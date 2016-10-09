@@ -85,7 +85,7 @@
 		mes "head on your way.^000000";
 		close;
 	}
-	if (getcharid(2) == .@GID) {
+	if (getcharid(ID_GUILD) == .@GID) {
 		if (strcharinfo(PC_NAME) == getguildmaster(.@GID)) {
 			if (guildrelay_q == 100) {
 				if (guildtime > 22) {
@@ -1197,7 +1197,7 @@
 		}
 	}
 	else {
-		if (getcharid(2) == 0) {
+		if (getcharid(ID_GUILD) == 0) {
 			mes "[" + .@name$ + "]";
 			mes "You haven't joined";
 			mes "a guild yet? Why don't";
@@ -1264,7 +1264,7 @@
 		mes "head on your way.^000000";
 		close;
 	}
-	if (getcharid(2) == .@GID) {
+	if (getcharid(ID_GUILD) == .@GID) {
 		if (strcharinfo(PC_NAME) == getguildmaster(.@GID)) {
 			if (countitem(Soul_Of_Guild) > 0) {
 				mes "[" + .@name$ + "]";
@@ -1768,7 +1768,7 @@
 		mes "there's no reason to be here.^000000";
 		close;
 	}
-	if (getcharid(2) == .@GID) {
+	if (getcharid(ID_GUILD) == .@GID) {
 		if (strcharinfo(PC_NAME) == getguildmaster(.@GID)) {
 			if (countitem(Soul_Of_Confidence) > 0) {
 				mes "[" + .@name$ + "]";
@@ -2452,7 +2452,7 @@
 		mes "there's no reason to be here.^000000";
 		close;
 	}
-	if (getcharid(2) == .@GID) {
+	if (getcharid(ID_GUILD) == .@GID) {
 		if (strcharinfo(PC_NAME) == getguildmaster(.@GID)) {
 			if (countitem(Soul_Of_Peace) > 0) {
 				mes "[" + .@name$ + "]";
@@ -2527,9 +2527,9 @@
 					close;
 				}
 			}
-			getpartymember(getcharid(1));
+			getpartymember(getcharid(ID_PARTY));
 			.@partymembercount = $@partymembercount;
-			.@partyleader = getpartyleader(getcharid(1),2);
+			.@partyleader = getpartyleader(getcharid(ID_PARTY),2);
 			if (guildrelay_q == 91) {
 				if (.@partymembercount == 6) {
 					mes "[" + .@name$ + "]";

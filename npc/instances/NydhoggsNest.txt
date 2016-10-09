@@ -104,7 +104,7 @@ nyd_dun02,100,201,3	script	Yggdrasil Gatekeeper	HIDDEN_NPC,8,8,{
 		}
 	} else if (ins_nyd == 131 || ins_nyd == 132 || ins_nyd > 199) {
 
-		.@party_id = getcharid(1);
+		.@party_id = getcharid(ID_PARTY);
 		.@md_name$ = "Nidhoggur's Nest";
 
 		.@ins_nyd_check = questprogress(3135,PLAYTIME); // 3 Day cooldown
@@ -124,7 +124,7 @@ nyd_dun02,100,201,3	script	Yggdrasil Gatekeeper	HIDDEN_NPC,8,8,{
 				mes "And only 1 representative of you needs to talk to me, so don't annoy me...";
 				close;
 			}
-			if (getcharid(0) == getpartyleader(.@party_id,2)) {
+			if (getcharid(ID_CHAR) == getpartyleader(.@party_id,2)) {
 				mes "[Yggdrasil Gatekeeper]";
 				mes "The loyal servants of the Guardian... what can I do for you?";
 				next;
@@ -224,7 +224,7 @@ L_Enter:
 		mes "You did not request for entrance. Please let your leader request entrance.";
 		close;
 	} else {
-		mapannounce "nyd_dun02", getpartyname(getcharid(1))+"'s party member "+strcharinfo(PC_NAME)+" has entered Nidhoggur's Nest.",bc_map,"0x00ff99";
+		mapannounce "nyd_dun02", getpartyname(getcharid(ID_PARTY))+"'s party member "+strcharinfo(PC_NAME)+" has entered Nidhoggur's Nest.",bc_map,"0x00ff99";
 		if (!questprogress(3135)) setquest 3135;
 		if (!questprogress(3136)) setquest 3136;
 		warp "1@nyd",32,37;
@@ -1608,7 +1608,7 @@ OnTouch_:
 		mes "I thank you deeply for your decision. I will use what is left of my powers to open up the path towards the Guardian's Nest.";
 		next;
 		mes "[World Tree Yggdrasil]";
-		if (getcharid(0) == getpartyleader(getcharid(1),2)) {
+		if (getcharid(ID_CHAR) == getpartyleader(getcharid(ID_PARTY),2)) {
 			mes "The path to the Guardian's Nest is just past the waterfall by the large World Tree Yggdrasil to the North. The defensive mechanisms of the Sanctuary will start immediately.";
 			next;
 			mes "[World Tree Yggdrasil]";
@@ -1860,7 +1860,7 @@ OnTouch:
 
 2@nyd,199,268,0	script	nyd_2f_boss_enter	FAKE_NPC,8,8,{
 OnTouch_:
-	if (getcharid(0) == getpartyleader(getcharid(1),2)) {
+	if (getcharid(ID_CHAR) == getpartyleader(getcharid(ID_PARTY),2)) {
 		donpcevent instance_npcname("nyd_2f_boss_enter_call")+"::OnEnable";
 		disablenpc instance_npcname("nyd_2f_boss_enter");
 		end;

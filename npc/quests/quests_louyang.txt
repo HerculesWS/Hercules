@@ -4634,9 +4634,9 @@ lou_in02,77,37,7	script	Hermit	4_M_CHNOLD,{
 				mes strcharinfo(PC_NAME)+ "...!";
 				mes "Your name is now engraved on this bloody pledge board. We will fight together to the death for Louyang's future!";
 				next;
-				getpartymember(getcharid(1));
+				getpartymember(getcharid(ID_PARTY));
 				@partymember = $@partymembercount;
-				if (getpartyleader(getcharid(1),1) == getcharid(0) || !@partymember) {
+				if (getpartyleader(getcharid(ID_PARTY),1) == getcharid(ID_CHAR) || !@partymember) {
 					mes "[Sun Mao]";
 					mes "Now, the most important thing for our cause is to gather more recruits and increase our numbers. Please find others who will join us in our fight.";
 					next;
@@ -4659,7 +4659,7 @@ lou_in02,77,37,7	script	Hermit	4_M_CHNOLD,{
 			mes "If you're a real tourist, you do not want to get involved in our business, one way or another.";
 			close;
 		}
-	} else if (getpartyleader(getcharid(1),2) == getcharid(0)) {
+	} else if (getpartyleader(getcharid(ID_PARTY),2) == getcharid(ID_CHAR)) {
 		if (QL_REVOL == 9) {
 			mes "[Sun Mao]";
 			mes "Once again,";
@@ -4668,7 +4668,7 @@ lou_in02,77,37,7	script	Hermit	4_M_CHNOLD,{
 			mes "Go back safe.";
 			close;
 		}
-		getpartymember(getcharid(1));
+		getpartymember(getcharid(ID_PARTY));
 		@partymember = $@partymembercount;
 		if (QL_REVOL < 8) {
 			if (@partymember == QL_REVOL +1) {
@@ -4860,7 +4860,7 @@ lou_in02,77,37,7	script	Hermit	4_M_CHNOLD,{
 
 lou_in01,43,147,3	script	Gunpowder Expert	4_M_ALCHE_C,{
 	if (ch_make == 0) {
-		getpartymember(getcharid(1));
+		getpartymember(getcharid(ID_PARTY));
 		@partymember = $@partymembercount;
 		if (!QL_REVOL) {
 			mes "[Hao Chenryu]";

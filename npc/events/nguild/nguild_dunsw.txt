@@ -49,7 +49,7 @@ function	script	F_GldDunSw	{
 		next;
 
 		if (select("Pull.", "Do not.") == 1) {
-			if (getcharid(2) == .@GID) {
+			if (getcharid(ID_GUILD) == .@GID) {
 				warp "gld_dun"+getarg(1),getarg(2),getarg(3);
 				end;
 			}

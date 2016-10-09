@@ -34,9 +34,9 @@
 //=========================================================================
 
 payon,103,113,3	script	Ledrion#payon::RelayLedrion	4_M_MANAGER,{
-	getpartymember(getcharid(1));
+	getpartymember(getcharid(ID_PARTY));
 	.@partymembercount = $@partymembercount;
-	.@partyleader = getpartyleader(getcharid(1),2);
+	.@partyleader = getpartyleader(getcharid(ID_PARTY),2);
 	if (checkweight(Resin,300) == 0) {
 		mes "^3355FFWait a minute! You're";
 		mes "carrying too many items";
@@ -54,7 +54,7 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	4_M_MANAGER,{
 		mes "of your group members with you.";
 		close;
 	}
-	if ((countitem(Mission_Certificate12) > 0) && (.@partyleader == getcharid(0)) && (getcharid(2) > 0) && (.@partymembercount > 5)) {
+	if ((countitem(Mission_Certificate12) > 0) && (.@partyleader == getcharid(ID_CHAR)) && (getcharid(ID_GUILD) > 0) && (.@partymembercount > 5)) {
 		mes "[Ledrion]";
 		mes "Ah, you've brought the";
 		mes "last ticket from Rospii.";
@@ -129,7 +129,7 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	4_M_MANAGER,{
 		mes "over to Gatan right now?";
 		close;
 	}
-	if ((countitem(Mission_Certificate8) > 0) && (.@partyleader == getcharid(0)) && (getcharid(2) > 0) && (.@partymembercount > 5)) {
+	if ((countitem(Mission_Certificate8) > 0) && (.@partyleader == getcharid(ID_CHAR)) && (getcharid(ID_GUILD) > 0) && (.@partymembercount > 5)) {
 		mes "[Ledrion]";
 		mes "Great, you've brought";
 		mes "me the eighth ticket from";
@@ -178,7 +178,7 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	4_M_MANAGER,{
 		mes "a ticket to Gatan?";
 		close;
 	}
-	if ((countitem(Mission_Certificate4) > 0) && (.@partyleader == getcharid(0)) && (getcharid(2) > 0) && (.@partymembercount > 5)) {
+	if ((countitem(Mission_Certificate4) > 0) && (.@partyleader == getcharid(ID_CHAR)) && (getcharid(ID_GUILD) > 0) && (.@partymembercount > 5)) {
 		mes "[Ledrion]";
 		mes "I see that you've brought";
 		mes "me the fourth ticket from";
@@ -219,7 +219,7 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	4_M_MANAGER,{
 		mes "come to me, not yet.";
 		close;
 	}
-	if ((BaseLevel > 39) && (.@partyleader == getcharid(0)) && (getcharid(2) > 0) && (.@partymembercount > 5) && (party_relay == 1)) {
+	if ((BaseLevel > 39) && (.@partyleader == getcharid(ID_CHAR)) && (getcharid(ID_GUILD) > 0) && (.@partymembercount > 5) && (party_relay == 1)) {
 		mes "[Ledrion]";
 		mes "As I mentioned earlier,";
 		mes "I'm challenging guild";
@@ -271,7 +271,7 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	4_M_MANAGER,{
 		mes "once the time is right.";
 		close;
 	}
-	if ((.@partyleader == getcharid(0)) && (getcharid(2) > 0) && (.@partymembercount > 5) && (party_relay > 0)) {
+	if ((.@partyleader == getcharid(ID_CHAR)) && (getcharid(ID_GUILD) > 0) && (.@partymembercount > 5) && (party_relay > 0)) {
 		mes "[Ledrion]";
 		mes "As leader of your";
 		mes "Party, you should";
@@ -280,7 +280,7 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	4_M_MANAGER,{
 		mes "of your partners.";
 		close;
 	}
-	if ((.@partyleader != getcharid(0)) && (getcharid(2) > 0)) {
+	if ((.@partyleader != getcharid(ID_CHAR)) && (getcharid(ID_GUILD) > 0)) {
 		mes "[Ledrion]";
 		mes "I'm sorry, but there's";
 		mes "nothing I can really offer";
@@ -363,7 +363,7 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	4_M_MANAGER,{
 	next;
 	switch(select("Sure!", "No.")) {
 	case 1:
-		if ((BaseLevel > 39) && (.@partyleader == getcharid(0)) && (getcharid(2) > 0) && (.@partymembercount > 5)) {
+		if ((BaseLevel > 39) && (.@partyleader == getcharid(ID_CHAR)) && (getcharid(ID_GUILD) > 0) && (.@partymembercount > 5)) {
 			mes "[Ledrion]";
 			mes "Great! Let's see...";
 			mes "Well, you meet all the";
@@ -402,9 +402,9 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	4_M_MANAGER,{
 }
 
 payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
-	getpartymember(getcharid(1));
+	getpartymember(getcharid(ID_PARTY));
 	.@partymembercount = $@partymembercount;
-	.@partyleader = getpartyleader(getcharid(1),2);
+	.@partyleader = getpartyleader(getcharid(ID_PARTY),2);
 	if (checkweight(Resin,300) == 0) {
 		mes "^3355FFWait a minute! You're";
 		mes "carrying too many items";
@@ -1837,9 +1837,9 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 }
 
 payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
-	getpartymember(getcharid(1));
+	getpartymember(getcharid(ID_PARTY));
 	.@partymembercount = $@partymembercount;
-	.@partyleader = getpartyleader(getcharid(1),2);
+	.@partyleader = getpartyleader(getcharid(ID_PARTY),2);
 	if (checkweight(Resin,300) == 0) {
 		mes "^3355FFWait a minute! You're";
 		mes "carrying too many items";
@@ -2470,9 +2470,9 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 }
 
 payon,168,314,3	script	Lospii#payon::RelayLospii	4_M_KID1,{
-	getpartymember(getcharid(1));
+	getpartymember(getcharid(ID_PARTY));
 	.@partymembercount = $@partymembercount;
-	.@partyleader = getpartyleader(getcharid(1),2);
+	.@partyleader = getpartyleader(getcharid(ID_PARTY),2);
 	if (checkweight(Resin,300) == 0) {
 		mes "^3355FFWait a minute! You're";
 		mes "carrying too many items";

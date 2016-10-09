@@ -405,7 +405,7 @@ OnTouch:
 }
 
 bat_b02,10,294,3	script	Guillaume Vintenar#b02_a	4_M_RASWORD,{
-	if ($@FlaviusBG2_id1 == getcharid(4)) {
+	if ($@FlaviusBG2_id1 == getcharid(ID_BATTLEGROUND)) {
 		if ($@FlaviusBG2_Victory == 1) {
 			.@your_medal = countitem(BF_Badge2);
 			.@medal_gap = 500 - .@your_medal;
@@ -457,7 +457,7 @@ OnInit:
 }
 
 bat_b02,389,14,3	script	Croix Vintenar#b02_b	4_M_RASWORD,{
-	if ($@FlaviusBG2_id2 == getcharid(4)) {
+	if ($@FlaviusBG2_id2 == getcharid(ID_BATTLEGROUND)) {
 		if ($@FlaviusBG2_Victory == 2) {
 			.@your_medal = countitem(BF_Badge2);
 			.@medal_gap = 500 - .@your_medal;
@@ -590,7 +590,7 @@ bat_b02,389,16,3	script	Croix Camp#flag42	1_FLAG_EAGLE,{ end; }
 
 bat_b02,10,294,3	script	Vintenar#bat_b02_aover	4_M_KY_HEAD,{
 	.@A_B_gap = $@Guill_ScoreBG2 - $@Croix_ScoreBG2;
-	if ($@FlaviusBG2_id1 == getcharid(4)) {
+	if ($@FlaviusBG2_id1 == getcharid(ID_BATTLEGROUND)) {
 		if (.@A_B_gap > 0) {
 			.@your_medal = countitem(BF_Badge2);
 			.@medal_gap = 500 - .@your_medal;
@@ -668,7 +668,7 @@ OnInit:
 
 bat_b02,389,14,3	script	Vintenar#bat_b02_bover	4_M_CRU_HEAD,{
 	.@A_B_gap = $@Guill_ScoreBG2 - $@Croix_ScoreBG2;
-	if ($@FlaviusBG2_id2 == getcharid(4)) {
+	if ($@FlaviusBG2_id2 == getcharid(ID_BATTLEGROUND)) {
 		if (.@A_B_gap > 0) {
 			.@your_medal = countitem(BF_Badge2);
 			.@medal_gap = 500 - .@your_medal;

@@ -1768,7 +1768,7 @@ lhz_dun04,151,276,3	script	Researcher#memo	4_LGTSCIENCE,{
 		mes "So, please prepare your party members, and take care of those boss creatures. I'm not sure how long this place can hold.";
 		close;
 	} else if (lght_duk01 > 6) {
-		if (getcharid(1) > 0) {
+		if (getcharid(ID_PARTY) > 0) {
 			mes "[Wolfchev]";
 			mes "Are you all set there? I will prepare the entrance if you are the leader of that party.";
 			next;
@@ -1859,8 +1859,8 @@ lhz_dun04,151,276,3	script	Researcher#memo	4_LGTSCIENCE,{
 						}
 					}
 				}
-				if (getpartyleader(getcharid(1),2) == getcharid(0)) {
-					.@instance = instance_create("Worsef", getcharid(1));
+				if (getpartyleader(getcharid(ID_PARTY),2) == getcharid(ID_CHAR)) {
+					.@instance = instance_create("Worsef", getcharid(ID_PARTY));
 					if (.@instance < 0) {
 						mes "[Wolfchev]";
 						mes "Hmm.. Lab entering system is a bit weird. Would wait for me to check the system?";
@@ -2035,7 +2035,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 1@lhz,39,168,0	script	Manual Sheet#1_1	CLEAR_NPC,{
 	mes "There are valve manual sheets littered on the floor.";
 	next;
-	if (getpartyleader(getcharid(1),2) == getcharid(0)) {
+	if (getpartyleader(getcharid(ID_PARTY),2) == getcharid(ID_CHAR)) {
 		mes "You the party leader, started to read the manual.";
 		next;
 		mes "[Emergency Access Valve Manual]";
@@ -2112,7 +2112,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 1@lhz,41,172,0	script	Valve#1_2	CLEAR_NPC,{
 	.@open_portal = 0;
 	mes "This is the left valve for the emergency access.";
-	if (getpartyleader(getcharid(1),2) == getcharid(0)) {
+	if (getpartyleader(getcharid(ID_PARTY),2) == getcharid(ID_CHAR)) {
 		next;
 		mes "To which direction do you wish to turn?";
 		next;
@@ -2174,7 +2174,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 1@lhz,52,172,0	script	Valve#1_3	CLEAR_NPC,{
 	.@open_portal = 0;
 	mes "This is the left valve for the emergency access.";
-	if (getpartyleader(getcharid(1),2) == getcharid(0)) {
+	if (getpartyleader(getcharid(ID_PARTY),2) == getcharid(ID_CHAR)) {
 		next;
 		mes "To which direction do you wish to turn?";
 		next;
@@ -2562,7 +2562,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 
 //== The Lab No.2 Valves ===================================
 -	script	bio4FLab2Valve	FAKE_NPC,{
-	if (getpartyleader(getcharid(1),2) == getcharid(0)) {
+	if (getpartyleader(getcharid(ID_PARTY),2) == getcharid(ID_CHAR)) {
 		progressbar "0xffff00", 20;
 		stopnpctimer;
 		donpcevent instance_npcname("Lab2#2_2")+"::OnDisableValve1";

@@ -38,7 +38,7 @@
 //== Instance Creation =====================================
 bif_fild01,158,340,5	script	Laphine Soldier#mist	4_M_FAIRYSOLDIER,{
 
-	.@party_id = getcharid(1);
+	.@party_id = getcharid(ID_PARTY);
 	.@md_name$ = "Mistwood Maze";
 
 	mes "[Laphine Soldier]";
@@ -51,7 +51,7 @@ bif_fild01,158,340,5	script	Laphine Soldier#mist	4_M_FAIRYSOLDIER,{
 		close;
 	}
 	.@playtime = questprogress(7211,PLAYTIME);
-	if (getcharid(0) == getpartyleader(.@party_id,2)) {
+	if (getcharid(ID_CHAR) == getpartyleader(.@party_id,2)) {
 		if (.@playtime == 1) {
 			mes "[Laphine Soldier]";
 			mes "...Are you sure you're not doing too much?";
@@ -177,7 +177,7 @@ bif_fild01,161,355,0	script	Log Tunnel	CLEAR_NPC,{
 	} else {
 		if (questprogress(7211,PLAYTIME) == 2) erasequest 7211;
 		if (!questprogress(7211,PLAYTIME)) setquest 7211;
-		mapannounce "bif_fild01",getpartyname(getcharid(1))+" party's "+strcharinfo(PC_NAME)+" member is entering the Mistwood Maze.",bc_map,"0x00ff99"; //FW_NORMAL 12 0 0
+		mapannounce "bif_fild01",getpartyname(getcharid(ID_PARTY))+" party's "+strcharinfo(PC_NAME)+" member is entering the Mistwood Maze.",bc_map,"0x00ff99"; //FW_NORMAL 12 0 0
 		warp "1@mist",89,29;
 		close;
 	}

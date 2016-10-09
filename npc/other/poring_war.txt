@@ -644,8 +644,8 @@ poring_w02,26,181,3	script	Mr. Doppel#wop_team_a	8_DOPPEL,{
 		close;
 	}
 	.@a_tname$ = getpartyname($@wop_team_a);
-	.@pname$ = getpartyname(getcharid(1));
-	if ($@wop_team_a != 0 && $@wop_team_a == getcharid(1)) {
+	.@pname$ = getpartyname(getcharid(ID_PARTY));
+	if ($@wop_team_a != 0 && $@wop_team_a == getcharid(ID_PARTY)) {
 		mes "[Mr. Doppel]";
 		mes "So, everyone joined the party?";
 		mes "The name of the party is... " + .@pname$ + ", right?";
@@ -662,7 +662,7 @@ poring_w02,26,181,3	script	Mr. Doppel#wop_team_a	8_DOPPEL,{
 			mes "If you don't get there in time, you won't make it to the battle.";
 			close;
 		case 2:
-			if ((getpartyleader(getcharid(1),2) == getcharid(0))) {
+			if ((getpartyleader(getcharid(ID_PARTY),2) == getcharid(ID_CHAR))) {
 				mes "[Mr. Doppel]";
 				mes "So, you are the leader. Before going to the battlefield, you should check all your members.";
 				next;
@@ -694,7 +694,7 @@ poring_w02,26,181,3	script	Mr. Doppel#wop_team_a	8_DOPPEL,{
 		}
 	}
 	else {
-		if ((getpartyleader(getcharid(1),2) == getcharid(0))) {
+		if ((getpartyleader(getcharid(ID_PARTY),2) == getcharid(ID_CHAR))) {
 			if ($@wop_team_a == 0) {
 				mes "[Mr. Doppel]";
 				mes "So, you are the party leader of Angeling Team.";
@@ -719,7 +719,7 @@ poring_w02,26,181,3	script	Mr. Doppel#wop_team_a	8_DOPPEL,{
 					mes "So, I'll register your party name as - " +.@pname$ + " -.";
 					mes "Now, Tell your ^4d4dffmembers to confirm your party^000000.";
 					mes "I'll send you to the battlefield as soon as I confirm your party.";
-					$@wop_team_a = getcharid(1);
+					$@wop_team_a = getcharid(ID_PARTY);
 					mapannounce "poring_w02","The registration of the Angeling Team has been confirmed. The party members must confirm their team with Mr. Doppel.",0,0x33FF66;
 					close;
 				case 3:
@@ -775,8 +775,8 @@ poring_w02,170,181,3	script	Mr. Doppel#wop_team_d	8_DOPPEL,{
 		close;
 	}
 	.@d_tname$ = getpartyname($@wop_team_d);
-	.@pname$ = getpartyname(getcharid(1));
-	if ($@wop_team_d != 0 && $@wop_team_d == getcharid(1)) {
+	.@pname$ = getpartyname(getcharid(ID_PARTY));
+	if ($@wop_team_d != 0 && $@wop_team_d == getcharid(ID_PARTY)) {
 		mes "[Mr. Doppel]";
 		mes "So, everyone joined the party?";
 		mes "The name of the party is... " + .@pname$ + ", right?";
@@ -793,7 +793,7 @@ poring_w02,170,181,3	script	Mr. Doppel#wop_team_d	8_DOPPEL,{
 			mes "If you don't get there in time, you won't make it to the battle.";
 			close;
 		case 2:
-			if ((getpartyleader(getcharid(1),2) == getcharid(0))) {
+			if ((getpartyleader(getcharid(ID_PARTY),2) == getcharid(ID_CHAR))) {
 				mes "[Mr. Doppel]";
 				mes "So, you are the leader. Before going to the battlefield, you should check all your members.";
 				next;
@@ -823,7 +823,7 @@ poring_w02,170,181,3	script	Mr. Doppel#wop_team_d	8_DOPPEL,{
 			}
 		}
 	} else {
-		if ((getpartyleader(getcharid(1),2) == getcharid(0))) {
+		if ((getpartyleader(getcharid(ID_PARTY),2) == getcharid(ID_CHAR))) {
 			if ($@wop_team_d == 0) {
 				mes "[Mr. Doppel]";
 				mes "So, you are the party leader of Deviling Team.";
@@ -848,7 +848,7 @@ poring_w02,170,181,3	script	Mr. Doppel#wop_team_d	8_DOPPEL,{
 					mes "So, I'll register your party name as - " + .@pname$ + " -.";
 					mes "Now, Tell your ^4d4dffmembers to confirm your party^000000.";
 					mes "I'll send you to the battlefield as soon as I confirm your party.";
-					$@wop_team_d = getcharid(1);
+					$@wop_team_d = getcharid(ID_PARTY);
 					mapannounce "poring_w02","The registration of the Deviling Team has been confirmed. The party members must confirm their team with Mr. Doppel.",0,0x33FF66;
 					close;
 				case 3:
@@ -1238,7 +1238,7 @@ poring_w02,99,201,3	script	Deviruchi#wop_endmaster	4_DEVIRUCHI,{
 	}
 	.@a_point = $@wop_deadcount_a;
 	.@d_point = $@wop_deadcount_d;
-	if (getcharid(1) == $@wop_team_a) {
+	if (getcharid(ID_PARTY) == $@wop_team_a) {
 		if (.@a_point < .@d_point) {
 			mes "[Devi]";
 			mes "Good work!";
@@ -1319,7 +1319,7 @@ poring_w02,99,201,3	script	Deviruchi#wop_endmaster	4_DEVIRUCHI,{
 			}
 		}
 	}
-	else if (getcharid(1) == $@wop_team_d) {
+	else if (getcharid(ID_PARTY) == $@wop_team_d) {
 		if (.@a_point > .@d_point) {
 			mes "[Devi]";
 			mes "Good work!";

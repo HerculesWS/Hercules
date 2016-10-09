@@ -93,7 +93,7 @@ glast_01,204,273,6	script	Hugin#ghinstance	4_M_SAGE_C,{
 	mes("Umm? Did you see me at another place? I don't think so. What about this time?");
 	next;
 	if (!questprogress(12317, PLAYTIME)) {
-		.@party_id = getcharid(1);
+		.@party_id = getcharid(ID_PARTY);
 		.@p_name$ = getpartyname(.@party_id);
 		.@md_name$ = "Old Glast Heim";
 		if (!instance_check_party(.@party_id)) {
@@ -103,13 +103,13 @@ glast_01,204,273,6	script	Hugin#ghinstance	4_M_SAGE_C,{
 		}
 		if (!questprogress(12318, HUNTING))
 			setquest 12318;
-		if (getcharid(0) == getpartyleader(.@party_id, 2))
+		if (getcharid(ID_CHAR) == getpartyleader(.@party_id, 2))
 			.@menu1$ = "Generate Time Gap";
 		else
 			.@menu1$ = "";
 		switch (select(.@menu1$, "Enter Old Glast Heim", "Cancel")) {
 		case 1:
-			if (getcharid(0) != getpartyleader(.@party_id, 2))
+			if (getcharid(ID_CHAR) != getpartyleader(.@party_id, 2))
 				end;
 			.@instance = instance_create(.@md_name$, .@party_id);
 			if (.@instance < 0) {
@@ -165,7 +165,7 @@ glast_01,204,273,6	script	Hugin#ghinstance	4_M_SAGE_C,{
 // Floor 1
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 1@gl_k,149,41,6	script	Varmundt#ghinstance1	4_M_BARMUND,{
-	if (getcharid(0) != getpartyleader(getcharid(1), 2)) {
+	if (getcharid(ID_CHAR) != getpartyleader(getcharid(ID_PARTY), 2)) {
 		cutin("gl_barmund2", 2);
 		mes("[Varmundt]");
 		mes("Where's your leader? I need his help.");
@@ -181,7 +181,7 @@ glast_01,204,273,6	script	Hugin#ghinstance	4_M_SAGE_C,{
 	select("Oh. Well I...");
 	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("Ah yes, I am. Herico told me to meet you.");
-	unittalk(getcharid(3), _("Ah yes, I am. Herico told me to meet you."));
+	unittalk(getcharid(ID_ACCOUNT), _("Ah yes, I am. Herico told me to meet you."));
 	next;
 	cutin("gl_barmund2", 2);
 	mes("[Varmundt]");
@@ -191,7 +191,7 @@ glast_01,204,273,6	script	Hugin#ghinstance	4_M_SAGE_C,{
 	select("Himelmez...");
 	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("Who is Himelmez?");
-	unittalk(getcharid(3), _("Who is Himelmez?"));
+	unittalk(getcharid(ID_ACCOUNT), _("Who is Himelmez?"));
 	next;
 	cutin("gl_barmund3", 2);
 	mes("[Varmundt]");
@@ -277,7 +277,7 @@ OnEnable:
 1@gl_k,154,104,3	duplicate(Khalitzburg Knight#1)	Khalitzburg Knight#22	4_F_KHALITZBURG
 
 1@gl_k,149,100,6	script	Heinrich#ghinstance1	4_M_HEINRICH,{
-	if (getcharid(0) != getpartyleader(getcharid(1), 2)) {
+	if (getcharid(ID_CHAR) != getpartyleader(getcharid(ID_PARTY), 2)) {
 		cutin("gl_heinrich2", 2);
 		mes("[Heinrich]");
 		mes("Where is your leader? I must talk to him.");
@@ -289,7 +289,7 @@ OnEnable:
 	select("Sir. Heinrich. Varmundt...");
 	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("Sir. Heinrich. Do you know what is happening in the castle now?");
-	unittalk(getcharid(3), _("Sir. Heinrich. Do you know what is happening in the castle now?"));
+	unittalk(getcharid(ID_ACCOUNT), _("Sir. Heinrich. Do you know what is happening in the castle now?"));
 	next;
 	mes("[Heinrich]");
 	mes("Aren't you the adventurer that came along with Varmundt?");
@@ -302,7 +302,7 @@ OnEnable:
 	select("Himelmez's invasion...");
 	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("Dead man's Valkyrie, Himelmez is coming to take the Ymir's Heart piece hidden inside this castle!");
-	unittalk(getcharid(3), _("Dead man's Valkyrie, Himelmez is coming to take the Ymir's Heart piece hidden inside this castle!"));
+	unittalk(getcharid(ID_ACCOUNT), _("Dead man's Valkyrie, Himelmez is coming to take the Ymir's Heart piece hidden inside this castle!"));
 	next;
 	cutin("gl_heinrich1", 2);
 	mes("[Heinrich]");
@@ -321,7 +321,7 @@ OnEnable:
 	select("Even if you don't believe me...");
 	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("I can't make you believe me, but there's no time to argue!");
-	unittalk(getcharid(3), _("I can't make you believe me, but there's no time to argue!"));
+	unittalk(getcharid(ID_ACCOUNT), _("I can't make you believe me, but there's no time to argue!"));
 	cutin("gl_barmund2", 255);
 	next;
 	cutin("gl_heinrich1", 2);
@@ -801,7 +801,7 @@ OnMyMobDead:
 }
 
 1@gl_k,17,51,3	script	Altar boy Domun#clearGH	4_M_KID1,{
-	if (getcharid(0) != getpartyleader(getcharid(1), 2)) {
+	if (getcharid(ID_CHAR) != getpartyleader(getcharid(ID_PARTY), 2)) {
 		mes("[Altar boy Domun]");
 		mes("Save me, save me, please...");
 		close;
@@ -814,7 +814,7 @@ OnMyMobDead:
 	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("Hold on!\r"
 		"Are you the only survivor?");
-	unittalk(getcharid(3), _("Hold on! Are you the only survivor?"));
+	unittalk(getcharid(ID_ACCOUNT), _("Hold on! Are you the only survivor?"));
 	next;
 	mes("[Altar boy Domun]");
 	mes("Chamberlains... monks...\r"
@@ -830,7 +830,7 @@ OnMyMobDead:
 	select("Pull it together!");
 	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("Wake up kid! Go east and find the middle passage to the outside! That is safe!");
-	unittalk(getcharid(3), _("Wake up kid! Go east and find the middle passage to the outside! That is safe!")); // Displays 1st Letter of char name in small?
+	unittalk(getcharid(ID_ACCOUNT), _("Wake up kid! Go east and find the middle passage to the outside! That is safe!")); // Displays 1st Letter of char name in small?
 	next;
 	mes("[Altar boy Domun]");
 	mes("To the east passage?\r"
@@ -841,7 +841,7 @@ OnMyMobDead:
 	select("I will give you a weapon.");
 	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("Here's a weapon. Just close your eye and swing for those monsters.");
-	unittalk(getcharid(3), _("Here's a weapon. Just close your eye and swing for those monsters."));
+	unittalk(getcharid(ID_ACCOUNT), _("Here's a weapon. Just close your eye and swing for those monsters."));
 	next;
 	mes("[Altar boy Domun]");
 	mes("Ok, I... I'l try.");
@@ -898,7 +898,7 @@ OnMyMobDead:
 }
 
 1@gl_k,291,145,3	script	Holgren the Destroyer	4_F_JOB_BLACKSMITH,{
-	if (getcharid(0) != getpartyleader(getcharid(1), 2)) {
+	if (getcharid(ID_CHAR) != getpartyleader(getcharid(ID_PARTY), 2)) {
 		mes("[Holgren the Destroyer]");
 		mes("Are you human?");
 		close;
@@ -911,7 +911,7 @@ OnMyMobDead:
 	select("Relax! I'm not a monster!");
 	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("Relax! I am Human. Are you alone? Anyone else here?");
-	unittalk(getcharid(3), _("Relax! I am Human. Are you alone? Anyone else here?"));
+	unittalk(getcharid(ID_ACCOUNT), _("Relax! I am Human. Are you alone? Anyone else here?"));
 	next;
 	mes("[Holgren the Destroyer]");
 	mes("It's only me alive.");
@@ -920,7 +920,7 @@ OnMyMobDead:
 	select("It's dangerous here...");
 	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("It's dangerous here. You know the way to the middle passage? Can you move?");
-	unittalk(getcharid(3), _("It's dangerous here. You know the way to the middle passage? Can you move?")); // Displays 1st Letter of char name in small?
+	unittalk(getcharid(ID_ACCOUNT), _("It's dangerous here. You know the way to the middle passage? Can you move?")); // Displays 1st Letter of char name in small?
 	next;
 	mes("[Holgren the Destroyer]");
 	mes("Yes, I can move. I need to get out of here.");
@@ -929,7 +929,7 @@ OnMyMobDead:
 	select("Be safe...");
 	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("Sorry, I can't go with you.");
-	unittalk(getcharid(3), _("Sorry, I can't go with you."));
+	unittalk(getcharid(ID_ACCOUNT), _("Sorry, I can't go with you."));
 	next;
 	mes("[Holgren the Destroyer]");
 	mes("It's ok. You've already done enough. I can help myself. Good luck to you too.");

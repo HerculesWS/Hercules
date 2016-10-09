@@ -33,7 +33,7 @@
 //=========================================================================
 
 ecl_hub01,132,12,3	script	Chief of Staff#tl01::EclInstance	4_F_FAIRY,{
-	.@party_id = getcharid(1);
+	.@party_id = getcharid(ID_PARTY);
 	.@md_name$ = "Eclage Interior";
 	if (!.@party_id){
 		mes "-! Warning !-";
@@ -42,7 +42,7 @@ ecl_hub01,132,12,3	script	Chief of Staff#tl01::EclInstance	4_F_FAIRY,{
 		close;
 	}
 
-	if (getpartyleader(.@party_id,2) != getcharid(0)) {
+	if (getpartyleader(.@party_id,2) != getcharid(ID_CHAR)) {
 		mes "-! Warning !-";
 		mes "This current quest will be held at Memorial dungeon.";
 		mes "Only the party leader will enter. Please create your party.";
@@ -93,7 +93,7 @@ ecl_hub01,130,15,0	script	It is closed shut.	CLEAR_NPC,{
 		next;
 		switch (select("Enter it.", "Forget it.")) {
 			case 1:
-				.@party_id = getcharid(1);
+				.@party_id = getcharid(ID_PARTY);
 
 				if (has_instance("1@ecl") == "") {
 					mes "It is closed shut.";
@@ -101,7 +101,7 @@ ecl_hub01,130,15,0	script	It is closed shut.	CLEAR_NPC,{
 				}
 				if (.@party_id) {
 					.@md_name$ = "Eclage Interior";
-					if (getpartyleader(.@party_id,2) != getcharid(0)){
+					if (getpartyleader(.@party_id,2) != getcharid(ID_CHAR)){
 						mes "-! Warning !-";
 						mes "This current quest will be held at Memorial dungeon.";
 						mes "Only the party leader will enter. Please create your party.";

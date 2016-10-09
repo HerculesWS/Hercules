@@ -80,7 +80,7 @@ function	script	F_Kafra	{
 			break;
 		case 2:
 			// Guild Castle Kafra message
-			@GID = getcharid(2);
+			@GID = getcharid(ID_GUILD);
 			mes "[Kafra Employee]";
 			mes "Welcome. ^ff0000" + getguildname(@GID) + "^000000 Member.";
 			mes "The Kafra Coporation will stay with you wherever you go.";
