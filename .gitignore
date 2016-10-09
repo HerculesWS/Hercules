@@ -6,6 +6,7 @@
 .local.vimrc
 .ycm_extra_conf.py*
 Thumbs.db
+/conf/char/char-server.conf
 
 # /
 /*.exe
