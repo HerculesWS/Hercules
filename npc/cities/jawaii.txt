@@ -862,7 +862,7 @@ jawaii_in,28,124,0	script	Bartender#jaw	1_ETC_01,{
 		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Thank you.";
 		close2;
-		percentheal -100,0;
+		unitkill getcharid(CHAR_ID_ACCOUNT);
 		end;
 	}
 	while (1) {
@@ -893,7 +893,7 @@ jawaii_in,28,124,0	script	Bartender#jaw	1_ETC_01,{
 				mes "Thank you...";
 				mes "So much...";
 				close2;
-				percentheal -100,0;
+				unitkill getcharid(CHAR_ID_ACCOUNT);
 				end;
 			}
 			if (Zeny > 99) Zeny -= 100;
@@ -1103,7 +1103,7 @@ S_KillChar:
 		mes "Thank you...";
 		mes "Mr. Bartender...";
 		close2;
-		percentheal -100,0;
+		unitkill getcharid(CHAR_ID_ACCOUNT);
 		end;
 	}
 	if (Zeny > 99) Zeny -= 100;
@@ -1154,8 +1154,9 @@ jawaii_in,43,115,0	script	Customer#jaw_1	4W_M_01,{
 		mes "the one who laughs last!";
 		next;
 		mes "^3355FFYou drank to your fill.^000000";
-		close;
-		percentheal -100,0;
+		close2;
+		unitkill getcharid(CHAR_ID_ACCOUNT);
+		end;
 	}
 	mes "[Buchi]";
 	mes "You look happy...";

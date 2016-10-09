@@ -724,7 +724,8 @@ L_Heal:
 
 function	script	illegalkill	{
 	announce "Illegal Kill by " + strcharinfo(PC_NAME) + " Detected",1;
-	percentheal -100,-100;
+	Sp = 0;
+	unitkill getcharid(CHAR_ID_ACCOUNT);
 	end;
 }
 
