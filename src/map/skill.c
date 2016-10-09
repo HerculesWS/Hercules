@@ -6827,7 +6827,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 		case AL_HOLYWATER:
 			if(sd) {
 				if (skill->produce_mix(sd, skill_id, ITEMID_HOLY_WATER, 0, 0, 0, 1)) {
- 					struct skill_unit* su;
+ 					struct skill_unit *su;
 					if ((su = map->find_skill_unit_oncell(bl, bl->x, bl->y, NJ_SUITON, NULL, 0)) != NULL) {
 						skill->delunit(su);
 					}
