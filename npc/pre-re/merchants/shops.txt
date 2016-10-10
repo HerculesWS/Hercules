@@ -149,8 +149,8 @@ OnInit:
 	sellitem Thunder_P;
 }
 
-//== Morroc ================================================
-morocc,147,102,3	trader	Tool Dealer#prt	4_M_01,{
+//== Morocc ================================================
+morocc,147,102,3	trader	Tool Dealer#moc	4_M_01,{
 OnInit:
 	sellitem Arrow;
 	sellitem Spectacles;
