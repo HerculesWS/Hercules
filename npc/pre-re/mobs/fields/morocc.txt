@@ -36,10 +36,10 @@
 //=========================================================================
 
 //== moc_fild01 - Sograt Desert ============================
-moc_fild01,0,0,0,0	monster	Condor	1009,20,0,0,0
-moc_fild01,0,0,0,0	monster	Peco Peco	1019,50,0,0,0
+moc_fild01,0,0,0,0	monster	Condor	1009,120,0,0,0
+moc_fild01,0,0,0,0	monster	Peco Peco	1019,150,0,0,0
 moc_fild01,0,0,0,0	monster	Peco Peco Egg	1047,20,0,0,0
-moc_fild01,0,0,0,0	monster	Picky	1049,45,0,0,0
+moc_fild01,0,0,0,0	monster	Picky	1049,145,0,0,0
 moc_fild01,0,0,0,0	monster	Super Picky	1050,45,0,0,0
 moc_fild01,0,0,0,0	monster	Drops	1113,30,0,0,0
 moc_fild01,0,0,0,0	monster	Poring	1002,10,0,0,0
@@ -158,11 +158,11 @@ moc_fild11,0,0,0,0	monster	Drops	1113,75,0,0,0
 moc_fild11,197,216,0,0	monster	Shining Plant	1083,1,1800000,900000,1
 
 //== moc_fild12 - Sograt Desert ============================
-moc_fild12,0,0,0,0	monster	Picky	1050,50,0,0,0
-moc_fild12,0,0,0,0	monster	Picky	1049,50,0,0,0
-moc_fild12,0,0,0,0	monster	ChonChon	1011,20,0,0,0
-moc_fild12,0,0,0,0	monster	Ant Egg	1097,35,0,0,0
-moc_fild12,0,0,0,0	monster	Drops	1113,55,0,0,0
+moc_fild12,0,0,0,0	monster	Picky	1050,150,0,0,0
+moc_fild12,0,0,0,0	monster	Picky	1049,150,0,0,0
+moc_fild12,0,0,0,0	monster	ChonChon	1011,120,0,0,0
+moc_fild12,0,0,0,0	monster	Ant Egg	1097,85,0,0,0
+moc_fild12,0,0,0,0	monster	Drops	1113,155,0,0,0
 moc_fild12,181,336,40,20	monster	Yellow Plant	1081,10,180000,90000,1
 
 //== moc_fild13 - Sograt Desert ============================
