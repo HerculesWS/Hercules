@@ -127,9 +127,9 @@ moc_fild17,30,300,0	warp	moc29	2,5,moc_fild18,379,305
 moc_fild17,369,272,0	warp	mocf28-1	2,3,moc_fild16,19,179
 moc_fild18,158,382,0	warp	mocf24-1	4,2,moc_fild12,118,33
 moc_fild18,382,305,0	warp	moc29-1	2,4,moc_fild17,33,300
-//moc_fild19,169,107,0	warp	mocf004	1,4,morocc,27,164
-//moc_fild19,71,170,0	warp	mocf018	8,2,moc_ruins,71,19
-//moc_fild19,98,99,0	warp	mocf019	1,1,in_sphinx1,288,9
+moc_fild19,169,107,0	warp	mocf004	1,4,morocc,27,164
+moc_fild19,71,170,0	warp	mocf018	8,2,moc_ruins,71,19
+moc_fild19,98,99,0	warp	mocf019	1,1,in_sphinx1,288,9
 
 // Satan Morroc Addition
 //moc_fild21,26,196,0	warp	mocf020	1,1,moc_fild20,349,179
