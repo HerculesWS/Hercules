@@ -150,6 +150,18 @@ OnInit:
 }
 
 //== Morroc ================================================
+morocc,147,102,3	trader	Tool Dealer#prt	4_M_01,{
+OnInit:
+	sellitem Arrow;
+	sellitem Spectacles;
+	sellitem Red_Potion;
+	sellitem Orange_Potion;
+	sellitem Green_Potion;
+	sellitem Center_Potion;
+	sellitem Wing_Of_Fly;
+	sellitem Wing_Of_Butterfly;
+}
+
 moc_ruins,91,128,4	trader	Tool Dealer#moc1	4_F_04,{
 OnInit:
 	sellitem Arrow;
