@@ -2526,6 +2526,7 @@ new_1-2,38,182,3	script	Entrance Guard#nv	4_F_03,{
 			getitem N_Fly_Wing,200;
 			getitem Warp_Free_Ticket,30;
 			getitem Cargo_Free_Ticket,30;
+			getitem N_Falchion,1;
 			getitem Novice_Knife,1;
 			getitem Novice_Guard,1;
 			getitem Spectacles,2;
@@ -2746,7 +2747,7 @@ new_4-3,96,174,3	duplicate(NovKeyman)	Test Examiner#nv4	4_M_03
 new_5-3,96,174,3	duplicate(NovKeyman)	Test Examiner#nv5	4_M_03
 
 //== Potato Merchant =======================================
-new_1-2,28,185,4	shop	Potato Merchant	4_F_01,516:15,13415:0,501:50
+new_1-2,28,185,4	shop	Potato Merchant	4_F_01,516:15,501:50
 
 new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 	if (checkweight(Jellopy,400) == 0) {
