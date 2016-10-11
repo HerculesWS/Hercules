@@ -36,9 +36,7 @@
 
 //== in_sphinx1 - Sphinx F1 ================================
 in_sphinx1,0,0,0,0	monster	Drainliar	1111,40,0,0,0
-in_sphinx1,0,0,0,0	monster	Requiem	1164,40,0,0,0
 in_sphinx1,0,0,0,0	monster	Zerom	1178,70,0,0,0
-in_sphinx1,0,0,0,0	monster	Matyr	1146,15,0,0,0
 
 //== in_sphinx2 - Sphinx F2 ================================
 in_sphinx2,0,0,0,0	monster	Drainliar	1111,15,0,0,0
