@@ -544,5 +544,5 @@ moc_ruins,141,125,3	script	Mr. Irrelevant	4_M_01,{
 //== Monsters ==============================================
 job_thief1,0,0,0,0	monster	Orange Mushroom	1182,230,0,0,0
 job_thief1,0,0,0,0	monster	Fabre	1184,50,0,0,0
-job_thief1,0,0,0,0	monster	Chonchon	1183,15,0,0,0
+job_thief1,0,0,0,0	monster	Chonchon	1183,18,0,0,0
 job_thief1,0,0,0,0	monster	Spore	1014,30,0,0,0
