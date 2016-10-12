@@ -71,27 +71,27 @@ L_Info:
 // Monster Summon Function //
 function	script	monstersummon	{
 	// 1. ---Change to Add Monsters--- //
-	if (#monster == 10) summon strcharinfo(0) + "'s Poring",1002, "OnPoringKilled";
-	if (#monster == 20) summon strcharinfo(0) + "'s Fabre",1007, "OnFaberKilled";
-	if (#monster == 30) summon strcharinfo(0) + "'s Lunatic",1063, "OnLunaticKilled";
-	if (#monster == 31) summon strcharinfo(0) + "'s Drops",1113, "OnDropsKilled";
-	if (#monster == 32) summon strcharinfo(0) + "'s Picky",1049, "OnPickyKilled";
-	if (#monster == 40) summon strcharinfo(0) + "'s ChonChon",1011, "OnChonChonKilled";
-	if (#monster == 41) summon strcharinfo(0) + "'s Super Picky",1050, "OnSPickyKilled";
-	if (#monster == 42) summon strcharinfo(0) + "'s Willow",1010, "OnWillowKilled";
-	if (#monster == 50) summon strcharinfo(0) + "'s Roda Frog",1012, "OnRodaKilled";
-	if (#monster == 51) summon strcharinfo(0) + "'s Condor",1009, "OnCondorKilled";
-	if (#monster == 60) summon strcharinfo(0) + "'s Thief Bug Larva",1051, "OnThiefKilled";
-	if (#monster == 70) summon strcharinfo(0) + "'s Savage Babe",1167, "OnSavageKilled";
-	if (#monster == 80) summon strcharinfo(0) + "'s Familiar",1005, "OnFamiliarKilled";
-	if (#monster == 81) summon strcharinfo(0) + "'s Hornet",1004, "OnHornetKilled";
-	if (#monster == 90) summon strcharinfo(0) + "'s Desert Wolf Puppy",1107, "OnPuppyKilled";
-	if (#monster == 91) summon strcharinfo(0) + "'s Spore",1014, "OnSporeKilled";
-	if (#monster == 92) summon strcharinfo(0) + "'s Rocker",1052, "OnRockerKilled";
-	if (#monster == 100) summon strcharinfo(0) + "'s Skeleton",1076, "OnSkeletonKilled";
-	if (#monster == 101) summon strcharinfo(0) + "'s Plankton",1161, "OnPlanktonKilled";
-	if (#monster == 102) summon strcharinfo(0) + "'s Antonio",1247, "OnAntonioKilled";
-	if (#monster == 103) summon strcharinfo(0) + "'s Thief Bug Female",1053, "OnThiefFemaleKilled";
+	if (#monster == 10) summon strcharinfo(PC_NAME) + "'s Poring",1002, "OnPoringKilled";
+	if (#monster == 20) summon strcharinfo(PC_NAME) + "'s Fabre",1007, "OnFaberKilled";
+	if (#monster == 30) summon strcharinfo(PC_NAME) + "'s Lunatic",1063, "OnLunaticKilled";
+	if (#monster == 31) summon strcharinfo(PC_NAME) + "'s Drops",1113, "OnDropsKilled";
+	if (#monster == 32) summon strcharinfo(PC_NAME) + "'s Picky",1049, "OnPickyKilled";
+	if (#monster == 40) summon strcharinfo(PC_NAME) + "'s ChonChon",1011, "OnChonChonKilled";
+	if (#monster == 41) summon strcharinfo(PC_NAME) + "'s Super Picky",1050, "OnSPickyKilled";
+	if (#monster == 42) summon strcharinfo(PC_NAME) + "'s Willow",1010, "OnWillowKilled";
+	if (#monster == 50) summon strcharinfo(PC_NAME) + "'s Roda Frog",1012, "OnRodaKilled";
+	if (#monster == 51) summon strcharinfo(PC_NAME) + "'s Condor",1009, "OnCondorKilled";
+	if (#monster == 60) summon strcharinfo(PC_NAME) + "'s Thief Bug Larva",1051, "OnThiefKilled";
+	if (#monster == 70) summon strcharinfo(PC_NAME) + "'s Savage Babe",1167, "OnSavageKilled";
+	if (#monster == 80) summon strcharinfo(PC_NAME) + "'s Familiar",1005, "OnFamiliarKilled";
+	if (#monster == 81) summon strcharinfo(PC_NAME) + "'s Hornet",1004, "OnHornetKilled";
+	if (#monster == 90) summon strcharinfo(PC_NAME) + "'s Desert Wolf Puppy",1107, "OnPuppyKilled";
+	if (#monster == 91) summon strcharinfo(PC_NAME) + "'s Spore",1014, "OnSporeKilled";
+	if (#monster == 92) summon strcharinfo(PC_NAME) + "'s Rocker",1052, "OnRockerKilled";
+	if (#monster == 100) summon strcharinfo(PC_NAME) + "'s Skeleton",1076, "OnSkeletonKilled";
+	if (#monster == 101) summon strcharinfo(PC_NAME) + "'s Plankton",1161, "OnPlanktonKilled";
+	if (#monster == 102) summon strcharinfo(PC_NAME) + "'s Antonio",1247, "OnAntonioKilled";
+	if (#monster == 103) summon strcharinfo(PC_NAME) + "'s Thief Bug Female",1053, "OnThiefFemaleKilled";
 	close;
 }
 
@@ -146,46 +146,46 @@ L_Start:
 
 	// Special Summons //
 Special1:
-	summon strcharinfo(0) + "'s Assault Team",1002, "OnPoringKilled";
-	summon strcharinfo(0) + "'s Assault Team",1002, "OnPoringKilled";
-	summon strcharinfo(0) + "'s Assault Team",1002, "OnPoringKilled";
-	summon strcharinfo(0) + "'s Assault Team",1002, "OnPoringKilled";
-	summon strcharinfo(0) + "'s Assault Team",1002, "OnPoringKilled";
-	summon strcharinfo(0) + "'s Assault Team",1002, "OnPoringKilled";
-	summon strcharinfo(0) + "'s Assault Team",1002, "OnPoringKilled";
-	summon strcharinfo(0) + "'s Assault Team",1002, "OnPoringKilled";
-	summon strcharinfo(0) + "'s Assault Team",1002, "OnPoringKilled";
-	summon strcharinfo(0) + "'s Assault Team",1002, "OnPoringKilled";
-	summon strcharinfo(0) + "'s Assault Team",1002, "OnPoringKilled";
-	summon strcharinfo(0) + "'s Assault Team",1002, "OnPoringKilled";
-	summon strcharinfo(0) + "'s Assault Team",1002, "OnPoringKilled";
-	summon strcharinfo(0) + "'s Assault Team",1002, "OnPoringKilled";
-	summon strcharinfo(0) + "'s Assault Team",1002, "OnPoringKilled";
-	summon strcharinfo(0) + "'s Assault Team",1002, "OnPoringKilled";
-	summon strcharinfo(0) + "'s Assault Team",1002, "OnPoringKilled";
-	summon strcharinfo(0) + "'s Assault Team",1002, "OnPoringKilled";
-	summon strcharinfo(0) + "'s Assault Team",1002, "OnPoringKilled";
-	summon strcharinfo(0) + "'s Assault Team",1002, "OnPoringKilled";
-	summon strcharinfo(0) + "'s Assault Team",1002, "OnPoringKilled";
-	summon strcharinfo(0) + "'s Assault Team",1002, "OnPoringKilled";
-	summon strcharinfo(0) + "'s Assault Team",1002, "OnPoringKilled";
-	summon strcharinfo(0) + "'s Assault Team",1002, "OnPoringKilled";
+	summon strcharinfo(PC_NAME) + "'s Assault Team",1002, "OnPoringKilled";
+	summon strcharinfo(PC_NAME) + "'s Assault Team",1002, "OnPoringKilled";
+	summon strcharinfo(PC_NAME) + "'s Assault Team",1002, "OnPoringKilled";
+	summon strcharinfo(PC_NAME) + "'s Assault Team",1002, "OnPoringKilled";
+	summon strcharinfo(PC_NAME) + "'s Assault Team",1002, "OnPoringKilled";
+	summon strcharinfo(PC_NAME) + "'s Assault Team",1002, "OnPoringKilled";
+	summon strcharinfo(PC_NAME) + "'s Assault Team",1002, "OnPoringKilled";
+	summon strcharinfo(PC_NAME) + "'s Assault Team",1002, "OnPoringKilled";
+	summon strcharinfo(PC_NAME) + "'s Assault Team",1002, "OnPoringKilled";
+	summon strcharinfo(PC_NAME) + "'s Assault Team",1002, "OnPoringKilled";
+	summon strcharinfo(PC_NAME) + "'s Assault Team",1002, "OnPoringKilled";
+	summon strcharinfo(PC_NAME) + "'s Assault Team",1002, "OnPoringKilled";
+	summon strcharinfo(PC_NAME) + "'s Assault Team",1002, "OnPoringKilled";
+	summon strcharinfo(PC_NAME) + "'s Assault Team",1002, "OnPoringKilled";
+	summon strcharinfo(PC_NAME) + "'s Assault Team",1002, "OnPoringKilled";
+	summon strcharinfo(PC_NAME) + "'s Assault Team",1002, "OnPoringKilled";
+	summon strcharinfo(PC_NAME) + "'s Assault Team",1002, "OnPoringKilled";
+	summon strcharinfo(PC_NAME) + "'s Assault Team",1002, "OnPoringKilled";
+	summon strcharinfo(PC_NAME) + "'s Assault Team",1002, "OnPoringKilled";
+	summon strcharinfo(PC_NAME) + "'s Assault Team",1002, "OnPoringKilled";
+	summon strcharinfo(PC_NAME) + "'s Assault Team",1002, "OnPoringKilled";
+	summon strcharinfo(PC_NAME) + "'s Assault Team",1002, "OnPoringKilled";
+	summon strcharinfo(PC_NAME) + "'s Assault Team",1002, "OnPoringKilled";
+	summon strcharinfo(PC_NAME) + "'s Assault Team",1002, "OnPoringKilled";
 	close;
 
 Special2:
-	summon strcharinfo(0) + "'s Mastering",1090, "OnSpecialKilled";
+	summon strcharinfo(PC_NAME) + "'s Mastering",1090, "OnSpecialKilled";
 	close;
 
 Special3:
-	summon strcharinfo(0) + "'s Eclipse",1093, "OnSpecialKilled";
+	summon strcharinfo(PC_NAME) + "'s Eclipse",1093, "OnSpecialKilled";
 	close;
 
 Special4:
-	summon strcharinfo(0) + "'s Dragon Fly",1091, "OnSpecialKilled";
+	summon strcharinfo(PC_NAME) + "'s Dragon Fly",1091, "OnSpecialKilled";
 	close;
 
 Special5:
-	summon strcharinfo(0) + "'s Toad",1089, "OnSpecialKilled";
+	summon strcharinfo(PC_NAME) + "'s Toad",1089, "OnSpecialKilled";
 	close;
 
 L_Exit:
@@ -222,7 +222,7 @@ L_High:
 	close2;
 	savepoint "gon_test",56,99;
 	set @battle,1;
-	atcommand strcharinfo(0) + "@option 64 0 64";
+	atcommand strcharinfo(PC_NAME) + "@option 64 0 64";
 	warp "gon_test",72,87;
 	end;
 
@@ -230,7 +230,7 @@ L_4to6:
 	close2;
 	savepoint "gon_test",56,99;
 	set @battle,1;
-	atcommand strcharinfo(0) + "@option 64 0 64";
+	atcommand strcharinfo(PC_NAME) + "@option 64 0 64";
 	warp "gon_test",57,86;
 	end;
 
@@ -238,7 +238,7 @@ L_1to3:
 	close2;
 	savepoint "gon_test",56,99;
 	set @battle,1;
-	atcommand strcharinfo(0) + "@option 64 0 64";
+	atcommand strcharinfo(PC_NAME) + "@option 64 0 64";
 	warp "gon_test",43,87;
 	end;
 
@@ -246,7 +246,7 @@ L_Exit:
 	close2;
 	savepoint "prontera",149,186;
 	set @battle,0;
-	atcommand strcharinfo(0) + "@option 0 0 0";
+	atcommand strcharinfo(PC_NAME) + "@option 0 0 0";
 	warp "prontera",149,186;
 	end;
 
@@ -254,7 +254,7 @@ L_Spec:
 	close2;
 	savepoint "gon_test",56,99;
 	set @battle,0;
-	atcommand strcharinfo(0) + "@option 0 0 0";
+	atcommand strcharinfo(PC_NAME) + "@option 0 0 0";
 	warp "gon_test",57,99;
 	end;
 
@@ -296,7 +296,7 @@ gon_test,52,103,6	script	Monster Trainer	4_M_BARBER,{
 	close;
 
 L_Mon:
-	mes "Welcome back, " + strcharinfo(0) + ".";
+	mes "Welcome back, " + strcharinfo(PC_NAME) + ".";
 	mes "Your monster has " + #monpoints + " exp points.";
 	next;
 	if (@fighting == 1) goto L_Heal;
@@ -712,10 +712,10 @@ gon_test,56,91,6	script	OnSpecialKilled	FAKE_NPC,{
 }
 
 function	script	duelkill	{
-	if (strcharinfo(0) == $@duelist1$ || strcharinfo(0) == $@duelist2$) goto L_Heal;
+	if (strcharinfo(PC_NAME) == $@duelist1$ || strcharinfo(PC_NAME) == $@duelist2$) goto L_Heal;
 	end;
 L_Heal:
-	announce strcharinfo(0) + " won the Duel",1;
+	announce strcharinfo(PC_NAME) + " won the Duel",1;
 	set @fighting,0;
 	set #heal,0;
 	set @healing,0;
@@ -723,7 +723,7 @@ L_Heal:
 }
 
 function	script	illegalkill	{
-	announce "Illegal Kill by " + strcharinfo(0) + " Detected",1;
+	announce "Illegal Kill by " + strcharinfo(PC_NAME) + " Detected",1;
 	percentheal -100,-100;
 	end;
 }
@@ -790,10 +790,10 @@ gon_test,58,103,5	script	Duel Master#01	4_F_03,{
 	if (#monster > 79 && #monster < 90) set $@monster1,8;
 	if (#monster > 89 && #monster < 100) set $@monster1,9;
 	if (#monster > 99 && #monster < 110) set $@monster1,10;
-	set $@duelist1$,strcharinfo(0);
+	set $@duelist1$,strcharinfo(PC_NAME);
 	set @battle,1;
-	announce strcharinfo(0) + " [Monster Level: " + $@monster1 + "] is waiting for a duel",1;
-	atcommand strcharinfo(0) + "@option 64 0 64";
+	announce strcharinfo(PC_NAME) + " [Monster Level: " + $@monster1 + "] is waiting for a duel",1;
+	atcommand strcharinfo(PC_NAME) + "@option 64 0 64";
 	warp "gon_test",49,5;
 	close;
 
@@ -818,10 +818,10 @@ L_Duel2:
 	if (#monster > 79 && #monster < 90) set $@monster2,8;
 	if (#monster > 89 && #monster < 100) set $@monster2,9;
 	if (#monster > 99 && #monster < 110) set $@monster2,10;
-	set $@duelist2$,strcharinfo(0);
+	set $@duelist2$,strcharinfo(PC_NAME);
 	set @battle,1;
-	announce strcharinfo(0) + " [Monster Level: " + $@monster2 + "] has joined the duel",1;
-	atcommand strcharinfo(0) + "@option 64 0 64";
+	announce strcharinfo(PC_NAME) + " [Monster Level: " + $@monster2 + "] has joined the duel",1;
+	atcommand strcharinfo(PC_NAME) + "@option 64 0 64";
 	warp "gon_test",49,5;
 	close;
 
@@ -834,7 +834,7 @@ L_Dueling:
 
 L_Spec:
 	set @battle,0;
-	atcommand strcharinfo(0) + "@option 64 0 64";
+	atcommand strcharinfo(PC_NAME) + "@option 64 0 64";
 	warp "gon_test",49,5;
 	close;
 
@@ -863,11 +863,11 @@ gon_test,42,8,5	script	Duel Master#02	4_F_03,{
 	close;
 
 L_Leave:
-	if ($@duelist1$ == strcharinfo(0)) goto L_Leave1;
-	if ($@duelist2$ == strcharinfo(0)) goto L_Leave2;
+	if ($@duelist1$ == strcharinfo(PC_NAME)) goto L_Leave1;
+	if ($@duelist2$ == strcharinfo(PC_NAME)) goto L_Leave2;
 
 L_Leave3:
-	atcommand strcharinfo(0) + "@option 0 0 0";
+	atcommand strcharinfo(PC_NAME) + "@option 0 0 0";
 	set @battle,0;
 	warp "gon_test",57,99;
 	close;
@@ -876,14 +876,14 @@ L_Leave1:
 	set $@duelist1$,$@duelist2$;
 	set $@monster1,$@monster2;
 	set $@duel,$@duel-1;
-	announce strcharinfo(0) + " stopped dueling",1;
+	announce strcharinfo(PC_NAME) + " stopped dueling",1;
 	goto L_Leave3;
 
 L_Leave2:
 	set $@duelist2$,"";
 	set $@monster2,0;
 	set $@duel,$@duel-1;
-	announce strcharinfo(0) + " stopped dueling",1;
+	announce strcharinfo(PC_NAME) + " stopped dueling",1;
 	goto L_Leave3;
 }
 

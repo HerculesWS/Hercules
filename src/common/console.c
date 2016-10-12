@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -57,6 +57,7 @@ struct console_interface console_s;
 struct console_interface *console;
 #ifdef CONSOLE_INPUT
 struct console_input_interface console_input_s;
+struct spin_lock console_ptlock_s;
 
 struct {
 	char queue[CONSOLE_PARSE_SIZE][MAX_CONSOLE_INPUT];
@@ -67,7 +68,8 @@ struct {
 /*======================================
  * CORE : Display title
  *--------------------------------------*/
-void display_title(void) {
+void display_title(void)
+{
 	const char *vcstype = sysinfo->vcstype();
 
 	ShowMessage("\n");
@@ -129,21 +131,24 @@ int console_parse_key_pressed(void)
 /**
  * Stops server
  **/
-CPCMD_C(exit,server) {
+CPCMD_C(exit, server)
+{
 	core->runflag = 0;
 }
 
 /**
  * Displays ERS-related statistics (Entry Reusage System)
  **/
-CPCMD_C(ers_report,server) {
+CPCMD_C(ers_report, server)
+{
 	ers_report();
 }
 
 /**
  * Displays memory usage
  **/
-CPCMD_C(mem_report,server) {
+CPCMD_C(mem_report, server)
+{
 #ifdef USE_MEMMGR
 	memmgr_report(line?atoi(line):0);
 #endif
@@ -170,7 +175,8 @@ CPCMD(help)
  * [Ind/Hercules]
  * Displays current malloc usage
  */
-CPCMD_C(malloc_usage,server) {
+CPCMD_C(malloc_usage, server)
+{
 	unsigned int val = (unsigned int)iMalloc->usage();
 	ShowInfo("malloc_usage: %.2f MB\n",(double)(val)/1024);
 }
@@ -179,7 +185,8 @@ CPCMD_C(malloc_usage,server) {
  * Skips an sql update
  * Usage: sql update skip UPDATE-FILE.sql
  **/
-CPCMD_C(skip,update) {
+CPCMD_C(skip, update)
+{
 	if( !line ) {
 		ShowDebug("usage example: sql update skip 2013-02-14--16-15.sql\n");
 		return;
@@ -310,6 +317,7 @@ void console_parse_create(char *name, CParseFunc func)
 	char sublist[CP_CMD_LENGTH * 5];
 	struct CParseEntry *cmd;
 
+	nullpo_retv(name);
 	safestrncpy(sublist, name, CP_CMD_LENGTH * 5);
 	tok = strtok(sublist,":");
 
@@ -363,6 +371,7 @@ void console_parse_list_subs(struct CParseEntry *cmd, unsigned char depth)
 {
 	int i;
 	char msg[CP_CMD_LENGTH * 2];
+	nullpo_retv(cmd);
 	Assert_retv(cmd->type == CPET_CATEGORY);
 	for (i = 0; i < VECTOR_LENGTH(cmd->u.children); i++) {
 		struct CParseEntry *child = VECTOR_INDEX(cmd->u.children, i);
@@ -390,6 +399,7 @@ void console_parse_sub(char *line)
 	char sublist[CP_CMD_LENGTH * 5];
 	int i;
 
+	nullpo_retv(line);
 	memcpy(bline, line, 200);
 	tok = strtok(line, " ");
 
@@ -443,9 +453,12 @@ void console_parse_sub(char *line)
 	}
 	ShowError("Is only a category, type '"CL_WHITE"%s help"CL_RESET"' to list its subcommands\n",sublist);
 }
-void console_parse(char* line) {
+
+void console_parse(char *line)
+{
 	int c, i = 0, len = MAX_CONSOLE_INPUT - 1;/* we leave room for the \0 :P */
 
+	nullpo_retv(line);
 	while( (c = fgetc(stdin)) != EOF ) {
 		if( --len == 0 )
 			break;
@@ -457,65 +470,73 @@ void console_parse(char* line) {
 
 	line[i++] = '\0';
 }
-void *cThread_main(void *x) {
+
+void *cThread_main(void *x)
+{
 	while( console->input->ptstate ) {/* loopx */
 		if( console->input->key_pressed() ) {
 			char input[MAX_CONSOLE_INPUT];
 
 			console->input->parse(input);
 			if( input[0] != '\0' ) {/* did we get something? */
-				EnterSpinLock(&console->input->ptlock);
+				EnterSpinLock(console->input->ptlock);
 
 				if( cinput.count == CONSOLE_PARSE_SIZE ) {
-					LeaveSpinLock(&console->input->ptlock);
+					LeaveSpinLock(console->input->ptlock);
 					continue;/* drop */
 				}
 
 				safestrncpy(cinput.queue[cinput.count++],input,MAX_CONSOLE_INPUT);
-				LeaveSpinLock(&console->input->ptlock);
+				LeaveSpinLock(console->input->ptlock);
 			}
 		}
-		ramutex_lock( console->input->ptmutex );
-		racond_wait( console->input->ptcond, console->input->ptmutex, -1 );
-		ramutex_unlock( console->input->ptmutex );
+		mutex->lock(console->input->ptmutex);
+		mutex->cond_wait(console->input->ptcond, console->input->ptmutex, -1);
+		mutex->unlock(console->input->ptmutex);
 	}
 
 	return NULL;
 }
-int console_parse_timer(int tid, int64 tick, int id, intptr_t data) {
+
+int console_parse_timer(int tid, int64 tick, int id, intptr_t data)
+{
 	int i;
-	EnterSpinLock(&console->input->ptlock);
+	EnterSpinLock(console->input->ptlock);
 	for(i = 0; i < cinput.count; i++) {
 		console->input->parse_sub(cinput.queue[i]);
 	}
 	cinput.count = 0;
-	LeaveSpinLock(&console->input->ptlock);
-	racond_signal(console->input->ptcond);
+	LeaveSpinLock(console->input->ptlock);
+	mutex->cond_signal(console->input->ptcond);
 	return 0;
 }
-void console_parse_final(void) {
+
+void console_parse_final(void)
+{
 	if( console->input->ptstate ) {
 		InterlockedDecrement(&console->input->ptstate);
-		racond_signal(console->input->ptcond);
+		mutex->cond_signal(console->input->ptcond);
 
 		/* wait for thread to close */
-		rathread_wait(console->input->pthread, NULL);
+		thread->wait(console->input->pthread, NULL);
 
-		racond_destroy(console->input->ptcond);
-		ramutex_destroy(console->input->ptmutex);
+		mutex->cond_destroy(console->input->ptcond);
+		mutex->destroy(console->input->ptmutex);
 	}
 }
-void console_parse_init(void) {
+
+void console_parse_init(void)
+{
 	cinput.count = 0;
 
 	console->input->ptstate = 1;
 
-	InitializeSpinLock(&console->input->ptlock);
+	InitializeSpinLock(console->input->ptlock);
 
-	console->input->ptmutex = ramutex_create();
-	console->input->ptcond = racond_create();
+	console->input->ptmutex = mutex->create();
+	console->input->ptcond = mutex->cond_create();
 
-	if( (console->input->pthread = rathread_create(console->input->pthread_main, NULL)) == NULL ){
+	if( (console->input->pthread = thread->create(console->input->pthread_main, NULL)) == NULL ){
 		ShowFatalError("console_parse_init: failed to spawn console_parse thread.\n");
 		exit(EXIT_FAILURE);
 	}
@@ -523,6 +544,7 @@ void console_parse_init(void) {
 	timer->add_func_list(console->input->parse_timer, "console_parse_timer");
 	timer->add_interval(timer->gettick() + 1000, console->input->parse_timer, 0, 0, 500);/* start listening in 1s; re-try every 0.5s */
 }
+
 void console_setSQL(struct Sql *SQL_handle)
 {
 	console->input->SQL = SQL_handle;
@@ -563,6 +585,7 @@ void console_defaults(void)
 	console->display_gplnotice = display_gplnotice;
 #ifdef CONSOLE_INPUT
 	console->input = &console_input_s;
+	console->input->ptlock = &console_ptlock_s;
 	console->input->parse_init = console_parse_init;
 	console->input->parse_final = console_parse_final;
 	console->input->parse_timer = console_parse_timer;

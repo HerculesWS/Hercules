@@ -487,7 +487,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 				next;
 				switch(select("So... You're a chef.", "Yes, I tried my best.")) {
 				case 1:
-					mes "["+ strcharinfo(0) +"]";
+					mes "["+ strcharinfo(PC_NAME) +"]";
 					mes "So...";
 					mes "You're a chef.";
 					next;
@@ -1055,7 +1055,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 			mes "Oh! Hello again,";
 			mes "you cutie adventurer.";
 			mes "So tell me, what brings";
-			mes "you here, "+strcharinfo(0)+"?";
+			mes "you here, "+strcharinfo(PC_NAME)+"?";
 			next;
 			switch(select("Ask about Cooking.", "Ask about Einbroch.", "Cancel.")) {
 			case 1:
@@ -2121,7 +2121,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 				mes "[Uwe]";
 				mes "Ah...!";
 				mes "I have it!";
-				mes "" + strcharinfo(0) + "!";
+				mes "" + strcharinfo(PC_NAME) + "!";
 				mes "Yes, now I remember you.";
 				mes "Decided to transcend, eh?";
 				next;
@@ -4492,7 +4492,7 @@ einbech,165,105,7	script	Buender Hikeman#ein	4_M_EINOLD,{
 		mes "Noooo! N-not now...";
 		mes "^333333*Cough! Cough!*^000000";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "...";
 		mes "I better";
 		mes "get away";
@@ -4524,7 +4524,7 @@ einbech,165,105,7	script	Buender Hikeman#ein	4_M_EINOLD,{
 		mes "on his face, he seems to be";
 		mes "having a nightmare.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Excuse me...";
 		next;
 		mes "[Buender Hikeman]";
@@ -4535,7 +4535,7 @@ einbech,165,105,7	script	Buender Hikeman#ein	4_M_EINOLD,{
 		mes "your beating,";
 		mes "eh, Shinokas?!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Look...!";
 		mes "I'm not Shinokas,";
 		mes "okay? How can you";
@@ -4557,7 +4557,7 @@ einbech,165,105,7	script	Buender Hikeman#ein	4_M_EINOLD,{
 		mes "Huh.";
 		next;
 		if (Sex == SEX_FEMALE) {
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "And...";
 			mes "I'm a cute girl!";
 			mes "Shinokas is male";
@@ -4567,7 +4567,7 @@ einbech,165,105,7	script	Buender Hikeman#ein	4_M_EINOLD,{
 			mes "What...?";
 			mes "IMPOSSIBLE!";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "...";
 			mes "......";
 			next;
@@ -4591,13 +4591,13 @@ einbech,165,105,7	script	Buender Hikeman#ein	4_M_EINOLD,{
 		mes "Did you come just to clear";
 		mes "up this misunderstanding?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Um...";
 		mes "Actually...";
 		next;
 		switch(select("Tell Hikeman about Shinokas's death.", "Don't notify Hikeman.")) {
 		case 1:
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Shinokas died";
 			mes "a while ago in";
 			mes "Einbroch.";
@@ -4605,7 +4605,7 @@ einbech,165,105,7	script	Buender Hikeman#ein	4_M_EINOLD,{
 			mes "[Buender Hikeman]";
 			mes "Wh-what...?";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Shinokas was killed by";
 			mes "some men. He thinks they";
 			mes "may have been the ones";
@@ -4616,7 +4616,7 @@ einbech,165,105,7	script	Buender Hikeman#ein	4_M_EINOLD,{
 			mes "I...";
 			mes "I see...";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Shinokas may have";
 			mes "gotten some money,";
 			mes "but he spent the rest";
@@ -4636,16 +4636,16 @@ einbech,165,105,7	script	Buender Hikeman#ein	4_M_EINOLD,{
 			mes "wherever you came";
 			mes "from. Leave me alone...";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "...";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "^333333Did Hikeman really want";
 			mes "revenge on Shinokas or did";
 			mes "he want to hear him out since";
 			mes "they used to be close friends?^000000";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "^333333If I mention that";
 			mes "what they found was";
 			mes "the Ymir Heart Piece,";
@@ -4653,7 +4653,7 @@ einbech,165,105,7	script	Buender Hikeman#ein	4_M_EINOLD,{
 			mes "getting hunted down, so";
 			mes "I better not say anything.^000000";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "^333333Why are those men";
 			mes "so obsessed with that";
 			mes "Ymir Heart Piece? Is it";
@@ -4677,7 +4677,7 @@ einbech,165,105,7	script	Buender Hikeman#ein	4_M_EINOLD,{
 			}
 			end;
 		case 2:
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Yeah...";
 			mes "That' right.";
 			mes "I wanted to clear up";
@@ -4753,7 +4753,7 @@ ein_in01,231,163,7	script	Sick Old Man#ein	4_M_DIEMAN,{
 		mes "come back from";
 		mes "the factory...?!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Shi...";
 		mes "Shinokas?";
 		next;
@@ -4763,14 +4763,14 @@ ein_in01,231,163,7	script	Sick Old Man#ein	4_M_DIEMAN,{
 		mes "Shinotarous. Y-you've";
 		mes "got the wrong person!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "^333333This has to be the";
 		mes "Shinokas that Hikeman";
 		mes "was talking about in Einbech.";
 		mes "Hmmm, but how can I get";
 		mes "him to admit it?^000000";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "^333333*Ahem!*^000000";
 		mes "Excuse me...";
 		next;
@@ -4829,7 +4829,7 @@ ein_in01,231,163,7	script	Sick Old Man#ein	4_M_DIEMAN,{
 				}
 			}
 		}
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Are you sure";
 		mes "that you don't";
 		mes "know anything";
@@ -4846,7 +4846,7 @@ ein_in01,231,163,7	script	Sick Old Man#ein	4_M_DIEMAN,{
 		mes ".......";
 		emotion e_swt2;
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I was right.";
 		mes "You're Shinokas!";
 		emotion e_gg,1;
@@ -4871,7 +4871,7 @@ ein_in01,231,163,7	script	Sick Old Man#ein	4_M_DIEMAN,{
 		mes "Get on with it.";
 		mes "I'm ready now...";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Tell me everything";
 		mes "you know related to";
 		mes "that incident where";
@@ -4886,7 +4886,7 @@ ein_in01,231,163,7	script	Sick Old Man#ein	4_M_DIEMAN,{
 		mes "here to kill me?";
 		emotion e_what;
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "No...!";
 		mes "I'm here to find";
 		mes "out the truth!";
@@ -4996,7 +4996,7 @@ ein_in01,231,163,7	script	Sick Old Man#ein	4_M_DIEMAN,{
 		mes "anything from the";
 		mes "Kapellthaines?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Well, Mr. Kapellthaine";
 		mes "is kind of violent, but";
 		mes "I didn't find anything";
@@ -5035,7 +5035,7 @@ ein_in01,231,163,7	script	Sick Old Man#ein	4_M_DIEMAN,{
 			mes "anything new";
 			mes "in the Factory?";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Well...";
 			mes "There's a lot of";
 			mes "suspicious business";
@@ -5121,7 +5121,7 @@ ein_in01,231,163,7	script	Sick Old Man#ein	4_M_DIEMAN,{
 		}
 	}
 	else if (Shinokas_Quest == 9) {
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Shinokas,";
 		mes "I found something!";
 		next;
@@ -5137,7 +5137,7 @@ ein_in01,231,163,7	script	Sick Old Man#ein	4_M_DIEMAN,{
 		mes "your hands have been";
 		mes "stained with his blood.^000000";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Blood...?!";
 		mes "Shinokas!";
 		mes "Who did this to you?";
@@ -5165,11 +5165,11 @@ ein_in01,231,163,7	script	Sick Old Man#ein	4_M_DIEMAN,{
 		mes "that ore? W-what";
 		mes "is it... Really?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "It was...";
 		next;
 		input .@input$;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "It was";
 		mes "^3131FF"+.@input$+"^000000!";
 		next;
@@ -5212,7 +5212,7 @@ ein_in01,231,163,7	script	Sick Old Man#ein	4_M_DIEMAN,{
 			mes "^333333*Cough cough!*^000000";
 			next;
 		}
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "No...!";
 		mes "Tell me who";
 		mes "did this to you!";
@@ -5228,7 +5228,7 @@ ein_in01,231,163,7	script	Sick Old Man#ein	4_M_DIEMAN,{
 		mes "...";
 		mes "......";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "No!";
 		mes "Shinokas!";
 		mes "Why, God?";
@@ -5293,7 +5293,7 @@ ein_in01,254,35,1	script	Scientist#ein	4_M_ALCHE_B,{
 	mes "How did you";
 	mes "get in here?";
 	next;
-	mes "["+strcharinfo(0)+"]";
+	mes "["+strcharinfo(PC_NAME)+"]";
 	mes "Oh! Ah....";
 	mes "I'm the new...";
 	mes "Guard. Nice";
@@ -5396,7 +5396,7 @@ airplane,31,77,5	script	Drunken Man#ein	4_M_YURI,{
 		mes "on my side! GO!";
 		emotion e_go;
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Huh...?";
 		mes "What did he just say?";
 		mes "It seemed important!";
@@ -5420,7 +5420,7 @@ airplane,31,77,5	script	Drunken Man#ein	4_M_YURI,{
 		}
 		else if ((countitem(Apple) > 10) && (countitem(Apple) < 100)) {
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Do you want";
 			mes "some of mine?";
 			next;
@@ -5435,7 +5435,7 @@ airplane,31,77,5	script	Drunken Man#ein	4_M_YURI,{
 		else {
 			delitem Apple,countitem(Apple);
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Do you want";
 			mes "some of mine?";
 			next;
@@ -5507,7 +5507,7 @@ airplane,31,77,5	script	Drunken Man#ein	4_M_YURI,{
 			mes "How do you know";
 			mes "about that? ^333333*Hiccup*^000000";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Y-you...!";
 			mes "You were just yelling,";
 			mes "''Ymir's Heart is on my";
@@ -5563,7 +5563,7 @@ airplane,31,77,5	script	Drunken Man#ein	4_M_YURI,{
 			mes "win me Dice games!";
 			mes "Bwahaha--^333333*Hiccup!*^000000";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "^333333(That thing I saw";
 			mes "hooked up to all those";
 			mes "wires in the Laboratory";
@@ -5607,7 +5607,7 @@ airplane,31,77,5	script	Drunken Man#ein	4_M_YURI,{
 		mes "on my side! GO!";
 		emotion e_go;
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Huh...?";
 		mes "What did he just say?";
 		mes "It seemed important!";
@@ -5925,7 +5925,7 @@ ein_in01,31,138,3	script	Calla#ein	4_F_01,{
 		mes "*Crack Crack Crrrrrrack*";
 		mes "*Rub Crrraaaaaaaaaack*^000000";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Ooooooooh...";
 		mes "I feel sooo";
 		mes "sore and yet";
@@ -5957,7 +5957,7 @@ ein_in01,31,138,3	script	Calla#ein	4_F_01,{
 		mes "[Calla]";
 		mes "Once again,";
 		mes "thank you so";
-		mes "much, "+ strcharinfo(0) +".";
+		mes "much, "+ strcharinfo(PC_NAME) +".";
 		mes "I'll always pray for";
 		mes "your safety on your";
 		mes "your adventures~";
@@ -5987,9 +5987,9 @@ ein_in01,31,138,3	script	Calla#ein	4_F_01,{
 		mes "tell me your name?";
 		next;
 		input .@input$;
-		if (.@input$ == strcharinfo(0)) {
+		if (.@input$ == strcharinfo(PC_NAME)) {
 			mes "[Calla]";
-			mes "Ah, " + strcharinfo(0) + "!";
+			mes "Ah, " + strcharinfo(PC_NAME) + "!";
 			mes "Such a lovely name~";
 			mes "I promise that I won't ever";
 			mes "forget it. Oh, and if you pass by Einbech, would you thank Klitzer for the flower for me please?";
@@ -6139,7 +6139,7 @@ ein_in01,200,101,5	script	Klitzer#ein	4_M_EINMAN2,{
 		mes "anything like that before!";
 		next;
 		mes "[Klitzer]";
-		mes "Wait, " + strcharinfo(0) + ".";
+		mes "Wait, " + strcharinfo(PC_NAME) + ".";
 		mes "What's that you've got";
 		mes "there? I've seen something";
 		mes "like that before. It's called";
@@ -6194,7 +6194,7 @@ ein_in01,200,101,5	script	Klitzer#ein	4_M_EINMAN2,{
 			}
 			next;
 			mes "[Klitzer]";
-			mes "" + strcharinfo(0) + ",";
+			mes "" + strcharinfo(PC_NAME) + ",";
 			mes "you've really opened";
 			mes "my eyes. From now on,";
 			mes "I'll do my best to earn the";
@@ -6307,9 +6307,9 @@ ein_in01,200,101,5	script	Klitzer#ein	4_M_EINMAN2,{
 		mes "What's your name?";
 		next;
 		input .@input$;
-		if (.@input$ == strcharinfo(0)) {
+		if (.@input$ == strcharinfo(PC_NAME)) {
 			mes "[Klitzer]";
-			mes "" + strcharinfo(0) + "...";
+			mes "" + strcharinfo(PC_NAME) + "...";
 			mes "That's very nice. Thank you,";
 			mes "I'm really grateful for your help. Although I can't see Calla in";
 			mes "person, I can at least send";
@@ -6402,7 +6402,7 @@ ein_in01,200,101,5	script	Klitzer#ein	4_M_EINMAN2,{
 		mes "*Press Press Press*";
 		mes "*C-c-c-c-c-c-crack!*";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Oh--";
 		mes "Hell yeah!";
 		mes "That's the stuff!";

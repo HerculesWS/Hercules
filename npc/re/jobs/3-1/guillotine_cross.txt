@@ -43,10 +43,10 @@ que_job01,75,96,3	script	Guild Member#3rdgc01	4_M_MOCASS1,{
 				mes "Finally, it's time...";
 				mes "Hey, what's your name?";
 				next;
-				switch(select(strcharinfo(0),".....")) {
+				switch(select(strcharinfo(PC_NAME),".....")) {
 				case 1:
 					mes "[Ahcart]";
-					mes strcharinfo(0)+"?";
+					mes strcharinfo(PC_NAME)+"?";
 					mes "Got it. I'll remember your name.";
 					mes "A master told me that you are a person with ability.";
 					break;
@@ -168,7 +168,7 @@ que_job01,75,96,3	script	Guild Member#3rdgc01	4_M_MOCASS1,{
 }
 
 function	script	func_3rdgc	{
-	.@n$ = "["+strcharinfo(0)+"]";
+	.@n$ = "["+strcharinfo(PC_NAME)+"]";
 	mes .@n$;
 	mes "Let me collect all the information...";
 	.@i = 0;
@@ -302,8 +302,8 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 				mes "Oh? You are a person of this world.";
 				mes "Your name is...";
 				next;
-				mes "["+strcharinfo(0)+"]";
-				mes strcharinfo(0)+".";
+				mes "["+strcharinfo(PC_NAME)+"]";
+				mes strcharinfo(PC_NAME)+".";
 				next;
 				mes "[Daora]";
 				if (job_3rd_gc == 3) {
@@ -630,7 +630,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 						mes "[Daora]";
 						mes "My glass, you don't need it?";
 						next;
-						mes "["+strcharinfo(0)+"]";
+						mes "["+strcharinfo(PC_NAME)+"]";
 						mes "Yes. I already have enough information.";
 						mes "If that is a stuff has a long story behind it,";
 						mes "we have only one way.";
@@ -903,7 +903,7 @@ job3_guil01,16,20,4	script	Mayshell#3rdgc03	4_F_KHELLISIA,{
 		mes "We saw a stranger in this village, we are quite sure that he is the person who we are looking for your task.";
 		next;
 		mes "[Mayshell]";
-		mes strcharinfo(0)+".";
+		mes strcharinfo(PC_NAME)+".";
 		mes "Time is not waiting for you.";
 		mes "Go ahead. Spill blood with the blade of a knife that stands for a stoic life.";
 		job_3rd_gc = 5;
@@ -915,7 +915,7 @@ job3_guil01,16,20,4	script	Mayshell#3rdgc03	4_F_KHELLISIA,{
 		next;
 		mes "[Mayshell]";
 		mes "It's a test to watch you.";
-		mes "Let me see, "+strcharinfo(0)+"...";
+		mes "Let me see, "+strcharinfo(PC_NAME)+"...";
 		mes "Go out and think about what you have to do first.";
 		next;
 		mes "[Mayshell]";
@@ -1511,7 +1511,7 @@ ve_in,246,303,3	script	Young Merchant#3rdgc05	4_M_RACHMAN2,{
 							mes "I'm a man of ability.";
 							next;
 							select("Where did you see her?");
-							mes "["+strcharinfo(0)+"]";
+							mes "["+strcharinfo(PC_NAME)+"]";
 							mes "A few days have passed already.";
 							mes "I want to find her as soon as possible.";
 							mes "You said you saw that child? Where did you see her?";
@@ -1798,10 +1798,10 @@ veins,187,143,5	script	Peddler#3rdgc07	4_F_HUGRANMA,{
 					mes "You're an adventurer, so I'm asking you.";
 					next;
 					select("I'll send her your message.", "Hmm...");
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "- Even though I don't have time to spare, the girl mentioned by the peddler is suspicious. -";
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "- A girl who has no clear residence and buys expensive food. I have to find out. -";
 					next;
 					mes "[Peddler]";
@@ -2160,19 +2160,19 @@ OnTouch:
 				mes "- Estillda is in shock because she thinks that she's in trouble. -";
 				next;
 				select("Calm her down.");
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Just relax for a second.";
 				mes "I totally understand what you're saying.";
 				mes "You won't get into any trouble.";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "I'm looking for a guy who committed a crime and ran away.";
 				mes "I have to catch him.";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "So who made you get those supplies?";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "If you cooperate with me, I'm going to protect you until this is all done.";
 				mes "The Assassin Guild will protect you.";
 				next;
@@ -2189,7 +2189,7 @@ OnTouch:
 				mes "Ah, these are mine.";
 				mes "I got a lot of zeny.";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Then go straight this way and pretend that nothing happened.";
 				next;
 				mes "- I demand that she walks as usual and tell her how to get to Daora's pub. -";
@@ -2290,7 +2290,7 @@ job3_guil01,79,15,1	script	Estillda#3rdgc11	4_F_SHABBY,{
 				mes "Sorry. I'm sorry.";
 				mes "I'm going to do what you want...";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Your attitude is a problem.";
 				mes "Let's take up the main subject.";
 				break;
@@ -2319,13 +2319,13 @@ job3_guil01,79,15,1	script	Estillda#3rdgc11	4_F_SHABBY,{
 			mes "In a couple of hours.";
 			mes "At a warehouse underground in the south.";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Thanks for your cooperation.";
 			mes "Your house is in Rachel?";
 			mes "Estillda is your real name?";
 			mes "Yes, I'm going to draw his rations in Rachel.";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "To go back home without an accident.";
 			job_3rd_gc = 12;
 			changequest 7106,7107;
@@ -2467,7 +2467,7 @@ OnTouch:
 	mes "When did I give you a clue?!";
 	next;
 	select("You lost your head...");
-	mes "["+strcharinfo(0)+"]";
+	mes "["+strcharinfo(PC_NAME)+"]";
 	mes "Is this the correct target?";
 	mes "Can you talk with me for a sec?";
 	next;
@@ -2475,7 +2475,7 @@ OnTouch:
 	mes "No way!!!!";
 	mes "You... I'll make you close your eyes forever!";
 	next;
-	mes "["+strcharinfo(0)+"]";
+	mes "["+strcharinfo(PC_NAME)+"]";
 	mes "What?!";
 	close2;
 	donpcevent "A man with black clothes::OnDisable";
@@ -2522,7 +2522,7 @@ job3_guil02,49,43,5	script	Dandelion#3rdgc12	4_M_DSTMANDEAD,{
 		next;
 		mes "- He puts something in his mouth and swallows. -";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "What is that?!";
 		mes "What do you have in your mouth...?";
 		mes "Why did you do that?";
@@ -3062,10 +3062,10 @@ OnTimer5000:
 	end;
 OnInit:
 OnDisable:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 
@@ -3386,17 +3386,17 @@ OnMyMobDead:
 job3_guil03,2,2,0	script	#3rdgc_sunchal_kill01	CLEAR_NPC,{
 	end;
 OnEnable:
-	.@i = atoi(charat(strnpcinfo(0),20));
+	.@i = atoi(charat(strnpcinfo(NPC_NAME),20));
 	setarray .@x[1],74,124,103;
 	setarray .@y[1],63, 78, 24;
-	monster "job3_guil03",.@x[.@i],.@y[.@i],"Guard",1985,1,strnpcinfo(0)+"::OnMyMobDead";
+	monster "job3_guil03",.@x[.@i],.@y[.@i],"Guard",1985,1,strnpcinfo(NPC_NAME)+"::OnMyMobDead";
 	end;
 OnStop:
 	mapannounce "job3_guil03","Guard : Am I imagining things? I just heard something...",bc_map,"0xA8A8A8"; //FW_NORMAL 12 0 0
 	stopnpctimer;
 	end;
 OnReset:
-	killmonster "job3_guil03",strnpcinfo(0)+"::OnMyMobDead";
+	killmonster "job3_guil03",strnpcinfo(NPC_NAME)+"::OnMyMobDead";
 	end;
 OnMyMobDead:
 	initnpctimer;
@@ -3419,32 +3419,32 @@ job3_guil03,2,4,0	duplicate(#3rdgc_sunchal_kill01)	#3rdgc_sunchal_kill03	CLEAR_N
 job3_guil03,64,68,3	script	#3rdgc_gojung_kill01	4_M_DSTMAN,7,7,{
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	end;
 OnDisable:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnStop:
 	mapannounce "job3_guil03","Guard : Am I imagining things? I just heard something.",bc_map,"0xA8A8A8"; //FW_NORMAL 12 0 0
 	stopnpctimer;
 	end;
 OnReset:
-	killmonster "job3_guil03",strnpcinfo(0)+"::OnMyMobDead";
+	killmonster "job3_guil03",strnpcinfo(NPC_NAME)+"::OnMyMobDead";
 	end;
 OnTouch:
-	.@i = atoi(charat(strnpcinfo(0),19));
+	.@i = atoi(charat(strnpcinfo(NPC_NAME),19));
 	setarray .@x[1],64,86,83;
 	setarray .@y[1],68,63,36;
 	mapannounce "job3_guil03","Guard : Who are you?!",bc_map,"0x7b68ee"; //FW_NORMAL 12 0 0
-	disablenpc strnpcinfo(0);
-	monster "job3_guil03",.@x[.@i],.@y[.@i],"Guard",1985,1,strnpcinfo(0)+"::OnMyMobDead";
+	disablenpc strnpcinfo(NPC_NAME);
+	monster "job3_guil03",.@x[.@i],.@y[.@i],"Guard",1985,1,strnpcinfo(NPC_NAME)+"::OnMyMobDead";
 	initnpctimer;
 	end;
 OnMyMobDead:
 	stopnpctimer;
 	end;
 OnTimer5000:
-	if (strnpcinfo(0) == "#3rdgc_gojung_kill03") end;
+	if (strnpcinfo(NPC_NAME) == "#3rdgc_gojung_kill03") end;
 OnTimer10000:
 	mapannounce "job3_guil03","Guard : I need support! Take caution!",bc_map,"0x7b68ee"; //FW_NORMAL 12 0 0
 	donpcevent "#3rdgc_guard::OnEnable";
@@ -3458,7 +3458,7 @@ job3_guil03,88,71,0	script	#3rdgc_safezone01	HIDDEN_WARP_NPC,1,1,{
 	end;
 OnTouch:
 	mes "It's a good bush to hide yourself.";
-	donpcevent strnpcinfo(0)+"::OnTimer";
+	donpcevent strnpcinfo(NPC_NAME)+"::OnTimer";
 	close;
 OnTimer:
 	//FIXME: This is a workaround for...
@@ -3491,7 +3491,7 @@ job3_guil03,111,51,7	script	Priest from Rachel	4_M_MIDDLE1,{
 		next;
 		mes "[Priest from Rachel]";
 		mes "Because of you, you ruined everything!";
-		setnpcdisplay(strnpcinfo(0), HIDEN_PRIEST);
+		setnpcdisplay(strnpcinfo(NPC_NAME), HIDEN_PRIEST);
 		next;
 		mes "[Priest from Rachel]";
 		mes "You want to destroy us forever!";

@@ -114,7 +114,7 @@ ecl_hub01,130,15,0	script	It is closed shut.	CLEAR_NPC,{
 						close;
 					}
 					close2;
-					mapannounce "ecl_hub01",getpartyname(.@party_id) + " Party leader " + strcharinfo(0) + " is entering " + .@md_name$,bc_map,"0x00ff99";
+					mapannounce "ecl_hub01",getpartyname(.@party_id) + " Party leader " + strcharinfo(PC_NAME) + " is entering " + .@md_name$,bc_map,"0x00ff99";
 					warp "1@ecl",60,50;
 					end;
 				}
@@ -145,7 +145,7 @@ ecl_hub01,130,15,0	script	It is closed shut.	CLEAR_NPC,{
 	mes "Farewell, then!";
 	specialeffect EF_BEGINSPELL3;
 	next;
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "No...way!!!";
 	specialeffect2 EF_LORD;
 	percentheal -99,0;
@@ -156,11 +156,11 @@ ecl_hub01,130,15,0	script	It is closed shut.	CLEAR_NPC,{
 	end;
 
 OnInstanceInit:
-	hideonnpc instance_npcname(strnpcinfo(0));
+	hideonnpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 
 OnEnable:
-	hideoffnpc instance_npcname(strnpcinfo(0));
+	hideoffnpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 }
 
@@ -175,7 +175,7 @@ OnEnable:
 1@ecl,42,80,5	script	Suspicious Creature#5	MOROCC_2_142,{
 	end;
 OnInstanceInit:
-	hideonnpc instance_npcname(strnpcinfo(0));
+	hideonnpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 }
 
@@ -188,7 +188,7 @@ OnInstanceInit:
 
 OnInstanceInit:
 	.mob_summoned = 0;
-	disablenpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 
 OnEnable:
@@ -228,7 +228,7 @@ OnTouch:
     next;
     mes "We couldn't communicate with them either, and one of them seemed furious after looking around and finding out that its fellows are defeated.";
     next;
-    mes "[" + strcharinfo(0) + "]";
+    mes "[" + strcharinfo(PC_NAME) + "]";
     mes "They look as if they are incarnation of Morroc.";
     mes "Is the King of Domons after the Orb?";
     mes "Or is it just a coincidence?";
@@ -368,7 +368,7 @@ OnInstanceInit:
 	next;
 	cutin "minuel01",4;
 	mes "[Minuel]";
-	mes "" + strcharinfo(0) + "Sir,";
+	mes "" + strcharinfo(PC_NAME) + "Sir,";
 	mes "Although you're detained on suspicion of being responsible for the recent incident in the lighting room,";
 	mes "there are some witnesses to prove your innocence.";
 	next;
@@ -416,7 +416,7 @@ OnInstanceInit:
 	cutin "",255;
 	mes "[Loki]";
 	mes "It's because of this.";
-	mes "" + strcharinfo(0) + "It was inside the body of -";
+	mes "" + strcharinfo(PC_NAME) + "It was inside the body of -";
 	mes "This is how powerful Shenime is.";
 	next;
 	mes "On Loki's palm, there rested a small, thin, and dried piece of thorn.";
@@ -433,7 +433,7 @@ OnInstanceInit:
 	mes "His power enbales him to control another person directly or mentally influence that person indirectly through a part of his body.";
 	next;
 	select("Now that I think about it...");
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "Right before coming here, Shenime reached his hand out to me and I felt a spark when I held his hand.";
 	mes "I thought it was just my imagination and ignored it...maybe that's when he...";
 	next;
@@ -456,7 +456,7 @@ OnInstanceInit:
 	next;
 	mes "[Nydhog]";
 	mes "I swear by the name of the guardian of Yggdrasil, too.";
-	mes "" + strcharinfo(0) + "- will by no means do such a thing.";
+	mes "" + strcharinfo(PC_NAME) + "- will by no means do such a thing.";
 	next;
 	cutin "hisie02",0;
 	mes "[Hisie]";
@@ -479,7 +479,7 @@ OnInstanceInit:
 	cutin "",255;
 	mes "[Loki]";
 	mes "Someone has to take the responsibility here then.";
-	mes "In all probablility," + strcharinfo(0) + "it will be you.";
+	mes "In all probablility," + strcharinfo(PC_NAME) + "it will be you.";
 	next;
 	cutin "hisie02",0;
 	mes "[Hisie]";
@@ -504,7 +504,7 @@ OnInstanceInit:
 	mes "[Hisie]";
 	mes "Thank you for your help.";
 	mes "We will take off now.";
-	mes "Let's go." + strcharinfo(0) + ".";
+	mes "Let's go." + strcharinfo(PC_NAME) + ".";
 	ep14_2_mylord = 30;
 	changequest 7450,7451;
 	erasequest 7450;

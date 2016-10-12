@@ -138,7 +138,7 @@ prt_in,88,101,4	script	Chivalry Captain#knt	1_M_KNIGHTMASTER,{
 				setquest 9000;
 				mes "Let me see...";
 				mes "Your name is";
-				mes strcharinfo(0) + "...";
+				mes strcharinfo(PC_NAME) + "...";
 				mes "Is that right?";
 				next;
 				mes "[Captain Herman]";
@@ -180,7 +180,7 @@ prt_in,88,101,4	script	Chivalry Captain#knt	1_M_KNIGHTMASTER,{
 	}
 	else if (KNIGHT_Q == 1) {
 		mes "Mmm?";
-		mes strcharinfo(0) + ",";
+		mes strcharinfo(PC_NAME) + ",";
 		mes "what can I do for you?";
 		mes "Ah, you don't know";
 		mes "who to visit?";
@@ -450,7 +450,7 @@ prt_in,88,101,4	script	Chivalry Captain#knt	1_M_KNIGHTMASTER,{
 	}
 L_Mission:
 	mes "Mmm?";
-	mes "Swordman " + strcharinfo(0) + ".";
+	mes "Swordman " + strcharinfo(PC_NAME) + ".";
 	mes "How are the tests?";
 	if (getarg(0)) {
 		mes "Ah~ You do not know";
@@ -529,7 +529,7 @@ prt_in,75,107,4	script	Sir Andrew#knt	1_M_YOUNGKNIGHT,{
 			mes "You wish";
 			mes "to become a Knight.";
 			mes "Your name is";
-			mes strcharinfo(0) + ",";
+			mes strcharinfo(PC_NAME) + ",";
 			mes "correct?";
 			next;
 			mes "[Sir Andrew]";
@@ -755,7 +755,7 @@ prt_in,71,91,0	script	Sir Siracuse#knt	1_M_YOUNGKNIGHT,{
 			mes "[Sir Siracuse]";
 			mes "Let's see...";
 			mes "Your name was";
-			mes strcharinfo(0) + ".";
+			mes strcharinfo(PC_NAME) + ".";
 			next;
 			mes "[Sir Siracuse]";
 			mes "But, before you come to me, you must visit the others. The way";

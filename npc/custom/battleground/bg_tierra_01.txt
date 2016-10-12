@@ -326,12 +326,12 @@ bat_a01,45,19,3	script	Croix Vintenar#tv1	4_M_CRU_HEAD,{
 			mes "[Swandery]";
 			mes "Blessed Croax!!";
 			mes "Let's enjoy our glorious victory!";
-			mes "" + strcharinfo(0) + ", its a sign reflecting victory";
+			mes "" + strcharinfo(PC_NAME) + ", its a sign reflecting victory";
 			close2;
 		} else {
 			set .@reward, 1;
 			mes "[Swandery]";
-			mes "Oh, " + strcharinfo(0) + ". Don't be sad.";
+			mes "Oh, " + strcharinfo(PC_NAME) + ". Don't be sad.";
 			mes "Even though we didn't win, we did our best.";
 			mes "This is a Royal gift from Croix, and please don't forget this battle. We can win the next.";
 			close2;
@@ -355,7 +355,7 @@ bat_a01,53,377,3	script	Guillaume Vintenar#tv1	4_M_KY_HEAD,{
 			mes "[Swandery]";
 			mes "Blessed Guillaume!!";
 			mes "Let's enjoy our glorious victory!";
-			mes "" + strcharinfo(0) + ", its a sign reflecting victory";
+			mes "" + strcharinfo(PC_NAME) + ", its a sign reflecting victory";
 			close2;
 		} else {
 			set .@reward, 1;

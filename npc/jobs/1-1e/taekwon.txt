@@ -424,7 +424,7 @@
 			mes "[Phoenix]";
 			mes "Very well. I wish you luck.";
 			mes "I hope to see you again";
-			mes "sometime, "+strcharinfo(0)+".";
+			mes "sometime, "+strcharinfo(PC_NAME)+".";
 			close;
 		}
 		mes "[Phoenix]";

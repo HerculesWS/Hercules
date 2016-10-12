@@ -80,7 +80,7 @@ prontera,164,69,3	script	Cool Devi#06_hw	4_DEVIRUCHI,{
 		mes "I just can guess what he will say next. So what do you say?";
 		next;
 		if (select("What will he say?", "I also know about it.") == 1) {
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "What will he say?";
 			next;
 			mes "[Cool Devi]";
@@ -96,7 +96,7 @@ prontera,164,69,3	script	Cool Devi#06_hw	4_DEVIRUCHI,{
 			mes "Why don't you give him back the 'Pumpkin Mojo'.";
 			mes "Don't worry he will compensate you.";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Compensate?With what?";
 			next;
 			mes "[Cool Devi]";
@@ -235,7 +235,7 @@ prontera,164,69,3	script	Cool Devi#06_hw	4_DEVIRUCHI,{
 		mes "Why don't you give him back the 'Pumpkin Mojo'.";
 		mes "Don't worry he will compensate you.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Compensate? With what?";
 		next;
 		mes "[Cool Devi]";
@@ -296,7 +296,7 @@ geffen,145,132,3	script	Hoirin#06_hw	4_F_NOVICE,{
 			mes "You'll get addicted to it.";
 			mes "Don't be surprised after trying it.";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "......................";
 			mes "You seem to be such a passionate person.";
 			mes "So, what's the ingredient anyway.?";
@@ -470,7 +470,7 @@ nif_in,19,32,3	script	Deviruchi#06_hw	4_DEVIRUCHI,{
 			mes "[Deviruchi]";
 			mes "Says she..Huh?!!Me?!!";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Poor Devi~";
 			mes "You shouldn't have lied~";
 			mes "Wish you a luck.";
@@ -672,14 +672,14 @@ nif_fild01,167,113,3	script	Masta's chicken#06_hw01	4_NFCOCK,{
 			specialeffect EF_TELEPORTATION;
 			mes "The magic spell has been casted.";
 			halloween = 103;
-			disablenpc "Masta's chicken#"+strnpcinfo(1);
+			disablenpc "Masta's chicken#"+strnpcinfo(NPC_NAME_VISIBLE);
 			close2;
 			sleep 180000;
-			enablenpc "Masta's chicken#"+strnpcinfo(1);
+			enablenpc "Masta's chicken#"+strnpcinfo(NPC_NAME_VISIBLE);
 			end;
 		}
 		else {
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Hm...I must have misspelled.";
 			close;
 		}
@@ -695,13 +695,13 @@ nif_fild01,167,113,3	script	Masta's chicken#06_hw01	4_NFCOCK,{
 	if( @egg_temp == 3) {
 		mes "As soon as you got close to the chicken and touched it, it disappeared completely.";
 		mes "You got an 'egg' in the place where the chicken disappeared.";
-		disablenpc "Chicken#"+strnpcinfo(1);
+		disablenpc "Chicken#"+strnpcinfo(NPC_NAME_VISIBLE);
 		getitem Egg,1;
 		close;
 	}
 	else {
 		mes "As soon as you got close to the chicken and touched it, it disappeared completely.";
-		disablenpc "Chicken#"+strnpcinfo(1);
+		disablenpc "Chicken#"+strnpcinfo(NPC_NAME_VISIBLE);
 		close;
 	}
 }
@@ -711,13 +711,13 @@ nif_fild01,167,113,3	script	Masta's chicken#06_hw01	4_NFCOCK,{
 	if( @egg_temp == 3) {
 		mes "As soon as you got close to the chicken and touched it, it disappeared completely.";
 		mes "You got an 'egg' in the place where the chicken disappeared.";
-		disablenpc "Chicken#"+strnpcinfo(1);
+		disablenpc "Chicken#"+strnpcinfo(NPC_NAME_VISIBLE);
 		getitem Egg,1;
 		close;
 	}
 	else {
 		mes "As soon as you got close to the chicken and touched it, it disappeared completely.";
-		disablenpc "Chicken#"+strnpcinfo(1);
+		disablenpc "Chicken#"+strnpcinfo(NPC_NAME_VISIBLE);
 		close;
 	}
 

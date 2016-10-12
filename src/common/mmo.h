@@ -185,9 +185,6 @@
 #ifndef MAX_QUEST_OBJECTIVES
 #define MAX_QUEST_OBJECTIVES 3           // Max quest objectives for a quest
 #endif
-#ifndef MAX_START_ITEMS
-#define MAX_START_ITEMS 32               // Max number of items allowed to be given to a char whenever it's created. [mkbu95]
-#endif
 
 // for produce
 #define MIN_ATTRIBUTE 0
@@ -360,7 +357,7 @@ enum equip_pos {
 
 struct point {
 	unsigned short map;
-	short x,y;
+	int16 x, y;
 };
 
 enum e_skill_flag
@@ -570,7 +567,7 @@ struct mmo_charstatus {
 	int bank_vault;
 
 	short class_;
-	unsigned int status_point,skill_point;
+	int status_point, skill_point;
 	int hp,max_hp,sp,max_sp;
 	unsigned int option;
 	short manner; // Defines how many minutes a char will be muted, each negative point is equivalent to a minute.
@@ -590,7 +587,7 @@ struct mmo_charstatus {
 	short robe;
 
 	char name[NAME_LENGTH];
-	unsigned int base_level,job_level;
+	int base_level, job_level;
 	short str,agi,vit,int_,dex,luk;
 	unsigned char slot,sex;
 
@@ -1068,6 +1065,7 @@ enum e_char_server_type {
 	CST_OVER18      = 2,
 	CST_PAYING      = 3,
 	CST_F2P         = 4,
+	CST_MAX,
 };
 
 enum e_pc_reg_loading {

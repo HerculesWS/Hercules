@@ -674,14 +674,14 @@ moc_ruins,105,62,4	script	Jacob#thai	1_M_04,{
 			next;
 			input .@input$;
 			if (.@input$ != "Pandger Mayer introduced you") {
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes ""+.@input$+"";
 				next;
 				mes "[Jacob]";
 				mes "....Sorry, what did you say? I have no idea what you're talking about.";
 				close;
 			}
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Pandger Mayer introduced you.";
 			next;
 			mes "[Jacob]";
@@ -1021,7 +1021,7 @@ moc_ruins,105,62,4	script	Jacob#thai	1_M_04,{
 				mes "Respect your parents when they're";
 				mes "still alive. It's too late to be sorry after you've lost them.";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "(Hmmm...I just know that there's more that this guy can tell me...)";
 				close;
 			}
@@ -1036,7 +1036,7 @@ moc_ruins,105,62,4	script	Jacob#thai	1_M_04,{
 				mes "'^0000FFTry to be in someone else's shoes before judging that person.^000000'";
 				mes "Do you understand?";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "(There's more this guy can tell me, I just know it...)";
 				close;
 			}

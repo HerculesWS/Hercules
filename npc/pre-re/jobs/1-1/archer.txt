@@ -134,7 +134,7 @@ payon_in02,64,71,4	script	Archer Guildsman#archer	4_M_03,{
 			close;
 		}
 		mes "[Archer Guildsman]";
-		mes "Are you..." + strcharinfo(0) + "?";
+		mes "Are you..." + strcharinfo(PC_NAME) + "?";
 		next;
 		if (getskilllv("NV_BASIC") < 9) {
 			mes "[Archer Guildsman]";

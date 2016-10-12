@@ -30,6 +30,7 @@ AC_CONFIG_FILES([src/char/Makefile src/login/Makefile])
 AC_CONFIG_FILES([src/map/Makefile src/plugins/Makefile src/tool/Makefile])
 AC_CONFIG_FILES([src/test/Makefile])
 AC_CONFIG_FILES([tools/HPMHookGen/Makefile])
+AC_CONFIG_FILES([tools/doxygen/Makefile])
 
 dnl AC_USE_SYSTEM_EXTENSIONS requires autoconf 2.60 or newer. Fall back to AC_GNU_SOURCE otherwise.
 m4_ifdef([AC_USE_SYSTEM_EXTENSIONS],
@@ -43,7 +44,7 @@ case $host_os in
 CYGWIN*)
 	;;
 *)
-	if type id >/dev/null 2>&1; then
+	if type id >/dev/null 2>&1 && test -n "$CI"; then
 		euid="`id -u`"
 		if test "$euid" == "0"; then
 			echo ""
@@ -789,6 +790,32 @@ AC_DEFUN([AC_CHECK_SANITIZER_FLAG],
 	]
 )
 
+AC_DEFUN([AC_CHECK_FLAG],
+	[
+		AC_MSG_CHECKING([whether $CC supports $1])
+		OLD_CFLAGS="$CFLAGS"
+		CFLAGS="$CFLAGS $1"
+		OLD_LDFLAGS="$LDFLAGS"
+		LDFLAGS="$LDFLAGS $1"
+		AC_COMPILE_IFELSE(
+			[AC_LANG_SOURCE([int foo;])],
+			[
+				AC_MSG_RESULT([yes])
+			],
+			[
+				AC_MSG_RESULT([no])
+				CFLAGS="$OLD_CFLAGS"
+				LDFLAGS="$OLD_LDFLAGS"
+			],
+			[
+				AC_MSG_RESULT([guessing no])
+				CFLAGS="$OLD_CFLAGS"
+				LDFLAGS="$OLD_LDFLAGS"
+			]
+		)
+	]
+)
+
 #
 # sanitize Support test
 #
@@ -1198,10 +1225,12 @@ case $enable_debug in
 	"yes")
 		CFLAGS="$CFLAGS -g"
 		CPPFLAGS="$CPPFLAGS -DDEBUG"
+		AC_CHECK_FLAG(-fno-omit-frame-pointer)
 		;;
 	"gdb")
 		CFLAGS="$CFLAGS -ggdb"
 		CPPFLAGS="$CPPFLAGS -DDEBUG"
+		AC_CHECK_FLAG(-fno-omit-frame-pointer)
 		;;
 esac
 

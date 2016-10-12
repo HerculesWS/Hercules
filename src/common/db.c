@@ -93,6 +93,7 @@
 #include "common/ers.h"
 #include "common/memmgr.h"
 #include "common/mmo.h"
+#include "common/nullpo.h"
 #include "common/showmsg.h"
 #include "common/strlib.h"
 
@@ -2418,6 +2419,7 @@ enum DBOptions db_fix_options(enum DBType type, enum DBOptions options)
 
 		default:
 			ShowError("db_fix_options: Unknown database type %u with options %x\n", type, options);
+			FALLTHROUGH
 		case DB_STRING:
 		case DB_ISTRING: // String databases, no fix required
 			return options;
@@ -2794,7 +2796,8 @@ void *db_data2ptr(struct DBData *data)
  * @public
  * @see #db_final(void)
  */
-void db_init(void) {
+void db_init(void)
+{
 	db_iterator_ers = ers_new(sizeof(struct DBIterator_impl),"db.c::db_iterator_ers",ERS_OPT_CLEAN|ERS_OPT_FLEX_CHUNK);
 	db_alloc_ers = ers_new(sizeof(struct DBMap_impl),"db.c::db_alloc_ers",ERS_OPT_CLEAN|ERS_OPT_FLEX_CHUNK);
 	ers_chunk_size(db_alloc_ers, 50);
@@ -2906,7 +2909,7 @@ void db_final(void)
 }
 
 // Link DB System - jAthena
-void linkdb_insert( struct linkdb_node** head, void *key, void* data)
+void linkdb_insert(struct linkdb_node **head, void *key, void *data)
 {
 	struct linkdb_node *node;
 	if( head == NULL ) return ;
@@ -2927,7 +2930,8 @@ void linkdb_insert( struct linkdb_node** head, void *key, void* data)
 	node->data = data;
 }
 
-void linkdb_vforeach( struct linkdb_node** head, LinkDBFunc func, va_list ap) {
+void linkdb_vforeach(struct linkdb_node **head, LinkDBFunc func, va_list ap)
+{
 	struct linkdb_node *node;
 	if( head == NULL ) return;
 	node = *head;
@@ -2940,14 +2944,15 @@ void linkdb_vforeach( struct linkdb_node** head, LinkDBFunc func, va_list ap) {
 	}
 }
 
-void linkdb_foreach( struct linkdb_node** head, LinkDBFunc func, ...) {
+void linkdb_foreach(struct linkdb_node **head, LinkDBFunc func, ...)
+{
 	va_list ap;
 	va_start(ap, func);
 	linkdb_vforeach(head, func, ap);
 	va_end(ap);
 }
 
-void* linkdb_search( struct linkdb_node** head, void *key)
+void* linkdb_search(struct linkdb_node **head, void *key)
 {
 	int n = 0;
 	struct linkdb_node *node;
@@ -2972,7 +2977,7 @@ void* linkdb_search( struct linkdb_node** head, void *key)
 	return NULL;
 }
 
-void* linkdb_erase( struct linkdb_node** head, void *key)
+void* linkdb_erase(struct linkdb_node **head, void *key)
 {
 	struct linkdb_node *node;
 	if( head == NULL ) return NULL;
@@ -2994,7 +2999,7 @@ void* linkdb_erase( struct linkdb_node** head, void *key)
 	return NULL;
 }
 
-void linkdb_replace( struct linkdb_node** head, void *key, void *data )
+void linkdb_replace(struct linkdb_node **head, void *key, void *data)
 {
 	int n = 0;
 	struct linkdb_node *node;
@@ -3021,7 +3026,7 @@ void linkdb_replace( struct linkdb_node** head, void *key, void *data )
 	linkdb_insert( head, key, data );
 }
 
-void linkdb_final( struct linkdb_node** head )
+void linkdb_final(struct linkdb_node **head)
 {
 	struct linkdb_node *node, *node2;
 	if( head == NULL ) return ;
@@ -3033,7 +3038,9 @@ void linkdb_final( struct linkdb_node** head )
 	}
 	*head = NULL;
 }
-void db_defaults(void) {
+
+void db_defaults(void)
+{
 	DB = &DB_s;
 	DB->alloc = db_alloc;
 	DB->custom_release = db_custom_release;
@@ -3054,5 +3061,4 @@ void db_defaults(void) {
 	DB->ui2key = db_ui2key;
 	DB->i642key = db_i642key;
 	DB->ui642key = db_ui642key;
-
 }

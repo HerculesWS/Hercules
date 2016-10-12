@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -33,6 +33,7 @@
 
 /* Forward Declarations */
 struct Sql; // common/sql.h
+struct config_t; // common/conf.h
 struct mob_data;
 struct npc_data;
 struct channel_data;
@@ -967,7 +968,6 @@ struct map_interface {
 	char db_path[256];
 
 	char help_txt[256];
-	char help2_txt[256];
 	char charhelp_txt[256];
 
 	char wisp_server_name[NAME_LENGTH];
@@ -996,7 +996,7 @@ struct map_interface {
 	char server_db[32];
 	struct Sql *mysql_handle;
 
-	int port;
+	uint16 port;
 	int users;
 	int enable_grf; //To enable/disable reading maps from GRF files, bypassing mapcache [blackhole89]
 	bool ip_set;
@@ -1147,7 +1147,7 @@ END_ZEROED_BLOCK;
 
 	int (*cleanup_sub) (struct block_list *bl, va_list ap);
 
-	int (*delmap) (char* mapname);
+	int (*delmap) (const char *mapname);
 	void (*flags_init) (void);
 
 	bool (*iwall_set) (int16 m, int16 x, int16 y, int size, int8 dir, bool shootable, const char* wall_name);
@@ -1187,10 +1187,11 @@ END_ZEROED_BLOCK;
 	int (*waterheight) (char *mapname);
 	int (*readgat) (struct map_data *m);
 	int (*readallmaps) (void);
-	int (*config_read) (char *cfgName);
-	int (*config_read_sub) (char *cfgName);
-	void (*reloadnpc_sub) (char *cfgName);
-	int (*inter_config_read) (char *cfgName);
+	bool (*config_read) (const char *filename, bool imported);
+	bool (*read_npclist) (const char *filename, bool imported);
+	bool (*inter_config_read) (const char *filename, bool imported);
+	bool (*inter_config_read_database_names) (const char *filename, const struct config_t *config, bool imported);
+	bool (*inter_config_read_connection) (const char *filename, const struct config_t *config, bool imported);
 	int (*sql_init) (void);
 	int (*sql_close) (void);
 	bool (*zone_mf_cache) (int m, char *flag, char *params);

@@ -44,7 +44,7 @@ prt_church,179,15,1	script	Priest Praupin	4_M_MINISTER,{
 	if(BaseJob != Job_Acolyte){
 		if(tu_acolyte01 == 25){
 			mes "Oh...!";
-			mes "You're "+strcharinfo(0)+" !";
+			mes "You're "+strcharinfo(PC_NAME)+" !";
 			mes "You've grown so much!";
 			mes "I'm truly proud of you.";
 		} else {
@@ -230,7 +230,7 @@ prt_monk,230,106,3	script	Asthe#tu	1_F_PRIEST,{
 		mes "the lessons?";
 		next;
 		mes "[Asthe]";
-		mes ""+strcharinfo(0)+",";
+		mes ""+strcharinfo(PC_NAME)+",";
 		mes "have you thought about what kind of Acolyte you would like to become? It's very important that you plan for the future that you want.";
 		next;
 		if(select("One that supports others.", "One that punishes evil.")==1){
@@ -257,7 +257,7 @@ prt_monk,230,106,3	script	Asthe#tu	1_F_PRIEST,{
 		next;
 		mes "[Asthe]";
 		mes "Now,";
-		mes ""+strcharinfo(0)+"...";
+		mes ""+strcharinfo(PC_NAME)+"...";
 		mes "What do you think";
 		mes "is the most necessary";
 		mes "skill for an Acolyte?";
@@ -451,7 +451,7 @@ prt_monk,230,106,3	script	Asthe#tu	1_F_PRIEST,{
 		tu_acolyte01 = 6;
 		close;
 	case 6:
-		mes ""+strcharinfo(0)+",";
+		mes ""+strcharinfo(PC_NAME)+",";
 		mes "I just received this letter, but it seems to have been a mistake.";
 		mes "It's actually addressed";
 		mes "to Priest Gardron.";
@@ -893,7 +893,7 @@ monk_in,18,38,6	script	Priest Gardron#tu	4_M_MINISTER,{
 				emotion e_gasp;
 				next;
 				mes "[Priest Gardron]";
-				mes "May I entrust you, acolyte "+strcharinfo(0)+",";
+				mes "May I entrust you, acolyte "+strcharinfo(PC_NAME)+",";
 				mes "this urgent matter?";
 				mes "Please dispose of Hornets";
 				mes "which are causing trouble on ^FF0000the western field of Prontera^000000.";
@@ -927,7 +927,7 @@ monk_in,18,38,6	script	Priest Gardron#tu	4_M_MINISTER,{
 				emotion e_gasp;
 				next;
 				mes "[Priest Gardron]";
-				mes ""+strcharinfo(0)+",";
+				mes ""+strcharinfo(PC_NAME)+",";
 				mes "may I ask";
 				mes "you to take care";
 				mes "of this task? Exterminate the Skeletons and Zombies in the";
@@ -1005,7 +1005,7 @@ prt_monk,235,245,5	script	Dog#tu	4_DOG01,{
 			}
 		}
 	}
-	mes "["+strcharinfo(0)+"]";
+	mes "["+strcharinfo(PC_NAME)+"]";
 	mes "So cute~!";
 	close;
 }
@@ -1080,20 +1080,20 @@ prt_monk,226,257,6	script	Ill Girl#tu	4_F_04,{
 		mes "should take a better look";
 		mes "and see what's wrong.^000000";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Are you alright?";
 		mes "................";
 		next;
 		specialeffect EF_CURSEATTACK;
 		soundeffectall "_curse.wav",0;
 		emotion e_omg;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "This is....!";
 		mes "A cursed spirit";
 		mes "is tormenting this";
 		mes "poor young girl!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I'll cure you...";
 		mes "For sure.";
 		tu_acolyte01 = 11;
@@ -1113,7 +1113,7 @@ prt_monk,226,257,6	script	Ill Girl#tu	4_F_04,{
 		next;
 		switch(select("Heal!", "Blessing!", "Cure!", "Recovery!", "Signum Crucis!", "B.S Sacramenti!")){
 		case 1:
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "H...";
 			mes "Heal !!";
 			specialeffect EF_HEAL;
@@ -1125,13 +1125,13 @@ prt_monk,226,257,6	script	Ill Girl#tu	4_F_04,{
 			break;
 		case 2:
 			if(getskilllv("AL_BLESSING") > 0){
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "B...";
 				mes "Blessing!";
 				next;
 				if(rand(100) < getskilllv("AL_BLESSING")*10){
 					specialeffect EF_BLESSING;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "I...";
 					mes "I did it!!";
 					next;
@@ -1149,7 +1149,7 @@ prt_monk,226,257,6	script	Ill Girl#tu	4_F_04,{
 					next;
 					break;
 				} else {
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "Huh...?";
 					mes "It's not working...";
 					mes "Maybe it's because";
@@ -1165,7 +1165,7 @@ prt_monk,226,257,6	script	Ill Girl#tu	4_F_04,{
 			break;
 		case 3:
 			if(getskilllv("AL_CURE") > 0){
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "C-Cure...!";
 				specialeffect EF_CURE;
 				next;
@@ -1185,7 +1185,7 @@ prt_monk,226,257,6	script	Ill Girl#tu	4_F_04,{
 			close;
 		case 5:
 			if(getskilllv("AL_CRUCIS") > 0){
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "S-Signum...";
 				mes "Signum Crucis!";
 				specialeffect EF_SIGNUM;

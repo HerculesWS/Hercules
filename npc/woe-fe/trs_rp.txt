@@ -38,15 +38,15 @@ end;
 
 OnTouch:
 	// Store the Guild ID of castle occupant.
-	.@GID = getcastledata(strnpcinfo(2),1);
-		if (strcharinfo(0) != getguildmaster(.@GID)) {
-			if (compare(strnpcinfo(2),"aldeg"))
+	.@GID = getcastledata(strnpcinfo(NPC_NAME_HIDDEN),1);
+		if (strcharinfo(PC_NAME) != getguildmaster(.@GID)) {
+			if (compare(strnpcinfo(NPC_NAME_HIDDEN),"aldeg"))
 				warp "aldebaran",143,112;
-			else if (compare(strnpcinfo(2),"gefg"))
+			else if (compare(strnpcinfo(NPC_NAME_HIDDEN),"gefg"))
 				warp "geffen",120,38;
-			else if (compare(strnpcinfo(2),"payg"))
+			else if (compare(strnpcinfo(NPC_NAME_HIDDEN),"payg"))
 				warp "payon",100,100;
-			else if (compare(strnpcinfo(2),"prtg"))
+			else if (compare(strnpcinfo(NPC_NAME_HIDDEN),"prtg"))
 				warp "prontera",119,64;
 		}
 	end;

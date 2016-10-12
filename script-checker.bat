@@ -32,7 +32,7 @@ ECHO                ^| ^| ^| ^|  __/ ^| ^| (__^| ^|_^| ^| ^|  __/\__ \
 ECHO                \_^| ^|_/\___^|_^|  \___^|\__,_^|_^|\___^|^|___/
 ECHO.
 ECHO                       Script Syntax Checker
-ECHO                     http://hercules.ws/board/
+ECHO                     http://herc.ws/board/
 ECHO.
 ECHO                  Drag and drop or input manually
 ECHO.

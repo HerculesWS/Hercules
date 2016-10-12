@@ -54,6 +54,9 @@ void WriteDump(FILE* fp, const void* buffer, size_t length)
 	size_t i;
 	char hex[48+1], ascii[16+1];
 
+	nullpo_retv(fp);
+	nullpo_retv(buffer);
+
 	fprintf(fp, "--- 00-01-02-03-04-05-06-07-08-09-0A-0B-0C-0D-0E-0F   0123456789ABCDEF\n");
 	ascii[16] = 0;
 
@@ -78,10 +81,12 @@ void WriteDump(FILE* fp, const void* buffer, size_t length)
 }
 
 /// Dumps given buffer on the console.
-void ShowDump(const void *buffer, size_t length) {
+void ShowDump(const void *buffer, size_t length)
+{
 	size_t i;
 	char hex[48+1], ascii[16+1];
 
+	nullpo_retv(buffer);
 	ShowDebug("--- 00-01-02-03-04-05-06-07-08-09-0A-0B-0C-0D-0E-0F   0123456789ABCDEF\n");
 	ascii[16] = 0;
 
@@ -108,6 +113,7 @@ static char* checkpath(char *path, const char *srcpath)
 {
 	// just make sure the char*path is not const
 	char *p = path;
+
 	if (NULL == path || NULL == srcpath)
 		return path;
 	while(*srcpath) {
@@ -400,7 +406,9 @@ int apply_percentrate(int value, int rate, int maxrate)
 //-----------------------------------------------------
 const char* timestamp2string(char* str, size_t size, time_t timestamp, const char* format)
 {
-	size_t len = strftime(str, size, format, localtime(&timestamp));
+	size_t len;
+	nullpo_retr(NULL, str);
+	len = strftime(str, size, format, localtime(&timestamp));
 	memset(str + len, '\0', size - len);
 	return str;
 }
@@ -413,6 +421,7 @@ bool HCache_check(const char *file)
 	char s_path[255], dT[1];
 	time_t rtime;
 
+	nullpo_retr(false, file);
 	if (!(first = fopen(file,"rb")))
 		return false;
 
@@ -456,9 +465,13 @@ bool HCache_check(const char *file)
 	return true;
 }
 
-FILE *HCache_open(const char *file, const char *opt) {
+FILE *HCache_open(const char *file, const char *opt)
+{
 	FILE *first;
 	char s_path[255];
+
+	nullpo_retr(NULL, file);
+	nullpo_retr(NULL, opt);
 
 	if( file[0] == '.' && file[1] == '/' )
 		file += 2;
@@ -498,15 +511,19 @@ void HCache_init(void)
 }
 
 /* transit to fread, shields vs warn_unused_result */
-size_t hread(void * ptr, size_t size, size_t count, FILE * stream) {
+size_t hread(void *ptr, size_t size, size_t count, FILE *stream)
+{
 	return fread(ptr, size, count, stream);
 }
+
 /* transit to fwrite, shields vs warn_unused_result */
-size_t hwrite(const void * ptr, size_t size, size_t count, FILE * stream) {
+size_t hwrite(const void *ptr, size_t size, size_t count, FILE *stream)
+{
 	return fwrite(ptr, size, count, stream);
 }
 
-void HCache_defaults(void) {
+void HCache_defaults(void)
+{
 	HCache = &HCache_s;
 
 	HCache->init = HCache_init;

@@ -150,7 +150,8 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		#define COMMON_DB_H
 	#endif // COMMON_DB_H
 	#ifdef COMMON_DES_H
-		{ "BIT64", sizeof(struct BIT64), SERVER_TYPE_ALL },
+		{ "des_bit64", sizeof(struct des_bit64), SERVER_TYPE_ALL },
+		{ "des_interface", sizeof(struct des_interface), SERVER_TYPE_ALL },
 	#else
 		#define COMMON_DES_H
 	#endif // COMMON_DES_H
@@ -159,6 +160,11 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define COMMON_ERS_H
 	#endif // COMMON_ERS_H
+	#ifdef COMMON_GRFIO_H
+		{ "grfio_interface", sizeof(struct grfio_interface), SERVER_TYPE_MAP },
+	#else
+		#define COMMON_GRFIO_H
+	#endif // COMMON_GRFIO_H
 	#ifdef COMMON_HPMI_H
 		{ "HPMi_interface", sizeof(struct HPMi_interface), SERVER_TYPE_ALL },
 		{ "hplugin_info", sizeof(struct hplugin_info), SERVER_TYPE_ALL },
@@ -171,6 +177,11 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define COMMON_MAPINDEX_H
 	#endif // COMMON_MAPINDEX_H
+	#ifdef COMMON_MD5CALC_H
+		{ "md5_interface", sizeof(struct md5_interface), SERVER_TYPE_ALL },
+	#else
+		#define COMMON_MD5CALC_H
+	#endif // COMMON_MD5CALC_H
 	#ifdef COMMON_MEMMGR_H
 		{ "malloc_interface", sizeof(struct malloc_interface), SERVER_TYPE_ALL },
 	#else
@@ -210,11 +221,21 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define COMMON_MMO_H
 	#endif // COMMON_MMO_H
+	#ifdef COMMON_MUTEX_H
+		{ "mutex_interface", sizeof(struct mutex_interface), SERVER_TYPE_ALL },
+	#else
+		#define COMMON_MUTEX_H
+	#endif // COMMON_MUTEX_H
 	#ifdef COMMON_NULLPO_H
 		{ "nullpo_interface", sizeof(struct nullpo_interface), SERVER_TYPE_ALL },
 	#else
 		#define COMMON_NULLPO_H
 	#endif // COMMON_NULLPO_H
+	#ifdef COMMON_RANDOM_H
+		{ "rnd_interface", sizeof(struct rnd_interface), SERVER_TYPE_ALL },
+	#else
+		#define COMMON_RANDOM_H
+	#endif // COMMON_RANDOM_H
 	#ifdef COMMON_SHOWMSG_H
 		{ "showmsg_interface", sizeof(struct showmsg_interface), SERVER_TYPE_ALL },
 	#else
@@ -230,7 +251,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		#define COMMON_SOCKET_H
 	#endif // COMMON_SOCKET_H
 	#ifdef COMMON_SPINLOCK_H
-		{ "SPIN_LOCK", sizeof(struct SPIN_LOCK), SERVER_TYPE_ALL },
+		{ "spin_lock", sizeof(struct spin_lock), SERVER_TYPE_ALL },
 	#else
 		#define COMMON_SPINLOCK_H
 	#endif // COMMON_SPINLOCK_H
@@ -253,6 +274,11 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define COMMON_SYSINFO_H
 	#endif // COMMON_SYSINFO_H
+	#ifdef COMMON_THREAD_H
+		{ "thread_interface", sizeof(struct thread_interface), SERVER_TYPE_ALL },
+	#else
+		#define COMMON_THREAD_H
+	#endif // COMMON_THREAD_H
 	#ifdef COMMON_TIMER_H
 		{ "TimerData", sizeof(struct TimerData), SERVER_TYPE_ALL },
 		{ "timer_interface", sizeof(struct timer_interface), SERVER_TYPE_ALL },

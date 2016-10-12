@@ -39,11 +39,11 @@ airplane,243,73,0	script	#AirshipWarp-1	WARPNPC,1,1,{
 OnInit:
 OnHide:
 	specialeffect EF_BASH;
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 
 OnUnhide:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	specialeffect EF_SUMMONSLAVE;
 	end;
 
@@ -680,11 +680,11 @@ OnTouch:
 OnInit:
 OnHide:
 	specialeffect EF_BASH;
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 
 OnUnhide:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	specialeffect EF_SUMMONSLAVE;
 	end;
 }
@@ -1186,8 +1186,8 @@ airplane_01,32,61,4	script	Nils#ein	1_M_03,1,1,{
 				mesf("However, ^ff0000%s^000000,\r"
 					"you made the new top record\r"
 					"this time. Congratulations!",
-					strcharinfo(0));
-				$050320_minus1_typing$ = strcharinfo(0);
+					strcharinfo(PC_NAME));
+				$050320_minus1_typing$ = strcharinfo(PC_NAME);
 				$050320_ein_typing = .@tasoo;
 				close;
 			}
@@ -1389,7 +1389,7 @@ function	script	applegamble	{
 	mes(.@n$);
 	mesf("I got a ^0000FF%d^000000 and a ^0000FF%d^000000.", .@table1, .@table2);
 	mesf("That's a total of ^0000FF%d^000000.", .@tablesub);
-	mesf("^FF0000%s^000000, now it's your turn.", strcharinfo(0));
+	mesf("^FF0000%s^000000, now it's your turn.", strcharinfo(PC_NAME));
 	next;
 	select("Cast Dice.");
 	mes("^3355FF*Rolling and rumbling*^000000");
@@ -1405,21 +1405,21 @@ function	script	applegamble	{
 	next;
 	mes(.@n$);
 	mesf("^FF0000%s^000000, you have ^FF0000%d^000000 and ^FF0000%d^000000. The total is ^FF0000%d^000000.",
-		strcharinfo(0), .@player1, .@player2, .@playersub);
+		strcharinfo(PC_NAME), .@player1, .@player2, .@playersub);
 	next;
 	mes(.@n$);
 	if(.@playersub == .@tablesub) {
 		mesf("Currently my total is ^0000FF%d^000000 and ^FF0000%s^000000, your total is ^FF0000%d^000000. "
 			"We are making an even game. Would you like to cast dice again?",
-			.@tablesub, strcharinfo(0), .@playersub);
+			.@tablesub, strcharinfo(PC_NAME), .@playersub);
 	} else if (.@playersub > .@tablesub) {
 		mesf("Currently my total is ^0000FF%d^000000 and ^FF0000%s^000000, your total is ^FF0000%d^000000. "
 			"^FF0000%s^000000, you are currently winning this game. Would you like to cast dice again?",
-			.@tablesub, strcharinfo(0), .@playersub, strcharinfo(0));
+			.@tablesub, strcharinfo(PC_NAME), .@playersub, strcharinfo(PC_NAME));
 	} else if(.@tablesub > .@playersub) {
 		mesf("Currently my total is ^0000FF%d^000000 and ^FF0000%s^000000, your total is ^FF0000%d^000000. "
 			"I am winning this game. Would you like to cast dice again?",
-			.@tablesub, strcharinfo(0), .@playersub);
+			.@tablesub, strcharinfo(PC_NAME), .@playersub);
 	}
 	next;
 	switch (select("Cast dice.", "Cancel.")) {
@@ -1432,14 +1432,14 @@ function	script	applegamble	{
 		if (.@playertotal > 12) {
 			mesf("^FF0000%s^000000, you got ^FF0000%d^000000 and the total is now ^FF0000%d^000000. "
 				"You lost this game. I am sorry but please try again.",
-				strcharinfo(0), .@player3, .@playertotal);
+				strcharinfo(PC_NAME), .@player3, .@playertotal);
 			close;
 		}
 		else if (.@playertotal < .@tablesub) {
 			mesf("^FF0000%s^000000, you got ^FF0000%d^000000 and the total is now ^FF0000%d^000000. "
 				"Even though you casted dice again, still your total is smaller than mine. "
 				"You lost the game. I am sorry and please try again.",
-				strcharinfo(0), .@player3, .@playertotal);
+				strcharinfo(PC_NAME), .@player3, .@playertotal);
 			close;
 		}
 		else if (.@playertotal == .@tablesub) {
@@ -1447,7 +1447,7 @@ function	script	applegamble	{
 				mesf("^FF0000%s^000000, you got ^FF0000%d^000000 and the total is now ^FF0000%d^000000. "
 					"I don't want to take any risk, let's end this game in a draw. "
 					"Let's play again some other time~",
-					strcharinfo(0), .@player3, .@playertotal);
+					strcharinfo(PC_NAME), .@player3, .@playertotal);
 				close2;
 				getitem Apple,.@amount;
 				end;
@@ -1456,7 +1456,7 @@ function	script	applegamble	{
 		else {
 			mesf("^FF0000%s^000000, you got ^FF0000%d^000000 and the total is now ^FF0000%d^000000. "
 					"Now it is my turn.",
-				strcharinfo(0), .@player3, .@playertotal);
+				strcharinfo(PC_NAME), .@player3, .@playertotal);
 		}
 		break;
 	case 2:
@@ -1504,7 +1504,7 @@ function	script	applegamble	{
 		mesf("I got ^0000FF%d^000000 and the total is now ^0000FF%d^000000. "
 			"With total ^FF0000%d^000000 you won this game, ^FF0000%s^000000. Let me give you my apples. "
 			"It was a great game and I hope we will play again some other time.",
-			.@table3, .@tabletotal, .@playertotal, strcharinfo(0));
+			.@table3, .@tabletotal, .@playertotal, strcharinfo(PC_NAME));
 		close2;
 		getitem Apple,.@giveapple;
 		end;
@@ -1513,7 +1513,7 @@ function	script	applegamble	{
 		mesf("I got ^0000FF%d^000000 and the total is now ^0000FF%d^000000. "
 			"With total ^FF0000%d^000000 this game came out even, ^FF0000%s^000000. "
 			"Let me give you your apple back. It was a great game and I hope we will play again some other time.",
-			.@table3, .@tabletotal, .@playertotal, strcharinfo(0));
+			.@table3, .@tabletotal, .@playertotal, strcharinfo(PC_NAME));
 		close2;
 		getitem Apple,.@amount;
 		end;
@@ -1521,7 +1521,7 @@ function	script	applegamble	{
 	else if (.@playertotal < .@tabletotal) {
 		mesf("I got ^0000FF%d^000000 and the total is now ^0000FF%d^000000. "
 			"With total ^FF0000%d^000000 you lost this game, ^FF0000%s^000000. I am sorry but please try again.",
-			.@table3, .@tabletotal, .@playertotal, strcharinfo(0));
+			.@table3, .@tabletotal, .@playertotal, strcharinfo(PC_NAME));
 		close;
 	}
 }

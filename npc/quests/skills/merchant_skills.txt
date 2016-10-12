@@ -36,7 +36,7 @@
 //================= Description ===========================================
 //= Quests for skills: Crazy Uproar, Change Cart, Cart Revolution
 //================= Current Version =======================================
-//= 1.8
+//= 1.9
 //=========================================================================
 
 alberta,83,96,5	script	Necko	4W_M_02,7,7,{
@@ -65,7 +65,7 @@ alberta,83,96,5	script	Necko	4W_M_02,7,7,{
 			mes "Ppyakikakikakakakakakakaka!!";
 			close;
 		}
-		else if (JobLevel < 15) {
+		else if (BaseJob == Job_Merchant && JobLevel < 15) {
 			mes "[Necko]";
 			mes "Oh, did you come because";
 			mes "you are infatuated with my voice?";
@@ -86,7 +86,7 @@ alberta,83,96,5	script	Necko	4W_M_02,7,7,{
 			mes "Kyukwakakakakakakakakakaka!";
 			close;
 		}
-		else if ((countitem(Scarlet_Jewel) > 6) && (countitem(Banana_Juice) > 0) && (countitem(Mushroom_Spore) > 49) && (JobLevel >= 15 || (BaseJob == Job_Blacksmith || BaseJob == Job_Alchemist))) {
+		else if ((countitem(Scarlet_Jewel) > 6) && (countitem(Banana_Juice) > 0) && (countitem(Mushroom_Spore) > 49)) {
 			mes "[Necko]";
 			mes "Oh! You!";
 			mes "You are qualified to learn how to shout!";

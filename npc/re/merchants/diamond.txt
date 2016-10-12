@@ -122,14 +122,14 @@
 			mes .@npc$;
 			mes "What is your name?";
 			next;
-			mes "[" + strcharinfo(0) + "]";
-			mes "My name is " + strcharinfo(0) + ".";
+			mes "[" + strcharinfo(PC_NAME) + "]";
+			mes "My name is " + strcharinfo(PC_NAME) + ".";
 			next;
 			mes .@npc$;
 			mes "Alright then, please sign here.";
 			next;
 			input .@charname$;
-			if (.@charname$ == strcharinfo(0)) {
+			if (.@charname$ == strcharinfo(PC_NAME)) {
 				mes .@npc$;
 				mes "Okay, good.";
 				mes "All that is left now is payment.";
@@ -190,8 +190,8 @@
 		mes .@npc$;
 		mes "What is your name?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
-		mes "My name is " + strcharinfo(0) + ".";
+		mes "[" + strcharinfo(PC_NAME) + "]";
+		mes "My name is " + strcharinfo(PC_NAME) + ".";
 		next;
 		mes .@npc$;
 		mes "Alright then, please sign here.";
@@ -203,7 +203,7 @@
 				close;
 			}
 			input .@charname$;
-			if (.@charname$ == strcharinfo(0)) {
+			if (.@charname$ == strcharinfo(PC_NAME)) {
 				mes .@npc$;
 				mes "Your signature has been received.";
 				mes "I will now take your ^FF82FF'17 Carat Diamond'^000000..";

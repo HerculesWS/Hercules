@@ -102,7 +102,7 @@ prt_in,253,168,4	script	Alora	4_F_LGTGIRL,{
 	mes "[Alora]";
 	mes "Any upgrades and cards will be dissolved by the mysterious dye, so be sure you are ok with having a ^0000FF+0 "+ getitemname(.@dyHG) +" without any cards.^000000";
 	next;
-	mes "["+ strcharinfo(0) +"]";
+	mes "["+ strcharinfo(PC_NAME) +"]";
 	mes "Ok, thanks for the warning, I think I'll give you my";
 	next;
 	.@menu$ = "Nevermind";

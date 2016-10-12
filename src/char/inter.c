@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -36,6 +36,7 @@
 #include "char/int_storage.h"
 #include "char/mapif.h"
 #include "common/cbasetypes.h"
+#include "common/conf.h"
 #include "common/db.h"
 #include "common/memmgr.h"
 #include "common/mmo.h"
@@ -62,7 +63,7 @@ char char_server_pw[100] = "ragnarok";
 char char_server_db[32] = "ragnarok";
 char default_codepage[32] = ""; //Feature by irmin.
 
-unsigned int party_share_level = 10;
+int party_share_level = 10;
 
 // recv. packet list
 int inter_recv_packet_length[] = {
@@ -474,7 +475,7 @@ void mapif_parse_accinfo(int fd)
 				inter->msg_to_fd(fd, u_fd, aid, "Your query returned the following %d results, please be more specific...",(int)SQL->NumRows(inter->sql_handle));
 				while ( SQL_SUCCESS == SQL->NextRow(inter->sql_handle) ) {
 					int class_;
-					short base_level, job_level, online;
+					int base_level, job_level, online;
 					char name[NAME_LENGTH];
 
 					SQL->GetData(inter->sql_handle, 0, &data, NULL); account_id = atoi(data);
@@ -546,7 +547,7 @@ void mapif_parse_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int acc
 		while ( SQL_SUCCESS == SQL->NextRow(inter->sql_handle) ) {
 			char *data;
 			int char_id, class_;
-			short char_num, base_level, job_level, online;
+			int char_num, base_level, job_level, online;
 			char name[NAME_LENGTH];
 
 			SQL->GetData(inter->sql_handle, 0, &data, NULL); char_id = atoi(data);
@@ -572,6 +573,7 @@ void mapif_parse_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int acc
  **/
 void inter_savereg(int account_id, int char_id, const char *key, unsigned int index, intptr_t val, bool is_string)
 {
+	char val_esq[1000];
 	nullpo_retv(key);
 	/* to login server we go! */
 	if( key[0] == '#' && key[1] == '#' ) {/* global account reg */
@@ -583,7 +585,8 @@ void inter_savereg(int account_id, int char_id, const char *key, unsigned int in
 	} else if ( key[0] == '#' ) {/* local account reg */
 		if( is_string ) {
 			if( val ) {
-				if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`account_id`,`key`,`index`,`value`) VALUES ('%d','%s','%u','%s')", acc_reg_str_db, account_id, key, index, (char*)val) )
+				SQL->EscapeString(inter->sql_handle, val_esq, (char*)val);
+				if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`account_id`,`key`,`index`,`value`) VALUES ('%d','%s','%u','%s')", acc_reg_str_db, account_id, key, index, val_esq) )
 					Sql_ShowDebug(inter->sql_handle);
 			} else {
 				if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `account_id` = '%d' AND `key` = '%s' AND `index` = '%u' LIMIT 1", acc_reg_str_db, account_id, key, index) )
@@ -601,7 +604,8 @@ void inter_savereg(int account_id, int char_id, const char *key, unsigned int in
 	} else { /* char reg */
 		if( is_string ) {
 			if( val ) {
-				if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`char_id`,`key`,`index`,`value`) VALUES ('%d','%s','%u','%s')", char_reg_str_db, char_id, key, index, (char*)val) )
+				SQL->EscapeString(inter->sql_handle, val_esq, (char*)val);
+				if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`char_id`,`key`,`index`,`value`) VALUES ('%d','%s','%u','%s')", char_reg_str_db, char_id, key, index, val_esq) )
 					Sql_ShowDebug(inter->sql_handle);
 			} else {
 				if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `char_id` = '%d' AND `key` = '%s' AND `index` = '%u' LIMIT 1", char_reg_str_db, char_id, key, index) )
@@ -788,50 +792,114 @@ int inter_accreg_fromsql(int account_id,int char_id, int fd, int type)
 	return 1;
 }
 
-/*==========================================
- * read config file
- *------------------------------------------*/
-static int inter_config_read(const char* cfgName)
+/**
+ * Reads the 'inter_configuration/log' config entry and initializes required variables.
+ *
+ * @param filename Path to configuration file (used in error and warning messages).
+ * @param config   The current config being parsed.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+bool inter_config_read_log(const char *filename, const struct config_t *config, bool imported)
 {
-	char line[1024], w1[1024], w2[1024];
-	FILE* fp;
+	const struct config_setting_t *setting = NULL;
 
-	nullpo_retr(1, cfgName);
-	fp = fopen(cfgName, "r");
-	if(fp == NULL) {
-		ShowError("File not found: %s\n", cfgName);
-		return 1;
+	nullpo_retr(false, filename);
+	nullpo_retr(false, config);
+
+	if ((setting = libconfig->lookup(config, "inter_configuration/log")) == NULL) {
+		if (imported)
+			return true;
+		ShowError("sql_config_read: inter_configuration/log was not found in %s!\n", filename);
+		return false;
 	}
 
-	while (fgets(line, sizeof(line), fp)) {
-		int i = sscanf(line, "%1023[^:]: %1023[^\r\n]", w1, w2);
-		if(i != 2)
-			continue;
+	libconfig->setting_lookup_bool_real(setting, "log_inter", &inter->enable_logs);
 
-		if(!strcmpi(w1,"char_server_ip")) {
-			safestrncpy(char_server_ip, w2, sizeof(char_server_ip));
-		} else if(!strcmpi(w1,"char_server_port")) {
-			char_server_port = atoi(w2);
-		} else if(!strcmpi(w1,"char_server_id")) {
-			safestrncpy(char_server_id, w2, sizeof(char_server_id));
-		} else if(!strcmpi(w1,"char_server_pw")) {
-			safestrncpy(char_server_pw, w2, sizeof(char_server_pw));
-		} else if(!strcmpi(w1,"char_server_db")) {
-			safestrncpy(char_server_db, w2, sizeof(char_server_db));
-		} else if(!strcmpi(w1,"default_codepage")) {
-			safestrncpy(default_codepage, w2, sizeof(default_codepage));
-		} else if(!strcmpi(w1,"party_share_level"))
-			party_share_level = atoi(w2);
-		else if(!strcmpi(w1,"log_inter"))
-			log_inter = atoi(w2);
-		else if(!strcmpi(w1,"import"))
-			inter->config_read(w2);
+	return true;
+}
+
+/**
+ * Reads the 'char_configuration/sql_connection' config entry and initializes required variables.
+ *
+ * @param filename Path to configuration file (used in error and warning messages).
+ * @param config   The current config being parsed.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+bool inter_config_read_connection(const char *filename, const struct config_t *config, bool imported)
+{
+	const struct config_setting_t *setting = NULL;
+
+	nullpo_retr(false, filename);
+	nullpo_retr(false, config);
+
+	if ((setting = libconfig->lookup(config, "char_configuration/sql_connection")) == NULL) {
+		if (imported)
+			return true;
+		ShowError("char_config_read: char_configuration/sql_connection was not found in %s!\n", filename);
+		ShowWarning("inter_config_read_connection: Defaulting sql_connection...\n");
+		return false;
 	}
-	fclose(fp);
 
-	ShowInfo ("Done reading %s.\n", cfgName);
+	libconfig->setting_lookup_int(setting, "db_port", &char_server_port);
+	libconfig->setting_lookup_mutable_string(setting, "db_hostname", char_server_ip, sizeof(char_server_ip));
+	libconfig->setting_lookup_mutable_string(setting, "db_username", char_server_id, sizeof(char_server_id));
+	libconfig->setting_lookup_mutable_string(setting, "db_password", char_server_pw, sizeof(char_server_pw));
+	libconfig->setting_lookup_mutable_string(setting, "db_database", char_server_db, sizeof(char_server_db));
+	libconfig->setting_lookup_mutable_string(setting, "default_codepage", default_codepage, sizeof(default_codepage));
 
-	return 0;
+	return true;
+}
+
+/**
+ * Reads the 'inter_configuration' config file and initializes required variables.
+ *
+ * @param filename Path to configuration file
+ * @param imported Whether the current config is from an imported file.
+ *
+ * @retval false in case of error.
+ */
+bool inter_config_read(const char *filename, bool imported)
+{
+	struct config_t config;
+	const struct config_setting_t *setting = NULL;
+	const char *import = NULL;
+	bool retval = true;
+
+	nullpo_retr(false, filename);
+
+	if (!libconfig->load_file(&config, filename))
+		return false;
+
+	if ((setting = libconfig->lookup(&config, "inter_configuration")) == NULL) {
+		libconfig->destroy(&config);
+		if (imported)
+			return true;
+		ShowError("inter_config_read: inter_configuration was not found in %s!\n", filename);
+		return false;
+	}
+	libconfig->setting_lookup_int(setting, "party_share_level", &party_share_level);
+
+	if (!inter->config_read_log(filename, &config, imported))
+		retval = false;
+
+	ShowInfo("Done reading %s.\n", filename);
+
+	// import should overwrite any previous configuration, so it should be called last
+	if (libconfig->lookup_string(&config, "import", &import) == CONFIG_TRUE) {
+		if (strcmp(import, filename) == 0 || strcmp(import, chr->INTER_CONF_NAME) == 0) {
+			ShowWarning("inter_config_read: Loop detected in %s! Skipping 'import'...\n", filename);
+		} else {
+			if (!inter->config_read(import, true))
+				retval = false;
+		}
+	}
+
+	libconfig->destroy(&config);
+	return retval;
 }
 
 /**
@@ -876,9 +944,7 @@ int inter_log(char* fmt, ...)
 // initialize
 int inter_init_sql(const char *file)
 {
-	//int i;
-
-	inter->config_read(file);
+	inter->config_read(file, false);
 
 	//DB connection initialized
 	inter->sql_handle = SQL->Malloc();
@@ -1361,6 +1427,7 @@ void inter_defaults(void)
 {
 	inter = &inter_s;
 
+	inter->enable_logs = true;
 	inter->sql_handle = NULL;
 
 	inter->msg_txt = inter_msg_txt;
@@ -1381,4 +1448,6 @@ void inter_defaults(void)
 	inter->check_length = inter_check_length;
 	inter->parse_frommap = inter_parse_frommap;
 	inter->final = inter_final;
+	inter->config_read_log = inter_config_read_log;
+	inter->config_read_connection = inter_config_read_connection;
 }

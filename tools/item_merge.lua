@@ -16,7 +16,7 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
--- Base Author: Dastgir @ http://hercules.ws
+-- Base Author: Dastgir @ http://herc.ws
 --
 -- This script requires lua 5.1 to run.
 

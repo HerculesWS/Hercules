@@ -97,6 +97,7 @@
 #include "map/storage.h"
 #include "map/trade.h"
 #include "map/unit.h"
+#include "common/grfio.h"
 #include "common/mapindex.h"
 #else
 #define HPM_SERVER_TYPE SERVER_TYPE_UNKNOWN
@@ -109,13 +110,18 @@
 #include "common/conf.h"
 #include "common/console.h"
 #include "common/db.h"
+#include "common/des.h"
+#include "common/md5calc.h"
 #include "common/memmgr.h"
+#include "common/mutex.h"
 #include "common/nullpo.h"
+#include "common/random.h"
 #include "common/showmsg.h"
 #include "common/socket.h"
 #include "common/sql.h"
 #include "common/strlib.h"
 #include "common/sysinfo.h"
+#include "common/thread.h"
 #include "common/timer.h"
 #include "common/utils.h"
 

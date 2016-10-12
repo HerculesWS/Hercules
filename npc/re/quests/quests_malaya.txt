@@ -169,7 +169,7 @@ malaya,266,76,3	script	Rodel the Guard#malaya	4_MAL_SOLDIER,4,4,{
 				erasequest 7404;
 				setquest 7405;
 				if (rand(2))
-					$malayaNames$[1] = strcharinfo(0);
+					$malayaNames$[1] = strcharinfo(PC_NAME);
 //				SavePPL Jejellopy
 				close;
 			}
@@ -616,7 +616,7 @@ malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
 			mes "Indeed.";
 			mes "I will protect the village!";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Now I haven't seen any Spiritual Protections made with those!";
 			mes "Interesting~";
 			mes "I'm sure you'll do just fine~";
@@ -720,7 +720,7 @@ malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
 //			getitem Lesser_Agimat, 1; // Lesser_Agimat
 		getexp 200000,200000;
 		if (rand(2))
-			$malayaNames$[0] = strcharinfo(0);
+			$malayaNames$[0] = strcharinfo(PC_NAME);
 		close;
 	} else {
 		mes "[Imelda]";
@@ -826,7 +826,7 @@ malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
 //					getitem Lesser_Agimat, 1; // Lesser_Agimat
 				getexp 200000,200000;
 				if (rand(2))
-					$malayaNames$[0] = strcharinfo(0);
+					$malayaNames$[0] = strcharinfo(PC_NAME);
 				close;
 			} else {
 				.@playtime = questprogress(7375, PLAYTIME);
@@ -956,7 +956,7 @@ malaya,181,353,5	script	Old Man Nardo#malaya	4_M_BARYO_OLD,{
 			close;
 		}
 	} else if (malaya_hi == 11) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "He'll rake off all my buttons if I talk to him now.";
 		mes "Must counsel with Mumbaki first!";
 		close;
@@ -1129,7 +1129,7 @@ malaya,181,353,5	script	Old Man Nardo#malaya	4_M_BARYO_OLD,{
 //						getitem Lesser_Agimat, 1; // Lesser_Agimat
 					getexp 200000,200000;
 					if (!rand(3))
-						$malayaNames$[2] = strcharinfo(0);
+						$malayaNames$[2] = strcharinfo(PC_NAME);
 					close;
 				} else {
 					if (questprogress(7376)) {
@@ -1487,15 +1487,15 @@ malaya,62,274,0	script	Sand Trap#malaya	4_SOIL,{
 	mes "someone scattered on the sea water.";
 	close2;
 	progressbar "0xffff00", 5;
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	initnpctimer;
 	getitem Salt_Bag, 1; // Salt_Bag
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "This should be enough.";
 	close;
 
 OnTimer30000:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	stopnpctimer;
 	end;
 }
@@ -1519,10 +1519,10 @@ ma_fild01,178,206,0	script	Black Bamboo#malaya	CLEAR_NPC,4,4,{
 	mes "If some of it is cut off and sharpened, I think it will suffice for the Sharpened Bamboo Imelda wanted.";
 	close2;
 	progressbar "0xffff00", 3;
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	initnpctimer;
 	getitem Sharp_Bamboo, 1;
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "I knew I could do this!";
 	close;
 OnTouch:
@@ -1531,7 +1531,7 @@ OnTouch:
 	}
 	end;
 OnTimer30000:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	stopnpctimer;
 	end;
 }
@@ -1747,7 +1747,7 @@ malaya,295,171,3	script	Collection Dealer Woeon	4_M_MALAYA,{
 					getexp 200000,200000;
 					.@memo_name = rand(1,3);
 					if (!rand(3))
-						$malayaNames$[1] = strcharinfo(0);
+						$malayaNames$[1] = strcharinfo(PC_NAME);
 					close;
 				} else {
 					mes "[Woeon]";
@@ -1981,7 +1981,7 @@ malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
 //					getitem Lesser_Agimat, 1; // Lesser_Agimat
 				getexp 200000,200000;
 				if (!rand(3))
-					$malayaNames$[1] = strcharinfo(0);
+					$malayaNames$[1] = strcharinfo(PC_NAME);
 				close;
 			} else if (.@hunting == 1) {
 				mes "[Pandoi]";
@@ -2394,7 +2394,7 @@ malaya,326,68,2	script	Pedro the Sailor	4W_SAILOR,{
 //				getitem Lesser_Agimat, 1; // Lesser_Agimat
 			getexp 200000,200000;
 			if (!rand(3))
-				$malayaNames$[0] = strcharinfo(0);
+				$malayaNames$[0] = strcharinfo(PC_NAME);
 			close;
 		} else {
 			.@playtime = questprogress(7401, PLAYTIME);
@@ -2457,7 +2457,7 @@ malaya,326,68,2	script	Pedro the Sailor	4W_SAILOR,{
 //					getitem Lesser_Agimat, 1; // Lesser_Agimat
 				getexp 200000,200000;
 				if (!rand(3))
-					$malayaNames$[0] = strcharinfo(0);
+					$malayaNames$[0] = strcharinfo(PC_NAME);
 				close;
 			}
 		}
@@ -2525,7 +2525,7 @@ OnTouch:
 		next;
 		if (select("It's a misunderstanding!", "You're from that..!") == 2) {
 			cutin "malaya_ghost02", 4;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Just as I thought! You're afraid of me?!";
 			mes "Stand aside!";
 			mes "I need to talk to her.";
@@ -2948,7 +2948,7 @@ ma_fild01,239,253,3	script	Dhong the Guard	4_MAL_SOLDIER,{
 //					getitem Lesser_Agimat, 1; // Lesser_Agimat
 				getexp 200000,200000;
 				if (!rand(0, 2))
-					$malayaNames$[2] = strcharinfo(0);
+					$malayaNames$[2] = strcharinfo(PC_NAME);
 				close;
 			} else {
 				mes "[Dhong the Guard]";
@@ -3044,7 +3044,7 @@ ma_fild01,200,190,3	script	Maries#malaya	4_F_BARYO_WOMAN,{
 //				getitem Lesser_Agimat, 1; // Lesser_Agimat
 			getexp 200000,200000;
 			if (!rand(3))
-				$malayaNames$[2] = strcharinfo(0);
+				$malayaNames$[2] = strcharinfo(PC_NAME);
 			close;
 		} else {
 			if (questprogress(7388)) {
@@ -3150,10 +3150,10 @@ ma_fild01,251,93,3	script	Lost Child#malaya01	4_F_BARYO_GIRL,{
 		setquest 7389;
 		erasequest 7388;
 		close2;
-		disablenpc strnpcinfo(0);
-		if (strnpcinfo(0) == "Lost Child#malaya01") {
+		disablenpc strnpcinfo(NPC_NAME);
+		if (strnpcinfo(NPC_NAME) == "Lost Child#malaya01") {
 			enablenpc "Lost Child#malaya02";
-		} else if (strnpcinfo(0) == "Lost Child#malaya01") {
+		} else if (strnpcinfo(NPC_NAME) == "Lost Child#malaya01") {
 			enablenpc "Lost Child#malaya03";
 		} else {
 			enablenpc "Lost Child#malaya01";
@@ -3183,8 +3183,8 @@ ma_fild01,251,93,3	script	Lost Child#malaya01	4_F_BARYO_GIRL,{
 	end;
 
 OnInit:
-	if (strnpcinfo(0) != "Lost Child#malaya01")
-		disablenpc strnpcinfo(0);
+	if (strnpcinfo(NPC_NAME) != "Lost Child#malaya01")
+		disablenpc strnpcinfo(NPC_NAME);
 }
 ma_fild01,114,141,3	duplicate(Lost Child#malaya01)	Lost Child#malaya02	4_F_BARYO_GIRL
 ma_fild01,130,314,3	duplicate(Lost Child#malaya01)	Lost Child#malaya03	4_F_BARYO_GIRL
@@ -3283,7 +3283,7 @@ ma_fild02,241,39,5	script	Good Capre Budidai	4_MAL_BUDIDAI,{
 //						getitem Lesser_Agimat, 1; // Lesser_Agimat
 					getexp 200000,200000;
 					if (!rand(3))
-						$malayaNames$[1] = strcharinfo(0);
+						$malayaNames$[1] = strcharinfo(PC_NAME);
 					close;
 				} else {
 					mes "[Budidai]";
@@ -4020,7 +4020,7 @@ ma_in01,47,101,3	script	Totoy#buwaya	4_M_BARYO_BOY,7,7,{
 		mes "[Totoy]";
 		mes "Wah! No! Go away! Leave me alone!";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Hey, are you alright?";
 		next;
 		mes "[Totoy]";
@@ -4031,14 +4031,14 @@ ma_in01,47,101,3	script	Totoy#buwaya	4_M_BARYO_BOY,7,7,{
 		mes "[Totoy]";
 		mes "Who's there?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
-		mes "I am " + strcharinfo(0) + ". You are Totoy, right? People say you've found a treasure. Is it true?";
+		mes "[" + strcharinfo(PC_NAME) + "]";
+		mes "I am " + strcharinfo(PC_NAME) + ". You are Totoy, right? People say you've found a treasure. Is it true?";
 		next;
 		mes "[Totoy]";
 		mes "What treasure?";
 		mes "I can't see. I'm blinded. Please help me. I'm tired and frustrated.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "What happened?";
 		next;
 		mes "[Totoy]";
@@ -4202,7 +4202,7 @@ ma_in01,47,101,3	script	Totoy#buwaya	4_M_BARYO_BOY,7,7,{
 		mes "Thank you so much!";
 		mes "You didn't see the monster, did you?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "The monster is called Buwaya. I told the Guard about the monster. You better not go near the place again.";
 		next;
 		mes "[Totoy]";
@@ -4309,7 +4309,7 @@ ma_in01,44,105,3	script	Drawer#buwaya	CLEAR_NPC,{
 		next;
 		mes "- Clunk, clank, crunch. -";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "What? I only see an empty potion bottle.";
 		mes "Does this mean I have to get the potion myself? That Totoy is really a troublemaker.";
 		close;
@@ -4479,7 +4479,7 @@ malaya,291,152,3	script	#buwaya_soil	4_SOIL,{
 		mes "- Sway, swag. -";
 		next;
 		if (rand(1,10) <= 5) {
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "I don't see anything.";
 			next;
 			mes "[Master of Hunting]";
@@ -4487,7 +4487,7 @@ malaya,291,152,3	script	#buwaya_soil	4_SOIL,{
 		} else {
 			mes "- Felt something pointy with the end of your fingers. -";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Ouch!";
 			mes "What is this?";
 			next;
@@ -4558,16 +4558,16 @@ OnInit:
 		}
 		mes "- You slowing and cautiously collect the squashy and slightly warm substance. -";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "It's warm as a mother's bosom.";
 		getitem Collected_Sample,1;
-		disablenpc strnpcinfo(0);
+		disablenpc strnpcinfo(NPC_NAME);
 		initnpctimer;
 		close;
 	}
 	end;
 OnTimer20000:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	stopnpctimer;
 	end;
 }
@@ -4643,7 +4643,7 @@ malaya,290,340,3	script	Guard Leader#buwaya	4_MAL_CAPTAIN,{
 		mes "^3131FFShoot a smoke bomb^000000 once you reach the area.";
 		mes "Then we will run to where the smoke bomb was shot.";
 	} else if ((malaya_buwaya == 12) || (malaya_buwaya == 13)) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Let's first bring Ed to Totoy.";
 	} else if (malaya_buwaya == 14) {
 		mes "[Guard Leader]";
@@ -4748,11 +4748,11 @@ ma_fild02,312,259,3	script	Dog#buwaya	4_DOG01,{
 		mes "[Dog]";
 		mes "Bark bark!!";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Why is a dog here?";
 		next;
 		if (select("Look closely at the dog.", "Ignore it.") == 2) {
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Looks like a lost dog.";
 			close;
 		}
@@ -4760,20 +4760,20 @@ ma_fild02,312,259,3	script	Dog#buwaya	4_DOG01,{
 		next;
 		mes "- The collar says, 'Forever with Totoy'. -";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "So you are Ed?";
 		next;
 		mes "[Dog]";
 		mes "Bark bark!";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "You didn't get killed by Buwaya. You lucky little dog. Let's go back to your owner.";
 		next;
 		emotion e_ho;
 		mes "[Dog]";
 		mes "Bark bark!!";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Ah, before we go, do you happen to know where Buwaya's nest is?";
 		next;
 		mes "[Dog]";
@@ -4781,7 +4781,7 @@ ma_fild02,312,259,3	script	Dog#buwaya	4_DOG01,{
 		next;
 		mes "- Ed is one smart dog and understood what you asked him. Ed started to bark towards the north. -";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Buwaya is over there!";
 		mes "Then I should shoot the smoke bomb here.";
 		next;
@@ -4796,7 +4796,7 @@ ma_fild02,312,259,3	script	Dog#buwaya	4_DOG01,{
 		mes "So Buwaya lives in remote place like this. I will make sure this information goes to the Guard Leader!";
 		disablenpc "Guard#buwayacave";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Should I return Ed to Totoy first and then go see the Guard Leader?";
 		next;
 		mes "[Dog]";
@@ -4807,7 +4807,7 @@ ma_fild02,312,259,3	script	Dog#buwaya	4_DOG01,{
 		setquest 2278;
 		close;
 	} else if (malaya_buwaya == 12) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Lets first bring Ed to Totoy and then go back to the Guard Leader.";
 		close;
 	}
@@ -7109,7 +7109,7 @@ malaya,55,72,4	script	Nurse#ma_n1	4_F_NURSE,{
 		cutin "",255;
 		end;
 	} else if (malaya_bang == 4) {
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "We pushed and pulled, but it won't budge.";
 		emotion e_swt2,1;
 		next;
@@ -7280,7 +7280,7 @@ malaya,55,72,4	script	Nurse#ma_n1	4_F_NURSE,{
 		mes "Hey "+ (Sex == SEX_MALE ? "dude" : "missy") +",";
 		mes "You're not getting in the hospital.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Who's there?!";
 		next;
 		mes "[???]";
@@ -7406,7 +7406,7 @@ malaya,55,72,4	script	Nurse#ma_n1	4_F_NURSE,{
 		cutin "malaya_nurseA02",2;
 		next;
 		mes "[Nurse Las]";
-		mes "Oh by the way, when ["+strcharinfo(0)+"], you were gone, I tried the door.";
+		mes "Oh by the way, when ["+strcharinfo(PC_NAME)+"], you were gone, I tried the door.";
 		mes "It did open...";
 		next;
 		mes "[Nurse Las]";
@@ -7509,7 +7509,7 @@ ma_dun01,152,23,4	script	Suspicious Wooden Stick::MalayaStick0	4_BULLETIN_BOARD2
 		mes "*Snigger*";
 		cutin "malaya_nurseA05",2;
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "?!";
 		cutin "",255;
 		next;
@@ -7693,7 +7693,7 @@ malaya,62,37,4	script	Village Man#mab	4_M_MALAYA,{
 			mes "Oh!!!";
 			mes "Did you meet the nurse?!";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "She was standing in front of the hospital.";
 			mes "Oh!";
 			mes "She must have gone to contact HQ.";
@@ -7826,7 +7826,7 @@ malaya,53,68,4	script	Bushes#ma	CLEAR_NPC,{
 		mes "How'd you know I was here?";
 		emotion e_omg;
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I'm not old.";
 		emotion e_an,1;
 		next;
@@ -7910,7 +7910,7 @@ malaya,53,68,4	script	Bushes#ma	CLEAR_NPC,{
 		mes "How'd you know I was here?";
 		emotion e_omg;
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I'm not old.";
 		emotion e_an,1;
 		close;
@@ -7951,18 +7951,18 @@ malaya,53,68,4	script	Bushes#ma	CLEAR_NPC,{
 					malaya_bang = 15;
 					changequest 11295,11296;
 					getitem Lesser_Agimat,1;
-					donpcevent "Tent"+replacestr(strnpcinfo(3),"MalayaStick","")+"#ma::OnEnable";
+					donpcevent "Tent"+replacestr(strnpcinfo(NPC_NAME_UNIQUE),"MalayaStick","")+"#ma::OnEnable";
 					next;
 					mes "Better show Las the talisman.";
 					close;
 				} else {
 					getitem Lesser_Agimat,1;
-					donpcevent "Tent"+replacestr(strnpcinfo(3),"MalayaStick","")+"#ma::OnEnable";
+					donpcevent "Tent"+replacestr(strnpcinfo(NPC_NAME_UNIQUE),"MalayaStick","")+"#ma::OnEnable";
 					close;
 				}
 			} else {
 				mes "After pulling out the deeply planted stick, an uneasy feeling washes over.";
-				donpcevent "Tent"+replacestr(strnpcinfo(3),"MalayaStick","")+"#ma::OnEnable";
+				donpcevent "Tent"+replacestr(strnpcinfo(NPC_NAME_UNIQUE),"MalayaStick","")+"#ma::OnEnable";
 				close;
 			}
 		case 2:
@@ -7975,10 +7975,10 @@ malaya,53,68,4	script	Bushes#ma	CLEAR_NPC,{
 	}
 	end;
 OnEnable:
-	enablenpc strnpcinfo(3); // NPC name is too long for strnpcinfo(0).
+	enablenpc strnpcinfo(NPC_NAME_UNIQUE); // NPC name is too long for strnpcinfo(NPC_NAME).
 	end;
 OnDisable:
-	disablenpc strnpcinfo(3);
+	disablenpc strnpcinfo(NPC_NAME_UNIQUE);
 	end;
 }
 malaya,40,52,4	duplicate(MalayaStick)	Suspicious Wooden Stick::MalayaStick1	4_BULLETIN_BOARD2
@@ -7995,22 +7995,22 @@ malaya,59,84,4	duplicate(MalayaStick)	Suspicious Wooden Stick::MalayaStick10	4_B
 -	script	Tent#ma	FAKE_NPC,{ //557
 	end;
 OnInit:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	initnpctimer;
 	end;
 OnDisable:
 	stopnpctimer;
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnTimer1000:
-	donpcevent "MalayaStick"+replacestr(strnpcinfo(1),"Tent","")+"::OnDisable";
+	donpcevent "MalayaStick"+replacestr(strnpcinfo(NPC_NAME_VISIBLE),"Tent","")+"::OnDisable";
 	end;
 OnTimer30000:
-	donpcevent "MalayaStick"+replacestr(strnpcinfo(1),"Tent","")+"::OnEnable";
-	donpcevent strnpcinfo(0)+"::OnDisable";
+	donpcevent "MalayaStick"+replacestr(strnpcinfo(NPC_NAME_VISIBLE),"Tent","")+"::OnEnable";
+	donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 	end;
 }
 -	duplicate(Tent#ma)	Tent1#ma	FAKE_NPC
@@ -8029,45 +8029,45 @@ malaya,114,183,3	script	Bent Old Lady#ma	4_F_BARYO_OLD,{
 		mes "[Bent Old Lady]";
 		mes "Ho ho ho ho~~";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Ma'am, excuse me, but can I ask you a question?";
 		next;
 		mes "[Bent Old Lady]";
 		mes "Ho ho ho ho~~";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Ma'am?";
 		next;
 		mes "[Bent Old Lady]";
 		mes "Ho ho ho ho~~";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Ma'am?";
 		next;
 		mes "[Bent Old Lady]";
 		mes "Ho ho ho ho~~";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Ma'am!!!!!!!!!";
 		next;
 		mes "[Bent Old Lady]";
 		mes "Who? What?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Excuse me, but can I ask you something?";
 		next;
 		mes "[Bent Old Lady]";
 		mes "What? I can't hear you.";
 		mes "Speak up!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I! Have! Something! To! Ask! You!";
 		next;
 		mes "[Bent Old Lady]";
 		mes "Oh~Yes dear~";
 		mes "I'll tell you everything I know, dear~";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Do you know anything about the hospital?";
 		next;
 		mes "[Bent Old Lady]";
@@ -8179,31 +8179,31 @@ malaya,114,183,3	script	Bent Old Lady#ma	4_F_BARYO_OLD,{
 		mes "[Bent Old Lady]";
 		mes "Ho ho ho ho~~";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Ma'am, excuse me, but can I ask you a question?";
 		next;
 		mes "[Bent Old Lady]";
 		mes "Ho ho ho ho~~";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Ma'am?";
 		next;
 		mes "[Bent Old Lady]";
 		mes "Ho ho ho ho~~";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Ma'am?";
 		next;
 		mes "[Bent Old Lady]";
 		mes "Ho ho ho ho~~";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Ma'am!!!!!!!!!";
 		next;
 		mes "[Bent Old Lady]";
 		mes "Who? What?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Excuse me, but can I ask you something?";
 		next;
 		mes "[Bent Old Lady]";
@@ -8532,7 +8532,7 @@ ma_fild01,179,260,2	script	Festival Helper Boy#pin	4_M_BARYO_BOY,{
 	emotion e_lv;
 	mes "[Isco]";
 	mes "Oh~ Really? Wow!";
-	mes "Thanks! "+strcharinfo(0)+" "+.@str$+"!!";
+	mes "Thanks! "+strcharinfo(PC_NAME)+" "+.@str$+"!!";
 	mes "He he. What did you bring?";
 	next;
 	.@i = select(
@@ -8930,7 +8930,7 @@ ma_fild01,172,223,6	script	Tattooist#pin	4_M_BARYO_OLD,{
 	delitem .@spirit,1;
 	delitem .@doll,1;
 	getitem .@tattoo,1;
-	$malaya_pintados_04$ = strcharinfo(0);
+	$malaya_pintados_04$ = strcharinfo(PC_NAME);
 	mes "[Tattooist]";
 	mes "I'm sorry you had to wait for a long time. But it was worth it cause I haven't created a Tattoo of this quality in a long time.";
 	next;
@@ -9156,13 +9156,13 @@ ma_fild01,164,231,6	script	Beat Catching Boy#pin10	4_M_BARYO_BOY,{
 	close;
 OnInit:
 	if (!$malaya_pintados_00)
-		disablenpc strnpcinfo(0);
+		disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	end;
 OnDisable:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 ma_fild01,170,228,4	duplicate(Beat Catching Boy#pin10)	Beat Catching Boy#pin11	4_M_BARYO_BOY

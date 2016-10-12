@@ -44,6 +44,26 @@ moc_para01,27,35,5	script	Secretary Lime Evenor	4_F_EDEN_OFFICER,{
 		mes "- after you loose some weight. -";
 		close;
 	}
+	if (countitem(Para_Team_Mark) > 0) {
+		mes "[Lime Evenor]";
+		mes "Thanks to many adventurers visiting our Eden Group, we've recently prepared a new version of Eden Group Mark for our visitors.";
+		mes "And it is also possible to exchange old version of Eden Group Mark into a new one.";
+		next;
+		mes "[Lime Evenor]";
+		mes "Though it has a slight time delay, this new version of Eden Group Mark will send you back to current saved location.";
+		mes "Would you like to exchange yours?";
+		next;
+		if (select("Sure", "I'm good.") == 2){
+			mes "[Lime Evenor]";
+			mes "What possible reason would you have... to not exchange?";
+			close;
+		}
+		delitem Para_Team_Mark,1;
+		getitem Para_Team_Mark_,1;
+		mes "[Lime Evenor]";
+		mes "There you go. Come back again~";
+		close;
+	}
 	mes "[Lime Evenor]";
 	mes "People who follow their dreams and romances listen to me. We are representatives of the paradise called 'The garden of Eden' called the Eden group . There is no place like this anywhere.";
 	mes "Hello. Can I help you?";
@@ -67,7 +87,7 @@ moc_para01,27,35,5	script	Secretary Lime Evenor	4_F_EDEN_OFFICER,{
 			next;
 			break;
 		case 2:
-			if (countitem(Para_Team_Mark) < 1) {
+			if (countitem(Para_Team_Mark) < 1 && countitem(Para_Team_Mark_) < 1) {
 				mes "[Lime Evenor]";
 				mes "You can be a Eden's member by simply registering with me.";
 				mes "Would you like to join Eden Group?";
@@ -96,7 +116,7 @@ moc_para01,27,35,5	script	Secretary Lime Evenor	4_F_EDEN_OFFICER,{
 					input .@input$;
 					next;
 					mes "[Lime Evenor]";
-					mes "Ah~ ha. You are ^3131FF"+strcharinfo(0)+"^000000.";
+					mes "Ah~ ha. You are ^3131FF"+strcharinfo(PC_NAME)+"^000000.";
 					mes "I got it right this time.";
 					next;
 					emotion e_no1;
@@ -106,7 +126,7 @@ moc_para01,27,35,5	script	Secretary Lime Evenor	4_F_EDEN_OFFICER,{
 					next;
 					mes "[Lime Evenor]";
 					mes "Hopefully you can do great work as an Eden's member.";
-					getitem Para_Team_Mark,1;
+					getitem Para_Team_Mark_,1;
 					next;
 					break;
 				case 2:
@@ -131,11 +151,11 @@ moc_para01,27,35,5	script	Secretary Lime Evenor	4_F_EDEN_OFFICER,{
 				input .@input$;
 				next;
 				mes "[Lime Evenor]";
-				mes "^3131FF"+strcharinfo(0)+"^000000.. Is that your name?";
+				mes "^3131FF"+strcharinfo(PC_NAME)+"^000000.. Is that your name?";
 				mes "Hmm, your handwriting is not clear. I can't read. it";
 				next;
 				mes "[Lime Evenor]";
-				mes "^3131FF"+strcharinfo(0)+"^000000, tell me what you want to register. for";
+				mes "^3131FF"+strcharinfo(PC_NAME)+"^000000, tell me what you want to register. for";
 				mes "Which map should we go to?";
 				input .@input$;
 				next;
@@ -179,7 +199,7 @@ moc_para01,27,35,5	script	Secretary Lime Evenor	4_F_EDEN_OFFICER,{
 			}
 			break;
 		case 4:
-			if (countitem(Para_Team_Mark) > 0) {
+			if (countitem(Para_Team_Mark) > 0 || countitem(Para_Team_Mark_) > 0) {
 				mes "[Lime Evenor]";
 				mes "Would like to try some missions as an Eden member?";
 				next;
@@ -218,7 +238,7 @@ moc_para01,27,35,5	script	Secretary Lime Evenor	4_F_EDEN_OFFICER,{
 	case 1:
 		mes "[Eden Teleport Officer]";
 		mes "Let's go to our secret base!";
-		nak_warp = strnpcinfo(2);
+		nak_warp = strnpcinfo(NPC_NAME_HIDDEN);
 		close2;
 		warp "moc_para01",31,14;
 		end;
@@ -306,7 +326,7 @@ OnTouch:
 }
 
 moc_para01,47,39,3	script	#warp_2_pass	HIDDEN_NPC,{
-	if (countitem(Para_Team_Mark) > 0) {
+	if (countitem(Para_Team_Mark) > 0 || countitem(Para_Team_Mark_) > 0) {
 		mes "[Lime Evenor]";
 		mes "Oh, it is an exclusive place only for Eden's members.";
 		mes "If you are a member, you can come whenever you want!";

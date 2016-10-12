@@ -49,7 +49,7 @@ mjolnir_02,186,193,4	script	Middle-Aged Man#magum1	1_M_LIBRARYMASTER,{
 			mes "receive visitors. Why don't";
 			mes "you relax and chat for a while?";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "What are you doing out";
 			mes "here in this secluded";
 			mes "area? You don't have";
@@ -85,7 +85,7 @@ mjolnir_02,186,193,4	script	Middle-Aged Man#magum1	1_M_LIBRARYMASTER,{
 			mes "the land, or are you";
 			mes "hunting monsters, or...?";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Actually, um,";
 			mes "I was led here by";
 			mes "this thing. It's called";
@@ -375,7 +375,7 @@ payon,248,159,1	script	Old Man#magum1	2_M_PHARMACIST,{
 		mes "Lemme alone so I can";
 		mes "drink in peace! ^333333*Urp*^000000";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Um, excuse me, but are";
 		mes "you Morf? I'm been sent";
 		mes "by your brother, Walker,";
@@ -390,7 +390,7 @@ payon,248,159,1	script	Old Man#magum1	2_M_PHARMACIST,{
 		mes "A-and that's really the Seal";
 		mes "of Muriel you have there?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Oh, the Seal!";
 		mes "Here, take a look";
 		mes "if you want. If it's";
@@ -426,7 +426,7 @@ payon,248,159,1	script	Old Man#magum1	2_M_PHARMACIST,{
 			mes "people call sobriety. Ugh...";
 			mes "I can think clearly... Damn!";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "......";
 			mes ".........";
 			mes "............";
@@ -519,7 +519,7 @@ payon,248,159,1	script	Old Man#magum1	2_M_PHARMACIST,{
 			mes "*Rub-Rub-Rub-Rub*";
 			mes "*Rub Rub Rub Rub*^000000";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Excuse me...";
 			mes "But is it almost done?";
 			next;
@@ -552,7 +552,7 @@ payon,248,159,1	script	Old Man#magum1	2_M_PHARMACIST,{
 			mes "*Rub-Rub-Rub-Rub*";
 			mes "*Rub Rub Rub Rub*^000000";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "H-hey, when is this";
 			mes "thing going to be finished?";
 			mes "Isn't it about time already?";
@@ -822,7 +822,7 @@ morocc,248,159,4	script	Young Man#magum1	4_M_04,{
 		mes "look like you have";
 		mes "a question for me.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Actually, I'm looking for";
 		mes "somebody named Huey.";
 		mes "I hear he's the only one";
@@ -838,7 +838,7 @@ morocc,248,159,4	script	Young Man#magum1	4_M_04,{
 		mes "of my brothers? I haven't heard";
 		mes "from them in quite a while.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Actually, I'm trying to";
 		mes "obtain a doomed sword.";
 		mes "To do that, I've already";
@@ -854,7 +854,7 @@ morocc,248,159,4	script	Young Man#magum1	4_M_04,{
 		mes "let me see the pentagram? Oh,";
 		mes "my brothers did such good work!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Ah, yes. Here.";
 		next;
 		mes "[Huey]";

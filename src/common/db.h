@@ -1114,7 +1114,11 @@ HPShared struct db_interface *DB;
  * @param _vec Vector.
  */
 #define VECTOR_INIT(_vec) \
-	memset(&(_vec), 0, sizeof(_vec))
+	do { \
+		VECTOR_DATA(_vec) = NULL; \
+		VECTOR_CAPACITY(_vec) = 0; \
+		VECTOR_LENGTH(_vec) = 0; \
+	} while(false)
 
 /**
  * Returns the internal array of values.
@@ -1220,12 +1224,11 @@ HPShared struct db_interface *DB;
  */
 #define VECTOR_ENSURE(_vec, _n, _step) \
 	do { \
-		int _empty_ = VECTOR_CAPACITY(_vec)-VECTOR_LENGTH(_vec); \
-		if ((_n) > _empty_) { \
-			while ((_n) > _empty_) \
-				_empty_ += (_step); \
-			VECTOR_RESIZE(_vec, _empty_+VECTOR_LENGTH(_vec)); \
-		} \
+		int _newcapacity_ = VECTOR_CAPACITY(_vec); \
+		while ((_n) + VECTOR_LENGTH(_vec) > _newcapacity_) \
+			_newcapacity_ += (_step); \
+		if (_newcapacity_ > VECTOR_CAPACITY(_vec)) \
+			VECTOR_RESIZE(_vec, _newcapacity_); \
 	} while(false)
 
 /**

@@ -659,9 +659,9 @@ lou_fild01,175,173,3	script	Jiu Lian Bu#1-2	4_M_CHN8GUEK,{
 		mes "Say it out loud!";
 		next;
 		input .@input$;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes .@input$;
-		mapannounce "lou_fild01","'"+strcharinfo(0)+"' shouts : "+.@input$,bc_map,"0x9CFF00";
+		mapannounce "lou_fild01","'"+strcharinfo(PC_NAME)+"' shouts : "+.@input$,bc_map,"0x9CFF00";
 		next;
 		mes "[Jiu Lian Bu]";
 		mes "So, how do you feel?";
@@ -684,9 +684,9 @@ lou_fild01,175,173,3	script	Jiu Lian Bu#1-2	4_M_CHN8GUEK,{
 			mes "Say it out loud!";
 			next;
 			input .@input$;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes .@input$;
-			mapannounce "lou_fild01","'"+strcharinfo(0)+"' shouts : "+.@input$,bc_map,"0x9CFF00";
+			mapannounce "lou_fild01","'"+strcharinfo(PC_NAME)+"' shouts : "+.@input$,bc_map,"0x9CFF00";
 			next;
 			mes "[Jiu Lian Bu]";
 			mes "So, how do you feel? Don't you feel better now?";
@@ -1429,6 +1429,7 @@ lou_in02,265,69,5	script	Doctor#lyang	4_F_CHNDOCTOR,{
 		mes "^3355FF10 Sprout^000000 and";
 		mes "^3355FF5 Honey Pot^000000.";
 		ch_par = 17;
+		changequest 11056,11057;
 		close;
 	}
 	else if (ch_par == 17) {
@@ -2683,10 +2684,10 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 						mes "[Nagash Arses]";
 						mes "Hm? Do you have recent news of Morroc?";
 						next;
-						mes "["+strcharinfo(0)+"]";
+						mes "["+strcharinfo(PC_NAME)+"]";
 						mes "Yeah, I've got some news you might be interested in.";
 						input .@input$;
-						mes "["+strcharinfo(0)+"]";
+						mes "["+strcharinfo(PC_NAME)+"]";
 						mes ""+.@input$+"";
 						next;
 						if (rand(1,50) > 25) {
@@ -2839,11 +2840,11 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 						mes "Is there anything";
 						mes "you want to say?";
 						next;
-						mes "["+strcharinfo(0)+"]";
+						mes "["+strcharinfo(PC_NAME)+"]";
 						mes "I have news";
 						mes "of Morroc...";
 						input .@input$;
-						mes "["+strcharinfo(0)+"]";
+						mes "["+strcharinfo(PC_NAME)+"]";
 						mes ""+.@input$+"";
 						next;
 						if (rand(1,50) > 30) {
@@ -3196,7 +3197,7 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 					changequest 11077,11078;
 					close;
 				}
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "...Nothing much.";
 				next;
 				mes "[Nagash Arses]";
@@ -3288,7 +3289,7 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 		mes "What...";
 		mes "What happened?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I made it.";
 		next;
 		mes "[Nagash Arses]";
@@ -4321,7 +4322,7 @@ OnTouch:
 
 louyang,217,278,0	script	 #lou_path	HIDDEN_NPC,{
 	if (ch_poison == 12 || ch_poison == 16) {
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "What's this?";
 		mes "A crack in the wall?";
 		next;
@@ -4630,7 +4631,7 @@ lou_in02,77,37,7	script	Hermit	4_M_CHNOLD,{
 			case 2:
 				QL_REVOL = 1;
 				mes "[Sun Mao]";
-				mes strcharinfo(0)+ "...!";
+				mes strcharinfo(PC_NAME)+ "...!";
 				mes "Your name is now engraved on this bloody pledge board. We will fight together to the death for Louyang's future!";
 				next;
 				getpartymember(getcharid(1));

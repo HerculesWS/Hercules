@@ -987,7 +987,7 @@ geffen,46,164,1	script	Baisulist#BLS	1_F_04,{
 		mes "Here it is.";
 		mes "Thank you so much!";
 		mes "Oh, and good luck~";
-		mapannounce "geffen","Hey, " +strcharinfo(0)+ ", thank you so much for the delivery~",bc_map;
+		mapannounce "geffen","Hey, " +strcharinfo(PC_NAME)+ ", thank you so much for the delivery~",bc_map;
 		close;
 	}
 	else if (BSMITH_Q == 14) {
@@ -1080,7 +1080,7 @@ morocc,27,112,4	script	Wickebine#BLS	4_F_JOB_ASSASSIN,{
 		mes "Here's the receipt.";
 		mes "I think you did";
 		mes "a good job.";
-		mapannounce "morocc","Thanks for delivering, " + strcharinfo(0) + "~!",bc_map;
+		mapannounce "morocc","Thanks for delivering, " + strcharinfo(PC_NAME) + "~!",bc_map;
 		close2;
 		cutin "Job_Black_hucke02",255;
 		end;
@@ -1171,7 +1171,7 @@ lighthalzen,209,80,4	script	Krongast#BLS	4_M_JOB_KNIGHT2,{
 		mes "your receipt.";
 		mes "Thank you for";
 		mes "your business!";
-		mapannounce "lighthalzen",strcharinfo(0)+"... Thank you for the delivery.",bc_map;
+		mapannounce "lighthalzen",strcharinfo(PC_NAME)+"... Thank you for the delivery.",bc_map;
 		close;
 	}
 	else if (BSMITH_Q == 14) {
@@ -1246,7 +1246,7 @@ payon,214,79,4	script	Talpiz#BLS	1_M_ORIENT01,{
 		mes "your receipt.";
 		mes "I really appreciate";
 		mes "your hard work.";
-		mapannounce "payon","Thanks, " +strcharinfo(0)+ ", you really delivered. Everytime I look at this, I love it even more~",bc_map;
+		mapannounce "payon","Thanks, " +strcharinfo(PC_NAME)+ ", you really delivered. Everytime I look at this, I love it even more~",bc_map;
 		close;
 	}
 	else if (BSMITH_Q == 14) {
@@ -1342,7 +1342,7 @@ hugel,168,183,1	script	Bismarc#BLS	2_M_THIEFMASTER,{
 		mes "your receipt.";
 		mes "T-take it...!";
 		mes "It's yours!";
-		mapannounce "hugel","Thanks, " +strcharinfo(0)+ ", for the delivery. You saved my life...",bc_map;
+		mapannounce "hugel","Thanks, " +strcharinfo(PC_NAME)+ ", for the delivery. You saved my life...",bc_map;
 		close;
 	}
 	else if (BSMITH_Q == 14) {

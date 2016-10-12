@@ -497,7 +497,7 @@ geffen_in,22,125,1	script	Crumpler	1_M_HOF,{
 			mes "IT BUUUURNS!";
 			close;
 		case 3:
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "No...";
 			mes "I can only use";
 			mes "my powers for good.";
@@ -629,9 +629,9 @@ geffen_in,27,134,5	script	Waitress#elen	4_F_02,{
 		next;
 		mes "[Elenore]";
 		if (Sex == SEX_MALE)
-			mes "Tell me, have you ever heard of "+strcharinfo(0)+"? He's supposed to be the suavest hero around!";
+			mes "Tell me, have you ever heard of "+strcharinfo(PC_NAME)+"? He's supposed to be the suavest hero around!";
 		else
-			mes "Have you ever heard of "+strcharinfo(0)+"? People say she's one of the prettiest girls in all of Rune-Midgard!";
+			mes "Have you ever heard of "+strcharinfo(PC_NAME)+"? People say she's one of the prettiest girls in all of Rune-Midgard!";
 		break;
 	case 4:
 		switch(rand(1,2)) {
@@ -667,7 +667,7 @@ geffen_in,27,134,5	script	Waitress#elen	4_F_02,{
 			mes "[William's Spirit]";
 			mes "^990000Hey you sex crazed bastard!! Stop looking at my daughter like that before I rip out your eyes, and eat them with pasta!^000000";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			if (Sex == SEX_MALE) {
 				mes "Huh...?";
 				mes "C-come again?";
@@ -676,7 +676,7 @@ geffen_in,27,134,5	script	Waitress#elen	4_F_02,{
 				mes "Huh...?";
 				mes "Oh, Dad must have possessed me again. It happens to me and my sister all the time.";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "No kidding?";
 				mes "Huh. Total bummer.";
 				next;
@@ -783,7 +783,7 @@ geffen_in,70,67,3	script	Waitress#elise	4_F_01,{
 			mes "[William's Spirit]";
 			mes "^990000Stay away from my daughter, or I'll beat your brains out, punk! Elisa's gonna marry a doctor! Or a lawyer!^000000";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			if (Sex == SEX_MALE) {
 				mes "Y-y-y-yes, sir!";
 				next;

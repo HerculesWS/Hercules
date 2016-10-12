@@ -265,8 +265,8 @@ moc_prydb1,39,129,2	script	Thief Guide	1_F_04,{
 				mes "me your name.";
 				next;
 				mes "[Thief Guide]";
-				mes "" + strcharinfo(0) + "?";
-				mes "What kind of name is " + strcharinfo(0) + "? Anyway, give me a second.";
+				mes "" + strcharinfo(PC_NAME) + "?";
+				mes "What kind of name is " + strcharinfo(PC_NAME) + "? Anyway, give me a second.";
 				job_thief_q = 1;
 				next;
 				mes "[Thief Guide]";
@@ -301,7 +301,7 @@ moc_prydb1,39,129,2	script	Thief Guide	1_F_04,{
 		}
 		mes "[Thief Guide]";
 		mes "Your name is...";
-		mes strcharinfo(0) + "? Um, where is it? Ah, here it is. Let's see...";
+		mes strcharinfo(PC_NAME) + "? Um, where is it? Ah, here it is. Let's see...";
 		next;
 		mes "[Thief Guide]";
 		if (getskilllv("NV_BASIC") < 9) {
@@ -440,7 +440,7 @@ moc_prydb1,42,133,2	script	Comrade	2_M_THIEFMASTER,{
 		}
 		next;
 		mes "[Comrade]";
-		mes strcharinfo(0) + "...";
+		mes strcharinfo(PC_NAME) + "...";
 		mes "You have passed the official Thief Test. You are now one of us.";
 		if (countitem(Mushroom_Of_Thief_1) != 0) delitem Mushroom_Of_Thief_1,countitem(Mushroom_Of_Thief_1);
 		if (countitem(Mushroom_Of_Thief_2) != 0) delitem Mushroom_Of_Thief_2,countitem(Mushroom_Of_Thief_2);
@@ -517,7 +517,7 @@ moc_ruins,141,125,3	script	Mr. Irrelevant	4_M_01,{
 		mes "You've come to take the test, right? I can see in your eyes that you know something.";
 		next;
 		mes "[Mr. Irrelevant]";
-		mes "Your name is " + strcharinfo(0) + "? Ah, it's on the list. Alright, I'll let you into the Mushroom Farm , but I can't guarantee your safety...";
+		mes "Your name is " + strcharinfo(PC_NAME) + "? Ah, it's on the list. Alright, I'll let you into the Mushroom Farm , but I can't guarantee your safety...";
 		close2;
 		job_thief_q = 3;
 		switch(rand(5)) {

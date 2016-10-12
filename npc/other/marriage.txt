@@ -330,7 +330,7 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 			next;
 			while(1) {
 				input .@name$;
-				if (.@name$ == strcharinfo(0))
+				if (.@name$ == strcharinfo(PC_NAME))
 					break;
 				mes "[Marry Happy]";
 				mes "Hmmm, you have to write";
@@ -590,7 +590,7 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 						mes "and joy. May the love you share";
 						mes "grow with each passing day.";
 						next;
-						mapannounce "prt_church","It's the marriage proposal from the groom, Mr. " + strcharinfo(0) + "...",bc_map;
+						mapannounce "prt_church","It's the marriage proposal from the groom, Mr. " + strcharinfo(PC_NAME) + "...",bc_map;
 						mes "[Vomars]";
 						mes "Until the end of the";
 						mes "world, may you stand";
@@ -601,21 +601,21 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 						next;
 						input $@wed_bride$;
 						mes "[Vomars]";
-						mes "Mr. " + strcharinfo(0) + "...";
+						mes "Mr. " + strcharinfo(PC_NAME) + "...";
 						mes "Do you swear on your life";
 						mes "that you will forever cherish";
 						mes "and care for your bride,";
 						mes "Miss " + $@wed_bride$ + "?";
 						next;
 						select("I do.");
-						$@wed_groom$ = strcharinfo(0);
+						$@wed_groom$ = strcharinfo(PC_NAME);
 						mes "[Vomars]";
 						mes "Now, it is time for";
 						mes "your bride to make";
 						mes "her wedding vows.";
 						mes "If she will come forward...";
 						close2;
-						mapannounce "prt_church","The groom, Mr. " + strcharinfo(0) + ", has made his vows to Miss " + $@wed_bride$ + "...",bc_map;
+						mapannounce "prt_church","The groom, Mr. " + strcharinfo(PC_NAME) + ", has made his vows to Miss " + $@wed_bride$ + "...",bc_map;
 						cutin "",255;
 						end;
 					}
@@ -652,7 +652,7 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 				.@partymembercount = $@partymembercount;
 				if (.@partymembercount == 2) {
 					if (Sex == SEX_FEMALE) {
-						if (strcharinfo(0) == $@wed_bride$) {
+						if (strcharinfo(PC_NAME) == $@wed_bride$) {
 							mes "[Vomars]";
 							mes "Young lovers, please";
 							mes "remember this moment for";
@@ -761,7 +761,7 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 				}
 				callsub S_Busy;
 			}
-			if (strcharinfo(0) == $@wed_bride$) {
+			if (strcharinfo(PC_NAME) == $@wed_bride$) {
 				mes "[Vomars]";
 				mes "Hm? It appears that";
 				mes "Happy Marry still hasn't";

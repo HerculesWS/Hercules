@@ -87,20 +87,20 @@ prt_castle,48,161,3	script	Middle-aged Gentleman#rg	1_M_LIBRARYMASTER,{
 		mes "Do you want to argue with me? Do you know who I am?";
 		next;
 		if(select("Not really, who are you?", "Sorry, I won't hurt your feelings.") == 2) {
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Sorry. I had to be sure. I didn't know that you are from the royal palace.";
 			next;
 			mes "[Middle-aged Gentleman]";
 			mes "That's enough. Don't make this mistake again.";
 			close;
 		}
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I'm a member here and have the authority to find out what your business is here.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "You are a stranger and I'm not sure if you belong here.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "If you tell me your identity, I will apologize.";
 		next;
 		mes "[Middle-aged Gentleman]";
@@ -465,7 +465,7 @@ gl_church,173,88,0	script	Delicate trace#01	CLEAR_NPC,{
 			getitem Stone,1;
 		else {
 			mes "While investigating, the topography breaks. It would be better to dig other places for a while.";
-			disablenpc strnpcinfo(0);
+			disablenpc strnpcinfo(NPC_NAME);
 			initnpctimer;
 			close;
 		}
@@ -473,7 +473,7 @@ gl_church,173,88,0	script	Delicate trace#01	CLEAR_NPC,{
 	mes "There is a trace that someone has already dug here.";
 	close;
 OnTimer60000:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	stopnpctimer;
 OnTimer1000:
 OnTimer20000:

@@ -35,7 +35,7 @@
 //=========================================================================
 
 moc_para01,38,38,3	script	Mission [26 - 40]	4_BOARD3,{
-	if (countitem(Para_Team_Mark) < 1) {
+	if (countitem(Para_Team_Mark) < 1 && countitem(Para_Team_Mark_) < 1) {
 		mes "You are not a qualified member. You can not use the bulletin board.";
 		close;
 	}

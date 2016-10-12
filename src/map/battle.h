@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -539,6 +539,11 @@ struct Battle_Config {
 	// BodyStyle
 	int min_body_style, max_body_style;
 	int save_body_style;
+
+	// Warp Face Direction
+	int player_warp_keep_direction;
+
+	int atcommand_levelup_events;	// Enable atcommands trigger level up events for NPCs
 };
 
 /* criteria for battle_config.idletime_critera */
@@ -587,6 +592,8 @@ struct battle_interface {
 	struct Damage (*calc_attack) (int attack_type, struct block_list *bl, struct block_list *target, uint16 skill_id, uint16 skill_lv, int count);
 	/* generic final damage calculation */
 	int64 (*calc_damage) (struct block_list *src, struct block_list *bl, struct Damage *d, int64 damage, uint16 skill_id, uint16 skill_lv);
+	/* pc special damage calculation */
+	int64 (*calc_pc_damage) (struct block_list *src, struct block_list *bl, struct Damage *d, int64 damage, uint16 skill_id, uint16 skill_lv);
 	/* gvg final damage calculation */
 	int64 (*calc_gvg_damage) (struct block_list *src, struct block_list *bl, int64 damage, int div_, uint16 skill_id, uint16 skill_lv, int flag);
 	/* battlegrounds final damage calculation */
@@ -656,10 +663,11 @@ struct battle_interface {
 	int (*adjust_skill_damage) (int m, unsigned short skill_id);
 	int64 (*add_mastery) (struct map_session_data *sd,struct block_list *target,int64 dmg,int type);
 	int (*calc_drain) (int64 damage, int rate, int per);
-	/* - battle_config                           */
-	int (*config_read) (const char *cfgName);
+	/* battle_config */
+	bool (*config_read) (const char *filename, bool imported);
 	void (*config_set_defaults) (void);
-	int (*config_set_value) (const char *w1, const char *w2);
+	bool (*config_set_value_sub) (int index, int value);
+	bool (*config_set_value) (const char *param, const char *value);
 	bool (*config_get_value) (const char *w1, int *value);
 	void (*config_adjust) (void);
 	/* ----------------------------------------- */

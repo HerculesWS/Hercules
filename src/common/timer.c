@@ -258,10 +258,6 @@ int64 timer_gettick(void) {
 /// Adds a timer to the timer_heap
 static void push_timer_heap(int tid) {
 	BHEAP_ENSURE(timer_heap, 1, 256);
-#ifdef __clang_analyzer__ // Clang's static analyzer warns that BHEAP_ENSURE might set BHEAP_DATA(timer_heap) to NULL.
-#include "assert.h"
-	assert(BHEAP_DATA(timer_heap) != NULL);
-#endif // __clang_analyzer__
 	BHEAP_PUSH(timer_heap, tid, DIFFTICK_MINTOPCMP, swap);
 }
 

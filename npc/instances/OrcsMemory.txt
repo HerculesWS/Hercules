@@ -70,7 +70,7 @@ gef_fild10,242,202,0	script	Dimensional Gorge Piece	2_MONEMUS,{
 				.@instance = instance_create(.@md_name$,.@party_id);
 				if (.@instance < 0) {
 					mes "Party Name: "+.@p_name$;
-					mes "Party Leader: "+strcharinfo(0);
+					mes "Party Leader: "+strcharinfo(PC_NAME);
 					mes "^0000ff"+.@md_name$+" ^000000 - Reservation Failed.";
 					close;
 				}
@@ -108,7 +108,7 @@ gef_fild10,242,202,0	script	Dimensional Gorge Piece	2_MONEMUS,{
 		close;
 	}
 
-	mapannounce "gef_fild10", strcharinfo(0) + " of the party, " + .@p_name$ + " is entering the "+.@md_name$+".",bc_map,"0x00ff99";
+	mapannounce "gef_fild10", strcharinfo(PC_NAME) + " of the party, " + .@p_name$ + " is entering the "+.@md_name$+".",bc_map,"0x00ff99";
 	if (!questprogress(12059)) setquest 12059;
 	warp "1@orcs",179,15;
 	end;
@@ -686,22 +686,22 @@ OnTimer23910:
 2@orcs,26,164,0	script	Torch#1-1	CLEAR_NPC,{
 	if(getpartyleader(getcharid(1),2) != getcharid(0)) end;
 	progressbar "ffff00",5;
-	setarray .@id[0], atoi(charat(strnpcinfo(2),0)), atoi(charat(strnpcinfo(2),2));
+	setarray .@id[0], atoi(charat(strnpcinfo(NPC_NAME_HIDDEN),0)), atoi(charat(strnpcinfo(NPC_NAME_HIDDEN),2));
 	if (.@id[1] == 4)
 		donpcevent instance_npcname("#Warp2-"+.@id[0])+"::OnEnable";
 	else
 		donpcevent instance_npcname("Torch#"+.@id[0]+"-"+(.@id[1]+1))+"::OnEnable";
 	initnpctimer;
-	disablenpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 
 OnInstanceInit:
-	if (strnpcinfo(0) != "Torch#2-1" && strnpcinfo(0) != "Torch#3-1")
-		disablenpc instance_npcname(strnpcinfo(0));
+	if (strnpcinfo(NPC_NAME) != "Torch#2-1" && strnpcinfo(NPC_NAME) != "Torch#3-1")
+		disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 
 OnEnable:
-	enablenpc instance_npcname(strnpcinfo(0));
+	enablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 
 OnTimer100:
@@ -876,9 +876,9 @@ OnTouch:
 	if (yong_odun < 2) {
 		mes "[Kruger]";
 		mes "*Coughing*";
-		mes ""+strcharinfo(0)+", it's you...";
+		mes ""+strcharinfo(PC_NAME)+", it's you...";
 		next;
-		mes "["+strcharinfo(0)+"] ";
+		mes "["+strcharinfo(PC_NAME)+"] ";
 		mes "Don't move! You are wounded!";
 		next;
 		mes "[Kruger]";
@@ -886,7 +886,7 @@ OnTouch:
 		mes "....";
 		mes "The Shaman? What about the Shaman?";
 		next;
-		mes "["+strcharinfo(0)+"] ";
+		mes "["+strcharinfo(PC_NAME)+"] ";
 		mes "The Shaman's dead now. Who was that Shaman really?";
 		next;
 		mes "Kruger seemed to be relieved as he hears of the death of the Shaman, but you notice the bitter expression on his face.";

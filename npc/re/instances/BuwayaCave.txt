@@ -98,7 +98,7 @@ ma_fild02,312,317,5	script	Guard#buwaya_cave	4_MAL_SOLDIER,{
 				if (.@instance < 0) {
 					mes "[Guard]";
 					mes "Party name is... "+getpartyname(.@party_id)+".";;
-					mes "Party leader is... "+strcharinfo(0);
+					mes "Party leader is... "+strcharinfo(PC_NAME);
 					mes "^0000ff"+.@md_name$+"^000000 cannot be opened now.";
 					mes "Please try a moment later.";
 					close;
@@ -159,7 +159,7 @@ OnTouch:
 			mes "The party leader did not generate the dungeon yet.";
 			close;
 		} else {
-			mapannounce "ma_fild02",getpartyname(getcharid(1))+" party's "+strcharinfo(0)+" member began hunting Buwaya in Buwaya Cave.",bc_map,"0x00ff99"; //FW_NORMAL 12 0 0
+			mapannounce "ma_fild02",getpartyname(getcharid(1))+" party's "+strcharinfo(PC_NAME)+" member began hunting Buwaya in Buwaya Cave.",bc_map,"0x00ff99"; //FW_NORMAL 12 0 0
 			setquest 4229;
 			warp "1@ma_c",35,57;
 			end;
@@ -337,7 +337,7 @@ OnDisable:
 1@ma_c,97,74,0	script	#yunobi1	HIDDEN_WARP_NPC,{
 	end;
 OnInstanceInit:
-	hideonnpc instance_npcname(strnpcinfo(0));
+	hideonnpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 OnEnable:
 	specialeffect EF_MAPPILLAR2;

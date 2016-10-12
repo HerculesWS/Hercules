@@ -132,7 +132,7 @@ gef_tower,111,37,4	script	Wizard Guildsman	1_F_GYPSY,{
 				}
 				mes "[Catherine]";
 				mes "Very well then, I accept your application.";
-				mes "Your name is..." + strcharinfo(0) + ", isn't it? I am not sure if I pronounced it correctly?";
+				mes "Your name is..." + strcharinfo(PC_NAME) + ", isn't it? I am not sure if I pronounced it correctly?";
 				next;
 				mes "[Catherine]";
 				mes "The Wizard job change quest is divided into 3 parts.";
@@ -1132,7 +1132,7 @@ OnMyMobDead:
 	--.MyMobs;
 	if (.MyMobs < 1) {
 		++WIZ_Q2;
-		mapannounce "job_wiz",strcharinfo(0)+" has succeeded in eliminating the monsters.",bc_map;
+		mapannounce "job_wiz",strcharinfo(PC_NAME)+" has succeeded in eliminating the monsters.",bc_map;
 		donpcevent "Room of Water#Door::OnEnable";
 		stopnpctimer;
 	}
@@ -1219,7 +1219,7 @@ OnDisable:
 OnMyMobDead:
 	--.MyMobs;
 	if (.MyMobs < 1) {
-		mapannounce "job_wiz",strcharinfo(0)+" has succeeded in eliminating the monsters.",bc_map;
+		mapannounce "job_wiz",strcharinfo(PC_NAME)+" has succeeded in eliminating the monsters.",bc_map;
 		percentheal 100,100;
 		warp "job_wiz",116,97;
 		donpcevent "Room of Water#Door::OnDisable";
@@ -1266,7 +1266,7 @@ OnInit:
 	end;
 
 OnTouch:
-	mapannounce "job_wiz",strcharinfo(0)+" has not succeeded.",bc_map;
+	mapannounce "job_wiz",strcharinfo(PC_NAME)+" has not succeeded.",bc_map;
 	warp "geffen",120,110;
 	end;
 }
@@ -1304,7 +1304,7 @@ OnDisable:
 OnMyMobDead:
 	--.MyMobs;
 	if (.MyMobs < 1) {
-		mapannounce "job_wiz",strcharinfo(0) + " has succeeded in eliminating the monsters.",bc_map;
+		mapannounce "job_wiz",strcharinfo(PC_NAME) + " has succeeded in eliminating the monsters.",bc_map;
 		donpcevent "Room of Earth#Door::OnEnable";
 		stopnpctimer;
 	}
@@ -1396,7 +1396,7 @@ OnDisable:
 OnMyMobDead:
 	--.MyMobs;
 	if (.MyMobs < 1) {
-		mapannounce "job_wiz",strcharinfo(0) + " has succeeded in eliminating the monster.",bc_map;
+		mapannounce "job_wiz",strcharinfo(PC_NAME) + " has succeeded in eliminating the monster.",bc_map;
 		percentheal 100,100;
 		warp "job_wiz",46,99;
 		donpcevent "Room of Earth#Door::OnDisable";
@@ -1443,7 +1443,7 @@ OnInit:
 	end;
 
 OnTouch:
-	mapannounce "job_wiz",strcharinfo(0) + " has not succeeded.",bc_map;
+	mapannounce "job_wiz",strcharinfo(PC_NAME) + " has not succeeded.",bc_map;
 	warp "geffen",120,110;
 	end;
 }
@@ -1479,7 +1479,7 @@ OnDisable:
 OnMyMobDead:
 	--.MyMobs;
 	if (.MyMobs < 1) {
-		mapannounce "job_wiz",strcharinfo(0) + " has succeeded in eliminating the monsters.",bc_map;
+		mapannounce "job_wiz",strcharinfo(PC_NAME) + " has succeeded in eliminating the monsters.",bc_map;
 		donpcevent "Room of Fire#Door::OnEnable";
 		stopnpctimer;
 	}
@@ -1569,7 +1569,7 @@ OnDisable:
 OnMyMobDead:
 	--.MyMobs;
 	if (.MyMobs < 1) {
-		mapannounce "job_wiz","Congratulations, " + strcharinfo(0) + ". You have passed the job change test.",bc_map;
+		mapannounce "job_wiz","Congratulations, " + strcharinfo(PC_NAME) + ". You have passed the job change test.",bc_map;
 		WIZ_Q = 7;
 		changequest 9017,9018;
 		donpcevent "Room of Fire#Door::OnDisable";

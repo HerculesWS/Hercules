@@ -80,7 +80,7 @@ gef_tower,102,34,5	script	Merito	2_M_SAGE_B,{
 			close;
 		}
 		mes "[Merito]";
-		mes "So, you are [" + strcharinfo(0) + "].";
+		mes "So, you are [" + strcharinfo(PC_NAME) + "].";
 		next;
 		mes "[Merito]";
 		mes "Give me a second to register your name.";
@@ -91,7 +91,7 @@ gef_tower,102,34,5	script	Merito	2_M_SAGE_B,{
 		mes "Good, then I'll give you a short explanation about the Sorcerer.";
 		next;
 		mes "[Merito]";
-		mes "[" + strcharinfo(0) + "], can you handle magic skillfully?";
+		mes "[" + strcharinfo(PC_NAME) + "], can you handle magic skillfully?";
 		next;
 		if(select("Yes, I can.", "No, I'm not really good at it.") == 2) {
 			mes "[Merito]";
@@ -188,7 +188,7 @@ gef_tower,113,161,5	script	Karacas	4_M_SAGE_A,{
 		mes "The list... has already arrived.";
 		next;
 		mes "[Karacas]";
-		mes "So, you are [" + strcharinfo(0) + "]... right?";
+		mes "So, you are [" + strcharinfo(PC_NAME) + "]... right?";
 		next;
 		if(select("Yes, I am.", "No, I'm not!") == 2) {
 			mes "[Karacas]";
@@ -355,14 +355,14 @@ gef_tower,113,161,5	script	Karacas	4_M_SAGE_A,{
 		mes "Originally my teacher needs to check the Sorcerer job change but after he went out to find the spirit of fish, I can't see him. So I'll check it myself.";
 		next;
 		mes "[Karacas]";
-		mes "Dear [" + strcharinfo(0) + "],";
+		mes "Dear [" + strcharinfo(PC_NAME) + "],";
 		mes "you went around the rough wilds to open the door as a Sorcerer and passed all the requirements that our Academy has given.";
 		next;
 		mes "[Karacas]";
 		mes "Of course it is just a beginning, we don't know which spirit you're going to commune with or what kind of hardships await you.";
 		next;
 		mes "[Karacas]";
-		mes "But with the ability you've shown until now, you will be capable to do anything from now on. Dear [" + strcharinfo(0) + "]";
+		mes "But with the ability you've shown until now, you will be capable to do anything from now on. Dear [" + strcharinfo(PC_NAME) + "]";
 		next;
 		mes "[Kalakas]";
 		if (BaseLevel < 99 || JobLevel < 50 || SkillPoint) {
@@ -380,7 +380,7 @@ gef_tower,113,161,5	script	Karacas	4_M_SAGE_A,{
 		mes "Moreover, I formally acknowledge that you've completed all the job transfer tests of the Sorcerer Academy.";
 		next;
 		mes "[Karacas]";
-		mes "Congratulations, [" + strcharinfo(0) + "]";
+		mes "Congratulations, [" + strcharinfo(PC_NAME) + "]";
 		jobchange roclass(eaclass()|EAJL_THIRD);
 		getitem Wind_Whisper,1;
 		getitem Green_Apple_Ring,1;
@@ -392,10 +392,10 @@ gef_tower,113,161,5	script	Karacas	4_M_SAGE_A,{
 }
 -	script	Spirit Detecting Staff#0	FAKE_NPC,{
 
-	if (strnpcinfo(4) == "thor_v01") setarray .@id[0],990,994,6276,6278;
-	else if (strnpcinfo(4) == "ice_dun01") setarray .@id[0],991,995,6278,6276;
-	else if (strnpcinfo(4) == "mjo_dun03") setarray .@id[0],993,997,6277,6276;
-	else if (strnpcinfo(4) == "gon_dun02") setarray .@id[0],992,996,6277,6278;
+	if (strnpcinfo(NPC_MAP) == "thor_v01") setarray .@id[0],990,994,6276,6278;
+	else if (strnpcinfo(NPC_MAP) == "ice_dun01") setarray .@id[0],991,995,6278,6276;
+	else if (strnpcinfo(NPC_MAP) == "mjo_dun03") setarray .@id[0],993,997,6277,6276;
+	else if (strnpcinfo(NPC_MAP) == "gon_dun02") setarray .@id[0],992,996,6277,6278;
 
 	if (job_soc == 4 && countitem(.@id[0]) > 2) {
 		progressbar "ffff00",5;

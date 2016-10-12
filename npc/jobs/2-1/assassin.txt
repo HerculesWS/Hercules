@@ -220,7 +220,7 @@ in_moc_16,19,33,1	script	Guildsman#asn	1_M_JOBTESTER,{
 			mes "Wasn't your name, umm, I remember 'cause it sounded funny to me...";
 			next;
 			mes "[Assassin Expert 'Huey']";
-			mes ":+:" + strcharinfo(0) + ":+:, right? No wait, just "+ strcharinfo(0) +". Yeah, how's it goin'?";
+			mes ":+:" + strcharinfo(PC_NAME) + ":+:, right? No wait, just "+ strcharinfo(PC_NAME) +". Yeah, how's it goin'?";
 			next;
 			mes "[Assassin Expert 'Huey']";
 			mes "Unfortunately, I don't have any requests for you at this time from the guild. Just keep focusing on your training. Till then, see ya.";
@@ -531,7 +531,7 @@ OnTouch:
 			mes "[Assassin 'Khai']";
 			mes "Let's see.";
 			mes "Your name is";
-			mes "" + strcharinfo(0) + "...";
+			mes "" + strcharinfo(PC_NAME) + "...";
 			mes "Job level " + JobLevel + "...";
 			next;
 			if (JobLevel > 48) {
@@ -610,7 +610,7 @@ OnTouch:
 			mes "Fill out the application form with your name and job level.";
 			next;
 			mes "[Assassin 'Khai']";
-			mes "" + strcharinfo(0) + "?";
+			mes "" + strcharinfo(PC_NAME) + "?";
 			mes "That's your name?";
 			mes "It sounds funny.";
 			mes "Let's see... Job Level " + JobLevel + "...";
@@ -1130,7 +1130,7 @@ OnTouch:
 	}
 	if (ASSIN_Q == 1 && ASSIN_Q2 == 5) {
 		mes "[Barcardi]";
-		mes "" + strcharinfo(0) + "...";
+		mes "" + strcharinfo(PC_NAME) + "...";
 		mes "You passed the test..?";
 		next;
 		mes "[Barcardi]";
@@ -1275,7 +1275,7 @@ OnMyMobDead:
 	end;
 
 OnMyMobDead2:
-	mapannounce "in_moc_16",strcharinfo(0) + "! You made a mistake! I'm bringing you back!",bc_map;
+	mapannounce "in_moc_16",strcharinfo(PC_NAME) + "! You made a mistake! I'm bringing you back!",bc_map;
 	ASSIN_Q = 2;
 	warp "in_moc_16",19,161;
 	donpcevent "Beholder#ASNTEST::OnReset";
@@ -1347,7 +1347,7 @@ OnTimer187000:
 in_moc_16,68,158,0	script	01_1::SinTrap	FAKE_NPC,0,0,{
 OnTouch:
 	if (getvariableofnpc(.DisableTraps,"Beholder#ASNTEST")  < 1) {
-		mapannounce "in_moc_16",strcharinfo(0) + ", you're trapped. You will be sent back.",bc_map;
+		mapannounce "in_moc_16",strcharinfo(PC_NAME) + ", you're trapped. You will be sent back.",bc_map;
 		ASSIN_Q = 2;
 		warp "in_moc_16",19,161;
 		donpcevent "Beholder#ASNTEST::OnResetMob";
@@ -1515,7 +1515,7 @@ OnTouch:
 			mes "[Thomas]";
 			mes "Oh hey, don't forget to save your respawn point in town.";
 			close2;
-			mapannounce "in_moc_16",strcharinfo(0) + " got scared and quit the test...Who's Next?!",bc_map;
+			mapannounce "in_moc_16",strcharinfo(PC_NAME) + " got scared and quit the test...Who's Next?!",bc_map;
 			ASSIN_Q = 0;
 			ASSIN_Q2 = 0;
 			ASSIN_Q3 = 0;
@@ -1600,7 +1600,7 @@ OnTouch:
 		changequest 8005,8006;
 	}
 	else {
-		mapannounce "in_moc_16",strcharinfo(0)+" has entered 'Guildmaster's room.'",bc_map;
+		mapannounce "in_moc_16",strcharinfo(PC_NAME)+" has entered 'Guildmaster's room.'",bc_map;
 		savepoint "in_moc_16",181,183;
 		donpcevent "Guildmaster#ASN1::OnCast";
 		warp "in_moc_16",167,113;
@@ -1931,9 +1931,9 @@ OnTouch:
 		mes "Please give me";
 		mes "one second...";
 		next;
-		mapannounce "in_moc_16","Those involved with the testing of " + strcharinfo(0) + ", please gather before me.",bc_map;
+		mapannounce "in_moc_16","Those involved with the testing of " + strcharinfo(PC_NAME) + ", please gather before me.",bc_map;
 		mes "[Guildmaster]";
-		mes "Those involved with the testing of " + strcharinfo(0) + ", please gather before me.";
+		mes "Those involved with the testing of " + strcharinfo(PC_NAME) + ", please gather before me.";
 		next;
 		mes "[Guildmaster]";
 		mes "They will";
@@ -1950,12 +1950,12 @@ OnTouch:
 		mes "I am here.";
 		next;
 		mes "[Guildmaster]";
-		mes "I would like to listen to your opinion of " + strcharinfo(0) + " for the job change test.";
+		mes "I would like to listen to your opinion of " + strcharinfo(PC_NAME) + " for the job change test.";
 		next;
 		mes "[The Anonymous One]";
 		mes "Ah yeah...";
 		mes "I think";
-		mes ""+ strcharinfo(0) +"";
+		mes ""+ strcharinfo(PC_NAME) +"";
 		mes "is decent.";
 		next;
 		mes "[Guildmaster]";
@@ -1976,7 +1976,7 @@ OnTouch:
 		}
 		else {
 			mes "[Huey]";
-			mes "Although "+ strcharinfo(0) +" looks too mellow and gentle, kind of like a pussycat, "+ strcharinfo(0) +" has the stuff.";
+			mes "Although "+ strcharinfo(PC_NAME) +" looks too mellow and gentle, kind of like a pussycat, "+ strcharinfo(PC_NAME) +" has the stuff.";
 			next;
 			mes "[Huey]";
 			mes "If it's alright with you, I'd like to get back to my job.";
@@ -1997,7 +1997,7 @@ OnTouch:
 		next;
 		mes "[Guildmaster]";
 		mes "Hmm...";
-		mes "It seems we are all in agreement. Good. I don't have any problem with "+ strcharinfo(0) +" as well...";
+		mes "It seems we are all in agreement. Good. I don't have any problem with "+ strcharinfo(PC_NAME) +" as well...";
 		next;
 		switch(ASSIN_Q) {
 		case 8:
@@ -2117,7 +2117,7 @@ OnTouch:
 		mes "Upon receiving this token, Huey will promote you to an Assassin.";
 		next;
 		mes "[Guildmaster]";
-		mes "You, " + strcharinfo(0) + ", have chosen to live as an Assassin. May you learn our ways and be an honorable example to others.";
+		mes "You, " + strcharinfo(PC_NAME) + ", have chosen to live as an Assassin. May you learn our ways and be an honorable example to others.";
 		savepoint "morocc",100,100;
 		getitem Frozen_Heart,1;
 		changequest 8006,8007;
@@ -2239,7 +2239,7 @@ OnTouch:
 	end;
 
 OnInit:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 in_moc_16,156,87,1	duplicate(#moc_assin_dup)	[Huey]	1_M_JOBTESTER

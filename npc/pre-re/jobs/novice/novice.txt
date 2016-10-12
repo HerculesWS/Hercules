@@ -83,7 +83,7 @@ new_1-2,100,29,4	script	Receptionist#nv1	4_M_04,{
 	mes "What is your name?";
 	next;
 	input .@charname$;
-	if (.@charname$!=strcharinfo(0)) {
+	if (.@charname$!=strcharinfo(PC_NAME)) {
 		mes "[Training Grounds Receptionist]";
 		mes "Sorry, but I don't think I heard";
 		mes "you correctly";
@@ -287,7 +287,7 @@ new_1-1,53,114,4	script	Shion#nv1	4_F_JOB_HUNTER,{
 		mes "[Shion]";
 		mes "Let's see.";
 		mes "Your name is...";
-		mes "" + strcharinfo(0) + ".";
+		mes "" + strcharinfo(PC_NAME) + ".";
 		next;
 		mes "[Shion]";
 		mes "My name is Shion.";
@@ -404,7 +404,7 @@ new_1-2,99,105,3	script	Interfaces Tutor#nv1	4_M_CRU,{
 		next;
 		if (NEW_MES_FLAG0) {
 			mes "[Kris]";
-			mes "Ah, " + strcharinfo(0) + ", you've applied for an old training course that we no longer provide for our trainees. Let me issue a new proof of registration for you.";
+			mes "Ah, " + strcharinfo(PC_NAME) + ", you've applied for an old training course that we no longer provide for our trainees. Let me issue a new proof of registration for you.";
 			NEW_MES_FLAG0 = 0;
 			NEW_MES_FLAG1 = 0;
 			NEW_MES_FLAG2 = 0;
@@ -424,7 +424,7 @@ new_1-2,99,105,3	script	Interfaces Tutor#nv1	4_M_CRU,{
 		mes "interfaces.";
 		next;
 		mes "[Kris]";
-		mes strcharinfo(0)+".";
+		mes strcharinfo(PC_NAME)+".";
 		mes "would you like to learn";
 		mes "more about interface";
 		mes "fundamentals?";
@@ -696,7 +696,7 @@ new_1-2,83,111,3	script	Skill Tutor#nv	4_M_MONK,{
 	}
 	if (nov_get_item03 < 10) {
 		mes "[Cecil]";
-		mes ""+strcharinfo(0)+"";
+		mes ""+strcharinfo(PC_NAME)+"";
 		mes "Heh, I like your name!";
 		if (NEW_MES_FLAG0) {
 			mes "By the way, your proof of registration has expired, so let me give you a new one.";
@@ -2661,7 +2661,7 @@ new_1-3,95,30,4	script	Trainer#nv1::NovHoffman	4_M_02,{
 		mes "I see, then let me guide";
 		mes "you to a training ground that has stronger monsters. May God be with you...";
 		next;
-		if (strnpcinfo(2) == "nv1") {
+		if (strnpcinfo(NPC_NAME_HIDDEN) == "nv1") {
 			if (rand(2)) {
 				warp "new_2-3",96,21;
 			}
@@ -2681,7 +2681,7 @@ new_1-3,95,30,4	script	Trainer#nv1::NovHoffman	4_M_02,{
 		mes "be careful, it can get";
 		mes "pretty difficult...";
 		next;
-		if (strnpcinfo(2) == "nv1" || strnpcinfo(2) == "nv2" || strnpcinfo(2) == "nv3") {
+		if (strnpcinfo(NPC_NAME_HIDDEN) == "nv1" || strnpcinfo(NPC_NAME_HIDDEN) == "nv2" || strnpcinfo(NPC_NAME_HIDDEN) == "nv3") {
 			if (rand(2)) {
 				warp "new_4-3",96,21;
 			}
@@ -2755,7 +2755,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 	if (nov_3_swordman == 20) {
 		mes "[Hanson]";
 		mes "Good day,";
-		mes "^A62A2A" + strcharinfo(0) + "'^000000.";
+		mes "^A62A2A" + strcharinfo(PC_NAME) + "'^000000.";
 		mes "You've made quite";
 		mes "an effort to come here.";
 		next;
@@ -3291,7 +3291,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 					mes "You will now";
 					mes "be teleported.";
 					mes "Good luck,";
-					mes "^A62A2A" + strcharinfo(0) + "^000000";
+					mes "^A62A2A" + strcharinfo(PC_NAME) + "^000000";
 					mes "and farewell.";
 					close2;
 					nov_1st_cos = 0;
@@ -3365,7 +3365,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 					next;
 					mes "[Hanson]";
 					mes "You'll now be teleported.";
-					mes "Good luck, ^A62A2A" + strcharinfo(0) + "^000000 and farewell.";
+					mes "Good luck, ^A62A2A" + strcharinfo(PC_NAME) + "^000000 and farewell.";
 					close2;
 					nov_1st_cos = 0;
 					nov_2nd_cos = 0;
@@ -3435,7 +3435,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 					mes "You will now";
 					mes "be teleported.";
 					mes "Good luck,";
-					mes "^A62A2A" + strcharinfo(0) + "^000000";
+					mes "^A62A2A" + strcharinfo(PC_NAME) + "^000000";
 					mes "and farewell.";
 					close2;
 					nov_1st_cos = 0;
@@ -3511,7 +3511,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 					mes "You will now";
 					mes "be teleported.";
 					mes "Good luck,";
-					mes "^A62A2A" + strcharinfo(0) + "^000000";
+					mes "^A62A2A" + strcharinfo(PC_NAME) + "^000000";
 					mes "and farewell.";
 					close2;
 					savepoint "morocc",150,99;
@@ -3572,7 +3572,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 					mes "You will now";
 					mes "be teleported.";
 					mes "Good luck,";
-					mes "^A62A2A" + strcharinfo(0) + "^000000";
+					mes "^A62A2A" + strcharinfo(PC_NAME) + "^000000";
 					mes "and farewell.";
 					close2;
 					nov_1st_cos = 0;
@@ -3644,7 +3644,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 					mes "You will now";
 					mes "be teleported.";
 					mes "Good luck,";
-					mes "^A62A2A" + strcharinfo(0) + "^000000";
+					mes "^A62A2A" + strcharinfo(PC_NAME) + "^000000";
 					mes "and farewell.";
 					close2;
 					nov_1st_cos = 0;
@@ -3678,7 +3678,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 			mes "Lastly...";
 			mes "I hope you will";
 			mes "become a nice player,";
-			mes ""+ strcharinfo(0) +".";
+			mes ""+ strcharinfo(PC_NAME) +".";
 			mes "Fare well.";
 			next;
 			nov_3_swordman = 40;
@@ -3771,7 +3771,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 	else {
 		mes "[Hanson]";
 		mes "Hello, you";
-		mes "must be "+ strcharinfo(0) +".";
+		mes "must be "+ strcharinfo(PC_NAME) +".";
 		next;
 		mes "[Hanson]";
 		mes "I am Hanson,";
@@ -3878,7 +3878,7 @@ S_UserJobchoice:
 	mes "You will now";
 	mes "be teleported.";
 	mes "Good luck,";
-	mes "^A62A2A" + strcharinfo(0) + "^000000";
+	mes "^A62A2A" + strcharinfo(PC_NAME) + "^000000";
 	mes "and farewell.";
 	next;
 	nov_1st_cos = 0;
@@ -4067,7 +4067,7 @@ new_1-4,91,22,4	script	Bruce#nv	1_M_LIBRARYMASTER,{
 			next;
 			mes "[Bruce]";
 			mes "Hello there,";
-			mes "^A62A2A" + strcharinfo(0) + "'^000000,";
+			mes "^A62A2A" + strcharinfo(PC_NAME) + "'^000000,";
 			mes "pleased to meet you.";
 			mes "I am Bruce of the";
 			mes "Rune-Midgarts Kingdom.";

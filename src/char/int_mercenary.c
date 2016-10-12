@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -168,7 +168,7 @@ bool mapif_mercenary_load(int merc_id, int char_id, struct s_mercenary *merc)
 	SQL->GetData(inter->sql_handle,  3, &data, NULL); merc->kill_count = atoi(data);
 	SQL->GetData(inter->sql_handle,  4, &data, NULL); merc->life_time = atoi(data);
 	SQL->FreeResult(inter->sql_handle);
-	if( save_log )
+	if (chr->show_save_log)
 		ShowInfo("Mercenary loaded (%d - %d).\n", merc->mercenary_id, merc->char_id);
 
 	return true;

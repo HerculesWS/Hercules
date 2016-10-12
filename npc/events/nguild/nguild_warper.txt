@@ -96,7 +96,7 @@ prontera,146,163,6	script	Novice Castles	4_F_NOVICE,{
 
 n_castle,102,107,5	script	Cita	4_F_NOVICE,{
 	mes "[Cita]";
-	mes "Hello, "+ strcharinfo(0) +". Can I help you?";
+	mes "Hello, "+ strcharinfo(PC_NAME) +". Can I help you?";
 	next;
 	if (select("Warp me to Prontera!","Cancel") == 1) {
 		warp "prontera",155,177+rand(5);

@@ -421,7 +421,7 @@ cmd_fild07,136,134,4	script	Kafra Employee::kaf_cmd_fild07	4_F_KAFRA7,{
 	mes "How may I assist you?";
 	callfunc "F_Kafra",5,0,1,40,820;
 	if (RENEWAL)
-		savepoint strnpcinfo(4),129,97;
+		savepoint strnpcinfo(NPC_MAP),129,97;
 	else
 		savepoint "izlude",94,103;
 	callfunc "F_KafEnd",0,1,"in the city of Izlude";

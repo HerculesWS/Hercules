@@ -258,9 +258,9 @@ job3_gen01,25,58,3	script	Devries#gen	4_LGTSCIENCE,{
 		mes "[Devries]";
 		mes "What's your name, young alchemist?";
 		next;
-		select("I'm "+strcharinfo(0)+".");
+		select("I'm "+strcharinfo(PC_NAME)+".");
 		mes "[Devries]";
-		mes "Oh, "+strcharinfo(0)+"!";
+		mes "Oh, "+strcharinfo(PC_NAME)+"!";
 		mes "That's a very unusual name. Pleased to meet you.";
 		next;
 		mes "[Devries]";
@@ -553,18 +553,18 @@ job3_gen01,25,58,3	script	Devries#gen	4_LGTSCIENCE,{
 		mes "<I'm sure it will be a great inspiration for other Alchemists.>";
 		next;
 		mes "<Come to think of it, you've attached a paper?>";
-		mes "<It was a new plant which makes plants grow super-fast, discovered by an Alchemist named, "+strcharinfo(0)+">";
+		mes "<It was a new plant which makes plants grow super-fast, discovered by an Alchemist named, "+strcharinfo(PC_NAME)+">";
 		next;
 		mes "<Myself and many other Alchemists from the Alchemist union are taking great interest in this.>";
 		next;
 		mes "<We are looking forward to more volumes of study papers and outcomes, especially from other Geneticists who?ve heard this news.>";
 		next;
 		mes "<Miss. Devries>";
-		mes "<I think that "+strcharinfo(0)+" has enough ability and talent to be a Geneticist.>";
+		mes "<I think that "+strcharinfo(PC_NAME)+" has enough ability and talent to be a Geneticist.>";
 		next;
-		mes "<Please tell "+strcharinfo(0)+" as soon as possible that we are expecting remarkable activities as a Geneticist from now on.>";
+		mes "<Please tell "+strcharinfo(PC_NAME)+" as soon as possible that we are expecting remarkable activities as a Geneticist from now on.>";
 		next;
-		mes "<The Alchemist Union is very proud of Miss Devries, Miss Demi Calberine and "+strcharinfo(0)+" who are excellent talented people.>";
+		mes "<The Alchemist Union is very proud of Miss Devries, Miss Demi Calberine and "+strcharinfo(PC_NAME)+" who are excellent talented people.>";
 		mes "<We hope that you yield good fruits in the future as well.>";
 		next;
 		mes "[Devries]";
@@ -723,7 +723,7 @@ job3_gen01,7,50,3	script	Testing Table#gen	CLEAR_NPC,{
 		}
 		if (!questprogress(2209) && !questprogress(2210) && !questprogress(2211) && !questprogress(2212)
 		 && !questprogress(2213) && !questprogress(2213) && !questprogress(2214)) {
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Hmm, I need to gather plant materials first.";
 			close;
 		}
@@ -747,7 +747,7 @@ job3_gen01,7,50,3	script	Testing Table#gen	CLEAR_NPC,{
 		select("Testing Seed - Type A", "Testing Seed - Type B", "Testing Seed - Type C", "Testing Seed - Type D");
 		mes "I've put the prepared materials into the chosen testing seed.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Good. Now I can let Miss Devries take a look at this seed!";
 		if (!questprogress(2209) && !questprogress(2210) && !questprogress(2211)) {
 			job_gen = 61;
@@ -866,7 +866,7 @@ job3_gen01,91,48,3	script	Demi Calberine#gen	4_F_SCIENCE,{
 		mes "Oh, by the way what made you come here?";
 		mes "Did you come here to order something";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I'm a Geneticist applicant.";
 		mes "I heard that you were very knowledgeable about portable mini cannons and stuff.";
 		next;
@@ -874,7 +874,7 @@ job3_gen01,91,48,3	script	Demi Calberine#gen	4_F_SCIENCE,{
 		mes "Yep, I deal with many kinds of cannons.";
 		mes "Nowadays, there are those who want to remodel their carts, so I've been installing several additional functions such as mini cannons to their carts.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Cart remodeling?";
 		next;
 		mes "[Demi Calberine]";
@@ -970,7 +970,7 @@ job3_gen01,91,48,3	script	Demi Calberine#gen	4_F_SCIENCE,{
 		mes "- You found a little metal fragment. -";
 		job_gen = job_gen+1;
 		specialeffect EF_BASH;
-		disablenpc strnpcinfo(0);
+		disablenpc strnpcinfo(NPC_NAME);
 		initnpctimer;
 		close;
 	} else if (job_gen == 74) {
@@ -979,7 +979,7 @@ job3_gen01,91,48,3	script	Demi Calberine#gen	4_F_SCIENCE,{
 	}
 	end;
 OnTimer7000:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	stopnpctimer;
 	end;
 }

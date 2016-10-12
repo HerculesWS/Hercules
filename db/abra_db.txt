@@ -1,4 +1,4 @@
-// Hocus-Pocus (Abrakadabra) Castable Skills Database
+// Hocus-Pocus (Abracadabra) Castable Skills Database
 //
 // Structure of Database:
 //        SkillID,DummyName,RequiredHocusPocusLevel,Rate

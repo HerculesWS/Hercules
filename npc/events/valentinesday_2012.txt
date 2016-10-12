@@ -40,7 +40,7 @@ mosk_in,21,246,5	script	Pinkamenia	1_F_LIBRARYGIRL,{
 		setarray .@SweetsID[0],538,558,539,573,559,560,12062,596,597,12414,12319;
 		setarray .@SweetsCost[0],1,2,5,10,10,10,15,15,15,20,20;
 		mes .@n$;
-		mes "Hello "+strcharinfo(0)+", do";
+		mes "Hello "+strcharinfo(PC_NAME)+", do";
 		mes "you want to buy some items?";
 		mes "You'll have to give me Love";
 		mes "Flowers for them, of course!";
@@ -99,7 +99,7 @@ mosk_in,21,246,5	script	Pinkamenia	1_F_LIBRARYGIRL,{
 		close;
 	} else if (BaseLevel >= 45) {
 		mes .@n$;
-		mes "Hello "+strcharinfo(0)+", it's";
+		mes "Hello "+strcharinfo(PC_NAME)+", it's";
 		mes "Valentine's Day and we";
 		mes "love to deliver sweet";
 		mes "chocolates.";
@@ -116,7 +116,7 @@ mosk_in,21,246,5	script	Pinkamenia	1_F_LIBRARYGIRL,{
 		close;
 	}
 	mes .@n$;
-	mes "Hello "+strcharinfo(0)+"!";
+	mes "Hello "+strcharinfo(PC_NAME)+"!";
 	close;
 
 OnInit:
@@ -171,7 +171,7 @@ mosk_in,21,244,3	script	Baker Extraordinaire	4_M_NOVELIST,{
 		}
 	} else {
 		mes .@n$;
-		mes "Hello, "+strcharinfo(0)+"!";
+		mes "Hello, "+strcharinfo(PC_NAME)+"!";
 		close;
 	}
 }

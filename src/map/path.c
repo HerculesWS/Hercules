@@ -192,10 +192,8 @@ bool path_search_long(struct shootpath_data *spd,struct block_list *bl,int16 m,i
 /// Ensures there is enough space in array to store new element.
 static void heap_push_node(struct node_heap *heap, struct path_node *node)
 {
-#ifndef __clang_analyzer__ // TODO: Figure out why clang's static analyzer doesn't like this
 	BHEAP_ENSURE(*heap, 1, 256);
 	BHEAP_PUSH2(*heap, node, NODE_MINTOPCMP, swap_ptr);
-#endif // __clang_analyzer__
 }
 
 /// Updates path_node in the binary node_heap.

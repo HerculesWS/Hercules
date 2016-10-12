@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -262,7 +262,7 @@ bool mapif_homunculus_load(int homun_id, struct s_homunculus* hd)
 	}
 	SQL->FreeResult(inter->sql_handle);
 
-	if( save_log )
+	if (chr->show_save_log)
 		ShowInfo("Homunculus loaded (%d - %s).\n", hd->hom_id, hd->name);
 
 	return true;

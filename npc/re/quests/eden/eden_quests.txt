@@ -37,7 +37,7 @@
 
 moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 	mes "[Boya]";
-	if (countitem(Para_Team_Mark) < 1) {
+	if (countitem(Para_Team_Mark) < 1 && countitem(Para_Team_Mark_) < 1) {
 		mes "You are not in my group are you?";
 		mes "I don't have anything to say to outsiders.";
 		mes "If you want something register with my group.";
@@ -839,7 +839,7 @@ moc_fild11,180,253,5	script	Talking Dog#para03	4_RUS_DWOLF,{
 	mes "Not a wolf.";
 	mes "I wasn't a dog originally...";
 	next;
-	if (countitem(Para_Team_Mark) > 0) {
+	if (countitem(Para_Team_Mark) > 0 || countitem(Para_Team_Mark_) > 0) {
 		mes "[Talking Dog]";
 		mes "Anyway are you a Eden Group member?";
 		mes "Oh good to see you.";
@@ -1047,7 +1047,7 @@ prt_sewb1,131,262,3	script	Timid Cat#para04	4_M_BABYCAT,{
 
 pay_arche,41,136,3	script	Eden Member Karl#para05	4_M_KHMAN,{
 	if (para_suv01 < 13) {
-		if (countitem(Para_Team_Mark) > 0) {
+		if (countitem(Para_Team_Mark) > 0 || countitem(Para_Team_Mark_) > 0) {
 			mes "[Karl]";
 			mes "Hey, how are you?";
 			mes "Good to see you~";
@@ -1190,7 +1190,7 @@ pay_arche,41,136,3	script	Eden Member Karl#para05	4_M_KHMAN,{
 
 anthell01,29,264,5	script	Eden Member Cloud#para06	4_M_HUMAN_02,{
 	if (para_suv01 < 17) {
-		if (countitem(Para_Team_Mark) > 0) {
+		if (countitem(Para_Team_Mark) > 0 || countitem(Para_Team_Mark_) > 0) {
 			mes "[Cloud]";
 			mes "Oops.";
 			mes "You are a member of my group.";
@@ -1380,7 +1380,7 @@ anthell01,29,264,5	script	Eden Member Cloud#para06	4_M_HUMAN_02,{
 
 in_orcs01,38,175,3	script	Eden Member Hooksha	1_F_SIGNZISK,{
 	if (para_suv01 < 24) {
-		if (countitem(Para_Team_Mark) > 0) {
+		if (countitem(Para_Team_Mark) > 0 || countitem(Para_Team_Mark_) > 0) {
 			mes "[Hooksha]";
 			mes "Unbelievable why did you come here?";
 			mes "Um... You are not on the third step of the training?";
@@ -1649,7 +1649,7 @@ in_orcs01,38,175,3	script	Eden Member Hooksha	1_F_SIGNZISK,{
 
 iz_dun04,43,46,3	script	Eden Member Callandiva	4_F_CRU,{
 	if (para_suv01 < 33) {
-		if (countitem(Para_Team_Mark) > 0) {
+		if (countitem(Para_Team_Mark) > 0 || countitem(Para_Team_Mark_) > 0) {
 			mes "[Callandiva]";
 			mes "How did you get so deep in this ocean city?";
 			mes "Ah, that symbol is of our group.";
@@ -2047,7 +2047,7 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 		if (para_suv02 == 4) {
 			mes "Umm, didn't you upgrade this already?";
 			mes "According to the records";
-			mes ""+strcharinfo(0)+": Has already upgraded their Hat.";
+			mes ""+strcharinfo(PC_NAME)+": Has already upgraded their Hat.";
 			next;
 			mes "[Michael]";
 			mes "We can only offer 1 upgrade.";
@@ -2243,7 +2243,7 @@ moc_para01,179,44,3	script	Chef	4_M_CHNCOOK,{
 			mes "Ah, Kim-dduck-soon.";
 			mes "It's the representative meal for normal citizens.";
 			next;
-			if (countitem(Para_Team_Mark) > 0) {
+			if (countitem(Para_Team_Mark) > 0 || countitem(Para_Team_Mark_) > 0) {
 				if (Zeny > 2699) {
 					mes "[Chef]";
 					mes "Hey, here you are.";
@@ -2282,7 +2282,7 @@ moc_para01,179,44,3	script	Chef	4_M_CHNCOOK,{
 			mes "Course meal B?";
 			mes "This food with meat and vegetables in hot soup has it's origins from nomadic life under the cold and dry nature.";
 			next;
-			if (countitem(Para_Team_Mark) > 0) {
+			if (countitem(Para_Team_Mark) > 0 || countitem(Para_Team_Mark_) > 0) {
 				if (Zeny > 3599) {
 					mes "[Chef]";
 					mes "Hey, here you are.";
@@ -2317,7 +2317,7 @@ moc_para01,179,44,3	script	Chef	4_M_CHNCOOK,{
 			mes "How many times do I have to tell you?";
 			close;
 		case 4:
-			if (countitem(Para_Team_Mark) > 0) {
+			if (countitem(Para_Team_Mark) > 0 || countitem(Para_Team_Mark_) > 0) {
 				if (Zeny > 4499) {
 					mes "[Chef]";
 					mes "Hey, here you are.";
@@ -2360,7 +2360,7 @@ moc_para01,179,44,3	script	Chef	4_M_CHNCOOK,{
 			close;
 		}
 	case 2:
-		if (countitem(Para_Team_Mark) > 0) {
+		if (countitem(Para_Team_Mark) > 0 || countitem(Para_Team_Mark_) > 0) {
 			mes "[Chef]";
 			mes "Most jobs should be managed by yourself. So it might be difficult, right?";
 			mes "Actually it's harmful so they have requested continuously.";
@@ -2469,7 +2469,7 @@ moc_para01,179,44,3	script	Chef	4_M_CHNCOOK,{
 
 moc_para01,23,35,5	script	Instructor Ur#2nd01	4_M_KNIGHT_BLACK,{
 	mes "[Instructor Ur]";
-	if (countitem(Para_Team_Mark) < 1) {
+	if (countitem(Para_Team_Mark) < 1 && countitem(Para_Team_Mark_) < 1) {
 		mes "Hey there!";
 		mes "I see you're not one of our agents?";
 		mes "Are you interested in joining us?";
@@ -2673,7 +2673,7 @@ moc_para01,23,35,5	script	Instructor Ur#2nd01	4_M_KNIGHT_BLACK,{
 	}
 	else if (para_2nd01 == 11) {
 		if (BaseLevel > 79) {
-			mes "Ah, ever so improving "+ strcharinfo(0) +"?";
+			mes "Ah, ever so improving "+ strcharinfo(PC_NAME) +"?";
 			mes "To what do I owe this pleasure?";
 			next;
 			switch( select( "I came for more training.", "I'm just visiting." ) ) {
@@ -3740,7 +3740,7 @@ moc_para01,111,83,3	script	Blacksmith Thorn#2nd10	2_M_OLDBLSMITH,{
 		close;
 	}
 	mes "[Thorn]";
-	if (countitem(Para_Team_Mark) < 1) {
+	if (countitem(Para_Team_Mark) < 1 && countitem(Para_Team_Mark_) < 1) {
 		mes "Hmm, are you a member of Eden Group?";
 		mes "You need to be one of our members to use my services.";
 		close;

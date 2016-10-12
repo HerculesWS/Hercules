@@ -52,7 +52,7 @@ moc_para01,37,95,5	script	Gelkah#1	4_F_GELKA,{
 		end;
 	}
 	mes "[Gelkah]";
-	if (!countitem(Para_Team_Mark)) {
+	if (!countitem(Para_Team_Mark) && !countitem(Para_Team_Mark_)) {
 		mes "- You need to have an -";
 		mes "- ^4d4dff'Eden Group Mark'^000000 -";
 		mes "- to receive these missions. -";
@@ -156,7 +156,7 @@ moc_para01,37,95,5	script	Gelkah#1	4_F_GELKA,{
 				mes "I think that's what a true master would sound like right?";
 				next;
 				mes "[Gelkah]";
-				mes strcharinfo(0) +" will make a request list for you so go talk to my Master now and show your respects.";
+				mes strcharinfo(PC_NAME) +" will make a request list for you so go talk to my Master now and show your respects.";
 				delitem Brigan,50;// Brigan
 				completequest 13002;// Brigan collecting
 				para_100lv01 = 2;
@@ -673,7 +673,7 @@ moc_para01,37,95,5	script	Gelkah#1	4_F_GELKA,{
 						mes "Adventurers sometimes bring special things or trophies from where they visited for a request. It is very good!";
 					}
 					else if (.@ran == 2)
-						mes "If there is something good "+ strcharinfo(0) +" I will try to give you a couple things. I am not sure if there will be enough to give because of so many adventurers.";
+						mes "If there is something good "+ strcharinfo(PC_NAME) +" I will try to give you a couple things. I am not sure if there will be enough to give because of so many adventurers.";
 					else
 						mes "Handling documents must be difficult. It's so much easier to just be out in the field.";
 				}
@@ -689,7 +689,7 @@ moc_para01,37,95,5	script	Gelkah#1	4_F_GELKA,{
 					}
 					else {
 						cutin "gelca03",2;
-						mes "I am busy but clearing a lot of requests "+ strcharinfo(0) +" I appreciate it. Lets see. I got some good food from an adventurer that he received during a request.";
+						mes "I am busy but clearing a lot of requests "+ strcharinfo(PC_NAME) +" I appreciate it. Lets see. I got some good food from an adventurer that he received during a request.";
 						next;
 						mes "[Gelkah]";
 						mes "Oops I ate all? Okay just one left. Please drop by later!";
@@ -700,7 +700,7 @@ moc_para01,37,95,5	script	Gelkah#1	4_F_GELKA,{
 				else if (para_100lv02 < 80) {
 					cutin "gelca03",2;
 					if (para_100lv01 > 4)
-						mes "Cheer up! "+ strcharinfo(0) +" I'm not sure if he thinks of you as his pupil. He is just out of control.";
+						mes "Cheer up! "+ strcharinfo(PC_NAME) +" I'm not sure if he thinks of you as his pupil. He is just out of control.";
 					else {
 						mes "There are a lot of presents coming in whenever the requests are done efficiently. Here, take this as a prize.";
 						para_100lv01 = 5;
@@ -708,7 +708,7 @@ moc_para01,37,95,5	script	Gelkah#1	4_F_GELKA,{
 					}
 				}
 				else if (para_100lv02 > 100) {
-					mes "It is tough work but also fun to with master right "+ strcharinfo(0) +"?";
+					mes "It is tough work but also fun to with master right "+ strcharinfo(PC_NAME) +"?";
 					next;
 					switch( select( "I hate that hot-tempered fool.", "I want you to be the master.", "I would follow you to any battle." ) ) {
 						mes "[Gelkah]";
@@ -963,7 +963,7 @@ moc_para01,37,95,5	script	Gelkah#1	4_F_GELKA,{
 	else {
 		cutin "gelca03",2;
 		if (para_100lv02 > 100)
-			mes strcharinfo(0) +"! You did a good job! There are more requests but reserve them for the other adventurers.";
+			mes strcharinfo(PC_NAME) +"! You did a good job! There are more requests but reserve them for the other adventurers.";
 		if (para_100lv02 < 101)
 			mes "I do not think you are suitable to the request I can give. Please find other adventures.";
 		callsub S_Hunting,13003,106000,148000,"Carat";// <quest id>, <job exp if joblevel < 6>, <job exp>, <quest name>
@@ -1047,7 +1047,7 @@ S_Hunting:
 
 moc_para01,41,95,5	script	Rohtert#12	4_M_ROTERT,{
 	mes "[Rohtert]";
-	if (!countitem(Para_Team_Mark)) {// Para_Team_Mark
+	if (!countitem(Para_Team_Mark) && !countitem(Para_Team_Mark_)) {
 		cutin "rote01",2;
 		mes "You are not even a member of Eden Group. What are you doing here?";
 		mes "I'm only dealing with base level ^FF0000100 - 110^000000 adventurers.";
@@ -1247,7 +1247,7 @@ moc_para01,41,95,5	script	Rohtert#12	4_M_ROTERT,{
 					next;
 					cutin "gelca02",2;
 					mes "[^FF0000Gelkah^000000]";
-					mes "......."+ strcharinfo(0) +" wait...";
+					mes "......."+ strcharinfo(PC_NAME) +" wait...";
 					next;
 					cutin "gelca01",2;
 					mes "[^FF0000Gelkah^000000]";

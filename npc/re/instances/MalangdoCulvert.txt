@@ -422,7 +422,7 @@ mal_in01,160,34,4	script	Missing, the Cleaner	4_CAT_SAILOR2,{
 				.@instance = instance_create(.@md_name$,.@party_id);
 				if (.@instance < 0) {
 					mes "Party name: "+getpartyname(.@party_id);
-					mes "Party leader: "+strcharinfo(0);
+					mes "Party leader: "+strcharinfo(PC_NAME);
 					mes "^0000ff"+.@md_name$+"^000000 - Reservation Failed!";
 					close;
 				}
@@ -468,7 +468,7 @@ L_Enter:
 		mes "The party leader has not reserved entrance to the dungeon yet.";
 		close;
 	}
-	mapannounce "mal_in01", strcharinfo(0)+" of the party "+getpartyname(.@party_id)+" is entering the Culvert.",bc_map,"0x00ff99";
+	mapannounce "mal_in01", strcharinfo(PC_NAME)+" of the party "+getpartyname(.@party_id)+" is entering the Culvert.",bc_map,"0x00ff99";
 	if (!questprogress(12254)) setquest 12254;
 	warp "1@pump",63,98;
 	end;
@@ -610,18 +610,18 @@ function	script	F_mal_missing	{
 	case 2:
 		mes "[Missing, the Cleaner]";
 		mes "Ok! Let's start now!";
-		.@i$ = charat(strnpcinfo(2),0);
+		.@i$ = charat(strnpcinfo(NPC_NAME_HIDDEN),0);
 		enablenpc instance_npcname("Missing, the Cleaner#"+.@i$);
 		donpcevent instance_npcname("Missing, the Cleaner#"+.@i$)+"::OnStart";
 		disablenpc instance_npcname("Culvert Entrance#"+.@i$);
 		disablenpc instance_npcname("Missing, the Cleaner#"+.@i$+"o");
 		donpcevent instance_npcname("Monster Hole#"+.@i$)+"::OnClear";
-		disablenpc instance_npcname(strnpcinfo(0));
+		disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 		close;
 	}
 	close;
 OnInstanceInit:
-	disablenpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 }
 
@@ -710,7 +710,7 @@ OnTimer520000:
 1@pump,1,1,4	script	Monster Hole#n	FAKE_NPC,{
 	end;
 OnSpawn:
-	.@i$ = charat(strnpcinfo(2),0);
+	.@i$ = charat(strnpcinfo(NPC_NAME_HIDDEN),0);
 	if (.@i$ == "n")
 		.@n = 6;
 	else if (.@i$ == "h")
@@ -718,7 +718,7 @@ OnSpawn:
 	donpcevent instance_npcname("#Culvert_"+.@i$+rand(1,.@n))+"::OnEnable";
 	end;
 OnClear:
-	.@i$ = charat(strnpcinfo(2),0);
+	.@i$ = charat(strnpcinfo(NPC_NAME_HIDDEN),0);
 	if (.@i$ == "n")
 		.@n = 6;
 	else if (.@i$ == "h")
@@ -731,16 +731,16 @@ OnClear:
 1@pump,36,111,4	script	#Culvert_n1	CLEAR_NPC,14,14,{ //temporary workaround for ALL_SAMEMAP
 	progressbar "0xFFFF00",10;
 	stopnpctimer;
-	disablenpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 OnInstanceInit:
-	disablenpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 OnEnable:
-	enablenpc instance_npcname(strnpcinfo(0));
-	.@label$ = instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	enablenpc instance_npcname(strnpcinfo(NPC_NAME));
+	.@label$ = instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead";
 	.@map$ = instance_mapname("1@pump");
-	.@index = atoi(charat(strnpcinfo(2),9));
+	.@index = atoi(charat(strnpcinfo(NPC_NAME_HIDDEN),9));
 	switch(.@index) {
 		case 1: setarray .@c[0],32,107,40,115; break;
 		case 2: setarray .@c[0],64,120,72,128; break;
@@ -761,7 +761,7 @@ OnEnable:
 	copyarray .@partymemberaid[0],$@partymemberaid[0],$@partymembercount;
 	for(.@i = 0; .@i<$@partymembercount; ++.@i) {
 		if (attachrid(.@partymemberaid[.@i])) {
-			if (strcharinfo(3) == .@map$)
+			if (strcharinfo(PC_MAP) == .@map$)
 				viewpoint 0,.@x,.@y,.@index,0xFFFF00;
 			detachrid;
 		}
@@ -772,12 +772,12 @@ OnMyMobDead:
 	end;
 OnClear:
 	stopnpctimer;
-	killmonster instance_mapname("1@pump"),instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	killmonster instance_mapname("1@pump"),instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead";
 	end;
 OnTimer49500:	//OnTimer50000 clashes with the timer in "Missing, the Cleaner#h".
 	donpcevent instance_npcname("Missing, the Cleaner#n")+"::OnAddSeaweed";
-	donpcevent instance_npcname(strnpcinfo(0))+"::OnClear";
-	disablenpc instance_npcname(strnpcinfo(0));
+	donpcevent instance_npcname(strnpcinfo(NPC_NAME))+"::OnClear";
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 OnTouch:
 	specialeffect EF_MAPPILLAR2;
@@ -792,48 +792,48 @@ OnTouch:
 1@pump,1,1,4	script	Boss Creation#n	FAKE_NPC,{
 	end;
 OnInstanceInit:
-	disablenpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 OnEnable:
-	enablenpc instance_npcname(strnpcinfo(0));
+	enablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	initnpctimer;
 	end;
 OnTimer100:
-	.@i$ = charat(strnpcinfo(2),0);
+	.@i$ = charat(strnpcinfo(NPC_NAME_HIDDEN),0);
 	if (.@i$ == "n")
 		mapannounce instance_mapname("1@pump"),"Hmm! That wasn't so bad!",bc_map,"0xff88ff",FW_NORMAL,15;
 	else if (.@i$ == "h")
 		mapannounce instance_mapname("2@pump"),"Hmm! You guys are pretty good!!",bc_map,"0xff88ff",FW_NORMAL,15;
 	end;
 OnTimer5000:
-	mapannounce strnpcinfo(4),"Let's pack up and go... WHAT!!?",bc_map,"0xff88ff",FW_NORMAL,15;
+	mapannounce strnpcinfo(NPC_MAP),"Let's pack up and go... WHAT!!?",bc_map,"0xff88ff",FW_NORMAL,15;
 	end;
 OnTimer10000:
-	mapannounce strnpcinfo(4),"I sense something strange!! Don't loosen up-- prepare for a fight!!",bc_map,"0xff88ff",FW_NORMAL,15;
+	mapannounce strnpcinfo(NPC_MAP),"I sense something strange!! Don't loosen up-- prepare for a fight!!",bc_map,"0xff88ff",FW_NORMAL,15;
 	end;
 OnTimer20000:
 	stopnpctimer;
-	.@i$ = charat(strnpcinfo(2),0);
-	.@label$ = instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	.@i$ = charat(strnpcinfo(NPC_NAME_HIDDEN),0);
+	.@label$ = instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead";
 	if (rand(1,100) > 50) {
 		if (.@i$ == "n")
 			monster instance_mapname("1@pump"),0,0,"Weird Coelacanth",2188,1,.@label$;
 		else if (.@i$ == "h")
 			monster instance_mapname("2@pump"),0,0,"Mutant Coelacanth",2189,1,.@label$;
-		mapannounce strnpcinfo(4),"Something big inside the abyss appears with a huge noise.",bc_map,"0x00ffcc",FW_NORMAL,15;
+		mapannounce strnpcinfo(NPC_MAP),"Something big inside the abyss appears with a huge noise.",bc_map,"0x00ffcc",FW_NORMAL,15;
 	} else {
 		if (.@i$ == "n")
 			monster instance_mapname("1@pump"),0,0,"Gloomy Coelacanth",2187,1,.@label$;
 		else if (.@i$ == "h")
 			monster instance_mapname("2@pump"),0,0,"Violent Coelacanth",2190,1,.@label$;
-		mapannounce strnpcinfo(4),"Something savage inside the abyss appears with a huge noise.",bc_map,"0x00ffcc",FW_NORMAL,15;
+		mapannounce strnpcinfo(NPC_MAP),"Something savage inside the abyss appears with a huge noise.",bc_map,"0x00ffcc",FW_NORMAL,15;
 	}
 	end;
 OnMyMobDead:
-	if (mobcount(strnpcinfo(4),instance_npcname(strnpcinfo(0))+"::OnMyMobDead") < 1) {
-		mapannounce strnpcinfo(4),"You've destroyed all monsters in the culverts. There are trophies lying on the ground, please look for them.",bc_map,"0xffff00",FW_NORMAL,15;
-		.@i$ = charat(strnpcinfo(2),0);
-		.@map$ = strnpcinfo(4);
+	if (mobcount(strnpcinfo(NPC_MAP),instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead") < 1) {
+		mapannounce strnpcinfo(NPC_MAP),"You've destroyed all monsters in the culverts. There are trophies lying on the ground, please look for them.",bc_map,"0xffff00",FW_NORMAL,15;
+		.@i$ = charat(strnpcinfo(NPC_NAME_HIDDEN),0);
+		.@map$ = strnpcinfo(NPC_MAP);
 		enablenpc instance_npcname("Culvert Entrance#"+.@i$);
 		enablenpc instance_npcname("Missing, the Cleaner#"+.@i$+"o");
 		if (.@i$ == "n") {
@@ -860,12 +860,12 @@ OnMyMobDead:
 			}
 		}
 	} else
-		mapannounce strnpcinfo(4),"There are still monsters alive.",bc_map,"0x00ff99",FW_NORMAL,20;
+		mapannounce strnpcinfo(NPC_MAP),"There are still monsters alive.",bc_map,"0x00ff99",FW_NORMAL,20;
 	end;
 }
 
 1@pump,84,105,4	script	Missing, the Cleaner#no	4_CAT_SAILOR2,{
-	.@i$ = charat(strnpcinfo(2),0);
+	.@i$ = charat(strnpcinfo(NPC_NAME_HIDDEN),0);
 	if (.@i$ == "n") {
 		mes "[Missing, the Cleaner]";
 		mes "I was very surprised!!";
@@ -894,14 +894,14 @@ OnMyMobDead:
 	mes "If Tomas closes this down, we will lose our jobs!";
 	close;
 OnInstanceInit:
-	disablenpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 }
 
 1@pump,32,100,0	script	Culvert Entrance#n	WARPNPC,3,3,{
 	end;
 OnInstanceInit:
-	disablenpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 OnTouch:
 	warp "mal_in01",161,32;
@@ -911,7 +911,7 @@ OnTouch:
 //MD_Putmob "1@pump" 0 0 0 0 20 HYDRA 0 0 2
 1@pump,1,1,4	script	Hydra#n	FAKE_NPC,{
 OnInstanceInit:
-	monster strnpcinfo(4),0,0,"Hydra",1068,20;
+	monster strnpcinfo(NPC_MAP),0,0,"Hydra",1068,20;
 	end;
 }
 
@@ -998,16 +998,16 @@ OnTimer425000:
 2@pump,53,114,4	script	#Culvert_h1	CLEAR_NPC,14,14,{ //temporary workaround for ALL_SAMEMAP
 	progressbar "0xFFFF00",15;
 	stopnpctimer;
-	disablenpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 OnInstanceInit:
-	disablenpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 OnEnable:
-	enablenpc instance_npcname(strnpcinfo(0));
-	.@label$ = instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	enablenpc instance_npcname(strnpcinfo(NPC_NAME));
+	.@label$ = instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead";
 	.@map$ = instance_mapname("2@pump");
-	.@index = atoi(substr(strnpcinfo(2),9,getstrlen(strnpcinfo(2))-1));
+	.@index = atoi(substr(strnpcinfo(NPC_NAME_HIDDEN),9,getstrlen(strnpcinfo(NPC_NAME_HIDDEN))-1));
 	switch(.@index) {
 		case 1: setarray .@c[0],49,110,57,118; break;
 		case 2: setarray .@c[0],75,105,83,113; break;
@@ -1033,12 +1033,12 @@ OnMyMobDead:
 	end;
 OnClear:
 	stopnpctimer;
-	killmonster instance_mapname("2@pump"),instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	killmonster instance_mapname("2@pump"),instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead";
 	end;
 OnTimer39500:	//OnTimer40000 clashes with the timer in "Missing, the Cleaner#h".
 	donpcevent instance_npcname("Missing, the Cleaner#h")+"::OnAddSeaweed";
-	donpcevent instance_npcname(strnpcinfo(0))+"::OnClear";
-	disablenpc instance_npcname(strnpcinfo(0));
+	donpcevent instance_npcname(strnpcinfo(NPC_NAME))+"::OnClear";
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 OnTouch:
 	specialeffect EF_MAPPILLAR2;

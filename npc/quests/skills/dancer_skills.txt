@@ -63,7 +63,7 @@ comodo,204,172,5	script	Canell#qsk_dan01	4_F_07,{
 				mes "tell there's a vitally important distinction between the two.";
 				mes "Now... Prepare for punishment!";
 				next;
-				mes "["+ strcharinfo(0) +"]";
+				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "Ow...!";
 				mes "Th-that whip!";
 				mes "I-i-it huuuurts!";
@@ -79,7 +79,7 @@ comodo,204,172,5	script	Canell#qsk_dan01	4_F_07,{
 			mes "your gift of dancing is...";
 			mes "grounds for punishment!";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "What the...? Ack!";
 			mes "S-stop wh-whipping";
 			mes "me! It... It stiiings!";
@@ -102,7 +102,7 @@ comodo,204,172,5	script	Canell#qsk_dan01	4_F_07,{
 				mes "for this blatant affront to our";
 				mes "profession! Prepare yourself!";
 				next;
-				mes "["+ strcharinfo(0) +"]";
+				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "Nooooo--!";
 				mes "Not that whip";
 				mes "again! Arrgh, it's--";
@@ -148,7 +148,7 @@ comodo,204,172,5	script	Canell#qsk_dan01	4_F_07,{
 				mes "''I am beautiful...";
 				mes "I am irresistable...''";
 				next;
-				mes "["+ strcharinfo(0) +"]";
+				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "I am beautiful...";
 				mes "I am irresistable...";
 				next;
@@ -160,7 +160,7 @@ comodo,204,172,5	script	Canell#qsk_dan01	4_F_07,{
 				mes "I am the most attractive";
 				mes "woman in the whole world!''";
 				next;
-				mes "["+ strcharinfo(0) +"]";
+				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "I am beautiful!";
 				mes "I am irresistable!";
 				mes "I am the most attractive";
@@ -234,7 +234,7 @@ comodo,204,172,5	script	Canell#qsk_dan01	4_F_07,{
 			mes "Were you able to learn";
 			mes "anything from her?";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Actually, I only learned";
 			mes "about winks, but not so";
 			mes "much as how to do them.";
@@ -254,7 +254,7 @@ comodo,204,172,5	script	Canell#qsk_dan01	4_F_07,{
 			specialeffect2 EF_HIT2;
 			percentheal -5,0;
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "?!";
 			mes "What the";
 			mes "hell was that?";
@@ -297,7 +297,7 @@ comodo,204,172,5	script	Canell#qsk_dan01	4_F_07,{
 				mes "completely wrong!";
 				mes "Can't you do it right?!";
 				next;
-				mes "["+ strcharinfo(0) +"]";
+				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "O-ow!";
 				mes "P-please...!";
 				mes "Not the whip again!";
@@ -305,7 +305,7 @@ comodo,204,172,5	script	Canell#qsk_dan01	4_F_07,{
 				percentheal -5,0;
 				close;
 			case 3:
-				mes "["+ strcharinfo(0) +"]";
+				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "Un, deux, trois~";
 				emotion e_no1,1;
 				specialeffect2 EF_FLASHER;
@@ -432,7 +432,7 @@ prontera,183,333,1	script	Aelle#qsk_dan02	1_F_PRIEST,{
 			mes "and the Dead Pit. So";
 			mes "you want in on this?";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Actually, um, I'm here";
 			mes "to look for somebody.";
 			mes "You wouldn't happen";
@@ -473,7 +473,7 @@ prontera,183,333,1	script	Aelle#qsk_dan02	1_F_PRIEST,{
 			mes "gotta bring me a refreshing";
 			mes "drink before we can begin...";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Oh... Okay.";
 			mes "Alright, I guess";
 			mes "I can spare a potion";
@@ -563,7 +563,7 @@ prontera,183,333,1	script	Aelle#qsk_dan02	1_F_PRIEST,{
 				mes "^333333*Wiiiiiiiiiiiiiink*^000000";
 				emotion e_no1;
 				next;
-				mes "["+ strcharinfo(0) +"]";
+				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "Wh-whoa...";
 				mes "That was...";
 				mes "It's so beautiful!";
@@ -613,7 +613,7 @@ prontera,183,333,1	script	Aelle#qsk_dan02	1_F_PRIEST,{
 			}
 		}
 		else if (DANCER_SK == 6) {
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "You still haven't told";
 			mes "me the secret to making";
 			mes "a simple wink have so";
@@ -626,7 +626,7 @@ prontera,183,333,1	script	Aelle#qsk_dan02	1_F_PRIEST,{
 			mes "I'm a geeenius, yeah...";
 			mes "...ZzzzZzzzZzZzzzZZZzz...";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "W-wake up!";
 			mes "I went through";
 			mes "all this trouble to";
@@ -644,7 +644,7 @@ prontera,183,333,1	script	Aelle#qsk_dan02	1_F_PRIEST,{
 			end;
 		}
 		else if (DANCER_SK > 6 && DANCER_SK < 8) {
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Aelle, I really";
 			mes "need you to teach";
 			mes "me everything else";

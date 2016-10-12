@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -25,6 +25,7 @@
 #include "map/map.h" // map-"mysql_handle
 #include "map/script.h"
 #include "common/cbasetypes.h"
+#include "common/conf.h"
 #include "common/db.h"
 #include "common/ers.h"
 #include "common/memmgr.h"
@@ -349,13 +350,19 @@ void mapreg_init(void) {
 
 /**
  * Loads the mapreg configuration file.
+ *
+ * @param filename Path to configuration file (used in error and warning messages).
+ * @param config   The current config being parsed.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
  */
-bool mapreg_config_read(const char* w1, const char* w2) {
-	nullpo_retr(false, w1);
-	nullpo_retr(false, w2);
-	if(!strcmpi(w1, "mapreg_db"))
-		safestrncpy(mapreg->table, w2, sizeof(mapreg->table));
-	else
+bool mapreg_config_read(const char *filename, const struct config_setting_t *config, bool imported)
+{
+	nullpo_retr(false, filename);
+	nullpo_retr(false, config);
+
+	if (libconfig->setting_lookup_mutable_string(config, "mapreg_db", mapreg->table, sizeof(mapreg->table)) != CONFIG_TRUE)
 		return false;
 
 	return true;

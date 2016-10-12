@@ -844,8 +844,8 @@ prt_are_in,25,188,3	script	Staff#50-2	1_F_02,{
 	@gap50 = (60 * $top_50min + $top_50sec) - (60 * @record_min50 + @record_sec50);
 	mes "[Staff]";
 	mes "Wow, you did a good job~ ";
-	mes "Your name is...^3131FF" + strcharinfo(0) +"^000000, isn't it?";
-	mes "^3131FF"+ strcharinfo(0) +"^000000, total time you spent to pass the battle..";
+	mes "Your name is...^3131FF" + strcharinfo(PC_NAME) +"^000000, isn't it?";
+	mes "^3131FF"+ strcharinfo(PC_NAME) +"^000000, total time you spent to pass the battle..";
 	next;
 	mes "[Staff]";
 	mes "is "+@record_min50+"minutes "+@record_sec50+"seconds.";
@@ -898,10 +898,10 @@ prt_are_in,25,188,3	script	Staff#50-2	1_F_02,{
 		mes "What a great job!";
 		next;
 		mes "[Staff]";
-		mes "You have been recorded as the fastest player among people who cleared ^FF0000Arena Time Force Battle lvl 50s^000000, ^3131FF"+strcharinfo(0)+"^000000.";
+		mes "You have been recorded as the fastest player among people who cleared ^FF0000Arena Time Force Battle lvl 50s^000000, ^3131FF"+strcharinfo(PC_NAME)+"^000000.";
 		$top_50min = @record_min50;
 		$top_50sec = @record_sec50;
-		$arena_50topn$ = strcharinfo(0);
+		$arena_50topn$ = strcharinfo(PC_NAME);
 		donpcevent "Vendigos::OnLineRec_50";
 		next;
 		if (arena_point > 29950) {

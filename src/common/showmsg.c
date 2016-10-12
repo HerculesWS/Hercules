@@ -804,7 +804,11 @@ void showmsg_showConfigWarning(struct config_setting_t *config, const char *stri
 	StrBuf->AppendStr(&buf, string);
 	StrBuf->Printf(&buf, " (%s:%u)\n", config_setting_source_file(config), config_setting_source_line(config));
 	va_start(ap, string);
+#ifdef BUILDBOT
+	vShowMessage_(MSG_ERROR, StrBuf->Value(&buf), ap);
+#else  // BUILDBOT
 	vShowMessage_(MSG_WARNING, StrBuf->Value(&buf), ap);
+#endif  // BUILDBOT
 	va_end(ap);
 	StrBuf->Destroy(&buf);
 }

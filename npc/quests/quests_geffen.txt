@@ -330,7 +330,7 @@ geffen,122,77,4	script	Nia#yagu	8_F_GIRL,{
 
 		.@retry = .@retry+1;
 		mes "[Nia]";
-		mes "^ff0000"+strcharinfo(0)+"^000000,";
+		mes "^ff0000"+strcharinfo(PC_NAME)+"^000000,";
 		mes "your guess is ^0000ff"+.@input+"^000000.";
 		mes "Give me a moment to";
 		mes "come up with your results.";
@@ -381,7 +381,7 @@ geffen,122,77,4	script	Nia#yagu	8_F_GIRL,{
 				.@score_sec = .@score_record % 60;
 
 				if (.@score_record >= .@total_time || !.@score_record) { //custom (second condition)
-					$050908_minus1_yagu$ = strcharinfo(0);
+					$050908_minus1_yagu$ = strcharinfo(PC_NAME);
 					$050908_minus1_yagu = .@total_time;
 					mes "[Nia]";
 					mes "Great! You guessed";

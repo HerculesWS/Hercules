@@ -109,7 +109,7 @@ yuno_in01,35,179,4	script	Pub Master#kh	1_ETC_01,5,5,{
 			mes "^3355FF*Gulp gulp gulp*^000000";
 			percentheal 5,-5;
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Ahhh, it's really";
 			mes "good! That really";
 			mes "hits the spot!";
@@ -155,7 +155,7 @@ yuno_in01,35,179,4	script	Pub Master#kh	1_ETC_01,5,5,{
 			mes "^3355FF*Gulp gulp gulp*^000000";
 			percentheal 5,-5;
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Ahhh, it's really";
 			mes "good! That really";
 			mes "hits the spot!";
@@ -850,7 +850,7 @@ kh_school,179,39,0	script	Cute Student#kh	4_F_KHELLY,{
 					next;
 					break;
 				case 2:
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "I'm outta here.";
 					next;
 					cutin "kh_elly04",2;
@@ -986,13 +986,13 @@ kh_school,179,39,0	script	Cute Student#kh	4_F_KHELLY,{
 		mes "^FF0000Ellyja^000000, but everybody calls me,";
 		mes "''Elly.'' What's your name?";
 		next;
-		mes "["+strcharinfo(0)+"]";
-		mes "^3355FF"+strcharinfo(0)+"^000000.";
-		mes "It's ^3355FF"+strcharinfo(0)+"^000000.";
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes "^3355FF"+strcharinfo(PC_NAME)+"^000000.";
+		mes "It's ^3355FF"+strcharinfo(PC_NAME)+"^000000.";
 		next;
 		cutin "kh_elly02",2;
 		mes "[Elly]";
-		mes ""+strcharinfo(0)+"?";
+		mes ""+strcharinfo(PC_NAME)+"?";
 		mes "...that name! It's wonderful!";
 		getitem Well_Baked_Cookie,5;
 		KielHyreQuest = 10;
@@ -1028,7 +1028,7 @@ kh_school,179,39,0	script	Cute Student#kh	4_F_KHELLY,{
 			case 1:
 				cutin "kh_elly02",2;
 				mes "[Elly]";
-				mes "Oh, "+strcharinfo(0)+"!";
+				mes "Oh, "+strcharinfo(PC_NAME)+"!";
 				mes "Thank you so much, I knew";
 				mes "you'd understand! Would you";
 				mes "please bring the cookies to";
@@ -1226,7 +1226,7 @@ kh_school,179,39,0	script	Cute Student#kh	4_F_KHELLY,{
 			mes "But I'll be okay!";
 			mes "You'll be there to";
 			mes "rescue me from danger,";
-			mes "right, "+strcharinfo(0)+"?";
+			mes "right, "+strcharinfo(PC_NAME)+"?";
 			next;
 			switch(select("Who is Ms. Allysia?", "Strange incidents?")) {
 			case 1:
@@ -1240,7 +1240,7 @@ kh_school,179,39,0	script	Cute Student#kh	4_F_KHELLY,{
 			case 2:
 				cutin "kh_elly04",2;
 				mes "[Elly]";
-				mes "Well, "+strcharinfo(0)+"...";
+				mes "Well, "+strcharinfo(PC_NAME)+"...";
 				mes "I'm not supposed to tell";
 				mes "anyone outside of the school,";
 				mes "but I can trust you! You see...";
@@ -1283,7 +1283,7 @@ kh_school,179,39,0	script	Cute Student#kh	4_F_KHELLY,{
 		mes "Mrs. Lecollane now.";
 		next;
 		mes "[Elly]";
-		mes "Say, "+strcharinfo(0)+",";
+		mes "Say, "+strcharinfo(PC_NAME)+",";
 		mes "if it's okay, would you";
 		mes "please go find what my";
 		mes "grandpa left for me in";
@@ -1432,7 +1432,7 @@ kh_school,178,180,4	script	Elly	4_F_KHELLY,{
 			mes "her to respond by violently";
 			mes "shaking her entire body.^000000";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Elly? Elly! No!";
 			mes "Come back to us!";
 			next;
@@ -1578,7 +1578,7 @@ kh_school,175,176,0	script	Cookie Basket#kh	HIDDEN_NPC,{
 		next;
 		switch(select("Read Note", "Ignore")) {
 		case 1:
-			mes ""+strcharinfo(0)+", help!";
+			mes ""+strcharinfo(PC_NAME)+", help!";
 			mes "There's this guy dressed in";
 			mes "black who's walking around,";
 			mes "and casting this weird spell!";
@@ -1618,7 +1618,7 @@ kh_school,175,176,0	script	Cookie Basket#kh	HIDDEN_NPC,{
 		mes "It was probably written";
 		mes "by Elly for you to read.^000000";
 		next;
-		mes "^333333Dearest "+strcharinfo(0)+",";
+		mes "^333333Dearest "+strcharinfo(PC_NAME)+",";
 		mes " ";
 		mes "My teachers usually yell at me";
 		mes "since I make so many mistakes,";
@@ -1649,7 +1649,7 @@ kh_school,175,176,0	script	Cookie Basket#kh	HIDDEN_NPC,{
 		KielHyreQuest = 109;
 		next;
 		input .@input$;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes ""+.@input$+"";
 		mes "It's time to go back. I can't";
 		mes "stay here much longer.";
@@ -3476,7 +3476,7 @@ OnTouch:
 		mes "^333333...Kiehl...";
 		mes "...How dare you...!^000000";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Mister Kiel Hyre?";
 		mes "Is that you in there?";
 		next;
@@ -3484,7 +3484,7 @@ OnTouch:
 		mes "Wh-who's there?";
 		mes "Identify yourself!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I'm... I'm...";
 		next;
 		mes "^3355FFYou explain your story";
@@ -3596,7 +3596,7 @@ kh_mansion,78,55,5	script	Steward#kh	4_M_MANAGER,{
 		switch(select("Present Golden Key", "????")) {
 		case 1:
 			mes "[Steward]";
-			mes "Ah, Master "+strcharinfo(0)+".";
+			mes "Ah, Master "+strcharinfo(PC_NAME)+".";
 			mes "I've been expecting your";
 			mes "arrival. Please, this way.";
 			close2;
@@ -3616,7 +3616,7 @@ kh_mansion,78,55,5	script	Steward#kh	4_M_MANAGER,{
 	}
 	if ((KielHyreQuest >= 50) && (KielHyreQuest < 64) || (KielHyreQuest >= 70)) {
 		mes "[Steward]";
-		mes "Ah, Master "+strcharinfo(0)+".";
+		mes "Ah, Master "+strcharinfo(PC_NAME)+".";
 		mes "It is a pleasure to";
 		mes "receive your company";
 		mes "once again. Would you";
@@ -3640,7 +3640,7 @@ kh_mansion,78,55,5	script	Steward#kh	4_M_MANAGER,{
 	}
 	if ((KielHyreQuest == 52) || (KielHyreQuest == 54) || (KielHyreQuest >= 64) && (KielHyreQuest <= 70)) {
 		mes "[Steward]";
-		mes "Ah, Master "+strcharinfo(0)+".";
+		mes "Ah, Master "+strcharinfo(PC_NAME)+".";
 		mes "It is a pleasure to";
 		mes "receive your company";
 		mes "once again. Would you";
@@ -3702,7 +3702,7 @@ kh_mansion,22,28,4	script	Kiel Hyre#kh	4_M_KHKYEL,{
 	else if (KielHyreQuest == 46) {
 		cutin "kh_kyel01",2;
 		mes "[Kiel Hyre]";
-		mes "Ah, you must be "+strcharinfo(0)+".";
+		mes "Ah, you must be "+strcharinfo(PC_NAME)+".";
 		mes "I'd like to thank you for saving";
 		mes "my life. You must have many";
 		mes "questions to ask me, so I'll";
@@ -3825,7 +3825,7 @@ kh_mansion,22,28,4	script	Kiel Hyre#kh	4_M_KHKYEL,{
 		mes "that you wanted";
 		mes "to ask me?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I don't have enough";
 		mes "concrete evidence yet,";
 		mes "but I might have some";
@@ -3834,12 +3834,12 @@ kh_mansion,22,28,4	script	Kiel Hyre#kh	4_M_KHKYEL,{
 	else if (KielHyreQuest == 68) {
 		cutin "kh_kyel02",2;
 		mes "[Kiel Hyre]";
-		mes "Ah, "+strcharinfo(0)+".";
+		mes "Ah, "+strcharinfo(PC_NAME)+".";
 		mes "It's you. So how can";
 		mes "I help you today?";
 		next;
 		select("About ^3355FFAllysia^000000...");
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "You know, I was looking";
 		mes "through this deserted house";
 		mes "in Juno, and discovered";
@@ -3861,7 +3861,7 @@ kh_mansion,22,28,4	script	Kiel Hyre#kh	4_M_KHKYEL,{
 		mes "not so strange to find";
 		mes "look-a-likes for other people...";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I don't think it's just";
 		mes "a coincidence. The woman";
 		mes "in that thirty year old portrait";
@@ -3876,7 +3876,7 @@ kh_mansion,22,28,4	script	Kiel Hyre#kh	4_M_KHKYEL,{
 		mes "............";
 		next;
 		cutin "kh_kyel01",2;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Then I thought that this";
 		mes "Allysia must have been the";
 		mes "woman that you loved, and";
@@ -3888,7 +3888,7 @@ kh_mansion,22,28,4	script	Kiel Hyre#kh	4_M_KHKYEL,{
 		mes "............";
 		next;
 		cutin "kh_kyel01",2;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I think this is what happened:";
 		mes "when you were a young, poor";
 		mes "man, you fell in love with";
@@ -3896,14 +3896,14 @@ kh_mansion,22,28,4	script	Kiel Hyre#kh	4_M_KHKYEL,{
 		mes "in love with Rosimier, who";
 		mes "was rich and powerful.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "However, Rosimier was";
 		mes "betrothed to some other";
 		mes "woman, and he ended up";
 		mes "marrying his fiancee, thus";
 		mes "breaking Allysia's heart.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Feeling betrayed, her";
 		mes "heart broken, Allysia jumped";
 		mes "into a river. Then, you decided";
@@ -3935,7 +3935,7 @@ kh_mansion,22,28,4	script	Kiel Hyre#kh	4_M_KHKYEL,{
 		mes "How did...";
 		mes "Where did you...?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Kiel Hyre, I found this";
 		mes "portrait of you as a young";
 		mes "man from the house of the";
@@ -3943,7 +3943,7 @@ kh_mansion,22,28,4	script	Kiel Hyre#kh	4_M_KHKYEL,{
 		mes "I even spoke to the fisherman";
 		mes "that discovered Allysia's body.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "You paid an awful lot";
 		mes "of money to buy Allysia's";
 		mes "ring. How can you not tell";
@@ -3974,12 +3974,12 @@ kh_mansion,22,28,4	script	Kiel Hyre#kh	4_M_KHKYEL,{
 		mes "capability to cause it...";
 		next;
 		cutin "kh_kyel02",2;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I'm afraid that the";
 		mes "evidence shows otherwise.";
 		next;
 		select("Reveal Portrait of Rosimiers");
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Take a good look";
 		mes "at this portrait that";
 		mes "I found at the Rosimiers'";
@@ -3994,7 +3994,7 @@ kh_mansion,22,28,4	script	Kiel Hyre#kh	4_M_KHKYEL,{
 		mes "anything wrong with";
 		mes "this picture at all.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Take a good look";
 		mes "at the pocketwatch";
 		mes "in the portrait. That's";
@@ -4005,7 +4005,7 @@ kh_mansion,22,28,4	script	Kiel Hyre#kh	4_M_KHKYEL,{
 		mes "[Kiel Hyre]";
 		mes "...!!!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "You might not have caused";
 		mes "the downfall of the Rosimiers";
 		mes "yourself, but with the aid of";
@@ -4021,7 +4021,7 @@ kh_mansion,22,28,4	script	Kiel Hyre#kh	4_M_KHKYEL,{
 		mes "her, if only he didn't drive";
 		mes "her to commit suicide...";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "That's where you're wrong!";
 		mes "Allysia was killed, she didn't";
 		mes "commit suicide. Take a good";
@@ -4039,7 +4039,7 @@ kh_mansion,22,28,4	script	Kiel Hyre#kh	4_M_KHKYEL,{
 		mes "She's dead, nothing I can do";
 		mes "will bring her back to me!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I never said James didn't";
 		mes "betray her. Look at the date";
 		mes "on the note. James made plans";
@@ -4047,7 +4047,7 @@ kh_mansion,22,28,4	script	Kiel Hyre#kh	4_M_KHKYEL,{
 		mes "20th. However, her body was";
 		mes "found on the same day.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Ergo, Allysia must have";
 		mes "died on August 19th. If she";
 		mes "was planning to run away with";
@@ -4061,14 +4061,14 @@ kh_mansion,22,28,4	script	Kiel Hyre#kh	4_M_KHKYEL,{
 		mes "realized she was nothing";
 		mes "but another toy to him!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Oh yeah? I say she jumped";
 		mes "into the river because you";
 		mes "met her on that day. Now,";
 		mes "take a good look at this!";
 		next;
 		select("Show K.H.'s note");
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "This note was  written by";
 		mes "a man with your initials,";
 		mes "K.H. These initials were also";
@@ -4076,7 +4076,7 @@ kh_mansion,22,28,4	script	Kiel Hyre#kh	4_M_KHKYEL,{
 		mes "must have written this note:";
 		mes "there's too many coincidences!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "According to this note,";
 		mes "you told Allysia that you";
 		mes "wanted to see her again";
@@ -4084,7 +4084,7 @@ kh_mansion,22,28,4	script	Kiel Hyre#kh	4_M_KHKYEL,{
 		mes "I think you did see her again...";
 		mes "on August 19th, the day she died!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I'm assuming the place you";
 		mes "two first met was near the";
 		mes "river. No more of your lies:";
@@ -4205,7 +4205,7 @@ kh_mansion,22,28,4	script	Kiel Hyre#kh	4_M_KHKYEL,{
 		mes "My death? Everything...?";
 		next;
 		cutin "kh_kyel01",2;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Actually, I just want";
 		mes "to ask about the nature";
 		mes "of your professional";
@@ -4429,7 +4429,7 @@ kh_mansion,22,28,4	script	Kiel Hyre#kh	4_M_KHKYEL,{
 		mes "be, I've got to stop him! Oh,";
 		mes "and here, please take this";
 		mes "with my thanks for all of";
-		mes "your help, "+.@KHTitle$+" "+strcharinfo(0)+".";
+		mes "your help, "+.@KHTitle$+" "+strcharinfo(PC_NAME)+".";
 		getitem Old_Card_Album,1;  //Old Card Album
 		delitem Elysia_Ring,1;
 		getexp RENEWAL_EXP?100000:1000000,0;
@@ -4672,7 +4672,7 @@ OnTouch:
 			mes "must have some connection";
 			mes "to him. I'm right, aren't it?";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "......";
 			mes ".........";
 			mes "............";
@@ -4794,7 +4794,7 @@ OnTouch:
 				mes "then I can't guarantee";
 				mes "your safety, adventurer";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Huh? What...?";
 				mes "What does that mean?";
 				mes "Are you threatening me?";
@@ -6286,7 +6286,7 @@ kh_kiehl02,50,52,4	script	Kiehl#Original	4_M_KHKIEL,{
 		mes "you. So has he sent";
 		mes "you to kill me?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Kiel Hyre sent me to ask";
 		mes "you to stop turning all of";
 		mes "the Third Generation robots";
@@ -6325,7 +6325,7 @@ kh_kiehl02,50,52,4	script	Kiehl#Original	4_M_KHKIEL,{
 		mes "how far a human could go for his own selfinishness by destroying a family.";
 		mes "And therefore I don't think that he could create better robots than mine.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Humankind may not be";
 		mes "perfect, but think about";
 		mes "who you're working with!";
@@ -6446,7 +6446,7 @@ kh_kiehl02,50,52,4	script	Kiehl#Original	4_M_KHKIEL,{
 		mes "everything down~";
 		next;
 		mes "[Mitchell]";
-		mes "Quick, "+strcharinfo(0)+",";
+		mes "Quick, "+strcharinfo(PC_NAME)+",";
 		mes "use Kiel Hyre's power";
 		mes "device, the one that's";
 		mes "supposed to mess with";
@@ -6768,7 +6768,7 @@ OnReset:
 kh_kiehl02,49,55,6	script	Mitchell#KiehlRoom	4_F_JOB_HUNTER,{
 	end;
 OnInit:
-	hideonnpc strnpcinfo(0);
+	hideonnpc strnpcinfo(NPC_NAME);
 	end;
 }
 kh_kiehl02,53,52,4	duplicate(Mitchell#KiehlRoom)	Agent#KHAgent1	4_M_MASKMAN

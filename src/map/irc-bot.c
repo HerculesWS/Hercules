@@ -326,7 +326,7 @@ void irc_privmsg_ctcp(int fd, char *cmd, char *source, char *target, char *msg) 
 		snprintf(send_string, IRC_MESSAGE_LENGTH, "NOTICE %s :\001TIME %s\001",source_nick,temp);
 		ircbot->send(send_string, false);
 	} else if( strcmpi(cmd,"VERSION") == 0 ) {
-		snprintf(send_string, IRC_MESSAGE_LENGTH, "NOTICE %s :\001VERSION Hercules.ws IRC Bridge\001",source_nick);
+		snprintf(send_string, IRC_MESSAGE_LENGTH, "NOTICE %s :\001VERSION Herc.ws IRC Bridge\001",source_nick);
 		ircbot->send(send_string, false);
 #ifdef IRCBOT_DEBUG
 	} else {

@@ -2167,11 +2167,14 @@ int npc_selllist(struct map_session_data *sd, struct itemlist *item_list)
 	}
 
 	if( nd->subtype != SHOP ) {
-		if( !(nd->subtype == SCRIPT && nd->u.scr.shop && nd->u.scr.shop->type == NST_ZENY) )
+		if (!(nd->subtype == SCRIPT && nd->u.scr.shop && (nd->u.scr.shop->type == NST_ZENY || nd->u.scr.shop->type == NST_MARKET)))
 			return 1;
 	}
 
 	z = 0;
+
+	if (sd->status.zeny >= MAX_ZENY && nd->master_nd == NULL)
+		return 1;
 
 	// verify the sell list
 	for (i = 0; i < VECTOR_LENGTH(*item_list); i++) {
@@ -2222,7 +2225,10 @@ int npc_selllist(struct map_session_data *sd, struct itemlist *item_list)
 		pc->delitem(sd, idx, entry->amount, 0, DELITEM_SOLD, LOG_TYPE_NPC);
 	}
 
-	if( z > MAX_ZENY )
+	if (z + sd->status.zeny > MAX_ZENY && nd->master_nd == NULL)
+		return 1;
+
+	if (z > MAX_ZENY)
 		z = MAX_ZENY;
 
 	pc->getzeny(sd, (int)z, LOG_TYPE_NPC, NULL);
@@ -2426,24 +2432,22 @@ void npc_clearsrcfile(void)
 	npc->src_files = NULL;
 }
 
-/// Adds a npc source file (or removes all)
-void npc_addsrcfile(const char* name)
+/**
+ * Adds a npc source file.
+ *
+ * @param name The file name to add.
+ */
+void npc_addsrcfile(const char *name)
 {
 	struct npc_src_list* file;
 	struct npc_src_list* file_prev = NULL;
 
 	nullpo_retv(name);
-	if( strcmpi(name, "clear") == 0 )
-	{
-		npc->clearsrcfile();
-		return;
-	}
 
 	// prevent multiple insert of source files
 	file = npc->src_files;
-	while( file != NULL )
-	{
-		if( strcmp(name, file->name) == 0 )
+	while (file != NULL) {
+		if (strcmp(name, file->name) == 0)
 			return;// found the file, no need to insert it again
 		file_prev = file;
 		file = file->next;
@@ -2458,24 +2462,21 @@ void npc_addsrcfile(const char* name)
 		file_prev->next = file;
 }
 
-/// Removes a npc source file (or all)
-void npc_delsrcfile(const char* name)
+/**
+ * Removes a npc source file.
+ *
+ * @param name The file name to remove.
+ */
+void npc_delsrcfile(const char *name)
 {
 	struct npc_src_list* file = npc->src_files;
 	struct npc_src_list* file_prev = NULL;
 
 	nullpo_retv(name);
-	if( strcmpi(name, "all") == 0 )
-	{
-		npc->clearsrcfile();
-		return;
-	}
 
-	while( file != NULL )
-	{
-		if( strcmp(file->name, name) == 0 )
-		{
-			if( npc->src_files == file )
+	while (file != NULL) {
+		if (strcmp(file->name, name) == 0) {
+			if (npc->src_files == file)
 				npc->src_files = file->next;
 			else
 				file_prev->next = file->next;

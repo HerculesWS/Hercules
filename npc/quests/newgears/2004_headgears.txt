@@ -134,7 +134,7 @@ geffen,129,148,3	script	Argen#1	4_M_YOYOROGUE,{
 	mes "Am I bored~!";
 	mes "If I only knew more tricks with this yo-yo. Then I could really impress the ladies.";
 	next;
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "Impress the ladies...?";
 	next;
 	emotion e_gasp;
@@ -448,21 +448,21 @@ prontera,165,232,3	script	Nephia#1	4_F_ALCHE,{
 	next;
 	if (Sex == SEX_MALE) {
 		if (select("Um, lady, I'm a dude.", "^FF66CCOoh~! You're right!^000000") == 1) {
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Woman, can't you that I'm a man?";
 			next;
 			mes "[Nephia]";
 			mes "Awww...";
 			mes "But you would look so ^FF66CCpretty~!^000000";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "That...";
 			mes "Was the worst";
 			mes "compliment anyone";
 			mes "has ever given me.";
 			close;
 		}
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Oooh~!";
 		mes "That sounds great!";
 		next;
@@ -485,7 +485,7 @@ prontera,165,232,3	script	Nephia#1	4_F_ALCHE,{
 	}
 	else {
 		if (select("No thanks.", "^FF66CCOoh~! You're right!^000000") == 1) {
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Er...";
 			mes "No thanks.";
 			next;
@@ -494,7 +494,7 @@ prontera,165,232,3	script	Nephia#1	4_F_ALCHE,{
 			mes "But you're just the cutest little thing. I just know you would look so preeeetty!";
 			close;
 		}
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Oooh~!";
 		mes "That sounds great!";
 		next;
@@ -1044,11 +1044,11 @@ xmas,183,267,3	script	Pretty Lindsay#1	4_F_NFLOSTGIRL,{
 		mes "[Pretty Lindsay]";
 		mes "It's the bestest magic ever because it comes from my heart!";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "That...";
 		mes "That still doesn't explain anything!";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Alright...";
 		mes "Yeah...";
 		mes "I'll come back later, kid.";
@@ -1407,10 +1407,10 @@ geffen,83,189,5	script	Seth#1	4_M_KID2,{
 			emotion e_sob;
 			close;
 		case 3:
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Hey.";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Boys aren't supposed to make flowers.";
 			next;
 			mes "[Seth]";
@@ -3579,7 +3579,7 @@ OnTouch:
 					next;
 					delitem Viking_Helm,1;
 					orcs_hero_hat = 17;
-					getnameditem 5094,strcharinfo(0); //Orc_Hero_Helm
+					getnameditem 5094,strcharinfo(PC_NAME); //Orc_Hero_Helm
 					mes "[Orc Hero]";
 					mes "There you go. I marked a small indication on it. So wear this helm from now on. Do you understand? My human Orc Hero.";
 					close;

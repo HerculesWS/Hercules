@@ -70,7 +70,7 @@ payon_in01,193,30,4	script	Rice Mill Grandma#rat	1_F_ORIENT_04,{
 		next;
 		if (select("Of course.", "I don't even know you.") == 1) {
 			lunar_rat = 1;
-			mes "[" + strcharinfo(0)+"]";
+			mes "[" + strcharinfo(PC_NAME)+"]";
 			mes "Of course.";
 			mes "What can I do?";
 			next;
@@ -83,7 +83,7 @@ payon_in01,193,30,4	script	Rice Mill Grandma#rat	1_F_ORIENT_04,{
 			mes "nasty little moles.";
 			next;
 			select("Not a problem.");
-			mes "[" + strcharinfo(0)+"]";
+			mes "[" + strcharinfo(PC_NAME)+"]";
 			mes "Not a problem.";
 			mes "I'll catch those animals,";
 			mes "and bring back any Rice";

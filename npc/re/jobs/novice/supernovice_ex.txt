@@ -160,7 +160,7 @@ beach_dun2,119,92,4	script	Fishing Novice#sp2	4_M_SIT_NOVICE,{
 		mes "Too ~ hard. Hey, little kid!";
 		mes "What's your name?";
 		next;
-		select(strcharinfo(0)+", how about you?");
+		select(strcharinfo(PC_NAME)+", how about you?");
 		mes "[Nodor]";
 		mes "My name is Nodor! Nodor.";
 		next;
@@ -288,7 +288,7 @@ beach_dun2,119,92,4	script	Fishing Novice#sp2	4_M_SIT_NOVICE,{
 		close;
 	}
 	else if (questprogress(5094) || questprogress(5095) || questprogress(5096) || questprogress(5097)) {
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Hey, Nodor!";
 		next;
 		emotion e_omg;
@@ -363,7 +363,7 @@ beach_dun2,119,92,4	script	Fishing Novice#sp2	4_M_SIT_NOVICE,{
 			next;
 		}
 		else {
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Tsk*... Ok...";
 			next;
 		}
@@ -390,7 +390,7 @@ beach_dun2,119,92,4	script	Fishing Novice#sp2	4_M_SIT_NOVICE,{
 		next;
 		changequest 5098,5099;
 		mes "[Nodor]";
-		mes "Hey- Super Novice "+strcharinfo(0)+"!";
+		mes "Hey- Super Novice "+strcharinfo(PC_NAME)+"!";
 		next;
 		mes "[Nodor]";
 		mes "You can give some to my bro. He's up in the airship.";
@@ -588,7 +588,7 @@ beach_dun2,119,92,4	script	Fishing Novice#sp2	4_M_SIT_NOVICE,{
 		next;
 		specialeffect2 EF_RECOVERY;
 		mes "[Nodor]";
-		mes "Let Super Novice "+strcharinfo(0)+" be blessed with the Super Novice Guardian!";
+		mes "Let Super Novice "+strcharinfo(PC_NAME)+" be blessed with the Super Novice Guardian!";
 		EXSUPNOV_Q = 6;
 		close;
 	}
@@ -697,7 +697,7 @@ airplane,33,47,5	script	Nudor#sp2	4_F_NOVICE,{
 		next;
 		mes "[Nudor]";
 		mes "Ooooops!";
-		mes strcharinfo(0)+", hush --- !!";
+		mes strcharinfo(PC_NAME)+", hush --- !!";
 		next;
 		mes "[Nudor]";
 		mes "Don't tell Nodor about this~~";

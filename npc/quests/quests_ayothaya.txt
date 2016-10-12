@@ -127,12 +127,12 @@ ayothaya,233,105,3	script	Powerful-Looking Woman	4_F_THAIAYO,2,2,{
 				emotion e_heh;
 				next;
 				emotion e_dots,1;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "(She's so scary!";
 				mes "Making me do stuff";
 				mes "for her again...)";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "(Why am I always";
 				mes "doing things for other";
 				mes "people anyway?!)";
@@ -217,7 +217,7 @@ ayothaya,233,105,3	script	Powerful-Looking Woman	4_F_THAIAYO,2,2,{
 				mes "own amusement or something?!";
 				next;
 				emotion e_gg,1;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "No no no no...";
 				mes "I meant, I can't";
 				mes "believe that you're";
@@ -234,7 +234,7 @@ ayothaya,233,105,3	script	Powerful-Looking Woman	4_F_THAIAYO,2,2,{
 				mes "I'm not gonna put up with crap";
 				mes "if you're gonna say something like 'I can't believe you're engaged to someone!'";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Whoa whoa whoa~";
 				mes "Calm down, lady.";
 				mes "Hear me out first.";
@@ -297,7 +297,7 @@ ayothaya,233,105,3	script	Powerful-Looking Woman	4_F_THAIAYO,2,2,{
 					mes "I never saw him after that.";
 					mes "So what I want to ask is...";
 					next;
-					mes "[" +strcharinfo(0)+ "]";
+					mes "[" +strcharinfo(PC_NAME)+ "]";
 					mes "You want me";
 					mes "to find your";
 					mes "ring, don't you?";
@@ -321,7 +321,7 @@ ayothaya,233,105,3	script	Powerful-Looking Woman	4_F_THAIAYO,2,2,{
 					mes "^666666*Grinds teeth*^000000";
 					next;
 					emotion e_gasp,1;
-					mes "[" +strcharinfo(0)+ "]";
+					mes "[" +strcharinfo(PC_NAME)+ "]";
 					mes "(...H-Horrifying!)";
 					next;
 					mes "[Shuda]";
@@ -359,7 +359,7 @@ ayothaya,233,105,3	script	Powerful-Looking Woman	4_F_THAIAYO,2,2,{
 					mes "would be known as";
 					mes "the hero of Ayotaya.";
 					next;
-					mes "[" +strcharinfo(0)+ "]";
+					mes "[" +strcharinfo(PC_NAME)+ "]";
 					mes " ...Say what?!";
 					next;
 					mes "[Shuda]";
@@ -370,7 +370,7 @@ ayothaya,233,105,3	script	Powerful-Looking Woman	4_F_THAIAYO,2,2,{
 					mes "Sure, Annon, he's my fiancee, is spineless and disappears whenever";
 					mes "I say something a little too harsh. What a little girl! Can't he see I'm trying to make him a better man?!";
 					next;
-					mes "[" +strcharinfo(0)+ "]";
+					mes "[" +strcharinfo(PC_NAME)+ "]";
 					mes "He ran away";
 					mes "from you, didn't he?";
 					next;
@@ -378,7 +378,7 @@ ayothaya,233,105,3	script	Powerful-Looking Woman	4_F_THAIAYO,2,2,{
 					mes "Eh...?";
 					mes "What was that?";
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "^666666*Ahem*^000000";
 					mes "You're way";
 					mes "too good for him.";
@@ -443,7 +443,7 @@ OnTouch:
 ayo_dun02,91,263,0	script	#Annonblood	HIDDEN_NPC,2,3,{
 if (!$@annonactive) {
 	if (thai_find == 13) {
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "A blood stain?";
 		mes "What's going on?";
 		mes "I should take a look...";
@@ -457,13 +457,13 @@ if (!$@annonactive) {
 		mes "that the trail of blood continues, almost as if a bleeding animal struggled to find refuge within";
 		mes "the bushes.^000000";
 		next;
-		mes "[" +strcharinfo(0)+ "]";
+		mes "[" +strcharinfo(PC_NAME)+ "]";
 		mes "Hmmm....";
 		next;
 		switch(select("Scatter the bushes.", "Dig up the bushes.")) {
 		case 1:
 			if (!rand(0,2)) {
-				mes "[" +strcharinfo(0)+ "]";
+				mes "[" +strcharinfo(PC_NAME)+ "]";
 				mes "^666666*Cough cough*^000000";
 				mes "It's so dusty!";
 				next;
@@ -472,7 +472,7 @@ if (!$@annonactive) {
 				mes "Oh... Oh God...!";
 				next;
 				emotion e_gasp,1;
-				mes "[" +strcharinfo(0)+ "]";
+				mes "[" +strcharinfo(PC_NAME)+ "]";
 				mes "Huh...?";
 				mes "I heard something";
 				mes "from below! Let's";
@@ -494,7 +494,7 @@ if (!$@annonactive) {
 				next;
 				switch(select("What are you doing here?", "I'm not Shuda!")) {
 				case 1:
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "Hey...";
 					mes "What are you doi--";
 					next;
@@ -515,7 +515,7 @@ if (!$@annonactive) {
 				mes "^3355FFYou dig up the bushes, stirring";
 				mes "up a large, choking cloud of dust.^000000";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "^666666*Cough cough!*^000000";
 				mes "What a large,";
 				mes "choking cloud";
@@ -534,7 +534,7 @@ if (!$@annonactive) {
 				mes "...M-my legs!";
 				close;
 			} else {
-				mes "[" +strcharinfo(0)+ "]";
+				mes "[" +strcharinfo(PC_NAME)+ "]";
 				mes "Hmmm...?";
 				mes "What was that noise?";
 				mes "Ugh, it's awfully dusty.";
@@ -555,19 +555,19 @@ OnTouch:
 	if (thai_find == 12) {
 		if (!rand(0,2)) {
 			emotion e_gasp,1;
-			mes "[" +strcharinfo(0)+ "]";
+			mes "[" +strcharinfo(PC_NAME)+ "]";
 			mes "Huh...?";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "That looks";
 			mes "like blood!";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Hmm...";
 			mes "Yes...";
 			mes "That's definitely blood.";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Strange to see";
 			mes "a blood stain in";
 			mes "this kind of place...";
@@ -595,11 +595,11 @@ ayo_dun02,91,264,3	script	Haggard Man	4_M_THAIAYO,{
 		next;
 		switch(select("Treat his wound first.", "Is that you, Annon?")) {
 		case 1:
-			mes "[" +strcharinfo(0)+ "]";
+			mes "[" +strcharinfo(PC_NAME)+ "]";
 			mes "Anyway, I think you need to be treated. Let me check if I have some potions.";
 			next;
 			if (countitem(White_Potion)) {
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Ah...";
 				mes "Here we are,";
 				mes "a White Potion.";
@@ -623,7 +623,7 @@ ayo_dun02,91,264,3	script	Haggard Man	4_M_THAIAYO,{
 				mes "Shuda sent you?! Oh well...";
 				mes "I thank you for curing me. Now, it's time for me to resume my training.";
 				next;
-				mes "[" +strcharinfo(0)+ "]";
+				mes "[" +strcharinfo(PC_NAME)+ "]";
 				specialeffect EF_CLOAKING;
 				mes "Wait, I can't let you go! You don't know how hard it was for me to find you! You can't just leave!";
 				next;
@@ -653,7 +653,7 @@ ayo_dun02,91,264,3	script	Haggard Man	4_M_THAIAYO,{
 				next;
 				switch(select("You think the world revolves around you?", "What do you want me to do?")) {
 				case 1:
-					mes "[" +strcharinfo(0)+ "]";
+					mes "[" +strcharinfo(PC_NAME)+ "]";
 					mes "You think the world";
 					mes "revolves around you?";
 					mes "You can't just run away!";
@@ -702,7 +702,7 @@ ayo_dun02,91,264,3	script	Haggard Man	4_M_THAIAYO,{
 				mes "arm this way, and";
 				mes "apply pressure here...";
 				next;
-				mes "[" +strcharinfo(0)+ "]";
+				mes "[" +strcharinfo(PC_NAME)+ "]";
 				mes "Wahhh~!";
 				mes "What the hell";
 				mes "are you doing!";
@@ -744,7 +744,7 @@ ayo_dun02,91,264,3	script	Haggard Man	4_M_THAIAYO,{
 					else getexp 406786,0;
 				}
 				next;
-				mes "[" +strcharinfo(0)+ "]";
+				mes "[" +strcharinfo(PC_NAME)+ "]";
 				mes "Whoa...?";
 				mes "That felt was so great~";
 				mes "It even feels like my mind";
@@ -765,7 +765,7 @@ ayo_dun02,91,264,3	script	Haggard Man	4_M_THAIAYO,{
 				disablenpc "Haggard Man";
 				end;
 			} else {
-				mes "[" +strcharinfo(0)+ "]";
+				mes "[" +strcharinfo(PC_NAME)+ "]";
 				mes "No way, no way.";
 				mes "He's too seriously";
 				mes "wounded to be cured";
@@ -773,7 +773,7 @@ ayo_dun02,91,264,3	script	Haggard Man	4_M_THAIAYO,{
 				mes "that I have. I'll need";
 				mes "a stronger potion...";
 				next;
-				mes "[" +strcharinfo(0)+ "]";
+				mes "[" +strcharinfo(PC_NAME)+ "]";
 				mes "Okay, you stay";
 				mes "here for a while.";
 				mes "I'll bring you some";
@@ -789,7 +789,7 @@ ayo_dun02,91,264,3	script	Haggard Man	4_M_THAIAYO,{
 				next;
 				$@annonactive = 0;
 				disablenpc "Haggard Man";
-				mes "[" +strcharinfo(0)+ "]";
+				mes "[" +strcharinfo(PC_NAME)+ "]";
 				mes "Okay, it's time";
 				mes "for me to play doctor!";
 				mes "I don't have much time!";
@@ -807,7 +807,7 @@ ayo_dun02,91,264,3	script	Haggard Man	4_M_THAIAYO,{
 			mes "I don't know him, okay!";
 			mes "Stop disturbing my training!";
 			next;
-			mes "[" +strcharinfo(0)+ "]";
+			mes "[" +strcharinfo(PC_NAME)+ "]";
 			mes "Uh...";
 			mes "Hmm, it doesn't seem like you should be yelling with that kind of wound. You sure you're not Annon?";
 			next;
@@ -1060,17 +1060,17 @@ OnTouch:
 			next;
 			switch(select("Ignore.", "^5C3317Investigate.^000000")) {
 			case 1:
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Well, it's probably nothing. But which way should I go now?";
 				thai_find = 10;
 				close;
 			case 2:
 				.@randayo = rand(1,10);
 				if (.@randayo < 2) {
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "Why, this is a pack of White Potions. Whoever owned these must have dropped these by accident. Hmm, I could use these for later...";
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "Wait...";
 					mes "There are more";
 					mes "footprints heading";
@@ -1081,10 +1081,10 @@ OnTouch:
 					getitem White_Potion,10;
 					close;
 				} else if (.@randayo > 2 && .@randayo < 5) {
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "Why, this is a pack of Yellow Potions. Whoever owned these must have dropped these by accident. Hmm, I could use these for later...";
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "Wait...";
 					mes "There are more";
 					mes "footprints heading";
@@ -1100,7 +1100,7 @@ OnTouch:
 					mes "^FF0000Squeak Squeak!^000000";
 					emotion e_omg,1;
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "^8C1717Wah^000000!";
 					mes "What was that?!";
 					next;
@@ -1515,6 +1515,7 @@ ayo_in01,181,193,4	script	Shaman#thai	4_F_THAISHAMAN,{
 			mes "[Boonthom]";
 			mes "The ancient building consists";
 			mes "of 2 levels. Before you enter the 2nd underground level, please return to me so that I can tell you how to enter that place.";
+			close;
 		}
 		mes "[Boonthom]";
 		mes "Did you forget what materials";
@@ -1580,7 +1581,7 @@ ayo_in01,181,193,4	script	Shaman#thai	4_F_THAISHAMAN,{
 		mes "me for help at anytime.";
 		close;
 	} else if (ayodunquest == 9) {
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I copied down this";
 		mes "message while exploring";
 		mes "the dungeon. Would you";
@@ -1730,7 +1731,7 @@ ayo_in01,181,193,4	script	Shaman#thai	4_F_THAISHAMAN,{
 		mes "You must have seen something.";
 		mes "I can tell by the gloomy look on your face, and the shadow looming over your soul.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I found";
 		mes "this old letter";
 		mes "in the ruins.";

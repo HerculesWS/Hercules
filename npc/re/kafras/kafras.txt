@@ -62,6 +62,14 @@ moc_para01,10,185,4	script	Kafra Employee::kaf_eden	4_F_KAFRA7,{
 	callfunc "F_Kafra",5,2,0,80,0;
 }
 
+//== Glastheim =============================================
+glast_01,200,275,5	script	Kafra Employee::kaf_glast	4_F_KAFRA3,{
+	cutin "kafra_03",2;
+	callfunc "F_Kafra",0,3,2,500,700;
+	savepoint "glast_01",200,272;
+	callfunc "F_KafEnd",0,1,"in Glast Heim";
+}
+
 //== Izlude ================================================
 izlude,128,148,6	duplicate(kaf_izlude)	Kafra Employee#iz	4_F_KAFRA1
 izlude_a,128,148,6	duplicate(kaf_izlude)	Kafra Employee#iz_a	4_F_KAFRA1

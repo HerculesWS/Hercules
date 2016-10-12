@@ -98,7 +98,7 @@ hu_fild01,140,163,5	script	Tower Keeper	4_M_EIN_SOLDIER,3,3,{
 		case 1:
 			if (thana_tower > 0) {
 				mes "[Gatei]";
-				mes "Oh, "+strcharinfo(0)+"!";
+				mes "Oh, "+strcharinfo(PC_NAME)+"!";
 				mes "Welcome back! Since you've";
 				mes "got a temporary Rekenber";
 				mes "work contract, your entrance";
@@ -327,7 +327,7 @@ L_Contract:
 		mes "out this employment";
 		mes "agreement first? Let's";
 		mes "see. Your name is...";
-		mes strcharinfo(0) + ", right?";
+		mes strcharinfo(PC_NAME) + ", right?";
 		next;
 		select("Yes");
 		mes "[Ditze]";
@@ -345,7 +345,7 @@ L_Contract:
 		mes " ";
 		mes "1. This employment agreement";
 		mes "is effective between Rekenber";
-		mes "Corporation (''Employer'') and "+strcharinfo(0)+"(''Employee'').";
+		mes "Corporation (''Employer'') and "+strcharinfo(PC_NAME)+"(''Employee'').";
 		mes "1-1. This employment agreement";
 		mes "is classified as a Mercernary";
 		mes "contract between both parties.";
@@ -469,7 +469,7 @@ tha_t01,140,78,4	script	Guide#reward	4_F_ZONDAGIRL,{
 		close;
 	}
 	mes "[Liei]";
-	mes "You're "+strcharinfo(0)+", yes?";
+	mes "You're "+strcharinfo(PC_NAME)+", yes?";
 	mes "Let me check our temp";
 	mes "employee records for--ah.";
 	mes "Here it is. Alright, so would";
@@ -550,7 +550,7 @@ tha_t02,231,161,5	script	Entrance Guide	4_M_ZONDAMAN,{
 		mes "Oh, alright. Let me";
 		mes "check and see if you're";
 		mes "on our temp list. Hmmm...";
-		mes "Ah, you're "+strcharinfo(0)+", right?";
+		mes "Ah, you're "+strcharinfo(PC_NAME)+", right?";
 		next;
 		mes "[Burled]";
 		if (getareausers("tha_t02",226,156,236,166) < 5) {
@@ -725,7 +725,7 @@ tha_t02,231,161,5	script	Entrance Guide	4_M_ZONDAMAN,{
 				case 1:
 					callsub L_Request;
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "(What's the accident...?";
 					mes "He might let me know later...)";
 					close;
@@ -805,13 +805,13 @@ tha_t02,231,161,5	script	Entrance Guide	4_M_ZONDAMAN,{
 			mes "This is supposed to theirs, but...";
 			next;
 			mes "[Burled]";
-			mes "How would you like to keep this, "+strcharinfo(0)+"?";
+			mes "How would you like to keep this, "+strcharinfo(PC_NAME)+"?";
 			mes "Definitely this should be a secret.";
 			mes "...um, this is a little revenge for them.";
 			next;
 			mes "[Burled]";
 			mes "I can guess that there are several secrets in this tower through this note.";
-			mes "This secret should be disclosed by you, "+strcharinfo(0)+", before Rekenber does.";
+			mes "This secret should be disclosed by you, "+strcharinfo(PC_NAME)+", before Rekenber does.";
 			next;
 			mes "[Burled]";
 			mes "No matter how much power they obtain... they won't get to know about this tower...";
@@ -824,7 +824,7 @@ tha_t02,231,161,5	script	Entrance Guide	4_M_ZONDAMAN,{
 			mes "This isn't much, but here's a return present.";
 			next;
 			mes "[Burled]";
-			mes "I hope that these will be useful for you, "+strcharinfo(0)+".";
+			mes "I hope that these will be useful for you, "+strcharinfo(PC_NAME)+".";
 			next;
 			mes "- Burled gives you the note and an Old Violet Box. -";
 			mes " ";
@@ -918,7 +918,7 @@ tha_t03,67,70,0	script	Rune Device#tt1	HIDDEN_NPC,4,4,{
 		next;
 		switch(select("Investigate it.", "I don't care about it.")) {
 		case 1:
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "This seems mysterious...";
 			mes "Let me investigate.";
 			next;
@@ -1191,7 +1191,7 @@ tha_t05,62,179,0	script	Brilliant Statue#tt3	HIDDEN_NPC,3,3,{
 			close;
 		}
 		if ((countitem(Key_Red) > 0) && (countitem(Key_Yellow) > 0)) {
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "I'll try the left wing first.";
 			mes "What key should I put in?";
 			next;
@@ -1203,7 +1203,7 @@ tha_t05,62,179,0	script	Brilliant Statue#tt3	HIDDEN_NPC,3,3,{
 			mes "The key fits and makes a click.";
 			mes "You feel the magical power growing stronger...";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Now the right side...";
 			next;
 			input .@inputstr$;
@@ -1490,7 +1490,7 @@ tha_t06,226,230,0	script	Brilliant Statue#tt4	HIDDEN_NPC,3,3,{
 					mes "but it was incomplete...";
 					mes "the guard of the gate was...^000000";
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "It is hard to read.";
 					next;
 					mes "^b22222...So I changed the location";
@@ -1699,10 +1699,10 @@ tha_t08,90,153,0	script	Shining Crystal#tt_r1	CLEAR_NPC,{
 
 OnInit:
 OnDisable:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 tha_t08,90,62,0	duplicate(Shining Crystal#tt_r1)	Shining Crystal#tt_r2	CLEAR_NPC
@@ -1733,10 +1733,10 @@ tha_t08,49,153,0	script	Shining Crystal#tt_y1	CLEAR_NPC,{
 
 OnInit:
 OnDisable:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 tha_t08,90,150,0	duplicate(Shining Crystal#tt_y1)	Shining Crystal#tt_y2	CLEAR_NPC
@@ -1767,10 +1767,10 @@ tha_t08,49,65,0	script	Shining Crystal#tt_b1	CLEAR_NPC,{
 
 OnInit:
 OnDisable:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 tha_t08,49,150,0	duplicate(Shining Crystal#tt_b1)	Shining Crystal#tt_b2	CLEAR_NPC
@@ -1801,10 +1801,10 @@ tha_t08,90,65,0	script	Shining Crystal#tt_g1	CLEAR_NPC,{
 
 OnInit:
 OnDisable:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 tha_t08,49,62,0	duplicate(Shining Crystal#tt_g1)	Shining Crystal#tt_g2	CLEAR_NPC
@@ -2102,15 +2102,15 @@ OnTimer3000:
 thana_boss,217,167,3	script	Memory Seal#tt1	G_THA_MAERO,3,3,{
 	end;
 OnEnable:
-	hideoffnpc strnpcinfo(0);
+	hideoffnpc strnpcinfo(NPC_NAME);
 	.hide = 0;
 	end;
 OnDisable:
-	hideonnpc strnpcinfo(0);
+	hideonnpc strnpcinfo(NPC_NAME);
 	.hide = 0;
 	end;
 OnTouch:
-	.@seal = atoi(charat(strnpcinfo(2),2));
+	.@seal = atoi(charat(strnpcinfo(NPC_NAME_HIDDEN),2));
 	if (.hide & (1<<.@seal)) end;
 
 	//  .@i: ItemID,MobID,MapX,MapY,EffectNum
@@ -2153,11 +2153,11 @@ OnTouch:
 		mes "into the crest, causing";
 		mes "its glow to intensify.^000000";
 		close2;
-		hideonnpc strnpcinfo(0);
+		hideonnpc strnpcinfo(NPC_NAME);
 		.hide |= (1<<.@seal);
 		delitem .@i[0],1;
 		specialeffect .@i[4];
-		monster "thana_boss",.@i[2],.@i[3],.@j$,.@i[1],1,strnpcinfo(0)+"::OnMyMobDead";
+		monster "thana_boss",.@i[2],.@i[3],.@j$,.@i[1],1,strnpcinfo(NPC_NAME)+"::OnMyMobDead";
 		switch($@thana_summon2) {
 			case 0: .@str$ = "... who... released... the... Memory... of... "+.@j$+"...?"; break;
 			case 1: .@str$ = "... why... did you... release... the... Memory... of... "+.@j$+"...?"; break;

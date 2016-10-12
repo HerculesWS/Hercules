@@ -112,7 +112,7 @@ OnGo:
 			mes "bow wow bow wow!!";
 			next;
 			++brazil_kid;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			if (brazil_kid == 3) {
 				mes "Good. I found all 3 puppies.";
 				mes "Now I need to go tell Angelo.";
@@ -124,11 +124,11 @@ OnGo:
 				mes "Ah... who's a good puppy?";
 				mes "Ok, where are the others?";
 			}
-			if (compare(strnpcinfo(2),"1")) setarray .@i[0],2,3;
-			else if (compare(strnpcinfo(2),"2")) setarray .@i[0],1,3;
+			if (compare(strnpcinfo(NPC_NAME_UNIQUE),"1")) setarray .@i[0],2,3;
+			else if (compare(strnpcinfo(NPC_NAME_UNIQUE),"2")) setarray .@i[0],1,3;
 			else setarray .@i[0],1,2;
-			donpcevent "Puppy#"+charat(strnpcinfo(2),0)+.@i[rand(2)]+"::OnEnable";
-			hideonnpc strnpcinfo(0);
+			donpcevent "Puppy#"+charat(strnpcinfo(NPC_NAME_UNIQUE),0)+.@i[rand(2)]+"::OnEnable";
+			hideonnpc strnpcinfo(NPC_NAME);
 			close;
 		}
 	}
@@ -137,15 +137,15 @@ OnGo:
 	close;
 
 OnInit:
-	if (!compare(strnpcinfo(2),"1")) hideonnpc strnpcinfo(0);
+	if (!compare(strnpcinfo(NPC_NAME_UNIQUE),"1")) hideonnpc strnpcinfo(NPC_NAME);
 	end;
 
 OnEnable:
-	hideoffnpc strnpcinfo(0);
+	hideoffnpc strnpcinfo(NPC_NAME);
 	end;
 
 OnDisable:
-	hideonnpc strnpcinfo(0);
+	hideonnpc strnpcinfo(NPC_NAME);
 	end;
 }
 
@@ -304,7 +304,7 @@ brasilis,192,133,6	script	Lucia#brasilis	4_F_BRZ_WOMAN,{
 		}
 		else {
 			mes "[Lucia]";
-			mes "Oh, ^0000FF"+strcharinfo(0)+"^000000 you're back.";
+			mes "Oh, ^0000FF"+strcharinfo(PC_NAME)+"^000000 you're back.";
 			if (questprogress(9029,PLAYTIME) == 1) {
 				mes "I'm so grateful for your help.";
 				mes "Each ^006400Hydra Ball^000000 is provided ^006400every 24 hours^000000";
@@ -644,7 +644,7 @@ bra_in01,95,179,3	script	Cherto	4_M_BRZ_MAN2,{
 		mes "[Cherto]";
 		mes "If he can make crying sounds of animals, they might be able to converse!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Now, what can I do?";
 		mes "If he is the kid from the legend, is there any way to raise the guarana again?";
 		next;
@@ -712,7 +712,7 @@ brasilis,203,64,3	script	Strange Kid#bra	4_M_KID1,{
 				mes "Kaaaaaaao~";
 				mes "Grrrrrrrrr - kaaan-";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "He makes strange sound like an animals.";
 				mes "Should I ask advice from Cherto?";
 				brazil_gua = 4;
@@ -722,7 +722,7 @@ brasilis,203,64,3	script	Strange Kid#bra	4_M_KID1,{
 		}
 	}
 	else if (brazil_gua == 4) {
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "He makes strange sounds like an animal.";
 		mes "Should I ask advice from Cherto?";
 		close;
@@ -736,7 +736,7 @@ brasilis,203,64,3	script	Strange Kid#bra	4_M_KID1,{
 		mes "[Strange Kid]";
 		mes "ah... ahah.....";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I don't have a story but there are lots of friends waiting outside.";
 		next;
 		mes "- You give the feather, fresh meat and branch of grapes to the kid -";
@@ -754,7 +754,7 @@ brasilis,203,64,3	script	Strange Kid#bra	4_M_KID1,{
 		mes "mon, mon, mon...key......";
 		mes "boo, booow...........";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Dog?!";
 		mes "kkk yes. Lots of friends want to meet you.";
 		mes "Don't be lonely anymore and be happy with your friends.";
@@ -768,20 +768,20 @@ brasilis,203,64,3	script	Strange Kid#bra	4_M_KID1,{
 		mes "Ye......yes.......";
 		mes "tha... than......thank......yo.........you.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Alright such a cute smile!";
 		mes "Be a happy kid as always.";
 		next;
 		mes "[Strange Kid]";
 		mes "Uh......";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "what?";
 		next;
 		mes "[Strange Kid]";
 		mes "hey..........";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Do you want to say anything?";
 		next;
 		mes "- You get closer and pretend to take caution. -";
@@ -796,13 +796,13 @@ brasilis,203,64,3	script	Strange Kid#bra	4_M_KID1,{
 		mes "[Strange Kid]";
 		mes "ga...ra..........na...";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Oops, guarana berry?";
 		mes "Ah! Thank you very much!";
 		emotion e_kis2,1;
 		emotion e_heh;
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "If I have this, I can make a guarana candy.";
 		mes "I better find that Candy Maker!";
 		brazil_gua = 10;
@@ -839,7 +839,7 @@ brasilis,56,224,7	script	Mage Paje#bra	4_M_BIBI,{
 	mes "Good to see you.";
 	mes "I am the Mage Paje.";
 	next;
-	mes "["+strcharinfo(0)+"]";
+	mes "["+strcharinfo(PC_NAME)+"]";
 	mes "Hello. Mr. Cherto told me to find you.";
 	next;
 	mes "[Mage Paje]";
@@ -1017,7 +1017,7 @@ bra_fild01,245,52,3	script	Monkey#bra	HIDDEN_NPC,{
 		mes "I can smell Jaguar from you, who are you?";
 		mes "Gosh, maybe there's no jaguar without fur and weird shape!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "........................";
 		mes "Are you saying that I look like an animal?!?!";
 		next;
@@ -1039,7 +1039,7 @@ bra_fild01,245,52,3	script	Monkey#bra	HIDDEN_NPC,{
 		next;
 		mes "- You get a bunch of grapes from Monkey. -";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Good~ Now it's time to go back to the kid~!!";
 		brazil_gua = 9;
 		changequest 2198,2199;
@@ -1138,8 +1138,8 @@ bra_in01,142,27,5	script	Marta#bra	4_F_BRZ_INDOLD,{
 		mes "I am Kaka!!";
 		mes "Whats your name?";
 		next;
-		mes "["+strcharinfo(0)+"]";
-		mes "I am "+strcharinfo(0)+".";
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes "I am "+strcharinfo(PC_NAME)+".";
 		next;
 		mes "[Brasilis Boy]";
 		mes "The outsider has a weird name!";
@@ -1149,7 +1149,7 @@ bra_in01,142,27,5	script	Marta#bra	4_F_BRZ_INDOLD,{
 		mes "Hehe...";
 		mes "So, why have you come here stranger~?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I heard you knows lots of stories, is that true?";
 		next;
 		mes "[Kaka]";
@@ -1169,7 +1169,7 @@ bra_in01,142,27,5	script	Marta#bra	4_F_BRZ_INDOLD,{
 		mes "[Marta]";
 		mes "Hey~ do you have special story that you want to listen to?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "About the mysterious water lily?";
 		next;
 		mes "[Marta]";
@@ -1289,8 +1289,8 @@ bra_in01,145,27,3	script	Brasilis Boy#bra	4_M_BRZ_INDIAN,{
 		mes "I am Kaka!!";
 		mes "Whats your name?";
 		next;
-		mes "["+strcharinfo(0)+"]";
-		mes "I am "+strcharinfo(0)+".";
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes "I am "+strcharinfo(PC_NAME)+".";
 		next;
 		mes "[Brasilis Boy]";
 		mes "The outsider has a weird name!";
@@ -1300,7 +1300,7 @@ bra_in01,145,27,3	script	Brasilis Boy#bra	4_M_BRZ_INDIAN,{
 		mes "Hehe...";
 		mes "So, why have you come here stranger~?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I heard you knows lots of stories, is that true?";
 		next;
 		mes "[Kaka]";
@@ -1320,7 +1320,7 @@ bra_in01,145,27,3	script	Brasilis Boy#bra	4_M_BRZ_INDIAN,{
 		mes "[Marta]";
 		mes "Hey~ do you have special story that you want to listen to?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "About the mysterious water lily?";
 		next;
 		mes "[Marta]";
@@ -1469,16 +1469,16 @@ brasilis,270,145,5	script	Brasilis Girl#bra	4_F_BRZ_INDIAN,5,5,{
 			mes "What's it matter to you that I'm rude??!!";
 			close;
 		}
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I know that I'm just passing by but I might be able to help you. What do you think?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "This kind of meeting could be more than just a coincidence.";
 		next;
 		mes "[Brasilis Girl]";
 		mes "......................";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Hmm can you tell me your name?";
 		next;
 		mes "[Brasilis Girl]";
@@ -1486,7 +1486,7 @@ brasilis,270,145,5	script	Brasilis Girl#bra	4_F_BRZ_INDIAN,5,5,{
 		mes "Jasira.";
 		mes "My name is Jasira.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Nice name~.";
 		mes "Jasira what's going on?";
 		next;
@@ -1496,7 +1496,7 @@ brasilis,270,145,5	script	Brasilis Girl#bra	4_F_BRZ_INDIAN,5,5,{
 		mes "[Jasira]";
 		mes "I have to meet 'Jasi' but I can't go out....";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "who is Jasi?";
 		mes "Your.... lover?";
 		next;
@@ -1512,7 +1512,7 @@ brasilis,270,145,5	script	Brasilis Girl#bra	4_F_BRZ_INDIAN,5,5,{
 		mes "Jasi is......";
 		mes "the great moon.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "The moon?";
 		mes "Maybe... are you talking about the moon from the story?";
 		next;
@@ -1520,14 +1520,14 @@ brasilis,270,145,5	script	Brasilis Girl#bra	4_F_BRZ_INDIAN,5,5,{
 		mes "Yeah!";
 		mes "Dear Jasi is from the moon from the sky!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Why are you thinking like that?";
 		next;
 		mes "[Jasira]";
 		mes "Cuz' Jasi is really gorgeous and the most important thing is he is taking care of the water lily in Brasilis.";
 		next;
 		emotion e_omg,1;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Brasilis water lily??!!";
 		mes "Isn't it the uniqe flower?";
 		next;
@@ -1536,7 +1536,7 @@ brasilis,270,145,5	script	Brasilis Girl#bra	4_F_BRZ_INDIAN,5,5,{
 		mes "But around Jasi there are lots of water lilies.";
 		mes "That's why I believe Jasi is the moon.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Where is Jasi?";
 		next;
 		mes "[Jasira]";
@@ -1552,7 +1552,7 @@ brasilis,270,145,5	script	Brasilis Girl#bra	4_F_BRZ_INDIAN,5,5,{
 		mes "Since I came back home, my parents punished me.";
 		mes "I can understand why they are worrying but i missed Jasi a lot!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Why don't you meet him after recovering your strength?";
 		next;
 		mes "[Jasira]";
@@ -1560,31 +1560,31 @@ brasilis,270,145,5	script	Brasilis Girl#bra	4_F_BRZ_INDIAN,5,5,{
 		mes "I wanna see him right now...";
 		next;
 		if(select("Help Jasira.", "Ignore her.") == 2) {
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Sorry I can't help you. Cheer up!";
 			next;
 			mes "[Jasira]";
 			mes "Crying........";
 			close;
 		}
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Jasira I came here to find the Brasilis water lily.";
 		mes "Don't you think fate has brought us together?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "If you tell me how to find Jasi, I can help you.";
 		next;
 		mes "[Jasira]";
 		mes "Really? But I don't know exactly how to get there. I was just wandering around when I met him.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Can't you remember anything?";
 		mes "If you know something you've gotta tell me.";
 		next;
 		mes "[Jasira]";
 		mes "Let's see... I was wandering around a waterfall then fell down into the water then I was sucked into somewhere.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Good, that's better than nothing! I will look for a similar place.";
 		next;
 		mes "[Jasira]";
@@ -1618,7 +1618,7 @@ brasilis,270,145,5	script	Brasilis Girl#bra	4_F_BRZ_INDIAN,5,5,{
 		mes "Did you talk about me?";
 		mes "You didn't? Uh? Stupid! Gosh~!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Hey girl~ you've got a short temper.";
 		mes "I did see him and I talked about you!";
 		next;
@@ -1627,7 +1627,7 @@ brasilis,270,145,5	script	Brasilis Girl#bra	4_F_BRZ_INDIAN,5,5,{
 		mes "What did he say?";
 		mes "Does he remember me?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "That you have a really good heart~";
 		mes "I told him that you will try to meet him when your condition gets better.";
 		next;
@@ -1635,7 +1635,7 @@ brasilis,270,145,5	script	Brasilis Girl#bra	4_F_BRZ_INDIAN,5,5,{
 		mes "Yeahhhhh!!";
 		mes "Thank you! You are more reliable than I thought you would be.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Anyway, I'm looking for a fruit that's brown and has a hard shell.";
 		mes "It has juice inside and can be used as a cup to drink out of.";
 		next;
@@ -1643,7 +1643,7 @@ brasilis,270,145,5	script	Brasilis Girl#bra	4_F_BRZ_INDIAN,5,5,{
 		mes "Duh! You mean a coconut right?!";
 		mes "They're everywhere here in Brasilis.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Thanks Jasira!";
 		brazil_regia = 6;
 		changequest 2204,2205;
@@ -1667,7 +1667,7 @@ brasilis,270,145,5	script	Brasilis Girl#bra	4_F_BRZ_INDIAN,5,5,{
 		mes "Gosh! Gosh!!!";
 		mes "Kkkkkaaaaa - !!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Thanks to you, I was able to get a flower.";
 		mes "Thanks a lot!!";
 		next;
@@ -1736,7 +1736,7 @@ bra_dun02,67,205,5	script	Recluse#bra	4_M_BRZ_JACI,3,3,{
 		mes "[Jasi]";
 		mes "My family has taken care of the water lily calmly to prevent harm from people's hand or monsters.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Do you remember a girl named Jasi.";
 		next;
 		mes "[Jasi]";
@@ -1744,7 +1744,7 @@ bra_dun02,67,205,5	script	Recluse#bra	4_M_BRZ_JACI,3,3,{
 		mes "Ah!! a hurry scurry girl. ";
 		mes "Gosh.. I was in trouble due to that girl.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Trouble?";
 		next;
 		mes "[Jasi]";
@@ -1754,7 +1754,7 @@ bra_dun02,67,205,5	script	Recluse#bra	4_M_BRZ_JACI,3,3,{
 		mes "I was barely able to calm down and send her to the village.";
 		mes "My life is that water lily so I didn't want anything embarrassing to happen.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "This is a gift from Jasira to say sorry for that time.";
 		mes "She is really sad that can't come here by herself due to private difficulties.";
 		next;
@@ -1771,7 +1771,7 @@ bra_dun02,67,205,5	script	Recluse#bra	4_M_BRZ_JACI,3,3,{
 		mes "[Jasi]";
 		mes "Anyway is that all the business you have with me?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Umm honestly I was wondering to find water lily and met you by coincidence. Jasira told me her sad story so that's what led me here.";
 		next;
 		mes "[Jasi]";
@@ -1803,7 +1803,7 @@ bra_dun02,67,205,5	script	Recluse#bra	4_M_BRZ_JACI,3,3,{
 			mes "Did you find the fruit?";
 			mes "Oh right this is....?";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "It's called a 'coconut'.";
 			next;
 			mes "[Jasi]";
@@ -1850,14 +1850,14 @@ bra_dun02,71,200,3	script	Water lily#bra	HIDDEN_NPC,{
 		mes "[Jasi]";
 		mes "Uh! What are you doing??!!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "There is a person who really needs this flower, can I just take one of 'em?";
 		next;
 		mes "[Jasi]";
 		mes "As I said earlier, I am the guardian of this water lily.";
 		mes "I can't just stand by here and watch you pluck even a single flower from it.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Hey man~ I brought these delicious fruits for you... try it! They are really well matured and fresh bananas.";
 		next;
 		if (countitem(Banana) < 10) {
@@ -1895,13 +1895,13 @@ bra_dun02,71,200,3	script	Water lily#bra	HIDDEN_NPC,{
 		mes "But rules are rules!";
 		mes "I must do my duty.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Please! I just need one flower~ What can I do to convince you?";
 		next;
 		mes "[Jasi]";
 		mes "Rules are rules, what do you want from me?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Didn't that banana remind you of your childhood? What can I get for you?";
 		next;
 		mes "[Jasi]";
@@ -1918,7 +1918,7 @@ bra_dun02,71,200,3	script	Water lily#bra	HIDDEN_NPC,{
 		brazil_regia = 5;
 		changequest 2203,2204;
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Ok so I have to bring 5 fruits with hard shells.";
 		mes "Hmm what is it?";
 		close;
@@ -2239,7 +2239,7 @@ bra_in01,149,184,3	script	Door#bra	CLEAR_NPC,{
 			mes "You start saying the first line of the magic words.";
 			input .@input$;
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes .@input$;
 			next;
 			.@braspell$ = "Mother the door won't open!";
@@ -2341,7 +2341,7 @@ bra_in01,144,187,3	script	Toilet#bra	CLEAR_NPC,{
 			mes "- What was the second line to that spell now? -";
 			input .@input$;
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes .@input$;
 			next;
 			.@braspell$ = "Mother the water is flooding!";
@@ -2414,7 +2414,7 @@ bra_in01,134,189,3	script	Faucet#bra	CLEAR_NPC,{
 			mes "- What was the next line to that spell now? -";
 			input .@input$;
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes .@input$;
 			next;
 			.@braspell$ = "Mother the drought has started!";
@@ -2489,7 +2489,7 @@ bra_in01,138,184,3	script	Carpet#bra	CLEAR_NPC,{
 			mes "- What was the next line to that spell now? -";
 			input .@input$;
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes .@input$;
 			next;
 			.@braspell$ = "Mother where are my friends?";
@@ -2571,7 +2571,7 @@ bra_in01,151,180,3	script	Mirror#bra	CLEAR_NPC,{
 			mes "- What was the next line to that spell now? -";
 			input .@input$;
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes .@input$;
 			next;
 			.@braspell$ = "Where are you mom?";
@@ -2594,7 +2594,7 @@ bra_in01,151,180,3	script	Mirror#bra	CLEAR_NPC,{
 					enablenpc "Ghost#bra";
 					next;
 					emotion e_omg,1;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "The stories about the ghost are true~!";
 					next;
 					mes "[Ghost]";
@@ -3057,7 +3057,7 @@ brasilis,315,334,5	script	Shaman#nk	4_F_BRZ_INDOLD,{
 
 bra_dun02,157,74,5	script	Iara#nk	4_F_BRZ_WOMAN,2,2,{
 	if (countitem(Puri_Potion) > 0) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Should I use a Purification Potion?";
 		next;
 		switch(select("Yes.", "No.")) {
@@ -3099,7 +3099,7 @@ bra_dun02,157,74,5	script	Iara#nk	4_F_BRZ_WOMAN,2,2,{
 			mes "Leave now while you are safe.";
 			close;
 		case 2:
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "(I guess I should ignore her.)";
 			close;
 		}
@@ -3114,7 +3114,7 @@ bra_dun02,157,74,5	script	Iara#nk	4_F_BRZ_WOMAN,2,2,{
 		else
 			sc_start SC_CONFUSION,60000,0;
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Ugh! What's this strange voice?";
 		close;
 	}
@@ -3131,7 +3131,7 @@ OnTouch:
 		else
 			sc_start SC_CONFUSION,60000,0;
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Ugh! What's this strange voice?";
 		close;
 	}
@@ -3146,11 +3146,11 @@ bra_fild01,188,301,5	script	Native Warrior#nk	4_M_BRZ_INDIAN,{
 	mes "When will she come out of the waterfall again...?";
 	next;
 	if (questprogress(4133) || questprogress(4134)) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "(Wh...what's this guy?)";
 	}
 	else {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "(This guy will never";
 		mes "get over Iara's curse...)";
 	}

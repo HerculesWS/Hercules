@@ -487,7 +487,7 @@ OnTouch:
 				if ($@hu_bingoa == 5) {
 					$@hu_bingoa = 6;
 					donpcevent "start2#bingo::OnStop";
-					$@bingowinner$ = strcharinfo(0);
+					$@bingowinner$ = strcharinfo(PC_NAME);
 					donpcevent "win1a#bingo::OnWin";
 					close;
 
@@ -669,7 +669,7 @@ OnInit:
 	end;
 
 OnTouch:
-	if ($@bingowinner$ != strcharinfo(0)) end;
+	if ($@bingowinner$ != strcharinfo(PC_NAME)) end;
 	specialeffect EF_SUI_EXPLOSION;
 	soundeffect "tming_success.wav",1;
 	if ($@bingoresult == 16) getitem 7515,50;

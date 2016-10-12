@@ -41,6 +41,7 @@
 #include "map/status.h"
 #include "common/HPM.h"
 #include "common/cbasetypes.h"
+#include "common/conf.h"
 #include "common/ers.h"
 #include "common/memmgr.h"
 #include "common/nullpo.h"
@@ -692,6 +693,7 @@ int64 battle_addmastery(struct map_session_data *sd,struct block_list *target,in
 			#ifdef RENEWAL
 				if((skill_lv = pc->checkskill(sd,AM_AXEMASTERY)) > 0)
 					damage += (skill_lv * 3);
+				FALLTHROUGH
 			#endif
 		case W_DAGGER:
 			if((skill_lv = pc->checkskill(sd,SM_SWORD)) > 0)
@@ -736,6 +738,7 @@ int64 battle_addmastery(struct map_session_data *sd,struct block_list *target,in
 			if((skill_lv = pc->checkskill(sd,TK_RUN)) > 0)
 				damage += (skill_lv * 10);
 			// No break, fall through to Knuckles
+			FALLTHROUGH
 		case W_KNUCKLE:
 			if((skill_lv = pc->checkskill(sd,MO_IRONHAND)) > 0)
 				damage += (skill_lv * 3);
@@ -2431,7 +2434,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					RE_LVL_DMOD(100);
 					break;
 				case LG_OVERBRAND_PLUSATK:
-					skillratio = 200 * skill_lv + rnd_value( 10, 100);
+					skillratio = 200 * skill_lv + rnd->value(10, 100);
 					RE_LVL_DMOD(100);
 					break;
 				case LG_RAYOFGENESIS:
@@ -3004,6 +3007,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 					case W_WHIP:
 						if(!t_sd->state.arrow_atk)
 							break;
+						FALLTHROUGH
 					case W_BOW:
 					case W_REVOLVER:
 					case W_RIFLE:
@@ -3263,30 +3267,8 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 		}
 	}
 	/* no data claims these settings affect anything other than players */
-	if( damage && t_sd && bl->type == BL_PC ) {
-		switch( skill_id ) {
-			//case PA_PRESSURE: /* pressure also belongs to this list but it doesn't reach this area -- so don't worry about it */
-			case HW_GRAVITATION:
-			case NJ_ZENYNAGE:
-			case KO_MUCHANAGE:
-				break;
-			default:
-				if (flag & BF_SKILL) { //Skills get a different reduction than non-skills. [Skotlex]
-					if (flag&BF_WEAPON)
-						damage = damage * map->list[bl->m].weapon_damage_rate / 100;
-					if (flag&BF_MAGIC)
-						damage = damage * map->list[bl->m].magic_damage_rate / 100;
-					if (flag&BF_MISC)
-						damage = damage * map->list[bl->m].misc_damage_rate / 100;
-				} else { //Normal attacks get reductions based on range.
-					if (flag & BF_SHORT)
-						damage = damage * map->list[bl->m].short_damage_rate / 100;
-					if (flag & BF_LONG)
-						damage = damage * map->list[bl->m].long_damage_rate / 100;
-				}
-				if(!damage) damage  = 1;
-				break;
-		}
+	if (damage && t_sd && bl->type == BL_PC) {
+		damage = battle->calc_pc_damage(src, bl, d, damage, skill_id, skill_lv);
 	}
 
 	if(battle_config.skill_min_damage && damage > 0 && damage < div_)
@@ -3328,6 +3310,37 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			pc->overheat(t_sd, -1);
 	}
 
+	return damage;
+}
+
+int64 battle_calc_pc_damage(struct block_list *src, struct block_list *bl, struct Damage *d, int64 damage, uint16 skill_id, uint16 skill_lv)
+{
+	int flag = d->flag;
+
+	switch (skill_id) {
+		//case PA_PRESSURE: /* pressure also belongs to this list but it doesn't reach this area -- so don't worry about it */
+		case HW_GRAVITATION:
+		case NJ_ZENYNAGE:
+		case KO_MUCHANAGE:
+			break;
+		default:
+			if (flag & BF_SKILL) { //Skills get a different reduction than non-skills. [Skotlex]
+				if (flag & BF_WEAPON)
+					damage = damage * map->list[bl->m].weapon_damage_rate / 100;
+				if (flag & BF_MAGIC)
+					damage = damage * map->list[bl->m].magic_damage_rate / 100;
+				if (flag & BF_MISC)
+					damage = damage * map->list[bl->m].misc_damage_rate / 100;
+			} else { //Normal attacks get reductions based on range.
+				if (flag & BF_SHORT)
+					damage = damage * map->list[bl->m].short_damage_rate / 100;
+				if (flag & BF_LONG)
+					damage = damage * map->list[bl->m].long_damage_rate / 100;
+			}
+			if (!damage)
+				damage  = 1;
+			break;
+	}
 	return damage;
 }
 
@@ -4246,7 +4259,9 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 	switch( skill_id ) {
 		case RA_FIRINGTRAP:
 		case RA_ICEBOUNDTRAP:
-			if( md.damage == 1 ) break;
+			if (md.damage == 1)
+				break;
+			FALLTHROUGH
 		case RA_CLUSTERBOMB:
 			{
 				struct Damage wd;
@@ -4546,16 +4561,19 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 							wd.div_ = 5;
 							break;
 						}
+						FALLTHROUGH
 					case 4:
 						if( chance < 7){// 6 % chance to attack 4 times.
 							wd.div_ = 4;
 							break;
 						}
+						FALLTHROUGH
 					case 3:
 						if( chance < 10){// 9 % chance to attack 3 times.
 							wd.div_ = 3;
 							break;
 						}
+						FALLTHROUGH
 					case 2:
 					case 1:
 						if( chance < 13){// 12 % chance to attack 2 times.
@@ -4609,6 +4627,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 				if(!(sc && sc->data[SC_AUTOCOUNTER]))
 					break;
 				status_change_end(src, SC_AUTOCOUNTER, INVALID_TIMER);
+				FALLTHROUGH
 			case KN_AUTOCOUNTER:
 				if(battle_config.auto_counter_type &&
 					(battle_config.auto_counter_type&src->type))
@@ -5064,7 +5083,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 					wd.damage = battle->calc_masteryfix(src, target, skill_id, skill_lv, wd.damage, wd.div_, 0, flag.weapon);
 					wd.damage = battle->calc_cardfix2(src, target, wd.damage, s_ele, nk, wd.flag);
 				}
-				/* Fall through */
+				FALLTHROUGH
 	#endif
 			default:
 				ATK_RATE(battle->calc_skillratio(BF_WEAPON, src, target, skill_id, skill_lv, skillratio, wflag));
@@ -5989,20 +6008,18 @@ int battle_damage_area(struct block_list *bl, va_list ap) {
 	if (bl->type == BL_MOB && BL_UCCAST(BL_MOB, bl)->class_ == MOBID_EMPELIUM)
 		return 0;
 	if( bl != src && battle->check_target(src,bl,BCT_ENEMY) > 0 ) {
-		struct map_session_data *sd = NULL;
 		nullpo_ret(src);
 
 		map->freeblock_lock();
-		sd = BL_CAST(BL_PC, src);
 
 		if (src->type == BL_PC)
-			battle->drain(sd, bl, damage, damage, status_get_race(bl), is_boss(bl));
+			battle->drain(BL_UCAST(BL_PC, src), bl, damage, damage, status_get_race(bl), is_boss(bl));
 		if( amotion )
 			battle->delay_damage(tick, amotion,src,bl,0,CR_REFLECTSHIELD,0,damage,ATK_DEF,0,true);
 		else
 			status_fix_damage(src,bl,damage,0);
 		clif->damage(bl,bl,amotion,dmotion,damage,1,BDT_ENDURE,0);
-		if (src->type != BL_PC || !sd->state.autocast)
+		if (src->type != BL_PC || !BL_UCCAST(BL_PC, src)->state.autocast)
 			skill->additional_effect(src, bl, CR_REFLECTSHIELD, 1, BF_WEAPON|BF_SHORT|BF_NORMAL,ATK_DEF,tick);
 		map->freeblock_unlock();
 	}
@@ -6269,17 +6286,7 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 		sp = skill->get_sp(skill_id,skill_lv) * 2 / 3;
 
 		if (status->charge(src, 0, sp)) {
-			switch (skill->get_casttype(skill_id)) {
-				case CAST_GROUND:
-					skill->castend_pos2(src, target->x, target->y, skill_id, skill_lv, tick, flag);
-					break;
-				case CAST_NODAMAGE:
-					skill->castend_nodamage_id(src, target, skill_id, skill_lv, tick, flag);
-					break;
-				case CAST_DAMAGE:
-					skill->castend_damage_id(src, target, skill_id, skill_lv, tick, flag);
-					break;
-			}
+			skill->castend_type(skill->get_casttype(skill_id), src, target, skill_id, skill_lv, tick, flag);
 		}
 	}
 	if (sd) {
@@ -6325,19 +6332,8 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 
 				sd->state.autocast = 1;
 				skill->consume_requirement(sd,r_skill,r_lv,3);
-				switch( type ) {
-					case CAST_GROUND:
-						skill->castend_pos2(src, target->x, target->y, r_skill, r_lv, tick, flag);
-						break;
-					case CAST_NODAMAGE:
-						skill->castend_nodamage_id(src, target, r_skill, r_lv, tick, flag);
-						break;
-					case CAST_DAMAGE:
-						skill->castend_damage_id(src, target, r_skill, r_lv, tick, flag);
-						break;
-				}
+				skill->castend_type(type, src, target, r_skill, r_lv, tick, flag);
 				sd->state.autocast = 0;
-
 				sd->ud.canact_tick = tick + skill->delay_fix(src, r_skill, r_lv);
 				clif->status_change(src, SI_POSTDELAY, 1, skill->delay_fix(src, r_skill, r_lv), 0, 0, 1);
 			}
@@ -6557,6 +6553,7 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 					case RK_DRAGONBREATH_WATER:
 						if( !map->list[m].flag.pvp && !map->list[m].flag.gvg )
 							break;
+						FALLTHROUGH
 					case 0://you can hit them without skills
 					case MA_REMOVETRAP:
 					case HT_REMOVETRAP:
@@ -6786,9 +6783,9 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 			if (
 				(s_sd->class_&MAPID_UPPERMASK) == MAPID_NOVICE ||
 				(t_sd->class_&MAPID_UPPERMASK) == MAPID_NOVICE ||
-				(int)s_sd->status.base_level < battle_config.pk_min_level ||
-				(int)t_sd->status.base_level < battle_config.pk_min_level ||
-				(battle_config.pk_level_range && abs((int)s_sd->status.base_level - (int)t_sd->status.base_level) > battle_config.pk_level_range)
+				s_sd->status.base_level < battle_config.pk_min_level ||
+				t_sd->status.base_level < battle_config.pk_min_level ||
+				(battle_config.pk_level_range && abs(s_sd->status.base_level - t_sd->status.base_level) > battle_config.pk_level_range)
 			)
 				state &= ~BCT_ENEMY;
 		}
@@ -7030,7 +7027,7 @@ static const struct battle_data {
 	{ "show_steal_in_same_party",           &battle_config.show_steal_in_same_party,        0,      0,      1,              },
 	{ "party_hp_mode",                      &battle_config.party_hp_mode,                   0,      0,      1,              },
 	{ "show_party_share_picker",            &battle_config.party_show_share_picker,         1,      0,      1,              },
-	{ "show_picker.item_type",              &battle_config.show_picker_item_type,           112,    0,      INT_MAX,        },
+	{ "show_picker_item_type",              &battle_config.show_picker_item_type,           112,    0,      INT_MAX,        },
 	{ "party_update_interval",              &battle_config.party_update_interval,           1000,   100,    INT_MAX,        },
 	{ "party_item_share_type",              &battle_config.party_share_type,                0,      0,      1|2|3,          },
 	{ "attack_attr_none",                   &battle_config.attack_attr_none,                ~BL_PC, BL_NUL, BL_ALL,         },
@@ -7189,14 +7186,14 @@ static const struct battle_data {
 	{ "display_status_timers",              &battle_config.display_status_timers,           1,      0,      1,              },
 	{ "skill_add_heal_rate",                &battle_config.skill_add_heal_rate,             7,      0,      INT_MAX,        },
 	{ "eq_single_target_reflectable",       &battle_config.eq_single_target_reflectable,    1,      0,      1,              },
-	{ "invincible.nodamage",                &battle_config.invincible_nodamage,             0,      0,      1,              },
+	{ "invincible_nodamage",                &battle_config.invincible_nodamage,             0,      0,      1,              },
 	{ "mob_slave_keep_target",              &battle_config.mob_slave_keep_target,           0,      0,      1,              },
 	{ "autospell_check_range",              &battle_config.autospell_check_range,           0,      0,      1,              },
 	{ "knockback_left",                     &battle_config.knockback_left,                  1,      0,      1,              },
 	{ "client_reshuffle_dice",              &battle_config.client_reshuffle_dice,           0,      0,      1,              },
 	{ "client_sort_storage",                &battle_config.client_sort_storage,             0,      0,      1,              },
-	{ "feature.buying_store",               &battle_config.feature_buying_store,            1,      0,      1,              },
-	{ "feature.search_stores",              &battle_config.feature_search_stores,           1,      0,      1,              },
+	{ "features/buying_store",              &battle_config.feature_buying_store,            1,      0,      1,              },
+	{ "features/search_stores",             &battle_config.feature_search_stores,           1,      0,      1,              },
 	{ "searchstore_querydelay",             &battle_config.searchstore_querydelay,         10,      0,      INT_MAX,        },
 	{ "searchstore_maxresults",             &battle_config.searchstore_maxresults,         30,      1,      INT_MAX,        },
 	{ "display_party_name",                 &battle_config.display_party_name,              0,      0,      1,              },
@@ -7216,7 +7213,7 @@ static const struct battle_data {
 	{ "atcommand_max_stat_bypass",          &battle_config.atcommand_max_stat_bypass,       0,      0,      100,            },
 	{ "skill_amotion_leniency",             &battle_config.skill_amotion_leniency,          90,     0,      300             },
 	{ "mvp_tomb_enabled",                   &battle_config.mvp_tomb_enabled,                1,      0,      1               },
-	{ "feature.atcommand_suggestions",      &battle_config.atcommand_suggestions_enabled,   0,      0,      1               },
+	{ "features/atcommand_suggestions",     &battle_config.atcommand_suggestions_enabled,   0,      0,      1               },
 	{ "min_npc_vendchat_distance",          &battle_config.min_npc_vendchat_distance,       3,      0,      100             },
 	{ "vendchat_near_hiddennpc",            &battle_config.vendchat_near_hiddennpc,         0,      0,      1               },
 	{ "atcommand_mobinfo_type",             &battle_config.atcommand_mobinfo_type,          0,      0,      1               },
@@ -7237,8 +7234,8 @@ static const struct battle_data {
 	{ "client_accept_chatdori",             &battle_config.client_accept_chatdori,          0,      0,      INT_MAX,        },
 	{ "snovice_call_type",                  &battle_config.snovice_call_type,               0,      0,      1,              },
 	{ "guild_notice_changemap",             &battle_config.guild_notice_changemap,          2,      0,      2,              },
-	{ "feature.banking",                    &battle_config.feature_banking,                 1,      0,      1,              },
-	{ "feature.auction",                    &battle_config.feature_auction,                 0,      0,      2,              },
+	{ "features/banking",                   &battle_config.feature_banking,                 1,      0,      1,              },
+	{ "features/auction",                   &battle_config.feature_auction,                 0,      0,      2,              },
 	{ "idletime_criteria",                  &battle_config.idletime_criteria,            0x25,      1,      INT_MAX,        },
 	{ "mon_trans_disable_in_gvg",           &battle_config.mon_trans_disable_in_gvg,        0,      0,      1,              },
 	{ "case_sensitive_aegisnames",          &battle_config.case_sensitive_aegisnames,       1,      0,      1,              },
@@ -7250,7 +7247,7 @@ static const struct battle_data {
 	{ "monster_chase_refresh",              &battle_config.mob_chase_refresh,               1,      0,      30,             },
 	{ "mob_icewall_walk_block",             &battle_config.mob_icewall_walk_block,          75,     0,      255,            },
 	{ "boss_icewall_walk_block",            &battle_config.boss_icewall_walk_block,         0,      0,      255,            },
-	{ "feature.roulette",                   &battle_config.feature_roulette,                1,      0,      1,              },
+	{ "features/roulette",                  &battle_config.feature_roulette,                1,      0,      1,              },
 	{ "show_monster_hp_bar",                &battle_config.show_monster_hp_bar,             1,      0,      1,              },
 	{ "fix_warp_hit_delay_abuse",           &battle_config.fix_warp_hit_delay_abuse,        0,      0,      1,              },
 	{ "costume_refine_def",                 &battle_config.costume_refine_def,              1,      0,      1,              },
@@ -7259,6 +7256,8 @@ static const struct battle_data {
 	{ "min_body_style",                     &battle_config.min_body_style,                  0,      0,      SHRT_MAX,       },
 	{ "max_body_style",                     &battle_config.max_body_style,                  4,      0,      SHRT_MAX,       },
 	{ "save_body_style",                    &battle_config.save_body_style,                 0,      0,      1,              },
+	{ "player_warp_keep_direction",         &battle_config.player_warp_keep_direction,      0,      0,      1,              },
+	{ "atcommand_levelup_events",	        &battle_config.atcommand_levelup_events,	    0,      0,      1,				},
 };
 #ifndef STATS_OPT_OUT
 /**
@@ -7423,28 +7422,36 @@ static int Hercules_report_timer(int tid, int64 tick, int id, intptr_t data) {
 }
 #endif
 
-int battle_set_value(const char* w1, const char* w2)
+bool battle_set_value_sub(int index, int value)
 {
-	int val = config_switch(w2);
+	Assert_retr(false, index >= 0);
+	if (value < battle_data[index].min || value > battle_data[index].max) {
+		ShowWarning("Value for setting '%s': %d is invalid (min:%d max:%d)! Defaulting to %d...\n",
+				battle_data[index].str, value, battle_data[index].min, battle_data[index].max, battle_data[index].defval);
+		value = battle_data[index].defval;
+	}
+	*battle_data[index].val = value;
+	return true;
+}
+
+bool battle_set_value(const char *param, const char *value)
+{
+	int val;
 	int i;
 
-	nullpo_retr(1, w1);
-	nullpo_retr(1, w2);
-	ARR_FIND(0, ARRAYLENGTH(battle_data), i, strcmpi(w1, battle_data[i].str) == 0);
+	nullpo_retr(false, param);
+	nullpo_retr(false, value);
+
+	val = config_switch(value);
+
+	ARR_FIND(0, ARRAYLENGTH(battle_data), i, strcmpi(param, battle_data[i].str) == 0);
 	if (i == ARRAYLENGTH(battle_data)) {
-		if( HPM->parseConf(w1,w2,HPCT_BATTLE) ) /* if plugin-owned, succeed */
-			return 1;
-		return 0; // not found
+		if (HPM->parse_conf_entry(param, value, HPCT_BATTLE)) /* if plugin-owned, succeed */
+			return true;
+		return false; // not found
 	}
 
-	if (val < battle_data[i].min || val > battle_data[i].max)
-	{
-		ShowWarning("Value for setting '%s': %s is invalid (min:%i max:%i)! Defaulting to %i...\n", w1, w2, battle_data[i].min, battle_data[i].max, battle_data[i].defval);
-		val = battle_data[i].defval;
-	}
-
-	*battle_data[i].val = val;
-	return 1;
+	return battle->config_set_value_sub(i, val);
 }
 
 bool battle_get_value(const char *w1, int *value)
@@ -7495,36 +7502,36 @@ void battle_adjust_conf(void) {
 
 #if PACKETVER < 20100427
 	if( battle_config.feature_buying_store ) {
-		ShowWarning("conf/battle/feature.conf buying_store is enabled but it requires PACKETVER 2010-04-27 or newer, disabling...\n");
+		ShowWarning("conf/map/battle/feature.conf buying_store is enabled but it requires PACKETVER 2010-04-27 or newer, disabling...\n");
 		battle_config.feature_buying_store = 0;
 	}
 #endif
 
 #if PACKETVER < 20100803
 	if( battle_config.feature_search_stores ) {
-		ShowWarning("conf/battle/feature.conf search_stores is enabled but it requires PACKETVER 2010-08-03 or newer, disabling...\n");
+		ShowWarning("conf/map/battle/feature.conf search_stores is enabled but it requires PACKETVER 2010-08-03 or newer, disabling...\n");
 		battle_config.feature_search_stores = 0;
 	}
 #endif
 
 #if PACKETVER < 20130724
 	if( battle_config.feature_banking ) {
-		ShowWarning("conf/battle/feature.conf banking is enabled but it requires PACKETVER 2013-07-24 or newer, disabling...\n");
+		ShowWarning("conf/map/battle/feature.conf banking is enabled but it requires PACKETVER 2013-07-24 or newer, disabling...\n");
 		battle_config.feature_banking = 0;
 	}
 #endif
 
 #if PACKETVER < 20141022
 	if( battle_config.feature_roulette ) {
-		ShowWarning("conf/battle/feature.conf roulette is enabled but it requires PACKETVER 2014-10-22 or newer, disabling...\n");
+		ShowWarning("conf/map/battle/feature.conf roulette is enabled but it requires PACKETVER 2014-10-22 or newer, disabling...\n");
 		battle_config.feature_roulette = 0;
 	}
 #endif
 
 #if PACKETVER > 20120000 && PACKETVER < 20130515 /* exact date (when it started) not known */
 	if( battle_config.feature_auction == 1 ) {
-		ShowWarning("conf/battle/feature.conf:feature.auction is enabled but it is not stable on PACKETVER "EXPAND_AND_QUOTE(PACKETVER)", disabling...\n");
-		ShowWarning("conf/battle/feature.conf:feature.auction change value to '2' to silence this warning and maintain it enabled\n");
+		ShowWarning("conf/map/battle/feature.conf:features/auction is enabled but it is not stable on PACKETVER "EXPAND_AND_QUOTE(PACKETVER)", disabling...\n");
+		ShowWarning("conf/map/battle/feature.conf:features/auction change value to '2' to silence this warning and maintain it enabled\n");
 		battle_config.feature_auction = 0;
 	}
 #endif
@@ -7535,48 +7542,78 @@ void battle_adjust_conf(void) {
 #endif
 }
 
-int battle_config_read(const char* cfgName)
+/**
+ * Dynamically reads battle configuration and initializes required variables.
+ *
+ * @param filename Path to configuration file.
+ * @param imported Whether the current config is imported from another file.
+ * @retval false in case of error.
+ */
+bool battle_config_read(const char *filename, bool imported)
 {
-	FILE* fp;
-	static int count = 0;
+	struct config_t config;
+	const struct config_setting_t *setting = NULL;
+	int i;
+	const char *import = NULL;
+	bool retval = true;
 
-	nullpo_ret(cfgName);
+	nullpo_retr(false, filename);
 
-	if (count == 0)
+	if (!libconfig->load_file(&config, filename))
+		return false; // Error message is already shown by libconfig->load_file()
+
+	if (!imported)
 		battle->config_set_defaults();
 
-	count++;
+	for (i = 0; i < ARRAYLENGTH(battle_data); i++) {
+		int type, val;
+		char config_name[256];
+		safesnprintf(config_name, sizeof config_name, "battle_configuration/%s", battle_data[i].str);
 
-	fp = fopen(cfgName,"r");
-	if (fp == NULL)
-		ShowError("File not found: %s\n", cfgName);
-	else
-	{
-		char line[1024], w1[1024], w2[1024];
-		while(fgets(line, sizeof(line), fp))
-		{
-			if (line[0] == '/' && line[1] == '/')
-				continue;
-			if (sscanf(line, "%1023[^:]:%1023s", w1, w2) != 2)
-				continue;
-			if (strcmpi(w1, "import") == 0)
-				battle->config_read(w2);
-			else
-			if (battle->config_set_value(w1, w2) == 0)
-				ShowWarning("Unknown setting '%s' in file %s\n", w1, cfgName);
+		if ((setting = libconfig->lookup(&config, config_name)) == NULL) {
+			if (!imported) {
+				ShowWarning("Missing configuration '%s' in file %s!\n", config_name, filename);
+				retval = false;
+			}
+			continue;
 		}
 
-		fclose(fp);
+		switch ((type = config_setting_type(setting))) {
+		case CONFIG_TYPE_INT:
+			val = libconfig->setting_get_int(setting);
+			break;
+		case CONFIG_TYPE_BOOL:
+			val = libconfig->setting_get_bool(setting);
+			break;
+		default: // Unsupported type
+			ShowWarning("Setting %s has unsupported type %d, ignoring...\n", config_name, type);
+			retval = false;
+			continue;
+		}
+
+		if (!battle->config_set_value_sub(i, val))
+			retval = false;
 	}
 
-	count--;
+	if (!HPM->parse_battle_conf(&config, filename, imported))
+		retval = false;
 
-	if (count == 0) {
+	// import should overwrite any previous configuration, so it should be called last
+	if (libconfig->lookup_string(&config, "import", &import) == CONFIG_TRUE) {
+		if (strcmp(import, filename) == 0 || strcmp(import, map->BATTLE_CONF_FILENAME) == 0) {
+			ShowWarning("battle_config_read: Loop detected! Skipping 'import'...\n");
+		} else {
+			if (!battle->config_read(import, true))
+				retval = false;
+		}
+	}
+
+	libconfig->destroy(&config);
+	if (!imported) {
 		battle->config_adjust();
 		clif->bc_ready();
 	}
-
-	return 0;
+	return retval;
 }
 
 void do_init_battle(bool minimal) {
@@ -7611,6 +7648,7 @@ void battle_defaults(void) {
 
 	battle->calc_attack = battle_calc_attack;
 	battle->calc_damage = battle_calc_damage;
+	battle->calc_pc_damage = battle_calc_pc_damage;
 	battle->calc_gvg_damage = battle_calc_gvg_damage;
 	battle->calc_bg_damage = battle_calc_bg_damage;
 	battle->weapon_attack = battle_weapon_attack;
@@ -7654,6 +7692,7 @@ void battle_defaults(void) {
 	battle->calc_drain = battle_calc_drain;
 	battle->config_read = battle_config_read;
 	battle->config_set_defaults = battle_set_defaults;
+	battle->config_set_value_sub = battle_set_value_sub;
 	battle->config_set_value = battle_set_value;
 	battle->config_get_value = battle_get_value;
 	battle->config_adjust = battle_adjust_conf;

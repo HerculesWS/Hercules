@@ -466,11 +466,11 @@ ACMD(mapmove) {
 			x = y = 0; //Invalid cell, use random spot.
 	}
 	if (map->list[m].flag.nowarpto && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
-		clif->message(fd, msg_fd(fd,247));
+		clif->message(fd, msg_fd(fd,247)); // You are not authorized to warp to this map.
 		return false;
 	}
 	if (sd->bl.m >= 0 && map->list[sd->bl.m].flag.nowarp && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
-		clif->message(fd, msg_fd(fd,248));
+		clif->message(fd, msg_fd(fd,248)); // You are not authorized to warp from your current map.
 		return false;
 	}
 	if (pc->setpos(sd, map_index, x, y, CLR_TELEPORT) != 0) {
@@ -854,7 +854,7 @@ ACMD(storage)
 		return false;
 
 	if (storage->open(sd) == 1) { //Already open.
-		clif->message(fd, msg_fd(fd,250));
+		clif->message(fd, msg_fd(fd,250)); // You have already opened your storage. Close it first.
 		return false;
 	}
 
@@ -869,7 +869,7 @@ ACMD(storage)
 ACMD(guildstorage)
 {
 	if (!sd->status.guild_id) {
-		clif->message(fd, msg_fd(fd,252));
+		clif->message(fd, msg_fd(fd,252)); // You are not in a guild.
 		return false;
 	}
 
@@ -877,12 +877,12 @@ ACMD(guildstorage)
 		return false;
 
 	if (sd->state.storage_flag == STORAGE_FLAG_NORMAL) {
-		clif->message(fd, msg_fd(fd,250));
+		clif->message(fd, msg_fd(fd,250)); // You have already opened your storage. Close it first.
 		return false;
 	}
 
 	if (sd->state.storage_flag == STORAGE_FLAG_GUILD) {
-		clif->message(fd, msg_fd(fd,251));
+		clif->message(fd, msg_fd(fd,251)); // You have already opened your guild storage. Close it first.
 		return false;
 	}
 
@@ -1368,13 +1368,13 @@ ACMD(baselevelup)
 			clif->message(fd, msg_fd(fd,47)); // Base level can't go any higher.
 			return false;
 		} // End Addition
-		if ((unsigned int)level > pc->maxbaselv(sd) || (unsigned int)level > pc->maxbaselv(sd) - sd->status.base_level) // fix positive overflow
+		if (level > pc->maxbaselv(sd) || level > pc->maxbaselv(sd) - sd->status.base_level) // fix positive overflow
 			level = pc->maxbaselv(sd) - sd->status.base_level;
 		for (i = 0; i < level; i++)
 			status_point += pc->gets_status_point(sd->status.base_level + i);
 
 		sd->status.status_point += status_point;
-		sd->status.base_level += (unsigned int)level;
+		sd->status.base_level += level;
 		status_calc_pc(sd, SCO_FORCE);
 		status_percent_heal(&sd->bl, 100, 100);
 		clif->misceffect(&sd->bl, 0);
@@ -1385,7 +1385,7 @@ ACMD(baselevelup)
 			return false;
 		}
 		level*=-1;
-		if ((unsigned int)level >= sd->status.base_level)
+		if (level >= sd->status.base_level)
 			level = sd->status.base_level-1;
 		for (i = 0; i > -level; i--)
 			status_point += pc->gets_status_point(sd->status.base_level + i - 1);
@@ -1395,9 +1395,10 @@ ACMD(baselevelup)
 			sd->status.status_point = 0;
 		else
 			sd->status.status_point -= status_point;
-		sd->status.base_level -= (unsigned int)level;
+		sd->status.base_level -= level;
 		clif->message(fd, msg_fd(fd,22)); // Base level lowered.
 		status_calc_pc(sd, SCO_FORCE);
+		level *= -1;
 	}
 	sd->status.base_exp = 0;
 	clif->updatestatus(sd, SP_STATUSPOINT);
@@ -1407,6 +1408,10 @@ ACMD(baselevelup)
 	pc->baselevelchanged(sd);
 	if(sd->status.party_id)
 		party->send_levelup(sd);
+	
+	if (level > 0 && battle_config.atcommand_levelup_events)
+		npc->script_event(sd, NPCE_BASELVUP); // Trigger OnPCBaseLvUpEvent
+
 	return true;
 }
 
@@ -1426,9 +1431,9 @@ ACMD(joblevelup)
 			clif->message(fd, msg_fd(fd,23)); // Job level can't go any higher.
 			return false;
 		}
-		if ((unsigned int)level > pc->maxjoblv(sd) || (unsigned int)level > pc->maxjoblv(sd) - sd->status.job_level) // fix positive overflow
+		if (level > pc->maxjoblv(sd) || level > pc->maxjoblv(sd) - sd->status.job_level) // fix positive overflow
 			level = pc->maxjoblv(sd) - sd->status.job_level;
-		sd->status.job_level += (unsigned int)level;
+		sd->status.job_level += level;
 		sd->status.skill_point += level;
 		clif->misceffect(&sd->bl, 1);
 		clif->message(fd, msg_fd(fd,24)); // Job level raised.
@@ -1438,9 +1443,9 @@ ACMD(joblevelup)
 			return false;
 		}
 		level *=-1;
-		if ((unsigned int)level >= sd->status.job_level) // fix negative overflow
+		if (level >= sd->status.job_level) // fix negative overflow
 			level = sd->status.job_level-1;
-		sd->status.job_level -= (unsigned int)level;
+		sd->status.job_level -= level;
 		if (sd->status.skill_point < level)
 			pc->resetskill(sd, PCRESETSKILL_NONE); //Reset skills since we need to subtract more points.
 		if (sd->status.skill_point < level)
@@ -1448,6 +1453,7 @@ ACMD(joblevelup)
 		else
 			sd->status.skill_point -= level;
 		clif->message(fd, msg_fd(fd,25)); // Job level lowered.
+		level *= -1;
 	}
 	sd->status.job_exp = 0;
 	clif->updatestatus(sd, SP_JOBLEVEL);
@@ -1455,6 +1461,9 @@ ACMD(joblevelup)
 	clif->updatestatus(sd, SP_NEXTJOBEXP);
 	clif->updatestatus(sd, SP_SKILLPOINT);
 	status_calc_pc(sd, SCO_FORCE);
+
+	if (level > 0 && battle_config.atcommand_levelup_events)
+		npc->script_event(sd, NPCE_JOBLVUP); // Trigger OnPCJobLvUpEvent
 
 	return true;
 }
@@ -2296,30 +2305,18 @@ ACMD(displaystatus)
 ACMD(statuspoint)
 {
 	int point;
-	unsigned int new_status_point;
+	int new_status_point;
 
 	if (!*message || (point = atoi(message)) == 0) {
 		clif->message(fd, msg_fd(fd,1010)); // Please enter a number (usage: @stpoint <number of points>).
 		return false;
 	}
 
-	if(point < 0)
-	{
-		if(sd->status.status_point < (unsigned int)(-point))
-		{
-			new_status_point = 0;
-		}
-		else
-		{
-			new_status_point = sd->status.status_point + point;
-		}
-	}
-	else if(UINT_MAX - sd->status.status_point < (unsigned int)point)
-	{
-		new_status_point = UINT_MAX;
-	}
-	else
-	{
+	if (point < 0 && sd->status.status_point + point < 0) {
+		new_status_point = 0;
+	} else if (point > 0 && (int64)sd->status.status_point + point > INT_MAX) {
+		new_status_point = INT_MAX;
+	} else {
 		new_status_point = sd->status.status_point + point;
 	}
 
@@ -2344,30 +2341,18 @@ ACMD(statuspoint)
 ACMD(skillpoint)
 {
 	int point;
-	unsigned int new_skill_point;
+	int new_skill_point;
 
 	if (!*message || (point = atoi(message)) == 0) {
 		clif->message(fd, msg_fd(fd,1011)); // Please enter a number (usage: @skpoint <number of points>).
 		return false;
 	}
 
-	if(point < 0)
-	{
-		if(sd->status.skill_point < (unsigned int)(-point))
-		{
-			new_skill_point = 0;
-		}
-		else
-		{
-			new_skill_point = sd->status.skill_point + point;
-		}
-	}
-	else if(UINT_MAX - sd->status.skill_point < (unsigned int)point)
-	{
-		new_skill_point = UINT_MAX;
-	}
-	else
-	{
+	if (point < 0 && sd->status.skill_point + point < 0) {
+		new_skill_point = 0;
+	} else if (point > 0 && (int64)sd->status.skill_point + point > INT_MAX) {
+		new_skill_point = INT_MAX;
+	} else {
 		new_skill_point = sd->status.skill_point + point;
 	}
 
@@ -3626,7 +3611,7 @@ ACMD(reloadbattleconf)
 	struct Battle_Config prev_config;
 	memcpy(&prev_config, &battle_config, sizeof(prev_config));
 
-	battle->config_read(map->BATTLE_CONF_FILENAME);
+	battle->config_read(map->BATTLE_CONF_FILENAME, false);
 	if (prev_config.feature_roulette == 0 && battle_config.feature_roulette == 1 && !clif->parse_roulette_db())
 		battle_config.feature_roulette = 0;
 
@@ -9295,8 +9280,9 @@ ACMD(costume){
 }
 /* for debugging purposes (so users can easily provide us with debug info) */
 /* should be trashed as soon as its no longer necessary */
-ACMD(skdebug) {
-	safesnprintf(atcmd_output, sizeof(atcmd_output),"second: %u; third: %u", sd->sktree.second, sd->sktree.third);
+ACMD(skdebug)
+{
+	safesnprintf(atcmd_output, sizeof(atcmd_output),"second: %d; third: %d", sd->sktree.second, sd->sktree.third);
 	clif->message(fd,atcmd_output);
 	safesnprintf(atcmd_output, sizeof(atcmd_output),"pc_calc_skilltree_normalize_job: %d",pc->calc_skilltree_normalize_job(sd));
 	clif->message(fd,atcmd_output);

@@ -43,14 +43,14 @@ prt_are_in,103,11,3	script	Arena Point Manager	4_M_JOB_HUNTER,{
 	switch(select("Point Check", "Convert Points", "^660000Conversion Info^000000")) {
 	case 1:
 		mes "[Arena Point Manager]";
-		mes "" + strcharinfo(0) + ",";
+		mes "" + strcharinfo(PC_NAME) + ",";
 		mes "you currently have";
 		mes "" + arena_point + " Arena Points";
 		mes "and " + tt_point + " Turbo Track Points.";
 		close;
 	case 2:
 		mes "[Arena Point Manager]";
-		mes "" + strcharinfo(0) + ",";
+		mes "" + strcharinfo(PC_NAME) + ",";
 		mes "you currently have";
 		mes "" + arena_point + " Arena Points";
 		mes "and " + tt_point + " Turbo Track Points.";
@@ -136,7 +136,7 @@ prt_are_in,103,11,3	script	Arena Point Manager	4_M_JOB_HUNTER,{
 					arena_point += .@want_point;
 					next;
 					mes "[Arena Point Manager]";
-					mes "" + strcharinfo(0) + ",";
+					mes "" + strcharinfo(PC_NAME) + ",";
 					mes "you now have";
 					mes "^4682B4" + arena_point + "^000000 Arena Points";
 					mes "and ^00688B" + tt_point + "^000000 Turbo Track Points.";
@@ -176,14 +176,14 @@ S_ExchangePoints:
 	}
 	if (tt_point >= getarg(1)) {
 		mes "[Arena Point Manager]";
-		mes "" + strcharinfo(0) + ",";
+		mes "" + strcharinfo(PC_NAME) + ",";
 		mes "you've converted "+getarg(1)+" Track";
 		mes "Points into "+getarg(2)+" Arena Point.";
 		tt_point -= getarg(1);
 		arena_point += getarg(2);
 		next;
 		mes "[Arena Point Manager]";
-		mes "" + strcharinfo(0) + ",";
+		mes "" + strcharinfo(PC_NAME) + ",";
 		mes "you now have";
 		mes "^4682B4" + arena_point + "^000000 Arena Points";
 		mes "and ^00688B" + tt_point + "^000000 Turbo Track Points.";

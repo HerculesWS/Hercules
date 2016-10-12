@@ -98,10 +98,10 @@ mal_in02,134,31,5	script	Investment Cat Helper	4_WHITETIGER,{
 				mes "ah!~ what's your name?";
 				next;
 				mes "[Investment Cat Helper]";
-				mes strcharinfo(0)+" you are~";
+				mes strcharinfo(PC_NAME)+" you are~";
 				next;
 				mes "[Investment Cat Helper]";
-				mes "Name: "+strcharinfo(0);
+				mes "Name: "+strcharinfo(PC_NAME);
 				mes "Number of accounts: 10";
 				mes "OK! Registered!";
 				next;
@@ -234,11 +234,11 @@ mal_in02,134,31,5	script	Investment Cat Helper	4_WHITETIGER,{
 					mes "[Investment Cat Helper]";
 					mes "You can have 20,000 accounts max";
 					mes "according to the trader policy...";
-					mes strcharinfo(0)+"'s accounts increase to 20,000.";
+					mes strcharinfo(PC_NAME)+"'s accounts increase to 20,000.";
 					mes "Thank you so much for your investment~";
 					next;
 					mes "[Investment Cat Helper]";
-					mes "Now, "+strcharinfo(0)+", you can't invest further";
+					mes "Now, "+strcharinfo(PC_NAME)+", you can't invest further";
 					mes "but you can still donate some of your cans to the trader group.";
 					mes "Thank you so much~";
 					close;
@@ -261,7 +261,7 @@ mal_in02,134,31,5	script	Investment Cat Helper	4_WHITETIGER,{
 			mes "You want to check the number of accounts? Hmm, let's see~";
 			next;
 			mes "[Investment Cat Helper]";
-			mes "Name: "+strcharinfo(0);
+			mes "Name: "+strcharinfo(PC_NAME);
 			mes "Number of accounts: "+ep13_yong1;
 			next;
 			mes "[Investment Cat Helper]";
@@ -277,8 +277,8 @@ mal_in02,134,31,5	script	Investment Cat Helper	4_WHITETIGER,{
 		}
 	} else if (ep13_yong1 >= 20000) {
 		mes "[Investment Cat Helper]";
-		mes strcharinfo(0) + ", welcome~";
-		mes strcharinfo(0) + "~ I felt something upon your arrival.";
+		mes strcharinfo(PC_NAME) + ", welcome~";
+		mes strcharinfo(PC_NAME) + "~ I felt something upon your arrival.";
 		next;
 		mes "[Investment Cat Helper]";
 		mes "Want to donate?";
@@ -289,10 +289,10 @@ mal_in02,134,31,5	script	Investment Cat Helper	4_WHITETIGER,{
 			close;
 		}
 		mes "[Investment Cat Helper]";
-		mes "Wow, thank you, "+strcharinfo(0)+"~!";
+		mes "Wow, thank you, "+strcharinfo(PC_NAME)+"~!";
 		next;
 		mes "[Investment Cat Helper]";
-		mes strcharinfo(0)+"~ with your help";
+		mes strcharinfo(PC_NAME)+"~ with your help";
 		mes "the cans will be distributed to cats";
 		mes "in the Midgard area with honor~";
 		next;
@@ -314,7 +314,7 @@ mal_in02,134,31,5	script	Investment Cat Helper	4_WHITETIGER,{
 			mes "Ohh! Thank you~";
 			next;
 			mes "[Investment Cat Helper]";
-			mes "Dear "+strcharinfo(0)+" ~";
+			mes "Dear "+strcharinfo(PC_NAME)+" ~";
 			mes "I have only Increase AGI";
 			mes "and Blessing to give you.";
 			mes "Thank you.";
@@ -933,7 +933,7 @@ mal_in02,174,64,5	script	Linguist Devore#mal	4_CAT_MERMASTER,{
 		emotion e_omg;
 		next;
 		mes "[Linguist Devore]";
-		mes "Ah, ah! Thanks to you, "+strcharinfo(0)+"!";
+		mes "Ah, ah! Thanks to you, "+strcharinfo(PC_NAME)+"!";
 		mes "I feel so grateful.";
 		next;
 		mes "[Linguist Devore]";
@@ -958,7 +958,7 @@ mal_in02,174,64,5	script	Linguist Devore#mal	4_CAT_MERMASTER,{
 	mes "[Linguist Devore]";
 	mes "Ah, ah!!";
 	mes "The study on Starfish is going well.";
-	mes "It could've really been a disaster, if you, "+strcharinfo(0)+", didn't help us.";
+	mes "It could've really been a disaster, if you, "+strcharinfo(PC_NAME)+", didn't help us.";
 	emotion e_thx;
 	close;
 }
@@ -1335,7 +1335,7 @@ mal_in02,140,94,0	script	Bob#mal	4_CAT_DOWN,{
 			mes "- Ground is a bit cracked. -";
 			mes "- Used a stapler. -";
 			.off = 1;
-			donpcevent "Crackt"+substr(strnpcinfo(2),3,getstrlen(strnpcinfo(2))-1)+"#mal::OnEnable";
+			donpcevent "Crackt"+substr(strnpcinfo(NPC_NAME_HIDDEN),3,getstrlen(strnpcinfo(NPC_NAME_HIDDEN))-1)+"#mal::OnEnable";
 			close;
 		} else if (.@ma_cr1 == 7) {
 			mes "- With the crack opening -";
@@ -1388,7 +1388,7 @@ mal_in02,140,94,0	script	Bob#mal	4_CAT_DOWN,{
 						mes "- the other cracks. -";
 					}
 					.off = 1;
-					donpcevent "Crackt"+substr(strnpcinfo(2),3,getstrlen(strnpcinfo(2))-1)+"#mal::OnEnable";
+					donpcevent "Crackt"+substr(strnpcinfo(NPC_NAME_HIDDEN),3,getstrlen(strnpcinfo(NPC_NAME_HIDDEN))-1)+"#mal::OnEnable";
 					close;
 				}
 			}
@@ -1399,11 +1399,11 @@ mal_in02,140,94,0	script	Bob#mal	4_CAT_DOWN,{
 	mes "- not enough supporters yet. -";
 	close;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	end;
 OnDisable:
 	.off = 0;
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 malangdo,114,157,0	duplicate(Crack#mal0)	Crack#mal1	4_CRACK
@@ -1420,22 +1420,22 @@ malangdo,162,183,0	duplicate(Crack#mal0)	Crack#mal10	4_CRACK
 -	script	Crackt0#mal	FAKE_NPC,{
 	end;
 OnInit:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	initnpctimer;
 	end;
 OnDisable:
 	stopnpctimer;
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnTimer1000:
-	donpcevent "Crack#mal"+substr(strnpcinfo(1),6,getstrlen(strnpcinfo(1))-1)+"::OnDisable";
+	donpcevent "Crack#mal"+substr(strnpcinfo(NPC_NAME_VISIBLE),6,getstrlen(strnpcinfo(NPC_NAME_VISIBLE))-1)+"::OnDisable";
 	end;
 OnTimer30000:
-	donpcevent "Crack#mal"+substr(strnpcinfo(1),6,getstrlen(strnpcinfo(1))-1)+"::OnEnable";
-	donpcevent strnpcinfo(0)+"::OnDisable";
+	donpcevent "Crack#mal"+substr(strnpcinfo(NPC_NAME_VISIBLE),6,getstrlen(strnpcinfo(NPC_NAME_VISIBLE))-1)+"::OnEnable";
+	donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 	end;
 }
 -	duplicate(Crackt0#mal)	Crackt1#mal	FAKE_NPC
@@ -1930,18 +1930,18 @@ mal_in01,116,168,0	script	Dry Machine#mal	2_SLOT_MACHINE,{
 			emotion e_omg,1;
 		}
 		.off = 1;
-		donpcevent "Water Sand"+strnpcinfo(2)+"#mal::OnEnable";
+		donpcevent "Water Sand"+strnpcinfo(NPC_NAME_HIDDEN)+"#mal::OnEnable";
 		close;
 	}
 	mes "- Seeems suspicious. -";
 	mes "- But it's just sand... -";
 	close;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	end;
 OnDisable:
 	.off = 0;
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 malangdo,221,139,0	duplicate(Suspicious Sand Pile#0)	Suspicious Sand Pile#1	4_SOIL
@@ -1957,22 +1957,22 @@ malangdo,242,175,0	duplicate(Suspicious Sand Pile#0)	Suspicious Sand Pile#10	4_S
 
 -	script	Water Sand0#mal	FAKE_NPC,{
 OnInit:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	initnpctimer;
 	end;
 OnDisable:
 	stopnpctimer;
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnTimer1000:
-	donpcevent "Suspicious Sand Pile#"+substr(strnpcinfo(1),10,getstrlen(strnpcinfo(1))-1)+"::OnDisable";
+	donpcevent "Suspicious Sand Pile#"+substr(strnpcinfo(NPC_NAME_VISIBLE),10,getstrlen(strnpcinfo(NPC_NAME_VISIBLE))-1)+"::OnDisable";
 	end;
 OnTimer30000:
-	donpcevent "Suspicious Sand Pile#"+substr(strnpcinfo(1),10,getstrlen(strnpcinfo(1))-1)+"::OnEnable";
-	donpcevent strnpcinfo(0)+"::OnDisable";
+	donpcevent "Suspicious Sand Pile#"+substr(strnpcinfo(NPC_NAME_VISIBLE),10,getstrlen(strnpcinfo(NPC_NAME_VISIBLE))-1)+"::OnEnable";
+	donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 	end;
 }
 -	duplicate(Water Sand0#mal)	Water Sand1#mal	FAKE_NPC
@@ -2035,7 +2035,7 @@ mal_dun01,136,122,3	script	Biscuit#mal	4_ASTER,{
 		mes "Well, that fellow is often the one ignoring my words.";
 		mes "He wavers with words to say and makes me uncomfortable.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Did you hear? Dr. Devore?";
 		donpcevent "Linguist Devore#mald::OnEnable";
 		next;
@@ -2044,7 +2044,7 @@ mal_dun01,136,122,3	script	Biscuit#mal	4_ASTER,{
 		mes "I cannot hear anything.";
 		emotion e_what,0,"Linguist Devore#mald";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Huh? Biscuit said 'Well, that fellow is often the one ignoring my words. He wavers with words to say and makes me uncomfortable.'?";
 		next;
 		mes "[Linguist Devore]";
@@ -2052,7 +2052,7 @@ mal_dun01,136,122,3	script	Biscuit#mal	4_ASTER,{
 		mes "I cannot hear anything.";
 		emotion e_what,0,"Linguist Devore#mald";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Huh?";
 		emotion e_what,1;
 		next;
@@ -2089,7 +2089,7 @@ mal_dun01,136,122,3	script	Biscuit#mal	4_ASTER,{
 		mes "I'll get back to the meeting and report this.";
 		mes "Then please take care of the next things!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Wait, Dr. Devore, what on earth is next...?";
 		mes "What should I do...?";
 		emotion e_dots,1;
@@ -2213,7 +2213,7 @@ mal_dun01,136,122,3	script	Biscuit#mal	4_ASTER,{
 			mes "[Biscuit]";
 			mes "You're not my subordinate, so I can't order you by force. But if Star Candy can't have her meal on time, you have to remember that this island will collapse completely.";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "...It's not a request, but a threat...";
 			emotion e_dots,1;
 			close;
@@ -2539,7 +2539,7 @@ mal_dun01,133,125,5	script	Star Candy#mal	4_F_STARFISHGIRL,{
 		mes "You look different from the fellows that usually comes...";
 		mes "You also look strange, though.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "?!";
 		mes "You can talk!";
 		emotion e_omg,1;
@@ -2604,7 +2604,7 @@ mal_dun01,133,125,5	script	Star Candy#mal	4_F_STARFISHGIRL,{
 }
 
 -	script	#skin_mal	FAKE_NPC,{
-	.@index = atoi(strnpcinfo(2));
+	.@index = atoi(strnpcinfo(NPC_NAME_HIDDEN));
 	switch(.@index) {
 		case 29: .@str$ = "dry"; break;
 		case 30: .@str$ = "prickly"; break;
@@ -2969,7 +2969,7 @@ malangdo,175,206,3	script	Gobonge#ml	4_CAT_SAILOR5,{
 				next;
 				switch(select("No, I don't want to!", "Yes, I'll do it!")) {
 				case 1:
-					mes "[" + strcharinfo(0) + "]";
+					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "For the peace in Malangdo,";
 					mes "just lay in bed forever.";
 					next;
@@ -4175,14 +4175,14 @@ malangdo,133,134,0	script	Strange Pile of Sand#7	4_SOIL,{
 		close;
 	}
 	if (questprogress(7268)) {
-		.@quest = (strnpcinfo(0) == "Strange Pile of Sand#7")?7270:7275;
+		.@quest = (strnpcinfo(NPC_NAME) == "Strange Pile of Sand#7")?7270:7275;
 		if (!questprogress(.@quest)) {
 			mes "The pile of sand is billowed like a grave. Should be something in there.";
 			mes "According to rumors, cats have a habit to bury with sand after stool...";
 			next;
 			switch(select("Avoid this dirty place.", "Darn it-!")) {
 			case 1:
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Right!";
 				mes "It may be cat's grave... Do not touch them!";
 				mes "Avoid, avoid~";
@@ -5488,7 +5488,7 @@ L_Viewpoint:
 		mes "This is the Duruduru compass from the Meow Bravery Team.";
 		close;
 	}
-	.@index = atoi(strnpcinfo(2));
+	.@index = atoi(strnpcinfo(NPC_NAME_HIDDEN));
 	switch(.@index) {
 	case 1:
 		setarray .@var[0],11,25;
@@ -5511,7 +5511,7 @@ L_Viewpoint:
 		.@color$ = "white";
 		break;
 	}
-	mes "Delicate "+.@color$+" lights surround the "+strnpcinfo(1)+".";
+	mes "Delicate "+.@color$+" lights surround the "+strnpcinfo(NPC_NAME_VISIBLE)+".";
 	if (nyadven02 < 11) {
 		mes "After inserting the card and pressing the button, characters appear on the screen.";
 		next;
@@ -5560,7 +5560,7 @@ L_Viewpoint:
 			input .@input;
 			if (.@input == .@nori_c) {
 				mes "The card slides out with a sound after entering the number.";
-				mes "^4d4dffYou have passed the "+strnpcinfo(1)+"! Run to the next destination!^000000";
+				mes "^4d4dffYou have passed the "+strnpcinfo(NPC_NAME_VISIBLE)+"! Run to the next destination!^000000";
 				mes "You should run for the next destination.";
 				++nyadven02;
 				close;
@@ -6534,7 +6534,7 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 	if (BaseLevel < 60) {
 		mes "A gentle looking cat is whispering to himself.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Hello... Mr. Cat...";
 		next;
 		mes "The cat takes a glance at you and goes back to his whispering as if he didn't even see you.";
@@ -6614,20 +6614,20 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 		mes "What is your name by the way?";
 		emotion e_gasp;
 		next;
-		mes "["+strcharinfo(0)+"]";
-		mes "My name is "+strcharinfo(0)+", Mr. Cat.";
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes "My name is "+strcharinfo(PC_NAME)+", Mr. Cat.";
 		next;
 		mes "[Cat Gamers Director]";
-		mes "Oh, ^0000FF"+strcharinfo(0)+"^000000.";
+		mes "Oh, ^0000FF"+strcharinfo(PC_NAME)+"^000000.";
 		mes "How may I help you?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Actually I wanted to help you out since I heard that you've lost 10 games in a row...";
 		next;
 		mes "[Cat Gamers Director]";
 		mes "Well, you didn't really have to point it out like that...";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "A weakness is no longer a weakness when you say it out loud.";
 		emotion e_no1,1;
 		next;
@@ -6641,7 +6641,7 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 		else
 			setarray .@sex$[0],"Miss","girl";
 		mes "[Cat Gamers Director]";
-		mes "I like you, "+.@sex$[0]+" "+strcharinfo(0)+". Will you help us get out of this 10 game losing streak? Ehehe~";
+		mes "I like you, "+.@sex$[0]+" "+strcharinfo(PC_NAME)+". Will you help us get out of this 10 game losing streak? Ehehe~";
 		next;
 		switch(select("Sorry, I'm a stupid "+.@sex$[1]+".", "Sure, I'm a cool "+.@sex$[1]+".")) {
 		case 1:
@@ -6654,7 +6654,7 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 			close;
 		case 2:
 			mes "[Cat Gamers Director]";
-			mes "Wow. I respect you, "+strcharinfo(0)+".";
+			mes "Wow. I respect you, "+strcharinfo(PC_NAME)+".";
 			mes "Let me ask you a favor.";
 			mes "Please meet the hard working Manager Cat and ask about our team's attitude these days.";
 			malang_gamer = 3;
@@ -6677,14 +6677,14 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 		next;
 		mes "You tell him exactly what the Manager Cat said.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "The manager cat said...";
 		next;
 		mes "[Cat Gamers Director]";
 		mes "Do not hesitate... Just tell me everything~";
 		emotion e_what;
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Umm... the player cats are afraid of you...";
 		next;
 		mes "[Cat Gamers Director]";
@@ -6720,7 +6720,7 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 		mes "Is that the truth?";
 		next;
 		mes "[Cat Gamers Director]";
-		mes strcharinfo(0)+", will you help me out?";
+		mes strcharinfo(PC_NAME)+", will you help me out?";
 		mes "There are 4 players who ran away from practice saying they were too tired.";
 		mes "Could you check if they ran away because of me? ehehehe~";
 		emotion e_what;
@@ -6736,7 +6736,7 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 		mes "Ok? Be! Gentle!";
 		next;
 		mes "[Cat Gamers Director]";
-		mes "I appreciate your help, "+strcharinfo(0)+". heh~";
+		mes "I appreciate your help, "+strcharinfo(PC_NAME)+". heh~";
 		malang_gamer = 6;
 		erasequest 5060;
 		setquest 5061;
@@ -6750,7 +6750,7 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 			mes "What good is it to scam innocent cats?~";
 			emotion e_gg;
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Yes, I think that you're right.";
 			emotion e_hmm,1;
 			next;
@@ -6765,7 +6765,7 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 			next;
 			mes "You tell the Cat Gamers Director what Eryu, Stew, Ketchup, and Eff said.";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "They think you push them too much through the practices. So they are scared.";
 			next;
 			mes "[Cat Gamers Director]";
@@ -6788,7 +6788,7 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 		mes "Ok? Be! Gentle!";
 		next;
 		mes "[Cat Gamers Director]";
-		mes "I appreciate your help, "+strcharinfo(0)+". heh~";
+		mes "I appreciate your help, "+strcharinfo(PC_NAME)+". heh~";
 		close;
 	} else if (malang_gamer == 7) {
 		if (questprogress(5060,PLAYTIME) == 1) {
@@ -6814,7 +6814,7 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 		mes "this scary cat image of mine. Heh~";
 		next;
 		mes "[Cat Gamers Director]";
-		mes "Heh~ I would much appreciate your help, "+strcharinfo(0)+"~.";
+		mes "Heh~ I would much appreciate your help, "+strcharinfo(PC_NAME)+"~.";
 		malang_gamer = 8;
 		erasequest 5060;
 		setquest 5066;
@@ -6826,27 +6826,27 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 		next;
 		mes "[Cat Gamers Director]";
 		mes "Heh~ Please help me out,";
-		mes strcharinfo(0)+"! Heh~";
+		mes strcharinfo(PC_NAME)+"! Heh~";
 		close;
 	} else if (malang_gamer == 9) {
 		mes "[Cat Gamers Director]";
 		mes "You came back!! Heh~";
 		mes "So, what did our manager cat say?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Manager cat asked to prepare a box.";
 		next;
 		mes "[Cat Gamers Director]";
 		mes "A box? Heh~ Sure, why not?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Are you going to ask me what is it for?";
 		next;
 		mes "[Cat Gamers Director]";
-		mes "Well, I kind of was eavesdropping when "+strcharinfo(0)+" and Manager Cat were talking together. Heh~";
+		mes "Well, I kind of was eavesdropping when "+strcharinfo(PC_NAME)+" and Manager Cat were talking together. Heh~";
 		emotion e_heh;
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "............";
 		next;
 		mes "[Cat Gamers Director]";
@@ -6930,29 +6930,29 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 		mes "[Cat Gamers Director]";
 		mes "Everyone seems to have a satisfied team life~ Heh~";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Not... Really...";
 		next;
 		mes "There are tons of letters piled in the back of the box, but Cat Gamers Director doesn't want to admit the problem.";
 		next;
 		mes "[Cat Gamers Director]";
 		mes "Heh~";
-		mes "Hey, "+strcharinfo(0)+". What did you say? Heh~";
+		mes "Hey, "+strcharinfo(PC_NAME)+". What did you say? Heh~";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Nothing! Please carry on.";
 		next;
 		mes "[Cat Gamers Director]";
 		mes "Heh~ Because of what these players want,";
-		mes "I have a favor to ask you, "+strcharinfo(0)+"...";
+		mes "I have a favor to ask you, "+strcharinfo(PC_NAME)+"...";
 		mes "Heh~";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "What is it?";
 		next;
 		mes "[Cat Gamers Director]";
 		mes "Will you be our players' practicing partner?";
-		mes "Heh~ I feel strongly that you, "+strcharinfo(0)+", can be trusted for this. Heh~";
+		mes "Heh~ I feel strongly that you, "+strcharinfo(PC_NAME)+", can be trusted for this. Heh~";
 		next;
 		switch(select("No thanks, buddy!", "Ok, I'll do it!")) {
 		case 1:
@@ -6961,13 +6961,13 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 			next;
 			mes "[Cat Gamers Director]";
 			mes "I'm sad. Sad~ Heh~";
-			mes "I didn't expect a refusal from a person like you, "+strcharinfo(0)+".";
+			mes "I didn't expect a refusal from a person like you, "+strcharinfo(PC_NAME)+".";
 			mes "But still, here's some coins for you~";
 			mes "Heh~";
 			emotion e_sob;
 			next;
 			mes "[Cat Gamers Director]";
-			mes "We will always welcome you, "+strcharinfo(0)+", as a guest member of the Cat Gamers.";
+			mes "We will always welcome you, "+strcharinfo(PC_NAME)+", as a guest member of the Cat Gamers.";
 			mes "Heh~";
 			malang_gamer = 11;
 			erasequest 5068;
@@ -6997,13 +6997,13 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 			getitem Egrade_Coin,100;
 			next;
 			mes "[Cat Gamers Director]";
-			mes "Heh~ Ok, "+strcharinfo(0)+". I will see you in an hour. Heh~";
+			mes "Heh~ Ok, "+strcharinfo(PC_NAME)+". I will see you in an hour. Heh~";
 			close;
 		}
 	} else if (malang_gamer == 11) {
 		mes "[Cat Gamers Director]";
 		mes "Heh~";
-		mes "Aren't you "+strcharinfo(0)+"?";
+		mes "Aren't you "+strcharinfo(PC_NAME)+"?";
 		mes "Have you changed your mind yet?";
 		mes "Are you willing to be our team's practicing partner?";
 		next;
@@ -7011,14 +7011,14 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 		case 1:
 			mes "[Cat Gamers Director]";
 			mes "Heh~ I see.";
-			mes "But, let me tell you once again, "+strcharinfo(0)+".";
+			mes "But, let me tell you once again, "+strcharinfo(PC_NAME)+".";
 			mes "You are always welcome to be one of our 'Cat Gamers Honorable Members'.";
 			mes "Heh~";
 			close;
 		case 2:
 			mes "[Cat Gamers Director]";
 			mes "Heh~ At last!!";
-			mes strcharinfo(0)+" will become our honorable member!!";
+			mes strcharinfo(PC_NAME)+" will become our honorable member!!";
 			mes "I shall make a '^0000FFCat Gamers Certificate^000000' right away. Heh~";
 			emotion e_ho;
 			next;
@@ -7045,7 +7045,7 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 		mes "[Cat Gamers Director]";
 		mes "This is not some ordinary certificate. Heh~";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "What do you mean?";
 		next;
 		mes "[Cat Gamers Director]";
@@ -7076,19 +7076,19 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 		close;
 	}
 	mes "[Cat Gamers Director]";
-	mes "Heh~ Hello, "+strcharinfo(0)+". How is it going practicing with the players?";
+	mes "Heh~ Hello, "+strcharinfo(PC_NAME)+". How is it going practicing with the players?";
 	emotion e_what;
 	next;
 	switch(select("How are the players doing?", "Just stopped by to say hi~", "Here's the current status...")) {
 	case 1:
 		mes "[Cat Gamers Director]";
-		mes "Heh~ Wow, "+strcharinfo(0)+"! I'm so touched by your care for the players.";
+		mes "Heh~ Wow, "+strcharinfo(PC_NAME)+"! I'm so touched by your care for the players.";
 		next;
 		mes "[Cat Gamers Director]";
-		mes "Heh~ For 13 years of my life, I've never seen anyone like you, "+strcharinfo(0)+". Heh~";
+		mes "Heh~ For 13 years of my life, I've never seen anyone like you, "+strcharinfo(PC_NAME)+". Heh~";
 		next;
 		mes "[Cat Gamers Director]";
-		mes "Heh~ "+strcharinfo(0)+", which player's condition are you interested in?";
+		mes "Heh~ "+strcharinfo(PC_NAME)+", which player's condition are you interested in?";
 		next;
 		switch(select("Rock Paper Scissors players", "ChamChamCham players", "KongNyangKong players", "Flag Game players")) {
 		case 1:
@@ -7110,11 +7110,11 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 		}
 		next;
 		mes "[Cat Gamers Director]";
-		mes "Heh~ Please keep up the good work, "+strcharinfo(0)+". Heh~";
+		mes "Heh~ Please keep up the good work, "+strcharinfo(PC_NAME)+". Heh~";
 		close;
 	case 2:
 		mes "[Cat Gamers Director]";
-		mes "Heh~ Hello there~ "+strcharinfo(0)+". You have such good manners~ Heh~";
+		mes "Heh~ Hello there~ "+strcharinfo(PC_NAME)+". You have such good manners~ Heh~";
 		next;
 		mes "[Cat Gamers Director]";
 		mes "Heh~ These days, there are so many cats and humans without proper manners. Heh~";
@@ -7123,17 +7123,17 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 		mes "We also have some of thme in our 'Cat Gamers'. They are so arrogant every time we win the game... Heh~";
 		next;
 		mes "[Cat Gamers Director]";
-		mes "Heh~ There should be more people like you, "+strcharinfo(0)+". Heh~";
+		mes "Heh~ There should be more people like you, "+strcharinfo(PC_NAME)+". Heh~";
 		next;
 		mes "[Cat Gamers Director]";
-		mes "Heh~ Please practice with our players more often~ Heh~ So they can learn some manners from you, "+strcharinfo(0)+". Heh~";
+		mes "Heh~ Please practice with our players more often~ Heh~ So they can learn some manners from you, "+strcharinfo(PC_NAME)+". Heh~";
 		next;
 		mes "[Cat Gamers Director]";
 		mes "Keep up the good work~ Heh~";
 		close;
 	case 3:
 		mes "[Cat Gamers Director]";
-		mes "Heh~ What happened to your face, "+strcharinfo(0)+"? Guess you lost from the practice, right? Heh~";
+		mes "Heh~ What happened to your face, "+strcharinfo(PC_NAME)+"? Guess you lost from the practice, right? Heh~";
 		emotion e_gg;
 		next;
 		mes "[Cat Gamers Director]";
@@ -7145,7 +7145,7 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 	// Detect quest (ID range 5074~5090)
 	mes "[Cat Gamers Director]";
 	if (questprogress(5074,HUNTING)) {
-		mes "Heh~ It's not like I didn't feed them right... Heh~ I hope it was not too much for you, "+strcharinfo(0)+".";
+		mes "Heh~ It's not like I didn't feed them right... Heh~ I hope it was not too much for you, "+strcharinfo(PC_NAME)+".";
 		next;
 		if (questprogress(5074,HUNTING) == 2 && countitem(Fish_Tail) >= 10) {
 			delitem Fish_Tail,10;
@@ -7300,7 +7300,7 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 		}
 	}
 	mes "[Cat Gamers Director]";
-	mes "Heh?! There's no favor note for you, "+strcharinfo(0)+". Heh~ What do you want to report? Heh~";
+	mes "Heh?! There's no favor note for you, "+strcharinfo(PC_NAME)+". Heh~ What do you want to report? Heh~";
 	close;
 
 // callsub L_CompleteQuest,<quest ID>,"<message>";
@@ -7311,7 +7311,7 @@ L_CompleteQuest:
 	mes getarg(1);
 	next;
 	mes "[Cat Gamers Director]";
-	mes "Heh~ Thanks for coming by, "+strcharinfo(0)+". Heh~ Keep up the good work. Heh~";
+	mes "Heh~ Thanks for coming by, "+strcharinfo(PC_NAME)+". Heh~ Keep up the good work. Heh~";
 	emotion e_thx;
 	close;
 }
@@ -7405,7 +7405,7 @@ malangdo,127,111,4	script	Strange Cat#gamer	4_CAT_SAILOR4,{
 			next;
 			break;
 		}
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Haha, I was just kidding. I actually need to tell you that the Cat Gamers Director has an issue...";
 		emotion e_swt2,1;
 		next;
@@ -7416,21 +7416,21 @@ malangdo,127,111,4	script	Strange Cat#gamer	4_CAT_SAILOR4,{
 		mes "Scary image... Meow, I understand... Cat Gamers Director should feel peace by giving up things.";
 		emotion e_hmm;
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "... ... ...";
 		emotion e_dots,1;
 		next;
 		mes "[Manager Cat]";
 		mes "Meow! Go tell him this, meow~ Prepare a box, meow~";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "A box?";
 		emotion e_what,1;
 		next;
 		mes "[Manager Cat]";
 		mes "Petition it is, meow!! There is some place where humans do such things, I think it will help us~";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Ok, I will go tell it to the Games Director~";
 		emotion e_ok,1;
 		malang_gamer = 9;
@@ -7451,7 +7451,7 @@ malangdo,127,111,4	script	Strange Cat#gamer	4_CAT_SAILOR4,{
 		close;
 	} else if (malang_gamer == 12) {
 		mes "[Manager Cat]";
-		mes "Meow~ Aren't you "+strcharinfo(0)+"? I heard Cat Gamers Director ordered a special certificate, meow~";
+		mes "Meow~ Aren't you "+strcharinfo(PC_NAME)+"? I heard Cat Gamers Director ordered a special certificate, meow~";
 		next;
 		mes "[Manager Cat]";
 		mes "When practicing, you must equip the '^0000FFCat Gamers Certificate^000000' item~ Don't forget, meow~";
@@ -7637,11 +7637,11 @@ malangdo,161,197,4	script	Eryu#gamer	4_CAT,{
 				mes "Is there such a thing?";
 				emotion e_what;
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "We've been publishing for 10 years.";
 				mes "But, I guess it is possible for cats to not know who we are.";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "We are a really famous magazine throughout the World!";
 				mes "Don't you believe me?";
 				next;
@@ -7649,7 +7649,7 @@ malangdo,161,197,4	script	Eryu#gamer	4_CAT,{
 				mes "Hmm... ok. But, what can I do for you?";
 				emotion e_what;
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "I am in the middle of writing an article named 'Game Playing Cats'...'";
 				mes "It is a special piece for me.";
 				mes "And some team named umm... do... umm... wal... not sure...";
@@ -7658,21 +7658,21 @@ malangdo,161,197,4	script	Eryu#gamer	4_CAT,{
 				mes "'Dog n Waltz'?";
 				emotion e_what;
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Oh! Yes!";
 				mes "One of players there 'Dog n Waltz' has recommended Eryu for an interview.";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "He says you are a really good player who can help me with the article.";
 				next;
 				mes "[Eryu]";
 				mes "I don't remember anyone from 'Dog n Waltz' that much.";
 				emotion e_dots;
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "The person isn't important.";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Just answer a few questions for me, ok?";
 				mes "Be yourself and you'll do just fine.";
 				mes "Ok, first question: How much do you practice a day?";
@@ -7681,7 +7681,7 @@ malangdo,161,197,4	script	Eryu#gamer	4_CAT,{
 				mes "[Eryu]";
 				mes "Usually for about 8 hours, but I have to tell you that I'm not on the team anymore...";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Wait, what?";
 				mes "You are not with the team now? How come...?";
 				emotion e_omg,1;
@@ -7692,21 +7692,21 @@ malangdo,161,197,4	script	Eryu#gamer	4_CAT,{
 				mes "I was very sick and had to take a day off...";
 				mes "Just one freaking day...";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "And...?";
 				next;
 				mes "[Eryu]";
 				mes "And then the Director Cat was raging at me!";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Hmm, sounds pretty rough.";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "'Cat Gamers' has lost another great player.";
 				mes "I'm sorry to hear that you're not on the team anymore.";
 				mes "I guess this is the end of the interview.";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Because this is for current players only.";
 				next;
 				mes "[Eryu]";
@@ -7714,7 +7714,7 @@ malangdo,161,197,4	script	Eryu#gamer	4_CAT,{
 				mes "Sorry to make you waste your time.";
 				emotion e_sry;
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Oh, don't worry.";
 				mes "I should say sorry for taking up your precious time.";
 				mes "Have a nice day.";
@@ -7735,7 +7735,7 @@ malangdo,161,197,4	script	Eryu#gamer	4_CAT,{
 			mes "Aren't you the magazine writer?";
 			mes "What brings you here again...?";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Ah!";
 			mes "Sorry, I was trying to interview another cat...";
 			mes "And came back to you by mistake.";
@@ -7768,7 +7768,7 @@ malangdo,161,197,4	script	Eryu#gamer	4_CAT,{
 		mes "Ah... aren't you the writer?";
 		emotion e_an;
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Huh... Who is that..?";
 		next;
 		mes "Eryu seems to recognize you.";
@@ -7794,7 +7794,7 @@ malangdo,161,197,4	script	Eryu#gamer	4_CAT,{
 			mes "Aren't you the writer?";
 			emotion e_what;
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Huh... Who is that..?";
 			next;
 			mes "Eryu seems to recognize you. Let's get away.";
@@ -7856,7 +7856,7 @@ malangdo,230,197,4	script	Stew#gamer	4_CAT_3COLOR,{
 				mes "'Boom Can' Company, meow?";
 				emotion e_what;
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "You don't know 'Boom Can' food?";
 				mes "You don't eat canned food at all?";
 				mes "Then, I came to the wrong cat.";
@@ -7865,23 +7865,23 @@ malangdo,230,197,4	script	Stew#gamer	4_CAT_3COLOR,{
 				mes "Yes meow~ Stew likes canned food very much meow~";
 				emotion e_lv;
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Ah! Ok then.";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "We, the 'Boom Can' Company, have been servicing for over 10 years, so we are doing a survey for better food production.";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Let me ask a few questions.";
 				mes "It is very easy.";
 				next;
 				mes "[Stew]";
 				mes "Ok meow~ Go ahead meow~";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Thank you! We were right about out cat customers with big hearts.";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "I met dog customers last week and they didn't answer me at all...";
 				mes "And they were so rude~ You know.";
 				next;
@@ -7890,7 +7890,7 @@ malangdo,230,197,4	script	Stew#gamer	4_CAT_3COLOR,{
 				mes "You humans know animals~";
 				emotion e_ok;
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Thank you! I'm flattered.~";
 				mes "Ok, let me ask you a few things.";
 				mes "What is your job?";
@@ -7899,7 +7899,7 @@ malangdo,230,197,4	script	Stew#gamer	4_CAT_3COLOR,{
 				mes "Job meow? Stew was a pro gamer meow~";
 				mes "But, Stew quit now meow~";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Well, how did that happen?";
 				mes "You seem to have good skills.";
 				mes "Fast and big hearted, its a pity that you quit already.";
@@ -7908,7 +7908,7 @@ malangdo,230,197,4	script	Stew#gamer	4_CAT_3COLOR,{
 				mes "Meow~ Meow~ Meow~ Yes, Stew was something meow.";
 				mes "If it was not for that Cat Gamers Director scaring me, Stew would still be playing meow~";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "What a bad Director.";
 				next;
 				mes "[Stew]";
@@ -7920,7 +7920,7 @@ malangdo,230,197,4	script	Stew#gamer	4_CAT_3COLOR,{
 				mes "Then the Cat Gamers Director started to get angry and scary meow.";
 				mes "So I quit meow.";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Ah! I see.";
 				mes "Ok, the survey is over now.";
 				mes "Thank you for your opinion on our survey for the 'Boom Can' company.";
@@ -7929,7 +7929,7 @@ malangdo,230,197,4	script	Stew#gamer	4_CAT_3COLOR,{
 				mes "[Stew]";
 				mes "Meow? Did you aks anything meow?";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "I already asked you everything...";
 				mes "Don't you remember?";
 				mes "There were 10 questions!";
@@ -7941,7 +7941,7 @@ malangdo,230,197,4	script	Stew#gamer	4_CAT_3COLOR,{
 				mes "It didn't felt like an interview meow.";
 				emotion e_sry;
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Well you did way better than those dogs.";
 				mes "I don't even want to think about them~ Phew~..";
 				mes "I should get going now.";
@@ -7965,7 +7965,7 @@ malangdo,230,197,4	script	Stew#gamer	4_CAT_3COLOR,{
 			mes "Another survey meow?";
 			emotion e_what;
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Oops! I should be meeting other cats.";
 			mes "I am very sorry...";
 			emotion e_sry,1;
@@ -7997,7 +7997,7 @@ malangdo,230,197,4	script	Stew#gamer	4_CAT_3COLOR,{
 		mes "And... Aren't you from the 'Boom Can' Company, meow?";
 		emotion e_what;
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Huh? What's that?";
 		next;
 		mes "Stew seems to recognize you.";
@@ -8020,7 +8020,7 @@ malangdo,230,197,4	script	Stew#gamer	4_CAT_3COLOR,{
 			mes "[Stew]";
 			mes "The 'Boom Can' Company!!";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Huh? What's that?";
 			next;
 			mes "Stew seems to recognize you. Let's get away.";
@@ -8084,7 +8084,7 @@ malangdo,244,144,4	script	Ketchup#gamer	4_CAT_SAILOR3,{
 				mes "Oh yeah? 'Cans for Kittens'?";
 				emotion e_what;
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "I want to share some of our philosophy with you.";
 				mes "Do you believe in giving to others?";
 				emotion e_what,1;
@@ -8093,7 +8093,7 @@ malangdo,244,144,4	script	Ketchup#gamer	4_CAT_SAILOR3,{
 				mes "Umm I guess so...";
 				emotion e_slur;
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "'Cans for Kittens' is a religion that embraces all felines.";
 				mes "Bow before the Lord of Cans!";
 				next;
@@ -8110,7 +8110,7 @@ malangdo,244,144,4	script	Ketchup#gamer	4_CAT_SAILOR3,{
 				mes ".........";
 				mes "What's the Lord of Cans?";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Your name is Ketchup, right? Don't you know about the Lord of Cans?";
 				mes "He knows everything.";
 				mes "Do not try to fool him and bow!";
@@ -8132,7 +8132,7 @@ malangdo,244,144,4	script	Ketchup#gamer	4_CAT_SAILOR3,{
 				emotion e_dots;
 				emotion e_dots,1;
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "The Lord of Cans forgives Ketchup's sins.";
 				mes "Our Lord also wants you to stop swearing and live an honest life!";
 				next;
@@ -8186,7 +8186,7 @@ malangdo,244,144,4	script	Ketchup#gamer	4_CAT_SAILOR3,{
 			mes "Can... 'Cans for Kittens'?";
 			emotion e_omg;
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Huh? What's that?";
 			next;
 			mes "Ketchup recognized you and ran away.";
@@ -8266,12 +8266,12 @@ malangdo,181,119,7	script	Eff#gamer	4_CAT_ADV2,{
 				mes "What is that? Meow~?";
 				emotion e_what;
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Interested, huh?";
 				mes "This is classified information.";
 				mes "You won't get it from any other human.";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Haha! You are lucky today.";
 				mes "You heard that land can be a good investment, right?";
 				emotion e_what,1;
@@ -8279,21 +8279,21 @@ malangdo,181,119,7	script	Eff#gamer	4_CAT_ADV2,{
 				mes "[Eff]";
 				mes "Oh oh~ I think so. Meow~";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "You do know about our capital Prontera, don't you?";
 				next;
 				mes "[Eff]";
 				mes "Prontera meow? Yes, I know about it. Meow~";
 				emotion e_heh;
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "There are some locations where";
 				mes "Prontera kingdom is secretly selling...";
 				next;
 				mes "[Eff]";
 				mes "And... And...?? Meow~";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Hmm, this is top secret.";
 				mes "Something that must not be revealed at all...";
 				mes "Can you really keep this secret...?";
@@ -8303,7 +8303,7 @@ malangdo,181,119,7	script	Eff#gamer	4_CAT_ADV2,{
 				mes "Well... I've always been known for being a good keeper of secrets meow.";
 				mes "Meow~ Don't worry at all. Meow~";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Ok, I believe you, Eff...";
 				mes "Please keep this a secret.";
 				next;
@@ -8311,17 +8311,17 @@ malangdo,181,119,7	script	Eff#gamer	4_CAT_ADV2,{
 				mes "I got it. Meow~";
 				emotion e_ok;
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Well, I heard that there is a location in Juno where underground big shots will be investing about 10,000,000,000 zeny.";
 				mes "And it is now available for pre-investment.";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "If you invest in 1 Can food here, the outcome will be enormous.";
 				next;
 				mes "[Eff]";
 				mes "Enor... mous... meow...?";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "100 Cans!!";
 				mes "You will get 100 cans for investing just 1 can food!";
 				mes "The profit will be X100! X100!!";
@@ -8330,7 +8330,7 @@ malangdo,181,119,7	script	Eff#gamer	4_CAT_ADV2,{
 				mes "Woot!! 100 Cans~ Meow~";
 				emotion e_omg;
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "So, how many cans do you want to invest?";
 				mes "You'll be a part owner so make sure to invest the max that you can afford.";
 				emotion e_what,1;
@@ -8340,13 +8340,13 @@ malangdo,181,119,7	script	Eff#gamer	4_CAT_ADV2,{
 				mes "But, I don't have cans with me. Meow~";
 				emotion e_sob;
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "You can always get a loan!!";
 				mes "This a like 100 times result for sure!!";
 				mes "How can you loose a chance like this?";
 				mes "You should do whatever it takes!";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "You know what..? They say some careers like pro gamers can get solid loans.";
 				mes "Like about 1,000 can loan at once.";
 				mes "Without a high interest rate!";
@@ -8356,11 +8356,11 @@ malangdo,181,119,7	script	Eff#gamer	4_CAT_ADV2,{
 				mes "Moew~ I am a Pro Gamer.";
 				mes "Meow~ But, I quit~ Meow~";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "What!! Why would you quit such good a gig!! Are you crazy?";
 				emotion e_omg,1;
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Let's say we invest 1,000 cans after getting that loan.";
 				mes "One, Ten, Hundred, Tousand. Woot!";
 				mes "I can't believe this.";
@@ -8369,7 +8369,7 @@ malangdo,181,119,7	script	Eff#gamer	4_CAT_ADV2,{
 				mes "[Eff]";
 				mes "1... 100,000 cans... Meow~";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "So tell me... Why did you quit such a great job?";
 				mes "Why?";
 				next;
@@ -8378,12 +8378,12 @@ malangdo,181,119,7	script	Eff#gamer	4_CAT_ADV2,{
 				mes "Meow~ This one time, I had to take a sick day.";
 				mes "Meow~ And I haven't seen such scary cat my entire life...";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "So you quit because Cat Gamers Director was so scary. Hmm, sorry but I can't let you in on this investment...";
 				mes "I guess... What a waste of time!";
 				mes "Good bye!";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Oh and don't tell anyone what I just told you!";
 				mes "Bye~";
 				next;
@@ -8411,14 +8411,14 @@ malangdo,181,119,7	script	Eff#gamer	4_CAT_ADV2,{
 			mes "You are--!!";
 			mes "Meow~ I want to invest. Meow~";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Not without the cans you can't!!";
 			mes "You didn't tell anyone about this deal, right?";
 			next;
 			mes "[Eff]";
 			mes "I didn't. Meow~";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Ok, good cat! Never!!";
 			mes "Tell this to other cats!~";
 			mes "Bye Bye~";
@@ -8445,7 +8445,7 @@ malangdo,181,119,7	script	Eff#gamer	4_CAT_ADV2,{
 		mes "What is this? What do you mean by '"+.@inputstr$+"'? Meow...";
 		mes "Meow...? Meow! You! Investor meow?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Huh? Who...?";
 		next;
 		mes "Eff seems to recognize you.";
@@ -8470,7 +8470,7 @@ malangdo,181,119,7	script	Eff#gamer	4_CAT_ADV2,{
 			mes "[Eff]";
 			mes "Meow~ I want to invest. Meow~";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Huh? Who...?";
 			next;
 			mes "Eff seems to recognize you, so let's get away.";
@@ -8515,7 +8515,7 @@ mal_in01,91,216,4	script	Ser#gamer	4_CAT_SAILOR1,{
 	for(.@i = 5074; .@i<=5090; ++.@i) {
 		if (questprogress(.@i)) {
 			mes "[Ser]";
-			mes "Hey, ^0000FF"+strcharinfo(0)+"^000000. You haven't done what we asked you for. A promise is a promise, you know.";
+			mes "Hey, ^0000FF"+strcharinfo(PC_NAME)+"^000000. You haven't done what we asked you for. A promise is a promise, you know.";
 			next;
 			mes "[Ser]";
 			mes "Ah!! When you are done, please get checked by the Cat Gamers Director over there.";
@@ -8534,7 +8534,7 @@ mal_in01,91,216,4	script	Ser#gamer	4_CAT_SAILOR1,{
 	}
 	if (!isequipped(2872)) {
 		mes "[Ser]";
-		mes "Oh, ^0000FF"+strcharinfo(0)+"^000000? Want to play the Rock Paper Scissors game?";
+		mes "Oh, ^0000FF"+strcharinfo(PC_NAME)+"^000000? Want to play the Rock Paper Scissors game?";
 		next;
 		mes "[Ser]";
 		mes "... ... ...";
@@ -8553,7 +8553,7 @@ mal_in01,91,216,4	script	Ser#gamer	4_CAT_SAILOR1,{
 	} else if (questprogress(5070,PLAYTIME) == 2)
 		erasequest 5070;
 	mes "[Ser]";
-	mes "Oh, ^0000FF"+strcharinfo(0)+"^000000? Want to play the Rock Paper Scissors game?";
+	mes "Oh, ^0000FF"+strcharinfo(PC_NAME)+"^000000? Want to play the Rock Paper Scissors game?";
 	next;
 	switch(select("Play the game.", "Say hi.", "Ask about the game rules.")) {
 	case 1:
@@ -8621,7 +8621,7 @@ mal_in01,91,216,4	script	Ser#gamer	4_CAT_SAILOR1,{
 		}
 		mes "Try your best!";
 		next;
-		mes "[Ser & "+strcharinfo(0)+"]";
+		mes "[Ser & "+strcharinfo(PC_NAME)+"]";
 		mes "Rock! Paper! Scissors!";
 		next;
 
@@ -8629,7 +8629,7 @@ mal_in01,91,216,4	script	Ser#gamer	4_CAT_SAILOR1,{
 		.@npc = rand(3);
 		emotion .@emote[.@pc],1;
 		emotion .@emote[.@npc];
-		mes "["+strcharinfo(0)+"] "+.@rps$[.@pc];
+		mes "["+strcharinfo(PC_NAME)+"] "+.@rps$[.@pc];
 		mes "--------------------------------";
 		mes "[Ser] "+.@rps$[.@npc];
 		if (.@pc == .@npc) {
@@ -8656,11 +8656,11 @@ mal_in01,91,216,4	script	Ser#gamer	4_CAT_SAILOR1,{
 	next;
 	mes "[Ser]";
 	mes "Hmm... Let me see...";
-	mes "I won "+.@loss+" times, and you, "+strcharinfo(0)+", won "+.@win+" times, right?";
+	mes "I won "+.@loss+" times, and you, "+strcharinfo(PC_NAME)+", won "+.@win+" times, right?";
 	next;
 	if (.@win > .@loss) {
 		mes "[Ser]";
-		mes strcharinfo(0)+" has won the game.";
+		mes strcharinfo(PC_NAME)+" has won the game.";
 		next;
 		mes "Ser became polite all of a sudden.";
 		next;
@@ -8689,7 +8689,7 @@ mal_in01,91,216,4	script	Ser#gamer	4_CAT_SAILOR1,{
 		close;
 	}
 	mes "[Ser]";
-	mes strcharinfo(0)+" has lost. Ha... Ha...";
+	mes strcharinfo(PC_NAME)+" has lost. Ha... Ha...";
 	next;
 	mes "Ser became very arrogant.";
 	next;
@@ -8878,7 +8878,7 @@ mal_in01,86,222,4	script	Paa#gamer	4_CAT_SAILOR1,{
 	}
 	if (!isequipped(2872)) {
 		mes "[Paa]";
-		mes "Oh, ^0000FF"+strcharinfo(0)+"^000000 meow? Want to play the Rock Paper Scissors game meow?";
+		mes "Oh, ^0000FF"+strcharinfo(PC_NAME)+"^000000 meow? Want to play the Rock Paper Scissors game meow?";
 		next;
 		mes "[Paa]";
 		mes "... ... ...";
@@ -8897,7 +8897,7 @@ mal_in01,86,222,4	script	Paa#gamer	4_CAT_SAILOR1,{
 	} else if (questprogress(5070,PLAYTIME) == 2)
 		erasequest 5070;
 	mes "[Paa]";
-	mes "Oh, ^0000FF"+strcharinfo(0)+"^000000 meow? Want to play the Rock Paper Scissors game meow?";
+	mes "Oh, ^0000FF"+strcharinfo(PC_NAME)+"^000000 meow? Want to play the Rock Paper Scissors game meow?";
 	next;
 	switch(select("Play the game.", "Say hi.", "Ask about the game rules.")) {
 	case 1:
@@ -8953,7 +8953,7 @@ mal_in01,86,222,4	script	Paa#gamer	4_CAT_SAILOR1,{
 		}
 		mes "Try your best meow!";
 		next;
-		mes "[Ser & "+strcharinfo(0)+"]";
+		mes "[Ser & "+strcharinfo(PC_NAME)+"]";
 		mes "Rock! Paper! Scissors!";
 		next;
 
@@ -8961,7 +8961,7 @@ mal_in01,86,222,4	script	Paa#gamer	4_CAT_SAILOR1,{
 		.@npc = rand(3);
 		emotion .@emote[.@pc],1;
 		emotion .@emote[.@npc];
-		mes "["+strcharinfo(0)+"] "+.@rps$[.@pc];
+		mes "["+strcharinfo(PC_NAME)+"] "+.@rps$[.@pc];
 		mes "--------------------------------";
 		mes "[Ser] "+.@rps$[.@npc];
 		if (.@pc == .@npc) {
@@ -8988,7 +8988,7 @@ mal_in01,86,222,4	script	Paa#gamer	4_CAT_SAILOR1,{
 	next;
 	mes "[Paa]";
 	mes "Let me see meow...";
-	mes "I won "+.@loss+" times meow, and you, "+strcharinfo(0)+", won "+.@win+" times, right meow?";
+	mes "I won "+.@loss+" times meow, and you, "+strcharinfo(PC_NAME)+", won "+.@win+" times, right meow?";
 	next;
 	if (.@win > .@loss) {
 		mes "[Paa]";
@@ -9208,7 +9208,7 @@ mal_in01,91,222,4	script	Kuka#gamer	4_M_BABYCAT,{
 	}
 	if (!isequipped(2872)) {
 		mes "[Kuka]";
-		mes "Oh great member you, ^0000FF"+strcharinfo(0)+"^000000~ Let's play ChamChamCham yo~";
+		mes "Oh great member you, ^0000FF"+strcharinfo(PC_NAME)+"^000000~ Let's play ChamChamCham yo~";
 		next;
 		mes "[Kuka]";
 		mes "... ... ...";
@@ -9227,7 +9227,7 @@ mal_in01,91,222,4	script	Kuka#gamer	4_M_BABYCAT,{
 	} else if (questprogress(5071,PLAYTIME) == 2)
 		erasequest 5071;
 	mes "[Kuka]";
-	mes "Oh great member you, ^0000FF"+strcharinfo(0)+"^000000~ Let's play ChamChamCham yo~";
+	mes "Oh great member you, ^0000FF"+strcharinfo(PC_NAME)+"^000000~ Let's play ChamChamCham yo~";
 	next;
 	switch(select("Play the game.", "Ask who is 1st place.", "Ask about the game rules.")) {
 	case 1:
@@ -9246,10 +9246,10 @@ mal_in01,91,222,4	script	Kuka#gamer	4_M_BABYCAT,{
 		mes "[Kuka]";
 		mes "Current 1st place for the ChamChamCham game is";
 		mes "^0000FF"+$malangdo_gamer$+"^000000 with ^DE2B21"+$malangdo_gamer+"^000000 winning streak yo~";
-		if (strcharinfo(0) == $malangdo_gamer$)
+		if (strcharinfo(PC_NAME) == $malangdo_gamer$)
 			mes "Never know when someone else would break the record yo~";
 		else
-			mes "I expect that you, "+strcharinfo(0)+", can beat ^0000FF"+$malangdo_gamer$+"^000000 sometime yo~";
+			mes "I expect that you, "+strcharinfo(PC_NAME)+", can beat ^0000FF"+$malangdo_gamer$+"^000000 sometime yo~";
 		close;
 	case 3:
 		mes "[Kuka]";
@@ -9275,13 +9275,13 @@ mal_in01,91,222,4	script	Kuka#gamer	4_M_BABYCAT,{
 	}
 	while(1) {
 		cutin "g_cat_00",4;
-		mes "[Kuka & "+strcharinfo(0)+"]";
+		mes "[Kuka & "+strcharinfo(PC_NAME)+"]";
 		mes "Cham!";
 		next;
-		mes "[Kuka & "+strcharinfo(0)+"]";
+		mes "[Kuka & "+strcharinfo(PC_NAME)+"]";
 		mes "Cham! Cham!";
 		next;
-		mes "[Kuka & "+strcharinfo(0)+"]";
+		mes "[Kuka & "+strcharinfo(PC_NAME)+"]";
 		mes "Cham! Cham! Cham!";
 		next;
 		switch(select("Hand towards left", "Hand towards right")) {
@@ -9316,7 +9316,7 @@ mal_in01,91,222,4	script	Kuka#gamer	4_M_BABYCAT,{
 		next;
 		cutin "",255;
 		mes "[Kuka]";
-		mes strcharinfo(0)+" has won "+.@win+" times yo~ Next game starts yo~";
+		mes strcharinfo(PC_NAME)+" has won "+.@win+" times yo~ Next game starts yo~";
 		next;
 	}
 	if (.@win == 0) {
@@ -9324,7 +9324,7 @@ mal_in01,91,222,4	script	Kuka#gamer	4_M_BABYCAT,{
 	} else if (.@win > 0 && .@win < 3) {
 		setquest 5071;
 		mes "[Kuka]";
-		mes "After the practice, "+strcharinfo(0)+" has won "+.@win+" in a row yo~";
+		mes "After the practice, "+strcharinfo(PC_NAME)+" has won "+.@win+" in a row yo~";
 		mes "Present is for 3 wins or more yo~ Nothing for today yo~ But, come again tomorrow yo~";
 		close;
 	} else {
@@ -9333,11 +9333,11 @@ mal_in01,91,222,4	script	Kuka#gamer	4_M_BABYCAT,{
 		.@win_cnt = .@win-.@win_record;
 		.@cans = .@win-2;
 		if (.@win > .@win_record) {
-			$malangdo_gamer$ = strcharinfo(0);
+			$malangdo_gamer$ = strcharinfo(PC_NAME);
 			$malangdo_gamer = .@win;
 			mes "[Kuka]";
 			mes "Congrats yo~ You won ^DE2B21"+.@win+"^000000 in a row yo~";
-			if (strcharinfo(0) == .@name_record$)
+			if (strcharinfo(PC_NAME) == .@name_record$)
 				mes "You won ^DE2B21"+.@win_cnt+"^000000 more than the recent ^DE2B21"+.@win_record+"^000000 record yo~ Congrats yo~";
 			// custom conditions
 			//else
@@ -9361,7 +9361,7 @@ mal_in01,91,222,4	script	Kuka#gamer	4_M_BABYCAT,{
 		}
 	}
 	mes "[Kuka]";
-	mes strcharinfo(0)+" didn't win at all yo~ You must work it out yo~";
+	mes strcharinfo(PC_NAME)+" didn't win at all yo~ You must work it out yo~";
 	next;
 	setquest 5071;
 	switch(rand(1,13)) {
@@ -9437,7 +9437,7 @@ mal_in01,91,222,4	script	Kuka#gamer	4_M_BABYCAT,{
 		mes "Recently, our Director seems to have been trying to cut some expenses yo~ Or maybe the Manager Cat is taking advantage yo~";
 		next;
 		mes "[Kuka]";
-		mes "Regular snacks for our players have been reduced yo~ "+strcharinfo(0)+" should go get 30 Rat Tails, and report to our Cat Gamers Director yo~";
+		mes "Regular snacks for our players have been reduced yo~ "+strcharinfo(PC_NAME)+" should go get 30 Rat Tails, and report to our Cat Gamers Director yo~";
 		next;
 		mes "[Kuka]";
 		mes "Then, we shall find out if our manager is being greedy or not yo~";
@@ -9626,21 +9626,21 @@ mal_in01,134,221,4	script	KungKung#gamer	4_M_BABYCAT,{
 	.@npc_hp = 100;
 	while(1) {
 		if (!.@pc_hp || !.@npc_hp) break;
-		mes strcharinfo(0)+" (^FF0000"+.@pc_hp+"^000000/100)";
+		mes strcharinfo(PC_NAME)+" (^FF0000"+.@pc_hp+"^000000/100)";
 		mes "--------------------------------";
 		mes "KungKung (^FF0000"+.@npc_hp+"^000000/100)";
 		next;
-		mes "[KungKung & "+strcharinfo(0)+"]";
+		mes "[KungKung & "+strcharinfo(PC_NAME)+"]";
 		mes "Kong!";
 		emotion e_loud,1;
 		emotion e_loud;
 		next;
-		mes "[KungKung & "+strcharinfo(0)+"]";
+		mes "[KungKung & "+strcharinfo(PC_NAME)+"]";
 		mes "Kong! Nyang!";
 		emotion e_loud,1;
 		emotion e_loud;
 		next;
-		mes "[KungKung & "+strcharinfo(0)+"]";
+		mes "[KungKung & "+strcharinfo(PC_NAME)+"]";
 		mes "Kong! Nyang! Kong!";
 		emotion e_loud,1;
 		emotion e_loud;
@@ -10156,7 +10156,7 @@ mal_in01,133,214,6	script	Leader#gamer	4_CAT_SAILOR3,{
 		mes "Game ^C1653E"+.@round+"^000000 results...";
 		next;
 		mes "[Leader]";
-		mes "~ Flag Game challenger "+strcharinfo(0)+" ~";
+		mes "~ Flag Game challenger "+strcharinfo(PC_NAME)+" ~";
 		mes "^FF0000"+.@you_flag$+"^000000 for game ^C1653E"+.@round+"^000000.";
 		mes .@flag_point+" Flag Point remaining.";
 		emotion .@emotion[0],1;
@@ -10195,7 +10195,7 @@ mal_in01,133,214,6	script	Leader#gamer	4_CAT_SAILOR3,{
 		} else {
 			if (.@cat_flags_waved == 5) {
 				mes "[Leader]";
-				mes "Congrats "+strcharinfo(0)+". You have succeed on not waving your flag.";
+				mes "Congrats "+strcharinfo(PC_NAME)+". You have succeed on not waving your flag.";
 				next;
 				mes "[Leader]";
 				mes "But! This is flag waving game, so this doesn't count.";
@@ -10237,7 +10237,7 @@ mal_in01,133,214,6	script	Leader#gamer	4_CAT_SAILOR3,{
 	next;
 	mes "[Leader]";
 	mes "Final results!!";
-	mes "After "+.@round+" games, "+strcharinfo(0)+" has "+.@flag_point+" Flag Point left.";
+	mes "After "+.@round+" games, "+strcharinfo(PC_NAME)+" has "+.@flag_point+" Flag Point left.";
 	mes "... ... ...";
 	next;
 	if (.@you_flag == 1 && .@cat_flags_waved == 0) {
@@ -10653,7 +10653,7 @@ mal_in01,15,16,3	script	Fallen Angel#mal	4_F_VALKYRIE2,{
 		}
 		getitem2 2573,1,1,.@equip_refine,0,.@equip_card[0],.@equip_card[1],.@equip_card[2],.@enchant; //Archangel_Wing
 		if (.@i < 4)
-			announce strcharinfo(0)+" has enchanted Archangel Wing with amazing capability!",bc_all,0xFF0000,FW_NORMAL,10;
+			announce strcharinfo(PC_NAME)+" has enchanted Archangel Wing with amazing capability!",bc_all,0xFF0000,FW_NORMAL,10;
 		mes "[Fallen Angel]";
 		mes "Take it!";
 		mes "I believe that you will become the dominator of the new world!";

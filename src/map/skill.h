@@ -91,6 +91,7 @@ enum e_skill_inf {
 enum e_skill_nk {
 	NK_NO_DAMAGE      = 0x01,
 	NK_SPLASH         = 0x02|0x04, // 0x4 = splash & split
+	NK_SPLASH_ONLY    = 0x02,
 	NK_SPLASHSPLIT    = 0x04,
 	NK_NO_CARDFIX_ATK = 0x08,
 	NK_NO_ELEFIX      = 0x10,
@@ -102,21 +103,23 @@ enum e_skill_nk {
 //A skill with 3 would be no damage + splash: area of effect.
 //Constants to identify a skill's inf2 value.
 enum e_skill_inf2 {
-	INF2_QUEST_SKILL    = 0x0001,
-	INF2_NPC_SKILL      = 0x0002, // NPC skills are those that players can't have in their skill tree.
-	INF2_WEDDING_SKILL  = 0x0004,
-	INF2_SPIRIT_SKILL   = 0x0008,
-	INF2_GUILD_SKILL    = 0x0010,
-	INF2_SONG_DANCE     = 0x0020,
-	INF2_ENSEMBLE_SKILL = 0x0040,
-	INF2_TRAP           = 0x0080,
-	INF2_TARGET_SELF    = 0x0100, // Refers to ground placed skills that will target the caster as well (like Grandcross)
-	INF2_NO_TARGET_SELF = 0x0200,
-	INF2_PARTY_ONLY     = 0x0400,
-	INF2_GUILD_ONLY     = 0x0800,
-	INF2_NO_ENEMY       = 0x1000,
-	INF2_NOLP           = 0x2000, // Spells that can ignore Land Protector
-	INF2_CHORUS_SKILL   = 0x4000, // Chorus skill
+	INF2_QUEST_SKILL       = 0x00001,
+	INF2_NPC_SKILL         = 0x00002, // NPC skills are those that players can't have in their skill tree.
+	INF2_WEDDING_SKILL     = 0x00004,
+	INF2_SPIRIT_SKILL      = 0x00008,
+	INF2_GUILD_SKILL       = 0x00010,
+	INF2_SONG_DANCE        = 0x00020,
+	INF2_ENSEMBLE_SKILL    = 0x00040,
+	INF2_TRAP              = 0x00080,
+	INF2_TARGET_SELF       = 0x00100, // Refers to ground placed skills that will target the caster as well (like Grandcross)
+	INF2_NO_TARGET_SELF    = 0x00200,
+	INF2_PARTY_ONLY        = 0x00400,
+	INF2_GUILD_ONLY        = 0x00800,
+	INF2_NO_ENEMY          = 0x01000,
+	INF2_NOLP              = 0x02000, // Spells that can ignore Land Protector
+	INF2_CHORUS_SKILL      = 0x04000, // Chorus skill
+	INF2_FREE_CAST_NORMAL  = 0x08000,
+	INF2_FREE_CAST_REDUCED = 0x10000,
 };
 
 
@@ -1975,12 +1978,15 @@ struct skill_interface {
 	bool (*can_cloak) (struct map_session_data *sd);
 	int (*enchant_elemental_end) (struct block_list *bl, int type);
 	int (*not_ok) (uint16 skill_id, struct map_session_data *sd);
+	int (*not_ok_unknown) (uint16 skill_id, struct map_session_data *sd);
 	int (*not_ok_hom) (uint16 skill_id, struct homun_data *hd);
+	int (*not_ok_hom_unknown) (uint16 skill_id, struct homun_data *hd);
 	int (*not_ok_mercenary) (uint16 skill_id, struct mercenary_data *md);
 	int (*chastle_mob_changetarget) (struct block_list *bl,va_list ap);
 	int (*can_produce_mix) ( struct map_session_data *sd, int nameid, int trigger, int qty);
 	int (*produce_mix) ( struct map_session_data *sd, uint16 skill_id, int nameid, int slot1, int slot2, int slot3, int qty );
 	int (*arrow_create) ( struct map_session_data *sd,int nameid);
+	void (*castend_type) (int type, struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
 	int (*castend_nodamage_id) (struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
 	int (*castend_damage_id) (struct block_list* src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick,int flag);
 	int (*castend_pos2) (struct block_list *src, int x, int y, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
@@ -2023,6 +2029,7 @@ struct skill_interface {
 	int (*sit_out) (struct block_list *bl, va_list ap);
 	void (*unitsetmapcell) (struct skill_unit *src, uint16 skill_id, uint16 skill_lv, cell_t cell, bool flag);
 	int (*unit_onplace_timer) (struct skill_unit *src, struct block_list *bl, int64 tick);
+	void (*unit_onplace_timer_unknown) (struct skill_unit *src, struct block_list *bl, int64 *tick);
 	int (*unit_effect) (struct block_list* bl, va_list ap);
 	int (*unit_timer_sub_onplace) (struct block_list* bl, va_list ap);
 	int (*unit_move_sub) (struct block_list* bl, va_list ap);
@@ -2033,6 +2040,7 @@ struct skill_interface {
 	int (*unit_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*unit_timer_sub) (union DBKey key, struct DBData *data, va_list ap);
 	void (*init_unit_layout) (void);
+	void (*init_unit_layout_unknown) (int skill_idx);
 	void (*validate_hittype) (struct config_setting_t *conf, struct s_skill_db *sk);
 	void (*validate_skilltype) (struct config_setting_t *conf, struct s_skill_db *sk);
 	void (*validate_attacktype) (struct config_setting_t *conf, struct s_skill_db *sk);
@@ -2048,6 +2056,9 @@ struct skill_interface {
 	void (*validate_unit_flag) (struct config_setting_t *conf,  struct s_skill_db *sk);
 	void (*validate_additional_fields) (struct config_setting_t *conf, struct s_skill_db *sk);
 	bool (*validate_skilldb) (struct s_skill_db *skt, const char *source);
+	int (*validate_weapontype_sub) (const char *type, bool on, struct s_skill_db *sk);
+	int (*validate_ammotype_sub) (const char *type, bool on, struct s_skill_db *sk);
+	int (*validate_unit_flag_sub) (const char *type, bool on, struct s_skill_db *sk);
 	bool (*read_skilldb) (const char *filename);
 	void (*config_set_level) (struct config_setting_t *conf, int *arr);
 	void (*level_set_value) (int *arr, int value);

@@ -842,7 +842,7 @@ OnTouch:
 	emotion e_sob;
 	emotion e_swt2;
 	next;
-	mes "["+strcharinfo(0)+"]";
+	mes "["+strcharinfo(PC_NAME)+"]";
 	mes "Hey, kid...";
 	next;
 	mes "[Ukki]";
@@ -854,7 +854,7 @@ OnTouch:
 	emotion e_sob;
 	emotion e_swt2;
 	next;
-	mes "["+strcharinfo(0)+"]";
+	mes "["+strcharinfo(PC_NAME)+"]";
 	mes "... ... ...";
 	emotion e_dots,1;
 	close;

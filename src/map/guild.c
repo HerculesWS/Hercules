@@ -416,20 +416,18 @@ int guild_request_info(int guild_id)
 //Information request with event
 int guild_npc_request_info(int guild_id,const char *event)
 {
-	if( guild->search(guild_id) )
-	{
-		if( event && *event )
+	if (guild->search(guild_id) != NULL) {
+		if (event != NULL && *event != '\0')
 			npc->event_do(event);
 
 		return 0;
 	}
 
-	if( event && *event )
-	{
+	if (event != NULL && *event != '\0') {
 		struct eventlist *ev;
 		struct DBData prev;
-		ev=(struct eventlist *)aCalloc(sizeof(struct eventlist),1);
-		memcpy(ev->name,event,strlen(event));
+		CREATE(ev, struct eventlist, 1);
+		safestrncpy(ev->name, event, sizeof(ev->name));
 		//The one in the db (if present) becomes the next event from this.
 		if (guild->infoevent_db->put(guild->infoevent_db, DB->i2key(guild_id), DB->ptr2data(ev), &prev))
 			ev->next = DB->data2ptr(&prev);

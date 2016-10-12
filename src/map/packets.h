@@ -2580,6 +2580,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0361,5,clif->pHomMenu,2,4);
 	packet(0x08A4,36,clif->pStoragePassword,0);
 	packet(0x09df,7);
+	packet(0x09cb,17);
 #endif
 
 // 2013-12-30aRagexe - Yommy
@@ -2786,6 +2787,10 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x09DF,7);
 #endif
 
+#if PACKETVER >= 20140613
+	packet(0x0a0e,14);
+#endif
+
 // 2014-10-16aRagexe - YomRawr
 #if PACKETVER >= 20141016
 	packet(0x0369,7,clif->pActionRequest,2,6);
@@ -2819,6 +2824,8 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0936,36,clif->pStoragePassword,0);
 	packet(0x09DF,7);
 	packet(0x0a00,269);
+	packet(0x09e5,18); // ZC_DELETEITEM_FROM_MCSTORE2
+	packet(0x09e6,22); // ZC_UPDATE_ITEM_FROM_BUYING_STORE2
 #endif
 
 /* Roulette System [Yommy/Hercules] */
@@ -2914,6 +2921,8 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0A2E,6,clif->pDull); // TITLE
 	packet(0x0A02,4); // ZC_DRESSROOM_OPEN
 	packet(0x0A35,4,clif->pOneClick_ItemIdentify,2);
+	packet(0x0a27,8); // ZC_RECOVERY2
+	packet(0x09f7,75); // ZC_PROPERTY_HOMUN_2
 #endif
 
 #if PACKETVER >= 20150805 // RagexeRE

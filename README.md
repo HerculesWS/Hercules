@@ -2,9 +2,11 @@ Hercules
 ========
 
 Build Status:  
-[![Build Status](https://travis-ci.org/HerculesWS/Hercules.svg)](https://travis-ci.org/HerculesWS/Hercules)
+[![Build Status](https://travis-ci.org/HerculesWS/Hercules.svg?branch=master)](https://travis-ci.org/HerculesWS/Hercules)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/cm9xbwurpbltqjop?svg=true)](https://ci.appveyor.com/project/Haru/hercules)
-[![Coverity Scan Build Status](https://scan.coverity.com/projects/3892/badge.svg)](https://scan.coverity.com/projects/herculesws-hercules)
+[![Coverity Scan Build Status](https://scan.coverity.com/projects/3892/badge.svg)](https://scan.coverity.com/projects/herculesws-hercules)  
+[![GitLabl Build Status](https://gitlab.com/HerculesWS/Hercules/badges/master/build.svg)](https://gitlab.com/HerculesWS/Hercules/commits/master)
+[![Coverage Report](https://gitlab.com/HerculesWS/Hercules/badges/master/coverage.svg)](https://gitlab.com/HerculesWS/Hercules/commits/master)
 
 Issues and pull requests:  
 [![Open Issues](https://img.shields.io/github/issues-raw/HerculesWS/Hercules.svg?label=Open%20Issues)](https://github.com/HerculesWS/Hercules/issues)

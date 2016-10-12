@@ -31,6 +31,7 @@
 #include "common/cbasetypes.h"
 #include "common/core.h"
 #include "common/memmgr.h"
+#include "common/nullpo.h"
 #include "common/strlib.h"
 
 #include <stdio.h> // fopen
@@ -237,11 +238,13 @@ enum windows_ver_suite {
  * @retval true  if a revision was correctly detected.
  * @retval false if no revision was detected. out is set to NULL in this case.
  */
-bool sysinfo_svn_get_revision(char **out) {
+bool sysinfo_svn_get_revision(char **out)
+{
 	// Only include SVN support if detected it, or we're on MSVC
 #if !defined(SYSINFO_VCSTYPE) || SYSINFO_VCSTYPE == VCSTYPE_SVN || SYSINFO_VCSTYPE == VCSTYPE_UNKNOWN
 	FILE *fp;
 
+	nullpo_ret(out);
 	// subversion 1.7 uses a sqlite3 database
 	// FIXME this is hackish at best...
 	// - ignores database file structure
@@ -291,6 +294,8 @@ bool sysinfo_svn_get_revision(char **out) {
 		if (*out != NULL)
 			return true;
 	}
+#else
+	nullpo_ret(out);
 #endif
 	if (*out != NULL)
 		aFree(*out);
@@ -305,11 +310,13 @@ bool sysinfo_svn_get_revision(char **out) {
  * @retval true  if a revision was correctly detected.
  * @retval false if no revision was detected. out is set to NULL in this case.
  */
-bool sysinfo_git_get_revision(char **out) {
+bool sysinfo_git_get_revision(char **out)
+{
 	// Only include Git support if we detected it, or we're on MSVC
 #if !defined(SYSINFO_VCSTYPE) || SYSINFO_VCSTYPE == VCSTYPE_GIT || SYSINFO_VCSTYPE == VCSTYPE_UNKNOWN
 	char ref[128], filepath[128], line[128];
 
+	nullpo_ret(out);
 	strcpy(ref, "HEAD");
 
 	while (*ref) {
@@ -334,6 +341,7 @@ bool sysinfo_git_get_revision(char **out) {
 	if (*out != NULL)
 		return true;
 #else
+	nullpo_ret(out);
 	if (*out != NULL)
 		aFree(*out);
 	*out = NULL;
@@ -351,7 +359,8 @@ typedef BOOL (WINAPI *PGPI)(DWORD, DWORD, DWORD, DWORD, PDWORD);
  *
  * Once retrieved, the version string is stored into sysinfo->p->osversion.
  */
-void sysinfo_osversion_retrieve(void) {
+void sysinfo_osversion_retrieve(void)
+{
 	OSVERSIONINFOEX osvi;
 	StringBuf buf;
 	ZeroMemory(&osvi, sizeof(OSVERSIONINFOEX));
@@ -602,7 +611,8 @@ typedef void (WINAPI *PGNSI)(LPSYSTEM_INFO);
  * System info is not stored anywhere after retrieval
  * @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms724958(v=vs.85).aspx
  **/
-void sysinfo_systeminfo_retrieve( LPSYSTEM_INFO info ) {
+void sysinfo_systeminfo_retrieve(LPSYSTEM_INFO info)
+{
 	PGNSI pGNSI;
 
 	// Call GetNativeSystemInfo if supported or GetSystemInfo otherwise.
@@ -619,7 +629,8 @@ void sysinfo_systeminfo_retrieve( LPSYSTEM_INFO info ) {
  * Returns number of bytes in a memory page
  * Only needed when compiling with MSVC
  **/
-long sysinfo_getpagesize( void ) {
+long sysinfo_getpagesize(void)
+{
 	SYSTEM_INFO si;
 	ZeroMemory(&si, sizeof(SYSTEM_INFO));
 
@@ -633,7 +644,8 @@ long sysinfo_getpagesize( void ) {
  * Once retrieved, the name is stored into sysinfo->p->cpu and the
  * number of cores in sysinfo->p->cpucores.
  */
-void sysinfo_cpu_retrieve(void) {
+void sysinfo_cpu_retrieve(void)
+{
 	StringBuf buf;
 	SYSTEM_INFO si;
 	ZeroMemory(&si, sizeof(SYSTEM_INFO));
@@ -669,7 +681,8 @@ void sysinfo_cpu_retrieve(void) {
  *
  * Once retrieved, the name is stored into sysinfo->p->arch.
  */
-void sysinfo_arch_retrieve(void) {
+void sysinfo_arch_retrieve(void)
+{
 	SYSTEM_INFO si;
 	ZeroMemory(&si, sizeof(SYSTEM_INFO));
 
@@ -697,7 +710,8 @@ void sysinfo_arch_retrieve(void) {
  *
  * Once retrieved, the value is stored in sysinfo->p->vcsrevision_src.
  */
-void sysinfo_vcsrevision_src_retrieve(void) {
+void sysinfo_vcsrevision_src_retrieve(void)
+{
 	if (sysinfo->p->vcsrevision_src != NULL) {
 		aFree(sysinfo->p->vcsrevision_src);
 		sysinfo->p->vcsrevision_src = NULL;
@@ -721,7 +735,8 @@ void sysinfo_vcsrevision_src_retrieve(void) {
  *
  * Once retrieved, the value is stored in sysinfo->p->vcstype_name.
  */
-void sysinfo_vcstype_name_retrieve(void) {
+void sysinfo_vcstype_name_retrieve(void)
+{
 	if (sysinfo->p->vcstype_name != NULL) {
 		aFree(sysinfo->p->vcstype_name);
 		sysinfo->p->vcstype_name = NULL;
@@ -750,7 +765,8 @@ void sysinfo_vcstype_name_retrieve(void) {
  *
  * Output example: "Linux", "Darwin", "Windows", etc.
  */
-const char *sysinfo_platform(void) {
+const char *sysinfo_platform(void)
+{
 	return sysinfo->p->platform;
 }
 
@@ -768,7 +784,8 @@ const char *sysinfo_platform(void) {
  * Output example: "Windows 2008 Small Business Server", "OS X 10.8 Mountain Lion",
  *   "Gentoo Base System Release 2.2", "Debian GNU/Linux 6.0.6 (squeeze)", etc.
  */
-const char *sysinfo_osversion(void) {
+const char *sysinfo_osversion(void)
+{
 	return sysinfo->p->osversion;
 }
 
@@ -787,7 +804,8 @@ const char *sysinfo_osversion(void) {
  *   "Intel(R) Xeon(R) CPU E5-1650 0 @ 3.20GHz", "Intel Core i7",
  *   "x86 CPU, Family 6, Model 54, Stepping 1", etc.
  */
-const char *sysinfo_cpu(void) {
+const char *sysinfo_cpu(void)
+{
 	return sysinfo->p->cpu;
 }
 
@@ -800,7 +818,8 @@ const char *sysinfo_cpu(void) {
  *
  * @return the number of CPU cores.
  */
-int sysinfo_cpucores(void) {
+int sysinfo_cpucores(void)
+{
 	return sysinfo->p->cpucores;
 }
 
@@ -817,7 +836,8 @@ int sysinfo_cpucores(void) {
  *
  * Output example: "x86", "x86_64", "IA-64", "ARM", etc.
  */
-const char *sysinfo_arch(void) {
+const char *sysinfo_arch(void)
+{
 	return sysinfo->p->arch;
 }
 
@@ -827,7 +847,8 @@ const char *sysinfo_arch(void) {
  * @retval true  if this is a 64 bit build.
  * @retval false if this isn't a 64 bit build (i.e. it is a 32 bit build).
  */
-bool sysinfo_is64bit(void) {
+bool sysinfo_is64bit(void)
+{
 #ifdef _LP64
 	return true;
 #else
@@ -845,7 +866,8 @@ bool sysinfo_is64bit(void) {
  * Output example: "Microsoft Visual C++ 2012 (v170050727)",
  *   "Clang v5.0.0", "MinGW32 v3.20", "GCC v4.7.3", etc.
  */
-const char *sysinfo_compiler(void) {
+const char *sysinfo_compiler(void)
+{
 	return sysinfo->p->compiler;
 }
 
@@ -860,7 +882,8 @@ const char *sysinfo_compiler(void) {
  *
  * Output example: "-ggdb -O2 -flto -pipe -ffast-math ..."
  */
-const char *sysinfo_cflags(void) {
+const char *sysinfo_cflags(void)
+{
 	return sysinfo->p->cflags;
 }
 
@@ -875,7 +898,8 @@ const char *sysinfo_cflags(void) {
  *
  * @see VCSTYPE_NONE, VCSTYPE_GIT, VCSTYPE_SVN, VCSTYPE_UNKNOWN
  */
-int sysinfo_vcstypeid(void) {
+int sysinfo_vcstypeid(void)
+{
 	return sysinfo->p->vcstype;
 }
 
@@ -892,7 +916,8 @@ int sysinfo_vcstypeid(void) {
  *
  * Output example: "Git", "SVN", "Exported"
  */
-const char *sysinfo_vcstype(void) {
+const char *sysinfo_vcstype(void)
+{
 	return sysinfo->p->vcstype_name;
 }
 
@@ -910,7 +935,8 @@ const char *sysinfo_vcstype(void) {
  *
  * Output example: Git: "9128feccf3bddda94a7f8a170305565416815b40", SVN: "17546"
  */
-const char *sysinfo_vcsrevision_src(void) {
+const char *sysinfo_vcsrevision_src(void)
+{
 	return sysinfo->p->vcsrevision_src;
 }
 
@@ -926,7 +952,8 @@ const char *sysinfo_vcsrevision_src(void) {
  *
  * Output example: Git: "9128feccf3bddda94a7f8a170305565416815b40", SVN: "17546"
  */
-const char *sysinfo_vcsrevision_scripts(void) {
+const char *sysinfo_vcsrevision_scripts(void)
+{
 	return sysinfo->p->vcsrevision_scripts;
 }
 
@@ -934,7 +961,8 @@ const char *sysinfo_vcsrevision_scripts(void) {
  * Reloads the run-time (scripts) VCS revision information. To be used during
  *   script reloads to refresh the cached version.
  */
-void sysinfo_vcsrevision_reload(void) {
+void sysinfo_vcsrevision_reload(void)
+{
 	if (sysinfo->p->vcsrevision_scripts != NULL) {
 		aFree(sysinfo->p->vcsrevision_scripts);
 		sysinfo->p->vcsrevision_scripts = NULL;
@@ -956,7 +984,8 @@ void sysinfo_vcsrevision_reload(void) {
  * @retval false if the current process is running as regular user, or
  *               in any case under Windows.
  */
-bool sysinfo_is_superuser(void) {
+bool sysinfo_is_superuser(void)
+{
 #ifndef _WIN32
 	if (geteuid() == 0)
 		return true;
@@ -967,7 +996,8 @@ bool sysinfo_is_superuser(void) {
 /**
  * Interface runtime initialization.
  */
-void sysinfo_init(void) {
+void sysinfo_init(void)
+{
 	sysinfo->p->compiler = SYSINFO_COMPILER;
 #ifdef WIN32
 	sysinfo->p->platform = "Windows";
@@ -993,7 +1023,8 @@ void sysinfo_init(void) {
 /**
  * Interface shutdown cleanup.
  */
-void sysinfo_final(void) {
+void sysinfo_final(void)
+{
 #ifdef WIN32
 	// Only need to be free'd in win32, they're #defined elsewhere
 	if (sysinfo->p->osversion)
@@ -1035,7 +1066,8 @@ static const char *sysinfo_time(void)
 /**
  * Interface default values initialization.
  */
-void sysinfo_defaults(void) {
+void sysinfo_defaults(void)
+{
 	sysinfo = &sysinfo_s;
 	memset(&sysinfo_p, '\0', sizeof(sysinfo_p));
 	sysinfo->p = &sysinfo_p;

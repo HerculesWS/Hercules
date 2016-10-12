@@ -65,7 +65,7 @@ bat_room,151,144,3	script	KVM Logistic Officer#a	4_M_JOB_KNIGHT2,{
 		"be reversed. Please be carefull.");
 	mes("Select the next step please.");
 	next;
-	.@name$ = strcharinfo(0);
+	.@name$ = strcharinfo(PC_NAME);
 	switch(select("Read the KVM Catalogue.", "Purchase KVM Items.", "Confirm KVM Points.", "Explanation of KVM Rewards.", "Explanation of KVM Points.")) {
 	case 1:
 		mes("[Logistics]");

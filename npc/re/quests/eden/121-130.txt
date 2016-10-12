@@ -41,7 +41,7 @@
 
 moc_para01,44,81,3	script	Melody-Jack#1	4_M_MELODY,8,8,{
 	mes "[Melody-Jack]";
-	if (!countitem(Para_Team_Mark)) {// Para_Team_Mark
+	if (!countitem(Para_Team_Mark) && !countitem(Para_Team_Mark_)) {
 		mes "Who the hell are you? Get out of here!";
 		mes "I'm only talking to base level ^FF0000121-130^000000 adventurers.";
 	}
@@ -582,7 +582,7 @@ OnTouch:
 
 moc_para01,17,77,5	script	Aigu#1	4_F_IU,{
 	mes "[Aigu]";
-	if (!countitem(Para_Team_Mark)) {// Para_Team_Mark
+	if (!countitem(Para_Team_Mark) && !countitem(Para_Team_Mark_)) {
 		mes "Oh, why aren't you a part of Eden Group?";
 		mes "I'm only talking to base level ^FF0000121-130^000000 adventurers.";
 	}
@@ -779,8 +779,8 @@ S_Erasequest2:
 }
 
 -	script	Trace of an adventurer	FAKE_NPC,{
-	.@quest = 13106 + atoi(strnpcinfo(2));
-	.@delay = 13110 + atoi(strnpcinfo(2));
+	.@quest = 13106 + atoi(strnpcinfo(NPC_NAME_HIDDEN));
+	.@delay = 13110 + atoi(strnpcinfo(NPC_NAME_HIDDEN));
 	if (questprogress(.@quest) == 1) {
 		mes "I found traces of someone who was here but I cannot find a clue. Lets go back and report to Aigu.";
 		erasequest .@quest;
