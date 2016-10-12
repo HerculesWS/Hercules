@@ -16,6 +16,7 @@
 //= 1.5 Replaced categories with shop IDs.
 //= 1.6 Added support for purchasing stackables.
 //= 1.6a Added support for previewing costumes and robes.
+//= 1.6b Added 'disable_items' command.
 //============================================================
 
 // Shop NPCs -- supplying no argument displays entire menu.
@@ -105,6 +106,7 @@ OnMenu:
 	end;
 
 OnBuyItem:
+	disable_items();
 	// .@q[] : RewardID, BoughtAmt, RewardAmt, BaseAmt, ReqZeny, ReqPts, { ReqItem, ReqAmt, ... }
 	setarray .@q[0],@bought_nameid[0],((@bought_quantity[0] > .MaxStack)?.MaxStack:@bought_quantity[0]);
 	copyarray .@q[3],getd(".q_"+.@q[0]+"[0]"),getarraysize(getd(".q_"+.@q[0]));
