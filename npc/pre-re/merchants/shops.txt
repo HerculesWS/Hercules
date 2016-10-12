@@ -151,7 +151,7 @@ OnInit:
 
 //== Morocc ================================================
 
-morocc,36,64,4	trader	Tool Dealer#moc	4_F_01,{
+morocc,36,64,4	trader	Tool Dealer#moc3	4_F_01,{
 OnInit:
 	sellitem Stunner;
 	sellitem Sword_Mace;
@@ -180,7 +180,7 @@ OnInit:
 
 }
 
-morocc,154,97,3	trader	Tool Dealer#moc	4_M_01,{
+morocc,154,97,3	trader	Tool Dealer#moc4	4_M_01,{
 OnInit:
 	sellitem Arrow;
 	sellitem Spectacles;
