@@ -4611,6 +4611,7 @@ Here are the possible look types:
  10 - LOOK_BODY           Body(N/A)
  11 - LOOK_FLOOR          FLOOR(N/A)
  12 - LOOK_ROBE           Robe
+ 13 - LOOK_BODY2          Body style
 
 Whatever 'shoes' means is anyone's guess, ask Gravity - the client does 
 nothing with this value. It still wants it from the server though, so it 
