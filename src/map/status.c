@@ -4412,13 +4412,12 @@ void status_calc_misc(struct block_list *bl, struct status_data *st, int level)
 	st->matk_min = status->base_matk_min(st);
 	st->matk_max = status->base_matk_max(st);
 	st->hit += level + st->dex;
-	if ( bl->type == BL_PC ) {
+	if ( bl->type != BL_MOB ) {
 		st->flee += level + st->agi+100;
 	}
 	else {
 		st->flee += level + st->agi;
 	}
-	st->flee += level + st->agi;
 	st->def2 += st->vit;
 	st->mdef2 += st->int_ + (st->vit >> 1);
 #endif // RENEWAL
