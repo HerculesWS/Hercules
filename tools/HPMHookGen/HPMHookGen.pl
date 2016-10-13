@@ -295,6 +295,7 @@ foreach my $file (@files) { # Loop through the xml files
 	my $loc = $data->{compounddef}->{$filekey}->{location}->[0];
 	next unless $loc->{file} =~ /src\/(map|char|login|common)\//;
 	next if $loc->{file} =~ /\/HPM.*\.h/; # Don't allow hooking into the HPM itself
+	next if $loc->{file} =~ /\/memmgr\.h/; # Don't allow hooking into the memory manager
 	my $servertype = $1;
 	my $key = $data->{compounddef}->{$filekey}->{compoundname}->[0];
 	my $original = $key;
@@ -338,8 +339,6 @@ foreach my $file (@files) { # Loop through the xml files
 		$key = "chr";
 	} elsif ($key eq "db_interface") {
 		$key = "DB";
-	} elsif ($key eq "malloc_interface") {
-		$key = "iMalloc";
 	} elsif ($key eq "socket_interface") {
 		$key = "sockt";
 	} elsif ($key eq "sql_interface") {

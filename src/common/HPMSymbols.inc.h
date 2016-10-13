@@ -155,9 +155,6 @@ struct loginif_interface *loginif;
 #ifdef MAP_MAIL_H /* mail */
 struct mail_interface *mail;
 #endif // MAP_MAIL_H
-#ifdef COMMON_MEMMGR_H /* iMalloc */
-struct malloc_interface *iMalloc;
-#endif // COMMON_MEMMGR_H
 #ifdef MAP_MAP_H /* map */
 struct map_interface *map;
 #endif // MAP_MAP_H
@@ -405,9 +402,6 @@ if ((server_type&(SERVER_TYPE_CHAR)) && !HPM_SYMBOL("loginif", loginif)) return 
 #ifdef MAP_MAIL_H /* mail */
 if ((server_type&(SERVER_TYPE_MAP)) && !HPM_SYMBOL("mail", mail)) return "mail";
 #endif // MAP_MAIL_H
-#ifdef COMMON_MEMMGR_H /* iMalloc */
-if ((server_type&(SERVER_TYPE_ALL)) && !HPM_SYMBOL("iMalloc", iMalloc)) return "iMalloc";
-#endif // COMMON_MEMMGR_H
 #ifdef MAP_MAP_H /* map */
 if ((server_type&(SERVER_TYPE_MAP)) && !HPM_SYMBOL("map", map)) return "map";
 #endif // MAP_MAP_H
