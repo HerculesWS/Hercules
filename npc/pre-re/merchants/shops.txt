@@ -159,7 +159,6 @@ OnInit:
 	sellitem N_Mace;
 	sellitem N_Rod;
 	sellitem N_Composite_Bow;
-	
 
 }
 
