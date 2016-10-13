@@ -46,7 +46,6 @@ memcpy(&HPMHooks.source.inter_quest, inter_quest, sizeof(struct inter_quest_inte
 memcpy(&HPMHooks.source.inter_storage, inter_storage, sizeof(struct inter_storage_interface));
 memcpy(&HPMHooks.source.libconfig, libconfig, sizeof(struct libconfig_interface));
 memcpy(&HPMHooks.source.loginif, loginif, sizeof(struct loginif_interface));
-memcpy(&HPMHooks.source.iMalloc, iMalloc, sizeof(struct malloc_interface));
 memcpy(&HPMHooks.source.mapif, mapif, sizeof(struct mapif_interface));
 memcpy(&HPMHooks.source.mapindex, mapindex, sizeof(struct mapindex_interface));
 memcpy(&HPMHooks.source.md5, md5, sizeof(struct md5_interface));

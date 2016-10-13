@@ -52,7 +52,6 @@ memcpy(&HPMHooks.source.itemdb, itemdb, sizeof(struct itemdb_interface));
 memcpy(&HPMHooks.source.libconfig, libconfig, sizeof(struct libconfig_interface));
 memcpy(&HPMHooks.source.logs, logs, sizeof(struct log_interface));
 memcpy(&HPMHooks.source.mail, mail, sizeof(struct mail_interface));
-memcpy(&HPMHooks.source.iMalloc, iMalloc, sizeof(struct malloc_interface));
 memcpy(&HPMHooks.source.map, map, sizeof(struct map_interface));
 memcpy(&HPMHooks.source.mapindex, mapindex, sizeof(struct mapindex_interface));
 memcpy(&HPMHooks.source.mapit, mapit, sizeof(struct mapit_interface));

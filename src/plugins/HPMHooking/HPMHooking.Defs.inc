@@ -3787,36 +3787,6 @@ typedef void (*HPMHOOK_post_mail_deliveryfail) (struct map_session_data *sd, str
 typedef bool (*HPMHOOK_pre_mail_invalid_operation) (struct map_session_data **sd);
 typedef bool (*HPMHOOK_post_mail_invalid_operation) (bool retVal___, struct map_session_data *sd);
 #endif // MAP_MAIL_H
-#ifdef COMMON_MEMMGR_H /* iMalloc */
-typedef void (*HPMHOOK_pre_iMalloc_init) (void);
-typedef void (*HPMHOOK_post_iMalloc_init) (void);
-typedef void (*HPMHOOK_pre_iMalloc_final) (void);
-typedef void (*HPMHOOK_post_iMalloc_final) (void);
-typedef void* (*HPMHOOK_pre_iMalloc_malloc) (size_t *size, const char **file, int *line, const char **func);
-typedef void* (*HPMHOOK_post_iMalloc_malloc) (void* retVal___, size_t size, const char *file, int line, const char *func);
-typedef void* (*HPMHOOK_pre_iMalloc_calloc) (size_t *num, size_t *size, const char **file, int *line, const char **func);
-typedef void* (*HPMHOOK_post_iMalloc_calloc) (void* retVal___, size_t num, size_t size, const char *file, int line, const char *func);
-typedef void* (*HPMHOOK_pre_iMalloc_realloc) (void **p, size_t *size, const char **file, int *line, const char **func);
-typedef void* (*HPMHOOK_post_iMalloc_realloc) (void* retVal___, void *p, size_t size, const char *file, int line, const char *func);
-typedef void* (*HPMHOOK_pre_iMalloc_reallocz) (void **p, size_t *size, const char **file, int *line, const char **func);
-typedef void* (*HPMHOOK_post_iMalloc_reallocz) (void* retVal___, void *p, size_t size, const char *file, int line, const char *func);
-typedef char* (*HPMHOOK_pre_iMalloc_astrdup) (const char **p, const char **file, int *line, const char **func);
-typedef char* (*HPMHOOK_post_iMalloc_astrdup) (char* retVal___, const char *p, const char *file, int line, const char *func);
-typedef char* (*HPMHOOK_pre_iMalloc_astrndup) (const char **p, size_t *size, const char **file, int *line, const char **func);
-typedef char* (*HPMHOOK_post_iMalloc_astrndup) (char* retVal___, const char *p, size_t size, const char *file, int line, const char *func);
-typedef void (*HPMHOOK_pre_iMalloc_free) (void **p, const char **file, int *line, const char **func);
-typedef void (*HPMHOOK_post_iMalloc_free) (void *p, const char *file, int line, const char *func);
-typedef void (*HPMHOOK_pre_iMalloc_memory_check) (void);
-typedef void (*HPMHOOK_post_iMalloc_memory_check) (void);
-typedef bool (*HPMHOOK_pre_iMalloc_verify_ptr) (void **ptr);
-typedef bool (*HPMHOOK_post_iMalloc_verify_ptr) (bool retVal___, void *ptr);
-typedef size_t (*HPMHOOK_pre_iMalloc_usage) (void);
-typedef size_t (*HPMHOOK_post_iMalloc_usage) (size_t retVal___);
-typedef void (*HPMHOOK_pre_iMalloc_post_shutdown) (void);
-typedef void (*HPMHOOK_post_iMalloc_post_shutdown) (void);
-typedef void (*HPMHOOK_pre_iMalloc_init_messages) (void);
-typedef void (*HPMHOOK_post_iMalloc_init_messages) (void);
-#endif // COMMON_MEMMGR_H
 #ifdef MAP_MAP_H /* map */
 typedef void (*HPMHOOK_pre_map_zone_init) (void);
 typedef void (*HPMHOOK_post_map_zone_init) (void);

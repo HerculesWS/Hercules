@@ -35,7 +35,6 @@ memcpy(&HPMHooks.source.lclif, lclif, sizeof(struct lclif_interface));
 memcpy(&HPMHooks.source.PRIV__lclif, lclif->p, sizeof(struct lclif_interface_private));
 memcpy(&HPMHooks.source.libconfig, libconfig, sizeof(struct libconfig_interface));
 memcpy(&HPMHooks.source.login, login, sizeof(struct login_interface));
-memcpy(&HPMHooks.source.iMalloc, iMalloc, sizeof(struct malloc_interface));
 memcpy(&HPMHooks.source.md5, md5, sizeof(struct md5_interface));
 memcpy(&HPMHooks.source.mutex, mutex, sizeof(struct mutex_interface));
 memcpy(&HPMHooks.source.nullpo, nullpo, sizeof(struct nullpo_interface));
