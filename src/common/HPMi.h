@@ -231,6 +231,7 @@ struct HPMi_interface {
 
 	/* Hooking */
 	struct HPMHooking_interface *hooking;
+	struct malloc_interface *memmgr;
 };
 #ifdef HERCULES_CORE
 #define HPM_SYMBOL(n, s) (HPM->share((s), (n)), true)

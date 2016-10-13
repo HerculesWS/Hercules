@@ -567,6 +567,7 @@ struct hplugin *hplugin_load(const char* filename)
 	/* id */
 	plugin->hpi->pid                = plugin->idx;
 	/* core */
+	plugin->hpi->memmgr             = HPMiMalloc;
 #ifdef CONSOLE_INPUT
 	plugin->hpi->addCPCommand       = console->input->addCommand;
 #endif // CONSOLE_INPUT
@@ -1093,8 +1094,8 @@ void hpm_init(void)
 
 	HPM->off = false;
 
-	memcpy(&iMalloc_HPM, iMalloc, sizeof(struct malloc_interface));
 	HPMiMalloc = &iMalloc_HPM;
+	*HPMiMalloc = *iMalloc;
 	HPMiMalloc->malloc = HPM_mmalloc;
 	HPMiMalloc->calloc = HPM_calloc;
 	HPMiMalloc->realloc = HPM_realloc;
