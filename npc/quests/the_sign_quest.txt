@@ -4484,9 +4484,8 @@ cmd_in02,88,51,4	script	Strange Guy#sign	1_M_SIGNART,{
 				mes "I'll freakin' beat you to near";
 				mes "freakin' death! Bam bam bam!";
 				close2;
-				percentheal -100,0;
 				soundeffect "effect\\sign_noise.wav",1;
-				percentheal -99,0;
+				Hp = 1;
 				warp "comodo",122,100;
 				end;
 			case 2:
@@ -10764,7 +10763,7 @@ que_sign01,45,227,4	script	Queen of the Dead	2_F_SIGN1,{
 		mes "invitation? Insolent mortal!";
 		mes "Go back to where you belong!^000000";
 		close2;
-		percentheal -100,0;
+		unitkill getcharid(CHAR_ID_ACCOUNT);
 		end;
 	}
 	else if (sign_q == 117) {
@@ -12202,7 +12201,7 @@ que_sign01,46,56,0	script	Fountain#sign	HIDDEN_NPC,{
 		case 1:
 			mes "...";
 			close2;
-			percentheal -100,0;
+			unitkill getcharid(CHAR_ID_ACCOUNT);
 			end;
 		case 2:
 			mes "...";

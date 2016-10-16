@@ -358,7 +358,7 @@ que_qsch05,345,23,0	warp	Gate02#gq_sch05	1,1,schg_cas05,369,306
 		mes "[Wish Maiden]";
 		mes "...You are not qualified.";
 		close2;
-		percentheal -100,0;
+		unitkill getcharid(CHAR_ID_ACCOUNT);
 		cutin "wish_maiden11",255;
 		end;
 	}
