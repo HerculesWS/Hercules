@@ -44,7 +44,7 @@ function	script	F_Okolnir	{
 -	script	Guide#gq_main	FAKE_NPC,{
 	.@sub$ = callfunc("F_Okolnir");
 	.@GID = getcastledata(strnpcinfo(NPC_MAP),1);
-	if (getcharid(2) == .@GID) {
+	if (getcharid(CHAR_ID_GUILD) == .@GID) {
 		if (getd("$siz_"+.@sub$+"_on") == 0) {
 			mes "[Guide]";
 			mes "This castle has a hidden secret.";
@@ -192,7 +192,7 @@ que_qsch05,345,23,0	warp	Gate02#gq_sch05	1,1,schg_cas05,369,306
 	.@sub$ = callfunc("F_Okolnir");
 	.@t$ = ((compare(strnpcinfo(NPC_MAP),"aru"))?"arug_cas0":"schg_cas0")+(charat(strnpcinfo(NPC_MAP),getstrlen(strnpcinfo(NPC_MAP))-1));
 	.@GID = getcastledata(.@t$,1);
-	if (getcharid(2) == .@GID) {
+	if (getcharid(CHAR_ID_GUILD) == .@GID) {
 		cutin "wish_maiden31",1;
 		if (strcharinfo(PC_NAME) == getguildmaster(.@GID)) {
 			mes "[Wish Maiden]";
@@ -2161,7 +2161,7 @@ que_qsch05,251,255,3	duplicate(Wish Maiden#main_boss)	Wish Maiden#sch05_boss	WIS
 	.@sub$ = callfunc("F_Okolnir");
 	.@t$ = ((compare(strnpcinfo(NPC_MAP),"aru"))?"arug_cas0":"schg_cas0")+(charat(strnpcinfo(NPC_MAP),getstrlen(strnpcinfo(NPC_MAP))-1));
 	.@GID = getcastledata(.@t$,1);
-	if (getcharid(2) == .@GID) {
+	if (getcharid(CHAR_ID_GUILD) == .@GID) {
 		if (strcharinfo(PC_NAME) == getguildmaster(.@GID)) {
 			if (compare(.@sub$,"aru")) {
 				setarray .@n, 7835,1,7836,1,7837,1,7838,1,2513,1,7291,10,7293,10,7063,100,985,20;

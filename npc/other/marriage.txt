@@ -577,7 +577,7 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 	if (!getpartnerid()) {
 		if (!$@wedding) {
 			if (wedding_sign == 1) {
-				getpartymember(getcharid(1));
+				getpartymember(getcharid(CHAR_ID_PARTY));
 				.@partymembercount = $@partymembercount;
 				if (.@partymembercount == 2) {
 					if (Sex == SEX_MALE) {
@@ -648,7 +648,7 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 		}
 		else if ($@wedding == 1) {
 			if (wedding_sign == 1) {
-				getpartymember(getcharid(1));
+				getpartymember(getcharid(CHAR_ID_PARTY));
 				.@partymembercount = $@partymembercount;
 				if (.@partymembercount == 2) {
 					if (Sex == SEX_FEMALE) {
@@ -689,7 +689,7 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 							mes "Will you marry "+$@wed_groom$+"?";
 							next;
 							if (select("Yes, I do.", "^FF0000No.^000000") == 1) {
-								if (isloggedin(getcharid(3,$@wed_groom$))) {
+								if (isloggedin(getcharid(CHAR_ID_ACCOUNT,$@wed_groom$))) {
 									if (marriage($@wed_groom$)) {
 										//Call Wedding effect
 										wedding;
@@ -697,12 +697,12 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 										sc_start SC_WEDDING,3600000,1;
 										getitem Bride_Ring,1;
 										//Give ring to Groom, and change to wedding sprite.
-										attachrid(getcharid(3,$@wed_groom$));
+										attachrid(getcharid(CHAR_ID_ACCOUNT,$@wed_groom$));
 										sc_start SC_WEDDING,3600000,1;
 										getitem Bridegroom_Ring,1;
 										detachrid;
 										//Switch Script progression back to Bride
-										attachrid(getcharid(3,$@wed_bride$));
+										attachrid(getcharid(CHAR_ID_ACCOUNT,$@wed_bride$));
 										cutin "wedding_bomars02",2;
 										mapannounce "prt_church","I now pronounce you, "+$@wed_groom$+" and "+$@wed_bride$+", husband and wife.",bc_map;
 										mes "[Vomars]";

@@ -44,7 +44,7 @@ ma_fild02,312,317,5	script	Guard#buwaya_cave	4_MAL_SOLDIER,{
 		close;
 	}
 
-	.@party_id = getcharid(1);
+	.@party_id = getcharid(CHAR_ID_PARTY);
 	.@md_name$ = "Buwaya Cave";
 
 	if (!.@party_id) {
@@ -54,7 +54,7 @@ ma_fild02,312,317,5	script	Guard#buwaya_cave	4_MAL_SOLDIER,{
 		mes "team with other people.";
 		close;
 	}
-	if (getcharid(0) == getpartyleader(.@party_id,2)) {
+	if (getcharid(CHAR_ID_CHAR) == getpartyleader(.@party_id,2)) {
 		mes "[Guard]";
 		mes "This place is dangerous. Please go back.";
 		mes "If you dont have any business here, please go back.";
@@ -159,7 +159,7 @@ OnTouch:
 			mes "The party leader did not generate the dungeon yet.";
 			close;
 		} else {
-			mapannounce "ma_fild02",getpartyname(getcharid(1))+" party's "+strcharinfo(PC_NAME)+" member began hunting Buwaya in Buwaya Cave.",bc_map,"0x00ff99"; //FW_NORMAL 12 0 0
+			mapannounce "ma_fild02",getpartyname(getcharid(CHAR_ID_PARTY))+" party's "+strcharinfo(PC_NAME)+" member began hunting Buwaya in Buwaya Cave.",bc_map,"0x00ff99"; //FW_NORMAL 12 0 0
 			setquest 4229;
 			warp "1@ma_c",35,57;
 			end;

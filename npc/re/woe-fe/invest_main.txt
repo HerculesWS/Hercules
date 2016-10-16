@@ -902,7 +902,7 @@ OnAgitInvest:
 			mes "Please come back during the investment duration.";
 			close;
 		}
-		.@guild = getcharid(2);
+		.@guild = getcharid(CHAR_ID_GUILD);
 		for(.@i = 1; .@i<=5; ++.@i) {
 			.@castle_name$[.@i] = getcastlename(.@npc$+"g_cas0"+.@i);
 			.@owner_id[.@i] = getcastledata(.@npc$+"g_cas0"+.@i,1);
@@ -1114,7 +1114,7 @@ OnAgitInvest:
 	}
 
 	.@GID = getcastledata(strnpcinfo(NPC_MAP),1);
-	if (getcharid(2) != .@GID) {
+	if (getcharid(CHAR_ID_GUILD) != .@GID) {
 		mes "[Gate Manager]";
 		mes "You don't seem to be the member of guild owning this castle.";
 		mes "If you need any help, please visit any of our guild members at "+.@realm$+" Square.";
@@ -1145,7 +1145,7 @@ OnAgitInvest:
 			mes "Please come back during the investment duration.";
 			close;
 		}
-		if (getcharid(2) != .@GID) {
+		if (getcharid(CHAR_ID_GUILD) != .@GID) {
 			mes "[Gate Manager]";
 			mes "You don't seem to be the member of the guild owning this castle.";
 			mes "Please use the normal investment from "+.@realm$+" Square.";

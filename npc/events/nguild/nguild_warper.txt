@@ -42,24 +42,24 @@
 
 prontera,146,163,6	script	Novice Castles	4_F_NOVICE,{
 	mes "[Cita]";
-	if (!getcharid(2)) {
+	if (!getcharid(CHAR_ID_GUILD)) {
 		mes "^FF0000You have to enter a guild to be able to hit Emperium!^000000";
-	} else if (getgdskilllv(getcharid(2),10013) ||
-	         (getgdskilllv(getcharid(2),10000) +
-	          getgdskilllv(getcharid(2),10001) +
-	          getgdskilllv(getcharid(2),10002) +
-	          getgdskilllv(getcharid(2),10003) +
-	          getgdskilllv(getcharid(2),10004) +
-	          getgdskilllv(getcharid(2),10005) +
-	          getgdskilllv(getcharid(2),10006) +
-	          getgdskilllv(getcharid(2),10007) +
-	          getgdskilllv(getcharid(2),10008) +
-	          getgdskilllv(getcharid(2),10009) +
-	          getgdskilllv(getcharid(2),10010) +
-	          getgdskilllv(getcharid(2),10011) +
-	          getgdskilllv(getcharid(2),10012) +
-	          getgdskilllv(getcharid(2),10013) +
-	          getgdskilllv(getcharid(2),10014) > 9)
+	} else if (getgdskilllv(getcharid(CHAR_ID_GUILD),10013) ||
+	         (getgdskilllv(getcharid(CHAR_ID_GUILD),10000) +
+	          getgdskilllv(getcharid(CHAR_ID_GUILD),10001) +
+	          getgdskilllv(getcharid(CHAR_ID_GUILD),10002) +
+	          getgdskilllv(getcharid(CHAR_ID_GUILD),10003) +
+	          getgdskilllv(getcharid(CHAR_ID_GUILD),10004) +
+	          getgdskilllv(getcharid(CHAR_ID_GUILD),10005) +
+	          getgdskilllv(getcharid(CHAR_ID_GUILD),10006) +
+	          getgdskilllv(getcharid(CHAR_ID_GUILD),10007) +
+	          getgdskilllv(getcharid(CHAR_ID_GUILD),10008) +
+	          getgdskilllv(getcharid(CHAR_ID_GUILD),10009) +
+	          getgdskilllv(getcharid(CHAR_ID_GUILD),10010) +
+	          getgdskilllv(getcharid(CHAR_ID_GUILD),10011) +
+	          getgdskilllv(getcharid(CHAR_ID_GUILD),10012) +
+	          getgdskilllv(getcharid(CHAR_ID_GUILD),10013) +
+	          getgdskilllv(getcharid(CHAR_ID_GUILD),10014) > 9)
 	          ) {
 		mes "I see... your guild has Emergency Call mastered.";
 		mes "You cannot enter the Novice Castle area.";

@@ -67,7 +67,7 @@ function	script	F_AgitBreak	{
 	.@map$ = getarg(0);
 	.@castle$ = getarg(1);
 
-	.@GID = getcharid(2);
+	.@GID = getcharid(CHAR_ID_GUILD);
 	if (.@GID <= 0) return;
 
 	.@Economy = getcastledata(.@map$,2) - 5;

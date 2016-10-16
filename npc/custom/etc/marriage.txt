@@ -723,13 +723,13 @@ function SF_TryRegister {
 		set $wed_bride$,strcharinfo(PC_NAME);
 		$wed_bride_sex = Sex;
 		if ($@wedding_effect == 1) //Store account id for effect.
-			set $wedding_effect_id, getcharid(3);
+			set $wedding_effect_id, getcharid(CHAR_ID_ACCOUNT);
 	} else {
 		set $wed_groom_progress,1;
 		set $wed_groom$,strcharinfo(PC_NAME);
 		$wed_groom_sex = Sex;
 		if ($@wedding_effect == 2) //Store account id for effect.
-			set $wedding_effect_id, getcharid(3);
+			set $wedding_effect_id, getcharid(CHAR_ID_ACCOUNT);
 	}
 }
 
@@ -882,7 +882,7 @@ function SF_InProgress {
 		mes "...I am still waiting for your partner to confirm the divorce procedure.";
 		close;
 	}
-	if (getcharid(0) != $@divorcee) {
+	if (getcharid(CHAR_ID_CHAR) != $@divorcee) {
 		mes "["+@name$+"]";
 		mes "I am in the progress of divorcing "+$@divorcer$+".";
 		mes "Do you know who the spouse is?";

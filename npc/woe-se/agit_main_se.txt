@@ -230,7 +230,7 @@ OnTreasureDied:
 		mes "to conquer this stronghold?";
 		close;
 	}
-	if (getcharid(2) != .@GID || strcharinfo(PC_NAME) != getguildmaster(.@GID)) {
+	if (getcharid(CHAR_ID_GUILD) != .@GID || strcharinfo(PC_NAME) != getguildmaster(.@GID)) {
 		mes "[ Steward ]";
 		mes "Hmpf. Your threats don't";
 		mes "scare me! Guardians, drive";
@@ -619,7 +619,7 @@ OnStop:
 	end;
 
 OnStartArena:
-	.@GID = getcharid(2);
+	.@GID = getcharid(CHAR_ID_GUILD);
 	.@region$ = (compare(strnpcinfo(NPC_MAP),"arug"))?"Valfreyja":"Nithafjoll";
 	// Lower castle Economy
 	.@Economy = getcastledata(strnpcinfo(NPC_MAP),2)-5;
@@ -663,7 +663,7 @@ OnStartArena:
 		mes "over this stronghold.";
 		close;
 	}
-	if (getcharid(2) == .@GID) {
+	if (getcharid(CHAR_ID_GUILD) == .@GID) {
 		if (strcharinfo(PC_NAME) != getguildmaster(.@GID)) {
 			mes .@n$;
 			mes "As guardian of this";
@@ -854,7 +854,7 @@ OnInit:
 -	script	Kafra#template	FAKE_NPC,{
 	cutin "kafra_01",2;
 	.@GID = getcastledata(strnpcinfo(NPC_MAP),1);
-	if (getcharid(2) == .@GID && getgdskilllv(.@GID,10001)) {
+	if (getcharid(CHAR_ID_GUILD) == .@GID && getgdskilllv(.@GID,10001)) {
 		mes "[Kafra Employee]";
 		mes "Welcome, proud member";
 		mes "of the ^FF0000"+getguildname(.@GID)+"^000000 Guild!";
@@ -967,7 +967,7 @@ OnInit:
 	.@GID = getcastledata(strnpcinfo(NPC_MAP),1);
 	.@num = atoi(charat(strnpcinfo(NPC_NAME_VISIBLE),0));
 	.@var$ = "$agit_"+strnpcinfo(NPC_NAME_HIDDEN);
-	if (getcharid(2) == .@GID) {
+	if (getcharid(CHAR_ID_GUILD) == .@GID) {
 		mes "^3355FFYou will need the";
 		mes "following materials to";
 		mes "rebuild a destroyed";
@@ -1120,7 +1120,7 @@ OnEnable:
 	.@GID = getcastledata(strnpcinfo(NPC_MAP),1);
 	.@num = atoi(charat(strnpcinfo(NPC_NAME_VISIBLE),15));
 	.@var$ = "$agit_"+strnpcinfo(NPC_NAME_HIDDEN);
-	if (getcharid(2) == .@GID) {
+	if (getcharid(CHAR_ID_GUILD) == .@GID) {
 		if (strcharinfo(PC_NAME) == getguildmaster(.@GID)) {
 			if (getd(.@var$+"["+(.@num+1)+"]") == 2) {
 				mes "^3355FFDemolished Fortress";
@@ -1707,7 +1707,7 @@ OnDisable:
 
 //== Link Flags (function) =================================
 function	script	LinkFlag	{
-	if (!getcharid(2) || getcharid(2) != getcastledata(strnpcinfo(NPC_MAP),1)) end;
+	if (!getcharid(CHAR_ID_GUILD) || getcharid(CHAR_ID_GUILD) != getcastledata(strnpcinfo(NPC_MAP),1)) end;
 	if (getarg(0) == "Convenience Facility") {
 		mes "^3355FFThis is the Stronghold";
 		mes "Teleport Service. Would";
@@ -1754,13 +1754,13 @@ function	script	ReturnFlag	{
 		mes "be recognized as its new owner.";
 		close;
 	}
-	if (getcharid(2) == .@GID && getarg(1,0)) {
+	if (getcharid(CHAR_ID_GUILD) == .@GID && getarg(1,0)) {
 		mes "[ Ringing Voice ]";
 		mes "Courageous one,";
 		mes "do you wish to return";
 		mes "to your stronghold?";
 		next;
-		if(select("Return to the Stronghold", "Cancel") == 1 && getcharid(2) == getcastledata(getarg(0),1)) {
+		if(select("Return to the Stronghold", "Cancel") == 1 && getcharid(CHAR_ID_GUILD) == getcastledata(getarg(0),1)) {
 			if (compare(getarg(0),"arug")) {
 				if (getarg(0) == "arug_cas01") setarray .@i[0],67,193;
 				else if (getarg(0) == "arug_cas02") setarray .@i[0],43,256;
@@ -1814,7 +1814,7 @@ function	script	ReturnFlag	{
 
 //== Guild Dungeon Warps ===================================
 -	script	Sunflower#template	FAKE_NPC,{
-	if (getcharid(2) == getcastledata(strnpcinfo(NPC_MAP),1)) {
+	if (getcharid(CHAR_ID_GUILD) == getcastledata(strnpcinfo(NPC_MAP),1)) {
 		mes "- It's an amazingly huge sunflower; as big as a human! ... You feel something mysterious emanating from the flower. -";
 		next;
 		switch(select("Hold the stem.", "Do nothing.")) {

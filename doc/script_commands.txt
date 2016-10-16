@@ -2466,11 +2466,11 @@ or, if a character name is specified, of that player.
 
 Type is the kind of associated ID number required:
 
- 0 - Character ID number.
- 1 - Party ID number.
- 2 - Guild ID number.
- 3 - Account ID number.
- 4 - Battle ground ID
+(0) CHAR_ID_CHAR - Character ID number.
+(1) CHAR_ID_PARTY - Party ID number.
+(2) CHAR_ID_GUILD - Guild ID number.
+(3) CHAR_ID_ACCOUNT - Account ID number.
+(4) CHAR_ID_BG - Battle ground ID
 
 For most purposes other than printing it, a number is better to have than 
 a name (people do horrifying things to their character names).
@@ -2479,12 +2479,12 @@ If the character is not in a party or not in a guild, the function will
 return 0 if guild or party number is requested. If a name is specified and 
 the character is not found, 0 is returned.
 
-If getcharid(0) returns a zero, the script got called not by a character 
+If getcharid(CHAR_ID_CHAR) returns a zero, the script got called not by a character 
 and doesn't have an attached RID. Note that this will cause the map server 
 to print "player not attached!" error messages, so it is preferred to use 
 playerattached() to check for the character attached to the script.
 
-	if (getcharid(2) == 0)
+	if (getcharid(CHAR_ID_GUILD) == 0)
 		mes("Only members of a guild are allowed here!");
 
 ---------------------------------------
@@ -2588,7 +2588,7 @@ return 7 in this case.
 Example 1: list party member names
 
 	// get the party member names
-	getpartymember(getcharid(1), 0);
+	getpartymember(getcharid(CHAR_ID_PARTY), 0);
 	
 	// It's a good idea to copy the global temporary $@partymember***** 
 	// variables to your own scope variables because if you have pauses in 
@@ -2610,8 +2610,8 @@ Example 2: check party count (with a next() pause), before warping to event
 	.register_num = 5; // How many party members are required?
 	
 	// get the charID and accountID of character's party members
-	getpartymember(getcharid(1), 1);
-	getpartymember(getcharid(1), 2);
+	getpartymember(getcharid(CHAR_ID_PARTY), 1);
+	getpartymember(getcharid(CHAR_ID_PARTY), 2);
 	
 	if ($@partymembercount != .register_num) {
 		mes("Please form a party of "+ .register_num +" to continue");
@@ -2645,7 +2645,7 @@ Example 2: check party count (with a next() pause), before warping to event
 	// party. To prevent this, we call getpartymember again and compare 
 	// with the original values.
 	
-	getpartymember(getcharid(1), 1);
+	getpartymember(getcharid(CHAR_ID_PARTY), 1);
 	if ($@partymembercount != .register_num) {
 		mes("You've made changes to your party !");
 		close();
@@ -2658,7 +2658,7 @@ Example 2: check party count (with a next() pause), before warping to event
 	}
 	
 	// Finally, it's safe to start the event!
-	warpparty("event_map", 0, 0, getcharid(1));
+	warpparty("event_map", 0, 0, getcharid(CHAR_ID_PARTY));
 
 ---------------------------------------
 
@@ -3377,7 +3377,7 @@ guild.
 
 Maybe you want to make a room only guild masters can enter:
 
-	.@GID = getcharid(2);
+	.@GID = getcharid(CHAR_ID_GUILD);
 	if (.@GID == 0) {
 		mes("Sorry you are not in a guild");
 		close();
@@ -3476,7 +3476,7 @@ Returns the amount of characters from the specified guild on the given map.
 
 Example:
 
-	mes("You have "+getmapguildusers("prontera", getcharid(2))+" guild members in Prontera.");
+	mes("You have "+getmapguildusers("prontera", getcharid(CHAR_ID_GUILD))+" guild members in Prontera.");
 
 ---------------------------------------
 
@@ -4251,8 +4251,8 @@ See also warp().
 *warpparty("<to_mapname>", <x>, <y>, <party_id>, {"<from_mapname>"})
 
 Warps a party to specified map and coordinate given the party ID, which 
-you can get with getcharid(1). You can also request another party id given 
-a member's name with getcharid(1, <player_name>).
+you can get with getcharid(CHAR_ID_PARTY). You can also request another party id given 
+a member's name with getcharid(CHAR_ID_PARTY, <player_name>).
 
 You can use the following "map names" for special warping behavior:
 Random:       All party members are randomly warped in their current map
@@ -4273,7 +4273,7 @@ Example:
 	mes("[Party Warper]");
 	mes("Here you go!");
 	close2();
-	.@id = getcharid(1);
+	.@id = getcharid(CHAR_ID_PARTY);
 	warpparty("prontera", 150, 100, .@id);
 	close();
 
@@ -4282,7 +4282,7 @@ Example:
 *warpchar("<mapname>", <x>, <y>, <char_id>)
 
 Warps another player to specified map and coordinate given the char id, 
-which you can get with getcharid(0, <player_name>). Obviously this is 
+which you can get with getcharid(CHAR_ID_CHAR, <player_name>). Obviously this is 
 useless if you want to warp the same player that is executing this script, 
 unless it's some kind of "chosen" script.
 
@@ -4295,8 +4295,8 @@ Example:
 *warpguild("<mapname>", <x>, <y>, <guild_id>)
 
 Warps a guild to specified map and coordinate given the guild id, which 
-you can get with getcharid(2). You can also request another guild id given 
-the member's name with getcharid(2, <player_name>).
+you can get with getcharid(CHAR_ID_GUILD). You can also request another guild id given 
+the member's name with getcharid(CHAR_ID_GUILD, <player_name>).
 
 You can use the following "map names" for special warping behavior:
 Random:       All guild members are randomly warped in their current map 
@@ -4748,7 +4748,7 @@ like this. Careful, minor magic ahead.
 	// item. Only an existing character's name may be there.
 	// Let's assume our character is 'Adam' and find his ID.
 
-	.@charid = getcharid(0, "Adam");
+	.@charid = getcharid(CHAR_ID_CHAR, "Adam");
 
 	// Now we split the character ID number into two portions with a 
 	// binary shift operation. If you don't understand what this does, 
@@ -5902,10 +5902,10 @@ Examples:
 
 // This will make Aaron follow Bullah, when both of these characters are 
 // online.
-	pcfollow(getcharid(3, "Aaron"), getcharid(3, "Bullah"));
+	pcfollow(getcharid(CHAR_ID_ACCOUNT, "Aaron"), getcharid(CHAR_ID_ACCOUNT, "Bullah"));
 	
 // Makes Aaron stop following whoever he is following.
-	pcstopfollow(getcharid(3, "Aaron"));
+	pcstopfollow(getcharid(CHAR_ID_ACCOUNT, "Aaron"));
 	
 ---------------------------------------
 
@@ -5919,10 +5919,10 @@ player if zero is supplied.
 Examples:
 
 // Prevents the current char from moving away.
-	pcblockmove(getcharid(3), true);
+	pcblockmove(getcharid(CHAR_ID_ACCOUNT), true);
 	
 // Enables the current char to move again.
-	pcblockmove(getcharid(3), false);
+	pcblockmove(getcharid(CHAR_ID_ACCOUNT), false);
 
 
 ---------------------------------------
@@ -5983,7 +5983,7 @@ For example:
 
 	// We'll make a poring which will automatically attack invoking player:
 	.@mobGID = monster("prontera", 150, 150, "Poring", PORING, 1); // PORING is defined in the mob db and its value is 1002
-	unitattack(.@mobGID, getcharid(3)); // Attacker GID, attacked GID
+	unitattack(.@mobGID, getcharid(CHAR_ID_ACCOUNT)); // Attacker GID, attacked GID
 
 The way you can get the GID of more than only one monster is looping 
 through all the summons to get their individual GIDs and do whatever you 
@@ -6273,7 +6273,7 @@ Examples:
 	unitwalk(.GID, 150, 150);
 
 //NPC will move towards the attached player.
-	unitwalk(.GID, getcharid(3));//a player's GID is their account ID
+	unitwalk(.GID, getcharid(CHAR_ID_ACCOUNT));//a player's GID is their account ID
 
 ---------------------------------------
 
@@ -8519,7 +8519,7 @@ ID this command returns.
 
 Example:
 	// Store the Party ID of the invoking character.
-	.@party_id = getcharid(1);
+	.@party_id = getcharid(CHAR_ID_PARTY);
 
 	// Attempt to create an instance using that party ID.
 	.@id = instance_create("Endless Tower", .@party_id);
@@ -8662,7 +8662,7 @@ max    - maximum level of all characters in the party (default is max
 
 Example:
 
-if (instance_check_party(getcharid(1), 2, 2, 149)) {
+if (instance_check_party(getcharid(CHAR_ID_PARTY), 2, 2, 149)) {
 	mes("Your party meets the Memorial Dungeon requirements.");
 	mes("All online members are between levels 1-150 and at least two are online.");
 	close();
@@ -8683,7 +8683,7 @@ min - minimum level of all characters in the guild (default is 1).
 max - maximum level of all characters in the guild (default is max level in conf).
 
 Example:
-	if (instance_check_guild(getcharid(2), 2, 1, 150)) {
+	if (instance_check_guild(getcharid(CHAR_ID_GUILD), 2, 1, 150)) {
 		mes("Your guild meets the Memorial Dungeon requirements.");
 		mes("All online members are between levels 1-150 and at least two are online.");
 		close();
@@ -8907,10 +8907,10 @@ Example:
 *bg_team_setxy(<Battle Group ID>, <x>, <y>)
 
 Update the respawn point of the given battle group to x, y on the same 
-map. The <Battle Group ID> can be retrieved using getcharid(4).
+map. The <Battle Group ID> can be retrieved using getcharid(CHAR_ID_BG).
 
 Example:
-	bg_team_setxy(getcharid(4), 56, 212);
+	bg_team_setxy(getcharid(CHAR_ID_BG), 56, 212);
 	mapannounce("bat_a01", "Group [1] has taken the work shop, and will now respawn there.", bc_map, 0xFFCE00);
 	end;
 

@@ -39,7 +39,7 @@
 //== Entrance ==============================================
 gef_fild10,242,202,0	script	Dimensional Gorge Piece	2_MONEMUS,{
 
-	.@party_id = getcharid(1);
+	.@party_id = getcharid(CHAR_ID_PARTY);
 	.@p_name$ = getpartyname(.@party_id);
 	.@md_name$ = "Orc's Memory";
 
@@ -62,7 +62,7 @@ gef_fild10,242,202,0	script	Dimensional Gorge Piece	2_MONEMUS,{
 			close;
 		// Fall through to access the dungeon
 	} else { // !.@orctime
-		if (getcharid(0) == getpartyleader(.@party_id,2)) {
+		if (getcharid(CHAR_ID_CHAR) == getpartyleader(.@party_id,2)) {
 			mes "Party status confirmed. Would you like to book entrance to the "+.@md_name$+"?";
 			next;
 			switch(select("Reserve the "+.@md_name$, "Enter the Dungeon", "Cancel")) {
@@ -684,7 +684,7 @@ OnTimer23910:
 }
 
 2@orcs,26,164,0	script	Torch#1-1	CLEAR_NPC,{
-	if(getpartyleader(getcharid(1),2) != getcharid(0)) end;
+	if(getpartyleader(getcharid(CHAR_ID_PARTY),2) != getcharid(CHAR_ID_CHAR)) end;
 	progressbar "ffff00",5;
 	setarray .@id[0], atoi(charat(strnpcinfo(NPC_NAME_HIDDEN),0)), atoi(charat(strnpcinfo(NPC_NAME_HIDDEN),2));
 	if (.@id[1] == 4)

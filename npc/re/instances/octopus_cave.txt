@@ -38,7 +38,7 @@
 //== Instance Creation =====================================
 mal_dun01,151,235,5	script	Starfish	4_ASTER,{
 
-	.@party_id = getcharid(1);
+	.@party_id = getcharid(CHAR_ID_PARTY);
 	.@md_name$ = "Octopus Cave";
 
 	if (!.@party_id) {
@@ -46,7 +46,7 @@ mal_dun01,151,235,5	script	Starfish	4_ASTER,{
 		mes("You alone is powerless, hehe! Better get someone to help you out. Make a party, and come back later.");
 		close;
 	}
-	if (getcharid(0) != getpartyleader(.@party_id, 2)) {
+	if (getcharid(CHAR_ID_CHAR) != getpartyleader(.@party_id, 2)) {
 		mes("[Starfish]");
 		mes("Where is your leader, hehe. I don't talk to some random people. Bring your boss to me.");
 		close;
@@ -136,7 +136,7 @@ mal_dun01,153,237,5	script	Weird Entrance	CLEAR_NPC,{
 				close;
 			}
 
-			mapannounce("mal_dun01", sprintf(_$("%s party's %s member started to hunt the Octopus!"), getpartyname(getcharid(1)), strcharinfo(PC_NAME)), bc_map, C_SPRINGGREEN);
+			mapannounce("mal_dun01", sprintf(_$("%s party's %s member started to hunt the Octopus!"), getpartyname(getcharid(CHAR_ID_PARTY)), strcharinfo(PC_NAME)), bc_map, C_SPRINGGREEN);
 			if (!questprogress(4197)) setquest 4197;
 			warp "1@cash", 199, 99;
 			end;
