@@ -97,7 +97,7 @@ cmd_in02,182,126,2	script	Crazy Boris	4_M_03,{
 			mes "You're dead!";
 			emotion e_gg;
 			Sp = 0;
-			unitkill getcharid(3);
+			unitkill getcharid(CHAR_ID_ACCOUNT);
 			close;
 		}
 		specialeffect EF_SUI_EXPLOSION;

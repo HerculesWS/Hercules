@@ -8626,7 +8626,7 @@ OnTouch:
 			mes "- seems to stare at you!! -";
 			close2;
 			specialeffect2 EF_FLASHER;
-			unitkill getcharid(3);
+			unitkill getcharid(CHAR_ID_ACCOUNT);
 			end;
 		}
 	} else if (rhea_rus_hair > 2 && rhea_rus_hair < 7) {
@@ -8648,7 +8648,7 @@ OnTouch:
 			mes "-You seem to hear the splash but something gleaming raids on you!!-";
 			close2;
 			specialeffect2 EF_FLASHER;
-			unitkill getcharid(3);
+			unitkill getcharid(CHAR_ID_ACCOUNT);
 			end;
 		}
 	} else if (rhea_rus_hair == 8) {
@@ -8887,7 +8887,7 @@ mosk_fild02,124,202,3	script	Lusalka#rus23	4_F_RUSGREEN,{
 	mes "-When Lusalka watches you, you are blacked out-";
 	close2;
 	specialeffect2 EF_FLASHER;
-	unitkill getcharid(3);
+	unitkill getcharid(CHAR_ID_ACCOUNT);
 	donpcevent "Lusalka#rus23::OnDisable";
 	end;
 
