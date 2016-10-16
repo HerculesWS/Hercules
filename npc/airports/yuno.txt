@@ -33,39 +33,39 @@
 
 y_airport,143,43,5	script	Airport Staff#y_air1a::y_airport1	4_F_01,{
 	mes("[Airport Staff]");
-	mes("Welcome to Juno Airport where we offer domestic flights to Einbroch, Lighthalzen and Hugel,\r"
+	mes("Welcome to Juno Airport where we offer domestic flights to Einbroch, Lighthalzen and Hugel, \r"
 		"and international flights to Izlude and Rachel.");
 	mes("How may I be of service?");
-	next;
+	next();
 	if (select("Board the Airship.", "Cancel.") == 1) {
 		mes("[Airport Staff]");
 		mes("The boarding fee for all\r"
 			"flights is 1,200 zeny. If you\r"
-			"use a Free Ticket for Airship,\r"
+			"use a Free Ticket for Airship, \r"
 			"the boarding fee will be waived.So would you like to depart?");
-		next;
+		next();
 		if (select("Yes", "No") == 1) {
 			if (countitem(Free_Flying_Ship_Ticket) > 0) {
-				delitem Free_Flying_Ship_Ticket,1;
-				warp "y_airport",148,51;
+				delitem(Free_Flying_Ship_Ticket, 1);
+				warp("y_airport", 148, 51);
 				end;
 			}
 			if (Zeny >= 1200) {
 				Zeny -= 1200;
-				warp "y_airport",148,51;
+				warp("y_airport", 148, 51);
 				end;
 			}
 			mes("[Airport Staff]");
 			mes("I'm sorry, but you don't\r"
 				"have 1,200 zeny to pay\r"
 				"for the boarding fee.");
-			close;
+			close();
 		}
 	}
 	mes("[Airport Staff]");
 	mes("Thank you and\r"
 		"have a nice day.");
-	close;
+	close();
 }
 
 y_airport,158,43,5	duplicate(y_airport1)	Airport Staff#y_air1b	4_F_01
@@ -76,16 +76,16 @@ y_airport,143,49,3	script	Arrival Staff#y_air2a::y_airport2	4_F_01,{
 	mes("Welcome to Juno Airport. If you've just arrived from your\r"
 		"flight, let me guide you to the main terminal. Otherwise, please\r"
 		"board the departing Airship to reach your intended destination.");
-	next;
+	next();
 	if (select("Exit to main terminal", "Cancel") == 1) {
 		mes("[Airport Staff]");
 		mes("Once you're in the main terminal, you must pay the fee once again\r"
 			"to board a departing Airship. You should only exit if your intended\r"
 			"destination is Juno. Proceed to\r"
 			"exit to the main terminal?");
-		next;
+		next();
 		if (select("Yes", "No") == 1) {
-			warp "y_airport",142,40;
+			warp("y_airport", 142, 40);
 			end;
 		}
 	}
@@ -94,7 +94,7 @@ y_airport,143,49,3	script	Arrival Staff#y_air2a::y_airport2	4_F_01,{
 		"for your patronage\r"
 		"and I hope you have\r"
 		"a pleasant flight~");
-	close;
+	close();
 }
 
 y_airport,126,51,3	duplicate(y_airport2)	Arrival Staff#y_air2b	4_F_01
@@ -103,13 +103,13 @@ y_airport,158,50,3	duplicate(y_airport2)	Arrival Staff#y_air2c	4_F_01
 y_airport,145,63,5	script	Domestic Boarding	4_F_02,{
 	mes("[Boarding Staff]");
 	mes("Would you like to board the\r"
-		"Airship that flies to Einbroch,\r"
-		"Lighthalzen and Hugel? If so,\r"
+		"Airship that flies to Einbroch, \r"
+		"Lighthalzen and Hugel? If so, \r"
 		"please let me guide you to that\r"
 		"Airship's boarding area.");
-	next;
+	next();
 	if (select("Yes", "No") == 1) {
-		warp "yuno",59,244;
+		warp("yuno", 59, 244);
 		end;
 	}
 	mes("[Boarding Staff]");
@@ -117,7 +117,7 @@ y_airport,145,63,5	script	Domestic Boarding	4_F_02,{
 	mes("Thank you for your\r"
 		"patronage, and I hope\r"
 		"you enjoy your travels~");
-	close;
+	close();
 }
 
 y_airport,140,63,5	script	International Boarding	4_F_02,{
@@ -127,9 +127,9 @@ y_airport,140,63,5	script	International Boarding	4_F_02,{
 		"Juno, Izlude and Rachel?");
 	mes("If so, let me guide\r"
 		"you to the boarding area.");
-	next;
+	next();
 	if (select("Yes", "No") == 1) {
-		warp "yuno",47,244;
+		warp("yuno", 47, 244);
 		end;
 	}
 	mes("[Boarding Staff]");
@@ -138,7 +138,7 @@ y_airport,140,63,5	script	International Boarding	4_F_02,{
 		"with us, and I hope you\r"
 		"enjoy your travels on our\r"
 		"state of the art Airships.");
-	close;
+	close();
 }
 
 yuno,14,262,5	script	Airship Staff#yuno01	4_F_02,{
@@ -147,18 +147,18 @@ yuno,14,262,5	script	Airship Staff#yuno01	4_F_02,{
 	mes("Please use this door to\r"
 		"board the Airship that will\r"
 		"be flying all the way to Izlude\r"
-		"in the Rune-Midgarts Kingdom,\r"
+		"in the Rune-Midgarts Kingdom, \r"
 		"and to Rachel in the Arunafeltz\r"
 		"Republic.");
-	next;
+	next();
 	mes("[Airship Staff]");
 	mes("Otherwise, if Juno is\r"
-		"your intended destination,\r"
+		"your intended destination, \r"
 		"please head down the stairs\r"
 		"and ask the Arrival Staff to lead\r"
 		"you to the main terminal. Thank\r"
 		"you, and enjoy your travels.");
-	close;
+	close();
 }
 
 yuno,88,263,3	script	Airship Staff#yuno02	4_F_02,{
@@ -168,13 +168,13 @@ yuno,88,263,3	script	Airship Staff#yuno02	4_F_02,{
 		"board the Airship which stops\r"
 		"over Einbroch, Lighthalzen and\r"
 		"Hugel in the Schwaltzvalt Republic.");
-	next;
+	next();
 	mes("[Airship Staff]");
 	mes("Otherwise, if Juno is\r"
-		"your intended destination,\r"
+		"your intended destination, \r"
 		"please head down the stairs\r"
 		"and ask the Arrival Staff to lead\r"
 		"you to the main terminal. Thank\r"
 		"you, and enjoy your travels.");
-	close;
+	close();
 }

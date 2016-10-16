@@ -37,36 +37,36 @@
 		"to board the Airship that\r"
 		"departs on the flight wich stops\r"
 		"in Juno and Rachel?");
-	next;
+	next();
 	if (select("Board the Airship to Juno/Rachel.", "Cancel.") == 1) {
 		mes("[Airship Staff]");
 		mes("The boarding fee is\r"
 			"1,200 zeny. However, this\r"
 			"charged is waived if you use\r"
-			"a Free Ticket for Airship. Now,\r"
+			"a Free Ticket for Airship. Now, \r"
 			"would you still like to board?");
-		next;
+		next();
 		if (select("Yes", "No") == 1) {
 			if (countitem(Free_Flying_Ship_Ticket) > 0) {
-				delitem Free_Flying_Ship_Ticket,1;
-				warp "airplane_01",244,58;
+				delitem(Free_Flying_Ship_Ticket, 1);
+				warp("airplane_01", 244, 58);
 				end;
 			}
 			if (Zeny >= 1200) {
 				Zeny -= 1200;
-				warp "airplane_01",244,58;
+				warp("airplane_01", 244, 58);
 				end;
 			}
 			mes("[Airship Staff]");
 			mes("I'm sorry, but you don't\r"
 				"have 1,200 zeny to pay\r"
 				"for the boarding fee.");
-			close;
+			close();
 		}
 	}
 	mes("[Airship Staff]");
 	mes("Thank you and\r"
 		"please come again.");
 	mes("Have a good day~");
-	close;
+	close();
 }
