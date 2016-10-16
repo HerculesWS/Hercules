@@ -33,27 +33,31 @@
 //= - Winning Team: 9 badges
 //= - Losing Team: 3 badge
 //================= Current Version =======================================
-//= 1.6
+//= 1.7
 //=========================================================================
 
 //== Waiting Room NPCs =====================================
 bat_room,142,227,4	script	Lieutenant Huvas	4_M_KY_KNT,{
 	end;
+
 OnInit:
 	waitingroom(_("Battle Station"), 11, "start#bat_b02::OnReadyCheck", 1, 0, 80);
 	end;
+
 OnEnterBG:
-	$@FlaviusBG2_id1 = waitingroom2bg("bat_b02",10,290,"start#bat_b02::OnGuillaumeQuit","");
+	$@FlaviusBG2_id1 = waitingroom2bg("bat_b02", 10, 290, "start#bat_b02::OnGuillaumeQuit", "");
 	end;
 }
 
 bat_room,142,204,0	script	Lieutenant Yukon	4_M_CRU_KNT,{
 	end;
+
 OnInit:
 	waitingroom(_("Battle Station"), 11, "start#bat_b02::OnReadyCheck", 1, 0, 80);
 	end;
+
 OnEnterBG:
-	$@FlaviusBG2_id2 = waitingroom2bg("bat_b02",390,10,"start#bat_b02::OnCroixQuit","");
+	$@FlaviusBG2_id2 = waitingroom2bg("bat_b02", 390, 10, "start#bat_b02::OnCroixQuit", "");
 	end;
 }
 
@@ -65,22 +69,22 @@ bat_room,2,151,3	script	#bat_b02_timer	CLEAR_NPC,{
 
 OnInit:
 OnEnable:
-	initnpctimer;
+	initnpctimer();
 	end;
 
 OnStop:
-	stopnpctimer;
+	stopnpctimer();
 	end;
 
 OnTimer1000:
-	stopnpctimer;
-	initnpctimer;
+	stopnpctimer();
+	initnpctimer();
 	.@chk_bat_a01 = getmapusers("bat_b02");
 	if (.@chk_bat_a01 < 1) {
 		$@FlaviusBG2 = 0;
-		if( $@FlaviusBG2_id1 ) { bg_destroy $@FlaviusBG2_id1; $@FlaviusBG2_id1 = 0; }
-		if( $@FlaviusBG2_id2 ) { bg_destroy $@FlaviusBG2_id2; $@FlaviusBG2_id2 = 0; }
-		donpcevent "start#bat_b02::OnReadyCheck";
+		if ($@FlaviusBG2_id1) { bg_destroy($@FlaviusBG2_id1); $@FlaviusBG2_id1 = 0; }
+		if ($@FlaviusBG2_id2) { bg_destroy($@FlaviusBG2_id2); $@FlaviusBG2_id2 = 0; }
+		donpcevent("start#bat_b02::OnReadyCheck");
 	}
 	end;
 }
@@ -88,109 +92,108 @@ OnTimer1000:
 //== Flavius Battleground Engine ===========================
 bat_b02,15,15,3	script	start#bat_b02	CLEAR_NPC,{
 OnInit:
-	mapwarp "bat_b02","bat_room",154,150;
+	mapwarp("bat_b02", "bat_room", 154, 150);
 	end;
 
 OnReadyCheck:
-	if( $@FlaviusBG2 )
+	if ($@FlaviusBG2)
 		end;
-	.@Guillaume = getwaitingroomstate(0,"Lieutenant Huvas");
-	.@Croix = getwaitingroomstate(0,"Lieutenant Yukon");
-	if( !.@Guillaume && !.@Croix ) {
-		donpcevent "#bat_b02_timer::OnStop";
+	.@Guillaume = getwaitingroomstate(0, "Lieutenant Huvas");
+	.@Croix = getwaitingroomstate(0, "Lieutenant Yukon");
+	if (!.@Guillaume && !.@Croix) {
+		donpcevent("#bat_b02_timer::OnStop");
 		end;
 	}
-	if( .@Guillaume < 10 || .@Croix < 10 )
+	if (.@Guillaume < 10 || .@Croix < 10)
 		end;
 	$@FlaviusBG2 = 1;
 	$@FlaviusBG2_Victory = 0;
 	$@Croix_ScoreBG2 = 0;
 	$@Guill_ScoreBG2 = 0;
 
-	bg_updatescore "bat_b02",$@Guill_ScoreBG2,$@Croix_ScoreBG2;
-	donpcevent "Lieutenant Huvas::OnEnterBG";
-	donpcevent "Lieutenant Yukon::OnEnterBG";
-	donpcevent "OBJ#bat_b02_a::OnKill";
-	donpcevent "OBJ#bat_b02_a::OnEnable";
-	donpcevent "OBJ#bat_b02_b::OnKill";
-	donpcevent "OBJ#bat_b02_b::OnEnable";
-	donpcevent "guardian#bat_b02_a::OnKill";
-	donpcevent "guardian#bat_b02_b::OnKill";
-	donpcevent "guardian#bat_b02_a::OnEnable";
-	donpcevent "guardian#bat_b02_b::OnEnable";
-	donpcevent "cell#bat_b02_a::OnRed";
-	donpcevent "cell#bat_b02_b::OnRed";
-	donpcevent "time#bat_b02::OnEnable";
-	disablenpc "Guillaume Vintenar#b02_a";
-	disablenpc "Croix Vintenar#b02_b";
-	disablenpc "Vintenar#bat_b02_aover";
-	disablenpc "Vintenar#bat_b02_bover";
-	bg_warp $@FlaviusBG2_id1,"bat_b02",87,75;
-	bg_warp $@FlaviusBG2_id2,"bat_b02",311,224;
-	donpcevent "countdown#bat_b02::OnEnable";
-	initnpctimer;
+	bg_updatescore("bat_b02", $@Guill_ScoreBG2, $@Croix_ScoreBG2);
+	donpcevent("Lieutenant Huvas::OnEnterBG");
+	donpcevent("Lieutenant Yukon::OnEnterBG");
+	donpcevent("OBJ#bat_b02_a::OnKill");
+	donpcevent("OBJ#bat_b02_a::OnEnable");
+	donpcevent("OBJ#bat_b02_b::OnKill");
+	donpcevent("OBJ#bat_b02_b::OnEnable");
+	donpcevent("guardian#bat_b02_a::OnKill");
+	donpcevent("guardian#bat_b02_b::OnKill");
+	donpcevent("guardian#bat_b02_a::OnEnable");
+	donpcevent("guardian#bat_b02_b::OnEnable");
+	donpcevent("cell#bat_b02_a::OnRed");
+	donpcevent("cell#bat_b02_b::OnRed");
+	donpcevent("time#bat_b02::OnEnable");
+	disablenpc("Guillaume Vintenar#b02_a");
+	disablenpc("Croix Vintenar#b02_b");
+	disablenpc("Vintenar#bat_b02_aover");
+	disablenpc("Vintenar#bat_b02_bover");
+	bg_warp($@FlaviusBG2_id1, "bat_b02", 87, 75);
+	bg_warp($@FlaviusBG2_id2, "bat_b02", 311, 224);
+	donpcevent("countdown#bat_b02::OnEnable");
+	initnpctimer();
 	end;
 
 OnReset:
-	donpcevent "OBJ#bat_b02_a::OnKill";
-	donpcevent "OBJ#bat_b02_a::OnEnable";
-	donpcevent "OBJ#bat_b02_b::OnKill";
-	donpcevent "OBJ#bat_b02_b::OnEnable";
-	donpcevent "guardian#bat_b02_a::OnKill";
-	donpcevent "guardian#bat_b02_b::OnKill";
-	donpcevent "guardian#bat_b02_a::OnEnable";
-	donpcevent "guardian#bat_b02_b::OnEnable";
-	donpcevent "cell#bat_b02_a::OnRed";
-	donpcevent "cell#bat_b02_b::OnRed";
-	donpcevent "time#bat_b02::OnEnable";
-	disablenpc "Guillaume Vintenar#b02_a";
-	disablenpc "Croix Vintenar#b02_b";
-	disablenpc "Vintenar#bat_b02_aover";
-	disablenpc "Vintenar#bat_b02_bover";
-	bg_warp $@FlaviusBG2_id1,"bat_b02",87,75;
-	bg_warp $@FlaviusBG2_id2,"bat_b02",311,224;
+	donpcevent("OBJ#bat_b02_a::OnKill");
+	donpcevent("OBJ#bat_b02_a::OnEnable");
+	donpcevent("OBJ#bat_b02_b::OnKill");
+	donpcevent("OBJ#bat_b02_b::OnEnable");
+	donpcevent("guardian#bat_b02_a::OnKill");
+	donpcevent("guardian#bat_b02_b::OnKill");
+	donpcevent("guardian#bat_b02_a::OnEnable");
+	donpcevent("guardian#bat_b02_b::OnEnable");
+	donpcevent("cell#bat_b02_a::OnRed");
+	donpcevent("cell#bat_b02_b::OnRed");
+	donpcevent("time#bat_b02::OnEnable");
+	disablenpc("Guillaume Vintenar#b02_a");
+	disablenpc("Croix Vintenar#b02_b");
+	disablenpc("Vintenar#bat_b02_aover");
+	disablenpc("Vintenar#bat_b02_bover");
+	bg_warp($@FlaviusBG2_id1, "bat_b02", 87, 75);
+	bg_warp($@FlaviusBG2_id2, "bat_b02", 311, 224);
 	end;
 
 OnGuillaumeQuit:
 OnCroixQuit:
-	bg_leave;
+	bg_leave();
 	end;
 
 OnTimer10000:
-	stopnpctimer;
-	donpcevent "#bat_b02_timer::OnEnable";
+	stopnpctimer();
+	donpcevent("#bat_b02_timer::OnEnable");
 	end;
 }
 
 bat_b02,1,1,3	script	OBJ#bat_b02_a	CLEAR_NPC,{
 OnEnable:
-	bg_monster $@FlaviusBG2_id1,"bat_b02",61,150,"Pink Crystal",1915,"OBJ#bat_b02_a::OnMyMobDead";
+	bg_monster($@FlaviusBG2_id1, "bat_b02", 61, 150, "Pink Crystal", 1915, "OBJ#bat_b02_a::OnMyMobDead");
 	end;
 
 OnKill:
-	killmonster "bat_b02","OBJ#bat_b02_a::OnMyMobDead";
+	killmonster("bat_b02", "OBJ#bat_b02_a::OnMyMobDead");
 	end;
 
 OnMyMobDead:
-	if (mobcount("bat_b02","OBJ#bat_b02_a::OnMyMobDead") < 1) {
+	if (mobcount("bat_b02", "OBJ#bat_b02_a::OnMyMobDead") < 1) {
 		mapannounce("bat_b02", _("Guillaume's Crystal has been destroyed."), bc_map, "0xFFCE00");
 		if ($@Croix_ScoreBG2 > 0) {
 			$@FlaviusBG2_Victory = 2;
 			$@Croix_ScoreBG2 = $@Croix_ScoreBG2+1;
-			enablenpc "Guillaume Vintenar#b02_a";
-			enablenpc "Croix Vintenar#b02_b";
-			donpcevent "time#bat_b02::OnStop";
-		}
-		else {
+			enablenpc("Guillaume Vintenar#b02_a");
+			enablenpc("Croix Vintenar#b02_b");
+			donpcevent("time#bat_b02::OnStop");
+		} else {
 			$@Croix_ScoreBG2 = 1;
-			donpcevent "time#bat_b02::OnEnable";
-			donpcevent "start#bat_b02::OnReset";
+			donpcevent("time#bat_b02::OnEnable");
+			donpcevent("start#bat_b02::OnReset");
 		}
-		donpcevent "#bat_b02_timer::OnStop";
-		bg_updatescore "bat_b02",$@Guill_ScoreBG2,$@Croix_ScoreBG2;
-		bg_warp $@FlaviusBG2_id1,"bat_b02",10,290;
-		bg_warp $@FlaviusBG2_id2,"bat_b02",390,10;
-		donpcevent "#bat_b02_timer::OnEnable";
+		donpcevent("#bat_b02_timer::OnStop");
+		bg_updatescore("bat_b02", $@Guill_ScoreBG2, $@Croix_ScoreBG2);
+		bg_warp($@FlaviusBG2_id1, "bat_b02", 10, 290);
+		bg_warp($@FlaviusBG2_id2, "bat_b02", 390, 10);
+		donpcevent("#bat_b02_timer::OnEnable");
 	}
 	end;
 }
@@ -201,29 +204,28 @@ OnEnable:
 	end;
 
 OnKill:
-	killmonster "bat_b02","OBJ#bat_b02_b::OnMyMobDead";
+	killmonster("bat_b02", "OBJ#bat_b02_b::OnMyMobDead");
 	end;
 
 OnMyMobDead:
-	if (mobcount("bat_b02","OBJ#bat_b02_b::OnMyMobDead") < 1) {
+	if (mobcount("bat_b02", "OBJ#bat_b02_b::OnMyMobDead") < 1) {
 		mapannounce("bat_b02", _("Croix's Crystal has been destroyed."), bc_map, "0xFFCE00");
 		if ($@Guill_ScoreBG2 > 0) {
 			$@FlaviusBG2_Victory = 1;
 			++$@Guill_ScoreBG2;
-			enablenpc "Guillaume Vintenar#b02_a";
-			enablenpc "Croix Vintenar#b02_b";
-			donpcevent "time#bat_b02::OnStop";
-		}
-		else {
+			enablenpc("Guillaume Vintenar#b02_a");
+			enablenpc("Croix Vintenar#b02_b");
+			donpcevent("time#bat_b02::OnStop");
+		} else {
 			$@Guill_ScoreBG2 = 1;
-			donpcevent "time#bat_b02::OnEnable";
-			donpcevent "start#bat_b02::OnReset";
+			donpcevent("time#bat_b02::OnEnable");
+			donpcevent("start#bat_b02::OnReset");
 		}
-		donpcevent "#bat_b02_timer::OnStop";
-		bg_updatescore "bat_b02",$@Guill_ScoreBG2,$@Croix_ScoreBG2;
-		bg_warp $@FlaviusBG2_id1,"bat_b02",10,290;
-		bg_warp $@FlaviusBG2_id2,"bat_b02",390,10;
-		donpcevent "#bat_b02_timer::OnEnable";
+		donpcevent("#bat_b02_timer::OnStop");
+		bg_updatescore("bat_b02", $@Guill_ScoreBG2, $@Croix_ScoreBG2);
+		bg_warp($@FlaviusBG2_id1, "bat_b02", 10, 290);
+		bg_warp($@FlaviusBG2_id2, "bat_b02", 390, 10);
+		donpcevent("#bat_b02_timer::OnEnable");
 	}
 	end;
 }
@@ -235,12 +237,12 @@ OnEnable:
 	end;
 
 OnKill:
-	killmonster "bat_b02","guardian#bat_b02_a::OnMyMobDead";
+	killmonster("bat_b02", "guardian#bat_b02_a::OnMyMobDead");
 	end;
 
 OnMyMobDead:
-	if (mobcount("bat_b02","guardian#bat_b02_a::OnMyMobDead") < 1) {
-		donpcevent "cell#bat_b02_a::OnGreen";
+	if (mobcount("bat_b02", "guardian#bat_b02_a::OnMyMobDead") < 1) {
+		donpcevent("cell#bat_b02_a::OnGreen");
 		mapannounce("bat_b02", _("The Guardian protecting Guillaume's Crystal has been slain."), bc_map, "0xFFCE00");
 	}
 	end;
@@ -253,12 +255,12 @@ OnEnable:
 	end;
 
 OnKill:
-	killmonster "bat_b02","guardian#bat_b02_b::OnMyMobDead";
+	killmonster("bat_b02", "guardian#bat_b02_b::OnMyMobDead");
 	end;
 
 OnMyMobDead:
-	if (mobcount("bat_b02","guardian#bat_b02_b::OnMyMobDead") < 1) {
-		donpcevent "cell#bat_b02_b::OnGreen";
+	if (mobcount("bat_b02", "guardian#bat_b02_b::OnMyMobDead") < 1) {
+		donpcevent("cell#bat_b02_b::OnGreen");
 		mapannounce("bat_b02", _("The Guardian protecting Croix's Crystal has been slain."), bc_map, "0xFFCE00");
 	}
 	end;
@@ -266,141 +268,141 @@ OnMyMobDead:
 
 bat_b02,1,4,3	script	cell#bat_b02_a	CLEAR_NPC,{
 OnRed:
-	setcell "bat_b02",62,149,60,151,cell_basilica,1;
-	setcell "bat_b02",62,149,60,151,cell_walkable,0;
+	setcell("bat_b02", 62, 149, 60, 151, cell_basilica, 1);
+	setcell("bat_b02", 62, 149, 60, 151, cell_walkable, 0);
 	end;
 
 OnGreen:
-	setcell "bat_b02",62,149,60,151,cell_basilica,0;
-	setcell "bat_b02",62,149,60,151,cell_walkable,1;
+	setcell("bat_b02", 62, 149, 60, 151, cell_basilica, 0);
+	setcell("bat_b02", 62, 149, 60, 151, cell_walkable, 1);
 	end;
 }
 
 bat_b02,1,5,3	script	cell#bat_b02_b	CLEAR_NPC,{
 OnRed:
-	setcell "bat_b02",327,151,329,149,cell_basilica,1;
-	setcell "bat_b02",327,151,329,149,cell_walkable,0;
+	setcell("bat_b02", 327, 151, 329, 149, cell_basilica, 1);
+	setcell("bat_b02", 327, 151, 329, 149, cell_walkable, 0);
 	end;
 
 OnGreen:
-	setcell "bat_b02",327,151,329,149,cell_basilica,0;
-	setcell "bat_b02",327,151,329,149,cell_walkable,1;
+	setcell("bat_b02", 327, 151, 329, 149, cell_basilica, 0);
+	setcell("bat_b02", 327, 151, 329, 149, cell_walkable, 1);
 	end;
 }
 
 bat_b02,1,6,1	script	time#bat_b02	CLEAR_NPC,{
 OnEnable:
-	donpcevent "Battle Therapist#b02_a::OnEnable";
-	donpcevent "Battle Therapist#b02_b::OnEnable";
+	donpcevent("Battle Therapist#b02_a::OnEnable");
+	donpcevent("Battle Therapist#b02_b::OnEnable");
 	end;
 
 OnStop:
-	donpcevent "Battle Therapist#b02_a::OnStop";
-	donpcevent "Battle Therapist#b02_b::OnStop";
+	donpcevent("Battle Therapist#b02_a::OnStop");
+	donpcevent("Battle Therapist#b02_b::OnStop");
 	end;
 }
 
 bat_b02,10,294,3	script	Battle Therapist#b02_a	4_F_SISTER,{
-	specialeffect2 EF_HEAL;
+	specialeffect2(EF_HEAL);
 	mes("[Battle Therapist]");
-	mes("Just close your eyes,\r"
+	mes("Just close your eyes, \r"
 		"and take a deep breath.");
 	mes("You can be free from pain.");
-	close;
+	close();
 
 OnTimer25000:
-	specialeffect EF_SANCTUARY;
-	enablenpc "bat_b02_rp1_a_warp";
+	specialeffect(EF_SANCTUARY);
+	enablenpc("bat_b02_rp1_a_warp");
 	end;
 
 OnTimer26000:
-	disablenpc "bat_b02_rp1_a_warp";
+	disablenpc("bat_b02_rp1_a_warp");
 	end;
 
 OnTimer26500:
-	stopnpctimer;
-	donpcevent "Battle Therapist#b02_a::OnEnable";
+	stopnpctimer();
+	donpcevent("Battle Therapist#b02_a::OnEnable");
 	end;
 
 OnEnable:
-	initnpctimer;
-	enablenpc "Battle Therapist#b02_a";
+	initnpctimer();
+	enablenpc("Battle Therapist#b02_a");
 	end;
 
 OnStop:
-	disablenpc "bat_b02_rp1_a_warp";
-	disablenpc "Battle Therapist#b02_a";
-	stopnpctimer;
+	disablenpc("bat_b02_rp1_a_warp");
+	disablenpc("Battle Therapist#b02_a");
+	stopnpctimer();
 	end;
 }
 
 bat_b02,10,290,0	script	bat_b02_rp1_a_warp	WARPNPC,10,10,{
 OnInit:
-	disablenpc "bat_b02_rp1_a_warp";
+	disablenpc("bat_b02_rp1_a_warp");
 	end;
 
 OnTouch:
-	percentheal 100,100;
-	warp "bat_b02",87,73;
+	percentheal(100, 100);
+	warp("bat_b02", 87, 73);
 	end;
 }
 
 bat_b02,389,14,3	script	Battle Therapist#b02_b	4_F_SISTER,{
-	specialeffect2 EF_HEAL;
+	specialeffect2(EF_HEAL);
 	mes("[Battle Therapist]");
-	mes("Just close your eyes,\r"
+	mes("Just close your eyes, \r"
 		"and take a deep breath.");
 	mes("You can be free from pain.");
-	close;
+	close();
 
 OnTimer25000:
-	specialeffect EF_SANCTUARY;
-	enablenpc "bat_b02_rp1_b_warp";
+	specialeffect(EF_SANCTUARY);
+	enablenpc("bat_b02_rp1_b_warp");
 	end;
 
 OnTimer26000:
-	disablenpc "bat_b02_rp1_b_warp";
+	disablenpc("bat_b02_rp1_b_warp");
 	end;
 
 OnTimer26500:
-	stopnpctimer;
-	donpcevent "Battle Therapist#b02_b::OnEnable";
+	stopnpctimer();
+	donpcevent("Battle Therapist#b02_b::OnEnable");
 	end;
 
 OnEnable:
-	initnpctimer;
-	enablenpc "Battle Therapist#b02_b";
+	initnpctimer();
+	enablenpc("Battle Therapist#b02_b");
 	end;
 
 OnStop:
-	disablenpc "bat_b02_rp1_b_warp";
-	disablenpc "Battle Therapist#b02_b";
-	stopnpctimer;
+	disablenpc("bat_b02_rp1_b_warp");
+	disablenpc("Battle Therapist#b02_b");
+	stopnpctimer();
 	end;
 }
 
 bat_b02,389,10,0	script	bat_b02_rp1_b_warp	WARPNPC,9,9,{
 OnInit:
-	disablenpc "bat_b02_rp1_a_warp";
+	disablenpc("bat_b02_rp1_a_warp");
 	end;
 
 OnTouch:
-	percentheal 100,100;
-	warp "bat_b02",312,225;
+	percentheal(100, 100);
+	warp("bat_b02", 312, 225);
 	end;
 }
 
 bat_b02,87,76,0	script	A_CODE#bat_b02	FAKE_NPC,5,5,{
 OnTouch:
 	//if (!questprogress(2070))
-	//	setquest 2070;
+	//	setquest(2070);
 	end;
 }
 
 bat_b02,312,224,0	script	B_CODE#bat_b02	FAKE_NPC,5,5,{
 OnTouch:
 	//if (!questprogress(2070))
-	//	setquest 2070;
+	//	setquest(2070);
 	end;
 }
 
@@ -414,19 +416,17 @@ bat_b02,10,294,3	script	Guillaume Vintenar#b02_a	4_M_RASWORD,{
 				mes("Blessed Guillaume!");
 				mes("Let's enjoy our glorious victory!");
 				mesf("%s, it's a sign reflecting victory.", strcharinfo(PC_NAME));
-				close2;
-				getitem BF_Badge2,9;
-			}
-			else {
+				close2();
+				getitem(BF_Badge2, 9);
+			} else {
 				mes("[Axl Rose]");
 				mes("Blessed Guillaume!");
 				mes("Let's enjoy our glorious victory!");
 				mesf("%s, it's a sign reflecting victory.", strcharinfo(PC_NAME));
-				close2;
-				getitem BF_Badge2,.@medal_gap;
+				close2();
+				getitem(BF_Badge2, .@medal_gap);
 			}
-		}
-		else {
+		} else {
 			.@your_medal = countitem(BF_Badge2);
 			.@medal_gap = 500 - .@your_medal;
 			if (.@medal_gap > 2) {
@@ -434,25 +434,24 @@ bat_b02,10,294,3	script	Guillaume Vintenar#b02_a	4_M_RASWORD,{
 				mes("You lost, but you're dedicated to this battle.");
 				mes("This is a reward for your great dedication by Guillaume Marollo!");
 				mes("Just take this defeat as a lesson, next time you will definitely win.");
-				close2;
-				getitem BF_Badge2,3;
-			}
-			else {
+				close2();
+				getitem(BF_Badge2, 3);
+			} else {
 				mes("[Axl Rose]");
 				mes("You lost, but you're dedicated to this battle.");
 				mes("This is a reward for your great dedication by Guillaume Marollo!");
 				mes("Just take this defeat as a lesson, next time you will definitely win.");
-				close2;
-				getitem BF_Badge2,.@medal_gap;
+				close2();
+				getitem(BF_Badge2, .@medal_gap);
 			}
 		}
 	}
-	bg_leave;
-	warp "bat_room",154,150;
+	bg_leave();
+	warp("bat_room", 154, 150);
 	end;
 
 OnInit:
-	disablenpc "Guillaume Vintenar#b02_a";
+	disablenpc("Guillaume Vintenar#b02_a");
 	end;
 }
 
@@ -466,19 +465,17 @@ bat_b02,389,14,3	script	Croix Vintenar#b02_b	4_M_RASWORD,{
 				mes("Blessed Croix!");
 				mes("Let's enjoy our glorious victory!");
 				mesf("%s, it's a sign reflecting victory.", strcharinfo(PC_NAME));
-				close2;
-				getitem BF_Badge2,9;
-			}
-			else {
+				close2();
+				getitem(BF_Badge2, 9);
+			} else {
 				mes("[Swandery]");
 				mes("Blessed Croix!");
 				mes("Let's enjoy our glorious victory!");
 				mesf("%s, it's a sign reflecting victory.", strcharinfo(PC_NAME));
-				close2;
-				getitem BF_Badge2,.@medal_gap;
+				close2();
+				getitem(BF_Badge2, .@medal_gap);
 			}
-		}
-		else {
+		} else {
 			.@your_medal = countitem(BF_Badge2);
 			.@medal_gap = 500 - .@your_medal;
 			if (.@medal_gap > 2) {
@@ -486,40 +483,39 @@ bat_b02,389,14,3	script	Croix Vintenar#b02_b	4_M_RASWORD,{
 				mesf("Oh, %s. Don't be sad.", strcharinfo(PC_NAME));
 				mes("Even though we didn't win, we did our best.");
 				mes("This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.");
-				close2;
-				getitem BF_Badge2,3;
-			}
-			else {
+				close2();
+				getitem(BF_Badge2, 3);
+			} else {
 				mes("[Swandery]");
 				mesf("Oh, %s. Don't be sad.", strcharinfo(PC_NAME));
 				mes("Even though we didn't win, we did our best.");
 				mes("This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.");
-				close2;
-				getitem BF_Badge2,.@medal_gap;
+				close2();
+				getitem(BF_Badge2, .@medal_gap);
 			}
 		}
 	}
-	bg_leave;
-	warp "bat_room",154,150;
+	bg_leave();
+	warp("bat_room", 154, 150);
 	end;
 
 OnInit:
-	disablenpc "Croix Vintenar#b02_b";
+	disablenpc("Croix Vintenar#b02_b");
 	end;
 }
 
 bat_b02,1,5,3	script	countdown#bat_b02	CLEAR_NPC,{
 OnInit:
-	stopnpctimer;
+	stopnpctimer();
 	end;
 
 OnEnable:
-	stopnpctimer;
-	initnpctimer;
+	stopnpctimer();
+	initnpctimer();
 	end;
 
 OnStop:
-	stopnpctimer;
+	stopnpctimer();
 	end;
 
 OnTimer7000:
@@ -551,16 +547,16 @@ OnTimer1825000:
 	end;
 
 OnTimer1830000:
-	donpcevent "time#bat_b02::OnStop";
-	bg_warp $@FlaviusBG2_id1,"bat_b02",10,290;
-	bg_warp $@FlaviusBG2_id2,"bat_b02",390,10;
-	enablenpc "Vintenar#bat_b02_aover";
-	enablenpc "Vintenar#bat_b02_bover";
+	donpcevent("time#bat_b02::OnStop");
+	bg_warp($@FlaviusBG2_id1, "bat_b02", 10, 290);
+	bg_warp($@FlaviusBG2_id2, "bat_b02", 390, 10);
+	enablenpc("Vintenar#bat_b02_aover");
+	enablenpc("Vintenar#bat_b02_bover");
 	end;
 
 OnTimer1900000:
-	mapwarp "bat_b02","bat_room",154,150;
-	donpcevent "countdown#bat_b02::OnStop";
+	mapwarp("bat_b02", "bat_room", 154, 150);
+	donpcevent("countdown#bat_b02::OnStop");
 	end;
 }
 
@@ -599,19 +595,17 @@ bat_b02,10,294,3	script	Vintenar#bat_b02_aover	4_M_KY_HEAD,{
 				mes("Blessed Guillaume!");
 				mes("Let's enjoy our glorious victory!");
 				mesf("%s, it's a sign reflecting victory.", strcharinfo(PC_NAME));
-				close2;
-				getitem BF_Badge2,9;
-			}
-			else {
+				close2();
+				getitem(BF_Badge2, 9);
+			} else {
 				mes("[Axl Rose]");
 				mes("Blessed Guillaume!");
 				mes("Let's enjoy our glorious victory!");
 				mesf("%s, it's a sign reflecting victory.", strcharinfo(PC_NAME));
-				close2;
-				getitem BF_Badge2,.@medal_gap;
+				close2();
+				getitem(BF_Badge2, .@medal_gap);
 			}
-		}
-		else if (.@A_B_gap == 0) {
+		} else if (.@A_B_gap == 0) {
 			.@your_medal = countitem(BF_Badge2);
 			.@medal_gap = 500 - .@your_medal;
 			if (.@medal_gap > 2) {
@@ -619,19 +613,17 @@ bat_b02,10,294,3	script	Vintenar#bat_b02_aover	4_M_KY_HEAD,{
 				mes("You lost, but you're dedicated to this battle.");
 				mes("This is a reward for your great dedication by Guillaume Marollo!");
 				mes("Just take this defeat as a lesson, next time you will definitely win.");
-				close2;
-				getitem BF_Badge2,3;
-			}
-			else {
+				close2();
+				getitem(BF_Badge2, 3);
+			} else {
 				mes("[Axl Rose]");
 				mes("You lost, but you're dedicated to this battle.");
 				mes("This is a reward for your great dedication by Guillaume Marollo!");
 				mes("Just take this defeat as a lesson, next time you will definitely win.");
-				close2;
-				getitem BF_Badge2,.@medal_gap;
+				close2();
+				getitem(BF_Badge2, .@medal_gap);
 			}
-		}
-		else {
+		} else {
 			.@your_medal = countitem(BF_Badge2);
 			.@medal_gap = 500 - .@your_medal;
 			if (.@medal_gap > 2) {
@@ -639,30 +631,28 @@ bat_b02,10,294,3	script	Vintenar#bat_b02_aover	4_M_KY_HEAD,{
 				mes("You lost, but you're dedicated to this battle.");
 				mes("This is a reward for your great dedication by Guillaume Marollo!");
 				mes("Just take this defeat as a lesson, next time you will definitely win.");
-				close2;
-				getitem BF_Badge2,3;
-			}
-			else {
+				close2();
+				getitem(BF_Badge2, 3);
+			} else {
 				mes("[Axl Rose]");
 				mes("You lost, but you're dedicated to this battle.");
 				mes("This is a reward for your great dedication by Guillaume Marollo!");
 				mes("Just take this defeat as a lesson, next time you will definitely win.");
-				close2;
-				getitem BF_Badge2,.@medal_gap;
+				close2();
+				getitem(BF_Badge2, .@medal_gap);
 			}
 		}
-	}
-	else {
+	} else {
 		mes("[Axl Rose]");
 		mes("Why are you here, Croix mercenary? I am definitely sure of victory against foolish Croix such as you. Ha!");
-		close;
+		close();
 	}
-	bg_leave;
-	warp "bat_room",154,150;
+	bg_leave();
+	warp("bat_room", 154, 150);
 	end;
 
 OnInit:
-	disablenpc "Vintenar#bat_b02_aover";
+	disablenpc("Vintenar#bat_b02_aover");
 	end;
 }
 
@@ -677,19 +667,17 @@ bat_b02,389,14,3	script	Vintenar#bat_b02_bover	4_M_CRU_HEAD,{
 				mesf("Oh, %s. Don't be sad.", strcharinfo(PC_NAME));
 				mes("Even though we didn't win, we did our best.");
 				mes("This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.");
-				close2;
-				getitem BF_Badge2,3;
-			}
-			else {
+				close2();
+				getitem(BF_Badge2, 3);
+			} else {
 				mes("[Swandery]");
 				mesf("Oh, %s. Don't be sad.", strcharinfo(PC_NAME));
 				mes("Even though we didn't win, we did our best.");
 				mes("This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.");
-				close2;
-				getitem BF_Badge2,.@medal_gap;
+				close2();
+				getitem(BF_Badge2, .@medal_gap);
 			}
-		}
-		else if (.@A_B_gap == 0) {
+		} else if (.@A_B_gap == 0) {
 			.@your_medal = countitem(BF_Badge2);
 			.@medal_gap = 500 - .@your_medal;
 			if (.@medal_gap > 2) {
@@ -697,19 +685,17 @@ bat_b02,389,14,3	script	Vintenar#bat_b02_bover	4_M_CRU_HEAD,{
 				mesf("Oh, %s. Don't be sad.", strcharinfo(PC_NAME));
 				mes("Even though we didn't win, we did our best.");
 				mes("This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.");
-				close2;
-				getitem BF_Badge2,3;
-			}
-			else {
+				close2();
+				getitem(BF_Badge2, 3);
+			} else {
 				mes("[Swandery]");
 				mesf("Oh, %s. Don't be sad.", strcharinfo(PC_NAME));
 				mes("Even though we didn't win, we did our best.");
 				mes("This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.");
-				close2;
-				getitem BF_Badge2,.@medal_gap;
+				close2();
+				getitem(BF_Badge2, .@medal_gap);
 			}
-		}
-		else {
+		} else {
 			.@your_medal = countitem(BF_Badge2);
 			.@medal_gap = 500 - .@your_medal;
 			if (.@medal_gap > 8) {
@@ -717,52 +703,50 @@ bat_b02,389,14,3	script	Vintenar#bat_b02_bover	4_M_CRU_HEAD,{
 				mes("Blessed Croix!");
 				mes("Let's enjoy our glorious victory!");
 				mesf("%s, it's a sign reflecting victory.", strcharinfo(PC_NAME));
-				close2;
-				getitem BF_Badge2,9;
-			}
-			else {
+				close2();
+				getitem(BF_Badge2, 9);
+			} else {
 				mes("[Swandery]");
 				mes("Blessed Croix!");
 				mes("Let's enjoy our glorious victory!");
 				mesf("%s, it's a sign reflecting victory.", strcharinfo(PC_NAME));
-				close2;
-				getitem BF_Badge2,.@medal_gap;
+				close2();
+				getitem(BF_Badge2, .@medal_gap);
 			}
 		}
-	}
-	else {
+	} else {
 		mes("[Swandery]");
 		mes("Why do you come here as a Guillaume? You will be sent to where you should be!");
-		close;
+		close();
 	}
-	bg_leave;
-	warp "bat_room",154,150;
+	bg_leave();
+	warp("bat_room", 154, 150);
 	end;
 
 OnInit:
-	disablenpc "Vintenar#bat_b02_bover";
+	disablenpc("Vintenar#bat_b02_bover");
 	end;
 }
 
 bat_b02,1,10,3	script	Release all#b02	4_DOG01,{
-	.@i = callfunc("F_GM_NPC",1854,0);
+	.@i = callfunc("F_GM_NPC", 1854, 0);
 	if (.@i == -1) {
 		mes("Cancelled.");
-		close;
+		close();
 	} else if (.@i == 0) {
 		end;
 	} else {
 		mes("May I help you?");
-		next;
-		switch(select("Release all.", "Cancel.")) {
+		next();
+		switch (select("Release all.", "Cancel.")) {
 		case 1:
 			mes("Bye.");
-			close2;
-			mapwarp "bat_b02","bat_room",154,150;
+			close2();
+			mapwarp("bat_b02", "bat_room", 154, 150);
 			end;
 		case 2:
 			mes("Cancelled.");
-			close;
+			close();
 		}
 	}
 }
