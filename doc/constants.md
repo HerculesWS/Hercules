@@ -3571,6 +3571,14 @@
 - `NPC_NAME_UNIQUE`: 3
 - `NPC_MAP`: 4
 
+### getcharid
+
+- `CHAR_ID_CHAR`: 0
+- `CHAR_ID_PARTY`: 1
+- `CHAR_ID_GUILD`: 2
+- `CHAR_ID_ACCOUNT`: 3
+- `CHAR_ID_BG`: 4
+
 ### sc_start
 
 - `SCFLAG_NONE`: 0
