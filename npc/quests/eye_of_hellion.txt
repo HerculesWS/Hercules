@@ -434,7 +434,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 		mes "for yourself?! I must smite";
 		mes "you now before you are";
 		mes "consumed by its darkness!";
-		close;
+		close2;
 		unitkill getcharid(CHAR_ID_ACCOUNT);
 		end;
 	}
