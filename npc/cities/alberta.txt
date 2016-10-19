@@ -206,37 +206,31 @@ alberta,93,174,2	script	Grandmother Alma	8_F_GRANDMOTHER,{
 
 alberta,189,151,5	script	Fisk	4W_SAILOR,{
 	mes("[Fisk]");
-	mes("Ahoy mate, where'd ya wanna go?");
+	mes("Ahoy mate,");
+	mes("where'd ya");
+	mes("wanna go?");
 	next();
-	.@menu = select("Sunken Ship -> 250 zeny.", "Izlude Marina -> 500 zeny.", "Never mind.");
-	switch (.@menu) {
+	switch (select("Sunken Ship -> 250 zeny.", "Izlude Marina -> 500 zeny.", "Never mind.")) {
 	case 1:
-	case 2:
-		if (.@menu == 1) {
-			.@fisk$ = "Hey now, don't try to cheat me! I said 250 zeny!";
-			.@z = 250;
-			.@map$ = "alb2trea";
-			.@x = 43;
-			.@y = 53;
-		} else {
-			.@fisk$ = "Ain't no way yer getting there without the 500 zeny first!";
-			.@z = 500;
-			.@map$ = "izlude";
-			if (RENEWAL) {
-				.@x = 195;
-				.@y = 212;
-			} else {
-				.@x = 176;
-				.@y = 182;
-			}
-		}
-		if (Zeny < .@z) {
+		if (Zeny < 250) {
 			mes("[Fisk]");
-			mesf("%s", .@fisk$);
+			mes("Hey now, don't try to cheat me! I said 250 zeny!");
 			close();
 		}
-		Zeny -= .@z;
-		warp(.@map$, .@x, .@y);
+		Zeny -= 250;
+		warp("alb2trea", 43, 53);
+		end;
+	case 2:
+		if (Zeny < 500) {
+			mes("[Fisk]");
+			mes("Ain't no way yer getting there without the 500 zeny first!");
+			close();
+		}
+		Zeny -= 500;
+		if (RENEWAL)
+			warp("izlude", 195, 212);
+		else
+			warp("izlude", 176, 182);
 		end;
 	case 3:
 		mes("[Fisk]");
@@ -299,7 +293,7 @@ alberta,190,173,4	script	Phelix	4_M_03,{
 		mes("Wait a moment!!");
 		mes("You have brought too many things!");
 		mes("You cannot accept any more items!");
-		mes("Please reduce the amount of items, ");
+		mes("Please reduce the amount of items,");
 		mes("then come see me again.");
 		close();
 	}
@@ -364,7 +358,7 @@ alberta,190,173,4	script	Phelix	4_M_03,{
 					break;
 				case 3:
 					mes("[Phelix]");
-					mes("No problem, ");
+					mes("No problem,");
 					mes("see you next time.");
 					close();
 				}
