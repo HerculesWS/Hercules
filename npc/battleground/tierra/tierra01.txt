@@ -484,7 +484,7 @@ OnInit:
 bat_a01,53,377,3	script	Battle Therapist#a01_a	4_F_SISTER,{
 	specialeffect2(EF_HEAL);
 	mes("[Battle Therapist]");
-	mes("Just close your eyes, \r"
+	mes("Just close your eyes,\r"
 		"and take a deep breath.");
 	mes("You can be free from pain.");
 	close();
@@ -534,7 +534,7 @@ OnTouch_:
 bat_a01,45,19,3	script	Battle Therapist#a01_b	4_F_SISTER,{
 	specialeffect2(EF_HEAL);
 	mes("[Battle Therapist]");
-	mes("Just close your eyes, \r"
+	mes("Just close your eyes,\r"
 		"and take a deep breath.");
 	mes("You can be free from pain.");
 	close();

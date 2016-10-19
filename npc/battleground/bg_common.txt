@@ -159,7 +159,7 @@ bat_room,160,159,3	script	General Guillaume	4_M_KY_KIYOM,{
 		cutin("bat_kiyom1", 2);
 		mes("[General Guillaume]");
 		mes("The 5th Prince Croix is currently titled as the Prime Minister of Maroll.");
-		mes("He thinks all national matters of a nation can be discussed and determined on a desk, \r"
+		mes("He thinks all national matters of a nation can be discussed and determined on a desk,\r"
 			"and believes in peaceful co-existence with other countries.");
 		next();
 		mes("[General Guillaume]");
@@ -465,9 +465,9 @@ bat_room,160,150,3	script	Erundek	4_M_MANAGER,{
 			}
 			.@menu$ = "";
 			for (.@i = 0; .@i < getarraysize(.@Weapons); .@i += 2)
-				.@menu$ += getitemname(.@Weapons[.@i]) + ((.@Weapons[.@i+1]==BF_Badge1) ? _("(BB)") : _("(VB)")) + ":";
+				.@menu$ += getitemname(.@Weapons[.@i]) + ((.@Weapons[.@i+1] == BF_Badge1) ? _("(BB)") : _("(VB)")) + ":";
 			.@i = (select(.@menu$)-1)*2;
-			.@type$ = ((.@Weapons[.@i+1]==BF_Badge1) ? _("(BB)") : _("(VB)"));
+			.@type$ = ((.@Weapons[.@i+1] == BF_Badge1) ? _("(BB)") : _("(VB)"));
 			mes("[Erundek]");
 			mesf("You chose ^3131FF%s%s^000000.", getitemname(.@Weapons[.@i]), .@type$);
 			mesf("You can exchange for this item with ^FF0000100 %s^000000.", getitemname(.@Weapons[.@i+1]));
@@ -601,7 +601,7 @@ bat_room,160,150,3	script	Erundek	4_M_MANAGER,{
 			mes("You cancelled the exchange.");
 			break;
 		}
-		.@cost = ((.@j==1)?BF_Badge1:BF_Badge2);
+		.@cost = ((.@j == 1)?BF_Badge1:BF_Badge2);
 		if (countitem(.@cost) >= .@items[.@i+1]) {
 			mes("Thank you for exchanging.");
 			delitem(.@cost, .@items[.@i+1]);

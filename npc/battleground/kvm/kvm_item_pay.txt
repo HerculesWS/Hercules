@@ -43,7 +43,7 @@ bat_room,151,144,3	script	KVM Logistic Officer#a	4_M_JOB_KNIGHT2,{
 		kvm_point += .@pointstoadd;
 		mes("[Logistics]");
 		mesf("Are those %ss I see?", getitemname(7773));
-		mes("We no longer accept that currency, \r"
+		mes("We no longer accept that currency,\r"
 			"but I can exchange those for you.");
 		mesf("So you have %d %ss?", .@pointstoadd, getitemname(7773));
 		mesf("Alright, all set, you now have ^580080%d^000000 KVM Points.", kvm_point);
@@ -70,8 +70,8 @@ bat_room,151,144,3	script	KVM Logistic Officer#a	4_M_JOB_KNIGHT2,{
 	case 1:
 		mes("[Logistics]");
 		mes("Here is the catalogue of KVM items.");
-		mes("Each weapon requires 2, 000 points\r"
-			"and each armor from 10 to 1, 200\r"
+		mes("Each weapon requires 2,000 points\r"
+			"and each armor from 10 to 1,200\r"
 			"points. So, be carefull when\r"
 			"selecting a reward.");
 		close2();
@@ -98,7 +98,7 @@ bat_room,151,144,3	script	KVM Logistic Officer#a	4_M_JOB_KNIGHT2,{
 				next();
 				switch (select("Dagger", "One-handed Sword", "Two-handed Sword", "One-handed Spear", "Two-handed Spear")) {
 				case 1:
-					callsub(PurchaseItem, Krieger_Dagger1, 0, 1); //Krieger_Dagger1
+					callsub(PurchaseItem, Krieger_Dagger1, 0, 1);
 				case 2:
 					mes("[Logistics]");
 					mes("You have selected the 'One-handed Sword' category.");
@@ -108,18 +108,18 @@ bat_room,151,144,3	script	KVM Logistic Officer#a	4_M_JOB_KNIGHT2,{
 					next();
 					switch (select("Glorious Flamberge", "Glorious Rapier", "Glorious Holy Avenger")) {
 					case 1:
-						callsub(PurchaseItem, Krieger_Onehand_Sword1, 0, 0); //Krieger_Onehand_Sword1
+						callsub(PurchaseItem, Krieger_Onehand_Sword1, 0, 0);
 					case 2:
-						callsub(PurchaseItem, Krieger_Onehand_Sword2, 0, 0); //Krieger_Onehand_Sword2
+						callsub(PurchaseItem, Krieger_Onehand_Sword2, 0, 0);
 					case 3:
-						callsub(PurchaseItem, Krieger_Onehand_Sword3, 0, 0); //Krieger_Onehand_Sword3
+						callsub(PurchaseItem, Krieger_Onehand_Sword3, 0, 0);
 					}
 				case 3:
-					callsub(PurchaseItem, Krieger_Twohand_Sword1, 0, 1); //Krieger_Twohand_Sword1
+					callsub(PurchaseItem, Krieger_Twohand_Sword1, 0, 1);
 				case 4:
-					callsub(PurchaseItem, Krieger_Onehand_Spear1, 0, 1); //Krieger_Onehand_Spear1
+					callsub(PurchaseItem, Krieger_Onehand_Spear1, 0, 1);
 				case 5:
-					callsub(PurchaseItem, Krieger_Twohand_Spear1, 0, 1); //Krieger_Twohand_Spear1
+					callsub(PurchaseItem, Krieger_Twohand_Spear1, 0, 1);
 				}
 			case 2:
 				mes("[Logistics]");
@@ -136,20 +136,20 @@ bat_room,151,144,3	script	KVM Logistic Officer#a	4_M_JOB_KNIGHT2,{
 					next();
 					switch (select("Glorious Destruction Staff", "Glorious Arc Wand", "Glorious Healing Staff")) {
 					case 1:
-						callsub(PurchaseItem, Krieger_Twohand_Staff1, 0, 0); //Krieger_Twohand_Staff1
+						callsub(PurchaseItem, Krieger_Twohand_Staff1, 0, 0);
 					case 2:
-						callsub(PurchaseItem, Krieger_Onehand_Staff1, 0, 0); //Krieger_Onehand_Staff1
+						callsub(PurchaseItem, Krieger_Onehand_Staff1, 0, 0);
 					case 3:
-						callsub(PurchaseItem, Krieger_Onehand_Staff2, 0, 0); //Krieger_Onehand_Staff2
+						callsub(PurchaseItem, Krieger_Onehand_Staff2, 0, 0);
 					}
 				case 2:
-					callsub(PurchaseItem, Krieger_Onehand_Mace1, 0, 1); //Krieger_Onehand_Mace1
+					callsub(PurchaseItem, Krieger_Onehand_Mace1, 0, 1);
 				case 3:
-				callsub(PurchaseItem, Krieger_Onehand_Axe1, 0, 1); //Krieger_Onehand_Axe1
+				callsub(PurchaseItem, Krieger_Onehand_Axe1, 0, 1);
 				case 4:
-					callsub(PurchaseItem, Krieger_Twohand_Axe1, 0, 1); //Krieger_Twohand_Axe1
+					callsub(PurchaseItem, Krieger_Twohand_Axe1, 0, 1);
 				case 5:
-					callsub(PurchaseItem, Krieger_Huuma_Shuriken1, 0, 1); //Krieger_Huuma_Shuriken1
+					callsub(PurchaseItem, Krieger_Huuma_Shuriken1, 0, 1);
 				}
 			case 3:
 				mes("[Logistics]");
@@ -158,7 +158,7 @@ bat_room,151,144,3	script	KVM Logistic Officer#a	4_M_JOB_KNIGHT2,{
 				next();
 				switch (select("Bow", "Katar", "Instrument", "Whip")) {
 				case 1:
-					callsub(PurchaseItem, Krieger_Bow1, 0, 1); //Krieger_Bow1
+					callsub(PurchaseItem, Krieger_Bow1, 0, 1);
 				case 2:
 					mes("[Logistics]");
 					mes("You have selected the 'Katar' category.");
@@ -168,14 +168,14 @@ bat_room,151,144,3	script	KVM Logistic Officer#a	4_M_JOB_KNIGHT2,{
 					next();
 					switch (select("Glorious Bloody Roar", "Glorious Jamadhar")) {
 					case 1:
-						callsub(PurchaseItem, Krieger_Katar1, 0, 0); //Krieger_Katar1
+						callsub(PurchaseItem, Krieger_Katar1, 0, 0);
 					case 2:
-						callsub(PurchaseItem, Krieger_Katar2, 0, 0); //Krieger_Katar2
+						callsub(PurchaseItem, Krieger_Katar2, 0, 0);
 					}
 				case 3:
-					callsub(PurchaseItem, Krieger_Instrument1, 0, 1); //Krieger_Instrument1
+					callsub(PurchaseItem, Krieger_Instrument1, 0, 1);
 				case 4:
-					callsub(PurchaseItem, Krieger_Whip1, 0, 1); //Krieger_Whip1
+					callsub(PurchaseItem, Krieger_Whip1, 0, 1);
 				}
 			case 4:
 				mes("[Logistics]");
@@ -192,9 +192,9 @@ bat_room,151,144,3	script	KVM Logistic Officer#a	4_M_JOB_KNIGHT2,{
 					next();
 					switch (select("Glorious Tablet", "Glorious Apocalypse")) {
 					case 1:
-						callsub(PurchaseItem, Krieger_Book1, 0, 0); //Krieger_Book1
+						callsub(PurchaseItem, Krieger_Book1, 0, 0);
 					case 2:
-						callsub(PurchaseItem, Krieger_Book2, 0, 0); //Krieger_Book2
+						callsub(PurchaseItem, Krieger_Book2, 0, 0);
 					}
 				case 2:
 					mes("[Logistics]");
@@ -205,9 +205,9 @@ bat_room,151,144,3	script	KVM Logistic Officer#a	4_M_JOB_KNIGHT2,{
 					next();
 					switch (select("Glorious Claw", "Glorious Fist")) {
 					case 1:
-						callsub(PurchaseItem, Krieger_Knuckle1, 0, 0); //Krieger_Knuckle1
+						callsub(PurchaseItem, Krieger_Knuckle1, 0, 0);
 					case 2:
-						callsub(PurchaseItem, Krieger_Knuckle2, 0, 0); //Krieger_Knuckle2
+						callsub(PurchaseItem, Krieger_Knuckle2, 0, 0);
 					}
 				}
 			case 5:
@@ -217,15 +217,15 @@ bat_room,151,144,3	script	KVM Logistic Officer#a	4_M_JOB_KNIGHT2,{
 				next();
 				switch (select("Revolver", "Rifle", "Gatling Gun", "Shotgun", "Grenade Launcher")) {
 				case 1:
-					callsub(PurchaseItem, Krieger_Pistol1, 0, 1); //Krieger_Pistol1
+					callsub(PurchaseItem, Krieger_Pistol1, 0, 1);
 				case 2:
-					callsub(PurchaseItem, Krieger_Rifle1, 0, 1); //Krieger_Rifle1
+					callsub(PurchaseItem, Krieger_Rifle1, 0, 1);
 				case 3:
-					callsub(PurchaseItem, Krieger_Gatling1, 0, 1); //Krieger_Gatling1
+					callsub(PurchaseItem, Krieger_Gatling1, 0, 1);
 				case 4:
-					callsub(PurchaseItem, Krieger_Shotgun1, 0, 1); //Krieger_Shotgun1
+					callsub(PurchaseItem, Krieger_Shotgun1, 0, 1);
 				case 5:
-					callsub(PurchaseItem, Krieger_Launcher1, 0, 1); //Krieger_Launcher1
+					callsub(PurchaseItem, Krieger_Launcher1, 0, 1);
 				}
 			}
 		case 2:
@@ -235,13 +235,13 @@ bat_room,151,144,3	script	KVM Logistic Officer#a	4_M_JOB_KNIGHT2,{
 			next();
 			switch (select("Armor", "Cloak", "Shoes", "Accessory")) {
 			case 1:
-				callsub(PurchaseItem, Krieger_Suit1, 1, 2); //Krieger_Suit1
+				callsub(PurchaseItem, Krieger_Suit1, 1, 2);
 			case 2:
-				callsub(PurchaseItem, Krieger_Muffler1, 2, 2); //Krieger_Muffler1
+				callsub(PurchaseItem, Krieger_Muffler1, 2, 2);
 			case 3:
-				callsub(PurchaseItem, Krieger_Shoes1, 3, 2); //Krieger_Shoes1
+				callsub(PurchaseItem, Krieger_Shoes1, 3, 2);
 			case 4:
-				callsub(PurchaseItem, Krieger_Ring1, 4, 2); //Krieger_Ring1
+				callsub(PurchaseItem, Krieger_Ring1, 4, 2);
 			}
 		case 3:
 			mes("[Logistics]");
@@ -250,11 +250,11 @@ bat_room,151,144,3	script	KVM Logistic Officer#a	4_M_JOB_KNIGHT2,{
 			next();
 			switch (select("Mass-Production Armor", "Mass-Production Shoes", "Mass-Production Accessory")) {
 			case 1:
-				callsub(PurchaseItem, Krieger_Suit2, 5, 3); //Krieger_Suit2
+				callsub(PurchaseItem, Krieger_Suit2, 5, 3);
 			case 2:
-				callsub(PurchaseItem, Krieger_Shoes2, 6, 3); //Krieger_Shoes2
+				callsub(PurchaseItem, Krieger_Shoes2, 6, 3);
 			case 3:
-				callsub(PurchaseItem, Krieger_Ring2, 7, 3); //Krieger_Ring2
+				callsub(PurchaseItem, Krieger_Ring2, 7, 3);
 			}
 		case 4:
 			mes("[Logistics]");
@@ -263,11 +263,11 @@ bat_room,151,144,3	script	KVM Logistic Officer#a	4_M_JOB_KNIGHT2,{
 			next();
 			switch (select("Popularized Armor", "Popularized Shoes", "Popularized Accessory")) {
 			case 1:
-				callsub(PurchaseItem, Krieger_Suit3, 8, 4); //Krieger_Suit3
+				callsub(PurchaseItem, Krieger_Suit3, 8, 4);
 			case 2:
-				callsub(PurchaseItem, Krieger_Shoes3, 9, 4); //Krieger_Shoes3
+				callsub(PurchaseItem, Krieger_Shoes3, 9, 4);
 			case 3:
-				callsub(PurchaseItem, Krieger_Ring3, 10, 4); //Krieger_Ring3
+				callsub(PurchaseItem, Krieger_Ring3, 10, 4);
 			}
 		}
 	case 3:
@@ -279,9 +279,9 @@ bat_room,151,144,3	script	KVM Logistic Officer#a	4_M_JOB_KNIGHT2,{
 		mes("There are 3 categories in KVM Rewards: Weapon/Armor.Accessory.");
 		next();
 		mes("[Logistics]");
-		mes("Weapon rewards require 2, 000 KVM points for each.");
+		mes("Weapon rewards require 2,000 KVM points for each.");
 		mes("There are 3 types of Armor rewards and they require 840/630/580 KVM points fo each.");
-		mes("Accessory rewards require 1, 200 KVM points for each.");
+		mes("Accessory rewards require 1,200 KVM points for each.");
 		next();
 		mes("[Logistics]");
 		mes("Kreiger Weapons are LV 4 Weapons, they can be upgraded and will have special effects: Slaughter, Destruction and Blessing.");

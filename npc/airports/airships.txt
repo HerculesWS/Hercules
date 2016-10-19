@@ -577,8 +577,7 @@ airplane,50,66,5	script	Apple Merchant#airplane	4_M_04,{
 				mes("Remember, I need 3 Apples\r"
 					"and 1 Empty Bottle to do it.");
 				close();
-			}
-			else {
+			} else {
 				mes("[Fruitz]");
 				mes("Thank you,\r"
 					"please wait\r"
@@ -1110,7 +1109,7 @@ airplane_01,32,61,4	script	Nils#ein	1_M_03,1,1,{
 					"^3cbcbcCOBO ON^000000",
 					"",
 					"";
-		setarray .@word1$[0], 	"callipygian salacius lascivious licentious prurient concupiscent",
+		setarray .@word1$[0], "callipygian salacius lascivious licentious prurient concupiscent",
 					"By the power of p-po-poi-po-poi-poin-poing GOD-POING. I NEVER LOSE!",
 					"thkelfkskeldmsiejdlslehfndkelsheidlskemd",
 					"burrdingdingdingdilidingdingdingphoohudaambandoorabambarambambambambamburanbamding",
@@ -1138,7 +1137,7 @@ airplane_01,32,61,4	script	Nils#ein	1_M_03,1,1,{
 					"belief love luck grimace sweat rush folktale rodimus optimus bumblebee",
 					"opeN, Open!op3n.openOpen0p3nOpEn0pen`open'0Pen open? open!111OPENSESAME",
 					"fReeDoM ecstAcy JoUrnaliSm ArMplt DisCoverY hEaDaChE MoonbeAmS jUsTiCE";
-		setarray .@letters[0], 	1300,
+		setarray .@letters[0], 1300,
 					1250,
 					1180,
 					1380,
