@@ -34,7 +34,7 @@
 lhz_airport,143,43,5	script	Airport Staff#lhz_air1a::lhz_airport1	4_F_01,{
 	mes("[Airport Staff]");
 	mes("Welcome to the\r"
-		"Lighthalzen Airport, \r"
+		"Lighthalzen Airport,\r"
 		"where we offer nonstop\r"
 		"flights to Einbroch, Juno and Hugel.");
 	next();

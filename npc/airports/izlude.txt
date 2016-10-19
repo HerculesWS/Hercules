@@ -43,7 +43,7 @@
 		mes("The boarding fee is\r"
 			"1,200 zeny. However, this\r"
 			"charged is waived if you use\r"
-			"a Free Ticket for Airship. Now, \r"
+			"a Free Ticket for Airship. Now,\r"
 			"would you still like to board?");
 		next();
 		if (select("Yes", "No") == 1) {

@@ -32,7 +32,7 @@
 airport,143,43,5	script	Airport Staff#airport1a::airport1	4_F_01,{
 	mes("[Airport Staff]");
 	mes("Welcome to the\r"
-		"Einbroch Airport, \r"
+		"Einbroch Airport,\r"
 		"where we offer nonstop\r"
 		"flights to the cities of\r"
 		"Juno, Lighthalzen and Hugel.");
@@ -41,7 +41,7 @@ airport,143,43,5	script	Airport Staff#airport1a::airport1	4_F_01,{
 		mes("[Airport Staff]");
 		mes("The Airship boarding fee\r"
 			"is 1,200 zeny, but if you've\r"
-			"got a Free Ticket for Airship, \r"
+			"got a Free Ticket for Airship,\r"
 			"the fee will be waived. Will\r"
 			"you board the Airship?");
 		next();
@@ -118,7 +118,7 @@ einbroch,94,267,3	script	Airship Staff#ein01	4_F_02,{
 	next();
 	mes("[Airship Staff]");
 	mes("Otherwise, if Einbroch is\r"
-		"your intended destination, \r"
+		"your intended destination,\r"
 		"please head down the stairs\r"
 		"and ask the Arrival Staff to lead\r"
 		"you to the main terminal. Thank\r"
