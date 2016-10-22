@@ -1749,7 +1749,7 @@ int pc_calc_skilltree_normalize_job(struct map_session_data *sd)
 	sd->sktree.second = sd->sktree.third = 0;
 
 	// limit 1st class and above to novice job levels
-	if(skill_point < novice_skills) {
+	if(skill_point < novice_skills && (sd->class_&MAPID_BASEMASK) != MAPID_SUMMONER) {
 		c = MAPID_NOVICE;
 	}
 	// limit 2nd class and above to first class job levels (super novices are exempt)
@@ -4965,6 +4965,7 @@ int pc_useitem(struct map_session_data *sd,int n) {
 		sd->sc.data[SC_DEEP_SLEEP] ||
 		sd->sc.data[SC_SATURDAY_NIGHT_FEVER] ||
 		sd->sc.data[SC_COLD] ||
+		sd->sc.data[SC_SUHIDE] ||
 		pc_ismuted(&sd->sc, MANNER_NOITEM)
 	    ))
 		return 0;
@@ -5881,6 +5882,7 @@ int pc_jobid2mapid(unsigned short b_class)
 		case JOB_XMAS:                  return MAPID_XMAS;
 		case JOB_SUMMER:                return MAPID_SUMMER;
 		case JOB_GANGSI:                return MAPID_GANGSI;
+		case JOB_SUMMONER:              return MAPID_SUMMONER;
 	//2-1 Jobs
 		case JOB_SUPER_NOVICE:          return MAPID_SUPER_NOVICE;
 		case JOB_KNIGHT:                return MAPID_KNIGHT;
@@ -6023,6 +6025,7 @@ int pc_mapid2jobid(unsigned short class_, int sex)
 		case MAPID_XMAS:                  return JOB_XMAS;
 		case MAPID_SUMMER:                return JOB_SUMMER;
 		case MAPID_GANGSI:                return JOB_GANGSI;
+		case MAPID_SUMMONER:              return JOB_SUMMONER;
 	//2-1 Jobs
 		case MAPID_SUPER_NOVICE:          return JOB_SUPER_NOVICE;
 		case MAPID_KNIGHT:                return JOB_KNIGHT;
@@ -6362,6 +6365,9 @@ const char* job_name(int class_)
 	case JOB_REBELLION:
 		return msg_txt(655);
 
+	case JOB_SUMMONER:
+		return msg_txt(669);
+
 	default:
 		return msg_txt(620); // "Unknown Job"
 	}
@@ -6487,6 +6493,7 @@ int pc_check_job_name(const char *name) {
 		{ "Kagerou", JOB_KAGEROU },
 		{ "Oboro", JOB_OBORO },
 		{ "Rebellion", JOB_REBELLION },
+		{ "Summoner", JOB_SUMMONER },
 	};
 
 	nullpo_retr(-1, name);
@@ -7398,6 +7405,9 @@ int pc_resetskill(struct map_session_data* sd, int flag)
 
 		if( homun_alive(sd->hd) && pc->checkskill(sd, AM_CALLHOMUN) )
 			homun->vaporize(sd, HOM_ST_REST);
+
+		if ((sd->sc.data[SC_SPRITEMABLE] && pc->checkskill(sd, SU_SPRITEMABLE)))
+			status_change_end(&sd->bl, SC_SPRITEMABLE, INVALID_TIMER);
 	}
 
 	for( i = 1; i < MAX_SKILL; i++ ) {
@@ -7422,7 +7432,9 @@ int pc_resetskill(struct map_session_data* sd, int flag)
 		}
 
 		// do not reset basic skill
-		if( skill_id == NV_BASIC && (sd->class_&(MAPID_BASEMASK|JOBL_2)) != MAPID_NOVICE )
+		if (skill_id == NV_BASIC && (sd->class_&(MAPID_BASEMASK|JOBL_2)) != MAPID_NOVICE)
+			continue;
+		if (skill_id == SU_BASIC_SKILL && (sd->class_&MAPID_BASEMASK) != MAPID_SUMMONER)
 			continue;
 
 		if( sd->status.skill[i].flag == SKILL_FLAG_PERM_GRANTED )
@@ -8396,6 +8408,9 @@ int pc_itemheal(struct map_session_data *sd,int itemid, int hp,int sp)
 		if( sd->sc.data[SC_EXTREMITYFIST2] )
 			sp = 0;
 #endif
+		if (sd->sc.data[SC_BITESCAR]) {
+			hp = 0;
+		}
 	}
 
 	return status->heal(&sd->bl, hp, sp, 1);
@@ -8617,6 +8632,9 @@ int pc_jobchange(struct map_session_data *sd,int job, int upper)
 
 	if(homun_alive(sd->hd) && !pc->checkskill(sd, AM_CALLHOMUN))
 		homun->vaporize(sd, HOM_ST_REST);
+
+	if ((sd->sc.data[SC_SPRITEMABLE] && pc->checkskill(sd, SU_SPRITEMABLE)))
+		status_change_end(&sd->bl, SC_SPRITEMABLE, INVALID_TIMER);
 
 	if(sd->status.manner < 0)
 		clif->changestatus(sd,SP_MANNER,sd->status.manner);
@@ -11644,7 +11662,8 @@ bool pc_db_checkid(unsigned int class_)
 		|| (class_ >= JOB_BABY_RUNE      && class_ <= JOB_BABY_MECHANIC2 )
 		|| (class_ >= JOB_SUPER_NOVICE_E && class_ <= JOB_SUPER_BABY_E   )
 		|| (class_ >= JOB_KAGEROU        && class_ <= JOB_OBORO          )
-		|| (class_ >= JOB_REBELLION      && class_ <  JOB_MAX            );
+		|| (class_ == JOB_REBELLION)
+		|| (class_ >= JOB_SUMMONER       && class_ <  JOB_MAX            );
 }
 
 /**
@@ -11659,6 +11678,18 @@ int pc_have_magnifier(struct map_session_data *sd)
 	if (n == INDEX_NOT_FOUND)
 		n = pc->search_inventory(sd, ITEMID_NOVICE_MAGNIFIER);
 	return n;
+}
+
+/**
+ * Checks if player have basic skills learned.
+ * @param  sd Player Data
+ * @param  level Required Level of Novice Skill
+ * @return bool true, if requirement is satisfied
+ */
+bool pc_check_basicskill(struct map_session_data *sd, int level) {
+	if (pc->checkskill(sd, NV_BASIC) >= level || pc->checkskill(sd, SU_BASIC_SKILL))
+		return true;
+	return false;
 }
 
 /**
@@ -12117,4 +12148,6 @@ void pc_defaults(void) {
 	pc->update_idle_time = pc_update_idle_time;
 
 	pc->have_magnifier = pc_have_magnifier;
+
+	pc->check_basicskill = pc_check_basicskill;
 }

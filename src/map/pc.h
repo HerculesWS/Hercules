@@ -635,6 +635,7 @@ END_ZEROED_BLOCK;
 #define pc_is50overweight(sd) ( (sd)->weight*100 >= (sd)->max_weight*battle->bc->natural_heal_weight_rate )
 #define pc_is90overweight(sd) ( (sd)->weight*10 >= (sd)->max_weight*9 )
 #define pc_maxparameter(sd)   ( \
+	((sd)->class_&MAPID_BASEMASK) == MAPID_SUMMONER ? battle->bc->max_summoner_parameter : \
 	( ((sd)->class_&MAPID_UPPERMASK) == MAPID_KAGEROUOBORO \
 	 || ((sd)->class_&MAPID_UPPERMASK) == MAPID_REBELLION \
 	 || ((sd)->class_&MAPID_THIRDMASK) == MAPID_SUPER_NOVICE_E \
@@ -1094,6 +1095,7 @@ END_ZEROED_BLOCK; /* End */
 
 	bool (*process_chat_message) (struct map_session_data *sd, const char *message);
 	void (*check_supernovice_call) (struct map_session_data *sd, const char *message);
+	bool (*check_basicskill) (struct map_session_data *sd, int level);
 };
 
 #ifdef HERCULES_CORE

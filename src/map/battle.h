@@ -544,6 +544,8 @@ struct Battle_Config {
 	int player_warp_keep_direction;
 
 	int atcommand_levelup_events;	// Enable atcommands trigger level up events for NPCs
+
+	int max_summoner_parameter; // Summoner Max Stats
 };
 
 /* criteria for battle_config.idletime_critera */

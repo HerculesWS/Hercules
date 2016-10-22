@@ -389,6 +389,9 @@ const char* inter_job_name(int class_)
 		case JOB_REBELLION:
 			return inter->msg_txt(655);
 
+		case JOB_SUMMONER:
+			return inter->msg_txt(669);
+
 		default:
 			return inter->msg_txt(620); // "Unknown Job"
 	}

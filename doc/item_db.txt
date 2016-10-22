@@ -45,7 +45,7 @@ item_db: (
 		Rogue: true/false             (boolean, defaults to false)
 		Alchemist: true/false         (boolean, defaults to false)
 		Bard: true/false              (boolean, defaults to false)
-		Gunslinger: true/false       (boolean, defaults to false)
+		Gunslinger: true/false        (boolean, defaults to false)
 		Ninja: true/false             (boolean, defaults to false)
 		Taekwon: true/false           (boolean, defaults to false)
 		Star_Gladiator: true/false    (boolean, defaults to false)
@@ -55,6 +55,7 @@ item_db: (
 		Dark_Collector: true/false    (boolean, defaults to false)
 		Kagerou: true/false           (boolean, defaults to false)
 		Rebellion: true/false         (boolean, defaults to false)
+		Summoner: true/false          (boolean, defaults to false)
 	}
 	Job: Job mask                 (alternate synxtax, int, defaults to all jobs = 0xFFFFFFFF)
 	Upper: Upper mask             (int, defaults to any = 0x3f)
@@ -179,6 +180,7 @@ Job:  Job restrictions. If this block is omitted, item can be equipped by all cl
 		Dark Collector (2^28): 0x10000000
 		Kagerou/Oboro  (2^29): 0x20000000
 		Rebellion      (2^30): 0x40000000
+		Summoner       (2^31): 0x80000000
 		Some other commonly used values:
 		All except novice:     0xFFFFFFFE
 		All (default value):   0xFFFFFFFF
