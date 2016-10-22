@@ -170,6 +170,7 @@
 - `Job_Kagerou`: 4211
 - `Job_Oboro`: 4212
 - `Job_Rebellion`: 4215
+- `Job_Summoner`: 4218
 
 ### Job masks / Job map_ids
 
@@ -193,6 +194,7 @@
 - `EAJ_GUNSLINGER`: 9
 - `EAJ_NINJA`: 10
 - `EAJ_GANGSI`: 13
+- `EAJ_SUMMONER`: 14
 - `EAJ_SUPER_NOVICE`: 256
 - `EAJ_KNIGHT`: 257
 - `EAJ_WIZARD`: 258
@@ -1304,6 +1306,16 @@
 - `SC_M_LIFEPOTION`: 639
 - `SC_G_LIFEPOTION`: 640
 - `SC_MYSTICPOWDER`: 641
+- `SC_SUHIDE`: 642
+- `SC_SU_STOOP`: 643
+- `SC_SPRITEMABLE`: 644
+- `SC_CATNIPPOWDER`: 645
+- `SC_SV_ROOTTWIST`: 646
+- `SC_BITESCAR`: 647
+- `SC_ARCLOUSEDASH`: 648
+- `SC_TUNAPARTY`: 649
+- `SC_SHRIMP`: 650
+- `SC_FRESHSHRIMP`: 651
 
 ### Emotes
 
@@ -4939,10 +4951,32 @@
 - `WL_TELEKINESIS_INTENSE`: 5012
 - `LG_KINGS_GRACE`: 5013
 - `ALL_FULL_THROTTLE`: 5014
-- `SR_FLASHCOMBO_ATK_STEP1`: 5015
-- `SR_FLASHCOMBO_ATK_STEP2`: 5016
-- `SR_FLASHCOMBO_ATK_STEP3`: 5017
-- `SR_FLASHCOMBO_ATK_STEP4`: 5018
+- `SU_BASIC_SKILL`: 5018
+- `SU_BITE`: 5019
+- `SU_HIDE`: 5020
+- `SU_SCRATCH`: 5021
+- `SU_STOOP`: 5022
+- `SU_LOPE`: 5023
+- `SU_SPRITEMABLE`: 5024
+- `SU_POWEROFLAND`: 5025
+- `SU_SV_STEMSPEAR`: 5026
+- `SU_CN_POWDERING`: 5027
+- `SU_CN_METEOR`: 5028
+- `SU_SV_ROOTTWIST`: 5029
+- `SU_SV_ROOTTWIST_ATK`: 5030
+- `SU_POWEROFLIFE`: 5031
+- `SU_SCAROFTAROU`: 5032
+- `SU_PICKYPECK`: 5033
+- `SU_PICKYPECK_DOUBLE_ATK`: 5034
+- `SU_ARCLOUSEDASH`: 5035
+- `SU_LUNATICCARROTBEAT`: 5036
+- `SU_POWEROFSEA`: 5037
+- `SU_TUNABELLY`: 5038
+- `SU_TUNAPARTY`: 5039
+- `SU_BUNCHOFSHRIMP`: 5040
+- `SU_FRESHSHRIMP`: 5041
+- `SU_CN_METEOR_ATK`: 5042
+- `SU_LUNATICCARROTBEAT2`: 5043
 
 ## Mobs (db/re/mob_db.txt)
 
@@ -7624,6 +7658,21 @@
 - `RWC_Memory_Staff`: 1670
 - `Evil_Slayer_Vanquisher_Staff`: 1671
 - `Crimson_Rod`: 1680
+- `Short_Foxtail_Staff`: 1681
+- `Enriched_Foxtail_Staff`: 1683
+- `Long_Foxtail_Staff`: 1684
+- `Dragonfly_Sitting_Foxtail_Staff`: 1685
+- `Large_Foxtail_Staff`: 1686
+- `Beginner_Foxtail_Staff`: 1687
+- `Mysterious_Foxtail_Staff`: 1690
+- `Strange_God_Foxtail_Staff`: 1691
+- `Magical_Foxtail_Staff`: 1692
+- `Magical_Yellow_Foxtail_Staff`: 1693
+- `Foxtail_Model`: 1694
+- `Delicate_Foxtail_Model`: 1695
+- `Exquisite_Foxtail_Model`: 1696
+- `Exquisite_Yellow_Foxtail_Model`: 1697
+- `Paradise_Foxtail_Staff_I`: 1699
 - `Bow`: 1701
 - `Bow_`: 1702
 - `Bow__`: 1703
@@ -12341,6 +12390,7 @@
 - `Trance_Candy_B`: 11593
 - `Trance_Candy_Y`: 11594
 - `Trance_Candy_G`: 11595
+- `Catnip_Fruit`: 11602
 - `Girl_Bunch_Of_Flower`: 11701
 - `Moon_Cookie`: 11702
 - `Mysterious_Blood`: 11703
@@ -14625,8 +14675,13 @@
 - `Armor_Of_Airship`: 15116
 - `Tarlock's_Armor`: 15117
 - `Whikebain_Suit`: 15123
+- `Private_Doram_Suits`: 15126
 - `Excellion_Suit`: 15128
+- `Luxury_Doram_Suit`: 15129
 - `Egir_Armor_K`: 15138
+- `White_Shirt`: 15150
+- `White_Eco-Shirt`: 15151
+- `Elegant_Doram_Suit`: 15156
 - `Erde`: 16000
 - `Red_Square_Bag`: 16001
 - `Stunner_C`: 16002
@@ -16282,6 +16337,9 @@
 - `Arch_Angel_Wing`: 20768
 - `Excellion_Wing`: 20773
 - `Crimson_Stole`: 20778
+- `Private_Doram_Manteau`: 20788
+- `Luxury_Doram_Manteau`: 20789
+- `Elegant_Doram_Manteau`: 20790
 - `Upg_Twohand_Sword`: 21000
 - `Velum_Claymore`: 21001
 - `Velum_Katzbalger`: 21002
@@ -16336,6 +16394,11 @@
 - `Tarlock's_Boots`: 22047
 - `Egir_Shoes_K`: 22059
 - `Witch_Shoes`: 22067
+- `Wooden_Slipper`: 22076
+- `Red_Eco-Friendly_Shoes`: 22077
+- `Private_Doram_Shoes`: 22083
+- `Luxury_Doram_Shoes`: 22084
+- `Elegant_Doram_Shoes`: 22085
 - `Para_Team_Mark_`: 22508
 - `Candy_Holder`: 22514
 - `Twisted_Key_of_Time`: 22515
@@ -16609,6 +16672,7 @@
 - `Reload_Shadow_Shoes`: 24243
 - `Reload_Shadow_Shield`: 24244
 - `Reload_Shadow_Armor`: 24245
+- `Paradise_Foxtail_Staff_III`: 26101
 - `Thanatos_Katar`: 28000
 - `Evil_Slayer_Ripper_Katar`: 28001
 - `Half_BF_Katar2`: 28002
@@ -16640,6 +16704,22 @@
 - `Dex_Gloves`: 28366
 - `Luk_Gloves`: 28367
 - `Imperial_Ring`: 28372
+- `Foxtail_Ring`: 28374
+- `Fresh_Grass_Necklace`: 28380
+- `Cute_Grass_Necklace`: 28381
+- `Charm_Grass_Necklace`: 28382
+- `Lesser_Mackerel_Talisman`: 28413
+- `Intermediate_Mackerel_Talisman`: 28414
+- `Greater_Mackerel_Talisman`: 28415
+- `Lesser_Leaf_Talisman`: 28416
+- `Intermediate_Leaf_Talisman`: 28417
+- `Greater_Leaf_Talisman`: 28418
+- `Lesser_Rabbit_Talisman`: 28419
+- `Intermediate_Rabbit_Talisman`: 28420
+- `Greater_Rabbit_Talisman`: 28421
+- `Shiny_Branch_Talisman`: 28422
+- `Fresh_Tuna_Talisman`: 28423
+- `Chubby_Worm_Talisman`: 28424
 - `Crimson_Bible`: 28604
 - `Book_of_Vicious_Mind`: 28605
 - `Infinity_Dagger`: 28703
