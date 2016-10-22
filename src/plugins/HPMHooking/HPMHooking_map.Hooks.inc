@@ -58647,6 +58647,33 @@ void HP_pc_check_supernovice_call(struct map_session_data *sd, const char *messa
 	}
 	return;
 }
+bool HP_pc_check_basicskill(struct map_session_data *sd, int level) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_pc_check_basicskill_pre ) {
+		bool (*preHookFunc) (struct map_session_data **sd, int *level);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_check_basicskill_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_pc_check_basicskill_pre[hIndex].func;
+			retVal___ = preHookFunc(&sd, &level);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.pc.check_basicskill(sd, level);
+	}
+	if( HPMHooks.count.HP_pc_check_basicskill_post ) {
+		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, int level);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_check_basicskill_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_pc_check_basicskill_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd, level);
+		}
+	}
+	return retVal___;
+}
 /* pcre_interface */
 pcre* HP_libpcre_compile(const char *pattern, int options, const char **errptr, int *erroffset, const unsigned char *tableptr) {
 	int hIndex = 0;

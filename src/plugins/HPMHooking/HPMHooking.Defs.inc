@@ -5574,6 +5574,8 @@ typedef bool (*HPMHOOK_pre_pc_process_chat_message) (struct map_session_data **s
 typedef bool (*HPMHOOK_post_pc_process_chat_message) (bool retVal___, struct map_session_data *sd, const char *message);
 typedef void (*HPMHOOK_pre_pc_check_supernovice_call) (struct map_session_data **sd, const char **message);
 typedef void (*HPMHOOK_post_pc_check_supernovice_call) (struct map_session_data *sd, const char *message);
+typedef bool (*HPMHOOK_pre_pc_check_basicskill) (struct map_session_data **sd, int *level);
+typedef bool (*HPMHOOK_post_pc_check_basicskill) (bool retVal___, struct map_session_data *sd, int level);
 #endif // MAP_PC_H
 #ifdef MAP_NPC_H /* libpcre */
 typedef pcre* (*HPMHOOK_pre_libpcre_compile) (const char **pattern, int *options, const char ***errptr, int **erroffset, const unsigned char **tableptr);

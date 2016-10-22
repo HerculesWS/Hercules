@@ -4402,6 +4402,8 @@ struct {
 	struct HPMHookPoint *HP_pc_process_chat_message_post;
 	struct HPMHookPoint *HP_pc_check_supernovice_call_pre;
 	struct HPMHookPoint *HP_pc_check_supernovice_call_post;
+	struct HPMHookPoint *HP_pc_check_basicskill_pre;
+	struct HPMHookPoint *HP_pc_check_basicskill_post;
 	struct HPMHookPoint *HP_libpcre_compile_pre;
 	struct HPMHookPoint *HP_libpcre_compile_post;
 	struct HPMHookPoint *HP_libpcre_study_pre;
@@ -10437,6 +10439,8 @@ struct {
 	int HP_pc_process_chat_message_post;
 	int HP_pc_check_supernovice_call_pre;
 	int HP_pc_check_supernovice_call_post;
+	int HP_pc_check_basicskill_pre;
+	int HP_pc_check_basicskill_post;
 	int HP_libpcre_compile_pre;
 	int HP_libpcre_compile_post;
 	int HP_libpcre_study_pre;
