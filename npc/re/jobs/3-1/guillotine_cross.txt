@@ -1,36 +1,52 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Joseph
+//= Copyright (C)  Euphy
+//= Copyright (C)  Muad_Dib
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Guillotine Cross Job Quest
-//===== By: ==================================================
-//= Muad_Dib
-//===== Current Version: =====================================
-//= 1.5
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Job change Quest from Assassin / Assassin Cross -> Guillotine Cross.
-//===== Additional Comments: =================================
-//= 1.0 Adapted from original script. [Euphy]
-//= 1.0a Added 'npcskill' command. [Euphy]
-//= 1.0b Moved warps to separate file. [Euphy]
-//= 1.1 Fixed some minor bugs. [Euphy]
-//= 1.2 Moved "Girl" NPC off ve_fild05. [Euphy]
-//= 1.3 Added missing OnMyMobDead labels. [Euphy]
-//= 1.4 Added missing labels. [Joseph]
-//= 1.5 Added GM management function. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.5
+//=========================================================================
 
 que_job01,75,96,3	script	Guild Member#3rdgc01	4_M_MOCASS1,{
 	if (job_3rd_gc == 0) {
 		if (Class == Job_Assassin || Class == Job_Assassin_Cross || Class == Job_Baby_Assassin) {
-			if (BaseLevel == 99) {
+			if (BaseLevel >= 99) {
 			L_Mission:
 				mes "[Ahcart]";
 				mes "Finally, it's time...";
 				mes "Hey, what's your name?";
 				next;
-				switch(select(strcharinfo(0),".....")) {
+				switch(select(strcharinfo(PC_NAME),".....")) {
 				case 1:
 					mes "[Ahcart]";
-					mes strcharinfo(0)+"?";
+					mes strcharinfo(PC_NAME)+"?";
 					mes "Got it. I'll remember your name.";
 					mes "A master told me that you are a person with ability.";
 					break;
@@ -73,7 +89,7 @@ que_job01,75,96,3	script	Guild Member#3rdgc01	4_M_MOCASS1,{
 				mes "This is all your choice.";
 				mes "Will you help us with this request?";
 				next;
-				switch(select("I'll do it.:Give me time to think.")) {
+				switch(select("I'll do it.", "Give me time to think.")) {
 				case 1:
 					mes "[Ahcart]";
 					mes "Ok, to Veins.";
@@ -83,14 +99,14 @@ que_job01,75,96,3	script	Guild Member#3rdgc01	4_M_MOCASS1,{
 					mes "[Ahcart]";
 					mes "You should be able to find it easily.";
 					mes "Go now.";
-					set job_3rd_gc, 3;
+					job_3rd_gc = 3;
 					setquest 7101;
 					close;
 				case 2:
 					mes "[Ahcart]";
 					mes "Got it.";
 					mes "But don't think about it for too long.";
-					set job_3rd_gc, 2;
+					job_3rd_gc = 2;
 					close;
 				}
 			}
@@ -102,7 +118,7 @@ que_job01,75,96,3	script	Guild Member#3rdgc01	4_M_MOCASS1,{
 			mes "[Ahcart]";
 			mes "Of course, a chapter of the assassin guild is not only in Morroc. If you have a chance to go there, visit there.";
 			mes "I think you might go there.";
-			set job_3rd_gc, 1;
+			job_3rd_gc = 1;
 			close;
 		}
 		mes "[A man of a sharp impression]";
@@ -111,7 +127,7 @@ que_job01,75,96,3	script	Guild Member#3rdgc01	4_M_MOCASS1,{
 		mes "You are not an assassin.";
 		close;
 	} else if (job_3rd_gc == 1) {
-		if (BaseLevel == 99) goto L_Mission;
+		if (BaseLevel >= 99) goto L_Mission;
 		mes "[Ahcart]";
 		mes "If you become stronger and more skillful, then the assassin's guild will give you a special task.";
 		mes "Go for it.";
@@ -120,7 +136,7 @@ que_job01,75,96,3	script	Guild Member#3rdgc01	4_M_MOCASS1,{
 		mes "[Ahcart]";
 		mes "Have you thought about it more?";
 		next;
-		switch(select("I'll do it.:I'm not ready.")) {
+		switch(select("I'll do it.", "I'm not ready.")) {
 		case 1:
 			mes "[Ahcart]";
 			mes "Ok, to Veins.";
@@ -130,7 +146,7 @@ que_job01,75,96,3	script	Guild Member#3rdgc01	4_M_MOCASS1,{
 			mes "[Ahcart]";
 			mes "You should be able to find it easily.";
 			mes "Go now.";
-			set job_3rd_gc, 3;
+			job_3rd_gc = 3;
 			setquest 7101;
 			close;
 		case 2:
@@ -152,17 +168,32 @@ que_job01,75,96,3	script	Guild Member#3rdgc01	4_M_MOCASS1,{
 }
 
 function	script	func_3rdgc	{
-	set .@n$, "["+strcharinfo(0)+"]";
+	.@n$ = "["+strcharinfo(PC_NAME)+"]";
 	mes .@n$;
 	mes "Let me collect all the information...";
-	set .@i,0;
-	if (checkquest(7112) == 1) { mes "Madelle saw a person who looked like a priest from Rachel late at night."; set .@i,.@i+1; }
-	if (checkquest(7113) == 1) { mes "Crave said that there was a girl who bought lots of things day and night."; set .@i,.@i+1; }
-	if (checkquest(7114) == 1) { mes "Trovan said that there was a guy who could be seen often but is not a hotel guest, so he is suspicious."; set .@i,.@i+1; }
+	.@i = 0;
+	if (questprogress(7112) == 1) {
+		mes "Madelle saw a person who looked like a priest from Rachel late at night.";
+		++.@i;
+	}
+	if (questprogress(7113) == 1) {
+		mes "Crave said that there was a girl who bought lots of things day and night.";
+		++.@i;
+	}
+	if (questprogress(7114) == 1) {
+		mes "Trovan said that there was a guy who could be seen often but is not a hotel guest, so he is suspicious.";
+		++.@i;
+	}
 	if (!getarg(0)) {
-		set .@i,.@i-2;
-		if (checkquest(7115) == 1) { mes "A peddler wears shabby clothes, but she buys fresh and expensive things every single day."; set .@i,.@i+1; }
-		if (checkquest(7116) == 1) { mes "The old man in village said that there was a girl who showed up in same place at the same time, so maybe moved here."; set .@i,.@i+1; }
+		.@i -= 2;
+		if (questprogress(7115) == 1) {
+			mes "A peddler wears shabby clothes, but she buys fresh and expensive things every single day.";
+			++.@i;
+		}
+		if (questprogress(7116) == 1) {
+			mes "The old man in village said that there was a girl who showed up in same place at the same time, so maybe moved here.";
+			++.@i;
+		}
 	}
 	next;
 	if (.@i == 3) {
@@ -173,7 +204,7 @@ function	script	func_3rdgc	{
 		mes .@n$;
 		mes "But the reason that Trovan suspects them is...";
 		next;
-		switch(select("They are unfamiliar:The residence is unclear")) {
+		switch(select("They are unfamiliar", "The residence is unclear")) {
 		case 1:
 			mes .@n$;
 			mes "No, that's not the reason. The guard sees new adventurers every day.";
@@ -182,7 +213,7 @@ function	script	func_3rdgc	{
 			next;
 			mes .@n$;
 			mes "Let me rethink this.";
-			set job_3rd_gc, 7;
+			job_3rd_gc = 7;
 			close;
 		case 2:
 			mes .@n$;
@@ -196,7 +227,7 @@ function	script	func_3rdgc	{
 			mes "Madelle said that she witnessed a guy.";
 			next;
 			if (getarg(0)) {
-				if(select("Madelle witnessed 2...:There are more than 2...") == 1) {
+				if(select("Madelle witnessed 2...", "There are more than 2...") == 1) {
 					mes .@n$;
 					mes "Madelle said that she saw one more person in the darkness.";
 					mes "Then is it a girl who brought the supplies?";
@@ -212,7 +243,7 @@ function	script	func_3rdgc	{
 			mes .@n$;
 			mes "Crave said that she comes here day and night to buy stuff regularly.";
 			mes "Then I know what I have to do.";
-			set job_3rd_gc, 8;
+			job_3rd_gc = 8;
 			close;
 		}
 	}
@@ -226,7 +257,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 	mes "[Daora]";
 	if (Class == Job_Assassin || Class == Job_Assassin_Cross || Class == Job_Baby_Assassin) {
 		if (job_3rd_gc < 4) {
-			if (Sex) {
+			if (Sex == SEX_MALE) {
 				mes "Oh~ you're good-looking!";
 				mes "So, what do you want?";
 			} else {
@@ -238,13 +269,13 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 			mes "I'm not sure that you already know or not, but we are selling special Morroc liquor.";
 			mes "Which one do you want?";
 			next;
-			switch(select("Tropical Sograt:Vermilion on the Beach:No thanks!:......")) {
+			switch(select("Tropical Sograt", "Vermilion on the Beach", "No thanks!", "......")) {
 			case 1:
 				mes "[Daora]";
 				if (Zeny > 799) {
 					mes "Here you are, take it.";
 					Zeny -= 800;
-					getitem 12112,1; //Tropical_Sograt
+					getitem Tropical_Sograt,1;
 					close;
 				}
 				mes "It's 800 zeny per glass of Tropical Sograt.";
@@ -254,7 +285,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 				if (Zeny > 799) {
 					mes "Here you are, take it.";
 					Zeny -= 800;
-					getitem 12113,1; //Vermilion_The_Beach
+					getitem Vermilion_The_Beach,1;
 					close;
 				}
 				mes "It's 800 zeny per glass of Vermilion on the Beach.";
@@ -271,8 +302,8 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 				mes "Oh? You are a person of this world.";
 				mes "Your name is...";
 				next;
-				mes "["+strcharinfo(0)+"]";
-				mes strcharinfo(0)+".";
+				mes "["+strcharinfo(PC_NAME)+"]";
+				mes strcharinfo(PC_NAME)+".";
 				next;
 				mes "[Daora]";
 				if (job_3rd_gc == 3) {
@@ -284,7 +315,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 					mes "Yeah, can you find an entrance to an alley in the corner?";
 					mes "Go in there, then you can hear a more detailed story.";
 					mes "Take on this special task~!";
-					set job_3rd_gc, 4;
+					job_3rd_gc = 4;
 					changequest 7101,7102;
 					close;
 				}
@@ -299,7 +330,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 			mes "[Daora]";
 			mes "Ah, I'm not selling liquir to someone who's started the special task.";
 			next;
-			switch(select("Not selling liquor...:I need information.:Fine then punk!")) {
+			switch(select("Not selling liquor...", "I need information.", "Fine then punk!")) {
 			case 1:
 				mes "[Daora]";
 				mes "Hey, you are performing a task now.";
@@ -352,7 +383,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 			mes "So, don't worry.";
 			mes "Are you supposed to be here for her?";
 			mes "Go ahead.";
-			set job_3rd_gc, 11;
+			job_3rd_gc = 11;
 			close;
 		} else if (job_3rd_gc == 11) {
 			mes "She is in a room.";
@@ -376,7 +407,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 			mes "What do you need?";
 			mes "We don't sell to anyone who has started the special task.";
 			next;
-			switch(select("....:Give me 1 glass.:Then, can you give milk?")) {
+			switch(select("....", "Give me 1 glass.", "Then, can you give milk?")) {
 			case 1:
 				mes "[Daora]";
 				mes "Why? Are you disappointed?";
@@ -395,10 +426,10 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 					next;
 					mes "[Daora]";
 					mes "If you need to, visit me anytime and I'll serve you a drink after your task is done.";
-					set job_3rd_gc, 6;
+					job_3rd_gc = 6;
 					close;
 				} else if (job_3rd_gc == 6) {
-					if (checkquest(7091) == 1) {
+					if (questprogress(7091) == 1) {
 						mes "You hope that there will be something in the glass?";
 						mes "Information can't come out of empty glasses.";
 						close;
@@ -410,7 +441,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 					mes "Ok, what do you want to know?";
 					mes "You hope that there will be something in the glass?";
 					next;
-					switch(select("Ask for help.:Handle it by yourself.")) {
+					switch(select("Ask for help.", "Handle it by yourself.")) {
 					case 1:
 						mes "[Daora]";
 						mes "So, it means just killing a strange guy in the village?";
@@ -451,9 +482,10 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 					mes "Here, It's cold water.";
 					mes "You think over with cold water.";
 					next;
-					switch(select("Figure out based on information.:Stop the stage.")) {
+					switch(select("Figure out based on information.", "Stop the stage.")) {
 					case 1:
-						if (checkquest(7091) == 1) set .@j,1;
+						if (questprogress(7091) == 1)
+							.@j = 1;
 						callfunc "func_3rdgc",.@j;
 						close;
 					case 2:
@@ -461,7 +493,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 						close;
 					}
 				} else if (job_3rd_gc == 8) {
-					if (checkquest(7092) == 1) {
+					if (questprogress(7092) == 1) {
 						mes "Wait in an alley where she usually shows up to find her, and you will be able to pursue the question.";
 						next;
 						mes "[Daora]";
@@ -473,12 +505,12 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 					mes "Did you solve it?";
 					mes "What will you do?";
 					next;
-					switch(select("Get advice.:It's a secret.")) {
+					switch(select("Get advice.", "It's a secret.")) {
 					case 1:
 						mes "[Daora]";
 						mes "Can you let me know about an information you collected?";
 						next;
-						if(select("You have a heart-to-heart talk with him.:That's impossible.") == 2) {
+						if(select("You have a heart-to-heart talk with him.", "That's impossible.") == 2) {
 							mes "[Daora]";
 							mes "What, I can't support you properly?";
 							mes "You solve it by yourself.";
@@ -531,7 +563,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 						close;
 					}
 				} else if (job_3rd_gc == 9) {
-					if (checkquest(7093) == 1) {
+					if (questprogress(7093) == 1) {
 						mes "So, go to the east of village, you can see a narrow alley directed to the north.";
 						next;
 						mes "[Daora]";
@@ -541,7 +573,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 					}
 					mes "Haha... how's it going?";
 					next;
-					switch(select("Where is the blind alley?:It's okay.")) {
+					switch(select("Where is the blind alley?", "It's okay.")) {
 					case 1:
 						mes "[Daora]";
 						mes "The blind alley?";
@@ -575,7 +607,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 					mes "I sent a girl named Estillda to her home.";
 					mes "Why do we handle worthless things like it?";
 					next;
-					if (checkquest(7094) == 1) {
+					if (questprogress(7094) == 1) {
 						mes "[Daora]";
 						mes "I'm not sure if he still lives...";
 						mes "Anyway, he is a key artisan in Rachel,";
@@ -593,12 +625,12 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 					mes "[Daora]";
 					mes "Yeah, how's it going?";
 					next;
-					switch(select("It progress satisfactorily.:Show the key.")) {
+					switch(select("It progress satisfactorily.", "Show the key.")) {
 					case 1:
 						mes "[Daora]";
 						mes "My glass, you don't need it?";
 						next;
-						mes "["+strcharinfo(0)+"]";
+						mes "["+strcharinfo(PC_NAME)+"]";
 						mes "Yes. I already have enough information.";
 						mes "If that is a stuff has a long story behind it,";
 						mes "we have only one way.";
@@ -639,7 +671,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 						close;
 					}
 				} else if (job_3rd_gc == 15) {
-					if (checkquest(7095) == 1) {
+					if (questprogress(7095) == 1) {
 						mes "The field northwest of Veins.";
 						mes "You can find that easily with a map.";
 						mes "There are lots of wolves, so be careful.";
@@ -651,7 +683,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 					mes "[Daora]";
 					mes "Don't pretend to be a noblewoman.";
 					next;
-					switch(select("I'm going to go.:Do you know a mansion around Veins?")) {
+					switch(select("I'm going to go.", "Do you know a mansion around Veins?")) {
 					case 1:
 						mes "[Daora]";
 						mes "Ok.";
@@ -691,14 +723,14 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 				mes "Our milk is expensive!";
 				mes "Give me 500 zeny for a cup.";
 				next;
-				switch(select("It's ok. Give me a cup of milk.:You are a barefaced robber!")) {
+				switch(select("It's ok. Give me a cup of milk.", "You are a barefaced robber!")) {
 				case 1:
 					mes "[Daora]";
 					if (Zeny > 499) {
 						mes "Here you are. Milk.";
 						mes "Then take a rest.";
 						Zeny -= 500;
-						getitem 519,1; //Milk
+						getitem Milk,1;
 						close;
 					}
 					mes "I told you, it's 500 zeny.";
@@ -723,7 +755,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 			close;
 		}
 	} else if (Class == Job_Guillotine_Cross || Class == Job_Guillotine_Cross_T || Class == Job_Baby_Cross) {
-		if (Sex) {
+		if (Sex == SEX_MALE) {
 			mes "Oh~ you're good-looking~!";
 			mes "It's worthwhile to open a pub~";
 			mes "I can feel fruitful labors whenever I see a guy like you~";
@@ -732,13 +764,13 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 			mes "What do you want?";
 		}
 		next;
-		switch(select("Tropical Sograt:Vermilion on the Beach:Milk")) {
+		switch(select("Tropical Sograt", "Vermilion on the Beach", "Milk")) {
 		case 1:
 			mes "[Daora]";
 			if (Zeny > 799) {
 				mes "Here you are, take it.";
 				Zeny -= 800;
-				getitem 12112,1; //Tropical_Sograt
+				getitem Tropical_Sograt,1;
 				close;
 			}
 			mes "It's 800 zeny per 1 glass of Tropical Sograt.";
@@ -748,7 +780,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 			if (Zeny > 799) {
 				mes "Here you are, take it.";
 				Zeny -= 800;
-				getitem 12113,1; //Vermilion_The_Beach
+				getitem Vermilion_The_Beach,1;
 				close;
 			}
 			mes "[Daora]";
@@ -756,7 +788,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 			close;
 		case 3:
 			mes "[Daora]";
-			if (Sex) {
+			if (Sex == SEX_MALE) {
 				mes "Uh... Umm...";
 				mes "It's complicated order. but I don't have any choice since you want it.";
 				next;
@@ -765,7 +797,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 					mes "I feel sorry to take 500 zeny per bottle, but I have to.";
 					mes "It's very hard to get milk in Veins.";
 					Zeny -= 500;
-					getitem 519,1; //Milk
+					getitem Milk,1;
 					close;
 				}
 				mes "Umm... I think I can't help you.";
@@ -781,7 +813,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 			}
 		}
 	} else {
-		if (Sex == 1) {
+		if (Sex == SEX_MALE) {
 			mes "Oh~ you're good-looking!";
 			mes "So, what do you want?";
 		}
@@ -794,13 +826,13 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 		mes "I'm not sure that you already know or not, but we are selling special liquor of Morroc.";
 		mes "Which one do you want?";
 		next;
-		switch(select("Tropical Sograt:Vermilion the beach:No thanks!")) {
+		switch(select("Tropical Sograt", "Vermilion the beach", "No thanks!")) {
 		case 1:
 			mes "[Daora]";
 			if (Zeny > 999) {
 				mes "Here you are, take it.";
 				Zeny -= 1000;
-				getitem 12112,1; //Tropical_Sograt
+				getitem Tropical_Sograt,1;
 				close;
 			}
 			mes "It's 1000 zeny per glass of Tropical Sograt.";
@@ -810,7 +842,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 			if (Zeny > 999) {
 				mes "Here you are, take it.";
 				Zeny -= 1000;
-				getitem 12113,1; //Vermilion_The_Beach
+				getitem Vermilion_The_Beach,1;
 				close;
 			}
 			mes "It's 1000 zeny per glass of Vermilion on the Beach.";
@@ -826,7 +858,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 }
 
 job3_guil01,16,20,4	script	Mayshell#3rdgc03	4_F_KHELLISIA,{
-	if (!checkweight(1201,2)) {
+	if (!checkweight(Knife,2)) {
 		mes "- You can't continue this quest because you have too many items. -";
 		close;
 	}
@@ -848,7 +880,7 @@ job3_guil01,16,20,4	script	Mayshell#3rdgc03	4_F_KHELLISIA,{
 		mes "Your memories should disappear in shadow.";
 		mes "Be cautious and avoid observation.";
 		next;
-		select("Ok...:So the task is...?");
+		select("Ok...", "So the task is...?");
 		mes "[Mayshell]";
 		mes "What does he look like?";
 		mes "How do you recognize him?";
@@ -871,10 +903,10 @@ job3_guil01,16,20,4	script	Mayshell#3rdgc03	4_F_KHELLISIA,{
 		mes "We saw a stranger in this village, we are quite sure that he is the person who we are looking for your task.";
 		next;
 		mes "[Mayshell]";
-		mes strcharinfo(0)+".";
+		mes strcharinfo(PC_NAME)+".";
 		mes "Time is not waiting for you.";
 		mes "Go ahead. Spill blood with the blade of a knife that stands for a stoic life.";
-		set job_3rd_gc, 5;
+		job_3rd_gc = 5;
 		changequest 7102,7103;
 		close;
 	} else if (job_3rd_gc == 5) {
@@ -883,7 +915,7 @@ job3_guil01,16,20,4	script	Mayshell#3rdgc03	4_F_KHELLISIA,{
 		next;
 		mes "[Mayshell]";
 		mes "It's a test to watch you.";
-		mes "Let me see, "+strcharinfo(0)+"...";
+		mes "Let me see, "+strcharinfo(PC_NAME)+"...";
 		mes "Go out and think about what you have to do first.";
 		next;
 		mes "[Mayshell]";
@@ -913,7 +945,7 @@ job3_guil01,16,20,4	script	Mayshell#3rdgc03	4_F_KHELLISIA,{
 		next;
 		select("Give a key to him.");
 		mes "[Mayshell]";
-		if (countitem(6150) == 0) {
+		if (countitem(Key_Of_The_Mansion) == 0) {
 			mes "You didn't bring a key?";
 			mes "I'll be in lots of trouble.";
 			close;
@@ -935,8 +967,8 @@ job3_guil01,16,20,4	script	Mayshell#3rdgc03	4_F_KHELLISIA,{
 		mes "[Mayshell]";
 		mes "This is the last step.";
 		mes "Don't make any mistakes.";
-		delitem 6150,1; //Key_Of_The_Mansion
-		set job_3rd_gc, 15;
+		delitem Key_Of_The_Mansion,1;
+		job_3rd_gc = 15;
 		changequest 7108,7109;
 		close;
 	} else if (job_3rd_gc == 15) {
@@ -957,9 +989,11 @@ job3_guil01,16,20,4	script	Mayshell#3rdgc03	4_F_KHELLISIA,{
 			mes "At least you came back alive.";
 		}
 		next;
-		set .@all_wine,0;
-		for(set .@i,0; .@i<5; set .@i,.@i+1)
-			if (checkquest(7091+.@i) == 1) set .@all_wine, .@all_wine+1;
+		.@all_wine = 0;
+		for(.@i = 0; .@i < 5; ++.@i)
+			if (questprogress(7091+.@i) == 1) {
+				++.@all_wine;
+			}
 		mes "[Mayshell]";
 		if (.@all_wine < 2) {
 			mes "You did the job by yourself";
@@ -975,11 +1009,11 @@ job3_guil01,16,20,4	script	Mayshell#3rdgc03	4_F_KHELLISIA,{
 			if (job_3rd_gc == 18) {
 				mes "The evaluation of your task is... [S].";
 				mes "[S] is for 'special'.";
-				set .@quest,7099;
+				.@quest = 7099;
 			} else {
 				mes "The evaluation of your task is... [A].";
 				mes "If you were punctual, you would have received higher.";
-				set .@quest,7096;
+				.@quest = 7096;
 			}
 			next;
 		} else {
@@ -998,11 +1032,11 @@ job3_guil01,16,20,4	script	Mayshell#3rdgc03	4_F_KHELLISIA,{
 			if (.@all_wine > 3) {
 				if (job_3rd_gc == 18) {
 					mes "The evaluation of your task is... [B].";
-					set .@quest,7097;
+					.@quest = 7097;
 				} else {
 					mes "The evaluation of your task is... [C].";
 					mes "You need to act by yourself.";
-					set .@quest,7098;
+					.@quest = 7098;
 				}
 				next;
 			} else {
@@ -1013,10 +1047,10 @@ job3_guil01,16,20,4	script	Mayshell#3rdgc03	4_F_KHELLISIA,{
 				mes "I like that.";
 				if (job_3rd_gc == 18) {
 					mes "The evaluation of your task is... [A].";
-					set .@quest,7096;
+					.@quest = 7096;
 				} else {
 					mes "The evaluation of your task is... [B].";
-					set .@quest,7097;
+					.@quest = 7097;
 				}
 				next;
 			}
@@ -1032,18 +1066,18 @@ job3_guil01,16,20,4	script	Mayshell#3rdgc03	4_F_KHELLISIA,{
 		mes "[Mayshell]";
 		mes "I reward you for your labor, and I'm going to give you a present.";
 		mes "I got this one from guild, I hope it's helpful to you.";
-		set job_3rd_gc, 20;
-		getitem 12106,1; //Accessory_Box
+		job_3rd_gc = 20;
+		getitem Accessory_Box,1;
 		erasequest 7091;
 		erasequest 7092;
 		erasequest 7093;
-		if (checkquest(7094) > -1) erasequest 7094;
-		if (checkquest(7095) > -1) erasequest 7095;
+		if (questprogress(7094)) erasequest 7094;
+		if (questprogress(7095)) erasequest 7095;
 		erasequest 7112;
 		erasequest 7113;
 		erasequest 7114;
-		if (checkquest(7115) > -1) erasequest 7115;
-		if (checkquest(7116) > -1) erasequest 7116;
+		if (questprogress(7115)) erasequest 7115;
+		if (questprogress(7116)) erasequest 7116;
 		changequest 7111,.@quest;
 		next;
 		mes "[Mayshell]";
@@ -1104,14 +1138,14 @@ ve_in,228,108,3	script	Waitress#3rdgc04	1_F_PUBGIRL,{
 		mes "Visit and take a rest~";
 		close;
 	} else if (job_3rd_gc == 6) {
-		if (checkquest(7091) == 1) {
-			if (checkquest(7112) == 1) {
+		if (questprogress(7091) == 1) {
+			if (questprogress(7112) == 1) {
 				mes "That's all the information that I know.";
 				mes "After that, I can't remember anything else.";
 				next;
 				mes "Then can we figure it out with the information you collected?-";
 				next;
-				switch(select("Do it.:Stop it.")) {
+				switch(select("Do it.", "Stop it.")) {
 				case 1:
 					callfunc "func_3rdgc",1;
 					close;
@@ -1123,7 +1157,7 @@ ve_in,228,108,3	script	Waitress#3rdgc04	1_F_PUBGIRL,{
 				mes "Welcome.";
 				mes "Are you ready to order?";
 				next;
-				switch(select("You are...:Your name is..?:Water, please.")) {
+				switch(select("You are...", "Your name is..?", "Water, please.")) {
 				case 1:
 					mes "[Waitress]";
 					mes "What's the matter?";
@@ -1171,7 +1205,7 @@ ve_in,228,108,3	script	Waitress#3rdgc04	1_F_PUBGIRL,{
 					mes "- The information of Madelle is attached on the guest board.";
 					mes "Then can we figure out what information you've collected? -";
 					next;
-					switch(select("Do it.:Stop it.")) {
+					switch(select("Do it.", "Stop it.")) {
 					case 1:
 						callfunc "func_3rdgc",1;
 						close;
@@ -1184,8 +1218,10 @@ ve_in,228,108,3	script	Waitress#3rdgc04	1_F_PUBGIRL,{
 					mes "What? My name?";
 					mes "Are you hitting on me?";
 					mes "Don't do that.";
-					if (Sex) mes "You are not my type.";
-					else mes "I don't swing that way.";
+					if (Sex == SEX_MALE)
+						mes "You are not my type.";
+					else
+						mes "I don't swing that way.";
 					close;
 				case 3:
 					mes "[Waitress]";
@@ -1194,13 +1230,13 @@ ve_in,228,108,3	script	Waitress#3rdgc04	1_F_PUBGIRL,{
 				}
 			}
 		} else {
-			if (checkquest(7112) == 1) {
+			if (questprogress(7112) == 1) {
 				mes "That's all the information that I know.";
 				mes "I haven't seen them since.";
 				next;
 				mes "- I wonder if I can figure it out with the information I've collected... -";
 				next;
-				switch(select("Do it.:Stop it.")) {
+				switch(select("Do it.", "Stop it.")) {
 				case 1:
 					callfunc "func_3rdgc",0;
 					close;
@@ -1212,7 +1248,7 @@ ve_in,228,108,3	script	Waitress#3rdgc04	1_F_PUBGIRL,{
 				mes "Welcome.";
 				mes "Are you ready to order?";
 				next;
-				switch(select("Suspicious people?:Which one is the best food?")) {
+				switch(select("Suspicious people?", "Which one is the best food?")) {
 				case 1:
 					mes "[Waitress]";
 					mes "A suspicious person?";
@@ -1224,14 +1260,14 @@ ve_in,228,108,3	script	Waitress#3rdgc04	1_F_PUBGIRL,{
 					mes "If you want to have a simple dish, have a meal from our fixed menu.";
 					mes "It's 5000 zeny, Do you want it?";
 					next;
-					switch(select("Yes, I'll try it.:......")) {
+					switch(select("Yes, I'll try it.", "......")) {
 					case 1:
 						if (Zeny > 4999) {
 							mes "[Waitress]";
 							mes "Here you are, this is a meal from the fixed menu.";
 							mes "Feel free to call me when you need.";
 							next;
-							switch(select("How's your business?:Do you have lots of guests?")) {
+							switch(select("How's your business?", "Do you have lots of guests?")) {
 							case 1:
 								mes "[Waitress]";
 								mes "Well... not bad.";
@@ -1294,7 +1330,7 @@ ve_in,228,108,3	script	Waitress#3rdgc04	1_F_PUBGIRL,{
 							next;
 							mes "- Madelle's information is attached to a quest board. What information have I collected? -";
 							next;
-							switch(select("Check information.:Cancel.")) {
+							switch(select("Check information.", "Cancel.")) {
 							case 1:
 								callfunc "func_3rdgc",0;
 								close;
@@ -1338,8 +1374,8 @@ ve_in,246,303,3	script	Young Merchant#3rdgc05	4_M_RACHMAN2,{
 		close;
 	}
 	else if (job_3rd_gc == 6) {
-		if (checkquest(7091) == 1) {
-			if (checkquest(7113) == 1) {
+		if (questprogress(7091) == 1) {
+			if (questprogress(7113) == 1) {
 				mes "[Crave]";
 				mes "I already gave you all the information I have.";
 				mes "I'm quick in visual learning.";
@@ -1347,7 +1383,7 @@ ve_in,246,303,3	script	Young Merchant#3rdgc05	4_M_RACHMAN2,{
 				next;
 				mes "Can we figure out with the information you collected?";
 				next;
-				switch(select("Do it.:Stop it.")) {
+				switch(select("Do it.", "Stop it.")) {
 				case 1:
 					callfunc "func_3rdgc",1;
 					close;
@@ -1360,7 +1396,7 @@ ve_in,246,303,3	script	Young Merchant#3rdgc05	4_M_RACHMAN2,{
 				mes "How about increasing potion in next time...";
 				mes "Um, do you have something to tell me?";
 				next;
-				switch(select("Do you know Crave?:Give me a potion.")) {
+				switch(select("Do you know Crave?", "Give me a potion.")) {
 				case 1:
 					mes "[Crave]";
 					mes "I'm Crave, who are you...?";
@@ -1397,7 +1433,7 @@ ve_in,246,303,3	script	Young Merchant#3rdgc05	4_M_RACHMAN2,{
 					mes "- The information Crave gave is attached on the quest board.";
 					mes "Then can we figure out with information you collected? -";
 					next;
-					switch(select("Do it.:Stop it.")) {
+					switch(select("Do it.", "Stop it.")) {
 					case 1:
 						callfunc "func_3rdgc",1;
 						close;
@@ -1413,7 +1449,7 @@ ve_in,246,303,3	script	Young Merchant#3rdgc05	4_M_RACHMAN2,{
 				}
 			}
 		} else {
-			if (checkquest(7113) == 1) {
+			if (questprogress(7113) == 1) {
 				mes "[Crave]";
 				mes "I already gave you all the information I have.";
 				mes "I'm quick in visual learning.";
@@ -1421,7 +1457,7 @@ ve_in,246,303,3	script	Young Merchant#3rdgc05	4_M_RACHMAN2,{
 				next;
 				mes "Can we figure out with the information you collected?";
 				next;
-				switch(select("Do it.:Stop it.")) {
+				switch(select("Do it.", "Stop it.")) {
 				case 1:
 					callfunc "func_3rdgc",0;
 					close;
@@ -1435,7 +1471,7 @@ ve_in,246,303,3	script	Young Merchant#3rdgc05	4_M_RACHMAN2,{
 				mes "I'm a merchant, but not a retail merchant.";
 				mes "If you want to buy things, go to the others.";
 				next;
-				switch(select("Suspicious people?:I heard that you are sharp.")) {
+				switch(select("Suspicious people?", "I heard that you are sharp.")) {
 				case 1:
 					mes "[Young Merchant]";
 					mes "A suspicious person?";
@@ -1453,12 +1489,12 @@ ve_in,246,303,3	script	Young Merchant#3rdgc05	4_M_RACHMAN2,{
 					mes "I have to memorize the faces of people who do business with me so I can make a profit.";
 					mes "Then I can make steady customers.";
 					next;
-					switch(select("I'm looking for a cousin...:End conversation.")) {
+					switch(select("I'm looking for a cousin...", "End conversation.")) {
 					case 1:
 						mes "[Young Merchant]";
 						mes "Is she a beautiful blonde?";
 						next;
-						switch(select("No, it's a boy.:Yes, she is.")) {
+						switch(select("No, it's a boy.", "Yes, she is.")) {
 						case 1:
 							mes "[Young Merchant]";
 							mes "Is he?";
@@ -1475,7 +1511,7 @@ ve_in,246,303,3	script	Young Merchant#3rdgc05	4_M_RACHMAN2,{
 							mes "I'm a man of ability.";
 							next;
 							select("Where did you see her?");
-							mes "["+strcharinfo(0)+"]";
+							mes "["+strcharinfo(PC_NAME)+"]";
 							mes "A few days have passed already.";
 							mes "I want to find her as soon as possible.";
 							mes "You said you saw that child? Where did you see her?";
@@ -1499,7 +1535,7 @@ ve_in,246,303,3	script	Young Merchant#3rdgc05	4_M_RACHMAN2,{
 							next;
 							mes "- Crave's information is attached to the quest board. What information have I collected? -";
 							next;
-							switch(select("Check information.:Cancel.")) {
+							switch(select("Check information.", "Cancel.")) {
 							case 1:
 								callfunc "func_3rdgc",0;
 								close;
@@ -1534,8 +1570,8 @@ veins,291,215,3	script	Vigilante#3rdgc06	4_DST_SOLDIER,{
 		close;
 	}
 	else if (job_3rd_gc == 6) {
-		if (checkquest(7091) == 1) {
-			if (checkquest(7114) == 1) {
+		if (questprogress(7091) == 1) {
+			if (questprogress(7114) == 1) {
 				mes "[Trovan]";
 				mes "I already gave you all the information I have.";
 				mes "He's the only suspicious person that's been seen.";
@@ -1543,7 +1579,7 @@ veins,291,215,3	script	Vigilante#3rdgc06	4_DST_SOLDIER,{
 				next;
 				mes "- What information have I collected? -";
 				next;
-				switch(select("Check information.:Cancel.")) {
+				switch(select("Check information.", "Cancel.")) {
 				case 1:
 					callfunc "func_3rdgc",1;
 					close;
@@ -1556,7 +1592,7 @@ veins,291,215,3	script	Vigilante#3rdgc06	4_DST_SOLDIER,{
 				mes "Hello?";
 				mes "Do you need help?";
 				next;
-				switch(select("Do you know Trovan?:No thanks.")) {
+				switch(select("Do you know Trovan?", "No thanks.")) {
 				case 1:
 					mes "[Vigilante]";
 					mes "Eh? I'm Trovan, a member of the vigilante corps of Veins.";
@@ -1600,7 +1636,7 @@ veins,291,215,3	script	Vigilante#3rdgc06	4_DST_SOLDIER,{
 					next;
 					mes "- Trovan's information is attached to the quest board. What information have I collected? -";
 					next;
-					switch(select("Check information.:Cancel.")) {
+					switch(select("Check information.", "Cancel.")) {
 					case 1:
 						callfunc "func_3rdgc",1;
 						close;
@@ -1616,7 +1652,7 @@ veins,291,215,3	script	Vigilante#3rdgc06	4_DST_SOLDIER,{
 				}
 			}
 		} else {
-			if (checkquest(7114) == 1) {
+			if (questprogress(7114) == 1) {
 				mes "[Trovan]";
 				mes "I already gave you all the information I have.";
 				mes "He's the only suspicious person that's been seen.";
@@ -1624,7 +1660,7 @@ veins,291,215,3	script	Vigilante#3rdgc06	4_DST_SOLDIER,{
 				next;
 				mes "- Should I figure out the information collected? -";
 				next;
-				switch(select("Check the information.:Cancel.")) {
+				switch(select("Check the information.", "Cancel.")) {
 				case 1:
 					callfunc "func_3rdgc",0;
 					close;
@@ -1637,7 +1673,7 @@ veins,291,215,3	script	Vigilante#3rdgc06	4_DST_SOLDIER,{
 				mes "I'm Trovan, a guard of Veins.";
 				mes "What's wrong?";
 				next;
-				switch(select("Is there a wanted man?:Nothing.")) {
+				switch(select("Is there a wanted man?", "Nothing.")) {
 				case 1:
 					mes "[Trovan]";
 					mes "A wanted man?";
@@ -1668,7 +1704,7 @@ veins,291,215,3	script	Vigilante#3rdgc06	4_DST_SOLDIER,{
 					next;
 					mes "- Trovan's information is attached to the quest board. What information have I collected? -";
 					next;
-					switch(select("Check information.:Cancel.")) {
+					switch(select("Check information.", "Cancel.")) {
 					case 1:
 						callfunc "func_3rdgc",0;
 						close;
@@ -1698,18 +1734,18 @@ veins,187,143,5	script	Peddler#3rdgc07	4_F_HUGRANMA,{
 		close;
 	}
 	else if (job_3rd_gc == 6) {
-		if (checkquest(7091) == 1) {
+		if (questprogress(7091) == 1) {
 			mes "What a huge sandstorm.";
 			mes "Are you ok?";
 			close;
 		} else {
-			if (checkquest(7115) == 1) {
+			if (questprogress(7115) == 1) {
 				mes "So, did you find that girl?";
 				mes "If you do, let her know that she has to come and visit me.";
 				next;
 				mes "- You can't get more information from the peddler. What information have I collected? -";
 				next;
-				switch(select("check information.:Cancel.")) {
+				switch(select("check information.", "Cancel.")) {
 				case 1:
 					callfunc "func_3rdgc",1;
 					close;
@@ -1721,7 +1757,7 @@ veins,187,143,5	script	Peddler#3rdgc07	4_F_HUGRANMA,{
 				mes "Hey. Hey!";
 				mes "I'm talking to you!";
 				next;
-				switch(select("Ignore him.:Listen to the story.")) {
+				switch(select("Ignore him.", "Listen to the story.")) {
 				case 1:
 					mes "[Peddler]";
 					mes "You are too cold.";
@@ -1761,11 +1797,11 @@ veins,187,143,5	script	Peddler#3rdgc07	4_F_HUGRANMA,{
 					mes "Actually, nobody knows where she's from.";
 					mes "You're an adventurer, so I'm asking you.";
 					next;
-					select("I'll send her your message.:Hmm...");
-					mes "["+strcharinfo(0)+"]";
+					select("I'll send her your message.", "Hmm...");
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "- Even though I don't have time to spare, the girl mentioned by the peddler is suspicious. -";
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "- A girl who has no clear residence and buys expensive food. I have to find out. -";
 					next;
 					mes "[Peddler]";
@@ -1775,7 +1811,7 @@ veins,187,143,5	script	Peddler#3rdgc07	4_F_HUGRANMA,{
 					next;
 					mes "- The peddler's information is attached to the quest board. What information have I collected? -";
 					next;
-					switch(select("Check information.:Cancel.")) {
+					switch(select("Check information.", "Cancel.")) {
 					case 1:
 						callfunc "func_3rdgc",0;
 						close;
@@ -1799,16 +1835,16 @@ veins,235,126,3	script	Old Man#3rdgc07	4_M_DST_GRAND,{
 		mes "Haha... I can remember my past when I see a young adventurer like you...";
 		close2;
 	} else if (job_3rd_gc == 6) {
-		if (checkquest(7091) == 1) {
+		if (questprogress(7091) == 1) {
 			mes "Haha... I can remember my past when I see a young adventurer like you...";
 			close;
 		} else {
-			if (checkquest(7116) == 1) {
+			if (questprogress(7116) == 1) {
 				mes "Thanks for talking to me.";
 				next;
 				mes "- I can't get anymore information from the Old Man. What information have I collected? -";
 				next;
-				switch(select("Check information.:Cancel.")) {
+				switch(select("Check information.", "Cancel.")) {
 				case 1:
 					callfunc "func_3rdgc",0;
 					close;
@@ -1820,7 +1856,7 @@ veins,235,126,3	script	Old Man#3rdgc07	4_M_DST_GRAND,{
 				mes "What? What's the matter?";
 				mes "You want to talk with me?";
 				next;
-				switch(select("Suspicious person...:You look good.")) {
+				switch(select("Suspicious person...", "You look good.")) {
 				case 1:
 					mes "[Old Man]";
 					mes "A suspicious person?";
@@ -1872,7 +1908,7 @@ veins,235,126,3	script	Old Man#3rdgc07	4_M_DST_GRAND,{
 					next;
 					mes "- The information of the Old Man is attached to the quest board. What information have I collected?";
 					next;
-					switch(select("Check information.:Cancel.")) {
+					switch(select("Check information.", "Cancel.")) {
 					case 1:
 						callfunc "func_3rdgc",0;
 						close;
@@ -1907,7 +1943,7 @@ veins,223,180,3	script	Girl#3rdgc09	4_F_DST_CHILD,{
 		mes "What?";
 		mes "Have you lost a friend?";
 		next;
-		switch(select("Do you know something?:No...")) {
+		switch(select("Do you know something?", "No...")) {
 		case 1:
 			mes "[Melissa]";
 			mes "I have a special gift that I've had my whole life.";
@@ -1917,19 +1953,19 @@ veins,223,180,3	script	Girl#3rdgc09	4_F_DST_CHILD,{
 			mes "Are looking for someone?";
 			mes "Can you tell me about their character?";
 			next;
-			switch(select("You are joking.:Let me do it.")) {
+			switch(select("You are joking.", "Let me do it.")) {
 			case 1:
 				mes "[Melissa]";
 				mes "Ha! But you'll come back to me when you need to find someone.";
 				mes "I know everything.";
 				close;
 			case 2:
-				set .@ans00, 0;
+				.@ans00 = 0;
 				mes "[Melissa]";
 				mes "Ok, answer my question.";
 				mes "Is it a boy or a girl?";
 				next;
-				switch(select("A boy:A girl")) {
+				switch(select("A boy", "A girl")) {
 				case 1:
 					mes "[Melissa]";
 					mes "A boy and...";
@@ -1937,14 +1973,14 @@ veins,223,180,3	script	Girl#3rdgc09	4_F_DST_CHILD,{
 				case 2:
 					mes "[Melissa]";
 					mes "A girl and...";
-					set .@ans00, .@ans00+1;
+					++.@ans00;
 					break;
 				}
 				next;
 				mes "[Melissa]";
 				mes "What is the hair color?";
 				next;
-				switch(select("Dark:Red:Light yellowish:White")) {
+				switch(select("Dark", "Red", "Light yellowish", "White")) {
 				case 1:
 					mes "[Melissa]";
 					mes "Dark hair color... hmm...";
@@ -1957,7 +1993,7 @@ veins,223,180,3	script	Girl#3rdgc09	4_F_DST_CHILD,{
 				case 3:
 					mes "[Melissa]";
 					mes "Light orange to blonde hair.";
-					set .@ans00, .@ans00+1;
+					++.@ans00;
 					break;
 				case 4:
 					mes "[Melissa]";
@@ -1968,7 +2004,7 @@ veins,223,180,3	script	Girl#3rdgc09	4_F_DST_CHILD,{
 				mes "[Melissa]";
 				mes "Young or old?";
 				next;
-				switch(select("Like a child.:Young.:Middle-aged.:Very old.")) {
+				switch(select("Like a child.", "Young.", "Middle-aged.", "Very old.")) {
 				case 1:
 					mes "[Melissa]";
 					mes "And a child.";
@@ -1977,7 +2013,7 @@ veins,223,180,3	script	Girl#3rdgc09	4_F_DST_CHILD,{
 					mes "[Melissa]";
 					mes "A young person.";
 					mes "Like you?";
-					set .@ans00, .@ans00+1;
+					++.@ans00;
 					break;
 				case 3:
 					mes "[Melissa]";
@@ -1991,7 +2027,7 @@ veins,223,180,3	script	Girl#3rdgc09	4_F_DST_CHILD,{
 				}
 				next;
 				mes "[Melissa]";
-				mes "Hi, "+((Sex)?"brother":"sister")+"~ Let me collect all of the information you've provided...";
+				mes "Hi, "+ (Sex == SEX_MALE ? "brother" : "sister")+ "~ Let me collect all of the information you've provided...";
 				next;
 				mes "- She begins to murmur and gestures toward the sky. Her hair springs up as she says... -";
 				next;
@@ -2014,13 +2050,13 @@ veins,223,180,3	script	Girl#3rdgc09	4_F_DST_CHILD,{
 					mes "Hehehe!";
 					erasequest 7103;
 					setquest 7104;
-					set job_3rd_gc, 9;
+					job_3rd_gc = 9;
 					next;
 					mes "[Melissa]";
 					mes "She has to be who you're looking for. I'm never wrong.";
 					mes "Tell me I did a good job!";
 					next;
-					switch(select("Pat Melissa on the head.:Giver her a thumbs up sign.")) {
+					switch(select("Pat Melissa on the head.", "Giver her a thumbs up sign.")) {
 					case 1:
 						mes "You pat Melissa on the head.";
 						mes "She reacts like a puppy would.";
@@ -2075,12 +2111,12 @@ veins,337,284,0	script	#ghostestilla_3rdgc	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnTouch:
 	if (job_3rd_gc == 9) {
-		if ((checkquest(7104,PLAYTIME) == 1) || (checkquest(7105,PLAYTIME) == 1)) {
+		if ((questprogress(7104,PLAYTIME) == 1) || (questprogress(7105,PLAYTIME) == 1)) {
 			mes ".....?";
 			mes "There's a sign of somebody present.";
 			mes "You still have time.";
 			close;
-		} else if ((checkquest(7104,PLAYTIME) == 2) || (checkquest(7105,PLAYTIME) == 2)) {
+		} else if ((questprogress(7104,PLAYTIME) == 2) || (questprogress(7105,PLAYTIME) == 2)) {
 			mes "The blind alley that Melissa told me about must be this street.";
 			next;
 			mes "There's a sign of somebody present.";
@@ -2088,7 +2124,7 @@ OnTouch:
 			donpcevent "Estillda#3rdgc10::OnEnable";
 			next;
 			select("Make a surprise attack.");
-			set .@c_spec, readparam(bDex)+readparam(bAspd)+readparam(bCritical);
+			.@c_spec = readparam(bDex)+readparam(bAspd)+readparam(bCritical);
 			if (.@c_spec > 209 || (!rand(2) && .@c_spec > 190 && .@c_spec < 210) || (!rand(3) && .@c_spec < 191)) {
 				mes "You take her by the wrist trying not to let her see you.";
 				mes "The food that she is holding falls on the floor.";
@@ -2098,7 +2134,7 @@ OnTouch:
 				mes "Who are you?";
 				mes "What are you doing?";
 				next;
-				if(select("Who sent you?:Who's from Rachel?") == 2) {
+				if(select("Who sent you?", "Who's from Rachel?") == 2) {
 					mes "[Estillda]";
 					mes "I don't know! I don't have any idea. I don't know him!";
 					next;
@@ -2124,19 +2160,19 @@ OnTouch:
 				mes "- Estillda is in shock because she thinks that she's in trouble. -";
 				next;
 				select("Calm her down.");
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Just relax for a second.";
 				mes "I totally understand what you're saying.";
 				mes "You won't get into any trouble.";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "I'm looking for a guy who committed a crime and ran away.";
 				mes "I have to catch him.";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "So who made you get those supplies?";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "If you cooperate with me, I'm going to protect you until this is all done.";
 				mes "The Assassin Guild will protect you.";
 				next;
@@ -2153,14 +2189,14 @@ OnTouch:
 				mes "Ah, these are mine.";
 				mes "I got a lot of zeny.";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Then go straight this way and pretend that nothing happened.";
 				next;
 				mes "- I demand that she walks as usual and tell her how to get to Daora's pub. -";
 				donpcevent "Estillda#3rdgc10::OnDisable";
-				if (checkquest(7104) > -1) erasequest 7104;
-				if (checkquest(7105) > -1) erasequest 7105;
-				set job_3rd_gc, 10;
+				if (questprogress(7104)) erasequest 7104;
+				if (questprogress(7105)) erasequest 7105;
+				job_3rd_gc = 10;
 				setquest 7106;
 				next;
 				mes "- The pub in the underground of Veins is the best place to keep her safe. -";
@@ -2168,8 +2204,8 @@ OnTouch:
 			} else {
 				mes "- I tried to take her by the wrist, but she already knew and ran away screaming. -";
 				donpcevent "Estillda#3rdgc10::OnDisable";
-				if (checkquest(7104) > -1) erasequest 7104;
-				if (checkquest(7105) > -1) erasequest 7105;
+				if (questprogress(7104)) erasequest 7104;
+				if (questprogress(7105)) erasequest 7105;
 				setquest 7105;
 				next;
 				mes "You couldn't catch Estillda.";
@@ -2198,7 +2234,7 @@ job3_guil01,79,15,1	script	Estillda#3rdgc11	4_F_SHABBY,{
 	if (job_3rd_gc == 11) {
 		mes "Estillda is looking around with an anxious expression on her face.";
 		next;
-		switch(select("Are you ok?:Intimidate her.")) {
+		switch(select("Are you ok?", "Intimidate her.")) {
 		case 1:
 			mes "[Estillda]";
 			mes "Yes? Yes...";
@@ -2212,7 +2248,7 @@ job3_guil01,79,15,1	script	Estillda#3rdgc11	4_F_SHABBY,{
 			mes "I'm here to make zeny.";
 			mes "I had a desolate life in Rachel.";
 			next;
-			switch(select("You came here with alone?:Had a desolate life...")) {
+			switch(select("You came here with alone?", "Had a desolate life...")) {
 			case 1:
 				mes "[Estillda]";
 				mes "No.";
@@ -2243,7 +2279,7 @@ job3_guil01,79,15,1	script	Estillda#3rdgc11	4_F_SHABBY,{
 			mes "...I'll never do it.";
 			mes "I want to go home. I miss my mommy.";
 			next;
-			switch(select("What can you tell me?:Tell me what you know!")) {
+			switch(select("What can you tell me?", "Tell me what you know!")) {
 			case 1:
 				mes "[Estillda]";
 				mes "Yes. Right?";
@@ -2254,7 +2290,7 @@ job3_guil01,79,15,1	script	Estillda#3rdgc11	4_F_SHABBY,{
 				mes "Sorry. I'm sorry.";
 				mes "I'm going to do what you want...";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Your attitude is a problem.";
 				mes "Let's take up the main subject.";
 				break;
@@ -2283,15 +2319,15 @@ job3_guil01,79,15,1	script	Estillda#3rdgc11	4_F_SHABBY,{
 			mes "In a couple of hours.";
 			mes "At a warehouse underground in the south.";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Thanks for your cooperation.";
 			mes "Your house is in Rachel?";
 			mes "Estillda is your real name?";
 			mes "Yes, I'm going to draw his rations in Rachel.";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "To go back home without an accident.";
-			set job_3rd_gc, 12;
+			job_3rd_gc = 12;
 			changequest 7106,7107;
 			close;
 		case 2:
@@ -2316,18 +2352,18 @@ job3_guil01,79,15,1	script	Estillda#3rdgc11	4_F_SHABBY,{
 veins,206,56,0	script	#3rdgc_battleroom01	HIDDEN_WARP_NPC,1,1,{
 	end;
 OnInit:
-	set $@3rdgc_room01, 0;
+	$@3rdgc_room01 = 0;
 	end;
 OnTouch:
 	if (job_3rd_gc == 12) {
-		if (checkquest(7107,PLAYTIME) == 2) {
+		if (questprogress(7107,PLAYTIME) == 2) {
 			mes "This must be the place Estillda told me about.";
 			next;
-			switch(select("Go inside.:Observe the situation.")) {
+			switch(select("Go inside.", "Observe the situation.")) {
 			case 1:
 				if ($@3rdgc_room01 == 0) {
 					warp "job3_guil02",34,44;
-					set $@3rdgc_room01, 1;
+					$@3rdgc_room01 = 1;
 				} else {
 					mes "You tried to open the door but it's locked.";
 					mes "It doesn't show any signs of life.";
@@ -2339,7 +2375,7 @@ OnTouch:
 				mes "I back up to watch the situation unfold.";
 				close;
 			}
-		} else if (checkquest(7107,PLAYTIME) == 1) {
+		} else if (questprogress(7107,PLAYTIME) == 1) {
 			mes "This must be the place Estillda told me about.";
 			mes "I have enough time for meeting.";
 			close;
@@ -2372,7 +2408,7 @@ OnTouch:
 		mes "You don't have to come here now.";
 		close;
 		warp "veins",178,62;
-		set $@3rdgc_room01, 0;
+		$@3rdgc_room01 = 0;
 		end;
 	}
 	end;
@@ -2392,7 +2428,7 @@ OnTimer299000:
 	donpcevent "#3rdgc_room01_mag01::OnEnable";
 	end;
 OnTimer300000:
-	set $@3rdgc_room01, 0;
+	$@3rdgc_room01 = 0;
 	stopnpctimer;
 	end;
 }
@@ -2402,11 +2438,11 @@ job3_guil02,51,43,7	script	A man with black clothes	4_M_DSTMAN,4,4,{
 OnInit:
 OnDisable:
 	hideonnpc "A man with black clothes";
-	set .on,0;
+	.on = 0;
 	end;
 OnEnable:
 	hideoffnpc "A man with black clothes";
-	set .on,1;
+	.on = 1;
 	end;
 OnReset:
 	killmonster "job3_guil02","A man with black clothes::OnMyMobDead";
@@ -2431,7 +2467,7 @@ OnTouch:
 	mes "When did I give you a clue?!";
 	next;
 	select("You lost your head...");
-	mes "["+strcharinfo(0)+"]";
+	mes "["+strcharinfo(PC_NAME)+"]";
 	mes "Is this the correct target?";
 	mes "Can you talk with me for a sec?";
 	next;
@@ -2439,7 +2475,7 @@ OnTouch:
 	mes "No way!!!!";
 	mes "You... I'll make you close your eyes forever!";
 	next;
-	mes "["+strcharinfo(0)+"]";
+	mes "["+strcharinfo(PC_NAME)+"]";
 	mes "What?!";
 	close2;
 	donpcevent "A man with black clothes::OnDisable";
@@ -2467,13 +2503,13 @@ OnTimer61000:
 	donpcevent "Dandelion#3rdgc12::OnDisable";
 	donpcevent "A man with black clothes::OnDisable";
 	donpcevent "#3rdgc_room01_mag01::OnEnable";
-	set $@3rdgc_room01, 0;
+	$@3rdgc_room01 = 0;
 	stopnpctimer;
 	end;
 }
 
 job3_guil02,49,43,5	script	Dandelion#3rdgc12	4_M_DSTMANDEAD,{
-	if (!checkweight(1201,2)) {
+	if (!checkweight(Knife,2)) {
 		mes "- You can't continue this quest because you have too many items. -";
 		close;
 	}
@@ -2486,7 +2522,7 @@ job3_guil02,49,43,5	script	Dandelion#3rdgc12	4_M_DSTMANDEAD,{
 		next;
 		mes "- He puts something in his mouth and swallows. -";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "What is that?!";
 		mes "What do you have in your mouth...?";
 		mes "Why did you do that?";
@@ -2494,8 +2530,8 @@ job3_guil02,49,43,5	script	Dandelion#3rdgc12	4_M_DSTMANDEAD,{
 		mes "It's too late to save him.";
 		mes "He passed away.";
 		mes "You find a key with a fancy decoration around his neck.";
-		set job_3rd_gc, 13;
-		getitem 6150,1; //Key_Of_The_Mansion
+		job_3rd_gc = 13;
+		getitem Key_Of_The_Mansion,1;
 		changequest 7107,7108;
 		close;
 	} else {
@@ -2576,7 +2612,7 @@ ra_in01,175,196,3	script	Oresa Rava#3rdgc13	4_M_LGTGRAND,{
 		mes "This pattern...";
 		mes "Where did you get this from?";
 		next;
-		switch(select("I just picked it up.:I have a story...")) {
+		switch(select("I just picked it up.", "I have a story...")) {
 		case 1:
 			mes "[Oresa Rava]";
 			mes "Umm? Did you just pick it up?";
@@ -2632,7 +2668,7 @@ ra_in01,175,196,3	script	Oresa Rava#3rdgc13	4_M_LGTGRAND,{
 		mes "Send over that key.";
 		next;
 		mes "- Find the owner of that key soon and tell Mayshell. -";
-		set job_3rd_gc, 14;
+		job_3rd_gc = 14;
 		close;
 	} else if (job_3rd_gc == 14) {
 		mes "That key is of a mansion built in a gorge of Veins.";
@@ -2679,13 +2715,13 @@ ve_fild02,330,384,3	script	Girl#3rdgc14	4_F_GUILLOTINE,{
 			mes "I'll wait for you.";
 		}
 		next;
-		switch(select("I got it.:I'll be ready.")) {
+		switch(select("I got it.", "I'll be ready.")) {
 		case 1:
 			if ($@3rdgc_room02 == 0) {
 				erasequest ((job_3rd_gc == 17)?7110:7109);
-				set job_3rd_gc, 17;
+				job_3rd_gc = 17;
 				setquest 7110;
-				set $@3rdgc_room02, 1;
+				$@3rdgc_room02 = 1;
 				warp "job3_guil03",22,70;
 			} else {
 				mes "[Renzak]";
@@ -2694,7 +2730,7 @@ ve_fild02,330,384,3	script	Girl#3rdgc14	4_F_GUILLOTINE,{
 				next;
 				mes "[Renzak]";
 				mes "It'll be easy to infiltrate because it's covered by the cliff's shadow.";
-				set job_3rd_gc, 16;
+				job_3rd_gc = 16;
 			}
 			close;
 		case 2:
@@ -2705,7 +2741,7 @@ ve_fild02,330,384,3	script	Girl#3rdgc14	4_F_GUILLOTINE,{
 				erasequest 7110;
 				setquest 7109;
 			}
-			set job_3rd_gc, 16;
+			job_3rd_gc = 16;
 			close;
 		}
 	} else if (job_3rd_gc > 18) {
@@ -2724,7 +2760,7 @@ ve_fild02,330,384,3	script	Girl#3rdgc14	4_F_GUILLOTINE,{
 		close;
 	}
 OnInit:
-	set $@3rdgc_room02, 0;
+	$@3rdgc_room02 = 0;
 	end;
 }
 
@@ -2748,7 +2784,7 @@ OnTouch:
 		mes "You don't have to come here.";
 		close2;
 		warp "ve_fild02",330,379;	//Pre-RE: ve_fild05 (341,303)
-		set $@3rdgc_room02, 0;
+		$@3rdgc_room02 = 0;
 	}
 	end;
 OnTimer900000:
@@ -2809,7 +2845,7 @@ OnReset:
 	donpcevent "Priest from Rachel::OnDisable";
 	donpcevent "Renzak#3rdgc16::OnDisable";
 	donpcevent "#3rdgc_event01::OnEnable";
-	set $@3rdgc_room02, 0;
+	$@3rdgc_room02 = 0;
 	end;
 }
 
@@ -2825,7 +2861,7 @@ OnDisable:
 OnTouch:
 	mes "There is space on the bottom of the old fence.";
 	next;
-	if(select("Find another way.:Climb into the space.") == 2) {
+	if(select("Find another way.", "Climb into the space.") == 2) {
 		mes "You climb into the narrow space.";
 		mes "The hole is blocked with the old barbed-wire entanglements.";
 		close2;
@@ -3022,14 +3058,14 @@ OnTimer5000:
 	end;
 }
 
--	script	#3rdgc_guard00	-1,{
+-	script	#3rdgc_guard00	FAKE_NPC,{
 	end;
 OnInit:
 OnDisable:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 
@@ -3350,17 +3386,17 @@ OnMyMobDead:
 job3_guil03,2,2,0	script	#3rdgc_sunchal_kill01	CLEAR_NPC,{
 	end;
 OnEnable:
-	set .@i, atoi(charat(strnpcinfo(0),20));
+	.@i = atoi(charat(strnpcinfo(NPC_NAME),20));
 	setarray .@x[1],74,124,103;
 	setarray .@y[1],63, 78, 24;
-	monster "job3_guil03",.@x[.@i],.@y[.@i],"Guard",1985,1,strnpcinfo(0)+"::OnMyMobDead";
+	monster "job3_guil03",.@x[.@i],.@y[.@i],"Guard",1985,1,strnpcinfo(NPC_NAME)+"::OnMyMobDead";
 	end;
 OnStop:
 	mapannounce "job3_guil03","Guard : Am I imagining things? I just heard something...",bc_map,"0xA8A8A8"; //FW_NORMAL 12 0 0
 	stopnpctimer;
 	end;
 OnReset:
-	killmonster "job3_guil03",strnpcinfo(0)+"::OnMyMobDead";
+	killmonster "job3_guil03",strnpcinfo(NPC_NAME)+"::OnMyMobDead";
 	end;
 OnMyMobDead:
 	initnpctimer;
@@ -3383,32 +3419,32 @@ job3_guil03,2,4,0	duplicate(#3rdgc_sunchal_kill01)	#3rdgc_sunchal_kill03	CLEAR_N
 job3_guil03,64,68,3	script	#3rdgc_gojung_kill01	4_M_DSTMAN,7,7,{
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	end;
 OnDisable:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnStop:
 	mapannounce "job3_guil03","Guard : Am I imagining things? I just heard something.",bc_map,"0xA8A8A8"; //FW_NORMAL 12 0 0
 	stopnpctimer;
 	end;
 OnReset:
-	killmonster "job3_guil03",strnpcinfo(0)+"::OnMyMobDead";
+	killmonster "job3_guil03",strnpcinfo(NPC_NAME)+"::OnMyMobDead";
 	end;
 OnTouch:
-	set .@i, atoi(charat(strnpcinfo(0),19));
+	.@i = atoi(charat(strnpcinfo(NPC_NAME),19));
 	setarray .@x[1],64,86,83;
 	setarray .@y[1],68,63,36;
 	mapannounce "job3_guil03","Guard : Who are you?!",bc_map,"0x7b68ee"; //FW_NORMAL 12 0 0
-	disablenpc strnpcinfo(0);
-	monster "job3_guil03",.@x[.@i],.@y[.@i],"Guard",1985,1,strnpcinfo(0)+"::OnMyMobDead";
+	disablenpc strnpcinfo(NPC_NAME);
+	monster "job3_guil03",.@x[.@i],.@y[.@i],"Guard",1985,1,strnpcinfo(NPC_NAME)+"::OnMyMobDead";
 	initnpctimer;
 	end;
 OnMyMobDead:
 	stopnpctimer;
 	end;
 OnTimer5000:
-	if (strnpcinfo(0) == "#3rdgc_gojung_kill03") end;
+	if (strnpcinfo(NPC_NAME) == "#3rdgc_gojung_kill03") end;
 OnTimer10000:
 	mapannounce "job3_guil03","Guard : I need support! Take caution!",bc_map,"0x7b68ee"; //FW_NORMAL 12 0 0
 	donpcevent "#3rdgc_guard::OnEnable";
@@ -3422,16 +3458,16 @@ job3_guil03,88,71,0	script	#3rdgc_safezone01	HIDDEN_WARP_NPC,1,1,{
 	end;
 OnTouch:
 	mes "It's a good bush to hide yourself.";
-	donpcevent strnpcinfo(0)+"::OnTimer";
+	donpcevent strnpcinfo(NPC_NAME)+"::OnTimer";
 	close;
 OnTimer:
 	//FIXME: This is a workaround for...
 	//var pccount_tt = GetNeighborPcNumber 2
-	getmapxy(.@map$,.@x,.@y,1);
+	getmapxy(.@map$, .@x, .@y, UNITTYPE_NPC);
 	setarray .@x[1],.@x-2,.@x+2;
 	setarray .@y[1],.@y-2,.@y+2;
 	sleep 1000;
-	for(set .@i,0; .@i<9; set .@i,.@i+1) {
+	for(.@i = 0; .@i<9; ++.@i) {
 		if (getareausers(.@map$,.@x[1],.@y[1],.@x[2],.@y[2]) < 1)
 			end;
 		sleep 1000;
@@ -3455,7 +3491,7 @@ job3_guil03,111,51,7	script	Priest from Rachel	4_M_MIDDLE1,{
 		next;
 		mes "[Priest from Rachel]";
 		mes "Because of you, you ruined everything!";
-		setnpcdisplay(strnpcinfo(0), HIDEN_PRIEST);
+		setnpcdisplay(strnpcinfo(NPC_NAME), HIDEN_PRIEST);
 		next;
 		mes "[Priest from Rachel]";
 		mes "You want to destroy us forever!";
@@ -3475,11 +3511,11 @@ job3_guil03,111,51,7	script	Priest from Rachel	4_M_MIDDLE1,{
 	end;
 OnInit:
 OnDisable:
-	set .on,0;
+	.on = 0;
 	hideonnpc "Priest from Rachel";
 	end;
 OnEnable:
-	set .on,1;
+	.on = 1;
 	hideoffnpc "Priest from Rachel";
 	end;
 OnReset:
@@ -3533,27 +3569,27 @@ OnTimer61000:
 	end;
 OnTimer61500:
 	donpcevent "#3rdgc_event01::OnEnable";
-	set $@3rdgc_room02, 0;
+	$@3rdgc_room02 = 0;
 	stopnpctimer;
 	end;
 }
 
 job3_guil03,146,70,3	script	Renzak#3rdgc16	4_F_GUILLOTINE,{
 	mes "[Renzak]";
-	if (checkquest(7110,HUNTING) == 2) {
+	if (questprogress(7110,HUNTING) == 2) {
 		mes "My peers will come here to settle this affair.";
 		mes "Go to Mayshell for the report.";
 		next;
 		mes "[Renzak]";
-		if (checkquest(7110,PLAYTIME) == 1) {
+		if (questprogress(7110,PLAYTIME) == 1) {
 			mes "You finished quickly.";
 			mes "Good job.";
-			set job_3rd_gc, 18;
+			job_3rd_gc = 18;
 		} else {
 			mes "I told you that you have to finish within 10 minutes.";
 			mes "You might be exhausted.";
 			mes "Fortunately you are ok.";
-			set job_3rd_gc, 19;
+			job_3rd_gc = 19;
 		}
 		erasequest 7110;
 		setquest 7111;
@@ -3576,7 +3612,7 @@ OnDisable:
 }
 
 job3_guil01,148,53,3	script	Bercasell#3rdgc16	4_M_GUILLOTINE,{
-	if (!checkweight(1201,2)) {
+	if (!checkweight(Knife,2)) {
 		mes "- You can't continue this quest because you have too many items. -";
 		close;
 	}
@@ -3588,7 +3624,7 @@ job3_guil01,148,53,3	script	Bercasell#3rdgc16	4_M_GUILLOTINE,{
 				mes "You were sent by Mayshell?";
 				mes "Tell me why you came to see me.";
 				next;
-				switch(select("What is a Guillotine Cross?:I want to be a Guillotine Cross.:Nothing.")) {
+				switch(select("What is a Guillotine Cross?", "I want to be a Guillotine Cross.", "Nothing.")) {
 				case 1:
 					mes "[Bercasell]";
 					mes ".....";
@@ -3597,7 +3633,7 @@ job3_guil01,148,53,3	script	Bercasell#3rdgc16	4_M_GUILLOTINE,{
 					mes "So you want to know about the Guillotine Cross?";
 					mes "Get out!";
 					next;
-					switch(select("Just tell me...:......")) {
+					switch(select("Just tell me...", "......")) {
 					case 1:
 						mes "[Bercasell]";
 						callsub L_Info;
@@ -3611,7 +3647,7 @@ job3_guil01,148,53,3	script	Bercasell#3rdgc16	4_M_GUILLOTINE,{
 						mes "That's good. You are qualified. What about being a Guillotine Cross?";
 						mes "Do you want to be a Guillotine Cross?";
 						next;
-						switch(select("Yes, change my job.:I need to think about it.")) {
+						switch(select("Yes, change my job.", "I need to think about it.")) {
 						case 1:
 							L_JobChange:
 							mes "[Bercasell]";
@@ -3621,10 +3657,10 @@ job3_guil01,148,53,3	script	Bercasell#3rdgc16	4_M_GUILLOTINE,{
 							mes "You can become a living offensive weapon.";
 							mes "Do you really want to become a Guillotine Cross?";
 							next;
-							switch(select("Yes, change my job.:I need to rethink it.")) {
+							switch(select("Yes, change my job.", "I need to rethink it.")) {
 							case 1:
 								mes "[Bercasell]";
-								if (ismounting()) {
+								if (hascashmount()) {
 									mes "I cannot perform the job change.";
 									mes "Please remove your mount and try again.";
 									close;
@@ -3653,21 +3689,21 @@ job3_guil01,148,53,3	script	Bercasell#3rdgc16	4_M_GUILLOTINE,{
 								mes "A sword of the shadow...";
 								setlook 7,0;
 								jobchange roclass(eaclass()|EAJL_THIRD);
-								if (checkquest(7096) == 1) {
-									set job_3rd_gc, 25;
+								if (questprogress(7096) == 1) {
+									job_3rd_gc = 25;
 									erasequest 7096;
-								} else if (checkquest(7097) == 1) {
-									set job_3rd_gc, 26;
+								} else if (questprogress(7097) == 1) {
+									job_3rd_gc = 26;
 									erasequest 7097;
-								} else if (checkquest(7098) == 1) {
-									set job_3rd_gc, 27;
+								} else if (questprogress(7098) == 1) {
+									job_3rd_gc = 27;
 									erasequest 7098;
-								} else if (checkquest(7099) == 1) {
-									set job_3rd_gc, 28;
+								} else if (questprogress(7099) == 1) {
+									job_3rd_gc = 28;
 									erasequest 7099;
 								}
-								getitem 2795,1; //Green_Apple_Ring
-								getitem 5755,1; //Silent_Executer
+								getitem Green_Apple_Ring,1;
+								getitem Silent_Executer,1;
 								next;
 								mes "[Bercasell]";
 								mes "And... these are presents to celebrate your becoming a Guillotine Cross.";
@@ -3696,7 +3732,7 @@ job3_guil01,148,53,3	script	Bercasell#3rdgc16	4_M_GUILLOTINE,{
 			mes "......";
 			mes "What can I do for you?";
 			next;
-			switch(select("I want to be a Guillotine.:Nothing.")) {
+			switch(select("I want to be a Guillotine.", "Nothing.")) {
 			case 1:
 				mes "[Bercasell]";
 				mes "Do you?";
@@ -3786,8 +3822,7 @@ L_Info:
 	return;
 }
 
-// Warp Portals
-//============================================================
+//== Warp Portals ==========================================
 job3_guil01,80,77,0	script	#gate_to_guil05	WARPNPC,1,1,{
 	end;
 OnTouch:
@@ -3837,17 +3872,17 @@ job3_guil02,1,3,0	script	#GMhelper01_gc	CLEAR_NPC,{
 	mes "What can I do for you?";
 	next;
 	if (callfunc("F_GM_NPC",1854,0) == 1) {
-		set .@room01, $@3rdgc_room01;
+		.@room01 = $@3rdgc_room01;
 		mes "I check the recent situation.";
 		mes "The battle situation of storage: "+.@room01+"";
 		mes "1 : In progress. 0 : Standby status.";
 		next;
-		switch(select("Reset a situation of storage:Stop it.")) {
+		switch(select("Reset a situation of storage", "Stop it.")) {
 		case 1:
 			mes "Do you wish to reset a situation of storage?";
 			mes "Check the inside that there is a person or not, please.";
 			next;
-			switch(select("No.:Reset.")) {
+			switch(select("No.", "Reset.")) {
 			case 1:
 				mes "I did nothing.";
 				close;
@@ -3856,7 +3891,7 @@ job3_guil02,1,3,0	script	#GMhelper01_gc	CLEAR_NPC,{
 				donpcevent "Dandelion#3rdgc12::OnDisable";
 				donpcevent "A man with black clothes::OnDisable";
 				donpcevent "#3rdgc_room01_mag01::OnEnable";
-				set $@3rdgc_room01, 0;
+				$@3rdgc_room01 = 0;
 				next;
 				mes "Complete a reset.";
 				close;
@@ -3876,17 +3911,17 @@ job3_guil03,1,8,0	script	#GMhelper02_gc	CLEAR_NPC,{
 	mes "What can I do for you?";
 	next;
 	if (callfunc("F_GM_NPC",1854,0) == 1) {
-		set .@room02, $@3rdgc_room02;
+		.@room02 = $@3rdgc_room02;
 		mes "Check the recent situation.";
 		mes "The battle situation of the mansion is: "+.@room02+"";
 		mes "1 : In progress. 0 : Standby status.";
 		next;
-		switch(select("Reset the mansion:Stop it.")) {
+		switch(select("Reset the mansion", "Stop it.")) {
 		case 1:
 			mes "Do you want to reset the mansion?";
 			mes "With completion a rest all players of inside will be expelled.";
 			next;
-			switch(select("No.:Reset.")) {
+			switch(select("No.", "Reset.")) {
 			case 1:
 				mes "I don't anything.";
 				close;
@@ -3927,7 +3962,7 @@ job3_guil03,1,8,0	script	#GMhelper02_gc	CLEAR_NPC,{
 				mes "We start to expel by force.";
 				mes "Just put the enter button now.";
 				donpcevent "#3rdgc_event01::OnEnable";
-				set $@3rdgc_room02, 0;
+				$@3rdgc_room02 = 0;
 				close2;
 				mapwarp "job3_guil03","ve_fild02",330,379;	//Pre-RE: ve_fild05 (341,303)
 				end;

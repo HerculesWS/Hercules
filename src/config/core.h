@@ -1,8 +1,25 @@
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-// Portions Copyright (c) Athena Dev Teams
-#ifndef _CONFIG_CORE_H_
-#define _CONFIG_CORE_H_
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C)  Athena Dev Teams
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+#ifndef CONFIG_CORE_H
+#define CONFIG_CORE_H
 
 /// Max number of items on @autolootid list
 #define AUTOLOOTITEM_SIZE 10
@@ -23,6 +40,17 @@
 /// your map-server using more resources while this is active, comment the line
 #define SCRIPT_CALLFUNC_CHECK
 
+/**
+ * Strip linebreaks from `mes` dialogs.
+ *
+ * Leave this line commented out to keep the hard line-breaks (`\r`) in the
+ * displayed `mes` dialogs (as in official servers).
+ * Uncomment it to strip the line-breaks and replace them with spaces, letting
+ * the client automatically wrap text in dialogs, depending on font size and
+ * dialog window size (may work better for clients using a non-standard font).
+ */
+//#define SCRIPT_MES_STRIP_LINEBREAK
+
 /// Comment to disable Hercules' console_parse
 /// CONSOLE_INPUT allows you to type commands into the server's console,
 /// Disabling it saves one thread.
@@ -35,15 +63,16 @@
 //#define STATS_OPT_OUT
 
 /// Uncomment to enable the Cell Stack Limit mod.
-/// It's only config is the battle_config cell_stack_limit.
-/// Only chars affected are those defined in BL_CHAR (mobs and players currently)
+/// It's only config is the battle_config custom_cell_stack_limit.
+/// Only chars affected are those defined in BL_CHAR
 //#define CELL_NOSTACK
 
 /// Uncomment to enable circular area checks.
-/// By default, all range checks in Aegis are of Square shapes, so a weapon range
-/// - of 10 allows you to attack from anywhere within a 21x21 area.
-/// Enabling this changes such checks to circular checks, which is more realistic,
-/// - but is not the official behavior.
+/// By default, most server-sided range checks in Aegis are of square shapes, so a monster
+/// with a range of 4 can attack anything within a 9x9 area.
+/// Client-sided range checks are, however, are always circular.
+/// Enabling this changes all checks to circular checks, which is more realistic,
+/// - but is not the official behaviour.
 //#define CIRCULAR_AREA
 
 //This is the distance at which @autoloot works,
@@ -63,7 +92,6 @@
 /// Uncomment to enable real-time server stats (in and out data and ram usage). [Ai4rei]
 //#define SHOW_SERVER_STATS
 
-
 /// Comment to disable autotrade persistency (where autotrading merchants survive server restarts)
 #define AUTOTRADE_PERSISTENCY
 
@@ -79,4 +107,4 @@
  **/
 #include "./const.h"
 
-#endif // _CONFIG_CORE_H_
+#endif // CONFIG_CORE_H

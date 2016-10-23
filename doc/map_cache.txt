@@ -3,7 +3,7 @@
 //===== By: ==================================================
 //= DracoRPG
 //===== Current Version: =====================================
-//= 20070724
+//= 20160820
 //===== Description: =========================================
 //= A complete manual for Hercules' map cache generator as 
 //= well as a reference on the map cache format used.
@@ -32,11 +32,8 @@ having slightly different maps. When building your cache, you should ensure you'
 
 The list of GRFs and/or data directory must follow the format and indication of the default file: as many "grf:" entries as
 you wish and optionally only one "data_dir:" entry with trailing backslash included. // comments are supported as usual.
-In fact, any file with one map name per line can be used as a map list, that's why the map index list is used as a default:
-we are sure it contains every map supported by the server. Anything after the map name is ignored, // comments are supported
-and if the first word on the line is "map:" then the second word is used as the map name instead: that allows using
-/conf/maps.conf as your map list, which is handy if you want to generate a minimal map cache for each of your multiple
-map-servers.
+A custom map list can be used, in order to generate a map cache file with different (or less) maps than the current Hercules
+configuration. For details on the map list format, see conf/map/maps.conf.
 The map cache file path can point to an already existing file, as the builder adds a map only if it's not already cached.
 This way, you can add custom maps to the base map cache without even needing kRO Sakray maps. If you wish to rebuild the
 entire map cache, though, you can either provide a path to a non-existing file, or force the rebuild mode.

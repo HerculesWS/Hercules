@@ -1,72 +1,81 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Orc's Memory
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
+//================= Description ===========================================
+//= Relive the memory of an orc.
+//================= Current Version =======================================
 //= 1.7
-//===== Description: =========================================
-//= [Official Conversion]
-//= Relive the memory of an orc.
-//===== Description: =========================================
-//= [Official Conversion]
-//= Relive the memory of an orc.
-//===== Additional Comments: =================================
-//= 1.0 First version. [L0ne_W0lf]
-//= 1.1 First round of bugfixes. (bugreport:3928) [L0ne_W0lf]
-//=     Fixed some npcs calling wrong events.
-//=     Fixed Depraved Orc Spirit spawn point
-//=     Fixed an NPC that was never being enabled.
-//= 1.1a Second round from bugreport. (bugreport:3928) [L0ne_W0lf]
-//=     Fixed first warp never enabling, issue not seen
-//=     because of a local source mod.
-//=     Corrected the IDs for the Vengeful Orc Spirit and
-//=     Shaman Cargalache, copy/paste fail.
-//=     Changed spawn point for dungeon according to spawn
-//=     point on iRO.
-//= 1.2 More bugfixes, mostly typos. :O (bugreport:3944) [L0ne_W0lf]
-//=     Fixed some varaibles (types/values) as well.
-//= 1.3 Disabled an exploit related to the orc hero spawn. [L0ne_W0lf]
-//=     Corrected the variable type for party leader name.
-//= 1.4 Fixed donpcevent calling non-existant npc. (bugreport:4039) [L0ne_W0lf]
-//= 1.5 Fixed a checkquest condition never setting quest. [L0ne_W0lf]
-//= 1.6 Added 'instance_check_party' command to the script for proper checking if
-//=     the invoking party meets the requirements to join the Memorial Dungeon.
-//= 1.7 Instance system rewrite. [Euphy]
-//============================================================
+//=========================================================================
 
 1@orcs	mapflag	src4instance
 2@orcs	mapflag	src4instance
-//============================================================
 
-// Entrance
-//============================================================
+//== Entrance ==============================================
 gef_fild10,242,202,0	script	Dimensional Gorge Piece	2_MONEMUS,{
 
-	set .@party_id,getcharid(1);
-	set .@p_name$,getpartyname(.@party_id);
-	set .@md_name$,"Orc's Memory";
+	.@party_id = getcharid(CHAR_ID_PARTY);
+	.@p_name$ = getpartyname(.@party_id);
+	.@md_name$ = "Orc's Memory";
 
 	if (!instance_check_party(.@party_id,2,30,80)) {
 		mes "Only users between Levels ^ff000030 ~ 80^000000 can enter this Dungeon.";
 		close;
 	}
 
-	set .@orctime,checkquest(12059,PLAYTIME);
-	if (.@orctime == -1) {
-		if (getcharid(0) == getpartyleader(.@party_id,2)) {
+	.@orctime = questprogress(12059,PLAYTIME);
+	if (.@orctime == 2) {
+		mes "^0000ffAll records and after-effects related to the Orc's Memory Dungeon are deleted. You can now regenerate or re-enter the dungeon.^000000";
+		erasequest 12059;
+		close;
+	}
+
+	if (.@orctime == 1) {
+		mes "You can enter the Dungeon if it has been generated.";
+		next;
+		if(select("Enter the Dungeon "+.@md_name$, "Cancel") == 2)
+			close;
+		// Fall through to access the dungeon
+	} else { // !.@orctime
+		if (getcharid(CHAR_ID_CHAR) == getpartyleader(.@party_id,2)) {
 			mes "Party status confirmed. Would you like to book entrance to the "+.@md_name$+"?";
 			next;
-			switch(select("Reserve the "+.@md_name$+":Enter the Dungeon:Cancel")) {
+			switch(select("Reserve the "+.@md_name$, "Enter the Dungeon", "Cancel")) {
 			case 1:
-				set .@instance,instance_create(.@md_name$,.@party_id);
+				.@instance = instance_create(.@md_name$,.@party_id);
 				if (.@instance < 0) {
 					mes "Party Name: "+.@p_name$;
-					mes "Party Leader: "+strcharinfo(0);
+					mes "Party Leader: "+strcharinfo(PC_NAME);
 					mes "^0000ff"+.@md_name$+" ^000000 - Reservation Failed.";
 					close;
 				}
 				mes "^0000ff"+.@md_name$+"^000000- Attempting to book an entrance";
-				for( set .@i, 1; .@i <= 2; set .@i, .@i + 1 ) {
+				for (.@i = 1; .@i <= 2; ++.@i) {
 					if( instance_attachmap(.@i + "@orcs", .@instance) == "" )
 						break;
 				}
@@ -79,28 +88,17 @@ gef_fild10,242,202,0	script	Dimensional Gorge Piece	2_MONEMUS,{
 				mes "After making a reservation, you have to select 'Enter the Dungeon' from the menu if you wish to enter the "+.@md_name$+".";
 				close;
 			case 2:
-				callsub L_Enter,0;
+				break; // Fall through to access the dungeon (after the else)
 			case 3:
 				close;
 			}
-		}
-		if(select(.@md_name$ + " Enter the Memorial Dungeon:Cancel") == 2)
+		} else if (select(.@md_name$ + " Enter the Memorial Dungeon", "Cancel") == 2)
 			end;
-		callsub L_Enter,1;
-	} else if (.@orctime == 0 || .@orctime == 1) {
-		mes "You can enter the Dungeon if it has been generated.";
-		next;
-		if(select("Enter the Dungeon "+.@md_name$+":Cancel") == 2)
-			close;
-		callsub L_Enter,0;
-	} else if (.@orctime == 2) {
-		mes "^0000ffAll records and after-effects related to the Orc's Memory Dungeon are deleted. You can now regenerate or re-enter the dungeon.^000000";
-		erasequest 12059;
-		close;
+		// Else access the dungeon
 	}
-	mes "In order to generate a dungeon you must be the Party Leader and have at least 2 members in the party.";
-	close;
-L_Enter:
+
+	// Dungeon access
+
 	if (has_instance("1@orcs") == "") {
 		mes "Memorial Dungeon "+.@md_name$+" does not exist.";
 		mes "The party leader has not reserved entrance to the dungeon yet.";
@@ -108,12 +106,12 @@ L_Enter:
 		mes "Once the reservation is complete, the dungeon will be generated.";
 		mes "If your dungeon has been destroyed you must wait 7 days before re-entering.";
 		close;
-	} else {
-		mapannounce "gef_fild10", .@p_leader$ + " of the party, " + .@p_name$ + " is entering the "+.@md_name$+".",bc_map,"0x00ff99";
-		if (checkquest(12059)== -1) setquest 12059;
-		warp "1@orcs",179,15;
-		end;
 	}
+
+	mapannounce "gef_fild10", strcharinfo(PC_NAME) + " of the party, " + .@p_name$ + " is entering the "+.@md_name$+".",bc_map,"0x00ff99";
+	if (!questprogress(12059)) setquest 12059;
+	warp "1@orcs",179,15;
+	end;
 }
 
 gef_fild10,238,202,6	script	Mad Scientist#orc	4_LGTSCIENCE,{
@@ -126,7 +124,7 @@ gef_fild10,238,202,6	script	Mad Scientist#orc	4_LGTSCIENCE,{
 		mes "Haha, no Orcs are coming near me!";
 		mes "The power of the Dimensional Gorge is undefeatable!!";
 		next;
-		switch(select("Orcs don't attack you?:You wish!")) {
+		switch(select("Orcs don't attack you?", "You wish!")) {
 		case 1:
 			mes "[Mad Scientist]";
 			mes "Yeah, yeah.. I know it's hard to belive. I don't blame ya.";
@@ -154,11 +152,11 @@ gef_fild10,238,202,6	script	Mad Scientist#orc	4_LGTSCIENCE,{
 		mes "[Mad Scientist]";
 		mes "Chances are they'll just give you lots of instructions once they see you, so just wing it! They're always saying the same thing, to the point where I memorized them!";
 		next;
-		switch(select("Alright... What do I do?:Umm, maybe not.")) {
+		switch(select("Alright... What do I do?", "Umm, maybe not.")) {
 		case 1:
 			mes "[Mad Scientist]";
 			mes "Very good! Just sit in the hands of this statue! And try to act natural when you're in there!";
-			set mad,1;
+			mad = 1;
 			close;
 		case 2:
 			mes "[Mad Scientist]";
@@ -170,13 +168,12 @@ gef_fild10,238,202,6	script	Mad Scientist#orc	4_LGTSCIENCE,{
 		mes "Hmm? Put your hand on that Monemus Statue if you want to experience traveling through dimensions!";
 		close;
 	} else {
-		set mad,1;
+		mad = 1;
 		end;
 	}
 }
 
-// Orc's Memory Floor 1
-//============================================================
+//== Orc's Memory Floor 1 ==================================
 1@orcs,180,30,0	script	#Resurrect Monsters1	CLEAR_NPC,{
 	end;
 
@@ -195,10 +192,10 @@ OnEnable:
 	end;
 
 OnMyMobDead:
-	set .@map$, instance_mapname("1@orcs");
-	set .@mob_dead_num, 30 - mobcount(.@map$,instance_npcname("#Resurrect Monsters1")+"::OnMyMobDead");
+	.@map$ = instance_mapname("1@orcs");
+	.@mob_dead_num = 30 - mobcount(.@map$,instance_npcname("#Resurrect Monsters1")+"::OnMyMobDead");
 	if (.@mob_dead_num > 0) {
-		set .@mob_ran,rand(1,30);
+		.@mob_ran = rand(1,30);
 		if (.@mob_ran > 29) {
 			monster .@map$,0,0,"Orc Warrior",1023,.@mob_dead_num,instance_npcname("#Resurrect Monsters1")+"::OnMyMobDead";
 		}
@@ -231,7 +228,7 @@ OnTimer10:
 	end;
 
 OnTimer4010:
-	set .@map$, instance_mapname("1@orcs");
+	.@map$ = instance_mapname("1@orcs");
 	mapannounce .@map$, "Stalactic Golems are digging out of the deep underground.",bc_map,"0x77ff77";
 	areamonster .@map$,17,187,27,177,"Stalactic Golem",1278,20,instance_npcname("#Resurrect Monsters1")+"::OnMyMobDead";
 	stopnpctimer;
@@ -255,8 +252,8 @@ OnEnable:
 	end;
 
 OnMyMobDead:
-	set .@map$, instance_mapname("1@orcs");
-	set .@mob_dead_num, 15 - mobcount(.@map$,instance_npcname("#Resurrect Monsters2")+"::OnMyMobDead");
+	.@map$ = instance_mapname("1@orcs");
+	.@mob_dead_num = 15 - mobcount(.@map$,instance_npcname("#Resurrect Monsters2")+"::OnMyMobDead");
 	if (rand(1,30) > 15) {
 		if (.@mob_dead_num > 0) {
 			monster .@map$,0,0,"Trained Wolf",1106,.@mob_dead_num,instance_npcname("#Resurrect Monsters2")+"::OnMyMobDead";
@@ -287,9 +284,9 @@ OnEnable:
 	end;
 
 OnMyMobDead:
-	set .@map$, instance_mapname("1@orcs");
-	set .@mob_dead_num, 15 - mobcount(.@map$,instance_npcname("#Resurrect Monsters3")+"::OnMyMobDead");
-	set .@mob_ran,rand(1,30);
+	.@map$ = instance_mapname("1@orcs");
+	.@mob_dead_num = 15 - mobcount(.@map$,instance_npcname("#Resurrect Monsters3")+"::OnMyMobDead");
+	.@mob_ran = rand(1,30);
 	if (.@mob_ran > 29) {
 		if (.@mob_dead_num > 0) {
 			monster .@map$,0,0,"Orc Archer",1189,.@mob_dead_num,instance_npcname("#Resurrect Monsters3")+"::OnMyMobDead";
@@ -320,8 +317,8 @@ OnInstanceInit:
 	end;
 
 OnMyMobDead:
-	set .@map$, instance_mapname("1@orcs");
-	set .@mob_dead_num, 10 - mobcount(.@map$,instance_npcname("#Resurrect Monsters4")+"::OnMyMobDead");
+	.@map$ = instance_mapname("1@orcs");
+	.@mob_dead_num = 10 - mobcount(.@map$,instance_npcname("#Resurrect Monsters4")+"::OnMyMobDead");
 	if (.@mob_dead_num > 0) {
 		monster .@map$,0,0,"Anopheles",1627,.@mob_dead_num,instance_npcname("#Resurrect Monsters4")+"::OnMyMobDead";
 	}
@@ -502,7 +499,7 @@ OnTouch:
 	end;
 }
 
-1@orcs,1,1,0	script	B1 Area Mobs	-1,{
+1@orcs,1,1,0	script	B1 Area Mobs	FAKE_NPC,{
 	end;
 
 OnMyMobDead:
@@ -522,8 +519,7 @@ OnMyMobDead3:
 	end;
 }
 
-// Orc's Memory Floor 2
-//============================================================
+//== Orc's Memory Floor 2 ==================================
 2@orcs,36,171,0	script	#2Resurrect Monsters1	CLEAR_NPC,{
 	end;
 
@@ -542,10 +538,10 @@ OnDisable:
 	end;
 
 OnMyMobDead:
-	set .@map$, instance_mapname("2@orcs");
-	set .@mob_dead_num, 30 - mobcount(.@map$,instance_npcname("#2Resurrect Monsters1")+"::OnMyMobDead");
+	.@map$ = instance_mapname("2@orcs");
+	.@mob_dead_num = 30 - mobcount(.@map$,instance_npcname("#2Resurrect Monsters1")+"::OnMyMobDead");
 	if (.@mob_dead_num > 0) {
-		set .@mob_ran,rand(1,30);
+		.@mob_ran = rand(1,30);
 		if (.@mob_ran > 29) {
 			monster .@map$,0,0,"Vengeful Orc",1152,.@mob_dead_num,instance_npcname("#2Resurrect Monsters1")+"::OnMyMobDead";
 		}
@@ -575,7 +571,7 @@ OnTimer10:
 	end;
 
 OnTimer4010:
-	set .@map$, instance_mapname("2@orcs");
+	.@map$ = instance_mapname("2@orcs");
 	mapannounce .@map$, "[ Wraiths were summoned by an unknown power ]",bc_map,"0x77ff77";
 	areamonster .@map$,167,25,177,35,"Wraith",1475,30,instance_npcname("#2Resurrect Monsters1")+"::OnMyMobDead";
 	stopnpctimer;
@@ -595,9 +591,9 @@ OnEnable:
 	end;
 
 OnMyMobDead:
-	set .@map$, instance_mapname("2@orcs");
-	set .@mob_dead_num, 15 - mobcount(.@map$,instance_npcname("#2Resurrect Monsters3")+"::OnMyMobDead");
-	set .@mob_ran,rand(1,30);
+	.@map$ = instance_mapname("2@orcs");
+	.@mob_dead_num = 15 - mobcount(.@map$,instance_npcname("#2Resurrect Monsters3")+"::OnMyMobDead");
+	.@mob_ran = rand(1,30);
 	if (.@mob_ran > 29) {
 		if (.@mob_dead_num > 0) {
 			monster .@map$,0,0,"Orc Archer",1189,.@mob_dead_num,instance_npcname("#2Resurrect Monsters3")+"::OnMyMobDead";
@@ -632,8 +628,8 @@ OnInstanceInit:
 	end;
 
 OnMyMobDead:
-	set .@map$, instance_mapname("2@orcs");
-	set .@mob_dead_num, 10 - mobcount(.@map$,instance_npcname("#2Resurrect Monsters4")+"::OnMyMobDead");
+	.@map$ = instance_mapname("2@orcs");
+	.@mob_dead_num = 10 - mobcount(.@map$,instance_npcname("#2Resurrect Monsters4")+"::OnMyMobDead");
 	if (.@mob_dead_num > 0) {
 		monster .@map$,0,0,"Anopheles",1627,1,instance_npcname("#2Resurrect Monsters4")+"::OnMyMobDead";
 	}
@@ -688,24 +684,24 @@ OnTimer23910:
 }
 
 2@orcs,26,164,0	script	Torch#1-1	CLEAR_NPC,{
-	if(getpartyleader(getcharid(1),2) != getcharid(0)) end;
+	if(getpartyleader(getcharid(CHAR_ID_PARTY),2) != getcharid(CHAR_ID_CHAR)) end;
 	progressbar "ffff00",5;
-	setarray .@id[0], atoi(charat(strnpcinfo(2),0)), atoi(charat(strnpcinfo(2),2));
+	setarray .@id[0], atoi(charat(strnpcinfo(NPC_NAME_HIDDEN),0)), atoi(charat(strnpcinfo(NPC_NAME_HIDDEN),2));
 	if (.@id[1] == 4)
 		donpcevent instance_npcname("#Warp2-"+.@id[0])+"::OnEnable";
 	else
 		donpcevent instance_npcname("Torch#"+.@id[0]+"-"+(.@id[1]+1))+"::OnEnable";
 	initnpctimer;
-	disablenpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 
 OnInstanceInit:
-	if (strnpcinfo(0) != "Torch#2-1" && strnpcinfo(0) != "Torch#3-1")
-		disablenpc instance_npcname(strnpcinfo(0));
+	if (strnpcinfo(NPC_NAME) != "Torch#2-1" && strnpcinfo(NPC_NAME) != "Torch#3-1")
+		disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 
 OnEnable:
-	enablenpc instance_npcname(strnpcinfo(0));
+	enablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 
 OnTimer100:
@@ -727,7 +723,7 @@ OnInstanceInit:
 	end;
 
 OnEnable:
-	set .@map$, instance_mapname("2@orcs");
+	.@map$ = instance_mapname("2@orcs");
 	monster .@map$,109,156,"Safeguard Chief",1981,1,instance_npcname("#Mobs Control")+"::OnMyMobDead1";
 	mapannounce .@map$, "The Chief Orc of Safeguards: Oh!! Looks like I have company. Defeat me if you can!!",bc_map,"0xff8888";
 	end;
@@ -758,7 +754,7 @@ OnInstanceInit:
 	end;
 
 OnEnable:
-	set .@map$, instance_mapname("2@orcs");
+	.@map$ = instance_mapname("2@orcs");
 	monster .@map$,67,64,"Orc Sniper",1982,1,instance_npcname("#Mobs Control")+"::OnMyMobDead2";
 	mapannounce .@map$, "Orc Sniper: Hah! Pretty impressive that you made it this far, but your foolish little trip ends here...",bc_map,"0xff8888";
 	end;
@@ -789,7 +785,7 @@ OnInstanceInit:
 	end;
 
 OnEnable:
-	set .@map$, instance_mapname("2@orcs");
+	.@map$ = instance_mapname("2@orcs");
 	monster .@map$,152,147,"Depraved Orc Spirit",1983,1,instance_npcname("#Mobs Control")+"::OnMyMobDead3";
 	mapannounce .@map$, "Depraved Orc Spirit: I smell flesh! Hungry! Wanna try some human meat!!",bc_map,"0xff8888";
 	end;
@@ -831,7 +827,7 @@ OnInstanceInit:
 	end;
 
 OnEnable:
-	set .@map$, instance_mapname("2@orcs");
+	.@map$ = instance_mapname("2@orcs");
 	monster .@map$,185,8,"Shaman Cargalache",1984,1,instance_npcname("#Boss Control")+"::OnMyMobDead";
 	monster .@map$,179,15,"Depraved Orc Hero",1087,1;
 	enablenpc instance_npcname("#Boss Control");
@@ -839,8 +835,8 @@ OnEnable:
 
 OnMyMobDead:
 	donpcevent instance_npcname("Kruger#")+"::OnEnable";
-	set .@map$, instance_mapname("2@orcs");
-	set .@mob_ran,rand(1,5);
+	.@map$ = instance_mapname("2@orcs");
+	.@mob_ran = rand(1,5);
 	if (.@mob_ran == 1) {
 		mapannounce .@map$, "Shaman Cargalache: How... How could this be... How could someone like you...!!",bc_map,"0xffff00";
 	}
@@ -880,9 +876,9 @@ OnTouch:
 	if (yong_odun < 2) {
 		mes "[Kruger]";
 		mes "*Coughing*";
-		mes ""+strcharinfo(0)+", it's you...";
+		mes ""+strcharinfo(PC_NAME)+", it's you...";
 		next;
-		mes "["+strcharinfo(0)+"] ";
+		mes "["+strcharinfo(PC_NAME)+"] ";
 		mes "Don't move! You are wounded!";
 		next;
 		mes "[Kruger]";
@@ -890,7 +886,7 @@ OnTouch:
 		mes "....";
 		mes "The Shaman? What about the Shaman?";
 		next;
-		mes "["+strcharinfo(0)+"] ";
+		mes "["+strcharinfo(PC_NAME)+"] ";
 		mes "The Shaman's dead now. Who was that Shaman really?";
 		next;
 		mes "Kruger seemed to be relieved as he hears of the death of the Shaman, but you notice the bitter expression on his face.";
@@ -900,7 +896,7 @@ OnTouch:
 		mes "Thank you, I'm sure she's finally free from the nightmare that used to choke her soul.";
 		next;
 		mes "Kruger was about to say something more, but he breathed his last breath before he could...";
-		set yong_odun,2;
+		yong_odun = 2;
 		close;
 	}
 	else {

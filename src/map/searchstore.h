@@ -1,15 +1,31 @@
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-// Portions Copyright (c) Athena Dev Teams
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C)  Athena Dev Teams
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+#ifndef MAP_SEARCHSTORE_H
+#define MAP_SEARCHSTORE_H
 
-#ifndef _MAP_SEARCHSTORE_H_
-#define _MAP_SEARCHSTORE_H_
+#include "map/map.h" // MESSAGE_SIZE
+#include "common/hercules.h"
+#include "common/mmo.h" // MAX_SLOTS
 
 #include <time.h>
-
-#include "map.h" // MESSAGE_SIZE
-#include "../common/cbasetypes.h"
-#include "../common/mmo.h" // MAX_SLOTS
 
 /**
  * Defines
@@ -95,8 +111,10 @@ struct searchstore_interface {
 	bool (*result) (struct map_session_data* sd, unsigned int store_id, int account_id, const char* store_name, unsigned short nameid, unsigned short amount, unsigned int price, const short* card, unsigned char refine);
 };
 
-struct searchstore_interface *searchstore;
+#ifdef HERCULES_CORE
+void searchstore_defaults(void);
+#endif // HERCULES_CORE
 
-void searchstore_defaults (void);
+HPShared struct searchstore_interface *searchstore;
 
-#endif /* _MAP_SEARCHSTORE_H_ */
+#endif /* MAP_SEARCHSTORE_H */

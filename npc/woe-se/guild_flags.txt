@@ -1,0 +1,125 @@
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= War of Emperium Second Edition
+//================= Description ===========================================
+//= WoE SE Guild Flags in Juno and Rachel
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
+
+//== Juno ==================================================
+yuno,109,167,5	script	Himinn	GUILD_FLAG,{
+	end;
+
+OnAgitInit2:
+OnRecvCastleSc01:
+	flagemblem getcastledata("schg_cas01",1);
+	end;
+}
+
+yuno,110,171,5	script	Andlangr	GUILD_FLAG,{
+	end;
+
+OnAgitInit2:
+OnRecvCastleSc02:
+	flagemblem getcastledata("schg_cas02",1);
+	end;
+}
+
+yuno,111,175,5	script	Viblainn	GUILD_FLAG,{
+	end;
+
+OnAgitInit2:
+OnRecvCastleSc03:
+	flagemblem getcastledata("schg_cas03",1);
+	end;
+}
+
+yuno,112,179,5	script	Hljod	GUILD_FLAG,{
+	end;
+
+OnAgitInit2:
+OnRecvCastleSc04:
+	flagemblem getcastledata("schg_cas04",1);
+	end;
+}
+
+yuno,114,183,5	script	Skidbladnir	GUILD_FLAG,{
+	end;
+
+OnAgitInit2:
+OnRecvCastleSc05:
+	flagemblem getcastledata("schg_cas05",1);
+	end;
+}
+
+//== Arunafeltz ============================================
+rachel,124,120,3	script	Mardol	GUILD_FLAG,{
+	end;
+
+OnAgitInit2:
+OnRecvCastleAr01:
+	flagemblem getcastledata("arug_cas01",1);
+	end;
+}
+
+rachel,136,120,5	script	Cyr	GUILD_FLAG,{
+	end;
+
+OnAgitInit2:
+OnRecvCastleAr02:
+	flagemblem getcastledata("arug_cas02",1);
+	end;
+}
+
+rachel,138,126,6	script	Horn	GUILD_FLAG,{
+	end;
+
+OnAgitInit2:
+OnRecvCastleAr03:
+	flagemblem getcastledata("arug_cas03",1);
+	end;
+}
+
+rachel,135,131,7	script	Gefn	GUILD_FLAG,{
+	end;
+
+OnAgitInit2:
+OnRecvCastleAr04:
+	flagemblem getcastledata("arug_cas04",1);
+	end;
+}
+
+rachel,124,130,1	script	Banadis	GUILD_FLAG,{
+	end;
+
+OnAgitInit2:
+OnRecvCastleAr05:
+	flagemblem getcastledata("arug_cas05",1);
+	end;
+}

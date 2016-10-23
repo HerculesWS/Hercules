@@ -1,16 +1,37 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2013-2015  Hercules Dev Team
+//= Copyright (C) 2013-2015  Haru
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Script engine self-tests
-//===== By: ==================================================
-//= Haru
-//===== Current Version: =====================================
+//================= Description ===========================================
+//= Script to test operators and possibly other elements of the script
+//= engine, useful for regression testing.
+//================= Current Version =======================================
 //= 2.0
-//===== Version History: =====================================
-//= 1.0 Initial version.
-//= 2.0 Moved tests to a function to allow them to be called
-//      externally.
-//===== Description: =========================================
-//= Script to test operators and possibly other elements of
-//= the script engine, useful for regression testing.
+//=========================================================================
 
 function	script	F_TestReturnValue	{
 	return getarg(0);
@@ -84,6 +105,15 @@ function	script	F_TestNPCArrays	{
 	setarray .x, 1, 2, 3, 4;
 	copyarray .y, getarg(0), getarraysize(getarg(0));
 	return getarraysize(.y);
+}
+
+function	script	F_TestVarOfAnotherNPC	{
+	return getvariableofnpc(.x, getarg(0));
+}
+
+-	script	TestVarOfAnotherNPC	FAKE_NPC,{
+	// Used to test getvariableofnpc()
+	end;
 }
 
 function	script	HerculesSelfTestHelper	{
@@ -565,6 +595,10 @@ function	script	HerculesSelfTestHelper	{
 	callsub(OnCheck, "array shrink", .@x[1], 0);
 	callsub(OnCheck, "array shrink and getarraysize", getarraysize(.@x), 0);
 
+	// min and max
+	callsub(OnCheck, "min()", min(5, -10, 8, 3, -2, 1000), -10);
+	callsub(OnCheck, "max()", max(5, -10, 8, 3, -2, 1000), 1000);
+
 
 	// Constants
 	callsub(OnCheck, "'true' constant", true, 1);
@@ -590,6 +624,11 @@ function	script	HerculesSelfTestHelper	{
 	setd(".@x", getd(".@y"));
 	callsub(OnCheck, "setd getd", .@x, .@y);
 
+	// getvariableofnpc
+	.x = 2;
+	set getvariableofnpc(.x, "TestVarOfAnotherNPC"), 1;
+	callsub(OnCheck, "Setting NPC variables of another NPC", getvariableofnpc(.x, "TestVarOfAnotherNPC"), 1);
+	callsub(OnCheck, "Setting NPC variables of another NPC (local variable overwrite check)", .x, 2);
 
 	// Callsub (advanced)
 	callsub(OnCheck, "Callsub return value", callsub(OnTestReturnValue, 1));
@@ -598,6 +637,10 @@ function	script	HerculesSelfTestHelper	{
 	callsub(OnCheck, "Callsub (parent scope vars isolation)", .@x, 1);
 	callsub(OnCheck, "Callsub (nested scopes)", callsub(OnTestNestedScope), 1);
 	callsub(OnCheck, "Callsub (deeply nested scopes)", callsub(OnTestDeepNestedScope, 30, 0), 1);
+	.@x = 1;
+	.@y = callsub(OnSetReference, .@x);
+	callsub(OnCheck, "Callsub (setting references)", .@y, 2);
+	callsub(OnCheck, "Callsub (setting references)", .@x, 2);
 	deletearray .@x;
 	setarray .@x, 1, 2, 3, 4;
 	callsub(OnCheck, "Callsub (array references)", callsub(OnTestArrayRefs, .@x), 4);
@@ -614,6 +657,10 @@ function	script	HerculesSelfTestHelper	{
 	callsub(OnCheck, "Callsub (parent array vars isolation)", getarraysize(.@x), .@z);
 	deletearray .@x;
 	deletearray .@y;
+	.x = 2;
+	set getvariableofnpc(.x, "TestVarOfAnotherNPC"), 1;
+	callsub(OnCheck, "Callsub (return NPC variables from another NPC)", callsub(OnTestVarOfAnotherNPC, "TestVarOfAnotherNPC"), 1);
+	callsub(OnCheck, "Callsub (return NPC variables from another NPC - local variable overwrite check)", .x, 2);
 
 	// Callfunc
 	callsub(OnCheck, "Callfunc return value", callfunc("F_TestReturnValue", 1));
@@ -659,6 +706,28 @@ function	script	HerculesSelfTestHelper	{
 	callsub(OnCheck, "Callfunc (parent array NPC vars isolation)", getarraysize(.@x), .@z);
 	deletearray .x;
 	deletearray .y;
+	.x = 2;
+	set getvariableofnpc(.x, "TestVarOfAnotherNPC"), 1;
+	callsub(OnCheck, "Callfunc (return NPC variables from another NPC)", callfunc("F_TestVarOfAnotherNPC", "TestVarOfAnotherNPC"), 1);
+	callsub(OnCheck, "Callfunc (return NPC variables from another NPC - local variable overwrite check)", .x, 2);
+
+	callsub(OnCheckStr, "sprintf (%%)",         sprintf("'%%'"), "'%'");
+	callsub(OnCheckStr, "sprintf (%d)",         sprintf("'%d'", 5), "'5'");
+	callsub(OnCheckStr, "sprintf (neg. %d)",    sprintf("'%d'", -5), "'-5'");
+	callsub(OnCheckStr, "sprintf (%u)",         sprintf("'%u'", 5), "'5'");
+	callsub(OnCheckStr, "sprintf (%x)",         sprintf("'%x'", 10), "'a'");
+	callsub(OnCheckStr, "sprintf (%X)",         sprintf("'%X'", 31), "'1F'");
+	callsub(OnCheckStr, "sprintf (%s)",         sprintf("'%s'", "Hello World!"), "'Hello World!'");
+	callsub(OnCheckStr, "sprintf (%c)",         sprintf("'%c'", "Hello World!"), "'H'");
+	callsub(OnCheckStr, "sprintf (%+d)",        sprintf("'%+d'", 5), "'+5'");
+	callsub(OnCheckStr, "sprintf (%{n}d)",      sprintf("'%5d'", 5), "'    5'");
+	callsub(OnCheckStr, "sprintf (%-{n}d)",     sprintf("'%-5d'", 5), "'5    '");
+	callsub(OnCheckStr, "sprintf (%-+{n}d)",    sprintf("'%-+5d'", 5), "'+5   '");
+	callsub(OnCheckStr, "sprintf (%+0{n}d)",    sprintf("'%+05d'", 5), "'+0005'");
+	callsub(OnCheckStr, "sprintf (%0*d)",       sprintf("'%0*d'", 5, 10), "'00010'");
+	callsub(OnCheckStr, "sprintf (Two args)",   sprintf("'%+05d' '%x'", 5, 0x7f), "'+0005' '7f'");
+	callsub(OnCheckStr, "sprintf (positional)", sprintf("'%2$+05d'", 5, 6), "'+0006'");
+	callsub(OnCheckStr, "sprintf (positional)", sprintf("'%2$s' '%1$c'", "First", "Second"), "'Second' 'F'");
 
 	if (.errors) {
 		debugmes "Script engine self-test   [ \033[0;31mFAILED\033[0m ]";
@@ -701,6 +770,9 @@ OnTestScopeArrays:
 	copyarray .@y, getarg(0), getarraysize(getarg(0));
 	return getarraysize(.@y);
 
+OnTestVarOfAnotherNPC:
+	return getvariableofnpc(.x, getarg(0));
+
 OnReportError:
 	.@msg$ = getarg(0,"Unknown Error");
 	.@val$ = getarg(1,"");
@@ -728,9 +800,12 @@ OnCheckStr:
 		callsub(OnReportError, .@msg$, .@val$, .@ref$);
 	}
 	return;
+OnSetReference:
+	set getarg(0), getarg(0) + 1;
+	return getarg(0);
 }
 
--	script	HerculesSelfTest	-1,{
+-	script	HerculesSelfTest	FAKE_NPC,{
 	end;
 
 OnInit:

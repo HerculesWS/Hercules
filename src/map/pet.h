@@ -1,15 +1,31 @@
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-// Portions Copyright (c) Athena Dev Teams
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C)  Athena Dev Teams
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+#ifndef MAP_PET_H
+#define MAP_PET_H
 
-#ifndef _MAP_PET_H_
-#define _MAP_PET_H_
-
-#include "map.h" // struct block_list
-#include "status.h" // enum sc_type
-#include "unit.h" // struct unit_data
-#include "../common/cbasetypes.h"
-#include "../common/mmo.h" // NAME_LENGTH, struct s_pet
+#include "map/map.h" // struct block_list
+#include "map/status.h" // enum sc_type
+#include "map/unit.h" // struct unit_data
+#include "common/hercules.h"
+#include "common/mmo.h" // NAME_LENGTH, struct s_pet
 
 #define MAX_PET_DB       300
 #define MAX_PETLOOT_SIZE 30
@@ -41,16 +57,16 @@ struct s_pet_db {
 enum { PET_CLASS,PET_CATCH,PET_EGG,PET_EQUIP,PET_FOOD };
 
 struct pet_recovery { //Stat recovery
-	enum sc_type type;	//Status Change id
-	unsigned short delay; //How long before curing (secs).
+	enum sc_type type;    ///< Status Change id
+	unsigned short delay; ///< How long before curing (secs).
 	int timer;
 };
 
 struct pet_bonus {
-	unsigned short type; //bStr, bVit?
-	unsigned short val;	//Qty
+	unsigned short type;     //bStr, bVit?
+	unsigned short val;      //Qty
 	unsigned short duration; //in secs
-	unsigned short delay;	//Time before RENEWAL_CAST (secs)
+	unsigned short delay;    //Time before RENEWAL_CAST (secs)
 	int timer;
 };
 
@@ -93,7 +109,7 @@ struct pet_data {
 	} state;
 	int move_fail_count;
 	int64 next_walktime, last_thinktime;
-	short rate_fix;	//Support rate as modified by intimacy (1000 = 100%) [Skotlex]
+	short rate_fix; //Support rate as modified by intimacy (1000 = 100%) [Skotlex]
 
 	struct pet_recovery* recovery;
 	struct pet_bonus* bonus;
@@ -138,8 +154,8 @@ struct pet_interface {
 	int (*food) (struct map_session_data *sd, struct pet_data *pd);
 	int (*ai_sub_hard_lootsearch) (struct block_list *bl, va_list ap);
 	int (*menu) (struct map_session_data *sd, int menunum);
-	int (*change_name) (struct map_session_data *sd, char *name);
-	int (*change_name_ack) (struct map_session_data *sd, char *name, int flag);
+	int (*change_name) (struct map_session_data *sd, const char *name);
+	int (*change_name_ack) (struct map_session_data *sd, const char *name, int flag);
 	int (*equipitem) (struct map_session_data *sd, int index);
 	int (*randomwalk) (struct pet_data *pd, int64 tick);
 	int (*ai_sub_hard) (struct pet_data *pd, struct map_session_data *sd, int64 tick);
@@ -149,13 +165,14 @@ struct pet_interface {
 	int (*lootitem_drop) (struct pet_data *pd, struct map_session_data *sd);
 	int (*skill_bonus_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*recovery_timer) (int tid, int64 tick, int id, intptr_t data);
-	int (*heal_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*skill_support_timer) (int tid, int64 tick, int id, intptr_t data);
-	int (*read_db) ();
+	int (*read_db) (void);
 };
 
-struct pet_interface *pet;
-
+#ifdef HERCULES_CORE
 void pet_defaults(void);
+#endif // HERCULES_CORE
 
-#endif /* _MAP_PET_H_ */
+HPShared struct pet_interface *pet;
+
+#endif /* MAP_PET_H */

@@ -1,10 +1,30 @@
 #1384763034
 
+
+-- This file is part of Hercules.
+-- http://herc.ws - http://github.com/HerculesWS/Hercules
+--
+-- Copyright (C) 2013-2015  Hercules Dev Team
+-- Copyright (C) 2013  Haru <haru@dotalux.com>
+--
+-- Hercules is free software: you can redistribute it and/or modify
+-- it under the terms of the GNU General Public License as published by
+-- the Free Software Foundation, either version 3 of the License, or
+-- (at your option) any later version.
+--
+-- This program is distributed in the hope that it will be useful,
+-- but WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-- GNU General Public License for more details.
+--
+-- You should have received a copy of the GNU General Public License
+-- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 -- Note: If you're running a MySQL version earlier than 5.0 (or if this scripts fails for you for any reason)
 --       you'll need to run the following queries manually:
 --
 -- [ Both Pre-Renewal and Renewal ]
--- ALTER TABLE item_db2 ADD COLUMN `bindonequip` tinyint(1) unsigned DEFAULT NULL AFTER `view`;
+-- ALTER TABLE item_db2 ADD COLUMN `bindonequip` TINYINT(1) UNSIGNED DEFAULT NULL AFTER `view`;
 -- INSERT INTO `sql_updates` (`timestamp`) VALUES (1384763034);
 --
 -- [ End ]
@@ -55,7 +75,7 @@ BEGIN
 
 END $$
 
-CALL alter_if_not_exists('item_db2', 'bindonequip', 'ADD COLUMN', 'tinyint(1) unsigned DEFAULT NULL AFTER `view`') $$
+CALL alter_if_not_exists('item_db2', 'bindonequip', 'ADD COLUMN', 'TINYINT(1) UNSIGNED DEFAULT NULL AFTER `view`') $$
 
 DROP PROCEDURE IF EXISTS alter_if_not_exists $$
 DROP PROCEDURE IF EXISTS alter_if_exists $$

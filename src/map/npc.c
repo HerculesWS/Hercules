@@ -1,11 +1,56 @@
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-// Portions Copyright (c) Athena Dev Teams
-
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C)  Athena Dev Teams
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #define HERCULES_CORE
 
-#include "../config/core.h" // NPC_SECURE_TIMEOUT_INPUT, NPC_SECURE_TIMEOUT_MENU, NPC_SECURE_TIMEOUT_NEXT, SECURE_NPCTIMEOUT, SECURE_NPCTIMEOUT_INTERVAL
+#include "config/core.h" // NPC_SECURE_TIMEOUT_INPUT, NPC_SECURE_TIMEOUT_MENU, NPC_SECURE_TIMEOUT_NEXT, SECURE_NPCTIMEOUT, SECURE_NPCTIMEOUT_INTERVAL
 #include "npc.h"
+
+#include "map/battle.h"
+#include "map/chat.h"
+#include "map/clif.h"
+#include "map/guild.h"
+#include "map/instance.h"
+#include "map/intif.h"
+#include "map/itemdb.h"
+#include "map/log.h"
+#include "map/map.h"
+#include "map/mob.h"
+#include "map/pc.h"
+#include "map/pet.h"
+#include "map/script.h"
+#include "map/skill.h"
+#include "map/status.h"
+#include "map/unit.h"
+#include "common/HPM.h"
+#include "common/cbasetypes.h"
+#include "common/db.h"
+#include "common/ers.h"
+#include "common/memmgr.h"
+#include "common/nullpo.h"
+#include "common/showmsg.h"
+#include "common/socket.h"
+#include "common/sql.h"
+#include "common/strlib.h"
+#include "common/timer.h"
+#include "common/utils.h"
 
 #include <errno.h>
 #include <math.h>
@@ -14,46 +59,9 @@
 #include <string.h>
 #include <time.h>
 
-#include "battle.h"
-#include "chat.h"
-#include "clif.h"
-#include "instance.h"
-#include "intif.h"
-#include "itemdb.h"
-#include "log.h"
-#include "map.h"
-#include "mob.h"
-#include "pc.h"
-#include "pet.h"
-#include "script.h"
-#include "skill.h"
-#include "status.h"
-#include "unit.h"
-#include "../common/HPM.h"
-#include "../common/cbasetypes.h"
-#include "../common/db.h"
-#include "../common/ers.h"
-#include "../common/malloc.h"
-#include "../common/nullpo.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h"
-#include "../common/strlib.h"
-#include "../common/timer.h"
-#include "../common/utils.h"
-
 struct npc_interface npc_s;
+struct npc_interface *npc;
 
-static int npc_id=START_NPC_NUM;
-static int npc_warp=0;
-static int npc_shop=0;
-static int npc_script=0;
-static int npc_mob=0;
-static int npc_delay_mob=0;
-static int npc_cache_mob=0;
-
-static char *npc_last_path;
-static char *npc_last_ref;
-struct npc_path_data *npc_last_npd;
 
 //For holding the view data of npc classes. [Skotlex]
 static struct view_data npc_viewdb[MAX_NPC_CLASS];
@@ -62,39 +70,66 @@ static struct view_data npc_viewdb2[MAX_NPC_CLASS2_END-MAX_NPC_CLASS2_START];
 /* for speedup */
 unsigned int npc_market_qty[MAX_INVENTORY];
 
-static struct script_event_s
-{	//Holds pointers to the commonly executed scripts for speedup. [Skotlex]
+static struct script_event_s {
+	//Holds pointers to the commonly executed scripts for speedup. [Skotlex]
 	struct event_data *event[UCHAR_MAX];
 	const char *event_name[UCHAR_MAX];
 	uint8 event_count;
 } script_event[NPCE_MAX];
 
-struct view_data* npc_get_viewdata(int class_)
-{	//Returns the viewdata for normal npc classes.
-	if( class_ == INVISIBLE_CLASS )
+/**
+ * Returns the viewdata for normal npc classes.
+ * @param class_ The NPC class ID.
+ * @return The viewdata, or NULL if the ID is invalid.
+ */
+struct view_data *npc_get_viewdata(int class_)
+{
+	if (class_ == INVISIBLE_CLASS)
 		return &npc_viewdb[0];
-	if (npcdb_checkid(class_) || class_ == WARP_CLASS){
-		if( class_ > MAX_NPC_CLASS2_START ){
-			return &npc_viewdb2[class_-MAX_NPC_CLASS2_START];
-		}else{
+	if (npc->db_checkid(class_)) {
+		if (class_ < MAX_NPC_CLASS) {
 			return &npc_viewdb[class_];
+		} else if (class_ >= MAX_NPC_CLASS2_START && class_ < MAX_NPC_CLASS2_END) {
+			return &npc_viewdb2[class_-MAX_NPC_CLASS2_START];
 		}
 	}
 	return NULL;
 }
 
+/**
+ * Checks if a given id is a valid npc id.
+ *
+ * Since new npcs are added all the time, the max valid value is the one before the first mob (Scorpion = 1001)
+ *
+ * @param id The NPC ID to validate.
+ * @return Whether the value is a valid ID.
+ */
+bool npc_db_checkid(int id)
+{
+	if (id >= WARP_CLASS && id <= 125) // First subrange
+		return true;
+	if (id == HIDDEN_WARP_CLASS || id == INVISIBLE_CLASS) // Special IDs not included in the valid ranges
+		return true;
+	if (id > 400 && id < MAX_NPC_CLASS) // Second subrange
+		return true;
+	if (id >= MAX_NPC_CLASS2_START && id < MAX_NPC_CLASS2_END) // Second range
+		return true;
+	// Anything else is invalid
+	return false;
+}
+
 /// Returns a new npc id that isn't being used in id_db.
 /// Fatal error if nothing is available.
 int npc_get_new_npc_id(void) {
-	if( npc_id >= START_NPC_NUM && !map->blid_exists(npc_id) )
-		return npc_id++;// available
+	if (npc->npc_id >= START_NPC_NUM && !map->blid_exists(npc->npc_id))
+		return npc->npc_id++;// available
 	else {// find next id
-		int base_id = npc_id;
-		while( base_id != ++npc_id ) {
-			if( npc_id < START_NPC_NUM )
-				npc_id = START_NPC_NUM;
-			if( !map->blid_exists(npc_id) )
-				return npc_id++;// available
+		int base_id = npc->npc_id;
+		while (base_id != ++npc->npc_id) {
+			if (npc->npc_id < START_NPC_NUM)
+				npc->npc_id = START_NPC_NUM;
+			if (!map->blid_exists(npc->npc_id))
+				return npc->npc_id++;// available
 		}
 		// full loop, nothing available
 		ShowFatalError("npc_get_new_npc_id: All ids are taken. Exiting...");
@@ -102,13 +137,21 @@ int npc_get_new_npc_id(void) {
 	}
 }
 
-int npc_isnear_sub(struct block_list* bl, va_list args) {
-    struct npc_data *nd = (struct npc_data*)bl;
-    
-    if( nd->option & (OPTION_HIDE|OPTION_INVISIBLE) )
-        return 0;
+int npc_isnear_sub(struct block_list *bl, va_list args)
+{
+	const struct npc_data *nd = NULL;
 
-    return 1;
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_NPC);
+	nd = BL_UCCAST(BL_NPC, bl);
+
+	if( nd->option & (OPTION_HIDE|OPTION_INVISIBLE) )
+		return 0;
+
+	if( battle_config.vendchat_near_hiddennpc && ( nd->class_ == FAKE_NPC || nd->class_ == HIDDEN_WARP_CLASS ) )
+		return 0;
+
+	return 1;
 }
 
 bool npc_isnear(struct block_list * bl) {
@@ -123,6 +166,7 @@ int npc_ontouch_event(struct map_session_data *sd, struct npc_data *nd)
 {
 	char name[EVENT_NAME_LENGTH];
 
+	nullpo_retr(1, nd);
 	if( nd->touching_id )
 		return 0; // Attached a player already. Can't trigger on anyone else.
 
@@ -137,11 +181,26 @@ int npc_ontouch2_event(struct map_session_data *sd, struct npc_data *nd)
 {
 	char name[EVENT_NAME_LENGTH];
 
-	if( sd->areanpc_id == nd->bl.id )
+	nullpo_retr(1, sd);
+	nullpo_retr(1, nd);
+	if (sd->areanpc_id == nd->bl.id)
 		return 0;
 
 	snprintf(name, ARRAYLENGTH(name), "%s::%s", nd->exname, script->config.ontouch2_name);
-	return npc->event(sd,name,2);
+	return npc->event(sd, name, 2);
+}
+
+int npc_onuntouch_event(struct map_session_data *sd, struct npc_data *nd)
+{
+	char name[EVENT_NAME_LENGTH];
+
+	nullpo_ret(sd);
+	nullpo_ret(nd);
+	if (sd->areanpc_id != nd->bl.id)
+		return 0;
+
+	snprintf(name, ARRAYLENGTH(name), "%s::%s", nd->exname, script->config.onuntouch_name);
+	return npc->event(sd, name, 2);
 }
 
 /*==========================================
@@ -153,9 +212,9 @@ int npc_enable_sub(struct block_list *bl, va_list ap)
 
 	nullpo_ret(bl);
 	nullpo_ret(nd=va_arg(ap,struct npc_data *));
-	if(bl->type == BL_PC)
-	{
-		TBL_PC *sd = (TBL_PC*)bl;
+
+	if (bl->type == BL_PC) {
+		struct map_session_data *sd = BL_UCAST(BL_PC, bl);
 
 		if (nd->option&OPTION_INVISIBLE)
 			return 1;
@@ -165,7 +224,7 @@ int npc_enable_sub(struct block_list *bl, va_list ap)
 			if (sd->npc_id != 0)
 				return 0;
 
-			pc_stop_walking(sd,1);
+			pc_stop_walking(sd, STOPWALKING_FLAG_FIXPOS);
 			npc->click(sd,nd);
 		}
 	}
@@ -213,9 +272,9 @@ int npc_enable(const char* name, int flag)
 /*==========================================
  * NPC lookup (get npc_data through npcname)
  *------------------------------------------*/
-struct npc_data* npc_name2id(const char* name)
+struct npc_data *npc_name2id(const char *name)
 {
-	return (struct npc_data *) strdb_get(npc->name_db, name);
+	return strdb_get(npc->name_db, name);
 }
 /**
  * For the Secure NPC Timeout option (check config/Secure.h) [RR]
@@ -231,7 +290,7 @@ int npc_rr_secure_timeout_timer(int tid, int64 tick, int id, intptr_t data) {
 		if( sd ) sd->npc_idle_timer = INVALID_TIMER;
 		return 0;//Not logged in anymore OR no longer attached to a npc
 	}
-	
+
 	switch( sd->npc_idle_type ) {
 		case NPCT_INPUT:
 			timeout = NPC_SECURE_TIMEOUT_INPUT;
@@ -241,7 +300,7 @@ int npc_rr_secure_timeout_timer(int tid, int64 tick, int id, intptr_t data) {
 			break;
 		//case NPCT_WAIT: var starts with this value
 	}
-	
+
 	if( DIFF_TICK(tick,sd->npc_idle_tick) > (timeout*1000) ) {
 		/**
 		 * If we still have the NPC script attached, tell it to stop.
@@ -250,13 +309,17 @@ int npc_rr_secure_timeout_timer(int tid, int64 tick, int id, intptr_t data) {
 			sd->st->state = END;
 		sd->state.menu_or_input = 0;
 		sd->npc_menu = 0;
-		clif->scriptmes(sd, sd->npc_id, " ");
 		/**
 		 * This guy's been idle for longer than allowed, close him.
 		 **/
 		clif->scriptclose(sd,sd->npc_id);
-		clif->scriptclear(sd,sd->npc_id);
 		sd->npc_idle_timer = INVALID_TIMER;
+		/**
+		* We will end the script ourselves, client will request to end it again if it have dialog,
+		* however it will be ignored, workaround for client stuck if NPC have no dialog. [hemagx]
+		**/
+		sd->state.dialog = 0;
+		npc->scriptcont(sd, sd->npc_id, true);
 	} else //Create a new instance of ourselves to continue
 		sd->npc_idle_timer = timer->add(timer->gettick() + (SECURE_NPCTIMEOUT_INTERVAL*1000),npc->secure_timeout_timer,sd->bl.id,0);
 #endif
@@ -298,7 +361,7 @@ int npc_event_dequeue(struct map_session_data* sd)
 /**
  * @see DBCreateData
  */
-DBData npc_event_export_create(DBKey key, va_list args)
+struct DBData npc_event_export_create(union DBKey key, va_list args)
 {
 	struct linkdb_node** head_ptr;
 	CREATE(head_ptr, struct linkdb_node*, 1);
@@ -312,8 +375,12 @@ DBData npc_event_export_create(DBKey key, va_list args)
  *------------------------------------------*/
 int npc_event_export(struct npc_data *nd, int i)
 {
-	char* lname = nd->u.scr.label_list[i].name;
-	int pos = nd->u.scr.label_list[i].pos;
+	char* lname;
+	int pos;
+	nullpo_ret(nd);
+	Assert_ret(i >= 0 && i < nd->u.scr.label_list_num);
+	lname = nd->u.scr.label_list[i].name;
+	pos = nd->u.scr.label_list[i].pos;
 	if ((lname[0] == 'O' || lname[0] == 'o') && (lname[1] == 'N' || lname[1] == 'n')) {
 		struct event_data *ev;
 		struct linkdb_node **label_linkdb = NULL;
@@ -357,7 +424,7 @@ void npc_event_doall_sub(void *key, void *data, va_list ap)
 			npc->event_sub(map->id2sd(rid), ev, buf);
 		}
 		else {
-			script->run(ev->nd->u.scr.script, ev->pos, rid, ev->nd->bl.id);
+			script->run_npc(ev->nd->u.scr.script, ev->pos, rid, ev->nd->bl.id);
 		}
 		(*c)++;
 	}
@@ -366,13 +433,14 @@ void npc_event_doall_sub(void *key, void *data, va_list ap)
 // runs the specified event (supports both single-npc and global events)
 int npc_event_do(const char* name)
 {
+	nullpo_ret(name);
 	if( name[0] == ':' && name[1] == ':' ) {
 		return npc->event_doall(name+2); // skip leading "::"
 	}
 	else {
 		struct event_data *ev = strdb_get(npc->ev_db, name);
 		if (ev) {
-			script->run(ev->nd->u.scr.script, ev->pos, 0, ev->nd->bl.id);
+			script->run_npc(ev->nd->u.scr.script, ev->pos, 0, ev->nd->bl.id);
 			return 1;
 		}
 	}
@@ -470,9 +538,12 @@ void npc_event_do_oninit( bool reload )
 int npc_timerevent_export(struct npc_data *nd, int i)
 {
 	int t = 0, len = 0;
-	char *lname = nd->u.scr.label_list[i].name;
-	int pos = nd->u.scr.label_list[i].pos;
-	if (sscanf(lname, "OnTimer%d%n", &t, &len) == 1 && lname[len] == '\0') {
+	char *lname;
+	int pos;
+	nullpo_ret(nd);
+	lname = nd->u.scr.label_list[i].name;
+	pos = nd->u.scr.label_list[i].pos;
+	if (sscanf(lname, "OnTimer%d%n", &t, &len) == 1 && len < NAME_LENGTH && lname[len] == '\0') {
 		// Timer event
 		struct npc_timerevent_list *te = nd->u.scr.timer_event;
 		int j, k = nd->u.scr.timeramount;
@@ -503,20 +574,23 @@ struct timer_event_data {
 /*==========================================
  * triger 'OnTimerXXXX' events
  *------------------------------------------*/
-int npc_timerevent(int tid, int64 tick, int id, intptr_t data) {
+int npc_timerevent(int tid, int64 tick, int id, intptr_t data)
+{
 	int old_rid, old_timer;
 	int64 old_tick;
-	struct npc_data* nd=(struct npc_data *)map->id2bl(id);
+	struct npc_data *nd = map->id2nd(id);
 	struct npc_timerevent_list *te;
 	struct timer_event_data *ted = (struct timer_event_data*)data;
 	struct map_session_data *sd=NULL;
+
+	nullpo_ret(ted);
 
 	if( nd == NULL ) {
 		ShowError("npc_timerevent: NPC not found??\n");
 		return 0;
 	}
 
-	if( ted->rid && !(sd = map->id2sd(ted->rid)) ) {
+	if (ted->rid && (sd = map->id2sd(ted->rid)) == NULL) {
 		ShowError("npc_timerevent: Attached player not found.\n");
 		ers_free(npc->timer_event_ers, ted);
 		return 0;
@@ -557,7 +631,7 @@ int npc_timerevent(int tid, int64 tick, int id, intptr_t data) {
 	}
 
 	// Run the script
-	script->run(nd->u.scr.script,te->pos,nd->u.scr.rid,nd->bl.id);
+	script->run_npc(nd->u.scr.script,te->pos,nd->u.scr.rid,nd->bl.id);
 
 	nd->u.scr.rid = old_rid; // Attached-rid should be restored anyway.
 	if( sd )
@@ -581,7 +655,7 @@ int npc_timerevent_start(struct npc_data* nd, int rid) {
 	// Check if there is an OnTimer Event
 	ARR_FIND( 0, nd->u.scr.timeramount, j, nd->u.scr.timer_event[j].timer > nd->u.scr.timer );
 
-	if( nd->u.scr.rid > 0 && !(sd = map->id2sd(nd->u.scr.rid)) ) {
+	if (nd->u.scr.rid > 0 && (sd = map->id2sd(nd->u.scr.rid)) == NULL) {
 		// Failed to attach timer to this player.
 		ShowError("npc_timerevent_start: Attached player not found!\n");
 		return 1;
@@ -626,12 +700,11 @@ int npc_timerevent_start(struct npc_data* nd, int rid) {
 int npc_timerevent_stop(struct npc_data* nd)
 {
 	struct map_session_data *sd = NULL;
-	const struct TimerData *td = NULL;
 	int *tid;
 
 	nullpo_ret(nd);
 
-	if( nd->u.scr.rid && !(sd = map->id2sd(nd->u.scr.rid)) ) {
+	if (nd->u.scr.rid && (sd = map->id2sd(nd->u.scr.rid)) == NULL) {
 		ShowError("npc_timerevent_stop: Attached player not found!\n");
 		return 1;
 	}
@@ -640,17 +713,15 @@ int npc_timerevent_stop(struct npc_data* nd)
 		return 0;
 
 	// Delete timer
-	if ( *tid != INVALID_TIMER )
-	{
-		td = timer->get(*tid);
-		if( td && td->data )
+	if (*tid != INVALID_TIMER) {
+		const struct TimerData *td = timer->get(*tid);
+		if (td && td->data)
 			ers_free(npc->timer_event_ers, (void*)td->data);
 		timer->delete(*tid,npc->timerevent);
 		*tid = INVALID_TIMER;
 	}
 
-	if( !sd && nd->u.scr.timertick )
-	{
+	if (!sd && nd->u.scr.timertick) {
 		nd->u.scr.timer += DIFF_TICK32(timer->gettick(),nd->u.scr.timertick); // Set 'timer' to the time that has passed since the beginning of the timers
 		nd->u.scr.timertick = 0; // Set 'tick' to zero so that we know it's off.
 	}
@@ -666,6 +737,7 @@ void npc_timerevent_quit(struct map_session_data* sd)
 	struct npc_data* nd;
 	struct timer_event_data *ted;
 
+	nullpo_retv(sd);
 	// Check timer existence
 	if( sd->npc_timer_id == INVALID_TIMER )
 		return;
@@ -676,14 +748,13 @@ void npc_timerevent_quit(struct map_session_data* sd)
 	}
 
 	// Delete timer
-	nd = (struct npc_data *)map->id2bl(td->id);
+	nd = map->id2nd(td->id);
 	ted = (struct timer_event_data*)td->data;
 	timer->delete(sd->npc_timer_id, npc->timerevent);
 	sd->npc_timer_id = INVALID_TIMER;
 
 	// Execute OnTimerQuit
-	if( nd && nd->bl.type == BL_NPC )
-	{
+	if (nd != NULL) {
 		char buf[EVENT_NAME_LENGTH];
 		struct event_data *ev;
 
@@ -698,6 +769,7 @@ void npc_timerevent_quit(struct map_session_data* sd)
 		{
 			int old_rid,old_timer;
 			int64 old_tick;
+			nullpo_retv(ted);
 
 			//Set timer related info.
 			old_rid = (nd->u.scr.rid == sd->bl.id ? 0 : nd->u.scr.rid); // Detach rid if the last attached player logged off.
@@ -709,7 +781,7 @@ void npc_timerevent_quit(struct map_session_data* sd)
 			nd->u.scr.timer = ted->time;
 
 			//Execute label
-			script->run(nd->u.scr.script,ev->pos,sd->bl.id,nd->bl.id);
+			script->run_npc(nd->u.scr.script,ev->pos,sd->bl.id,nd->bl.id);
 
 			//Restore previous data.
 			nd->u.scr.rid = old_rid;
@@ -766,6 +838,8 @@ int npc_settimerevent_tick(struct npc_data* nd, int newtimer)
 
 int npc_event_sub(struct map_session_data* sd, struct event_data* ev, const char* eventname)
 {
+	nullpo_retr(2, sd);
+	nullpo_retr(2, eventname);
 	if ( sd->npc_id != 0 )
 	{
 		//Enqueue the event trigger.
@@ -786,7 +860,7 @@ int npc_event_sub(struct map_session_data* sd, struct event_data* ev, const char
 		npc->event_dequeue(sd);
 		return 2;
 	}
-	script->run(ev->nd->u.scr.script,ev->pos,sd->bl.id,ev->nd->bl.id);
+	script->run_npc(ev->nd->u.scr.script,ev->pos,sd->bl.id,ev->nd->bl.id);
 	return 0;
 }
 
@@ -850,9 +924,11 @@ int npc_touch_areanpc_sub(struct block_list *bl, va_list ap) {
  * If not, it unsets it and searches for another player in range.
  *------------------------------------------*/
 int npc_touchnext_areanpc(struct map_session_data* sd, bool leavemap) {
-	struct npc_data *nd = map->id2nd(sd->touching_id);
+	struct npc_data *nd;
 	short xs, ys;
 
+	nullpo_retr(1, sd);
+	nd = map->id2nd(sd->touching_id);
 	if( !nd || nd->touching_id != sd->bl.id )
 		return 1;
 
@@ -884,10 +960,11 @@ int npc_touch_areanpc(struct map_session_data* sd, int16 m, int16 x, int16 y)
 	int j, found_warp = 0;
 
 	nullpo_retr(1, sd);
-
-	// Why not enqueue it? [Inkfish]
-	//if(sd->npc_id)
-	//	return 1;
+	Assert_retr(1, m >= 0 && m < map->count);
+#if 0 // Why not enqueue it? [Inkfish]
+	if(sd->npc_id)
+		return 1;
+#endif // 0
 
 	for(i=0;i<map->list[m].npc_num;i++) {
 		if (map->list[m].npc[i]->option&OPTION_INVISIBLE) {
@@ -961,14 +1038,42 @@ int npc_touch_areanpc(struct map_session_data* sd, int16 m, int16 x, int16 y)
 	return 0;
 }
 
+/*==========================================
+ * Exec OnUnTouch for player if out range of area event
+ *------------------------------------------*/
+int npc_untouch_areanpc(struct map_session_data* sd, int16 m, int16 x, int16 y)
+{
+	struct npc_data *nd = NULL;
+	nullpo_retr(1, sd);
+	Assert_retr(1, m >= 0 && m < map->count);
+
+	if (!sd->areanpc_id)
+		return 0;
+
+	nd = map->id2nd(sd->areanpc_id);
+	if (nd == NULL) {
+		sd->areanpc_id = 0;
+		return 1;
+	}
+
+	npc->onuntouch_event(sd, nd);
+	sd->areanpc_id = 0;
+	return 0;
+}
+
 // OnTouch NPC or Warp for Mobs
 // Return 1 if Warped
 int npc_touch_areanpc2(struct mob_data *md)
 {
-	int i, m = md->bl.m, x = md->bl.x, y = md->bl.y, id;
+	int i, m, x, y, id;
 	char eventname[EVENT_NAME_LENGTH];
 	struct event_data* ev;
 	int xs, ys;
+
+	nullpo_ret(md);
+	m = md->bl.m;
+	x = md->bl.x;
+	y = md->bl.y;
 
 	for( i = 0; i < map->list[m].npc_num; i++ ) {
 		if( map->list[m].npc[i]->option&OPTION_INVISIBLE )
@@ -1007,7 +1112,7 @@ int npc_touch_areanpc2(struct mob_data *md)
 						break; // No OnTouchNPC Event
 					md->areanpc_id = map->list[m].npc[i]->bl.id;
 					id = md->bl.id; // Stores Unique ID
-					script->run(ev->nd->u.scr.script, ev->pos, md->bl.id, ev->nd->bl.id);
+					script->run_npc(ev->nd->u.scr.script, ev->pos, md->bl.id, ev->nd->bl.id);
 					if( map->id2md(id) == NULL ) return 1; // Not Warped, but killed
 					break;
 			}
@@ -1028,6 +1133,8 @@ int npc_check_areanpc(int flag, int16 m, int16 x, int16 y, int16 range) {
 	int x0,y0,x1,y1;
 	int xs,ys;
 
+	Assert_retr(1, m >= 0 && m < map->count);
+
 	if (range < 0) return 0;
 	x0 = max(x-range, 0);
 	y0 = max(y-range, 0);
@@ -1038,7 +1145,7 @@ int npc_check_areanpc(int flag, int16 m, int16 x, int16 y, int16 range) {
 	i = 0;
 	for (ys = y0; ys <= y1 && !i; ys++) {
 		for(xs = x0; xs <= x1 && !i; xs++) {
-			if (map->getcell(m,xs,ys,CELL_CHKNPC))
+			if (map->getcell(m, NULL, xs, ys, CELL_CHKNPC))
 				i = 1;
 		}
 	}
@@ -1082,23 +1189,30 @@ int npc_check_areanpc(int flag, int16 m, int16 x, int16 y, int16 range) {
  *------------------------------------------*/
 struct npc_data* npc_checknear(struct map_session_data* sd, struct block_list* bl)
 {
-	struct npc_data *nd;
+	struct npc_data *nd = BL_CAST(BL_NPC, bl);
+	int distance = AREA_SIZE + 1;
 
 	nullpo_retr(NULL, sd);
-	if(bl == NULL) return NULL;
-	if(bl->type != BL_NPC) return NULL;
-	nd = (TBL_NPC*)bl;
 
-	if(sd->state.using_fake_npc && sd->npc_id == bl->id)
+	if (nd == NULL)
+		return NULL;
+
+	if (sd->npc_id == bl->id)
 		return nd;
 
 	if (nd->class_<0) //Class-less npc, enable click from anywhere.
 		return nd;
 
-	if (bl->m!=sd->bl.m ||
-	   bl->x<sd->bl.x-AREA_SIZE-1 || bl->x>sd->bl.x+AREA_SIZE+1 ||
-	   bl->y<sd->bl.y-AREA_SIZE-1 || bl->y>sd->bl.y+AREA_SIZE+1)
+	if (distance > nd->area_size)
+		distance = nd->area_size;
+
+	nullpo_retr(NULL, bl);
+	if (bl->m != sd->bl.m ||
+	   bl->x < sd->bl.x - distance || bl->x > sd->bl.x + distance ||
+	   bl->y < sd->bl.y - distance || bl->y > sd->bl.y + distance)
+	{
 		return NULL;
+	}
 
 	return nd;
 }
@@ -1114,6 +1228,9 @@ int npc_globalmessage(const char* name, const char* mes)
 	if (!nd)
 		return 0;
 
+	nullpo_ret(name);
+	nullpo_ret(mes);
+
 	snprintf(temp, sizeof(temp), "%s : %s", name, mes);
 	clif->GlobalMessage(&nd->bl,temp);
 
@@ -1125,20 +1242,21 @@ void run_tomb(struct map_session_data* sd, struct npc_data* nd) {
 	char buffer[200];
 	char time[10];
 
+	nullpo_retv(nd);
 	strftime(time, sizeof(time), "%H:%M", localtime(&nd->u.tomb.kill_time));
 
 	// TODO: Find exact color?
-	snprintf(buffer, sizeof(buffer), msg_txt(857), nd->u.tomb.md->db->name); // "[ ^EE0000%s^000000 ]"
+	snprintf(buffer, sizeof(buffer), msg_sd(sd,857), nd->u.tomb.md->db->name); // "[ ^EE0000%s^000000 ]"
 	clif->scriptmes(sd, nd->bl.id, buffer);
 
-	clif->scriptmes(sd, nd->bl.id, msg_txt(858)); // "Has met its demise"
+	clif->scriptmes(sd, nd->bl.id, msg_sd(sd,858)); // "Has met its demise"
 
-	snprintf(buffer, sizeof(buffer), msg_txt(859), time); // "Time of death : ^EE0000%s^000000"
+	snprintf(buffer, sizeof(buffer), msg_sd(sd,859), time); // "Time of death : ^EE0000%s^000000"
 	clif->scriptmes(sd, nd->bl.id, buffer);
 
-	clif->scriptmes(sd, nd->bl.id, msg_txt(860)); // "Defeated by"
+	clif->scriptmes(sd, nd->bl.id, msg_sd(sd,860)); // "Defeated by"
 
-	snprintf(buffer, sizeof(buffer), msg_txt(861), nd->u.tomb.killer_name[0] ? nd->u.tomb.killer_name : msg_txt(15)); // "[^EE0000%s^000000]" / "Unknown"
+	snprintf(buffer, sizeof(buffer), msg_sd(sd,861), nd->u.tomb.killer_name[0] ? nd->u.tomb.killer_name : msg_sd(sd,15)); // "[^EE0000%s^000000]" / "Unknown"
 	clif->scriptmes(sd, nd->bl.id, buffer);
 
 	clif->scriptclose(sd, nd->bl.id);
@@ -1172,7 +1290,7 @@ int npc_click(struct map_session_data* sd, struct npc_data* nd)
 
 	if ((nd = npc->checknear(sd,&nd->bl)) == NULL)
 		return 1;
-	
+
 	//Hidden/Disabled npc.
 	if (nd->class_ < 0 || nd->option&(OPTION_INVISIBLE|OPTION_HIDE))
 		return 1;
@@ -1189,7 +1307,7 @@ int npc_click(struct map_session_data* sd, struct npc_data* nd)
 				if( !npc->trader_open(sd,nd) )
 					return 1;
 			} else
-				script->run(nd->u.scr.script,0,sd->bl.id,nd->bl.id);
+				script->run_npc(nd->u.scr.script,0,sd->bl.id,nd->bl.id);
 			break;
 		case TOMB:
 			npc->run_tomb(sd,nd);
@@ -1207,14 +1325,14 @@ int npc_scriptcont(struct map_session_data* sd, int id, bool closing) {
 	nullpo_retr(1, sd);
 
 	if( id != sd->npc_id ){
-		TBL_NPC* nd_sd=(TBL_NPC*)map->id2bl(sd->npc_id);
-		TBL_NPC* nd = BL_CAST(BL_NPC, target);
+		struct npc_data *nd_sd = map->id2nd(sd->npc_id);
+		struct npc_data *nd = BL_CAST(BL_NPC, target);
 		ShowDebug("npc_scriptcont: %s (sd->npc_id=%d) is not %s (id=%d).\n",
 			nd_sd?(char*)nd_sd->name:"'Unknown NPC'", (int)sd->npc_id,
-		  	nd?(char*)nd->name:"'Unknown NPC'", (int)id);
+			nd?(char*)nd->name:"'Unknown NPC'", (int)id);
 		return 1;
 	}
-	
+
 	if(id != npc->fake_nd->bl.id) { // Not item script
 		if ((npc->checknear(sd,target)) == NULL){
 			ShowWarning("npc_scriptcont: failed npc->checknear test.\n");
@@ -1236,10 +1354,10 @@ int npc_scriptcont(struct map_session_data* sd, int id, bool closing) {
 	 **/
 	if( sd->progressbar.npc_id && DIFF_TICK(sd->progressbar.timeout,timer->gettick()) > 0 )
 		return 1;
-	
+
 	if( !sd->st )
 		return 1;
-	
+
 	if( closing && sd->st->state == CLOSE )
 		sd->st->state = END;
 
@@ -1260,20 +1378,19 @@ int npc_buysellsel(struct map_session_data* sd, int id, int type) {
 		return 1;
 
 	if ( nd->subtype != SHOP && !(nd->subtype == SCRIPT && nd->u.scr.shop && nd->u.scr.shop->items) ) {
-		
 		if( nd->subtype == SCRIPT )
 			ShowError("npc_buysellsel: trader '%s' has no shop list!\n",nd->exname);
 		else
 			ShowError("npc_buysellsel: no such shop npc %d (%s)\n",id,nd->exname);
-		 
+
 		if (sd->npc_id == id)
 			sd->npc_id = 0;
 		return 1;
 	}
-    
+
 	if (nd->option & OPTION_INVISIBLE) // can't buy if npc is not visible (hack?)
 		return 1;
-	
+
 	if( nd->class_ < 0 && !sd->state.callshop ) {// not called through a script and is not a visible NPC so an invalid call
 		return 1;
 	}
@@ -1287,31 +1404,34 @@ int npc_buysellsel(struct map_session_data* sd, int id, int type) {
 	} else {
 		clif->selllist(sd);
 	}
-	
 	return 0;
 }
 
 /*==========================================
 * Cash Shop Buy List
 *------------------------------------------*/
-int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, unsigned short* item_list) {
-	int i, j, nameid, amount, new_, w, vt;
+int npc_cashshop_buylist(struct map_session_data *sd, int points, struct itemlist *item_list)
+{
+	int i, j, new_, w, vt;
 	struct npc_data *nd = NULL;
 	struct npc_item_list *shop = NULL;
 	unsigned short shop_size = 0;
 
+	nullpo_retr(ERROR_TYPE_SYSTEM, sd);
+	nullpo_retr(ERROR_TYPE_SYSTEM, item_list);
 	if( sd->state.trading )
 		return ERROR_TYPE_EXCHANGE;
 
-	if( count <= 0 )
+	if (VECTOR_LENGTH(*item_list) <= 0)
 		return ERROR_TYPE_ITEM_ID;
-	
+
 	if( points < 0 )
 		return ERROR_TYPE_MONEY;
-	
-	if( !(nd = (struct npc_data *)map->id2bl(sd->npc_shopid)) )
+
+	nd = map->id2nd(sd->npc_shopid);
+	if (nd == NULL)
 		return ERROR_TYPE_NPC;
-	
+
 	if( nd->subtype != CASHSHOP ) {
 		if( nd->subtype == SCRIPT && nd->u.scr.shop && nd->u.scr.shop->type != NST_ZENY && nd->u.scr.shop->type != NST_MARKET ) {
 			shop = nd->u.scr.shop->item;
@@ -1322,30 +1442,29 @@ int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, uns
 		shop = nd->u.shop.shop_item;
 		shop_size = nd->u.shop.count;
 	}
-	
+
 	new_ = 0;
 	w = 0;
 	vt = 0; // Global Value
 
 	// Validating Process ----------------------------------------------------
-	for( i = 0; i < count; i++ ) {
-		nameid = item_list[i*2+1];
-		amount = item_list[i*2+0];
+	for (i = 0; i < VECTOR_LENGTH(*item_list); i++) {
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
 
-		if( !itemdb->exists(nameid) || amount <= 0 )
+		if (!itemdb->exists(entry->id) || entry->amount <= 0)
 			return ERROR_TYPE_ITEM_ID;
 
-		ARR_FIND(0,shop_size,j,shop[j].nameid == nameid);
-		if( j == shop_size || shop[j].value <= 0 )
+		ARR_FIND(0,shop_size,j,shop[j].nameid == entry->id);
+		if (j == shop_size || shop[j].value <= 0)
 			return ERROR_TYPE_ITEM_ID;
 
-		if( !itemdb->isstackable(nameid) && amount > 1 ) {
+		if (!itemdb->isstackable(entry->id) && entry->amount > 1) {
 			ShowWarning("Player %s (%d:%d) sent a hexed packet trying to buy %d of non-stackable item %d!\n",
-						sd->status.name, sd->status.account_id, sd->status.char_id, amount, nameid);
-			amount = item_list[i*2+0] = 1;
+						sd->status.name, sd->status.account_id, sd->status.char_id, entry->amount, entry->id);
+			entry->amount = 1;
 		}
 
-		switch( pc->checkadditem(sd,nameid,amount) ) {
+		switch (pc->checkadditem(sd, entry->id, entry->amount)) {
 			case ADDITEM_NEW:
 				new_++;
 				break;
@@ -1353,16 +1472,16 @@ int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, uns
 				return ERROR_TYPE_INVENTORY_WEIGHT;
 		}
 
-		vt += shop[j].value * amount;
-		w += itemdb_weight(nameid) * amount;
+		vt += shop[j].value * entry->amount;
+		w += itemdb_weight(entry->id) * entry->amount;
 	}
 
 	if( w + sd->weight > sd->max_weight )
 		return ERROR_TYPE_INVENTORY_WEIGHT;
-	
+
 	if( pc->inventoryblank(sd) < new_ )
 		return ERROR_TYPE_INVENTORY_WEIGHT;
-	
+
 	if( points > vt ) points = vt;
 
 	// Payment Process ----------------------------------------------------
@@ -1375,18 +1494,16 @@ int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, uns
 		pc->paycash(sd,vt,points);
 	}
 	// Delivery Process ----------------------------------------------------
-	for( i = 0; i < count; i++ ) {
+	for (i = 0; i < VECTOR_LENGTH(*item_list); i++) {
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
 		struct item item_tmp;
-
-		nameid = item_list[i*2+1];
-		amount = item_list[i*2+0];
 
 		memset(&item_tmp,0,sizeof(item_tmp));
 
-		if( !pet->create_egg(sd,nameid) ) {
-			item_tmp.nameid = nameid;
+		if (!pet->create_egg(sd, entry->id)) {
+			item_tmp.nameid = entry->id;
 			item_tmp.identify = 1;
-			pc->additem(sd,&item_tmp,amount,LOG_TYPE_NPC);
+			pc->additem(sd, &item_tmp, entry->amount, LOG_TYPE_NPC);
 		}
 	}
 
@@ -1394,21 +1511,27 @@ int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, uns
 }
 
 //npc_buylist for script-controlled shops.
-int npc_buylist_sub(struct map_session_data* sd, int n, unsigned short* item_list, struct npc_data* nd)
+int npc_buylist_sub(struct map_session_data *sd, struct itemlist *item_list, struct npc_data *nd)
 {
 	char npc_ev[EVENT_NAME_LENGTH];
 	int i;
 	int key_nameid = 0;
 	int key_amount = 0;
 
+	nullpo_ret(item_list);
+	nullpo_ret(nd);
+
 	// discard old contents
 	script->cleararray_pc(sd, "@bought_nameid", (void*)0);
 	script->cleararray_pc(sd, "@bought_quantity", (void*)0);
 
 	// save list of bought items
-	for( i = 0; i < n; i++ ) {
-		script->setarray_pc(sd, "@bought_nameid", i, (void*)(intptr_t)item_list[i*2+1], &key_nameid);
-		script->setarray_pc(sd, "@bought_quantity", i, (void*)(intptr_t)item_list[i*2], &key_amount);
+	for (i = 0; i < VECTOR_LENGTH(*item_list); i++) {
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
+		intptr_t nameid = entry->id;
+		intptr_t amount = entry->amount;
+		script->setarray_pc(sd, "@bought_nameid", i, (void *)nameid, &key_nameid);
+		script->setarray_pc(sd, "@bought_quantity", i, (void *)amount, &key_amount);
 	}
 
 	// invoke event
@@ -1420,12 +1543,13 @@ int npc_buylist_sub(struct map_session_data* sd, int n, unsigned short* item_lis
 /**
  * Loads persistent NPC Market Data from SQL
  **/
-void npc_market_fromsql(void) {
-	SqlStmt* stmt = SQL->StmtMalloc(map->mysql_handle);
+void npc_market_fromsql(void)
+{
+	struct SqlStmt *stmt = SQL->StmtMalloc(map->mysql_handle);
 	char name[NAME_LENGTH+1];
 	int itemid;
 	int amount;
-	
+
 	if ( SQL_ERROR == SQL->StmtPrepare(stmt, "SELECT `name`, `itemid`, `amount` FROM `%s`", map->npc_market_data_db)
 		|| SQL_ERROR == SQL->StmtExecute(stmt)
 		) {
@@ -1433,15 +1557,15 @@ void npc_market_fromsql(void) {
 		SQL->StmtFree(stmt);
 		return;
 	}
-	
+
 	SQL->StmtBindColumn(stmt, 0, SQLDT_STRING, &name[0], sizeof(name), NULL, NULL);
 	SQL->StmtBindColumn(stmt, 1, SQLDT_INT, &itemid, 0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 2, SQLDT_INT, &amount, 0, NULL, NULL);
-	
+
 	while ( SQL_SUCCESS == SQL->StmtNextRow(stmt) ) {
 		struct npc_data *nd = NULL;
 		unsigned short i;
-		
+
 		if( !(nd = npc->name2id(name)) ) {
 			ShowError("npc_market_fromsql: NPC '%s' not found! skipping...\n",name);
 			npc->market_delfromsql_sub(name, USHRT_MAX);
@@ -1451,30 +1575,30 @@ void npc_market_fromsql(void) {
 			npc->market_delfromsql_sub(name, USHRT_MAX);
 			continue;
 		}
-		
+
 		for(i = 0; i < nd->u.scr.shop->items; i++) {
 			if( nd->u.scr.shop->item[i].nameid == itemid ) {
 				nd->u.scr.shop->item[i].qty = amount;
 				break;
 			}
 		}
-		
+
 		if( i == nd->u.scr.shop->items ) {
 			ShowError("npc_market_fromsql: NPC '%s' does not sell item %d (qty %d), deleting...\n",name,itemid,amount);
 			npc->market_delfromsql_sub(name, itemid);
 			continue;
 		}
-		
 	}
-	
 	SQL->StmtFree(stmt);
 }
 /**
  * Saves persistent NPC Market Data into SQL
  **/
 void npc_market_tosql(struct npc_data *nd, unsigned short index) {
-	if( SQL_ERROR == SQL->Query(map->mysql_handle, "REPLACE INTO `%s` VALUES ('%s','%d','%d')",
-		map->npc_market_data_db, nd->exname, nd->u.scr.shop->item[index].nameid, nd->u.scr.shop->item[index].qty) )
+	nullpo_retv(nd);
+	Assert_retv(index < nd->u.scr.shop->items);
+	if (SQL_ERROR == SQL->Query(map->mysql_handle, "REPLACE INTO `%s` VALUES ('%s','%d','%u')",
+		map->npc_market_data_db, nd->exname, nd->u.scr.shop->item[index].nameid, nd->u.scr.shop->item[index].qty))
 		Sql_ShowDebug(map->mysql_handle);
 }
 /**
@@ -1494,16 +1618,19 @@ void npc_market_delfromsql_sub(const char *npcname, unsigned short index) {
  * Removes persistent NPC Market Data from SQL
  **/
 void npc_market_delfromsql(struct npc_data *nd, unsigned short index) {
+	nullpo_retv(nd);
+	Assert_retv(index == USHRT_MAX || index < nd->u.scr.shop->items);
 	npc->market_delfromsql_sub(nd->exname, index == USHRT_MAX ? index : nd->u.scr.shop->item[index].nameid);
 }
 /**
  * Judges whether to allow and spawn a trader's window.
  **/
 bool npc_trader_open(struct map_session_data *sd, struct npc_data *nd) {
-	
+	nullpo_retr(false, sd);
+	nullpo_retr(false, nd);
 	if( !nd->u.scr.shop || !nd->u.scr.shop->items )
 		return false;
-		
+
 	switch( nd->u.scr.shop->type ) {
 		case NST_ZENY:
 			sd->state.callshop = 1;
@@ -1511,15 +1638,15 @@ bool npc_trader_open(struct map_session_data *sd, struct npc_data *nd) {
 			return true;/* we skip sd->npc_shopid, npc->buysell will set it then when the player selects */
 		case NST_MARKET: {
 				unsigned short i;
-				
+
 				for(i = 0; i < nd->u.scr.shop->items; i++) {
 					if( nd->u.scr.shop->item[i].qty )
 						break;
 				}
-			
+
 				/* nothing to display, no items available */
-				if( i == nd->u.scr.shop->items ) {
-					clif->colormes(sd->fd,COLOR_RED, msg_txt(881));
+				if (i == nd->u.scr.shop->items) {
+					clif->messagecolor_self(sd->fd, COLOR_RED, msg_sd(sd,881));
 					return false;
 				}
 
@@ -1530,9 +1657,7 @@ bool npc_trader_open(struct map_session_data *sd, struct npc_data *nd) {
 			clif->cashshop_show(sd,nd);
 			break;
 	}
-	
 	sd->npc_shopid = nd->bl.id;
-	
 	return true;
 }
 /**
@@ -1541,24 +1666,21 @@ bool npc_trader_open(struct map_session_data *sd, struct npc_data *nd) {
  * @param master id of the original npc
  **/
 void npc_trader_update(int master) {
-	DBIterator* iter;
+	struct DBIterator *iter;
 	struct block_list* bl;
 	struct npc_data *master_nd = map->id2nd(master);
-	
+
 	CREATE(master_nd->u.scr.shop,struct npc_shop_data,1);
-	
+
 	iter = db_iterator(map->id_db);
-	
-	for( bl = (struct block_list*)dbi_first(iter); dbi_exists(iter); bl = (struct block_list*)dbi_next(iter) ) {
-		if( bl->type == BL_NPC ) {
-			struct npc_data* nd = (struct npc_data*)bl;
-			
-			if( nd->src_id == master ) {
+	for (bl = dbi_first(iter); dbi_exists(iter); bl = dbi_next(iter)) {
+		if (bl->type == BL_NPC) {
+			struct npc_data *nd = BL_UCAST(BL_NPC, bl);
+			if (nd->src_id == master) {
 				nd->u.scr.shop = master_nd->u.scr.shop;
 			}
 		}
 	}
-	
 	dbi_destroy(iter);
 }
 /**
@@ -1570,9 +1692,12 @@ void npc_trader_update(int master) {
 void npc_trader_count_funds(struct npc_data *nd, struct map_session_data *sd) {
 	char evname[EVENT_NAME_LENGTH];
 	struct event_data *ev = NULL;
-	
+
+	nullpo_retv(nd);
+	nullpo_retv(sd);
+
 	npc->trader_funds[0] = npc->trader_funds[1] = 0;/* clear */
-	
+
 	switch( nd->u.scr.shop->type ) {
 		case NST_CASH:
 			npc->trader_funds[0] = sd->cashPoints;
@@ -1584,14 +1709,14 @@ void npc_trader_count_funds(struct npc_data *nd, struct map_session_data *sd) {
 			ShowError("npc_trader_count_funds: unsupported shop type %d\n",nd->u.scr.shop->type);
 			return;
 	}
-	
+
 	snprintf(evname, EVENT_NAME_LENGTH, "%s::OnCountFunds",nd->exname);
-	
+
 	if ( (ev = strdb_get(npc->ev_db, evname)) )
-		script->run(ev->nd->u.scr.script, ev->pos, sd->bl.id, ev->nd->bl.id);
+		script->run_npc(ev->nd->u.scr.script, ev->pos, sd->bl.id, ev->nd->bl.id);
 	else
 		ShowError("npc_trader_count_funds: '%s' event '%s' not found, operation failed\n",nd->exname,evname);
-	
+
 	/* the callee will rely on npc->trader_funds, upon success script->run updates them */
 }
 /**
@@ -1607,19 +1732,19 @@ void npc_trader_count_funds(struct npc_data *nd, struct map_session_data *sd) {
 bool npc_trader_pay(struct npc_data *nd, struct map_session_data *sd, int price, int points) {
 	char evname[EVENT_NAME_LENGTH];
 	struct event_data *ev = NULL;
-	
+
+	nullpo_retr(false, nd);
+	nullpo_retr(false, sd);
 	npc->trader_ok = false;/* clear */
-	
+
 	snprintf(evname, EVENT_NAME_LENGTH, "%s::OnPayFunds",nd->exname);
-	
 	if ( (ev = strdb_get(npc->ev_db, evname)) ) {
 		pc->setreg(sd,script->add_str("@price"),price);
 		pc->setreg(sd,script->add_str("@points"),points);
-		
-		script->run(ev->nd->u.scr.script, ev->pos, sd->bl.id, ev->nd->bl.id);
+		script->run_npc(ev->nd->u.scr.script, ev->pos, sd->bl.id, ev->nd->bl.id);
 	} else
 		ShowError("npc_trader_pay: '%s' event '%s' not found, operation failed\n",nd->exname,evname);
-	
+
 	return npc->trader_ok;/* run script will deal with it */
 }
 /*==========================================
@@ -1631,7 +1756,8 @@ int npc_cashshop_buy(struct map_session_data *sd, int nameid, int amount, int po
 	struct npc_item_list *shop = NULL;
 	int i, price, w;
 	unsigned short shop_size = 0;
-	
+
+	nullpo_retr(ERROR_TYPE_SYSTEM, sd);
 	if( amount <= 0 )
 		return ERROR_TYPE_ITEM_ID;
 
@@ -1640,8 +1766,9 @@ int npc_cashshop_buy(struct map_session_data *sd, int nameid, int amount, int po
 
 	if( sd->state.trading )
 		return ERROR_TYPE_EXCHANGE;
-	
-	if( !(nd = (struct npc_data *)map->id2bl(sd->npc_shopid)) )
+
+	nd = map->id2nd(sd->npc_shopid);
+	if (nd == NULL)
 		return ERROR_TYPE_NPC;
 
 	if( (item = itemdb->exists(nameid)) == NULL )
@@ -1657,12 +1784,12 @@ int npc_cashshop_buy(struct map_session_data *sd, int nameid, int amount, int po
 		shop = nd->u.shop.shop_item;
 		shop_size = nd->u.shop.count;
 	}
-	
+
 	ARR_FIND(0, shop_size, i, shop[i].nameid == nameid);
-	
+
 	if( i == shop_size )
 		return ERROR_TYPE_ITEM_ID;
-	
+
 	if( shop[i].value <= 0 )
 		return ERROR_TYPE_ITEM_ID;
 
@@ -1685,9 +1812,9 @@ int npc_cashshop_buy(struct map_session_data *sd, int nameid, int amount, int po
 	if( w + sd->weight > sd->max_weight )
 		return ERROR_TYPE_INVENTORY_WEIGHT;
 
-	if( (double)shop[i].value * amount > INT_MAX ) {
+	if ((int64)shop[i].value * amount > INT_MAX) {
 		ShowWarning("npc_cashshop_buy: Item '%s' (%d) price overflow attempt!\n", item->name, nameid);
-		ShowDebug("(NPC:'%s' (%s,%d,%d), player:'%s' (%d/%d), value:%d, amount:%d)\n",
+		ShowDebug("(NPC:'%s' (%s,%d,%d), player:'%s' (%d/%d), value:%u, amount:%d)\n",
 				nd->exname, map->list[nd->bl.m].name, nd->bl.x, nd->bl.y,
 				sd->status.name, sd->status.account_id, sd->status.char_id,
 				shop[i].value, amount);
@@ -1695,7 +1822,7 @@ int npc_cashshop_buy(struct map_session_data *sd, int nameid, int amount, int po
 	}
 
 	price = shop[i].value * amount;
-	
+
 	if( points > price )
 		points = price;
 
@@ -1705,7 +1832,7 @@ int npc_cashshop_buy(struct map_session_data *sd, int nameid, int amount, int po
 	} else {
 		if( (sd->kafraPoints < points) || (sd->cashPoints < price - points) )
 			return ERROR_TYPE_MONEY;
-			
+
 		pc->paycash(sd, price, points);
 	}
 
@@ -1721,24 +1848,28 @@ int npc_cashshop_buy(struct map_session_data *sd, int nameid, int amount, int po
 	return ERROR_TYPE_NONE;
 }
 
-/// Player item purchase from npc shop.
-///
-/// @param item_list 'n' pairs <amount,itemid>
-/// @return result code for clif->parse_NpcBuyListSend
-int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list) {
+/**
+ * Processes a player item purchase from npc shop.
+ *
+ * @param sd        Buyer character.
+ * @param item_list List of items.
+ * @return result code for clif->parse_NpcBuyListSend.
+ */
+int npc_buylist(struct map_session_data *sd, struct itemlist *item_list)
+{
 	struct npc_data* nd;
 	struct npc_item_list *shop = NULL;
-	double z;
+	int64 z;
 	int i,j,w,skill_t,new_, idx = skill->get_index(MC_DISCOUNT);
 	unsigned short shop_size = 0;
-	
+
 	nullpo_retr(3, sd);
 	nullpo_retr(3, item_list);
-	
+
 	nd = npc->checknear(sd,map->id2bl(sd->npc_shopid));
 	if( nd == NULL )
 		return 3;
-	
+
 	if( nd->subtype != SHOP ) {
 		if( nd->subtype == SCRIPT && nd->u.scr.shop && nd->u.scr.shop->type == NST_ZENY ) {
 			shop = nd->u.scr.shop->item;
@@ -1749,209 +1880,204 @@ int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list) {
 		shop = nd->u.shop.shop_item;
 		shop_size = nd->u.shop.count;
 	}
-	
+
 	z = 0;
 	w = 0;
 	new_ = 0;
 	// process entries in buy list, one by one
-	for( i = 0; i < n; ++i ) {
-		int nameid, amount, value;
-		
+	for (i = 0; i < VECTOR_LENGTH(*item_list); ++i) {
+		int value;
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
+
 		// find this entry in the shop's sell list
 		ARR_FIND( 0, shop_size, j,
-				 item_list[i*2+1] == shop[j].nameid || //Normal items
-				 item_list[i*2+1] == itemdb_viewid(shop[j].nameid) //item_avail replacement
+				 entry->id == shop[j].nameid || //Normal items
+				 entry->id == itemdb_viewid(shop[j].nameid) //item_avail replacement
 				 );
-		
-		if( j == shop_size )
+		if (j == shop_size)
 			return 3; // no such item in shop
-		
-		amount = item_list[i*2+0];
-		nameid = item_list[i*2+1] = shop[j].nameid; //item_avail replacement
+
+		entry->id = shop[j].nameid; //item_avail replacement
 		value = shop[j].value;
-		
-		if( !itemdb->exists(nameid) )
+
+		if (!itemdb->exists(entry->id))
 			return 3; // item no longer in itemdb
-		
-		if( !itemdb->isstackable(nameid) && amount > 1 ) {
+
+		if (!itemdb->isstackable(entry->id) && entry->amount > 1) {
 			//Exploit? You can't buy more than 1 of equipment types o.O
 			ShowWarning("Player %s (%d:%d) sent a hexed packet trying to buy %d of non-stackable item %d!\n",
-						sd->status.name, sd->status.account_id, sd->status.char_id, amount, nameid);
-			amount = item_list[i*2+0] = 1;
+						sd->status.name, sd->status.account_id, sd->status.char_id, entry->amount, entry->id);
+			entry->amount = 1;
 		}
-		
+
 		if( nd->master_nd ) {
 			// Script-controlled shops decide by themselves, what can be bought and for what price.
 			continue;
 		}
-		
-		switch( pc->checkadditem(sd,nameid,amount) ) {
+
+		switch (pc->checkadditem(sd, entry->id, entry->amount)) {
 			case ADDITEM_EXIST:
 				break;
-				
+
 			case ADDITEM_NEW:
 				new_++;
 				break;
-				
+
 			case ADDITEM_OVERAMOUNT:
 				return 2;
 		}
-		
+
 		value = pc->modifybuyvalue(sd,value);
-		
-		z += (double)value * amount;
-		w += itemdb_weight(nameid) * amount;
+
+		z += (int64)value * entry->amount;
+		w += itemdb_weight(entry->id) * entry->amount;
 	}
-	
-	if( nd->master_nd != NULL ) //Script-based shops.
-		return npc->buylist_sub(sd,n,item_list,nd->master_nd);
-	
-	if( z > (double)sd->status.zeny )
-		return 1;	// Not enough Zeny
+
+	if (nd->master_nd != NULL) //Script-based shops.
+		return npc->buylist_sub(sd, item_list, nd->master_nd);
+
+	if (z > sd->status.zeny)
+		return 1; // Not enough Zeny
 	if( w + sd->weight > sd->max_weight )
-		return 2;	// Too heavy
+		return 2; // Too heavy
 	if( pc->inventoryblank(sd) < new_ )
-		return 3;	// Not enough space to store items
-	
-	pc->payzeny(sd,(int)z,LOG_TYPE_NPC, NULL);
-	
-	for( i = 0; i < n; ++i ) {
-		int nameid = item_list[i*2+1];
-		int amount = item_list[i*2+0];
-		struct item item_tmp;
-		
-		if (itemdb_type(nameid) == IT_PETEGG)
-			pet->create_egg(sd, nameid);
-		else {
+		return 3; // Not enough space to store items
+
+	pc->payzeny(sd, (int)z, LOG_TYPE_NPC, NULL);
+
+	for (i = 0; i < VECTOR_LENGTH(*item_list); ++i) {
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
+		if (itemdb_type(entry->id) == IT_PETEGG) {
+			pet->create_egg(sd, entry->id);
+		} else {
+			struct item item_tmp;
 			memset(&item_tmp,0,sizeof(item_tmp));
-			item_tmp.nameid = nameid;
+			item_tmp.nameid = entry->id;
 			item_tmp.identify = 1;
-			
-			pc->additem(sd,&item_tmp,amount,LOG_TYPE_NPC);
+
+			pc->additem(sd, &item_tmp, entry->amount, LOG_TYPE_NPC);
 		}
 	}
-	
+
 	// custom merchant shop exp bonus
 	if( battle_config.shop_exp > 0 && z > 0 && (skill_t = pc->checkskill2(sd,idx)) > 0 ) {
 		if( sd->status.skill[idx].flag >= SKILL_FLAG_REPLACED_LV_0 )
 			skill_t = sd->status.skill[idx].flag - SKILL_FLAG_REPLACED_LV_0;
-		
+
 		if( skill_t > 0 ) {
-			z = z * (double)skill_t * (double)battle_config.shop_exp/10000.;
-			if( z < 1 )
+			z = apply_percentrate64(z, skill_t * battle_config.shop_exp, 10000);
+			if (z < 1)
 				z = 1;
-			pc->gainexp(sd,NULL,0,(int)z, false);
+			pc->gainexp(sd, NULL, 0, (int)z, false);
 		}
 	}
-	
+
 	return 0;
 }
 
 /**
- * parses incoming npc market purchase list
+ * Processes incoming npc market purchase list
  **/
-int npc_market_buylist(struct map_session_data* sd, unsigned short list_size, struct packet_npc_market_purchase *p) {
+int npc_market_buylist(struct map_session_data *sd, struct itemlist *item_list)
+{
 	struct npc_data* nd;
 	struct npc_item_list *shop = NULL;
-	double z;
+	int64 z;
 	int i,j,w,new_;
 	unsigned short shop_size = 0;
-	
+
 	nullpo_retr(1, sd);
-	nullpo_retr(1, p);
+	nullpo_retr(1, item_list);
 
 	nd = npc->checknear(sd,map->id2bl(sd->npc_shopid));
 
-	if( nd == NULL || nd->subtype != SCRIPT || !list_size || !nd->u.scr.shop || nd->u.scr.shop->type != NST_MARKET )
+	if (nd == NULL || nd->subtype != SCRIPT || VECTOR_LENGTH(*item_list) == 0 || !nd->u.scr.shop || nd->u.scr.shop->type != NST_MARKET)
 		return 1;
 
 	shop = nd->u.scr.shop->item;
 	shop_size = nd->u.scr.shop->items;
-	
+
 	z = 0;
 	w = 0;
 	new_ = 0;
-	
+
 	// process entries in buy list, one by one
-	for( i = 0; i < list_size; ++i ) {
-		int nameid, amount, value;
-		
+	for (i = 0; i < VECTOR_LENGTH(*item_list); ++i) {
+		int value;
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
+
 		// find this entry in the shop's sell list
 		ARR_FIND( 0, shop_size, j,
-				 p->list[i].ITID == shop[j].nameid || //Normal items
-				 p->list[i].ITID == itemdb_viewid(shop[j].nameid) //item_avail replacement
+				 entry->id == shop[j].nameid || //Normal items
+				 entry->id == itemdb_viewid(shop[j].nameid) //item_avail replacement
 				 );
-		
-		if( j == shop_size ) /* TODO find official response for this */
+		if (j == shop_size) /* TODO find official response for this */
 			return 1; // no such item in shop
 
-		if( p->list[i].qty > shop[j].qty )
+		entry->id = shop[j].nameid; //item_avail replacement
+
+		if (entry->amount > (int)shop[j].qty)
 			return 1;
 
-		amount = p->list[i].qty;
-		nameid = p->list[i].ITID = shop[j].nameid; //item_avail replacement
 		value = shop[j].value;
 		npc_market_qty[i] = j;
 
-		if( !itemdb->exists(nameid) ) /* TODO find official response for this */
+		if (!itemdb->exists(entry->id)) /* TODO find official response for this */
 			return 1; // item no longer in itemdb
-		
-		if( !itemdb->isstackable(nameid) && amount > 1 ) {
+
+		if (!itemdb->isstackable(entry->id) && entry->amount > 1) {
 			//Exploit? You can't buy more than 1 of equipment types o.O
 			ShowWarning("Player %s (%d:%d) sent a hexed packet trying to buy %d of non-stackable item %d!\n",
-						sd->status.name, sd->status.account_id, sd->status.char_id, amount, nameid);
-			amount = p->list[i].qty = 1;
+						sd->status.name, sd->status.account_id, sd->status.char_id, entry->amount, entry->id);
+			entry->amount = 1;
 		}
-				
-		switch( pc->checkadditem(sd,nameid,amount) ) {
+
+		switch (pc->checkadditem(sd, entry->id, entry->amount)) {
 			case ADDITEM_EXIST:
 				break;
-				
 			case ADDITEM_NEW:
 				new_++;
 				break;
-				
 			case ADDITEM_OVERAMOUNT: /* TODO find official response for this */
 				return 1;
 		}
-				
-		z += (double)value * amount;
-		w += itemdb_weight(nameid) * amount;
+
+		z += (int64)value * entry->amount;
+		w += itemdb_weight(entry->id) * entry->amount;
 	}
 
-	if( z > (double)sd->status.zeny ) /* TODO find official response for this */
-		return 1;	// Not enough Zeny
+	if (z > sd->status.zeny) /* TODO find official response for this */
+		return 1; // Not enough Zeny
 
 	if( w + sd->weight > sd->max_weight ) /* TODO find official response for this */
-		return 1;	// Too heavy
+		return 1; // Too heavy
 
 	if( pc->inventoryblank(sd) < new_ ) /* TODO find official response for this */
-		return 1;	// Not enough space to store items
+		return 1; // Not enough space to store items
 
 	pc->payzeny(sd,(int)z,LOG_TYPE_NPC, NULL);
-	
-	for( i = 0; i < list_size; ++i ) {
-		int nameid = p->list[i].ITID;
-		int amount = p->list[i].qty;
-		struct item item_tmp;
-		
+
+	for (i = 0; i < VECTOR_LENGTH(*item_list); ++i) {
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
+
 		j = npc_market_qty[i];
-		
-		if( p->list[i].qty > shop[j].qty ) /* wohoo someone tampered with the packet. */
+
+		if (entry->amount > (int)shop[j].qty) /* wohoo someone tampered with the packet. */
 			return 1;
-		
-		shop[j].qty -= amount;
-		
+
+		shop[j].qty -= entry->amount;
+
 		npc->market_tosql(nd,j);
-		
-		if (itemdb_type(nameid) == IT_PETEGG)
-			pet->create_egg(sd, nameid);
-		else {
+
+		if (itemdb_type(entry->id) == IT_PETEGG) {
+			pet->create_egg(sd, entry->id);
+		} else {
+			struct item item_tmp;
 			memset(&item_tmp,0,sizeof(item_tmp));
-			item_tmp.nameid = nameid;
+			item_tmp.nameid = entry->id;
 			item_tmp.identify = 1;
-			
-			pc->additem(sd,&item_tmp,amount,LOG_TYPE_NPC);
+
+			pc->additem(sd, &item_tmp, entry->amount, LOG_TYPE_NPC);
 		}
 	}
 
@@ -1959,17 +2085,21 @@ int npc_market_buylist(struct map_session_data* sd, unsigned short list_size, st
 }
 
 /// npc_selllist for script-controlled shops
-int npc_selllist_sub(struct map_session_data* sd, int n, unsigned short* item_list, struct npc_data* nd)
+int npc_selllist_sub(struct map_session_data *sd, struct itemlist *item_list, struct npc_data *nd)
 {
 	char npc_ev[EVENT_NAME_LENGTH];
 	char card_slot[NAME_LENGTH];
-	int i, j, idx;
+	int i, j;
 	int key_nameid = 0;
 	int key_amount = 0;
 	int key_refine = 0;
 	int key_attribute = 0;
 	int key_identify = 0;
 	int key_card[MAX_SLOTS];
+
+	nullpo_ret(sd);
+	nullpo_ret(item_list);
+	nullpo_ret(nd);
 
 	// discard old contents
 	script->cleararray_pc(sd, "@sold_nameid", (void*)0);
@@ -1986,25 +2116,30 @@ int npc_selllist_sub(struct map_session_data* sd, int n, unsigned short* item_li
 	}
 
 	// save list of to be sold items
-	for( i = 0; i < n; i++ )
-	{
-		idx = item_list[i*2]-2;
+	for (i = 0; i < VECTOR_LENGTH(*item_list); i++) {
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
+		struct item *item = &sd->status.inventory[entry->id];
+		intptr_t nameid = item->nameid;
+		intptr_t amount = entry->amount;
+		intptr_t refine = item->refine;
+		intptr_t attribute = item->attribute;
+		intptr_t identify = item->identify;
 
-		script->setarray_pc(sd, "@sold_nameid", i, (void*)(intptr_t)sd->status.inventory[idx].nameid, &key_nameid);
-		script->setarray_pc(sd, "@sold_quantity", i, (void*)(intptr_t)item_list[i*2+1], &key_amount);
+		script->setarray_pc(sd, "@sold_nameid", i, (void*)nameid, &key_nameid);
+		script->setarray_pc(sd, "@sold_quantity", i, (void*)amount, &key_amount);
 
-		if( itemdb->isequip(sd->status.inventory[idx].nameid) )
-		{// process equipment based information into the arrays
-			script->setarray_pc(sd, "@sold_refine", i, (void*)(intptr_t)sd->status.inventory[idx].refine, &key_refine);
-			script->setarray_pc(sd, "@sold_attribute", i, (void*)(intptr_t)sd->status.inventory[idx].attribute, &key_attribute);
-			script->setarray_pc(sd, "@sold_identify", i, (void*)(intptr_t)sd->status.inventory[idx].identify, &key_identify);
+		// process item based information into the arrays
+		script->setarray_pc(sd, "@sold_refine", i, (void*)refine, &key_refine);
+		script->setarray_pc(sd, "@sold_attribute", i, (void*)attribute, &key_attribute);
+		script->setarray_pc(sd, "@sold_identify", i, (void*)identify, &key_identify);
 
-			for( j = 0; j < MAX_SLOTS; j++ )
-			{// store each of the cards from the equipment in the array
-				snprintf(card_slot, sizeof(card_slot), "@sold_card%d", j + 1);
-				script->setarray_pc(sd, card_slot, i, (void*)(intptr_t)sd->status.inventory[idx].card[j], &key_card[j]);
-			}
+		for (j = 0; j < MAX_SLOTS; j++) {
+			intptr_t card = item->card[j];
+			// store each of the cards/special info from the item in the array
+			snprintf(card_slot, sizeof(card_slot), "@sold_card%d", j + 1);
+			script->setarray_pc(sd, card_slot, i, (void*)card, &key_card[j]);
 		}
+
 	}
 
 	// invoke event
@@ -2013,15 +2148,16 @@ int npc_selllist_sub(struct map_session_data* sd, int n, unsigned short* item_li
 	return 0;
 }
 
-
 /// Player item selling to npc shop.
 ///
 /// @param item_list 'n' pairs <index,amount>
 /// @return result code for clif->parse_NpcSellListSend
-int npc_selllist(struct map_session_data* sd, int n, unsigned short* item_list) {
-	double z;
+int npc_selllist(struct map_session_data *sd, struct itemlist *item_list)
+{
+	int64 z;
 	int i,skill_t, skill_idx = skill->get_index(MC_OVERCHARGE);
 	struct npc_data *nd;
+	bool duplicates[MAX_INVENTORY] = { 0 };
 
 	nullpo_retr(1, sd);
 	nullpo_retr(1, item_list);
@@ -2031,60 +2167,68 @@ int npc_selllist(struct map_session_data* sd, int n, unsigned short* item_list) 
 	}
 
 	if( nd->subtype != SHOP ) {
-		if( !(nd->subtype == SCRIPT && nd->u.scr.shop && nd->u.scr.shop->type == NST_ZENY) )
+		if (!(nd->subtype == SCRIPT && nd->u.scr.shop && (nd->u.scr.shop->type == NST_ZENY || nd->u.scr.shop->type == NST_MARKET)))
 			return 1;
 	}
 
-	
 	z = 0;
 
+	if (sd->status.zeny >= MAX_ZENY && nd->master_nd == NULL)
+		return 1;
+
 	// verify the sell list
-	for( i = 0; i < n; i++ ) {
-		int nameid, amount, idx, value;
+	for (i = 0; i < VECTOR_LENGTH(*item_list); i++) {
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
+		int nameid, value, idx = entry->id;
 
-		idx    = item_list[i*2]-2;
-		amount = item_list[i*2+1];
-
-		if( idx >= MAX_INVENTORY || idx < 0 || amount < 0 ) {
+		if (idx >= MAX_INVENTORY || idx < 0 || entry->amount < 0) {
 			return 1;
 		}
+
+		if (duplicates[idx]) {
+			// Sanity check. The client sends each inventory index at most once [Haru]
+			return 1;
+		}
+		duplicates[idx] = true;
 
 		nameid = sd->status.inventory[idx].nameid;
 
-		if( !nameid || !sd->inventory_data[idx] || sd->status.inventory[idx].amount < amount ) {
+		if (!nameid || !sd->inventory_data[idx] || sd->status.inventory[idx].amount < entry->amount) {
 			return 1;
 		}
 
-		if( nd->master_nd ) {// Script-controlled shops decide by themselves, what can be sold and at what price.
+		if (nd->master_nd) {
+			// Script-controlled shops decide by themselves, what can be sold and at what price.
 			continue;
 		}
 
 		value = pc->modifysellvalue(sd, sd->inventory_data[idx]->value_sell);
 
-		z+= (double)value*amount;
+		z += (int64)value * entry->amount;
 	}
 
 	if( nd->master_nd ) { // Script-controlled shops
-		return npc->selllist_sub(sd, n, item_list, nd->master_nd);
+		return npc->selllist_sub(sd, item_list, nd->master_nd);
 	}
 
 	// delete items
-	for( i = 0; i < n; i++ ) {
-		int amount, idx;
+	for (i = 0; i < VECTOR_LENGTH(*item_list); i++) {
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
+		int idx = entry->id;
 
-		idx    = item_list[i*2]-2;
-		amount = item_list[i*2+1];
-
-		if( sd->inventory_data[idx]->type == IT_PETEGG && sd->status.inventory[idx].card[0] == CARD0_PET ) {
-			if( pet->search_petDB_index(sd->status.inventory[idx].nameid, PET_EGG) >= 0 ) {
+		if (sd->inventory_data[idx]->type == IT_PETEGG && sd->status.inventory[idx].card[0] == CARD0_PET) {
+			if (pet->search_petDB_index(sd->status.inventory[idx].nameid, PET_EGG) >= 0) {
 				intif->delete_petdata(MakeDWord(sd->status.inventory[idx].card[1], sd->status.inventory[idx].card[2]));
 			}
 		}
 
-		pc->delitem(sd, idx, amount, 0, 6, LOG_TYPE_NPC);
+		pc->delitem(sd, idx, entry->amount, 0, DELITEM_SOLD, LOG_TYPE_NPC);
 	}
 
-	if( z > MAX_ZENY )
+	if (z + sd->status.zeny > MAX_ZENY && nd->master_nd == NULL)
+		return 1;
+
+	if (z > MAX_ZENY)
 		z = MAX_ZENY;
 
 	pc->getzeny(sd, (int)z, LOG_TYPE_NPC, NULL);
@@ -2095,8 +2239,8 @@ int npc_selllist(struct map_session_data* sd, int n, unsigned short* item_list) 
 			skill_t = sd->status.skill[skill_idx].flag - SKILL_FLAG_REPLACED_LV_0;
 
 		if( skill_t > 0 ) {
-			z = z * (double)skill_t * (double)battle_config.shop_exp/10000.;
-			if( z < 1 )
+			z = apply_percentrate64(z, skill_t * battle_config.shop_exp, 10000);
+			if (z < 1)
 				z = 1;
 			pc->gainexp(sd, NULL, 0, (int)z, false);
 		}
@@ -2130,7 +2274,7 @@ int npc_remove_map(struct npc_data* nd) {
 /**
  * @see DBApply
  */
-int npc_unload_ev(DBKey key, DBData *data, va_list ap)
+int npc_unload_ev(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct event_data* ev = DB->data2ptr(data);
 	char* npcname = va_arg(ap, char *);
@@ -2145,7 +2289,7 @@ int npc_unload_ev(DBKey key, DBData *data, va_list ap)
 /**
  * @see DBApply
  */
-int npc_unload_ev_label(DBKey key, DBData *data, va_list ap)
+int npc_unload_ev_label(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct linkdb_node **label_linkdb = DB->data2ptr(data);
 	struct npc_data* nd = va_arg(ap, struct npc_data *);
@@ -2161,6 +2305,7 @@ int npc_unload_dup_sub(struct npc_data* nd, va_list args)
 {
 	int src_id;
 
+	nullpo_ret(nd);
 	src_id = va_arg(args, int);
 	if (nd->src_id == src_id)
 		npc->unload(nd, true);
@@ -2169,15 +2314,19 @@ int npc_unload_dup_sub(struct npc_data* nd, va_list args)
 
 //Removes all npcs that are duplicates of the passed one. [Skotlex]
 void npc_unload_duplicates(struct npc_data* nd) {
+	nullpo_retv(nd);
 	map->foreachnpc(npc->unload_dup_sub,nd->bl.id);
 }
 
 //Removes an npc from map and db.
 //Single is to free name (for duplicates).
-int npc_unload(struct npc_data* nd, bool single) {
-	unsigned int i;
-	
+int npc_unload(struct npc_data* nd, bool single)
+{
 	nullpo_ret(nd);
+
+	if( nd->ud && nd->ud != &npc->base_ud ) {
+		skill->clear_unitgroup(&nd->bl);
+	}
 
 	npc->remove_map(nd);
 	map->deliddb(&nd->bl);
@@ -2187,30 +2336,22 @@ int npc_unload(struct npc_data* nd, bool single) {
 	if (nd->chat_id) // remove npc chatroom object and kick users
 		chat->delete_npc_chat(nd);
 
-#ifdef PCRE_SUPPORT
 	npc_chat->finalize(nd); // deallocate npc PCRE data structures
-#endif
 
-	if( single && nd->path ) {
-		struct npc_path_data* npd = NULL;
-		if( nd->path && nd->path != npc_last_ref ) {
-			npd = strdb_get(npc->path_db, nd->path);
-		}
-
-		if( npd && --npd->references == 0 ) {
-			strdb_remove(npc->path_db, nd->path);/* remove from db */
-			aFree(nd->path);/* remove now that no other instances exist */
-		}
+	if (single && nd->path != NULL) {
+		npc->releasepathreference(nd->path);
+		nd->path = NULL;
 	}
-	
+
 	if( single && nd->bl.m != -1 )
 		map->remove_questinfo(nd->bl.m,nd);
 
-	if( nd->src_id == 0 && ( nd->subtype == SHOP || nd->subtype == CASHSHOP ) ) //src check for duplicate shops [Orcao]
+	if (nd->src_id == 0 && ( nd->subtype == SHOP || nd->subtype == CASHSHOP)) {
+		//src check for duplicate shops [Orcao]
 		aFree(nd->u.shop.shop_item);
-	else if( nd->subtype == SCRIPT ) {
-		struct s_mapiterator* iter;
-		struct block_list* bl;
+	} else if (nd->subtype == SCRIPT) {
+		struct s_mapiterator *iter;
+		struct map_session_data *sd = NULL;
 
 		if( single ) {
 			npc->ev_db->foreach(npc->ev_db,npc->unload_ev,nd->exname); //Clean up all events related
@@ -2218,9 +2359,8 @@ int npc_unload(struct npc_data* nd, bool single) {
 		}
 
 		iter = mapit_geteachpc();
-		for( bl = (struct block_list*)mapit->first(iter); mapit->exists(iter); bl = (struct block_list*)mapit->next(iter) ) {
-			struct map_session_data *sd = ((TBL_PC*)bl);
-			if( sd && sd->npc_timer_id != INVALID_TIMER ) {
+		for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
+			if (sd->npc_timer_id != INVALID_TIMER ) {
 				const struct TimerData *td = timer->get(sd->npc_timer_id);
 
 				if( td && td->id != nd->bl.id )
@@ -2263,20 +2403,13 @@ int npc_unload(struct npc_data* nd, bool single) {
 			guild->flag_remove(nd);
 	}
 
-	if( nd->ud != &npc->base_ud ) {
+	if( nd->ud && nd->ud != &npc->base_ud ) {
 		aFree(nd->ud);
 		nd->ud = NULL;
 	}
-	
-	for( i = 0; i < nd->hdatac; i++ ) {
-		if( nd->hdata[i]->flag.free ) {
-			aFree(nd->hdata[i]->data);
-		}
-		aFree(nd->hdata[i]);
-	}
-	if( nd->hdata )
-		aFree(nd->hdata);
-	
+
+	HPM->data_store_destroy(&nd->hdata);
+
 	aFree(nd);
 
 	return 0;
@@ -2290,34 +2423,31 @@ int npc_unload(struct npc_data* nd, bool single) {
 void npc_clearsrcfile(void)
 {
 	struct npc_src_list* file = npc->src_files;
-	struct npc_src_list* file_tofree;
 
-	while( file != NULL )
-	{
-		file_tofree = file;
+	while (file != NULL) {
+		struct npc_src_list *file_tofree = file;
 		file = file->next;
 		aFree(file_tofree);
 	}
 	npc->src_files = NULL;
 }
 
-/// Adds a npc source file (or removes all)
-void npc_addsrcfile(const char* name)
+/**
+ * Adds a npc source file.
+ *
+ * @param name The file name to add.
+ */
+void npc_addsrcfile(const char *name)
 {
 	struct npc_src_list* file;
 	struct npc_src_list* file_prev = NULL;
 
-	if( strcmpi(name, "clear") == 0 )
-	{
-		npc->clearsrcfile();
-		return;
-	}
+	nullpo_retv(name);
 
 	// prevent multiple insert of source files
 	file = npc->src_files;
-	while( file != NULL )
-	{
-		if( strcmp(name, file->name) == 0 )
+	while (file != NULL) {
+		if (strcmp(name, file->name) == 0)
 			return;// found the file, no need to insert it again
 		file_prev = file;
 		file = file->next;
@@ -2332,23 +2462,21 @@ void npc_addsrcfile(const char* name)
 		file_prev->next = file;
 }
 
-/// Removes a npc source file (or all)
-void npc_delsrcfile(const char* name)
+/**
+ * Removes a npc source file.
+ *
+ * @param name The file name to remove.
+ */
+void npc_delsrcfile(const char *name)
 {
 	struct npc_src_list* file = npc->src_files;
 	struct npc_src_list* file_prev = NULL;
 
-	if( strcmpi(name, "all") == 0 )
-	{
-		npc->clearsrcfile();
-		return;
-	}
+	nullpo_retv(name);
 
-	while( file != NULL )
-	{
-		if( strcmp(file->name, name) == 0 )
-		{
-			if( npc->src_files == file )
+	while (file != NULL) {
+		if (strcmp(file->name, name) == 0) {
+			if (npc->src_files == file)
 				npc->src_files = file->next;
 			else
 				file_prev->next = file->next;
@@ -2360,6 +2488,64 @@ void npc_delsrcfile(const char* name)
 	}
 }
 
+/**
+ * Retains a reference to filepath, for use in nd->path
+ *
+ * @param filepath The file path to retain.
+ * @return A retained reference to filepath.
+ */
+const char *npc_retainpathreference(const char *filepath)
+{
+	struct npc_path_data * npd = NULL;
+	nullpo_ret(filepath);
+
+	if (npc->npc_last_path == filepath) {
+		if (npc->npc_last_npd != NULL)
+			npc->npc_last_npd->references++;
+		return npc->npc_last_ref;
+	}
+
+	if ((npd = strdb_get(npc->path_db,filepath)) == NULL) {
+		CREATE(npd, struct npc_path_data, 1);
+		strdb_put(npc->path_db, filepath, npd);
+
+		CREATE(npd->path, char, strlen(filepath)+1);
+		safestrncpy(npd->path, filepath, strlen(filepath)+1);
+
+		npd->references = 0;
+	}
+
+	npd->references++;
+
+	npc->npc_last_npd = npd;
+	npc->npc_last_ref = npd->path;
+	npc->npc_last_path = filepath;
+
+	return npd->path;
+}
+
+/**
+ * Releases a previously retained filepath.
+ *
+ * @param filepath The file path to release.
+ */
+void npc_releasepathreference(const char *filepath)
+{
+	struct npc_path_data* npd = NULL;
+
+	nullpo_retv(filepath);
+
+	if (filepath != npc->npc_last_ref) {
+		npd = strdb_get(npc->path_db, filepath);
+	}
+
+	if (npd != NULL && --npd->references == 0) {
+		char *npcpath = npd->path;
+		strdb_remove(npc->path_db, filepath);/* remove from db */
+		aFree(npcpath);
+	}
+}
+
 /// Parses and sets the name and exname of a npc.
 /// Assumes that m, x and y are already set in nd.
 void npc_parsename(struct npc_data* nd, const char* name, const char* start, const char* buffer, const char* filepath) {
@@ -2367,12 +2553,14 @@ void npc_parsename(struct npc_data* nd, const char* name, const char* start, con
 	struct npc_data* dnd;// duplicate npc
 	char newname[NAME_LENGTH];
 
+	nullpo_retv(nd);
+	nullpo_retv(name);
 	// parse name
 	p = strstr(name,"::");
 	if( p ) { // <Display name>::<Unique name>
 		size_t len = p-name;
 		if( len > NAME_LENGTH ) {
-			ShowWarning("npc_parsename: Display name of '%s' is too long (len=%u) in file '%s', line '%d'. Truncating to %u characters.\n", name, (unsigned int)len, filepath, strline(buffer,start-buffer), NAME_LENGTH);
+			ShowWarning("npc_parsename: Display name of '%s' is too long (len=%u) in file '%s', line '%d'. Truncating to %d characters.\n", name, (unsigned int)len, filepath, strline(buffer,start-buffer), NAME_LENGTH);
 			safestrncpy(nd->name, name, sizeof(nd->name));
 		} else {
 			memcpy(nd->name, name, len);
@@ -2380,12 +2568,12 @@ void npc_parsename(struct npc_data* nd, const char* name, const char* start, con
 		}
 		len = strlen(p+2);
 		if( len > NAME_LENGTH )
-			ShowWarning("npc_parsename: Unique name of '%s' is too long (len=%u) in file '%s', line '%d'. Truncating to %u characters.\n", name, (unsigned int)len, filepath, strline(buffer,start-buffer), NAME_LENGTH);
+			ShowWarning("npc_parsename: Unique name of '%s' is too long (len=%u) in file '%s', line '%d'. Truncating to %d characters.\n", name, (unsigned int)len, filepath, strline(buffer,start-buffer), NAME_LENGTH);
 		safestrncpy(nd->exname, p+2, sizeof(nd->exname));
 	} else {// <Display name>
 		size_t len = strlen(name);
 		if( len > NAME_LENGTH )
-			ShowWarning("npc_parsename: Name '%s' is too long (len=%u) in file '%s', line '%d'. Truncating to %u characters.\n", name, (unsigned int)len, filepath, strline(buffer,start-buffer), NAME_LENGTH);
+			ShowWarning("npc_parsename: Name '%s' is too long (len=%u) in file '%s', line '%d'. Truncating to %d characters.\n", name, (unsigned int)len, filepath, strline(buffer,start-buffer), NAME_LENGTH);
 		safestrncpy(nd->name, name, sizeof(nd->name));
 		safestrncpy(nd->exname, name, sizeof(nd->exname));
 	}
@@ -2414,39 +2602,15 @@ void npc_parsename(struct npc_data* nd, const char* name, const char* start, con
 		ShowDebug("other npc in '%s' :\n   display name '%s'\n   unique name '%s'\n   map=%s, x=%d, y=%d\n",dnd->path, dnd->name, dnd->exname, other_mapname, dnd->bl.x, dnd->bl.y);
 		safestrncpy(nd->exname, newname, sizeof(nd->exname));
 	}
-
-	if( npc_last_path != filepath ) {
-		struct npc_path_data * npd = NULL;
-
-		if( !(npd = strdb_get(npc->path_db,filepath) ) ) {
-			CREATE(npd, struct npc_path_data, 1);
-			strdb_put(npc->path_db, filepath, npd);
-
-			CREATE(npd->path, char, strlen(filepath)+1);
-			safestrncpy(npd->path, filepath, strlen(filepath)+1);
-
-			npd->references = 0;
-		}
-
-		nd->path = npd->path;
-		npd->references++;
-
-		npc_last_npd = npd;
-		npc_last_ref = npd->path;
-		npc_last_path = (char*) filepath;
-	} else {
-		nd->path = npc_last_ref;
-		if( npc_last_npd )
-			npc_last_npd->references++;
-	}
 }
 
 // Parse View
 // Support for using Constants in place of NPC View IDs.
 int npc_parseview(const char* w4, const char* start, const char* buffer, const char* filepath) {
-	int val = -1, i = 0;
-	char viewid[1024];	// Max size of name from const.txt, see script->read_constdb.
+	int val = FAKE_NPC, i = 0;
+	char viewid[1024]; // Max size of name from constants.conf, see script->read_constdb.
 
+	nullpo_retr(FAKE_NPC, w4);
 	// Extract view ID / constant
 	while (w4[i] != '\0') {
 		if (ISSPACE(w4[i]) || w4[i] == '/' || w4[i] == ',')
@@ -2462,12 +2626,13 @@ int npc_parseview(const char* w4, const char* start, const char* buffer, const c
 	{
 		// Check if constant exists and get its value.
 		if(!script->get_constant(viewid, &val)) {
-			ShowWarning("npc_parseview: Invalid NPC constant '%s' specified in file '%s', line'%d'. Defaulting to INVISIBLE_CLASS. \n", viewid, filepath, strline(buffer,start-buffer));
+			ShowWarning("npc_parseview: Invalid NPC constant '%s' specified in file '%s', line '%d'. Defaulting to INVISIBLE_CLASS.\n", viewid, filepath, strline(buffer,start-buffer));
 			val = INVISIBLE_CLASS;
 		}
 	} else {
 		// NPC has an ID specified for view id.
 		val = atoi(w4);
+		ShowWarning("npc_parseview: Use of numeric NPC view IDs is deprecated and may be removed in a future update. Please use NPC view constants instead. ID '%d' specified in file '%s', line '%d'.\n", val, filepath, strline(buffer, start-buffer));
 	}
 
 	return val;
@@ -2477,15 +2642,46 @@ int npc_parseview(const char* w4, const char* start, const char* buffer, const c
 // Checks if given view is an ID or constant.
 bool npc_viewisid(const char * viewid)
 {
-	if(atoi(viewid) != -1)
-	{
+	nullpo_retr(false, viewid);
+	if (atoi(viewid) != FAKE_NPC) {
 		// Loop through view, looking for non-numeric character.
 		while (*viewid) {
 			if (ISDIGIT(*viewid++) == 0) return false;
 		}
 	}
 
-    return true;
+	return true;
+}
+
+/**
+ * Creates a new NPC.
+ *
+ * @param subtype The NPC subtype.
+ * @param m       The map id.
+ * @param x       The x coordinate on map.
+ * @param y       The y coordinate on map.
+ * @param dir     The facing direction.
+ * @param class_  The NPC view class.
+ * @return A pointer to the created NPC data (ownership passed to the caller).
+ */
+struct npc_data *npc_create_npc(enum npc_subtype subtype, int m, int x, int y, uint8 dir, int16 class_)
+{
+	struct npc_data *nd;
+
+	CREATE(nd, struct npc_data, 1);
+	nd->subtype = subtype;
+	nd->bl.type = BL_NPC;
+	nd->bl.id = npc->get_new_npc_id();
+	nd->bl.prev = nd->bl.next = NULL;
+	nd->bl.m = m;
+	nd->bl.x = x;
+	nd->bl.y = y;
+	nd->dir = dir;
+	nd->area_size = AREA_SIZE + 1;
+	nd->class_ = class_;
+	nd->speed = 200;
+
+	return nd;
 }
 
 //Add then display an npc warp on map
@@ -2493,13 +2689,9 @@ struct npc_data* npc_add_warp(char* name, short from_mapid, short from_x, short 
 	int i, flag = 0;
 	struct npc_data *nd;
 
-	CREATE(nd, struct npc_data, 1);
-	nd->bl.id = npc->get_new_npc_id();
-	map->addnpc(from_mapid, nd);
-	nd->bl.prev = nd->bl.next = NULL;
-	nd->bl.m = from_mapid;
-	nd->bl.x = from_x;
-	nd->bl.y = from_y;
+	nullpo_retr(NULL, name);
+
+	nd = npc->create_npc(WARP, from_mapid, from_x, from_y, 0, battle_config.warp_point_debug ? WARP_DEBUG_CLASS : WARP_CLASS);
 
 	safestrncpy(nd->exname, name, ARRAYLENGTH(nd->exname));
 	if (npc->name2id(nd->exname) != NULL)
@@ -2512,36 +2704,43 @@ struct npc_data* npc_add_warp(char* name, short from_mapid, short from_x, short 
 		snprintf(nd->exname, ARRAYLENGTH(nd->exname), "warp%d_%d_%d_%d", i, from_mapid, from_x, from_y);
 	safestrncpy(nd->name, nd->exname, ARRAYLENGTH(nd->name));
 
-	if( battle_config.warp_point_debug )
-		nd->class_ = WARP_DEBUG_CLASS;
-	else
-		nd->class_ = WARP_CLASS;
-	nd->speed = 200;
-
 	nd->u.warp.mapindex = to_mapindex;
 	nd->u.warp.x = to_x;
 	nd->u.warp.y = to_y;
 	nd->u.warp.xs = xs;
 	nd->u.warp.ys = xs;
-	nd->bl.type = BL_NPC;
-	nd->subtype = WARP;
-	npc->setcells(nd);
-	map->addblock(&nd->bl);
-	status->set_viewdata(&nd->bl, nd->class_);
-	nd->ud = &npc->base_ud;
-	if( map->list[nd->bl.m].users )
-		clif->spawn(&nd->bl);
-	strdb_put(npc->name_db, nd->exname, nd);
+
+	npc->add_to_location(nd);
 
 	return nd;
 }
 
-/// Parses a warp npc.
-const char* npc_parse_warp(char* w1, char* w2, char* w3, char* w4, const char* start, const char* buffer, const char* filepath, int *retval) {
+/**
+ * Parses a warp NPC.
+ *
+ * @param[in]  w1       First tab-delimited part of the string to parse.
+ * @param[in]  w2       Second tab-delimited part of the string to parse.
+ * @param[in]  w3       Third tab-delimited part of the string to parse.
+ * @param[in]  w4       Fourth tab-delimited part of the string to parse.
+ * @param[in]  start    Pointer to the beginning of the string inside buffer.
+ *                      This must point to the same buffer as `buffer`.
+ * @param[in]  buffer   Pointer to the buffer containing the script. For
+ *                      single-line mapflags not inside a script, this may be
+ *                      an empty (but initialized) single-character buffer.
+ * @param[in]  filepath Source file path.
+ * @param[out] retval   Pointer to return the success (EXIT_SUCCESS) or failure
+ *                      (EXIT_FAILURE) status. May be NULL.
+ * @return A pointer to the advanced buffer position.
+ */
+const char *npc_parse_warp(const char *w1, const char *w2, const char *w3, const char *w4, const char *start, const char *buffer, const char *filepath, int *retval)
+{
 	int x, y, xs, ys, to_x, to_y, m;
 	unsigned short i;
 	char mapname[32], to_mapname[32];
 	struct npc_data *nd;
+
+	nullpo_retr(strchr(start,'\n'), w1);
+	nullpo_retr(strchr(start,'\n'), w4);
 
 	// w1=<from map name>,<fromX>,<fromY>,<facing>
 	// w4=<spanx>,<spany>,<to map name>,<toX>,<toY>
@@ -2566,48 +2765,42 @@ const char* npc_parse_warp(char* w1, char* w2, char* w3, char* w4, const char* s
 		if (retval) *retval = EXIT_FAILURE;
 		return strchr(start,'\n');;//try next
 	}
-	
-	CREATE(nd, struct npc_data, 1);
 
-	nd->bl.id = npc->get_new_npc_id();
-	map->addnpc(m, nd);
-	nd->bl.prev = nd->bl.next = NULL;
-	nd->bl.m = m;
-	nd->bl.x = x;
-	nd->bl.y = y;
+	nd = npc->create_npc(WARP, m, x, y, 0, battle_config.warp_point_debug ? WARP_DEBUG_CLASS : WARP_CLASS);
 	npc->parsename(nd, w3, start, buffer, filepath);
-
-	if (!battle_config.warp_point_debug)
-		nd->class_ = WARP_CLASS;
-	else
-		nd->class_ = WARP_DEBUG_CLASS;
-	nd->speed = 200;
+	nd->path = npc->retainpathreference(filepath);
 
 	nd->u.warp.mapindex = i;
 	nd->u.warp.x = to_x;
 	nd->u.warp.y = to_y;
 	nd->u.warp.xs = xs;
 	nd->u.warp.ys = ys;
-	npc_warp++;
-	nd->bl.type = BL_NPC;
-	nd->subtype = WARP;
-	npc->setcells(nd);
-	map->addblock(&nd->bl);
-	status->set_viewdata(&nd->bl, nd->class_);
-	nd->ud = &npc->base_ud;
-	if( map->list[nd->bl.m].users )
-		clif->spawn(&nd->bl);
-	strdb_put(npc->name_db, nd->exname, nd);
+	npc->npc_warp++;
+
+	npc->add_to_location(nd);
 
 	return strchr(start,'\n');// continue
 }
 
 /**
- * Parses a SHOP/CASHSHOP npc
- * @param retval Pointer to the status, used to know whether there was an error or not, if so it will be EXIT_FAILURE
- * @retval Parsing position (currently only '\n')
- **/
-const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const char* start, const char* buffer, const char* filepath, int *retval) {
+ * Parses a SHOP/CASHSHOP NPC.
+ *
+ * @param[in]  w1       First tab-delimited part of the string to parse.
+ * @param[in]  w2       Second tab-delimited part of the string to parse.
+ * @param[in]  w3       Third tab-delimited part of the string to parse.
+ * @param[in]  w4       Fourth tab-delimited part of the string to parse.
+ * @param[in]  start    Pointer to the beginning of the string inside buffer.
+ *                      This must point to the same buffer as `buffer`.
+ * @param[in]  buffer   Pointer to the buffer containing the script. For
+ *                      single-line mapflags not inside a script, this may be
+ *                      an empty (but initialized) single-character buffer.
+ * @param[in]  filepath Source file path.
+ * @param[out] retval   Pointer to return the success (EXIT_SUCCESS) or failure
+ *                      (EXIT_FAILURE) status. May be NULL.
+ * @return A pointer to the advanced buffer position.
+ */
+const char *npc_parse_shop(const char *w1, const char *w2, const char *w3, const char *w4, const char *start, const char *buffer, const char *filepath, int *retval)
+{
 	//TODO: could be rewritten to NOT need this temp array [ultramage]
 	// We could use nd->u.shop.shop_item to store directly the items, but this could lead
 	// to unecessary memory usage by the server, using a temp dynamic array is the
@@ -2616,10 +2809,12 @@ const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const char* s
 	size_t items_count = 40; // Starting items size
 
 	char *p;
-	int x, y, dir, m, i;
+	int x, y, dir, m, i, class_;
 	struct npc_data *nd;
 	enum npc_subtype type;
 
+	nullpo_retr(strchr(start,'\n'), w1);
+	nullpo_retr(strchr(start,'\n'), w4);
 	if( strcmp(w1,"-") == 0 ) {
 		// 'floating' shop
 		x = y = dir = 0;
@@ -2634,6 +2829,12 @@ const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const char* s
 			return strchr(start,'\n');// skip and continue
 		}
 
+		if (dir < 0 || dir > 7) {
+			ShowError("npc_parse_shop: Invalid NPC facing direction '%d' in file '%s', line '%d'.\n", dir, filepath, strline(buffer, start-buffer));
+			if (retval) *retval = EXIT_FAILURE;
+			return strchr(start,'\n');//continue
+		}
+
 		m = map->mapname2mapid(mapname);
 	}
 
@@ -2642,7 +2843,7 @@ const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const char* s
 		if (retval) *retval = EXIT_FAILURE;
 		return strchr(start,'\n');//try next
 	}
-	
+
 	if( strcmp(w2,"cashshop") == 0 )
 		type = CASHSHOP;
 	else
@@ -2709,50 +2910,33 @@ const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const char* s
 		return strchr(start,'\n');// continue
 	}
 
-	CREATE(nd, struct npc_data, 1);
+	class_ = m == -1 ? FAKE_NPC : npc->parseview(w4, start, buffer, filepath);
+	nd = npc->create_npc(type, m, x, y, dir, class_);
 	CREATE(nd->u.shop.shop_item, struct npc_item_list, i);
 	memcpy(nd->u.shop.shop_item, items, sizeof(items[0])*i);
 	aFree(items);
 
 	nd->u.shop.count = i;
-	nd->bl.prev = nd->bl.next = NULL;
-	nd->bl.m = m;
-	nd->bl.x = x;
-	nd->bl.y = y;
-	nd->bl.id = npc->get_new_npc_id();
 	npc->parsename(nd, w3, start, buffer, filepath);
-	nd->class_ = m == -1 ? -1 : npc->parseview(w4, start, buffer, filepath);
-	nd->speed = 200;
+	nd->path = npc->retainpathreference(filepath);
 
-	++npc_shop;
-	nd->bl.type = BL_NPC;
-	nd->subtype = type;
-	if( m >= 0 ) {// normal shop npc
-		map->addnpc(m,nd);
-		map->addblock(&nd->bl);
-		status->set_viewdata(&nd->bl, nd->class_);
-		nd->ud = &npc->base_ud;
-		nd->dir = dir;
-		if( map->list[nd->bl.m].users )
-			clif->spawn(&nd->bl);
-	} else {// 'floating' shop
-		map->addiddb(&nd->bl);
-	}
-	strdb_put(npc->name_db, nd->exname, nd);
+	++npc->npc_shop;
+	npc->add_to_location(nd);
 
 	return strchr(start,'\n');// continue
 }
 
 void npc_convertlabel_db(struct npc_label_list* label_list, const char *filepath) {
 	int i;
-	
+
+	nullpo_retv(label_list);
 	for( i = 0; i < script->label_count; i++ ) {
 		const char* lname = script->get_str(script->labels[i].key);
 		int lpos = script->labels[i].pos;
 		struct npc_label_list* label;
 		const char *p;
 		size_t len;
-				
+
 		// In case of labels not terminated with ':', for user defined function support
 		p = lname;
 
@@ -2765,9 +2949,9 @@ void npc_convertlabel_db(struct npc_label_list* label_list, const char *filepath
 			ShowError("npc_parse_script: label name longer than 23 chars! (%s) in file '%s'.\n", lname, filepath);
 			return;
 		}
-		
+
 		label = &label_list[i];
-				
+
 		safestrncpy(label->name, lname, sizeof(label->name));
 		label->pos = lpos;
 	}
@@ -2829,16 +3013,42 @@ const char* npc_skip_script(const char* start, const char* buffer, const char* f
 	return p+1;// return after the last '}'
 }
 
-/// Parses a npc script.
-///
-/// -%TAB%script%TAB%<NPC Name>%TAB%-1,{<code>}
-/// <map name>,<x>,<y>,<facing>%TAB%script%TAB%<NPC Name>%TAB%<sprite id>,{<code>}
-/// <map name>,<x>,<y>,<facing>%TAB%script%TAB%<NPC Name>%TAB%<sprite id>,<triggerX>,<triggerY>,{<code>}
-const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char* start, const char* buffer, const char* filepath, int options, int *retval) {
-	int x, y, dir = 0, m, xs = 0, ys = 0;	// [Valaris] thanks to fov
-	char mapname[32];
+/**
+ * Parses a NPC script.
+ *
+ * Example:
+ * @code
+ * -<TAB>script<TAB><NPC Name><TAB>FAKE_NPC,{
+ *   <code>
+ * }
+ * <map name>,<x>,<y>,<facing><TAB>script<TAB><NPC Name><TAB><sprite id>,{
+ *   <code>
+ * }
+ * <map name>,<x>,<y>,<facing><TAB>script<TAB><NPC Name><TAB><sprite id>,<triggerX>,<triggerY>,{
+ *   <code>
+ * }
+ * @endcode
+ *
+ * @param[in]  w1       First tab-delimited part of the string to parse.
+ * @param[in]  w2       Second tab-delimited part of the string to parse.
+ * @param[in]  w3       Third tab-delimited part of the string to parse.
+ * @param[in]  w4       Fourth tab-delimited part of the string to parse.
+ * @param[in]  start    Pointer to the beginning of the string inside buffer.
+ *                      This must point to the same buffer as `buffer`.
+ * @param[in]  buffer   Pointer to the buffer containing the script. For
+ *                      single-line mapflags not inside a script, this may be
+ *                      an empty (but initialized) single-character buffer.
+ * @param[in]  filepath Source file path.
+ * @param[in]  options  NPC parse/load options (@see enum npc_parse_options).
+ * @param[out] retval   Pointer to return the success (EXIT_SUCCESS) or failure
+ *                      (EXIT_FAILURE) status. May be NULL.
+ * @return A pointer to the advanced buffer position.
+ */
+const char *npc_parse_script(const char *w1, const char *w2, const char *w3, const char *w4, const char *start, const char *buffer, const char *filepath, int options, int *retval)
+{
+	int x, y, dir = 0, m, xs = 0, ys = 0; // [Valaris] thanks to fov
 	struct script_code *scriptroot;
-	int i;
+	int i, class_;
 	const char* end;
 	const char* script_start;
 
@@ -2846,13 +3056,16 @@ const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char*
 	int label_list_num;
 	struct npc_data* nd;
 
-	if( strcmp(w1, "-") == 0 )
-	{// floating npc
+	nullpo_retr(NULL, w1);
+	if (strcmp(w1, "-") == 0) {
+		// floating npc
 		x = 0;
 		y = 0;
 		m = -1;
-	} else {// npc in a map
-		if( sscanf(w1, "%31[^,],%d,%d,%d", mapname, &x, &y, &dir) != 4 ) {
+	} else {
+		// npc in a map
+		char mapname[32];
+		if (sscanf(w1, "%31[^,],%d,%d,%d", mapname, &x, &y, &dir) != 4) {
 			ShowError("npc_parse_script: Invalid placement format for a script in file '%s', line '%d'. Skipping the rest of file...\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
 			if (retval) *retval = EXIT_FAILURE;
 			return NULL;// unknown format, don't continue
@@ -2862,6 +3075,13 @@ const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char*
 
 	script_start = strstr(start,",{");
 	end = strchr(start,'\n');
+
+	if (dir < 0 || dir > 7) {
+		ShowError("npc_parse_script: Invalid NPC facing direction '%d' in file '%s', line '%d'.\n", dir, filepath, strline(buffer, start-buffer));
+		if (retval) *retval = EXIT_FAILURE;
+		return npc->skip_script(script_start, buffer, filepath, retval); // continue
+	}
+
 	if( strstr(w4,",{") == NULL || script_start == NULL || (end != NULL && script_start > end) )
 	{
 		ShowError("npc_parse_script: Missing left curly ',{' in file '%s', line '%d'. Skipping the rest of the file.\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
@@ -2874,7 +3094,10 @@ const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char*
 	if( end == NULL )
 		return NULL;// (simple) parse error, don't continue
 
+	script->parser_current_npc_name = w3;
 	scriptroot = script->parse(script_start, filepath, strline(buffer,script_start-buffer), SCRIPT_USE_LABEL_DB, retval);
+	script->parser_current_npc_name = NULL;
+
 	label_list = NULL;
 	label_list_num = 0;
 	if( script->label_count ) {
@@ -2883,54 +3106,28 @@ const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char*
 		npc->convertlabel_db(label_list,filepath);
 	}
 
-	CREATE(nd, struct npc_data, 1);
-
-	if( sscanf(w4, "%*[^,],%d,%d", &xs, &ys) == 2 )
-	{// OnTouch area defined
+	class_ = m == -1 ? FAKE_NPC : npc->parseview(w4, start, buffer, filepath);
+	nd = npc->create_npc(SCRIPT, m, x, y, dir, class_);
+	if (sscanf(w4, "%*[^,],%d,%d", &xs, &ys) == 2) {
+		// OnTouch area defined
 		nd->u.scr.xs = xs;
 		nd->u.scr.ys = ys;
-	}
-	else
-	{// no OnTouch area
+	} else {
+		// no OnTouch area
 		nd->u.scr.xs = -1;
 		nd->u.scr.ys = -1;
 	}
 
-	nd->bl.prev = nd->bl.next = NULL;
-	nd->bl.m = m;
-	nd->bl.x = x;
-	nd->bl.y = y;
 	npc->parsename(nd, w3, start, buffer, filepath);
-	nd->bl.id = npc->get_new_npc_id();
-	nd->class_ = m == -1 ? -1 : npc->parseview(w4, start, buffer, filepath);
-	nd->speed = 200;
+	nd->path = npc->retainpathreference(filepath);
 	nd->u.scr.script = scriptroot;
 	nd->u.scr.label_list = label_list;
 	nd->u.scr.label_list_num = label_list_num;
 	if( options&NPO_TRADER )
 		nd->u.scr.trader = true;
 	nd->u.scr.shop = NULL;
-	
-	++npc_script;
-	nd->bl.type = BL_NPC;
-	nd->subtype = SCRIPT;
-
-	if( m >= 0 ) {
-		map->addnpc(m, nd);
-		nd->ud = &npc->base_ud;
-		nd->dir = dir;
-		npc->setcells(nd);
-		map->addblock(&nd->bl);
-		if( nd->class_ >= 0 ) {
-			status->set_viewdata(&nd->bl, nd->class_);
-			if( map->list[nd->bl.m].users )
-				clif->spawn(&nd->bl);
-		}
-	} else {
-		// we skip map->addnpc, but still add it to the list of ID's
-		map->addiddb(&nd->bl);
-	}
-	strdb_put(npc->name_db, nd->exname, nd);
+	++npc->npc_script;
+	npc->add_to_location(nd);
 
 	//-----------------------------------------
 	// Loop through labels to export them as necessary
@@ -2954,7 +3151,7 @@ const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char*
 		if( ( ev = (struct event_data*)strdb_get(npc->ev_db, evname) ) ) {
 
 			//Execute OnInit
-			script->run(nd->u.scr.script,ev->pos,0,nd->bl.id);
+			script->run_npc(nd->u.scr.script,ev->pos,0,nd->bl.id);
 
 		}
 	}
@@ -2962,27 +3159,207 @@ const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char*
 	return end;
 }
 
-/// Duplicate a warp, shop, cashshop or script. [Orcao]
-/// warp: <map name>,<x>,<y>,<facing>%TAB%duplicate(<name of target>)%TAB%<NPC Name>%TAB%<spanx>,<spany>
-/// shop/cashshop/npc: -%TAB%duplicate(<name of target>)%TAB%<NPC Name>%TAB%<sprite id>
-/// shop/cashshop/npc: <map name>,<x>,<y>,<facing>%TAB%duplicate(<name of target>)%TAB%<NPC Name>%TAB%<sprite id>
-/// npc: -%TAB%duplicate(<name of target>)%TAB%<NPC Name>%TAB%<sprite id>,<triggerX>,<triggerY>
-/// npc: <map name>,<x>,<y>,<facing>%TAB%duplicate(<name of target>)%TAB%<NPC Name>%TAB%<sprite id>,<triggerX>,<triggerY>
-/// !!Only NPO_ONINIT is available trough options!!
-const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const char* start, const char* buffer, const char* filepath, int options, int *retval) {
-	int x, y, dir, m, xs = -1, ys = -1;
-	char mapname[32];
-	char srcname[128];
+/**
+ * Registers the NPC and adds it to its location (on map or floating).
+ *
+ * @param nd The NPC to register.
+ */
+void npc_add_to_location(struct npc_data *nd)
+{
+	nullpo_retv(nd);
+
+	if (nd->bl.m >= 0) {
+		map->addnpc(nd->bl.m, nd);
+		npc->setcells(nd);
+		map->addblock(&nd->bl);
+		nd->ud = &npc->base_ud;
+		if (nd->class_ >= 0) {
+			status->set_viewdata(&nd->bl, nd->class_);
+			if( map->list[nd->bl.m].users )
+				clif->spawn(&nd->bl);
+		}
+	} else {
+		// we skip map->addnpc, but still add it to the list of ID's
+		map->addiddb(&nd->bl);
+	}
+	strdb_put(npc->name_db, nd->exname, nd);
+}
+
+/**
+ * Duplicates a script (@see npc_duplicate_sub)
+ */
+bool npc_duplicate_script_sub(struct npc_data *nd, const struct npc_data *snd, int xs, int ys, int options)
+{
 	int i;
-	const char* end;
+	bool retval = true;
+
+	nullpo_retr(false, nd);
+	nullpo_retr(false, snd);
+
+	++npc->npc_script;
+	nd->u.scr.xs = xs;
+	nd->u.scr.ys = ys;
+	nd->u.scr.script = snd->u.scr.script;
+	nd->u.scr.label_list = snd->u.scr.label_list;
+	nd->u.scr.label_list_num = snd->u.scr.label_list_num;
+	nd->u.scr.shop = snd->u.scr.shop;
+	nd->u.scr.trader = snd->u.scr.trader;
+
+	//add the npc to its location
+	npc->add_to_location(nd);
+
+	// Loop through labels to export them as necessary
+	for (i = 0; i < nd->u.scr.label_list_num; i++) {
+		if (npc->event_export(nd, i)) {
+			ShowWarning("npc_parse_duplicate: duplicate event %s::%s in file '%s'.\n",
+			             nd->exname, nd->u.scr.label_list[i].name, nd->path);
+			retval = false;
+		}
+		npc->timerevent_export(nd, i);
+	}
+
+	nd->u.scr.timerid = INVALID_TIMER;
+
+	if (options&NPO_ONINIT) {
+		// From npc_parse_script
+		char evname[EVENT_NAME_LENGTH];
+		struct event_data *ev;
+
+		snprintf(evname, ARRAYLENGTH(evname), "%s::OnInit", nd->exname);
+
+		if ((ev = (struct event_data*)strdb_get(npc->ev_db, evname)) != NULL) {
+			//Execute OnInit
+			script->run_npc(nd->u.scr.script,ev->pos,0,nd->bl.id);
+		}
+	}
+	return retval;
+}
+
+/**
+ * Duplicates a shop or cash shop (@see npc_duplicate_sub)
+ */
+bool npc_duplicate_shop_sub(struct npc_data *nd, const struct npc_data *snd, int xs, int ys, int options)
+{
+	nullpo_retr(false, nd);
+	nullpo_retr(false, snd);
+
+	++npc->npc_shop;
+	nd->u.shop.shop_item = snd->u.shop.shop_item;
+	nd->u.shop.count = snd->u.shop.count;
+
+	//add the npc to its location
+	npc->add_to_location(nd);
+
+	return true;
+}
+
+/**
+ * Duplicates a warp (@see npc_duplicate_sub)
+ */
+bool npc_duplicate_warp_sub(struct npc_data *nd, const struct npc_data *snd, int xs, int ys, int options)
+{
+	nullpo_retr(false, nd);
+	nullpo_retr(false, snd);
+
+	++npc->npc_warp;
+	nd->u.warp.xs = xs;
+	nd->u.warp.ys = ys;
+	nd->u.warp.mapindex = snd->u.warp.mapindex;
+	nd->u.warp.x = snd->u.warp.x;
+	nd->u.warp.y = snd->u.warp.y;
+
+	//Add the npc to its location
+	npc->add_to_location(nd);
+
+	return true;
+}
+
+/**
+ * Duplicates a warp, shop, cashshop or script.
+ *
+ * @param nd      An already initialized NPC data. Expects bl->m, bl->x, bl->y,
+ *                name, exname, path, dir, class_, speed, subtype to be already
+ *                filled.
+ * @param snd     The source NPC to duplicate.
+ * @param class_  The npc view class.
+ * @param dir     The facing direction.
+ * @param xs      The x-span, if any.
+ * @param ys      The y-span, if any.
+ * @param options The NPC options.
+ * @retval false if there were any issues while creating and validating the NPC.
+ */
+bool npc_duplicate_sub(struct npc_data *nd, const struct npc_data *snd, int xs, int ys, int options)
+{
+	nullpo_retr(false, nd);
+	nullpo_retr(false, snd);
+
+	nd->src_id = snd->bl.id;
+	switch (nd->subtype) {
+		case SCRIPT:
+			return npc->duplicate_script_sub(nd, snd, xs, ys, options);
+
+		case SHOP:
+		case CASHSHOP:
+			return npc->duplicate_shop_sub(nd, snd, xs, ys, options);
+
+		case WARP:
+			return npc->duplicate_warp_sub(nd, snd, xs, ys, options);
+
+		case TOMB:
+			return false;
+	}
+	return false;
+}
+
+/**
+ * Parses a duplicate warp, shop, cashshop or script NPC. [Orcao]
+ *
+ * Example:
+ * @code
+ * warp:
+ *   <map name>,<x>,<y>,<facing><TAB>duplicate(<name of target>)<TAB><NPC Name><TAB><spanx>,<spany>
+ * shop/cashshop/npc:
+ *   -<TAB>duplicate(<name of target>)<TAB><NPC Name><TAB><sprite id>
+ * shop/cashshop/npc:
+ *   <map name>,<x>,<y>,<facing><TAB>duplicate(<name of target>)<TAB><NPC Name><TAB><sprite id>
+ * npc:
+ *   -<TAB>duplicate(<name of target>)<TAB><NPC Name><TAB><sprite id>,<triggerX>,<triggerY>
+ * npc:
+ *   <map name>,<x>,<y>,<facing><TAB>duplicate(<name of target>)<TAB><NPC Name><TAB><sprite id>,<triggerX>,<triggerY>
+ * @endcode
+ *
+ * @param[in]  w1       First tab-delimited part of the string to parse.
+ * @param[in]  w2       Second tab-delimited part of the string to parse.
+ * @param[in]  w3       Third tab-delimited part of the string to parse.
+ * @param[in]  w4       Fourth tab-delimited part of the string to parse.
+ * @param[in]  start    Pointer to the beginning of the string inside buffer.
+ *                      This must point to the same buffer as `buffer`.
+ * @param[in]  buffer   Pointer to the buffer containing the script. For
+ *                      single-line mapflags not inside a script, this may be
+ *                      an empty (but initialized) single-character buffer.
+ * @param[in]  filepath Source file path.
+ * @param[in]  options  NPC parse/load options (@see enum npc_parse_options).
+ * @param[out] retval   Pointer to return the success (EXIT_SUCCESS) or failure
+ *                      (EXIT_FAILURE) status. May be NULL.
+ * @return A pointer to the advanced buffer position.
+ *
+ * @remark
+ *   Only `NPO_ONINIT` is available trough the options argument.
+ */
+const char *npc_parse_duplicate(const char *w1, const char *w2, const char *w3, const char *w4, const char *start, const char *buffer, const char *filepath, int options, int *retval)
+{
+	int x, y, dir, m, xs = -1, ys = -1;
+	char srcname[128];
+	const char *end;
 	size_t length;
 
-	int src_id;
-	int type;
+	int class_;
 	struct npc_data* nd;
 	struct npc_data* dnd;
 
 	end = strchr(start,'\n');
+	nullpo_retr(end, w2);
+	nullpo_retr(end, w4);
 	length = strlen(w2);
 
 	// get the npc being duplicated
@@ -3000,21 +3377,28 @@ const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const ch
 		if (retval) *retval = EXIT_FAILURE;
 		return end;// next line, try to continue
 	}
-	src_id = dnd->bl.id;
-	type = dnd->subtype;
 
 	// get placement
-	if( (type==SHOP || type==CASHSHOP || type==SCRIPT) && strcmp(w1, "-") == 0 ) {// floating shop/chashshop/script
+	if ((dnd->subtype==SHOP || dnd->subtype==CASHSHOP || dnd->subtype==SCRIPT) && strcmp(w1, "-") == 0) {
+		// floating shop/chashshop/script
 		x = y = dir = 0;
 		m = -1;
 	} else {
+		char mapname[32];
 		int fields = sscanf(w1, "%31[^,],%d,%d,%d", mapname, &x, &y, &dir);
-		if( type == WARP && fields == 3 ) { // <map name>,<x>,<y>
+		if (dnd->subtype == WARP && fields == 3) {
+			// <map name>,<x>,<y>
 			dir = 0;
-		} else if( fields != 4 ) {// <map name>,<x>,<y>,<facing>
+		} else if (fields != 4) {
+			// <map name>,<x>,<y>,<facing>
 			ShowError("npc_parse_duplicate: Invalid placement format for duplicate in file '%s', line '%d'. Skipping line...\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
 			if (retval) *retval = EXIT_FAILURE;
 			return end;// next line, try to continue
+		}
+		if (dir < 0 || dir > 7) {
+			ShowError("npc_parse_duplicate: Invalid NPC facing direction '%d' in file '%s', line '%d'.\n", dir, filepath, strline(buffer, start-buffer));
+			if (retval) *retval = EXIT_FAILURE;
+			return end; // try next
 		}
 		m = map->mapname2mapid(mapname);
 	}
@@ -3024,116 +3408,49 @@ const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const ch
 		if (retval) *retval = EXIT_FAILURE;
 		return end;//try next
 	}
-	
-	if( type == WARP && sscanf(w4, "%d,%d", &xs, &ys) == 2 );// <spanx>,<spany>
-	else if( type == SCRIPT && sscanf(w4, "%*[^,],%d,%d", &xs, &ys) == 2);// <sprite id>,<triggerX>,<triggerY>
-	else if( type == WARP ) {
+
+	if (dnd->subtype == WARP && sscanf(w4, "%d,%d", &xs, &ys) == 2) { // <spanx>,<spany>
+		;
+	} else if (dnd->subtype == SCRIPT && sscanf(w4, "%*[^,],%d,%d", &xs, &ys) == 2) { // <sprite id>,<triggerX>,<triggerY>
+		;
+	} else if (dnd->subtype == WARP) {
 		ShowError("npc_parse_duplicate: Invalid span format for duplicate warp in file '%s', line '%d'. Skipping line...\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
 		if (retval) *retval = EXIT_FAILURE;
 		return end;// next line, try to continue
 	}
 
-	CREATE(nd, struct npc_data, 1);
-
-	nd->bl.prev = nd->bl.next = NULL;
-	nd->bl.m = m;
-	nd->bl.x = x;
-	nd->bl.y = y;
+	class_ = m == -1 ? FAKE_NPC : npc->parseview(w4, start, buffer, filepath);
+	nd = npc->create_npc(dnd->subtype, m, x, y, dir, class_);
 	npc->parsename(nd, w3, start, buffer, filepath);
-	nd->bl.id = npc->get_new_npc_id();
-	nd->class_ = m == -1 ? -1 : npc->parseview(w4, start, buffer, filepath);
-	nd->speed = 200;
-	nd->src_id = src_id;
-	nd->bl.type = BL_NPC;
-	nd->subtype = (enum npc_subtype)type;
-	switch( type ) {
-		case SCRIPT:
-			++npc_script;
-			nd->u.scr.xs = xs;
-			nd->u.scr.ys = ys;
-			nd->u.scr.script = dnd->u.scr.script;
-			nd->u.scr.label_list = dnd->u.scr.label_list;
-			nd->u.scr.label_list_num = dnd->u.scr.label_list_num;
-			nd->u.scr.shop = dnd->u.scr.shop;
-			nd->u.scr.trader = dnd->u.scr.trader;
-			break;
-
-		case SHOP:
-		case CASHSHOP:
-			++npc_shop;
-			nd->u.shop.shop_item = dnd->u.shop.shop_item;
-			nd->u.shop.count = dnd->u.shop.count;
-			break;
-
-		case WARP:
-			++npc_warp;
-			if( !battle_config.warp_point_debug )
-				nd->class_ = WARP_CLASS;
-			else
-				nd->class_ = WARP_DEBUG_CLASS;
-			nd->u.warp.xs = xs;
-			nd->u.warp.ys = ys;
-			nd->u.warp.mapindex = dnd->u.warp.mapindex;
-			nd->u.warp.x = dnd->u.warp.x;
-			nd->u.warp.y = dnd->u.warp.y;
-			break;
+	nd->path = npc->retainpathreference(filepath);
+	if (!npc->duplicate_sub(nd, dnd, xs, ys, options)) {
+		if (retval) *retval = EXIT_FAILURE;
 	}
 
-	//Add the npc to its location
-	if( m >= 0 ) {
-		map->addnpc(m, nd);
-		nd->ud = &npc->base_ud;
-		nd->dir = dir;
-		npc->setcells(nd);
-		map->addblock(&nd->bl);
-		if( nd->class_ >= 0 ) {
-			status->set_viewdata(&nd->bl, nd->class_);
-			if( map->list[nd->bl.m].users )
-				clif->spawn(&nd->bl);
-		}
-	} else {
-		// we skip map->addnpc, but still add it to the list of ID's
-		map->addiddb(&nd->bl);
-	}
-	strdb_put(npc->name_db, nd->exname, nd);
-
-	if( type != SCRIPT )
-		return end;
-
-	//-----------------------------------------
-	// Loop through labels to export them as necessary
-	for (i = 0; i < nd->u.scr.label_list_num; i++) {
-		if (npc->event_export(nd, i)) {
-			ShowWarning("npc_parse_duplicate: duplicate event %s::%s in file '%s'.\n",
-			             nd->exname, nd->u.scr.label_list[i].name, filepath);
-			if (retval) *retval = EXIT_FAILURE;
-		}
-		npc->timerevent_export(nd, i);
-	}
-
-	nd->u.scr.timerid = INVALID_TIMER;
-
-	if( type == SCRIPT && options&NPO_ONINIT ) {
-		// From npc_parse_script
-		char evname[EVENT_NAME_LENGTH];
-		struct event_data *ev;
-
-		snprintf(evname, ARRAYLENGTH(evname), "%s::OnInit", nd->exname);
-
-		if( ( ev = (struct event_data*)strdb_get(npc->ev_db, evname) ) ) {
-
-			//Execute OnInit
-			script->run(nd->u.scr.script,ev->pos,0,nd->bl.id);
-
-		}
-	}
 	return end;
 }
 
-int npc_duplicate4instance(struct npc_data *snd, int16 m) {
+/**
+ * Duplicates an NPC for instancing purposes.
+ *
+ * @param snd The NPC to duplicate.
+ * @param m   The instanced map ID.
+ * @return success state.
+ * @retval 0 in case of successful creation.
+ */
+int npc_duplicate4instance(struct npc_data *snd, int16 m)
+{
 	char newname[NAME_LENGTH];
+	int dm = -1, im = -1, xs = -1, ys = -1;
+	struct npc_data *nd = NULL;
 
-	if( m == -1 || map->list[m].instance_id == -1 )
+	if (m == -1)
+		return 1;
+
+	Assert_retr(1, m >= 0 && m < map->count);
+	nullpo_retr(1, snd);
+
+	if (map->list[m].instance_id == -1)
 		return 1;
 
 	snprintf(newname, ARRAYLENGTH(newname), "dup_%d_%d", map->list[m].instance_id, snd->bl.id);
@@ -3142,65 +3459,50 @@ int npc_duplicate4instance(struct npc_data *snd, int16 m) {
 		return 1;
 	}
 
-	if( snd->subtype == WARP ) { // Adjust destination, if instanced
-		struct npc_data *wnd = NULL; // New NPC
-		int dm = map->mapindex2mapid(snd->u.warp.mapindex), im;
-		if( dm < 0 ) return 1;
-
-		if( ( im = instance->mapid2imapid(dm, map->list[m].instance_id) ) == -1 ) {
+	switch (snd->subtype) {
+	case SCRIPT:
+		xs = snd->u.scr.xs;
+		ys = snd->u.scr.ys;
+		break;
+	case WARP:
+		xs = snd->u.warp.xs;
+		ys = snd->u.warp.ys;
+		// Adjust destination, if instanced
+		if ((dm = map->mapindex2mapid(snd->u.warp.mapindex)) < 0) {
+			return 1;
+		}
+		if ((im = instance->mapid2imapid(dm, map->list[m].instance_id)) == -1) {
 			ShowError("npc_duplicate4instance: warp (%s) leading to instanced map (%s), but instance map is not attached to current instance.\n", map->list[dm].name, snd->exname);
 			return 1;
 		}
+		break;
+	default: // Other types have no xs/ys
+		break;
+	}
 
-		CREATE(wnd, struct npc_data, 1);
-		wnd->bl.id = npc->get_new_npc_id();
-		map->addnpc(m, wnd);
-		wnd->bl.prev = wnd->bl.next = NULL;
-		wnd->bl.m = m;
-		wnd->bl.x = snd->bl.x;
-		wnd->bl.y = snd->bl.y;
-		safestrncpy(wnd->name, "", ARRAYLENGTH(wnd->name));
-		safestrncpy(wnd->exname, newname, ARRAYLENGTH(wnd->exname));
-		wnd->class_ = WARP_CLASS;
-		wnd->speed = 200;
-		wnd->u.warp.mapindex = map_id2index(im);
-		wnd->u.warp.x = snd->u.warp.x;
-		wnd->u.warp.y = snd->u.warp.y;
-		wnd->u.warp.xs = snd->u.warp.xs;
-		wnd->u.warp.ys = snd->u.warp.ys;
-		wnd->bl.type = BL_NPC;
-		wnd->subtype = WARP;
-		npc->setcells(wnd);
-		map->addblock(&wnd->bl);
-		status->set_viewdata(&wnd->bl, wnd->class_);
-		wnd->ud = &npc->base_ud;
-		if( map->list[wnd->bl.m].users )
-			clif->spawn(&wnd->bl);
-		strdb_put(npc->name_db, wnd->exname, wnd);
-	} else {
-		static char w1[50], w2[50], w3[50], w4[50];
-		const char* stat_buf = "- call from instancing subsystem -\n";
-
-		snprintf(w1, sizeof(w1), "%s,%d,%d,%d", map->list[m].name, snd->bl.x, snd->bl.y, snd->dir);
-		snprintf(w2, sizeof(w2), "duplicate(%s)", snd->exname);
-		snprintf(w3, sizeof(w3), "%s::%s", snd->name, newname);
-
-		if( snd->u.scr.xs >= 0 && snd->u.scr.ys >= 0 )
-			snprintf(w4, sizeof(w4), "%d,%d,%d", snd->class_, snd->u.scr.xs, snd->u.scr.ys); // Touch Area
-		else
-			snprintf(w4, sizeof(w4), "%d", snd->class_);
-
-		npc->parse_duplicate(w1, w2, w3, w4, stat_buf, stat_buf, "INSTANCING", NPO_NONE, NULL);
+	nd = npc->create_npc(snd->subtype, m, snd->bl.x, snd->bl.y, snd->dir, snd->class_);
+	safestrncpy(nd->name, snd->name, sizeof(nd->name));
+	safestrncpy(nd->exname, newname, sizeof(nd->exname));
+	nd->path = npc->retainpathreference("INSTANCING");
+	npc->duplicate_sub(nd, snd, xs, ys, NPO_NONE);
+	if (nd->subtype == WARP) {
+		// Adjust destination, if instanced
+		nd->u.warp.mapindex = map_id2index(im);
 	}
 
 	return 0;
 }
 
 //Set mapcell CELL_NPC to trigger event later
-void npc_setcells(struct npc_data* nd) {
-	int16 m = nd->bl.m, x = nd->bl.x, y = nd->bl.y, xs, ys;
+void npc_setcells(struct npc_data* nd)
+{
+	int16 m, x, y, xs, ys;
 	int i,j;
 
+	nullpo_retv(nd);
+	m = nd->bl.m;
+	x = nd->bl.x;
+	y = nd->bl.y;
 	switch(nd->subtype) {
 		case WARP:
 			xs = nd->u.warp.xs;
@@ -3219,25 +3521,36 @@ void npc_setcells(struct npc_data* nd) {
 
 	for (i = y-ys; i <= y+ys; i++) {
 		for (j = x-xs; j <= x+xs; j++) {
-			if (map->getcell(m, j, i, CELL_CHKNOPASS))
+			if (map->getcell(m, &nd->bl, j, i, CELL_CHKNOPASS))
 				continue;
 			map->list[m].setcell(m, j, i, CELL_NPC, true);
 		}
 	}
 }
 
-int npc_unsetcells_sub(struct block_list* bl, va_list ap) {
-	struct npc_data *nd = (struct npc_data*)bl;
-	int id =  va_arg(ap,int);
-	if (nd->bl.id == id) return 0;
+int npc_unsetcells_sub(struct block_list *bl, va_list ap)
+{
+	struct npc_data *nd = NULL;
+	int id = va_arg(ap, int);
+
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_NPC);
+	nd = BL_UCAST(BL_NPC, bl);
+
+	if (nd->bl.id == id)
+		return 0;
 	npc->setcells(nd);
 	return 1;
 }
 
 void npc_unsetcells(struct npc_data* nd) {
-	int16 m = nd->bl.m, x = nd->bl.x, y = nd->bl.y, xs, ys;
+	int16 m, x, y, xs, ys;
 	int i,j, x0, x1, y0, y1;
 
+	nullpo_retv(nd);
+	m = nd->bl.m;
+	x = nd->bl.x;
+	y = nd->bl.y;
 	switch(nd->subtype) {
 		case WARP:
 			xs = nd->u.warp.xs;
@@ -3256,10 +3569,10 @@ void npc_unsetcells(struct npc_data* nd) {
 
 	//Locate max range on which we can locate npc cells
 	//FIXME: does this really do what it's supposed to do? [ultramage]
-	for(x0 = x-xs; x0 > 0 && map->getcell(m, x0, y, CELL_CHKNPC); x0--);
-	for(x1 = x+xs; x1 < map->list[m].xs-1 && map->getcell(m, x1, y, CELL_CHKNPC); x1++);
-	for(y0 = y-ys; y0 > 0 && map->getcell(m, x, y0, CELL_CHKNPC); y0--);
-	for(y1 = y+ys; y1 < map->list[m].ys-1 && map->getcell(m, x, y1, CELL_CHKNPC); y1++);
+	for(x0 = x-xs; x0 > 0 && map->getcell(m, &nd->bl, x0, y, CELL_CHKNPC); x0--);
+	for(x1 = x+xs; x1 < map->list[m].xs-1 && map->getcell(m, &nd->bl, x1, y, CELL_CHKNPC); x1++);
+	for(y0 = y-ys; y0 > 0 && map->getcell(m, &nd->bl, x, y0, CELL_CHKNPC); y0--);
+	for(y1 = y+ys; y1 < map->list[m].ys-1 && map->getcell(m, &nd->bl, x, y1, CELL_CHKNPC); y1++);
 
 	//Erase this npc's cells
 	for (i = y-ys; i <= y+ys; i++)
@@ -3272,7 +3585,9 @@ void npc_unsetcells(struct npc_data* nd) {
 
 void npc_movenpc(struct npc_data* nd, int16 x, int16 y)
 {
-	const int16 m = nd->bl.m;
+	int16 m;
+	nullpo_retv(nd);
+	m = nd->bl.m;
 	if (m < 0 || nd->bl.prev == NULL) return; //Not on a map.
 
 	x = cap_value(x, 0, map->list[m].xs-1);
@@ -3290,6 +3605,7 @@ void npc_movenpc(struct npc_data* nd, int16 x, int16 y)
 void npc_setdisplayname(struct npc_data* nd, const char* newname)
 {
 	nullpo_retv(nd);
+	nullpo_retv(newname);
 
 	safestrncpy(nd->name, newname, sizeof(nd->name));
 	if( map->list[nd->bl.m].users )
@@ -3320,10 +3636,11 @@ int npc_do_atcmd_event(struct map_session_data* sd, const char* command, const c
 	struct event_data* ev = (struct event_data*)strdb_get(npc->ev_db, eventname);
 	struct npc_data *nd;
 	struct script_state *st;
-	int i = 0, j = 0, k = 0;
-	char *temp;
+	int i = 0, nargs = 0;
+	size_t len;
 
 	nullpo_ret(sd);
+	nullpo_ret(message);
 
 	if( ev == NULL || (nd = ev->nd) == NULL ) {
 		ShowError("npc_event: event not found [%s]\n", eventname);
@@ -3347,42 +3664,74 @@ int npc_do_atcmd_event(struct map_session_data* sd, const char* command, const c
 	}
 
 	st = script->alloc_state(ev->nd->u.scr.script, ev->pos, sd->bl.id, ev->nd->bl.id);
-	script->setd_sub(st, NULL, ".@atcmd_command$", 0, (void *)command, NULL);
+	script->setd_sub(st, NULL, ".@atcmd_command$", 0, command, NULL);
 
-	// split atcmd parameters based on spaces
-	temp = (char*)aMalloc(strlen(message) + 1);
-
-	for( i = 0; i < ( strlen( message ) + 1 ) && k < 127; i ++ ) {
-		if( message[i] == ' ' || message[i] == '\0' ) {
-			if( message[ ( i - 1 ) ] == ' ' ) {
-				continue; // To prevent "@atcmd [space][space]" and .@atcmd_numparameters return 1 without any parameter.
-			}
-			temp[k] = '\0';
-			k = 0;
-			if( temp[0] != '\0' ) {
-				script->setd_sub( st, NULL, ".@atcmd_parameters$", j++, (void *)temp, NULL );
-			}
-		} else {
-			temp[k] = message[i];
-			k++;
+	len = strlen(message);
+	if (len) {
+		char *temp, *p;
+		p = temp = aStrdup(message);
+		// Sanity check - Skip leading spaces (shouldn't happen)
+		while (i <= len && temp[i] == ' ') {
+			p++;
+			i++;
 		}
+		// split atcmd parameters based on spaces
+		while (i <= len) {
+			if (temp[i] != ' ' && temp[i] != '\0') {
+				i++;
+				continue;
+			}
+			temp[i] = '\0';
+			script->setd_sub(st, NULL, ".@atcmd_parameters$", nargs++, (void *)p, NULL);
+			i++;
+			p = temp + i;
+		}
+		aFree(temp);
 	}
-
-	script->setd_sub(st, NULL, ".@atcmd_numparameters", 0, (void *)__64BPTRSIZE(j), NULL);
-	aFree(temp);
+	script->setd_sub(st, NULL, ".@atcmd_numparameters", 0, (void *)h64BPTRSIZE(nargs), NULL);
 
 	script->run_main(st);
 	return 0;
 }
 
-/// Parses a function.
-/// function%TAB%script%TAB%<function name>%TAB%{<code>}
-const char* npc_parse_function(char* w1, char* w2, char* w3, char* w4, const char* start, const char* buffer, const char* filepath, int *retval) {
-	DBMap* func_db;
-	DBData old_data;
+/**
+ * Parses a function.
+ *
+ * Example:
+ * @code
+ * function<TAB>script<TAB><function name><TAB>{
+ *   <code>
+ * }
+ * @endcode
+ *
+ * @param[in]  w1       First tab-delimited part of the string to parse.
+ * @param[in]  w2       Second tab-delimited part of the string to parse.
+ * @param[in]  w3       Third tab-delimited part of the string to parse.
+ * @param[in]  w4       Fourth tab-delimited part of the string to parse.
+ * @param[in]  start    Pointer to the beginning of the string inside buffer.
+ *                      This must point to the same buffer as `buffer`.
+ * @param[in]  buffer   Pointer to the buffer containing the script. For
+ *                      single-line mapflags not inside a script, this may be
+ *                      an empty (but initialized) single-character buffer.
+ * @param[in]  filepath Source file path.
+ * @param[out] retval   Pointer to return the success (EXIT_SUCCESS) or failure
+ *                      (EXIT_FAILURE) status. May be NULL.
+ * @return A pointer to the advanced buffer position.
+ */
+const char *npc_parse_function(const char *w1, const char *w2, const char *w3, const char *w4, const char *start, const char *buffer, const char *filepath, int *retval)
+{
+	struct DBMap *func_db;
+	struct DBData old_data;
 	struct script_code *scriptroot;
 	const char* end;
 	const char* script_start;
+
+	nullpo_retr(NULL, w1);
+	nullpo_retr(NULL, w2);
+	nullpo_retr(NULL, w3);
+	nullpo_retr(NULL, w4);
+	nullpo_retr(NULL, start);
+	nullpo_retr(NULL, retval);
 
 	script_start = strstr(start,"\t{");
 	end = strchr(start,'\n');
@@ -3397,7 +3746,12 @@ const char* npc_parse_function(char* w1, char* w2, char* w3, char* w4, const cha
 	if( end == NULL )
 		return NULL;// (simple) parse error, don't continue
 
+	script->parser_current_npc_name = w3;
+
 	scriptroot = script->parse(script_start, filepath, strline(buffer,start-buffer), SCRIPT_RETURN_EMPTY_SCRIPT, retval);
+
+	script->parser_current_npc_name = NULL;
+
 	if( scriptroot == NULL )// parse error, continue
 		return end;
 
@@ -3406,13 +3760,12 @@ const char* npc_parse_function(char* w1, char* w2, char* w3, char* w4, const cha
 		struct script_code *oldscript = (struct script_code*)DB->data2ptr(&old_data);
 		ShowWarning("npc_parse_function: Overwriting user function [%s] in file '%s', line '%d'.\n", w3, filepath, strline(buffer,start-buffer));
 		script->free_vars(oldscript->local.vars);
-		aFree(oldscript->script_buf);
+		VECTOR_CLEAR(oldscript->script_buf);
 		aFree(oldscript);
 	}
 
 	return end;
 }
-
 
 /*==========================================
  * Parse Mob 1 - Parse mob list into each map
@@ -3423,6 +3776,7 @@ void npc_parse_mob2(struct spawn_data* mobspawn)
 {
 	int i;
 
+	nullpo_retv(mobspawn);
 	for( i = mobspawn->active; i < mobspawn->num; ++i ) {
 		struct mob_data* md = mob->spawn_dataset(mobspawn);
 		md->spawn = mobspawn;
@@ -3431,12 +3785,35 @@ void npc_parse_mob2(struct spawn_data* mobspawn)
 	}
 }
 
-const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const char* start, const char* buffer, const char* filepath, int *retval) {
+/**
+ * Parses a mob permanent spawn.
+ *
+ * @param[in]  w1       First tab-delimited part of the string to parse.
+ * @param[in]  w2       Second tab-delimited part of the string to parse.
+ * @param[in]  w3       Third tab-delimited part of the string to parse.
+ * @param[in]  w4       Fourth tab-delimited part of the string to parse.
+ * @param[in]  start    Pointer to the beginning of the string inside buffer.
+ *                      This must point to the same buffer as `buffer`.
+ * @param[in]  buffer   Pointer to the buffer containing the script. For
+ *                      single-line mapflags not inside a script, this may be
+ *                      an empty (but initialized) single-character buffer.
+ * @param[in]  filepath Source file path.
+ * @param[out] retval   Pointer to return the success (EXIT_SUCCESS) or failure
+ *                      (EXIT_FAILURE) status. May be NULL.
+ * @return A pointer to the advanced buffer position.
+ */
+const char *npc_parse_mob(const char *w1, const char *w2, const char *w3, const char *w4, const char *start, const char *buffer, const char *filepath, int *retval)
+{
 	int num, class_, m,x,y,xs,ys, i,j;
 	int mob_lv = -1, ai = -1, size = -1;
 	char mapname[32], mobname[NAME_LENGTH];
 	struct spawn_data mobspawn, *data;
 	struct mob_db* db;
+
+	nullpo_retr(strchr(start,'\n'), w1);
+	nullpo_retr(strchr(start,'\n'), w2);
+	nullpo_retr(strchr(start,'\n'), w3);
+	nullpo_retr(strchr(start,'\n'), w4);
 
 	memset(&mobspawn, 0, sizeof(struct spawn_data));
 
@@ -3444,10 +3821,10 @@ const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const char* st
 
 	// w1=<map name>,<x>,<y>,<xs>,<ys>
 	// w3=<mob name>{,<mob level>}
-	// w4=<mob id>,<amount>,<delay1>,<delay2>,<event>{,<mob size>,<mob ai>}
-	if( sscanf(w1, "%31[^,],%d,%d,%d,%d", mapname, &x, &y, &xs, &ys) < 3
+	// w4=<mob id>,<amount>,<delay1>,<delay2>{,<event>,<mob size>,<mob ai>}
+	if( sscanf(w1, "%31[^,],%d,%d,%d,%d", mapname, &x, &y, &xs, &ys) < 5
 	 || sscanf(w3, "%23[^,],%d", mobname, &mob_lv) < 1
-	 || sscanf(w4, "%d,%d,%u,%u,%127[^,],%d,%d[^\t\r\n]", &class_, &num, &mobspawn.delay1, &mobspawn.delay2, mobspawn.eventname, &size, &ai) < 2
+	 || sscanf(w4, "%d,%d,%u,%u,%50[^,],%d,%d[^\t\r\n]", &class_, &num, &mobspawn.delay1, &mobspawn.delay2, mobspawn.eventname, &size, &ai) < 4
 	 ) {
 		ShowError("npc_parse_mob: Invalid mob definition in file '%s', line '%d'.\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
 		if (retval) *retval = EXIT_FAILURE;
@@ -3482,13 +3859,13 @@ const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const char* st
 		return strchr(start,'\n');// skip and continue
 	}
 
-	if( (mobspawn.state.size < 0 || mobspawn.state.size > 2) && size != -1 ) {
+	if (mobspawn.state.size > 2 && size != -1) {
 		ShowError("npc_parse_mob: Invalid size number %d for mob ID %d in file '%s', line '%d'.\n", mobspawn.state.size, class_, filepath, strline(buffer, start - buffer));
 		if (retval) *retval = EXIT_FAILURE;
 		return strchr(start, '\n');
 	}
 
-	if( (mobspawn.state.ai < 0 || mobspawn.state.ai > 4) && ai != -1 ) {
+	if (mobspawn.state.ai >= AI_MAX && ai != -1) {
 		ShowError("npc_parse_mob: Invalid ai %d for mob ID %d in file '%s', line '%d'.\n", mobspawn.state.ai, class_, filepath, strline(buffer, start - buffer));
 		if (retval) *retval = EXIT_FAILURE;
 		return strchr(start, '\n');
@@ -3511,7 +3888,7 @@ const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const char* st
 		mobspawn.level = mob_lv;
 	if (size > 0 && size <= 2)
 		mobspawn.state.size = size;
-	if (ai > 0 && ai <= 4)
+	if (ai > AI_NONE && ai < AI_MAX)
 		mobspawn.state.ai = ai;
 
 	if (mobspawn.num > 1 && battle_config.mob_count_rate != 100) {
@@ -3565,7 +3942,8 @@ const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const char* st
 		}
 		if (mobspawn.num > db->spawn[i].qty) {
 			//Insert into list
-			memmove(&db->spawn[i+1], &db->spawn[i], sizeof(db->spawn) -(i+1)*sizeof(db->spawn[0]));
+			if( i != ARRAYLENGTH(db->spawn) - 1 )
+				memmove(&db->spawn[i+1], &db->spawn[i], sizeof(db->spawn) -(i+1)*sizeof(db->spawn[0]));
 			db->spawn[i].mapindex = map_id2index(mobspawn.m);
 			db->spawn[i].qty = mobspawn.num;
 			break;
@@ -3579,7 +3957,7 @@ const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const char* st
 	// spawn / cache the new mobs
 	if( battle_config.dynamic_mobs && map->addmobtolist(data->m, data) >= 0 ) {
 		data->state.dynamic = true;
-		npc_cache_mob += data->num;
+		npc->npc_cache_mob += data->num;
 
 		// check if target map has players
 		// (usually shouldn't occur when map server is just starting,
@@ -3590,22 +3968,61 @@ const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const char* st
 	} else {
 		data->state.dynamic = false;
 		npc->parse_mob2(data);
-		npc_delay_mob += data->num;
+		npc->npc_delay_mob += data->num;
 	}
 
-	npc_mob++;
+	npc->npc_mob++;
 
 	return strchr(start,'\n');// continue
 }
-/*==========================================
- * Set or disable mapflag on map
- * eg : bat_c01	mapflag	battleground	2
- * also chking if mapflag conflict with another
- *------------------------------------------*/
-const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char* start, const char* buffer, const char* filepath, int *retval) {
+
+/**
+ * Parses an unknown mapflag.
+ *
+ * The purpose of this function is to be an override or hooking point for plugins.
+ *
+ * @see npc_parse_mapflag
+ */
+void npc_parse_unknown_mapflag(const char *name, const char *w3, const char *w4, const char* start, const char* buffer, const char* filepath, int *retval)
+{
+	ShowError("npc_parse_mapflag: unrecognized mapflag '%s' in file '%s', line '%d'.\n", w3, filepath, strline(buffer,start-buffer));
+	if (retval)
+		*retval = EXIT_FAILURE;
+}
+
+/**
+ * Parses a mapflag and sets or disables it on a map.
+ *
+ * @remark
+ *   This also checks if the mapflag conflicts with another.
+ *
+ * Example:
+ * @code
+ *   bat_c01<TAB>mapflag<TAB>battleground<TAB>2
+ * @endcode
+ *
+ * @param[in]  w1       First tab-delimited part of the string to parse.
+ * @param[in]  w2       Second tab-delimited part of the string to parse.
+ * @param[in]  w3       Third tab-delimited part of the string to parse.
+ * @param[in]  w4       Fourth tab-delimited part of the string to parse.
+ * @param[in]  start    Pointer to the beginning of the string inside buffer.
+ *                      This must point to the same buffer as `buffer`.
+ * @param[in]  buffer   Pointer to the buffer containing the script. For
+ *                      single-line mapflags not inside a script, this may be
+ *                      an empty (but initialized) single-character buffer.
+ * @param[in]  filepath Source file path.
+ * @param[out] retval   Pointer to return the success (EXIT_SUCCESS) or failure
+ *                      (EXIT_FAILURE) status. May be NULL.
+ * @return A pointer to the advanced buffer position.
+ */
+const char *npc_parse_mapflag(const char *w1, const char *w2, const char *w3, const char *w4, const char *start, const char *buffer, const char *filepath, int *retval)
+{
 	int16 m;
 	char mapname[32];
 	int state = 1;
+
+	nullpo_retr(strchr(start,'\n'), w1);
+	nullpo_retr(strchr(start,'\n'), w3);
 
 	// w1=<mapname>
 	if( sscanf(w1, "%31[^,]", mapname) != 1 )
@@ -3615,14 +4032,15 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 		return strchr(start,'\n');// skip and continue
 	}
 	m = map->mapname2mapid(mapname);
-	if( m < 0 ) {
-		ShowWarning("npc_parse_mapflag: Unknown map in file '%s', line '%d' : %s\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", mapname, filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
+	if (m < 0) {
+		ShowWarning("npc_parse_mapflag: Unknown map in file '%s', line '%d': %s\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n",
+		            filepath, strline(buffer,start-buffer), mapname, w1, w2, w3, w4);
 		if (retval) *retval = EXIT_FAILURE;
 		return strchr(start,'\n');// skip and continue
 	}
 
 	if (w4 && !strcmpi(w4, "off"))
-		state = 0;	//Disable mapflag rather than enable it. [Skotlex]
+		state = 0; //Disable mapflag rather than enable it. [Skotlex]
 
 	if (!strcmpi(w3, "nosave")) {
 		char savemap[32];
@@ -3633,7 +4051,7 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 			map->list[m].save.map = 0;
 			map->list[m].save.x = -1;
 			map->list[m].save.y = -1;
-		} else if (sscanf(w4, "%31[^,],%d,%d", savemap, &savex, &savey) == 3) {
+		} else if (w4 && sscanf(w4, "%31[^,],%d,%d", savemap, &savex, &savey) == 3) {
 			map->list[m].save.map = mapindex->name2id(savemap);
 			map->list[m].save.x = savex;
 			map->list[m].save.y = savey;
@@ -3685,10 +4103,10 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 			ShowWarning("npc_parse_mapflag: You can't set PvP and BattleGround flags for the same map! Removing BattleGround flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer,start-buffer));
 			if (retval) *retval = EXIT_FAILURE;
 		}
-		if( state && (zone = strdb_get(map->zone_db, MAP_ZONE_PVP_NAME)) && map->list[m].zone != zone ) {
+		if( state && (zone = strdb_get(map->zone_db, MAP_ZONE_PVP_NAME)) != NULL && map->list[m].zone != zone ) {
 			map->zone_change(m,zone,start,buffer,filepath);
 		} else if ( !state ) {
-			map->list[m].zone = &map->zone_pk;
+			map->list[m].zone = &map->zone_all;
 		}
 	}
 	else if (!strcmpi(w3,"pvp_noparty"))
@@ -3698,7 +4116,7 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 	else if (!strcmpi(w3, "pvp_nightmaredrop")) {
 		char drop_arg1[16], drop_arg2[16];
 		int drop_per = 0;
-		if (sscanf(w4, "%[^,],%[^,],%d", drop_arg1, drop_arg2, &drop_per) == 3) {
+		if (sscanf(w4, "%15[^,],%15[^,],%d", drop_arg1, drop_arg2, &drop_per) == 3) {
 			int drop_id = 0, drop_type = 0;
 			if (!strcmpi(drop_arg1, "random"))
 				drop_id = -1;
@@ -3725,7 +4143,7 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 		map->list[m].flag.pvp_nocalcrank=state;
 	else if (!strcmpi(w3,"gvg")) {
 		struct map_zone_data *zone;
-		
+
 		map->list[m].flag.gvg = state;
 		if( state && map->list[m].flag.pvp ) {
 			map->list[m].flag.pvp = 0;
@@ -3737,7 +4155,7 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 			ShowWarning("npc_parse_mapflag: You can't set GvG and BattleGround flags for the same map! Removing BattleGround flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer,start-buffer));
 			if (retval) *retval = EXIT_FAILURE;
 		}
-		if( state && (zone = strdb_get(map->zone_db, MAP_ZONE_GVG_NAME)) && map->list[m].zone != zone ) {
+		if( state && (zone = strdb_get(map->zone_db, MAP_ZONE_GVG_NAME)) != NULL && map->list[m].zone != zone ) {
 			map->zone_change(m,zone,start,buffer,filepath);
 		}
 	}
@@ -3753,13 +4171,14 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 	}
 	else if (!strcmpi(w3,"battleground")) {
 		struct map_zone_data *zone;
-		if( state ) {
-			if( sscanf(w4, "%d", &state) == 1 )
+		if (state) {
+			if (w4 && sscanf(w4, "%d", &state) == 1)
 				map->list[m].flag.battleground = state;
 			else
 				map->list[m].flag.battleground = 1; // Default value
-		} else
+		} else {
 			map->list[m].flag.battleground = 0;
+		}
 
 		if( map->list[m].flag.battleground && map->list[m].flag.pvp ) {
 			map->list[m].flag.pvp = 0;
@@ -3773,8 +4192,8 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 			ShowWarning("npc_parse_mapflag: You can't set GvG and BattleGround flags for the same map! Removing GvG flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer,start-buffer));
 			if (retval) *retval = EXIT_FAILURE;
 		}
-		
-		if( state && (zone = strdb_get(map->zone_db, MAP_ZONE_BG_NAME)) && map->list[m].zone != zone ) {
+
+		if( state && (zone = strdb_get(map->zone_db, MAP_ZONE_BG_NAME)) != NULL && map->list[m].zone != zone ) {
 			map->zone_change(m,zone,start,buffer,filepath);
 		}
 	}
@@ -3826,7 +4245,7 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 		map->list[m].flag.nomvploot=state;
 	else if (!strcmpi(w3,"nocommand")) {
 		if (state) {
-			if (sscanf(w4, "%d", &state) == 1)
+			if (w4 && sscanf(w4, "%d", &state) == 1)
 				map->list[m].nocommand =state;
 			else //No level specified, block everyone.
 				map->list[m].nocommand =100;
@@ -3859,11 +4278,11 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 		int skill_id, k;
 		char skill_name[MAP_ZONE_MAPFLAG_LENGTH], modifier[MAP_ZONE_MAPFLAG_LENGTH];
 		size_t len = w4 ? strlen(w4) : 0;
-		
+
 		modifier[0] = '\0';
 		if( w4 )
 			memcpy(skill_name, w4, MAP_ZONE_MAPFLAG_LENGTH);
-		
+
 		for(k = 0; k < len; k++) {
 			if( skill_name[k] == '\t' ) {
 				memcpy(modifier, &skill_name[k+1], len - k);
@@ -3871,7 +4290,7 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 				break;
 			}
 		}
-		
+
 		if( modifier[0] == '\0' ) {
 			ShowWarning("npc_parse_mapflag: Missing 5th param for 'adjust_unit_duration' flag! removing flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer,start-buffer));
 			if (retval) *retval = EXIT_FAILURE;
@@ -3883,9 +4302,9 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 			if (retval) *retval = EXIT_FAILURE;
 		} else {
 			int idx = map->list[m].unit_count;
-			
+
 			ARR_FIND(0, idx, k, map->list[m].units[k]->skill_id == skill_id);
-			
+
 			if( k < idx ) {
 				if( atoi(modifier) != 100 )
 					map->list[m].units[k]->modifier = (unsigned short)atoi(modifier);
@@ -3896,9 +4315,9 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 					for( k = 0; k < idx; k++ ) {
 						if( map->list[m].units[k] == NULL )
 							continue;
-						
+
 						map->list[m].units[cursor] = map->list[m].units[k];
-												
+
 						cursor++;
 					}
 					if( !( map->list[m].unit_count = cursor ) ) {
@@ -3917,12 +4336,12 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 		int skill_id, k;
 		char skill_name[MAP_ZONE_MAPFLAG_LENGTH], modifier[MAP_ZONE_MAPFLAG_LENGTH];
 		size_t len = w4 ? strlen(w4) : 0;
-		
+
 		modifier[0] = '\0';
-		
+
 		if( w4 )
 			memcpy(skill_name, w4, MAP_ZONE_MAPFLAG_LENGTH);
-		
+
 		for(k = 0; k < len; k++) {
 			if( skill_name[k] == '\t' ) {
 				memcpy(modifier, &skill_name[k+1], len - k);
@@ -3930,7 +4349,7 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 				break;
 			}
 		}
-				
+
 		if( modifier[0] == '\0' ) {
 			ShowWarning("npc_parse_mapflag: Missing 5th param for 'adjust_skill_damage' flag! removing flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer,start-buffer));
 			if (retval) *retval = EXIT_FAILURE;
@@ -3942,9 +4361,9 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 			if (retval) *retval = EXIT_FAILURE;
 		} else {
 			int idx = map->list[m].skill_count;
-			
+
 			ARR_FIND(0, idx, k, map->list[m].skills[k]->skill_id == skill_id);
-			
+
 			if( k < idx ) {
 				if( atoi(modifier) != 100 )
 					map->list[m].skills[k]->modifier = (unsigned short)atoi(modifier);
@@ -3955,9 +4374,9 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 					for( k = 0; k < idx; k++ ) {
 						if( map->list[m].skills[k] == NULL )
 							continue;
-						
+
 						map->list[m].skills[cursor] = map->list[m].skills[k];
-												
+
 						cursor++;
 					}
 					if( !( map->list[m].skill_count = cursor ) ) {
@@ -3971,11 +4390,10 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 				map->list[m].skills[idx]->skill_id = (unsigned short)skill_id;
 				map->list[m].skills[idx]->modifier = (unsigned short)atoi(modifier);
 			}
-			
 		}
 	} else if (!strcmpi(w3,"zone")) {
 		struct map_zone_data *zone;
-		
+
 		if( !(zone = strdb_get(map->zone_db, w4)) ) {
 			ShowWarning("npc_parse_mapflag: Invalid zone '%s'! removing flag from %s in file '%s', line '%d'.\n", w4, map->list[m].name, filepath, strline(buffer,start-buffer));
 			if (retval) *retval = EXIT_FAILURE;
@@ -4002,12 +4420,39 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 		map->list[m].flag.src4instance = (state) ? 1 : 0;
 	} else if ( !strcmpi(w3,"nocashshop") ) {
 		map->list[m].flag.nocashshop = (state) ? 1 : 0;
+	} else if (!strcmpi(w3,"noviewid")) {
+		map->list[m].flag.noviewid = (state) ? atoi(w4) : 0;
 	} else {
-		ShowError("npc_parse_mapflag: unrecognized mapflag '%s' in file '%s', line '%d'.\n", w3, filepath, strline(buffer,start-buffer));
-		if (retval) *retval = EXIT_FAILURE;
+		npc->parse_unknown_mapflag(mapname, w3, w4, start, buffer, filepath, retval);
 	}
 
 	return strchr(start,'\n');// continue
+}
+
+/**
+ * Parses an unknown NPC object. This function may be used as override or hooking point by plugins.
+ *
+ * @param[in]  w1       First tab-delimited part of the string to parse.
+ * @param[in]  w2       Second tab-delimited part of the string to parse.
+ * @param[in]  w3       Third tab-delimited part of the string to parse.
+ * @param[in]  w4       Fourth tab-delimited part of the string to parse.
+ * @param[in]  start    Pointer to the beginning of the string inside buffer.
+ *                      This must point to the same buffer as `buffer`.
+ * @param[in]  buffer   Pointer to the buffer containing the script. For
+ *                      single-line mapflags not inside a script, this may be
+ *                      an empty (but initialized) single-character buffer.
+ * @param[in]  filepath Source file path.
+ * @param[out] retval   Pointer to return the success (EXIT_SUCCESS) or failure
+ *                      (EXIT_FAILURE) status. May be NULL.
+ * @return A pointer to the advanced buffer position.
+ */
+const char *npc_parse_unknown_object(const char *w1, const char *w2, const char *w3, const char *w4, const char *start, const char *buffer, const char *filepath, int *retval)
+{
+	nullpo_retr(start, retval);
+	ShowError("npc_parsesrcfile: Unable to parse, probably a missing or extra TAB in file '%s', line '%d'. Skipping line...\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
+	start = strchr(start,'\n');// skip and continue
+	*retval = EXIT_FAILURE;
+	return start;
 }
 
 /**
@@ -4027,6 +4472,8 @@ int npc_parsesrcfile(const char* filepath, bool runOnInit) {
 	size_t len;
 	char* buffer;
 	const char* p;
+
+	nullpo_retr(EXIT_FAILURE, filepath);
 
 	// read whole file to buffer
 	fp = fopen(filepath, "rb");
@@ -4056,7 +4503,6 @@ int npc_parsesrcfile(const char* filepath, bool runOnInit) {
 		// More info at http://unicode.org/faq/utf_bom.html#bom5 and http://en.wikipedia.org/wiki/Byte_order_mark#UTF-8
 		ShowError("npc_parsesrcfile: Detected unsupported UTF-8 BOM in file '%s'. Stopping (please consider using another character set.)\n", filepath);
 		aFree(buffer);
-		fclose(fp);
 		return EXIT_FAILURE;
 	}
 
@@ -4174,9 +4620,6 @@ int npc_parsesrcfile(const char* filepath, bool runOnInit) {
 			if( strcmp(w1,"function") == 0 ) {
 				p = npc->parse_function(w1, w2, w3, w4, p, buffer, filepath, &success);
 			} else {
-#ifdef ENABLE_CASE_CHECK
-				if( strcasecmp(w1, "function") == 0 ) DeprecationWarning("npc_parsesrcfile", w1, "function", filepath, strline(buffer, p-buffer)); // TODO
-#endif // ENABLE_CASE_CHECK
 				p = npc->parse_script(w1,w2,w3,w4, p, buffer, filepath,runOnInit?NPO_ONINIT:NPO_NONE, &success);
 			}
 		}
@@ -4201,25 +4644,7 @@ int npc_parsesrcfile(const char* filepath, bool runOnInit) {
 		}
 		else
 		{
-#ifdef ENABLE_CASE_CHECK
-			if( strcasecmp(w2, "warp") == 0 ) { DeprecationWarning("npc_parsesrcfile", w2, "warp", filepath, strline(buffer, p-buffer)); } // TODO
-			else if( strcasecmp(w2,"shop") == 0 ) { DeprecationWarning("npc_parsesrcfile", w2, "shop", filepath, strline(buffer, p-buffer)); } // TODO
-			else if( strcasecmp(w2,"cashshop") == 0 ) { DeprecationWarning("npc_parsesrcfile", w2, "cashshop", filepath, strline(buffer, p-buffer)); } // TODO
-			else if( strcasecmp(w2, "script") == 0 ) { DeprecationWarning("npc_parsesrcfile", w2, "script", filepath, strline(buffer, p-buffer)); } // TODO
-			else if( strcasecmp(w2,"trader") == 0 ) DeprecationWarning("npc_parsesrcfile", w2, "trader", filepath, strline(buffer, p-buffer)) // TODO
-			else if( strncasecmp(w2, "duplicate", 9) == 0 ) {
-				char temp[10];
-				safestrncpy(temp, w2, 10);
-				DeprecationWarning("npc_parsesrcfile", temp, "duplicate", filepath, strline(buffer, p-buffer)); // TODO
-			}
-			else if( strcasecmp(w2,"monster") == 0 ) { DeprecationWarning("npc_parsesrcfile", w2, "monster", filepath, strline(buffer, p-buffer)); } // TODO:
-			else if( strcasecmp(w2,"boss_monster") == 0 ) { DeprecationWarning("npc_parsesrcfile", w2, "boss_monster", filepath, strline(buffer, p-buffer)); } // TODO
-			else if( strcasecmp(w2, "mapflag") == 0 ) { DeprecationWarning("npc_parsesrcfile", w2, "mapflag", filepath, strline(buffer, p-buffer)); } // TODO
-			else
-#endif // ENABLE_CASE_CHECK
-			ShowError("npc_parsesrcfile: Unable to parse, probably a missing or extra TAB in file '%s', line '%d'. Skipping line...\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,p-buffer), w1, w2, w3, w4);
-			p = strchr(p,'\n');// skip and continue
-			success = EXIT_FAILURE;
+			p = npc->parse_unknown_object(w1, w2, w3, w4, p, buffer, filepath, &success);
 		}
 	}
 	aFree(buffer);
@@ -4233,7 +4658,7 @@ int npc_script_event(struct map_session_data* sd, enum npce_event type)
 	if (type == NPCE_MAX)
 		return 0;
 	if (!sd) {
-		ShowError("npc_script_event: NULL sd. Event Type %d\n", type);
+		ShowError("npc_script_event: NULL sd. Event Type %u\n", type);
 		return 0;
 	}
 	for (i = 0; i<script_event[type].event_count; i++)
@@ -4258,11 +4683,10 @@ void npc_read_event_script(void)
 		{"Kill NPC Event",script->config.kill_mob_event_name},
 	};
 
-	for (i = 0; i < NPCE_MAX; i++)
-	{
-		DBIterator* iter;
-		DBKey key;
-		DBData *data;
+	for (i = 0; i < NPCE_MAX; i++) {
+		struct DBIterator *iter;
+		union DBKey key;
+		struct DBData *data;
 
 		char name[64]="::";
 		safestrncpy(name+2,config[i].event_name,62);
@@ -4288,7 +4712,7 @@ void npc_read_event_script(void)
 				script_event[i].event_count++;
 #ifdef ENABLE_CASE_CHECK
 			} else if( p && strcasecmp(name, p) == 0 ) {
-				DeprecationWarning2("npc_read_event_script", p, name, config[i].event_name); // TODO
+				DeprecationCaseWarning("npc_read_event_script", p, name, config[i].event_name); // TODO
 #endif // ENABLE_CASE_CHECK
 			}
 		}
@@ -4305,9 +4729,10 @@ void npc_read_event_script(void)
 /**
  * @see DBApply
  */
-int npc_path_db_clear_sub(DBKey key, DBData *data, va_list args)
+int npc_path_db_clear_sub(union DBKey key, struct DBData *data, va_list args)
 {
 	struct npc_path_data *npd = DB->data2ptr(data);
+	nullpo_ret(npd);
 	if (npd->path)
 		aFree(npd->path);
 	return 0;
@@ -4316,7 +4741,7 @@ int npc_path_db_clear_sub(DBKey key, DBData *data, va_list args)
 /**
  * @see DBApply
  */
-int npc_ev_label_db_clear_sub(DBKey key, DBData *data, va_list args)
+int npc_ev_label_db_clear_sub(union DBKey key, struct DBData *data, va_list args)
 {
 	struct linkdb_node **label_linkdb = DB->data2ptr(data);
 	linkdb_final(label_linkdb); // linked data (struct event_data*) is freed when clearing ev_db
@@ -4343,13 +4768,12 @@ void npc_process_files( int npc_min ) {
 		"\t-'"CL_WHITE"%d"CL_RESET"' Spawn sets\n"
 		"\t-'"CL_WHITE"%d"CL_RESET"' Mobs Cached\n"
 		"\t-'"CL_WHITE"%d"CL_RESET"' Mobs Not Cached\n",
-		npc_id - npc_min, npc_warp, npc_shop, npc_script, npc_mob, npc_cache_mob, npc_delay_mob);
+		npc->npc_id - npc_min, npc->npc_warp, npc->npc_shop, npc->npc_script, npc->npc_mob, npc->npc_cache_mob, npc->npc_delay_mob);
 }
 
 //Clear then reload npcs files
 int npc_reload(void) {
-	int16 m, i;
-	int npc_new_min = npc_id;
+	int npc_new_min = npc->npc_id;
 	struct s_mapiterator* iter;
 	struct block_list* bl;
 
@@ -4365,18 +4789,17 @@ int npc_reload(void) {
 	db_clear(npc->ev_db);
 	npc->ev_label_db->clear(npc->ev_label_db, npc->ev_label_db_clear_sub);
 
-	npc_last_npd = NULL;
-	npc_last_path = NULL;
-	npc_last_ref = NULL;
-	
-	//Remove all npcs/mobs. [Skotlex]
+	npc->npc_last_npd = NULL;
+	npc->npc_last_path = NULL;
+	npc->npc_last_ref = NULL;
 
+	//Remove all npcs/mobs. [Skotlex]
 	iter = mapit_geteachiddb();
-	for( bl = (struct block_list*)mapit->first(iter); mapit->exists(iter); bl = (struct block_list*)mapit->next(iter) ) {
+	for (bl = mapit->first(iter); mapit->exists(iter); bl = mapit->next(iter)) {
 		switch(bl->type) {
 			case BL_NPC:
 				if( bl->id != npc->fake_nd->bl.id )// don't remove fake_nd
-					npc->unload((struct npc_data *)bl, false);
+					npc->unload(BL_UCAST(BL_NPC, bl), false);
 				break;
 			case BL_MOB:
 				unit->free(bl,CLR_OUTSIGHT);
@@ -4386,7 +4809,9 @@ int npc_reload(void) {
 	mapit->free(iter);
 
 	if(battle_config.dynamic_mobs) {// dynamic check by [random]
+		int16 m;
 		for (m = 0; m < map->count; m++) {
+			int16 i;
 			for (i = 0; i < MAX_MOB_LIST_PER_MAP; i++) {
 				if (map->list[m].moblist[i] != NULL) {
 					aFree(map->list[m].moblist[i]);
@@ -4406,8 +4831,8 @@ int npc_reload(void) {
 	// clear mob spawn lookup index
 	mob->clear_spawninfo();
 
-	npc_warp = npc_shop = npc_script = 0;
-	npc_mob = npc_cache_mob = npc_delay_mob = 0;
+	npc->npc_warp = npc->npc_shop = npc->npc_script = 0;
+	npc->npc_mob = npc->npc_cache_mob = npc->npc_delay_mob = 0;
 
 	// reset mapflags
 	map->flags_init();
@@ -4445,10 +4870,13 @@ int npc_reload(void) {
 }
 
 //Unload all npc in the given file
-bool npc_unloadfile( const char* filepath ) {
-	DBIterator * iter = db_iterator(npc->name_db);
+bool npc_unloadfile(const char *filepath)
+{
+	struct DBIterator *iter = db_iterator(npc->name_db);
 	struct npc_data* nd = NULL;
 	bool found = false;
+
+	nullpo_retr(false, filepath);
 
 	for( nd = dbi_first(iter); dbi_exists(iter); nd = dbi_next(iter) ) {
 		if( nd->path && strcasecmp(nd->path,filepath) == 0 ) { // FIXME: This can break in case-sensitive file systems
@@ -4488,6 +4916,9 @@ int do_final_npc(void) {
 
 void npc_debug_warps_sub(struct npc_data* nd) {
 	int16 m;
+
+	nullpo_retv(nd);
+
 	if (nd->bl.type != BL_NPC || nd->subtype != WARP || nd->bl.m < 0)
 		return;
 
@@ -4495,14 +4926,14 @@ void npc_debug_warps_sub(struct npc_data* nd) {
 	if (m < 0) return; //Warps to another map, nothing to do about it.
 	if (nd->u.warp.x == 0 && nd->u.warp.y == 0) return; // random warp
 
-	if (map->getcell(m, nd->u.warp.x, nd->u.warp.y, CELL_CHKNPC)) {
+	if (map->getcell(m, &nd->bl, nd->u.warp.x, nd->u.warp.y, CELL_CHKNPC)) {
 		ShowWarning("Warp %s at %s(%d,%d) warps directly on top of an area npc at %s(%d,%d)\n",
 			nd->name,
 			map->list[nd->bl.m].name, nd->bl.x, nd->bl.y,
 			map->list[m].name, nd->u.warp.x, nd->u.warp.y
 			);
 	}
-	if (map->getcell(m, nd->u.warp.x, nd->u.warp.y, CELL_CHKNOPASS)) {
+	if (map->getcell(m, &nd->bl, nd->u.warp.x, nd->u.warp.y, CELL_CHKNOPASS)) {
 		ShowWarning("Warp %s at %s(%d,%d) warps to a non-walkable tile at %s(%d,%d)\n",
 			nd->name,
 			map->list[nd->bl.m].name, nd->bl.x, nd->bl.y,
@@ -4524,15 +4955,9 @@ static void npc_debug_warps(void) {
 int do_init_npc(bool minimal) {
 	int i;
 
-	memset(&npc->base_ud, 0, sizeof( struct unit_data) );
-	npc->base_ud.bl             = NULL;
-	npc->base_ud.walktimer      = INVALID_TIMER;
-	npc->base_ud.skilltimer     = INVALID_TIMER;
-	npc->base_ud.attacktimer    = INVALID_TIMER;
-	npc->base_ud.attackabletime =
-	npc->base_ud.canact_tick    =
-	npc->base_ud.canmove_tick   = timer->gettick();
-	
+	unit->init_ud(&npc->base_ud);
+	npc->base_ud.bl = NULL;
+
 	//Stock view data for normal npcs.
 	memset(&npc_viewdb, 0, sizeof(npc_viewdb));
 
@@ -4547,9 +4972,9 @@ int do_init_npc(bool minimal) {
 	npc->name_db = strdb_alloc(DB_OPT_BASE, NAME_LENGTH);
 	npc->path_db = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, 0);
 
-	npc_last_npd = NULL;
-	npc_last_path = NULL;
-	npc_last_ref = NULL;
+	npc->npc_last_npd = NULL;
+	npc->npc_last_path = NULL;
+	npc->npc_last_ref = NULL;
 
 	// Should be loaded before npc processing, otherwise labels could overwrite constant values
 	// and lead to undefined behavior [Panikon]
@@ -4560,12 +4985,12 @@ int do_init_npc(bool minimal) {
 
 		npc_process_files(START_NPC_NUM);
 	}
-	
+
 	if (!minimal) {
 		map->zone_init();
-	
+
 		npc->motd = npc->name2id("HerculesMOTD"); /* [Ind/Hercules] */
-	
+
 		// set up the events cache
 		memset(script_event, 0, sizeof(script_event));
 		npc->read_event_script();
@@ -4579,15 +5004,15 @@ int do_init_npc(bool minimal) {
 	}
 
 	// Init dummy NPC
-	npc->fake_nd = (struct npc_data *)aCalloc(1,sizeof(struct npc_data));
+	CREATE(npc->fake_nd, struct npc_data, 1);
 	npc->fake_nd->bl.m = -1;
 	npc->fake_nd->bl.id = npc->get_new_npc_id();
-	npc->fake_nd->class_ = -1;
+	npc->fake_nd->class_ = FAKE_NPC;
 	npc->fake_nd->speed = 200;
 	strcpy(npc->fake_nd->name,"FAKE_NPC");
 	memcpy(npc->fake_nd->exname, npc->fake_nd->name, 9);
 
-	npc_script++;
+	npc->npc_script++;
 	npc->fake_nd->bl.type = BL_NPC;
 	npc->fake_nd->subtype = SCRIPT;
 
@@ -4600,6 +5025,17 @@ int do_init_npc(bool minimal) {
 }
 void npc_defaults(void) {
 	npc = &npc_s;
+
+	npc->npc_id = START_NPC_NUM;
+	npc->npc_warp = 0;
+	npc->npc_shop = 0;
+	npc->npc_script = 0;
+	npc->npc_mob = 0;
+	npc->npc_delay_mob = 0;
+	npc->npc_cache_mob = 0;
+	npc->npc_last_path = NULL;
+	npc->npc_last_ref = NULL;
+	npc->npc_last_npd = NULL;
 
 	npc->motd = NULL;
 	npc->ev_db = NULL;
@@ -4622,6 +5058,7 @@ void npc_defaults(void) {
 	npc->isnear = npc_isnear;
 	npc->ontouch_event = npc_ontouch_event;
 	npc->ontouch2_event = npc_ontouch2_event;
+	npc->onuntouch_event = npc_onuntouch_event;
 	npc->enable_sub = npc_enable_sub;
 	npc->enable = npc_enable;
 	npc->name2id = npc_name2id;
@@ -4646,6 +5083,7 @@ void npc_defaults(void) {
 	npc->touch_areanpc_sub = npc_touch_areanpc_sub;
 	npc->touchnext_areanpc = npc_touchnext_areanpc;
 	npc->touch_areanpc = npc_touch_areanpc;
+	npc->untouch_areanpc = npc_untouch_areanpc;
 	npc->touch_areanpc2 = npc_touch_areanpc2;
 	npc->check_areanpc = npc_check_areanpc;
 	npc->checknear = npc_checknear;
@@ -4669,15 +5107,23 @@ void npc_defaults(void) {
 	npc->clearsrcfile = npc_clearsrcfile;
 	npc->addsrcfile = npc_addsrcfile;
 	npc->delsrcfile = npc_delsrcfile;
+	npc->retainpathreference = npc_retainpathreference;
+	npc->releasepathreference = npc_releasepathreference;
 	npc->parsename = npc_parsename;
 	npc->parseview = npc_parseview;
 	npc->viewisid = npc_viewisid;
+	npc->create_npc = npc_create_npc;
 	npc->add_warp = npc_add_warp;
 	npc->parse_warp = npc_parse_warp;
 	npc->parse_shop = npc_parse_shop;
 	npc->convertlabel_db = npc_convertlabel_db;
 	npc->skip_script = npc_skip_script;
 	npc->parse_script = npc_parse_script;
+	npc->add_to_location = npc_add_to_location;
+	npc->duplicate_script_sub = npc_duplicate_script_sub;
+	npc->duplicate_shop_sub = npc_duplicate_shop_sub;
+	npc->duplicate_warp_sub = npc_duplicate_warp_sub;
+	npc->duplicate_sub = npc_duplicate_sub;
 	npc->parse_duplicate = npc_parse_duplicate;
 	npc->duplicate4instance = npc_duplicate4instance;
 	npc->setcells = npc_setcells;
@@ -4691,7 +5137,9 @@ void npc_defaults(void) {
 	npc->parse_mob2 = npc_parse_mob2;
 	npc->parse_mob = npc_parse_mob;
 	npc->parse_mapflag = npc_parse_mapflag;
+	npc->parse_unknown_mapflag = npc_parse_unknown_mapflag;
 	npc->parsesrcfile = npc_parsesrcfile;
+	npc->parse_unknown_object = npc_parse_unknown_object;
 	npc->script_event = npc_script_event;
 	npc->read_event_script = npc_read_event_script;
 	npc->path_db_clear_sub = npc_path_db_clear_sub;
@@ -4712,4 +5160,5 @@ void npc_defaults(void) {
 	npc->market_tosql = npc_market_tosql;
 	npc->market_delfromsql = npc_market_delfromsql;
 	npc->market_delfromsql_sub = npc_market_delfromsql_sub;
+	npc->db_checkid = npc_db_checkid;
 }

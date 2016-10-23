@@ -1,10 +1,30 @@
+-- This file is part of Hercules.
+-- http://herc.ws - http://github.com/HerculesWS/Hercules
+--
+-- Copyright (C) 2013-2014  Hercules Dev Team
+--
+-- Hercules is free software: you can redistribute it and/or modify
+-- it under the terms of the GNU General Public License as published by
+-- the Free Software Foundation, either version 3 of the License, or
+-- (at your option) any later version.
+--
+-- This program is distributed in the hope that it will be useful,
+-- but WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-- GNU General Public License for more details.
+--
+-- You should have received a copy of the GNU General Public License
+-- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+--
 -- rAthena to Hercules main database upgrade query.
 -- This upgrades a FULLY UPGRADED rAthena to a FULLY UPGRADED Hercules
 -- Please don't use if either rAthena or Hercules launched a SQL update after last revision date of this file.
 -- Remember to make a backup before applying.
 -- We are not liable for any data loss this may cause.
 -- Apply in the same database you applied your main.sql
--- Last revised: April 26, 2014 12:29 GMT
+-- Last revised: July 22, 2014 21:45 GMT
+--
 
 -- Drop table contents from `sc_data` since we use a different status order than rAthena
 -- /!\ WARNING /!\ This will remove _ALL_ of the status effects active on the server
@@ -15,56 +35,76 @@ TRUNCATE TABLE `sc_data`;
 -- Drop table `skillcooldown` since it's not used in Hercules
 DROP TABLE IF EXISTS `skillcooldown`;
 
+-- Upgrades for table `auction`
+ALTER TABLE `auction` MODIFY `nameid` INT(11) NOT NULL DEFAULT '0',
+	MODIFY `card0` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `card1` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `card2` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `card3` SMALLINT(11) NOT NULL DEFAULT '0';
 
 -- Upgrades for table `cart_inventory`
-ALTER TABLE `cart_inventory` MODIFY `bound` tinyint(1) unsigned NOT NULL default '0';
-
+ALTER TABLE `cart_inventory` MODIFY `nameid` INT(11) NOT NULL DEFAULT '0',
+	MODIFY `card0` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `card1` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `card2` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `card3` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `bound` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0';
 
 -- Upgrades for table `char`
-ALTER TABLE `char` CHANGE `moves` `slotchange` SMALLINT(3) UNSIGNED NOT NULL default '0',
-	ADD `char_opt` INT( 11 ) UNSIGNED NOT NULL default '0' AFTER `slotchange`,
-	ADD `font` TINYINT( 3 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `char_opt`,
-	MODIFY `uniqueitem_counter` BIGINT(20) UNSIGNED NOT NULL DEFAULT '0';
-
+ALTER TABLE `char` CHANGE `moves` `slotchange` SMALLINT(3) UNSIGNED NOT NULL DEFAULT '0',
+	ADD `char_opt` INT(11) UNSIGNED NOT NULL DEFAULT '0' AFTER `slotchange`,
+	MODIFY `font` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0' AFTER `char_opt`,
+	ADD `uniqueitem_counter` BIGINT(20) UNSIGNED NOT NULL DEFAULT '0' AFTER `unban_time`;
 
 -- Upgrades for table `charlog`
-ALTER TABLE `charlog` ADD COLUMN `char_id` int(11) unsigned NOT NULL default '0' AFTER `account_id`;
-
+ALTER TABLE `charlog` ADD COLUMN `char_id` INT(11) UNSIGNED NOT NULL DEFAULT '0' AFTER `account_id`;
 
 -- Upgrades for table `guild_storage`
-ALTER TABLE `guild_storage` MODIFY `bound` tinyint(1) unsigned NOT NULL default '0';
-
+ALTER TABLE `guild_storage` MODIFY `nameid` INT(11) NOT NULL DEFAULT '0',
+	MODIFY `card0` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `card1` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `card2` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `card3` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `bound` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0';
 
 -- Upgrades for table `inventory`
-ALTER TABLE `inventory` MODIFY `bound` tinyint(1) unsigned NOT NULL default '0';
-
+ALTER TABLE `inventory` MODIFY `nameid` INT(11) NOT NULL DEFAULT '0',
+	MODIFY `card0` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `card1` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `card2` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `card3` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `bound` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0';
 
 -- Login table will be upgraded at a later point on this file
 -- so that we can save the bank vault.
 
+-- Upgrades for table `mail`
+ALTER TABLE `mail` MODIFY `nameid` INT(11) NOT NULL DEFAULT '0',
+	MODIFY `card0` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `card1` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `card2` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `card3` SMALLINT(11) NOT NULL DEFAULT '0';
 
 -- Upgrades for table `mapreg`
-ALTER TABLE `mapreg` MODIFY `varname` varchar(32) BINARY NOT NULL,
+ALTER TABLE `mapreg` MODIFY `varname` VARCHAR(32) BINARY NOT NULL,
 	DROP KEY `varname`,
 	DROP KEY `index`,
-	ADD PRIMARY KEY  (`varname`,`index`);
+	ADD PRIMARY KEY (`varname`,`index`);
 
-
--- Upgrades for table `sc_data`
-ALTER TABLE `pet` CHANGE `incuvate` `incubate` int(11) unsigned NOT NULL default '0';
+-- Upgrades for table `pet`
+ALTER TABLE `pet` MODIFY `egg_id` SMALLINT(11) UNSIGNED NOT NULL DEFAULT '0';
 
 
 -- Upgrades for table `sc_data`
 ALTER TABLE `sc_data` ADD PRIMARY KEY  (`account_id`,`char_id`,`type`);
-
 
 --
 -- Table structure for table `sql_updates`
 --
 
 CREATE TABLE IF NOT EXISTS `sql_updates` (
-  `timestamp` int(11) unsigned NOT NULL,
-  `ignored` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `timestamp` INT(11) UNSIGNED NOT NULL,
+  `ignored` ENUM('Yes','No') NOT NULL DEFAULT 'No',
   PRIMARY KEY (`timestamp`)
 ) ENGINE=MyISAM;
 
@@ -97,21 +137,24 @@ INSERT INTO `sql_updates` (`timestamp`) VALUES (1396893866); -- 2014-04-07--22-0
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1398477600); -- 2014-04-26--10-00.sql
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1400256139); -- 2014-05-17--00-06.sql
 
-
 -- Updates to table `storage`
-ALTER TABLE `storage` MODIFY `bound` tinyint(1) unsigned NOT NULL default '0';
-
+ALTER TABLE `storage` MODIFY `nameid` INT(11) NOT NULL DEFAULT '0',
+	MODIFY `card0` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `card1` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `card2` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `card3` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `bound` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0';
 
 --
 -- Table structure for table `account_data`
 --
 
 CREATE TABLE IF NOT EXISTS `account_data` (
-  `account_id` int(11) unsigned NOT NULL default '0',
-  `bank_vault` int(11) unsigned NOT NULL default '0',
-  `base_exp` TINYINT( 4 ) UNSIGNED NOT NULL default '100',
-  `base_drop` TINYINT( 4 ) UNSIGNED NOT NULL default '100',
-  `base_death` TINYINT( 4 ) UNSIGNED NOT NULL default '100',
+  `account_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `bank_vault` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `base_exp` TINYINT( 4 ) UNSIGNED NOT NULL DEFAULT '100',
+  `base_drop` TINYINT( 4 ) UNSIGNED NOT NULL DEFAULT '100',
+  `base_death` TINYINT( 4 ) UNSIGNED NOT NULL DEFAULT '100',
   PRIMARY KEY (`account_id`)
 ) ENGINE=MyISAM;
 
@@ -119,28 +162,24 @@ CREATE TABLE IF NOT EXISTS `account_data` (
 -- to our account_data table. There may be some not working cases.
 INSERT INTO `account_data` (`account_id`, `bank_vault`) SELECT `account_id`, `bank_vault` FROM `login` WHERE `bank_vault` > 0 ;
 
-
 -- Upgrades for table `login`
 ALTER TABLE `login` DROP COLUMN `vip_time`,
 	DROP COLUMN `old_group`,
 	DROP COLUMN `bank_vault`;
 
-
 -- Drop table `bonus_script` since it's not used in Hercules
 DROP TABLE IF EXISTS `bonus_script`;
-
 
 --
 -- Table structure for table `npc_market_data`
 --
 
 CREATE TABLE IF NOT EXISTS `npc_market_data` (
-  `name` varchar(24) NOT NULL default '',
-  `itemid` int(11) unsigned NOT NULL default '0',
-  `amount` int(11) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`name`,`itemid`)
+  `name` VARCHAR(24) NOT NULL DEFAULT '',
+  `itemid` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `amount` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  PRIMARY KEY (`name`,`itemid`)
 ) ENGINE=MyISAM;
-
 
 -- Autotrade saving. Very special thanks to Dastgir Pojee!
 --
@@ -163,7 +202,7 @@ ALTER TABLE `vending_items`
   MODIFY `price` INT(11) NOT NULL DEFAULT '0';
 
 ALTER TABLE `vending_items`
-  ADD PRIMARY KEY( `char_id`, `itemkey`);
+  ADD PRIMARY KEY ( `char_id`, `itemkey`);
 
 RENAME TABLE `vending_items` TO `autotrade_data`;
 
@@ -213,11 +252,11 @@ DROP TABLE IF EXISTS `buyingstores`, `buyingstore_items`;
 --
 
 CREATE TABLE IF NOT EXISTS `acc_reg_num_db` (
-  `account_id` int(11) unsigned NOT NULL default '0',
-  `key` varchar(32) BINARY NOT NULL default '',
-  `index` int(11) unsigned NOT NULL default '0',
-  `value` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`account_id`,`key`,`index`),
+  `account_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `key` VARCHAR(32) BINARY NOT NULL DEFAULT '',
+  `index` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `value` INT(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`account_id`,`key`,`index`),
   KEY `account_id` (`account_id`)
 ) ENGINE=MyISAM;
 
@@ -227,70 +266,65 @@ CREATE TABLE IF NOT EXISTS `acc_reg_num_db` (
 --
 
 CREATE TABLE IF NOT EXISTS `acc_reg_str_db` (
-  `account_id` int(11) unsigned NOT NULL default '0',
-  `key` varchar(32) BINARY NOT NULL default '',
-  `index` int(11) unsigned NOT NULL default '0',
-  `value` varchar(254) NOT NULL default '0',
-  PRIMARY KEY  (`account_id`,`key`,`index`),
+  `account_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `key` VARCHAR(32) BINARY NOT NULL DEFAULT '',
+  `index` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `value` VARCHAR(254) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`account_id`,`key`,`index`),
   KEY `account_id` (`account_id`)
 ) ENGINE=MyISAM;
-
 
 --
 -- Table structure for table `char_reg_num_db`
 --
 
 CREATE TABLE IF NOT EXISTS `char_reg_num_db` (
-  `char_id` int(11) unsigned NOT NULL default '0',
-  `key` varchar(32) BINARY NOT NULL default '',
-  `index` int(11) unsigned NOT NULL default '0',
-  `value` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`char_id`,`key`,`index`),
+  `char_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `key` VARCHAR(32) BINARY NOT NULL DEFAULT '',
+  `index` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `value` INT(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`char_id`,`key`,`index`),
   KEY `char_id` (`char_id`)
 ) ENGINE=MyISAM;
-
 
 --
 -- Table structure for table `char_reg_str_db`
 --
 
 CREATE TABLE IF NOT EXISTS `char_reg_str_db` (
-  `char_id` int(11) unsigned NOT NULL default '0',
-  `key` varchar(32) BINARY NOT NULL default '',
-  `index` int(11) unsigned NOT NULL default '0',
-  `value` varchar(254) NOT NULL default '0',
-  PRIMARY KEY  (`char_id`,`key`,`index`),
+  `char_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `key` VARCHAR(32) BINARY NOT NULL DEFAULT '',
+  `index` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `value` VARCHAR(254) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`char_id`,`key`,`index`),
   KEY `char_id` (`char_id`)
 ) ENGINE=MyISAM;
-
 
 --
 -- Table structure for table `global_acc_reg_num_db`
 --
 
 CREATE TABLE IF NOT EXISTS `global_acc_reg_num_db` (
-  `account_id` int(11) unsigned NOT NULL default '0',
-  `key` varchar(32) BINARY NOT NULL default '',
-  `index` int(11) unsigned NOT NULL default '0',
-  `value` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`account_id`,`key`,`index`),
+  `account_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `key` VARCHAR(32) BINARY NOT NULL DEFAULT '',
+  `index` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `value` INT(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`account_id`,`key`,`index`),
   KEY `account_id` (`account_id`)
 ) ENGINE=MyISAM;
-
 
 --
 -- Table structure for table `global_acc_reg_str_db`
 --
 
 CREATE TABLE IF NOT EXISTS `global_acc_reg_str_db` (
-  `account_id` int(11) unsigned NOT NULL default '0',
-  `key` varchar(32) BINARY NOT NULL default '',
-  `index` int(11) unsigned NOT NULL default '0',
-  `value` varchar(254) NOT NULL default '0',
-  PRIMARY KEY  (`account_id`,`key`,`index`),
+  `account_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `key` VARCHAR(32) BINARY NOT NULL DEFAULT '',
+  `index` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `value` VARCHAR(254) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`account_id`,`key`,`index`),
   KEY `account_id` (`account_id`)
 ) ENGINE=MyISAM;
-
 
 -- Saving the data
 INSERT INTO `acc_reg_num_db` (`account_id`, `key`, `index`, `value`) SELECT `account_id`, `str`, 0, `value` FROM `global_reg_value` WHERE `type` = 2 AND `str` NOT LIKE '%$';
@@ -302,3 +336,17 @@ INSERT INTO `global_acc_reg_str_db` (`account_id`, `key`, `index`, `value`) SELE
 
 -- Dropping now useless table
 DROP TABLE `global_reg_value`;
+
+ALTER TABLE `charlog` MODIFY `time` DATETIME NULL;
+ALTER TABLE `interlog` MODIFY `time` DATETIME NULL;
+ALTER TABLE `ipbanlist` MODIFY `btime` DATETIME NULL;
+ALTER TABLE `ipbanlist` MODIFY `rtime` DATETIME NULL;
+ALTER TABLE `login` MODIFY `lastlogin` DATETIME NULL;
+ALTER TABLE `login` MODIFY `birthdate` DATE NULL;
+
+UPDATE `charlog` SET `time` = NULL WHERE `time` = '0000-00-00 00:00:00';
+UPDATE `interlog` SET `time` = NULL WHERE `time` = '0000-00-00 00:00:00';
+UPDATE `ipbanlist` SET `btime` = NULL WHERE `btime` = '0000-00-00 00:00:00';
+UPDATE `ipbanlist` SET `rtime` = NULL WHERE `rtime` = '0000-00-00 00:00:00';
+UPDATE `login` SET `lastlogin` = NULL WHERE `lastlogin` = '0000-00-00 00:00:00';
+UPDATE `login` SET `birthdate` = NULL WHERE `birthdate` = '0000-00-00';

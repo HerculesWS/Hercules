@@ -7,11 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A5296FCD1CAC40CF001ABCAC /* lclif.c in Sources */ = {isa = PBXBuildFile; fileRef = A5296FCA1CAC40CF001ABCAC /* lclif.c */; };
 		A5380CD71856CE3C0090CBC4 /* mapcache.c in Sources */ = {isa = PBXBuildFile; fileRef = A5380CD61856CE3C0090CBC4 /* mapcache.c */; };
 		A5380CD81856CE8A0090CBC4 /* console.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC692185643BB009EB79C /* console.c */; };
 		A5380CD91856CF4A0090CBC4 /* core.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC694185643BB009EB79C /* core.c */; };
 		A5380CDA1856D0650090CBC4 /* socket.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6BA185643BB009EB79C /* socket.c */; };
-		A5380CDB1856D0690090CBC4 /* malloc.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6A3185643BB009EB79C /* malloc.c */; };
+		A5380CDB1856D0690090CBC4 /* memmgr.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6A3185643BB009EB79C /* memmgr.c */; };
+		A5467AD31A16FCB4008AFAA6 /* loginif.c in Sources */ = {isa = PBXBuildFile; fileRef = A5467AD11A16FCB4008AFAA6 /* loginif.c */; };
+		A5467AD61A16FCDC008AFAA6 /* mapif.c in Sources */ = {isa = PBXBuildFile; fileRef = A5467AD41A16FCDC008AFAA6 /* mapif.c */; };
+		A5467AD91A16FD08008AFAA6 /* geoip.c in Sources */ = {isa = PBXBuildFile; fileRef = A5467AD71A16FD08008AFAA6 /* geoip.c */; };
+		A55AED781B8153D800149CF8 /* conf.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC690185643BB009EB79C /* conf.c */; };
+		A55AED791B8153EA00149CF8 /* grammar.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC72218564C05009EB79C /* grammar.c */; };
+		A55AED7A1B8153EC00149CF8 /* libconfig.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC72418564C05009EB79C /* libconfig.c */; };
+		A55AED7B1B8153EF00149CF8 /* scanctx.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC72718564C05009EB79C /* scanctx.c */; };
+		A55AED7C1B8153F100149CF8 /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC72918564C05009EB79C /* scanner.c */; };
+		A55AED7D1B8153F300149CF8 /* strbuf.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC72B18564C05009EB79C /* strbuf.c */; };
 		A567612D185D11D700997C0D /* nullpo.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6B2185643BB009EB79C /* nullpo.c */; };
 		A56CC68918564387009EB79C /* account_sql.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC68118564387009EB79C /* account_sql.c */; };
 		A56CC68A18564387009EB79C /* ipban_sql.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC68318564387009EB79C /* ipban_sql.c */; };
@@ -41,9 +51,9 @@
 		A56CC6E1185643BB009EB79C /* HPM.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6A0185643BB009EB79C /* HPM.c */; };
 		A56CC6E2185643BB009EB79C /* HPM.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6A0185643BB009EB79C /* HPM.c */; };
 		A56CC6E3185643BB009EB79C /* HPM.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6A0185643BB009EB79C /* HPM.c */; };
-		A56CC6E4185643BB009EB79C /* malloc.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6A3185643BB009EB79C /* malloc.c */; };
-		A56CC6E5185643BB009EB79C /* malloc.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6A3185643BB009EB79C /* malloc.c */; };
-		A56CC6E6185643BB009EB79C /* malloc.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6A3185643BB009EB79C /* malloc.c */; };
+		A56CC6E4185643BB009EB79C /* memmgr.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6A3185643BB009EB79C /* memmgr.c */; };
+		A56CC6E5185643BB009EB79C /* memmgr.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6A3185643BB009EB79C /* memmgr.c */; };
+		A56CC6E6185643BB009EB79C /* memmgr.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6A3185643BB009EB79C /* memmgr.c */; };
 		A56CC6E7185643BB009EB79C /* mapindex.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6A5185643BB009EB79C /* mapindex.c */; };
 		A56CC6E8185643BB009EB79C /* mapindex.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6A5185643BB009EB79C /* mapindex.c */; };
 		A56CC6E9185643BB009EB79C /* mapindex.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6A5185643BB009EB79C /* mapindex.c */; };
@@ -156,8 +166,13 @@
 		A58A5A1A185800CD0099683E /* strlib.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6BF185643BB009EB79C /* strlib.c */; };
 		A58A5A1B185800E70099683E /* utils.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6C6185643BB009EB79C /* utils.c */; };
 		A58A5A281858025D0099683E /* HPMHooking.c in Sources */ = {isa = PBXBuildFile; fileRef = A58A5A271858025D0099683E /* HPMHooking.c */; };
+		A59EA4511A727D36005F2B6D /* channel.c in Sources */ = {isa = PBXBuildFile; fileRef = A59EA44F1A727D36005F2B6D /* channel.c */; };
 		A5AA94EE185796CB00C940C8 /* sample.c in Sources */ = {isa = PBXBuildFile; fileRef = A5AA94ED185796CB00C940C8 /* sample.c */; };
 		A5AA94FA185799E400C940C8 /* db2sql.c in Sources */ = {isa = PBXBuildFile; fileRef = A5AA94F8185799DF00C940C8 /* db2sql.c */; };
+		A5B894AA1A03CDD4005AD22E /* HPMlogin.c in Sources */ = {isa = PBXBuildFile; fileRef = A5B894A81A03CDD4005AD22E /* HPMlogin.c */; };
+		A5B894AD1A03CDFA005AD22E /* HPMchar.c in Sources */ = {isa = PBXBuildFile; fileRef = A5B894AB1A03CDFA005AD22E /* HPMchar.c */; };
+		A5B894B01A03CE25005AD22E /* HPMHooking.c in Sources */ = {isa = PBXBuildFile; fileRef = A58A5A271858025D0099683E /* HPMHooking.c */; };
+		A5B894B91A03CE5D005AD22E /* HPMHooking.c in Sources */ = {isa = PBXBuildFile; fileRef = A58A5A271858025D0099683E /* HPMHooking.c */; };
 		A5F7946C191CA34E002293AB /* sysinfo.c in Sources */ = {isa = PBXBuildFile; fileRef = A5F79469191CA34E002293AB /* sysinfo.c */; };
 		A5F7946D191CA34E002293AB /* sysinfo.c in Sources */ = {isa = PBXBuildFile; fileRef = A5F79469191CA34E002293AB /* sysinfo.c */; };
 		A5F7946E191CA34E002293AB /* sysinfo.c in Sources */ = {isa = PBXBuildFile; fileRef = A5F79469191CA34E002293AB /* sysinfo.c */; };
@@ -204,8 +219,17 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A5296FCA1CAC40CF001ABCAC /* lclif.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = lclif.c; path = src/login/lclif.c; sourceTree = SOURCE_ROOT; };
+		A5296FCB1CAC40CF001ABCAC /* lclif.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lclif.h; path = src/login/lclif.h; sourceTree = SOURCE_ROOT; };
+		A5296FCC1CAC40CF001ABCAC /* lclif.p.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lclif.p.h; path = src/login/lclif.p.h; sourceTree = SOURCE_ROOT; };
 		A5380CCD1856CE180090CBC4 /* mapcache */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = mapcache; sourceTree = BUILT_PRODUCTS_DIR; };
 		A5380CD61856CE3C0090CBC4 /* mapcache.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mapcache.c; path = src/tool/mapcache.c; sourceTree = "<group>"; };
+		A5467AD11A16FCB4008AFAA6 /* loginif.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = loginif.c; path = src/char/loginif.c; sourceTree = SOURCE_ROOT; };
+		A5467AD21A16FCB4008AFAA6 /* loginif.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = loginif.h; path = src/char/loginif.h; sourceTree = SOURCE_ROOT; };
+		A5467AD41A16FCDC008AFAA6 /* mapif.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mapif.c; path = src/char/mapif.c; sourceTree = SOURCE_ROOT; };
+		A5467AD51A16FCDC008AFAA6 /* mapif.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mapif.h; path = src/char/mapif.h; sourceTree = SOURCE_ROOT; };
+		A5467AD71A16FD08008AFAA6 /* geoip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = geoip.c; path = src/char/geoip.c; sourceTree = SOURCE_ROOT; };
+		A5467AD81A16FD08008AFAA6 /* geoip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = geoip.h; path = src/char/geoip.h; sourceTree = SOURCE_ROOT; };
 		A56CC66A18564315009EB79C /* login-server */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "login-server"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A56CC6731856434D009EB79C /* char-server */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "char-server"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A56CC67C18564356009EB79C /* map-server */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "map-server"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -236,8 +260,8 @@
 		A56CC6A0185643BB009EB79C /* HPM.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = HPM.c; path = src/common/HPM.c; sourceTree = "<group>"; };
 		A56CC6A1185643BB009EB79C /* HPM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HPM.h; path = src/common/HPM.h; sourceTree = "<group>"; };
 		A56CC6A2185643BB009EB79C /* HPMi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HPMi.h; path = src/common/HPMi.h; sourceTree = "<group>"; };
-		A56CC6A3185643BB009EB79C /* malloc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = malloc.c; path = src/common/malloc.c; sourceTree = "<group>"; };
-		A56CC6A4185643BB009EB79C /* malloc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = malloc.h; path = src/common/malloc.h; sourceTree = "<group>"; };
+		A56CC6A3185643BB009EB79C /* memmgr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = memmgr.c; path = src/common/memmgr.c; sourceTree = "<group>"; };
+		A56CC6A4185643BB009EB79C /* memmgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = memmgr.h; path = src/common/memmgr.h; sourceTree = "<group>"; };
 		A56CC6A5185643BB009EB79C /* mapindex.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mapindex.c; path = src/common/mapindex.c; sourceTree = "<group>"; };
 		A56CC6A6185643BB009EB79C /* mapindex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mapindex.h; path = src/common/mapindex.h; sourceTree = "<group>"; };
 		A56CC6A7185643BB009EB79C /* md5calc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = md5calc.c; path = src/common/md5calc.c; sourceTree = "<group>"; };
@@ -389,17 +413,35 @@
 		A56CC7B618565812009EB79C /* unit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = unit.h; path = src/map/unit.h; sourceTree = SOURCE_ROOT; };
 		A56CC7B718565812009EB79C /* vending.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = vending.c; path = src/map/vending.c; sourceTree = SOURCE_ROOT; };
 		A56CC7B818565812009EB79C /* vending.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vending.h; path = src/map/vending.h; sourceTree = SOURCE_ROOT; };
-		A58A5A26185801FF0099683E /* HPMHooking.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = HPMHooking.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		A58A5A26185801FF0099683E /* HPMHooking_map.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = HPMHooking_map.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		A58A5A271858025D0099683E /* HPMHooking.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = HPMHooking.c; path = src/plugins/HPMHooking.c; sourceTree = "<group>"; };
-		A58A5A2A1858028C0099683E /* HPMHooking.GetSymbol.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; name = HPMHooking.GetSymbol.inc; path = src/plugins/HPMHooking/HPMHooking.GetSymbol.inc; sourceTree = "<group>"; };
-		A58A5A2B1858028C0099683E /* HPMHooking.HookingPoints.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; name = HPMHooking.HookingPoints.inc; path = src/plugins/HPMHooking/HPMHooking.HookingPoints.inc; sourceTree = "<group>"; };
-		A58A5A2C1858028C0099683E /* HPMHooking.Hooks.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; name = HPMHooking.Hooks.inc; path = src/plugins/HPMHooking/HPMHooking.Hooks.inc; sourceTree = "<group>"; };
-		A58A5A2D1858028C0099683E /* HPMHooking.HPMHooksCore.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; name = HPMHooking.HPMHooksCore.inc; path = src/plugins/HPMHooking/HPMHooking.HPMHooksCore.inc; sourceTree = "<group>"; };
-		A58A5A2E1858028C0099683E /* HPMHooking.sources.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; name = HPMHooking.sources.inc; path = src/plugins/HPMHooking/HPMHooking.sources.inc; sourceTree = "<group>"; };
+		A59EA44F1A727D36005F2B6D /* channel.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = channel.c; path = src/map/channel.c; sourceTree = SOURCE_ROOT; };
+		A59EA4501A727D36005F2B6D /* channel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = channel.h; path = src/map/channel.h; sourceTree = SOURCE_ROOT; };
 		A5AA94E71857956100C940C8 /* sample.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = sample.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		A5AA94ED185796CB00C940C8 /* sample.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sample.c; path = src/plugins/sample.c; sourceTree = "<group>"; };
 		A5AA94F3185799B700C940C8 /* db2sql.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = db2sql.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		A5AA94F8185799DF00C940C8 /* db2sql.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = db2sql.c; path = src/plugins/db2sql.c; sourceTree = "<group>"; };
+		A5B894A81A03CDD4005AD22E /* HPMlogin.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = HPMlogin.c; path = src/login/HPMlogin.c; sourceTree = SOURCE_ROOT; };
+		A5B894A91A03CDD4005AD22E /* HPMlogin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HPMlogin.h; path = src/login/HPMlogin.h; sourceTree = SOURCE_ROOT; };
+		A5B894AB1A03CDFA005AD22E /* HPMchar.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = HPMchar.c; path = src/char/HPMchar.c; sourceTree = SOURCE_ROOT; };
+		A5B894AC1A03CDFA005AD22E /* HPMchar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HPMchar.h; path = src/char/HPMchar.h; sourceTree = SOURCE_ROOT; };
+		A5B894B61A03CE25005AD22E /* HPMHooking_char.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = HPMHooking_char.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		A5B894BF1A03CE5D005AD22E /* HPMHooking_login.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = HPMHooking_login.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		A5B894C01A03CEE1005AD22E /* HPMHooking_char.GetSymbol.inc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; name = HPMHooking_char.GetSymbol.inc; path = src/plugins/HPMHooking/HPMHooking_char.GetSymbol.inc; sourceTree = "<group>"; };
+		A5B894C11A03CEE1005AD22E /* HPMHooking_char.HookingPoints.inc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; name = HPMHooking_char.HookingPoints.inc; path = src/plugins/HPMHooking/HPMHooking_char.HookingPoints.inc; sourceTree = "<group>"; };
+		A5B894C21A03CEE1005AD22E /* HPMHooking_char.Hooks.inc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; name = HPMHooking_char.Hooks.inc; path = src/plugins/HPMHooking/HPMHooking_char.Hooks.inc; sourceTree = "<group>"; };
+		A5B894C31A03CEE1005AD22E /* HPMHooking_char.HPMHooksCore.inc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; name = HPMHooking_char.HPMHooksCore.inc; path = src/plugins/HPMHooking/HPMHooking_char.HPMHooksCore.inc; sourceTree = "<group>"; };
+		A5B894C41A03CEE1005AD22E /* HPMHooking_char.sources.inc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; name = HPMHooking_char.sources.inc; path = src/plugins/HPMHooking/HPMHooking_char.sources.inc; sourceTree = "<group>"; };
+		A5B894C51A03CEE1005AD22E /* HPMHooking_login.GetSymbol.inc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; name = HPMHooking_login.GetSymbol.inc; path = src/plugins/HPMHooking/HPMHooking_login.GetSymbol.inc; sourceTree = "<group>"; };
+		A5B894C61A03CEE1005AD22E /* HPMHooking_login.HookingPoints.inc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; name = HPMHooking_login.HookingPoints.inc; path = src/plugins/HPMHooking/HPMHooking_login.HookingPoints.inc; sourceTree = "<group>"; };
+		A5B894C71A03CEE1005AD22E /* HPMHooking_login.Hooks.inc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; name = HPMHooking_login.Hooks.inc; path = src/plugins/HPMHooking/HPMHooking_login.Hooks.inc; sourceTree = "<group>"; };
+		A5B894C81A03CEE1005AD22E /* HPMHooking_login.HPMHooksCore.inc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; name = HPMHooking_login.HPMHooksCore.inc; path = src/plugins/HPMHooking/HPMHooking_login.HPMHooksCore.inc; sourceTree = "<group>"; };
+		A5B894C91A03CEE1005AD22E /* HPMHooking_login.sources.inc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; name = HPMHooking_login.sources.inc; path = src/plugins/HPMHooking/HPMHooking_login.sources.inc; sourceTree = "<group>"; };
+		A5B894CA1A03CEE1005AD22E /* HPMHooking_map.GetSymbol.inc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; name = HPMHooking_map.GetSymbol.inc; path = src/plugins/HPMHooking/HPMHooking_map.GetSymbol.inc; sourceTree = "<group>"; };
+		A5B894CB1A03CEE1005AD22E /* HPMHooking_map.HookingPoints.inc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; name = HPMHooking_map.HookingPoints.inc; path = src/plugins/HPMHooking/HPMHooking_map.HookingPoints.inc; sourceTree = "<group>"; };
+		A5B894CC1A03CEE1005AD22E /* HPMHooking_map.Hooks.inc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; name = HPMHooking_map.Hooks.inc; path = src/plugins/HPMHooking/HPMHooking_map.Hooks.inc; sourceTree = "<group>"; };
+		A5B894CD1A03CEE1005AD22E /* HPMHooking_map.HPMHooksCore.inc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; name = HPMHooking_map.HPMHooksCore.inc; path = src/plugins/HPMHooking/HPMHooking_map.HPMHooksCore.inc; sourceTree = "<group>"; };
+		A5B894CE1A03CEE1005AD22E /* HPMHooking_map.sources.inc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; name = HPMHooking_map.sources.inc; path = src/plugins/HPMHooking/HPMHooking_map.sources.inc; sourceTree = "<group>"; };
 		A5F79468191CA34E002293AB /* HPMDataCheck.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HPMDataCheck.h; path = src/common/HPMDataCheck.h; sourceTree = "<group>"; };
 		A5F79469191CA34E002293AB /* sysinfo.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sysinfo.c; path = src/common/sysinfo.c; sourceTree = "<group>"; };
 		A5F7946A191CA34E002293AB /* sysinfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sysinfo.h; path = src/common/sysinfo.h; sourceTree = "<group>"; };
@@ -457,6 +499,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A5B894B11A03CE25005AD22E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A5B894BA1A03CE5D005AD22E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -488,7 +544,9 @@
 				A5380CCD1856CE180090CBC4 /* mapcache */,
 				A5AA94E71857956100C940C8 /* sample.dylib */,
 				A5AA94F3185799B700C940C8 /* db2sql.dylib */,
-				A58A5A26185801FF0099683E /* HPMHooking.dylib */,
+				A58A5A26185801FF0099683E /* HPMHooking_map.dylib */,
+				A5B894B61A03CE25005AD22E /* HPMHooking_char.dylib */,
+				A5B894BF1A03CE5D005AD22E /* HPMHooking_login.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -496,6 +554,11 @@
 		A56CC66B18564315009EB79C /* login-server */ = {
 			isa = PBXGroup;
 			children = (
+				A5296FCA1CAC40CF001ABCAC /* lclif.c */,
+				A5296FCB1CAC40CF001ABCAC /* lclif.h */,
+				A5296FCC1CAC40CF001ABCAC /* lclif.p.h */,
+				A5B894A81A03CDD4005AD22E /* HPMlogin.c */,
+				A5B894A91A03CDD4005AD22E /* HPMlogin.h */,
 				A56CC68118564387009EB79C /* account_sql.c */,
 				A56CC68218564387009EB79C /* account.h */,
 				A56CC68318564387009EB79C /* ipban_sql.c */,
@@ -511,6 +574,14 @@
 		A56CC6741856434D009EB79C /* char-server */ = {
 			isa = PBXGroup;
 			children = (
+				A5467AD71A16FD08008AFAA6 /* geoip.c */,
+				A5467AD81A16FD08008AFAA6 /* geoip.h */,
+				A5467AD41A16FCDC008AFAA6 /* mapif.c */,
+				A5467AD51A16FCDC008AFAA6 /* mapif.h */,
+				A5467AD11A16FCB4008AFAA6 /* loginif.c */,
+				A5467AD21A16FCB4008AFAA6 /* loginif.h */,
+				A5B894AB1A03CDFA005AD22E /* HPMchar.c */,
+				A5B894AC1A03CDFA005AD22E /* HPMchar.h */,
 				A56CC743185657D9009EB79C /* char.c */,
 				A56CC744185657D9009EB79C /* char.h */,
 				A56CC745185657D9009EB79C /* int_auction.c */,
@@ -552,6 +623,8 @@
 				A56CC76F18565812009EB79C /* battleground.h */,
 				A56CC77018565812009EB79C /* buyingstore.c */,
 				A56CC77118565812009EB79C /* buyingstore.h */,
+				A59EA44F1A727D36005F2B6D /* channel.c */,
+				A59EA4501A727D36005F2B6D /* channel.h */,
 				A56CC77218565812009EB79C /* chat.c */,
 				A56CC77318565812009EB79C /* chat.h */,
 				A56CC77418565812009EB79C /* chrif.c */,
@@ -653,8 +726,8 @@
 				A56CC6A0185643BB009EB79C /* HPM.c */,
 				A56CC6A1185643BB009EB79C /* HPM.h */,
 				A56CC6A2185643BB009EB79C /* HPMi.h */,
-				A56CC6A3185643BB009EB79C /* malloc.c */,
-				A56CC6A4185643BB009EB79C /* malloc.h */,
+				A56CC6A3185643BB009EB79C /* memmgr.c */,
+				A56CC6A4185643BB009EB79C /* memmgr.h */,
 				A56CC6A5185643BB009EB79C /* mapindex.c */,
 				A56CC6A6185643BB009EB79C /* mapindex.h */,
 				A56CC6A7185643BB009EB79C /* md5calc.c */,
@@ -752,11 +825,21 @@
 		A58A5A291858026F0099683E /* HPMHooking */ = {
 			isa = PBXGroup;
 			children = (
-				A58A5A2A1858028C0099683E /* HPMHooking.GetSymbol.inc */,
-				A58A5A2B1858028C0099683E /* HPMHooking.HookingPoints.inc */,
-				A58A5A2C1858028C0099683E /* HPMHooking.Hooks.inc */,
-				A58A5A2D1858028C0099683E /* HPMHooking.HPMHooksCore.inc */,
-				A58A5A2E1858028C0099683E /* HPMHooking.sources.inc */,
+				A5B894C01A03CEE1005AD22E /* HPMHooking_char.GetSymbol.inc */,
+				A5B894C11A03CEE1005AD22E /* HPMHooking_char.HookingPoints.inc */,
+				A5B894C21A03CEE1005AD22E /* HPMHooking_char.Hooks.inc */,
+				A5B894C31A03CEE1005AD22E /* HPMHooking_char.HPMHooksCore.inc */,
+				A5B894C41A03CEE1005AD22E /* HPMHooking_char.sources.inc */,
+				A5B894C51A03CEE1005AD22E /* HPMHooking_login.GetSymbol.inc */,
+				A5B894C61A03CEE1005AD22E /* HPMHooking_login.HookingPoints.inc */,
+				A5B894C71A03CEE1005AD22E /* HPMHooking_login.Hooks.inc */,
+				A5B894C81A03CEE1005AD22E /* HPMHooking_login.HPMHooksCore.inc */,
+				A5B894C91A03CEE1005AD22E /* HPMHooking_login.sources.inc */,
+				A5B894CA1A03CEE1005AD22E /* HPMHooking_map.GetSymbol.inc */,
+				A5B894CB1A03CEE1005AD22E /* HPMHooking_map.HookingPoints.inc */,
+				A5B894CC1A03CEE1005AD22E /* HPMHooking_map.Hooks.inc */,
+				A5B894CD1A03CEE1005AD22E /* HPMHooking_map.HPMHooksCore.inc */,
+				A5B894CE1A03CEE1005AD22E /* HPMHooking_map.sources.inc */,
 				A58A5A271858025D0099683E /* HPMHooking.c */,
 			);
 			name = HPMHooking;
@@ -806,6 +889,20 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		A5AA94F1185799B700C940C8 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A5B894B21A03CE25005AD22E /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A5B894BB1A03CE5D005AD22E /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -887,9 +984,9 @@
 			productReference = A56CC67C18564356009EB79C /* map-server */;
 			productType = "com.apple.product-type.tool";
 		};
-		A58A5A1E185801FF0099683E /* HPMHooking */ = {
+		A58A5A1E185801FF0099683E /* HPMHooking_map */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A58A5A23185801FF0099683E /* Build configuration list for PBXNativeTarget "HPMHooking" */;
+			buildConfigurationList = A58A5A23185801FF0099683E /* Build configuration list for PBXNativeTarget "HPMHooking_map" */;
 			buildPhases = (
 				A58A5A1F185801FF0099683E /* Sources */,
 				A58A5A21185801FF0099683E /* Frameworks */,
@@ -899,9 +996,9 @@
 			);
 			dependencies = (
 			);
-			name = HPMHooking;
+			name = HPMHooking_map;
 			productName = sample;
-			productReference = A58A5A26185801FF0099683E /* HPMHooking.dylib */;
+			productReference = A58A5A26185801FF0099683E /* HPMHooking_map.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
 		A5AA94E61857956100C940C8 /* sample */ = {
@@ -938,14 +1035,48 @@
 			productReference = A5AA94F3185799B700C940C8 /* db2sql.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
+		A5B894AE1A03CE25005AD22E /* HPMHooking_char */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A5B894B31A03CE25005AD22E /* Build configuration list for PBXNativeTarget "HPMHooking_char" */;
+			buildPhases = (
+				A5B894AF1A03CE25005AD22E /* Sources */,
+				A5B894B11A03CE25005AD22E /* Frameworks */,
+				A5B894B21A03CE25005AD22E /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HPMHooking_char;
+			productName = sample;
+			productReference = A5B894B61A03CE25005AD22E /* HPMHooking_char.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		A5B894B71A03CE5D005AD22E /* HPMHooking_login */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A5B894BC1A03CE5D005AD22E /* Build configuration list for PBXNativeTarget "HPMHooking_login" */;
+			buildPhases = (
+				A5B894B81A03CE5D005AD22E /* Sources */,
+				A5B894BA1A03CE5D005AD22E /* Frameworks */,
+				A5B894BB1A03CE5D005AD22E /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HPMHooking_login;
+			productName = sample;
+			productReference = A5B894BF1A03CE5D005AD22E /* HPMHooking_login.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		A56CC652185642B4009EB79C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0500;
-				ORGANIZATIONNAME = hercules.ws;
+				LastUpgradeCheck = 0800;
+				ORGANIZATIONNAME = herc.ws;
 			};
 			buildConfigurationList = A56CC655185642B4009EB79C /* Build configuration list for PBXProject "Hercules" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -963,7 +1094,9 @@
 				A56CC6721856434D009EB79C /* char-server */,
 				A56CC67B18564356009EB79C /* map-server */,
 				A5380CCC1856CE180090CBC4 /* mapcache */,
-				A58A5A1E185801FF0099683E /* HPMHooking */,
+				A5B894B71A03CE5D005AD22E /* HPMHooking_login */,
+				A5B894AE1A03CE25005AD22E /* HPMHooking_char */,
+				A58A5A1E185801FF0099683E /* HPMHooking_map */,
 				A5AA94F2185799B700C940C8 /* db2sql */,
 				A5AA94E61857956100C940C8 /* sample */,
 			);
@@ -1030,6 +1163,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A55AED781B8153D800149CF8 /* conf.c in Sources */,
 				A58A5A1A185800CD0099683E /* strlib.c in Sources */,
 				A5F7946F191CA34E002293AB /* sysinfo.c in Sources */,
 				A5380CD91856CF4A0090CBC4 /* core.c in Sources */,
@@ -1038,10 +1172,15 @@
 				A58A5A19185800C20099683E /* des.c in Sources */,
 				A5380CD71856CE3C0090CBC4 /* mapcache.c in Sources */,
 				A58A5A1B185800E70099683E /* utils.c in Sources */,
+				A55AED7A1B8153EC00149CF8 /* libconfig.c in Sources */,
 				A58A5A18185800B80099683E /* grfio.c in Sources */,
 				A5380CDA1856D0650090CBC4 /* socket.c in Sources */,
+				A55AED7C1B8153F100149CF8 /* scanner.c in Sources */,
 				A58A5A17185800A40099683E /* showmsg.c in Sources */,
-				A5380CDB1856D0690090CBC4 /* malloc.c in Sources */,
+				A5380CDB1856D0690090CBC4 /* memmgr.c in Sources */,
+				A55AED7B1B8153EF00149CF8 /* scanctx.c in Sources */,
+				A55AED791B8153EA00149CF8 /* grammar.c in Sources */,
+				A55AED7D1B8153F300149CF8 /* strbuf.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1056,6 +1195,8 @@
 				A56CC6EA185643BB009EB79C /* md5calc.c in Sources */,
 				A5F7946C191CA34E002293AB /* sysinfo.c in Sources */,
 				A56CC74018564C23009EB79C /* mt19937ar.c in Sources */,
+				A5B894AA1A03CDD4005AD22E /* HPMlogin.c in Sources */,
+				A5296FCD1CAC40CF001ABCAC /* lclif.c in Sources */,
 				A56CC6DE185643BB009EB79C /* grfio.c in Sources */,
 				A56CC68C18564387009EB79C /* loginlog_sql.c in Sources */,
 				A56CC73118564C05009EB79C /* libconfig.c in Sources */,
@@ -1075,7 +1216,7 @@
 				A56CC72E18564C05009EB79C /* grammar.c in Sources */,
 				A56CC705185643BB009EB79C /* socket.c in Sources */,
 				A56CC68918564387009EB79C /* account_sql.c in Sources */,
-				A56CC6E4185643BB009EB79C /* malloc.c in Sources */,
+				A56CC6E4185643BB009EB79C /* memmgr.c in Sources */,
 				A56CC6E1185643BB009EB79C /* HPM.c in Sources */,
 				A56CC6FF185643BB009EB79C /* random.c in Sources */,
 				A56CC73418564C05009EB79C /* scanctx.c in Sources */,
@@ -1094,6 +1235,7 @@
 				A56CC75D185657D9009EB79C /* char.c in Sources */,
 				A56CC6D9185643BB009EB79C /* ers.c in Sources */,
 				A56CC6CA185643BB009EB79C /* conf.c in Sources */,
+				A5467AD91A16FD08008AFAA6 /* geoip.c in Sources */,
 				A56CC718185643BB009EB79C /* utils.c in Sources */,
 				A56CC715185643BB009EB79C /* timer.c in Sources */,
 				A56CC6CD185643BB009EB79C /* console.c in Sources */,
@@ -1101,11 +1243,13 @@
 				A56CC6EB185643BB009EB79C /* md5calc.c in Sources */,
 				A56CC760185657D9009EB79C /* int_guild.c in Sources */,
 				A56CC768185657D9009EB79C /* inter.c in Sources */,
+				A5467AD61A16FCDC008AFAA6 /* mapif.c in Sources */,
 				A56CC73818564C05009EB79C /* scanner.c in Sources */,
 				A56CC700185643BB009EB79C /* random.c in Sources */,
+				A5B894AD1A03CDFA005AD22E /* HPMchar.c in Sources */,
 				A56CC761185657D9009EB79C /* int_homun.c in Sources */,
 				A56CC6FA185643BB009EB79C /* nullpo.c in Sources */,
-				A56CC6E5185643BB009EB79C /* malloc.c in Sources */,
+				A56CC6E5185643BB009EB79C /* memmgr.c in Sources */,
 				A56CC6E2185643BB009EB79C /* HPM.c in Sources */,
 				A56CC765185657D9009EB79C /* int_pet.c in Sources */,
 				A56CC769185657D9009EB79C /* pincode.c in Sources */,
@@ -1122,6 +1266,7 @@
 				A56CC73518564C05009EB79C /* scanctx.c in Sources */,
 				A56CC712185643BB009EB79C /* thread.c in Sources */,
 				A56CC6D0185643BB009EB79C /* core.c in Sources */,
+				A5467AD31A16FCB4008AFAA6 /* loginif.c in Sources */,
 				A56CC767185657D9009EB79C /* int_storage.c in Sources */,
 				A56CC763185657D9009EB79C /* int_mercenary.c in Sources */,
 				A56CC6D3185643BB009EB79C /* db.c in Sources */,
@@ -1143,6 +1288,7 @@
 				A56CC70A185643BB009EB79C /* sql.c in Sources */,
 				A56CC7D718565812009EB79C /* quest.c in Sources */,
 				A56CC7CC18565812009EB79C /* map.c in Sources */,
+				A59EA4511A727D36005F2B6D /* channel.c in Sources */,
 				A56CC7C318565812009EB79C /* guild.c in Sources */,
 				A56CC7C518565812009EB79C /* HPMmap.c in Sources */,
 				A56CC6DA185643BB009EB79C /* ers.c in Sources */,
@@ -1176,7 +1322,7 @@
 				A56CC7D318565812009EB79C /* path.c in Sources */,
 				A56CC7C218565812009EB79C /* elemental.c in Sources */,
 				A56CC6FB185643BB009EB79C /* nullpo.c in Sources */,
-				A56CC6E6185643BB009EB79C /* malloc.c in Sources */,
+				A56CC6E6185643BB009EB79C /* memmgr.c in Sources */,
 				A56CC7D418565812009EB79C /* pc_groups.c in Sources */,
 				A56CC6E3185643BB009EB79C /* HPM.c in Sources */,
 				A56CC7DD18565812009EB79C /* trade.c in Sources */,
@@ -1227,6 +1373,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				A5AA94FA185799E400C940C8 /* db2sql.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A5B894AF1A03CE25005AD22E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A5B894B01A03CE25005AD22E /* HPMHooking.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A5B894B81A03CE5D005AD22E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A5B894B91A03CE5D005AD22E /* HPMHooking.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1341,12 +1503,18 @@
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_FAST_MATH = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -1359,6 +1527,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
 				GCC_WARN_SHADOW = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -1367,14 +1536,14 @@
 					/usr/include,
 					/usr/local/include,
 					/usr/local/include/mysql,
-					3rdparty/mt19937ar,
-					3rdparty/libconfig,
+					3rdparty,
+					src,
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 				);
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
-				MACOSX_DEPLOYMENT_TARGET = "";
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = (
+					"-DHAVE_EXECINFO",
 					"-DMAXCONN=16384",
 					"-DHAS_TLS",
 					"-DHAVE_SETRLIMIT",
@@ -1411,6 +1580,7 @@
 					"-lpthread",
 					"-lz",
 					"-lmysqlclient",
+					"-lpcre",
 				);
 				SDKROOT = macosx;
 			};
@@ -1424,19 +1594,25 @@
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)";
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_FAST_MATH = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_STRICT_ALIASING = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
 				GCC_WARN_SHADOW = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -1445,14 +1621,14 @@
 					/usr/include,
 					/usr/local/include,
 					/usr/local/include/mysql,
-					3rdparty/mt19937ar,
-					3rdparty/libconfig,
+					3rdparty,
+					src,
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 				);
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LLVM_LTO = YES;
-				MACOSX_DEPLOYMENT_TARGET = "";
 				OTHER_CFLAGS = (
+					"-DHAVE_EXECINFO",
 					"-DMAXCONN=16384",
 					"-DHAS_TLS",
 					"-DHAVE_SETRLIMIT",
@@ -1489,6 +1665,7 @@
 					"-lpthread",
 					"-lz",
 					"-lmysqlclient",
+					"-lpcre",
 				);
 				SDKROOT = macosx;
 			};
@@ -1551,28 +1728,101 @@
 		A58A5A24185801FF0099683E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/plugins";
 				EXECUTABLE_PREFIX = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				PRODUCT_NAME = HPMHooking;
+				OTHER_CFLAGS = (
+					"-DHAVE_EXECINFO",
+					"-DMAXCONN=16384",
+					"-DHAS_TLS",
+					"-DHAVE_SETRLIMIT",
+					"-DHAVE_STRNLEN",
+					"-DPACKAGE_NAME=\\\"\\\"",
+					"-DPACKAGE_TARNAME=\\\"\\\"",
+					"-DPACKAGE_VERSION=\\\"\\\"",
+					"-DPACKAGE_STRING=\\\"\\\"",
+					"-DPACKAGE_BUGREPORT=\\\"\\\"",
+					"-DPACKAGE_URL=\\\"\\\"",
+					"-DSTDC_HEADERS=1",
+					"-DHAVE_SYS_TYPES_H=1",
+					"-DHAVE_SYS_STAT_H=1",
+					"-DHAVE_STDLIB_H=1",
+					"-DHAVE_STRING_H=1",
+					"-DHAVE_MEMORY_H=1",
+					"-DHAVE_STRINGS_H=1",
+					"-DHAVE_INTTYPES_H=1",
+					"-DHAVE_STDINT_H=1",
+					"-DHAVE_UNISTD_H=1",
+					"-D__EXTENSIONS__=1",
+					"-D_ALL_SOURCE=1",
+					"-D_GNU_SOURCE=1",
+					"-D_POSIX_PTHREAD_SEMANTICS=1",
+					"-D_TANDEM_SOURCE=1",
+					"-DHAVE_USELOCALE=1",
+					"-DHAVE_NEWLOCALE=1",
+					"-DHAVE_FREELOCALE=1",
+					"-DHAVE_XLOCALE_H=1",
+					"-DHAVE_LIBZ=1",
+					"-DHAVE_LIBPTHREAD=1",
+					"-DHPMHOOKING_MAP",
+				);
+				PRODUCT_NAME = HPMHooking_map;
 			};
 			name = Debug;
 		};
 		A58A5A25185801FF0099683E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/plugins";
 				EXECUTABLE_PREFIX = "";
-				PRODUCT_NAME = HPMHooking;
+				OTHER_CFLAGS = (
+					"-DHAVE_EXECINFO",
+					"-DMAXCONN=16384",
+					"-DHAS_TLS",
+					"-DHAVE_SETRLIMIT",
+					"-DHAVE_STRNLEN",
+					"-DPACKAGE_NAME=\\\"\\\"",
+					"-DPACKAGE_TARNAME=\\\"\\\"",
+					"-DPACKAGE_VERSION=\\\"\\\"",
+					"-DPACKAGE_STRING=\\\"\\\"",
+					"-DPACKAGE_BUGREPORT=\\\"\\\"",
+					"-DPACKAGE_URL=\\\"\\\"",
+					"-DSTDC_HEADERS=1",
+					"-DHAVE_SYS_TYPES_H=1",
+					"-DHAVE_SYS_STAT_H=1",
+					"-DHAVE_STDLIB_H=1",
+					"-DHAVE_STRING_H=1",
+					"-DHAVE_MEMORY_H=1",
+					"-DHAVE_STRINGS_H=1",
+					"-DHAVE_INTTYPES_H=1",
+					"-DHAVE_STDINT_H=1",
+					"-DHAVE_UNISTD_H=1",
+					"-D__EXTENSIONS__=1",
+					"-D_ALL_SOURCE=1",
+					"-D_GNU_SOURCE=1",
+					"-D_POSIX_PTHREAD_SEMANTICS=1",
+					"-D_TANDEM_SOURCE=1",
+					"-DHAVE_USELOCALE=1",
+					"-DHAVE_NEWLOCALE=1",
+					"-DHAVE_FREELOCALE=1",
+					"-DHAVE_XLOCALE_H=1",
+					"-DHAVE_LIBZ=1",
+					"-DHAVE_LIBPTHREAD=1",
+					"-DHPMHOOKING_MAP",
+				);
+				PRODUCT_NAME = HPMHooking_map;
 			};
 			name = Release;
 		};
 		A5AA94E81857956100C940C8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/plugins";
 				EXECUTABLE_PREFIX = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1586,6 +1836,7 @@
 		A5AA94E91857956100C940C8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/plugins";
 				EXECUTABLE_PREFIX = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1595,6 +1846,7 @@
 		A5AA94F5185799B700C940C8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/plugins";
 				EXECUTABLE_PREFIX = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1608,9 +1860,198 @@
 		A5AA94F6185799B700C940C8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/plugins";
 				EXECUTABLE_PREFIX = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		A5B894B41A03CE25005AD22E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/plugins";
+				EXECUTABLE_PREFIX = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				OTHER_CFLAGS = (
+					"-DHAVE_EXECINFO",
+					"-DMAXCONN=16384",
+					"-DHAS_TLS",
+					"-DHAVE_SETRLIMIT",
+					"-DHAVE_STRNLEN",
+					"-DPACKAGE_NAME=\\\"\\\"",
+					"-DPACKAGE_TARNAME=\\\"\\\"",
+					"-DPACKAGE_VERSION=\\\"\\\"",
+					"-DPACKAGE_STRING=\\\"\\\"",
+					"-DPACKAGE_BUGREPORT=\\\"\\\"",
+					"-DPACKAGE_URL=\\\"\\\"",
+					"-DSTDC_HEADERS=1",
+					"-DHAVE_SYS_TYPES_H=1",
+					"-DHAVE_SYS_STAT_H=1",
+					"-DHAVE_STDLIB_H=1",
+					"-DHAVE_STRING_H=1",
+					"-DHAVE_MEMORY_H=1",
+					"-DHAVE_STRINGS_H=1",
+					"-DHAVE_INTTYPES_H=1",
+					"-DHAVE_STDINT_H=1",
+					"-DHAVE_UNISTD_H=1",
+					"-D__EXTENSIONS__=1",
+					"-D_ALL_SOURCE=1",
+					"-D_GNU_SOURCE=1",
+					"-D_POSIX_PTHREAD_SEMANTICS=1",
+					"-D_TANDEM_SOURCE=1",
+					"-DHAVE_USELOCALE=1",
+					"-DHAVE_NEWLOCALE=1",
+					"-DHAVE_FREELOCALE=1",
+					"-DHAVE_XLOCALE_H=1",
+					"-DHAVE_LIBZ=1",
+					"-DHAVE_LIBPTHREAD=1",
+					"-DHPMHOOKING_CHAR",
+				);
+				PRODUCT_NAME = HPMHooking_char;
+			};
+			name = Debug;
+		};
+		A5B894B51A03CE25005AD22E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/plugins";
+				EXECUTABLE_PREFIX = "";
+				OTHER_CFLAGS = (
+					"-DHAVE_EXECINFO",
+					"-DMAXCONN=16384",
+					"-DHAS_TLS",
+					"-DHAVE_SETRLIMIT",
+					"-DHAVE_STRNLEN",
+					"-DPACKAGE_NAME=\\\"\\\"",
+					"-DPACKAGE_TARNAME=\\\"\\\"",
+					"-DPACKAGE_VERSION=\\\"\\\"",
+					"-DPACKAGE_STRING=\\\"\\\"",
+					"-DPACKAGE_BUGREPORT=\\\"\\\"",
+					"-DPACKAGE_URL=\\\"\\\"",
+					"-DSTDC_HEADERS=1",
+					"-DHAVE_SYS_TYPES_H=1",
+					"-DHAVE_SYS_STAT_H=1",
+					"-DHAVE_STDLIB_H=1",
+					"-DHAVE_STRING_H=1",
+					"-DHAVE_MEMORY_H=1",
+					"-DHAVE_STRINGS_H=1",
+					"-DHAVE_INTTYPES_H=1",
+					"-DHAVE_STDINT_H=1",
+					"-DHAVE_UNISTD_H=1",
+					"-D__EXTENSIONS__=1",
+					"-D_ALL_SOURCE=1",
+					"-D_GNU_SOURCE=1",
+					"-D_POSIX_PTHREAD_SEMANTICS=1",
+					"-D_TANDEM_SOURCE=1",
+					"-DHAVE_USELOCALE=1",
+					"-DHAVE_NEWLOCALE=1",
+					"-DHAVE_FREELOCALE=1",
+					"-DHAVE_XLOCALE_H=1",
+					"-DHAVE_LIBZ=1",
+					"-DHAVE_LIBPTHREAD=1",
+					"-DHPMHOOKING_CHAR",
+				);
+				PRODUCT_NAME = HPMHooking_char;
+			};
+			name = Release;
+		};
+		A5B894BD1A03CE5D005AD22E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/plugins";
+				EXECUTABLE_PREFIX = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				OTHER_CFLAGS = (
+					"-DHAVE_EXECINFO",
+					"-DMAXCONN=16384",
+					"-DHAS_TLS",
+					"-DHAVE_SETRLIMIT",
+					"-DHAVE_STRNLEN",
+					"-DPACKAGE_NAME=\\\"\\\"",
+					"-DPACKAGE_TARNAME=\\\"\\\"",
+					"-DPACKAGE_VERSION=\\\"\\\"",
+					"-DPACKAGE_STRING=\\\"\\\"",
+					"-DPACKAGE_BUGREPORT=\\\"\\\"",
+					"-DPACKAGE_URL=\\\"\\\"",
+					"-DSTDC_HEADERS=1",
+					"-DHAVE_SYS_TYPES_H=1",
+					"-DHAVE_SYS_STAT_H=1",
+					"-DHAVE_STDLIB_H=1",
+					"-DHAVE_STRING_H=1",
+					"-DHAVE_MEMORY_H=1",
+					"-DHAVE_STRINGS_H=1",
+					"-DHAVE_INTTYPES_H=1",
+					"-DHAVE_STDINT_H=1",
+					"-DHAVE_UNISTD_H=1",
+					"-D__EXTENSIONS__=1",
+					"-D_ALL_SOURCE=1",
+					"-D_GNU_SOURCE=1",
+					"-D_POSIX_PTHREAD_SEMANTICS=1",
+					"-D_TANDEM_SOURCE=1",
+					"-DHAVE_USELOCALE=1",
+					"-DHAVE_NEWLOCALE=1",
+					"-DHAVE_FREELOCALE=1",
+					"-DHAVE_XLOCALE_H=1",
+					"-DHAVE_LIBZ=1",
+					"-DHAVE_LIBPTHREAD=1",
+					"-DHPMHOOKING_LOGIN",
+				);
+				PRODUCT_NAME = HPMHooking_login;
+			};
+			name = Debug;
+		};
+		A5B894BE1A03CE5D005AD22E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/plugins";
+				EXECUTABLE_PREFIX = "";
+				OTHER_CFLAGS = (
+					"-DHAVE_EXECINFO",
+					"-DMAXCONN=16384",
+					"-DHAS_TLS",
+					"-DHAVE_SETRLIMIT",
+					"-DHAVE_STRNLEN",
+					"-DPACKAGE_NAME=\\\"\\\"",
+					"-DPACKAGE_TARNAME=\\\"\\\"",
+					"-DPACKAGE_VERSION=\\\"\\\"",
+					"-DPACKAGE_STRING=\\\"\\\"",
+					"-DPACKAGE_BUGREPORT=\\\"\\\"",
+					"-DPACKAGE_URL=\\\"\\\"",
+					"-DSTDC_HEADERS=1",
+					"-DHAVE_SYS_TYPES_H=1",
+					"-DHAVE_SYS_STAT_H=1",
+					"-DHAVE_STDLIB_H=1",
+					"-DHAVE_STRING_H=1",
+					"-DHAVE_MEMORY_H=1",
+					"-DHAVE_STRINGS_H=1",
+					"-DHAVE_INTTYPES_H=1",
+					"-DHAVE_STDINT_H=1",
+					"-DHAVE_UNISTD_H=1",
+					"-D__EXTENSIONS__=1",
+					"-D_ALL_SOURCE=1",
+					"-D_GNU_SOURCE=1",
+					"-D_POSIX_PTHREAD_SEMANTICS=1",
+					"-D_TANDEM_SOURCE=1",
+					"-DHAVE_USELOCALE=1",
+					"-DHAVE_NEWLOCALE=1",
+					"-DHAVE_FREELOCALE=1",
+					"-DHAVE_XLOCALE_H=1",
+					"-DHAVE_LIBZ=1",
+					"-DHAVE_LIBPTHREAD=1",
+					"-DHPMHOOKING_LOGIN",
+				);
+				PRODUCT_NAME = HPMHooking_login;
 			};
 			name = Release;
 		};
@@ -1662,7 +2103,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A58A5A23185801FF0099683E /* Build configuration list for PBXNativeTarget "HPMHooking" */ = {
+		A58A5A23185801FF0099683E /* Build configuration list for PBXNativeTarget "HPMHooking_map" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A58A5A24185801FF0099683E /* Debug */,
@@ -1685,6 +2126,24 @@
 			buildConfigurations = (
 				A5AA94F5185799B700C940C8 /* Debug */,
 				A5AA94F6185799B700C940C8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A5B894B31A03CE25005AD22E /* Build configuration list for PBXNativeTarget "HPMHooking_char" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A5B894B41A03CE25005AD22E /* Debug */,
+				A5B894B51A03CE25005AD22E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A5B894BC1A03CE5D005AD22E /* Build configuration list for PBXNativeTarget "HPMHooking_login" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A5B894BD1A03CE5D005AD22E /* Debug */,
+				A5B894BE1A03CE5D005AD22E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

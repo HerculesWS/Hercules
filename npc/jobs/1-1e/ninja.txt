@@ -1,19 +1,41 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  SinSloth
+//= Copyright (C)  Playtester
+//= Copyright (C)  Lupus
+//= Copyright (C)  Kisuka
+//= Copyright (C)  Legionaire
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Ninja Job Quest
-//===== By: ==================================================
-//= Legionaire, Kisuka
-//===== Current Version: =====================================
-//= 1.6
-//===== Description: =========================================
+//================= Description ===========================================
 //= Ninja Job Change Quest
-//===== Additional Comments: =================================
-//= 1.1 Optimized, updated, checked [Lupus]
-//= 1.2 Added Akagi [Playtester]
-//= 1.3 Updated dialogs to official ones and optimized [SinSloth]
-//= 1.4 Fixed a minor bug [SinSloth]
-//= 1.5 Updated to match AEGIS script and Added Quest Log commands. [Kisuka]
-//= 1.6 Fixed AEGIS amatsu warp typo. [Kisuka]
-//============================================================
+//================= Current Version =======================================
+//= 1.7
+//=========================================================================
 
 alberta,30,65,3	script	Akagi	4_M_JOB_ASSASSIN,{
 	if (Class == Job_Novice) {
@@ -26,7 +48,7 @@ alberta,30,65,3	script	Akagi	4_M_JOB_ASSASSIN,{
 			mes "Tell me, do you seek";
 			mes "the path of patience?";
 			next;
-			if(select("No:Yes") == 1) {
+			if(select("No", "Yes") == 1) {
 				mes "[Akagi]";
 				mes "I see.";
 				mes "To each his own,";
@@ -93,7 +115,7 @@ que_ng,30,65,3	script	Cougar#nq	4_M_JOB_ASSASSIN,{
 			close;
 		}
 		if (NINJ_Q == 0) {
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Excuse me.";
 			mes "H-hello?";
 			next;
@@ -101,7 +123,7 @@ que_ng,30,65,3	script	Cougar#nq	4_M_JOB_ASSASSIN,{
 			mes "...............................";
 			mes "How did you do that?";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Do what? I didn't";
 			mes "do anything, I don't think...";
 			next;
@@ -112,7 +134,7 @@ que_ng,30,65,3	script	Cougar#nq	4_M_JOB_ASSASSIN,{
 			mes "Ah, now I get it. Wildcat Joe";
 			mes "must have sent you to kill me! I won't fall for your tricks! Die!";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "W-wait! I-I don't even";
 			mes "know who Wildcat Joe is!";
 			mes "Calm down, there's no";
@@ -125,7 +147,7 @@ que_ng,30,65,3	script	Cougar#nq	4_M_JOB_ASSASSIN,{
 			mes "You've got some talent,";
 			mes "I'll give you that.";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "...............................";
 			mes "I came here hoping";
 			mes "to change my job";
@@ -154,7 +176,7 @@ que_ng,30,65,3	script	Cougar#nq	4_M_JOB_ASSASSIN,{
 			mes "you a few of my skills if you";
 			mes "really want to be a Ninja.";
 			next;
-			if(select("Sure.:No, thanks.") == 2) {
+			if(select("Sure.", "No, thanks.") == 2) {
 				mes "[Cougar]";
 				mes "Hm? Well, alright.";
 				mes "Still, I don't see";
@@ -186,7 +208,7 @@ que_ng,30,65,3	script	Cougar#nq	4_M_JOB_ASSASSIN,{
 			mes "Anyway, after you give him";
 			mes "the letter, come back and";
 			mes "let me know his answer.";
-			set NINJ_Q,1;
+			NINJ_Q = 1;
 			setquest 6015;
 			close;
 		}
@@ -240,7 +262,7 @@ que_ng,30,65,3	script	Cougar#nq	4_M_JOB_ASSASSIN,{
 			mes "Please get those";
 			mes "as quickly as you can!";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Huh? That's funny,";
 			mes "Wildcat Joe actually";
 			mes "asked me to gather";
@@ -253,12 +275,12 @@ que_ng,30,65,3	script	Cougar#nq	4_M_JOB_ASSASSIN,{
 			mes "I should have thought about";
 			mes "that earlier! Well, it's too";
 			mes "late now. Just h-hurry it up!";
-			set NINJ_Q,4;
+			NINJ_Q = 4;
 			changequest 6017,6018;
 			close;
 		}
 		else if (NINJ_Q == 4) {
-			if (countitem(7053) < 5 || countitem(1010) < 1) {
+			if (countitem(Cyfar) < 5 || countitem(Phracon) < 1) {
 				mes "[Cougar]";
 				mes "Hurry and bring";
 				mes "^3355FF5 Cyfars^000000 and";
@@ -331,10 +353,10 @@ que_ng,30,65,3	script	Cougar#nq	4_M_JOB_ASSASSIN,{
 			mes "agile as the wind, and as";
 			mes "quiet as the falling shadows.";
 			callfunc "Job_Change",Job_Ninja;
-			set NINJ_Q,5;
-			delitem 7053,5; // Cyfar
-			delitem 1010,1; // Phracon
-			getitem 13010,1;	// Asura
+			NINJ_Q = 5;
+			delitem Cyfar,5; // Cyfar
+			delitem Phracon,1; // Phracon
+			getitem Asura,1;	// Asura
 			completequest 6018;
 			close;
 		}
@@ -349,7 +371,7 @@ que_ng,30,65,3	script	Cougar#nq	4_M_JOB_ASSASSIN,{
 			close;
 		}
 	} else {
-		if (Class == Job_Ninja) {
+		if (BaseClass == Job_Ninja) {
 			mes "[Cougar]";
 			mes "How have you been?";
 			mes "Train hard: you want";
@@ -381,7 +403,7 @@ einbroch,184,194,3	script	Suspicious Man#nq	4_M_SITDOWN,{
 		mes "buildings in my hometown";
 		mes "are tiny in comparison...";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Oh, are you from";
 		mes "Amatsu? I'm looking";
 		mes "for someone named";
@@ -394,7 +416,7 @@ einbroch,184,194,3	script	Suspicious Man#nq	4_M_SITDOWN,{
 		mes "minerals. Tell me, why are";
 		mes "you looking for this Wildcat Joe?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Well, I need to deliver";
 		mes "this letter to him and";
 		mes "get his response so that";
@@ -407,7 +429,7 @@ einbroch,184,194,3	script	Suspicious Man#nq	4_M_SITDOWN,{
 		mes "in this town. Though, he prefers to be called ''Red Leopard Joe,''";
 		mes "instead of ''Wildcat Joe.''";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I really want to help you";
 		mes "find him, but first I need";
 		mes "to find the minerals that";
@@ -415,7 +437,7 @@ einbroch,184,194,3	script	Suspicious Man#nq	4_M_SITDOWN,{
 		mes "mind, would you help me?";
 		mes "Then I can help you find Joe.";
 		next;
-		if(select("Don't worry, I'll find him alone.:Sure, I'll help you.") == 1) {
+		if(select("Don't worry, I'll find him alone.", "Sure, I'll help you.") == 1) {
 			mes "[Suspicious Man]";
 			mes "You sure about that...?";
 			mes "Red Leopard Joe is a true";
@@ -430,12 +452,12 @@ einbroch,184,194,3	script	Suspicious Man#nq	4_M_SITDOWN,{
 		mes "help me find";
 		mes "^3355FF5 Cyfars^000000 and";
 		mes "^3355FF1 Phracon^000000.";
-		set NINJ_Q,2;
+		NINJ_Q = 2;
 		changequest 6015,6016;
 		close;
 	}
 	else if (NINJ_Q == 2) {
-		if (countitem(7053) < 5 || countitem(1010) < 1) {
+		if (countitem(Cyfar) < 5 || countitem(Phracon) < 1) {
 			mes "[Suspicious Man]";
 			mes "Please bring";
 			mes "^3355FF5 Cyfars^000000 and";
@@ -452,13 +474,13 @@ einbroch,184,194,3	script	Suspicious Man#nq	4_M_SITDOWN,{
 		mes "help you now. Here,";
 		mes "let me see that letter.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "?????!!";
 		next;
 		mes "[Suspicious Man]";
 		mes "Why? Didn't you bring Cougar's letter for me?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Are you...";
 		mes "Are you Wildcat Joe?";
 		next;
@@ -484,7 +506,7 @@ einbroch,184,194,3	script	Suspicious Man#nq	4_M_SITDOWN,{
 		mes "shadows is really our";
 		mes "ultimate power.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I see...";
 		mes "...........";
 		next;
@@ -510,7 +532,7 @@ einbroch,184,194,3	script	Suspicious Man#nq	4_M_SITDOWN,{
 		mes "Ninja, even if I did trick you";
 		mes "just earlier. Heh heh heh!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "......";
 		mes ".........";
 		mes "............";
@@ -522,9 +544,9 @@ einbroch,184,194,3	script	Suspicious Man#nq	4_M_SITDOWN,{
 		mes "It'll take a while to";
 		mes "return to Amatsu, so let";
 		mes "me send you there directly...";
-		delitem 1010,1;	// Phracon
-		delitem 7053,5;	// Cyfar
-		set NINJ_Q,3;
+		delitem Phracon,1;	// Phracon
+		delitem Cyfar,5;	// Cyfar
+		NINJ_Q = 3;
 		changequest 6016,6017;
 		close2;
 		warp "amatsu",113,127;
@@ -539,7 +561,7 @@ einbroch,184,194,3	script	Suspicious Man#nq	4_M_SITDOWN,{
 		mes "Shall I directly send you";
 		mes "to Amatsu right now?";
 		next;
-		if(select("No, thanks.:Yes, please.") == 1) {
+		if(select("No, thanks.", "Yes, please.") == 1) {
 			mes "[Red Leopard Joe]";
 			mes "Alright. Well, I was";
 			mes "just trying to save";
@@ -563,7 +585,7 @@ einbroch,184,194,3	script	Suspicious Man#nq	4_M_SITDOWN,{
 		mes "to beat him in a fair fight~";
 		close;
 	}
-	else if (NINJ_Q == 5 && Class == Job_Ninja) {
+	else if (NINJ_Q == 5 && BaseClass == Job_Ninja) {
 		mes "[Red Leopard Joe]";
 		mes "Oh, you're a Ninja~";
 		mes "I hope you continue to";

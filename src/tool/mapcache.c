@@ -1,30 +1,45 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
-
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C)  Athena Dev Teams
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #define HERCULES_CORE
 
-#include "../config/core.h" // RENEWAL
+#include "common/cbasetypes.h"
+#include "common/core.h"
+#include "common/grfio.h"
+#include "common/memmgr.h"
+#include "common/mmo.h"
+#include "common/showmsg.h"
+#include "common/strlib.h"
+#include "common/utils.h"
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-
-#include "../common/cbasetypes.h"
-#include "../common/grfio.h"
-#include "../common/malloc.h"
-#include "../common/mmo.h"
-#include "../common/showmsg.h"
-#include "../common/utils.h"
-
 #ifndef _WIN32
 #include <unistd.h>
 #endif
 
 #define NO_WATER 1000000
 
-char grf_list_file[256] = "conf/grf-files.txt";
-char map_list_file[256] = "db/map_index.txt";
-char map_cache_file[256];
+char *grf_list_file;
+char *map_list_file;
+char *map_cache_file;
 int rebuild = 0;
 
 FILE *map_cache_fp;
@@ -52,11 +67,6 @@ struct map_info {
 	int32 len;
 };
 
- /*************************************
- * Big-endian compatibility functions *
- * Moved to utils.h                   *
- *************************************/
-
 // Reads a map from GRF's GAT and RSW files
 int read_map(char *name, struct map_data *m)
 {
@@ -64,18 +74,16 @@ int read_map(char *name, struct map_data *m)
 	unsigned char *gat, *rsw;
 	int water_height;
 	size_t xy, off, num_cells;
-	float height;
-	uint32 type;
 
 	// Open map GAT
 	sprintf(filename,"data\\%s.gat", name);
-	gat = (unsigned char *)grfio_read(filename);
+	gat = grfio_read(filename);
 	if (gat == NULL)
 		return 0;
 
 	// Open map RSW
 	sprintf(filename,"data\\%s.rsw", name);
-	rsw = (unsigned char *)grfio_read(filename);
+	rsw = grfio_read(filename);
 
 	// Read water height
 	if (rsw) {
@@ -96,12 +104,11 @@ int read_map(char *name, struct map_data *m)
 
 	// Set cell properties
 	off = 14;
-	for (xy = 0; xy < num_cells; xy++)
-	{
+	for (xy = 0; xy < num_cells; xy++) {
 		// Height of the bottom-left corner
-		height = GetFloat( gat + off      );
+		float height = GetFloat(gat + off);
 		// Type of cell
-		type   = GetULong( gat + off + 16 );
+		uint32 type = GetULong(gat + off + 16);
 		off += 20;
 
 		if (type == 0 && water_height != NO_WATER && height > water_height)
@@ -115,8 +122,14 @@ int read_map(char *name, struct map_data *m)
 	return 1;
 }
 
-// Adds a map to the cache
-void cache_map(char *name, struct map_data *m)
+/**
+ * Adds a map to the cache.
+ *
+ * @param name The map name.
+ * @param m    Map data to cache.
+ * @retval true if the map was successfully added to the cache.
+ */
+bool cache_map(char *name, struct map_data *m)
 {
 	struct map_info info;
 	unsigned long len;
@@ -126,18 +139,23 @@ void cache_map(char *name, struct map_data *m)
 	len = (unsigned long)m->xs*(unsigned long)m->ys*2;
 	write_buf = (unsigned char *)aMalloc(len);
 	// Compress the cells and get the compressed length
-	encode_zip(write_buf, &len, m->cells, m->xs*m->ys);
+	grfio->encode_zip(write_buf, &len, m->cells, m->xs*m->ys);
 
 	// Fill the map header
+	safestrncpy(info.name, name, MAP_NAME_LENGTH);
 	if (strlen(name) > MAP_NAME_LENGTH) // It does not hurt to warn that there are maps with name longer than allowed.
-		ShowWarning ("Map name '%s' size '%d' is too long. Truncating to '%d'.\n", name, strlen(name), MAP_NAME_LENGTH);
-	strncpy(info.name, name, MAP_NAME_LENGTH);
+		ShowWarning("Map name '%s' (length %"PRIuS") is too long. Truncating to '%s' (length %d).\n",
+		            name, strlen(name), info.name, MAP_NAME_LENGTH);
 	info.xs = MakeShortLE(m->xs);
 	info.ys = MakeShortLE(m->ys);
 	info.len = MakeLongLE((uint32)len);
 
 	// Append map header then compressed cells at the end of the file
-	fseek(map_cache_fp, header.file_size, SEEK_SET);
+	if (fseek(map_cache_fp, header.file_size, SEEK_SET) != 0) {
+		aFree(write_buf);
+		aFree(m->cells);
+		return false;
+	}
 	fwrite(&info, sizeof(struct map_info), 1, map_cache_fp);
 	fwrite(write_buf, 1, len, map_cache_fp);
 	header.file_size += sizeof(struct map_info) + len;
@@ -146,26 +164,34 @@ void cache_map(char *name, struct map_data *m)
 	aFree(write_buf);
 	aFree(m->cells);
 
-	return;
+	return true;
 }
 
-// Checks whether a map is already is the cache
-int find_map(char *name)
+/**
+ * Checks whether a map is already is the cache.
+ *
+ * @param name The map name.
+ * @retval true if the map is already cached.
+ */
+bool find_map(char *name)
 {
 	int i;
 	struct map_info info;
 
-	fseek(map_cache_fp, sizeof(struct main_header), SEEK_SET);
+	if (fseek(map_cache_fp, sizeof(struct main_header), SEEK_SET) != 0)
+		return false;
 
-	for(i = 0; i < header.map_count; i++) {
-		if(fread(&info, sizeof(info), 1, map_cache_fp) != 1) printf("An error as occured in fread while reading map_cache\n");
-		if(strcmp(name, info.name) == 0) // Map found
-			return 1;
-		else // Map not found, jump to the beginning of the next map info header
-			fseek(map_cache_fp, GetLong((unsigned char *)&(info.len)), SEEK_CUR);
+	for (i = 0; i < header.map_count; i++) {
+		if (fread(&info, sizeof(info), 1, map_cache_fp) != 1)
+			printf("An error as occured in fread while reading map_cache\n");
+		if (strcmp(name, info.name) == 0) // Map found
+			return true;
+		// Map not found, jump to the beginning of the next map info header
+		if (fseek(map_cache_fp, GetLong((unsigned char *)&(info.len)), SEEK_CUR) != 0)
+			return false;
 	}
 
-	return 0;
+	return false;
 }
 
 // Cuts the extension from a map name
@@ -174,7 +200,7 @@ char *remove_extension(char *mapname)
 	char *ptr, *ptr2;
 	ptr = strchr(mapname, '.');
 	if (ptr) { //Check and remove extension.
-		while (ptr[1] && (ptr2 = strchr(ptr+1, '.')))
+		while (ptr[1] && (ptr2 = strchr(ptr+1, '.')) != NULL)
 			ptr = ptr2; //Skip to the last dot.
 		if (strcmp(ptr,".gat") == 0)
 			*ptr = '\0'; //Remove extension.
@@ -182,25 +208,66 @@ char *remove_extension(char *mapname)
 	return mapname;
 }
 
-// Processes command-line arguments
-void process_args(int argc, char *argv[])
+/**
+ * --grf-list handler
+ *
+ * Overrides the default grf list filename.
+ * @see cmdline->exec
+ */
+static CMDLINEARG(grflist)
 {
-	int i;
+	aFree(grf_list_file);
+	grf_list_file = aStrdup(params);
+	return true;
+}
 
-	for(i = 0; i < argc; i++) {
-		if(strcmp(argv[i], "-grf") == 0) {
-			if(++i < argc)
-				strcpy(grf_list_file, argv[i]);
-		} else if(strcmp(argv[i], "-list") == 0) {
-			if(++i < argc)
-				strcpy(map_list_file, argv[i]);
-		} else if(strcmp(argv[i], "-cache") == 0) {
-			if(++i < argc)
-				strcpy(map_cache_file, argv[i]);
-		} else if(strcmp(argv[i], "-rebuild") == 0)
-			rebuild = 1;
-	}
+/**
+ * --map-list handler
+ *
+ * Overrides the default map list filename.
+ * @see cmdline->exec
+ */
+static CMDLINEARG(maplist)
+{
+	aFree(map_list_file);
+	map_list_file = aStrdup(params);
+	return true;
+}
 
+/**
+ * --map-cache handler
+ *
+ * Overrides the default map cache filename.
+ * @see cmdline->exec
+ */
+static CMDLINEARG(mapcache)
+{
+	aFree(map_cache_file);
+	map_cache_file = aStrdup(params);
+	return true;
+}
+
+/**
+ * --rebuild handler
+ *
+ * Forces a rebuild of the mapcache, rather than only adding missing maps.
+ * @see cmdline->exec
+ */
+static CMDLINEARG(rebuild)
+{
+	rebuild = 1;
+	return true;
+}
+
+/**
+ * Defines the local command line arguments
+ */
+void cmdline_args_init_local(void)
+{
+	CMDLINEARG_DEF2(grf-list, grflist, "Alternative grf list file", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2(map-list, maplist, "Alternative map list file", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2(map-cache, mapcache, "Alternative map cache file", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2(rebuild, rebuild, "Forces a rebuild of the map cache, rather than only adding missing maps", CMDLINE_OPT_NORMAL);
 }
 
 int do_init(int argc, char** argv)
@@ -210,20 +277,16 @@ int do_init(int argc, char** argv)
 	struct map_data map;
 	char name[MAP_NAME_LENGTH_EXT];
 
+	grf_list_file = aStrdup("conf/grf-files.txt");
+	map_list_file = aStrdup("db/map_index.txt");
 	/* setup pre-defined, #define-dependant */
-	sprintf(map_cache_file,"db/%s/map_cache.dat",
-#ifdef RENEWAL
-			"re"
-#else
-			"pre-re"
-#endif
-			);
+	map_cache_file = aStrdup("db/"DBPATH"map_cache.dat");
 
-	// Process the command-line arguments
-	process_args(argc, argv);
+	cmdline->exec(argc, argv, CMDLINE_OPT_PREINIT);
+	cmdline->exec(argc, argv, CMDLINE_OPT_NORMAL);
 
 	ShowStatus("Initializing grfio with %s\n", grf_list_file);
-	grfio_init(grf_list_file);
+	grfio->init(grf_list_file);
 
 	// Attempt to open the map cache file and force rebuild if not found
 	ShowStatus("Opening map cache: %s\n", map_cache_file);
@@ -276,14 +339,15 @@ int do_init(int argc, char** argv)
 
 		name[MAP_NAME_LENGTH_EXT-1] = '\0';
 		remove_extension(name);
-		if(find_map(name))
+		if (find_map(name)) {
 			ShowInfo("Map '"CL_WHITE"%s"CL_RESET"' already in cache.\n", name);
-		else if(read_map(name, &map)) {
-			cache_map(name, &map);
-			ShowInfo("Map '"CL_WHITE"%s"CL_RESET"' successfully cached.\n", name);
-		} else
+		} else if(!read_map(name, &map)) {
 			ShowError("Map '"CL_WHITE"%s"CL_RESET"' not found!\n", name);
-
+		} else if (!cache_map(name, &map)) {
+			ShowError("Map '"CL_WHITE"%s"CL_RESET"' failed to cache (write error).\n", name);
+		} else {
+			ShowInfo("Map '"CL_WHITE"%s"CL_RESET"' successfully cached.\n", name);
+		}
 	}
 
 	ShowStatus("Closing map list: %s\n", map_list_file);
@@ -296,13 +360,18 @@ int do_init(int argc, char** argv)
 	fclose(map_cache_fp);
 
 	ShowStatus("Finalizing grfio\n");
-	grfio_final();
+	grfio->final();
 
 	ShowInfo("%d maps now in cache\n", header.map_count);
+
+	aFree(grf_list_file);
+	aFree(map_list_file);
+	aFree(map_cache_file);
 
 	return 0;
 }
 
-void do_final(void)
+int do_final(void)
 {
+	return EXIT_SUCCESS;
 }

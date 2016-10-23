@@ -1,30 +1,46 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2013-2015  Hercules Dev Team
+//= Copyright (C)  Joseph
+//= Copyright (C)  Euphy
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Malangdo Culvert
-//===== By: ==================================================
-//= Euphy
-//===== Current Version: =====================================
-//= 1.1
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Clean the culverts and defeat the Coelacanth.
 //= Daily and weekly quests are available.
 //= Contains a normal mode and hard mode.
-//===== Additional Comments: =================================
-//= 1.0 First version. [Euphy]
-//=     Letters "n" and "h" in NPC names indicate difficulty.
-//= 1.0a There is no minimum party size on official servers.
-//= 1.0b Fixed incorrect use of 'close'. [Joseph]
-//= 1.1 Instance system rewrite. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.1
+//=========================================================================
 
 1@pump	mapflag	src4instance
 2@pump	mapflag	src4instance
-//============================================================
 
-// Quest NPCs
-//============================================================
+//== Quest NPCs ============================================
 mal_in01,172,28,2	script	Albo#mal	4_CAT_SAILOR5,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You have too many kinds of objects. Try to continue after reducing those objects.";
 		close;
 	}
@@ -42,24 +58,24 @@ mal_in01,172,28,2	script	Albo#mal	4_CAT_SAILOR5,{
 	setarray .@names$[0],
 		"General Culvert Daily Service","^990000Hard Culvert Daily Service^000000",
 		"General Culvert Weekly Service","^990000Hard Culvert Weekly Service^000000";
-	set .@menu$,"Why are doing this job?:";
-	for(set .@i,0; .@i<4; set .@i,.@i+1) {
-		if (checkquest(.@quests[.@i],PLAYTIME) > -1) {
-			set .@status[.@i],2;
-			set .@menu$, .@menu$+"^aaaaaa- There is no new task -^000000:";
+	.@menu$ = "Why are doing this job?:";
+	for(.@i = 0; .@i<4; ++.@i) {
+		if (questprogress(.@quests[.@i],PLAYTIME)) {
+			.@status[.@i] = 2;
+			.@menu$ += "^aaaaaa- There is no new task -^000000:";
 		} else if (.@i%2 && BaseLevel < 140) {
-			set .@status[.@i],0;
-			set .@menu$, .@menu$+"^aaaaaaCan't take this job because level is too low^000000:";
+			.@status[.@i] = 0;
+			.@menu$ += "^aaaaaaCan't take this job because level is too low^000000:";
 		} else {
-			set .@status[.@i],1;
-			set .@menu$, .@menu$+.@names$[.@i]+":";
+			.@status[.@i] = 1;
+			.@menu$ += .@names$[.@i]+":";
 		}
 	}
 	mes "[Albo]";
 	mes "We crossed the sea!";
 	mes "We are great heroes of Culvert! We do not forgive the seafood that aims at Culvert!";
 	next;
-	set .@i, select(.@menu$)-1;
+	.@i = select(.@menu$)-1;
 	if (.@i == 0) {
 		mes "[Albo]";
 		mes "We used to be the henchmen of Mr. Missing! We almost became guards of such a historic site.";
@@ -148,7 +164,7 @@ L_GiveQuest:
 }
 
 mal_in01,172,26,2	script	Madeca#mal	4_CAT_SAILOR1,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You have too many kinds of objects. Try to continue after reducing those objects.";
 		close;
 	}
@@ -169,7 +185,7 @@ mal_in01,172,26,2	script	Madeca#mal	4_CAT_SAILOR1,{
 	mes "Oh?";
 	mes "You're the one who took care of my big brother Albo's request. It was a hard job!";
 	next;
-	set .@i, select("What are you doing here?:General Culvert Daily Service Compensation:Hard Culvert Daily Service Compensation:General Culvert Weekly Service Compensation:Hard Culvert Weekly Service Compensation")-1;
+	.@i = select("What are you doing here?", "General Culvert Daily Service Compensation", "Hard Culvert Daily Service Compensation", "General Culvert Weekly Service Compensation", "Hard Culvert Weekly Service Compensation")-1;
 	if (.@i == 0) {
 		mes "[Madeca]";
 		mes "I'm here to help my big brother Albo!";
@@ -192,7 +208,7 @@ mal_in01,172,26,2	script	Madeca#mal	4_CAT_SAILOR1,{
 	specialeffect2 EF_STEAL;
 	switch(.@i) {
 	case 1: // General Culvert Daily Service
-		if (checkquest(12271,PLAYTIME) == 2)
+		if (questprogress(12271,PLAYTIME) == 2)
 			callsub L_EraseQuest,12255,12256,12257,12258,12259,12260,12271;
 		else {
 			// Reward: 2x B Grade Coin
@@ -205,7 +221,7 @@ mal_in01,172,26,2	script	Madeca#mal	4_CAT_SAILOR1,{
 		}
 		break;
 	case 2: // Hard Culvert Daily Service
-		if (checkquest(12272,PLAYTIME) == 2)
+		if (questprogress(12272,PLAYTIME) == 2)
 			callsub L_EraseQuest,12261,12262,12263,12264,12265,12266,12272;
 		else {
 			// Reward: 1x A Grade Coin
@@ -218,7 +234,7 @@ mal_in01,172,26,2	script	Madeca#mal	4_CAT_SAILOR1,{
 		}
 		break;
 	case 3: // General Culvert Weekly Service
-		if (checkquest(12273,PLAYTIME) == 2)
+		if (questprogress(12273,PLAYTIME) == 2)
 			callsub L_EraseQuest,12267,12268,12273;
 		else {
 			// Reward: 1x Sea God's Wrath
@@ -227,7 +243,7 @@ mal_in01,172,26,2	script	Madeca#mal	4_CAT_SAILOR1,{
 		}
 		break;
 	case 4: // Hard Culvert Weekly Service
-		if (checkquest(12274,PLAYTIME) == 2)
+		if (questprogress(12274,PLAYTIME) == 2)
 			callsub L_EraseQuest,12269,12270,12274;
 		else {
 			// Reward: 5x Sea God's Wrath
@@ -245,8 +261,8 @@ mal_in01,172,26,2	script	Madeca#mal	4_CAT_SAILOR1,{
 	close;
 
 L_EraseQuest:
-	for(set .@j,0; .@j<getargcount(); set .@j,.@j+1) {
-		if (checkquest(getarg(.@j)) > -1)
+	for(.@j = 0; .@j<getargcount(); ++.@j) {
+		if (questprogress(getarg(.@j)))
 			erasequest getarg(.@j);
 	}
 	mes "[Madeca]";
@@ -255,7 +271,7 @@ L_EraseQuest:
 
 // callsub L_CheckQuest,<quest ID>,<monster>,<reward item ID>,<reward item amount>;
 L_CheckQuest:
-	if (checkquest(getarg(0),HUNTING) == 2) {
+	if (questprogress(getarg(0),HUNTING) == 2) {
 		mes "[Madeca]";
 		mes "You've punished ^0000ff"+getarg(1)+"^000000!";
 		mes "Here's your pay!";
@@ -267,8 +283,7 @@ L_CheckQuest:
 	return;
 }
 
-// Instance Creation
-//============================================================
+//== Instance Creation =====================================
 mal_in01,160,34,4	script	Missing, the Cleaner	4_CAT_SAILOR2,{
 	if (BaseLevel < 90) {
 		mes "[Missing, the Cleaner]";
@@ -287,7 +302,7 @@ mal_in01,160,34,4	script	Missing, the Cleaner	4_CAT_SAILOR2,{
 		next;
 		mes "^660066This cat looks like it's in bad shape. It is slightly trembling.^000000";
 		next;
-		if(select("Pet the cat:Are you ok?") == 1) {
+		if(select("Pet the cat", "Are you ok?") == 1) {
 			mes "[Missing, the Cleaner]";
 			mes "Are you talking to me?!";
 			next;
@@ -340,7 +355,7 @@ mal_in01,160,34,4	script	Missing, the Cleaner	4_CAT_SAILOR2,{
 		mes "Sometimes I can get a lucky box,";
 		mes "or even better, I can get cans...";
 		next;
-		if(select("Okay, cheers!:I will help if possible...") == 1) {
+		if(select("Okay, cheers!", "I will help if possible...") == 1) {
 			mes "[Missing, the Cleaner]";
 			mes "Thank you. I am going back to pour the water!";
 			close;
@@ -376,38 +391,38 @@ mal_in01,160,34,4	script	Missing, the Cleaner	4_CAT_SAILOR2,{
 		mes "[Missing, the Cleaner]";
 		mes "Don't forget! I will not open the";
 		mes "door if you do not have Seagod Protection!";
-		set in_canal_n,1;
+		in_canal_n = 1;
 		close;
 	}
-	if (countitem(6436) == 0) {
+	if (countitem(Ptotection_Seagod) == 0) {
 		mes "[Missing, the Cleaner]";
 		mes "You don't look like you have Seagod Protection. I can't open door at the moment!";
 		close;
 	}
-	set .@party_id,getcharid(1);
-	set .@md_name$,"Culvert";
+	.@party_id = getcharid(CHAR_ID_PARTY);
+	.@md_name$ = "Culvert";
 	if (!.@party_id) {
 		mes "^0000ffYou have to organize a party of";
 		mes "more than 1 member or be a member";
 		mes "of the party and come back.^000000";
 		close;
 	}
-	set .@playtime, checkquest(12254,PLAYTIME);
-	if (.@playtime == -1) {
-		if (getcharid(0) == getpartyleader(.@party_id,2)) {
+	.@playtime = questprogress(12254,PLAYTIME);
+	if (!.@playtime) {
+		if (getcharid(CHAR_ID_CHAR) == getpartyleader(.@party_id,2)) {
 			mes "[Missing, the Cleaner]";
 			mes "Ummm? What's up? Tell me the password if you're the leader!";
 			next;
-			switch(select("No... nothing.:Aragam insulted me.:Enter the Culvert.")) {
+			switch(select("No... nothing.", "Aragam insulted me.", "Enter the Culvert.")) {
 			case 1:
 				mes "[Missing, the Cleaner]";
 				mes "What a rookie.";
 				close;
 			case 2:
-				set .@instance,instance_create(.@md_name$,.@party_id);
+				.@instance = instance_create(.@md_name$,.@party_id);
 				if (.@instance < 0) {
 					mes "Party name: "+getpartyname(.@party_id);
-					mes "Party leader: "+strcharinfo(0);
+					mes "Party leader: "+strcharinfo(PC_NAME);
 					mes "^0000ff"+.@md_name$+"^000000 - Reservation Failed!";
 					close;
 				}
@@ -418,7 +433,7 @@ mal_in01,160,34,4	script	Missing, the Cleaner	4_CAT_SAILOR2,{
 				}
 				instance_set_timeout 3600,300,.@instance;
 				instance_init(.@instance);
-				
+
 				mes "^3333FF"+.@md_name$+"^000000 - Reserving";
 				mes "After making the reservation, you";
 				mes "have to select Enter the Culvert.";
@@ -427,13 +442,13 @@ mal_in01,160,34,4	script	Missing, the Cleaner	4_CAT_SAILOR2,{
 				callsub L_Enter,0;
 			}
 		}
-		if(select("Enter Culvert:Cancel") == 2)
+		if(select("Enter Culvert", "Cancel") == 2)
 			end;
 		callsub L_Enter,1;
-	} else if (.@playtime == 0 || .@playtime == 1) {
+	} else if (.@playtime == 1) {
 		mes "You can enter the Culvert if the gate is open.";
 		next;
-		if(select("Enter Culvert:Cancel") == 2)
+		if(select("Enter Culvert", "Cancel") == 2)
 			close;
 		callsub L_Enter,0;
 	} else if (.@playtime == 2) {
@@ -444,7 +459,7 @@ mal_in01,160,34,4	script	Missing, the Cleaner	4_CAT_SAILOR2,{
 	end;
 L_Enter:
 	if (has_instance("1@pump") == "") {
-		if (checkquest(12254,PLAYTIME) == 0 || checkquest(12254,PLAYTIME) == 1) {
+		if (questprogress(12254,PLAYTIME) == 1) {
 			mes "The gate to the Culvert is still closed.";
 			mes "You must wait until you are able to enter or find a party leader who can create the instance.";
 			close;
@@ -453,16 +468,15 @@ L_Enter:
 		mes "The party leader has not reserved entrance to the dungeon yet.";
 		close;
 	}
-	mapannounce "mal_in01", strcharinfo(0)+" of the party "+getpartyname(.@party_id)+" is entering the Culvert.",bc_map,"0x00ff99";
-	if (checkquest(12254) == -1) setquest 12254;
+	mapannounce "mal_in01", strcharinfo(PC_NAME)+" of the party "+getpartyname(.@party_id)+" is entering the Culvert.",bc_map,"0x00ff99";
+	if (!questprogress(12254)) setquest 12254;
 	warp "1@pump",63,98;
 	end;
 }
 
-// Instance: Common Scripts
-//============================================================
+//== Instance: Common Scripts ==============================
 1@pump,63,100,4	script	Missing, the Cleaner#0	4_CAT_SAILOR2,{
-	if (getcharid(0) != getpartyleader(getcharid(1),2)) {
+	if (getcharid(CHAR_ID_CHAR) != getpartyleader(getcharid(CHAR_ID_PARTY),2)) {
 		mes "[Missing, the Cleaner]";
 		mes "I am trying to have a conversation with your leader now. Please don't disturb and wait!";
 		close;
@@ -473,17 +487,17 @@ L_Enter:
 	mes "[Missing, the Cleaner]";
 	mes "I'll open the door first. By the way, do you know how to fight?";
 	next;
-	switch(select("I'm pretty good at delivering bread.:I know how to fight.:^ffffffGive me the diamond.^000000")) {
+	switch(select("I'm pretty good at delivering bread.", "I know how to fight.", "^ffffffGive me the diamond.^000000")) {
 	case 1:
 		mes "[Missing, the Cleaner]";
 		mes "Ok then, I'll let you clean the culverts here as usual! I will prepare at the right-hand corner, please follow me!";
 		next;
-		if(select("Wait! I changed my mind!:As you wish~") == 1) {
+		if(select("Wait! I changed my mind!", "As you wish~") == 1) {
 			mes "[Missing, the Cleaner]";
 			mes "Huh? Not ready yet? Talk to me again when you're ready.";
 			close;
 		}
-		set 'party_id,getcharid(1);
+		'party_id = getcharid(CHAR_ID_PARTY);
 		mapannounce instance_mapname("1@pump"),"Missing: Move toward the 3 o'clock direction and wait for my next order!",bc_map,"0xff88ff",FW_NORMAL,15;
 		disablenpc instance_npcname("Missing, the Cleaner#0");
 		enablenpc instance_npcname("Missing, the Cleaner#n");
@@ -500,12 +514,12 @@ L_Enter:
 		mes "[Missing, the Cleaner]";
 		mes "I must tell you that it's been such a long~~ time since we've cleaned that place, so anyone under level 140 cannot even enter! Are you sure you still want to go?";
 		next;
-		if(select("Wait! I changed my mind!:Sure, I'm prepared already~") == 1) {
+		if(select("Wait! I changed my mind!", "Sure, I'm prepared already~") == 1) {
 			mes "[Missing, the Cleaner]";
 			mes "Hmm? Talk to me again when you're ready.";
 			close;
 		}
-		set 'party_id,getcharid(1);
+		'party_id = getcharid(CHAR_ID_PARTY);
 		mapannounce instance_mapname("1@pump"),"Missing: I'll go in first, so follow me! I'll open up a gate at the 3 o'clock direction!",bc_map,"0xff88ff",FW_NORMAL,15;
 		disablenpc instance_npcname("Missing, the Cleaner#0");
 		enablenpc instance_npcname("Culvert Entrance#i");
@@ -535,7 +549,7 @@ function	script	F_mal_missing	{
 	mes "[Missing, the Cleaner]";
 	mes "I will tell you how to clean shortly. Can you see the culverts around you?";
 	next;
-	if(select("What culverts??:Yes, I see them.") == 1) {
+	if(select("What culverts??", "Yes, I see them.") == 1) {
 		mes "[Missing, the Cleaner]";
 		mes "Huh? Is this your first time seeing culverts? You'll see many buried machines in the ground. You may look around and come back!";
 		close;
@@ -552,7 +566,7 @@ function	script	F_mal_missing	{
 	mes "[Missing, the Cleaner]";
 	mes "I don't care if you get help from your friends or not. I want you to clean up all culverts! Don't forget! I will watch you and give you instructions. Just do what I said!!";
 	next;
-	if (getcharid(0) != getpartyleader(getcharid(1),2)) {
+	if (getcharid(CHAR_ID_CHAR) != getpartyleader(getcharid(CHAR_ID_PARTY),2)) {
 		mes "[Missing, the Cleaner]";
 		mes "Once your leader finishes preparing, it will begin, so get your hearts ready for it!!";
 		close;
@@ -560,7 +574,7 @@ function	script	F_mal_missing	{
 	mes "[Missing, the Cleaner]";
 	mes "So, are you ready to clean now?";
 	next;
-	switch(select("Wait! Not yet!:Let's start!")) {
+	switch(select("Wait! Not yet!", "Let's start!")) {
 	case 1:
 		mes "[Missing, the Cleaner]";
 		mes "Huh? Not ready yet? Then talk to me when you're ready.";
@@ -572,8 +586,7 @@ function	script	F_mal_missing	{
 	}
 }
 
-// Instance: Normal Mode
-//============================================================
+//== Instance: Normal Mode =================================
 1@pump,84,105,4	script	Missing, the Cleaner#nf	4_CAT_SAILOR2,{
 	mes "[Missing, the Cleaner]";
 	mes "I have the cleaning job for 40 years and I've never seen such a terrible team!!";
@@ -581,7 +594,7 @@ function	script	F_mal_missing	{
 	mes "[Missing, the Cleaner]";
 	mes "I see seaweed everywhere because you're wiggling! All the culverts will be blocked with seaweed!";
 	next;
-	if (getcharid(0) != getpartyleader(getcharid(1),2)) {
+	if (getcharid(CHAR_ID_CHAR) != getpartyleader(getcharid(CHAR_ID_PARTY),2)) {
 		mes "[Missing, the Cleaner]";
 		mes "Once your leader finishes preparing, settlement will be decided so get your hearts ready for it!!";
 		close;
@@ -589,7 +602,7 @@ function	script	F_mal_missing	{
 	mes "[Missing, the Cleaner]";
 	mes "If you got some guts to challenge again, I'll give you another chance! What's your choice going to be!?";
 	next;
-	switch(select("Wait! Not yet!:Okay, let's start again!")) {
+	switch(select("Wait! Not yet!", "Okay, let's start again!")) {
 	case 1:
 		mes "[Missing, the Cleaner]";
 		mes "You're still slow! Talk to me again whenever your're ready.";
@@ -597,18 +610,18 @@ function	script	F_mal_missing	{
 	case 2:
 		mes "[Missing, the Cleaner]";
 		mes "Ok! Let's start now!";
-		set .@i$, charat(strnpcinfo(2),0);
+		.@i$ = charat(strnpcinfo(NPC_NAME_HIDDEN),0);
 		enablenpc instance_npcname("Missing, the Cleaner#"+.@i$);
 		donpcevent instance_npcname("Missing, the Cleaner#"+.@i$)+"::OnStart";
 		disablenpc instance_npcname("Culvert Entrance#"+.@i$);
 		disablenpc instance_npcname("Missing, the Cleaner#"+.@i$+"o");
 		donpcevent instance_npcname("Monster Hole#"+.@i$)+"::OnClear";
-		disablenpc instance_npcname(strnpcinfo(0));
+		disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 		close;
 	}
 	close;
 OnInstanceInit:
-	disablenpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 }
 
@@ -625,9 +638,9 @@ OnStart:
 	initnpctimer;
 	end;
 OnAddSeaweed:
-	set .@map$, instance_mapname("1@pump");
+	.@map$ = instance_mapname("1@pump");
 	areamonster .@map$,55,99,61,105,"Contaminated Seaweed",2191,1,instance_npcname("Missing, the Cleaner#n")+"::OnMyMobDead";
-	set .@mob_dead_num, mobcount(.@map$,instance_npcname("Missing, the Cleaner#n")+"::OnMyMobDead");
+	.@mob_dead_num = mobcount(.@map$,instance_npcname("Missing, the Cleaner#n")+"::OnMyMobDead");
 	if (.@mob_dead_num >= 6)
 		donpcevent instance_npcname("Missing, the Cleaner#n")+"::OnFail";
 	else
@@ -638,7 +651,7 @@ OnMyMobDead:
 OnFail:
 	stopnpctimer;
 	donpcevent instance_npcname("Monster Hole#n")+"::OnClear";
-	set .@map$, instance_mapname("1@pump");
+	.@map$ = instance_mapname("1@pump");
 	killmonster .@map$,instance_npcname("Missing, the Cleaner#n")+"::OnMyMobDead";
 	enablenpc instance_npcname("Missing, the Cleaner#nf");
 	mapannounce .@map$,"What is this!! Seaweed is all over the culverts! You're done with cleaning! Get out!!",bc_map,"0xff88ff",FW_NORMAL,15;
@@ -673,20 +686,20 @@ OnTimer300000:
 OnTimer350000:
 OnTimer400000:
 OnTimer450000:
-	set .@mob_dead_num, mobcount(instance_mapname("1@pump"),instance_npcname("Missing, the Cleaner#n")+"::OnMyMobDead");
+	.@mob_dead_num = mobcount(instance_mapname("1@pump"),instance_npcname("Missing, the Cleaner#n")+"::OnMyMobDead");
 	if (.@mob_dead_num >= 6)
 		donpcevent instance_npcname("Missing, the Cleaner#n")+"::OnFail";
 	else
 		donpcevent instance_npcname("Monster Hole#n")+"::OnSpawn";
 	end;
 OnTimer515000:
-	set .@map$, instance_mapname("1@pump");
-	set .@mob_dead_num, mobcount(.@map$,instance_npcname("Missing, the Cleaner#n")+"::OnMyMobDead");
+	.@map$ = instance_mapname("1@pump");
+	.@mob_dead_num = mobcount(.@map$,instance_npcname("Missing, the Cleaner#n")+"::OnMyMobDead");
 	mapannounce .@map$,"Contaminated Seaweed: "+.@mob_dead_num+" stem. Missing will come and inspect the results of the cleaning soon.",bc_map,"0xff3333",FW_NORMAL,20;
 	end;
 OnTimer520000:
 	stopnpctimer;
-	set .@mob_dead_num, mobcount(instance_mapname("1@pump"),instance_npcname("Missing, the Cleaner#n")+"::OnMyMobDead");
+	.@mob_dead_num = mobcount(instance_mapname("1@pump"),instance_npcname("Missing, the Cleaner#n")+"::OnMyMobDead");
 	if (.@mob_dead_num >= 6)
 		donpcevent instance_npcname("Missing, the Cleaner#n")+"::OnFail";
 	else
@@ -694,23 +707,23 @@ OnTimer520000:
 	end;
 }
 
-1@pump,1,1,4	script	Monster Hole#n	-1,{
+1@pump,1,1,4	script	Monster Hole#n	FAKE_NPC,{
 	end;
 OnSpawn:
-	set .@i$, charat(strnpcinfo(2),0);
+	.@i$ = charat(strnpcinfo(NPC_NAME_HIDDEN),0);
 	if (.@i$ == "n")
-		set .@n,6;
+		.@n = 6;
 	else if (.@i$ == "h")
-		set .@n,10;
+		.@n = 10;
 	donpcevent instance_npcname("#Culvert_"+.@i$+rand(1,.@n))+"::OnEnable";
 	end;
 OnClear:
-	set .@i$, charat(strnpcinfo(2),0);
+	.@i$ = charat(strnpcinfo(NPC_NAME_HIDDEN),0);
 	if (.@i$ == "n")
-		set .@n,6;
+		.@n = 6;
 	else if (.@i$ == "h")
-		set .@n,10;
-	for(set .@i,1; .@i<=.@n; set .@i,.@i+1)
+		.@n = 10;
+	for(.@i = 1; .@i<=.@n; ++.@i)
 		donpcevent instance_npcname("#Culvert_"+.@i$+.@n)+"::OnClear";
 	end;
 }
@@ -718,16 +731,16 @@ OnClear:
 1@pump,36,111,4	script	#Culvert_n1	CLEAR_NPC,14,14,{ //temporary workaround for ALL_SAMEMAP
 	progressbar "0xFFFF00",10;
 	stopnpctimer;
-	disablenpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 OnInstanceInit:
-	disablenpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 OnEnable:
-	enablenpc instance_npcname(strnpcinfo(0));
-	set .@label$, instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
-	set .@map$, instance_mapname("1@pump");
-	set .@index, atoi(charat(strnpcinfo(2),9));
+	enablenpc instance_npcname(strnpcinfo(NPC_NAME));
+	.@label$ = instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead";
+	.@map$ = instance_mapname("1@pump");
+	.@index = atoi(charat(strnpcinfo(NPC_NAME_HIDDEN),9));
 	switch(.@index) {
 		case 1: setarray .@c[0],32,107,40,115; break;
 		case 2: setarray .@c[0],64,120,72,128; break;
@@ -743,12 +756,12 @@ OnEnable:
 	areamonster .@map$,.@c[0],.@c[1],.@c[2],.@c[3],"Ancient Kukre",2179,rand(1,3),.@label$;
 	areamonster .@map$,.@c[0],.@c[1],.@c[2],.@c[3],"Abysmal Cornutus",2177,rand(1,3),.@label$;
 	specialeffect EF_MAPPILLAR2,ALL_SAMEMAP; //currently broken
-	getmapxy(.@map$,.@x,.@y,1);
+	getmapxy(.@map$, .@x, .@y, UNITTYPE_NPC);
 	getpartymember 'party_id,2;
 	copyarray .@partymemberaid[0],$@partymemberaid[0],$@partymembercount;
-	for(set .@i,0; .@i<$@partymembercount; set .@i,.@i+1) {
+	for(.@i = 0; .@i<$@partymembercount; ++.@i) {
 		if (attachrid(.@partymemberaid[.@i])) {
-			if (strcharinfo(3) == .@map$)
+			if (strcharinfo(PC_MAP) == .@map$)
 				viewpoint 0,.@x,.@y,.@index,0xFFFF00;
 			detachrid;
 		}
@@ -759,12 +772,12 @@ OnMyMobDead:
 	end;
 OnClear:
 	stopnpctimer;
-	killmonster instance_mapname("1@pump"),instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	killmonster instance_mapname("1@pump"),instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead";
 	end;
 OnTimer49500:	//OnTimer50000 clashes with the timer in "Missing, the Cleaner#h".
 	donpcevent instance_npcname("Missing, the Cleaner#n")+"::OnAddSeaweed";
-	donpcevent instance_npcname(strnpcinfo(0))+"::OnClear";
-	disablenpc instance_npcname(strnpcinfo(0));
+	donpcevent instance_npcname(strnpcinfo(NPC_NAME))+"::OnClear";
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 OnTouch:
 	specialeffect EF_MAPPILLAR2;
@@ -776,83 +789,83 @@ OnTouch:
 1@pump,75,80,4	duplicate(#Culvert_n1)	#Culvert_n5	CLEAR_NPC,14,14
 1@pump,58,101,4	duplicate(#Culvert_n1)	#Culvert_n6	CLEAR_NPC,14,14
 
-1@pump,1,1,4	script	Boss Creation#n	-1,{
+1@pump,1,1,4	script	Boss Creation#n	FAKE_NPC,{
 	end;
 OnInstanceInit:
-	disablenpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 OnEnable:
-	enablenpc instance_npcname(strnpcinfo(0));
+	enablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	initnpctimer;
 	end;
 OnTimer100:
-	set .@i$, charat(strnpcinfo(2),0);
+	.@i$ = charat(strnpcinfo(NPC_NAME_HIDDEN),0);
 	if (.@i$ == "n")
 		mapannounce instance_mapname("1@pump"),"Hmm! That wasn't so bad!",bc_map,"0xff88ff",FW_NORMAL,15;
 	else if (.@i$ == "h")
 		mapannounce instance_mapname("2@pump"),"Hmm! You guys are pretty good!!",bc_map,"0xff88ff",FW_NORMAL,15;
 	end;
 OnTimer5000:
-	mapannounce strnpcinfo(4),"Let's pack up and go... WHAT!!?",bc_map,"0xff88ff",FW_NORMAL,15;
+	mapannounce strnpcinfo(NPC_MAP),"Let's pack up and go... WHAT!!?",bc_map,"0xff88ff",FW_NORMAL,15;
 	end;
 OnTimer10000:
-	mapannounce strnpcinfo(4),"I sense something strange!! Don't loosen up-- prepare for a fight!!",bc_map,"0xff88ff",FW_NORMAL,15;
+	mapannounce strnpcinfo(NPC_MAP),"I sense something strange!! Don't loosen up-- prepare for a fight!!",bc_map,"0xff88ff",FW_NORMAL,15;
 	end;
 OnTimer20000:
 	stopnpctimer;
-	set .@i$, charat(strnpcinfo(2),0);
-	set .@label$, instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	.@i$ = charat(strnpcinfo(NPC_NAME_HIDDEN),0);
+	.@label$ = instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead";
 	if (rand(1,100) > 50) {
 		if (.@i$ == "n")
 			monster instance_mapname("1@pump"),0,0,"Weird Coelacanth",2188,1,.@label$;
 		else if (.@i$ == "h")
 			monster instance_mapname("2@pump"),0,0,"Mutant Coelacanth",2189,1,.@label$;
-		mapannounce strnpcinfo(4),"Something big inside the abyss appears with a huge noise.",bc_map,"0x00ffcc",FW_NORMAL,15;
+		mapannounce strnpcinfo(NPC_MAP),"Something big inside the abyss appears with a huge noise.",bc_map,"0x00ffcc",FW_NORMAL,15;
 	} else {
 		if (.@i$ == "n")
 			monster instance_mapname("1@pump"),0,0,"Gloomy Coelacanth",2187,1,.@label$;
 		else if (.@i$ == "h")
 			monster instance_mapname("2@pump"),0,0,"Violent Coelacanth",2190,1,.@label$;
-		mapannounce strnpcinfo(4),"Something savage inside the abyss appears with a huge noise.",bc_map,"0x00ffcc",FW_NORMAL,15;
+		mapannounce strnpcinfo(NPC_MAP),"Something savage inside the abyss appears with a huge noise.",bc_map,"0x00ffcc",FW_NORMAL,15;
 	}
 	end;
 OnMyMobDead:
-	if (mobcount(strnpcinfo(4),instance_npcname(strnpcinfo(0))+"::OnMyMobDead") < 1) {
-		mapannounce strnpcinfo(4),"You've destroyed all monsters in the culverts. There are trophies lying on the ground, please look for them.",bc_map,"0xffff00",FW_NORMAL,15;
-		set .@i$, charat(strnpcinfo(2),0);
-		set .@map$, strnpcinfo(4);
+	if (mobcount(strnpcinfo(NPC_MAP),instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead") < 1) {
+		mapannounce strnpcinfo(NPC_MAP),"You've destroyed all monsters in the culverts. There are trophies lying on the ground, please look for them.",bc_map,"0xffff00",FW_NORMAL,15;
+		.@i$ = charat(strnpcinfo(NPC_NAME_HIDDEN),0);
+		.@map$ = strnpcinfo(NPC_MAP);
 		enablenpc instance_npcname("Culvert Entrance#"+.@i$);
 		enablenpc instance_npcname("Missing, the Cleaner#"+.@i$+"o");
 		if (.@i$ == "n") {
-			for(set .@i,0; .@i<10; set .@i,.@i+1) {
-				set .@j, rand(1,6401);
-				     if (.@j < 5001) set .@item,12636; //Malang_Sp_Can
-				else if (.@j < 5501) set .@item,12615; //Low_Coin_Pocket
-				else if (.@j < 6001) set .@item,12621; //Egrade_Pocket
-				else if (.@j < 6201) set .@item,12620; //Dgrade_Pocket
-				else if (.@j < 6401) set .@item,12623; //High_Weapon_Box
+			for(.@i = 0; .@i<10; ++.@i) {
+				.@j = rand(1,6401);
+				     if (.@j < 5001) .@item = 12636; //Malang_Sp_Can
+				else if (.@j < 5501) .@item = 12615; //Low_Coin_Pocket
+				else if (.@j < 6001) .@item = 12621; //Egrade_Pocket
+				else if (.@j < 6201) .@item = 12620; //Dgrade_Pocket
+				else if (.@j < 6401) .@item = 12623; //High_Weapon_Box
 				else continue;
 				makeitem .@item,1,.@map$,rand(40,77),rand(87,120);
 			}
 		} else if (.@i$ == "h") {
-			for(set .@i,0; .@i<10; set .@i,.@i+1) {
-				set .@j, rand(1,5001);
-				     if (.@j < 2001) set .@item,12615; //Low_Coin_Pocket
-				else if (.@j < 3001) set .@item,12621; //Egrade_Pocket
-				else if (.@j < 4001) set .@item,12620; //Dgrade_Pocket
-				else if (.@j < 4501) set .@item,12619; //Cgrade_Pocket
-				else if (.@j < 5001) set .@item,12623; //High_Weapon_Box
+			for(.@i = 0; .@i<10; ++.@i) {
+				.@j = rand(1,5001);
+				     if (.@j < 2001) .@item = 12615; //Low_Coin_Pocket
+				else if (.@j < 3001) .@item = 12621; //Egrade_Pocket
+				else if (.@j < 4001) .@item = 12620; //Dgrade_Pocket
+				else if (.@j < 4501) .@item = 12619; //Cgrade_Pocket
+				else if (.@j < 5001) .@item = 12623; //High_Weapon_Box
 				else continue;
 				makeitem .@item,1,.@map$,rand(40,77),rand(87,120);
 			}
 		}
 	} else
-		mapannounce strnpcinfo(4),"There are still monsters alive.",bc_map,"0x00ff99",FW_NORMAL,20;
+		mapannounce strnpcinfo(NPC_MAP),"There are still monsters alive.",bc_map,"0x00ff99",FW_NORMAL,20;
 	end;
 }
 
 1@pump,84,105,4	script	Missing, the Cleaner#no	4_CAT_SAILOR2,{
-	set .@i$, charat(strnpcinfo(2),0);
+	.@i$ = charat(strnpcinfo(NPC_NAME_HIDDEN),0);
 	if (.@i$ == "n") {
 		mes "[Missing, the Cleaner]";
 		mes "I was very surprised!!";
@@ -881,14 +894,14 @@ OnMyMobDead:
 	mes "If Tomas closes this down, we will lose our jobs!";
 	close;
 OnInstanceInit:
-	disablenpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 }
 
 1@pump,32,100,0	script	Culvert Entrance#n	WARPNPC,3,3,{
 	end;
 OnInstanceInit:
-	disablenpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 OnTouch:
 	warp "mal_in01",161,32;
@@ -896,14 +909,13 @@ OnTouch:
 }
 
 //MD_Putmob "1@pump" 0 0 0 0 20 HYDRA 0 0 2
-1@pump,1,1,4	script	Hydra#n	-1,{
+1@pump,1,1,4	script	Hydra#n	FAKE_NPC,{
 OnInstanceInit:
-	monster strnpcinfo(4),0,0,"Hydra",1068,20;
+	monster strnpcinfo(NPC_MAP),0,0,"Hydra",1068,20;
 	end;
 }
 
-// Instance: Hard Mode
-//============================================================
+//== Instance: Hard Mode ===================================
 2@pump,39,88,4	duplicate(Missing, the Cleaner#nf)	Missing, the Cleaner#hf	4_CAT_SAILOR2
 
 2@pump,39,88,4	script	Missing, the Cleaner#h	4_CAT_SAILOR2,{
@@ -916,9 +928,9 @@ OnStart:
 	initnpctimer;
 	end;
 OnAddSeaweed:
-	set .@map$, instance_mapname("2@pump");
+	.@map$ = instance_mapname("2@pump");
 	areamonster .@map$,75,78,85,88,"Contaminated Seaweed",2191,1,instance_npcname("Missing, the Cleaner#h")+"::OnMyMobDead";
-	set .@mob_dead_num, mobcount(.@map$,instance_npcname("Missing, the Cleaner#h")+"::OnMyMobDead");
+	.@mob_dead_num = mobcount(.@map$,instance_npcname("Missing, the Cleaner#h")+"::OnMyMobDead");
 	if (.@mob_dead_num >= 6)
 		donpcevent instance_npcname("Missing, the Cleaner#h")+"::OnFail";
 	else
@@ -929,7 +941,7 @@ OnMyMobDead:
 OnFail:
 	stopnpctimer;
 	donpcevent instance_npcname("Monster Hole#h")+"::OnClear";
-	set .@map$, instance_mapname("2@pump");
+	.@map$ = instance_mapname("2@pump");
 	killmonster .@map$, instance_npcname("Missing, the Cleaner#h")+"::OnMyMobDead";
 	enablenpc instance_npcname("Missing, the Cleaner#hf");
 	mapannounce .@map$,"What is this!! Seaweed is all over the culverts! You're done with cleaning! Get out!!",bc_map,"0xff88ff",FW_NORMAL,15;
@@ -964,7 +976,7 @@ OnTimer240000:
 OnTimer280000:
 OnTimer320000:
 OnTimer360000:
-	set .@mob_dead_num, mobcount(instance_mapname("2@pump"),instance_npcname("Missing, the Cleaner#h")+"::OnMyMobDead");
+	.@mob_dead_num = mobcount(instance_mapname("2@pump"),instance_npcname("Missing, the Cleaner#h")+"::OnMyMobDead");
 	if (.@mob_dead_num >= 6)
 		donpcevent instance_npcname("Missing, the Cleaner#h")+"::OnFail";
 	else
@@ -975,7 +987,7 @@ OnTimer420000:
 	end;
 OnTimer425000:
 	stopnpctimer;
-	set .@mob_dead_num, mobcount(instance_mapname("2@pump"),instance_npcname("Missing, the Cleaner#h")+"::OnMyMobDead");
+	.@mob_dead_num = mobcount(instance_mapname("2@pump"),instance_npcname("Missing, the Cleaner#h")+"::OnMyMobDead");
 	if (.@mob_dead_num >= 6)
 		donpcevent instance_npcname("Missing, the Cleaner#h")+"::OnFail";
 	else
@@ -986,16 +998,16 @@ OnTimer425000:
 2@pump,53,114,4	script	#Culvert_h1	CLEAR_NPC,14,14,{ //temporary workaround for ALL_SAMEMAP
 	progressbar "0xFFFF00",15;
 	stopnpctimer;
-	disablenpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 OnInstanceInit:
-	disablenpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 OnEnable:
-	enablenpc instance_npcname(strnpcinfo(0));
-	set .@label$, instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
-	set .@map$, instance_mapname("2@pump");
-	set .@index, atoi(substr(strnpcinfo(2),9,getstrlen(strnpcinfo(2))-1));
+	enablenpc instance_npcname(strnpcinfo(NPC_NAME));
+	.@label$ = instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead";
+	.@map$ = instance_mapname("2@pump");
+	.@index = atoi(substr(strnpcinfo(NPC_NAME_HIDDEN),9,getstrlen(strnpcinfo(NPC_NAME_HIDDEN))-1));
 	switch(.@index) {
 		case 1: setarray .@c[0],49,110,57,118; break;
 		case 2: setarray .@c[0],75,105,83,113; break;
@@ -1021,12 +1033,12 @@ OnMyMobDead:
 	end;
 OnClear:
 	stopnpctimer;
-	killmonster instance_mapname("2@pump"),instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	killmonster instance_mapname("2@pump"),instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead";
 	end;
 OnTimer39500:	//OnTimer40000 clashes with the timer in "Missing, the Cleaner#h".
 	donpcevent instance_npcname("Missing, the Cleaner#h")+"::OnAddSeaweed";
-	donpcevent instance_npcname(strnpcinfo(0))+"::OnClear";
-	disablenpc instance_npcname(strnpcinfo(0));
+	donpcevent instance_npcname(strnpcinfo(NPC_NAME))+"::OnClear";
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 OnTouch:
 	specialeffect EF_MAPPILLAR2;
@@ -1042,10 +1054,10 @@ OnTouch:
 2@pump,100,74,4	duplicate(#Culvert_h1)	#Culvert_h9	CLEAR_NPC,14,14
 2@pump,115,50,4	duplicate(#Culvert_h1)	#Culvert_h10	CLEAR_NPC,14,14
 
-2@pump,1,1,4	duplicate(Monster Hole#n)	Monster Hole#h	-1
-2@pump,1,1,4	duplicate(Boss Creation#n)	Boss Creation#h	-1
+2@pump,1,1,4	duplicate(Monster Hole#n)	Monster Hole#h	FAKE_NPC
+2@pump,1,1,4	duplicate(Boss Creation#n)	Boss Creation#h	FAKE_NPC
 2@pump,39,88,4	duplicate(Missing, the Cleaner#no)	Missing, the Cleaner#ho	4_CAT_SAILOR2
 2@pump,38,100,0	duplicate(Culvert Entrance#n)	Culvert Entrance#h	WARPNPC,3,3
 
 //MD_Putmob "2@pump" 0 0 0 0 20 HYDRA 0 0 2
-2@pump,1,1,4	duplicate(Hydra#n)	Hydra#h	-1
+2@pump,1,1,4	duplicate(Hydra#n)	Hydra#h	FAKE_NPC

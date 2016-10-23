@@ -1,17 +1,39 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  JayPee
+//= Copyright (C)  Masao
+//= Copyright (C)  Muad_Dib
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Mechanic Job Quest
-//===== By: ==================================================
-//= Muad_Dib
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Jobchange Quest from Blacksmith / Whitesmith -> Mechanic.
-//===== Additional Comments: =================================
-//= 1.0 First Version. [Masao]
-//= 1.1 Fixed the Door NPC [JayPee].
-//= 1.2 Updated script. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
 
 yuno,129,156,3	script	Chainheart	4_M_DOCTOR,{
 	mes "[Chainheart]";
@@ -30,7 +52,7 @@ yuno,129,156,3	script	Chainheart	4_M_DOCTOR,{
 		close;
 	} else if (job__mechanic == 11) {
 		if (BaseJob == Job_Blacksmith && BaseLevel > 98 && JobLevel > 49 && SkillPoint == 0) {
-			if (ismounting()) {
+			if (hascashmount()) {
 				mes "You are on a riding pet,";
 				mes "so you cannot change your job.";
 				mes "Please unequip your riding pet and try again!";
@@ -71,13 +93,13 @@ yuno,129,156,3	script	Chainheart	4_M_DOCTOR,{
 			mes "As I said before if the passion and the talent are real there would be no problem!";
 			mes "Congratulations for walking through a new path as a Mechanic!";
 			next;
-			set job__mechanic,12;
+			job__mechanic = 12;
 			completequest 10101;
-			if (Sex)
-				getitem 5749,1; //Driver_Band
+			if (Sex == SEX_MALE)
+				getitem Driver_Band,1;
 			else
-				getitem 5760,1; //Driver_Band_
-			getitem 2795,1; //Green_Apple_Ring
+				getitem Driver_Band_,1;
+			getitem Green_Apple_Ring,1;
 			jobchange roclass(eaclass()|EAJL_THIRD);
 			mes "[Chainheart]";
 			mes "This is a gift that I give to you.";
@@ -109,7 +131,7 @@ yuno,129,156,3	script	Chainheart	4_M_DOCTOR,{
 	} else if (job__mechanic == 2) {
 		mes "I think I've done all the explanations, is there anything else you want to know?";
 		next;
-		switch(select("I want to know more.:Nothing.")) {
+		switch(select("I want to know more.", "Nothing.")) {
 		case 1:
 			mes "[Chainheart]";
 			mes "Um..? You want to know more about magic machinery. Is that it?";
@@ -154,7 +176,7 @@ yuno,129,156,3	script	Chainheart	4_M_DOCTOR,{
 			mes "for yourself like we did.";
 			mes "Don't just wait around for someone to teach it to you. Show the passion that you claim to have.";
 			next;
-			set job__mechanic,3;
+			job__mechanic = 3;
 			changequest 10091,10092;
 			mes "[Chainheart]";
 			mes "Anyway, whatever your choice might be I expect you to do your best.";
@@ -207,7 +229,7 @@ yuno,129,156,3	script	Chainheart	4_M_DOCTOR,{
 		mes "I want to explain more but it's too technical.";
 		mes "I don't want to bore you more.";
 		next;
-		set job__mechanic,2;
+		job__mechanic = 2;
 		changequest 10090,10091;
 		mes "[Chainheart]";
 		mes "Anyway if you become one of us you can form your own definition and explanation of Mechanics yourself.";
@@ -241,7 +263,7 @@ yuno,129,156,3	script	Chainheart	4_M_DOCTOR,{
 			mes "That isn't as simple to explain but I'll give it a try.";
 			next;
 			setquest 10090;
-			set job__mechanic,1;
+			job__mechanic = 1;
 			mes "[Chainheart]";
 			mes "Sorry, I'm starting";
 			mes "to talk too much.";
@@ -294,7 +316,7 @@ yuno,129,156,3	script	Chainheart	4_M_DOCTOR,{
 }
 
 jupe_cave,37,55,5	script	Scholar#Mechanic	4_M_ALCHE_D,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 300) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 300) {
 		mes "- Your pack is too heavy. -";
 		mes "- Lighten your body first -";
 		mes "- and please try again. -";
@@ -320,7 +342,7 @@ jupe_cave,37,55,5	script	Scholar#Mechanic	4_M_ALCHE_D,{
 		mes "to go to the midway point";
 		mes "at Juperos?";
 		next;
-		switch(select("I am ready!:Not yet")) {
+		switch(select("I am ready!", "Not yet")) {
 		case 1:
 			mes "[Scholar]";
 			mes "Uh... you are acting so firmly that I regret a little that I haven't gone there.";
@@ -375,7 +397,7 @@ jupe_cave,37,55,5	script	Scholar#Mechanic	4_M_ALCHE_D,{
 	mes "has told me how to warp to";
 	mes "the midway point to Juperos.";
 	next;
-	set job__mechanic,4;
+	job__mechanic = 4;
 	mes "[Scholar]";
 	mes "It is true that it becomes easy";
 	mes "but you can't help the fear";
@@ -417,7 +439,7 @@ jupe_core2,149,273,3	script	Ghostfire#1	4_NFWISP,{
 		mes "[?]";
 		mes "My name... name is... Fr...";
 		close2;
-		set job__mechanic,11;
+		job__mechanic = 11;
 		changequest 10100,10101;
 		warp "yuno",157,83;
 		end;
@@ -432,7 +454,7 @@ jupe_core2,149,273,3	script	Ghostfire#1	4_NFWISP,{
 		mes "If you focus on me,";
 		mes "you might get attacked.";
 		next;
-		if(select("Well then, later.:Focus.") == 1) close;
+		if(select("Well then, later.", "Focus.") == 1) close;
 		mes "[?]";
 		mes "I was once a human scholar.";
 		mes "I wanted to know the limitation of science that humankind didn't know of, so I learned a lot of things, studied,";
@@ -461,7 +483,7 @@ jupe_core2,149,273,3	script	Ghostfire#1	4_NFWISP,{
 		next;
 		if (job__mechanic == 3 || job__mechanic == 4)
 			changequest 10092,10094;
-		set job__mechanic,5;
+		job__mechanic = 5;
 		mes "[?]";
 		mes "Knowledge isn't obtained from others. It is found through one's own efforts.";
 		mes "Find your own knowledge path.";
@@ -485,7 +507,7 @@ jupe_core2,53,75,3	script	Ghostfire#2	4_NFWISP,{
 		mes "If you focus on me,";
 		mes "you might get attacked.";
 		next;
-		if(select("Well then, later:Focus") == 1) close;
+		if(select("Well then, later", "Focus") == 1) close;
 		mes "[?]";
 		mes "When I had a body";
 		mes "I wanted to prove the";
@@ -523,7 +545,7 @@ jupe_core2,53,75,3	script	Ghostfire#2	4_NFWISP,{
 		mes "[?]";
 		mes "The recent events of the world have created a confusion so my research hasn't been shared with the rest of the world.";
 		next;
-		set job__mechanic,6;
+		job__mechanic = 6;
 		changequest 10094,10095;
 		mes "[?]";
 		mes "So... I came back to Juperos to continue my investigation of science and magic.";
@@ -547,7 +569,7 @@ jupe_core2,242,62,3	script	Ghostfire#3	4_NFWISP,{
 		mes "If you focus on me,";
 		mes "you might get attacked.";
 		next;
-		if(select("Well then, later:Focus") == 1) close;
+		if(select("Well then, later", "Focus") == 1) close;
 		mes "[?]";
 		mes "I wasn't satisfied with my success so I came back here time and time again.";
 		next;
@@ -564,7 +586,7 @@ jupe_core2,242,62,3	script	Ghostfire#3	4_NFWISP,{
 		mes "[?]";
 		mes "I don't regret gaining the knowledge. All I wish is that I could have my body back.";
 		next;
-		set job__mechanic,7;
+		job__mechanic = 7;
 		changequest 10095,10096;
 		mes "[?]";
 		mes "After I had poured my energy into the statue, I figured that I could move my energy to different statues.";
@@ -596,7 +618,7 @@ OnTouch:
 		mes "-a sacrificial offering-";
 		mes "-the statue of a human.-";
 		next;
-		set job__mechanic,8;
+		job__mechanic = 8;
 		changequest 10096,10097;
 		mes "-Most certain of all is that-";
 		mes "-I started to feel the urge-";
@@ -695,7 +717,7 @@ OnTouch:
 	mes "-head instructed, let's go to-";
 	mes "-the southern foothold.-";
 	close2;
-	set job__mechanic,9;
+	job__mechanic = 9;
 	changequest 10098,10099;
 	donpcevent "#Door::OnDisable";
 	end;
@@ -716,7 +738,7 @@ OnTouch:
 		mes "-to know about mechanics-";
 		mes "-and magic machinery.-";
 		next;
-		set job__mechanic,10;
+		job__mechanic = 10;
 		changequest 10099,10100;
 		specialeffect EF_POTION_CON;
 		mes "-This amount of knowledge-";

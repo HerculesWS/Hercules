@@ -1,10 +1,37 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  rAthena Dev Team
+//= Copyright (C)  eAthena Dev Team
+//= Copyright (C)  Lupus
+//= Copyright (C)  Nova
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Mapflag: Disable teleportation.
-//===== By: ==================================================
-//= Hercules Dev Team
-//===== Current Version: =====================================
-//= 1.6a
-//===== Description: =========================================
+//================= Current Version =======================================
+//= 1.6.2
+//================= Description ===========================================
 //= Disables all means of teleportation within a map.
 //= Script commands 'warp', 'areawarp', 'warpchar',
 //=   'warpparty', 'warpguild', 'warpwaitingpc' will not
@@ -12,9 +39,7 @@
 //= Disables skills AL_TELEPORT and TK_HIGHJUMP.
 //= Disables the following items:
 //=   Fly Wing (601), Giant Fly Wing (12212)
-//===== Additional Comments: =================================
-//= 1.6a - Updated. [Lupus]
-//============================================================
+//=========================================================================
 
 // Cities ========================
 ayo_in01	mapflag	noteleport
@@ -427,6 +452,8 @@ ecl_in04	mapflag	noteleport
 1@ecl	mapflag	noteleport
 1@ecl	mapflag	monster_noteleport
 ecl_hub01	mapflag	noteleport
+dali	mapflag	noteleport
+dali02	mapflag	noteleport
 
 //Orc's Memory ===================
 1@orcs	mapflag	noteleport
@@ -442,6 +469,14 @@ nyd_dun02	mapflag	noteleport
 1@nyd	mapflag	monster_noteleport
 2@nyd	mapflag	noteleport
 2@nyd	mapflag	monster_noteleport
+
+// Ghost Palace ===========
+1@spa	mapflag	noteleport
+1@spa	mapflag	monster_noteleport
+
+// Sara's Memory Instance ===========
+1@sara	mapflag	noteleport
+1@sara	mapflag	monster_noteleport
 
 //evt_zombie	mapflag	noteleport
 

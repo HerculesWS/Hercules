@@ -1,21 +1,40 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  Lupus
+//= Copyright (C)  Jukka
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Thief Mage Quest Story Mode
-//===== By: ==================================================
-//= Fix up by Jukka
-//===== Current Version: =====================================
-//= 1.3
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Battle Traces from Thief and Magician training quests.
-//===== Additional Comments: =================================
-//= 1.0 Fully working
-//= 1.1 optimized [Lupus]
-//= 1.2 Changed "battle_trace" to "Trace of Battle". [L0ne_W0lf]
-//= 1.3 Misc. updates. [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 1.3
+//=========================================================================
 
-// Battle Traces 1
-//============================================================
+//== Battle Traces 1 =======================================
 moc_fild12,166,369,0	script	Trace of Battle#1	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 5){
@@ -29,7 +48,7 @@ moc_fild12,166,369,0	script	Trace of Battle#1	CLEAR_NPC,{
 			mes "used in a battle. A feeling";
 			mes "of acute dizziness overcomes";
 			mes "you after examining the scene.^000000";
-			set tu_thief01, 6;
+			tu_thief01 = 6;
 			sc_start SC_POISON,60000,0;
 			specialeffect EF_VENOMDUST2;
 			close;
@@ -59,7 +78,7 @@ moc_fild12,166,369,0	script	Trace of Battle#1	CLEAR_NPC,{
 			mes "The trail of this";
 			mes "battle decidedly";
 			mes "heads southward.^000000";
-			set tu_thief01, 9;
+			tu_thief01 = 9;
 			close;
 		} else {
 			mes "^3355FFYou find signs of";
@@ -88,7 +107,7 @@ moc_fild12,166,369,0	script	Trace of Battle#1	CLEAR_NPC,{
 			mes "The trail of this";
 			mes "battle decidedly";
 			mes "heads southward.^000000";
-			set tu_magician01, 9;
+			tu_magician01 = 9;
 			close;
 		} else {
 			mes "^3355FFYou find signs of";
@@ -105,8 +124,7 @@ moc_fild12,166,369,0	script	Trace of Battle#1	CLEAR_NPC,{
 	close;
 }
 
-// Battle Traces 2
-//============================================================
+//== Battle Traces 2 =======================================
 moc_fild12,173,215,0	script	Trace of Battle#2	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 9){
@@ -119,7 +137,7 @@ moc_fild12,173,215,0	script	Trace of Battle#2	CLEAR_NPC,{
 			mes "^3355FFYou've found traces";
 			mes "of the pursuit which";
 			mes "continue eastward.^000000";
-			set tu_thief01, 10;
+			tu_thief01 = 10;
 			close;
 		} else {
 			mes "^3355FFThese traces of";
@@ -138,7 +156,7 @@ moc_fild12,173,215,0	script	Trace of Battle#2	CLEAR_NPC,{
 			mes "^3355FFYou've found traces";
 			mes "of the pursuit which";
 			mes "continue eastward.^000000";
-			set tu_magician01, 10;
+			tu_magician01 = 10;
 			close;
 		} else {
 			mes "^3355FFThese traces of";
@@ -155,8 +173,7 @@ moc_fild12,173,215,0	script	Trace of Battle#2	CLEAR_NPC,{
 	close;
 }
 
-// Battle Traces 3
-//============================================================
+//== Battle Traces 3 =======================================
 moc_fild12,276,165,0	script	Trace of Battle#3	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 10){
@@ -171,7 +188,7 @@ moc_fild12,276,165,0	script	Trace of Battle#3	CLEAR_NPC,{
 			mes "footprints looks almost too";
 			mes "pronounced, as if it had been";
 			mes "made for somebody to find.^000000";
-			set tu_thief01, 11;
+			tu_thief01 = 11;
 			close;
 		} else {
 			mes "^3355FFIt's a very";
@@ -192,7 +209,7 @@ moc_fild12,276,165,0	script	Trace of Battle#3	CLEAR_NPC,{
 			mes "footprints looks almost too";
 			mes "pronounced, as if it had been";
 			mes "made for somebody to find.^000000";
-			set tu_magician01, 11;
+			tu_magician01 = 11;
 			close;
 		} else {
 			mes "^3355FFIt's a very";
@@ -208,8 +225,7 @@ moc_fild12,276,165,0	script	Trace of Battle#3	CLEAR_NPC,{
 	close;
 }
 
-// Battle Traces 4
-//============================================================
+//== Battle Traces 4 =======================================
 moc_fild11,39,163,0	script	Trace of Battle#4	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 11){
@@ -226,7 +242,7 @@ moc_fild11,39,163,0	script	Trace of Battle#4	CLEAR_NPC,{
 			mes "someone } else got involved.";
 			mes "These prints are distinctly";
 			mes "clearer and much smaller.^000000";
-			set tu_thief01, 12;
+			tu_thief01 = 12;
 			close;
 		} else {
 			mes "^3355FFFrom these traces,";
@@ -250,7 +266,7 @@ moc_fild11,39,163,0	script	Trace of Battle#4	CLEAR_NPC,{
 			mes "someone } else got involved.";
 			mes "These prints are distinctly";
 			mes "clearer and much smaller.^000000";
-			set tu_magician01, 12;
+			tu_magician01 = 12;
 			close;
 		} else {
 			mes "^3355FFFrom these traces,";
@@ -268,8 +284,7 @@ moc_fild11,39,163,0	script	Trace of Battle#4	CLEAR_NPC,{
 	close;
 }
 
-// Battle Traces 5
-//============================================================
+//== Battle Traces 5 =======================================
 moc_fild11,205,52,0	script	Trace of Battle#5	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 12){
@@ -282,7 +297,7 @@ moc_fild11,205,52,0	script	Trace of Battle#5	CLEAR_NPC,{
 			mes "^3355FFThe traces of the battle";
 			mes "now split and head towards";
 			mes "the north and south. However,^000000";
-			if(countitem(506) == 0){
+			if(countitem(Green_Potion) == 0){
 				mes "^3355FFthere is a puddle of strong poison that you must neutralize before you can investigate this scene.^000000";
 				close;
 			} else {
@@ -293,29 +308,29 @@ moc_fild11,205,52,0	script	Trace of Battle#5	CLEAR_NPC,{
 				mes "poison by using one";
 				mes "of your Green Potions.^000000";
 				next;
-				switch(select("Use Green Potion.:Don't use it.")){
+				switch(select("Use Green Potion.", "Don't use it.")){
 				case 1:
 					mes "^3355FFThe poison weakens";
 					mes "and some of it evaporates,";
 					mes "revealing a piece of cloth that";
 					mes "was hidden in that puddle.^000000";
 					next;
-					switch(select("Don't investigate.:Investigate.")){
+					switch(select("Don't investigate.", "Investigate.")){
 					case 1:
-						mes "["+strcharinfo(0)+"]";
+						mes "["+strcharinfo(PC_NAME)+"]";
 						mes "A piece of cloth";
 						mes "is nothing to be";
 						mes "concerned about.";
 						close;
 					case 2:
-						mes "["+strcharinfo(0)+"]";
+						mes "["+strcharinfo(PC_NAME)+"]";
 						mes "Hey... There's";
 						mes "blood on this cloth";
 						mes "and some writing on";
 						mes "it that I can't recognize.";
 						mes "Hopefully, this'll provide";
 						mes "some sort of clue to all this?";
-						set tu_thief01, 13;
+						tu_thief01 = 13;
 						next;
 						mes "^3355FFYou take the piece";
 						mes "of cloth from the puddle";
@@ -323,7 +338,7 @@ moc_fild11,205,52,0	script	Trace of Battle#5	CLEAR_NPC,{
 						close;
 					}
 				case 2:
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "Hmm...";
 					mes "It'll probably be";
 					mes "faster if I follow this";
@@ -351,7 +366,7 @@ moc_fild11,205,52,0	script	Trace of Battle#5	CLEAR_NPC,{
 			mes "^3355FFThe traces of the battle";
 			mes "now split and head towards";
 			mes "the north and south. However,^000000";
-			if(countitem(506) == 0){
+			if(countitem(Green_Potion) == 0){
 				mes "^3355FFthere is a puddle of strong poison that you must neutralize before you can investigate this scene.^000000";
 				close;
 			} else {
@@ -362,29 +377,29 @@ moc_fild11,205,52,0	script	Trace of Battle#5	CLEAR_NPC,{
 				mes "poison by using one";
 				mes "of your Green Potions.^000000";
 				next;
-				switch(select("Use Green Potion.:Don't use it.")){
+				switch(select("Use Green Potion.", "Don't use it.")){
 				case 1:
 					mes "^3355FFThe poison weakens";
 					mes "and some of it evaporates,";
 					mes "revealing a piece of cloth that";
 					mes "was hidden in that puddle.^000000";
 					next;
-					switch(select("Don't investigate.:Investigate.")){
+					switch(select("Don't investigate.", "Investigate.")){
 					case 1:
-						mes "["+strcharinfo(0)+"]";
+						mes "["+strcharinfo(PC_NAME)+"]";
 						mes "A piece of cloth";
 						mes "is nothing to be";
 						mes "concerned about.";
 						close;
 					case 2:
-						mes "["+strcharinfo(0)+"]";
+						mes "["+strcharinfo(PC_NAME)+"]";
 						mes "Hey... There's";
 						mes "blood on this cloth";
 						mes "and some writing on";
 						mes "it that I can't recognize.";
 						mes "Hopefully, this'll provide";
 						mes "some sort of clue to all this?";
-						set tu_magician01,13;
+						tu_magician01 = 13;
 						next;
 						mes "^3355FFYou take the piece";
 						mes "of cloth from the puddle";
@@ -392,7 +407,7 @@ moc_fild11,205,52,0	script	Trace of Battle#5	CLEAR_NPC,{
 						close;
 					}
 				case 2:
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "Hmm...";
 					mes "It'll probably be";
 					mes "faster if I follow this";
@@ -417,8 +432,7 @@ moc_fild11,205,52,0	script	Trace of Battle#5	CLEAR_NPC,{
 	close;
 }
 
-// Battle Traces 6
-//============================================================
+//== Battle Traces 6 =======================================
 moc_fild11,226,235,0	script	Trace of Battle#6	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 13){
@@ -460,8 +474,7 @@ moc_fild11,226,235,0	script	Trace of Battle#6	CLEAR_NPC,{
 	close;
 }
 
-// Battle Traces 7
-//============================================================
+//== Battle Traces 7 =======================================
 moc_fild11,184,342,0	script	Trace of Battle#7	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 13){
@@ -501,8 +514,7 @@ moc_fild11,184,342,0	script	Trace of Battle#7	CLEAR_NPC,{
 	close;
 }
 
-// Battle Traces 8
-//============================================================
+//== Battle Traces 8 =======================================
 moc_fild17,213,358,0	script	Trace of Battle#8	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 13){
@@ -519,7 +531,7 @@ moc_fild17,213,358,0	script	Trace of Battle#8	CLEAR_NPC,{
 			mes "only two sets of footprints.";
 			mes "What happened to the other";
 			mes "set that you found earlier?^000000";
-			set tu_thief01, 14;
+			tu_thief01 = 14;
 			close;
 		} else {
 			mes "^3355FFFrom the evidence";
@@ -544,7 +556,7 @@ moc_fild17,213,358,0	script	Trace of Battle#8	CLEAR_NPC,{
 			mes "only two sets of footprints.";
 			mes "What happened to the other";
 			mes "set that you found earlier?^000000";
-			set tu_magician01, 14;
+			tu_magician01 = 14;
 			close;
 		} else {
 			mes "^3355FFFrom the evidence";
@@ -562,8 +574,7 @@ moc_fild17,213,358,0	script	Trace of Battle#8	CLEAR_NPC,{
 	close;
 }
 
-// Battle Traces 9
-//============================================================
+//== Battle Traces 9 =======================================
 moc_fild17,228,274,0	script	Trace of Battle#9	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 14){
@@ -579,10 +590,10 @@ moc_fild17,228,274,0	script	Trace of Battle#9	CLEAR_NPC,{
 			mes "together, it looks like the battle continues towards the east.";
 			mes "But you should check this";
 			mes "spot a little bit more...^000000";
-			set tu_thief01, 15;
+			tu_thief01 = 15;
 			close;
 		} else if(tu_thief01 == 15){
-			set .@seek_tm, rand(1,10);
+			.@seek_tm = rand(1,10);
 			if(.@seek_tm == 7){
 				mes "^3355FFAfter investigating this";
 				mes "area more thoroughly,";
@@ -591,7 +602,7 @@ moc_fild17,228,274,0	script	Trace of Battle#9	CLEAR_NPC,{
 				mes "You decide to keep it with";
 				mes "you, hoping that it will";
 				mes "provide more clues.^000000";
-				set tu_thief01, 16;
+				tu_thief01 = 16;
 				close;
 			} else {
 				mes "^3355FFYou don't find anything,";
@@ -621,10 +632,10 @@ moc_fild17,228,274,0	script	Trace of Battle#9	CLEAR_NPC,{
 			mes "together, it looks like the battle continues towards the east.";
 			mes "But you should check this";
 			mes "spot a little bit more...^000000";
-			set tu_magician01, 15;
+			tu_magician01 = 15;
 			close;
 		} else if(tu_magician01 == 15){
-			set .@seek_tm1, rand(1,10);
+			.@seek_tm1 = rand(1,10);
 			if(.@seek_tm1 == 7){
 				mes "^3355FFAfter investigating this";
 				mes "area more thoroughly,";
@@ -633,7 +644,7 @@ moc_fild17,228,274,0	script	Trace of Battle#9	CLEAR_NPC,{
 				mes "You decide to keep it with";
 				mes "you, hoping that it will";
 				mes "provide more clues.^000000";
-				set tu_magician01, 16;
+				tu_magician01 = 16;
 				close;
 			} else {
 				mes "^3355FFYou don't find anything,";
@@ -657,8 +668,7 @@ moc_fild17,228,274,0	script	Trace of Battle#9	CLEAR_NPC,{
 	close;
 }
 
-// Battle Traces 10
-//============================================================
+//== Battle Traces 10 ======================================
 moc_fild17,34,292,0	script	Trace of Battle#10	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 16){
@@ -673,7 +683,7 @@ moc_fild17,34,292,0	script	Trace of Battle#10	CLEAR_NPC,{
 			mes "who was being pursued, look";
 			mes "more erratic, as if exhaustion";
 			mes "and desperation were setting in. These traces lead to the west.^000000";
-			set tu_thief01, 17;
+			tu_thief01 = 17;
 			close;
 		} else {
 			mes "^3355FFThe trail from";
@@ -694,7 +704,7 @@ moc_fild17,34,292,0	script	Trace of Battle#10	CLEAR_NPC,{
 			mes "who was being pursued, look";
 			mes "more erratic, as if exhaustion";
 			mes "and desperation were setting in. These traces lead to the west.^000000";
-			set tu_magician01, 17;
+			tu_magician01 = 17;
 			close;
 		} else {
 			mes "^3355FFThe trail from";
@@ -710,8 +720,7 @@ moc_fild17,34,292,0	script	Trace of Battle#10	CLEAR_NPC,{
 	close;
 }
 
-// Battle Traces 11
-//============================================================
+//== Battle Traces 11 ======================================
 moc_fild18,346,296,0	script	Trace of Battle#11	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 17){
@@ -727,7 +736,7 @@ moc_fild18,346,296,0	script	Trace of Battle#11	CLEAR_NPC,{
 			mes "in this area. It looks like";
 			mes "someone was injured";
 			mes "pretty badly around here.^000000";
-			set tu_thief01, 18;
+			tu_thief01 = 18;
 			close;
 		} else {
 			mes "^3355FFSince someone involved";
@@ -750,7 +759,7 @@ moc_fild18,346,296,0	script	Trace of Battle#11	CLEAR_NPC,{
 			mes "in this area. It looks like";
 			mes "someone was injured";
 			mes "pretty badly around here.^000000";
-			set tu_magician01, 18;
+			tu_magician01 = 18;
 			close;
 		} else {
 			mes "^3355FFSince someone involved";
@@ -767,8 +776,7 @@ moc_fild18,346,296,0	script	Trace of Battle#11	CLEAR_NPC,{
 	close;
 }
 
-// Battle Traces 12
-//============================================================
+//== Battle Traces 12 ======================================
 moc_fild18,309,257,0	script	Trace of Battle#12	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 18){
@@ -783,7 +791,7 @@ moc_fild18,309,257,0	script	Trace of Battle#12	CLEAR_NPC,{
 			mes "like whoever is doing";
 			mes "the chasing is getting";
 			mes "much closer to his prey.^000000";
-			set tu_thief01, 19;
+			tu_thief01 = 19;
 			close;
 		} else {
 			mes "^3355FFThe trail of this";
@@ -804,7 +812,7 @@ moc_fild18,309,257,0	script	Trace of Battle#12	CLEAR_NPC,{
 			mes "like whoever is doing";
 			mes "the chasing is getting";
 			mes "much closer to his prey.^000000";
-			set tu_magician01, 19;
+			tu_magician01 = 19;
 			close;
 		} else {
 			mes "^3355FFThe trail of this";
@@ -820,8 +828,7 @@ moc_fild18,309,257,0	script	Trace of Battle#12	CLEAR_NPC,{
 	close;
 }
 
-// Battle Traces 13
-//============================================================
+//== Battle Traces 13 ======================================
 moc_fild18,177,333,0	script	Trace of Battle#13	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 19){
@@ -837,7 +844,7 @@ moc_fild18,177,333,0	script	Trace of Battle#13	CLEAR_NPC,{
 			mes "joined the battle which";
 			mes "now seems to be leading";
 			mes "in the southwest direction.^000000";
-			set tu_thief01, 20;
+			tu_thief01 = 20;
 			close;
 		} else {
 			mes "^3355FFIt looks like";
@@ -857,7 +864,7 @@ moc_fild18,177,333,0	script	Trace of Battle#13	CLEAR_NPC,{
 			mes "joined the battle which";
 			mes "now seems to be leading";
 			mes "in the southwest direction.^000000";
-			set tu_magician01, 20;
+			tu_magician01 = 20;
 			close;
 		} else {
 			mes "^3355FFIt looks like";
@@ -874,8 +881,7 @@ moc_fild18,177,333,0	script	Trace of Battle#13	CLEAR_NPC,{
 	close;
 }
 
-// Battle Traces 14
-//============================================================
+//== Battle Traces 14 ======================================
 moc_fild18,111,303,0	script	Trace of Battle#14	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 20){
@@ -890,7 +896,7 @@ moc_fild18,111,303,0	script	Trace of Battle#14	CLEAR_NPC,{
 			mes "joined in this battle and";
 			mes "the pursuit clearly heads";
 			mes "towards the south.^000000";
-			set tu_thief01, 21;
+			tu_thief01 = 21;
 			close;
 		} else {
 			mes "^3355FFThe trail of";
@@ -911,7 +917,7 @@ moc_fild18,111,303,0	script	Trace of Battle#14	CLEAR_NPC,{
 			mes "joined in this battle and";
 			mes "the pursuit clearly heads";
 			mes "towards the south.^000000";
-			set tu_magician01, 21;
+			tu_magician01 = 21;
 			close;
 		} else {
 			mes "^3355FFThe trail of";
@@ -927,8 +933,7 @@ moc_fild18,111,303,0	script	Trace of Battle#14	CLEAR_NPC,{
 	close;
 }
 
-// Battle Traces 15
-//============================================================
+//== Battle Traces 15 ======================================
 moc_fild18,109,197,0	script	Trace of Battle#15	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 21){
@@ -944,7 +949,7 @@ moc_fild18,109,197,0	script	Trace of Battle#15	CLEAR_NPC,{
 			mes "traces of poison strewn";
 			mes "all over the ground.^000000";
 			next;
-			switch(select("Continue following the traces.:Further investigate the area.")){
+			switch(select("Continue following the traces.", "Further investigate the area.")){
 			case 1:
 				mes "^3355FFYou examine the";
 				mes "trail, but can't really";
@@ -959,11 +964,11 @@ moc_fild18,109,197,0	script	Trace of Battle#15	CLEAR_NPC,{
 				mes "that have been set off are";
 				mes "mixed with the ones which";
 				mes "haven't been triggered.^000000";
-				set tu_thief01, 22;
+				tu_thief01 = 22;
 				close;
 			}
 		} else if(tu_thief01 == 22){
-			set .@trap_tm, rand(1,3);
+			.@trap_tm = rand(1,3);
 			if(.@trap_tm == 3){
 				mes "^3355FFOne trap in particular";
 				mes "stands out to you more";
@@ -972,9 +977,9 @@ moc_fild18,109,197,0	script	Trace of Battle#15	CLEAR_NPC,{
 				mes "Green Potion on it to";
 				mes "neutralize it first.^000000";
 				next;
-				switch(select("Pour Green Potion.:Don't use Green Potion.")){
+				switch(select("Pour Green Potion.", "Don't use Green Potion.")){
 				case 1:
-					if(countitem(506) < 1){
+					if(countitem(Green_Potion) < 1){
 						mes "^3355FFUnfortunately, you";
 						mes "don't have a Green";
 						mes "Potion that you can";
@@ -986,12 +991,12 @@ moc_fild18,109,197,0	script	Trace of Battle#15	CLEAR_NPC,{
 						mes "really make anything";
 						mes "happen. Perhaps you";
 						mes "should try something else.^000000";
-						delitem 506,1; //Green_Potion
-						set tu_thief01, 23;
+						delitem Green_Potion,1;
+						tu_thief01 = 23;
 						close;
 					}
 				case 2:
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "I guess...";
 					mes "I'll try investigating";
 					mes "this area a little more?";
@@ -1007,8 +1012,8 @@ moc_fild18,109,197,0	script	Trace of Battle#15	CLEAR_NPC,{
 				close;
 			}
 		} else if(tu_thief01 == 23){
-			if(countitem(511) > 0 || countitem(716) > 0){
-				if(countitem(511) > 0 && countitem(716) > 0){
+			if(countitem(Green_Herb) > 0 || countitem(Red_Gemstone) > 0){
+				if(countitem(Green_Herb) > 0 && countitem(Red_Gemstone) > 0){
 					mes "^3355FFYou try grinding";
 					mes "a Green Herb and";
 					mes "sprinkling it on the";
@@ -1024,11 +1029,11 @@ moc_fild18,109,197,0	script	Trace of Battle#15	CLEAR_NPC,{
 					mes "to successfully dismantle";
 					mes "the trap. Now you can safely";
 					mes "check what might be inside.^000000";
-					delitem 511,1; //Green_Herb
-					delitem 716,1; //Red_Gemstone
-					set tu_thief01, 24;
+					delitem Green_Herb,1;
+					delitem Red_Gemstone,1;
+					tu_thief01 = 24;
 					close;
-				} else if(countitem(511) > 0){
+				} else if(countitem(Green_Herb) > 0){
 					mes "^3355FFYou should try to";
 					mes "dismantle this trap";
 					mes "by using other catalysts";
@@ -1078,7 +1083,7 @@ moc_fild18,109,197,0	script	Trace of Battle#15	CLEAR_NPC,{
 			mes "You take it with you in";
 			mes "hopes that it provides";
 			mes "some kind of evidence.^000000";
-			set tu_thief01, 25;
+			tu_thief01 = 25;
 			close;
 		} else {
 			mes "^3355FFYou examine the area";
@@ -1098,7 +1103,7 @@ moc_fild18,109,197,0	script	Trace of Battle#15	CLEAR_NPC,{
 			mes "traces of poison strewn";
 			mes "all over the ground.^000000";
 			next;
-			switch(select("Continue following the traces.:Further investigate the area.")){
+			switch(select("Continue following the traces.", "Further investigate the area.")){
 			case 1:
 				mes "^3355FFYou examine the";
 				mes "trail, but can't really";
@@ -1113,11 +1118,11 @@ moc_fild18,109,197,0	script	Trace of Battle#15	CLEAR_NPC,{
 				mes "that have been set off are";
 				mes "mixed with the ones which";
 				mes "haven't been triggered.^000000";
-				set tu_magician01, 22;
+				tu_magician01 = 22;
 				close;
 			}
 		} else if(tu_magician01 == 22){
-			set .@trap_tm, rand(1,3);
+			.@trap_tm = rand(1,3);
 			if(.@trap_tm == 3){
 				mes "^3355FFOne trap in particular";
 				mes "stands out to you more";
@@ -1126,9 +1131,9 @@ moc_fild18,109,197,0	script	Trace of Battle#15	CLEAR_NPC,{
 				mes "Green Potion on it to";
 				mes "neutralize it first.^000000";
 				next;
-				switch(select("Pour Green Potion.:Don't use Green Potion.")){
+				switch(select("Pour Green Potion.", "Don't use Green Potion.")){
 				case 1:
-					if(countitem(506) < 1){
+					if(countitem(Green_Potion) < 1){
 						mes "^3355FFUnfortunately, you";
 						mes "don't have a Green";
 						mes "Potion that you can";
@@ -1140,12 +1145,12 @@ moc_fild18,109,197,0	script	Trace of Battle#15	CLEAR_NPC,{
 						mes "really make anything";
 						mes "happen. Perhaps you";
 						mes "should try something else.^000000";
-						delitem 506,1; //Green_Potion
-						set tu_magician01, 23;
+						delitem Green_Potion,1;
+						tu_magician01 = 23;
 						close;
 					}
 				case 2:
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "I guess...";
 					mes "I'll try investigating";
 					mes "this area a little more?";
@@ -1161,8 +1166,8 @@ moc_fild18,109,197,0	script	Trace of Battle#15	CLEAR_NPC,{
 				close;
 			}
 		} else if(tu_magician01 == 23){
-			if(countitem(511) > 0 || countitem(716) > 0){
-				if(countitem(511) > 0 && countitem(716) > 0){
+			if(countitem(Green_Herb) > 0 || countitem(Red_Gemstone) > 0){
+				if(countitem(Green_Herb) > 0 && countitem(Red_Gemstone) > 0){
 					mes "^3355FFYou try grinding";
 					mes "a Green Herb and";
 					mes "sprinkling it on the";
@@ -1178,11 +1183,11 @@ moc_fild18,109,197,0	script	Trace of Battle#15	CLEAR_NPC,{
 					mes "to successfully dismantle";
 					mes "the trap. Now you can safely";
 					mes "check what might be inside.^000000";
-					delitem 511,1; //Green_Herb
-					delitem 716,1; //Red_Gemstone
-					set tu_magician01, 24;
+					delitem Green_Herb,1;
+					delitem Red_Gemstone,1;
+					tu_magician01 = 24;
 					close;
-				} else if(countitem(511) > 0){
+				} else if(countitem(Green_Herb) > 0){
 					mes "^3355FFYou should try to";
 					mes "dismantle this trap";
 					mes "by using other catalysts";
@@ -1232,7 +1237,7 @@ moc_fild18,109,197,0	script	Trace of Battle#15	CLEAR_NPC,{
 			mes "You take it with you in";
 			mes "hopes that it provides";
 			mes "some kind of evidence.^000000";
-			set tu_magician01, 25;
+			tu_magician01 = 25;
 			close;
 		} else {
 			mes "^3355FFYou examine the area";
@@ -1250,8 +1255,7 @@ moc_fild18,109,197,0	script	Trace of Battle#15	CLEAR_NPC,{
 	close;
 }
 
-// Battle Traces 16
-//============================================================
+//== Battle Traces 16 ======================================
 moc_fild18,156,96,0	script	Trace of Battle#16	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 25){
@@ -1280,7 +1284,7 @@ moc_fild18,156,96,0	script	Trace of Battle#16	CLEAR_NPC,{
 			mes "from this investigation. You";
 			mes "better return and report your";
 			mes "findings to Yierhan soon.^000000";
-			set tu_thief01, 26;
+			tu_thief01 = 26;
 			close;
 		} else {
 			mes "^3355FFThis is the end";
@@ -1316,7 +1320,7 @@ moc_fild18,156,96,0	script	Trace of Battle#16	CLEAR_NPC,{
 			mes "from this investigation. You";
 			mes "better return and report your";
 			mes "findings to Yierhan soon.^000000";
-			set tu_magician01, 26;
+			tu_magician01 = 26;
 			close;
 		} else {
 			mes "^3355FFThis is the end";

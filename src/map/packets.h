@@ -1,10 +1,27 @@
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2013-2015  Hercules Dev Team
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 //Included directly by clif.h in packet_loaddb()
 
-#ifndef _MAP_PACKETS_H_
-#define _MAP_PACKETS_H_
+#ifndef MAP_PACKETS_H
+#define MAP_PACKETS_H
 
 #ifndef packet
 	#define packet(a,b,...)
@@ -448,6 +465,8 @@ packet(0x020a,10);
 //packet(0x020b,-1);
 //packet(0x020c,-1);
 packet(0x020d,-1);
+packet(0x974,2,clif->cancelmergeitem);
+packet(0x96e,-1,clif->ackmergeitems);
 
 //2004-07-05aSakexe
 #if PACKETVER >= 20040705
@@ -1654,128 +1673,128 @@ packet(0x020d,-1);
 	packet(0x0802,18,clif->pPartyBookingRegisterReq,2,4,6); // Booking System
 	packet(0x0803,4);
 	packet(0x0804,8); // Booking System
-   	packet(0x0805,-1);
-   	packet(0x0806,4,clif->pPartyBookingDeleteReq,2);// Booking System
-   	//packet(0x0807,2);
-   	packet(0x0808,4); // Booking System
-  	//packet(0x0809,14);
-  	//packet(0x080A,50);
-  	//packet(0x080B,18);
-  	//packet(0x080C,6);
+	packet(0x0805,-1);
+	packet(0x0806,4,clif->pPartyBookingDeleteReq,2);// Booking System
+	//packet(0x0807,2);
+	packet(0x0808,4); // Booking System
+	//packet(0x0809,14);
+	//packet(0x080A,50);
+	//packet(0x080B,18);
+	//packet(0x080C,6);
 #endif
-  
-  //2009-12-29aRagexeRE
+
+	//2009-12-29aRagexeRE
 #if PACKETVER >= 20091229
-  	packet(0x0804,14,clif->pPartyBookingSearchReq,2,4,6,8,12);// Booking System
-  	packet(0x0806,2,clif->pPartyBookingDeleteReq,0);// Booking System
-  	packet(0x0807,4);
-  	packet(0x0808,14,clif->pPartyBookingUpdateReq,2); // Booking System
-  	packet(0x0809,50);
-  	packet(0x080A,18);
-  	packet(0x080B,6);// Booking System
+	packet(0x0804,14,clif->pPartyBookingSearchReq,2,4,6,8,12);// Booking System
+	packet(0x0806,2,clif->pPartyBookingDeleteReq,0);// Booking System
+	packet(0x0807,4);
+	packet(0x0808,14,clif->pPartyBookingUpdateReq,2); // Booking System
+	packet(0x0809,50);
+	packet(0x080A,18);
+	packet(0x080B,6);// Booking System
 #endif
-  
-  //2010-01-05aRagexeRE
+
+	//2010-01-05aRagexeRE
 #if PACKETVER >= 20100105
-  	packet(0x0801,-1,clif->pPurchaseReq2,2,4,8,12);
+	packet(0x0801,-1,clif->pPurchaseReq2,2,4,8,12);
 #endif
-  
-  //2010-01-26aRagexeRE
+
+	//2010-01-26aRagexeRE
 #if PACKETVER >= 20100126
-  	//packet(0x080C,2);
-  	//packet(0x080D,3);
-  	packet(0x080E,14);
+	//packet(0x080C,2);
+	//packet(0x080D,3);
+	packet(0x080E,14);
 #endif
-  
-  //2010-02-09aRagexeRE
+
+	//2010-02-09aRagexeRE
 #if PACKETVER >= 20100209
-  	//packet(0x07F0,6);
+	//packet(0x07F0,6);
 #endif
-  
-  //2010-02-23aRagexeRE
+
+	//2010-02-23aRagexeRE
 #if PACKETVER >= 20100223
-  	packet(0x080F,20);
+	packet(0x080F,20);
 #endif
-  
-  //2010-03-03aRagexeRE
+
+	//2010-03-03aRagexeRE
 #if PACKETVER >= 20100303
-  	packet(0x0810,3);
-  	packet(0x0811,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
-  	//packet(0x0812,86);
-  	//packet(0x0813,6);
-  	//packet(0x0814,6);
-  	//packet(0x0815,-1);
-  	//packet(0x0817,-1);
-  	//packet(0x0818,6);
-  	//packet(0x0819,4);
+	packet(0x0810,3);
+	packet(0x0811,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
+	//packet(0x0812,86);
+	//packet(0x0813,6);
+	//packet(0x0814,6);
+	//packet(0x0815,-1);
+	//packet(0x0817,-1);
+	//packet(0x0818,6);
+	//packet(0x0819,4);
 #endif
-  
-  //2010-03-09aRagexeRE
+
+	//2010-03-09aRagexeRE
 #if PACKETVER >= 20100309
-  	packet(0x0813,-1);
-  	//packet(0x0814,2);
-  	//packet(0x0815,6);
-  	packet(0x0816,6);
-  	packet(0x0818,-1);
-  	//packet(0x0819,10);
-  	//packet(0x081A,4);
-  	//packet(0x081B,4);
-  	//packet(0x081C,6);
-  	packet(0x081d,22);
-  	packet(0x081e,8);
+	packet(0x0813,-1);
+	//packet(0x0814,2);
+	//packet(0x0815,6);
+	packet(0x0816,6);
+	packet(0x0818,-1);
+	//packet(0x0819,10);
+	//packet(0x081A,4);
+	//packet(0x081B,4);
+	//packet(0x081C,6);
+	packet(0x081d,22);
+	packet(0x081e,8);
 #endif
-  
-  //2010-03-23aRagexeRE
+
+	//2010-03-23aRagexeRE
 #if PACKETVER >= 20100323
-  	//packet(0x081F,-1);
+	//packet(0x081F,-1);
 #endif
-  
-  //2010-04-06aRagexeRE
+
+	//2010-04-06aRagexeRE
 #if PACKETVER >= 20100406
-  	//packet(0x081A,6);
+	//packet(0x081A,6);
 #endif
-  
-  //2010-04-13aRagexeRE
+
+	//2010-04-13aRagexeRE
 #if PACKETVER >= 20100413
-  	//packet(0x081A,10);
-  	packet(0x0820,11);
-  	//packet(0x0821,2);
-  	//packet(0x0822,9);
-  	//packet(0x0823,-1);
+	//packet(0x081A,10);
+	packet(0x0820,11);
+	//packet(0x0821,2);
+	//packet(0x0822,9);
+	//packet(0x0823,-1);
 #endif
-  
-  //2010-04-14dRagexeRE
+
+	//2010-04-14dRagexeRE
 #if PACKETVER >= 20100414
-  	//packet(0x081B,8);
+	//packet(0x081B,8);
 #endif
-  
-  //2010-04-20aRagexeRE
+
+	//2010-04-20aRagexeRE
 #if PACKETVER >= 20100420
-  	packet(0x0812,8);
-  	packet(0x0814,86);
-  	packet(0x0815,2,clif->pReqCloseBuyingStore,0);
-  	packet(0x0817,6,clif->pReqClickBuyingStore,2);
-  	packet(0x0819,-1,clif->pReqTradeBuyingStore,2,4,8,12);
-  	packet(0x081a,4);
-  	packet(0x081b,10);
-  	packet(0x081c,10);
-  	packet(0x0824,6);
+	packet(0x0812,8);
+	packet(0x0814,86);
+	packet(0x0815,2,clif->pReqCloseBuyingStore,0);
+	packet(0x0817,6,clif->pReqClickBuyingStore,2);
+	packet(0x0819,-1,clif->pReqTradeBuyingStore,2,4,8,12);
+	packet(0x081a,4);
+	packet(0x081b,10);
+	packet(0x081c,10);
+	packet(0x0824,6);
 #endif
-  
-  //2010-06-01aRagexeRE
+
+	//2010-06-01aRagexeRE
 #if PACKETVER >= 20100601
-  	//packet(0x0825,-1);
-  	//packet(0x0826,4);
-  	packet(0x0835,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);
-  	packet(0x0836,-1);
-  	packet(0x0837,3);
-  	//packet(0x0838,3);
+	//packet(0x0825,-1);
+	//packet(0x0826,4);
+	packet(0x0835,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);
+	packet(0x0836,-1);
+	packet(0x0837,3);
+	//packet(0x0838,3);
 #endif
-  
-  //2010-06-08aRagexeRE
+
+	//2010-06-08aRagexeRE
 #if PACKETVER >= 20100608
-  	packet(0x0838,2,clif->pSearchStoreInfoNextPage,0);
-  	packet(0x083A,4); // Search Stalls Feature
+	packet(0x0838,2,clif->pSearchStoreInfoNextPage,0);
+	packet(0x083A,4); // Search Stalls Feature
 	packet(0x083B,2,clif->pCloseSearchStoreInfo,0);
 	packet(0x083C,12,clif->pSearchStoreInfoListItemClick,2,6,10);
 	packet(0x083D,6);
@@ -2290,6 +2309,7 @@ packet(0x020d,-1);
 	packet(0x023B,26,clif->pFriendsListAdd,2);
 	packet(0x0361,5,clif->pHomMenu,2,4);
 	packet(0x0883,36,clif->pStoragePassword,0);
+	packet(0x097C,4,clif->pRanklist);
 #endif
 
 //2013-06-12Ragexe (Shakto)
@@ -2375,21 +2395,6 @@ packet(0x020d,-1);
 	packet(0x0930,36,clif->pStoragePassword,0);
 #endif
 
-/* Bank System [Yommy/Hercules] */
-#if PACKETVER >= 20130724
-	packet(0x09A6,12); // ZC_BANKING_CHECK
-	packet(0x09A7,10,clif->pBankDeposit,2,4,6);
-	packet(0x09A8,16); // ZC_ACK_BANKING_DEPOSIT
-	packet(0x09A9,10,clif->pBankWithdraw,2,4,6);
-	packet(0x09AA,16); // ZC_ACK_BANKING_WITHDRAW
-	packet(0x09AB,6,clif->pBankCheck,2,4);
-	////
-	packet(0x09B6,6,clif->pBankOpen,2,4);
-	packet(0x09B7,4); // ZC_ACK_OPEN_BANKING
-	packet(0x09B8,6,clif->pBankClose,2,4);
-	packet(0x09B9,4); // ZC_ACK_CLOSE_BANKING
-#endif
-
 //2013-07-03Ragexe (Shakto)
 #if PACKETVER >= 20130703
 	packet(0x0930,5,clif->pChangeDir,2,4);
@@ -2413,9 +2418,23 @@ packet(0x020d,-1);
 	packet(0x0360,26,clif->pFriendsListAdd,2);
 	packet(0x094A,5,clif->pHomMenu,2,4);
 	packet(0x0873,36,clif->pStoragePassword,0);
-	packet(0x097C,4,clif->pRanklist);
 #endif
-	
+
+/* Bank System [Yommy/Hercules] */
+#if PACKETVER >= 20130724
+	packet(0x09A6,12); // ZC_BANKING_CHECK
+	packet(0x09A7,10,clif->pBankDeposit,2,4,6);
+	packet(0x09A8,16); // ZC_ACK_BANKING_DEPOSIT
+	packet(0x09A9,10,clif->pBankWithdraw,2,4,6);
+	packet(0x09AA,16); // ZC_ACK_BANKING_WITHDRAW
+	packet(0x09AB,6,clif->pBankCheck,2,4);
+	////
+	packet(0x09B6,6,clif->pBankOpen,2,4);
+	packet(0x09B7,4); // ZC_ACK_OPEN_BANKING
+	packet(0x09B8,6,clif->pBankClose,2,4);
+	packet(0x09B9,4); // ZC_ACK_CLOSE_BANKING
+#endif
+
 //2013-08-07Ragexe (Shakto)
 #if PACKETVER >= 20130807
 	packet(0x0369,7,clif->pActionRequest,2,6);
@@ -2561,6 +2580,7 @@ packet(0x020d,-1);
 	packet(0x0361,5,clif->pHomMenu,2,4);
 	packet(0x08A4,36,clif->pStoragePassword,0);
 	packet(0x09df,7);
+	packet(0x09cb,17);
 #endif
 
 // 2013-12-30aRagexe - Yommy
@@ -2700,7 +2720,7 @@ packet(0x020d,-1);
 #endif
 
 // 2014-04-02gRagexe - Themon
-#if PACKETVER >= 20140402 
+#if PACKETVER >= 20140402
 	packet(0x0946,7,clif->pActionRequest,2,6);
 	packet(0x0868,10,clif->pUseSkillToId,2,4,6);
 	packet(0x093F,5,clif->pWalkToXY,2);
@@ -2734,7 +2754,7 @@ packet(0x020d,-1);
 #endif
 
 // 2014-04-16aRagexe - Themon
-#if PACKETVER >= 20140416 
+#if PACKETVER >= 20140416
 	packet(0x0369,7,clif->pActionRequest,2,6);
 	packet(0x083C,10,clif->pUseSkillToId,2,4,6);
 	packet(0x0437,5,clif->pWalkToXY,2);
@@ -2767,7 +2787,284 @@ packet(0x020d,-1);
 	packet(0x09DF,7);
 #endif
 
-/* PacketKeys: http://hercules.ws/board/topic/1105-hercules-wpe-free-june-14th-patch/ */
+#if PACKETVER >= 20140613
+	packet(0x0a0e,14);
+#endif
+
+// 2014-10-16aRagexe - YomRawr
+#if PACKETVER >= 20141016
+	packet(0x0369,7,clif->pActionRequest,2,6);
+	packet(0x083C,10,clif->pUseSkillToId,2,4,6);
+	packet(0x0437,5,clif->pWalkToXY,2);
+	packet(0x035F,6,clif->pTickSend,2);
+	packet(0x0967,5,clif->pChangeDir,2,4);
+	packet(0x07E4,6,clif->pTakeItem,2);
+	packet(0x0362,6,clif->pDropItem,2,4);
+	packet(0x07EC,8,clif->pMoveToKafra,2,4);
+	packet(0x022D,8,clif->pMoveFromKafra,2,4);
+	packet(0x0438,10,clif->pUseSkillToPos,2,4,6,8);
+	packet(0x0366,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);
+	packet(0x096A,6,clif->pGetCharNameRequest,2);
+	packet(0x0368,6,clif->pSolveCharName,2);
+	packet(0x0838,12,clif->pSearchStoreInfoListItemClick,2,6,10);
+	packet(0x0835,2,clif->pSearchStoreInfoNextPage,0);
+	packet(0x0819,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);
+	packet(0x0811,-1,clif->pReqTradeBuyingStore,2,4,8,12);
+	packet(0x0360,6,clif->pReqClickBuyingStore,2);
+	packet(0x0817,2,clif->pReqCloseBuyingStore,0);
+	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
+	packet(0x0365,18,clif->pPartyBookingRegisterReq,2,4);
+	// packet(0x0363,8); // CZ_JOIN_BATTLE_FIELD
+	packet(0x0281,-1,clif->pItemListWindowSelected,2,4,8);
+	packet(0x086E,19,clif->pWantToConnection,2,6,10,14,18);
+	packet(0x0802,26,clif->pPartyInvite2,2);
+	// packet(0x0922,4); // CZ_GANGSI_RANK
+	packet(0x094B,26,clif->pFriendsListAdd,2);
+	packet(0x0364,5,clif->pHomMenu,2,4);
+	packet(0x0936,36,clif->pStoragePassword,0);
+	packet(0x09DF,7);
+	packet(0x0a00,269);
+	packet(0x09e5,18); // ZC_DELETEITEM_FROM_MCSTORE2
+	packet(0x09e6,22); // ZC_UPDATE_ITEM_FROM_BUYING_STORE2
+#endif
+
+/* Roulette System [Yommy/Hercules] */
+#if PACKETVER >= 20141016
+	packet(0x0A19,2,clif->pRouletteOpen,0);     // HEADER_CZ_REQ_OPEN_ROULETTE
+	packet(0x0A1A,23);                          // HEADER_ZC_ACK_OPEN_ROULETTE
+	packet(0x0A1B,2,clif->pRouletteInfo,0);     // HEADER_CZ_REQ_ROULETTE_INFO
+	packet(0x0A1C,-1);                          // HEADER_ZC_ACK_ROULEITTE_INFO
+	packet(0x0A1D,2,clif->pRouletteClose,0);    // HEADER_CZ_REQ_CLOSE_ROULETTE
+	packet(0x0A1E,3);                           // HEADER_ZC_ACK_CLOSE_ROULETTE
+	packet(0x0A1F,2,clif->pRouletteGenerate,0); // HEADER_CZ_REQ_GENERATE_ROULETTE
+	packet(0x0A20,21);                          // HEADER_ZC_ACK_GENERATE_ROULETTE
+	packet(0x0A21,3,clif->pRouletteRecvItem,2); // HEADER_CZ_RECV_ROULETTE_ITEM
+	packet(0x0A22,5);                           // HEADER_ZC_RECV_ROULETTE_ITEM
+#endif
+
+// 2014-10-22bRagexe - YomRawr
+#if PACKETVER >= 20141022
+	packet(0x0369,7,clif->pActionRequest,2,6);
+	packet(0x083C,10,clif->pUseSkillToId,2,4,6);
+	packet(0x0437,5,clif->pWalkToXY,2);
+	packet(0x035F,6,clif->pTickSend,2);
+	packet(0x08AD,5,clif->pChangeDir,2,4);
+	packet(0x094E,6,clif->pTakeItem,2);
+	packet(0x087D,6,clif->pDropItem,2,4);
+	packet(0x0878,8,clif->pMoveToKafra,2,4);
+	packet(0x08AA,8,clif->pMoveFromKafra,2,4);
+	packet(0x023B,10,clif->pUseSkillToPos,2,4,6,8);
+	packet(0x0366,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);
+	packet(0x096A,6,clif->pGetCharNameRequest,2);
+	packet(0x0368,6,clif->pSolveCharName,2);
+	packet(0x0835,12,clif->pSearchStoreInfoListItemClick,2,6,10);
+	packet(0x0940,2,clif->pSearchStoreInfoNextPage,0);
+	packet(0x0819,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);
+	packet(0x0811,-1,clif->pReqTradeBuyingStore,2,4,8,12);
+	packet(0x0360,6,clif->pReqClickBuyingStore,2);
+	packet(0x0817,2,clif->pReqCloseBuyingStore,0);
+	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
+	packet(0x0955,18,clif->pPartyBookingRegisterReq,2,4);
+	// packet(0x092B,8); // CZ_JOIN_BATTLE_FIELD
+	packet(0x0281,-1,clif->pItemListWindowSelected,2,4,8);
+	packet(0x093B,19,clif->pWantToConnection,2,6,10,14,18);
+	packet(0x0896,26,clif->pPartyInvite2,2);
+	// packet(0x08AB,4); // CZ_GANGSI_RANK
+	packet(0x091A,26,clif->pFriendsListAdd,2);
+	packet(0x0899,5,clif->pHomMenu,2,4);
+	packet(0x0438,36,clif->pStoragePassword,0);
+	packet(0x0A01,3,clif->pHotkeyRowShift,2);
+#endif
+
+#if PACKETVER >= 20150226
+	packet(0x0A09,45);
+	packet(0x0A0A,47);
+	packet(0x0A0B,47);
+	packet(0x0A0C,56);
+	packet(0x0A0D,-1);
+	packet(0x0A0F,-1);
+	packet(0x0A10,-1);
+#endif
+
+// 2015-05-13aRagexe
+#if PACKETVER >= 20150513
+	packet(0x0369,7,clif->pActionRequest,2,6);
+	packet(0x083C,10,clif->pUseSkillToId,2,4,6);
+	packet(0x0437,5,clif->pWalkToXY,2);
+	packet(0x035F,6,clif->pTickSend,2);
+	packet(0x0924,5,clif->pChangeDir,2,4);
+	packet(0x0958,6,clif->pTakeItem,2);
+	packet(0x0885,6,clif->pDropItem,2,4);
+	packet(0x0879,8,clif->pMoveToKafra,2,4);
+	packet(0x0864,8,clif->pMoveFromKafra,2,4);
+	packet(0x0438,10,clif->pUseSkillToPos,2,4,6,8);
+	packet(0x0366,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);
+	packet(0x096A,6,clif->pGetCharNameRequest,2);
+	packet(0x0368,6,clif->pSolveCharName,2);
+	packet(0x0838,12,clif->pSearchStoreInfoListItemClick,2,6,10);
+	packet(0x0835,2,clif->pSearchStoreInfoNextPage,0);
+	packet(0x0819,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);
+	packet(0x0811,-1,clif->pReqTradeBuyingStore,2,4,8,12);
+	packet(0x0360,6,clif->pReqClickBuyingStore,2);
+	packet(0x022D,2,clif->pReqCloseBuyingStore,0);
+	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
+	packet(0x0883,18,clif->pPartyBookingRegisterReq,2,4);
+	packet(0x02C4,8); // CZ_JOIN_BATTLE_FIELD
+	packet(0x0960,-1,clif->pItemListWindowSelected,2,4,8);
+	packet(0x0363,19,clif->pWantToConnection,2,6,10,14,18);
+	packet(0x094A,26,clif->pPartyInvite2,2);
+	packet(0x0927,4); // CZ_GANGSI_RANK
+	packet(0x08A8,26,clif->pFriendsListAdd,2);
+	packet(0x0817,5,clif->pHomMenu,2,4);
+	packet(0x0923,36,clif->pStoragePassword,0);
+	packet(0x09E8,11,clif->pDull); // CZ_OPEN_MAILBOX
+	packet(0x0A2E,6,clif->pDull); // TITLE
+	packet(0x0A02,4); // ZC_DRESSROOM_OPEN
+	packet(0x0A35,4,clif->pOneClick_ItemIdentify,2);
+	packet(0x0a27,8); // ZC_RECOVERY2
+	packet(0x09f7,75); // ZC_PROPERTY_HOMUN_2
+#endif
+
+#if PACKETVER >= 20150805 // RagexeRE
+	packet(0x097f,-1); // ZC_SELECTCART
+	packet(0x0980,7,clif->pSelectCart); // CZ_SELECTCART
+#endif
+
+// 2015-10-01bRagexeRE
+#if PACKETVER >= 20151001
+	packet(0x0369,7,clif->pActionRequest,2,6);
+	packet(0x083C,10,clif->pUseSkillToId,2,4,6);
+	packet(0x0437,5,clif->pWalkToXY,2);
+	packet(0x035F,6,clif->pTickSend,2);
+	packet(0x0202,5,clif->pChangeDir,2,4);
+	packet(0x07E4,6,clif->pTakeItem,2);
+	packet(0x0362,6,clif->pDropItem,2,4);
+	packet(0x07EC,8,clif->pMoveToKafra,2,4);
+	packet(0x0364,8,clif->pMoveFromKafra,2,4);
+	packet(0x0438,10,clif->pUseSkillToPos,2,4,6,8);
+	packet(0x0366,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);
+	packet(0x096A,6,clif->pGetCharNameRequest,2);
+	packet(0x0368,6,clif->pSolveCharName,2);
+	packet(0x0838,12,clif->pSearchStoreInfoListItemClick,2,6,10);
+	packet(0x0835,2,clif->pSearchStoreInfoNextPage,0);
+	packet(0x0819,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);
+	packet(0x0811,-1,clif->pReqTradeBuyingStore,2,4,8,12);
+	packet(0x0360,6,clif->pReqClickBuyingStore,2);
+	packet(0x0817,2,clif->pReqCloseBuyingStore,0);
+	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
+	packet(0x0365,18,clif->pPartyBookingRegisterReq,2,4);
+//	packet(0x0363,8); // CZ_JOIN_BATTLE_FIELD
+	packet(0x0281,-1,clif->pItemListWindowSelected,2,4,8);
+	packet(0x022D,19,clif->pWantToConnection,2,6,10,14,18);
+	packet(0x0802,26,clif->pPartyInvite2,2);
+//	packet(0x0436,4); // CZ_GANGSI_RANK
+	packet(0x023B,26,clif->pFriendsListAdd,2);
+	packet(0x0361,5,clif->pHomMenu,2,4);
+	packet(0x0860,36,clif->pStoragePassword,0);
+#endif
+
+// 2015-10-29aRagexe
+#if PACKETVER >= 20151029
+	packet(0x0369,7,clif->pActionRequest,2,6);
+	packet(0x083C,10,clif->pUseSkillToId,2,4,6);
+	packet(0x0437,5,clif->pWalkToXY,2);
+	packet(0x035F,6,clif->pTickSend,2);
+	packet(0x0202,5,clif->pChangeDir,2,4);
+	packet(0x07E4,6,clif->pTakeItem,2);
+	packet(0x0362,6,clif->pDropItem,2,4);
+	packet(0x07EC,8,clif->pMoveToKafra,2,4);
+	packet(0x0364,8,clif->pMoveFromKafra,2,4);
+	packet(0x0438,10,clif->pUseSkillToPos,2,4,6,8);
+	packet(0x0366,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);
+	packet(0x096A,6,clif->pGetCharNameRequest,2);
+	packet(0x0368,6,clif->pSolveCharName,2);
+	packet(0x0838,12,clif->pSearchStoreInfoListItemClick,2,6,10);
+	packet(0x0835,2,clif->pSearchStoreInfoNextPage,0);
+	packet(0x0819,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);
+	packet(0x0811,-1,clif->pReqTradeBuyingStore,2,4,8,12);
+	packet(0x0360,6,clif->pReqClickBuyingStore,2);
+	packet(0x0817,2,clif->pReqCloseBuyingStore,0);
+	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
+	packet(0x0365,18,clif->pPartyBookingRegisterReq,2,4);
+	packet(0x0363,8); // CZ_JOIN_BATTLE_FIELD
+	packet(0x0281,-1,clif->pItemListWindowSelected,2,4,8);
+	packet(0x022D,19,clif->pWantToConnection,2,6,10,14,18);
+	packet(0x0802,26,clif->pPartyInvite2,2);
+	packet(0x0436,4); // CZ_GANGSI_RANK
+	packet(0x023B,26,clif->pFriendsListAdd,2);
+	packet(0x0361,5,clif->pHomMenu,2,4);
+	packet(0x0860,36,clif->pStoragePassword,0);
+	packet(0x0a39,36);
+#endif
+
+// 2015-11-04aRagexe
+#if PACKETVER >= 20151104	
+	packet(0x0369,7,clif->pActionRequest,2,6);
+	packet(0x083C,10,clif->pUseSkillToId,2,4,6);
+	packet(0x0363,5,clif->pWalkToXY,2);
+	packet(0x0886,6,clif->pTickSend,2);
+	packet(0x0928,5,clif->pChangeDir,2,4);
+	packet(0x0964,6,clif->pTakeItem,2);
+	packet(0x0437,6,clif->pDropItem,2,4);
+	packet(0x088B,8,clif->pMoveToKafra,2,4);
+	packet(0x0364,8,clif->pMoveFromKafra,2,4);
+	packet(0x0438,10,clif->pUseSkillToPos,2,4,6,8);
+	packet(0x0366,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);
+	packet(0x0887,6,clif->pGetCharNameRequest,2);
+	packet(0x0368,6,clif->pSolveCharName,2);
+	packet(0x0838,12,clif->pSearchStoreInfoListItemClick,2,6,10);
+	packet(0x0835,2,clif->pSearchStoreInfoNextPage,0);
+	packet(0x0819,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);
+	packet(0x0815,-1,clif->pReqTradeBuyingStore,2,4,8,12);
+	packet(0x0436,6,clif->pReqClickBuyingStore,2);
+	packet(0x0817,2,clif->pReqCloseBuyingStore,0);
+	packet(0x023B,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
+	packet(0x0811,18,clif->pPartyBookingRegisterReq,2,4,6);
+	packet(0x0939,8); // CZ_JOIN_BATTLE_FIELD
+	packet(0x093A,-1,clif->pItemListWindowSelected,2,4,8,12);
+	packet(0x0360,19,clif->pWantToConnection,2,6,10,14,18);
+	packet(0x08A5,26,clif->pPartyInvite2,2);
+	packet(0x08A3,4); // CZ_GANGSI_RANK CZ_GANGSI_RANK
+	packet(0x07EC,26,clif->pFriendsListAdd,2);
+	packet(0x088D,5,clif->pHomMenu,2,4);
+	packet(0x0940,36,clif->pStoragePassword,2,4,20);
+	packet(0x0a39,36);
+#endif
+
+// 2015-12-16aRagexe
+#if PACKETVER >= 20151216
+	packet(0x089D,7,clif->pActionRequest,2,6);
+	packet(0x0968,10,clif->pUseSkillToId,2,4,6);
+	packet(0x08A2,5,clif->pWalkToXY,2);
+	packet(0x085B,6,clif->pTickSend,2);
+	packet(0x022D,5,clif->pChangeDir,2,4);
+	packet(0x08A9,6,clif->pTakeItem,2);
+	packet(0x0966,6,clif->pDropItem,2,4);
+	packet(0x08AC,8,clif->pMoveToKafra,2,4);
+	packet(0x0864,8,clif->pMoveFromKafra,2,4);
+	packet(0x0865,10,clif->pUseSkillToPos,2,4,6,8);
+	packet(0x0874,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);
+	packet(0x088B,6,clif->pGetCharNameRequest,2);
+	packet(0x089E,6,clif->pSolveCharName,2);
+	packet(0x0436,12,clif->pSearchStoreInfoListItemClick,2,6,10);
+	packet(0x0960,2,clif->pSearchStoreInfoNextPage,0);
+	packet(0x0944,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);
+	packet(0x0954,-1,clif->pReqTradeBuyingStore,2,4,8,12);
+	packet(0x0361,6,clif->pReqClickBuyingStore,2);
+	packet(0x083C,2,clif->pReqCloseBuyingStore,0);
+	packet(0x0870,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
+	packet(0x0365,18,clif->pPartyBookingRegisterReq,2,4);
+	packet(0x086A,8); // CZ_JOIN_BATTLE_FIELD
+	packet(0x0949,-1,clif->pItemListWindowSelected,2,4,8);
+	packet(0x0947,19,clif->pWantToConnection,2,6,10,14,18);
+	packet(0x086E,26,clif->pPartyInvite2,2);
+	packet(0x0364,4); // CZ_GANGSI_RANK
+	packet(0x091D,26,clif->pFriendsListAdd,2);
+	packet(0x0362,5,clif->pHomMenu,2,4);
+	packet(0x0885,36,clif->pStoragePassword,0);
+#endif
+
+/* PacketKeys: http://herc.ws/board/topic/1105-hercules-wpe-free-june-14th-patch/ */
 #if PACKETVER >= 20110817
 	packetKeys(0x053D5CED,0x3DED6DED,0x6DED6DED); /* Thanks to Shakto */
 #endif
@@ -2998,8 +3295,38 @@ packet(0x020d,-1);
 	packetKeys(0x04810281,0x42814281,0x42814281); /* Themon */
 #endif
 
+#if PACKETVER >= 20141016
+	packetKeys(0x2DFF467C,0x444B37EE,0x2C1B634F); /* YomRawr */
+#endif
+
+#if PACKETVER >= 20141022
+	packetKeys(0x290551EA,0x2B952C75,0x2D67669B); /* YomRawr */
+#endif
+
+// 2015 Packet Keys
+
+#if PACKETVER >= 20150513
+	packetKeys(0x62C86D09,0x75944F17,0x112C133D); /* Dastgir */
+#endif
+
+#if PACKETVER >= 20151001
+	packetKeys(0x5CFF4561,0x32514AD1,0x06D126D1); /* Dastgir */
+#endif
+
+#if PACKETVER >= 20151029
+	packetKeys(0x45B945B9,0x45B945B9,0x45B945B9); /* Dastgir */
+#endif
+
+#if PACKETVER >= 20151104
+	packetKeys(0x4C17382A,0x7ED174C9,0x29961E4F);  /* ossi0110 */
+#endif
+
+#if PACKETVER >= 20151216
+	packetKeys(0x25DD643D,0x61AC39DE,0x77A8206D); /* Dastgir */
+#endif
+
 #if defined(OBFUSCATIONKEY1) && defined(OBFUSCATIONKEY2) && defined(OBFUSCATIONKEY3)
 	packetKeys(OBFUSCATIONKEY1,OBFUSCATIONKEY2,OBFUSCATIONKEY3);
 #endif
 
-#endif /* _MAP_PACKETS_H_ */
+#endif /* MAP_PACKETS_H */

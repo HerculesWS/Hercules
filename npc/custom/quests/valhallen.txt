@@ -17,7 +17,7 @@ prontera,147,171,5	script	Lenneth	4_F_VALKYRIE,{
 	mes "I can transmute for you many of the Valhallen items,";
 	mes "although they require many rare elements to make.";
 	next;
-	switch(select("Mjolnir:Sleipnir:Brisingamen:Gleipnir:Megingjard")) {
+	switch(select("Mjolnir", "Sleipnir", "Brisingamen", "Gleipnir", "Megingjard")) {
 		case 1:
 			mes "[Lenneth]";
 			mes "^3355FFMjolnir^000000 is the mighty Hammer of Thor.";
@@ -52,7 +52,7 @@ prontera,147,171,5	script	Lenneth	4_F_VALKYRIE,{
 	mes "[Lenneth]";
 	mes "Do you desire ^3355FF"+getitemname(.@items[0])+"^000000?";
 	next;
-	if(select("Yes:No")==2) {
+	if(select("Yes", "No")==2) {
 		mes "[Lenneth]";
 		mes "Please return if you change your mind.";
 		close; }

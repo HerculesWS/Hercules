@@ -21,6 +21,8 @@ Thumbs.db
 /*.suo
 /*.exp
 /*.lib
+/*.VC.db
+/*.VC.opendb
 /autom4te.cache/
 /start-log.txt
 /char-server
@@ -57,7 +59,8 @@ Thumbs.db
 /cache/
 
 # /conf/
-/conf/import
+/conf/import/*.conf
+/conf/import/msg_conf.txt
 
 # /log/
 /log/*.log
@@ -101,6 +104,8 @@ Thumbs.db
 /tools/*.pdb
 /tools/HPMHookGen/Makefile
 /tools/HPMHookGen/doxyoutput
+/tools/doxygen/Makefile
+/tools/doxygen/docs
 
 # /vcproj-*
 /vcproj-*/*.user

@@ -13,7 +13,7 @@
 	mes "[Maroll Battle Recruiter]";
 	mes "The two princes of the kingdom are now battling for the throne of Maroll, and are in need of experienced soldiers like you. How would you like to lend your power to one of the princes in the Maroll Kingdom?";
 	next;
-	if( select("Join:Don't Join") == 2 )
+	if( select("Join", "Don't Join") == 2 )
 	{
 		mes "[Maroll Battle Recruiter]";
 		mes "I'll always be stationed here for more soldiers. Feel free to come back whenever you're interested.";
@@ -40,7 +40,7 @@ bat_room,148,150,4	script	Teleporter#bat	4_F_TELEPORTER,{
 	mes "[Teleporter]";
 	mes "Do you wish to leave the battlefield? Use my service to return to town.";
 	next;
-	if( select("Leave:Don't Leave") == 2 )
+	if( select("Leave", "Don't Leave") == 2 )
 	{
 		mes "[Teleporter]";
 		mes "I'll be here whenever you're in need of my service.";
@@ -82,7 +82,7 @@ bat_room,160,159,3	script	General Guillaume	4_M_KY_KIYOM,{
 	mes "[General Guillaume]";
 	mes "This is however, not just a battle between us. This battle will determine the future of this country. I pledge on my honor to prove that I'm the one who can protect this Maroll from outside threats.";
 	next;
-	if( select("Yes, I want to join you.:End Conversation") == 2 )
+	if( select("Yes, I want to join you.", "End Conversation") == 2 )
 	{
 		mes "[General Guillaume]";
 		mes "I'll be the one who will capture the flag!";
@@ -117,7 +117,7 @@ bat_room,160,140,3	script	Prince Croix	4_M_CRU_CRUA,{
 	mes "[Prince Croix]";
 	mes "General Guillaume may have an advantage in this battle as he is the great general of Maroll, but that doesn't automatically mean he'll win. I want to win this battle so that I can grant a better future for my people.";
 	next;
-	if( select("Yes, I want to join you!:End Conversation") == 2 )
+	if( select("Yes, I want to join you!", "End Conversation") == 2 )
 	{
 		mes "[Prince Croix]";
 		mes "For Maroll!";
@@ -137,14 +137,14 @@ bat_room,160,140,3	script	Prince Croix	4_M_CRU_CRUA,{
 // *********************************************************************
 function	script	Time2Str	{
 	set .@time_left, getarg(0) - gettimetick(2);
-	
+
 	set .@Days, .@time_left / 86400;
 	set .@time_left, .@time_left - (.@Days * 86400);
 	set .@Hours, .@time_left / 3600;
 	set .@time_left, .@time_left - (.@Hours * 3600);
 	set .@Minutes, .@time_left / 60;
 	set .@time_left, .@time_left - (.@Minutes * 60);
-	
+
 	set .@Time$, "";
 	if( .@Days > 1 )
 		set .@Time$, .@Time$ + .@Days + " days, ";
@@ -165,7 +165,7 @@ function	script	Time2Str	{
 		set .@Time$, .@Time$ + .@time_left + " seconds.";
 	else if( .@time_left == 1 )
 		set .@Time$, .@Time$ + .@time_left + " second.";
-	
+
 	return .@Time$;
 }
 
@@ -203,10 +203,10 @@ bat_room,156,178,5	script	Tierra Valley Officer#1	4_M_KY_KNT,{
 		mes "Please sign up for an army with Prince Croix or General Guillaume!";
 		close;
 	}
-	
-	mes "Hello " + strcharinfo(0) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
+
+	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
 	next;
-	if( select("I want to join your army!:End Conversation") == 2 )
+	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
 	mes "[Tierra Officer]";
@@ -217,16 +217,16 @@ bat_room,156,178,5	script	Tierra Valley Officer#1	4_M_KY_KNT,{
 		close;
 	}
 
-	if( checkquest(2069,PLAYTIME) == 2 ) erasequest 2069;
-	if( checkquest(2069,PLAYTIME) != -1 )
-	{
+	if (questprogress(2069,PLAYTIME) == 2)
+		erasequest 2069;
+	if (questprogress(2069,PLAYTIME)) {
 		mes "You have received an indicator showing that you've participated in the Battle at Tierra Gorge. I can't let you participate in any other battles until the indicator goes off.";
 		next;
 		mes "[Tierra Officer]";
 		mes "Stand-by for Tierra Gorge Battle until the time limit passes.";
 		close;
 	}
-	
+
 	if( BaseLevel < 80 )
 	{
 		mes "I'm very please you want to join our army, but I'm sorry: I can't send a rookie like you to die on the cruel battlefield";
@@ -274,9 +274,9 @@ bat_room,156,121,1	script	Tierra Valley Officer#2	4_M_CRU_KNT,{
 		close;
 	}
 
-	mes "Hello " + strcharinfo(0) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
+	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
 	next;
-	if( select("I want to join your army!:End Conversation") == 2 )
+	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
 	mes "[Tierra Officer]";
@@ -287,9 +287,9 @@ bat_room,156,121,1	script	Tierra Valley Officer#2	4_M_CRU_KNT,{
 		close;
 	}
 
-	if( checkquest(2069,PLAYTIME) == 2 ) erasequest 2069;
-	if( checkquest(2069,PLAYTIME) != -1 )
-	{
+	if (questprogress(2069,PLAYTIME) == 2)
+		erasequest 2069;
+	if (questprogress(2069,PLAYTIME)) {
 		mes "You have received an indicator showing that you've participated in the Battle at Tierra Gorge. I can't let you participate in any other battles until the indicator goes off.";
 		next;
 		mes "[Tierra Officer]";
@@ -343,10 +343,10 @@ bat_room,164,178,5	script	Tierra Valley Officer#3	4_M_KY_KNT,{
 		mes "Please sign up for an army with Prince Croix or General Guillaume!";
 		close;
 	}
-	
-	mes "Hello " + strcharinfo(0) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
+
+	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
 	next;
-	if( select("I want to join your army!:End Conversation") == 2 )
+	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
 	mes "[Tierra Officer]";
@@ -357,9 +357,9 @@ bat_room,164,178,5	script	Tierra Valley Officer#3	4_M_KY_KNT,{
 		close;
 	}
 
-	if( checkquest(2069,PLAYTIME) == 2 ) erasequest 2069;
-	if( checkquest(2069,PLAYTIME) != -1 )
-	{
+	if (questprogress(2069,PLAYTIME) == 2)
+		erasequest 2069;
+	if (questprogress(2069,PLAYTIME)) {
 		mes "You have received an indicator showing that you've participated in the Battle at Tierra Gorge. I can't let you participate in any other battles until the indicator goes off.";
 		next;
 		mes "[Tierra Officer]";
@@ -414,9 +414,9 @@ bat_room,164,121,1	script	Tierra Valley Officer#4	4_M_CRU_KNT,{
 		close;
 	}
 
-	mes "Hello " + strcharinfo(0) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
+	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
 	next;
-	if( select("I want to join your army!:End Conversation") == 2 )
+	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
 	mes "[Tierra Officer]";
@@ -427,9 +427,9 @@ bat_room,164,121,1	script	Tierra Valley Officer#4	4_M_CRU_KNT,{
 		close;
 	}
 
-	if( checkquest(2069,PLAYTIME) == 2 ) erasequest 2069;
-	if( checkquest(2069,PLAYTIME) != -1 )
-	{
+	if (questprogress(2069,PLAYTIME) == 2)
+		erasequest 2069;
+	if (questprogress(2069,PLAYTIME)) {
 		mes "You have received an indicator showing that you've participated in the Battle at Tierra Gorge. I can't let you participate in any other battles until the indicator goes off.";
 		next;
 		mes "[Tierra Officer]";
@@ -485,9 +485,9 @@ bat_room,172,178,5	script	Flavius Officer#1	4_M_KY_KNT,{
 		close;
 	}
 
-	mes "Hello " + strcharinfo(0) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
+	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
 	next;
-	if( select("I want to join your army!:End Conversation") == 2 )
+	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
 	mes "[Flavius Officer]";
@@ -498,9 +498,9 @@ bat_room,172,178,5	script	Flavius Officer#1	4_M_KY_KNT,{
 		close;
 	}
 
-	if( checkquest(2070,PLAYTIME) == 2 ) erasequest 2070;
-	if( checkquest(2070,PLAYTIME) != -1 )
-	{
+	if (questprogress(2070,PLAYTIME) == 2)
+		erasequest 2070;
+	if (questprogress(2070,PLAYTIME)) {
 		mes "You have received an indicator showing that you've participated in the Battle at Flavius. I can't let you participate in any other battles until the indicator goes off.";
 		next;
 		mes "[Flavius Officer]";
@@ -556,9 +556,9 @@ bat_room,172,121,1	script	Flavius Officer#2	4_M_CRU_KNT,{
 		close;
 	}
 
-	mes "Hello " + strcharinfo(0) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
+	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
 	next;
-	if( select("I want to join your army!:End Conversation") == 2 )
+	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
 	mes "[Flavius Officer]";
@@ -569,9 +569,9 @@ bat_room,172,121,1	script	Flavius Officer#2	4_M_CRU_KNT,{
 		close;
 	}
 
-	if( checkquest(2070,PLAYTIME) == 2 ) erasequest 2070;
-	if( checkquest(2070,PLAYTIME) != -1 )
-	{
+	if (questprogress(2070,PLAYTIME) == 2)
+		erasequest 2070;
+	if (questprogress(2070,PLAYTIME)) {
 		mes "You have received an indicator showing that you've participated in the Battle at Flavius. I can't let you participate in any other battles until the indicator goes off.";
 		next;
 		mes "[Flavius Officer]";
@@ -627,9 +627,9 @@ bat_room,148,178,5	script	Flavius Officer#3	4_M_KY_KNT,{
 		close;
 	}
 
-	mes "Hello " + strcharinfo(0) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
+	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
 	next;
-	if( select("I want to join your army!:End Conversation") == 2 )
+	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
 	mes "[Flavius Officer]";
@@ -640,9 +640,9 @@ bat_room,148,178,5	script	Flavius Officer#3	4_M_KY_KNT,{
 		close;
 	}
 
-	if( checkquest(2070,PLAYTIME) == 2 ) erasequest 2070;
-	if( checkquest(2070,PLAYTIME) != -1 )
-	{
+	if (questprogress(2070,PLAYTIME) == 2)
+		erasequest 2070;
+	if (questprogress(2070,PLAYTIME)) {
 		mes "You have received an indicator showing that you've participated in the Battle at Flavius. I can't let you participate in any other battles until the indicator goes off.";
 		next;
 		mes "[Flavius Officer]";
@@ -698,9 +698,9 @@ bat_room,148,121,1	script	Flavius Officer#4	4_M_CRU_KNT,{
 		close;
 	}
 
-	mes "Hello " + strcharinfo(0) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
+	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
 	next;
-	if( select("I want to join your army!:End Conversation") == 2 )
+	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
 	mes "[Flavius Officer]";
@@ -711,9 +711,9 @@ bat_room,148,121,1	script	Flavius Officer#4	4_M_CRU_KNT,{
 		close;
 	}
 
-	if( checkquest(2070,PLAYTIME) == 2 ) erasequest 2070;
-	if( checkquest(2070,PLAYTIME) != -1 )
-	{
+	if (questprogress(2070,PLAYTIME) == 2)
+		erasequest 2070;
+	if (questprogress(2070,PLAYTIME)) {
 		mes "You have received an indicator showing that you've participated in the Battle at Flavius. I can't let you participate in any other battles until the indicator goes off.";
 		next;
 		mes "[Flavius Officer]";
@@ -766,9 +766,9 @@ bat_room,140,178,5	script	KVM [80-99] Officer#1	4_M_KY_KNT,{
 		close;
 	}
 
-	mes "Hello " + strcharinfo(0) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
+	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
 	next;
-	if( select("I want to join your army!:End Conversation") == 2 )
+	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
 	mes "[KVM Officer]";
@@ -779,9 +779,9 @@ bat_room,140,178,5	script	KVM [80-99] Officer#1	4_M_KY_KNT,{
 		close;
 	}
 
-	if( checkquest(6025,PLAYTIME) == 2 ) erasequest 6025;
-	if( checkquest(6025,PLAYTIME) != -1 )
-	{
+	if (questprogress(6025,PLAYTIME) == 2)
+		erasequest 6025;
+	if (questprogress(6025,PLAYTIME)) {
 		mes "You have received an indicator showing that you've participated in the Battle at KvM. I can't let you participate in any other battles until the indicator goes off.";
 		next;
 		mes "[KVM Officer]";
@@ -834,9 +834,9 @@ bat_room,140,121,1	script	KVM [80-99] Officer#2	4_M_CRU_KNT,{
 		close;
 	}
 
-	mes "Hello " + strcharinfo(0) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
+	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
 	next;
-	if( select("I want to join your army!:End Conversation") == 2 )
+	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
 	mes "[KVM Officer]";
@@ -847,9 +847,9 @@ bat_room,140,121,1	script	KVM [80-99] Officer#2	4_M_CRU_KNT,{
 		close;
 	}
 
-	if( checkquest(6025,PLAYTIME) == 2 ) erasequest 6025;
-	if( checkquest(6025,PLAYTIME) != -1 )
-	{
+	if (questprogress(6025,PLAYTIME) == 2)
+		erasequest 6025;
+	if (questprogress(6025,PLAYTIME)) {
 		mes "You have received an indicator showing that you've participated in the Battle at KvM. I can't let you participate in any other battles until the indicator goes off.";
 		next;
 		mes "[KVM Officer]";
@@ -902,9 +902,9 @@ bat_room,132,178,5	script	KVM [60-79] Officer#1	4_M_KY_KNT,{
 		close;
 	}
 
-	mes "Hello " + strcharinfo(0) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
+	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
 	next;
-	if( select("I want to join your army!:End Conversation") == 2 )
+	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
 	mes "[KVM Officer]";
@@ -915,9 +915,9 @@ bat_room,132,178,5	script	KVM [60-79] Officer#1	4_M_KY_KNT,{
 		close;
 	}
 
-	if( checkquest(6025,PLAYTIME) == 2 ) erasequest 6025;
-	if( checkquest(6025,PLAYTIME) != -1 )
-	{
+	if (questprogress(6025,PLAYTIME) == 2)
+		erasequest 6025;
+	if (questprogress(6025,PLAYTIME)) {
 		mes "You have received an indicator showing that you've participated in the Battle at KvM. I can't let you participate in any other battles until the indicator goes off.";
 		next;
 		mes "[KVM Officer]";
@@ -970,9 +970,9 @@ bat_room,132,121,1	script	KVM [60-79] Officer#2	4_M_CRU_KNT,{
 		close;
 	}
 
-	mes "Hello " + strcharinfo(0) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
+	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
 	next;
-	if( select("I want to join your army!:End Conversation") == 2 )
+	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
 	mes "[KVM Officer]";
@@ -983,9 +983,9 @@ bat_room,132,121,1	script	KVM [60-79] Officer#2	4_M_CRU_KNT,{
 		close;
 	}
 
-	if( checkquest(6025,PLAYTIME) == 2 ) erasequest 6025;
-	if( checkquest(6025,PLAYTIME) != -1 )
-	{
+	if (questprogress(6025,PLAYTIME) == 2)
+		erasequest 6025;
+	if (questprogress(6025,PLAYTIME)) {
 		mes "You have received an indicator showing that you've participated in the Battle at KvM. I can't let you participate in any other battles until the indicator goes off.";
 		next;
 		mes "[KVM Officer]";
@@ -1038,9 +1038,9 @@ bat_room,124,178,5	script	KVM [1-59] Officer#1	4_M_KY_KNT,{
 		close;
 	}
 
-	mes "Hello " + strcharinfo(0) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
+	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
 	next;
-	if( select("I want to join your army!:End Conversation") == 2 )
+	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
 	mes "[KVM Officer]";
@@ -1051,9 +1051,9 @@ bat_room,124,178,5	script	KVM [1-59] Officer#1	4_M_KY_KNT,{
 		close;
 	}
 
-	if( checkquest(6025,PLAYTIME) == 2 ) erasequest 6025;
-	if( checkquest(6025,PLAYTIME) != -1 )
-	{
+	if (questprogress(6025,PLAYTIME) == 2)
+		erasequest 6025;
+	if (questprogress(6025,PLAYTIME)) {
 		mes "You have received an indicator showing that you've participated in the Battle at KvM. I can't let you participate in any other battles until the indicator goes off.";
 		next;
 		mes "[KVM Officer]";
@@ -1106,9 +1106,9 @@ bat_room,124,121,1	script	KVM [1-59] Officer#2	4_M_CRU_KNT,{
 		close;
 	}
 
-	mes "Hello " + strcharinfo(0) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
+	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
 	next;
-	if( select("I want to join your army!:End Conversation") == 2 )
+	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
 	mes "[KVM Officer]";
@@ -1119,9 +1119,9 @@ bat_room,124,121,1	script	KVM [1-59] Officer#2	4_M_CRU_KNT,{
 		close;
 	}
 
-	if( checkquest(6025,PLAYTIME) == 2 ) erasequest 6025;
-	if( checkquest(6025,PLAYTIME) != -1 )
-	{
+	if (questprogress(6025,PLAYTIME) == 2)
+		erasequest 6025;
+	if (questprogress(6025,PLAYTIME)) {
 		mes "You have received an indicator showing that you've participated in the Battle at KvM. I can't let you participate in any other battles until the indicator goes off.";
 		next;
 		mes "[KVM Officer]";
@@ -1157,7 +1157,7 @@ bat_room,161,158,3	duplicate(bat_aid)	General Guillaume's Aid::bat_aid4	4_M_KY_H
 
 // Exit from Registration
 // *********************************************************************
--	script	warp2bat_room	-1,{
+-	script	warp2bat_room	FAKE_NPC,{
 	end;
 
 OnTouch:
@@ -1252,7 +1252,7 @@ bat_room,160,150,3	script	Erundek	4_M_MANAGER,{
 			deletearray .@Item_DB[0],127;
 			set .@Badge, 7828;
 
-			switch( select("Weapons:Garment:Footgear:Armor:Accessory") )
+			switch( select("Weapons", "Garment", "Footgear", "Armor", "Accessory") )
 			{
 				case 1: setarray .@Item_DB[0],13036,13411,1425,1632,1634,1543,1924,1978,1574,1824,1183,1380,13305,1279,1739,13108,13172; set .@Value, 100; break;
 				case 2: setarray .@Item_DB[0],2538,2539,2540; set .@Value, 50; break;
@@ -1260,7 +1260,7 @@ bat_room,160,150,3	script	Erundek	4_M_MANAGER,{
 				case 4: setarray .@Item_DB[0],2376,2377,2378,2379,2380,2381,2382; set .@Value, 80; break;
 				case 5: setarray .@Item_DB[0],2720,2721,2722,2723,2724,2725,2733; set .@Value, 500; break;
 			}
-			
+
 			break;
 		case 3: // Valor Badges
 			mes "[Erundek]";
@@ -1270,7 +1270,7 @@ bat_room,160,150,3	script	Erundek	4_M_MANAGER,{
 			deletearray .@Item_DB[0],127;
 			set .@Badge, 7829;
 
-			switch( select("Weapons:Garment:Footgear:Armor:Accessory") )
+			switch( select("Weapons", "Garment", "Footgear", "Armor", "Accessory") )
 			{
 				case 1: setarray .@Item_DB[0],13037,13410,1633,1635,1542,1923,1977,1575,1823,1184,1482,1379,13306,1280,1738,13171,13173,13174; set .@Value, 100; break;
 				case 2: setarray .@Item_DB[0],2538,2539,2540; set .@Value, 50; break;
@@ -1278,7 +1278,7 @@ bat_room,160,150,3	script	Erundek	4_M_MANAGER,{
 				case 4: setarray .@Item_DB[0],2376,2377,2378,2379,2380,2381,2382; set .@Value, 80; break;
 				case 5: setarray .@Item_DB[0],2720,2721,2722,2723,2724,2725,2733; set .@Value, 500; break;
 			}
-			
+
 			break;
 		case 4: // Heroism Badge
 			mes "[Erundek]";
@@ -1286,7 +1286,7 @@ bat_room,160,150,3	script	Erundek	4_M_MANAGER,{
 			mes "This shop is not available at the moment.";
 			close;
 	}
-	
+
 	mes "[Erundek]";
 	mes "What item do you want to exchange?";
 	mes "If you are not sure, check the catalog.";
@@ -1305,21 +1305,21 @@ bat_room,160,150,3	script	Erundek	4_M_MANAGER,{
 	mes "Remember, Battleground Reward Items are ^FF0000Character Bound^000000.";
 	mes "Are you sure you want this item?";
 	next;
-	
-	if( select("Yes:No") == 2 )
+
+	if( select("Yes", "No") == 2 )
 	{
 		mes "[Erundek]";
 		mes "Do you need more time to check the items?";
 		close;
 	}
-	
+
 	if( countitem(.@Badge) < .@Value )
 	{
 		mes "[Erundek]";
 		mes "I'm sorry, but you don't have enough badges to exchange.";
 		close;
 	}
-	
+
 	delitem .@Badge,.@Value;
 	getitem .@Item_ID,1;
 	mes "[Erundek]";

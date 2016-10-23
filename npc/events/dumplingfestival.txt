@@ -1,16 +1,38 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Lupus
+//= Copyright (C)  Massdriller
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Imitation of Dumpling Festival
-//===== By ===================================================
-//= Massdriller
-//===== Version ==============================================
-//= 1.01
-//===== Description ==========================================
+//================= Description ===========================================
 //= A complete redering of the Dumpling Festival.
-//===== Comments =============================================
-//= Ver 1.0- Duplicate of MRO's Dumpling Event
-//= 1.01 fixed bugs [Lupus]
-//============================================================
-  
+//================= Current Version =======================================
+//= 1.01
+//=========================================================================
+
 payon,93,81,4	script	Exorcist Master Fahae	4_M_BUDDHIST,{
 
 	mes "[Exorcist Master Fahae]";
@@ -21,64 +43,51 @@ payon,93,81,4	script	Exorcist Master Fahae	4_M_BUDDHIST,{
 	mes "I feel it is time I let another warrior try to complete";
 	mes "my quest. I have some items to assist you in my quest.";
 	next;
-	menu "I wish to buy",-, "No thanks",M_FIN;
-  
+	if (select("I wish to buy","No thanks") != 1) {
+		mes "[Exorcist Master Fahae]";
+		mes "The path of fully venquishing evil is far, help me in the way of God.";
+		close;
+	}
 	mes "[Exorcist Master Fahae]";
 	mes "I have 2 items which might become useful to you.";
 	next;
-	menu "Realgar Wine",-, "Exorcize Herb",M_HERB;
-  
+	switch (select("Realgar Wine","Exorcize Herb")) {
+	case 1:
+		.@itemid = Realgar_Wine; // 682
+		.@price = 20000;
+		break;
+	case 2:
+		.@itemid = Exorcize_Herb; // 683
+		.@price = 10000;
+		break;
+	}
 	mes "[Exorcist Master Fahae]";
 	mes "How many do you require?";
 	mes "You may only buy 5 at one time.";
-	mes "Each costs 20000z.";
+	mes "Each costs "+ .@price +"z.";
 	mes "(Type in 0 to cancel)";
 	next;
 	input @input;
-	if(@input==0) close;
-	if(@input>5) goto L_SORRY;
-	if(Zeny< @input*20000) goto L_NoZeny;
-	Zeny -= 20000*@input;
-	getitem 682,@input;
+	if (@input == 0)
+		close;
+	if (@input > 5) {
+		mes "[Exorcist Master Fahae]";
+		mes "You must not be stingy, it is the path of God to be honest.";
+		close;
+	}
+	if (Zeny < @input * .@price) {
+		mes "[Exorcist Master Fahae]";
+		mes "Money doesn't bring joy to everyone, but we need it to support the temple and myself. Please, try to kill some monsters and take their drops.";
+		close;
+	}
+	Zeny -= @input * .@price;
+	getitem .@itemid, @input;
 	mes "[Exorcist Master Fahae]";
 	mes "Here you go, I hope you may succeed in my quest.";
-	close;
-  
-L_SORRY:
-	mes "[Exorcist Master Fahae]";
-	mes "You must not be stingy, it is the path of God to be honest.";
-	close;
-  
-M_FIN:
-	mes "[Exorcist Master Fahae]";
-	mes "The path of fully venquishing evil is far, help me in the way of God.";
-	close;
-  
-M_HERB:
-	mes "[Exorcist Master Fahae]";
-	mes "How many do you require?";
-	mes "You may only buy 5 at one time.";
-	mes "Each costs 10000z.";
-	mes "(Type in 0 to cancel)";
-	next;
-	input @input;
-	if(@input==0) close;
-	if(@input>5) goto L_SORRY;
-	if(Zeny< @input*10000) goto L_NoZeny;
-	Zeny -= 10000*@input;
-	getitem 683,@input;
-	mes "[Exorcist Master Fahae]";
-	mes "Here you go, I hope you may succeed in my quest.";
-	close;
-
-L_NoZeny:
-	mes "[Exorcist Master Fahae]";
-	mes "Money doesn't bring joy to everyone, but we need it to support the temple and myself. Please, try to kill some monsters and take their drops.";
 	close;
 }
-  
-// Monsters
-//============================================================
+
+//== Monsters ==============================================
 gef_fild00,0,0,0,0	monster	Dumpling	1520,20,60000,66000
 gef_fild07,0,0,0,0	monster	Dumpling	1520,20,60000,66000
 gef_fild04,0,0,0,0	monster	Dumpling	1520,20,60000,66000

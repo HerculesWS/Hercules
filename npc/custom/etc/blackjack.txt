@@ -3,7 +3,7 @@
 //===== By: ==================================================
 //= kobra_k88
 //===== Current Version: =====================================
-//= 1.0
+//= 1.1
 //===== Description: =========================================
 //= Black Jack card game.  Gameplay based off standard casino
 //= black jack rules.  Dealer must have at least 17 to stay and will
@@ -12,7 +12,8 @@
 //= Currently does not allow for "insurance", or "splitting"
 //= of pairs.
 //===== Additional Comments: =================================
-//=
+// 1.0 Release
+// 1.1 Prevent player logout from zeny deletion (AnnieRuru)
 //============================================================
 
 cmd_in02,188,89,1	script	Black Jack Dealer	1_M_LIBRARYMASTER,{
@@ -71,7 +72,7 @@ sM_0b:
 	mes "3.) If you have a point total of 21 with the first 2 cards, you";
 	mes "will automatically win the round.  This is called a ^5533FF'Black Jack'^000000";
 	mes "and happens when you get an 'Ace' and a '10 valued' card. If the";
-	mes "dealer gets a Black Jack he/she will automatically win the round.";
+	mes "dealer gets a Black Jack the player will automatically lose the round.";
 	next;
 	mes "[Dealer]";
 	mes "4.) Besides winning and loosing, you can tie with the dealer.  If";
@@ -133,18 +134,22 @@ L_Play:
 M_1a:
 	if(Zeny < 2) goto sL_NotEnuf;
 	set @bet, 2;
+	Zeny -= @bet;
 	goto L_Cont0;
 M_1b:
 	if(Zeny < 10) goto sL_NotEnuf;
 	set @bet, 10;
+	Zeny -= @bet;
 	goto L_Cont0;
 M_1c:
 	if(Zeny < 20) goto sL_NotEnuf;
 	set @bet, 20;
+	Zeny -= @bet;
 	goto L_Cont0;
 M_1d:
 	if(Zeny < 100) goto sL_NotEnuf;
 	set @bet, 100;
+	Zeny -= @bet;
 	goto L_Cont0;
 
 sL_NotEnuf:
@@ -157,6 +162,7 @@ L_Cont0:
 	next;
 	deletearray $@card[0],13;
 	set @dealerTurn, 0;
+	set @doubledown, 0;
 	set @numP, 0;
 	set @numD, 0;
 	set @pAce, 0;
@@ -219,7 +225,7 @@ M_Double:
 	mes "doubled, and you will only be able to pull 1 extra card.";
 	next;
 	set @dealerTurn, 1;
-	set @bet, @bet*2;
+	set @doubledown, 1;
 	callsub sF_GetCards, @numP, @playCard[@numP], @playCard$[@numP], @pAce;
 	goto L_Start;
 
@@ -232,18 +238,21 @@ L_Check:
 sL_Win:
 	mes "[Dealer]";
 	mes "Congratulations, you've won!";
+	if ( @doubledown )
+		Zeny += @bet *3;
+	else
+		Zeny += @bet *2;
 	next;
-	Zeny += @bet;
 	goto L_Play;
 sL_Lose:
 	mes "[Dealer]";
 	mes "I'm sorry but you've lost.";
-	Zeny -= @bet;
 	next;
 	goto L_Play;
 sL_Push:
 	mes "[Dealer]";
 	mes "Its a push.  You tied with the Dealer.";
+	Zeny += @bet;
 	next;
 	goto L_Play;
 

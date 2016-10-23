@@ -15,7 +15,7 @@ prt_castle,80,170,4	script	King of Prontera	1_M_PRON_KING,{
 	mes "[King of Prontera]";
 	mes "Hello, can you help me?";
 	next;
-	if(select("Sure, what can I do?:Sorry, I'm busy.")==2) {
+	if(select("Sure, what can I do?", "Sorry, I'm busy.")==2) {
 		mes "[King of Prontera]";
 		mes "Ok, that's fine, I'm sure someone else will help.";
 		close; }
@@ -26,7 +26,7 @@ prt_castle,80,170,4	script	King of Prontera	1_M_PRON_KING,{
 	next;
 	setarray .@items1[0],5007,742,30,741,50,753,20,732,1,710,20,629,20;
 	setarray .@items2[0],1137,2254,1,2282,1,714,1;
-	switch(select("What do you need?:I have the items!:Forget it.")) {
+	switch(select("What do you need?", "I have the items!", "Forget it.")) {
 		case 1:
 			for(set .@i,1; .@i<3; set .@i,.@i+1) {
 				mes "[King of Prontera]";
@@ -40,7 +40,7 @@ prt_castle,80,170,4	script	King of Prontera	1_M_PRON_KING,{
 			mes "[King of Prontera]";
 			mes "What item do you want?";
 			next;
-			set .@i, select("Crown:Sword");
+			set .@i, select("Crown", "Sword");
 			for(set .@j,1; .@j<getarraysize(getd(".@items"+.@i)); set .@j,.@j+2)
 				if (countitem(getd(".@items"+.@i+"["+.@j+"]")) < getd(".@items"+.@i+"["+(.@j+1)+"]")) set .@nr,1;
 			mes "[King of Prontera]";
@@ -66,7 +66,7 @@ prt_castle,84,170,4	script	King's Daughter	1_M_SIZ,{
 	mes "[King's Daughter]";
 	mes "Hmph, I hate my dad right now!!";
 	next;
-	if(select("Why?:Whatever...")==2) {
+	if(select("Why?", "Whatever...")==2) {
 		mes "[King's Daughter]";
 		mes "FINE THEN! Hmph!!";
 		close; }

@@ -1,93 +1,131 @@
-// Copyright (c) rAthena Project (www.rathena.org) - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
-
-#ifndef _COMMON_MUTEX_H_
-#define _COMMON_MUTEX_H_
-
-#include "../common/cbasetypes.h"
-
-typedef struct ramutex *ramutex; // Mutex
-typedef struct racond *racond; // Condition Var
-
 /**
- * Creates a Mutex
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * @return not NULL
+ * Copyright (C) 2012-2016  Hercules Dev Team
+ * Copyright (C)  rAthena Project (www.rathena.org)
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-ramutex ramutex_create();
+#ifndef COMMON_MUTEX_H
+#define COMMON_MUTEX_H
 
-/**
- * Destroys a Mutex
- *
- * @param m - the mutex to destroy
+#include "common/hercules.h"
+
+/** @file
+ * Mutex and conditional variables implementation for Hercules.
  */
-void ramutex_destroy( ramutex m );
 
-/**
- * Gets a lock
- *
- * @param m - the mutex to lock
- */
-void ramutex_lock( ramutex m);
+/* Opaque types */
 
-/**
- * Trys to get the Lock
- *
- * @param m - the mutex try to lock
- *
- * @return boolean (true = got the lock)
- */
-bool ramutex_trylock( ramutex m );
+struct mutex_data; ///< Mutex
+struct cond_data;  ///< Conditional variable
 
-/**
- * Unlocks a mutex
- *
- * @param m - the mutex to unlock
- */
-void ramutex_unlock( ramutex m);
+/* Interface */
 
+/// The mutex interface.
+struct mutex_interface {
+	/**
+	 * Creates a mutex.
+	 *
+	 * @return The created mutex.
+	 */
+	struct mutex_data *(*create) (void);
 
-/**
- * Creates a Condition variable
- *
- * @return not NULL
- */
-racond racond_create();
+	/**
+	 * Destroys a mutex.
+	 *
+	 * @param m the mutex to destroy.
+	 */
+	void (*destroy) (struct mutex_data *m);
 
-/**
- * Destroy a Condition variable
- *
- * @param c - the condition variable to destroy
- */
-void racond_destroy( racond c );
+	/**
+	 * Gets a lock.
+	 *
+	 * This function blocks until the lock can be acquired.
+	 *
+	 * @param m The mutex to lock.
+	 */
+	void (*lock) (struct mutex_data *m);
 
-/**
- * Waits Until state is signaled
- *
- * @param c - the condition var to wait for signaled state
- * @param m - the mutex used for synchronization
- * @param timeout_ticks - timeout in ticks ( -1 = INFINITE )
- */
-void racond_wait( racond c,  ramutex m,  sysint timeout_ticks);
+	/**
+	 * Tries to get a lock.
+	 *
+	 * This function returns immediately.
+	 *
+	 * @param m The mutex to try to lock.
+	 * @return success status.
+	 * @retval true if the lock was acquired.
+	 * @retval false if the mutex couldn't be locked.
+	 */
+	bool (*trylock) (struct mutex_data *m);
 
-/**
- * Sets the given condition var to signaled state
- *
- * @param c - condition var to set in signaled state.
- *
- * @note:
- *  Only one waiter gets notified.
- */
-void racond_signal( racond c );
+	/**
+	 * Unlocks a mutex.
+	 *
+	 * @param m The mutex to unlock.
+	 */
+	void (*unlock) (struct mutex_data *m);
 
-/**
- * Sets notifies all waiting threads thats signaled.
- * @param c - condition var to set in signaled state
- *
- * @note:
- *  All Waiters getting notified.
- */
-void racond_broadcast( racond c );
+	/**
+	 * Creates a conditional variable.
+	 *
+	 * @return the created conditional variable.
+	 */
+	struct cond_data *(*cond_create) (void);
 
+	/**
+	 * Destroys a conditional variable.
+	 *
+	 * @param c the conditional variable to destroy.
+	 */
+	void (*cond_destroy) (struct cond_data *c);
 
-#endif /* _COMMON_MUTEX_H_ */
+	/**
+	 * Waits Until state is signaled.
+	 *
+	 * @param c             The condition var to wait for signaled state.
+	 * @param m             The mutex used for synchronization.
+	 * @param timeout_ticks Timeout in ticks (-1 = INFINITE)
+	 */
+	void (*cond_wait) (struct cond_data *c, struct mutex_data *m, sysint timeout_ticks);
+
+	/**
+	 * Sets the given condition var to signaled state.
+	 *
+	 * @remark
+	 *   Only one waiter gets notified.
+	 *
+	 * @param c Condition var to set in signaled state.
+	 */
+	void (*cond_signal) (struct cond_data *c);
+
+	/**
+	 * Sets notifies all waiting threads thats signaled.
+	 *
+	 * @remark
+	 *   All Waiters getting notified.
+	 *
+	 * @param c Condition var to set in signaled state.
+	 */
+	void (*cond_broadcast) (struct cond_data *c);
+};
+
+#ifdef HERCULES_CORE
+void mutex_defaults(void);
+#endif // HERCULES_CORE
+
+HPShared struct mutex_interface *mutex; ///< Pointer to the mutex interface.
+
+#endif /* COMMON_MUTEX_H */

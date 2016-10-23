@@ -1,40 +1,40 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  Joseph
+//= Copyright (C)  Gepard
+//= Copyright (C)  L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Endless Tower
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 2.4
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Endless Tower Memorial Dungeon.
 //= Consists of 101 floors.
-//===== Additional Comments: =================================
-//= 1.0 First version.
-//= 1.1 Removed a disablenpc from #102FShadowDust1. (bugreport:4415)
-//= 1.2 Added ends to several NPCs which would allow you to restart timers.
-//=     Added some missing stopnpctimers to npcs. (bugreport:4418)
-//= 1.3 Fixed a couple copy/paste errors :D I fail. [L0ne_W0lf]
-//      Timer no longer resets when re-entering.
-//= 1.4 Added quest log entries based on iRO. [L0ne_W0lf]
-//=     You may need to update your questid2display.
-//=     Changed White lady spawn to MVP White Lady. (bugreport:4601)
-//= 1.5 Corrected some grammar and typos.
-//= 1.6 Corrected the tower re-entry blocked condition. (bugreport:4677) [L0ne_W0lf]
-//=     Corrected floor 75 warp disabling the wrong NPC. (bugreport:4711)
-//= 1.7 Added missing end's to prevent accidental disabling of
-//=     warps between floors. (bugreport:4623)
-//=     Added missing end's to prevent infinite mobspawn (bugreport:4540)
-//=     Commented out remaining GM-only NPCs. [Gepard]
-//= 1.8 Adjusted Instance Attach Map to Validate ALL Maps, instead of
-//=     only 1@tower -> 5@tower (bugreport:4983)
-//= 1.9 Added 'instance_check_party' command to the script for proper checking if
-//=     the invoking party meets the requirements to join the Memorial Dungeon.
-//= 2.0 Fixed broken else/if chaining. [Joseph]
-//= 2.1 Updated to match latest official script. [Euphy]
-//= 2.2 Instance system rewrite. [Euphy]
-//= 2.3 Added some missing announcements. [Euphy]
-//= 2.4 Added GM management function. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 2.4
+//=========================================================================
 
 1@tower	mapflag	src4instance
 2@tower	mapflag	src4instance
@@ -42,9 +42,9 @@
 4@tower	mapflag	src4instance
 5@tower	mapflag	src4instance
 6@tower	mapflag	src4instance
-//============================================================
+
 alberta,214,77,6	script	Captain Janssen	4_M_SEAMAN,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "^008800Wait here!!";
 		mes "You're carrying too much stuff. Why don't you put some of it away, and then come back.^000000";
 		close;
@@ -54,7 +54,7 @@ alberta,214,77,6	script	Captain Janssen	4_M_SEAMAN,{
 		mes "Sigh... I don't know if I can ever go back to sailing the sea...";
 		close;
 	}
-	set .@name$,strcharinfo(0);
+	.@name$ = strcharinfo(PC_NAME);
 	if (in_102tower == 1) {
 		mes "^0000ffLooking incredibly excited, the old man ran into the marine shop hurriedly ordering goods. You don't have anything better to do, so you decide to ask him why he is in such a rush.^000000";
 		next;
@@ -75,7 +75,7 @@ alberta,214,77,6	script	Captain Janssen	4_M_SEAMAN,{
 		mes "^0000ffMr. Janssen talked about his perilous ocean journeys for quite a while. You have enough time on your hands, so you sit down, quietly listening to his story.^000000";
 		next;
 		mes "^0000ffAt least half of his story sounded grossly exaggerated, but something caught your ear: he insists that a humongous tower exists on the ocean, and that it's so tall, it scrapes across the sky.^000000";
-		set in_102tower,2;
+		in_102tower = 2;
 		close;
 	} else if (in_102tower == 2) {
 		mes "[Captain Janssen]";
@@ -119,18 +119,18 @@ alberta,214,77,6	script	Captain Janssen	4_M_SEAMAN,{
 		mes "[Captain Janssen]";
 		mes "...Okay then...";
 		mes "Welcome aboard, first mate.";
-		set in_102tower,3;
+		in_102tower = 3;
 		close;
 	} else if (in_102tower == 3) {
 		mes "[Captain Janssen]";
 		mes "Shall we leave now?";
 		next;
-		switch(select("Yes, let's go!:No, I'm not quite ready...")) {
+		switch(select("Yes, let's go!", "No, I'm not quite ready...")) {
 		case 1:
 			mes "[Captain Janssen]";
 			mes "Then pull up the anchor, first mate!";
 			close2;
-			set in_102tower,4;
+			in_102tower = 4;
 			warp "e_tower",70,114;
 			end;
 		case 2:
@@ -142,7 +142,7 @@ alberta,214,77,6	script	Captain Janssen	4_M_SEAMAN,{
 		mes "[Captain Janssen]";
 		mes "Well, to travel the ocean again, we need to restock on goods. If you give me 10,000 Zeny, I'll take care of the rest.";
 		next;
-		switch(select("I'll come back later.:Let's go, now!")) {
+		switch(select("I'll come back later.", "Let's go, now!")) {
 		case 1:
 			mes "["+.@name$+"]";
 			mes "I'm sorry, but I don't have that much money. I'll come back when I save enough.";
@@ -175,7 +175,7 @@ alberta,214,77,6	script	Captain Janssen	4_M_SEAMAN,{
 		mes "[Captain Janssen]";
 		mes "Can you donate ^0000ff10,000 Zeny^000000 to me? It's for a cause that's important to me...";
 		next;
-		switch(select("No!:Sure thing.")) {
+		switch(select("No!", "Sure thing.")) {
 		case 1:
 			mes "["+.@name$+"]";
 			mes "I'm sorry, but you've got the wrong person to ask that.";
@@ -200,7 +200,7 @@ alberta,214,77,6	script	Captain Janssen	4_M_SEAMAN,{
 				mes "[Captain Janssen]";
 				mes "Thank you so much! Now I can stock up on food and materials for my ship. You're kind, very kind!";
 				Zeny -= 10000;
-				set in_102tower,1;
+				in_102tower = 1;
 				close;
 			}
 		}
@@ -209,33 +209,33 @@ alberta,214,77,6	script	Captain Janssen	4_M_SEAMAN,{
 
 e_tower,81,105,0	script	Tower Protection Stone	2_MONEMUS,{
 
-	set .@party_id,getcharid(1);
-	set .@p_name$,getpartyname(.@party_id);
-	set .@md_name$,"Endless Tower";
+	.@party_id = getcharid(CHAR_ID_PARTY);
+	.@p_name$ = getpartyname(.@party_id);
+	.@md_name$ = "Endless Tower";
 
-	set .@etower_timer,checkquest(60200,PLAYTIME); // 1 week
-	set .@etower_timer2,checkquest(60201,PLAYTIME); // 4 hours
+	.@etower_timer = questprogress(60200,PLAYTIME); // 1 week
+	.@etower_timer2 = questprogress(60201,PLAYTIME); // 4 hours
 
 	if (!instance_check_party(.@party_id,2)) {
 		mes "Make or join a party with more than 1 member and try again.";
 		close;
 	}
-	if (.@etower_timer == -1) {
-		if (getcharid(0) == getpartyleader(.@party_id,2)) {
+	if (!.@etower_timer) {
+		if (getcharid(CHAR_ID_CHAR) == getpartyleader(.@party_id,2)) {
 			mes "Confirmed the party has been made. Would you like to reserve entrance to the Endless Tower?";
 			next;
-			switch(select("Generate dungeon "+.@md_name$+":Enter the dungeon:Return to Alberta:Cancel")) {
+			switch(select("Generate dungeon "+.@md_name$, "Enter the dungeon", "Return to Alberta", "Cancel")) {
 			case 1:
-				set .@instance, instance_create(.@md_name$,.@party_id);
+				.@instance = instance_create(.@md_name$,.@party_id);
 				if (.@instance < 0) {
 					mes "Party Name: "+.@p_name$;
-					mes "Party Leader: "+strcharinfo(0);
+					mes "Party Leader: "+strcharinfo(PC_NAME);
 					mes "^0000ff"+.@md_name$+" ^000000- Reservation Failed!";
 					close;
 				}
 				mes "^0000ff"+.@md_name$+"^000000 - Try to reserve";
 				mes "After making a reservation, you have to talk to NPC behind and select the menu 'Enter the Dungeon' to enter the dungeon.";
-				for( set .@i, 1; .@i <= 6; set .@i, .@i + 1 ) {
+				for (.@i = 1; .@i <= 6; ++.@i) {
 					if( instance_attachmap(.@i + "@tower", .@instance) == "" ) {
 						mes "^0000ff"+.@md_name$+" ^000000- Reservation Failed!";
 						instance_destroy(.@instance);
@@ -256,7 +256,7 @@ e_tower,81,105,0	script	Tower Protection Stone	2_MONEMUS,{
 				close;
 			}
 		}
-		switch(select("Enter the "+.@md_name$+":Return to Alberta:Cancel")) {
+		switch(select("Enter the "+.@md_name$, "Return to Alberta", "Cancel")) {
 		case 1:
 			callsub L_Enter,1,1,.@md_name$,.@p_name$;
 		case 2:
@@ -267,10 +267,26 @@ e_tower,81,105,0	script	Tower Protection Stone	2_MONEMUS,{
 		case 3:
 			end;
 		}
-	} else if ((.@etower_timer >= 0) && (.@etower_timer2 < 2)) {
+	} else if (.@etower_timer == 1 && .@etower_timer2 == 2) {
+
+		.@dun_lim_time = etower_timer+604800; // 1 week
+		.@dun_lim_time2 = etower_timer+14400; // 4 hours
+		.@dun_cur_time = gettimetick(2);
+		.@dun_ent_t = (.@dun_lim_time - .@dun_cur_time);
+		.@dun_h = (.@dun_ent_t / 3600);
+		.@dun_m = (.@dun_ent_t - (.@dun_h * 3600)) / 60;
+		.@dun_s = .@dun_ent_t - ((.@dun_h * 3600) + (.@dun_m * 60));
+
+		mes "Due to the tower's aftereffects, you cannot enter the dungeon right now, " + .@dun_h + "hours " + .@dun_m + "minutes " + .@dun_s + "seconds left to enter the next dungeon.";
+		next;
+		mes "It is dangerous here. Let me move you to Alberta.";
+		close2;
+		warp "alberta",223,36;
+		end;
+	} else if (.@etower_timer == 1) {
 		mes "If you have the dungeon generated already, you can enter it. ";
 		next;
-		switch(select("Enter the "+.@md_name$+":Return to Alberta:Cancel")) {
+		switch(select("Enter the "+.@md_name$, "Return to Alberta", "Cancel")) {
 		case 1:
 			callsub L_Enter,0,0,.@md_name$,.@p_name$;
 		case 2:
@@ -282,24 +298,8 @@ e_tower,81,105,0	script	Tower Protection Stone	2_MONEMUS,{
 			break;
 		}
 		close;
-	} else if ((.@etower_timer >= 0) && (.@etower_timer < 2) && (.@etower_timer2 == 2)) {
-
-		set .@dun_lim_time,etower_timer+604800; // 1 week
-		set .@dun_lim_time2,etower_timer+14400; // 4 hours
-		set .@dun_cur_time,gettimetick(2);
-		set .@dun_ent_t,(.@dun_lim_time - .@dun_cur_time);
-		set .@dun_h,(.@dun_ent_t / 3600);
-		set .@dun_m,(.@dun_ent_t - (.@dun_h * 3600)) / 60;
-		set .@dun_s,.@dun_ent_t - ((.@dun_h * 3600) + (.@dun_m * 60));
-
-		mes "Due to the tower's aftereffects, you cannot enter the dungeon right now, " + .@dun_h + "hours " + .@dun_m + "minutes " + .@dun_s + "seconds left to enter the next dungeon.";
-		next;
-		mes "It is dangerous here. Let me move you to Alberta.";
-		close2;
-		warp "alberta",223,36;
-		end;
 	} else {
-		set etower_timer,0;
+		etower_timer = 0;
 		erasequest 60200;
 		erasequest 60201;
 		mes "^0000ffThe records and after effects related to the Endless Tower have been removed. You can generate and enter the Endless Tower again.^000000";
@@ -312,9 +312,9 @@ L_Enter:
 		mes "The party leader did not generate the dungeon yet.";
 		close;
 	} else {
-		mapannounce "e_tower", strcharinfo(0)+" of the party, " +getarg(3)+", is entering the dungeon, Endless Tower.",bc_map,"0x00ff99",FW_NORMAL,12;
+		mapannounce "e_tower", strcharinfo(PC_NAME)+" of the party, " +getarg(3)+", is entering the dungeon, Endless Tower.",bc_map,"0x00ff99",FW_NORMAL,12;
 		if (getarg(1)) {
-			set etower_timer,gettimetick(2);
+			etower_timer = gettimetick(2);
 			setquest 60200;
 			setquest 60201;
 		}
@@ -329,7 +329,7 @@ L_Enter:
 e_tower,30,30,2	script	Huge Vortex	CLEAR_NPC,2,2,{
 	end;
 OnTouch:
-	mapannounce "e_tower","[ " + strcharinfo(0) + " ], seems to be engulfed by a huge vortex",bc_map,"0x00ff99",FW_NORMAL,12;
+	mapannounce "e_tower","[ " + strcharinfo(PC_NAME) + " ], seems to be engulfed by a huge vortex",bc_map,"0x00ff99",FW_NORMAL,12;
 	warp "alberta",223,36;
 	end;
 }
@@ -338,10 +338,10 @@ OnTouch:
 e_tower,1,1,2	script	#102Administrator Mode	CLEAR_NPC,{
 	callfunc "F_GM_NPC";
 	mes "Please enter the password";
-	set .@i, callfunc("F_GM_NPC","dmc2008",1);
+	.@i = callfunc("F_GM_NPC","dmc2008",1);
 	next;
 	if (.@i == 1) {
-		switch(select("Generate Purification Stone:Remove Purification Stone:Cancel")) {
+		switch(select("Generate Purification Stone", "Remove Purification Stone", "Cancel")) {
 		case 1:
 			mes "Create the Purification Stone that stays for 30 minutes.";
 			donpcevent "Purification Stone#et1::OnEnable";
@@ -362,7 +362,7 @@ e_tower,1,1,2	script	#102Administrator Mode	CLEAR_NPC,{
 }
 
 e_tower,69,117,4	script	Purification Stone#et1	2_MONEMUS,{
-	set etower_timer,0;
+	etower_timer = 0;
 	mes "^0000ffThe records and aftereffects related to the Endless Tower have been removed. You can generate and enter the Endless Tower again.^000000";
 	close;
 
@@ -394,20 +394,19 @@ OnTimer1800000:
 
 e_tower,151,185,4	script	Purification Stone#et2	CLEAR_NPC,{
 	callfunc "F_GM_NPC";
-	set etower_timer,0;
+	etower_timer = 0;
 	mes "^0000ffThe records and aftereffects related to the Endless Tower have been removed. You can generate and enter the Endless Tower again.^000000";
 	close2;
 	warp "e_tower",75,108;
 	end;
 }
 
-// Core Functions
-//============================================================
+//== Core Functions ========================================
 function	script	F_Tower_Monster	{
 
-	set .@level, getarg(0);
-	set .@map$, getarg(1);
-	set .@label$, getarg(2);
+	.@level = getarg(0);
+	.@map$ = getarg(1);
+	.@label$ = getarg(2);
 
 	switch(.@level) {
 	case 1:
@@ -861,7 +860,7 @@ function	script	F_Tower_Monster	{
 		areamonster .@map$,181,9,191,45,"Aliza",1737,10,.@label$;
 		areamonster .@map$,181,9,191,45,"Zealotus",1200,5,.@label$;
 		areamonster .@map$,181,9,191,45,"Alice",1275,5,.@label$;
-		areamonster .@map$,181,9,191,45,"Green Maiden",1631,10,.@label$;
+		areamonster .@map$,181,9,191,45,"Green Maiden",1519,10,.@label$;
 		break;
 	case 74:
 		areamonster .@map$,267,9,277,45,"Dimik",1671,6,.@label$;
@@ -1018,8 +1017,8 @@ function	script	F_Tower_Monster	{
 		areamonster .@map$,181,9,191,45,"Cecil Damon",1638,2,.@label$;
 		break;
 	case 99:
-		for(set .@i,1; .@i<=7; set .@i,.@i+1) {
-			set .@mob_ran,rand(1,30);
+		for(.@i = 1; .@i<=7; ++.@i) {
+			.@mob_ran = rand(1,30);
 			if (.@mob_ran == 1)
 				areamonster .@map$,267,9,277,45,"Kathryne Keyron",1639,2,.@label$;
 			else if (.@mob_ran == 2)
@@ -1088,8 +1087,8 @@ function	script	F_Tower_Monster	{
 
 function	script	F_Tower_Warp	{
 
-	set .@level, getarg(0);
-	set .@map$, getarg(1);
+	.@level = getarg(0);
+	.@map$ = getarg(1);
 
 	switch(.@level) {
 		case 2: warp .@map$,136,354; break;
@@ -1194,8 +1193,7 @@ function	script	F_Tower_Warp	{
 	return;
 }
 
-// Levels 1-25
-//============================================================
+//== Levels 1-25 ===========================================
 1@tower,50,360,0	script	Immortal Brazier#	CLEAR_NPC,{
 	mes "- A Message is Engraved on the Brazier -";
 	mes "The one who scatters the ashes of the darkness in this place shall become one step closer to Nacht Sieger, the Hegemon King of the Darkness...";
@@ -1203,15 +1201,15 @@ function	script	F_Tower_Warp	{
 
 	setarray .@level$[1],"26th","51st","76th";
 	setarray .@map$[1],"2@tower","3@tower","4@tower";
-	set .@i, select("26th Level:51st Level:76th Level");
+	.@i = select("26th Level", "51st Level", "76th Level");
 
-	if (countitem(6000) < .@i) {
+	if (countitem(Dark_Ashes) < .@i) {
 		mes "-Warning-";
 		mes "To warp to the "+.@level$[.@i]+" Level, you need "+.@i+" Ashes of the Darkness.";
 		close;
 	}
-	delitem 6000,.@i; //Dark_Ashes
-	mapannounce instance_mapname("1@tower"), strcharinfo(0)+". You will be warped to the "+.@level$[.@i]+" Level.",bc_map,"0x00ff99";
+	delitem Dark_Ashes,.@i;
+	mapannounce instance_mapname("1@tower"), strcharinfo(PC_NAME)+". You will be warped to the "+.@level$[.@i]+" Level.",bc_map,"0x00ff99";
 	warp instance_mapname(.@map$[.@i]),52,354;
 	close;
 
@@ -1236,8 +1234,8 @@ OnInstanceInit:
 	end;
 
 OnMyMobDead:
-	set .@map$, instance_mapname("1@tower");
-	set .@mob_dead_num,mobcount(.@map$,instance_npcname("#1F Controller")+"::OnMyMobDead");
+	.@map$ = instance_mapname("1@tower");
+	.@mob_dead_num = mobcount(.@map$,instance_npcname("#1F Controller")+"::OnMyMobDead");
 	if (.@mob_dead_num < 1) {
 		initnpctimer;
 		//SetItemPartyInMap in_102floor 1
@@ -1256,27 +1254,27 @@ OnTimer5000:
 	end;
 
 OnInstanceInit:
-	disablenpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 
 OnEnable:
-	enablenpc instance_npcname(strnpcinfo(0));
+	enablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	callfunc "F_Tower_Monster",
-		atoi(replacestr(strnpcinfo(0),"FGate102tower","")) + 1,
-		strnpcinfo(4),
-		instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+		atoi(replacestr(strnpcinfo(NPC_NAME),"FGate102tower","")) + 1,
+		strnpcinfo(NPC_MAP),
+		instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead";
 	end;
 
 OnTouch_:
 	callfunc "F_Tower_Warp",
-		atoi(replacestr(strnpcinfo(0),"FGate102tower","")) + 1,
-		strnpcinfo(4);
+		atoi(replacestr(strnpcinfo(NPC_NAME),"FGate102tower","")) + 1,
+		strnpcinfo(NPC_MAP);
 	end;
 
 OnMyMobDead:
-	set .@map$, strnpcinfo(4);
-	set .@level, atoi(replacestr(strnpcinfo(0),"FGate102tower","")) + 1;
-	set .@mob_dead_num,mobcount(.@map$,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	.@map$ = strnpcinfo(NPC_MAP);
+	.@level = atoi(replacestr(strnpcinfo(NPC_NAME),"FGate102tower","")) + 1;
+	.@mob_dead_num = mobcount(.@map$,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 	if (.@mob_dead_num < 1) {
 		initnpctimer;
 		//SetItemPartyInMap in_102floor .@level
@@ -1285,15 +1283,15 @@ OnMyMobDead:
 	end;
 
 OnTimer5000:
-	set .@level, atoi(replacestr(strnpcinfo(0),"FGate102tower","")) + 1;
-	mapannounce strnpcinfo(4), "All Monsters on the "+callsub(L_Display,.@level)+" Level have been defeated.",bc_map,"0xffff00";
+	.@level = atoi(replacestr(strnpcinfo(NPC_NAME),"FGate102tower","")) + 1;
+	mapannounce strnpcinfo(NPC_MAP), "All Monsters on the "+callsub(L_Display,.@level)+" Level have been defeated.",bc_map,"0xffff00";
 	donpcevent instance_npcname(.@level+"FGate102tower")+"::OnEnable";
 	stopnpctimer;
 	end;
 
 L_Display:
 	// Display level properly.
-	set .@mod, getarg(0) % 10;
+	.@mod = getarg(0) % 10;
 	if (.@mod == 1 && getarg(0) != 11) return getarg(0)+"st";
 	else if (.@mod == 2 && getarg(0) != 12) return getarg(0)+"nd";
 	else if (.@mod == 3 && getarg(0) != 13) return getarg(0)+"rd";
@@ -1336,7 +1334,7 @@ OnEnable:
 	end;
 
 OnTouch_:
-	getitem 6000,1; //Dark_Ashes
+	getitem Dark_Ashes,1;
 	warp instance_mapname("2@tower"),52,354;
 	end;
 
@@ -1383,7 +1381,7 @@ OnTimer120000:
 1@tower,71,1,0	script	#Manager Mode1	CLEAR_NPC,{
 	callfunc "F_GM_NPC";
 	mes "Please enter the password.";
-	set .@i, callfunc("F_GM_NPC","dmc2008",1);
+	.@i = callfunc("F_GM_NPC","dmc2008",1);
 	next;
 	if (.@i == 1) {
 		mes "This NPC manages the tower from the 1st to the 25th Level.";
@@ -1401,8 +1399,7 @@ OnTimer120000:
 	close;
 }
 
-// Levels 26-50
-//============================================================
+//== Levels 26-50 ==========================================
 2@tower,29,365,2	script	Immortal Furnace#1	CLEAR_NPC,{
 	end;
 
@@ -1414,8 +1411,8 @@ OnInstanceInit:
 	end;
 
 OnMyMobDead:
-	set .@map$, instance_mapname("2@tower");
-	set .@mob_dead_num,mobcount(.@map$,instance_npcname("Immortal Furnace#1")+"::OnMyMobDead");
+	.@map$ = instance_mapname("2@tower");
+	.@mob_dead_num = mobcount(.@map$,instance_npcname("Immortal Furnace#1")+"::OnMyMobDead");
 	if (.@mob_dead_num < 1) {
 		initnpctimer;
 		//SetItemPartyInMap in_102floor 26
@@ -1469,7 +1466,7 @@ OnEnable:
 	end;
 
 OnTouch_:
-	getitem 6000,1; //Dark_Ashes
+	getitem Dark_Ashes,1;
 	warp instance_mapname("3@tower"),52,354;
 	end;
 
@@ -1499,7 +1496,7 @@ OnTouch_:
 2@tower,71,1,0	script	#Manager Mode2	CLEAR_NPC,{
 	callfunc "F_GM_NPC";
 	mes "Please enter the password.";
-	set .@i, callfunc("F_GM_NPC","dmc2008",1);
+	.@i = callfunc("F_GM_NPC","dmc2008",1);
 	next;
 	if (.@i == 1) {
 		mes "This NPC manages the tower from the 26st to the 50th Level.";
@@ -1517,8 +1514,7 @@ OnTouch_:
 	close;
 }
 
-// Levels 51-75
-//============================================================
+//== Levels 51-75 ==========================================
 3@tower,29,365,2	script	Immortal Furnace#2	CLEAR_NPC,{
 	end;
 
@@ -1530,8 +1526,8 @@ OnInstanceInit:
 	end;
 
 OnMyMobDead:
-	set .@map$, instance_mapname("3@tower");
-	set .@mob_dead_num,mobcount(.@map$,instance_npcname("Immortal Furnace#2")+"::OnMyMobDead");
+	.@map$ = instance_mapname("3@tower");
+	.@mob_dead_num = mobcount(.@map$,instance_npcname("Immortal Furnace#2")+"::OnMyMobDead");
 	if (.@mob_dead_num < 1) {
 		initnpctimer;
 		//SetItemPartyInMap in_102floor 51
@@ -1585,7 +1581,7 @@ OnEnable:
 	end;
 
 OnTouch_:
-	getitem 6000,1; //Dark_Ashes
+	getitem Dark_Ashes,1;
 	warp instance_mapname("4@tower"),52,354;
 	end;
 
@@ -1615,7 +1611,7 @@ OnTouch_:
 3@tower,71,1,0	script	#Manager Mode3	CLEAR_NPC,{
 	callfunc "F_GM_NPC";
 	mes "Please enter the password.";
-	set .@i, callfunc("F_GM_NPC","dmc2008",1);
+	.@i = callfunc("F_GM_NPC","dmc2008",1);
 	next;
 	if (.@i == 1) {
 		mes "This NPC manages the tower from the 51st to the 75th Level.";
@@ -1633,8 +1629,7 @@ OnTouch_:
 	close;
 }
 
-// Levels 76-99
-//============================================================
+//== Levels 76-99 ==========================================
 4@tower,29,365,2	script	Immortal Furnace#3	CLEAR_NPC,{
 	end;
 
@@ -1646,8 +1641,8 @@ OnInstanceInit:
 	end;
 
 OnMyMobDead:
-	set .@map$, instance_mapname("4@tower");
-	set .@mob_dead_num,mobcount(.@map$,instance_npcname("Immortal Furnace#3")+"::OnMyMobDead");
+	.@map$ = instance_mapname("4@tower");
+	.@mob_dead_num = mobcount(.@map$,instance_npcname("Immortal Furnace#3")+"::OnMyMobDead");
 	if (.@mob_dead_num < 1) {
 		initnpctimer;
 		//SetItemPartyInMap in_102floor 76
@@ -1700,7 +1695,7 @@ OnEnable:
 	end;
 
 OnTouch_:
-	getitem 6000,1; //Dark_Ashes
+	getitem Dark_Ashes,1;
 	warp instance_mapname("5@tower"),101,72;
 	end;
 
@@ -1730,7 +1725,7 @@ OnTouch_:
 4@tower,71,1,0	script	#Manager Mode4	CLEAR_NPC,{
 	callfunc "F_GM_NPC";
 	mes "Please enter the password.";
-	set .@i, callfunc("F_GM_NPC","dmc2008",1);
+	.@i = callfunc("F_GM_NPC","dmc2008",1);
 	next;
 	if (.@i == 1) {
 		mes "This NPC manages the tower from the 76th to the 99th Level.";
@@ -1748,8 +1743,7 @@ OnTouch_:
 	close;
 }
 
-// Level 100
-//============================================================
+//== Level 100 =============================================
 5@tower,106,109,2	script	Lucid Crystal#102	CLEAR_NPC,{
 	if (in_102tower < 10) {
 		mes "^0000ffA mysterious voice echoes through the room as you touch the lucid crystal radiating a strong light.^000000";
@@ -1772,7 +1766,7 @@ OnTouch_:
 		next;
 		mes "^0000ffAs soon as the voice stopped talking, an irresistible force lifted and moved you somewhere else.";
 		close2;
-		set in_102tower,10;
+		in_102tower = 10;
 		warp "alberta",223,36;
 	}
 	else {
@@ -1857,8 +1851,8 @@ OnInstanceInit:
 	end;
 
 OnMyMobDead:
-	set .@map$, instance_mapname("5@tower");
-	set .@mob_dead_num,mobcount(.@map$,instance_npcname("#102FShadowDust1")+"::OnMyMobDead");
+	.@map$ = instance_mapname("5@tower");
+	.@mob_dead_num = mobcount(.@map$,instance_npcname("#102FShadowDust1")+"::OnMyMobDead");
 	if (.@mob_dead_num < 1) {
 		mapannounce .@map$, "Mysterious Voice: Who are you to dare intrude upon my sanctuary?!",bc_map,"0xffff00";
 		donpcevent instance_npcname("#102FShadowDust")+"::OnDisable";
@@ -1880,7 +1874,7 @@ OnDisable:
 	end;
 
 OnEnable:
-	set .@map$, instance_mapname("5@tower");
+	.@map$ = instance_mapname("5@tower");
 	monster .@map$,72,93,"Thorny Skeleton",1958,1;
 	monster .@map$,70,87,"Thorn of Magic",1960,1;
 	monster .@map$,68,83,"Thorn of Pureness",1961,1;
@@ -1922,7 +1916,7 @@ OnEnable:
 5@tower,71,1,0	script	#Manager Mode5	CLEAR_NPC,{
 	callfunc "F_GM_NPC";
 	mes "This NPC manages the crystal on the 100th Level. Please enter the password.";
-	set .@i, callfunc("F_GM_NPC","dmc2008",1);
+	.@i = callfunc("F_GM_NPC","dmc2008",1);
 	next;
 	if (.@i == 1) {
 		donpcevent instance_npcname("Lucid Crystal#102")+"::OnEnable";
@@ -1932,8 +1926,7 @@ OnEnable:
 	close;
 }
 
-// Level 101
-//============================================================
+//== Level 101 =============================================
 6@tower,45,89,2	script	Life Spring#1	CLEAR_NPC,{
 	mes "^0066ffYou took a sip of the spring's clear water, and you feel invigorated.^000000";
 	heal (MaxHp-Hp),(MaxSp-Sp);
@@ -1982,7 +1975,7 @@ OnInstanceInit:
 	end;
 
 OnMyMobDead:
-	set .@mob_dead_num,mobcount(instance_mapname("6@tower"),instance_npcname("Tyrant's Throne#")+"::OnMyMobDead");
+	.@mob_dead_num = mobcount(instance_mapname("6@tower"),instance_npcname("Tyrant's Throne#")+"::OnMyMobDead");
 	if (.@mob_dead_num < 1) {
 		donpcevent instance_npcname("#1st Beeper")+"::OnEnable";
 		disablenpc instance_npcname("Tyrant's Throne#");
@@ -2014,7 +2007,7 @@ OnTimer15500:
 	end;
 
 OnTimer20500:
-	set .@map$, instance_mapname("6@tower");
+	.@map$ = instance_mapname("6@tower");
 	mapannounce .@map$,"Let's see who runs fastest. Are you ready?",bc_map,"0x00ffcc";
 	stopnpctimer;
 	areamonster .@map$,151,66,153,106,"Bone Guardian",1152,50,instance_npcname("#1st Beeper")+"::OnMyMobDead";
@@ -2022,8 +2015,8 @@ OnTimer20500:
 	end;
 
 OnMyMobDead:
-	set .@map$, instance_mapname("6@tower");
-	set .@mob_dead_num,mobcount(.@map$,instance_npcname("#1st Beeper")+"::OnMyMobDead");
+	.@map$ = instance_mapname("6@tower");
+	.@mob_dead_num = mobcount(.@map$,instance_npcname("#1st Beeper")+"::OnMyMobDead");
 	if (.@mob_dead_num < 1) {
 		donpcevent instance_npcname("#2nd Beeper")+"::OnEnable";
 		//SetItemPartyInMap in_102floor 101
@@ -2049,7 +2042,7 @@ OnTimer5500:
 	end;
 
 OnTimer10500:
-	set .@map$, instance_mapname("6@tower");
+	.@map$ = instance_mapname("6@tower");
 	mapannounce .@map$,"I demand an encore!",bc_map,"0x00ffcc";
 	stopnpctimer;
 	areamonster .@map$,151,66,153,106,"Wind Guardian",1263,30,instance_npcname("#2nd Beeper")+"::OnMyMobDead";
@@ -2057,8 +2050,8 @@ OnTimer10500:
 	end;
 
 OnMyMobDead:
-	set .@map$, instance_mapname("6@tower");
-	set .@mob_dead_num,mobcount(.@map$,instance_npcname("#2nd Beeper")+"::OnMyMobDead");
+	.@map$ = instance_mapname("6@tower");
+	.@mob_dead_num = mobcount(.@map$,instance_npcname("#2nd Beeper")+"::OnMyMobDead");
 	if (.@mob_dead_num < 1) {
 		donpcevent instance_npcname("#3rd Beeper")+"::OnEnable";
 		//SetItemPartyInMap in_102floor 102
@@ -2084,7 +2077,7 @@ OnTimer5500:
 	end;
 
 OnTimer10500:
-	set .@map$, instance_mapname("6@tower");
+	.@map$ = instance_mapname("6@tower");
 	mapannounce .@map$,"How would you like to play one more round?",bc_map,"0x00ffcc";
 	stopnpctimer;
 	areamonster .@map$,151,66,153,106,"Sword Edge Guardian",1132,20,instance_npcname("#3rd Beeper")+"::OnMyMobDead";
@@ -2092,8 +2085,8 @@ OnTimer10500:
 	end;
 
 OnMyMobDead:
-	set .@map$, instance_mapname("6@tower");
-	set .@mob_dead_num,mobcount(.@map$,instance_npcname("#3rd Beeper")+"::OnMyMobDead");
+	.@map$ = instance_mapname("6@tower");
+	.@mob_dead_num = mobcount(.@map$,instance_npcname("#3rd Beeper")+"::OnMyMobDead");
 	if (.@mob_dead_num < 1) {
 		donpcevent instance_npcname("#4th Beeper")+"::OnEnable";
 		//SetItemPartyInMap in_102floor 103
@@ -2119,7 +2112,7 @@ OnTimer5500:
 	end;
 
 OnTimer10500:
-	set .@map$, instance_mapname("6@tower");
+	.@map$ = instance_mapname("6@tower");
 	mapannounce .@map$,"You'll soon know. Mine is the face of death!",bc_map,"0x00ffcc";
 	stopnpctimer;
 	monster .@map$,156,147,"Nacht Sieger",1956,1,instance_npcname("#4th Beeper")+"::OnMyMobDead";
@@ -2131,7 +2124,7 @@ OnMyMobDead:
 }
 
 6@tower,169,127,2	script	Lost Soul#102	4_M_NFDEADSWDMAN,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You're carrying too much stuff. Why don't you put some of it away, and then come back?";
 		close;
 	}
@@ -2141,26 +2134,26 @@ OnMyMobDead:
 	mes "[Lost Souls]";
 	mes "Thank you so much. Now we can escape from this cold and dark place... to heaven.";
 	next;
-	if ((countitem(13412) > 0) && (countitem(13413) > 0)) {
+	if ((countitem(Twin_Edge_B) > 0) && (countitem(Twin_Edge_R) > 0)) {
 		mes "[Lost Souls]";
 		mes "Hey, you have the remnants of Nacht Sieger with you.";
 		next;
 		mes "[Lost Souls]";
 		mes "They may appear to be one-handed swords, but I can put them together to make a two-handed one if you want. That's the only way I can repay you for freeing me.";
 		next;
-		switch(select("Make a Two-Handed Sword.:No, thanks.")) {
+		switch(select("Make a Two-Handed Sword.", "No, thanks.")) {
 		case 1:
 			mes "[Lost Souls]";
 			mes "If it is already upgraded or has a card inside, those effects will be disappear. Is this ok with you?";
 			next;
-			switch(select("It's fine with me. Please make one.:No way!")) {
+			switch(select("It's fine with me. Please make one.", "No way!")) {
 			case 1:
 				mes "[Lost Souls]";
 				mes "Good, then I'll combine these to create a two-handed sword.";
 				next;
-				delitem 13412,1; //Twin_Edge_B
-				delitem 13413,1; //Twin_Edge_R
-				getitem 1185,1; //Violet_Fear
+				delitem Twin_Edge_B,1;
+				delitem Twin_Edge_R,1;
+				getitem Violet_Fear,1;
 				break;
 			case 2:
 				mes "[Lost Souls]";

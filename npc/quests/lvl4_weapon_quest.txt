@@ -1,27 +1,45 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  Gepard
+//= Copyright (C)  erKURITA
+//= Copyright (C)  Silent
+//= Copyright (C)  MasterOfMuppets
+//= Copyright (C)  Reddozen
+//= Copyright (C)  Vicious_Pucca
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Grade A and Grade S weapon quests
-//===== By: ==================================================
-//= Vicious_Pucca, Reddozen & MasterOfMuppets
-//===== Current Version: =====================================
+//================= Description ===========================================
+//= Grade A and Grade S weapon quests
+//================= Current Version =======================================
 //= 1.6
-//===== Description: =========================================
-//= [Official Conversion]
-//= Grade A and Grade S weapon quests
-//===== Additional Comments: =================================
-//= 1.0 First Version, Credits goes to Vicious_Pucca for converting [MasterOfMuppets]
-//=     the quest from aegis format to eA format. Also thanks to
-//=     reddozen for fixing bugs.
-//= 1.1 Many fixes to spelling, grammar, and sentence order. [Silent]
-//= 1.2 A small fix, thanks to vicious_pucca [MasterOfMuppets]
-//= 1.21 Fixing MoM's typos (Citrin -> Citrine) [erKURITA]
-//= 1.3 Redirected error message for "LV_16" to "LV_16_NOGEM" (Gepard) [L0ne_W0lf]
-//= 1.4 Fixed bad NPC header data to comply with rev. 11603. [L0ne_W0lf]
-//= 1.5 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
-//= 1.6 Was using the wrong IDs for the ores needed. [L0ne_W0lf]
-//============================================================
+//=========================================================================
 
 umbala,117,285,3	script	Bazo#lv4	4_M_03,{
-	if (checkweight(908,300) == 0) {
+	if (checkweight(Spawn,300) == 0) {
 		mes "^3355FFWait a second! Right now, you're carrying too many items with you. Please come back after putting some of your things into Kafra Storage.^000000";
 		close;
 	}
@@ -48,7 +66,7 @@ umbala,117,285,3	script	Bazo#lv4	4_M_03,{
 		mes "[Bazo]";
 		mes "If you like, I'd be willing to show you my skills. Now how does that sound?";
 		next;
-		switch(select("Sounds good~:No, thanks.")) {
+		switch(select("Sounds good~", "No, thanks.")) {
 		case 1:
 			if (BaseLevel < 70) {
 				mes "[Bazo]";
@@ -80,7 +98,7 @@ umbala,117,285,3	script	Bazo#lv4	4_M_03,{
 			next;
 			mes "[Bazo]";
 			mes "Please bring me 30 of either Citrin, Turquoise or Agate. Well then, I wish you luck in finding those things and I'll be waiting for you~";
-			set lv4_weapon,1;
+			lv4_weapon = 1;
 			close;
 		case 2:
 			mes "[Bazo]";
@@ -133,43 +151,43 @@ umbala,117,285,3	script	Bazo#lv4	4_M_03,{
 			mes "Immaterial Sword!";
 			mes "This sword was born to be yours!";
 			mes "Congratulations and hopefully it will be useful to you.";
-			set lv4_weapon,0;
-			getitem 1141,1; //Immaterial_Sword
+			lv4_weapon = 0;
+			getitem Immaterial_Sword,1;
 		}
 		else if (lv4_weapon == 6) {
 			mes "Slash!";
 			mes "This mace was born to be yours!";
 			mes "Congratulations and hopefully it will be useful to you.";
-			set lv4_weapon,0;
-			getitem 1526,1; //Slash
+			lv4_weapon = 0;
+			getitem Slash,1;
 		}
 		else if (lv4_weapon == 7) {
 			mes "Quadrille!";
 			mes "This mace was born to be yours!";
 			mes "Congratulations and hopefully it will be useful to you.";
-			set lv4_weapon,0;
-			getitem 1527,1; //Quadrille
+			lv4_weapon = 0;
+			getitem Quadrille,1;
 		}
 		next;
 		mes "[Bazo]";
 		mes "Ah, I'm very satisfied with these results. If you wish to have another one, please feel free to visit me anytime. Alright then, enjoy your travels~";
 		close;
 	}
-	if (((lv4_weapon == 2) && (countitem(7295) > 29)) || ((lv4_weapon == 3) && (countitem(7294) > 29)) || ((lv4_weapon == 4) && (countitem(7291) > 29))) {
+	if (((lv4_weapon == 2) && (countitem(Citrine) > 29)) || ((lv4_weapon == 3) && (countitem(Turquoise) > 29)) || ((lv4_weapon == 4) && (countitem(Agate) > 29))) {
 		if (lv4_weapon == 2) {
-			set .@itemreq,7295; // Citrine
+			.@itemreq = 7295; // Citrine
 		}
 		else if (lv4_weapon == 3) {
-			set .@itemreq,7294; //Turqoise
+			.@itemreq = 7294; //Turqoise
 		}
 		else if (lv4_weapon == 4) {
-			set .@itemreq,7291; // Agate
+			.@itemreq = 7291; // Agate
 		}
 		mes "[Bazo]";
 		mes "Okay, it seems like you're";
 		mes "ready so let's get started. Now, my favorite monsters are Poring, Hode, Obeaune and Minorous.";
 		next;
-		for( set .@i, 1; .@i <= 5; set .@i,.@i+1 ) {
+		for( .@i = 1; .@i <= 5; ++.@i ) {
 			setarray .@mons[.@i],rand(1,4);
 			mes "[Bazo]";
 			if (.@i == 1) {
@@ -196,16 +214,16 @@ umbala,117,285,3	script	Bazo#lv4	4_M_03,{
 				mes "thinking about right now.";
 			}
 			next;
-			set .@answer,select("Poring:Hode:Obeaune:Minorous");
+			.@answer = select("Poring", "Hode", "Obeaune", "Minorous");
 			if (.@answer == .@mons[.@i]) {
-				set .@dap,.@dap + 1;
+				++.@dap;
 			}
 		}
 		mes "[Bazo]";
 		mes "Okay, let me give you the answers for the questions in the order I was thinking. Now, it might seem like I'm making them up right now, but I'm not. We gotta trust each other on this.";
 		next;
 		mes "[Bazo]";
-		for( set .@i, 1; .@i <= 5; set .@i,.@i+1 ) {
+		for( .@i = 1; .@i <= 5; ++.@i ) {
 			if (.@mons[.@i] == 1) {
 				mes "Poring";
 			}
@@ -221,7 +239,7 @@ umbala,117,285,3	script	Bazo#lv4	4_M_03,{
 		}
 		if (.@dap > 0) {
 			delitem .@itemreq,30;
-			set lv4_weapon,lv4_weapon+3;
+			lv4_weapon += 3;
 		}
 		else if (.@dap < 1) {
 			delitem .@itemreq,10;
@@ -257,80 +275,80 @@ umbala,117,285,3	script	Bazo#lv4	4_M_03,{
 		mes "materials you've brought again?";
 		close;
 	}
-	if ((lv4_weapon == 1) && (countitem(969) > 9) && (countitem(999) > 49) && (countitem(714) > 9)) {
+	if ((lv4_weapon == 1) && (countitem(Gold) > 9) && (countitem(Steel) > 49) && (countitem(Emperium) > 9)) {
 		mes "[Bazo]";
 		mes "Oh, you've brought all the basic materials. Now, let me check to see if you brought any of the rare ores I asked for...";
 		next;
-		if ((countitem(7295) > 29) || (countitem(7294) > 29) || (countitem(7291) > 29)) {
-			if ((countitem(7295) > 29) && (countitem(7294) > 29) && (countitem(7291) > 29)) {
+		if ((countitem(Citrine) > 29) || (countitem(Turquoise) > 29) || (countitem(Agate) > 29)) {
+			if ((countitem(Citrine) > 29) && (countitem(Turquoise) > 29) && (countitem(Agate) > 29)) {
 				mes "[Bazo]";
 				mes "Hahaha, I asked you to";
 				mes "bring one kind of ore, not all of them. So which one would you";
 				mes "like to use?";
 				next;
-				switch(select("Citrin:Turquoise:Agate")) {
+				switch(select("Citrin", "Turquoise", "Agate")) {
 				case 1:
-					set .@itemreq,7295; // Citrine
+					.@itemreq = 7295; // Citrine
 					break;
 				case 2:
-					set .@itemreq,7294; //Turqoise
+					.@itemreq = 7294; //Turqoise
 					break;
 				case 3:
-					set .@itemreq,7291; // Agate
+					.@itemreq = 7291; // Agate
 					break;
 				}
 			}
-			else if ((countitem(7295) > 29) && (countitem(7294) > 29)) {
+			else if ((countitem(Citrine) > 29) && (countitem(Turquoise) > 29)) {
 				mes "Hahaha, I asked you to";
 				mes "bring one kind of ore, not";
 				mes "two. So which one would";
 				mes "you like to use?";
-				switch(select("Citrin:Turquoise")) {
+				switch(select("Citrin", "Turquoise")) {
 				case 1:
-					set .@itemreq,7295; // Citrine
+					.@itemreq = 7295; // Citrine
 					break;
 				case 2:
-					set .@itemreq,7294; //Turqoise
+					.@itemreq = 7294; //Turqoise
 					break;
 				}
 			}
-			else if ((countitem(7295) > 29) && (countitem(7291) > 29)) {
+			else if ((countitem(Citrine) > 29) && (countitem(Agate) > 29)) {
 				mes "Hahaha, I asked you to";
 				mes "bring one kind of ore, not";
 				mes "two. So which one would";
 				mes "you like to use?";
-				switch(select("Citrin:Agate")) {
+				switch(select("Citrin", "Agate")) {
 				case 1:
-					set .@itemreq,7295; // Citrine
+					.@itemreq = 7295; // Citrine
 					break;
 				case 2:
-					set .@itemreq,7291; // Agate
+					.@itemreq = 7291; // Agate
 					break;
 				}
 			}
-			else if ((countitem(7294) > 29) && (countitem(7291) > 29)) {
+			else if ((countitem(Turquoise) > 29) && (countitem(Agate) > 29)) {
 				mes "Hahaha, I asked you to";
 				mes "bring one kind of ore, not";
 				mes "two. So which one would";
 				mes "you like to use?";
-				switch(select("Turquoise:Agate")) {
+				switch(select("Turquoise", "Agate")) {
 				case 1:
-					set .@itemreq,7294; //Turqoise
+					.@itemreq = 7294; //Turqoise
 					break;
 				case 2:
-					set .@itemreq,7291; // Agate
+					.@itemreq = 7291; // Agate
 					break;
 				}
 			}
 			else {
-				if (countitem(7295) > 29) {
-					set .@itemreq,7295; // Citrine
+				if (countitem(Citrine) > 29) {
+					.@itemreq = 7295; // Citrine
 				}
-				if (countitem(7294) > 29) {
-					set .@itemreq,7294; //Turqoise
+				if (countitem(Turquoise) > 29) {
+					.@itemreq = 7294; //Turqoise
 				}
-				if (countitem(7291) > 29) {
-					set .@itemreq,7291; // Agate
+				if (countitem(Agate) > 29) {
+					.@itemreq = 7291; // Agate
 				}
 			}
 			mes "[Bazo]";
@@ -356,17 +374,17 @@ umbala,117,285,3	script	Bazo#lv4	4_M_03,{
 			mes "Okay, now I need";
 			mes "some time to preprare...";
 			mes "Talk to you later!";
-			delitem 969,10; //Gold
-			delitem 999,50; //Steel
-			delitem 714,10; //Emperium
+			delitem Gold,10;
+			delitem Steel,50;
+			delitem Emperium,10;
 			if (.@itemreq == 7295) {
-				set lv4_weapon,2;
+				lv4_weapon = 2;
 			}
 			else if (.@itemreq == 7294) {
-				set lv4_weapon,3;
+				lv4_weapon = 3;
 			}
 			else if (.@itemreq == 7291) {
-				set lv4_weapon,4;
+				lv4_weapon = 4;
 			}
 			close;
 		}
@@ -417,7 +435,7 @@ umbala,117,285,3	script	Bazo#lv4	4_M_03,{
 	mes "[Bazo]";
 	mes "If you like, I'd be willing to show you my skills. Now how does that sound?";
 	next;
-	switch(select("Sounds good~:No, thanks.")) {
+	switch(select("Sounds good~", "No, thanks.")) {
 	case 1:
 		if (BaseLevel < 70) {
 			mes "[Bazo]";
@@ -449,7 +467,7 @@ umbala,117,285,3	script	Bazo#lv4	4_M_03,{
 		next;
 		mes "[Bazo]";
 		mes "Please bring me 30 of either Citrin, Turquoise or Agate. Well then, I wish you luck in finding those things and I'll be waiting for you~";
-		set lv4_weapon,1;
+		lv4_weapon = 1;
 		close;
 	case 2:
 		mes "[Bazo]";
@@ -462,7 +480,7 @@ umbala,117,285,3	script	Bazo#lv4	4_M_03,{
 }
 
 umbala,163,257,3	script	Hibilaithan#lv4	4_M_UMDANCEKID2,{
-	if (checkweight(908,300) == 0) {
+	if (checkweight(Spawn,300) == 0) {
 		mes "^3355FFWait a second! Right now, you're carrying too many items with you. Please come back after putting some of your things into Kafra Storage.^000000";
 		close;
 	}
@@ -499,7 +517,7 @@ umbala,163,257,3	script	Hibilaithan#lv4	4_M_UMDANCEKID2,{
 		mes "inspired and oft imitated";
 		mes "handiwork or not?";
 		next;
-		switch(select("Yes. Yes, I do.:Sorry, I don't need it!")) {
+		switch(select("Yes. Yes, I do.", "Sorry, I don't need it!")) {
 		case 1:
 			if (BaseLevel < 70) {
 				mes "[Hibilaithan]";
@@ -529,7 +547,7 @@ umbala,163,257,3	script	Hibilaithan#lv4	4_M_UMDANCEKID2,{
 			next;
 			mes "[Hibilaithan]";
 			mes "Okay, I wish you good luck! In the meantime, I shall relax here and wait for your return.";
-			set lv4_weapon,8;
+			lv4_weapon = 8;
 			close;
 		case 2:
 			mes "[Hibilaithan]";
@@ -575,33 +593,33 @@ umbala,163,257,3	script	Hibilaithan#lv4	4_M_UMDANCEKID2,{
 		mes "[Hibilaithan]";
 		if (lv4_weapon == 12) {
 			mes "Ooh, this is a huge success! But of course, since it's my handiwork, that goes without saying. Hey, this is a weapon... Some sort of... Mailbreaker!";
-			set lv4_weapon,0;
-			getitem 1225,1; //Mail_Breaker
+			lv4_weapon = 0;
+			getitem Mail_Breaker,1;
 		}
 		else if (lv4_weapon == 13) {
 			mes "Ooh, this is a huge success! But of course, since it's my handiwork, that goes without saying. Hey, this is a weapon... Some sort of... Swordbreaker!";
-			set lv4_weapon,0;
-			getitem 1224,1; //Sword_Breaker
+			lv4_weapon = 0;
+			getitem Sword_Breaker,1;
 		}
 		else if (lv4_weapon == 14) {
 			mes "Ooh, this is a huge success! But of course, since it's my handiwork, that goes without saying. Hey, this is a weapon... Some sort of... Slaughter!";
-			set lv4_weapon,0;
-			getitem 1367,1; //Slaughter
+			lv4_weapon = 0;
+			getitem Slaughter,1;
 		}
 		next;
 		mes "[Hibilaithan]";
 		mes "Ah, yet another creation that's a testament to my awesome skills! Come back to me whenever you want me to make something truly great for you. See you around~";
 		close;
 	}
-	if (((lv4_weapon == 9) && (countitem(7292) > 29)) || ((lv4_weapon == 10) && (countitem(7297) > 29)) || ((lv4_weapon == 11) && (countitem(7296) > 29))) {
+	if (((lv4_weapon == 9) && (countitem(Muscovite) > 29)) || ((lv4_weapon == 10) && (countitem(Biotite) > 29)) || ((lv4_weapon == 11) && (countitem(Pyroxene) > 29))) {
 		if (lv4_weapon == 9) {
-			set .@itemreq,7292; //Muscovite
+			.@itemreq = 7292; //Muscovite
 		}
 		else if (lv4_weapon == 10) {
-			set .@itemreq,7297; // Biotite
+			.@itemreq = 7297; // Biotite
 		}
 		else if (lv4_weapon == 11) {
-			set .@itemreq,7296; // Pyroxene
+			.@itemreq = 7296; // Pyroxene
 		}
 		mes "[Hibilaithan]";
 		mes "Okay, let's get started!";
@@ -612,7 +630,7 @@ umbala,163,257,3	script	Hibilaithan#lv4	4_M_UMDANCEKID2,{
 		mes "[Hibilaithan]";
 		mes "Don't worry, I'll tell you which monsters are my favorite, so this game isn't impossible. If you can guess just one of them right, we'll know your luck is good today!";
 		next;
-		for( set .@i, 1; .@i <= 5; set .@i,.@i+1 ) {
+		for( .@i = 1; .@i <= 5; ++.@i ) {
 			setarray .@mons[.@i],rand(1,4);
 			mes "[Hibilaithan]";
 			if (.@i == 1) {
@@ -641,9 +659,9 @@ umbala,163,257,3	script	Hibilaithan#lv4	4_M_UMDANCEKID2,{
 				mes "am I thinking of?";
 			}
 			next;
-			set .@answer,select("Zealotus:Alice:Munak:Isis");
+			.@answer = select("Zealotus", "Alice", "Munak", "Isis");
 			if (.@answer == .@mons[.@i]) {
-				set .@dap,.@dap + 1;
+				++.@dap;
 			}
 		}
 		mes "[Hibilaithan]";
@@ -653,7 +671,7 @@ umbala,163,257,3	script	Hibilaithan#lv4	4_M_UMDANCEKID2,{
 		mes "I was thinking about...";
 		next;
 		mes "[Hibilaithan]";
-		for( set .@i, 1; .@i <= 5; set .@i,.@i+1 ) {
+		for( .@i = 1; .@i <= 5; ++.@i ) {
 			if (.@mons[.@i] == 1) {
 				mes "Zealotus";
 			}
@@ -669,7 +687,7 @@ umbala,163,257,3	script	Hibilaithan#lv4	4_M_UMDANCEKID2,{
 		}
 		if (.@dap > 0) {
 			delitem .@itemreq,30;
-			set lv4_weapon,lv4_weapon+3;
+			lv4_weapon += 3;
 		}
 		else if (.@dap < 1) {
 			delitem .@itemreq,10;
@@ -710,75 +728,75 @@ umbala,163,257,3	script	Hibilaithan#lv4	4_M_UMDANCEKID2,{
 		mes "materials you've brought again?";
 		close;
 	}
-	if ((lv4_weapon == 8) && (countitem(969) > 9) && (countitem(999) > 49) && (countitem(714) > 9)) {
+	if ((lv4_weapon == 8) && (countitem(Gold) > 9) && (countitem(Steel) > 49) && (countitem(Emperium) > 9)) {
 		mes "[Hibilaithan]";
 		mes "Ooh, you're back earlier than I expected. I see that you have all the basic materials, but did you bring the most important thing...?";
 		next;
-		if ((countitem(7292) > 29) || (countitem(7297) > 29) || (countitem(7296) > 29)) {
-			if ((countitem(7292) > 29) && (countitem(7297) > 29) && (countitem(7296) > 29)) {
+		if ((countitem(Muscovite) > 29) || (countitem(Biotite) > 29) || (countitem(Pyroxene) > 29)) {
+			if ((countitem(Muscovite) > 29) && (countitem(Biotite) > 29) && (countitem(Pyroxene) > 29)) {
 				mes "[Hibilaithan]";
 				mes "Whoa, you brought all three kinds of those ores I asked for? Haha, we can only use one of them, so go ahead and choose.";
 				next;
-				switch(select("Muscovite:Biotite:Pyroxene")) {
+				switch(select("Muscovite", "Biotite", "Pyroxene")) {
 				case 1:
-					set .@itemreq,7292; //Muscovite
+					.@itemreq = 7292; //Muscovite
 					break;
 				case 2:
-					set .@itemreq,7297; // Biotite
+					.@itemreq = 7297; // Biotite
 					break;
 				case 3:
-					set .@itemreq,7296; // Pyroxene
+					.@itemreq = 7296; // Pyroxene
 					break;
 				}
 			}
-			else if ((countitem(7292) > 29) && (countitem(7297) > 29)) {
+			else if ((countitem(Muscovite) > 29) && (countitem(Biotite) > 29)) {
 				mes "[Hibilaithan]";
 				mes "Hahaha, you only needed to bring one kind of ore, not two. Now, which ore would you like to use?";
 				next;
-				switch(select("Muscovite:Biotite")) {
+				switch(select("Muscovite", "Biotite")) {
 				case 1:
-					set .@itemreq,7292; //Muscovite
+					.@itemreq = 7292; //Muscovite
 					break;
 				case 2:
-					set .@itemreq,7297; // Biotite
+					.@itemreq = 7297; // Biotite
 					break;
 				}
 			}
-			else if ((countitem(7292) > 29) && (countitem(7296) > 29)) {
+			else if ((countitem(Muscovite) > 29) && (countitem(Pyroxene) > 29)) {
 				mes "[Hibilaithan]";
 				mes "Hahaha, you only needed to bring one kind of ore, not two. Now, which ore would you like to use?";
 				next;
-				switch(select("Muscovite:Pyroxene")) {
+				switch(select("Muscovite", "Pyroxene")) {
 				case 1:
-					set .@itemreq,7292; //Muscovite
+					.@itemreq = 7292; //Muscovite
 					break;
 				case 2:
-					set .@itemreq,7296; // Pyroxene
+					.@itemreq = 7296; // Pyroxene
 					break;
 				}
 			}
-			else if ((countitem(7297) > 29) && (countitem(7296) > 29)) {
+			else if ((countitem(Biotite) > 29) && (countitem(Pyroxene) > 29)) {
 				mes "[Hibilaithan]";
 				mes "Hahaha, you only needed to bring one kind of ore, not two. Now, which ore would you like to use?";
 				next;
-				switch(select("Biotite:Pyroxene")) {
+				switch(select("Biotite", "Pyroxene")) {
 				case 1:
-					set .@itemreq,7297; // Biotite
+					.@itemreq = 7297; // Biotite
 					break;
 				case 2:
-					set .@itemreq,7296; // Pyroxene
+					.@itemreq = 7296; // Pyroxene
 					break;
 				}
 			}
 			else {
-				if (countitem(7292) > 29) {
-					set .@itemreq,7292; //Muscovite
+				if (countitem(Muscovite) > 29) {
+					.@itemreq = 7292; //Muscovite
 				}
-				else if (countitem(7297) > 29) {
-					set .@itemreq,7297; // Biotite
+				else if (countitem(Biotite) > 29) {
+					.@itemreq = 7297; // Biotite
 				}
-				else if (countitem(7296) > 29) {
-					set .@itemreq,7296; // Pyroxene
+				else if (countitem(Pyroxene) > 29) {
+					.@itemreq = 7296; // Pyroxene
 				}
 			}
 			mes "[Hibilaithan]";
@@ -804,17 +822,17 @@ umbala,163,257,3	script	Hibilaithan#lv4	4_M_UMDANCEKID2,{
 			mes "[Hibilaithan]";
 			mes "Okay, I'll need some time to get ready. Come back to me a little later so that I can judge your";
 			mes "luck today~";
-			delitem 969,10; //Gold
-			delitem 999,50; //Steel
-			delitem 714,10; //Emperium
-			if (countitem(7292) > 29) {
-				set lv4_weapon,9;
+			delitem Gold,10;
+			delitem Steel,50;
+			delitem Emperium,10;
+			if (countitem(Muscovite) > 29) {
+				lv4_weapon = 9;
 			}
-			else if (countitem(7297) > 29) {
-				set lv4_weapon,10;
+			else if (countitem(Biotite) > 29) {
+				lv4_weapon = 10;
 			}
-			else if (countitem(7296) > 29) {
-				set lv4_weapon,11;
+			else if (countitem(Pyroxene) > 29) {
+				lv4_weapon = 11;
 			}
 			close;
 		}
@@ -873,7 +891,7 @@ umbala,163,257,3	script	Hibilaithan#lv4	4_M_UMDANCEKID2,{
 	mes "inspired and oft imitated";
 	mes "handiwork or not?";
 	next;
-	switch(select("Yes. Yes, I do.:Sorry, I don't need it!")) {
+	switch(select("Yes. Yes, I do.", "Sorry, I don't need it!")) {
 	case 1:
 		if (BaseLevel < 70) {
 			mes "[Hibilaithan]";
@@ -903,7 +921,7 @@ umbala,163,257,3	script	Hibilaithan#lv4	4_M_UMDANCEKID2,{
 		next;
 		mes "[Hibilaithan]";
 		mes "Okay, I wish you good luck! In the meantime, I shall relax here and wait for your return.";
-		set lv4_weapon,8;
+		lv4_weapon = 8;
 		close;
 	case 2:
 		mes "[Hibilaithan]";
@@ -920,7 +938,7 @@ umbala,163,257,3	script	Hibilaithan#lv4	4_M_UMDANCEKID2,{
 }
 
 um_in,156,77,5	script	Tabezthan#lv4	4_M_UMOLDMAN,{
-	if (checkweight(908,300) == 0) {
+	if (checkweight(Spawn,300) == 0) {
 		mes "^3355FFWait a second! Right now, you're carrying too many items with you. Please come back after putting some of your things into Kafra Storage.^000000";
 		close;
 	}
@@ -954,7 +972,7 @@ um_in,156,77,5	script	Tabezthan#lv4	4_M_UMOLDMAN,{
 		mes "In any case, do have any use";
 		mes "for my skills? If so, please bring me the materials that I need so that I may be of service to you.";
 		next;
-		switch(select("Yes, please.:No, thank you.")) {
+		switch(select("Yes, please.", "No, thank you.")) {
 		case 1:
 			if (BaseLevel < 70) {
 				mes "[Tabezthan]";
@@ -981,7 +999,7 @@ um_in,156,77,5	script	Tabezthan#lv4	4_M_UMOLDMAN,{
 			next;
 			mes "[Tabezthan]";
 			mes "In other words, we will have to trust to luck. However, we'll have time to talk about that later. For now, please go and gather the necessary materials. I shall be waiting here.";
-			set lv4_weapon,15;
+			lv4_weapon = 15;
 			close;
 		case 2:
 			mes "[Tabezthan]";
@@ -1024,20 +1042,20 @@ um_in,156,77,5	script	Tabezthan#lv4	4_M_UMOLDMAN,{
 		if (lv4_weapon == 19) {
 			mes "I don't believe it!";
 			mes "This is such an incredibly rare weapon! Yes, I remember its name from what my late father told me. This is... Caesar's Sword!";
-			set lv4_weapon,0;
-			getitem 1134,1; //Scissores_Sword
+			lv4_weapon = 0;
+			getitem Scissores_Sword,1;
 		}
 		else if (lv4_weapon == 20) {
 			mes "I don't believe it!";
 			mes "This is such an incredibly rare weapon! Yes, I remember its name from what my late father told me. This is... Tirfing!";
-			set lv4_weapon,0;
-			getitem 1139,1; //Tale_Fing_
+			lv4_weapon = 0;
+			getitem Tale_Fing_,1;
 		}
 		else if (lv4_weapon == 21) {
 			mes "I don't believe it!";
 			mes "This is such an incredibly rare weapon! Yes, I remember its name from what my late father told me. This is... Sabbath!";
-			set lv4_weapon,0;
-			getitem 1365,1; //Sabbath
+			lv4_weapon = 0;
+			getitem Sabbath,1;
 		}
 		next;
 		mes "[Tabezthan]";
@@ -1046,15 +1064,15 @@ um_in,156,77,5	script	Tabezthan#lv4	4_M_UMOLDMAN,{
 		mes "Farewell for now, brave adventurer.";
 		close;
 	}
-	if (((lv4_weapon == 16) && (countitem(7290))) || ((lv4_weapon == 17) && (countitem(7289))) || ((lv4_weapon == 18) && (countitem(7293)))) {
+	if (((lv4_weapon == 16) && (countitem(Phlogopite))) || ((lv4_weapon == 17) && (countitem(Olivine))) || ((lv4_weapon == 18) && (countitem(Rose_Quartz)))) {
 		if (lv4_weapon == 16) {
-			set .@itemreq,7290; //Phlogopite
+			.@itemreq = 7290; //Phlogopite
 		}
 		else if (lv4_weapon == 17) {
-			set .@itemreq,7289; //Olivine
+			.@itemreq = 7289; //Olivine
 		}
 		else if (lv4_weapon == 18) {
-			set .@itemreq,7293; //Rose_Quartz
+			.@itemreq = 7293; //Rose_Quartz
 		}
 		mes "[Tabezthan]";
 		mes "Shall we begin?";
@@ -1063,7 +1081,7 @@ um_in,156,77,5	script	Tabezthan#lv4	4_M_UMOLDMAN,{
 		mes "[Tabezthan]";
 		mes "This mind reading game is an effective method of determining whether your fortune is good or bad. Get ready now...";
 		next;
-		for( set .@i, 1; .@i <= 5; set .@i,.@i+1 ) {
+		for( .@i = 1; .@i <= 5; ++.@i ) {
 			setarray .@mons[.@i],rand(1,4);
 			mes "[Tabezthan]";
 			if (.@i == 1) {
@@ -1095,16 +1113,16 @@ um_in,156,77,5	script	Tabezthan#lv4	4_M_UMOLDMAN,{
 				mes "monster I'm thinking of.";
 			}
 			next;
-			set .@answer,select("Baphomet:Dark Lord:Bloody Knight:Stormy Knight");
+			.@answer = select("Baphomet", "Dark Lord", "Bloody Knight", "Stormy Knight");
 			if (.@answer == .@mons[.@i]) {
-				set .@dap,.@dap + 1;
+				++.@dap;
 			}
 		}
 		mes "[Tabezthan]";
 		mes "That's the end of the game. Now, this is the order of the monsters that I had in mind...";
 		next;
 		mes "[Tabezthan]";
-		for( set .@i, 1; .@i <= 5; set .@i,.@i+1 ) {
+		for( .@i = 1; .@i <= 5; ++.@i ) {
 			if (.@mons[.@i] == 1) {
 				mes "Baphomet";
 			}
@@ -1120,7 +1138,7 @@ um_in,156,77,5	script	Tabezthan#lv4	4_M_UMOLDMAN,{
 		}
 		if (.@dap > 0) {
 			delitem .@itemreq,30;
-			set lv4_weapon,lv4_weapon+3;
+			lv4_weapon += 3;
 		}
 		else if (.@dap < 1) {
 			delitem .@itemreq,10;
@@ -1152,84 +1170,84 @@ um_in,156,77,5	script	Tabezthan#lv4	4_M_UMOLDMAN,{
 		mes "return to me.";
 		close;
 	}
-	if ((lv4_weapon == 15) && (countitem(969) > 9) && (countitem(999) > 49) && (countitem(714) > 9)) {
+	if ((lv4_weapon == 15) && (countitem(Gold) > 9) && (countitem(Steel) > 49) && (countitem(Emperium) > 9)) {
 		mes "[Tabezthan]";
 		mes "You've returned to me earlier than I've expected. I sense that you've brought all the basic materials, but did you bring enough special ore as well?";
 		next;
-		if ((countitem(7290) > 29) || (countitem(7289) > 29) || (countitem(7293) > 29)) {
-			if ((countitem(7290) > 29) && (countitem(7289) > 29) && (countitem(7293) > 29)) {
+		if ((countitem(Phlogopite) > 29) || (countitem(Olivine) > 29) || (countitem(Rose_Quartz) > 29)) {
+			if ((countitem(Phlogopite) > 29) && (countitem(Olivine) > 29) && (countitem(Rose_Quartz) > 29)) {
 				mes "[Tabezthan]";
 				mes "Ah, you've brought all three. However, we can only use one kind of ore at a time, so please choose just one.";
 				next;
-				switch(select("Phlogopite:Peridot:Rose Quartz")) {
+				switch(select("Phlogopite", "Peridot", "Rose Quartz")) {
 				case 1:
-					set .@itemreq,7290; //Phlogopite
+					.@itemreq = 7290; //Phlogopite
 					break;
 				case 2:
-					set .@itemreq,7289; //Olivine
+					.@itemreq = 7289; //Olivine
 					break;
 				case 3:
-					set .@itemreq,7293; //Rose_Quartz
+					.@itemreq = 7293; //Rose_Quartz
 					break;
 				}
 			}
-			else if ((countitem(7290) > 29) && (countitem(7289) > 29)) {
+			else if ((countitem(Phlogopite) > 29) && (countitem(Olivine) > 29)) {
 				mes "[Tabezthan]";
 				mes "Hahaha, you didn't need";
 				mes "to bring more than one kind";
 				mes "of ore. Now, which one would";
 				mes "you like to use?";
 				next;
-				switch(select("Phlogopite:Peridot")) {
+				switch(select("Phlogopite", "Peridot")) {
 				case 1:
-					set .@itemreq,7290; //Phlogopite
+					.@itemreq = 7290; //Phlogopite
 					break;
 				case 2:
-					set .@itemreq,7289; //Olivine
+					.@itemreq = 7289; //Olivine
 					break;
 				}
 			}
-			else if ((countitem(7290) > 29) && (countitem(7293) > 29)) {
+			else if ((countitem(Phlogopite) > 29) && (countitem(Rose_Quartz) > 29)) {
 				mes "[Tabezthan]";
 				mes "Hahaha, you didn't need";
 				mes "to bring more than one kind";
 				mes "of ore. Now, which one would";
 				mes "you like to use?";
 				next;
-				switch(select("Phlogopite:Rose Quartz")) {
+				switch(select("Phlogopite", "Rose Quartz")) {
 				case 1:
-					set .@itemreq,7290; //Phlogopite
+					.@itemreq = 7290; //Phlogopite
 					break;
 				case 2:
-					set .@itemreq,7293; //Rose_Quartz
+					.@itemreq = 7293; //Rose_Quartz
 					break;
 				}
 			}
-			else if ((countitem(7289) > 29) && (countitem(7293) > 29)) {
+			else if ((countitem(Olivine) > 29) && (countitem(Rose_Quartz) > 29)) {
 				mes "[Tabezthan]";
 				mes "Hahaha, you didn't need";
 				mes "to bring more than one kind";
 				mes "of ore. Now, which one would";
 				mes "you like to use?";
 				next;
-				switch(select("Peridot:Rose Quartz")) {
+				switch(select("Peridot", "Rose Quartz")) {
 				case 1:
-					set .@itemreq,7289; //Olivine
+					.@itemreq = 7289; //Olivine
 					break;
 				case 2:
-					set .@itemreq,7293; //Rose_Quartz
+					.@itemreq = 7293; //Rose_Quartz
 					break;
 				}
 			}
 			else {
-				if (countitem(7290) > 29) {
-					set .@itemreq,7290; //Phlogopite
+				if (countitem(Phlogopite) > 29) {
+					.@itemreq = 7290; //Phlogopite
 				}
-				else if (countitem(7289) > 29) {
-					set .@itemreq,7289; //Olivine
+				else if (countitem(Olivine) > 29) {
+					.@itemreq = 7289; //Olivine
 				}
-				else if (countitem(7293) > 29) {
-					set .@itemreq,7293; //Rose_Quartz
+				else if (countitem(Rose_Quartz) > 29) {
+					.@itemreq = 7293; //Rose_Quartz
 				}
 			}
 			mes "[Tabezthan]";
@@ -1250,17 +1268,17 @@ um_in,156,77,5	script	Tabezthan#lv4	4_M_UMOLDMAN,{
 			next;
 			mes "[Tabezthan]";
 			mes "Now, please give me a little time to finish my preparations. I shall speak to you later.";
-			delitem 999,50; //Steel
-			delitem 969,10; //Gold
-			delitem 714,10; //Emperium
-			if (countitem(7290) > 29) {
-				set lv4_weapon,16;
+			delitem Steel,50;
+			delitem Gold,10;
+			delitem Emperium,10;
+			if (countitem(Phlogopite) > 29) {
+				lv4_weapon = 16;
 			}
-			else if (countitem(7289) > 29) {
-				set lv4_weapon,17;
+			else if (countitem(Olivine) > 29) {
+				lv4_weapon = 17;
 			}
-			else if (countitem(7293) > 29) {
-				set lv4_weapon,18;
+			else if (countitem(Rose_Quartz) > 29) {
+				lv4_weapon = 18;
 			}
 			close;
 		}
@@ -1305,7 +1323,7 @@ um_in,156,77,5	script	Tabezthan#lv4	4_M_UMOLDMAN,{
 	mes "In any case, do have any use";
 	mes "for my skills? If so, please bring me the materials that I need so that I may be of service to you.";
 	next;
-	switch(select("Yes, please.:No, thank you.")) {
+	switch(select("Yes, please.", "No, thank you.")) {
 	case 1:
 		if (BaseLevel < 70) {
 			mes "[Tabezthan]";
@@ -1332,7 +1350,7 @@ um_in,156,77,5	script	Tabezthan#lv4	4_M_UMOLDMAN,{
 		next;
 		mes "[Tabezthan]";
 		mes "In other words, we will have to trust to luck. However, we'll have time to talk about that later. For now, please go and gather the necessary materials. I shall be waiting here.";
-		set lv4_weapon,15;
+		lv4_weapon = 15;
 		close;
 	case 2:
 		mes "[Tabezthan]";
@@ -1389,7 +1407,7 @@ aldebaran,178,239,3	script	Bill Thayer#lv4	4_M_05,{
 			mes "^333333*Sniff*^000000";
 			mes "All of my sons passed away";
 			mes "before they could finish their research. I should have been the one to have died. They were still so young...";
-			set lv4_weapon,54;
+			lv4_weapon = 54;
 			close;
 		}
 		else {
@@ -1401,7 +1419,7 @@ aldebaran,178,239,3	script	Bill Thayer#lv4	4_M_05,{
 			mes "^333333*Sniff*^000000";
 			mes "All of my sons passed away";
 			mes "before they could finish their research. I should have been the one to have died. They were still so young...";
-			set lv4_weapon,55;
+			lv4_weapon = 55;
 			close;
 		}
 	}
@@ -1422,7 +1440,7 @@ aldebaran,178,239,3	script	Bill Thayer#lv4	4_M_05,{
 		next;
 		mes "[Bill Thayer]";
 		mes "I hope you remember that. It's something I used to tell my sons when they were alive. Ha ha ha~";
-		set lv4_weapon,50;
+		lv4_weapon = 50;
 		close;
 	}
 	if (lv4_weapon == 45) {
@@ -1435,7 +1453,7 @@ aldebaran,178,239,3	script	Bill Thayer#lv4	4_M_05,{
 		mes "^333333*Sniff*^000000";
 		mes "All of my sons passed away";
 		mes "before they could finish their research. I should have been the one to have died. They were still so young...";
-		set lv4_weapon,45;
+		lv4_weapon = 45;
 		close;
 	}
 	if (lv4_weapon == 46) {
@@ -1448,7 +1466,7 @@ aldebaran,178,239,3	script	Bill Thayer#lv4	4_M_05,{
 		mes "^333333*Sniff*^000000";
 		mes "All of my sons passed away";
 		mes "before they could finish their research. I should have been the one to have died. They were still so young...";
-		set lv4_weapon,46;
+		lv4_weapon = 46;
 		close;
 	}
 	if (lv4_weapon == 44) {
@@ -1472,7 +1490,7 @@ aldebaran,178,239,3	script	Bill Thayer#lv4	4_M_05,{
 			mes "^333333*Sniff*^000000";
 			mes "All of my sons passed away";
 			mes "before they could finish their research. I should have been the one to have died. They were still so young...";
-			set lv4_weapon,45;
+			lv4_weapon = 45;
 			close;
 		}
 		else {
@@ -1485,7 +1503,7 @@ aldebaran,178,239,3	script	Bill Thayer#lv4	4_M_05,{
 			mes "^333333*Sniff*^000000";
 			mes "All of my sons passed away";
 			mes "before they could finish their research. I should have been the one to have died. They were still so young...";
-			set lv4_weapon,46;
+			lv4_weapon = 46;
 			close;
 		}
 	}
@@ -1500,7 +1518,7 @@ aldebaran,178,239,3	script	Bill Thayer#lv4	4_M_05,{
 		next;
 		mes "[Bill Thayer]";
 		mes "I always told my sons: 'Never accept payment to forge a good weapon. ^333333It brings bad luck.^000000' Don't ask me how that works. It just is.";
-		set lv4_weapon,41;
+		lv4_weapon = 41;
 		next;
 		mes "[Bill Thayer]";
 		mes "Even if you offer me something more precious than money, I won't do any weapon smithing for you. Although I might have back when my sons were still alive...";
@@ -1551,7 +1569,7 @@ aldebaran,178,239,3	script	Bill Thayer#lv4	4_M_05,{
 			mes "^333333*Sniff*^000000";
 			mes "All of my sons passed away";
 			mes "before they could finish their research. I should have been the one to have died. They were still so young...";
-			set lv4_weapon,36;
+			lv4_weapon = 36;
 			close;
 		}
 		else {
@@ -1564,14 +1582,14 @@ aldebaran,178,239,3	script	Bill Thayer#lv4	4_M_05,{
 			mes "^333333*Sniff*^000000";
 			mes "All of my sons passed away";
 			mes "before they could finish their research. I should have been the one to have died. They were still so young...";
-			set lv4_weapon,37;
+			lv4_weapon = 37;
 			close;
 		}
 	}
 	if ((lv4_weapon == 31) || (lv4_weapon == 32)) {
 		mes "[Bill Thayer]";
 		mes "All of my sons broke my heart by dying too young. I remember that I always used to tell them: 'Enjoy your youth. ^333333Live without regret.^000000'";
-		set lv4_weapon,32;
+		lv4_weapon = 32;
 		next;
 		mes "[Bill Thayer]";
 		mes "But I never suspected that their lives would be cut so short. Please remember to live life in such a way that regret won't haunt you later. That's the best advice I can give to you.";
@@ -1622,7 +1640,7 @@ aldebaran,178,239,3	script	Bill Thayer#lv4	4_M_05,{
 			mes "^333333*Sniff*^000000";
 			mes "All of my sons passed away";
 			mes "before they could finish their research. I should have been the one to have died. They were still so young...";
-			set lv4_weapon,27;
+			lv4_weapon = 27;
 			close;
 		}
 		else {
@@ -1635,7 +1653,7 @@ aldebaran,178,239,3	script	Bill Thayer#lv4	4_M_05,{
 			mes "^333333*Sniff*^000000";
 			mes "All of my sons passed away";
 			mes "before they could finish their research. I should have been the one to have died. They were still so young...";
-			set lv4_weapon,28;
+			lv4_weapon = 28;
 			close;
 		}
 	}
@@ -1644,7 +1662,7 @@ aldebaran,178,239,3	script	Bill Thayer#lv4	4_M_05,{
 		mes "Listen, I told you...";
 		mes "There's nothing I can do.";
 		mes "^333333I'm utterly helpless here.^000000";
-		set lv4_weapon,23;
+		lv4_weapon = 23;
 		next;
 		mes "[Bill Thayer]";
 		mes "There's no point in asking me to do anything. Ever since my sons passed away, I haven't been able to function. Please leave me alone.";
@@ -1691,7 +1709,7 @@ morocc,289,230,3	script	Citizen#lv4-2	4_F_03,{
 }
 
 niflheim,240,193,3	script	Kayron#lv4	4_M_NFDEADMAN2,{
-	if (checkweight(908,300) == 0) {
+	if (checkweight(Spawn,300) == 0) {
 		mes "^3355FFWait a second! Right now, you're carrying too many items with you. Please come back after putting some of your things into Kafra Storage.^000000";
 		close;
 	}
@@ -1712,12 +1730,12 @@ niflheim,240,193,3	script	Kayron#lv4	4_M_NFDEADMAN2,{
 		mes "the dead. Without a body, I feel";
 		mes "so useless.";
 		next;
-		switch(select("Show interest.:Ignore him.")) {
+		switch(select("Show interest.", "Ignore him.")) {
 		case 1:
 			mes "[Kayron]";
 			mes "Huh...?";
 			mes "I can't remember what I was going to say. M-my memories! I... I can't seem to recollect...";
-			set lv4_weapon,22;
+			lv4_weapon = 22;
 			close;
 		case 2:
 			mes "[Kayron]";
@@ -1756,13 +1774,13 @@ niflheim,240,193,3	script	Kayron#lv4	4_M_NFDEADMAN2,{
 			mes "can't believe it! I created";
 			if (lv4_weapon == 29) {
 				mes "this... Great Axe!";
-				getitem 1364,1; //Great_Axe
+				getitem Great_Axe,1;
 			}
 			else {
 				mes "this... Longinus's Spear!";
-				getitem 1469,1; //Longinus's_Spear
+				getitem Longinus's_Spear,1;
 			}
-			set lv4_weapon,0;
+			lv4_weapon = 0;
 			next;
 			mes "[Kayron]";
 			mes "I'm so glad that my years of research haven't been wasted.";
@@ -1783,13 +1801,13 @@ niflheim,240,193,3	script	Kayron#lv4	4_M_NFDEADMAN2,{
 			mes "can't believe it! I created";
 			if (lv4_weapon == 29) {
 				mes "this... Guillotine!";
-				getitem 1369,1; //Guillotine
+				getitem Guillotine,1;
 			}
 			else {
 				mes "this... Brionac!";
-				getitem 1470,1; //Brionac
+				getitem Brionac,1;
 			}
-			set lv4_weapon,0;
+			lv4_weapon = 0;
 			next;
 			mes "[Kayron]";
 			mes "I'm so glad that my years of research haven't been wasted.";
@@ -1803,7 +1821,7 @@ niflheim,240,193,3	script	Kayron#lv4	4_M_NFDEADMAN2,{
 			close;
 		}
 	}
-	if (((lv4_weapon == 27) && (countitem(7289) > 29) && (countitem(7294) > 29) && (countitem(7291) > 29)) || ((lv4_weapon == 28) && (countitem(7290) > 29) && (countitem(7296) > 29) && (countitem(7293) > 29))) {
+	if (((lv4_weapon == 27) && (countitem(Olivine) > 29) && (countitem(Turquoise) > 29) && (countitem(Agate) > 29)) || ((lv4_weapon == 28) && (countitem(Phlogopite) > 29) && (countitem(Pyroxene) > 29) && (countitem(Rose_Quartz) > 29))) {
 		mes "[Kayron]";
 		mes "What's this?";
 		mes "The stuff you're carrying";
@@ -1828,20 +1846,20 @@ niflheim,240,193,3	script	Kayron#lv4	4_M_NFDEADMAN2,{
 		mes "Here's a piece of paper.";
 		mes "You'll write 'Rock,' 'Paper,' or 'Scissors,' and I'll do the same. Then we'll compare our results and see what happens. Alright, let's do the first match!";
 		next;
-		set .@npchand1,rand(1,3);
-		set .@myhand1,select("Scissors:Rock:Paper");
+		.@npchand1 = rand(1,3);
+		.@myhand1 = select("Scissors", "Rock", "Paper");
 		if (((.@myhand1 == 1) && (.@npchand1 == 3)) || ((.@myhand1 == 2) && (.@npchand1 == 1)) || ((.@myhand1 == 3) && (.@npchand1 == 2))) {
-			set .@shobu,.@shobu+1;
+			++.@shobu;
 		}
 		mes "[Kayron]";
 		mes "Now...";
 		mes "Let's play";
 		mes "the second match~";
 		next;
-		set .@npchand2,rand(1,3);
-		set .@myhand2,select("Scissors:Rock:Paper");
+		.@npchand2 = rand(1,3);
+		.@myhand2 = select("Scissors", "Rock", "Paper");
 		if (((.@myhand2 == 1) && (.@npchand2 == 3)) || ((.@myhand2 == 2) && (.@npchand2 == 1)) || ((.@myhand2 == 3) && (.@npchand2 == 2))) {
-			set .@shobu,.@shobu+1;
+			++.@shobu;
 		}
 		mes "[Kayron]";
 		mes "Alright...";
@@ -1849,48 +1867,48 @@ niflheim,240,193,3	script	Kayron#lv4	4_M_NFDEADMAN2,{
 		mes "Write down 'Rock,'";
 		mes "'Paper' or 'Scissors.'";
 		next;
-		set .@npchand3,rand(1,3);
-		set .@myhand3,select("Scissors:Rock:Paper");
+		.@npchand3 = rand(1,3);
+		.@myhand3 = select("Scissors", "Rock", "Paper");
 		if (((.@myhand3 == 1) && (.@npchand3 == 3)) || ((.@myhand3 == 2) && (.@npchand3 == 1)) || ((.@myhand3 == 3) && (.@npchand3 == 2))) {
-			set .@shobu,.@shobu+1;
+			++.@shobu;
 		}
-		set .@aekddam,rand(1,3);
+		.@aekddam = rand(1,3);
 		if (.@shobu > 1) {
 			if (lv4_weapon == 27) {
-				delitem 7289,30; //Olivine
-				delitem 7294,30; //Turquoise
-				delitem 7291,30; //Agate
+				delitem Olivine,30;
+				delitem Turquoise,30;
+				delitem Agate,30;
 			}
 			else {
-				delitem 7290,30; //Phlogopite
-				delitem 7296,30; //Pyroxene
-				delitem 7293,30; //Rose_Quartz
+				delitem Phlogopite,30;
+				delitem Pyroxene,30;
+				delitem Rose_Quartz,30;
 			}
-			set lv4_weapon,lv4_weapon+2;
+			lv4_weapon += 2;
 		}
 		else if (.@shobu < 2) {
 			if (.@aekddam == 1) {
 				if (lv4_weapon == 27) {
-					delitem 7289,30; //Olivine
+					delitem Olivine,30;
 				}
 				else {
-					delitem 7290,30; //Phlogopite
+					delitem Phlogopite,30;
 				}
 			}
 			else if (.@aekddam == 2) {
 				if (lv4_weapon == 27) {
-					delitem 7294,30; //Turquoise
+					delitem Turquoise,30;
 				}
 				else {
-					delitem 7296,30; //Pyroxene
+					delitem Pyroxene,30;
 				}
 			}
 			else if (.@aekddam == 3) {
 				if (lv4_weapon == 27) {
-					delitem 7291,30; //Agate
+					delitem Agate,30;
 				}
 				else {
-					delitem 7293,30; //Rose_Quartz
+					delitem Rose_Quartz,30;
 				}
 			}
 		}
@@ -1958,7 +1976,7 @@ niflheim,240,193,3	script	Kayron#lv4	4_M_NFDEADMAN2,{
 		if (.@shobu > 1) {
 			mes "[Kayron]";
 			mes "Let's see...";
-			mes "You won " + shobu + " times.";
+			mes "You won " + .@shobu + " times.";
 			mes "You must be really";
 			mes "Without a doubt, you've";
 			mes "got some pretty good luck~";
@@ -1988,7 +2006,7 @@ niflheim,240,193,3	script	Kayron#lv4	4_M_NFDEADMAN2,{
 		mes "I mean, me and my father used to know this stuff like it was second nature. What's wrong with me...?";
 		close;
 	}
-	if ((lv4_weapon == 25) && (countitem(1005) > 1) && (countitem(989) > 0) && (countitem(710) > 0) && (countitem(969) > 19)) {
+	if ((lv4_weapon == 25) && (countitem(Hammer_Of_Blacksmith) > 1) && (countitem(Emperium_Anvil) > 0) && (countitem(Illusion_Flower) > 0) && (countitem(Gold) > 19)) {
 		mes "[Kayron]";
 		mes "Oh...!";
 		mes "I had no idea you were such a reliable person! You brought the things I've asked for pretty quickly!";
@@ -1998,11 +2016,11 @@ niflheim,240,193,3	script	Kayron#lv4	4_M_NFDEADMAN2,{
 		next;
 		mes "[Kayron]";
 		mes "Is there any way to get more of my memory back? In the meantime, let me keep these materials. I promise they'll be used to make a good weapon for you.";
-		delitem 1005,2; //Hammer_Of_Blacksmith
-		delitem 989,1; //Emperium_Anvil
-		delitem 710,1; //Illusion_Flower
-		delitem 969,20; //Gold
-		set lv4_weapon,26;
+		delitem Hammer_Of_Blacksmith,2;
+		delitem Emperium_Anvil,1;
+		delitem Illusion_Flower,1;
+		delitem Gold,20;
+		lv4_weapon = 26;
 		close;
 	}
 	if (lv4_weapon == 25) {
@@ -2047,7 +2065,7 @@ niflheim,240,193,3	script	Kayron#lv4	4_M_NFDEADMAN2,{
 		next;
 		mes "[Kayron]";
 		mes "Anyway, I'll be waiting for you here while you go out and collect those things. Be careful, alright?";
-		set lv4_weapon,25;
+		lv4_weapon = 25;
 		close;
 	}
 	if (lv4_weapon == 23) {
@@ -2091,7 +2109,7 @@ niflheim,240,193,3	script	Kayron#lv4	4_M_NFDEADMAN2,{
 			next;
 			mes "[Kayron]";
 			mes "Alright, just give me a little time so that I can try to remember the things that I'll need, alright?";
-			set lv4_weapon,24;
+			lv4_weapon = 24;
 			close;
 		}
 		else {
@@ -2121,12 +2139,12 @@ niflheim,240,193,3	script	Kayron#lv4	4_M_NFDEADMAN2,{
 	mes "the dead. Without a body, I feel";
 	mes "so useless.";
 	next;
-	switch(select("Show interest.:Ignore him.")) {
+	switch(select("Show interest.", "Ignore him.")) {
 	case 1:
 		mes "[Kayron]";
 		mes "Huh...?";
 		mes "I can't remember what I was going to say. M-my memories! I... I can't seem to recollect...";
-		set lv4_weapon,22;
+		lv4_weapon = 22;
 		close;
 	case 2:
 		mes "[Kayron]";
@@ -2165,7 +2183,7 @@ niflheim,99,268,5	script	Reyghema#lv4	4_M_NFDEADMAN2,{
 		mes "something like that,";
 		mes "but there was more to it...";
 		next;
-		switch(select("Show interest.:Ignore him.")) {
+		switch(select("Show interest.", "Ignore him.")) {
 		case 1:
 			mes "[Reyghema]";
 			mes "Enjoy your youth...";
@@ -2177,7 +2195,7 @@ niflheim,99,268,5	script	Reyghema#lv4	4_M_NFDEADMAN2,{
 			mes "I can't remember!";
 			mes "Everything in my";
 			mes "head is so cloudy!";
-			set lv4_weapon,31;
+			lv4_weapon = 31;
 			close;
 		case 2:
 			mes "[Reyghema]";
@@ -2210,13 +2228,13 @@ niflheim,99,268,5	script	Reyghema#lv4	4_M_NFDEADMAN2,{
 			mes "but I finally finished it!";
 			if (lv4_weapon == 38) {
 				mes "This is... Berserk!";
-				getitem 1814,1; //Berserk
+				getitem Berserk,1;
 			}
 			else {
 				mes "This is... Tjungkuletti!";
-				getitem 1416,1; //Tjungkuletti
+				getitem Tjungkuletti,1;
 			}
-			set lv4_weapon,0;
+			lv4_weapon = 0;
 			next;
 			mes "[Reyghema]";
 			mes "^333333*Sigh*^000000 I can feel it happening again. My memories are starting to slip away. Can't I be allowed to hold on to this memory?";
@@ -2236,13 +2254,13 @@ niflheim,99,268,5	script	Reyghema#lv4	4_M_NFDEADMAN2,{
 			mes "but I finally finished it!";
 			if (lv4_weapon == 38) {
 				mes "This is... the Rudra Bow!";
-				getitem 1720,1; //Bow_Of_Rudra
+				getitem Bow_Of_Rudra,1;
 			}
 			else {
 				mes "This is... Brocca! Weee~ I made it!";
-				getitem 1415,1; //Skewer
+				getitem Skewer,1;
 			}
-			set lv4_weapon,0;
+			lv4_weapon = 0;
 			next;
 			mes "[Reyghema]";
 			mes "^333333*Sigh*^000000 I can feel it happening again. My memories are starting to slip away. Can't I be allowed to hold on to this memory?";
@@ -2256,7 +2274,7 @@ niflheim,99,268,5	script	Reyghema#lv4	4_M_NFDEADMAN2,{
 			close;
 		}
 	}
-	if (((lv4_weapon == 36) && (countitem(7292) > 29) && (countitem(7293) > 29) && (countitem(7289) > 29)) || ((lv4_weapon == 37) && (countitem(7297) > 29) && (countitem(7291) > 29) && (countitem(7295) > 29))) {
+	if (((lv4_weapon == 36) && (countitem(Muscovite) > 29) && (countitem(Rose_Quartz) > 29) && (countitem(Olivine) > 29)) || ((lv4_weapon == 37) && (countitem(Biotite) > 29) && (countitem(Agate) > 29) && (countitem(Citrine) > 29))) {
 		mes "[Reyghema]";
 		mes "Wait...";
 		mes "The stuff that you have. Those are things I'll need for my creation! Let me take a look...";
@@ -2278,67 +2296,67 @@ niflheim,99,268,5	script	Reyghema#lv4	4_M_NFDEADMAN2,{
 		mes "[Reyghema]";
 		mes "Alright, here's a piece of paper. When I say so, you write down 'Rock,' 'Paper' or 'Scissors.' Alright? Let's start.";
 		next;
-		set .@npchand1,rand(1,3);
-		set .@myhand1,select("Scissors:Rock:Paper");
+		.@npchand1 = rand(1,3);
+		.@myhand1 = select("Scissors", "Rock", "Paper");
 		if (((.@myhand1 == 1) && (.@npchand1 == 3)) || ((.@myhand1 == 2) && (.@npchand1 == 1)) || ((.@myhand1 == 3) && (.@npchand1 == 2))) {
-			set .@shobu,.@shobu+1;
+			++.@shobu;
 		}
 		mes "[Reyghema]";
 		mes "Okay, now let's";
 		mes "try this again.";
 		next;
-		set .@npchand2,rand(1,3);
-		set .@myhand2,select("Scissors:Rock:Paper");
+		.@npchand2 = rand(1,3);
+		.@myhand2 = select("Scissors", "Rock", "Paper");
 		if (((.@myhand2 == 1) && (.@npchand2 == 3)) || ((.@myhand2 == 2) && (.@npchand2 == 1)) || ((.@myhand2 == 3) && (.@npchand2 == 2))) {
-			set .@shobu,.@shobu+1;
+			++.@shobu;
 		}
 		mes "[Reyghema]";
 		mes "Last time.";
 		mes "Write down 'Rock,'";
 		mes "'Paper' or 'Scissors.'";
 		next;
-		set .@npchand3,rand(1,3);
-		set .@myhand3,select("Scissors:Rock:Paper");
+		.@npchand3 = rand(1,3);
+		.@myhand3 = select("Scissors", "Rock", "Paper");
 		if (((.@myhand3 == 1) && (.@npchand3 == 3)) || ((.@myhand3 == 2) && (.@npchand3 == 1)) || ((.@myhand3 == 3) && (.@npchand3 == 2))) {
-			set .@shobu,.@shobu+1;
+			++.@shobu;
 		}
-		set .@aekddam,rand(1,3);
+		.@aekddam = rand(1,3);
 		if (.@shobu > 1) {
 			if (lv4_weapon == 36) {
-				delitem 7292,30; //Muscovite
-				delitem 7293,30; //Rose_Quartz
-				delitem 7289,30; //Olivine
+				delitem Muscovite,30;
+				delitem Rose_Quartz,30;
+				delitem Olivine,30;
 			}
 			else {
-				delitem 7297,30; //Biotite
-				delitem 7291,30; //Agate
-				delitem 7295,30; //Citrine
+				delitem Biotite,30;
+				delitem Agate,30;
+				delitem Citrine,30;
 			}
-			set lv4_weapon,lv4_weapon+2;
+			lv4_weapon += 2;
 		}
 		else if (.@shobu < 2) {
 			if (.@aekddam == 1) {
 				if (lv4_weapon == 36) {
-					delitem 7292,30; //Muscovite
+					delitem Muscovite,30;
 				}
 				else {
-					delitem 7297,30; //Biotite
+					delitem Biotite,30;
 				}
 			}
 			else if (.@aekddam == 2) {
 				if (lv4_weapon == 36) {
-					delitem 7293,30; //Rose_Quartz
+					delitem Rose_Quartz,30;
 				}
 				else {
-					delitem 7291,30; //Agate
+					delitem Agate,30;
 				}
 			}
 			else if (.@aekddam == 3) {
 				if (lv4_weapon == 36) {
-					delitem 7289,30; //Olivine
+					delitem Olivine,30;
 				}
 				else {
-					delitem 7295,30; //Citrine
+					delitem Citrine,30;
 				}
 			}
 		}
@@ -2444,7 +2462,7 @@ niflheim,99,268,5	script	Reyghema#lv4	4_M_NFDEADMAN2,{
 		mes "'Killing me?!' I'm already dead!";
 		close;
 	}
-	if ((lv4_weapon == 34) && (countitem(1005) > 1) && (countitem(989) > 0) && (countitem(710) > 0) && (countitem(969) > 19)) {
+	if ((lv4_weapon == 34) && (countitem(Hammer_Of_Blacksmith) > 1) && (countitem(Emperium_Anvil) > 0) && (countitem(Illusion_Flower) > 0) && (countitem(Gold) > 19)) {
 		mes "[Reyghema]";
 		mes "Good work, you've brought everything I asked for. However, there's been a bit of a snafu in the plans...";
 		next;
@@ -2454,11 +2472,11 @@ niflheim,99,268,5	script	Reyghema#lv4	4_M_NFDEADMAN2,{
 		mes "[Reyghema]";
 		mes "Just give me some time to think about it some more. For now, let";
 		mes "me hold on to the things you've brought. You've got my word that I'll be using these to make a weapon for you.";
-		delitem 1005,2; //Hammer_Of_Blacksmith
-		delitem 989,1; //Emperium_Anvil
-		delitem 710,1; //Illusion_Flower
-		delitem 969,20; //Gold
-		set lv4_weapon,35;
+		delitem Hammer_Of_Blacksmith,2;
+		delitem Emperium_Anvil,1;
+		delitem Illusion_Flower,1;
+		delitem Gold,20;
+		lv4_weapon = 35;
 		close;
 	}
 	if (lv4_weapon == 34) {
@@ -2494,7 +2512,7 @@ niflheim,99,268,5	script	Reyghema#lv4	4_M_NFDEADMAN2,{
 		next;
 		mes "[Reyghema]";
 		mes "For now, just go and bring back the things I asked for. The sooner, the better. Hurry, I don't know how long my memories will last...";
-		set lv4_weapon,34;
+		lv4_weapon = 34;
 		close;
 	}
 	if (lv4_weapon == 32) {
@@ -2541,7 +2559,7 @@ niflheim,99,268,5	script	Reyghema#lv4	4_M_NFDEADMAN2,{
 			mes "[Reyghema]";
 			mes "Come back a little later.";
 			mes "By then, I should remember what kinds of things I'll need.";
-			set lv4_weapon,33;
+			lv4_weapon = 33;
 			close;
 		}
 		else {
@@ -2594,7 +2612,7 @@ niflheim,99,268,5	script	Reyghema#lv4	4_M_NFDEADMAN2,{
 	mes "something like that,";
 	mes "but there was more to it...";
 	next;
-	switch(select("Show interest.:Ignore him.")) {
+	switch(select("Show interest.", "Ignore him.")) {
 	case 1:
 		mes "[Reyghema]";
 		mes "Enjoy your youth...";
@@ -2606,7 +2624,7 @@ niflheim,99,268,5	script	Reyghema#lv4	4_M_NFDEADMAN2,{
 		mes "I can't remember!";
 		mes "Everything in my";
 		mes "head is so cloudy!";
-		set lv4_weapon,31;
+		lv4_weapon = 31;
 		close;
 	case 2:
 		mes "[Reyghema]";
@@ -2618,7 +2636,7 @@ niflheim,99,268,5	script	Reyghema#lv4	4_M_NFDEADMAN2,{
 }
 
 niflheim,187,280,3	script	Hein#lv4	4_M_NFDEADMAN,{
-	if (checkweight(908,300) == 0) {
+	if (checkweight(Spawn,300) == 0) {
 		mes "^3355FFWait a second! Right now, you're carrying too many items with you. Please come back after putting some of your things into Kafra Storage.^000000";
 		close;
 	}
@@ -2630,7 +2648,7 @@ niflheim,187,280,3	script	Hein#lv4	4_M_NFDEADMAN,{
 		mes "Back during those days,";
 		mes "I never accepted money for my work. Father always used to say, 'Never accept payment to forge a good weapon. It... It...'";
 		next;
-		switch(select("Show interest.:Ignore him.")) {
+		switch(select("Show interest.", "Ignore him.")) {
 		case 1:
 			mes "[Hein]";
 			mes "What was the rest of it?";
@@ -2643,7 +2661,7 @@ niflheim,187,280,3	script	Hein#lv4	4_M_NFDEADMAN,{
 			mes "something I used to";
 			mes "say all the time? I...";
 			mes "I hate being dead!";
-			set lv4_weapon,40;
+			lv4_weapon = 40;
 			close;
 		case 2:
 			mes "[Hein]";
@@ -2680,13 +2698,13 @@ niflheim,187,280,3	script	Hein#lv4	4_M_NFDEADMAN,{
 			mes "This weapon's name";
 			if (lv4_weapon == 47) {
 				mes "is Edge!";
-				getitem 1132,1; //Edge
+				getitem Edge,1;
 			}
 			else {
 				mes "is Dragon Slayer!";
-				getitem 1166,1; //Dragon_Slayer
+				getitem Dragon_Slayer,1;
 			}
-			set lv4_weapon,0;
+			lv4_weapon = 0;
 			next;
 		}
 		else {
@@ -2698,13 +2716,13 @@ niflheim,187,280,3	script	Hein#lv4	4_M_NFDEADMAN,{
 			mes "This weapon's name";
 			if (lv4_weapon == 47) {
 				mes "is Excalibur!";
-				getitem 1137,1; //Excalibur
+				getitem Excalibur,1;
 			}
 			else {
 				mes "is Schweizersabel!";
-				getitem 1167,1; //Schweizersabel
+				getitem Schweizersabel,1;
 			}
-			set lv4_weapon,0;
+			lv4_weapon = 0;
 			next;
 		}
 		mes "[Hein]";
@@ -2716,7 +2734,7 @@ niflheim,187,280,3	script	Hein#lv4	4_M_NFDEADMAN,{
 		mes "my memories again, I'll try to help you as well. So long, adventurer...";
 		close;
 	}
-	if (((lv4_weapon == 45) && (countitem(7294) > 29) && (countitem(7297) > 29) && (countitem(7293) > 29)) || ((lv4_weapon == 46) && (countitem(7295) > 29) && (countitem(7296) > 29) && (countitem(7290) > 29))) {
+	if (((lv4_weapon == 45) && (countitem(Turquoise) > 29) && (countitem(Biotite) > 29) && (countitem(Rose_Quartz) > 29)) || ((lv4_weapon == 46) && (countitem(Citrine) > 29) && (countitem(Pyroxene) > 29) && (countitem(Phlogopite) > 29))) {
 		mes "[Hein]";
 		mes "Mm...?";
 		mes "The stuff you brought seems to be just what I need to finish my work. Let me have a look at them...";
@@ -2739,19 +2757,19 @@ niflheim,187,280,3	script	Hein#lv4	4_M_NFDEADMAN,{
 		mes "Here's a piece of paper.";
 		mes "When I tell you to, write down 'Rock,' 'Paper' or 'Scissors.' I'll do the same thing, and we'll compare our results at the end, okay? Let's begin!";
 		next;
-		set .@npchand1,rand(1,3);
-		set .@myhand1,select("Scissors:Rock:Paper");
+		.@npchand1 = rand(1,3);
+		.@myhand1 = select("Scissors", "Rock", "Paper");
 		if (((.@myhand1 == 1) && (.@npchand1 == 3)) || ((.@myhand1 == 2) && (.@npchand1 == 1)) || ((.@myhand1 == 3) && (.@npchand1 == 2))) {
-			set .@shobu,.@shobu+1;
+			++.@shobu;
 		}
 		mes "[Hein]";
 		mes "Okay, let's play";
 		mes "the second round!";
 		next;
-		set .@npchand2,rand(1,3);
-		set .@myhand2,select("Scissors:Rock:Paper");
+		.@npchand2 = rand(1,3);
+		.@myhand2 = select("Scissors", "Rock", "Paper");
 		if (((.@myhand2 == 1) && (.@npchand2 == 3)) || ((.@myhand2 == 2) && (.@npchand2 == 1)) || ((.@myhand2 == 3) && (.@npchand2 == 2))) {
-			set .@shobu,.@shobu+1;
+			++.@shobu;
 		}
 		mes "[Hein]";
 		mes "Okay...";
@@ -2759,61 +2777,61 @@ niflheim,187,280,3	script	Hein#lv4	4_M_NFDEADMAN,{
 		mes "After this, we";
 		mes "compare our results.";
 		next;
-		set .@npchand3,rand(1,3);
-		set .@myhand3,select("Scissors:Rock:Paper");
-		set .@aekddam,rand(1,3);
+		.@npchand3 = rand(1,3);
+		.@myhand3 = select("Scissors", "Rock", "Paper");
+		.@aekddam = rand(1,3);
 		if (((.@myhand3 == 1) && (.@npchand3 == 3)) || ((.@myhand3 == 2) && (.@npchand3 == 1)) || ((.@myhand3 == 3) && (.@npchand3 == 2))) {
-			set .@shobu,.@shobu+1;
+			++.@shobu;
 		}
 		if (.@shobu > 1) {
 			if (lv4_weapon == 45) {
-				delitem 7294,30; //Turquoise
-				delitem 7297,30; //Biotite
-				delitem 7293,30; //Rose_Quartz
+				delitem Turquoise,30;
+				delitem Biotite,30;
+				delitem Rose_Quartz,30;
 			}
 			else {
-				delitem 7295,30; //Citrine
-				delitem 7296,30; //Pyroxene
-				delitem 7290,30; //Phlogopite
+				delitem Citrine,30;
+				delitem Pyroxene,30;
+				delitem Phlogopite,30;
 			}
-			set lv4_weapon,lv4_weapon+2;
+			lv4_weapon += 2;
 		}
 		else if (.@shobu < 2) {
 			if (.@aekddam == 1) {
 				if (lv4_weapon == 45) {
-					delitem 7294,30; //Turquoise
+					delitem Turquoise,30;
 				}
 				else {
-					delitem 7295,30; //Citrine
+					delitem Citrine,30;
 				}
 			}
 			else if (.@aekddam == 2) {
 				if (lv4_weapon == 45) {
-					delitem 7297,30; //Biotite
+					delitem Biotite,30;
 				}
 				else {
-					delitem 7296,30; //Pyroxene
+					delitem Pyroxene,30;
 				}
 			}
 			else if (.@aekddam == 3) {
 				if (lv4_weapon == 45) {
-					delitem 7293,30; //Rose_Quartz
+					delitem Rose_Quartz,30;
 				}
 				else {
-					delitem 7290,30; //Phlogopite
+					delitem Phlogopite,30;
 				}
 			}
 		}
 		mes "[Hein]";
 		mes "Ready? This is";
 		mes "what I wrote down...";
-		if (.@npchand == 1) {
+		if (.@npchand1 == 1) {
 			mes "Scissors";
 		}
-		else if (.@npchand == 2) {
+		else if (.@npchand1 == 2) {
 			mes "Rock";
 		}
-		else if (.@npchand == 3) {
+		else if (.@npchand1 == 3) {
 			mes "Paper";
 		}
 		if (.@npchand2 == 1) {
@@ -2870,7 +2888,7 @@ niflheim,187,280,3	script	Hein#lv4	4_M_NFDEADMAN,{
 		if (.@shobu > 1) {
 			mes "[Hein]";
 			mes "Let's see...";
-			mes "You won " + shobu + " times.";
+			mes "You won " + .@shobu + " times.";
 			mes "You're really good at game!";
 			mes "Yes, your luck is at its highest!";
 			next;
@@ -2901,7 +2919,7 @@ niflheim,187,280,3	script	Hein#lv4	4_M_NFDEADMAN,{
 		mes "I had a much better memory when I was alive I'm sure. My father would quiz me on this stuff all the time...";
 		close;
 	}
-	if ((lv4_weapon == 43) && (countitem(1005) > 1) && (countitem(989) > 0) && (countitem(710) > 0) && (countitem(969) > 19)) {
+	if ((lv4_weapon == 43) && (countitem(Hammer_Of_Blacksmith) > 1) && (countitem(Emperium_Anvil) > 0) && (countitem(Illusion_Flower) > 0) && (countitem(Gold) > 19)) {
 		mes "[Hein]";
 		mes "Hey, you brought everything I asked for already. You must be ready to get started!";
 		next;
@@ -2911,11 +2929,11 @@ niflheim,187,280,3	script	Hein#lv4	4_M_NFDEADMAN,{
 		next;
 		mes "[Hein]";
 		mes "Well, for now, let me keep the things you've brought to me. I promise that I'll use this stuff to make you a good weapon once everything is ready.";
-		delitem 1005,2; //Hammer_Of_Blacksmith
-		delitem 989,1; //Emperium_Anvil
-		delitem 710,1; //Illusion_Flower
-		delitem 969,20; //Gold
-		set lv4_weapon,44;
+		delitem Hammer_Of_Blacksmith,2;
+		delitem Emperium_Anvil,1;
+		delitem Illusion_Flower,1;
+		delitem Gold,20;
+		lv4_weapon = 44;
 		close;
 	}
 	if (lv4_weapon == 43) {
@@ -2957,7 +2975,7 @@ niflheim,187,280,3	script	Hein#lv4	4_M_NFDEADMAN,{
 		next;
 		mes "[Hein]";
 		mes "While you do that, I'll try my best to remember what else I need to make this weapon.";
-		set lv4_weapon,43;
+		lv4_weapon = 43;
 		close;
 	}
 	if (lv4_weapon == 41) {
@@ -2981,7 +2999,7 @@ niflheim,187,280,3	script	Hein#lv4	4_M_NFDEADMAN,{
 			mes "Or remembered.";
 			mes "Perhaps I'm brain";
 			mes "dead too, huh?";
-			set lv4_weapon,42;
+			lv4_weapon = 42;
 			next;
 			mes "[Hein]";
 			mes "Well, I must be a lucky dead man for remembering some of my past, right? Hahahaha!";
@@ -3036,7 +3054,7 @@ niflheim,187,280,3	script	Hein#lv4	4_M_NFDEADMAN,{
 	mes "Back during those days,";
 	mes "I never accepted money for my work. Father always used to say, 'Never accept payment to forge a good weapon. It... It...'";
 	next;
-	switch(select("Show interest.:Ignore him.")) {
+	switch(select("Show interest.", "Ignore him.")) {
 	case 1:
 		mes "[Hein]";
 		mes "What was the rest of it?";
@@ -3049,7 +3067,7 @@ niflheim,187,280,3	script	Hein#lv4	4_M_NFDEADMAN,{
 		mes "something I used to";
 		mes "say all the time? I...";
 		mes "I hate being dead!";
-		set lv4_weapon,40;
+		lv4_weapon = 40;
 		close;
 	case 2:
 		mes "[Hein]";
@@ -3060,7 +3078,7 @@ niflheim,187,280,3	script	Hein#lv4	4_M_NFDEADMAN,{
 }
 
 niflheim,331,72,3	script	Waltboughst#lv4	4_M_NFDEADMAN,{
-	if (checkweight(908,300) == 0) {
+	if (checkweight(Spawn,300) == 0) {
 		mes "^3355FFWait a second! Right now, you're carrying too many items with you. Please come back after putting some of your things into Kafra Storage.^000000";
 		close;
 	}
@@ -3083,7 +3101,7 @@ niflheim,331,72,3	script	Waltboughst#lv4	4_M_NFDEADMAN,{
 		mes "[Waltboughst]";
 		mes "It's funny, you know. My father always used to say, 'Trying your best won't always result in success...' Um, that's ... Huh? There was more, I think.";
 		next;
-		switch(select("Show interest.:Ignore him.")) {
+		switch(select("Show interest.", "Ignore him.")) {
 		case 1:
 			mes "[Waltboughst]";
 			mes "Let me try it again.";
@@ -3096,7 +3114,7 @@ niflheim,331,72,3	script	Waltboughst#lv4	4_M_NFDEADMAN,{
 			mes "I can't think!";
 			mes "What was supposed";
 			mes "to come after that part?";
-			set lv4_weapon,49;
+			lv4_weapon = 49;
 			close;
 		case 2:
 			mes "[Waltboughst]";
@@ -3122,13 +3140,13 @@ niflheim,331,72,3	script	Waltboughst#lv4	4_M_NFDEADMAN,{
 			mes "Waltboughst never fails!";
 			if (lv4_weapon == 56) {
 				mes "With my skill and your luck, there was zero probability for failure. Behold... Byeollungum!";
-				getitem 1140,1; //Byeorrun_Gum
+				getitem Byeorrun_Gum,1;
 			}
 			else {
 				mes "With my skill and your luck, there was zero probability for failure. Behold... Exorcise!";
-				getitem 1233,1; //Exercise
+				getitem Exercise,1;
 			}
-			set lv4_weapon,0;
+			lv4_weapon = 0;
 			next;
 			mes "[Waltboughst]";
 			mes "I'm a genius!";
@@ -3152,13 +3170,13 @@ niflheim,331,72,3	script	Waltboughst#lv4	4_M_NFDEADMAN,{
 			mes "Waltboughst never fails!";
 			if (lv4_weapon == 56) {
 				mes "With my skill and your luck, there was zero probability for failure. Behold... Combat Knife!";
-				getitem 1228,1; //Combat_Knife
+				getitem Combat_Knife,1;
 			}
 			else {
 				mes "With my skill and your luck, there was zero probability for failure. Behold...Grand Cross!!";
-				getitem 1528,1; //Grand_Cross
+				getitem Grand_Cross,1;
 			}
-			set lv4_weapon,0;
+			lv4_weapon = 0;
 			next;
 			mes "[Waltboughst]";
 			mes "I'm a genius!";
@@ -3178,7 +3196,7 @@ niflheim,331,72,3	script	Waltboughst#lv4	4_M_NFDEADMAN,{
 			close;
 		}
 	}
-	if (((lv4_weapon == 54) && (countitem(7292) > 29) && (countitem(7291) > 29) && (countitem(7295) > 29)) || ((lv4_weapon == 55) && (countitem(7296) > 29) && (countitem(7294) > 29) && (countitem(7290) > 29))) {
+	if (((lv4_weapon == 54) && (countitem(Muscovite) > 29) && (countitem(Agate) > 29) && (countitem(Citrine) > 29)) || ((lv4_weapon == 55) && (countitem(Pyroxene) > 29) && (countitem(Turquoise) > 29) && (countitem(Phlogopite) > 29))) {
 		mes "[Waltboughst]";
 		mes "Wait, what's that you're holding?";
 		mes "I think those are the exact things we need for me to make you a weapon...";
@@ -3204,20 +3222,20 @@ niflheim,331,72,3	script	Waltboughst#lv4	4_M_NFDEADMAN,{
 		mes "Take this piece of paper.";
 		mes "Now, when I tell you to, write down 'Rock,' 'Paper' or 'Scissors.' Let's begin...!";
 		next;
-		set .@npchand1,rand(1,3);
-		set .@myhand1,select("Scissors:Rock:Paper");
+		.@npchand1 = rand(1,3);
+		.@myhand1 = select("Scissors", "Rock", "Paper");
 		if (((.@myhand1 == 1) && (.@npchand1 == 3)) || ((.@myhand1 == 2) && (.@npchand1 == 1)) || ((.@myhand1 == 3) && (.@npchand1 == 2))) {
-			set .@shobu,.@shobu+1;
+			++.@shobu;
 		}
 		mes "[Waltboughst]";
 		mes "Alright...";
 		mes "Now, let's play";
 		mes "a second time.";
 		next;
-		set .@npchand2,rand(1,3);
-		set .@myhand2,select("Scissors:Rock:Paper");
+		.@npchand2 = rand(1,3);
+		.@myhand2 = select("Scissors", "Rock", "Paper");
 		if (((.@myhand2 == 1) && (.@npchand2 == 3)) || ((.@myhand2 == 2) && (.@npchand2 == 1)) || ((.@myhand2 == 3) && (.@npchand2 == 2))) {
-			set .@shobu,.@shobu+1;
+			++.@shobu;
 		}
 		mes "[Waltboughst]";
 		mes "One last time.";
@@ -3225,61 +3243,61 @@ niflheim,331,72,3	script	Waltboughst#lv4	4_M_NFDEADMAN,{
 		mes "compare results";
 		mes "and check your luck.";
 		next;
-		set .@npchand3,rand(1,3);
-		set .@myhand3,select("Scissors:Rock:Paper");
+		.@npchand3 = rand(1,3);
+		.@myhand3 = select("Scissors", "Rock", "Paper");
 		if (((.@myhand3 == 1) && (.@npchand3 == 3)) || ((.@myhand3 == 2) && (.@npchand3 == 1)) || ((.@myhand3 == 3) && (.@npchand3 == 2))) {
-			set .@shobu,.@shobu+1;
+			++.@shobu;
 		}
-		set .@aekddam,rand(1,3);
+		.@aekddam = rand(1,3);
 		if (.@shobu > 1) {
 			if (lv4_weapon == 54) {
-				delitem 7292,30; //Muscovite
-				delitem 7295,30; //Citrine
-				delitem 7291,30; //Agate
+				delitem Muscovite,30;
+				delitem Citrine,30;
+				delitem Agate,30;
 			}
 			else {
-				delitem 7296,30; //Pyroxene
-				delitem 7294,30; //Turquoise
-				delitem 7290,30; //Phlogopite
+				delitem Pyroxene,30;
+				delitem Turquoise,30;
+				delitem Phlogopite,30;
 			}
-			set lv4_weapon,lv4_weapon+2;
+			lv4_weapon += 2;
 		}
 		else if (.@shobu < 2) {
 			if (.@aekddam == 1) {
 				if (lv4_weapon == 54) {
-					delitem 7292,30; //Muscovite
+					delitem Muscovite,30;
 				}
 				else {
-					delitem 7296,30; //Pyroxene
+					delitem Pyroxene,30;
 				}
 			}
 			else if (.@aekddam == 2) {
 				if (lv4_weapon == 54) {
-					delitem 7295,30; //Citrine
+					delitem Citrine,30;
 				}
 				else {
-					delitem 7294,30; //Turquoise
+					delitem Turquoise,30;
 				}
 			}
 			else if (.@aekddam == 3) {
 				if (lv4_weapon == 54) {
-					delitem 7291,30; //Agate
+					delitem Agate,30;
 				}
 				else {
-					delitem 7290,30; //Phlogopite
+					delitem Phlogopite,30;
 				}
 			}
 		}
 		mes "[Waltboughst]";
 		mes "Okay...";
 		mes "I wrote down...";
-		if (.@npchand == 1) {
+		if (.@npchand1 == 1) {
 			mes "Scissors";
 		}
-		else if (.@npchand == 2) {
+		else if (.@npchand1 == 2) {
 			mes "Rock";
 		}
-		else if (.@npchand == 3) {
+		else if (.@npchand1 == 3) {
 			mes "Paper";
 		}
 		if (.@npchand2 == 1) {
@@ -3333,7 +3351,7 @@ niflheim,331,72,3	script	Waltboughst#lv4	4_M_NFDEADMAN,{
 		next;
 		if (.@shobu > 1) {
 			mes "[Waltboughst]";
-			mes "Excellent. You won " + shobu + " times,";
+			mes "Excellent. You won " + .@shobu + " times,";
 			mes "so your luck must be really high.";
 			mes "That means we can begin~!";
 			next;
@@ -3369,17 +3387,17 @@ niflheim,331,72,3	script	Waltboughst#lv4	4_M_NFDEADMAN,{
 		mes "sure he'd be ashamed...";
 		close;
 	}
-	if ((lv4_weapon == 52) && (countitem(1005) > 1) && (countitem(989) > 0) && (countitem(710) > 0) && (countitem(969) > 19)) {
+	if ((lv4_weapon == 52) && (countitem(Hammer_Of_Blacksmith) > 1) && (countitem(Emperium_Anvil) > 0) && (countitem(Illusion_Flower) > 0) && (countitem(Gold) > 19)) {
 		mes "[Waltboughst]";
 		mes "You brought everything I needed already? That's great, but somehow, I can't still remember the other materials I need...";
 		next;
 		mes "[Waltboughst]";
 		mes "Tell you what. Let me hold on to these things, and I promise you that I'll use them to create a weapon for you. In the meantime, we need to figure out the rest of the necessary materials...";
-		delitem 1005,2; //Hammer_Of_Blacksmith
-		delitem 989,1; //Emperium_Anvil
-		delitem 710,1; //Illusion_Flower
-		delitem 969,20; //Gold
-		set lv4_weapon,53;
+		delitem Hammer_Of_Blacksmith,2;
+		delitem Emperium_Anvil,1;
+		delitem Illusion_Flower,1;
+		delitem Gold,20;
+		lv4_weapon = 53;
 		close;
 	}
 	if (lv4_weapon == 52) {
@@ -3406,7 +3424,7 @@ niflheim,331,72,3	script	Waltboughst#lv4	4_M_NFDEADMAN,{
 		next;
 		mes "[Waltboughst]";
 		mes "There were a few other necessary materials, but I need some time to focus and remember what they were.";
-		set lv4_weapon,52;
+		lv4_weapon = 52;
 		close;
 	}
 	if (lv4_weapon == 50) {
@@ -3424,7 +3442,7 @@ niflheim,331,72,3	script	Waltboughst#lv4	4_M_NFDEADMAN,{
 			mes "But that's no excuse!";
 			mes "Every successful man in";
 			mes "history has tried his best!";
-			set lv4_weapon,51;
+			lv4_weapon = 51;
 			next;
 			mes "[Waltboughst]";
 			mes "I remember now...";
@@ -3480,7 +3498,7 @@ niflheim,331,72,3	script	Waltboughst#lv4	4_M_NFDEADMAN,{
 	mes "[Waltboughst]";
 	mes "It's funny, you know. My father always used to say, 'Trying your best won't always result in success...' Um, that's ... Huh? There was more, I think.";
 	next;
-	switch(select("Show interest.:Ignore him.")) {
+	switch(select("Show interest.", "Ignore him.")) {
 	case 1:
 		mes "[Waltboughst]";
 		mes "Let me try it again.";
@@ -3493,7 +3511,7 @@ niflheim,331,72,3	script	Waltboughst#lv4	4_M_NFDEADMAN,{
 		mes "I can't think!";
 		mes "What was supposed";
 		mes "to come after that part?";
-		set lv4_weapon,49;
+		lv4_weapon = 49;
 		close;
 	case 2:
 		mes "[Waltboughst]";

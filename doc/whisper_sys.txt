@@ -29,7 +29,7 @@ You whisper an NPC "NPCCommander" in-game with the following instructions:
 The parameters are passed on to the "OnWhisperGlobal" label of the NPC, and can
 be processed accordingly:
 
--	script	NPCCommander	-1,{
+-	script	NPCCommander	FAKE_NPC,{
 OnWhisperGlobal:
 	// Inform player "Lordalfa" that he has been reported for killstealing.
 	if (@whispervar0$ == "Report")
@@ -39,7 +39,7 @@ OnWhisperGlobal:
 
 This could also be used for hidden event triggers:
 
--	script	EventManager	-1,{
+-	script	EventManager	FAKE_NPC,{
 OnWhisperGlobal:
 	if (getgmlevel() < 80) end;
 	if (@whispervar0$ == "pvp") {

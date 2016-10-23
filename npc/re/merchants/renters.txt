@@ -1,43 +1,63 @@
-//===== Hercules Script ======================================
-//= Renters
-//===== By: ==================================================
-//= Hercules Dev Team
-//===== Current Version: =====================================
-//= 2.1
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  rAthena Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  Daegaladh
+//= Copyright (C)  eAthena Dev Team
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Renters (Renewal)
+//================= Description ===========================================
 //= Renewal-specific breeder NPCs.
-//===== Additional Comments: =================================
-//= 2.1 Moved some renters to a separate renewal file. [Daegaladh]
-//= 2.2 Updated to match the official scripts. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 2.1
+//=========================================================================
 
-// Dragon Breeder
-//============================================================
+//== Dragon Breeder ========================================
 job3_rune01,88,62,5	script	Dragon Breeder	8W_SOLDIER,{
 	mes "[Dragon Breeder]";
 	if (Class == Job_Rune_Knight || Class == Job_Rune_Knight_T || Class == Job_Baby_Rune) {
 		mes "Welcome. Would you like to rent a Dragon?";
 		next;
-		switch(select("Yes:No")) {
+		switch(select("Yes", "No")) {
 		case 1:
-			//if (!getskilllv("RK_DRAGONTRAINING")) {
-			if (!getskilllv("KN_RIDING")) {
+			//if (!getskilllv(RK_DRAGONTRAINING)) {
+			if (!getskilllv(KN_RIDING)) {
 				mes "[Dragon Breeder]";
 				mes "Please learn how to ride a Dragon first.";
 				close;
-			}
-			else if (checkriding()) {
+			} else if (checkmount()) {
 				mes "[Dragon Breeder]";
 				mes "You already have a Dragon.";
 				close;
-			}
-			else if(ismounting()) {
+			} else if(hascashmount()) {
 				mes "[Dragon Breeder]";
 				mes "Please remove your cash mount.";
 				close;
 			}
-			setdragon;
+			setmount(MOUNT_DRAGON);
 			close;
 		case 2:
 			mes "[Dragon Breeder]";
@@ -50,32 +70,29 @@ job3_rune01,88,62,5	script	Dragon Breeder	8W_SOLDIER,{
 	close;
 }
 
-// Dragon/Gryphon Master
-//============================================================
+//== Dragon/Gryphon Master =================================
 prontera,130,213,5	script	Riding Creature Master	8W_SOLDIER,{
 	mes "[Riding Creature Master]";
 	if (Class == Job_Rune_Knight || Class == Job_Rune_Knight_T || Class == Job_Baby_Rune) {
 		mes "Welcome. Would you like to rent a Dragon?";
 		next;
-		switch(select("Yes:No")) {
+		switch(select("Yes", "No")) {
 		case 1:
-			//if (!getskilllv("RK_DRAGONTRAINING")) {
-			if (!getskilllv("KN_RIDING")) {
+			//if (!getskilllv(RK_DRAGONTRAINING)) {
+			if (!getskilllv(KN_RIDING)) {
 				mes "[Riding Creature Master]";
 				mes "Please learn how to ride a Dragon first.";
 				close;
-			}
-			else if (checkriding()) {
+			} else if (checkmount()) {
 				mes "[Riding Creature Master]";
 				mes "You already have a Dragon.";
 				close;
-			}
-			else if(ismounting()) {
+			} else if(hascashmount()) {
 				mes "[Riding Creature Master]";
 				mes "Please remove your cash mount.";
 				close;
 			}
-			setdragon;
+			setmount(MOUNT_DRAGON);
 			close;
 		case 2:
 			mes "[Riding Creature Master]";
@@ -86,24 +103,22 @@ prontera,130,213,5	script	Riding Creature Master	8W_SOLDIER,{
 	if (Class == Job_Royal_Guard || Class == Job_Royal_Guard_T || Class == Job_Baby_Guard) {
 		mes "Welcome. Would you like to rent a Gryphon?";
 		next;
-		switch(select("Yes:No")) {
+		switch(select("Yes", "No")) {
 		case 1:
-			if(!getskilllv("KN_RIDING")) {
+			if(!getskilllv(KN_RIDING)) {
 				mes "[Riding Creature Master]";
 				mes "Please learn how to ride a Gryphon first.";
 				close;
-			}
-			else if (checkriding()) {
+			} else if (checkmount()) {
 				mes "[Riding Creature Master]";
 				mes "You already have a Gryphon.";
 				close;
-			}
-			else if(ismounting()) {
+			} else if(hascashmount()) {
 				mes "[Riding Creature Master]";
 				mes "Please remove your cash mount.";
 				close;
 			}
-			setriding;
+			setmount(MOUNT_PECO);
 			close;
 		case 2:
 			mes "[Riding Creature Master]";
@@ -115,22 +130,27 @@ prontera,130,213,5	script	Riding Creature Master	8W_SOLDIER,{
 	close;
 }
 
-// Peco removing NPC
-//============================================================
+geffen,100,55,3	duplicate(Riding Creature Master)	Riding Creature Master#2	8W_SOLDIER
+payon,166,102,5	duplicate(Riding Creature Master)	Riding Creature Master#3	8W_SOLDIER
+aldebaran,133,109,5	duplicate(Riding Creature Master)	Riding Creature Master#4	8W_SOLDIER
+yuno,171,187,3	duplicate(Riding Creature Master)	Riding Creature Master#5	8W_SOLDIER
+rachel,106,130,5	duplicate(Riding Creature Master)	Riding Creature Master#6	8W_SOLDIER
+
+//== Peco removing NPC =====================================
 prontera,125,208,5	script	Peco Peco Remover	8W_SOLDIER,{
 	mes "[Soldier]";
 	mes "If you're unable to dismount from a Peco Peco";
 	mes "for some unknown reason,";
 	mes "please feel free to use my services.";
-	if (checkriding()) {
+	if (checkmount() == MOUNT_PECO) {
 		next;
 		mes "[Soldier]";
 		mes "You're riding a Peco Peco.";
 		mes "Would you like to dismount?";
 		next;
-		switch(select("Yes:No")) {
+		switch(select("Yes", "No")) {
 		case 1:
-			setriding 0;
+			setmount(MOUNT_NONE);
 			mes "[Soldier]";
 			mes "Say, how does it feel to";
 			mes "step on the ground on your own";
@@ -146,16 +166,15 @@ prontera,125,208,5	script	Peco Peco Remover	8W_SOLDIER,{
 	close;
 }
 
-// Magic Gear Renter
-//============================================================
--	script	::mgm	-1,{
+//== Magic Gear Renter =====================================
+-	script	::mgm	FAKE_NPC,{
 	mes "[Magic Gear Master]";
 	if (Class == Job_Mechanic || Class == Job_Mechanic_T || Class == Job_Baby_Mechanic) {
 		mes "Welcome, Mechanic.";
 		mes "Would you like to rent a Pushcart or";
 		mes "ride a Magic Gear?";
 		next;
-		switch(select("Rent a Pushcart:Ride a Magic Gear:Cancel")) {
+		switch(select("Rent a Pushcart", "Ride a Magic Gear", "Cancel")) {
 		case 1:
 			if (checkcart()) {
 				mes "[Magic Gear Master]";
@@ -168,23 +187,21 @@ prontera,125,208,5	script	Peco Peco Remover	8W_SOLDIER,{
 			mes "There you go!";
 			close;
 		case 2:
-			if (checkmadogear()) {
+			if (checkmount() == MOUNT_MADO) {
 				mes "[Magic Gear Master]";
 				mes "I'm sorry, but you're already";
 				mes "riding a Magic Gear.";
 				close;
-			}
-			else if (!getskilllv("NC_MADOLICENCE")) {
+			} else if (!getskilllv(NC_MADOLICENCE)) {
 				mes "[Magic Gear Master]";
 				mes "Please learn the skill to get the Magic Gear License first.";
 				close;
-			}
-			else if(ismounting()) {
+			} else if(hascashmount()) {
 				mes "[Magic Gear Master]";
 				mes "Please remove your cash mount.";
 				close;
 			}
-			setmadogear;
+			setmount(MOUNT_MADO);
 			mes "[Magic Gear Master]";
 			mes "Have fun, and please come again!";
 			close;

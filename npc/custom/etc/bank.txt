@@ -18,7 +18,7 @@ set @cost,500;
 mes "[Banker]";
 mes "Welcome to the First Bank of Prontera. How can I help you today?";
 next;
-switch(select("I'd like to make a deposit.:I'd like to make a withdrawl.:What's my current balance?:Cancel")) {
+switch(select("I'd like to make a deposit.", "I'd like to make a withdrawl.", "What's my current balance?", "Cancel")) {
 	case 1:
 		mes "[Banker]";
 		mes "Very well... How much would you like to deposit? The maximum you can deposit at once is 999,999 Zeny.";
@@ -72,7 +72,7 @@ switch(select("I'd like to make a deposit.:I'd like to make a withdrawl.:What's 
 			mes "[Banker]";
 			mes "You don't have the Zeny for the transaction fee right now. Would you like me to take the fee directly from your withdrawl?";
 			next;
-			switch(select("Yes please.:No, Thanks")){
+			switch(select("Yes please.", "No, Thanks")){
 			case 1:
 				mes "[Banker]";
 				mes "Removing " + @cost + " from your withdrawl to cover the deposit fee...";

@@ -1,24 +1,46 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Ticket Refiner
-//===== By: ==================================================
-//= Euphy
-//===== Current Version: =====================================
-//= 1.0
-//===== Description: =========================================
-//= [Official Conversion]
-//= Refiner that uses +5~9/+11 refine tickets to refine
-//= equipment with no chance of failure.
+//================= Description ===========================================
+//= Refiner that uses +5~9/+11 refine tickets to refine equipment with no
+//= chance of failure.
+//================= Additional Comments ===================================
 //= NOTE: This NPC is currently disabled on official servers.
-//===== Additional Comments: =================================
-//= 1.0 First version. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
 
 prontera,184,177,6	script	Refine Master	4_M_REPAIR,{
 	disable_items;
-	if (countitem(6238) || countitem(6228) || countitem(6229) || countitem(6230) || countitem(6231) || countitem(6456))
-		set .@bWeaponUp,1;
-	if (countitem(6239) || countitem(6232) || countitem(6233) || countitem(6234) || countitem(6235) || countitem(6457))
-		set .@bArmorUp,1;
+	if (countitem(Guarantee_Weapon_11Up) || countitem(Guarantee_Weapon_9Up) || countitem(Guarantee_Weapon_8Up) || countitem(Guarantee_Weapon_7Up) || countitem(Guarantee_Weapon_6Up) || countitem(Guarantee_Weapon_5Up))
+		.@bWeaponUp = 1;
+	if (countitem(Guarantee_Armor_11Up) || countitem(Guarantee_Armor_9Up) || countitem(Guarantee_Armor_8Up) || countitem(Guarantee_Armor_7Up) || countitem(Guarantee_Armor_6Up) || countitem(Guarantee_Armor_5Up))
+		.@bArmorUp = 1;
 	if (!.@bWeaponUp && !.@bArmorUp) {
 		mes "[Refine Master]";
 		mes "Hello!";
@@ -27,7 +49,7 @@ prontera,184,177,6	script	Refine Master	4_M_REPAIR,{
 		mes "for refining items,";
 		mes "but I don't work anymore.";
 		next;
-		switch(select("I'll go on my way.:Hmm... this makes me curious.")) {
+		switch(select("I'll go on my way.", "Hmm... this makes me curious.")) {
 		case 1:
 			mes "[Refine Master]";
 			mes "Take care, adventurer.";
@@ -45,7 +67,7 @@ prontera,184,177,6	script	Refine Master	4_M_REPAIR,{
 	mes "I can refine an item up to the ^006400same level as your ticket^000000.";
 	mes "You don't have to worry! There's no chance of breaking your item.";
 	next;
-	if(select("I'll come back later.:Refine item with ticket.") == 1) {
+	if(select("I'll come back later.", "Refine item with ticket.") == 1) {
 		mes "[Refine Master]";
 		mes "Okay.";
 		mes "You can come again later.";
@@ -55,10 +77,10 @@ prontera,184,177,6	script	Refine Master	4_M_REPAIR,{
 	mes "Which equipment would you like to refine?";
 	next;
 	setarray .@position$[1],"Head upper","Armor","Left hand","Right hand","Robe","Shoes","Accessory 1","Accessory 2","Head middle","Head lower";
-	set .@menu$,"";
-	for(set .@i,1; .@i<=10; set .@i,.@i+1)
-		set .@menu$, .@menu$+((getequipisequiped(.@i))?getequipname(.@i):.@position$[.@i]+"- [Empty]")+":";
-	set .@part, select(.@menu$);
+	.@menu$ = "";
+	for(.@i = 1; .@i<=10; ++.@i)
+		.@menu$ += ((getequipisequiped(.@i))?getequipname(.@i):.@position$[.@i]+"- [Empty]")+":";
+	.@part = select(.@menu$);
 	if (!getequipisequiped(.@part)) {
 		mes "[Refine Master]";
 		mes "You have to equip the item you want to refine.";
@@ -76,8 +98,8 @@ prontera,184,177,6	script	Refine Master	4_M_REPAIR,{
 	case 0:
 		setarray .@tickets[0],6457,6235,6234,6233,6232,6239;
 		setarray .@levels[0],5,6,7,8,9,11;
-		set .@type$,"Armor";
-		set .@check,.@bArmorUp;
+		.@type$ = "Armor";
+		.@check = .@bArmorUp;
 		break;
 	case 1:
 	case 2:
@@ -85,8 +107,8 @@ prontera,184,177,6	script	Refine Master	4_M_REPAIR,{
 	case 4:
 		setarray .@tickets[0],6456,6231,6230,6229,6228,6238;
 		setarray .@levels[0],5,6,7,8,9,11;
-		set .@type$,"Weapon";
-		set .@check,.@bWeaponUp;
+		.@type$ = "Weapon";
+		.@check = .@bWeaponUp;
 		break;
 	}
 	if (!.@check) {
@@ -99,12 +121,12 @@ prontera,184,177,6	script	Refine Master	4_M_REPAIR,{
 	mes "[Refine Master]";
 	mes "Please choose which ^006400"+.@type$+" Refine Ticket^000000 you want to use.";
 	next;
-	set .@menu$,"";
-	for(set .@i,0; .@i<getarraysize(.@tickets); set .@i,.@i+1)
-		set .@menu$, .@menu$+getitemname(.@tickets[.@i])+":";
-	set .@select, select(.@menu$)-1;
-	set .@ticket_lv, .@levels[.@select];
-	set .@ticket_id, .@tickets[.@select];
+	.@menu$ = "";
+	for(.@i = 0; .@i<getarraysize(.@tickets); ++.@i)
+		.@menu$ += getitemname(.@tickets[.@i])+":";
+	.@select = select(.@menu$)-1;
+	.@ticket_lv = .@levels[.@select];
+	.@ticket_id = .@tickets[.@select];
 	if (countitem(.@ticket_id) == 0) {
 		emotion e_what;
 		mes "[Refine Master]";
@@ -124,7 +146,7 @@ prontera,184,177,6	script	Refine Master	4_M_REPAIR,{
 	mes "I'm going to refine ^006400"+getequipname(.@part)+"^8B4513 up to the +"+.@ticket_lv+" level^000000 with ^006400"+getitemname(.@ticket_id)+"^000000.";
 	mes "May I proceed?";
 	next;
-	if(select("No.:Yes.") == 1) {
+	if(select("No.", "Yes.") == 1) {
 		emotion e_dots;
 		mes "[Refine Master]";
 		mes "Oh, you changed your mind.";
@@ -146,13 +168,13 @@ prontera,184,177,6	script	Refine Master	4_M_REPAIR,{
 		mes "Please report this.";
 		close;
 	}
-	for(set .@i,getequiprefinerycnt(.@part); .@i<.@ticket_lv; set .@i,.@i+1)
+	for(.@i = getequiprefinerycnt(.@part); .@i<.@ticket_lv; ++.@i)
 		successrefitem .@part;
 	next;
 	emotion e_ho;
 	mes "[Refine Master]";
 	mes "Alright, here it is~";
-	mes "Well, ^0000FF"+strcharinfo(0)+"^000000!";
+	mes "Well, ^0000FF"+strcharinfo(PC_NAME)+"^000000!";
 	mes "Congratulations on your shining "+.@type$+".";
 	mes "You look GREAT!";
 	mes "Farewell~!";

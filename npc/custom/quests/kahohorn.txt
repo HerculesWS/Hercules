@@ -45,7 +45,7 @@ geffen,115,107,5	script	Lord Kaho's Servant	1_M_PUBMASTER,{
 	mes .@n$;
 	mes "Are you ready for me to make this special item?";
 	next;
-	if(select("Sure am!:These requirements are unfathomable!")==2) {
+	if(select("Sure am!", "These requirements are unfathomable!")==2) {
 		mes .@n$;
 		mes "What I had to go through was more unfathomable...";
 		mes "If you succeed in getting these items, you will have incredible strength!";
@@ -53,7 +53,7 @@ geffen,115,107,5	script	Lord Kaho's Servant	1_M_PUBMASTER,{
 	mes .@n$;
 	for(set .@i,0; .@i<18; set .@i,.@i+1)
 		if (!countitem(.@items[.@i])) { set .@nr,1; break; }
-	if (.@nr || countitem(714) < 3 || Zeny < 5000000) {
+	if (.@nr || countitem(Emperium) < 3 || Zeny < 5000000) {
 		mes "I can't afford to make this if you don't bring all materials needed. Please understand this is to benefit heroes such as yourself!";
 		close; }
 	for(set .@i,0; .@i<18; set .@i,.@i+1)

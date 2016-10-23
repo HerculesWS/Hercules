@@ -1,16 +1,36 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2013-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Acolyte Warpers
-//===== By: ==================================================
-//= Euphy
-//===== Current Version: =====================================
-//= 1.0
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Warpers to various towns.
-//===== Additional Comments: =================================
-//= 1.0 First version. [Euphy]
-//=     Unsure if this is on kRO, so disabled for now.
-//============================================================
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
 
 prontera,98,121,4	script	Acolyte#Prtclear	4_F_01,{
 	mes "[Keiki]";
@@ -30,7 +50,7 @@ prontera,98,121,4	script	Acolyte#Prtclear	4_F_01,{
 	mes "I am willing to warp you to the many locations that I have memorized for a small fee.";
 	mes "Would you like to use this service?";
 	next;
-	switch(select("Yes:No")) {
+	switch(select("Yes", "No")) {
 	case 1:
 		mes "[Keiki]";
 		mes "Where would you like to go to?";
@@ -41,10 +61,10 @@ prontera,98,121,4	script	Acolyte#Prtclear	4_F_01,{
 		setarray .@maps$[0],  "izlude", "geffen", "payon", "morocc", "alberta",   "aldebaran", "comodo", "umbala", "yuno";
 		setarray .@cost[0],        600,     1200,    1200,     1200,      1800,          2200,     2200,     2200,   1800;
 
-		set .@size, getarraysize(.@towns$);
-		for(set .@i,0; .@i<.@size; set .@i,.@i+1)
-			set .@menu$, .@menu$+.@towns$[.@i]+" -> "+.@cost[.@i]+"z:";
-		set .@i, select(.@menu$+"Cancel")-1;
+		.@size = getarraysize(.@towns$);
+		for(.@i = 0; .@i<.@size; ++.@i)
+			.@menu$ += .@towns$[.@i]+" -> "+.@cost[.@i]+"z:";
+		.@i = select(.@menu$+"Cancel")-1;
 		if (.@i == .@size)
 			close;
 		if (Zeny < .@cost[.@i]) {
@@ -61,7 +81,7 @@ prontera,98,121,4	script	Acolyte#Prtclear	4_F_01,{
 		next;
 		Zeny -= .@cost[.@i];
 		switch(.@i) {
-			case 0: if (checkre(0)) warp "izlude",128,98; else warp "izlude",91,105; break;
+			case 0: if (RENEWAL) warp "izlude",128,98; else warp "izlude",91,105; break;
 			case 1: warp "geffen",120,39; break;
 			case 2: warp "payon",161,58; break;
 			case 3: warp "morocc",156,46; break;
@@ -93,7 +113,7 @@ yuno,142,184,6	script	Acolyte#Junoclear	4_F_01,{
 	mes "I am willing to warp you to the many locations that I have memorized for a small fee.";
 	mes "Would you like to use this service?";
 	next;
-	switch(select("Yes:No")) {
+	switch(select("Yes", "No")) {
 	case 1:
 		mes "[Isalei]";
 		mes "Where would you like to go to?";
@@ -104,10 +124,10 @@ yuno,142,184,6	script	Acolyte#Junoclear	4_F_01,{
 		setarray .@maps$[0],  "einbroch", "lighthalzen", "hugel", "rachel", "prontera";
 		setarray .@cost[0],         2200,          2200,    2200,     2200,       1800;
 
-		set .@size, getarraysize(.@towns$);
-		for(set .@i,0; .@i<.@size; set .@i,.@i+1)
-			set .@menu$, .@menu$+.@towns$[.@i]+" -> "+.@cost[.@i]+"z:";
-		set .@i, select(.@menu$+"Cancel")-1;
+		.@size = getarraysize(.@towns$);
+		for(.@i = 0; .@i<.@size; ++.@i)
+			.@menu$ += .@towns$[.@i]+" -> "+.@cost[.@i]+"z:";
+		.@i = select(.@menu$+"Cancel")-1;
 		if (.@i == .@size)
 			close;
 		if (Zeny < .@cost[.@i]) {

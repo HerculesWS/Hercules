@@ -1,20 +1,44 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2016  Hercules Dev Team
+//= Copyright (C)  Epoque
+//= Copyright (C)  eAthena Dev Team
+//= Copyright (C)  Gepard
+//= Copyright (C)  Yommy
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  Samuray22
+//= Copyright (C)  Lupus
+//= Copyright (C)  Nova
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Mapflag: Disable Warp Portal memory.
-//===== By: ==================================================
-//= Hercules Dev Team
-//===== Current Version: =====================================
-//= 1.8b
-//===== Description: =========================================
+//================= Current Version =======================================
+//= 1.8.3
+//================= Description ===========================================
 //= Prevents players from using /memo on a map.
 //= Also disables marriage warp skills.
-//===== Additional Comments: =================================
-//= 1.6a - Added up to Hugel maps. [Lupus]
-//= 1.6b - Added job_knt map. [Samuray22]
-//= 1.7 - Added all novice maps. [L0ne_W0lf]
-//= 1.8 - Added nameless_i location. [Lupus]
-//= 1.8a - Removed duplicate gef_cas nomemo mapflags. [Yommy]
-//= 1.8b - Removed duplicate arug_dun01 & schg_dun01 entries. [Gepard]
-//============================================================
+//=========================================================================
 
 // Towns  ====================
 ayo_in01	mapflag	nomemo
@@ -760,6 +784,12 @@ ecl_tdun04	mapflag	nomemo
 ecl_hub01	mapflag	nomemo
 moc_prydn1	mapflag	nomemo
 moc_prydn2	mapflag	nomemo
+dali	mapflag	nomemo
+dali02	mapflag	nomemo
+c_tower2_	mapflag	nomemo
+c_tower3_	mapflag	nomemo
+gl_chyard_	mapflag	nomemo
+gl_cas02_	mapflag	nomemo
 
 //Orc's Memory ===================
 1@orcs	mapflag	nomemo
@@ -768,6 +798,12 @@ moc_prydn2	mapflag	nomemo
 // Nidhoggr's Instance ===========
 1@nyd	mapflag	nomemo
 2@nyd	mapflag	nomemo
+
+// Ghost Palace ===========
+1@spa	mapflag	nomemo
+
+// Sara's Memory Instance ===========
+1@sara	mapflag	nomemo
 
 //evt_zombie	mapflag	nomemo
 

@@ -13,7 +13,7 @@
 // 70000,0,1002,3,0,0,0,0,"3 Splats Please!"
 
 prontera,90,95,1	script	Jelly	2_F_MAGICMASTER,{
-	if(checkquest(70000) == -1) {
+	if (!questprogress(70000)) {
 		// Quest not yet started.
 		mes "[Jelly]";
 		mes "Hey there! Would you help me?";
@@ -30,7 +30,7 @@ prontera,90,95,1	script	Jelly	2_F_MAGICMASTER,{
 			setquest 70000;	// Adds the quest to your Quest Window.
 			close;
 		}
-	} else if(checkquest(70000,HUNTING) == 2) {
+	} else if (questprogress(70000,HUNTING) == 2) {
 		// All monsters killed.
 		mes "[Jelly]";
 		mes "Awesome! Thank you!";
@@ -38,12 +38,12 @@ prontera,90,95,1	script	Jelly	2_F_MAGICMASTER,{
 		dispbottom "You have been rewarded with 10,000 Base Exp.";
 		completequest 70000; // Sets quest status to "complete".
 		close;
-	} else if(checkquest(70000) == 1) {
+	} else if (questprogress(70000) == 1) {
 		// Quest is active.
 		mes "[Jelly]";
 		mes "Keep going, almost there!";
 		close;
-	} else if(checkquest(70000) == 2) {
+	} else if (questprogress(70000) == 2) {
 		// Quest finished.
 		mes "[Jelly]";
 		mes "Thanks again for doing that for me!";

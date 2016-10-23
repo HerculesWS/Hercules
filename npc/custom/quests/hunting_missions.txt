@@ -3,7 +3,7 @@
 //===== By: ==================================================
 //= Euphy
 //===== Current Version: =====================================
-//= 1.4a
+//= 1.4b
 //===== Description: =========================================
 //= Random hunting missions.
 //= Rewards are based on quest difficulty.
@@ -17,12 +17,14 @@
 //= 1.4 Fix ranking table using new SQL database [ossi0110]
 //= 1.4a Fix a bug when a character has deleted, that account
 //=     can't do mission. [AnnieRuru]
+//= 1.4b Update to follow author's method on fixing
+//=     character deletion bug [AnnieRuru]
 //============================================================
 
 prontera,152,187,6	script	Hunting Missions	4_F_EDEN_MASTER,{
 function Chk; function Cm;
 	mes "[Hunting Missions]";
-	mes "Hello, "+strcharinfo(0)+"!";
+	mes "Hello, "+strcharinfo(PC_NAME)+"!";
 	if (!#Mission_Delay) {
 		next;
 		mes "[Hunting Missions]";
@@ -44,9 +46,21 @@ function Chk; function Cm;
 	switch(select(((!Mission0)?" ~ New Mission::":": ~ Mission Status: ~ Abandon Mission")+": ~ Information: ~ Mission Shop: ~ View Top Hunters: ~ ^777777Cancel^000000")) {
 	case 1:
 		mes "[Hunting Missions]";
-		if ( query_sql( "SELECT 1 FROM `char_reg_num_db` WHERE `key` = 'Mission0' AND `char_id` IN ( SELECT `char_id` FROM `char` WHERE `account_id` = "+ getcharid(3) +" )", .@dummy ) && #Mission_Count ) {
+		if ( #Mission_Count ) {
 			mes "You've started a mission";
 			mes "on another character.";
+			if ( !@hm_char_del_check ) {
+				if ( !query_sql( "SELECT 1 FROM `char_reg_num_db` WHERE `key` = 'Mission0' AND `char_id` IN ( SELECT `char_id` FROM `char` WHERE `account_id` = "+ getcharid(CHAR_ID_ACCOUNT) +" )", .@dummy ) ) {
+					next;
+					mes "[Hunting Missions]";
+					mes "I can't seem to find any records";
+					mes "for that character, though...";
+					mes "One moment, please.";
+					emotion e_hmm;
+					set #Mission_Count, 0;
+				}
+				set @hm_char_del_check, 1;
+			}
 			close;
 		}
 		if (#Mission_Delay > gettimetick(2) && .Delay) {
@@ -85,7 +99,7 @@ function Chk; function Cm;
 		else if (.Reset > 0)
 			mes "It will cost "+Cm(.Reset)+" Zeny.";
 		next;
-		switch(select(" ~ Abandon...: ~ ^777777Cancel^000000")) {
+		switch(select(" ~ Abandon...", " ~ ^777777Cancel^000000")) {
 		case 1:
 			if (.Reset > 0) {
 				if (Zeny < .Reset) {
@@ -184,8 +198,8 @@ Mission_Status:
 	set #Mission_Count,0;
 	if (.Delay) set #Mission_Delay, gettimetick(2)+(.Delay*3600);
 	set Mission_Total, Mission_Total+1;
-	if (Mission_Total == 1) query_sql("INSERT INTO `char_reg_num_db` (`char_id`,`key`,`index`,`value`) VALUES ("+getcharid(0)+",'Mission_Total','0',1)");
-	else query_sql("UPDATE `char_reg_num_db` SET `value` = "+Mission_Total+" WHERE `char_id` = "+getcharid(0)+" AND `key` = 'Mission_Total'");
+	if (Mission_Total == 1) query_sql("INSERT INTO `char_reg_num_db` (`char_id`,`key`,`index`,`value`) VALUES ("+getcharid(CHAR_ID_CHAR)+",'Mission_Total','0',1)");
+	else query_sql("UPDATE `char_reg_num_db` SET `value` = "+Mission_Total+" WHERE `char_id` = "+getcharid(CHAR_ID_CHAR)+" AND `key` = 'Mission_Total'");
 	close;
 
 Mission_Info:
@@ -244,7 +258,7 @@ OnBuyItem:
 	close;
 
 OnNPCKillEvent:
-	if (!getcharid(1) || !.Party) {
+	if (!getcharid(CHAR_ID_PARTY) || !.Party) {
 		if (!#Mission_Count || !Mission0) end;
 		for (set .@i, 0; .@i<.Quests; set .@i,.@i+1) {
 			if (strmobinfo(1,killedrid) == strmobinfo(1,getd("Mission"+.@i))) {
@@ -256,14 +270,14 @@ OnNPCKillEvent:
 		}
 	} else if (.Party) {
 		set .@mob, killedrid;
-		getmapxy(.@map1$,.@x1,.@y1,0);
-		getpartymember getcharid(1),1;
-		getpartymember getcharid(1),2;
+		getmapxy(.@map1$, .@x1, .@y1, UNITTYPE_PC);
+		getpartymember getcharid(CHAR_ID_PARTY),1;
+		getpartymember getcharid(CHAR_ID_PARTY),2;
 		for(set .@i,0; .@i<$@partymembercount; set .@i,.@i+1) {
 			if (isloggedin($@partymemberaid[.@i], $@partymembercid[.@i])) {
 				attachrid $@partymemberaid[.@i];
 				if (#Mission_Count && Mission0 && Hp > 0) {
-					getmapxy(.@map2$,.@x2,.@y2,0);
+					getmapxy(.@map2$, .@x2, .@y2, UNITTYPE_PC);
 					if ((.@map1$ == .@map2$ || .Party == 1) && (distance(.@x1,.@y1,.@x2,.@y2) <= 30 || .Party < 3)) {
 						for(set .@j,0; .@j<.Quests; set .@j,.@j+1) {
 							if (strmobinfo(1,.@mob) == strmobinfo(1,getd("Mission"+.@j))) {
@@ -303,4 +317,4 @@ OnInit:
 		npcshopadditem "mission_shop", .Shop[.@i], .Shop[.@i+1];
 	end;
 }
--	shop	mission_shop	-1,512:-1
+-	shop	mission_shop	FAKE_NPC,512:-1

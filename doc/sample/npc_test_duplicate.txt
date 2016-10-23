@@ -12,14 +12,14 @@
 //=  'OnInit' loads the main npc last, for some reason. (check with debugmes)
 //============================================================
 
--	script	Test Script	-1,1,1,{
+-	script	Test Script	FAKE_NPC,1,1,{
 	mes "Hi.";
 	mes "My coords are "+ .map$ +", "+ .x +"/" +.y ;
 	close;
 
 OnInit:
 	getmapxy(.map$, .x, .y, 1);
-	debugmes strnpcinfo(0);
+	debugmes strnpcinfo(NPC_NAME);
 	end;
 
 OnTouch:
