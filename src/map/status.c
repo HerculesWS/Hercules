@@ -8243,12 +8243,12 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 						int i;
 						for( i = 0; i < MAX_PC_DEVOTION; i++ ) {
 							if (sd->devotion[i] && (tsd = map->id2sd(sd->devotion[i])) != NULL)
-								status->change_start(bl, &tsd->bl, type, 10000, val1, val2, val3, val4, tick, SCFLAG_ALL);
+								status->change_start(bl, &tsd->bl, type, 10000, val1, val2, val3, val4, tick, SCFLAG_NOAVOID|SCFLAG_NOICON);
 						}
 					} else if (bl->type == BL_MER) {
 						struct mercenary_data *mc = BL_UCAST(BL_MER, bl);
 						if (mc->devotion_flag && (tsd = mc->master) != NULL) {
-							status->change_start(bl, &tsd->bl, type, 10000, val1, val2, val3, val4, tick, SCFLAG_ALL);
+							status->change_start(bl, &tsd->bl, type, 10000, val1, val2, val3, val4, tick, SCFLAG_NOAVOID|SCFLAG_NOICON);
 						}
 					}
 				}
@@ -8347,12 +8347,12 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 						int i;
 						for( i = 0; i < MAX_PC_DEVOTION; i++ ) {
 							if (sd->devotion[i] && (tsd = map->id2sd(sd->devotion[i])) != NULL)
-								status->change_start(bl, &tsd->bl, type, 10000, val1, val2, 0, 0, tick, SCFLAG_ALL);
+								status->change_start(bl, &tsd->bl, type, 10000, val1, val2, 0, 0, tick, SCFLAG_NOAVOID|SCFLAG_NOICON);
 						}
 					} else if (bl->type == BL_MER) {
 						struct mercenary_data *mc = BL_UCAST(BL_MER, bl);
 						if (mc->devotion_flag && (tsd = mc->master) != NULL) {
-							status->change_start(bl, &tsd->bl, type, 10000, val1, val2, 0, 0, tick, SCFLAG_ALL);
+							status->change_start(bl, &tsd->bl, type, 10000, val1, val2, 0, 0, tick, SCFLAG_NOAVOID|SCFLAG_NOICON);
 						}
 					}
 				}
@@ -8611,12 +8611,12 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 						if( sd ) {
 							for( i = 0; i < MAX_PC_DEVOTION; i++ ) {
 								if (sd->devotion[i] && (tsd = map->id2sd(sd->devotion[i])) != NULL)
-									status->change_start(bl, &tsd->bl, type, 10000, val1, val2, 0, 0, tick, SCFLAG_ALL);
+									status->change_start(bl, &tsd->bl, type, 10000, val1, val2, 0, 0, tick, SCFLAG_NOAVOID|SCFLAG_NOICON);
 							}
 						} else if (bl->type == BL_MER) {
 							struct mercenary_data *mc = BL_UCAST(BL_MER, bl);
 							if (mc->devotion_flag && (tsd = mc->master) != NULL) {
-								status->change_start(bl, &tsd->bl, type, 10000, val1, val2, 0, 0, tick, SCFLAG_ALL);
+								status->change_start(bl, &tsd->bl, type, 10000, val1, val2, 0, 0, tick, SCFLAG_NOAVOID|SCFLAG_NOICON);
 							}
 						}
 					}
