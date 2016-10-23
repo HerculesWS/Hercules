@@ -1459,8 +1459,15 @@ bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 
 	// Abnormalities
 	if(( md->sc.opt1 > 0 && md->sc.opt1 != OPT1_STONEWAIT && md->sc.opt1 != OPT1_BURNING && md->sc.opt1 != OPT1_CRYSTALIZE )
-	  || md->sc.data[SC_DEEP_SLEEP] || md->sc.data[SC_BLADESTOP] || md->sc.data[SC__MANHOLE] || md->sc.data[SC_CURSEDCIRCLE_TARGET]) {
+	  || md->sc.data[SC_DEEP_SLEEP] || md->sc.data[SC_STUN] || md->sc.data[SC_BLADESTOP] || md->sc.data[SC__MANHOLE] || md->sc.data[SC_CURSEDCIRCLE_TARGET] || md->sc.data[SC_CURSEDCIRCLE_TARGET]) {
 		//Should reset targets.
+		struct map_session_data* pl_sd;
+		struct s_mapiterator* iter;
+		iter = mapit_getallusers();
+		for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
+			if (check_distance_bl(&md->bl, &pl_sd->bl, AREA_SIZE))
+				clif->sao_hp_bar(md, pl_sd);
+		mapit->free(iter);
 		md->target_id = md->attacked_id = 0;
 		return false;
 	}
@@ -1492,6 +1499,16 @@ bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 			mob->unlocktarget(md, tick); //Unlock target
 			tbl = NULL;
 		}
+	else if(tbl->type == BL_PC){
+	struct map_session_data* pl_sd;
+	struct s_mapiterator* iter;
+	iter = mapit_getallusers();
+	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )	
+		if (check_distance_bl(&md->bl, &pl_sd->bl, AREA_SIZE))
+			clif->sao_hp_bar(md, pl_sd);
+	mapit->free(iter);
+
+	 }
 	}
 
 	// Check for target change.
