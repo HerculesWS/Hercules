@@ -31,7 +31,7 @@
 /// The official walkpath disables users from taking non-clear walk paths,
 /// e.g. if they want to get around an obstacle they have to walk around it,
 /// while with OFFICIAL_WALKPATH disabled if they click to walk around a obstacle the server will do it automatically
-//#define OFFICIAL_WALKPATH
+#define OFFICIAL_WALKPATH
 
 /// leave this line uncommented to enable callfunc checks when processing scripts.
 /// while allowed, the script engine will attempt to match user-defined functions
