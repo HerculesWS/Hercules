@@ -4139,7 +4139,7 @@ bool map_read_npclist(const char *filename, bool imported)
 	if (!libconfig->load_file(&config, filename))
 		return false;
 
-	deleted_npcs = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_ALLOW_NULL_DATA, MAP_NAME_LENGTH);
+	deleted_npcs = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_ALLOW_NULL_DATA, 0);
 
 	// Remove NPCs
 	if ((setting = libconfig->lookup(&config, "npc_removed_list")) != NULL) {
