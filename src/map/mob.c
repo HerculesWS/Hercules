@@ -2710,8 +2710,9 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 			 * We give the client some time to breath and this allows it to display anything it'd like with the dead corpose
 			 * For example, this delay allows it to display soul drain effect
 			 **/
-			clif->clearunit_delayed(&md->bl, CLR_DEAD, tick+250);
-
+			clif->specialeffect(&md->bl, 638, AREA);
+			clif->specialeffect(&md->bl, 934, AREA);
+			clif->clearunit_area(&md->bl,CLR_DEAD);
 	}
 
 	if(!md->spawn) //Tell status->damage to remove it from memory.
