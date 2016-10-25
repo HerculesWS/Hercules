@@ -5706,6 +5706,30 @@ BUILDIN(mesf)
 	return true;
 }
 
+
+BUILDIN(autonext)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+	int timeout;
+	if (sd == NULL)
+		return true;
+#ifdef SECURE_NPCTIMEOUT
+	sd->npc_idle_type = NPCT_WAIT;
+#endif
+	timeout = script_getnum(st,2);	
+	if(st->sleep.tick == 0)	{
+	st->state = RERUNLINE;
+	st->sleep.tick = timeout;	}	
+	else	
+	{// sleep time is over	
+	clif->scriptclear(sd, st->oid);
+	st->state = RUN;		
+	st->sleep.tick = 0;	}
+	//clif->scriptnext(sd, st->oid);	
+	return true;
+}
+
+
 /// Displays the button 'next' in the npc dialog.
 /// The dialog text is cleared and the script continues when the button is pressed.
 ///
@@ -20711,6 +20735,7 @@ void script_parse_builtin(void) {
 		// NPC interaction
 		BUILDIN_DEF(mes,"s"),
 		BUILDIN_DEF(mesf,"s*"),
+		BUILDIN_DEF(autonext,"i"),
 		BUILDIN_DEF(next,""),
 		BUILDIN_DEF(close,""),
 		BUILDIN_DEF(close2,""),
