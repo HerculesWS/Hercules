@@ -1921,12 +1921,14 @@ int unit_attack(struct block_list *src, int target_id, int continuous)
 
 	if (src->type == BL_PC) {
 		struct map_session_data *sd = BL_UCAST(BL_PC, src);
+		struct status_data *sstatus = status->get_status_data(src);
 		if( target->type == BL_NPC ) { // monster npcs [Valaris]
 			npc->click(sd, BL_UCAST(BL_NPC, target)); // submitted by leinsirk10 [Celest]
 			return 0;
 		}
-		if( pc_is90overweight(sd) || pc_isridingwug(sd) ) { // overweight or mounted on warg - stop attacking
+		if( pc_is90overweight(sd) || pc_isridingwug(sd) || sstatus->sp == 0) { // overweight or mounted on warg - stop attacking
 			unit->stop_attack(src);
+			clif->specialeffect(src, 626, AREA);
 			return 0;
 		}
 		if( !pc->can_attack(sd, target_id) ) {
