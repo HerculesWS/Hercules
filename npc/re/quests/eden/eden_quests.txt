@@ -4073,8 +4073,8 @@ moc_para01,112,79,3	script	Weapons Expert BK#2nd11	4_M_REPAIR,{
 		P_Knuckle1,
 		P_Huuma_Shuriken1;
 	.@wplist_size = getarraysize(.@wplist);
-	for ( .@i = 0; .@i <.@wplist_size; .@i++ ) {
-		.@menu$ = .@menu$ + getitemname(.@wplist[.@i]) + ":";
+	for ( .@i = 0; .@i < .@wplist_size; .@i++ ) {
+		.@menu$ += getitemname(.@wplist[.@i]) + ":";
 	}
 	mes "[BK]";
 	mes "What's happening?";
