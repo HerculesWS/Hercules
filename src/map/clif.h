@@ -38,6 +38,8 @@ struct eri;
 struct flooritem_data;
 struct guild;
 struct homun_data;
+struct homun_beasts_system;
+struct homun_beasts_evo_system;
 struct item;
 struct item_data;
 struct itemlist; // map/itemdb.h

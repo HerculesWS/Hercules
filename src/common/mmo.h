@@ -491,8 +491,8 @@ struct s_homunculus { //[orn]
 	char name[NAME_LENGTH];
 	int hom_id;
 	int char_id;
-	short class_;
 	short prev_class;
+	short class_;
 	int hp,max_hp,sp,max_sp;
 	unsigned int intimacy;
 	short hunger;
@@ -508,6 +508,12 @@ struct s_homunculus { //[orn]
 	int int_;
 	int dex;
 	int luk;
+
+	// [CreativeSD]: Beast System
+	short mob_class;
+	int sex;
+	int call_hp;
+	int call_sp;
 
 	int str_value;
 	int agi_value;

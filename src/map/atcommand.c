@@ -6867,6 +6867,115 @@ ACMD(hommutate) {
 	return true;
 }
 
+// [CreativeSD]: Beast System
+ACMD(beastinfo) {
+	int homunid;
+
+	if (!*message) {
+		clif->message(fd, "Você deve utilizar: @beastinfo <ID_da_Besta>");
+		return false;
+	}
+
+	homunid = atoi(message);
+
+	clif->message(fd, "Procurando Besta...");
+	beast_list_negotiation(sd, homunid);
+	return true;
+}
+
+ACMD(beastalive) {
+	struct homun_beasts_system *bsc = NULL;
+	int i, homun_id, unique_id, class_, mob_class, sex;
+
+	if (!*message) {
+		clif->message(fd, "Para ressucitar uma Besta, digite: @beastalive <Beast_ID/Unique_ID>");
+		beast_inventory_atcmd_list(sd);
+		return false;
+	}
+
+	unique_id = atoi(message);
+
+	if (unique_id < BEAST_UNIQUE_ID) {
+		homun_id = unique_id;
+		unique_id = 0;
+	}
+	else
+		homun_id = unique_id - BEAST_UNIQUE_ID;
+	
+	class_ = homunculus_get_info(homun_id, 0);
+	mob_class = homunculus_get_info(homun_id, 13);
+	sex = homunculus_get_info(homun_id, 14);
+
+	bsc = beast_search2(class_, mob_class);
+
+	if (bsc == NULL) {
+		clif->message(fd, "Besta não encontrada no banco de dados, reporte ao Desenvolvedor.");
+		return false;
+	}
+
+	for (i = 0; i < MAX_INVENTORY; i++) {
+		if ( (unique_id && sd->status.inventory[i].unique_id == unique_id) || (!unique_id && (sd->status.inventory[i].unique_id-BEAST_UNIQUE_ID) == homun_id)) {
+			pc->delitem(sd, i, 1, 1, DELITEM_MATERIALCHANGE, LOG_TYPE_NONE);
+			clif->delitem(sd, i, 1, DELITEM_MATERIALCHANGE);
+			homunculus_beast_revive(homun_id);
+			homunculus_beast_get_item(sd, bsc->item_add, bsc->item_race_icon, homun_id, sex, BSTATUS_ALIVE);
+			clif->message(fd,"Besta revivida com sucesso!");
+			return true;
+		}
+	}
+
+	clif->message(fd,"A Besta não pode ser revivida porque o item não está em seu inventário.");
+	beast_inventory_atcmd_list(sd);
+	return false;
+}
+
+ACMD(beastheal) {
+	int unique_id, homun_id, hp = 0, sp = 0;
+
+	if (*message)
+	{
+		unique_id = atoi(message);
+
+		if (unique_id < BEAST_UNIQUE_ID)
+			homun_id = unique_id;
+		else
+			homun_id = unique_id - BEAST_UNIQUE_ID;
+
+		if (!homunculus_beast_heal(homun_id, 100, 100))
+		{
+			clif->message(fd, "A Besta não foi curada.");
+			clif->message(fd, "Para curar uma Besta, digite: @beastheal <Beast_ID / Unique_ID> ou @beastheal para curar sua Besta invocada.");
+			beast_inventory_atcmd_list(sd);
+			return false;
+		}
+		clif->message(fd, "Besta curada com sucesso!");
+		return true;
+	}
+
+	if (!sd->hd || !sd->status.hom_id)
+	{
+		clif->message(fd, "Você não invocou nenhuma Besta para curar.");
+		clif->message(fd, "Para curar uma Besta, digite: @beastheal <Beast_ID/Unique_ID> ou @beastheal para curar sua Besta invocada.");
+		beast_inventory_atcmd_list(sd);
+		return false;
+	}
+	else if (!homun_alive(sd->hd))
+	{
+		clif->message(fd, "Sua Besta está morta, para revive-la utilize @beastalive.");
+		clif->message(fd, "Para curar uma Besta, digite: @beastheal <Beast_ID/Unique_ID> ou @beastheal para curar sua Besta invocada.");
+		beast_inventory_atcmd_list(sd);
+		return false;
+	}
+	else {
+		hp = APPLY_RATE(sd->hd->homunculus.max_hp, 100);
+		sp = APPLY_RATE(sd->hd->homunculus.max_sp, 100);
+		status->heal(&sd->hd->bl, hp, sp, 1);
+		clif->message(fd, "Besta curada com sucesso!");
+	}
+	return true;
+}
+
+
 /*==========================================
  * call choosen homunculus [orn]
  *------------------------------------------*/
@@ -9597,6 +9706,9 @@ void atcommand_basecommands(void) {
 		ACMD_DEF(homlevel),
 		ACMD_DEF(homevolution),
 		ACMD_DEF(hommutate),
+		ACMD_DEF(beastinfo),
+		ACMD_DEF(beastalive),
+		ACMD_DEF(beastheal),
 		ACMD_DEF(makehomun),
 		ACMD_DEF(homfriendly),
 		ACMD_DEF(homhungry),

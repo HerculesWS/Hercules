@@ -4047,6 +4047,10 @@ void clif_tradeitemok(struct map_session_data* sd, int index, int fail)
 void clif_tradedeal_lock(struct map_session_data* sd, int fail)
 {
 	int fd;
+	int i, n, hom_id, title_flag = 0;
+	char output[256];
+	struct map_session_data* tsd = NULL;
+
 	nullpo_retv(sd);
 
 	fd = sd->fd;
@@ -4054,6 +4058,33 @@ void clif_tradedeal_lock(struct map_session_data* sd, int fail)
 	WFIFOW(fd,0) = 0xec;
 	WFIFOB(fd,2) = fail;
 	WFIFOSET(fd,packet_len(0xec));
+
+
+	if ( fail == 1)
+	{
+		if ((tsd = map->id2sd(sd->trade_partner)) != NULL)
+		{
+			for (i = 0; i < 10; i++) { // give items back (only virtual)
+				if (!tsd->deal.item[i].amount)
+					continue;
+
+				n = tsd->deal.item[i].index;
+
+				if (tsd->status.inventory[n].unique_id > BEAST_UNIQUE_ID)
+				{
+					if(!title_flag)
+					{
+						title_flag = 1;
+						sprintf(output, "Bestas sendo negociada por %s:", tsd->status.name);
+						clif->messagecolor_self(sd->fd, COLOR_BEASTMSG, output);
+					}
+
+					hom_id = (int)tsd->status.inventory[n].unique_id - BEAST_UNIQUE_ID;
+					beast_list_negotiation(sd, hom_id);
+				}
+			}
+		}
+	}
 }
 
 /// Notifies the client about the trade being canceled (ZC_CANCEL_EXCHANGE_ITEM).
@@ -6302,8 +6333,8 @@ void clif_closevendingboard(struct block_list* bl, int fd)
 /// R 0133 <packet len>.W <owner id>.L { <price>.L <amount>.W <index>.W <type>.B <name id>.W <identified>.B <damaged>.B <refine>.B <card1>.W <card2>.W <card3>.W <card4>.W }* (ZC_PC_PURCHASE_ITEMLIST_FROMMC)
 /// R 0800 <packet len>.W <owner id>.L <unique id>.L { <price>.L <amount>.W <index>.W <type>.B <name id>.W <identified>.B <damaged>.B <refine>.B <card1>.W <card2>.W <card3>.W <card4>.W }* (ZC_PC_PURCHASE_ITEMLIST_FROMMC2)
 void clif_vendinglist(struct map_session_data* sd, unsigned int id, struct s_vending* vending_items) {
-	int i,fd;
-	int count;
+	int i,fd,hom_id;
+	int count, count_beasts = 0;
 	struct map_session_data* vsd;
 #if PACKETVER < 20100105
 	const int cmd = 0x133;
@@ -6349,8 +6380,25 @@ void clif_vendinglist(struct map_session_data* sd, unsigned int id, struct s_ven
 #if PACKETVER >= 20150226
 		clif->add_random_options(WFIFOP(fd,offset+22+i*item_length), &vsd->status.cart[index]);
 #endif
+		if (vsd->status.cart[index].unique_id > BEAST_UNIQUE_ID)
+			count_beasts++;
 	}
 	WFIFOSET(fd,WFIFOW(fd,2));
+	
+	if (count_beasts)
+	{
+		
+		clif->messagecolor_self(sd->fd, COLOR_BEASTMSG, "Bestas sendo vendidas:");
+		for (i = 0; i < count; i++) {
+			int index = vending_items[i].index;
+			struct item_data* data = itemdb->search(vsd->status.cart[index].nameid);
+
+			if (vsd->status.cart[index].unique_id > BEAST_UNIQUE_ID) {
+				hom_id = (int)vsd->status.cart[index].unique_id - BEAST_UNIQUE_ID;
+				beast_list_negotiation(sd, hom_id);
+			}
+		}
+	}
 }
 
 /// Shop purchase failure (ZC_PC_PURCHASE_RESULT_FROMMC).
@@ -9411,17 +9459,20 @@ void clif_parse_LoadEndAck(int fd, struct map_session_data *sd) {
 	}
 
 	//homunculus [blackhole89]
-	if( homun_alive(sd->hd) ) {
-		map->addblock(&sd->hd->bl);
-		clif->spawn(&sd->hd->bl);
-		clif->send_homdata(sd,SP_ACK,0);
-		clif->hominfo(sd,sd->hd,1);
-		clif->hominfo(sd,sd->hd,0); //for some reason, at least older clients want this sent twice
-		clif->homskillinfoblock(sd);
-		if( battle_config.hom_setting&0x8 )
-			status_calc_bl(&sd->hd->bl, SCB_SPEED); //Homunc mimic their master's speed on each map change
-		if( !(battle_config.hom_setting&0x2) )
-			skill->unit_move(&sd->hd->bl,timer->gettick(),1); // apply land skills immediately
+	//homunculus [CreativeSD]
+	if( sd->hd && sd->status.hom_id) {
+		int hom_unique_id = sd->status.hom_id - BEAST_UNIQUE_ID;
+	
+		if (homunculus_beast_check_item(sd, hom_unique_id))
+			homunculus_call2(sd->status.hom_id, sd);
+		else {
+			memset(&sd->hd, 0, sizeof(sd->hd));
+			sd->status.hom_id = 0;
+		}
+	}
+	else {
+		memset(&sd->hd, 0, sizeof(sd->hd));
+		sd->status.hom_id = 0;
 	}
 
 	if( sd->md ) {
