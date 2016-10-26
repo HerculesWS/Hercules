@@ -57,11 +57,6 @@ enum homun_id {
 #define MAX_HOMUNCULUS_CLASS 52 // [orn] Increased to 60 from 16 to allow new Homun-S.
 #define HM_CLASS_BASE 6001
 #define HM_CLASS_MAX (HM_CLASS_BASE+MAX_HOMUNCULUS_CLASS-1)
-+// [CreativeSD]: Beast System
-#define	BEAST_UNIQUE_ID	3000000
-#define	MAX_BEASTS_CLASS 200
-#define	MAX_BEASTS_EVO 200
-#define	COLOR_BEASTMSG	0x89cff0
 
 #define MAX_HOM_SKILL_REQUIRE 5
 #define homdb_checkid(id) ((id) >=  HM_CLASS_BASE && (id) <= HM_CLASS_MAX)
@@ -152,34 +147,11 @@ enum homun_type {
 	HT_INVALID = -1, // Invalid Homunculus
 };
 
-enum beast_search {
-	HBS_ID,
-	HBS_HOMCLASS,
-	HBS_MOBCLASS,
-	HBS_ALL = -1,
-};
-
-enum beast_status_icons {
-	BSTATUS_MALE = 31000,
-	BSTATUS_FEMALE = 31001,
-	BSTATUS_ALIVE = 31002,
-	BSTATUS_DIE = 31003,
-};
-
 struct homun_dbs {
 	unsigned int exptable[MAX_LEVEL];
 	struct view_data viewdb[MAX_HOMUNCULUS_CLASS];
 	struct s_homunculus_db db[MAX_HOMUNCULUS_CLASS];
 	struct homun_skill_tree_entry skill_tree[MAX_HOMUNCULUS_CLASS][MAX_SKILL_TREE];
-};
-
-
-struct homun_beasts_system {
-	int beast_id, mob_class, hom_class, item_add, item_race_icon, chance;
-};
-
-struct homun_beasts_evo_system {
-	int hom_class, hom_evo, mob_class, level, sex, intimacy;
 };
 
 /* homunculus.c interface */
@@ -239,29 +211,6 @@ struct homunculus_interface {
 #ifdef HERCULES_CORE
 void homunculus_defaults(void);
 #endif // HERCULES_CORE
-
-// [CreativeSD]: Beast System
-struct homun_beasts_system *beast_search(int id, int flag);
-struct homun_beasts_system *beast_search2(int hom_id, int mob_id);
-struct homun_beasts_evo_system *beast_evo_search(int id, int sex);
-
-int homunculus_create2(struct map_session_data *sd, int class_, struct mob_data *md);
-bool homunculus_call2(int homun_id, struct map_session_data *sd);
-int homunculus_get_info(int homun_id, int type);
-const char* homunculus_beast_name(int homun_id);
-bool homunculus_force_save(struct homun_data *hd, int alive);
-int homunculus_beast_get_item(struct map_session_data *sd, int item_id, int item_race_icon, int hom_id, int sex, int flag_type);
-int homunculus_beast_change_item(struct homun_data *hd, int flag);
-int homunculus_beast_check_item(struct map_session_data *sd, int unique_id);
-int homunculus_beast_used_item(struct map_session_data *sd, int homun_id);
-int homunculus_beast_revive(int homun_id);
-int homunculus_beast_heal(int homun_id, int percent_hp, int percent_sp);
-bool homunculus_evolve2(struct homun_data *hd, int class_);
-void beast_list_negotiation(struct map_session_data *sd, int homun_id);
-void beast_inventory_atcmd_list(struct map_session_data *sd);
-bool homunculus_read_beast_sub(char* str[], int columns, int current);
-bool homunculus_read_beast_evo_sub(char* str[], int columns, int current);
-void homunculus_read_beasts(void);
 
 HPShared struct homunculus_interface *homun;
 

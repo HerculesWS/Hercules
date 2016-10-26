@@ -400,9 +400,6 @@ END_ZEROED_BLOCK;
 	int itemid;
 	short itemindex; //Used item's index in sd->inventory [Skotlex]
 	short catch_target_class; // pet catching, stores a pet class to catch (short now) [zzo]
-	// [CreativeSD]: Beast System
-	int beast_catch_flag;
-	int beast_item_chance;
 	short spiritball, spiritball_old;
 	int spirit_timer[MAX_SPIRITBALL];
 	short charm_count;

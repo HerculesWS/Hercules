@@ -27,7 +27,6 @@
 #include "map/chrif.h"
 #include "map/clif.h"
 #include "map/guild.h"
-#include "map/homunculus.h"
 #include "map/intif.h"
 #include "map/itemdb.h"
 #include "map/log.h"
@@ -157,17 +156,6 @@ int storage_additem(struct map_session_data* sd, struct item* item_data, int amo
 		return 1;
 
 	data = itemdb->search(item_data->nameid);
-
-	
-	// [CreativeSD]: Beast System Protect
-	if (item_data->unique_id > BEAST_UNIQUE_ID)
-	{
-		if ((item_data->unique_id - BEAST_UNIQUE_ID) == sd->status.hom_id) {
-			clif->messagecolor_self(sd->fd, COLOR_RED, "Você não pode adicionar este item pois sua Besta não está guardada no item.");
-			return 1;
-		}
-	}
-
 
 	if( data->stack.storage && amount > data->stack.amount )
 	{// item stack limitation

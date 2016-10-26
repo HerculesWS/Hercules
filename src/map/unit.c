@@ -2595,7 +2595,6 @@ int unit_remove_map(struct block_list *bl, clr_type clrtype, const char* file, i
 				map->delblock(bl);
 				unit->free(bl,CLR_OUTSIGHT);
 				map->freeblock_unlock();
-				memset(&hd, 0, sizeof(hd));
 				return 0;
 			}
 

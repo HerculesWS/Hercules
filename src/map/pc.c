@@ -4645,16 +4645,6 @@ int pc_dropitem(struct map_session_data *sd,int n,int amount)
 		)
 		return 0;
 
-	// [CreativeSD]: Beast System Protect
-	if (sd->status.inventory[n].unique_id > BEAST_UNIQUE_ID)
-	{
-		if ((sd->status.inventory[n].unique_id - BEAST_UNIQUE_ID) == sd->status.hom_id) {
-			clif->messagecolor_self(sd->fd, COLOR_RED, "Você não pode adicionar este item pois sua Besta não está guardada no item.");
-			return 0;
-		}
-	}
-
-
 	if( map->list[sd->bl.m].flag.nodrop ) {
 		clif->message (sd->fd, msg_sd(sd,271)); // You can't drop items in this map
 		return 0;
@@ -5100,16 +5090,6 @@ int pc_cart_additem(struct map_session_data *sd,struct item *item_data,int amoun
 	if(item_data->nameid <= 0 || amount <= 0)
 		return 1;
 	data = itemdb->search(item_data->nameid);
-
-// [CreativeSD]: Beast System Protect
-	if (item_data->unique_id > BEAST_UNIQUE_ID)
-	{
-		if ((item_data->unique_id - BEAST_UNIQUE_ID) == sd->status.hom_id) {
-			clif->messagecolor_self(sd->fd, COLOR_RED, "Você não pode adicionar este item pois sua Besta não está guardada no item.");
-			return 0;
-		}
-	}
-
 
 	if( data->stack.cart && amount > data->stack.amount )
 	{// item stack limitation
@@ -9726,15 +9706,6 @@ int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 		clif->equipitemack(sd,n,0,EIA_FAIL);
 		return 0;
 	}
-
-
-	if (sd->status.inventory[n].unique_id > BEAST_UNIQUE_ID)
-	{
-		int homun_id = (int)sd->status.inventory[n].unique_id - BEAST_UNIQUE_ID;
-		homunculus_beast_used_item(sd, homun_id);
-		return 0;
-	}
-
 
 	id = sd->inventory_data[n];
 	pos = pc->equippoint(sd,n); //With a few exceptions, item should go in all specified slots.

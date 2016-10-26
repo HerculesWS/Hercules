@@ -6904,10 +6904,6 @@ void status_set_viewdata(struct block_list *bl, int class_)
 	case BL_HOM: //[blackhole89]
 	{
 		struct homun_data *hd = BL_UCAST(BL_HOM, bl);
-
-		if( hd->homunculus.mob_class && mob->db_checkid(hd->homunculus.mob_class))
-			vd = mob->get_viewdata(hd->homunculus.mob_class);
-
 		if (vd != NULL)
 			hd->vd = vd;
 		else

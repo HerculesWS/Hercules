@@ -385,17 +385,6 @@ void trade_tradeadditem(struct map_session_data *sd, short index, short amount)
 		return;
 	}
 
-	// [CreativeSD]: Beast System Protect
-	if ( item->unique_id > BEAST_UNIQUE_ID )
-	{
-		if ((item->unique_id - BEAST_UNIQUE_ID) == sd->status.hom_id) {
-			clif->messagecolor_self(sd->fd, COLOR_RED, "Você não pode adicionar este item pois sua Besta não está guardada no item.");
-			clif->tradeitemok(sd, index + 2, TIO_INDROCKS);
-			return;
-		}
-	}
-
-
 	if( item->expire_time )
 	{ // Rental System
 		clif->message (sd->fd, msg_sd(sd,260)); // This item cannot be traded.

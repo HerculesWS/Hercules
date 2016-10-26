@@ -27,7 +27,6 @@
 #include "map/battle.h"
 #include "map/chrif.h"
 #include "map/clif.h"
-#include "map/homunculus.h"
 #include "map/intif.h"
 #include "map/itemdb.h"
 #include "map/log.h"
@@ -518,10 +517,7 @@ int pet_catch_process1(struct map_session_data *sd,int target_class)
 int pet_catch_process2(struct map_session_data* sd, int target_id) {
 	struct mob_data *md = NULL;
 	struct block_list *bl = NULL;
-	struct homun_beasts_system *homun_bs = NULL;
-	struct status_change* sc = NULL;
-	char output[256];
-	int i = 0, pet_catch_rate = 0, n_rate = 0;
+	int i = 0, pet_catch_rate = 0;
 
 	nullpo_retr(1, sd);
 
@@ -531,70 +527,9 @@ int pet_catch_process2(struct map_session_data* sd, int target_id) {
 		// Invalid inputs/state, abort capture.
 		clif->pet_roulette(sd,0);
 		sd->catch_target_class = -1;
-		sd->beast_catch_flag = 0;
-		sd->beast_item_chance = 0;
 		sd->itemid = sd->itemindex = -1;
 		return 1;
 	}
-
-	
-	// [CreativeSD]: Beast System
-	if (sd->beast_catch_flag == BEAST_UNIQUE_ID)
-	{
-		homun_bs = beast_search(md->class_, HBS_MOBCLASS);
-		if (homun_bs == NULL) {
-			clif->pet_roulette(sd, 0);
-			sd->catch_target_class = -1;
-			sd->beast_item_chance = 0;
-			sd->beast_catch_flag = 0;
-			return 0;
-		}
-
-		//pet_catch_rate = (homun_bs->chance + sd->beast_item_chance) + ((sd->status.base_level - md->level) * 30 + sd->battle_status.luk * 20)*(200 - get_percentage(md->status.hp, md->status.max_hp)) / 100;
-
-		pet_catch_rate = (homun_bs->chance + sd->beast_item_chance) + (sd->battle_status.luk * 10) + (sd->status.base_level - md->level) * 10 + (100 - get_percentage(md->status.hp, md->status.max_hp)) * 10;
-
-		// Ajustando chance de acordo com status negativos...
-		sc = status->get_sc(bl);
-		if (sc && sc->count) {
-			if (sc->data[SC_POISON])
-				pet_catch_rate += 50;
-			if (sc->data[SC_STUN])
-				pet_catch_rate += 250;
-			if (sc->data[SC_FREEZE])
-				pet_catch_rate += 300;
-			if (sc->data[SC_FEAR])
-				pet_catch_rate += 400;
-			if (sc->data[SC_THORNS_TRAP])
-				pet_catch_rate += 400;
-		}
-
-
-		//n_rate = rnd()%10000;
-		//if(n_rate < pet_catch_rate)
-		n_rate = rnd()%3;
-		if( n_rate < 2 )
-		{
-			sprintf(output, "Você capturou %s com a chance de %d%%.", md->name, get_percentage(n_rate, pet_catch_rate));
-			clif->messagecolor_self(sd->fd, COLOR_BEASTMSG, output);
-
-			clif->pet_roulette(sd, 1);
-			homunculus_create2(sd, homun_bs->hom_class, md);
-			unit->remove_map(&md->bl, CLR_OUTSIGHT, ALC_MARK);
-			status_kill(&md->bl);
-			sd->beast_item_chance = 0;
-			sd->beast_catch_flag = 0;
-			return 1;
-		}
-
-		clif->pet_roulette(sd, 0);
-		sd->catch_target_class = -1;
-		sd->beast_item_chance = 0;
-		sd->beast_catch_flag = 0;
-		return 0;
-	}
-
-
 
 	//FIXME: delete taming item here, if this was an item-invoked capture and the item was flagged as delay-consume [ultramage]
 
@@ -602,7 +537,6 @@ int pet_catch_process2(struct map_session_data* sd, int target_id) {
 	//catch_target_class == 0 is used for universal lures (except bosses for now). [Skotlex]
 	if (sd->catch_target_class == 0 && !(md->status.mode&MD_BOSS))
 		sd->catch_target_class = md->class_;
-
 	if(i < 0 || sd->catch_target_class != md->class_) {
 		clif->emotion(&md->bl, E_AG); //mob will do /ag if wrong lure is used on them.
 		clif->pet_roulette(sd,0);
@@ -615,7 +549,6 @@ int pet_catch_process2(struct map_session_data* sd, int target_id) {
 	if(pet_catch_rate < 1) pet_catch_rate = 1;
 	if(battle_config.pet_catch_rate != 100)
 		pet_catch_rate = (pet_catch_rate*battle_config.pet_catch_rate)/100;
-
 
 	if(rnd()%10000 < pet_catch_rate)
 	{
