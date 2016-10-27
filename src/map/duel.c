@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -41,25 +41,19 @@ struct duel_interface *duel;
  *------------------------------------------*/
 void duel_savetime(struct map_session_data* sd) {
 	time_t clock;
-	struct tm *t;
-
 	time(&clock);
-	t = localtime(&clock);
 
-	pc_setglobalreg(sd, script->add_str("PC_LAST_DUEL_TIME"), t->tm_mday*24*60 + t->tm_hour*60 + t->tm_min);
+	pc_setglobalreg(sd, script->add_str("PC_LAST_DUEL_TIME"), (int)time(NULL));
 }
 
 int duel_checktime(struct map_session_data* sd) {
-	int diff;
+	int diff = 0;
 	time_t clock;
-	struct tm *t;
-
 	time(&clock);
-	t = localtime(&clock);
 
-	diff = t->tm_mday*24*60 + t->tm_hour*60 + t->tm_min - pc_readglobalreg(sd, script->add_str("PC_LAST_DUEL_TIME") );
+	diff = pc_readglobalreg(sd, script->add_str("PC_LAST_DUEL_TIME")) + battle_config.duel_time_interval - (int)time(NULL);
 
-	return !(diff >= 0 && diff < battle_config.duel_time_interval);
+	return diff;
 }
 
 static int duel_showinfo_sub(struct map_session_data* sd, va_list va)
