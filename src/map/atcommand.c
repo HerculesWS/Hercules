@@ -8048,10 +8048,11 @@ ACMD(duel)
 		return false;
 	}
 
-	if (!duel->checktime(sd)) {
+	int64 diff = duel->difftime(sd);
+	if (diff > 0) {
 		char output[CHAT_SIZE_MAX];
-		// "Duel: You can take part in duel only one time per %d minutes."
-		sprintf(output, msg_fd(fd,356), battle_config.duel_time_interval);
+		// "Duel: You can take part in duel again after %d secconds."
+		sprintf(output, msg_fd(fd,356), (int)diff);
 		clif->message(fd, output);
 		return false;
 	}
@@ -8101,10 +8102,11 @@ ACMD(leave)
 
 ACMD(accept)
 {
-	if (!duel->checktime(sd)) {
+	int64 diff = duel->difftime(sd);
+	if (diff > 0) {
 		char output[CHAT_SIZE_MAX];
-		// "Duel: You can take part in duel only one time per %d minutes."
-		sprintf(output, msg_fd(fd,356), battle_config.duel_time_interval);
+		// "Duel: You can take part in duel again after %d seconds."
+		sprintf(output, msg_fd(fd,356), (int)diff);
 		clif->message(fd, output);
 		return false;
 	}
