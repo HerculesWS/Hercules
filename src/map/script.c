@@ -6607,20 +6607,22 @@ BUILDIN(warpparty)
 }
 /*==========================================
  * Warpguild - [Fredzilla]
- * Syntax: warpguild "mapname",x,y,Guild_ID;
+ * Syntax: warpguild "mapname",x,y,Guild_ID,{"from_mapname"};
  *------------------------------------------*/
 BUILDIN(warpguild)
 {
 	struct map_session_data *sd = NULL;
-	struct map_session_data *pl_sd;
 	struct guild* g;
-	struct s_mapiterator* iter;
 	int type;
+	int i;
 
-	const char* str = script_getstr(st,2);
-	int x           = script_getnum(st,3);
-	int y           = script_getnum(st,4);
-	int gid         = script_getnum(st,5);
+	const char* str  = script_getstr(st,2);
+	int x            = script_getnum(st,3);
+	int y            = script_getnum(st,4);
+	int gid          = script_getnum(st,5);
+	const char* str2 = NULL;
+	if (script_hasdata(st, 6))
+		str2 = script_getstr(st, 6);
 
 	g = guild->search(gid);
 	if( g == NULL )
@@ -6636,32 +6638,34 @@ BUILDIN(warpguild)
 		return true;
 	}
 
-	iter = mapit_getallusers();
-	for (pl_sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); pl_sd = BL_UCAST(BL_PC, mapit->next(iter))) {
-		if( pl_sd->status.guild_id != gid )
-			continue;
 
-		switch( type )
-		{
+	for (i = 0; i < MAX_GUILD; i++) {
+		if (g->member[i].online) {
+
+			if (str2 && strcmp(str2, map->list[g->member[i].sd->bl.m].name) != 0)
+				continue;
+
+			switch (type)
+			{
 			case 0: // Random
-				if(!map->list[pl_sd->bl.m].flag.nowarp)
-					pc->randomwarp(pl_sd,CLR_TELEPORT);
+				if (!map->list[g->member[i].sd->bl.m].flag.nowarp)
+					pc->randomwarp(g->member[i].sd, CLR_TELEPORT);
 				break;
 			case 1: // SavePointAll
-				if(!map->list[pl_sd->bl.m].flag.noreturn)
-					pc->setpos(pl_sd,pl_sd->status.save_point.map,pl_sd->status.save_point.x,pl_sd->status.save_point.y,CLR_TELEPORT);
+				if (!map->list[g->member[i].sd->bl.m].flag.noreturn)
+					pc->setpos(g->member[i].sd, g->member[i].sd->status.save_point.map, g->member[i].sd->status.save_point.x, g->member[i].sd->status.save_point.y, CLR_TELEPORT);
 				break;
 			case 2: // SavePoint
-				if(!map->list[pl_sd->bl.m].flag.noreturn)
-					pc->setpos(pl_sd,sd->status.save_point.map,sd->status.save_point.x,sd->status.save_point.y,CLR_TELEPORT);
+				if (!map->list[g->member[i].sd->bl.m].flag.noreturn)
+					pc->setpos(g->member[i].sd, sd->status.save_point.map, sd->status.save_point.x, sd->status.save_point.y, CLR_TELEPORT);
 				break;
 			case 3: // m,x,y
-				if(!map->list[pl_sd->bl.m].flag.noreturn && !map->list[pl_sd->bl.m].flag.nowarp)
-					pc->setpos(pl_sd,script->mapindexname2id(st,str),x,y,CLR_TELEPORT);
+				if (!map->list[g->member[i].sd->bl.m].flag.noreturn && !map->list[g->member[i].sd->bl.m].flag.nowarp)
+					pc->setpos(g->member[i].sd, script->mapindexname2id(st, str), x, y, CLR_TELEPORT);
 				break;
+			}
 		}
 	}
-	mapit->free(iter);
 
 	return true;
 }
@@ -20730,7 +20734,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(areawarp,"siiiisii??"),
 		BUILDIN_DEF(warpchar,"siii"), // [LuzZza]
 		BUILDIN_DEF(warpparty,"siii?"), // [Fredzilla] [Paradox924X]
-		BUILDIN_DEF(warpguild,"siii"), // [Fredzilla]
+		BUILDIN_DEF(warpguild,"siii?"), // [Fredzilla]
 		BUILDIN_DEF(setlook,"ii"),
 		BUILDIN_DEF(changelook,"ii"), // Simulates but don't Store it
 		BUILDIN_DEF2(__setr,"set","rv"),
