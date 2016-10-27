@@ -52,7 +52,7 @@ struct duel_interface {
 	void (*reject) (const unsigned int did, struct map_session_data* sd);
 	void (*leave) (const unsigned int did, struct map_session_data* sd);
 	void (*showinfo) (const unsigned int did, struct map_session_data* sd);
-	int (*checktime) (struct map_session_data* sd);
+	int64 (*checktime) (struct map_session_data* sd);
 
 	void (*init) (bool minimal);
 	void (*final) (void);

@@ -39,29 +39,12 @@ struct duel_interface *duel;
 /*==========================================
  * Duel organizing functions [LuzZza]
  *------------------------------------------*/
-static void duel_savetime(struct map_session_data *sd)
-{
-	time_t clock;
-	struct tm *t;
-
-	time(&clock);
-	t = localtime(&clock);
-
-	pc_setglobalreg(sd, script->add_variable("PC_LAST_DUEL_TIME"), t->tm_mday*24*60 + t->tm_hour*60 + t->tm_min);
+static void duel_savetime(struct map_session_data* sd) {
+	pc_setglobalreg(sd, script->add_str("PC_LAST_DUEL_TIME"), (int)time(NULL));
 }
 
-static int duel_checktime(struct map_session_data *sd)
-{
-	int diff;
-	time_t clock;
-	struct tm *t;
-
-	time(&clock);
-	t = localtime(&clock);
-
-	diff = t->tm_mday*24*60 + t->tm_hour*60 + t->tm_min - pc_readglobalreg(sd, script->add_variable("PC_LAST_DUEL_TIME") );
-
-	return !(diff >= 0 && diff < battle_config.duel_time_interval);
+static int64 duel_checktime(struct map_session_data* sd) {
+	return (pc_readglobalreg(sd, script->add_str("PC_LAST_DUEL_TIME")) + battle_config.duel_time_interval - (int)time(NULL));
 }
 
 static int duel_showinfo_sub(struct map_session_data *sd, va_list va)
