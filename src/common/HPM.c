@@ -867,7 +867,7 @@ bool hplugins_get_battle_conf(const char *w1, int *value)
 {
 	int i;
 
-	nullpo_retr(w1, value);
+	nullpo_retr(false, w1);
 	nullpo_retr(false, value);
 
 	ARR_FIND(0, VECTOR_LENGTH(HPM->config_listeners[HPCT_BATTLE]), i, strcmpi(w1, VECTOR_INDEX(HPM->config_listeners[HPCT_BATTLE], i).key) == 0);
