@@ -28,7 +28,7 @@
 //================= Description ===========================================
 //= Official TaeKwon Job Change Quest
 //================= Current Version =======================================
-//= 1.0
+//= 1.0.1
 //=========================================================================
 
-payon,157,141,5	duplicate(Pheonix)	Phoenix#TKJobChangePRE	4_M_MONK
+payon,157,141,5	duplicate(TKJobChange)	Phoenix#TKJobChangePRE	4_M_MONK
