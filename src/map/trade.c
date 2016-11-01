@@ -283,16 +283,15 @@ int trade_check(struct map_session_data *sd, struct map_session_data *tsd)
 			data = itemdb->search(inventory[n].nameid);
 			i = MAX_INVENTORY;
 			if (itemdb->isstackable2(data)) { //Stackable item.
-				for(i = 0; i < MAX_INVENTORY; i++)
-					if (inventory2[i].nameid == inventory[n].nameid &&
-						inventory2[i].card[0] == inventory[n].card[0] && inventory2[i].card[1] == inventory[n].card[1] &&
-						inventory2[i].card[2] == inventory[n].card[2] && inventory2[i].card[3] == inventory[n].card[3]) {
+				for (i = 0; i < MAX_INVENTORY; i++) {
+					if (itemdb->items_identical(&inventory2[i], &inventory[i], true)) {
 						if (inventory2[i].amount + amount > MAX_AMOUNT)
 							return 0;
 						inventory2[i].amount += amount;
 						inventory[n].amount -= amount;
 						break;
 					}
+				}
 			}
 
 			if (i == MAX_INVENTORY) {// look for an empty slot.
@@ -316,16 +315,15 @@ int trade_check(struct map_session_data *sd, struct map_session_data *tsd)
 		data = itemdb->search(inventory2[n].nameid);
 		i = MAX_INVENTORY;
 		if (itemdb->isstackable2(data)) {
-			for(i = 0; i < MAX_INVENTORY; i++)
-				if (inventory[i].nameid == inventory2[n].nameid &&
-					inventory[i].card[0] == inventory2[n].card[0] && inventory[i].card[1] == inventory2[n].card[1] &&
-					inventory[i].card[2] == inventory2[n].card[2] && inventory[i].card[3] == inventory2[n].card[3]) {
+			for (i = 0; i < MAX_INVENTORY; i++) {
+				if (itemdb->items_identical(&inventory[i], &inventory2[n], true)) {
 					if (inventory[i].amount + amount > MAX_AMOUNT)
 						return 0;
 					inventory[i].amount += amount;
 					inventory2[n].amount -= amount;
 					break;
 				}
+			}
 		}
 		if (i == MAX_INVENTORY) {
 			for(i = 0; i < MAX_INVENTORY && inventory[i].nameid; i++);

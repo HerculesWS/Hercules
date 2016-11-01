@@ -7613,10 +7613,10 @@ BUILDIN(countitem) {
  * returns number of items that meet the conditions
  *------------------------------------------*/
 BUILDIN(countitem2) {
-	int nameid, iden, ref, attr, c1, c2, c3, c4;
 	int count = 0;
 	int i;
 	struct item_data* id = NULL;
+	struct item tmp_item = { 0 };
 
 	struct map_session_data *sd = script->rid2sd(st);
 	if (sd == NULL)
@@ -7636,24 +7636,19 @@ BUILDIN(countitem2) {
 		return false;
 	}
 
-	nameid = id->nameid;
-	iden = script_getnum(st,3);
-	ref  = script_getnum(st,4);
-	attr = script_getnum(st,5);
-	c1 = (short)script_getnum(st,6);
-	c2 = (short)script_getnum(st,7);
-	c3 = (short)script_getnum(st,8);
-	c4 = (short)script_getnum(st,9);
+	tmp_item.nameid = id->nameid;
+	tmp_item.identify = script_getnum(st, 3);
+	tmp_item.refine = script_getnum(st, 4);
+	tmp_item.attribute = script_getnum(st, 5);
+	for (i = 0; i < MAX_SLOTS; ++i)
+		tmp_item.card[i] = script_getnum(st, 6 + i);
 
-	for(i = 0; i < MAX_INVENTORY; i++)
-		if (sd->status.inventory[i].nameid > 0 && sd->inventory_data[i] != NULL &&
-			sd->status.inventory[i].amount > 0 && sd->status.inventory[i].nameid == nameid &&
-			sd->status.inventory[i].identify == iden && sd->status.inventory[i].refine == ref &&
-			sd->status.inventory[i].attribute == attr && sd->status.inventory[i].card[0] == c1 &&
-			sd->status.inventory[i].card[1] == c2 && sd->status.inventory[i].card[2] == c3 &&
-			sd->status.inventory[i].card[3] == c4
-			)
+	for (i = 0; i < MAX_INVENTORY; i++) {
+		if (sd->status.inventory[i].nameid <= 0 || sd->inventory_data[i] == NULL || sd->status.inventory[i].amount == 0)
+			continue;
+		if (itemdb->items_identical(&sd->status.inventory[i], &tmp_item, false))
 			count += sd->status.inventory[i].amount;
+	}
 
 	script_pushint(st,count);
 	return true;
@@ -24160,6 +24155,11 @@ void script_run_item_unequip_script(struct map_session_data *sd, struct item_dat
 #define BUILDIN_DEF_DEPRECATED(x,args) { buildin_ ## x , #x , args, true }
 #define BUILDIN_DEF2_DEPRECATED(x,x2,args) { buildin_ ## x , x2 , args, true }
 void script_parse_builtin(void) {
+#if MAX_SLOTS == 4
+#define CARDSLOTS_CMDARGS "iiii"
+#else
+#error Compiling Hercules with MAX_SLOT > 4 requires the line above to be adjusted.
+#endif
 	struct script_function BUILDIN[] = {
 		/* Commands for internal use by the script engine */
 		BUILDIN_DEF(__jump_zero,"il"),
@@ -24216,7 +24216,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(percentheal,"ii"),
 		BUILDIN_DEF(rand,"i?"),
 		BUILDIN_DEF(countitem,"v"),
-		BUILDIN_DEF(countitem2,"viiiiiii"),
+		BUILDIN_DEF(countitem2,"viii" CARDSLOTS_CMDARGS), // "viiiiiii"
 		BUILDIN_DEF(checkweight,"vi*"),
 		BUILDIN_DEF(checkweight2,"rr"),
 		BUILDIN_DEF(readparam,"i?"),
