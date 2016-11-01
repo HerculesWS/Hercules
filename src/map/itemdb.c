@@ -216,10 +216,7 @@ void itemdb_package_item(struct map_session_data *sd, struct item_package *packa
 		}
 
 		if( package->must_items[i].named ) {
-			it.card[0] = CARD0_FORGE;
-			it.card[1] = 0;
-			it.card[2] = GetWord(sd->status.char_id, 0);
-			it.card[3] = GetWord(sd->status.char_id, 1);
+			itemdb->fill_produceinfo(&it, sd->status.char_id);
 		}
 
 		if( package->must_items[i].announce )
@@ -260,10 +257,7 @@ void itemdb_package_item(struct map_session_data *sd, struct item_package *packa
 					}
 
 					if( entry->named ) {
-						it.card[0] = CARD0_FORGE;
-						it.card[1] = 0;
-						it.card[2] = GetWord(sd->status.char_id, 0);
-						it.card[3] = GetWord(sd->status.char_id, 1);
+						itemdb->fill_produceinfo(&it, sd->status.char_id);
 					}
 
 					if( entry->announce )
@@ -2454,6 +2448,51 @@ bool itemdb_items_identical(const struct item *a, const struct item *b, bool sta
 	return true;
 }
 
+/**
+ * Encodes producer/signer information on an item.
+ *
+ * @param[in,out] item    The item to sign.
+ * @param[in]     char_id The signer/creator character ID.
+ */
+void itemdb_fill_produceinfo(struct item *item, int char_id)
+{
+	STATIC_ASSERT(MAX_SLOTS >= 4, "MAX_SLOTS should be at least 4");
+	nullpo_retv(item);
+	item->card[0] = CARD0_CREATE;
+	item->card[1] = 0;
+	item->card[2] = GetWord(char_id, 0);
+	item->card[3] = GetWord(char_id, 1);
+}
+
+void itemdb_fill_forgeinfo(struct item *item, int char_id, int star_crumbs, int element)
+{
+	STATIC_ASSERT(MAX_SLOTS >= 4, "MAX_SLOTS should be at least 4");
+	nullpo_retv(item);
+	Assert_retv(star_crumbs >= 0 && (((uint32)star_crumbs * 5) << 8) <= UINT16_MAX);
+	Assert_retv(element >= 0 && element <= 0xff);
+	item->card[0] = CARD0_FORGE;
+	item->card[1] = (((uint32)star_crumbs * 5) << 8) | ((uint32)element & 0xff);
+	item->card[2] = GetWord(char_id, 0);
+	item->card[3] = GetWord(char_id, 1);
+}
+
+/**
+ * Encodes pet information on a pet egg item.
+ *
+ * @param[in,out] item        The pet egg to mark.
+ * @param[in]     pet_id      The pet ID.
+ * @param[in]     rename_flag The pet rename flag.
+ */
+void itemdb_fill_petinfo(struct item *item, int pet_id, char rename_flag)
+{
+	STATIC_ASSERT(MAX_SLOTS >= 4, "MAX_SLOTS should be at least 4");
+	nullpo_retv(item);
+	item->card[0] = CARD0_PET;
+	item->card[1] = GetWord(pet_id, 0);
+	item->card[2] = GetWord(pet_id, 1);
+	item->card[3] = rename_flag;
+}
+
 /*==========================================
  * Initialize / Finalize
  *------------------------------------------*/
@@ -2771,4 +2810,7 @@ void itemdb_defaults(void) {
 	itemdb->lookup_const = itemdb_lookup_const;
 	itemdb->lookup_const_mask = itemdb_lookup_const_mask;
 	itemdb->items_identical = itemdb_items_identical;
+	itemdb->fill_produceinfo = itemdb_fill_produceinfo;
+	itemdb->fill_forgeinfo = itemdb_fill_forgeinfo;
+	itemdb->fill_petinfo = itemdb_fill_petinfo;
 }

@@ -8051,10 +8051,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 		memset(&item_tmp,0,sizeof(item_tmp));
 		item_tmp.nameid=ITEMID_SKULL_;
 		item_tmp.identify=1;
-		item_tmp.card[0]=CARD0_CREATE;
-		item_tmp.card[1]=0;
-		item_tmp.card[2]=GetWord(sd->status.char_id,0); // CharId
-		item_tmp.card[3]=GetWord(sd->status.char_id,1);
+		itemdb->fill_produceinfo(&item_tmp, sd->status.char_id);
 		map->addflooritem(&sd->bl, &item_tmp, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0, false);
 	}
 

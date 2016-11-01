@@ -18318,11 +18318,8 @@ int skill_produce_mix(struct map_session_data *sd, uint16 skill_id, int nameid, 
 		tmp_item.nameid=nameid;
 		tmp_item.amount=1;
 		tmp_item.identify=1;
-		if(equip){
-			tmp_item.card[0]=CARD0_FORGE;
-			tmp_item.card[1]=((sc*5)<<8)+ele;
-			tmp_item.card[2]=GetWord(sd->status.char_id,0); // CharId
-			tmp_item.card[3]=GetWord(sd->status.char_id,1);
+		if (equip) {
+			itemdb->fill_forgeinfo(&tmp_item, sd->status.char_id, sc, ele);
 		} else {
 			//Flag is only used on the end, so it can be used here. [Skotlex]
 			switch (skill_id) {
@@ -18356,10 +18353,7 @@ int skill_produce_mix(struct map_session_data *sd, uint16 skill_id, int nameid, 
 					break;
 			}
 			if (flag) {
-				tmp_item.card[0]=CARD0_CREATE;
-				tmp_item.card[1]=0;
-				tmp_item.card[2]=GetWord(sd->status.char_id,0); // CharId
-				tmp_item.card[3]=GetWord(sd->status.char_id,1);
+				itemdb->fill_produceinfo(&tmp_item, sd->status.char_id);
 			}
 		}
 
@@ -18577,10 +18571,7 @@ int skill_arrow_create (struct map_session_data *sd, int nameid)
 		tmp_item.nameid = skill->dbs->arrow_db[index].cre_id[i];
 		tmp_item.amount = skill->dbs->arrow_db[index].cre_amount[i];
 		if(battle_config.produce_item_name_input&0x4) {
-			tmp_item.card[0]=CARD0_CREATE;
-			tmp_item.card[1]=0;
-			tmp_item.card[2]=GetWord(sd->status.char_id,0); // CharId
-			tmp_item.card[3]=GetWord(sd->status.char_id,1);
+			itemdb->fill_produceinfo(&tmp_item, sd->status.char_id);
 		}
 		if(tmp_item.nameid <= 0 || tmp_item.amount <= 0)
 			continue;

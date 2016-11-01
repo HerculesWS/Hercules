@@ -7636,12 +7636,17 @@ BUILDIN(countitem2) {
 		return false;
 	}
 
-	tmp_item.nameid = id->nameid;
-	tmp_item.identify = script_getnum(st, 3);
-	tmp_item.refine = script_getnum(st, 4);
-	tmp_item.attribute = script_getnum(st, 5);
-	for (i = 0; i < MAX_SLOTS; ++i)
-		tmp_item.card[i] = script_getnum(st, 6 + i);
+	{
+		int tmp;
+		tmp_item.nameid = id->nameid;
+		tmp_item.identify = script_getnum(st, 3) > 0 ? 1 : 0;
+		tmp = script_getnum(st, 4);
+		tmp_item.refine = cap_value(tmp, 0, MAX_REFINE);
+		tmp = script_getnum(st, 5);
+		tmp_item.attribute = cap_value(tmp, 0, CHAR_MAX);
+		for (i = 0; i < MAX_SLOTS; ++i)
+			tmp_item.card[i] = script_getnum(st, 6 + i);
+	}
 
 	for (i = 0; i < MAX_INVENTORY; i++) {
 		if (sd->status.inventory[i].nameid <= 0 || sd->inventory_data[i] == NULL || sd->status.inventory[i].amount == 0)
@@ -8133,9 +8138,7 @@ BUILDIN(getnameditem) {
 	item_tmp.nameid=nameid;
 	item_tmp.amount=1;
 	item_tmp.identify=1;
-	item_tmp.card[0]=CARD0_CREATE; //we don't use 255! because for example SIGNED WEAPON shouldn't get TOP10 BS Fame bonus [Lupus]
-	item_tmp.card[2] = GetWord(tsd->status.char_id, 0);
-	item_tmp.card[3] = GetWord(tsd->status.char_id, 1);
+	itemdb->fill_produceinfo(&item_tmp, tsd->status.char_id); // Mark as produced and not forged, so that i.e. signed weapons don't obtain the fame bonus.
 	if(pc->additem(sd,&item_tmp,1,LOG_TYPE_SCRIPT)) {
 		script_pushint(st,0);
 		return true; //Failed to add item, we will not drop if they don't fit
@@ -16251,9 +16254,10 @@ BUILDIN(autoequip)
  *-------------------------------------------------------*/
 BUILDIN(equip2)
 {
-	int i,nameid,ref,attr,c0,c1,c2,c3;
+	int i,nameid;
 	struct item_data *item_data;
 	struct map_session_data *sd = script->rid2sd(st);
+	struct item item_tmp = { 0 };
 
 	if (sd == NULL) {
 		script_pushint(st,0);
@@ -16268,22 +16272,14 @@ BUILDIN(equip2)
 		return false;
 	}
 
-	ref    = script_getnum(st,3);
-	attr   = script_getnum(st,4);
-	c0     = (short)script_getnum(st,5);
-	c1     = (short)script_getnum(st,6);
-	c2     = (short)script_getnum(st,7);
-	c3     = (short)script_getnum(st,8);
+	item_tmp.nameid = nameid;
+	item_tmp.identify = 1;
+	item_tmp.refine = script_getnum(st,3);
+	item_tmp.attribute = script_getnum(st,4);
+	for (i = 0; i < MAX_SLOTS; ++i)
+		item_tmp.card[i] = (short)script_getnum(st, 5 + i);
 
-	ARR_FIND( 0, MAX_INVENTORY, i,( sd->status.inventory[i].equip == 0 &&
-									sd->status.inventory[i].nameid == nameid &&
-									sd->status.inventory[i].refine == ref &&
-									sd->status.inventory[i].attribute == attr &&
-									sd->status.inventory[i].card[0] == c0 &&
-									sd->status.inventory[i].card[1] == c1 &&
-									sd->status.inventory[i].card[2] == c2 &&
-									sd->status.inventory[i].card[3] == c3 ) );
-
+	ARR_FIND(0, MAX_INVENTORY, i, sd->status.inventory[i].equip == 0 && itemdb->items_identical(&sd->status.inventory[i], &item_tmp, false));
 	if( i < MAX_INVENTORY ) {
 		script_pushint(st,1);
 		pc->equipitem(sd,i,item_data->equip);
@@ -24501,7 +24497,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(npcshopattach,"s?"),
 		BUILDIN_DEF(equip,"i"),
 		BUILDIN_DEF(autoequip,"ii"),
-		BUILDIN_DEF(equip2,"iiiiiii"),
+		BUILDIN_DEF(equip2,"iii" CARDSLOTS_CMDARGS), // "iiiiiii"
 		BUILDIN_DEF(setbattleflag,"si"),
 		BUILDIN_DEF(getbattleflag,"s"),
 		BUILDIN_DEF(setitemscript,"is?"), //Set NEW item bonus script. Lupus

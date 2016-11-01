@@ -2257,11 +2257,10 @@ ACMD(produce)
 		tmp_item.nameid = item_id;
 		tmp_item.amount = 1;
 		tmp_item.identify = 1;
-		tmp_item.card[0] = CARD0_FORGE;
-		tmp_item.card[1] = item_data->type==IT_WEAPON?
-		((star*5) << 8) + attribute:0;
-		tmp_item.card[2] = GetWord(sd->status.char_id, 0);
-		tmp_item.card[3] = GetWord(sd->status.char_id, 1);
+		if (item_data->type == IT_WEAPON)
+			itemdb->fill_forgeinfo(&tmp_item, sd->status.char_id, star, attribute);
+		else
+			itemdb->fill_forgeinfo(&tmp_item, sd->status.char_id, 0, 0);
 		clif->produce_effect(sd, 0, item_id);
 		clif->misceffect(&sd->bl, 3);
 
@@ -5495,9 +5494,7 @@ void atcommand_getring(struct map_session_data* sd) {
 	memset(&item_tmp, 0, sizeof(item_tmp));
 	item_tmp.nameid = item_id;
 	item_tmp.identify = 1;
-	item_tmp.card[0] = 255;
-	item_tmp.card[2] = GetWord(sd->status.partner_id, 0);
-	item_tmp.card[3] = GetWord(sd->status.partner_id, 1);
+	itemdb->fill_forgeinfo(&item_tmp, sd->status.partner_id, 0, 0);
 
 	if((flag = pc->additem(sd,&item_tmp,1,LOG_TYPE_COMMAND))) {
 		clif->additem(sd,0,0,flag);

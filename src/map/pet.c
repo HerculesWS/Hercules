@@ -320,10 +320,7 @@ int pet_return_egg(struct map_session_data *sd, struct pet_data *pd)
 	memset(&tmp_item,0,sizeof(tmp_item));
 	tmp_item.nameid = pd->petDB->EggID;
 	tmp_item.identify = 1;
-	tmp_item.card[0] = CARD0_PET;
-	tmp_item.card[1] = GetWord(pd->pet.pet_id,0);
-	tmp_item.card[2] = GetWord(pd->pet.pet_id,1);
-	tmp_item.card[3] = pd->pet.rename_flag;
+	itemdb->fill_petinfo(&tmp_item, pd->pet.pet_id, pd->pet.rename_flag);
 	if((flag = pc->additem(sd,&tmp_item,1,LOG_TYPE_EGG))) {
 		clif->additem(sd,0,0,flag);
 		map->addflooritem(&sd->bl, &tmp_item, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0, false);
@@ -604,10 +601,7 @@ bool pet_get_egg(int account_id, short pet_class, int pet_id ) {
 	memset(&tmp_item,0,sizeof(tmp_item));
 	tmp_item.nameid = pet->db[i].EggID;
 	tmp_item.identify = 1;
-	tmp_item.card[0] = CARD0_PET;
-	tmp_item.card[1] = GetWord(pet_id,0);
-	tmp_item.card[2] = GetWord(pet_id,1);
-	tmp_item.card[3] = 0; //New pets are not named.
+	itemdb->fill_petinfo(&tmp_item, pet_id, 0); //New pets are not named.
 	if((ret = pc->additem(sd,&tmp_item,1,LOG_TYPE_PICKDROP_PLAYER))) {
 		clif->additem(sd,0,0,ret);
 		map->addflooritem(&sd->bl, &tmp_item, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0, false);
