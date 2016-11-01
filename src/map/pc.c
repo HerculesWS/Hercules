@@ -5280,8 +5280,7 @@ int pc_useitem(struct map_session_data *sd,int n) {
 		}
 	}
 
-	if (sd->status.inventory[n].card[0] == CARD0_CREATE
-	 && pc->fame_rank(MakeDWord(sd->status.inventory[n].card[2], sd->status.inventory[n].card[3]), RANKTYPE_ALCHEMIST) > 0) {
+	if (sd->status.inventory[n].card[0] == CARD0_CREATE && pc->fame_rank(itemdb_creator_id(&sd->status.inventory[n]), RANKTYPE_ALCHEMIST) > 0) {
 		script->potion_flag = 2; // Famous player's potions have 50% more efficiency
 		if (sd->sc.data[SC_SOULLINK] && sd->sc.data[SC_SOULLINK]->val2 == SL_ROGUE)
 			script->potion_flag = 3; //Even more effective potions.

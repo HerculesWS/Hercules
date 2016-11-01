@@ -16186,10 +16186,8 @@ void skill_weaponrefine (struct map_session_data *sd, int idx)
 				if (ep)
 					pc->equipitem(sd,idx,ep);
 				clif->misceffect(&sd->bl,3);
-				if(item->refine == 10 &&
-					item->card[0] == CARD0_FORGE &&
-					(int)MakeDWord(item->card[2],item->card[3]) == sd->status.char_id)
-				{ // Fame point system [DracoRPG]
+				if (item->refine == 10 && item->card[0] == CARD0_FORGE && itemdb_creator_id(item) == sd->status.char_id) {
+					// Fame point system [DracoRPG]
 					switch (ditem->wlv) {
 					case 1:
 						pc->addfame(sd, RANKTYPE_BLACKSMITH, 1); // Success to refine to +10 a lv1 weapon you forged = +1 fame point

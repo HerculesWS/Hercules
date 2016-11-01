@@ -2247,7 +2247,7 @@ int npc_selllist(struct map_session_data *sd, struct itemlist *item_list)
 
 		if (sd->inventory_data[idx]->type == IT_PETEGG && sd->status.inventory[idx].card[0] == CARD0_PET) {
 			if (pet->search_petDB_index(sd->status.inventory[idx].nameid, PET_EGG) >= 0) {
-				intif->delete_petdata(MakeDWord(sd->status.inventory[idx].card[1], sd->status.inventory[idx].card[2]));
+				intif->delete_petdata(itemdb_pet_id(&sd->status.inventory[idx]));
 			}
 		}
 

@@ -2537,14 +2537,14 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 
 			if (sd->status.inventory[index].card[0]==CARD0_FORGE) {
 				// Forged weapon
-				wd->star += (sd->status.inventory[index].card[1]>>8);
+				wd->star += itemdb_forged_starcrumbs(&sd->status.inventory[index]);
 				if (wd->star >= 15)
 					wd->star = 40; // 3 Star Crumbs now give +40 dmg
-				if (pc->fame_rank(MakeDWord(sd->status.inventory[index].card[2],sd->status.inventory[index].card[3]), RANKTYPE_BLACKSMITH) > 0)
+				if (pc->fame_rank(itemdb_creator_id(&sd->status.inventory[index]), RANKTYPE_BLACKSMITH) > 0)
 					wd->star += 10;
 
 				if (!wa->ele) //Do not overwrite element from previous bonuses.
-					wa->ele = (sd->status.inventory[index].card[1]&0x0f);
+					wa->ele = itemdb_forged_element(&sd->status.inventory[index]);
 			}
 		}
 		else if(sd->inventory_data[index]->type == IT_ARMOR) {

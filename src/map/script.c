@@ -8139,8 +8139,8 @@ BUILDIN(getnameditem) {
 	item_tmp.amount=1;
 	item_tmp.identify=1;
 	item_tmp.card[0]=CARD0_CREATE; //we don't use 255! because for example SIGNED WEAPON shouldn't get TOP10 BS Fame bonus [Lupus]
-	item_tmp.card[2]=tsd->status.char_id;
-	item_tmp.card[3]=tsd->status.char_id >> 16;
+	item_tmp.card[2] = GetWord(tsd->status.char_id, 0);
+	item_tmp.card[3] = GetWord(tsd->status.char_id, 1);
 	if(pc->additem(sd,&item_tmp,1,LOG_TYPE_SCRIPT)) {
 		script_pushint(st,0);
 		return true; //Failed to add item, we will not drop if they don't fit
@@ -8332,9 +8332,9 @@ void buildin_delitem_delete(struct map_session_data* sd, int idx, int* amount, b
 
 	if( delete_items )
 	{
-		if( sd->inventory_data[idx]->type == IT_PETEGG && inv->card[0] == CARD0_PET )
-		{// delete associated pet
-			intif->delete_petdata(MakeDWord(inv->card[1], inv->card[2]));
+		if (sd->inventory_data[idx]->type == IT_PETEGG && inv->card[0] == CARD0_PET) {
+			// delete associated pet
+			intif->delete_petdata(itemdb_pet_id(inv));
 		}
 		pc->delitem(sd, idx, delamount, 0, DELITEM_NORMAL, LOG_TYPE_SCRIPT);
 	}
@@ -9467,9 +9467,9 @@ BUILDIN(successrefitem)
 		clif->additem(sd,i,1,0);
 		pc->equipitem(sd,i,ep);
 		clif->misceffect(&sd->bl,3);
-		if(sd->status.inventory[i].refine == 10 &&
-		   sd->status.inventory[i].card[0] == CARD0_FORGE &&
-		   sd->status.char_id == (int)MakeDWord(sd->status.inventory[i].card[2],sd->status.inventory[i].card[3])
+		if (sd->status.inventory[i].refine == 10
+		 && sd->status.inventory[i].card[0] == CARD0_FORGE
+		 && sd->status.char_id == itemdb_creator_id(&sd->status.inventory[i])
 		  ) { // Fame point system [DracoRPG]
 			switch (sd->inventory_data[i]->wlv) {
 			case 1:

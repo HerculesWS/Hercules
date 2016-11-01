@@ -45,6 +45,50 @@ struct hplugin_data_store;
 //Marks if the card0 given is "special" (non-item id used to mark pets/created items. [Skotlex]
 #define itemdb_isspecial(i) ((i) == CARD0_FORGE || (i) == CARD0_CREATE || (i) == CARD0_PET)
 
+/**
+ * Returns the creator character ID if the item is forged or produced.
+ *
+ * @param it The item data (struct item).
+ * @return The creator character ID.
+ */
+#define itemdb_creator_id(it) ( \
+		((it)->card[0] == CARD0_FORGE || (it)->card[0] == CARD0_CREATE) \
+		? ((int)MakeDWord((uint16)(it)->card[2], (uint16)(it)->card[3])) \
+		: 0)
+
+/**
+ * Returns the contained pet ID if the item is a pet egg.
+ *
+ * @param it The item data (struct item).
+ * @return The contained pet ID.
+ */
+#define itemdb_pet_id(it) ( \
+		((it)->card[0] == CARD0_PET) \
+		? ((int)MakeDWord((uint16)(it)->card[1], (uint16)(it)->card[2])) \
+		: 0)
+
+/**
+ * Returns the attack strength bonus of a forged weapon (defined as starcrumbs * 5).
+ *
+ * @param it The item data (struct item).
+ * @return The attack strength bonus.
+ */
+#define itemdb_forged_starcrumbs(it) ( \
+		((it)->card[0] == CARD0_FORGE) \
+		? (int)((uint32)((it)->card[1]) >> 8) \
+		: 0)
+
+/**
+ * Returns the element of a forged weapon.
+ *
+ * @param it The item data (struct item).
+ * @return The weapon element.
+ */
+#define itemdb_forged_element(it) ( \
+		((it)->card[0] == CARD0_FORGE) \
+		? (int)((uint32)((it)->card[1]) & 0x0f) \
+		: 0)
+
 //Use apple for unknown items.
 #define UNKNOWN_ITEM_ID 512
 
