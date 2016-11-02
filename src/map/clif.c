@@ -15236,10 +15236,7 @@ void clif_Mail_read(struct map_session_data *sd, int mail_id)
 			WFIFOB(fd,88) = item->identify;
 			WFIFOB(fd,89) = item->attribute;
 			WFIFOB(fd,90) = item->refine;
-			WFIFOW(fd,91) = item->card[0];
-			WFIFOW(fd,93) = item->card[1];
-			WFIFOW(fd,95) = item->card[2];
-			WFIFOW(fd,97) = item->card[3];
+			clif->addcards(WFIFOP(fd, 91), item);
 		} else // no item, set all to zero
 			memset(WFIFOP(fd,80), 0x00, 19);
 
@@ -15555,10 +15552,7 @@ void clif_Auction_results(struct map_session_data *sd, short count, short pages,
 		WFIFOB(fd,36+k) = auction.item.identify;
 		WFIFOB(fd,37+k) = auction.item.attribute;
 		WFIFOB(fd,38+k) = auction.item.refine;
-		WFIFOW(fd,39+k) = auction.item.card[0];
-		WFIFOW(fd,41+k) = auction.item.card[1];
-		WFIFOW(fd,43+k) = auction.item.card[2];
-		WFIFOW(fd,45+k) = auction.item.card[3];
+		clif->addcards(WFIFOP(fd, 39 + k), &auction.item);
 		WFIFOL(fd,47+k) = auction.price;
 		WFIFOL(fd,51+k) = auction.buynow;
 		safestrncpy(WFIFOP(fd,55+k), auction.buyer_name, NAME_LENGTH);

@@ -343,6 +343,7 @@ void searchstore_clearremote(struct map_session_data* sd) {
 bool searchstore_result(struct map_session_data* sd, unsigned int store_id, int account_id, const char* store_name, unsigned short nameid, unsigned short amount, unsigned int price, const short* card, unsigned char refine)
 {
 	struct s_search_store_info_item* ssitem;
+	int i;
 
 	nullpo_retr(false, sd);
 	if( sd->searchstore.count >= (unsigned int)battle_config.searchstore_maxresults ) {// no more
@@ -358,7 +359,8 @@ bool searchstore_result(struct map_session_data* sd, unsigned int store_id, int 
 	ssitem->nameid = nameid;
 	ssitem->amount = amount;
 	ssitem->price = price;
-	memcpy(ssitem->card, card, sizeof(ssitem->card));
+	for (i = 0; i < MAX_SLOTS; i++)
+		ssitem->card[i] = card[i];
 	ssitem->refine = refine;
 
 	return true;
