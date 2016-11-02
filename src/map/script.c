@@ -16049,14 +16049,33 @@ BUILDIN(isequipped)
 	int index, flag;
 	int ret = -1;
 	//Original hash to reverse it when full check fails.
-	unsigned int setitem_hash = 0, setitem_hash2 = 0;
+	uint32 backup_bitmask[MAX_SLOTS] = { 0 };
 	struct map_session_data *sd = script->rid2sd(st);
+
+	STATIC_ASSERT(EQI_MAX < 32, "Due to the bit-shift operations used, EQI_MAX >= 32 is not supported by this function.");
 
 	if (sd == NULL)
 		return true;
 
-	setitem_hash = sd->bonus.setitem_hash;
-	setitem_hash2 = sd->bonus.setitem_hash2;
+	// Back up original values
+	for (k = 0; k < MAX_SLOTS; ++k)
+		backup_bitmask[k] = sd->bonus.isequipped_bitmask[k];
+
+	/*
+	 * [!] Note:
+	 * isequipped_bitmask[] is used during item script execution, to keep track of which cards are already used by
+	 * another set (they can't be re-used).
+	 *
+	 * TODO: check whether this behavior is still desired or not, now that we use the item combo system, and this
+	 * command has been (ab)used outside item scripts for different purposes than it was intended to.
+	 *
+	 * For memory usage and extensibility reasons, the variable's memory layout is inverted (compared to what the
+	 * common sense would dictate): it's an array of slots, and for each slot, a bit mask specifies which piece of
+	 * equipment had its card in said slot already taken into account.
+	 * For example, (isequipped_bitmask[0] & (1 << EQI_HAND_R)) represents the first slot of the item equipped in
+	 * the character's right hand (i.e. weapon).
+	 */
+
 	for (i=0; id!=0; i++) {
 		script_fetch(st,i+2, id);
 		if (id <= 0)
@@ -16084,22 +16103,18 @@ BUILDIN(isequipped)
 
 				for (k = 0; k < sd->inventory_data[index]->slot; k++) {
 					//New hash system which should support up to 4 slots on any equipment. [Skotlex]
-					unsigned int hash = 0;
+					uint32 mask = 1 << j;
 					if (sd->status.inventory[index].card[k] != id)
 						continue;
 
-					hash = 1<<((j<5?j:j-5)*4 + k);
 					// check if card is already used by another set
-					if ( ( j < 5 ? sd->bonus.setitem_hash : sd->bonus.setitem_hash2 ) & hash)
+					if ((sd->bonus.isequipped_bitmask[k] & mask) != 0)
 						continue;
 
 					// We have found a match
 					flag = 1;
 					// Set hash so this card cannot be used by another
-					if (j<5)
-						sd->bonus.setitem_hash |= hash;
-					else
-						sd->bonus.setitem_hash2 |= hash;
+					sd->bonus.isequipped_bitmask[k] |= mask;
 					break;
 				}
 			}
@@ -16112,8 +16127,9 @@ BUILDIN(isequipped)
 		if (!ret) break;
 	}
 	if (!ret) {//When check fails, restore original hash values. [Skotlex]
-		sd->bonus.setitem_hash = setitem_hash;
-		sd->bonus.setitem_hash2 = setitem_hash2;
+		for (k = 0; k < MAX_SLOTS; ++k) {
+			sd->bonus.isequipped_bitmask[k] = backup_bitmask[k];
+		}
 	}
 	script_pushint(st,ret);
 	return true;
