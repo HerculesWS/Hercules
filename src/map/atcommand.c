@@ -1250,35 +1250,64 @@ ACMD(item2)
 {
 	struct item item_tmp;
 	struct item_data *item_data;
-	char item_name[100];
+	char item_name[100] = "";
 	int item_id, number = 0, bound = 0;
 	int identify = 0, refine = 0, attr = 0;
-	int c1 = 0, c2 = 0, c3 = 0, c4 = 0;
+	int card[MAX_SLOTS] = { 0 };
+	bool is_bound = false;
+	bool invalid_input = false;
 
-	memset(item_name, '\0', sizeof(item_name));
+	if (strcmpi(info->command,"itembound2") == 0)
+		is_bound = true;
 
-	if (!strcmpi(info->command,"itembound2") && (!*message || (
-		sscanf(message, "\"%99[^\"]\" %12d %12d %12d %12d %12d %12d %12d %12d %12d", item_name, &number, &identify, &refine, &attr, &c1, &c2, &c3, &c4, &bound) < 10 &&
-		sscanf(message, "%99s %12d %12d %12d %12d %12d %12d %12d %12d %12d", item_name, &number, &identify, &refine, &attr, &c1, &c2, &c3, &c4, &bound) < 10 ))) {
-		clif->message(fd, msg_fd(fd,296)); // Please enter all parameters (usage: @itembound2 <item name/ID> <quantity>
-		clif->message(fd, msg_fd(fd,297)); //   <identify_flag> <refine> <attribute> <card1> <card2> <card3> <card4> <bound_type>).
-		return false;
-	} else if (!*message
-	         || ( sscanf(message, "\"%99[^\"]\" %12d %12d %12d %12d %12d %12d %12d %12d", item_name, &number, &identify, &refine, &attr, &c1, &c2, &c3, &c4) < 9
-	           && sscanf(message, "%99s %12d %12d %12d %12d %12d %12d %12d %12d", item_name, &number, &identify, &refine, &attr, &c1, &c2, &c3, &c4) < 9
-	)) {
-		clif->message(fd, msg_fd(fd,984)); // Please enter all parameters (usage: @item2 <item name/ID> <quantity>
-		clif->message(fd, msg_fd(fd,985)); //   <identify_flag> <refine> <attribute> <card1> <card2> <card3> <card4>).
+	do {
+		int pos = 0;
+		int i = 0;
+		const char *p = message;
+		if (*message != '\0') {
+			invalid_input = true;
+			break;
+		}
+		if (sscanf(p, "\"%99[^\"]\" %d %d %d %d%n", item_name, &number, &identify, &refine, &attr, &pos) < 5
+		 && sscanf(p, "%99s %d %d %d %d%n", item_name, &number, &identify, &refine, &attr, &pos) < 5) {
+			invalid_input = true;
+			break;
+		}
+		p += pos;
+		for (i = 0; i < MAX_SLOTS; ++i) {
+			if (sscanf(p, " %d%n", &card[i], &pos) < 1) {
+				invalid_input = true;
+				break;
+			}
+			p += pos;
+		}
+		if (invalid_input)
+			break;
+		if (is_bound) {
+			if (sscanf(p, " %d", &bound) < 1) {
+				invalid_input = true;
+				break;
+			}
+			if (bound < IBT_MIN || bound > IBT_MAX) {
+				clif->message(fd, msg_fd(fd,298)); // Invalid bound type
+				return false;
+			}
+		}
+	} while(false);
+
+	if (invalid_input) {
+		if (is_bound) {
+			clif->message(fd, msg_fd(fd,296)); // Please enter all parameters (usage: @itembound2 <item name/ID> <quantity>
+			clif->message(fd, msg_fd(fd,297)); //   <identify_flag> <refine> <attribute> <card1> <card2> <card3> <card4> <bound_type>).
+		} else {
+			clif->message(fd, msg_fd(fd,984)); // Please enter all parameters (usage: @item2 <item name/ID> <quantity>
+			clif->message(fd, msg_fd(fd,985)); //   <identify_flag> <refine> <attribute> <card1> <card2> <card3> <card4>).
+		}
 		return false;
 	}
 
 	if (number <= 0)
 		number = 1;
-
-	if( !strcmpi(info->command,"itembound2") && !(bound >= IBT_MIN && bound <= IBT_MAX) ) {
-		clif->message(fd, msg_fd(fd,298)); // Invalid bound type
-		return false;
-	}
 
 	item_id = 0;
 	if ((item_data = itemdb->search_name(item_name)) != NULL ||
@@ -1287,11 +1316,10 @@ ACMD(item2)
 
 	if (item_id > 500) {
 		int flag = 0;
-		int loop, get_count, i;
+		int loop, get_count, i, j;
 		loop = 1;
 		get_count = number;
-		if( !strcmpi(info->command,"itembound2") )
-			bound = 1;
+
 		if( !itemdb->isstackable2(item_data) ) {
 			if( bound && (item_data->type == IT_PETEGG || item_data->type == IT_PETARMOR) ) {
 				clif->message(fd, msg_fd(fd,498)); // Cannot create bounded pet eggs or pet armors.
@@ -1317,10 +1345,8 @@ ACMD(item2)
 			item_tmp.refine = refine;
 			item_tmp.attribute = attr;
 			item_tmp.bound = (unsigned char)bound;
-			item_tmp.card[0] = c1;
-			item_tmp.card[1] = c2;
-			item_tmp.card[2] = c3;
-			item_tmp.card[3] = c4;
+			for (j = 0; j < MAX_SLOTS; ++j)
+				item_tmp.card[j] = card[j];
 
 			if ((flag = pc->additem(sd, &item_tmp, get_count, LOG_TYPE_COMMAND)))
 				clif->additem(sd, 0, 0, flag);
