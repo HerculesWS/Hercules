@@ -2793,7 +2793,14 @@ packet(0x96e,-1,clif->ackmergeitems);
 #endif
 
 #if PACKETVER >= 20140613
+// no shuffle packets
 	packet(0x0a0e,14);
+#endif
+
+// 2014-06-25aRagexeRE
+#if PACKETVER >= 20140625
+// no shuffle packets
+	packet(0x0a28,3); // ZC_ACK_OPENSTORE2
 #endif
 
 // 2014-10-16aRagexe - YomRawr

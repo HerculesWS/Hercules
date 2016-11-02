@@ -6418,12 +6418,12 @@ void clif_openvending(struct map_session_data* sd, int id, struct s_vending* ven
 	}
 	WFIFOSET(fd,WFIFOW(fd,2));
 
-#if PACKETVER >= 20141022
+#if PACKETVER >= 20140625
 	/** should go elsewhere perhaps? it has to be bundled with this however. **/
-	WFIFOHEAD(fd, 3);
+	WFIFOHEAD(fd, packet_len(0xa28));
 	WFIFOW(fd, 0) = 0xa28;
 	WFIFOB(fd, 2) = 0;/** 1 is failure. our current responses to failure are working so not yet implemented **/
-	WFIFOSET(fd, 3);
+	WFIFOSET(fd, packet_len(0xa28));
 #endif
 }
 
