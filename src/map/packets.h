@@ -1954,6 +1954,8 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0835,2,clif->pSearchStoreInfoNextPage,0);
 	packet(0x0838,12,clif->pSearchStoreInfoListItemClick,2,6,10);
 	packet(0x0439,8,clif->pUseItem,2,4);
+// changed packet sizes
+	packet(0x08e2,27); // ZC_NAVIGATION_ACTIVE
 #endif
 
 //2012-04-10aRagexeRE

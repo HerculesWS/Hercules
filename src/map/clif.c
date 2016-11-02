@@ -18956,13 +18956,14 @@ void clif_selectcart(struct map_session_data *sd)
 /// Starts navigation to the given target on client side
 void clif_navigate_to(struct map_session_data *sd, const char* mapname, uint16 x, uint16 y, uint8 flag, bool hideWindow, uint16 mob_id)
 {
-#if PACKETVER >= 20111010
+// probably this packet with other fields present in older packet versions
+#if PACKETVER >= 20120307
 	int fd;
 
 	nullpo_retv(sd);
 	nullpo_retv(mapname);
 	fd = sd->fd;
-	WFIFOHEAD(fd, 27);
+	WFIFOHEAD(fd, packet_len(0x8e2));
 	WFIFOW(fd, 0) = 0x8e2;
 
 	// How detailed will our navigation be?
@@ -18990,7 +18991,7 @@ void clif_navigate_to(struct map_session_data *sd, const char* mapname, uint16 x
 	WFIFOW(fd, 23) = y;
 	// Target monster ID
 	WFIFOW(fd, 25) = mob_id;
-	WFIFOSET(fd, 27);
+	WFIFOSET(fd, packet_len(0x8e2));
 #endif
 }
 
