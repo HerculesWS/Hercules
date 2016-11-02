@@ -2050,6 +2050,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 #if PACKETVER >= 20120502
 // shuffle packets not added
 	packet(0x097d,288); // ZC_ACK_RANKING
+	packet(0x097e,12); // ZC_UPDATE_RANKING_POINT
 #endif
 
 #ifndef PACKETVER_RE

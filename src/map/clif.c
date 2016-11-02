@@ -14263,8 +14263,9 @@ void clif_parse_ranklist(int fd, struct map_session_data *sd) {
 }
 
 // 097e <RankingType>.W <point>.L <TotalPoint>.L (ZC_UPDATE_RANKING_POINT)
-void clif_update_rankingpoint(struct map_session_data *sd, enum fame_list_type type, int points) {
-#if PACKETVER < 20130710
+void clif_update_rankingpoint(struct map_session_data *sd, enum fame_list_type type, int points)
+{
+#if PACKETVER < 20120502
 	switch( type ) {
 		case RANKTYPE_BLACKSMITH: clif->fame_blacksmith(sd,points); break;
 		case RANKTYPE_ALCHEMIST:  clif->fame_alchemist(sd,points);  break;
@@ -14273,15 +14274,16 @@ void clif_update_rankingpoint(struct map_session_data *sd, enum fame_list_type t
 #else
 
 	int fd;
+	int len = packet_len(0x97e);
 
 	nullpo_retv(sd);
 	fd = sd->fd;
-	WFIFOHEAD(fd, 12);
+	WFIFOHEAD(fd, len);
 	WFIFOW(fd, 0) = 0x97e;
 	WFIFOW(fd, 2) = type;
 	WFIFOL(fd, 4) = points;
 	WFIFOL(fd, 8) = sd->status.fame;
-	WFIFOSET(fd, 12);
+	WFIFOSET(fd, len);
 #endif
 }
 
