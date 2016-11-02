@@ -2046,14 +2046,22 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0916,26,clif->pGuildInvite2,2);
 #endif
 
+// 2012-05-02aRagexeRE
+#if PACKETVER >= 20120502
+// shuffle packets not added
+	packet(0x097d,288); // ZC_ACK_RANKING
+#endif
+
 #ifndef PACKETVER_RE
 #if PACKETVER >= 20120604
+// shuffle packets not added
 	packet(0x0861,18,clif->pPartyRecruitRegisterReq,2,4,6);
 #endif
 #endif
 
 //2012-06-18aRagexeRE
 #if PACKETVER >= 20120618
+// shuffle packets not added
 	packet(0x0983,29);
 #endif
 

@@ -14222,11 +14222,12 @@ void clif_ranklist(struct map_session_data *sd, enum fame_list_type type)
 	int fd;
 	int mypoint = 0;
 	int upperMask;
+	int len = packet_len(0x97d);
 
 	nullpo_retv(sd);
 	fd = sd->fd;
 	upperMask = sd->class_&MAPID_UPPERMASK;
-	WFIFOHEAD(fd, 288);
+	WFIFOHEAD(fd, len);
 	WFIFOW(fd, 0) = 0x97d;
 	WFIFOW(fd, 2) = type;
 	clif_ranklist_sub(WFIFOP(fd,4), type);
@@ -14241,7 +14242,7 @@ void clif_ranklist(struct map_session_data *sd, enum fame_list_type type)
 	}
 
 	WFIFOL(fd, 284) = mypoint; //mypoint
-	WFIFOSET(fd, 288);
+	WFIFOSET(fd, len);
 #endif
 }
 
