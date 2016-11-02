@@ -75,7 +75,6 @@ struct s_buyingstore {
  **/
 struct buyingstore_interface {
 	unsigned int nextid;
-	short blankslots[MAX_SLOTS];  // used when checking whether or not an item's card slots are blank
 	/* */
 	bool (*setup) (struct map_session_data* sd, unsigned char slots);
 	void (*create) (struct map_session_data* sd, int zenylimit, unsigned char result, const char* storename, const uint8* itemlist, unsigned int count);
