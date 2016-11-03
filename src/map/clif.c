@@ -1360,7 +1360,7 @@ void clif_spiritball_single(int fd, struct map_session_data *sd) {
  *------------------------------------------*/
 void clif_charm_single(int fd, struct map_session_data *sd)
 {
-#if PACKETVER >= 20120410
+#if PACKETVER >= 20110809
 	nullpo_retv(sd);
 	WFIFOHEAD(fd, packet_len(0x08cf));
 	WFIFOW(fd,0) = 0x08cf;
@@ -6418,12 +6418,12 @@ void clif_openvending(struct map_session_data* sd, int id, struct s_vending* ven
 	}
 	WFIFOSET(fd,WFIFOW(fd,2));
 
-#if PACKETVER >= 20141022
+#if PACKETVER >= 20140625
 	/** should go elsewhere perhaps? it has to be bundled with this however. **/
-	WFIFOHEAD(fd, 3);
+	WFIFOHEAD(fd, packet_len(0xa28));
 	WFIFOW(fd, 0) = 0xa28;
 	WFIFOB(fd, 2) = 0;/** 1 is failure. our current responses to failure are working so not yet implemented **/
-	WFIFOSET(fd, 3);
+	WFIFOSET(fd, packet_len(0xa28));
 #endif
 }
 
@@ -14222,11 +14222,12 @@ void clif_ranklist(struct map_session_data *sd, enum fame_list_type type)
 	int fd;
 	int mypoint = 0;
 	int upperMask;
+	int len = packet_len(0x97d);
 
 	nullpo_retv(sd);
 	fd = sd->fd;
 	upperMask = sd->class_&MAPID_UPPERMASK;
-	WFIFOHEAD(fd, 288);
+	WFIFOHEAD(fd, len);
 	WFIFOW(fd, 0) = 0x97d;
 	WFIFOW(fd, 2) = type;
 	clif_ranklist_sub(WFIFOP(fd,4), type);
@@ -14241,7 +14242,7 @@ void clif_ranklist(struct map_session_data *sd, enum fame_list_type type)
 	}
 
 	WFIFOL(fd, 284) = mypoint; //mypoint
-	WFIFOSET(fd, 288);
+	WFIFOSET(fd, len);
 #endif
 }
 
@@ -14262,8 +14263,9 @@ void clif_parse_ranklist(int fd, struct map_session_data *sd) {
 }
 
 // 097e <RankingType>.W <point>.L <TotalPoint>.L (ZC_UPDATE_RANKING_POINT)
-void clif_update_rankingpoint(struct map_session_data *sd, enum fame_list_type type, int points) {
-#if PACKETVER < 20130710
+void clif_update_rankingpoint(struct map_session_data *sd, enum fame_list_type type, int points)
+{
+#if PACKETVER < 20120502
 	switch( type ) {
 		case RANKTYPE_BLACKSMITH: clif->fame_blacksmith(sd,points); break;
 		case RANKTYPE_ALCHEMIST:  clif->fame_alchemist(sd,points);  break;
@@ -14272,15 +14274,16 @@ void clif_update_rankingpoint(struct map_session_data *sd, enum fame_list_type t
 #else
 
 	int fd;
+	int len = packet_len(0x97e);
 
 	nullpo_retv(sd);
 	fd = sd->fd;
-	WFIFOHEAD(fd, 12);
+	WFIFOHEAD(fd, len);
 	WFIFOW(fd, 0) = 0x97e;
 	WFIFOW(fd, 2) = type;
 	WFIFOL(fd, 4) = points;
 	WFIFOL(fd, 8) = sd->status.fame;
-	WFIFOSET(fd, 12);
+	WFIFOSET(fd, len);
 #endif
 }
 
@@ -17494,7 +17497,7 @@ void clif_parse_SkillSelectMenu(int fd, struct map_session_data *sd) {
  *------------------------------------------*/
 void clif_charm(struct map_session_data *sd)
 {
-#if PACKETVER >= 20120410
+#if PACKETVER >= 20110809
 	unsigned char buf[10];
 
 	nullpo_retv(sd);
@@ -17620,7 +17623,7 @@ void clif_favorite_item(struct map_session_data* sd, unsigned short index) {
 }
 
 void clif_snap( struct block_list *bl, short x, short y ) {
-#if PACKETVER >= 20111005
+#if PACKETVER >= 20110809
 	unsigned char buf[10];
 
 	nullpo_retv(bl);
@@ -17675,7 +17678,9 @@ void clif_parse_CashShopClose(int fd, struct map_session_data *sd) {
 }
 
 void clif_parse_CashShopSchedule(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
-void clif_parse_CashShopSchedule(int fd, struct map_session_data *sd) {
+void clif_parse_CashShopSchedule(int fd, struct map_session_data *sd)
+{
+#if PACKETVER >= 20110614
 	int i, j = 0;
 
 	for( i = 0; i < CASHSHOP_TAB_MAX; i++ ) {
@@ -17695,6 +17700,7 @@ void clif_parse_CashShopSchedule(int fd, struct map_session_data *sd) {
 
 		WFIFOSET(fd, 8 + ( clif->cs.item_count[i] * 6 ));
 	}
+#endif
 }
 
 void clif_parse_CashShopBuy(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
@@ -17788,7 +17794,9 @@ void clif_parse_CashShopBuy(int fd, struct map_session_data *sd) {
 
 void clif_parse_CashShopReqTab(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 /* [Ind/Hercules] */
-void clif_parse_CashShopReqTab(int fd, struct map_session_data *sd) {
+void clif_parse_CashShopReqTab(int fd, struct map_session_data *sd)
+{
+#if PACKETVER >= 20110222
 	short tab = RFIFOW(fd, 2);
 	int j;
 
@@ -17807,9 +17815,12 @@ void clif_parse_CashShopReqTab(int fd, struct map_session_data *sd) {
 	}
 
 	WFIFOSET(fd, 10 + ( clif->cs.item_count[tab] * 6 ));
+#endif
 }
+
 /* [Ind/Hercules] */
-void clif_maptypeproperty2(struct block_list *bl,enum send_target t) {
+void clif_maptypeproperty2(struct block_list *bl,enum send_target t)
+{
 #if PACKETVER >= 20121010
 	struct packet_maptypeproperty2 p;
 	struct map_session_data *sd = NULL;
@@ -17862,6 +17873,7 @@ void clif_partytickack(struct map_session_data* sd, bool flag) {
 
 void clif_ShowScript(struct block_list *bl, const char *message)
 {
+#if PACKETVER >= 20110111
 	char buf[256];
 	int len;
 	nullpo_retv(bl);
@@ -17881,6 +17893,7 @@ void clif_ShowScript(struct block_list *bl, const char *message)
 	WBUFL(buf,4) = bl->id;
 	safestrncpy(WBUFP(buf,8),message,len);
 	clif->send(buf,WBUFW(buf,2),bl,AREA);
+#endif
 }
 
 void clif_status_change_end(struct block_list *bl, int tid, enum send_target target, int type) {
@@ -18037,14 +18050,17 @@ void clif_bgqueue_battlebegins(struct map_session_data *sd, unsigned char arena_
 	clif->send(&p,sizeof(p), &sd->bl, target);
 }
 
-void clif_scriptclear(struct map_session_data *sd, int npcid) {
+void clif_scriptclear(struct map_session_data *sd, int npcid)
+{
+#if PACKETVER >= 20110928
 	struct packet_script_clear p;
 
 	nullpo_retv(sd);
 	p.PacketType = script_clearType;
 	p.NpcID = npcid;
 
-	clif->send(&p,sizeof(p), &sd->bl, SELF);
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
+#endif
 }
 
 /* Made Possible Thanks to Yommy! */
@@ -18953,13 +18969,14 @@ void clif_selectcart(struct map_session_data *sd)
 /// Starts navigation to the given target on client side
 void clif_navigate_to(struct map_session_data *sd, const char* mapname, uint16 x, uint16 y, uint8 flag, bool hideWindow, uint16 mob_id)
 {
-#if PACKETVER >= 20111010
+// probably this packet with other fields present in older packet versions
+#if PACKETVER >= 20120307
 	int fd;
 
 	nullpo_retv(sd);
 	nullpo_retv(mapname);
 	fd = sd->fd;
-	WFIFOHEAD(fd, 27);
+	WFIFOHEAD(fd, packet_len(0x8e2));
 	WFIFOW(fd, 0) = 0x8e2;
 
 	// How detailed will our navigation be?
@@ -18987,7 +19004,7 @@ void clif_navigate_to(struct map_session_data *sd, const char* mapname, uint16 x
 	WFIFOW(fd, 23) = y;
 	// Target monster ID
 	WFIFOW(fd, 25) = mob_id;
-	WFIFOSET(fd, 27);
+	WFIFOSET(fd, packet_len(0x8e2));
 #endif
 }
 
