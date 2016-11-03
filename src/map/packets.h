@@ -1891,6 +1891,16 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x08b6,3); // ZC_TRYCOLLECTION
 #endif
 
+// 2011-01-31aRagexe
+#if PACKETVER >= 20110131
+// shuffle packets not added
+// new packets
+	packet(0x02f3,-1,clif->pDull); // CZ_IRMAIL_SEND
+	packet(0x02f4,3); // ZC_IRMAIL_SEND_RES
+	packet(0x02f5,7); // ZC_IRMAIL_NOTIFY
+	packet(0x02f6,7,clif->pDull,2); // CZ_IRMAIL_LIST
+#endif
+
 //2011-07-18aRagexe (Thanks to Yommy!)
 #if PACKETVER >= 20110718
 	packet(0x0844,2,clif->pCashShopOpen,2);/* tell server cashshop window is being open */
