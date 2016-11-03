@@ -1954,6 +1954,8 @@ packet(0x96e,-1,clif->ackmergeitems);
 // shuffle packets not added
 // new packets
 	packet(0x08cf,10); // ZC_SPIRITS_ATTRIBUTE
+	packet(0x08d0,9); // ZC_REQ_WEAR_EQUIP_ACK2
+	packet(0x08d1,7); // ZC_REQ_TAKEOFF_EQUIP_ACK2
 #endif
 
 //2011-10-05aRagexeRE
