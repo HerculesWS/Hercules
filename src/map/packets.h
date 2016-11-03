@@ -1926,8 +1926,16 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x08ca,-1); // ZC_ACK_SCHEDULER_CASHITEM
 #endif
 
+// 2011-06-27aRagexe
+#if PACKETVER >= 20110627
+// shuffle packets not added
+// new packets
+	packet(0x08cb,-1); // ZC_PERSONAL_INFOMATION
+#endif
+
 //2011-07-18aRagexe (Thanks to Yommy!)
 #if PACKETVER >= 20110718
+// shuffle packets not added
 	packet(0x0844,2,clif->pCashShopOpen,2);/* tell server cashshop window is being open */
 	packet(0x084a,2,clif->pCashShopClose,2);/* tell server cashshop window is being closed */
 	packet(0x0846,4,clif->pCashShopReqTab,2);
