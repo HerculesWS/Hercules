@@ -1922,6 +1922,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 // shuffle packets not added
 // new packets
 	packet(0x08c8,34); // ZC_NOTIFY_ACT3
+	packet(0x08c9,2,clif->pCashShopSchedule,0);
 #endif
 
 //2011-07-18aRagexe (Thanks to Yommy!)
@@ -1929,7 +1930,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0844,2,clif->pCashShopOpen,2);/* tell server cashshop window is being open */
 	packet(0x084a,2,clif->pCashShopClose,2);/* tell server cashshop window is being closed */
 	packet(0x0846,4,clif->pCashShopReqTab,2);
-	packet(0x08c9,2,clif->pCashShopSchedule,0);
 	packet(0x0848,-1,clif->pCashShopBuy,2);
 #endif
 
