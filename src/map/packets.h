@@ -1917,6 +1917,13 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x08c7,-1); // ZC_SKILL_ENTRY3
 #endif
 
+// 2011-06-14aRagexe
+#if PACKETVER >= 20110614
+// shuffle packets not added
+// new packets
+	packet(0x08c8,34); // ZC_NOTIFY_ACT3
+#endif
+
 //2011-07-18aRagexe (Thanks to Yommy!)
 #if PACKETVER >= 20110718
 	packet(0x0844,2,clif->pCashShopOpen,2);/* tell server cashshop window is being open */
