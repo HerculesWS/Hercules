@@ -319,7 +319,7 @@ void quest_update_objective(struct map_session_data *sd, int mob_id)
 		// process quest-granted extra drop bonuses
 		for (j = 0; j < qi->dropitem_count; j++) {
 			struct quest_dropitem *dropitem = &qi->dropitem[j];
-			struct item item;
+			struct item item = { 0 };
 			struct item_data *data = NULL;
 			int temp;
 			if (dropitem->mob_id != 0 && dropitem->mob_id != mob_id)
@@ -329,7 +329,6 @@ void quest_update_objective(struct map_session_data *sd, int mob_id)
 				continue;
 			if (!(data = itemdb->exists(dropitem->nameid)))
 				continue;
-			memset(&item,0,sizeof(item));
 			item.nameid = dropitem->nameid;
 			item.identify = itemdb->isidentified2(data);
 			item.amount = 1;

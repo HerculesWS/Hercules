@@ -139,13 +139,13 @@ bool mail_setattachment(struct map_session_data *sd, struct mail_message *msg)
 		if( sd->weight > sd->max_weight )
 			return false;
 
-		memcpy(&msg->item, &sd->status.inventory[n], sizeof(struct item));
+		msg->item = sd->status.inventory[n];
 		msg->item.amount = sd->mail.amount;
 		if (msg->item.amount != sd->mail.amount)  // check for amount overflow
 			return false;
-	}
-	else
+	} else {
 		memset(&msg->item, 0x00, sizeof(struct item));
+	}
 
 	msg->zeny = sd->mail.zeny;
 

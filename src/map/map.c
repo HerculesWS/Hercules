@@ -1730,7 +1730,7 @@ int map_addflooritem(const struct block_list *bl, struct item *item_data, int am
 	fitem->third_get_charid = third_charid;
 	fitem->third_get_tick = fitem->second_get_tick + ((flags&1) ? battle_config.mvp_item_third_get_time : battle_config.item_third_get_time);
 
-	memcpy(&fitem->item_data,item_data,sizeof(*item_data));
+	fitem->item_data = *item_data;
 	fitem->item_data.amount=amount;
 	fitem->subx=(r&3)*3+3;
 	fitem->suby=((r>>2)&3)*3+3;

@@ -508,8 +508,8 @@ void inter_mail_sendmail(int send_id, const char* send_name, int dest_id, const 
 	safestrncpy(msg.title, title, MAIL_TITLE_LENGTH);
 	safestrncpy(msg.body, body, MAIL_BODY_LENGTH);
 	msg.zeny = zeny;
-	if( item != NULL )
-		memcpy(&msg.item, item, sizeof(struct item));
+	if (item != NULL)
+		msg.item = *item;
 
 	msg.timestamp = time(NULL);
 

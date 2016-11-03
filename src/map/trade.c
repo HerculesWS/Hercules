@@ -211,7 +211,7 @@ int impossible_trade_check(struct map_session_data *sd)
 	// remove equipped items (they can not be trade)
 	for (i = 0; i < MAX_INVENTORY; i++)
 		if (inventory[i].nameid > 0 && inventory[i].equip && !(inventory[i].equip & EQP_AMMO))
-			memset(&inventory[i], 0, sizeof(struct item));
+			memset(&inventory[i], 0, sizeof(inventory[0]));
 
 	// check items in player inventory
 	for(i = 0; i < 10; i++) {
@@ -298,7 +298,7 @@ int trade_check(struct map_session_data *sd, struct map_session_data *tsd)
 				for(i = 0; i < MAX_INVENTORY && inventory2[i].nameid; i++);
 				if (i == MAX_INVENTORY)
 					return 0;
-				memcpy(&inventory2[i], &inventory[n], sizeof(struct item));
+				inventory2[i] = inventory[n];
 				inventory2[i].amount = amount;
 				inventory[n].amount -= amount;
 			}
@@ -329,7 +329,7 @@ int trade_check(struct map_session_data *sd, struct map_session_data *tsd)
 			for(i = 0; i < MAX_INVENTORY && inventory[i].nameid; i++);
 			if (i == MAX_INVENTORY)
 				return 0;
-			memcpy(&inventory[i], &inventory2[n], sizeof(struct item));
+			inventory[i] = inventory2[n];
 			inventory[i].amount = amount;
 			inventory2[n].amount -= amount;
 		}

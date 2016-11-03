@@ -1499,9 +1499,7 @@ int npc_cashshop_buylist(struct map_session_data *sd, int points, struct itemlis
 	// Delivery Process ----------------------------------------------------
 	for (i = 0; i < VECTOR_LENGTH(*item_list); i++) {
 		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
-		struct item item_tmp;
-
-		memset(&item_tmp,0,sizeof(item_tmp));
+		struct item item_tmp = { 0 };
 
 		if (!pet->create_egg(sd, entry->id)) {
 			item_tmp.nameid = entry->id;
@@ -1840,8 +1838,7 @@ int npc_cashshop_buy(struct map_session_data *sd, int nameid, int amount, int po
 	}
 
 	if( !pet->create_egg(sd, nameid) ) {
-		struct item item_tmp;
-		memset(&item_tmp, 0, sizeof(struct item));
+		struct item item_tmp = { 0 };
 		item_tmp.nameid = nameid;
 		item_tmp.identify = 1;
 
@@ -1953,8 +1950,7 @@ int npc_buylist(struct map_session_data *sd, struct itemlist *item_list)
 		if (itemdb_type(entry->id) == IT_PETEGG) {
 			pet->create_egg(sd, entry->id);
 		} else {
-			struct item item_tmp;
-			memset(&item_tmp,0,sizeof(item_tmp));
+			struct item item_tmp = { 0 };
 			item_tmp.nameid = entry->id;
 			item_tmp.identify = 1;
 
@@ -2075,8 +2071,7 @@ int npc_market_buylist(struct map_session_data *sd, struct itemlist *item_list)
 		if (itemdb_type(entry->id) == IT_PETEGG) {
 			pet->create_egg(sd, entry->id);
 		} else {
-			struct item item_tmp;
-			memset(&item_tmp,0,sizeof(item_tmp));
+			struct item item_tmp = { 0 };
 			item_tmp.nameid = entry->id;
 			item_tmp.identify = 1;
 

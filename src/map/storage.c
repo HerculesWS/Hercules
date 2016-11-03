@@ -236,7 +236,7 @@ int storage_delitem(struct map_session_data* sd, int n, int amount)
 	it->amount -= amount;
 
 	if (it->amount == 0) {
-		memset(it, 0, sizeof(struct item));
+		memset(it, 0, sizeof(*it));
 		clif->updatestorageamount(sd, --sd->storage.aggregate, MAX_STORAGE);
 	}
 
@@ -551,7 +551,7 @@ int guild_storage_additem(struct map_session_data* sd, struct guild_storage* sto
 	if(i>=MAX_GUILD_STORAGE)
 		return 1;
 
-	memcpy(&stor->items[i],item_data,sizeof(stor->items[0]));
+	stor->items[i] = *item_data;
 	stor->items[i].amount=amount;
 	stor->storage_amount++;
 	clif->storageitemadded(sd,&stor->items[i],i,amount);

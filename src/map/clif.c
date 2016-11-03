@@ -15746,7 +15746,7 @@ void clif_parse_Auction_register(int fd, struct map_session_data *sd)
 
 	safestrncpy(auction.item_name, item->jname, sizeof(auction.item_name));
 	auction.type = item->type;
-	memcpy(&auction.item, &sd->status.inventory[sd->auction.index], sizeof(struct item));
+	auction.item = sd->status.inventory[sd->auction.index];
 	auction.item.amount = 1;
 	auction.timestamp = 0;
 
@@ -17637,7 +17637,7 @@ void clif_search_store_info_ack(struct map_session_data* sd)
 
 	for( i = start; i < end; i++ ) {
 		struct s_search_store_info_item* ssitem = &sd->searchstore.items[i];
-		struct item it;
+		struct item it = { 0 };
 
 		WFIFOL(fd,i*blocksize+ 7) = ssitem->store_id;
 		WFIFOL(fd,i*blocksize+11) = ssitem->account_id;
@@ -17649,7 +17649,6 @@ void clif_search_store_info_ack(struct map_session_data* sd)
 		WFIFOB(fd,i*blocksize+24+MESSAGE_SIZE) = ssitem->refine;
 
 		// make-up an item for clif_addcards
-		memset(&it, 0, sizeof(it));
 		memcpy(&it.card, &ssitem->card, sizeof(it.card));
 		it.nameid = ssitem->nameid;
 		it.amount = ssitem->amount;
@@ -18271,7 +18270,6 @@ void clif_parse_CashShopBuy(int fd, struct map_session_data *sd) {
 			} else if (!(data = itemdb->exists(clif->cs.data[tab][j]->id))) {
 				result = CSBR_UNKONWN_ITEM;
 			} else {
-				struct item item_tmp;
 				int k, get_count;
 				int ret = 0;
 				
@@ -18288,7 +18286,7 @@ void clif_parse_CashShopBuy(int fd, struct map_session_data *sd) {
 				kafra_pay = ret;
 				for (k = 0; k < qty; k += get_count) {
 					if (!pet->create_egg(sd, data->nameid)) {
-						memset(&item_tmp, 0, sizeof(item_tmp));
+						struct item item_tmp = { 0 };
 						item_tmp.nameid = data->nameid;
 						item_tmp.identify = 1;
 
@@ -19135,8 +19133,7 @@ void clif_parse_RouletteGenerate(int fd, struct map_session_data* sd) {
 		sd->roulette.prizeStage = stage;
 		sd->roulette.prizeIdx = rnd()%clif->rd.items[stage];
 		if( sd->roulette.prizeIdx == 0 ) {
-			struct item it;
-			memset(&it, 0, sizeof(it));
+			struct item it = { 0 };
 
 			it.nameid = clif->rd.nameid[stage][0];
 			it.identify = 1;
@@ -19172,8 +19169,7 @@ void clif_parse_RouletteRecvItem(int fd, struct map_session_data* sd)
 	p.AdditionItemID = 0;/** TODO **/
 
 	if( sd->roulette.claimPrize ) {
-		struct item it;
-		memset(&it, 0, sizeof(it));
+		struct item it = { 0 };
 
 		it.nameid = clif->rd.nameid[sd->roulette.prizeStage][sd->roulette.prizeIdx];
 		it.identify = 1;
@@ -19385,7 +19381,6 @@ void clif_ackmergeitems(int fd, struct map_session_data *sd)
 #if PACKETVER > 20120228
 	int i = 0, n = 0, length = 0, count = 0;
 	int16 nameid = 0, indexes[MAX_INVENTORY] = {0}, amounts[MAX_INVENTORY] = {0};
-	struct item item_data;
 
 	nullpo_retv(sd);
 	length = (RFIFOW(fd,2) - 4)/2;
@@ -19447,14 +19442,16 @@ void clif_ackmergeitems(int fd, struct map_session_data *sd)
 	for (i = 0; i < n; i++)
 		pc->delitem(sd,indexes[i],amounts[i],0,DELITEM_NORMAL,LOG_TYPE_NPC);
 
-	memset(&item_data,'\0',sizeof(item_data));
+	{
+		struct item item_data = { 0 };
 
-	item_data.nameid = nameid;
-	item_data.identify = 1;
-	item_data.unique_id = itemdb->unique_id(sd);
-	pc->additem(sd,&item_data,count,LOG_TYPE_NPC);
+		item_data.nameid = nameid;
+		item_data.identify = 1;
+		item_data.unique_id = itemdb->unique_id(sd);
+		pc->additem(sd, &item_data, count, LOG_TYPE_NPC);
 
-	ARR_FIND(0,MAX_INVENTORY,i,item_data.unique_id == sd->status.inventory[i].unique_id);
+		ARR_FIND(0, MAX_INVENTORY, i, item_data.unique_id == sd->status.inventory[i].unique_id);
+	}
 
 	WFIFOHEAD(fd,7);
 	WFIFOW(fd,0) = 0x96f;

@@ -539,7 +539,7 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 #ifdef GP_BOUND_ITEMS
 	StringBuf buf;
 	struct SqlStmt *stmt;
-	struct item item;
+	struct item item = { 0 };
 	int j, i=0, s=0, bound_qt=0;
 	struct item items[MAX_INVENTORY];
 	unsigned int bound_item[MAX_INVENTORY] = {0};
@@ -565,7 +565,6 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 		return 1;
 	}
 
-	memset(&item, 0, sizeof(item));
 	SQL->StmtBindColumn(stmt, 0, SQLDT_INT,       &item.id,          sizeof item.id,          NULL, NULL);
 	SQL->StmtBindColumn(stmt, 1, SQLDT_SHORT,     &item.nameid,      sizeof item.nameid,      NULL, NULL);
 	SQL->StmtBindColumn(stmt, 2, SQLDT_SHORT,     &item.amount,      sizeof item.amount,      NULL, NULL);
@@ -586,7 +585,7 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 	}
 	while (SQL_SUCCESS == SQL->StmtNextRow(stmt)) {
 		Assert_retb(i < MAX_INVENTORY);
-		memcpy(&items[i],&item,sizeof(struct item));
+		items[i] = item;
 		i++;
 	}
 	SQL->FreeResult(inter->sql_handle);

@@ -1160,7 +1160,6 @@ ACMD(item)
 {
 	char item_name[100];
 	int number = 0, item_id, flag = 0, bound = 0;
-	struct item item_tmp;
 	struct item_data *item_data;
 	int get_count, i;
 
@@ -1228,7 +1227,7 @@ ACMD(item)
 	for (i = 0; i < number; i += get_count) {
 		// if not pet egg
 		if (!pet->create_egg(sd, item_id)) {
-			memset(&item_tmp, 0, sizeof(item_tmp));
+			struct item item_tmp = { 0 };
 			item_tmp.nameid = item_id;
 			item_tmp.identify = 1;
 			item_tmp.bound = (unsigned char)bound;
@@ -1248,7 +1247,6 @@ ACMD(item)
  *------------------------------------------*/
 ACMD(item2)
 {
-	struct item item_tmp;
 	struct item_data *item_data;
 	char item_name[100] = "";
 	int item_id, number = 0, bound = 0;
@@ -1339,7 +1337,7 @@ ACMD(item2)
 		}
 		refine = cap_value(refine, 0, MAX_REFINE);
 		for (i = 0; i < loop; i++) {
-			memset(&item_tmp, 0, sizeof(item_tmp));
+			struct item item_tmp = { 0 };
 			item_tmp.nameid = item_id;
 			item_tmp.identify = identify;
 			item_tmp.refine = refine;
@@ -2252,7 +2250,6 @@ ACMD(produce)
 	char item_name[100];
 	int item_id, attribute = 0, star = 0;
 	struct item_data *item_data;
-	struct item tmp_item;
 
 	memset(atcmd_output, '\0', sizeof(atcmd_output));
 	memset(item_name, '\0', sizeof(item_name));
@@ -2275,11 +2272,11 @@ ACMD(produce)
 
 	if (itemdb->isequip2(item_data)) {
 		int flag = 0;
+		struct item tmp_item = { 0 };
 		if (attribute < MIN_ATTRIBUTE || attribute > MAX_ATTRIBUTE)
 			attribute = ATTRIBUTE_NORMAL;
 		if (star < MIN_STAR || star > MAX_STAR)
 			star = 0;
-		memset(&tmp_item, 0, sizeof tmp_item);
 		tmp_item.nameid = item_id;
 		tmp_item.amount = 1;
 		tmp_item.identify = 1;
@@ -5513,11 +5510,10 @@ ACMD(skilltree)
 // Hand a ring with partners name on it to this char
 void atcommand_getring(struct map_session_data* sd) {
 	int flag, item_id;
-	struct item item_tmp;
+	struct item item_tmp = { 0 };
 	nullpo_retv(sd);
 	item_id = (sd->status.sex) ? WEDDING_RING_M : WEDDING_RING_F;
 
-	memset(&item_tmp, 0, sizeof(item_tmp));
 	item_tmp.nameid = item_id;
 	item_tmp.identify = 1;
 	itemdb->fill_forgeinfo(&item_tmp, sd->status.partner_id, 0, 0);

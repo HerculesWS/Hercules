@@ -7852,9 +7852,10 @@ BUILDIN(checkweight2)
  * getitembound <item id>,<amount>,<type>{,<account ID>};
  * getitembound "<item id>",<amount>,<type>{,<account ID>};
  *------------------------------------------*/
-BUILDIN(getitem) {
+BUILDIN(getitem)
+{
 	int nameid,amount,get_count,i,flag = 0, offset = 0;
-	struct item it;
+	struct item it = { 0 };
 	struct map_session_data *sd;
 	struct item_data *item_data;
 
@@ -7884,7 +7885,6 @@ BUILDIN(getitem) {
 	if( (amount=script_getnum(st,3)) <= 0)
 		return true; //return if amount <=0, skip the useles iteration
 
-	memset(&it,0,sizeof(it));
 	it.nameid=nameid;
 
 	if(!flag)
@@ -8038,9 +8038,9 @@ BUILDIN(getitem2)
  * rentitem <item id>,<seconds>
  * rentitem "<item name>",<seconds>
  *------------------------------------------*/
-BUILDIN(rentitem) {
+BUILDIN(rentitem)
+{
 	struct map_session_data *sd;
-	struct item it;
 	int seconds;
 	int nameid = 0, flag;
 
@@ -8065,16 +8065,18 @@ BUILDIN(rentitem) {
 	}
 
 	seconds = script_getnum(st,3);
-	memset(&it, 0, sizeof(it));
-	it.nameid = nameid;
-	it.identify = 1;
-	it.expire_time = (unsigned int)(time(NULL) + seconds);
-	it.bound = 0;
 
-	if( (flag = pc->additem(sd, &it, 1, LOG_TYPE_SCRIPT)) )
 	{
-		clif->additem(sd, 0, 0, flag);
-		return false;
+		struct item it = { 0 };
+		it.nameid = nameid;
+		it.identify = 1;
+		it.expire_time = (unsigned int)(time(NULL) + seconds);
+		it.bound = 0;
+
+		if ((flag = pc->additem(sd, &it, 1, LOG_TYPE_SCRIPT)) != 0) {
+			clif->additem(sd, 0, 0, flag);
+			return false;
+		}
 	}
 
 	return true;
@@ -8086,9 +8088,9 @@ BUILDIN(rentitem) {
  * Returned Qty is always 1, only works on equip-able
  * equipment
  *------------------------------------------*/
-BUILDIN(getnameditem) {
+BUILDIN(getnameditem)
+{
 	int nameid;
-	struct item item_tmp;
 	struct map_session_data *sd, *tsd;
 
 	sd = script->rid2sd(st);
@@ -8125,14 +8127,16 @@ BUILDIN(getnameditem) {
 		return true;
 	}
 
-	memset(&item_tmp,0,sizeof(item_tmp));
-	item_tmp.nameid=nameid;
-	item_tmp.amount=1;
-	item_tmp.identify=1;
-	itemdb->fill_produceinfo(&item_tmp, tsd->status.char_id); // Mark as produced and not forged, so that i.e. signed weapons don't obtain the fame bonus.
-	if(pc->additem(sd,&item_tmp,1,LOG_TYPE_SCRIPT)) {
-		script_pushint(st,0);
-		return true; //Failed to add item, we will not drop if they don't fit
+	{
+		struct item item_tmp = { 0 };
+		item_tmp.nameid = nameid;
+		item_tmp.amount = 1;
+		item_tmp.identify = 1;
+		itemdb->fill_produceinfo(&item_tmp, tsd->status.char_id); // Mark as produced and not forged, so that i.e. signed weapons don't obtain the fame bonus.
+		if (pc->additem(sd, &item_tmp, 1, LOG_TYPE_SCRIPT)) {
+			script_pushint(st,0);
+			return true; //Failed to add item, we will not drop if they don't fit
+		}
 	}
 
 	script_pushint(st,1);
@@ -8178,7 +8182,6 @@ BUILDIN(makeitem)
 	int nameid,amount;
 	int x,y,m;
 	const char *mapname;
-	struct item item_tmp;
 
 	if( script_isstringtype(st, 2) ) {
 		const char *name = script_getstr(st, 2);
@@ -8212,11 +8215,13 @@ BUILDIN(makeitem)
 		return false;
 	}
 
-	memset(&item_tmp,0,sizeof(item_tmp));
-	item_tmp.nameid = nameid;
-	item_tmp.identify=1;
+	{
+		struct item item_tmp = { 0 };
+		item_tmp.nameid = nameid;
+		item_tmp.identify = 1;
 
-	map->addflooritem(NULL, &item_tmp, amount, m, x, y, 0, 0, 0, 0, false);
+		map->addflooritem(NULL, &item_tmp, amount, m, x, y, 0, 0, 0, 0, false);
+	}
 
 	return true;
 }
@@ -8462,7 +8467,7 @@ bool buildin_delitem_search(struct map_session_data* sd, struct item* it, bool e
 BUILDIN(delitem)
 {
 	struct map_session_data *sd;
-	struct item it;
+	struct item it = { 0 };
 
 	if (script_hasdata(st,4)) {
 		int account_id = script_getnum(st,4);
@@ -8477,7 +8482,6 @@ BUILDIN(delitem)
 			return true;
 	}
 
-	memset(&it, 0, sizeof(it));
 	if (script_isstringtype(st, 2)) {
 		const char* item_name = script_getstr(st, 2);
 		struct item_data* id = itemdb->search_name(item_name);
@@ -8519,7 +8523,7 @@ BUILDIN(delitem)
 BUILDIN(delitem2)
 {
 	struct map_session_data *sd;
-	struct item it;
+	struct item it = { 0 };
 	int i;
 
 	if (script_hasdata(st, 7 + MAX_SLOTS)) {
@@ -8535,7 +8539,6 @@ BUILDIN(delitem2)
 			return true;
 	}
 
-	memset(&it, 0, sizeof(it));
 	if (script_isstringtype(st, 2)) {
 		const char* item_name = script_getstr(st, 2);
 		struct item_data* id = itemdb->search_name(item_name);
@@ -12255,10 +12258,9 @@ BUILDIN(homunculus_morphembryo)
 		enum homun_type m_class = homun->class2type(sd->hd->homunculus.class_);
 
 		if (m_class == HT_EVO && sd->hd->homunculus.level >= 99) {
-			struct item item_tmp;
+			struct item item_tmp = { 0 };
 			int i = 0;
 
-			memset(&item_tmp, 0, sizeof(item_tmp));
 			item_tmp.nameid = ITEMID_STRANGE_EMBRYO;
 			item_tmp.identify = 1;
 
@@ -13592,9 +13594,7 @@ BUILDIN(successremovecards)
 	for (c = sd->inventory_data[i]->slot - 1; c >= 0; --c) {
 		if (sd->status.inventory[i].card[c] > 0 && itemdb_type(sd->status.inventory[i].card[c]) == IT_CARD) {
 			int flag;
-			struct item item_tmp;
-
-			memset(&item_tmp, 0, sizeof(item_tmp));
+			struct item item_tmp = { 0 };
 
 			cardflag = 1;
 			item_tmp.nameid = sd->status.inventory[i].card[c];
@@ -13652,9 +13652,7 @@ BUILDIN(failedremovecards)
 
 			if (typefail == 2) { // add cards to inventory, clear
 				int flag;
-				struct item item_tmp;
-
-				memset(&item_tmp, 0, sizeof(item_tmp));
+				struct item item_tmp = { 0 };
 
 				item_tmp.nameid = sd->status.inventory[i].card[c];
 				item_tmp.identify = 1;
@@ -22216,9 +22214,7 @@ BUILDIN(getrandgroupitem)
 		script_pushint(st, 1);
 	} else {
 		int i, get_count, flag;
-		struct item it;
-
-		memset(&it,0,sizeof(it));
+		struct item it = { 0 };
 
 		nameid = itemdb->group_item(data->group);
 

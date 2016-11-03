@@ -724,7 +724,7 @@ int char_getitemdata_from_sql(struct item *items, int max, int guid, enum invent
 	Assert_retr(-1, max > 0);
 
 	// Initialize the array.
-	memset(items, 0x0, sizeof(struct item) * max);
+	memset(items, 0x0, sizeof(items[0]) * max);
 
 	switch (table) {
 	case TABLE_INVENTORY:

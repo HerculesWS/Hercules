@@ -1687,13 +1687,13 @@ bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 		logs->pick_mob(md, LOG_TYPE_LOOT, fitem->item_data.amount, &fitem->item_data, NULL);
 
 		if (md->lootitem_count < LOOTITEM_SIZE) {
-			memcpy (&md->lootitem[md->lootitem_count++], &fitem->item_data, sizeof(md->lootitem[0]));
+			md->lootitem[md->lootitem_count++] = fitem->item_data;
 		} else {
 			//Destroy first looted item...
 			if (md->lootitem[0].card[0] == CARD0_PET)
 				intif->delete_petdata(itemdb_pet_id(&md->lootitem[0]));
 			memmove(&md->lootitem[0], &md->lootitem[1], (LOOTITEM_SIZE-1)*sizeof(md->lootitem[0]));
-			memcpy (&md->lootitem[LOOTITEM_SIZE-1], &fitem->item_data, sizeof(md->lootitem[0]));
+			md->lootitem[LOOTITEM_SIZE - 1] = fitem->item_data;
 		}
 		if (pc->db_checkid(md->vd->class)) {
 			//Give them walk act/delay to properly mimic players. [Skotlex]
@@ -1901,7 +1901,7 @@ struct item_drop* mob_setlootitem(struct item* item)
 
 	nullpo_retr(NULL, item);
 	drop = ers_alloc(item_drop_ers, struct item_drop);
-	memcpy(&drop->item_data, item, sizeof(struct item));
+	drop->item_data = *item;
 	drop->showdropeffect = false;
 	drop->next = NULL;
 	return drop;

@@ -205,8 +205,7 @@ void itemdb_package_item(struct map_session_data *sd, struct item_package *packa
 	nullpo_retv(sd);
 	nullpo_retv(package);
 	for( i = 0; i < package->must_qty; i++ ) {
-		struct item it;
-		memset(&it, 0, sizeof(it));
+		struct item it = { 0 };
 
 		it.nameid = package->must_items[i].id;
 		it.identify = 1;
@@ -246,8 +245,7 @@ void itemdb_package_item(struct map_session_data *sd, struct item_package *packa
 					entry = entry->next;
 					continue;
 				} else {
-					struct item it;
-					memset(&it, 0, sizeof(it));
+					struct item it = { 0 };
 
 					it.nameid = entry->id;
 					it.identify = 1;
