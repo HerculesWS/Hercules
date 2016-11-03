@@ -1906,6 +1906,8 @@ packet(0x96e,-1,clif->ackmergeitems);
 // shuffle packets not added
 // new packets
 	packet(0x08c0,-1); // ZC_ACK_SE_CASH_ITEM_LIST2
+	packet(0x08c1,2,clif->pDull); // CZ_MACRO_START
+	packet(0x08c2,2,clif->pDull); // CZ_MACRO_STOP
 #endif
 
 //2011-07-18aRagexe (Thanks to Yommy!)
