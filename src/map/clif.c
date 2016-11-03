@@ -17865,6 +17865,7 @@ void clif_partytickack(struct map_session_data* sd, bool flag) {
 
 void clif_ShowScript(struct block_list *bl, const char *message)
 {
+#if PACKETVER >= 20110111
 	char buf[256];
 	int len;
 	nullpo_retv(bl);
@@ -17884,6 +17885,7 @@ void clif_ShowScript(struct block_list *bl, const char *message)
 	WBUFL(buf,4) = bl->id;
 	safestrncpy(WBUFP(buf,8),message,len);
 	clif->send(buf,WBUFW(buf,2),bl,AREA);
+#endif
 }
 
 void clif_status_change_end(struct block_list *bl, int tid, enum send_target target, int type) {
