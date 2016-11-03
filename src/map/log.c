@@ -279,39 +279,40 @@ void log_zeny(struct map_session_data* sd, e_log_pick_type type, struct map_sess
 
 	logs->zeny_sub(sd,type,src_sd,amount);
 }
-void log_mvpdrop_sub_sql(struct map_session_data* sd, int monster_id, int* log_mvp) {
+void log_mvpdrop_sub_sql(struct map_session_data* sd, int monster_id, int mvp_drop, int mvp_exp)
+{
 	nullpo_retv(sd);
-	nullpo_retv(log_mvp);
-	if( SQL_ERROR == SQL->Query(logs->mysql_handle, LOG_QUERY " INTO `%s` (`mvp_date`, `kill_char_id`, `monster_id`, `prize`, `mvpexp`, `map`) VALUES (NOW(), '%d', '%d', '%d', '%d', '%s') ",
-							   logs->config.log_mvpdrop, sd->status.char_id, monster_id, log_mvp[0], log_mvp[1], mapindex_id2name(sd->mapindex)) )
-	{
+	if (SQL_ERROR == SQL->Query(logs->mysql_handle, LOG_QUERY " INTO `%s` (`mvp_date`, `kill_char_id`, `monster_id`, `prize`, `mvpexp`, `map`) "
+	                            "VALUES (NOW(), '%d', '%d', '%d', '%d', '%s') ",
+	                            logs->config.log_mvpdrop, sd->status.char_id, monster_id, mvp_drop, mvp_exp, mapindex_id2name(sd->mapindex))
+	) {
 		Sql_ShowDebug(logs->mysql_handle);
 		return;
 	}
 }
-void log_mvpdrop_sub_txt(struct map_session_data* sd, int monster_id, int* log_mvp) {
+void log_mvpdrop_sub_txt(struct map_session_data* sd, int monster_id, int mvp_drop, int mvp_exp)
+{
 	char timestring[255];
 	time_t curtime;
 	FILE* logfp;
 
 	nullpo_retv(sd);
-	nullpo_retv(log_mvp);
 	if( ( logfp = fopen(logs->config.log_mvpdrop,"a") ) == NULL )
 		return;
 	time(&curtime);
 	strftime(timestring, sizeof(timestring), "%m/%d/%Y %H:%M:%S", localtime(&curtime));
-	fprintf(logfp,"%s - %s[%d:%d]\t%d\t%d,%d\n", timestring, sd->status.name, sd->status.account_id, sd->status.char_id, monster_id, log_mvp[0], log_mvp[1]);
+	fprintf(logfp,"%s - %s[%d:%d]\t%d\t%d,%d\n", timestring, sd->status.name, sd->status.account_id, sd->status.char_id, monster_id, mvp_drop, mvp_exp);
 	fclose(logfp);
 }
 /// logs MVP monster rewards
-void log_mvpdrop(struct map_session_data* sd, int monster_id, int* log_mvp)
+void log_mvpdrop(struct map_session_data* sd, int monster_id, int mvp_drop, int mvp_exp)
 {
 	nullpo_retv(sd);
 
 	if( !logs->config.mvpdrop )
 		return;
 
-	logs->mvpdrop_sub(sd,monster_id,log_mvp);
+	logs->mvpdrop_sub(sd, monster_id, mvp_drop, mvp_exp);
 }
 
 void log_atcommand_sub_sql(struct map_session_data* sd, const char* message)
