@@ -17623,7 +17623,7 @@ void clif_favorite_item(struct map_session_data* sd, unsigned short index) {
 }
 
 void clif_snap( struct block_list *bl, short x, short y ) {
-#if PACKETVER >= 20111005
+#if PACKETVER >= 20110809
 	unsigned char buf[10];
 
 	nullpo_retv(bl);

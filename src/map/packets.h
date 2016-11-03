@@ -1956,6 +1956,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x08cf,10); // ZC_SPIRITS_ATTRIBUTE
 	packet(0x08d0,9); // ZC_REQ_WEAR_EQUIP_ACK2
 	packet(0x08d1,7); // ZC_REQ_TAKEOFF_EQUIP_ACK2
+	packet(0x08d2,10); // ZC_FASTMOVE
 #endif
 
 //2011-10-05aRagexeRE
@@ -1972,7 +1973,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x088a,6,clif->pGetCharNameRequest,2);
 	packet(0x0838,6,clif->pSolveCharName,2);
 	packet(0x0439,8,clif->pUseItem,2,4);
-	packet(0x08d2,10);
 	packet(0x08d7,28,clif->pBGQueueRegister,2);
 	packet(0x090a,26,clif->pBGQueueCheckState,2);
 	packet(0x08da,26,clif->pBGQueueRevokeReq,2);
@@ -2124,7 +2124,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x096A,6,clif->pGetCharNameRequest,2);
 	packet(0x0368,6,clif->pSolveCharName,2);
 	packet(0x08E5,41,clif->pPartyRecruitRegisterReq,2,4);
-	packet(0x08d2,10);
 	packet(0x0916,26,clif->pGuildInvite2,2);
 #endif
 
