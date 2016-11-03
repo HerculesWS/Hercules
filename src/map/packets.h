@@ -1949,6 +1949,13 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x09dc,2); // unknown
 #endif
 
+// 2011-08-09aRagexe
+#if PACKETVER >= 20110809
+// shuffle packets not added
+// new packets
+	packet(0x08cf,10); // ZC_SPIRITS_ATTRIBUTE
+#endif
+
 //2011-10-05aRagexeRE
 #if PACKETVER >= 20111005
 	packet(0x0364,5,clif->pWalkToXY,2);
@@ -2095,7 +2102,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x08FB,6,clif->pDull,2); //bookingcanceljoinparty
 	packet(0x0907,5,clif->pMoveItem,2,4);
 	packet(0x0908,5);
-	packet(0x08CF,10);//Amulet spirits
 	packet(0x0977,14);//Monster HP Bar
 #endif
 

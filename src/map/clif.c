@@ -1360,7 +1360,7 @@ void clif_spiritball_single(int fd, struct map_session_data *sd) {
  *------------------------------------------*/
 void clif_charm_single(int fd, struct map_session_data *sd)
 {
-#if PACKETVER >= 20120410
+#if PACKETVER >= 20110809
 	nullpo_retv(sd);
 	WFIFOHEAD(fd, packet_len(0x08cf));
 	WFIFOW(fd,0) = 0x08cf;
@@ -17497,7 +17497,7 @@ void clif_parse_SkillSelectMenu(int fd, struct map_session_data *sd) {
  *------------------------------------------*/
 void clif_charm(struct map_session_data *sd)
 {
-#if PACKETVER >= 20120410
+#if PACKETVER >= 20110809
 	unsigned char buf[10];
 
 	nullpo_retv(sd);
