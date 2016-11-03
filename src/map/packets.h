@@ -1942,6 +1942,13 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0848,-1,clif->pCashShopBuy,2);
 #endif
 
+// 2011-08-02aRagexe
+#if PACKETVER >= 20110802
+// shuffle packets not added
+// new packets
+	packet(0x09dc,2); // unknown
+#endif
+
 //2011-10-05aRagexeRE
 #if PACKETVER >= 20111005
 	packet(0x0364,5,clif->pWalkToXY,2);
