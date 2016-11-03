@@ -17791,7 +17791,9 @@ void clif_parse_CashShopBuy(int fd, struct map_session_data *sd) {
 
 void clif_parse_CashShopReqTab(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 /* [Ind/Hercules] */
-void clif_parse_CashShopReqTab(int fd, struct map_session_data *sd) {
+void clif_parse_CashShopReqTab(int fd, struct map_session_data *sd)
+{
+#if PACKETVER >= 20110222
 	short tab = RFIFOW(fd, 2);
 	int j;
 
@@ -17810,9 +17812,12 @@ void clif_parse_CashShopReqTab(int fd, struct map_session_data *sd) {
 	}
 
 	WFIFOSET(fd, 10 + ( clif->cs.item_count[tab] * 6 ));
+#endif
 }
+
 /* [Ind/Hercules] */
-void clif_maptypeproperty2(struct block_list *bl,enum send_target t) {
+void clif_maptypeproperty2(struct block_list *bl,enum send_target t)
+{
 #if PACKETVER >= 20121010
 	struct packet_maptypeproperty2 p;
 	struct map_session_data *sd = NULL;

@@ -1901,6 +1901,13 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x02f6,7,clif->pDull,2); // CZ_IRMAIL_LIST
 #endif
 
+// 2011-02-22aRagexe
+#if PACKETVER >= 20110222
+// shuffle packets not added
+// new packets
+	packet(0x08c0,-1); // ZC_ACK_SE_CASH_ITEM_LIST2
+#endif
+
 //2011-07-18aRagexe (Thanks to Yommy!)
 #if PACKETVER >= 20110718
 	packet(0x0844,2,clif->pCashShopOpen,2);/* tell server cashshop window is being open */
