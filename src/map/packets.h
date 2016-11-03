@@ -1923,6 +1923,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 // new packets
 	packet(0x08c8,34); // ZC_NOTIFY_ACT3
 	packet(0x08c9,2,clif->pCashShopSchedule,0);
+	packet(0x08ca,-1); // ZC_ACK_SCHEDULER_CASHITEM
 #endif
 
 //2011-07-18aRagexe (Thanks to Yommy!)

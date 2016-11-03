@@ -17678,7 +17678,9 @@ void clif_parse_CashShopClose(int fd, struct map_session_data *sd) {
 }
 
 void clif_parse_CashShopSchedule(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
-void clif_parse_CashShopSchedule(int fd, struct map_session_data *sd) {
+void clif_parse_CashShopSchedule(int fd, struct map_session_data *sd)
+{
+#if PACKETVER >= 20110614
 	int i, j = 0;
 
 	for( i = 0; i < CASHSHOP_TAB_MAX; i++ ) {
@@ -17698,6 +17700,7 @@ void clif_parse_CashShopSchedule(int fd, struct map_session_data *sd) {
 
 		WFIFOSET(fd, 8 + ( clif->cs.item_count[i] * 6 ));
 	}
+#endif
 }
 
 void clif_parse_CashShopBuy(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
