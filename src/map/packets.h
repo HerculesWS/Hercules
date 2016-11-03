@@ -1966,6 +1966,13 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x08d3,10); // ZC_SE_CASHSHOP_UPDATE
 #endif
 
+// 2011-09-28aRagexe
+#if PACKETVER >= 20110928
+// shuffle packets not added
+// new packets
+	packet(0x08d6,6); // ZC_CLEAR_DIALOG
+#endif
+
 //2011-10-05aRagexeRE
 #if PACKETVER >= 20111005
 	packet(0x0364,5,clif->pWalkToXY,2);

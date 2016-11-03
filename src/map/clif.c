@@ -18050,14 +18050,17 @@ void clif_bgqueue_battlebegins(struct map_session_data *sd, unsigned char arena_
 	clif->send(&p,sizeof(p), &sd->bl, target);
 }
 
-void clif_scriptclear(struct map_session_data *sd, int npcid) {
+void clif_scriptclear(struct map_session_data *sd, int npcid)
+{
+#if PACKETVER >= 20110928
 	struct packet_script_clear p;
 
 	nullpo_retv(sd);
 	p.PacketType = script_clearType;
 	p.NpcID = npcid;
 
-	clif->send(&p,sizeof(p), &sd->bl, SELF);
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
+#endif
 }
 
 /* Made Possible Thanks to Yommy! */
