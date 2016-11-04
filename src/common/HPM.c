@@ -898,8 +898,11 @@ bool hplugins_parse_conf(const struct config_t *config, const char *filename, en
 
 	for (i = 0; i < VECTOR_LENGTH(HPM->config_listeners[point]); i++) {
 		const struct HPConfListenStorage *entry = &VECTOR_INDEX(HPM->config_listeners[point], i);
-		const char *config_name = entry->key;
+		char config_name[256];
 		const char *str = NULL;
+		
+		safesnprintf(config_name, sizeof config_name, "battle_configuration/%s", entry->key);
+		
 		if ((setting = libconfig->lookup(config, config_name)) == NULL) {
 			if (!imported && entry->required) {
 				ShowWarning("Missing configuration '%s' in file %s!\n", config_name, filename);
