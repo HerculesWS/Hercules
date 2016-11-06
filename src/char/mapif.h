@@ -41,7 +41,7 @@ struct mapif_interface {
 	int (*send) (int fd, unsigned char *buf, unsigned int len);
 	void (*send_users_count) (int users);
 	void (*auction_message) (int char_id, unsigned char result);
-	void (*auction_sendlist) (int fd, int char_id, short count, short pages, unsigned char *buf);
+	void (*auction_sendlist) (int fd, int char_id, short count, short pages, const struct auction_data *auctions);
 	void (*parse_auction_requestlist) (int fd);
 	void (*auction_register) (int fd, struct auction_data *auction);
 	void (*parse_auction_register) (int fd);

@@ -2092,7 +2092,7 @@ void intif_parse_AuctionResults(int fd) {
 	struct map_session_data *sd = map->charid2sd(RFIFOL(fd,4));
 	short count = RFIFOW(fd,8);
 	short pages = RFIFOW(fd,10);
-	const uint8 *data = RFIFOP(fd,12);
+	const struct auction_data *data = RFIFOP(fd,12);
 
 	if( sd == NULL )
 		return;

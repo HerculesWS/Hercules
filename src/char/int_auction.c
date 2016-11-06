@@ -269,11 +269,11 @@ void inter_auctions_fromsql(void)
 	SQL->FreeResult(inter->sql_handle);
 }
 
-void mapif_auction_sendlist(int fd, int char_id, short count, short pages, unsigned char *buf)
+void mapif_auction_sendlist(int fd, int char_id, short count, short pages, const struct auction_data *auctions)
 {
 	int len = (sizeof(struct auction_data) * count) + 12;
 
-	nullpo_retv(buf);
+	nullpo_retv(auctions);
 
 	WFIFOHEAD(fd, len);
 	WFIFOW(fd,0) = 0x3850;
@@ -281,17 +281,17 @@ void mapif_auction_sendlist(int fd, int char_id, short count, short pages, unsig
 	WFIFOL(fd,4) = char_id;
 	WFIFOW(fd,8) = count;
 	WFIFOW(fd,10) = pages;
-	memcpy(WFIFOP(fd,12), buf, len - 12);
+	memcpy(WFIFOP(fd,12), auctions, len - 12);
 	WFIFOSET(fd,len);
 }
 
 void mapif_parse_auction_requestlist(int fd)
 {
 	char searchtext[NAME_LENGTH];
-	int char_id = RFIFOL(fd,4), len = sizeof(struct auction_data);
+	int char_id = RFIFOL(fd,4);
 	int price = RFIFOL(fd,10);
 	short type = RFIFOW(fd,8), page = max(1,RFIFOW(fd,14));
-	unsigned char buf[5 * sizeof(struct auction_data)];
+	struct auction_data auctions[5];
 	struct DBIterator *iter = db_iterator(inter_auction->db);
 	struct auction_data *auction;
 	short i = 0, j = 0, pages = 1;
@@ -320,12 +320,12 @@ void mapif_parse_auction_requestlist(int fd)
 		if( page != pages )
 			continue; // This is not the requested Page
 
-		memcpy(WBUFP(buf, j * len), auction, len);
+		auctions[j] = *auction;
 		j++; // Found Results
 	}
 	dbi_destroy(iter);
 
-	mapif->auction_sendlist(fd, char_id, j, pages, buf);
+	mapif->auction_sendlist(fd, char_id, j, pages, auctions);
 }
 
 void mapif_auction_register(int fd, struct auction_data *auction)

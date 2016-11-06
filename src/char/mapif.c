@@ -48,7 +48,7 @@ int mapif_sendallwos(int sfd, unsigned char *buf, unsigned int len);
 int mapif_send(int fd, unsigned char *buf, unsigned int len);
 void mapif_send_users_count(int users);
 void mapif_auction_message(int char_id, unsigned char result);
-void mapif_auction_sendlist(int fd, int char_id, short count, short pages, unsigned char *buf);
+void mapif_auction_sendlist(int fd, int char_id, short count, short pages, const struct auction_data *auctions);
 void mapif_parse_auction_requestlist(int fd);
 void mapif_auction_register(int fd, struct auction_data *auction);
 void mapif_parse_auction_register(int fd);

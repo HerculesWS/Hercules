@@ -1059,7 +1059,7 @@ struct clif_interface {
 	void (*mail_setattachment) (int fd, int index, uint8 flag);
 	/* auction-related */
 	void (*auction_openwindow) (struct map_session_data *sd);
-	void (*auction_results) (struct map_session_data *sd, short count, short pages, const uint8 *buf);
+	void (*auction_results) (struct map_session_data *sd, short count, short pages, const struct auction_data *auctions);
 	void (*auction_message) (int fd, unsigned char flag);
 	void (*auction_close) (int fd, unsigned char flag);
 	void (*auction_setitem) (int fd, int index, bool fail);

@@ -15523,10 +15523,10 @@ void clif_Auction_openwindow(struct map_session_data *sd)
 
 /// Returns auction item search results (ZC_AUCTION_ITEM_REQ_SEARCH).
 /// 0252 <packet len>.W <pages>.L <count>.L { <auction id>.L <seller name>.24B <name id>.W <type>.L <amount>.W <identified>.B <damaged>.B <refine>.B <card1>.W <card2>.W <card3>.W <card4>.W <now price>.L <max price>.L <buyer name>.24B <delete time>.L }*
-void clif_Auction_results(struct map_session_data *sd, short count, short pages, const uint8 *buf)
+void clif_Auction_results(struct map_session_data *sd, short count, short pages, const struct auction_data *auctions)
 {
-	int i, fd, len = sizeof(struct auction_data);
-	struct auction_data auction;
+	int i, fd;
+	const struct auction_data *auction = NULL;
 	struct item_data *item;
 
 	nullpo_retv(sd);
@@ -15539,26 +15539,26 @@ void clif_Auction_results(struct map_session_data *sd, short count, short pages,
 
 	for( i = 0; i < count; i++ ) {
 		int k = 12 + (i * 83);
-		memcpy(&auction, RBUFP(buf,i * len), len);
+		auction = &auctions[i];
 
-		WFIFOL(fd,k) = auction.auction_id;
-		safestrncpy(WFIFOP(fd,4+k), auction.seller_name, NAME_LENGTH);
+		WFIFOL(fd,k) = auction->auction_id;
+		safestrncpy(WFIFOP(fd,4+k), auction->seller_name, NAME_LENGTH);
 
-		if( (item = itemdb->exists(auction.item.nameid)) != NULL && item->view_id > 0 )
+		if ((item = itemdb->exists(auction->item.nameid)) != NULL && item->view_id > 0)
 			WFIFOW(fd,28+k) = item->view_id;
 		else
-			WFIFOW(fd,28+k) = auction.item.nameid;
+			WFIFOW(fd,28+k) = auction->item.nameid;
 
-		WFIFOL(fd,30+k) = auction.type;
-		WFIFOW(fd,34+k) = auction.item.amount; // Always 1
-		WFIFOB(fd,36+k) = auction.item.identify;
-		WFIFOB(fd,37+k) = auction.item.attribute;
-		WFIFOB(fd,38+k) = auction.item.refine;
-		clif->addcards(WFIFOP(fd, 39 + k), &auction.item);
-		WFIFOL(fd,47+k) = auction.price;
-		WFIFOL(fd,51+k) = auction.buynow;
-		safestrncpy(WFIFOP(fd,55+k), auction.buyer_name, NAME_LENGTH);
-		WFIFOL(fd,79+k) = (uint32)auction.timestamp;
+		WFIFOL(fd,30+k) = auction->type;
+		WFIFOW(fd,34+k) = auction->item.amount; // Always 1
+		WFIFOB(fd,36+k) = auction->item.identify;
+		WFIFOB(fd,37+k) = auction->item.attribute;
+		WFIFOB(fd,38+k) = auction->item.refine;
+		clif->addcards(WFIFOP(fd, 39 + k), &auction->item);
+		WFIFOL(fd,47+k) = auction->price;
+		WFIFOL(fd,51+k) = auction->buynow;
+		safestrncpy(WFIFOP(fd,55+k), auction->buyer_name, NAME_LENGTH);
+		WFIFOL(fd,79+k) = (uint32)auction->timestamp;
 	}
 	WFIFOSET(fd,WFIFOW(fd,2));
 }
