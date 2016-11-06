@@ -1190,14 +1190,14 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 		return false;
 	}
 
-	memcpy(&sd->status, st, sizeof(*st));
-	memset(&sd->rodex, 0x0, sizeof(sd->rodex));
-	VECTOR_INIT(sd->rodex.messages);
-
 	if (st->sex != sd->status.sex) {
 		clif->authfail_fd(sd->fd, 0);
 		return false;
 	}
+
+	sd->status = *st;
+	memset(&sd->rodex, 0x0, sizeof(sd->rodex));
+	VECTOR_INIT(sd->rodex.messages);
 
 	//Set the map-server used job id. [Skotlex]
 	{
