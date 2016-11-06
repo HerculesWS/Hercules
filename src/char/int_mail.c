@@ -287,7 +287,7 @@ static bool inter_mail_DeleteAttach(int mail_id)
 	int i;
 
 	StrBuf->Init(&buf);
-	StrBuf->Printf(&buf, "UPDATE `%s` SET `zeny` = '0', `nameid` = '0', `amount` = '0', `refine` = '0', `attribute` = '0', `identify` = '0'", mail_db);
+	StrBuf->Printf(&buf, "UPDATE `%s` SET `zeny` = '0', `nameid` = '0', `amount` = '0', `refine` = '0', `attribute` = '0', `identify` = '0', `unique_id` = '0'", mail_db);
 	for (i = 0; i < MAX_SLOTS; i++)
 		StrBuf->Printf(&buf, ", `card%d` = '0'", i);
 	for (i = 0; i < MAX_ITEM_OPTIONS; i++)
