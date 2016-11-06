@@ -913,6 +913,10 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 			break;
 	#endif
 
+		case WZ_HEAVENDRIVE:
+			status_change_end(bl, SC_SV_ROOTTWIST, INVALID_TIMER);
+			break;
+
 		case WZ_STORMGUST:
 		/**
 		 * Storm Gust counter was dropped in renewal
@@ -9558,7 +9562,6 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			clif->skill_nodamage(src, bl, skill_id, skill_lv, 1);
 			sc_start(src, bl, type, 100, skill_lv, skill->get_time(skill_id, skill_lv));
 			break;
-			break;
 
 		case SU_BUNCHOFSHRIMP:
 			if (sd == NULL || sd->status.party_id == 0 || flag&1) {
@@ -12321,9 +12324,6 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 					map->freeblock_unlock();
 				}
 				break;
-		case WZ_HEAVENDRIVE:
-			status_change_end(bl, SC_SV_ROOTTWIST, INVALID_TIMER);
-			break;
 		/**
 		 * The storm gust counter was dropped in renewal
 		 **/
