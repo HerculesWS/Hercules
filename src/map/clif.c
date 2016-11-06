@@ -2358,7 +2358,8 @@ void clif_cutin(struct map_session_data* sd, const char* image, int type)
 /*==========================================
  * Fills in card data from the given item and into the buffer. [Skotlex]
  *------------------------------------------*/
-void clif_addcards(unsigned char* buf, struct item* item) {
+void clif_addcards(unsigned char *buf, const struct item *item)
+{
 	int i=0,j;
 	nullpo_retv(buf);
 	if( item == NULL ) { //Blank data
@@ -2408,7 +2409,8 @@ void clif_addcards(unsigned char* buf, struct item* item) {
 		WBUFW(buf,6) = item->card[i];
 }
 
-void clif_addcards2(unsigned short *cards, struct item* item) {
+void clif_addcards2(unsigned short *cards, const struct item *item)
+{
 	int i=0,j;
 	nullpo_retv(cards);
 	if( item == NULL ) { //Blank data
