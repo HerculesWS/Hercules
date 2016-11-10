@@ -17226,13 +17226,14 @@ void clif_parse_ReqOpenBuyingStore(int fd, struct map_session_data* sd) __attrib
 /// result:
 ///     0 = cancel
 ///     1 = open
-void clif_parse_ReqOpenBuyingStore(int fd, struct map_session_data* sd) {
-	const unsigned int blocksize = 8;
-	const uint8 *itemlist;
+void clif_parse_ReqOpenBuyingStore(int fd, struct map_session_data *sd)
+{
+	const int blocksize = 8;
+	const uint8 *raw_list;
+	struct buyingstore_itemlist item_list;
 	char storename[MESSAGE_SIZE];
 	unsigned char result;
-	int zenylimit;
-	int count, packet_len;
+	int zenylimit, count, packet_len, i;
 	struct s_packet_db* info = &packet_db[RFIFOW(fd,0)];
 
 	packet_len = RFIFOW(fd,info->pos[0]);
@@ -17240,29 +17241,37 @@ void clif_parse_ReqOpenBuyingStore(int fd, struct map_session_data* sd) {
 	// TODO: Make this check global for all variable length packets.
 	if( packet_len < 89 )
 	{// minimum packet length
-		ShowError("clif_parse_ReqOpenBuyingStore: Malformed packet (expected length=%u, length=%d, account_id=%d).\n", 89U, packet_len, sd->bl.id);
+		ShowError("clif_parse_ReqOpenBuyingStore: Malformed packet (expected length=%d, length=%d, account_id=%d).\n", 89, packet_len, sd->bl.id);
 		return;
 	}
 
 	zenylimit = RFIFOL(fd,info->pos[1]);
 	result    = RFIFOL(fd,info->pos[2]);
 	safestrncpy(storename, RFIFOP(fd,info->pos[3]), sizeof(storename));
-	itemlist  = RFIFOP(fd,info->pos[4]);
+	raw_list  = RFIFOP(fd,info->pos[4]);
 
-	// so that buyingstore_create knows, how many elements it has access to
-	packet_len-= info->pos[4];
+	packet_len -= info->pos[4];
 
 	if (packet_len < 0)
 		return;
 
-	if( packet_len%blocksize )
-	{
-		ShowError("clif_parse_ReqOpenBuyingStore: Unexpected item list size %d (account_id=%d, block size=%u)\n", packet_len, sd->bl.id, blocksize);
+	if (packet_len%blocksize != 0) {
+		ShowError("clif_parse_ReqOpenBuyingStore: Unexpected item list size %d (account_id=%d, block size=%d)\n", packet_len, sd->bl.id, blocksize);
 		return;
 	}
 	count = packet_len/blocksize;
 
-	buyingstore->create(sd, zenylimit, result, storename, itemlist, count);
+	VECTOR_INIT(item_list);
+	VECTOR_ENSURE(item_list, count, 1);
+	for (i = 0; i < count; i++) {
+		struct s_buyingstore_item entry = { 0 };
+		entry.nameid = RBUFW(raw_list, i * blocksize + 0);
+		entry.amount = RBUFW(raw_list, i * blocksize + 2);
+		entry.price  = RBUFL(raw_list, i * blocksize + 4);
+		VECTOR_PUSH(item_list, entry);
+	}
+	buyingstore->create(sd, zenylimit, result, storename, &item_list);
+	VECTOR_CLEAR(item_list);
 }
 
 /// Notification, that the requested buying store could not be created (ZC_FAILED_OPEN_BUYING_STORE_TO_BUYER).
@@ -17422,39 +17431,50 @@ void clif_buyingstore_itemlist(struct map_session_data* sd, struct map_session_d
 void clif_parse_ReqTradeBuyingStore(int fd, struct map_session_data* sd) __attribute__((nonnull (2)));
 /// Request to sell items to a buying store (CZ_REQ_TRADE_BUYING_STORE).
 /// 0819 <packet len>.W <account id>.L <store id>.L { <index>.W <name id>.W <amount>.W }*
-void clif_parse_ReqTradeBuyingStore(int fd, struct map_session_data* sd) {
-	const unsigned int blocksize = 6;
-	const uint8 *itemlist;
-	int account_id;
+void clif_parse_ReqTradeBuyingStore(int fd, struct map_session_data *sd)
+{
+	const int blocksize = 6;
+	const uint8 *raw_list;
+	struct buyingstore_trade_itemlist item_list;
+	int account_id, count, packet_len, i;
 	unsigned int buyer_id;
-	int count, packet_len;
 	struct s_packet_db* info = &packet_db[RFIFOW(fd,0)];
 
 	packet_len = RFIFOW(fd,info->pos[0]);
 
 	if( packet_len < 12 )
 	{// minimum packet length
-		ShowError("clif_parse_ReqTradeBuyingStore: Malformed packet (expected length=%u, length=%d, account_id=%d).\n", 12U, packet_len, sd->bl.id);
+		ShowError("clif_parse_ReqTradeBuyingStore: Malformed packet (expected length=%d, length=%d, account_id=%d).\n", 12, packet_len, sd->bl.id);
 		return;
 	}
 
 	account_id = RFIFOL(fd,info->pos[1]);
 	buyer_id   = RFIFOL(fd,info->pos[2]);
-	itemlist   = RFIFOP(fd,info->pos[3]);
+	raw_list   = RFIFOP(fd,info->pos[3]);
 
 	// so that buyingstore_trade knows, how many elements it has access to
 	packet_len-= info->pos[3];
 	if (packet_len < 0)
 		return;
 
-	if( packet_len%blocksize )
-	{
-		ShowError("clif_parse_ReqTradeBuyingStore: Unexpected item list size %d (account_id=%d, buyer_id=%d, block size=%u)\n", packet_len, sd->bl.id, account_id, blocksize);
+	if (packet_len%blocksize != 0) {
+		ShowError("clif_parse_ReqTradeBuyingStore: Unexpected item list size %d (account_id=%d, buyer_id=%d, block size=%d)\n", packet_len, sd->bl.id, account_id, blocksize);
 		return;
 	}
 	count = packet_len/blocksize;
 
-	buyingstore->trade(sd, account_id, buyer_id, itemlist, count);
+	VECTOR_INIT(item_list);
+	VECTOR_ENSURE(item_list, count, 1);
+	for (i = 0; i < count; i++) {
+		struct buyingstore_trade_item entry = { 0 };
+		entry.index  = RBUFW(raw_list, i * blocksize + 0) - 2;
+		entry.nameid = RBUFW(raw_list, i * blocksize + 2);
+		entry.amount = RBUFW(raw_list, i * blocksize + 4);
+		VECTOR_PUSH(item_list, entry);
+	}
+
+	buyingstore->trade(sd, account_id, buyer_id, &item_list);
+	VECTOR_CLEAR(item_list);
 }
 
 /// Notifies the buyer, that the buying store has been closed due to a post-trade condition (ZC_FAILED_TRADE_BUYING_STORE_TO_BUYER).

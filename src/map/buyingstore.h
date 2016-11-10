@@ -22,6 +22,7 @@
 #define MAP_BUYINGSTORE_H
 
 #include "common/hercules.h"
+#include "common/db.h"
 #include "common/mmo.h" // MAX_SLOTS
 
 struct map_session_data;
@@ -55,14 +56,25 @@ enum e_buyingstore_failure {
 	BUYINGSTORE_CREATE_NO_INFO       = 8,  // "No sale (purchase) information available."
 };
 
-/**
- * Structures
- **/
+/* Structures */
+
+/** Buyingstore item entry */
 struct s_buyingstore_item {
 	int price;
 	unsigned short amount;
 	unsigned short nameid;
 };
+/** Buyingstore item list */
+VECTOR_STRUCT_DECL(buyingstore_itemlist, struct s_buyingstore_item);
+
+/** Buyingstore item used in trade requests */
+struct buyingstore_trade_item {
+	int nameid;
+	int16 index;
+	int16 amount;
+};
+/** Buyingstore item list used in trade requests */
+VECTOR_STRUCT_DECL(buyingstore_trade_itemlist, struct buyingstore_trade_item);
 
 struct s_buyingstore {
 	struct s_buyingstore_item items[MAX_BUYINGSTORE_SLOTS];
@@ -77,10 +89,10 @@ struct buyingstore_interface {
 	unsigned int nextid;
 	/* */
 	bool (*setup) (struct map_session_data* sd, unsigned char slots);
-	void (*create) (struct map_session_data* sd, int zenylimit, unsigned char result, const char* storename, const uint8* itemlist, unsigned int count);
+	void (*create) (struct map_session_data *sd, int zenylimit, unsigned char result, const char *storename, const struct buyingstore_itemlist *itemlist);
 	void (*close) (struct map_session_data* sd);
 	void (*open) (struct map_session_data* sd, int account_id);
-	void (*trade) (struct map_session_data* sd, int account_id, unsigned int buyer_id, const uint8* itemlist, unsigned int count);
+	void (*trade) (struct map_session_data *sd, int account_id, unsigned int buyer_id, const struct buyingstore_trade_itemlist *itemlist);
 	bool (*search) (struct map_session_data* sd, unsigned short nameid);
 	bool (*searchall) (struct map_session_data* sd, const struct s_search_store_search* s);
 	unsigned int (*getuid) (void);
