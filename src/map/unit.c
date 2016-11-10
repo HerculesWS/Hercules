@@ -668,11 +668,12 @@ void unit_run_hit(struct block_list *bl, struct status_change *sc, struct map_se
 	ud->state.running = 0;
 	status_change_end(bl, type, INVALID_TIMER);
 
-	if( type == SC_RUN ) {
-		skill->blown(bl,bl,skill->get_blewcount(TK_RUN,lv),unit->getdir(bl),0);
+	if (type == SC_RUN) {
+		if (lv > 0)
+			skill->blown(bl, bl, skill->get_blewcount(TK_RUN, lv), unit->getdir(bl), 0);
 		clif->fixpos(bl); //Why is a clif->slide (skill->blown) AND a fixpos needed? Ask Aegis.
-		clif->sc_end(bl,bl->id,AREA,SI_TING);
-	} else if( sd ) {
+		clif->sc_end(bl, bl->id, AREA, SI_TING);
+	} else if (sd) {
 		clif->fixpos(bl);
 		skill->castend_damage_id(bl, &sd->bl, RA_WUGDASH, lv, timer->gettick(), SD_LEVEL);
 	}
