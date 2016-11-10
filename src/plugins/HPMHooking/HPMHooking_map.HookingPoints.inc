@@ -1526,6 +1526,10 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(itemdb->is_item_usable, HP_itemdb_is_item_usable) },
 	{ HP_POP(itemdb->lookup_const, HP_itemdb_lookup_const) },
 	{ HP_POP(itemdb->lookup_const_mask, HP_itemdb_lookup_const_mask) },
+	{ HP_POP(itemdb->items_identical, HP_itemdb_items_identical) },
+	{ HP_POP(itemdb->fill_produceinfo, HP_itemdb_fill_produceinfo) },
+	{ HP_POP(itemdb->fill_forgeinfo, HP_itemdb_fill_forgeinfo) },
+	{ HP_POP(itemdb->fill_petinfo, HP_itemdb_fill_petinfo) },
 /* libconfig_interface */
 	{ HP_POP(libconfig->read, HP_libconfig_read) },
 	{ HP_POP(libconfig->write, HP_libconfig_write) },

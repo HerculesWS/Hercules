@@ -11028,14 +11028,14 @@ void HP_mapif_auction_message(int char_id, unsigned char result) {
 	}
 	return;
 }
-void HP_mapif_auction_sendlist(int fd, int char_id, short count, short pages, unsigned char *buf) {
+void HP_mapif_auction_sendlist(int fd, int char_id, short count, short pages, const struct auction_data *auctions) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_mapif_auction_sendlist_pre > 0) {
-		void (*preHookFunc) (int *fd, int *char_id, short *count, short *pages, unsigned char **buf);
+		void (*preHookFunc) (int *fd, int *char_id, short *count, short *pages, const struct auction_data **auctions);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_auction_sendlist_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_mapif_auction_sendlist_pre[hIndex].func;
-			preHookFunc(&fd, &char_id, &count, &pages, &buf);
+			preHookFunc(&fd, &char_id, &count, &pages, &auctions);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -11043,13 +11043,13 @@ void HP_mapif_auction_sendlist(int fd, int char_id, short count, short pages, un
 		}
 	}
 	{
-		HPMHooks.source.mapif.auction_sendlist(fd, char_id, count, pages, buf);
+		HPMHooks.source.mapif.auction_sendlist(fd, char_id, count, pages, auctions);
 	}
 	if (HPMHooks.count.HP_mapif_auction_sendlist_post > 0) {
-		void (*postHookFunc) (int fd, int char_id, short count, short pages, unsigned char *buf);
+		void (*postHookFunc) (int fd, int char_id, short count, short pages, const struct auction_data *auctions);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_auction_sendlist_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_mapif_auction_sendlist_post[hIndex].func;
-			postHookFunc(fd, char_id, count, pages, buf);
+			postHookFunc(fd, char_id, count, pages, auctions);
 		}
 	}
 	return;
