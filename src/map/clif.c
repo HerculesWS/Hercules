@@ -10992,16 +10992,16 @@ void clif_parse_NpcBuyListSend(int fd, struct map_session_data* sd)
 	if( sd->state.trading || !sd->npc_shopid || pc_has_permission(sd,PC_PERM_DISABLE_STORE) ) {
 		result = 1;
 	} else {
-		struct itemlist item_list = { 0 };
+		struct itemlist_id item_list = { 0 };
 		int i;
 
 		VECTOR_INIT(item_list);
 		VECTOR_ENSURE(item_list, n, 1);
 		for (i = 0; i < n; i++) {
-			struct itemlist_entry entry = { 0 };
+			struct itemlist_id_entry entry = { 0 };
 
 			entry.amount = RFIFOW(fd, 4 + 4 * i);
-			entry.id =     RFIFOW(fd, 4 + 4 * i + 2);
+			entry.nameid = RFIFOW(fd, 4 + 4 * i + 2);
 
 			VECTOR_PUSH(item_list, entry);
 		}
@@ -11044,17 +11044,17 @@ void clif_parse_NpcSellListSend(int fd,struct map_session_data *sd)
 	if (sd->state.trading || !sd->npc_shopid) {
 		fail = 1;
 	} else {
-		struct itemlist item_list = { 0 };
+		struct itemlist_idx item_list = { 0 };
 		int i;
 
 		VECTOR_INIT(item_list);
 		VECTOR_ENSURE(item_list, n, 1);
 
 		for (i = 0; i < n; i++) {
-			struct itemlist_entry entry = { 0 };
+			struct itemlist_idx_entry entry = { 0 };
 
-			entry.id = (int)RFIFOW(fd, 4 + 4 * i) - 2;
-			entry.amount =  RFIFOW(fd, 4 + 4 * i + 2);
+			entry.index = RFIFOW(fd, 4 + 4 * i) - 2;
+			entry.amount = RFIFOW(fd, 4 + 4 * i + 2);
 
 			VECTOR_PUSH(item_list, entry);
 		}
@@ -15967,7 +15967,7 @@ void clif_parse_cashshop_buy(int fd, struct map_session_data *sd)
 		int len = RFIFOW(fd,2);
 		int points;
 		int count;
-		struct itemlist item_list = { 0 };
+		struct itemlist_id item_list = { 0 };
 		int i;
 
 		if (len < 10) {
@@ -15986,10 +15986,10 @@ void clif_parse_cashshop_buy(int fd, struct map_session_data *sd)
 		VECTOR_INIT(item_list);
 		VECTOR_ENSURE(item_list, count, 1);
 		for (i = 0; i < count; i++) {
-			struct itemlist_entry entry = { 0 };
+			struct itemlist_id_entry entry = { 0 };
 
 			entry.amount = RFIFOW(fd, 10 + 4 * i);
-			entry.id =     RFIFOW(fd, 10 + 4 * i + 2); // Nameid
+			entry.nameid = RFIFOW(fd, 10 + 4 * i + 2); // Nameid
 
 			VECTOR_PUSH(item_list, entry);
 		}
@@ -17104,7 +17104,7 @@ void clif_parse_ItemListWindowSelected(int fd, struct map_session_data *sd)
 	int n = ((int)RFIFOW(fd, 2) - 12) / 4;
 	int type = RFIFOL(fd,4);
 	int flag = RFIFOL(fd,8); // Button clicked: 0 = Cancel, 1 = OK
-	struct itemlist item_list = { 0 };
+	struct itemlist_idx item_list = { 0 };
 	int i;
 
 	if( sd->state.trading || sd->npc_shopid )
@@ -17126,9 +17126,9 @@ void clif_parse_ItemListWindowSelected(int fd, struct map_session_data *sd)
 	VECTOR_INIT(item_list);
 	VECTOR_ENSURE(item_list, n, 1);
 	for (i = 0; i < n; i++) {
-		struct itemlist_entry entry = { 0 };
-		entry.id = (int)RFIFOW(fd, 12 + 4 * i) - 2; // Inventory index
-		entry.amount =  RFIFOW(fd, 12 + 4 * i + 2);
+		struct itemlist_idx_entry entry = { 0 };
+		entry.index = RFIFOW(fd, 12 + 4 * i) - 2; // Inventory index
+		entry.amount = RFIFOW(fd, 12 + 4 * i + 2);
 		VECTOR_PUSH(item_list, entry);
 	}
 
@@ -18954,7 +18954,7 @@ void clif_parse_NPCMarketClosed(int fd, struct map_session_data *sd) {
 	sd->npc_shopid = 0;
 }
 
-void clif_npc_market_purchase_ack(struct map_session_data *sd, const struct itemlist *item_list, unsigned char response)
+void clif_npc_market_purchase_ack(struct map_session_data *sd, const struct itemlist_id *item_list, unsigned char response)
 {
 #if PACKETVER >= 20131223
 	unsigned short c = 0;
@@ -18971,13 +18971,13 @@ void clif_npc_market_purchase_ack(struct map_session_data *sd, const struct item
 		int i;
 
 		for (i = 0; i < VECTOR_LENGTH(*item_list); i++) {
-			const struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
+			const struct itemlist_id_entry *entry = &VECTOR_INDEX(*item_list, i);
 			int j;
 
-			npcmarket_result.list[i].ITID = entry->id;
+			npcmarket_result.list[i].ITID = (uint16)entry->nameid;
 			npcmarket_result.list[i].qty  = entry->amount;
 
-			ARR_FIND( 0, shop_size, j, entry->id == shop[j].nameid);
+			ARR_FIND( 0, shop_size, j, entry->nameid == shop[j].nameid);
 
 			npcmarket_result.list[i].price = (j != shop_size) ? shop[j].value : 0;
 
@@ -18998,7 +18998,7 @@ void clif_parse_NPCMarketPurchase(int fd, struct map_session_data *sd)
 	const struct packet_npc_market_purchase *p = RP2PTR(fd);
 	int response = 0, i;
 	int count = (p->PacketLength - 4) / sizeof p->list[0];
-	struct itemlist item_list;
+	struct itemlist_id item_list;
 
 	Assert_retv(count >= 0 && count <= MAX_INVENTORY);
 
@@ -19006,9 +19006,9 @@ void clif_parse_NPCMarketPurchase(int fd, struct map_session_data *sd)
 	VECTOR_ENSURE(item_list, count, 1);
 
 	for (i = 0; i < count; i++) {
-		struct itemlist_entry entry = { 0 };
+		struct itemlist_id_entry entry = { 0 };
 
-		entry.id = p->list[i].ITID;
+		entry.nameid = p->list[i].ITID;
 		entry.amount = p->list[i].qty;
 
 		VECTOR_PUSH(item_list, entry);

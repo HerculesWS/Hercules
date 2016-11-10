@@ -427,13 +427,21 @@ enum ItemOptionTypes {
 	IT_OPT_MAX
 };
 
-/** Convenience item list (entry) used in various functions */
-struct itemlist_entry {
-	int id;       ///< Item ID or (inventory) index
+/** Convenience item list (entry) used in various functions (using item nameid) */
+struct itemlist_id_entry {
+	int nameid;   ///< Item ID
 	int16 amount; ///< Amount
 };
-/** Convenience item list used in various functions */
-VECTOR_STRUCT_DECL(itemlist, struct itemlist_entry);
+/** Convenience item list used in various functions (using item nameid) */
+VECTOR_STRUCT_DECL(itemlist_id, struct itemlist_id_entry);
+
+/** Convenience item list (entry) used in various functions (using item index) */
+struct itemlist_idx_entry {
+	int16 index;  ///< Inventory index
+	int16 amount; ///< Amount
+};
+/** Convenience item list used in various functions (using item index) */
+VECTOR_STRUCT_DECL(itemlist_idx, struct itemlist_idx_entry);
 
 struct item_combo {
 	struct script_code *script;

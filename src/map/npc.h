@@ -31,7 +31,8 @@
 
 /* Forward declarations */
 struct hplugin_data_store;
-struct itemlist; // map/itemdb.h
+struct itemlist_id; // map/itemdb.h
+struct itemlist_idx; // map/itemdb.h
 struct view_data;
 
 enum npc_parse_options {
@@ -244,12 +245,12 @@ struct npc_interface {
 	int (*click) (struct map_session_data *sd, struct npc_data *nd);
 	int (*scriptcont) (struct map_session_data *sd, int id, bool closing);
 	int (*buysellsel) (struct map_session_data *sd, int id, int type);
-	int (*cashshop_buylist) (struct map_session_data *sd, int points, struct itemlist *item_list);
-	int (*buylist_sub) (struct map_session_data *sd, struct itemlist *item_list, struct npc_data *nd);
+	int (*cashshop_buylist) (struct map_session_data *sd, int points, struct itemlist_id *item_list);
+	int (*buylist_sub) (struct map_session_data *sd, struct itemlist_id *item_list, struct npc_data *nd);
 	int (*cashshop_buy) (struct map_session_data *sd, int nameid, int amount, int points);
-	int (*buylist) (struct map_session_data *sd, struct itemlist *item_list);
-	int (*selllist_sub) (struct map_session_data *sd, struct itemlist *item_list, struct npc_data *nd);
-	int (*selllist) (struct map_session_data *sd, struct itemlist *item_list);
+	int (*buylist) (struct map_session_data *sd, struct itemlist_id *item_list);
+	int (*selllist_sub) (struct map_session_data *sd, struct itemlist_idx *item_list, struct npc_data *nd);
+	int (*selllist) (struct map_session_data *sd, struct itemlist_idx *item_list);
 	int (*remove_map) (struct npc_data *nd);
 	int (*unload_ev) (union DBKey key, struct DBData *data, va_list ap);
 	int (*unload_ev_label) (union DBKey key, struct DBData *data, va_list ap);
@@ -305,7 +306,7 @@ struct npc_interface {
 	void (*trader_count_funds) (struct npc_data *nd, struct map_session_data *sd);
 	bool (*trader_pay) (struct npc_data *nd, struct map_session_data *sd, int price, int points);
 	void (*trader_update) (int master);
-	int (*market_buylist) (struct map_session_data *sd, struct itemlist *item_list);
+	int (*market_buylist) (struct map_session_data *sd, struct itemlist_id *item_list);
 	bool (*trader_open) (struct map_session_data *sd, struct npc_data *nd);
 	void (*market_fromsql) (void);
 	void (*market_tosql) (struct npc_data *nd, unsigned short index);
