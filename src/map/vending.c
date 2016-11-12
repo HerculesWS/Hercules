@@ -335,53 +335,59 @@ bool vending_search(struct map_session_data* sd, unsigned short nameid)
 
 /// Searches for all items in a vending, that match given ids, price and possible cards.
 /// @return Whether or not the search should be continued.
-bool vending_searchall(struct map_session_data* sd, const struct s_search_store_search* s)
+bool vending_searchall(const struct map_session_data *sd, const struct s_search_store_search *query)
 {
-	int i, c, slot;
-	unsigned int idx, cidx;
-	struct item* it;
+	int i, idx;
 
 	nullpo_retr(false, sd);
-	nullpo_retr(false, s);
-	if( !sd->state.vending ) // not vending
+	nullpo_retr(false, query);
+
+	if (!sd->state.vending) // not vending
 		return true;
 
-	for( idx = 0; idx < s->item_count; idx++ ) {
-		ARR_FIND( 0, sd->vend_num, i, sd->status.cart[sd->vending[i].index].nameid == (short)s->itemlist[idx] );
-		if( i == sd->vend_num ) {// not found
+	for (idx = 0; idx < VECTOR_LENGTH(query->itemlist); idx++) {
+		const struct item *it;
+		ARR_FIND(0, sd->vend_num, i, sd->status.cart[sd->vending[i].index].nameid == VECTOR_INDEX(query->itemlist, idx));
+		if (i == sd->vend_num) {
+			// not found
 			continue;
 		}
 		it = &sd->status.cart[sd->vending[i].index];
 
-		if( s->min_price && s->min_price > sd->vending[i].value ) {// too low price
+		if (query->min_price && query->min_price > sd->vending[i].value) {
+			// too low price
 			continue;
 		}
 
-		if( s->max_price && s->max_price < sd->vending[i].value ) {// too high price
+		if (query->max_price && query->max_price < sd->vending[i].value) {
+			// too high price
 			continue;
 		}
 
-		if( s->card_count ) {// check cards
-			if( itemdb_isspecial(it->card[0]) ) {// something, that is not a carded
+		if (VECTOR_LENGTH(query->cardlist)) {
+			int c, cidx, slot;
+			// check cards
+
+			if (itemdb_isspecial(it->card[0])) {
+				// something, that is not a carded
 				continue;
 			}
 			slot = itemdb_slot(it->nameid);
 
-			for( c = 0; c < slot && it->card[c]; c ++ ) {
-				ARR_FIND( 0, s->card_count, cidx, s->cardlist[cidx] == it->card[c] );
-				if( cidx != s->card_count )
-				{// found
-					break;
-				}
+			for (c = 0; c < slot && it->card[c]; c++) {
+				ARR_FIND(0, VECTOR_LENGTH(query->cardlist), cidx, VECTOR_INDEX(query->cardlist, cidx) == it->card[c]);
+				if (cidx != VECTOR_LENGTH(query->cardlist))
+					break; // found
 			}
 
-			if( c == slot || !it->card[c] ) {// no card match
+			if (c == slot || !it->card[c]) {
+				// no card match
 				continue;
 			}
 		}
 
-		if( !searchstore->result(s->search_sd, sd->vender_id, sd->status.account_id, sd->message, it->nameid, sd->vending[i].amount, sd->vending[i].value, it->card, it->refine) )
-		{// result set full
+		if (!searchstore->result(query->search_sd, sd->vender_id, sd->status.account_id, sd->message, it->nameid, sd->vending[i].amount, sd->vending[i].value, it->card, it->refine)) {
+			// result set full
 			return false;
 		}
 	}

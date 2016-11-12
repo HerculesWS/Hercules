@@ -94,7 +94,7 @@ struct buyingstore_interface {
 	void (*open) (struct map_session_data* sd, int account_id);
 	void (*trade) (struct map_session_data *sd, int account_id, unsigned int buyer_id, const struct buyingstore_trade_itemlist *itemlist);
 	bool (*search) (struct map_session_data* sd, unsigned short nameid);
-	bool (*searchall) (struct map_session_data* sd, const struct s_search_store_search* s);
+	bool (*searchall) (const struct map_session_data *sd, const struct s_search_store_search *query);
 	unsigned int (*getuid) (void);
 };
 
