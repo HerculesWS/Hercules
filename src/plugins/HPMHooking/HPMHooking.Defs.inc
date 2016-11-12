@@ -330,18 +330,18 @@ typedef void (*HPMHOOK_post_bg_config_read) (void);
 #ifdef MAP_BUYINGSTORE_H /* buyingstore */
 typedef bool (*HPMHOOK_pre_buyingstore_setup) (struct map_session_data **sd, unsigned char *slots);
 typedef bool (*HPMHOOK_post_buyingstore_setup) (bool retVal___, struct map_session_data *sd, unsigned char slots);
-typedef void (*HPMHOOK_pre_buyingstore_create) (struct map_session_data **sd, int *zenylimit, unsigned char *result, const char **storename, const uint8 **itemlist, unsigned int *count);
-typedef void (*HPMHOOK_post_buyingstore_create) (struct map_session_data *sd, int zenylimit, unsigned char result, const char *storename, const uint8 *itemlist, unsigned int count);
+typedef void (*HPMHOOK_pre_buyingstore_create) (struct map_session_data **sd, int *zenylimit, unsigned char *result, const char **storename, const struct buyingstore_itemlist **itemlist);
+typedef void (*HPMHOOK_post_buyingstore_create) (struct map_session_data *sd, int zenylimit, unsigned char result, const char *storename, const struct buyingstore_itemlist *itemlist);
 typedef void (*HPMHOOK_pre_buyingstore_close) (struct map_session_data **sd);
 typedef void (*HPMHOOK_post_buyingstore_close) (struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_buyingstore_open) (struct map_session_data **sd, int *account_id);
 typedef void (*HPMHOOK_post_buyingstore_open) (struct map_session_data *sd, int account_id);
-typedef void (*HPMHOOK_pre_buyingstore_trade) (struct map_session_data **sd, int *account_id, unsigned int *buyer_id, const uint8 **itemlist, unsigned int *count);
-typedef void (*HPMHOOK_post_buyingstore_trade) (struct map_session_data *sd, int account_id, unsigned int buyer_id, const uint8 *itemlist, unsigned int count);
+typedef void (*HPMHOOK_pre_buyingstore_trade) (struct map_session_data **sd, int *account_id, unsigned int *buyer_id, const struct buyingstore_trade_itemlist **itemlist);
+typedef void (*HPMHOOK_post_buyingstore_trade) (struct map_session_data *sd, int account_id, unsigned int buyer_id, const struct buyingstore_trade_itemlist *itemlist);
 typedef bool (*HPMHOOK_pre_buyingstore_search) (struct map_session_data **sd, unsigned short *nameid);
 typedef bool (*HPMHOOK_post_buyingstore_search) (bool retVal___, struct map_session_data *sd, unsigned short nameid);
-typedef bool (*HPMHOOK_pre_buyingstore_searchall) (struct map_session_data **sd, const struct s_search_store_search **s);
-typedef bool (*HPMHOOK_post_buyingstore_searchall) (bool retVal___, struct map_session_data *sd, const struct s_search_store_search *s);
+typedef bool (*HPMHOOK_pre_buyingstore_searchall) (const struct map_session_data **sd, const struct s_search_store_search **query);
+typedef bool (*HPMHOOK_post_buyingstore_searchall) (bool retVal___, const struct map_session_data *sd, const struct s_search_store_search *query);
 typedef unsigned int (*HPMHOOK_pre_buyingstore_getuid) (void);
 typedef unsigned int (*HPMHOOK_post_buyingstore_getuid) (unsigned int retVal___);
 #endif // MAP_BUYINGSTORE_H
@@ -6568,8 +6568,8 @@ typedef void (*HPMHOOK_post_script_run_item_unequip_script) (struct map_session_
 #ifdef MAP_SEARCHSTORE_H /* searchstore */
 typedef bool (*HPMHOOK_pre_searchstore_open) (struct map_session_data **sd, unsigned int *uses, unsigned short *effect);
 typedef bool (*HPMHOOK_post_searchstore_open) (bool retVal___, struct map_session_data *sd, unsigned int uses, unsigned short effect);
-typedef void (*HPMHOOK_pre_searchstore_query) (struct map_session_data **sd, unsigned char *type, unsigned int *min_price, unsigned int *max_price, const unsigned short **itemlist, unsigned int *item_count, const unsigned short **cardlist, unsigned int *card_count);
-typedef void (*HPMHOOK_post_searchstore_query) (struct map_session_data *sd, unsigned char type, unsigned int min_price, unsigned int max_price, const unsigned short *itemlist, unsigned int item_count, const unsigned short *cardlist, unsigned int card_count);
+typedef void (*HPMHOOK_pre_searchstore_query) (struct map_session_data **sd, unsigned char *type, const struct s_search_store_search **query);
+typedef void (*HPMHOOK_post_searchstore_query) (struct map_session_data *sd, unsigned char type, const struct s_search_store_search *query);
 typedef bool (*HPMHOOK_pre_searchstore_querynext) (struct map_session_data **sd);
 typedef bool (*HPMHOOK_post_searchstore_querynext) (bool retVal___, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_searchstore_next) (struct map_session_data **sd);
@@ -7784,6 +7784,6 @@ typedef void (*HPMHOOK_pre_vending_purchase) (struct map_session_data **sd, int 
 typedef void (*HPMHOOK_post_vending_purchase) (struct map_session_data *sd, int aid, unsigned int uid, const uint8 *data, int count);
 typedef bool (*HPMHOOK_pre_vending_search) (struct map_session_data **sd, unsigned short *nameid);
 typedef bool (*HPMHOOK_post_vending_search) (bool retVal___, struct map_session_data *sd, unsigned short nameid);
-typedef bool (*HPMHOOK_pre_vending_searchall) (struct map_session_data **sd, const struct s_search_store_search **s);
-typedef bool (*HPMHOOK_post_vending_searchall) (bool retVal___, struct map_session_data *sd, const struct s_search_store_search *s);
+typedef bool (*HPMHOOK_pre_vending_searchall) (const struct map_session_data **sd, const struct s_search_store_search **query);
+typedef bool (*HPMHOOK_post_vending_searchall) (bool retVal___, const struct map_session_data *sd, const struct s_search_store_search *query);
 #endif // MAP_VENDING_H

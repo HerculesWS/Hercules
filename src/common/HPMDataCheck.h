@@ -395,6 +395,9 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#endif // MAP_BATTLE_H
 	#ifdef MAP_BUYINGSTORE_H
 		{ "buyingstore_interface", sizeof(struct buyingstore_interface), SERVER_TYPE_MAP },
+		{ "buyingstore_itemlist", sizeof(struct buyingstore_itemlist), SERVER_TYPE_MAP },
+		{ "buyingstore_trade_item", sizeof(struct buyingstore_trade_item), SERVER_TYPE_MAP },
+		{ "buyingstore_trade_itemlist", sizeof(struct buyingstore_trade_itemlist), SERVER_TYPE_MAP },
 		{ "s_buyingstore", sizeof(struct s_buyingstore), SERVER_TYPE_MAP },
 		{ "s_buyingstore_item", sizeof(struct s_buyingstore_item), SERVER_TYPE_MAP },
 	#else

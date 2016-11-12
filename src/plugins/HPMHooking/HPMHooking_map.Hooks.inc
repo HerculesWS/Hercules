@@ -3526,14 +3526,14 @@ bool HP_buyingstore_setup(struct map_session_data *sd, unsigned char slots) {
 	}
 	return retVal___;
 }
-void HP_buyingstore_create(struct map_session_data *sd, int zenylimit, unsigned char result, const char *storename, const uint8 *itemlist, unsigned int count) {
+void HP_buyingstore_create(struct map_session_data *sd, int zenylimit, unsigned char result, const char *storename, const struct buyingstore_itemlist *itemlist) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_buyingstore_create_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, int *zenylimit, unsigned char *result, const char **storename, const uint8 **itemlist, unsigned int *count);
+		void (*preHookFunc) (struct map_session_data **sd, int *zenylimit, unsigned char *result, const char **storename, const struct buyingstore_itemlist **itemlist);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_buyingstore_create_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_buyingstore_create_pre[hIndex].func;
-			preHookFunc(&sd, &zenylimit, &result, &storename, &itemlist, &count);
+			preHookFunc(&sd, &zenylimit, &result, &storename, &itemlist);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -3541,13 +3541,13 @@ void HP_buyingstore_create(struct map_session_data *sd, int zenylimit, unsigned 
 		}
 	}
 	{
-		HPMHooks.source.buyingstore.create(sd, zenylimit, result, storename, itemlist, count);
+		HPMHooks.source.buyingstore.create(sd, zenylimit, result, storename, itemlist);
 	}
 	if (HPMHooks.count.HP_buyingstore_create_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, int zenylimit, unsigned char result, const char *storename, const uint8 *itemlist, unsigned int count);
+		void (*postHookFunc) (struct map_session_data *sd, int zenylimit, unsigned char result, const char *storename, const struct buyingstore_itemlist *itemlist);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_buyingstore_create_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_buyingstore_create_post[hIndex].func;
-			postHookFunc(sd, zenylimit, result, storename, itemlist, count);
+			postHookFunc(sd, zenylimit, result, storename, itemlist);
 		}
 	}
 	return;
@@ -3604,14 +3604,14 @@ void HP_buyingstore_open(struct map_session_data *sd, int account_id) {
 	}
 	return;
 }
-void HP_buyingstore_trade(struct map_session_data *sd, int account_id, unsigned int buyer_id, const uint8 *itemlist, unsigned int count) {
+void HP_buyingstore_trade(struct map_session_data *sd, int account_id, unsigned int buyer_id, const struct buyingstore_trade_itemlist *itemlist) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_buyingstore_trade_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, int *account_id, unsigned int *buyer_id, const uint8 **itemlist, unsigned int *count);
+		void (*preHookFunc) (struct map_session_data **sd, int *account_id, unsigned int *buyer_id, const struct buyingstore_trade_itemlist **itemlist);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_buyingstore_trade_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_buyingstore_trade_pre[hIndex].func;
-			preHookFunc(&sd, &account_id, &buyer_id, &itemlist, &count);
+			preHookFunc(&sd, &account_id, &buyer_id, &itemlist);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -3619,13 +3619,13 @@ void HP_buyingstore_trade(struct map_session_data *sd, int account_id, unsigned 
 		}
 	}
 	{
-		HPMHooks.source.buyingstore.trade(sd, account_id, buyer_id, itemlist, count);
+		HPMHooks.source.buyingstore.trade(sd, account_id, buyer_id, itemlist);
 	}
 	if (HPMHooks.count.HP_buyingstore_trade_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, int account_id, unsigned int buyer_id, const uint8 *itemlist, unsigned int count);
+		void (*postHookFunc) (struct map_session_data *sd, int account_id, unsigned int buyer_id, const struct buyingstore_trade_itemlist *itemlist);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_buyingstore_trade_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_buyingstore_trade_post[hIndex].func;
-			postHookFunc(sd, account_id, buyer_id, itemlist, count);
+			postHookFunc(sd, account_id, buyer_id, itemlist);
 		}
 	}
 	return;
@@ -3657,15 +3657,15 @@ bool HP_buyingstore_search(struct map_session_data *sd, unsigned short nameid) {
 	}
 	return retVal___;
 }
-bool HP_buyingstore_searchall(struct map_session_data *sd, const struct s_search_store_search *s) {
+bool HP_buyingstore_searchall(const struct map_session_data *sd, const struct s_search_store_search *query) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if (HPMHooks.count.HP_buyingstore_searchall_pre > 0) {
-		bool (*preHookFunc) (struct map_session_data **sd, const struct s_search_store_search **s);
+		bool (*preHookFunc) (const struct map_session_data **sd, const struct s_search_store_search **query);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_buyingstore_searchall_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_buyingstore_searchall_pre[hIndex].func;
-			retVal___ = preHookFunc(&sd, &s);
+			retVal___ = preHookFunc(&sd, &query);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -3673,13 +3673,13 @@ bool HP_buyingstore_searchall(struct map_session_data *sd, const struct s_search
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.buyingstore.searchall(sd, s);
+		retVal___ = HPMHooks.source.buyingstore.searchall(sd, query);
 	}
 	if (HPMHooks.count.HP_buyingstore_searchall_post > 0) {
-		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, const struct s_search_store_search *s);
+		bool (*postHookFunc) (bool retVal___, const struct map_session_data *sd, const struct s_search_store_search *query);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_buyingstore_searchall_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_buyingstore_searchall_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd, s);
+			retVal___ = postHookFunc(retVal___, sd, query);
 		}
 	}
 	return retVal___;
@@ -69143,14 +69143,14 @@ bool HP_searchstore_open(struct map_session_data *sd, unsigned int uses, unsigne
 	}
 	return retVal___;
 }
-void HP_searchstore_query(struct map_session_data *sd, unsigned char type, unsigned int min_price, unsigned int max_price, const unsigned short *itemlist, unsigned int item_count, const unsigned short *cardlist, unsigned int card_count) {
+void HP_searchstore_query(struct map_session_data *sd, unsigned char type, const struct s_search_store_search *query) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_searchstore_query_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, unsigned char *type, unsigned int *min_price, unsigned int *max_price, const unsigned short **itemlist, unsigned int *item_count, const unsigned short **cardlist, unsigned int *card_count);
+		void (*preHookFunc) (struct map_session_data **sd, unsigned char *type, const struct s_search_store_search **query);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_searchstore_query_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_searchstore_query_pre[hIndex].func;
-			preHookFunc(&sd, &type, &min_price, &max_price, &itemlist, &item_count, &cardlist, &card_count);
+			preHookFunc(&sd, &type, &query);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -69158,13 +69158,13 @@ void HP_searchstore_query(struct map_session_data *sd, unsigned char type, unsig
 		}
 	}
 	{
-		HPMHooks.source.searchstore.query(sd, type, min_price, max_price, itemlist, item_count, cardlist, card_count);
+		HPMHooks.source.searchstore.query(sd, type, query);
 	}
 	if (HPMHooks.count.HP_searchstore_query_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, unsigned char type, unsigned int min_price, unsigned int max_price, const unsigned short *itemlist, unsigned int item_count, const unsigned short *cardlist, unsigned int card_count);
+		void (*postHookFunc) (struct map_session_data *sd, unsigned char type, const struct s_search_store_search *query);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_searchstore_query_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_searchstore_query_post[hIndex].func;
-			postHookFunc(sd, type, min_price, max_price, itemlist, item_count, cardlist, card_count);
+			postHookFunc(sd, type, query);
 		}
 	}
 	return;
@@ -85234,15 +85234,15 @@ bool HP_vending_search(struct map_session_data *sd, unsigned short nameid) {
 	}
 	return retVal___;
 }
-bool HP_vending_searchall(struct map_session_data *sd, const struct s_search_store_search *s) {
+bool HP_vending_searchall(const struct map_session_data *sd, const struct s_search_store_search *query) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if (HPMHooks.count.HP_vending_searchall_pre > 0) {
-		bool (*preHookFunc) (struct map_session_data **sd, const struct s_search_store_search **s);
+		bool (*preHookFunc) (const struct map_session_data **sd, const struct s_search_store_search **query);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_vending_searchall_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_vending_searchall_pre[hIndex].func;
-			retVal___ = preHookFunc(&sd, &s);
+			retVal___ = preHookFunc(&sd, &query);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -85250,13 +85250,13 @@ bool HP_vending_searchall(struct map_session_data *sd, const struct s_search_sto
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.vending.searchall(sd, s);
+		retVal___ = HPMHooks.source.vending.searchall(sd, query);
 	}
 	if (HPMHooks.count.HP_vending_searchall_post > 0) {
-		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, const struct s_search_store_search *s);
+		bool (*postHookFunc) (bool retVal___, const struct map_session_data *sd, const struct s_search_store_search *query);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_vending_searchall_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_vending_searchall_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd, s);
+			retVal___ = postHookFunc(retVal___, sd, query);
 		}
 	}
 	return retVal___;
