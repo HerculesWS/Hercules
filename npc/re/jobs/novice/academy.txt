@@ -123,8 +123,8 @@ int_land,58,69,5	script	Sailor#int_land	4W_SAILOR,{
 		mes("I'll let you know when we set sail~!");
 		close();
 	} else {
-		if (countitem(Lumber) >= 2) {
-			delitem(Lumber, countitem(Lumber));
+		if (countitem(Wood) >= 2) {
+			delitem(Wood, countitem(Wood));
 			completequest(21002);
 			mes("[Sailor]");
 			mes("Unbelievable, perfect! Any chance you want to join my crew?");
@@ -2646,8 +2646,8 @@ iz_ac01,100,39,5	script	Academy Receptionist#1	4_F_01,{
 				getitem(Novice_Egg_Cap, 1); // Novice_Egg_Cap
 				getitem(Novice_Knife, 1); // Novice_Knife
 				getitem(Novice_Guard, 1); // Novice_Guard
-				getitem(Criatura_Academy_Hat, 1); // Criatura_Academy_Hat
-				getitem(Criatura_Hair_Coupon, 1); // Criatura_Hair_Coupon
+				getitem(Cryptura_Academy_Hat, 1);
+				getitem(Cryptura_Hair_Coupon, 1);
 				getitem(Novice_Potion, 300); // Novice_Potion
 				next();
 				mes("[Receptionist]");
@@ -5208,7 +5208,7 @@ new_1-3,99,169,3	script	Friendly Poring#ac	4_PORING,{
 		cutin("", 255);
 		completequest(2295);
 		setquest(2296);
-		getitem(Little_Unripe_Apple, 5); // Little_Unripe_Apple
+		getitem(Unripe_Apple2, 5);
 		close();
 	} else if (questprogress(2296) == 1) {
 		if (countitem(Novice_Poring_Egg) > 0) {
@@ -6111,7 +6111,7 @@ iz_ac01,69,36,3	script	Otter Samssoon#ac	4W_SAILOR,{
 			}
 			close();
 		case 2:
-			if (!countitem(Criatura_Hair_Coupon)) {
+			if (!countitem(Cryptura_Hair_Coupon)) {
 				mes("[Otter Samssoon]");
 				mes("Come on.. Honey~");
 				mes("You should bring ^ff0000'Criatura Hair Coupon'^000000 for changing hair...");
@@ -6192,7 +6192,7 @@ iz_ac01,69,36,3	script	Otter Samssoon#ac	4W_SAILOR,{
 				mes("- Chikak, crack, crack.. -");
 				mes("- Snap, snap, snap.. Crack -");
 				next();
-				delitem(Criatura_Hair_Coupon, 1); // Criatura_Hair_Coupon
+				delitem(Cryptura_Hair_Coupon, 1);
 				cutin("", 255);
 				mes("[Otter Samssoon]");
 				mes("Oh my! Oh my! Oh my!");
