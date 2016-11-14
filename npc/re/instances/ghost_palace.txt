@@ -318,9 +318,9 @@ OnInstanceInit:
 			"Everything will be vanished...");
 		close2();
 		if (first_time_gpmission)
-			getitem Gray_Piece, 1;
+			getitem(Gray_Shard, 1);
 		if (!first_time_gpmission) {
-			getitem Gray_Piece, 2;
+			getitem(Gray_Shard, 2);
 			getexp(900000, 500000);
 			++first_time_gpmission;
 		}
@@ -705,9 +705,10 @@ OnInstanceInit:
 	mes("The cursed knight...\r"
 		"Please help me save the soul of Sakray.");
 	next;
-	setarray .@items_list, Thanatos_Sword, Thanatos_Great_Sword, Thanatos_Spear, Thanatos_Long_Spear, Thanatos_Staff, Thanatos_Two-Handed_Staff, Thanatos_Bow, 
-							Thanatos_Dagger, Thanatos_Katar, Thanatos_Knuckles, Thanatos_Hammer, Thanatos_Axe, Thanatos_Violin, Thanatos_Whip, Gray_Shield, 
-							Gray_Armor, Gray_Robe, Gray_Cloak, Boots_of_Gray, Gray_Helmet;
+	setarray(.@items_list,
+	         Thanos_Sword, Thanos_Great_Sword, Thanos_Spear, Thanos_Long_Spear, Thanos_Staff, Thanos_Rod, Thanos_Bow,
+	         Thanos_Dagger, Thanos_Katar, Thanos_Knuckle, Thanos_Hammer, Thanos_Axe, Thanos_Violin, Thanos_Whip, Shield_Of_Gray,
+	         Armor_Of_Gray, Gray_Robe, Cloak_Of_Gray, Boots_Of_Gray, Gray_Helmet);
 
 	setarray .@cost, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 100, 100, 100, 100, 100, 100;
 	.@menulist$ = "";
@@ -734,7 +735,7 @@ OnInstanceInit:
 			break;
 		case 2:
 			next;
-			if (countitem(Gray_Piece) < .@cost[.@choice]) {
+			if (countitem(Gray_Shard) < .@cost[.@choice]) {
 				mes("[King]");
 				mes("You don't have enough Gray Shards.");
 				mesf("I need %d Gray Shards to make a ^FF0000%s.^000000", .@cost[.@choice], getitemname(.@items_list[.@choice]));
@@ -755,7 +756,7 @@ OnInstanceInit:
 			mes("[King]");
 			mes("The power requires a sacrifice.\r"
 				"Please be careful...");
-			delitem Gray_Piece, .@cost[.@choice];
+			delitem(Gray_Shard, .@cost[.@choice]);
 			getitem .@items_list[.@choice], 1;
 			close();
 		}

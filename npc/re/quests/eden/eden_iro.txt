@@ -709,7 +709,7 @@ OnInit:
 	tradertype(NST_CASH);
 	sellitem Blue_Potion_Box,5;
 	sellitem F_Neuralizer_Box,400;
-	sellitem FPr_Reset_Stone_Box,100;
+	sellitem FPremium_Reset_Stone_Box,100;
 	sellitem F_Abrasive_Box10,75;
 	sellitem F_G_O_I_Box10,25;
 	sellitem Greed_Scroll_Box_30,30;
