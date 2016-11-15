@@ -65,7 +65,7 @@ enum item_itemid {
 	ITEMID_BRANCH_OF_DEAD_TREE   = 604,
 	ITEMID_ANODYNE               = 605,
 	ITEMID_ALOEBERA              = 606,
-	ITEMID_MAGNIFIER             = 611,
+	ITEMID_SPECTACLES            = 611,
 	ITEMID_POISON_BOTTLE         = 678,
 	ITEMID_EMPTY_BOTTLE          = 713,
 	ITEMID_EMPERIUM              = 714,
@@ -93,15 +93,15 @@ enum item_itemid {
 	ITEMID_IRON_ORE              = 1002,
 	ITEMID_PHRACON               = 1010,
 	ITEMID_EMVERETARCON          = 1011,
-	ITEMID_TRAP                  = 1065,
+	ITEMID_BOOBY_TRAP            = 1065,
 	ITEMID_PILEBUNCKER           = 1549,
 	ITEMID_ANGRA_MANYU           = 1599,
 	ITEMID_STRANGE_EMBRYO        = 6415,
 	ITEMID_FACE_PAINT            = 6120,
-	ITEMID_SCARLET_POINT         = 6360,
-	ITEMID_INDIGO_POINT          = 6361,
-	ITEMID_YELLOW_WISH_POINT     = 6362,
-	ITEMID_LIME_GREEN_POINT      = 6363,
+	ITEMID_SCARLET_PTS           = 6360,
+	ITEMID_INDIGO_PTS            = 6361,
+	ITEMID_YELLOW_WISH_PTS       = 6362,
+	ITEMID_LIME_GREEN_PTS        = 6363,
 	ITEMID_STONE                 = 7049,
 	ITEMID_FIRE_BOTTLE           = 7135,
 	ITEMID_ACID_BOTTLE           = 7136,
@@ -113,7 +113,7 @@ enum item_itemid {
 	ITEMID_TOKEN_OF_SIEGFRIED    = 7621,
 	ITEMID_GOLD_KEY77            = 7782,
 	ITEMID_SILVER_KEY77          = 7783,
-	ITEMID_TRAP_ALLOY            = 7940,
+	ITEMID_SPECIAL_ALLOY_TRAP    = 7940,
 	ITEMID_CATNIP_FRUIT          = 11602,
 	ITEMID_RED_POUCH_OF_SURPRISE = 12024,
 	ITEMID_BLOODY_DEAD_BRANCH    = 12103,
@@ -139,13 +139,13 @@ enum item_itemid {
 	ITEMID_MAGIC_CASTLE          = 12308,
 	ITEMID_BULGING_HEAD          = 12309,
 	ITEMID_THICK_MANUAL50        = 12312,
-	ITEMID_NOVICE_MAGNIFIER      = 12325,
-	ITEMID_ANCILLA               = 12333,
-	ITEMID_REPAIR_A              = 12392,
-	ITEMID_REPAIR_B              = 12393,
-	ITEMID_REPAIR_C              = 12394,
+	ITEMID_N_MAGNIFIER           = 12325,
+	ITEMID_ANSILA                = 12333,
+	ITEMID_REPAIRA               = 12392,
+	ITEMID_REPAIRB               = 12393,
+	ITEMID_REPAIRC               = 12394,
 	ITEMID_BLACK_THING           = 12435,
-	ITEMID_REINS_OF_MOUNT        = 12622,
+	ITEMID_BOARDING_HALTER       = 12622,
 	ITEMID_NOBLE_NAMEPLATE       = 12705,
 	ITEMID_DUN_TELE_SCROLL1      = 14527,
 	ITEMID_BATTLE_MANUAL25       = 14532,
@@ -550,7 +550,7 @@ struct item_data {
 #define itemdb_canrefine(n)   (!itemdb->search(n)->flag.no_refine)
 
 #define itemdb_is_rune(n)        (((n) >= ITEMID_NAUTHIZ && (n) <= ITEMID_HAGALAZ) || (n) == ITEMID_LUX_ANIMA)
-#define itemdb_is_element(n)     ((n) >= ITEMID_SCARLET_POINT && (n) <= ITEMID_LIME_GREEN_POINT)
+#define itemdb_is_element(n)     ((n) >= ITEMID_SCARLET_PTS && (n) <= ITEMID_LIME_GREEN_PTS)
 #define itemdb_is_spellbook(n)   ((n) >= ITEMID_MAGIC_BOOK_FB && (n) <= ITEMID_MAGIC_BOOK_DL)
 #define itemdb_is_poison(n)      ((n) >= ITEMID_POISON_PARALYSIS && (n) <= ITEMID_POISON_FATIGUE)
 #define itemid_isgemstone(n)     ((n) >= ITEMID_YELLOW_GEMSTONE && (n) <= ITEMID_BLUE_GEMSTONE)
