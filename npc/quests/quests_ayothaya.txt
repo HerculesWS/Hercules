@@ -859,7 +859,7 @@ ayothaya,253,99,3	script	Fisherman	4_M_THAIONGBAK,{
 		next;
 		switch(select("Yes.", "No, thanks.")) {
 		case 1:
-			if (countitem(Monster's_Feed) && Zeny > 49) {
+			if (countitem(Monsters_Feed) && Zeny > 49) {
 				mes "^3355FFYou cast your";
 				mes "fishing line";
 				mes "into the water.^000000";
@@ -871,7 +871,7 @@ ayothaya,253,99,3	script	Fisherman	4_M_THAIONGBAK,{
 				next;
 				mes "^3355FFYou've hooked a Phen!^000000";
 				next;
-				delitem Monster's_Feed,1;
+				delitem Monsters_Feed,1;
 				Zeny -= 50;
 				.@randfish = rand(1,100);
 				if (.@randfish > 0 && .@randfish < 40) {

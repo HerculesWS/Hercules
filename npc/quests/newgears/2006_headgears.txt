@@ -577,8 +577,8 @@ hugel,147,103,3	script	Ghenirhemin	4_M_HUGRANFA,{
 //== Hahoe Mask / Mythical Lion Mask / Bride Mask ==========
 payon,135,320,3	script	Chungwolmang	4W_M_01,{
 	if (moza_tal == 2) {
-		if (countitem(Bookclip_In_Memory) > 19 && countitem(Cactus_Needle) > 99 && countitem(Wild_Boar's_Mane) > 99) {
-			//Hahoe_Mask: Bookclip_In_Memory, Cactus_Needle, Wild_Boar's_Mane
+		if (countitem(Bookclip_In_Memory) > 19 && countitem(Cactus_Needle) > 99 && countitem(Wild_Boars_Mane) > 99) {
+			//Hahoe_Mask: Bookclip_In_Memory, Cactus_Needle, Wild_Boars_Mane
 			callsub S_MakeMask,5176,7015,20,952,100,1028,100,0,0;
 		}
 		if (countitem(Slender_Snake) > 499 && countitem(Tooth_Of_Ancient_Fish) > 1 && countitem(Orange_Dyestuffs) > 0) {

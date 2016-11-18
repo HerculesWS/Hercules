@@ -530,11 +530,11 @@ payon,179,66,3	script	Dashia	4_M_RACHMAN1,{
 		break;
 	case 2:
 		callsub L_Quest,8275;
-		if ((countitem(Bear's_Foot) > 9) && (countitem(Animal's_Skin) > 4)) {
+		if ((countitem(Bears_Foot) > 9) && (countitem(Animals_Skin) > 4)) {
 			callsub L_Reward;
 			getitem Novice_Potion,100;
-			delitem Bear's_Foot,10;
-			delitem Animal's_Skin,5;
+			delitem Bears_Foot,10;
+			delitem Animals_Skin,5;
 			getexp 1000,100;
 			erasequest 8275;
 			close;

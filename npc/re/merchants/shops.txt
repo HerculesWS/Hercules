@@ -712,16 +712,16 @@ OnInit:
 morocc,171,103,4	trader	Item Collector#moc3	4_M_03,{
 OnInit:
 	sellitem Scell;
-	sellitem Monster's_Feed;
-	sellitem Animal's_Skin;
+	sellitem Monsters_Feed;
+	sellitem Animals_Skin;
 	sellitem Bill_Of_Birds;
 }
 
 morocc,205,247,2	trader	Item Collector#moc4	4_M_03,{
 OnInit:
 	sellitem Scell;
-	sellitem Monster's_Feed;
-	sellitem Animal's_Skin;
+	sellitem Monsters_Feed;
+	sellitem Animals_Skin;
 	sellitem Bill_Of_Birds;
 }
 

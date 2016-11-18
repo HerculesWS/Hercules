@@ -2148,7 +2148,7 @@ lhz_in02,201,210,5	script	Digotz	4_M_LGTMAN,{
 		mes "my fashionable street clothes?";
 		close;
 	}
-	if ((friendship == 12 && countitem(Friend's_Diary) > 0)) {
+	if ((friendship == 12 && countitem(Friends_Diary) > 0)) {
 		mes "[Digotz]";
 		mes "Even if Benkaistein";
 		mes "did come back, I don't";
@@ -2555,7 +2555,7 @@ lighthalzen,337,232,3	script	Maku	4_M_LGTPOOR,{
 		cutin "lhz_macu05",255;
 		end;
 	}
-	if (friendship == 13 && countitem(Friend's_Diary) > 0) {
+	if (friendship == 13 && countitem(Friends_Diary) > 0) {
 		cutin "lhz_macu06",2;
 		mes "[Maku]";
 		mes "Hey, what is that? You want";
@@ -2703,7 +2703,7 @@ lighthalzen,337,232,3	script	Maku	4_M_LGTPOOR,{
 		mes "that I'm grateful or anything.";
 		cutin "lhz_macu07",255;
 		next;
-		delitem Friend's_Diary,1;
+		delitem Friends_Diary,1;
 		friendship = 14;
 		if (RENEWAL_EXP) {
 			if (BaseLevel > 90) getexp 70000,0;
@@ -3175,7 +3175,7 @@ yuno_in04,96,106,5	script	Passionate Student	4_M_SAGE_A,{
 		mes "sure to let you know~";
 		close;
 	}
-	if ((friendship == 11 && countitem(Friend's_Diary) > 0)) {
+	if ((friendship == 11 && countitem(Friends_Diary) > 0)) {
 		mes "[Benkaistein]";
 		mes "Aw nuts, this is";
 		mes "taking much longer";
@@ -3351,7 +3351,7 @@ yuno_in04,168,117,3	script	Book#lhz	HIDDEN_NPC,{
 	}
 	if (friendship == 10) {
 		friendship = 11;
-		getitem Friend's_Diary,1;
+		getitem Friends_Diary,1;
 		mes "^3355FFThis book is labeled,";
 		mes "''Benkaistein's Journal";
 		mes "Vol. 6.'' This is probably";

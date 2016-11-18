@@ -1433,7 +1433,7 @@ lou_in02,265,69,5	script	Doctor#lyang	4_F_CHNDOCTOR,{
 		close;
 	}
 	else if (ch_par == 17) {
-		if (countitem(Leopard_Talon) > 1 && countitem(Hard_Peach) > 9 && countitem(Poison_Toad's_Skin) > 4 && countitem(Browny_Root) > 19 && countitem(Germinating_Sprout) > 9 && countitem(Honey_Jar) > 4) {
+		if (countitem(Leopard_Talon) > 1 && countitem(Hard_Peach) > 9 && countitem(Poison_Toads_Skin) > 4 && countitem(Browny_Root) > 19 && countitem(Germinating_Sprout) > 9 && countitem(Honey_Jar) > 4) {
 			mes "[Hua Tuo]";
 			mes "Hm? Ah, you have returned.";
 			mes "Sorry, I was taking care of my other patients. Have you already gathered the medicines I'll need?";
@@ -1448,7 +1448,7 @@ lou_in02,265,69,5	script	Doctor#lyang	4_F_CHNDOCTOR,{
 			mes "Please take this as a token of my appreciation. It's not much, but this medicine is an old family secret. I hope it will be helpful to you in dangerous situations.";
 			delitem Leopard_Talon,2;
 			delitem Hard_Peach,10;
-			delitem Poison_Toad's_Skin,5;
+			delitem Poison_Toads_Skin,5;
 			delitem Browny_Root,20;
 			delitem Germinating_Sprout,10;
 			delitem Honey_Jar,5;

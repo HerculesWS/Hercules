@@ -93,7 +93,7 @@ malangdo,213,167,4	script	Mayomayo#mal	4_CAT_3COLOR,{
 			case 1224: callsub L_Socket,1,2; //Sword_Breaker
 			case 1225: callsub L_Socket,1,2; //Mail_Breaker
 			case 1227: callsub L_Socket,1,2; //Weeder_Knife
-			case 1229: callsub L_Socket,1,2; //Mama's_Knife
+			case 1229: callsub L_Socket,1,2; //Mamas_Knife
 			case 1232: callsub L_Socket,1,2; //Assasin_Dagger
 			case 1233: callsub L_Socket,1,2; //Exercise
 			case 1235: callsub L_Socket,1,2; //Azoth
@@ -212,7 +212,7 @@ malangdo,213,167,4	script	Mayomayo#mal	4_CAT_3COLOR,{
 			case 1466: callsub L_Socket,1,2; //Crescent_Scythe
 			case 1467: callsub L_Socket,1,2; //Bill_Guisarme
 			case 1468: callsub L_Socket,1,2; //Zephyrus
-			case 1469: callsub L_Socket,1,2; //Longinus's_Spear
+			case 1469: callsub L_Socket,1,2; //Longinuss_Spear
 			case 1470: callsub L_Socket,1,2; //Brionac
 			case 1471: callsub L_Socket,1,2; //Hell_Fire
 			case 1474: callsub L_Socket,1,2; //Gae_Bolg
@@ -264,7 +264,7 @@ malangdo,213,167,4	script	Mayomayo#mal	4_CAT_3COLOR,{
 	case 15: // Books
 		switch(@mal_equip_id) {
 			case 1557: callsub L_Socket,1,2; //Book_Of_The_Apocalypse
-			case 1558: callsub L_Socket,1,2; //Girl's_Diary
+			case 1558: callsub L_Socket,1,2; //Girls_Diary
 			case 1559: callsub L_Socket,1,2; //Legacy_Of_Dragon
 			case 1561: callsub L_Socket,1,2; //Hardback
 			case 1562: callsub L_Socket,1,2; //Bible_Of_Battlefield
@@ -311,11 +311,11 @@ malangdo,213,167,4	script	Mayomayo#mal	4_CAT_3COLOR,{
 			case 1963: callsub L_Socket,1,2; //Rapture_Rose
 			case 1964: callsub L_Socket,1,2; //Chemeti
 			case 1969: callsub L_Socket,1,2; //Bladed_Whip
-			case 1970: callsub L_Socket,1,2; //Queen's_Whip
+			case 1970: callsub L_Socket,1,2; //Queens_Whip
 			case 1972: callsub L_Socket,1,2; //Electric_Eel
 			case 1973: callsub L_Socket,1,2; //Sea_Witch_Foot
 			case 1974: callsub L_Socket,1,2; //Carrot_Whip
-			case 1976: callsub L_Socket,1,2; //Queen's_Whip_
+			case 1976: callsub L_Socket,1,2; //Queens_Whip_
 			case 1979: callsub L_Socket,1,2; //Stem_Of_Nepenthes
 			case 1984: callsub L_Socket,2,2; //Stem_Whip
 			case 1985: callsub L_Socket,4,2; //Rosebine

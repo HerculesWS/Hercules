@@ -445,7 +445,7 @@ new_5-2,100,29,4	duplicate(NvSprakkiB)	Sprakki#nv5b	4_F_01
 		mes "You've come along fine this far.";
 		mes "This is not much, but take this as a reward.";
 		job_novice_q = 7;
-		getitem N_Adventurer's_Suit,1;
+		getitem N_Adventurers_Suit,1;
 		completequest 7120;
 		close;
 	} else if (job_novice_q == 7) {
@@ -2609,7 +2609,7 @@ L_Supplies:
 	nov_3_swordman = 40;
 	getitem Cargo_Free_Ticket,20;
 	getitem Warp_Free_Ticket,30;
-	getitem N_Adventurer's_Suit,1;
+	getitem N_Adventurers_Suit,1;
 	getitem N_Cutter,1;
 	next;
 	mes "[Hanson]";

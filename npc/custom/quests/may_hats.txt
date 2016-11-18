@@ -62,10 +62,10 @@ gonryun,187,140,4	script	Yakima	4_F_EINWOMAN,{
 		next;
 		if (select("Yeah.", "Nay." != 1))
 			break;
-		if(countitem(Tiger_Mask) < 1 || countitem(Tiger_Footskin) < 10 || countitem(Tiger's_Skin) < 30 || countitem(Tiger_Skin_Panties) < 300) goto l_noitem;//Items: Tiger_Mask, Tiger_Skin, Tiger's_Footskin, Tiger_Panty,
+		if(countitem(Tiger_Mask) < 1 || countitem(Tiger_Footskin) < 10 || countitem(Tigers_Skin) < 30 || countitem(Tiger_Skin_Panties) < 300) goto l_noitem;//Items: Tiger_Mask, Tiger_Skin, Tiger_Footskin, Tiger_Panty,
 		delitem Tiger_Mask,1;//Items: Tiger_Mask,
-		delitem Tiger_Footskin,10;//Items: Tiger's_Footskin,
-		delitem Tiger's_Skin,30;//Items: Tiger_Skin,
+		delitem Tiger_Footskin,10;//Items: Tiger_Footskin,
+		delitem Tigers_Skin,30;//Items: Tiger_Skin,
 		delitem Tiger_Skin_Panties,300;//Items: Tiger_Panty,
 		getitem Lion_Mask,1;//Items: Lion_Mask,
 		mes "[Yakima]";
@@ -95,7 +95,7 @@ gonryun,187,140,4	script	Yakima	4_F_EINWOMAN,{
 		delitem Manteau_,2;//Items: Manteau_,
 		delitem Skul_Ring,3;//Items: Skull_Ring,
 		delitem Old_Manteau,10;//Items: Old_Manteau,
-		getitem Skeleton's_Cape,1;//Items: Skeleton_Manteau,
+		getitem Skeletons_Cape,1;//Items: Skeleton_Manteau,
 		mes "[Yakima]";
 		mes "Thank you very very much!";
 		mes callfunc("F_Bye");

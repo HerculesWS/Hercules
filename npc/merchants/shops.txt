@@ -53,7 +53,7 @@
 alberta_in,165,96,0	trader	Item Collector#alb	1_F_MERCHANT_02,{
 OnInit:
 	sellitem Scell;
-	sellitem Monster's_Feed;
+	sellitem Monsters_Feed;
 }
 
 alberta_in,180,15,0	trader	Armor Dealer#alb	4W_F_01,{
@@ -68,7 +68,7 @@ OnInit:
 	sellitem Manteau;
 	sellitem Glasses;
 	sellitem Sunglasses;
-	sellitem Diver's_Goggles;
+	sellitem Divers_Goggles;
 	sellitem Cap;
 	sellitem Cotton_Shirt;
 	sellitem Leather_Jacket;
@@ -507,7 +507,7 @@ ein_in01,119,26,4	trader	Weapon Dealer#ein	4_M_EINMAN,{
 OnInit:
 	sellitem Kindling_Dagger;
 	sellitem Obsidian_Dagger;
-	sellitem Fisherman's_Dagger;
+	sellitem Fishermans_Dagger;
 	sellitem Jujube_Dagger;
 }
 
@@ -707,7 +707,7 @@ OnInit:
 	sellitem Blue_Gemstone;
 	sellitem Sunglasses;
 	sellitem Garlet;
-	sellitem Monster's_Feed;
+	sellitem Monsters_Feed;
 }
 
 hu_in01,100,390,3	trader	Bow Dealer#hu	4_M_04,{
@@ -1103,7 +1103,7 @@ OnInit:
 	sellitem Scell;
 	sellitem Garlet;
 	sellitem Zargon;
-	sellitem Monster's_Feed;
+	sellitem Monsters_Feed;
 }
 
 //== Louyang ===============================================
@@ -1216,16 +1216,16 @@ OnInit:
 moc_ruins,93,53,2	trader	Item Collector#moc1	4_M_03,{
 OnInit:
 	sellitem Scell;
-	sellitem Monster's_Feed;
-	sellitem Animal's_Skin;
+	sellitem Monsters_Feed;
+	sellitem Animals_Skin;
 	sellitem Bill_Of_Birds;
 }
 
 moc_ruins,81,113,0	trader	Item Collector#moc2	4_M_03,{
 OnInit:
 	sellitem Scell;
-	sellitem Monster's_Feed;
-	sellitem Animal's_Skin;
+	sellitem Monsters_Feed;
+	sellitem Animals_Skin;
 	sellitem Bill_Of_Birds;
 }
 
@@ -1408,7 +1408,7 @@ OnInit:
 	sellitem Pumpkin;
 	sellitem Pumpkin_Head;
 	sellitem Tree_Root;
-	sellitem Goat's_Horn;
+	sellitem Goats_Horn;
 	sellitem Pet_Food;
 	sellitem Poison_Powder;
 	sellitem Single_Cell;
@@ -1480,7 +1480,7 @@ OnInit:
 prontera,64,125,0	trader	Butcher#prt	4_M_BARBER,{
 OnInit:
 	sellitem Meat;
-	sellitem Monster's_Feed;
+	sellitem Monsters_Feed;
 }
 
 prontera,58,182,0	trader	Flower Girl#prt	4W_KID,{
@@ -1701,7 +1701,7 @@ OnInit:
 	sellitem Sweet_Potato;
 	sellitem Banana;
 	sellitem Meat;
-	sellitem Monster's_Feed;
+	sellitem Monsters_Feed;
 	sellitem Pet_Food;
 	sellitem Wing_Of_Fly;
 	sellitem Wing_Of_Butterfly;

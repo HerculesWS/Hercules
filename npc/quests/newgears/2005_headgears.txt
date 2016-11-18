@@ -1650,7 +1650,7 @@ gl_prison1,97,104,1	script	Phendark#LhzHat	PHENDARK,{
 			countitem(Tail_) || countitem(Whip) || countitem(Whip_) ||
 			countitem(Lariat) || countitem(Rapture_Rose) || countitem(Chemeti) ||
 			countitem(Whip_Of_Red_Flame) || countitem(Whip_Of_Ice_Piece) || countitem(Whip_Of_Earth) ||
-			countitem(Jump_Rope) || countitem(Bladed_Whip) || countitem(Queen's_Whip) ||
+			countitem(Jump_Rope) || countitem(Bladed_Whip) || countitem(Queens_Whip) ||
 			countitem(Electric_Wire)
 		))
 			close; // no whip equipped or in inventory

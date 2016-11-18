@@ -38,7 +38,7 @@
 
 	setarray .@tame_id[0],Unripe_Apple,Orange_Juice,Rainbow_Carrot,Earthworm_The_Dude,Rotten_Fish,Sweet_Milk,Well_Dried_Bone,Singing_Flower,Dew_Laden_Moss;
 	setarray .@tame_amount[0],3,3,3,3,3,3,3,3,3;
-	setarray .@hunt_id[0],Jellopy,Jellopy,Clover,Feather_Of_Birds,Shell,Animal's_Skin,Animal's_Skin,Grasshopper's_Leg,Mushroom_Spore;
+	setarray .@hunt_id[0],Jellopy,Jellopy,Clover,Feather_Of_Birds,Shell,Animals_Skin,Animals_Skin,Grasshoppers_Leg,Mushroom_Spore;
 	setarray .@hunt_amount[0],500,600,500,500,500,500,600,500,500;
 	setarray .@mob_id[0],1002,1113,1063,1049,1011,1167,1107,1052,1014;
 	.@tame_gets = 3;
@@ -95,9 +95,9 @@
 
 	setarray .@tame_id[0],Silver_Knife_Of_Chaste,Monster_Juice,Contracts_In_Shadow,Sway_Apron,Prohibition_Red_Candle,Book_Of_Devil;
 	setarray .@tame_amount[0],1,1,1,1,1,1;
-	setarray .@hunt_id[0],Long_Hair,Solid_Shell,Petite_DiablOfs_Horn,Alice's_Apron,Queen's_Whip,Evil_Horn;
+	setarray .@hunt_id[0],Long_Hair,Solid_Shell,Petite_DiablOfs_Horn,Alices_Apron,Queens_Whip,Evil_Horn;
 	setarray .@hunt_amount[0],600,600,600,500,1,100;
-	setarray .@hunt_id2[0],0,0,0,0,Executioner's_Mitten,0;
+	setarray .@hunt_id2[0],0,0,0,0,Executioners_Mitten,0;
 	setarray .@hunt_amount2[0],0,0,0,0,20,0;
 	setarray .@mob_id[0],1170,1035,1109,1275,1200,1101;
 	.@tame_gets = 1;

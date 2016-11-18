@@ -606,7 +606,7 @@ function	script	HerculesSelfTestHelper	{
 	callsub(OnCheck, "'PORING' mob ID", PORING, 1002);
 	callsub(OnCheck, "'NV_BASIC' skill ID", NV_BASIC, 1);
 	callsub(OnCheck, "'Red_Potion' item ID", Red_Potion, 501);
-	callsub(OnCheck, "'Monster's_Feed' item ID", Monster's_Feed, 528);
+	callsub(OnCheck, "'Monsters_Feed' item ID", Monsters_Feed, 528);
 
 
 	// setd/getd

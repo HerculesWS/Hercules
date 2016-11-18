@@ -5148,7 +5148,7 @@ function	script	mora_remains	{
 1@mist,145,245,0	script	Meshir's Remains#33	CLEAR_NPC,{ callfunc "mora_remains",12245,"Meshir",5,943,4; }	//Solid_Shell
 1@mist,196,276,0	script	Noirit's Remains#33	CLEAR_NPC,{ callfunc "mora_remains",12246,"Noirit",6,549,3; }	//Nice_Sweet_Potato
 1@mist,304,327,0	script	Pajama God's Remains#33	CLEAR_NPC,{ callfunc "mora_remains",12247,"Pajama God",5,945,18; }	//Raccoon_Leaf
-1@mist,334,287,0	script	Mendel's Remains#33	CLEAR_NPC,{ callfunc "mora_remains",12248,"Mendel",7,946,31; }	//Snail's_Shell
+1@mist,334,287,0	script	Mendel's Remains#33	CLEAR_NPC,{ callfunc "mora_remains",12248,"Mendel",7,946,31; }	//Snails_Shell
 1@mist,330,177,0	script	Milebit's Remains#33	CLEAR_NPC,{ callfunc "mora_remains",12249,"Milebit",5,7008,17; }	//Stiff_Horn
 1@mist,284,84,0	script	Kunmun's Remains#33	CLEAR_NPC,{ callfunc "mora_remains",12250,"Kunmun",4,6380,20; }	//Mora_Coin
 1@mist,170,54,0	script	Tsaihokin's Remains#33	CLEAR_NPC,{ callfunc "mora_remains",12251,"Tsaihokin",2,929,5; }	//Immortal_Heart

@@ -70,7 +70,7 @@ L_MAKE:
 	mes "[Bearded Man]";
 	mes "Let's make you your beard!";
 	next;
-	if(countitem(Flexible_String) < 1 || countitem(Animal's_Skin) < 1 ||	countitem(Black_Dyestuffs) < 1 || countitem(Granpa_Beard) < 1 ||
+	if(countitem(Flexible_String) < 1 || countitem(Animals_Skin) < 1 || countitem(Black_Dyestuffs) < 1 || countitem(Granpa_Beard) < 1 ||
 	countitem(Sticky_Mucus) < 100 || countitem(Counteragent) < 1 || countitem(Crystal_Jewel_) < 1) goto L_NOITEMS;
 	delitem 7200, 1;
 	delitem 919, 1;

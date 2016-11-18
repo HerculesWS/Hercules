@@ -247,10 +247,10 @@ que_god01,98,98,4	script	Manager#G	1_F_04,{
 					else if (.@god_treasure1 < 348) getitem Helm_,1;
 					else if (.@god_treasure1 < 400) getitem Gemmed_Sallet_,1;
 					else if (.@god_treasure1 < 448) getitem Circlet_,1;
-					else if (.@god_treasure1 < 496) getitem Santa's_Hat,1;
-					else if (.@god_treasure1 < 544) getitem Big_Sis'_Ribbon,1;
+					else if (.@god_treasure1 < 496) getitem Santas_Hat,1;
+					else if (.@god_treasure1 < 544) getitem Big_Sis_Ribbon,1;
 					else if (.@god_treasure1 < 592) getitem Sweet_Gents,1;
-					else if (.@god_treasure1 < 640) getitem Oldman's_Romance,1;
+					else if (.@god_treasure1 < 640) getitem Oldmans_Romance,1;
 					else if (.@god_treasure1 < 688) getitem Western_Grace,1;
 					else if (.@god_treasure1 < 736) getitem Fillet,1;
 					else if (.@god_treasure1 < 784) getitem Holy_Bonnet,1;
@@ -287,7 +287,7 @@ que_god01,98,98,4	script	Manager#G	1_F_04,{
 					else getitem Apple_Of_Archer,1;
 				}
 				else if (.@god_treasure < 501) {
-					     if (.@god_treasure1 < 80) getitem Adventurere's_Suit_,1;
+					     if (.@god_treasure1 < 80) getitem Adventureres_Suit_,1;
 					else if (.@god_treasure1 < 160) getitem Mantle_,1;
 					else if (.@god_treasure1 < 240) getitem Coat_,1;
 					else if (.@god_treasure1 < 320) getitem Mink_Coat,1;
@@ -325,7 +325,7 @@ que_god01,98,98,4	script	Manager#G	1_F_04,{
 					else if (.@god_treasure1 < 660) getitem Clip,1;
 					else if (.@god_treasure1 < 770) getitem Rosary,1;
 					else if (.@god_treasure1 < 880) getitem Mitten_Of_Presbyter,1;
-					else getitem Matyr's_Flea_Guard,1;
+					else getitem Matyrs_Flea_Guard,1;
 				}
 				else {
 					     if (.@god_treasure1 < 150) getitem Mr_Scream,1;
@@ -360,7 +360,7 @@ que_god01,98,98,4	script	Manager#G	1_F_04,{
 					else if (.@god_treasure1 < 496) getitem Spinx_Helm,1;
 					else if (.@god_treasure1 < 544) getitem Corsair,1;
 					else if (.@god_treasure1 < 592) getitem Sweet_Gents,1;
-					else if (.@god_treasure1 < 640) getitem Oldman's_Romance,1;
+					else if (.@god_treasure1 < 640) getitem Oldmans_Romance,1;
 					else if (.@god_treasure1 < 688) getitem Western_Grace,1;
 					else if (.@god_treasure1 < 736) getitem Spinx_Helm_,1;
 					else if (.@god_treasure1 < 784) getitem Holy_Bonnet_,1;

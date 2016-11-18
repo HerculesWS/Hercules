@@ -458,7 +458,7 @@ spl_fild03,226,151,0	script	School of Fish#5::FishingHole_spl3	CLEAR_NPC,{
 		specialeffect2 EF_BUBBLE;
 		specialeffect2 EF_INVENOM;
 		.@fcast = 15;
-		if (isequipped(2550)) //Fisher's_Muffler
+		if (isequipped(2550)) //Fishers_Muffler
 			.@fcast -= 2;
 		if (isequipped(2443)) //Fish_Shoes
 			.@fcast -= 2;
@@ -6495,7 +6495,7 @@ mid_camp,283,198,5	script	Bazett Teablack#ep13bs	4_M_ALCHE_D,{
 		ep13_2_bs2 = 1;
 		ep13_2_bs3 = 1;
 		ep13_2_bs4 = 1;
-		getitem Bazett's_Order,1;
+		getitem Bazetts_Order,1;
 		changequest 11101,11102;
 		close;
 	}
@@ -6503,7 +6503,7 @@ mid_camp,283,198,5	script	Bazett Teablack#ep13bs	4_M_ALCHE_D,{
 		mes "[Bazett]";
 		mes "How's the search going?";
 		next;
-		if (countitem(Bazett's_Order) < 1) {
+		if (countitem(Bazetts_Order) < 1) {
 			mes "[Bazett]";
 			mes "!!!!!!!";
 			mes "You lost the notes!!?";
@@ -6512,7 +6512,7 @@ mid_camp,283,198,5	script	Bazett Teablack#ep13bs	4_M_ALCHE_D,{
 			mes "[Bazett]";
 			mes "What's done has been done.";
 			mes "I'll give you a new one.";
-			getitem Bazett's_Order,1;
+			getitem Bazetts_Order,1;
 			close;
 		}
 		else {
@@ -6527,7 +6527,7 @@ mid_camp,283,198,5	script	Bazett Teablack#ep13bs	4_M_ALCHE_D,{
 		next;
 		switch(select("Yes.", "Not yet...")) {
 		case 1:
-			if (countitem(Bazett's_Order) < 1) {
+			if (countitem(Bazetts_Order) < 1) {
 				mes "[Bazett]";
 				mes "!!!!!!!";
 				mes "You lost the notes!!?";
@@ -6570,7 +6570,7 @@ mid_camp,283,198,5	script	Bazett Teablack#ep13bs	4_M_ALCHE_D,{
 				mes "[Bazett]";
 				mes "Ah... this isn't much, but it's a coin that the giants use.";
 				mes "Maybe you can buy something from them with this.";
-				delitem Bazett's_Order,1;
+				delitem Bazetts_Order,1;
 				ep13_2_busut = 7;
 				if (ep13_2_bs1 == 3) getitem Manuk_Coin,1;
 				if (ep13_2_bs2 == 3) getitem Manuk_Coin,1;

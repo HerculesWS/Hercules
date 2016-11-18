@@ -777,7 +777,7 @@ aldeba_in,84,166,4	script	Kafra Service#alde	4_F_KAFRA1,{
 	mes "Due to a change in customer support policy, we no longer accept Kafra Passes. However, we are offering refunds for our customers who still possess these passes.";
 	next;
 	if (select("Sell Kafra Pass", "Alright, bye~") == 1) {
-		if (countitem(Kapra's_Pass) == 0) {
+		if (countitem(Kapras_Pass) == 0) {
 			mes "[Kafra Pavianne]";
 			mes "I'm sorry,";
 			mes "but you don't";
@@ -787,27 +787,27 @@ aldeba_in,84,166,4	script	Kafra Service#alde	4_F_KAFRA1,{
 			end;
 		}
 		else {
-			.@kafrapassmoney = countitem(Kapra's_Pass)*2000;
+			.@kafrapassmoney = countitem(Kapras_Pass)*2000;
 			mes "[Kafra Pavianne]";
 			mes "Let's see...";
-			if (countitem(Kapra's_Pass) == 1) {
+			if (countitem(Kapras_Pass) == 1) {
 				mes "You have 1 Kafra Pass.";
 				mes "You can sell that pass to us for 2000 zeny. Would you like to sell this Kafra Pass back to the Kafra Corporation?";
 			}
 			else {
-				mes "You have "+ countitem(Kapra's_Pass) +" Kafra Passes.";
+				mes "You have "+ countitem(Kapras_Pass) +" Kafra Passes.";
 				mes "If you want to sell them to us, you will receive "+ .@kafrapassmoney +" zeny. Would you like to sell these back to the Kafra Corporation?";
 			}
 			next;
 			if (select("Yes", "No") == 1) {
-				if (countitem(Kapra's_Pass) == 0) {
+				if (countitem(Kapras_Pass) == 0) {
 					mes "[Kafra Pavianne]";
 					mes "I'm sorry, but you don't have any Kafra Passes.";
 					close2;
 					cutin "",255;
 					end;
 				}
-				delitem Kapra's_Pass,countitem(Kapra's_Pass);
+				delitem Kapras_Pass,countitem(Kapras_Pass);
 				Zeny += .@kafrapassmoney;
 				mes "[Kafra Pavianne]";
 				mes "Thank you.";

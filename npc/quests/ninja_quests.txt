@@ -897,7 +897,7 @@ que_ng,72,34,3	script	Craftsman Kaibara	4_M_EINOLD,{
 				mes "If you ever happen to gather all these materials one day, feel free to come back.";
 				close;
 			}else{
-				if(countitem(Dragon_Scale) < 400 || countitem(Oridecon) < 5 || countitem(Dragon's_Skin) < 30){
+				if(countitem(Dragon_Scale) < 400 || countitem(Oridecon) < 5 || countitem(Dragons_Skin) < 30){
 					mes "[Kaibara]";
 					mes "It looks like there are not enough ingredients for me to make you a Gokurin.";
 					next;
@@ -1180,7 +1180,7 @@ que_ng,22,62,3	script	Tetsu	4_M_SEAMAN,{
 			break;
 		}
 
-		if(countitem(Steel)<50 || countitem(Harpy's_Feather)<20 || countitem(Oridecon)<5){
+		if (countitem(Steel) < 50 || countitem(Harpys_Feather) < 20 || countitem(Oridecon) < 5) {
 			mes "[Tetsu]";
 			mes "It looks like you haven't brought me enough materials to make you a Fuuma Shuriken Beneki.";
 			next;

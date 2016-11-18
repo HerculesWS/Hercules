@@ -938,7 +938,7 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 			tu_archer01 = 11;
 			close;
 		} else if(tu_archer01 == 11){
-			if (RENEWAL && countitem(Grasshopper's_Leg) < 10) {
+			if (RENEWAL && countitem(Grasshoppers_Leg) < 10) {
 				mes "Hey...";
 				mes "You gotta bring";
 				mes "^3131FF10 Grasshopper's Leg^000000 to pass my midterm! Go back to the southwest area of Prontera and get them!";
@@ -965,7 +965,7 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 				specialeffect2 EF_WIND;
 				tu_archer01 = 12;
 				if (RENEWAL)
-					delitem Grasshopper's_Leg,10;
+					delitem Grasshoppers_Leg,10;
 				getexp 1000,1000;
 				getitem Great_Bow,1;
 				close;
