@@ -1748,7 +1748,7 @@ job3_rang01,90,43,3	script	Ranger Master#jr_29	4_M_REIDIN_KURS,{
 		jobchange roclass(eaclass()|EAJL_THIRD);
 		getitem Sniper_Goggle,1;
 		getitem Green_Apple_Ring,1;
-		getitem Wolf's_Flute,1;
+		getitem Wolfs_Flute,1;
 		close;
 	}
 	mes "Hey, you look great.";

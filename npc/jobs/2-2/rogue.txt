@@ -674,8 +674,8 @@ in_rogue,376,23,1	script	Mr. Smith#rg	1_M_LIBRARYMASTER,{
 		else if (ROGUE_Q == 5) callsub S_CheckItems,508,10,948,10,935,10,940,10;
 		else if (ROGUE_Q == 6) {
 			if (Zeny > 9999 && countitem(Chrysalis) > 4 && countitem(Empty_Bottle) > 4 && countitem(Iron_Ore) > 4 &&
-			countitem(Stone_Heart) > 4 && countitem(Red_Herb) > 4 && countitem(Animal's_Skin) > 4 && countitem(Yellow_Gemstone) > 4 &&
-			countitem(Tooth_Of_Bat) > 4 && countitem(Scorpion's_Tail) > 4 && countitem(Yoyo_Tail) > 4 && countitem(Monster's_Feed) > 4 &&
+			countitem(Stone_Heart) > 4 && countitem(Red_Herb) > 4 && countitem(Animals_Skin) > 4 && countitem(Yellow_Gemstone) > 4 &&
+			countitem(Tooth_Of_Bat) > 4 && countitem(Scorpions_Tail) > 4 && countitem(Yoyo_Tail) > 4 && countitem(Monsters_Feed) > 4 &&
 			countitem(Fluff) > 4 && countitem(Clover) > 4 && countitem(Feather_Of_Birds) > 4 && countitem(Talon) > 4 &&
 			countitem(Spawn) > 4 && countitem(Raccoon_Leaf) > 4) {
 				mes "[Mr. Smith]";
@@ -686,12 +686,12 @@ in_rogue,376,23,1	script	Mr. Smith#rg	1_M_LIBRARYMASTER,{
 				delitem Iron_Ore,5;
 				delitem Stone_Heart,5;
 				delitem Red_Herb,5;
-				delitem Animal's_Skin,5;
+				delitem Animals_Skin,5;
 				delitem Yellow_Gemstone,5;
 				delitem Tooth_Of_Bat,5;
-				delitem Scorpion's_Tail,5;
+				delitem Scorpions_Tail,5;
 				delitem Yoyo_Tail,5;
-				delitem Monster's_Feed,5;
+				delitem Monsters_Feed,5;
 				delitem Fluff,5;
 				delitem Clover,5;
 				delitem Feather_Of_Birds,5;

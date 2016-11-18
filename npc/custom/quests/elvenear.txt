@@ -36,7 +36,7 @@ geffen,127,49,5	script	Elven Ears Quest	4_M_02,{
 		mes "[Elven Ears quest]";
 		mes "Good good, let me just check";
 		next;
-		if (countitem(Cat_Hairband)<1 || countitem(Elder_Pixie's_Beard)<20 || countitem(Animal's_Skin)<20) {
+		if (countitem(Cat_Hairband) < 1 || countitem(Elder_Pixies_Beard) < 20 || countitem(Animals_Skin) < 20) {
 			mes "[Elven Ears Quest]";
 			mes "You don't have the requirements.";
 			mes "Please come back another time...";

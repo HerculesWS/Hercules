@@ -194,13 +194,13 @@ prt_in,53,56,5	script	Jac	1_M_PAY_ELDER,{
 				mes "Oh, dear. You need 10 Steels...";
 				close;
 			}
-			if (countitem(Bear's_Foot) < 200) {
+			if (countitem(Bears_Foot) < 200) {
 				mes "[Jac]";
 				mes "Oh, dear. You need 200 Bear Footskins...";
 				close;
 			}
 			delitem Steel,10;//Items: Steel,
-			delitem Bear's_Foot,200;	//Items: Bears Footskin,
+			delitem Bears_Foot,200; //Items: Bears Footskin,
 			mes "[Jac]";
 			mes "Wow!! Well done! Finally you have gathered all items needed! We will make the Panda Hat for you right away. Please Wait a Moment.";
 			next;

@@ -1778,7 +1778,7 @@ niflheim,240,193,3	script	Kayron#lv4	4_M_NFDEADMAN2,{
 			}
 			else {
 				mes "this... Longinus's Spear!";
-				getitem Longinus's_Spear,1;
+				getitem Longinuss_Spear,1;
 			}
 			lv4_weapon = 0;
 			next;

@@ -17592,7 +17592,7 @@ eclage,112,40,3	script	Eclage Guard Leo#tl	4_M_FAIRYSOLDIER2,{
 			}
 		}
 		else if (questprogress(7420) == 1) {
-			if ((countitem(Pinguicula's_fruit_Jam) < 3) || (countitem(Luciola's_Honey_Jam) < 3)) {
+			if ((countitem(Pinguiculas_fruit_Jam) < 3) || (countitem(Luciolas_Honey_Jam) < 3)) {
 				mes "[Leo]";
 				mes "I need 3 jars of Pinguicula's pickled fruits and another 3 jars of Luciola's honey jam~";
 				mes "They are specialties of the base of Splendide.";
@@ -17611,8 +17611,8 @@ eclage,112,40,3	script	Eclage Guard Leo#tl	4_M_FAIRYSOLDIER2,{
 			mes "It seems like Mayor Jun has an eye for character.";
 			mes "So he is Mayor after all...";
 			next;
-			delitem Pinguicula's_fruit_Jam,3; //Pinguicula's_fruit_Jam
-			delitem Luciola's_Honey_Jam,3; //Luciola's_Honey_Jam
+			delitem Pinguiculas_fruit_Jam,3;
+			delitem Luciolas_Honey_Jam, 3;
 			completequest 7420;
 			getexp 200000,200000;
 			.@alltotal =  questprogress(7420) + questprogress(7419) + questprogress(7418);

@@ -228,7 +228,7 @@ N_QuestStart:
 ///////Job list 3///////
 //3-1;
 moc_fild04,208,322,6	script	Clark	1_M_YOUNGKNIGHT,{
-	if (three_qset == 1 && countitem(Elder_Pixie's_Beard) > 29) goto N_QuestComp;
+	if (three_qset == 1 && countitem(Elder_Pixies_Beard) > 29) goto N_QuestComp;
 	if (three_qset == 1) goto N_QuestStart;
 	mes "[Clark]";
 	mes "Love to chat, but I'm waiting for someone.";
@@ -456,7 +456,7 @@ N_QuestStart:
 ///////Job list 5///////
 //5-1;
 prt_maze01,18,184,6	script	Lithin#01	4_M_CRU_OLD,{
-	if (five_qset == 1 && countitem(Wild_Boar's_Mane) > 14) goto N_QuestComp;
+	if (five_qset == 1 && countitem(Wild_Boars_Mane) > 14) goto N_QuestComp;
 	if (five_qset == 1) goto N_QuestStart;
 	mes "[Lithin]";
 	mes "Well hello.";
@@ -975,7 +975,7 @@ N_QuestStart:
 }
 //10-2;
 pay_fild10,145,252,6	script	Man#02	2_M_DYEINGER,{
-	if (ten_qset == 2 && countitem(Tiger's_Skin) > 0) goto N_QuestComp;
+	if (ten_qset == 2 && countitem(Tigers_Skin) > 0) goto N_QuestComp;
 	if (ten_qset == 2) goto N_QuestStart;
 	mes "[Man]";
 	mes "Sorry I'm waiting for someone, you will have to come back later";
@@ -995,12 +995,12 @@ N_QuestStart:
 	mes "[Man]";
 	mes "Tony the Tiger is on Crack! He must be stoped, KILL HIM!";
 	mes " ";
-	mes "Bring me back 1 Tiger's_Skin!";
+	mes "Bring me back 1 Tiger's Skin!";
 	close;
 }
 //10-3;
 cmd_fild08,328,349,4	script	Caral	2_M_SWORDMASTER,{
-	if (ten_qset == 3 && countitem(Thin_N'_Long_Tongue) > 0) goto N_QuestComp;
+	if (ten_qset == 3 && countitem(Thin_N_Long_Tongue) > 0) goto N_QuestComp;
 	if (ten_qset == 3) goto N_QuestStart;
 	mes "[Caral]";
 	mes "Sorry I'm waiting for someone, you will have to come back later.";

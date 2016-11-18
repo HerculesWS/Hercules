@@ -2450,7 +2450,7 @@ glast_01,212,273,4	script	Hugin's Magic Master	1_F_01,{ // Custom text due to of
 				case MHP2:
 				case Attack_Delay_4:
 				case Luck6:
-					.@enchant = callfunc("F_Rand", Bear's_Power, Runaway_Magic, Speed_Of_Light, Muscle_Fool, Hawkeye, Lucky_Day);
+					.@enchant = callfunc("F_Rand", Bears_Power, Runaway_Magic, Speed_Of_Light, Muscle_Fool, Hawkeye, Lucky_Day);
 					mes("[Hugin's Magic Master]"); // Custom text
 					mes("Seems you already completed the best upgrade option in your 4th slot. For that I can give a random bonus effect to your 3rd slot. And of course, with certain payment...");
 					next;

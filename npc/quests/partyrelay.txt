@@ -2015,7 +2015,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "you've already forgotten.";
 		close;
 	}
-	if ((party_relay == 19) && (.@relaytime >= 14) && (.@relaytime < 17) && (countitem(Thin_N'_Long_Tongue) > 9) && (countitem(Leopard_Talon) > 9) && (countitem(Poison_Toad's_Skin) > 9)) {
+	if ((party_relay == 19) && (.@relaytime >= 14) && (.@relaytime < 17) && (countitem(Thin_N_Long_Tongue) > 9) && (countitem(Leopard_Talon) > 9) && (countitem(Poison_Toads_Skin) > 9)) {
 		mes "[Bafhail]";
 		mes "Well, it looks like you came";
 		mes "at the right time and brought";
@@ -2023,9 +2023,9 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "Please take your next ticket";
 		mes "and this small reward for you.";
 		next;
-		delitem Thin_N'_Long_Tongue,10;
+		delitem Thin_N_Long_Tongue,10;
 		delitem Leopard_Talon,10;
-		delitem Poison_Toad's_Skin,10;
+		delitem Poison_Toads_Skin,10;
 		party_relay = 20;
 		getitem Mission_Certificate7,1;
 		getitem Leaf_Of_Yggdrasil,2;
@@ -2039,7 +2039,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "I'll see you later, then.";
 		close;
 	}
-	else if ((party_relay == 19) && (.@relaytime >= 18) && (.@relaytime < 21) && (countitem(Thin_N'_Long_Tongue) > 9) && (countitem(Leopard_Talon) > 9) && (countitem(Poison_Toad's_Skin) > 9)) {
+	else if ((party_relay == 19) && (.@relaytime >= 18) && (.@relaytime < 21) && (countitem(Thin_N_Long_Tongue) > 9) && (countitem(Leopard_Talon) > 9) && (countitem(Poison_Toads_Skin) > 9)) {
 		mes "[Bafhail]";
 		mes "Well, it looks like you came";
 		mes "at the right time and brought";
@@ -2047,9 +2047,9 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "Please take your next ticket";
 		mes "and this small reward for you.";
 		next;
-		delitem Thin_N'_Long_Tongue,10;
+		delitem Thin_N_Long_Tongue,10;
 		delitem Leopard_Talon,10;
-		delitem Poison_Toad's_Skin,10;
+		delitem Poison_Toads_Skin,10;
 		party_relay = 20;
 		getitem Mission_Certificate7,1;
 		getitem Leaf_Of_Yggdrasil,2;
@@ -2310,7 +2310,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "Standard Time. Don't forget!";
 		close;
 	}
-	if ((party_relay == 7) && ((.@relaytime >= 8) && (.@relaytime < 11)) && (countitem(Porcupine_Spike) > 9) && (countitem(Elder_Pixie's_Beard) > 9) && (countitem(Fish_Tail) > 9)) {
+	if ((party_relay == 7) && ((.@relaytime >= 8) && (.@relaytime < 11)) && (countitem(Porcupine_Spike) > 9) && (countitem(Elder_Pixies_Beard) > 9) && (countitem(Fish_Tail) > 9)) {
 		mes "[Bafhail]";
 		mes "Well, it looks like you came";
 		mes "at the right time and brought";
@@ -2319,7 +2319,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "and this small reward for you.";
 		next;
 		delitem Porcupine_Spike,10;
-		delitem Elder_Pixie's_Beard,10;
+		delitem Elder_Pixies_Beard,10;
 		delitem Fish_Tail,10;
 		party_relay = 9;
 		getitem Mission_Certificate3,1;
@@ -2332,7 +2332,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "Good luck on your travels~";
 		close;
 	}
-	else if ((party_relay == 7) && ((.@relaytime >= 21) && (countitem(Porcupine_Spike) > 9) && (countitem(Elder_Pixie's_Beard) > 9) && (countitem(Fish_Tail) > 9))) {
+	else if ((party_relay == 7) && ((.@relaytime >= 21) && (countitem(Porcupine_Spike) > 9) && (countitem(Elder_Pixies_Beard) > 9) && (countitem(Fish_Tail) > 9))) {
 		mes "[Bafhail]";
 		mes "Well, it looks like you came";
 		mes "at the right time and brought";
@@ -2341,7 +2341,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "and this small reward for you.";
 		next;
 		delitem Porcupine_Spike,10;
-		delitem Elder_Pixie's_Beard,10;
+		delitem Elder_Pixies_Beard,10;
 		delitem Fish_Tail,10;
 		party_relay = 9;
 		getitem Mission_Certificate3,1;
