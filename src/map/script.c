@@ -771,7 +771,7 @@ const char* skip_word(const char* p)
 			p += ( p[1] == '@' ? 2 : 1 ); break;
 	}
 
-	while( ISALNUM(*p) || *p == '_' || *p == '\'' )
+	while (ISALNUM(*p) || *p == '_')
 		++p;
 
 	// postfix
