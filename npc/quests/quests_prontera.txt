@@ -186,7 +186,7 @@ prt_in,38,108,4	script	Teacher	1_M_INNKEEPER,{
 				delitem Hinalle,1;
 				delitem Aloe,1;
 				delitem Ment,1;
-				getitem 5012,1;	//Ph.D_Hat
+				getitem(Ph_D_Hat, 1);
 				mes "[Teacher]";
 				mes "I really really appreciate you what you've done for me. I'm truly grateful. I will give my precious item to you as promised.";
 				next;
