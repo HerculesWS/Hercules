@@ -691,19 +691,22 @@ static const char *test_libconfig_setting_names(void)
 	struct config_t config;
 	int32 i32;
 	const char *input = "/* Test File */\n"
-		"Setting'with'apostrophes: 1;\n"
+		"1st_setting_with_numbers: 1;\n"
 		"Setting.with.periods: 2;\n"
 		"Setting: {\n"
 		"    with: {\n"
 		"        periods: 3;\n"
+		"        2nested: {\n"
+		"            numbers1: 4;\n"
+		"        };\n"
 		"    };\n"
 		"    nested: {\n"
 		"        in: {\n"
-		"            groups: 4;\n"
+		"            groups: 5;\n"
 		"        };\n"
 		"    };\n"
 		"};\n"
-		"1st_setting_with_numbers: 5;\n"
+		"Setting_with_2_numbers_000: 6;\n"
 		"/* End test file */\n";
 
 	libconfig->init(&config);
@@ -713,9 +716,9 @@ static const char *test_libconfig_setting_names(void)
 		return "Unable to parse configuration.";
 	}
 
-	if (libconfig->lookup_int(&config, "Setting'with'apostrophes", &i32) == CONFIG_FALSE || i32 != 1) {
+	if (libconfig->lookup_int(&config, "1st_setting_with_numbers", &i32) == CONFIG_FALSE || i32 != 1) {
 		libconfig->destroy(&config);
-		return "Setting'with'apostrophes failed.";
+		return "1st_setting_with_numbers failed.";
 	}
 
 	if (libconfig->lookup_int(&config, "Setting.with.periods", &i32) == CONFIG_FALSE || i32 != 2) {
@@ -728,19 +731,24 @@ static const char *test_libconfig_setting_names(void)
 		return "Setting:with:periods failed.";
 	}
 
-	if (libconfig->lookup_int(&config, "Setting:nested:in:groups", &i32) == CONFIG_FALSE || i32 != 4) {
+	if (libconfig->lookup_int(&config, "Setting/with/2nested/numbers1", &i32) == CONFIG_FALSE || i32 != 4) {
+		libconfig->destroy(&config);
+		return "Setting/with/2nested/numbers1 failed.";
+	}
+
+	if (libconfig->lookup_int(&config, "Setting:nested:in:groups", &i32) == CONFIG_FALSE || i32 != 5) {
 		libconfig->destroy(&config);
 		return "Setting:nested:in:groups failed.";
 	}
 
-	if (libconfig->lookup_int(&config, "Setting/nested/in/groups", &i32) == CONFIG_FALSE || i32 != 4) {
+	if (libconfig->lookup_int(&config, "Setting/nested/in/groups", &i32) == CONFIG_FALSE || i32 != 5) {
 		libconfig->destroy(&config);
 		return "Setting/nested/in/groups failed.";
 	}
 
-	if (libconfig->lookup_int(&config, "1st_setting_with_numbers", &i32) == CONFIG_FALSE || i32 != 5) {
+	if (libconfig->lookup_int(&config, "Setting_with_2_numbers_000", &i32) == CONFIG_FALSE || i32 != 6) {
 		libconfig->destroy(&config);
-		return "1st_setting_with_numbers failed.";
+		return "Setting_with_2_numbers_000 failed.";
 	}
 
 	libconfig->destroy(&config);
