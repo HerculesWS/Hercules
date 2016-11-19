@@ -47,7 +47,7 @@ LOGIN_PH = lclif.p.h
 
 HAVE_MYSQL=@HAVE_MYSQL@
 ifeq ($(HAVE_MYSQL),yes)
-	LOGIN_SERVER_SQL_DEPENDS=$(LOGIN_OBJ) $(COMMON_D)/obj_sql/common_sql.a $(COMMON_D)/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ $(SYSINFO_INC))
+	LOGIN_SERVER_SQL_DEPENDS=$(LOGIN_OBJ) $(COMMON_D)/obj_all/common.a $(COMMON_D)/obj_sql/common_sql.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) $(SYSINFO_INC)
 else
 	LOGIN_SERVER_SQL_DEPENDS=needs_mysql
 endif
@@ -106,8 +106,8 @@ login-server: ../../login-server@EXEEXT@
 
 ../../login-server@EXEEXT@: $(LOGIN_SERVER_SQL_DEPENDS) Makefile
 	@echo "	LD	$(notdir $@)"
-	@$(CC) @STATIC@ @LDFLAGS@ -o ../../login-server@EXEEXT@ $(LOGIN_OBJ) $(COMMON_D)/obj_sql/common_sql.a \
-		$(COMMON_D)/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @MYSQL_LIBS@
+	@$(CC) @STATIC@ @LDFLAGS@ -o ../../login-server@EXEEXT@ $(LOGIN_OBJ) $(COMMON_D)/obj_all/common.a $(COMMON_D)/obj_sql/common_sql.a \
+		$(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @MYSQL_LIBS@
 
 # missing object files
 $(COMMON_D)/obj_all/common.a:

@@ -57,7 +57,7 @@ MAP_PH =
 
 HAVE_MYSQL=@HAVE_MYSQL@
 ifeq ($(HAVE_MYSQL),yes)
-	MAP_SERVER_SQL_DEPENDS=$(MAP_OBJ) $(COMMON_D)/obj_sql/common_sql.a $(COMMON_D)/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ $(SYSINFO_INC))
+	MAP_SERVER_SQL_DEPENDS=$(MAP_OBJ) $(COMMON_D)/obj_all/common.a $(COMMON_D)/obj_sql/common_sql.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) $(SYSINFO_INC)
 else
 	MAP_SERVER_SQL_DEPENDS=needs_mysql
 endif
@@ -116,8 +116,8 @@ map-server: ../../map-server@EXEEXT@
 
 ../../map-server@EXEEXT@: $(MAP_SERVER_SQL_DEPENDS) Makefile
 	@echo "	LD	$(notdir $@)"
-	@$(CC) @STATIC@ @LDFLAGS@ -o ../../map-server@EXEEXT@ $(MAP_OBJ) $(COMMON_D)/obj_sql/common_sql.a \
-		$(COMMON_D)/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @MYSQL_LIBS@
+	@$(CC) @STATIC@ @LDFLAGS@ -o ../../map-server@EXEEXT@ $(MAP_OBJ) $(COMMON_D)/obj_all/common.a $(COMMON_D)/obj_sql/common_sql.a \
+		$(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @MYSQL_LIBS@
 
 # missing object files
 $(COMMON_D)/obj_all/common.a:
