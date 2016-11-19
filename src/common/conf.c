@@ -373,6 +373,80 @@ int config_lookup_mutable_string(const struct config_t *config, const char *name
 	return CONFIG_FALSE;
 }
 
+/**
+ * Wrapper for config_setting_get_int64() using defined-size variables
+ *
+ * @see config_setting_get_int64_real()
+ */
+int64 config_setting_get_int64_real(const struct config_setting_t *setting)
+{
+	return (int64)config_setting_get_int64(setting);
+}
+
+/**
+ * Wrapper for config_setting_lookup_int64() using defined-size variables
+ *
+ * @see config_setting_lookup_int64()
+ */
+int config_setting_lookup_int64_real(const struct config_setting_t *setting, const char *name, int64 *value)
+{
+	long long int lli = 0;
+
+	if (config_setting_lookup_int64(setting, name, &lli) != CONFIG_TRUE)
+		return CONFIG_FALSE;
+
+	*value = (int64)lli;
+
+	return CONFIG_TRUE;
+}
+
+/**
+ * Wrapper for config_setting_set_int64() using defined-size variables
+ *
+ * @see config_setting_set_int64()
+ */
+int config_setting_set_int64_real(struct config_setting_t *setting, int64 value)
+{
+	return config_setting_set_int64(setting, (long long int)value);
+}
+
+/**
+ * Wrapper for config_setting_get_int64_elem() using defined-size variables
+ *
+ * @see config_setting_get_int64_elem()
+ */
+int64 config_setting_get_int64_elem_real(const struct config_setting_t *setting, int idx)
+{
+	return (int64)config_setting_get_int64_elem(setting, idx);
+}
+
+/**
+ * Wrapper for config_setting_set_int64_elem() using defined-size variables
+ *
+ * @see config_setting_set_int64_elem()
+ */
+struct config_setting_t *config_setting_set_int64_elem_real(struct config_setting_t *setting, int idx, int64 value)
+{
+	return config_setting_set_int64_elem(setting, idx, (long long int)value);
+}
+
+/**
+ * Wrapper for config_lookup_int64() using defined-size variables
+ *
+ * @see config_lookup_int64()
+ */
+int config_lookup_int64_real(const struct config_t *config, const char *filepath, int64 *value)
+{
+	long long int lli = 0;
+
+	if (config_lookup_int64(config, filepath, &lli) != CONFIG_TRUE)
+		return CONFIG_FALSE;
+
+	*value = (int64)lli;
+
+	return CONFIG_TRUE;
+}
+
 void libconfig_defaults(void) {
 	libconfig = &libconfig_s;
 
@@ -393,20 +467,20 @@ void libconfig_defaults(void) {
 	libconfig->destroy = config_destroy;
 	/* */
 	libconfig->setting_get_int = config_setting_get_int;
-	libconfig->setting_get_int64 = config_setting_get_int64;
+	libconfig->setting_get_int64 = config_setting_get_int64_real;
 	libconfig->setting_get_float = config_setting_get_float;
 	libconfig->setting_get_bool = config_setting_get_bool;
 	libconfig->setting_get_string = config_setting_get_string;
 	/* */
 	libconfig->setting_lookup = config_setting_lookup;
 	libconfig->setting_lookup_int = config_setting_lookup_int;
-	libconfig->setting_lookup_int64 = config_setting_lookup_int64;
+	libconfig->setting_lookup_int64 = config_setting_lookup_int64_real;
 	libconfig->setting_lookup_float = config_setting_lookup_float;
 	libconfig->setting_lookup_bool = config_setting_lookup_bool;
 	libconfig->setting_lookup_string = config_setting_lookup_string;
 	/* */
 	libconfig->setting_set_int = config_setting_set_int;
-	libconfig->setting_set_int64 = config_setting_set_int64;
+	libconfig->setting_set_int64 = config_setting_set_int64_real;
 	libconfig->setting_set_float = config_setting_set_float;
 	libconfig->setting_set_bool = config_setting_set_bool;
 	libconfig->setting_set_string = config_setting_set_string;
@@ -415,13 +489,13 @@ void libconfig_defaults(void) {
 	libconfig->setting_get_format = config_setting_get_format;
 	/* */
 	libconfig->setting_get_int_elem = config_setting_get_int_elem;
-	libconfig->setting_get_int64_elem = config_setting_get_int64_elem;
+	libconfig->setting_get_int64_elem = config_setting_get_int64_elem_real;
 	libconfig->setting_get_float_elem = config_setting_get_float_elem;
 	libconfig->setting_get_bool_elem = config_setting_get_bool_elem;
 	libconfig->setting_get_string_elem = config_setting_get_string_elem;
 	/* */
 	libconfig->setting_set_int_elem = config_setting_set_int_elem;
-	libconfig->setting_set_int64_elem = config_setting_set_int64_elem;
+	libconfig->setting_set_int64_elem = config_setting_set_int64_elem_real;
 	libconfig->setting_set_float_elem = config_setting_set_float_elem;
 	libconfig->setting_set_bool_elem = config_setting_set_bool_elem;
 	libconfig->setting_set_string_elem = config_setting_set_string_elem;
@@ -441,7 +515,7 @@ void libconfig_defaults(void) {
 	libconfig->lookup = config_lookup;
 	/* */
 	libconfig->lookup_int = config_lookup_int;
-	libconfig->lookup_int64 = config_lookup_int64;
+	libconfig->lookup_int64 = config_lookup_int64_real;
 	libconfig->lookup_float = config_lookup_float;
 	libconfig->lookup_bool = config_lookup_bool;
 	libconfig->lookup_string = config_lookup_string;

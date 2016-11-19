@@ -366,8 +366,8 @@ static const char *test_libconfig_setting_get(void)
 
 static const char *test_libconfig_set(void)
 {
-	//int (*setting_set_int) (struct config_setting_t *setting ,int value);
-	//int (*setting_set_int64) (struct config_setting_t *setting, long long value);
+	//int (*setting_set_int) (struct config_setting_t *setting, int value);
+	//int (*setting_set_int64) (struct config_setting_t *setting, int64 value);
 	//int (*setting_set_float) (struct config_setting_t *setting, double value);
 	//int (*setting_set_bool) (struct config_setting_t *setting, int value);
 	//int (*setting_set_string) (struct config_setting_t *setting, const char *value);
@@ -818,7 +818,7 @@ int do_init(int argc, char **argv)
 	//int (*setting_set_format) (struct config_setting_t *setting, short format);
 	//short (*setting_get_format) (const struct config_setting_t *setting);
 	//struct config_setting_t * (*setting_set_int_elem) (struct config_setting_t *setting, int idx, int value);
-	//struct config_setting_t * (*setting_set_int64_elem) (struct config_setting_t *setting, int idx, long long value);
+	//struct config_setting_t * (*setting_set_int64_elem) (struct config_setting_t *setting, int idx, int64 value);
 	//struct config_setting_t * (*setting_set_float_elem) (struct config_setting_t *setting, int idx, double value);
 	//struct config_setting_t * (*setting_set_bool_elem) (struct config_setting_t *setting, int idx, int value);
 	//struct config_setting_t * (*setting_set_string_elem) (struct config_setting_t *setting, int idx, const char *value);

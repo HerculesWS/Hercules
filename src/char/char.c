@@ -5940,7 +5940,7 @@ bool char_config_read_player_new(const char *filename, const struct config_t *co
 #else
 	const char *start_point_setting = "start_point_pre";
 #endif
-	long long int i64 = 0; // TODO: Temporary until the signature of libconfig->setting_lookup_int64 is changed to take a defined-size int (int64)
+	int64 i64 = 0;
 
 	nullpo_retr(false, filename);
 	nullpo_retr(false, config);
