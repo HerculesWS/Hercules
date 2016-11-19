@@ -88,7 +88,7 @@ static unsigned long long fromhex(const char *s)
 
 true              [Tt][Rr][Uu][Ee]
 false             [Ff][Aa][Ll][Ss][Ee]
-name              [A-Za-z0-9\*][-A-Za-z0-9_\*'.]*
+name              [A-Za-z0-9\*][-A-Za-z0-9_\*.]*
 integer           [-+]?[0-9]+
 integer64         [-+]?[0-9]+L(L)?
 hex               0[Xx][0-9A-Fa-f]+
