@@ -62,6 +62,24 @@ function run_server {
 	fi
 }
 
+function run_test {
+	echo "Running: test_$1"
+	./test_$1 2>runlog.txt
+	export errcode=$?
+	export teststr=$(cat runlog.txt)
+	if [[ -n "${teststr}" ]]; then
+		echo "Errors found in running test $1."
+		cat runlog.txt
+		aborterror "Errors found in running test $1."
+	else
+		echo "No errors found for test $1."
+	fi
+	if [ ${errcode} -ne 0 ]; then
+		echo "test $1 terminated with exit code ${errcode}"
+		aborterror "Test failed"
+	fi
+}
+
 # Defaults
 DBNAME=ragnarok
 DBUSER=ragnarok
@@ -105,6 +123,7 @@ case "$MODE" in
 		make -j3 || aborterror "Build failed."
 		make plugins -j3 || aborterror "Build failed."
 		make plugin.script_mapquit -j3 || aborterror "Build failed."
+		make test || aborterror "Build failed."
 		;;
 	test)
 		cat > conf/travis_sql_connection.conf << EOF
@@ -153,6 +172,9 @@ EOF
 		ARGS="--load-script npc/dev/test.txt "
 		ARGS="--load-plugin script_mapquit $ARGS --load-script npc/dev/ci_test.txt"
 		PLUGINS="--load-plugin HPMHooking --load-plugin sample"
+		echo "run tests"
+		# run_test spinlock # Not running the spinlock test for the time being (too time consuming)
+		run_test libconfig
 		echo "run all servers without HPM"
 		run_server ./login-server
 		run_server ./char-server

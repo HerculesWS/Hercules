@@ -51,7 +51,7 @@ CHAR_PH =
 
 HAVE_MYSQL=@HAVE_MYSQL@
 ifeq ($(HAVE_MYSQL),yes)
-	CHAR_SERVER_SQL_DEPENDS=$(CHAR_OBJ) $(COMMON_D)/obj_sql/common_sql.a $(COMMON_D)/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) $(SYSINFO_INC)
+	CHAR_SERVER_SQL_DEPENDS=$(CHAR_OBJ) $(COMMON_D)/obj_all/common.a $(COMMON_D)/obj_sql/common_sql.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) $(SYSINFO_INC)
 else
 	CHAR_SERVER_SQL_DEPENDS=needs_mysql
 endif
@@ -110,8 +110,8 @@ char-server: ../../char-server@EXEEXT@
 
 ../../char-server@EXEEXT@: $(CHAR_SERVER_SQL_DEPENDS) Makefile
 	@echo "	LD	$(notdir $@)"
-	@$(CC) @STATIC@ @LDFLAGS@ -o ../../char-server@EXEEXT@ $(CHAR_OBJ) $(COMMON_D)/obj_sql/common_sql.a \
-		$(COMMON_D)/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @MYSQL_LIBS@
+	@$(CC) @STATIC@ @LDFLAGS@ -o ../../char-server@EXEEXT@ $(CHAR_OBJ) $(COMMON_D)/obj_all/common.a $(COMMON_D)/obj_sql/common_sql.a \
+		$(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @MYSQL_LIBS@
 
 # missing object files
 $(COMMON_D)/obj_all/common.a:

@@ -86,6 +86,8 @@ static const char *test_libconfig_init_destroy(void)
 static const char *test_libconfig_read_file_src(void)
 {
 	struct config_t config;
+	libconfig->init(&config);
+
 #define FILENAME "src/test/libconfig/test.conf"
 	if (libconfig->read_file_src(&config, FILENAME) == CONFIG_FALSE) {
 		libconfig->destroy(&config);
@@ -108,6 +110,9 @@ static const char *test_libconfig_read(void)
 	if (!fp) {
 		return "File not found: '" FILENAME "'.";
 	}
+
+	libconfig->init(&config);
+
 	if (libconfig->read(&config, fp) == CONFIG_FALSE) {
 		fclose(fp);
 		libconfig->destroy(&config);
@@ -154,6 +159,8 @@ static const char *test_libconfig_write_file(void)
 static const char *test_libconfig_read_string(void)
 {
 	struct config_t config;
+	libconfig->init(&config);
+
 	if (libconfig->read_string(&config, "") == CONFIG_FALSE) {
 		libconfig->destroy(&config);
 		return "Unable to read from string.";
@@ -179,6 +186,8 @@ static const char *test_libconfig_syntax(void)
 		"Setting_Group: { };\n"
 		"Setting_List: ( );\n"
 		"/* End test file */\n";
+
+	libconfig->init(&config);
 
 	if (libconfig->read_string(&config, input) == CONFIG_FALSE) {
 		libconfig->destroy(&config);
@@ -215,6 +224,8 @@ static const char *test_libconfig_lookup(void)
 		"Setting_Group: { };\n"
 		"Setting_List: ( );\n"
 		"/* End test file */\n";
+
+	libconfig->init(&config);
 
 	if (libconfig->read_string(&config, input) == CONFIG_FALSE) {
 		libconfig->destroy(&config);
@@ -277,6 +288,8 @@ static const char *test_libconfig_setting_get(void)
 		"Setting_Group: { };\n"
 		"Setting_List: ( );\n"
 		"/* End test file */\n";
+
+	libconfig->init(&config);
 
 	if (libconfig->read_string(&config, input) == CONFIG_FALSE) {
 		libconfig->destroy(&config);
@@ -366,8 +379,8 @@ static const char *test_libconfig_setting_get(void)
 
 static const char *test_libconfig_set(void)
 {
-	//int (*setting_set_int) (struct config_setting_t *setting ,int value);
-	//int (*setting_set_int64) (struct config_setting_t *setting, long long value);
+	//int (*setting_set_int) (struct config_setting_t *setting, int value);
+	//int (*setting_set_int64) (struct config_setting_t *setting, int64 value);
 	//int (*setting_set_float) (struct config_setting_t *setting, double value);
 	//int (*setting_set_bool) (struct config_setting_t *setting, int value);
 	//int (*setting_set_string) (struct config_setting_t *setting, const char *value);
@@ -391,6 +404,8 @@ static const char *test_libconfig_setting_lookup(void)
 		"Setting_Group: { };\n"
 		"Setting_List: ( );\n"
 		"/* End test file */\n";
+
+	libconfig->init(&config);
 
 	if (libconfig->read_string(&config, input) == CONFIG_FALSE) {
 		libconfig->destroy(&config);
@@ -441,6 +456,8 @@ static const char *test_libconfig_setting_types(void)
 		"Setting_Group: { };\n"
 		"Setting_List: ( );\n"
 		"/* End test file */\n";
+
+	libconfig->init(&config);
 
 	if (libconfig->read_string(&config, input) == CONFIG_FALSE) {
 		libconfig->destroy(&config);
@@ -536,6 +553,8 @@ static const char *test_libconfig_values(void)
 		"Setting_IntSignedMax: 0x7fffffff;\n"
 		"/* End test file */\n";
 
+	libconfig->init(&config);
+
 	if (libconfig->read_string(&config, input) == CONFIG_FALSE) {
 		libconfig->destroy(&config);
 		return "Unable to parse configuration.";
@@ -599,6 +618,9 @@ static const char *test_libconfig_path_lookup(void)
 		"    10,\n"
 		");\n"
 		"/* End test file */\n";
+
+	libconfig->init(&config);
+
 	if (libconfig->read_string(&config, input) == CONFIG_FALSE) {
 		libconfig->destroy(&config);
 		return "Unable to parse configuration.";
@@ -683,6 +705,9 @@ static const char *test_libconfig_setting_names(void)
 		"};\n"
 		"1st_setting_with_numbers: 5;\n"
 		"/* End test file */\n";
+
+	libconfig->init(&config);
+
 	if (libconfig->read_string(&config, input) == CONFIG_FALSE) {
 		libconfig->destroy(&config);
 		return "Unable to parse configuration.";
@@ -736,6 +761,9 @@ static const char *test_libconfig_duplicate_keys(void)
 		"    Duplicate: 4;\n"
 		"};\n"
 		"/* End test file */\n";
+
+	libconfig->init(&config);
+
 	if (libconfig->read_string(&config, input) == CONFIG_FALSE) {
 		libconfig->destroy(&config);
 		return "Unable to parse configuration.";
@@ -780,6 +808,9 @@ static const char *test_libconfig_special_string_syntax(void)
 	const char *input = "/* Test File */\n"
 		"SpecialString: <\"This is an \"Item_Script\" Special String\n\tWith a line-break inside.\">;\n"
 		"/* End test file */\n";
+
+	libconfig->init(&config);
+
 	if (libconfig->read_string(&config, input) == CONFIG_FALSE) {
 		libconfig->destroy(&config);
 		return "Unable to parse configuration.";
@@ -818,7 +849,7 @@ int do_init(int argc, char **argv)
 	//int (*setting_set_format) (struct config_setting_t *setting, short format);
 	//short (*setting_get_format) (const struct config_setting_t *setting);
 	//struct config_setting_t * (*setting_set_int_elem) (struct config_setting_t *setting, int idx, int value);
-	//struct config_setting_t * (*setting_set_int64_elem) (struct config_setting_t *setting, int idx, long long value);
+	//struct config_setting_t * (*setting_set_int64_elem) (struct config_setting_t *setting, int idx, int64 value);
 	//struct config_setting_t * (*setting_set_float_elem) (struct config_setting_t *setting, int idx, double value);
 	//struct config_setting_t * (*setting_set_bool_elem) (struct config_setting_t *setting, int idx, int value);
 	//struct config_setting_t * (*setting_set_string_elem) (struct config_setting_t *setting, int idx, const char *value);

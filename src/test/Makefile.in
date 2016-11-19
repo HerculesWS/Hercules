@@ -87,8 +87,8 @@ $(TESTS_ALL): test_%: ../../test_%@EXEEXT@
 
 ../../test_%@EXEEXT@: obj/test_%.o $(TEST_DEPENDS) Makefile
 	@echo "	LD	$(notdir $@)"
-	@$(CC) @STATIC@ @LDFLAGS@ -o $@ $< $(COMMON_D)/obj_sql/common_sql.a \
-		$(COMMON_D)/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @MYSQL_LIBS@
+	@$(CC) @STATIC@ @LDFLAGS@ -o $@ $< $(COMMON_D)/obj_all/common.a $(COMMON_D)/obj_sql/common_sql.a \
+		$(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @MYSQL_LIBS@
 
 # object files
 

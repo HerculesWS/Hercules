@@ -81,6 +81,7 @@ int do_init(int argc, char **argv)
 		for(i =0; i < THRC; i++){
 			t[i] = thread->create_opt(worker, NULL, 1024*512, THREADPRIO_NORMAL);
 		}
+		(void)t;
 
 		while(1){
 			if(InterlockedCompareExchange(&done_threads, THRC, THRC) == THRC)
@@ -100,14 +101,13 @@ int do_init(int argc, char **argv)
 
 	}
 
-	if(ok != LOOPS){
+	if (ok != LOOPS) {
 		ShowFatalError("Test failed.\n");
 		exit(1);
-	}else{
-		ShowStatus("Test passed.\n");
-		exit(0);
 	}
-	return 0;
+
+	core->runflag = CORE_ST_STOP;
+	return EXIT_SUCCESS;
 }//end: do_init()
 
 void do_abort(void) {
@@ -118,6 +118,8 @@ void set_server_type(void) {
 }//end: set_server_type()
 
 int do_final(void) {
+	ShowStatus("Test passed.\n");
+
 	return EXIT_SUCCESS;
 }//end: do_final()
 

@@ -2,9 +2,9 @@
 #define libconfig_yyHEADER_H 1
 #define libconfig_yyIN_HEADER 1
 
-#line 6 "scanner.h"
+#line 5 "scanner.h"
 
-#line 8 "scanner.h"
+#line 7 "scanner.h"
 
 #define  YY_INT_ALIGNED short int
 
@@ -13,7 +13,7 @@
 #define FLEX_SCANNER
 #define YY_FLEX_MAJOR_VERSION 2
 #define YY_FLEX_MINOR_VERSION 6
-#define YY_FLEX_SUBMINOR_VERSION 0
+#define YY_FLEX_SUBMINOR_VERSION 2
 #if YY_FLEX_SUBMINOR_VERSION > 0
 #define FLEX_BETA
 #endif
@@ -92,25 +92,13 @@ typedef unsigned int flex_uint32_t;
 
 #endif /* ! FLEXINT_H */
 
-#ifdef __cplusplus
-
-/* The "const" storage-class-modifier is valid. */
-#define YY_USE_CONST
-
-#else	/* ! __cplusplus */
-
-/* C99 requires __STDC__ to be defined as 1. */
-#if defined (__STDC__)
-
-#define YY_USE_CONST
-
-#endif	/* defined (__STDC__) */
-#endif	/* ! __cplusplus */
-
-#ifdef YY_USE_CONST
+/* TODO: this is always defined, so inline it */
 #define yyconst const
+
+#if defined(__GNUC__) && __GNUC__ >= 3
+#define yynoreturn __attribute__((__noreturn__))
 #else
-#define yyconst
+#define yynoreturn
 #endif
 
 /* An opaque pointer. */
@@ -165,12 +153,12 @@ struct yy_buffer_state
 	/* Size of input buffer in bytes, not including room for EOB
 	 * characters.
 	 */
-	yy_size_t yy_buf_size;
+	int yy_buf_size;
 
 	/* Number of characters read into yy_ch_buf, not including EOB
 	 * characters.
 	 */
-	yy_size_t yy_n_chars;
+	int yy_n_chars;
 
 	/* Whether we "own" the buffer - i.e., we know we created it,
 	 * and can realloc() it to grow it, and should free() it to
@@ -204,21 +192,21 @@ struct yy_buffer_state
 	};
 #endif /* !YY_STRUCT_YY_BUFFER_STATE */
 
-void libconfig_yyrestart (FILE *input_file ,yyscan_t yyscanner );
-void libconfig_yy_switch_to_buffer (YY_BUFFER_STATE new_buffer ,yyscan_t yyscanner );
-YY_BUFFER_STATE libconfig_yy_create_buffer (FILE *file,int size ,yyscan_t yyscanner );
-void libconfig_yy_delete_buffer (YY_BUFFER_STATE b ,yyscan_t yyscanner );
-void libconfig_yy_flush_buffer (YY_BUFFER_STATE b ,yyscan_t yyscanner );
-void libconfig_yypush_buffer_state (YY_BUFFER_STATE new_buffer ,yyscan_t yyscanner );
-void libconfig_yypop_buffer_state (yyscan_t yyscanner );
+void libconfig_yyrestart ( FILE *input_file , yyscan_t yyscanner );
+void libconfig_yy_switch_to_buffer ( YY_BUFFER_STATE new_buffer , yyscan_t yyscanner );
+YY_BUFFER_STATE libconfig_yy_create_buffer ( FILE *file, int size , yyscan_t yyscanner );
+void libconfig_yy_delete_buffer ( YY_BUFFER_STATE b , yyscan_t yyscanner );
+void libconfig_yy_flush_buffer ( YY_BUFFER_STATE b , yyscan_t yyscanner );
+void libconfig_yypush_buffer_state ( YY_BUFFER_STATE new_buffer , yyscan_t yyscanner );
+void libconfig_yypop_buffer_state ( yyscan_t yyscanner );
 
-YY_BUFFER_STATE libconfig_yy_scan_buffer (char *base,yy_size_t size ,yyscan_t yyscanner );
-YY_BUFFER_STATE libconfig_yy_scan_string (yyconst char *yy_str ,yyscan_t yyscanner );
-YY_BUFFER_STATE libconfig_yy_scan_bytes (yyconst char *bytes,yy_size_t len ,yyscan_t yyscanner );
+YY_BUFFER_STATE libconfig_yy_scan_buffer ( char *base, yy_size_t size , yyscan_t yyscanner );
+YY_BUFFER_STATE libconfig_yy_scan_string ( const char *yy_str , yyscan_t yyscanner );
+YY_BUFFER_STATE libconfig_yy_scan_bytes ( const char *bytes, int len , yyscan_t yyscanner );
 
-void *libconfig_yyalloc (yy_size_t ,yyscan_t yyscanner );
-void *libconfig_yyrealloc (void *,yy_size_t ,yyscan_t yyscanner );
-void libconfig_yyfree (void * ,yyscan_t yyscanner );
+void *libconfig_yyalloc ( yy_size_t , yyscan_t yyscanner );
+void *libconfig_yyrealloc ( void *, yy_size_t , yyscan_t yyscanner );
+void libconfig_yyfree ( void * , yyscan_t yyscanner );
 
 #define libconfig_yywrap(yyscanner) (/*CONSTCOND*/1)
 #define YY_SKIP_YYWRAP
@@ -238,44 +226,44 @@ void libconfig_yyfree (void * ,yyscan_t yyscanner );
 
 int libconfig_yylex_init (yyscan_t* scanner);
 
-int libconfig_yylex_init_extra (YY_EXTRA_TYPE user_defined,yyscan_t* scanner);
+int libconfig_yylex_init_extra ( YY_EXTRA_TYPE user_defined, yyscan_t* scanner);
 
 /* Accessor methods to globals.
    These are made visible to non-reentrant scanners for convenience. */
 
-int libconfig_yylex_destroy (yyscan_t yyscanner );
+int libconfig_yylex_destroy ( yyscan_t yyscanner );
 
-int libconfig_yyget_debug (yyscan_t yyscanner );
+int libconfig_yyget_debug ( yyscan_t yyscanner );
 
-void libconfig_yyset_debug (int debug_flag ,yyscan_t yyscanner );
+void libconfig_yyset_debug ( int debug_flag , yyscan_t yyscanner );
 
-YY_EXTRA_TYPE libconfig_yyget_extra (yyscan_t yyscanner );
+YY_EXTRA_TYPE libconfig_yyget_extra ( yyscan_t yyscanner );
 
-void libconfig_yyset_extra (YY_EXTRA_TYPE user_defined ,yyscan_t yyscanner );
+void libconfig_yyset_extra ( YY_EXTRA_TYPE user_defined , yyscan_t yyscanner );
 
-FILE *libconfig_yyget_in (yyscan_t yyscanner );
+FILE *libconfig_yyget_in ( yyscan_t yyscanner );
 
-void libconfig_yyset_in  (FILE * _in_str ,yyscan_t yyscanner );
+void libconfig_yyset_in  ( FILE * _in_str , yyscan_t yyscanner );
 
-FILE *libconfig_yyget_out (yyscan_t yyscanner );
+FILE *libconfig_yyget_out ( yyscan_t yyscanner );
 
-void libconfig_yyset_out  (FILE * _out_str ,yyscan_t yyscanner );
+void libconfig_yyset_out  ( FILE * _out_str , yyscan_t yyscanner );
 
-yy_size_t libconfig_yyget_leng (yyscan_t yyscanner );
+			int libconfig_yyget_leng ( yyscan_t yyscanner );
 
-char *libconfig_yyget_text (yyscan_t yyscanner );
+char *libconfig_yyget_text ( yyscan_t yyscanner );
 
-int libconfig_yyget_lineno (yyscan_t yyscanner );
+int libconfig_yyget_lineno ( yyscan_t yyscanner );
 
-void libconfig_yyset_lineno (int _line_number ,yyscan_t yyscanner );
+void libconfig_yyset_lineno ( int _line_number , yyscan_t yyscanner );
 
-int libconfig_yyget_column  (yyscan_t yyscanner );
+int libconfig_yyget_column  ( yyscan_t yyscanner );
 
-void libconfig_yyset_column (int _column_no ,yyscan_t yyscanner );
+void libconfig_yyset_column ( int _column_no , yyscan_t yyscanner );
 
-YYSTYPE * libconfig_yyget_lval (yyscan_t yyscanner );
+YYSTYPE * libconfig_yyget_lval ( yyscan_t yyscanner );
 
-void libconfig_yyset_lval (YYSTYPE * yylval_param ,yyscan_t yyscanner );
+void libconfig_yyset_lval ( YYSTYPE * yylval_param , yyscan_t yyscanner );
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -283,18 +271,18 @@ void libconfig_yyset_lval (YYSTYPE * yylval_param ,yyscan_t yyscanner );
 
 #ifndef YY_SKIP_YYWRAP
 #ifdef __cplusplus
-extern "C" int libconfig_yywrap (yyscan_t yyscanner );
+extern "C" int libconfig_yywrap ( yyscan_t yyscanner );
 #else
-extern int libconfig_yywrap (yyscan_t yyscanner );
+extern int libconfig_yywrap ( yyscan_t yyscanner );
 #endif
 #endif
 
 #ifndef yytext_ptr
-static void yy_flex_strncpy (char *,yyconst char *,int ,yyscan_t yyscanner);
+static void yy_flex_strncpy ( char *, const char *, int , yyscan_t yyscanner);
 #endif
 
 #ifdef YY_NEED_STRLEN
-static int yy_flex_strlen (yyconst char * ,yyscan_t yyscanner);
+static int yy_flex_strlen ( const char * , yyscan_t yyscanner);
 #endif
 
 #ifndef YY_NO_INPUT
@@ -323,7 +311,7 @@ static int yy_flex_strlen (yyconst char * ,yyscan_t yyscanner);
 #define YY_DECL_IS_OURS 1
 
 extern int libconfig_yylex \
-               (YYSTYPE * yylval_param ,yyscan_t yyscanner);
+               (YYSTYPE * yylval_param , yyscan_t yyscanner);
 
 #define YY_DECL int libconfig_yylex \
                (YYSTYPE * yylval_param , yyscan_t yyscanner)
@@ -345,6 +333,6 @@ extern int libconfig_yylex \
 
 #line 219 "scanner.l"
 
-#line 349 "scanner.h"
+#line 336 "scanner.h"
 #undef libconfig_yyIN_HEADER
 #endif /* libconfig_yyHEADER_H */

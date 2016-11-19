@@ -2,14 +2,35 @@ diff --git a/grammar.c b/grammar.c
 index 3595578..26444f8 100644
 --- a/grammar.c
 +++ b/grammar.c
-@@ -1211,9 +1211,7 @@ void libconfig_yyerror(void *scanner, struct parse_context *ctx,
+@@ -1084,9 +1084,7 @@ void libconfig_yyerror(void *scanner, struct parse_context *ctx,
+   YYUSE (scanner);
    YYUSE (ctx);
    YYUSE (scan_ctx);
- 
 -  if (!yymsg)
 -    yymsg = "Deleting";
 -  YY_SYMBOL_PRINT (yymsg, yytype, yyvaluep, yylocationp);
-+  YY_SYMBOL_PRINT (yymsg ? yymsg : "Deleting", yytype, yyvaluep, yylocationp);
++  YY_SYMBOL_PRINT (yymsg != NULL ? yymsg : "Deleting", yytype, yyvaluep, yylocationp);
  
+   YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
    YYUSE (yytype);
+diff --git a/scanner.c b/scanner.c
+index 60882db..8b8af33 100644
+--- a/scanner.c
++++ b/scanner.c
+@@ -21,6 +21,7 @@
+ #include <string.h>
+ #include <errno.h>
+ #include <stdlib.h>
++#include <assert.h>
+ 
+ /* end standard C headers. */
+ 
+@@ -1702,6 +1703,8 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
+             libconfig_yy_create_buffer(yyin,YY_BUF_SIZE ,yyscanner);
+ 	}
+ 
++	assert(YY_CURRENT_BUFFER != NULL); // Fixes compiler warning -Wnull-dereference on gcc-6 and -O3
++
+ 	libconfig_yy_init_buffer(YY_CURRENT_BUFFER,input_file ,yyscanner);
+ 	libconfig_yy_load_buffer_state(yyscanner );
  }
