@@ -64,7 +64,7 @@ xmas_in,89,92,5	script	Louise Kim#designer	4_F_06,{
 	mes "";
 	emotion e_lv;
 	next;
-	if (countitem(Santa's_Hat) > 0) {
+	if (countitem(Santas_Hat) > 0) {
 		if (select("Here.", "It's ok.") == 1) {
 			mes "[Designer Louise Kim]";
 			mes "Nice choice!!";
@@ -160,11 +160,11 @@ xmas_in,89,92,5	script	Louise Kim#designer	4_F_06,{
 					mes "~Who would be happier than~";
 					mes "~being with Louise.~";
 					emotion e_ho;
-					delitem Santa's_Hat,1;
+					delitem Santas_Hat,1;
 					delitem Cactus_Needle,1;
 					delitem Holy_Water,10;
 					delitem Rosary,1;
-					getitem Santa's_Hat_,1;
+					getitem Santas_Hat_,1;
 					close;
 				}
 				else {
@@ -1370,7 +1370,7 @@ prontera,156,242,0	script	Oholy#pron::OholyDup	1_F_PRIEST,{
 				emotion e_heh;
 				delitem Worn_Out_Page,1;
 				christ_carol05 = 3;
-				getitem Santa's_Hat,1;
+				getitem Santas_Hat,1;
 				close;
 			}
 		}

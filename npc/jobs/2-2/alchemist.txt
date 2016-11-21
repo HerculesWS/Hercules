@@ -715,7 +715,7 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 				getitemname(Buckler),
 				getitemname(Coat),
 				getitemname(Gas_Mask),
-				getitemname(Big_Sis'_Ribbon),
+				getitemname(Big_Sis_Ribbon),
 				getitemname(Fillet),
 				getitemname(Sahkkat),
 				getitemname(Glasses));
@@ -1690,7 +1690,7 @@ alde_alche,79,19,5	script	Experiment Expert#am	4_M_ALCHE_A,{
 				"a %s?",
 				getitemname(Mixture));
 			next;
-			select(getitemname(Monster's_Feed),
+			select(getitemname(Monsters_Feed),
 				getitemname(Lip_Of_Ancient_Fish),
 				getitemname(Rotten_Bandage));
 			mes "[Van Helmont]";

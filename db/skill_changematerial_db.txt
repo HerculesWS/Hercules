@@ -48,7 +48,7 @@
 1035,1000,8,800,12,200                 // Dragon_Canine
 1037,800,6,1000                        // Dragon_Train
 1038,1000,1,1000                       // Petite_Dablofs_Horn
-1040,1000,8,800,12,200                 // Elder_Pixie's_Beard
+1040,1000,8,800,12,200                 // Elder_Pixies_Beard
 1041,800,3,1000                        // Lantern
 1042,800,6,1000                        // Short_Leg
 1043,800,6,1000                        // Nail_Of_Orc

@@ -547,42 +547,42 @@ OnInit:
 
 prontera,92,209,4	trader	Rebellion Weapon Vending	2_VENDING_MACHINE1,{
 OnInit:
-	sellitem Heaven's_Feather_and_Hell's_Fire;
-	sellitem Altea_and_Ares;
-	sellitem Color_Scope;
+	sellitem H_FEATHER_H_FIRE;
+	sellitem ALTAIR_ARES;
+	sellitem COLORSCOPE;
 	sellitem RAG203;
-	sellitem Death_Fire;
-	sellitem Rolling_Thunder;
-	sellitem Peace_Breaker;
-	sellitem Mini_Mei;
-	sellitem Tempest;
-	sellitem End_Of_The_Horizon;
-	sellitem South_Cross;
+	sellitem DEATHFIRE;
+	sellitem R_THUNDER;
+	sellitem P_BREAKER;
+	sellitem MINIMAY;
+	sellitem TEMPEST;
+	sellitem END_OF_HORIZON;
+	sellitem Southern_Cross_R;
 }
 
 prontera,96,209,4	trader	Rebellion Prop Vending	2_VENDING_MACHINE1,{
 OnInit:
-	sellitem Slug_Ammunition_L;
-	sellitem Slug_Ammunition_M;
-	sellitem Slug_Ammunition_H;
-	sellitem Full_Metal_Jacket;
-	sellitem Projection_Landmines;
+	sellitem Slug_Bullet_1;
+	sellitem Slug_Bullet_2;
+	sellitem Slug_Bullet_3;
+	sellitem Fullmetal_Jacket_Bullet;
+	sellitem Mine_Projectile;
 	sellitem Dragon_Tail_Missile;
 	sellitem Special_Alloy_Trap;
 	sellitem Bullet;
 	sellitem Silver_Bullet_;
 	sellitem Shell_Of_Blood_;
-	sellitem Armor_Piercing_Bullet;
-	sellitem Blazing_Bullet;
+	sellitem AP_Ammo;
+	sellitem Blaze_Bullet;
 	sellitem Freezing_Bullet;
-	sellitem Lightning_Bullet;
-	sellitem Magic_Stone_Bullet;
-	sellitem Purifying_Bullet;
-	sellitem Incendiary_Grenade;
-	sellitem Lightning_Grenade;
-	sellitem Poison_Grenade;
-	sellitem Flash_Grenade;
-	sellitem Cyro_Grenade;
+	sellitem Electric_Shock_Bullet;
+	sellitem Magical_Stone_Bullet;
+	sellitem Sanctified_Bullet;
+	sellitem Flare_Sphere_;
+	sellitem Lighting_Sphere_;
+	sellitem Poison_Sphere_;
+	sellitem Blind_Sphere_;
+	sellitem Freezing_Sphere_;
 }
 
 //== Morroc ===============================================
@@ -712,16 +712,16 @@ OnInit:
 morocc,171,103,4	trader	Item Collector#moc3	4_M_03,{
 OnInit:
 	sellitem Scell;
-	sellitem Monster's_Feed;
-	sellitem Animal's_Skin;
+	sellitem Monsters_Feed;
+	sellitem Animals_Skin;
 	sellitem Bill_Of_Birds;
 }
 
 morocc,205,247,2	trader	Item Collector#moc4	4_M_03,{
 OnInit:
 	sellitem Scell;
-	sellitem Monster's_Feed;
-	sellitem Animal's_Skin;
+	sellitem Monsters_Feed;
+	sellitem Animals_Skin;
 	sellitem Bill_Of_Birds;
 }
 

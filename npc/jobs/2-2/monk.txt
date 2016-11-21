@@ -594,14 +594,14 @@ monk_in,99,58,1	script	Sensei Moohae#mk	1_M_PASTOR,{
 		mes "[Sensei Moohae]";
 		mes "Hmm?";
 		next;
-		if (countitem(Tooth_Of_Bat) > 9 && countitem(Bear's_Foot) > 4 && countitem(Poison_Spore) > 19) {
+		if (countitem(Tooth_Of_Bat) > 9 && countitem(Bears_Foot) > 4 && countitem(Poison_Spore) > 19) {
 			mes "[Sensei Moohae]";
 			mes "Excellent, all the items I asked for.";
 			mes "I will tell this to the elders.";
 			MONK_Q = 10;
 			changequest 3022,3024;
 			delitem Tooth_Of_Bat,10;
-			delitem Bear's_Foot,5;
+			delitem Bears_Foot,5;
 			delitem Poison_Spore,20;
 			next;
 			mes "[Sensei Moohae]";

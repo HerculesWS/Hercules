@@ -267,7 +267,7 @@ L_Explain:
 
 niflheim,181,173,5	script	Chef Candycon#2013HE	4_M_NFDEADSWDMAN,{
 	if (eve_bs == 1) {
-		if (countitem(Organic_Pumpkin) * 3 + countitem(Inorganic_Pumpkin) >= 30) {
+		if (countitem(ORGANIC_PUMPKIN) * 3 + countitem(INORGANIC_PUMPKIN) >= 30) {
 			mes "[Chef Candycon]";
 			mes "Clang~Clang~!";
 			next;
@@ -400,16 +400,16 @@ L_GivePumpkin:
 		mes "Eeh~~ You have no use for those pumpkins~~";
 		close;
 	}
-	if (countitem(Organic_Pumpkin) * 3 + countitem(Inorganic_Pumpkin) < 30) {
+	if (countitem(ORGANIC_PUMPKIN) * 3 + countitem(INORGANIC_PUMPKIN) < 30) {
 		mes "[Chef Candycon]";
 		mes "Ooops where is pumpkin? escaped again?";
 		mes "Oh, boy...no... you should go to get them again...";
 		close;
 	}
-	if (countitem(Inorganic_Pumpkin))
-		delitem Inorganic_Pumpkin,countitem(Inorganic_Pumpkin);
-	if (countitem(Organic_Pumpkin))
-		delitem Organic_Pumpkin,countitem(Organic_Pumpkin);
+	if (countitem(INORGANIC_PUMPKIN))
+		delitem INORGANIC_PUMPKIN, countitem(INORGANIC_PUMPKIN);
+	if (countitem(ORGANIC_PUMPKIN))
+		delitem ORGANIC_PUMPKIN, countitem(ORGANIC_PUMPKIN);
 	eve_bs = 2;
 	getitem HALLOWEEN_G_BOX,1;
 	erasequest 11378;

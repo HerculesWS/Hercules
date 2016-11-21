@@ -238,7 +238,7 @@ alberta,119,221,6	script	Charlron	1_M_PAY_ELDER,{
 			next;
 			switch (select("That's why I came here.", "What about my cart?", "Two pairs is pitiful?")) {
 			case 1:
-				if ((countitem(Wooden_Block) > 49) && (countitem(Iron) > 9) && (countitem(Animal's_Skin) > 19)) {
+				if ((countitem(Wooden_Block) > 49) && (countitem(Iron) > 9) && (countitem(Animals_Skin) > 19)) {
 					mes "[Charlron]";
 					mes "Haha! Ok, ok!";
 					mes "With the things you brought";
@@ -246,7 +246,7 @@ alberta,119,221,6	script	Charlron	1_M_PAY_ELDER,{
 					next;
 					delitem Wooden_Block,50;
 					delitem Iron,10;
-					delitem Animal's_Skin,20;
+					delitem Animals_Skin,20;
 					skill "MC_CHANGECART",1,0;
 					mes "[Charlron]";
 					mes "Congratulations.";

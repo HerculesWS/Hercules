@@ -175,7 +175,7 @@ moc_prydb1,154,128,4	script	Alcouskou	2_M_THIEFMASTER,{
 				close;
 			}
 	case 2:
-		if ((countitem(Grasshopper's_Leg) > 19) && ((JobLevel > 34) || (BaseJob == Job_Assassin || BaseJob == Job_Rogue))) {
+		if ((countitem(Grasshoppers_Leg) > 19) && ((JobLevel > 34) || (BaseJob == Job_Assassin || BaseJob == Job_Rogue))) {
 			mes "[Alcouskou]";
 			mes "Okay! Let's practice!";
 			next;
@@ -192,7 +192,7 @@ moc_prydb1,154,128,4	script	Alcouskou	2_M_THIEFMASTER,{
 			mes "Great! -At this level,";
 			mes "I am sure you can increase";
 			mes "your skill on your own.";
-			delitem Grasshopper's_Leg,20;
+			delitem Grasshoppers_Leg,20;
 			skill "TF_BACKSLIDING",1,0;
 			close;
 		}
@@ -252,7 +252,7 @@ moc_prydb1,154,128,4	script	Alcouskou	2_M_THIEFMASTER,{
 		mes "If not, I cannot teach you.";
 		close;
 	case 3:
-		if ((countitem(Zargon) > 0) && (countitem(Bear's_Foot) > 0) && (countitem(Spawn) > 4) && ((JobLevel > 19) || (BaseJob == Job_Assassin || BaseJob == Job_Rogue))) {
+		if ((countitem(Zargon) > 0) && (countitem(Bears_Foot) > 0) && (countitem(Spawn) > 4) && ((JobLevel > 19) || (BaseJob == Job_Assassin || BaseJob == Job_Rogue))) {
 			mes "[Alcouskou]";
 			mes "Wow, you have already prepared?";
 			mes "Great, I see promise in you. -";
@@ -283,7 +283,7 @@ moc_prydb1,154,128,4	script	Alcouskou	2_M_THIEFMASTER,{
 			mes "I hope it aids you in the future.";
 			mes ". . . . . Hope to see you soon";
 			delitem Zargon,1;
-			delitem Bear's_Foot,1;
+			delitem Bears_Foot,1;
 			delitem Spawn,5;
 			skill "TF_PICKSTONE",1,0;
 			close;

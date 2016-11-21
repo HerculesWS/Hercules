@@ -2226,7 +2226,7 @@ OnEnable:
 	end;
 }
 
-// Merchant, and Trade NPC - Get Temporal Boots --> exchange to Temporal_STAT_Boots
+// Merchant, and Trade NPC - Get Temporal Boots --> exchange to Temporal_*_Boots
 // Upon trade all refines got removed
 // Uses Temporal_Crystal
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -2275,7 +2275,7 @@ glast_01,210,273,5	script	Hugin's Butler	1_F_04,{
 		mes("You can trade ^0000FF1 Temporal Boots and 5 Temporal Crystals^000000 for 1 of the following items. ^FF0000Previous refine rate will not be retained with these new ones^000000.");
 		next;
 		setarray .@type$[0], "Strength", "Intelligence", "Agility", "Vitality", "Dexterity", "Luck";
-		setarray .@equip_type[0], Temporal_STR_Boots, Temporal_INT_Boots, Temporal_AGI_Boots, Temporal_VIT_Boots, Temporal_DEX_Boots, Temporal_LUK_Boots;
+		setarray .@equip_type[0], Temporal_Str_Boots, Temporal_Int_Boots, Temporal_Agi_Boots, Temporal_Vit_Boots, Temporal_Dex_Boots, Temporal_Luk_Boots;
 		.@select = select("Cancel", "Str Boots", "Int Boots", "Agi Boots", "Vit Boots", "Dex Boots", "Luk Boots");
 		switch (.@select) {
 		case 1:
@@ -2296,7 +2296,7 @@ glast_01,210,273,5	script	Hugin's Butler	1_F_04,{
 				mes("The boots has been upgraded as you want.");
 				delequip .@part;
 				delitem Temporal_Crystal, 5;
-				getitem2 .@equip_type[.@select-2], 1, 1, 0, 0, 0, 0, 0, 0; // Temporal_STR_Boots, Temporal_INT_Boots, Temporal_AGI_Boots, Temporal_VIT_Boots, Temporal_DEX_Boots, Temporal_LUK_Boots
+				getitem2 .@equip_type[.@select-2], 1, 1, 0, 0, 0, 0, 0, 0; // Temporal_Str_Boots, Temporal_Int_Boots, Temporal_Agi_Boots, Temporal_Vit_Boots, Temporal_Dex_Boots, Temporal_Luk_Boots
 				close;
 			}
 			mes("[Hugin's Butler]");
@@ -2307,7 +2307,7 @@ glast_01,210,273,5	script	Hugin's Butler	1_F_04,{
 }
 
 // Enchant NPC - Coagulated Spell to enchants on 4th slot. First one to pick --> upgraded --> additional random enchant on 3rd slot
-// Adding a socket on the Craftsman NPC will remove the 3rd and 4th slot enchants of the Temporal_STAT_Boots
+// Adding a socket on the Craftsman NPC will remove the 3rd and 4th slot enchants of the Temporal_*_Boots
 // Enchanting can fail, the 3th slot random one is guaranteed
 // Refine remains
 // Item Used: Coagulated_Spell
@@ -2371,18 +2371,18 @@ glast_01,212,273,4	script	Hugin's Magic Master	1_F_01,{ // Custom text due to of
 	setarray .@enchant_rate[0], 90, 80, 70, 50, 100; // Enchant Success Rate in %
 	.@random = rand(1, 100);
 	switch (.@equip_id) {
-	case Temporal_STR_Boots:
-	case Temporal_INT_Boots:
-	case Temporal_AGI_Boots:
-	case Temporal_VIT_Boots:
-	case Temporal_DEX_Boots:
-	case Temporal_LUK_Boots:
-	case Temporal_STR_Boots_:
-	case Temporal_INT_Boots_:
-	case Temporal_AGI_Boots_:
-	case Temporal_VIT_Boots_:
-	case Temporal_DEX_Boots_:
-	case Temporal_LUK_Boots_:
+	case Temporal_Str_Boots:
+	case Temporal_Int_Boots:
+	case Temporal_Agi_Boots:
+	case Temporal_Vit_Boots:
+	case Temporal_Dex_Boots:
+	case Temporal_Luk_Boots:
+	case Temporal_Str_Boots_:
+	case Temporal_Int_Boots_:
+	case Temporal_Agi_Boots_:
+	case Temporal_Vit_Boots_:
+	case Temporal_Dex_Boots_:
+	case Temporal_Luk_Boots_:
 		if (.@card3 == 0) { //4th slot 1st try enchanting
 			.@cost = .@enchant_cost[0];
 			.@scs = .@enchant_rate[0];
@@ -2450,7 +2450,7 @@ glast_01,212,273,4	script	Hugin's Magic Master	1_F_01,{ // Custom text due to of
 				case MHP2:
 				case Attack_Delay_4:
 				case Luck6:
-					.@enchant = callfunc("F_Rand", Bear's_Power, Runaway_Magic, Speed_Of_Light, Muscle_Fool, Hawkeye, Lucky_Day);
+					.@enchant = callfunc("F_Rand", Bears_Power, Runaway_Magic, Speed_Of_Light, Muscle_Fool, Hawkeye, Lucky_Day);
 					mes("[Hugin's Magic Master]"); // Custom text
 					mes("Seems you already completed the best upgrade option in your 4th slot. For that I can give a random bonus effect to your 3rd slot. And of course, with certain payment...");
 					next;
@@ -2566,9 +2566,9 @@ glast_01,212,273,4	script	Hugin's Magic Master	1_F_01,{ // Custom text due to of
 	close;
 }
 
-// Socket NPC - Contaminated_Magic or Temporal_Crystal to add card slot
+// Socket NPC - Corrupted_Charm or Temporal_Crystal to add card slot
 // After the boots were slotted, you can still enchant, but slotting removes any enchants and refines applied before.
-// Item Used: Contaminated_Magic, Temporal_Crystal
+// Item Used: Corrupted_Charm, Temporal_Crystal
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 glast_01,210,270,0	script	Hugin's Craftsman	4_F_JOB_BLACKSMITH,{
 	disable_items;
@@ -2601,12 +2601,12 @@ glast_01,210,270,0	script	Hugin's Craftsman	4_F_JOB_BLACKSMITH,{
 	}
 	.@equip_id = getequipid(.@part);
 	switch (.@equip_id) {
-	case Temporal_STR_Boots:
-	case Temporal_INT_Boots:
-	case Temporal_AGI_Boots:
-	case Temporal_VIT_Boots:
-	case Temporal_DEX_Boots:
-	case Temporal_LUK_Boots:
+	case Temporal_Str_Boots:
+	case Temporal_Int_Boots:
+	case Temporal_Agi_Boots:
+	case Temporal_Vit_Boots:
+	case Temporal_Dex_Boots:
+	case Temporal_Luk_Boots:
 		mes("[Hugin's Craftsman]");
 		mes("The ^FF0000Boots and all enchants or refines will be lost if you fail this.^000000\r"
 				"Still want to risk it?");
@@ -2629,7 +2629,7 @@ glast_01,210,270,0	script	Hugin's Craftsman	4_F_JOB_BLACKSMITH,{
 		mes("Then my last question:\r"
 				"Which item are you gonna use to pay me?");
 		next;
-		setarray .@slotpay[0], Temporal_Crystal, Contaminated_Magic;
+		setarray .@slotpay[0], Temporal_Crystal, Corrupted_Charm;
 		setarray .@slotcost[0], 10, 50;
 		setarray .@slotchance[0], 80, 65; // Custom rates
 		.@select = select("Cancel", "Temporal Crystal", "Contaminated Magic");
@@ -2664,18 +2664,18 @@ glast_01,210,270,0	script	Hugin's Craftsman	4_F_JOB_BLACKSMITH,{
 		specialeffect2 EF_PHARMACY_OK;
 		delequip .@part;
 		// todo: read aegis name and attach "_" to worn constant
-		if (.@equip_id == Temporal_STR_Boots) {
-			getitem2 Temporal_STR_Boots_, 1, 1, 0, 0, 0, 0, 0, 0;
-		} else if (.@equip_id == Temporal_INT_Boots) {
-			getitem2 Temporal_INT_Boots_, 1, 1, 0, 0, 0, 0, 0, 0;
-		} else if (.@equip_id == Temporal_AGI_Boots) {
-			getitem2 Temporal_AGI_Boots_, 1, 1, 0, 0, 0, 0, .0, 0;
-		} else if (.@equip_id == Temporal_VIT_Boots) {
-			getitem2 Temporal_VIT_Boots_, 1, 1, 0, 0, 0, 0, 0, 0;
-		} else if (.@equip_id == Temporal_DEX_Boots) {
-			getitem2 Temporal_DEX_Boots_, 1, 1, 0, 0, 0, 0, 0, 0;
-		} else if (.@equip_id == Temporal_LUK_Boots) {
-			getitem2 Temporal_LUK_Boots_, 1, 1, 0, 0, 0, 0, 0, 0;
+		if (.@equip_id == Temporal_Str_Boots) {
+			getitem2 Temporal_Str_Boots_, 1, 1, 0, 0, 0, 0, 0, 0;
+		} else if (.@equip_id == Temporal_Int_Boots) {
+			getitem2 Temporal_Int_Boots_, 1, 1, 0, 0, 0, 0, 0, 0;
+		} else if (.@equip_id == Temporal_Agi_Boots) {
+			getitem2 Temporal_Agi_Boots_, 1, 1, 0, 0, 0, 0, .0, 0;
+		} else if (.@equip_id == Temporal_Vit_Boots) {
+			getitem2 Temporal_Vit_Boots_, 1, 1, 0, 0, 0, 0, 0, 0;
+		} else if (.@equip_id == Temporal_Dex_Boots) {
+			getitem2 Temporal_Dex_Boots_, 1, 1, 0, 0, 0, 0, 0, 0;
+		} else if (.@equip_id == Temporal_Luk_Boots) {
+			getitem2 Temporal_Luk_Boots_, 1, 1, 0, 0, 0, 0, 0, 0;
 		}
 		close;
 	default:
@@ -2699,7 +2699,7 @@ glast_01,188,273,5	script	White Knight#1a	4_WHITEKNIGHT,{
 	mes("I exchange you a White Knight Card for ^0000FF3000 Coagulated Spell^000000 or ^FF000070 Contaminated Magic^000000.");
 	mes("<ITEMLINK>White Knight Card<INFO>4608</INFO></ITEMLINK>");
 	next;
-	setarray .@item[0], Coagulated_Spell, Contaminated_Magic;
+	setarray .@item[0], Coagulated_Spell, Corrupted_Charm;
 	setarray .@cost[0], 3000, 70;
 	.@select = select("Cancel", "^0000FFUse Coagulated Spell^000000", "^FF0000Use Contaminated Magic^000000");
 	switch (.@select) {
@@ -2717,7 +2717,7 @@ glast_01,188,273,5	script	White Knight#1a	4_WHITEKNIGHT,{
 			close;
 		}
 		delitem .@item, .@cost;
-		getitem White_Knight_Card, 1;
+		getitem White_Knightage_Card, 1;
 		close;
 	}
 }
@@ -2732,7 +2732,7 @@ glast_01,192,273,3	script	Khalitzburg Knight#1a	4_F_KHALITZBURG,{
 	mes("I exchange you a Khalitzburg Knight Card for ^0000FF5000 Coagulated Spell^000000 or ^FF0000100 Contaminated Magic^000000.");
 	mes("<ITEMLINK>Khalitzburg Knight Card<INFO>4609</INFO></ITEMLINK>");
 	next;
-	setarray .@item[0], Coagulated_Spell, Contaminated_Magic;
+	setarray .@item[0], Coagulated_Spell, Corrupted_Charm;
 	setarray .@cost[0], 5000, 100;
 	.@select = select("Cancel", "^0000FFUse Coagulated Spell^000000", "^FF0000Use Contaminated Magic^000000");
 	switch (.@select) {
@@ -2750,7 +2750,7 @@ glast_01,192,273,3	script	Khalitzburg Knight#1a	4_F_KHALITZBURG,{
 			close;
 		}
 		delitem .@item, .@cost;
-		getitem Khalitzburg_Knight_Card, 1;
+		getitem Khali_Knightage_Card, 1;
 		close;
 	}
 }

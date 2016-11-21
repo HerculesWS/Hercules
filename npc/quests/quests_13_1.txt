@@ -7289,7 +7289,7 @@ mid_camp,143,306,5	script	Breeder Taab#ep13_alba	4_M_DST_MASTER,{
 			}
 		}
 		else if (ep13_alba == 3) {
-			if ((countitem(Monster's_Feed) > 19) && (countitem(Pet_Food) > 29)) {
+			if ((countitem(Monsters_Feed) > 19) && (countitem(Pet_Food) > 29)) {
 				mes "[Taab]";
 				mes "Oh, thanks!";
 				mes "You brought them their";
@@ -7305,7 +7305,7 @@ mid_camp,143,306,5	script	Breeder Taab#ep13_alba	4_M_DST_MASTER,{
 				mes "material to give you.";
 				mes "How about a spiritual reward?";
 				next;
-				delitem Monster's_Feed,20;
+				delitem Monsters_Feed,20;
 				delitem Pet_Food,30;
 				ep13_alba = 6;
 				if (RENEWAL_EXP) {
@@ -8270,7 +8270,7 @@ spl_fild02,314,165,0	script	School of Fish#1::Fishinghole	CLEAR_NPC,{
 		specialeffect2 EF_BUBBLE;
 		specialeffect2 EF_INVENOM;
 		.@fcast = 15;
-		if (isequipped(2550)) //Fisher's_Muffler
+		if (isequipped(2550)) //Fishers_Muffler
 			.@fcast -= 2;
 		if (isequipped(2443)) //Fish_Shoes
 			.@fcast -= 2;

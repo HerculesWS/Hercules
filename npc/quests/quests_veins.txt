@@ -4516,7 +4516,7 @@ veins,115,59,5	script	Saraman	4_M_EINOLD,{
 		close;
 	}
 	else if (rachel_camel == 8) {
-		if ((countitem(Monster's_Feed) > 4) && (countitem(Yellow_Potion) > 0) && (countitem(Unripe_Apple) > 0) && (countitem(Empty_Bottle) > 0)) {
+		if ((countitem(Monsters_Feed) > 4) && (countitem(Yellow_Potion) > 0) && (countitem(Unripe_Apple) > 0) && (countitem(Empty_Bottle) > 0)) {
 			mes "[Camel Farm Owner Saraman]";
 			mes "Oh good, you're back.";
 			mes "Did you bring everything?";
@@ -4552,7 +4552,7 @@ veins,115,59,5	script	Saraman	4_M_EINOLD,{
 			mes "ingredients. That's a good";
 			mes "amount to collect since that's";
 			mes "what Ms. Ivory usually orders.";
-			delitem Monster's_Feed,5;
+			delitem Monsters_Feed,5;
 			delitem Yellow_Potion,1;
 			delitem Unripe_Apple,1;
 			delitem Empty_Bottle,1;

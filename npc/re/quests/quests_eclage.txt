@@ -2807,7 +2807,7 @@ ecl_in04,226,231,4	script	Du Lian#ep14_2in2	4_M_REDMAN,{
 		emotion e_dots,0,"Alp Ocart#ep14_2in2";
 		cutin "bu_alp2",2;
 		ep14_2_oliver = 30;
-		getitem C_Oliver_Wolf_Hood,1;
+		getitem(Oliver_Wolf_Hood, 1);
 		completequest 11337;
 		close2;
 		cutin "",255;
@@ -2949,7 +2949,7 @@ ecl_in04,224,234,4	script	Mark Esha#ep14_2in2	4_M_BLUEMAN,{
 		emotion e_dots,0,"Alp Ocart#ep14_2in2";
 		cutin "bu_alp2",2;
 		ep14_2_oliver = 30;
-		getitem C_Oliver_Wolf_Hood,1;
+		getitem(Oliver_Wolf_Hood, 1);
 		completequest 11337;
 		close2;
 		cutin "",255;
@@ -3094,7 +3094,7 @@ ecl_in04,223,234,4	script	Maggi Steen#ep14_2in2	4_F_PINKWOMAN,{
 		emotion e_dots,0,"Alp Ocart#ep14_2in2";
 		cutin "bu_alp2",2;
 		ep14_2_oliver = 30;
-		getitem C_Oliver_Wolf_Hood,1;
+		getitem(Oliver_Wolf_Hood, 1);
 		completequest 11337;
 		close2;
 		cutin "",255;
@@ -3230,7 +3230,7 @@ ecl_in04,223,230,4	script	Alp Ocart#ep14_2in2	4_M_BLACKMAN,{
 		emotion e_dots;
 		cutin "bu_alp2",2;
 		ep14_2_oliver = 30;
-		getitem C_Oliver_Wolf_Hood,1;
+		getitem(Oliver_Wolf_Hood, 1);
 		completequest 11337;
 		close2;
 		cutin "",255;
@@ -17592,7 +17592,7 @@ eclage,112,40,3	script	Eclage Guard Leo#tl	4_M_FAIRYSOLDIER2,{
 			}
 		}
 		else if (questprogress(7420) == 1) {
-			if ((countitem(Pinguicula's_fruit_Jam) < 3) || (countitem(Luciola's_Honey_Jam) < 3)) {
+			if ((countitem(Pinguiculas_fruit_Jam) < 3) || (countitem(Luciolas_Honey_Jam) < 3)) {
 				mes "[Leo]";
 				mes "I need 3 jars of Pinguicula's pickled fruits and another 3 jars of Luciola's honey jam~";
 				mes "They are specialties of the base of Splendide.";
@@ -17611,8 +17611,8 @@ eclage,112,40,3	script	Eclage Guard Leo#tl	4_M_FAIRYSOLDIER2,{
 			mes "It seems like Mayor Jun has an eye for character.";
 			mes "So he is Mayor after all...";
 			next;
-			delitem Pinguicula's_fruit_Jam,3; //Pinguicula's_fruit_Jam
-			delitem Luciola's_Honey_Jam,3; //Luciola's_Honey_Jam
+			delitem Pinguiculas_fruit_Jam,3;
+			delitem Luciolas_Honey_Jam, 3;
 			completequest 7420;
 			getexp 200000,200000;
 			.@alltotal =  questprogress(7420) + questprogress(7419) + questprogress(7418);

@@ -1484,7 +1484,7 @@ ama_in02,170,62,4	script	Soldier#ama2	8_M_JPNSOLDIER,{
 	switch(select("Issue me a Transit Permit", "I want to live in Amatsu", "Nothing")) {
 	case 1:
 		if (event_amatsu == 6) {
-			if (countitem(Lord's_Passable_Ticket) > 0) {
+			if (countitem(Lords_Passable_Ticket) > 0) {
 				mes "[Jiro]";
 				mes "You already have one...";
 				mes "You don't need to have two of them.";
@@ -1497,7 +1497,7 @@ ama_in02,170,62,4	script	Soldier#ama2	8_M_JPNSOLDIER,{
 			next;
 			if (select("Issue one", "Talk to you later") == 1) {
 				Zeny -= 10000;
-				getitem Lord's_Passable_Ticket,1;
+				getitem Lords_Passable_Ticket,1;
 				mes "[Jiro]";
 				mes "There you go.";
 				mes "Don't lose it this time.";
@@ -1678,7 +1678,7 @@ ama_in02,115,177,7	script	Soldier#ama10	8_M_JPNSOLDIER,{
 		close;
 	}
 	if (event_amatsu == 6) {
-		if (countitem(Lord's_Passable_Ticket) > 0) {
+		if (countitem(Lords_Passable_Ticket) > 0) {
 			mes "[Jyuro]";
 			mes "You have the ticket...";
 			mes "Do you want me to send you now, or do you need a little instruction?";
@@ -1734,7 +1734,7 @@ ama_in02,115,177,7	script	Soldier#ama10	8_M_JPNSOLDIER,{
 	mes "A gate? On the top floor of the building??? Surely, you must been be mistaken.";
 	emotion e_swt;
 	next;
-	if (countitem(Lord's_Passable_Ticket) > 0) {
+	if (countitem(Lords_Passable_Ticket) > 0) {
 		if (select("Show him the ticket", "Cancel") == 1) {
 			mes "[Jyuro]";
 			mes "What? That pass is...?";
@@ -1742,7 +1742,7 @@ ama_in02,115,177,7	script	Soldier#ama10	8_M_JPNSOLDIER,{
 			mes "the lord but I guess it has";
 			mes "been issued to the wrong person.";
 			next;
-			delitem Lord's_Passable_Ticket,1;
+			delitem Lords_Passable_Ticket,1;
 			mes "[Jyuro]";
 			mes "I will keep this ticket because";
 			mes "it was issued without permission.";
@@ -1885,7 +1885,7 @@ ama_in02,200,176,4	script	Lord of Palace#ama	8_M_JPNMASTER,{
 			event_amatsu = 6;
 			completequest 8135;
 			delitem Fox_Tail,1;
-			getitem Lord's_Passable_Ticket,1;
+			getitem Lords_Passable_Ticket,1;
 			mes "[Ishida Yoshinaga]";
 			mes "This isn't a big reward but";
 			mes "someday it will be useful for you.";
@@ -1943,7 +1943,7 @@ ama_in01,22,111,0	script	Grandma#ama2	4_F_JPNOBA,{
 		mes "it won't harm me!! Yelp!^000000";
 		next;
 		select("Taaaah!!");
-		if ((BaseJob == Job_Priest || BaseJob != Job_Acolyte && BaseJob != Job_Monk) || (countitem(Holy_Water) < 1 || countitem(Bear's_Foot) < 1 || countitem(Tiger's_Skin) < 1)) {
+		if ((BaseJob == Job_Priest || BaseJob != Job_Acolyte && BaseJob != Job_Monk) || (countitem(Holy_Water) < 1 || countitem(Bears_Foot) < 1 || countitem(Tigers_Skin) < 1)) {
 			if (rand(1,4) == 1)
 				.@fox_kill = 0;
 			else

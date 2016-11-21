@@ -16,16 +16,16 @@ prontera,124,201,1	script	Universal Rental NPC	4_F_JOB_BLACKSMITH,{
 	if (hascashmount()) {
 		message strcharinfo(PC_NAME),"You must first remove your mount.";
 		end;
-	} else if ((eaclass()&EAJ_THIRDMASK) == EAJ_RANGER && !countitem(Wolf's_Flute)) {
+	} else if ((eaclass()&EAJ_THIRDMASK) == EAJ_RANGER && !countitem(Wolfs_Flute)) {
 		if (!checkfalcon() && getskilllv(HT_FALCON) && !checkwug()) {
 			if (select(" ~ Falcon", " ~ Warg") == 1)
 				setfalcon;
 			else
-				getitem Wolf's_Flute, 1;
+				getitem Wolfs_Flute, 1;
 			specialeffect2 EF_TEIHIT3;
 			close;
 		} else {
-			getitem Wolf's_Flute,1;
+			getitem Wolfs_Flute,1;
 		}
 	} else if ((eaclass()&EAJ_THIRDMASK) == EAJ_MECHANIC && !checkcart() && getskilllv(MC_PUSHCART)) {
 		if (!checkmount() != MOUNT_MADO && getskilllv(NC_MADOLICENCE)) {

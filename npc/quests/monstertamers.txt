@@ -593,7 +593,7 @@ aldeba_in,168,175,4	script	Monster Tamer#alde	4_M_TELEPORTER,{
 		mes "Its name?";
 		mes "^3355FFOrc Trophy^000000!";
 		next;
-		if ((countitem(Patriotism_Marks) > 0) && (countitem(Scorpion's_Tail) > 0)) {
+		if ((countitem(Patriotism_Marks) > 0) && (countitem(Scorpions_Tail) > 0)) {
 			mes "[Shogo]";
 			mes "Oh! You have all the items necessary to make an Orc Trophy! Good, good! With all my pride as a monster tamer, let me make one for you right away!";
 			next;
@@ -610,7 +610,7 @@ aldeba_in,168,175,4	script	Monster Tamer#alde	4_M_TELEPORTER,{
 			mes "the cute monster";
 			mes "you are raising...";
 			mes "Orc Trophy!";
-			delitem Scorpion's_Tail,1;
+			delitem Scorpions_Tail,1;
 			delitem Patriotism_Marks,1;
 			getitem Horror_Of_Tribe,1; // Horror_Of_Tribe
 			close;
@@ -641,7 +641,7 @@ aldeba_in,168,175,4	script	Monster Tamer#alde	4_M_TELEPORTER,{
 }
 
 comodo,112,182,0	script	Munak's Grandma	8_F_GRANDMOTHER,{
-	if (countitem(Girl's_Diary) > 0) {
+	if (countitem(Girls_Diary) > 0) {
 		mes "[Munak's grandma]";
 		mes "Oh my...";
 		mes "Have you seen my granddaughter,";

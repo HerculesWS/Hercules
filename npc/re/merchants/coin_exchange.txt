@@ -1129,7 +1129,7 @@ ecl_in01,67,39,4	script	Replication Expert Paltu	4_M_FAIRYKID4,{
 						Assassin_Mask_,
 						Elven_Ears,
 						Hahoe_Mask,
-						Boy's_Cap;
+						Boys_Cap;
 	setarray .@costumes[0], C_Frog_Cap,
 							C_Centimental_Flower,
 							C_Magestic_Goat,
@@ -1139,7 +1139,7 @@ ecl_in01,67,39,4	script	Replication Expert Paltu	4_M_FAIRYKID4,{
 							C_Assassin_Mask_,
 							C_Elven_Ears,
 							C_Hahoe_Mask,
-							C_Boy's_Cap;
+							C_Boys_Cap;
 	if ((countitem(Splendide_Coin) >= 50) && (countitem(Crystal_Mirror) >= 4) && countitem(Angel_Magic_Power) && (countitem(Azure_Jewel) >= 10) && (countitem(Cardinal_Jewel) >= 10) && (countitem(Blue_Jewel) >= 10) && (countitem(Golden_Jewel) >= 10) && (countitem(Bluish_Green_Jewel) >= 10))
 		.@item_check =1;
 

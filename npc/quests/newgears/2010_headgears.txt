@@ -368,8 +368,8 @@ comodo,236,164,0	script	Hat Girl#Hair_Brush	1_F_04,{
 
 //== 4. Making the new headgear Statue Of Baby Angel(5443) =
 alberta,151,78,0	script	Bebete#Baby_Angel_Status	4W_KID,{
-	// Check if wearing Ear_Of_Angel's_Wing, Angelic_Chain, Flying_Angel
-	if (!isequipped(Ear_Of_Angel's_Wing) && !isequipped(Angelic_Chain) && !isequipped(Flying_Angel)) {
+	// Check if wearing Ear_Of_Angels_Wing, Angelic_Chain, Flying_Angel
+	if (!isequipped(Ear_Of_Angels_Wing) && !isequipped(Angelic_Chain) && !isequipped(Flying_Angel)) {
 		mes "[Bebete]";
 		mes "A fake angel? Go away!!";
 		next;

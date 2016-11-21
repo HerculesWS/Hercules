@@ -429,7 +429,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 		goto L_End;
 	}
 	else if (cooking_q == 1) {
-		if (countitem(Grasshopper's_Leg) > 4 && countitem(Old_Frying_Pan) > 0 && countitem(Cooking_Oil) > 0) {
+		if (countitem(Grasshoppers_Leg) > 4 && countitem(Old_Frying_Pan) > 0 && countitem(Cooking_Oil) > 0) {
 			cutin "orleans_4",0;
 			emotion e_an;
 			mes "[Charles Orleans]";
@@ -462,7 +462,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			mes "know this recipe now. That's";
 			mes "all for today, so please go";
 			mes "and practice on your own now.";
-			delitem Grasshopper's_Leg,5;
+			delitem Grasshoppers_Leg,5;
 			delitem Old_Frying_Pan,1;
 			delitem Cooking_Oil,1;
 			cooking_q = 7;

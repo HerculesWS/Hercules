@@ -490,7 +490,7 @@ void pc_rental_expire(struct map_session_data *sd, int i) {
 
 	/* Soon to be dropped, we got plans to integrate it with item db */
 	switch( nameid ) {
-		case ITEMID_REINS_OF_MOUNT:
+		case ITEMID_BOARDING_HALTER:
 			status_change_end(&sd->bl,SC_ALL_RIDING,INVALID_TIMER);
 			break;
 		case ITEMID_LOVE_ANGEL:
@@ -4977,7 +4977,7 @@ int pc_useitem(struct map_session_data *sd,int n) {
 		return 0;
 
 	/* Items with delayed consume are not meant to work while in mounts except reins of mount(12622) */
-	if( sd->inventory_data[n]->flag.delay_consume && nameid != ITEMID_REINS_OF_MOUNT ) {
+	if (sd->inventory_data[n]->flag.delay_consume && nameid != ITEMID_BOARDING_HALTER) {
 		if( sd->sc.data[SC_ALL_RIDING] )
 			return 0;
 		else if( pc_issit(sd) )
@@ -5004,7 +5004,7 @@ int pc_useitem(struct map_session_data *sd,int n) {
 			} else {// not yet used item (all slots are initially empty)
 				sd->item_delay[i].nameid = nameid;
 			}
-			if (!(nameid == ITEMID_REINS_OF_MOUNT && pc_hasmount(sd)))
+			if (!(nameid == ITEMID_BOARDING_HALTER && pc_hasmount(sd)))
 				sd->item_delay[i].tick = tick + sd->inventory_data[n]->delay;
 		} else {// should not happen
 			ShowError("pc_useitem: Exceeded item delay array capacity! (nameid=%d, char_id=%d)\n", nameid, sd->status.char_id);
@@ -11674,9 +11674,9 @@ bool pc_db_checkid(unsigned int class_)
 int pc_have_magnifier(struct map_session_data *sd)
 {
 	int n;
-	n = pc->search_inventory(sd, ITEMID_MAGNIFIER);
+	n = pc->search_inventory(sd, ITEMID_SPECTACLES);
 	if (n == INDEX_NOT_FOUND)
-		n = pc->search_inventory(sd, ITEMID_NOVICE_MAGNIFIER);
+		n = pc->search_inventory(sd, ITEMID_N_MAGNIFIER);
 	return n;
 }
 

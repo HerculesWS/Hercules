@@ -896,7 +896,7 @@ morocc,248,159,4	script	Young Man#magum1	4_M_04,{
 		close;
 	}
 	else if (dmdswrd_Q == 40) {
-		if (countitem(Bloody_Edge) == 9 && countitem(Blade_Lost_In_Darkness) == 6 && countitem(Cardinal_Jewel) == 9 && countitem(Loki's_Whispers) == 1) {
+		if (countitem(Bloody_Edge) == 9 && countitem(Blade_Lost_In_Darkness) == 6 && countitem(Cardinal_Jewel) == 9 && countitem(Lokis_Whispers) == 1) {
 			mes "[Huey]";
 			mes "Oh, you're back. Did";
 			mes "you bring everything";
@@ -914,7 +914,7 @@ morocc,248,159,4	script	Young Man#magum1	4_M_04,{
 			delitem Bloody_Edge,9;
 			delitem Blade_Lost_In_Darkness,6;
 			delitem Cardinal_Jewel,9;
-			delitem Loki's_Whispers,1;
+			delitem Lokis_Whispers,1;
 			dmdswrd_Q = 41;
 			close;
 		}

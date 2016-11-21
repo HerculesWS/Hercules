@@ -1438,7 +1438,7 @@ mosk_fild01,86,104,3	script	Aged Stranger#npc	4_M_GUSLIMAN,{
 		mes "Oh... Did you get all the";
 		mes "materials?";
 		next;
-		if (countitem(Log) > 29 && countitem(Tough_Vines) > 19 && countitem(Goat's_Horn) > 19 && countitem(Sea_Otter_Leather) > 9) {
+		if (countitem(Log) > 29 && countitem(Tough_Vines) > 19 && countitem(Goats_Horn) > 19 && countitem(Sea_Otter_Leather) > 9) {
 			mes "[Aged Stranger]";
 			mes "You found the right materials.";
 			mes "Okay, I will start to make the";
@@ -1446,7 +1446,7 @@ mosk_fild01,86,104,3	script	Aged Stranger#npc	4_M_GUSLIMAN,{
 			next;
 			delitem Log,30;
 			delitem Tough_Vines,20;
-			delitem Goat's_Horn,20;
+			delitem Goats_Horn,20;
 			delitem Sea_Otter_Leather,10;
 			mos_whale_edq = 34;
 			mes "[Aged Stranger]";
@@ -4496,7 +4496,7 @@ mosk_in,215,46,5	script	Baba Yaga, the Horrible	4_F_BABAYAGA,{
 		mes "Did you get";
 		mes "all of the items?";
 		next;
-		setarray .@n, Grasshopper's_Leg,20,Spawn,5,Wing_Of_Red_Bat,20,Starsand_Of_Witch,10,Fine_Grit,10,Sticky_Mucus,10,Detonator,1,Boody_Red,5,Burning_Heart,10;
+		setarray .@n, Grasshoppers_Leg,20,Spawn,5,Wing_Of_Red_Bat,20,Starsand_Of_Witch,10,Fine_Grit,10,Sticky_Mucus,10,Detonator,1,Boody_Red,5,Burning_Heart,10;
 		for (.@i = 0; .@i < getarraysize(.@n); .@i += 2) {
 			if (countitem(.@n[.@i]) < .@n[.@i+1]) {
 				.@f = 1;
@@ -4591,7 +4591,7 @@ mosk_in,215,46,5	script	Baba Yaga, the Horrible	4_F_BABAYAGA,{
 		mes "Did you get";
 		mes "all of them?";
 		next;
-		setarray .@n, Grasshopper's_Leg,20,Spawn,5,Wing_Of_Red_Bat,20,Starsand_Of_Witch,10,Fine_Grit,10,Detonator,1,Boody_Red,5,Burning_Heart,10;
+		setarray .@n, Grasshoppers_Leg,20,Spawn,5,Wing_Of_Red_Bat,20,Starsand_Of_Witch,10,Fine_Grit,10,Detonator,1,Boody_Red,5,Burning_Heart,10;
 		for (.@i = 0; .@i < getarraysize(.@n); .@i += 2) {
 			if (countitem(.@n[.@i]) < .@n[.@i+1]) {
 				.@f = 1;

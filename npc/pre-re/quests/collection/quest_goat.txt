@@ -188,11 +188,11 @@ ein_fild06,82,171,0	script	Vegetable Farmer#Goat	4_F_SHABBY,{
 							close;
 						}
 						*/
-						if (countitem(Goat's_Horn) > 49) {
+						if (countitem(Goats_Horn) > 49) {
 							mes "[Vegetable Farmer]";
 							mes "Amazing, you did that with speed.";
 							mes "I am truly grateful.";
-							delitem Goat's_Horn,50;
+							delitem Goats_Horn,50;
 							getexp 258489,155155;
 							//getitem White_Potion,10;
 							close;

@@ -723,7 +723,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 						mes "Mysteltainn twig used to kill Baldur. Hurry and bring it...";
 						close;
 					}
-					if (countitem(Loki's_Whispers) < 1) {
+					if (countitem(Lokis_Whispers) < 1) {
 						mes "[Mysterious Blacksmith]";
 						mes "Hm. You forgot to bring";
 						mes "^0099FF1 Loki's Whispers^000000. We need";
@@ -732,7 +732,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 						mes "find that as quickly as you can! ";
 						close;
 					}
-					if (countitem(Mother's_Nightmare) < 1) {
+					if (countitem(Mothers_Nightmare) < 1) {
 						mes "[Mysterious Blacksmith]";
 						mes "Hm, you still need to";
 						mes "bring ^0099FF1 Mother's Nightmare^000000";
@@ -758,7 +758,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 						mes "of wielding it. Bring ^0099FF1 Emperium^000000 and I will recognize your worth.";
 						close;
 					}
-					if (countitem(Young_Twig) > 0 && countitem(Loki's_Whispers) > 0 && countitem(Mother's_Nightmare) > 0 && countitem(Foolishness_Of_Blind) > 0 && countitem(Emperium) > 0) {
+					if (countitem(Young_Twig) > 0 && countitem(Lokis_Whispers) > 0 && countitem(Mothers_Nightmare) > 0 && countitem(Foolishness_Of_Blind) > 0 && countitem(Emperium) > 0) {
 						mes "[Mysterious Blacksmith]";
 						mes "Well done, adventurer.";
 						mes "All seems to be in readiness.";
@@ -773,8 +773,8 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 						mes "quickly! I d-don't want";
 						mes "to touch it if I can avoid it.";
 						delitem Young_Twig,1;
-						delitem Loki's_Whispers,1;
-						delitem Mother's_Nightmare,1;
+						delitem Lokis_Whispers,1;
+						delitem Mothers_Nightmare,1;
 						delitem Foolishness_Of_Blind,1;
 						delitem Emperium,1;
 						getitem Mysteltainn_,1;
@@ -1058,7 +1058,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 					mes "prepared to wield that blade";
 					mes "with your own two hands...";
 					next;
-					if (countitem(Executioner's_Mitten) < 2) {
+					if (countitem(Executioners_Mitten) < 2) {
 						mes "[Mysterious Blacksmith]";
 						mes "Hm. In order for me";
 						mes "to forge the Executioner,";
@@ -1105,7 +1105,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 						mes "if you bring ^0099FF1 Emperium^000000.";
 						close;
 					}
-					if (countitem(Executioner's_Mitten) > 1 && countitem(Bloody_Edge) > 9 && countitem(Frozen_Heart) > 2 && countitem(Amulet) > 49 && countitem(Emperium) > 0) {
+					if (countitem(Executioners_Mitten) > 1 && countitem(Bloody_Edge) > 9 && countitem(Frozen_Heart) > 2 && countitem(Amulet) > 49 && countitem(Emperium) > 0) {
 						mes "[Mysterious Blacksmith]";
 						mes "Great, I see that you've";
 						mes "prepared everything that";
@@ -1120,7 +1120,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 						mes "terrifying sword. Now";
 						mes "take it! Be wary, and don't";
 						mes "let its bloodlust consume you!";
-						delitem Executioner's_Mitten,2;
+						delitem Executioners_Mitten,2;
 						delitem Bloody_Edge,10;
 						delitem Frozen_Heart,3;
 						delitem Amulet,50;

@@ -529,12 +529,12 @@ um_in,44,71,2	script	Utan Shaman	4_F_UMOLDWOMAN,{
 			.@success = 993; //Yellow_Live
 			break;
 		case 2:
-			.@consume = 946; //Snail's_Shell
+			.@consume = 946; //Snails_Shell
 			.@amount = 20;
 			.@success = 991; //Crystal_Blue
 			break;
 		case 3:
-			.@consume = 904; //Scorpion's_Tail
+			.@consume = 904; //Scorpions_Tail
 			.@amount = 20;
 			.@success = 990; //Boody_Red
 			break;

@@ -204,12 +204,12 @@ xmas,115,297,4	script	Vending Machine	HIDDEN_NPC,{
 		}
 		break;
 	case 3:
-		if ((countitem(Poison_Spore) > 849) && (countitem(Burn_Tree) > 299) && (countitem(Thin_N'_Long_Tongue) > 0)) {
+		if ((countitem(Poison_Spore) > 849) && (countitem(Burn_Tree) > 299) && (countitem(Thin_N_Long_Tongue) > 0)) {
 			mes "^3355FFYou gingerly place the items into the snowman's mouth.^000000";
 			next;
 			delitem Poison_Spore,850;
 			delitem Burn_Tree,300;
-			delitem Thin_N'_Long_Tongue,1;
+			delitem Thin_N_Long_Tongue,1;
 			emotion e_oh;
 			mes "^3355FF*Vroooooom~~*";
 			mes "*Bzzzzzt*";
@@ -268,10 +268,10 @@ xmas,115,297,4	script	Vending Machine	HIDDEN_NPC,{
 		}
 		break;
 	case 6:
-		if (countitem(Alice's_Apron) > 99) {
+		if (countitem(Alices_Apron) > 99) {
 			mes "^3355FFYou gingerly place all 100 Aprons into the snowman's mouth.^000000";
 			next;
-			delitem Alice's_Apron,100;
+			delitem(Alices_Apron, 100);
 			emotion e_oh;
 			mes "^3355FF*Vroooooom~~*";
 			mes "*Bzzzzzt*";

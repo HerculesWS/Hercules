@@ -619,7 +619,7 @@
 						getitem Old_Violet_Box,1;
 					}
 					else if ((.@incen_item > 90) && (.@incen_item < 101)) {
-						getitem Ear_Of_Angel's_Wing,1;
+						getitem Ear_Of_Angels_Wing,1;
 					}
 					next;
 					mes "[" + .@name$ + "]";
@@ -1330,7 +1330,7 @@
 					close;
 				}
 			}
-			if ((countitem(Thin_N'_Long_Tongue) > 29) && (countitem(Shoulder_Protection) > 29) && (countitem(Black_Mask) > 29) && (guildrelay_q == 2)) {
+			if ((countitem(Thin_N_Long_Tongue) > 29) && (countitem(Shoulder_Protection) > 29) && (countitem(Black_Mask) > 29) && (guildrelay_q == 2)) {
 				mes "[" + .@name$ + "]";
 				mes "Huh. I didn't actually";
 				mes "expect that you'd collect";
@@ -1338,7 +1338,7 @@
 				mes "Now, take this and give it to";
 				mes "a Blacksmith or Mastersmith.";
 				mes "Your guild's pretty good...";
-				delitem Thin_N'_Long_Tongue,30;
+				delitem Thin_N_Long_Tongue,30;
 				delitem Shoulder_Protection,30;
 				delitem Black_Mask,30;
 				guildrelay_q = 88;
@@ -1380,7 +1380,7 @@
 				mes "Don't forget this time.";
 				close;
 			}
-			if ((countitem(Fright_Paper_Blade) > 29) && (countitem(Lizard_Scruff) > 29) && (countitem(Elder_Pixie's_Beard) > 29) && (guildrelay_q == 89)) {
+			if ((countitem(Fright_Paper_Blade) > 29) && (countitem(Lizard_Scruff) > 29) && (countitem(Elder_Pixies_Beard) > 29) && (guildrelay_q == 89)) {
 				mes "[" + .@name$ + "]";
 				mes "Huh. I didn't actually";
 				mes "expect that you'd collect";
@@ -1390,7 +1390,7 @@
 				mes "Your guild's pretty good...";
 				delitem Fright_Paper_Blade,30;
 				delitem Lizard_Scruff,30;
-				delitem Elder_Pixie's_Beard,30;
+				delitem Elder_Pixies_Beard,30;
 				guildrelay_q = 88;
 				getitem Soul_Of_Courage,1;
 				close;
@@ -2019,7 +2019,7 @@
 				getitem Soul_Of_Harmony,1;
 				close;
 			}
-			else if ((countitem(Heart_Of_Tree) > 29) && (countitem(Soft_Leaf) > 29) && (countitem(Poison_Toad's_Skin) > 29) && (guildrelay_q == 11)) {
+			else if ((countitem(Heart_Of_Tree) > 29) && (countitem(Soft_Leaf) > 29) && (countitem(Poison_Toads_Skin) > 29) && (guildrelay_q == 11)) {
 				mes "[" + .@name$ + "]";
 				mes "Oh, perfect! You brought";
 				mes "all the items. Well then,";
@@ -2029,7 +2029,7 @@
 				mes "^42426FAssassin Cross^000000. Thank you.";
 				delitem Heart_Of_Tree,30;
 				delitem Soft_Leaf,30;
-				delitem Poison_Toad's_Skin,30;
+				delitem Poison_Toads_Skin,30;
 				if (BaseJob == Job_Dancer) {
 					guildrelay_q = 72;
 				}
@@ -2039,7 +2039,7 @@
 				getitem Soul_Of_Harmony,1;
 				close;
 			}
-			else if ((countitem(Goat's_Horn) > 29) && (countitem(Honey_Jar) > 29) && (countitem(Porcupine_Spike) > 29) && (guildrelay_q == 80)) {
+			else if ((countitem(Goats_Horn) > 29) && (countitem(Honey_Jar) > 29) && (countitem(Porcupine_Spike) > 29) && (guildrelay_q == 80)) {
 				mes "[" + .@name$ + "]";
 				mes "Oh, perfect! You brought";
 				mes "all the items. Well then,";
@@ -2047,7 +2047,7 @@
 				mes "take this spirit now. Please";
 				mes "give it to an ^42426FAssassin^000000 or an";
 				mes "^42426FAssassin Cross^000000. Thank you.";
-				delitem Goat's_Horn,30;
+				delitem Goats_Horn,30;
 				delitem Honey_Jar,30;
 				delitem Porcupine_Spike,30;
 				if (BaseJob == Job_Dancer) {

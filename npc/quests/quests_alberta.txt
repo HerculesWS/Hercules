@@ -424,7 +424,7 @@ alberta_in,28,145,4	script	Grampa	2_M_PHARMACIST,{
 			close;
 		case 2:
 			delitem Tiger_Footskin,10;
-			getitem Boy's_Cap,1;
+			getitem Boys_Cap,1;
 			mes "[Grampa]";
 			mes "T... Thank you !!";
 			mes "With this I can revive my youthful splendor!! I must eat this thing right away !";
@@ -2650,7 +2650,7 @@ alberta_in,131,95,5	script	Iromo#ep3_2	4_M_KID1,{
 		mes "I should stay at home.";
 		close;
 	}
-	if ((ep13_2_hiki == 6) && (countitem(Monster's_Feed) > 0) && (countitem(Red_Potion) > 0)) {
+	if ((ep13_2_hiki == 6) && (countitem(Monsters_Feed) > 0) && (countitem(Red_Potion) > 0)) {
 		mes "[Iromo]";
 		mes "...Huh? This smell...";
 		mes "This is the one I like the most.";
@@ -2687,7 +2687,7 @@ alberta_in,131,95,5	script	Iromo#ep3_2	4_M_KID1,{
 		mes "I like cats so I approached him.";
 		mes "Then suddenly he scratched and bit me.";
 		next;
-		delitem Monster's_Feed,1;
+		delitem Monsters_Feed,1;
 		delitem Red_Potion,1;
 		ep13_2_hiki = 7;
 		changequest 10083,10084;

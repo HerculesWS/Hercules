@@ -4699,7 +4699,7 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 					if( !(sg->unit_id == UNT_USED_TRAPS || (sg->unit_id == UNT_ANKLESNARE && sg->val2 != 0 )) ) {
 						struct item item_tmp;
 						memset(&item_tmp,0,sizeof(item_tmp));
-						item_tmp.nameid = sg->item_id?sg->item_id:ITEMID_TRAP;
+						item_tmp.nameid = sg->item_id ? sg->item_id : ITEMID_BOOBY_TRAP;
 						item_tmp.identify = 1;
 						if( item_tmp.nameid )
 							map->addflooritem(bl, &item_tmp, 1, bl->m, bl->x, bl->y, 0, 0, 0, 0);
@@ -7677,7 +7677,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 							// get back 1 trap
 							struct item item_tmp;
 							memset(&item_tmp,0,sizeof(item_tmp));
-							item_tmp.nameid = su->group->item_id?su->group->item_id:ITEMID_TRAP;
+							item_tmp.nameid = su->group->item_id ? su->group->item_id : ITEMID_BOOBY_TRAP;
 							item_tmp.identify = 1;
 							if (item_tmp.nameid && (flag=pc->additem(sd,&item_tmp,1,LOG_TYPE_SKILL)) != 0) {
 								clif->additem(sd,0,0,flag);
@@ -8554,7 +8554,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 		case AB_ANCILLA:
 			if( sd ) {
 				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
-				skill->produce_mix(sd, skill_id, ITEMID_ANCILLA, 0, 0, 0, 1);
+				skill->produce_mix(sd, skill_id, ITEMID_ANSILA, 0, 0, 0, 1);
 			}
 			break;
 
@@ -11477,7 +11477,7 @@ struct skill_unit_group* skill_unitsetting(struct block_list *src, uint16 skill_
 		case RA_ICEBOUNDTRAP:
 			{
 				struct skill_condition req = skill->get_requirement(sd,skill_id,skill_lv);
-				ARR_FIND(0, MAX_SKILL_ITEM_REQUIRE, i, req.itemid[i] && (req.itemid[i] == ITEMID_TRAP || req.itemid[i] == ITEMID_TRAP_ALLOY));
+				ARR_FIND(0, MAX_SKILL_ITEM_REQUIRE, i, req.itemid[i] && (req.itemid[i] == ITEMID_BOOBY_TRAP || req.itemid[i] == ITEMID_SPECIAL_ALLOY_TRAP));
 				if( i != MAX_SKILL_ITEM_REQUIRE && req.itemid[i] )
 					req_item = req.itemid[i];
 				if( map_flag_gvg2(src->m) || map->list[src->m].flag.battleground )
@@ -13943,7 +13943,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 			{
 				int count = 0, i;
 				for( i = 0; i < MAX_INVENTORY; i ++ )
-					if( sd->status.inventory[i].nameid == ITEMID_ANCILLA )
+					if (sd->status.inventory[i].nameid == ITEMID_ANSILA)
 						count += sd->status.inventory[i].amount;
 				if( count >= 3 ) {
 					clif->skill_fail(sd, skill_id, USESKILL_FAIL_ANCILLA_NUMOVER, 0);
@@ -14576,7 +14576,7 @@ int skill_check_condition_castend(struct map_session_data* sd, uint16 skill_id, 
 							cause = USESKILL_FAIL_BLUEJAMSTONE; break;
 						case ITEMID_HOLY_WATER:
 							cause = USESKILL_FAIL_HOLYWATER; break;
-						case ITEMID_ANCILLA:
+						case ITEMID_ANSILA:
 							cause = USESKILL_FAIL_ANCILLA; break;
 						case ITEMID_ACCELERATOR:
 						case ITEMID_HOVERING_BOOSTER:
@@ -14891,7 +14891,7 @@ struct skill_condition skill_get_requirement(struct map_session_data* sd, uint16
 			if ((item_index = pc->search_inventory(sd, req.itemid[i])) == INDEX_NOT_FOUND
 			  || sd->status.inventory[item_index].amount < req.amount[i]
 			) {
-				req.itemid[i] = ITEMID_TRAP_ALLOY;
+				req.itemid[i] = ITEMID_SPECIAL_ALLOY_TRAP;
 				req.amount[i] = 1;
 			}
 			break;
@@ -14918,14 +14918,14 @@ struct skill_condition skill_get_requirement(struct map_session_data* sd, uint16
 		switch(skill_lv) {
 			case 1:
 			case 2:
-				req.itemid[1] = ITEMID_REPAIR_A;
+				req.itemid[1] = ITEMID_REPAIRA;
 				break;
 			case 3:
 			case 4:
-				req.itemid[1] = ITEMID_REPAIR_B;
+				req.itemid[1] = ITEMID_REPAIRB;
 				break;
 			case 5:
-				req.itemid[1] = ITEMID_REPAIR_C;
+				req.itemid[1] = ITEMID_REPAIRC;
 				break;
 		}
 		req.amount[1] = 1;
@@ -16983,7 +16983,7 @@ int skill_unit_timer_sub(union DBKey key, struct DBData *data, va_list ap)
 					// revert unit back into a trap
 					struct item item_tmp;
 					memset(&item_tmp,0,sizeof(item_tmp));
-					item_tmp.nameid = group->item_id?group->item_id:ITEMID_TRAP;
+					item_tmp.nameid = group->item_id ? group->item_id : ITEMID_BOOBY_TRAP;
 					item_tmp.identify = 1;
 					map->addflooritem(bl, &item_tmp, 1, bl->m, bl->x, bl->y, 0, 0, 0, 0);
 				}
@@ -18157,16 +18157,16 @@ int skill_magicdecoy(struct map_session_data *sd, int nameid)
 	sd->menuskill_val = 0;
 
 	switch (nameid) {
-	case ITEMID_SCARLET_POINT:
+	case ITEMID_SCARLET_PTS:
 		class_ = MOBID_MAGICDECOY_FIRE;
 		break;
-	case ITEMID_INDIGO_POINT:
+	case ITEMID_INDIGO_PTS:
 		class_ = MOBID_MAGICDECOY_WATER;
 		break;
-	case ITEMID_LIME_GREEN_POINT:
+	case ITEMID_LIME_GREEN_PTS:
 		class_ = MOBID_MAGICDECOY_WIND;
 		break;
-	case ITEMID_YELLOW_WISH_POINT:
+	case ITEMID_YELLOW_WISH_PTS:
 		class_ = MOBID_MAGICDECOY_EARTH;
 		break;
 	}

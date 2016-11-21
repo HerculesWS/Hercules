@@ -589,7 +589,7 @@ ein_in01,201,27,3	script	Guildsman#alberta	1_M_SMITH,{
 			case 3: setarray .@items[0], 1003,1, 935,2, 990,2, 1119,1, 6; changequest 2002,2005; break;
 			//Iron_Ore, Eye_Bandage, Blue_Gemstone, Arbalest
 			case 4: setarray .@items[0], 1002,1, 2212,1, 717,2, 1713,1, 7; changequest 2002,2006; break;
-			//Iron, Green_Herb, Animal's_Skin, Ring_Pommel_Saber
+			//Iron, Green_Herb, Animals_Skin, Ring_Pommel_Saber
 			default: setarray .@items[0], 998,1, 511,1, 919,2, 1122,1, 8; changequest 2002,2007; break;
 			}
 			BSMITH_Q = .@items[8];

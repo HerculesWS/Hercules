@@ -266,7 +266,7 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 		close;
 	}
 	else if(SAG_SK == 1) {
-		if (countitem(Scorpion's_Tail) < 10 || countitem(Horn) < 7 || countitem(Colorful_Shell) < 12 || countitem(Snail's_Shell) < 10 || countitem(Scroll) < 4) {
+		if (countitem(Scorpions_Tail) < 10 || countitem(Horn) < 7 || countitem(Colorful_Shell) < 12 || countitem(Snails_Shell) < 10 || countitem(Scroll) < 4) {
 			mes "[Mishuna]";
 			mes "Hm, you still haven't";
 			mes "gathered all of the materials";
@@ -333,10 +333,10 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 			mes "Creation skill by reviewing";
 			mes "your copy of Barmundt's scroll.^000000";
 			specialeffect2 EF_ABSORBSPIRITS;
-			delitem Scorpion's_Tail,10; // Scorpion_Tail
+			delitem Scorpions_Tail,10;
 			delitem Horn,7; // Horn
 			delitem Colorful_Shell,12; // Rainbow_Shell
-			delitem Snail's_Shell,10; // Snail's_Shell
+			delitem Snails_Shell,10;
 			delitem Scroll,4; // Blank_Scroll
 			SAG_SK = 2;
 			skill "SA_CREATECON",1,0;
