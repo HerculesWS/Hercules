@@ -5165,8 +5165,8 @@ OnInit:
 	end;
 
 OnEnable:
-	specialeffect EF_SUMMONSLAVE;
 	enablenpc "s_dance#up";
+	specialeffect EF_SUMMONSLAVE;
 	end;
 
 OnDisable:
@@ -5221,8 +5221,8 @@ OnInit:
 	end;
 
 OnEnable:
-	specialeffect EF_SUMMONSLAVE;
 	enablenpc "s_dance#down";
+	specialeffect EF_SUMMONSLAVE;
 	end;
 
 OnDisable:
@@ -5298,8 +5298,8 @@ OnInit:
 
 
 OnEnable:
-	specialeffect EF_SUMMONSLAVE;
 	enablenpc "s_dance#left";
+	specialeffect EF_SUMMONSLAVE;
 	end;
 
 OnDisable:
@@ -5366,8 +5366,8 @@ OnInit:
 	end;
 
 OnEnable:
-	specialeffect EF_SUMMONSLAVE;
 	enablenpc "s_dance#right";
+	specialeffect EF_SUMMONSLAVE;
 	end;
 
 OnDisable:
@@ -5440,8 +5440,8 @@ OnInit:
 	end;
 
 OnEnable:
-	specialeffect EF_SUMMONSLAVE;
 	enablenpc "s_dance#cen";
+	specialeffect EF_SUMMONSLAVE;
 	end;
 
 OnDisable:
