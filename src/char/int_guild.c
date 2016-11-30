@@ -251,7 +251,7 @@ int inter_guild_tosql(struct guild *g,int flag)
 					"VALUES ('%d','%d','%d','%d','%d','%d','%d','%d','%"PRIu64"','%d','%d','%d','%s')",
 					guild_member_db, g->guild_id, m->account_id, m->char_id,
 					m->hair, m->hair_color, m->gender,
-					m->class_, m->lv, m->exp, m->exp_payper, m->online, m->position, esc_name) )
+					m->class, m->lv, m->exp, m->exp_payper, m->online, m->position, esc_name) )
 					Sql_ShowDebug(inter->sql_handle);
 				if (m->modified&GS_MEMBER_NEW || new_guild == 1)
 				{
@@ -433,7 +433,7 @@ struct guild * inter_guild_fromsql(int guild_id)
 		SQL->GetData(inter->sql_handle,  2, &data, NULL); m->hair = atoi(data);
 		SQL->GetData(inter->sql_handle,  3, &data, NULL); m->hair_color = atoi(data);
 		SQL->GetData(inter->sql_handle,  4, &data, NULL); m->gender = atoi(data);
-		SQL->GetData(inter->sql_handle,  5, &data, NULL); m->class_ = atoi(data);
+		SQL->GetData(inter->sql_handle,  5, &data, NULL); m->class = atoi(data);
 		SQL->GetData(inter->sql_handle,  6, &data, NULL); m->lv = atoi(data);
 		SQL->GetData(inter->sql_handle,  7, &data, NULL); m->exp = strtoull(data, NULL, 10);
 		SQL->GetData(inter->sql_handle,  8, &data, NULL); m->exp_payper = (unsigned int)atoi(data);
@@ -984,7 +984,7 @@ int mapif_guild_memberinfoshort(struct guild *g, int idx)
 	WBUFL(buf,10)=g->member[idx].char_id;
 	WBUFB(buf,14)=(unsigned char)g->member[idx].online;
 	WBUFW(buf,15)=g->member[idx].lv;
-	WBUFW(buf,17)=g->member[idx].class_;
+	WBUFW(buf,17)=g->member[idx].class;
 	mapif->sendall(buf,19);
 	return 0;
 }
@@ -1349,7 +1349,7 @@ int mapif_parse_GuildLeave(int fd, int guild_id, int account_id, int char_id, in
 }
 
 // Change member info
-int mapif_parse_GuildChangeMemberInfoShort(int fd, int guild_id, int account_id, int char_id, int online, int lv, int class_)
+int mapif_parse_GuildChangeMemberInfoShort(int fd, int guild_id, int account_id, int char_id, int online, int lv, int16 class)
 {
 	// Could speed up by manipulating only guild_member
 	struct guild * g;
@@ -1365,7 +1365,7 @@ int mapif_parse_GuildChangeMemberInfoShort(int fd, int guild_id, int account_id,
 	{
 		g->member[i].online = online;
 		g->member[i].lv = lv;
-		g->member[i].class_ = class_;
+		g->member[i].class = class;
 		g->member[i].modified = GS_MEMBER_MODIFIED;
 		mapif->guild_memberinfoshort(g,i);
 	}
@@ -1602,7 +1602,7 @@ int mapif_parse_GuildMemberInfoChange(int fd, int guild_id, int account_id, int 
 		}
 		case GMI_CLASS:
 		{
-			g->member[i].class_ = *(const short *)data;
+			g->member[i].class = *(const int16 *)data;
 			g->member[i].modified = GS_MEMBER_MODIFIED;
 			mapif->guild_memberinfochanged(guild_id,account_id,char_id,type,data,len);
 			g->save_flag |= GS_MEMBER; //Save new data.

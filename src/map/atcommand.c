@@ -639,7 +639,7 @@ ACMD(who) {
 					if (pc_get_group_id(pl_sd) > 0) // Player title, if exists
 						StrBuf->Printf(&buf, msg_fd(fd,344), pcg->get_name(pl_sd->group)); // "(%s) "
 					StrBuf->Printf(&buf, msg_fd(fd,347), pl_sd->status.base_level, pl_sd->status.job_level,
-									 pc->job_name(pl_sd->status.class_)); // "| Lv:%d/%d | Job: %s"
+									 pc->job_name(pl_sd->status.class)); // "| Lv:%d/%d | Job: %s"
 					break;
 				}
 				case 3: {
@@ -748,7 +748,7 @@ ACMD(whogm)
 
 		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,915), // BLvl: %d | Job: %s (Lvl: %d)
 				pl_sd->status.base_level,
-				pc->job_name(pl_sd->status.class_), pl_sd->status.job_level);
+				pc->job_name(pl_sd->status.class), pl_sd->status.job_level);
 		clif->message(fd, atcmd_output);
 
 		p = party->search(pl_sd->status.party_id);
@@ -937,7 +937,7 @@ ACMD(hide) {
 		if (sd->disguise != -1 )
 			status->set_viewdata(&sd->bl, sd->disguise);
 		else
-			status->set_viewdata(&sd->bl, sd->status.class_);
+			status->set_viewdata(&sd->bl, sd->status.class);
 		clif->message(fd, msg_fd(fd,10)); // Invisible: Off
 
 		// increment the number of pvp players on the map
@@ -8210,7 +8210,7 @@ ACMD(stats)
 	output_table[14].value = sd->change_level_2nd;
 	output_table[15].value = sd->change_level_3rd;
 
-	sprintf(job_jobname, "Job - %s %s", pc->job_name(sd->status.class_), "(level %d)");
+	sprintf(job_jobname, "Job - %s %s", pc->job_name(sd->status.class), "(level %d)");
 	sprintf(output, msg_fd(fd,53), sd->status.name); // '%s' stats:
 
 	clif->message(fd, output);

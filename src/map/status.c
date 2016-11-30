@@ -2269,7 +2269,7 @@ unsigned int status_get_base_maxsp(const struct map_session_data *sd, const stru
 
 	nullpo_ret(sd);
 	nullpo_ret(st);
-	val = pc->class2idx(sd->status.class_);
+	val = pc->class2idx(sd->status.class);
 	val = status->dbs->SP_table[val][sd->status.base_level];
 
 	if ( sd->class_&JOBL_UPPER )
@@ -2290,7 +2290,7 @@ unsigned int status_get_base_maxhp(const struct map_session_data *sd, const stru
 
 	nullpo_ret(sd);
 	nullpo_ret(st);
-	val = pc->class2idx(sd->status.class_);
+	val = pc->class2idx(sd->status.class);
 	val = status->dbs->HP_table[val][sd->status.base_level];
 
 	if ( (sd->class_&MAPID_UPPERMASK) == MAPID_SUPER_NOVICE && sd->status.base_level >= 99 )
@@ -2342,7 +2342,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 
 	pc->calc_skilltree(sd); // SkillTree calculation
 
-	sd->max_weight = status->dbs->max_weight_base[pc->class2idx(sd->status.class_)]+sd->status.str*300;
+	sd->max_weight = status->dbs->max_weight_base[pc->class2idx(sd->status.class)]+sd->status.str*300;
 
 	if(opt&SCO_FIRST) {
 		//Load Hp/SP from char-received data.
@@ -2686,7 +2686,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 	// ----- STATS CALCULATION -----
 
 	// Job bonuses
-	index = pc->class2idx(sd->status.class_);
+	index = pc->class2idx(sd->status.class);
 	for (i = 0; i < sd->status.job_level && i < MAX_LEVEL; i++) {
 		if(!status->dbs->job_bonus[index][i])
 			continue;
@@ -4287,11 +4287,11 @@ int status_base_amotion_pc(struct map_session_data *sd, struct status_data *st)
 	nullpo_ret(sd);
 	nullpo_ret(st);
 
-	amotion = status->dbs->aspd_base[pc->class2idx(sd->status.class_)][sd->weapontype1];
+	amotion = status->dbs->aspd_base[pc->class2idx(sd->status.class)][sd->weapontype1];
 	if ( sd->status.weapon > MAX_SINGLE_WEAPON_TYPE)
-		amotion += status->dbs->aspd_base[pc->class2idx(sd->status.class_)][sd->weapontype2] / 4;
+		amotion += status->dbs->aspd_base[pc->class2idx(sd->status.class)][sd->weapontype2] / 4;
 	if ( sd->status.shield )
-		amotion += status->dbs->aspd_base[pc->class2idx(sd->status.class_)][MAX_SINGLE_WEAPON_TYPE];
+		amotion += status->dbs->aspd_base[pc->class2idx(sd->status.class)][MAX_SINGLE_WEAPON_TYPE];
 	switch ( sd->status.weapon ) {
 		case W_BOW:
 		case W_MUSICAL:
@@ -4315,8 +4315,8 @@ int status_base_amotion_pc(struct map_session_data *sd, struct status_data *st)
 #else
 	// base weapon delay
 	amotion = (sd->status.weapon < MAX_SINGLE_WEAPON_TYPE)
-		? (status->dbs->aspd_base[pc->class2idx(sd->status.class_)][sd->status.weapon]) // single weapon
-		: (status->dbs->aspd_base[pc->class2idx(sd->status.class_)][sd->weapontype1] + status->dbs->aspd_base[pc->class2idx(sd->status.class_)][sd->weapontype2]) * 7 / 10; // dual-wield
+		? (status->dbs->aspd_base[pc->class2idx(sd->status.class)][sd->status.weapon]) // single weapon
+		: (status->dbs->aspd_base[pc->class2idx(sd->status.class)][sd->weapontype1] + status->dbs->aspd_base[pc->class2idx(sd->status.class)][sd->weapontype2]) * 7 / 10; // dual-wield
 
 	// percentual delay reduction from stats
 	amotion -= amotion * (4 * st->agi + st->dex) / 1000;
@@ -6430,7 +6430,7 @@ int status_get_class(const struct block_list *bl)
 {
 	nullpo_ret(bl);
 	switch (bl->type) {
-		case BL_PC:  return BL_UCCAST(BL_PC, bl)->status.class_;
+		case BL_PC:  return BL_UCCAST(BL_PC, bl)->status.class;
 		case BL_MOB: return BL_UCCAST(BL_MOB, bl)->vd->class_; //Class used on all code should be the view class of the mob.
 		case BL_PET: return BL_UCCAST(BL_PET, bl)->pet.class_;
 		case BL_HOM: return BL_UCCAST(BL_HOM, bl)->homunculus.class_;
@@ -13070,15 +13070,15 @@ void status_read_job_db(void) /* [malufett/Hercules] */
 		return;
 
 	while ( (jdb = libconfig->setting_get_elem(job_db_conf.root, i++)) ) {
-		int class_, idx;
+		int class, idx;
 		const char *name = config_setting_name(jdb);
 
-		if ( (class_ = pc->check_job_name(name)) == -1 ) {
+		if ((class = pc->check_job_name(name)) == -1) {
 			ShowWarning("pc_read_job_db: '%s' unknown job name!\n", name);
 			continue;
 		}
 
-		idx = pc->class2idx(class_);
+		idx = pc->class2idx(class);
 		status->read_job_db_sub(idx, name, jdb);
 	}
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", i, config_filename);
@@ -13087,17 +13087,16 @@ void status_read_job_db(void) /* [malufett/Hercules] */
 
 bool status_readdb_job2(char* fields[], int columns, int current)
 {
-	int idx, class_, i;
+	int idx, class, i;
 
 	nullpo_retr(false, fields);
-	class_ = atoi(fields[0]);
+	class = atoi(fields[0]);
 
-	if(!pc->db_checkid(class_))
-	{
-		ShowWarning("status_readdb_job2: Invalid job class %d specified.\n", class_);
+	if (!pc->db_checkid(class)) {
+		ShowWarning("status_readdb_job2: Invalid job class %d specified.\n", class);
 		return false;
 	}
-	idx = pc->class2idx(class_);
+	idx = pc->class2idx(class);
 
 	for(i = 1; i < columns; i++)
 	{

@@ -892,7 +892,7 @@ int64 battle_calc_masteryfix(struct block_list *src, struct block_list *target, 
 		damage += damage * ratio / 100;
 	}
 
-	if( sd->status.class_ == JOB_ARCH_BISHOP_T || sd->status.class_ == JOB_ARCH_BISHOP ){
+	if ((sd->class_ & MAPID_THIRDMASK) == MAPID_ARCH_BISHOP) {
 		if((skill2_lv = pc->checkskill(sd,AB_EUCHARISTICA)) > 0 &&
 			(tstatus->race == RC_DEMON || tstatus->def_ele == ELE_DARK) )
 			damage += damage * skill2_lv / 100;
@@ -3760,10 +3760,11 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 				//Constant/misc additions from skills
 				if (skill_id == WZ_FIREPILLAR)
 					MATK_ADD(100+50*skill_lv);
-				if( sd && ( sd->status.class_ == JOB_ARCH_BISHOP_T || sd->status.class_ == JOB_ARCH_BISHOP ) &&
-					(i=pc->checkskill(sd,AB_EUCHARISTICA)) > 0 &&
-					(tstatus->race == RC_DEMON || tstatus->def_ele == ELE_DARK) )
-					MATK_ADDRATE(i);
+				if (sd != NULL && (sd->class_ & MAPID_THIRDMASK) == MAPID_ARCH_BISHOP) {
+					int eucharistica_level = pc->checkskill(sd,AB_EUCHARISTICA);
+					if (eucharistica_level > 0 && (tstatus->race == RC_DEMON || tstatus->def_ele == ELE_DARK))
+						MATK_ADDRATE(eucharistica_level);
+				}
 			}
 		}
 #ifndef HMAP_ZONE_DAMAGE_CAP_TYPE

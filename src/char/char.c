@@ -519,7 +519,7 @@ int char_mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 	if (
 		(p->hair != cp->hair) || (p->hair_color != cp->hair_color) ||
 		(p->clothes_color != cp->clothes_color) || (p->body != cp->body) ||
-		(p->class_ != cp->class_) ||
+		(p->class != cp->class) ||
 		(p->partner_id != cp->partner_id) || (p->father != cp->father) ||
 		(p->mother != cp->mother) || (p->child != cp->child) ||
 		(p->karma != cp->karma) || (p->manner != cp->manner) ||
@@ -531,7 +531,7 @@ int char_mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 			"`partner_id`='%d', `father`='%d', `mother`='%d', `child`='%d',"
 			"`karma`='%d', `manner`='%d', `fame`='%d'"
 			" WHERE  `account_id`='%d' AND `char_id` = '%d'",
-			char_db, p->class_,
+			char_db, p->class,
 			p->hair, p->hair_color, p->clothes_color, p->body,
 			p->partner_id, p->father, p->mother, p->child,
 			p->karma, p->manner, p->fame,
@@ -961,7 +961,7 @@ int char_mmo_chars_fromsql(struct char_session_data* sd, uint8* buf)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 0,  SQLDT_INT,    &p.char_id, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 1,  SQLDT_UCHAR,  &p.slot, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 2,  SQLDT_STRING, &p.name, sizeof(p.name), NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 3,  SQLDT_SHORT,  &p.class_, 0, NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 3,  SQLDT_SHORT,  &p.class, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 4,  SQLDT_INT,    &p.base_level, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 5,  SQLDT_INT,    &p.job_level, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 6,  SQLDT_UINT,   &p.base_exp, 0, NULL, NULL)
@@ -1072,7 +1072,7 @@ int char_mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_every
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 1,  SQLDT_INT,    &p->account_id, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 2,  SQLDT_UCHAR,  &p->slot, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 3,  SQLDT_STRING, &p->name, sizeof(p->name), NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 4,  SQLDT_SHORT,  &p->class_, 0, NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 4,  SQLDT_SHORT,  &p->class, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 5,  SQLDT_INT,    &p->base_level, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 6,  SQLDT_INT,    &p->job_level, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 7,  SQLDT_UINT,   &p->base_exp, 0, NULL, NULL)
@@ -1544,7 +1544,7 @@ int char_check_char_name(char * name, char * esc_name)
  *  -5: 'Symbols in Character Names are forbidden'
  *  char_id: Success
  **/
-int char_make_new_char_sql(struct char_session_data *sd, const char *name_, int str, int agi, int vit, int int_, int dex, int luk, int slot, int hair_color, int hair_style, short starting_job)
+int char_make_new_char_sql(struct char_session_data *sd, const char *name_, int str, int agi, int vit, int int_, int dex, int luk, int slot, int hair_color, int hair_style, int16 starting_class)
 {
 	char name[NAME_LENGTH];
 	char esc_name[NAME_LENGTH*2+1];
@@ -1560,7 +1560,7 @@ int char_make_new_char_sql(struct char_session_data *sd, const char *name_, int 
 	if (flag < 0)
 		return flag;
 
-	switch (starting_job) {
+	switch (starting_class) {
 		case JOB_SUMMONER:
 		case JOB_NOVICE:
 			break;
@@ -1592,7 +1592,7 @@ int char_make_new_char_sql(struct char_session_data *sd, const char *name_, int 
 	if (SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` (`account_id`, `char_num`, `name`, `class`, `zeny`, `status_point`,`str`, `agi`, `vit`, `int`, `dex`, `luk`, `max_hp`, `hp`,"
 		"`max_sp`, `sp`, `hair`, `hair_color`, `last_map`, `last_x`, `last_y`, `save_map`, `save_x`, `save_y`) VALUES ("
 		"'%d', '%d', '%s', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d','%d', '%d','%d', '%d', '%s', '%d', '%d', '%s', '%d', '%d')",
-		char_db, sd->account_id , slot, esc_name, starting_job, start_zeny, 48, str, agi, vit, int_, dex, luk,
+		char_db, sd->account_id , slot, esc_name, starting_class, start_zeny, 48, str, agi, vit, int_, dex, luk,
 		(40 * (100 + vit)/100) , (40 * (100 + vit)/100 ),  (11 * (100 + int_)/100), (11 * (100 + int_)/100), hair_style, hair_color,
 		mapindex_id2name(start_point.map), start_point.x, start_point.y, mapindex_id2name(start_point.map), start_point.x, start_point.y) )
 	{
@@ -1604,7 +1604,7 @@ int char_make_new_char_sql(struct char_session_data *sd, const char *name_, int 
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` (`account_id`, `char_num`, `name`, `class`, `zeny`, `str`, `agi`, `vit`, `int`, `dex`, `luk`, `max_hp`, `hp`,"
 							   "`max_sp`, `sp`, `hair`, `hair_color`, `last_map`, `last_x`, `last_y`, `save_map`, `save_x`, `save_y`) VALUES ("
 							   "'%d', '%d', '%s', '%d',  '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d','%d', '%d','%d', '%d', '%s', '%d', '%d', '%s', '%d', '%d')",
-							   char_db, sd->account_id , slot, esc_name, starting_job, start_zeny, str, agi, vit, int_, dex, luk,
+							   char_db, sd->account_id , slot, esc_name, starting_class, start_zeny, str, agi, vit, int_, dex, luk,
 							   (40 * (100 + vit)/100) , (40 * (100 + vit)/100 ),  (11 * (100 + int_)/100), (11 * (100 + int_)/100), hair_style, hair_color,
 							   mapindex_id2name(start_point.map), start_point.x, start_point.y, mapindex_id2name(start_point.map), start_point.x, start_point.y) )
 	{
@@ -1623,7 +1623,7 @@ int char_make_new_char_sql(struct char_session_data *sd, const char *name_, int 
 		if (SQL_ERROR == SQL->Query(inter->sql_handle,
 					"INSERT INTO `%s` (`time`, `char_msg`, `account_id`, `char_id`, `char_num`, `class`, `name`, `str`, `agi`, `vit`, `int`, `dex`, `luk`, `hair`, `hair_color`)"
 					"VALUES (NOW(), '%s', '%d', '%d', '%d', '%d', '%s', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d')",
-					charlog_db, "make new char", sd->account_id, char_id, slot, starting_job, esc_name, str, agi, vit, int_, dex, luk, hair_style, hair_color))
+					charlog_db, "make new char", sd->account_id, char_id, slot, starting_class, esc_name, str, agi, vit, int_, dex, luk, hair_style, hair_color))
 			Sql_ShowDebug(inter->sql_handle);
 	}
 
@@ -1890,7 +1890,7 @@ int char_mmo_char_tobuf(uint8* buffer, struct mmo_charstatus* p) {
 	WBUFW(buf,46) = min(p->sp, INT16_MAX);
 	WBUFW(buf,48) = min(p->max_sp, INT16_MAX);
 	WBUFW(buf,50) = DEFAULT_WALK_SPEED; // p->speed;
-	WBUFW(buf,52) = p->class_;
+	WBUFW(buf,52) = p->class;
 	WBUFW(buf,54) = p->hair;
 #if PACKETVER >= 20141022
 	WBUFW(buf,56) = p->body;
@@ -2326,33 +2326,33 @@ void char_changesex(int account_id, int sex)
  * @param sex      The new sex (SEX_MALE or SEX_FEMALE).
  * @param acc      The character's account ID.
  * @param char_id  The character ID.
- * @param class_   The character's current job class.
+ * @param class    The character's current job class.
  * @param guild_id The character's guild ID.
  */
-void char_change_sex_sub(int sex, int acc, int char_id, int class_, int guild_id)
+void char_change_sex_sub(int sex, int acc, int char_id, int class, int guild_id)
 {
 	// job modification
-	if (class_ == JOB_BARD || class_ == JOB_DANCER)
-		class_ = (sex == SEX_MALE ? JOB_BARD : JOB_DANCER);
-	else if (class_ == JOB_CLOWN || class_ == JOB_GYPSY)
-		class_ = (sex == SEX_MALE ? JOB_CLOWN : JOB_GYPSY);
-	else if (class_ == JOB_BABY_BARD || class_ == JOB_BABY_DANCER)
-		class_ = (sex == SEX_MALE ? JOB_BABY_BARD : JOB_BABY_DANCER);
-	else if (class_ == JOB_MINSTREL || class_ == JOB_WANDERER)
-		class_ = (sex == SEX_MALE ? JOB_MINSTREL : JOB_WANDERER);
-	else if (class_ == JOB_MINSTREL_T || class_ == JOB_WANDERER_T)
-		class_ = (sex == SEX_MALE ? JOB_MINSTREL_T : JOB_WANDERER_T);
-	else if (class_ == JOB_BABY_MINSTREL || class_ == JOB_BABY_WANDERER)
-		class_ = (sex == SEX_MALE ? JOB_BABY_MINSTREL : JOB_BABY_WANDERER);
-	else if (class_ == JOB_KAGEROU || class_ == JOB_OBORO)
-		class_ = (sex == SEX_MALE ? JOB_KAGEROU : JOB_OBORO);
+	if (class == JOB_BARD || class == JOB_DANCER)
+		class = (sex == SEX_MALE ? JOB_BARD : JOB_DANCER);
+	else if (class == JOB_CLOWN || class == JOB_GYPSY)
+		class = (sex == SEX_MALE ? JOB_CLOWN : JOB_GYPSY);
+	else if (class == JOB_BABY_BARD || class == JOB_BABY_DANCER)
+		class = (sex == SEX_MALE ? JOB_BABY_BARD : JOB_BABY_DANCER);
+	else if (class == JOB_MINSTREL || class == JOB_WANDERER)
+		class = (sex == SEX_MALE ? JOB_MINSTREL : JOB_WANDERER);
+	else if (class == JOB_MINSTREL_T || class == JOB_WANDERER_T)
+		class = (sex == SEX_MALE ? JOB_MINSTREL_T : JOB_WANDERER_T);
+	else if (class == JOB_BABY_MINSTREL || class == JOB_BABY_WANDERER)
+		class = (sex == SEX_MALE ? JOB_BABY_MINSTREL : JOB_BABY_WANDERER);
+	else if (class == JOB_KAGEROU || class == JOB_OBORO)
+		class = (sex == SEX_MALE ? JOB_KAGEROU : JOB_OBORO);
 
 	if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `equip`='0' WHERE `char_id`='%d'", inventory_db, char_id))
 		Sql_ShowDebug(inter->sql_handle);
 
 	if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `class`='%d', `weapon`='0', `shield`='0', "
 				"`head_top`='0', `head_mid`='0', `head_bottom`='0' WHERE `char_id`='%d'",
-				char_db, class_, char_id))
+				char_db, class, char_id))
 		Sql_ShowDebug(inter->sql_handle);
 	if (guild_id) // If there is a guild, update the guild_member data [Skotlex]
 		inter_guild->sex_changed(guild_id, acc, char_id, sex);
@@ -2360,7 +2360,7 @@ void char_change_sex_sub(int sex, int acc, int char_id, int class_, int guild_id
 
 int char_parse_fromlogin_changesex_reply(int fd)
 {
-	int char_id = 0, class_ = 0, guild_id = 0;
+	int char_id = 0, class = 0, guild_id = 0;
 	int i;
 	struct char_auth_node *node;
 	struct SqlStmt *stmt;
@@ -2389,11 +2389,11 @@ int char_parse_fromlogin_changesex_reply(int fd)
 		SQL->StmtFree(stmt);
 	}
 	SQL->StmtBindColumn(stmt, 0, SQLDT_INT, &char_id,  0, NULL, NULL);
-	SQL->StmtBindColumn(stmt, 1, SQLDT_INT, &class_,   0, NULL, NULL);
+	SQL->StmtBindColumn(stmt, 1, SQLDT_INT, &class,   0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 2, SQLDT_INT, &guild_id, 0, NULL, NULL);
 
 	for (i = 0; i < MAX_CHARS && SQL_SUCCESS == SQL->StmtNextRow(stmt); ++i) {
-		char_change_sex_sub(sex, acc, char_id, class_, guild_id);
+		char_change_sex_sub(sex, acc, char_id, class, guild_id);
 	}
 	SQL->StmtFree(stmt);
 
@@ -3371,7 +3371,7 @@ void char_ask_name_ack(int fd, int acc, const char* name, int type, int result)
  */
 int char_changecharsex(int char_id, int sex)
 {
-	int class_ = 0, guild_id = 0, account_id = 0;
+	int class = 0, guild_id = 0, account_id = 0;
 	char *data;
 
 	// get character data
@@ -3384,7 +3384,7 @@ int char_changecharsex(int char_id, int sex)
 		return 1;
 	}
 	SQL->GetData(inter->sql_handle, 0, &data, NULL); account_id = atoi(data);
-	SQL->GetData(inter->sql_handle, 1, &data, NULL); class_ = atoi(data);
+	SQL->GetData(inter->sql_handle, 1, &data, NULL); class = atoi(data);
 	SQL->GetData(inter->sql_handle, 2, &data, NULL); guild_id = atoi(data);
 	SQL->FreeResult(inter->sql_handle);
 
@@ -3392,7 +3392,7 @@ int char_changecharsex(int char_id, int sex)
 		Sql_ShowDebug(inter->sql_handle);
 		return 1;
 	}
-	char_change_sex_sub(sex, account_id, char_id, class_, guild_id);
+	char_change_sex_sub(sex, account_id, char_id, class, guild_id);
 
 	// disconnect player if online on char-server
 	chr->disconnect_player(account_id);
@@ -5039,7 +5039,7 @@ int char_parse_char(int fd)
 
 			// create new char
 #if PACKETVER >= 20151001
-			// S 0a39 <name>.24B <slot>.B <hair color>.W <hair style>.W <starting job ID>.W <Unknown>.(W or 2 B's)??? <sex>.B
+			// S 0a39 <name>.24B <slot>.B <hair color>.W <hair style>.W <starting job class ID>.W <Unknown>.(W or 2 B's)??? <sex>.B
 			case 0xa39:
 			{
 				FIFOSD_CHECK(36);	
