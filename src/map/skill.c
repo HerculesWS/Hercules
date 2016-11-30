@@ -219,14 +219,14 @@ int skill_get_fixed_cast( uint16 skill_id ,uint16 skill_lv ) {
 #endif
 }
 
-int skill_tree_get_max(uint16 skill_id, int b_class)
+int skill_tree_get_max(uint16 skill_id, int class)
 {
 	int i;
-	b_class = pc->class2idx(b_class);
+	int class_idx = pc->class2idx(class);
 
-	ARR_FIND( 0, MAX_SKILL_TREE, i, pc->skill_tree[b_class][i].id == 0 || pc->skill_tree[b_class][i].id == skill_id );
-	if( i < MAX_SKILL_TREE && pc->skill_tree[b_class][i].id == skill_id )
-		return pc->skill_tree[b_class][i].max;
+	ARR_FIND( 0, MAX_SKILL_TREE, i, pc->skill_tree[class_idx][i].id == 0 || pc->skill_tree[class_idx][i].id == skill_id );
+	if( i < MAX_SKILL_TREE && pc->skill_tree[class_idx][i].id == skill_id )
+		return pc->skill_tree[class_idx][i].max;
 	else
 		return skill->get_max(skill_id);
 }
@@ -459,13 +459,14 @@ int can_copy (struct map_session_data *sd, uint16 skill_id, struct block_list* b
 	if (skill->get_inf2(skill_id)&(INF2_NPC_SKILL|INF2_WEDDING_SKILL))
 		return 0;
 
-	// High-class skills
-	if((skill_id >= LK_AURABLADE && skill_id <= ASC_CDP) || (skill_id >= ST_PRESERVE && skill_id <= CR_CULTIVATION))
-	{
-		if(battle_config.copyskill_restrict == 2)
+	// Transcendent-class skills
+	if((skill_id >= LK_AURABLADE && skill_id <= ASC_CDP) || (skill_id >= ST_PRESERVE && skill_id <= CR_CULTIVATION)) {
+		if (battle_config.copyskill_restrict == 2) {
 			return 0;
-		else if(battle_config.copyskill_restrict)
-			return (sd->status.class_ == JOB_STALKER);
+		} else if (battle_config.copyskill_restrict == 1) {
+			if ((sd->class_ & (MAPID_UPPERMASK | JOBL_UPPER)) != MAPID_STALKER)
+				return 0;
+		}
 	}
 
 	//Added so plagarize can't copy agi/bless if you're undead since it damages you
@@ -15649,7 +15650,7 @@ void skill_weaponrefine (struct map_session_data *sd, int idx)
 			per = status->get_refine_chance(ditem->wlv, (int)item->refine) * 10;
 
 			// Aegis leaked formula. [malufett]
-			if( sd->status.class_ == JOB_MECHANIC_T )
+			if (sd->status.class == JOB_MECHANIC_T)
 				per += 100;
 			else
 				per += 5 * (sd->status.job_level - 50);

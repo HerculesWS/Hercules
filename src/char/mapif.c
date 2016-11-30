@@ -89,7 +89,7 @@ int mapif_parse_CreateGuild(int fd, int account_id, const char *name, const stru
 int mapif_parse_GuildInfo(int fd, int guild_id);
 int mapif_parse_GuildAddMember(int fd, int guild_id, const struct guild_member *m);
 int mapif_parse_GuildLeave(int fd, int guild_id, int account_id, int char_id, int flag, const char *mes);
-int mapif_parse_GuildChangeMemberInfoShort(int fd, int guild_id, int account_id, int char_id, int online, int lv, int class_);
+int mapif_parse_GuildChangeMemberInfoShort(int fd, int guild_id, int account_id, int char_id, int online, int lv, int16 class);
 int mapif_parse_BreakGuild(int fd, int guild_id);
 int mapif_parse_GuildMessage(int fd, int guild_id, int account_id, const char *mes, int len);
 int mapif_parse_GuildBasicInfoChange(int fd, int guild_id, int type, const void *data, int len);

@@ -619,7 +619,7 @@ struct itemdb_interface {
 	int (*searchrandomid) (struct item_group *group);
 	const char* (*typename) (int type);
 	void (*jobmask2mapid) (uint64 *bclass, uint64 jobmask);
-	void (*jobid2mapid) (uint64 *bclass, int job_id, bool enable);
+	void (*jobid2mapid) (uint64 *bclass, int job_class, bool enable);
 	void (*create_dummy_data) (void);
 	struct item_data* (*create_item_data) (int nameid);
 	int (*isequip) (int nameid);

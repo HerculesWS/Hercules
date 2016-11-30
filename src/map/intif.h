@@ -81,7 +81,7 @@ struct intif_interface {
 	int (*guild_request_info) (int guild_id);
 	int (*guild_addmember) (int guild_id, struct guild_member *m);
 	int (*guild_leave) (int guild_id, int account_id, int char_id, int flag, const char *mes);
-	int (*guild_memberinfoshort) (int guild_id, int account_id, int char_id, int online, int lv, int class_);
+	int (*guild_memberinfoshort) (int guild_id, int account_id, int char_id, int online, int lv, int16 class);
 	int (*guild_break) (int guild_id);
 	int (*guild_message) (int guild_id, int account_id, const char *mes, int len);
 	int (*guild_change_gm) (int guild_id, const char *name, int len);

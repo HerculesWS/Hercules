@@ -352,14 +352,14 @@ const char* itemdb_typename(int type)
  *
  * @author Dastgir
  */
-void itemdb_jobid2mapid(uint64 *bclass, int job_id, bool enable)
+void itemdb_jobid2mapid(uint64 *bclass, int job_class, bool enable)
 {
 	uint64 mask[3] = { 0 };
 	int i;
 
 	nullpo_retv(bclass);
 
-	switch(job_id) {
+	switch (job_class) {
 		// Base Classes
 		case JOB_NOVICE:
 		case JOB_SUPER_NOVICE:
@@ -367,12 +367,22 @@ void itemdb_jobid2mapid(uint64 *bclass, int job_id, bool enable)
 			mask[1] = 1ULL << MAPID_NOVICE;
 			break;
 		case JOB_SWORDMAN:
+			mask[0] = 1ULL << MAPID_SWORDMAN;
+			break;
 		case JOB_MAGE:
+			mask[0] = 1ULL << MAPID_MAGE;
+			break;
 		case JOB_ARCHER:
+			mask[0] = 1ULL << MAPID_ARCHER;
+			break;
 		case JOB_ACOLYTE:
+			mask[0] = 1ULL << MAPID_ACOLYTE;
+			break;
 		case JOB_MERCHANT:
+			mask[0] = 1ULL << MAPID_MERCHANT;
+			break;
 		case JOB_THIEF:
-			mask[0] = 1ULL << (MAPID_NOVICE+job_id);
+			mask[0] = 1ULL << MAPID_THIEF;
 			break;
 		// 2-1 Classes
 		case JOB_KNIGHT:
@@ -471,7 +481,6 @@ void itemdb_jobid2mapid(uint64 *bclass, int job_id, bool enable)
  */
 void itemdb_jobmask2mapid(uint64 *bclass, uint64 jobmask)
 {
-	int i;
 	nullpo_retv(bclass);
 	bclass[0] = bclass[1] = bclass[2] = 0;
 	//Base classes
@@ -480,10 +489,18 @@ void itemdb_jobmask2mapid(uint64 *bclass, uint64 jobmask)
 		bclass[0] |= 1ULL<<MAPID_NOVICE;
 		bclass[1] |= 1ULL<<MAPID_NOVICE;
 	}
-	for (i = JOB_NOVICE+1; i <= JOB_THIEF; i++) {
-		if (jobmask & 1ULL<<i)
-			bclass[0] |= 1ULL<<(MAPID_NOVICE+i);
-	}
+	if (jobmask & 1ULL<<JOB_SWORDMAN)
+		bclass[0] |= 1ULL<<MAPID_SWORDMAN;
+	if (jobmask & 1ULL<<JOB_MAGE)
+		bclass[0] |= 1ULL<<MAPID_MAGE;
+	if (jobmask & 1ULL<<JOB_ARCHER)
+		bclass[0] |= 1ULL<<MAPID_ARCHER;
+	if (jobmask & 1ULL<<JOB_ACOLYTE)
+		bclass[0] |= 1ULL<<MAPID_ACOLYTE;
+	if (jobmask & 1ULL<<JOB_MERCHANT)
+		bclass[0] |= 1ULL<<MAPID_MERCHANT;
+	if (jobmask & 1ULL<<JOB_THIEF)
+		bclass[0] |= 1ULL<<MAPID_THIEF;
 	//2-1 classes
 	if (jobmask & 1ULL<<JOB_KNIGHT)
 		bclass[1] |= 1ULL<<MAPID_SWORDMAN;

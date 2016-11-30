@@ -89,7 +89,7 @@ static void inter_party_calc_state(struct party_data *p)
 	// FIXME[Haru]: What if the occupied positions aren't the first three? It can happen if some party members leave. This is the reason why family sharing some times stops working until you recreate your party
 	if( p->size == 2 && ( chr->char_child(p->party.member[0].char_id,p->party.member[1].char_id) || chr->char_child(p->party.member[1].char_id,p->party.member[0].char_id) ) ) {
 		//Child should be able to share with either of their parents  [RoM]
-		if(p->party.member[0].class_&JOBL_BABY) //first slot is the child?
+		if (p->party.member[0].class >= JOB_BABY && p->party.member[0].class <= JOB_SUPER_BABY) //first slot is the child?
 			p->family = p->party.member[0].char_id;
 		else
 			p->family = p->party.member[1].char_id;
@@ -252,7 +252,7 @@ struct party_data *inter_party_fromsql(int party_id)
 		SQL->GetData(inter->sql_handle, 3, &data, NULL); m->lv = atoi(data);
 		SQL->GetData(inter->sql_handle, 4, &data, NULL); m->map = mapindex->name2id(data);
 		SQL->GetData(inter->sql_handle, 5, &data, NULL); m->online = (atoi(data) ? 1 : 0);
-		SQL->GetData(inter->sql_handle, 6, &data, NULL); m->class_ = atoi(data);
+		SQL->GetData(inter->sql_handle, 6, &data, NULL); m->class = atoi(data);
 		m->leader = (m->account_id == leader_id && m->char_id == leader_char ? 1 : 0);
 	}
 	SQL->FreeResult(inter->sql_handle);

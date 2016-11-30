@@ -6742,18 +6742,18 @@ BUILDIN(percentheal)
  *------------------------------------------*/
 BUILDIN(jobchange)
 {
-	int job, upper=-1;
+	int class, upper=-1;
 
-	job=script_getnum(st,2);
+	class = script_getnum(st,2);
 	if( script_hasdata(st,3) )
 		upper=script_getnum(st,3);
 
-	if (pc->db_checkid(job)) {
+	if (pc->db_checkid(class)) {
 		struct map_session_data *sd = script->rid2sd(st);
 		if (sd == NULL)
 			return true;
 
-		pc->jobchange(sd, job, upper);
+		pc->jobchange(sd, class, upper);
 	}
 
 	return true;
@@ -6764,8 +6764,8 @@ BUILDIN(jobchange)
  *------------------------------------------*/
 BUILDIN(jobname)
 {
-	int class_=script_getnum(st,2);
-	script_pushconststr(st, pc->job_name(class_));
+	int class = script_getnum(st,2);
+	script_pushconststr(st, pc->job_name(class));
 	return true;
 }
 
@@ -8561,7 +8561,7 @@ BUILDIN(getpartyleader)
 	switch (type) {
 		case 1: script_pushint(st,p->party.member[i].account_id); break;
 		case 2: script_pushint(st,p->party.member[i].char_id); break;
-		case 3: script_pushint(st,p->party.member[i].class_); break;
+		case 3: script_pushint(st,p->party.member[i].class); break;
 		case 4: script_pushstrcopy(st,mapindex_id2name(p->party.member[i].map)); break;
 		case 5: script_pushint(st,p->party.member[i].lv); break;
 		default: script_pushstrcopy(st,p->party.member[i].name); break;
@@ -11767,16 +11767,16 @@ BUILDIN(homunculus_shuffle)
 //These two functions bring the eA MAPID_* class functionality to scripts.
 BUILDIN(eaclass)
 {
-	int class_;
+	int class;
 	if (script_hasdata(st,2)) {
-		class_ = script_getnum(st,2);
+		class = script_getnum(st,2);
 	} else {
 		struct map_session_data *sd = script->rid2sd(st);
 		if (sd == NULL)
 			return true;
-		class_ = sd->status.class_;
+		class = sd->status.class;
 	}
-	script_pushint(st,pc->jobid2mapid(class_));
+	script_pushint(st,pc->jobid2mapid(class));
 	return true;
 }
 
@@ -13841,14 +13841,14 @@ BUILDIN(undisguise)
  * @type unused
  *------------------------------------------*/
 BUILDIN(classchange) {
-	int class_,type;
+	int class, type;
 	struct block_list *bl=map->id2bl(st->oid);
 
 	if(bl==NULL) return true;
 
-	class_=script_getnum(st,2);
+	class = script_getnum(st,2);
 	type=script_getnum(st,3);
-	clif->class_change(bl,class_,type);
+	clif->class_change(bl, class, type);
 	return true;
 }
 
