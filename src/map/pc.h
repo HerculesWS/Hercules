@@ -235,7 +235,7 @@ struct map_session_data {
 		unsigned int bonus_coma : 1;
 	} special_state;
 	int login_id1, login_id2;
-	unsigned short class_; //This is the internal job ID used by the map server to simplify comparisons/queries/etc. [Skotlex]
+	uint16 job; //This is the internal job ID used by the map server to simplify comparisons/queries/etc. [Skotlex]
 
 	/// Groups & permissions
 	int group_id;
@@ -635,13 +635,13 @@ END_ZEROED_BLOCK;
 #define pc_is50overweight(sd) ( (sd)->weight*100 >= (sd)->max_weight*battle->bc->natural_heal_weight_rate )
 #define pc_is90overweight(sd) ( (sd)->weight*10 >= (sd)->max_weight*9 )
 #define pc_maxparameter(sd)   ( \
-	((sd)->class_&MAPID_BASEMASK) == MAPID_SUMMONER ? battle->bc->max_summoner_parameter : \
-	( ((sd)->class_&MAPID_UPPERMASK) == MAPID_KAGEROUOBORO \
-	 || ((sd)->class_&MAPID_UPPERMASK) == MAPID_REBELLION \
-	 || ((sd)->class_&MAPID_THIRDMASK) == MAPID_SUPER_NOVICE_E \
-	) ? battle->bc->max_extended_parameter : ((sd)->class_&JOBL_THIRD) ? \
-	    (((sd)->class_&JOBL_BABY) ? battle->bc->max_baby_third_parameter : battle->bc->max_third_parameter ) : \
-	    (((sd)->class_&JOBL_BABY) ? battle->bc->max_baby_parameter : battle->bc->max_parameter) \
+	((sd)->job & MAPID_BASEMASK) == MAPID_SUMMONER ? battle->bc->max_summoner_parameter : \
+	( ((sd)->job & MAPID_UPPERMASK) == MAPID_KAGEROUOBORO \
+	 || ((sd)->job & MAPID_UPPERMASK) == MAPID_REBELLION \
+	 || ((sd)->job & MAPID_THIRDMASK) == MAPID_SUPER_NOVICE_E \
+	) ? battle->bc->max_extended_parameter : ((sd)->job & JOBL_THIRD) ? \
+	    (((sd)->job & JOBL_BABY) ? battle->bc->max_baby_third_parameter : battle->bc->max_third_parameter ) : \
+	    (((sd)->job & JOBL_BABY) ? battle->bc->max_baby_parameter : battle->bc->max_parameter) \
 	)
 /// Generic check for mounts
 #define pc_hasmount(sd)       ( (sd)->sc.option&(OPTION_RIDING|OPTION_WUGRIDER|OPTION_DRAGON|OPTION_MADOGEAR) )
@@ -1004,7 +1004,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*delspiritball) (struct map_session_data *sd,int count,int type);
 	int (*getmaxspiritball) (struct map_session_data *sd, int min);
 	void (*addfame) (struct map_session_data *sd,int count);
-	unsigned char (*famerank) (int char_id, int job);
+	int (*famerank) (int char_id, uint32 job);
 	int (*set_hate_mob) (struct map_session_data *sd, int pos, struct block_list *bl);
 
 	int (*readdb) (void);
