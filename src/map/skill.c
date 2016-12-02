@@ -2430,7 +2430,7 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 			case TK_STORMKICK:
 			case TK_DOWNKICK:
 			case TK_COUNTER:
-				if (pc->famerank(sd->status.char_id,MAPID_TAEKWON)) {//Extend combo time.
+				if (pc->fame_rank(sd->status.char_id, RANKTYPE_TAEKWON) > 0) { //Extend combo time.
 					sce->val1 = skill_id; //Update combo-skill
 					sce->val3 = skill_id;
 					if( sce->timer != INVALID_TIMER )
@@ -13758,7 +13758,8 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 				status_change_end(&sd->bl, SC_COMBOATTACK, INVALID_TIMER);
 				return 0;
 			}
-			if(sc->data[SC_COMBOATTACK]->val1 != skill_id && !( sd && sd->status.base_level >= 90 && pc->famerank(sd->status.char_id, MAPID_TAEKWON) )) {
+			if (sc->data[SC_COMBOATTACK]->val1 != skill_id
+			 && !(sd != NULL && sd->status.base_level >= 90 && pc->fame_rank(sd->status.char_id, RANKTYPE_TAEKWON) > 0)) {
 				//Cancel combo wait.
 				unit->cancel_combo(&sd->bl);
 				return 0;

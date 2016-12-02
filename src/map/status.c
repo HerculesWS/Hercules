@@ -2276,7 +2276,7 @@ unsigned int status_get_base_maxsp(const struct map_session_data *sd, const stru
 		val += val * 25 / 100;
 	else if ((sd->job & JOBL_BABY) != 0)
 		val = val * 70 / 100;
-	if ((sd->job & MAPID_UPPERMASK) == MAPID_TAEKWON && sd->status.base_level >= 90 && pc->famerank(sd->status.char_id, MAPID_TAEKWON))
+	if ((sd->job & MAPID_UPPERMASK) == MAPID_TAEKWON && sd->status.base_level >= 90 && pc->fame_rank(sd->status.char_id, RANKTYPE_TAEKWON) > 0)
 		val *= 3; //Triple max SP for top ranking Taekwons over level 90.
 
 	val += val * st->int_ / 100;
@@ -2303,7 +2303,7 @@ unsigned int status_get_base_maxhp(const struct map_session_data *sd, const stru
 	else if ((sd->job & JOBL_BABY) != 0)
 		val = val * 70 / 100; //Baby classes get a 30% hp penalty
 
-	if ((sd->job & MAPID_UPPERMASK) == MAPID_TAEKWON && sd->status.base_level >= 90 && pc->famerank(sd->status.char_id, MAPID_TAEKWON))
+	if ((sd->job & MAPID_UPPERMASK) == MAPID_TAEKWON && sd->status.base_level >= 90 && pc->fame_rank(sd->status.char_id, RANKTYPE_TAEKWON))
 		val *= 3; //Triple max HP for top ranking Taekwons over level 90.
 
 	val += val * st->vit / 100; // +1% per each point of VIT
@@ -2510,8 +2510,9 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 			if (sd->status.inventory[index].card[0]==CARD0_FORGE) {
 				// Forged weapon
 				wd->star += (sd->status.inventory[index].card[1]>>8);
-				if(wd->star >= 15) wd->star = 40; // 3 Star Crumbs now give +40 dmg
-				if(pc->famerank(MakeDWord(sd->status.inventory[index].card[2],sd->status.inventory[index].card[3]) ,MAPID_BLACKSMITH))
+				if (wd->star >= 15)
+					wd->star = 40; // 3 Star Crumbs now give +40 dmg
+				if (pc->fame_rank(MakeDWord(sd->status.inventory[index].card[2],sd->status.inventory[index].card[3]), RANKTYPE_BLACKSMITH) > 0)
 					wd->star += 10;
 
 				if (!wa->ele) //Do not overwrite element from previous bonuses.
