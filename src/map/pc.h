@@ -1003,7 +1003,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*addspiritball) (struct map_session_data *sd,int interval,int max);
 	int (*delspiritball) (struct map_session_data *sd,int count,int type);
 	int (*getmaxspiritball) (struct map_session_data *sd, int min);
-	void (*addfame) (struct map_session_data *sd,int count);
+	void (*addfame) (struct map_session_data *sd, int ranktype, int count);
 	int (*famerank) (int char_id, uint32 job);
 	int (*set_hate_mob) (struct map_session_data *sd, int pos, struct block_list *bl);
 

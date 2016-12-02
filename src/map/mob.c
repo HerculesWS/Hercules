@@ -2635,7 +2635,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 		if( sd ) {
 			if( sd->mission_mobid == md->class_) { //TK_MISSION [Skotlex]
 				if (++sd->mission_count >= 100 && (temp = mob->get_random_id(0, 0xE, sd->status.base_level)) != 0) {
-					pc->addfame(sd, 1);
+					pc->addfame(sd, RANKTYPE_TAEKWON, 1);
 					sd->mission_mobid = temp;
 					pc_setglobalreg(sd,script->add_str("TK_MISSION_ID"), temp);
 					sd->mission_count = 0;

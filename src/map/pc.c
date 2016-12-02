@@ -388,26 +388,43 @@ int pc_banding(struct map_session_data *sd, uint16 skill_lv) {
 }
 
 // Increases a player's fame points and displays a notice to him
-void pc_addfame(struct map_session_data *sd,int count)
+/**
+ * Increases a player's fame points and displays a notice to them.
+ *
+ * If the character's job class doesn't allow the specified rank type, nothing
+ * happens and the request is ignored.
+ *
+ * @param sd    The target character.
+ * @param type  The fame list type (@see enum fame_list_type).
+ * @param count The amount of points to add.
+ */
+void pc_addfame(struct map_session_data *sd, int ranktype, int count)
 {
-	int ranktype = -1;
 	nullpo_retv(sd);
-	sd->status.fame += count;
-	if(sd->status.fame > MAX_FAME)
-		sd->status.fame = MAX_FAME;
 
-	switch (sd->job & MAPID_UPPERMASK) {
-	case MAPID_BLACKSMITH:
-		ranktype = RANKTYPE_BLACKSMITH;
+	switch (ranktype) {
+	case RANKTYPE_BLACKSMITH:
+		if ((sd->job & MAPID_UPPERMASK) != MAPID_BLACKSMITH)
+			return;
 		break;
-	case MAPID_ALCHEMIST:
-		ranktype = RANKTYPE_ALCHEMIST;
+	case RANKTYPE_ALCHEMIST:
+		if ((sd->job & MAPID_UPPERMASK) != MAPID_ALCHEMIST)
+			return;
 		break;
-	case MAPID_TAEKWON:
-		ranktype = RANKTYPE_TAEKWON;
+	case RANKTYPE_TAEKWON:
+		if ((sd->job & MAPID_UPPERMASK) != MAPID_TAEKWON)
+			return;
 		break;
+	case RANKTYPE_PK:
+		// Not supported
+		FALLTHROUGH
+	default:
+		Assert_retv(0);
 	}
-	Assert_retv(ranktype != -1);
+
+	sd->status.fame += count;
+	if (sd->status.fame > MAX_FAME)
+		sd->status.fame = MAX_FAME;
 
 	clif->update_rankingpoint(sd, ranktype, count);
 	chrif->updatefamelist(sd);

@@ -15674,16 +15674,16 @@ void skill_weaponrefine (struct map_session_data *sd, int idx)
 					item->card[0] == CARD0_FORGE &&
 					(int)MakeDWord(item->card[2],item->card[3]) == sd->status.char_id)
 				{ // Fame point system [DracoRPG]
-					switch(ditem->wlv){
-						case 1:
-							pc->addfame(sd,1); // Success to refine to +10 a lv1 weapon you forged = +1 fame point
-							break;
-						case 2:
-							pc->addfame(sd,25); // Success to refine to +10 a lv2 weapon you forged = +25 fame point
-							break;
-						case 3:
-							pc->addfame(sd,1000); // Success to refine to +10 a lv3 weapon you forged = +1000 fame point
-							break;
+					switch (ditem->wlv) {
+					case 1:
+						pc->addfame(sd, RANKTYPE_BLACKSMITH, 1); // Success to refine to +10 a lv1 weapon you forged = +1 fame point
+						break;
+					case 2:
+						pc->addfame(sd, RANKTYPE_BLACKSMITH, 25); // Success to refine to +10 a lv2 weapon you forged = +25 fame point
+						break;
+					case 3:
+						pc->addfame(sd, RANKTYPE_BLACKSMITH, 1000); // Success to refine to +10 a lv3 weapon you forged = +1000 fame point
+						break;
 					}
 				}
 			} else {
@@ -17855,8 +17855,8 @@ int skill_produce_mix(struct map_session_data *sd, uint16 skill_id, int nameid, 
 		if(equip){
 			clif->produce_effect(sd,0,nameid);
 			clif->misceffect(&sd->bl,3);
-			if(itemdb_wlv(nameid) >= 3 && ((ele? 1 : 0) + sc) >= 3) // Fame point system [DracoRPG]
-				pc->addfame(sd,10); // Success to forge a lv3 weapon with 3 additional ingredients = +10 fame point
+			if (itemdb_wlv(nameid) >= 3 && ((ele? 1 : 0) + sc) >= 3) // Fame point system [DracoRPG]
+				pc->addfame(sd, RANKTYPE_BLACKSMITH, 10); // Success to forge a lv3 weapon with 3 additional ingredients = +10 fame point
 		} else {
 			int fame = 0;
 			tmp_item.amount = 0;
@@ -17896,8 +17896,9 @@ int skill_produce_mix(struct map_session_data *sd, uint16 skill_id, int nameid, 
 					sd->potion_success_counter = 0;
 			}
 
-			if (fame)
-				pc->addfame(sd,fame);
+			if (fame != 0 && (skill_id == AM_PHARMACY || skill_id == AM_TWILIGHT1 || skill_id == AM_TWILIGHT2 || skill_id == AM_TWILIGHT3)) {
+				pc->addfame(sd, RANKTYPE_ALCHEMIST, fame);
+			}
 			//Visual effects and the like.
 			switch (skill_id) {
 				case AM_PHARMACY:
