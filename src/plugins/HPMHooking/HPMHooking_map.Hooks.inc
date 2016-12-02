@@ -27588,15 +27588,15 @@ int HP_guild_send_memberinfoshort(struct map_session_data *sd, int online) {
 	}
 	return retVal___;
 }
-int HP_guild_recv_memberinfoshort(int guild_id, int account_id, int char_id, int online, int lv, int class_) {
+int HP_guild_recv_memberinfoshort(int guild_id, int account_id, int char_id, int online, int lv, int16 class) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_recv_memberinfoshort_pre ) {
-		int (*preHookFunc) (int *guild_id, int *account_id, int *char_id, int *online, int *lv, int *class_);
+		int (*preHookFunc) (int *guild_id, int *account_id, int *char_id, int *online, int *lv, int16 *class);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_recv_memberinfoshort_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_guild_recv_memberinfoshort_pre[hIndex].func;
-			retVal___ = preHookFunc(&guild_id, &account_id, &char_id, &online, &lv, &class_);
+			retVal___ = preHookFunc(&guild_id, &account_id, &char_id, &online, &lv, &class);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -27604,13 +27604,13 @@ int HP_guild_recv_memberinfoshort(int guild_id, int account_id, int char_id, int
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.guild.recv_memberinfoshort(guild_id, account_id, char_id, online, lv, class_);
+		retVal___ = HPMHooks.source.guild.recv_memberinfoshort(guild_id, account_id, char_id, online, lv, class);
 	}
 	if( HPMHooks.count.HP_guild_recv_memberinfoshort_post ) {
-		int (*postHookFunc) (int retVal___, int guild_id, int account_id, int char_id, int online, int lv, int class_);
+		int (*postHookFunc) (int retVal___, int guild_id, int account_id, int char_id, int online, int lv, int16 class);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_recv_memberinfoshort_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_guild_recv_memberinfoshort_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, guild_id, account_id, char_id, online, lv, class_);
+			retVal___ = postHookFunc(retVal___, guild_id, account_id, char_id, online, lv, class);
 		}
 	}
 	return retVal___;
@@ -31727,15 +31727,15 @@ int HP_intif_guild_leave(int guild_id, int account_id, int char_id, int flag, co
 	}
 	return retVal___;
 }
-int HP_intif_guild_memberinfoshort(int guild_id, int account_id, int char_id, int online, int lv, int class_) {
+int HP_intif_guild_memberinfoshort(int guild_id, int account_id, int char_id, int online, int lv, int16 class) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_guild_memberinfoshort_pre ) {
-		int (*preHookFunc) (int *guild_id, int *account_id, int *char_id, int *online, int *lv, int *class_);
+		int (*preHookFunc) (int *guild_id, int *account_id, int *char_id, int *online, int *lv, int16 *class);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_guild_memberinfoshort_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_intif_guild_memberinfoshort_pre[hIndex].func;
-			retVal___ = preHookFunc(&guild_id, &account_id, &char_id, &online, &lv, &class_);
+			retVal___ = preHookFunc(&guild_id, &account_id, &char_id, &online, &lv, &class);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -31743,13 +31743,13 @@ int HP_intif_guild_memberinfoshort(int guild_id, int account_id, int char_id, in
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.intif.guild_memberinfoshort(guild_id, account_id, char_id, online, lv, class_);
+		retVal___ = HPMHooks.source.intif.guild_memberinfoshort(guild_id, account_id, char_id, online, lv, class);
 	}
 	if( HPMHooks.count.HP_intif_guild_memberinfoshort_post ) {
-		int (*postHookFunc) (int retVal___, int guild_id, int account_id, int char_id, int online, int lv, int class_);
+		int (*postHookFunc) (int retVal___, int guild_id, int account_id, int char_id, int online, int lv, int16 class);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_guild_memberinfoshort_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_intif_guild_memberinfoshort_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, guild_id, account_id, char_id, online, lv, class_);
+			retVal___ = postHookFunc(retVal___, guild_id, account_id, char_id, online, lv, class);
 		}
 	}
 	return retVal___;
@@ -35710,14 +35710,14 @@ void HP_itemdb_jobmask2mapid(uint64 *bclass, uint64 jobmask) {
 	}
 	return;
 }
-void HP_itemdb_jobid2mapid(uint64 *bclass, int job_id, bool enable) {
+void HP_itemdb_jobid2mapid(uint64 *bclass, int job_class, bool enable) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_itemdb_jobid2mapid_pre ) {
-		void (*preHookFunc) (uint64 **bclass, int *job_id, bool *enable);
+		void (*preHookFunc) (uint64 **bclass, int *job_class, bool *enable);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_jobid2mapid_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_itemdb_jobid2mapid_pre[hIndex].func;
-			preHookFunc(&bclass, &job_id, &enable);
+			preHookFunc(&bclass, &job_class, &enable);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -35725,13 +35725,13 @@ void HP_itemdb_jobid2mapid(uint64 *bclass, int job_id, bool enable) {
 		}
 	}
 	{
-		HPMHooks.source.itemdb.jobid2mapid(bclass, job_id, enable);
+		HPMHooks.source.itemdb.jobid2mapid(bclass, job_class, enable);
 	}
 	if( HPMHooks.count.HP_itemdb_jobid2mapid_post ) {
-		void (*postHookFunc) (uint64 *bclass, int job_id, bool enable);
+		void (*postHookFunc) (uint64 *bclass, int job_class, bool enable);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_jobid2mapid_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_itemdb_jobid2mapid_post[hIndex].func;
-			postHookFunc(bclass, job_id, enable);
+			postHookFunc(bclass, job_class, enable);
 		}
 	}
 	return;
@@ -52830,15 +52830,15 @@ struct map_session_data* HP_pc_get_dummy_sd(void) {
 	}
 	return retVal___;
 }
-int HP_pc_class2idx(int class_) {
+int HP_pc_class2idx(int class) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_class2idx_pre ) {
-		int (*preHookFunc) (int *class_);
+		int (*preHookFunc) (int *class);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_class2idx_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_pc_class2idx_pre[hIndex].func;
-			retVal___ = preHookFunc(&class_);
+			retVal___ = preHookFunc(&class);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -52846,13 +52846,13 @@ int HP_pc_class2idx(int class_) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.pc.class2idx(class_);
+		retVal___ = HPMHooks.source.pc.class2idx(class);
 	}
 	if( HPMHooks.count.HP_pc_class2idx_post ) {
-		int (*postHookFunc) (int retVal___, int class_);
+		int (*postHookFunc) (int retVal___, int class);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_class2idx_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_pc_class2idx_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, class_);
+			retVal___ = postHookFunc(retVal___, class);
 		}
 	}
 	return retVal___;
@@ -55577,15 +55577,15 @@ int HP_pc_percentheal(struct map_session_data *sd, int hp, int sp) {
 	}
 	return retVal___;
 }
-int HP_pc_jobchange(struct map_session_data *sd, int job, int upper) {
+int HP_pc_jobchange(struct map_session_data *sd, int class, int upper) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_jobchange_pre ) {
-		int (*preHookFunc) (struct map_session_data **sd, int *job, int *upper);
+		int (*preHookFunc) (struct map_session_data **sd, int *class, int *upper);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_jobchange_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_pc_jobchange_pre[hIndex].func;
-			retVal___ = preHookFunc(&sd, &job, &upper);
+			retVal___ = preHookFunc(&sd, &class, &upper);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -55593,13 +55593,13 @@ int HP_pc_jobchange(struct map_session_data *sd, int job, int upper) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.pc.jobchange(sd, job, upper);
+		retVal___ = HPMHooks.source.pc.jobchange(sd, class, upper);
 	}
 	if( HPMHooks.count.HP_pc_jobchange_post ) {
-		int (*postHookFunc) (int retVal___, struct map_session_data *sd, int job, int upper);
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, int class, int upper);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_jobchange_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_pc_jobchange_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd, job, upper);
+			retVal___ = postHookFunc(retVal___, sd, class, upper);
 		}
 	}
 	return retVal___;
@@ -56566,15 +56566,15 @@ int HP_pc_candrop(struct map_session_data *sd, struct item *item) {
 	}
 	return retVal___;
 }
-int HP_pc_jobid2mapid(unsigned short b_class) {
+int HP_pc_jobid2mapid(int16 class) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_jobid2mapid_pre ) {
-		int (*preHookFunc) (unsigned short *b_class);
+		int (*preHookFunc) (int16 *class);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_jobid2mapid_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_pc_jobid2mapid_pre[hIndex].func;
-			retVal___ = preHookFunc(&b_class);
+			retVal___ = preHookFunc(&class);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -56582,13 +56582,13 @@ int HP_pc_jobid2mapid(unsigned short b_class) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.pc.jobid2mapid(b_class);
+		retVal___ = HPMHooks.source.pc.jobid2mapid(class);
 	}
 	if( HPMHooks.count.HP_pc_jobid2mapid_post ) {
-		int (*postHookFunc) (int retVal___, unsigned short b_class);
+		int (*postHookFunc) (int retVal___, int16 class);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_jobid2mapid_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_pc_jobid2mapid_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, b_class);
+			retVal___ = postHookFunc(retVal___, class);
 		}
 	}
 	return retVal___;
@@ -56620,15 +56620,15 @@ int HP_pc_mapid2jobid(unsigned short class_, int sex) {
 	}
 	return retVal___;
 }
-const char* HP_pc_job_name(int class_) {
+const char* HP_pc_job_name(int class) {
 	int hIndex = 0;
 	const char* retVal___ = NULL;
 	if( HPMHooks.count.HP_pc_job_name_pre ) {
-		const char* (*preHookFunc) (int *class_);
+		const char* (*preHookFunc) (int *class);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_job_name_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_pc_job_name_pre[hIndex].func;
-			retVal___ = preHookFunc(&class_);
+			retVal___ = preHookFunc(&class);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -56636,13 +56636,13 @@ const char* HP_pc_job_name(int class_) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.pc.job_name(class_);
+		retVal___ = HPMHooks.source.pc.job_name(class);
 	}
 	if( HPMHooks.count.HP_pc_job_name_post ) {
-		const char* (*postHookFunc) (const char* retVal___, int class_);
+		const char* (*postHookFunc) (const char* retVal___, int class);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_job_name_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_pc_job_name_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, class_);
+			retVal___ = postHookFunc(retVal___, class);
 		}
 	}
 	return retVal___;
@@ -56780,14 +56780,14 @@ int HP_pc_getmaxspiritball(struct map_session_data *sd, int min) {
 	}
 	return retVal___;
 }
-void HP_pc_addfame(struct map_session_data *sd, int count) {
+void HP_pc_addfame(struct map_session_data *sd, int ranktype, int count) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_pc_addfame_pre ) {
-		void (*preHookFunc) (struct map_session_data **sd, int *count);
+		void (*preHookFunc) (struct map_session_data **sd, int *ranktype, int *count);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_addfame_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_pc_addfame_pre[hIndex].func;
-			preHookFunc(&sd, &count);
+			preHookFunc(&sd, &ranktype, &count);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -56795,26 +56795,26 @@ void HP_pc_addfame(struct map_session_data *sd, int count) {
 		}
 	}
 	{
-		HPMHooks.source.pc.addfame(sd, count);
+		HPMHooks.source.pc.addfame(sd, ranktype, count);
 	}
 	if( HPMHooks.count.HP_pc_addfame_post ) {
-		void (*postHookFunc) (struct map_session_data *sd, int count);
+		void (*postHookFunc) (struct map_session_data *sd, int ranktype, int count);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_addfame_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_pc_addfame_post[hIndex].func;
-			postHookFunc(sd, count);
+			postHookFunc(sd, ranktype, count);
 		}
 	}
 	return;
 }
-unsigned char HP_pc_famerank(int char_id, int job) {
+int HP_pc_fame_rank(int char_id, int ranktype) {
 	int hIndex = 0;
-	unsigned char retVal___ = 0;
-	if( HPMHooks.count.HP_pc_famerank_pre ) {
-		unsigned char (*preHookFunc) (int *char_id, int *job);
+	int retVal___ = 0;
+	if( HPMHooks.count.HP_pc_fame_rank_pre ) {
+		int (*preHookFunc) (int *char_id, int *ranktype);
 		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_famerank_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_pc_famerank_pre[hIndex].func;
-			retVal___ = preHookFunc(&char_id, &job);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_fame_rank_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_pc_fame_rank_pre[hIndex].func;
+			retVal___ = preHookFunc(&char_id, &ranktype);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -56822,13 +56822,13 @@ unsigned char HP_pc_famerank(int char_id, int job) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.pc.famerank(char_id, job);
+		retVal___ = HPMHooks.source.pc.fame_rank(char_id, ranktype);
 	}
-	if( HPMHooks.count.HP_pc_famerank_post ) {
-		unsigned char (*postHookFunc) (unsigned char retVal___, int char_id, int job);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_famerank_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_pc_famerank_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, char_id, job);
+	if( HPMHooks.count.HP_pc_fame_rank_post ) {
+		int (*postHookFunc) (int retVal___, int char_id, int ranktype);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_fame_rank_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_pc_fame_rank_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, char_id, ranktype);
 		}
 	}
 	return retVal___;
@@ -57020,15 +57020,15 @@ void HP_pc_inventory_rental_add(struct map_session_data *sd, int seconds) {
 	}
 	return;
 }
-int HP_pc_disguise(struct map_session_data *sd, int class_) {
+int HP_pc_disguise(struct map_session_data *sd, int class) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_disguise_pre ) {
-		int (*preHookFunc) (struct map_session_data **sd, int *class_);
+		int (*preHookFunc) (struct map_session_data **sd, int *class);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_disguise_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_pc_disguise_pre[hIndex].func;
-			retVal___ = preHookFunc(&sd, &class_);
+			retVal___ = preHookFunc(&sd, &class);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -57036,13 +57036,13 @@ int HP_pc_disguise(struct map_session_data *sd, int class_) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.pc.disguise(sd, class_);
+		retVal___ = HPMHooks.source.pc.disguise(sd, class);
 	}
 	if( HPMHooks.count.HP_pc_disguise_post ) {
-		int (*postHookFunc) (int retVal___, struct map_session_data *sd, int class_);
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, int class);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_disguise_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_pc_disguise_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd, class_);
+			retVal___ = postHookFunc(retVal___, sd, class);
 		}
 	}
 	return retVal___;
@@ -58298,15 +58298,15 @@ void HP_pc_expire_check(struct map_session_data *sd) {
 	}
 	return;
 }
-bool HP_pc_db_checkid(unsigned int class_) {
+bool HP_pc_db_checkid(int class) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if( HPMHooks.count.HP_pc_db_checkid_pre ) {
-		bool (*preHookFunc) (unsigned int *class_);
+		bool (*preHookFunc) (int *class);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_db_checkid_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_pc_db_checkid_pre[hIndex].func;
-			retVal___ = preHookFunc(&class_);
+			retVal___ = preHookFunc(&class);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -58314,13 +58314,13 @@ bool HP_pc_db_checkid(unsigned int class_) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.pc.db_checkid(class_);
+		retVal___ = HPMHooks.source.pc.db_checkid(class);
 	}
 	if( HPMHooks.count.HP_pc_db_checkid_post ) {
-		bool (*postHookFunc) (bool retVal___, unsigned int class_);
+		bool (*postHookFunc) (bool retVal___, int class);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_db_checkid_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_pc_db_checkid_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, class_);
+			retVal___ = postHookFunc(retVal___, class);
 		}
 	}
 	return retVal___;
@@ -66911,15 +66911,15 @@ int HP_skill_get_cooldown(uint16 skill_id, uint16 skill_lv) {
 	}
 	return retVal___;
 }
-int HP_skill_tree_get_max(uint16 skill_id, int b_class) {
+int HP_skill_tree_get_max(uint16 skill_id, int class) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_tree_get_max_pre ) {
-		int (*preHookFunc) (uint16 *skill_id, int *b_class);
+		int (*preHookFunc) (uint16 *skill_id, int *class);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_tree_get_max_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_skill_tree_get_max_pre[hIndex].func;
-			retVal___ = preHookFunc(&skill_id, &b_class);
+			retVal___ = preHookFunc(&skill_id, &class);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -66927,13 +66927,13 @@ int HP_skill_tree_get_max(uint16 skill_id, int b_class) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.skill.tree_get_max(skill_id, b_class);
+		retVal___ = HPMHooks.source.skill.tree_get_max(skill_id, class);
 	}
 	if( HPMHooks.count.HP_skill_tree_get_max_post ) {
-		int (*postHookFunc) (int retVal___, uint16 skill_id, int b_class);
+		int (*postHookFunc) (int retVal___, uint16 skill_id, int class);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_tree_get_max_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_skill_tree_get_max_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, skill_id, b_class);
+			retVal___ = postHookFunc(retVal___, skill_id, class);
 		}
 	}
 	return retVal___;

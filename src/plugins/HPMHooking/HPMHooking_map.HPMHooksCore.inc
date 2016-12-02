@@ -4266,8 +4266,8 @@ struct {
 	struct HPMHookPoint *HP_pc_getmaxspiritball_post;
 	struct HPMHookPoint *HP_pc_addfame_pre;
 	struct HPMHookPoint *HP_pc_addfame_post;
-	struct HPMHookPoint *HP_pc_famerank_pre;
-	struct HPMHookPoint *HP_pc_famerank_post;
+	struct HPMHookPoint *HP_pc_fame_rank_pre;
+	struct HPMHookPoint *HP_pc_fame_rank_post;
 	struct HPMHookPoint *HP_pc_set_hate_mob_pre;
 	struct HPMHookPoint *HP_pc_set_hate_mob_post;
 	struct HPMHookPoint *HP_pc_readdb_pre;
@@ -10303,8 +10303,8 @@ struct {
 	int HP_pc_getmaxspiritball_post;
 	int HP_pc_addfame_pre;
 	int HP_pc_addfame_post;
-	int HP_pc_famerank_pre;
-	int HP_pc_famerank_post;
+	int HP_pc_fame_rank_pre;
+	int HP_pc_fame_rank_post;
 	int HP_pc_set_hate_mob_pre;
 	int HP_pc_set_hate_mob_post;
 	int HP_pc_readdb_pre;
