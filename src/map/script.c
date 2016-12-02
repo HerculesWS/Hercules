@@ -8030,7 +8030,7 @@ BUILDIN(makeitem2)
 	if (script_isstringtype(st, 2)) {
 		const char *name = script_getstr(st, 2);
 		struct item_data *item_data = itemdb->search_name(name);
-		if (item_data == NULL)
+		if (item_data != NULL)
 			nameid = item_data->nameid;
 	} else {
 		nameid = script_getnum(st, 2);
