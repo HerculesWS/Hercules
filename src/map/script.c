@@ -9168,15 +9168,15 @@ BUILDIN(successrefitem)
 		   sd->status.char_id == (int)MakeDWord(sd->status.inventory[i].card[2],sd->status.inventory[i].card[3])
 		  ) { // Fame point system [DracoRPG]
 			switch (sd->inventory_data[i]->wlv) {
-				case 1:
-					pc->addfame(sd,1); // Success to refine to +10 a lv1 weapon you forged = +1 fame point
-					break;
-				case 2:
-					pc->addfame(sd,25); // Success to refine to +10 a lv2 weapon you forged = +25 fame point
-					break;
-				case 3:
-					pc->addfame(sd,1000); // Success to refine to +10 a lv3 weapon you forged = +1000 fame point
-					break;
+			case 1:
+				pc->addfame(sd, RANKTYPE_BLACKSMITH, 1); // Success to refine to +10 a lv1 weapon you forged = +1 fame point
+				break;
+			case 2:
+				pc->addfame(sd, RANKTYPE_BLACKSMITH, 25); // Success to refine to +10 a lv2 weapon you forged = +25 fame point
+				break;
+			case 3:
+				pc->addfame(sd, RANKTYPE_BLACKSMITH, 1000); // Success to refine to +10 a lv3 weapon you forged = +1000 fame point
+				break;
 			}
 		}
 	}
