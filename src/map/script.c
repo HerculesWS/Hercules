@@ -9977,7 +9977,7 @@ BUILDIN(setmount)
 			flag = SETMOUNT_TYPE_AUTODETECT;
 		}
 		// Sanity checks and auto-detection
-		if ((sd->class_&MAPID_THIRDMASK) == MAPID_RUNE_KNIGHT) {
+		if ((sd->job & MAPID_THIRDMASK) == MAPID_RUNE_KNIGHT) {
 			if (pc->checkskill(sd, RK_DRAGONTRAINING)) {
 				// Rune Knight (Dragon)
 				unsigned int option;
@@ -9989,11 +9989,11 @@ BUILDIN(setmount)
 				           OPTION_DRAGON1); // default value
 				pc->setridingdragon(sd, option);
 			}
-		} else if ((sd->class_&MAPID_THIRDMASK) == MAPID_RANGER) {
+		} else if ((sd->job & MAPID_THIRDMASK) == MAPID_RANGER) {
 			// Ranger (Warg)
 			if (pc->checkskill(sd, RA_WUGRIDER))
 				pc->setridingwug(sd, true);
-		} else if ((sd->class_&MAPID_THIRDMASK) == MAPID_MECHANIC) {
+		} else if ((sd->job & MAPID_THIRDMASK) == MAPID_MECHANIC) {
 			// Mechanic (Mado Gear)
 			if (pc->checkskill(sd, NC_MADOLICENCE))
 				pc->setmadogear(sd, true);
@@ -11782,7 +11782,7 @@ BUILDIN(eaclass)
 
 BUILDIN(roclass)
 {
-	int class_ =script_getnum(st,2);
+	int job = script_getnum(st,2);
 	int sex;
 	if (script_hasdata(st,3)) {
 		sex = script_getnum(st,3);
@@ -11793,7 +11793,7 @@ BUILDIN(roclass)
 		else
 			sex = 1; //Just use male when not found.
 	}
-	script_pushint(st,pc->mapid2jobid(class_, sex));
+	script_pushint(st,pc->mapid2jobid(job, sex));
 	return true;
 }
 
@@ -11889,7 +11889,7 @@ BUILDIN(changebase)
 	if(vclass == JOB_WEDDING)
 	{
 		if (!battle_config.wedding_modifydisplay || //Do not show the wedding sprites
-			sd->class_&JOBL_BABY //Baby classes screw up when showing wedding sprites. [Skotlex] They don't seem to anymore.
+			sd->job & JOBL_BABY //Baby classes screw up when showing wedding sprites. [Skotlex] They don't seem to anymore.
 			)
 			return true;
 	}

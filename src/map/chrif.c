@@ -1065,12 +1065,18 @@ int chrif_updatefamelist(struct map_session_data* sd) {
 	nullpo_retr(0, sd);
 	chrif_check(-1);
 
-	switch(sd->class_ & MAPID_UPPERMASK) {
-		case MAPID_BLACKSMITH: type = RANKTYPE_BLACKSMITH; break;
-		case MAPID_ALCHEMIST:  type = RANKTYPE_ALCHEMIST;  break;
-		case MAPID_TAEKWON:    type = RANKTYPE_TAEKWON;    break;
-		default:
-			return 0;
+	switch (sd->job & MAPID_UPPERMASK) {
+	case MAPID_BLACKSMITH:
+		type = RANKTYPE_BLACKSMITH;
+		break;
+	case MAPID_ALCHEMIST:
+		type = RANKTYPE_ALCHEMIST;
+		break;
+	case MAPID_TAEKWON:
+		type = RANKTYPE_TAEKWON;
+		break;
+	default:
+		return 0;
 	}
 
 	WFIFOHEAD(chrif->fd, 11);

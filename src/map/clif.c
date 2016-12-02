@@ -13824,7 +13824,7 @@ void clif_parse_NoviceDoriDori(int fd, struct map_session_data *sd)
 {
 	if (sd->state.doridori) return;
 
-	switch (sd->class_&MAPID_UPPERMASK) {
+	switch (sd->job & MAPID_UPPERMASK) {
 		case MAPID_SOUL_LINKER:
 		case MAPID_STAR_GLADIATOR:
 		case MAPID_TAEKWON:
@@ -13852,7 +13852,7 @@ void clif_parse_NoviceExplosionSpirits(int fd, struct map_session_data *sd)
 	/* game client is currently broken on this (not sure the packetver range) */
 	/* it sends the request when the criteria doesn't match (and of course we let it fail) */
 	/* so restoring the old parse_globalmes method. */
-	if( ( sd->class_&MAPID_UPPERMASK ) == MAPID_SUPER_NOVICE ) {
+	if ((sd->job & MAPID_UPPERMASK) == MAPID_SUPER_NOVICE) {
 		unsigned int next = pc->nextbaseexp(sd);
 		if( next == 0 ) next = pc->thisbaseexp(sd);
 		if( next ) {
@@ -14226,7 +14226,7 @@ void clif_ranklist(struct map_session_data *sd, enum fame_list_type type)
 
 	nullpo_retv(sd);
 	fd = sd->fd;
-	upperMask = sd->class_&MAPID_UPPERMASK;
+	upperMask = sd->job & MAPID_UPPERMASK;
 	WFIFOHEAD(fd, len);
 	WFIFOW(fd, 0) = 0x97d;
 	WFIFOW(fd, 2) = type;
