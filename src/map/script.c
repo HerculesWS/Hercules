@@ -6391,6 +6391,9 @@ int buildin_areawarp_sub(struct block_list *bl, va_list ap)
 		pc->randomwarp(sd, CLR_TELEPORT);
 	} else if (x3 != 0 && y3 != 0) {
 		int max, tx, ty, j = 0;
+		int16 m;
+
+		m = map->mapindex2mapid(index);
 
 		// choose a suitable max number of attempts
 		if( (max = (y3-y2+1)*(x3-x2+1)*3) > 1000 )
@@ -6401,7 +6404,7 @@ int buildin_areawarp_sub(struct block_list *bl, va_list ap)
 			tx = rnd()%(x3-x2+1)+x2;
 			ty = rnd()%(y3-y2+1)+y2;
 			j++;
-		} while (map->getcell(index, bl, tx, ty, CELL_CHKNOPASS) && j < max);
+		} while (map->getcell(m, bl, tx, ty, CELL_CHKNOPASS) && j < max);
 
 		pc->setpos(sd, index, tx, ty, CLR_OUTSIGHT);
 	} else {
