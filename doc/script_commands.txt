@@ -4977,7 +4977,32 @@ will be used.
 
 ---------------------------------------
 
-*cleanarea("<map name>", <x1>, <y1>, <x2>, <y2>)
+*makeitem2(<item id>,<amount>,<identify>,<refine>,<attribute>,<card1>,<card2>,<card3>,<card4>,{"<map name>",<X>,<Y>,<range>})
+*makeitem2("<item name>",<amount>,<identify>,<refine>,<attribute>,<card1>,<card2>,<card3>,<card4>,{"<map name>",<X>,<Y>,<range>})
+
+This script command work like 'makeitem', but it has additional parameters
+to expand the usage of the scritp command.
+
+Parameter List:
+	itemid		- ID / Name of an item
+	amount		- Amount you want produced (Value: 1~MAX_AMOUNT)
+				- if item type is Armor/Wepaon/PetEgg/PetArmor, amount will be limit to 1
+	identify	- Item to be identified (1) or not (0)
+	refine		- Refine count of item. (Value: 0 ~ MAX_REFINE)
+	attribute	- Item is broken (1) or not (0)
+	card1,2,3,4	- Card IDs that compound on each slot
+
+Optional Parameter List:
+	map name	- Map name (Default to attached player map)
+	X,Y			- The coordinate of item will be dropped
+					If value = 0, it's drop random across the map
+					If value = -1, its drop around player
+	range		- Range of item drop around player. (Value: 1 ~ battle_config.area_size, Default: 3)
+					Default value will be used if no player are attached to the script.
+
+---------------------------------------
+
+*cleanarea("<map name>",<x1>,<y1>,<x2>,<y2>)
 *cleanmap("<map name>")
 
 These commands will clear all items lying on the ground on the specified 
