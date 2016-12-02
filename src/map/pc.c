@@ -430,30 +430,41 @@ void pc_addfame(struct map_session_data *sd, int ranktype, int count)
 	chrif->updatefamelist(sd);
 }
 
-// Check whether a player ID is in the fame rankers' list of its job, returns his/her position if so, 0 else
-int pc_famerank(int char_id, uint32 job)
+/**
+ * Returns a character's rank in the specified fame list.
+ *
+ * @param char_id  The character ID.
+ * @param ranktype The rank list type (@see enum fame_list_type).
+ * @return The rank position (1-based index)
+ * @retval 0 if the character isn't in the specified list.
+ */
+int pc_fame_rank(int char_id, int ranktype)
 {
 	int i;
 
-	switch (job & MAPID_UPPERMASK) {
-	case MAPID_BLACKSMITH: // Blacksmith
+	switch (ranktype) {
+	case RANKTYPE_BLACKSMITH:
 		for (i = 0; i < MAX_FAME_LIST; i++) {
 			if (pc->smith_fame_list[i].id == char_id)
 				return i + 1;
 		}
 		break;
-	case MAPID_ALCHEMIST: // Alchemist
+	case RANKTYPE_ALCHEMIST:
 		for (i = 0; i < MAX_FAME_LIST; i++) {
 			if (pc->chemist_fame_list[i].id == char_id)
 				return i + 1;
 		}
 		break;
-	case MAPID_TAEKWON: // Taekwon
+	case RANKTYPE_TAEKWON:
 		for (i = 0; i < MAX_FAME_LIST; i++) {
 			if (pc->taekwon_fame_list[i].id == char_id)
 				return i + 1;
 		}
 		break;
+	case RANKTYPE_PK: // Not implemented
+		FALLTHROUGH
+	default:
+		Assert_ret(0);
 	}
 
 	return 0;
@@ -1656,8 +1667,10 @@ int pc_calc_skilltree(struct map_session_data *sd)
 	} while(flag);
 
 	//
-	if (classidx > 0 && (sd->job & MAPID_UPPERMASK) == MAPID_TAEKWON && sd->status.base_level >= 90 && sd->status.skill_point == 0 && pc->famerank(sd->status.char_id, MAPID_TAEKWON)) {
-		/* Taekwon Ranger Bonus Skill Tree
+	if (classidx > 0 && (sd->job & MAPID_UPPERMASK) == MAPID_TAEKWON
+	 && sd->status.base_level >= 90 && sd->status.skill_point == 0
+	 && pc->fame_rank(sd->status.char_id, RANKTYPE_TAEKWON) > 0) {
+		/* Taekwon Ranker Bonus Skill Tree
 		============================================
 		- Grant All Taekwon Tree, but only as Bonus Skills in case they drop from ranking.
 		- (c > 0) to avoid grant Novice Skill Tree in case of Skill Reset (need more logic)
@@ -5108,9 +5121,8 @@ int pc_useitem(struct map_session_data *sd,int n) {
 		}
 	}
 
-	if(sd->status.inventory[n].card[0]==CARD0_CREATE &&
-		pc->famerank(MakeDWord(sd->status.inventory[n].card[2],sd->status.inventory[n].card[3]), MAPID_ALCHEMIST))
-	{
+	if (sd->status.inventory[n].card[0] == CARD0_CREATE
+	 && pc->fame_rank(MakeDWord(sd->status.inventory[n].card[2], sd->status.inventory[n].card[3]), RANKTYPE_ALCHEMIST) > 0) {
 		script->potion_flag = 2; // Famous player's potions have 50% more efficiency
 		if (sd->sc.data[SC_SOULLINK] && sd->sc.data[SC_SOULLINK]->val2 == SL_ROGUE)
 			script->potion_flag = 3; //Even more effective potions.
@@ -7182,7 +7194,8 @@ int pc_skillup(struct map_session_data *sd,uint16 skill_id) {
 		sd->status.skill_point--;
 		if( !skill->dbs->db[index].inf )
 			status_calc_pc(sd,SCO_NONE); // Only recalculate for passive skills.
-		else if (sd->status.skill_point == 0 && (sd->job & MAPID_UPPERMASK) == MAPID_TAEKWON && sd->status.base_level >= 90 && pc->famerank(sd->status.char_id, MAPID_TAEKWON))
+		else if (sd->status.skill_point == 0 && (sd->job & MAPID_UPPERMASK) == MAPID_TAEKWON
+		      && sd->status.base_level >= 90 && pc->fame_rank(sd->status.char_id, RANKTYPE_TAEKWON) > 0)
 			pc->calc_skilltree(sd); // Required to grant all TK Ranger skills.
 		else
 			pc->check_skilltree(sd, skill_id); // Check if a new skill can Lvlup
@@ -7429,7 +7442,7 @@ int pc_resetskill(struct map_session_data* sd, int flag)
 		/**
 		 * It has been confirmed on official server that when you reset skills with a ranked tweakwon your skills are not reset (because you have all of them anyway)
 		 **/
-		if ((sd->job & MAPID_UPPERMASK) == MAPID_TAEKWON && sd->status.base_level >= 90 && pc->famerank(sd->status.char_id, MAPID_TAEKWON))
+		if ((sd->job & MAPID_UPPERMASK) == MAPID_TAEKWON && sd->status.base_level >= 90 && pc->fame_rank(sd->status.char_id, RANKTYPE_TAEKWON))
 			return 0;
 
 		if( pc->checkskill(sd, SG_DEVIL) &&  !pc->nextjobexp(sd) ) //Remove perma blindness due to skill-reset. [Skotlex]
@@ -8611,7 +8624,12 @@ int pc_jobchange(struct map_session_data *sd, int class, int upper)
 	}
 
 	sd->status.class = class;
-	fame_flag = pc->famerank(sd->status.char_id, sd->job);
+	if ((sd->job & MAPID_UPPERMASK) == MAPID_BLACKSMITH)
+		fame_flag = pc->fame_rank(sd->status.char_id, RANKTYPE_BLACKSMITH);
+	else if ((sd->job & MAPID_UPPERMASK) == MAPID_ALCHEMIST)
+		fame_flag = pc->fame_rank(sd->status.char_id, RANKTYPE_ALCHEMIST);
+	else if ((sd->job & MAPID_UPPERMASK) == MAPID_TAEKWON)
+		fame_flag = pc->fame_rank(sd->status.char_id, RANKTYPE_TAEKWON);
 	sd->job = (uint16)job;
 	sd->status.job_level=1;
 	sd->status.job_exp=0;
@@ -12112,7 +12130,7 @@ void pc_defaults(void) {
 	pc->addspiritball = pc_addspiritball;
 	pc->delspiritball = pc_delspiritball;
 	pc->addfame = pc_addfame;
-	pc->famerank = pc_famerank;
+	pc->fame_rank = pc_fame_rank;
 	pc->set_hate_mob = pc_set_hate_mob;
 	pc->getmaxspiritball = pc_getmaxspiritball;
 
