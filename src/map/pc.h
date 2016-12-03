@@ -290,7 +290,9 @@ struct map_session_data {
 		short nameid;
 		int64 tick;
 	} item_delay[MAX_ITEMDELAYS]; // [Paradox924X]
-	short weapontype1,weapontype2;
+	int16 weapontype;  ///< Weapon type considering both hands (@see enum weapon_type).
+	int16 weapontype1; ///< Weapon type in the right/primary hand (@see enum weapon_type).
+	int16 weapontype2; ///< Weapon type in the left/secondary hand (@see enum weapon_type).
 	short disguise; // [Valaris]
 	struct weapon_data right_weapon, left_weapon;
 
@@ -659,8 +661,13 @@ END_ZEROED_BLOCK;
 #define pc_stop_attack(sd)        (unit->stop_attack(&(sd)->bl))
 
 //Weapon check considering dual wielding.
-#define pc_check_weapontype(sd, type) ((type)&((sd)->status.weapon < MAX_SINGLE_WEAPON_TYPE? \
-	1<<(sd)->status.weapon:(1<<(sd)->weapontype1)|(1<<(sd)->weapontype2)|(1<<(sd)->status.weapon)))
+#define pc_check_weapontype(sd, type) ( \
+	(type) & ( \
+		(sd)->weapontype < MAX_SINGLE_WEAPON_TYPE ? \
+			1 << (sd)->weapontype : \
+			(1 << (sd)->weapontype1) | (1 << (sd)->weapontype2) \
+		) \
+	)
 
 // clientside display macros (values to the left/right of the "+")
 #ifdef RENEWAL

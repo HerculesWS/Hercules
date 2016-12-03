@@ -2675,9 +2675,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 	sd->left_weapon.atkmods[1] = status->dbs->atkmods[1][sd->weapontype2];
 	sd->left_weapon.atkmods[2] = status->dbs->atkmods[2][sd->weapontype2];
 
-	if ((pc_isridingpeco(sd) || pc_isridingdragon(sd))
-	    && (sd->status.weapon==W_1HSPEAR || sd->status.weapon==W_2HSPEAR)
-	    ) {
+	if ((pc_isridingpeco(sd) || pc_isridingdragon(sd)) && (sd->weapontype == W_1HSPEAR || sd->weapontype == W_2HSPEAR)) {
 		//When Riding with spear, damage modifier to mid-class becomes
 		//same as versus large size.
 		sd->right_weapon.atkmods[1] = sd->right_weapon.atkmods[2];
@@ -2741,8 +2739,8 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 
 	// Base batk value is set on status->calc_misc
 	// weapon-type bonus (FIXME: Why is the weapon_atk bonus applied to base attack?)
-	if (sd->status.weapon < MAX_SINGLE_WEAPON_TYPE && sd->weapon_atk[sd->status.weapon])
-		bstatus->batk += sd->weapon_atk[sd->status.weapon];
+	if (sd->weapontype < MAX_SINGLE_WEAPON_TYPE && sd->weapon_atk[sd->weapontype])
+		bstatus->batk += sd->weapon_atk[sd->weapontype];
 	// Absolute modifiers from passive skills
 #ifndef RENEWAL
 	if((skill_lv=pc->checkskill(sd,BS_HILTBINDING))>0) // it doesn't work in RE.
@@ -2890,10 +2888,10 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 #ifndef RENEWAL
 		bstatus->hit += skill_lv;
 #endif
-		if(sd->status.weapon == W_BOW)
+		if (sd->weapontype == W_BOW)
 			bstatus->rhw.range += skill_lv;
 	}
-	if(sd->status.weapon >= W_REVOLVER && sd->status.weapon <= W_GRENADE) {
+	if (sd->weapontype >= W_REVOLVER && sd->weapontype <= W_GRENADE) {
 		if((skill_lv=pc->checkskill(sd,GS_SINGLEACTION))>0)
 			bstatus->hit += 2*skill_lv;
 		if((skill_lv=pc->checkskill(sd,GS_SNAKEEYE))>0) {
@@ -2901,9 +2899,9 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 			bstatus->rhw.range += skill_lv;
 		}
 	}
-	if( (sd->status.weapon == W_1HAXE || sd->status.weapon == W_2HAXE) && (skill_lv = pc->checkskill(sd,NC_TRAININGAXE)) > 0 )
+	if ((sd->weapontype == W_1HAXE || sd->weapontype == W_2HAXE) && (skill_lv = pc->checkskill(sd,NC_TRAININGAXE)) > 0)
 		bstatus->hit += 3*skill_lv;
-	if((sd->status.weapon == W_MACE || sd->status.weapon == W_2HMACE) && (skill_lv = pc->checkskill(sd,NC_TRAININGAXE)) > 0)
+	if ((sd->weapontype == W_MACE || sd->weapontype == W_2HMACE) && (skill_lv = pc->checkskill(sd,NC_TRAININGAXE)) > 0)
 		bstatus->hit += 2*skill_lv;
 	if (pc->checkskill(sd, SU_POWEROFLIFE) > 0)
 		bstatus->hit += 20;
@@ -2963,12 +2961,11 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 
 	// Relative modifiers from passive skills
 #ifndef RENEWAL_ASPD
-	if((skill_lv=pc->checkskill(sd,SA_ADVANCEDBOOK))>0 && sd->status.weapon == W_BOOK)
+	if (sd->weapontype == W_BOOK && (skill_lv=pc->checkskill(sd,SA_ADVANCEDBOOK)) > 0)
 		bstatus->aspd_rate -= 5*skill_lv;
 	if((skill_lv = pc->checkskill(sd,SG_DEVIL)) > 0 && !pc->nextjobexp(sd))
 		bstatus->aspd_rate -= 30*skill_lv;
-	if((skill_lv=pc->checkskill(sd,GS_SINGLEACTION))>0 &&
-		(sd->status.weapon >= W_REVOLVER && sd->status.weapon <= W_GRENADE))
+	if (sd->weapontype >= W_REVOLVER && sd->weapontype <= W_GRENADE && (skill_lv=pc->checkskill(sd,GS_SINGLEACTION)) > 0)
 		bstatus->aspd_rate -= ((skill_lv+1)/2) * 10;
 	if (pc_isridingpeco(sd))
 		bstatus->aspd_rate += 500-100*pc->checkskill(sd,KN_CAVALIERMASTERY);
@@ -3858,7 +3855,7 @@ void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag)
 		} else {
 			st->cri = status->calc_critical(bl, sc, bst->cri + 3*(st->luk - bst->luk), true);
 		}
-		if (battle_config.show_katar_crit_bonus && bl->type == BL_PC && BL_UCAST(BL_PC, bl)->status.weapon == W_KATAR) {
+		if (battle_config.show_katar_crit_bonus && bl->type == BL_PC && BL_UCAST(BL_PC, bl)->weapontype == W_KATAR) {
 			st->cri *= 2;
 		}
 	}
@@ -4289,11 +4286,11 @@ int status_base_amotion_pc(struct map_session_data *sd, struct status_data *st)
 	nullpo_ret(st);
 
 	amotion = status->dbs->aspd_base[pc->class2idx(sd->status.class)][sd->weapontype1];
-	if ( sd->status.weapon > MAX_SINGLE_WEAPON_TYPE)
+	if (sd->weapontype > MAX_SINGLE_WEAPON_TYPE)
 		amotion += status->dbs->aspd_base[pc->class2idx(sd->status.class)][sd->weapontype2] / 4;
 	if ( sd->status.shield )
 		amotion += status->dbs->aspd_base[pc->class2idx(sd->status.class)][MAX_SINGLE_WEAPON_TYPE];
-	switch ( sd->status.weapon ) {
+	switch (sd->weapontype) {
 		case W_BOW:
 		case W_MUSICAL:
 		case W_WHIP:
@@ -4308,15 +4305,15 @@ int status_base_amotion_pc(struct map_session_data *sd, struct status_data *st)
 			temp = st->dex * st->dex / 5.0f + st->agi * st->agi * 0.5f;
 	}
 	temp = (float)(sqrt(temp) * 0.25f) + 0xc4;
-	if ( (skill_lv = pc->checkskill(sd, SA_ADVANCEDBOOK)) > 0 && sd->status.weapon == W_BOOK )
+	if (sd->weapontype == W_BOOK && (skill_lv = pc->checkskill(sd, SA_ADVANCEDBOOK)) > 0)
 		val += (skill_lv - 1) / 2 + 1;
 	if ( (skill_lv = pc->checkskill(sd, GS_SINGLEACTION)) > 0 )
 		val += ((skill_lv + 1) / 2);
 	amotion = ((int)(temp + ((float)(status->calc_aspd(&sd->bl, &sd->sc, 1) + val) * st->agi / 200)) - min(amotion, 200));
 #else
 	// base weapon delay
-	amotion = (sd->status.weapon < MAX_SINGLE_WEAPON_TYPE)
-		? (status->dbs->aspd_base[pc->class2idx(sd->status.class)][sd->status.weapon]) // single weapon
+	amotion = (sd->weapontype < MAX_SINGLE_WEAPON_TYPE)
+		? (status->dbs->aspd_base[pc->class2idx(sd->status.class)][sd->weapontype]) // single weapon
 		: (status->dbs->aspd_base[pc->class2idx(sd->status.class)][sd->weapontype1] + status->dbs->aspd_base[pc->class2idx(sd->status.class)][sd->weapontype2]) * 7 / 10; // dual-wield
 
 	// percentual delay reduction from stats
@@ -4343,7 +4340,7 @@ unsigned short status_base_atk(const struct block_list *bl, const struct status_
 		return 0;
 
 	if (bl->type == BL_PC) {
-		switch (BL_UCCAST(BL_PC, bl)->status.weapon) {
+		switch (BL_UCCAST(BL_PC, bl)->weapontype) {
 		case W_BOW:
 		case W_MUSICAL:
 		case W_WHIP:
@@ -5904,7 +5901,7 @@ short status_calc_aspd(struct block_list *bl, struct status_change *sc, short fl
 			if (bl->type != BL_PC) {
 				bonus = sc->data[SC_ASSNCROS]->val2;
 			} else {
-				switch (BL_UCCAST(BL_PC, bl)->status.weapon) {
+				switch (BL_UCCAST(BL_PC, bl)->weapontype) {
 					case W_BOW:
 					case W_REVOLVER:
 					case W_RIFLE:
@@ -6065,7 +6062,7 @@ short status_calc_aspd_rate(struct block_list *bl, struct status_change *sc, int
 			if (bl->type != BL_PC) {
 				max = sc->data[SC_ASSNCROS]->val2;
 			} else {
-				switch (BL_UCCAST(BL_PC, bl)->status.weapon) {
+				switch (BL_UCCAST(BL_PC, bl)->weapontype) {
 				case W_BOW:
 				case W_REVOLVER:
 				case W_RIFLE:

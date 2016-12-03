@@ -800,40 +800,40 @@ int pc_calcweapontype(struct map_session_data *sd)
 
 	// single-hand
 	if(sd->weapontype2 == W_FIST) {
-		sd->status.weapon = sd->weapontype1;
+		sd->weapontype = sd->weapontype1;
 		return 1;
 	}
 	if(sd->weapontype1 == W_FIST) {
-		sd->status.weapon = sd->weapontype2;
+		sd->weapontype = sd->weapontype2;
 		return 1;
 	}
 	// dual-wield
-	sd->status.weapon = W_FIST;
+	sd->weapontype = W_FIST;
 	switch (sd->weapontype1){
 		case W_DAGGER:
 			switch (sd->weapontype2) {
-				case W_DAGGER:  sd->status.weapon = W_DOUBLE_DD; break;
-				case W_1HSWORD: sd->status.weapon = W_DOUBLE_DS; break;
-				case W_1HAXE:   sd->status.weapon = W_DOUBLE_DA; break;
+				case W_DAGGER:  sd->weapontype = W_DOUBLE_DD; break;
+				case W_1HSWORD: sd->weapontype = W_DOUBLE_DS; break;
+				case W_1HAXE:   sd->weapontype = W_DOUBLE_DA; break;
 			}
 			break;
 		case W_1HSWORD:
 			switch (sd->weapontype2) {
-				case W_DAGGER:  sd->status.weapon = W_DOUBLE_DS; break;
-				case W_1HSWORD: sd->status.weapon = W_DOUBLE_SS; break;
-				case W_1HAXE:   sd->status.weapon = W_DOUBLE_SA; break;
+				case W_DAGGER:  sd->weapontype = W_DOUBLE_DS; break;
+				case W_1HSWORD: sd->weapontype = W_DOUBLE_SS; break;
+				case W_1HAXE:   sd->weapontype = W_DOUBLE_SA; break;
 			}
 			break;
 		case W_1HAXE:
 			switch (sd->weapontype2) {
-				case W_DAGGER:  sd->status.weapon = W_DOUBLE_DA; break;
-				case W_1HSWORD: sd->status.weapon = W_DOUBLE_SA; break;
-				case W_1HAXE:   sd->status.weapon = W_DOUBLE_AA; break;
+				case W_DAGGER:  sd->weapontype = W_DOUBLE_DA; break;
+				case W_1HSWORD: sd->weapontype = W_DOUBLE_SA; break;
+				case W_1HAXE:   sd->weapontype = W_DOUBLE_AA; break;
 			}
 	}
 	// unknown, default to right hand type
-	if (sd->status.weapon == W_FIST)
-		sd->status.weapon = sd->weapontype1;
+	if (sd->weapontype == W_FIST)
+		sd->weapontype = sd->weapontype1;
 
 	return 2;
 }
@@ -856,10 +856,13 @@ int pc_setequipindex(struct map_session_data *sd)
 					sd->equip_index[j] = i;
 
 			if (sd->status.inventory[i].equip & EQP_HAND_R) {
-				if (sd->inventory_data[i])
+				if (sd->inventory_data[i]) {
 					sd->weapontype1 = sd->inventory_data[i]->subtype;
-				else
+					sd->status.look.weapon = sd->inventory_data[i]->view_sprite;
+				} else {
 					sd->weapontype1 = W_FIST;
+					sd->status.look.weapon = 0;
+				}
 			}
 
 			if (sd->status.inventory[i].equip & EQP_HAND_L) {
@@ -2450,7 +2453,7 @@ int pc_bonus(struct map_session_data *sd,int type,int val) {
 			}
 			switch (sd->state.lr_flag) {
 			case 2:
-				switch (sd->status.weapon) {
+				switch (sd->weapontype) {
 					case W_BOW:
 					case W_REVOLVER:
 					case W_RIFLE:
@@ -2517,7 +2520,7 @@ int pc_bonus(struct map_session_data *sd,int type,int val) {
 		case SP_ATTACKRANGE:
 			switch (sd->state.lr_flag) {
 			case 2:
-				switch (sd->status.weapon) {
+				switch (sd->weapontype) {
 					case W_BOW:
 					case W_REVOLVER:
 					case W_RIFLE:
@@ -5912,7 +5915,7 @@ int pc_checkallowskill(struct map_session_data *sd)
 			status_change_end(&sd->bl, scw_list[i], INVALID_TIMER);
 	}
 
-	if(sd->sc.data[SC_STRUP] && sd->status.weapon != W_FIST)
+	if(sd->sc.data[SC_STRUP] && sd->weapontype != W_FIST)
 		// Spurt requires bare hands (feet, in fact xD)
 		status_change_end(&sd->bl, SC_STRUP, INVALID_TIMER);
 
@@ -8777,7 +8780,7 @@ int pc_changelook(struct map_session_data *sd,int type,int val)
 		case LOOK_BASE:
 			status->set_viewdata(&sd->bl, val);
 			clif->changelook(&sd->bl, LOOK_BASE, sd->vd.class);
-			clif->changelook(&sd->bl,LOOK_WEAPON,sd->status.weapon);
+			clif->changelook(&sd->bl, LOOK_WEAPON, sd->status.look.weapon);
 			if (sd->vd.cloth_color)
 				clif->changelook(&sd->bl,LOOK_CLOTHES_COLOR,sd->vd.cloth_color);
 			if (sd->vd.body_style)
@@ -8796,7 +8799,7 @@ int pc_changelook(struct map_session_data *sd,int type,int val)
 			}
 			break;
 		case LOOK_WEAPON:
-			sd->status.weapon=val;
+			sd->status.look.weapon = val;
 			break;
 		case LOOK_HEAD_BOTTOM:
 			sd->status.head_bottom=val;
@@ -9690,12 +9693,15 @@ void pc_equipitem_pos(struct map_session_data *sd, struct item_data *id, int n, 
 	nullpo_retv(sd);
 	if ((!map_no_view(sd->bl.m,EQP_SHADOW_WEAPON) && pos & EQP_SHADOW_WEAPON) ||
 		 (pos & EQP_HAND_R)) {
-		if (id != NULL)
+		if (id != NULL) {
 			sd->weapontype1 = id->subtype;
-		else
+			sd->status.look.weapon = id->view_sprite;
+		} else {
 			sd->weapontype1 = W_FIST;
+			sd->status.look.weapon = 0;
+		}
 		pc->calcweapontype(sd);
-		clif->changelook(&sd->bl,LOOK_WEAPON,sd->status.weapon);
+		clif->changelook(&sd->bl, LOOK_WEAPON, sd->status.look.weapon);
 	}
 	if ((!map_no_view(sd->bl.m,EQP_SHADOW_SHIELD) && pos & EQP_SHADOW_SHIELD) ||
 		 (pos & EQP_HAND_L)) {
@@ -9923,9 +9929,9 @@ void pc_unequipitem_pos(struct map_session_data *sd, int n, int pos)
 	nullpo_retv(sd);
 	if (pos & EQP_HAND_R) {
 		sd->weapontype1 = W_FIST;
-		sd->status.weapon = sd->weapontype2;
 		pc->calcweapontype(sd);
-		clif->changelook(&sd->bl,LOOK_WEAPON,sd->status.weapon);
+		sd->status.look.weapon = 0;
+		clif->changelook(&sd->bl, LOOK_WEAPON, sd->status.look.weapon);
 		if (!battle_config.dancing_weaponswitch_fix)
 			status_change_end(&sd->bl, SC_DANCING, INVALID_TIMER); // Unequipping => stop dancing.
 	}
