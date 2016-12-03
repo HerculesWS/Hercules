@@ -1491,8 +1491,8 @@ bool clif_spawn(struct block_list *bl)
 			}
 			if (sd->charm_type != CHARM_TYPE_NONE && sd->charm_count > 0)
 				clif->spiritcharm(sd);
-			if (sd->status.robe)
-				clif->refreshlook(bl,bl->id,LOOK_ROBE,sd->status.robe,AREA);
+			if (sd->status.look.robe != 0)
+				clif->refreshlook(bl, bl->id, LOOK_ROBE, sd->status.look.robe, AREA);
 		}
 			break;
 		case BL_MOB:
@@ -4309,8 +4309,8 @@ void clif_getareachar_unit(struct map_session_data* sd,struct block_list *bl) {
 				clif->specialeffect_single(bl,421,sd->fd);
 			if (tsd->bg_id != 0 && map->list[tsd->bl.m].flag.battleground)
 				clif->sendbgemblem_single(sd->fd,tsd);
-			if (tsd->status.robe)
-				clif->refreshlook(&sd->bl,bl->id,LOOK_ROBE,tsd->status.robe,SELF);
+			if (tsd->status.look.robe != 0)
+				clif->refreshlook(&sd->bl, bl->id, LOOK_ROBE, tsd->status.look.robe, SELF);
 		}
 			break;
 		case BL_MER: // Devotion Effects

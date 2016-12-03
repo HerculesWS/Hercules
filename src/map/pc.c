@@ -8835,10 +8835,10 @@ int pc_equiplookall(struct map_session_data *sd)
 
 	clif->changelook(&sd->bl,LOOK_WEAPON,0);
 	clif->changelook(&sd->bl,LOOK_SHOES,0);
-	clif->changelook(&sd->bl,LOOK_HEAD_BOTTOM,sd->status.head_bottom);
-	clif->changelook(&sd->bl,LOOK_HEAD_TOP,sd->status.head_top);
-	clif->changelook(&sd->bl,LOOK_HEAD_MID,sd->status.head_mid);
-	clif->changelook(&sd->bl,LOOK_ROBE, sd->status.robe);
+	clif->changelook(&sd->bl, LOOK_HEAD_BOTTOM, sd->status.look.head_bottom);
+	clif->changelook(&sd->bl, LOOK_HEAD_TOP, sd->status.look.head_top);
+	clif->changelook(&sd->bl, LOOK_HEAD_MID, sd->status.look.head_mid);
+	clif->changelook(&sd->bl, LOOK_ROBE, sd->status.look.robe);
 
 	return 0;
 }
@@ -8876,13 +8876,13 @@ int pc_changelook(struct map_session_data *sd,int type,int val)
 			sd->status.look.weapon = val;
 			break;
 		case LOOK_HEAD_BOTTOM:
-			sd->status.head_bottom=val;
+			sd->status.look.head_bottom = val;
 			break;
 		case LOOK_HEAD_TOP:
-			sd->status.head_top=val;
+			sd->status.look.head_top = val;
 			break;
 		case LOOK_HEAD_MID:
-			sd->status.head_mid=val;
+			sd->status.look.head_mid = val;
 			break;
 		case LOOK_HAIR_COLOR: //Use the battle_config limits! [Skotlex]
 			val = cap_value(val, MIN_HAIR_COLOR, MAX_HAIR_COLOR);
@@ -8905,7 +8905,7 @@ int pc_changelook(struct map_session_data *sd,int type,int val)
 		case LOOK_SHOES:
 			break;
 		case LOOK_ROBE:
-			sd->status.robe = val;
+			sd->status.look.robe = val;
 			break;
 		case LOOK_BODY2:
 			val = cap_value(val, MIN_BODY_STYLE, MAX_BODY_STYLE);
@@ -9801,57 +9801,57 @@ void pc_equipitem_pos(struct map_session_data *sd, struct item_data *id, int n, 
 	//causes client to redraw item on top of itself. (suggested by Lupus)
 	if (!map_no_view(sd->bl.m,EQP_HEAD_LOW) && pos & EQP_HEAD_LOW && pc->checkequip(sd,EQP_COSTUME_HEAD_LOW) == -1) {
 		if (id && !(pos&(EQP_HEAD_TOP|EQP_HEAD_MID)))
-			sd->status.head_bottom = id->view_sprite;
+			sd->status.look.head_bottom = id->view_sprite;
 		else
-			sd->status.head_bottom = 0;
-		clif->changelook(&sd->bl,LOOK_HEAD_BOTTOM,sd->status.head_bottom);
+			sd->status.look.head_bottom = 0;
+		clif->changelook(&sd->bl, LOOK_HEAD_BOTTOM, sd->status.look.head_bottom);
 	}
 	if (!map_no_view(sd->bl.m,EQP_HEAD_TOP) && pos & EQP_HEAD_TOP && pc->checkequip(sd,EQP_COSTUME_HEAD_TOP) == -1) {
 		if (id)
-			sd->status.head_top = id->view_sprite;
+			sd->status.look.head_top = id->view_sprite;
 		else
-			sd->status.head_top = 0;
-		clif->changelook(&sd->bl,LOOK_HEAD_TOP,sd->status.head_top);
+			sd->status.look.head_top = 0;
+		clif->changelook(&sd->bl, LOOK_HEAD_TOP, sd->status.look.head_top);
 	}
 	if (!map_no_view(sd->bl.m,EQP_HEAD_MID) && pos & EQP_HEAD_MID && pc->checkequip(sd,EQP_COSTUME_HEAD_MID) == -1) {
 		if (id && !(pos&EQP_HEAD_TOP))
-			sd->status.head_mid = id->view_sprite;
+			sd->status.look.head_mid = id->view_sprite;
 		else
-			sd->status.head_mid = 0;
-		clif->changelook(&sd->bl,LOOK_HEAD_MID,sd->status.head_mid);
+			sd->status.look.head_mid = 0;
+		clif->changelook(&sd->bl, LOOK_HEAD_MID, sd->status.look.head_mid);
 	}
 	if (!map_no_view(sd->bl.m,EQP_COSTUME_HEAD_TOP) && pos & EQP_COSTUME_HEAD_TOP) {
 		if (id){
-			sd->status.head_top = id->view_sprite;
+			sd->status.look.head_top = id->view_sprite;
 		} else
-			sd->status.head_top = 0;
-		clif->changelook(&sd->bl,LOOK_HEAD_TOP,sd->status.head_top);
+			sd->status.look.head_top = 0;
+		clif->changelook(&sd->bl, LOOK_HEAD_TOP, sd->status.look.head_top);
 	}
 	if (!map_no_view(sd->bl.m,EQP_COSTUME_HEAD_MID) && pos & EQP_COSTUME_HEAD_MID) {
 		if(id && !(pos&EQP_HEAD_TOP)){
-			sd->status.head_mid = id->view_sprite;
+			sd->status.look.head_mid = id->view_sprite;
 		} else
-			sd->status.head_mid = 0;
-		clif->changelook(&sd->bl,LOOK_HEAD_MID,sd->status.head_mid);
+			sd->status.look.head_mid = 0;
+		clif->changelook(&sd->bl, LOOK_HEAD_MID, sd->status.look.head_mid);
 	}
 	if (!map_no_view(sd->bl.m,EQP_COSTUME_HEAD_LOW) && pos & EQP_COSTUME_HEAD_LOW) {
 		if (id && !(pos&(EQP_HEAD_TOP|EQP_HEAD_MID))){
-			sd->status.head_bottom = id->view_sprite;
+			sd->status.look.head_bottom = id->view_sprite;
 		} else
-			sd->status.head_bottom = 0;
-		clif->changelook(&sd->bl,LOOK_HEAD_BOTTOM,sd->status.head_bottom);
+			sd->status.look.head_bottom = 0;
+		clif->changelook(&sd->bl, LOOK_HEAD_BOTTOM, sd->status.look.head_bottom);
 	}
 
 	if (!map_no_view(sd->bl.m,EQP_SHOES) && pos & EQP_SHOES)
 		clif->changelook(&sd->bl,LOOK_SHOES,0);
 	if (!map_no_view(sd->bl.m,EQP_GARMENT) && pos&EQP_GARMENT && pc->checkequip(sd,EQP_COSTUME_GARMENT) == -1) {
-		sd->status.robe = id ? id->view_sprite : 0;
-		clif->changelook(&sd->bl, LOOK_ROBE, sd->status.robe);
+		sd->status.look.robe = id ? id->view_sprite : 0;
+		clif->changelook(&sd->bl, LOOK_ROBE, sd->status.look.robe);
 	}
 
 	if (!map_no_view(sd->bl.m,EQP_COSTUME_GARMENT) && pos & EQP_COSTUME_GARMENT) {
-		sd->status.robe = id ? id->view_sprite : 0;
-		clif->changelook(&sd->bl,LOOK_ROBE,sd->status.robe);
+		sd->status.look.robe = id ? id->view_sprite : 0;
+		clif->changelook(&sd->bl, LOOK_ROBE, sd->status.look.robe);
 	}
 }
 
@@ -10020,44 +10020,44 @@ void pc_unequipitem_pos(struct map_session_data *sd, int n, int pos)
 		clif->changelook(&sd->bl, LOOK_SHIELD, sd->status.look.shield);
 	}
 	if (pos & EQP_HEAD_LOW && pc->checkequip(sd,EQP_COSTUME_HEAD_LOW) == -1) {
-		sd->status.head_bottom = 0;
-		clif->changelook(&sd->bl,LOOK_HEAD_BOTTOM,sd->status.head_bottom);
+		sd->status.look.head_bottom = 0;
+		clif->changelook(&sd->bl, LOOK_HEAD_BOTTOM, sd->status.look.head_bottom);
 	}
 	if (pos & EQP_HEAD_TOP && pc->checkequip(sd,EQP_COSTUME_HEAD_TOP) == -1) {
-		sd->status.head_top = 0;
-		clif->changelook(&sd->bl,LOOK_HEAD_TOP,sd->status.head_top);
+		sd->status.look.head_top = 0;
+		clif->changelook(&sd->bl, LOOK_HEAD_TOP, sd->status.look.head_top);
 	}
 	if (pos & EQP_HEAD_MID && pc->checkequip(sd,EQP_COSTUME_HEAD_MID) == -1) {
-		sd->status.head_mid = 0;
-		clif->changelook(&sd->bl,LOOK_HEAD_MID,sd->status.head_mid);
+		sd->status.look.head_mid = 0;
+		clif->changelook(&sd->bl, LOOK_HEAD_MID, sd->status.look.head_mid);
 	}
 
 	if (pos & EQP_COSTUME_HEAD_TOP) {
-		sd->status.head_top = ( pc->checkequip(sd,EQP_HEAD_TOP) >= 0 ) ? sd->inventory_data[pc->checkequip(sd,EQP_HEAD_TOP)]->view_sprite : 0;
-		clif->changelook(&sd->bl,LOOK_HEAD_TOP,sd->status.head_top);
+		sd->status.look.head_top = ( pc->checkequip(sd,EQP_HEAD_TOP) >= 0 ) ? sd->inventory_data[pc->checkequip(sd,EQP_HEAD_TOP)]->view_sprite : 0;
+		clif->changelook(&sd->bl, LOOK_HEAD_TOP, sd->status.look.head_top);
 	}
 
 	if (pos & EQP_COSTUME_HEAD_MID) {
-		sd->status.head_mid = ( pc->checkequip(sd,EQP_HEAD_MID) >= 0 ) ? sd->inventory_data[pc->checkequip(sd,EQP_HEAD_MID)]->view_sprite : 0;
-		clif->changelook(&sd->bl,LOOK_HEAD_MID,sd->status.head_mid);
+		sd->status.look.head_mid = ( pc->checkequip(sd,EQP_HEAD_MID) >= 0 ) ? sd->inventory_data[pc->checkequip(sd,EQP_HEAD_MID)]->view_sprite : 0;
+		clif->changelook(&sd->bl, LOOK_HEAD_MID, sd->status.look.head_mid);
 	}
 
 	if (pos & EQP_COSTUME_HEAD_LOW) {
-		sd->status.head_bottom = ( pc->checkequip(sd,EQP_HEAD_LOW) >= 0 ) ? sd->inventory_data[pc->checkequip(sd,EQP_HEAD_LOW)]->view_sprite : 0;
-		clif->changelook(&sd->bl,LOOK_HEAD_BOTTOM,sd->status.head_bottom);
+		sd->status.look.head_bottom = ( pc->checkequip(sd,EQP_HEAD_LOW) >= 0 ) ? sd->inventory_data[pc->checkequip(sd,EQP_HEAD_LOW)]->view_sprite : 0;
+		clif->changelook(&sd->bl, LOOK_HEAD_BOTTOM, sd->status.look.head_bottom);
 	}
 
 	if (pos & EQP_SHOES)
 		clif->changelook(&sd->bl,LOOK_SHOES,0);
 
 	if (pos & EQP_GARMENT && pc->checkequip(sd,EQP_COSTUME_GARMENT) == -1) {
-		sd->status.robe = 0;
+		sd->status.look.robe = 0;
 		clif->changelook(&sd->bl, LOOK_ROBE, 0);
 	}
 
 	if (pos & EQP_COSTUME_GARMENT) {
-		sd->status.robe = ( pc->checkequip(sd,EQP_GARMENT) >= 0 ) ? sd->inventory_data[pc->checkequip(sd,EQP_GARMENT)]->view_sprite : 0;
-		clif->changelook(&sd->bl,LOOK_ROBE,sd->status.robe);
+		sd->status.look.robe = ( pc->checkequip(sd,EQP_GARMENT) >= 0 ) ? sd->inventory_data[pc->checkequip(sd,EQP_GARMENT)]->view_sprite : 0;
+		clif->changelook(&sd->bl, LOOK_ROBE, sd->status.look.robe);
 	}
 }
 

@@ -613,11 +613,13 @@ struct mmo_charstatus {
 	int sword_faith, sword_calls;
 
 	struct {
-		short weapon; ///< Weapon view sprite id.
-		short shield; ///< Shield view sprite id.
+		short weapon;      ///< Weapon view sprite id.
+		short shield;      ///< Shield view sprite id.
+		short head_top;    ///< Top headgear view sprite id.
+		short head_mid;    ///< Middle headgear view sprite id.
+		short head_bottom; ///< Bottom headgear view sprite id.
+		short robe;        ///< Robe view sprite id.
 	} look;
-	short head_top,head_mid,head_bottom;
-	short robe;
 
 	char name[NAME_LENGTH];
 	int base_level, job_level;
