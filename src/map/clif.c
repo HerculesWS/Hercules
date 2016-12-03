@@ -888,7 +888,7 @@ void clif_get_weapon_view(struct map_session_data* sd, unsigned short *rhand, un
 	}
 
 #if PACKETVER < 4
-	*rhand = sd->status.weapon;
+	*rhand = sd->status.look.weapon;
 	*lhand = sd->status.shield;
 #else
 	if (sd->equip_index[EQI_HAND_R] >= 0 &&
@@ -9449,7 +9449,7 @@ void clif_parse_LoadEndAck(int fd, struct map_session_data *sd) {
 
 	// Character Looks
 #if PACKETVER < 4
-	clif->changelook(&sd->bl,LOOK_WEAPON,sd->status.weapon);
+	clif->changelook(&sd->bl, LOOK_WEAPON, sd->status.look.weapon);
 	clif->changelook(&sd->bl,LOOK_SHIELD,sd->status.shield);
 #else
 	clif->changelook(&sd->bl,LOOK_WEAPON,0);

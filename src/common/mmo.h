@@ -612,7 +612,9 @@ struct mmo_charstatus {
 	int spear_faith, spear_calls;
 	int sword_faith, sword_calls;
 
-	short weapon; // enum weapon_type
+	struct {
+		short weapon; ///< Weapon view sprite id.
+	} look;
 	short shield; // view-id
 	short head_top,head_mid,head_bottom;
 	short robe;
