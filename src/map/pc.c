@@ -1492,7 +1492,7 @@ int pc_reg_received(struct map_session_data *sd)
 	}
 
 	if (pc_isinvisible(sd)) {
-		sd->vd.class_ = INVISIBLE_CLASS;
+		sd->vd.class = INVISIBLE_CLASS;
 		clif->message(sd->fd, msg_sd(sd,11)); // Invisible: On
 		// decrement the number of pvp players on the map
 		map->list[sd->bl.m].users_pvp--;
@@ -1945,7 +1945,7 @@ int pc_disguise(struct map_session_data *sd, int class)
 	clif->changeoption(&sd->bl);
 	// We need to update the client so it knows that a costume is being used
 	if( sd->sc.option&OPTION_COSTUME ) {
-		clif->changelook(&sd->bl,LOOK_BASE,sd->vd.class_);
+		clif->changelook(&sd->bl, LOOK_BASE, sd->vd.class);
 		clif->changelook(&sd->bl,LOOK_WEAPON,0);
 		clif->changelook(&sd->bl,LOOK_SHIELD,0);
 		clif->changelook(&sd->bl,LOOK_CLOTHES_COLOR,sd->vd.cloth_color);
@@ -8679,7 +8679,7 @@ int pc_jobchange(struct map_session_data *sd, int class, int upper)
 		pc->disguise(sd, -1);
 
 	status->set_viewdata(&sd->bl, class);
-	clif->changelook(&sd->bl,LOOK_BASE,sd->vd.class_); // move sprite update to prevent client crashes with incompatible equipment [Valaris]
+	clif->changelook(&sd->bl, LOOK_BASE, sd->vd.class); // move sprite update to prevent client crashes with incompatible equipment [Valaris]
 	if(sd->vd.cloth_color)
 		clif->changelook(&sd->bl,LOOK_CLOTHES_COLOR,sd->vd.cloth_color);
 	if (sd->vd.body_style)
@@ -8779,7 +8779,7 @@ int pc_changelook(struct map_session_data *sd,int type,int val)
 	switch(type){
 		case LOOK_BASE:
 			status->set_viewdata(&sd->bl, val);
-			clif->changelook(&sd->bl,LOOK_BASE,sd->vd.class_);
+			clif->changelook(&sd->bl, LOOK_BASE, sd->vd.class);
 			clif->changelook(&sd->bl,LOOK_WEAPON,sd->status.weapon);
 			if (sd->vd.cloth_color)
 				clif->changelook(&sd->bl,LOOK_CLOTHES_COLOR,sd->vd.cloth_color);
@@ -8926,7 +8926,7 @@ int pc_setoption(struct map_session_data *sd,int type)
 
 	if (new_look < 0) { //Restore normal look.
 		status->set_viewdata(&sd->bl, sd->status.class);
-		new_look = sd->vd.class_;
+		new_look = sd->vd.class;
 	}
 
 	pc_stop_attack(sd); //Stop attacking on new view change (to prevent wedding/santa attacks.
@@ -11743,7 +11743,7 @@ void pc_update_idle_time(struct map_session_data* sd, enum e_battle_config_idlet
 }
 
 //Checks if the given class value corresponds to a player class. [Skotlex]
-//JOB_NOVICE isn't checked for class_ is supposed to be unsigned
+//JOB_NOVICE isn't checked for class is supposed to be unsigned
 bool pc_db_checkid(int class)
 {
 	return class < JOB_MAX_BASIC

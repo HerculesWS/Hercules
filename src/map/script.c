@@ -11894,7 +11894,7 @@ BUILDIN(changebase)
 			return true;
 	}
 
-	if(sd->disguise == -1 && vclass != sd->vd.class_)
+	if (sd->disguise == -1 && vclass != sd->vd.class)
 		pc->changelook(sd,LOOK_BASE,vclass); //Updated client view. Base, Weapon and Cloth Colors.
 
 	return true;

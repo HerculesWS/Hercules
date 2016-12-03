@@ -6432,7 +6432,7 @@ int status_get_class(const struct block_list *bl)
 	nullpo_ret(bl);
 	switch (bl->type) {
 		case BL_PC:  return BL_UCCAST(BL_PC, bl)->status.class;
-		case BL_MOB: return BL_UCCAST(BL_MOB, bl)->vd->class_; //Class used on all code should be the view class of the mob.
+		case BL_MOB: return BL_UCCAST(BL_MOB, bl)->vd->class; //Class used on all code should be the view class of the mob.
 		case BL_PET: return BL_UCCAST(BL_PET, bl)->pet.class_;
 		case BL_HOM: return BL_UCCAST(BL_HOM, bl)->homunculus.class_;
 		case BL_MER: return BL_UCCAST(BL_MER, bl)->mercenary.class_;
@@ -6827,7 +6827,7 @@ void status_set_viewdata(struct block_list *bl, int class_)
 						break;
 				}
 			}
-			sd->vd.class_ = class_;
+			sd->vd.class = class_;
 			clif->get_weapon_view(sd, &sd->vd.weapon, &sd->vd.shield);
 			sd->vd.head_top = sd->status.head_top;
 			sd->vd.head_mid = sd->status.head_mid;
@@ -6879,7 +6879,7 @@ void status_set_viewdata(struct block_list *bl, int class_)
 		struct pet_data *pd = BL_UCAST(BL_PET, bl);
 		if (vd != NULL) {
 			memcpy(&pd->vd, vd, sizeof(struct view_data));
-			if (!pc->db_checkid(vd->class_)) {
+			if (!pc->db_checkid(vd->class)) {
 				pd->vd.hair_style = battle_config.pet_hair_style;
 				if(pd->pet.equip) {
 					pd->vd.head_bottom = itemdb_viewid(pd->pet.equip);
@@ -9864,7 +9864,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			case SC_HANBOK:
 			case SC_OKTOBERFEST:
 				if( !vd ) break;
-				clif->changelook(bl,LOOK_BASE,vd->class_);
+				clif->changelook(bl, LOOK_BASE, vd->class);
 				clif->changelook(bl,LOOK_WEAPON,0);
 				clif->changelook(bl,LOOK_SHIELD,0);
 				clif->changelook(bl,LOOK_CLOTHES_COLOR,vd->cloth_color);
@@ -10264,7 +10264,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 		clif->changeoption(bl);
 		if( sd && opt_flag&0x4 ) {
 			if (vd)
-				clif->changelook(bl,LOOK_BASE,vd->class_);
+				clif->changelook(bl, LOOK_BASE, vd->class);
 			clif->changelook(bl,LOOK_WEAPON,0);
 			clif->changelook(bl,LOOK_SHIELD,0);
 			if (vd)
@@ -11202,7 +11202,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 	else if(opt_flag) {
 		clif->changeoption(bl);
 		if( sd && opt_flag&0x4 ) {
-			clif->changelook(bl,LOOK_BASE,sd->vd.class_);
+			clif->changelook(bl, LOOK_BASE, sd->vd.class);
 			clif->get_weapon_view(sd, &sd->vd.weapon, &sd->vd.shield);
 			clif->changelook(bl,LOOK_WEAPON,sd->vd.weapon);
 			clif->changelook(bl,LOOK_SHIELD,sd->vd.shield);

@@ -444,7 +444,7 @@ bool read_mercenarydb_sub(char* str[], int columns, int current) {
 	db->lv = atoi(str[3]);
 
 	mstatus = &db->status;
-	db->vd.class_ = db->class_;
+	db->vd.class = db->class_;
 
 	mstatus->max_hp = atoi(str[4]);
 	mstatus->max_sp = atoi(str[5]);
