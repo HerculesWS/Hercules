@@ -219,14 +219,14 @@ int skill_get_fixed_cast( uint16 skill_id ,uint16 skill_lv ) {
 #endif
 }
 
-int skill_tree_get_max(uint16 skill_id, int b_class)
+int skill_tree_get_max(uint16 skill_id, int class)
 {
 	int i;
-	b_class = pc->class2idx(b_class);
+	int class_idx = pc->class2idx(class);
 
-	ARR_FIND( 0, MAX_SKILL_TREE, i, pc->skill_tree[b_class][i].id == 0 || pc->skill_tree[b_class][i].id == skill_id );
-	if( i < MAX_SKILL_TREE && pc->skill_tree[b_class][i].id == skill_id )
-		return pc->skill_tree[b_class][i].max;
+	ARR_FIND( 0, MAX_SKILL_TREE, i, pc->skill_tree[class_idx][i].id == 0 || pc->skill_tree[class_idx][i].id == skill_id );
+	if( i < MAX_SKILL_TREE && pc->skill_tree[class_idx][i].id == skill_id )
+		return pc->skill_tree[class_idx][i].max;
 	else
 		return skill->get_max(skill_id);
 }
@@ -459,13 +459,14 @@ int can_copy (struct map_session_data *sd, uint16 skill_id, struct block_list* b
 	if (skill->get_inf2(skill_id)&(INF2_NPC_SKILL|INF2_WEDDING_SKILL))
 		return 0;
 
-	// High-class skills
-	if((skill_id >= LK_AURABLADE && skill_id <= ASC_CDP) || (skill_id >= ST_PRESERVE && skill_id <= CR_CULTIVATION))
-	{
-		if(battle_config.copyskill_restrict == 2)
+	// Transcendent-class skills
+	if((skill_id >= LK_AURABLADE && skill_id <= ASC_CDP) || (skill_id >= ST_PRESERVE && skill_id <= CR_CULTIVATION)) {
+		if (battle_config.copyskill_restrict == 2) {
 			return 0;
-		else if(battle_config.copyskill_restrict)
-			return (sd->status.class_ == JOB_STALKER);
+		} else if (battle_config.copyskill_restrict == 1) {
+			if ((sd->job & (MAPID_UPPERMASK | JOBL_UPPER)) != MAPID_STALKER)
+				return 0;
+		}
 	}
 
 	//Added so plagarize can't copy agi/bless if you're undead since it damages you
@@ -1150,8 +1151,8 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 			break;
 
 		case TK_JUMPKICK:
-			if( dstsd && dstsd->class_ != MAPID_SOUL_LINKER && !tsc->data[SC_PRESERVE] )
-			{// debuff the following statuses
+			if (dstsd != NULL && (dstsd->job & MAPID_UPPERMASK) != MAPID_SOUL_LINKER && tsc->data[SC_PRESERVE] == NULL) {
+				// debuff the following statuses
 				status_change_end(bl, SC_SOULLINK, INVALID_TIMER);
 				status_change_end(bl, SC_ADRENALINE2, INVALID_TIMER);
 				status_change_end(bl, SC_KAITE, INVALID_TIMER);
@@ -1842,7 +1843,7 @@ int skill_counter_additional_effect(struct block_list* src, struct block_list *b
 			break;
 	}
 
-	if( sd && (sd->class_&MAPID_UPPERMASK) == MAPID_STAR_GLADIATOR
+	if (sd != NULL && (sd->job & MAPID_UPPERMASK) == MAPID_STAR_GLADIATOR
 	 && rnd()%10000 < battle_config.sg_miracle_skill_ratio) // SG_MIRACLE [Komurka]
 		sc_start(src,src,SC_MIRACLE,100,1,battle_config.sg_miracle_skill_duration);
 
@@ -2429,7 +2430,7 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 			case TK_STORMKICK:
 			case TK_DOWNKICK:
 			case TK_COUNTER:
-				if (pc->famerank(sd->status.char_id,MAPID_TAEKWON)) {//Extend combo time.
+				if (pc->fame_rank(sd->status.char_id, RANKTYPE_TAEKWON) > 0) { //Extend combo time.
 					sce->val1 = skill_id; //Update combo-skill
 					sce->val3 = skill_id;
 					if( sce->timer != INVALID_TIMER )
@@ -5575,7 +5576,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				if (status->isimmune(bl) || (dstmd != NULL && (dstmd->class_ == MOBID_EMPELIUM || mob_is_battleground(dstmd))))
 					heal = 0;
 
-				if (sd && dstsd && sd->status.partner_id == dstsd->status.char_id && (sd->class_&MAPID_UPPERMASK) == MAPID_SUPER_NOVICE && sd->status.sex == 0)
+				if (sd != NULL && dstsd != NULL && sd->status.partner_id == dstsd->status.char_id && (sd->job & MAPID_UPPERMASK) == MAPID_SUPER_NOVICE && sd->status.sex == 0)
 					heal = heal * 2;
 
 				if (tsc && tsc->count)
@@ -5866,7 +5867,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 
 		case CR_PROVIDENCE:
 			if(sd && dstsd){ //Check they are not another crusader [Skotlex]
-				if ((dstsd->class_&MAPID_UPPERMASK) == MAPID_CRUSADER) {
+				if ((dstsd->job & MAPID_UPPERMASK) == MAPID_CRUSADER) {
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 					map->freeblock_unlock();
 					return 1;
@@ -5880,7 +5881,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			{
 				struct status_change* sc = status->get_sc(src);
 
-				if( sd && dstsd && (dstsd->class_&MAPID_UPPERMASK) == MAPID_BARDDANCER && dstsd->status.sex == sd->status.sex ) {
+				if (sd != NULL && dstsd != NULL && (dstsd->job & MAPID_UPPERMASK) == MAPID_BARDDANCER && dstsd->status.sex == sd->status.sex) {
 					// Cannot cast on another bard/dancer-type class of the same gender as caster
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 					map->freeblock_unlock();
@@ -6302,7 +6303,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				if( lv > battle_config.devotion_level_difference || // Level difference requeriments
 					(dstsd->sc.data[type] && dstsd->sc.data[type]->val1 != src->id) || // Cannot Devote a player devoted from another source
 					(skill_id == ML_DEVOTION && (!mer || mer != dstsd->md)) || // Mercenary only can devote owner
-					(dstsd->class_&MAPID_UPPERMASK) == MAPID_CRUSADER || // Crusader Cannot be devoted
+					(dstsd->job & MAPID_UPPERMASK) == MAPID_CRUSADER || // Crusader Cannot be devoted
 					(dstsd->sc.data[SC_HELLPOWER])) // Players affected by SC_HELLPOWERR cannot be devoted.
 				{
 					if( sd )
@@ -6355,7 +6356,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			break;
 
 		case MO_KITRANSLATION:
-			if(dstsd && ((dstsd->class_&MAPID_BASEMASK)!=MAPID_GUNSLINGER || (dstsd->class_&MAPID_UPPERMASK)!=MAPID_REBELLION)) {
+			if (dstsd != NULL && (dstsd->job & MAPID_BASEMASK) != MAPID_GUNSLINGER) {
 				pc->addspiritball(dstsd,skill->get_time(skill_id,skill_lv),5);
 			}
 			break;
@@ -6371,10 +6372,10 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 		case MO_ABSORBSPIRITS:
 		{
 			int sp = 0;
-			if ( dstsd && dstsd->spiritball
-				&& (sd == dstsd || map_flag_vs(src->m) || (sd && sd->duel_group && sd->duel_group == dstsd->duel_group))
-				&& ((dstsd->class_&MAPID_BASEMASK) != MAPID_GUNSLINGER || (dstsd->class_&MAPID_UPPERMASK) != MAPID_REBELLION)
-				) {
+			if (dstsd != NULL && dstsd->spiritball != 0
+			 && (sd == dstsd || map_flag_vs(src->m) || (sd && sd->duel_group && sd->duel_group == dstsd->duel_group))
+			 && (dstsd->job & MAPID_BASEMASK) != MAPID_GUNSLINGER
+			 ) {
 				// split the if for readability, and included gunslingers in the check so that their coins cannot be removed [Reddozen]
 				sp = dstsd->spiritball * 7;
 				pc->delspiritball(dstsd, dstsd->spiritball, 0);
@@ -6575,7 +6576,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			if (sd) {
 				if (!dstsd || !(
 				                (sd->sc.data[SC_SOULLINK] && sd->sc.data[SC_SOULLINK]->val2 == SL_SOULLINKER)
-				             || (dstsd->class_&MAPID_UPPERMASK) == MAPID_SOUL_LINKER
+				             || (dstsd->job & MAPID_UPPERMASK) == MAPID_SOUL_LINKER
 				             || dstsd->status.char_id == sd->status.char_id
 				             || dstsd->status.char_id == sd->status.partner_id
 				             || dstsd->status.char_id == sd->status.child
@@ -7210,7 +7211,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 					break;
 				}
 				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
-				if((dstsd && (dstsd->class_&MAPID_UPPERMASK) == MAPID_SOUL_LINKER)
+				if ((dstsd != NULL && (dstsd->job & MAPID_UPPERMASK) == MAPID_SOUL_LINKER)
 					|| (tsc && tsc->data[SC_SOULLINK] && tsc->data[SC_SOULLINK]->val2 == SL_ROGUE) //Rogue's spirit defends against dispel.
 					|| (dstsd && pc_ismadogear(dstsd))
 					|| rnd()%100 >= 50+10*skill_lv )
@@ -8003,7 +8004,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 		case SL_SUPERNOVICE:
 		case SL_WIZARD:
 			//NOTE: here, 'type' has the value of the associated MAPID, not of the SC_SOULLINK constant.
-			if (sd && !(dstsd && (dstsd->class_&MAPID_UPPERMASK) == type)) {
+			if (sd != NULL && !(dstsd != NULL && (dstsd->job & MAPID_UPPERMASK) == type)) {
 				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 				break;
 			}
@@ -8019,7 +8020,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			sc_start(src,src,SC_SMA_READY,100,skill_lv,skill->get_time(SL_SMA,skill_lv));
 			break;
 		case SL_HIGH:
-			if (sd && !(dstsd && (dstsd->class_&JOBL_UPPER) && !(dstsd->class_&JOBL_2) && dstsd->status.base_level < 70)) {
+			if (sd != NULL && !(dstsd != NULL && (dstsd->job & JOBL_UPPER) != 0 && (dstsd->job & JOBL_2) == 0 && dstsd->status.base_level < 70)) {
 				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 				break;
 			}
@@ -8672,7 +8673,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 
 				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 
-				if((dstsd && (dstsd->class_&MAPID_UPPERMASK) == MAPID_SOUL_LINKER) || rnd()%100 >= 60 + 8 * skill_lv) {
+				if ((dstsd != NULL && (dstsd->job & MAPID_UPPERMASK) == MAPID_SOUL_LINKER) || rnd()%100 >= 60 + 8 * skill_lv) {
 					if (sd)
 						clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 					break;
@@ -9229,8 +9230,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 		case SR_ASSIMILATEPOWER:
 			if( flag&1 ) {
 				int sp = 0;
-				if( dstsd && dstsd->spiritball && (sd == dstsd || map_flag_vs(src->m)) && (dstsd->class_&MAPID_BASEMASK)!=MAPID_GUNSLINGER )
-				{
+				if (dstsd != NULL && dstsd->spiritball != 0 && (sd == dstsd || map_flag_vs(src->m)) && (dstsd->job & MAPID_BASEMASK) != MAPID_GUNSLINGER) {
 					sp = dstsd->spiritball; //1%sp per spiritball.
 					pc->delspiritball(dstsd, dstsd->spiritball, 0);
 					status_percent_heal(src, 0, sp);
@@ -9248,7 +9248,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 		case SR_POWERVELOCITY:
 			if( !dstsd )
 				break;
-			if ( sd && (dstsd->class_&MAPID_BASEMASK) != MAPID_GUNSLINGER ) {
+			if (sd != NULL && (dstsd->job & MAPID_BASEMASK) != MAPID_GUNSLINGER) {
 				int i, max = pc->getmaxspiritball(dstsd, 5);
 				for ( i = 0; i < max; i++ ) {
 					pc->addspiritball(dstsd, skill->get_time(MO_CALLSPIRITS, 1), max);
@@ -13239,7 +13239,7 @@ int skill_check_condition_char_sub (struct block_list *bl, va_list ap)
 		return 0;
 
 	if( skill->get_inf2(skill_id)&INF2_CHORUS_SKILL ) {
-		if( tsd->status.party_id == sd->status.party_id && (tsd->class_&MAPID_THIRDMASK) == MAPID_MINSTRELWANDERER )
+		if (tsd->status.party_id == sd->status.party_id && (tsd->job & MAPID_THIRDMASK) == MAPID_MINSTRELWANDERER)
 			p_sd[(*c)++] = tsd->bl.id;
 		return 1;
 	} else {
@@ -13248,24 +13248,23 @@ int skill_check_condition_char_sub (struct block_list *bl, va_list ap)
 			case PR_BENEDICTIO: {
 				uint8 dir = map->calc_dir(&sd->bl,tsd->bl.x,tsd->bl.y);
 				dir = (unit->getdir(&sd->bl) + dir)%8; //This adjusts dir to account for the direction the sd is facing.
-				if ((tsd->class_&MAPID_BASEMASK) == MAPID_ACOLYTE && (dir == 2 || dir == 6) //Must be standing to the left/right of Priest.
+				if ((tsd->job & MAPID_BASEMASK) == MAPID_ACOLYTE && (dir == 2 || dir == 6) //Must be standing to the left/right of Priest.
 					&& sd->status.sp >= 10)
 					p_sd[(*c)++]=tsd->bl.id;
 				return 1;
 			}
 			case AB_ADORAMUS:
 			// Adoramus does not consume Blue Gemstone when there is at least 1 Priest class next to the caster
-				if( (tsd->class_&MAPID_UPPERMASK) == MAPID_PRIEST )
+				if ((tsd->job & MAPID_UPPERMASK) == MAPID_PRIEST)
 					p_sd[(*c)++] = tsd->bl.id;
 				return 1;
 			case WL_COMET:
 			// Comet does not consume Red Gemstones when there is at least 1 Warlock class next to the caster
-				if( ( tsd->class_&MAPID_THIRDMASK ) == MAPID_WARLOCK )
+				if ((tsd->job & MAPID_THIRDMASK) == MAPID_WARLOCK)
 					p_sd[(*c)++] = tsd->bl.id;
 				return 1;
 			case LG_RAYOFGENESIS:
-				if( tsd->status.party_id == sd->status.party_id && (tsd->class_&MAPID_THIRDMASK) == MAPID_ROYAL_GUARD &&
-					tsd->sc.data[SC_BANDING] )
+				if (tsd->status.party_id == sd->status.party_id && (tsd->job & MAPID_THIRDMASK) == MAPID_ROYAL_GUARD && tsd->sc.data[SC_BANDING])
 					p_sd[(*c)++] = tsd->bl.id;
 				return 1;
 			default: //Warning: Assuming Ensemble Dance/Songs for code speed. [Skotlex]
@@ -13274,7 +13273,7 @@ int skill_check_condition_char_sub (struct block_list *bl, va_list ap)
 					if(pc_issit(tsd) || !unit->can_move(&tsd->bl))
 						return 0;
 					if (sd->status.sex != tsd->status.sex &&
-							(tsd->class_&MAPID_UPPERMASK) == MAPID_BARDDANCER &&
+							(tsd->job & MAPID_UPPERMASK) == MAPID_BARDDANCER &&
 							(skill_lv = pc->checkskill(tsd, skill_id)) > 0 &&
 							(tsd->weapontype1==W_MUSICAL || tsd->weapontype1==W_WHIP) &&
 							sd->status.party_id && tsd->status.party_id &&
@@ -13724,7 +13723,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 			break;
 
 		case TK_MISSION:
-			if( (sd->class_&MAPID_UPPERMASK) != MAPID_TAEKWON ) {
+			if ((sd->job & MAPID_UPPERMASK) != MAPID_TAEKWON) {
 				// Cannot be used by Non-Taekwon classes
 				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 				return 0;
@@ -13736,7 +13735,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 		case TK_READYSTORM:
 		case TK_READYTURN:
 		case TK_JUMPKICK:
-			if( (sd->class_&MAPID_UPPERMASK) == MAPID_SOUL_LINKER ) {
+			if ((sd->job & MAPID_UPPERMASK) == MAPID_SOUL_LINKER) {
 				// Soul Linkers cannot use this skill
 				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 				return 0;
@@ -13747,7 +13746,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 		case TK_STORMKICK:
 		case TK_DOWNKICK:
 		case TK_COUNTER:
-			if ((sd->class_&MAPID_UPPERMASK) == MAPID_SOUL_LINKER)
+			if ((sd->job & MAPID_UPPERMASK) == MAPID_SOUL_LINKER)
 				return 0; //Anti-Soul Linker check in case you job-changed with Stances active.
 			if(!(sc && sc->data[SC_COMBOATTACK]) || sc->data[SC_COMBOATTACK]->val1 == TK_JUMPKICK)
 				return 0; //Combo needs to be ready
@@ -13759,7 +13758,8 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 				status_change_end(&sd->bl, SC_COMBOATTACK, INVALID_TIMER);
 				return 0;
 			}
-			if(sc->data[SC_COMBOATTACK]->val1 != skill_id && !( sd && sd->status.base_level >= 90 && pc->famerank(sd->status.char_id, MAPID_TAEKWON) )) {
+			if (sc->data[SC_COMBOATTACK]->val1 != skill_id
+			 && !(sd != NULL && sd->status.base_level >= 90 && pc->fame_rank(sd->status.char_id, RANKTYPE_TAEKWON) > 0)) {
 				//Cancel combo wait.
 				unit->cancel_combo(&sd->bl);
 				return 0;
@@ -15649,7 +15649,7 @@ void skill_weaponrefine (struct map_session_data *sd, int idx)
 			per = status->get_refine_chance(ditem->wlv, (int)item->refine) * 10;
 
 			// Aegis leaked formula. [malufett]
-			if( sd->status.class_ == JOB_MECHANIC_T )
+			if (sd->status.class == JOB_MECHANIC_T)
 				per += 100;
 			else
 				per += 5 * (sd->status.job_level - 50);
@@ -15675,16 +15675,16 @@ void skill_weaponrefine (struct map_session_data *sd, int idx)
 					item->card[0] == CARD0_FORGE &&
 					(int)MakeDWord(item->card[2],item->card[3]) == sd->status.char_id)
 				{ // Fame point system [DracoRPG]
-					switch(ditem->wlv){
-						case 1:
-							pc->addfame(sd,1); // Success to refine to +10 a lv1 weapon you forged = +1 fame point
-							break;
-						case 2:
-							pc->addfame(sd,25); // Success to refine to +10 a lv2 weapon you forged = +25 fame point
-							break;
-						case 3:
-							pc->addfame(sd,1000); // Success to refine to +10 a lv3 weapon you forged = +1000 fame point
-							break;
+					switch (ditem->wlv) {
+					case 1:
+						pc->addfame(sd, RANKTYPE_BLACKSMITH, 1); // Success to refine to +10 a lv1 weapon you forged = +1 fame point
+						break;
+					case 2:
+						pc->addfame(sd, RANKTYPE_BLACKSMITH, 25); // Success to refine to +10 a lv2 weapon you forged = +25 fame point
+						break;
+					case 3:
+						pc->addfame(sd, RANKTYPE_BLACKSMITH, 1000); // Success to refine to +10 a lv3 weapon you forged = +1000 fame point
+						break;
 					}
 				}
 			} else {
@@ -17792,7 +17792,7 @@ int skill_produce_mix(struct map_session_data *sd, uint16 skill_id, int nameid, 
 			make_per = make_per * battle_config.wp_rate / 100;
 	}
 
-	if (sd->class_&JOBL_BABY) //if it's a Baby Class
+	if ((sd->job & JOBL_BABY) != 0) //if it's a Baby Class
 		make_per = (make_per * 50) / 100; //Baby penalty is 50% (bugreport:4847)
 
 	if(make_per < 1) make_per = 1;
@@ -17856,8 +17856,8 @@ int skill_produce_mix(struct map_session_data *sd, uint16 skill_id, int nameid, 
 		if(equip){
 			clif->produce_effect(sd,0,nameid);
 			clif->misceffect(&sd->bl,3);
-			if(itemdb_wlv(nameid) >= 3 && ((ele? 1 : 0) + sc) >= 3) // Fame point system [DracoRPG]
-				pc->addfame(sd,10); // Success to forge a lv3 weapon with 3 additional ingredients = +10 fame point
+			if (itemdb_wlv(nameid) >= 3 && ((ele? 1 : 0) + sc) >= 3) // Fame point system [DracoRPG]
+				pc->addfame(sd, RANKTYPE_BLACKSMITH, 10); // Success to forge a lv3 weapon with 3 additional ingredients = +10 fame point
 		} else {
 			int fame = 0;
 			tmp_item.amount = 0;
@@ -17897,8 +17897,9 @@ int skill_produce_mix(struct map_session_data *sd, uint16 skill_id, int nameid, 
 					sd->potion_success_counter = 0;
 			}
 
-			if (fame)
-				pc->addfame(sd,fame);
+			if (fame != 0 && (skill_id == AM_PHARMACY || skill_id == AM_TWILIGHT1 || skill_id == AM_TWILIGHT2 || skill_id == AM_TWILIGHT3)) {
+				pc->addfame(sd, RANKTYPE_ALCHEMIST, fame);
+			}
 			//Visual effects and the like.
 			switch (skill_id) {
 				case AM_PHARMACY:

@@ -639,7 +639,7 @@ ACMD(who) {
 					if (pc_get_group_id(pl_sd) > 0) // Player title, if exists
 						StrBuf->Printf(&buf, msg_fd(fd,344), pcg->get_name(pl_sd->group)); // "(%s) "
 					StrBuf->Printf(&buf, msg_fd(fd,347), pl_sd->status.base_level, pl_sd->status.job_level,
-									 pc->job_name(pl_sd->status.class_)); // "| Lv:%d/%d | Job: %s"
+									 pc->job_name(pl_sd->status.class)); // "| Lv:%d/%d | Job: %s"
 					break;
 				}
 				case 3: {
@@ -748,7 +748,7 @@ ACMD(whogm)
 
 		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,915), // BLvl: %d | Job: %s (Lvl: %d)
 				pl_sd->status.base_level,
-				pc->job_name(pl_sd->status.class_), pl_sd->status.job_level);
+				pc->job_name(pl_sd->status.class), pl_sd->status.job_level);
 		clif->message(fd, atcmd_output);
 
 		p = party->search(pl_sd->status.party_id);
@@ -937,7 +937,7 @@ ACMD(hide) {
 		if (sd->disguise != -1 )
 			status->set_viewdata(&sd->bl, sd->disguise);
 		else
-			status->set_viewdata(&sd->bl, sd->status.class_);
+			status->set_viewdata(&sd->bl, sd->status.class);
 		clif->message(fd, msg_fd(fd,10)); // Invisible: Off
 
 		// increment the number of pvp players on the map
@@ -951,7 +951,7 @@ ACMD(hide) {
 		map->foreachinmovearea(clif->insight, &sd->bl, AREA_SIZE, sd->bl.x, sd->bl.y, BL_ALL, &sd->bl);
 	} else {
 		sd->sc.option |= OPTION_INVISIBLE;
-		sd->vd.class_ = INVISIBLE_CLASS;
+		sd->vd.class = INVISIBLE_CLASS;
 		clif->message(fd, msg_fd(fd,11)); // Invisible: On
 
 		// decrement the number of pvp players on the map
@@ -3975,7 +3975,7 @@ ACMD(mount_peco)
 		return false;
 	}
 
-	if ((sd->class_&MAPID_THIRDMASK) == MAPID_RUNE_KNIGHT) {
+	if ((sd->job & MAPID_THIRDMASK) == MAPID_RUNE_KNIGHT) {
 		if (!pc->checkskill(sd,RK_DRAGONTRAINING)) {
 			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,213), skill->get_desc(RK_DRAGONTRAINING)); // You need %s to mount!
 			clif->message(fd, atcmd_output);
@@ -3990,7 +3990,7 @@ ACMD(mount_peco)
 		}
 		return true;
 	}
-	if ((sd->class_&MAPID_THIRDMASK) == MAPID_RANGER) {
+	if ((sd->job & MAPID_THIRDMASK) == MAPID_RANGER) {
 		if (!pc->checkskill(sd,RA_WUGRIDER)) {
 			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,213), skill->get_desc(RA_WUGRIDER)); // You need %s to mount!
 			clif->message(fd, atcmd_output);
@@ -4005,7 +4005,7 @@ ACMD(mount_peco)
 		}
 		return true;
 	}
-	if ((sd->class_&MAPID_THIRDMASK) == MAPID_MECHANIC) {
+	if ((sd->job & MAPID_THIRDMASK) == MAPID_MECHANIC) {
 		if (!pc_ismadogear(sd)) {
 			clif->message(sd->fd,msg_fd(fd,1123)); // You have mounted your Mado Gear.
 			pc->setmadogear(sd, true);
@@ -4015,7 +4015,7 @@ ACMD(mount_peco)
 		}
 		return true;
 	}
-	if (sd->class_&MAPID_SWORDMAN && sd->class_&JOBL_2) {
+	if ((sd->job & MAPID_BASEMASK) == MAPID_SWORDMAN && (sd->job & JOBL_2) != 0) {
 		if (!pc_isridingpeco(sd)) { // if actually no peco
 			if (!pc->checkskill(sd, KN_RIDING)) {
 				safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,213), skill->get_desc(KN_RIDING)); // You need %s to mount!
@@ -6610,9 +6610,9 @@ ACMD(mobinfo)
 
 		// stats
 		if (monster->mexp)
-			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1240), monster->name, monster->jname, monster->sprite, monster->vd.class_); // MVP Monster: '%s'/'%s'/'%s' (%d)
+			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1240), monster->name, monster->jname, monster->sprite, monster->vd.class); // MVP Monster: '%s'/'%s'/'%s' (%d)
 		else
-			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1241), monster->name, monster->jname, monster->sprite, monster->vd.class_); // Monster: '%s'/'%s'/'%s' (%d)
+			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1241), monster->name, monster->jname, monster->sprite, monster->vd.class); // Monster: '%s'/'%s'/'%s' (%d)
 		clif->message(fd, atcmd_output);
 
 		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1242), monster->lv, monster->status.max_hp, base_exp, job_exp, MOB_HIT(monster), MOB_FLEE(monster)); //  Lv:%d  HP:%d  Base EXP:%u  Job EXP:%u  HIT:%d  FLEE:%d
@@ -8210,7 +8210,7 @@ ACMD(stats)
 	output_table[14].value = sd->change_level_2nd;
 	output_table[15].value = sd->change_level_3rd;
 
-	sprintf(job_jobname, "Job - %s %s", pc->job_name(sd->status.class_), "(level %d)");
+	sprintf(job_jobname, "Job - %s %s", pc->job_name(sd->status.class), "(level %d)");
 	sprintf(output, msg_fd(fd,53), sd->status.name); // '%s' stats:
 
 	clif->message(fd, output);

@@ -235,7 +235,7 @@ struct map_session_data {
 		unsigned int bonus_coma : 1;
 	} special_state;
 	int login_id1, login_id2;
-	unsigned short class_; //This is the internal job ID used by the map server to simplify comparisons/queries/etc. [Skotlex]
+	uint16 job; //This is the internal job ID used by the map server to simplify comparisons/queries/etc. [Skotlex]
 
 	/// Groups & permissions
 	int group_id;
@@ -635,13 +635,13 @@ END_ZEROED_BLOCK;
 #define pc_is50overweight(sd) ( (sd)->weight*100 >= (sd)->max_weight*battle->bc->natural_heal_weight_rate )
 #define pc_is90overweight(sd) ( (sd)->weight*10 >= (sd)->max_weight*9 )
 #define pc_maxparameter(sd)   ( \
-	((sd)->class_&MAPID_BASEMASK) == MAPID_SUMMONER ? battle->bc->max_summoner_parameter : \
-	( ((sd)->class_&MAPID_UPPERMASK) == MAPID_KAGEROUOBORO \
-	 || ((sd)->class_&MAPID_UPPERMASK) == MAPID_REBELLION \
-	 || ((sd)->class_&MAPID_THIRDMASK) == MAPID_SUPER_NOVICE_E \
-	) ? battle->bc->max_extended_parameter : ((sd)->class_&JOBL_THIRD) ? \
-	    (((sd)->class_&JOBL_BABY) ? battle->bc->max_baby_third_parameter : battle->bc->max_third_parameter ) : \
-	    (((sd)->class_&JOBL_BABY) ? battle->bc->max_baby_parameter : battle->bc->max_parameter) \
+	((sd)->job & MAPID_BASEMASK) == MAPID_SUMMONER ? battle->bc->max_summoner_parameter : \
+	( ((sd)->job & MAPID_UPPERMASK) == MAPID_KAGEROUOBORO \
+	 || ((sd)->job & MAPID_UPPERMASK) == MAPID_REBELLION \
+	 || ((sd)->job & MAPID_THIRDMASK) == MAPID_SUPER_NOVICE_E \
+	) ? battle->bc->max_extended_parameter : ((sd)->job & JOBL_THIRD) ? \
+	    (((sd)->job & JOBL_BABY) ? battle->bc->max_baby_third_parameter : battle->bc->max_third_parameter ) : \
+	    (((sd)->job & JOBL_BABY) ? battle->bc->max_baby_parameter : battle->bc->max_parameter) \
 	)
 /// Generic check for mounts
 #define pc_hasmount(sd)       ( (sd)->sc.option&(OPTION_RIDING|OPTION_WUGRIDER|OPTION_DRAGON|OPTION_MADOGEAR) )
@@ -824,7 +824,7 @@ END_ZEROED_BLOCK; /* End */
 	void (*final) (void);
 
 	struct map_session_data* (*get_dummy_sd) (void);
-	int (*class2idx) (int class_);
+	int (*class2idx) (int class);
 	bool (*can_talk) (struct map_session_data *sd);
 	bool (*can_attack) ( struct map_session_data *sd, int target_id );
 
@@ -948,7 +948,7 @@ END_ZEROED_BLOCK; /* End */
 	void (*heal) (struct map_session_data *sd,unsigned int hp,unsigned int sp, int type);
 	int (*itemheal) (struct map_session_data *sd,int itemid, int hp,int sp);
 	int (*percentheal) (struct map_session_data *sd,int hp,int sp);
-	int (*jobchange) (struct map_session_data *sd,int job, int upper);
+	int (*jobchange) (struct map_session_data *sd, int class, int upper);
 	int (*setoption) (struct map_session_data *sd,int type);
 	int (*setcart) (struct map_session_data* sd, int type);
 	void (*setfalcon) (struct map_session_data *sd, bool flag);
@@ -992,10 +992,10 @@ END_ZEROED_BLOCK; /* End */
 	void (*setstand) (struct map_session_data *sd);
 	int (*candrop) (struct map_session_data *sd,struct item *item);
 
-	int (*jobid2mapid) (unsigned short b_class); // Skotlex
+	int (*jobid2mapid) (int16 class); // Skotlex
 	int (*mapid2jobid) (unsigned short class_, int sex); // Skotlex
 
-	const char * (*job_name) (int class_);
+	const char * (*job_name) (int class);
 
 	void (*setinvincibletimer) (struct map_session_data* sd, int val);
 	void (*delinvincibletimer) (struct map_session_data* sd);
@@ -1003,8 +1003,9 @@ END_ZEROED_BLOCK; /* End */
 	int (*addspiritball) (struct map_session_data *sd,int interval,int max);
 	int (*delspiritball) (struct map_session_data *sd,int count,int type);
 	int (*getmaxspiritball) (struct map_session_data *sd, int min);
-	void (*addfame) (struct map_session_data *sd,int count);
-	unsigned char (*famerank) (int char_id, int job);
+	void (*addfame) (struct map_session_data *sd, int ranktype, int count);
+	int (*fame_rank) (int char_id, int ranktype);
+	int (*famelist_type) (uint16 job_mapid);
 	int (*set_hate_mob) (struct map_session_data *sd, int pos, struct block_list *bl);
 
 	int (*readdb) (void);
@@ -1015,7 +1016,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*inventory_rental_clear) (struct map_session_data *sd);
 	void (*inventory_rental_add) (struct map_session_data *sd, int seconds);
 
-	int (*disguise) (struct map_session_data *sd, int class_);
+	int (*disguise) (struct map_session_data *sd, int class);
 	bool (*isautolooting) (struct map_session_data *sd, int nameid);
 
 	void (*overheat) (struct map_session_data *sd, int val);
@@ -1074,7 +1075,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*global_expiration_timer) (int tid, int64 tick, int id, intptr_t data);
 	void (*expire_check) (struct map_session_data *sd);
 
-	bool (*db_checkid) (unsigned int class_);
+	bool (*db_checkid) (int class);
 
 	void (*validate_levels) (void);
 

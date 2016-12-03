@@ -822,7 +822,7 @@ enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, struct bg_
 	if ( sd->status.base_level > arena->max_level || sd->status.base_level < arena->min_level )
 		return BGQA_FAIL_LEVEL_INCORRECT;
 
-	if ( !(sd->class_&JOBL_2) ) /* TODO: maybe make this a per-arena setting, so users may make custom arenas like baby-only,whatever. */
+	if ((sd->job & JOBL_2) == 0) /* TODO: maybe make this a per-arena setting, so users may make custom arenas like baby-only,whatever. */
 		return BGQA_FAIL_CLASS_INVALID;
 
 	tsec = (unsigned int)time(NULL);

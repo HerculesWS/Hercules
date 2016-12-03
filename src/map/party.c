@@ -64,7 +64,7 @@ void party_fill_member(struct party_member* member, struct map_session_data* sd,
 	member->account_id = sd->status.account_id;
 	member->char_id    = sd->status.char_id;
 	safestrncpy(member->name, sd->status.name, NAME_LENGTH);
-	member->class_     = sd->status.class_;
+	member->class      = sd->status.class;
 	member->map        = sd->mapindex;
 	member->lv         = sd->status.base_level;
 	member->online     = 1;
@@ -238,12 +238,13 @@ void party_check_state(struct party_data *p) {
 	memset(&p->state, 0, sizeof(p->state));
 	for (i = 0; i < MAX_PARTY; i++) {
 		if (!p->party.member[i].online) continue; //Those not online shouldn't apart to skill usage and all that.
-		switch (p->party.member[i].class_) {
+		switch (p->party.member[i].class) {
 			case JOB_MONK:
 			case JOB_BABY_MONK:
 			case JOB_CHAMPION:
 			case JOB_SURA:
 			case JOB_SURA_T:
+			case JOB_BABY_SURA:
 				p->state.monk = 1;
 				break;
 			case JOB_STAR_GLADIATOR:
@@ -880,15 +881,14 @@ int party_skill_check(struct map_session_data *sd, int party_id, uint16 skill_id
 			continue;
 		switch(skill_id) {
 			case TK_COUNTER: //Increase Triple Attack rate of Monks.
-				if((p_sd->class_&MAPID_UPPERMASK) == MAPID_MONK
-					&& pc->checkskill(p_sd,MO_TRIPLEATTACK)) {
+				if ((p_sd->job & MAPID_UPPERMASK) == MAPID_MONK && pc->checkskill(p_sd, MO_TRIPLEATTACK)) {
 					sc_start4(&p_sd->bl,&p_sd->bl,SC_SKILLRATE_UP,100,MO_TRIPLEATTACK,
 						50+50*skill_lv, //+100/150/200% rate
 						0,0,skill->get_time(SG_FRIEND, 1));
 				}
 				break;
 			case MO_COMBOFINISH: //Increase Counter rate of Star Gladiators
-				if((p_sd->class_&MAPID_UPPERMASK) == MAPID_STAR_GLADIATOR
+				if ((p_sd->job & MAPID_UPPERMASK) == MAPID_STAR_GLADIATOR
 					&& sd->sc.data[SC_COUNTERKICK_READY]
 					&& pc->checkskill(p_sd,SG_FRIEND)) {
 					sc_start4(&p_sd->bl,&p_sd->bl,SC_SKILLRATE_UP,100,TK_COUNTER,
@@ -1159,7 +1159,7 @@ int party_sub_count_chorus(struct block_list *bl, va_list ap)
 	if (battle_config.idle_no_share && pc_isidle(sd))
 		return 0;
 
-	if ( (sd->class_&MAPID_THIRDMASK) != MAPID_MINSTRELWANDERER )
+	if ((sd->job & MAPID_THIRDMASK) != MAPID_MINSTRELWANDERER)
 		return 0;
 
 	return 1;

@@ -6694,15 +6694,15 @@ void HP_inter_do_final_msg(void) {
 	}
 	return;
 }
-const char* HP_inter_job_name(int class_) {
+const char* HP_inter_job_name(int class) {
 	int hIndex = 0;
 	const char* retVal___ = NULL;
 	if( HPMHooks.count.HP_inter_job_name_pre ) {
-		const char* (*preHookFunc) (int *class_);
+		const char* (*preHookFunc) (int *class);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_inter_job_name_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_inter_job_name_pre[hIndex].func;
-			retVal___ = preHookFunc(&class_);
+			retVal___ = preHookFunc(&class);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -6710,13 +6710,13 @@ const char* HP_inter_job_name(int class_) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.inter.job_name(class_);
+		retVal___ = HPMHooks.source.inter.job_name(class);
 	}
 	if( HPMHooks.count.HP_inter_job_name_post ) {
-		const char* (*postHookFunc) (const char* retVal___, int class_);
+		const char* (*postHookFunc) (const char* retVal___, int class);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_inter_job_name_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_inter_job_name_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, class_);
+			retVal___ = postHookFunc(retVal___, class);
 		}
 	}
 	return retVal___;
@@ -11873,15 +11873,15 @@ int HP_mapif_parse_GuildLeave(int fd, int guild_id, int account_id, int char_id,
 	}
 	return retVal___;
 }
-int HP_mapif_parse_GuildChangeMemberInfoShort(int fd, int guild_id, int account_id, int char_id, int online, int lv, int class_) {
+int HP_mapif_parse_GuildChangeMemberInfoShort(int fd, int guild_id, int account_id, int char_id, int online, int lv, int16 class) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_mapif_parse_GuildChangeMemberInfoShort_pre ) {
-		int (*preHookFunc) (int *fd, int *guild_id, int *account_id, int *char_id, int *online, int *lv, int *class_);
+		int (*preHookFunc) (int *fd, int *guild_id, int *account_id, int *char_id, int *online, int *lv, int16 *class);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mapif_parse_GuildChangeMemberInfoShort_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_mapif_parse_GuildChangeMemberInfoShort_pre[hIndex].func;
-			retVal___ = preHookFunc(&fd, &guild_id, &account_id, &char_id, &online, &lv, &class_);
+			retVal___ = preHookFunc(&fd, &guild_id, &account_id, &char_id, &online, &lv, &class);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -11889,13 +11889,13 @@ int HP_mapif_parse_GuildChangeMemberInfoShort(int fd, int guild_id, int account_
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.mapif.parse_GuildChangeMemberInfoShort(fd, guild_id, account_id, char_id, online, lv, class_);
+		retVal___ = HPMHooks.source.mapif.parse_GuildChangeMemberInfoShort(fd, guild_id, account_id, char_id, online, lv, class);
 	}
 	if( HPMHooks.count.HP_mapif_parse_GuildChangeMemberInfoShort_post ) {
-		int (*postHookFunc) (int retVal___, int fd, int guild_id, int account_id, int char_id, int online, int lv, int class_);
+		int (*postHookFunc) (int retVal___, int fd, int guild_id, int account_id, int char_id, int online, int lv, int16 class);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mapif_parse_GuildChangeMemberInfoShort_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_mapif_parse_GuildChangeMemberInfoShort_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, fd, guild_id, account_id, char_id, online, lv, class_);
+			retVal___ = postHookFunc(retVal___, fd, guild_id, account_id, char_id, online, lv, class);
 		}
 	}
 	return retVal___;

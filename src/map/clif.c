@@ -276,7 +276,7 @@ unsigned char clif_bl_type(struct block_list *bl)
 		vd = status->get_viewdata(bl);
 		nullpo_retr(CLUT_NPC, vd);
 
-		if (clif->isdisguised(bl) && !pc->db_checkid(vd->class_))
+		if (clif->isdisguised(bl) && !pc->db_checkid(vd->class))
 			return CLUT_NPC;
 		return CLUT_PC;
 	case BL_ITEM:
@@ -288,15 +288,15 @@ unsigned char clif_bl_type(struct block_list *bl)
 	case BL_MOB:
 		vd = status->get_viewdata(bl);
 		nullpo_retr(CLUT_NPC, vd);
-		return pc->db_checkid(vd->class_) ? CLUT_PC : CLUT_MOB;
+		return pc->db_checkid(vd->class) ? CLUT_PC : CLUT_MOB;
 	case BL_NPC:
 		vd = status->get_viewdata(bl);
 		nullpo_retr(CLUT_NPC, vd);
-		return pc->db_checkid(vd->class_) ? CLUT_PC : CLUT_EVENT;
+		return pc->db_checkid(vd->class) ? CLUT_PC : CLUT_EVENT;
 	case BL_PET:
 		vd = status->get_viewdata(bl);
 		nullpo_retr(CLUT_NPC, vd);
-		return pc->db_checkid(vd->class_) ? CLUT_PC : CLUT_PET;
+		return pc->db_checkid(vd->class) ? CLUT_PC : CLUT_PET;
 	case BL_HOM:
 		return CLUT_HOMNUCLUS;
 	case BL_MER:
@@ -961,14 +961,15 @@ void clif_set_unit_idle2(struct block_list* bl, struct map_session_data *tsd, en
 	p.bodyState = (sc) ? sc->opt1 : 0;
 	p.healthState = (sc) ? sc->opt2 : 0;
 	p.effectState = (sc != NULL) ? sc->option : ((bl->type == BL_NPC) ? BL_UCCAST(BL_NPC, bl)->option : 0);
-	p.job = vd->class_;
+	p.job = vd->class;
 	p.head = vd->hair_style;
 	p.weapon = vd->weapon;
 	p.accessory = vd->head_bottom;
 	p.shield = vd->shield;
 	p.accessory2 = vd->head_top;
 	p.accessory3 = vd->head_mid;
-	if( bl->type == BL_NPC && vd->class_ == FLAG_CLASS ) { //The hell, why flags work like this?
+	if (bl->type == BL_NPC && vd->class == FLAG_CLASS) {
+		// The hell, why flags work like this?
 		p.shield = status->get_emblem_id(bl);
 		p.accessory2 = GetWord(g_id, 1);
 		p.accessory3 = GetWord(g_id, 0);
@@ -1005,7 +1006,7 @@ void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enu
 	nullpo_retv(bl);
 
 #if PACKETVER < 20091103
-	if( !pc->db_checkid(vd->class_) ) {
+	if (!pc->db_checkid(vd->class)) {
 		clif->set_unit_idle2(bl,tsd,target);
 		return;
 	}
@@ -1028,7 +1029,7 @@ void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enu
 	p.bodyState = (sc) ? sc->opt1 : 0;
 	p.healthState = (sc) ? sc->opt2 : 0;
 	p.effectState = (sc != NULL) ? sc->option : ((bl->type == BL_NPC) ? BL_UCCAST(BL_NPC, bl)->option : 0);
-	p.job = vd->class_;
+	p.job = vd->class;
 	p.head = vd->hair_style;
 	p.weapon = vd->weapon;
 	p.accessory = vd->head_bottom;
@@ -1037,7 +1038,8 @@ void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enu
 #endif
 	p.accessory2 = vd->head_top;
 	p.accessory3 = vd->head_mid;
-	if( bl->type == BL_NPC && vd->class_ == FLAG_CLASS ) { //The hell, why flags work like this?
+	if (bl->type == BL_NPC && vd->class == FLAG_CLASS) {
+		// The hell, why flags work like this?
 		p.accessory = status->get_emblem_id(bl);
 		p.accessory2 = GetWord(g_id, 1);
 		p.accessory3 = GetWord(g_id, 0);
@@ -1082,7 +1084,7 @@ void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enu
 
 	if (clif->isdisguised(bl)) {
 #if PACKETVER >= 20091103
-		p.objecttype = pc->db_checkid(status->get_viewdata(bl)->class_) ? 0x0 : 0x5; //PC_TYPE : NPC_MOB_TYPE
+		p.objecttype = pc->db_checkid(status->get_viewdata(bl)->class) ? 0x0 : 0x5; //PC_TYPE : NPC_MOB_TYPE
 		p.GID = -bl->id;
 #else
 		p.GID = -bl->id;
@@ -1115,11 +1117,12 @@ void clif_spawn_unit2(struct block_list* bl, enum send_target target) {
 	p.head = vd->hair_style;
 	p.weapon = vd->weapon;
 	p.accessory = vd->head_bottom;
-	p.job = vd->class_;
+	p.job = vd->class;
 	p.shield = vd->shield;
 	p.accessory2 = vd->head_top;
 	p.accessory3 = vd->head_mid;
-	if( bl->type == BL_NPC && vd->class_ == FLAG_CLASS ) { //The hell, why flags work like this?
+	if (bl->type == BL_NPC && vd->class == FLAG_CLASS) {
+		// The hell, why flags work like this?
 		p.shield = status->get_emblem_id(bl);
 		p.accessory2 = GetWord(g_id, 1);
 		p.accessory3 = GetWord(g_id, 0);
@@ -1147,7 +1150,7 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 	nullpo_retv(bl);
 
 #if PACKETVER < 20091103
-	if( !pc->db_checkid(vd->class_) ) {
+	if (!pc->db_checkid(vd->class)) {
 		clif->spawn_unit2(bl,target);
 		return;
 	}
@@ -1170,7 +1173,7 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 	p.bodyState = (sc) ? sc->opt1 : 0;
 	p.healthState = (sc) ? sc->opt2 : 0;
 	p.effectState = (sc != NULL) ? sc->option : ((bl->type == BL_NPC) ? BL_UCCAST(BL_NPC, bl)->option : 0);
-	p.job = vd->class_;
+	p.job = vd->class;
 	p.head = vd->hair_style;
 	p.weapon = vd->weapon;
 	p.accessory = vd->head_bottom;
@@ -1179,7 +1182,8 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 #endif
 	p.accessory2 = vd->head_top;
 	p.accessory3 = vd->head_mid;
-	if( bl->type == BL_NPC && vd->class_ == FLAG_CLASS ) { //The hell, why flags work like this?
+	if (bl->type == BL_NPC && vd->class == FLAG_CLASS) {
+		// The hell, why flags work like this?
 		p.accessory = status->get_emblem_id(bl);
 		p.accessory2 = GetWord(g_id, 1);
 		p.accessory3 = GetWord(g_id, 0);
@@ -1220,10 +1224,10 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 #endif
 	if (clif->isdisguised(bl)) {
 		nullpo_retv(sd);
-		if( sd->status.class_ != sd->disguise )
+		if (sd->status.class != sd->disguise)
 			clif->send(&p,sizeof(p),bl,target);
 #if PACKETVER >= 20091103
-		p.objecttype = pc->db_checkid(status->get_viewdata(bl)->class_) ? 0x0 : 0x5; //PC_TYPE : NPC_MOB_TYPE
+		p.objecttype = pc->db_checkid(status->get_viewdata(bl)->class) ? 0x0 : 0x5; //PC_TYPE : NPC_MOB_TYPE
 		p.GID = -bl->id;
 #else
 		p.GID = -bl->id;
@@ -1266,7 +1270,7 @@ void clif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd, 
 	p.bodyState = (sc) ? sc->opt1 : 0;
 	p.healthState = (sc) ? sc->opt2 : 0;
 	p.effectState = (sc != NULL) ? sc->option : ((bl->type == BL_NPC) ? BL_UCCAST(BL_NPC, bl)->option : 0);
-	p.job = vd->class_;
+	p.job = vd->class;
 	p.head = vd->hair_style;
 	p.weapon = vd->weapon;
 	p.accessory = vd->head_bottom;
@@ -1315,7 +1319,7 @@ void clif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd, 
 
 	if (clif->isdisguised(bl)) {
 #if PACKETVER >= 20091103
-		p.objecttype = pc->db_checkid(status->get_viewdata(bl)->class_) ? 0x0 : 0x5; //PC_TYPE : NPC_MOB_TYPE
+		p.objecttype = pc->db_checkid(status->get_viewdata(bl)->class) ? 0x0 : 0x5; //PC_TYPE : NPC_MOB_TYPE
 		p.GID = -bl->id;
 #else
 		p.GID = -bl->id;
@@ -1427,7 +1431,7 @@ bool clif_spawn(struct block_list *bl)
 	if( !vd )
 		return false;
 
-	if (vd->class_ == INVISIBLE_CLASS)
+	if (vd->class == INVISIBLE_CLASS)
 		return true; // Doesn't need to be spawned, so everything is alright
 
 	if (bl->type == BL_NPC) {
@@ -1774,7 +1778,7 @@ void clif_move(struct unit_data *ud)
 	bl = ud->bl;
 	nullpo_retv(bl);
 	vd = status->get_viewdata(bl);
-	if (!vd || vd->class_ == INVISIBLE_CLASS)
+	if (vd == NULL || vd->class == INVISIBLE_CLASS)
 		return; //This performance check is needed to keep GM-hidden objects from being notified to bots.
 
 	if (bl->type == BL_NPC) {
@@ -4231,7 +4235,7 @@ void clif_getareachar_unit(struct map_session_data* sd,struct block_list *bl) {
 	nullpo_retv(bl);
 
 	vd = status->get_viewdata(bl);
-	if (!vd || vd->class_ == INVISIBLE_CLASS)
+	if (vd == NULL || vd->class == INVISIBLE_CLASS)
 		return;
 
 	if (bl->type == BL_NPC) {
@@ -4691,7 +4695,7 @@ int clif_outsight(struct block_list *bl,va_list ap)
 		nullpo_ret(bl);
 		switch(bl->type){
 			case BL_PC:
-				if (sd->vd.class_ != INVISIBLE_CLASS)
+				if (sd->vd.class != INVISIBLE_CLASS)
 					clif->clearunit_single(bl->id,CLR_OUTSIGHT,tsd->fd);
 				if (sd->chat_id != 0) {
 					struct chat_data *cd = map->id2cd(sd->chat_id);
@@ -4714,7 +4718,7 @@ int clif_outsight(struct block_list *bl,va_list ap)
 					clif->clearunit_single(bl->id,CLR_OUTSIGHT,tsd->fd);
 				break;
 			default:
-				if ((vd=status->get_viewdata(bl)) && vd->class_ != INVISIBLE_CLASS)
+				if ((vd=status->get_viewdata(bl)) && vd->class != INVISIBLE_CLASS)
 					clif->clearunit_single(bl->id,CLR_OUTSIGHT,tsd->fd);
 				break;
 			}
@@ -4723,7 +4727,7 @@ int clif_outsight(struct block_list *bl,va_list ap)
 		nullpo_ret(tbl);
 		if (tbl->type == BL_SKILL) //Trap knocked out of sight
 			clif->clearchar_skillunit(BL_UCAST(BL_SKILL, tbl), sd->fd);
-		else if ((vd = status->get_viewdata(tbl)) && vd->class_ != INVISIBLE_CLASS
+		else if ((vd = status->get_viewdata(tbl)) != NULL && vd->class != INVISIBLE_CLASS
 		      && !(tbl->type == BL_NPC && (BL_UCAST(BL_NPC, tbl)->option&OPTION_INVISIBLE)))
 			clif->clearunit_single(tbl->id,CLR_OUTSIGHT,sd->fd);
 	}
@@ -4799,7 +4803,7 @@ void clif_skillinfoblock(struct map_session_data *sd)
 			}
 			safestrncpy(WFIFOP(fd,len+12), skill->get_name(id), NAME_LENGTH);
 			if(sd->status.skill[i].flag == SKILL_FLAG_PERMANENT)
-				WFIFOB(fd,len+36) = (sd->status.skill[i].lv < skill->tree_get_max(id, sd->status.class_))? 1:0;
+				WFIFOB(fd,len+36) = (sd->status.skill[i].lv < skill->tree_get_max(id, sd->status.class))? 1:0;
 			else
 				WFIFOB(fd,len+36) = 0;
 			len += 37;
@@ -4850,7 +4854,7 @@ void clif_addskill(struct map_session_data *sd, int id)
 	}
 	safestrncpy(WFIFOP(fd,14), skill->get_name(id), NAME_LENGTH);
 	if (sd->status.skill[idx].flag == SKILL_FLAG_PERMANENT)
-		WFIFOB(fd,38) = (skill_lv < skill->tree_get_max(id, sd->status.class_))? 1:0;
+		WFIFOB(fd,38) = (skill_lv < skill->tree_get_max(id, sd->status.class))? 1:0;
 	else
 		WFIFOB(fd,38) = 0;
 	WFIFOSET(fd,packet_len(0x111));
@@ -4895,7 +4899,7 @@ void clif_skillup(struct map_session_data *sd, uint16 skill_id, int skill_lv, in
 	WFIFOW(fd, 6) = skill->get_sp(skill_id, skill_lv);
 	WFIFOW(fd, 8) = (flag)?skill->get_range2(&sd->bl, skill_id, skill_lv) : skill->get_range(skill_id, skill_lv);
 	if( flag )
-		WFIFOB(fd,10) = (skill_lv < skill->tree_get_max(skill_id, sd->status.class_)) ? 1 : 0;
+		WFIFOB(fd,10) = (skill_lv < skill->tree_get_max(skill_id, sd->status.class)) ? 1 : 0;
 	else
 		WFIFOB(fd,10) = 1;
 
@@ -4928,7 +4932,7 @@ void clif_skillinfo(struct map_session_data *sd,int skill_id, int inf)
 		WFIFOW(fd,12) = 0;
 	}
 	if (sd->status.skill[idx].flag == SKILL_FLAG_PERMANENT)
-		WFIFOB(fd,14) = (skill_lv < skill->tree_get_max(skill_id, sd->status.class_))? 1:0;
+		WFIFOB(fd,14) = (skill_lv < skill->tree_get_max(skill_id, sd->status.class))? 1:0;
 	else
 		WFIFOB(fd,14) = 0;
 	WFIFOSET(fd,packet_len(0x7e1));
@@ -7482,7 +7486,7 @@ void clif_guild_memberlist(struct map_session_data *sd)
 		WFIFOW(fd,c*104+12)=m->hair;
 		WFIFOW(fd,c*104+14)=m->hair_color;
 		WFIFOW(fd,c*104+16)=m->gender;
-		WFIFOW(fd,c*104+18)=m->class_;
+		WFIFOW(fd,c*104+18)=m->class;
 		WFIFOW(fd,c*104+20)=m->lv;
 		WFIFOL(fd,c*104+22)=(int)cap_value(m->exp,0,INT32_MAX);
 		WFIFOL(fd,c*104+26)=m->online;
@@ -8913,7 +8917,7 @@ void clif_viewequip_ack(struct map_session_data* sd, struct map_session_data* ts
 
 	safestrncpy(viewequip_list.characterName, tsd->status.name, NAME_LENGTH);
 
-	viewequip_list.job         = tsd->status.class_;
+	viewequip_list.job         = tsd->status.class;
 	viewequip_list.head        = tsd->vd.hair_style;
 	viewequip_list.accessory   = tsd->vd.head_bottom;
 	viewequip_list.accessory2  = tsd->vd.head_mid;
@@ -9628,7 +9632,7 @@ void clif_parse_LoadEndAck(int fd, struct map_session_data *sd) {
 			struct questinfo *qi = &map->list[sd->bl.m].qi_data[i];
 			if( quest->check(sd, qi->quest_id, HAVEQUEST) == -1 ) {// Check if quest is not started
 				if( qi->hasJob ) { // Check if quest is job-specific, check is user is said job class.
-					if( sd->class_ == qi->job )
+					if (sd->status.class == qi->job)
 						clif->quest_show_event(sd, &qi->nd->bl, qi->icon, qi->color);
 				} else {
 					clif->quest_show_event(sd, &qi->nd->bl, qi->icon, qi->color);
@@ -9870,7 +9874,7 @@ int clif_undisguise_timer(int tid, int64 tick, int id, intptr_t data) {
 	struct map_session_data * sd;
 	if( (sd = map->id2sd(id)) ) {
 		sd->fontcolor_tid = INVALID_TIMER;
-		if( sd->fontcolor && sd->disguise == sd->status.class_ )
+		if (sd->fontcolor && sd->disguise == sd->status.class)
 			pc->disguise(sd,-1);
 	}
 	return 0;
@@ -9921,12 +9925,12 @@ void clif_parse_GlobalMessage(int fd, struct map_session_data *sd)
 
 		if (sd->disguise == -1) {
 			sd->fontcolor_tid = timer->add(timer->gettick()+5000, clif->undisguise_timer, sd->bl.id, 0);
-			pc->disguise(sd,sd->status.class_);
+			pc->disguise(sd,sd->status.class);
 			if (pc_isdead(sd))
 				clif->clearunit_single(-sd->bl.id, CLR_DEAD, sd->fd);
 			if (unit->is_walking(&sd->bl))
 				clif->move(&sd->ud);
-		} else if (sd->disguise == sd->status.class_ && sd->fontcolor_tid != INVALID_TIMER) {
+		} else if (sd->disguise == sd->status.class && sd->fontcolor_tid != INVALID_TIMER) {
 			const struct TimerData *td;
 			if ((td = timer->get(sd->fontcolor_tid)) != NULL)
 				timer->settick(sd->fontcolor_tid, td->tick+5000);
@@ -12568,7 +12572,7 @@ void clif_PartyBookingVolunteerInfo(int index, struct map_session_data *sd)
 	nullpo_retv(sd);
 	WBUFW(buf, 0) = 0x8f2;
 	WBUFL(buf, 2) = sd->status.account_id;
-	WBUFL(buf, 6) = sd->status.class_;
+	WBUFL(buf, 6) = sd->status.class;
 	WBUFW(buf, 10) = sd->status.base_level;
 	memcpy(WBUFP(buf, 12), sd->status.name, NAME_LENGTH);
 
@@ -13824,7 +13828,7 @@ void clif_parse_NoviceDoriDori(int fd, struct map_session_data *sd)
 {
 	if (sd->state.doridori) return;
 
-	switch (sd->class_&MAPID_UPPERMASK) {
+	switch (sd->job & MAPID_UPPERMASK) {
 		case MAPID_SOUL_LINKER:
 		case MAPID_STAR_GLADIATOR:
 		case MAPID_TAEKWON:
@@ -13852,7 +13856,7 @@ void clif_parse_NoviceExplosionSpirits(int fd, struct map_session_data *sd)
 	/* game client is currently broken on this (not sure the packetver range) */
 	/* it sends the request when the criteria doesn't match (and of course we let it fail) */
 	/* so restoring the old parse_globalmes method. */
-	if( ( sd->class_&MAPID_UPPERMASK ) == MAPID_SUPER_NOVICE ) {
+	if ((sd->job & MAPID_UPPERMASK) == MAPID_SUPER_NOVICE) {
 		unsigned int next = pc->nextbaseexp(sd);
 		if( next == 0 ) next = pc->thisbaseexp(sd);
 		if( next ) {
@@ -14220,28 +14224,21 @@ void clif_ranklist(struct map_session_data *sd, enum fame_list_type type)
 {
 #if PACKETVER >= 20120502
 	int fd;
-	int mypoint = 0;
-	int upperMask;
 	int len = packet_len(0x97d);
 
 	nullpo_retv(sd);
 	fd = sd->fd;
-	upperMask = sd->class_&MAPID_UPPERMASK;
 	WFIFOHEAD(fd, len);
 	WFIFOW(fd, 0) = 0x97d;
 	WFIFOW(fd, 2) = type;
 	clif_ranklist_sub(WFIFOP(fd,4), type);
 
-	if( (upperMask == MAPID_BLACKSMITH && type == RANKTYPE_BLACKSMITH)
-	 || (upperMask == MAPID_ALCHEMIST  && type == RANKTYPE_ALCHEMIST)
-	 || (upperMask == MAPID_TAEKWON    && type == RANKTYPE_TAEKWON)
-	) {
-		mypoint = sd->status.fame;
+	if (pc->famelist_type(sd->job) == type) {
+		WFIFOL(fd, 284) = sd->status.fame; //mypoint
 	} else {
-		mypoint = 0;
+		WFIFOL(fd, 284) = 0; //mypoint
 	}
 
-	WFIFOL(fd, 284) = mypoint; //mypoint
 	WFIFOSET(fd, len);
 #endif
 }
@@ -16251,7 +16248,7 @@ void clif_bg_xy(struct map_session_data *sd)
 	WBUFW(buf,0)=0x2df;
 	WBUFL(buf,2)=sd->status.account_id;
 	memcpy(WBUFP(buf,6), sd->status.name, NAME_LENGTH);
-	WBUFW(buf,30)=sd->status.class_;
+	WBUFW(buf,30)=sd->status.class;
 	WBUFW(buf,32)=sd->bl.x;
 	WBUFW(buf,34)=sd->bl.y;
 

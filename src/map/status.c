@@ -2269,14 +2269,14 @@ unsigned int status_get_base_maxsp(const struct map_session_data *sd, const stru
 
 	nullpo_ret(sd);
 	nullpo_ret(st);
-	val = pc->class2idx(sd->status.class_);
+	val = pc->class2idx(sd->status.class);
 	val = status->dbs->SP_table[val][sd->status.base_level];
 
-	if ( sd->class_&JOBL_UPPER )
+	if ((sd->job & JOBL_UPPER) != 0)
 		val += val * 25 / 100;
-	else if ( sd->class_&JOBL_BABY )
+	else if ((sd->job & JOBL_BABY) != 0)
 		val = val * 70 / 100;
-	if ( (sd->class_&MAPID_UPPERMASK) == MAPID_TAEKWON && sd->status.base_level >= 90 && pc->famerank(sd->status.char_id, MAPID_TAEKWON) )
+	if ((sd->job & MAPID_UPPERMASK) == MAPID_TAEKWON && sd->status.base_level >= 90 && pc->fame_rank(sd->status.char_id, RANKTYPE_TAEKWON) > 0)
 		val *= 3; //Triple max SP for top ranking Taekwons over level 90.
 
 	val += val * st->int_ / 100;
@@ -2290,20 +2290,20 @@ unsigned int status_get_base_maxhp(const struct map_session_data *sd, const stru
 
 	nullpo_ret(sd);
 	nullpo_ret(st);
-	val = pc->class2idx(sd->status.class_);
+	val = pc->class2idx(sd->status.class);
 	val = status->dbs->HP_table[val][sd->status.base_level];
 
-	if ( (sd->class_&MAPID_UPPERMASK) == MAPID_SUPER_NOVICE && sd->status.base_level >= 99 )
+	if ((sd->job & MAPID_UPPERMASK) == MAPID_SUPER_NOVICE && sd->status.base_level >= 99)
 		val += 2000; //Supernovice lvl99 hp bonus.
-	if ( (sd->class_&MAPID_THIRDMASK) == MAPID_SUPER_NOVICE_E && sd->status.base_level >= 150 )
+	if ((sd->job & MAPID_THIRDMASK) == MAPID_SUPER_NOVICE_E && sd->status.base_level >= 150)
 		val += 2000; //Extented Supernovice lvl150 hp bonus.
 
-	if ( sd->class_&JOBL_UPPER )
+	if ((sd->job & JOBL_UPPER) != 0)
 		val += val * 25 / 100; //Trans classes get a 25% hp bonus
-	else if ( sd->class_&JOBL_BABY )
+	else if ((sd->job & JOBL_BABY) != 0)
 		val = val * 70 / 100; //Baby classes get a 30% hp penalty
 
-	if ( (sd->class_&MAPID_UPPERMASK) == MAPID_TAEKWON && sd->status.base_level >= 90 && pc->famerank(sd->status.char_id, MAPID_TAEKWON) )
+	if ((sd->job & MAPID_UPPERMASK) == MAPID_TAEKWON && sd->status.base_level >= 90 && pc->fame_rank(sd->status.char_id, RANKTYPE_TAEKWON))
 		val *= 3; //Triple max HP for top ranking Taekwons over level 90.
 
 	val += val * st->vit / 100; // +1% per each point of VIT
@@ -2342,7 +2342,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 
 	pc->calc_skilltree(sd); // SkillTree calculation
 
-	sd->max_weight = status->dbs->max_weight_base[pc->class2idx(sd->status.class_)]+sd->status.str*300;
+	sd->max_weight = status->dbs->max_weight_base[pc->class2idx(sd->status.class)]+sd->status.str*300;
 
 	if(opt&SCO_FIRST) {
 		//Load Hp/SP from char-received data.
@@ -2404,9 +2404,9 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 	//Give them all modes except these (useful for clones)
 	bstatus->mode = MD_MASK&~(MD_BOSS|MD_PLANT|MD_DETECTOR|MD_ANGRY|MD_TARGETWEAK);
 
-	bstatus->size = (sd->class_&JOBL_BABY || (sd->class_&MAPID_BASEMASK) == MAPID_SUMMONER)?SZ_SMALL:SZ_MEDIUM;
+	bstatus->size = ((sd->job & JOBL_BABY) != 0 || (sd->job & MAPID_BASEMASK) == MAPID_SUMMONER)?SZ_SMALL:SZ_MEDIUM;
 	if (battle_config.character_size && (pc_isridingpeco(sd) || pc_isridingdragon(sd))) { //[Lupus]
-		if (sd->class_&JOBL_BABY) {
+		if ((sd->job & JOBL_BABY) != 0) {
 			if (battle_config.character_size&SZ_BIG)
 				bstatus->size++;
 		} else {
@@ -2416,7 +2416,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 	}
 	bstatus->aspd_rate = 1000;
 	bstatus->ele_lv = 1;
-	bstatus->race = ((sd->class_&MAPID_BASEMASK) == MAPID_SUMMONER)?RC_BRUTE:RC_PLAYER;
+	bstatus->race = ((sd->job & MAPID_BASEMASK) == MAPID_SUMMONER)?RC_BRUTE:RC_PLAYER;
 
 	// Autobonus
 	pc->delautobonus(sd,sd->autobonus,ARRAYLENGTH(sd->autobonus),true);
@@ -2510,8 +2510,9 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 			if (sd->status.inventory[index].card[0]==CARD0_FORGE) {
 				// Forged weapon
 				wd->star += (sd->status.inventory[index].card[1]>>8);
-				if(wd->star >= 15) wd->star = 40; // 3 Star Crumbs now give +40 dmg
-				if(pc->famerank(MakeDWord(sd->status.inventory[index].card[2],sd->status.inventory[index].card[3]) ,MAPID_BLACKSMITH))
+				if (wd->star >= 15)
+					wd->star = 40; // 3 Star Crumbs now give +40 dmg
+				if (pc->fame_rank(MakeDWord(sd->status.inventory[index].card[2],sd->status.inventory[index].card[3]), RANKTYPE_BLACKSMITH) > 0)
 					wd->star += 10;
 
 				if (!wa->ele) //Do not overwrite element from previous bonuses.
@@ -2686,7 +2687,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 	// ----- STATS CALCULATION -----
 
 	// Job bonuses
-	index = pc->class2idx(sd->status.class_);
+	index = pc->class2idx(sd->status.class);
 	for (i = 0; i < sd->status.job_level && i < MAX_LEVEL; i++) {
 		if(!status->dbs->job_bonus[index][i])
 			continue;
@@ -2701,7 +2702,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 	}
 
 	// If a Super Novice has never died and is at least joblv 70, he gets all stats +10
-	if((sd->class_&MAPID_UPPERMASK) == MAPID_SUPER_NOVICE && sd->die_counter == 0 && sd->status.job_level >= 70) {
+	if ((sd->job & MAPID_UPPERMASK) == MAPID_SUPER_NOVICE && sd->die_counter == 0 && sd->status.job_level >= 70) {
 		bstatus->str += 10;
 		bstatus->agi += 10;
 		bstatus->vit += 10;
@@ -2820,7 +2821,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 		bstatus->hp = bstatus->max_hp;
 		bstatus->sp = bstatus->max_sp;
 	} else {
-		if((sd->class_&MAPID_BASEMASK) == MAPID_NOVICE && !(sd->class_&JOBL_2)
+		if ((sd->job & MAPID_BASEMASK) == MAPID_NOVICE && (sd->job & JOBL_2) == 0
 			&& battle_config.restart_hp_rate < 50)
 			bstatus->hp = bstatus->max_hp>>1;
 		else
@@ -2911,7 +2912,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 
 	// Absolute modifiers from passive skills
 	if((skill_lv=pc->checkskill(sd,TF_MISS))>0)
-		bstatus->flee += skill_lv*(sd->class_&JOBL_2 && (sd->class_&MAPID_BASEMASK) == MAPID_THIEF? 4 : 3);
+		bstatus->flee += skill_lv*((sd->job & JOBL_2) != 0 && (sd->job & MAPID_BASEMASK) == MAPID_THIEF? 4 : 3);
 	if((skill_lv=pc->checkskill(sd,MO_DODGE))>0)
 		bstatus->flee += (skill_lv*3)>>1;
 	if (pc->checkskill(sd, SU_POWEROFLIFE) > 0)
@@ -2958,7 +2959,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 
 	// Basic ASPD value
 	i = status->base_amotion_pc(sd,bstatus);
-	bstatus->amotion = cap_value(i,((sd->class_&JOBL_THIRD) ? battle_config.max_third_aspd : battle_config.max_aspd),2000);
+	bstatus->amotion = cap_value(i,((sd->job & JOBL_THIRD) != 0 ? battle_config.max_third_aspd : battle_config.max_aspd),2000);
 
 	// Relative modifiers from passive skills
 #ifndef RENEWAL_ASPD
@@ -3562,7 +3563,7 @@ void status_calc_regen_rate(struct block_list *bl, struct regen_data *regen, str
 	 || sc->data[SC_OBLIVIONCURSE] != NULL
 	 || sc->data[SC_MAXIMIZEPOWER] != NULL
 	 || sc->data[SC_REBOUND] != NULL
-	 || (bl->type == BL_PC && (BL_UCAST(BL_PC, bl)->class_&MAPID_UPPERMASK) == MAPID_MONK
+	 || (bl->type == BL_PC && (BL_UCAST(BL_PC, bl)->job & MAPID_UPPERMASK) == MAPID_MONK
 	  && (sc->data[SC_EXTREMITYFIST] != NULL
 	   || (sc->data[SC_EXPLOSIONSPIRITS] != NULL
 	    && (sc->data[SC_SOULLINK] == NULL || sc->data[SC_SOULLINK]->val2 != SL_MONK)
@@ -4008,7 +4009,7 @@ void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag)
 #endif
 			amotion = status->calc_fix_aspd(bl, sc, amotion);
 			if (sd != NULL) {
-				st->amotion = cap_value(amotion, ((sd->class_&JOBL_THIRD) ? battle_config.max_third_aspd : battle_config.max_aspd), 2000);
+				st->amotion = cap_value(amotion, ((sd->job & JOBL_THIRD) != 0 ? battle_config.max_third_aspd : battle_config.max_aspd), 2000);
 			} else {
 				st->amotion = cap_value(amotion, battle_config.max_aspd, 2000);
 			}
@@ -4287,11 +4288,11 @@ int status_base_amotion_pc(struct map_session_data *sd, struct status_data *st)
 	nullpo_ret(sd);
 	nullpo_ret(st);
 
-	amotion = status->dbs->aspd_base[pc->class2idx(sd->status.class_)][sd->weapontype1];
+	amotion = status->dbs->aspd_base[pc->class2idx(sd->status.class)][sd->weapontype1];
 	if ( sd->status.weapon > MAX_SINGLE_WEAPON_TYPE)
-		amotion += status->dbs->aspd_base[pc->class2idx(sd->status.class_)][sd->weapontype2] / 4;
+		amotion += status->dbs->aspd_base[pc->class2idx(sd->status.class)][sd->weapontype2] / 4;
 	if ( sd->status.shield )
-		amotion += status->dbs->aspd_base[pc->class2idx(sd->status.class_)][MAX_SINGLE_WEAPON_TYPE];
+		amotion += status->dbs->aspd_base[pc->class2idx(sd->status.class)][MAX_SINGLE_WEAPON_TYPE];
 	switch ( sd->status.weapon ) {
 		case W_BOW:
 		case W_MUSICAL:
@@ -4315,8 +4316,8 @@ int status_base_amotion_pc(struct map_session_data *sd, struct status_data *st)
 #else
 	// base weapon delay
 	amotion = (sd->status.weapon < MAX_SINGLE_WEAPON_TYPE)
-		? (status->dbs->aspd_base[pc->class2idx(sd->status.class_)][sd->status.weapon]) // single weapon
-		: (status->dbs->aspd_base[pc->class2idx(sd->status.class_)][sd->weapontype1] + status->dbs->aspd_base[pc->class2idx(sd->status.class_)][sd->weapontype2]) * 7 / 10; // dual-wield
+		? (status->dbs->aspd_base[pc->class2idx(sd->status.class)][sd->status.weapon]) // single weapon
+		: (status->dbs->aspd_base[pc->class2idx(sd->status.class)][sd->weapontype1] + status->dbs->aspd_base[pc->class2idx(sd->status.class)][sd->weapontype2]) * 7 / 10; // dual-wield
 
 	// percentual delay reduction from stats
 	amotion -= amotion * (4 * st->agi + st->dex) / 1000;
@@ -5801,7 +5802,7 @@ unsigned short status_calc_speed(struct block_list *bl, struct status_change *sc
 				val = max( val, 2 * sc->data[SC_WINDWALK]->val1 );
 			if( sc->data[SC_CARTBOOST] )
 				val = max( val, 20 );
-			if( sd && (sd->class_&MAPID_UPPERMASK) == MAPID_ASSASSIN && pc->checkskill(sd,TF_MISS) > 0 )
+			if (sd != NULL && (sd->job & MAPID_UPPERMASK) == MAPID_ASSASSIN && pc->checkskill(sd,TF_MISS) > 0)
 				val = max( val, 1 * pc->checkskill(sd,TF_MISS) );
 			if( sc->data[SC_CLOAKING] && (sc->data[SC_CLOAKING]->val4&1) == 1 )
 				val = max( val, sc->data[SC_CLOAKING]->val1 >= 10 ? 25 : 3 * sc->data[SC_CLOAKING]->val1 - 3 );
@@ -6430,8 +6431,8 @@ int status_get_class(const struct block_list *bl)
 {
 	nullpo_ret(bl);
 	switch (bl->type) {
-		case BL_PC:  return BL_UCCAST(BL_PC, bl)->status.class_;
-		case BL_MOB: return BL_UCCAST(BL_MOB, bl)->vd->class_; //Class used on all code should be the view class of the mob.
+		case BL_PC:  return BL_UCCAST(BL_PC, bl)->status.class;
+		case BL_MOB: return BL_UCCAST(BL_MOB, bl)->vd->class; //Class used on all code should be the view class of the mob.
 		case BL_PET: return BL_UCCAST(BL_PET, bl)->pet.class_;
 		case BL_HOM: return BL_UCCAST(BL_HOM, bl)->homunculus.class_;
 		case BL_MER: return BL_UCCAST(BL_MER, bl)->mercenary.class_;
@@ -6826,7 +6827,7 @@ void status_set_viewdata(struct block_list *bl, int class_)
 						break;
 				}
 			}
-			sd->vd.class_ = class_;
+			sd->vd.class = class_;
 			clif->get_weapon_view(sd, &sd->vd.weapon, &sd->vd.shield);
 			sd->vd.head_top = sd->status.head_top;
 			sd->vd.head_mid = sd->status.head_mid;
@@ -6878,7 +6879,7 @@ void status_set_viewdata(struct block_list *bl, int class_)
 		struct pet_data *pd = BL_UCAST(BL_PET, bl);
 		if (vd != NULL) {
 			memcpy(&pd->vd, vd, sizeof(struct view_data));
-			if (!pc->db_checkid(vd->class_)) {
+			if (!pc->db_checkid(vd->class)) {
 				pd->vd.hair_style = battle_config.pet_hair_style;
 				if(pd->pet.equip) {
 					pd->vd.head_bottom = itemdb_viewid(pd->pet.equip);
@@ -8401,7 +8402,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 	#endif
 				break;
 			case SC_NJ_SUITON:
-				if (!val2 || (sd && (sd->class_&MAPID_BASEMASK) == MAPID_NINJA)) {
+				if (val2 == 0 || (sd != NULL && (sd->job & MAPID_BASEMASK) == MAPID_NINJA)) {
 					//No penalties.
 					val2 = 0; //Agi penalty
 					val3 = 0; //Walk speed penalty
@@ -9830,7 +9831,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			case SC_ARCLOUSEDASH:
 				val2 = 15 + 5 * val1; // AGI
 				val3 = 25; // Move speed increase
-				if (sd && (sd->class_&MAPID_BASEMASK) == MAPID_SUMMONER)
+				if (sd != NULL && (sd->job & MAPID_BASEMASK) == MAPID_SUMMONER)
 					val4 = 10; // Ranged ATK increase
 				break;
 			case SC_TUNAPARTY:
@@ -9863,7 +9864,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			case SC_HANBOK:
 			case SC_OKTOBERFEST:
 				if( !vd ) break;
-				clif->changelook(bl,LOOK_BASE,vd->class_);
+				clif->changelook(bl, LOOK_BASE, vd->class);
 				clif->changelook(bl,LOOK_WEAPON,0);
 				clif->changelook(bl,LOOK_SHIELD,0);
 				clif->changelook(bl,LOOK_CLOTHES_COLOR,vd->cloth_color);
@@ -10263,7 +10264,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 		clif->changeoption(bl);
 		if( sd && opt_flag&0x4 ) {
 			if (vd)
-				clif->changelook(bl,LOOK_BASE,vd->class_);
+				clif->changelook(bl, LOOK_BASE, vd->class);
 			clif->changelook(bl,LOOK_WEAPON,0);
 			clif->changelook(bl,LOOK_SHIELD,0);
 			if (vd)
@@ -11201,7 +11202,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 	else if(opt_flag) {
 		clif->changeoption(bl);
 		if( sd && opt_flag&0x4 ) {
-			clif->changelook(bl,LOOK_BASE,sd->vd.class_);
+			clif->changelook(bl, LOOK_BASE, sd->vd.class);
 			clif->get_weapon_view(sd, &sd->vd.weapon, &sd->vd.shield);
 			clif->changelook(bl,LOOK_WEAPON,sd->vd.weapon);
 			clif->changelook(bl,LOOK_SHIELD,sd->vd.shield);
@@ -12800,7 +12801,7 @@ int status_natural_heal(struct block_list* bl, va_list args)
 				if ((rate = pc->checkskill(sd,TK_SPTIME)))
 					sc_start(bl,bl,status->skill2sc(TK_SPTIME),
 					         100,rate,skill->get_time(TK_SPTIME, rate));
-				if ((sd->class_&MAPID_UPPERMASK) == MAPID_STAR_GLADIATOR
+				if ((sd->job & MAPID_UPPERMASK) == MAPID_STAR_GLADIATOR
 				 &&rnd()%10000 < battle_config.sg_angel_skill_ratio
 				) {
 					//Angel of the Sun/Moon/Star
@@ -13070,15 +13071,15 @@ void status_read_job_db(void) /* [malufett/Hercules] */
 		return;
 
 	while ( (jdb = libconfig->setting_get_elem(job_db_conf.root, i++)) ) {
-		int class_, idx;
+		int class, idx;
 		const char *name = config_setting_name(jdb);
 
-		if ( (class_ = pc->check_job_name(name)) == -1 ) {
+		if ((class = pc->check_job_name(name)) == -1) {
 			ShowWarning("pc_read_job_db: '%s' unknown job name!\n", name);
 			continue;
 		}
 
-		idx = pc->class2idx(class_);
+		idx = pc->class2idx(class);
 		status->read_job_db_sub(idx, name, jdb);
 	}
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", i, config_filename);
@@ -13087,17 +13088,16 @@ void status_read_job_db(void) /* [malufett/Hercules] */
 
 bool status_readdb_job2(char* fields[], int columns, int current)
 {
-	int idx, class_, i;
+	int idx, class, i;
 
 	nullpo_retr(false, fields);
-	class_ = atoi(fields[0]);
+	class = atoi(fields[0]);
 
-	if(!pc->db_checkid(class_))
-	{
-		ShowWarning("status_readdb_job2: Invalid job class %d specified.\n", class_);
+	if (!pc->db_checkid(class)) {
+		ShowWarning("status_readdb_job2: Invalid job class %d specified.\n", class);
 		return false;
 	}
-	idx = pc->class2idx(class_);
+	idx = pc->class2idx(class);
 
 	for(i = 1; i < columns; i++)
 	{

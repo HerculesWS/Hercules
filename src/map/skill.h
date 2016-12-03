@@ -1970,7 +1970,7 @@ struct skill_interface {
 	int (*get_unit_layout_type) ( uint16 skill_id ,uint16 skill_lv );
 	int (*get_unit_range) ( uint16 skill_id, uint16 skill_lv );
 	int (*get_cooldown) ( uint16 skill_id, uint16 skill_lv );
-	int (*tree_get_max) ( uint16 skill_id, int b_class );
+	int (*tree_get_max) (uint16 skill_id, int class);
 	const char *(*get_name) ( uint16 skill_id );
 	const char *(*get_desc) ( uint16 skill_id );
 	/* check */

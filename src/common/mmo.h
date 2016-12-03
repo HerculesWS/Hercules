@@ -259,12 +259,12 @@
 // The following system marks a different job ID system used by the map server,
 // which makes a lot more sense than the normal one. [Skotlex]
 // These marks the "level" of the job.
-#define JOBL_2_1 0x100 //256
-#define JOBL_2_2 0x200 //512
-#define JOBL_2 0x300
-#define JOBL_UPPER 0x1000 //4096
-#define JOBL_BABY 0x2000  //8192
-#define JOBL_THIRD 0x4000 //16384
+#define JOBL_2_1   0x0100
+#define JOBL_2_2   0x0200
+#define JOBL_2     0x0300 // JOBL_2_1 | JOBL_2_2
+#define JOBL_UPPER 0x1000
+#define JOBL_BABY  0x2000
+#define JOBL_THIRD 0x4000
 
 #define SCRIPT_VARNAME_LENGTH 32 ///< Maximum length of a script variable
 
@@ -566,7 +566,7 @@ struct mmo_charstatus {
 	int zeny;
 	int bank_vault;
 
-	short class_;
+	int16 class;
 	int status_point, skill_point;
 	int hp,max_hp,sp,max_sp;
 	unsigned int option;
@@ -670,7 +670,7 @@ struct party_member {
 	int account_id;
 	int char_id;
 	char name[NAME_LENGTH];
-	unsigned short class_;
+	int16 class;
 	unsigned short map;
 	unsigned short lv;
 	unsigned leader : 1,
@@ -689,7 +689,9 @@ struct party {
 struct map_session_data;
 struct guild_member {
 	int account_id, char_id;
-	short hair,hair_color,gender,class_,lv;
+	short hair,hair_color,gender;
+	int16 class;
+	short lv;
 	uint64 exp;
 	int exp_payper;
 	short online,position;
@@ -777,6 +779,7 @@ struct fame_list {
 };
 
 enum fame_list_type {
+	RANKTYPE_UNKNOWN    = -1,
 	RANKTYPE_BLACKSMITH = 0,
 	RANKTYPE_ALCHEMIST  = 1,
 	RANKTYPE_TAEKWON    = 2,

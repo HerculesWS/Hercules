@@ -6742,18 +6742,18 @@ BUILDIN(percentheal)
  *------------------------------------------*/
 BUILDIN(jobchange)
 {
-	int job, upper=-1;
+	int class, upper=-1;
 
-	job=script_getnum(st,2);
+	class = script_getnum(st,2);
 	if( script_hasdata(st,3) )
 		upper=script_getnum(st,3);
 
-	if (pc->db_checkid(job)) {
+	if (pc->db_checkid(class)) {
 		struct map_session_data *sd = script->rid2sd(st);
 		if (sd == NULL)
 			return true;
 
-		pc->jobchange(sd, job, upper);
+		pc->jobchange(sd, class, upper);
 	}
 
 	return true;
@@ -6764,8 +6764,8 @@ BUILDIN(jobchange)
  *------------------------------------------*/
 BUILDIN(jobname)
 {
-	int class_=script_getnum(st,2);
-	script_pushconststr(st, pc->job_name(class_));
+	int class = script_getnum(st,2);
+	script_pushconststr(st, pc->job_name(class));
 	return true;
 }
 
@@ -8561,7 +8561,7 @@ BUILDIN(getpartyleader)
 	switch (type) {
 		case 1: script_pushint(st,p->party.member[i].account_id); break;
 		case 2: script_pushint(st,p->party.member[i].char_id); break;
-		case 3: script_pushint(st,p->party.member[i].class_); break;
+		case 3: script_pushint(st,p->party.member[i].class); break;
 		case 4: script_pushstrcopy(st,mapindex_id2name(p->party.member[i].map)); break;
 		case 5: script_pushint(st,p->party.member[i].lv); break;
 		default: script_pushstrcopy(st,p->party.member[i].name); break;
@@ -9168,15 +9168,15 @@ BUILDIN(successrefitem)
 		   sd->status.char_id == (int)MakeDWord(sd->status.inventory[i].card[2],sd->status.inventory[i].card[3])
 		  ) { // Fame point system [DracoRPG]
 			switch (sd->inventory_data[i]->wlv) {
-				case 1:
-					pc->addfame(sd,1); // Success to refine to +10 a lv1 weapon you forged = +1 fame point
-					break;
-				case 2:
-					pc->addfame(sd,25); // Success to refine to +10 a lv2 weapon you forged = +25 fame point
-					break;
-				case 3:
-					pc->addfame(sd,1000); // Success to refine to +10 a lv3 weapon you forged = +1000 fame point
-					break;
+			case 1:
+				pc->addfame(sd, RANKTYPE_BLACKSMITH, 1); // Success to refine to +10 a lv1 weapon you forged = +1 fame point
+				break;
+			case 2:
+				pc->addfame(sd, RANKTYPE_BLACKSMITH, 25); // Success to refine to +10 a lv2 weapon you forged = +25 fame point
+				break;
+			case 3:
+				pc->addfame(sd, RANKTYPE_BLACKSMITH, 1000); // Success to refine to +10 a lv3 weapon you forged = +1000 fame point
+				break;
 			}
 		}
 	}
@@ -9977,7 +9977,7 @@ BUILDIN(setmount)
 			flag = SETMOUNT_TYPE_AUTODETECT;
 		}
 		// Sanity checks and auto-detection
-		if ((sd->class_&MAPID_THIRDMASK) == MAPID_RUNE_KNIGHT) {
+		if ((sd->job & MAPID_THIRDMASK) == MAPID_RUNE_KNIGHT) {
 			if (pc->checkskill(sd, RK_DRAGONTRAINING)) {
 				// Rune Knight (Dragon)
 				unsigned int option;
@@ -9989,11 +9989,11 @@ BUILDIN(setmount)
 				           OPTION_DRAGON1); // default value
 				pc->setridingdragon(sd, option);
 			}
-		} else if ((sd->class_&MAPID_THIRDMASK) == MAPID_RANGER) {
+		} else if ((sd->job & MAPID_THIRDMASK) == MAPID_RANGER) {
 			// Ranger (Warg)
 			if (pc->checkskill(sd, RA_WUGRIDER))
 				pc->setridingwug(sd, true);
-		} else if ((sd->class_&MAPID_THIRDMASK) == MAPID_MECHANIC) {
+		} else if ((sd->job & MAPID_THIRDMASK) == MAPID_MECHANIC) {
 			// Mechanic (Mado Gear)
 			if (pc->checkskill(sd, NC_MADOLICENCE))
 				pc->setmadogear(sd, true);
@@ -11767,22 +11767,22 @@ BUILDIN(homunculus_shuffle)
 //These two functions bring the eA MAPID_* class functionality to scripts.
 BUILDIN(eaclass)
 {
-	int class_;
+	int class;
 	if (script_hasdata(st,2)) {
-		class_ = script_getnum(st,2);
+		class = script_getnum(st,2);
 	} else {
 		struct map_session_data *sd = script->rid2sd(st);
 		if (sd == NULL)
 			return true;
-		class_ = sd->status.class_;
+		class = sd->status.class;
 	}
-	script_pushint(st,pc->jobid2mapid(class_));
+	script_pushint(st,pc->jobid2mapid(class));
 	return true;
 }
 
 BUILDIN(roclass)
 {
-	int class_ =script_getnum(st,2);
+	int job = script_getnum(st,2);
 	int sex;
 	if (script_hasdata(st,3)) {
 		sex = script_getnum(st,3);
@@ -11793,7 +11793,7 @@ BUILDIN(roclass)
 		else
 			sex = 1; //Just use male when not found.
 	}
-	script_pushint(st,pc->mapid2jobid(class_, sex));
+	script_pushint(st,pc->mapid2jobid(job, sex));
 	return true;
 }
 
@@ -11889,12 +11889,12 @@ BUILDIN(changebase)
 	if(vclass == JOB_WEDDING)
 	{
 		if (!battle_config.wedding_modifydisplay || //Do not show the wedding sprites
-			sd->class_&JOBL_BABY //Baby classes screw up when showing wedding sprites. [Skotlex] They don't seem to anymore.
+			sd->job & JOBL_BABY //Baby classes screw up when showing wedding sprites. [Skotlex] They don't seem to anymore.
 			)
 			return true;
 	}
 
-	if(sd->disguise == -1 && vclass != sd->vd.class_)
+	if (sd->disguise == -1 && vclass != sd->vd.class)
 		pc->changelook(sd,LOOK_BASE,vclass); //Updated client view. Base, Weapon and Cloth Colors.
 
 	return true;
@@ -13841,14 +13841,14 @@ BUILDIN(undisguise)
  * @type unused
  *------------------------------------------*/
 BUILDIN(classchange) {
-	int class_,type;
+	int class, type;
 	struct block_list *bl=map->id2bl(st->oid);
 
 	if(bl==NULL) return true;
 
-	class_=script_getnum(st,2);
+	class = script_getnum(st,2);
 	type=script_getnum(st,3);
-	clif->class_change(bl,class_,type);
+	clif->class_change(bl, class, type);
 	return true;
 }
 

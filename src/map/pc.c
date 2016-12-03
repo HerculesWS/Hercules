@@ -80,12 +80,13 @@ struct pc_interface *pc;
 //Converts a class to its array index for CLASS_COUNT defined arrays.
 //Note that it does not do a validity check for speed purposes, where parsing
 //player input make sure to use a pc->db_checkid first!
-int pc_class2idx(int class_) {
-	if (class_ >= JOB_NOVICE_HIGH) {
-		class_ += - JOB_NOVICE_HIGH + JOB_MAX_BASIC;
+int pc_class2idx(int class)
+{
+	if (class >= JOB_NOVICE_HIGH) {
+		class += - JOB_NOVICE_HIGH + JOB_MAX_BASIC;
 	}
-	Assert_ret(class_ >= 0 && class_ < CLASS_COUNT);
-	return class_;
+	Assert_ret(class >= 0 && class < CLASS_COUNT);
+	return class;
 }
 
 /**
@@ -247,7 +248,7 @@ int pc_addspiritball(struct map_session_data *sd,int interval,int max)
 		memmove(sd->spirit_timer+i+1, sd->spirit_timer+i, (sd->spiritball-i)*sizeof(int));
 	sd->spirit_timer[i] = tid;
 	sd->spiritball++;
-	if( (sd->class_&MAPID_THIRDMASK) == MAPID_ROYAL_GUARD )
+	if ((sd->job & MAPID_THIRDMASK) == MAPID_ROYAL_GUARD)
 		clif->millenniumshield(&sd->bl,sd->spiritball);
 	else
 		clif->spiritball(&sd->bl);
@@ -286,7 +287,7 @@ int pc_delspiritball(struct map_session_data *sd,int count,int type)
 	}
 
 	if(!type) {
-		if( (sd->class_&MAPID_THIRDMASK) == MAPID_ROYAL_GUARD )
+		if ((sd->job & MAPID_THIRDMASK) == MAPID_ROYAL_GUARD)
 			clif->millenniumshield(&sd->bl,sd->spiritball);
 		else
 			clif->spiritball(&sd->bl);
@@ -387,49 +388,106 @@ int pc_banding(struct map_session_data *sd, uint16 skill_lv) {
 }
 
 // Increases a player's fame points and displays a notice to him
-void pc_addfame(struct map_session_data *sd,int count)
+/**
+ * Increases a player's fame points and displays a notice to them.
+ *
+ * If the character's job class doesn't allow the specified rank type, nothing
+ * happens and the request is ignored.
+ *
+ * @param sd    The target character.
+ * @param type  The fame list type (@see enum fame_list_type).
+ * @param count The amount of points to add.
+ */
+void pc_addfame(struct map_session_data *sd, int ranktype, int count)
 {
-	int ranktype = -1;
 	nullpo_retv(sd);
-	sd->status.fame += count;
-	if(sd->status.fame > MAX_FAME)
-		sd->status.fame = MAX_FAME;
-	switch(sd->class_&MAPID_UPPERMASK){
-		case MAPID_BLACKSMITH: ranktype = RANKTYPE_BLACKSMITH; break;
-		case MAPID_ALCHEMIST:  ranktype = RANKTYPE_ALCHEMIST; break;
-		case MAPID_TAEKWON: ranktype = RANKTYPE_TAEKWON; break;
+
+	switch (ranktype) {
+	case RANKTYPE_BLACKSMITH:
+		if ((sd->job & MAPID_UPPERMASK) != MAPID_BLACKSMITH)
+			return;
+		break;
+	case RANKTYPE_ALCHEMIST:
+		if ((sd->job & MAPID_UPPERMASK) != MAPID_ALCHEMIST)
+			return;
+		break;
+	case RANKTYPE_TAEKWON:
+		if ((sd->job & MAPID_UPPERMASK) != MAPID_TAEKWON)
+			return;
+		break;
+	case RANKTYPE_PK:
+		// Not supported
+		FALLTHROUGH
+	default:
+		Assert_retv(0);
 	}
+
+	sd->status.fame += count;
+	if (sd->status.fame > MAX_FAME)
+		sd->status.fame = MAX_FAME;
+
 	clif->update_rankingpoint(sd, ranktype, count);
 	chrif->updatefamelist(sd);
 }
 
-// Check whether a player ID is in the fame rankers' list of its job, returns his/her position if so, 0 else
-unsigned char pc_famerank(int char_id, int job)
+/**
+ * Returns a character's rank in the specified fame list.
+ *
+ * @param char_id  The character ID.
+ * @param ranktype The rank list type (@see enum fame_list_type).
+ * @return The rank position (1-based index)
+ * @retval 0 if the character isn't in the specified list.
+ */
+int pc_fame_rank(int char_id, int ranktype)
 {
 	int i;
 
-	switch(job){
-		case MAPID_BLACKSMITH: // Blacksmith
-		    for(i = 0; i < MAX_FAME_LIST; i++){
-				if(pc->smith_fame_list[i].id == char_id)
-				    return i + 1;
-			}
-			break;
-		case MAPID_ALCHEMIST: // Alchemist
-			for(i = 0; i < MAX_FAME_LIST; i++){
-				if(pc->chemist_fame_list[i].id == char_id)
-					return i + 1;
-			}
-			break;
-		case MAPID_TAEKWON: // Taekwon
-			for(i = 0; i < MAX_FAME_LIST; i++){
-				if(pc->taekwon_fame_list[i].id == char_id)
-					return i + 1;
-			}
-			break;
+	switch (ranktype) {
+	case RANKTYPE_BLACKSMITH:
+		for (i = 0; i < MAX_FAME_LIST; i++) {
+			if (pc->smith_fame_list[i].id == char_id)
+				return i + 1;
+		}
+		break;
+	case RANKTYPE_ALCHEMIST:
+		for (i = 0; i < MAX_FAME_LIST; i++) {
+			if (pc->chemist_fame_list[i].id == char_id)
+				return i + 1;
+		}
+		break;
+	case RANKTYPE_TAEKWON:
+		for (i = 0; i < MAX_FAME_LIST; i++) {
+			if (pc->taekwon_fame_list[i].id == char_id)
+				return i + 1;
+		}
+		break;
+	case RANKTYPE_PK: // Not implemented
+		FALLTHROUGH
+	default:
+		Assert_ret(0);
 	}
 
 	return 0;
+}
+
+/**
+ * Returns the appropriate fame list type for the given job.
+ *
+ * @param job_mapid The job (in MapID format)
+ * @return the appropriate fame list type (@see enum fame_list_type).
+ * @retval RANKTYPE_UNKNOWN if no appropriate type exists.
+ */
+int pc_famelist_type(uint16 job_mapid) {
+	switch (job_mapid & MAPID_UPPERMASK) {
+	case MAPID_BLACKSMITH:
+		return RANKTYPE_BLACKSMITH;
+	case MAPID_ALCHEMIST:
+		return RANKTYPE_ALCHEMIST;
+	case MAPID_TAEKWON:
+		return RANKTYPE_TAEKWON;
+	default:
+		return RANKTYPE_UNKNOWN;
+	}
 }
 
 int pc_setrestartvalue(struct map_session_data *sd,int type) {
@@ -711,8 +769,8 @@ int pc_equippoint(struct map_session_data *sd,int n)
 	 || sd->inventory_data[n]->look == W_1HAXE
 	) {
 		if (pc->checkskill(sd,AS_LEFT) > 0
-		 || (sd->class_&MAPID_UPPERMASK) == MAPID_ASSASSIN
-		 || (sd->class_&MAPID_UPPERMASK) == MAPID_KAGEROUOBORO
+		 || (sd->job & MAPID_UPPERMASK) == MAPID_ASSASSIN
+		 || (sd->job & MAPID_UPPERMASK) == MAPID_KAGEROUOBORO
 		) {
 			//Kagerou and Oboro can dual wield daggers. [Rytech]
 			if( ep == EQP_HAND_R )
@@ -887,7 +945,7 @@ bool pc_can_Adopt(struct map_session_data *p1_sd, struct map_session_data *p2_sd
 		return false;
 	}
 
-	if( !( ( b_sd->status.class_ >= JOB_NOVICE && b_sd->status.class_ <= JOB_THIEF ) || b_sd->status.class_ == JOB_SUPER_NOVICE ) )
+	if (!(b_sd->status.class >= JOB_NOVICE && b_sd->status.class <= JOB_THIEF) && b_sd->status.class != JOB_SUPER_NOVICE)
 		return false;
 
 	return true;
@@ -898,7 +956,7 @@ bool pc_can_Adopt(struct map_session_data *p1_sd, struct map_session_data *p2_sd
  *------------------------------------------*/
 bool pc_adoption(struct map_session_data *p1_sd, struct map_session_data *p2_sd, struct map_session_data *b_sd)
 {
-	int job, joblevel;
+	int class, joblevel;
 	unsigned int jobexp;
 
 	if( !pc->can_Adopt(p1_sd, p2_sd, b_sd) )
@@ -909,9 +967,9 @@ bool pc_adoption(struct map_session_data *p1_sd, struct map_session_data *p2_sd,
 	joblevel = b_sd->status.job_level;
 	jobexp = b_sd->status.job_exp;
 
-	job = pc->mapid2jobid(b_sd->class_|JOBL_BABY, b_sd->status.sex);
-	if( job != -1 && !pc->jobchange(b_sd, job, 0) )
-	{ // Success, proceed to configure parents and baby skills
+	class = pc->mapid2jobid(b_sd->job | JOBL_BABY, b_sd->status.sex);
+	if (class != -1 && !pc->jobchange(b_sd, class, 0)) {
+		// Success, proceed to configure parents and baby skills
 		p1_sd->status.child = b_sd->status.char_id;
 		p2_sd->status.child = b_sd->status.char_id;
 		b_sd->status.father = p1_sd->status.char_id;
@@ -972,12 +1030,11 @@ int pc_isequip(struct map_session_data *sd,int n)
 		return 0;
 
 	if ( item->equip & EQP_AMMO ) {
-		if ( (sd->state.active && !pc_iscarton(sd)) // check if sc data is already loaded.
-			&& (sd->status.class_ == JOB_GENETIC_T || sd->status.class_ == JOB_GENETIC) ) {
+		if (sd->state.active && !pc_iscarton(sd) && (sd->job & MAPID_THIRDMASK) == MAPID_GENETIC) { // check if sc data is already loaded.
 			clif->msgtable(sd, MSG_ITEM_NEED_CART);
 			return 0;
 		}
-		if ( !pc_ismadogear(sd) && (sd->status.class_ == JOB_MECHANIC_T || sd->status.class_ == JOB_MECHANIC) ) {
+		if (!pc_ismadogear(sd) && (sd->job & MAPID_THIRDMASK) == MAPID_MECHANIC) {
 			clif->msgtable(sd, MSG_ITEM_NEED_MADO);
 			return 0;
 		}
@@ -1014,14 +1071,26 @@ int pc_isequip(struct map_session_data *sd,int n)
 		}
 	}
 	//Not equipable by class. [Skotlex]
-	if (!(1ULL<<(sd->class_&MAPID_BASEMASK)&item->class_base[(sd->class_&JOBL_2_1)?1:((sd->class_&JOBL_2_2)?2:0)]))
+	if (((1ULL<<(sd->job & MAPID_BASEMASK)) & item->class_base[(sd->job & JOBL_2_1) != 0 ? 1 : ((sd->job & JOBL_2_2) != 0 ? 2 : 0)]) == 0)
 		return 0;
 	//Not usable by upper class. [Inkfish]
 	while( 1 ) {
-		if( item->class_upper&ITEMUPPER_NORMAL && !(sd->class_&(JOBL_UPPER|JOBL_THIRD|JOBL_BABY)) ) break;
-		if( item->class_upper&ITEMUPPER_UPPER  &&   sd->class_&(JOBL_UPPER|JOBL_THIRD)            ) break;
-		if( item->class_upper&ITEMUPPER_BABY   &&   sd->class_&JOBL_BABY                          ) break;
-		if( item->class_upper&ITEMUPPER_THIRD  &&   sd->class_&JOBL_THIRD                         ) break;
+		if ((item->class_upper & ITEMUPPER_NORMAL) != 0) {
+			if ((sd->job & (JOBL_UPPER|JOBL_THIRD|JOBL_BABY)) == 0)
+				break;
+		}
+		if ((item->class_upper & ITEMUPPER_UPPER) != 0) {
+			if ((sd->job & (JOBL_UPPER|JOBL_THIRD)) != 0)
+				break;
+		}
+		if ((item->class_upper & ITEMUPPER_BABY) != 0) {
+			if ((sd->job & JOBL_BABY) != 0)
+				break;
+		}
+		if ((item->class_upper & ITEMUPPER_THIRD) != 0) {
+			if ((sd->job & JOBL_THIRD) != 0)
+				break;
+		}
 		return 0;
 	}
 
@@ -1075,13 +1144,16 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 	}
 
 	//Set the map-server used job id. [Skotlex]
-	i = pc->jobid2mapid(sd->status.class_);
-	if (i == -1) { //Invalid class?
-		ShowError("pc_authok: Invalid class %d for player %s (%d:%d). Class was changed to novice.\n", sd->status.class_, sd->status.name, sd->status.account_id, sd->status.char_id);
-		sd->status.class_ = JOB_NOVICE;
-		sd->class_ = MAPID_NOVICE;
-	} else
-		sd->class_ = i;
+	{
+		int job = pc->jobid2mapid(sd->status.class);
+		if (job == -1) {
+			ShowError("pc_authok: Invalid class %d for player %s (%d:%d). Class was changed to novice.\n", sd->status.class, sd->status.name, sd->status.account_id, sd->status.char_id);
+			sd->status.class = JOB_NOVICE;
+			sd->job = MAPID_NOVICE;
+		} else {
+			sd->job = job;
+		}
+	}
 
 	// Checks and fixes to character status data, that are required
 	// in case of configuration change or stuff, which cannot be
@@ -1162,7 +1234,7 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 	sd->sc.option = sd->status.option; //This is the actual option used in battle.
 
 	//Set here because we need the inventory data for weapon sprite parsing.
-	status->set_viewdata(&sd->bl, sd->status.class_);
+	status->set_viewdata(&sd->bl, sd->status.class);
 	unit->dataset(&sd->bl);
 
 	sd->guild_x = -1;
@@ -1338,7 +1410,7 @@ int pc_reg_received(struct map_session_data *sd)
 	// Cooking Exp
 	sd->cook_mastery = pc_readglobalreg(sd,script->add_str("COOK_MASTERY"));
 
-	if( (sd->class_&MAPID_BASEMASK) == MAPID_TAEKWON ) {
+	if ((sd->job & MAPID_BASEMASK) == MAPID_TAEKWON) {
 		// Better check for class rather than skill to prevent "skill resets" from unsetting this
 		sd->mission_mobid = pc_readglobalreg(sd,script->add_str("TK_MISSION_ID"));
 		sd->mission_count = pc_readglobalreg(sd,script->add_str("TK_MISSION_COUNT"));
@@ -1420,7 +1492,7 @@ int pc_reg_received(struct map_session_data *sd)
 	}
 
 	if (pc_isinvisible(sd)) {
-		sd->vd.class_ = INVISIBLE_CLASS;
+		sd->vd.class = INVISIBLE_CLASS;
 		clif->message(sd->fd, msg_sd(sd,11)); // Invisible: On
 		// decrement the number of pvp players on the map
 		map->list[sd->bl.m].users_pvp--;
@@ -1467,17 +1539,17 @@ int pc_calc_skillpoint(struct map_session_data* sd) {
 int pc_calc_skilltree(struct map_session_data *sd)
 {
 	int i,id=0,flag;
-	int c=0;
+	int class = 0, classidx = 0;
 
 	nullpo_ret(sd);
 	i = pc->calc_skilltree_normalize_job(sd);
-	c = pc->mapid2jobid(i, sd->status.sex);
-	if( c == -1 )
-	{ //Unable to normalize job??
+	class = pc->mapid2jobid(i, sd->status.sex);
+	if (class == -1) {
+		//Unable to normalize job??
 		ShowError("pc_calc_skilltree: Unable to normalize job %d for character %s (%d:%d)\n", i, sd->status.name, sd->status.account_id, sd->status.char_id);
 		return 1;
 	}
-	c = pc->class2idx(c);
+	classidx = pc->class2idx(class);
 
 	for( i = 0; i < MAX_SKILL; i++ ) {
 		if( sd->status.skill[i].flag != SKILL_FLAG_PLAGIARIZED && sd->status.skill[i].flag != SKILL_FLAG_PERM_GRANTED ) //Don't touch these
@@ -1486,10 +1558,10 @@ int pc_calc_skilltree(struct map_session_data *sd)
 		if( sd->status.skill[i].flag == SKILL_FLAG_PERMANENT ) {
 			switch( skill->dbs->db[i].nameid ) {
 				case NV_TRICKDEAD:
-					if( (sd->class_&(MAPID_BASEMASK|JOBL_2)) != MAPID_NOVICE ) {
-							sd->status.skill[i].id = 0;
-							sd->status.skill[i].lv = 0;
-							sd->status.skill[i].flag = 0;
+					if ((sd->job & MAPID_UPPERMASK) != MAPID_NOVICE) {
+						sd->status.skill[i].id = 0;
+						sd->status.skill[i].lv = 0;
+						sd->status.skill[i].flag = 0;
 					}
 					break;
 			}
@@ -1559,16 +1631,16 @@ int pc_calc_skilltree(struct map_session_data *sd)
 
 	do {
 		flag = 0;
-		for (i = 0; i < MAX_SKILL_TREE && (id = pc->skill_tree[c][i].id) > 0; i++) {
-			int idx = pc->skill_tree[c][i].idx;
+		for (i = 0; i < MAX_SKILL_TREE && (id = pc->skill_tree[classidx][i].id) > 0; i++) {
+			int idx = pc->skill_tree[classidx][i].idx;
 			bool satisfied = true;
 			if (sd->status.skill[idx].id > 0)
 				continue; //Skill already known.
 
 			if (!battle_config.skillfree) {
 				int j;
-				for (j = 0; j < VECTOR_LENGTH(pc->skill_tree[c][i].need); j++) {
-					struct skill_tree_requirement *req = &VECTOR_INDEX(pc->skill_tree[c][i].need, j);
+				for (j = 0; j < VECTOR_LENGTH(pc->skill_tree[classidx][i].need); j++) {
+					struct skill_tree_requirement *req = &VECTOR_INDEX(pc->skill_tree[classidx][i].need, j);
 					int level;
 					if (sd->status.skill[req->idx].id == 0
 					 || sd->status.skill[req->idx].flag == SKILL_FLAG_TEMPORARY
@@ -1583,8 +1655,8 @@ int pc_calc_skilltree(struct map_session_data *sd)
 						break;
 					}
 				}
-				if (sd->status.job_level < (int)pc->skill_tree[c][i].joblv) {
-					int jobid = pc->mapid2jobid(sd->class_, sd->status.sex); // need to get its own skilltree
+				if (sd->status.job_level < (int)pc->skill_tree[classidx][i].joblv) {
+					int jobid = pc->mapid2jobid(sd->job, sd->status.sex); // need to get its own skilltree
 					if (jobid > -1) {
 						if (!pc->skill_tree[pc->class2idx(jobid)][i].inherited)
 							satisfied = false; // job level requirement wasn't satisfied
@@ -1615,16 +1687,17 @@ int pc_calc_skilltree(struct map_session_data *sd)
 	} while(flag);
 
 	//
-	if( c > 0 && (sd->class_&MAPID_UPPERMASK) == MAPID_TAEKWON && sd->status.base_level >= 90 && sd->status.skill_point == 0 && pc->famerank(sd->status.char_id, MAPID_TAEKWON) )
-	{
-		/* Taekwon Ranger Bonus Skill Tree
+	if (classidx > 0 && (sd->job & MAPID_UPPERMASK) == MAPID_TAEKWON
+	 && sd->status.base_level >= 90 && sd->status.skill_point == 0
+	 && pc->fame_rank(sd->status.char_id, RANKTYPE_TAEKWON) > 0) {
+		/* Taekwon Ranker Bonus Skill Tree
 		============================================
 		- Grant All Taekwon Tree, but only as Bonus Skills in case they drop from ranking.
 		- (c > 0) to avoid grant Novice Skill Tree in case of Skill Reset (need more logic)
 		- (sd->status.skill_point == 0) to wait until all skill points are asigned to avoid problems with Job Change quest. */
 
-		for( i = 0; i < MAX_SKILL_TREE && (id = pc->skill_tree[c][i].id) > 0; i++ ) {
-			int idx = pc->skill_tree[c][i].idx;
+		for (i = 0; i < MAX_SKILL_TREE && (id = pc->skill_tree[classidx][i].id) > 0; i++) {
+			int idx = pc->skill_tree[classidx][i].idx;
 			if( (skill->dbs->db[idx].inf2&(INF2_QUEST_SKILL|INF2_WEDDING_SKILL)) )
 				continue; //Do not include Quest/Wedding skills.
 
@@ -1635,7 +1708,7 @@ int pc_calc_skilltree(struct map_session_data *sd)
 				sd->status.skill[idx].flag = SKILL_FLAG_REPLACED_LV_0 + sd->status.skill[idx].lv; // Remember original level
 			}
 
-			sd->status.skill[idx].lv = skill->tree_get_max(id, sd->status.class_);
+			sd->status.skill[idx].lv = skill->tree_get_max(id, sd->status.class);
 		}
 	}
 
@@ -1688,7 +1761,7 @@ void pc_check_skilltree(struct map_session_data *sd, int skill_id)
 				continue;
 
 			if (sd->status.job_level < (int)pc->skill_tree[c][i].joblv) {
-				int jobid = pc->mapid2jobid(sd->class_, sd->status.sex); // need to get its own skilltree
+				int jobid = pc->mapid2jobid(sd->job, sd->status.sex); // need to get its own skilltree
 				if (jobid > -1) {
 					if (!pc->skill_tree[pc->class2idx(jobid)][i].inherited)
 						continue;
@@ -1735,12 +1808,12 @@ int pc_clean_skilltree(struct map_session_data *sd)
 int pc_calc_skilltree_normalize_job(struct map_session_data *sd)
 {
 	int skill_point, novice_skills;
-	int c;
+	uint16 job;
 
 	nullpo_ret(sd);
-	c = sd->class_;
+	job = sd->job;
 	if (!battle_config.skillup_limit || pc_has_permission(sd, PC_PERM_ALL_SKILL))
-		return c;
+		return job;
 
 	skill_point = pc->calc_skillpoint(sd);
 
@@ -1748,19 +1821,17 @@ int pc_calc_skilltree_normalize_job(struct map_session_data *sd)
 
 	sd->sktree.second = sd->sktree.third = 0;
 
-	// limit 1st class and above to novice job levels
-	if(skill_point < novice_skills && (sd->class_&MAPID_BASEMASK) != MAPID_SUMMONER) {
-		c = MAPID_NOVICE;
-	}
-	// limit 2nd class and above to first class job levels (super novices are exempt)
-	else if ((sd->class_&JOBL_2) && (sd->class_&MAPID_UPPERMASK) != MAPID_SUPER_NOVICE)
-	{
+	if (skill_point < novice_skills && (sd->job & MAPID_BASEMASK) != MAPID_SUMMONER) {
+		// limit 1st class and above to novice job levels
+		job = MAPID_NOVICE;
+	} else if ((sd->job & JOBL_2) != 0 && (sd->job & MAPID_UPPERMASK) != MAPID_SUPER_NOVICE) {
+		// limit 2nd class and above to first class job levels (super novices are exempt)
 		// regenerate change_level_2nd
 		if (sd->change_level_2nd == 0) {
-			if (sd->class_&JOBL_THIRD) {
+			if ((sd->job & JOBL_THIRD) != 0) {
 				// if neither 2nd nor 3rd jobchange levels are known, we have to assume a default for 2nd
 				if (sd->change_level_3rd == 0) {
-					sd->change_level_2nd = pc->max_level[pc->class2idx(pc->mapid2jobid(sd->class_&MAPID_UPPERMASK, sd->status.sex))][1];
+					sd->change_level_2nd = pc->max_level[pc->class2idx(pc->mapid2jobid(sd->job & MAPID_UPPERMASK, sd->status.sex))][1];
 				} else {
 					sd->change_level_2nd = 1 + skill_point + sd->status.skill_point
 						- (sd->status.job_level - 1)
@@ -1778,9 +1849,9 @@ int pc_calc_skilltree_normalize_job(struct map_session_data *sd)
 		}
 
 		if (skill_point < novice_skills + (sd->change_level_2nd - 1)) {
-			c &= MAPID_BASEMASK;
+			job &= MAPID_BASEMASK;
 			sd->sktree.second = ( novice_skills + (sd->change_level_2nd - 1) ) - skill_point;
-		} else if(sd->class_&JOBL_THIRD) { // limit 3rd class to 2nd class/trans job levels
+		} else if ((sd->job & JOBL_THIRD) != 0) { // limit 3rd class to 2nd class/trans job levels
 			// regenerate change_level_3rd
 			if (sd->change_level_3rd == 0) {
 					sd->change_level_3rd = 1 + skill_point + sd->status.skill_point
@@ -1791,16 +1862,16 @@ int pc_calc_skilltree_normalize_job(struct map_session_data *sd)
 			}
 
 			if (skill_point < novice_skills + (sd->change_level_2nd - 1) + (sd->change_level_3rd - 1)) {
-				c &= MAPID_UPPERMASK;
+				job &= MAPID_UPPERMASK;
 				sd->sktree.third = (novice_skills + (sd->change_level_2nd - 1) + (sd->change_level_3rd - 1)) - skill_point;
 			}
 		}
 	}
 
 	// restore non-limiting flags
-	c |= sd->class_&(JOBL_UPPER|JOBL_BABY);
+	job |= sd->job & (JOBL_UPPER|JOBL_BABY);
 
-	return c;
+	return job;
 }
 
 /*==========================================
@@ -1841,38 +1912,40 @@ int pc_updateweightstatus(struct map_session_data *sd)
 	return 0;
 }
 
-int pc_disguise(struct map_session_data *sd, int class_) {
+int pc_disguise(struct map_session_data *sd, int class)
+{
 	nullpo_ret(sd);
-	if (class_ == -1 && sd->disguise == -1)
+	if (class == -1 && sd->disguise == -1)
 		return 0;
-	if (class_ >= 0 && sd->disguise == class_)
+	if (class >= 0 && sd->disguise == class)
 		return 0;
 
 	if (pc_isinvisible(sd)) { //Character is invisible. Stealth class-change. [Skotlex]
-		sd->disguise = class_; //viewdata is set on uncloaking.
+		sd->disguise = class; //viewdata is set on uncloaking.
 		return 2;
 	}
 
 	if (sd->bl.prev != NULL) {
-		if( class_ == -1 && sd->disguise == sd->status.class_ ) {
+		if (class == -1 && sd->disguise == sd->status.class) {
 			clif->clearunit_single(-sd->bl.id,CLR_OUTSIGHT,sd->fd);
-		} else if ( class_ != sd->status.class_ ) {
+		} else if (class != sd->status.class) {
 			pc_stop_walking(sd, STOPWALKING_FLAG_NONE);
 			clif->clearunit_area(&sd->bl, CLR_OUTSIGHT);
 		}
 	}
 
-	if (class_ == -1) {
+	if (class == -1) {
 		sd->disguise = -1;
-		class_ = sd->status.class_;
-	} else
-		sd->disguise = class_;
+		class = sd->status.class;
+	} else {
+		sd->disguise = class;
+	}
 
-	status->set_viewdata(&sd->bl, class_);
+	status->set_viewdata(&sd->bl, class);
 	clif->changeoption(&sd->bl);
 	// We need to update the client so it knows that a costume is being used
 	if( sd->sc.option&OPTION_COSTUME ) {
-		clif->changelook(&sd->bl,LOOK_BASE,sd->vd.class_);
+		clif->changelook(&sd->bl, LOOK_BASE, sd->vd.class);
 		clif->changelook(&sd->bl,LOOK_WEAPON,0);
 		clif->changelook(&sd->bl,LOOK_SHIELD,0);
 		clif->changelook(&sd->bl,LOOK_CLOTHES_COLOR,sd->vd.cloth_color);
@@ -1880,7 +1953,7 @@ int pc_disguise(struct map_session_data *sd, int class_) {
 
 	if (sd->bl.prev != NULL) {
 		clif->spawn(&sd->bl);
-		if (class_ == sd->status.class_ && pc_iscarton(sd)) {
+		if (class == sd->status.class && pc_iscarton(sd)) {
 			//It seems the cart info is lost on undisguise.
 			clif->cartlist(sd);
 			clif->updatestatus(sd,SP_CARTINFO);
@@ -4852,12 +4925,12 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 	/**
 	 * Only Rune Knights may use runes
 	 **/
-	if( itemdb_is_rune(nameid) && (sd->class_&MAPID_THIRDMASK) != MAPID_RUNE_KNIGHT )
+	if (itemdb_is_rune(nameid) && (sd->job & MAPID_THIRDMASK) != MAPID_RUNE_KNIGHT)
 		return 0;
 	/**
 	 * Only GCross may use poisons
 	 **/
-	else if( itemdb_is_poison(nameid) && (sd->class_&MAPID_THIRDMASK) != MAPID_GUILLOTINE_CROSS )
+	else if (itemdb_is_poison(nameid) && (sd->job & MAPID_THIRDMASK) != MAPID_GUILLOTINE_CROSS)
 		return 0;
 
 	if( item->package || item->group ) {
@@ -4886,31 +4959,47 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 	}
 
 	//Not equipable by class. [Skotlex]
-	if (!(
-		(1ULL<<(sd->class_&MAPID_BASEMASK)) &
-		(item->class_base[(sd->class_&JOBL_2_1) ? 1 : ((sd->class_&JOBL_2_2) ? 2 : 0)])
-	))
+	if (((1ULL << (sd->job & MAPID_BASEMASK)) & (item->class_base[(sd->job & JOBL_2_1) ? 1 : ((sd->job & JOBL_2_2) ? 2 : 0)])) == 0)
 		return 0;
 
 	//Not usable by upper class. [Haru]
 	while( 1 ) {
 		// Normal classes (no upper, no baby, no third classes)
-		if( item->class_upper&ITEMUPPER_NORMAL && !(sd->class_&(JOBL_UPPER|JOBL_THIRD|JOBL_BABY)) ) break;
+		if ((item->class_upper & ITEMUPPER_NORMAL) != 0) {
+			if ((sd->job & (JOBL_UPPER|JOBL_THIRD|JOBL_BABY)) == 0)
+				break;
+		}
+		if ((item->class_upper & ITEMUPPER_UPPER) != 0) {
 #ifdef RENEWAL
-		// Upper classes (no third classes)
-		if( item->class_upper&ITEMUPPER_UPPER && sd->class_&JOBL_UPPER && !(sd->class_&JOBL_THIRD) ) break;
+			// Upper classes (no third classes)
+			if ((sd->job & JOBL_UPPER) != 0 && (sd->job&JOBL_THIRD) == 0)
+				break;
 #else
-		//pre-re has no use for the extra, so we maintain the previous for backwards compatibility
-		if( item->class_upper&ITEMUPPER_UPPER && sd->class_&(JOBL_UPPER|JOBL_THIRD) ) break;
+			//pre-re has no use for the extra, so we maintain the previous for backwards compatibility
+			if ((sd->job & (JOBL_UPPER|JOBL_THIRD)) != 0)
+				break;
 #endif
+		}
 		// Baby classes (no third classes)
-		if( item->class_upper&ITEMUPPER_BABY && sd->class_&JOBL_BABY && !(sd->class_&JOBL_THIRD) ) break;
+		if ((item->class_upper & ITEMUPPER_BABY) != 0) {
+			if ((sd->job & JOBL_BABY) != 0 && (sd->job&JOBL_THIRD) == 0)
+				break;
+		}
 		// Third classes (no upper, no baby classes)
-		if( item->class_upper&ITEMUPPER_THIRD && sd->class_&JOBL_THIRD && !(sd->class_&(JOBL_UPPER|JOBL_BABY)) ) break;
+		if ((item->class_upper & ITEMUPPER_THIRD) != 0) {
+			if ((sd->job & JOBL_THIRD) != 0 && (sd->job & (JOBL_UPPER|JOBL_BABY)) == 0)
+				break;
+		}
 		// Upper third classes
-		if( item->class_upper&ITEMUPPER_THURDUPPER && sd->class_&JOBL_THIRD && sd->class_&JOBL_UPPER ) break;
+		if ((item->class_upper & ITEMUPPER_THURDUPPER) != 0) {
+			if ((sd->job & JOBL_THIRD) != 0 && (sd->job & JOBL_UPPER) != 0)
+				break;
+		}
 		// Baby third classes
-		if( item->class_upper&ITEMUPPER_THIRDBABY && sd->class_&JOBL_THIRD && sd->class_&JOBL_BABY ) break;
+		if ((item->class_upper & ITEMUPPER_THIRDBABY) != 0) {
+			if ((sd->job & JOBL_THIRD) != 0 && (sd->job & JOBL_BABY) != 0)
+				break;
+		}
 		return 0;
 	}
 
@@ -5052,9 +5141,8 @@ int pc_useitem(struct map_session_data *sd,int n) {
 		}
 	}
 
-	if(sd->status.inventory[n].card[0]==CARD0_CREATE &&
-		pc->famerank(MakeDWord(sd->status.inventory[n].card[2],sd->status.inventory[n].card[3]), MAPID_ALCHEMIST))
-	{
+	if (sd->status.inventory[n].card[0] == CARD0_CREATE
+	 && pc->fame_rank(MakeDWord(sd->status.inventory[n].card[2], sd->status.inventory[n].card[3]), RANKTYPE_ALCHEMIST) > 0) {
 		script->potion_flag = 2; // Famous player's potions have 50% more efficiency
 		if (sd->sc.data[SC_SOULLINK] && sd->sc.data[SC_SOULLINK]->val2 == SL_ROGUE)
 			script->potion_flag = 3; //Even more effective potions.
@@ -5863,10 +5951,9 @@ int pc_checkequip(struct map_session_data *sd,int pos)
  * Convert's from the client's lame Job ID system
  * to the map server's 'makes sense' system. [Skotlex]
  *------------------------------------------*/
-int pc_jobid2mapid(unsigned short b_class)
+int pc_jobid2mapid(int16 class)
 {
-	switch(b_class)
-	{
+	switch (class) {
 	//Novice And 1-1 Jobs
 		case JOB_NOVICE:                return MAPID_NOVICE;
 		case JOB_SWORDMAN:              return MAPID_SWORDMAN;
@@ -6006,10 +6093,9 @@ int pc_jobid2mapid(unsigned short b_class)
 }
 
 //Reverts the map-style class id to the client-style one.
-int pc_mapid2jobid(unsigned short class_, int sex)
+int pc_mapid2jobid(uint16 job, int sex)
 {
-	switch(class_)
-	{
+	switch (job) {
 	//Novice And 1-1 Jobs
 		case MAPID_NOVICE:                return JOB_NOVICE;
 		case MAPID_SWORDMAN:              return JOB_SWORDMAN;
@@ -6144,9 +6230,9 @@ int pc_mapid2jobid(unsigned short class_, int sex)
 /*====================================================
  * This function return the name of the job (by [Yor])
  *----------------------------------------------------*/
-const char* job_name(int class_)
+const char *job_name(int class)
 {
-	switch (class_) {
+	switch (class) {
 	case JOB_NOVICE:   // 550
 	case JOB_SWORDMAN: // 551
 	case JOB_MAGE:     // 552
@@ -6154,7 +6240,7 @@ const char* job_name(int class_)
 	case JOB_ACOLYTE:  // 554
 	case JOB_MERCHANT: // 555
 	case JOB_THIEF:    // 556
-		return msg_txt(550 - JOB_NOVICE+class_);
+		return msg_txt(550 - JOB_NOVICE + class);
 
 	case JOB_KNIGHT:     // 557
 	case JOB_PRIEST:     // 558
@@ -6162,7 +6248,7 @@ const char* job_name(int class_)
 	case JOB_BLACKSMITH: // 560
 	case JOB_HUNTER:     // 561
 	case JOB_ASSASSIN:   // 562
-		return msg_txt(557 - JOB_KNIGHT+class_);
+		return msg_txt(557 - JOB_KNIGHT + class);
 
 	case JOB_KNIGHT2:
 		return msg_txt(557);
@@ -6174,7 +6260,7 @@ const char* job_name(int class_)
 	case JOB_ALCHEMIST: // 567
 	case JOB_BARD:      // 568
 	case JOB_DANCER:    // 569
-		return msg_txt(563 - JOB_CRUSADER+class_);
+		return msg_txt(563 - JOB_CRUSADER + class);
 
 	case JOB_CRUSADER2:
 		return msg_txt(563);
@@ -6184,7 +6270,7 @@ const char* job_name(int class_)
 	case JOB_GUNSLINGER:   // 572
 	case JOB_NINJA:        // 573
 	case JOB_XMAS:         // 574
-		return msg_txt(570 - JOB_WEDDING+class_);
+		return msg_txt(570 - JOB_WEDDING + class);
 
 	case JOB_SUMMER:
 		return msg_txt(621);
@@ -6196,7 +6282,7 @@ const char* job_name(int class_)
 	case JOB_ACOLYTE_HIGH:  // 579
 	case JOB_MERCHANT_HIGH: // 580
 	case JOB_THIEF_HIGH:    // 581
-		return msg_txt(575 - JOB_NOVICE_HIGH+class_);
+		return msg_txt(575 - JOB_NOVICE_HIGH + class);
 
 	case JOB_LORD_KNIGHT:    // 582
 	case JOB_HIGH_PRIEST:    // 583
@@ -6204,7 +6290,7 @@ const char* job_name(int class_)
 	case JOB_WHITESMITH:     // 585
 	case JOB_SNIPER:         // 586
 	case JOB_ASSASSIN_CROSS: // 587
-		return msg_txt(582 - JOB_LORD_KNIGHT+class_);
+		return msg_txt(582 - JOB_LORD_KNIGHT + class);
 
 	case JOB_LORD_KNIGHT2:
 		return msg_txt(582);
@@ -6216,7 +6302,7 @@ const char* job_name(int class_)
 	case JOB_CREATOR:   // 592
 	case JOB_CLOWN:     // 593
 	case JOB_GYPSY:     // 594
-		return msg_txt(588 - JOB_PALADIN + class_);
+		return msg_txt(588 - JOB_PALADIN + class);
 
 	case JOB_PALADIN2:
 		return msg_txt(588);
@@ -6228,7 +6314,7 @@ const char* job_name(int class_)
 	case JOB_BABY_ACOLYTE:  // 599
 	case JOB_BABY_MERCHANT: // 600
 	case JOB_BABY_THIEF:    // 601
-		return msg_txt(595 - JOB_BABY + class_);
+		return msg_txt(595 - JOB_BABY + class);
 
 	case JOB_BABY_KNIGHT:     // 602
 	case JOB_BABY_PRIEST:     // 603
@@ -6236,7 +6322,7 @@ const char* job_name(int class_)
 	case JOB_BABY_BLACKSMITH: // 605
 	case JOB_BABY_HUNTER:     // 606
 	case JOB_BABY_ASSASSIN:   // 607
-		return msg_txt(602 - JOB_BABY_KNIGHT + class_);
+		return msg_txt(602 - JOB_BABY_KNIGHT + class);
 
 	case JOB_BABY_KNIGHT2:
 		return msg_txt(602);
@@ -6248,7 +6334,7 @@ const char* job_name(int class_)
 	case JOB_BABY_ALCHEMIST: // 612
 	case JOB_BABY_BARD:      // 613
 	case JOB_BABY_DANCER:    // 614
-		return msg_txt(608 - JOB_BABY_CRUSADER + class_);
+		return msg_txt(608 - JOB_BABY_CRUSADER + class);
 
 	case JOB_BABY_CRUSADER2:
 		return msg_txt(608);
@@ -6267,7 +6353,7 @@ const char* job_name(int class_)
 	case JOB_GANGSI:         // 622
 	case JOB_DEATH_KNIGHT:   // 623
 	case JOB_DARK_COLLECTOR: // 624
-		return msg_txt(622 - JOB_GANGSI+class_);
+		return msg_txt(622 - JOB_GANGSI + class);
 
 	case JOB_RUNE_KNIGHT:      // 625
 	case JOB_WARLOCK:          // 626
@@ -6275,7 +6361,7 @@ const char* job_name(int class_)
 	case JOB_ARCH_BISHOP:      // 628
 	case JOB_MECHANIC:         // 629
 	case JOB_GUILLOTINE_CROSS: // 630
-		return msg_txt(625 - JOB_RUNE_KNIGHT+class_);
+		return msg_txt(625 - JOB_RUNE_KNIGHT + class);
 
 	case JOB_RUNE_KNIGHT_T:      // 656
 	case JOB_WARLOCK_T:          // 657
@@ -6283,7 +6369,7 @@ const char* job_name(int class_)
 	case JOB_ARCH_BISHOP_T:      // 659
 	case JOB_MECHANIC_T:         // 660
 	case JOB_GUILLOTINE_CROSS_T: // 661
-		return msg_txt(656 - JOB_RUNE_KNIGHT_T+class_);
+		return msg_txt(656 - JOB_RUNE_KNIGHT_T + class);
 
 	case JOB_ROYAL_GUARD:   // 631
 	case JOB_SORCERER:      // 632
@@ -6292,7 +6378,7 @@ const char* job_name(int class_)
 	case JOB_SURA:          // 635
 	case JOB_GENETIC:       // 636
 	case JOB_SHADOW_CHASER: // 637
-		return msg_txt(631 - JOB_ROYAL_GUARD+class_);
+		return msg_txt(631 - JOB_ROYAL_GUARD + class);
 
 	case JOB_ROYAL_GUARD_T:   // 662
 	case JOB_SORCERER_T:      // 663
@@ -6301,7 +6387,7 @@ const char* job_name(int class_)
 	case JOB_SURA_T:          // 666
 	case JOB_GENETIC_T:       // 667
 	case JOB_SHADOW_CHASER_T: // 668
-		return msg_txt(662 - JOB_ROYAL_GUARD_T+class_);
+		return msg_txt(662 - JOB_ROYAL_GUARD_T + class);
 
 	case JOB_RUNE_KNIGHT2:
 		return msg_txt(625);
@@ -6340,7 +6426,7 @@ const char* job_name(int class_)
 	case JOB_BABY_SURA:     // 648
 	case JOB_BABY_GENETIC:  // 649
 	case JOB_BABY_CHASER:   // 650
-		return msg_txt(638 - JOB_BABY_RUNE+class_);
+		return msg_txt(638 - JOB_BABY_RUNE + class);
 
 	case JOB_BABY_RUNE2:
 		return msg_txt(638);
@@ -6356,11 +6442,11 @@ const char* job_name(int class_)
 
 	case JOB_SUPER_NOVICE_E: // 651
 	case JOB_SUPER_BABY_E:   // 652
-		return msg_txt(651 - JOB_SUPER_NOVICE_E+class_);
+		return msg_txt(651 - JOB_SUPER_NOVICE_E + class);
 
 	case JOB_KAGEROU: // 653
 	case JOB_OBORO:   // 654
-		return msg_txt(653 - JOB_KAGEROU+class_);
+		return msg_txt(653 - JOB_KAGEROU + class);
 
 	case JOB_REBELLION:
 		return msg_txt(655);
@@ -6605,7 +6691,7 @@ int pc_checkbaselevelup(struct map_session_data *sd) {
 	status_calc_pc(sd,SCO_FORCE);
 	status_percent_heal(&sd->bl,100,100);
 
-	if((sd->class_&MAPID_UPPERMASK) == MAPID_SUPER_NOVICE) {
+	if ((sd->job & MAPID_UPPERMASK) == MAPID_SUPER_NOVICE) {
 		sc_start(NULL,&sd->bl,status->skill2sc(PR_KYRIE),100,1,skill->get_time(PR_KYRIE,1));
 		sc_start(NULL,&sd->bl,status->skill2sc(PR_IMPOSITIO),100,1,skill->get_time(PR_IMPOSITIO,1));
 		sc_start(NULL,&sd->bl,status->skill2sc(PR_MAGNIFICAT),100,1,skill->get_time(PR_MAGNIFICAT,1));
@@ -6613,7 +6699,7 @@ int pc_checkbaselevelup(struct map_session_data *sd) {
 		sc_start(NULL,&sd->bl,status->skill2sc(PR_SUFFRAGIUM),100,1,skill->get_time(PR_SUFFRAGIUM,1));
 		if (sd->state.snovice_dead_flag)
 			sd->state.snovice_dead_flag = 0; //Reenable steelbody resurrection on dead.
-	} else if( (sd->class_&MAPID_BASEMASK) == MAPID_TAEKWON ) {
+	} else if ((sd->job & MAPID_BASEMASK) == MAPID_TAEKWON) {
 		sc_start(NULL,&sd->bl,status->skill2sc(AL_INCAGI),100,10,600000);
 		sc_start(NULL,&sd->bl,status->skill2sc(AL_BLESSING),100,10,600000);
 	}
@@ -6837,12 +6923,12 @@ bool pc_gainexp(struct map_session_data *sd, struct block_list *src, unsigned in
  *------------------------------------------*/
 int pc_maxbaselv(const struct map_session_data *sd)
 {
-	return pc->max_level[pc->class2idx(sd->status.class_)][0];
+	return pc->max_level[pc->class2idx(sd->status.class)][0];
 }
 
 int pc_maxjoblv(const struct map_session_data *sd)
 {
-	return pc->max_level[pc->class2idx(sd->status.class_)][1];
+	return pc->max_level[pc->class2idx(sd->status.class)][1];
 }
 
 /*==========================================
@@ -6857,7 +6943,7 @@ unsigned int pc_nextbaseexp(const struct map_session_data *sd)
 	if (sd->status.base_level >= pc->maxbaselv(sd) || sd->status.base_level <= 0)
 		return 0;
 
-	return pc->exp_table[pc->class2idx(sd->status.class_)][0][sd->status.base_level-1];
+	return pc->exp_table[pc->class2idx(sd->status.class)][0][sd->status.base_level-1];
 }
 
 //Base exp needed for this level.
@@ -6866,7 +6952,7 @@ unsigned int pc_thisbaseexp(const struct map_session_data *sd)
 	if (sd->status.base_level > pc->maxbaselv(sd) || sd->status.base_level <= 1)
 		return 0;
 
-	return pc->exp_table[pc->class2idx(sd->status.class_)][0][sd->status.base_level-2];
+	return pc->exp_table[pc->class2idx(sd->status.class)][0][sd->status.base_level-2];
 }
 
 /*==========================================
@@ -6883,7 +6969,7 @@ unsigned int pc_nextjobexp(const struct map_session_data *sd)
 
 	if (sd->status.job_level >= pc->maxjoblv(sd) || sd->status.job_level <= 0)
 		return 0;
-	return pc->exp_table[pc->class2idx(sd->status.class_)][1][sd->status.job_level-1];
+	return pc->exp_table[pc->class2idx(sd->status.class)][1][sd->status.job_level-1];
 }
 
 //Job exp needed for this level.
@@ -6891,7 +6977,7 @@ unsigned int pc_thisjobexp(const struct map_session_data *sd)
 {
 	if (sd->status.job_level > pc->maxjoblv(sd) || sd->status.job_level <= 1)
 		return 0;
-	return pc->exp_table[pc->class2idx(sd->status.class_)][1][sd->status.job_level-2];
+	return pc->exp_table[pc->class2idx(sd->status.class)][1][sd->status.job_level-2];
 }
 
 /// Returns the value of the specified stat.
@@ -7122,13 +7208,14 @@ int pc_skillup(struct map_session_data *sd,uint16 skill_id) {
 	if( sd->status.skill_point > 0 &&
 		sd->status.skill[index].id &&
 		sd->status.skill[index].flag == SKILL_FLAG_PERMANENT && //Don't allow raising while you have granted skills. [Skotlex]
-		sd->status.skill[index].lv < skill->tree_get_max(skill_id, sd->status.class_) )
+		sd->status.skill[index].lv < skill->tree_get_max(skill_id, sd->status.class) )
 	{
 		sd->status.skill[index].lv++;
 		sd->status.skill_point--;
 		if( !skill->dbs->db[index].inf )
 			status_calc_pc(sd,SCO_NONE); // Only recalculate for passive skills.
-		else if( sd->status.skill_point == 0 && (sd->class_&MAPID_UPPERMASK) == MAPID_TAEKWON && sd->status.base_level >= 90 && pc->famerank(sd->status.char_id, MAPID_TAEKWON) )
+		else if (sd->status.skill_point == 0 && (sd->job & MAPID_UPPERMASK) == MAPID_TAEKWON
+		      && sd->status.base_level >= 90 && pc->fame_rank(sd->status.char_id, RANKTYPE_TAEKWON) > 0)
 			pc->calc_skilltree(sd); // Required to grant all TK Ranger skills.
 		else
 			pc->check_skilltree(sd, skill_id); // Check if a new skill can Lvlup
@@ -7184,8 +7271,8 @@ int pc_allskillup(struct map_session_data *sd)
 		}
 	} else {
 		int id;
-		for (i = 0; i < MAX_SKILL_TREE && (id=pc->skill_tree[pc->class2idx(sd->status.class_)][i].id) > 0; i++) {
-			int idx = pc->skill_tree[pc->class2idx(sd->status.class_)][i].idx;
+		for (i = 0; i < MAX_SKILL_TREE && (id=pc->skill_tree[pc->class2idx(sd->status.class)][i].id) > 0; i++) {
+			int idx = pc->skill_tree[pc->class2idx(sd->status.class)][i].idx;
 			int inf2 = skill->dbs->db[idx].inf2;
 			if (
 				(inf2&INF2_QUEST_SKILL && !battle_config.quest_skill_learn) ||
@@ -7195,7 +7282,7 @@ int pc_allskillup(struct map_session_data *sd)
 				continue; //Cannot be learned normally.
 
 			sd->status.skill[idx].id = id;
-			sd->status.skill[idx].lv = skill->tree_get_max(id, sd->status.class_); // celest
+			sd->status.skill[idx].lv = skill->tree_get_max(id, sd->status.class); // celest
 		}
 	}
 	status_calc_pc(sd,SCO_NONE);
@@ -7232,7 +7319,7 @@ int pc_resetlvl(struct map_session_data* sd,int type)
 		sd->status.int_=1;
 		sd->status.dex=1;
 		sd->status.luk=1;
-		if(sd->status.class_ == JOB_NOVICE_HIGH) {
+		if (sd->status.class == JOB_NOVICE_HIGH) {
 			sd->status.status_point=100; // not 88 [celest]
 			// give platinum skills upon changing
 			pc->skill(sd, NV_FIRSTAID, 1, SKILL_GRANT_PERMANENT);
@@ -7309,7 +7396,7 @@ int pc_resetstate(struct map_session_data* sd)
 			return 0;
 		}
 
-		sd->status.status_point = pc->statp[sd->status.base_level] + ((sd->class_&JOBL_UPPER) ? 52 : 0); // extra 52+48=100 stat points
+		sd->status.status_point = pc->statp[sd->status.base_level] + ((sd->job & JOBL_UPPER) != 0 ? 52 : 0); // extra 52+48=100 stat points
 	}
 	else
 	{
@@ -7367,7 +7454,7 @@ int pc_resetskill(struct map_session_data* sd, int flag)
 	int i, inf2, skill_point=0;
 	nullpo_ret(sd);
 
-	if( flag&PCRESETSKILL_CHSEX && (sd->class_&MAPID_UPPERMASK) != MAPID_BARDDANCER )
+	if (flag&PCRESETSKILL_CHSEX && (sd->job & MAPID_UPPERMASK) != MAPID_BARDDANCER)
 		return 0;
 
 	if( !(flag&PCRESETSKILL_RECOUNT) ) { //Remove stuff lost when resetting skills.
@@ -7375,7 +7462,7 @@ int pc_resetskill(struct map_session_data* sd, int flag)
 		/**
 		 * It has been confirmed on official server that when you reset skills with a ranked tweakwon your skills are not reset (because you have all of them anyway)
 		 **/
-		if( (sd->class_&MAPID_UPPERMASK) == MAPID_TAEKWON && sd->status.base_level >= 90 && pc->famerank(sd->status.char_id, MAPID_TAEKWON) )
+		if ((sd->job & MAPID_UPPERMASK) == MAPID_TAEKWON && sd->status.base_level >= 90 && pc->fame_rank(sd->status.char_id, RANKTYPE_TAEKWON))
 			return 0;
 
 		if( pc->checkskill(sd, SG_DEVIL) &&  !pc->nextjobexp(sd) ) //Remove perma blindness due to skill-reset. [Skotlex]
@@ -7391,7 +7478,7 @@ int pc_resetskill(struct map_session_data* sd, int flag)
 			i &= ~OPTION_WUG;
 		if( i&OPTION_WUGRIDER && pc->checkskill(sd, RA_WUGRIDER) )
 			i &= ~OPTION_WUGRIDER;
-		if( i&OPTION_MADOGEAR && ( sd->class_&MAPID_THIRDMASK ) == MAPID_MECHANIC )
+		if (i&OPTION_MADOGEAR && (sd->job & MAPID_THIRDMASK) == MAPID_MECHANIC)
 			i &= ~OPTION_MADOGEAR;
 #ifndef NEW_CARTS
 		if( i&OPTION_CART && pc->checkskill(sd, MC_PUSHCART) )
@@ -7425,16 +7512,16 @@ int pc_resetskill(struct map_session_data* sd, int flag)
 		skill_id = skill->dbs->db[i].nameid;
 
 		// Don't reset trick dead if not a novice/baby
-		if( skill_id == NV_TRICKDEAD && (sd->class_&(MAPID_BASEMASK|JOBL_2)) != MAPID_NOVICE ) {
+		if (skill_id == NV_TRICKDEAD && (sd->job & MAPID_UPPERMASK) != MAPID_NOVICE) {
 			sd->status.skill[i].lv = 0;
 			sd->status.skill[i].flag = 0;
 			continue;
 		}
 
 		// do not reset basic skill
-		if (skill_id == NV_BASIC && (sd->class_&(MAPID_BASEMASK|JOBL_2)) != MAPID_NOVICE)
+		if (skill_id == NV_BASIC && (sd->job & MAPID_UPPERMASK) != MAPID_NOVICE)
 			continue;
-		if (skill_id == SU_BASIC_SKILL && (sd->class_&MAPID_BASEMASK) != MAPID_SUMMONER)
+		if (skill_id == SU_BASIC_SKILL && (sd->job & MAPID_BASEMASK) != MAPID_SUMMONER)
 			continue;
 
 		if( sd->status.skill[i].flag == SKILL_FLAG_PERM_GRANTED )
@@ -7812,7 +7899,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 	}
 
 	// activate Steel body if a super novice dies at 99+% exp [celest]
-	if ((sd->class_&MAPID_UPPERMASK) == MAPID_SUPER_NOVICE && !sd->state.snovice_dead_flag) {
+	if ((sd->job & MAPID_UPPERMASK) == MAPID_SUPER_NOVICE && !sd->state.snovice_dead_flag) {
 		unsigned int next = pc->nextbaseexp(sd);
 		if( next == 0 ) next = pc->thisbaseexp(sd);
 		if( get_percentage(sd->status.base_exp,next) >= 99 ) {
@@ -7831,7 +7918,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 
 	// changed penalty options, added death by player if pk_mode [Valaris]
 	if( battle_config.death_penalty_type
-	   && (sd->class_&MAPID_UPPERMASK) != MAPID_NOVICE // only novices will receive no penalty
+	   && (sd->job & MAPID_UPPERMASK) != MAPID_NOVICE // only novices will receive no penalty
 	   && !map->list[sd->bl.m].flag.noexppenalty && !map_flag_gvg2(sd->bl.m)
 	   && !sd->sc.data[SC_BABY] && !sd->sc.data[SC_CASH_DEATHPENALTY]
 	   ) {
@@ -8012,10 +8099,10 @@ int pc_readparam(const struct map_session_data *sd, int type)
 		case SP_ZENY:            val = sd->status.zeny; break;
 		case SP_BASELEVEL:       val = sd->status.base_level; break;
 		case SP_JOBLEVEL:        val = sd->status.job_level; break;
-		case SP_CLASS:           val = sd->status.class_; break;
-		case SP_BASEJOB:         val = pc->mapid2jobid(sd->class_&MAPID_UPPERMASK, sd->status.sex); break; //Base job, extracting upper type.
-		case SP_UPPER:           val = (sd->class_&JOBL_UPPER) ? 1 : ((sd->class_&JOBL_BABY) ? 2 : 0); break;
-		case SP_BASECLASS:       val = pc->mapid2jobid(sd->class_&MAPID_BASEMASK, sd->status.sex); break; //Extract base class tree. [Skotlex]
+		case SP_CLASS:           val = sd->status.class; break;
+		case SP_BASEJOB:         val = pc->mapid2jobid(sd->job & MAPID_UPPERMASK, sd->status.sex); break; //Base job, extracting upper type.
+		case SP_UPPER:           val = (sd->job & JOBL_UPPER) != 0 ? 1 : ((sd->job & JOBL_BABY) != 0 ? 2 : 0); break;
+		case SP_BASECLASS:       val = pc->mapid2jobid(sd->job & MAPID_BASEMASK, sd->status.sex); break; //Extract base class tree. [Skotlex]
 		case SP_SEX:             val = sd->status.sex; break;
 		case SP_WEIGHT:          val = sd->weight; break;
 		case SP_MAXWEIGHT:       val = sd->max_weight; break;
@@ -8473,44 +8560,43 @@ int jobchange_killclone(struct block_list *bl, va_list ap)
  * Called when player changes job
  * Rewrote to make it tidider [Celest]
  *------------------------------------------*/
-int pc_jobchange(struct map_session_data *sd,int job, int upper)
+int pc_jobchange(struct map_session_data *sd, int class, int upper)
 {
 	int i, fame_flag=0;
-	int b_class, idx = 0;
+	int job, idx = 0;
 
 	nullpo_ret(sd);
 
-	if (job < 0)
+	if (class < 0)
 		return 1;
 
 	//Normalize job.
-	b_class = pc->jobid2mapid(job);
-	if (b_class == -1)
+	job = pc->jobid2mapid(class);
+	if (job == -1)
 		return 1;
 	switch (upper) {
 		case 1:
-			b_class|= JOBL_UPPER;
+			job |= JOBL_UPPER;
 			break;
 		case 2:
-			b_class|= JOBL_BABY;
+			job |= JOBL_BABY;
 			break;
 	}
 	//This will automatically adjust bard/dancer classes to the correct gender
 	//That is, if you try to jobchange into dancer, it will turn you to bard.
-	job = pc->mapid2jobid(b_class, sd->status.sex);
-	if (job == -1)
+	class = pc->mapid2jobid(job, sd->status.sex);
+	if (class == -1)
 		return 1;
 
-	if ((unsigned short)b_class == sd->class_)
+	if ((uint16)job == sd->job)
 		return 1; //Nothing to change.
 
-	// changing from 1st to 2nd job
-	if ((b_class&JOBL_2) && !(sd->class_&JOBL_2) && (b_class&MAPID_UPPERMASK) != MAPID_SUPER_NOVICE) {
+	if ((job & JOBL_2) != 0 && (sd->job & JOBL_2) == 0 && (job & MAPID_UPPERMASK) != MAPID_SUPER_NOVICE) {
+		// changing from 1st to 2nd job
 		sd->change_level_2nd = sd->status.job_level;
 		pc_setglobalreg(sd, script->add_str("jobchange_level"), sd->change_level_2nd);
-	}
-	// changing from 2nd to 3rd job
-	else if((b_class&JOBL_THIRD) && !(sd->class_&JOBL_THIRD)) {
+	} else if((job & JOBL_THIRD) != 0 && (sd->job & JOBL_THIRD) == 0) {
+		// changing from 2nd to 3rd job
 		sd->change_level_3rd = sd->status.job_level;
 		pc_setglobalreg(sd, script->add_str("jobchange_level_3rd"), sd->change_level_3rd);
 	}
@@ -8541,10 +8627,10 @@ int pc_jobchange(struct map_session_data *sd,int job, int upper)
 		pc_setglobalreg(sd, script->add_str("REPRODUCE_SKILL_LV"),0);
 	}
 
-	if ( (b_class&MAPID_UPPERMASK) != (sd->class_&MAPID_UPPERMASK) ) { //Things to remove when changing class tree.
-		const int class_ = pc->class2idx(sd->status.class_);
+	if ((job & MAPID_UPPERMASK) != (sd->job & MAPID_UPPERMASK)) { //Things to remove when changing class tree.
+		const int class_idx = pc->class2idx(sd->status.class);
 		short id;
-		for(i = 0; i < MAX_SKILL_TREE && (id = pc->skill_tree[class_][i].id) > 0; i++) {
+		for (i = 0; i < MAX_SKILL_TREE && (id = pc->skill_tree[class_idx][i].id) > 0; i++) {
 			//Remove status specific to your current tree skills.
 			enum sc_type sc = status->skill2sc(id);
 			if (sc > SC_COMMON_MAX && sd->sc.data[sc])
@@ -8552,14 +8638,18 @@ int pc_jobchange(struct map_session_data *sd,int job, int upper)
 		}
 	}
 
-	if( (sd->class_&MAPID_UPPERMASK) == MAPID_STAR_GLADIATOR && (b_class&MAPID_UPPERMASK) != MAPID_STAR_GLADIATOR) {
+	if ((sd->job & MAPID_UPPERMASK) == MAPID_STAR_GLADIATOR && (job & MAPID_UPPERMASK) != MAPID_STAR_GLADIATOR) {
 		/* going off star glad lineage, reset feel to not store no-longer-used vars in the database */
 		pc->resetfeel(sd);
 	}
 
-	sd->status.class_ = job;
-	fame_flag = pc->famerank(sd->status.char_id,sd->class_&MAPID_UPPERMASK);
-	sd->class_ = (unsigned short)b_class;
+	sd->status.class = class;
+	{
+		int fame_list_type = pc->famelist_type(sd->job);
+		if (fame_list_type != RANKTYPE_UNKNOWN)
+			fame_flag = pc->fame_rank(sd->status.char_id, fame_list_type);
+	}
+	sd->job = (uint16)job;
 	sd->status.job_level=1;
 	sd->status.job_exp=0;
 
@@ -8588,8 +8678,8 @@ int pc_jobchange(struct map_session_data *sd,int job, int upper)
 	if (sd->disguise != -1)
 		pc->disguise(sd, -1);
 
-	status->set_viewdata(&sd->bl, job);
-	clif->changelook(&sd->bl,LOOK_BASE,sd->vd.class_); // move sprite update to prevent client crashes with incompatible equipment [Valaris]
+	status->set_viewdata(&sd->bl, class);
+	clif->changelook(&sd->bl, LOOK_BASE, sd->vd.class); // move sprite update to prevent client crashes with incompatible equipment [Valaris]
 	if(sd->vd.cloth_color)
 		clif->changelook(&sd->bl,LOOK_CLOTHES_COLOR,sd->vd.cloth_color);
 	if (sd->vd.body_style)
@@ -8608,7 +8698,7 @@ int pc_jobchange(struct map_session_data *sd,int job, int upper)
 
 	//Remove peco/cart/falcon
 	i = sd->sc.option;
-	if( i&OPTION_RIDING && (!pc->checkskill(sd, KN_RIDING) || (sd->class_&MAPID_THIRDMASK) == MAPID_RUNE_KNIGHT) )
+	if (i&OPTION_RIDING && (!pc->checkskill(sd, KN_RIDING) || (sd->job & MAPID_THIRDMASK) == MAPID_RUNE_KNIGHT))
 		i&=~OPTION_RIDING;
 	if( i&OPTION_FALCON && !pc->checkskill(sd, HT_FALCON) )
 		i&=~OPTION_FALCON;
@@ -8644,12 +8734,12 @@ int pc_jobchange(struct map_session_data *sd,int job, int upper)
 	pc->equiplookall(sd);
 
 	//if you were previously famous, not anymore.
-	if (fame_flag) {
+	if (fame_flag != 0) {
 		chrif->save(sd,0);
 		chrif->buildfamelist();
 	} else if (sd->status.fame > 0) {
 		//It may be that now they are famous?
-		switch (sd->class_&MAPID_UPPERMASK) {
+		switch (sd->job & MAPID_UPPERMASK) {
 			case MAPID_BLACKSMITH:
 			case MAPID_ALCHEMIST:
 			case MAPID_TAEKWON:
@@ -8689,7 +8779,7 @@ int pc_changelook(struct map_session_data *sd,int type,int val)
 	switch(type){
 		case LOOK_BASE:
 			status->set_viewdata(&sd->bl, val);
-			clif->changelook(&sd->bl,LOOK_BASE,sd->vd.class_);
+			clif->changelook(&sd->bl, LOOK_BASE, sd->vd.class);
 			clif->changelook(&sd->bl,LOOK_WEAPON,sd->status.weapon);
 			if (sd->vd.cloth_color)
 				clif->changelook(&sd->bl,LOOK_CLOTHES_COLOR,sd->vd.cloth_color);
@@ -8835,8 +8925,8 @@ int pc_setoption(struct map_session_data *sd,int type)
 		return 0; //Disguises break sprite changes
 
 	if (new_look < 0) { //Restore normal look.
-		status->set_viewdata(&sd->bl, sd->status.class_);
-		new_look = sd->vd.class_;
+		status->set_viewdata(&sd->bl, sd->status.class);
+		new_look = sd->vd.class;
 	}
 
 	pc_stop_attack(sd); //Stop attacking on new view change (to prevent wedding/santa attacks.
@@ -8958,7 +9048,7 @@ void pc_setmadogear(struct map_session_data *sd, bool flag)
 {
 	nullpo_retv(sd);
 	if (flag) {
-		if ((sd->class_&MAPID_THIRDMASK) == MAPID_MECHANIC)
+		if ((sd->job & MAPID_THIRDMASK) == MAPID_MECHANIC)
 			pc->setoption(sd, sd->sc.option|OPTION_MADOGEAR);
 	} else if (pc_ismadogear(sd)) {
 		pc->setoption(sd, sd->sc.option&~OPTION_MADOGEAR);
@@ -9204,7 +9294,7 @@ int pc_setregistry(struct map_session_data *sd, int64 reg, int val) {
 	switch( regname[0] ) {
 		default: //Char reg
 			if( !strcmp(regname,"PC_DIE_COUNTER") && sd->die_counter != val ) {
-				int i = (!sd->die_counter && (sd->class_&MAPID_UPPERMASK) == MAPID_SUPER_NOVICE);
+				int i = (!sd->die_counter && (sd->job & MAPID_UPPERMASK) == MAPID_SUPER_NOVICE);
 				sd->die_counter = val;
 				if( i )
 					status_calc_pc(sd,SCO_NONE); // Lost the bonus.
@@ -10242,7 +10332,7 @@ int pc_marriage(struct map_session_data *sd,struct map_session_data *dstsd)
 {
 	if(sd == NULL || dstsd == NULL ||
 		sd->status.partner_id > 0 || dstsd->status.partner_id > 0 ||
-		(sd->class_&JOBL_BABY) || (dstsd->class_&JOBL_BABY))
+		(sd->job & JOBL_BABY) != 0 || (dstsd->job & JOBL_BABY) != 0)
 		return -1;
 	sd->status.partner_id = dstsd->status.char_id;
 	dstsd->status.partner_id = sd->status.char_id;
@@ -10306,7 +10396,7 @@ struct map_session_data *pc_get_partner(struct map_session_data *sd) {
  * Get sd father charid. (Need to be baby)
  *------------------------------------------*/
 struct map_session_data *pc_get_father(struct map_session_data *sd) {
-	if (sd && sd->class_&JOBL_BABY && sd->status.father > 0)
+	if (sd && (sd->job & JOBL_BABY) != 0 && sd->status.father > 0)
 		// charid2sd returns NULL if not found
 		return map->charid2sd(sd->status.father);
 
@@ -10317,7 +10407,7 @@ struct map_session_data *pc_get_father(struct map_session_data *sd) {
  * Get sd mother charid. (Need to be baby)
  *------------------------------------------*/
 struct map_session_data *pc_get_mother(struct map_session_data *sd) {
-	if (sd && sd->class_&JOBL_BABY && sd->status.mother > 0)
+	if (sd && (sd->job & JOBL_BABY) != 0 && sd->status.mother > 0)
 		// charid2sd returns NULL if not found
 		return map->charid2sd(sd->status.mother);
 
@@ -11653,17 +11743,17 @@ void pc_update_idle_time(struct map_session_data* sd, enum e_battle_config_idlet
 }
 
 //Checks if the given class value corresponds to a player class. [Skotlex]
-//JOB_NOVICE isn't checked for class_ is supposed to be unsigned
-bool pc_db_checkid(unsigned int class_)
+//JOB_NOVICE isn't checked for class is supposed to be unsigned
+bool pc_db_checkid(int class)
 {
-	return class_ < JOB_MAX_BASIC
-		|| (class_ >= JOB_NOVICE_HIGH    && class_ <= JOB_DARK_COLLECTOR )
-		|| (class_ >= JOB_RUNE_KNIGHT    && class_ <= JOB_MECHANIC_T2    )
-		|| (class_ >= JOB_BABY_RUNE      && class_ <= JOB_BABY_MECHANIC2 )
-		|| (class_ >= JOB_SUPER_NOVICE_E && class_ <= JOB_SUPER_BABY_E   )
-		|| (class_ >= JOB_KAGEROU        && class_ <= JOB_OBORO          )
-		|| (class_ == JOB_REBELLION)
-		|| (class_ >= JOB_SUMMONER       && class_ <  JOB_MAX            );
+	return class < JOB_MAX_BASIC
+		|| (class >= JOB_NOVICE_HIGH    && class <= JOB_DARK_COLLECTOR )
+		|| (class >= JOB_RUNE_KNIGHT    && class <= JOB_MECHANIC_T2    )
+		|| (class >= JOB_BABY_RUNE      && class <= JOB_BABY_MECHANIC2 )
+		|| (class >= JOB_SUPER_NOVICE_E && class <= JOB_SUPER_BABY_E   )
+		|| (class >= JOB_KAGEROU        && class <= JOB_OBORO          )
+		|| (class == JOB_REBELLION)
+		|| (class >= JOB_SUMMONER       && class <  JOB_MAX            );
 }
 
 /**
@@ -11739,7 +11829,7 @@ void pc_check_supernovice_call(struct map_session_data *sd, const char *message)
 
 	nullpo_retv(sd);
 	nullpo_retv(message);
-	if ((sd->class_&MAPID_UPPERMASK) != MAPID_SUPER_NOVICE)
+	if ((sd->job & MAPID_UPPERMASK) != MAPID_SUPER_NOVICE)
 		return;
 	if (next == 0)
 		next = pc->thisbaseexp(sd);
@@ -12059,7 +12149,8 @@ void pc_defaults(void) {
 	pc->addspiritball = pc_addspiritball;
 	pc->delspiritball = pc_delspiritball;
 	pc->addfame = pc_addfame;
-	pc->famerank = pc_famerank;
+	pc->fame_rank = pc_fame_rank;
+	pc->famelist_type = pc_famelist_type;
 	pc->set_hate_mob = pc_set_hate_mob;
 	pc->getmaxspiritball = pc_getmaxspiritball;
 
