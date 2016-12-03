@@ -15519,7 +15519,7 @@ BUILDIN(getlook)
 	type=script_getnum(st,2);
 	switch(type) {
 		case LOOK_HAIR:          val = sd->status.hair;          break; //1
-		case LOOK_WEAPON:        val = sd->status.weapon;        break; //2
+		case LOOK_WEAPON:        val = sd->status.look.weapon;   break; //2
 		case LOOK_HEAD_BOTTOM:   val = sd->status.head_bottom;   break; //3
 		case LOOK_HEAD_TOP:      val = sd->status.head_top;      break; //4
 		case LOOK_HEAD_MID:      val = sd->status.head_mid;      break; //5
