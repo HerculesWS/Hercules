@@ -308,6 +308,7 @@ struct map_session_data {
 		short nameid;
 		int64 tick;
 	} item_delay[MAX_ITEMDELAYS]; // [Paradox924X]
+	bool has_shield;   ///< Whether the character is wearing a shield.
 	int16 weapontype;  ///< Weapon type considering both hands (@see enum weapon_type).
 	int16 weapontype1; ///< Weapon type in the right/primary hand (@see enum weapon_type).
 	int16 weapontype2; ///< Weapon type in the left/secondary hand (@see enum weapon_type).
