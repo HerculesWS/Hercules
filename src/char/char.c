@@ -461,7 +461,7 @@ int char_mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 		(p->option != cp->option) ||
 		(p->party_id != cp->party_id) || (p->guild_id != cp->guild_id) ||
 		(p->pet_id != cp->pet_id) || (p->look.weapon != cp->look.weapon) || (p->hom_id != cp->hom_id) ||
-		(p->ele_id != cp->ele_id) || (p->shield != cp->shield) || (p->head_top != cp->head_top) ||
+		(p->ele_id != cp->ele_id) || (p->look.shield != cp->look.shield) || (p->head_top != cp->head_top) ||
 		(p->head_mid != cp->head_mid) || (p->head_bottom != cp->head_bottom) || (p->delete_date != cp->delete_date) ||
 		(p->rename != cp->rename) || (p->slotchange != cp->slotchange) || (p->robe != cp->robe) ||
 		(p->show_equip != cp->show_equip) || (p->allow_party != cp->allow_party) || (p->font != cp->font) ||
@@ -490,7 +490,7 @@ int char_mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 			p->max_hp, p->hp, p->max_sp, p->sp, p->status_point, p->skill_point,
 			p->str, p->agi, p->vit, p->int_, p->dex, p->luk,
 			p->option, p->party_id, p->guild_id, p->pet_id, p->hom_id, p->ele_id,
-			p->look.weapon, p->shield, p->head_top, p->head_mid, p->head_bottom,
+			p->look.weapon, p->look.shield, p->head_top, p->head_mid, p->head_bottom,
 			mapindex_id2name(p->last_point.map), p->last_point.x, p->last_point.y,
 			mapindex_id2name(p->save_point.map), p->save_point.x, p->save_point.y, p->rename,
 			(unsigned long)p->delete_date,  // FIXME: platform-dependent size
@@ -1095,7 +1095,7 @@ int char_mmo_chars_fromsql(struct char_session_data* sd, uint8* buf)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 26, SQLDT_SHORT,  &p.clothes_color, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 27, SQLDT_SHORT,  &p.body, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 28, SQLDT_SHORT,  &p.look.weapon, 0, NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 29, SQLDT_SHORT,  &p.shield, 0, NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 29, SQLDT_SHORT,  &p.look.shield, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 30, SQLDT_SHORT,  &p.head_top, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 31, SQLDT_SHORT,  &p.head_mid, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 32, SQLDT_SHORT,  &p.head_bottom, 0, NULL, NULL)
@@ -1209,7 +1209,7 @@ int char_mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_every
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 32, SQLDT_SHORT,  &p->clothes_color, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 33, SQLDT_SHORT,  &p->body, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 34, SQLDT_SHORT,  &p->look.weapon, 0, NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 35, SQLDT_SHORT,  &p->shield, 0, NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 35, SQLDT_SHORT,  &p->look.shield, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 36, SQLDT_SHORT,  &p->head_top, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 37, SQLDT_SHORT,  &p->head_mid, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 38, SQLDT_SHORT,  &p->head_bottom, 0, NULL, NULL)
@@ -1947,7 +1947,7 @@ int char_mmo_char_tobuf(uint8* buffer, struct mmo_charstatus* p) {
 	WBUFW(buf,58) = p->base_level;
 	WBUFW(buf,60) = min(p->skill_point, INT16_MAX);
 	WBUFW(buf,62) = p->head_bottom;
-	WBUFW(buf,64) = p->shield;
+	WBUFW(buf,64) = p->look.shield;
 	WBUFW(buf,66) = p->head_top;
 	WBUFW(buf,68) = p->head_mid;
 	WBUFW(buf,70) = p->hair_color;
