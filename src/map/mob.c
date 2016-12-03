@@ -1652,7 +1652,7 @@ bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 			memmove(&md->lootitem[0], &md->lootitem[1], (LOOTITEM_SIZE-1)*sizeof(md->lootitem[0]));
 			memcpy (&md->lootitem[LOOTITEM_SIZE-1], &fitem->item_data, sizeof(md->lootitem[0]));
 		}
-		if (pc->db_checkid(md->vd->class_)) {
+		if (pc->db_checkid(md->vd->class)) {
 			//Give them walk act/delay to properly mimic players. [Skotlex]
 			clif->takeitem(&md->bl,tbl);
 			md->ud.canact_tick = tick + md->status.amotion;
@@ -2684,7 +2684,8 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 
 	if( !rebirth ) {
 
-		if( pc->db_checkid(md->vd->class_) ) {//Player mobs are not removed automatically by the client.
+		if (pc->db_checkid(md->vd->class)) {
+			// Player mobs are not removed automatically by the client.
 			/* first we set them dead, then we delay the out sight effect */
 			clif->clearunit_area(&md->bl,CLR_DEAD);
 			clif->clearunit_delayed(&md->bl, CLR_OUTSIGHT,tick+3000);
@@ -2831,7 +2832,7 @@ int mob_class_change (struct mob_data *md, int class_) {
 	mob_stop_walking(md, STOPWALKING_FLAG_NONE);
 	unit->skillcastcancel(&md->bl, 0);
 	status->set_viewdata(&md->bl, class_);
-	clif->class_change(&md->bl, md->vd->class_, 1);
+	clif->class_change(&md->bl, md->vd->class, 1);
 	status_calc_mob(md, SCO_FIRST);
 	md->ud.state.speed_changed = 1; //Speed change update.
 
@@ -4209,7 +4210,7 @@ int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *source)
 		return 0;
 	}
 	md.mob_id = i32;
-	md.vd.class_ = md.mob_id;
+	md.vd.class = md.mob_id;
 
 	if ((t = libconfig->setting_get_member(mobt, "Inherit")) && (inherit = libconfig->setting_get_bool(t))) {
 		if (!mob->db_data[md.mob_id]) {
@@ -4563,7 +4564,7 @@ void mob_name_constants(void) {
  *------------------------------------------*/
 bool mob_readdb_mobavail(char* str[], int columns, int current)
 {
-	int class_, k;
+	int class_, view_class;
 
 	nullpo_retr(false, str);
 	class_=atoi(str[0]);
@@ -4574,13 +4575,13 @@ bool mob_readdb_mobavail(char* str[], int columns, int current)
 		return false;
 	}
 
-	k=atoi(str[1]);
+	view_class = atoi(str[1]);
 
 	memset(&mob->db_data[class_]->vd, 0, sizeof(struct view_data));
-	mob->db_data[class_]->vd.class_=k;
+	mob->db_data[class_]->vd.class = view_class;
 
 	//Player sprites
-	if(pc->db_checkid(k) && columns==12) {
+	if (pc->db_checkid(view_class) && columns == 12) {
 		mob->db_data[class_]->vd.sex=atoi(str[2]);
 		mob->db_data[class_]->vd.hair_style=atoi(str[3]);
 		mob->db_data[class_]->vd.hair_color=atoi(str[4]);

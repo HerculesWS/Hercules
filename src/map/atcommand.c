@@ -951,7 +951,7 @@ ACMD(hide) {
 		map->foreachinmovearea(clif->insight, &sd->bl, AREA_SIZE, sd->bl.x, sd->bl.y, BL_ALL, &sd->bl);
 	} else {
 		sd->sc.option |= OPTION_INVISIBLE;
-		sd->vd.class_ = INVISIBLE_CLASS;
+		sd->vd.class = INVISIBLE_CLASS;
 		clif->message(fd, msg_fd(fd,11)); // Invisible: On
 
 		// decrement the number of pvp players on the map
@@ -6610,9 +6610,9 @@ ACMD(mobinfo)
 
 		// stats
 		if (monster->mexp)
-			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1240), monster->name, monster->jname, monster->sprite, monster->vd.class_); // MVP Monster: '%s'/'%s'/'%s' (%d)
+			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1240), monster->name, monster->jname, monster->sprite, monster->vd.class); // MVP Monster: '%s'/'%s'/'%s' (%d)
 		else
-			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1241), monster->name, monster->jname, monster->sprite, monster->vd.class_); // Monster: '%s'/'%s'/'%s' (%d)
+			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1241), monster->name, monster->jname, monster->sprite, monster->vd.class); // Monster: '%s'/'%s'/'%s' (%d)
 		clif->message(fd, atcmd_output);
 
 		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1242), monster->lv, monster->status.max_hp, base_exp, job_exp, MOB_HIT(monster), MOB_FLEE(monster)); //  Lv:%d  HP:%d  Base EXP:%u  Job EXP:%u  HIT:%d  FLEE:%d

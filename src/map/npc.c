@@ -4961,11 +4961,11 @@ int do_init_npc(bool minimal) {
 	//Stock view data for normal npcs.
 	memset(&npc_viewdb, 0, sizeof(npc_viewdb));
 
-	npc_viewdb[0].class_ = INVISIBLE_CLASS; //Invisible class is stored here.
+	npc_viewdb[0].class = INVISIBLE_CLASS; //Invisible class is stored here.
 	for( i = 1; i < MAX_NPC_CLASS; i++ )
-		npc_viewdb[i].class_ = i;
+		npc_viewdb[i].class = i;
 	for( i = MAX_NPC_CLASS2_START; i < MAX_NPC_CLASS2_END; i++ )
-		npc_viewdb2[i - MAX_NPC_CLASS2_START].class_ = i;
+		npc_viewdb2[i - MAX_NPC_CLASS2_START].class = i;
 
 	npc->ev_db = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, EVENT_NAME_LENGTH);
 	npc->ev_label_db = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, NAME_LENGTH);

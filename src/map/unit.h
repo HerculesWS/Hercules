@@ -80,11 +80,7 @@ struct unit_data {
 };
 
 struct view_data {
-#ifdef __64BIT__
-	uint32 class_; // FIXME: This shouldn't really depend on the architecture.
-#else // not __64BIT__
-	uint16 class_;
-#endif // __64BIT__
+	int16 class;
 	uint16 weapon,
 		shield, //Or left-hand weapon.
 		robe,
