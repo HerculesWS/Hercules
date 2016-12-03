@@ -4326,7 +4326,7 @@ int status_base_amotion_pc(struct map_session_data *sd, struct status_data *st)
 	amotion = status->dbs->aspd_base[pc->class2idx(sd->status.class)][sd->weapontype1];
 	if (sd->weapontype > MAX_SINGLE_WEAPON_TYPE)
 		amotion += status->dbs->aspd_base[pc->class2idx(sd->status.class)][sd->weapontype2] / 4;
-	if ( sd->status.shield )
+	if (sd->has_shield)
 		amotion += status->dbs->aspd_base[pc->class2idx(sd->status.class)][MAX_SINGLE_WEAPON_TYPE];
 	switch (sd->weapontype) {
 		case W_BOW:

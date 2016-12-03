@@ -15525,7 +15525,7 @@ BUILDIN(getlook)
 		case LOOK_HEAD_MID:      val = sd->status.head_mid;      break; //5
 		case LOOK_HAIR_COLOR:    val = sd->status.hair_color;    break; //6
 		case LOOK_CLOTHES_COLOR: val = sd->status.clothes_color; break; //7
-		case LOOK_SHIELD:        val = sd->status.shield;        break; //8
+		case LOOK_SHIELD:        val = sd->status.look.shield;   break; //8
 		case LOOK_SHOES:                                         break; //9
 		case LOOK_ROBE:          val = sd->status.robe;          break; //12
 		case LOOK_BODY2:         val=sd->status.body;            break; //13
