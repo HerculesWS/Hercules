@@ -583,8 +583,8 @@ struct mmo_charstatus {
 
 	struct {
 		short weapon; ///< Weapon view sprite id.
+		short shield; ///< Shield view sprite id.
 	} look;
-	short shield; // view-id
 	short head_top,head_mid,head_bottom;
 	short robe;
 

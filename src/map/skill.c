@@ -14239,7 +14239,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 			}
 			break;
 		case ST_SHIELD:
-			if(sd->status.shield <= 0) {
+			if (!sd->has_shield) {
 				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 				return 0;
 			}

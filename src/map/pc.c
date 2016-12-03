@@ -866,10 +866,19 @@ int pc_setequipindex(struct map_session_data *sd)
 			}
 
 			if (sd->status.inventory[i].equip & EQP_HAND_L) {
-				if (sd->inventory_data[i] != NULL && sd->inventory_data[i]->type == IT_WEAPON)
-					sd->weapontype2 = sd->inventory_data[i]->subtype;
-				else
+				if (sd->inventory_data[i] != NULL) {
+					if (sd->inventory_data[i]->type == IT_WEAPON)
+						sd->weapontype2 = sd->inventory_data[i]->subtype;
+					else
+						sd->weapontype2 = W_FIST;
+					if (sd->inventory_data[i]->type == IT_ARMOR)
+						sd->has_shield = true;
+					else
+						sd->has_shield = false;
+				} else {
 					sd->weapontype2 = W_FIST;
+					sd->has_shield = false;
+				}
 			}
 		}
 	}
@@ -5919,7 +5928,7 @@ int pc_checkallowskill(struct map_session_data *sd)
 		// Spurt requires bare hands (feet, in fact xD)
 		status_change_end(&sd->bl, SC_STRUP, INVALID_TIMER);
 
-	if(sd->status.shield <= 0) { // Skills requiring a shield
+	if (!sd->has_shield) { // Skills requiring a shield
 		for (i = 0; i < ARRAYLENGTH(scs_list); i++)
 			if(sd->sc.data[scs_list[i]])
 				status_change_end(&sd->bl, scs_list[i], INVALID_TIMER);
@@ -8826,7 +8835,7 @@ int pc_changelook(struct map_session_data *sd,int type,int val)
 			sd->status.clothes_color=val;
 			break;
 		case LOOK_SHIELD:
-			sd->status.shield=val;
+			sd->status.look.shield = val;
 			break;
 		case LOOK_SHOES:
 			break;
@@ -9707,18 +9716,21 @@ void pc_equipitem_pos(struct map_session_data *sd, struct item_data *id, int n, 
 		 (pos & EQP_HAND_L)) {
 		if (id != NULL) {
 			if (id->type == IT_WEAPON) {
-				sd->status.shield = 0;
+				sd->has_shield = false;
+				sd->status.look.shield = 0;
 				sd->weapontype2 = id->subtype;
 			} else if (id->type == IT_ARMOR) {
-				sd->status.shield = id->view_sprite;
+				sd->has_shield = true;
+				sd->status.look.shield = id->view_sprite;
 				sd->weapontype2 = W_FIST;
 			}
 		} else {
-			sd->status.shield = 0;
+			sd->has_shield = false;
+			sd->status.look.shield = 0;
 			sd->weapontype2 = W_FIST;
 		}
 		pc->calcweapontype(sd);
-		clif->changelook(&sd->bl,LOOK_SHIELD,sd->status.shield);
+		clif->changelook(&sd->bl, LOOK_SHIELD, sd->status.look.shield);
 	}
 	//Added check to prevent sending the same look on multiple slots ->
 	//causes client to redraw item on top of itself. (suggested by Lupus)
@@ -9936,10 +9948,11 @@ void pc_unequipitem_pos(struct map_session_data *sd, int n, int pos)
 			status_change_end(&sd->bl, SC_DANCING, INVALID_TIMER); // Unequipping => stop dancing.
 	}
 	if (pos & EQP_HAND_L) {
-		sd->status.shield = 0;
+		sd->has_shield = false;
+		sd->status.look.shield = 0;
 		sd->weapontype2 = W_FIST;
 		pc->calcweapontype(sd);
-		clif->changelook(&sd->bl,LOOK_SHIELD,sd->status.shield);
+		clif->changelook(&sd->bl, LOOK_SHIELD, sd->status.look.shield);
 	}
 	if (pos & EQP_HEAD_LOW && pc->checkequip(sd,EQP_COSTUME_HEAD_LOW) == -1) {
 		sd->status.head_bottom = 0;
