@@ -6864,13 +6864,13 @@ void status_set_viewdata(struct block_list *bl, int class_)
 			}
 			sd->vd.class = class_;
 			clif->get_weapon_view(sd, &sd->vd.weapon, &sd->vd.shield);
-			sd->vd.head_top = sd->status.head_top;
-			sd->vd.head_mid = sd->status.head_mid;
-			sd->vd.head_bottom = sd->status.head_bottom;
+			sd->vd.head_top = sd->status.look.head_top;
+			sd->vd.head_mid = sd->status.look.head_mid;
+			sd->vd.head_bottom = sd->status.look.head_bottom;
 			sd->vd.hair_style = cap_value(sd->status.hair,0,battle_config.max_hair_style);
 			sd->vd.hair_color = cap_value(sd->status.hair_color,0,battle_config.max_hair_color);
 			sd->vd.cloth_color = cap_value(sd->status.clothes_color,0,battle_config.max_cloth_color);
-			sd->vd.robe = sd->status.robe;
+			sd->vd.robe = sd->status.look.robe;
 			sd->vd.body_style = sd->status.body;
 			sd->vd.sex = sd->status.sex;
 
