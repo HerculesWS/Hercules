@@ -470,6 +470,26 @@ int pc_fame_rank(int char_id, int ranktype)
 	return 0;
 }
 
+/**
+ * Returns the appropriate fame list type for the given job.
+ *
+ * @param job_mapid The job (in MapID format)
+ * @return the appropriate fame list type (@see enum fame_list_type).
+ * @retval RANKTYPE_UNKNOWN if no appropriate type exists.
+ */
+int pc_famelist_type(uint16 job_mapid) {
+	switch (job_mapid & MAPID_UPPERMASK) {
+	case MAPID_BLACKSMITH:
+		return RANKTYPE_BLACKSMITH;
+	case MAPID_ALCHEMIST:
+		return RANKTYPE_ALCHEMIST;
+	case MAPID_TAEKWON:
+		return RANKTYPE_TAEKWON;
+	default:
+		return RANKTYPE_UNKNOWN;
+	}
+}
+
 int pc_setrestartvalue(struct map_session_data *sd,int type) {
 	struct status_data *st, *bst;
 	nullpo_ret(sd);
@@ -8624,12 +8644,11 @@ int pc_jobchange(struct map_session_data *sd, int class, int upper)
 	}
 
 	sd->status.class = class;
-	if ((sd->job & MAPID_UPPERMASK) == MAPID_BLACKSMITH)
-		fame_flag = pc->fame_rank(sd->status.char_id, RANKTYPE_BLACKSMITH);
-	else if ((sd->job & MAPID_UPPERMASK) == MAPID_ALCHEMIST)
-		fame_flag = pc->fame_rank(sd->status.char_id, RANKTYPE_ALCHEMIST);
-	else if ((sd->job & MAPID_UPPERMASK) == MAPID_TAEKWON)
-		fame_flag = pc->fame_rank(sd->status.char_id, RANKTYPE_TAEKWON);
+	{
+		int fame_list_type = pc->famelist_type(sd->job);
+		if (fame_list_type != RANKTYPE_UNKNOWN)
+			fame_flag = pc->fame_rank(sd->status.char_id, fame_list_type);
+	}
 	sd->job = (uint16)job;
 	sd->status.job_level=1;
 	sd->status.job_exp=0;
@@ -8715,7 +8734,7 @@ int pc_jobchange(struct map_session_data *sd, int class, int upper)
 	pc->equiplookall(sd);
 
 	//if you were previously famous, not anymore.
-	if (fame_flag) {
+	if (fame_flag != 0) {
 		chrif->save(sd,0);
 		chrif->buildfamelist();
 	} else if (sd->status.fame > 0) {
@@ -12131,6 +12150,7 @@ void pc_defaults(void) {
 	pc->delspiritball = pc_delspiritball;
 	pc->addfame = pc_addfame;
 	pc->fame_rank = pc_fame_rank;
+	pc->famelist_type = pc_famelist_type;
 	pc->set_hate_mob = pc_set_hate_mob;
 	pc->getmaxspiritball = pc_getmaxspiritball;
 

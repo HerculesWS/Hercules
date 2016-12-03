@@ -14224,28 +14224,21 @@ void clif_ranklist(struct map_session_data *sd, enum fame_list_type type)
 {
 #if PACKETVER >= 20120502
 	int fd;
-	int mypoint = 0;
-	int upperMask;
 	int len = packet_len(0x97d);
 
 	nullpo_retv(sd);
 	fd = sd->fd;
-	upperMask = sd->job & MAPID_UPPERMASK;
 	WFIFOHEAD(fd, len);
 	WFIFOW(fd, 0) = 0x97d;
 	WFIFOW(fd, 2) = type;
 	clif_ranklist_sub(WFIFOP(fd,4), type);
 
-	if( (upperMask == MAPID_BLACKSMITH && type == RANKTYPE_BLACKSMITH)
-	 || (upperMask == MAPID_ALCHEMIST  && type == RANKTYPE_ALCHEMIST)
-	 || (upperMask == MAPID_TAEKWON    && type == RANKTYPE_TAEKWON)
-	) {
-		mypoint = sd->status.fame;
+	if (pc->famelist_type(sd->job) == type) {
+		WFIFOL(fd, 284) = mypoint; //mypoint
 	} else {
-		mypoint = 0;
+		WFIFOL(fd, 284) = 0; //mypoint
 	}
 
-	WFIFOL(fd, 284) = mypoint; //mypoint
 	WFIFOSET(fd, len);
 #endif
 }
