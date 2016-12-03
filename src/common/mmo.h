@@ -779,6 +779,7 @@ struct fame_list {
 };
 
 enum fame_list_type {
+	RANKTYPE_UNKNOWN    = -1,
 	RANKTYPE_BLACKSMITH = 0,
 	RANKTYPE_ALCHEMIST  = 1,
 	RANKTYPE_TAEKWON    = 2,
