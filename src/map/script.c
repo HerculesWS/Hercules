@@ -15520,14 +15520,14 @@ BUILDIN(getlook)
 	switch(type) {
 		case LOOK_HAIR:          val = sd->status.hair;          break; //1
 		case LOOK_WEAPON:        val = sd->status.look.weapon;   break; //2
-		case LOOK_HEAD_BOTTOM:   val = sd->status.head_bottom;   break; //3
-		case LOOK_HEAD_TOP:      val = sd->status.head_top;      break; //4
-		case LOOK_HEAD_MID:      val = sd->status.head_mid;      break; //5
+		case LOOK_HEAD_BOTTOM:   val = sd->status.look.head_bottom; break; //3
+		case LOOK_HEAD_TOP:      val = sd->status.look.head_top; break; //4
+		case LOOK_HEAD_MID:      val = sd->status.look.head_mid; break; //5
 		case LOOK_HAIR_COLOR:    val = sd->status.hair_color;    break; //6
 		case LOOK_CLOTHES_COLOR: val = sd->status.clothes_color; break; //7
 		case LOOK_SHIELD:        val = sd->status.look.shield;   break; //8
 		case LOOK_SHOES:                                         break; //9
-		case LOOK_ROBE:          val = sd->status.robe;          break; //12
+		case LOOK_ROBE:          val = sd->status.look.robe;     break; //12
 		case LOOK_BODY2:         val=sd->status.body;            break; //13
 	}
 
