@@ -56833,6 +56833,33 @@ int HP_pc_fame_rank(int char_id, int ranktype) {
 	}
 	return retVal___;
 }
+int HP_pc_famelist_type(uint16 job_mapid) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if( HPMHooks.count.HP_pc_famelist_type_pre ) {
+		int (*preHookFunc) (uint16 *job_mapid);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_famelist_type_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_pc_famelist_type_pre[hIndex].func;
+			retVal___ = preHookFunc(&job_mapid);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.pc.famelist_type(job_mapid);
+	}
+	if( HPMHooks.count.HP_pc_famelist_type_post ) {
+		int (*postHookFunc) (int retVal___, uint16 job_mapid);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_famelist_type_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_pc_famelist_type_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, job_mapid);
+		}
+	}
+	return retVal___;
+}
 int HP_pc_set_hate_mob(struct map_session_data *sd, int pos, struct block_list *bl) {
 	int hIndex = 0;
 	int retVal___ = 0;

@@ -5440,6 +5440,8 @@ typedef void (*HPMHOOK_pre_pc_addfame) (struct map_session_data **sd, int *rankt
 typedef void (*HPMHOOK_post_pc_addfame) (struct map_session_data *sd, int ranktype, int count);
 typedef int (*HPMHOOK_pre_pc_fame_rank) (int *char_id, int *ranktype);
 typedef int (*HPMHOOK_post_pc_fame_rank) (int retVal___, int char_id, int ranktype);
+typedef int (*HPMHOOK_pre_pc_famelist_type) (uint16 *job_mapid);
+typedef int (*HPMHOOK_post_pc_famelist_type) (int retVal___, uint16 job_mapid);
 typedef int (*HPMHOOK_pre_pc_set_hate_mob) (struct map_session_data **sd, int *pos, struct block_list **bl);
 typedef int (*HPMHOOK_post_pc_set_hate_mob) (int retVal___, struct map_session_data *sd, int pos, struct block_list *bl);
 typedef int (*HPMHOOK_pre_pc_readdb) (void);
