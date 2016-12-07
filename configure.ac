@@ -1300,7 +1300,7 @@ Linux* )
 	LIBS="$LIBS -ldl"
 	;;
 FreeBSD*)
-	CPPFLAGS="$CPPFLAGS -D__FREEBSD__"
+	CPPFLAGS="$CPPFLAGS -D__FREEBSD__ -fvisibility=hidden"
 	;;
 NetBSD*)
 	CPPFLAGS="$CPPFLAGS -D__NETBSD__"
