@@ -4467,6 +4467,11 @@ function	script	jewel_13_2	{
 				mes "...What the heck am I doing now...";
 				close;
 			}
+			if (checkweight(Knife, 1) == 0) { // Custom check
+				mes "- It looks like you're carrying too many things. -";
+				mes "- Why not put some of your items in storage and come back? -";
+				close;
+			}
 			if (rand(1,4) == 2) {
 				mes "- You dug up a pile of earth -";
 				mes "- and pulled out the "+getarg(0)+" Gem -";
