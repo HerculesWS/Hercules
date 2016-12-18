@@ -300,6 +300,18 @@ int party_recv_info(const struct party *sp, int char_id)
 			if (i == MAX_PARTY)
 				added[added_count++] = member_id;
 		}
+		
+		ARR_FIND(0, MAX_PARTY, j, p->party.member[j].leader == 1);
+		if( j == MAX_PARTY ) {
+			// Leader has changed
+			int i;
+			ARR_FIND(0, MAX_PARTY, i, sp->member[i].leader == 1);
+			if( i < MAX_PARTY ) {
+				clif->PartyLeaderChanged(map->id2sd(sp->member[i].account_id), 0, sp->member[i].account_id);
+			} else {
+				party->broken(p->party.party_id); // Should not happen, Party is leaderless, disband
+			}
+		}
 	} else {
 		for( member_id = 0; member_id < MAX_PARTY; ++member_id )
 			if( sp->member[member_id].char_id != 0 )

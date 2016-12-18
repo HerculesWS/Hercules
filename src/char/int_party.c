@@ -614,6 +614,7 @@ int mapif_parse_PartyLeave(int fd, int party_id, int account_id, int char_id)
 {
 	struct party_data *p;
 	int i,j;
+	unsigned int leader;
 
 	p = inter_party->fromsql(party_id);
 	if( p == NULL )
@@ -634,25 +635,30 @@ int mapif_parse_PartyLeave(int fd, int party_id, int account_id, int char_id)
 
 	mapif->party_withdraw(party_id, account_id, char_id);
 
-	if (p->party.member[i].leader){
-		p->party.member[i].account_id = 0;
-		for (j = 0; j < MAX_PARTY; j++) {
-			if (!p->party.member[j].account_id)
-				continue;
-			mapif->party_withdraw(party_id, p->party.member[j].account_id, p->party.member[j].char_id);
-			p->party.member[j].account_id = 0;
+	leader = p->party.member[i].leader; // member's leader state
+	
+	inter_party->tosql(&p->party,PS_DELMEMBER,i);
+	j = p->party.member[i].lv;
+	if(p->party.member[i].online) p->party.count--;
+	memset(&p->party.member[i], 0, sizeof(struct party_member));
+	p->size--;
+	if (j == p->min_lv || j == p->max_lv || p->family)
+	{
+		if(p->family) p->family = 0; //Family state broken.
+		inter_party->check_lv(p);
+	}
+
+	if( leader ) {
+		// Member was party leader, pick a new leader
+		i = 0;
+		while (i < MAX_PARTY && p->party.member[i].account_id == 0) {
+			i++;
 		}
-		//Party gets deleted on the check_empty call below.
-	} else {
-		inter_party->tosql(&p->party,PS_DELMEMBER,i);
-		j = p->party.member[i].lv;
-		if(p->party.member[i].online) p->party.count--;
-		memset(&p->party.member[i], 0, sizeof(struct party_member));
-		p->size--;
-		if (j == p->min_lv || j == p->max_lv || p->family)
-		{
-			if(p->family) p->family = 0; //Family state broken.
-			inter_party->check_lv(p);
+
+		if( i < MAX_PARTY ) {
+			// Update party's leader
+			p->party.member[i].leader = 1;
+			inter_party->tosql(&p->party, PS_LEADER, i);
 		}
 	}
 
