@@ -639,7 +639,8 @@ int mapif_parse_PartyLeave(int fd, int party_id, int account_id, int char_id)
 	
 	inter_party->tosql(&p->party,PS_DELMEMBER,i);
 	j = p->party.member[i].lv;
-	if (p->party.member[i].online > 0) p->party.count--;
+	if (p->party.member[i].online > 0)
+		p->party.count--;
 	memset(&p->party.member[i], 0, sizeof(struct party_member));
 	p->size--;
 	if (j == p->min_lv || j == p->max_lv || p->family) {
@@ -649,8 +650,7 @@ int mapif_parse_PartyLeave(int fd, int party_id, int account_id, int char_id)
 
 	if (leader) {
 		// Member was party leader, pick a new leader
-		i = 0;
-		while (i < MAX_PARTY && p->party.member[i].account_id == 0) i++;
+		ARR_FIND(0, MAX_PARTY, i, p->party.member[i].account_id != 0);
 
 		if (i < MAX_PARTY) {
 			// Update party's leader

@@ -306,7 +306,7 @@ int party_recv_info(const struct party *sp, int char_id)
 			// Leader has changed
 			int k;
 			ARR_FIND(0, MAX_PARTY, k, sp->member[k].leader == 1);
-			if (i < MAX_PARTY) {
+			if (k < MAX_PARTY) {
 				clif->PartyLeaderChanged(map->id2sd(sp->member[k].account_id), 0, sp->member[k].account_id);
 			} else {
 				party->broken(p->party.party_id); // Should not happen, Party is leaderless, disband
