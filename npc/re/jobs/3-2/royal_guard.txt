@@ -147,7 +147,6 @@ prt_castle,48,161,3	script	Middle-aged Gentleman#rg	1_M_LIBRARYMASTER,{
 	}
 	mes "[Heinrich]";
 	if (job_royal == 1) {
-		mes "[Heinrich]";
 		mes "You are persistent friend.";
 		mes "Do you have more things to talk to me about?";
 		next;
