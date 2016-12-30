@@ -332,7 +332,6 @@ prt_in,85,99,3	script	Knight#kabuto	4_M_JOB_KNIGHT2,{
 }
 
 prontera,69,351,0	script	#tour	HIDDEN_NPC,5,5,{
-//OnTouch2:
 OnTouch:
 	if (KNGT_SK > 2)
 		end;

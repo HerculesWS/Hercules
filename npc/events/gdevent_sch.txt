@@ -1330,7 +1330,7 @@ OnInit:
 	disablenpc "removepp_sch_gd";
 	end;
 
-OnTouch2:
+OnTouch:
 	.@paper_sch_gd = countitem(Glitering_PaperA);
 	.@spaper_sch_gd = countitem(Glitering_PaperB);
 	if ((.@paper_sch_gd > 0) || (.@spaper_sch_gd > 0)) {

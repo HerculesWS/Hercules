@@ -1092,7 +1092,6 @@ moc_fild20,354,183,3	script	Continental Guard#01::MocConGuard	4_M_MOC_SOLDIER,3,
 		end;
 	}
 
-//OnTouch2:
 OnTouch:
 	mes "[Continental Guard]";
 	mes "No commoners are allowed in the area beyond this point.";
@@ -2647,7 +2646,6 @@ yuno,333,210,5	script	Library Master#garas	1_M_LIBRARYMASTER,{
 }
 
 yuno,336,203,0	script	#garas_catch	HIDDEN_WARP_NPC,3,3,{
-//OnTouch2:
 OnTouch:
 	if (barmunt_crow == 2) {
 		mes "[Dog]";
@@ -2912,8 +2910,7 @@ yuno_in04,100,5,3	script	Hot Bestseller Corner	HIDDEN_NPC,{
 }
 
 yuno_in04,100,3,0	script	#garas_path	HIDDEN_WARP_NPC,1,1,{
-//OnTouch2:
-OnTouch2:
+OnTouch:
 	if (barmunt_crow == 6) {
 		mes "...................................";
 		next;
@@ -3572,7 +3569,6 @@ yuno_in04,167,120,3	script	Worn-out Book#garas	HIDDEN_NPC,{
 }
 
 que_ba,247,33,0	script	#bpast_1_1	FAKE_NPC,1,1,{
-//OnTouch2:
 OnTouch:
 	if (barmunt_crow < 4) {
 		warp "ama_dun03",119,110;
@@ -3640,7 +3636,6 @@ que_ba,183,25,0	warp	#bpast_2to3_1	1,1,que_ba,72,25
 que_ba,183,52,0	warp	#bpast_2to3_2	1,1,que_ba,72,51
 
 que_ba,102,56,0	script	#3room_barmunt	FAKE_NPC,3,3,{
-//OnTouch2:
 OnTouch:
 	if (barmunt_crow < 4) {
 		warp "yuno_in04",100,3;
@@ -3712,7 +3707,6 @@ que_ba,99,51,7	script	Grotesque Man#zid1	4_M_MUT1,{
 }
 
 que_ba,53,232,0	script	#garas_f_yume	HIDDEN_WARP_NPC,1,1,{
-//OnTouch2:
 OnTouch:
 	if (barmunt_crow == 5) {
 		//GetHEALTHSTATE VAR_HEALTHSTATENORMAL 0
@@ -3757,7 +3751,6 @@ que_ba,48,227,7	script	Grotesque Man#zid2	4_M_MUT1,{
 }
 
 que_ba,264,186,0	script	#barmut_room1	HIDDEN_WARP_NPC,2,2,{
-//OnTouch2:
 OnTouch:
 	if (barmunt_crow == 11) {
 		mes "^660000You wake up, and look around you. Somehow, you've now ended up in a huge mansion.^000000";
@@ -3797,7 +3790,6 @@ que_ba,270,181,3	script	#barmunt_fire	4_M_SAGE_C,{
 }
 
 que_ba,270,270,0	script	#barmunt_living	HIDDEN_WARP_NPC,1,1,{
-//OnTouch2:
 OnTouch:
 	mes "..................";
 	mes "..................";
@@ -3974,7 +3966,6 @@ cave,82,97,3	script	Cave Settler#g1	4_M_CAVE1,3,3,{
 		close;
 	}
 
-//OnTouch2:
 OnTouch:
 	if (barmunt_crow == 8) {
 		mes "[Cave Settler]";
@@ -6810,7 +6801,6 @@ prt_castle,368,312,4	script	Prince#ern	4_M_2NDPRIN1,{
 }
 
 prt_castle,163,319,0	script	#twonoble	FAKE_NPC,3,3,{
-//OnTouch2:
 OnTouch:
 	if (nkprince_eisen == 7) {
 		donpcevent "Young Noble#valter::OnEnable";
@@ -7723,7 +7713,6 @@ prt_castle,176,170,5	script	Guard#princein	8W_SOLDIER,{
 }
 
 prt_castle,121,168,0	script	#arm	HIDDEN_NPC,4,4,{
-//OnTouch2:
 OnTouch:
 	if (nk_prince == 8) {
 		mes "[" + strcharinfo(PC_NAME) + "]";
@@ -7744,7 +7733,6 @@ OnTouch:
 }
 
 prt_castle,316,313,0	script	#arm1	HIDDEN_NPC,3,3,{
-//OnTouch2:
 OnTouch:
 	if (nkprince_eisen > 14) {
 		mes "[" + strcharinfo(PC_NAME) + "]";
