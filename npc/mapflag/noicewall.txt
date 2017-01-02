@@ -206,6 +206,9 @@ nguild_prt	mapflag	noicewall
 // Sara's Memory Instance ===========
 1@sara	mapflag	noicewall
 
+// Horror Toy Factory ===========
+1@xm_d	mapflag	noicewall
+
 // Poring War ====================
 poring_w01	mapflag	noicewall
 poring_w02	mapflag	noicewall

@@ -478,6 +478,10 @@ nyd_dun02	mapflag	noteleport
 1@sara	mapflag	noteleport
 1@sara	mapflag	monster_noteleport
 
+// Horror Toy Factory ===========
+1@xm_d	mapflag	noteleport
+1@xm_d	mapflag	monster_noteleport
+
 //evt_zombie	mapflag	noteleport
 
 // Poring War ====================

@@ -84,3 +84,6 @@
 
 // Sara's Memory Instance ===========
 1@sara	mapflag	partylock
+
+// Horror Toy Factory ===========
+1@xm_d	mapflag	partylock

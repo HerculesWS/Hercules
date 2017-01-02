@@ -805,6 +805,9 @@ gl_cas02_	mapflag	nomemo
 // Sara's Memory Instance ===========
 1@sara	mapflag	nomemo
 
+// Horror Toy Factory ===========
+1@xm_d	mapflag	nomemo
+
 //evt_zombie	mapflag	nomemo
 
 // Poring War ====================
