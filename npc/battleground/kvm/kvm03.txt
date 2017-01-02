@@ -32,7 +32,7 @@
 //= - Winning Team: 2 points
 //= - Losing Team: 1 point
 //================= Current Version =======================================
-//= 1.3
+//= 1.4
 //=========================================================================
 
 //== Waiting Room NPCs =====================================
@@ -40,11 +40,11 @@ bat_room,225,226,5	script	KVM Waiting Room#a3::KvM03R_Guillaume	4_M_KY_KNT,{
 	end;
 
 OnInit:
-	waitingroom(_("Battle Station 5 Players"), 6, "KvM03_BG::OnGuillaumeJoin", 1);
+	waitingroom( _("Battle Station 5 Players"), 6, "KvM03_BG::OnGuillaumeJoin", 1);
 	end;
 
 OnEnterBG:
-	$@KvM03BG_id1 = waitingroom2bg("bat_c03",52,129,"KvM03_BG::OnGuillaumeQuit","KvM03_BG::OnGuillaumeDie");
+	$@KvM03BG_id1 = waitingroom2bg("bat_c03", 52, 129, "KvM03_BG::OnGuillaumeQuit", "KvM03_BG::OnGuillaumeDie");
 	end;
 }
 
@@ -54,11 +54,11 @@ bat_room,225,205,3	script	KVM Waiting Room#b3::KvM03R_Croix	4_M_CRU_KNT,{
 	end;
 
 OnInit:
-	waitingroom(_("Battle Station 5 Players"), 6, "KvM03_BG::OnCroixJoin", 1);
+	waitingroom( _("Battle Station 5 Players"), 6, "KvM03_BG::OnCroixJoin", 1);
 	end;
 
 OnEnterBG:
-	$@KvM03BG_id2 = waitingroom2bg("bat_c03",147,55,"KvM03_BG::OnCroixQuit","KvM03_BG::OnCroixDie");
+	$@KvM03BG_id2 = waitingroom2bg("bat_c03", 147, 55, "KvM03_BG::OnCroixQuit", "KvM03_BG::OnCroixDie");
 	end;
 }
 
@@ -69,11 +69,11 @@ bat_room,225,211,0	warp	#kvm702	2,2,bat_room,154,150
 	end;
 
 OnKvM03One:
-	specialeffect EF_CHANGECOLD;
+	specialeffect(EF_CHANGECOLD);
 	end;
 
 OnKvM03Two:
-	specialeffect EF_CHANGEPOISON;
+	specialeffect(EF_CHANGEPOISON);
 	end;
 }
 
@@ -97,20 +97,20 @@ bat_c03,54,128,3	script	#A_camp_start03	HIDDEN_WARP_NPC,4,4,{
 	end;
 
 OnInit:
-	disablenpc "#A_camp_start03";
+	disablenpc("#A_camp_start03");
 	end;
 
 OnEnable:
-	enablenpc "#A_camp_start03";
+	enablenpc("#A_camp_start03");
 	end;
 
 OnDisable:
-	disablenpc "#A_camp_start03";
+	disablenpc("#A_camp_start03");
 	end;
 
 OnTouch:
 	Bat_Team = 1;
-	setquest 6025;
+	setquest(6025);
 	end;
 }
 
@@ -118,20 +118,20 @@ bat_c03,146,56,3	script	#B_camp_start03	HIDDEN_WARP_NPC,4,4,{
 	end;
 
 OnInit:
-	disablenpc "#B_camp_start03";
+	disablenpc("#B_camp_start03");
 	end;
 
 OnEnable:
-	enablenpc "#B_camp_start03";
+	enablenpc("#B_camp_start03");
 	end;
 
 OnDisable:
-	disablenpc "#B_camp_start03";
+	disablenpc("#B_camp_start03");
 	end;
 
 OnTouch:
 	Bat_Team = 2;
-	setquest 6025;
+	setquest(6025);
 	end;
 }
 
@@ -140,17 +140,17 @@ OnTouch:
 	end;
 
 OnInit:
-	setwall "bat_c03",54,122,6,7,0,"batc03wall_a";
-	setwall "bat_c03",55,122,5,7,0,"batc03wall_b";
-	setwall "bat_c03",140,56,6,7,0,"batc03wall_c";
-	setwall "bat_c03",140,57,5,7,0,"batc03wall_d";
-	disablenpc "KVM Officer#KVM03A";
-	disablenpc "KVM Officer#KVM03B";
+	setwall("bat_c03", 54, 122, 6, 7, 0, "batc03wall_a");
+	setwall("bat_c03", 55, 122, 5, 7, 0, "batc03wall_b");
+	setwall("bat_c03", 140, 56, 6, 7, 0, "batc03wall_c");
+	setwall("bat_c03", 140, 57, 5, 7, 0, "batc03wall_d");
+	disablenpc("KVM Officer#KVM03A");
+	disablenpc("KVM Officer#KVM03B");
 	end;
 
 OnGuillaumeJoin:
 OnCroixJoin:
-	donpcevent "KvM03_BG::OnReadyCheck";
+	donpcevent("KvM03_BG::OnReadyCheck");
 	end;
 
 OnGuillaumeQuit:
@@ -158,9 +158,10 @@ OnGuillaumeQuit:
 OnGuillaumeDie:
 	if ($@KvM03BG == 2) {
 		--.Guillaume_Count;
-		bg_updatescore "bat_c03",.Guillaume_Count,.Croix_Count;
-		if( .Guillaume_Count < 1 ) donpcevent "KvM03_BG::OnCroixWin";
-		else {
+		bg_updatescore("bat_c03", .Guillaume_Count, .Croix_Count);
+		if (.Guillaume_Count < 1) {
+			donpcevent("KvM03_BG::OnCroixWin");
+		} else {
 			mapannounce("bat_c03", sprintf(_$("The number of Guillaumes is %d."), .Guillaume_Count), bc_map, "0x00ff00");
 			mapannounce("bat_c03", sprintf(_$("The number of Croixes is %d."), .Croix_Count), bc_map, "0x00ff00");
 		}
@@ -172,9 +173,10 @@ OnCroixQuit:
 OnCroixDie:
 	if ($@KvM03BG == 2) {
 		--.Croix_Count;
-		bg_updatescore "bat_c03",.Guillaume_Count,.Croix_Count;
-		if( .Croix_Count < 1 ) donpcevent "KvM03_BG::OnGuillaumeWin";
-		else {
+		bg_updatescore("bat_c03", .Guillaume_Count, .Croix_Count);
+		if (.Croix_Count < 1) {
+			donpcevent("KvM03_BG::OnGuillaumeWin");
+		} else {
 			mapannounce("bat_c03", sprintf(_$("The number of Guillaumes is %d."), .Guillaume_Count), bc_map, "0x00ff00");
 			mapannounce("bat_c03", sprintf(_$("The number of Croixes is %d."), .Croix_Count), bc_map, "0x00ff00");
 		}
@@ -182,28 +184,28 @@ OnCroixDie:
 	end;
 
 OnReadyCheck:
-	if( $@KvM03BG )
+	if ($@KvM03BG)
 		end;
-	.@Guillaume = getwaitingroomstate(0,"KvM03R_Guillaume");
-	.@Croix = getwaitingroomstate(0,"KvM03R_Croix");
+	.@Guillaume = getwaitingroomstate(0, "KvM03R_Guillaume");
+	.@Croix = getwaitingroomstate(0, "KvM03R_Croix");
 
-	if( .@Guillaume < 5 || .@Croix < 5 )
+	if (.@Guillaume < 5 || .@Croix < 5)
 		end;
 
 	$@KvM03BG = 1; // Starting
-	donpcevent "KvM03R_Croix::OnEnterBG";
-	donpcevent "KvM03R_Guillaume::OnEnterBG";
-	donpcevent "KvM03_BG::OnStart";
+	donpcevent("KvM03R_Croix::OnEnterBG");
+	donpcevent("KvM03R_Guillaume::OnEnterBG");
+	donpcevent("KvM03_BG::OnStart");
 	end;
 
 OnStart:
-	disablenpc "KVM Officer#KVM03A";
-	disablenpc "KVM Officer#KVM03B";
+	disablenpc("KVM Officer#KVM03A");
+	disablenpc("KVM Officer#KVM03B");
 	$@KvM01BG_Victory = 0;
 	// Warp Teams
-	bg_warp $@KvM03BG_id1,"bat_c03",53,128;
-	bg_warp $@KvM03BG_id2,"bat_c03",146,55;
-	initnpctimer;
+	bg_warp($@KvM03BG_id1, "bat_c03", 53, 128);
+	bg_warp($@KvM03BG_id2, "bat_c03", 146, 55);
+	initnpctimer();
 	end;
 
 OnTimer1000:
@@ -217,13 +219,13 @@ OnTimer3000:
 OnTimer6000:
 	mapannounce("bat_c03", _("Please prepare for the KVM battle."), bc_map, "0x00ff00");
 	mapannounce("bat_c03", _("You can buff your people."), bc_map, "0x00ff00");
-	donpcevent "#A_camp_start03::OnEnable";
-	donpcevent "#B_camp_start03::OnEnable";
+	donpcevent("#A_camp_start03::OnEnable");
+	donpcevent("#B_camp_start03::OnEnable");
 	end;
 
 OnTimer13000:
-	donpcevent "#A_camp_start03::OnDisable";
-	donpcevent "#B_camp_start03::OnDisable";
+	donpcevent("#A_camp_start03::OnDisable");
+	donpcevent("#B_camp_start03::OnDisable");
 	end;
 
 OnTimer30000:
@@ -232,40 +234,39 @@ OnTimer30000:
 
 OnTimer45000:
 	mapannounce("bat_c03", _("15 seconds remaining to start KVM battle."), bc_map, "0x00ff00");
-	donpcevent "::OnKvM01One";
+	donpcevent("::OnKvM01One");
 	end;
 
 OnTimer50000:
 	mapannounce("bat_c03", _("10 seconds remaining to start KVM battle."), bc_map, "0x00ff00");
-	donpcevent "::OnKvM01Two";
+	donpcevent("::OnKvM01Two");
 	end;
 
 OnTimer55000:
 	mapannounce("bat_c03", _("5 seconds remaining to start KVM battle."), bc_map, "0x00ff00");
-	donpcevent "::OnKvM01One";
+	donpcevent("::OnKvM01One");
 	end;
 
 OnTimer59000:
 	mapannounce("bat_c03", _("KVM is now commencing."), bc_map, "0x00ff00");
-	donpcevent "::OnKvM01Two";
+	donpcevent("::OnKvM01Two");
 	end;
 
 OnTimer61000:
 	// Team Members
 	.Guillaume_Count = bg_get_data($@KvM03BG_id1, 0);
 	.Croix_Count = bg_get_data($@KvM03BG_id2, 0);
-	if( .Guillaume_Count < 5 || .Croix_Count < 5 )
-	{
+	if (.Guillaume_Count < 5 || .Croix_Count < 5) {
 		$@KvM03BG_Victory = 3;
 		$@KvM03BG = 3;
 		mapannounce("bat_c03", _("There are not enough players to start the battle"), bc_map, "0xC0C0C0");
-		stopnpctimer;
-		donpcevent "KvM03_BG::OnStop";
+		stopnpctimer();
+		donpcevent("KvM03_BG::OnStop");
 		end;
 	}
 	$@KvM03BG = 2; // Playing
-	bg_warp $@KvM03BG_id1,"bat_c03",62,119;
-	bg_warp $@KvM03BG_id2,"bat_c03",137,64;
+	bg_warp($@KvM03BG_id1, "bat_c03", 62, 119);
+	bg_warp($@KvM03BG_id2, "bat_c03", 137, 64);
 	end;
 
 OnTimer300000:
@@ -290,18 +291,17 @@ OnTimer355000:
 
 OnTimer360000:
 	mapannounce("bat_c03", _("KVM has ended."), bc_map, "0x00ff00");
-	if( .Croix_Count > .Guillaume_Count )
-		donpcevent "KvM03_BG::OnCroixWin";
-	else if( .Croix_Count < .Guillaume_Count )
-		donpcevent "KvM03_BG::OnGuillaumeWin";
-	else
-	{ // Draw Game
+	if (.Croix_Count > .Guillaume_Count) {
+		donpcevent("KvM03_BG::OnCroixWin");
+	} else if (.Croix_Count < .Guillaume_Count) {
+		donpcevent("KvM03_BG::OnGuillaumeWin");
+	} else { // Draw Game
 		$@KvM03BG = 3;
 		$@KvM03BG_Victory = 3;
 		mapannounce("bat_c03", sprintf(_$("The number of Guillaumes is %d."), .Guillaume_Count), bc_map, "0x00ff00");
 		mapannounce("bat_c03", sprintf(_$("The number of Croixes is %d."), .Croix_Count), bc_map, "0x00ff00");
 		mapannounce("bat_c03", _("This battle has ended in a draw."), bc_map, "0x00ff00");
-		donpcevent "KvM03_BG::OnStop";
+		donpcevent("KvM03_BG::OnStop");
 	}
 	end;
 
@@ -311,7 +311,7 @@ OnGuillaumeWin:
 	mapannounce("bat_c03", _("Guillaume wins!"), bc_map, "0x00ff00");
 	mapannounce("bat_c03", _("Congratulations to Guillaume members."), bc_map, "0x00ff00");
 	mapannounce("bat_c03", _("Everyone will be moved to the start point."), bc_map, "0x00ff00");
-	donpcevent "KvM03_BG::OnStop";
+	donpcevent("KvM03_BG::OnStop");
 	end;
 
 OnCroixWin:
@@ -320,32 +320,38 @@ OnCroixWin:
 	mapannounce("bat_c03", _("Croix wins!"), bc_map, "0x00ff00");
 	mapannounce("bat_c03", _("Congratulations to Croix members."), bc_map, "0x00ff00");
 	mapannounce("bat_c03", _("Everyone will be moved to the start point."), bc_map, "0x00ff00");
-	donpcevent "KvM03_BG::OnStop";
+	donpcevent("KvM03_BG::OnStop");
 	end;
 
 OnStop:
-	stopnpctimer;
-	enablenpc "KVM Officer#KVM03A";
-	enablenpc "KVM Officer#KVM03B";
+	stopnpctimer();
+	enablenpc("KVM Officer#KVM03A");
+	enablenpc("KVM Officer#KVM03B");
 	// Warp Teams
-	bg_warp $@KvM03BG_id1,"bat_c03",53,128;
-	bg_warp $@KvM03BG_id2,"bat_c03",146,55;
-	donpcevent "KvM03_BG_Out::OnBegin";
+	bg_warp($@KvM03BG_id1, "bat_c03", 53, 128);
+	bg_warp($@KvM03BG_id2, "bat_c03", 146, 55);
+	donpcevent("KvM03_BG_Out::OnBegin");
 	end;
 
 OnReset:
 	.Croix_Count = 0;
 	.Guillaume_Count = 0;
 	$@KvM03BG_Victory = 0;
-	if( $@KvM03BG_id1 ) { bg_destroy $@KvM03BG_id1; $@KvM03BG_id1 = 0; }
-	if( $@KvM03BG_id2 ) { bg_destroy $@KvM03BG_id2; $@KvM03BG_id2 = 0; }
-	disablenpc "KVM Officer#KVM03A";
-	disablenpc "KVM Officer#KVM03B";
-	mapwarp "bat_c03","bat_room",154,150;
-	maprespawnguildid "bat_c03",0,3; // Just in case someone else
-	bg_updatescore "bat_c03",5,5;
+	if ($@KvM03BG_id1) {
+		bg_destroy($@KvM03BG_id1);
+		$@KvM03BG_id1 = 0;
+	}
+	if ($@KvM03BG_id2) {
+		bg_destroy($@KvM03BG_id2);
+		$@KvM03BG_id2 = 0;
+	}
+	disablenpc("KVM Officer#KVM03A");
+	disablenpc("KVM Officer#KVM03B");
+	mapwarp("bat_c03", "bat_room", 154, 150);
+	maprespawnguildid("bat_c03", 0, 3); // Just in case someone else
+	bg_updatescore("bat_c03", 5, 5);
 	$@KvM03BG = 0;
-	donpcevent "KvM03_BG::OnReadyCheck"; // Maybe a game is ready to start
+	donpcevent("KvM03_BG::OnReadyCheck"); // Maybe a game is ready to start
 	end;
 }
 
@@ -353,7 +359,7 @@ OnReset:
 	end;
 
 OnBegin:
-	initnpctimer;
+	initnpctimer();
 	end;
 
 OnTimer1000:
@@ -375,61 +381,57 @@ OnTimer55000:
 	end;
 
 OnTimer60000:
-	stopnpctimer;
-	donpcevent "KvM03_BG::OnReset";
+	stopnpctimer();
+	donpcevent("KvM03_BG::OnReset");
 	end;
 }
 
 //== Battleground rewards ==================================
 bat_c03,51,130,5	script	KVM Officer#KVM03A	4_M_KY_HEAD,{
-	if( $@KvM01BG_Victory )
-	{
-		if( $@KvM03BG_Victory == Bat_Team )
-		{ // Victory
+	if ($@KvM01BG_Victory) {
+		if ($@KvM03BG_Victory == Bat_Team) { // Victory
 			kvm_point += 2;
 			mes("[KVM Officer]");
 			mes("Good Game.");
 			mes("May the glory of KVM be with you.");
 			mes("You aquire the winning points: 2");
-			close2;
+			close2();
 		} else {
 			++kvm_point;
 			mes("[KVM Officer]");
 			mes("I am so sorry.");
 			mes("I wish you better luck next time.");
 			mes("You aquire the losing points: 1");
-			close2;
+			close2();
 		}
-		bg_leave;
+		bg_leave();
 		Bat_Team = 0;
-		warp "bat_room",154,150;
+		warp("bat_room", 154, 150);
 		end;
 	}
 	end;
 }
 
 bat_c03,148,53,1	script	KVM Officer#KVM03B	4_M_CRU_HEAD,{
-	if( $@KvM01BG_Victory )
-	{
-		if( $@KvM03BG_Victory == Bat_Team )
-		{ // Victory
+	if ($@KvM01BG_Victory) {
+		if ($@KvM03BG_Victory == Bat_Team) { // Victory
 			kvm_point +=2;
 			mes("[KVM Officer]");
 			mes("Good Game.");
 			mes("May the glory of KVM be with you.");
 			mes("You aquire the winning points: 2");
-			close2;
+			close2();
 		} else {
 			++kvm_point;
 			mes("[KVM Officer]");
 			mes("I am so sorry.");
 			mes("I wish you better luck next time.");
 			mes("You aquire the losing points: 1");
-			close2;
+			close2();
 		}
-		bg_leave;
+		bg_leave();
 		Bat_Team = 0;
-		warp "bat_room",154,150;
+		warp("bat_room", 154, 150);
 		end;
 	}
 	end;

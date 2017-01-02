@@ -31,25 +31,26 @@
 
 hugel,178,142,0	script	toairplane#hugel	WARPNPC,1,1,{
 	end;
+
 OnTouch:
-	mes("To use the airship, you are required to pay 1,200 zeny or a Free Airship Ticket.");
+	mes("To use the airship, you are required to pay 1, 200 zeny or a Free Airship Ticket.");
 	mes("Would you like to use the service?");
-	next;
+	next();
 	if (select("Yes", "No") == 1) {
 		if (countitem(Free_Flying_Ship_Ticket) > 0) {
-			delitem Free_Flying_Ship_Ticket,1;
-			warp "airplane",244,58;
+			delitem(Free_Flying_Ship_Ticket, 1);
+			warp("airplane", 244, 58);
 			end;
 		}
 		if (Zeny >= 1200) {
 			Zeny -= 1200;
-			warp "airplane",244,58;
+			warp("airplane", 244, 58);
 			end;
 		}
 		mes("I am sorry, but you do not have enough money.");
 		mes("Please remember, you are required to pay 1,200 zeny to use the service.");
-		close;
+		close();
 	}
 	mes("Thank you, please come again.");
-	close;
+	close();
 }
