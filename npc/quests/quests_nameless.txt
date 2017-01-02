@@ -2862,7 +2862,6 @@ que_temsky,99,100,6	script	Pope#rachel2	4_F_ARUNA_POP,{
 }
 
 que_temsky,100,93,0	script	#em_sky_s	FAKE_NPC,5,2,{
-//OnTouch2:
 OnTouch:
 	if (aru_em == 21) {
 		mes "^3355FFHigh Priest Zhed and High";
@@ -4252,7 +4251,6 @@ cmd_fild01,55,160,0	script	Heap of Earth	CLEAR_NPC,{
 		close;
 	}
 
-//OnTouch2:
 OnTouch:
 	if (diamond_edq < 9) {
 		mes "[Dorian]";
@@ -5162,7 +5160,6 @@ moc_ruins,152,147,5	script	Ibrahim	4_M_JOB_HUNTER,3,3,{
 	mes "kept it well hidden...";
 	close;
 
-//OnTouch2:
 OnTouch:
 if ((diamond_edq == 14) && (BaseLevel > 65)) {
 	mes "[Ibrahim]";
@@ -6861,7 +6858,6 @@ prt_in,168,18,1	script	Valdes	1_M_YOUNGKNIGHT,2,2,{
 	mes "It's like my life is over...";
 	close;
 
-//OnTouch2:
 OnTouch:
 	if (zdan_edq == 2) {
 		mes "[Valdes]";
@@ -8702,7 +8698,6 @@ OnInit:
 	$@mosnter = 0;
 	end;
 
-//OnTouch2:
 OnTouch:
 	if (zdan_edq == 15) {
 		mes "^FF0000*Creak Creak*^000000";
@@ -11647,7 +11642,6 @@ OnTimer60000:
 gef_fild08,182,182,0	script	#CallGhost	FAKE_NPC,2,2,{
 	end;
 
-//OnTouch2:
 OnTouch:
 	if (jewel_nd == 21) {
 		if (countitem(Unlucky_Emerald) > 0) {

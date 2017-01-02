@@ -302,7 +302,6 @@ yuno_in01,35,179,4	script	Pub Master#kh	1_ETC_01,5,5,{
 		close;
 	}
 
-//OnTouch2:
 OnTouch:
 	if (KielHyreQuest < 1) {
 		mes "[Vandt]";
@@ -1987,7 +1986,6 @@ kh_vila,175,19,0	duplicate(BookKHQ1)	Book#kh4	HIDDEN_NPC
 
 //- Store room interior; Letter to Elly on the floor. -
 kh_vila,179,11,0	script	Letter#kh	FAKE_NPC,1,1,{
-//OnTouch2:
 OnTouch:
 	if (KielHyreQuest == 18) {
 		if (checkweight(Kyll_Hire_Letter,1) == 0) {
@@ -2369,7 +2367,6 @@ kh_vila,39,41,0	script	Pool#khp1	HIDDEN_NPC,{
 
 //- Cottage interior, upstairs; Vicious Dog -
 kh_vila,181,178,4	script	Vicious Dog#khp1	4_DOG01,7,3,{
-//OnTouch2:
 OnTouch:
 	mes "*Grrr~*";
 	next;
@@ -3456,7 +3453,6 @@ kh_dun01,162,206,0	duplicate(KHKeyardReader)	Mechanical Device	HIDDEN_NPC
 
 //- Kiel Hyre - OnTouch -
 kh_dun01,224,233,0	script	Factory B Area Door	FAKE_NPC,5,5,{
-//OnTouch2:
 OnTouch:
 	if (KielHyreQuest == 40) {
 		if (checkweight(Steel_Piece,1) == 0) {
@@ -4612,7 +4608,6 @@ kh_mansion,18,30,4	script	Allysia	4_F_KHELLISIA,{
 
 //- Abduction triggering NPC -
 lighthalzen,188,200,0	script	Abduction_trigger	FAKE_NPC,3,1,{
-//OnTouch2:
 OnTouch:
 	if (KielHyreQuest == 50) {
 		mes "^3355FFAs you walked out of";
@@ -4630,7 +4625,6 @@ OnTouch:
 //- Mysterious Woman "Mitchell Layla" -
 kh_mansion,25,79,4	script	Mysterious Woman#kh	4_F_JOB_HUNTER,3,3,{
 
-//OnTouch2:
 OnTouch:
 	if (KielHyreQuest == 50) {
 		mes "^3355FFYou awaken with your";
