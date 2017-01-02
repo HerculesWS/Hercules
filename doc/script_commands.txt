@@ -6854,7 +6854,7 @@ The maximum length of a chat room name is 60 letters.
 The limit is the maximum number of people allowed to enter the chat room. 
 The attached NPC is included in this count. If the optional event and 
 trigger parameters are given, the event label 
-("<NPC object name>::<label name>") will be invoked as if with a doevent()
+("<NPC object name>::<label name>") will be invoked as if with a donpcevent()
 upon the number of people in the chat room reaching the given triggering 
 amount.
 
