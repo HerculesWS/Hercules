@@ -106,6 +106,9 @@ prt_are_in	mapflag	zone	Izlude Battle Arena
 // Sara's Memory Instance ===========
 1@sara	mapflag	zone	Memorial Dungeon
 
+// Horror Toy Factory ===========
+1@xm_d	mapflag	zone	Memorial Dungeon
+
 //Towns
 alberta	mapflag	zone	Towns
 aldebaran	mapflag	zone	Towns

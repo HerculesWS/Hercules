@@ -417,6 +417,9 @@ gl_cas02_	mapflag	nobranch
 // Sara's Memory Instance ===========
 1@sara	mapflag	nobranch
 
+// Horror Toy Factory ===========
+1@xm_d	mapflag	nobranch
+
 //evt_zombie	mapflag	nobranch
 
 // Poring War ==================

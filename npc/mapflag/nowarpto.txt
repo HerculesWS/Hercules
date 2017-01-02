@@ -171,6 +171,9 @@ spl_in01	mapflag	nowarpto
 // Ghost Palace ===========
 1@spa	mapflag	nowarpto
 
+// Horror Toy Factory ===========
+1@xm_d	mapflag	nowarpto
+
 // Poring War ====================
 poring_w01	mapflag	nowarpto
 poring_w02	mapflag	nowarpto
