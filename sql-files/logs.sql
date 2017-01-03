@@ -167,7 +167,7 @@ CREATE TABLE IF NOT EXISTS `zenylog` (
   `time` DATETIME NULL,
   `char_id` INT(11) NOT NULL DEFAULT '0',
   `src_id` INT(11) NOT NULL DEFAULT '0',
-  `type` ENUM('T','V','P','M','S','N','D','C','A','E','I','B') NOT NULL DEFAULT 'S',
+  `type` ENUM('T','V','P','M','S','N','D','C','A','E','I','B','K') NOT NULL DEFAULT 'S',
   `amount` INT(11) NOT NULL DEFAULT '0',
   `map` VARCHAR(11) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
