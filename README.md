@@ -101,8 +101,7 @@ the end of this file).
   3. Connect to the MySQL server as root:
     - Create a database (hercules): `CREATE DATABASE hercules;`
     - Create a user (hercules): `CREATE USER 'hercules'@'localhost' IDENTIFIED BY 'password';`.
-    - Give permissions (GRANT SELECT,INSERT,UPDATE,DELETE) to the user: `GRANT SELECT,INSERT,UPDATE,DELETE ON
-      \`hercules\`.* TO 'hercules'@'localhost';`
+    - Give permissions (GRANT SELECT,INSERT,UPDATE,DELETE) to the user: `GRANT SELECT,INSERT,UPDATE,DELETE ON hercules.* TO 'hercules'@'localhost';`
   4. Connect to the MySQL server as the new user:
     - Import the .sql files in /sql-files/ into the new database.
   5. Start Visual Studio and load the provided solution:
@@ -123,8 +122,7 @@ the end of this file).
   4. Connect to the MySQL server as root:
     - Create a database (hercules): `CREATE DATABASE hercules;`
     - Create a user (hercules): `CREATE USER 'hercules'@'localhost' IDENTIFIED BY 'password';`.
-    - Give permissions (GRANT SELECT,INSERT,UPDATE,DELETE) to the user: `GRANT SELECT,INSERT,UPDATE,DELETE ON
-      \`hercules\`.* TO 'hercules'@'localhost';`
+    - Give permissions (GRANT SELECT,INSERT,UPDATE,DELETE) to the user: `GRANT SELECT,INSERT,UPDATE,DELETE ON hercules.* TO 'hercules'@'localhost';`
   5. Connect to the MySQL server as the new user:
     - Import the .sql files in /sql-files/ into the new database.
   6. Enter the Hercules directory and configure/build Hercules
