@@ -1452,6 +1452,8 @@ function	script	applegamble	{
 				getitem Apple,.@amount;
 				end;
 			}
+			mes("Alright.");
+			mes("Let me cast the dice again.");
 		}
 		else {
 			mesf("^FF0000%s^000000, you got ^FF0000%d^000000 and the total is now ^FF0000%d^000000. "
