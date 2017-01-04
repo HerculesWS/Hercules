@@ -4392,10 +4392,11 @@ int pc_payzeny(struct map_session_data *sd,int zeny, enum e_log_pick_type type, 
 /*==========================================
  * Cash Shop
  *------------------------------------------*/
-
+//Changed Kafrapoints calculation. [Normynator]
 int pc_paycash(struct map_session_data *sd, int price, int points)
 {
 	int cash;
+	int smp;
 	nullpo_retr(-1,sd);
 
 	points = cap_value(points,-MAX_ZENY,MAX_ZENY); //prevent command UB
@@ -4408,10 +4409,14 @@ int pc_paycash(struct map_session_data *sd, int price, int points)
 	if( points > price )
 	{
 		ShowWarning("pc_paycash: More kafra points provided than needed (price=%d, points=%d, account_id=%d, char_id=%d).\n", price, points, sd->status.account_id, sd->status.char_id);
-		points = price;
+		points = points - price;
+		smp = price;
+		cash = 0;
+	}else{
+		cash = price-points;
+		smp = points;
+		points = 0;
 	}
-
-	cash = price-points;
 
 	if( sd->cashPoints < cash || sd->kafraPoints < points )
 	{
@@ -4420,7 +4425,7 @@ int pc_paycash(struct map_session_data *sd, int price, int points)
 	}
 
 	pc_setaccountreg(sd, script->add_str("#CASHPOINTS"), sd->cashPoints-cash);
-	pc_setaccountreg(sd, script->add_str("#KAFRAPOINTS"), sd->kafraPoints-points);
+	pc_setaccountreg(sd, script->add_str("#KAFRAPOINTS"), sd->kafraPoints-smp);
 
 	if( battle_config.cashshop_show_points )
 	{
@@ -4428,7 +4433,7 @@ int pc_paycash(struct map_session_data *sd, int price, int points)
 		sprintf(output, msg_sd(sd,504), points, cash, sd->kafraPoints, sd->cashPoints);
 		clif_disp_onlyself(sd, output);
 	}
-	return cash+points;
+	return points;
 }
 
 int pc_getcash(struct map_session_data *sd, int cash, int points)

@@ -17740,7 +17740,7 @@ void clif_parse_CashShopBuy(int fd, struct map_session_data *sd) {
 				if (!itemdb->isstackable2(data))
 					get_count = 1;
 
-				pc->paycash(sd, clif->cs.data[tab][j]->price * qty, kafra_pay);// [Ryuuzaki]
+				kafra_pay = pc->paycash(sd, clif->cs.data[tab][j]->price * qty, kafra_pay);// [Ryuuzaki] //changed Kafrapoints calculation. [Normynator]
 				for (k = 0; k < qty; k += get_count) {
 					if (!pet->create_egg(sd, data->nameid)) {
 						memset(&item_tmp, 0, sizeof(item_tmp));
