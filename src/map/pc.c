@@ -4396,43 +4396,40 @@ int pc_payzeny(struct map_session_data *sd,int zeny, enum e_log_pick_type type, 
 int pc_paycash(struct map_session_data *sd, int price, int points)
 {
 	int cash;
-	int smp;
+	int mempoints;
 	nullpo_retr(-1,sd);
 
 	points = cap_value(points,-MAX_ZENY,MAX_ZENY); //prevent command UB
-	if( price < 0 || points < 0 )
-	{
+	if( price < 0 || points < 0 ) {
 		ShowError("pc_paycash: Paying negative points (price=%d, points=%d, account_id=%d, char_id=%d).\n", price, points, sd->status.account_id, sd->status.char_id);
 		return -2;
 	}
 
-	if( points > price )
-	{
+	if( points > price ) {
 		ShowWarning("pc_paycash: More kafra points provided than needed (price=%d, points=%d, account_id=%d, char_id=%d).\n", price, points, sd->status.account_id, sd->status.char_id);
 		points = points - price;
-		smp = price;
+		mempoints = price;
 		cash = 0;
-	}else{
-		cash = price-points;
-		smp = points;
+	} else {
+		cash = price - points;
+		mempoints = points;
 		points = 0;
 	}
 
-	if( sd->cashPoints < cash || sd->kafraPoints < points )
-	{
+	if( sd->cashPoints < cash || sd->kafraPoints < points ) {
 		ShowError("pc_paycash: Not enough points (cash=%d, kafra=%d) to cover the price (cash=%d, kafra=%d) (account_id=%d, char_id=%d).\n", sd->cashPoints, sd->kafraPoints, cash, points, sd->status.account_id, sd->status.char_id);
 		return -1;
 	}
 
 	pc_setaccountreg(sd, script->add_str("#CASHPOINTS"), sd->cashPoints-cash);
-	pc_setaccountreg(sd, script->add_str("#KAFRAPOINTS"), sd->kafraPoints-smp);
+	pc_setaccountreg(sd, script->add_str("#KAFRAPOINTS"), sd->kafraPoints-mempoints);
 
-	if( battle_config.cashshop_show_points )
-	{
+	if( battle_config.cashshop_show_points ) {
 		char output[128];
 		sprintf(output, msg_sd(sd,504), points, cash, sd->kafraPoints, sd->cashPoints);
 		clif_disp_onlyself(sd, output);
 	}
+	
 	return points;
 }
 
