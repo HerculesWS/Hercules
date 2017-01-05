@@ -4397,9 +4397,9 @@ int pc_paycash(struct map_session_data *sd, int price, int points)
 {
 	int cash;
 	int mempoints;
-	nullpo_retr(-1,sd);
+	nullpo_retr(-1, sd);
 
-	points = cap_value(points,-MAX_ZENY,MAX_ZENY); //prevent command UB
+	points = cap_value(points, -MAX_ZENY, MAX_ZENY); //prevent command UB
 	if (price < 0 || points < 0) {
 		ShowError("pc_paycash: Paying negative points (price=%d, points=%d, account_id=%d, char_id=%d).\n", price, points, sd->status.account_id, sd->status.char_id);
 		return -2;
@@ -4421,8 +4421,8 @@ int pc_paycash(struct map_session_data *sd, int price, int points)
 		return -1;
 	}
 
-	pc_setaccountreg(sd, script->add_str("#CASHPOINTS"), sd->cashPoints-cash);
-	pc_setaccountreg(sd, script->add_str("#KAFRAPOINTS"), sd->kafraPoints-mempoints);
+	pc_setaccountreg(sd, script->add_str("#CASHPOINTS"), sd->cashPoints - cash);
+	pc_setaccountreg(sd, script->add_str("#KAFRAPOINTS"), sd->kafraPoints - mempoints);
 
 	if (battle_config.cashshop_show_points) {
 		char output[128];
