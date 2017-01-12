@@ -13,6 +13,7 @@
 //= Copyright (C) Ridley
 //= Copyright (C) Steph
 //= Copyright (C) AtlantisRO
+//= Copyright (C) Asheraf
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -34,8 +35,8 @@
 //= 1.0
 //=========================================================================
 
-xmas,240,291,3	script	Gold Hand Birina#1	4_F_05,{
-	if (checkweight(1201, 1) == 0) {
+xmas,240,291,3	script	Billy The Golden Hands#1	4_F_05,{
+	if (checkweight(Knife, 1) == 0) {
 		mes("You have too many items in your inventory! Please remove some items before coming back.");
 		close();
 	}
@@ -43,84 +44,49 @@ xmas,240,291,3	script	Gold Hand Birina#1	4_F_05,{
 		mes("Please reduce your inventory weight before coming back.");
 		close();
 	}
-	mes("[Gold Hand Birina]");
+	disable_items();
+	mes("[Billy The Golden Hands]");
 	mes("Did you bring those bloody coins? If you enough of them, I'll sell you some items!");
 	next();
-	switch (select("Cancel", "Sealed Mind Box (100 Coins)", "Fresh Rose (500 Coins)", "(Costume)Fresh Rose (1000 Coins)", "(Costume)Santa Doll Hairband (500 Coins)", "(Costume)Costume Red Bonnet (500 Coins)", "Old Parasol (1000 Coins)", "Warm Tea (7 Coins)", "Sweet Pastry (5 Coins)", "Holy Water (1 Coin)", "Cursed Water (1 Coin)")) {
-	case 1:
-		mes("[Gold Hand Birina]");
+	setarray(.@xm_item[0], Closedmind_Box, Lush_Rose, C_Lush_Rose, C_SantaHairband, C_Red_Bonnet, Old_Parasol, Hot_Tee, Sweet_Canape, Holy_Water, Water_Of_Darkness);
+	setarray(.@xm_bill[0], 100, 500, 1000, 500, 500, 1000, 7, 5, 1, 1);
+	for (.@i = 0; .@i < getarraysize(.@xm_item); ++.@i)
+		.@menulist$ += sprintf(_$("%s (%d Coins):"), getitemname(.@xm_item[.@i]), .@xm_bill[.@i]);
+	.@choice = select("Cancel", .@menulist$) - 2;
+	if (.@choice == -1) {
+		mes("[Billy The Golden Hands]");
 		mes("I look forward to your visit next time.");
 		close();
-	case 2:
-		.@xm_bill = 100;
-		.@xm_item = Closedmind_Box;
-		break;
-	case 3:
-		.@xm_bill = 500;
-		.@xm_item = Lush_Rose;
-		break;
-	case 4:
-		.@xm_bill = 1000;
-		.@xm_item = C_Lush_Rose;
-		break;
-	case 5:
-		.@xm_bill = 500;
-		.@xm_item = C_SantaHairband;
-		break;
-	case 6:
-		.@xm_bill = 500;
-		.@xm_item = C_Red_Bonnet;
-		break;
-	case 7:
-		.@xm_bill = 1000;
-		.@xm_item = Old_Parasol;
-		break;
-	case 8:
-		.@xm_bill = 7;
-		.@xm_item = Hot_Tee;
-		break;
-	case 9:
-		.@xm_bill = 5;
-		.@xm_item = Sweet_Canape;
-		break;
-	case 10:
-		.@xm_bill = 1;
-		.@xm_item = Holy_Water;
-		break;
-	case 11:
-		.@xm_bill = 1;
-		.@xm_item = Water_Of_Darkness;
-		break;
 	}
-	if (countitem(Bloody_Coin) >= .@xm_bill) {
-		mes("[Gold Hand Birina]");
-		mesf("^0000ff%s^000000 needs a total of ^0000ff%d^000000 bloody coins. Proceed?", getitemname(.@xm_item), .@xm_bill);
+	if (countitem(Bloody_Coin) >= .@xm_bill[.@choice]) {
+		mes("[Billy The Golden Hands]");
+		mesf("^0000ff%s^000000 needs a total of ^0000ff%d^000000 bloody coins. Proceed?", getitemname(.@xm_item[.@choice]), .@xm_bill[.@choice]);
 		next();
 		if (select("Cancel", "Buy") == 1) {
-			mes("[Gold Hand Birina]");
+			mes("[Billy The Golden Hands]");
 			mes("You're a troublesome customer aren't you!? Come back once you've made up your mind!");
 			close();
 		}
-		if (countitem(Bloody_Coin) >= .@xm_bill) {
-			delitem(Bloody_Coin, .@xm_bill);
-			getitem(.@xm_item, 1);
-			mes("[Gold Hand Birina]");
+		if (countitem(Bloody_Coin) >= .@xm_bill[.@choice]) {
+			delitem(Bloody_Coin, .@xm_bill[.@choice]);
+			getitem(.@xm_item[.@choice], 1);
+			mes("[Billy The Golden Hands]");
 			mes("Thank you for your patronage.");
 			close();
 		} else {
-			mes("[Gold Hand Birina]");
-			mesf("^0000ff%s^000000 needs a total of ^0000ff%d^000000 Bloody Coins. You do not have enough!", getitemname(.@xm_item), .@xm_bill);
+			mes("[Billy The Golden Hands]");
+			mesf("^0000ff%s^000000 needs a total of ^0000ff%d^000000 Bloody Coins. You do not have enough!", getitemname(.@xm_item[.@choice]), .@xm_bill[.@choice]);
 			close();
 		}
 	} else {
-		mes("[Gold Hand Birina]");
-		mesf("^0000ff%s^000000 needs a total of ^0000ff%d^000000 bloody coins. You do not have enough!", getitemname(.@xm_item), .@xm_bill);
+		mes("[Billy The Golden Hands]");
+		mesf("^0000ff%s^000000 needs a total of ^0000ff%d^000000 Bloody Coins. You do not have enough!", getitemname(.@xm_item[.@choice]), .@xm_bill[.@choice]);
 		close();
 	}
 }
 
 xmas,240,297,3	script	Kain the Orphan#1	4_M_06,{
-	if (checkweight(1201, 1) == 0) {
+	if (checkweight(Knife, 1) == 0) {
 		mes("You have too many items in your inventory! Please remove some items before coming back.");
 		close();
 	}
@@ -181,11 +147,11 @@ xmas,240,297,3	script	Kain the Orphan#1	4_M_06,{
 			delequip(.@eq_num);
 			getitem(Celines_Ribbon, 1);
 			mes("[Kain the Orphan]");
-			mes("Transaction completed.");
+			mes("Transaction Completed.");
 			close();
 		} else {
 			mes("[Kain the Orphan]");
-			mes("You do not have enough Bloody Coins. Please reconfirm the amounts.");
+			mes("You do not have 1000 Bloody Coins. Please reconfirm the amounts.");
 			close();
 		}
 		break;
@@ -228,11 +194,11 @@ xmas,240,297,3	script	Kain the Orphan#1	4_M_06,{
 			delequip(.@eq_num);
 			getitem(Noble_Cross, 1);
 			mes("[Kain the Orphan]");
-			mes("Transaction completed.");
+			mes("Transaction Completed.");
 			close();
 		} else {
 			mes("[Kain the Orphan]");
-			mes("You do not have enough Bloody Coins. Please reconfirm the amounts.");
+			mes("You do not have 2000 Bloody Coins. Please reconfirm the amounts.");
 			close();
 		}
 		break;
@@ -252,9 +218,9 @@ xmas,240,297,3	script	Kain the Orphan#1	4_M_06,{
 			close();
 		}
 		mes("[Kain the Orphan]");
-		mes("Do you wish to proceed? All current ^ff0000Refinement, Enchantments, Cards will be removed and there will not be a refund.^000000");
+		mes("Do you wish to proceed with the exchange? All current ^ff0000Refinement, Enchantments, Cards will be removed and there will not be a refund.^000000");
 		next();
-		if (select("Next time", "Proceed with the exchange.") == 1) {
+		if (select("Next time.", "Proceed with the exchange.") == 1) {
 			mes("[Kain the Orphan]");
 			mes("A stubborn person indeed. Come back next time if you need anything.");
 			close();
@@ -273,14 +239,14 @@ xmas,240,297,3	script	Kain the Orphan#1	4_M_06,{
 			mes("You did not bring the required materials.");
 			next();
 			mes("[Kain the Orphan]");
-			mes("^0000ffEvil Spirit's Silk Glove^000000 requires a total of ^0000ff 1000 ^000000 Bloody Coins and ^0000ff 1 Broken Heart, 1 Kind Heart and 1 Red Lantern^000000.");
+			mes("^0000ffEvil Spirit's Silk Glove^000000 requires a total of ^0000ff 1000 ^000000 Bloody Coins and ^0000ff 1 Broken Heart, 1 Kind Heart, and 1 Red Lantern^000000.");
 			close();
 		}
 	}
 }
 
 xmas,240,294,3	script	Bearded Joe#pa0829	4_M_05,{
-	if (checkweight(1201, 1) == 0) {
+	if (checkweight(Knife, 1) == 0) {
 		mes("You have too many items in your inventory! Please remove some items before coming back.");
 		close();
 	}
@@ -292,8 +258,9 @@ xmas,240,294,3	script	Bearded Joe#pa0829	4_M_05,{
 	mes("[Bearded Joe]");
 	mes("There's no limit to greed in human nature.. What do you need today?");
 	next();
-	switch (select("What can you do?", "Enchant ^0000ffAccessory^000000 obtained from Toy Factory", "Enchant ^0000ffWeapon^000000 obtained from Toy Factory", "Enchant ^0000ffHeadgear^000000 obtained from Toy Factory", "Enchant  ^0000ffShoes^000000 obtained from Toy Factory")) {
-	case 1:
+	setarray(.@eq_num[0], EQI_ACC_L, EQI_HAND_R, EQI_HEAD_TOP, EQI_SHOES);
+	.@s = select("What can you do?", "Enchant ^0000ffAccessory^000000 obtained from Toy Factory", "Enchant ^0000ffWeapon^000000 obtained from Toy Factory", "Enchant ^0000ffHeadgear^000000 obtained from Toy Factory", "Enchant  ^0000ffShoes^000000 obtained from Toy Factory") - 2;
+	if (.@s == -1){
 		mes("[Bearded Joe]");
 		mes("Did you ask what I can do? It's pretty simple, just give me Bloody Coins and I will enchant your equipments obtained from the Toy Factory.");
 		next();
@@ -303,32 +270,20 @@ xmas,240,294,3	script	Bearded Joe#pa0829	4_M_05,{
 		mes("[Bearded Joe]");
 		mes("As usual, the more you enchant, the higher the chances of breaking the equipment. I suggest enchanting only 1 or 2 times to be on the safe side. You have to learn how to be grateful with what you have.");
 		close();
-	case 2:
-		.@eq_num = EQI_ACC_L;
-		break;
-	case 3:
-		.@eq_num = EQI_HAND_R;
-		break;
-	case 4:
-		.@eq_num = EQI_HEAD_TOP;	// Official script sets value to EQI_HEAD_LOW, but gear is EQI_HEAD_TOP in db.
-		break;
-	case 5:
-		.@eq_num = EQI_SHOES;
-		break;
 	}
-	if (getequipisidentify(.@eq_num) == 0) {
+	if (getequipisidentify(.@eq_num[.@s]) == 0) {
 		mes("[Bearded Joe]");
 		mes("Did you unequip the equipment you want to enchant? Come back after you equip them.");
 		close();
 	}
-	if (getequipisidentify(.@eq_num) == 0) {
+	if (getequipisidentify(.@eq_num[.@s]) == 0) {
 		mes("[Bearded Joe]");
 		mes("It will be very dangerous if you unequip the equipment in the process of enchantment.");
 		close();
 	}
-	.@enc_s_n = getequipid(.@eq_num);
-	.@compo_num = getequiprefinerycnt(.@eq_num);
-	setarray(.@equip_card[0], getequipcardid(.@eq_num, 0), getequipcardid(.@eq_num, 1), getequipcardid(.@eq_num, 2), getequipcardid(.@eq_num, 3));
+	.@enc_s_n = getequipid(.@eq_num[.@s]);
+	.@compo_num = getequiprefinerycnt(.@eq_num[.@s]);
+	setarray(.@equip_card[0], getequipcardid(.@eq_num[.@s], 0), getequipcardid(.@eq_num[.@s], 1), getequipcardid(.@eq_num[.@s], 2), getequipcardid(.@eq_num[.@s], 3));
 	switch (.@enc_s_n) {
 	case 2486:
 		.@enc_ts = Shadow_Walk_;
@@ -381,7 +336,7 @@ xmas,240,294,3	script	Bearded Joe#pa0829	4_M_05,{
 		.@sc_type = 2;
 		break;
 	}
-	if (.@eq_num == EQI_ACC_L) {
+	if (.@eq_num[.@s] == EQI_ACC_L) {
 		mes("[Bearded Joe]");
 		mes("There are 2 options for you to choose from. Both of them cost the same at 15 Bloody Coins each.");
 		next();
@@ -437,7 +392,7 @@ xmas,240,294,3	script	Bearded Joe#pa0829	4_M_05,{
 			mes("You cannot enchant this equipment any further.");
 			close();
 		}
-	} else if (.@eq_num == EQI_HAND_R) {
+	} else if (.@eq_num[.@s] == EQI_HAND_R) {
 		if (.@enc_coin < 1) {
 			mes("[Bearded Joe]");
 			mes("This equipment is definitely not from the Toy Factory! I only provide my services to items obtained within.");
@@ -453,7 +408,7 @@ xmas,240,294,3	script	Bearded Joe#pa0829	4_M_05,{
 			mes("Such an indecisive person! Come back to me when you've made up your mind!");
 			close();
 		}
-	} else if (.@eq_num == EQI_HEAD_TOP || .@eq_num == EQI_SHOES) {
+	} else if (.@eq_num[.@s] == EQI_HEAD_TOP || .@eq_num[.@s] == EQI_SHOES) {
 		if (.@enc_coin < 1) {
 			mes("[Bearded Joe]");
 			mes("This equipment is definitely not from the Toy Factory! I only provide my services to items obtained within.");
@@ -491,7 +446,6 @@ xmas,240,294,3	script	Bearded Joe#pa0829	4_M_05,{
 		mes("I do not provide my services for these parts. Please visit another person.");
 		close();
 	}
-
 	if (.@sc_num == 4) {
 		.@en_brk1 = 550;
 		.@en_brk2 = 1050;
@@ -506,7 +460,6 @@ xmas,240,294,3	script	Bearded Joe#pa0829	4_M_05,{
 		mes("There's an unknown problem, please come again later.");
 		close();
 	}
-
 	if (.@sc_ec == 1) {
 		.@ran_e_m = rand(.@en_brk1, .@en_brk2);
 		if (.@ran_e_m >= 1 && .@ran_e_m < 601)
@@ -726,7 +679,7 @@ xmas,240,294,3	script	Bearded Joe#pa0829	4_M_05,{
 	if (countitem(Bloody_Coin) > 14) {
 		if (.@en_name == 0) {
 			delitem(Bloody_Coin, 15);
-			delequip(.@eq_num);
+			delequip(.@eq_num[.@s]);
 			mes("[Bearded Joe]");
 			mes("Tough luck eh? Your equipment just broke.");
 			close2();
@@ -734,7 +687,7 @@ xmas,240,294,3	script	Bearded Joe#pa0829	4_M_05,{
 			end;
 		} else {
 			delitem(Bloody_Coin, 15);
-			delequip(.@eq_num);
+			delequip(.@eq_num[.@s]);
 			getitem2(.@enc_ts, 1, 1, .@compo_num, 0, .@equip_card[0], .@equip_card[1], .@equip_card[2], .@equip_card[3]);
 			mes("[Bearded Joe]");
 			mes("It's a success! Please verify the results!");
