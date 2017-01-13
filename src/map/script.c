@@ -11591,14 +11591,16 @@ BUILDIN(getstatus)
 		case 3: script_pushint(st, sd->sc.data[id]->val3); break;
 		case 4: script_pushint(st, sd->sc.data[id]->val4); break;
 		case 5:
-		{
-			const struct TimerData *td = timer->get(sd->sc.data[id]->timer);
+			if (sd->sc.data[id]->infinite_duration) {
+				script_pushint(st, INFINITE_DURATION);
+			} else {
+				const struct TimerData *td = timer->get(sd->sc.data[id]->timer);
 
-			if (td != NULL) {
-				// return the amount of time remaining
-				script_pushint(st, (int)(td->tick - timer->gettick())); // TODO: change this to int64 when we'll support 64 bit script values
+				if (td != NULL) {
+					// return the amount of time remaining
+					script_pushint(st, (int)(td->tick - timer->gettick())); // TODO: change this to int64 when we'll support 64 bit script values
+				}
 			}
-		}
 			break;
 		default: script_pushint(st, 1); break;
 	}
