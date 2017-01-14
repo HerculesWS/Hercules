@@ -4462,8 +4462,8 @@ typedef bool (*HPMHOOK_post_mapreg_config_read) (bool retVal___, const char *fil
 #ifdef COMMON_MD5CALC_H /* md5 */
 typedef void (*HPMHOOK_pre_md5_string) (const char **string, char **output);
 typedef void (*HPMHOOK_post_md5_string) (const char *string, char *output);
-typedef void (*HPMHOOK_pre_md5_binary) (const char **string, unsigned char **output);
-typedef void (*HPMHOOK_post_md5_binary) (const char *string, unsigned char *output);
+typedef void (*HPMHOOK_pre_md5_binary) (const uint8 **buf, const int *buf_size, uint8 **output);
+typedef void (*HPMHOOK_post_md5_binary) (const uint8 *buf, const int buf_size, uint8 *output);
 typedef void (*HPMHOOK_pre_md5_salt) (int *len, char **output);
 typedef void (*HPMHOOK_post_md5_salt) (int len, char *output);
 #endif // COMMON_MD5CALC_H
