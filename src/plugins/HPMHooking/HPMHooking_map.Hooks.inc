@@ -43812,14 +43812,14 @@ void HP_md5_string(const char *string, char *output) {
 	}
 	return;
 }
-void HP_md5_binary(const char *string, unsigned char *output) {
+void HP_md5_binary(const uint8 *buf, const int buf_size, uint8 *output) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_md5_binary_pre ) {
-		void (*preHookFunc) (const char **string, unsigned char **output);
+		void (*preHookFunc) (const uint8 **buf, const int *buf_size, uint8 **output);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_md5_binary_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_md5_binary_pre[hIndex].func;
-			preHookFunc(&string, &output);
+			preHookFunc(&buf, &buf_size, &output);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -43827,13 +43827,13 @@ void HP_md5_binary(const char *string, unsigned char *output) {
 		}
 	}
 	{
-		HPMHooks.source.md5.binary(string, output);
+		HPMHooks.source.md5.binary(buf, buf_size, output);
 	}
 	if( HPMHooks.count.HP_md5_binary_post ) {
-		void (*postHookFunc) (const char *string, unsigned char *output);
+		void (*postHookFunc) (const uint8 *buf, const int buf_size, uint8 *output);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_md5_binary_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_md5_binary_post[hIndex].func;
-			postHookFunc(string, output);
+			postHookFunc(buf, buf_size, output);
 		}
 	}
 	return;

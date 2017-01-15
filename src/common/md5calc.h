@@ -46,7 +46,7 @@ struct md5_interface {
 	 * @param[in]  string The source string.
 	 * @param[out] output Output buffer (at least 16 bytes available).
 	 */
-	void (*binary) (const char *string, unsigned char *output);
+	void (*binary) (const uint8 *buf, const int buf_size, uint8 *output);
 
 	/**
 	 * Generates a random salt.
