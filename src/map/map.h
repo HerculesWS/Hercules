@@ -902,7 +902,8 @@ struct map_data {
 	/* */
 	int (*getcellp)(struct map_data* m, const struct block_list *bl, int16 x, int16 y, cell_chk cellchk);
 	void (*setcell) (int16 m, int16 x, int16 y, cell_t cell, bool flag);
-	char *cellPos;
+	char *cell_buf;
+	int cell_buf_len;
 
 	/* ShowEvent Data Cache */
 	struct questinfo *qi_data;
@@ -1057,20 +1058,14 @@ struct charid2nick {
 	struct charid_request* requests;// requests of notification on this nick
 };
 
-// This is the main header found at the very beginning of the map cache
-struct map_cache_main_header {
-	uint32 file_size;
-	uint16 map_count;
-};
-
-// This is the header appended before every compressed map cells info in the map cache
-struct map_cache_map_info {
-	char name[MAP_NAME_LENGTH];
+// New mcache file format header
+struct map_cache_header {
+	int16 version;
+	uint8 md5_checksum[16];
 	int16 xs;
 	int16 ys;
 	int32 len;
-};
-
+} __attribute__((packed));
 
 /*=====================================
 * Interface : map.h
@@ -1160,7 +1155,7 @@ END_ZEROED_BLOCK;
 	struct map_data *list;
 	/* [Ind/Hercules] */
 	struct eri *iterator_ers;
-	char *cache_buffer; // Has the uncompressed gat data of all maps, so just one allocation has to be made
+	//char *cache_buffer; // Has the uncompressed gat data of all maps, so just one allocation has to be made
 	/* */
 	struct eri *flooritem_ers;
 	/* */
@@ -1310,8 +1305,8 @@ END_ZEROED_BLOCK;
 	void (*iwall_nextxy) (int16 x, int16 y, int8 dir, int pos, int16 *x1, int16 *y1);
 	struct DBData (*create_map_data_other_server) (union DBKey key, va_list args);
 	int (*eraseallipport_sub) (union DBKey key, struct DBData *data, va_list va);
-	char* (*init_mapcache) (FILE *fp);
-	int (*readfromcache) (struct map_data *m, char *buffer);
+	int (*readfromcache) (struct map_data *m);
+	int (*readfromcache_v1) (FILE *fp, struct map_data *m, unsigned int file_size);
 	int (*addmap) (const char *mapname);
 	void (*delmapid) (int id);
 	void (*zone_db_clear) (void);
