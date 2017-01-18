@@ -58,7 +58,7 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 			mes "married. For now, why";
 			mes "don't you enjoy the simple";
 			mes "pleasures of childhood?";
-			goto L_End;
+			callsub L_End;
 		}
 		mes "[Marry Happy]";
 		mes "Oh, of course you";
@@ -67,7 +67,7 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 		mes "are too many laws against";
 		mes "that~ Aren't you the most";
 		mes "adorable little thing?";
-		goto L_End;
+		callsub L_End;
 	}
 	mes "[Marry Happy]";
 	mes "Marriage is the beautiful";
@@ -166,7 +166,7 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 			mes "If there was something";
 			mes "you didn't understand,";
 			mes "feel free to ask me again.";
-			goto L_End;
+			callsub L_End;
 		}
 		mes "[Marry Happy]";
 		mes "The easiest way to write";
@@ -262,7 +262,7 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 				mes "you can consider marriage.";
 				mes "After you grow stronger,";
 				mes "come and talk to me again.";
-				goto L_End;
+				callsub L_End;
 			}
 			else if (countitem(Diamond_Ring) < 1) {
 				mes "[Marry Happy]";
@@ -272,7 +272,7 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 				mes "during the wedding ceremony?";
 				mes "Look for it carefully and come";
 				mes "back after you find it, okay?";
-				goto L_End;
+				callsub L_End;
 			} else if (Sex == SEX_MALE) {
 				if (Zeny < 1300000) {
 					mes "[Marry Happy]";
@@ -281,7 +281,7 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 					mes "that all grooms must pay";
 					mes "for the wedding ceremony.";
 					mes "Did you misplace your money?";
-					goto L_End;
+					callsub L_End;
 				}
 				else if (countitem(Tuxedo) < 1) {
 					mes "[Marry Happy]";
@@ -291,7 +291,7 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 					mes "ceremony! Find it, bring it";
 					mes "to me, and then we can finally";
 					mes "begin the wedding, okay?";
-					goto L_End;
+					callsub L_End;
 				}
 			} else if (Sex == SEX_FEMALE) {
 				if (Zeny < 1200000) {
@@ -302,7 +302,7 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 					mes "wedding ceremony. Perhaps";
 					mes "you could ask your partner";
 					mes "to help you with the funds?";
-					goto L_End;
+					callsub L_End;
 				}
 				else if (countitem(Wedding_Dress) < 1) {
 					mes "[Marry Happy]";
@@ -312,7 +312,7 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 					mes "bring it to me-- you";
 					mes "absolutely need it";
 					mes "for the wedding!";
-					goto L_End;
+					callsub L_End;
 				}
 			}
 			mes "[Marry Happy]";
@@ -379,7 +379,7 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 			}
 			delitem Diamond_Ring,1;
 			wedding_sign = 1;
-			goto L_End;
+			callsub L_End;
 		}
 		mes "[Marry Happy]";
 		mes "No...?";
@@ -626,7 +626,7 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 					mes "It's old fashioned protocol,";
 					mes "but I'll admit that it does";
 					mes "keep things running smoothly.";
-					goto L_End;
+					callsub L_End;
 				}
 				mes "[Vomars]";
 				mes "Before you can be";
@@ -635,7 +635,7 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 				mes "two with your partner.";
 				mes "Then, we can proceed";
 				mes "with the ceremony.";
-				goto L_End;
+				callsub L_End;
 			}
 			mes "[Vomars]";
 			mes "You must apply for";
@@ -644,7 +644,7 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 			mes "Happy Marry will let you know";
 			mes "what else you'll need to do";
 			mes "to prepare for marriage.";
-			goto L_End;
+			callsub L_End;
 		}
 		else if ($@wedding == 1) {
 			if (wedding_sign == 1) {
@@ -734,7 +734,7 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 								mes "the ceremony has finished";
 								mes "Please try again once he's";
 								mes "returned.";
-								goto L_End;
+								callsub L_End;
 							}
 							else {
 								cutin "wedding_bomars03",2;
@@ -769,7 +769,7 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 				mes "application. Please speak";
 				mes "to her so that we can begin";
 				mes "the wedding ceremony.";
-				goto L_End;
+				callsub L_End;
 			}
 			callsub S_Busy;
 		}
@@ -796,14 +796,14 @@ S_Busy:
 		mes "Mister "+ $@wed_groom$;
 		mes "is currently in progress.";
 		mes "Please keep your voice down.";
-		goto L_End;
+		callsub L_End;
 	}
 	mes "[Vomars]";
 	mes "I'm conducting a wedding";
 	mes "for another couple now, so";
 	mes "please wait patiently for your";
 	mes "turn. Thanks for understanding... ";
-	goto L_End;
+	callsub L_End;
 
 OnStop:
 	stopnpctimer;

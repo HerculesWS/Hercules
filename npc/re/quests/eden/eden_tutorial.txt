@@ -35,8 +35,129 @@
 moc_para01,34,178,3	script	Tutorial Instructor	4_M_KHMAN,{
 	if (Class == Job_Novice) {
 		// Fall through
-	} else if (!questprogress(9167)) {
-	OnStartQuest:
+	} else if (!questprogress(9167) || questprogress(9173) == 1) {
+		if (questprogress(9173) == 1) {
+			mes "[Tutorial Instructor]";
+			mes "Do you have any questions?";
+			next;
+			switch(select("Can I do the same quest again?", "About the Quest Window...", "About ENCHANT...", "About Searching Vends...", "About Mercenary and Pets...", "End Conversation.")) {
+			case 1:
+				if (questprogress(9173,PLAYTIME) == 1) {
+					mes "[Tutorial Instructor]";
+					mes "The one method to do the same quests repeatdedly is to do the ^006400Daily Quests^000000.";
+					next;
+					mes "[Tutorial Instructor]";
+					mes "Once you complete a ^006400Daily Quest^000000 and turn it in, wait about a day then come back to get the request and do it all over again!";
+					mes "[Tutorial Instructor]";
+					mes "If you received a daily quest, look at bottom right of the ^006400Quest Window^000000. There is a section that is called ^006400LIMITED^000000. In that section, it'll tell you how much time needs to pass before you can pick up another daily quest.";
+					next;
+					mes "[Tutorial Instructor]";
+					mes "It seems you still have some time left to wait out after finishing my quest. Wait it out a bit more, then come find me and you can get the same quest again.";
+					close;
+				}
+				mes "[Tutorial Instructor]";
+				mes "It seems that about a day has passed since you've finished my quest. Alright, so like the ^006400Daily Quests^000000, you can get a quest from me. Did you want to proceed?";
+				next;
+				switch(select("Yes", "No")) {
+				case 1:
+					@tutorial_restart = 1;
+					break;
+				case 2:
+					mes "[Tutorial Instructor]";
+					mes "Okay. But if you change your mind and want to receive a quest, come find me.";
+					close;
+				}
+				break;
+			case 2:
+				mes "[Tutorial Instructor]";
+				mes "They say that the ^006400Quest Window^000000 details out everything you need to know about your quests.";
+				next;
+				mes "[Tutorial Instructor]";
+				mes "If you look at the top left";
+				mes "in the area with the information,";
+				mes "it says ^006400QUEST^000000";
+				mes "and if you click that";
+				mes "it'll show all information";
+				mes "that pertains to the request.";
+				next;
+				mes "[Tutorial Instructor]";
+				mes "Using the ^006400Quest Window^000000 will make your life easier. It'll tell you where to go, what items to get or who to find and etc.";
+				close;
+			case 3:
+				mes "[Tutorial Instructor]";
+				mes "006400ENCHANT^000000, in general, is divided into two parts: ^006400SOCKET ENCHANT^000000 and ^006400HIDDEN SOCKET ENCHANT^000000.";
+				next;
+				mes "[Tutorial Instructor]";
+				mes "^006400SOCKET ENCHANT^000000 is used to add a SOCKET into equipments and ^006400HIDDEN SOCKET ENCHANT^000000 is used to put in stats into a socket of an armor.";
+				next;
+				mes "[Tutorial Instructor]";
+				mes "Of course, in order to do this we are in need of some materials and there is a chance that it may fail, but that's the risk you're taking.";
+				next;
+				mes "[Tutorial Instructor]";
+				mes "The people who do the ^006400SOCKET ENCHANT^000000 can be found in ^8B4513Prontera, Morroc, Payon,^000000. ^8B4513Rhitalzen^000000 is in the Refinery and ^0000FFSeiyablem^000000 and ^0000FFReiablem^000000 can be found near the entrance.";
+				next;
+				mes "[Tutorial Instructor]";
+				mes "The one who does ^006400HIDDEN SOCKET ENCHANT^000000 is found at the 6 o'clock location of ^8B4513Prontera^000000. Look for the ^0000FFCraftman Apprentice^000000.";
+				next;
+				mes "[Tutorial Instructor]";
+				mes "Do you think you understand a little bit more about ^006400ENCHANT^000000?";
+				close;
+			case 4:
+				mes "[Tutorial Instructor]";
+				mes "^006400Vend Search^000000 can be utilized by the ^006400Universal Silver Catalog^000000 item. Since you search through as vends on that map, it'll make it easier for you to find the item that you're looking for.";
+				next;
+				mes "[Tutorial Instructor]";
+				mes "The ^006400Universal Silver Catalog^000000";
+				mes "can be obtained from ";
+				mes "the ^0000FFCatalogue Wizard^000000";
+				mes "that is located in South Prontera;";
+				next;
+				mes "[Tutorial Instructor]";
+				mes "It only costs 200 zeny for one";
+				mes "of these and with it you can";
+				mes "search up to 10 times.";
+				mes "You can say that it's a necessity.";
+				next;
+				mes "[Tutorial Instructor]";
+				mes "So, are you getting familiar with ^006400Vend Search^000000? Don't just stand there and listen to me. Go ahead and try it for yourself!";
+				close;
+			case 5:
+				mes "[Tutorial Instructor]";
+				mes "Depending on what you need, ^006400Mercenary^000000 and ^006400Pet^000000 can be used in various ways.";
+				next;
+				mes "[Tutorial Instructor]";
+				mes "If a 006400Mercenary^000000 gives you direct effect";
+				mes "by fighting for you";
+				mes "then a ^006400Pet^000000 helps you indirectly with their";
+				mes "abilities and varied appearances,";
+				mes "and it captures your heart.";
+				next;
+				mes "[Tutorial Instructor]";
+				mes "In order to employ a Mercenary";
+				mes "Go find the ^006400Mercenary Guild^000000";
+				mes "which is by the front door of ^8B4513Prontera^000000.";
+				mes "Go to the ^006400Information Agent^000000";
+				mes "and ask them where the ^006400Mercenary Guild Official^000000";
+				mes "is located and they will let you know.";
+				next;
+				mes "[Tutorial Instructor]";
+				mes "In order to get a ^006400Pet^000000, while hunting you will obtain taming items. Use the tame on the monster it's for and you can get a pet.";
+				next;
+				mes "[Tutorial Instructor]";
+				mes "Because there is a chance for failure, please use the taming item with great care.";
+				next;
+				mes "[Tutorial Instructor]";
+				mes "That aside... you can get a ^006400Mercenary^000000 from the Mercenary Guild and you can get a ^006400Pet^000000 by trading or buying it from another player.";
+				next;
+				mes "[Tutorial Instructor]";
+				mes "Now, do you understand a bit more about using a ^006400Mercenary^000000 and a ^006400Pet^000000? I hope you get a chance to use them in the future.";
+				close;
+			case 6:
+				mes "[Tutorial Instructor]";
+				mes "If you have any questions, come find me again.";
+				close;
+			}
+		}
 		if (@tutorial_restart) {
 			.@tutorial_restart = 1;
 			@tutorial_restart = 0;
@@ -457,126 +578,6 @@ moc_para01,34,178,3	script	Tutorial Instructor	4_M_KHMAN,{
 			mes "[Tutorial Instructor]";
 			mes "Take your time to look them over";
 			mes "then bring them back to me.";
-			close;
-		}
-	} else if (questprogress(9173) == 1) {
-		mes "[Tutorial Instructor]";
-		mes "Do you have any questions?";
-		next;
-		switch(select("Can I do the same quest again?", "About the Quest Window...", "About ENCHANT...", "About Searching Vends...", "About Mercenary and Pets...", "End Conversation.")) {
-		case 1:
-			if (questprogress(9173,PLAYTIME) == 1) {
-				mes "[Tutorial Instructor]";
-				mes "The one method to do the same quests repeatdedly is to do the ^006400Daily Quests^000000.";
-				next;
-				mes "[Tutorial Instructor]";
-				mes "Once you complete a ^006400Daily Quest^000000 and turn it in, wait about a day then come back to get the request and do it all over again!";
-				mes "[Tutorial Instructor]";
-				mes "If you received a daily quest, look at bottom right of the ^006400Quest Window^000000. There is a section that is called ^006400LIMITED^000000. In that section, it'll tell you how much time needs to pass before you can pick up another daily quest.";
-				next;
-				mes "[Tutorial Instructor]";
-				mes "It seems you still have some time left to wait out after finishing my quest. Wait it out a bit more, then come find me and you can get the same quest again.";
-				close;
-			}
-			mes "[Tutorial Instructor]";
-			mes "It seems that about a day has passed since you've finished my quest. Alright, so like the ^006400Daily Quests^000000, you can get a quest from me. Did you want to proceed?";
-			next;
-			switch(select("Yes", "No")) {
-			case 1:
-				@tutorial_restart = 1;
-				goto OnStartQuest;
-			case 2:
-				mes "[Tutorial Instructor]";
-				mes "Okay. But if you change your mind and want to receive a quest, come find me.";
-				close;
-			}
-		case 2:
-			mes "[Tutorial Instructor]";
-			mes "They say that the ^006400Quest Window^000000 details out everything you need to know about your quests.";
-			next;
-			mes "[Tutorial Instructor]";
-			mes "If you look at the top left";
-			mes "in the area with the information,";
-			mes "it says ^006400QUEST^000000";
-			mes "and if you click that";
-			mes "it'll show all information";
-			mes "that pertains to the request.";
-			next;
-			mes "[Tutorial Instructor]";
-			mes "Using the ^006400Quest Window^000000 will make your life easier. It'll tell you where to go, what items to get or who to find and etc.";
-			close;
-		case 3:
-			mes "[Tutorial Instructor]";
-			mes "006400ENCHANT^000000, in general, is divided into two parts: ^006400SOCKET ENCHANT^000000 and ^006400HIDDEN SOCKET ENCHANT^000000.";
-			next;
-			mes "[Tutorial Instructor]";
-			mes "^006400SOCKET ENCHANT^000000 is used to add a SOCKET into equipments and ^006400HIDDEN SOCKET ENCHANT^000000 is used to put in stats into a socket of an armor.";
-			next;
-			mes "[Tutorial Instructor]";
-			mes "Of course, in order to do this we are in need of some materials and there is a chance that it may fail, but that's the risk you're taking.";
-			next;
-			mes "[Tutorial Instructor]";
-			mes "The people who do the ^006400SOCKET ENCHANT^000000 can be found in ^8B4513Prontera, Morroc, Payon,^000000. ^8B4513Rhitalzen^000000 is in the Refinery and ^0000FFSeiyablem^000000 and ^0000FFReiablem^000000 can be found near the entrance.";
-			next;
-			mes "[Tutorial Instructor]";
-			mes "The one who does ^006400HIDDEN SOCKET ENCHANT^000000 is found at the 6 o'clock location of ^8B4513Prontera^000000. Look for the ^0000FFCraftman Apprentice^000000.";
-			next;
-			mes "[Tutorial Instructor]";
-			mes "Do you think you understand a little bit more about ^006400ENCHANT^000000?";
-			close;
-		case 4:
-			mes "[Tutorial Instructor]";
-			mes "^006400Vend Search^000000 can be utilized by the ^006400Universal Silver Catalog^000000 item. Since you search through as vends on that map, it'll make it easier for you to find the item that you're looking for.";
-			next;
-			mes "[Tutorial Instructor]";
-			mes "The ^006400Universal Silver Catalog^000000";
-			mes "can be obtained from ";
-			mes "the ^0000FFCatalogue Wizard^000000";
-			mes "that is located in South Prontera;";
-			next;
-			mes "[Tutorial Instructor]";
-			mes "It only costs 200 zeny for one";
-			mes "of these and with it you can";
-			mes "search up to 10 times.";
-			mes "You can say that it's a necessity.";
-			next;
-			mes "[Tutorial Instructor]";
-			mes "So, are you getting familiar with ^006400Vend Search^000000? Don't just stand there and listen to me. Go ahead and try it for yourself!";
-			close;
-		case 5:
-			mes "[Tutorial Instructor]";
-			mes "Depending on what you need, ^006400Mercenary^000000 and ^006400Pet^000000 can be used in various ways.";
-			next;
-			mes "[Tutorial Instructor]";
-			mes "If a 006400Mercenary^000000 gives you direct effect";
-			mes "by fighting for you";
-			mes "then a ^006400Pet^000000 helps you indirectly with their";
-			mes "abilities and varied appearances,";
-			mes "and it captures your heart.";
-			next;
-			mes "[Tutorial Instructor]";
-			mes "In order to employ a Mercenary";
-			mes "Go find the ^006400Mercenary Guild^000000";
-			mes "which is by the front door of ^8B4513Prontera^000000.";
-			mes "Go to the ^006400Information Agent^000000";
-			mes "and ask them where the ^006400Mercenary Guild Official^000000";
-			mes "is located and they will let you know.";
-			next;
-			mes "[Tutorial Instructor]";
-			mes "In order to get a ^006400Pet^000000, while hunting you will obtain taming items. Use the tame on the monster it's for and you can get a pet.";
-			next;
-			mes "[Tutorial Instructor]";
-			mes "Because there is a chance for failure, please use the taming item with great care.";
-			next;
-			mes "[Tutorial Instructor]";
-			mes "That aside... you can get a ^006400Mercenary^000000 from the Mercenary Guild and you can get a ^006400Pet^000000 by trading or buying it from another player.";
-			next;
-			mes "[Tutorial Instructor]";
-			mes "Now, do you understand a bit more about using a ^006400Mercenary^000000 and a ^006400Pet^000000? I hope you get a chance to use them in the future.";
-			close;
-		case 6:
-			mes "[Tutorial Instructor]";
-			mes "If you have any questions, come find me again.";
 			close;
 		}
 	}
