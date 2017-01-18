@@ -2831,87 +2831,88 @@ airplane,33,69,4	script	Kaci	1_F_MERCHANT_01,{
 		mes "do it himself. Reading that";
 		mes "letter really made my day~";
 		next;
-L_Ask:
-		switch(select("Ask about Hallen", "Ask about Mawong", "Ask about the Airship")) {
-		case 1:
-			.@mesa = 1;
+		while (true) {
+			switch (prompt("Ask about Hallen", "Ask about Mawong", "Ask about the Airship")) {
+			case 1:
+				.@mesa = 1;
+				mes "[Kaci]";
+				mes "Hallen? Well, he and I are";
+				mes "pretty close. Did you know";
+				mes "that we're cousins? In fact,";
+				mes "his dad, my uncle, brought";
+				mes "me as a child after my father";
+				mes "passed away 20 years ago.";
+				next;
+				mes "[Kaci]";
+				mes "There was some kind of";
+				mes "mine explosion accident in";
+				mes "Einbech. I don't remember.";
+				mes "Anyway, me and Hallen are";
+				mes "like sister and brother, and";
+				mes "we always stick together.";
+				next;
+				mes "[Kaci]";
+				mes "When Captain Ferlock saw me";
+				mes "host a Dice game by coincidence";
+				mes "and then hired me to work on his Airship, Hallen insisted on coming";
+				mes "along. He's stubborn like that,";
+				mes "but he's also very sweet.";
+				next;
+				break;
+			case 2:
+				.@mesb = 1;
+				mes "[Kaci]";
+				mes "Mr. Mawong? Oh, don't get";
+				mes "the wrong idea! He's my";
+				mes "mentor, the one who taught";
+				mes "me how to play all of these";
+				mes "wonderful games. He's pretty";
+				mes "famous around Juno, you know.";
+				next;
+				mes "[Kaci]";
+				mes "I used to be so depressed,";
+				mes "not caring about the world";
+				mes "at all, after my father died.";
+				mes "Then, I ran into Mr. Mawong,";
+				mes "and he taught me how to find";
+				mes "the joy in life once again.";
+				next;
+				mes "[Kaci]";
+				mes "Because of him, I decided";
+				mes "to learn his games and to";
+				mes "help people forget their";
+				mes "worries and just enjoy";
+				mes "themselves, even if it's";
+				mes "just for a little while.";
+				next;
+				break;
+			case 3:
+				.@mesc = 1;
+				mes "[Kaci]";
+				mes "The Airship? It's so";
+				mes "huge and beautiful, and";
+				mes "I'm always amazed that it";
+				mes "can fly so gracefully through";
+				mes "the air. I've always wanted to live someplace close to the sky...";
+				next;
+				mes "[Kaci]";
+				mes "A place where I can see";
+				mes "the clouds and bask in the";
+				mes "sun. So, when Captain Ferlock";
+				mes "invited me to work here, it was";
+				mes "like a dream come true~";
+				next;
+				break;
+			}
 			mes "[Kaci]";
-			mes "Hallen? Well, he and I are";
-			mes "pretty close. Did you know";
-			mes "that we're cousins? In fact,";
-			mes "his dad, my uncle, brought";
-			mes "me as a child after my father";
-			mes "passed away 20 years ago.";
+			mes "Please don't hesitate";
+			mes "to ask me anything if";
+			mes "you need a small favor,";
+			mes "or if you're just curious";
+			mes "about me in general~";
 			next;
-			mes "[Kaci]";
-			mes "There was some kind of";
-			mes "mine explosion accident in";
-			mes "Einbech. I don't remember.";
-			mes "Anyway, me and Hallen are";
-			mes "like sister and brother, and";
-			mes "we always stick together.";
-			next;
-			mes "[Kaci]";
-			mes "When Captain Ferlock saw me";
-			mes "host a Dice game by coincidence";
-			mes "and then hired me to work on his Airship, Hallen insisted on coming";
-			mes "along. He's stubborn like that,";
-			mes "but he's also very sweet.";
-			next;
-			break;
-		case 2:
-			.@mesb = 1;
-			mes "[Kaci]";
-			mes "Mr. Mawong? Oh, don't get";
-			mes "the wrong idea! He's my";
-			mes "mentor, the one who taught";
-			mes "me how to play all of these";
-			mes "wonderful games. He's pretty";
-			mes "famous around Juno, you know.";
-			next;
-			mes "[Kaci]";
-			mes "I used to be so depressed,";
-			mes "not caring about the world";
-			mes "at all, after my father died.";
-			mes "Then, I ran into Mr. Mawong,";
-			mes "and he taught me how to find";
-			mes "the joy in life once again.";
-			next;
-			mes "[Kaci]";
-			mes "Because of him, I decided";
-			mes "to learn his games and to";
-			mes "help people forget their";
-			mes "worries and just enjoy";
-			mes "themselves, even if it's";
-			mes "just for a little while.";
-			next;
-			break;
-		case 3:
-			.@mesc = 1;
-			mes "[Kaci]";
-			mes "The Airship? It's so";
-			mes "huge and beautiful, and";
-			mes "I'm always amazed that it";
-			mes "can fly so gracefully through";
-			mes "the air. I've always wanted to live someplace close to the sky...";
-			next;
-			mes "[Kaci]";
-			mes "A place where I can see";
-			mes "the clouds and bask in the";
-			mes "sun. So, when Captain Ferlock";
-			mes "invited me to work here, it was";
-			mes "like a dream come true~";
-			next;
-			break;
+			if (.@mesa || .@mesb || .@mesc) break;
 		}
-		mes "[Kaci]";
-		mes "Please don't hesitate";
-		mes "to ask me anything if";
-		mes "you need a small favor,";
-		mes "or if you're just curious";
-		mes "about me in general~";
-		next;
-		if (!.@mesa || !.@mesb || !.@mesc) goto L_Ask;
 		mes "[Kaci]";
 		mes "By the way, if Hallen";
 		mes "bothers you with another";
@@ -3077,7 +3078,6 @@ OnTouch:
 		}
 		while (1) {
 			while (1) {
-L_Retry:
 				next;
 				input @input;
 				if (@input < 100 || @input > 999) {
@@ -3218,7 +3218,6 @@ L_Retry:
 				case 3: mes "Initialing 4th attempt...^000000"; break;
 				case 4: mes "Initialing final attempt...^000000"; break;
 			}
-			goto L_Retry;
 		}
 	}
 	end;

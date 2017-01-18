@@ -119,31 +119,7 @@ prontera,202,297,3	script	Rina#Easter	4_F_JOB_HUNTER,{
 		setquest 9117;
 		close;
 	} else if (.@quest1 == 1) {
-	L_HuntingInfo:
-		mes "[Rina]";
-		mes "What you need to do is";
-		mes "to choose one monster among";
-		mes "^FF0000DEVIRUCHI,^000000 ^FF0000WRAITH DEAD,^000000";
-		mes "^FF0000DULLAHAN,^000000 ^FF0000NIGHTMARE TERROR^000000";
-		mes "and then kill ^0000FF50^000000 monsters";
-		mes "and come back to me.";
-		next;
-		mes "[Rina]";
-		mes "It must be a tough task,";
-		mes "but you are the right person";
-		mes "who did the oath-taking ceremony.";
-		mes "I hope you succeed.";
-		if (.@quest1 < 2) {
-			completequest 9117;
-			setquest 9118;
-			setquest 9119;
-			setquest 9120;
-			setquest 9121;
-		}
-		close2;
-		npcskill "AL_INCAGI",1,0,0;
-		npcskill "AL_BLESSING",1,0,0;
-		end;
+		callsub L_HuntingInfo;
 	} else if (.@quest1 == 2) {
 		if (questprogress(9118) != 2 || questprogress(9119) != 2 || questprogress(9120) != 2 || questprogress(9121) != 2) {
 			if (questprogress(9118,HUNTING) == 2 || questprogress(9119,HUNTING) == 2 || questprogress(9120,HUNTING) == 2 || questprogress(9121,HUNTING) == 2) {
@@ -162,7 +138,7 @@ prontera,202,297,3	script	Rina#Easter	4_F_JOB_HUNTER,{
 				completequest 9121;
 				setquest 9122;
 			} else
-				goto L_HuntingInfo;
+				callsub L_HuntingInfo;
 			end;
 		}
 	}
@@ -306,6 +282,32 @@ prontera,202,297,3	script	Rina#Easter	4_F_JOB_HUNTER,{
 	mes "Have a happy day~!";
 	close2;
 	consumeitem 607; //Yggdrasilberry
+	npcskill "AL_INCAGI",1,0,0;
+	npcskill "AL_BLESSING",1,0,0;
+	end;
+
+L_HuntingInfo:
+	mes "[Rina]";
+	mes "What you need to do is";
+	mes "to choose one monster among";
+	mes "^FF0000DEVIRUCHI,^000000 ^FF0000WRAITH DEAD,^000000";
+	mes "^FF0000DULLAHAN,^000000 ^FF0000NIGHTMARE TERROR^000000";
+	mes "and then kill ^0000FF50^000000 monsters";
+	mes "and come back to me.";
+	next;
+	mes "[Rina]";
+	mes "It must be a tough task,";
+	mes "but you are the right person";
+	mes "who did the oath-taking ceremony.";
+	mes "I hope you succeed.";
+	if (.@quest1 < 2) {
+		completequest 9117;
+		setquest 9118;
+		setquest 9119;
+		setquest 9120;
+		setquest 9121;
+	}
+	close2;
 	npcskill "AL_INCAGI",1,0,0;
 	npcskill "AL_BLESSING",1,0,0;
 	end;
