@@ -153,7 +153,7 @@ nyd_dun02,100,201,3	script	Yggdrasil Gatekeeper	HIDDEN_NPC,8,8,{
 					mes "If you are ready, I will allow you to enter.";
 					close;
 				case 2:
-					goto L_Enter;
+					callsub L_Enter;
 				case 3:
 					close;
 				}
@@ -163,7 +163,7 @@ nyd_dun02,100,201,3	script	Yggdrasil Gatekeeper	HIDDEN_NPC,8,8,{
 			next;
 			if(select("I want to go in.", "I want to leave.") == 2)
 				close;
-			goto L_Enter;
+			callsub L_Enter;
 		} else {
 			if (.@ins_nyd_check == 1) {
 				if ('ins_nyd2 == 3 || 'ins_nyd2 == 4) {
@@ -179,7 +179,7 @@ nyd_dun02,100,201,3	script	Yggdrasil Gatekeeper	HIDDEN_NPC,8,8,{
 				next;
 				if(select("I want to go in.", "I want to leave.") == 2)
 					close;
-				goto L_Enter;
+				callsub L_Enter;
 			} else if (.@ins_nyd_check == 2) {
 				if (.@ins_nyd_check2 == 1) {
 					mes "[Yggdrasil Gatekeeper]";

@@ -44,15 +44,14 @@
 xmas_in,100,96,4	script	Santa Claus::Santa2	4_M_SANTA,{
 	mes "[Santa Claus]";
 	if(xmas_npc==0) xmas_npc = 1; // For Lutie & Bard quest
-	if(#event_xmas > 0 && #event_xmas < 30 ) goto L_Start;
-	mes "Merry Christmas!";
-	if(Class==0 || #event_xmas>=30 ) close; //anti exploit protection
-	mes "I have a gift for you! Ho Ho Ho!";
-	getitem rand(664,667),1; //gives one of 4 gift boxes
-	++#event_xmas;
-	close;
-
-L_Start:
+	if(#event_xmas <= 0 || #event_xmas >= 30 ) {
+		mes "Merry Christmas!";
+		if(Class==0 || #event_xmas>=30 ) close; //anti exploit protection
+		mes "I have a gift for you! Ho Ho Ho!";
+		getitem rand(664,667),1; //gives one of 4 gift boxes
+		++#event_xmas;
+		close;
+	}
 	mes "I'm having a bit of a problem...";
 	mes "Do you care to listen?";
 	next;
@@ -98,7 +97,12 @@ L_Start:
 		close;
 	case 2: // Give proof
 		mes "[Santa Claus]";
-		if(countitem(Red_Socks_With_Holes) < 3) goto L_NotEnuf;
+		if(countitem(Red_Socks_With_Holes) < 3) {
+			mes "You don't have enough socks as proof.";
+			mes "Go take down those evil Santas";
+			mes "and get more for me and I'll reward you.";
+			close;
+		}
 		delitem 7034,3;
 		mes "Seems you've been doing a";
 		mes "good job of taking down those";
@@ -111,12 +115,6 @@ L_Start:
 		mes "If you get 3 more, I'll give you another.";
 		mes "Hope you get a good item.";
 		close;
-
-		L_NotEnuf:
-			mes "You don't have enough socks as proof.";
-			mes "Go take down those evil Santas";
-			mes "and get more for me and I'll reward you.";
-			close;
 	default: // Cancel
 		mes "[Santa Claus]";
 		mes "I see. Well, at the very least";
