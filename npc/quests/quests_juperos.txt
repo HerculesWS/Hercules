@@ -9,12 +9,13 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C) 2012-2017  Hercules Dev Team
 //= Copyright (C)  Euphy
 //= Copyright (C)  Zephyrus
 //= Copyright (C)  L0ne_W0lf
 //= Copyright (C)  SinSloth
 //= Copyright (C)  MasterOfMuppets
+//= Copyright (C)  Capuche
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -33,11 +34,11 @@
 //================= Description ===========================================
 //= Juperos Ruins related Quests/Events
 //================= Current Version =======================================
-//= 1.9
+//= 2.0
 //=========================================================================
 
 yuno_in04,190,125,4	script	Scholar	8_F_GIRL,{
-	switch(yuno_hist) {
+	switch (yuno_book) {
 	case 0:
 		mes "[Scholar]";
 		mes "...Mm? ";
@@ -155,7 +156,8 @@ yuno_in04,190,125,4	script	Scholar	8_F_GIRL,{
 			mes "service of his royal majesty,";
 			mes "the wise and benevolent";
 			mes "King Tristram III.";
-			yuno_hist = 2;
+			yuno_book = 2;
+			setquest(11017);
 			next;
 			mes "[Fayruz]";
 			mes "Well, "+strcharinfo(PC_NAME)+",";
@@ -258,7 +260,8 @@ yuno_in04,190,125,4	script	Scholar	8_F_GIRL,{
 			mes "''You will see him, the one";
 			mes "who was vain and extravagant,";
 			mes "with your own eyes at the place where the light passes through.";
-			yuno_hist = 4;
+			yuno_book = 4;
+			changequest(11018, 11019);
 			next;
 			mes "[Fayruz]";
 			mes "Ah, usually, descriptions";
@@ -387,7 +390,7 @@ yuno_in04,190,125,4	script	Scholar	8_F_GIRL,{
 		next;
 		switch(select("Take a look at this.", "Oh, I'm sorry...")) {
 		case 1:
-			switch(jupe_hist) {
+			switch (jupe_book) {
 				case 1: callfunc "Func_JupHist",7353,7354,7355,7352;
 				case 2: callfunc "Func_JupHist",7352,7354,7355,7353;
 				case 4: callfunc "Func_JupHist",7352,7353,7355,7354;
@@ -419,7 +422,7 @@ yuno_in04,190,125,4	script	Scholar	8_F_GIRL,{
 		mes "last time is really helping me";
 		mes "in my research. If you get the";
 		mes "chance, please bring me more!";
-		yuno_hist = 7;
+		yuno_book = 7;
 		next;
 		mes "[Fayruz]";
 		mes "This new data is adding";
@@ -438,7 +441,7 @@ yuno_in04,190,125,4	script	Scholar	8_F_GIRL,{
 		next;
 		switch(select("Yeah, take a look at this.", "No, I'm sorry...")) {
 		case 1:
-			switch(jupe_hist) {
+			switch (jupe_book) {
 				case 3: callfunc "Func_JupHist",7354,7355,7352,7353;
 				case 5: callfunc "Func_JupHist",7353,7355,7352,7354;
 				case 6: callfunc "Func_JupHist",7352,7355,7353,7354;
@@ -470,7 +473,7 @@ yuno_in04,190,125,4	script	Scholar	8_F_GIRL,{
 		mes "Alright. Okay. Yes.";
 		mes "Yes! Of course, how";
 		mes "could I not see it before!";
-		yuno_hist = 9;
+		yuno_book = 9;
 		next;
 		mes "[Fayruz]";
 		mes "I'll be with you";
@@ -487,7 +490,7 @@ yuno_in04,190,125,4	script	Scholar	8_F_GIRL,{
 		next;
 		switch(select("Actually, I did find this...", "I'm sorry, I haven't...")) {
 		case 1:
-			switch(jupe_hist) {
+			switch (jupe_book) {
 				case 7: callfunc "Func_JupHist",7355,7352,7353,7354;
 				case 11: callfunc "Func_JupHist",7354,7352,7353,7355;
 				case 13: callfunc "Func_JupHist",7353,7352,7354,7355;
@@ -564,7 +567,7 @@ yuno_in04,190,125,4	script	Scholar	8_F_GIRL,{
 }
 
 function	script	Func_JupHist	{
-	switch(yuno_hist) {
+	switch (yuno_book) {
 	case 4:
 		mes "[Fayruz]";
 		mes "Thank you so much,";
@@ -588,8 +591,9 @@ function	script	Func_JupHist	{
 		mes "and you awaken from the trance,";
 		mes "gently brought back to reality.^000000";
 		delitem getarg(0),1;
-		yuno_hist = 5;
-		jupe_hist = getarg(1);
+		yuno_book = 5;
+		jupe_book = getarg(1);
+		changequest(11019, 11020);
 		getexp RENEWAL_EXP?10000:100000,0;
 		next;
 		mes "[Fayruz]";
@@ -652,20 +656,21 @@ function	script	Func_JupHist	{
 			mes "mankind that can't be ignored.";
 			if (countitem(getarg(0))) {
 				delitem getarg(0),1;
-				if (getarg(0) == 7352) jupe_hist += 1;
-				else jupe_hist += 2;
+				if (getarg(0) == 7352) jupe_book += 1;
+				else jupe_book += 2;
 			}
 			else if (countitem(getarg(1))) {
 				delitem getarg(1),1;
-				if (getarg(1) == 7353) jupe_hist += 2;
-				else jupe_hist += 4;
+				if (getarg(1) == 7353) jupe_book += 2;
+				else jupe_book += 4;
 			}
 			else {
 				delitem getarg(2),1;
-				if (getarg(2) == 7354) jupe_hist += 4;
-				else jupe_hist += 8;
+				if (getarg(2) == 7354) jupe_book += 4;
+				else jupe_book += 8;
 			}
-			yuno_hist = 6;
+			yuno_book = 6;
+			changequest(11020, 11021);
 			getexp RENEWAL_EXP?10000:100000,0;
 			next;
 			mes "[Fayruz]";
@@ -779,17 +784,18 @@ function	script	Func_JupHist	{
 			mes "like the strange and grotesque.";
 			if (countitem(getarg(0))) {
 				delitem getarg(0),1;
-				if (getarg(0) == 7352) jupe_hist += 1;
-				else if (getarg(0) == 7353) jupe_hist += 2;
-				else jupe_hist += 4;
+				if (getarg(0) == 7352) jupe_book += 1;
+				else if (getarg(0) == 7353) jupe_book += 2;
+				else jupe_book += 4;
 			}
 			else if (countitem(getarg(1))) {
 				delitem getarg(1),1;
-				if (getarg(1) == 7353) jupe_hist += 2;
-				else if (getarg(1) == 7354) jupe_hist += 4;
-				else jupe_hist += 8;
+				if (getarg(1) == 7353) jupe_book += 2;
+				else if (getarg(1) == 7354) jupe_book += 4;
+				else jupe_book += 8;
 			}
-			yuno_hist = 8;
+			yuno_book = 8;
+			changequest(11021, 11022);
 			getexp RENEWAL_EXP?10000:100000,0;
 			next;
 			mes "[Fayruz]";
@@ -881,12 +887,13 @@ function	script	Func_JupHist	{
 			mes "feeling of indefatigable";
 			mes "hope and inspiration...";
 			mes "You can make it if you try!^000000";
-			if (getarg(0) == 7352) jupe_hist += 1;
-			else if (getarg(0) == 7353) jupe_hist += 2;
-			else if (getarg(0) == 7354) jupe_hist += 4;
-			else jupe_hist += 8;
-			yuno_hist = 10;
-			delitem getarg(0),1;
+			delitem(getarg(0), 1);
+			if (getarg(0) == 7352) jupe_book += 1;
+			else if (getarg(0) == 7353) jupe_book += 2;
+			else if (getarg(0) == 7354) jupe_book += 4;
+			else jupe_book += 8;
+			yuno_book = 10;
+			completequest(11022);
 			getexp RENEWAL_EXP?10000:100000,0;
 			next;
 			mes "[Fayruz]";
@@ -941,7 +948,7 @@ yuno_in04,186,125,4	script	Bundle of Files	HIDDEN_NPC,{
 	next;
 	switch(select("Table of Contents.", "Leave it alone.")) {
 	case 1:
-		if (yuno_hist > 4) {
+		if (yuno_book > 4) {
 			mes "^8B6914 1. Preface";
 			mes " 2. Juperos Background";
 			mes " 3. Theory Behind Its Fall^000000";
@@ -954,7 +961,7 @@ yuno_in04,186,125,4	script	Bundle of Files	HIDDEN_NPC,{
 				mes "ground, but it is now buried";
 				mes "beneath the El Mes Plateau.";
 				mes "The reasons for the city's";
-				if (yuno_hist < 9) {
+				if (yuno_book < 9) {
 					mes "ruin are still nebulous...^000000";
 					next;
 					mes "^8B6914There is much speculation";
@@ -971,7 +978,7 @@ yuno_in04,186,125,4	script	Bundle of Files	HIDDEN_NPC,{
 					mes "may be able to learn much";
 					mes "from that ancient city's ruins.";
 					mes "..................^000000";
-					if (yuno_hist < 7) {
+					if (yuno_book < 7) {
 						next;
 						mes "["+strcharinfo(PC_NAME)+"]";
 						mes "Hmmm...";
@@ -991,7 +998,7 @@ yuno_in04,186,125,4	script	Bundle of Files	HIDDEN_NPC,{
 				mes "us to make a few conclusions.^000000";
 				close;
 			case 2:
-				if (yuno_hist < 9) {
+				if (yuno_book < 9) {
 					mes "^8B6914...";
 					mes "......";
 					mes "..........^000000";
@@ -1003,7 +1010,7 @@ yuno_in04,186,125,4	script	Bundle of Files	HIDDEN_NPC,{
 					mes "yet to be a real thesis...";
 					close;
 				}
-				else if (yuno_hist == 9) {
+				else if (yuno_book == 9) {
 					mes "^8B6914Juperos was built over";
 					mes "a thousand years ago in";
 					mes "an era of peace just after";
@@ -1041,7 +1048,7 @@ yuno_in04,186,125,4	script	Bundle of Files	HIDDEN_NPC,{
 				mes "life. Science was reponsible for Juperos's rise and downfall.";
 				close;
 			case 3:
-				if (yuno_hist < 10) {
+				if (yuno_book < 10) {
 					mes "^8B6914...";
 					mes "......";
 					mes "..........^000000";
@@ -1146,7 +1153,7 @@ yuno_in04,186,125,4	script	Bundle of Files	HIDDEN_NPC,{
 			mes "may be able to learn much";
 			mes "from that ancient city's ruins.";
 			mes "..................^000000";
-			if (!yuno_hist) yuno_hist = 1;
+			if (!yuno_book) yuno_book = 1;
 			next;
 			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "This...";
@@ -1165,26 +1172,26 @@ yuno_in04,186,125,4	script	Bundle of Files	HIDDEN_NPC,{
 			close;
 		}
 	case 2:
-		if (yuno_hist < 5) {
+		if (yuno_book < 5) {
 			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Nah...";
 			mes "I'm tired of reading.";
 			mes "Ironically enough.";
 			close;
 		}
-		else if (yuno_hist < 7) {
+		else if (yuno_book < 7) {
 			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "I don't feel like";
 			mes "reading this. Not";
 			mes "enough pictures...";
 			close;
 		}
-		else if (yuno_hist < 9) {
+		else if (yuno_book < 9) {
 			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "It looks very sophisticated...";
 			close;
 		}
-		else if (yuno_hist < 10) {
+		else if (yuno_book < 10) {
 			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "I know this book...";
 			mes "But I don't feel like";
@@ -1203,7 +1210,7 @@ yuno_in04,186,125,4	script	Bundle of Files	HIDDEN_NPC,{
 }
 
 yuno_in04,188,118,4	script	Book#juperos	HIDDEN_NPC,{
-	if (yuno_hist > 7) {
+	if (yuno_book > 7) {
 		mes "^8B6914*Self-Honesty*";
 		mes "*'Benefits Fo' Life!'*";
 		mes "By Stephen Oyoung";
@@ -1262,7 +1269,7 @@ yuno_in04,188,118,4	script	Book#juperos	HIDDEN_NPC,{
 
 //- Bronze Statue - juperos_01 99 112
 juperos_01,99,112,4	script	Bronze Statue#1	CLEAR_NPC,{
-	if (yuno_hist > 3) {
+	if (yuno_book > 3) {
 		mes "^3355FF''Do you wish to see";
 		mes "the end of the madness?";
 		mes "He is waiting where the three";
@@ -1270,7 +1277,7 @@ juperos_01,99,112,4	script	Bronze Statue#1	CLEAR_NPC,{
 		mes "two hundred illusions wander.''^000000";
 		close;
 	}
-	else if (yuno_hist == 3) {
+	else if (yuno_book == 3) {
 		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I better go and";
 		mes "see Fayruz in the";
@@ -1300,14 +1307,15 @@ juperos_01,99,112,4	script	Bronze Statue#1	CLEAR_NPC,{
 			mes "I am. I know what sounds";
 			mes "all of these letters make...";
 			next;
-			if (yuno_hist == 2) {
+			if (yuno_book == 2) {
 				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Then again, Fayruz did";
 				mes "say this was enchanted.";
 				mes "Okay, I guess I'll go back";
 				mes "to the Juno Library and";
 				mes "tell her what I found.";
-				yuno_hist = 3;
+				yuno_book = 3;
+				changequest(11017, 11018);
 				close;
 			}
 			mes "["+strcharinfo(PC_NAME)+"]";
@@ -1535,7 +1543,7 @@ yuno_in04,118,116,4	script	Paper	HIDDEN_NPC,{
 	next;
 	switch(select("Read it.", "Leave it alone.")) {
 	case 1:
-		if (yuno_hist > 7) {
+		if (yuno_book > 7) {
 			mes "^8B6914P.S.";
 			mes "Please...";
 			mes "Come back to me.";
@@ -1582,7 +1590,7 @@ yuno_in04,118,116,4	script	Paper	HIDDEN_NPC,{
 }
 
 juperos_01,123,92,4	script	Stone Statue	CLEAR_NPC,{
-	if (yuno_hist) {
+	if (yuno_book) {
 		mes "^3355FFIt's a stone statue";
 		mes "that looks exactly like";
 		mes "the one in the Juno Library.";
