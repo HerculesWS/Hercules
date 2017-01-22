@@ -404,6 +404,8 @@ int cmdline_exec(int argc, char **argv, unsigned int options)
 		struct CmdlineArgData *data = NULL;
 		const char *arg = argv[i];
 		if (arg[0] != '-') { // All arguments must begin with '-'
+			if ((options&(CMDLINE_OPT_SILENT|CMDLINE_OPT_PREINIT)) != 0)
+				continue;
 			ShowError("Invalid option '%s'.\n", argv[i]);
 			exit(EXIT_FAILURE);
 		}
