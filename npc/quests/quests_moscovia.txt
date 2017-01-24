@@ -9,7 +9,7 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C) 2012-2017  Hercules Dev Team
 //= Copyright (C)  Lemongrass
 //= Copyright (C)  Euphy
 //= Copyright (C)  Joseph
@@ -17,6 +17,7 @@
 //= Copyright (C)  Gepard
 //= Copyright (C)  brianluau
 //= Copyright (C)  Kisuka
+//= Copyright (C)  Asheraf
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -43,7 +44,7 @@
 //= The Moving Island, Help Mikhail, Acorn Exchange, Banish Winter, Shafka
 //= Hat, Koshei the Immortal.
 //================= Current Version =======================================
-//= 2.3
+//= 2.4
 //=========================================================================
 
 //== The Moving Island :: mos_whale_edq ====================
@@ -65,6 +66,7 @@ moscovia,171,71,3	script	Berbayeff#npc	4_M_RUSMAN2,{
 		mes "seen many marvelous things";
 		mes "from near and far.";
 		next;
+		setquest(18100);
 		mes "[Berbayeff]";
 		mes "I'm sure you'll probably";
 		mes "be interested in my story.";
@@ -189,6 +191,7 @@ moscovia,171,71,3	script	Berbayeff#npc	4_M_RUSMAN2,{
 		mes "I'll definitely go up to that";
 		mes "island... and verify it with my own eyes!";
 		mos_whale_edq = 1;
+		changequest(18100, 18101);
 		close;
 	} else if (mos_whale_edq == 1) {
 		.@speak = rand(1,5);
@@ -235,6 +238,7 @@ moscovia,171,71,3	script	Berbayeff#npc	4_M_RUSMAN2,{
 		mes "If you want to find the island";
 		mes "by ship, go to Mr. Ibanoff";
 		mes "and ask for a favor.";
+		changequest(18101, 18102);
 		close;
 	} else if (mos_whale_edq > 12 && mos_whale_edq < 42) {
 		emotion e_omg;
@@ -298,6 +302,8 @@ moscovia,135,49,5	script	Mr. Ibanoff#npc	4_M_RUSBALD,{
 		mes "What's up?";
 		next;
 		if(select("Tell me an adventure story.", "Lend me your ship.") == 1) {
+			completequest(18101, 18102);
+			setquest(18103);
 			mes "[Mr. Ibanoff]";
 			mes "You are an adventurer, right?";
 			mes "You come from a strange land?";
@@ -399,6 +405,7 @@ moscovia,135,49,5	script	Mr. Ibanoff#npc	4_M_RUSBALD,{
 			mes "If you ever need anything,";
 			mes "come talk to me whenever, hahaha!";
 			mos_whale_edq = 2;
+			changequest(18103, 18104);
 			close;
 		}
 		if (mos_whale_edq == 2) {
@@ -452,6 +459,7 @@ moscovia,135,49,5	script	Mr. Ibanoff#npc	4_M_RUSBALD,{
 			mes "materials, bring them to me. I'll";
 			mes "repair the ship.";
 			mos_whale_edq = 3;
+			changequest(18104, 18105);
 			close;
 		}
 		emotion e_ag;
@@ -483,6 +491,7 @@ moscovia,135,49,5	script	Mr. Ibanoff#npc	4_M_RUSBALD,{
 			delitem Tube,5;
 			delitem Jubilee,10;
 			mos_whale_edq = 4;
+			changequest(18105, 18106);
 			mes "[Mr. Ibanoff]";
 			mes "Okay, we are at the ready.";
 			mes "When would you like to depart?";
@@ -603,6 +612,7 @@ moscovia,135,49,5	script	Mr. Ibanoff#npc	4_M_RUSBALD,{
 			mes "back to the island, I want to go";
 			mes "together with you! Eh? Hahaha!";
 			mos_whale_edq = 16;
+			changequest(18111, 18112);
 			close;
 	} else if (mos_whale_edq < 18) {
 		mes "[Mr. Ibanoff]";
@@ -640,6 +650,7 @@ moscovia,135,49,5	script	Mr. Ibanoff#npc	4_M_RUSBALD,{
 			mes "[Mr. Ibanoff]";
 			mes "Again, let's get the ship ready and sail before the sun sets!";
 			mos_whale_edq = 19;
+			changequest(18113, 18114);
 			close;
 		}
 		mes "[Mr. Ibanoff]";
@@ -676,6 +687,7 @@ moscovia,135,49,5	script	Mr. Ibanoff#npc	4_M_RUSBALD,{
 		mes "been, it's very good to see you";
 		mes "again.";
 		mos_whale_edq = 19;
+		changequest(18113, 18114);
 		next;
 		mes "[Mr. Ibanoff]";
 		mes "I can guess you'd like to go to";
@@ -821,6 +833,7 @@ mosk_ship,98,110,3	script	Mr. Ibanoff#npc2	4_M_RUSBALD,{
 		mes "At first, hold the rudder to go";
 		mes "forward, to the east.";
 		mos_whale_edq = 5;
+		changequest(18106, 18107);
 		close;
 	} else if (mos_whale_edq == 5) {
 		mes "[Mr. Ibanoff]";
@@ -874,6 +887,7 @@ mosk_ship,98,110,3	script	Mr. Ibanoff#npc2	4_M_RUSBALD,{
 		mes "Go around the deck to look more";
 		mes "carefully! Go!";
 		mos_whale_edq = 12;
+		changequest(18107, 18108);
 		donpcevent "#findship::OnEnable";
 		close;
 	} else if (mos_whale_edq == 12) {
@@ -904,6 +918,7 @@ mosk_ship,98,110,3	script	Mr. Ibanoff#npc2	4_M_RUSBALD,{
 		mes "At first, hold the rudder to go";
 		mes "forward, to the east.";
 		mos_whale_edq = 20;
+		changequest(18114, 18115);
 		close;
 	} else if (mos_whale_edq == 20) {
 		mes "[Mr. Ibanoff]";
@@ -921,6 +936,7 @@ mosk_ship,98,110,3	script	Mr. Ibanoff#npc2	4_M_RUSBALD,{
 		mes "There is a moving island!";
 		mes "We have done well!";
 		next;
+		changequest(18115, 18116);
 		mes "[Mr. Ibanoff]";
 		mes "Oh...my...";
 		mes "It really is there...";
@@ -1230,6 +1246,7 @@ mosk_fild01,86,104,3	script	Aged Stranger#npc	4_M_GUSLIMAN,{
 		mes "the back of a gigantic whale!";
 		mes "That's why I call it Whale Island!";
 		next;
+		changequest(18109, 18110);
 		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "How...? How is it possible";
 		mes "that the water flows in streams";
@@ -1269,6 +1286,7 @@ mosk_fild01,86,104,3	script	Aged Stranger#npc	4_M_GUSLIMAN,{
 		next;
 		callsub S_AS_3;
 		mos_whale_edq = 14;
+		changequest(18110, 18111);
 		close2;
 		sleep2 20000;
 		mos_whale_edq = 15;
@@ -1411,6 +1429,7 @@ mosk_fild01,86,104,3	script	Aged Stranger#npc	4_M_GUSLIMAN,{
 		mes "I'll send you back to the";
 		mes "mainland.";
 		mos_whale_edq = 31;
+		changequest(18116, 18117);
 		close;
 	} else if (mos_whale_edq == 31) {
 		mes "[Aged Stranger]";
@@ -1449,6 +1468,7 @@ mosk_fild01,86,104,3	script	Aged Stranger#npc	4_M_GUSLIMAN,{
 			delitem Goats_Horn,20;
 			delitem Sea_Otter_Leather,10;
 			mos_whale_edq = 34;
+			changequest(18117, 18118);
 			mes "[Aged Stranger]";
 			mes "Wait for a moment until I make the";
 			mes "instrument successfully.";
@@ -1495,6 +1515,7 @@ mosk_fild01,86,104,3	script	Aged Stranger#npc	4_M_GUSLIMAN,{
 			mes "the ancestors of Moscovia.";
 			getitem GUSLI, 1;
 			mos_whale_edq = 35;
+			changequest(18118, 18119);
 			next;
 			mes "[Aged Stranger]";
 			mes "I am the last person who has";
@@ -1696,6 +1717,7 @@ S_AS_1:
 		mes "With your ability to play, surely";
 		mes "you can win the admiration of all.";
 		mos_whale_edq = 38;
+		changequest(18119, 18120);
 		close;
 	}
 	mes "[Aged Stranger]";
@@ -1891,6 +1913,7 @@ mosk_in,131,92,3	script	Csar Alexsay III#npc	4_M_RUSKING,{
 				mes "banishing winter with magic,";
 				mes "announce that to me immediately.";
 				mos_nowinter = 14;
+				changequest(18076, 18077);
 				close;
 			}
 		}
@@ -1934,6 +1957,7 @@ mosk_in,131,92,3	script	Csar Alexsay III#npc	4_M_RUSKING,{
 				mes "If you do that, I will arrest you immediately!";
 				mes "So take care of yourself.";
 				mos_nowinter = 14;
+				changequest(18076, 18077);
 				close;
 			}
 			mes "[Csar Alexsay III]";
@@ -2004,6 +2028,7 @@ mosk_in,131,92,3	script	Csar Alexsay III#npc	4_M_RUSKING,{
 		mes "I give it as an atonement";
 		mes "to make my people happy.";
 		mos_nowinter = 21;
+		completequest(18079);
 		getitem Old_Blue_Box,1;
 		next;
 		mes "[Csar Alexsay III]";
@@ -2111,6 +2136,7 @@ mosk_in,131,92,3	script	Csar Alexsay III#npc	4_M_RUSKING,{
 		mes "You have a heavy responsibility.";
 		mes "Bring evidence of this whale island to me, to provide me with some relief. Now go.";
 		mos_whale_edq = 18;
+		changequest(18112, 18113);
 		close;
 	} else if (mos_whale_edq > 17 && mos_whale_edq < 35) {
 		mes "[Csar Alexsay III]";
@@ -2307,6 +2333,7 @@ mosk_in,131,92,3	script	Csar Alexsay III#npc	4_M_RUSKING,{
 			getitem Old_Violet_Box,1;
 			getexp RENEWAL_EXP?100000:1200000,0;
 			mos_whale_edq = 41;
+			completequest(18120);
 			close;
 		}
 		mes "[Csar Alexsay III]";
@@ -2558,6 +2585,7 @@ OnTouch:
 		mes "Watch out! "+strcharinfo(PC_NAME)+"!";
 		mes "Ah... That... That is... What...";
 		mos_whale_edq = 13;
+		changequest(18108, 18109);
 		close2;
 		warp "mosk_fild01",95,93;
 		end;
@@ -2697,6 +2725,7 @@ function	script	F_MOS_1	{
 	mes "Mikhail is such a timid boy. I guess he didn't leave this village.";
 	mes "Please bring him to me, then~";
 	mos_swan = 1;
+	setquest(18060);
 	close;
 }
 
@@ -2751,6 +2780,7 @@ mosk_in,144,279,5	script	Gallina#mos	4_F_RUSWOMAN1,{
 		mes "Well, now I have to get to work!";
 		mes "I'll make you my hotcakes someday. Please visit me later";
 		mos_swan = 100;
+		completequest(18069);
 		getexp RENEWAL_EXP?90000:1000000,0;
 		close;
 	}
@@ -2863,7 +2893,10 @@ mosk_in,148,274,1	script	Anna#mos	4_F_RUSCHILD,{
 					next;
 					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "It's the only clue, I guess I'll go to ^3131FFInn 'Sticky Herb Tree'^000000?";
-					if (mos_swan == 2) mos_swan = 3;
+					if (mos_swan == 2) {
+						mos_swan = 3;
+						changequest(18060, 18061);
+					}
 					next;
 					break;
 				case 4:
@@ -3084,6 +3117,7 @@ mosk_in,205,268,3	script	Fire pot#mos	HIDDEN_NPC,{
 				mes "- I need to know what's required for the paste.";
 				mes "I'll ask that guy ^3131FFMr. Victor^000000 about them. -";
 				mos_swan = 12;
+				changequest(18064, 18065);
 				close;
 				break;
 			case 2:
@@ -3139,6 +3173,7 @@ mosk_in,205,268,3	script	Fire pot#mos	HIDDEN_NPC,{
 		mes "Now I'm gonna give this back to Mom.";
 		donpcevent "Mikhail#mos::OnInit";
 		mos_swan = 25;
+		changequest(18068, 18069);
 		delitem High_Strength_Adhesive,1;
 		close;
 	}
@@ -3302,6 +3337,7 @@ mosk_in,135,191,5	script	Landlord#mos	4_F_RUSWOMAN3,{
 					mes "I was unkind to make you stay here but wasn't it easier for you? hoho.";
 					mes "When it gets dark, promise me to come here again. Hoho";
 					mos_swan = 7;
+					changequest(18061, 18062);
 					close;
 					break;
 				case 3:
@@ -3380,6 +3416,7 @@ mosk_in,141,212,3	script	Pub Owner#mos	4_M_RUSBALD,{
 			mes "[Pub Owner]";
 			mes "You're welcome.";
 			mos_swan = 8;
+			changequest(18062, 18063);
 			close;
 		}
 		mes "[Pub Owner]";
@@ -3596,6 +3633,7 @@ mosk_in,147,202,3	script	Victor#mos	4_M_RUSMAN2,{
 		mes "[Victor]";
 		mes "He might've just hidden himself somewhere, haha!";
 		mos_swan = 10;
+		changequest(18062, 18063);
 		close;
 	} else if (mos_swan == 10 || mos_swan == 11) {
 		mes "[Victor]";
@@ -3633,6 +3671,7 @@ mosk_in,147,202,3	script	Victor#mos	4_M_RUSMAN2,{
 		mes "[Victor]";
 		mes "You should bring ^3131FF'10 sticky herbs'^000000 and ^3131FF 1 medicine bowl^000000 to me.";
 		mos_swan = 13;
+		changequest(18065, 18066);
 		close;
 	} else if (mos_swan > 12 && mos_swan < 23) {
 		mes "[Victor]";
@@ -3664,6 +3703,7 @@ mosk_in,147,202,3	script	Victor#mos	4_M_RUSMAN2,{
 			delitem Sticky_Herb,10;
 			delitem Medicine_Bowl,1;
 			mos_swan = 24;
+			changequest(18067, 18068);
 			getitem High_Strength_Adhesive,1;
 			close;
 		}
@@ -3730,6 +3770,7 @@ mosk_dun03,153,90,3	script	Bubbling Swamp#mos1	CLEAR_NPC,{
 		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I don't see any traces of Mikhail. I think I should go back and check his house one more time.";
 		mos_swan = 11;
+		changequest(18063, 18064);
 		close;
 	} else if (mos_swan == 11 && mos_swan == 12) {
 		mes "- You can see a small muddy swamp -";
@@ -3748,6 +3789,7 @@ mosk_dun03,153,90,3	script	Bubbling Swamp#mos1	CLEAR_NPC,{
 			if (mos_swan == 22) {
 				getitem Sticky_Herb,1;
 				mos_swan = 23;
+				changequest(18066, 18067);
 				close;
 			}
 			getitem Sticky_Herb,1;
@@ -4461,6 +4503,7 @@ mosk_in,215,46,5	script	Baba Yaga, the Horrible	4_F_BABAYAGA,{
 			mes "a 1, 2, or 3 carat";
 			mes "^ff00001 Diamond^000000.";
 			mos_nowinter = 6;
+			changequest(18070, 18071);
 			next;
 		} else {
 			mes "[Baba Yaga, the Horrible]";
@@ -4481,6 +4524,7 @@ mosk_in,215,46,5	script	Baba Yaga, the Horrible	4_F_BABAYAGA,{
 			mes "a 1, 2, or 3 carat";
 			mes "^ff0000Diamond^000000.";
 			mos_nowinter = 7;
+			changequest(18070, 18072);
 			next;
 		}
 		mes "[Baba Yaga, the Horrible]";
@@ -4541,6 +4585,7 @@ mosk_in,215,46,5	script	Baba Yaga, the Horrible	4_F_BABAYAGA,{
 			mes "contain people's speech.";
 			mes "I must have this.";
 			next;
+			changequest(18071, 18073);
 			mes "[Baba Yaga, the Horrible]";
 			mes "I don't know how strong you are,";
 			mes "but I would like to recommend that";
@@ -4742,6 +4787,7 @@ mosk_in,215,46,5	script	Baba Yaga, the Horrible	4_F_BABAYAGA,{
 			mes "[Baba Yaga, the Horrible]";
 			mes "Take care of yourself, cough, cough.";
 			mos_nowinter = 10;
+			changequest(18074, 18075);
 			close;
 		}
 		mes "[Baba Yaga, the Horrible]";
@@ -4888,8 +4934,9 @@ mosk_in,215,46,5	script	Baba Yaga, the Horrible	4_F_BABAYAGA,{
 		mes "If you do this, what the villagers want";
 		mes "will be happening,";
 		mes "forever.";
-		getitem Yaga_Secret_Medicine,1;
 		mos_nowinter = 19;
+		changequest(18077, 18078);
+		getitem(Yaga_Secret_Medicine, 1);
 		close;
 	} else if (mos_nowinter == 19) {
 		mes "[Baba Yaga, the Horrible]";
@@ -4935,6 +4982,7 @@ S_BY_1:
 	mes "where it is.";
 	mes "Could you please come back later?";
 	mos_nowinter = 5;
+	setquest(18070);
 	close;
 }
 
@@ -5472,6 +5520,7 @@ moscovia,224,190,0	script	#nowinterplz	CLEAR_NPC,{
 		delitem Yaga_Secret_Medicine,1;
 		specialeffect EF_BARRIER;
 		mos_nowinter = 20;
+		changequest(18078, 18079);
 		next;
 		mes "-You feel like your";
 		mes "body is heating up.";
@@ -6166,7 +6215,10 @@ moscovia,196,71,3	script	A Young Man#mos14	4_M_RUSMAN2,{
 			mes "I hope that winter never comes.";
 			mes "It is my dream.";
 			mos_middle = 1;
-			if (mos_kid == 1 && mos_elder == 1) mos_nowinter = 11;
+			if (mos_kid == 1 && mos_elder == 1) {
+				mos_nowinter = 11;
+				changequest(18075, 18076);
+			}
 			close;
 		}
 		mes "[Fredek]";
@@ -6217,7 +6269,10 @@ moscovia,234,168,5	script	A Man#mos15	4_M_RUSBALD,{
 			mes "But, design of coldness is";
 			mes "winter itself, isn't it?";
 			mos_elder = 1;
-			if (mos_kid == 1 && mos_middle == 1) mos_nowinter = 11;
+			if (mos_kid == 1 && mos_middle == 1) {
+				mos_nowinter = 11;
+				changequest(18075, 18076);
+			}
 			close;
 		}
 		mes "[Gavrel]";
@@ -6267,7 +6322,10 @@ moscovia,228,80,3	script	A Little Boy#mos16	4_M_RUSCHILD,{
 			mes "Do you think";
 			mes "the winter should come again?";
 			mos_kid = 1;
-			if (mos_middle == 1 && mos_elder == 1) mos_nowinter = 11;
+			if (mos_middle == 1 && mos_elder == 1) {
+				mos_nowinter = 11;
+				changequest(18075, 18076);
+			}
 			close;
 		}
 		mes "[Rurik]";
@@ -6329,6 +6387,7 @@ OnTouch:
 					mes "Here it is.";
 					mes "That was easy to find.";
 					mos_nowinter = 9;
+					changequest(18073, 18074);
 					getitem Magic_Gourd_Bottle,1;
 					close;
 				}
@@ -6337,6 +6396,7 @@ OnTouch:
 					mes "Ah, I got it!";
 					mes "I better get out of here quickly.";
 					mos_nowinter = 9;
+					changequest(18073, 18074);
 					getitem Magic_Gourd_Bottle,1;
 					close;
 				}
@@ -6503,6 +6563,7 @@ moscovia,211,93,3	script	Irina#edq	4_F_RUSCHILD,{
 		mes "Shafka still keeps you warm!";
 		close;
 	}
+	setquest(18121);
 	mes "[Irina]";
 	mes "Do you want to make a Shafka hat?";
 	mes "Heheh. Good idea!";
@@ -6525,6 +6586,7 @@ moscovia,211,93,3	script	Irina#edq	4_F_RUSCHILD,{
 		delitem Sea_Otter_Leather,20;
 		delitem Spool,1;
 		getitem Chullos,1;
+		completequest(18121);
 		mes "[Irina]";
 		mes "Good, I made it. So, how about it?";
 		mes "Do you like it?";
@@ -6770,6 +6832,7 @@ mosk_dun01,167,160,3	script	Gray Wolf#rus03	4_RUS_DWOLF,{
 		mes "I'm warning you again!";
 		mes "Unless you want to be killed, leave now.";
 		rhea_rus_main = 3;
+		setquest(8136);
 		emotion e_omg,1;
 		specialeffect2 EF_HIT2;
 		percentheal -50,0;
@@ -6918,6 +6981,7 @@ mosk_dun01,45,259,0	script	Wall#rus04	HIDDEN_NPC,{
 		mes "Please don't forget about me.";
 		donpcevent "Gray Wolf#rus05::OnDisable";
 		rhea_rus_main = 6;
+		changequest(8136, 8137);
 		close;
 	} else if (rhea_rus_main > 5 && rhea_rus_main < 8) {
 		mes "[Girl's Voice]";
@@ -7084,6 +7148,7 @@ mosk_dun01,45,259,0	script	Wall#rus04	HIDDEN_NPC,{
 			mes "Stop! Where do you think you're going?!!!";
 			delitem Gold_Key,1;
 			rhea_rus_main = 48;
+			changequest(8167, 8168);
 			monster "mosk_dun01",45,256,"Koshei, the Immortal",1890,1,"Wall#rus04::OnMyMobDead";
 			donpcevent "Koshei#rus47::OnEnable";
 			close;
@@ -7124,6 +7189,7 @@ mosk_dun01,45,259,0	script	Wall#rus04	HIDDEN_NPC,{
 		mes "[Gray Wolf]";
 		mes "I can't keep her alive for much longer. You must find Baba Yaga.";
 		rhea_rus_main = 49;
+		changequest(8168, 8169);
 		close2;
 		donpcevent "Gray Wolf#rus05::OnDisable";
 		end;
@@ -7258,6 +7324,7 @@ mosk_dun01,45,259,0	script	Wall#rus04	HIDDEN_NPC,{
 		mes "[Maria Morebna]";
 		mes "It's been a long time since I've felt the sunlight, fresh wind and the scent of grass. I'm so grateful.";
 		rhea_rus_main = 52;
+		completequest(8171);
 		.@rus_food = rand(1,6);
 		switch (rand(1,6)) {
 			case 1: getitem Dex_Dish08,1; break;
@@ -7475,6 +7542,7 @@ moscovia,178,127,0	script	The Blacksmith#rus06	1_M_SMITH,{
 		mes "Bahahaha~";
 		mes "I promise you, I'll explain when you bring the ^0000ff25 Steel^000000 to me. Please just get the Steel and come back.";
 		rhea_rus_main = 7;
+		changequest(8137, 8138);
 		close;
 	} else if (rhea_rus_main == 7) {
 		if (countitem(Steel) > 24) {
@@ -7524,6 +7592,8 @@ moscovia,178,127,0	script	The Blacksmith#rus06	1_M_SMITH,{
 			mes "And don't forget to wear these!";
 			delitem Steel,25;
 			rhea_rus_main = 8;
+			// if (BaseClass != Job_Thief)
+			changequest(8138, 8139);
 			if (BaseClass == Job_Merchant || BaseClass == Job_Swordman || BaseClass == Job_Thief || BaseClass == Job_Archer) getitem Iron_Boots01,1; else getitem Iron_Boots02,1; close;
 		}
 		mes "[The Blacksmith]";
@@ -7585,6 +7655,7 @@ moscovia,178,127,0	script	The Blacksmith#rus06	1_M_SMITH,{
 					mes "Ah and you shouldn't be needing those Steel Boots anymore. Good luck!";
 					if (countitem(Iron_Boots01)) delitem Iron_Boots01,1; else delitem Iron_Boots02,1;
 					rhea_rus_main = 9;
+					changequest(8139, 8154);
 					close;
 				}
 				mes "[The Blacksmith]";
@@ -7753,6 +7824,7 @@ moscovia,206,81,0	script	Vassili Grandpapa#rus07	4_M_05,{
 			mes "[Vassili Grandpapa]";
 			mes "She disappeared soon... after Now all I have is Ryubaba. She is also pretty and smart but nothing can relieve the sadnesss in my heart from losing Mashenka...";
 			rhea_rus_ring = 1;
+			setquest(8140);
 			close;
 		} else if (rhea_rus_ring && rhea_rus_ring < 8) {
 			mes "[Vassili Grandpapa]";
@@ -7879,6 +7951,7 @@ moscovia,206,81,0	script	Vassili Grandpapa#rus07	4_M_05,{
 				mes "...It is my fault that this tragedy between my daughters happened. I will spend the rest of my life trying to make up for it...";
 				delitem Pointed_Wooden_Flute,1;
 				rhea_rus_ring = 10;
+				completequest(8144);
 				getitem Red_Ring,1;
 				if (RENEWAL_EXP) {
 					if (BaseLevel < 56) getexp 470,0;
@@ -8073,6 +8146,7 @@ moscovia,213,216,3	script	Ryubaba#rus08	4_F_RUSWOMAN2,{
 			mes "[Ryubaba]";
 			mes "Right... Let me finish talking. We tried searching for her but we couldn't find her. She must have been wearing the ring when she disappeared around the marsh.";
 			rhea_rus_ring = 5;
+			changequest(8140, 8141);
 			close;
 		} else if (rhea_rus_ring > 4 && rhea_rus_ring < 7) {
 			mes "[Ryubaba]";
@@ -8184,6 +8258,7 @@ moscovia,213,216,3	script	Ryubaba#rus08	4_F_RUSWOMAN2,{
 					mes "[Ryubaba]";
 					mes "W, wait!!!";
 					rhea_rus_ring = 8;
+					changequest(8143, 8144);
 					close2;
 					warp "moscovia",203,80;
 					end;
@@ -8195,6 +8270,7 @@ moscovia,213,216,3	script	Ryubaba#rus08	4_F_RUSWOMAN2,{
 				mes "I have to repent for my sins and atone for them for the rest of my life.";
 				delitem Pointed_Wooden_Flute,1;
 				rhea_rus_ring = 9;
+				completequest(8143);
 				getitem Red_Ring,1;
 				if (RENEWAL_EXP) {
 					if (BaseLevel < 56) getexp 470,0;
@@ -8367,6 +8443,7 @@ mosk_fild02,157,233,0	script	Shepherdess#rus10	1_F_04,{
 			mes "[Shepherdess]";
 			mes "I am an excellent flute player! If you get me enough Pointed Branches, I will make a flute from them and play beautiful music for you. Please~!";
 			rhea_rus_ring = 6;
+			changequest(8141, 8142);
 			close;
 		} else if (rhea_rus_ring == 6) {
 			if (countitem(Pointed_Branch) > 24) {
@@ -8421,6 +8498,7 @@ mosk_fild02,157,233,0	script	Shepherdess#rus10	1_F_04,{
 				mes "- ^0000ff'Pointed Wooden Flute'!!^000000 -";
 				delitem Pointed_Branch,25;
 				rhea_rus_ring = 7;
+				changequest(8142, 8143);
 				getitem Pointed_Wooden_Flute,1;
 				close;
 			}
@@ -8544,6 +8622,7 @@ moscovia,166,145,1	script	Worried Mother#rus19	4_F_RUSWOMAN3,{
 			mes "[Worried Mother]";
 			mes "Please, please find my daughter.";
 			rhea_rus_hair = 1;
+			setquest(8145);
 			close;
 		} else if (rhea_rus_hair == 1) {
 			mes "[Worried Mother]";
@@ -8567,6 +8646,7 @@ moscovia,166,145,1	script	Worried Mother#rus19	4_F_RUSWOMAN3,{
 			mes "[Worried Mother]";
 			mes "I'm not sure where she would be but it has to be somewhere near water. Please, find where my daughter is. I beg of you.";
 			rhea_rus_hair = 2;
+			changequest(8145, 8146);
 			close;
 		} else if (rhea_rus_hair > 1 && rhea_rus_hair < 9) {
 			mes "[Worried Mother]";
@@ -8781,6 +8861,7 @@ mosk_fild02,124,202,3	script	Lusalka#rus23	4_F_RUSGREEN,{
 				mes "- ^0000ffgolden earrings^000000 -";
 				mes "- ^0000fffrom Lusalka!^000000 -";
 				rhea_rus_hair = 3;
+				changequest(8146, 8147);
 				donpcevent "Lusalka#rus23::OnDisable";
 				close;
 			} else if (rhea_rus_hair > 2 && rhea_rus_hair < 7) {
@@ -8861,6 +8942,7 @@ mosk_fild02,124,202,3	script	Lusalka#rus23	4_F_RUSGREEN,{
 				mes "W, who are you!? Ahkkk!!";
 				sc_start SC_BLIND,10000,0;
 				rhea_rus_hair = 8;
+				completequest(8150);
 				donpcevent "Lusalka#rus23::OnDisable";
 				close;
 			} else if (rhea_rus_hair > 7) {
@@ -8992,6 +9074,7 @@ prontera,228,279,3	script	Wanderer#rus24	4_M_RUSMAN2,{
 			mes "me that he wanted";
 			mes "to travel to a desert.";
 			rhea_rus_hair = 4;
+			changequest(8147, 8148);
 			close;
 		} else if (rhea_rus_hair > 3 && rhea_rus_hair < 7) {
 			mes "[A Wanderer from a strange land]";
@@ -9070,6 +9153,7 @@ morocc,165,82,0	script	Morroc Villager#rus25	1_M_02,{
 			mes "[Morroc Villager]";
 			mes "Yep that's gotta be who you're looking for. I can see his gloomy face right now... that poor sad man.";
 			rhea_rus_hair = 5;
+			changequest(8148, 8149);
 			close;
 		} else if (rhea_rus_hair > 4 && rhea_rus_hair < 7) {
 			mes "[Morroc Villager]";
@@ -9208,6 +9292,7 @@ moc_pryd04,126,120,0	script	Soldier#rus26	4_M_RUSMAN1,{
 			mes "[A gloomy looking soldier]";
 			mes "Before the full moon, I will be back to Moscovia and meet her. I will come back so strong and happy that when I go to see her she will not suffer anymore.";
 			rhea_rus_hair = 7;
+			changequest(8149, 8150);
 			close;
 		} else if (rhea_rus_hair == 7) {
 			mes "[A gloomy looking soldier]";
@@ -9292,6 +9377,7 @@ OnTouch:
 			mes "[Voice unidentified]";
 			mes "Show me what you can do.";
 			rhea_rus_quiz = 1;
+			setquest(8151);
 			close;
 		}
 	}
@@ -9489,6 +9575,7 @@ mosk_fild02,243,270,0	script	Marozka#rus31	4_M_LGTGRAND,{
 			mes "[Marozka]";
 			mes "That was a test of your strength. Now you must pass the test of mind and wisdom.";
 			rhea_rus_quiz = 29;
+			changequest(8152, 8153);
 			close;
 		} else if (rhea_rus_quiz == 29) {
 			if (getequipid(EQI_SHOES) != 2429) {
@@ -9556,6 +9643,7 @@ mosk_fild02,243,270,0	script	Marozka#rus31	4_M_LGTGRAND,{
 			mes "[Marozka]";
 			mes "I hope you help Maria with your strength and kindness.";
 			rhea_rus_quiz = 30;
+			completequest(8153);
 			getitem Golden_Thread,10;
 			close;
 		}
@@ -9687,6 +9775,7 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 			mes "[Baba Yaga]";
 			mes "Ok! Move, move! You better be quick or I will find a way to punish you. Ehehehehehe.";
 			rhea_rus_main = 11;
+			changequest(8154, 8155);
 			close;
 		} else if (BaseClass == Job_Acolyte) {
 			mes "[Baba Yaga]";
@@ -9695,6 +9784,7 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 			mes "[Baba Yaga]";
 			mes "Ok! Move, move! You better be quick or I will find a way to punish you. Ehehehehehe.";
 			rhea_rus_main = 16;
+			changequest(8154, 8157);
 			close;
 		} else if (BaseClass == Job_Thief) {
 			mes "[Baba Yaga]";
@@ -9703,6 +9793,7 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 			mes "[Baba Yaga]";
 			mes "Ok! Move, move! You better be quick or I will find a way to punish you. Ehehehehehe.";
 			rhea_rus_main = 21;
+			changequest(8154, 8159);
 			close;
 		} else if (BaseClass == Job_Mage) {
 			mes "[Baba Yaga]";
@@ -9711,6 +9802,7 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 			mes "[Baba Yaga]";
 			mes "Ok! Move, move! You better be quick or I will find a way to punish you. Ehehehehehe.";
 			rhea_rus_main = 26;
+			changequest(8154, 8161);
 			close;
 		} else if (BaseClass == Job_Swordman) {
 			mes "[Baba Yaga]";
@@ -9719,6 +9811,7 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 			mes "[Baba Yaga]";
 			mes "Ok! Move, move! You better be quick or I will find a way to punish you. Ehehehehehe.";
 			rhea_rus_main = 31;
+			changequest(8154, 8163);
 			close;
 		}
 		mes "[Baba Yaga]";
@@ -9727,6 +9820,7 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 		mes "[Baba Yaga]";
 		mes "Ok! Move, move! You better be quick or I will find a way to punish you. Ehehehehehe.";
 		rhea_rus_main = 36;
+		changequest(8154, 8165);
 		close;
 	} else if (rhea_rus_main > 10 && rhea_rus_main < 16) {
 		mes "[Baba Yaga]";
@@ -9855,6 +9949,7 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 		mes "Here, help Maria with this key and watch out for Koshei. He is very dangerous. Kehehehehehe.";
 		rhea_rus_main = 47;
 		getitem Gold_Key,1;
+		changequest(8156, 8167);
 		close;
 	} else if (rhea_rus_main == 42) {
 		mes "["+ strcharinfo(PC_NAME) +"]";
@@ -9869,6 +9964,7 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 		mes "[Baba Yaga]";
 		mes "Here, help Maria with this key and watch out for Koshei. He is very dangerous. Kehehehehehe.";
 		rhea_rus_main = 47;
+		changequest(8158, 8167);
 		getitem Gold_Key,1;
 		close;
 	} else if (rhea_rus_main == 43) {
@@ -9886,6 +9982,7 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 			mes "Here, help Maria with this key and watch out for Koshei. He is very dangerous. Kehehehehehe.";
 			delitem Babayaga_Silver_Spoon,1;
 			rhea_rus_main = 47;
+			changequest(8160, 8167);
 			getitem Gold_Key,1;
 			close;
 		}
@@ -9911,6 +10008,7 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 		mes "[Baba Yaga]";
 		mes "Here, help Maria with this key and watch out for Koshei. He is very dangerous. Kehehehehehe.";
 		rhea_rus_main = 47;
+		changequest(8162, 8167);
 		getitem Gold_Key,1;
 		close;
 	} else if (rhea_rus_main == 45) {
@@ -9926,6 +10024,7 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 		mes "[Baba Yaga]";
 		mes "Here, help Maria with this key and watch out for Koshei. He is very dangerous. Kehehehehehe.";
 		rhea_rus_main = 47;
+		changequest(8164, 8167);
 		getitem Gold_Key,1;
 		close;
 	} else if (rhea_rus_main == 46) {
@@ -9941,6 +10040,7 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 		mes "[Baba Yaga]";
 		mes "Here, help Maria with this key and watch out for Koshei. He is very dangerous. Kehehehehehe.";
 		rhea_rus_main = 47;
+		changequest(8166, 8167);
 		getitem Gold_Key,1;
 		close;
 	} else if (rhea_rus_main > 46 && rhea_rus_main < 49) {
@@ -9979,6 +10079,7 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 		mes "[Baba Yaga]";
 		mes "Bring them to me quickly! Time is running out!";
 		rhea_rus_main = 50;
+		changequest(8169, 8170);
 		close;
 	} else if (rhea_rus_main == 50) {
 		if (countitem(Holy_Water) && countitem(Water_Of_Darkness) && countitem(Leaf_Of_Yggdrasil) > 1 && countitem(Leaflet_Of_Hinal) > 9) {
@@ -10031,6 +10132,7 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 			delitem Leaf_Of_Yggdrasil,2;
 			delitem Leaflet_Of_Hinal,10;
 			rhea_rus_main = 51;
+			changequest(8170, 8171);
 			close;
 		}
 		mes "[Baba Yaga]";
@@ -10383,6 +10485,7 @@ OnTouch:
 		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Ok, then. Let's get back to Baba Yaga...";
 		rhea_rus_main = 41;
+		changequest(8155, 8156);
 		close;
 	} else if (rhea_rus_main == 41) {
 		mes "[Cow]";
@@ -10482,6 +10585,7 @@ OnTouch:
 		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Ok, then. Let's get back to Baba Yaga...";
 		rhea_rus_main = 41;
+		changequest(8155, 8156);
 		close;
 	} else if (rhea_rus_main == 41) {
 		mes "[Cow]";
@@ -10570,6 +10674,7 @@ OnTouch:
 		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Ok, then. Let's get back to Baba Yaga...";
 		rhea_rus_main = 41;
+		changequest(8155, 8156);
 		close;
 	} else if (rhea_rus_main == 41) {
 		mes "[Cow]";
@@ -10764,6 +10869,7 @@ mosk_dun02,65,232,0	script	Noisy Coffin#rus36	4_NFCOFFIN,{
 		mes "Hu, the job has been done.";
 		mes "Let's get back to Baba Yaga.";
 		rhea_rus_main = 42;
+		changequest(8157, 8158);
 		close;
 	} else if (rhea_rus_main == 20) {
 		mes "["+ strcharinfo(PC_NAME) +"]";
@@ -10777,6 +10883,7 @@ mosk_dun02,65,232,0	script	Noisy Coffin#rus36	4_NFCOFFIN,{
 		mes "Hu, the job has been done.";
 		mes "Let's get back to Baba Yaga.";
 		rhea_rus_main = 42;
+		changequest(8157, 8158);
 		close;
 	} else if (rhea_rus_main == 42) {
 		mes "["+ strcharinfo(PC_NAME) +"]";
@@ -10835,6 +10942,7 @@ treasure01,165,58,0	script	Old Treasure Box#rus37	HIDDEN_NPC,{
 		next;
 		mes "- ^0000ff You find Baba Yaga's spoon !!^000000 -";
 		rhea_rus_main = 43;
+		changequest(8159, 8160);
 		getitem Babayaga_Silver_Spoon,1;
 		close;
 	} else if (rhea_rus_main == 43) {
@@ -11111,6 +11219,7 @@ amatsu,233,234,3	script	Momotoro Publisher#rus42	4_F_JPN2,{
 		mes "Thank you for buying our books. If you need more books, contact us please.";
 		Zeny -= 5000;
 		rhea_rus_main = 27;
+		changequest(8161, 8162);
 		getitem Book_Of_Magic,1;
 		close;
 	} else if (rhea_rus_main > 26 && rhea_rus_main < 31) {
@@ -11381,6 +11490,7 @@ mosk_dun02,57,220,0	script	House Ghost Jar#rus43	HIDDEN_NPC,{
 		mes "[House Ghost]";
 		mes "I will never forget your kindness of entertaining me.";
 		rhea_rus_main = 45;
+		changequest(8163, 8164);
 		close;
 	} else if (rhea_rus_main == 45) {
 		mes "[House Ghost]";
@@ -11756,6 +11866,7 @@ pay_dun04,163,186,0	script	Ghost Tree#rus45	HIDDEN_NPC,{
 			next;
 			mes "- ^0000ff You receive the best broom from Payon !!^000000 - ";
 			rhea_rus_main = 46;
+			changequest(8165, 8166);
 			close;
 		}
 		mes "[Ghost Tree]";
