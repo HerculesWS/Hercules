@@ -10110,6 +10110,16 @@ BUILDIN(openstorage)
 	return true;
 }
 
+BUILDIN(closestorage)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+	if (sd == NULL)
+		return true;
+
+	storage->close(sd);
+	return true;
+}
+
 BUILDIN(guildopenstorage)
 {
 	int ret;
@@ -20847,6 +20857,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(gettime,"i"),
 		BUILDIN_DEF(gettimestr,"si"),
 		BUILDIN_DEF(openstorage,""),
+		BUILDIN_DEF(closestorage,""),
 		BUILDIN_DEF(guildopenstorage,""),
 		BUILDIN_DEF(itemskill,"vi?"),
 		BUILDIN_DEF(produce,"i"),
