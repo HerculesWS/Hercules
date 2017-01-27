@@ -451,8 +451,8 @@ bool clif_send(const void* buf, int len, struct block_list* bl, enum send_target
 			break;
 		case AREA_CHAT_WOC:
 			nullpo_retr(true, bl);
-			map->foreachinarea(clif->send_sub, bl->m, bl->x-(AREA_SIZE-5), bl->y-(AREA_SIZE-5),
-			                   bl->x+(AREA_SIZE-5), bl->y+(AREA_SIZE-5), BL_PC, buf, len, bl, AREA_WOC);
+			map->foreachinarea(clif->send_sub, bl->m, bl->x-CHAT_AREA_SIZE, bl->y-CHAT_AREA_SIZE,
+			                   bl->x+CHAT_AREA_SIZE, bl->y+CHAT_AREA_SIZE, BL_PC, buf, len, bl, AREA_WOC);
 			break;
 
 		case CHAT:
