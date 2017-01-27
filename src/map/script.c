@@ -4180,6 +4180,14 @@ bool script_check_buildin_argtype(struct script_state* st, int func)
 					invalid++;
 				}
 				break;
+			case 'c':
+				if (!reference_toconstant(data) && !data_isint(data)) {
+					// constant/number
+					ShowWarning("Unexpected type for argument %d. Expected constant or number.\n", idx-1);
+					script->reportdata(data);
+					invalid++;
+				}
+				break;
 		}
 	}
 
@@ -11432,6 +11440,15 @@ BUILDIN(sc_start)
 	int tick, val1, val2, val3, val4=0, rate, flag;
 	char start_type;
 	const char* command = script->getfuncname(st);
+	struct script_data *data = script_getdata(st,2);
+
+	if (data->type == C_NAME && data_isreference(data)) {
+		const char *varname = reference_getname(data);
+		if (not_server_variable(*varname)) {
+			ShowWarning( "script:%s: Detected player variable '%s'.\n", command, varname );
+			return false;
+		}
+	}
 
 	if(strstr(command, "4"))
 		start_type = 4;
@@ -11495,6 +11512,15 @@ BUILDIN(sc_start)
 BUILDIN(sc_end) {
 	struct block_list* bl;
 	int type;
+	struct script_data *data = script_getdata(st,2);
+
+	if (data->type == C_NAME && data_isreference(data)) {
+		const char *varname = reference_getname(data);
+		if (not_server_variable(*varname)) {
+			ShowWarning( "script:sc_end: Detected player variable '%s'.\n", varname );
+			return false;
+		}
+	}
 
 	type = script_getnum(st, 2);
 	if (script_hasdata(st, 3))
@@ -11542,6 +11568,15 @@ BUILDIN(sc_end) {
 BUILDIN(getscrate) {
 	struct block_list *bl;
 	int type,rate;
+	struct script_data *data = script_getdata(st,2);
+
+	if (data->type == C_NAME && data_isreference(data)) {
+		const char *varname = reference_getname(data);
+		if (not_server_variable(*varname)) {
+			ShowWarning( "script:getscrate: Detected player variable '%s'.\n", varname );
+			return false;
+		}
+	}
 
 	type=script_getnum(st,2);
 	rate=script_getnum(st,3);
@@ -11564,6 +11599,15 @@ BUILDIN(getstatus)
 {
 	int id, type;
 	struct map_session_data* sd = script->rid2sd(st);
+	struct script_data *data = script_getdata(st,2);
+
+	if (data->type == C_NAME && data_isreference(data)) {
+		const char *varname = reference_getname(data);
+		if (not_server_variable(*varname)) {
+			ShowWarning( "script:getstatus: Detected player variable '%s'.\n", varname );
+			return false;
+		}
+	}
 
 	if( sd == NULL )
 	{// no player attached
@@ -20658,10 +20702,11 @@ bool script_add_builtin(const struct script_function *buildin, bool override)
 		// 'i' - int
 		// 'r' - reference (of a variable)
 		// 'l' - label
+		// 'c' - constant/number
 		// '?' - one optional parameter
 		// '*' - unknown number of optional parameters
 		char *p = buildin->arg;
-		while( *p == 'v' || *p == 's' || *p == 'i' || *p == 'r' || *p == 'l' ) ++p;
+		while( *p == 'v' || *p == 's' || *p == 'i' || *p == 'r' || *p == 'l' || *p == 'c' ) ++p;
 		while( *p == '?' ) ++p;
 		if( *p == '*' ) ++p;
 		if( *p != 0 ) {
@@ -20878,11 +20923,11 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(downrefitem,"i?"),
 		BUILDIN_DEF(statusup,"i"),
 		BUILDIN_DEF(statusup2,"ii"),
-		BUILDIN_DEF(bonus,"iv"),
-		BUILDIN_DEF2(bonus,"bonus2","ivi"),
-		BUILDIN_DEF2(bonus,"bonus3","ivii"),
-		BUILDIN_DEF2(bonus,"bonus4","ivvii"),
-		BUILDIN_DEF2(bonus,"bonus5","ivviii"),
+		BUILDIN_DEF(bonus,"cv"),
+		BUILDIN_DEF2(bonus,"bonus2","cvi"),
+		BUILDIN_DEF2(bonus,"bonus3","cvii"),
+		BUILDIN_DEF2(bonus,"bonus4","cvvii"),
+		BUILDIN_DEF2(bonus,"bonus5","cvviii"),
 		BUILDIN_DEF(autobonus,"sii??"),
 		BUILDIN_DEF(autobonus2,"sii??"),
 		BUILDIN_DEF(autobonus3,"siiv?"),
@@ -21010,7 +21055,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getskilllist,""),
 		BUILDIN_DEF(clearitem,""),
 		BUILDIN_DEF(classchange,"ii"),
-		BUILDIN_DEF(misceffect,"i"),
+		BUILDIN_DEF(misceffect,"c"),
 		BUILDIN_DEF(playbgm,"s"),
 		BUILDIN_DEF(playbgmall,"s?????"),
 		BUILDIN_DEF(soundeffect,"si"),
@@ -21025,8 +21070,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(petskillsupport,"viiii"), // [Skotlex]
 		BUILDIN_DEF(skilleffect,"vi"), // skill effect [Celest]
 		BUILDIN_DEF(npcskilleffect,"viii"), // npc skill effect [Valaris]
-		BUILDIN_DEF(specialeffect,"i??"), // npc skill effect [Valaris]
-		BUILDIN_DEF(specialeffect2,"i??"), // skill effect on players[Valaris]
+		BUILDIN_DEF(specialeffect,"c??"), // npc skill effect [Valaris]
+		BUILDIN_DEF(specialeffect2,"c??"), // skill effect on players[Valaris]
 		BUILDIN_DEF(nude,""), // nude command [Valaris]
 		BUILDIN_DEF(mapwarp,"ssii??"), // Added by RoVeRT
 		BUILDIN_DEF(atcommand,"s"), // [MouseJstr]
