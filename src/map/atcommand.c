@@ -7490,7 +7490,7 @@ ACMD(fakename)
 	clif->charnameack(0, &sd->bl);
 	if (sd->disguise) // Another packet should be sent so the client updates the name for sd
 		clif->charnameack(sd->fd, &sd->bl);
-	clif->message(sd->fd, msg_fd(fd,1310)); // Fake name enabled.
+//	clif->message(sd->fd, msg_fd(fd,1310)); // Fake name enabled.
 
 	return true;
 }
