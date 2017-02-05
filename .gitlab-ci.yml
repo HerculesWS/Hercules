@@ -18,7 +18,7 @@ variables: &base_vars
     - echo "Building $CI_BUILD_NAME"
     - uname -a
     - ./tools/ci/retry.sh apt-get update
-    - ./tools/ci/retry.sh apt-get install -y -qq $INSTALL_PACKAGES $DEBIAN_COMMON_PACKAGES libmysqlclient-dev
+    - ./tools/ci/retry.sh apt-get install -y -qq $INSTALL_PACKAGES $DEBIAN_COMMON_PACKAGES
     - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok mysql
     - ./tools/ci/travis.sh getplugins || true
   services:
@@ -37,10 +37,10 @@ pre_re:clang-3.9:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: primary
-  image: debian:unstable
+  image: debian:stretch
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: clang-3.9 mysql-client
+    INSTALL_PACKAGES: clang-3.9 mariadb-client libmariadbclient-dev-compat
   script:
     - ./tools/ci/travis.sh build CC=clang-3.9 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
@@ -49,22 +49,46 @@ re:clang-3.9:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: primary
+  image: debian:stretch
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: clang-3.9 mariadb-client libmariadbclient-dev-compat
+  script:
+    - ./tools/ci/travis.sh build CC=clang-3.9 --enable-debug --enable-Werror --enable-buildbot
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+pre_re:clang-4.0:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  stage: primary
   image: debian:unstable
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: clang-3.9 mysql-client
+    INSTALL_PACKAGES: clang-4.0 mysql-client libmysqlclient-dev
   script:
-    - ./tools/ci/travis.sh build CC=clang-3.9 --enable-debug --enable-Werror --enable-buildbot
+    - ./tools/ci/travis.sh build CC=clang-4.0 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+re:clang-4.0:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  stage: primary
+  image: debian:unstable
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: clang-4.0 mysql-client libmysqlclient-dev
+  script:
+    - ./tools/ci/travis.sh build CC=clang-4.0 --enable-debug --enable-Werror --enable-buildbot
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
 
 pre_re:gcc-4.6:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: secondary
-  image: debian:oldstable
+  image: debian:wheezy
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-4.6 mysql-client
+    INSTALL_PACKAGES: gcc-4.6 mysql-client libmysqlclient-dev
   script:
     - ./tools/ci/travis.sh build CC=gcc-4.6 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
@@ -73,10 +97,10 @@ re:gcc-4.6:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: secondary
-  image: debian:oldstable
+  image: debian:wheezy
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-4.6 mysql-client
+    INSTALL_PACKAGES: gcc-4.6 mysql-client libmysqlclient-dev
   script:
     - ./tools/ci/travis.sh build CC=gcc-4.6 --enable-debug --enable-Werror --enable-buildbot
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
@@ -85,10 +109,10 @@ pre_re:gcc-4.7:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: secondary
-  image: debian:oldstable
+  image: debian:wheezy
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-4.7 mysql-client
+    INSTALL_PACKAGES: gcc-4.7 mysql-client libmysqlclient-dev
   script:
     - ./tools/ci/travis.sh build CC=gcc-4.7 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
@@ -97,10 +121,10 @@ re:gcc-4.7:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: secondary
-  image: debian:oldstable
+  image: debian:wheezy
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-4.7 mysql-client
+    INSTALL_PACKAGES: gcc-4.7 mysql-client libmysqlclient-dev
   script:
     - ./tools/ci/travis.sh build CC=gcc-4.7 --enable-debug --enable-Werror --enable-buildbot
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
@@ -109,10 +133,10 @@ pre_re:gcc-4.8:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: primary
-  image: debian:stable
+  image: debian:jessie
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-4.8 mysql-client
+    INSTALL_PACKAGES: gcc-4.8 mysql-client libmysqlclient-dev
   script:
     - ./tools/ci/travis.sh build CC=gcc-4.8 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
@@ -121,10 +145,10 @@ re:gcc-4.8:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: primary
-  image: debian:stable
+  image: debian:jessie
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-4.8 mysql-client
+    INSTALL_PACKAGES: gcc-4.8 mysql-client libmysqlclient-dev
   script:
     - ./tools/ci/travis.sh build CC=gcc-4.8 --enable-debug --enable-Werror --enable-buildbot
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
@@ -133,10 +157,10 @@ pre_re:gcc-4.9:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: primary
-  image: debian:stable
+  image: debian:jessie
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-4.9 mysql-client
+    INSTALL_PACKAGES: gcc-4.9 mysql-client libmysqlclient-dev
   script:
     - ./tools/ci/travis.sh build CC=gcc-4.9 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
@@ -145,10 +169,10 @@ re:gcc-4.9:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: primary
-  image: debian:stable
+  image: debian:jessie
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-4.9 mysql-client
+    INSTALL_PACKAGES: gcc-4.9 mysql-client libmysqlclient-dev
   script:
     - ./tools/ci/travis.sh build CC=gcc-4.9 --enable-debug --enable-Werror --enable-buildbot
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
@@ -157,10 +181,10 @@ pre_re:gcc-5:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: primary
-  image: debian:unstable
+  image: debian:stretch
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-5 mysql-client
+    INSTALL_PACKAGES: gcc-5 mariadb-client libmariadbclient-dev-compat
   script:
     - ./tools/ci/travis.sh build CC=gcc-5 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
@@ -169,10 +193,10 @@ re:gcc-5:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: primary
-  image: debian:unstable
+  image: debian:stretch
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-5 mysql-client
+    INSTALL_PACKAGES: gcc-5 mariadb-client libmariadbclient-dev-compat
   script:
     - ./tools/ci/travis.sh build CC=gcc-5 --enable-debug --enable-Werror --enable-buildbot
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
@@ -181,10 +205,10 @@ pre_re:gcc-6:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: primary
-  image: debian:unstable
+  image: debian:stretch
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-6 mysql-client
+    INSTALL_PACKAGES: gcc-6 mariadb-client libmariadbclient-dev-compat
   script:
     - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
@@ -193,10 +217,10 @@ re:gcc-6:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: primary
-  image: debian:unstable
+  image: debian:stretch
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-6 mysql-client
+    INSTALL_PACKAGES: gcc-6 mariadb-client libmariadbclient-dev-compat
   script:
     - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
@@ -208,7 +232,7 @@ pre_re:gcc-6_i386:
   image: vicamo/debian:sid-i386
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-6 mysql-client
+    INSTALL_PACKAGES: gcc-6 mysql-client libmysqlclient-dev
   script:
     - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
@@ -220,7 +244,7 @@ re:gcc-6_i386:
   image: vicamo/debian:sid-i386
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-6 mysql-client
+    INSTALL_PACKAGES: gcc-6 mysql-client libmysqlclient-dev
   script:
     - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
@@ -229,10 +253,10 @@ pre_re:gcc-6_sanitize:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: secondary
-  image: debian:unstable
+  image: debian:stretch
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-6 mysql-client
+    INSTALL_PACKAGES: gcc-6 mariadb-client libmariadbclient-dev-compat
   script:
     - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot --disable-renewal --disable-manager --enable-sanitize=full
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
@@ -241,10 +265,10 @@ re:gcc-6_sanitize:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: secondary
-  image: debian:unstable
+  image: debian:stretch
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-6 mysql-client
+    INSTALL_PACKAGES: gcc-6 mariadb-client libmariadbclient-dev-compat
   script:
     - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot --disable-manager --enable-sanitize=full
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
@@ -256,7 +280,7 @@ pre_re:gcc-6_i386_sanitize:
   image: vicamo/debian:sid-i386
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-6 mysql-client
+    INSTALL_PACKAGES: gcc-6 mysql-client libmysqlclient-dev
   script:
     - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot --disable-renewal --disable-manager --enable-sanitize=full
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
@@ -268,7 +292,7 @@ re:gcc-6_i386_sanitize:
   image: vicamo/debian:sid-i386
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-6 mysql-client
+    INSTALL_PACKAGES: gcc-6 mysql-client libmysqlclient-dev
   script:
     - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot --disable-manager --enable-sanitize=full
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
@@ -277,10 +301,10 @@ pre_re:gcc-6_cov:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: secondary
-  image: debian:unstable
+  image: debian:stretch
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-6 gcovr mysql-client
+    INSTALL_PACKAGES: gcc-6 gcovr mariadb-client libmariadbclient-dev-compat
   script:
     - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot --disable-renewal CFLAGS="-coverage" LDFLAGS="-coverage"
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
@@ -296,10 +320,10 @@ re:gcc-6_cov:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: secondary
-  image: debian:unstable
+  image: debian:stretch
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-6 gcovr mysql-client
+    INSTALL_PACKAGES: gcc-6 gcovr mariadb-client libmariadbclient-dev-compat
   script:
     - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot CFLAGS="-coverage" LDFLAGS="-coverage"
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
@@ -317,10 +341,10 @@ pre_re:debian-oldstable:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: platforms
-  image: debian:wheezy
+  image: debian:oldstable
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mysql-client
+    INSTALL_PACKAGES: gcc mysql-client libmysqlclient-dev
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
@@ -329,10 +353,10 @@ re:debian-oldstable:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: platforms
-  image: debian:wheezy
+  image: debian:oldstable
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mysql-client
+    INSTALL_PACKAGES: gcc mysql-client libmysqlclient-dev
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
@@ -341,10 +365,10 @@ pre_re:debian-stable:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: platforms
-  image: debian:jessie
+  image: debian:stable
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mysql-client
+    INSTALL_PACKAGES: gcc mysql-client libmysqlclient-dev
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
@@ -353,10 +377,10 @@ re:debian-stable:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: platforms
-  image: debian:jessie
+  image: debian:stable
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mysql-client
+    INSTALL_PACKAGES: gcc mysql-client libmysqlclient-dev
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
@@ -365,10 +389,10 @@ pre_re:debian-testing:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: platforms
-  image: debian:stretch
+  image: debian:testing
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mysql-client
+    INSTALL_PACKAGES: gcc mariadb-client libmariadbclient-dev-compat
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
@@ -377,10 +401,10 @@ re:debian-testing:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: platforms
-  image: debian:stretch
+  image: debian:testing
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mysql-client
+    INSTALL_PACKAGES: gcc mariadb-client libmariadbclient-dev-compat
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
@@ -474,7 +498,7 @@ pre_re:ubuntu-xenial:
     - mysql:latest
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mysql-client
+    INSTALL_PACKAGES: gcc mysql-client libmysqlclient-dev
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
@@ -488,7 +512,7 @@ re:ubuntu-xenial:
     - mysql:latest
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mysql-client
+    INSTALL_PACKAGES: gcc mysql-client libmysqlclient-dev
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
@@ -499,10 +523,10 @@ pre_re:mysql-5.5:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: platforms
-  image: debian:stable
+  image: debian:jessie
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mysql-client-5.5
+    INSTALL_PACKAGES: gcc mysql-client-5.5 libmysqlclient-dev
   services:
     - mysql:5.5
   script:
@@ -513,10 +537,10 @@ re:mysql-5.5:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: platforms
-  image: debian:stable
+  image: debian:jessie
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mysql-client-5.5
+    INSTALL_PACKAGES: gcc mysql-client-5.5 libmysqlclient-dev
   services:
     - mysql:5.5
   script:
@@ -527,10 +551,10 @@ pre_re:mysql-5.6:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: platforms
-  image: debian:unstable
+  image: debian:jessie
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mysql-client-5.6
+    INSTALL_PACKAGES: gcc mysql-client libmysqlclient-dev
   services:
     - mysql:5.6
   script:
@@ -541,10 +565,10 @@ re:mysql-5.6:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: platforms
-  image: debian:unstable
+  image: debian:jessie
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mysql-client-5.6
+    INSTALL_PACKAGES: gcc mysql-client libmysqlclient-dev
   services:
     - mysql:5.6
   script:
@@ -558,8 +582,7 @@ pre_re:mysql-5.7:
   image: debian:unstable
   variables:
     <<: *base_vars
-    # mysql-client-5.7 is not available
-    INSTALL_PACKAGES: gcc mysql-client
+    INSTALL_PACKAGES: gcc mysql-client-5.7 libmysqlclient-dev
   services:
     - mysql:5.7
   script:
@@ -573,26 +596,25 @@ re:mysql-5.7:
   image: debian:unstable
   variables:
     <<: *base_vars
-    # mysql-client-5.7 is not available
-    INSTALL_PACKAGES: gcc mysql-client
+    INSTALL_PACKAGES: gcc mysql-client-5.7 libmysqlclient-dev
   services:
     - mysql:5.7
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
 
-pre_re:mariadb-10:
+pre_re:mariadb-10.0:
   <<: *branch_exceptions
   stage: platforms
-  image: debian:stable
+  image: debian:jessie
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mariadb-client-10.0
+    INSTALL_PACKAGES: gcc mariadb-client-10.0 libmysqlclient-dev
   before_script:
     - echo "Building $CI_BUILD_NAME"
     - uname -a
     - ./tools/ci/retry.sh apt-get update
-    - ./tools/ci/retry.sh apt-get install -y -qq $INSTALL_PACKAGES $DEBIAN_COMMON_PACKAGES libmysqlclient-dev
+    - ./tools/ci/retry.sh apt-get install -y -qq $INSTALL_PACKAGES $DEBIAN_COMMON_PACKAGES
     - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok mariadb
     - ./tools/ci/travis.sh getplugins || true
   services:
@@ -601,18 +623,18 @@ pre_re:mariadb-10:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mariadb
 
-re:mariadb-10:
+re:mariadb-10.0:
   <<: *branch_exceptions
   stage: platforms
-  image: debian:stable
+  image: debian:jessie
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mariadb-client-10.0
+    INSTALL_PACKAGES: gcc mariadb-client-10.0 libmysqlclient-dev
   before_script:
     - echo "Building $CI_BUILD_NAME"
     - uname -a
     - ./tools/ci/retry.sh apt-get update
-    - ./tools/ci/retry.sh apt-get install -y -qq $INSTALL_PACKAGES $DEBIAN_COMMON_PACKAGES libmysqlclient-dev
+    - ./tools/ci/retry.sh apt-get install -y -qq $INSTALL_PACKAGES $DEBIAN_COMMON_PACKAGES
     - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok mariadb
     - ./tools/ci/travis.sh getplugins || true
   services:
@@ -624,15 +646,15 @@ re:mariadb-10:
 pre_re:mariadb-latest:
   <<: *branch_exceptions
   stage: platforms
-  image: debian:stable
+  image: debian:unstable
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mariadb-client-10.0
+    INSTALL_PACKAGES: gcc mariadb-client-10.1 libmariadbclient-dev-compat
   before_script:
     - echo "Building $CI_BUILD_NAME"
     - uname -a
     - ./tools/ci/retry.sh apt-get update
-    - ./tools/ci/retry.sh apt-get install -y -qq $INSTALL_PACKAGES $DEBIAN_COMMON_PACKAGES libmysqlclient-dev
+    - ./tools/ci/retry.sh apt-get install -y -qq $INSTALL_PACKAGES $DEBIAN_COMMON_PACKAGES
     - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok mariadb
     - ./tools/ci/travis.sh getplugins || true
   services:
@@ -644,15 +666,15 @@ pre_re:mariadb-latest:
 re:mariadb-latest:
   <<: *branch_exceptions
   stage: platforms
-  image: debian:stable
+  image: debian:unstable
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mariadb-client-10.0
+    INSTALL_PACKAGES: gcc mariadb-client-10.1 libmariadbclient-dev-compat
   before_script:
     - echo "Building $CI_BUILD_NAME"
     - uname -a
     - ./tools/ci/retry.sh apt-get update
-    - ./tools/ci/retry.sh apt-get install -y -qq $INSTALL_PACKAGES $DEBIAN_COMMON_PACKAGES libmysqlclient-dev
+    - ./tools/ci/retry.sh apt-get install -y -qq $INSTALL_PACKAGES $DEBIAN_COMMON_PACKAGES
     - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok mariadb
     - ./tools/ci/travis.sh getplugins || true
   services:
@@ -664,15 +686,15 @@ re:mariadb-latest:
 pre_re:percona:
   <<: *branch_exceptions
   stage: platforms
-  image: debian:stable
+  image: debian:jessie
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mysql-client
+    INSTALL_PACKAGES: gcc mysql-client libmysqlclient-dev
   before_script:
     - echo "Building $CI_BUILD_NAME"
     - uname -a
     - ./tools/ci/retry.sh apt-get update
-    - ./tools/ci/retry.sh apt-get install -y -qq $INSTALL_PACKAGES $DEBIAN_COMMON_PACKAGES libmysqlclient-dev
+    - ./tools/ci/retry.sh apt-get install -y -qq $INSTALL_PACKAGES $DEBIAN_COMMON_PACKAGES
     - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok percona
     - ./tools/ci/travis.sh getplugins || true
   services:
@@ -684,15 +706,15 @@ pre_re:percona:
 re:percona:
   <<: *branch_exceptions
   stage: platforms
-  image: debian:stable
+  image: debian:jessie
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mysql-client
+    INSTALL_PACKAGES: gcc mysql-client libmysqlclient-dev
   before_script:
     - echo "Building $CI_BUILD_NAME"
     - uname -a
     - ./tools/ci/retry.sh apt-get update
-    - ./tools/ci/retry.sh apt-get install -y -qq $INSTALL_PACKAGES $DEBIAN_COMMON_PACKAGES libmysqlclient-dev
+    - ./tools/ci/retry.sh apt-get install -y -qq $INSTALL_PACKAGES $DEBIAN_COMMON_PACKAGES
     - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok percona
     - ./tools/ci/travis.sh getplugins || true
   services:
