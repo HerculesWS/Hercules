@@ -17644,7 +17644,7 @@ void clif_sao_hp_bar( struct mob_data* md, struct map_session_data *sd ){
 		fd = sd->fd;
 		// m = sd->status.show_equip;
 
-        for (i = 0; i < sd->avail_quests; i++) {
+      //  for (i = 0; i < sd->avail_quests; i++) {
 		//if(sd->quest_log[i].quest_id == 1020){
 				if( PER_HP <= 0 )
 					clif->specialeffect_single(&md->bl, 638, sd->fd);
@@ -17666,8 +17666,8 @@ void clif_sao_hp_bar( struct mob_data* md, struct map_session_data *sd ){
 					clif->specialeffect_single(&md->bl, 742, sd->fd);
 				else if( PER_HP < 100 )
 					clif->specialeffect_single(&md->bl, 743, sd->fd);
-		//}
-		 }
+	//	}
+		// }
 		 
 }
 
