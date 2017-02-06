@@ -392,6 +392,24 @@ const char* inter_job_name(int class_)
 		case JOB_SUMMONER:
 			return inter->msg_txt(669);
 
+		case JOB_BEGINNER:
+			return inter->msg_txt(700);
+
+		case JOB_FIGHTER:
+			return inter->msg_txt(701);
+
+		case JOB_GUARDIAN:
+			return inter->msg_txt(702);
+
+		case JOB_WARRIOR:
+			return inter->msg_txt(703);
+
+		case JOB_LADINO:
+			return inter->msg_txt(704);
+
+		case JOB_TAMER:
+			return inter->msg_txt(705);
+
 		default:
 			return inter->msg_txt(620); // "Unknown Job"
 	}

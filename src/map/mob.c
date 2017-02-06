@@ -2712,6 +2712,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 			 **/
 			clif->specialeffect(&md->bl, 638, AREA);
 			clif->specialeffect(&md->bl, 934, AREA);
+			clif->specialeffect(&md->bl, 638, AREA);
 			clif->clearunit_area(&md->bl,CLR_DEAD);
 	}
 

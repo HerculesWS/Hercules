@@ -199,6 +199,12 @@ enum {
 	MAPID_BABY_SURA,
 	MAPID_BABY_GENETIC,
 	MAPID_BABY_CHASER,
+	MAPID_BEGINNER = 0x11,
+	MAPID_FIGHTER = 0x12,
+	MAPID_GUARDIAN = 0x13,
+	MAPID_WARRIOR = 0x14,
+	MAPID_LADINO = 0x15,
+	MAPID_TAMER = 0x16,
 };
 
 // Max size for inputs to Graffiti, Talkie Box and Vending text prompts

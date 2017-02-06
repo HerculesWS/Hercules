@@ -5883,6 +5883,12 @@ int pc_jobid2mapid(unsigned short b_class)
 		case JOB_SUMMER:                return MAPID_SUMMER;
 		case JOB_GANGSI:                return MAPID_GANGSI;
 		case JOB_SUMMONER:              return MAPID_SUMMONER;
+		case JOB_BEGINNER:              return MAPID_BEGINNER;
+		case JOB_FIGHTER:               return MAPID_FIGHTER;
+		case JOB_GUARDIAN:              return MAPID_GUARDIAN;
+		case JOB_WARRIOR:               return MAPID_WARRIOR;			
+		case JOB_LADINO:                return MAPID_LADINO;
+		case JOB_TAMER:                 return MAPID_TAMER;
 	//2-1 Jobs
 		case JOB_SUPER_NOVICE:          return MAPID_SUPER_NOVICE;
 		case JOB_KNIGHT:                return MAPID_KNIGHT;
@@ -6026,6 +6032,12 @@ int pc_mapid2jobid(unsigned short class_, int sex)
 		case MAPID_SUMMER:                return JOB_SUMMER;
 		case MAPID_GANGSI:                return JOB_GANGSI;
 		case MAPID_SUMMONER:              return JOB_SUMMONER;
+		case MAPID_BEGINNER:              return JOB_BEGINNER;
+		case MAPID_FIGHTER:               return JOB_FIGHTER;
+		case MAPID_GUARDIAN:              return JOB_GUARDIAN;
+		case MAPID_WARRIOR:               return JOB_WARRIOR;			
+		case MAPID_LADINO:                return JOB_LADINO;
+		case MAPID_TAMER:                 return JOB_TAMER;
 	//2-1 Jobs
 		case MAPID_SUPER_NOVICE:          return JOB_SUPER_NOVICE;
 		case MAPID_KNIGHT:                return JOB_KNIGHT;
@@ -6188,6 +6200,19 @@ const char* job_name(int class_)
 
 	case JOB_SUMMER:
 		return msg_txt(621);
+
+	case JOB_BEGINNER:
+		return msg_txt(700);
+	case JOB_FIGHTER:
+		return msg_txt(701);
+	case JOB_GUARDIAN:
+		return msg_txt(702);
+	case JOB_WARRIOR:
+		return msg_txt(703);
+	case JOB_LADINO:
+		return msg_txt(704);
+	case JOB_TAMER:
+		return msg_txt(705);
 
 	case JOB_NOVICE_HIGH:   // 575
 	case JOB_SWORDMAN_HIGH: // 576
@@ -6494,6 +6519,13 @@ int pc_check_job_name(const char *name) {
 		{ "Oboro", JOB_OBORO },
 		{ "Rebellion", JOB_REBELLION },
 		{ "Summoner", JOB_SUMMONER },
+		{ "Beginner", JOB_BEGINNER},
+		{ "Fighter", JOB_FIGHTER},
+		{ "Guardian", JOB_GUARDIAN},
+		{ "Warrior", JOB_WARRIOR},
+		{ "Ladino", JOB_LADINO},
+		{ "Tamer", JOB_TAMER},
+
 	};
 
 	nullpo_retr(-1, name);

@@ -543,6 +543,12 @@ void itemdb_jobmask2mapid(uint64 *bclass, uint64 jobmask)
 		bclass[1] |= 1ULL<<MAPID_GUNSLINGER;
 	if (jobmask & 1ULL<<31) //Summoner
 		bclass[0] |= 1ULL<<MAPID_SUMMONER;
+		bclass[0] |= 1ULL<<MAPID_BEGINNER;
+		bclass[0] |= 1ULL<<MAPID_FIGHTER;
+		bclass[0] |= 1ULL<<MAPID_GUARDIAN;
+		bclass[0] |= 1ULL<<MAPID_WARRIOR;
+		bclass[0] |= 1ULL<<MAPID_LADINO;
+		bclass[0] |= 1ULL<<MAPID_TAMER;
 }
 
 void create_dummy_data(void)

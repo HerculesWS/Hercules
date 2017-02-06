@@ -17635,19 +17635,27 @@ void clif_snap( struct block_list *bl, short x, short y ) {
 
 void clif_sao_hp_bar( struct mob_data* md, struct map_session_data *sd ){
 
-		int	MAX_HP, CUR_HP, PER_HP, fd, i;
+		int	MAX_HP, CUR_HP, PER_HP, fd, i, BARS;
 		nullpo_retv(md);
 		nullpo_retv(sd);
 		MAX_HP = md->status.max_hp;
 		CUR_HP = md->status.hp;
-		PER_HP = (CUR_HP*100)/MAX_HP;
 		fd = sd->fd;
 		// m = sd->status.show_equip;
+		if(MAX_HP > 200000 && MAX_HP/2 < CUR_HP){ 
+			BARS = 2;
+			clif->specialeffect_single(&md->bl, 1041, sd->fd);
+		}else{
+			BARS = 1;}
+		
 
+		PER_HP = ((CUR_HP)*100)/(MAX_HP*BARS);
       //  for (i = 0; i < sd->avail_quests; i++) {
 		//if(sd->quest_log[i].quest_id == 1020){
-				if( PER_HP <= 0 )
-					clif->specialeffect_single(&md->bl, 638, sd->fd);
+
+
+				if( PER_HP <= 0 ){
+					clif->specialeffect_single(&md->bl, 638, sd->fd);}
 				else if( PER_HP < 10 )
 					clif->specialeffect_single(&md->bl, 639, sd->fd);
 				else if( PER_HP < 20 )
@@ -17664,7 +17672,7 @@ void clif_sao_hp_bar( struct mob_data* md, struct map_session_data *sd ){
 					clif->specialeffect_single(&md->bl, 741, sd->fd);
 				else if( PER_HP < 80 )
 					clif->specialeffect_single(&md->bl, 742, sd->fd);
-				else if( PER_HP < 100 )
+				else if( PER_HP <= 100 )
 					clif->specialeffect_single(&md->bl, 743, sd->fd);
 	//	}
 		// }
