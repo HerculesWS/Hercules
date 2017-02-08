@@ -9688,10 +9688,23 @@ BUILDIN(setgroupid) {
 
 /// Returns the group ID of the player.
 ///
-/// getgroupid() -> <int>
+/// getgroupid({<account ID>/<character ID>/<character name>})
 BUILDIN(getgroupid)
 {
-	struct map_session_data *sd = script->rid2sd(st);
+	struct map_session_data *sd = NULL;
+
+	/* check if a character name is specified */
+	if (script_hasdata(st, 2)) {
+		if (script_isstringtype(st, 2)) {
+			sd = map->nick2sd(script_getstr(st, 2));
+		} else {
+			int id = script_getnum(st, 2);
+			sd = (map->id2sd(id) ? map->id2sd(id) : map->charid2sd(id));
+		}
+	} else {
+		sd = script->rid2sd(st);
+	}
+
 	if (sd == NULL)
 		return true; // no player attached, report source
 	script_pushint(st, pc_get_group_id(sd));
@@ -20894,7 +20907,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(basicskillcheck,""),
 		BUILDIN_DEF(getgmlevel,""),
 		BUILDIN_DEF(setgroupid, "i?"),
-		BUILDIN_DEF(getgroupid,""),
+		BUILDIN_DEF(getgroupid,"?"),
 		BUILDIN_DEF(end,""),
 		BUILDIN_DEF(checkoption,"i"),
 		BUILDIN_DEF(setoption,"i?"),

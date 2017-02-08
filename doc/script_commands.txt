@@ -3225,10 +3225,10 @@ Return true if successful, otherwise it will return false.
 
 ---------------------------------------
 
-*getgroupid()
+*getgroupid({<account ID>|<character ID>|<character name>})
 
-This function will return the id of player group the account to which the 
-invoking player belongs.
+This function will return the id of player group the account to which the
+given player belongs. If no parameter is given this function will return the group id of invoking player.
 
 ---------------------------------------
 
