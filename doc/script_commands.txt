@@ -6426,11 +6426,11 @@ A debug message also shows on the console when no events are triggered.
 
 ---------------------------------------
 
-*npctalk("<message>"{, "<npc name>"{, <display>}})
+*npctalk("<message>"{, "<npc name>"{, <show_npcname>}})
 
-display values:
-	0: false (default) - shows npc name
-	1: true - hide npc name
+show_npcname values:
+	1: true (default) - shows npc name
+	0: false - hide npc name
 
 This command will display a message to the surrounding area as if the NPC 
 object running it was a player talking - that is, above their head and in 
