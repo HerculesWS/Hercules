@@ -9688,10 +9688,23 @@ BUILDIN(setgroupid) {
 
 /// Returns the group ID of the player.
 ///
-/// getgroupid() -> <int>
+/// getgroupid({<account ID>/<character ID>/<character name>})
 BUILDIN(getgroupid)
 {
-	struct map_session_data *sd = script->rid2sd(st);
+	struct map_session_data *sd = NULL;
+
+	/* check if a character name is specified */
+	if (script_hasdata(st, 2)) {
+		if (script_isstringtype(st, 2)) {
+			sd = map->nick2sd(script_getstr(st, 2));
+		} else {
+			int id = script_getnum(st, 2);
+			sd = (map->id2sd(id) ? map->id2sd(id) : map->charid2sd(id));
+		}
+	} else {
+		sd = script->rid2sd(st);
+	}
+
 	if (sd == NULL)
 		return true; // no player attached, report source
 	script_pushint(st, pc_get_group_id(sd));
@@ -14534,11 +14547,15 @@ BUILDIN(message)
 
 /*==========================================
  * npctalk (sends message to surrounding area)
- * usage: npctalk "<message>"{,"<npc name>"};
+ * usage: npctalk "<message>"{,"<npc name>"{,<display>}};
+ *  <display>:
+ *      0: shows npc name like "Npc : message"
+ *      1: hide npc name
  *------------------------------------------*/
 BUILDIN(npctalk)
 {
 	struct npc_data* nd;
+	int display = 0;
 	const char *str = script_getstr(st,2);
 
 	if (script_hasdata(st, 3)) {
@@ -14547,11 +14564,19 @@ BUILDIN(npctalk)
 		nd = map->id2nd(st->oid);
 	}
 
+	if ( script_hasdata(st, 4) ) {
+		display = script_getnum(st, 4);
+	}
+
 	if (nd != NULL) {
 		char name[NAME_LENGTH], message[256];
 		safestrncpy(name, nd->name, sizeof(name));
 		strtok(name, "#"); // discard extra name identifier if present
-		safesnprintf(message, sizeof(message), "%s : %s", name, str);
+		if ( display ) {
+			safesnprintf(message, sizeof(message), "%s", str);
+		} else {
+			safesnprintf(message, sizeof(message), "%s : %s", name, str);
+		}
 		clif->disp_overhead(&nd->bl, message);
 	}
 
@@ -20894,7 +20919,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(basicskillcheck,""),
 		BUILDIN_DEF(getgmlevel,""),
 		BUILDIN_DEF(setgroupid, "i?"),
-		BUILDIN_DEF(getgroupid,""),
+		BUILDIN_DEF(getgroupid,"?"),
 		BUILDIN_DEF(end,""),
 		BUILDIN_DEF(checkoption,"i"),
 		BUILDIN_DEF(setoption,"i?"),
@@ -21033,7 +21058,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF2(atcommand,"charcommand","s"), // [MouseJstr]
 		BUILDIN_DEF(movenpc,"sii?"), // [MouseJstr]
 		BUILDIN_DEF(message,"vs"), // [MouseJstr]
-		BUILDIN_DEF(npctalk,"s?"), // [Valaris]
+		BUILDIN_DEF(npctalk,"s??"), // [Valaris][Murilo BiO]
 		BUILDIN_DEF(mobcount,"ss"),
 		BUILDIN_DEF(getlook,"i"),
 		BUILDIN_DEF(getsavepoint,"i"),
