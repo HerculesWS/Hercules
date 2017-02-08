@@ -14547,15 +14547,15 @@ BUILDIN(message)
 
 /*==========================================
  * npctalk (sends message to surrounding area)
- * usage: npctalk "<message>"{,"<npc name>"{,<display>}};
- *  <display>:
- *      0: shows npc name like "Npc : message"
- *      1: hide npc name
+ * usage: npctalk "<message>"{,"<npc name>"{,<show_npcname>}};
+ *  <show_npcname>:
+ *      1: shows npc name like "Npc : message"
+ *      0: hide npc name
  *------------------------------------------*/
 BUILDIN(npctalk)
 {
 	struct npc_data* nd;
-	int display = 0;
+	int show_npcname = 1;
 	const char *str = script_getstr(st,2);
 
 	if (script_hasdata(st, 3)) {
@@ -14564,18 +14564,17 @@ BUILDIN(npctalk)
 		nd = map->id2nd(st->oid);
 	}
 
-	if ( script_hasdata(st, 4) ) {
-		display = script_getnum(st, 4);
+	if (script_hasdata(st, 4)) {
+		show_npcname = script_getnum(st, 4);
 	}
 
 	if (nd != NULL) {
 		char name[NAME_LENGTH], message[256];
 		safestrncpy(name, nd->name, sizeof(name));
 		strtok(name, "#"); // discard extra name identifier if present
-		if ( display ) {
-			safesnprintf(message, sizeof(message), "%s", str);
-		} else {
-			safesnprintf(message, sizeof(message), "%s : %s", name, str);
+		switch (show_npcname) {
+			case 0: safesnprintf(message, sizeof(message), "%s", str);
+			case 1: safesnprintf(message, sizeof(message), "%s : %s", name, str);
 		}
 		clif->disp_overhead(&nd->bl, message);
 	}
