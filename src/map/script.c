@@ -9705,8 +9705,10 @@ BUILDIN(getgroupid)
 		sd = script->rid2sd(st);
 	}
 
-	if (sd == NULL)
+	if (sd == NULL) {
+		script_pushint(st, -1); // Failure, no player found.
 		return true; // no player attached, report source
+	}
 	script_pushint(st, pc_get_group_id(sd));
 
 	return true;
