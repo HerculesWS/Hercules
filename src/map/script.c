@@ -14549,13 +14549,13 @@ BUILDIN(message)
  * npctalk (sends message to surrounding area)
  * usage: npctalk "<message>"{,"<npc name>"{,<show_npcname>}};
  *  <show_npcname>:
- *      0: shows npc name like "Npc : message"
- *      1: hide npc name
+ *      1: shows npc name like "Npc : message"
+ *      0: hide npc name
  *------------------------------------------*/
 BUILDIN(npctalk)
 {
 	struct npc_data* nd;
-	int show_npcname = 0;
+	int show_npcname = 1;
 	const char *str = script_getstr(st,2);
 
 	if (script_hasdata(st, 3)) {
@@ -14573,8 +14573,11 @@ BUILDIN(npctalk)
 		safestrncpy(name, nd->name, sizeof(name));
 		strtok(name, "#"); // discard extra name identifier if present
 		switch (show_npcname) {
-			case 0: safesnprintf(message, sizeof(message), "%s", str); break;
+			default:
+				ShowWarning("script: buildin_npctalk: Invalid value for 'show_npcname'. Using default.\n");
+				//fall through
 			case 1: safesnprintf(message, sizeof(message), "%s : %s", name, str); break;
+			case 0: safesnprintf(message, sizeof(message), "%s", str); break;
 		}
 		clif->disp_overhead(&nd->bl, message);
 	}
@@ -17288,6 +17291,9 @@ BUILDIN(unittalk) {
 		if(bl->type == BL_NPC)
 			strtok(blname, "#");
 		switch (show_unitname) {
+			default:
+				ShowWarning("script: buildin_unittalk: Invalid value for 'show_unitname'. Using default.\n");
+				//fall through
 			case 1: StrBuf->Printf(&sbuf, "%s : %s", blname, message); break;
 			case 0: StrBuf->Printf(&sbuf, "%s", message); break;
 		}
