@@ -6316,8 +6316,8 @@ For the emotions, you can look in db/constants.conf for prefixes with e_
 PS: unittalk() can receive a third parameter:
 
 	Show_UnitName:
-		1: true (default) - Shows Unit name like (UnitName : Message)
-		0: false - Hides Unit name
+		true: Shows Unit name like "UnitName : Message" (default)
+		false: Hides Unit name
 
 unitwarp() supports a <GID> of zero, which causes the executor of the
 script to be affected. This can be used with OnTouchNPC to warp
@@ -6436,8 +6436,8 @@ A debug message also shows on the console when no events are triggered.
 *npctalk("<message>"{, "<npc name>"{, <show_npcname>}})
 
 show_npcname values:
-	1: true (default) - shows npc name
-	0: false - hide npc name
+	true: shows npc name (default)
+	false: hide npc name
 
 This command will display a message to the surrounding area as if the NPC 
 object running it was a player talking - that is, above their head and in 
