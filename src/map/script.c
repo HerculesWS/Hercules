@@ -17269,7 +17269,7 @@ BUILDIN(unitstop) {
 ///
 /// unittalk <unit_id>,"<message>"{, show_unitname};
 BUILDIN(unittalk) {
-	int unit_id, show_unitname;
+	int unit_id, show_unitname = 1;
 	const char* message;
 	struct block_list* bl;
 
