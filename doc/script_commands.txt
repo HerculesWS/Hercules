@@ -6312,11 +6312,14 @@ Examples:
 
 Okay, these commands should be fairly self explaining.
 For the emotions, you can look in db/constants.conf for prefixes with e_
-PS: unittalk can receive a third parameter:
+
+PS: unittalk() can receive a third parameter:
+
 	Show_UnitName:
 		1: true (default) - Shows Unit name like (UnitName : Message)
 		0: false - Hides Unit name
-PS2: unitwarp() supports a <GID> of zero, which causes the executor of the
+
+unitwarp() supports a <GID> of zero, which causes the executor of the
 script to be affected. This can be used with OnTouchNPC to warp
 monsters:
 
