@@ -5836,7 +5836,7 @@ hugel,76,134,3	script	Neha	4W_F_01,{
 				mes "for your impertinence, girl!";
 			}
 			for (.@i = 8064; .@i <= 8067; ++.@i) {
-				if (questprogress(.@i) && questprogress(.@i) != 2)
+				if (questprogress(.@i) == 1)
 					completequest .@i;
 			}
 			setquest 8068;
@@ -8706,7 +8706,7 @@ hu_in01,14,11,4	script	Laura	1_F_GYPSY,{
 		select("Yeah, yeah, whatever.", "Sure thing.", "I s-s-s-suppose...!", "Yes, Ma'am!");
 		hg_odin = 17;
 		for(.@i = 11002; .@i <= 11005; ++.@i) {
-			if (questprogress(.@i) && questprogress(.@i) != 2)
+			if (questprogress(.@i) == 1)
 				completequest .@i;
 		}
 		setquest 11006;

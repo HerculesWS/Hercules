@@ -8503,7 +8503,7 @@ L_Mission:
 		mes ".........";
 		mes "............";
 		for (.@i = 12015; .@i <= 12028; ++.@i) {
-			if (questprogress(.@i) && questprogress(.@i) != 2)
+			if (questprogress(.@i) == 1)
 				completequest .@i;
 		}
 		close;

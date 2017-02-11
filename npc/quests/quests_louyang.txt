@@ -2123,7 +2123,7 @@ lou_in02,156,38,0	script	Studying Officer#lou	4_M_CHNMAN,{
 			mes "so I was able to find it again pretty easily. I hope it's useful to you.";
 			ch_par = 15;
 			for (.@i = 11051; .@i <= 11054; ++.@i) {
-				if (questprogress(.@i) && questprogress(.@i) != 2)
+				if (questprogress(.@i) == 1)
 					completequest .@i;
 			}
 			setquest 11055;
