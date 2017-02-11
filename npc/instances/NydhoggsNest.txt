@@ -2168,27 +2168,27 @@ OnTouch:
 
 2@nyd,1,1,0	script	ins_nyd2_spawn_mobs	FAKE_NPC,{
 OnInstanceInit:
-	.@map$ = instance_mapname("2@nyd");
-	areamonster .@map$,200,92,180,80,"Rhyncho",2020,40,instance_npcname("ins_nyd2_spawn_mobs")+"::OnMyRhynDead";
-	areamonster .@map$,200,92,180,80,"Phylla",2021,40,instance_npcname("ins_nyd2_spawn_mobs")+"::OnMyPhyDead";
-	areamonster .@map$,200,92,180,80,"Dark Shadow",2023,40,instance_npcname("ins_nyd2_spawn_mobs")+"::OnMyDarkshaDead";
-	areamonster .@map$,200,92,180,80,"Dark Pinguicula",2015,40,instance_npcname("ins_nyd2_spawn_mobs")+"::OnMyPingDead";
+	.@map$ = instance_mapname("2@nyd"); //temp fix since all mobs spawn on the same (inaccessable) area
+	areamonster .@map$,14,20,382,180,"Rhyncho",2020,40,instance_npcname("ins_nyd2_spawn_mobs")+"::OnMyRhynDead";
+	areamonster .@map$,14,20,382,180,"Phylla",2021,40,instance_npcname("ins_nyd2_spawn_mobs")+"::OnMyPhyDead";
+	areamonster .@map$,14,20,382,180,"Dark Shadow",2023,40,instance_npcname("ins_nyd2_spawn_mobs")+"::OnMyDarkshaDead";
+	areamonster .@map$,14,20,382,180,"Dark Pinguicula",2015,40,instance_npcname("ins_nyd2_spawn_mobs")+"::OnMyPingDead";
 	end;
 
 OnMyRhynDead:
-	areamonster instance_mapname("2@nyd"),200,92,180,80,"Rhyncho",2020,1,instance_npcname("ins_nyd2_spawn_mobs")+"::OnMyRhynDead";
+	areamonster instance_mapname("2@nyd"),14,20,382,180,"Rhyncho",2020,1,instance_npcname("ins_nyd2_spawn_mobs")+"::OnMyRhynDead";
 	end;
 
 OnMyPhyDead:
-	areamonster instance_mapname("2@nyd"),200,92,180,80,"Phylla",2021,1,instance_npcname("ins_nyd2_spawn_mobs")+"::OnMyPhyDead";
+	areamonster instance_mapname("2@nyd"),14,20,382,180,"Phylla",2021,1,instance_npcname("ins_nyd2_spawn_mobs")+"::OnMyPhyDead";
 	end;
 
 OnMyDarkshaDead:
-	areamonster instance_mapname("2@nyd"),200,92,180,80,"Dark Shadow",2023,1,instance_npcname("ins_nyd2_spawn_mobs")+"::OnMyDarkshaDead";
+	areamonster instance_mapname("2@nyd"),14,20,382,180,"Dark Shadow",2023,1,instance_npcname("ins_nyd2_spawn_mobs")+"::OnMyDarkshaDead";
 	end;
 
 OnMyPingDead:
-	areamonster instance_mapname("2@nyd"),200,92,180,80,"Dark Pinguicula",2015,1,instance_npcname("ins_nyd2_spawn_mobs")+"::OnMyPingDead";
+	areamonster instance_mapname("2@nyd"),14,20,382,180,"Dark Pinguicula",2015,1,instance_npcname("ins_nyd2_spawn_mobs")+"::OnMyPingDead";
 	end;
 }
 
