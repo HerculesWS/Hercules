@@ -614,7 +614,6 @@ int mapif_parse_PartyLeave(int fd, int party_id, int account_id, int char_id)
 {
 	struct party_data *p;
 	int i,j;
-	unsigned int leader;
 
 	p = inter_party->fromsql(party_id);
 	if( p == NULL )
@@ -634,10 +633,7 @@ int mapif_parse_PartyLeave(int fd, int party_id, int account_id, int char_id)
 		return 0; //Member not found?
 
 	mapif->party_withdraw(party_id, account_id, char_id);
-
-	leader = p->party.member[i].leader; // member's leader state
 	
-	inter_party->tosql(&p->party,PS_DELMEMBER,i);
 	j = p->party.member[i].lv;
 	if (p->party.member[i].online > 0)
 		p->party.count--;
@@ -648,19 +644,10 @@ int mapif_parse_PartyLeave(int fd, int party_id, int account_id, int char_id)
 		inter_party->check_lv(p);
 	}
 
-	if (leader) {
-		// Member was party leader, pick a new leader
-		ARR_FIND(0, MAX_PARTY, i, p->party.member[i].account_id != 0);
-
-		if (i < MAX_PARTY) {
-			// Update party's leader
-			p->party.member[i].leader = 1;
-			inter_party->tosql(&p->party, PS_LEADER, i);
-		}
-	}
-
-	if (inter_party->check_empty(p) == 0)
+	if (inter_party->check_empty(p) == 0) {
+		inter_party->tosql(&p->party, PS_DELMEMBER, i);
 		mapif->party_info(-1, &p->party, 0);
+	}
 	return 0;
 }
 // When member goes to other map or levels up.
