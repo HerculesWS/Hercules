@@ -17805,7 +17805,8 @@ BUILDIN(questinfo)
 {
 	struct npc_data *nd = map->id2nd(st->oid);
 	int quest_id, icon;
-	struct questinfo qi;
+	struct questinfo qi = { 0 };
+	int offset = 0;
 
 	if( nd == NULL || nd->bl.m == -1 )
 		return true;
@@ -17837,10 +17838,21 @@ BUILDIN(questinfo)
 		qi.color = (unsigned char)color;
 	}
 
-	qi.hasJob = false;
+	if (script_hasdata(st, 5) && script_hasdata(st, 6)) {
+		int req_quest_id = script_getnum(st, 5);
+		bool req_quest_state = true;
+		if (script_getnum(st, 6) == 0)
+			req_quest_state = false;
+		if (req_quest_id != 0) {
+			qi.quest_requirement.enabled = true;
+			qi.quest_requirement.id = req_quest_id;
+			qi.quest_requirement.state = req_quest_state;
+		}
+		offset += 2;
+	}
 
-	if (script_hasdata(st, 5)) {
-		int job = script_getnum(st, 5);
+	if (script_hasdata(st, 5 + offset)) {
+		int job = script_getnum(st, 5 + offset);
 
 		if (!pc->db_checkid(job)) {
 			ShowError("buildin_questinfo: Nonexistant Job Class.\n");
@@ -17868,15 +17880,30 @@ BUILDIN(setquest)
 
 	quest->add(sd, quest_id);
 
-	// If questinfo is set, remove quest bubble once quest is set.
 	for(i = 0; i < map->list[sd->bl.m].qi_count; i++) {
 		struct questinfo *qi = &map->list[sd->bl.m].qi_data[i];
 		if( qi->quest_id == quest_id ) {
+			// If questinfo is set, remove quest bubble once quest is set.
 #if PACKETVER >= 20120410
 			clif->quest_show_event(sd, &qi->nd->bl, 9999, 0);
 #else
 			clif->quest_show_event(sd, &qi->nd->bl, 0, 0);
 #endif
+		}
+		if (qi->quest_requirement.enabled && qi->quest_requirement.id == quest_id) {
+			// Add or remove bubbles from quests that depend on this one.
+			// FIXME: This shouldn't be done by the command directly, but by quest->add()
+			if (!qi->hasJob || qi->job == sd->status.class) {
+				if (qi->quest_requirement.state) {
+					clif->quest_show_event(sd, &qi->nd->bl, qi->icon, qi->color);
+				} else {
+#if PACKETVER >= 20120410
+					clif->quest_show_event(sd, &qi->nd->bl, 9999, 0);
+#else
+					clif->quest_show_event(sd, &qi->nd->bl, 0, 0);
+#endif
+				}
+			}
 		}
 	}
 

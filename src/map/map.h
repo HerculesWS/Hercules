@@ -772,6 +772,11 @@ struct questinfo {
 	int quest_id;
 	bool hasJob;
 	unsigned short job;/* perhaps a mapid mask would be most flexible? */
+	struct {
+		bool enabled; ///< Whether there is a quest requirement.
+		bool state;   ///< Required state (if true, the quest is required to be there; if false, the quest is required not to be there).
+		int id;       ///< Quest ID
+	} quest_requirement;  ///< Other quests required to show (or not to show) this.
 };
 
 

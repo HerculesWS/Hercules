@@ -9628,16 +9628,20 @@ void clif_parse_LoadEndAck(int fd, struct map_session_data *sd) {
 #if PACKETVER >= 20090218
 	{
 		int i;
-		for(i = 0; i < map->list[sd->bl.m].qi_count; i++) {
-			struct questinfo *qi = &map->list[sd->bl.m].qi_data[i];
-			if( quest->check(sd, qi->quest_id, HAVEQUEST) == -1 ) {// Check if quest is not started
-				if( qi->hasJob ) { // Check if quest is job-specific, check is user is said job class.
-					if (sd->status.class == qi->job)
-						clif->quest_show_event(sd, &qi->nd->bl, qi->icon, qi->color);
-				} else {
-					clif->quest_show_event(sd, &qi->nd->bl, qi->icon, qi->color);
-				}
+		for (i = 0; i < map->list[sd->bl.m].qi_count; i++) {
+			const struct questinfo *qi = &map->list[sd->bl.m].qi_data[i];
+			bool display = true;
+			if (display && quest->check(sd, qi->quest_id, HAVEQUEST) != -1)
+				display = false; // Don't show if quest was already started
+			if (display && qi->hasJob && sd->status.class != qi->job)
+				display = false; // Don't display if the job doesn't match the requirement
+			if (display && qi->quest_requirement.enabled) {
+				bool state = (quest->check(sd, qi->quest_requirement.id, HAVEQUEST) != -1);
+				if (state != qi->quest_requirement.state)
+					display = false; // Don't display if the quest requirement aren't met
 			}
+			if (display)
+				clif->quest_show_event(sd, &qi->nd->bl, qi->icon, qi->color);
 		}
 	}
 #endif
