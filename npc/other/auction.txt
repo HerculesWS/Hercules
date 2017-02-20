@@ -113,7 +113,7 @@ auction_02,43,17,0	warp	auction_enterance_lhz	1,1,lighthalzen,209,169
 	next;
 	if (select("Yes", "No") == 1) {
 		mes "[Auction Broker]";
-		if ( getbattleflag( "feature.auction" ) ) {
+		if (getbattleflag("features/auction")) {
 			mes "Very well.";
 			mes "Please take";
 			mes "a look, and see";
