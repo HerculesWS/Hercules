@@ -1085,7 +1085,11 @@ void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enu
 	if (clif->isdisguised(bl)) {
 #if PACKETVER >= 20091103
 		p.objecttype = pc->db_checkid(status->get_viewdata(bl)->class) ? 0x0 : 0x5; //PC_TYPE : NPC_MOB_TYPE
+#if PACKETVER >= 20131223
+		p.AID = -bl->id;
+#else
 		p.GID = -bl->id;
+#endif
 #else
 		p.GID = -bl->id;
 #endif
@@ -1228,7 +1232,11 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 			clif->send(&p,sizeof(p),bl,target);
 #if PACKETVER >= 20091103
 		p.objecttype = pc->db_checkid(status->get_viewdata(bl)->class) ? 0x0 : 0x5; //PC_TYPE : NPC_MOB_TYPE
+#if PACKETVER >= 20131223
+		p.AID = -bl->id;
+#else
 		p.GID = -bl->id;
+#endif
 #else
 		p.GID = -bl->id;
 #endif
@@ -1320,7 +1328,11 @@ void clif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd, 
 	if (clif->isdisguised(bl)) {
 #if PACKETVER >= 20091103
 		p.objecttype = pc->db_checkid(status->get_viewdata(bl)->class) ? 0x0 : 0x5; //PC_TYPE : NPC_MOB_TYPE
+#if PACKETVER >= 20131223
+		p.AID = -bl->id;
+#else
 		p.GID = -bl->id;
+#endif
 #else
 		p.GID = -bl->id;
 #endif
