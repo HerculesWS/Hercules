@@ -17084,6 +17084,1000 @@ BUILDIN(getunittype) {
 	return true;
 }
 
+/**
+ * Sets real-time unit data for a game object.
+ * Setunitdata <GUID>,<DataType>,<Val1>{,<Val2>,<Val3>}
+ * @param1  GUID        Game ID of the unit.
+ * @param2  DataType    Type of Data to be set for the unit.
+ * @param3  Value#1     Value to be passed as change in data.
+ * @param4  Value#2     Optional int value to be passed for certain data types.
+ * @param5  Value#3     Optional int value to be passed for certain data types.
+ * @return  true        on success
+ */
+BUILDIN(setunitdata)
+{
+	struct block_list *bl = NULL;
+	const char *mapname = NULL, *udtype = NULL;
+	int type = 0, value = 0, value2 = 0, value3 = 0;
+	
+	bl = map->id2bl(script_getnum(st, 2));
+	
+	if (bl == NULL) {
+		ShowWarning("buildin_setunitdata: Error in finding object with given GID %d!\n", script_getnum(st, 2));
+		script_pushint(st, 0);
+		return false;
+	} else if (!script_isstring(st, 3) || (udtype = script_getstr(st, 3)) == NULL || !script->get_constant(udtype, &type)) {
+		ShowWarning("buildin_setunitdata: Undefined Unit Data Type %s set.\n", udtype);
+		script_pushint(st, 0);
+		return false;
+	} else if (!script_hasdata(st, 4)) {
+		ShowWarning("buildin_setunitdata: Value not given for type %s.\n", udtype);
+		script_pushint(st, 0);
+		return false;
+	}
+	
+	/* Mandatory Value1 */
+	if (script_isstring(st, 4)) {
+		if (type == UDT_MAPIDXY) {
+			mapname = script_getstr(st, 4);
+		} else if (!script->get_constant(script_getstr(st, 4), &value)) {
+			ShowError("buildin_setunitdata: Invalid data type for Parameter");
+			script_pushint(st, 0);
+			return false;
+		}
+	} else if (script_isint(st, 4)) {
+		value = script_getnum(st, 4);
+	} else {
+		ShowError("buildin_setunitdata: Invalid data type for Parameter #4");
+		script_pushint(st, 0);
+		return false;
+	}
+	
+	/* Optional Value2 */
+	if (script_hasdata(st, 5)) {
+		if (script_isstring(st, 5)) {
+			ShowError("buildin_setunitdata: Fifth parameter expects integer, string given.");
+			script_pushint(st, 0);
+			return false;
+		} else {
+			value2 = script_getnum(st, 5);
+		}
+	}
+	
+	/* Optional Value3 */
+	if (script_hasdata(st, 6)) {
+		if (script_isstring(st, 6)) {
+			ShowError("buildin_setunitdata: Fifth parameter expects integer, string given.");
+			script_pushint(st, 0);
+			return false;
+		} else {
+			value3 = script_getnum(st, 6);
+		}
+	}
+	
+	switch (bl->type) {
+		case BL_MOB:
+		{
+			struct mob_data *md = map->id2md(bl->id);
+			
+			nullpo_retr(false, md);
+			
+			switch (type) {
+				case UDT_SIZE:        md->status.size = (unsigned char)value; break;
+				case UDT_LEVEL:       md->level = (unsigned short)value; break;
+				case UDT_HP:          status->set_hp(bl, (unsigned int)value, 0); clif->charnameack(0, &md->bl); break;
+				case UDT_MAXHP:       md->status.max_hp = (unsigned int)value; clif->charnameack(0, &md->bl); break;
+				case UDT_SP:          status->set_sp(bl, (unsigned int)value, 0); break;
+				case UDT_MAXSP:       md->status.max_sp = (unsigned int)value; break;
+				case UDT_MASTERAID:   md->master_id = value; break;
+				case UDT_MAPIDXY:
+					if (mapname) {
+						value = map->mapname2mapid(mapname);
+						if (value == -1) {
+							ShowError("buildin_setunitdata: Invalid map index, perhaps incorrectly spelt or non-existant.\n");
+							script_pushint(st, 0);
+							return false;
+						} else {
+							unit->warp(bl, (short)value, (short)value2, (short)value3, CLR_TELEPORT);
+						}
+					}
+					break;
+				case UDT_WALKTOXY:
+					if (!unit->walktoxy(bl, (short)(value?value:bl->x), (short)(value2?value2:bl->y), 2))
+						unit->movepos(bl, (short)(value?value:bl->x), (short)(value2?value2:bl->y), 0, 0);
+					break;
+				case UDT_SPEED:
+					md->status.speed = (unsigned short)value;
+					status->calc_misc(bl, &md->status, md->level);
+					break;
+				case UDT_MODE:        md->status.mode = (enum e_mode)value; break;
+				case UDT_AI:          md->special_state.ai = (enum ai)value; break;
+				case UDT_SCOPTION:    md->sc.option = (unsigned short)value; break;
+				case UDT_SEX:         md->vd->sex = (char)value; break;
+				case UDT_CLASS:       status->set_viewdata(bl, (unsigned short)value); break;
+				case UDT_HAIRSTYLE:   clif->changelook(bl, LOOK_HAIR, (unsigned short)value); break;
+				case UDT_HAIRCOLOR:   clif->changelook(bl, LOOK_HAIR_COLOR, (unsigned short)value); break;
+				case UDT_HEADBOTTOM:  clif->changelook(bl, LOOK_HEAD_BOTTOM, (unsigned short)value); break;
+				case UDT_HEADMIDDLE:  clif->changelook(bl, LOOK_HEAD_MID, (unsigned short)value); break;
+				case UDT_HEADTOP:     clif->changelook(bl, LOOK_HEAD_TOP, (unsigned short)value); break;
+				case UDT_CLOTHCOLOR:  clif->changelook(bl, LOOK_CLOTHES_COLOR, (unsigned short)value); break;
+				case UDT_SHIELD:      clif->changelook(bl, LOOK_SHIELD, (unsigned short)value); break;
+				case UDT_WEAPON:      clif->changelook(bl, LOOK_WEAPON, (unsigned short)value); break;
+				case UDT_LOOKDIR:     unit->setdir(bl, (uint8)value); break;
+				case UDT_CANMOVETICK: md->ud.canmove_tick = value > 0 ? (unsigned int)value : 0; break;
+				case UDT_STR:         md->status.str = (unsigned short)value; status->calc_misc(bl, &md->status, md->level); break;
+				case UDT_AGI:         md->status.agi = (unsigned short)value; status->calc_misc(bl, &md->status, md->level); break;
+				case UDT_VIT:         md->status.vit = (unsigned short)value; status->calc_misc(bl, &md->status, md->level); break;
+				case UDT_INT:         md->status.int_ = (unsigned short)value; status->calc_misc(bl, &md->status, md->level); break;
+				case UDT_DEX:         md->status.dex = (unsigned short)value; status->calc_misc(bl, &md->status, md->level); break;
+				case UDT_LUK:         md->status.luk = (unsigned short)value; status->calc_misc(bl, &md->status, md->level); break;
+				case UDT_ATKRANGE:    md->status.rhw.range = (unsigned short)value; break;
+				case UDT_ATKMIN:      md->status.rhw.atk = (unsigned short)value; break;
+				case UDT_ATKMAX:      md->status.rhw.atk2 = (unsigned short)value; break;
+				case UDT_MATKMIN:     md->status.matk_min = (unsigned short)value; break;
+				case UDT_MATKMAX:     md->status.matk_max = (unsigned short)value; break;
+				case UDT_DEF:         md->status.def = (defType)value; break;
+				case UDT_MDEF:        md->status.mdef = (defType)value; break;
+				case UDT_HIT:         md->status.hit = (short)value; break;
+				case UDT_FLEE:        md->status.flee = (short)value; break;
+				case UDT_PDODGE:      md->status.flee2 = (short)value; break;
+				case UDT_CRIT:        md->status.cri = (short)value; break;
+				case UDT_RACE:        md->status.race = (unsigned char)value; break;
+				case UDT_ELETYPE:     md->status.def_ele = (unsigned char)value; break;
+				case UDT_ELELEVEL:    md->status.ele_lv = (unsigned char)value; break;
+				case UDT_AMOTION:     md->status.amotion = (short)value; break;
+				case UDT_ADELAY:      md->status.adelay = (short)value; break;
+				case UDT_DMOTION:     md->status.dmotion = (short)value; break;
+				default:
+					ShowWarning("buildin_setunitdata: Invalid data type '%s' for mob unit.\n", udtype);
+					script_pushint(st, 0);
+					return false;
+			}
+		}
+			break;
+		case BL_HOM:
+		{
+			struct homun_data *hd = map->id2hd(bl->id);
+			
+			nullpo_retr(false, hd);
+			
+			switch (type) {
+				case UDT_SIZE:        hd->base_status.size = (unsigned char)value; break;
+				case UDT_LEVEL:       hd->homunculus.level = (unsigned short)value; break;
+				case UDT_HP:          status->set_hp(bl, (unsigned int)value, 0); break;
+				case UDT_MAXHP:       hd->homunculus.max_hp = (unsigned int)value; break;
+				case UDT_SP:          status->set_sp(bl, (unsigned int)value, 0); break;
+				case UDT_MAXSP:       hd->homunculus.max_sp = (unsigned int)value; break;
+				case UDT_MASTERCID:
+				{
+					struct map_session_data *tsd = map->charid2sd((uint32)value);
+					if (tsd == NULL) {
+						ShowWarning("buildin_setunitdata: Character ID %d not found for homunculus master change!\n",value);
+						script_pushint(st, 0);
+						return false;
+					}
+					hd->homunculus.char_id = (uint32)value;
+					hd->master = tsd;
+				}
+					break;
+				case UDT_MAPIDXY:
+					if (mapname) {
+						value = map->mapname2mapid(mapname);
+						if (value == -1) {
+							ShowError("buildin_setunitdata: Invalid map index, perhaps incorrectly spelt or non-existant.\n");
+							script_pushint(st, 0);
+							return false;
+						} else {
+							unit->warp(bl, (short)value, (short)value2, (short)value3, CLR_TELEPORT);
+						}
+					}
+					break;
+				case UDT_WALKTOXY:
+					if (!unit->walktoxy(bl, (short)(value?value:bl->x), (short)(value2?value2:bl->y), 2))
+						unit->movepos(bl, (short)(value?value:bl->x), (short)(value2?value2:bl->y), 0, 0);
+					break;
+				case UDT_SPEED:       hd->base_status.speed = (unsigned short)value; status->calc_misc(bl, &hd->base_status, hd->homunculus.level); break;
+				case UDT_LOOKDIR:     unit->setdir(bl, (uint8)value); break;
+				case UDT_CANMOVETICK: hd->ud.canmove_tick = value > 0 ? (unsigned int)value : 0; break;
+				case UDT_STR:         hd->base_status.str = (unsigned short)value; status->calc_misc(bl, &hd->base_status, hd->homunculus.level); break;
+				case UDT_AGI:         hd->base_status.agi = (unsigned short)value; status->calc_misc(bl, &hd->base_status, hd->homunculus.level); break;
+				case UDT_VIT:         hd->base_status.vit = (unsigned short)value; status->calc_misc(bl, &hd->base_status, hd->homunculus.level); break;
+				case UDT_INT:         hd->base_status.int_ = (unsigned short)value; status->calc_misc(bl, &hd->base_status, hd->homunculus.level); break;
+				case UDT_DEX:         hd->base_status.dex = (unsigned short)value; status->calc_misc(bl, &hd->base_status, hd->homunculus.level); break;
+				case UDT_LUK:         hd->base_status.luk = (unsigned short)value; status->calc_misc(bl, &hd->base_status, hd->homunculus.level); break;
+				case UDT_ATKRANGE:    hd->base_status.rhw.range = (unsigned short)value; break;
+				case UDT_ATKMIN:      hd->base_status.rhw.atk = (unsigned short)value; break;
+				case UDT_ATKMAX:      hd->base_status.rhw.atk2 = (unsigned short)value; break;
+				case UDT_MATKMIN:     hd->base_status.matk_min = (unsigned short)value; break;
+				case UDT_MATKMAX:     hd->base_status.matk_max = (unsigned short)value; break;
+				case UDT_DEF:         hd->base_status.def = (defType)value; break;
+				case UDT_MDEF:        hd->base_status.mdef = (defType)value; break;
+				case UDT_HIT:         hd->base_status.hit = (short)value; break;
+				case UDT_FLEE:        hd->base_status.flee = (short)value; break;
+				case UDT_PDODGE:      hd->base_status.flee2 = (short)value; break;
+				case UDT_CRIT:        hd->base_status.cri = (short)value; break;
+				case UDT_RACE:        hd->base_status.race = (unsigned char)value; break;
+				case UDT_ELETYPE:     hd->base_status.def_ele = (unsigned char)value; break;
+				case UDT_ELELEVEL:    hd->base_status.ele_lv = (unsigned char)value; break;
+				case UDT_AMOTION:     hd->base_status.amotion = (short)value; break;
+				case UDT_ADELAY:      hd->base_status.adelay = (short)value; break;
+				case UDT_DMOTION:     hd->base_status.dmotion = (short)value; break;
+				case UDT_HUNGER:
+					hd->homunculus.hunger = (short)value;
+					clif->send_homdata(hd->master, SP_HUNGRY, hd->homunculus.hunger);
+					break;
+				case UDT_INTIMACY:
+					homun->add_intimacy(hd, (unsigned int)value);
+					clif->send_homdata(hd->master, SP_INTIMATE, hd->homunculus.intimacy / 100);
+					break;
+				default:
+					ShowWarning("buildin_setunitdata: Invalid data type '%s' for homunculus unit.\n", udtype);
+					script_pushint(st, 0);
+					return false;
+			}
+			
+			clif->send_homdata(hd->master, SP_ACK, 0); // send homun data
+		}
+			break;
+		case BL_PET:
+		{
+			struct pet_data *pd = map->id2pd(bl->id);
+			
+			nullpo_retr(false, pd);
+			
+			switch (type) {
+				case UDT_SIZE:        pd->status.size = (unsigned char)value; break;
+				case UDT_LEVEL:       pd->pet.level = (unsigned short)value; break;
+				case UDT_HP:          status->set_hp(bl, (unsigned int)value, 0); break;
+				case UDT_MAXHP:       pd->status.max_hp = (unsigned int)value; break;
+				case UDT_SP:          status->set_sp(bl, (unsigned int)value, 0); break;
+				case UDT_MAXSP:       pd->status.max_sp = (unsigned int)value; break;
+				case UDT_MASTERAID:
+				{
+					struct map_session_data *tsd = map->id2sd(value);
+					
+					if (tsd == NULL) {
+						ShowWarning("buildin_setunitdata: Account ID %d not found for pet master change!\n",value);
+						script_pushint(st, 0);
+						return false;
+					}
+					
+					pd->pet.account_id = (unsigned int)value;
+					pd->msd = tsd;
+				}
+					break;
+				case UDT_MAPIDXY:
+					if (mapname) {
+						value = map->mapname2mapid(mapname);
+						if (value == -1) {
+							ShowError("buildin_setunitdata: Invalid map index, perhaps incorrectly spelt or non-existant.\n");
+							script_pushint(st, 0);
+							return false;
+						} else {
+							unit->warp(bl, (short)value, (short)value2, (short)value3, CLR_TELEPORT);
+						}
+					}
+					break;
+				case UDT_WALKTOXY:
+					if (!unit->walktoxy(bl, (short)(value?value:bl->x), (short)(value2?value2:bl->y), 2))
+						unit->movepos(bl, (short)(value?value:bl->x), (short)(value2?value2:bl->y), 0, 0);
+					break;
+				case UDT_SPEED:       pd->status.speed = (unsigned short)value; status->calc_misc(bl, &pd->status, pd->pet.level); break;
+				case UDT_LOOKDIR:     unit->setdir(bl, (uint8)value); break;
+				case UDT_CANMOVETICK: pd->ud.canmove_tick = value > 0 ? (unsigned int)value : 0; break;
+				case UDT_STR:         pd->status.str = (unsigned short)value; status->calc_misc(bl, &pd->status, pd->pet.level); break;
+				case UDT_AGI:         pd->status.agi = (unsigned short)value; status->calc_misc(bl, &pd->status, pd->pet.level); break;
+				case UDT_VIT:         pd->status.vit = (unsigned short)value; status->calc_misc(bl, &pd->status, pd->pet.level); break;
+				case UDT_INT:         pd->status.int_ = (unsigned short)value; status->calc_misc(bl, &pd->status, pd->pet.level); break;
+				case UDT_DEX:         pd->status.dex = (unsigned short)value; status->calc_misc(bl, &pd->status, pd->pet.level); break;
+				case UDT_LUK:         pd->status.luk = (unsigned short)value; status->calc_misc(bl, &pd->status, pd->pet.level); break;
+				case UDT_ATKRANGE:    pd->status.rhw.range = (unsigned short)value; break;
+				case UDT_ATKMIN:      pd->status.rhw.atk = (unsigned short)value; break;
+				case UDT_ATKMAX:      pd->status.rhw.atk2 = (unsigned short)value; break;
+				case UDT_MATKMIN:     pd->status.matk_min = (unsigned short)value; break;
+				case UDT_MATKMAX:     pd->status.matk_max = (unsigned short)value; break;
+				case UDT_DEF:         pd->status.def = (defType)value; break;
+				case UDT_MDEF:        pd->status.mdef = (defType)value; break;
+				case UDT_HIT:         pd->status.hit = (short)value; break;
+				case UDT_FLEE:        pd->status.flee = (short)value; break;
+				case UDT_PDODGE:      pd->status.flee2 = (short)value; break;
+				case UDT_CRIT:        pd->status.cri = (short)value; break;
+				case UDT_RACE:        pd->status.race = (unsigned char)value; break;
+				case UDT_ELETYPE:     pd->status.def_ele = (unsigned char)value; break;
+				case UDT_ELELEVEL:    pd->status.ele_lv = (unsigned char)value; break;
+				case UDT_AMOTION:     pd->status.amotion = (short)value; break;
+				case UDT_ADELAY:      pd->status.adelay = (short)value; break;
+				case UDT_DMOTION:     pd->status.dmotion = (short)value; break;
+				case UDT_INTIMACY:    pet->set_intimate(pd, value); clif->send_petdata(pd->msd,pd,1,pd->pet.intimate); break;
+				case UDT_HUNGER:      pd->pet.hungry = (short)(value<100 && value>=0)?value:0; break;
+				default:
+					ShowWarning("buildin_setunitdata: Invalid data type '%s' for pet unit.\n", udtype);
+					script_pushint(st, 0);
+					return false;
+			}
+			clif->send_petstatus(pd->msd); // send pet data
+		}
+			break;
+		case BL_MER:
+		{
+			struct mercenary_data *mc = map->id2mc(bl->id);
+			
+			nullpo_retr(false, mc);
+			
+			switch (type) {
+				case UDT_SIZE:        mc->base_status.size = (unsigned char)value; break;
+				case UDT_HP:          status->set_hp(bl, (unsigned int)value, 0); break;
+				case UDT_MAXHP:       mc->base_status.max_hp = (unsigned int)value; break;
+				case UDT_SP:          status->set_sp(bl, (unsigned int)value, 0); break;
+				case UDT_MAXSP:       mc->base_status.max_sp = (unsigned int)value; break;
+				case UDT_MASTERCID:   mc->mercenary.char_id = (uint32)value; break;
+				case UDT_MAPIDXY:
+					if (mapname) {
+						value = map->mapname2mapid(mapname);
+						if (value == -1) {
+							ShowError("buildin_setunitdata: Invalid map index, perhaps incorrectly spelt or non-existant.\n");
+							script_pushint(st, 0);
+							return false;
+						} else {
+							unit->warp(bl, (short)value, (short)value2, (short)value3, CLR_TELEPORT);
+						}
+					}
+					break;
+				case UDT_WALKTOXY:
+					if (!unit->walktoxy(bl, (short)(value?value:bl->x), (short)(value2?value2:bl->y), 2))
+						unit->movepos(bl, (short)(value?value:bl->x), (short)(value2?value2:bl->y), 0, 0);
+					break;
+				case UDT_SPEED:       mc->base_status.size = (unsigned char)value; break;
+				case UDT_LOOKDIR:     unit->setdir(bl, (uint8)value); break;
+				case UDT_CANMOVETICK: mc->ud.canmove_tick = value > 0 ? (unsigned int)value : 0; break;
+				case UDT_STR:         mc->base_status.str = (unsigned short)value; status->calc_misc(bl, &mc->base_status, mc->db->lv); break;
+				case UDT_AGI:         mc->base_status.agi = (unsigned short)value; status->calc_misc(bl, &mc->base_status, mc->db->lv); break;
+				case UDT_VIT:         mc->base_status.vit = (unsigned short)value; status->calc_misc(bl, &mc->base_status, mc->db->lv); break;
+				case UDT_INT:         mc->base_status.int_ = (unsigned short)value; status->calc_misc(bl, &mc->base_status, mc->db->lv); break;
+				case UDT_DEX:         mc->base_status.dex = (unsigned short)value; status->calc_misc(bl, &mc->base_status, mc->db->lv); break;
+				case UDT_LUK:         mc->base_status.luk = (unsigned short)value; status->calc_misc(bl, &mc->base_status, mc->db->lv); break;
+				case UDT_ATKRANGE:    mc->base_status.rhw.range = (unsigned short)value; break;
+				case UDT_ATKMIN:      mc->base_status.rhw.atk = (unsigned short)value; break;
+				case UDT_ATKMAX:      mc->base_status.rhw.atk2 = (unsigned short)value; break;
+				case UDT_MATKMIN:     mc->base_status.matk_min = (unsigned short)value; break;
+				case UDT_MATKMAX:     mc->base_status.matk_max = (unsigned short)value; break;
+				case UDT_DEF:         mc->base_status.def = (defType)value; break;
+				case UDT_MDEF:        mc->base_status.mdef = (defType)value; break;
+				case UDT_HIT:         mc->base_status.hit = (short)value; break;
+				case UDT_FLEE:        mc->base_status.flee = (short)value; break;
+				case UDT_PDODGE:      mc->base_status.flee2 = (short)value; break;
+				case UDT_CRIT:        mc->base_status.cri = (short)value; break;
+				case UDT_RACE:        mc->base_status.race = (unsigned char)value; break;
+				case UDT_ELETYPE:     mc->base_status.def_ele = (unsigned char)value; break;
+				case UDT_ELELEVEL:    mc->base_status.ele_lv = (unsigned char)value; break;
+				case UDT_AMOTION:     mc->base_status.amotion = (short)value; break;
+				case UDT_ADELAY:      mc->base_status.adelay = (short)value; break;
+				case UDT_DMOTION:     mc->base_status.dmotion = (short)value; break;
+				case UDT_MERC_KILLCOUNT: mc->mercenary.kill_count = (unsigned int)value; break;
+				case UDT_LIFETIME:    mc->mercenary.life_time = (unsigned int)value; break;
+				default:
+					ShowWarning("buildin_setunitdata: Invalid data type '%s' for mercenary unit.\n", udtype);
+					script_pushint(st, 0);
+					return false;
+			}
+			
+			clif->mercenary_info(map->charid2sd(mc->mercenary.char_id));
+			clif->mercenary_skillblock(map->charid2sd(mc->mercenary.char_id));
+		}
+			break;
+		case BL_ELEM:
+		{
+			struct elemental_data *ed = map->id2ed(bl->id);
+			
+			nullpo_retr(false, ed);
+			
+			switch (type) {
+				case UDT_SIZE:        ed->base_status.size = (unsigned char)value; break;
+				case UDT_HP:          status->set_hp(bl, (unsigned int)value, 0); break;
+				case UDT_MAXHP:       ed->base_status.max_hp = (unsigned int)value; break;
+				case UDT_SP:          status->set_sp(bl, (unsigned int)value, 0); break;
+				case UDT_MAXSP:       ed->base_status.max_sp = (unsigned int)value; break;
+				case UDT_MASTERCID:   ed->elemental.char_id = (uint32)value; break;
+				case UDT_MAPIDXY:
+					if (mapname) {
+						value = map->mapname2mapid(mapname);
+						if (value == -1) {
+							ShowError("buildin_setunitdata: Invalid map index, perhaps incorrectly spelt or non-existant.\n");
+							script_pushint(st, 0);
+							return false;
+						} else {
+							unit->warp(bl, (short)value, (short)value2, (short)value3, CLR_TELEPORT);
+						}
+					}
+					break;
+				case UDT_WALKTOXY:
+					if (!unit->walktoxy(bl, (short)(value?value:bl->x), (short)(value2?value2:bl->y), 2))
+						unit->movepos(bl, (short)(value?value:bl->x), (short)(value2?value2:bl->y), 0, 0);
+					break;
+				case UDT_SPEED:       ed->base_status.speed = (unsigned short)value; status->calc_misc(bl, &ed->base_status, ed->db->lv); break;
+				case UDT_LOOKDIR:     unit->setdir(bl, (uint8)value); break;
+				case UDT_CANMOVETICK: ed->ud.canmove_tick = value > 0 ? (unsigned int)value : 0; break;
+				case UDT_STR:         ed->base_status.str = (unsigned short)value; status->calc_misc(bl, &ed->base_status, ed->db->lv); break;
+				case UDT_AGI:         ed->base_status.agi = (unsigned short)value; status->calc_misc(bl, &ed->base_status, ed->db->lv); break;
+				case UDT_VIT:         ed->base_status.vit = (unsigned short)value; status->calc_misc(bl, &ed->base_status, ed->db->lv); break;
+				case UDT_INT:         ed->base_status.int_ = (unsigned short)value; status->calc_misc(bl, &ed->base_status, ed->db->lv); break;
+				case UDT_DEX:         ed->base_status.dex = (unsigned short)value; status->calc_misc(bl, &ed->base_status, ed->db->lv); break;
+				case UDT_LUK:         ed->base_status.luk = (unsigned short)value; status->calc_misc(bl, &ed->base_status, ed->db->lv); break;
+				case UDT_ATKRANGE:    ed->base_status.rhw.range = (unsigned short)value; break;
+				case UDT_ATKMIN:      ed->base_status.rhw.atk = (unsigned short)value; break;
+				case UDT_ATKMAX:      ed->base_status.rhw.atk2 = (unsigned short)value; break;
+				case UDT_MATKMIN:     ed->base_status.matk_min = (unsigned short)value; break;
+				case UDT_MATKMAX:     ed->base_status.matk_max = (unsigned short)value; break;
+				case UDT_DEF:         ed->base_status.def = (defType)value; break;
+				case UDT_MDEF:        ed->base_status.mdef = (defType)value; break;
+				case UDT_HIT:         ed->base_status.hit = (short)value; break;
+				case UDT_FLEE:        ed->base_status.flee = (short)value; break;
+				case UDT_PDODGE:      ed->base_status.flee2 = (short)value; break;
+				case UDT_CRIT:        ed->base_status.cri = (short)value; break;
+				case UDT_RACE:        ed->base_status.race = (unsigned char)value; break;
+				case UDT_ELETYPE:     ed->base_status.def_ele = (unsigned char)value; break;
+				case UDT_ELELEVEL:    ed->base_status.ele_lv = (unsigned char)value; break;
+				case UDT_AMOTION:     ed->base_status.amotion = (short)value; break;
+				case UDT_ADELAY:      ed->base_status.adelay = (short)value; break;
+				case UDT_DMOTION:     ed->base_status.dmotion = (short)value; break;
+				case UDT_LIFETIME:    ed->elemental.life_time = (unsigned int)value; break;
+				default:
+					ShowWarning("buildin_setunitdata: Invalid data type '%s' for elemental unit.\n", udtype);
+					script_pushint(st, 0);
+					return false;
+			}
+			clif->elemental_info(ed->master);
+		}
+			break;
+		case BL_NPC:
+		{
+			struct npc_data *nd = map->id2nd(bl->id);
+			
+			nullpo_retr(false, nd);
+			
+			switch (type) {
+				case UDT_SIZE:        status->set_viewdata(bl, (unsigned short)value); break;
+				case UDT_LEVEL:       nd->level = (unsigned int)value; break;
+				case UDT_HP:          status->set_hp(bl, (unsigned int)value, 0); break;
+				case UDT_MAXHP:       nd->status.max_hp = (unsigned int)value; break;
+				case UDT_SP:          status->set_sp(bl, (unsigned int)value, 0); break;
+				case UDT_MAXSP:       nd->status.max_sp = (unsigned int)value; break;
+				case UDT_MAPIDXY:
+					if (mapname) {
+						value = map->mapname2mapid(mapname);
+						if (value == -1) {
+							ShowError("buildin_setunitdata: Invalid map index, perhaps incorrectly spelt or non-existant.\n");
+							script_pushint(st, 0);
+							return false;
+						} else {
+							unit->warp(bl, (short)value, (short)value2, (short)value3, CLR_TELEPORT);
+						}
+					}
+					break;
+				case UDT_WALKTOXY:
+					if (!unit->walktoxy(bl, (short)(value?value:bl->x), (short)(value2?value2:bl->y), 2))
+						unit->movepos(bl, (short)(value?value:bl->x), (short)(value2?value2:bl->y), 0, 0);
+					break;
+				case UDT_LOOKDIR:     unit->setdir(bl, (uint8)value); break;
+				case UDT_STR:         nd->status.str = (unsigned short)value; status->calc_misc(bl, &nd->status, nd->level); break;
+				case UDT_AGI:         nd->status.agi = (unsigned short)value; status->calc_misc(bl, &nd->status, nd->level); break;
+				case UDT_VIT:         nd->status.vit = (unsigned short)value; status->calc_misc(bl, &nd->status, nd->level); break;
+				case UDT_INT:         nd->status.int_ = (unsigned short)value; status->calc_misc(bl, &nd->status, nd->level); break;
+				case UDT_DEX:         nd->status.dex = (unsigned short)value; status->calc_misc(bl, &nd->status, nd->level); break;
+				case UDT_LUK:         nd->status.luk = (unsigned short)value; status->calc_misc(bl, &nd->status, nd->level); break;
+				case UDT_STATADD:     nd->stat_point = (unsigned int)value; break;
+				case UDT_ATKRANGE:    nd->status.rhw.range = (unsigned short)value; break;
+				case UDT_ATKMIN:      nd->status.rhw.atk = (unsigned short)value; break;
+				case UDT_ATKMAX:      nd->status.rhw.atk2 = (unsigned short)value; break;
+				case UDT_MATKMIN:     nd->status.matk_min = (unsigned short)value; break;
+				case UDT_MATKMAX:     nd->status.matk_max = (unsigned short)value; break;
+				case UDT_DEF:         nd->status.def = (defType)value; break;
+				case UDT_MDEF:        nd->status.mdef = (defType)value; break;
+				case UDT_HIT:         nd->status.hit = (short)value; break;
+				case UDT_FLEE:        nd->status.flee = (short)value; break;
+				case UDT_PDODGE:      nd->status.flee2 = (short)value; break;
+				case UDT_CRIT:        nd->status.cri = (short)value; break;
+				case UDT_RACE:        nd->status.race = (unsigned char)value; break;
+				case UDT_ELETYPE:     nd->status.def_ele = (unsigned char)value; break;
+				case UDT_ELELEVEL:    nd->status.ele_lv = (unsigned char)value; break;
+				case UDT_AMOTION:     nd->status.amotion = (short)value; break;
+				case UDT_ADELAY:      nd->status.adelay = (short)value; break;
+				case UDT_DMOTION:     nd->status.dmotion = (short)value; break;
+				default:
+					ShowWarning("buildin_setunitdata: Invalid data type '%s' for NPC unit.\n", udtype);
+					script_pushint(st, 0);
+					return false;
+			}
+		}
+			break;
+		default:
+			ShowError("buildin_setunitdata: Unknown object!\n");
+			return false;
+	}
+	
+	script_pushint(st, 1);
+	return true;
+}
+
+/**
+ * Retrieves real-time data for a game object.
+ * Getunitdata <GUID>,<DataType>{,<Variable>}
+ * @param1  GUID        Game object unique Id.
+ * @param2  DataType    Type of Data to be set for the unit.
+ * @param3  Variable    array reference to store data into. (used for UDT_MAPIDXY)
+ * @return  true        on success
+ */
+BUILDIN(getunitdata)
+{
+	struct block_list *bl;
+	const char *udtype = NULL;
+	struct map_session_data *sd = NULL;
+	int type = 0;
+	char* name = NULL;
+	struct script_data *data = script_hasdata(st,4)?script_getdata(st, 4):NULL;
+	
+	bl = map->id2bl(script_getnum(st, 2));
+	
+	if (bl == NULL) {
+		ShowWarning("buildin_getunitdata: Error in finding object with given GID %d!\n", script_getnum(st, 2));
+		script_pushint(st, 0);
+		return false;
+	} else if (!script_isstring(st, 3) || (udtype = script_getstr(st, 3)) == NULL || !script->get_constant(udtype, &type)) {
+		ShowWarning("buildin_getunitdata: Undefined Unit Data Type %s set.\n", udtype);
+		script_pushint(st, 0);
+		return false;
+	}
+	
+	if (type == UDT_MAPIDXY) {
+		if (data == NULL || !data_isreference(data)) {
+			ShowWarning("buildin_getunitdata: Error in argument 2. Please provide a reference variable to store values in.\n");
+			script_pushint(st, 0);
+			return false;
+		}
+		
+		name = reference_getname(data);
+		
+		if (not_server_variable(*name)) {
+			sd = script->rid2sd(st);
+			if (sd == NULL) {
+				ShowWarning("buildin_getunitdata: Player not attached! Cannot use player variable %s.\n",name);
+				script_pushint(st, 0);
+				return true;// no player attached
+			}
+		}
+	}
+	
+#define getunitdata_sub(idx__,var__) script->setd_sub(st,NULL,name,(idx__),(void *)h64BPTRSIZE((int)(var__)),data->ref);
+	
+	switch (bl->type) {
+		case BL_MOB:
+		{
+			struct mob_data *md = map->id2md(bl->id);
+			
+			nullpo_retr(false, md);
+			
+			switch (type) {
+				case UDT_SIZE:        script_pushint(st, md->status.size); break;
+				case UDT_LEVEL:       script_pushint(st, md->level); break;
+				case UDT_HP:          script_pushint(st, md->status.hp); break;
+				case UDT_MAXHP:       script_pushint(st, md->status.max_hp); break;
+				case UDT_SP:          script_pushint(st, md->status.sp); break;
+				case UDT_MAXSP:       script_pushint(st, md->status.max_sp); break;
+				case UDT_MAPIDXY:
+					getunitdata_sub(0, md->bl.m);
+					getunitdata_sub(1, md->bl.x);
+					getunitdata_sub(2, md->bl.y);
+					break;
+				case UDT_SPEED:       script_pushint(st, md->status.speed); break;
+				case UDT_MODE:        script_pushint(st, md->status.mode); break;
+				case UDT_AI:          script_pushint(st, md->special_state.ai); break;
+				case UDT_SCOPTION:    script_pushint(st, md->sc.option); break;
+				case UDT_SEX:         script_pushint(st, md->vd->sex); break;
+				case UDT_CLASS:       script_pushint(st, md->vd->class); break;
+				case UDT_HAIRSTYLE:   script_pushint(st, md->vd->hair_style); break;
+				case UDT_HAIRCOLOR:   script_pushint(st, md->vd->hair_color); break;
+				case UDT_HEADBOTTOM:  script_pushint(st, md->vd->head_bottom); break;
+				case UDT_HEADMIDDLE:  script_pushint(st, md->vd->head_mid); break;
+				case UDT_HEADTOP:     script_pushint(st, md->vd->head_top); break;
+				case UDT_CLOTHCOLOR:  script_pushint(st, md->vd->cloth_color); break;
+				case UDT_SHIELD:      script_pushint(st, md->vd->shield); break;
+				case UDT_WEAPON:      script_pushint(st, md->vd->weapon); break;
+				case UDT_LOOKDIR:     script_pushint(st, md->ud.dir); break;
+				case UDT_CANMOVETICK: script_pushint(st, md->ud.canmove_tick); break;
+				case UDT_STR:         script_pushint(st, md->status.str); break;
+				case UDT_AGI:         script_pushint(st, md->status.agi); break;
+				case UDT_VIT:         script_pushint(st, md->status.vit); break;
+				case UDT_INT:         script_pushint(st, md->status.int_); break;
+				case UDT_DEX:         script_pushint(st, md->status.dex); break;
+				case UDT_LUK:         script_pushint(st, md->status.luk); break;
+				case UDT_ATKRANGE:    script_pushint(st, md->status.rhw.range); break;
+				case UDT_ATKMIN:      script_pushint(st, md->status.rhw.atk); break;
+				case UDT_ATKMAX:      script_pushint(st, md->status.rhw.atk2); break;
+				case UDT_MATKMIN:     script_pushint(st, md->status.matk_min); break;
+				case UDT_MATKMAX:     script_pushint(st, md->status.matk_max); break;
+				case UDT_DEF:         script_pushint(st, md->status.def); break;
+				case UDT_MDEF:        script_pushint(st, md->status.mdef); break;
+				case UDT_HIT:         script_pushint(st, md->status.hit); break;
+				case UDT_FLEE:        script_pushint(st, md->status.flee); break;
+				case UDT_PDODGE:      script_pushint(st, md->status.flee2); break;
+				case UDT_CRIT:        script_pushint(st, md->status.cri); break;
+				case UDT_RACE:        script_pushint(st, md->status.race); break;
+				case UDT_ELETYPE:     script_pushint(st, md->status.def_ele); break;
+				case UDT_ELELEVEL:    script_pushint(st, md->status.ele_lv); break;
+				case UDT_AMOTION:     script_pushint(st, md->status.amotion); break;
+				case UDT_ADELAY:      script_pushint(st, md->status.adelay); break;
+				case UDT_DMOTION:     script_pushint(st, md->status.dmotion); break;
+				default:
+					ShowWarning("buildin_setunitdata: Invalid data type '%s' for Mob unit.\n", udtype);
+					script_pushint(st, 0);
+					return false;
+			}
+		}
+			break;
+		case BL_HOM:
+		{
+			struct homun_data *hd = map->id2hd(bl->id);
+			
+			nullpo_retr(false, hd);
+			
+			switch (type) {
+				case UDT_SIZE:        script_pushint(st, hd->base_status.size); break;
+				case UDT_LEVEL:       script_pushint(st, hd->homunculus.level); break;
+				case UDT_HP:          script_pushint(st, hd->base_status.hp); break;
+				case UDT_MAXHP:       script_pushint(st, hd->base_status.max_hp); break;
+				case UDT_SP:          script_pushint(st, hd->base_status.sp); break;
+				case UDT_MAXSP:       script_pushint(st, hd->base_status.max_sp); break;
+				case UDT_MAPIDXY:
+					getunitdata_sub(0, hd->bl.m);
+					getunitdata_sub(1, hd->bl.x);
+					getunitdata_sub(2, hd->bl.y);
+					break;
+				case UDT_SPEED:       script_pushint(st, hd->base_status.speed); break;
+				case UDT_LOOKDIR:     script_pushint(st, hd->ud.dir); break;
+				case UDT_CANMOVETICK: script_pushint(st, hd->ud.canmove_tick); break;
+				case UDT_MODE:        script_pushint(st, hd->base_status.mode); break;
+				case UDT_STR:         script_pushint(st, hd->base_status.str); break;
+				case UDT_AGI:         script_pushint(st, hd->base_status.agi); break;
+				case UDT_VIT:         script_pushint(st, hd->base_status.vit); break;
+				case UDT_INT:         script_pushint(st, hd->base_status.int_); break;
+				case UDT_DEX:         script_pushint(st, hd->base_status.dex); break;
+				case UDT_LUK:         script_pushint(st, hd->base_status.luk); break;
+				case UDT_ATKRANGE:    script_pushint(st, hd->base_status.rhw.range); break;
+				case UDT_ATKMIN:      script_pushint(st, hd->base_status.rhw.atk); break;
+				case UDT_ATKMAX:      script_pushint(st, hd->base_status.rhw.atk2); break;
+				case UDT_MATKMIN:     script_pushint(st, hd->base_status.matk_min); break;
+				case UDT_MATKMAX:     script_pushint(st, hd->base_status.matk_max); break;
+				case UDT_DEF:         script_pushint(st, hd->base_status.def); break;
+				case UDT_MDEF:        script_pushint(st, hd->base_status.mdef); break;
+				case UDT_HIT:         script_pushint(st, hd->base_status.hit); break;
+				case UDT_FLEE:        script_pushint(st, hd->base_status.flee); break;
+				case UDT_PDODGE:      script_pushint(st, hd->base_status.flee2); break;
+				case UDT_CRIT:        script_pushint(st, hd->base_status.cri); break;
+				case UDT_RACE:        script_pushint(st, hd->base_status.race); break;
+				case UDT_ELETYPE:     script_pushint(st, hd->base_status.def_ele); break;
+				case UDT_ELELEVEL:    script_pushint(st, hd->base_status.ele_lv); break;
+				case UDT_AMOTION:     script_pushint(st, hd->base_status.amotion); break;
+				case UDT_ADELAY:      script_pushint(st, hd->base_status.adelay); break;
+				case UDT_DMOTION:     script_pushint(st, hd->base_status.dmotion); break;
+				case UDT_MASTERCID:   script_pushint(st, hd->homunculus.char_id); break;
+				case UDT_HUNGER:      script_pushint(st, hd->homunculus.hunger); break;
+				case UDT_INTIMACY:    script_pushint(st, hd->homunculus.intimacy); break;
+				default:
+					ShowWarning("buildin_setunitdata: Invalid data type '%s' for Homunculus unit.\n", udtype);
+					script_pushint(st, 0);
+					return false;
+			}
+		}
+			break;
+		case BL_PET:
+		{
+			struct pet_data *pd = map->id2pd(bl->id);
+			
+			nullpo_retr(false, pd);
+			
+			switch (type) {
+				case UDT_SIZE:        script_pushint(st, pd->status.size); break;
+				case UDT_LEVEL:       script_pushint(st, pd->pet.level); break;
+				case UDT_HP:          script_pushint(st, pd->status.hp); break;
+				case UDT_MAXHP:       script_pushint(st, pd->status.max_hp); break;
+				case UDT_SP:          script_pushint(st, pd->status.sp); break;
+				case UDT_MAXSP:       script_pushint(st, pd->status.max_sp); break;
+				case UDT_MAPIDXY:
+					getunitdata_sub(0, pd->bl.m);
+					getunitdata_sub(1, pd->bl.x);
+					getunitdata_sub(2, pd->bl.y);
+					break;
+				case UDT_SPEED:       script_pushint(st, pd->status.speed); break;
+				case UDT_LOOKDIR:     script_pushint(st, pd->ud.dir); break;
+				case UDT_CANMOVETICK: script_pushint(st, pd->ud.canmove_tick); break;
+				case UDT_MODE:        script_pushint(st, pd->status.mode); break;
+				case UDT_STR:         script_pushint(st, pd->status.str); break;
+				case UDT_AGI:         script_pushint(st, pd->status.agi); break;
+				case UDT_VIT:         script_pushint(st, pd->status.vit); break;
+				case UDT_INT:         script_pushint(st, pd->status.int_); break;
+				case UDT_DEX:         script_pushint(st, pd->status.dex); break;
+				case UDT_LUK:         script_pushint(st, pd->status.luk); break;
+				case UDT_ATKRANGE:    script_pushint(st, pd->status.rhw.range); break;
+				case UDT_ATKMIN:      script_pushint(st, pd->status.rhw.atk); break;
+				case UDT_ATKMAX:      script_pushint(st, pd->status.rhw.atk2); break;
+				case UDT_MATKMIN:     script_pushint(st, pd->status.matk_min); break;
+				case UDT_MATKMAX:     script_pushint(st, pd->status.matk_max); break;
+				case UDT_DEF:         script_pushint(st, pd->status.def); break;
+				case UDT_MDEF:        script_pushint(st, pd->status.mdef); break;
+				case UDT_HIT:         script_pushint(st, pd->status.hit); break;
+				case UDT_FLEE:        script_pushint(st, pd->status.flee); break;
+				case UDT_PDODGE:      script_pushint(st, pd->status.flee2); break;
+				case UDT_CRIT:        script_pushint(st, pd->status.cri); break;
+				case UDT_RACE:        script_pushint(st, pd->status.race); break;
+				case UDT_ELETYPE:     script_pushint(st, pd->status.def_ele); break;
+				case UDT_ELELEVEL:    script_pushint(st, pd->status.ele_lv); break;
+				case UDT_AMOTION:     script_pushint(st, pd->status.amotion); break;
+				case UDT_ADELAY:      script_pushint(st, pd->status.adelay); break;
+				case UDT_DMOTION:     script_pushint(st, pd->status.dmotion); break;
+				case UDT_MASTERAID:   script_pushint(st, pd->pet.account_id); break;
+				case UDT_HUNGER:      script_pushint(st, pd->pet.hungry); break;
+				case UDT_INTIMACY:    script_pushint(st, pd->pet.intimate); break;
+				default:
+					ShowWarning("buildin_setunitdata: Invalid data type '%s' for Pet unit.\n", udtype);
+					script_pushint(st, 0);
+					return false;
+			}
+		}
+			break;
+		case BL_MER:
+		{
+			struct mercenary_data *mc = map->id2mc(bl->id);
+			
+			nullpo_retr(false, mc);
+			
+			switch (type) {
+				case UDT_SIZE:        script_pushint(st, mc->base_status.size); break;
+				case UDT_HP:          script_pushint(st, mc->base_status.hp); break;
+				case UDT_MAXHP:       script_pushint(st, mc->base_status.max_hp); break;
+				case UDT_SP:          script_pushint(st, mc->base_status.sp); break;
+				case UDT_MAXSP:       script_pushint(st, mc->base_status.max_sp); break;
+				case UDT_MAPIDXY:
+					getunitdata_sub(0, mc->bl.m);
+					getunitdata_sub(1, mc->bl.x);
+					getunitdata_sub(2, mc->bl.y);
+					break;
+				case UDT_SPEED:       script_pushint(st, mc->base_status.speed); break;
+				case UDT_LOOKDIR:     script_pushint(st, mc->ud.dir); break;
+				case UDT_CANMOVETICK: script_pushint(st, mc->ud.canmove_tick); break;
+				case UDT_MODE:        script_pushint(st, mc->base_status.mode); break;
+				case UDT_STR:         script_pushint(st, mc->base_status.str); break;
+				case UDT_AGI:         script_pushint(st, mc->base_status.agi); break;
+				case UDT_VIT:         script_pushint(st, mc->base_status.vit); break;
+				case UDT_INT:         script_pushint(st, mc->base_status.int_); break;
+				case UDT_DEX:         script_pushint(st, mc->base_status.dex); break;
+				case UDT_LUK:         script_pushint(st, mc->base_status.luk); break;
+				case UDT_ATKRANGE:    script_pushint(st, mc->base_status.rhw.range); break;
+				case UDT_ATKMIN:      script_pushint(st, mc->base_status.rhw.atk); break;
+				case UDT_ATKMAX:      script_pushint(st, mc->base_status.rhw.atk2); break;
+				case UDT_MATKMIN:     script_pushint(st, mc->base_status.matk_min); break;
+				case UDT_MATKMAX:     script_pushint(st, mc->base_status.matk_max); break;
+				case UDT_DEF:         script_pushint(st, mc->base_status.def); break;
+				case UDT_MDEF:        script_pushint(st, mc->base_status.mdef); break;
+				case UDT_HIT:         script_pushint(st, mc->base_status.hit); break;
+				case UDT_FLEE:        script_pushint(st, mc->base_status.flee); break;
+				case UDT_PDODGE:      script_pushint(st, mc->base_status.flee2); break;
+				case UDT_CRIT:        script_pushint(st, mc->base_status.cri); break;
+				case UDT_RACE:        script_pushint(st, mc->base_status.race); break;
+				case UDT_ELETYPE:     script_pushint(st, mc->base_status.def_ele); break;
+				case UDT_ELELEVEL:    script_pushint(st, mc->base_status.ele_lv); break;
+				case UDT_AMOTION:     script_pushint(st, mc->base_status.amotion); break;
+				case UDT_ADELAY:      script_pushint(st, mc->base_status.adelay); break;
+				case UDT_DMOTION:     script_pushint(st, mc->base_status.dmotion); break;
+				case UDT_MASTERCID:   script_pushint(st, mc->mercenary.char_id); break;
+				case UDT_MERC_KILLCOUNT: script_pushint(st, mc->mercenary.kill_count); break;
+				case UDT_LIFETIME:    script_pushint(st, mc->mercenary.life_time); break;
+				default:
+					ShowWarning("buildin_setunitdata: Invalid data type '%s' for Mercenary unit.\n", udtype);
+					script_pushint(st, 0);
+					return false;
+			}
+		}
+			break;
+		case BL_ELEM:
+		{
+			struct elemental_data *ed = map->id2ed(bl->id);
+			
+			nullpo_retr(false, ed);
+			
+			switch (type) {
+				case UDT_SIZE:        script_pushint(st, ed->base_status.size); break;
+				case UDT_HP:          script_pushint(st, ed->base_status.hp); break;
+				case UDT_MAXHP:       script_pushint(st, ed->base_status.max_hp); break;
+				case UDT_SP:          script_pushint(st, ed->base_status.sp); break;
+				case UDT_MAXSP:       script_pushint(st, ed->base_status.max_sp); break;
+				case UDT_MAPIDXY:
+					getunitdata_sub(0, ed->bl.m);
+					getunitdata_sub(1, ed->bl.x);
+					getunitdata_sub(2, ed->bl.y);
+					break;
+				case UDT_SPEED:       script_pushint(st, ed->base_status.speed); break;
+				case UDT_LOOKDIR:     script_pushint(st, ed->ud.dir); break;
+				case UDT_CANMOVETICK: script_pushint(st, ed->ud.canmove_tick); break;
+				case UDT_MODE:        script_pushint(st, ed->base_status.mode); break;
+				case UDT_STR:         script_pushint(st, ed->base_status.str); break;
+				case UDT_AGI:         script_pushint(st, ed->base_status.agi); break;
+				case UDT_VIT:         script_pushint(st, ed->base_status.vit); break;
+				case UDT_INT:         script_pushint(st, ed->base_status.int_); break;
+				case UDT_DEX:         script_pushint(st, ed->base_status.dex); break;
+				case UDT_LUK:         script_pushint(st, ed->base_status.luk); break;
+				case UDT_ATKRANGE:    script_pushint(st, ed->base_status.rhw.range); break;
+				case UDT_ATKMIN:      script_pushint(st, ed->base_status.rhw.atk); break;
+				case UDT_ATKMAX:      script_pushint(st, ed->base_status.rhw.atk2); break;
+				case UDT_MATKMIN:     script_pushint(st, ed->base_status.matk_min); break;
+				case UDT_MATKMAX:     script_pushint(st, ed->base_status.matk_max); break;
+				case UDT_DEF:         script_pushint(st, ed->base_status.def); break;
+				case UDT_MDEF:        script_pushint(st, ed->base_status.mdef); break;
+				case UDT_HIT:         script_pushint(st, ed->base_status.hit); break;
+				case UDT_FLEE:        script_pushint(st, ed->base_status.flee); break;
+				case UDT_PDODGE:      script_pushint(st, ed->base_status.flee2); break;
+				case UDT_CRIT:        script_pushint(st, ed->base_status.cri); break;
+				case UDT_RACE:        script_pushint(st, ed->base_status.race); break;
+				case UDT_ELETYPE:     script_pushint(st, ed->base_status.def_ele); break;
+				case UDT_ELELEVEL:    script_pushint(st, ed->base_status.ele_lv); break;
+				case UDT_AMOTION:     script_pushint(st, ed->base_status.amotion); break;
+				case UDT_ADELAY:      script_pushint(st, ed->base_status.adelay); break;
+				case UDT_DMOTION:     script_pushint(st, ed->base_status.dmotion); break;
+				case UDT_MASTERCID:   script_pushint(st, ed->elemental.char_id); break;
+				default:
+					ShowWarning("buildin_setunitdata: Invalid data type '%s' for Elemental unit.\n", udtype);
+					script_pushint(st, 0);
+					return false;
+			}
+		}
+			break;
+		case BL_NPC:
+		{
+			struct npc_data *nd = map->id2nd(bl->id);
+			
+			nullpo_retr(false, nd);
+			
+			switch (type) {
+				case UDT_SIZE:        script_pushint(st, nd->status.size); break;
+				case UDT_HP:          script_pushint(st, nd->status.hp); break;
+				case UDT_MAXHP:       script_pushint(st, nd->status.max_hp); break;
+				case UDT_SP:          script_pushint(st, nd->status.sp); break;
+				case UDT_MAXSP:       script_pushint(st, nd->status.max_sp); break;
+				case UDT_MAPIDXY:
+					getunitdata_sub(0, bl->m);
+					getunitdata_sub(1, bl->x);
+					getunitdata_sub(2, bl->y);
+					break;
+				case UDT_SPEED:       script_pushint(st, nd->status.speed); break;
+				case UDT_LOOKDIR:     script_pushint(st, nd->ud->dir); break;
+				case UDT_CANMOVETICK: script_pushint(st, nd->ud->canmove_tick); break;
+				case UDT_MODE:        script_pushint(st, nd->status.mode); break;
+				case UDT_STR:         script_pushint(st, nd->status.str); break;
+				case UDT_AGI:         script_pushint(st, nd->status.agi); break;
+				case UDT_VIT:         script_pushint(st, nd->status.vit); break;
+				case UDT_INT:         script_pushint(st, nd->status.int_); break;
+				case UDT_DEX:         script_pushint(st, nd->status.dex); break;
+				case UDT_LUK:         script_pushint(st, nd->status.luk); break;
+				case UDT_ATKRANGE:    script_pushint(st, nd->status.rhw.range); break;
+				case UDT_ATKMIN:      script_pushint(st, nd->status.rhw.atk); break;
+				case UDT_ATKMAX:      script_pushint(st, nd->status.rhw.atk2); break;
+				case UDT_MATKMIN:     script_pushint(st, nd->status.matk_min); break;
+				case UDT_MATKMAX:     script_pushint(st, nd->status.matk_max); break;
+				case UDT_DEF:         script_pushint(st, nd->status.def); break;
+				case UDT_MDEF:        script_pushint(st, nd->status.mdef); break;
+				case UDT_HIT:         script_pushint(st, nd->status.hit); break;
+				case UDT_FLEE:        script_pushint(st, nd->status.flee); break;
+				case UDT_PDODGE:      script_pushint(st, nd->status.flee2); break;
+				case UDT_CRIT:        script_pushint(st, nd->status.cri); break;
+				case UDT_RACE:        script_pushint(st, nd->status.race); break;
+				case UDT_ELETYPE:     script_pushint(st, nd->status.def_ele); break;
+				case UDT_ELELEVEL:    script_pushint(st, nd->status.ele_lv); break;
+				case UDT_AMOTION:     script_pushint(st, nd->status.amotion); break;
+				case UDT_ADELAY:      script_pushint(st, nd->status.adelay); break;
+				case UDT_DMOTION:     script_pushint(st, nd->status.dmotion); break;
+				default:
+					ShowWarning("buildin_setunitdata: Invalid data type '%s' for NPC unit.\n", udtype);
+					script_pushint(st, 0);
+					return false;
+			}
+		}
+			break;
+	}
+	
+	return false;
+}
+
+/**
+ * Gets the name of a Unit.
+ * Supported types are [MOB|HOM|PET|NPC].
+ * MER and ELEM don't support custom names.
+ *
+ * @command Getunitname <GUID>;
+ * @param GUID Game Object Unique ID.
+ * @return boolean or Name of the game object.
+ */
+BUILDIN(getunitname)
+{
+	struct block_list* bl = NULL;
+	
+	bl = map->id2bl(script_getnum(st, 2));
+	
+	if (bl == NULL) {
+		ShowWarning("buildin_getunitname: Error in finding object with given game ID %d!\n", script_getnum(st, 2));
+		script_pushconststr(st, "Unknown");
+		return false;
+	}
+	
+	script_pushstrcopy(st, status->get_name(bl));
+	
+	return true;
+}
+
+/**
+ * Changes the name of a bl.
+ * Supported types are [MOB|HOM|PET].
+ * For NPC see 'setnpcdisplay', MER and ELEM don't support custom names.
+ *
+ * @command Setunitname <GUID>,<name>;
+ * @param GUID  Game object unique ID.
+ * @param Name as string.
+ * @return boolean.
+ */
+BUILDIN(setunitname)
+{
+	struct block_list* bl = map->id2bl(script_getnum(st, 2));
+	
+	if (bl == NULL) {
+		ShowWarning("buildin_setunitname: Game object with ID %d was not found!\n", script_getnum(st, 2));
+		script_pushint(st, 0);
+		return false;
+	}
+	
+	switch (bl->type) {
+		case BL_MOB:
+		{
+			struct mob_data *md = map->id2md(bl->id);
+			if (md == NULL) {
+				ShowWarning("buildin_setunitname: Error in finding object BL_MOB!\n");
+				script_pushint(st, 0);
+				return false;
+			}
+			safestrncpy(md->name, script_getstr(st, 3), NAME_LENGTH);
+		}
+			break;
+		case BL_HOM:
+		{
+			struct homun_data *hd = map->id2hd(bl->id);
+			if (hd == NULL) {
+				ShowWarning("buildin_setunitname: Error in finding object BL_HOM!\n");
+				script_pushint(st, 0);
+				return false;
+			}
+			safestrncpy(hd->homunculus.name, script_getstr(st, 3), NAME_LENGTH);
+		}
+			break;
+		case BL_PET:
+		{
+			struct pet_data *pd = map->id2pd(bl->id);
+			if (pd == NULL) {
+				ShowWarning("buildin_setunitname: Error in finding object BL_PET!\n");
+				script_pushint(st, 0);
+				return false;
+			}
+			safestrncpy(pd->pet.name, script_getstr(st, 3), NAME_LENGTH);
+		}
+			break;
+		default:
+			script_pushint(st, 0);
+			ShowWarning("buildin_setunitname: Unknown object type!\n");
+			return false;
+	}
+	
+	script_pushint(st, 1);
+	clif->charnameack(0, bl); // Send update to client.
+	
+	return true;
+}
+
 /// Makes the unit walk to target position or target id
 /// Returns if it was successfull
 ///
@@ -21141,6 +22135,11 @@ void script_parse_builtin(void) {
 		// <--- [zBuffer] List of player cont commands
 		// [zBuffer] List of mob control commands --->
 		BUILDIN_DEF(getunittype,"i"),
+		/* Unit Data */
+		BUILDIN_DEF(setunitdata,"isv??"),
+		BUILDIN_DEF(getunitdata,"i?"),
+		BUILDIN_DEF(getunitname,"i"),
+		BUILDIN_DEF(setunitname,"is"),
 		BUILDIN_DEF(unitwalk,"ii?"),
 		BUILDIN_DEF(unitkill,"i"),
 		BUILDIN_DEF(unitwarp,"isii"),
