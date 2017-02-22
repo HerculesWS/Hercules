@@ -729,6 +729,29 @@ function	script	HerculesSelfTestHelper	{
 	callsub(OnCheckStr, "sprintf (positional)", sprintf("'%2$+05d'", 5, 6), "'+0006'");
 	callsub(OnCheckStr, "sprintf (positional)", sprintf("'%2$s' '%1$c'", "First", "Second"), "'Second' 'F'");
 
+	// unit data test
+	freeloop(1);
+	setarray(.@ud_types[0], UDT_SIZE, UDT_LEVEL, UDT_HP, UDT_MAXHP, UDT_SP, UDT_MAXSP, UDT_SPEED,
+			UDT_MODE, UDT_AI, UDT_SCOPTION, UDT_SEX, UDT_HAIRSTYLE,
+			UDT_HAIRCOLOR, UDT_HEADBOTTOM, UDT_HEADMIDDLE, UDT_HEADTOP, UDT_CLOTHCOLOR,
+			UDT_SHIELD, UDT_WEAPON, UDT_LOOKDIR, UDT_CANMOVETICK, UDT_STR, UDT_AGI,
+			UDT_VIT, UDT_INT, UDT_DEX, UDT_LUK, UDT_ATKRANGE, UDT_ATKMIN, UDT_ATKMAX,
+			UDT_MATKMIN, UDT_MATKMAX, UDT_DEF, UDT_MDEF, UDT_HIT, UDT_FLEE, UDT_PDODGE,
+			UDT_CRIT, UDT_RACE, UDT_ELETYPE, UDT_ELELEVEL, UDT_AMOTION, UDT_ADELAY, UDT_DMOTION);
+	.@guid = monster("prontera", 0, 0, "Poring", 1002, 1);
+
+	for (.@i = 0; .@i < getarraysize(.@ud_types); .@i++) {
+		.@udt = .@ud_types[.@i];
+		.@sret = setunitdata(.@guid, .@udt, 1);
+		callsub(OnCheck, "setunitdata type "+.@udt, .@sret, 1);
+		.@gret = getunitdata(.@guid, .@udt, 1);
+		callsub(OnCheck, "getunitdata type "+.@udt, (.@gret != 0), 1);
+	}
+
+	cleararray(.@ud_types, 0, getarraysize(.@ud_types));
+	unitkill .@guid; // kill the poring.
+	freeloop(0);
+
 	if (.errors) {
 		debugmes "Script engine self-test   [ \033[0;31mFAILED\033[0m ]";
 		debugmes "**** The test was completed with " + .errors + " errors. ****";
