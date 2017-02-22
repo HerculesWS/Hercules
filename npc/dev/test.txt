@@ -812,3 +812,14 @@ OnInit:
 	callfunc("HerculesSelfTestHelper");
 	end;
 }
+
+-	script	HerculesUnitDataTest	FAKE_NPC,{
+	end;
+OnInit:
+	.@guid = monster("prontera", 0, 0, "Poring", 1002, 1);
+    
+    debugmes("GUID: "+.@guid+" - "+getunitdata(.@guid,"UDT_MAXHP"));
+    setunitdata(.@guid, "UDT_MAXHP", 20000);
+    debugmes("GUID: "+.@guid+" - "+getunitdata(.@guid,"UDT_MAXHP"));
+    end;
+}
