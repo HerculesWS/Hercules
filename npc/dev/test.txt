@@ -812,3 +812,19 @@ OnInit:
 	callfunc("HerculesSelfTestHelper");
 	end;
 }
+
+-	script	HerculesUnitDataTest	FAKE_NPC,{
+	end;
+OnInit:
+	.@guid = monster("prontera", 0, 0, "Poring", 1002, 1);
+    
+    debugmes("GUID: "+.@guid+" - MAXHP = "+getunitdata(.@guid,"UDT_MAXHP"));
+    setunitdata(.@guid, "UDT_MAXHP", 20000);
+    debugmes("GUID: "+.@guid+" - MAXHP = "+getunitdata(.@guid,"UDT_MAXHP"));
+    
+    .@hp = getunitdata(.@guid, "UDT_HP");
+    debugmes("GUID: "+.@guid+" - HP = "+.@hp);
+    setunitdata(.@guid, "UDT_HP", .@hp/2);
+    debugmes("GUID: "+.@guid+" - HP = "+getunitdata(.@guid, "UDT_HP"));
+    end;
+}
