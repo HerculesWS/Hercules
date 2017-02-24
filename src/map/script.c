@@ -2862,13 +2862,18 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 
 		switch (prefix) {
 			case '@':
-				str = pc->readregstr(sd, data->u.num);
+				if (data->ref)
+					str = script->get_val_ref_str(st, data->ref, data);
+				else
+					str = pc->readregstr(sd, data->u.num);
 				break;
 			case '$':
 				str = mapreg->readregstr(data->u.num);
 				break;
 			case '#':
-				if (name[1] == '#')
+				if (data->ref)
+					str = script->get_val_ref_str(st, data->ref, data);
+				else if (name[1] == '#')
 					str = pc_readaccountreg2str(sd, data->u.num);// global
 				else
 					str = pc_readaccountregstr(sd, data->u.num);// local
@@ -2885,7 +2890,10 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 				str = script->get_val_instance_str(st, name, data);
 				break;
 			default:
-				str = pc_readglobalreg_str(sd, data->u.num);
+				if (data->ref)
+					str = script->get_val_ref_str(st, data->ref, data);
+				else
+					str = pc_readglobalreg_str(sd, data->u.num);
 				break;
 		}
 
@@ -2909,13 +2917,18 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 		} else
 			switch( prefix ) {
 				case '@':
-					data->u.num = pc->readreg(sd, data->u.num);
+					if (data->ref)
+						data->u.num = script->get_val_ref_num(st, data->ref, data);
+					else
+						data->u.num = pc->readreg(sd, data->u.num);
 					break;
 				case '$':
 					data->u.num = mapreg->readreg(data->u.num);
 					break;
 				case '#':
-					if( name[1] == '#' )
+					if (data->ref)
+						data->u.num = script->get_val_ref_num(st, data->ref, data);
+					else if( name[1] == '#' )
 						data->u.num = pc_readaccountreg2(sd, data->u.num);// global
 					else
 						data->u.num = pc_readaccountreg(sd, data->u.num);// local
@@ -2932,7 +2945,10 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 					data->u.num = script->get_val_instance_num(st, name, data);
 					break;
 				default:
-					data->u.num = pc_readglobalreg(sd, data->u.num);
+					if (data->ref)
+						data->u.num = script->get_val_ref_num(st, data->ref, data);
+					else
+						data->u.num = pc_readglobalreg(sd, data->u.num);
 					break;
 			}
 
@@ -5197,7 +5213,7 @@ int script_load_translation(const char *file, uint8 lang_id)
 			VECTOR_TRUNCATE(msgstr);
 			continue;
 		}
-		
+
 		if (strncasecmp(line, "msgid \"", 7) == 0) {
 			VECTOR_TRUNCATE(msgid);
 			for (i = 7; i < len - 2; i++) {
@@ -16461,6 +16477,9 @@ BUILDIN(escape_sql)
 }
 
 BUILDIN(getd) {
+	struct block_list *bl = NULL;
+	struct map_session_data *sd;
+	struct npc_data *nd;
 	char varname[100];
 	const char *buffer;
 	int elem;
@@ -16470,8 +16489,62 @@ BUILDIN(getd) {
 	if (sscanf(buffer, "%99[^[][%d]", varname, &elem) < 2)
 		elem = 0;
 
+	if (strlen(varname) < 1) {
+		ShowError("script:getd: variable cannot be empty\n");
+		script->reportdata(script_getdata(st, 2));
+		script_pushnil(st);
+		st->state = END;
+		return false;
+	}
+
+	if (script_hasdata(st, 3)) {
+		bl = map->id2bl(script_getnum(st, 3));
+
+		if (!bl) {
+			// being not found, push default value
+			if(script_hasdata(st, 4))
+				script_pushcopy(st, 4);
+			else if (varname[strlen(varname) - 1] == '$')
+				script_pushconststr(st, "");
+			else
+				script_pushint(st, 0);
+			return false;
+		} else if (bl->type == BL_NPC && (varname[0] != '.' || varname[1] == '@')) {
+			ShowError("script:getd: invalid scope (not npc variable)\n");
+			script->reportdata(script_getdata(st, 2));
+			script_pushnil(st);
+			st->state = END;
+			return false;
+		} else if (bl->type == BL_PC && (varname[0] == '.' || varname[0] == '$' || varname[0] == '\'')) {
+			ShowError("script:getd: invalid scope (not pc variable)\n");
+			script->reportdata(script_getdata(st, 2));
+			script_pushnil(st);
+			st->state = END;
+			return false;
+		}
+	}
+
 	// Push the 'pointer' so it's more flexible [Lance]
-	script->push_val(st->stack, C_NAME, reference_uid(script->add_str(varname), elem),NULL);
+
+	if (bl != NULL) {
+		switch (bl->type) {
+		case BL_PC:
+			sd = map->id2sd(bl->id);
+			script->push_val(st->stack, C_NAME, reference_uid(script->add_str(varname), elem), &sd->regs);
+			break;
+		case BL_NPC:
+			nd = map->id2nd(bl->id);
+			script->push_val(st->stack, C_NAME, reference_uid(script->add_str(varname), elem), &nd->u.scr.script->local);
+			break;
+		default:
+			ShowError("script:getd: invalid being type (not npc or pc)\n");
+			script_pushnil(st);
+			st->state = END;
+			return false;
+		}
+	} else {
+		script->push_val(st->stack, C_NAME, reference_uid(script->add_str(varname), elem), NULL);
+	}
 
 	return true;
 }
@@ -21107,7 +21180,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(md5,"s"),
 		BUILDIN_DEF(swap,"rr"),
 		// [zBuffer] List of dynamic var commands --->
-		BUILDIN_DEF(getd,"s"),
+		BUILDIN_DEF(getd,"s??"),
 		BUILDIN_DEF(setd,"sv"),
 		// <--- [zBuffer] List of dynamic var commands
 		BUILDIN_DEF(petstat,"i"),
