@@ -2341,7 +2341,7 @@ deleted.
 //=====================================
 ---------------------------------------
 
-*strcharinfo(<type>)
+*strcharinfo(<type>{, <GID>{, <default value>}})
 
 This function will return either the name, party name or guild name for 
 the invoking character. Whatever it returns is determined by type.
@@ -2349,6 +2349,10 @@ the invoking character. Whatever it returns is determined by type.
 (1) PC_PARTY	- The name of the party they're in if any.
 (2) PC_GUILD	- The name of the guild they're in if any.
 (3) PC_MAP		- The name of the map the character is in.
+
+If <GID> is passed, it will return the value of the specified player instead
+the attached player. If the passed <GID> is not found, it will return
+<default value>, if any, or else return an empty string.
  
 If a character is not a member of any party or guild, an empty string will 
 be returned when requesting that information.
@@ -2358,7 +2362,7 @@ using only numbers reduces script readability
 
 ---------------------------------------
 
-*strnpcinfo(<type>)
+*strnpcinfo(<type>{, <GID>{, <default value>}})
 
 This function will return the various parts of the name of the calling NPC.
 Whatever it returns is determined by type.
@@ -2368,6 +2372,10 @@ Whatever it returns is determined by type.
 (2) NPC_NAME_HIDDEN  - The hidden part of the NPC's display name
 (3) NPC_NAME_UNIQUE  - The NPC's unique name (::name)
 (4) NPC_MAP		    - The name of the map the NPC is in.
+
+If <GID> is passed, it will return the value of the specified NPC instead of
+the attached NPC. If the passed <GID> is not found, it will return
+<default value>, if any, or else return an empty string.
 
 ---------------------------------------
 
