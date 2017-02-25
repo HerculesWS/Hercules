@@ -5197,7 +5197,7 @@ int script_load_translation(const char *file, uint8 lang_id)
 			VECTOR_TRUNCATE(msgstr);
 			continue;
 		}
-		
+
 		if (strncasecmp(line, "msgid \"", 7) == 0) {
 			VECTOR_TRUNCATE(msgid);
 			for (i = 7; i < len - 2; i++) {
@@ -15455,6 +15455,29 @@ BUILDIN(charat) {
 }
 
 //=======================================================
+// chr <int>
+//-------------------------------------------------------
+BUILDIN(chr)
+{
+	char output[2];
+	output[0] = script_getnum(st,2);
+	output[1] = '\0';
+
+	script_pushstrcopy(st, output);
+	return true;
+}
+
+//=======================================================
+// ord <chr>
+//-------------------------------------------------------
+BUILDIN(ord)
+{
+	const char *chr = script_getstr(st,2);
+	script_pushint(st, *chr);
+	return true;
+}
+
+//=======================================================
 // setchar <string>, <char>, <index>
 //-------------------------------------------------------
 BUILDIN(setchar)
@@ -21075,6 +21098,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getstrlen,"s"), //strlen [Valaris]
 		BUILDIN_DEF(charisalpha,"si"), //isalpha [Valaris]
 		BUILDIN_DEF(charat,"si"),
+		BUILDIN_DEF(chr,"i"),
+		BUILDIN_DEF(ord,"s"),
 		BUILDIN_DEF(setchar,"ssi"),
 		BUILDIN_DEF(insertchar,"ssi"),
 		BUILDIN_DEF(delchar,"si"),
