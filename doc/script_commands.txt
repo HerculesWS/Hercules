@@ -8046,6 +8046,26 @@ Example:
 
 ---------------------------------------
 
+*chr(<int>)
+
+Returns a char from its ASCII value.
+
+Example:
+
+    chr(99); //returns "c"
+
+---------------------------------------
+
+*ord(<chr>)
+
+Returns the ASCII value of char <chr>.
+
+Example:
+
+    ord("c"); //returns 99
+
+---------------------------------------
+
 *setchar(<string>, <char>, <index>)
 
 Returns the original string with the char at the specified index set to 
