@@ -2832,7 +2832,7 @@ int mob_class_change (struct mob_data *md, int class_) {
 	mob_stop_walking(md, STOPWALKING_FLAG_NONE);
 	unit->skillcastcancel(&md->bl, 0);
 	status->set_viewdata(&md->bl, class_);
-	clif->class_change(&md->bl, md->vd->class, 1);
+	clif->class_change(&md->bl, md->vd->class, 1, NULL);
 	status_calc_mob(md, SCO_FIRST);
 	md->ud.state.speed_changed = 1; //Speed change update.
 

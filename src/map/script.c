@@ -13841,14 +13841,23 @@ BUILDIN(undisguise)
  * @type unused
  *------------------------------------------*/
 BUILDIN(classchange) {
-	int class, type;
+	int class, type, target;
 	struct block_list *bl=map->id2bl(st->oid);
-
+	
 	if(bl==NULL) return true;
 
 	class = script_getnum(st,2);
-	type=script_getnum(st,3);
-	clif->class_change(bl, class, type);
+	type = script_getnum(st,3);
+	target = script_hasdata(st, 4) ? script_getnum(st, 4) : 0;
+	
+	if (target > 0) {
+		struct map_session_data *sd = script->charid2sd(st, target);
+		if (sd != NULL)
+			clif->class_change(bl, class, type, sd);
+	}
+	else {
+		clif->class_change(bl, class, type, NULL);
+	}
 	return true;
 }
 
@@ -21009,7 +21018,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getcartinventorylist,""),
 		BUILDIN_DEF(getskilllist,""),
 		BUILDIN_DEF(clearitem,""),
-		BUILDIN_DEF(classchange,"ii"),
+		BUILDIN_DEF(classchange,"ii?"),
 		BUILDIN_DEF(misceffect,"i"),
 		BUILDIN_DEF(playbgm,"s"),
 		BUILDIN_DEF(playbgmall,"s?????"),
