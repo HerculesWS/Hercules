@@ -3298,7 +3298,7 @@ int set_reg(struct script_state *st, struct map_session_data *sd, int64 num, con
 		return 0;
 	}
 
-	if( is_string_variable(name) ) {// string variable
+	if (is_string_variable(name)) {// string variable
 		const char *str = (const char*)value;
 
 		switch (prefix) {
@@ -3306,40 +3306,47 @@ int set_reg(struct script_state *st, struct map_session_data *sd, int64 num, con
 			pc->setregstr(sd, num, str);
 			return 1;
 		case '$':
-			return mapreg->setregstr(num, str);
+			mapreg->setregstr(num, str);
+			return 1;
 		case '#':
-			return (name[1] == '#') ?
-				pc_setaccountreg2str(sd, num, str) :
+			if (name[1] == '#') {
+				pc_setaccountreg2str(sd, num, str);
+			} else {
 				pc_setaccountregstr(sd, num, str);
+			}
+			return 1;
 		case '.':
-			if (ref)
+			if (ref) {
 				script->set_reg_ref_str(st, ref, num, name, str);
-			else if (name[1] == '@')
+			} else if (name[1] == '@') {
 				script->set_reg_scope_str(st, &st->stack->scope, num, name, str);
-			else
+			} else {
 				script->set_reg_npc_str(st, &st->script->local, num, name, str);
+			}
 			return 1;
 		case '\'':
 			set_reg_instance_str(st, num, name, str);
 			return 1;
 		default:
-			return pc_setglobalreg_str(sd, num, str);
+			pc_setglobalreg_str(sd, num, str);
+			return 1;
 		}
 	} else {// integer variable
 		// FIXME: This isn't safe, in 32bits systems we're converting a 64bit pointer
 		// to a 32bit int, this will lead to overflows! [Panikon]
 		int val = (int)h64BPTRSIZE(value);
 
-		if(script->str_data[script_getvarid(num)].type == C_PARAM) {
-			if( pc->setparam(sd, script->str_data[script_getvarid(num)].val, val) == 0 ) {
-				if( st != NULL ) {
+		if (script->str_data[script_getvarid(num)].type == C_PARAM) {
+			if (pc->setparam(sd, script->str_data[script_getvarid(num)].val, val) == 0) {
+				if (st != NULL) {
 					ShowError("script:set_reg: failed to set param '%s' to %d.\n", name, val);
 					script->reportsrc(st);
 					// Instead of just stop the script execution we let the character close
 					// the window if it was open.
 					st->state = (sd->state.dialog) ? CLOSE : END;
-					if( st->state == CLOSE )
+					if(st->state == CLOSE) {
 						clif->scriptclose(sd, st->oid);
+					}
 				}
 				return 0;
 			}
@@ -3351,24 +3358,30 @@ int set_reg(struct script_state *st, struct map_session_data *sd, int64 num, con
 			pc->setreg(sd, num, val);
 			return 1;
 		case '$':
-			return mapreg->setreg(num, val);
+			mapreg->setreg(num, val);
+			return 1;
 		case '#':
-			return (name[1] == '#') ?
-				pc_setaccountreg2(sd, num, val) :
+			if (name[1] == '#') {
+				pc_setaccountreg2(sd, num, val);
+			} else {
 				pc_setaccountreg(sd, num, val);
+			}
+			return 1;
 		case '.':
-			if (ref)
+			if (ref) {
 				script->set_reg_ref_num(st, ref, num, name, val);
-			else if (name[1] == '@')
+			} else if (name[1] == '@') {
 				script->set_reg_scope_num(st, &st->stack->scope, num, name, val);
-			else
+			} else {
 				script->set_reg_npc_num(st, &st->script->local, num, name, val);
+			}
 			return 1;
 		case '\'':
 			set_reg_instance_num(st, num, name, val);
 			return 1;
 		default:
-			return pc_setglobalreg(sd, num, val);
+			pc_setglobalreg(sd, num, val);
+			return 1;
 		}
 	}
 }
