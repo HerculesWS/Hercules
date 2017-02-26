@@ -2825,7 +2825,7 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 	char postfix;
 	struct map_session_data *sd = NULL;
 
-	if( !data_isreference(data) )
+	if (!data_isreference(data))
 		return data;// not a variable/constant
 
 	name = reference_getname(data);
@@ -2840,10 +2840,10 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 	}
 
 	//##TODO use reference_tovariable(data) when it's confirmed that it works [FlavioJS]
-	if( !reference_toconstant(data) && not_server_variable(prefix) ) {
+	if (!reference_toconstant(data) && not_server_variable(prefix)) {
 		sd = script->rid2sd(st);
-		if( sd == NULL ) {// needs player attached
-			if( postfix == '$' ) {// string variable
+		if (sd == NULL) {// needs player attached
+			if (postfix == '$') {// string variable
 				ShowWarning("script_get_val: cannot access player variable '%s', defaulting to \"\"\n", name);
 				data->type = C_CONSTSTR;
 				data->u.str = "";
@@ -2868,18 +2868,20 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 			str = mapreg->readregstr(data->u.num);
 			break;
 		case '#':
-			if (name[1] == '#')
+			if (name[1] == '#') {
 				str = pc_readaccountreg2str(sd, data->u.num);// global
-			else
+			} else {
 				str = pc_readaccountregstr(sd, data->u.num);// local
+			}
 			break;
 		case '.':
-			if (data->ref)
+			if (data->ref) {
 				str = script->get_val_ref_str(st, data->ref, data);
-			else if (name[1] == '@')
+			} else if (name[1] == '@') {
 				str = script->get_val_scope_str(st, &st->stack->scope, data);
-			else
+			} else {
 				str = script->get_val_npc_str(st, &st->script->local, data);
+			}
 			break;
 		case '\'':
 			str = script->get_val_instance_str(st, name, data);
@@ -2906,8 +2908,8 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 			data->u.num = reference_getconstant(data);
 		} else if( reference_toparam(data) ) {
 			data->u.num = pc->readparam(sd, reference_getparamtype(data));
-		} else
-			switch( prefix ) {
+		} else {
+			switch (prefix) {
 			case '@':
 				data->u.num = pc->readreg(sd, data->u.num);
 				break;
@@ -2915,18 +2917,21 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 				data->u.num = mapreg->readreg(data->u.num);
 				break;
 			case '#':
-				if( name[1] == '#' )
+				if (name[1] == '#') {
 					data->u.num = pc_readaccountreg2(sd, data->u.num);// global
-				else
+				} else {
 					data->u.num = pc_readaccountreg(sd, data->u.num);// local
+				}
 				break;
 			case '.':
-				if (data->ref)
+				if (data->ref) {
 					data->u.num = script->get_val_ref_num(st, data->ref, data);
-				else if (name[1] == '@')
+				} else if (name[1] == '@') {
 					data->u.num = script->get_val_scope_num(st, &st->stack->scope, data);
-				else
+				}
+				else {
 					data->u.num = script->get_val_npc_num(st, &st->script->local, data);
+				}
 				break;
 			case '\'':
 				data->u.num = script->get_val_instance_num(st, name, data);
@@ -2935,7 +2940,7 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 				data->u.num = pc_readglobalreg(sd, data->u.num);
 				break;
 			}
-
+		}
 	}
 	data->ref = NULL;
 
