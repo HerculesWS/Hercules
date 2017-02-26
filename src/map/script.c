@@ -2944,8 +2944,7 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 					data->u.num = script->get_val_ref_num(st, data->ref, data);
 				} else if (name[1] == '@') {
 					data->u.num = script->get_val_scope_num(st, &st->stack->scope, data);
-				}
-				else {
+				} else {
 					data->u.num = script->get_val_npc_num(st, &st->script->local, data);
 				}
 				break;
@@ -17595,6 +17594,55 @@ BUILDIN(getvariableofnpc)
 	return true;
 }
 
+BUILDIN(getvariableofpc)
+{
+	const char* name;
+	struct script_data* data = script_getdata(st, 2);
+	struct map_session_data *sd = map->id2sd(script_getnum(st, 3));
+
+	if (!data_isreference(data)) {
+		ShowError("script:getvariableofpc: not a variable\n");
+		script->reportdata(data);
+		script_pushnil(st);
+		st->state = END;
+		return false;
+	}
+
+	name = reference_getname(data);
+
+	switch (*name)
+	{
+	case '#':
+	case '$':
+	case '.':
+	case '\'':
+		ShowError("script:getvariableofpc: illegal scope (not pc variable)\n");
+		script->reportdata(data);
+		script_pushnil(st);
+		st->state = END;
+		return false;
+	}
+
+	if (sd == NULL)
+	{
+		// player not found, return default value
+		if (script_hasdata(st, 4)) {
+			script_pushcopy(st, 4);
+		} else if (is_string_variable(name)) {
+			script_pushconststr(st, "");
+		} else {
+			script_pushint(st, 0);
+		}
+		return true;
+	}
+
+	if (!sd->regs.vars)
+		sd->regs.vars = i64db_alloc(DB_OPT_RELEASE_DATA);
+
+	script->push_val(st->stack, C_NAME, reference_getuid(data), &sd->regs);
+	return true;
+}
+
 /// Opens a warp portal.
 /// Has no "portal opening" effect/sound, it opens the portal immediately.
 ///
@@ -21254,6 +21302,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(sleep2,"i"),
 		BUILDIN_DEF(awake,"s"),
 		BUILDIN_DEF(getvariableofnpc,"rs"),
+		BUILDIN_DEF(getvariableofpc,"ri?"),
 		BUILDIN_DEF(warpportal,"iisii"),
 		BUILDIN_DEF2(homunculus_evolution,"homevolution",""), //[orn]
 		BUILDIN_DEF2(homunculus_mutate,"hommutate","?"),

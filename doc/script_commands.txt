@@ -1409,6 +1409,27 @@ getvariableofnpc() should not be used on them.
 
 ---------------------------------------
 
+*getvariableofpc(<variable>, <account id>{, <default value>})
+
+Returns a reference to a PC variable from the target player.
+If <default value> is passed, it will return this value if the player is
+not found.
+
+Examples:
+
+//This will return the value of @var, note that this can't be used, since
+//the value isn't caught.
+	getvariableofpc(@var, getcharid(CHAR_ID_ACCOUNT, "player"));
+	
+//This will set the .@v variable to the value of the player's @var
+//variable.
+	.@v = getvariableofpc(@var, getcharid(CHAR_ID_ACCOUNT, "player"));
+	
+//This will set the @var variable of the player to 1.
+	set(getvariableofpc(@var, getcharid(CHAR_ID_ACCOUNT, "player")), 1);
+
+---------------------------------------
+
 *goto(<label>)
 
 This command will make the script jump to a label, usually used in 
