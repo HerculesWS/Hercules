@@ -180,11 +180,11 @@ re:gcc-4.9:
 pre_re:gcc-5:
   <<: *branch_exceptions
   <<: *prerequisites
-  stage: primary
-  image: debian:stretch
+  stage: secondary
+  image: debian:unstable
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-5 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc-5 mysql-client libmysqlclient-dev
   script:
     - ./tools/ci/travis.sh build CC=gcc-5 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
@@ -192,11 +192,11 @@ pre_re:gcc-5:
 re:gcc-5:
   <<: *branch_exceptions
   <<: *prerequisites
-  stage: primary
-  image: debian:stretch
+  stage: secondary
+  image: debian:unstable
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-5 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc-5 mysql-client libmysqlclient-dev
   script:
     - ./tools/ci/travis.sh build CC=gcc-5 --enable-debug --enable-Werror --enable-buildbot
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
