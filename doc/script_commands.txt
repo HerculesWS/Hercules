@@ -1371,10 +1371,11 @@ Examples:
 
 ---------------------------------------
 
-*getd("<variable name>")
+*getd("<variable name>"{, <GID>{, <default value>}})
 
 Returns a reference to a variable, the name can be constructed dynamically.
-Refer to setd() for usage.
+If <GID> is present, it can be used to get a variable from another player or
+npc. If the target player or npc is not found, <default value> is returned.
 
 This can also be used to set an array dynamically:
   setarray(getd(".array[0]"), 1, 2, 3, 4, 5);
