@@ -2861,32 +2861,32 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 		const char *str = NULL;
 
 		switch (prefix) {
-			case '@':
-				str = pc->readregstr(sd, data->u.num);
-				break;
-			case '$':
-				str = mapreg->readregstr(data->u.num);
-				break;
-			case '#':
-				if (name[1] == '#')
-					str = pc_readaccountreg2str(sd, data->u.num);// global
-				else
-					str = pc_readaccountregstr(sd, data->u.num);// local
-				break;
-			case '.':
-				if (data->ref)
-					str = script->get_val_ref_str(st, data->ref, data);
-				else if (name[1] == '@')
-					str = script->get_val_scope_str(st, &st->stack->scope, data);
-				else
-					str = script->get_val_npc_str(st, &st->script->local, data);
-				break;
-			case '\'':
-				str = script->get_val_instance_str(st, name, data);
-				break;
-			default:
-				str = pc_readglobalreg_str(sd, data->u.num);
-				break;
+		case '@':
+			str = pc->readregstr(sd, data->u.num);
+			break;
+		case '$':
+			str = mapreg->readregstr(data->u.num);
+			break;
+		case '#':
+			if (name[1] == '#')
+				str = pc_readaccountreg2str(sd, data->u.num);// global
+			else
+				str = pc_readaccountregstr(sd, data->u.num);// local
+			break;
+		case '.':
+			if (data->ref)
+				str = script->get_val_ref_str(st, data->ref, data);
+			else if (name[1] == '@')
+				str = script->get_val_scope_str(st, &st->stack->scope, data);
+			else
+				str = script->get_val_npc_str(st, &st->script->local, data);
+			break;
+		case '\'':
+			str = script->get_val_instance_str(st, name, data);
+			break;
+		default:
+			str = pc_readglobalreg_str(sd, data->u.num);
+			break;
 		}
 
 		if (str == NULL || str[0] == '\0') {
@@ -2908,32 +2908,32 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 			data->u.num = pc->readparam(sd, reference_getparamtype(data));
 		} else
 			switch( prefix ) {
-				case '@':
-					data->u.num = pc->readreg(sd, data->u.num);
-					break;
-				case '$':
-					data->u.num = mapreg->readreg(data->u.num);
-					break;
-				case '#':
-					if( name[1] == '#' )
-						data->u.num = pc_readaccountreg2(sd, data->u.num);// global
-					else
-						data->u.num = pc_readaccountreg(sd, data->u.num);// local
-					break;
-				case '.':
-					if (data->ref)
-						data->u.num = script->get_val_ref_num(st, data->ref, data);
-					else if (name[1] == '@')
-						data->u.num = script->get_val_scope_num(st, &st->stack->scope, data);
-					else
-						data->u.num = script->get_val_npc_num(st, &st->script->local, data);
-					break;
-				case '\'':
-					data->u.num = script->get_val_instance_num(st, name, data);
-					break;
-				default:
-					data->u.num = pc_readglobalreg(sd, data->u.num);
-					break;
+			case '@':
+				data->u.num = pc->readreg(sd, data->u.num);
+				break;
+			case '$':
+				data->u.num = mapreg->readreg(data->u.num);
+				break;
+			case '#':
+				if( name[1] == '#' )
+					data->u.num = pc_readaccountreg2(sd, data->u.num);// global
+				else
+					data->u.num = pc_readaccountreg(sd, data->u.num);// local
+				break;
+			case '.':
+				if (data->ref)
+					data->u.num = script->get_val_ref_num(st, data->ref, data);
+				else if (name[1] == '@')
+					data->u.num = script->get_val_scope_num(st, &st->stack->scope, data);
+				else
+					data->u.num = script->get_val_npc_num(st, &st->script->local, data);
+				break;
+			case '\'':
+				data->u.num = script->get_val_instance_num(st, name, data);
+				break;
+			default:
+				data->u.num = pc_readglobalreg(sd, data->u.num);
+				break;
 			}
 
 	}
