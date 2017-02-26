@@ -2840,7 +2840,7 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 	}
 
 	//##TODO use reference_tovariable(data) when it's confirmed that it works [FlavioJS]
-	if (!reference_toconstant(data) && not_server_variable(prefix)) {
+	if (!reference_toconstant(data) && not_server_variable(prefix) && reference_getref(data) == NULL) {
 		sd = script->rid2sd(st);
 		if (sd == NULL) {// needs player attached
 			if (postfix == '$') {// string variable
@@ -2862,13 +2862,19 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 
 		switch (prefix) {
 		case '@':
-			str = pc->readregstr(sd, data->u.num);
+			if (data->ref) {
+				str = script->get_val_ref_str(st, data->ref, data);
+			} else {
+				str = pc->readregstr(sd, data->u.num);
+			}
 			break;
 		case '$':
 			str = mapreg->readregstr(data->u.num);
 			break;
 		case '#':
-			if (name[1] == '#') {
+			if (data->ref) {
+				str = script->get_val_ref_str(st, data->ref, data);
+			} else if (name[1] == '#') {
 				str = pc_readaccountreg2str(sd, data->u.num);// global
 			} else {
 				str = pc_readaccountregstr(sd, data->u.num);// local
@@ -2887,7 +2893,11 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 			str = script->get_val_instance_str(st, name, data);
 			break;
 		default:
-			str = pc_readglobalreg_str(sd, data->u.num);
+			if (data->ref) {
+				str = script->get_val_ref_str(st, data->ref, data);
+			} else {
+				str = pc_readglobalreg_str(sd, data->u.num);
+			}
 			break;
 		}
 
@@ -2911,13 +2921,19 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 		} else {
 			switch (prefix) {
 			case '@':
-				data->u.num = pc->readreg(sd, data->u.num);
+				if (data->ref) {
+					data->u.num = script->get_val_ref_num(st, data->ref, data);
+				} else {
+					data->u.num = pc->readreg(sd, data->u.num);
+				}
 				break;
 			case '$':
 				data->u.num = mapreg->readreg(data->u.num);
 				break;
 			case '#':
-				if (name[1] == '#') {
+				if (data->ref) {
+					data->u.num = script->get_val_ref_num(st, data->ref, data);
+				} else if (name[1] == '#') {
 					data->u.num = pc_readaccountreg2(sd, data->u.num);// global
 				} else {
 					data->u.num = pc_readaccountreg(sd, data->u.num);// local
@@ -2937,7 +2953,11 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 				data->u.num = script->get_val_instance_num(st, name, data);
 				break;
 			default:
-				data->u.num = pc_readglobalreg(sd, data->u.num);
+				if (data->ref) {
+					data->u.num = script->get_val_ref_num(st, data->ref, data);
+				} else {
+					data->u.num = pc_readglobalreg(sd, data->u.num);
+				}
 				break;
 			}
 		}
@@ -3120,8 +3140,12 @@ struct reg_db *script_array_src(struct script_state *st, struct map_session_data
 	default: /* char reg */
 	case '@':/* temp char reg */
 	case '#':/* account reg */
-		nullpo_retr(NULL, sd);
-		src = &sd->regs;
+		if (ref != NULL) {
+			src = ref;
+		} else {
+			nullpo_retr(NULL, sd);
+			src = &sd->regs;
+		}
 		break;
 	case '$':/* map reg */
 		src = &mapreg->regs;
@@ -3303,13 +3327,19 @@ int set_reg(struct script_state *st, struct map_session_data *sd, int64 num, con
 
 		switch (prefix) {
 		case '@':
-			pc->setregstr(sd, num, str);
+			if (ref) {
+				script->set_reg_ref_str(st, ref, num, name, str);
+			} else {
+				pc->setregstr(sd, num, str);
+			}
 			return 1;
 		case '$':
 			mapreg->setregstr(num, str);
 			return 1;
 		case '#':
-			if (name[1] == '#') {
+			if (ref) {
+				script->set_reg_ref_str(st, ref, num, name, str);
+			} else if (name[1] == '#') {
 				pc_setaccountreg2str(sd, num, str);
 			} else {
 				pc_setaccountregstr(sd, num, str);
@@ -3328,7 +3358,11 @@ int set_reg(struct script_state *st, struct map_session_data *sd, int64 num, con
 			set_reg_instance_str(st, num, name, str);
 			return 1;
 		default:
-			pc_setglobalreg_str(sd, num, str);
+			if (ref) {
+				script->set_reg_ref_str(st, ref, num, name, str);
+			} else {
+				pc_setglobalreg_str(sd, num, str);
+			}
 			return 1;
 		}
 	} else {// integer variable
@@ -3355,13 +3389,19 @@ int set_reg(struct script_state *st, struct map_session_data *sd, int64 num, con
 
 		switch (prefix) {
 		case '@':
-			pc->setreg(sd, num, val);
+			if (ref) {
+				script->set_reg_ref_num(st, ref, num, name, val);
+			} else {
+				pc->setreg(sd, num, val);
+			}
 			return 1;
 		case '$':
 			mapreg->setreg(num, val);
 			return 1;
 		case '#':
-			if (name[1] == '#') {
+			if (ref) {
+				script->set_reg_ref_num(st, ref, num, name, val);
+			} else if (name[1] == '#') {
 				pc_setaccountreg2(sd, num, val);
 			} else {
 				pc_setaccountreg(sd, num, val);
@@ -3380,7 +3420,11 @@ int set_reg(struct script_state *st, struct map_session_data *sd, int64 num, con
 			set_reg_instance_num(st, num, name, val);
 			return 1;
 		default:
-			pc_setglobalreg(sd, num, val);
+			if (ref) {
+				script->set_reg_ref_num(st, ref, num, name, val);
+			} else {
+				pc_setglobalreg(sd, num, val);
+			}
 			return 1;
 		}
 	}
