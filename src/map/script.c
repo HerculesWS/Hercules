@@ -3113,9 +3113,9 @@ void script_array_add_member(struct script_array *sa, unsigned int idx) {
  **/
 struct reg_db *script_array_src(struct script_state *st, struct map_session_data *sd, const char *name, struct reg_db *ref) {
 	struct reg_db *src = NULL;
-
 	nullpo_retr(NULL, name);
-	switch( name[0] ) {
+
+	switch (name[0]) {
 		/* from player */
 	default: /* char reg */
 	case '@':/* temp char reg */
@@ -3136,15 +3136,16 @@ struct reg_db *script_array_src(struct script_state *st, struct map_session_data
 		break;
 	case '\'':/* instance */
 		nullpo_retr(NULL, st);
-		if( st->instance_id >= 0 ) {
+		if (st->instance_id >= 0) {
 			src = &instance->list[st->instance_id].regs;
 		}
 		break;
 	}
 
-	if( src ) {
-		if( !src->arrays )
+	if (src) {
+		if (!src->arrays) {
 			src->arrays = idb_alloc(DB_OPT_BASE);
+		}
 		return src;
 	}
 	return NULL;
