@@ -2861,44 +2861,32 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 		const char *str = NULL;
 
 		switch (prefix) {
-		case '@':
-			if (data->ref) {
-				str = script->get_val_ref_str(st, data->ref, data);
-			} else {
+			case '@':
 				str = pc->readregstr(sd, data->u.num);
-			}
-			break;
-		case '$':
-			str = mapreg->readregstr(data->u.num);
-			break;
-		case '#':
-			if (data->ref) {
-				str = script->get_val_ref_str(st, data->ref, data);
-			} else if (name[1] == '#') {
-				str = pc_readaccountreg2str(sd, data->u.num);// global
-			} else {
-				str = pc_readaccountregstr(sd, data->u.num);// local
-			}
-			break;
-		case '.':
-			if (data->ref) {
-				str = script->get_val_ref_str(st, data->ref, data);
-			} else if (name[1] == '@') {
-				str = script->get_val_scope_str(st, &st->stack->scope, data);
-			} else {
-				str = script->get_val_npc_str(st, &st->script->local, data);
-			}
-			break;
-		case '\'':
-			str = script->get_val_instance_str(st, name, data);
-			break;
-		default:
-			if (data->ref) {
-				str = script->get_val_ref_str(st, data->ref, data);
-			} else {
+				break;
+			case '$':
+				str = mapreg->readregstr(data->u.num);
+				break;
+			case '#':
+				if (name[1] == '#')
+					str = pc_readaccountreg2str(sd, data->u.num);// global
+				else
+					str = pc_readaccountregstr(sd, data->u.num);// local
+				break;
+			case '.':
+				if (data->ref)
+					str = script->get_val_ref_str(st, data->ref, data);
+				else if (name[1] == '@')
+					str = script->get_val_scope_str(st, &st->stack->scope, data);
+				else
+					str = script->get_val_npc_str(st, &st->script->local, data);
+				break;
+			case '\'':
+				str = script->get_val_instance_str(st, name, data);
+				break;
+			default:
 				str = pc_readglobalreg_str(sd, data->u.num);
-			}
-			break;
+				break;
 		}
 
 		if (str == NULL || str[0] == '\0') {
@@ -2918,48 +2906,35 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 			data->u.num = reference_getconstant(data);
 		} else if( reference_toparam(data) ) {
 			data->u.num = pc->readparam(sd, reference_getparamtype(data));
-		} else {
-			switch(prefix) {
-			case '@':
-				if (data->ref) {
-					data->u.num = script->get_val_ref_num(st, data->ref, data);
-				} else {
+		} else
+			switch( prefix ) {
+				case '@':
 					data->u.num = pc->readreg(sd, data->u.num);
-				}
-				break;
-			case '$':
-				data->u.num = mapreg->readreg(data->u.num);
-				break;
-			case '#':
-				if (data->ref) {
-					data->u.num = script->get_val_ref_num(st, data->ref, data);
-				} else if(name[1] == '#') {
-					data->u.num = pc_readaccountreg2(sd, data->u.num);// global
-				} else {
-					data->u.num = pc_readaccountreg(sd, data->u.num);// local
-				}
-				break;
-			case '.':
-				if (data->ref) {
-					data->u.num = script->get_val_ref_num(st, data->ref, data);
-				} else if (name[1] == '@') {
-					data->u.num = script->get_val_scope_num(st, &st->stack->scope, data);
-				} else {
-					data->u.num = script->get_val_npc_num(st, &st->script->local, data);
-				}
-				break;
-			case '\'':
-				data->u.num = script->get_val_instance_num(st, name, data);
-				break;
-			default:
-				if (data->ref) {
-					data->u.num = script->get_val_ref_num(st, data->ref, data);
-				} else {
+					break;
+				case '$':
+					data->u.num = mapreg->readreg(data->u.num);
+					break;
+				case '#':
+					if( name[1] == '#' )
+						data->u.num = pc_readaccountreg2(sd, data->u.num);// global
+					else
+						data->u.num = pc_readaccountreg(sd, data->u.num);// local
+					break;
+				case '.':
+					if (data->ref)
+						data->u.num = script->get_val_ref_num(st, data->ref, data);
+					else if (name[1] == '@')
+						data->u.num = script->get_val_scope_num(st, &st->stack->scope, data);
+					else
+						data->u.num = script->get_val_npc_num(st, &st->script->local, data);
+					break;
+				case '\'':
+					data->u.num = script->get_val_instance_num(st, name, data);
+					break;
+				default:
 					data->u.num = pc_readglobalreg(sd, data->u.num);
-				}
-				break;
+					break;
 			}
-		}
 
 	}
 	data->ref = NULL;
@@ -3317,47 +3292,32 @@ int set_reg(struct script_state *st, struct map_session_data *sd, int64 num, con
 		return 0;
 	}
 
-	if(is_string_variable(name)) {// string variable
+	if( is_string_variable(name) ) {// string variable
 		const char *str = (const char*)value;
 
 		switch (prefix) {
-		case '@':
-			if (ref) {
-				script->set_reg_ref_str(st, ref, num, name, str);
-			} else {
+			case '@':
 				pc->setregstr(sd, num, str);
-			}
-			return 1;
-		case '$':
-			return mapreg->setregstr(num, str);
-		case '#':
-			if (ref) {
-				script->set_reg_ref_str(st, ref, num, name, str);
-			} else if (name[1] == '#') {
-				pc_setaccountreg2str(sd, num, str);
-			} else {
-				pc_setaccountregstr(sd, num, str);
-			}
-			return 1;
-		case '.':
-			if (ref) {
-				script->set_reg_ref_str(st, ref, num, name, str);
-			} else if (name[1] == '@') {
-				script->set_reg_scope_str(st, &st->stack->scope, num, name, str);
-			} else {
-				script->set_reg_npc_str(st, &st->script->local, num, name, str);
-			}
-			return 1;
-		case '\'':
-			set_reg_instance_str(st, num, name, str);
-			return 1;
-		default:
-			if (ref) {
-				script->set_reg_ref_str(st, ref, num, name, str);
-			} else {
-				pc_setglobalreg_str(sd, num, str);
-			}
-			return 1;
+				return 1;
+			case '$':
+				return mapreg->setregstr(num, str);
+			case '#':
+				return (name[1] == '#') ?
+					pc_setaccountreg2str(sd, num, str) :
+					pc_setaccountregstr(sd, num, str);
+			case '.':
+				if (ref)
+					script->set_reg_ref_str(st, ref, num, name, str);
+				else if (name[1] == '@')
+					script->set_reg_scope_str(st, &st->stack->scope, num, name, str);
+				else
+					script->set_reg_npc_str(st, &st->script->local, num, name, str);
+				return 1;
+			case '\'':
+				set_reg_instance_str(st, num, name, str);
+				return 1;
+			default:
+				return pc_setglobalreg_str(sd, num, str);
 		}
 	} else {// integer variable
 		// FIXME: This isn't safe, in 32bits systems we're converting a 64bit pointer
@@ -3381,43 +3341,28 @@ int set_reg(struct script_state *st, struct map_session_data *sd, int64 num, con
 		}
 
 		switch (prefix) {
-		case '@':
-			if (ref) {
-				script->set_reg_ref_num(st, ref, num, name, val);
-			} else {
+			case '@':
 				pc->setreg(sd, num, val);
-			}
-			return 1;
-		case '$':
-			return mapreg->setreg(num, val);
-		case '#':
-			if (ref) {
-				script->set_reg_ref_num(st, ref, num, name, val);
-			} else if (name[1] == '#') {
-				pc_setaccountreg2(sd, num, val);
-			} else {
-				pc_setaccountreg(sd, num, val);
-			}
-			return 1;
-		case '.':
-			if (ref) {
-				script->set_reg_ref_num(st, ref, num, name, val);
-			} else if (name[1] == '@') {
-				script->set_reg_scope_num(st, &st->stack->scope, num, name, val);
-			} else {
-				script->set_reg_npc_num(st, &st->script->local, num, name, val);
-			}
-			return 1;
-		case '\'':
-			set_reg_instance_num(st, num, name, val);
-			return 1;
-		default:
-			if (ref) {
-				script->set_reg_ref_num(st, ref, num, name, val);
-			} else {
-				pc_setglobalreg(sd, num, val);
-			}
-			return 1;
+				return 1;
+			case '$':
+				return mapreg->setreg(num, val);
+			case '#':
+				return (name[1] == '#') ?
+					pc_setaccountreg2(sd, num, val) :
+					pc_setaccountreg(sd, num, val);
+			case '.':
+				if (ref)
+					script->set_reg_ref_num(st, ref, num, name, val);
+				else if (name[1] == '@')
+					script->set_reg_scope_num(st, &st->stack->scope, num, name, val);
+				else
+					script->set_reg_npc_num(st, &st->script->local, num, name, val);
+				return 1;
+			case '\'':
+				set_reg_instance_num(st, num, name, val);
+				return 1;
+			default:
+				return pc_setglobalreg(sd, num, val);
 		}
 	}
 }
@@ -16549,11 +16494,7 @@ BUILDIN(escape_sql)
 	return true;
 }
 
-BUILDIN(getd)
-{
-	struct block_list *bl = NULL;
-	struct map_session_data *sd;
-	struct npc_data *nd;
+BUILDIN(getd) {
 	char varname[100];
 	const char *buffer;
 	int elem;
@@ -16563,63 +16504,8 @@ BUILDIN(getd)
 	if (sscanf(buffer, "%99[^[][%d]", varname, &elem) < 2)
 		elem = 0;
 
-	if (strlen(varname) < 1) {
-		ShowError("script:getd: variable cannot be empty\n");
-		script->reportdata(script_getdata(st, 2));
-		script_pushnil(st);
-		st->state = END;
-		return false;
-	}
-
-	if (script_hasdata(st, 3)) {
-		bl = map->id2bl(script_getnum(st, 3));
-
-		if (bl == NULL) {
-			// being not found, push default value
-			if (script_hasdata(st, 4)) {
-				script_pushcopy(st, 4);
-			} else if (varname[strlen(varname) - 1] == '$') {
-				script_pushconststr(st, "");
-			} else {
-				script_pushint(st, 0);
-			}
-			return false;
-		} else if (bl->type == BL_NPC && (varname[0] != '.' || varname[1] == '@')) {
-			ShowError("script:getd: invalid scope (not npc variable)\n");
-			script->reportdata(script_getdata(st, 2));
-			script_pushnil(st);
-			st->state = END;
-			return false;
-		} else if (bl->type == BL_PC && (varname[0] == '.' || varname[0] == '$' || varname[0] == '\'')) {
-			ShowError("script:getd: invalid scope (not pc variable)\n");
-			script->reportdata(script_getdata(st, 2));
-			script_pushnil(st);
-			st->state = END;
-			return false;
-		}
-	}
-
 	// Push the 'pointer' so it's more flexible [Lance]
-
-	if (bl != NULL) {
-		switch (bl->type) {
-		case BL_PC:
-			sd = map->id2sd(bl->id);
-			script->push_val(st->stack, C_NAME, reference_uid(script->add_str(varname), elem), &sd->regs);
-			break;
-		case BL_NPC:
-			nd = map->id2nd(bl->id);
-			script->push_val(st->stack, C_NAME, reference_uid(script->add_str(varname), elem), &nd->u.scr.script->local);
-			break;
-		default:
-			ShowError("script:getd: invalid being type (not npc or pc)\n");
-			script_pushnil(st);
-			st->state = END;
-			return false;
-		}
-	} else {
-		script->push_val(st->stack, C_NAME, reference_uid(script->add_str(varname), elem), NULL);
-	}
+	script->push_val(st->stack, C_NAME, reference_uid(script->add_str(varname), elem),NULL);
 
 	return true;
 }
@@ -21257,7 +21143,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(md5,"s"),
 		BUILDIN_DEF(swap,"rr"),
 		// [zBuffer] List of dynamic var commands --->
-		BUILDIN_DEF(getd,"s??"),
+		BUILDIN_DEF(getd,"s"),
 		BUILDIN_DEF(setd,"sv"),
 		// <--- [zBuffer] List of dynamic var commands
 		BUILDIN_DEF(petstat,"i"),
