@@ -3302,28 +3302,28 @@ int set_reg(struct script_state *st, struct map_session_data *sd, int64 num, con
 		const char *str = (const char*)value;
 
 		switch (prefix) {
-			case '@':
-				pc->setregstr(sd, num, str);
-				return 1;
-			case '$':
-				return mapreg->setregstr(num, str);
-			case '#':
-				return (name[1] == '#') ?
-					pc_setaccountreg2str(sd, num, str) :
-					pc_setaccountregstr(sd, num, str);
-			case '.':
-				if (ref)
-					script->set_reg_ref_str(st, ref, num, name, str);
-				else if (name[1] == '@')
-					script->set_reg_scope_str(st, &st->stack->scope, num, name, str);
-				else
-					script->set_reg_npc_str(st, &st->script->local, num, name, str);
-				return 1;
-			case '\'':
-				set_reg_instance_str(st, num, name, str);
-				return 1;
-			default:
-				return pc_setglobalreg_str(sd, num, str);
+		case '@':
+			pc->setregstr(sd, num, str);
+			return 1;
+		case '$':
+			return mapreg->setregstr(num, str);
+		case '#':
+			return (name[1] == '#') ?
+				pc_setaccountreg2str(sd, num, str) :
+				pc_setaccountregstr(sd, num, str);
+		case '.':
+			if (ref)
+				script->set_reg_ref_str(st, ref, num, name, str);
+			else if (name[1] == '@')
+				script->set_reg_scope_str(st, &st->stack->scope, num, name, str);
+			else
+				script->set_reg_npc_str(st, &st->script->local, num, name, str);
+			return 1;
+		case '\'':
+			set_reg_instance_str(st, num, name, str);
+			return 1;
+		default:
+			return pc_setglobalreg_str(sd, num, str);
 		}
 	} else {// integer variable
 		// FIXME: This isn't safe, in 32bits systems we're converting a 64bit pointer
@@ -3347,28 +3347,28 @@ int set_reg(struct script_state *st, struct map_session_data *sd, int64 num, con
 		}
 
 		switch (prefix) {
-			case '@':
-				pc->setreg(sd, num, val);
-				return 1;
-			case '$':
-				return mapreg->setreg(num, val);
-			case '#':
-				return (name[1] == '#') ?
-					pc_setaccountreg2(sd, num, val) :
-					pc_setaccountreg(sd, num, val);
-			case '.':
-				if (ref)
-					script->set_reg_ref_num(st, ref, num, name, val);
-				else if (name[1] == '@')
-					script->set_reg_scope_num(st, &st->stack->scope, num, name, val);
-				else
-					script->set_reg_npc_num(st, &st->script->local, num, name, val);
-				return 1;
-			case '\'':
-				set_reg_instance_num(st, num, name, val);
-				return 1;
-			default:
-				return pc_setglobalreg(sd, num, val);
+		case '@':
+			pc->setreg(sd, num, val);
+			return 1;
+		case '$':
+			return mapreg->setreg(num, val);
+		case '#':
+			return (name[1] == '#') ?
+				pc_setaccountreg2(sd, num, val) :
+				pc_setaccountreg(sd, num, val);
+		case '.':
+			if (ref)
+				script->set_reg_ref_num(st, ref, num, name, val);
+			else if (name[1] == '@')
+				script->set_reg_scope_num(st, &st->stack->scope, num, name, val);
+			else
+				script->set_reg_npc_num(st, &st->script->local, num, name, val);
+			return 1;
+		case '\'':
+			set_reg_instance_num(st, num, name, val);
+			return 1;
+		default:
+			return pc_setglobalreg(sd, num, val);
 		}
 	}
 }
