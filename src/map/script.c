@@ -3117,29 +3117,29 @@ struct reg_db *script_array_src(struct script_state *st, struct map_session_data
 	nullpo_retr(NULL, name);
 	switch( name[0] ) {
 		/* from player */
-		default: /* char reg */
-		case '@':/* temp char reg */
-		case '#':/* account reg */
-			nullpo_retr(NULL, sd);
-			src = &sd->regs;
-			break;
-		case '$':/* map reg */
-			src = &mapreg->regs;
-			break;
-		case '.':/* npc/script */
-			if (ref != NULL) {
-				src = ref;
-			} else {
-				nullpo_retr(NULL, st);
-				src = (name[1] == '@') ? &st->stack->scope : &st->script->local;
-			}
-			break;
-		case '\'':/* instance */
+	default: /* char reg */
+	case '@':/* temp char reg */
+	case '#':/* account reg */
+		nullpo_retr(NULL, sd);
+		src = &sd->regs;
+		break;
+	case '$':/* map reg */
+		src = &mapreg->regs;
+		break;
+	case '.':/* npc/script */
+		if (ref != NULL) {
+			src = ref;
+		} else {
 			nullpo_retr(NULL, st);
-			if( st->instance_id >= 0 ) {
-				src = &instance->list[st->instance_id].regs;
-			}
-			break;
+			src = (name[1] == '@') ? &st->stack->scope : &st->script->local;
+		}
+		break;
+	case '\'':/* instance */
+		nullpo_retr(NULL, st);
+		if( st->instance_id >= 0 ) {
+			src = &instance->list[st->instance_id].regs;
+		}
+		break;
 	}
 
 	if( src ) {
