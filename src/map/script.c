@@ -13840,22 +13840,24 @@ BUILDIN(undisguise)
  * Transform a bl to another class,
  * @type unused
  *------------------------------------------*/
-BUILDIN(classchange) {
+BUILDIN(classchange)
+{
 	int class, type, target;
-	struct block_list *bl=map->id2bl(st->oid);
-	
-	if(bl==NULL) return true;
+	struct block_list *bl = map->id2bl(st->oid);
 
-	class = script_getnum(st,2);
-	type = script_getnum(st,3);
+	if (bl == NULL)
+		return true;
+
+	class = script_getnum(st, 2);
+	type = script_getnum(st, 3);
 	target = script_hasdata(st, 4) ? script_getnum(st, 4) : 0;
-	
+
 	if (target > 0) {
 		struct map_session_data *sd = script->charid2sd(st, target);
-		if (sd != NULL)
+		if (sd != NULL) {
 			clif->class_change(bl, class, type, sd);
-	}
-	else {
+		}
+	} else {
 		clif->class_change(bl, class, type, NULL);
 	}
 	return true;

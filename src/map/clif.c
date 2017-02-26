@@ -1365,7 +1365,7 @@ void clif_class_change(struct block_list *bl, int class_, int type, struct map_s
 		WBUFL(buf,7)=class_;
 
 		if (sd == NULL)
-			clif->send(buf,packet_len(0x1b0),bl,AREA);
+			clif->send(buf, packet_len(0x1b0), bl, AREA);
 		else
 			clif->send(buf, packet_len(0x1b0), &sd->bl, SELF);
 	}
