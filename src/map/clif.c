@@ -1352,7 +1352,7 @@ void clif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd, 
 /// 01b0 <id>.L <type>.B <value>.L
 /// type:
 ///     unused
-void clif_class_change(struct block_list *bl, int class_, int type)
+void clif_class_change(struct block_list *bl, int class_, int type, struct map_session_data *sd)
 {
 	nullpo_retv(bl);
 
@@ -1363,7 +1363,11 @@ void clif_class_change(struct block_list *bl, int class_, int type)
 		WBUFL(buf,2)=bl->id;
 		WBUFB(buf,6)=type;
 		WBUFL(buf,7)=class_;
-		clif->send(buf,packet_len(0x1b0),bl,AREA);
+
+		if (sd == NULL)
+			clif->send(buf, packet_len(0x1b0), bl, AREA);
+		else
+			clif->send(buf, packet_len(0x1b0), &sd->bl, SELF);
 	}
 }
 

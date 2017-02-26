@@ -974,8 +974,8 @@ typedef void (*HPMHOOK_pre_clif_refreshlook) (struct block_list **bl, int *id, i
 typedef void (*HPMHOOK_post_clif_refreshlook) (struct block_list *bl, int id, int type, int val, enum send_target target);
 typedef void (*HPMHOOK_pre_clif_sendlook) (struct block_list **bl, int *id, int *type, int *val, int *val2, enum send_target *target);
 typedef void (*HPMHOOK_post_clif_sendlook) (struct block_list *bl, int id, int type, int val, int val2, enum send_target target);
-typedef void (*HPMHOOK_pre_clif_class_change) (struct block_list **bl, int *class_, int *type);
-typedef void (*HPMHOOK_post_clif_class_change) (struct block_list *bl, int class_, int type);
+typedef void (*HPMHOOK_pre_clif_class_change) (struct block_list **bl, int *class_, int *type, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_class_change) (struct block_list *bl, int class_, int type, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_skill_delunit) (struct skill_unit **su);
 typedef void (*HPMHOOK_post_clif_skill_delunit) (struct skill_unit *su);
 typedef void (*HPMHOOK_pre_clif_skillunit_update) (struct block_list **bl);
