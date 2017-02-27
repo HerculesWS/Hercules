@@ -547,6 +547,8 @@ struct Battle_Config {
 	int atcommand_levelup_events;	// Enable atcommands trigger level up events for NPCs
 
 	int max_summoner_parameter; // Summoner Max Stats
+	
+	int pre_re_instance_mode;	// Pre-Renewal instances entrance mode
 };
 
 /* criteria for battle_config.idletime_critera */

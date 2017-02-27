@@ -224,6 +224,26 @@ L_Enter:
 		mes "You did not request for entrance. Please let your leader request entrance.";
 		close;
 	} else {
+		switch (getbattleflag("features/pre_re_instance_mode")) {
+		case 0:
+			break;
+		case 1:
+			.@instance = has_instance2("1@nyd");
+			instance_attach(.@instance);
+			if (!'ins_nyd_id) {
+				$@ins_nyd_id[.@instance] = gettimetick(2);
+				'ins_nyd_id = $@ins_nyd_id[.@instance];
+			}
+			if (!questprogress(3135,PLAYTIME))
+				ins_nyd_id = 'ins_nyd_id;
+			if (ins_nyd_id == 'ins_nyd_id)
+				break;
+			// fall through
+		case 2:
+			mes "[Yggdrasil Gatekeeper]";
+			mes "The time limit to enter the dungeon has expired. You must wait for the World Tree to stabilize its power before trying to re-enter.";
+			close;
+		}
 		mapannounce "nyd_dun02", getpartyname(getcharid(CHAR_ID_PARTY))+"'s party member "+strcharinfo(PC_NAME)+" has entered Nidhoggur's Nest.",bc_map,"0x00ff99";
 		if (!questprogress(3135)) setquest 3135;
 		if (!questprogress(3136)) setquest 3136;

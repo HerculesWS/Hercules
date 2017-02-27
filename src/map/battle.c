@@ -7321,6 +7321,7 @@ static const struct battle_data {
 	{ "player_warp_keep_direction",         &battle_config.player_warp_keep_direction,      0,      0,      1,              },
 	{ "atcommand_levelup_events",	        &battle_config.atcommand_levelup_events,	    0,      0,      1,				},
 	{ "max_summoner_parameter",             &battle_config.max_summoner_parameter,          120,    10,     10000,          },
+	{ "features/pre_re_instance_mode",      &battle_config.pre_re_instance_mode,            1,      0,      2,              },
 };
 #ifndef STATS_OPT_OUT
 /**
