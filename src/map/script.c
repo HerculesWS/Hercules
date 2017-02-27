@@ -18007,19 +18007,21 @@ BUILDIN(setquest)
 {
 	unsigned short i;
 	int quest_id;
+	unsigned int time_limit;
 	struct map_session_data *sd = script->rid2sd(st);
 
 	if (sd == NULL)
 		return true;
 
 	quest_id = script_getnum(st, 2);
+	time_limit = script_hasdata(st, 3) ? script_getnum(st, 3) : 0;
 
-	quest->add(sd, quest_id);
+	quest->add(sd, quest_id, time_limit);
 
 	// If questinfo is set, remove quest bubble once quest is set.
 	for(i = 0; i < map->list[sd->bl.m].qi_count; i++) {
 		struct questinfo *qi = &map->list[sd->bl.m].qi_data[i];
-		if( qi->quest_id == quest_id ) {
+		if(qi->quest_id == quest_id) {
 #if PACKETVER >= 20120410
 			clif->quest_show_event(sd, &qi->nd->bl, 9999, 0);
 #else
@@ -21412,7 +21414,7 @@ void script_parse_builtin(void) {
 
 		//Quest Log System [Inkfish]
 		BUILDIN_DEF(questinfo, "ii??"),
-		BUILDIN_DEF(setquest, "i"),
+		BUILDIN_DEF(setquest, "i?"),
 		BUILDIN_DEF(erasequest, "i?"),
 		BUILDIN_DEF(completequest, "i?"),
 		BUILDIN_DEF(questprogress, "i?"),

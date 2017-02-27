@@ -60087,15 +60087,15 @@ int HP_quest_pc_login(struct map_session_data *sd) {
 	}
 	return retVal___;
 }
-int HP_quest_add(struct map_session_data *sd, int quest_id) {
+int HP_quest_add(struct map_session_data *sd, int quest_id, unsigned int time_limit) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_quest_add_pre ) {
-		int (*preHookFunc) (struct map_session_data **sd, int *quest_id);
+		int (*preHookFunc) (struct map_session_data **sd, int *quest_id, unsigned int *time_limit);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_quest_add_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_quest_add_pre[hIndex].func;
-			retVal___ = preHookFunc(&sd, &quest_id);
+			retVal___ = preHookFunc(&sd, &quest_id, &time_limit);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -60103,13 +60103,13 @@ int HP_quest_add(struct map_session_data *sd, int quest_id) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.quest.add(sd, quest_id);
+		retVal___ = HPMHooks.source.quest.add(sd, quest_id, time_limit);
 	}
 	if( HPMHooks.count.HP_quest_add_post ) {
-		int (*postHookFunc) (int retVal___, struct map_session_data *sd, int quest_id);
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, int quest_id, unsigned int time_limit);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_quest_add_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_quest_add_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd, quest_id);
+			retVal___ = postHookFunc(retVal___, sd, quest_id, time_limit);
 		}
 	}
 	return retVal___;
