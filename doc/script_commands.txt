@@ -9152,9 +9152,11 @@ Example
 
 ---------------------------------------
 
-*setquest(<ID>)
+*setquest(<ID>{, <Time Limit>})
 
 Place quest of <ID> in the users quest log, the state of which is "active".
+If Time Limit is given, this quest will have its expire time set to <Time Limit>, an UNIX epoch time,
+ignoring quest_db setting.
 
 If questinfo() is set, and the same ID is specified here, the icon will be cleared when the quest is set.
 
