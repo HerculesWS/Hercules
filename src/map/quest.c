@@ -114,12 +114,12 @@ int quest_add(struct map_session_data *sd, int quest_id, unsigned int time_limit
 	struct quest_db *qi = quest->db(quest_id);
 
 	nullpo_retr(-1, sd);
-	if(qi == &quest->dummy) {
+	if (qi == &quest->dummy) {
 		ShowError("quest_add: quest %d not found in DB.\n", quest_id);
 		return -1;
 	}
 
-	if(quest->check(sd, quest_id, HAVEQUEST) >= 0) {
+	if (quest->check(sd, quest_id, HAVEQUEST) >= 0) {
 		ShowError("quest_add: Character %d already has quest %d.\n", sd->status.char_id, quest_id);
 		return -1;
 	}
@@ -131,7 +131,7 @@ int quest_add(struct map_session_data *sd, int quest_id, unsigned int time_limit
 	sd->avail_quests++;
 	RECREATE(sd->quest_log, struct quest, sd->num_quests);
 
-	if(sd->avail_quests != sd->num_quests) {
+	if (sd->avail_quests != sd->num_quests) {
 		// The character has some completed quests, make room before them so that they will stay at the end of the array
 		memmove(&sd->quest_log[n+1], &sd->quest_log[n], sizeof(struct quest)*(sd->num_quests-sd->avail_quests));
 	}
@@ -141,7 +141,7 @@ int quest_add(struct map_session_data *sd, int quest_id, unsigned int time_limit
 	sd->quest_log[n].quest_id = qi->id;
 	if (time_limit > 0)
 		sd->quest_log[n].time = time_limit;
-	else if(qi->time)
+	else if (qi->time)
 		sd->quest_log[n].time = (unsigned int)(time(NULL) + qi->time);
 	sd->quest_log[n].state = Q_ACTIVE;
 
@@ -150,7 +150,7 @@ int quest_add(struct map_session_data *sd, int quest_id, unsigned int time_limit
 	clif->quest_add(sd, &sd->quest_log[n]);
 	clif->quest_update_objective(sd, &sd->quest_log[n]);
 
-	if(map->save_settings&64)
+	if (map->save_settings&64)
 		chrif->save(sd, 0);
 
 	return 0;

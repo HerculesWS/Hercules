@@ -1,4 +1,4 @@
-﻿//===== Hercules Documentation ===============================
+//===== Hercules Documentation ===============================
 //= Hercules Script Commands
 //===== By: ==================================================
 //= Hercules Dev Team
