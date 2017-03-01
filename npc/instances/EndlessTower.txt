@@ -312,7 +312,12 @@ L_Enter:
 		mes "The party leader did not generate the dungeon yet.";
 		close;
 	} else {
-		switch (getbattleflag("features/pre_re_instance_mode")) {
+		// Instance cooldown mode. Fixes entrance exploits and changes behavior of cooldown with this values:
+		// 0 - Classic behaviour with exploit entrance (not recommended)
+		// 1 - Classic behaviour without exploit entrance (default)
+		// 2 - Updated behaviour to disable re-entrance on same instance
+		.@instance_mode = 1;
+		switch (.@instance_mode) {
 		case 0:
 			break;
 		case 1:
@@ -322,7 +327,7 @@ L_Enter:
 				$@ins_etower_id[.@instance] = gettimetick(2);
 				'ins_etower_id = $@ins_etower_id[.@instance];
 			}
-			if (!questprogress(60200,PLAYTIME))
+			if (!questprogress(60200, PLAYTIME))
 				ins_etower_id = 'ins_etower_id;
 			if (ins_etower_id == 'ins_etower_id)
 				break;
@@ -336,7 +341,7 @@ L_Enter:
 			next;
 			mes "It is dangerous here. Let me move you to Alberta.";
 			close2;
-			warp "alberta",223,36;
+			warp "alberta", 223, 36;
 			end;
 		}
 		mapannounce "e_tower", strcharinfo(PC_NAME)+" of the party, " +getarg(3)+", is entering the dungeon, Endless Tower.",bc_map,"0x00ff99",FW_NORMAL,12;

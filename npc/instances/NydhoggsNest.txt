@@ -224,7 +224,12 @@ L_Enter:
 		mes "You did not request for entrance. Please let your leader request entrance.";
 		close;
 	} else {
-		switch (getbattleflag("features/pre_re_instance_mode")) {
+		// Instance cooldown mode. Fixes entrance exploits and changes behavior of cooldown with this values:
+		// 0 - Classic behaviour with exploit entrance (not recommended)
+		// 1 - Classic behaviour without exploit entrance (default)
+		// 2 - Updated behaviour to disable re-entrance on same instance
+		.@instance_mode = 1;
+		switch (.@instance_mode) {
 		case 0:
 			break;
 		case 1:
@@ -234,7 +239,7 @@ L_Enter:
 				$@ins_nyd_id[.@instance] = gettimetick(2);
 				'ins_nyd_id = $@ins_nyd_id[.@instance];
 			}
-			if (!questprogress(3135,PLAYTIME))
+			if (!questprogress(3135, PLAYTIME))
 				ins_nyd_id = 'ins_nyd_id;
 			if (ins_nyd_id == 'ins_nyd_id)
 				break;
