@@ -2386,14 +2386,26 @@ void clif_addcards2(unsigned short *cards, struct item* item) {
  * @param buf[in,out] The buffer to write to. The pointer must be valid and initialized.
  * @param item[in]    The source item.
  */
-void clif_add_random_options(unsigned char* buf, struct item* item)
+void clif_add_random_options(struct RndOptions *buf, const struct item it)
 {
-	int i;
+	int i = 0, j = 0;
+	
 	nullpo_retv(buf);
-	for (i = 0; i < 5; i++){
-		WBUFW(buf,i*5+0) = 0; // OptIndex
-		WBUFW(buf,i*5+2) = 0; // Value
-		WBUFB(buf,i*5+4) = 0; // Param1
+	
+	// Append the buffer with existing options first.
+	for (i = 0; i < MAX_ITEM_OPTIONS; i++) {
+		if (it.option[i].index) {
+			WBUFW(buf, j*5+0) = it.option[i].index; // OptIndex
+			WBUFW(buf, j*5+2) = it.option[i].value; // Value
+			WBUFB(buf, j*5+4) = it.option[i].param; // Param1
+			j++;
+		}
+	}
+	// Append the remaining buffer with no values;
+	for (; j < MAX_ITEM_OPTIONS || j < 5; j++) {
+		WBUFW(buf, j*5+0) = 0;
+		WBUFW(buf, j*5+2) = 0;
+		WBUFB(buf, j*5+4) = 0;
 	}
 }
 
@@ -2419,7 +2431,7 @@ void clif_additem(struct map_session_data *sd, int n, int amount, int fail) {
 
 	if( !fail ) {
 #if PACKETVER >= 20150226
-		int i;
+		int i, j = 0;
 #endif
 		if( n < 0 || n >= MAX_INVENTORY || sd->status.inventory[n].nameid <=0 || sd->inventory_data[n] == NULL )
 			return;
@@ -2445,10 +2457,18 @@ void clif_additem(struct map_session_data *sd, int n, int amount, int fail) {
 		p.bindOnEquipType = sd->status.inventory[n].bound && !itemdb->isstackable2(sd->inventory_data[n]) ? 2 : sd->inventory_data[n]->flag.bindonequip ? 1 : 0;
 #endif
 #if PACKETVER >= 20150226
-		for (i=0; i<5; i++){
-			p.option_data[i].index = 0;
-			p.option_data[i].value = 0;
-			p.option_data[i].param = 0;
+		for (i = 0; i < MAX_ITEM_OPTIONS; i++) {
+			if (sd->status.inventory[n].option[i].index) {
+				p.option_data[j].index = sd->status.inventory[n].option[i].index;
+				p.option_data[j].value = sd->status.inventory[n].option[i].value;
+				p.option_data[j].param = sd->status.inventory[n].option[i].param;
+				j++;
+			}
+		}
+		for (; j < MAX_ITEM_OPTIONS || j < 5; j++) {
+			p.option_data[j].index = 0;
+			p.option_data[j].value = 0;
+			p.option_data[j].param = 0;
 		}
 #endif
 	}
@@ -2522,19 +2542,20 @@ void clif_item_sub(unsigned char *buf, int n, struct item *i, struct item_data *
 
 }
 
-void clif_item_equip(short idx, struct EQUIPITEM_INFO *p, struct item *i, struct item_data *id, int eqp_pos) {
+void clif_item_equip(short idx, struct EQUIPITEM_INFO *p, struct item *it, struct item_data *id, int eqp_pos) {
+	
 #if PACKETVER >= 20150226
-	int j;
+	int i, j = 0;
 #endif
 	nullpo_retv(p);
-	nullpo_retv(i);
+	nullpo_retv(it);
 	nullpo_retv(id);
 	p->index = idx;
 
 	if (id->view_id > 0)
 		p->ITID = id->view_id;
 	else
-		p->ITID = i->nameid;
+		p->ITID = it->nameid;
 
 	p->type = itemtype(id->type);
 
@@ -2543,20 +2564,20 @@ void clif_item_equip(short idx, struct EQUIPITEM_INFO *p, struct item *i, struct
 #endif
 
 	p->location = eqp_pos;
-	p->WearState = i->equip;
+	p->WearState = it->equip;
 #if PACKETVER < 20120925
 	p->IsDamaged = (i->attribute & ATTR_BROKEN) != 0 ? 1 : 0;
 #endif
-	p->RefiningLevel = i->refine;
+	p->RefiningLevel = it->refine;
 
-	clif->addcards2(&p->slot.card[0], i);
+	clif->addcards2(&p->slot.card[0], it);
 
 #if PACKETVER >= 20071002
-	p->HireExpireDate = i->expire_time;
+	p->HireExpireDate = it->expire_time;
 #endif
 
 #if PACKETVER >= 20080102
-	p->bindOnEquipType = i->bound ? 2 : id->flag.bindonequip ? 1 : 0;
+	p->bindOnEquipType = it->bound ? 2 : id->flag.bindonequip ? 1 : 0;
 #endif
 
 #if PACKETVER >= 20100629
@@ -2564,18 +2585,22 @@ void clif_item_equip(short idx, struct EQUIPITEM_INFO *p, struct item *i, struct
 #endif
 
 #if PACKETVER >= 20120925
-	p->Flag.IsIdentified = i->identify ? 1 : 0;
-	p->Flag.IsDamaged    = (i->attribute & ATTR_BROKEN) != 0 ? 1 : 0;
-	p->Flag.PlaceETCTab  = i->favorite ? 1 : 0;
+	p->Flag.IsIdentified = it->identify ? 1 : 0;
+	p->Flag.IsDamaged    = (it->attribute & ATTR_BROKEN) != 0 ? 1 : 0;
+	p->Flag.PlaceETCTab  = it->favorite ? 1 : 0;
 	p->Flag.SpareBits    = 0;
 #endif
 
 #if PACKETVER >= 20150226
 	p->option_count = 0;
-	for (j=0; j<5; j++){
-		p->option_data[j].index = 0;
-		p->option_data[j].value = 0;
-		p->option_data[j].param = 0;
+	for (i=0, j=0; i < MAX_ITEM_OPTIONS; i++) {
+		if (it->option[i].index) {
+			p->option_data[j].index = it->option[i].index;
+			p->option_data[j].value = it->option[i].value;
+			p->option_data[j].param = it->option[i].param;
+			p->option_count++;
+			j++;
+		}
 	}
 #endif
 }
@@ -3992,7 +4017,7 @@ void clif_tradeadditem(struct map_session_data* sd, struct map_session_data* tsd
 		WBUFW(buf,15)= 0; //card (4w)
 		WBUFW(buf,17)= 0; //card (4w)
 #if PACKETVER >= 20150226
-		clif->add_random_options(WBUFP(buf, 19), &sd->status.inventory[index]);
+		clif->add_random_options(WBUFP(buf, 19), sd->status.inventory[index]);
 #endif
 	}
 	else
@@ -4018,7 +4043,7 @@ void clif_tradeadditem(struct map_session_data* sd, struct map_session_data* tsd
 		WBUFB(buf,10)= sd->status.inventory[index].refine; //refine
 		clif->addcards(WBUFP(buf, 11), &sd->status.inventory[index]);
 #if PACKETVER >= 20150226
-		clif->add_random_options(WBUFP(buf, 19), &sd->status.inventory[index]);
+		clif->add_random_options(WBUFP(buf, 19), sd->status.inventory[index]);
 #endif
 	}
 	WFIFOSET(fd,packet_len(tradeaddType));
@@ -4149,7 +4174,7 @@ void clif_storageitemadded(struct map_session_data* sd, struct item* i, int inde
 	WFIFOB(fd,12+offset) = i->refine; //refine
 	clif->addcards(WFIFOP(fd,13+offset), i);
 #if PACKETVER >= 20150226
-	clif->add_random_options(WFIFOP(fd,21+offset), i);
+	clif->add_random_options(WFIFOP(fd,21+offset), *i);
 #endif
 	WFIFOSET(fd,packet_len(storageaddType));
 }
@@ -6223,7 +6248,7 @@ void clif_cart_additem(struct map_session_data *sd,int n,int amount,int fail)
 	WBUFB(buf,12+offset)=sd->status.cart[n].refine;
 	clif->addcards(WBUFP(buf,13+offset), &sd->status.cart[n]);
 #if PACKETVER >= 20150226
-	clif->add_random_options(WBUFP(buf,21+offset), &sd->status.cart[n]);
+	clif->add_random_options(WBUFP(buf,21+offset), sd->status.cart[n]);
 #endif
 	WFIFOSET(fd,packet_len(cartaddType));
 }
@@ -6351,7 +6376,7 @@ void clif_vendinglist(struct map_session_data* sd, unsigned int id, struct s_ven
 		WFIFOB(fd,offset+13+i*item_length) = vsd->status.cart[index].refine;
 		clif->addcards(WFIFOP(fd,offset+14+i*item_length), &vsd->status.cart[index]);
 #if PACKETVER >= 20150226
-		clif->add_random_options(WFIFOP(fd,offset+22+i*item_length), &vsd->status.cart[index]);
+		clif->add_random_options(WFIFOP(fd,offset+22+i*item_length), vsd->status.cart[index]);
 #endif
 	}
 	WFIFOSET(fd,WFIFOW(fd,2));
@@ -6417,7 +6442,7 @@ void clif_openvending(struct map_session_data* sd, int id, struct s_vending* ven
 		WFIFOB(fd,21+i*item_length) = sd->status.cart[index].refine;
 		clif->addcards(WFIFOP(fd,22+i*item_length), &sd->status.cart[index]);
 #if PACKETVER >= 20150226
-		clif->add_random_options(WFIFOP(fd,30+22+i*item_length), &sd->status.cart[index]);
+		clif->add_random_options(WFIFOP(fd,30+22+i*item_length), sd->status.cart[index]);
 #endif
 	}
 	WFIFOSET(fd,WFIFOW(fd,2));

@@ -9019,6 +9019,32 @@ BUILDIN(getequipisenableref)
 	return true;
 }
 
+/**
+ * Checks if the equipped item allows options.
+ * *getequipisenableopt(<equipment_index>);
+ * 
+ * @param equipment_index as the inventory index of the equipment.
+ * @return 1 on enabled 0 on disabled.
+ */
+BUILDIN(getequipisenableopt)
+{
+	int i = -1, index = script_getnum(st,2);
+	struct map_session_data *sd = script->rid2sd(st);
+	
+	if (sd == NULL)
+		return false;
+	
+	if (index > 0 && index <= ARRAYLENGTH(script->equip))
+		i = pc->checkequip(sd, script->equip[index-1]);
+	
+	if (i >=0 && sd->inventory_data[i] && !sd->inventory_data[i]->flag.no_options && !sd->status.inventory[i].expire_time)
+		script_pushint(st, 1);
+	else
+		script_pushint(st, 0);
+	
+	return true;
+}
+
 /*==========================================
  * Chk if the item equiped at pos is identify (huh ?)
  * return (npc)
@@ -13546,6 +13572,184 @@ BUILDIN(getiteminfo)
 	return true;
 }
 
+/**
+ * Returns the value of the current equipment being parsed using static variables -
+ * current_equip_item_index and current_equip_option_index.
+ * !!Designed to be used with item_options.conf only!!
+ * *getequippedoptioninfo(<info_type>);
+ *
+ * @param (int) Types -
+ *        IT_OPT_INDEX     ID of the item option.
+ *        IT_OPT_VALUE     Amount of the bonus to be added.
+ * @return value of the type or -1.
+ */
+BUILDIN(getequippedoptioninfo)
+{
+	int val = 0, type = script_getnum(st, 2);
+	struct map_session_data *sd = NULL;
+	
+	if ((sd = script->rid2sd(st)) == NULL || status->current_equip_item_index == -1
+		|| !sd->status.inventory[status->current_equip_item_index].option[status->current_equip_option_index].index) {
+		script_pushint(st, -1);
+		return false;
+	}
+	
+	switch (type) {
+		case IT_OPT_INDEX:
+			val = sd->status.inventory[status->current_equip_item_index].option[status->current_equip_option_index].index;
+			break;
+		case IT_OPT_VALUE:
+			val = sd->status.inventory[status->current_equip_item_index].option[status->current_equip_option_index].value;
+			break;
+		default:
+			ShowError("buildin_getequippedoptioninfo: Invalid option data type %d (Max %d).\n", type, IT_OPT_MAX-1);
+			script_pushint(st, -1);
+			return false;
+	}
+	
+	script_pushint(st, val);
+	
+	return true;
+}
+
+/**
+ * Gets the option information of an equipment.
+ * *getequipoptioninfo(<equip_index>,<type>,<slot>);
+ *
+ * @param equip_index as the Index of the Equipment.
+ * @param type        IT_OPT_INDEX or IT_OPT_VALUE.
+ * @param slot        as the slot# of the Item Option (0 to MAX_ITEM_OPTIONS-1)
+ * @return (int) value or -1 on failure.
+ */
+BUILDIN(getequipoption)
+{
+	int val = 0, equip_index = script_getnum(st, 2);
+	int opt_type = script_getnum(st, 3);
+	int slot = script_getnum(st, 4);
+	int i = -1;
+	struct map_session_data *sd = script->rid2sd(st);
+	
+	if (sd == NULL) {
+		script_pushint(st, -1);
+		ShowError("buildin_getequipoptioninfo: Player not attached!\n");
+		return false;
+	} else if (equip_index < 0) {
+		script_pushint(st, -1);
+		ShowError("buildin_getequipoptioninfo: Invalid equipment index %d provided.\n", equip_index);
+		return false;
+	} else if (slot < 0 || slot >= MAX_ITEM_OPTIONS) {
+		script_pushint(st, -1);
+		ShowError("buildin_getequipoptioninfo: Invalid option slot %d (Min: 0, Max: %d) provided.\n", slot, MAX_ITEM_OPTIONS-1);
+		return false;
+	} else if (equip_index > 0 && equip_index <= ARRAYLENGTH(script->equip))
+		i = pc->checkequip(sd,script->equip[equip_index-1]);
+	
+	if (&sd->status.inventory[i] != NULL) {
+		switch (opt_type) {
+			case IT_OPT_INDEX:
+				val = sd->status.inventory[i].option[slot].index;
+				break;
+			case IT_OPT_VALUE:
+				val = sd->status.inventory[i].option[slot].value;
+				break;
+			default:
+				ShowError("buildin_geteqiupoptioninfo: Invalid option data type %d provided.\n", opt_type);
+				script_pushint(st, -1);
+				break;
+		}
+	}
+	
+	script_pushint(st, val);
+	
+	return true;
+}
+
+/**
+ * Set an equipment's option value.
+ * *setequipoption(<equip_index>,<type>,<slot>,<value>);
+ *
+ * @param equip_index     as the inventory index of the equipment.
+ * @param type            as IT_OPT_INDEX or IT_OPT_VALUE
+ * @param slot            as the slot of the item option (0 to MAX_ITEM_OPTIONS-1)
+ * @param value           as the value of the option type.
+ *                        For IT_OPT_INDEX see "Name" in item_options.conf
+ *                        For IT_OPT_VALUE, the value of the script bonus.
+ * @return 0 on failure, 1 on success.
+ */
+BUILDIN(setequipoption)
+{
+	int equip_index = script_getnum(st, 2);
+	int opt_type = script_getnum(st, 3);
+	int slot = script_getnum(st, 4);
+	int value = script_getnum(st, 5);
+	int i = -1;
+	
+	struct map_session_data *sd = script->rid2sd(st);
+	struct item_option *ito = NULL;
+	
+	if (sd == NULL) {
+		script_pushint(st, 0);
+		ShowError("buildin_setequipoption: Player not attached!\n");
+		return false;
+	} else if (equip_index < 0) {
+		script_pushint(st, 0);
+		ShowError("buildin_setequipoption: Invalid equipment index %d provided.\n", equip_index);
+		return false;
+	} else if (slot < 0 || slot >= MAX_ITEM_OPTIONS) {
+		script_pushint(st, 0);
+		ShowError("buildin_setequipoption: Invalid option index %d (Min: 1, Max: %d) provided.\n", slot, MAX_ITEM_OPTIONS-1);
+		return false;
+	} else if (equip_index > 0 && equip_index <= ARRAYLENGTH(script->equip))
+		i = pc->checkequip(sd,script->equip[equip_index-1]);
+	
+	if (&sd->status.inventory[i] != NULL) {
+		int ep = sd->status.inventory[i].equip;
+		
+		switch (opt_type) {
+			case IT_OPT_INDEX:
+				if ((ito = itemdb->option_exists(value)) == NULL) {
+					script_pushint(st, 0);
+					ShowError("buildin_setequipotion: Option variable %d does not exist!\n", value);
+					return false;
+				}
+				sd->status.inventory[i].option[slot].index = value;
+				break;
+			case IT_OPT_VALUE:
+				if (value < -INT16_MAX || value > INT16_MAX) {
+					script_pushint(st, 0);
+					ShowError("buildin_setequipotion: Option variable %d exceeds maximum limit (%d to %d) for type!\n", value, -INT16_MAX, INT16_MAX);
+					return false;
+				}
+				sd->status.inventory[i].option[slot].value = value;
+				break;
+			default:
+				script_pushint(st, 0);
+				ShowError("buildin_setequipoption: Invalid option type %d provided.\n", opt_type);
+				break;
+		}
+		
+		pc->unequipitem(sd, i, PCUNEQUIPITEM_FORCE); // status calc will happen in pc->equipitem() below
+		clif->refine(sd->fd, 0, i, sd->status.inventory[i].refine);
+		clif->delitem(sd, i, 1, DELITEM_MATERIALCHANGE);
+		
+		//Logs items, got from (N)PC scripts
+		logs->pick_pc(sd, LOG_TYPE_SCRIPT, 1, &sd->status.inventory[i],sd->inventory_data[i]);
+		
+		clif->additem(sd, i, 1, 0);
+		pc->equipitem(sd, i, ep);
+		clif->misceffect(&sd->bl, 2);
+	} else {
+		script_pushint(st, 0);
+		ShowError("buildin_setequipoption: Item with equipment index %d does not exist in the inventory.\n", equip_index);
+		return false;
+	}
+	
+	script_pushint(st, 1);
+	
+	return true;
+	
+}
+
 /*==========================================
  * Set some values of an item [Lupus]
  * Price, Weight, etc...
@@ -13706,7 +13910,7 @@ BUILDIN(petloot)
 BUILDIN(getinventorylist)
 {
 	struct map_session_data *sd = script->rid2sd(st);
-	char card_var[NAME_LENGTH];
+	char card_var[26];
 
 	int i,j=0,k;
 	if(!sd) return true;
@@ -13727,6 +13931,14 @@ BUILDIN(getinventorylist)
 				sprintf(card_var, "@inventorylist_card%d",k+1);
 				pc->setreg(sd,reference_uid(script->add_str(card_var), j),sd->status.inventory[i].card[k]);
 			}
+			for (k = 0; k < MAX_ITEM_OPTIONS; k++) {
+				sprintf(card_var, "@inventorylist_opt_id%d",k+1);
+				pc->setreg(sd,reference_uid(script->add_str(card_var), j),sd->status.inventory[i].option[k].index);
+				sprintf(card_var, "@inventorylist_opt_val%d",k+1);
+				pc->setreg(sd,reference_uid(script->add_str(card_var), j),sd->status.inventory[i].option[k].value);
+				sprintf(card_var, "@inventorylist_opt_param%d",k+1);
+				pc->setreg(sd,reference_uid(script->add_str(card_var), j),sd->status.inventory[i].option[k].param);
+			}
 			pc->setreg(sd,reference_uid(script->add_str("@inventorylist_expire"), j),sd->status.inventory[i].expire_time);
 			pc->setreg(sd,reference_uid(script->add_str("@inventorylist_bound"), j),sd->status.inventory[i].bound);
 			j++;
@@ -13739,7 +13951,7 @@ BUILDIN(getinventorylist)
 BUILDIN(getcartinventorylist)
 {
 	struct map_session_data *sd = script->rid2sd(st);
-	char card_var[26];
+	char card_var[30];
 
 	int i,j=0,k;
 	if(!sd) return true;
@@ -13755,6 +13967,14 @@ BUILDIN(getcartinventorylist)
 			for (k = 0; k < MAX_SLOTS; k++) {
 				sprintf(card_var, "@cartinventorylist_card%d",k+1);
 				pc->setreg(sd,reference_uid(script->add_str(card_var), j),sd->status.cart[i].card[k]);
+			}
+			for (k = 0; k < MAX_ITEM_OPTIONS; k++) {
+				sprintf(card_var, "@cartinventorylist_opt_id%d",k+1);
+				pc->setreg(sd,reference_uid(script->add_str(card_var), j),sd->status.cart[i].option[k].index);
+				sprintf(card_var, "@cartinventorylist_opt_val%d",k+1);
+				pc->setreg(sd,reference_uid(script->add_str(card_var), j),sd->status.cart[i].option[k].value);
+				sprintf(card_var, "@cartinventorylist_opt_param%d",k+1);
+				pc->setreg(sd,reference_uid(script->add_str(card_var), j),sd->status.cart[i].option[k].param);
 			}
 			pc->setreg(sd,reference_uid(script->add_str("@cartinventorylist_expire"), j),sd->status.cart[i].expire_time);
 			pc->setreg(sd,reference_uid(script->add_str("@cartinventorylist_bound"), j),sd->status.cart[i].bound);
@@ -21096,6 +21316,10 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getiteminfo,"ii"), //[Lupus] returns Items Buy / sell Price, etc info
 		BUILDIN_DEF(setiteminfo,"iii"), //[Lupus] set Items Buy / sell Price, etc info
 		BUILDIN_DEF(getequipcardid,"ii"), //[Lupus] returns CARD ID or other info from CARD slot N of equipped item
+		BUILDIN_DEF(getequippedoptioninfo, "i"),
+		BUILDIN_DEF(getequipoption, "iii"),
+		BUILDIN_DEF(setequipoption, "iiii"),
+		BUILDIN_DEF(getequipisenableopt, "i"),
 		// List of mathematics commands --->
 		BUILDIN_DEF(log10,"i"),
 		BUILDIN_DEF(sqrt,"i"), //[zBuffer]
@@ -21463,6 +21687,14 @@ void script_hardcoded_constants(void)
 	script->set_constant("EQP_SHADOW_ACC_R", EQP_SHADOW_ACC_R, false, false);
 	script->set_constant("EQP_SHADOW_ACC_L", EQP_SHADOW_ACC_L, false, false);
 
+	script->constdb_comment("Item Option Types");
+	script->set_constant("IT_OPT_INDEX", IT_OPT_INDEX, false, false);
+	script->set_constant("IT_OPT_VALUE", IT_OPT_VALUE, false, false);
+	script->set_constant("IT_OPT_PARAM", IT_OPT_PARAM, false, false);
+	
+	script->constdb_comment("Maximum Item Options");
+	script->set_constant("MAX_ITEM_OPTIONS", MAX_ITEM_OPTIONS, false, false);
+	
 	script->constdb_comment("Navigation constants, use with *navigateto*");
 	script->set_constant("NAV_NONE", NAV_NONE, false, false);
 	script->set_constant("NAV_AIRSHIP_ONLY", NAV_AIRSHIP_ONLY, false, false);

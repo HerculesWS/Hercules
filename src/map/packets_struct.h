@@ -379,7 +379,7 @@ struct EQUIPITEM_INFO {
 #endif
 #if PACKETVER >= 20150226
 	uint8 option_count;
-	struct RndOptions option_data[5];
+	struct RndOptions option_data[MAX_ITEM_OPTIONS];
 #endif
 #if PACKETVER >= 20120925
 	struct {
@@ -442,7 +442,7 @@ struct packet_additem {
 	uint16 bindOnEquipType;
 #endif
 #if PACKETVER >= 20150226
-	struct RndOptions option_data[5];
+	struct RndOptions option_data[MAX_ITEM_OPTIONS];
 #endif
 } __attribute__((packed));
 
