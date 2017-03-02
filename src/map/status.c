@@ -2400,8 +2400,8 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 		bstatus->speed = pSpeed;
 	}
 
-	//FIXME: Most of these stuff should be calculated once, but how do I fix the memset above to do that? [Skotlex]
-	//Give them all modes except these (useful for clones)
+	// FIXME: Most of these stuff should be calculated once, but how do I fix the memset above to do that? [Skotlex]
+	// Give them all modes except these (useful for clones)
 	bstatus->mode = MD_MASK&~(MD_BOSS|MD_PLANT|MD_DETECTOR|MD_ANGRY|MD_TARGETWEAK);
 
 	bstatus->size = ((sd->job & JOBL_BABY) != 0 || (sd->job & MAPID_BASEMASK) == MAPID_SUMMONER)?SZ_SMALL:SZ_MEDIUM;
@@ -2646,7 +2646,42 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 			}
 		}
 	}
-
+	
+	/* parse item options [Smokexyz] */
+	for (i = 0; i < EQI_MAX; i++) {
+		status->current_equip_item_index = index = sd->equip_index[i];
+		status->current_equip_option_index = -1;
+		
+		if (i == EQI_HAND_R && sd->equip_index[EQI_HAND_L] == index)
+			continue;
+		else if (i == EQI_HEAD_MID && sd->equip_index[EQI_HEAD_LOW] == index)
+			continue;
+		else if (i == EQI_HEAD_TOP && (sd->equip_index[EQI_HEAD_MID] == index || sd->equip_index[EQI_HEAD_LOW] == index))
+			continue;
+		
+		if (index >= 0 && sd->inventory_data[index]) {
+			int j;
+			struct item_option *ito = NULL;
+			for (j = 0; j < MAX_ITEM_OPTIONS; j++) {
+				short option_index = sd->status.inventory[index].option[j].index;
+				
+				if (option_index == 0)
+					continue;
+				
+				status->current_equip_option_index = j;
+				
+				if ((ito = itemdb->option_exists(option_index)) == NULL || ito->script == NULL)
+					continue;
+				else
+					script->run(ito->script, 0, sd->bl.id, 0);
+				
+				if (calculating == 0) //Abort, script->run his function. [Skotlex]
+					return 1;
+			}
+		}
+		status->current_equip_option_index = -1;
+	}
+	
 	status->calc_pc_additional(sd, opt);
 
 	if( sd->pd ) { // Pet Bonus

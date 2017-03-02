@@ -452,6 +452,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "item_combo", sizeof(struct item_combo), SERVER_TYPE_MAP },
 		{ "item_data", sizeof(struct item_data), SERVER_TYPE_MAP },
 		{ "item_group", sizeof(struct item_group), SERVER_TYPE_MAP },
+		{ "item_option", sizeof(struct item_option), SERVER_TYPE_MAP },
 		{ "item_package", sizeof(struct item_package), SERVER_TYPE_MAP },
 		{ "item_package_must_entry", sizeof(struct item_package_must_entry), SERVER_TYPE_MAP },
 		{ "item_package_rand_entry", sizeof(struct item_package_rand_entry), SERVER_TYPE_MAP },
@@ -542,8 +543,8 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#ifdef MAP_PACKETS_STRUCT_H
 		{ "EQUIPITEM_INFO", sizeof(struct EQUIPITEM_INFO), SERVER_TYPE_MAP },
 		{ "EQUIPSLOTINFO", sizeof(struct EQUIPSLOTINFO), SERVER_TYPE_MAP },
+		{ "ItemOptions", sizeof(struct ItemOptions), SERVER_TYPE_MAP },
 		{ "NORMALITEM_INFO", sizeof(struct NORMALITEM_INFO), SERVER_TYPE_MAP },
-		{ "RndOptions", sizeof(struct RndOptions), SERVER_TYPE_MAP },
 		{ "packet_additem", sizeof(struct packet_additem), SERVER_TYPE_MAP },
 		{ "packet_authok", sizeof(struct packet_authok), SERVER_TYPE_MAP },
 		{ "packet_banking_check", sizeof(struct packet_banking_check), SERVER_TYPE_MAP },

@@ -2682,6 +2682,8 @@ struct {
 	struct HPMHookPoint *HP_itemdb_read_chains_post;
 	struct HPMHookPoint *HP_itemdb_read_packages_pre;
 	struct HPMHookPoint *HP_itemdb_read_packages_post;
+	struct HPMHookPoint *HP_itemdb_read_options_pre;
+	struct HPMHookPoint *HP_itemdb_read_options_post;
 	struct HPMHookPoint *HP_itemdb_write_cached_packages_pre;
 	struct HPMHookPoint *HP_itemdb_write_cached_packages_post;
 	struct HPMHookPoint *HP_itemdb_read_cached_packages_pre;
@@ -2698,6 +2700,8 @@ struct {
 	struct HPMHookPoint *HP_itemdb_search_post;
 	struct HPMHookPoint *HP_itemdb_exists_pre;
 	struct HPMHookPoint *HP_itemdb_exists_post;
+	struct HPMHookPoint *HP_itemdb_option_exists_pre;
+	struct HPMHookPoint *HP_itemdb_option_exists_post;
 	struct HPMHookPoint *HP_itemdb_in_group_pre;
 	struct HPMHookPoint *HP_itemdb_in_group_post;
 	struct HPMHookPoint *HP_itemdb_group_item_pre;
@@ -2762,6 +2766,8 @@ struct {
 	struct HPMHookPoint *HP_itemdb_gendercheck_post;
 	struct HPMHookPoint *HP_itemdb_validate_entry_pre;
 	struct HPMHookPoint *HP_itemdb_validate_entry_post;
+	struct HPMHookPoint *HP_itemdb_readdb_options_additional_fields_pre;
+	struct HPMHookPoint *HP_itemdb_readdb_options_additional_fields_post;
 	struct HPMHookPoint *HP_itemdb_readdb_additional_fields_pre;
 	struct HPMHookPoint *HP_itemdb_readdb_additional_fields_post;
 	struct HPMHookPoint *HP_itemdb_readdb_job_sub_pre;
@@ -2778,6 +2784,8 @@ struct {
 	struct HPMHookPoint *HP_itemdb_destroy_item_data_post;
 	struct HPMHookPoint *HP_itemdb_final_sub_pre;
 	struct HPMHookPoint *HP_itemdb_final_sub_post;
+	struct HPMHookPoint *HP_itemdb_options_final_sub_pre;
+	struct HPMHookPoint *HP_itemdb_options_final_sub_post;
 	struct HPMHookPoint *HP_itemdb_clear_pre;
 	struct HPMHookPoint *HP_itemdb_clear_post;
 	struct HPMHookPoint *HP_itemdb_id2combo_pre;
@@ -8721,6 +8729,8 @@ struct {
 	int HP_itemdb_read_chains_post;
 	int HP_itemdb_read_packages_pre;
 	int HP_itemdb_read_packages_post;
+	int HP_itemdb_read_options_pre;
+	int HP_itemdb_read_options_post;
 	int HP_itemdb_write_cached_packages_pre;
 	int HP_itemdb_write_cached_packages_post;
 	int HP_itemdb_read_cached_packages_pre;
@@ -8737,6 +8747,8 @@ struct {
 	int HP_itemdb_search_post;
 	int HP_itemdb_exists_pre;
 	int HP_itemdb_exists_post;
+	int HP_itemdb_option_exists_pre;
+	int HP_itemdb_option_exists_post;
 	int HP_itemdb_in_group_pre;
 	int HP_itemdb_in_group_post;
 	int HP_itemdb_group_item_pre;
@@ -8801,6 +8813,8 @@ struct {
 	int HP_itemdb_gendercheck_post;
 	int HP_itemdb_validate_entry_pre;
 	int HP_itemdb_validate_entry_post;
+	int HP_itemdb_readdb_options_additional_fields_pre;
+	int HP_itemdb_readdb_options_additional_fields_post;
 	int HP_itemdb_readdb_additional_fields_pre;
 	int HP_itemdb_readdb_additional_fields_post;
 	int HP_itemdb_readdb_job_sub_pre;
@@ -8817,6 +8831,8 @@ struct {
 	int HP_itemdb_destroy_item_data_post;
 	int HP_itemdb_final_sub_pre;
 	int HP_itemdb_final_sub_post;
+	int HP_itemdb_options_final_sub_pre;
+	int HP_itemdb_options_final_sub_post;
 	int HP_itemdb_clear_pre;
 	int HP_itemdb_clear_post;
 	int HP_itemdb_id2combo_pre;
