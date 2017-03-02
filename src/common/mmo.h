@@ -256,6 +256,12 @@
 #define MAX_ELESKILLTREE 3
 #endif
 
+// Maximum item options [Smokexyz]
+#ifndef MAX_ITEM_OPTIONS
+#define MAX_ITEM_OPTIONS 5
+STATIC_ASSERT(MAX_ITEM_OPTIONS <= 5, "This value is limited by the client and database layout and should only be increased if you know the consequences.");
+#endif
+
 // The following system marks a different job ID system used by the map server,
 // which makes a lot more sense than the normal one. [Skotlex]
 // These marks the "level" of the job.
@@ -326,6 +332,12 @@ struct item {
 	char favorite;
 	unsigned char bound;
 	uint64 unique_id;
+	
+	struct {
+		int16 index;
+		int16 value;
+		uint8 param;
+	} option[MAX_ITEM_OPTIONS];
 };
 
 //Equip position constants
