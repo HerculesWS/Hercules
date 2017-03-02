@@ -2205,6 +2205,7 @@ struct status_interface {
 	/* vars */
 	int current_equip_item_index;
 	int current_equip_card_id;
+	int current_equip_option_index;
 
 	struct s_status_dbs *dbs;
 
