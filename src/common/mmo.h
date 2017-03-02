@@ -63,7 +63,7 @@
 // 20120307 - 2012-03-07aRagexeRE+ - 0x970
 
 #ifndef PACKETVER
-	#define PACKETVER 20141022
+	#define PACKETVER 20150513
 #endif // PACKETVER
 
 //Uncomment the following line if your client is ragexeRE instead of ragexe (required because of conflicting packets in ragexe vs ragexeRE).
@@ -256,6 +256,14 @@
 #define MAX_ELESKILLTREE 3
 #endif
 
+// Maximum item options [Smokexyz]
+#ifndef MAX_ITEM_OPTIONS
+#define MAX_ITEM_OPTIONS 5
+#if MAX_ITEM_OPTIONS > 5 // (constrained to 5 through client and database !!Do not exceed!!)  [Smokexyz]
+#define MAX_ITEM_OPTIONS 5
+#endif
+#endif
+
 // The following system marks a different job ID system used by the map server,
 // which makes a lot more sense than the normal one. [Skotlex]
 // These marks the "level" of the job.
@@ -326,6 +334,12 @@ struct item {
 	char favorite;
 	unsigned char bound;
 	uint64 unique_id;
+	
+	struct {
+		int16 index;
+		int16 value;
+		uint8 param;
+	} option[MAX_ITEM_OPTIONS];
 };
 
 //Equip position constants

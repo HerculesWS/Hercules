@@ -63,8 +63,10 @@ int inter_storage_fromsql(int account_id, struct storage_data* p)
 	// storage {`account_id`/`id`/`nameid`/`amount`/`equip`/`identify`/`refine`/`attribute`/`card0`/`card1`/`card2`/`card3`}
 	StrBuf->Init(&buf);
 	StrBuf->AppendStr(&buf, "SELECT `id`,`nameid`,`amount`,`equip`,`identify`,`refine`,`attribute`,`expire_time`,`bound`,`unique_id`");
-	for( j = 0; j < MAX_SLOTS; ++j )
+	for (j = 0; j < MAX_SLOTS; ++j)
 		StrBuf->Printf(&buf, ",`card%d`", j);
+	for (j = 0; j < MAX_ITEM_OPTIONS; ++j)
+		StrBuf->Printf(&buf, ",`opt_idx%d`,`opt_val%d`", j, j);
 	StrBuf->Printf(&buf, " FROM `%s` WHERE `account_id`='%d' ORDER BY `nameid`", storage_db, account_id);
 
 	if (SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf)))
@@ -84,9 +86,17 @@ int inter_storage_fromsql(int account_id, struct storage_data* p)
 		SQL->GetData(inter->sql_handle, 7, &data, NULL); item->expire_time = (unsigned int)atoi(data);
 		SQL->GetData(inter->sql_handle, 8, &data, NULL); item->bound = atoi(data);
 		SQL->GetData(inter->sql_handle, 9, &data, NULL); item->unique_id = strtoull(data, NULL, 10);
-		for( j = 0; j < MAX_SLOTS; ++j )
-		{
-			SQL->GetData(inter->sql_handle, 10+j, &data, NULL); item->card[j] = atoi(data);
+		/* Card Slots */
+		for (j = 0; j < MAX_SLOTS; ++j) {
+			SQL->GetData(inter->sql_handle, 10+j, &data, NULL);
+			item->card[j] = atoi(data);
+		}
+		/* Item Options */
+		for (j = 0; j < MAX_ITEM_OPTIONS; ++j) {
+			SQL->GetData(inter->sql_handle, 10+MAX_SLOTS+j*2, &data, NULL);
+			item->option[j].index = atoi(data);
+			SQL->GetData(inter->sql_handle, 11+MAX_SLOTS+j*2, &data, NULL);
+			item->option[j].value = atoi(data);
 		}
 	}
 	p->storage_amount = i;
@@ -121,8 +131,10 @@ int inter_storage_guild_storage_fromsql(int guild_id, struct guild_storage* p)
 	// storage {`guild_id`/`id`/`nameid`/`amount`/`equip`/`identify`/`refine`/`attribute`/`card0`/`card1`/`card2`/`card3`}
 	StrBuf->Init(&buf);
 	StrBuf->AppendStr(&buf, "SELECT `id`,`nameid`,`amount`,`equip`,`identify`,`refine`,`attribute`,`bound`,`unique_id`");
-	for( j = 0; j < MAX_SLOTS; ++j )
+	for (j = 0; j < MAX_SLOTS; ++j)
 		StrBuf->Printf(&buf, ",`card%d`", j);
+	for (j = 0; j < MAX_ITEM_OPTIONS; ++j)
+		StrBuf->Printf(&buf, ", `opt_idx%d`, `opt_val%d`", j, j);
 	StrBuf->Printf(&buf, " FROM `%s` WHERE `guild_id`='%d' ORDER BY `nameid`", guild_storage_db, guild_id);
 
 	if( SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf)))
@@ -142,9 +154,17 @@ int inter_storage_guild_storage_fromsql(int guild_id, struct guild_storage* p)
 		SQL->GetData(inter->sql_handle, 7, &data, NULL); item->bound = atoi(data);
 		SQL->GetData(inter->sql_handle, 8, &data, NULL); item->unique_id = strtoull(data, NULL, 10);
 		item->expire_time = 0;
-
-		for( j = 0; j < MAX_SLOTS; ++j ) {
-			SQL->GetData(inter->sql_handle, 9+j, &data, NULL); item->card[j] = atoi(data);
+		/* Card Slots */
+		for (j = 0; j < MAX_SLOTS; ++j) {
+			SQL->GetData(inter->sql_handle, 9+j, &data, NULL);
+			item->card[j] = atoi(data);
+		}
+		/* Item Options */
+		for (j = 0; j < MAX_ITEM_OPTIONS; ++j) {
+			SQL->GetData(inter->sql_handle, 9+MAX_SLOTS+j*2, &data, NULL);
+			item->option[j].index = atoi(data);
+			SQL->GetData(inter->sql_handle, 10+MAX_SLOTS+j*2, &data, NULL);
+			item->option[j].value = atoi(data);
 		}
 	}
 	p->storage_amount = i;
@@ -288,8 +308,10 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 
 	StrBuf->Init(&buf);
 	StrBuf->AppendStr(&buf, "SELECT `id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `bound`, `unique_id`");
-	for( j = 0; j < MAX_SLOTS; ++j )
+	for (j = 0; j < MAX_SLOTS; ++j)
 		StrBuf->Printf(&buf, ", `card%d`", j);
+	for (j = 0; j < MAX_ITEM_OPTIONS; ++j)
+		StrBuf->Printf(&buf, ", `opt_idx%d`, `opt_val%d`", j, j);
 	StrBuf->Printf(&buf, " FROM `%s` WHERE `char_id`='%d' AND `bound` = '%d'",inventory_db,char_id,IBT_GUILD);
 
 	stmt = SQL->StmtMalloc(inter->sql_handle);
@@ -313,17 +335,22 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 	SQL->StmtBindColumn(stmt, 7, SQLDT_UINT,      &item.expire_time, 0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 8, SQLDT_UCHAR,     &item.bound,       0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 9, SQLDT_UINT64,    &item.unique_id,   0, NULL, NULL);
-	for( j = 0; j < MAX_SLOTS; ++j )
+	/* Card Slots */
+	for (j = 0; j < MAX_SLOTS; ++j)
 		SQL->StmtBindColumn(stmt, 10+j, SQLDT_SHORT, &item.card[j], 0, NULL, NULL);
-
-	while( SQL_SUCCESS == SQL->StmtNextRow(stmt)) {
+	/* Item Options */
+	for (j = 0; j < MAX_ITEM_OPTIONS; ++j) {
+		SQL->StmtBindColumn(stmt, 10+MAX_SLOTS+j*2, SQLDT_INT16, &item.option[j].index, 0, NULL, NULL);
+		SQL->StmtBindColumn(stmt, 11+MAX_SLOTS+j*2, SQLDT_INT16, &item.option[j].value, 0, NULL, NULL);
+	}
+	while (SQL_SUCCESS == SQL->StmtNextRow(stmt)) {
 		Assert_retb(i < MAX_INVENTORY);
 		memcpy(&items[i],&item,sizeof(struct item));
 		i++;
 	}
 	SQL->FreeResult(inter->sql_handle);
 
-	if(!i) { //No items found - No need to continue
+	if (i == 0) { //No items found - No need to continue
 		StrBuf->Destroy(&buf);
 		SQL->StmtFree(stmt);
 		return 0;
@@ -408,24 +435,28 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 	StrBuf->Printf(&buf,"INSERT INTO `%s` (`guild_id`,`nameid`,`amount`,`equip`,`identify`,`refine`,"
 						"`attribute`,`expire_time`,`bound`,`unique_id`",
 					guild_storage_db);
-	for( s = 0; s < MAX_SLOTS; ++s )
+	for (s = 0; s < MAX_SLOTS; ++s)
 		StrBuf->Printf(&buf, ", `card%d`", s);
+	for (s = 0; s < MAX_ITEM_OPTIONS; ++s)
+		StrBuf->Printf(&buf, ", `opt_idx%d`, `opt_val%d`", s, s);
 	StrBuf->AppendStr(&buf," ) VALUES ");
 
-	for( j = 0; j < i; ++j ) {
-		if( j )
+	for (j = 0; j < i; ++j) {
+		if (j != 0)
 			StrBuf->AppendStr(&buf, ",");
 
 		StrBuf->Printf(&buf, "('%d', '%d', '%d', '%u', '%d', '%d', '%d', '%u', '%d', '%"PRIu64"'",
 			guild_id, items[j].nameid, items[j].amount, items[j].equip, items[j].identify, items[j].refine,
 			items[j].attribute, items[j].expire_time, items[j].bound, items[j].unique_id);
-		for( s = 0; s < MAX_SLOTS; ++s )
+		for (s = 0; s < MAX_SLOTS; ++s)
 			StrBuf->Printf(&buf, ", '%d'", items[j].card[s]);
+		for (s = 0; s < MAX_ITEM_OPTIONS; ++s)
+			StrBuf->Printf(&buf, ", '%d', '%d'", items[j].option[s].index, items[j].option[s].value);
 		StrBuf->AppendStr(&buf, ")");
 	}
 
-	if( SQL_ERROR == SQL->StmtPrepareStr(stmt, StrBuf->Value(&buf))
-	||  SQL_ERROR == SQL->StmtExecute(stmt) )
+	if (SQL_ERROR == SQL->StmtPrepareStr(stmt, StrBuf->Value(&buf))
+	||  SQL_ERROR == SQL->StmtExecute(stmt))
 	{
 		Sql_ShowDebug(inter->sql_handle);
 		SQL->StmtFree(stmt);
