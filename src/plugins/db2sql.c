@@ -320,6 +320,9 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source)
 
 		// refineable
 		StrBuf->Printf(&buf, "'%d',", it->flag.no_refine?0:1);
+		
+		// disable_options
+		StrBuf->Printf(&buf, "'%d',", it->flag.no_options?1:0);
 
 		// view
 		StrBuf->Printf(&buf, "'%d',", it->look);
@@ -462,6 +465,7 @@ void itemdb2sql_tableheader(void)
 			"  `equip_level_min` smallint(5) UNSIGNED DEFAULT NULL,\n"
 			"  `equip_level_max` smallint(5) UNSIGNED DEFAULT NULL,\n"
 			"  `refineable` tinyint(1) UNSIGNED DEFAULT NULL,\n"
+			"  `disable_options` tinyint(1) UNSIGNED DEFAULT NULL,\n"
 			"  `view` smallint(3) UNSIGNED DEFAULT NULL,\n"
 			"  `bindonequip` tinyint(1) UNSIGNED DEFAULT NULL,\n"
 			"  `forceserial` tinyint(1) UNSIGNED DEFAULT NULL,\n"
