@@ -14574,10 +14574,11 @@ BUILDIN(npctalk)
 		char name[NAME_LENGTH], message[256];
 		safestrncpy(name, nd->name, sizeof(name));
 		strtok(name, "#"); // discard extra name identifier if present
-		if (show_npcname)
+		if (show_npcname) {
 			safesnprintf(message, sizeof(message), "%s", str);
-		else
+		} else {
 			safesnprintf(message, sizeof(message), "%s : %s", name, str);
+		}
 		clif->disp_overhead(&nd->bl, message);
 	}
 
@@ -17270,7 +17271,8 @@ BUILDIN(unitstop) {
 /// Makes the unit say the message
 ///
 /// unittalk <unit_id>,"<message>"{, show_unitname};
-BUILDIN(unittalk) {
+BUILDIN(unittalk)
+{
 	int unit_id, show_unitname = 1;
 	const char* message;
 	struct block_list* bl;
@@ -17287,12 +17289,14 @@ BUILDIN(unittalk) {
 		char blname[NAME_LENGTH];
 		StrBuf->Init(&sbuf);
 		safestrncpy(blname, clif->get_bl_name(bl), sizeof(blname));
-		if(bl->type == BL_NPC)
+		if(bl->type == BL_NPC) {
 			strtok(blname, "#");
-		if (show_unitname)
+		}
+		if (show_unitname) {
 			StrBuf->Printf(&sbuf, "%s : %s", blname, message);
-		else
+		} else {
 			StrBuf->Printf(&sbuf, "%s", message);
+		}
 		clif->disp_overhead(bl, StrBuf->Value(&sbuf));
 		StrBuf->Destroy(&sbuf);
 	}
