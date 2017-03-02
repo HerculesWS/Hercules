@@ -388,13 +388,23 @@ enum ItemTradeRestrictions {
 };
 
 /**
- * Iten No-use restrictions
+ * Item No-use restrictions
  */
 enum ItemNouseRestrictions {
 	INR_NONE    = 0x0, ///< No restrictions
 	INR_SITTING = 0x1, ///< Item can't be used while sitting
 
 	INR_ALL     = 0x1 ///< Sum of all the above values
+};
+
+/**
+ * Item Option Types
+ */
+enum ItemOptionTypes {
+	IT_OPT_INDEX = 0,
+	IT_OPT_VALUE,
+	IT_OPT_PARAM,
+	IT_OPT_MAX
 };
 
 /** Convenience item list (entry) used in various functions */
@@ -462,6 +472,11 @@ struct item_package {
 	unsigned short must_qty;
 };
 
+struct item_option {
+	int16 index;
+	struct script_code *script;
+};
+
 struct item_data {
 	uint16 nameid;
 	char name[ITEM_NAME_LENGTH],jname[ITEM_NAME_LENGTH];
@@ -507,6 +522,7 @@ struct item_data {
 		unsigned bindonequip : 1;
 		unsigned keepafteruse : 1;
 		unsigned force_serial : 1;
+		unsigned no_options: 1; // < disallows use of item options on the item. (non-equippable items are automatically flagged) [Smokexyz]
 	} flag;
 	struct {// item stacking limitation
 		unsigned short amount;
@@ -548,6 +564,7 @@ struct item_data {
 #define itemdb_value_buy(n)   (itemdb->search(n)->value_buy)
 #define itemdb_value_sell(n)  (itemdb->search(n)->value_sell)
 #define itemdb_canrefine(n)   (!itemdb->search(n)->flag.no_refine)
+#define itemdb_allowoption(n) (!itemdb->search(n)->flag.no_options)
 
 #define itemdb_is_rune(n)        (((n) >= ITEMID_NAUTHIZ && (n) <= ITEMID_HAGALAZ) || (n) == ITEMID_LUX_ANIMA)
 #define itemdb_is_element(n)     ((n) >= ITEMID_SCARLET_PTS && (n) <= ITEMID_LIME_GREEN_PTS)
@@ -595,11 +612,13 @@ struct itemdb_interface {
 	/* */
 	struct item_data *array[MAX_ITEMDB];
 	struct DBMap *other;// int nameid -> struct item_data*
+	struct DBMap *options; // int opt_id -> struct item_option*
 	struct item_data dummy; //This is the default dummy item used for non-existant items. [Skotlex]
 	/* */
 	void (*read_groups) (void);
 	void (*read_chains) (void);
 	void (*read_packages) (void);
+	void (*read_options) (void);
 	/* */
 	void (*write_cached_packages) (const char *config_filename);
 	bool (*read_cached_packages) (const char *config_filename);
@@ -610,6 +629,7 @@ struct itemdb_interface {
 	struct item_data* (*load)(int nameid);
 	struct item_data* (*search)(int nameid);
 	struct item_data* (*exists) (int nameid);
+	struct item_option* (*option_exists) (int idx);
 	bool (*in_group) (struct item_group *group, int nameid);
 	int (*group_item) (struct item_group *group);
 	int (*chain_item) (unsigned short chain_id, int *rate);
@@ -650,6 +670,7 @@ struct itemdb_interface {
 	void (*read) (bool minimal);
 	void (*destroy_item_data) (struct item_data *self, int free_self);
 	int (*final_sub) (union DBKey key, struct DBData *data, va_list ap);
+	int (*options_final_sub) (union DBKey key, struct DBData *data, va_list ap);
 	void (*clear) (bool total);
 	struct item_combo * (*id2combo) (unsigned short id);
 	bool (*is_item_usable) (struct item_data *item);

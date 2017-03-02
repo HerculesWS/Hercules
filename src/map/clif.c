@@ -2378,23 +2378,37 @@ void clif_addcards2(unsigned short *cards, struct item* item) {
 }
 
 /**
- * Fills in RandomOptions(Bonuses) of items into the buffer
+ * Fills in ItemOptions(Bonuses) of items into the buffer
  *
- * Dummy datais used since this feature isn't supported yet (ITEM_RDM_OPT).
- * A maximum of 5 random options can be supported.
+ * A maximum of 5 item options can be supported.
  *
  * @param buf[in,out] The buffer to write to. The pointer must be valid and initialized.
  * @param item[in]    The source item.
  */
-void clif_add_random_options(unsigned char* buf, struct item* item)
+unsigned int clif_add_random_options(struct ItemOptions *buf, struct item *it)
 {
-	int i;
-	nullpo_retv(buf);
-	for (i = 0; i < 5; i++){
-		WBUFW(buf,i*5+0) = 0; // OptIndex
-		WBUFW(buf,i*5+2) = 0; // Value
-		WBUFB(buf,i*5+4) = 0; // Param1
+	int i = 0, j = 0, total_options = 0;
+	
+	nullpo_ret(buf);
+	
+	// Append the buffer with existing options first.
+	for (i = 0; i < MAX_ITEM_OPTIONS; i++) {
+		if (it->option[i].index) {
+			WBUFW(buf, j * 5 + 0) = it->option[i].index; // OptIndex
+			WBUFW(buf, j * 5 + 2) = it->option[i].value; // Value
+			WBUFB(buf, j * 5 + 4) = it->option[i].param; // Param1
+			total_options++;
+			j++;
+		}
 	}
+	// Append the remaining buffer with no values;
+	for (; j < MAX_ITEM_OPTIONS || j < 5; j++) {
+		WBUFW(buf, j * 5 + 0) = 0;
+		WBUFW(buf, j * 5 + 2) = 0;
+		WBUFB(buf, j * 5 + 4) = 0;
+	}
+	
+	return total_options;
 }
 
 /// Notifies the client, about a received inventory item or the result of a pick-up request.
@@ -2418,9 +2432,6 @@ void clif_additem(struct map_session_data *sd, int n, int amount, int fail) {
 	p.count = amount;
 
 	if( !fail ) {
-#if PACKETVER >= 20150226
-		int i;
-#endif
 		if( n < 0 || n >= MAX_INVENTORY || sd->status.inventory[n].nameid <=0 || sd->inventory_data[n] == NULL )
 			return;
 
@@ -2445,11 +2456,7 @@ void clif_additem(struct map_session_data *sd, int n, int amount, int fail) {
 		p.bindOnEquipType = sd->status.inventory[n].bound && !itemdb->isstackable2(sd->inventory_data[n]) ? 2 : sd->inventory_data[n]->flag.bindonequip ? 1 : 0;
 #endif
 #if PACKETVER >= 20150226
-		for (i=0; i<5; i++){
-			p.option_data[i].index = 0;
-			p.option_data[i].value = 0;
-			p.option_data[i].param = 0;
-		}
+		clif->add_random_options(&p.option_data[0], &sd->status.inventory[n]);
 #endif
 	}
 	p.result = (unsigned char)fail;
@@ -2522,19 +2529,17 @@ void clif_item_sub(unsigned char *buf, int n, struct item *i, struct item_data *
 
 }
 
-void clif_item_equip(short idx, struct EQUIPITEM_INFO *p, struct item *i, struct item_data *id, int eqp_pos) {
-#if PACKETVER >= 20150226
-	int j;
-#endif
+void clif_item_equip(short idx, struct EQUIPITEM_INFO *p, struct item *it, struct item_data *id, int eqp_pos)
+{
 	nullpo_retv(p);
-	nullpo_retv(i);
+	nullpo_retv(it);
 	nullpo_retv(id);
 	p->index = idx;
 
 	if (id->view_id > 0)
 		p->ITID = id->view_id;
 	else
-		p->ITID = i->nameid;
+		p->ITID = it->nameid;
 
 	p->type = itemtype(id->type);
 
@@ -2543,20 +2548,20 @@ void clif_item_equip(short idx, struct EQUIPITEM_INFO *p, struct item *i, struct
 #endif
 
 	p->location = eqp_pos;
-	p->WearState = i->equip;
+	p->WearState = it->equip;
 #if PACKETVER < 20120925
 	p->IsDamaged = (i->attribute & ATTR_BROKEN) != 0 ? 1 : 0;
 #endif
-	p->RefiningLevel = i->refine;
+	p->RefiningLevel = it->refine;
 
-	clif->addcards2(&p->slot.card[0], i);
+	clif->addcards2(&p->slot.card[0], it);
 
 #if PACKETVER >= 20071002
-	p->HireExpireDate = i->expire_time;
+	p->HireExpireDate = it->expire_time;
 #endif
 
 #if PACKETVER >= 20080102
-	p->bindOnEquipType = i->bound ? 2 : id->flag.bindonequip ? 1 : 0;
+	p->bindOnEquipType = it->bound ? 2 : id->flag.bindonequip ? 1 : 0;
 #endif
 
 #if PACKETVER >= 20100629
@@ -2564,19 +2569,14 @@ void clif_item_equip(short idx, struct EQUIPITEM_INFO *p, struct item *i, struct
 #endif
 
 #if PACKETVER >= 20120925
-	p->Flag.IsIdentified = i->identify ? 1 : 0;
-	p->Flag.IsDamaged    = (i->attribute & ATTR_BROKEN) != 0 ? 1 : 0;
-	p->Flag.PlaceETCTab  = i->favorite ? 1 : 0;
+	p->Flag.IsIdentified = it->identify ? 1 : 0;
+	p->Flag.IsDamaged    = (it->attribute & ATTR_BROKEN) != 0 ? 1 : 0;
+	p->Flag.PlaceETCTab  = it->favorite ? 1 : 0;
 	p->Flag.SpareBits    = 0;
 #endif
 
 #if PACKETVER >= 20150226
-	p->option_count = 0;
-	for (j=0; j<5; j++){
-		p->option_data[j].index = 0;
-		p->option_data[j].value = 0;
-		p->option_data[j].param = 0;
-	}
+	p->option_count = clif->add_random_options(p->option_data, it);
 #endif
 }
 
