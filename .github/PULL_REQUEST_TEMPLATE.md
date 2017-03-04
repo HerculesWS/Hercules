@@ -12,7 +12,7 @@
 
 - [ ] I have followed [proper Hercules code styling][code].
 - [ ] I have read and understood the [contribution guidelines][cont] before making this PR.
-- [ ] I am aware that this PR will be closed if the above mentioned criteria are not fulfilled.
+- [ ] I am aware that this PR will be closed if the above-mentioned criteria are not fulfilled.
 
 ### Changes Proposed
 
