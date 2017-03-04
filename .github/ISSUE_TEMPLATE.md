@@ -2,9 +2,12 @@
 [//]: # (** Fill in the following fields **)
 [//]: # (**********************************)
 
+[//]: # (Note: Lines begining with syntax such as this one, are comments and will not be visible in your report!)
+
 ### Issue Prelude
-**Please complete these steps and check these boxes (by putting an `x` inside
-the brackets) _before_ filing your issue:**
+
+[//]: # (Please complete these mandatory steps and check the following boxes by putting an `x` inside the brackets _before_ filing your issue)
+
 -  [ ] I have not modified the source prior to reproducing this issue.
 -  [ ] I am using the latest version of Hercules.
 -  [ ] I am aware that this report will be closed or deleted if it becomes obvious that I am stating the false.
@@ -12,7 +15,7 @@ the brackets) _before_ filing your issue:**
 ### Description
 
 [//]: # (Description of the problem or issue at length.)
-[//]: # (Please specify any battle configuration related to this issue that has been changed from the default values.)
+[//]: # (Please specify any battle configuration related to the components of issue that has been changed from the default values. This will allow quicker determination of the cause for this problem.)
 
 ### Current Behavior
 
