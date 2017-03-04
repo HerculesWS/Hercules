@@ -274,6 +274,7 @@ int party_recv_info(const struct party *sp, int char_id)
 	int added_count = 0;
 	int j;
 	int member_id;
+	int leader_account_id = 0, leader_char_id = 0;
 
 	nullpo_ret(sp);
 
@@ -287,8 +288,12 @@ int party_recv_info(const struct party *sp, int char_id)
 			ARR_FIND(0, MAX_PARTY, i,
 				sp->member[i].account_id == member->account_id &&
 				sp->member[i].char_id == member->char_id);
-			if (i == MAX_PARTY)
+			if (i == MAX_PARTY) {
 				removed[removed_count++] = member_id;
+			} else if (member->leader != 0) {
+				leader_account_id = member->account_id;
+				leader_char_id = member->char_id;
+			}
 		}
 		for (member_id = 0; member_id < MAX_PARTY; ++member_id) {
 			member = &sp->member[member_id];
@@ -316,6 +321,7 @@ int party_recv_info(const struct party *sp, int char_id)
 			continue;// not online
 		party->member_withdraw(sp->party_id, sd->status.account_id, sd->status.char_id);
 	}
+
 	memcpy(&p->party, sp, sizeof(struct party));
 	memset(&p->state, 0, sizeof(p->state));
 	memset(&p->data, 0, sizeof(p->data));
@@ -324,6 +330,8 @@ int party_recv_info(const struct party *sp, int char_id)
 		if ( member->char_id == 0 )
 			continue;// empty
 		p->data[member_id].sd = party->sd_check(sp->party_id, member->account_id, member->char_id);
+		if (member->account_id == leader_account_id && member->char_id == leader_char_id)
+			p->party.member[member_id].leader = 1;
 	}
 	party->check_state(p);
 	while( added_count > 0 ) { // new in party
@@ -591,11 +599,43 @@ int party_member_withdraw(int party_id, int account_id, int char_id)
 		int i;
 		ARR_FIND( 0, MAX_PARTY, i, p->party.member[i].account_id == account_id && p->party.member[i].char_id == char_id );
 		if( i < MAX_PARTY ) {
+			bool was_leader = false;
+			int prev_leader_accountId = 0;
+			if (p->party.member[i].leader != 0) {
+				was_leader = true;
+				prev_leader_accountId = p->party.member[i].account_id;
+			}
+
 			clif->party_withdraw(p,sd,account_id,p->party.member[i].name,0x0);
 			memset(&p->party.member[i], 0, sizeof(p->party.member[0]));
 			memset(&p->data[i], 0, sizeof(p->data[0]));
 			p->party.count--;
 			party->check_state(p);
+
+			if (was_leader) {
+				int k;
+				// Member was party leader, try to pick a new leader from online members
+				ARR_FIND(0, MAX_PARTY, k, p->party.member[k].account_id != 0 && p->party.member[k].online == 1);
+
+				if (k == MAX_PARTY) {
+					// No online members, get an offline one
+					ARR_FIND(0, MAX_PARTY, k, p->party.member[k].account_id != 0);
+				}
+
+				if (k < MAX_PARTY) {
+					// Update party's leader
+					p->party.member[k].leader = 1;
+
+					if (p->data[k].sd != NULL) {
+						/** update members **/
+						clif->PartyLeaderChanged(p->data[k].sd, prev_leader_accountId, p->data[k].sd->status.account_id);
+					}
+
+					//Update info.
+					intif->party_leaderchange(p->party.party_id, p->party.member[k].account_id, p->party.member[k].char_id);
+					clif->party_info(p, NULL);
+				}
+			}
 		}
 	}
 
