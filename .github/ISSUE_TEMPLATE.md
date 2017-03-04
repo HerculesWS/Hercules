@@ -16,8 +16,8 @@ the brackets) _before_ filing your issue:**
 
 ### Current Behavior
 
-[//]: # (Tell us what should happens.)
-[//]: # (If this is a crash, post the crashlog to https://gist.github.com/)
+[//]: # (Tell us what happens currently during your tests.)
+[//]: # (If this is a crash, post the core/stack-dump or crash-log to https://gist.github.com/)
 
 ### Expected Behavior
 
@@ -44,10 +44,7 @@ Git revision src:
 
 ### Operating System
 
-[//]: # ( Mac OS X 10.12.3 16D32 [x86_64] )
-
-Thank you for adhering to this process! It ensures your issue is resolved
-quickly and that neither your nor our time is needlessly wasted.
-
+[//]: # (Mac OS X 10.12.3 16D32 [x86_64])
+[//]: # (Thank you for adhering to this process! It ensures your issue is resolved quickly and that neither your nor our time is needlessly wasted.)
 [//]: # (This template is for problem reports. For other types of report, edit it accordingly.)
 [//]: # (For fixes please create a Pull Request.)
