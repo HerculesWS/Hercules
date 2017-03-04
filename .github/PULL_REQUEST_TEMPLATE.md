@@ -2,11 +2,13 @@
 [//]: # (** Fill in the following fields **)
 [//]: # (**********************************)
 
+[//]: # (Note: Lines begining with syntax such as this one, are comments and will not be visible in your report!)
+
 ### Pull Request Prelude
 
-[//]: # (Thank you for working on improving Hercules)
+[//]: # (Thank you for working on improving Hercules!)
 
-[//]: # (Please complete these steps and check these boxes by putting an `x` inside the brackets _before_ filing your Pull Request)
+[//]: # (Please complete these steps and check these boxes by putting an `x` inside the brackets _before_ filing your Pull Request.)
 
 - [ ] I have followed [proper Hercules code styling][code].
 - [ ] I have read and understood the [contribution guidelines][cont] before making this PR.
