@@ -2825,7 +2825,7 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 	char postfix;
 	struct map_session_data *sd = NULL;
 
-	if( !data_isreference(data) )
+	if (!data_isreference(data))
 		return data;// not a variable/constant
 
 	name = reference_getname(data);
@@ -2840,10 +2840,10 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 	}
 
 	//##TODO use reference_tovariable(data) when it's confirmed that it works [FlavioJS]
-	if( !reference_toconstant(data) && not_server_variable(prefix) ) {
+	if (!reference_toconstant(data) && not_server_variable(prefix) && reference_getref(data) == NULL) {
 		sd = script->rid2sd(st);
-		if( sd == NULL ) {// needs player attached
-			if( postfix == '$' ) {// string variable
+		if (sd == NULL) {// needs player attached
+			if (postfix == '$') {// string variable
 				ShowWarning("script_get_val: cannot access player variable '%s', defaulting to \"\"\n", name);
 				data->type = C_CONSTSTR;
 				data->u.str = "";
@@ -2919,7 +2919,7 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 		} else if( reference_toparam(data) ) {
 			data->u.num = pc->readparam(sd, reference_getparamtype(data));
 		} else {
-			switch(prefix) {
+			switch (prefix) {
 			case '@':
 				if (data->ref) {
 					data->u.num = script->get_val_ref_num(st, data->ref, data);
@@ -2933,7 +2933,7 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 			case '#':
 				if (data->ref) {
 					data->u.num = script->get_val_ref_num(st, data->ref, data);
-				} else if(name[1] == '#') {
+				} else if (name[1] == '#') {
 					data->u.num = pc_readaccountreg2(sd, data->u.num);// global
 				} else {
 					data->u.num = pc_readaccountreg(sd, data->u.num);// local
@@ -2960,7 +2960,6 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 				break;
 			}
 		}
-
 	}
 	data->ref = NULL;
 
@@ -3133,38 +3132,43 @@ void script_array_add_member(struct script_array *sa, unsigned int idx) {
  **/
 struct reg_db *script_array_src(struct script_state *st, struct map_session_data *sd, const char *name, struct reg_db *ref) {
 	struct reg_db *src = NULL;
-
 	nullpo_retr(NULL, name);
-	switch( name[0] ) {
+
+	switch (name[0]) {
 		/* from player */
-		default: /* char reg */
-		case '@':/* temp char reg */
-		case '#':/* account reg */
+	default: /* char reg */
+	case '@':/* temp char reg */
+	case '#':/* account reg */
+		if (ref != NULL) {
+			src = ref;
+		} else {
 			nullpo_retr(NULL, sd);
 			src = &sd->regs;
-			break;
-		case '$':/* map reg */
-			src = &mapreg->regs;
-			break;
-		case '.':/* npc/script */
-			if (ref != NULL) {
-				src = ref;
-			} else {
-				nullpo_retr(NULL, st);
-				src = (name[1] == '@') ? &st->stack->scope : &st->script->local;
-			}
-			break;
-		case '\'':/* instance */
+		}
+		break;
+	case '$':/* map reg */
+		src = &mapreg->regs;
+		break;
+	case '.':/* npc/script */
+		if (ref != NULL) {
+			src = ref;
+		} else {
 			nullpo_retr(NULL, st);
-			if( st->instance_id >= 0 ) {
-				src = &instance->list[st->instance_id].regs;
-			}
-			break;
+			src = (name[1] == '@') ? &st->stack->scope : &st->script->local;
+		}
+		break;
+	case '\'':/* instance */
+		nullpo_retr(NULL, st);
+		if (st->instance_id >= 0) {
+			src = &instance->list[st->instance_id].regs;
+		}
+		break;
 	}
 
-	if( src ) {
-		if( !src->arrays )
+	if (src) {
+		if (!src->arrays) {
 			src->arrays = idb_alloc(DB_OPT_BASE);
+		}
 		return src;
 	}
 	return NULL;
@@ -3317,7 +3321,7 @@ int set_reg(struct script_state *st, struct map_session_data *sd, int64 num, con
 		return 0;
 	}
 
-	if(is_string_variable(name)) {// string variable
+	if (is_string_variable(name)) {// string variable
 		const char *str = (const char*)value;
 
 		switch (prefix) {
@@ -3329,7 +3333,8 @@ int set_reg(struct script_state *st, struct map_session_data *sd, int64 num, con
 			}
 			return 1;
 		case '$':
-			return mapreg->setregstr(num, str);
+			mapreg->setregstr(num, str);
+			return 1;
 		case '#':
 			if (ref) {
 				script->set_reg_ref_str(st, ref, num, name, str);
@@ -3364,16 +3369,17 @@ int set_reg(struct script_state *st, struct map_session_data *sd, int64 num, con
 		// to a 32bit int, this will lead to overflows! [Panikon]
 		int val = (int)h64BPTRSIZE(value);
 
-		if(script->str_data[script_getvarid(num)].type == C_PARAM) {
-			if( pc->setparam(sd, script->str_data[script_getvarid(num)].val, val) == 0 ) {
-				if( st != NULL ) {
+		if (script->str_data[script_getvarid(num)].type == C_PARAM) {
+			if (pc->setparam(sd, script->str_data[script_getvarid(num)].val, val) == 0) {
+				if (st != NULL) {
 					ShowError("script:set_reg: failed to set param '%s' to %d.\n", name, val);
 					script->reportsrc(st);
 					// Instead of just stop the script execution we let the character close
 					// the window if it was open.
 					st->state = (sd->state.dialog) ? CLOSE : END;
-					if( st->state == CLOSE )
+					if(st->state == CLOSE) {
 						clif->scriptclose(sd, st->oid);
+					}
 				}
 				return 0;
 			}
@@ -3389,7 +3395,8 @@ int set_reg(struct script_state *st, struct map_session_data *sd, int64 num, con
 			}
 			return 1;
 		case '$':
-			return mapreg->setreg(num, val);
+			mapreg->setreg(num, val);
+			return 1;
 		case '#':
 			if (ref) {
 				script->set_reg_ref_num(st, ref, num, name, val);
@@ -16549,11 +16556,7 @@ BUILDIN(escape_sql)
 	return true;
 }
 
-BUILDIN(getd)
-{
-	struct block_list *bl = NULL;
-	struct map_session_data *sd;
-	struct npc_data *nd;
+BUILDIN(getd) {
 	char varname[100];
 	const char *buffer;
 	int elem;
@@ -16563,63 +16566,8 @@ BUILDIN(getd)
 	if (sscanf(buffer, "%99[^[][%d]", varname, &elem) < 2)
 		elem = 0;
 
-	if (strlen(varname) < 1) {
-		ShowError("script:getd: variable cannot be empty\n");
-		script->reportdata(script_getdata(st, 2));
-		script_pushnil(st);
-		st->state = END;
-		return false;
-	}
-
-	if (script_hasdata(st, 3)) {
-		bl = map->id2bl(script_getnum(st, 3));
-
-		if (bl == NULL) {
-			// being not found, push default value
-			if (script_hasdata(st, 4)) {
-				script_pushcopy(st, 4);
-			} else if (varname[strlen(varname) - 1] == '$') {
-				script_pushconststr(st, "");
-			} else {
-				script_pushint(st, 0);
-			}
-			return false;
-		} else if (bl->type == BL_NPC && (varname[0] != '.' || varname[1] == '@')) {
-			ShowError("script:getd: invalid scope (not npc variable)\n");
-			script->reportdata(script_getdata(st, 2));
-			script_pushnil(st);
-			st->state = END;
-			return false;
-		} else if (bl->type == BL_PC && (varname[0] == '.' || varname[0] == '$' || varname[0] == '\'')) {
-			ShowError("script:getd: invalid scope (not pc variable)\n");
-			script->reportdata(script_getdata(st, 2));
-			script_pushnil(st);
-			st->state = END;
-			return false;
-		}
-	}
-
 	// Push the 'pointer' so it's more flexible [Lance]
-
-	if (bl != NULL) {
-		switch (bl->type) {
-		case BL_PC:
-			sd = map->id2sd(bl->id);
-			script->push_val(st->stack, C_NAME, reference_uid(script->add_str(varname), elem), &sd->regs);
-			break;
-		case BL_NPC:
-			nd = map->id2nd(bl->id);
-			script->push_val(st->stack, C_NAME, reference_uid(script->add_str(varname), elem), &nd->u.scr.script->local);
-			break;
-		default:
-			ShowError("script:getd: invalid being type (not npc or pc)\n");
-			script_pushnil(st);
-			st->state = END;
-			return false;
-		}
-	} else {
-		script->push_val(st->stack, C_NAME, reference_uid(script->add_str(varname), elem), NULL);
-	}
+	script->push_val(st->stack, C_NAME, reference_uid(script->add_str(varname), elem),NULL);
 
 	return true;
 }
@@ -17643,6 +17591,55 @@ BUILDIN(getvariableofnpc)
 		nd->u.scr.script->local.vars = i64db_alloc(DB_OPT_RELEASE_DATA);
 
 	script->push_val(st->stack, C_NAME, reference_getuid(data), &nd->u.scr.script->local);
+	return true;
+}
+
+BUILDIN(getvariableofpc)
+{
+	const char* name;
+	struct script_data* data = script_getdata(st, 2);
+	struct map_session_data *sd = map->id2sd(script_getnum(st, 3));
+
+	if (!data_isreference(data)) {
+		ShowError("script:getvariableofpc: not a variable\n");
+		script->reportdata(data);
+		script_pushnil(st);
+		st->state = END;
+		return false;
+	}
+
+	name = reference_getname(data);
+
+	switch (*name)
+	{
+	case '#':
+	case '$':
+	case '.':
+	case '\'':
+		ShowError("script:getvariableofpc: illegal scope (not pc variable)\n");
+		script->reportdata(data);
+		script_pushnil(st);
+		st->state = END;
+		return false;
+	}
+
+	if (sd == NULL)
+	{
+		// player not found, return default value
+		if (script_hasdata(st, 4)) {
+			script_pushcopy(st, 4);
+		} else if (is_string_variable(name)) {
+			script_pushconststr(st, "");
+		} else {
+			script_pushint(st, 0);
+		}
+		return true;
+	}
+
+	if (!sd->regs.vars)
+		sd->regs.vars = i64db_alloc(DB_OPT_RELEASE_DATA);
+
+	script->push_val(st->stack, C_NAME, reference_getuid(data), &sd->regs);
 	return true;
 }
 
@@ -21257,7 +21254,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(md5,"s"),
 		BUILDIN_DEF(swap,"rr"),
 		// [zBuffer] List of dynamic var commands --->
-		BUILDIN_DEF(getd,"s??"),
+		BUILDIN_DEF(getd,"s"),
 		BUILDIN_DEF(setd,"sv"),
 		// <--- [zBuffer] List of dynamic var commands
 		BUILDIN_DEF(petstat,"i"),
@@ -21305,6 +21302,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(sleep2,"i"),
 		BUILDIN_DEF(awake,"s"),
 		BUILDIN_DEF(getvariableofnpc,"rs"),
+		BUILDIN_DEF(getvariableofpc,"ri?"),
 		BUILDIN_DEF(warpportal,"iisii"),
 		BUILDIN_DEF2(homunculus_evolution,"homevolution",""), //[orn]
 		BUILDIN_DEF2(homunculus_mutate,"hommutate","?"),
