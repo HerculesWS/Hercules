@@ -15,13 +15,13 @@
 ### Description
 
 [//]: # (Description of the problem or issue at length.)
-[//]: # (Please specify any battle configuration related to the components of this issue that have been changed from the default values. This will allow quicker determination of the cause for this problem.)
+[//]: # (Please specify any battle configuration related to the components of this issue that have been changed from the default values. This will allow quicker determination of the cause of the problem.)
 
 ### Current Behavior
 
 [//]: # (Describe at length what you noticed during your analysis.)
 [//]: # (If this is a crash, post the core/stack-dump or crash-log to https://gist.github.com/)
-[//]: # (If you are referencing from sources such as iROwiki or ratemyserver, please quote specific information rather than providing the links alone.)
+[//]: # (If you are referencing from sources such as iROwiki or ratemyserver.net, please quote specific information rather than providing the links alone.)
 
 ### Expected Behavior
 
