@@ -30,6 +30,7 @@
 #include "map/chat.h"
 #include "map/chrif.h"
 #include "map/clif.h"
+#include "map/date.h"
 #include "map/elemental.h"
 #include "map/guild.h"
 #include "map/homunculus.h"
@@ -20723,6 +20724,82 @@ BUILDIN(mergeitem)
 	return true;
 }
 
+// getcalendartime(<day of month>, <day of week>{, <hour>{, <minute>}});
+// Returns the UNIX Timestamp of next ocurrency of given time
+BUILDIN(getcalendartime)
+{
+	struct tm info = { 0 };
+	int day_of_month = script_hasdata(st, 4) ? script_getnum(st, 4) : -1,
+		day_of_week = script_hasdata(st, 5) ? script_getnum(st, 5) : -1,
+		year = date_get_year(),
+		month = date_get_month(),
+		day = date_get_day(),
+		hour = script_getnum(st, 2),
+		minute = script_getnum(st, 3);
+
+	info.tm_sec = 0;
+	info.tm_min = minute;
+	info.tm_hour = hour;
+	info.tm_mday = day;
+	info.tm_mon = month - 1;
+	info.tm_year = year - 1900;
+
+	if (day_of_month > -1 && day_of_week > -1) {
+		ShowError("script:getcalendartime: You must only specify a day_of_week or a day_of_month, not both\n");
+		script_pushint(st, -1);
+		return false;
+	}
+	if (day_of_month > -1 && (day_of_month < 1 || day_of_month > 31)) {
+		ShowError("script:getcalendartime: Day of Month in invalid range. Must be between 1 and 31.\n");
+		script_pushint(st, -1);
+		return false;
+	}
+	if (day_of_week > -1 && (day_of_week < 0 || day_of_week > 6)) {
+		ShowError("script:getcalendartime: Day of Week in invalid range. Must be between 0 and 6.\n");
+		script_pushint(st, -1);
+		return false;
+	}
+	if (hour == -1 || minute == -1) {
+		ShowError("script:getcalendartime: Minutes and Hours are required\n");
+		script_pushint(st, -1);
+		return false;
+	}
+
+	if (day_of_month > -1) {
+		if (day_of_month < day) { // Next Month
+			info.tm_mon++;
+		} else if (day_of_month == day) { // Today
+			if (hour < date_get_hour() ||
+				(hour == date_get_hour() && minute < date_get_min())) { // But past time, next month
+				info.tm_mon++;
+			}
+		}
+		info.tm_mday = day_of_month;
+	} else if (day_of_week > -1) {
+		int cur_wday = date_get_dayofweek();
+
+		if (day_of_week > cur_wday) { // This week
+			info.tm_mday += (day_of_week - cur_wday);
+		} else if (day_of_week == cur_wday) { // Today
+			if (hour < date_get_hour() ||
+				(hour == date_get_hour() && minute < date_get_min())) {
+				info.tm_mday += 7; // Next week
+			}
+		} else if (day_of_week < cur_wday) { // Next week
+			info.tm_mday += (7 - cur_wday + day_of_week);
+		}
+	} else if (day_of_week == -1 && day_of_month == -1) { // Next occurence of hour/min
+		if (hour < date_get_hour() ||
+			(hour == date_get_hour() && minute < date_get_min())) {
+			info.tm_mday++;
+		}
+	}
+
+	script_pushint(st, mktime(&info));
+
+	return true;
+}
+
 /** place holder for the translation macro **/
 BUILDIN(_)
 {
@@ -21464,6 +21541,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(channelmes, "ss"),
 		BUILDIN_DEF(showscript, "s?"),
 		BUILDIN_DEF(mergeitem,""),
+		BUILDIN_DEF(getcalendartime, "ii??"),
 		BUILDIN_DEF(_,"s"),
 		BUILDIN_DEF2(_, "_$", "s"),
 	};

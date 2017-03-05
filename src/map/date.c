@@ -77,6 +77,15 @@ int date_get_sec(void)
 	return lt->tm_sec;
 }
 
+int date_get_dayofweek(void)
+{
+	time_t t;
+	struct tm * lt;
+	t = time(NULL);
+	lt = localtime(&t);
+	return lt->tm_wday;
+}
+
 /*==========================================
  * Star gladiator related checks
  *------------------------------------------*/
