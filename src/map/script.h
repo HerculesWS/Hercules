@@ -775,6 +775,7 @@ struct script_interface {
 	void (*add_autobonus) (const char *autobonus);
 	int (*menu_countoptions) (const char *str, int max_count, int *total);
 	int (*buildin_areawarp_sub) (struct block_list *bl, va_list ap);
+	int (*buildin_areatimer_sub) (struct block_list *bl, va_list ap);
 	int (*buildin_areapercentheal_sub) (struct block_list *bl, va_list ap);
 	void (*buildin_delitem_delete) (struct map_session_data *sd, int idx, int *amount, bool delete_items);
 	bool (*buildin_delitem_search) (struct map_session_data *sd, struct item *it, bool exact_match);

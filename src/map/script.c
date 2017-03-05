@@ -10810,6 +10810,45 @@ BUILDIN(addtimer)
 	script_pushint(st, 1);
 	return true;
 }
+
+
+int buildin_areatimer_sub(struct block_list *bl, va_list ap)
+{
+	struct map_session_data *sd = BL_UCAST(BL_PC, bl);
+	int tick = va_arg(ap, int);
+	const char *event = va_arg(ap, const char *);
+
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_PC);
+
+	if (!pc->addeventtimer(sd, tick, event)) {
+		ShowWarning("script:addtimer: Event timer is full, can't add new event timer. (cid:%d timer:%s)\n", sd->status.char_id, event);
+		return false;
+	}
+
+	return true;
+}
+
+BUILDIN(areatimer)
+{
+	const char *mapname = script_getstr(st,2);
+	int16 x1 = script_getnum(st, 3);
+	int16 y1 = script_getnum(st, 4);
+	int16 x2 = script_getnum(st, 5);
+	int16 y2 = script_getnum(st, 6);
+	int tick = script_getnum(st, 7);
+	const char *event = script_getstr(st, 8);
+	int16 m = map->mapname2mapid(mapname);
+
+	script->check_event(st, event);
+
+	if (m < 0)
+		return false;
+
+	map->foreachinarea(script->buildin_areatimer_sub, m, x1, y1, x2, y2, BL_PC, tick, event);
+	return true;
+}
+
 /*==========================================
  *------------------------------------------*/
 BUILDIN(deltimer)
@@ -21107,6 +21146,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(doevent,"s"),
 		BUILDIN_DEF(donpcevent,"s"),
 		BUILDIN_DEF(addtimer,"is?"),
+		BUILDIN_DEF(areatimer,"siiiiis"),
 		BUILDIN_DEF(deltimer,"s?"),
 		BUILDIN_DEF(addtimercount,"si?"),
 		BUILDIN_DEF(initnpctimer,"??"),
@@ -21908,6 +21948,7 @@ void script_defaults(void)
 	script->db_free_code_sub = db_script_free_code_sub;
 	script->add_autobonus = script_add_autobonus;
 	script->menu_countoptions = menu_countoptions;
+	script->buildin_areatimer_sub = buildin_areatimer_sub;
 	script->buildin_areawarp_sub = buildin_areawarp_sub;
 	script->buildin_areapercentheal_sub = buildin_areapercentheal_sub;
 	script->buildin_delitem_delete = buildin_delitem_delete;
