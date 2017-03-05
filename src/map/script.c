@@ -10841,7 +10841,11 @@ BUILDIN(addtimercount)
 
 	event = script_getstr(st, 2);
 	tick = script_getnum(st, 3);
-	sd = script->rid2sd(st);
+
+	if (script_hasdata(st, 4))
+		sd = map->id2sd(script_getnum(st, 4));
+	else
+		sd = script->rid2sd(st);
 
 	if (sd == NULL)
 		return true;
@@ -21104,7 +21108,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(donpcevent,"s"),
 		BUILDIN_DEF(addtimer,"is?"),
 		BUILDIN_DEF(deltimer,"s?"),
-		BUILDIN_DEF(addtimercount,"si"),
+		BUILDIN_DEF(addtimercount,"si?"),
 		BUILDIN_DEF(initnpctimer,"??"),
 		BUILDIN_DEF(stopnpctimer,"??"),
 		BUILDIN_DEF(startnpctimer,"??"),
