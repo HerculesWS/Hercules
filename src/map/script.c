@@ -10819,11 +10819,12 @@ BUILDIN(deltimer)
 
 	event=script_getstr(st, 2);
 	sd = script->rid2sd(st);
-	if( sd == NULL )
+
+	if (sd == NULL)
 		return true;
 
 	script->check_event(st, event);
-	pc->deleventtimer(sd,event);
+	pc->deleventtimer(sd, event);
 	return true;
 }
 /*==========================================
