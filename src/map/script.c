@@ -10790,7 +10790,11 @@ BUILDIN(addtimer)
 	struct map_session_data *sd;
 
 	script->check_event(st, event);
-	sd = script->rid2sd(st);
+
+	if (script_hasdata(st, 4))
+		sd = map->id2sd(script_getnum(st, 4));
+	else
+		sd = script->rid2sd(st);
 
 	if (sd == NULL) {
 		script_pushint(st, 0);
@@ -21092,7 +21096,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(clone,"siisi????"),
 		BUILDIN_DEF(doevent,"s"),
 		BUILDIN_DEF(donpcevent,"s"),
-		BUILDIN_DEF(addtimer,"is"),
+		BUILDIN_DEF(addtimer,"is?"),
 		BUILDIN_DEF(deltimer,"s"),
 		BUILDIN_DEF(addtimercount,"si"),
 		BUILDIN_DEF(initnpctimer,"??"),
