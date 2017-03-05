@@ -3408,6 +3408,30 @@ Example :
 
 ---------------------------------------
 
+*getcalendartime(<hour>, <minute>{, <day of month>{, <day of week>}})
+
+This function returns the timestamp of the next ocurrence of given time.
+
+Day of Month specifies a day between 1 and 31 in the future, by default its value is -1 (don't use).
+Day of Week specifies a day in the week and its valid values are:
+	0 - SUNDAY
+	1 - MONDAY
+	2 - TUESDAY
+	3 - WEDNESDAY
+	4 - THURSDAY
+	5 - FRIDAY
+	6 - SATURDAY
+
+In order to use Day of Week, you must use Day of Month as -1.
+If for some reason the command fails, it'll return -1.
+
+Examples :
+	getcalendartime(19, 00); // Next 7 pm
+	getcalendartime(19, 00, 6); // Next day 6 of the month, at 7pm
+	getcalendartime(19, 10, -1, 1); // Next Monday, at 7:10pm
+
+---------------------------------------
+
 *gettimestr(<format string>, <max length>)
 
 This function will return a string containing time data as specified by 
