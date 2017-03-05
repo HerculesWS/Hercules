@@ -8747,39 +8747,48 @@ BUILDIN(getguildmember)
  *------------------------------------------*/
 BUILDIN(strcharinfo)
 {
-	int num;
 	struct guild* g;
 	struct party_data* p;
-	struct map_session_data *sd = script->rid2sd(st);
-	if (sd == NULL) //Avoid crashing....
-		return true;
+	struct map_session_data *sd;
 
-	num=script_getnum(st,2);
-	switch(num) {
-		case 0:
-			script_pushstrcopy(st,sd->status.name);
-			break;
-		case 1:
-			if( ( p = party->search(sd->status.party_id) ) != NULL ) {
-				script_pushstrcopy(st,p->party.name);
-			} else {
-				script_pushconststr(st,"");
-			}
-			break;
-		case 2:
-			if( ( g = sd->guild ) != NULL ) {
-				script_pushstrcopy(st,g->name);
-			} else {
-				script_pushconststr(st,"");
-			}
-			break;
-		case 3:
-			script_pushconststr(st,map->list[sd->bl.m].name);
-			break;
-		default:
-			ShowWarning("buildin_strcharinfo: unknown parameter.\n");
-			script_pushconststr(st,"");
-			break;
+	if (script_hasdata(st, 4))
+		sd = map->id2sd(script_getnum(st, 4));
+	else
+		sd = script->rid2sd(st);
+
+	if (sd == NULL) {
+		if(script_hasdata(st, 3)) {
+			script_pushcopy(st, 3);
+		} else {
+			script_pushconststr(st, "");
+		}
+		return true;
+	}
+
+	switch (script_getnum(st, 2)) {
+	case 0:
+		script_pushstrcopy(st, sd->status.name);
+		break;
+	case 1:
+		if ((p = party->search(sd->status.party_id)) != NULL) {
+			script_pushstrcopy(st, p->party.name);
+		} else {
+			script_pushconststr(st, "");
+		}
+		break;
+	case 2:
+		if ((g = sd->guild) != NULL) {
+			script_pushstrcopy(st, g->name);
+		} else {
+			script_pushconststr(st, "");
+		}
+		break;
+	case 3:
+		script_pushconststr(st, map->list[sd->bl.m].name);
+		break;
+	default:
+		ShowWarning("script:strcharinfo: unknown parameter.\n");
+		script_pushconststr(st, "");
 	}
 
 	return true;
@@ -8796,41 +8805,51 @@ BUILDIN(strcharinfo)
  *------------------------------------------*/
 BUILDIN(strnpcinfo)
 {
-	int num;
 	char *buf,*name=NULL;
-	struct npc_data *nd = map->id2nd(st->oid);
+	struct npc_data *nd;
+
+	if (script_hasdata(st, 4))
+		nd = map->id2nd(script_getnum(st, 4));
+	else
+		nd = map->id2nd(st->oid);
+
 	if (nd == NULL) {
-		script_pushconststr(st, "");
+		if (script_hasdata(st, 3)) {
+			script_pushcopy(st, 3);
+		} else {
+			script_pushconststr(st, "");
+		}
 		return true;
 	}
 
-	num = script_getnum(st,2);
-	switch(num) {
-		case 0: // display name
+	switch (script_getnum(st,2)) {
+	case 0: // display name
+		name = aStrdup(nd->name);
+		break;
+	case 1: // visible part of display name
+		if ((buf = strchr(nd->name,'#')) != NULL) {
 			name = aStrdup(nd->name);
-			break;
-		case 1: // visible part of display name
-			if((buf = strchr(nd->name,'#')) != NULL)
-			{
-				name = aStrdup(nd->name);
-				name[buf - nd->name] = 0;
-			} else // Return the name, there is no '#' present
-				name = aStrdup(nd->name);
-			break;
-		case 2: // # fragment
-			if((buf = strchr(nd->name,'#')) != NULL)
-				name = aStrdup(buf+1);
-			break;
-		case 3: // unique name
-			name = aStrdup(nd->exname);
-			break;
-		case 4: // map name
-			if( nd->bl.m >= 0 ) // Only valid map indexes allowed (issue:8034)
-				name = aStrdup(map->list[nd->bl.m].name);
-			break;
+			name[buf - nd->name] = 0;
+		} else { // Return the name, there is no '#' present
+			name = aStrdup(nd->name);
+		}
+		break;
+	case 2: // # fragment
+		if ((buf = strchr(nd->name,'#')) != NULL) {
+			name = aStrdup(buf+1);
+		}
+		break;
+	case 3: // unique name
+		name = aStrdup(nd->exname);
+		break;
+	case 4: // map name
+		if (nd->bl.m >= 0) { // Only valid map indexes allowed (issue:8034)
+			name = aStrdup(map->list[nd->bl.m].name);
+		}
+		break;
 	}
 
-	if(name)
+	if (name)
 		script_pushstr(st, name);
 	else
 		script_pushconststr(st, "");
@@ -21003,8 +21022,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getguildmaster,"i"),
 		BUILDIN_DEF(getguildmasterid,"i"),
 		BUILDIN_DEF(getguildmember,"i?"),
-		BUILDIN_DEF(strcharinfo,"i"),
-		BUILDIN_DEF(strnpcinfo,"i"),
+		BUILDIN_DEF(strcharinfo,"i??"),
+		BUILDIN_DEF(strnpcinfo,"i??"),
 		BUILDIN_DEF(charid2rid,"i"),
 		BUILDIN_DEF(getequipid,"i"),
 		BUILDIN_DEF(getequipname,"i"),
