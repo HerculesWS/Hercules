@@ -10792,14 +10792,18 @@ BUILDIN(addtimer)
 	script->check_event(st, event);
 	sd = script->rid2sd(st);
 
-	if (sd == NULL)
-		return true;
-
-	if (!pc->addeventtimer(sd, tick, event)) {
-		ShowWarning("script:addtimer: Event timer is full, can't add new event timer. (cid:%d timer:%s)\n", sd->status.char_id, event);
+	if (sd == NULL) {
+		script_pushint(st, 0);
 		return false;
 	}
 
+	if (!pc->addeventtimer(sd, tick, event)) {
+		ShowWarning("script:addtimer: Event timer is full, can't add new event timer. (cid:%d timer:%s)\n", sd->status.char_id, event);
+		script_pushint(st, 0);
+		return false;
+	}
+
+	script_pushint(st, 1);
 	return true;
 }
 /*==========================================
