@@ -10785,19 +10785,21 @@ BUILDIN(donpcevent)
  *------------------------------------------*/
 BUILDIN(addtimer)
 {
-	int tick = script_getnum(st,2);
+	int tick = script_getnum(st, 2);
 	const char* event = script_getstr(st, 3);
 	struct map_session_data *sd;
 
 	script->check_event(st, event);
 	sd = script->rid2sd(st);
-	if( sd == NULL )
+
+	if (sd == NULL)
 		return true;
 
-	if (!pc->addeventtimer(sd,tick,event)) {
-		ShowWarning("buildin_addtimer: Event timer is full, can't add new event timer. (cid:%d timer:%s)\n",sd->status.char_id,event);
+	if (!pc->addeventtimer(sd, tick, event)) {
+		ShowWarning("script:addtimer: Event timer is full, can't add new event timer. (cid:%d timer:%s)\n", sd->status.char_id, event);
 		return false;
 	}
+
 	return true;
 }
 /*==========================================
