@@ -10839,14 +10839,15 @@ BUILDIN(addtimercount)
 	int tick;
 	struct map_session_data *sd;
 
-	event=script_getstr(st, 2);
-	tick=script_getnum(st,3);
+	event = script_getstr(st, 2);
+	tick = script_getnum(st, 3);
 	sd = script->rid2sd(st);
-	if( sd == NULL )
+
+	if (sd == NULL)
 		return true;
 
 	script->check_event(st, event);
-	pc->addeventtimercount(sd,event,tick);
+	pc->addeventtimercount(sd, event, tick);
 	return true;
 }
 
