@@ -12249,6 +12249,7 @@ OnInit:
 	end;
 
 OnTouch:
+	callfunc("F_UpdateSignVars");
 	.@geffenia_warp = rand(1,4);
 	if (.@geffenia_warp == 1) warp "gefenia01",58,169;
 	else if (.@geffenia_warp == 2) warp "gefenia02",116,115;
@@ -12644,6 +12645,7 @@ function	script	F_UpdateSignVars	{
 		Sign_Branch2B = 0;
 		serinring = 0;
 		signmetzhour = 0;
+		geffenia_warp = 0;
 	}
 	return;
 }
