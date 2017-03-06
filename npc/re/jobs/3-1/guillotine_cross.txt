@@ -3710,7 +3710,7 @@ job3_guil01,148,53,3	script	Bercasell#3rdgc16	4_M_GUILLOTINE,{
 					next;
 					mes "[Bercasell]";
 					mes "A sword of the shadow...";
-					setlook 7,0;
+					setlook(LOOK_CLOTHES_COLOR, 0);
 					jobchange roclass(eaclass()|EAJL_THIRD);
 					if (questprogress(7096) == 1) {
 						job_3rd_gc = 25;
@@ -3725,8 +3725,8 @@ job3_guil01,148,53,3	script	Bercasell#3rdgc16	4_M_GUILLOTINE,{
 						job_3rd_gc = 28;
 						erasequest 7099;
 					}
-					getitem Green_Apple_Ring,1;
-					getitem Silent_Executer,1;
+					getitem(Green_Apple_Ring, 1);
+					getitem(Silent_Executer, 1);
 					next;
 					mes "[Bercasell]";
 					mes "And... these are presents to celebrate your becoming a Guillotine Cross.";
