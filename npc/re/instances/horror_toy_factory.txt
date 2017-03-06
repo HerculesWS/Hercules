@@ -9,7 +9,7 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2016  Hercules Dev Team
+//= Copyright (C) 2017  Hercules Dev Team
 //= Copyright (C) Ridley
 //= Copyright (C) Steph
 //= Copyright (C) AtlantisRO
@@ -195,7 +195,7 @@ xmas,237,303,3	script	Catherine Zeta Jones	4_F_SKULL06GIRL,{
 			close();
 		}
 		if (instance_attachmap("1@xm_d", .@instance) == "") {
-			mes("^0000FF.@md_name$^000000 - Reservation Failed!");
+			mesf("^0000FF%s^000000 - Reservation Failed!", .@md_name$);
 			instance_destroy(.@instance);
 			close();
 		}
@@ -833,40 +833,40 @@ OnStart:
 		pcblockmove .@char_id, 1;
 		switch (.@i) {
 		case 1:
-			setarray(.@s$[1], _("Worker: Ohh did you mean that old man? He's a really kind person! He maintained out bodies well."), _("Worker: If only he were still alive."));
+			setarray(.@s$[0], _("Worker: Ohh did you mean that old man? He's a really kind person! He maintained out bodies well."), _("Worker: If only he were still alive."));
 			break;
 		case 2:
-			setarray(.@s$[1], _("Worker: What? You thought that Kimi killed the Toy Maker? NO! She wanted to save him!"), _("Worker: Ahh.. But why.. why is my body.."));
+			setarray(.@s$[0], _("Worker: What? You thought that Kimi killed the Toy Maker? NO! She wanted to save him!"), _("Worker: Ahh.. But why.. why is my body.."));
 			break;
 		case 3:
-			setarray(.@s$[1], _("Worker: The Toy Maker had some heart issues.. His heart started failing on him on the day he passed away.. Kimi was trying to save him."), _("Worker: Ahh.. But what did you do to my body.. I feel weird.."));
+			setarray(.@s$[0], _("Worker: The Toy Maker had some heart issues.. His heart started failing on him on the day he passed away.. Kimi was trying to save him."), _("Worker: Ahh.. But what did you do to my body.. I feel weird.."));
 			break;
 		case 4:
-			setarray(.@s$[1], _("Worker: When the Toy Maker took his last breath, Kimi stood there staring without any expressions."), _("Worker: As if she gave up on her soul.. But I.. How did I turn out like this?"));
+			setarray(.@s$[0], _("Worker: When the Toy Maker took his last breath, Kimi stood there staring without any expressions."), _("Worker: As if she gave up on her soul.. But I.. How did I turn out like this?"));
 			break;
 		case 5:
-			setarray(.@s$[1], _("Worker: Kimi the poor girl, blamed herself for the Toy Maker's death because she thought the Toy Maker was frightened by her appearance."), _("Worker: But the truth is the Toy Maker was so delighted to see Kimi move!"));
+			setarray(.@s$[0], _("Worker: Kimi the poor girl, blamed herself for the Toy Maker's death because she thought the Toy Maker was frightened by her appearance."), _("Worker: But the truth is the Toy Maker was so delighted to see Kimi move!"));
 			break;
 		case 6:
-			setarray(.@s$[1], _("Worker: Being able to see the Toy Maker's delighted expression was the first thing Kimi saw as she came to life."), _("Worker: But that was also the last time she saw him.."));
+			setarray(.@s$[0], _("Worker: Being able to see the Toy Maker's delighted expression was the first thing Kimi saw as she came to life."), _("Worker: But that was also the last time she saw him.."));
 			break;
 		case 7:
-			setarray(.@s$[1], _("Worker: It is rumoured that Kimi even heard the Toy Maker's voice even before she came to life!"), _("Worker: Perhaps it was the Toy Maker's unwavering love that made Kimi move? I feel a little drowsy now.."));
+			setarray(.@s$[0], _("Worker: It is rumoured that Kimi even heard the Toy Maker's voice even before she came to life!"), _("Worker: Perhaps it was the Toy Maker's unwavering love that made Kimi move? I feel a little drowsy now.."));
 			break;
 		case 8:
-			setarray(.@s$[1], _("Worker: The Toy Maker is a great guy! Kimi is a poor little girl! Kimi loves the Toy Maker! I'm sad that the Toy Maker passed away.."));
+			setarray(.@s$[0], _("Worker: The Toy Maker is a great guy! Kimi is a poor little girl! Kimi loves the Toy Maker! I'm sad that the Toy Maker passed away.."));
 			break;
 		case 9:
-			setarray(.@s$[1], _("Worker: The truth is that the Toy Maker was too excited when he saw Kimi open her eyes."), _("Worker: It feels like my body is floating in the air.. Weird"));
+			setarray(.@s$[0], _("Worker: The truth is that the Toy Maker was too excited when he saw Kimi open her eyes."), _("Worker: It feels like my body is floating in the air.. Weird"));
 			break;
 		case 10:
-			setarray(.@s$[1], _("Worker: Kimi didn't kill the Toy Maker! Kimi wanted to save him! Everyone one is afraid of Kimi! Kimi is a good girl! She's a good kid!"), _("Worker: I miss you gramps.. come back.."));
+			setarray(.@s$[0], _("Worker: Kimi didn't kill the Toy Maker! Kimi wanted to save him! Everyone one is afraid of Kimi! Kimi is a good girl! She's a good kid!"), _("Worker: I miss you gramps.. come back.."));
 			break;
 		}
-		npctalk(.@s$[1]);
+		npctalk(.@s$[0]);
 		sleep(3000);
 		if (strnpcinfo(NPC_NAME_HIDDEN) != "8") {
-			npctalk(.@s$[2]);
+			npctalk(.@s$[1]);
 			sleep(3000);
 		}
 		'fac_open += 1;
@@ -901,37 +901,37 @@ OnAlert:
 	.@i = atoi(strnpcinfo(NPC_NAME_HIDDEN));
 	switch (.@i) {
 	case 1:
-		setarray(.@xy[1], 147, 90, 163, 106);
+		setarray(.@xy[0], 147, 90, 163, 106);
 		break;
 	case 2:
-		setarray(.@xy[1], 122, 64, 138,  80);
+		setarray(.@xy[0], 122, 64, 138,  80);
 		break;
 	case 3:
-		setarray(.@xy[1], 126, 26, 142,  42);
+		setarray(.@xy[0], 126, 26, 142,  42);
 		break;
 	case 4:
-		setarray(.@xy[1], 187, 20, 203,  36);
+		setarray(.@xy[0], 187, 20, 203,  36);
 		break;
 	case 5:
-		setarray(.@xy[1], 220, 22, 236,  38);
+		setarray(.@xy[0], 220, 22, 236,  38);
 		break;
 	case 6:
-		setarray(.@xy[1], 195, 47, 211,  63);
+		setarray(.@xy[0], 195, 47, 211,  63);
 		break;
 	case 7:
-		setarray(.@xy[1], 124, 44, 140,  60);
+		setarray(.@xy[0], 124, 44, 140,  60);
 		break;
 	case 8:
-		setarray(.@xy[1], 154, 44, 170,  60);
+		setarray(.@xy[0], 154, 44, 170,  60);
 		break;
 	case 9:
-		setarray(.@xy[1], 225, 19, 241,  35);
+		setarray(.@xy[0], 225, 19, 241,  35);	// Note : Aegis doesn't focus this one around npc.
 		break;
 	case 10:
-		setarray(.@xy[1], 201, 19, 217,  35);
+		setarray(.@xy[0], 201, 19, 217,  35);	// Note : Aegis doesn't focus this one around npc.
 		break;
 	}
-	areamonster(.@in_map$, .@xy[1], .@xy[2], .@xy[3], .@xy[4], "Corrupt Cruiser", XM_CRUISER, 21, .@in_npc$+"::OnMyMobDead");
+	areamonster(.@in_map$, .@xy[0], .@xy[1], .@xy[2], .@xy[3], "Corrupt Cruiser", XM_CRUISER, 21, .@in_npc$+"::OnMyMobDead");
 	donpcevent(instance_npcname(strnpcinfo(NPC_NAME))+"::OnStart");
 	initnpctimer();
 	end;
@@ -1419,8 +1419,8 @@ OnStart:
 	killmonster(.@in_map$, .@in_npc$+"::OnMyMobDead");
 	for (.@i = 0; .@i < 22; ++.@i) {
 		getmapxy(.@mapname$, .@mapx, .@mapy, UNITTYPE_MOB, 'xm_celine_gid);
-		.@x = (.@mapx + rand(1, 20)) - 10;
-		.@y = (.@mapy + rand(1, 20)) - 10;
+		.@x = .@mapx + rand(-9, 10);
+		.@y = .@mapy + rand(-9, 10);
 		monster(.@in_map$, .@x, .@y, "#f_w_1", HIDDEN_MOB7, 1, .@in_npc$+"::OnMyMobDead");
 		sleep(200);
 	}
@@ -1449,19 +1449,19 @@ OnStart:
 		switch (.@i) {
 		case 1:
 			.@mapx += 2;
-			.@mapy += rand(0, 2) - 1;
+			.@mapy += rand(-1, 1);
 			break;
 		case 2:
 			.@mapx -= 2;
-			.@mapy += rand(0, 2) - 1;
+			.@mapy += rand(-1, 1);
 			break;
 		case 3:
 			.@mapy += 2;
-			.@mapx += rand(0, 2) - 1;
+			.@mapx += rand(-1, 1);
 			break;
 		case 4:
 			.@mapy -= 2;
-			.@mapx += rand(0, 2) - 1;
+			.@mapx += rand(-1, 1);
 			break;
 		}
 		monster(.@in_map$, .@mapx, .@mapy, "#f_w_1", HIDDEN_MOB7, 1, .@in_npc$+"::OnMyMobDead");
@@ -1621,9 +1621,7 @@ OnTimer10000:
 			.@gp_hp = (.@MOB_HP1 - .@MOB_HP2);
 			if (.@gp_hp > 100000) {
 				.@set_bs_hp = ((.@gp_hp * 5) / 10);
-				.@MOB_HP3 = .@MOB_HP1 + .@set_bs_hp;
-				if (.@MOB_HP3 > 66666666)
-					.@MOB_HP3 = 66666666;
+				.@MOB_HP3 = min(.@MOB_HP1 + .@set_bs_hp, 66666666);
 				// setmobdata 'xm_celine_gid, MOBDATA_MAXHP, .@MOB_HP3;
 				// setmobdata 'g_xm_celine_gid, MOBDATA_MAXHP, .@MOB_HP3;
 				donpcevent(instance_npcname("#eff_f01")+"::OnStart");
@@ -1636,9 +1634,7 @@ OnTimer10000:
 			.@gp_hp = (.@MOB_HP2 - .@MOB_HP1);
 			if (.@gp_hp > 100000) {
 				.@set_bs_hp = ((.@gp_hp * 5) / 10);
-				.@MOB_HP3 = .@MOB_HP2 + .@set_bs_hp;
-				if (.@MOB_HP3 > 66666666)
-					.@MOB_HP3 = 66666666;
+				.@MOB_HP3 = min(.@MOB_HP2 + .@set_bs_hp, 66666666);
 				// setmobdata 'xm_celine_gid, MOBDATA_MAXHP, .@MOB_HP3;
 				// setmobdata 'g_xm_celine_gid, MOBDATA_MAXHP, .@MOB_HP3;
 				donpcevent(instance_npcname("#eff_f01")+"::OnStart");
@@ -1769,99 +1765,68 @@ OnStart:
 	end;
 
 OnTimer1000:
-	.@in_map$ = instance_mapname("1@xm_d");
-	.@box = atoi(strnpcinfo(NPC_NAME_HIDDEN));
-	switch (.@box) {
+	switch (atoi(strnpcinfo(NPC_NAME_HIDDEN))) {
 	case 1:
-		.@min = 4; .@max = 8;
-		setarray(.@x[1], 208, 212);
-		setarray(.@y[1], 139, 143);
-		setarray(.@d_item[1], 150, 600, 900);
-		setarray(.@ItemDown[1], Gift_Box, Old_Violet_Box, Closedmind_Box);
-		setarray(.@DownX[1], 209, 210, 211);
+		.@idnum001 = rand(4, 8);
+		setarray(.@d_item[0], 150, 600, 900);
+		setarray(.@ItemDown[0], Gift_Box, Old_Violet_Box, Closedmind_Box);
 		break;
 	case 2:
-		.@min = 3; .@max = 7;
-		setarray(.@x[1], 212, 216);
-		setarray(.@y[1], 139, 143);
-		setarray(.@d_item[1], 400, 700, 950);
-		setarray(.@ItemDown[1], Old_Blue_Box, Old_Card_Album, Old_Parasol);
-		setarray(.@DownX[1], 213, 214, 215);
+		.@idnum001 = rand(3, 7);
+		setarray(.@d_item[0], 400, 700, 950);
+		setarray(.@ItemDown[0], Old_Blue_Box, Old_Card_Album, Old_Parasol);
 		break;
 	case 3:
-		.@min = 2; .@max = 6;
-		setarray(.@x[1], 216, 220);
-		setarray(.@y[1], 139, 143);
-		setarray(.@d_item[1], 850, 800, 950);
-		setarray(.@ItemDown[1], Silver_Bullion, Magic_Card_Album, Shadow_Walk_);
-		setarray(.@DownX[1], 217, 218, 219);
+		.@idnum001 = rand(2, 6);
+		setarray(.@d_item[0], 850, 800, 950);
+		setarray(.@ItemDown[0], Silver_Bullion, Magic_Card_Album, Shadow_Walk_);
 		break;
 	case 4:
-		.@min = 4; .@max = 8;
-		setarray(.@x[1], 220, 224);
-		setarray(.@y[1], 139, 143);
-		setarray(.@d_item[1], 700, 600, 900);
-		setarray(.@ItemDown[1], Gold_Bullion, Old_Violet_Box, Closedmind_Box);
-		setarray(.@DownX[1], 221, 222, 223);
+		.@idnum001 = rand(4, 8);
+		setarray(.@d_item[0], 700, 600, 900);
+		setarray(.@ItemDown[0], Gold_Bullion, Old_Violet_Box, Closedmind_Box);
 		break;
 	case 5:
-		.@min = 3; .@max = 7;
-		setarray(.@x[1], 224, 228);
-		setarray(.@y[1], 139, 143);
-		setarray(.@d_item[1], 150, 700, 950);
-		setarray(.@ItemDown[1], Gift_Box, Old_Card_Album, Red_Lantern);
-		setarray(.@DownX[1], 225, 226, 227);
+		.@idnum001 = rand(3, 7);
+		setarray(.@d_item[0], 150, 700, 950);
+		setarray(.@ItemDown[0], Gift_Box, Old_Card_Album, Red_Lantern);
 		break;
 	case 6:
-		.@min = 2; .@max = 6;
-		setarray(.@x[1], 208, 212);
-		setarray(.@y[1], 134, 138);
-		setarray(.@d_item[1], 400, 800, 950);
-		setarray(.@ItemDown[1], Old_Blue_Box, Magic_Card_Album, Hurt_Mind);
-		setarray(.@DownX[1], 209, 210, 211);
+		.@idnum001 = rand(2, 6);
+		setarray(.@d_item[0], 400, 800, 950);
+		setarray(.@ItemDown[0], Old_Blue_Box, Magic_Card_Album, Hurt_Mind);
 		break;
 	case 7:
-		.@min = 4; .@max = 8;
-		setarray(.@x[1], 212, 216);
-		setarray(.@y[1], 134, 138);
-		setarray(.@d_item[1], 850, 600, 900);
-		setarray(.@ItemDown[1], Silver_Bullion, Old_Violet_Box, Closedmind_Box);
-		setarray(.@DownX[1], 213, 214, 215);
+		.@idnum001 = rand(4, 8);
+		setarray(.@d_item[0], 850, 600, 900);
+		setarray(.@ItemDown[0], Silver_Bullion, Old_Violet_Box, Closedmind_Box);
 		break;
 	case 8:
-		.@min = 3; .@max = 7;
-		setarray(.@x[1], 216, 220);
-		setarray(.@y[1], 134, 138);
-		setarray(.@d_item[1], 700, 700, 950);
-		setarray(.@ItemDown[1], Gold_Bullion, Old_Card_Album, KindHeart);
-		setarray(.@DownX[1], 217, 218, 219);
+		.@idnum001 = rand(3, 7);
+		setarray(.@d_item[0], 700, 700, 950);
+		setarray(.@ItemDown[0], Gold_Bullion, Old_Card_Album, KindHeart);
 		break;
 	case 9:
-		.@min = 2; .@max = 6;
-		setarray(.@x[1], 220, 224);
-		setarray(.@y[1], 134, 138);
-		setarray(.@d_item[1], 150, 800, 950);
-		setarray(.@ItemDown[1], Gift_Box, Magic_Card_Album, Lush_Rose);
-		setarray(.@DownX[1], 221, 222, 223);
+		.@idnum001 = rand(2, 6);
+		setarray(.@d_item[0], 150, 800, 950);
+		setarray(.@ItemDown[0], Gift_Box, Magic_Card_Album, Lush_Rose);
 		break;
 	case 10:
-		.@min = 4; .@max = 8;
-		setarray(.@x[1], 224, 228);
-		setarray(.@y[1], 134, 138);
-		setarray(.@d_item[1], 400, 600, 900);
-		setarray(.@ItemDown[1], Old_Blue_Box, Old_Violet_Box, Closedmind_Box);
-		setarray(.@DownX[1], 225, 226, 227);
+		.@idnum001 = rand(4, 8);
+		setarray(.@d_item[0], 400, 600, 900);
+		setarray(.@ItemDown[0], Old_Blue_Box, Old_Violet_Box, Closedmind_Box);
 		break;
 	}
-	.@idnum = rand(.@min, .@max);
-	for (.@i = 0; .@i < .@idnum; ++.@i) {
-		.@idx = rand(.@x[1], .@x[2]);
-		.@idy = rand(.@y[1], .@y[2]);
-		makeitem(Bloody_Coin, 1, .@in_map$, .@idx, .@idy);
+	getmapxy(.@mapname$, .@mapx, .@mapy, UNITTYPE_NPC);
+	for (.@i = 0; .@i < .@idnum001; ++.@i) {
+		.@idx = rand(.@mapx - 2, .@mapx + 2);
+		.@idy = rand(.@mapy - 2, .@mapy + 2);
+		makeitem(Bloody_Coin, 1, .@mapname$, .@idx, .@idy);
 	}
-	for (.@i = 1; .@i < 4; ++.@i) {
+	for (.@i = 0; .@i < 3; ++.@i) {
+		.@x = .@mapx - 1 + .@i;
 		if (rand(1, 1000) > .@d_item[.@i])
-			makeitem(.@ItemDown[.@i], 1, .@in_map$, .@DownX[.@i], (.@box < 6 ? 141 : 136));
+			makeitem(.@ItemDown[.@i], 1, .@mapname$, .@x, .@mapy);
 	}
 	stopnpctimer();
 	end;
@@ -1962,10 +1927,8 @@ OnMyMobDead:
 //-------- NPC for GM Testing ------------------------
 /*
 1@xm_d,1,1,3	script	#adsw1	CLEAR_NPC,{
-	callfunc("F_GM_NPC");
 	mes("Please enter the password.");
-	.@i = callfunc("F_GM_NPC", 1854, 0);
-	if (.@i == 1) {
+	if (callfunc("F_GM_NPC", 1854, 0) == 1) {
 		mes("[Time Keeper]");
 		mes("Which point in time would you like to go back?");
 		next();
@@ -2013,12 +1976,10 @@ OnMyMobDead:
 }
 
 1@xm_d,3,1,3	script	#adsw2	CLEAR_NPC,{
-	callfunc("F_GM_NPC");
 	mes("Please enter the password.");
-	.@i = callfunc("F_GM_NPC", 1854, 0);
-	if (.@i == 1) {
+	if (callfunc("F_GM_NPC", 1854, 0) == 1) {
 		getmapxy(.@mapname$, .@mapx, .@mapy, UNITTYPE_MOB, 'antonio_gid);
-		mapannounce(instance_mapname("1@xm_d"), sprintf(_$("Factory Announcement: It's %d - %d ¡C"), .@mapx, .@mapy), bc_map, 0x00ff44, FW_NORMAL, 12);
+		mapannounce(instance_mapname("1@xm_d"), sprintf(_$("Factory Announcement: It's %d - %d"), .@mapx, .@mapy), bc_map, 0x00ff44, FW_NORMAL, 12);
 	}
 	close();
 }
