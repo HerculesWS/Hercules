@@ -221,7 +221,7 @@ xmas,237,303,3	script	Catherine Zeta Jones	4_F_SKULL06GIRL,{
 }
 
 // Original NPC Name: Toy Factory Dimensional Machine
-xmas,233,305,4	script	Dimensional Machine	PORTAL,{
+xmas,233,305,4	script	Dimensional Machine#htf	PORTAL,{
 	if (getstatus(SC_MONSTER_TRANSFORM)) {
 		mes("[Toy Factory Dimensional Machine]");
 		mes("You ^ff0000cannot enter while transformed.^000000");
@@ -255,8 +255,34 @@ xmas,233,305,4	script	Dimensional Machine	PORTAL,{
 			end;
 		}
 	} else if (.@xm_time == 1) {
-		mes("[Toy Factory Dimensional Machine]");
-		mes("Traces of entering the dimensional gap has not disappeared.");
+		// Instance entrance mode. Changes behavior of entrance with this values:
+		// 0 - Classic behaviour with exploit entrance (not recommended)
+		// 1 - Classic behaviour without exploit entrance
+		// 2 - Updated behaviour to disable re-entrance on same instance (default)
+		.@entrance_mode = 2;
+		switch (.@entrance_mode) {
+		case 0:
+			break;
+		case 1:
+			.@instance = has_instance2("1@xm_d");
+			instance_attach(.@instance);
+			if (!'ins_htf_id) {
+				$@ins_global_id[.@instance] = gettimetick(2);
+				'ins_htf_id = $@ins_global_id[.@instance];
+			}
+			if (ins_htf_id + 82800 < 'ins_htf_id)
+				ins_htf_id = 'ins_htf_id;
+			if (ins_htf_id == 'ins_htf_id) {
+				mapannounce("xmas", sprintf(_$("%s, member of the party %s entered the instance %s."), strcharinfo(PC_NAME), .@p_name$, .@md_name$), bc_map, C_SPRINGGREEN, FW_NORMAL, 12);
+				warp("1@xm_d", 111, 22);
+				end;
+			}
+			// fall through
+		case 2:
+			mes("[Toy Factory Dimensional Machine]");
+			mes("Traces of entering the dimensional gap has not disappeared.");
+			break;
+		}
 	} else if (.@xm_time > 1) {
 		mes("^0000ffTraces of entering the dimensional gap has now disappeared. You may now use the Toy Factory Dimensional Machine.^000000");
 		completequest(12331);
@@ -708,7 +734,7 @@ OnStart2:
 	disablenpc(instance_npcname("Catherine Zeta Jones#21"));
 	donpcevent(instance_npcname("Factory Uniform Box#4")+"::OnStart");
 	donpcevent(instance_npcname("#fac2ct")+"::OnStart");
-	for (.@i = 1; .@i < 11; ++.@i)
+	for (.@i = 1; .@i <= 10; ++.@i)
 		enablenpc(instance_npcname("Worker#"+.@i));
 	disablenpc(instance_npcname("#bgm06"));
 	end;
@@ -746,9 +772,7 @@ OnInstanceInit:
 	end;
 
 OnEnd:
-	.@in_map$ = instance_mapname("1@xm_d");
-	.@in_npc$ = instance_npcname("#fac2ct");
-	killmonster(.@in_map$, .@in_npc$+"::OnMyMobDead");
+	killmonster(instance_mapname("1@xm_d"), instance_npcname("#fac2ct")+"::OnMyMobDead");
 	end;
 
 OnStart:
@@ -830,7 +854,7 @@ OnStart:
 		if ('worker_off[.@i] == 1)
 			end;
 		setarray('worker_off[.@i], 1);
-		pcblockmove .@char_id, 1;
+		pcblockmove(.@char_id, true);
 		switch (.@i) {
 		case 1:
 			setarray(.@s$[0], _("Worker: Ohh did you mean that old man? He's a really kind person! He maintained out bodies well."), _("Worker: If only he were still alive."));
@@ -871,7 +895,7 @@ OnStart:
 		}
 		'fac_open += 1;
 		donpcevent(instance_npcname(strnpcinfo(NPC_NAME))+"::OnStart");
-		pcblockmove .@char_id, 0;
+		pcblockmove(.@char_id, false);
 		end;
 	} else {
 		mes("[Worker]");
@@ -894,52 +918,29 @@ OnAlert:
 	.@in_map$ = instance_mapname("1@xm_d");
 	.@in_npc$ = instance_npcname(strnpcinfo(NPC_NAME));
 	killmonster(.@in_map$, .@in_npc$+"::OnMyMobDead");
-	enablenpc(instance_npcname(strnpcinfo(NPC_NAME)));
+	enablenpc(.@in_npc$);
 	npctalk((strnpcinfo(NPC_NAME_HIDDEN) != "8" ? _("Worker: Officers! Where are the Officers!? There're humans here!") : _("Worker: Officers! Officers!!")));
 	sleep(3000);
-	disablenpc(instance_npcname(strnpcinfo(NPC_NAME)));
-	.@i = atoi(strnpcinfo(NPC_NAME_HIDDEN));
-	switch (.@i) {
-	case 1:
-		setarray(.@xy[0], 147, 90, 163, 106);
-		break;
-	case 2:
-		setarray(.@xy[0], 122, 64, 138,  80);
-		break;
-	case 3:
-		setarray(.@xy[0], 126, 26, 142,  42);
-		break;
-	case 4:
-		setarray(.@xy[0], 187, 20, 203,  36);
-		break;
-	case 5:
-		setarray(.@xy[0], 220, 22, 236,  38);
-		break;
-	case 6:
-		setarray(.@xy[0], 195, 47, 211,  63);
-		break;
-	case 7:
-		setarray(.@xy[0], 124, 44, 140,  60);
-		break;
-	case 8:
-		setarray(.@xy[0], 154, 44, 170,  60);
-		break;
+	disablenpc(.@in_npc$);
+	getmapxy(.@mapname$, .@mapx, .@mapy, UNITTYPE_NPC);
+	switch (atoi(strnpcinfo(NPC_NAME_HIDDEN))) {
 	case 9:
-		setarray(.@xy[0], 225, 19, 241,  35);	// Note : Aegis doesn't focus this one around npc.
+		setarray(.@xy[0], 225, 19, 241,  35);
 		break;
 	case 10:
-		setarray(.@xy[0], 201, 19, 217,  35);	// Note : Aegis doesn't focus this one around npc.
+		setarray(.@xy[0], 201, 19, 217,  35);
+		break;
+	default:
+		setarray(.@xy[0], .@mapx - 8, .@mapy - 8, .@mapx + 8, .@mapy + 8);
 		break;
 	}
 	areamonster(.@in_map$, .@xy[0], .@xy[1], .@xy[2], .@xy[3], "Corrupt Cruiser", XM_CRUISER, 21, .@in_npc$+"::OnMyMobDead");
-	donpcevent(instance_npcname(strnpcinfo(NPC_NAME))+"::OnStart");
+	donpcevent(.@in_npc$+"::OnStart");
 	initnpctimer();
 	end;
 
 OnTimer60000:
-	.@in_map$ = instance_mapname("1@xm_d");
-	.@in_npc$ = instance_npcname(strnpcinfo(NPC_NAME));
-	killmonster(.@in_map$, .@in_npc$+"::OnMyMobDead");
+	killmonster(instance_mapname("1@xm_d"), instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 	if (strnpcinfo(NPC_NAME_HIDDEN) == "1")
 		npctalk(_("Worker: I almost died there.. Those humans are scary!"));
 	stopnpctimer();
@@ -1444,9 +1445,8 @@ OnStart:
 	.@in_npc$ = instance_npcname("#crssk1");
 	killmonster(.@in_map$, .@in_npc$+"::OnMyMobDead");
 	getmapxy(.@mapname$, .@mapx, .@mapy, UNITTYPE_MOB, 'xm_celine_gid);
-	.@i = atoi(charat(strnpcinfo(NPC_NAME_HIDDEN), 5));
 	while (.@mapx >= 211 && .@mapx <= 241 && .@mapy >= 166 && .@mapy <= 201) {
-		switch (.@i) {
+		switch (atoi(charat(strnpcinfo(NPC_NAME_HIDDEN), 5))) {
 		case 1:
 			.@mapx += 2;
 			.@mapy += rand(-1, 1);
@@ -1532,9 +1532,7 @@ OnInstanceInit:
 
 OnFail:
 	stopnpctimer();
-	.@in_map$ = instance_mapname("1@xm_d");
-	.@in_npc$ = instance_npcname("#finalbs2");
-	killmonster(.@in_map$, .@in_npc$+"::OnMyMobDead");
+	killmonster(instance_mapname("1@xm_d"), instance_npcname("#finalbs2")+"::OnMyMobDead");
 	enablenpc(instance_npcname("Celine Kimi#2"));
 	disablenpc(instance_npcname("#bgm03"));
 	enablenpc(instance_npcname("#kimion1"));
@@ -1542,9 +1540,7 @@ OnFail:
 
 OnEnd:
 	stopnpctimer();
-	.@in_map$ = instance_mapname("1@xm_d");
-	.@in_npc$ = instance_npcname("#finalbs2");
-	killmonster(.@in_map$, .@in_npc$+"::OnMyMobDead");
+	killmonster(instance_mapname("1@xm_d"), instance_npcname("#finalbs2")+"::OnMyMobDead");
 	disablenpc(instance_npcname("#bgm03"));
 	donpcevent(instance_npcname("#finalbs_e")+"::OnStart");
 	end;
