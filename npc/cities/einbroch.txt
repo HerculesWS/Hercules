@@ -809,7 +809,7 @@ ein_in01,206,224,3	script	Hotel Employee#ein	4_M_EINMAN,{
 	mes "standards in cleanliness,";
 	mes "service and convenience~";
 	next;
-	if (kain_ticket == 5) {
+	if (ein_tre == 5) {
 		mes "[Hotel Employee]";
 		mes "Are you looking";
 		mes "for Mr. Defru Ark?";
