@@ -46,10 +46,9 @@ xmas_in,100,96,4	script	Santa Claus::Santa2	4_M_SANTA,{
 	if(xmas_npc==0) xmas_npc = 1; // For Lutie & Bard quest
 	if(#event_xmas <= 0 || #event_xmas >= 30 ) {
 		mes "Merry Christmas!";
-		if (Class == Job_Novice || #event_xmas >= 30 )
-			close; //anti exploit protection
+		if(Class==0 || #event_xmas>=30 ) close; //anti exploit protection
 		mes "I have a gift for you! Ho Ho Ho!";
-		getitem(rand(Gift_Box_1, Gift_Box_4), 1); //gives one of 4 gift boxes
+		getitem rand(664,667),1; //gives one of 4 gift boxes
 		++#event_xmas;
 		close;
 	}

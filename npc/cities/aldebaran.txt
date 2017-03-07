@@ -1265,7 +1265,7 @@ function	script	F_Lottery	{
 	}
 
 sF_Spin:
-	while (@input > 0) {
+	while (true) {
 		mes "[Lottery Machine]";
 		mes "Number of spins remaining: "+@input;
 		next;
@@ -1274,8 +1274,8 @@ sF_Spin:
 		next;
 		@temp = rand(10);
 		--@input;
+		if(@input <= 0) return;
 	}
-	return;
 }
 
 //== Inside Clock Tower ====================================
