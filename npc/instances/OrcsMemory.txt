@@ -107,7 +107,7 @@ gef_fild10,242,202,0	script	Dimensional Gorge Piece	2_MONEMUS,{
 		mes "If your dungeon has been destroyed you must wait 7 days before re-entering.";
 		close;
 	}
-	// Instance entrance mode. Changes behavior of entrance with this values:
+	// Instance entrance mode. Changes behavior of entrance with these values:
 	// 0 - Classic behaviour with exploit entrance (not recommended)
 	// 1 - Classic behaviour without exploit entrance (default)
 	// 2 - Updated behaviour to disable re-entrance on same instance

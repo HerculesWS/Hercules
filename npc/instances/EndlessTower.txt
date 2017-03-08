@@ -312,7 +312,7 @@ L_Enter:
 		mes "The party leader did not generate the dungeon yet.";
 		close;
 	} else {
-		// Instance entrance mode. Changes behavior of entrance with this values:
+		// Instance entrance mode. Changes behavior of entrance with these values:
 		// 0 - Classic behaviour with exploit entrance (not recommended)
 		// 1 - Classic behaviour without exploit entrance (default)
 		// 2 - Updated behaviour to disable re-entrance on same instance
