@@ -255,7 +255,7 @@ xmas,233,305,4	script	Dimensional Machine#htf	PORTAL,{
 			end;
 		}
 	} else if (.@xm_time == 1) {
-		// Instance entrance mode. Changes behavior of entrance with this values:
+		// Instance entrance mode. Changes behavior of entrance with these values:
 		// 0 - Classic behaviour with exploit entrance (not recommended)
 		// 1 - Classic behaviour without exploit entrance
 		// 2 - Updated behaviour to disable re-entrance on same instance (default)
