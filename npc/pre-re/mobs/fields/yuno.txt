@@ -43,7 +43,7 @@
 yuno_fild01,0,0,0,0	monster	Dustiness	1114,50,0,0,0
 yuno_fild01,0,0,0,0	monster	Poring	1002,20,0,0,0
 yuno_fild01,0,0,0,0	monster	Poporing	1031,20,0,0,0
-yuno_fild01,190,329,80,20	monster	Grand Peco	1369,3,50000,25000,0
+yuno_fild01,190,329,80,20	monster	Grand Peco	1369,30,50000,25000,0
 yuno_fild01,0,0,0,0	monster	Red Plant	1078,15,1800000,900000,1
 yuno_fild01,70,370,10,10	monster	Blue Plant	1079,2,1800000,900000,1
 yuno_fild01,70,370,10,10	monster	Shining Plant	1083,1,1800000,900000,1
@@ -54,24 +54,21 @@ yuno_fild01,0,0,0,0	monster	Yellow Plant	1081,15,1800000,900000,1
 yuno_fild01,0,0,0,0	monster	Green Plant	1080,20,1800000,900000,1
 
 //== yuno_fild02 - Kiel Hyre's Cottage =====================
-yuno_fild02,0,0,0,0	monster	Beetle King	1494,40,0,0,0
-yuno_fild02,0,0,0,0	monster	Horn	1128,40,0,0,0
 yuno_fild02,0,0,0,0	monster	Dustiness	1114,20,0,0,0
-yuno_fild02,0,0,0,0	monster	Hunter Fly	1035,10,0,0,0
-yuno_fild02,92,200,43,52	monster	Wild Rose	1261,5,0,0,0
-yuno_fild02,185,310,170,37	monster	Novus	1715,2,1200000,600000,0
-yuno_fild02,298,194,55,158	monster	Novus	1718,2,1200000,600000,0
+yuno_fild02,0,0,0,0	monster	Poring	1002,40,0,0,0
+yuno_fild02,0,0,0,0	monster	Driller	1380,20,0,0,0
+yuno_fild02,0,0,0,0	monster	Archangeling	1388,1,3600000,600000,1
+yuno_fild02,0,0,0,0	monster	Geographer	1368,20,0,0,0
+yuno_fild02,0,0,0,0	monster	Grand Peco	1369,20,0,0,0
 yuno_fild02,0,0,0,0	monster	Red Plant	1078,10,1800000,900000,1
 yuno_fild02,0,0,0,0	monster	Yellow Plant	1081,10,1800000,900000,1
 yuno_fild02,0,0,0,0	monster	Green Plant	1080,10,1800000,900000,1
 
 //== yuno_fild03 - El Mes Plateau ==========================
-yuno_fild03,0,0,0,0	monster	Poporing	1031,50,0,0,0
-yuno_fild03,0,0,0,0	monster	Drops	1113,40,0,0,0
-yuno_fild03,0,0,0,0	monster	Poring	1002,30,0,0,0
-yuno_fild03,0,0,0,0	monster	Marin	1242,20,0,0,0
-yuno_fild03,0,0,0,0	monster	Geographer	1368,15,0,0,0
-yuno_fild03,62,131,44,15	monster	Side Winder	1037,1,300000,240000,0
+yuno_fild03,0,0,0,0	monster	Demon Pungus	1378,20,0,0,0
+yuno_fild03,0,0,0,0	monster	Goat	1372,20,0,0,0
+yuno_fild03,0,0,0,0	monster	Harpy	1376,5,0,0,0
+yuno_fild03,0,0,0,0	monster	Geographer	1368,35,0,0,0
 yuno_fild03,0,0,0,0	monster	Angeling	1096,1,3600000,1800000,1
 yuno_fild03,0,0,0,0	monster	Deviling	1582,1,3600000,1800000,1
 yuno_fild03,0,0,0,0	monster	Red Plant	1078,15,1800000,900000,1

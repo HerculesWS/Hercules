@@ -36,10 +36,13 @@
 //=========================================================================
 
 //== gef_fild00 - Geffen Field =============================
-gef_fild00,0,0,0,0	monster	Poring	1002,50,0,0,0
-gef_fild00,0,0,0,0	monster	Fabre	1007,50,0,0,0
-gef_fild00,0,0,0,0	monster	Pupa	1008,20,0,0,0
-gef_fild00,0,0,0,0	monster	Poporing	1031,10,0,0,0
+gef_fild00,0,0,0,0	monster	Poring	1002,150,0,0,0
+gef_fild00,0,0,0,0	monster	Fabre	1007,150,0,0,0
+gef_fild00,0,0,0,0	monster	Pupa	1008,50,0,0,0
+gef_fild00,0,0,0,0	monster	Roda Frog	1012,150,0,0,0
+gef_fild00,0,0,0,0	monster	Willow	1010,150,0,0,0
+gef_fild00,0,0,0,0	monster	Chonchon	1011,150,0,0,0
+gef_fild00,0,0,0,0	monster	Poporing	1031,30,0,0,0
 gef_fild00,95,128,0,0	monster	Blue Plant	1079,1,900000,450000,1
 gef_fild00,124,321,0,0	monster	Blue Plant	1079,1,900000,450000,1
 gef_fild00,54,212,5,5	monster	Green Plant	1080,3,360000,180000,1
@@ -47,14 +50,16 @@ gef_fild00,54,186,5,5	monster	Green Plant	1080,3,360000,180000,1
 
 //== gef_fild01 - Geffen Field =============================
 gef_fild01,0,0,0,0	monster	Roda Frog	1012,50,0,0,0
+gef_fild01,0,0,0,0	monster	Thara Frog	1034,55,0,0,0
+gef_fild01,0,0,0,0	monster	Hornet	1004,50,0,0,0
 gef_fild01,0,0,0,0	monster	Poporing	1031,20,0,0,0
 gef_fild01,0,0,0,0	monster	Toad	1089,1,3600000,1800000,1
 gef_fild01,215,225,10,10	monster	Green Plant	1080,5,360000,180000,1
 
 //== gef_fild02 - Geffen Field =============================
-gef_fild02,0,0,0,0	monster	Yoyo	1057,10,0,0,0
+gef_fild02,0,0,0,0	monster	Yoyo	1057,30,0,0,0
 gef_fild02,0,0,0,0	monster	Orc Warrior	1023,60,0,0,0
-gef_fild02,0,0,0,0	monster	Coco	1104,10,0,0,0
+gef_fild02,0,0,0,0	monster	Coco	1104,30,0,0,0
 gef_fild02,0,0,0,0	monster	Smokie	1056,10,0,0,0
 gef_fild02,0,0,0,0	monster	Choco	1214,1,0,0,0
 gef_fild02,0,0,0,0	boss_monster	Orc Hero	1087,1,86400000,600000,1
@@ -66,9 +71,8 @@ gef_fild02,220,214,1,1	monster	Blue Plant	1079,1,360000,180000,1
 gef_fild02,164,194,1,1	monster	Shining Plant	1083,1,1800000,900000,1
 
 //== gef_fild03 - Geffen Field =============================
-gef_fild03,0,0,0,0	monster	Orc Warrior	1023,60,0,0,0
-gef_fild03,0,0,0,0	monster	High Orc	1213,1,0,0,0
-gef_fild03,0,0,0,0	monster	Savage	1166,40,0,0,0
+gef_fild03,0,0,0,0	monster	Smokie	1056,40,0,0,0
+gef_fild03,0,0,0,0	monster	Coco	1104,80,0,0,0
 gef_fild03,0,0,0,0	monster	Poporing	1031,20,0,0,0
 gef_fild03,45,350,3,3	monster	Green Plant	1080,1,180000,90000,1
 gef_fild03,66,300,3,3	monster	Green Plant	1080,1,180000,90000,1
@@ -93,17 +97,18 @@ gef_fild03,45,93,3,3	monster	Green Plant	1080,1,180000,90000,1
 gef_fild03,44,133,3,3	monster	Green Plant	1080,1,180000,90000,1
 
 //== gef_fild04 - Geffen Field =============================
-gef_fild04,0,0,0,0	monster	Poring	1002,30,0,0,0
-gef_fild04,0,0,0,0	monster	Chonchon	1011,30,0,0,0
+gef_fild04,0,0,0,0	monster	Poring	1002,230,0,0,0
+gef_fild04,0,0,0,0	monster	Chonchon	1011,130,0,0,0
 gef_fild04,0,0,0,0	monster	Pupa	1008,60,0,0,0
+gef_fild04,0,0,0,0	monster	Wilow	1010,250,0,0,0
 gef_fild04,0,0,0,0	monster	Fabre	1007,20,0,0,0
-gef_fild04,0,0,0,0	monster	Roda Frog	1012,20,0,0,0
+gef_fild04,0,0,0,0	monster	Roda Frog	1012,220,0,0,0
 gef_fild04,224,82,5,2	monster	Green Plant	1080,3,360000,180000,1
 gef_fild04,152,82,5,2	monster	Green Plant	1080,3,360000,180000,1
 
 //== gef_fild05 - Geffen Field =============================
 gef_fild05,0,0,0,0	monster	Poring	1002,30,0,0,0
-gef_fild05,0,0,0,0	monster	Kobold Archer	1282,10,0,0,0
+gef_fild05,0,0,0,0	monster	Kobold Archer	1282,15,0,0,0
 gef_fild05,0,0,0,0	monster	Wild Rose	1261,50,0,0,0
 gef_fild05,0,0,0,0	monster	Dustiness	1114,30,0,0,0
 gef_fild05,235,322,0,0	monster	Red Plant	1078,1,180000,90000,1
@@ -126,16 +131,19 @@ gef_fild05,130,293,0,0	monster	Red Plant	1078,1,180000,90000,1
 gef_fild06,0,0,0,0	monster	Kobold	1133,20,0,0,0
 gef_fild06,0,0,0,0	monster	Kobold	1134,10,0,0,0
 gef_fild06,0,0,0,0	monster	Kobold	1135,10,0,0,0
-gef_fild06,0,0,0,0	monster	Petite	1156,50,0,0,0
+gef_fild06,0,0,0,0	monster	Sky Petit	1156,50,0,0,0
+gef_fild06,0,0,0,0	monster	Pertit	1155,40,0,0,0
 gef_fild06,0,0,0,0	monster	Poporing	1031,10,0,0,0
-gef_fild06,0,0,0,0	monster	Mantis	1139,20,0,0,0
+gef_fild06,0,0,0,0	monster	Stainer 	1174,50,0,0,0
+gef_fild06,0,0,0,0	monster	Creamy 	1018,30,0,0,0
 gef_fild06,0,0,0,0	monster	Shining Plant	1083,4,1800000,900000,1
 
 //== gef_fild07 - Geffen Field =============================
-gef_fild07,0,0,0,0	monster	Poring	1002,20,0,0,0
-gef_fild07,0,0,0,0	monster	Chonchon	1011,30,0,0,0
-gef_fild07,0,0,0,0	monster	Pupa	1008,10,0,0,0
-gef_fild07,0,0,0,0	monster	Fabre	1007,60,0,0,0
+gef_fild07,0,0,0,0	monster	Poring	1002,120,0,0,0
+gef_fild07,0,0,0,0	monster	Chonchon	1011,130,0,0,0
+gef_fild07,0,0,0,0	monster	Pupa	1008,60,0,0,0
+gef_fild07,0,0,0,0	monster	Fabre	1007,160,0,0,0
+gef_fild07,0,0,0,0	monster	Willow	1010,160,0,0,0
 gef_fild07,122,221,0,0	monster	Green Plant	1080,3,360000,180000,1
 gef_fild07,185,247,0,0	monster	Shining Plant	1083,1,1800000,900000,1
 gef_fild07,269,289,0,0	monster	Blue Plant	1079,1,900000,450000,1
@@ -143,7 +151,7 @@ gef_fild07,269,289,3,3	monster	Green Plant	1080,3,360000,180000,1
 
 //== gef_fild08 - Geffen Field =============================
 gef_fild08,0,0,0,0	monster	Kobold	1133,20,0,0,0
-gef_fild08,0,0,0,0	monster	Kobold	1134,40,0,0,0
+gef_fild08,0,0,0,0	monster	Kobold	1134,60,0,0,0
 gef_fild08,0,0,0,0	monster	Kobold	1135,20,0,0,0
 gef_fild08,0,0,0,0	monster	Golem	1040,40,0,0,0
 gef_fild08,0,0,0,0	monster	Steel Chonchon	1042,20,0,0,0
@@ -159,6 +167,7 @@ gef_fild08,162,247,0,0	monster	Blue Plant	1079,1,900000,450000,1
 
 //== gef_fild09 - Geffen Field =============================
 gef_fild09,0,0,0,0	monster	Ambernite	1094,60,0,0,0
+gef_fild09,0,0,0,0	monster	Hornet	1004,50,0,0,0
 gef_fild09,0,0,0,0	monster	Poporing	1031,10,0,0,0
 gef_fild09,0,0,0,0	monster	Poison Spore	1077,10,0,0,0
 gef_fild09,51,43,0,0	monster	Red Mushroom	1085,1,180000,90000,1
@@ -174,10 +183,12 @@ gef_fild09,344,51,0,0	monster	Red Mushroom	1085,1,180000,90000,1
 gef_fild09,277,201,5,5	monster	Blue Plant	1079,3,900000,450000,1
 
 //== gef_fild10 - Geffen Field =============================
-gef_fild10,0,0,0,0	boss_monster	Orc Lord	1190,1,7200000,600000,0
-gef_fild10,0,0,0,0	monster	Orc Warrior	1023,20,0,0,0
-gef_fild10,0,0,0,0	monster	Orc Lady	1273,70,0,0,0
+gef_fild10,0,0,0,0	boss_monster	Orc Hero	1187,1,7200000,600000,0
+gef_fild10,0,0,0,0	monster	Orc Warrior	1023,50,0,0,0
+gef_fild10,0,0,0,0	monster	Orc Lady	1273,30,0,0,0
 gef_fild10,0,0,0,0	monster	Poporing	1031,15,0,0,0
+gef_fild10,0,0,0,0	monster	Hornet	1004,25,0,0,0
+gef_fild10,0,0,0,0	monster	Yoyo	1057,15,0,0,0
 gef_fild10,0,0,0,0	monster	Orc Baby	1686,5,0,0,0
 gef_fild10,46,350,5,5	monster	Blue Plant	1079,3,900000,450000,1
 gef_fild10,287,61,5,5	monster	Blue Plant	1079,3,900000,450000,1
@@ -185,11 +196,11 @@ gef_fild10,300,253,5,5	monster	Green Plant	1080,3,360000,180000,1
 
 //== gef_fild11 - Geffen Field =============================
 gef_fild11,0,0,0,0	monster	Goblin Leader	1299,1,1800000,1200000,0
-gef_fild11,0,0,0,0	monster	Goblin	1122,30,0,0,0
-gef_fild11,0,0,0,0	monster	Goblin	1123,20,0,0,0
-gef_fild11,0,0,0,0	monster	Goblin	1124,20,0,0,0
-gef_fild11,0,0,0,0	monster	Goblin	1125,20,0,0,0
-gef_fild11,0,0,0,0	monster	Goblin	1126,20,0,0,0
+gef_fild11,0,0,0,0	monster	Goblin	1122,40,0,0,0
+gef_fild11,0,0,0,0	monster	Goblin	1123,30,0,0,0
+gef_fild11,0,0,0,0	monster	Goblin	1124,30,0,0,0
+gef_fild11,0,0,0,0	monster	Goblin	1125,30,0,0,0
+gef_fild11,0,0,0,0	monster	Goblin	1126,30,0,0,0
 gef_fild11,0,0,0,0	monster	Goblin Archer	1258,20,0,0,0
 gef_fild11,0,0,0,0	monster	Poporing	1031,15,0,0,0
 gef_fild11,0,0,0,0	monster	Rotar Zairo	1392,10,0,0,0

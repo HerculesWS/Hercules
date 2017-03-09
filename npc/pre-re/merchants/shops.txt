@@ -149,7 +149,55 @@ OnInit:
 	sellitem Thunder_P;
 }
 
-//== Morroc ================================================
+//== Morocc ================================================
+
+morocc,36,64,4	trader	Tool Dealer#moc3	4_F_01,{
+OnInit:
+	sellitem Stunner;
+	sellitem Sword_Mace;
+	sellitem N_Falchion;
+	sellitem N_Mace;
+	sellitem N_Rod;
+	sellitem N_Composite_Bow;
+
+}
+
+morocc,158,258,3	trader	Tool Dealer#moc	4_M_01,{
+OnInit:
+	sellitem Arrow;
+	sellitem Spectacles;
+	sellitem Red_Potion;
+	sellitem Orange_Potion;
+	sellitem Yellow_Potion;
+	sellitem White_Potion;
+	sellitem Green_Potion;
+	sellitem Center_Potion;
+	sellitem Awakening_Potion;
+	sellitem Wing_Of_Fly;
+	sellitem Wing_Of_Butterfly;
+	sellitem Booby_Trap;
+
+
+}
+
+morocc,154,97,3	trader	Tool Dealer#moc4	4_M_01,{
+OnInit:
+	sellitem Arrow;
+	sellitem Spectacles;
+	sellitem Red_Potion;
+	sellitem Orange_Potion;
+	sellitem Yellow_Potion;
+	sellitem White_Potion;
+	sellitem Green_Potion;
+	sellitem Center_Potion;
+	sellitem Awakening_Potion;
+	sellitem Wing_Of_Fly;
+	sellitem Wing_Of_Butterfly;
+	sellitem Booby_Trap;
+
+
+}
+
 moc_ruins,91,128,4	trader	Tool Dealer#moc1	4_F_04,{
 OnInit:
 	sellitem Arrow;

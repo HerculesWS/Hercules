@@ -35,20 +35,20 @@
 //= 1.4
 //=========================================================================
 
-rachel,150,249,0	warp	rachel01	1,1,ra_temple,120,30
+//rachel,150,249,0	warp	rachel01	1,1,ra_temple,120,30
 
-rachel,81,33,0	warp	rachel02	1,1,ra_in01,237,198
-rachel,61,33,0	warp	rachel03	1,1,ra_in01,181,198
-rachel,217,55,0	warp	rachel04	1,1,ra_in01,250,34
-rachel,179,220,0	warp	rachel05	1,1,ra_in01,295,352
-rachel,103,240,0	warp	rachel06	1,1,ra_in01,343,193
-rachel,216,160,0	warp	rachel07	1,1,ra_in01,135,282
-rachel,42,87,0	warp	rachel08	1,1,ra_in01,171,359
-rachel,42,109,0	warp	rachel09	1,1,ra_in01,171,388
-rachel,83,78,0	warp	rachel10	1,1,ra_in01,249,266
-rachel,115,149,0	warp	rachel11	1,1,ra_in01,386,43
-rachel,90,189,0	warp	rachel12	1,1,ra_in01,192,148
-rachel,108,200,0	warp	rachel13	1,1,ra_in01,213,83
+//rachel,81,33,0	warp	rachel02	1,1,ra_in01,237,198
+//rachel,61,33,0	warp	rachel03	1,1,ra_in01,181,198
+//rachel,217,55,0	warp	rachel04	1,1,ra_in01,250,34
+//rachel,179,220,0	warp	rachel05	1,1,ra_in01,295,352
+//rachel,103,240,0	warp	rachel06	1,1,ra_in01,343,193
+//rachel,216,160,0	warp	rachel07	1,1,ra_in01,135,282
+//rachel,42,87,0	warp	rachel08	1,1,ra_in01,171,359
+//rachel,42,109,0	warp	rachel09	1,1,ra_in01,171,388
+//rachel,83,78,0	warp	rachel10	1,1,ra_in01,249,266
+//rachel,115,149,0	warp	rachel11	1,1,ra_in01,386,43
+//rachel,90,189,0	warp	rachel12	1,1,ra_in01,192,148
+//rachel,108,200,0	warp	rachel13	1,1,ra_in01,213,83
 
 ra_in01,188,189,0	warp	rachel14	1,1,ra_in01,263,144
 ra_in01,296,144,0	warp	rachel15	1,1,ra_in01,235,189
