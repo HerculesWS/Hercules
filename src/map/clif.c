@@ -677,7 +677,8 @@ void clif_authok(struct map_session_data *sd)
 #if PACKETVER >= 20080102
 	p.font = sd->status.font;
 #endif
-#if PACKETVER >= 20141016
+// Some clients smaller than 20160330 cant be tested [4144]
+#if PACKETVER >= 20141016 && PACKETVER < 20160330
 	p.sex = sd->status.sex;
 #endif
 	clif->send(&p,sizeof(p),&sd->bl,SELF);
