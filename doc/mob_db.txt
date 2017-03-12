@@ -35,8 +35,8 @@ mob_db: (
 	}
 	ViewRange: view range                 (int, defaults to 1)
 	ChaseRange: chase range               (int, defaults to 1)
-	Size: size                            (string)
-	Race: race                            (string)
+	Size: size                            (string, defaults to "Size_Medium")
+	Race: race                            (string, defaults to "RC_Formless")
 	Element: (type, level)
 	Mode: {
 		CanMove: true/false           (bool, defaults to false)
