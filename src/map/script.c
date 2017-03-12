@@ -10791,19 +10791,29 @@ BUILDIN(donpcevent)
  *------------------------------------------*/
 BUILDIN(addtimer)
 {
-	int tick = script_getnum(st,2);
+	int tick = script_getnum(st, 2);
 	const char* event = script_getstr(st, 3);
 	struct map_session_data *sd;
 
 	script->check_event(st, event);
-	sd = script->rid2sd(st);
-	if( sd == NULL )
-		return true;
 
-	if (!pc->addeventtimer(sd,tick,event)) {
-		ShowWarning("buildin_addtimer: Event timer is full, can't add new event timer. (cid:%d timer:%s)\n",sd->status.char_id,event);
+	if (script_hasdata(st, 4))
+		sd = map->id2sd(script_getnum(st, 4));
+	else
+		sd = script->rid2sd(st);
+
+	if (sd == NULL) {
+		script_pushint(st, 0);
 		return false;
 	}
+
+	if (!pc->addeventtimer(sd, tick, event)) {
+		ShowWarning("script:addtimer: Event timer is full, can't add new event timer. (cid:%d timer:%s)\n", sd->status.char_id, event);
+		script_pushint(st, 0);
+		return false;
+	}
+
+	script_pushint(st, 1);
 	return true;
 }
 /*==========================================
@@ -10814,12 +10824,17 @@ BUILDIN(deltimer)
 	struct map_session_data *sd;
 
 	event=script_getstr(st, 2);
-	sd = script->rid2sd(st);
-	if( sd == NULL )
+
+	if (script_hasdata(st, 3))
+		sd = map->id2sd(script_getnum(st, 3));
+	else
+		sd = script->rid2sd(st);
+
+	if (sd == NULL)
 		return true;
 
 	script->check_event(st, event);
-	pc->deleventtimer(sd,event);
+	pc->deleventtimer(sd, event);
 	return true;
 }
 /*==========================================
@@ -10830,14 +10845,19 @@ BUILDIN(addtimercount)
 	int tick;
 	struct map_session_data *sd;
 
-	event=script_getstr(st, 2);
-	tick=script_getnum(st,3);
-	sd = script->rid2sd(st);
-	if( sd == NULL )
+	event = script_getstr(st, 2);
+	tick = script_getnum(st, 3);
+
+	if (script_hasdata(st, 4))
+		sd = map->id2sd(script_getnum(st, 4));
+	else
+		sd = script->rid2sd(st);
+
+	if (sd == NULL)
 		return true;
 
 	script->check_event(st, event);
-	pc->addeventtimercount(sd,event,tick);
+	pc->addeventtimercount(sd, event, tick);
 	return true;
 }
 
@@ -21092,9 +21112,9 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(clone,"siisi????"),
 		BUILDIN_DEF(doevent,"s"),
 		BUILDIN_DEF(donpcevent,"s"),
-		BUILDIN_DEF(addtimer,"is"),
-		BUILDIN_DEF(deltimer,"s"),
-		BUILDIN_DEF(addtimercount,"si"),
+		BUILDIN_DEF(addtimer,"is?"),
+		BUILDIN_DEF(deltimer,"s?"),
+		BUILDIN_DEF(addtimercount,"si?"),
 		BUILDIN_DEF(initnpctimer,"??"),
 		BUILDIN_DEF(stopnpctimer,"??"),
 		BUILDIN_DEF(startnpctimer,"??"),

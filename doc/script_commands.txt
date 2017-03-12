@@ -6478,15 +6478,16 @@ Size is 0 = normal 1 = small 2 = big.
 //=====================================
 ---------------------------------------
 
-*addtimer(<ticks>, "NPC::OnLabel")
-*deltimer("NPC::OnLabel")
-*addtimercount("NPC::OnLabel", <ticks>)
+*addtimer(<ticks>, "NPC::OnLabel"{, <account id>})
+*deltimer("NPC::OnLabel"{, <account id>})
+*addtimercount("NPC::OnLabel", <ticks>{, <account id>})
 
 These commands will create, destroy, and delay a countdown timer - 
 addtimer() to create, deltimer() to destroy and addtimercount() to delay
 it by the specified number of ticks. For all three cases, the event label 
 given is the identifier of that timer. The timer runs on the character 
-object that is attached to the script, and can have multiple instances. 
+object that is attached to the script, and can have multiple instances.
+If <acccount id> is passed, this player will be used instead.
 When the label is run, it is run as if the player that the timer runs on 
 has clicked the NPC.
 
