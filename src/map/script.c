@@ -6680,7 +6680,7 @@ BUILDIN(warpguild)
 	struct guild* g;
 	int type;
 	int i;
-	int16 map_index = -1;
+	int16 map_id = -1;
 
 	const char *str  = script_getstr(st, 2);
 	int x            = script_getnum(st, 3);
@@ -6688,11 +6688,11 @@ BUILDIN(warpguild)
 	int gid          = script_getnum(st, 5);
 
 	if (script_hasdata(st, 6)) {
-		map_index = map->mapname2mapid(script_getstr(st, 6));
+		map_id = map->mapname2mapid(script_getstr(st, 6));
 	}
 
 	g = guild->search(gid);
-	if(g == NULL)
+	if (g == NULL)
 		return true;
 
 	type = (strcmp(str, "Random") == 0) ? 0
@@ -6707,27 +6707,28 @@ BUILDIN(warpguild)
 
 	for (i = 0; i < MAX_GUILD; i++) {
 		if (g->member[i].online && g->member[i].sd != NULL) {
+			struct map_session_data *pl_sd = g->member[i].sd;
 
-			if (map_index >= 0 && map_index != g->member[i].sd->bl.m)
+			if (map_id >= 0 && map_id != pl_sd->bl.m)
 				continue;
 
 			switch (type)
 			{
 			case 0: // Random
-				if (!map->list[g->member[i].sd->bl.m].flag.nowarp)
-					pc->randomwarp(g->member[i].sd, CLR_TELEPORT);
+				if (!map->list[pl_sd->bl.m].flag.nowarp)
+					pc->randomwarp(pl_sd, CLR_TELEPORT);
 				break;
 			case 1: // SavePointAll
-				if (!map->list[g->member[i].sd->bl.m].flag.noreturn)
-					pc->setpos(g->member[i].sd, g->member[i].sd->status.save_point.map, g->member[i].sd->status.save_point.x, g->member[i].sd->status.save_point.y, CLR_TELEPORT);
+				if (!map->list[pl_sd->bl.m].flag.noreturn)
+					pc->setpos(pl_sd, pl_sd->status.save_point.map, pl_sd->status.save_point.x, pl_sd->status.save_point.y, CLR_TELEPORT);
 				break;
 			case 2: // SavePoint
-				if (!map->list[g->member[i].sd->bl.m].flag.noreturn)
-					pc->setpos(g->member[i].sd, sd->status.save_point.map, sd->status.save_point.x, sd->status.save_point.y, CLR_TELEPORT);
+				if (!map->list[pl_sd->bl.m].flag.noreturn)
+					pc->setpos(pl_sd, sd->status.save_point.map, sd->status.save_point.x, sd->status.save_point.y, CLR_TELEPORT);
 				break;
 			case 3: // m,x,y
-				if (!map->list[g->member[i].sd->bl.m].flag.noreturn && !map->list[g->member[i].sd->bl.m].flag.nowarp)
-					pc->setpos(g->member[i].sd, script->mapindexname2id(st, str), x, y, CLR_TELEPORT);
+				if (!map->list[pl_sd->bl.m].flag.noreturn && !map->list[pl_sd->bl.m].flag.nowarp)
+					pc->setpos(pl_sd, script->mapindexname2id(st, str), x, y, CLR_TELEPORT);
 				break;
 			}
 		}

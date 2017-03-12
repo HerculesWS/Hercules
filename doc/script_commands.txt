@@ -4334,7 +4334,7 @@ SavePointAll: All guild members are warped to their respective save point.
 SavePoint:    All guild members are warped to the save point of the 
               currently attached player (will fail if there's no player 
               attached).
-			  
+
 If you specify a from_mapname, warpguild() will only affect those on that map.
 
 Example:
