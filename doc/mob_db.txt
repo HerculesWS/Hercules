@@ -1,0 +1,219 @@
+//===== Hercules Documentation ===============================
+//= Monster Database
+//===== By: ==================================================
+//= Hercules Dev Team
+//===== Current Version: =====================================
+//= 20170311
+//===== Description: =========================================
+//= Explanation of the mob_db.conf file and structure.
+//============================================================
+
+mob_db: (
+{
+	// ================ Mandatory fields ==============================
+	Id: ID                                (int)
+	SpriteName: "SPRITE_NAME"             (string)
+	Name: "Mob name"                      (string)
+	// ================ Optional fields ===============================
+	JName: "Mob name"                     (string)
+	Lv: level                             (int, defaults to 1)
+	Hp: health                            (int, defaults to 1)
+	Sp: mana                              (int, defaults to 0)
+	Exp: basic experience                 (int, defaults to 0)
+	JExp: job experience                  (int, defaults to 0)
+	AttackRange: attack range             (int, defaults to 1)
+	Attack: [attack1, attack2]            (int, defaults to 0)
+	Def: defence                          (int, defaults to 0)
+	Mdef: magic defence                   (int, defaults to 0)
+	Stats: {
+		Str: strength                 (int, defaults to 0)
+		Agi: agility                  (int, defaults to 0)
+		Vit: vitality                 (int, defaults to 0)
+		Int: intelligence             (int, defaults to 0)
+		Dex: dexterity                (int, defaults to 0)
+		Luk: luck                     (int, defaults to 0)
+	}
+	ViewRange: view range                 (int, defaults to 1)
+	ChaseRange: chase range               (int, defaults to 1)
+	Size: size                            (string, defaults to "Size_Medium")
+	Race: race                            (string, defaults to "RC_Formless")
+	Element: (type, level)
+	Mode: {
+		CanMove: true/false           (bool, defaults to false)
+		Looter: true/false            (bool, defaults to false)
+		Aggressive: true/false        (bool, defaults to false)
+		Assist: true/false            (bool, defaults to false)
+		CastSensorIdle:true/false     (bool, defaults to false)
+		Boss: true/false              (bool, defaults to false)
+		Plant: true/false             (bool, defaults to false)
+		CanAttack: true/false         (bool, defaults to false)
+		Detector: true/false          (bool, defaults to false)
+		CastSensorChase: true/false   (bool, defaults to false)
+		ChangeChase: true/false       (bool, defaults to false)
+		Angry: true/false             (bool, defaults to false)
+		ChangeTargetMelee: true/false (bool, defaults to false)
+		ChangeTargetChase: true/false (bool, defaults to false)
+		TargetWeak: true/false        (bool, defaults to false)
+		NoKnockback: true/false       (bool, defaults to false)
+	}
+	MoveSpeed: move speed                 (int, defaults to 0)
+	AttackDelay: attack delay             (int, defaults to 4000)
+	AttackMotion: attack motion           (int, defaults to 2000)
+	DamageMotion: damage motion           (int, defaults to 0)
+	MvpExp: mvp experience                (int, defaults to 0)
+	MvpDrops: {
+		AegisName: chance             (string: int)
+		// ...
+	}
+	Drops: {
+		AegisName: chance         (string: int)
+		// ...
+	}
+},
+...
+)
+
+Id: Monster id
+
+Sprite: Monster name as it is named on client.
+        Allowed characters: [A-Za-z0-9_]
+
+Name: Name displaying as output for @ and script commands.
+      This is the name shown when summon a monster with "--en--" as monster name.
+
+JName: Name displaying as output for @ and script commands.
+       When provided, this has preference over Name value.
+       This is the name shown when summon a monster with "--ja--" as monster name.
+
+Lv: Monster level
+    When not specified, becomes 1.
+
+Hp: Monster Hp
+    When not specified, becomes 1.
+
+Sp: Monster Sp
+    When not specified, becomes 0.
+
+Exp: Base Experience given by the monster.
+     When not specified, becomes 0.
+
+JExp: Job Experience given by the monster.
+      When not specified, becomes 0.
+
+AttackRange: Range for monster's attack.
+             When the range between monster and target is greater than 3 the skill is considered long-range,
+             otherwise it's a melee range.
+             When not specified, becomes 1.
+
+Attack: Attack of the monster, represented in two values: attack1 and attack2.
+        attack1 is minimal attack for the monster.
+        attack2, when pre-renewal is set, it's a value that sets maximum attack for monster.
+            Example: Familiar's attack is "Attack: [68, 77]", that is min attack of 68 and max attack of 77.
+        attack2, when renewal is set, it's a value added to attack1 to calculate maximum attack for monster.
+            Example: Familiar's attack is "Attack: [68, 9]", that is min attack of 68 and max attack of 77 (68+9).
+        When not specified, becomes 0.
+
+Def: Monster defense to physical attacks.
+     When not specified, becomes 0.
+
+Mdef: Monster defense to magical attacks.
+      When not specified, becomes 0.
+
+Stats: {
+	Str: monster strength points (When not specified, becomes 0)
+	Agi: monster agility points (When not specified, becomes 0)
+	Vit: monster vitality points (When not specified, becomes 0)
+	Int: monster intelligence points (When not specified, becomes 0)
+	Dex: monster dexterity points (When not specified, becomes 0)
+	Luk: monster luck points (When not specified, becomes 0)
+}
+
+ViewRange: Range for monster's view.
+           Aggressive monsters will attack when Player is inside view range.
+           When not specified, becomes 1.
+
+ChaseRange: Range for monster's chase.
+            Aggressive and attacking monsters will stop chasing when Player gets outside chase range.
+            When not specified, becomes 1.
+
+Size: Sets monster's size. Accepts these constants:
+      "Size_Small"
+      "Size_Medium"
+      "Size_Large"
+      When not specified, becomes "Size_Medium".
+
+Race: Sets monster's race. Accepts these constants:
+      "RC_Formless"
+      "RC_Undead"
+      "RC_Brute"
+      "RC_Plant"
+      "RC_Insect"
+      "RC_Fish"
+      "RC_Demon"
+      "RC_DemiHuman"
+      "RC_Angel"
+      "RC_Dragon"
+      When not specified, becomes "RC_Formless".
+
+Element: Monster's element. Sets element type and level.
+         Required format: ("Element Type", Level).
+         Accepts these constants for Element Type:
+         "Ele_Neutral"
+         "Ele_Water"
+         "Ele_Earth"
+         "Ele_Fire"
+         "Ele_Wind"
+         "Ele_Poison"
+         "Ele_Holy"
+         "Ele_Dark"
+         "Ele_Ghost"
+         "Ele_Undead"
+         Level is an integer. Valid values: 1 ~ 4.
+
+Mode: Monster AI behaviour. If this block is omitted, monster doesn't react to anything.
+      All the settings in this group are boolean values,
+      Default value is false (mode not set) for any missing setting.
+      See /doc/sample/mob_db_mode_list.txt for more information about monsters Mode types.
+
+MoveSpeed: Monster's speed. Sets speed (cells/sec).
+           MoveSpeed is calculated to Hercules with this formula: 1000 / SPEED (CELLS/SEC)
+           When not specified, becomes 0.
+
+AttackDelay: Sets time delay between monster attack. Also refered as aspd.
+             Monster will not be able to do new attack until AttackDelay ends.
+             If AttackMotion is bigger than AttackDelay, monster will need to wait to AttackMotion delay.
+             When not specified, becomes 4000.
+
+AttackMotion: Sets time delay between animation motion.
+              Monster will not be able to do new attack until AttackMotion ends.
+              If AttackDelay is bigger than AttackMotion, monster will need to wait to AttackDelay delay.
+              AttackMotion is calculated to Hercules with this formula: 1000 / ASPD (ATTACKS/SEC)
+              When not specified, becomes 2000.
+
+DamageMotion: Sets time delay between damage motion.
+              When not specified, becomes 2000.
+
+MvpExp: Base Experience given by the monster to the player who inflict more attack.
+        Having any value except 0 will trigger MVP banner to the player who inflict more attack.
+        When not specified, becomes 0.
+
+
+MvpDrops: Sets monster mvp drops list. Requires to have MvpExp to trigger.
+          Accepted values are AegisName as defined on item_db.conf and a chance.
+          Chance is an integer from 1 to 10000 (10000 = 100%).
+          Required format:
+          MvpDrops: {
+          	AegisName: chance
+          	// ...
+          }
+          When not specified, becomes false.
+
+Drops: Sets monster drops list.
+       Accepted values are AegisName as defined on item_db.conf and a chance.
+       Chance is an integer from 1 to 10000 (10000 = 100%).
+       Required format:
+       Drops: {
+       	AegisName: chance
+       	// ...
+       }
+       When not specified, becomes false.
