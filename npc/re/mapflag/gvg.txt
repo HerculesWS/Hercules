@@ -26,7 +26,7 @@
 //=========================================================================
 //= Mapflag: Guild versus Guild mode.
 //================= Current Version =======================================
-//= 1.2
+//= 1.0
 //================= Description ===========================================
 //= Players can attack other guilds, and will have their guild
 //= icons shown. WoE damage reductions will also take place.
