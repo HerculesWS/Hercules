@@ -33,9 +33,6 @@
 //= 1.7
 //=========================================================================
 
-1@orcs	mapflag	src4instance
-2@orcs	mapflag	src4instance
-
 //== Entrance ==============================================
 gef_fild10,242,202,0	script	Dimensional Gorge Piece	2_MONEMUS,{
 

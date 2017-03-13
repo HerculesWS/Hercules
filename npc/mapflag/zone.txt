@@ -75,37 +75,6 @@ prt_are_in	mapflag	zone	Izlude Battle Arena
 1@nyd	mapflag	zone	Memorial Dungeon
 2@nyd	mapflag	zone	Memorial Dungeon
 
-// Misty Forest Labyrinth ===========
-1@mist	mapflag	zone	Memorial Dungeon
-
-// Octopus Cave ===========
-1@cash	mapflag	zone	Memorial Dungeon
-
-// Drain ===========
-1@pump	mapflag	zone	Memorial Dungeon
-2@pump	mapflag	zone	Memorial Dungeon
-
-// Somatology Laboratory ===========
-1@lhz	mapflag	zone	Memorial Dungeon
-
-// Bangungot Hospital F2 ===========
-1@ma_h	mapflag	zone	Memorial Dungeon
-
-// Buwaya Cave ===========
-1@ma_c	mapflag	zone	Memorial Dungeon
-
-// Bakonawa Hideout ===========
-1@ma_b	mapflag	zone	Memorial Dungeon
-
-// Inside Eclage ===========
-1@ecl	mapflag	zone	Memorial Dungeon
-
-// Ghost Palace ===========
-1@spa	mapflag	zone	Memorial Dungeon
-
-// Sara's Memory Instance ===========
-1@sara	mapflag	zone	Memorial Dungeon
-
 //Towns
 alberta	mapflag	zone	Towns
 aldebaran	mapflag	zone	Towns

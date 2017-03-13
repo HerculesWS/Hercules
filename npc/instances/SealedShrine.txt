@@ -35,9 +35,6 @@
 //= 2.3
 //=========================================================================
 
-1@cata	mapflag	src4instance
-2@cata	mapflag	src4instance
-
 //== Sealed Catacomb Entrance ==============================
 monk_test,309,146,3	script	Friar Patrick#edq	4_M_OLDFRIAR,{
 	cutin "ins_cata_pri_n",2;

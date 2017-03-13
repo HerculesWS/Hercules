@@ -115,18 +115,8 @@ que_qaru03	mapflag	nowarpto
 que_qaru04	mapflag	nowarpto
 que_qaru05	mapflag	nowarpto
 
-//Sealed Shrine ==================
-1@cata	mapflag	nowarpto
-2@cata	mapflag	nowarpto
-
 //Endless Tower ==================
 e_tower	mapflag	nowarpto
-1@tower	mapflag	nowarpto
-2@tower	mapflag	nowarpto
-3@tower	mapflag	nowarpto
-4@tower	mapflag	nowarpto
-5@tower	mapflag	nowarpto
-6@tower	mapflag	nowarpto
 
 // Battle Grounds ==============
 bat_c01	mapflag	nowarpto
@@ -159,17 +149,6 @@ man_in01	mapflag	nowarpto
 splendide	mapflag	nowarpto
 spl_fild01	mapflag	nowarpto
 spl_in01	mapflag	nowarpto
-
-//Orc's Memory ===================
-1@orcs	mapflag	nowarpto
-2@orcs	mapflag	nowarpto
-
-// Nidhoggr's Instance ===========
-1@nyd	mapflag	nowarpto
-2@nyd	mapflag	nowarpto
-
-// Ghost Palace ===========
-1@spa	mapflag	nowarpto
 
 // Poring War ====================
 poring_w01	mapflag	nowarpto

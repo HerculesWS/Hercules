@@ -36,8 +36,6 @@
 //================= Current Version =======================================
 //= 1.2
 //=========================================================================
-1@gl_k	mapflag	src4instance
-2@gl_k	mapflag	src4instance
 
 glast_01,204,273,6	script	Hugin#ghinstance	4_M_SAGE_C,{
 	if (BaseLevel < 130) { // iRO text
