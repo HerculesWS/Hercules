@@ -33,8 +33,6 @@
 //= 1.1
 //=========================================================================
 
-1@mist	mapflag	src4instance
-
 //== Instance Creation =====================================
 bif_fild01,158,340,5	script	Laphine Soldier#mist	4_M_FAIRYSOLDIER,{
 

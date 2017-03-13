@@ -33,8 +33,6 @@
 //= 1.0
 //=========================================================================
 
-1@ma_c	mapflag	src4instance
-
 ma_fild02,312,317,5	script	Guard#buwaya_cave	4_MAL_SOLDIER,{
 	if (BaseLevel < 130) {
 		mes "[Guard]";

@@ -33,8 +33,6 @@
 //= 1.1
 //=========================================================================
 
-1@ma_b	mapflag	src4instance
-
 ma_scene01,174,179,4	script	Taho	4_M_DEWZATIMAN,{
 	disable_items;
 	if (checkweight(Knife,1) == 0) {

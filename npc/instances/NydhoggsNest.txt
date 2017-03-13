@@ -33,9 +33,6 @@
 //= 1.6
 //=========================================================================
 
-1@nyd	mapflag	src4instance
-2@nyd	mapflag	src4instance
-
 nyd_dun02,100,201,3	script	Yggdrasil Gatekeeper	HIDDEN_NPC,8,8,{
 	if (ins_nyd == 0) {
 		mes "A great stone gate stands before you. The sculpture of a terrible dragon spreads its powerful looking wings.";
