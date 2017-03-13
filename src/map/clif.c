@@ -7256,6 +7256,13 @@ void clif_mvp_item(struct map_session_data *sd,int nameid)
 /// 010b <exp>.L
 void clif_mvp_exp(struct map_session_data *sd, unsigned int exp)
 {
+#if PACKETVER >= 20131223		// Kro removed this packet [Napster]
+	if (battle_config.mvp_exp_reward_message) {
+		char e_msg[CHAT_SIZE_MAX];
+		sprintf(e_msg, msg_txt(855), exp);
+		clif->messagecolor_self(sd->fd, COLOR_CYAN, e_msg); // Congratulations! You are the MVP! Your reward EXP Points are %u !!
+	}
+#else
 	int fd;
 
 	nullpo_retv(sd);
@@ -7265,6 +7272,7 @@ void clif_mvp_exp(struct map_session_data *sd, unsigned int exp)
 	WFIFOW(fd,0)=0x10b;
 	WFIFOL(fd,2)=cap_value(exp,0,INT32_MAX);
 	WFIFOSET(fd,packet_len(0x10b));
+#endif
 }
 
 /// Dropped MVP item reward message (ZC_THROW_MVPITEM).
