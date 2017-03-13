@@ -107,16 +107,16 @@ function	script	F_Invest_Status	{
 		return 0;
 
 	// Open for investments.
-	if (.@day >= 3 && (.@day < 5 || (.@day == 5 && .@hour <= 12)))
+	if (.@day >= WEDNESDAY && (.@day < FRIDAY || (.@day == FRIDAY && .@hour <= 12)))
 		return 1;
 
 	// Investments closed, calculating results.
-	if (.@day == 5 && .@hour == 12 && .@minute < 35)
+	if (.@day == FRIDAY && .@hour == 12 && .@minute < 35)
 		return 2;
 
 	// Calculations complete, dungeons open.
-	if ((.@day == 5 && (.@hour > 12 || (.@hour == 12 && .@minute >= 35))) || .@day > 5 ||
-	    .@day < 2 || (.@day == 2 && .@hour < 20))
+	if ((.@day == FRIDAY && (.@hour > 12 || (.@hour == 12 && .@minute >= 35))) || .@day > FRIDAY ||
+	    .@day < TUESDAY || (.@day == TUESDAY && .@hour < 20))
 		return 3;
 
 	// Dungeons closed.
@@ -273,14 +273,14 @@ OnCalculate:
 		else
 			setd "$"+.@cas$[.@i]+"_invest_result",1;
 	}
-	// No further actions if 20,000,000z isn't reached.
-	if (!.@total_2000)
-		end;
 	// No further actions if any realm hits 70,000,000z.
 	if (.@total_7000) {
 		$2011_agit_invest = 4;
 		end;
 	}
+	// No further actions if 20,000,000z isn't reached.
+	if (!.@total_2000)
+		end;
 	// Otherwise, highest investment above 20,000,000z opens Hall of Abyss.
 	.@max = .@funds[0];
 	for(.@i = 1; .@i<4; ++.@i) {
@@ -882,7 +882,7 @@ OnAgitInvest:
 			close;
 		}
 	case 3:
-		if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 1000) {
+		if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 2000) {
 			mes "- Currently you're carrying -";
 			mes "- too many items with you. -";
 			mes "- Please try again after you -";
@@ -1126,7 +1126,7 @@ OnAgitInvest:
 	next;
 	switch(select("Invest for gate connection", "Deepest Layer Dungeon Access", "Abyss Gate Access", "Cancel")) {
 	case 1:
-		if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 1000) {
+		if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 2000) {
 			mes "[Gate Manager]";
 			mes "You have too many items to receive the Thank You Ticket as a small gift for your investment.";
 			mes "Please come back after making room in your inventory.";
@@ -1401,27 +1401,48 @@ malangdo,218,123,1	script	Namis#invest	4_CAT_SAILOR2,4,4,{
 			"Piece of Thanatos' armor","I hear Dragon Scales are tough 02","The identity of the creepy eye","If only I could see!";
 		.@i = select(implode(.@event1$[0],":"))-1;
 		switch(.@i+1) {
-			case 1: callsub L_Check,"2 Pieces of Queen's Wing",6326,2,"Wings of the Insect Queen? What a pitiful name. I would've given some cool names!",.@event1$[.@i];
-			case 2: callsub L_Check,"2 Broken Crowns",7754,2,"For crying out loud! Those cats working on these events must be playing around. Can't they think of a better name?",.@event1$[.@i];
-			case 3: callsub L_Check,"2 Fire Dragon Scales",7451,2,"Dragon scales? Well... I guess they are tough. But what are they going to use them for?",.@event1$[.@i];
-			case 4: callsub L_Check,"3 Mother's Nightmares",7020,3,"Even though I don't have the authority to find out, I wonder what they're doing with the collected items?",.@event1$[.@i];
-			case 5: callsub L_Check,"5 Gemstones",7300,5,"Something useful for a change. The ore will end up as nice pieces of jewelry.",.@event1$[.@i];
-			case 6: callsub L_Check,"5 Heroic Emblems",968,5,"Good, good. This is the kind of name I wanted!",.@event1$[.@i];
-			case 7: callsub L_Check,"3 Taeguk Plates",7169,3,"Taking in something like this, maybe they're up to something dangerous.",.@event1$[.@i];
-			case 8: callsub L_Check,"3 Broken Pharaoh Symbols and 3 Tutankhamen's Masks",7113,3,"I hear the pyramids are in Morroc, but I've never been there. Some humans call it Morco.",.@event1$[.@i],7114,3;
-			case 9: callsub L_Check,"2 Pocket Watches",7513,2,"Those lazy merchants, why do they need pocket watches they don't even use?",.@event1$[.@i];
-			case 10: callsub L_Check,"3 Young Twigs",7018,3,"Mellow Island has a climate like with where we cats used to live. But the trees die out sometimes due to it being an island.",.@event1$[.@i];
-			case 11: callsub L_Check,"5 Rossata Pieces",7211,5,"I guess they collect these because humans have them, but what's the use of researching ancient languages?",.@event1$[.@i];
-			case 12: callsub L_Check,"5 Fangs of Garm",7036,5,"Weak humans need sharp weapons, but cats already have nice and sharp claws, so why are we collecting these!!",.@event1$[.@i];
-			case 13: callsub L_Check,"3 Baphomet Dolls",750,3,"Baphomet dolls are great for playing around with.",.@event1$[.@i];
-			case 14: callsub L_Check,"1 Tiger's Footskin and 5 Tiger Skins",1030,1,"Did you know that tigers are cats too? Therefore, cats are better than tigers.",.@event1$[.@i],1029,5;
-			case 15: callsub L_Check,"3 Broken Shield Pieces and 3 Shining Spear Blades",7108,3,"I don't know what they want with these.",.@event1$[.@i],7109,3;
-			case 16: callsub L_Check,"3 Osiris Dolls",751,3,"Shame~ I never got to play with an Osiris doll.",.@event1$[.@i];
-			case 17: callsub L_Check,"1 Ice Scale",7562,1,"Mellow Island is a fabulous place to live. But the ships are too hot.",.@event1$[.@i];
-			case 18: callsub L_Check,"1 Skeletal Armor Piece",7450,1,"Ewww... Why would they collect something so creepy?",.@event1$[.@i];
-			case 19: callsub L_Check,"1 Darkred Scale Piece",6091,1,"Dragon scales? Well... I guess they are tough. But what are they going to use them for?",.@event1$[.@i];
-			case 20: callsub L_Check,"2 Wills of Red Darkness",7566,2,"Interesting! Does it scream or something when I poke it in the eye?",.@event1$[.@i];
-			case 21: callsub L_Check,"2 Foolishness of the Blind",7021,2,"This blind man is foolish in not knowing that gathering 300 cats cures blindness...",.@event1$[.@i];
+		case 1:
+			callsub(L_Check, "2 Pieces of Queen's Wing", Queen_Wing_Piece, 2, "Wings of the Insect Queen? What a pitiful name. I would've given some cool names!", .@event1$[.@i]);
+		case 2:
+			callsub(L_Check, "2 Broken Crowns", Broken_Crown, 2, "For crying out loud! Those cats working on these events must be playing around. Can't they think of a better name?", .@event1$[.@i]);
+		case 3:
+			callsub(L_Check, "2 Fire Dragon Scales", Scale_Of_Red_Dragon, 2, "Dragon scales? Well... I guess they are tough. But what are they going to use them for?", .@event1$[.@i]);
+		case 4:
+			callsub(L_Check, "3 Mother's Nightmares", Mothers_Nightmare, 3, "Even though I don't have the authority to find out, I wonder what they're doing with the collected items?", .@event1$[.@i]);
+		case 5:
+			callsub(L_Check, "5 Gemstones", Gemstone, 5, "Something useful for a change. The ore will end up as nice pieces of jewelry.", .@event1$[.@i]);
+		case 6:
+			callsub(L_Check, "5 Heroic Emblems", Voucher_Of_Orcish_Hero, 5, "Good, good. This is the kind of name I wanted!", .@event1$[.@i]);
+		case 7:
+			callsub(L_Check, "3 Taeguk Plates", Taegeuk_Plate, 3, "Taking in something like this, maybe they're up to something dangerous.", .@event1$[.@i]);
+		case 8:
+			callsub(L_Check, "3 Broken Pharaoh Symbols and 3 Tutankhamen's Masks", Broken_Pharaoh_Symbol, 3, "I hear the pyramids are in Morroc, but I've never been there. Some humans call it Morco.", .@event1$[.@i], Tutankhamens_Mask, 3);
+		case 9:
+			callsub(L_Check, "2 Pocket Watches", Pocket_Watch, 2, "Those lazy merchants, why do they need pocket watches they don't even use?", .@event1$[.@i]);
+		case 10:
+			callsub(L_Check, "3 Young Twigs", Young_Twig, 3, "Mellow Island has a climate like with where we cats used to live. But the trees die out sometimes due to it being an island.", .@event1$[.@i]);
+		case 11:
+			callsub(L_Check, "5 Rossata Pieces", Rojerta_Piece, 5, "I guess they collect these because humans have them, but what's the use of researching ancient languages?", .@event1$[.@i]);
+		case 12:
+			callsub(L_Check, "5 Fangs of Garm", Fang_Of_Garm, 5, "Weak humans need sharp weapons, but cats already have nice and sharp claws, so why are we collecting these!!", .@event1$[.@i]);
+		case 13:
+			callsub(L_Check, "3 Baphomet Dolls", Baphomet_Doll, 3, "Baphomet dolls are great for playing around with.", .@event1$[.@i]);
+		case 14:
+			callsub(L_Check, "1 Tiger's Footskin and 5 Tiger Skins", Tiger_Footskin, 1, "Did you know that tigers are cats too? Therefore, cats are better than tigers.", .@event1$[.@i], Tigers_Skin, 5);
+		case 15:
+			callsub(L_Check, "3 Broken Shield Pieces and 3 Shining Spear Blades", Boroken_Shiled_Piece, 3, "I don't know what they want with these.", .@event1$[.@i], Shine_Spear_Blade, 3);
+		case 16:
+			callsub(L_Check, "3 Osiris Dolls", Osiris_Doll, 3, "Shame~ I never got to play with an Osiris doll.", .@event1$[.@i]);
+		case 17:
+			callsub(L_Check, "1 Ice Scale", Ice_Scale, 1, "Mellow Island is a fabulous place to live. But the ships are too hot.", .@event1$[.@i]);
+		case 18:
+			callsub(L_Check, "1 Skeletal Armor Piece", Piece_Of_Bone_Armor, 1, "Ewww... Why would they collect something so creepy?", .@event1$[.@i]);
+		case 19:
+			callsub(L_Check, "1 Darkred Scale Piece", Dark_Red_Scale, 1, "Dragon scales? Well... I guess they are tough. But what are they going to use them for?", .@event1$[.@i]);
+		case 20:
+			callsub(L_Check, "2 Wills of Red Darkness", Will_Of_Darkness_, 2, "Interesting! Does it scream or something when I poke it in the eye?", .@event1$[.@i]);
+		case 21:
+			callsub(L_Check, "2 Foolishness of the Blind", Foolishness_Of_Blind, 2, "This blind man is foolish in not knowing that gathering 300 cats cures blindness...", .@event1$[.@i]);
 		}
 	case 3:
 		mes "[Namis]";
@@ -1496,21 +1517,36 @@ malangdo,215,119,4	script	Thanks Ticket Machine	2_VENDING_MACHINE1,{
 		mes "The Vending Machine is selling items in the following list.";
 		next;
 		switch(select("Finish", "1 Siege Arrow Quiver A (2 Tickets)", "1 Siege Arrow Quiver S (2 Tickets)", "30 White Potion (12 Tickets)", "30 White Slim Potion (14 Tickets)", "10 Dark Water (20 Tickets)", "20 Siege_Violet_Potion (30 Tickets)", "10 Coldproof Potion (30 Tickets)", "10 Thunderproof Potion (30 Tickets)", "10 Earthproof Potion (30 Tickets)", "10 Fireproof Potion (30 Tickets)", "10 Elemental Converter[Fire] (30 Tickets)")) {
-			case 1: close;
-			case 2: callsub L_Purchase,2,12678,1; //Siege_Arrow_Quiver_A
-			case 3: callsub L_Purchase,2,12677,1; //Siege_Arrow_Quiver_S
-			case 4: callsub L_Purchase,12,504,30; //White_Potion
-			case 5: callsub L_Purchase,14,547,30; //White_Slim_Potion
-			case 6: callsub L_Purchase,20,12020,10; //Water_Of_Darkness
-			case 7: callsub L_Purchase,30,11547,20; //Woe_Violet_Potion
-			case 8: callsub L_Purchase,30,12119,10; //Resist_Water
-			case 9: callsub L_Purchase,30,12121,10; //Resist_Wind
-			case 10: callsub L_Purchase,30,12120,10; //Resist_Earth
-			case 11: callsub L_Purchase,30,12118,10; //Resist_Fire
-			case 12: callsub L_Purchase,30,12114,10,"Elemental Converter[Fire]"; //Elemental_Fire
-			case 13: callsub L_Purchase,30,12115,10,"Elemental Converter[Water]"; //Elemental_Water
-			case 14: callsub L_Purchase,30,12117,10,"Elemental Converter[Wind]"; //Elemental_Wind
-			case 15: callsub L_Purchase,30,12116,10,"Elemental Converter[Earth]"; //Elemental_Earth
+		case 1:
+			close;
+		case 2:
+			callsub(L_Purchase, 2, Siege_Arrow_Quiver_A, 1);
+		case 3:
+			callsub(L_Purchase, 2, Siege_Arrow_Quiver_S, 1);
+		case 4:
+			callsub(L_Purchase, 12, White_Potion, 30);
+		case 5:
+			callsub(L_Purchase, 14, White_Slim_Potion, 30);
+		case 6:
+			callsub(L_Purchase, 20, Water_Of_Darkness, 10);
+		case 7:
+			callsub(L_Purchase, 30, Woe_Violet_Potion, 20);
+		case 8:
+			callsub(L_Purchase, 30, Resist_Water, 10);
+		case 9:
+			callsub(L_Purchase, 30, Resist_Wind, 10);
+		case 10:
+			callsub(L_Purchase, 30, Resist_Earth, 10);
+		case 11:
+			callsub(L_Purchase, 30, Resist_Fire, 10);
+		case 12:
+			callsub(L_Purchase, 30, Elemental_Fire, 10, "Elemental Converter[Fire]");
+		case 13:
+			callsub(L_Purchase, 30, Elemental_Water, 10, "Elemental Converter[Water]");
+		case 14:
+			callsub(L_Purchase, 30, Elemental_Wind, 10, "Elemental Converter[Wind]");
+		case 15:
+			callsub(L_Purchase, 30, Elemental_Earth, 10, "Elemental Converter[Earth]");
 		}
 		end;
 	case 3:
@@ -1520,67 +1556,126 @@ malangdo,215,119,4	script	Thanks Ticket Machine	2_VENDING_MACHINE1,{
 			mes "You don't have enough ^FF0000Invest Thanks Ticket^000000 to proceed.";
 			close;
 		}
-		delitem Thanks_Invest_Ticket,5;
-		.@i = rand(1,10000);
-		     if (.@i <= 100) callsub L_Bag,12531,1; //White_Potion_Box
-		else if (.@i <= 200) callsub L_Bag,12549,1; //White_Slim_Pot_Box2
-		else if (.@i <= 250) callsub L_Bag,11549,10; //Woe_Blue_Potion
-		else if (.@i <= 660) callsub L_Bag,617,1; //Old_Violet_Box
-		else if (.@i <= 710) callsub L_Bag,12532,1; //Royal_Jelly_Box2
-		else if (.@i <= 760) callsub L_Bag,12533,1; //Blue_Herb_Box2
-		else if (.@i <= 810) callsub L_Bag,505,5; //Blue_Potion
-		else if (.@i <= 1110) callsub L_Bag,644,1; //Gift_Box
-		else if (.@i <= 1120) callsub L_Bag,607,1; //Yggdrasilberry
-		else if (.@i <= 1130) callsub L_Bag,608,2; //Seed_Of_Yggdrasil
-		else if (.@i <= 1140) callsub L_Bag,12292,5; //Unripe_Fruit
-		else if (.@i <= 1150) callsub L_Bag,12293,5; //Dried_Yggdrasilberry
-		else if (.@i <= 1250) callsub L_Bag,12679,1; //Sg_White_Potion_Box
-		else if (.@i <= 1471) callsub L_Bag,603,1; //Old_Blue_Box
-		else if (.@i <= 1571) callsub L_Bag,12550,1,"Poison Bottle Box(30)"; //Poison_Bottle_Box2
-		else if (.@i <= 1671) callsub L_Bag,12020,10; //Water_Of_Darkness
-		else if (.@i <= 1871) callsub L_Bag,12030,5; //Box_Of_Grudge
-		else if (.@i <= 2071) callsub L_Bag,12031,5; //Sleepy_Box
-		else if (.@i <= 2371) callsub L_Bag,12033,2; //Box_Of_Sunlight
-		else if (.@i <= 2571) callsub L_Bag,12114,5,"Elemental Converter[Fire]"; //Elemental_Fire
-		else if (.@i <= 2771) callsub L_Bag,12115,5,"Elemental Converter[Water]"; //Elemental_Water
-		else if (.@i <= 2971) callsub L_Bag,12117,5,"Elemental Converter[Wind]"; //Elemental_Wind
-		else if (.@i <= 3171) callsub L_Bag,12116,5,"Elemental Converter[Earth]"; //Elemental_Earth
-		else if (.@i <= 3271) callsub L_Bag,12680,1; //Sg_Blue_Potion_Box
-		else if (.@i <= 3471) callsub L_Bag,12118,5; //Resist_Fire
-		else if (.@i <= 3671) callsub L_Bag,12119,5; //Resist_Water
-		else if (.@i <= 3871) callsub L_Bag,12121,5; //Resist_Wind
-		else if (.@i <= 4071) callsub L_Bag,12120,5; //Resist_Earth
-		else if (.@i <= 4271) callsub L_Bag,929,20; //Immortal_Heart
-		else if (.@i <= 4471) callsub L_Bag,1059,20; //Transparent_Cloth
-		else if (.@i <= 4671) callsub L_Bag,905,20; //Stem
-		else if (.@i <= 4871) callsub L_Bag,606,10; //Aloebera
-		else if (.@i <= 5071) callsub L_Bag,609,10; //Amulet
-		else if (.@i <= 5271) callsub L_Bag,710,2; //Illusion_Flower
-		else if (.@i <= 5471) callsub L_Bag,576,20; //Prickly_Fruit
-		else if (.@i <= 5671) callsub L_Bag,621,10; //Bitter_Herb
-		else if (.@i <= 5871) callsub L_Bag,709,10; //Izidor
-		else if (.@i <= 6071) callsub L_Bag,605,10; //Anodyne
-		else if (.@i <= 6171) callsub L_Bag,11548,10; //Woe_White_Potion
-		else if (.@i <= 6371) callsub L_Bag,706,10; //Four_Leaf_Clover
-		else if (.@i <= 6571) callsub L_Bag,521,10; //Leaflet_Of_Aloe
-		else if (.@i <= 6771) callsub L_Bag,707,10; //Singing_Plant
-		else if (.@i <= 6971) callsub L_Bag,610,10; //Leaf_Of_Yggdrasil
-		else if (.@i <= 7021) callsub L_Bag,12676,1; //Sg_Violet_Potion_Box
-		else if (.@i <= 7171) callsub L_Bag,6249,10; //Savage_Meat
-		else if (.@i <= 7321) callsub L_Bag,6252,10; //Wolf_Blood
-		else if (.@i <= 7471) callsub L_Bag,6254,10; //Beef_Head_Meat
-		else if (.@i <= 7621) callsub L_Bag,6253,10; //Cold_Ice
-		else if (.@i <= 7771) callsub L_Bag,6256,10; //Ice_Fragment
-		else if (.@i <= 7921) callsub L_Bag,6257,10; //Ice_Crystal
-		else if (.@i <= 8071) callsub L_Bag,6260,10; //Petti_Tail
-		else if (.@i <= 8309) callsub L_Bag,7932,20; //Poison_Herb_Nerium
-		else if (.@i <= 8547) callsub L_Bag,7933,20; //Poison_Herb_Rantana
-		else if (.@i <= 8785) callsub L_Bag,7934,20; //Poison_Herb_Makulata
-		else if (.@i <= 9023) callsub L_Bag,7935,20; //Poison_Herb_Seratum
-		else if (.@i <= 9261) callsub L_Bag,7936,20; //Poison_Herb_Scopolia
-		else if (.@i <= 9499) callsub L_Bag,7937,20; //Poison_Herb_Amoena
-		else if (.@i <= 9699) callsub L_Bag,6217,20; //Mandragora_Flowerpot
-		else callsub L_Bag,12016,10; //Speed_Up_Potion
+		delitem(Thanks_Invest_Ticket, 5);
+		.@i = rand(1, 10000);
+		if (.@i <= 100)
+			callsub(L_Bag, White_Potion_Box, 1);
+		else if (.@i <= 200)
+			callsub(L_Bag, White_Slim_Pot_Box2, 1);
+		else if (.@i <= 250)
+			callsub(L_Bag, Woe_Blue_Potion, 10);
+		else if (.@i <= 660)
+			callsub(L_Bag, Old_Violet_Box, 1);
+		else if (.@i <= 710)
+			callsub(L_Bag, Royal_Jelly_Box2, 1);
+		else if (.@i <= 760)
+			callsub(L_Bag, Blue_Herb_Box2, 1);
+		else if (.@i <= 810)
+			callsub(L_Bag, Blue_Potion, 5);
+		else if (.@i <= 1110)
+			callsub(L_Bag, Gift_Box, 1);
+		else if (.@i <= 1120)
+			callsub(L_Bag, Yggdrasilberry, 1);
+		else if (.@i <= 1130)
+			callsub(L_Bag, Seed_Of_Yggdrasil, 2);
+		else if (.@i <= 1140)
+			callsub(L_Bag, Unripe_Fruit, 5);
+		else if (.@i <= 1150)
+			callsub(L_Bag, Dried_Yggdrasilberry, 5);
+		else if (.@i <= 1250)
+			callsub(L_Bag, Sg_White_Potion_Box, 1);
+		else if (.@i <= 1471)
+			callsub(L_Bag, Old_Blue_Box, 1);
+		else if (.@i <= 1571)
+			callsub(L_Bag, Poison_Bottle_Box2, 1, "Poison Bottle Box(30);");
+		else if (.@i <= 1671)
+			callsub(L_Bag, Water_Of_Darkness, 10);
+		else if (.@i <= 1871)
+			callsub(L_Bag, Box_Of_Grudge, 5);
+		else if (.@i <= 2071)
+			callsub(L_Bag, Sleepy_Box, 5);
+		else if (.@i <= 2371)
+			callsub(L_Bag, Box_Of_Sunlight, 2);
+		else if (.@i <= 2571)
+			callsub(L_Bag, Elemental_Fire, 5, "Elemental Converter[Fire]");
+		else if (.@i <= 2771)
+			callsub(L_Bag, Elemental_Water, 5, "Elemental Converter[Water]");
+		else if (.@i <= 2971)
+			callsub(L_Bag, Elemental_Earth, 5, "Elemental Converter[Wind]");
+		else if (.@i <= 3171)
+			callsub(L_Bag, Elemental_Wind, 5, "Elemental Converter[Earth]");
+		else if (.@i <= 3271)
+			callsub(L_Bag, Sg_Blue_Potion_Box, 1);
+		else if (.@i <= 3471)
+			callsub(L_Bag, Resist_Fire, 5);
+		else if (.@i <= 3671)
+			callsub(L_Bag, Resist_Water, 5);
+		else if (.@i <= 3871)
+			callsub(L_Bag, Resist_Wind, 5);
+		else if (.@i <= 4071)
+			callsub(L_Bag, Resist_Earth, 5);
+		else if (.@i <= 4271)
+			callsub(L_Bag, Immortal_Heart, 20);
+		else if (.@i <= 4471)
+			callsub(L_Bag, Transparent_Cloth, 20);
+		else if (.@i <= 4671)
+			callsub(L_Bag, Stem, 20);
+		else if (.@i <= 4871)
+			callsub(L_Bag, Aloebera, 10);
+		else if (.@i <= 5071)
+			callsub(L_Bag, Amulet, 10);
+		else if (.@i <= 5271)
+			callsub(L_Bag, Illusion_Flower, 2);
+		else if (.@i <= 5471)
+			callsub(L_Bag, Prickly_Fruit, 20);
+		else if (.@i <= 5671)
+			callsub(L_Bag, Bitter_Herb, 10);
+		else if (.@i <= 5871)
+			callsub(L_Bag, Izidor, 10);
+		else if (.@i <= 6071)
+			callsub(L_Bag, Anodyne, 10);
+		else if (.@i <= 6171)
+			callsub(L_Bag, Woe_White_Potion, 10);
+		else if (.@i <= 6371)
+			callsub(L_Bag, Four_Leaf_Clover, 10);
+		else if (.@i <= 6571)
+			callsub(L_Bag, Leaflet_Of_Aloe, 10);
+		else if (.@i <= 6771)
+			callsub(L_Bag, Singing_Plant, 10);
+		else if (.@i <= 6971)
+			callsub(L_Bag, Leaf_Of_Yggdrasil, 10);
+		else if (.@i <= 7021)
+			callsub(L_Bag, Sg_Violet_Potion_Box, 1);
+		else if (.@i <= 7171)
+			callsub(L_Bag, Savage_Meat, 10);
+		else if (.@i <= 7321)
+			callsub(L_Bag, Wolf_Blood, 10);
+		else if (.@i <= 7471)
+			callsub(L_Bag, Beef_Head_Meat, 10);
+		else if (.@i <= 7621)
+			callsub(L_Bag, Cold_Ice, 10);
+		else if (.@i <= 7771)
+			callsub(L_Bag, Ice_Fragment, 10);
+		else if (.@i <= 7921)
+			callsub(L_Bag, Ice_Crystal, 10);
+		else if (.@i <= 8071)
+			callsub(L_Bag, Petti_Tail, 10);
+		else if (.@i <= 8309)
+			callsub(L_Bag, Poison_Herb_Nerium, 20);
+		else if (.@i <= 8547)
+			callsub(L_Bag, Poison_Herb_Rantana, 20);
+		else if (.@i <= 8785)
+			callsub(L_Bag, Poison_Herb_Makulata, 20);
+		else if (.@i <= 9023)
+			callsub(L_Bag, Poison_Herb_Seratum, 20);
+		else if (.@i <= 9261)
+			callsub(L_Bag, Poison_Herb_Scopolia, 20);
+		else if (.@i <= 9499)
+			callsub(L_Bag, Poison_Herb_Amoena, 20);
+		else if (.@i <= 9699)
+			callsub(L_Bag, Mandragora_Flowerpot, 20);
+		else
+			callsub(L_Bag, Speed_Up_Potion, 10);
 		end;
 	case 4:
 		mes "Black Paw Jelly Bag Button chosen. Need to insert 50 ^FF0000Invest Thanks Ticket^000000 and a random item will appear.";
@@ -1589,75 +1684,142 @@ malangdo,215,119,4	script	Thanks Ticket Machine	2_VENDING_MACHINE1,{
 			mes "You don't have enough ^FF0000Invest Thanks Ticket^000000 to proceed.";
 			close;
 		}
-		delitem Thanks_Invest_Ticket,50;
-		.@i = rand(1,10000);
-		     if (.@i <= 100) callsub L_Bag,12531,1; //White_Potion_Box
-		else if (.@i <= 200) callsub L_Bag,12549,1; //White_Slim_Pot_Box2
-		else if (.@i <= 250) callsub L_Bag,11549,20; //Woe_Blue_Potion
-		else if (.@i <= 450) callsub L_Bag,617,1; //Old_Violet_Box
-		else if (.@i <= 500) callsub L_Bag,12532,1; //Royal_Jelly_Box2
-		else if (.@i <= 550) callsub L_Bag,12533,1; //Blue_Herb_Box2
-		else if (.@i <= 600) callsub L_Bag,505,10; //Blue_Potion
-		else if (.@i <= 800) callsub L_Bag,644,1; //Gift_Box
-		else if (.@i <= 810) callsub L_Bag,607,2; //Yggdrasilberry
-		else if (.@i <= 820) callsub L_Bag,608,3; //Seed_Of_Yggdrasil
-		else if (.@i <= 830) callsub L_Bag,12292,10; //Unripe_Fruit
-		else if (.@i <= 840) callsub L_Bag,12293,10; //Dried_Yggdrasilberry
-		else if (.@i <= 940) callsub L_Bag,12679,1; //Sg_White_Potion_Box
-		else if (.@i <= 1140) callsub L_Bag,603,1; //Old_Blue_Box
-		else if (.@i <= 1240) callsub L_Bag,12550,1,"Poison Bottle Box(30)"; //Poison_Bottle_Box2
-		else if (.@i <= 1340) callsub L_Bag,12020,20; //Water_Of_Darkness
-		else if (.@i <= 1440) callsub L_Bag,12030,10; //Box_Of_Grudge
-		else if (.@i <= 1540) callsub L_Bag,12031,10; //Sleepy_Box
-		else if (.@i <= 1690) callsub L_Bag,12033,4; //Box_Of_Sunlight
-		else if (.@i <= 1790) callsub L_Bag,12114,10,"Elemental Converter[Fire]"; //Elemental_Fire
-		else if (.@i <= 1890) callsub L_Bag,12115,10,"Elemental Converter[Water]"; //Elemental_Water
-		else if (.@i <= 1990) callsub L_Bag,12117,10,"Elemental Converter[Wind]"; //Elemental_Wind
-		else if (.@i <= 2090) callsub L_Bag,12116,10,"Elemental Converter[Earth]"; //Elemental_Earth
-		else if (.@i <= 2190) callsub L_Bag,12680,1; //Sg_Blue_Potion_Box
-		else if (.@i <= 2290) callsub L_Bag,12118,10; //Resist_Fire
-		else if (.@i <= 2390) callsub L_Bag,12119,10; //Resist_Water
-		else if (.@i <= 2490) callsub L_Bag,12121,10; //Resist_Wind
-		else if (.@i <= 2590) callsub L_Bag,12120,10; //Resist_Earth
-		else if (.@i <= 2690) callsub L_Bag,929,40; //Immortal_Heart
-		else if (.@i <= 2790) callsub L_Bag,1059,40; //Transparent_Cloth
-		else if (.@i <= 2890) callsub L_Bag,905,40; //Stem
-		else if (.@i <= 2990) callsub L_Bag,606,20; //Aloebera
-		else if (.@i <= 3090) callsub L_Bag,609,20; //Amulet
-		else if (.@i <= 3190) callsub L_Bag,710,4; //Illusion_Flower
-		else if (.@i <= 3290) callsub L_Bag,576,40; //Prickly_Fruit
-		else if (.@i <= 3390) callsub L_Bag,621,20; //Bitter_Herb
-		else if (.@i <= 3490) callsub L_Bag,709,20; //Izidor
-		else if (.@i <= 3590) callsub L_Bag,605,20; //Anodyne
-		else if (.@i <= 3690) callsub L_Bag,11548,20; //Woe_White_Potion
-		else if (.@i <= 3790) callsub L_Bag,706,20; //Four_Leaf_Clover
-		else if (.@i <= 3890) callsub L_Bag,521,20; //Leaflet_Of_Aloe
-		else if (.@i <= 3990) callsub L_Bag,707,20; //Singing_Plant
-		else if (.@i <= 4090) callsub L_Bag,610,20; //Leaf_Of_Yggdrasil
-		else if (.@i <= 4140) callsub L_Bag,12676,1; //Sg_Violet_Potion_Box
-		else if (.@i <= 4240) callsub L_Bag,6249,20; //Savage_Meat
-		else if (.@i <= 4340) callsub L_Bag,6252,20; //Wolf_Blood
-		else if (.@i <= 4440) callsub L_Bag,6254,20; //Beef_Head_Meat
-		else if (.@i <= 4540) callsub L_Bag,6253,20; //Cold_Ice
-		else if (.@i <= 4640) callsub L_Bag,6256,20; //Ice_Fragment
-		else if (.@i <= 4740) callsub L_Bag,6257,20; //Ice_Crystal
-		else if (.@i <= 4840) callsub L_Bag,6260,20; //Petti_Tail
-		else if (.@i <= 4940) callsub L_Bag,7932,40; //Poison_Herb_Nerium
-		else if (.@i <= 5040) callsub L_Bag,7933,40; //Poison_Herb_Rantana
-		else if (.@i <= 5140) callsub L_Bag,7934,40; //Poison_Herb_Makulata
-		else if (.@i <= 5240) callsub L_Bag,7935,40; //Poison_Herb_Seratum
-		else if (.@i <= 5340) callsub L_Bag,7936,40; //Poison_Herb_Scopolia
-		else if (.@i <= 5440) callsub L_Bag,7937,40; //Poison_Herb_Amoena
-		else if (.@i <= 5540) callsub L_Bag,6217,40; //Mandragora_Flowerpot
-		else if (.@i <= 6000) callsub L_Bag,12016,20; //Speed_Up_Potion
-		else if (.@i <= 6500) callsub L_Bag,2483,1; //Siege_Greave
-		else if (.@i <= 7000) callsub L_Bag,2484,1; //Siege_Boots
-		else if (.@i <= 7500) callsub L_Bag,2485,1; //Siege_Shoes
-		else if (.@i <= 8000) callsub L_Bag,2586,1; //Siege_Manteau
-		else if (.@i <= 8500) callsub L_Bag,2587,1; //Siege_Muffler
-		else if (.@i <= 9000) callsub L_Bag,15046,1; //Siege_Plate
-		else if (.@i <= 9500) callsub L_Bag,15047,1; //Siege_Suits
-		else callsub L_Bag,15048,1; //Siege_Robe
+		delitem(Thanks_Invest_Ticket, 50);
+		.@i = rand(1, 10000);
+		if (.@i <= 100)
+			callsub(L_Bag, White_Potion_Box, 1);
+		else if (.@i <= 200)
+			callsub(L_Bag, White_Slim_Pot_Box2, 1);
+		else if (.@i <= 250)
+			callsub(L_Bag, Woe_Blue_Potion, 20);
+		else if (.@i <= 450)
+			callsub(L_Bag, Old_Violet_Box, 1);
+		else if (.@i <= 500)
+			callsub(L_Bag, Royal_Jelly_Box2, 1);
+		else if (.@i <= 550)
+			callsub(L_Bag, Blue_Herb_Box2, 1);
+		else if (.@i <= 600)
+			callsub(L_Bag, Blue_Potion, 10);
+		else if (.@i <= 800)
+			callsub(L_Bag, Gift_Box, 1);
+		else if (.@i <= 810)
+			callsub(L_Bag, Yggdrasilberry, 2);
+		else if (.@i <= 820)
+			callsub(L_Bag, Seed_Of_Yggdrasil, 3);
+		else if (.@i <= 830)
+			callsub(L_Bag, Unripe_Fruit, 10);
+		else if (.@i <= 840)
+			callsub(L_Bag, Dried_Yggdrasilberry, 10);
+		else if (.@i <= 940)
+			callsub(L_Bag, Sg_White_Potion_Box, 1);
+		else if (.@i <= 1140)
+			callsub(L_Bag, Old_Blue_Box, 1);
+		else if (.@i <= 1240)
+			callsub(L_Bag, Poison_Bottle_Box2, 1, Poison Bottle Box(30));
+		else if (.@i <= 1340)
+			callsub(L_Bag, Water_Of_Darkness, 20);
+		else if (.@i <= 1440)
+			callsub(L_Bag, Box_Of_Grudge, 10);
+		else if (.@i <= 1540)
+			callsub(L_Bag, Sleepy_Box, 10);
+		else if (.@i <= 1690)
+			callsub(L_Bag, Box_Of_Sunlight, 4);
+		else if (.@i <= 1790)
+			callsub(L_Bag, Elemental_Fire, 10, Elemental Converter[Fire]);
+		else if (.@i <= 1890)
+			callsub(L_Bag, Elemental_Water, 10, Elemental Converter[Water]);
+		else if (.@i <= 1990)
+			callsub(L_Bag, Elemental_Wind, 10, Elemental Converter[Wind]);
+		else if (.@i <= 2090)
+			callsub(L_Bag, Elemental_Earth, 10, Elemental Converter[Earth]);
+		else if (.@i <= 2190)
+			callsub(L_Bag, Sg_Blue_Potion_Box, 1);
+		else if (.@i <= 2290)
+			callsub(L_Bag, Resist_Fire, 10);
+		else if (.@i <= 2390)
+			callsub(L_Bag, Resist_Water, 10);
+		else if (.@i <= 2490)
+			callsub(L_Bag, Resist_Wind, 10);
+		else if (.@i <= 2590)
+			callsub(L_Bag, Resist_Earth, 10);
+		else if (.@i <= 2690)
+			callsub(L_Bag, Immortal_Heart, 40);
+		else if (.@i <= 2790)
+			callsub(L_Bag, Transparent_Cloth, 40);
+		else if (.@i <= 2890)
+			callsub(L_Bag, Stem, 40);
+		else if (.@i <= 2990)
+			callsub(L_Bag, Aloebera, 20);
+		else if (.@i <= 3090)
+			callsub(L_Bag, Amulet, 20);
+		else if (.@i <= 3190)
+			callsub(L_Bag, Illusion_Flower, 4);
+		else if (.@i <= 3290)
+			callsub(L_Bag, Prickly_Fruit, 40);
+		else if (.@i <= 3390)
+			callsub(L_Bag, Bitter_Herb, 20);
+		else if (.@i <= 3490)
+			callsub(L_Bag, Izidor, 20);
+		else if (.@i <= 3590)
+			callsub(L_Bag, Anodyne, 20);
+		else if (.@i <= 3690)
+			callsub(L_Bag, Woe_White_Potion, 20);
+		else if (.@i <= 3790)
+			callsub(L_Bag, Four_Leaf_Clover, 20);
+		else if (.@i <= 3890)
+			callsub(L_Bag, Leaflet_Of_Aloe, 20);
+		else if (.@i <= 3990)
+			callsub(L_Bag, Singing_Plant, 20);
+		else if (.@i <= 4090)
+			callsub(L_Bag, Leaf_Of_Yggdrasil, 20);
+		else if (.@i <= 4140)
+			callsub(L_Bag, Sg_Violet_Potion_Box, 1);
+		else if (.@i <= 4240)
+			callsub(L_Bag, Savage_Meat, 20);
+		else if (.@i <= 4340)
+			callsub(L_Bag, Wolf_Blood, 20);
+		else if (.@i <= 4440)
+			callsub(L_Bag, Beef_Head_Meat, 20);
+		else if (.@i <= 4540)
+			callsub(L_Bag, Cold_Ice, 20);
+		else if (.@i <= 4640)
+			callsub(L_Bag, Ice_Fragment, 20);
+		else if (.@i <= 4740)
+			callsub(L_Bag, Ice_Crystal, 20);
+		else if (.@i <= 4840)
+			callsub(L_Bag, Petti_Tail, 20);
+		else if (.@i <= 4940)
+			callsub(L_Bag, Poison_Herb_Nerium, 40);
+		else if (.@i <= 5040)
+			callsub(L_Bag, Poison_Herb_Rantana, 40);
+		else if (.@i <= 5140)
+			callsub(L_Bag, Poison_Herb_Makulata, 40);
+		else if (.@i <= 5240)
+			callsub(L_Bag, Poison_Herb_Seratum, 40);
+		else if (.@i <= 5340)
+			callsub(L_Bag, Poison_Herb_Scopolia, 40);
+		else if (.@i <= 5440)
+			callsub(L_Bag, Poison_Herb_Amoena, 40);
+		else if (.@i <= 5540)
+			callsub(L_Bag, Mandragora_Flowerpot, 40);
+		else if (.@i <= 6000)
+			callsub(L_Bag, Speed_Up_Potion, 20);
+		else if (.@i <= 6500)
+			callsub(L_Bag, Siege_Greave, 1);
+		else if (.@i <= 7000)
+			callsub(L_Bag, Siege_Boots, 1);
+		else if (.@i <= 7500)
+			callsub(L_Bag, Siege_Shoes, 1);
+		else if (.@i <= 8000)
+			callsub(L_Bag, Siege_Manteau, 1);
+		else if (.@i <= 8500)
+			callsub(L_Bag, Siege_Muffler, 1);
+		else if (.@i <= 9000)
+			callsub(L_Bag, Siege_Plate, 1);
+		else if (.@i <= 9500)
+			callsub(L_Bag, Siege_Suits, 1);
+		else
+			callsub(L_Bag, Siege_Robe, 1);
 		end;
 	}
 	end;
