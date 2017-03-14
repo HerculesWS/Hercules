@@ -7423,21 +7423,21 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 		case NPC_CHANGEHOLY:
 		case NPC_CHANGEDARKNESS:
 		case NPC_CHANGETELEKINESIS:
-			clif->skill_nodamage(src,bl,skill_id,skill_lv,
-				sc_start2(src, bl, type, 100, skill_lv, skill->get_ele(skill_id,skill_lv),
+			clif->skill_nodamage(src, bl, skill_id, skill_lv,
+				sc_start2(src, bl, type, 100, skill_lv, skill->get_ele(skill_id, skill_lv),
 					skill->get_time(skill_id, skill_lv)));
 			break;
 		case NPC_CHANGEUNDEAD:
 			//This skill should fail if target is wearing bathory/evil druid card [Brainstorm]
 			//TO-DO This is ugly, fix it
 			if(tstatus->def_ele==ELE_UNDEAD || tstatus->def_ele==ELE_DARK) break;
-			clif->skill_nodamage(src,bl,skill_id,skill_lv,
+			clif->skill_nodamage(src, bl, skill_id, skill_lv,
 				sc_start2(src, bl, type, 100, skill_lv, skill->get_ele(skill_id,skill_lv),
 					skill->get_time(skill_id, skill_lv)));
 			break;
 
 		case NPC_PROVOCATION:
-			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
+			clif->skill_nodamage(src, bl, skill_id, skill_lv, 1);
 			if (md) mob->unlocktarget(md, tick);
 			break;
 
@@ -7464,29 +7464,29 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			break;
 
 		case NPC_DARKBLESSING:
-			clif->skill_nodamage(src,bl,skill_id,skill_lv,
-				sc_start2(src,bl,type,(50+skill_lv*5),skill_lv,skill_lv,skill->get_time2(skill_id,skill_lv)));
+			clif->skill_nodamage(src, bl, skill_id, skill_lv,
+				sc_start2(src, bl, type, (50 + skill_lv * 5), skill_lv, skill_lv, skill->get_time2(skill_id, skill_lv)));
 			break;
 
 		case NPC_LICK:
 			status_zap(bl, 0, 100);
-			clif->skill_nodamage(src,bl,skill_id,skill_lv,
-				sc_start(src,bl,type,(skill_lv*20),skill_lv,skill->get_time2(skill_id,skill_lv)));
+			clif->skill_nodamage(src, bl, skill_id, skill_lv,
+				sc_start(src, bl, type, (skill_lv * 20), skill_lv, skill->get_time2(skill_id, skill_lv)));
 			break;
 
 		case NPC_SUICIDE:
-			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
+			clif->skill_nodamage(src, bl, skill_id, skill_lv, 1);
 			status_kill(src); //When suiciding, neither exp nor drops is given.
 			break;
 
 		case NPC_SUMMONSLAVE:
 		case NPC_SUMMONMONSTER:
 			if(md && md->skill_idx >= 0)
-				mob->summonslave(md,md->db->skill[md->skill_idx].val,skill_lv,skill_id);
+				mob->summonslave(md, md->db->skill[md->skill_idx].val, skill_lv, skill_id);
 			break;
 
 		case NPC_CALLSLAVE:
-			mob->warpslave(src,MOB_SLAVEDISTANCE);
+			mob->warpslave(src, MOB_SLAVEDISTANCE);
 			break;
 
 		case NPC_RANDOMMOVE:
