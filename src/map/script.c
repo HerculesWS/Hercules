@@ -10861,6 +10861,91 @@ BUILDIN(addtimercount)
 	return true;
 }
 
+BUILDIN(gettimer)
+{
+	struct map_session_data *sd;
+	const struct TimerData *td;
+	int i;
+	int tick;
+	const char *event = NULL;
+	int val = 0;
+	bool first = true;
+	short mode = script_getnum(st, 2);
+
+	if (script_hasdata(st, 3))
+		sd = map->id2sd(script_getnum(st, 3));
+	else
+		sd = script->rid2sd(st);
+
+	if (script_hasdata(st, 4)) {
+		event = script_getstr(st, 4);
+		script->check_event(st, event);
+	}
+
+	if (sd == NULL) {
+		script_pushint(st, -1);
+		return true;
+	}
+
+	switch (mode) {
+	case 0:
+		// get number of timers
+		for (i = 0; i < MAX_EVENTTIMER; i++) {
+			if (sd->eventtimer[i] != INVALID_TIMER) {
+				if (event != NULL) {
+					if (strcmp((char *)(timer->get(sd->eventtimer[i])->data), event) == 0) {
+						val++;
+					}
+				} else {
+					val++;
+				}
+			}
+		}
+		break;
+	case 1:
+		// get the number of tick before the next timer runs
+		for (i = 0; i < MAX_EVENTTIMER; i++) {
+			if (sd->eventtimer[i] != INVALID_TIMER) {
+				td = timer->get(sd->eventtimer[i]);
+				tick = max(0, DIFF_TICK32(td->tick, timer->gettick()));
+				if (first == true && tick > 0) {
+					val = tick;
+					first = false;
+				}
+
+				if (event != NULL) {
+					if (tick < val && strcmp((char *)(td->data), event) == 0) {
+						val = tick;
+					}
+				} else if (tick < val) {
+					val = tick;
+				}
+			}
+		}
+		break;
+	case 2:
+		// get the number of ticks before the last timer runs
+		for (i = MAX_EVENTTIMER - 1; i >= 0; i--) {
+			if (sd->eventtimer[i] != INVALID_TIMER) {
+				td = timer->get(sd->eventtimer[i]);
+				tick = max(0, DIFF_TICK32(td->tick, timer->gettick()));
+
+				if (event != NULL) {
+					if (strcmp((char *)(td->data), event) == 0) {
+						val = max(val, tick);
+					}
+				} else {
+					val = max(val, tick);
+				}
+			}
+		}
+		break;
+	}
+
+	script_pushint(st, val);
+	return true;
+}
+
 /*==========================================
  *------------------------------------------*/
 BUILDIN(initnpctimer)
@@ -21115,6 +21200,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(addtimer,"is?"),
 		BUILDIN_DEF(deltimer,"s?"),
 		BUILDIN_DEF(addtimercount,"si?"),
+		BUILDIN_DEF(gettimer,"i??"),
 		BUILDIN_DEF(initnpctimer,"??"),
 		BUILDIN_DEF(stopnpctimer,"??"),
 		BUILDIN_DEF(startnpctimer,"??"),
