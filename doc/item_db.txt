@@ -59,7 +59,7 @@ item_db: (
 	}
 	Job: Job mask                 (alternate synxtax, int, defaults to all jobs = 0xFFFFFFFF)
 	Upper: Upper mask             (int, defaults to any = 0x3f)
-	Gender: Gender                (int, defaults to both = 2)
+	Gender: Gender                (string, defaults to "SEX_ANY")
 	Loc: Equip location           (int, required value for equipment)
 	WeaponLv: Weapon Level        (int, defaults to 0)
 	EquipLv: Equip required level (int, defaults to 0)
@@ -200,7 +200,12 @@ Upper: Equippable upper-types. Uses the following bitmasks:
 	mode. When no value is specified, all classes (mask 0x3f) are able to
 	equip the item.
 
-Gender: Gender restriction. 0 is female, 1 is male, 2 for both (default value).
+Gender: Gender restriction.
+	Available genders:
+		SEX_FEMALE: 0
+		SEX_MALE:   1
+		SEX_ANY:    2
+	When not specified, becomes "SEX_ANY".
 
 Loc: Equipment's placement. A value needs to be specified if the item is an
      equipment piece. Values are:
