@@ -210,6 +210,7 @@ prt_castle,45,169,5	script	Senior Crusader	4_M_CRU_OLD,{
 		mes "Have you proven your determination with the task I have given you, or do you possess the items proving that you have received your calling?";
 		next;
 		if (countitem(Patriotism_Marks) >= 1 && countitem(Sacred_Marks) >= 1) {
+			mes "[Michael Halig]";
 			mes "Ah...";
 			mes "I see that you have been called to become a Crusader. We are assured of your will, but now we must test your capabilities.";
 			next;
