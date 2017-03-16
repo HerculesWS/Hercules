@@ -27669,11 +27669,11 @@ int HP_guild_memberposition_changed(struct guild *g, int idx, int pos) {
 	}
 	return retVal___;
 }
-int HP_guild_change_position(int guild_id, int idx, int mode, int exp_mode, const char *name) {
+bool HP_guild_change_position(int guild_id, int idx, int mode, int exp_mode, const char *name) {
 	int hIndex = 0;
-	int retVal___ = 0;
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_guild_change_position_pre ) {
-		int (*preHookFunc) (int *guild_id, int *idx, int *mode, int *exp_mode, const char **name);
+		bool (*preHookFunc) (int *guild_id, int *idx, int *mode, int *exp_mode, const char **name);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_change_position_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_guild_change_position_pre[hIndex].func;
@@ -27688,7 +27688,7 @@ int HP_guild_change_position(int guild_id, int idx, int mode, int exp_mode, cons
 		retVal___ = HPMHooks.source.guild.change_position(guild_id, idx, mode, exp_mode, name);
 	}
 	if( HPMHooks.count.HP_guild_change_position_post ) {
-		int (*postHookFunc) (int retVal___, int guild_id, int idx, int mode, int exp_mode, const char *name);
+		bool (*postHookFunc) (bool retVal___, int guild_id, int idx, int mode, int exp_mode, const char *name);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_change_position_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_guild_change_position_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, guild_id, idx, mode, exp_mode, name);
@@ -31921,11 +31921,11 @@ int HP_intif_guild_change_memberinfo(int guild_id, int account_id, int char_id, 
 	}
 	return retVal___;
 }
-int HP_intif_guild_position(int guild_id, int idx, struct guild_position *p) {
+bool HP_intif_guild_position(int guild_id, int idx, struct guild_position *p) {
 	int hIndex = 0;
-	int retVal___ = 0;
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_intif_guild_position_pre ) {
-		int (*preHookFunc) (int *guild_id, int *idx, struct guild_position **p);
+		bool (*preHookFunc) (int *guild_id, int *idx, struct guild_position **p);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_guild_position_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_intif_guild_position_pre[hIndex].func;
@@ -31940,7 +31940,7 @@ int HP_intif_guild_position(int guild_id, int idx, struct guild_position *p) {
 		retVal___ = HPMHooks.source.intif.guild_position(guild_id, idx, p);
 	}
 	if( HPMHooks.count.HP_intif_guild_position_post ) {
-		int (*postHookFunc) (int retVal___, int guild_id, int idx, struct guild_position *p);
+		bool (*postHookFunc) (bool retVal___, int guild_id, int idx, struct guild_position *p);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_guild_position_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_intif_guild_position_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, guild_id, idx, p);
