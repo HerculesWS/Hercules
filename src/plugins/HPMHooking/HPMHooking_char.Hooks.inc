@@ -6432,11 +6432,11 @@ int HP_inter_guild_removemember_tosql(int account_id, int char_id) {
 	}
 	return retVal___;
 }
-int HP_inter_guild_tosql(struct guild *g, int flag) {
+bool HP_inter_guild_tosql(struct guild *g, int flag) {
 	int hIndex = 0;
-	int retVal___ = 0;
+	bool retVal___ = false;
 	if (HPMHooks.count.HP_inter_guild_tosql_pre > 0) {
-		int (*preHookFunc) (struct guild **g, int *flag);
+		bool (*preHookFunc) (struct guild **g, int *flag);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_guild_tosql_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_inter_guild_tosql_pre[hIndex].func;
@@ -6451,7 +6451,7 @@ int HP_inter_guild_tosql(struct guild *g, int flag) {
 		retVal___ = HPMHooks.source.inter_guild.tosql(g, flag);
 	}
 	if (HPMHooks.count.HP_inter_guild_tosql_post > 0) {
-		int (*postHookFunc) (int retVal___, struct guild *g, int flag);
+		bool (*postHookFunc) (bool retVal___, struct guild *g, int flag);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_guild_tosql_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_inter_guild_tosql_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, g, flag);
@@ -9954,15 +9954,15 @@ int HP_inter_storage_fromsql(int account_id, struct storage_data *p) {
 	}
 	return retVal___;
 }
-bool HP_inter_storage_guild_storage_tosql(int guild_id, const struct guild_storage *p) {
+bool HP_inter_storage_guild_storage_tosql(int guild_id, const struct guild_storage *gstor) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if (HPMHooks.count.HP_inter_storage_guild_storage_tosql_pre > 0) {
-		bool (*preHookFunc) (int *guild_id, const struct guild_storage **p);
+		bool (*preHookFunc) (int *guild_id, const struct guild_storage **gstor);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_storage_guild_storage_tosql_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_inter_storage_guild_storage_tosql_pre[hIndex].func;
-			retVal___ = preHookFunc(&guild_id, &p);
+			retVal___ = preHookFunc(&guild_id, &gstor);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -9970,26 +9970,26 @@ bool HP_inter_storage_guild_storage_tosql(int guild_id, const struct guild_stora
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.inter_storage.guild_storage_tosql(guild_id, p);
+		retVal___ = HPMHooks.source.inter_storage.guild_storage_tosql(guild_id, gstor);
 	}
 	if (HPMHooks.count.HP_inter_storage_guild_storage_tosql_post > 0) {
-		bool (*postHookFunc) (bool retVal___, int guild_id, const struct guild_storage *p);
+		bool (*postHookFunc) (bool retVal___, int guild_id, const struct guild_storage *gstor);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_storage_guild_storage_tosql_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_inter_storage_guild_storage_tosql_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, guild_id, p);
+			retVal___ = postHookFunc(retVal___, guild_id, gstor);
 		}
 	}
 	return retVal___;
 }
-int HP_inter_storage_guild_storage_fromsql(int guild_id, struct guild_storage *p) {
+int HP_inter_storage_guild_storage_fromsql(int guild_id, struct guild_storage *gstor) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_inter_storage_guild_storage_fromsql_pre > 0) {
-		int (*preHookFunc) (int *guild_id, struct guild_storage **p);
+		int (*preHookFunc) (int *guild_id, struct guild_storage **gstor);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_storage_guild_storage_fromsql_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_inter_storage_guild_storage_fromsql_pre[hIndex].func;
-			retVal___ = preHookFunc(&guild_id, &p);
+			retVal___ = preHookFunc(&guild_id, &gstor);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -9997,13 +9997,13 @@ int HP_inter_storage_guild_storage_fromsql(int guild_id, struct guild_storage *p
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.inter_storage.guild_storage_fromsql(guild_id, p);
+		retVal___ = HPMHooks.source.inter_storage.guild_storage_fromsql(guild_id, gstor);
 	}
 	if (HPMHooks.count.HP_inter_storage_guild_storage_fromsql_post > 0) {
-		int (*postHookFunc) (int retVal___, int guild_id, struct guild_storage *p);
+		int (*postHookFunc) (int retVal___, int guild_id, struct guild_storage *gstor);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_storage_guild_storage_fromsql_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_inter_storage_guild_storage_fromsql_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, guild_id, p);
+			retVal___ = postHookFunc(retVal___, guild_id, gstor);
 		}
 	}
 	return retVal___;

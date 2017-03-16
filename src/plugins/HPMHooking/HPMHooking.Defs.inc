@@ -3394,8 +3394,8 @@ typedef int (*HPMHOOK_pre_inter_guild_save_timer) (int *tid, int64 *tick, int *i
 typedef int (*HPMHOOK_post_inter_guild_save_timer) (int retVal___, int tid, int64 tick, int id, intptr_t data);
 typedef int (*HPMHOOK_pre_inter_guild_removemember_tosql) (int *account_id, int *char_id);
 typedef int (*HPMHOOK_post_inter_guild_removemember_tosql) (int retVal___, int account_id, int char_id);
-typedef int (*HPMHOOK_pre_inter_guild_tosql) (struct guild **g, int *flag);
-typedef int (*HPMHOOK_post_inter_guild_tosql) (int retVal___, struct guild *g, int flag);
+typedef bool (*HPMHOOK_pre_inter_guild_tosql) (struct guild **g, int *flag);
+typedef bool (*HPMHOOK_post_inter_guild_tosql) (bool retVal___, struct guild *g, int flag);
 typedef struct guild* (*HPMHOOK_pre_inter_guild_fromsql) (int *guild_id);
 typedef struct guild* (*HPMHOOK_post_inter_guild_fromsql) (struct guild* retVal___, int guild_id);
 typedef int (*HPMHOOK_pre_inter_guild_castle_tosql) (struct guild_castle **gc);
@@ -3672,10 +3672,10 @@ typedef int (*HPMHOOK_pre_inter_storage_tosql) (int *account_id, const struct st
 typedef int (*HPMHOOK_post_inter_storage_tosql) (int retVal___, int account_id, const struct storage_data *p);
 typedef int (*HPMHOOK_pre_inter_storage_fromsql) (int *account_id, struct storage_data **p);
 typedef int (*HPMHOOK_post_inter_storage_fromsql) (int retVal___, int account_id, struct storage_data *p);
-typedef bool (*HPMHOOK_pre_inter_storage_guild_storage_tosql) (int *guild_id, const struct guild_storage **p);
-typedef bool (*HPMHOOK_post_inter_storage_guild_storage_tosql) (bool retVal___, int guild_id, const struct guild_storage *p);
-typedef int (*HPMHOOK_pre_inter_storage_guild_storage_fromsql) (int *guild_id, struct guild_storage **p);
-typedef int (*HPMHOOK_post_inter_storage_guild_storage_fromsql) (int retVal___, int guild_id, struct guild_storage *p);
+typedef bool (*HPMHOOK_pre_inter_storage_guild_storage_tosql) (int *guild_id, const struct guild_storage **gstor);
+typedef bool (*HPMHOOK_post_inter_storage_guild_storage_tosql) (bool retVal___, int guild_id, const struct guild_storage *gstor);
+typedef int (*HPMHOOK_pre_inter_storage_guild_storage_fromsql) (int *guild_id, struct guild_storage **gstor);
+typedef int (*HPMHOOK_post_inter_storage_guild_storage_fromsql) (int retVal___, int guild_id, struct guild_storage *gstor);
 typedef int (*HPMHOOK_pre_inter_storage_sql_init) (void);
 typedef int (*HPMHOOK_post_inter_storage_sql_init) (int retVal___);
 typedef void (*HPMHOOK_pre_inter_storage_sql_final) (void);
