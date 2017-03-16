@@ -1391,6 +1391,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(gstorage->ensure, HP_gstorage_ensure) },
 	{ HP_POP(gstorage->init, HP_gstorage_init) },
 	{ HP_POP(gstorage->final, HP_gstorage_final) },
+	{ HP_POP(gstorage->final_sub, HP_gstorage_final_sub) },
 	{ HP_POP(gstorage->delete, HP_gstorage_delete) },
 	{ HP_POP(gstorage->open, HP_gstorage_open) },
 	{ HP_POP(gstorage->additem, HP_gstorage_additem) },
