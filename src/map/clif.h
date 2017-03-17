@@ -65,6 +65,7 @@ struct view_data;
 #define MAX_ROULETTE_COLUMNS 9 /** client-defined value **/
 #define RGB2BGR(c) (((c) & 0x0000FF) << 16 | ((c) & 0x00FF00) | ((c) & 0xFF0000) >> 16)
 
+#define COLOR_CYAN    0x00ffffU
 #define COLOR_RED     0xff0000U
 #define COLOR_GREEN   0x00ff00U
 #define COLOR_WHITE   0xffffffU

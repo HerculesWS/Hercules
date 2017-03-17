@@ -78,20 +78,6 @@ prt_castle,45,169,5	script	Senior Crusader	4_M_CRU_OLD,{
 		mes "As it happened one thousand years ago, evil forces will one day attack in droves in an attempt to take over the world once again.";
 		close;
 	}
-	else if(CRUS_Q <= 3 && countitem(Patriotism_Marks) && countitem(Sacred_Marks)) {
-		mes "Ah...";
-		mes "I see that you have been called to become a Crusader. We are assured of your will, but now we must test your capabilities.";
-		next;
-		mes "[Michael Halig]";
-		mes "Meet with Moorenak Miyol who is training in the underground dungeon of the Prontera Castle. Go, and speak with him first.";
-		next;
-		delitem 1004, 1;
-		delitem 1009, 1;
-		CRUS_Q = 4;
-		mes "[Michael Halig]";
-		mes "Moorenak and others like him will test the limits of your capabilities and help you find your path. Return to me after you have completed their tests...";
-		close;
-	}
 	else if(CRUS_Q == 0) {
 		mes "We are Crusaders, warriors preparing for the Holy War.";
 		mes "What brings you";
@@ -223,6 +209,28 @@ prt_castle,45,169,5	script	Senior Crusader	4_M_CRU_OLD,{
 	else if(CRUS_Q >= 1 && CRUS_Q <= 3) {
 		mes "Have you proven your determination with the task I have given you, or do you possess the items proving that you have received your calling?";
 		next;
+		if (countitem(Patriotism_Marks) >= 1 && countitem(Sacred_Marks) >= 1) {
+			mes "[Michael Halig]";
+			mes "Ah...";
+			mes "I see that you have been called to become a Crusader. We are assured of your will, but now we must test your capabilities.";
+			next;
+			mes "[Michael Halig]";
+			mes "Meet with Moorenak Miyol who is training in the underground dungeon of the Prontera Castle. Go, and speak with him first.";
+			next;
+			delitem Patriotism_Marks, 1;
+			delitem Sacred_Marks, 1;
+			CRUS_Q = 4;
+			if (questprogress(3006)) {
+				changequest 3006,3009;
+			} else if (questprogress(3007)) {
+				changequest 3007,3009;
+			} else {
+				changequest 3008,3009;
+			}
+			mes "[Michael Halig]";
+			mes "Moorenak and others like him will test the limits of your capabilities and help you find your path. Return to me after you have completed their tests...";
+			close;
+		}
 		switch(CRUS_Q) {
 		case 1:
 			.@item1 = 957;

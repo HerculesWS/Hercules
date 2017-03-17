@@ -7321,6 +7321,7 @@ static const struct battle_data {
 	{ "player_warp_keep_direction",         &battle_config.player_warp_keep_direction,      0,      0,      1,              },
 	{ "atcommand_levelup_events",	        &battle_config.atcommand_levelup_events,	    0,      0,      1,				},
 	{ "max_summoner_parameter",             &battle_config.max_summoner_parameter,          120,    10,     10000,          },
+	{ "mvp_exp_reward_message",             &battle_config.mvp_exp_reward_message,          0,      0,      1,              },
 };
 #ifndef STATS_OPT_OUT
 /**
@@ -7596,6 +7597,13 @@ void battle_adjust_conf(void) {
 		ShowWarning("conf/map/battle/feature.conf:features/auction is enabled but it is not stable on PACKETVER "EXPAND_AND_QUOTE(PACKETVER)", disabling...\n");
 		ShowWarning("conf/map/battle/feature.conf:features/auction change value to '2' to silence this warning and maintain it enabled\n");
 		battle_config.feature_auction = 0;
+	}
+#endif
+
+#if PACKETVER < 20131223
+	if (battle_config.mvp_exp_reward_message) {
+		ShowWarning("conf/map/battle/client.conf MVP EXP reward message is enabled but it requires PACKETVER 2013-12-23 or newer, disabling...\n");
+		battle_config.mvp_exp_reward_message = 0;
 	}
 #endif
 
