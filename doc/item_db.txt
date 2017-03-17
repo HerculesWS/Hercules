@@ -244,8 +244,27 @@ EquipLv: Base level required to be able to equip. It is possible to specify
 Refineable: true if the item can be refined, false otherwise. If no value is
             specified, it defaults to true.
 
-Sprite: Defines a replacement view-sprite for the item (eg:
+ViewSprite: Defines a replacement view-sprite for the item (eg:
       Making apples look like apple juice).
+
+	For shields, the types are:
+		S_GUARD:         1
+		S_BUCKLER:       2
+		S_SHIELD:        3
+		S_MIRROR_SHIELD: 4
+		S_MEMORIZE_BOOK: 5
+
+	For garments, the types are:
+		G_ARCHANGEL_WING:      1
+		G_BRAVERY_BAG:         2
+		G_FALLEN_ANGEL_WING:   3
+		G_AMISTR_BAG:          4
+		G_LOVE_DAD_WINGS_2012: 5
+		G_KIRIN_WING:          6
+		G_RIBBON_PIAMAT:       7
+		G_RUDRA_WING:          8
+		G_WING_OF_HAPPINESS:   9
+		G_GREATDEVILWING:      10
 
 Subtype: For weapons and ammo, indicates the weapon-class of the item.
 

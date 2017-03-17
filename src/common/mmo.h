@@ -1069,6 +1069,29 @@ enum ammo_type {
 	MAX_AMMO_TYPE
 };
 
+enum shield_sprite_type {
+	S_GUARD          = 1,
+	S_BUCKLER,       //2
+	S_SHIELD,        //3
+	S_MIRROR_SHIELD, //4
+	S_MEMORIZE_BOOK, //5
+	MAX_SHIELD_SPRITE_TYPE
+};
+
+enum garment_sprite_type {
+	G_ARCHANGEL_WING       = 1,
+	G_BRAVERY_BAG,         //2
+	G_FALLEN_ANGEL_WING,   //3
+	G_AMISTR_BAG,          //4
+	G_LOVE_DAD_WINGS_2012, //5
+	G_KIRIN_WING,          //6
+	G_RIBBON_PIAMAT,       //7
+	G_RUDRA_WING,          //8
+	G_WING_OF_HAPPINESS,   //9
+	G_GREATDEVILWING,      //10
+	MAX_GARMENT_SPRITE_TYPE
+};
+
 enum e_char_server_type {
 	CST_NORMAL      = 0,
 	CST_MAINTENANCE = 1,

@@ -21758,6 +21758,25 @@ void script_hardcoded_constants(void)
 	script->set_constant("A_CANNONBALL", A_CANNONBALL, false, false);
 	script->set_constant("A_THROWWEAPON", A_THROWWEAPON, false, false);
 
+	script->constdb_comment("Item Sprite types (Shield types)");
+	script->set_constant("S_GUARD", S_GUARD, false, false);
+	script->set_constant("S_BUCKLER", S_BUCKLER, false, false);
+	script->set_constant("S_SHIELD", S_SHIELD, false, false);
+	script->set_constant("S_MIRROR_SHIELD", S_MIRROR_SHIELD, false, false);
+	script->set_constant("S_MEMORIZE_BOOK", S_MEMORIZE_BOOK, false, false);
+
+	script->constdb_comment("Item Sprite types (Garment types)");
+	script->set_constant("G_ARCHANGEL_WING", G_ARCHANGEL_WING, false, false);
+	script->set_constant("G_BRAVERY_BAG", G_BRAVERY_BAG, false, false);
+	script->set_constant("G_FALLEN_ANGEL_WING", G_FALLEN_ANGEL_WING, false, false);
+	script->set_constant("G_AMISTR_BAG", G_AMISTR_BAG, false, false);
+	script->set_constant("G_LOVE_DAD_WINGS_2012", G_LOVE_DAD_WINGS_2012, false, false);
+	script->set_constant("G_KIRIN_WING", G_KIRIN_WING, false, false);
+	script->set_constant("G_RIBBON_PIAMAT", G_RIBBON_PIAMAT, false, false);
+	script->set_constant("G_RUDRA_WING", G_RUDRA_WING, false, false);
+	script->set_constant("G_WING_OF_HAPPINESS", G_WING_OF_HAPPINESS, false, false);
+	script->set_constant("G_GREATDEVILWING", G_GREATDEVILWING, false, false);
+
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL
 	script->set_constant("RENEWAL", 1, false, false);
