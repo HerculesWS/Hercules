@@ -17253,7 +17253,6 @@ BUILDIN(setunitdata)
 		val2 = script_getnum(st, 5);
 		val3 = script_getnum(st, 6);
 		break;
-		// fall through
 	case UDT_WALKTOXY:
 		setunitdata_assert_arg(6, false);
 		setunitdata_check_int(5);
