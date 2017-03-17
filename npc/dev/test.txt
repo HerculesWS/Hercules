@@ -748,7 +748,7 @@ function	script	HerculesSelfTestHelper	{
 		callsub(OnCheck, "getunitdata type "+.@udt, (.@gret != 0), 1);
 	}
 
-	cleararray(.@ud_types, 0, getarraysize(.@ud_types));
+	deletearray(.@ud_types);
 	unitkill .@guid; // kill the poring.
 	freeloop(0);
 
