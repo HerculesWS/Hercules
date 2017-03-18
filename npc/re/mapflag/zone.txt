@@ -67,6 +67,14 @@
 // Sara's Memory Instance ===========
 1@sara	mapflag	zone	Memorial Dungeon
 
+//Towns
+brasilis	mapflag	zone	Towns
+dewata	mapflag	zone	Towns
+eclage	mapflag	zone	Towns
+malangdo	mapflag	zone	Towns
+malaya	mapflag	zone	Towns
+mora	mapflag	zone	Towns
+
 // WoE:TE
 te_prt_gld	mapflag	zone	WoE TE
 te_prtcas01	mapflag	zone	WoE TE

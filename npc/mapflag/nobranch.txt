@@ -60,7 +60,6 @@ lou_in01	mapflag	nobranch
 lou_in02	mapflag	nobranch
 moc_castle	mapflag	nobranch
 morocc_in	mapflag	nobranch
-moscovia	mapflag	nobranch
 mosk_in	mapflag	nobranch
 new_zone01	mapflag	nobranch
 new_zone02	mapflag	nobranch
@@ -253,31 +252,7 @@ prt_are01	mapflag	nobranch
 pvp_y_room	mapflag	nobranch
 pvp_n_room	mapflag	nobranch
 
-// Main City maps ==============
-alberta	mapflag	nobranch
-aldebaran	mapflag	nobranch
-amatsu	mapflag	nobranch
-ayothaya	mapflag	nobranch
-comodo	mapflag	nobranch
-einbroch	mapflag	nobranch
-einbech	mapflag	nobranch
-geffen	mapflag	nobranch
-gonryun	mapflag	nobranch
-izlude	mapflag	nobranch
-jawaii	mapflag	nobranch
-hugel	mapflag	nobranch
-lighthalzen	mapflag	nobranch
-louyang	mapflag	nobranch
-morocc	mapflag	nobranch
 niflheim	mapflag	nobranch
-prontera	mapflag	nobranch
-payon	mapflag	nobranch
-pay_arche	mapflag	nobranch
-umbala	mapflag	nobranch
-xmas	mapflag	nobranch
-yuno	mapflag	nobranch
-rachel	mapflag	nobranch
-veins	mapflag	nobranch
 
 //Aldebaran Turbo Track ========
 turbo_room	mapflag	nobranch
@@ -309,7 +284,6 @@ que_qaru05	mapflag	nobranch
 e_tower	mapflag	nobranch
 
 // Episode 13.1 ===========
-mid_camp	mapflag	nobranch
 mid_campin	mapflag	nobranch
 man_fild01	mapflag	nobranch
 moc_fild22b	mapflag	nobranch
@@ -329,10 +303,8 @@ bat_a01	mapflag	nobranch
 bat_a02	mapflag	nobranch
 
 // Episode 13.2 ===========
-manuk	mapflag	nobranch
 man_fild02	mapflag	nobranch
 man_in01	mapflag	nobranch
-splendide	mapflag	nobranch
 spl_in01	mapflag	nobranch
 spl_in02	mapflag	nobranch
 
@@ -354,30 +326,22 @@ job3_war02	mapflag	nobranch
 jupe_core2	mapflag	nobranch
 
 // Brasilis ===========
-brasilis	mapflag	nobranch
 bra_in01	mapflag	nobranch
 
 // Episode 13.3 ===========
-dicastes01	mapflag	nobranch
-dicastes02	mapflag	nobranch
 dic_in01	mapflag	nobranch
 s_atelier	mapflag	nobranch
 
 // Episode 14.1 & Dewata ===========
-mora	mapflag	nobranch
-dewata	mapflag	nobranch
 dew_in01	mapflag	nobranch
 
 // Episode Zero & Malaya Port ===========
-malangdo	mapflag	nobranch
 mal_in01	mapflag	nobranch
 mal_in02	mapflag	nobranch
-malaya	mapflag	nobranch
 ma_scene01	mapflag	nobranch
 ma_in01	mapflag	nobranch
 
 // Episode 14.2 ===========
-eclage	mapflag	nobranch
 ecl_in01	mapflag	nobranch
 ecl_in02	mapflag	nobranch
 ecl_in03	mapflag	nobranch
