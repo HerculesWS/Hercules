@@ -87,7 +87,6 @@ nif_in	mapflag	nopenalty
 payon_in01	mapflag	nopenalty
 payon_in02	mapflag	nopenalty
 payon_in03	mapflag	nopenalty
-prt_are_in	mapflag	nopenalty
 prt_are01	mapflag	nopenalty
 prt_castle	mapflag	nopenalty
 prt_church	mapflag	nopenalty
@@ -203,17 +202,6 @@ que_sign02	mapflag	nopenalty
 // Arenas=======================
 sec_in01	mapflag	nopenalty
 sec_in02	mapflag	nopenalty
-
-// Izlude Arena ========================
-force_1-1	mapflag	nopenalty
-force_1-2	mapflag	nopenalty
-force_1-3	mapflag	nopenalty
-force_2-1	mapflag	nopenalty
-force_2-2	mapflag	nopenalty
-force_2-3	mapflag	nopenalty
-force_3-1	mapflag	nopenalty
-force_3-2	mapflag	nopenalty
-force_3-3	mapflag	nopenalty
 
 // PvP Arenas =========================
 pvp_y_1-1	mapflag	nopenalty

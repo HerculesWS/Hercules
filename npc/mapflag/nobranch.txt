@@ -175,9 +175,6 @@ que_thor	mapflag	nobranch
 
 // Arenas ======================
 arena_room	mapflag	nobranch
-force_1-1	mapflag	nobranch
-force_1-2	mapflag	nobranch
-force_1-3	mapflag	nobranch
 ordeal_1-1	mapflag	nobranch
 ordeal_1-2	mapflag	nobranch
 //ordeal_1-3	mapflag	nobranch
@@ -201,7 +198,6 @@ sec_in01	mapflag	nobranch
 //priest_1-1	mapflag	nobranch
 //priest_2-1	mapflag	nobranch
 //priest_3-1	mapflag	nobranch
-prt_are_in	mapflag	nobranch
 prt_are01	mapflag	nobranch
 //wizard_1-1	mapflag	nobranch
 //wizard_2-1	mapflag	nobranch

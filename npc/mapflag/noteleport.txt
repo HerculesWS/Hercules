@@ -94,7 +94,6 @@ nif_in	mapflag	noteleport
 payon_in01	mapflag	noteleport
 payon_in02	mapflag	noteleport
 payon_in03	mapflag	noteleport
-prt_are_in	mapflag	noteleport
 prt_are01	mapflag	noteleport
 prt_castle	mapflag	noteleport
 prt_church	mapflag	noteleport
@@ -194,13 +193,6 @@ cave	mapflag	noteleport
 
 // Arenas =====================>\\
 arena_room	mapflag	noteleport
-force_1-1	mapflag	noteleport
-force_2-1	mapflag	noteleport
-force_3-1	mapflag	noteleport
-force_4-1	mapflag	noteleport
-force_5-1	mapflag	noteleport
-force_1-2	mapflag	noteleport
-force_1-3	mapflag	noteleport
 sec_in01	mapflag	noteleport
 sec_in02	mapflag	noteleport
 

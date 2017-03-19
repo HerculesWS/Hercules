@@ -52,7 +52,11 @@ force_3-1	mapflag	zone	Izlude Battle Arena
 force_4-1	mapflag	zone	Izlude Battle Arena
 force_5-1	mapflag	zone	Izlude Battle Arena
 force_1-2	mapflag	zone	Izlude Battle Arena
+// force_2-2	mapflag	zone	Izlude Battle Arena
+// force_3-2	mapflag	zone	Izlude Battle Arena
 force_1-3	mapflag	zone	Izlude Battle Arena
+// force_2-3	mapflag	zone	Izlude Battle Arena
+// force_3-3	mapflag	zone	Izlude Battle Arena
 prt_are_in	mapflag	zone	Izlude Battle Arena
 
 //Sealed Shrine ==================
