@@ -591,13 +591,6 @@ pvp_2vs2	mapflag	nomemo
 
 //Aldebaran Turbo Track
 turbo_room	mapflag	nomemo
-turbo_n_1	mapflag	nomemo
-turbo_n_4	mapflag	nomemo
-turbo_n_8	mapflag	nomemo
-turbo_n_16	mapflag	nomemo
-turbo_e_4	mapflag	nomemo
-turbo_e_8	mapflag	nomemo
-turbo_e_16	mapflag	nomemo
 
 //Monster Races ================
 p_track01	mapflag	nomemo

@@ -213,15 +213,6 @@ gld2_prt	mapflag	nosave	SavePoint
 yggdrasil01	mapflag	nosave	SavePoint
 thana_boss	mapflag	nosave	SavePoint
 
-//Aldebaran Turbo Track
-turbo_n_1	mapflag	nosave	SavePoint
-turbo_n_4	mapflag	nosave	SavePoint
-turbo_n_8	mapflag	nosave	SavePoint
-turbo_n_16	mapflag	nosave	SavePoint
-turbo_e_4	mapflag	nosave	SavePoint
-turbo_e_8	mapflag	nosave	SavePoint
-turbo_e_16	mapflag	nosave	SavePoint
-
 //Monster Races ================
 p_track01	mapflag	nosave	SavePoint
 p_track02	mapflag	nosave	SavePoint

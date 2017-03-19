@@ -38,14 +38,6 @@ ama_test	mapflag	nowarp
 gon_test	mapflag	nowarp
 
 n_castle	mapflag	nowarp
-//Aldebaran Turbo Track ======
-turbo_n_1	mapflag	nowarp
-turbo_n_4	mapflag	nowarp
-turbo_n_8	mapflag	nowarp
-turbo_n_16	mapflag	nowarp
-turbo_e_4	mapflag	nowarp
-turbo_e_8	mapflag	nowarp
-turbo_e_16	mapflag	nowarp
 //Monster Races ================
 p_track01	mapflag	nowarp
 p_track02	mapflag	nowarp
