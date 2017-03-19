@@ -466,13 +466,6 @@ abbey03	mapflag	nomemo
 //To Protect Novices Guilds from level abusers
 n_castle	mapflag	nomemo
 
-// GvG Arenas ================
-guild_vs1	mapflag	nomemo
-guild_vs2	mapflag	nomemo
-guild_vs3	mapflag	nomemo
-guild_vs4	mapflag	nomemo
-guild_vs5	mapflag	nomemo
-
 // Arenas ====================
 arena_room	mapflag	nomemo
 force_1-1	mapflag	nomemo

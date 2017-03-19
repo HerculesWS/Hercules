@@ -144,3 +144,10 @@ schg_cas02	mapflag	zone	GvG2
 schg_cas03	mapflag	zone	GvG2
 schg_cas04	mapflag	zone	GvG2
 schg_cas05	mapflag	zone	GvG2
+
+// GvG Arenas
+guild_vs1	mapflag	zone	GvG Arena
+guild_vs2	mapflag	zone	GvG Arena
+guild_vs3	mapflag	zone	GvG Arena
+guild_vs4	mapflag	zone	GvG Arena
+guild_vs5	mapflag	zone	GvG Arena

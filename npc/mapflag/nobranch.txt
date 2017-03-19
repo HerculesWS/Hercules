@@ -173,13 +173,6 @@ que_thor	mapflag	nobranch
 
 //n_castle	mapflag	nobranch
 
-// GvG Arenas ==================
-guild_vs1	mapflag	nobranch
-guild_vs2	mapflag	nobranch
-guild_vs3	mapflag	nobranch
-guild_vs4	mapflag	nobranch
-guild_vs5	mapflag	nobranch
-
 // Arenas ======================
 arena_room	mapflag	nobranch
 force_1-1	mapflag	nobranch

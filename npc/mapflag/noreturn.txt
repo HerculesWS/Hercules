@@ -135,13 +135,6 @@ que_hugel	mapflag	noreturn
 //poring_c01	mapflag	noreturn
 //poring_c02	mapflag	noreturn
 
-// GvG Arenas ===================
-//guild_vs1	mapflag	noreturn
-//guild_vs2	mapflag	noreturn
-//guild_vs3	mapflag	noreturn
-//guild_vs4	mapflag	noreturn
-//guild_vs5	mapflag	noreturn
-
 // Arenas =====================
 //arena_room	mapflag	noreturn
 //sec_in01	mapflag	noreturn

@@ -40,12 +40,6 @@ bat_c01	mapflag	pvp	off
 bat_c02	mapflag	pvp	off
 bat_c03	mapflag	pvp	off
 
-guild_vs1	mapflag	pvp	off
-guild_vs2	mapflag	pvp	off
-guild_vs3	mapflag	pvp	off
-guild_vs4	mapflag	pvp	off
-guild_vs5	mapflag	pvp	off
-
 ayo_in01	mapflag	pvp	off
 ayo_in02	mapflag	pvp	off
 alberta_in	mapflag	pvp	off

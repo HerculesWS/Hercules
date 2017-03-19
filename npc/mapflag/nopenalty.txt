@@ -200,13 +200,6 @@ mosk_ship	mapflag	nopenalty
 que_sign01	mapflag	nopenalty
 que_sign02	mapflag	nopenalty
 
-// GvG Arenas ===================
-guild_vs1	mapflag	nopenalty
-guild_vs2	mapflag	nopenalty
-guild_vs3	mapflag	nopenalty
-guild_vs4	mapflag	nopenalty
-guild_vs5	mapflag	nopenalty
-
 // Arenas=======================
 sec_in01	mapflag	nopenalty
 sec_in02	mapflag	nopenalty
