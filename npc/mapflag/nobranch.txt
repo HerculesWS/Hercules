@@ -241,14 +241,7 @@ schg_que01	mapflag	nobranch
 arug_que01	mapflag	nobranch
 
 // Battle Grounds ==============
-bat_c01	mapflag	nobranch
-bat_c02	mapflag	nobranch
-bat_c03	mapflag	nobranch
 bat_room	mapflag	nobranch
-bat_b01	mapflag	nobranch
-bat_b02	mapflag	nobranch
-bat_a01	mapflag	nobranch
-bat_a02	mapflag	nobranch
 
 // Episode 13.2 ===========
 man_fild02	mapflag	nobranch

@@ -233,14 +233,7 @@ que_qaru05	mapflag	monster_noteleport
 e_tower	mapflag	noteleport
 
 // Battle Grounds ==============
-bat_c01	mapflag	noteleport
-bat_c02	mapflag	noteleport
-bat_c03	mapflag	noteleport
 bat_room	mapflag	noteleport
-bat_b01	mapflag	noteleport
-bat_b02	mapflag	noteleport
-bat_a01	mapflag	noteleport
-bat_a02	mapflag	noteleport
 
 // Episode 13 ====================
 mid_campin	mapflag	noteleport

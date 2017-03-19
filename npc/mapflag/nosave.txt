@@ -137,15 +137,6 @@ que_qaru05	mapflag	nosave	SavePoint
 // Endless Tower ==================
 e_tower	mapflag	nosave	SavePoint
 
-// Battle Grounds ==============
-bat_c01	mapflag	nosave	SavePoint
-bat_c02	mapflag	nosave	SavePoint
-bat_c03	mapflag	nosave	SavePoint
-bat_b01	mapflag	nosave	SavePoint
-bat_b02	mapflag	nosave	SavePoint
-bat_a01	mapflag	nosave	SavePoint
-bat_a02	mapflag	nosave	SavePoint
-
 // Episode 13 ====================
 moc_fild22b	mapflag	nosave	SavePoint
 que_dan01	mapflag	nosave	SavePoint
