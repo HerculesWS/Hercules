@@ -100,43 +100,6 @@
 //ve_in	mapflag	noicewall
 //ve_in02	mapflag	noicewall
 
-// Guild Castles ==========
-aldeg_cas01	mapflag	noicewall
-aldeg_cas02	mapflag	noicewall
-aldeg_cas03	mapflag	noicewall
-aldeg_cas04	mapflag	noicewall
-aldeg_cas05	mapflag	noicewall
-gefg_cas01	mapflag	noicewall
-gefg_cas02	mapflag	noicewall
-gefg_cas03	mapflag	noicewall
-gefg_cas04	mapflag	noicewall
-gefg_cas05	mapflag	noicewall
-payg_cas01	mapflag	noicewall
-payg_cas02	mapflag	noicewall
-payg_cas03	mapflag	noicewall
-payg_cas04	mapflag	noicewall
-payg_cas05	mapflag	noicewall
-prtg_cas01	mapflag	noicewall
-prtg_cas02	mapflag	noicewall
-prtg_cas03	mapflag	noicewall
-prtg_cas04	mapflag	noicewall
-prtg_cas05	mapflag	noicewall
-schg_cas01	mapflag	noicewall
-schg_cas02	mapflag	noicewall
-schg_cas03	mapflag	noicewall
-schg_cas04	mapflag	noicewall
-schg_cas05	mapflag	noicewall
-arug_cas01	mapflag	noicewall
-arug_cas02	mapflag	noicewall
-arug_cas03	mapflag	noicewall
-arug_cas04	mapflag	noicewall
-arug_cas05	mapflag	noicewall
-// Novice Guild Castles ===
-nguild_alde	mapflag	noicewall
-nguild_gef	mapflag	noicewall
-nguild_pay	mapflag	noicewall
-nguild_prt	mapflag	noicewall
-
 // Poring War ====================
 poring_w01	mapflag	noicewall
 poring_w02	mapflag	noicewall

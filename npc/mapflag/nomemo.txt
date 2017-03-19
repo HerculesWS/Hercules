@@ -461,42 +461,8 @@ abbey03	mapflag	nomemo
 
 // Guild Castles =============
 //alde_gld	mapflag	nomemo
-aldeg_cas01	mapflag	nomemo
-aldeg_cas02	mapflag	nomemo
-aldeg_cas03	mapflag	nomemo
-aldeg_cas04	mapflag	nomemo
-aldeg_cas05	mapflag	nomemo
-gefg_cas01	mapflag	nomemo
-gefg_cas02	mapflag	nomemo
-gefg_cas03	mapflag	nomemo
-gefg_cas04	mapflag	nomemo
-gefg_cas05	mapflag	nomemo
 //pay_gld	mapflag	nomemo
-payg_cas01	mapflag	nomemo
-payg_cas02	mapflag	nomemo
-payg_cas03	mapflag	nomemo
-payg_cas04	mapflag	nomemo
-payg_cas05	mapflag	nomemo
 //prt_gld	mapflag	nomemo
-prtg_cas01	mapflag	nomemo
-prtg_cas02	mapflag	nomemo
-prtg_cas03	mapflag	nomemo
-prtg_cas04	mapflag	nomemo
-prtg_cas05	mapflag	nomemo
-nguild_alde	mapflag	nomemo
-nguild_gef	mapflag	nomemo
-nguild_pay	mapflag	nomemo
-nguild_prt	mapflag	nomemo
-schg_cas01	mapflag	nomemo
-schg_cas02	mapflag	nomemo
-schg_cas03	mapflag	nomemo
-schg_cas04	mapflag	nomemo
-schg_cas05	mapflag	nomemo
-arug_cas01	mapflag	nomemo
-arug_cas02	mapflag	nomemo
-arug_cas03	mapflag	nomemo
-arug_cas04	mapflag	nomemo
-arug_cas05	mapflag	nomemo
 //To Protect Novices Guilds from level abusers
 n_castle	mapflag	nomemo
 

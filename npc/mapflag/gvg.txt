@@ -75,49 +75,12 @@ arug_cas03	mapflag	gvg_castle
 arug_cas04	mapflag	gvg_castle
 arug_cas05	mapflag	gvg_castle
 
-//Uncomment to disable monsters teleporting (prevents them from "escaping" when rude attacked)
-//aldeg_cas01	mapflag	monster_noteleport
-//aldeg_cas02	mapflag	monster_noteleport
-//aldeg_cas03	mapflag	monster_noteleport
-//aldeg_cas04	mapflag	monster_noteleport
-//aldeg_cas05	mapflag	monster_noteleport
-//gefg_cas01	mapflag	monster_noteleport
-//gefg_cas02	mapflag	monster_noteleport
-//gefg_cas03	mapflag	monster_noteleport
-//gefg_cas04	mapflag	monster_noteleport
-//gefg_cas05	mapflag	monster_noteleport
-//payg_cas01	mapflag	monster_noteleport
-//payg_cas02	mapflag	monster_noteleport
-//payg_cas03	mapflag	monster_noteleport
-//payg_cas04	mapflag	monster_noteleport
-//payg_cas05	mapflag	monster_noteleport
-//prtg_cas01	mapflag	monster_noteleport
-//prtg_cas02	mapflag	monster_noteleport
-//prtg_cas03	mapflag	monster_noteleport
-//prtg_cas04	mapflag	monster_noteleport
-//prtg_cas05	mapflag	monster_noteleport
-//schg_cas01	mapflag	monster_noteleport
-//schg_cas02	mapflag	monster_noteleport
-//schg_cas03	mapflag	monster_noteleport
-//schg_cas04	mapflag	monster_noteleport
-//schg_cas05	mapflag	monster_noteleport
-//arug_cas01	mapflag	monster_noteleport
-//arug_cas02	mapflag	monster_noteleport
-//arug_cas03	mapflag	monster_noteleport
-//arug_cas04	mapflag	monster_noteleport
-//arug_cas05	mapflag	monster_noteleport
-
 // Novice Guild Castles ===
 //n_castle	mapflag	gvg_castle
 nguild_alde	mapflag	gvg_castle
 nguild_gef	mapflag	gvg_castle
 nguild_pay	mapflag	gvg_castle
 nguild_prt	mapflag	gvg_castle
-
-//nguild_alde	mapflag	monster_noteleport
-//nguild_gef	mapflag	monster_noteleport
-//nguild_pay	mapflag	monster_noteleport
-//nguild_prt	mapflag	monster_noteleport
 
 // Guild Dungeons =========
 arug_dun01	mapflag	gvg_dungeon

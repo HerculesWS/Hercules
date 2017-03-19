@@ -135,33 +135,6 @@ que_hugel	mapflag	noreturn
 //poring_c01	mapflag	noreturn
 //poring_c02	mapflag	noreturn
 
-// Guild Castles =================
-//= 1.3 According to the kRO patch, enabled Butterfly wings in the Castles
-//aldeg_cas01	mapflag	noreturn
-//aldeg_cas02	mapflag	noreturn
-//aldeg_cas03	mapflag	noreturn
-//aldeg_cas04	mapflag	noreturn
-//aldeg_cas05	mapflag	noreturn
-//gefg_cas01	mapflag	noreturn
-//gefg_cas02	mapflag	noreturn
-//gefg_cas03	mapflag	noreturn
-//gefg_cas04	mapflag	noreturn
-//gefg_cas05	mapflag	noreturn
-//payg_cas01	mapflag	noreturn
-//payg_cas02	mapflag	noreturn
-//payg_cas03	mapflag	noreturn
-//payg_cas04	mapflag	noreturn
-//payg_cas05	mapflag	noreturn
-//prtg_cas01	mapflag	noreturn
-//prtg_cas02	mapflag	noreturn
-//prtg_cas03	mapflag	noreturn
-//prtg_cas04	mapflag	noreturn
-//prtg_cas05	mapflag	noreturn
-//nguild_alde	mapflag	noreturn
-//nguild_gef	mapflag	noreturn
-//nguild_pay	mapflag	noreturn
-//nguild_prt	mapflag	noreturn
-
 // GvG Arenas ===================
 //guild_vs1	mapflag	noreturn
 //guild_vs2	mapflag	noreturn

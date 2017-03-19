@@ -192,42 +192,6 @@ que_job02	mapflag	noteleport
 que_job03	mapflag	noteleport
 cave	mapflag	noteleport
 
-// Guild Castles =================
-aldeg_cas01	mapflag	noteleport
-aldeg_cas02	mapflag	noteleport
-aldeg_cas03	mapflag	noteleport
-aldeg_cas04	mapflag	noteleport
-aldeg_cas05	mapflag	noteleport
-gefg_cas01	mapflag	noteleport
-gefg_cas02	mapflag	noteleport
-gefg_cas03	mapflag	noteleport
-gefg_cas04	mapflag	noteleport
-gefg_cas05	mapflag	noteleport
-payg_cas01	mapflag	noteleport
-payg_cas02	mapflag	noteleport
-payg_cas03	mapflag	noteleport
-payg_cas04	mapflag	noteleport
-payg_cas05	mapflag	noteleport
-prtg_cas01	mapflag	noteleport
-prtg_cas02	mapflag	noteleport
-prtg_cas03	mapflag	noteleport
-prtg_cas04	mapflag	noteleport
-prtg_cas05	mapflag	noteleport
-schg_cas01	mapflag	noteleport
-schg_cas02	mapflag	noteleport
-schg_cas03	mapflag	noteleport
-schg_cas04	mapflag	noteleport
-schg_cas05	mapflag	noteleport
-arug_cas01	mapflag	noteleport
-arug_cas02	mapflag	noteleport
-arug_cas03	mapflag	noteleport
-arug_cas04	mapflag	noteleport
-arug_cas05	mapflag	noteleport
-nguild_alde	mapflag	noteleport
-nguild_gef	mapflag	noteleport
-nguild_pay	mapflag	noteleport
-nguild_prt	mapflag	noteleport
-
 // GvG Arenas ===================
 guild_vs1	mapflag	noteleport
 guild_vs2	mapflag	noteleport

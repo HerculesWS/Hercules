@@ -105,6 +105,34 @@ veins	mapflag	zone	Towns
 xmas	mapflag	zone	Towns
 yuno	mapflag	zone	Towns
 
+// WoE FE
+aldeg_cas01	mapflag	zone	GvG
+aldeg_cas02	mapflag	zone	GvG
+aldeg_cas03	mapflag	zone	GvG
+aldeg_cas04	mapflag	zone	GvG
+aldeg_cas05	mapflag	zone	GvG
+gefg_cas01	mapflag	zone	GvG
+gefg_cas02	mapflag	zone	GvG
+gefg_cas03	mapflag	zone	GvG
+gefg_cas04	mapflag	zone	GvG
+gefg_cas05	mapflag	zone	GvG
+payg_cas01	mapflag	zone	GvG
+payg_cas02	mapflag	zone	GvG
+payg_cas03	mapflag	zone	GvG
+payg_cas04	mapflag	zone	GvG
+payg_cas05	mapflag	zone	GvG
+prtg_cas01	mapflag	zone	GvG
+prtg_cas02	mapflag	zone	GvG
+prtg_cas03	mapflag	zone	GvG
+prtg_cas04	mapflag	zone	GvG
+prtg_cas05	mapflag	zone	GvG
+
+// WoE for Newbies
+nguild_alde	mapflag	zone	GvG
+nguild_gef	mapflag	zone	GvG
+nguild_pay	mapflag	zone	GvG
+nguild_prt	mapflag	zone	GvG
+
 // WoE SE
 arug_cas01	mapflag	zone	GvG2
 arug_cas02	mapflag	zone	GvG2
