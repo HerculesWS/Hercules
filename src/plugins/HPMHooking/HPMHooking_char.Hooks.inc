@@ -744,15 +744,15 @@ int HP_chr_check_char_name(char *name, char *esc_name) {
 	}
 	return retVal___;
 }
-int HP_chr_make_new_char_sql(struct char_session_data *sd, const char *name_, int str, int agi, int vit, int int_, int dex, int luk, int slot, int hair_color, int hair_style, short starting_job) {
+int HP_chr_make_new_char_sql(struct char_session_data *sd, const char *name_, int str, int agi, int vit, int int_, int dex, int luk, int slot, int hair_color, int hair_style, short starting_job, uint8 sex) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_chr_make_new_char_sql_pre ) {
-		int (*preHookFunc) (struct char_session_data **sd, const char **name_, int *str, int *agi, int *vit, int *int_, int *dex, int *luk, int *slot, int *hair_color, int *hair_style, short *starting_job);
+		int (*preHookFunc) (struct char_session_data **sd, const char **name_, int *str, int *agi, int *vit, int *int_, int *dex, int *luk, int *slot, int *hair_color, int *hair_style, short *starting_job, uint8 *sex);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_make_new_char_sql_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_chr_make_new_char_sql_pre[hIndex].func;
-			retVal___ = preHookFunc(&sd, &name_, &str, &agi, &vit, &int_, &dex, &luk, &slot, &hair_color, &hair_style, &starting_job);
+			retVal___ = preHookFunc(&sd, &name_, &str, &agi, &vit, &int_, &dex, &luk, &slot, &hair_color, &hair_style, &starting_job, &sex);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -760,13 +760,13 @@ int HP_chr_make_new_char_sql(struct char_session_data *sd, const char *name_, in
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.chr.make_new_char_sql(sd, name_, str, agi, vit, int_, dex, luk, slot, hair_color, hair_style, starting_job);
+		retVal___ = HPMHooks.source.chr.make_new_char_sql(sd, name_, str, agi, vit, int_, dex, luk, slot, hair_color, hair_style, starting_job, sex);
 	}
 	if( HPMHooks.count.HP_chr_make_new_char_sql_post ) {
-		int (*postHookFunc) (int retVal___, struct char_session_data *sd, const char *name_, int str, int agi, int vit, int int_, int dex, int luk, int slot, int hair_color, int hair_style, short starting_job);
+		int (*postHookFunc) (int retVal___, struct char_session_data *sd, const char *name_, int str, int agi, int vit, int int_, int dex, int luk, int slot, int hair_color, int hair_style, short starting_job, uint8 sex);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_make_new_char_sql_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_chr_make_new_char_sql_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd, name_, str, agi, vit, int_, dex, luk, slot, hair_color, hair_style, starting_job);
+			retVal___ = postHookFunc(retVal___, sd, name_, str, agi, vit, int_, dex, luk, slot, hair_color, hair_style, starting_job, sex);
 		}
 	}
 	return retVal___;
