@@ -79,6 +79,78 @@ prt_are_in	mapflag	zone	Izlude Battle Arena
 1@nyd	mapflag	zone	Memorial Dungeon
 2@nyd	mapflag	zone	Memorial Dungeon
 
+// Job Quests ====================
+// First Job Class
+job_sword1	mapflag	zone	Job Quest
+job_thief1	mapflag	zone	Job Quest
+// Primary Second Job Class
+job_knt	mapflag	zone	Job Quest
+job_prist	mapflag	zone	Job Quest
+job_wiz	mapflag	zone	Job Quest
+job_hunte	mapflag	zone	Job Quest
+in_hunter	mapflag	zone	Job Quest
+in_moc_16	mapflag	zone	Job Quest
+// Secondary Second Job Class
+alde_alche	mapflag	zone	Job Quest
+job_cru	mapflag	zone	Job Quest
+job_duncer	mapflag	zone	Job Quest
+job_monk	mapflag	zone	Job Quest
+monk_test	mapflag	zone	Job Quest
+monk_in	mapflag	zone	Job Quest
+in_rogue	mapflag	zone	Job Quest
+job_sage	mapflag	zone	Job Quest
+// Expanded Job Class
+que_ng	mapflag	zone	Job Quest
+job_soul	mapflag	zone	Job Quest
+job_star	mapflag	zone	Job Quest
+// 3-1 Job Class
+job3_arch01	mapflag	zone	Job Quest
+job3_arch02	mapflag	zone	Job Quest
+job3_arch03	mapflag	zone	Job Quest
+job3_guil01	mapflag	zone	Job Quest
+job3_guil02	mapflag	zone	Job Quest
+job3_guil03	mapflag	zone	Job Quest
+job3_rang01	mapflag	zone	Job Quest
+job3_rang02	mapflag	zone	Job Quest
+job3_rune01	mapflag	zone	Job Quest
+job3_rune02	mapflag	zone	Job Quest
+job3_rune03	mapflag	zone	Job Quest
+job3_sha01	mapflag	zone	Job Quest
+job3_war01	mapflag	zone	Job Quest
+job3_war02	mapflag	zone	Job Quest
+jupe_core2	mapflag	zone	Job Quest
+s_atelier	mapflag	zone	Job Quest
+sword_1-1	mapflag	zone	Job Quest
+// 3-2 Job Class
+job3_gen01	mapflag	zone	Job Quest
+// Ext
+job_ko	mapflag	zone	Job Quest
+// Novice Training Grouns
+new_zone01	mapflag	zone	Job Quest
+new_zone02	mapflag	zone	Job Quest
+new_zone03	mapflag	zone	Job Quest
+new_zone04	mapflag	zone	Job Quest
+new_1-1	mapflag	zone	Job Quest
+new_1-2	mapflag	zone	Job Quest
+new_1-3	mapflag	zone	Job Quest
+new_1-4	mapflag	zone	Job Quest
+new_2-1	mapflag	zone	Job Quest
+new_2-2	mapflag	zone	Job Quest
+new_2-3	mapflag	zone	Job Quest
+new_2-4	mapflag	zone	Job Quest
+new_3-1	mapflag	zone	Job Quest
+new_3-2	mapflag	zone	Job Quest
+new_3-3	mapflag	zone	Job Quest
+new_3-4	mapflag	zone	Job Quest
+new_4-1	mapflag	zone	Job Quest
+new_4-2	mapflag	zone	Job Quest
+new_4-3	mapflag	zone	Job Quest
+new_4-4	mapflag	zone	Job Quest
+new_5-1	mapflag	zone	Job Quest
+new_5-2	mapflag	zone	Job Quest
+new_5-3	mapflag	zone	Job Quest
+new_5-4	mapflag	zone	Job Quest
+
 //Towns
 alberta	mapflag	zone	Towns
 aldebaran	mapflag	zone	Towns

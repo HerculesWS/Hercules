@@ -35,46 +35,6 @@
 //= to the map specified in the last field, or "SavePoint".
 //=========================================================================
 
-// Job Quests ====================
-job_sword1	mapflag	nosave	SavePoint
-//job_thief1	mapflag	nosave	SavePoint
-// 2-1
-job_knt	mapflag	nosave	SavePoint
-job_prist	mapflag	nosave	SavePoint
-job_wiz	mapflag	nosave	SavePoint
-in_moc_16	mapflag	nosave	SavePoint
-job_hunte	mapflag	nosave	SavePoint
-//in_hunter	mapflag	nosave	SavePoint
-// 2-2
-alde_alche	mapflag	nosave	SavePoint
-job_cru	mapflag	nosave	SavePoint
-job_duncer	mapflag	nosave	SavePoint
-job_monk	mapflag	nosave	SavePoint
-monk_test	mapflag	nosave	SavePoint
-in_rogue	mapflag	nosave	SavePoint
-job_sage	mapflag	nosave	SavePoint
-// Ext
-job_star	mapflag	nosave	SavePoint
-job_soul	mapflag	nosave	SavePoint
-job3_sha01	mapflag	nosave	SavePoint
-job_ko	mapflag	nosave	SavePoint
-// 3-1
-job3_arch01	mapflag	nosave	SavePoint
-job3_arch02	mapflag	nosave	SavePoint
-job3_arch03	mapflag	nosave	SavePoint
-job3_guil01	mapflag	nosave	SavePoint
-job3_guil02	mapflag	nosave	SavePoint
-job3_guil03	mapflag	nosave	SavePoint
-job3_rang01	mapflag	nosave	SavePoint
-job3_rang02	mapflag	nosave	SavePoint
-job3_rune01	mapflag	nosave	SavePoint
-job3_rune02	mapflag	nosave	SavePoint
-job3_rune03	mapflag	nosave	SavePoint
-job3_war01	mapflag	nosave	SavePoint
-job3_war02	mapflag	nosave	SavePoint
-// 3-2
-job3_gen01	mapflag	nosave	SavePoint
-
 // Special Quests Places =====
 ama_test	mapflag	nosave	SavePoint
 gef_dun03	mapflag	nosave	SavePoint
@@ -83,7 +43,6 @@ que_god02	mapflag	nosave	SavePoint
 que_sign01	mapflag	nosave	SavePoint
 que_sign02	mapflag	nosave	SavePoint
 que_thor	mapflag	nosave	SavePoint
-que_ng	mapflag	nosave	SavePoint
 gon_test	mapflag	nosave	SavePoint
 kh_kiehl01	mapflag	nosave	SavePoint
 kh_kiehl02	mapflag	nosave	SavePoint

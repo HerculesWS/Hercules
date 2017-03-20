@@ -46,7 +46,6 @@ geffen_in	mapflag	pvp	off
 gon_in	mapflag	pvp	off
 gon_test	mapflag	pvp	off
 in_hunter	mapflag	pvp	off
-in_moc_16	mapflag	pvp	off
 in_orcs01	mapflag	pvp	off
 izlude_in	mapflag	pvp	off
 hu_in01	mapflag	pvp	off
@@ -57,7 +56,6 @@ lhz_in03	mapflag	pvp	off
 lou_in01	mapflag	pvp	off
 lou_in02	mapflag	pvp	off
 moc_castle	mapflag	pvp	off
-monk_in	mapflag	pvp	off
 morocc_in	mapflag	pvp	off
 mosk_in	mapflag	pvp	off
 nif_in	mapflag	pvp	off
@@ -70,7 +68,6 @@ prt_castle	mapflag	pvp	off
 prt_church	mapflag	pvp	off
 prt_in	mapflag	pvp	off
 sec_in01	mapflag	pvp	off
-job_sword1	mapflag	pvp	off
 um_in	mapflag	pvp	off
 xmas_in	mapflag	pvp	off
 yuno_in01	mapflag	pvp	off
@@ -109,8 +106,6 @@ moc_para01	mapflag	pvp	off
 bra_in01	mapflag	pvp	off
 
 dic_in01	mapflag	pvp	off
-
-s_atelier	mapflag	pvp	off
 
 dew_in01	mapflag	pvp	off
 

@@ -65,10 +65,6 @@
 //moc_castle	mapflag	noreturn
 //morocc_in	mapflag	noreturn
 //mosk_in	mapflag	noreturn
-//new_zone01	mapflag	noreturn
-//new_zone02	mapflag	noreturn
-//new_zone03	mapflag	noreturn
-//new_zone04	mapflag	noreturn
 //nif_in	mapflag	noreturn
 //payon_in01	mapflag	noreturn
 //payon_in02	mapflag	noreturn
@@ -104,27 +100,6 @@
 //ra_temin	mapflag	noreturn
 //ve_in	mapflag	noreturn
 //ve_in02	mapflag	noreturn
-
-// Job Quests ====================
-//job_sword1	mapflag	noreturn
-//job_thief1	mapflag	noreturn
-// 2-1 -----------------------
-//job_knt	mapflag	noreturn
-//job_hunte	mapflag	noreturn
-//job_prist	mapflag	noreturn
-//job_wiz	mapflag	noreturn
-//in_hunter	mapflag	noreturn
-//in_moc_16	mapflag	noreturn
-// 2-2 --------------------
-//alde_alche	mapflag	noreturn
-//job_cru	mapflag	noreturn
-//job_duncer	mapflag	noreturn
-//job_monk	mapflag	noreturn
-//monk_test	mapflag	noreturn
-//monk_in	mapflag	noreturn
-//in_rogue	mapflag	noreturn
-//job_sage	mapflag	noreturn
-//que_ng	mapflag	noreturn
 
 // Special Quests Places =========
 //que_god01	mapflag	noreturn

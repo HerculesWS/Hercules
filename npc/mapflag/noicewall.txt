@@ -48,11 +48,9 @@
 //geffen_in	mapflag	noicewall
 //gon_in	mapflag	noicewall
 //in_hunter	mapflag	noicewall
-//in_moc_16	mapflag	noicewall
 //in_orcs01	mapflag	noicewall
 //izlude_in	mapflag	noicewall
 //moc_castle	mapflag	noicewall
-//monk_in	mapflag	noicewall
 //morocc_in	mapflag	noicewall
 //mosk_in	mapflag	noicewall
 //payon_in01	mapflag	noicewall
@@ -64,7 +62,6 @@
 //prt_church	mapflag	noicewall
 //prt_in	mapflag	noicewall
 //sec_in01	mapflag	noicewall
-//job_sword1	mapflag	noicewall
 //um_in	mapflag	noicewall
 //xmas_in	mapflag	noicewall
 //yuno_in01	mapflag	noicewall

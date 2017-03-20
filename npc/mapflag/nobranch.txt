@@ -61,30 +61,6 @@ lou_in02	mapflag	nobranch
 moc_castle	mapflag	nobranch
 morocc_in	mapflag	nobranch
 mosk_in	mapflag	nobranch
-new_zone01	mapflag	nobranch
-new_zone02	mapflag	nobranch
-new_zone03	mapflag	nobranch
-new_zone04	mapflag	nobranch
-new_1-1	mapflag	nobranch
-new_1-2	mapflag	nobranch
-new_1-3	mapflag	nobranch
-new_1-4	mapflag	nobranch
-new_2-1	mapflag	nobranch
-new_2-2	mapflag	nobranch
-new_2-3	mapflag	nobranch
-new_2-4	mapflag	nobranch
-new_3-1	mapflag	nobranch
-new_3-2	mapflag	nobranch
-new_3-3	mapflag	nobranch
-new_3-4	mapflag	nobranch
-new_4-1	mapflag	nobranch
-new_4-2	mapflag	nobranch
-new_4-3	mapflag	nobranch
-new_4-4	mapflag	nobranch
-new_5-1	mapflag	nobranch
-new_5-2	mapflag	nobranch
-new_5-3	mapflag	nobranch
-new_5-4	mapflag	nobranch
 nif_in	mapflag	nobranch
 payon_in01	mapflag	nobranch
 payon_in02	mapflag	nobranch
@@ -123,29 +99,6 @@ ve_in	mapflag	nobranch
 ve_in02	mapflag	nobranch
 thor_camp	mapflag	nobranch
 cave	mapflag	nobranch
-
-// Job Quests ==================
-job_sword1	mapflag	nobranch
-job_thief1	mapflag	nobranch
-// 2-1
-job_knt	mapflag	nobranch
-job_prist	mapflag	nobranch
-job_wiz	mapflag	nobranch
-job_hunte	mapflag	nobranch
-in_hunter	mapflag	nobranch
-in_moc_16	mapflag	nobranch
-// 2-2
-alde_alche	mapflag	nobranch
-job_cru	mapflag	nobranch
-job_duncer	mapflag	nobranch
-job_monk	mapflag	nobranch
-monk_test	mapflag	nobranch
-monk_in	mapflag	nobranch
-in_rogue	mapflag	nobranch
-job_sage	mapflag	nobranch
-que_ng	mapflag	nobranch
-job_soul	mapflag	nobranch
-job_star	mapflag	nobranch
 
 // Special Quests Places =======
 que_god01	mapflag	nobranch
@@ -249,29 +202,11 @@ man_in01	mapflag	nobranch
 spl_in01	mapflag	nobranch
 spl_in02	mapflag	nobranch
 
-// 3rd Class Job Maps & Paradise ===========
-moc_para01	mapflag	nobranch
-job3_arch01	mapflag	nobranch
-job3_arch02	mapflag	nobranch
-job3_arch03	mapflag	nobranch
-job3_guil01	mapflag	nobranch
-job3_guil02	mapflag	nobranch
-job3_guil03	mapflag	nobranch
-job3_rang01	mapflag	nobranch
-job3_rang02	mapflag	nobranch
-job3_rune01	mapflag	nobranch
-job3_rune02	mapflag	nobranch
-job3_rune03	mapflag	nobranch
-job3_war01	mapflag	nobranch
-job3_war02	mapflag	nobranch
-jupe_core2	mapflag	nobranch
-
 // Brasilis ===========
 bra_in01	mapflag	nobranch
 
 // Episode 13.3 ===========
 dic_in01	mapflag	nobranch
-s_atelier	mapflag	nobranch
 
 // Episode 14.1 & Dewata ===========
 dew_in01	mapflag	nobranch

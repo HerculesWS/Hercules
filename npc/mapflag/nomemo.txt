@@ -72,30 +72,6 @@ mosk_dun03	mapflag	nomemo
 nameless_in	mapflag	nomemo
 niflheim	mapflag	nomemo
 nif_in	mapflag	nomemo
-new_zone01	mapflag	nomemo
-new_zone02	mapflag	nomemo
-new_zone03	mapflag	nomemo
-new_zone04	mapflag	nomemo
-new_1-1	mapflag	nomemo
-new_1-2	mapflag	nomemo
-new_1-3	mapflag	nomemo
-new_1-4	mapflag	nomemo
-new_2-1	mapflag	nomemo
-new_2-2	mapflag	nomemo
-new_2-3	mapflag	nomemo
-new_2-4	mapflag	nomemo
-new_3-1	mapflag	nomemo
-new_3-2	mapflag	nomemo
-new_3-3	mapflag	nomemo
-new_3-4	mapflag	nomemo
-new_4-1	mapflag	nomemo
-new_4-2	mapflag	nomemo
-new_4-3	mapflag	nomemo
-new_4-4	mapflag	nomemo
-new_5-1	mapflag	nomemo
-new_5-2	mapflag	nomemo
-new_5-3	mapflag	nomemo
-new_5-4	mapflag	nomemo
 pay_arche	mapflag	nomemo
 payon_in01	mapflag	nomemo
 payon_in02	mapflag	nomemo
@@ -225,30 +201,6 @@ ve_fild03	mapflag	nomemo
 ve_fild04	mapflag	nomemo
 ve_fild06	mapflag	nomemo
 cave	mapflag	nomemo
-
-// Job Quests ================
-// First Job Class
-job_sword1	mapflag	nomemo
-job_thief1	mapflag	nomemo
-job_star	mapflag	nomemo
-// Primary Second Job Class
-job_knt	mapflag	nomemo
-job_prist	mapflag	nomemo
-job_wiz	mapflag	nomemo
-job_hunte	mapflag	nomemo
-in_hunter	mapflag	nomemo
-in_moc_16	mapflag	nomemo
-// Secondary Second Job Class
-alde_alche	mapflag	nomemo
-job_cru	mapflag	nomemo
-job_duncer	mapflag	nomemo
-job_monk	mapflag	nomemo
-monk_test	mapflag	nomemo
-monk_in	mapflag	nomemo
-in_rogue	mapflag	nomemo
-job_sage	mapflag	nomemo
-job_soul	mapflag	nomemo
-que_ng	mapflag	nomemo
 
 // Special Quests Places =====
 que_god01	mapflag	nomemo
@@ -546,23 +498,6 @@ man_in01	mapflag	nomemo
 splendide	mapflag	nomemo
 spl_fild01	mapflag	nomemo
 spl_in01	mapflag	nomemo
-job3_arch01	mapflag	nomemo
-job3_arch02	mapflag	nomemo
-job3_arch03	mapflag	nomemo
-job3_guil01	mapflag	nomemo
-job3_guil02	mapflag	nomemo
-job3_guil03	mapflag	nomemo
-job3_rang01	mapflag	nomemo
-job3_rang02	mapflag	nomemo
-job3_rune01	mapflag	nomemo
-job3_rune02	mapflag	nomemo
-job3_rune03	mapflag	nomemo
-job3_war01	mapflag	nomemo
-job3_war02	mapflag	nomemo
-job3_gen01	mapflag	nomemo
-job3_sha01	mapflag	nomemo
-jupe_core2	mapflag	nomemo
-s_atelier	mapflag	nomemo
 bra_in01	mapflag	nomemo
 bra_dun01	mapflag	nomemo
 bra_dun02	mapflag	nomemo
