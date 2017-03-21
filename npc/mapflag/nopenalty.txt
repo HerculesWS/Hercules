@@ -59,6 +59,7 @@ lou_in01	mapflag	nopenalty
 lou_in02	mapflag	nopenalty
 moc_castle	mapflag	nopenalty
 morocc_in	mapflag	nopenalty
+mosk_in	mapflag	nopenalty
 nif_in	mapflag	nopenalty
 payon_in01	mapflag	nopenalty
 payon_in02	mapflag	nopenalty
