@@ -4416,7 +4416,7 @@ int pc_paycash(struct map_session_data *sd, int price, int points)
 		points = 0;
 	}
 
-	if (sd->cashPoints < cash || sd->kafraPoints < points) {
+	if (sd->cashPoints < cash || sd->kafraPoints < mempoints) {
 		ShowError("pc_paycash: Not enough points (cash=%d, kafra=%d) to cover the price (cash=%d, kafra=%d) (account_id=%d, char_id=%d).\n", sd->cashPoints, sd->kafraPoints, cash, points, sd->status.account_id, sd->status.char_id);
 		return -1;
 	}
