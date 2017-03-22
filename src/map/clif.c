@@ -9061,13 +9061,13 @@ const char *clif_process_chat_message(struct map_session_data *sd, const struct 
 		return NULL;
 	}
 
-#if PACKETVER >= 20151001
+#if PACKETVER >= 20150923
 	// Packet doesn't include a NUL terminator
 	textlen = packet->packet_len - 4;
-#else // PACKETVER < 20151001
+#else // PACKETVER < 20150923
 	// Packet includes a NUL terminator
 	textlen = packet->packet_len - 4 - 1;
-#endif // PACKETVER > 20151001
+#endif // PACKETVER > 20150923
 
 	// name and message are separated by ' : '
 	srcname = packet->message;
@@ -9141,13 +9141,13 @@ bool clif_process_whisper_message(struct map_session_data *sd, const struct pack
 		return false;
 	}
 
-#if PACKETVER >= 20151001
+#if PACKETVER >= 20150923
 	// Packet doesn't include a NUL terminator
 	messagelen = packet->packet_len - NAME_LENGTH - 4;
-#else // PACKETVER < 20151001
+#else // PACKETVER < 20150923
 	// Packet includes a NUL terminator
 	messagelen = packet->packet_len - NAME_LENGTH - 4 - 1;
-#endif // PACKETVER > 20151001
+#endif // PACKETVER > 20150923
 
 	if (messagelen >= CHAT_SIZE_MAX || messagelen >= out_messagelen) {
 		// messages mustn't be too long
@@ -11627,7 +11627,7 @@ void clif_parse_NpcStringInput(int fd, struct map_session_data* sd) __attribute_
 void clif_parse_NpcStringInput(int fd, struct map_session_data* sd)
 {
 // [4144] can't confirm exact client version. At least >= correct for 20150513
-#if PACKETVER >= 20151029
+#if PACKETVER >= 20150923
 	int message_len = RFIFOW(fd, 2) - 7;
 #else
 	int message_len = RFIFOW(fd, 2) - 8;

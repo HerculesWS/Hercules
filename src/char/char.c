@@ -4633,8 +4633,11 @@ void char_parse_char_create_new_char(int fd, struct char_session_data* sd)
 		//turn character creation on/off [Kevin]
 		result = -2;
 	} else {
+
+#ifdef ENABLE_PACKETVER_RE
 	#if PACKETVER >= 20151001
 		result = chr->make_new_char_sql(sd, RFIFOP(fd,2), 1, 1, 1, 1, 1, 1, RFIFOB(fd,26), RFIFOW(fd,27), RFIFOW(fd,29), RFIFOW(fd, 31));
+#endif
 	#elif PACKETVER >= 20120307
 		result = chr->make_new_char_sql(sd, RFIFOP(fd,2), 1, 1, 1, 1, 1, 1, RFIFOB(fd,26), RFIFOW(fd,27), RFIFOW(fd,29), JOB_NOVICE);
 	#else
@@ -4654,8 +4657,10 @@ void char_parse_char_create_new_char(int fd, struct char_session_data* sd)
 		// add new entry to the chars list
 		sd->found_char[char_dat.slot] = result; // the char_id of the new char
 	}
+#ifdef ENABLE_PACKETVER_RE
 #if PACKETVER >= 20151001
 	RFIFOSKIP(fd, 36);
+#endif
 #elif PACKETVER >= 20120307
 	RFIFOSKIP(fd, 31);
 #else
@@ -5038,11 +5043,13 @@ int char_parse_char(int fd)
 			break;
 
 			// create new char
+#ifdef ENABLE_PACKETVER_RE
 #if PACKETVER >= 20151001
 			// S 0a39 <name>.24B <slot>.B <hair color>.W <hair style>.W <starting job class ID>.W <Unknown>.(W or 2 B's)??? <sex>.B
 			case 0xa39:
 			{
 				FIFOSD_CHECK(36);	
+#endif
 #elif PACKETVER >= 20120307
 			// S 0970 <name>.24B <slot>.B <hair color>.W <hair style>.W
 			case 0x970:
