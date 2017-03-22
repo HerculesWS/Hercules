@@ -157,6 +157,8 @@ aldebaran	mapflag	zone	Towns
 amatsu	mapflag	zone	Towns
 ayothaya	mapflag	zone	Towns
 comodo	mapflag	zone	Towns
+dicastes01	mapflag	zone	Towns
+dicastes02	mapflag	zone	Towns
 einbech	mapflag	zone	Towns
 einbroch	mapflag	zone	Towns
 geffen	mapflag	zone	Towns

@@ -202,6 +202,9 @@ man_in01	mapflag	nobranch
 spl_in01	mapflag	nobranch
 spl_in02	mapflag	nobranch
 
+// Paradise ===========
+moc_para01	mapflag	nobranch
+
 // Brasilis ===========
 bra_in01	mapflag	nobranch
 
