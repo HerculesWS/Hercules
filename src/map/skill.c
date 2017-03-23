@@ -8181,8 +8181,14 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				int x,y;
 				x = src->x;
 				y = src->y;
-				if (hd)
-					skill->blockhomun_start(hd, skill_id, skill->get_time2(skill_id,skill_lv));
+				if (hd) {
+#ifdef RENEWAL
+					skill->blockhomun_start(hd, skill_id, skill->get_cooldown(skill_id, skill_lv));
+#else
+					skill->blockhomun_start(hd, skill_id, skill->get_time2(skill_id, skill_lv));
+#endif
+				}
+
 
 				if (unit->movepos(src,bl->x,bl->y,0,0)) {
 					clif->skill_nodamage(src,src,skill_id,skill_lv,1); // Homun
