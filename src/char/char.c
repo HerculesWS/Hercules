@@ -4633,7 +4633,10 @@ void char_parse_char_create_new_char(int fd, struct char_session_data* sd)
 		//turn character creation on/off [Kevin]
 		result = -2;
 	} else {
+#ifdef ENABLE_PACKETVER_RE
 #if PACKETVER >= 20151001
+#endif
+#elif PACKETVER >= 20151029
 		uint8 sex = RFIFOB(fd, 35);
 
 		switch (sex) {
@@ -4666,7 +4669,10 @@ void char_parse_char_create_new_char(int fd, struct char_session_data* sd)
 		// add new entry to the chars list
 		sd->found_char[char_dat.slot] = result; // the char_id of the new char
 	}
+#ifdef ENABLE_PACKETVER_RE
 #if PACKETVER >= 20151001
+#endif
+#elif PACKETVER >= 20151029
 	RFIFOSKIP(fd, 36);
 #elif PACKETVER >= 20120307
 	RFIFOSKIP(fd, 31);
@@ -5050,7 +5056,10 @@ int char_parse_char(int fd)
 			break;
 
 			// create new char
+#ifdef ENABLE_PACKETVER_RE
 #if PACKETVER >= 20151001
+#endif
+#elif PACKETVER >= 20151029
 			// S 0a39 <name>.24B <slot>.B <hair color>.W <hair style>.W <starting job class ID>.W <Unknown>.(W or 2 B's)??? <sex>.B
 			case 0xa39:
 			{
