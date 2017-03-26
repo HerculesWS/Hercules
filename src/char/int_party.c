@@ -317,7 +317,7 @@ struct party_data* inter_party_search_partyname(const char *const str)
 int inter_party_check_exp_share(struct party_data *const p)
 {
 	nullpo_ret(p);
-	return (p->party.count < 2 || p->max_lv - p->min_lv <= party_share_level);
+	return (p->party.count < 2 || (int)(p->max_lv - p->min_lv) <= party_share_level);
 }
 
 // Is there any member in the party?
@@ -633,7 +633,7 @@ int mapif_parse_PartyLeave(int fd, int party_id, int account_id, int char_id)
 		return 0; //Member not found?
 
 	mapif->party_withdraw(party_id, account_id, char_id);
-	
+
 	j = p->party.member[i].lv;
 	if (p->party.member[i].online > 0)
 		p->party.count--;
