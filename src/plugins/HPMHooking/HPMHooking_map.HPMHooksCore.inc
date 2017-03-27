@@ -1860,8 +1860,8 @@ struct {
 	struct HPMHookPoint *HP_clif_pNPCMarketClosed_post;
 	struct HPMHookPoint *HP_clif_pNPCMarketPurchase_pre;
 	struct HPMHookPoint *HP_clif_pNPCMarketPurchase_post;
-	struct HPMHookPoint *HP_clif_add_random_options_pre;
-	struct HPMHookPoint *HP_clif_add_random_options_post;
+	struct HPMHookPoint *HP_clif_add_item_options_pre;
+	struct HPMHookPoint *HP_clif_add_item_options_post;
 	struct HPMHookPoint *HP_clif_pHotkeyRowShift_pre;
 	struct HPMHookPoint *HP_clif_pHotkeyRowShift_post;
 	struct HPMHookPoint *HP_clif_dressroom_open_pre;
@@ -7907,8 +7907,8 @@ struct {
 	int HP_clif_pNPCMarketClosed_post;
 	int HP_clif_pNPCMarketPurchase_pre;
 	int HP_clif_pNPCMarketPurchase_post;
-	int HP_clif_add_random_options_pre;
-	int HP_clif_add_random_options_post;
+	int HP_clif_add_item_options_pre;
+	int HP_clif_add_item_options_post;
 	int HP_clif_pHotkeyRowShift_pre;
 	int HP_clif_pHotkeyRowShift_post;
 	int HP_clif_dressroom_open_pre;

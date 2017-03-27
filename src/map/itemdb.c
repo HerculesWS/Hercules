@@ -1335,7 +1335,6 @@ void itemdb_read_options(void)
 	int index = 0, count = 0;
 	const char *filepath = "db/item_options.conf";
 	VECTOR_DECL(int) duplicate_id;
-	VECTOR_DECL(char *) duplicate_name;
 
 	if (!libconfig->load_file(&item_options_db, filepath))
 		return;
@@ -1351,15 +1350,13 @@ void itemdb_read_options(void)
 	}
 
 	VECTOR_INIT(duplicate_id);
-	VECTOR_INIT(duplicate_name);
 
 	VECTOR_ENSURE(duplicate_id, libconfig->setting_length(ito), 1);
-	VECTOR_ENSURE(duplicate_name, libconfig->setting_length(ito), 1);
 
 	while ((conf = libconfig->setting_get_elem(ito, index++))) {
 		struct item_option t_opt = { 0 }, *s_opt = NULL;
 		const char *str = NULL;
-		int i = 0;
+		int i = 0, tmp = 0;
 
 		/* Id Lookup */
 		if (!libconfig->setting_lookup_int16(conf, "Id", &t_opt.index) || t_opt.index <= 0) {
@@ -1383,16 +1380,13 @@ void itemdb_read_options(void)
 			continue;
 		}
 
-		ARR_FIND(0, VECTOR_LENGTH(duplicate_name), i, strcmp(VECTOR_INDEX(duplicate_name, i), str) == 0);
-
-		if (i != VECTOR_LENGTH(duplicate_name)) {
-			ShowError("itemdb_read_options: Duplicate entry for Option Name '%s' for Id %d in '%s', skipping...\n", str, t_opt.index, filepath);
+		/* check if name is a duplicate. */
+		if (script->get_constant(str, &tmp)) {
+			ShowError("itemdb_read_options: Duplicate option name '%s' provided for Option Id %d in '%s', skipping...\n", str, t_opt.index, filepath);
 			continue;
 		}
 
-		VECTOR_PUSH(duplicate_name, (char *)str);
-
-		/* Set Constant */
+		/* Set name as a script constant with index as value. */
 		script->set_constant2(str, t_opt.index, false, false);
 
 		/* Script Code Lookup */
@@ -1423,7 +1417,6 @@ void itemdb_read_options(void)
 	libconfig->destroy(&item_options_db);
 
 	VECTOR_CLEAR(duplicate_id);
-	VECTOR_CLEAR(duplicate_name);
 
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
 }

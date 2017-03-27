@@ -952,7 +952,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->pNPCShopClosed, HP_clif_pNPCShopClosed) },
 	{ HP_POP(clif->pNPCMarketClosed, HP_clif_pNPCMarketClosed) },
 	{ HP_POP(clif->pNPCMarketPurchase, HP_clif_pNPCMarketPurchase) },
-	{ HP_POP(clif->add_random_options, HP_clif_add_random_options) },
+	{ HP_POP(clif->add_item_options, HP_clif_add_item_options) },
 	{ HP_POP(clif->pHotkeyRowShift, HP_clif_pHotkeyRowShift) },
 	{ HP_POP(clif->dressroom_open, HP_clif_dressroom_open) },
 	{ HP_POP(clif->pOneClick_ItemIdentify, HP_clif_pOneClick_ItemIdentify) },
