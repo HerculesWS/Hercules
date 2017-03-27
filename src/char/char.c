@@ -800,7 +800,7 @@ int char_memitemdata_to_sql(const struct item items[], int max, int id, int tabl
 				int k = 0;
 				// They are the same item.
 				ARR_FIND(0, MAX_SLOTS, j, items[i].card[j] != item.card[j]);
-				ARR_FIND(0, MAX_ITEM_OPTIONS, k, items[i].option[k].index != item.option[k].index);
+				ARR_FIND(0, MAX_ITEM_OPTIONS, k, items[i].option[k].index != item.option[k].index || items[i].option[k].value != item.option[k].value);
 				
 				if (j == MAX_SLOTS && k == MAX_ITEM_OPTIONS
 				 && items[i].amount == item.amount

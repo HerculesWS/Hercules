@@ -125,6 +125,8 @@ int storage_storageopen(struct map_session_data *sd)
  */
 int compare_item(struct item *a, struct item *b)
 {
+	int i = 0, k = 0;
+
 	if( a->nameid == b->nameid &&
 		a->identify == b->identify &&
 		a->refine == b->refine &&
@@ -133,9 +135,11 @@ int compare_item(struct item *a, struct item *b)
 		a->bound == b->bound &&
 		a->unique_id == b->unique_id)
 	{
-		int i;
-		for (i = 0; i < MAX_SLOTS && (a->card[i] == b->card[i]); i++);
-		return (i == MAX_SLOTS);
+		ARR_FIND(0, MAX_SLOTS, i, a->card[i] == b->card[i]);
+		ARR_FIND(0, MAX_ITEM_OPTIONS, k, a->option[k].index == b->option[k].index && a->option[k].value == b->option[k].value);
+
+		if (i == MAX_SLOTS && k == MAX_ITEM_OPTIONS)
+			return 1;
 	}
 	return 0;
 }

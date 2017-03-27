@@ -2649,6 +2649,9 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 	
 	/* parse item options [Smokexyz] */
 	for (i = 0; i < EQI_MAX; i++) {
+		int j = 0;
+		struct item_option *ito = NULL;
+
 		status->current_equip_item_index = index = sd->equip_index[i];
 		status->current_equip_option_index = -1;
 		
@@ -2660,8 +2663,6 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 			continue;
 		
 		if (index >= 0 && sd->inventory_data[index]) {
-			int j;
-			struct item_option *ito = NULL;
 			for (j = 0; j < MAX_ITEM_OPTIONS; j++) {
 				short option_index = sd->status.inventory[index].option[j].index;
 				
@@ -2672,16 +2673,18 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 				
 				if ((ito = itemdb->option_exists(option_index)) == NULL || ito->script == NULL)
 					continue;
-				else
-					script->run(ito->script, 0, sd->bl.id, 0);
+
+				script->run(ito->script, 0, sd->bl.id, 0);
 				
 				if (calculating == 0) //Abort, script->run his function. [Skotlex]
 					return 1;
 			}
 		}
-		status->current_equip_option_index = -1;
 	}
-	
+
+	status->current_equip_option_index = -1;
+	status->current_equip_item_index = -1;
+
 	status->calc_pc_additional(sd, opt);
 
 	if( sd->pd ) { // Pet Bonus
