@@ -1356,7 +1356,7 @@ void itemdb_read_options(void)
 	while ((conf = libconfig->setting_get_elem(ito, index++))) {
 		struct item_option t_opt = { 0 }, *s_opt = NULL;
 		const char *str = NULL;
-		int i = 0, tmp = 0;
+		int i = 0;
 
 		/* Id Lookup */
 		if (!libconfig->setting_lookup_int16(conf, "Id", &t_opt.index) || t_opt.index <= 0) {
@@ -1376,14 +1376,21 @@ void itemdb_read_options(void)
 
 		/* Name Lookup */
 		if (!libconfig->setting_lookup_string(conf, "Name", &str)) {
-			ShowError("itemdb_read_options: Invalid Option Name '%s' provided for Option Id %d in '%s', skipping...\n", str, t_opt.index, filepath);
+			ShowError("itemdb_read_options: Invalid Option Name '%s' provided for Id %d in '%s', skipping...\n", str, t_opt.index, filepath);
 			continue;
 		}
 
-		/* check if name is a duplicate. */
-		if (script->get_constant(str, &tmp)) {
-			ShowError("itemdb_read_options: Duplicate option name '%s' provided for Option Id %d in '%s', skipping...\n", str, t_opt.index, filepath);
-			continue;
+		/* check for illegal characters in the constant. */
+		{
+			const char *c = str;
+
+			while (ISALNUM(*c) || *c == '_')
+				++c;
+
+			if (*c != '\0') {
+				ShowError("itemdb_read_options: Invalid characters in Option Name '%s' for Id %d in '%s', skipping...\n", str, t_opt.index, filepath);
+				continue;
+			}
 		}
 
 		/* Set name as a script constant with index as value. */
