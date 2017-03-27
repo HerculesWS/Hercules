@@ -13656,6 +13656,10 @@ BUILDIN(getequipoption)
 			script_pushint(st, -1);
 			return false;
 		}
+	} else {
+		ShowError("buildin_getequipoptioninfo: Invalid equipment index %d provided.\n", equip_index);
+		script_pushint(st, 0);
+		return false;
 	}
 
 	if (sd->status.inventory[i].nameid) {
@@ -13721,10 +13725,14 @@ BUILDIN(setequipoption)
 
 	if (equip_index > 0 && equip_index <= ARRAYLENGTH(script->equip)) {
 		if ((i = pc->checkequip(sd, script->equip[equip_index - 1])) == -1) {
-			ShowError("buildin_getequipoptioninfo: No equipment is equipped in the given index %d.\n", equip_index);
+			ShowError("buildin_setequipoptioninfo: No equipment is equipped in the given index %d.\n", equip_index);
 			script_pushint(st, 0);
 			return false;
 		}
+	} else {
+		ShowError("buildin_setequipoptioninfo: Invalid equipment index %d provided.\n", equip_index);
+		script_pushint(st, 0);
+		return false;
 	}
 	
 	if (sd->status.inventory[i].nameid) {
