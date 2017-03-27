@@ -13727,7 +13727,7 @@ BUILDIN(setequipoption)
 		}
 	}
 	
-	if (i >= 0 && sd->status.inventory[i].nameid) {
+	if (sd->status.inventory[i].nameid) {
 		
 		if ((ito = itemdb->option_exists(opt_index)) == NULL) {
 			script_pushint(st, 0);
@@ -13753,10 +13753,6 @@ BUILDIN(setequipoption)
 		clif->additem(sd, i, 1, 0); // notify client to simulate item addition.
 		pc->equipitem(sd, i, sd->status.inventory[i].equip); // force equip the item at the original position.
 		clif->misceffect(&sd->bl, 2); // show effect
-	} else {
-		script_pushint(st, 0);
-		ShowError("buildin_setequipoption: Item with equipment index %d does not exist in the inventory.\n", equip_index);
-		return false;
 	}
 	
 	script_pushint(st, 1);
