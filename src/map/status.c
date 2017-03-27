@@ -2664,7 +2664,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 		
 		if (index >= 0 && sd->inventory_data[index]) {
 			for (j = 0; j < MAX_ITEM_OPTIONS; j++) {
-				short option_index = sd->status.inventory[index].option[j].index;
+				uint16 option_index = sd->status.inventory[index].option[j].index;
 				
 				if (option_index == 0)
 					continue;
