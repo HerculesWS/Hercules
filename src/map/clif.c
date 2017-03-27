@@ -2385,7 +2385,7 @@ void clif_addcards2(unsigned short *cards, struct item* item) {
  * @param buf[in,out] The buffer to write to. The pointer must be valid and initialized.
  * @param item[in]    The source item.
  */
- int clif_add_random_options(struct ItemOptions *buf, const struct item *it)
+ int clif_add_item_options(struct ItemOptions *buf, const struct item *it)
 {
 	int i = 0, j = 0, total_options = 0;
 	
@@ -2456,7 +2456,7 @@ void clif_additem(struct map_session_data *sd, int n, int amount, int fail) {
 		p.bindOnEquipType = sd->status.inventory[n].bound && !itemdb->isstackable2(sd->inventory_data[n]) ? 2 : sd->inventory_data[n]->flag.bindonequip ? 1 : 0;
 #endif
 #if PACKETVER >= 20150226
-		clif->add_random_options(&p.option_data[0], &sd->status.inventory[n]);
+		clif->add_item_options(&p.option_data[0], &sd->status.inventory[n]);
 #endif
 	}
 	p.result = (unsigned char)fail;
@@ -2576,7 +2576,7 @@ void clif_item_equip(short idx, struct EQUIPITEM_INFO *p, struct item *it, struc
 #endif
 
 #if PACKETVER >= 20150226
-	p->option_count = clif->add_random_options(p->option_data, it);
+	p->option_count = clif->add_item_options(p->option_data, it);
 #endif
 }
 
@@ -3992,7 +3992,7 @@ void clif_tradeadditem(struct map_session_data* sd, struct map_session_data* tsd
 		WBUFW(buf,15)= 0; //card (4w)
 		WBUFW(buf,17)= 0; //card (4w)
 #if PACKETVER >= 20150226
-		clif->add_random_options(WBUFP(buf, 19), &sd->status.inventory[index]);
+		clif->add_item_options(WBUFP(buf, 19), &sd->status.inventory[index]);
 #endif
 	}
 	else
@@ -4018,7 +4018,7 @@ void clif_tradeadditem(struct map_session_data* sd, struct map_session_data* tsd
 		WBUFB(buf,10)= sd->status.inventory[index].refine; //refine
 		clif->addcards(WBUFP(buf, 11), &sd->status.inventory[index]);
 #if PACKETVER >= 20150226
-		clif->add_random_options(WBUFP(buf, 19), &sd->status.inventory[index]);
+		clif->add_item_options(WBUFP(buf, 19), &sd->status.inventory[index]);
 #endif
 	}
 	WFIFOSET(fd,packet_len(tradeaddType));
@@ -4149,7 +4149,7 @@ void clif_storageitemadded(struct map_session_data* sd, struct item* i, int inde
 	WFIFOB(fd,12+offset) = i->refine; //refine
 	clif->addcards(WFIFOP(fd,13+offset), i);
 #if PACKETVER >= 20150226
-	clif->add_random_options(WFIFOP(fd,21+offset), i);
+	clif->add_item_options(WFIFOP(fd,21+offset), i);
 #endif
 	WFIFOSET(fd,packet_len(storageaddType));
 }
@@ -6223,7 +6223,7 @@ void clif_cart_additem(struct map_session_data *sd,int n,int amount,int fail)
 	WBUFB(buf,12+offset)=sd->status.cart[n].refine;
 	clif->addcards(WBUFP(buf,13+offset), &sd->status.cart[n]);
 #if PACKETVER >= 20150226
-	clif->add_random_options(WBUFP(buf,21+offset), &sd->status.cart[n]);
+	clif->add_item_options(WBUFP(buf,21+offset), &sd->status.cart[n]);
 #endif
 	WFIFOSET(fd,packet_len(cartaddType));
 }
@@ -6351,7 +6351,7 @@ void clif_vendinglist(struct map_session_data* sd, unsigned int id, struct s_ven
 		WFIFOB(fd,offset+13+i*item_length) = vsd->status.cart[index].refine;
 		clif->addcards(WFIFOP(fd,offset+14+i*item_length), &vsd->status.cart[index]);
 #if PACKETVER >= 20150226
-		clif->add_random_options(WFIFOP(fd,offset+22+i*item_length), &vsd->status.cart[index]);
+		clif->add_item_options(WFIFOP(fd,offset+22+i*item_length), &vsd->status.cart[index]);
 #endif
 	}
 	WFIFOSET(fd,WFIFOW(fd,2));
@@ -6417,7 +6417,7 @@ void clif_openvending(struct map_session_data* sd, int id, struct s_vending* ven
 		WFIFOB(fd,21+i*item_length) = sd->status.cart[index].refine;
 		clif->addcards(WFIFOP(fd,22+i*item_length), &sd->status.cart[index]);
 #if PACKETVER >= 20150226
-		clif->add_random_options(WFIFOP(fd,30+22+i*item_length), &sd->status.cart[index]);
+		clif->add_item_options(WFIFOP(fd,30+22+i*item_length), &sd->status.cart[index]);
 #endif
 	}
 	WFIFOSET(fd,WFIFOW(fd,2));
@@ -20092,7 +20092,7 @@ void clif_defaults(void) {
 	clif->pNPCMarketClosed = clif_parse_NPCMarketClosed;
 	clif->pNPCMarketPurchase = clif_parse_NPCMarketPurchase;
 	/* */
-	clif->add_random_options = clif_add_random_options;
+	clif->add_item_options = clif_add_item_options;
 	clif->pHotkeyRowShift = clif_parse_HotkeyRowShift;
 	clif->dressroom_open = clif_dressroom_open;
 	clif->pOneClick_ItemIdentify = clif_parse_OneClick_ItemIdentify;

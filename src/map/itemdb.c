@@ -1334,7 +1334,8 @@ void itemdb_read_options(void)
 	struct config_setting_t *ito = NULL, *conf = NULL;
 	int index = 0, count = 0;
 	const char *filepath = "db/item_options.conf";
-	
+	VECTOR_DECL(int) duplicate_id;
+
 	if (!libconfig->load_file(&item_options_db, filepath))
 		return;
 	
@@ -1347,24 +1348,55 @@ void itemdb_read_options(void)
 		libconfig->destroy(&item_options_db);
 		return;
 	}
-	
+
+	VECTOR_INIT(duplicate_id);
+
+	VECTOR_ENSURE(duplicate_id, libconfig->setting_length(ito), 1);
+
 	while ((conf = libconfig->setting_get_elem(ito, index++))) {
 		struct item_option t_opt = { 0 }, *s_opt = NULL;
 		const char *str = NULL;
-		
+		int i = 0;
+
+		/* Id Lookup */
 		if (!libconfig->setting_lookup_int16(conf, "Id", &t_opt.index) || t_opt.index <= 0) {
 			ShowError("itemdb_read_options: Invalid Option Id provided for entry %d in '%s', skipping...\n", t_opt.index, filepath);
 			continue;
 		}
-		
-		if (!libconfig->setting_lookup_string(conf, "Name", &str)) {
-			ShowError("itemdb_read_options: Invalid Option variable name provided for Option Id %d in '%s', skipping...\n", t_opt.index, filepath);
+
+		/* Checking for duplicate entries. */
+		ARR_FIND(0, VECTOR_LENGTH(duplicate_id), i, VECTOR_INDEX(duplicate_id, i) == t_opt.index);
+
+		if (i != VECTOR_LENGTH(duplicate_id)) {
+			ShowError("itemdb_read_options: Duplicate entry for Option Id %d in '%s', skipping...\n", t_opt.index, filepath);
 			continue;
 		}
-		
-		/* Set Constant */
-		script->set_constant(str, t_opt.index, false, false);
-		
+
+		VECTOR_PUSH(duplicate_id, t_opt.index);
+
+		/* Name Lookup */
+		if (!libconfig->setting_lookup_string(conf, "Name", &str)) {
+			ShowError("itemdb_read_options: Invalid Option Name '%s' provided for Id %d in '%s', skipping...\n", str, t_opt.index, filepath);
+			continue;
+		}
+
+		/* check for illegal characters in the constant. */
+		{
+			const char *c = str;
+
+			while (ISALNUM(*c) || *c == '_')
+				++c;
+
+			if (*c != '\0') {
+				ShowError("itemdb_read_options: Invalid characters in Option Name '%s' for Id %d in '%s', skipping...\n", str, t_opt.index, filepath);
+				continue;
+			}
+		}
+
+		/* Set name as a script constant with index as value. */
+		script->set_constant2(str, t_opt.index, false, false);
+
+		/* Script Code Lookup */
 		if (!libconfig->setting_lookup_string(conf, "Script", &str)) {
 			ShowError("itemdb_read_options: Script code not found for entry %s (Id: %d) in '%s', skipping...\n", str, t_opt.index, filepath);
 			continue;
@@ -1372,15 +1404,16 @@ void itemdb_read_options(void)
 		
 		/* Set Script */
 		t_opt.script = *str ? script->parse(str, filepath, t_opt.index, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
-		
+
 		/* Allocate memory and copy contents */
 		CREATE(s_opt, struct item_option, 1);
-		
+
 		*s_opt = t_opt;
 		
 		/* Store ptr in the database */
 		idb_put(itemdb->options, t_opt.index, s_opt);
-		
+
+
 		count++;
 	}
 	
@@ -1389,7 +1422,9 @@ void itemdb_read_options(void)
 #endif // ENABLE_CASE_CHECK
 	
 	libconfig->destroy(&item_options_db);
-	
+
+	VECTOR_CLEAR(duplicate_id);
+
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
 }
 
@@ -2494,7 +2529,7 @@ void do_final_itemdb(void) {
 void do_init_itemdb(bool minimal) {
 	memset(itemdb->array, 0, sizeof(itemdb->array));
 	itemdb->other = idb_alloc(DB_OPT_BASE);
-	itemdb->options = idb_alloc(DB_OPT_RELEASE_BOTH);
+	itemdb->options = idb_alloc(DB_OPT_RELEASE_DATA);
 	itemdb->names = strdb_alloc(DB_OPT_BASE,ITEM_NAME_LENGTH);
 	itemdb->create_dummy_data(); //Dummy data item.
 	itemdb->read(minimal);

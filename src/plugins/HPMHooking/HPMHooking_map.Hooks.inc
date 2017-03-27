@@ -24201,14 +24201,14 @@ void HP_clif_pNPCMarketPurchase(int fd, struct map_session_data *sd) {
 	}
 	return;
 }
-int HP_clif_add_random_options(struct ItemOptions *buf, const struct item *it) {
+int HP_clif_add_item_options(struct ItemOptions *buf, const struct item *it) {
 	int hIndex = 0;
 	int retVal___ = 0;
-	if( HPMHooks.count.HP_clif_add_random_options_pre ) {
+	if( HPMHooks.count.HP_clif_add_item_options_pre ) {
 		int (*preHookFunc) (struct ItemOptions **buf, const struct item **it);
 		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_add_random_options_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_clif_add_random_options_pre[hIndex].func;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_add_item_options_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_add_item_options_pre[hIndex].func;
 			retVal___ = preHookFunc(&buf, &it);
 		}
 		if( *HPMforce_return ) {
@@ -24217,12 +24217,12 @@ int HP_clif_add_random_options(struct ItemOptions *buf, const struct item *it) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.clif.add_random_options(buf, it);
+		retVal___ = HPMHooks.source.clif.add_item_options(buf, it);
 	}
-	if( HPMHooks.count.HP_clif_add_random_options_post ) {
+	if( HPMHooks.count.HP_clif_add_item_options_post ) {
 		int (*postHookFunc) (int retVal___, struct ItemOptions *buf, const struct item *it);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_add_random_options_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_clif_add_random_options_post[hIndex].func;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_add_item_options_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_add_item_options_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, buf, it);
 		}
 	}

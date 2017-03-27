@@ -13591,7 +13591,7 @@ BUILDIN(getequippedoptioninfo)
 	int val = 0, type = script_getnum(st, 2);
 	struct map_session_data *sd = NULL;
 	
-	if ((sd = script->rid2sd(st)) == NULL || status->current_equip_item_index == -1
+	if ((sd = script->rid2sd(st)) == NULL || status->current_equip_item_index == -1 || status->current_equip_option_index == -1
 		|| !sd->status.inventory[status->current_equip_item_index].option[status->current_equip_option_index].index) {
 		script_pushint(st, -1);
 		return false;
@@ -13636,19 +13636,33 @@ BUILDIN(getequipoption)
 		script_pushint(st, -1);
 		ShowError("buildin_getequipoptioninfo: Player not attached!\n");
 		return false;
-	} else if (equip_index < 0) {
+	}
+
+	if (equip_index < 0) {
 		script_pushint(st, -1);
 		ShowError("buildin_getequipoptioninfo: Invalid equipment index %d provided.\n", equip_index);
 		return false;
-	} else if (slot <= 0 || slot > MAX_ITEM_OPTIONS) {
+	}
+
+	if (slot <= 0 || slot > MAX_ITEM_OPTIONS) {
 		script_pushint(st, -1);
 		ShowError("buildin_getequipoptioninfo: Invalid option slot %d (Min: 1, Max: %d) provided.\n", slot, MAX_ITEM_OPTIONS);
 		return false;
-	} else if (equip_index > 0 && equip_index <= ARRAYLENGTH(script->equip)) {
-		i = pc->checkequip(sd, script->equip[equip_index - 1]);
 	}
-	
-	if (i >= 0 && sd->status.inventory[i].nameid) {
+
+	if (equip_index > 0 && equip_index <= ARRAYLENGTH(script->equip)) {
+		if ((i = pc->checkequip(sd, script->equip[equip_index - 1])) == -1) {
+			ShowError("buildin_getequipoptioninfo: No equipment is equipped in the given index %d.\n", equip_index);
+			script_pushint(st, -1);
+			return false;
+		}
+	} else {
+		ShowError("buildin_getequipoptioninfo: Invalid equipment index %d provided.\n", equip_index);
+		script_pushint(st, 0);
+		return false;
+	}
+
+	if (sd->status.inventory[i].nameid) {
 		switch (opt_type) {
 		case IT_OPT_INDEX:
 			val = sd->status.inventory[i].option[slot-1].index;
@@ -13695,19 +13709,33 @@ BUILDIN(setequipoption)
 		script_pushint(st, 0);
 		ShowError("buildin_setequipoption: Player not attached!\n");
 		return false;
-	} else if (equip_index < 0) {
+	}
+
+	if (equip_index < 0) {
 		script_pushint(st, 0);
 		ShowError("buildin_setequipoption: Invalid equipment index %d provided.\n", equip_index);
 		return false;
-	} else if (slot <= 0 || slot > MAX_ITEM_OPTIONS) {
+	}
+
+	if (slot <= 0 || slot > MAX_ITEM_OPTIONS) {
 		script_pushint(st, 0);
 		ShowError("buildin_setequipoption: Invalid option index %d (Min: 1, Max: %d) provided.\n", slot, MAX_ITEM_OPTIONS);
 		return false;
-	} else if (equip_index > 0 && equip_index <= ARRAYLENGTH(script->equip)) {
-		i = pc->checkequip(sd, script->equip[equip_index - 1]);
+	}
+
+	if (equip_index > 0 && equip_index <= ARRAYLENGTH(script->equip)) {
+		if ((i = pc->checkequip(sd, script->equip[equip_index - 1])) == -1) {
+			ShowError("buildin_setequipoptioninfo: No equipment is equipped in the given index %d.\n", equip_index);
+			script_pushint(st, 0);
+			return false;
+		}
+	} else {
+		ShowError("buildin_setequipoptioninfo: Invalid equipment index %d provided.\n", equip_index);
+		script_pushint(st, 0);
+		return false;
 	}
 	
-	if (i >= 0 && sd->status.inventory[i].nameid) {
+	if (sd->status.inventory[i].nameid) {
 		
 		if ((ito = itemdb->option_exists(opt_index)) == NULL) {
 			script_pushint(st, 0);
@@ -13733,10 +13761,6 @@ BUILDIN(setequipoption)
 		clif->additem(sd, i, 1, 0); // notify client to simulate item addition.
 		pc->equipitem(sd, i, sd->status.inventory[i].equip); // force equip the item at the original position.
 		clif->misceffect(&sd->bl, 2); // show effect
-	} else {
-		script_pushint(st, 0);
-		ShowError("buildin_setequipoption: Item with equipment index %d does not exist in the inventory.\n", equip_index);
-		return false;
 	}
 	
 	script_pushint(st, 1);

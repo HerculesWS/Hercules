@@ -2660,28 +2660,26 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 			continue;
 		
 		if (index >= 0 && sd->inventory_data[index]) {
-			int j;
-			struct item_option *ito = NULL;
+			int j = 0;
 			for (j = 0; j < MAX_ITEM_OPTIONS; j++) {
-				short option_index = sd->status.inventory[index].option[j].index;
+				uint16 option_index = sd->status.inventory[index].option[j].index;
+				struct item_option *ito = NULL;
 				
-				if (option_index == 0)
+				if (option_index == 0 || (ito = itemdb->option_exists(option_index)) == NULL || ito->script == NULL)
 					continue;
 				
 				status->current_equip_option_index = j;
-				
-				if ((ito = itemdb->option_exists(option_index)) == NULL || ito->script == NULL)
-					continue;
-				else
-					script->run(ito->script, 0, sd->bl.id, 0);
+				script->run(ito->script, 0, sd->bl.id, 0);
 				
 				if (calculating == 0) //Abort, script->run his function. [Skotlex]
 					return 1;
 			}
 		}
-		status->current_equip_option_index = -1;
 	}
-	
+
+	status->current_equip_option_index = -1;
+	status->current_equip_item_index = -1;
+
 	status->calc_pc_additional(sd, opt);
 
 	if( sd->pd ) { // Pet Bonus
