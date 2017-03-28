@@ -35,6 +35,7 @@
 #include "char/int_pet.h"
 #include "char/int_quest.h"
 #include "char/int_storage.h"
+#include "char/int_achievement.h"
 #include "char/inter.h"
 #include "char/loginif.h"
 #include "char/mapif.h"
@@ -108,6 +109,7 @@ char acc_reg_num_db[32] = "acc_reg_num_db";
 char acc_reg_str_db[32] = "acc_reg_str_db";
 char char_reg_str_db[32] = "char_reg_str_db";
 char char_reg_num_db[32] = "char_reg_num_db";
+char char_achievement_db[256] = "char_achievements";
 
 struct char_interface char_s;
 struct char_interface *chr;
@@ -5495,6 +5497,7 @@ bool char_sql_config_read_pc(const char *filename, const struct config_t *config
 	libconfig->setting_lookup_mutable_string(setting, "hotkey_db", hotkey_db, sizeof(hotkey_db));
 	libconfig->setting_lookup_mutable_string(setting, "scdata_db", scdata_db, sizeof(scdata_db));
 	libconfig->setting_lookup_mutable_string(setting, "inventory_db", inventory_db, sizeof(inventory_db));
+	libconfig->setting_lookup_mutable_string(setting, "achievement_db", char_achievement_db, sizeof(char_achievement_db));
 	libconfig->setting_lookup_mutable_string(setting, "cart_db", cart_db, sizeof(cart_db));
 	libconfig->setting_lookup_mutable_string(setting, "charlog_db", charlog_db, sizeof(charlog_db));
 	libconfig->setting_lookup_mutable_string(setting, "storage_db", storage_db, sizeof(storage_db));
@@ -6364,6 +6367,7 @@ void char_load_defaults(void)
 	inter_pet_defaults();
 	inter_quest_defaults();
 	inter_storage_defaults();
+	inter_achievement_defaults();
 	inter_defaults();
 	geoip_defaults();
 }

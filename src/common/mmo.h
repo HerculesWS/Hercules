@@ -23,6 +23,7 @@
 
 #include "config/core.h"
 #include "common/cbasetypes.h"
+#include "common/db.h" // VECTORS
 
 // server->client protocol version
 //        0 - pre-?
@@ -193,6 +194,15 @@
 #ifndef MAX_QUEST_OBJECTIVES
 #define MAX_QUEST_OBJECTIVES 3           // Max quest objectives for a quest
 #endif
+// Achievements [Smokexyz/Hercules]
+#ifndef MAX_ACHIEVEMENT_DB
+#define MAX_ACHIEVEMENT_DB 360          // Maximum number of achievements
+#define MAX_ACHIEVEMENT_OBJECTIVES 10	// Maximum number of achievement objectives
+STATIC_ASSERT(MAX_ACHIEVEMENT_OBJECTIVES <= 10, "This value is limited by the client and database layout and should only be increased if you know the consequences.");
+#define MAX_ACHIEVEMENT_RANKS 20 // Achievement Ranks
+STATIC_ASSERT(MAX_ACHIEVEMENT_RANKS <= 255, "This value is limited by the client and database layout and should only be increased if you know the consequences.");
+#define MAX_ACHIEVEMENT_ITEM_REWARDS 10 // Achievement Rewards
+#endif
 
 // for produce
 #define MIN_ATTRIBUTE 0
@@ -263,16 +273,6 @@
 #ifndef MAX_ELESKILLTREE
 #define MAX_ELESKILLTREE 3
 #endif
-
-// The following system marks a different job ID system used by the map server,
-// which makes a lot more sense than the normal one. [Skotlex]
-// These marks the "level" of the job.
-#define JOBL_2_1   0x0100
-#define JOBL_2_2   0x0200
-#define JOBL_2     0x0300 // JOBL_2_1 | JOBL_2_2
-#define JOBL_UPPER 0x1000
-#define JOBL_BABY  0x2000
-#define JOBL_THIRD 0x4000
 
 #define SCRIPT_VARNAME_LENGTH 32 ///< Maximum length of a script variable
 
@@ -561,6 +561,14 @@ struct hotkey {
 	UNAVAILABLE_STRUCT;
 #endif
 };
+
+struct achievement { // Achievements [Smokexyz/Hercules]
+	int id;
+	int objective[MAX_ACHIEVEMENT_OBJECTIVES];
+	time_t completed_at, rewarded_at;
+};
+
+VECTOR_STRUCT_DECL(char_achievements, struct achievement);
 
 struct mmo_charstatus {
 	int char_id;

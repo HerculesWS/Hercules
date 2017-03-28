@@ -65,6 +65,16 @@ enum E_MAPSERVER_ST {
 #define block_free_max 1048576
 #define BL_LIST_MAX 1048576
 
+// The following system marks a different job ID system used by the map server,
+// which makes a lot more sense than the normal one. [Skotlex]
+// These marks the "level" of the job.
+#define JOBL_2_1   0x0100
+#define JOBL_2_2   0x0200
+#define JOBL_2     0x0300 // JOBL_2_1 | JOBL_2_2
+#define JOBL_UPPER 0x1000
+#define JOBL_BABY  0x2000
+#define JOBL_THIRD 0x4000
+
 // For filtering and quick checking.
 #define MAPID_BASEMASK 0x00ff
 #define MAPID_UPPERMASK 0x0fff

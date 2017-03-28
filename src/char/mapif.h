@@ -40,6 +40,8 @@ struct mapif_interface {
 	int (*sendallwos) (int sfd, unsigned char *buf, unsigned int len);
 	int (*send) (int fd, unsigned char *buf, unsigned int len);
 	void (*send_users_count) (int users);
+	void (*pLoadAchievements) (int fd);
+	void (*pSaveAchievements) (int fd);
 	void (*auction_message) (int char_id, unsigned char result);
 	void (*auction_sendlist) (int fd, int char_id, short count, short pages, unsigned char *buf);
 	void (*parse_auction_requestlist) (int fd);

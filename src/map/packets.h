@@ -2899,12 +2899,23 @@ packet(0x96e,-1,clif->ackmergeitems);
 #if PACKETVER >= 20140613
 // no shuffle packets
 	packet(0x0a0e,14);
+	/* Achievements [Smokexyz/Hercules] */
+	packet(0x0A23, -1); // ZC_ALL_ACH_LIST
+	packet(0x0A24, 35); // ZC_ACH_UPDATE
+	packet(0x0A25, 6, clif->pAchievementGetReward, 2); // CZ_REQ_ACH_REWARD
+	packet(0x0A26, 7); // ZC_REQ_ACH_REWARD_ACK
 #endif
 
 // 2014-06-25aRagexeRE
 #if PACKETVER >= 20140625
 // no shuffle packets
 	packet(0x0a28,3); // ZC_ACK_OPENSTORE2
+	packet(0x0A24, 36); // ZC_ACH_UPDATE [Smokexyz/Hercules]
+#endif
+
+// 2014-07-23aRagexe Achievements - Smokexyz/Hercules
+#if PACKETVER >= 20140723
+	packet(0x0A24, 56); // ZC_ACH_UPDATE
 #endif
 
 // 2014-10-16aRagexe - YomRawr
@@ -2942,6 +2953,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0a00,269);
 	packet(0x09e5,18); // ZC_DELETEITEM_FROM_MCSTORE2
 	packet(0x09e6,22); // ZC_UPDATE_ITEM_FROM_BUYING_STORE2
+	packet(0x0A24, 66); // ZC_ACH_UPDATE [Smokexyz/Hercules]
 #endif
 
 /* Roulette System [Yommy/Hercules] */

@@ -39,6 +39,8 @@
 #include "map/pet.h"
 #include "map/quest.h"
 #include "map/storage.h"
+#include "map/achievement.h"
+
 #include "common/memmgr.h"
 #include "common/nullpo.h"
 #include "common/showmsg.h"
@@ -1495,11 +1497,94 @@ void intif_parse_DeleteHomunculusOk(int fd) {
 		ShowError("Homunculus data delete failure\n");
 }
 
-/**************************************
+/***************************************
+ *
+ * ACHIEVEMENT SYSTEM FUNCTIONS
+ *
+ ***************************************/
+/**
+ * Sends a request to the inter-server to load
+ * and send a character's achievement data.
+ * @packet [out] 0x3098 <char_id>.L
+ * @param sd pointer to map_session_data.
+ */
+void intif_achievements_request(struct map_session_data *sd)
+{
+	nullpo_retv(sd);
 
-QUESTLOG SYSTEM FUNCTIONS
+	if (intif->CheckForCharServer())
+		return;
 
-***************************************/
+	WFIFOHEAD(inter_fd, 6);
+	WFIFOW(inter_fd, 0) = 0x3098;
+	WFIFOL(inter_fd, 2) = sd->status.char_id;
+	WFIFOSET(inter_fd, 6);
+}
+
+/**
+ * Handles reception of achievement data for a character from the inter-server.
+ * @packet [in] 0x3898 <packet_len>.W <char_id>.L <char_achievements[]>.P
+ * @param fd socket descriptor.
+ */
+void intif_parse_achievements_load(int fd)
+{
+	int size = RFIFOW(fd, 2);
+	int char_id = RFIFOL(fd, 4);
+	int payload_count = (size - 8) / sizeof(struct achievement);
+	struct map_session_data *sd = map->charid2sd(char_id);
+	int i = 0;
+
+	VECTOR_ENSURE(sd->achievement, payload_count, 1);
+
+	for (i = 0; i < payload_count; i++) {
+		struct achievement t_ach = { 0 };
+
+		memcpy(&t_ach, RFIFOP(fd, 8 + i * sizeof(struct achievement)), sizeof(struct achievement));
+
+		if (achievement->get(t_ach.id) == NULL) {
+			ShowError("intif_parse_achievements_load: Invalid Achievement %d received from character %d. Ignoring...\n", t_ach.id, char_id);
+			continue;
+		}
+
+		VECTOR_PUSH(sd->achievement, t_ach);
+	}
+
+	clif->achievement_send_list(fd, sd);
+}
+
+/**
+ * Send character's achievement data to the inter-server.
+ * @packet 0x3099 <packet_len>.W <char_id>.L <achievements[]>.P
+ * @param sd pointer to map session data.
+ */
+void intif_achievements_save(struct map_session_data *sd)
+{
+	int packet_len = 0, payload_size = 0, i = 0;
+
+	nullpo_retv(sd);
+	/* check for character server. */
+	if (intif->CheckForCharServer())
+		return;
+	/* Return if no data. */
+	if (!(payload_size = VECTOR_LENGTH(sd->achievement) * sizeof(struct achievement)))
+		return;
+
+	packet_len = payload_size + 8;
+
+	WFIFOHEAD(inter_fd, packet_len);
+	WFIFOW(inter_fd, 0) = 0x3099;
+	WFIFOL(inter_fd, 2) = packet_len;
+	WFIFOL(inter_fd, 4) = sd->status.char_id;
+	for (i = 0; i < VECTOR_LENGTH(sd->achievement); i++)
+		memcpy(WFIFOP(inter_fd, 8 + i * sizeof(struct achievement)), &VECTOR_INDEX(sd->achievement, i), sizeof(struct achievement));
+	WFIFOSET(inter_fd, packet_len);
+}
+
+/***************************************
+ *
+ * QUESTLOG SYSTEM FUNCTIONS
+ *
+ ***************************************/
 
 /**
  * Requests a character's quest log entries to the inter server.
@@ -2378,6 +2463,7 @@ int intif_parse(int fd)
 		case 0x3891: intif->pRecvHomunculusData(fd); break;
 		case 0x3892: intif->pSaveHomunculusOk(fd); break;
 		case 0x3893: intif->pDeleteHomunculusOk(fd); break;
+		case 0x3898: intif->pAchievementsLoad(fd); break;
 	default:
 		ShowError("intif_parse : unknown packet %d %x\n",fd,RFIFOW(fd,0));
 		return 0;
@@ -2403,7 +2489,7 @@ void intif_defaults(void) {
 		-1, 7, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3860  Quests [Kevin] [Inkfish]
 		-1, 3, 3, 0,  0, 0, 0, 0,  0, 0, 0, 0, -1, 3,  3, 0, //0x3870  Mercenaries [Zephyrus] / Elemental [pakpil]
 		12,-1, 7, 3,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3880
-		-1,-1, 7, 3,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3890  Homunculus [albator]
+		-1,-1, 7, 3,  0, 0, 0, 0, -1, 0, 0, 0,  0, 0,  0, 0, //0x3890  Homunculus [albator] + Achievements [Smokexyz/Hercules]
 	};
 
 	intif = &intif_s;
@@ -2489,6 +2575,9 @@ void intif_defaults(void) {
 	intif->CheckForCharServer = CheckForCharServer;
 	/* */
 	intif->itembound_req = intif_itembound_req;
+	/* Achievement System */
+	intif->achievements_request = intif_achievements_request;
+	intif->achievements_save = intif_achievements_save;
 	/* parse functions */
 	intif->pWisMessage = intif_parse_WisMessage;
 	intif->pWisEnd = intif_parse_WisEnd;
@@ -2552,4 +2641,6 @@ void intif_defaults(void) {
 	intif->pRecvHomunculusData = intif_parse_RecvHomunculusData;
 	intif->pSaveHomunculusOk = intif_parse_SaveHomunculusOk;
 	intif->pDeleteHomunculusOk = intif_parse_DeleteHomunculusOk;
+	/* Achievement System */
+	intif->pAchievementsLoad = intif_parse_achievements_load;
 }
