@@ -3229,6 +3229,33 @@ Notice that NPC objects disabled with disablenpc() will still be located.
 
 ---------------------------------------
 
+*getunits(<type>, <variable>, <limit>, "<map>"{, <x1>, <y1>, <x2>, <y2>})
+
+This function searches a whole map or area for units and adds their GID to
+the provided <variable> array. It filters units by <type> and stops searching
+after <limit> units have been found. Set <limit> to false (0) if you wish to
+disable the limit altogether.
+
+Type is the type of unit to search for:
+
+	UNITTYPE_PC   - Character object
+	UNITTYPE_NPC  - NPC object
+	UNITTYPE_PET  - Pet object
+	UNITTYPE_MOB  - Monster object
+	UNITTYPE_HOM  - Homunculus object
+	UNITTYPE_MER  - Mercenary object
+	UNITTYPE_ELEM - Elemental object
+
+Example:
+
+	.@count = getunits((UNITTYPE_PC | UNITTYPE_NPC), .@units, false, "prontera");
+
+The above example would search the map "prontera" for all PC and NPC units and
+add them to the .@units array, while setting .@count to the amount of units
+added to the array (useful in for() loops).
+
+---------------------------------------
+
 *getgmlevel()
 
 This function will return the (GM) level of player group the account to 

@@ -10955,6 +10955,89 @@ BUILDIN(gettimer)
 	return true;
 }
 
+int buildin_getunits_sub(struct block_list *bl, va_list ap)
+{
+	struct script_state *st = va_arg(ap, struct script_state *);
+	struct map_session_data *sd = va_arg(ap, struct map_session_data *);
+	int32 id = va_arg(ap, int32);
+	uint32 start = va_arg(ap, uint32);
+	uint32 *count = va_arg(ap, uint32 *);
+	uint32 limit = va_arg(ap, uint32);
+	const char *name = va_arg(ap, const char *);
+	struct reg_db *ref = va_arg(ap, struct reg_db *);
+	uint32 index = start + *count;
+
+	if (index >= SCRIPT_MAX_ARRAYSIZE || *count > limit) {
+		return 1;
+	}
+
+	script->set_reg(st, sd, reference_uid(id, index), name,
+		(const void *)h64BPTRSIZE(bl->id), ref);
+
+	(*count)++;
+	return 0;
+}
+
+BUILDIN(getunits)
+{
+	const char *mapname, *name;
+	int16 m, x1, y1, x2, y2;
+	int32 id;
+	uint32 start;
+	enum bl_type type = script_getnum(st, 2);
+	struct script_data *data = script_getdata(st, 3);
+	uint32 count = 0, limit = script_getnum(st, 4);
+	struct map_session_data *sd = NULL;
+
+	if (!data_isreference(data) || reference_toconstant(data)) {
+		ShowError("script:getunits: second argument must be a variable\n");
+		script->reportdata(data);
+		st->state = END;
+		return false;
+	}
+
+	id = reference_getid(data);
+	start = reference_getindex(data);
+	name = reference_getname(data);
+
+	if (not_server_variable(*name)) {
+		sd = script->rid2sd(st);
+		if (sd == NULL) {
+			return true; // player variable but no player attached
+		}
+	}
+
+	if (is_string_variable(name)) {
+		ShowError("script:getunits: second argument must be an integer variable\n");
+		script->reportdata(data);
+		st->state = END;
+		return false;
+	}
+
+	if (limit < 1 || limit > SCRIPT_MAX_ARRAYSIZE) {
+		limit = SCRIPT_MAX_ARRAYSIZE;
+	}
+
+	mapname = script_getstr(st, 5);
+	m = map->mapname2mapid(mapname);
+
+	if (script_hasdata(st, 9)) {
+		x1 = script_getnum(st, 6);
+		y1 = script_getnum(st, 7);
+		x2 = script_getnum(st, 8);
+		y2 = script_getnum(st, 9);
+
+		map->foreachinarea(buildin_getunits_sub, m, x1, y1, x2, y2, type,
+			st, sd, id, start, &count, limit, name, reference_getref(data));
+	} else {
+		map->foreachinmap(buildin_getunits_sub, m, type,
+			st, sd, id, start, &count, limit, name, reference_getref(data));
+	}
+
+	script_pushint(st, count);
+	return true;
+}
+
 /*==========================================
  *------------------------------------------*/
 BUILDIN(initnpctimer)
@@ -21210,6 +21293,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(deltimer,"s?"),
 		BUILDIN_DEF(addtimercount,"si?"),
 		BUILDIN_DEF(gettimer,"i??"),
+		BUILDIN_DEF(getunits,"iris????"),
 		BUILDIN_DEF(initnpctimer,"??"),
 		BUILDIN_DEF(stopnpctimer,"??"),
 		BUILDIN_DEF(startnpctimer,"??"),
