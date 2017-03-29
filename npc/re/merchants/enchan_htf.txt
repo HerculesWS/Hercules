@@ -360,7 +360,7 @@ xmas,240,294,3	script	Bearded Joe#pa0829	4_M_05,{
 		if (.@equip_card[3] == 0 && .@sc_type < 4) {
 			.@sc_num = 4;
 			mes("[Bearded Joe]");
-			mes("Let's proceed with the first enchantment then. The success rate is 95% on average, there's only a low chance of failing.");
+			mesf("Let's proceed with the first enchantment then. The success rate is 95%% on average, there's only a low chance of failing.");
 			next();
 			if (select("Maybe later", "Proceed") == 1) {
 				mes("[Bearded Joe]");
@@ -370,7 +370,7 @@ xmas,240,294,3	script	Bearded Joe#pa0829	4_M_05,{
 		} else if (.@equip_card[2] == 0 && .@sc_type < 3) {
 			.@sc_num = 3;
 			mes("[Bearded Joe]");
-			mes("Is this the second time enchanting this piece of equipment? It's a little risky, the success rate is 70% on average. Please note that if you fail, you'll lose the item.");
+			mesf("Is this the second time enchanting this piece of equipment? It's a little risky, the success rate is 70%% on average. Please note that if you fail, you'll lose the item.");
 			next();
 			if (select("Maybe later", "Proceed") == 1) {
 				mes("[Bearded Joe]");
@@ -380,7 +380,7 @@ xmas,240,294,3	script	Bearded Joe#pa0829	4_M_05,{
 		} else if (.@equip_card[1] == 0 && .@sc_type < 2) {
 			.@sc_num = 2;
 			mes("[Bearded Joe]");
-			mes("This is the final enchantment. The success rate^ff0000 is less than 50%^000000. Of course I'd like it to succeed in the enchantment, but I'd advise you to think again.");
+			mesf("This is the final enchantment. The success rate^ff0000 is less than 50%%^000000. Of course I'd like it to succeed in the enchantment, but I'd advise you to think again.");
 			next();
 			if (select("Maybe later", "Proceed") == 1) {
 				mes("[Bearded Joe]");
