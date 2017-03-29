@@ -10861,6 +10861,100 @@ BUILDIN(addtimercount)
 	return true;
 }
 
+enum gettimer_mode {
+	GETTIMER_COUNT = 0,
+	GETTIMER_TICK_NEXT = 1,
+	GETTIMER_TICK_LAST = 2,
+};
+
+BUILDIN(gettimer)
+{
+	struct map_session_data *sd;
+	const struct TimerData *td;
+	int i;
+	int tick;
+	const char *event = NULL;
+	int val = 0;
+	bool first = true;
+	short mode = script_getnum(st, 2);
+
+	if (script_hasdata(st, 3))
+		sd = map->id2sd(script_getnum(st, 3));
+	else
+		sd = script->rid2sd(st);
+
+	if (script_hasdata(st, 4)) {
+		event = script_getstr(st, 4);
+		script->check_event(st, event);
+	}
+
+	if (sd == NULL) {
+		script_pushint(st, -1);
+		return true;
+	}
+
+	switch (mode) {
+	case GETTIMER_COUNT:
+		// get number of timers
+		for (i = 0; i < MAX_EVENTTIMER; i++) {
+			if (sd->eventtimer[i] != INVALID_TIMER) {
+				if (event != NULL) {
+					td = timer->get(sd->eventtimer[i]);
+					Assert_retr(false, td != NULL);
+
+					if (strcmp((char *)(td->data), event) == 0) {
+						val++;
+					}
+				} else {
+					val++;
+				}
+			}
+		}
+		break;
+	case GETTIMER_TICK_NEXT:
+		// get the number of tick before the next timer runs
+		for (i = 0; i < MAX_EVENTTIMER; i++) {
+			if (sd->eventtimer[i] != INVALID_TIMER) {
+				td = timer->get(sd->eventtimer[i]);
+				Assert_retr(false, td != NULL);
+				tick = max(0, DIFF_TICK32(td->tick, timer->gettick()));
+
+				if (event != NULL) {
+					if ((first == true || tick < val) && strcmp((char *)(td->data), event) == 0) {
+						val = tick;
+						first = false;
+					}
+				} else if (first == true || tick < val) {
+					val = tick;
+					first = false;
+				}
+			}
+		}
+		break;
+	case GETTIMER_TICK_LAST:
+		// get the number of ticks before the last timer runs
+		for (i = MAX_EVENTTIMER - 1; i >= 0; i--) {
+			if (sd->eventtimer[i] != INVALID_TIMER) {
+				td = timer->get(sd->eventtimer[i]);
+				Assert_retr(false, td != NULL);
+				tick = max(0, DIFF_TICK32(td->tick, timer->gettick()));
+
+				if (event != NULL) {
+					if (strcmp((char *)(td->data), event) == 0) {
+						val = max(val, tick);
+					}
+				} else {
+					val = max(val, tick);
+				}
+			}
+		}
+		break;
+	}
+
+	script_pushint(st, val);
+	return true;
+}
+
 /*==========================================
  *------------------------------------------*/
 BUILDIN(initnpctimer)
@@ -21115,6 +21209,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(addtimer,"is?"),
 		BUILDIN_DEF(deltimer,"s?"),
 		BUILDIN_DEF(addtimercount,"si?"),
+		BUILDIN_DEF(gettimer,"i??"),
 		BUILDIN_DEF(initnpctimer,"??"),
 		BUILDIN_DEF(stopnpctimer,"??"),
 		BUILDIN_DEF(startnpctimer,"??"),
