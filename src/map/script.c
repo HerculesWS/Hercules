@@ -10955,6 +10955,91 @@ BUILDIN(gettimer)
 	return true;
 }
 
+int buildin_getunits_sub(struct block_list *bl, va_list ap)
+{
+	struct script_state *st = va_arg(ap, struct script_state *);
+	struct map_session_data *sd = va_arg(ap, struct map_session_data *);
+	int32 id = va_arg(ap, int32);
+	uint32 start = va_arg(ap, uint32);
+	int *count = va_arg(ap, int *);
+	int limit = va_arg(ap, int);
+	const char *name = va_arg(ap, const char *);
+	struct reg_db *ref = va_arg(ap, struct reg_db *);
+	int index = start + *count;
+
+	if (index >= SCRIPT_MAX_ARRAYSIZE || *count > limit) {
+		return 1;
+	}
+
+	script->set_reg(st, sd, reference_uid(id, index), name,
+		(const void *)h64BPTRSIZE(bl->id), ref);
+
+	(*count)++;
+	return 0;
+}
+
+BUILDIN(getunits)
+{
+	const char *mapname, *name;
+	int16 m, x1, y1, x2, y2;
+	int32 id;
+	uint32 start;
+	short area = script_getnum(st, 2);
+	short bl_type = script_getnum(st, 3);
+	int count = 0, limit = script_getnum(st, 4);
+	struct script_data *data = script_getdata(st, 5);
+	struct map_session_data *sd = NULL;
+
+	if (!data_isreference(data) || reference_toconstant(data)) {
+		ShowError("script:getunits: not a variable\n");
+		script->reportdata(data);
+		st->state = END;
+		return false;
+	}
+
+	id = reference_getid(data);
+	start = reference_getindex(data);
+	name = reference_getname(data);
+
+	if (not_server_variable(*name)) {
+		sd = script->rid2sd(st);
+		if (sd == NULL) {
+			return true; // player variable but no player attached
+		}
+	}
+
+	if (is_string_variable(name)) {
+		ShowError("script:getunits: must be an integer variable\n");
+		script->reportdata(data);
+		st->state = END;
+		return false;
+	}
+
+	switch (area) {
+	case AREA:
+		mapname = script_getstr(st, 6);
+		m = map->mapname2mapid(mapname);
+		x1 = script_getnum(st, 7);
+		y1 = script_getnum(st, 8);
+		x2 = script_getnum(st, 9);
+		y2 = script_getnum(st, 10);
+
+		map->foreachinarea(buildin_getunits_sub, m, x1, y1, x2, y2, bl_type,
+			st, sd, id, start, &count, limit, name, reference_getref(data));
+		break;
+	case ALL_SAMEMAP:
+		mapname = script_getstr(st, 6);
+		m = map->mapname2mapid(mapname);
+
+		map->foreachinmap(buildin_getunits_sub, m, bl_type,
+			st, sd, id, start, &count, limit, name, reference_getref(data));
+		break;
+	}
+
+	script_pushint(st, count);
+	return true;
+}
+
 /*==========================================
  *------------------------------------------*/
 BUILDIN(initnpctimer)
@@ -21210,6 +21295,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(deltimer,"s?"),
 		BUILDIN_DEF(addtimercount,"si?"),
 		BUILDIN_DEF(gettimer,"i??"),
+		BUILDIN_DEF(getunits,"iiir?????"),
 		BUILDIN_DEF(initnpctimer,"??"),
 		BUILDIN_DEF(stopnpctimer,"??"),
 		BUILDIN_DEF(startnpctimer,"??"),
