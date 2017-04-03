@@ -2662,7 +2662,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 		if (index >= 0 && sd->inventory_data[index]) {
 			int j = 0;
 			for (j = 0; j < MAX_ITEM_OPTIONS; j++) {
-				uint16 option_index = sd->status.inventory[index].option[j].index;
+				int16 option_index = sd->status.inventory[index].option[j].index;
 				struct item_option *ito = NULL;
 				
 				if (option_index == 0 || (ito = itemdb->option_exists(option_index)) == NULL || ito->script == NULL)

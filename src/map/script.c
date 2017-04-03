@@ -13638,12 +13638,6 @@ BUILDIN(getequipoption)
 		return false;
 	}
 
-	if (equip_index < 0) {
-		script_pushint(st, -1);
-		ShowError("buildin_getequipoptioninfo: Invalid equipment index %d provided.\n", equip_index);
-		return false;
-	}
-
 	if (slot <= 0 || slot > MAX_ITEM_OPTIONS) {
 		script_pushint(st, -1);
 		ShowError("buildin_getequipoptioninfo: Invalid option slot %d (Min: 1, Max: %d) provided.\n", slot, MAX_ITEM_OPTIONS);
@@ -13662,7 +13656,7 @@ BUILDIN(getequipoption)
 		return false;
 	}
 
-	if (sd->status.inventory[i].nameid) {
+	if (sd->status.inventory[i].nameid != 0) {
 		switch (opt_type) {
 		case IT_OPT_INDEX:
 			val = sd->status.inventory[i].option[slot-1].index;
@@ -13711,12 +13705,6 @@ BUILDIN(setequipoption)
 		return false;
 	}
 
-	if (equip_index < 0) {
-		script_pushint(st, 0);
-		ShowError("buildin_setequipoption: Invalid equipment index %d provided.\n", equip_index);
-		return false;
-	}
-
 	if (slot <= 0 || slot > MAX_ITEM_OPTIONS) {
 		script_pushint(st, 0);
 		ShowError("buildin_setequipoption: Invalid option index %d (Min: 1, Max: %d) provided.\n", slot, MAX_ITEM_OPTIONS);
@@ -13735,7 +13723,7 @@ BUILDIN(setequipoption)
 		return false;
 	}
 	
-	if (sd->status.inventory[i].nameid) {
+	if (sd->status.inventory[i].nameid != 0) {
 		
 		if ((ito = itemdb->option_exists(opt_index)) == NULL) {
 			script_pushint(st, 0);
@@ -13755,10 +13743,12 @@ BUILDIN(setequipoption)
 		pc->unequipitem(sd, i, PCUNEQUIPITEM_FORCE); // status calc will happen in pc->equipitem() below
 		clif->refine(sd->fd, 0, i, sd->status.inventory[i].refine); // notify client of a refine.
 		clif->delitem(sd, i, 1, DELITEM_MATERIALCHANGE); // notify client to simulate item deletion.
-		/* Log the Item */
-		logs->pick_pc(sd, LOG_TYPE_SCRIPT, 1, &sd->status.inventory[i], sd->inventory_data[i]);
+		/* Log deletion of the item. */
+		logs->pick_pc(sd, LOG_TYPE_SCRIPT, -1, &sd->status.inventory[i],sd->inventory_data[i]);
 		/* Equip and simulate addition of the item. */
 		clif->additem(sd, i, 1, 0); // notify client to simulate item addition.
+		/* Log addition of the item. */
+		logs->pick_pc(sd, LOG_TYPE_SCRIPT, 1, &sd->status.inventory[i], sd->inventory_data[i]);
 		pc->equipitem(sd, i, sd->status.inventory[i].equip); // force equip the item at the original position.
 		clif->misceffect(&sd->bl, 2); // show effect
 	}

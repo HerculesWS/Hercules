@@ -134,8 +134,8 @@ int compare_item(struct item *a, struct item *b)
 		a->unique_id == b->unique_id)
 	{
 		int i = 0, k = 0;
-		ARR_FIND(0, MAX_SLOTS, i, a->card[i] == b->card[i]);
-		ARR_FIND(0, MAX_ITEM_OPTIONS, k, a->option[k].index == b->option[k].index && a->option[k].value == b->option[k].value);
+		ARR_FIND(0, MAX_SLOTS, i, a->card[i] != b->card[i]);
+		ARR_FIND(0, MAX_ITEM_OPTIONS, k, a->option[k].index != b->option[k].index || a->option[k].value != b->option[k].value);
 
 		if (i == MAX_SLOTS && k == MAX_ITEM_OPTIONS)
 			return 1;
