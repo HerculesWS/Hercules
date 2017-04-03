@@ -289,7 +289,7 @@ enum packet_headers {
 	maptypeproperty2Type = 0x99b,
 	npcmarketresultackType = 0x9d7,
 	npcmarketopenType = 0x9d5,
-#if PACKETVER >= 20131223
+#if PACKETVER >= 20131223  // version probably can be 20131030 [4144]
 	wisendType = 0x9df,
 #else
 	wisendType = 0x98,
