@@ -33,8 +33,6 @@
 //= 1.0.2
 //=========================================================================
 
-1@lhz	mapflag	src4instance
-
 //== Giacomo Girolam =======================================
 lighthalzen,303,303,6	script	Giacomo Girolamo#kiup2	4_M_KHMAN,3,3,{
 	if ((MaxWeight - Weight) < 1000 || !checkweight(Knife, 1)) {

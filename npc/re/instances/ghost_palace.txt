@@ -30,7 +30,6 @@
 //================= Current Version =======================================
 //= 1.1
 //=========================================================================
-1@spa	mapflag	src4instance
 
 dali02,44,129,5	script	Unpleasent Royal Guard	4_M_SAKRAYROYAL,{
 	if (BaseLevel < 120) {

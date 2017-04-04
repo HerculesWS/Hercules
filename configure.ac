@@ -726,28 +726,57 @@ AC_LINK_IFELSE(
 if test "$enable_lto" != "no" ; then
 
 	OLD_CFLAGS="$CFLAGS"
-	CFLAGS="$CFLAGS -flto"
+	CFLAGS="$CFLAGS -flto -ffat-lto-objects -Werror"
 
 	OLD_LDFLAGS="$LDFLAGS"
-	LDFLAGS="$LDFLAGS -flto"
+	LDFLAGS="$LDFLAGS -flto -ffat-lto-objects"
 
-	AC_MSG_CHECKING([whether $CC supports -flto])
+	AC_MSG_CHECKING([whether $CC supports -flto -ffat-lto-objects])
 	AC_RUN_IFELSE(
 		[AC_LANG_SOURCE([
 			int main(int argc, char **argv){
+				(void)argc;
+				(void)argv;
 				return 0;
 			}
 		])],
 		[
 			AC_MSG_RESULT([yes])
+			CFLAGS="$OLD_CFLAGS -flto -ffat-lto-objects"
+			LDFLAGS="$OLD_LDFLAGS -flto -ffat-lto-objects"
 		],
 		[
 			AC_MSG_RESULT([no])
-			CFLAGS="$OLD_CFLAGS"
-			LDFLAGS="$OLD_LDFLAGS"
+			CFLAGS="$OLD_CFLAGS -flto"
+			LDFLAGS="$OLD_LDFLAGS -flto"
+			AC_MSG_CHECKING([whether $CC supports -flto])
+			AC_RUN_IFELSE(
+				[AC_LANG_SOURCE([
+					int main(int argc, char **argv){
+						(void)argc;
+						(void)argv;
+						return 0;
+					}
+				])],
+				[
+					AC_MSG_RESULT([yes])
+				],
+				[
+					AC_MSG_RESULT([no])
+					CFLAGS="$OLD_CFLAGS"
+					LDFLAGS="$OLD_LDFLAGS"
+				],
+				[
+					AC_MSG_RESULT([guessing no])
+					CFLAGS="$OLD_CFLAGS"
+					LDFLAGS="$OLD_LDFLAGS"
+				]
+			)
 		],
 		[
 			AC_MSG_RESULT([guessing no])
+			CFLAGS="$OLD_CFLAGS"
+			LDFLAGS="$OLD_LDFLAGS"
 		]
 	)
 fi

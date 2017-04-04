@@ -387,7 +387,6 @@ int pc_banding(struct map_session_data *sd, uint16 skill_lv) {
 	return c;
 }
 
-// Increases a player's fame points and displays a notice to him
 /**
  * Increases a player's fame points and displays a notice to them.
  *

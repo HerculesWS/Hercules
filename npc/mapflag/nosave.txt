@@ -281,18 +281,8 @@ que_qaru03	mapflag	nosave	SavePoint
 que_qaru04	mapflag	nosave	SavePoint
 que_qaru05	mapflag	nosave	SavePoint
 
-// Sealed Shrine ==================
-1@cata	mapflag	nosave	SavePoint
-2@cata	mapflag	nosave	SavePoint
-
 // Endless Tower ==================
 e_tower	mapflag	nosave	SavePoint
-1@tower	mapflag	nosave	SavePoint
-2@tower	mapflag	nosave	SavePoint
-3@tower	mapflag	nosave	SavePoint
-4@tower	mapflag	nosave	SavePoint
-5@tower	mapflag	nosave	SavePoint
-6@tower	mapflag	nosave	SavePoint
 
 // Battle Grounds ==============
 bat_c01	mapflag	nosave	SavePoint
@@ -312,45 +302,8 @@ schg_dun01	mapflag	nosave	SavePoint
 arug_que01	mapflag	nosave	SavePoint
 arug_dun01	mapflag	nosave	SavePoint
 
-// Orc's Memory ===================
-1@orcs	mapflag	nosave	SavePoint
-2@orcs	mapflag	nosave	SavePoint
-
-// Nidhoggr's Instance ===========
-1@nyd	mapflag	nosave	SavePoint
-2@nyd	mapflag	nosave	SavePoint
-
-// Misty Forest Labyrinth ===========
-1@mist	mapflag	nosave	SavePoint
-
-// Octopus Cave ===========
-1@cash	mapflag	nosave	SavePoint
-
-// Drain ===========
-1@pump	mapflag	nosave	SavePoint
-2@pump	mapflag	nosave	SavePoint
-
 // Somatology Laboratory ===========
 que_lhz	mapflag	nosave	SavePoint
-1@lhz	mapflag	nosave	SavePoint
-
-// Bangungot Hospital F2 ===========
-1@ma_h	mapflag	nosave	SavePoint
-
-// Buwaya Cave ===========
-1@ma_c	mapflag	nosave	SavePoint
-
-// Bakonawa Hideout ===========
-1@ma_b	mapflag	nosave	SavePoint
-
-// Inside Eclage ===========
-1@ecl	mapflag	nosave	SavePoint
-
-// Ghost Palace ===========
-1@spa	mapflag	nosave	SavePoint
-
-// Sara's Memory Instance ===========
-1@sara	mapflag	nosave	SavePoint
 
 //evt_zombie	mapflag	nosave	SavePoint
 

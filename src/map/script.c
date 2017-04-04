@@ -2825,7 +2825,7 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 	char postfix;
 	struct map_session_data *sd = NULL;
 
-	if( !data_isreference(data) )
+	if (!data_isreference(data))
 		return data;// not a variable/constant
 
 	name = reference_getname(data);
@@ -2840,10 +2840,10 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 	}
 
 	//##TODO use reference_tovariable(data) when it's confirmed that it works [FlavioJS]
-	if( !reference_toconstant(data) && not_server_variable(prefix) ) {
+	if (!reference_toconstant(data) && not_server_variable(prefix) && reference_getref(data) == NULL) {
 		sd = script->rid2sd(st);
-		if( sd == NULL ) {// needs player attached
-			if( postfix == '$' ) {// string variable
+		if (sd == NULL) {// needs player attached
+			if (postfix == '$') {// string variable
 				ShowWarning("script_get_val: cannot access player variable '%s', defaulting to \"\"\n", name);
 				data->type = C_CONSTSTR;
 				data->u.str = "";
@@ -2861,32 +2861,44 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 		const char *str = NULL;
 
 		switch (prefix) {
-			case '@':
+		case '@':
+			if (data->ref) {
+				str = script->get_val_ref_str(st, data->ref, data);
+			} else {
 				str = pc->readregstr(sd, data->u.num);
-				break;
-			case '$':
-				str = mapreg->readregstr(data->u.num);
-				break;
-			case '#':
-				if (name[1] == '#')
-					str = pc_readaccountreg2str(sd, data->u.num);// global
-				else
-					str = pc_readaccountregstr(sd, data->u.num);// local
-				break;
-			case '.':
-				if (data->ref)
-					str = script->get_val_ref_str(st, data->ref, data);
-				else if (name[1] == '@')
-					str = script->get_val_scope_str(st, &st->stack->scope, data);
-				else
-					str = script->get_val_npc_str(st, &st->script->local, data);
-				break;
-			case '\'':
-				str = script->get_val_instance_str(st, name, data);
-				break;
-			default:
+			}
+			break;
+		case '$':
+			str = mapreg->readregstr(data->u.num);
+			break;
+		case '#':
+			if (data->ref) {
+				str = script->get_val_ref_str(st, data->ref, data);
+			} else if (name[1] == '#') {
+				str = pc_readaccountreg2str(sd, data->u.num);// global
+			} else {
+				str = pc_readaccountregstr(sd, data->u.num);// local
+			}
+			break;
+		case '.':
+			if (data->ref) {
+				str = script->get_val_ref_str(st, data->ref, data);
+			} else if (name[1] == '@') {
+				str = script->get_val_scope_str(st, &st->stack->scope, data);
+			} else {
+				str = script->get_val_npc_str(st, &st->script->local, data);
+			}
+			break;
+		case '\'':
+			str = script->get_val_instance_str(st, name, data);
+			break;
+		default:
+			if (data->ref) {
+				str = script->get_val_ref_str(st, data->ref, data);
+			} else {
 				str = pc_readglobalreg_str(sd, data->u.num);
-				break;
+			}
+			break;
 		}
 
 		if (str == NULL || str[0] == '\0') {
@@ -2906,36 +2918,48 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 			data->u.num = reference_getconstant(data);
 		} else if( reference_toparam(data) ) {
 			data->u.num = pc->readparam(sd, reference_getparamtype(data));
-		} else
-			switch( prefix ) {
-				case '@':
+		} else {
+			switch (prefix) {
+			case '@':
+				if (data->ref) {
+					data->u.num = script->get_val_ref_num(st, data->ref, data);
+				} else {
 					data->u.num = pc->readreg(sd, data->u.num);
-					break;
-				case '$':
-					data->u.num = mapreg->readreg(data->u.num);
-					break;
-				case '#':
-					if( name[1] == '#' )
-						data->u.num = pc_readaccountreg2(sd, data->u.num);// global
-					else
-						data->u.num = pc_readaccountreg(sd, data->u.num);// local
-					break;
-				case '.':
-					if (data->ref)
-						data->u.num = script->get_val_ref_num(st, data->ref, data);
-					else if (name[1] == '@')
-						data->u.num = script->get_val_scope_num(st, &st->stack->scope, data);
-					else
-						data->u.num = script->get_val_npc_num(st, &st->script->local, data);
-					break;
-				case '\'':
-					data->u.num = script->get_val_instance_num(st, name, data);
-					break;
-				default:
+				}
+				break;
+			case '$':
+				data->u.num = mapreg->readreg(data->u.num);
+				break;
+			case '#':
+				if (data->ref) {
+					data->u.num = script->get_val_ref_num(st, data->ref, data);
+				} else if (name[1] == '#') {
+					data->u.num = pc_readaccountreg2(sd, data->u.num);// global
+				} else {
+					data->u.num = pc_readaccountreg(sd, data->u.num);// local
+				}
+				break;
+			case '.':
+				if (data->ref) {
+					data->u.num = script->get_val_ref_num(st, data->ref, data);
+				} else if (name[1] == '@') {
+					data->u.num = script->get_val_scope_num(st, &st->stack->scope, data);
+				} else {
+					data->u.num = script->get_val_npc_num(st, &st->script->local, data);
+				}
+				break;
+			case '\'':
+				data->u.num = script->get_val_instance_num(st, name, data);
+				break;
+			default:
+				if (data->ref) {
+					data->u.num = script->get_val_ref_num(st, data->ref, data);
+				} else {
 					data->u.num = pc_readglobalreg(sd, data->u.num);
-					break;
+				}
+				break;
 			}
-
+		}
 	}
 	data->ref = NULL;
 
@@ -3108,38 +3132,43 @@ void script_array_add_member(struct script_array *sa, unsigned int idx) {
  **/
 struct reg_db *script_array_src(struct script_state *st, struct map_session_data *sd, const char *name, struct reg_db *ref) {
 	struct reg_db *src = NULL;
-
 	nullpo_retr(NULL, name);
-	switch( name[0] ) {
+
+	switch (name[0]) {
 		/* from player */
-		default: /* char reg */
-		case '@':/* temp char reg */
-		case '#':/* account reg */
+	default: /* char reg */
+	case '@':/* temp char reg */
+	case '#':/* account reg */
+		if (ref != NULL) {
+			src = ref;
+		} else {
 			nullpo_retr(NULL, sd);
 			src = &sd->regs;
-			break;
-		case '$':/* map reg */
-			src = &mapreg->regs;
-			break;
-		case '.':/* npc/script */
-			if (ref != NULL) {
-				src = ref;
-			} else {
-				nullpo_retr(NULL, st);
-				src = (name[1] == '@') ? &st->stack->scope : &st->script->local;
-			}
-			break;
-		case '\'':/* instance */
+		}
+		break;
+	case '$':/* map reg */
+		src = &mapreg->regs;
+		break;
+	case '.':/* npc/script */
+		if (ref != NULL) {
+			src = ref;
+		} else {
 			nullpo_retr(NULL, st);
-			if( st->instance_id >= 0 ) {
-				src = &instance->list[st->instance_id].regs;
-			}
-			break;
+			src = (name[1] == '@') ? &st->stack->scope : &st->script->local;
+		}
+		break;
+	case '\'':/* instance */
+		nullpo_retr(NULL, st);
+		if (st->instance_id >= 0) {
+			src = &instance->list[st->instance_id].regs;
+		}
+		break;
 	}
 
-	if( src ) {
-		if( !src->arrays )
+	if (src) {
+		if (!src->arrays) {
 			src->arrays = idb_alloc(DB_OPT_BASE);
+		}
 		return src;
 	}
 	return NULL;
@@ -3292,48 +3321,65 @@ int set_reg(struct script_state *st, struct map_session_data *sd, int64 num, con
 		return 0;
 	}
 
-	if( is_string_variable(name) ) {// string variable
+	if (is_string_variable(name)) {// string variable
 		const char *str = (const char*)value;
 
 		switch (prefix) {
-			case '@':
+		case '@':
+			if (ref) {
+				script->set_reg_ref_str(st, ref, num, name, str);
+			} else {
 				pc->setregstr(sd, num, str);
-				return 1;
-			case '$':
-				return mapreg->setregstr(num, str);
-			case '#':
-				return (name[1] == '#') ?
-					pc_setaccountreg2str(sd, num, str) :
-					pc_setaccountregstr(sd, num, str);
-			case '.':
-				if (ref)
-					script->set_reg_ref_str(st, ref, num, name, str);
-				else if (name[1] == '@')
-					script->set_reg_scope_str(st, &st->stack->scope, num, name, str);
-				else
-					script->set_reg_npc_str(st, &st->script->local, num, name, str);
-				return 1;
-			case '\'':
-				set_reg_instance_str(st, num, name, str);
-				return 1;
-			default:
-				return pc_setglobalreg_str(sd, num, str);
+			}
+			return 1;
+		case '$':
+			mapreg->setregstr(num, str);
+			return 1;
+		case '#':
+			if (ref) {
+				script->set_reg_ref_str(st, ref, num, name, str);
+			} else if (name[1] == '#') {
+				pc_setaccountreg2str(sd, num, str);
+			} else {
+				pc_setaccountregstr(sd, num, str);
+			}
+			return 1;
+		case '.':
+			if (ref) {
+				script->set_reg_ref_str(st, ref, num, name, str);
+			} else if (name[1] == '@') {
+				script->set_reg_scope_str(st, &st->stack->scope, num, name, str);
+			} else {
+				script->set_reg_npc_str(st, &st->script->local, num, name, str);
+			}
+			return 1;
+		case '\'':
+			set_reg_instance_str(st, num, name, str);
+			return 1;
+		default:
+			if (ref) {
+				script->set_reg_ref_str(st, ref, num, name, str);
+			} else {
+				pc_setglobalreg_str(sd, num, str);
+			}
+			return 1;
 		}
 	} else {// integer variable
 		// FIXME: This isn't safe, in 32bits systems we're converting a 64bit pointer
 		// to a 32bit int, this will lead to overflows! [Panikon]
 		int val = (int)h64BPTRSIZE(value);
 
-		if(script->str_data[script_getvarid(num)].type == C_PARAM) {
-			if( pc->setparam(sd, script->str_data[script_getvarid(num)].val, val) == 0 ) {
-				if( st != NULL ) {
+		if (script->str_data[script_getvarid(num)].type == C_PARAM) {
+			if (pc->setparam(sd, script->str_data[script_getvarid(num)].val, val) == 0) {
+				if (st != NULL) {
 					ShowError("script:set_reg: failed to set param '%s' to %d.\n", name, val);
 					script->reportsrc(st);
 					// Instead of just stop the script execution we let the character close
 					// the window if it was open.
 					st->state = (sd->state.dialog) ? CLOSE : END;
-					if( st->state == CLOSE )
+					if(st->state == CLOSE) {
 						clif->scriptclose(sd, st->oid);
+					}
 				}
 				return 0;
 			}
@@ -3341,28 +3387,44 @@ int set_reg(struct script_state *st, struct map_session_data *sd, int64 num, con
 		}
 
 		switch (prefix) {
-			case '@':
+		case '@':
+			if (ref) {
+				script->set_reg_ref_num(st, ref, num, name, val);
+			} else {
 				pc->setreg(sd, num, val);
-				return 1;
-			case '$':
-				return mapreg->setreg(num, val);
-			case '#':
-				return (name[1] == '#') ?
-					pc_setaccountreg2(sd, num, val) :
-					pc_setaccountreg(sd, num, val);
-			case '.':
-				if (ref)
-					script->set_reg_ref_num(st, ref, num, name, val);
-				else if (name[1] == '@')
-					script->set_reg_scope_num(st, &st->stack->scope, num, name, val);
-				else
-					script->set_reg_npc_num(st, &st->script->local, num, name, val);
-				return 1;
-			case '\'':
-				set_reg_instance_num(st, num, name, val);
-				return 1;
-			default:
-				return pc_setglobalreg(sd, num, val);
+			}
+			return 1;
+		case '$':
+			mapreg->setreg(num, val);
+			return 1;
+		case '#':
+			if (ref) {
+				script->set_reg_ref_num(st, ref, num, name, val);
+			} else if (name[1] == '#') {
+				pc_setaccountreg2(sd, num, val);
+			} else {
+				pc_setaccountreg(sd, num, val);
+			}
+			return 1;
+		case '.':
+			if (ref) {
+				script->set_reg_ref_num(st, ref, num, name, val);
+			} else if (name[1] == '@') {
+				script->set_reg_scope_num(st, &st->stack->scope, num, name, val);
+			} else {
+				script->set_reg_npc_num(st, &st->script->local, num, name, val);
+			}
+			return 1;
+		case '\'':
+			set_reg_instance_num(st, num, name, val);
+			return 1;
+		default:
+			if (ref) {
+				script->set_reg_ref_num(st, ref, num, name, val);
+			} else {
+				pc_setglobalreg(sd, num, val);
+			}
+			return 1;
 		}
 	}
 }
@@ -5197,7 +5259,7 @@ int script_load_translation(const char *file, uint8 lang_id)
 			VECTOR_TRUNCATE(msgstr);
 			continue;
 		}
-		
+
 		if (strncasecmp(line, "msgid \"", 7) == 0) {
 			VECTOR_TRUNCATE(msgid);
 			for (i = 7; i < len - 2; i++) {
@@ -6610,61 +6672,67 @@ BUILDIN(warpparty)
 }
 /*==========================================
  * Warpguild - [Fredzilla]
- * Syntax: warpguild "mapname",x,y,Guild_ID;
+ * Syntax: warpguild "mapname",x,y,Guild_ID,{"from_mapname"};
  *------------------------------------------*/
 BUILDIN(warpguild)
 {
 	struct map_session_data *sd = NULL;
-	struct map_session_data *pl_sd;
 	struct guild* g;
-	struct s_mapiterator* iter;
 	int type;
+	int i;
+	int16 map_id = -1;
 
-	const char* str = script_getstr(st,2);
-	int x           = script_getnum(st,3);
-	int y           = script_getnum(st,4);
-	int gid         = script_getnum(st,5);
+	const char *str  = script_getstr(st, 2);
+	int x            = script_getnum(st, 3);
+	int y            = script_getnum(st, 4);
+	int gid          = script_getnum(st, 5);
+
+	if (script_hasdata(st, 6)) {
+		map_id = map->mapname2mapid(script_getstr(st, 6));
+	}
 
 	g = guild->search(gid);
-	if( g == NULL )
+	if (g == NULL)
 		return true;
 
-	type = ( strcmp(str,"Random")==0 ) ? 0
-	: ( strcmp(str,"SavePointAll")==0 ) ? 1
-	: ( strcmp(str,"SavePoint")==0 ) ? 2
+	type = (strcmp(str, "Random") == 0) ? 0
+	: (strcmp(str, "SavePointAll") == 0) ? 1
+	: (strcmp(str, "SavePoint") == 0) ? 2
 	: 3;
 
-	if( type == 2 && ( sd = script->rid2sd(st) ) == NULL )
+	if (type == 2 && (sd = script->rid2sd(st)) == NULL)
 	{// "SavePoint" uses save point of the currently attached player
 		return true;
 	}
 
-	iter = mapit_getallusers();
-	for (pl_sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); pl_sd = BL_UCAST(BL_PC, mapit->next(iter))) {
-		if( pl_sd->status.guild_id != gid )
-			continue;
+	for (i = 0; i < MAX_GUILD; i++) {
+		if (g->member[i].online && g->member[i].sd != NULL) {
+			struct map_session_data *pl_sd = g->member[i].sd;
 
-		switch( type )
-		{
+			if (map_id >= 0 && map_id != pl_sd->bl.m)
+				continue;
+
+			switch (type)
+			{
 			case 0: // Random
-				if(!map->list[pl_sd->bl.m].flag.nowarp)
-					pc->randomwarp(pl_sd,CLR_TELEPORT);
+				if (!map->list[pl_sd->bl.m].flag.nowarp)
+					pc->randomwarp(pl_sd, CLR_TELEPORT);
 				break;
 			case 1: // SavePointAll
-				if(!map->list[pl_sd->bl.m].flag.noreturn)
-					pc->setpos(pl_sd,pl_sd->status.save_point.map,pl_sd->status.save_point.x,pl_sd->status.save_point.y,CLR_TELEPORT);
+				if (!map->list[pl_sd->bl.m].flag.noreturn)
+					pc->setpos(pl_sd, pl_sd->status.save_point.map, pl_sd->status.save_point.x, pl_sd->status.save_point.y, CLR_TELEPORT);
 				break;
 			case 2: // SavePoint
-				if(!map->list[pl_sd->bl.m].flag.noreturn)
-					pc->setpos(pl_sd,sd->status.save_point.map,sd->status.save_point.x,sd->status.save_point.y,CLR_TELEPORT);
+				if (!map->list[pl_sd->bl.m].flag.noreturn)
+					pc->setpos(pl_sd, sd->status.save_point.map, sd->status.save_point.x, sd->status.save_point.y, CLR_TELEPORT);
 				break;
 			case 3: // m,x,y
-				if(!map->list[pl_sd->bl.m].flag.noreturn && !map->list[pl_sd->bl.m].flag.nowarp)
-					pc->setpos(pl_sd,script->mapindexname2id(st,str),x,y,CLR_TELEPORT);
+				if (!map->list[pl_sd->bl.m].flag.noreturn && !map->list[pl_sd->bl.m].flag.nowarp)
+					pc->setpos(pl_sd, script->mapindexname2id(st, str), x, y, CLR_TELEPORT);
 				break;
+			}
 		}
 	}
-	mapit->free(iter);
 
 	return true;
 }
@@ -8685,39 +8753,48 @@ BUILDIN(getguildmember)
  *------------------------------------------*/
 BUILDIN(strcharinfo)
 {
-	int num;
 	struct guild* g;
 	struct party_data* p;
-	struct map_session_data *sd = script->rid2sd(st);
-	if (sd == NULL) //Avoid crashing....
-		return true;
+	struct map_session_data *sd;
 
-	num=script_getnum(st,2);
-	switch(num) {
-		case 0:
-			script_pushstrcopy(st,sd->status.name);
-			break;
-		case 1:
-			if( ( p = party->search(sd->status.party_id) ) != NULL ) {
-				script_pushstrcopy(st,p->party.name);
-			} else {
-				script_pushconststr(st,"");
-			}
-			break;
-		case 2:
-			if( ( g = sd->guild ) != NULL ) {
-				script_pushstrcopy(st,g->name);
-			} else {
-				script_pushconststr(st,"");
-			}
-			break;
-		case 3:
-			script_pushconststr(st,map->list[sd->bl.m].name);
-			break;
-		default:
-			ShowWarning("buildin_strcharinfo: unknown parameter.\n");
-			script_pushconststr(st,"");
-			break;
+	if (script_hasdata(st, 4))
+		sd = map->id2sd(script_getnum(st, 4));
+	else
+		sd = script->rid2sd(st);
+
+	if (sd == NULL) {
+		if(script_hasdata(st, 3)) {
+			script_pushcopy(st, 3);
+		} else {
+			script_pushconststr(st, "");
+		}
+		return true;
+	}
+
+	switch (script_getnum(st, 2)) {
+	case 0:
+		script_pushstrcopy(st, sd->status.name);
+		break;
+	case 1:
+		if ((p = party->search(sd->status.party_id)) != NULL) {
+			script_pushstrcopy(st, p->party.name);
+		} else {
+			script_pushconststr(st, "");
+		}
+		break;
+	case 2:
+		if ((g = sd->guild) != NULL) {
+			script_pushstrcopy(st, g->name);
+		} else {
+			script_pushconststr(st, "");
+		}
+		break;
+	case 3:
+		script_pushconststr(st, map->list[sd->bl.m].name);
+		break;
+	default:
+		ShowWarning("script:strcharinfo: unknown parameter.\n");
+		script_pushconststr(st, "");
 	}
 
 	return true;
@@ -8734,41 +8811,51 @@ BUILDIN(strcharinfo)
  *------------------------------------------*/
 BUILDIN(strnpcinfo)
 {
-	int num;
 	char *buf,*name=NULL;
-	struct npc_data *nd = map->id2nd(st->oid);
+	struct npc_data *nd;
+
+	if (script_hasdata(st, 4))
+		nd = map->id2nd(script_getnum(st, 4));
+	else
+		nd = map->id2nd(st->oid);
+
 	if (nd == NULL) {
-		script_pushconststr(st, "");
+		if (script_hasdata(st, 3)) {
+			script_pushcopy(st, 3);
+		} else {
+			script_pushconststr(st, "");
+		}
 		return true;
 	}
 
-	num = script_getnum(st,2);
-	switch(num) {
-		case 0: // display name
+	switch (script_getnum(st,2)) {
+	case 0: // display name
+		name = aStrdup(nd->name);
+		break;
+	case 1: // visible part of display name
+		if ((buf = strchr(nd->name,'#')) != NULL) {
 			name = aStrdup(nd->name);
-			break;
-		case 1: // visible part of display name
-			if((buf = strchr(nd->name,'#')) != NULL)
-			{
-				name = aStrdup(nd->name);
-				name[buf - nd->name] = 0;
-			} else // Return the name, there is no '#' present
-				name = aStrdup(nd->name);
-			break;
-		case 2: // # fragment
-			if((buf = strchr(nd->name,'#')) != NULL)
-				name = aStrdup(buf+1);
-			break;
-		case 3: // unique name
-			name = aStrdup(nd->exname);
-			break;
-		case 4: // map name
-			if( nd->bl.m >= 0 ) // Only valid map indexes allowed (issue:8034)
-				name = aStrdup(map->list[nd->bl.m].name);
-			break;
+			name[buf - nd->name] = 0;
+		} else { // Return the name, there is no '#' present
+			name = aStrdup(nd->name);
+		}
+		break;
+	case 2: // # fragment
+		if ((buf = strchr(nd->name,'#')) != NULL) {
+			name = aStrdup(buf+1);
+		}
+		break;
+	case 3: // unique name
+		name = aStrdup(nd->exname);
+		break;
+	case 4: // map name
+		if (nd->bl.m >= 0) { // Only valid map indexes allowed (issue:8034)
+			name = aStrdup(map->list[nd->bl.m].name);
+		}
+		break;
 	}
 
-	if(name)
+	if (name)
 		script_pushstr(st, name);
 	else
 		script_pushconststr(st, "");
@@ -10704,19 +10791,29 @@ BUILDIN(donpcevent)
  *------------------------------------------*/
 BUILDIN(addtimer)
 {
-	int tick = script_getnum(st,2);
+	int tick = script_getnum(st, 2);
 	const char* event = script_getstr(st, 3);
 	struct map_session_data *sd;
 
 	script->check_event(st, event);
-	sd = script->rid2sd(st);
-	if( sd == NULL )
-		return true;
 
-	if (!pc->addeventtimer(sd,tick,event)) {
-		ShowWarning("buildin_addtimer: Event timer is full, can't add new event timer. (cid:%d timer:%s)\n",sd->status.char_id,event);
+	if (script_hasdata(st, 4))
+		sd = map->id2sd(script_getnum(st, 4));
+	else
+		sd = script->rid2sd(st);
+
+	if (sd == NULL) {
+		script_pushint(st, 0);
 		return false;
 	}
+
+	if (!pc->addeventtimer(sd, tick, event)) {
+		ShowWarning("script:addtimer: Event timer is full, can't add new event timer. (cid:%d timer:%s)\n", sd->status.char_id, event);
+		script_pushint(st, 0);
+		return false;
+	}
+
+	script_pushint(st, 1);
 	return true;
 }
 /*==========================================
@@ -10727,12 +10824,17 @@ BUILDIN(deltimer)
 	struct map_session_data *sd;
 
 	event=script_getstr(st, 2);
-	sd = script->rid2sd(st);
-	if( sd == NULL )
+
+	if (script_hasdata(st, 3))
+		sd = map->id2sd(script_getnum(st, 3));
+	else
+		sd = script->rid2sd(st);
+
+	if (sd == NULL)
 		return true;
 
 	script->check_event(st, event);
-	pc->deleventtimer(sd,event);
+	pc->deleventtimer(sd, event);
 	return true;
 }
 /*==========================================
@@ -10743,14 +10845,113 @@ BUILDIN(addtimercount)
 	int tick;
 	struct map_session_data *sd;
 
-	event=script_getstr(st, 2);
-	tick=script_getnum(st,3);
-	sd = script->rid2sd(st);
-	if( sd == NULL )
+	event = script_getstr(st, 2);
+	tick = script_getnum(st, 3);
+
+	if (script_hasdata(st, 4))
+		sd = map->id2sd(script_getnum(st, 4));
+	else
+		sd = script->rid2sd(st);
+
+	if (sd == NULL)
 		return true;
 
 	script->check_event(st, event);
-	pc->addeventtimercount(sd,event,tick);
+	pc->addeventtimercount(sd, event, tick);
+	return true;
+}
+
+enum gettimer_mode {
+	GETTIMER_COUNT = 0,
+	GETTIMER_TICK_NEXT = 1,
+	GETTIMER_TICK_LAST = 2,
+};
+
+BUILDIN(gettimer)
+{
+	struct map_session_data *sd;
+	const struct TimerData *td;
+	int i;
+	int tick;
+	const char *event = NULL;
+	int val = 0;
+	bool first = true;
+	short mode = script_getnum(st, 2);
+
+	if (script_hasdata(st, 3))
+		sd = map->id2sd(script_getnum(st, 3));
+	else
+		sd = script->rid2sd(st);
+
+	if (script_hasdata(st, 4)) {
+		event = script_getstr(st, 4);
+		script->check_event(st, event);
+	}
+
+	if (sd == NULL) {
+		script_pushint(st, -1);
+		return true;
+	}
+
+	switch (mode) {
+	case GETTIMER_COUNT:
+		// get number of timers
+		for (i = 0; i < MAX_EVENTTIMER; i++) {
+			if (sd->eventtimer[i] != INVALID_TIMER) {
+				if (event != NULL) {
+					td = timer->get(sd->eventtimer[i]);
+					Assert_retr(false, td != NULL);
+
+					if (strcmp((char *)(td->data), event) == 0) {
+						val++;
+					}
+				} else {
+					val++;
+				}
+			}
+		}
+		break;
+	case GETTIMER_TICK_NEXT:
+		// get the number of tick before the next timer runs
+		for (i = 0; i < MAX_EVENTTIMER; i++) {
+			if (sd->eventtimer[i] != INVALID_TIMER) {
+				td = timer->get(sd->eventtimer[i]);
+				Assert_retr(false, td != NULL);
+				tick = max(0, DIFF_TICK32(td->tick, timer->gettick()));
+
+				if (event != NULL) {
+					if ((first == true || tick < val) && strcmp((char *)(td->data), event) == 0) {
+						val = tick;
+						first = false;
+					}
+				} else if (first == true || tick < val) {
+					val = tick;
+					first = false;
+				}
+			}
+		}
+		break;
+	case GETTIMER_TICK_LAST:
+		// get the number of ticks before the last timer runs
+		for (i = MAX_EVENTTIMER - 1; i >= 0; i--) {
+			if (sd->eventtimer[i] != INVALID_TIMER) {
+				td = timer->get(sd->eventtimer[i]);
+				Assert_retr(false, td != NULL);
+				tick = max(0, DIFF_TICK32(td->tick, timer->gettick()));
+
+				if (event != NULL) {
+					if (strcmp((char *)(td->data), event) == 0) {
+						val = max(val, tick);
+					}
+				} else {
+					val = max(val, tick);
+				}
+			}
+		}
+		break;
+	}
+
+	script_pushint(st, val);
 	return true;
 }
 
@@ -11591,14 +11792,16 @@ BUILDIN(getstatus)
 		case 3: script_pushint(st, sd->sc.data[id]->val3); break;
 		case 4: script_pushint(st, sd->sc.data[id]->val4); break;
 		case 5:
-		{
-			const struct TimerData *td = timer->get(sd->sc.data[id]->timer);
+			if (sd->sc.data[id]->infinite_duration) {
+				script_pushint(st, INFINITE_DURATION);
+			} else {
+				const struct TimerData *td = timer->get(sd->sc.data[id]->timer);
 
-			if (td != NULL) {
-				// return the amount of time remaining
-				script_pushint(st, (int)(td->tick - timer->gettick())); // TODO: change this to int64 when we'll support 64 bit script values
+				if (td != NULL) {
+					// return the amount of time remaining
+					script_pushint(st, (int)(td->tick - timer->gettick())); // TODO: change this to int64 when we'll support 64 bit script values
+				}
 			}
-		}
 			break;
 		default: script_pushint(st, 1); break;
 	}
@@ -13840,15 +14043,26 @@ BUILDIN(undisguise)
  * Transform a bl to another class,
  * @type unused
  *------------------------------------------*/
-BUILDIN(classchange) {
-	int class, type;
-	struct block_list *bl=map->id2bl(st->oid);
+BUILDIN(classchange)
+{
+	int class, type, target;
+	struct block_list *bl = map->id2bl(st->oid);
 
-	if(bl==NULL) return true;
+	if (bl == NULL)
+		return true;
 
-	class = script_getnum(st,2);
-	type=script_getnum(st,3);
-	clif->class_change(bl, class, type);
+	class = script_getnum(st, 2);
+	type = script_getnum(st, 3);
+	target = script_hasdata(st, 4) ? script_getnum(st, 4) : 0;
+
+	if (target > 0) {
+		struct map_session_data *sd = script->charid2sd(st, target);
+		if (sd != NULL) {
+			clif->class_change(bl, class, type, sd);
+		}
+	} else {
+		clif->class_change(bl, class, type, NULL);
+	}
 	return true;
 }
 
@@ -15451,6 +15665,29 @@ BUILDIN(charat) {
 		script_pushstrcopy(st, output);
 	} else
 		script_pushconststr(st, "");
+	return true;
+}
+
+//=======================================================
+// chr <int>
+//-------------------------------------------------------
+BUILDIN(chr)
+{
+	char output[2];
+	output[0] = script_getnum(st, 2);
+	output[1] = '\0';
+
+	script_pushstrcopy(st, output);
+	return true;
+}
+
+//=======================================================
+// ord <chr>
+//-------------------------------------------------------
+BUILDIN(ord)
+{
+	const char *chr = script_getstr(st, 2);
+	script_pushint(st, *chr);
 	return true;
 }
 
@@ -19087,6 +19324,55 @@ BUILDIN(getvariableofnpc)
 	return true;
 }
 
+BUILDIN(getvariableofpc)
+{
+	const char* name;
+	struct script_data* data = script_getdata(st, 2);
+	struct map_session_data *sd = map->id2sd(script_getnum(st, 3));
+
+	if (!data_isreference(data)) {
+		ShowError("script:getvariableofpc: not a variable\n");
+		script->reportdata(data);
+		script_pushnil(st);
+		st->state = END;
+		return false;
+	}
+
+	name = reference_getname(data);
+
+	switch (*name)
+	{
+	case '#':
+	case '$':
+	case '.':
+	case '\'':
+		ShowError("script:getvariableofpc: illegal scope (not pc variable)\n");
+		script->reportdata(data);
+		script_pushnil(st);
+		st->state = END;
+		return false;
+	}
+
+	if (sd == NULL)
+	{
+		// player not found, return default value
+		if (script_hasdata(st, 4)) {
+			script_pushcopy(st, 4);
+		} else if (is_string_variable(name)) {
+			script_pushconststr(st, "");
+		} else {
+			script_pushint(st, 0);
+		}
+		return true;
+	}
+
+	if (!sd->regs.vars)
+		sd->regs.vars = i64db_alloc(DB_OPT_RELEASE_DATA);
+
+	script->push_val(st->stack, C_NAME, reference_getuid(data), &sd->regs);
+	return true;
+}
+
 /// Opens a warp portal.
 /// Has no "portal opening" effect/sound, it opens the portal immediately.
 ///
@@ -22406,7 +22692,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(areawarp,"siiiisii??"),
 		BUILDIN_DEF(warpchar,"siii"), // [LuzZza]
 		BUILDIN_DEF(warpparty,"siii?"), // [Fredzilla] [Paradox924X]
-		BUILDIN_DEF(warpguild,"siii"), // [Fredzilla]
+		BUILDIN_DEF(warpguild,"siii?"), // [Fredzilla]
 		BUILDIN_DEF(setlook,"ii"),
 		BUILDIN_DEF(changelook,"ii"), // Simulates but don't Store it
 		BUILDIN_DEF2(__setr,"set","rv"),
@@ -22447,8 +22733,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getguildmaster,"i"),
 		BUILDIN_DEF(getguildmasterid,"i"),
 		BUILDIN_DEF(getguildmember,"i?"),
-		BUILDIN_DEF(strcharinfo,"i"),
-		BUILDIN_DEF(strnpcinfo,"i"),
+		BUILDIN_DEF(strcharinfo,"i??"),
+		BUILDIN_DEF(strnpcinfo,"i??"),
 		BUILDIN_DEF(charid2rid,"i"),
 		BUILDIN_DEF(getequipid,"i"),
 		BUILDIN_DEF(getequipname,"i"),
@@ -22511,9 +22797,10 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(clone,"siisi????"),
 		BUILDIN_DEF(doevent,"s"),
 		BUILDIN_DEF(donpcevent,"s"),
-		BUILDIN_DEF(addtimer,"is"),
-		BUILDIN_DEF(deltimer,"s"),
-		BUILDIN_DEF(addtimercount,"si"),
+		BUILDIN_DEF(addtimer,"is?"),
+		BUILDIN_DEF(deltimer,"s?"),
+		BUILDIN_DEF(addtimercount,"si?"),
+		BUILDIN_DEF(gettimer,"i??"),
 		BUILDIN_DEF(initnpctimer,"??"),
 		BUILDIN_DEF(stopnpctimer,"??"),
 		BUILDIN_DEF(startnpctimer,"??"),
@@ -22598,7 +22885,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getcartinventorylist,""),
 		BUILDIN_DEF(getskilllist,""),
 		BUILDIN_DEF(clearitem,""),
-		BUILDIN_DEF(classchange,"ii"),
+		BUILDIN_DEF(classchange,"ii?"),
 		BUILDIN_DEF(misceffect,"i"),
 		BUILDIN_DEF(playbgm,"s"),
 		BUILDIN_DEF(playbgmall,"s?????"),
@@ -22664,6 +22951,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getstrlen,"s"), //strlen [Valaris]
 		BUILDIN_DEF(charisalpha,"si"), //isalpha [Valaris]
 		BUILDIN_DEF(charat,"si"),
+		BUILDIN_DEF(chr,"i"),
+		BUILDIN_DEF(ord,"s"),
 		BUILDIN_DEF(setchar,"ssi"),
 		BUILDIN_DEF(insertchar,"ssi"),
 		BUILDIN_DEF(delchar,"si"),
@@ -22749,6 +23038,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(sleep2,"i"),
 		BUILDIN_DEF(awake,"s"),
 		BUILDIN_DEF(getvariableofnpc,"rs"),
+		BUILDIN_DEF(getvariableofpc,"ri?"),
 		BUILDIN_DEF(warpportal,"iisii"),
 		BUILDIN_DEF2(homunculus_evolution,"homevolution",""), //[orn]
 		BUILDIN_DEF2(homunculus_mutate,"hommutate","?"),

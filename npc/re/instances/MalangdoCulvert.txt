@@ -35,9 +35,6 @@
 //= 1.1
 //=========================================================================
 
-1@pump	mapflag	src4instance
-2@pump	mapflag	src4instance
-
 //== Quest NPCs ============================================
 mal_in01,172,28,2	script	Albo#mal	4_CAT_SAILOR5,{
 	if (checkweight(Knife,1) == 0) {
