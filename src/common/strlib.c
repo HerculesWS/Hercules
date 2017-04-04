@@ -344,6 +344,7 @@ int strlib_config_switch(const char *str) {
 }
 
 /// strncpy that always null-terminates the string
+/// @remark this function will read at most `n` - 1 bytes from `src` (from 0 to `n` - 2)
 char *strlib_safestrncpy(char *dst, const char *src, size_t n)
 {
 	if( n > 0 )

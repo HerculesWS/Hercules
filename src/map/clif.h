@@ -65,6 +65,7 @@ struct view_data;
 #define MAX_ROULETTE_COLUMNS 9 /** client-defined value **/
 #define RGB2BGR(c) (((c) & 0x0000FF) << 16 | ((c) & 0x00FF00) | ((c) & 0xFF0000) >> 16)
 
+#define COLOR_CYAN    0x00ffffU
 #define COLOR_RED     0xff0000U
 #define COLOR_GREEN   0x00ff00U
 #define COLOR_WHITE   0xffffffU
@@ -671,7 +672,7 @@ struct clif_interface {
 	void (*changetraplook) (struct block_list *bl,int val);
 	void (*refreshlook) (struct block_list *bl,int id,int type,int val,enum send_target target);
 	void (*sendlook) (struct block_list *bl, int id, int type, int val, int val2, enum send_target target);
-	void (*class_change) (struct block_list *bl,int class_,int type);
+	void (*class_change) (struct block_list *bl,int class_,int type, struct map_session_data *sd);
 	void (*skill_delunit) (struct skill_unit *su);
 	void (*skillunit_update) (struct block_list* bl);
 	int (*clearunit_delayed_sub) (int tid, int64 tick, int id, intptr_t data);

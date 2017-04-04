@@ -3624,6 +3624,12 @@
 - `GETTIME_YEAR`: 7
 - `GETTIME_DAYOFYEAR`: 8
 
+### gettimer
+
+- `TIMER_COUNT`: 0
+- `TIMER_TICK_NEXT`: 1
+- `TIMER_TICK_LAST`: 2
+
 ### unit types
 
 - `UNITTYPE_PC`: 0

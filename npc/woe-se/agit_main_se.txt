@@ -1681,6 +1681,10 @@ OnEnable:
 	if (.@num == 3) set getd(".MyMobCount_"+.@num+strnpcinfo(NPC_NAME_HIDDEN)),4;
 	else if (.@num) set getd(".MyMobCount_"+.@num+strnpcinfo(NPC_NAME_HIDDEN)),6;
 	setwall strnpcinfo(NPC_NAME_HIDDEN),.@wall[0],.@wall[1],.@wall[2],.@wall[3],.@wall[4],substr(strnpcinfo(NPC_NAME_HIDDEN),0,1)+substr(strnpcinfo(NPC_NAME_HIDDEN),8,9)+"_"+strnpcinfo(NPC_NAME_VISIBLE);
+	if (.@num == 0)
+		setcell(strnpcinfo(NPC_NAME_HIDDEN), .@x[0], .@y[0], .@x[getarraysize(.@x)-1], .@y[getarraysize(.@y)-1], cell_basilica, true);
+	if (.@num == 1 && (strnpcinfo(NPC_NAME_HIDDEN) == "schg_cas01" || strnpcinfo(NPC_NAME_HIDDEN) == "schg_cas04" || strnpcinfo(NPC_NAME_HIDDEN) == "schg_cas05"))
+		setcell(strnpcinfo(NPC_NAME_HIDDEN), .@x[0], .@y[0], .@x[5], .@y[5], cell_basilica, true);
 	.@j = (getd(".MyMobCount_"+.@num+strnpcinfo(NPC_NAME_HIDDEN)))?getd(".MyMobCount_"+.@num+strnpcinfo(NPC_NAME_HIDDEN)):getarraysize(.@x);
 	for (.@i = 0; .@i<.@j; ++.@i)
 		guardian strnpcinfo(NPC_NAME_HIDDEN),.@x[.@i],.@y[.@i]," ",1905,strnpcinfo(NPC_NAME)+"::OnBarrierDestroyed";
@@ -1700,6 +1704,31 @@ OnBarrierDestroyed:
 	end;
 
 OnDisable:
+	if (compare(strnpcinfo(NPC_NAME_HIDDEN),"arug")) {
+		if (strnpcinfo(NPC_NAME_HIDDEN) == "arug_cas01") {
+			setarray(.@x[0], 239, 245);
+			setarray(.@y[0],  73,  73);
+		} else if (strnpcinfo(NPC_NAME_HIDDEN) == "arug_cas02") {
+			setarray(.@x[0], 137, 143);
+			setarray(.@y[0], 137, 137);
+		} else {	// Castles 3, 4, 5 are identical.
+			setarray(.@x[0], 139, 145);
+			setarray(.@y[0], 111, 111);
+		}
+	} else {
+		if (strnpcinfo(NPC_NAME_HIDDEN) == "schg_cas02") {
+			setarray(.@x[0], 289, 289);
+			setarray(.@y[0],  98, 104);
+		} else if (strnpcinfo(NPC_NAME_HIDDEN) == "schg_cas03") {
+			setarray(.@x[0], 326, 330);
+			setarray(.@y[0], 300, 300);
+		} else {	// Castles 1, 4, 5 are identical.
+			setarray(.@x[0], 115, 125);
+			setarray(.@y[0],  49,  49);
+			setcell(strnpcinfo(NPC_NAME_HIDDEN), 115, 50, 125, 50, cell_basilica, false);
+		}
+	}
+	setcell(strnpcinfo(NPC_NAME_HIDDEN), .@x[0], .@y[0], .@x[1], .@y[1], cell_basilica, false);
 	delwall substr(strnpcinfo(NPC_NAME_HIDDEN),0,1)+substr(strnpcinfo(NPC_NAME_HIDDEN),8,9)+"_"+strnpcinfo(NPC_NAME_VISIBLE);
 	killmonster strnpcinfo(NPC_NAME_HIDDEN),strnpcinfo(NPC_NAME)+"::OnBarrierDestroyed";
 	end;

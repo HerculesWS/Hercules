@@ -306,15 +306,7 @@ que_qaru04	mapflag	nobranch
 que_qaru05	mapflag	nobranch
 
 // Episode 12 ===========
-1@cata	mapflag	nobranch
-2@cata	mapflag	nobranch
 e_tower	mapflag	nobranch
-1@tower	mapflag	nobranch
-2@tower	mapflag	nobranch
-3@tower	mapflag	nobranch
-4@tower	mapflag	nobranch
-5@tower	mapflag	nobranch
-6@tower	mapflag	nobranch
 
 // Episode 13.1 ===========
 mid_camp	mapflag	nobranch
@@ -325,8 +317,6 @@ que_dan01	mapflag	nobranch
 que_dan02	mapflag	nobranch
 schg_que01	mapflag	nobranch
 arug_que01	mapflag	nobranch
-1@orcs	mapflag	nobranch
-2@orcs	mapflag	nobranch
 
 // Battle Grounds ==============
 bat_c01	mapflag	nobranch
@@ -339,8 +329,6 @@ bat_a01	mapflag	nobranch
 bat_a02	mapflag	nobranch
 
 // Episode 13.2 ===========
-1@nyd	mapflag	nobranch
-2@nyd	mapflag	nobranch
 manuk	mapflag	nobranch
 man_fild02	mapflag	nobranch
 man_in01	mapflag	nobranch
@@ -377,7 +365,6 @@ s_atelier	mapflag	nobranch
 
 // Episode 14.1 & Dewata ===========
 mora	mapflag	nobranch
-1@mist	mapflag	nobranch
 dewata	mapflag	nobranch
 dew_in01	mapflag	nobranch
 
@@ -385,16 +372,9 @@ dew_in01	mapflag	nobranch
 malangdo	mapflag	nobranch
 mal_in01	mapflag	nobranch
 mal_in02	mapflag	nobranch
-1@cash	mapflag	nobranch
-1@pump	mapflag	nobranch
-2@pump	mapflag	nobranch
-1@lhz	mapflag	nobranch
 malaya	mapflag	nobranch
 ma_scene01	mapflag	nobranch
 ma_in01	mapflag	nobranch
-1@ma_h	mapflag	nobranch
-1@ma_c	mapflag	nobranch
-1@ma_b	mapflag	nobranch
 
 // Episode 14.2 ===========
 eclage	mapflag	nobranch
@@ -402,7 +382,6 @@ ecl_in01	mapflag	nobranch
 ecl_in02	mapflag	nobranch
 ecl_in03	mapflag	nobranch
 ecl_in04	mapflag	nobranch
-1@ecl	mapflag	nobranch
 ecl_hub01	mapflag	nobranch
 
 // Episode 14.3 ===========
@@ -410,12 +389,6 @@ c_tower2_	mapflag	nobranch
 c_tower3_	mapflag	nobranch
 gl_chyard_	mapflag	nobranch
 gl_cas02_	mapflag	nobranch
-
-// Ghost Palace ===========
-1@spa	mapflag	nobranch
-
-// Sara's Memory Instance ===========
-1@sara	mapflag	nobranch
 
 //evt_zombie	mapflag	nobranch
 

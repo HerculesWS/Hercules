@@ -9,9 +9,7 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  rAthena Dev Team
-//= Copyright (C)  eAthena Dev Team
+//= Copyright (C) 2017  Hercules Dev Team
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -26,10 +24,18 @@
 //= You should have received a copy of the GNU General Public License
 //= along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //=========================================================================
-//= Mapflag: Party lock.
+//= Mapflag: Guild versus Guild mode.
 //================= Current Version =======================================
 //= 1.0
 //================= Description ===========================================
-//= Blocks all party modifications on a map:
-//=   /organize, /leave, /invite, @changeleader
+//= Players can attack other guilds, and will have their guild
+//= icons shown. WoE damage reductions will also take place.
+//= gvg: Turns on GvG mode
+//= gvg_castle: Describes castle maps for WoE.
 //=========================================================================
+
+// Guild Dungeons =========
+gld_dun01	mapflag	gvg_dungeon
+gld_dun02	mapflag	gvg_dungeon
+gld_dun03	mapflag	gvg_dungeon
+gld_dun04	mapflag	gvg_dungeon

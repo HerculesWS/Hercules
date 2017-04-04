@@ -33,8 +33,6 @@
 //= 1.1
 //=========================================================================
 
-1@ma_h	mapflag	src4instance
-
 //== Instance Creation =====================================
 ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 	if (BaseLevel < 100) end;

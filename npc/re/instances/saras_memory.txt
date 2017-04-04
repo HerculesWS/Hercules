@@ -37,7 +37,6 @@
 //================= Current Version =======================================
 //= 1.1
 //=========================================================================
-1@sara	mapflag	src4instance
 
 dali,130,107,5	script	Leon the Adventurer#Sara	4_M_DST_GRAND,{ // instance CD check only at the Dimensional Device
 	mes("[Leon the Adventurer]");

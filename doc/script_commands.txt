@@ -1409,6 +1409,27 @@ getvariableofnpc() should not be used on them.
 
 ---------------------------------------
 
+*getvariableofpc(<variable>, <account id>{, <default value>})
+
+Returns a reference to a PC variable from the target player.
+If <default value> is passed, it will return this value if the player is
+not found.
+
+Examples:
+
+//This will return the value of @var, note that this can't be used, since
+//the value isn't caught.
+	getvariableofpc(@var, getcharid(CHAR_ID_ACCOUNT, "player"));
+	
+//This will set the .@v variable to the value of the player's @var
+//variable.
+	.@v = getvariableofpc(@var, getcharid(CHAR_ID_ACCOUNT, "player"));
+	
+//This will set the @var variable of the player to 1.
+	set(getvariableofpc(@var, getcharid(CHAR_ID_ACCOUNT, "player")), 1);
+
+---------------------------------------
+
 *goto(<label>)
 
 This command will make the script jump to a label, usually used in 
@@ -2341,7 +2362,7 @@ deleted.
 //=====================================
 ---------------------------------------
 
-*strcharinfo(<type>)
+*strcharinfo(<type>{, <default value>{, <GID>}})
 
 This function will return either the name, party name or guild name for 
 the invoking character. Whatever it returns is determined by type.
@@ -2349,6 +2370,10 @@ the invoking character. Whatever it returns is determined by type.
 (1) PC_PARTY	- The name of the party they're in if any.
 (2) PC_GUILD	- The name of the guild they're in if any.
 (3) PC_MAP		- The name of the map the character is in.
+
+If <GID> is passed, it will return the value of the specified player instead
+the attached player. If the player is not found, it will return
+<default value>, if any, or else return an empty string.
  
 If a character is not a member of any party or guild, an empty string will 
 be returned when requesting that information.
@@ -2358,7 +2383,7 @@ using only numbers reduces script readability
 
 ---------------------------------------
 
-*strnpcinfo(<type>)
+*strnpcinfo(<type>{, <default value>{, <GID>}})
 
 This function will return the various parts of the name of the calling NPC.
 Whatever it returns is determined by type.
@@ -2368,6 +2393,10 @@ Whatever it returns is determined by type.
 (2) NPC_NAME_HIDDEN  - The hidden part of the NPC's display name
 (3) NPC_NAME_UNIQUE  - The NPC's unique name (::name)
 (4) NPC_MAP		    - The name of the map the NPC is in.
+
+If <GID> is passed, it will return the value of the specified NPC instead of
+the attached NPC. If the NPC is not found, it will return <default value>,
+if any, or else return an empty string.
 
 ---------------------------------------
 
@@ -4292,7 +4321,7 @@ Example:
 
 ---------------------------------------
 
-*warpguild("<mapname>", <x>, <y>, <guild_id>)
+*warpguild("<mapname>", <x>, <y>, <guild_id>, {"<from_mapname>"})
 
 Warps a guild to specified map and coordinate given the guild id, which 
 you can get with getcharid(CHAR_ID_GUILD). You can also request another guild id given 
@@ -4306,9 +4335,12 @@ SavePoint:    All guild members are warped to the save point of the
               currently attached player (will fail if there's no player 
               attached).
 
+If you specify a from_mapname, warpguild() will only affect those on that map.
+
 Example:
 
 	warpguild("prontera", x, y, Guild_ID);
+	warpguild("prontera", x, y, Guild_ID, "payon"); // warp member from Payon map only.
 
 ---------------------------------------
 
@@ -4507,26 +4539,17 @@ changebase(Class); // Changes player back to default sprite.
 
 ---------------------------------------
 
-*classchange(<view id>, <type>)
+*classchange(<view id>, <type> {, <char id>})
 
 This command is very ancient, it's origins are clouded in mystery. 
-It will send a 'display id change' packet to everyone in the immediate 
-area of the NPC object, which will supposedly make the NPC look like a 
-different sprite, an NPC sprite ID, or a monster ID. This effect is not 
-stored anywhere and will not persist (Which is odd, cause it would be 
-relatively easy to make it do so) and most importantly, will not work at 
-all since this command was broken with the introduction of advanced 
-classes. The code is written with the assumption that the lowest sprite 
-IDs are the job sprites and the anything beyond them is monster and NPC 
-sprites, but since the advanced classes rolled in, they got the ID numbers 
-on the other end of the number pool where monster sprites float.
+It will send a 'display id change' packet to player with given char ID
+or to everyone in the immediate area of the NPC object if char ID is 0 or
+not passed, which will make the NPC look like a different sprite, an NPC
+sprite ID, or a monster ID. This effect is not stored anywhere and will
+not persist.
+Note that you can't send a Job sprite ID
 
-As a result it is currently impossible to call this command with a valid 
-view id. It will do nothing whatsoever if the view ID is below 4047. 
-Getting it to run will actually just crash the client.
-
-It could be a real gem if it can be gotten to actually do what it's 
-supposed to do, but this will only happen in a later Git revision.
+type is not used and should always be 0.
 
 ---------------------------------------
 
@@ -6455,17 +6478,14 @@ Size is 0 = normal 1 = small 2 = big.
 //=====================================
 ---------------------------------------
 
-*addtimer(<ticks>, "NPC::OnLabel")
-*deltimer("NPC::OnLabel")
-*addtimercount("NPC::OnLabel", <ticks>)
+*addtimer(<ticks>, "NPC::OnLabel"{, <account id>})
 
-These commands will create, destroy, and delay a countdown timer - 
-addtimer() to create, deltimer() to destroy and addtimercount() to delay
-it by the specified number of ticks. For all three cases, the event label 
-given is the identifier of that timer. The timer runs on the character 
-object that is attached to the script, and can have multiple instances. 
-When the label is run, it is run as if the player that the timer runs on 
-has clicked the NPC.
+This command will create a countdown timer.
+The event label given is the identifier of that timer.
+The timer runs on the character object that is attached to the script,
+and can have multiple instances. If <acccount id> is passed, this player
+will be used instead. When the label is run, it is run as if the player
+that the timer runs on has clicked the NPC.
 
 When this timer runs out, a new execution thread will start in the 
 specified NPC object at the specified label.
@@ -6486,6 +6506,39 @@ On5secs:
 	dispbottom("5 seconds have passed!");
 	end;
 }
+
+---------------------------------------
+
+*deltimer("NPC::OnLabel"{, <account id>})
+
+Deletes timers created by addtimer() that matches the given event
+label. Refer to addtimer() for additional information.
+
+---------------------------------------
+
+*addtimercount("NPC::OnLabel", <ticks>{, <account id>})
+
+Delays a timer that was created with addtimer() by <ticks> ticks
+if it matches the given event label. Refer to addtimer() for additional
+information.
+
+---------------------------------------
+
+*gettimer(<type>{, <account id>{, "<event>"}})
+
+Returns informations on timers that were created by addtimer().
+
+valid <type> for gettimer() are:
+
+(0) TIMER_COUNT
+	Will return the total number of timers for the specified or
+	attached player. Can be filtered by <event>.
+(1) TIMER_TICK_NEXT
+	Will return the number of ticks until the next timer runs
+	for the specified or attached player. Can be filtered by <event>.
+(2) TIMER_TICK_LAST
+	Will return the number of ticks until the last timer runs
+	for the specified or attached player. Can be filtered by <event>.
 
 ---------------------------------------
 
@@ -8043,6 +8096,26 @@ empty string.
 Example:
 
 	charat("This is a string", 10); //returns "s"
+
+---------------------------------------
+
+*chr(<int>)
+
+Returns a char from its ASCII value.
+
+Example:
+
+    chr(99); //returns "c"
+
+---------------------------------------
+
+*ord(<chr>)
+
+Returns the ASCII value of char <chr>.
+
+Example:
+
+    ord("c"); //returns 99
 
 ---------------------------------------
 

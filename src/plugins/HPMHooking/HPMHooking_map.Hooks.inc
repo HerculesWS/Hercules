@@ -7917,14 +7917,14 @@ void HP_clif_sendlook(struct block_list *bl, int id, int type, int val, int val2
 	}
 	return;
 }
-void HP_clif_class_change(struct block_list *bl, int class_, int type) {
+void HP_clif_class_change(struct block_list *bl, int class_, int type, struct map_session_data *sd) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_clif_class_change_pre ) {
-		void (*preHookFunc) (struct block_list **bl, int *class_, int *type);
+		void (*preHookFunc) (struct block_list **bl, int *class_, int *type, struct map_session_data **sd);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_class_change_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_clif_class_change_pre[hIndex].func;
-			preHookFunc(&bl, &class_, &type);
+			preHookFunc(&bl, &class_, &type, &sd);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -7932,13 +7932,13 @@ void HP_clif_class_change(struct block_list *bl, int class_, int type) {
 		}
 	}
 	{
-		HPMHooks.source.clif.class_change(bl, class_, type);
+		HPMHooks.source.clif.class_change(bl, class_, type, sd);
 	}
 	if( HPMHooks.count.HP_clif_class_change_post ) {
-		void (*postHookFunc) (struct block_list *bl, int class_, int type);
+		void (*postHookFunc) (struct block_list *bl, int class_, int type, struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_class_change_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_clif_class_change_post[hIndex].func;
-			postHookFunc(bl, class_, type);
+			postHookFunc(bl, class_, type, sd);
 		}
 	}
 	return;

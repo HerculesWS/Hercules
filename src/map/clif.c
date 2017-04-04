@@ -677,7 +677,8 @@ void clif_authok(struct map_session_data *sd)
 #if PACKETVER >= 20080102
 	p.font = sd->status.font;
 #endif
-#if PACKETVER >= 20141016
+// Some clients smaller than 20160330 cant be tested [4144]
+#if PACKETVER >= 20141016 && PACKETVER < 20160330
 	p.sex = sd->status.sex;
 #endif
 	clif->send(&p,sizeof(p),&sd->bl,SELF);
@@ -1077,15 +1078,21 @@ void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enu
 #endif
 #if PACKETVER >= 20150513
 	p.body = vd->body_style;
+#endif
+/* Might be earlier, this is when the named item bug began */
+#if PACKETVER >= 20131223
 	safestrncpy(p.name, clif->get_bl_name(bl), NAME_LENGTH);
 #endif
-
 	clif->send(&p,sizeof(p),tsd?&tsd->bl:bl,target);
 
 	if (clif->isdisguised(bl)) {
 #if PACKETVER >= 20091103
 		p.objecttype = pc->db_checkid(status->get_viewdata(bl)->class) ? 0x0 : 0x5; //PC_TYPE : NPC_MOB_TYPE
+#if PACKETVER >= 20131223
+		p.AID = -bl->id;
+#else
 		p.GID = -bl->id;
+#endif
 #else
 		p.GID = -bl->id;
 #endif
@@ -1220,6 +1227,9 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 #endif
 #if PACKETVER >= 20150513
 	p.body = vd->body_style;
+#endif
+/* Might be earlier, this is when the named item bug began */
+#if PACKETVER >= 20131223
 	safestrncpy(p.name, clif->get_bl_name(bl), NAME_LENGTH);
 #endif
 	if (clif->isdisguised(bl)) {
@@ -1228,7 +1238,11 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 			clif->send(&p,sizeof(p),bl,target);
 #if PACKETVER >= 20091103
 		p.objecttype = pc->db_checkid(status->get_viewdata(bl)->class) ? 0x0 : 0x5; //PC_TYPE : NPC_MOB_TYPE
+#if PACKETVER >= 20131223
+		p.AID = -bl->id;
+#else
 		p.GID = -bl->id;
+#endif
 #else
 		p.GID = -bl->id;
 #endif
@@ -1262,7 +1276,7 @@ void clif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd, 
 #endif
 #if PACKETVER >= 20131223
 	p.AID = bl->id;
-	p.GID = (tsd) ? tsd->status.char_id : 0; // CCODE
+	p.GID = (sd) ? sd->status.char_id : 0; // CCODE
 #else
 	p.GID = bl->id;
 #endif
@@ -1312,6 +1326,9 @@ void clif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd, 
 #endif
 #if PACKETVER >= 20150513
 	p.body = vd->body_style;
+#endif
+/* Might be earlier, this is when the named item bug began */
+#if PACKETVER >= 20131223
 	safestrncpy(p.name, clif->get_bl_name(bl), NAME_LENGTH);
 #endif
 
@@ -1320,7 +1337,11 @@ void clif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd, 
 	if (clif->isdisguised(bl)) {
 #if PACKETVER >= 20091103
 		p.objecttype = pc->db_checkid(status->get_viewdata(bl)->class) ? 0x0 : 0x5; //PC_TYPE : NPC_MOB_TYPE
+#if PACKETVER >= 20131223
+		p.AID = -bl->id;
+#else
 		p.GID = -bl->id;
+#endif
 #else
 		p.GID = -bl->id;
 #endif
@@ -1332,7 +1353,7 @@ void clif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd, 
 /// 01b0 <id>.L <type>.B <value>.L
 /// type:
 ///     unused
-void clif_class_change(struct block_list *bl, int class_, int type)
+void clif_class_change(struct block_list *bl, int class_, int type, struct map_session_data *sd)
 {
 	nullpo_retv(bl);
 
@@ -1343,7 +1364,11 @@ void clif_class_change(struct block_list *bl, int class_, int type)
 		WBUFL(buf,2)=bl->id;
 		WBUFB(buf,6)=type;
 		WBUFL(buf,7)=class_;
-		clif->send(buf,packet_len(0x1b0),bl,AREA);
+
+		if (sd == NULL)
+			clif->send(buf, packet_len(0x1b0), bl, AREA);
+		else
+			clif->send(buf, packet_len(0x1b0), &sd->bl, SELF);
 	}
 }
 
@@ -7232,6 +7257,13 @@ void clif_mvp_item(struct map_session_data *sd,int nameid)
 /// 010b <exp>.L
 void clif_mvp_exp(struct map_session_data *sd, unsigned int exp)
 {
+#if PACKETVER >= 20131223		// Kro removed this packet [Napster]
+	if (battle_config.mvp_exp_reward_message) {
+		char e_msg[CHAT_SIZE_MAX];
+		sprintf(e_msg, msg_txt(855), exp);
+		clif->messagecolor_self(sd->fd, COLOR_CYAN, e_msg); // Congratulations! You are the MVP! Your reward EXP Points are %u !!
+	}
+#else
 	int fd;
 
 	nullpo_retv(sd);
@@ -7241,6 +7273,7 @@ void clif_mvp_exp(struct map_session_data *sd, unsigned int exp)
 	WFIFOW(fd,0)=0x10b;
 	WFIFOL(fd,2)=cap_value(exp,0,INT32_MAX);
 	WFIFOSET(fd,packet_len(0x10b));
+#endif
 }
 
 /// Dropped MVP item reward message (ZC_THROW_MVPITEM).
@@ -11594,7 +11627,12 @@ void clif_parse_NpcStringInput(int fd, struct map_session_data* sd) __attribute_
 /// 01d5 <packet len>.W <npc id>.L <string>.?B
 void clif_parse_NpcStringInput(int fd, struct map_session_data* sd)
 {
-	int message_len = RFIFOW(fd,2)-8;
+// [4144] can't confirm exact client version. At least >= correct for 20150513
+#if PACKETVER >= 20151029
+	int message_len = RFIFOW(fd, 2) - 7;
+#else
+	int message_len = RFIFOW(fd, 2) - 8;
+#endif
 	int npcid = RFIFOL(fd,4);
 	const char *message = RFIFOP(fd,8);
 

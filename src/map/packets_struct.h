@@ -141,8 +141,11 @@ enum packet_headers {
 	authokType = 0x73,
 #elif PACKETVER < 20141022
 	authokType = 0x2eb,
-#else
+// Some clients smaller than 20160330 cant be tested [4144]
+#elif PACKETVER < 20160330
 	authokType = 0xa18,
+#else
+	authokType = 0x2eb,
 #endif
 	script_clearType = 0x8d6,
 	package_item_announceType = 0x7fd,
@@ -400,7 +403,8 @@ struct packet_authok {
 #if PACKETVER >= 20080102
 	int16 font;
 #endif
-#if PACKETVER >= 20141022
+// Some clients smaller than 20160330 cant be tested [4144]
+#if PACKETVER >= 20141022 && PACKETVER < 20160330
 	uint8 sex;
 #endif
 } __attribute__((packed));
@@ -589,6 +593,9 @@ struct packet_spawn_unit {
 #endif
 #if PACKETVER >= 20150513
 	int16 body;
+#endif
+/* Might be earlier, this is when the named item bug began */
+#if PACKETVER >= 20131223
 	char name[NAME_LENGTH];
 #endif
 } __attribute__((packed));
@@ -657,6 +664,9 @@ struct packet_unit_walking {
 #endif
 #if PACKETVER >= 20150513
 	int16 body;
+#endif
+/* Might be earlier, this is when the named item bug began */
+#if PACKETVER >= 20131223
 	char name[NAME_LENGTH];
 #endif
 } __attribute__((packed));
@@ -723,6 +733,9 @@ struct packet_idle_unit {
 #endif
 #if PACKETVER >= 20150513
 	int16 body;
+#endif
+/* Might be earlier, this is when the named item bug began */
+#if PACKETVER >= 20131223
 	char name[NAME_LENGTH];
 #endif
 } __attribute__((packed));
