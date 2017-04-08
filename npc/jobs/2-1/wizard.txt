@@ -1805,7 +1805,6 @@ gef_tower,107,36,4	script	White Dog#wiz	4_DOG01,{
 			mes "It's better to just try it yourself than to listen to my descriptions.";
 			close2;
 			cutin "job_wizard_maria01",255;
-			warp "gef_dun00",116,102;
 			end;
 		case 2:
 			mes "[Maria]";
