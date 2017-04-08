@@ -2617,6 +2617,14 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0896,8,clif->pDull); // CZ_JOIN_BATTLE_FIELD
 #endif
 
+// 2013-10-30aRagexe
+#if PACKETVER >= 20131030
+// new packets
+	packet(0x09de,-1); // ZC_WHISPER02
+	packet(0x09df,7); // ZC_ACK_WHISPER02
+	packet(0x09e0,-1); // SC_LOGIN_ANSWER_WITH_ID
+#endif
+
 // 2013-12-18bRagexe - Yommy
 #if PACKETVER >= 20131218
 	packet(0x0369,7,clif->pActionRequest,2,6);
@@ -2687,7 +2695,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x08A4,36,clif->pStoragePassword,0);
 	packet(0x0363,8,clif->pDull); // CZ_JOIN_BATTLE_FIELD
 	packet(0x0436,4,clif->pDull); // CZ_GANGSI_RANK
-	packet(0x09df,7);
 	packet(0x09cb,17);
 #endif
 
@@ -2760,6 +2767,47 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0865,36,clif->pStoragePassword,0);
 #endif
 
+// 2014-01-15cRagexeRE
+#if PACKETVER >= 20140115
+// new packets
+	packet(0x09f1,10,clif->pDull/*,XXX*/); // CZ_REQ_ZENY_FROM_RODEX
+	packet(0x09f2,3); // ZC_ACK_ZENY_FROM_RODEX
+	packet(0x09f3,15,clif->pDull/*,XXX*/); // CZ_REQ_ITEM_FROM_RODEX
+	packet(0x09f4,12); // ZC_ACK_ITEM_FROM_RODEX
+	packet(0x09f8,-1); // ZC_ALL_QUEST_LIST3
+	packet(0x09f9,131); // ZC_ADD_QUEST_EX
+	packet(0x09fa,-1); // ZC_UPDATE_MISSION_HUNT_EX
+// changed packet sizes
+	packet(0x09eb,-1); // ZC_ACK_READ_RODEX
+#endif
+
+// 2014-01-22aRagexeRE
+#if PACKETVER >= 20140122
+// new packets
+	packet(0x09fb,-1,clif->pDull/*,XXX*/); // CZ_PET_EVOLUTION
+	packet(0x09fc,6); // ZC_PET_EVOLUTION_RESULT
+	packet(0x09fd,-1); // ZC_NOTIFY_MOVEENTRY11
+	packet(0x09fe,-1); // ZC_NOTIFY_NEWENTRY11
+	packet(0x09ff,-1); // ZC_NOTIFY_STANDENTRY11
+// changed packet sizes
+	packet(0x09f9,143); // ZC_ADD_QUEST_EX
+#endif
+
+// 2014-01-29bRagexeRE
+#if PACKETVER >= 20140129
+// new packets
+	packet(0x0a00,269); // ZC_SHORTCUT_KEY_LIST_V3
+	packet(0x0a01,3,clif->pHotkeyRowShift,2); // CZ_SHORTCUTKEYBAR_ROTATE
+// Warning hercules using this packets for items manipulation. In RagexeRE from 20140129 and before 20140305, this actions broken.
+#ifdef PACKETVER_RE
+// changed packet sizes
+	packet(0x01c4,43); // ZC_ADD_ITEM_TO_STORE2
+	packet(0x01c5,43); // ZC_ADD_ITEM_TO_CART2
+	packet(0x080f,41); // ZC_ADD_EXCHANGE_ITEM2
+	packet(0x0990,52); // ZC_ITEM_PICKUP_ACK_V5
+#endif  // PACKETVER_RE
+#endif
+
 // 2014-02-05bRagexe - Themon
 #if PACKETVER >= 20140205
 	packet(0x0369,7,clif->pActionRequest,2,6);
@@ -2791,7 +2839,36 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0938,36,clif->pStoragePassword,0);
 	packet(0x0363,8,clif->pDull); // CZ_JOIN_BATTLE_FIELD
 	packet(0x0436,4,clif->pDull); // CZ_GANGSI_RANK
-	packet(0x09DF,7);
+#endif
+
+// 2014-02-12aRagexeRE
+#if PACKETVER >= 20140212
+// new packets
+	packet(0x0a02,4); // ZC_DRESSROOM_OPEN
+// changed packet sizes
+	packet(0x09e8,11,clif->pDull/*,XXX*/); // CZ_OPEN_RODEXBOX
+#endif
+
+// 2014-02-19aRagexeRE
+#if PACKETVER >= 20140219
+// Warning hercules using this packets for items manipulation. In RagexeRE from 20140129 and before 20140305, this actions broken.
+#ifdef PACKETVER_RE
+// changed packet sizes
+	packet(0x01c4,53); // ZC_ADD_ITEM_TO_STORE2
+	packet(0x01c5,53); // ZC_ADD_ITEM_TO_CART2
+	packet(0x080f,51); // ZC_ADD_EXCHANGE_ITEM2
+	packet(0x0990,62); // ZC_ITEM_PICKUP_ACK_V5
+#endif  // PACKETVER_RE
+#endif
+
+// 2014-02-26aRagexeRE
+#if PACKETVER >= 20140226
+// new packets
+	packet(0x0a03,14,clif->pDull/*,XXX*/); // CZ_REQ_CANCEL_WRITE_RODEX
+	packet(0x0a04,11,clif->pDull/*,XXX*/); // CZ_REQ_ADD_ITEM_RODEX
+	packet(0x0a05,6); // ZC_ACK_ADD_ITEM_RODEX
+	packet(0x0a06,5,clif->pDull/*,XXX*/); // CZ_REQ_REMOVE_RODEX_ITEM
+// changed packet sizes
 #endif
 
 // 2014-03-05bRagexe - Themon
@@ -2825,7 +2902,49 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x095e,36,clif->pStoragePassword,0);
 	packet(0x0363,8,clif->pDull); // CZ_JOIN_BATTLE_FIELD
 	packet(0x0878,4,clif->pDull); // CZ_GANGSI_RANK
-	packet(0x09DF,7);
+#endif
+
+// 2014-03-05aRagexeRE
+#if PACKETVER >= 20140305
+// new packets
+	packet(0x0a07,4); // ZC_ACK_REMOVE_RODEX_ITEM
+	packet(0x0a08,5,clif->pDull/*,XXX*/); // CZ_REQ_OPEN_WRITE_RODEX
+	packet(0x0a09,50); // ZC_ADD_EXCHANGE_ITEM3
+	packet(0x0a0a,52); // ZC_ADD_ITEM_TO_STORE3
+	packet(0x0a0b,52); // ZC_ADD_ITEM_TO_CART3
+	packet(0x0a0c,61); // ZC_ITEM_PICKUP_ACK_V6
+	packet(0x0a0d,4); // ZC_INVENTORY_ITEMLIST_EQUIP_V6
+// changed packet sizes
+	packet(0x01c4,22); // ZC_ADD_ITEM_TO_STORE2
+	packet(0x01c5,22); // ZC_ADD_ITEM_TO_CART2
+	packet(0x080f,20); // ZC_ADD_EXCHANGE_ITEM2
+	packet(0x0990,31); // ZC_ITEM_PICKUP_ACK_V5
+	packet(0x09f3,10,clif->pDull/*,XXX*/); // CZ_REQ_ITEM_FROM_RODEX
+	packet(0x09f4,3); // ZC_ACK_ITEM_FROM_RODEX
+#endif
+
+// 2014-03-12bRagexeRE
+#if PACKETVER >= 20140312
+// new packets
+	packet(0x0a0e,14); // ZC_BATTLEFIELD_NOTIFY_HP2
+// changed packet sizes
+	packet(0x0a09,45); // ZC_ADD_EXCHANGE_ITEM3
+	packet(0x0a0a,47); // ZC_ADD_ITEM_TO_STORE3
+	packet(0x0a0b,47); // ZC_ADD_ITEM_TO_CART3
+	packet(0x0a0c,56); // ZC_ITEM_PICKUP_ACK_V6
+	packet(0x0a0d,-1); // ZC_INVENTORY_ITEMLIST_EQUIP_V6
+#endif
+
+// 2014-03-26cRagexeRE
+#if PACKETVER >= 20140326
+// changed packet sizes
+	packet(0x09f1,11,clif->pDull/*,XXX*/); // CZ_REQ_ZENY_FROM_RODEX
+	packet(0x09f2,4); // ZC_ACK_ZENY_FROM_RODEX
+	packet(0x09f3,11,clif->pDull/*,XXX*/); // CZ_REQ_ITEM_FROM_RODEX
+	packet(0x09f4,4); // ZC_ACK_ITEM_FROM_RODEX
+	packet(0x0a03,2,clif->pDull/*,XXX*/); // CZ_REQ_CANCEL_WRITE_RODEX
+	packet(0x0a07,6); // ZC_ACK_REMOVE_RODEX_ITEM
+	packet(0x0a08,7,clif->pDull/*,XXX*/); // CZ_REQ_OPEN_WRITE_RODEX
 #endif
 
 // 2014-04-02gRagexe - Themon
@@ -2859,7 +2978,22 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0926,36,clif->pStoragePassword,0);
 	packet(0x088c,4,clif->pDull); // CZ_GANGSI_RANK
 	packet(0x094c,8,clif->pDull); // CZ_JOIN_BATTLE_FIELD
-	packet(0x09DF,7);
+#endif
+
+// 2014-04-02eRagexeRE
+#if PACKETVER >= 20140402
+// new packets
+	packet(0x0a0f,-1); // ZC_CART_ITEMLIST_EQUIP_V6
+	packet(0x0a10,-1); // ZC_STORE_ITEMLIST_EQUIP_V6
+	packet(0x0a11,-1); // ZC_GUILDSTORAGE_ITEMLIST_EQUIP_V6
+// changed packet sizes
+#endif
+
+// 2014-04-09aRagexeRE
+#if PACKETVER >= 20140409
+// changed packet sizes
+	packet(0x09f2,12); // ZC_ACK_ZENY_FROM_RODEX
+	packet(0x09f4,12); // ZC_ACK_ITEM_FROM_RODEX
 #endif
 
 // 2014-04-16aRagexe - Themon
@@ -2893,18 +3027,155 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x095C,36,clif->pStoragePassword,0);
 	packet(0x0363,8,clif->pDull); // CZ_JOIN_BATTLE_FIELD
 	packet(0x0436,4,clif->pDull); // CZ_GANGSI_RANK
-	packet(0x09DF,7);
 #endif
 
-#if PACKETVER >= 20140613
-// no shuffle packets
-	packet(0x0a0e,14);
+// 2014-04-16aRagexeRE
+#if PACKETVER >= 20140416
+// new packets
+	packet(0x0a04,6,clif->pDull/*,XXX*/); // CZ_REQ_ADD_ITEM_RODEX
+	packet(0x0a12,27); // ZC_ACK_OPEN_WRITE_RODEX
+	packet(0x0a13,2,clif->pDull/*,XXX*/); // CZ_CHECK_RECEIVE_CHARACTER_NAME
+// changed packet sizes
+	packet(0x0a05,48); // ZC_ACK_ADD_ITEM_RODEX
+	packet(0x0a06,6,clif->pDull/*,XXX*/); // CZ_REQ_REMOVE_RODEX_ITEM
+	packet(0x0a07,7); // ZC_ACK_REMOVE_RODEX_ITEM
+	packet(0x0a08,26,clif->pDull/*,XXX*/); // CZ_REQ_OPEN_WRITE_RODEX
+#endif
+
+// 2014-04-23aRagexeRE
+#if PACKETVER >= 20140423
+// new packets
+	packet(0x0a14,6); // ZC_CHECK_RECEIVE_CHARACTER_NAME
+// changed packet sizes
+	packet(0x0a13,26,clif->pDull/*,XXX*/); // CZ_CHECK_RECEIVE_CHARACTER_NAME
+#endif
+
+// 2014-04-30aRagexeRE
+#if PACKETVER >= 20140430
+// new packets
+	packet(0x0a15,11); // ZC_GOLDPCCAFE_POINT
+	packet(0x0a16,26,clif->pDull/*,XXX*/); // CZ_DYNAMICNPC_CREATE_REQUEST
+	packet(0x0a17,6); // ZC_DYNAMICNPC_CREATE_RESULT
+#endif
+
+// 2014-05-08bRagexeRE
+#if PACKETVER >= 20140508
+// changed packet sizes
+	packet(0x0a15,12); // ZC_GOLDPCCAFE_POINT
+#endif
+
+// 2014-05-21aRagexeRE
+#if PACKETVER >= 20140521
+// changed packet sizes
+	packet(0x0a07,9); // ZC_ACK_REMOVE_RODEX_ITEM
+	packet(0x0a14,10); // ZC_CHECK_RECEIVE_CHARACTER_NAME
+#endif
+
+/* Roulette System [Yommy/Hercules] */
+// 2014-06-05aRagexe
+#if PACKETVER >= 20140605
+// new packets
+	packet(0x0a18,2); // ZC_ACCEPT_ENTER3
+	packet(0x0a19,-1,clif->pDull/*,XXX*/); // CZ_REQ_OPEN_ROULETTE
+	packet(0x0a1a,10); // ZC_ACK_OPEN_ROULETTE
+	packet(0x0A1B,2,clif->pRouletteInfo,0);     // HEADER_CZ_REQ_ROULETTE_INFO
+	packet(0x0a1c,6); // ZC_ACK_ROULEITTE_INFO
+	packet(0x0a1d,14,clif->pDull/*,XXX*/); // CZ_REQ_CLOSE_ROULETTE
+#endif
+
+/* Roulette System [Yommy/Hercules] */
+// 2014-06-11bRagexe / RE. moved by 4144
+#if PACKETVER >= 20140611
+// new packets
+	packet(0x0a1e,3); // ZC_ACK_CLOSE_ROULETTE
+	packet(0x0a1f,2,clif->pRouletteGenerate,0); // CZ_REQ_GENERATE_ROULETTE
+	packet(0x0a20,21); // ZC_ACK_GENERATE_ROULETTE
+	packet(0x0a21,6,clif->pDull/*,XXX*/); // CZ_RECV_ROULETTE_ITEM
+	packet(0x0a22,3); // ZC_RECV_ROULETTE_ITEM
+	packet(0x0a23,-1); // ZC_ALL_ACH_LIST
+	packet(0x0a24,35); // ZC_ACH_UPDATE
+	packet(0x0a25,6,clif->pDull/*,XXX*/); // CZ_REQ_ACH_REWARD
+	packet(0x0a26,7); // ZC_REQ_ACH_REWARD_ACK
+// changed packet sizes
+	packet(0x0a18,14); // ZC_ACCEPT_ENTER3
+	packet(0x0a19,2,clif->pRouletteOpen,0); // CZ_REQ_OPEN_ROULETTE
+	packet(0x0a1a,23); // ZC_ACK_OPEN_ROULETTE
+	packet(0x0a1c,-1); // ZC_ACK_ROULEITTE_INFO
+	packet(0x0a1d,2,clif->pRouletteClose,0); // CZ_REQ_CLOSE_ROULETTE
+#endif
+
+// 2014-06-18cRagexeRE
+#if PACKETVER >= 20140618
+// changed packet sizes
+	packet(0x0a21,3,clif->pRouletteRecvItem,2); // CZ_RECV_ROULETTE_ITEM
+	packet(0x0a22,5); // ZC_RECV_ROULETTE_ITEM
 #endif
 
 // 2014-06-25aRagexeRE
 #if PACKETVER >= 20140625
-// no shuffle packets
+// new packets
+	packet(0x0a27,8); // ZC_RECOVERY2
 	packet(0x0a28,3); // ZC_ACK_OPENSTORE2
+// changed packet sizes
+	packet(0x0a24,36); // ZC_ACH_UPDATE
+#endif
+
+// 2014-07-02aRagexeRE
+#if PACKETVER >= 20140702
+// new packets
+	packet(0x0a29,6); // ZC_REQ_AU_BOT
+	packet(0x0a2a,6,clif->pDull/*,XXX*/); // CZ_ACK_AU_BOT
+#endif
+
+// 2014-07-16aRagexeRE
+#if PACKETVER >= 20140716
+// changed packet sizes
+	packet(0x09e7,3); // ZC_NOTIFY_UNREAD_RODEX
+#endif
+
+// 2014-07-23aRagexeRE
+#if PACKETVER >= 20140723
+// new packets
+	packet(0x0a2b,14); // ZC_SE_CASHSHOP_OPEN2
+	packet(0x0a2c,12); // ZC_SE_PC_BUY_TAIWANCASHITEM_RESULT
+// changed packet sizes
+	packet(0x0a24,56); // ZC_ACH_UPDATE
+#endif
+
+// 2014-08-20aRagexeRE
+#if PACKETVER >= 20140820
+// new packets
+	packet(0x0a2d,-1); // ZC_EQUIPWIN_MICROSCOPE_V6
+#endif
+
+// 2014-09-03aRagexeRE
+#if PACKETVER >= 20140903
+// new packets
+	packet(0x0a2e,6,clif->pDull/*,XXX*/); // CZ_REQ_CHANGE_TITLE
+	packet(0x0a2f,7); // ZC_ACK_CHANGE_TITLE
+// changed packet sizes
+#endif
+
+// 2014-09-24bRagexeRE
+#if PACKETVER >= 20140924
+// new packets
+	packet(0x0a30,106); // ZC_ACK_REQNAMEALL2
+	packet(0x0a31,-1); // ZC_RESULT_PACKAGE_ITEM_TEST
+	packet(0x0a32,2); // ZC_OPEN_RODEX_THROUGH_NPC_ONLY
+	packet(0x0a33,7); // ZC_UPDATE_ROULETTE_COIN
+	packet(0x0a34,6); // ZC_UPDATE_TAIWANCASH
+#endif
+
+// 2014-10-01bRagexeRE
+#if PACKETVER >= 20141001
+// changed packet sizes
+	packet(0x0a24,66); // ZC_ACH_UPDATE
+#endif
+
+// 2014-10-08bRagexeRE
+#if PACKETVER >= 20141008
+// changed packet sizes
+	packet(0x0a05,49); // ZC_ACK_ADD_ITEM_RODEX
 #endif
 
 // 2014-10-16aRagexe - YomRawr
@@ -2938,24 +3209,8 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0936,36,clif->pStoragePassword,0);
 	packet(0x0363,8,clif->pDull); // CZ_JOIN_BATTLE_FIELD
 	packet(0x0922,4,clif->pDull); // CZ_GANGSI_RANK
-	packet(0x09DF,7);
-	packet(0x0a00,269);
 	packet(0x09e5,18); // ZC_DELETEITEM_FROM_MCSTORE2
 	packet(0x09e6,22); // ZC_UPDATE_ITEM_FROM_BUYING_STORE2
-#endif
-
-/* Roulette System [Yommy/Hercules] */
-#if PACKETVER >= 20141016
-	packet(0x0A19,2,clif->pRouletteOpen,0);     // HEADER_CZ_REQ_OPEN_ROULETTE
-	packet(0x0A1A,23);                          // HEADER_ZC_ACK_OPEN_ROULETTE
-	packet(0x0A1B,2,clif->pRouletteInfo,0);     // HEADER_CZ_REQ_ROULETTE_INFO
-	packet(0x0A1C,-1);                          // HEADER_ZC_ACK_ROULEITTE_INFO
-	packet(0x0A1D,2,clif->pRouletteClose,0);    // HEADER_CZ_REQ_CLOSE_ROULETTE
-	packet(0x0A1E,3);                           // HEADER_ZC_ACK_CLOSE_ROULETTE
-	packet(0x0A1F,2,clif->pRouletteGenerate,0); // HEADER_CZ_REQ_GENERATE_ROULETTE
-	packet(0x0A20,21);                          // HEADER_ZC_ACK_GENERATE_ROULETTE
-	packet(0x0A21,3,clif->pRouletteRecvItem,2); // HEADER_CZ_RECV_ROULETTE_ITEM
-	packet(0x0A22,5);                           // HEADER_ZC_RECV_ROULETTE_ITEM
 #endif
 
 // 2014-10-22bRagexe - YomRawr
@@ -2987,20 +3242,55 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x091A,26,clif->pFriendsListAdd,2);
 	packet(0x0899,5,clif->pHomMenu,2,4);
 	packet(0x0438,36,clif->pStoragePassword,0);
-	packet(0x0A01,3,clif->pHotkeyRowShift,2);
 	packet(0x08ab,4,clif->pDull); // CZ_GANGSI_RANK
 	packet(0x092b,8,clif->pDull); // CZ_JOIN_BATTLE_FIELD
 #endif
 
+// 2014-11-19bRagexeRE
+#if PACKETVER >= 20141119
+// new packets
+	packet(0x0A35,4,clif->pOneClick_ItemIdentify,2);
+// changed packet sizes
+	packet(0x0a05,53); // ZC_ACK_ADD_ITEM_RODEX
+#endif
+
+// 2014-11-26aRagexeRE
+#if PACKETVER >= 20141126
+// new packets
+	packet(0x0a36,7); // ZC_HP_INFO_TINY
+	packet(0x0a37,57); // ZC_ITEM_PICKUP_ACK_V7
+#endif
+
+// 2015-01-28aRagexeRE
+#if PACKETVER >= 20150128
+// new packets
+	packet(0x0a38,3);
+#endif
+
 #if PACKETVER >= 20150226
 // shuffle packets not added
-	packet(0x0A09,45);
-	packet(0x0A0A,47);
-	packet(0x0A0B,47);
-	packet(0x0A0C,56);
-	packet(0x0A0D,-1);
 	packet(0x0A0F,-1);
 	packet(0x0A10,-1);
+#endif
+
+// 2015-03-11aRagexeRE
+#if PACKETVER >= 20150311
+// new packets
+	packet(0x0a3a,12);
+// changed packet sizes
+#endif
+
+// 2015-04-15aRagexeRE
+#if PACKETVER >= 20150415
+// changed packet sizes
+	packet(0x0a39,36);  // CH_UNKNOWN_MAKE_CHAR  // in char server used from 20151001. is this correct?
+#endif
+
+// 2015-04-22aRagexeRE
+#if PACKETVER >= 20150422
+// new packets
+	packet(0x0a3b,-1);
+// changed packet sizes
 #endif
 
 // 2015-05-13aRagexe
@@ -3034,18 +3324,54 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x08A8,26,clif->pFriendsListAdd,2);
 	packet(0x0817,5,clif->pHomMenu,2,4);
 	packet(0x0923,36,clif->pStoragePassword,0);
-	packet(0x09E8,11,clif->pDull); // CZ_OPEN_MAILBOX
-	packet(0x0A2E,6,clif->pDull); // TITLE
-	packet(0x0A02,4); // ZC_DRESSROOM_OPEN
-	packet(0x0A35,4,clif->pOneClick_ItemIdentify,2);
 	packet(0x0a27,8); // ZC_RECOVERY2
 	packet(0x09f7,75); // ZC_PROPERTY_HOMUN_2
 #endif
 
+// 2015-05-20aRagexeRE
+#if PACKETVER >= 20150520
+// new packets
+	packet(0x0a3c,-1);
+	packet(0x0a3d,18,clif->pDull/*,XXX*/);
+#endif
+
+// 2015-06-03bRagexeRE
+#if PACKETVER >= 20150603
+// new packets
+	packet(0x0a3e,-1);
+#endif
+
+// 2015-06-24aRagexeRE
+#if PACKETVER >= 20150624
+// new packets
+	packet(0x0a3f,9);
+#endif
+
+// ---
+// this packet was added in 2012-05-02aRagexeRE / 2012-05-03aRagexe probably if should be allowed in this versions?
 #if PACKETVER >= 20150805 // RagexeRE
 // shuffle packets not added
-	packet(0x097f,-1); // ZC_SELECTCART
+	packet(0x097f,-1);  // ZC_SELECTCART
 	packet(0x0980,7,clif->pSelectCart); // CZ_SELECTCART
+#endif
+// ---
+
+// 2015-08-12aRagexeRE
+#if PACKETVER >= 20150812
+// new packets
+	packet(0x0a40,11);
+#endif
+
+// 2015-09-09aRagexeRE
+#if PACKETVER >= 20150909
+// new packets
+	packet(0x0a41,18);
+#endif
+
+// 2015-09-16aRagexeRE
+#if PACKETVER >= 20150916
+// new packets
+	packet(0x0a42,43);
 #endif
 
 // 2015-10-01bRagexeRE
@@ -3081,6 +3407,19 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0436,4,clif->pDull); // CZ_GANGSI_RANK
 #endif
 
+// 2015-10-07aRagexeRE
+#if PACKETVER >= 20151007
+// new packets
+	packet(0x0a43,85);
+	packet(0x0a44,-1);
+#endif
+
+// 2015-10-28cRagexeRE
+#if PACKETVER >= 20151028
+// new packets
+	packet(0x0a45,-1);
+#endif
+
 // 2015-10-29aRagexe
 #if PACKETVER >= 20151029
 	packet(0x0369,7,clif->pActionRequest,2,6);
@@ -3112,7 +3451,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0860,36,clif->pStoragePassword,0);
 	packet(0x0363,8,clif->pDull); // CZ_JOIN_BATTLE_FIELD
 	packet(0x0436,4,clif->pDull); // CZ_GANGSI_RANK
-	packet(0x0a39,36);
 #endif
 
 // 2015-11-04aRagexe
@@ -3146,7 +3484,21 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0940,36,clif->pStoragePassword,2,4,20);
 	packet(0x08a3,4,clif->pDull); // CZ_GANGSI_RANK
 	packet(0x0939,8,clif->pDull); // CZ_JOIN_BATTLE_FIELD
-	packet(0x0a39,36);
+// new packets
+	packet(0x0a46,14,clif->pDull/*,XXX*/);
+	packet(0x0a47,3);
+	packet(0x0a48,2,clif->pDull/*,XXX*/);
+// changed packet sizes
+	packet(0x0a45,2);
+#endif
+
+// 2015-11-18aRagexeRE
+#if PACKETVER >= 20151118
+// new packets
+	packet(0x0a49,22);
+	packet(0x0a4a,6);
+	packet(0x0a4b,22);
+	packet(0x0a4c,28);
 #endif
 
 // 2015-12-16aRagexe

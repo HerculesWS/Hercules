@@ -16239,7 +16239,7 @@ void clif_bg_hp(struct map_session_data *sd)
 {
 	unsigned char buf[34];
 
-// packet version can be wrong, because inconsistend data in other servers.
+// packet version can be wrong, because inconsistend data in other servers. From packets table it start from 20140312 [4144]
 #if PACKETVER < 20140613
 	const int cmd = 0x2e0;
 	nullpo_retv(sd);
