@@ -6815,10 +6815,10 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 			int s_party = status->get_party_id(s_bl);
 			int s_guild = status->get_guild_id(s_bl);
 			int t_guild = status->get_guild_id(t_bl);
-			
-			if (s_party && s_party == status->get_party_id(t_bl)) {
-				if (map_flag_gvg(m) && map->list[m].flag.gvg_noparty && !(s_guild && s_guild == t_guild)) {
-					if (t_guild && guild->isallied(s_guild, t_guild))
+
+			if (s_party != 0 && s_party == status->get_party_id(t_bl)) {
+				if (map_flag_gvg(m) && map->list[m].flag.gvg_noparty) {
+					if (s_guild != 0 && t_guild != 0 && (s_guild == t_guild || guild->isallied(s_guild, t_guild)))
 						state |= BCT_PARTY;
 					else
 						state |= flag&BCT_ENEMY ? BCT_ENEMY : BCT_PARTY;
