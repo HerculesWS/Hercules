@@ -7329,6 +7329,7 @@ static const struct battle_data {
 	{ "save_body_style",                    &battle_config.save_body_style,                 0,      0,      1,              },
 	{ "player_warp_keep_direction",         &battle_config.player_warp_keep_direction,      0,      0,      1,              },
 	{ "atcommand_levelup_events",	        &battle_config.atcommand_levelup_events,	    0,      0,      1,				},
+	{ "bow_unequip_arrow",                  &battle_config.bow_unequip_arrow,               1,      0,      1,              },
 	{ "max_summoner_parameter",             &battle_config.max_summoner_parameter,          120,    10,     10000,          },
 	{ "mvp_exp_reward_message",             &battle_config.mvp_exp_reward_message,          0,      0,      1,              },
 };

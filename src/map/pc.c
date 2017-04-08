@@ -10035,6 +10035,11 @@ int pc_unequipitem(struct map_session_data *sd,int n,int flag)
 		status_change_end(&sd->bl, SC_ARMOR_RESIST, INVALID_TIMER);
 	}
 
+#ifdef RENEWAL
+	if (battle->bc->bow_unequip_arrow && pos&EQP_ARMS && sd->equip_index[EQI_AMMO] > 0)
+		pc->unequipitem(sd, sd->equip_index[EQI_AMMO], PCUNEQUIPITEM_FORCE);
+#endif
+
 	if( sd->state.autobonus&pos )
 		sd->state.autobonus &= ~sd->status.inventory[n].equip; //Check for activated autobonus [Inkfish]
 
