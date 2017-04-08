@@ -3758,21 +3758,6 @@
 - `BG_AREA_WOS`: 30
 - `BG_QUEUE`: 31
 
-### block_list types (units)
-
-- `BL_PC`: 1
-- `BL_MOB`: 2
-- `BL_PET`: 4
-- `BL_HOM`: 8
-- `BL_MER`: 16
-- `BL_ITEM`: 32
-- `BL_SKILL`: 64
-- `BL_NPC`: 128
-- `BL_CHAT`: 256
-- `BL_ELEM`: 512
-- `BL_CHAR`: 539 (shorthand for `BL_PC|BL_MOB|BL_HOM|BL_MER|BL_ELEM`)
-- `BL_ALL`: 4095
-
 ### LOOK_ constants, use in setlook/changelook script commands
 
 - `LOOK_BASE`: 0
@@ -3824,6 +3809,21 @@
 - `NAV_KAFRA_AND_AIRSHIP`: 101
 - `NAV_KAFRA_AND_SCROLL`: 110
 - `NAV_ALL`: 111
+
+### BL types
+
+- `BL_PC`: 1
+- `BL_MOB`: 2
+- `BL_PET`: 4
+- `BL_HOM`: 8
+- `BL_MER`: 16
+- `BL_ITEM`: 32
+- `BL_SKILL`: 64
+- `BL_NPC`: 128
+- `BL_CHAT`: 256
+- `BL_ELEM`: 512
+- `BL_CHAR`: 539
+- `BL_ALL`: 4095
 
 ### Renewal
 
