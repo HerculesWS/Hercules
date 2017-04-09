@@ -3799,6 +3799,16 @@
 - `EQP_SHADOW_ACC_R`: 1048576
 - `EQP_SHADOW_ACC_L`: 2097152
 
+### Item Option Types
+
+- `IT_OPT_INDEX`: 0
+- `IT_OPT_VALUE`: 1
+- `IT_OPT_PARAM`: 2
+
+### Maximum Item Options
+
+- `MAX_ITEM_OPTIONS`: 5
+
 ### Navigation constants, use with *navigateto*
 
 - `NAV_NONE`: 0
