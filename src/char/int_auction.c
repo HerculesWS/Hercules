@@ -71,8 +71,10 @@ void inter_auction_save(struct auction_data *auction)
 	StrBuf->Init(&buf);
 	StrBuf->Printf(&buf, "UPDATE `%s` SET `seller_id` = '%d', `seller_name` = ?, `buyer_id` = '%d', `buyer_name` = ?, `price` = '%d', `buynow` = '%d', `hours` = '%d', `timestamp` = '%lu', `nameid` = '%d', `item_name` = ?, `type` = '%d', `refine` = '%d', `attribute` = '%d'",
 		auction_db, auction->seller_id, auction->buyer_id, auction->price, auction->buynow, auction->hours, (unsigned long)auction->timestamp, auction->item.nameid, auction->type, auction->item.refine, auction->item.attribute);
-	for( j = 0; j < MAX_SLOTS; j++ )
+	for (j = 0; j < MAX_SLOTS; j++)
 		StrBuf->Printf(&buf, ", `card%d` = '%d'", j, auction->item.card[j]);
+	for (j = 0; j < MAX_ITEM_OPTIONS; j++)
+		StrBuf->Printf(&buf, ", `opt_idx%d` = '%d', `opt_val%d` = '%d'", j, auction->item.option[j].index, j, auction->item.option[j].value);
 	StrBuf->Printf(&buf, " WHERE `auction_id` = '%u'", auction->auction_id);
 
 	stmt = SQL->StmtMalloc(inter->sql_handle);
@@ -95,33 +97,35 @@ unsigned int inter_auction_create(struct auction_data *auction)
 	StringBuf buf;
 	struct SqlStmt *stmt;
 
-	if( !auction )
-		return false;
+	nullpo_ret(auction);
 
 	auction->timestamp = time(NULL) + (auction->hours * 3600);
 
 	StrBuf->Init(&buf);
 	StrBuf->Printf(&buf, "INSERT INTO `%s` (`seller_id`,`seller_name`,`buyer_id`,`buyer_name`,`price`,`buynow`,`hours`,`timestamp`,`nameid`,`item_name`,`type`,`refine`,`attribute`,`unique_id`", auction_db);
-	for( j = 0; j < MAX_SLOTS; j++ )
+	for (j = 0; j < MAX_SLOTS; j++)
 		StrBuf->Printf(&buf, ",`card%d`", j);
+	for (j = 0; j < MAX_ITEM_OPTIONS; j++)
+		StrBuf->Printf(&buf, ", `opt_idx%d`, `opt_val%d`", j, j);
 	StrBuf->Printf(&buf, ") VALUES ('%d',?,'%d',?,'%d','%d','%d','%lu','%d',?,'%d','%d','%d','%"PRIu64"'",
 		auction->seller_id, auction->buyer_id, auction->price, auction->buynow, auction->hours, (unsigned long)auction->timestamp, auction->item.nameid, auction->type, auction->item.refine, auction->item.attribute, auction->item.unique_id);
-	for( j = 0; j < MAX_SLOTS; j++ )
+	for (j = 0; j < MAX_SLOTS; j++)
 		StrBuf->Printf(&buf, ",'%d'", auction->item.card[j]);
+	for (j = 0; j < MAX_ITEM_OPTIONS; j++)
+		StrBuf->Printf(&buf, ",'%d','%d'", auction->item.option[j].index, auction->item.option[j].value);
+	
 	StrBuf->AppendStr(&buf, ")");
 
 	stmt = SQL->StmtMalloc(inter->sql_handle);
-	if( SQL_SUCCESS != SQL->StmtPrepareStr(stmt, StrBuf->Value(&buf))
+	if (SQL_SUCCESS != SQL->StmtPrepareStr(stmt, StrBuf->Value(&buf))
 	||  SQL_SUCCESS != SQL->StmtBindParam(stmt, 0, SQLDT_STRING, auction->seller_name, strnlen(auction->seller_name, NAME_LENGTH))
 	||  SQL_SUCCESS != SQL->StmtBindParam(stmt, 1, SQLDT_STRING, auction->buyer_name, strnlen(auction->buyer_name, NAME_LENGTH))
 	||  SQL_SUCCESS != SQL->StmtBindParam(stmt, 2, SQLDT_STRING, auction->item_name, strnlen(auction->item_name, ITEM_NAME_LENGTH))
-	||  SQL_SUCCESS != SQL->StmtExecute(stmt) )
+	||  SQL_SUCCESS != SQL->StmtExecute(stmt))
 	{
 		SqlStmt_ShowDebug(stmt);
 		auction->auction_id = 0;
-	}
-	else
-	{
+	} else {
 		struct auction_data *auction_;
 		int64 tick = (int64)auction->hours * 3600000;
 
@@ -204,8 +208,10 @@ void inter_auctions_fromsql(void)
 	StrBuf->Init(&buf);
 	StrBuf->AppendStr(&buf, "SELECT `auction_id`,`seller_id`,`seller_name`,`buyer_id`,`buyer_name`,"
 		"`price`,`buynow`,`hours`,`timestamp`,`nameid`,`item_name`,`type`,`refine`,`attribute`,`unique_id`");
-	for( i = 0; i < MAX_SLOTS; i++ )
+	for (i = 0; i < MAX_SLOTS; i++)
 		StrBuf->Printf(&buf, ",`card%d`", i);
+	for (i = 0; i < MAX_ITEM_OPTIONS; i++)
+		StrBuf->Printf(&buf, ", `opt_idx%d`, `opt_val%d`", i, i);
 	StrBuf->Printf(&buf, " FROM `%s` ORDER BY `auction_id` DESC", auction_db);
 
 	if (SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf)))
@@ -238,14 +244,20 @@ void inter_auctions_fromsql(void)
 		item->identify = 1;
 		item->amount = 1;
 		item->expire_time = 0;
-
-		for( i = 0; i < MAX_SLOTS; i++ )
-		{
+		/* Card Slots */
+		for (i = 0; i < MAX_SLOTS; i++) {
 			SQL->GetData(inter->sql_handle, 15 + i, &data, NULL);
 			item->card[i] = atoi(data);
 		}
+		/* Item Options */
+		for (i = 0; i < MAX_ITEM_OPTIONS; i++) {
+			SQL->GetData(inter->sql_handle, 15 + MAX_SLOTS + i * 2, &data, NULL);
+			item->option[i].index = atoi(data);
+			SQL->GetData(inter->sql_handle, 16 + MAX_SLOTS + i * 2, &data, NULL);
+			item->option[i].value = atoi(data);
+		}
 
-		if( auction->timestamp > now )
+		if (auction->timestamp > now)
 			endtick = ((int64)(auction->timestamp - now) * 1000) + tick;
 		else
 			endtick = tick + 10000; // 10 seconds to process ended auctions

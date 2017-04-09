@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `account_data` (
   `base_drop` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '100',
   `base_death` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '100',
   PRIMARY KEY (`account_id`)
-) ENGINE=MyISAM; 
+) ENGINE=MyISAM;
 
 --
 -- Table structure for table `acc_reg_num_db`
@@ -79,6 +79,16 @@ CREATE TABLE IF NOT EXISTS `auction` (
   `card1` SMALLINT(11) NOT NULL DEFAULT '0',
   `card2` SMALLINT(11) NOT NULL DEFAULT '0',
   `card3` SMALLINT(11) NOT NULL DEFAULT '0',
+  `opt_idx0` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+  `opt_val0` SMALLINT(5) NOT NULL DEFAULT '0',
+  `opt_idx1` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+  `opt_val1` SMALLINT(5) NOT NULL DEFAULT '0',
+  `opt_idx2` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+  `opt_val2` SMALLINT(5) NOT NULL DEFAULT '0',
+  `opt_idx3` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+  `opt_val3` SMALLINT(5) NOT NULL DEFAULT '0',
+  `opt_idx4` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+  `opt_val4` SMALLINT(5) NOT NULL DEFAULT '0',
   `unique_id` BIGINT(20) UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY (`auction_id`)
 ) ENGINE=MyISAM;
@@ -93,7 +103,7 @@ CREATE TABLE IF NOT EXISTS `autotrade_data` (
   `amount` INT(11) NOT NULL DEFAULT '0',
   `price` INT(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`char_id`,`itemkey`)
-) ENGINE=MyISAM; 
+) ENGINE=MyISAM;
 
 --
 -- Table structure for table `autotrade_merchants`
@@ -105,7 +115,7 @@ CREATE TABLE IF NOT EXISTS `autotrade_merchants` (
   `sex` TINYINT(2) NOT NULL DEFAULT '0',
   `title` VARCHAR(80) NOT NULL DEFAULT 'Buy From Me!',
   PRIMARY KEY (`account_id`,`char_id`)
-) ENGINE=MyISAM; 
+) ENGINE=MyISAM;
 
 --
 -- Table structure for table `cart_inventory`
@@ -124,6 +134,16 @@ CREATE TABLE IF NOT EXISTS `cart_inventory` (
   `card1` SMALLINT(11) NOT NULL DEFAULT '0',
   `card2` SMALLINT(11) NOT NULL DEFAULT '0',
   `card3` SMALLINT(11) NOT NULL DEFAULT '0',
+  `opt_idx0` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+  `opt_val0` SMALLINT(5) NOT NULL DEFAULT '0',
+  `opt_idx1` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+  `opt_val1` SMALLINT(5) NOT NULL DEFAULT '0',
+  `opt_idx2` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+  `opt_val2` SMALLINT(5) NOT NULL DEFAULT '0',
+  `opt_idx3` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+  `opt_val3` SMALLINT(5) NOT NULL DEFAULT '0',
+  `opt_idx4` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+  `opt_val4` SMALLINT(5) NOT NULL DEFAULT '0',
   `expire_time` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   `bound` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
   `unique_id` BIGINT(20) UNSIGNED NOT NULL DEFAULT '0',
@@ -169,7 +189,7 @@ CREATE TABLE IF NOT EXISTS `char` (
   `hair` TINYINT(4) UNSIGNED NOT NULL DEFAULT '0',
   `hair_color` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
   `clothes_color` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
-  `body` SMALLINT(5) unsigned NOT NULL default '0',
+  `body` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
   `weapon` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',
   `shield` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',
   `head_top` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',
@@ -203,7 +223,7 @@ CREATE TABLE IF NOT EXISTS `char` (
   KEY `party_id` (`party_id`),
   KEY `guild_id` (`guild_id`),
   KEY `online` (`online`)
-) ENGINE=MyISAM AUTO_INCREMENT=150000; 
+) ENGINE=MyISAM AUTO_INCREMENT=150000;
 
 --
 -- Table structure for table `char_reg_num_db`
@@ -469,6 +489,16 @@ CREATE TABLE IF NOT EXISTS `guild_storage` (
   `card1` SMALLINT(11) NOT NULL DEFAULT '0',
   `card2` SMALLINT(11) NOT NULL DEFAULT '0',
   `card3` SMALLINT(11) NOT NULL DEFAULT '0',
+  `opt_idx0` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+  `opt_val0` SMALLINT(5) NOT NULL DEFAULT '0',
+  `opt_idx1` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+  `opt_val1` SMALLINT(5) NOT NULL DEFAULT '0',
+  `opt_idx2` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+  `opt_val2` SMALLINT(5) NOT NULL DEFAULT '0',
+  `opt_idx3` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+  `opt_val3` SMALLINT(5) NOT NULL DEFAULT '0',
+  `opt_idx4` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+  `opt_val4` SMALLINT(5) NOT NULL DEFAULT '0',
   `expire_time` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   `bound` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
   `unique_id` BIGINT(20) UNSIGNED NOT NULL DEFAULT '0',
@@ -507,14 +537,14 @@ CREATE TABLE IF NOT EXISTS `homunculus` (
   PRIMARY KEY (`homun_id`)
 ) ENGINE=MyISAM;
 
--- 
+--
 -- Table structure for table `interlog`
 --
 
 CREATE TABLE IF NOT EXISTS `interlog` (
   `time` DATETIME NULL,
   `log` VARCHAR(255) NOT NULL DEFAULT ''
-) ENGINE=MyISAM; 
+) ENGINE=MyISAM;
 
 --
 -- Table structure for table `inventory`
@@ -533,6 +563,16 @@ CREATE TABLE IF NOT EXISTS `inventory` (
   `card1` SMALLINT(11) NOT NULL DEFAULT '0',
   `card2` SMALLINT(11) NOT NULL DEFAULT '0',
   `card3` SMALLINT(11) NOT NULL DEFAULT '0',
+  `opt_idx0` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+  `opt_val0` SMALLINT(5) NOT NULL DEFAULT '0',
+  `opt_idx1` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+  `opt_val1` SMALLINT(5) NOT NULL DEFAULT '0',
+  `opt_idx2` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+  `opt_val2` SMALLINT(5) NOT NULL DEFAULT '0',
+  `opt_idx3` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+  `opt_val3` SMALLINT(5) NOT NULL DEFAULT '0',
+  `opt_idx4` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+  `opt_val4` SMALLINT(5) NOT NULL DEFAULT '0',
   `expire_time` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   `favorite` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0',
   `bound` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
@@ -568,7 +608,7 @@ CREATE TABLE IF NOT EXISTS `login` (
   `unban_time` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   `expiration_time` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   `logincount` MEDIUMINT(9) UNSIGNED NOT NULL DEFAULT '0',
-  `lastlogin` DATETIME NULL, 
+  `lastlogin` DATETIME NULL,
   `last_ip` VARCHAR(100) NOT NULL DEFAULT '',
   `birthdate` DATE NULL,
   `character_slots` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0',
@@ -576,7 +616,7 @@ CREATE TABLE IF NOT EXISTS `login` (
   `pincode_change` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY (`account_id`),
   KEY `name` (`userid`)
-) ENGINE=MyISAM AUTO_INCREMENT=2000000; 
+) ENGINE=MyISAM AUTO_INCREMENT=2000000;
 
 -- added standard accounts for servers, VERY INSECURE!!!
 -- inserted into the table called login which is above
@@ -647,6 +687,16 @@ CREATE TABLE IF NOT EXISTS `mail` (
   `card1` SMALLINT(11) NOT NULL DEFAULT '0',
   `card2` SMALLINT(11) NOT NULL DEFAULT '0',
   `card3` SMALLINT(11) NOT NULL DEFAULT '0',
+  `opt_idx0` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+  `opt_val0` SMALLINT(5) NOT NULL DEFAULT '0',
+  `opt_idx1` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+  `opt_val1` SMALLINT(5) NOT NULL DEFAULT '0',
+  `opt_idx2` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+  `opt_val2` SMALLINT(5) NOT NULL DEFAULT '0',
+  `opt_idx3` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+  `opt_val3` SMALLINT(5) NOT NULL DEFAULT '0',
+  `opt_idx4` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+  `opt_val4` SMALLINT(5) NOT NULL DEFAULT '0',
   `unique_id` BIGINT(20) UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM;
@@ -830,6 +880,8 @@ INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1467934919); -- 2016-07-0
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1467935469); -- 2016-07-08--02-51.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1475526420); -- 2016-10-03--20-27.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1477434595); -- 2016-10-26--10-29.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1488454834); -- 2017-03-02--11-40.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1488744559); -- 2017-03-05--08-09.sql
 
 --
 -- Table structure for table `storage`
@@ -848,6 +900,16 @@ CREATE TABLE IF NOT EXISTS `storage` (
   `card1` SMALLINT(11) NOT NULL DEFAULT '0',
   `card2` SMALLINT(11) NOT NULL DEFAULT '0',
   `card3` SMALLINT(11) NOT NULL DEFAULT '0',
+  `opt_idx0` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+  `opt_val0` SMALLINT(5) NOT NULL DEFAULT '0',
+  `opt_idx1` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+  `opt_val1` SMALLINT(5) NOT NULL DEFAULT '0',
+  `opt_idx2` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+  `opt_val2` SMALLINT(5) NOT NULL DEFAULT '0',
+  `opt_idx3` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+  `opt_val3` SMALLINT(5) NOT NULL DEFAULT '0',
+  `opt_idx4` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+  `opt_val4` SMALLINT(5) NOT NULL DEFAULT '0',
   `expire_time` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   `bound` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
   `unique_id` BIGINT(20) UNSIGNED NOT NULL DEFAULT '0',

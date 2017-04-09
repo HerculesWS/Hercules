@@ -3162,6 +3162,50 @@ Check sample in doc/sample/getiteminfo.txt
 
 ---------------------------------------
 
+*getequipisenableopt(<equipment slot>)
+
+This function checks if the equipped item allows the use of bonus options.
+
+Returns 1 if allowed, 0 if not.
+
+---------------------------------------
+
+*getequippedoptioninfo(<info_type>);
+
+This function is to be used with the scripts of contents listed in
+db/item_options.conf only.
+
+Returns the value of the current equipment being parsed.
+If the equip was not found or the type is invalid, -1 is returned.
+
+---------------------------------------
+
+*getequipoptioninfo(<equip_index>,<slot>,<type>);
+
+Gets the option information of an equipment.
+
+<equipment_index> For a list of equipment indexes see getequipid().
+<option_slot> can range from 1 to MAX_ITEM_OPTIONS
+<type> can be IT_OPT_INDEX (the ID of the option bonus, @see "Id" or "Name" in db/item_options.conf)
+       or IT_OPT_VALUE (the value of the bonus script of the equipment, @see "Script" in db_item_options.conf).
+
+returns the value of the slot if exists or -1 for invalid slot, type or slots.
+
+---------------------------------------
+
+*setequipoption(<equip_index>,<slot>,<opt_index>,<value>);
+
+Set an equipment's option index or value for the specified option slot.
+
+<equipment_index> For a list of equipment indexes see getequipid().
+<option_slot> can range from 1 to MAX_ITEM_OPTIONS
+<type> can be IT_OPT_INDEX (the ID of the option bonus, @see "Id" or "Name" in db/item_options.conf)
+<value> The value of the type to be set.
+
+returns 0 if value couldn't be set, 1 on success.
+
+---------------------------------------
+
 *getequipcardid(<equipment slot>, <card slot>)
 
 Returns value for equipped item slot in the indicated slot (0, 1, 2, or 3).

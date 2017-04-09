@@ -2089,6 +2089,8 @@ int npc_selllist_sub(struct map_session_data *sd, struct itemlist *item_list, st
 {
 	char npc_ev[EVENT_NAME_LENGTH];
 	char card_slot[NAME_LENGTH];
+	char opt_index_str[NAME_LENGTH];
+	char opt_value_str[NAME_LENGTH];
 	int i, j;
 	int key_nameid = 0;
 	int key_amount = 0;
@@ -2096,6 +2098,8 @@ int npc_selllist_sub(struct map_session_data *sd, struct itemlist *item_list, st
 	int key_attribute = 0;
 	int key_identify = 0;
 	int key_card[MAX_SLOTS];
+	int key_opt_idx[MAX_ITEM_OPTIONS];
+	int key_opt_value[MAX_ITEM_OPTIONS];
 
 	nullpo_ret(sd);
 	nullpo_ret(item_list);
@@ -2138,6 +2142,17 @@ int npc_selllist_sub(struct map_session_data *sd, struct itemlist *item_list, st
 			// store each of the cards/special info from the item in the array
 			snprintf(card_slot, sizeof(card_slot), "@sold_card%d", j + 1);
 			script->setarray_pc(sd, card_slot, i, (void*)card, &key_card[j]);
+		}
+
+		for (j = 0; j < MAX_ITEM_OPTIONS; j++) {
+			intptr_t opt_idx = item->option[j].index;
+			intptr_t opt_value = item->option[j].value;
+
+			snprintf(opt_index_str, sizeof(opt_index_str), "@slot_opt_idx%d", j + 1);
+			script->setarray_pc(sd, opt_index_str, i, (void*)opt_idx, &key_opt_idx[j]);
+
+			snprintf(opt_value_str, sizeof(opt_value_str), "@slot_opt_val%d", j + 1);
+			script->setarray_pc(sd, opt_value_str, i, (void*)opt_value, &key_opt_value[j]);
 		}
 
 	}
