@@ -1219,7 +1219,7 @@ void intif_parse_Registers(int fd)
 
 	if (RFIFOW(fd, 14) != 0) {
 		char key[SCRIPT_VARNAME_LENGTH+1];
-		unsigned int index;
+		int index;
 		int max = RFIFOW(fd, 14), cursor = 16, i;
 
 		script->parser_current_file = "loading char/acc variables";//for script_add_str to refer to here in case errors occur

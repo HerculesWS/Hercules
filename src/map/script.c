@@ -256,7 +256,7 @@ void script_reportdata(struct script_data* data)
 		case C_NAME:// reference
 			if( reference_tovariable(data) ) {// variable
 				const char* name = reference_getname(data);
-				ShowDebug("Data: variable name='%s' index=%u\n", name, reference_getindex(data));
+				ShowDebug("Data: variable name='%s' index=%d\n", name, reference_getindex(data));
 			} else if( reference_toconstant(data) ) {// constant
 				ShowDebug("Data: constant name='%s' value=%d\n", reference_getname(data), reference_getconstant(data));
 			} else if( reference_toparam(data) ) {// param
@@ -3043,8 +3043,8 @@ void script_array_ensure_zero(struct script_state *st, struct map_session_data *
 
 	if (src && src->arrays) {
 		struct script_array *sa = idb_get(src->arrays, script_getvarid(uid));
-		if (sa) {
-			unsigned int i;
+		if (sa != NULL) {
+			int i;
 
 			ARR_FIND(0, sa->size, i, sa->members[i] == 0);
 			if( i != sa->size ) {
@@ -3061,7 +3061,8 @@ void script_array_ensure_zero(struct script_state *st, struct map_session_data *
 /**
  * Returns array size by ID
  **/
-unsigned int script_array_size(struct script_state *st, struct map_session_data *sd, const char *name, struct reg_db *ref) {
+int script_array_size(struct script_state *st, struct map_session_data *sd, const char *name, struct reg_db *ref)
+{
 	struct script_array *sa = NULL;
 	struct reg_db *src = script->array_src(st, sd, name, ref);
 
@@ -3073,19 +3074,20 @@ unsigned int script_array_size(struct script_state *st, struct map_session_data 
 /**
  * Returns array's highest key (for that awful getarraysize implementation that doesn't really gets the array size)
  **/
-unsigned int script_array_highest_key(struct script_state *st, struct map_session_data *sd, const char *name, struct reg_db *ref) {
-	struct script_array *sa = NULL;
+int script_array_highest_key(struct script_state *st, struct map_session_data *sd, const char *name, struct reg_db *ref)
+{
 	struct reg_db *src = script->array_src(st, sd, name, ref);
 
 	if( src && src->arrays ) {
 		int key = script->add_word(name);
+		struct script_array *sa = NULL;
 
 		script->array_ensure_zero(st,sd,reference_uid(key, 0),ref);
 
 		if( ( sa = idb_get(src->arrays, key) ) ) {
-			unsigned int i, highest_key = 0;
+			int i, highest_key = 0;
 
-			for(i = 0; i < sa->size; i++) {
+			for (i = 0; i < sa->size; i++) {
 				if( sa->members[i] > highest_key )
 					highest_key = sa->members[i];
 			}
@@ -3116,8 +3118,9 @@ void script_array_delete(struct reg_db *src, struct script_array *sa) {
  *
  * @param idx the index of the member in script_array struct list, not of the actual array member
  **/
-void script_array_remove_member(struct reg_db *src, struct script_array *sa, unsigned int idx) {
-	unsigned int i, cursor;
+void script_array_remove_member(struct reg_db *src, struct script_array *sa, int idx)
+{
+	int i, cursor;
 
 	nullpo_retv(sa);
 	/* its the only member left, no need to do anything other than delete the array data */
@@ -3126,10 +3129,10 @@ void script_array_remove_member(struct reg_db *src, struct script_array *sa, uns
 		return;
 	}
 
-	sa->members[idx] = UINT_MAX;
+	sa->members[idx] = -1;
 
 	for(i = 0, cursor = 0; i < sa->size; i++) {
-		if( sa->members[i] == UINT_MAX )
+		if (sa->members[i] == -1)
 			continue;
 		if( i != cursor )
 			sa->members[cursor] = sa->members[i];
@@ -3143,9 +3146,10 @@ void script_array_remove_member(struct reg_db *src, struct script_array *sa, uns
  *
  * @param idx the index of the array member being inserted
  **/
-void script_array_add_member(struct script_array *sa, unsigned int idx) {
+void script_array_add_member(struct script_array *sa, int idx)
+{
 	nullpo_retv(sa);
-	RECREATE(sa->members, unsigned int, ++sa->size);
+	RECREATE(sa->members, int, ++sa->size);
 	sa->members[sa->size - 1] = idx;
 }
 /**
@@ -3206,7 +3210,7 @@ struct reg_db *script_array_src(struct script_state *st, struct map_session_data
 void script_array_update(struct reg_db *src, int64 num, bool empty) {
 	struct script_array *sa = NULL;
 	int id = script_getvarid(num);
-	unsigned int index = script_getvaridx(num);
+	int index = script_getvaridx(num);
 
 	nullpo_retv(src);
 	if (!src->arrays) {
@@ -3215,8 +3219,8 @@ void script_array_update(struct reg_db *src, int64 num, bool empty) {
 		sa = idb_get(src->arrays, id);
 	}
 
-	if( sa ) {
-		unsigned int i;
+	if (sa != NULL) {
+		int i;
 
 		/* search */
 		for(i = 0; i < sa->size; i++) {
@@ -3264,7 +3268,7 @@ void set_reg_npcscope_str(struct script_state* st, struct reg_db *n, int64 num, 
 void set_reg_pc_ref_str(struct script_state *st, struct reg_db *n, int64 num, const char *name, const char *str)
 {
 	struct script_reg_str *p = NULL;
-	unsigned int index = script_getvaridx(num);
+	int index = script_getvaridx(num);
 
 	nullpo_retv(n);
 
@@ -3313,7 +3317,7 @@ void set_reg_pc_ref_str(struct script_state *st, struct reg_db *n, int64 num, co
 void set_reg_pc_ref_num(struct script_state *st, struct reg_db *n, int64 num, const char *name, int val)
 {
 	struct script_reg_num *p = NULL;
-	unsigned int index = script_getvaridx(num);
+	int index = script_getvaridx(num);
 
 	nullpo_retv(n);
 
@@ -3551,6 +3555,7 @@ int set_var(struct map_session_data *sd, char *name, void *val)
 
 void setd_sub(struct script_state *st, struct map_session_data *sd, const char *varname, int elem, const void *value, struct reg_db *ref)
 {
+	Assert_retv(elem >= 0 && elem < SCRIPT_MAX_ARRAYSIZE);
 	script->set_reg(st, sd, reference_uid(script->add_str(varname),elem), varname, value, ref);
 }
 
@@ -4855,7 +4860,7 @@ void script_add_autobonus(const char *autobonus)
 void script_cleararray_pc(struct map_session_data* sd, const char* varname, void* value) {
 	struct script_array *sa = NULL;
 	struct reg_db *src = NULL;
-	unsigned int i, *list = NULL, size = 0;
+	int i, *list = NULL, size = 0;
 	int key;
 
 	key = script->add_str(varname);
@@ -4879,11 +4884,12 @@ void script_cleararray_pc(struct map_session_data* sd, const char* varname, void
 
 /// sets a temporary character array variable element idx to given value
 /// @param refcache Pointer to an int variable, which keeps a copy of the reference to varname and must be initialized to 0. Can be NULL if only one element is set.
-void script_setarray_pc(struct map_session_data* sd, const char* varname, uint32 idx, void* value, int* refcache) {
+void script_setarray_pc(struct map_session_data *sd, const char *varname, int idx, void *value, int *refcache)
+{
 	int key;
 
-	if( idx >= SCRIPT_MAX_ARRAYSIZE ) {
-		ShowError("script_setarray_pc: Variable '%s' has invalid index '%u' (char_id=%d).\n", varname, idx, sd->status.char_id);
+	if (idx < 0 || idx >= SCRIPT_MAX_ARRAYSIZE) {
+		ShowError("script_setarray_pc: Variable '%s' has invalid index '%d' (char_id=%d).\n", varname, idx, sd->status.char_id);
 		return;
 	}
 
@@ -4940,17 +4946,16 @@ void script_reg_destroy_single(struct map_session_data *sd, int64 reg, struct sc
 		ers_free(pc->num_reg_ers,(struct script_reg_num*)data);
 	}
 }
-unsigned int *script_array_cpy_list(struct script_array *sa) {
+
+int *script_array_cpy_list(struct script_array *sa)
+{
 	nullpo_retr(NULL, sa);
-	if( sa->size > script->generic_ui_array_size )
-		script->generic_ui_array_expand(sa->size);
-	memcpy(script->generic_ui_array, sa->members, sizeof(unsigned int)*sa->size);
-	return script->generic_ui_array;
+	VECTOR_TRUNCATE(script->array_cpy_list_temp);
+	VECTOR_ENSURE(script->array_cpy_list_temp, sa->size, 100);
+	memcpy(VECTOR_DATA(script->array_cpy_list_temp), sa->members, sizeof(int) * sa->size);
+	return VECTOR_DATA(script->array_cpy_list_temp);
 }
-void script_generic_ui_array_expand (unsigned int plus) {
-	script->generic_ui_array_size += plus + 100;
-	RECREATE(script->generic_ui_array, unsigned int, script->generic_ui_array_size);
-}
+
 /*==========================================
  * Destructor
  *------------------------------------------*/
@@ -5079,8 +5084,7 @@ void do_final_script(void)
 
 	ers_destroy(script->array_ers);
 
-	if( script->generic_ui_array )
-		aFree(script->generic_ui_array);
+	VECTOR_CLEAR(script->array_cpy_list_temp);
 
 	script->clear_translations(false);
 	script->parser_clean_leftovers();
@@ -7123,10 +7127,10 @@ BUILDIN(setarray)
 {
 	struct script_data* data;
 	const char* name;
-	uint32 start;
-	uint32 end;
+	int start;
+	int end;
 	int32 id;
-	int32 i;
+	int i;
 	struct map_session_data *sd = NULL;
 
 	data = script_getdata(st, 2);
@@ -7149,9 +7153,10 @@ BUILDIN(setarray)
 			return true;// no player attached
 	}
 
-	end = start + script_lastdata(st) - 2;
-	if( end > SCRIPT_MAX_ARRAYSIZE )
-		end = SCRIPT_MAX_ARRAYSIZE;
+	if ((int64)start + script_lastdata(st) - 2 >= SCRIPT_MAX_ARRAYSIZE)
+		end = SCRIPT_MAX_ARRAYSIZE - 1;
+	else
+		end = start + script_lastdata(st) - 2;
 
 	if (is_string_variable(name)) {
 		// string array
@@ -7173,8 +7178,8 @@ BUILDIN(cleararray)
 {
 	struct script_data* data;
 	const char* name;
-	uint32 start;
-	uint32 end;
+	int start;
+	int end;
 	int32 id;
 	const void *v = NULL;
 	struct map_session_data *sd = NULL;
@@ -7204,9 +7209,10 @@ BUILDIN(cleararray)
 	else
 		v = (const void *)h64BPTRSIZE(script_getnum(st, 3));
 
-	end = start + script_getnum(st, 4);
-	if( end > SCRIPT_MAX_ARRAYSIZE )
-		end = SCRIPT_MAX_ARRAYSIZE;
+	if ((int64)start + script_getnum(st, 4) >= SCRIPT_MAX_ARRAYSIZE)
+		end = SCRIPT_MAX_ARRAYSIZE - 1;
+	else
+		end = start + script_getnum(st, 4);
 
 	for( ; start < end; ++start )
 		script->set_reg(st, sd, reference_uid(id, start), name, v, script_getref(st,2));
@@ -7223,12 +7229,12 @@ BUILDIN(copyarray)
 	struct script_data* data2;
 	const char* name1;
 	const char* name2;
-	int32 idx1;
-	int32 idx2;
+	int idx1;
+	int idx2;
 	int32 id1;
 	int32 id2;
-	int32 i;
-	uint32 count;
+	int i;
+	int count;
 	struct map_session_data *sd = NULL;
 
 	data1 = script_getdata(st, 2);
@@ -7266,8 +7272,8 @@ BUILDIN(copyarray)
 	}
 
 	count = script_getnum(st, 4);
-	if( count > SCRIPT_MAX_ARRAYSIZE - idx1 )
-		count = SCRIPT_MAX_ARRAYSIZE - idx1;
+	if (count >= SCRIPT_MAX_ARRAYSIZE - idx1)
+		count = SCRIPT_MAX_ARRAYSIZE - 1 - idx1;
 	if( count <= 0 || (idx1 == idx2 && is_same_reference(data1, data2)) )
 		return true;// nothing to copy
 
@@ -7323,7 +7329,7 @@ BUILDIN(getarraysize)
 }
 int script_array_index_cmp(const void *a, const void *b)
 {
-	return (*(const unsigned int *)a - *(const unsigned int *)b); // FIXME: Is the unsigned difference really intended here?
+	return (*(const int *)a - *(const int *)b);
 }
 
 BUILDIN(getarrayindex)
@@ -7351,7 +7357,7 @@ BUILDIN(deletearray)
 {
 	struct script_data* data;
 	const char* name;
-	unsigned int start, end, i;
+	int start, end, i;
 	int id;
 	struct map_session_data *sd = NULL;
 	struct script_array *sa = NULL;
@@ -7402,7 +7408,7 @@ BUILDIN(deletearray)
 		value = (void *)0;
 
 	if( script_hasdata(st,3) ) {
-		unsigned int count = script_getnum(st, 3);
+		int count = script_getnum(st, 3);
 		if( count > end - start )
 			count = end - start;
 		if( count <= 0 )
@@ -7422,10 +7428,10 @@ BUILDIN(deletearray)
 			}
 		} else {
 			// using sa to speed up
-			unsigned int *list = NULL, size = 0;
+			int *list = NULL, size = 0;
 			list = script->array_cpy_list(sa);
 			size = sa->size;
-			qsort(list, size, sizeof(unsigned int), script_array_index_cmp);
+			qsort(list, size, sizeof(*list), script_array_index_cmp);
 
 			ARR_FIND(0, size, i, list[i] >= start);
 
@@ -7444,7 +7450,7 @@ BUILDIN(deletearray)
 			}
 		}
 	} else {
-		unsigned int *list = NULL, size = 0;
+		int *list = NULL, size = 0;
 		list = script->array_cpy_list(sa);
 		size = sa->size;
 
@@ -7465,7 +7471,7 @@ BUILDIN(getelementofarray)
 {
 	struct script_data* data;
 	int32 id;
-	int64 i;
+	int i;
 
 	data = script_getdata(st, 2);
 	if( !data_isreference(data) )
@@ -7481,14 +7487,14 @@ BUILDIN(getelementofarray)
 
 	i = script_getnum(st, 3);
 	if (i < 0 || i >= SCRIPT_MAX_ARRAYSIZE) {
-		ShowWarning("script:getelementofarray: index out of range (%"PRId64")\n", i);
+		ShowWarning("script:getelementofarray: index out of range (%d)\n", i);
 		script->reportdata(data);
 		script_pushnil(st);
 		st->state = END;
 		return false;// out of range
 	}
 
-	script->push_val(st->stack, C_NAME, reference_uid(id, (unsigned int)i), reference_getref(data));
+	script->push_val(st->stack, C_NAME, reference_uid(id, i), reference_getref(data));
 	return true;
 }
 
@@ -11192,14 +11198,17 @@ int buildin_getunits_sub(struct block_list *bl, va_list ap)
 	struct script_state *st = va_arg(ap, struct script_state *);
 	struct map_session_data *sd = va_arg(ap, struct map_session_data *);
 	int32 id = va_arg(ap, int32);
-	uint32 start = va_arg(ap, uint32);
-	uint32 *count = va_arg(ap, uint32 *);
-	uint32 limit = va_arg(ap, uint32);
+	int start = va_arg(ap, int);
+	int *count = va_arg(ap, int *);
+	int limit = va_arg(ap, int);
 	const char *name = va_arg(ap, const char *);
 	struct reg_db *ref = va_arg(ap, struct reg_db *);
-	uint32 index = start + *count;
+	int index = start + *count;
 
-	if (index >= SCRIPT_MAX_ARRAYSIZE || *count > limit) {
+	if ((int64)start + *count >= SCRIPT_MAX_ARRAYSIZE)
+		return 1;
+
+	if (index < 0 || index >= SCRIPT_MAX_ARRAYSIZE || *count > limit) {
 		return 1;
 	}
 
@@ -11215,11 +11224,11 @@ BUILDIN(getunits)
 	const char *mapname, *name;
 	int16 m, x1, y1, x2, y2;
 	int32 id;
-	uint32 start;
+	int start;
 	struct reg_db *ref;
 	enum bl_type type = script_getnum(st, 2);
 	struct script_data *data = script_getdata(st, 3);
-	uint32 count = 0, limit = script_getnum(st, 4);
+	int count = 0, limit = script_getnum(st, 4);
 	struct map_session_data *sd = NULL;
 
 	if (!data_isreference(data) || reference_toconstant(data)) {
@@ -11248,8 +11257,8 @@ BUILDIN(getunits)
 		return false;
 	}
 
-	if (limit < 1 || limit > SCRIPT_MAX_ARRAYSIZE) {
-		limit = SCRIPT_MAX_ARRAYSIZE;
+	if (limit <= 0 || limit >= SCRIPT_MAX_ARRAYSIZE) {
+		limit = SCRIPT_MAX_ARRAYSIZE - 1;
 	}
 
 	mapname = script_getstr(st, 5);
@@ -16647,7 +16656,7 @@ BUILDIN(explode)
 	temp = aMalloc(len + 1);
 
 	for (i = 0; str[i] != '\0'; i++) {
-		if (str[i] == delimiter && (int64)start + k < (int64)(SCRIPT_MAX_ARRAYSIZE-1)) { // FIXME[Haru]: SCRIPT_MAX_ARRAYSIZE should really be unsigned (and INT32_MAX)
+		if (str[i] == delimiter && (int64)start + k < SCRIPT_MAX_ARRAYSIZE) {
 			//break at delimiter but ignore after reaching last array index
 			temp[j] = '\0';
 			script->set_reg(st, sd, reference_uid(id, start + k), name, temp, reference_getref(data));
@@ -16675,7 +16684,7 @@ BUILDIN(implode)
 {
 	struct script_data* data = script_getdata(st, 2);
 	const char *name;
-	uint32 array_size, id;
+	int array_size, id;
 
 	struct map_session_data *sd = NULL;
 
@@ -17361,6 +17370,11 @@ BUILDIN(setd)
 		}
 	}
 
+	if (elem < 0 || elem >= SCRIPT_MAX_ARRAYSIZE) {
+		ShowError("script setd: invalid array index %d.\n", elem);
+		return false;
+	}
+
 	if (is_string_variable(varname)) {
 		script->setd_sub(st, sd, varname, elem, script_getstr(st, 3), NULL);
 	} else {
@@ -17377,7 +17391,7 @@ int buildin_query_sql_sub(struct script_state *st, struct Sql *handle)
 	const char* query;
 	struct script_data* data;
 	const char* name;
-	unsigned int max_rows = SCRIPT_MAX_ARRAYSIZE; // maximum number of rows
+	int max_rows = SCRIPT_MAX_ARRAYSIZE; // maximum number of rows
 	int num_vars;
 	int num_cols;
 
@@ -17418,10 +17432,10 @@ int buildin_query_sql_sub(struct script_state *st, struct Sql *handle)
 	// Count the number of columns to store
 	num_cols = SQL->NumColumns(handle);
 	if( num_vars < num_cols ) {
-		ShowWarning("script:query_sql: Too many columns, discarding last %u columns.\n", (unsigned int)(num_cols-num_vars));
+		ShowWarning("script:query_sql: Too many columns, discarding last %d columns.\n", num_cols - num_vars);
 		script->reportsrc(st);
 	} else if( num_vars > num_cols ) {
-		ShowWarning("script:query_sql: Too many variables (%u extra).\n", (unsigned int)(num_vars-num_cols));
+		ShowWarning("script:query_sql: Too many variables (%d extra).\n", num_vars - num_cols);
 		script->reportsrc(st);
 	}
 
@@ -17441,8 +17455,8 @@ int buildin_query_sql_sub(struct script_state *st, struct Sql *handle)
 				script->setd_sub(st, sd, name, i, (void *)h64BPTRSIZE((str?atoi(str):0)), reference_getref(data));
 		}
 	}
-	if( i == max_rows && max_rows < SQL->NumRows(handle) ) {
-		ShowWarning("script:query_sql: Only %u/%u rows have been stored.\n", max_rows, (unsigned int)SQL->NumRows(handle));
+	if (i == max_rows && max_rows < (int)SQL->NumRows(handle)) {
+		ShowWarning("script:query_sql: Only %d/%d rows have been stored.\n", max_rows, (int)SQL->NumRows(handle));
 		script->reportsrc(st);
 	}
 
@@ -17489,6 +17503,12 @@ BUILDIN(getd) {
 
 	if (sscanf(buffer, "%99[^[][%d]", varname, &elem) < 2)
 		elem = 0;
+
+	if (elem < 0 || elem >= SCRIPT_MAX_ARRAYSIZE) {
+		ShowError("script getd: invalid array index %d.\n", elem);
+		script_pushnil(st);
+		return false;
+	}
 
 	// Push the 'pointer' so it's more flexible [Lance]
 	script->push_val(st->stack, C_NAME, reference_uid(script->add_str(varname), elem),NULL);
@@ -17945,18 +17965,6 @@ BUILDIN(searchitem)
 	int32 i;
 	struct map_session_data *sd = NULL;
 
-	if ((items[0] = itemdb->exists(atoi(itemname)))) {
-		count = 1;
-	} else {
-		count = itemdb->search_name_array(items, ARRAYLENGTH(items), itemname, 0);
-		if (count > MAX_SEARCH) count = MAX_SEARCH;
-	}
-
-	if (!count) {
-		script_pushint(st, 0);
-		return true;
-	}
-
 	if( !data_isreference(data) )
 	{
 		ShowError("script:searchitem: not a variable\n");
@@ -17984,10 +17992,25 @@ BUILDIN(searchitem)
 		return false;// not supported
 	}
 
-	for( i = 0; i < count; ++start, ++i )
-	{// Set array
+	if ((items[0] = itemdb->exists(atoi(itemname)))) {
+		count = 1;
+	} else {
+		count = itemdb->search_name_array(items, ARRAYLENGTH(items), itemname, 0);
+		if (count > MAX_SEARCH) count = MAX_SEARCH;
+	}
+
+	if (count == 0) {
+		script_pushint(st, 0);
+		return true;
+	}
+
+	if (start + count - 1 >= SCRIPT_MAX_ARRAYSIZE)
+		count = SCRIPT_MAX_ARRAYSIZE - start;
+
+	for (i = 0; i < count; i++) {
+		// Set array
 		const void *v = (const void *)h64BPTRSIZE((int)items[i]->nameid);
-		script->set_reg(st, sd, reference_uid(id, start), name, v, reference_getref(data));
+		script->set_reg(st, sd, reference_uid(id, start + i), name, v, reference_getref(data));
 	}
 
 	script_pushint(st, count);
@@ -24981,8 +25004,7 @@ void script_defaults(void)
 	script->potion_flag = script->potion_hp = script->potion_per_hp =
 	script->potion_sp = script->potion_per_sp = script->potion_target = 0;
 
-	script->generic_ui_array = NULL;
-	script->generic_ui_array_size = 0;
+	VECTOR_INIT(script->array_cpy_list_temp);
 	/* */
 	script->init = do_init_script;
 	script->final = do_final_script;
@@ -25201,7 +25223,6 @@ void script_defaults(void)
 	script->reg_destroy_single = script_reg_destroy_single;
 	script->reg_destroy = script_reg_destroy;
 	/* */
-	script->generic_ui_array_expand = script_generic_ui_array_expand;
 	script->array_cpy_list = script_array_cpy_list;
 	/* */
 	script->hardcoded_constants = script_hardcoded_constants;

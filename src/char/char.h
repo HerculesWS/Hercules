@@ -182,7 +182,7 @@ struct char_interface {
 	int (*request_accreg2) (int account_id, int char_id);
 	void (*global_accreg_to_login_start) (int account_id, int char_id);
 	void (*global_accreg_to_login_send) (void);
-	void (*global_accreg_to_login_add) (const char *key, unsigned int index, intptr_t val, bool is_string);
+	void (*global_accreg_to_login_add) (const char *key, int index, intptr_t val, bool is_string);
 	void (*read_fame_list) (void);
 	int (*send_fame_list) (int fd);
 	void (*update_fame_list) (int type, int index, int fame);

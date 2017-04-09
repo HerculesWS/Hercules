@@ -75,7 +75,7 @@ char* mapreg_readregstr(int64 uid) {
 bool mapreg_setreg(int64 uid, int val) {
 	struct mapreg_save *m;
 	int num = script_getvarid(uid);
-	unsigned int i = script_getvaridx(uid);
+	int index = script_getvaridx(uid);
 	const char* name = script->get_str(num);
 
 	nullpo_retr(true, name);
@@ -87,7 +87,7 @@ bool mapreg_setreg(int64 uid, int val) {
 				mapreg->dirty = true;
 			}
 		} else {
-			if( i )
+			if (index != 0)
 				script->array_update(&mapreg->regs, uid, false);
 
 			m = ers_alloc(mapreg->ers, struct mapreg_save);
@@ -100,13 +100,13 @@ bool mapreg_setreg(int64 uid, int val) {
 			if (name[1] != '@' && !mapreg->skip_insert) {// write new variable to database
 				char tmp_str[(SCRIPT_VARNAME_LENGTH+1)*2+1];
 				SQL->EscapeStringLen(map->mysql_handle, tmp_str, name, strnlen(name, SCRIPT_VARNAME_LENGTH+1));
-				if( SQL_ERROR == SQL->Query(map->mysql_handle, "INSERT INTO `%s`(`varname`,`index`,`value`) VALUES ('%s','%u','%d')", mapreg->table, tmp_str, i, val) )
+				if (SQL_ERROR == SQL->Query(map->mysql_handle, "INSERT INTO `%s`(`varname`,`index`,`value`) VALUES ('%s','%d','%d')", mapreg->table, tmp_str, index, val))
 					Sql_ShowDebug(map->mysql_handle);
 			}
 			i64db_put(mapreg->regs.vars, uid, m);
 		}
 	} else { // val == 0
-		if( i )
+		if (index != 0)
 			script->array_update(&mapreg->regs, uid, true);
 		if( (m = i64db_get(mapreg->regs.vars, uid)) ) {
 			ers_free(mapreg->ers, m);
@@ -114,7 +114,7 @@ bool mapreg_setreg(int64 uid, int val) {
 		i64db_remove(mapreg->regs.vars, uid);
 
 		if( name[1] != '@' ) {// Remove from database because it is unused.
-			if( SQL_ERROR == SQL->Query(map->mysql_handle, "DELETE FROM `%s` WHERE `varname`='%s' AND `index`='%u'", mapreg->table, name, i) )
+			if (SQL_ERROR == SQL->Query(map->mysql_handle, "DELETE FROM `%s` WHERE `varname`='%s' AND `index`='%d'", mapreg->table, name, index))
 				Sql_ShowDebug(map->mysql_handle);
 		}
 	}
@@ -132,16 +132,16 @@ bool mapreg_setreg(int64 uid, int val) {
 bool mapreg_setregstr(int64 uid, const char* str) {
 	struct mapreg_save *m;
 	int num = script_getvarid(uid);
-	unsigned int i   = script_getvaridx(uid);
+	int index = script_getvaridx(uid);
 	const char* name = script->get_str(num);
 
 	nullpo_retr(true, name);
 
 	if( str == NULL || *str == 0 ) {
-		if( i )
+		if (index != 0)
 			script->array_update(&mapreg->regs, uid, true);
 		if(name[1] != '@') {
-			if (SQL_ERROR == SQL->Query(map->mysql_handle, "DELETE FROM `%s` WHERE `varname`='%s' AND `index`='%u'", mapreg->table, name, i))
+			if (SQL_ERROR == SQL->Query(map->mysql_handle, "DELETE FROM `%s` WHERE `varname`='%s' AND `index`='%d'", mapreg->table, name, index))
 				Sql_ShowDebug(map->mysql_handle);
 		}
 		if( (m = i64db_get(mapreg->regs.vars, uid)) ) {
@@ -160,7 +160,7 @@ bool mapreg_setregstr(int64 uid, const char* str) {
 				m->save = true;
 			}
 		} else {
-			if( i )
+			if (index != 0)
 				script->array_update(&mapreg->regs, uid, false);
 
 			m = ers_alloc(mapreg->ers, struct mapreg_save);
@@ -175,7 +175,7 @@ bool mapreg_setregstr(int64 uid, const char* str) {
 				char tmp_str2[255*2+1];
 				SQL->EscapeStringLen(map->mysql_handle, tmp_str, name, strnlen(name, SCRIPT_VARNAME_LENGTH+1));
 				SQL->EscapeStringLen(map->mysql_handle, tmp_str2, str, strnlen(str, 255));
-				if( SQL_ERROR == SQL->Query(map->mysql_handle, "INSERT INTO `%s`(`varname`,`index`,`value`) VALUES ('%s','%u','%s')", mapreg->table, tmp_str, i, tmp_str2) )
+				if (SQL_ERROR == SQL->Query(map->mysql_handle, "INSERT INTO `%s`(`varname`,`index`,`value`) VALUES ('%s','%d','%s')", mapreg->table, tmp_str, index, tmp_str2))
 					Sql_ShowDebug(map->mysql_handle);
 			}
 			i64db_put(mapreg->regs.vars, uid, m);

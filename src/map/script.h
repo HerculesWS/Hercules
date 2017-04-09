@@ -50,7 +50,7 @@ struct item_data;
 #define NUM_WHISPER_VAR 10
 
 /// Maximum amount of elements in script arrays
-#define SCRIPT_MAX_ARRAYSIZE (UINT_MAX - 1)
+#define SCRIPT_MAX_ARRAYSIZE (INT_MAX - 1)
 
 #define SCRIPT_BLOCK_SIZE 512
 
@@ -150,7 +150,7 @@ struct item_data;
 /// Returns the id of the reference
 #define reference_getid(data) ( (int32)(int64)(reference_getuid(data) & 0xFFFFFFFF) )
 /// Returns the array index of the reference
-#define reference_getindex(data) ( (uint32)(int64)((reference_getuid(data) >> 32) & 0xFFFFFFFF) )
+#define reference_getindex(data) ( (int)((reference_getuid(data) >> 32) & 0x7FFFFFFF) )
 /// Returns the name of the reference
 #define reference_getname(data) ( script->str_buf + script->str_data[reference_getid(data)].str )
 /// Returns the linked list of uid-value pairs of the reference (can be NULL)
@@ -161,7 +161,7 @@ struct item_data;
 #define reference_getparamtype(data) ( script->str_data[reference_getid(data)].val )
 
 /// Composes the uid of a reference from the id and the index
-#define reference_uid(id,idx) ( (int64) ((uint64)(id) & 0xFFFFFFFF) | ((uint64)(idx) << 32) )
+#define reference_uid(id,idx) ( (int64) ((uint64)(id) & 0xFFFFFFFF) | (((uint64)(idx) << 32) & 0x7FFFFFFF00000000) )
 
 /// Checks whether two references point to the same variable (or array)
 #define is_same_reference(data1, data2) \
@@ -171,7 +171,7 @@ struct item_data;
 	     ) ) )
 
 #define script_getvarid(var)  ( (int32)(int64)(var & 0xFFFFFFFF) )
-#define script_getvaridx(var) ( (uint32)(int64)((var >> 32) & 0xFFFFFFFF) )
+#define script_getvaridx(var) ( (int)((var >> 32) & 0x7FFFFFFF) )
 
 #define not_server_variable(prefix) ( (prefix) != '$' && (prefix) != '.' && (prefix) != '\'')
 #define is_string_variable(name) ( (name)[strlen(name) - 1] == '$' )
@@ -637,8 +637,8 @@ struct casecheck_data {
 
 struct script_array {
 	unsigned int id;/* the first 32b of the 64b uid, aka the id */
-	unsigned int size;/* how many members */
-	unsigned int *members;/* member list */
+	int size;/* how many members */
+	int *members;/* member list */
 };
 
 struct string_translation_entry {
@@ -732,8 +732,7 @@ struct script_interface {
 	int potion_hp, potion_per_hp, potion_sp, potion_per_sp;
 	int potion_target;
 	/* */
-	unsigned int *generic_ui_array;
-	unsigned int generic_ui_array_size;
+	VECTOR_DECL(int) array_cpy_list_temp;
 	/* set and unset on npc_parse_script */
 	const char *parser_current_npc_name;
 	/* */
@@ -808,7 +807,7 @@ struct script_interface {
 	void (*add_pending_ref) (struct script_state *st, struct reg_db *ref);
 	void (*run_autobonus) (const char *autobonus,int id, int pos);
 	void (*cleararray_pc) (struct map_session_data* sd, const char* varname, void* value);
-	void (*setarray_pc) (struct map_session_data* sd, const char* varname, uint32 idx, void* value, int* refcache);
+	void (*setarray_pc) (struct map_session_data *sd, const char *varname, int idx, void *value, int *refcache);
 	bool (*config_read) (const char *filename, bool imported);
 	int (*add_str) (const char* p);
 	const char* (*get_str) (int id);
@@ -921,18 +920,17 @@ struct script_interface {
 	struct reg_db *(*array_src) (struct script_state *st, struct map_session_data *sd, const char *name, struct reg_db *ref);
 	void (*array_update) (struct reg_db *src, int64 num, bool empty);
 	void (*array_delete) (struct reg_db *src, struct script_array *sa);
-	void (*array_remove_member) (struct reg_db *src, struct script_array *sa, unsigned int idx);
-	void (*array_add_member) (struct script_array *sa, unsigned int idx);
-	unsigned int (*array_size) (struct script_state *st, struct map_session_data *sd, const char *name, struct reg_db *ref);
-	unsigned int (*array_highest_key) (struct script_state *st, struct map_session_data *sd, const char *name, struct reg_db *ref);
+	void (*array_remove_member) (struct reg_db *src, struct script_array *sa, int idx);
+	void (*array_add_member) (struct script_array *sa, int idx);
+	int (*array_size) (struct script_state *st, struct map_session_data *sd, const char *name, struct reg_db *ref);
+	int (*array_highest_key) (struct script_state *st, struct map_session_data *sd, const char *name, struct reg_db *ref);
 	int (*array_free_db) (union DBKey key, struct DBData *data, va_list ap);
 	void (*array_ensure_zero) (struct script_state *st, struct map_session_data *sd, int64 uid, struct reg_db *ref);
 	/* */
 	void (*reg_destroy_single) (struct map_session_data *sd, int64 reg, struct script_reg_state *data);
 	int (*reg_destroy) (union DBKey key, struct DBData *data, va_list ap);
 	/* */
-	void (*generic_ui_array_expand) (unsigned int plus);
-	unsigned int *(*array_cpy_list) (struct script_array *sa);
+	int *(*array_cpy_list) (struct script_array *sa);
 	/* */
 	void (*hardcoded_constants) (void);
 	unsigned short (*mapindexname2id) (struct script_state *st, const char* name);

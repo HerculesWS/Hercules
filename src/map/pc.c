@@ -9256,16 +9256,16 @@ int pc_readreg(struct map_session_data* sd, int64 reg) {
  * For '@type' variables (temporary numeric char reg)
  **/
 void pc_setreg(struct map_session_data* sd, int64 reg, int val) {
-	unsigned int index = script_getvaridx(reg);
+	int index = script_getvaridx(reg);
 
 	nullpo_retv(sd);
 	if( val ) {
 		i64db_iput(sd->regs.vars, reg, val);
-		if( index )
+		if (index != 0)
 			script->array_update(&sd->regs, reg, false);
 	} else {
 		i64db_remove(sd->regs.vars, reg);
-		if( index )
+		if (index != 0)
 			script->array_update(&sd->regs, reg, true);
 	}
 }
@@ -9286,7 +9286,7 @@ char* pc_readregstr(struct map_session_data* sd, int64 reg) {
  **/
 void pc_setregstr(struct map_session_data* sd, int64 reg, const char* str) {
 	struct script_reg_str *p = NULL;
-	unsigned int index = script_getvaridx(reg);
+	int index = script_getvaridx(reg);
 	struct DBData prev;
 
 	nullpo_retv(sd);
@@ -9303,7 +9303,7 @@ void pc_setregstr(struct map_session_data* sd, int64 reg, const char* str) {
 				aFree(p->value);
 			ers_free(pc->str_reg_ers, p);
 		} else {
-			if( index )
+			if (index != 0)
 				script->array_update(&sd->regs, reg, false);
 		}
 	} else {
@@ -9312,7 +9312,7 @@ void pc_setregstr(struct map_session_data* sd, int64 reg, const char* str) {
 			if( p->value )
 				aFree(p->value);
 			ers_free(pc->str_reg_ers, p);
-			if( index )
+			if (index != 0)
 				script->array_update(&sd->regs, reg, true);
 		}
 	}
@@ -9370,7 +9370,7 @@ char* pc_readregistry_str(struct map_session_data *sd, int64 reg) {
 int pc_setregistry(struct map_session_data *sd, int64 reg, int val) {
 	struct script_reg_num *p = NULL;
 	const char *regname = script->get_str( script_getvarid(reg) );
-	unsigned int index = script_getvaridx(reg);
+	int index = script_getvaridx(reg);
 
 	nullpo_ret(sd);
 	/* SAAD! those things should be stored elsewhere e.g. char ones in char table, the cash ones in account_data table! */
@@ -9446,7 +9446,7 @@ int pc_setregistry(struct map_session_data *sd, int64 reg, int val) {
 int pc_setregistry_str(struct map_session_data *sd, int64 reg, const char *val) {
 	struct script_reg_str *p = NULL;
 	const char *regname = script->get_str( script_getvarid(reg) );
-	unsigned int index = script_getvaridx(reg);
+	int index = script_getvaridx(reg);
 
 	nullpo_ret(sd);
 	nullpo_ret(val);

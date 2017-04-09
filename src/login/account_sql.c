@@ -686,7 +686,7 @@ void mmo_save_accreg2(AccountDB* self, int fd, int account_id, int char_id)
 		char key[SCRIPT_VARNAME_LENGTH+1], sval[254];
 
 		for (i = 0; i < count; i++) {
-			unsigned int index;
+			int index;
 			int len = RFIFOB(fd, cursor);
 			safestrncpy(key, RFIFOP(fd, cursor + 1), min((int)sizeof(key), len));
 			cursor += len + 1;
@@ -697,12 +697,12 @@ void mmo_save_accreg2(AccountDB* self, int fd, int account_id, int char_id)
 			switch (RFIFOB(fd, cursor++)) {
 				/* int */
 				case 0:
-					if( SQL_ERROR == SQL->Query(sql_handle, "REPLACE INTO `%s` (`account_id`,`key`,`index`,`value`) VALUES ('%d','%s','%u','%u')", db->global_acc_reg_num_db, account_id, key, index, RFIFOL(fd, cursor)) )
+					if( SQL_ERROR == SQL->Query(sql_handle, "REPLACE INTO `%s` (`account_id`,`key`,`index`,`value`) VALUES ('%d','%s','%d','%u')", db->global_acc_reg_num_db, account_id, key, index, RFIFOL(fd, cursor)) )
 						Sql_ShowDebug(sql_handle);
 					cursor += 4;
 					break;
 				case 1:
-					if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `account_id` = '%d' AND `key` = '%s' AND `index` = '%u' LIMIT 1", db->global_acc_reg_num_db, account_id, key, index) )
+					if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `account_id` = '%d' AND `key` = '%s' AND `index` = '%d' LIMIT 1", db->global_acc_reg_num_db, account_id, key, index) )
 						Sql_ShowDebug(sql_handle);
 					break;
 				/* str */
@@ -710,11 +710,11 @@ void mmo_save_accreg2(AccountDB* self, int fd, int account_id, int char_id)
 					len = RFIFOB(fd, cursor);
 					safestrncpy(sval, RFIFOP(fd, cursor + 1), min((int)sizeof(sval), len));
 					cursor += len + 1;
-					if( SQL_ERROR == SQL->Query(sql_handle, "REPLACE INTO `%s` (`account_id`,`key`,`index`,`value`) VALUES ('%d','%s','%u','%s')", db->global_acc_reg_str_db, account_id, key, index, sval) )
+					if( SQL_ERROR == SQL->Query(sql_handle, "REPLACE INTO `%s` (`account_id`,`key`,`index`,`value`) VALUES ('%d','%s','%d','%s')", db->global_acc_reg_str_db, account_id, key, index, sval) )
 						Sql_ShowDebug(sql_handle);
 					break;
 				case 3:
-					if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `account_id` = '%d' AND `key` = '%s' AND `index` = '%u' LIMIT 1", db->global_acc_reg_str_db, account_id, key, index) )
+					if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `account_id` = '%d' AND `key` = '%s' AND `index` = '%d' LIMIT 1", db->global_acc_reg_str_db, account_id, key, index) )
 						Sql_ShowDebug(sql_handle);
 					break;
 				default:
@@ -766,7 +766,7 @@ void mmo_send_accreg2(AccountDB* self, int fd, int account_id, int char_id)
 
 		SQL->GetData(sql_handle, 1, &data, NULL);
 
-		WFIFOL(fd, plen) = (unsigned int)atol(data);
+		WFIFOL(fd, plen) = atoi(data);
 		plen += 4;
 
 		SQL->GetData(sql_handle, 2, &data, NULL);
@@ -834,7 +834,7 @@ void mmo_send_accreg2(AccountDB* self, int fd, int account_id, int char_id)
 
 		SQL->GetData(sql_handle, 1, &data, NULL);
 
-		WFIFOL(fd, plen) = (unsigned int)atol(data);
+		WFIFOL(fd, plen) = atoi(data);
 		plen += 4;
 
 		SQL->GetData(sql_handle, 2, &data, NULL);

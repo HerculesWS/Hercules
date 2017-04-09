@@ -2734,7 +2734,7 @@ void char_global_accreg_to_login_send (void) {
 /**
  * Handles global account reg saving that starts chr->global_accreg_to_login_start and ends with global_accreg_to_send
  **/
-void char_global_accreg_to_login_add (const char *key, unsigned int index, intptr_t val, bool is_string) {
+void char_global_accreg_to_login_add (const char *key, int index, intptr_t val, bool is_string) {
 	int nlen = WFIFOW(chr->login_fd, 2);
 	size_t len = strlen(key)+1;
 

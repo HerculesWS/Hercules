@@ -575,7 +575,7 @@ void mapif_parse_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int acc
  * @param val either str or int, depending on type
  * @param type false when int, true otherwise
  **/
-void inter_savereg(int account_id, int char_id, const char *key, unsigned int index, intptr_t val, bool is_string)
+void inter_savereg(int account_id, int char_id, const char *key, int index, intptr_t val, bool is_string)
 {
 	char val_esq[1000];
 	nullpo_retv(key);
@@ -590,18 +590,18 @@ void inter_savereg(int account_id, int char_id, const char *key, unsigned int in
 		if( is_string ) {
 			if( val ) {
 				SQL->EscapeString(inter->sql_handle, val_esq, (char*)val);
-				if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`account_id`,`key`,`index`,`value`) VALUES ('%d','%s','%u','%s')", acc_reg_str_db, account_id, key, index, val_esq) )
+				if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`account_id`,`key`,`index`,`value`) VALUES ('%d','%s','%d','%s')", acc_reg_str_db, account_id, key, index, val_esq) )
 					Sql_ShowDebug(inter->sql_handle);
 			} else {
-				if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `account_id` = '%d' AND `key` = '%s' AND `index` = '%u' LIMIT 1", acc_reg_str_db, account_id, key, index) )
+				if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `account_id` = '%d' AND `key` = '%s' AND `index` = '%d' LIMIT 1", acc_reg_str_db, account_id, key, index) )
 					Sql_ShowDebug(inter->sql_handle);
 			}
 		} else {
 			if( val ) {
-				if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`account_id`,`key`,`index`,`value`) VALUES ('%d','%s','%u','%d')", acc_reg_num_db, account_id, key, index, (int)val) )
+				if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`account_id`,`key`,`index`,`value`) VALUES ('%d','%s','%d','%d')", acc_reg_num_db, account_id, key, index, (int)val) )
 					Sql_ShowDebug(inter->sql_handle);
 			} else {
-				if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `account_id` = '%d' AND `key` = '%s' AND `index` = '%u' LIMIT 1", acc_reg_num_db, account_id, key, index) )
+				if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `account_id` = '%d' AND `key` = '%s' AND `index` = '%d' LIMIT 1", acc_reg_num_db, account_id, key, index) )
 					Sql_ShowDebug(inter->sql_handle);
 			}
 		}
@@ -609,18 +609,18 @@ void inter_savereg(int account_id, int char_id, const char *key, unsigned int in
 		if( is_string ) {
 			if( val ) {
 				SQL->EscapeString(inter->sql_handle, val_esq, (char*)val);
-				if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`char_id`,`key`,`index`,`value`) VALUES ('%d','%s','%u','%s')", char_reg_str_db, char_id, key, index, val_esq) )
+				if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`char_id`,`key`,`index`,`value`) VALUES ('%d','%s','%d','%s')", char_reg_str_db, char_id, key, index, val_esq) )
 					Sql_ShowDebug(inter->sql_handle);
 			} else {
-				if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `char_id` = '%d' AND `key` = '%s' AND `index` = '%u' LIMIT 1", char_reg_str_db, char_id, key, index) )
+				if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `char_id` = '%d' AND `key` = '%s' AND `index` = '%d' LIMIT 1", char_reg_str_db, char_id, key, index) )
 					Sql_ShowDebug(inter->sql_handle);
 			}
 		} else {
 			if( val ) {
-				if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`char_id`,`key`,`index`,`value`) VALUES ('%d','%s','%u','%d')", char_reg_num_db, char_id, key, index, (int)val) )
+				if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`char_id`,`key`,`index`,`value`) VALUES ('%d','%s','%d','%d')", char_reg_num_db, char_id, key, index, (int)val) )
 					Sql_ShowDebug(inter->sql_handle);
 			} else {
-				if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `char_id` = '%d' AND `key` = '%s' AND `index` = '%u' LIMIT 1", char_reg_num_db, char_id, key, index) )
+				if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `char_id` = '%d' AND `key` = '%s' AND `index` = '%d' LIMIT 1", char_reg_num_db, char_id, key, index) )
 					Sql_ShowDebug(inter->sql_handle);
 			}
 		}
@@ -679,7 +679,7 @@ int inter_accreg_fromsql(int account_id,int char_id, int fd, int type)
 
 		SQL->GetData(inter->sql_handle, 1, &data, NULL);
 
-		WFIFOL(fd, plen) = (unsigned int)atol(data);
+		WFIFOL(fd, plen) = atoi(data);
 		plen += 4;
 
 		SQL->GetData(inter->sql_handle, 2, &data, NULL);
@@ -760,7 +760,7 @@ int inter_accreg_fromsql(int account_id,int char_id, int fd, int type)
 
 		SQL->GetData(inter->sql_handle, 1, &data, NULL);
 
-		WFIFOL(fd, plen) = (unsigned int)atol(data);
+		WFIFOL(fd, plen) = atoi(data);
 		plen += 4;
 
 		SQL->GetData(inter->sql_handle, 2, &data, NULL);
@@ -1265,7 +1265,7 @@ int mapif_parse_Registry(int fd)
 			chr->global_accreg_to_login_start(account_id,char_id);
 
 		for(i = 0; i < count; i++) {
-			unsigned int index;
+			int index;
 			int len = RFIFOB(fd, cursor);
 			safestrncpy(key, RFIFOP(fd, cursor + 1), min((int)sizeof(key), len));
 			cursor += len + 1;

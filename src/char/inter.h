@@ -42,7 +42,7 @@ struct inter_interface {
 	const char* (*job_name) (int class);
 	void (*vmsg_to_fd) (int fd, int u_fd, int aid, char* msg, va_list ap);
 	void (*msg_to_fd) (int fd, int u_fd, int aid, char *msg, ...) __attribute__((format(printf, 4, 5)));
-	void (*savereg) (int account_id, int char_id, const char *key, unsigned int index, intptr_t val, bool is_string);
+	void (*savereg) (int account_id, int char_id, const char *key, int index, intptr_t val, bool is_string);
 	int (*accreg_fromsql) (int account_id,int char_id, int fd, int type);
 	int (*vlog) (char* fmt, va_list ap);
 	int (*log) (char* fmt, ...);
