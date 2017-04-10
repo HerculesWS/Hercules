@@ -7332,6 +7332,7 @@ static const struct battle_data {
 	{ "bow_unequip_arrow",                  &battle_config.bow_unequip_arrow,               1,      0,      1,              },
 	{ "max_summoner_parameter",             &battle_config.max_summoner_parameter,          120,    10,     10000,          },
 	{ "mvp_exp_reward_message",             &battle_config.mvp_exp_reward_message,          0,      0,      1,              },
+	{ "monster_eye_range_bonus",            &battle_config.mob_eye_range_bonus,             0,      0,      10,             },
 };
 #ifndef STATS_OPT_OUT
 /**

@@ -550,6 +550,8 @@ struct Battle_Config {
 
 	int max_summoner_parameter; // Summoner Max Stats
 	int mvp_exp_reward_message;
+
+	int mob_eye_range_bonus; //Vulture's Eye and Snake's Eye range bonus
 };
 
 /* criteria for battle_config.idletime_critera */

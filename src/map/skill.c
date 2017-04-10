@@ -303,7 +303,7 @@ int skill_get_range2(struct block_list *bl, uint16 skill_id, uint16 skill_lv)
 			if (sd != NULL)
 				range += pc->checkskill(sd, AC_VULTURE);
 			else
-				range += 10; //Assume level 10?
+				range += battle->bc->mob_eye_range_bonus;
 			break;
 		// added to allow GS skills to be effected by the range of Snake Eyes [Reddozen]
 		case GS_RAPIDSHOWER:
@@ -314,7 +314,7 @@ int skill_get_range2(struct block_list *bl, uint16 skill_id, uint16 skill_lv)
 			if (sd != NULL)
 				range += pc->checkskill(sd, GS_SNAKEEYE);
 			else
-				range += 10; //Assume level 10?
+				range += battle->bc->mob_eye_range_bonus;
 			break;
 		case NJ_KIRIKAGE:
 			if (sd != NULL)
