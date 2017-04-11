@@ -23,6 +23,7 @@
 
 #include "config/core.h"
 #include "common/cbasetypes.h"
+#include "common/db.h" // VECTORS
 
 // server->client protocol version
 //        0 - pre-?
@@ -327,27 +328,6 @@ enum attribute_flag {
 	ATTR_BROKEN = 1,
 };
 
-struct item {
-	int id;
-	short nameid;
-	short amount;
-	unsigned int equip; // Location(s) where item is equipped (using enum equip_pos for bitmasking).
-	char identify;
-	char refine;
-	char attribute;
-	short card[MAX_SLOTS];
-	unsigned int expire_time;
-	char favorite;
-	unsigned char bound;
-	uint64 unique_id;
-	
-	struct {
-		int16 index;
-		int16 value;
-		uint8 param;
-	} option[MAX_ITEM_OPTIONS];
-};
-
 //Equip position constants
 enum equip_pos {
 	EQP_NONE               = 0x000000,
@@ -478,10 +458,28 @@ struct status_change_data {
 	int tick;                   ///< Remaining duration.
 };
 
-struct storage_data {
-	int storage_amount;
-	struct item items[MAX_STORAGE];
+struct item {
+	int id;
+	short nameid;
+	short amount;
+	unsigned int equip; // Location(s) where item is equipped (using enum equip_pos for bitmasking).
+	char identify;
+	char refine;
+	char attribute;
+	short card[MAX_SLOTS];
+	unsigned int expire_time;
+	char favorite;
+	unsigned char bound;
+	uint64 unique_id;
+
+	struct {
+		int16 index;
+		int16 value;
+		uint8 param;
+	} option[MAX_ITEM_OPTIONS];
 };
+
+VECTOR_STRUCT_DECL(storage_data, struct item);
 
 struct guild_storage {
 	int dirty;
@@ -616,7 +614,6 @@ struct mmo_charstatus {
 
 	struct point last_point,save_point,memo_point[MAX_MEMOPOINTS];
 	struct item inventory[MAX_INVENTORY],cart[MAX_CART];
-	struct storage_data storage;
 	struct s_skill skill[MAX_SKILL];
 
 	struct s_friend friends[MAX_FRIENDS]; //New friend system [Skotlex]

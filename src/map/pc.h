@@ -243,7 +243,9 @@ struct map_session_data {
 	unsigned int extra_temp_permissions; /* permissions from @addperm */
 
 	struct mmo_charstatus status;
-	struct item_data* inventory_data[MAX_INVENTORY]; // direct pointers to itemdb entries (faster than doing item_id lookups)
+	struct item_data *inventory_data[MAX_INVENTORY]; // direct pointers to itemdb entries (faster than doing item_id lookups)
+	struct storage_data storage; ///< Account Storage
+	bool storage_received;
 	short equip_index[EQI_MAX];
 	unsigned int weight,max_weight;
 	int cart_weight,cart_num,cart_weight_max;

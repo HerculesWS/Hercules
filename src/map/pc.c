@@ -1250,6 +1250,7 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 	sd->bg_queue.type = 0;
 
 	VECTOR_INIT(sd->script_queues);
+	VECTOR_INIT(sd->storage);
 
 	sd->state.dialog = 0;
 
@@ -1482,6 +1483,9 @@ int pc_reg_received(struct map_session_data *sd)
 	status_calc_pc(sd,SCO_FIRST|SCO_FORCE);
 	chrif->scdata_request(sd->status.account_id, sd->status.char_id);
 
+	// Storage Request
+	intif->request_account_storage(sd);
+	
 	intif->Mail_requestinbox(sd->status.char_id, 0); // MAIL SYSTEM - Request Mail Inbox
 	intif->request_questlog(sd);
 
@@ -10163,21 +10167,22 @@ int pc_checkitem(struct map_session_data *sd)
 				sd->status.cart[i].unique_id = itemdb->unique_id(sd);
 		}
 
-		for( i = 0; i < MAX_STORAGE; i++ ) {
-			id = sd->status.storage.items[i].nameid;
+		for (i = 0; i < MAX_STORAGE; i++) {
+			struct item *it = &VECTOR_INDEX(sd->storage, i);
+			id = it->nameid;
 
 			if (!id)
 				continue;
 
 			if( id && !itemdb_available(id) ) {
-				ShowWarning("Removed invalid/disabled item id %d from storage (amount=%d, char_id=%d).\n", id, sd->status.storage.items[i].amount, sd->status.char_id);
-				storage->delitem(sd, i, sd->status.storage.items[i].amount);
+				ShowWarning("Removed invalid/disabled item id %d from storage (amount=%d, char_id=%d).\n", id, it->amount, sd->status.char_id);
+				storage->delitem(sd, i, it->amount);
 				storage->close(sd);
 				continue;
 			}
 
-			if ( !sd->status.storage.items[i].unique_id && !itemdb->isstackable(id) )
-				sd->status.storage.items[i].unique_id = itemdb->unique_id(sd);
+			if (it->unique_id == 0 && itemdb->isstackable(id) == 0)
+				it->unique_id = itemdb->unique_id(sd);
 		}
 
 		if (sd->guild) {

@@ -41,24 +41,25 @@ struct inter_storage_interface inter_storage_s;
 struct inter_storage_interface *inter_storage;
 
 /// Save storage data to sql
-int inter_storage_tosql(int account_id, struct storage_data* p)
+int inter_storage_tosql(int account_id, const struct item *p)
 {
 	nullpo_ret(p);
-	chr->memitemdata_to_sql(p->items, MAX_STORAGE, account_id, TABLE_STORAGE);
+	chr->memitemdata_to_sql(p, MAX_STORAGE, account_id, TABLE_STORAGE);
 	return 0;
 }
 
 /// Load storage data to mem
-int inter_storage_fromsql(int account_id, struct storage_data* p)
+int inter_storage_fromsql(int account_id, struct storage_data *p)
 {
 	StringBuf buf;
 	char* data;
 	int i;
 	int j;
+	int num_rows = 0;
 
 	nullpo_ret(p);
-	memset(p, 0, sizeof(struct storage_data)); //clean up memory
-	p->storage_amount = 0;
+
+	VECTOR_INIT(*p);
 
 	// storage {`account_id`/`id`/`nameid`/`amount`/`equip`/`identify`/`refine`/`attribute`/`card0`/`card1`/`card2`/`card3`}
 	StrBuf->Init(&buf);
@@ -74,36 +75,41 @@ int inter_storage_fromsql(int account_id, struct storage_data* p)
 
 	StrBuf->Destroy(&buf);
 
-	for (i = 0; i < MAX_STORAGE && SQL_SUCCESS == SQL->NextRow(inter->sql_handle); ++i) {
-		struct item *item = &p->items[i];
-		SQL->GetData(inter->sql_handle, 0, &data, NULL); item->id = atoi(data);
-		SQL->GetData(inter->sql_handle, 1, &data, NULL); item->nameid = atoi(data);
-		SQL->GetData(inter->sql_handle, 2, &data, NULL); item->amount = atoi(data);
-		SQL->GetData(inter->sql_handle, 3, &data, NULL); item->equip = atoi(data);
-		SQL->GetData(inter->sql_handle, 4, &data, NULL); item->identify = atoi(data);
-		SQL->GetData(inter->sql_handle, 5, &data, NULL); item->refine = atoi(data);
-		SQL->GetData(inter->sql_handle, 6, &data, NULL); item->attribute = atoi(data);
-		SQL->GetData(inter->sql_handle, 7, &data, NULL); item->expire_time = (unsigned int)atoi(data);
-		SQL->GetData(inter->sql_handle, 8, &data, NULL); item->bound = atoi(data);
-		SQL->GetData(inter->sql_handle, 9, &data, NULL); item->unique_id = strtoull(data, NULL, 10);
-		/* Card Slots */
-		for (j = 0; j < MAX_SLOTS; ++j) {
-			SQL->GetData(inter->sql_handle, 10 + j, &data, NULL);
-			item->card[j] = atoi(data);
-		}
-		/* Item Options */
-		for (j = 0; j < MAX_ITEM_OPTIONS; ++j) {
-			SQL->GetData(inter->sql_handle, 10 + MAX_SLOTS + j * 2, &data, NULL);
-			item->option[j].index = atoi(data);
-			SQL->GetData(inter->sql_handle, 11 + MAX_SLOTS + j * 2, &data, NULL);
-			item->option[j].value = atoi(data);
+	if ((num_rows = (int)SQL->NumRows(inter->sql_handle)) != 0) {
+		VECTOR_ENSURE(*p, num_rows, 1);
+
+		for (i = 0; i < MAX_STORAGE && SQL_SUCCESS == SQL->NextRow(inter->sql_handle); ++i) {
+			struct item item = { 0 };
+			SQL->GetData(inter->sql_handle, 0, &data, NULL); item.id = atoi(data);
+			SQL->GetData(inter->sql_handle, 1, &data, NULL); item.nameid = atoi(data);
+			SQL->GetData(inter->sql_handle, 2, &data, NULL); item.amount = atoi(data);
+			SQL->GetData(inter->sql_handle, 3, &data, NULL); item.equip = atoi(data);
+			SQL->GetData(inter->sql_handle, 4, &data, NULL); item.identify = atoi(data);
+			SQL->GetData(inter->sql_handle, 5, &data, NULL); item.refine = atoi(data);
+			SQL->GetData(inter->sql_handle, 6, &data, NULL); item.attribute = atoi(data);
+			SQL->GetData(inter->sql_handle, 7, &data, NULL); item.expire_time = (unsigned int)atoi(data);
+			SQL->GetData(inter->sql_handle, 8, &data, NULL); item.bound = atoi(data);
+			SQL->GetData(inter->sql_handle, 9, &data, NULL); item.unique_id = strtoull(data, NULL, 10);
+			/* Card Slots */
+			for (j = 0; j < MAX_SLOTS; ++j) {
+				SQL->GetData(inter->sql_handle, 10 + j, &data, NULL);
+				item.card[j] = atoi(data);
+			}
+			/* Item Options */
+			for (j = 0; j < MAX_ITEM_OPTIONS; ++j) {
+				SQL->GetData(inter->sql_handle, 10 + MAX_SLOTS + j * 2, &data, NULL);
+				item.option[j].index = atoi(data);
+				SQL->GetData(inter->sql_handle, 11 + MAX_SLOTS + j * 2, &data, NULL);
+				item.option[j].value = atoi(data);
+			}
+			VECTOR_PUSH(*p, item);
 		}
 	}
-	p->storage_amount = i;
+
 	SQL->FreeResult(inter->sql_handle);
 
-	ShowInfo("storage load complete from DB - id: %d (total: %d)\n", account_id, p->storage_amount);
-	return 1;
+	ShowInfo("storage load complete from DB - id: %d (total: %d)\n", account_id, VECTOR_LENGTH(*p));
+	return num_rows;
 }
 
 /// Save guild_storage data to sql
@@ -240,13 +246,94 @@ int mapif_save_guild_storage_ack(int fd, int account_id, int guild_id, int fail)
 	return 0;
 }
 
+//=========================================================
+// Account Storage
 //---------------------------------------------------------
-// packet from map server
+/**
+ * Parses account storage load request from map server.
+ * @packet 0x3010 [in] <account_id>.L
+ * @param  fd     [in] file/socket descriptor
+ * @return 1 on success, 0 on failure.
+ */
+int mapif_parse_AccountStorageLoad(int fd)
+{
+	int account_id = RFIFOL(fd, 2);
 
+	Assert_ret(fd > 0);
+	Assert_ret(account_id > 0);
+
+	mapif->account_storage_load(fd, account_id);
+
+	return 1;
+}
+
+/**
+ * Loads the account storage and send to the map server.
+ * @packet 0x3805     [out] <account_id>.L <struct item[]>.P
+ * @param  fd         [in]  file/socket descriptor.
+ * @param  account_id [in]  account id of the session.
+ * @return 1 on success, 0 on failure.
+ */
+int mapif_account_storage_load(int fd, int account_id)
+{
+	struct storage_data p = { 0 };
+	int count = 0, i = 0, len = 0;
+
+	Assert_ret(account_id > 0);
+
+	if ((count = inter_storage->fromsql(account_id, &p)) == 0)
+		return 0;
+
+	len = 8 + count * sizeof(struct item);
+
+	WFIFOHEAD(fd, len);
+	WFIFOW(fd, 0) = 0x3805;
+	WFIFOW(fd, 2) = (uint16) len;
+	WFIFOL(fd, 4) = account_id;
+	for (i = 0; i < count; i++)
+		memcpy(WFIFOP(fd, 8 + i * sizeof(struct item)), &VECTOR_INDEX(p, i), sizeof(struct item));
+	WFIFOSET(fd, len);
+
+	VECTOR_CLEAR(p);
+
+	return 1;
+}
+
+/**
+ * Parses an account storage save request from the map server.
+ * @packet 0x3011 [in] <packet_len>.W <account_id>.L <struct item[]>.P
+ * @param  fd     [in] file/socket descriptor.
+ * @return 1 on success, 0 on failure.
+ */
+int mapif_parse_AccountStorageSave(int fd)
+{
+	int payload_size = RFIFOW(fd, 2) - 8, account_id = RFIFOL(fd, 4);
+	int i = 0;
+	struct item p_buf[MAX_STORAGE];
+
+	Assert_ret(fd > 0);
+	Assert_ret(account_id > 0);
+
+	memset(&p_buf, 0, sizeof(p_buf));
+
+	for (i = 0; i < payload_size/sizeof(struct item) && i < MAX_STORAGE; i++)
+		memcpy(&p_buf[i], RFIFOP(fd, 8 + i * sizeof(struct item)), sizeof(struct item));
+
+	if (payload_size > 0)
+		inter_storage->tosql(account_id, p_buf);
+
+	return 1;
+}
+
+//=========================================================
+// Guild Storage
+//---------------------------------------------------------
 int mapif_parse_LoadGuildStorage(int fd)
 {
 	RFIFOHEAD(fd);
+
 	mapif->load_guild_storage(fd,RFIFOL(fd,2),RFIFOL(fd,6),1);
+
 	return 0;
 }
 
@@ -274,6 +361,7 @@ int mapif_parse_SaveGuildStorage(int fd)
 		SQL->FreeResult(inter->sql_handle);
 	}
 	mapif->save_guild_storage_ack(fd, RFIFOL(fd,4), guild_id, 1);
+
 	return 0;
 }
 
@@ -487,6 +575,8 @@ int inter_storage_parse_frommap(int fd)
 {
 	RFIFOHEAD(fd);
 	switch(RFIFOW(fd,0)){
+		case 0x3010: mapif->pAccountStorageLoad(fd); break;
+		case 0x3011: mapif->pAccountStorageSave(fd); break;
 		case 0x3018: mapif->parse_LoadGuildStorage(fd); break;
 		case 0x3019: mapif->parse_SaveGuildStorage(fd); break;
 #ifdef GP_BOUND_ITEMS

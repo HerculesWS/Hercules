@@ -8429,9 +8429,11 @@ void clif_refresh_storagewindow(struct map_session_data *sd)
 	nullpo_retv(sd);
 	// Notify the client that the storage is open
 	if (sd->state.storage_flag == STORAGE_FLAG_NORMAL) {
-		storage->sortitem(sd->status.storage.items, ARRAYLENGTH(sd->status.storage.items));
-		clif->storagelist(sd, sd->status.storage.items, ARRAYLENGTH(sd->status.storage.items));
-		clif->updatestorageamount(sd, sd->status.storage.storage_amount, MAX_STORAGE);
+		if (VECTOR_LENGTH(sd->storage)) {
+			storage->sortitem(VECTOR_DATA(sd->storage), VECTOR_LENGTH(sd->storage));
+			clif->storagelist(sd, VECTOR_DATA(sd->storage), VECTOR_LENGTH(sd->storage));
+		}
+		clif->updatestorageamount(sd, VECTOR_LENGTH(sd->storage), MAX_STORAGE);
 	}
 	// Notify the client that the gstorage is open otherwise it will
 	// remain locked forever and nobody will be able to access it

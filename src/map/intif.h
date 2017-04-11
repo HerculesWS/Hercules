@@ -66,6 +66,8 @@ struct intif_interface {
 	int (*wis_message_to_gm) (char *Wisp_name, int permission, char *mes);
 	int (*saveregistry) (struct map_session_data *sd);
 	int (*request_registry) (struct map_session_data *sd, int flag);
+	void (*request_account_storage) (const struct map_session_data *sd);
+	void (*send_account_storage) (const struct map_session_data *sd);
 	int (*request_guild_storage) (int account_id, int guild_id);
 	int (*send_guild_storage) (int account_id, struct guild_storage *gstor);
 	int (*create_party) (struct party_member *member, const char *name, int item, int item2);
@@ -141,6 +143,7 @@ struct intif_interface {
 	void (*pRegisters) (int fd);
 	void (*pChangeNameOk) (int fd);
 	void (*pMessageToFD) (int fd);
+	void (*pAccountStorage) (int fd);
 	void (*pLoadGuildStorage) (int fd);
 	void (*pSaveGuildStorage) (int fd);
 	void (*pPartyCreated) (int fd);

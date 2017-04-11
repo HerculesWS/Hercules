@@ -324,6 +324,9 @@ bool chrif_save(struct map_session_data *sd, int flag) {
 	if( sd->save_quest )
 		intif->quest_save(sd);
 
+	if (VECTOR_LENGTH(sd->storage))
+		intif->send_account_storage(sd);
+
 	return true;
 }
 
