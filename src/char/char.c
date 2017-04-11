@@ -3664,7 +3664,7 @@ void char_map_auth_ok(int fd, int account_id, struct char_auth_node* node, struc
 	nullpo_retv(cd);
 	WFIFOHEAD(fd,25 + sizeof(struct mmo_charstatus));
 	WFIFOW(fd,0) = 0x2afd;
-	WFIFOW(fd,2) = 25 + sizeof(struct mmo_charstatus);
+	WFIFOW(fd,2) = 25 + (uint16)sizeof(struct mmo_charstatus);
 	WFIFOL(fd,4) = account_id;
 	if (node)
 	{
