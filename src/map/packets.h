@@ -2915,10 +2915,12 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0a0c,61); // ZC_ITEM_PICKUP_ACK_V6
 	packet(0x0a0d,4); // ZC_INVENTORY_ITEMLIST_EQUIP_V6
 // changed packet sizes
+#ifdef PACKETVER_RE
 	packet(0x01c4,22); // ZC_ADD_ITEM_TO_STORE2
 	packet(0x01c5,22); // ZC_ADD_ITEM_TO_CART2
 	packet(0x080f,20); // ZC_ADD_EXCHANGE_ITEM2
 	packet(0x0990,31); // ZC_ITEM_PICKUP_ACK_V5
+#endif  // PACKETVER_RE
 	packet(0x09f3,10,clif->pDull/*,XXX*/); // CZ_REQ_ITEM_FROM_RODEX
 	packet(0x09f4,3); // ZC_ACK_ITEM_FROM_RODEX
 #endif
