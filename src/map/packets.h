@@ -3269,12 +3269,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0a38,3);
 #endif
 
-#if PACKETVER >= 20150226
-// shuffle packets not added
-	packet(0x0A0F,-1);
-	packet(0x0A10,-1);
-#endif
-
 // 2015-03-11aRagexeRE
 #if PACKETVER >= 20150311
 // new packets
