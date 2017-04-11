@@ -2146,6 +2146,8 @@ packet(0x96e,-1,clif->ackmergeitems);
 // shuffle packets not added
 	packet(0x097d,288); // ZC_ACK_RANKING
 	packet(0x097e,12); // ZC_UPDATE_RANKING_POINT
+	packet(0x097f,-1);  // ZC_SELECTCART
+	packet(0x0980,7,clif->pSelectCart); // CZ_SELECTCART
 #endif
 
 #ifndef PACKETVER_RE
@@ -3342,15 +3344,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 // new packets
 	packet(0x0a3f,9);
 #endif
-
-// ---
-// this packet was added in 2012-05-02aRagexeRE / 2012-05-03aRagexe probably if should be allowed in this versions?
-#if PACKETVER >= 20150805 // RagexeRE
-// shuffle packets not added
-	packet(0x097f,-1);  // ZC_SELECTCART
-	packet(0x0980,7,clif->pSelectCart); // CZ_SELECTCART
-#endif
-// ---
 
 // 2015-08-12aRagexeRE
 #if PACKETVER >= 20150812
