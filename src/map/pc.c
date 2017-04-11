@@ -9986,37 +9986,37 @@ void pc_unequipitem_pos(struct map_session_data *sd, int n, int pos)
  *------------------------------------------*/
 int pc_unequipitem(struct map_session_data *sd,int n,int flag)
 {
-	int i,iflag;
+	int i, iflag;
 	bool status_calc = false;
 	int pos;
+
 	nullpo_ret(sd);
 
-	if( n < 0 || n >= MAX_INVENTORY ) {
-		clif->unequipitemack(sd,0,0,UIA_FAIL);
+	if (n < 0 || n >= MAX_INVENTORY) {
+		clif->unequipitemack(sd, 0, 0, UIA_FAIL);
 		return 0;
 	}
 
 	// if player is berserk then cannot unequip
-	if (!(flag&PCUNEQUIPITEM_FORCE) && sd->sc.count && (sd->sc.data[SC_BERSERK] || sd->sc.data[SC_NO_SWITCH_EQUIP]) )
-	{
-		clif->unequipitemack(sd,n,0,UIA_FAIL);
+	if (!(flag&PCUNEQUIPITEM_FORCE) && sd->sc.count && (sd->sc.data[SC_BERSERK] || sd->sc.data[SC_NO_SWITCH_EQUIP])) {
+		clif->unequipitemack(sd, n, 0, UIA_FAIL);
 		return 0;
 	}
 
-	if( !(flag&PCUNEQUIPITEM_FORCE) && sd->sc.count && sd->sc.data[SC_KYOUGAKU] )
-	{
-		clif->unequipitemack(sd,n,0,UIA_FAIL);
+	if (!(flag&PCUNEQUIPITEM_FORCE) && sd->sc.count && sd->sc.data[SC_KYOUGAKU]) {
+		clif->unequipitemack(sd, n, 0, UIA_FAIL);
 		return 0;
 	}
 
-	if(battle_config.battle_log)
+	if (battle_config.battle_log)
 		ShowInfo("unequip %d %x:%x\n", n, (unsigned int)(pc->equippoint(sd, n)), sd->status.inventory[n].equip);
 
-	if(!sd->status.inventory[n].equip){ //Nothing to unequip
-		clif->unequipitemack(sd,n,0,UIA_FAIL);
+	if (!sd->status.inventory[n].equip) { //Nothing to unequip
+		clif->unequipitemack(sd, n, 0, UIA_FAIL);
 		return 0;
 	}
-	for(i=0;i<EQI_MAX;i++) {
+
+	for (i=0;i<EQI_MAX;i++) {
 		if(sd->status.inventory[n].equip & pc->equip_pos[i])
 			sd->equip_index[i] = -1;
 	}
@@ -10024,13 +10024,13 @@ int pc_unequipitem(struct map_session_data *sd,int n,int flag)
 	pos = sd->status.inventory[n].equip;
 	pc->unequipitem_pos(sd, n, pos);
 
-	clif->unequipitemack(sd,n,pos,UIA_SUCCESS);
+	clif->unequipitemack(sd, n, pos, UIA_SUCCESS);
 
-	if((pos & EQP_ARMS) &&
+	if ((pos & EQP_ARMS) &&
 		sd->weapontype1 == 0 && sd->weapontype2 == 0 && (!sd->sc.data[SC_TK_SEVENWIND] || sd->sc.data[SC_ASPERSIO])) //Check for seven wind (but not level seven!)
-		skill->enchant_elemental_end(&sd->bl,-1);
+		skill->enchant_elemental_end(&sd->bl, -1);
 
-	if(pos & EQP_ARMOR) {
+	if (pos & EQP_ARMOR) {
 		// On Armor Change...
 		status_change_end(&sd->bl, SC_BENEDICTIO, INVALID_TIMER);
 		status_change_end(&sd->bl, SC_ARMOR_RESIST, INVALID_TIMER);
@@ -10043,19 +10043,19 @@ int pc_unequipitem(struct map_session_data *sd,int n,int flag)
 	iflag = sd->npc_item_flag;
 
 	/* check for combos (MUST be before status_calc_pc) */
-	if ( sd->inventory_data[n] != NULL ) {
-		if( sd->inventory_data[n]->combos_count ) {
-			if( pc->removecombo(sd,sd->inventory_data[n]) )
+	if (sd->inventory_data[n] != NULL) {
+		if (sd->inventory_data[n]->combos_count) {
+			if (pc->removecombo(sd, sd->inventory_data[n]))
 				status_calc = true;
 		}
-		if(itemdb_isspecial(sd->status.inventory[n].card[0]) == false) {
-			for( i = 0; i < sd->inventory_data[n]->slot; i++ ) {
+		if (itemdb_isspecial(sd->status.inventory[n].card[0]) == false) {
+			for (i = 0; i < sd->inventory_data[n]->slot; i++) {
 				struct item_data *data;
-				if (!sd->status.inventory[n].card[i])
+				if (sd->status.inventory[n].card[i] == 0)
 					continue;
-				if ( ( data = itemdb->exists(sd->status.inventory[n].card[i]) ) != NULL ) {
-					if( data->combos_count ) {
-						if( pc->removecombo(sd,data) )
+				if ((data = itemdb->exists(sd->status.inventory[n].card[i])) != NULL) {
+					if (data->combos_count) {
+						if (pc->removecombo(sd, data))
 							status_calc = true;
 					}
 				}
@@ -10075,49 +10075,48 @@ int pc_unequipitem(struct map_session_data *sd,int n,int flag)
 		}
 	}
 
-	if(flag&PCUNEQUIPITEM_RECALC || status_calc) {
+	if (flag&PCUNEQUIPITEM_RECALC || status_calc) {
 		pc->checkallowskill(sd);
-		status_calc_pc(sd,SCO_NONE);
+		status_calc_pc(sd, SCO_NONE);
 	}
 
-	if(sd->sc.data[SC_CRUCIS] && !battle->check_undead(sd->battle_status.race,sd->battle_status.def_ele))
+	if (sd->sc.data[SC_CRUCIS] && !battle->check_undead(sd->battle_status.race, sd->battle_status.def_ele))
 		status_change_end(&sd->bl, SC_CRUCIS, INVALID_TIMER);
 
 	//OnUnEquip script [Skotlex]
 	if (sd->inventory_data[n]) {
 		if (sd->inventory_data[n]->unequip_script) {
-			if ( battle_config.unequip_restricted_equipment & 1 ) {
+			if (battle_config.unequip_restricted_equipment & 1) {
 				ARR_FIND(0, map->list[sd->bl.m].zone->disabled_items_count, i,  map->list[sd->bl.m].zone->disabled_items[i] == sd->status.inventory[n].nameid);
-				if ( i == map->list[sd->bl.m].zone->disabled_items_count )
+				if (i == map->list[sd->bl.m].zone->disabled_items_count)
 					script->run_item_unequip_script(sd, sd->inventory_data[n], npc->fake_nd->bl.id);
 			}
 			else
 				script->run_item_unequip_script(sd, sd->inventory_data[n], npc->fake_nd->bl.id);
 		}
-		if(itemdb_isspecial(sd->status.inventory[n].card[0]))
-			; //No cards
-		else {
-			for( i = 0; i < sd->inventory_data[n]->slot; i++ ) {
+		if (itemdb_isspecial(sd->status.inventory[n].card[0]) == false){
+			for (i = 0; i < sd->inventory_data[n]->slot; i++) {
 				struct item_data *data;
 				if (!sd->status.inventory[n].card[i])
 					continue;
 
-				if ( ( data = itemdb->exists(sd->status.inventory[n].card[i]) ) != NULL ) {
-					if ( data->unequip_script ) {
-						if ( battle_config.unequip_restricted_equipment & 2 ) {
+				if ((data = itemdb->exists(sd->status.inventory[n].card[i])) != NULL) {
+					if (data->unequip_script) {
+						if (battle_config.unequip_restricted_equipment & 2) {
 							int j;
 							ARR_FIND(0, map->list[sd->bl.m].zone->disabled_items_count, j,  map->list[sd->bl.m].zone->disabled_items[j] == sd->status.inventory[n].card[i]);
-							if ( j == map->list[sd->bl.m].zone->disabled_items_count )
+							if (j == map->list[sd->bl.m].zone->disabled_items_count)
 								script->run_item_unequip_script(sd, data, npc->fake_nd->bl.id);
-						}
-						else
+						} else {
 							script->run_item_unequip_script(sd, data, npc->fake_nd->bl.id);
+						}
 					}
 				}
 
 			}
 		}
 	}
+
 	sd->npc_item_flag = iflag;
 
 	return 1;
