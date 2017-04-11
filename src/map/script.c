@@ -13979,8 +13979,8 @@ BUILDIN(getequipoption)
 BUILDIN(setequipoption)
 {
 	int equip_index = script_getnum(st, 2);
-	int slot = script_getnum(st, 4);
-	int opt_index = script_getnum(st, 3);
+	int slot = script_getnum(st, 3);
+	int opt_index = script_getnum(st, 4);
 	int value = script_getnum(st, 5);
 	int i = -1;
 	
