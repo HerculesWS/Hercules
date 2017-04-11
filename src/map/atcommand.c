@@ -5160,17 +5160,17 @@ ACMD(storeall)
 
 ACMD(clearstorage)
 {
-	int i, j;
+	int i;
 
 	if (sd->state.storage_flag == STORAGE_FLAG_NORMAL) {
 		clif->message(fd, msg_fd(fd,250));
 		return false;
 	}
 
-	j = sd->status.storage.storage_amount;
-	for (i = 0; i < j; ++i) {
-		storage->delitem(sd, i, sd->status.storage.items[i].amount);
+	for (i = 0; i < VECTOR_LENGTH(sd->storage); ++i) {
+		storage->delitem(sd, i, VECTOR_INDEX(sd->storage, i).amount);
 	}
+
 	storage->close(sd);
 
 	clif->message(fd, msg_fd(fd,1394)); // Your storage was cleaned.
@@ -8027,8 +8027,8 @@ ACMD(itemlist)
 
 	if( strcmpi(info->command, "storagelist") == 0 ) {
 		location = "storage";
-		items = sd->status.storage.items;
-		size = MAX_STORAGE;
+		items = VECTOR_DATA(sd->storage);
+		size = VECTOR_LENGTH(sd->storage);
 	} else if( strcmpi(info->command, "cartlist") == 0 ) {
 		location = "cart";
 		items = sd->status.cart;
@@ -8049,7 +8049,7 @@ ACMD(itemlist)
 		const struct item* it = &items[i];
 		struct item_data* itd;
 
-		if( it->nameid == 0 || (itd = itemdb->exists(it->nameid)) == NULL )
+		if (it->nameid == 0 || (itd = itemdb->exists(it->nameid)) == NULL)
 			continue;
 
 		counter += it->amount;

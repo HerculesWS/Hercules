@@ -442,14 +442,6 @@ int char_mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 			errors++;
 	}
 
-	//map storage data
-	if( memcmp(p->storage.items, cp->storage.items, sizeof(p->storage.items)) ) {
-		if (!chr->memitemdata_to_sql(p->storage.items, MAX_STORAGE, p->account_id, TABLE_STORAGE))
-			strcat(save_status, " storage");
-		else
-			errors++;
-	}
-
 	if (
 		(p->base_exp != cp->base_exp) || (p->base_level != cp->base_level) ||
 		(p->job_level != cp->job_level) || (p->job_exp != cp->job_exp) ||
@@ -1283,10 +1275,6 @@ int char_mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_every
 		memcpy(&p->cart[i], &tmp_item, sizeof(tmp_item));
 	
 	strcat(t_msg, " cart");
-
-	//read storage
-	inter_storage->fromsql(p->account_id, &p->storage);
-	strcat(t_msg, " storage");
 
 	//read skill
 	//`skill` (`char_id`, `id`, `lv`)
