@@ -9987,7 +9987,7 @@ void pc_unequipitem_pos(struct map_session_data *sd, int n, int pos)
 int pc_unequipitem(struct map_session_data *sd,int n,int flag)
 {
 	int i,iflag;
-	bool status_cacl = false;
+	bool status_calc = false;
 	int pos;
 	nullpo_ret(sd);
 
@@ -10043,13 +10043,12 @@ int pc_unequipitem(struct map_session_data *sd,int n,int flag)
 	iflag = sd->npc_item_flag;
 
 	/* check for combos (MUST be before status_calc_pc) */
-	if ( sd->inventory_data[n] ) {
+	if ( sd->inventory_data[n] != NULL ) {
 		if( sd->inventory_data[n]->combos_count ) {
 			if( pc->removecombo(sd,sd->inventory_data[n]) )
-				status_cacl = true;
-		} if(itemdb_isspecial(sd->status.inventory[n].card[0]))
-			; //No cards
-		else {
+				status_calc = true;
+		}
+		if(itemdb_isspecial(sd->status.inventory[n].card[0]) == false) {
 			for( i = 0; i < sd->inventory_data[n]->slot; i++ ) {
 				struct item_data *data;
 				if (!sd->status.inventory[n].card[i])
@@ -10057,14 +10056,26 @@ int pc_unequipitem(struct map_session_data *sd,int n,int flag)
 				if ( ( data = itemdb->exists(sd->status.inventory[n].card[i]) ) != NULL ) {
 					if( data->combos_count ) {
 						if( pc->removecombo(sd,data) )
-							status_cacl = true;
+							status_calc = true;
 					}
 				}
 			}
 		}
+		/* Item Options checking */
+		for (i = 0; i < MAX_ITEM_OPTIONS; i++) {
+			struct item_option *ito = NULL;
+			uint16 item_option = sd->status.inventory[n].option[i].index;
+
+			if (item_option == 0)
+				continue;
+			if ((ito = itemdb->option_exists(sd->status.inventory[n].option[i].index)) == NULL)
+				continue;
+
+			status_calc = true;
+		}
 	}
 
-	if(flag&PCUNEQUIPITEM_RECALC || status_cacl) {
+	if(flag&PCUNEQUIPITEM_RECALC || status_calc) {
 		pc->checkallowskill(sd);
 		status_calc_pc(sd,SCO_NONE);
 	}
