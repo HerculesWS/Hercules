@@ -18176,7 +18176,6 @@ BUILDIN(getvariableofpc)
 
 	switch (*name)
 	{
-	case '#':
 	case '$':
 	case '.':
 	case '\'':
