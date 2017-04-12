@@ -70,6 +70,7 @@ struct old_mapcache_map_info {
 #define NO_WATER 1000000
 
 VECTOR_DECL(char *) maplist;
+bool needs_grfio;
 
 
 /**
@@ -133,7 +134,7 @@ bool write_mapcache(const uint8 *buf, int32 buf_len, bool is_compressed, const c
 
 
 	snprintf(file_path, sizeof(file_path), "%s%s%s.%s", "maps/", DBPATH, mapname, "mcache");
-	new_mapcache_fp = fopen(file_path, "w+b");
+	new_mapcache_fp = fopen(file_path, "wb");
 
 	if (new_mapcache_fp == NULL) {
 		ShowWarning("Could not open file '%s', map cache creating failed.\n", file_path);
@@ -332,8 +333,6 @@ bool mapcache_rebuild(void)
 		}
 	}
 
-	grfio->init("conf/grf-files.txt");
-
 	for (i = 0; i < VECTOR_LENGTH(maplist); ++i) {
 		ShowStatus("Creating mapcache: %s"CL_CLL"\r", VECTOR_INDEX(maplist, i));
 		mapcache_cache_map(VECTOR_INDEX(maplist, i));
@@ -350,8 +349,18 @@ CMDLINEARG(convertmapcache)
 
 CMDLINEARG(rebuild)
 {
+	needs_grfio = true;
+	grfio->init("conf/grf-files.txt");
 	map->minimal = true;
 	return mapcache_rebuild();
+}
+
+CMDLINEARG(cachemap)
+{
+	needs_grfio = true;
+	grfio->init("conf/grf-files.txt");
+	map->minimal = true;
+	return mapcache_cache_map(params);
 }
 
 HPExport void server_preinit(void)
@@ -360,11 +369,16 @@ HPExport void server_preinit(void)
 			"Converts an old db/"DBPATH"map_cache.dat file to the new format.");
 	addArg("--rebuild-mapcache", false, rebuild,
 			"Rebuilds the entire mapcache folder (maps/"DBPATH"), using db/map_index.txt as index.");
+	addArg("--map", true, cachemap,
+			"Rebuilds an individual map's cache into maps/"DBPATH" (usage: --map <map_name_without_extension>).");
 
+	needs_grfio = false;
 	VECTOR_INIT(maplist);
 }
 
 HPExport void plugin_final(void)
 {
 	VECTOR_CLEAR(maplist);
+	if (needs_grfio)
+		grfio->final();
 }
