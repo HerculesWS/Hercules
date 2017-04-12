@@ -2786,6 +2786,14 @@ char *get_val_npcscope_str(struct script_state* st, struct reg_db *n, struct scr
 		return NULL;
 }
 
+char *get_val_pc_ref_str(struct script_state *st, struct reg_db *n, struct script_data *data) {
+	struct script_reg_str *p = NULL;
+	nullpo_retr(NULL, n);
+
+	p = i64db_get(n->vars, reference_getuid(data));
+	return p ? p->value : NULL;
+}
+
 char *get_val_instance_str(struct script_state* st, const char* name, struct script_data* data) {
 	nullpo_retr(NULL, st);
 	if (st->instance_id >= 0) {
@@ -2801,6 +2809,14 @@ int get_val_npcscope_num(struct script_state* st, struct reg_db *n, struct scrip
 		return (int)i64db_iget(n->vars, reference_getuid(data));
 	else
 		return 0;
+}
+
+int get_val_pc_ref_num(struct script_state *st, struct reg_db *n, struct script_data *data) {
+	struct script_reg_num *p = NULL;
+	nullpo_retr(0, n);
+
+	p = i64db_get(n->vars, reference_getuid(data));
+	return p ? p->value : 0;
 }
 
 int get_val_instance_num(struct script_state* st, const char* name, struct script_data* data) {
@@ -2873,7 +2889,7 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 			break;
 		case '#':
 			if (data->ref) {
-				str = script->get_val_ref_str(st, data->ref, data);
+				str = script->get_val_pc_ref_str(st, data->ref, data);
 			} else if (name[1] == '#') {
 				str = pc_readaccountreg2str(sd, data->u.num);// global
 			} else {
@@ -2894,7 +2910,7 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 			break;
 		default:
 			if (data->ref) {
-				str = script->get_val_ref_str(st, data->ref, data);
+				str = script->get_val_pc_ref_str(st, data->ref, data);
 			} else {
 				str = pc_readglobalreg_str(sd, data->u.num);
 			}
@@ -2932,7 +2948,7 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 				break;
 			case '#':
 				if (data->ref) {
-					data->u.num = script->get_val_ref_num(st, data->ref, data);
+					data->u.num = script->get_val_pc_ref_num(st, data->ref, data);
 				} else if (name[1] == '#') {
 					data->u.num = pc_readaccountreg2(sd, data->u.num);// global
 				} else {
@@ -2953,7 +2969,7 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 				break;
 			default:
 				if (data->ref) {
-					data->u.num = script->get_val_ref_num(st, data->ref, data);
+					data->u.num = script->get_val_pc_ref_num(st, data->ref, data);
 				} else {
 					data->u.num = pc_readglobalreg(sd, data->u.num);
 				}
@@ -3235,6 +3251,99 @@ void set_reg_npcscope_str(struct script_state* st, struct reg_db *n, int64 num, 
 			i64db_remove(n->vars, num);
 			if (script_getvaridx(num))
 				script->array_update(n, num, true);
+		}
+	}
+}
+
+void set_reg_pc_ref_str(struct script_state *st, struct reg_db *n, int64 num, const char *name, const char *str)
+{
+	struct script_reg_str *p = NULL;
+	unsigned int index = script_getvaridx(num);
+
+	nullpo_retv(n);
+
+	if ((p = i64db_get(n->vars, num)) != NULL) {
+		if (str[0]) {
+			if (p->value) {
+				aFree(p->value);
+			} else if (index) {
+				script->array_update(n, num, false);
+			}
+			p->value = aStrdup(str);
+		} else {
+			p->value = NULL;
+			if (index) {
+				script->array_update(n, num, true);
+			}
+		}
+
+		if (!pc->reg_load) {
+			p->flag.update = 1;
+		}
+	} else if (str[0]) {
+		struct DBData prev;
+		if (index) {
+			script->array_update(n, num, false);
+		}
+
+		p = ers_alloc(pc->str_reg_ers, struct script_reg_str);
+		p->value = aStrdup(str);
+
+		if (!pc->reg_load) {
+			p->flag.update = 1;
+		}
+		p->flag.type = 1;
+
+		if(n->vars->put(n->vars, DB->i642key(num), DB->ptr2data(p), &prev)) {
+			p = DB->data2ptr(&prev);
+			if (p->value) {
+				aFree(p->value);
+			}
+			ers_free(pc->str_reg_ers, p);
+		}
+	}
+}
+
+void set_reg_pc_ref_num(struct script_state *st, struct reg_db *n, int64 num, const char *name, int val)
+{
+	struct script_reg_num *p = NULL;
+	unsigned int index = script_getvaridx(num);
+
+	nullpo_retv(n);
+
+	if ((p = i64db_get(n->vars, num)) != NULL) {
+		if (val) {
+			if (!p->value && index) {
+				script->array_update(n, num, false);
+			}
+			p->value = val;
+		} else {
+			p->value = 0;
+			if (index) {
+				script->array_update(n, num, true);
+			}
+		}
+
+		if (!pc->reg_load) {
+			p->flag.update = 1;
+		}
+	} else if (val) {
+		struct DBData prev;
+		if (index) {
+			script->array_update(n, num, false);
+		}
+
+		p = ers_alloc(pc->num_reg_ers, struct script_reg_num);
+		p->value = val;
+
+		if (!pc->reg_load) {
+			p->flag.update = 1;
+		}
+		p->flag.type = 1;
+
+		if(n->vars->put(n->vars, DB->i642key(num), DB->ptr2data(p), &prev)) {
+			p = DB->data2ptr(&prev);
+			ers_free(pc->num_reg_ers, p);
 		}
 	}
 }
@@ -9109,7 +9218,7 @@ BUILDIN(getequipisenableref)
 /**
  * Checks if the equipped item allows options.
  * *getequipisenableopt(<equipment_index>);
- * 
+ *
  * @param equipment_index as the inventory index of the equipment.
  * @return 1 on enabled 0 on disabled.
  */
@@ -9117,21 +9226,21 @@ BUILDIN(getequipisenableopt)
 {
 	int i = -1, index = script_getnum(st, 2);
 	struct map_session_data *sd = script->rid2sd(st);
-	
+
 	if (sd == NULL) {
 		script_pushint(st, -1);
 		ShowError("buildin_getequipisenableopt: player is not attached!");
 		return false;
 	}
-	
+
 	if (index > 0 && index <= ARRAYLENGTH(script->equip))
 		i = pc->checkequip(sd, script->equip[index - 1]);
-	
+
 	if (i >=0 && sd->inventory_data[i] && !sd->inventory_data[i]->flag.no_options && !sd->status.inventory[i].expire_time)
 		script_pushint(st, 1);
 	else
 		script_pushint(st, 0);
-	
+
 	return true;
 }
 
@@ -13878,13 +13987,13 @@ BUILDIN(getequippedoptioninfo)
 {
 	int val = 0, type = script_getnum(st, 2);
 	struct map_session_data *sd = NULL;
-	
+
 	if ((sd = script->rid2sd(st)) == NULL || status->current_equip_item_index == -1 || status->current_equip_option_index == -1
 		|| !sd->status.inventory[status->current_equip_item_index].option[status->current_equip_option_index].index) {
 		script_pushint(st, -1);
 		return false;
 	}
-	
+
 	switch (type) {
 	case IT_OPT_INDEX:
 		val = sd->status.inventory[status->current_equip_item_index].option[status->current_equip_option_index].index;
@@ -13897,9 +14006,9 @@ BUILDIN(getequippedoptioninfo)
 		script_pushint(st, -1);
 		return false;
 	}
-	
+
 	script_pushint(st, val);
-	
+
 	return true;
 }
 
@@ -13919,7 +14028,7 @@ BUILDIN(getequipoption)
 	int opt_type = script_getnum(st, 4);
 	int i = -1;
 	struct map_session_data *sd = script->rid2sd(st);
-	
+
 	if (sd == NULL) {
 		script_pushint(st, -1);
 		ShowError("buildin_getequipoptioninfo: Player not attached!\n");
@@ -13958,9 +14067,9 @@ BUILDIN(getequipoption)
 			break;
 		}
 	}
-	
+
 	script_pushint(st, val);
-	
+
 	return true;
 }
 
@@ -13983,10 +14092,10 @@ BUILDIN(setequipoption)
 	int opt_index = script_getnum(st, 4);
 	int value = script_getnum(st, 5);
 	int i = -1;
-	
+
 	struct map_session_data *sd = script->rid2sd(st);
 	struct item_option *ito = NULL;
-	
+
 	if (sd == NULL) {
 		script_pushint(st, 0);
 		ShowError("buildin_setequipoption: Player not attached!\n");
@@ -14010,9 +14119,9 @@ BUILDIN(setequipoption)
 		script_pushint(st, 0);
 		return false;
 	}
-	
+
 	if (sd->status.inventory[i].nameid != 0) {
-		
+
 		if ((ito = itemdb->option_exists(opt_index)) == NULL) {
 			script_pushint(st, 0);
 			ShowError("buildin_setequipotion: Option index %d does not exist!\n", opt_index);
@@ -14026,7 +14135,7 @@ BUILDIN(setequipoption)
 		sd->status.inventory[i].option[slot-1].index = ito->index;
 		/* Add Option Value */
 		sd->status.inventory[i].option[slot-1].value = value;
-		
+
 		/* Unequip and simulate deletion of the item. */
 		pc->unequipitem(sd, i, PCUNEQUIPITEM_FORCE); // status calc will happen in pc->equipitem() below
 		clif->refine(sd->fd, 0, i, sd->status.inventory[i].refine); // notify client of a refine.
@@ -14040,11 +14149,11 @@ BUILDIN(setequipoption)
 		pc->equipitem(sd, i, sd->status.inventory[i].equip); // force equip the item at the original position.
 		clif->misceffect(&sd->bl, 2); // show effect
 	}
-	
+
 	script_pushint(st, 1);
-	
+
 	return true;
-	
+
 }
 
 /*==========================================
@@ -22076,10 +22185,10 @@ void script_hardcoded_constants(void)
 	script->set_constant("IT_OPT_INDEX", IT_OPT_INDEX, false, false);
 	script->set_constant("IT_OPT_VALUE", IT_OPT_VALUE, false, false);
 	script->set_constant("IT_OPT_PARAM", IT_OPT_PARAM, false, false);
-	
+
 	script->constdb_comment("Maximum Item Options");
 	script->set_constant("MAX_ITEM_OPTIONS", MAX_ITEM_OPTIONS, false, false);
-	
+
 	script->constdb_comment("Navigation constants, use with *navigateto*");
 	script->set_constant("NAV_NONE", NAV_NONE, false, false);
 	script->set_constant("NAV_AIRSHIP_ONLY", NAV_AIRSHIP_ONLY, false, false);
@@ -22250,10 +22359,12 @@ void script_defaults(void)
 	script->get_val = get_val;
 	script->get_val2 = get_val2;
 	script->get_val_ref_str = get_val_npcscope_str;
+	script->get_val_pc_ref_str = get_val_pc_ref_str;
 	script->get_val_scope_str = get_val_npcscope_str;
 	script->get_val_npc_str = get_val_npcscope_str;
 	script->get_val_instance_str = get_val_instance_str;
 	script->get_val_ref_num = get_val_npcscope_num;
+	script->get_val_pc_ref_num = get_val_pc_ref_num;
 	script->get_val_scope_num = get_val_npcscope_num;
 	script->get_val_npc_num = get_val_npcscope_num;
 	script->get_val_instance_num = get_val_instance_num;
@@ -22332,10 +22443,12 @@ void script_defaults(void)
 	script->errorwarning_sub = script_errorwarning_sub;
 	script->set_reg = set_reg;
 	script->set_reg_ref_str = set_reg_npcscope_str;
+	script->set_reg_pc_ref_str = set_reg_pc_ref_str;
 	script->set_reg_scope_str = set_reg_npcscope_str;
 	script->set_reg_npc_str = set_reg_npcscope_str;
 	script->set_reg_instance_str = set_reg_instance_str;
 	script->set_reg_ref_num = set_reg_npcscope_num;
+	script->set_reg_pc_ref_num = set_reg_pc_ref_num;
 	script->set_reg_scope_num = set_reg_npcscope_num;
 	script->set_reg_npc_num = set_reg_npcscope_num;
 	script->set_reg_instance_num = set_reg_instance_num;
