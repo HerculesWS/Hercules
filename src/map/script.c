@@ -3446,7 +3446,7 @@ int set_reg(struct script_state *st, struct map_session_data *sd, int64 num, con
 			return 1;
 		case '#':
 			if (ref) {
-				script->set_reg_ref_str(st, ref, num, name, str);
+				script->set_reg_pc_ref_str(st, ref, num, name, str);
 			} else if (name[1] == '#') {
 				pc_setaccountreg2str(sd, num, str);
 			} else {
@@ -3467,7 +3467,7 @@ int set_reg(struct script_state *st, struct map_session_data *sd, int64 num, con
 			return 1;
 		default:
 			if (ref) {
-				script->set_reg_ref_str(st, ref, num, name, str);
+				script->set_reg_pc_ref_str(st, ref, num, name, str);
 			} else {
 				pc_setglobalreg_str(sd, num, str);
 			}
@@ -3508,7 +3508,7 @@ int set_reg(struct script_state *st, struct map_session_data *sd, int64 num, con
 			return 1;
 		case '#':
 			if (ref) {
-				script->set_reg_ref_num(st, ref, num, name, val);
+				script->set_reg_pc_ref_num(st, ref, num, name, val);
 			} else if (name[1] == '#') {
 				pc_setaccountreg2(sd, num, val);
 			} else {
@@ -3529,7 +3529,7 @@ int set_reg(struct script_state *st, struct map_session_data *sd, int64 num, con
 			return 1;
 		default:
 			if (ref) {
-				script->set_reg_ref_num(st, ref, num, name, val);
+				script->set_reg_pc_ref_num(st, ref, num, name, val);
 			} else {
 				pc_setglobalreg(sd, num, val);
 			}
