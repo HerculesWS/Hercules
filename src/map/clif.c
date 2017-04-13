@@ -2569,13 +2569,13 @@ void clif_item_equip(short idx, struct EQUIPITEM_INFO *p, struct item *it, struc
 	p->type = itemtype(id->type);
 
 #if PACKETVER < 20120925
-	p->IsIdentified = i->identify ? 1 : 0;
+	p->IsIdentified = it->identify ? 1 : 0;
 #endif
 
 	p->location = eqp_pos;
 	p->WearState = it->equip;
 #if PACKETVER < 20120925
-	p->IsDamaged = (i->attribute & ATTR_BROKEN) != 0 ? 1 : 0;
+	p->IsDamaged = (it->attribute & ATTR_BROKEN) != 0 ? 1 : 0;
 #endif
 	p->RefiningLevel = it->refine;
 
