@@ -4594,6 +4594,8 @@ struct {
 	struct HPMHookPoint *HP_script_get_val_post;
 	struct HPMHookPoint *HP_script_get_val_ref_str_pre;
 	struct HPMHookPoint *HP_script_get_val_ref_str_post;
+	struct HPMHookPoint *HP_script_get_val_pc_ref_str_pre;
+	struct HPMHookPoint *HP_script_get_val_pc_ref_str_post;
 	struct HPMHookPoint *HP_script_get_val_scope_str_pre;
 	struct HPMHookPoint *HP_script_get_val_scope_str_post;
 	struct HPMHookPoint *HP_script_get_val_npc_str_pre;
@@ -4602,6 +4604,8 @@ struct {
 	struct HPMHookPoint *HP_script_get_val_instance_str_post;
 	struct HPMHookPoint *HP_script_get_val_ref_num_pre;
 	struct HPMHookPoint *HP_script_get_val_ref_num_post;
+	struct HPMHookPoint *HP_script_get_val_pc_ref_num_pre;
+	struct HPMHookPoint *HP_script_get_val_pc_ref_num_post;
 	struct HPMHookPoint *HP_script_get_val_scope_num_pre;
 	struct HPMHookPoint *HP_script_get_val_scope_num_post;
 	struct HPMHookPoint *HP_script_get_val_npc_num_pre;
@@ -4756,6 +4760,8 @@ struct {
 	struct HPMHookPoint *HP_script_set_reg_post;
 	struct HPMHookPoint *HP_script_set_reg_ref_str_pre;
 	struct HPMHookPoint *HP_script_set_reg_ref_str_post;
+	struct HPMHookPoint *HP_script_set_reg_pc_ref_str_pre;
+	struct HPMHookPoint *HP_script_set_reg_pc_ref_str_post;
 	struct HPMHookPoint *HP_script_set_reg_scope_str_pre;
 	struct HPMHookPoint *HP_script_set_reg_scope_str_post;
 	struct HPMHookPoint *HP_script_set_reg_npc_str_pre;
@@ -4764,6 +4770,8 @@ struct {
 	struct HPMHookPoint *HP_script_set_reg_instance_str_post;
 	struct HPMHookPoint *HP_script_set_reg_ref_num_pre;
 	struct HPMHookPoint *HP_script_set_reg_ref_num_post;
+	struct HPMHookPoint *HP_script_set_reg_pc_ref_num_pre;
+	struct HPMHookPoint *HP_script_set_reg_pc_ref_num_post;
 	struct HPMHookPoint *HP_script_set_reg_scope_num_pre;
 	struct HPMHookPoint *HP_script_set_reg_scope_num_post;
 	struct HPMHookPoint *HP_script_set_reg_npc_num_pre;
@@ -10641,6 +10649,8 @@ struct {
 	int HP_script_get_val_post;
 	int HP_script_get_val_ref_str_pre;
 	int HP_script_get_val_ref_str_post;
+	int HP_script_get_val_pc_ref_str_pre;
+	int HP_script_get_val_pc_ref_str_post;
 	int HP_script_get_val_scope_str_pre;
 	int HP_script_get_val_scope_str_post;
 	int HP_script_get_val_npc_str_pre;
@@ -10649,6 +10659,8 @@ struct {
 	int HP_script_get_val_instance_str_post;
 	int HP_script_get_val_ref_num_pre;
 	int HP_script_get_val_ref_num_post;
+	int HP_script_get_val_pc_ref_num_pre;
+	int HP_script_get_val_pc_ref_num_post;
 	int HP_script_get_val_scope_num_pre;
 	int HP_script_get_val_scope_num_post;
 	int HP_script_get_val_npc_num_pre;
@@ -10803,6 +10815,8 @@ struct {
 	int HP_script_set_reg_post;
 	int HP_script_set_reg_ref_str_pre;
 	int HP_script_set_reg_ref_str_post;
+	int HP_script_set_reg_pc_ref_str_pre;
+	int HP_script_set_reg_pc_ref_str_post;
 	int HP_script_set_reg_scope_str_pre;
 	int HP_script_set_reg_scope_str_post;
 	int HP_script_set_reg_npc_str_pre;
@@ -10811,6 +10825,8 @@ struct {
 	int HP_script_set_reg_instance_str_post;
 	int HP_script_set_reg_ref_num_pre;
 	int HP_script_set_reg_ref_num_post;
+	int HP_script_set_reg_pc_ref_num_pre;
+	int HP_script_set_reg_pc_ref_num_post;
 	int HP_script_set_reg_scope_num_pre;
 	int HP_script_set_reg_scope_num_post;
 	int HP_script_set_reg_npc_num_pre;
