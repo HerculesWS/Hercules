@@ -672,10 +672,12 @@ struct script_interface {
 	struct script_data* (*push_val)(struct script_stack* stack, enum c_op type, int64 val, struct reg_db *ref);
 	struct script_data *(*get_val) (struct script_state* st, struct script_data* data);
 	char* (*get_val_ref_str) (struct script_state* st, struct reg_db *n, struct script_data* data);
+	char* (*get_val_pc_ref_str) (struct script_state* st, struct reg_db *n, struct script_data* data);
 	char* (*get_val_scope_str) (struct script_state* st, struct reg_db *n, struct script_data* data);
 	char* (*get_val_npc_str) (struct script_state* st, struct reg_db *n, struct script_data* data);
 	char* (*get_val_instance_str) (struct script_state* st, const char* name, struct script_data* data);
 	int (*get_val_ref_num) (struct script_state* st, struct reg_db *n, struct script_data* data);
+	int (*get_val_pc_ref_num) (struct script_state* st, struct reg_db *n, struct script_data* data);
 	int (*get_val_scope_num) (struct script_state* st, struct reg_db *n, struct script_data* data);
 	int (*get_val_npc_num) (struct script_state* st, struct reg_db *n, struct script_data* data);
 	int (*get_val_instance_num) (struct script_state* st, const char* name, struct script_data* data);
@@ -755,10 +757,12 @@ struct script_interface {
 	void (*errorwarning_sub) (StringBuf *buf, const char *src, const char *file, int start_line, const char *error_msg, const char *error_pos);
 	int (*set_reg) (struct script_state *st, struct map_session_data *sd, int64 num, const char *name, const void *value, struct reg_db *ref);
 	void (*set_reg_ref_str) (struct script_state* st, struct reg_db *n, int64 num, const char* name, const char *str);
+	void (*set_reg_pc_ref_str) (struct script_state* st, struct reg_db *n, int64 num, const char* name, const char *str);
 	void (*set_reg_scope_str) (struct script_state* st, struct reg_db *n, int64 num, const char* name, const char *str);
 	void (*set_reg_npc_str) (struct script_state* st, struct reg_db *n, int64 num, const char* name, const char *str);
 	void (*set_reg_instance_str) (struct script_state* st, int64 num, const char* name, const char *str);
 	void (*set_reg_ref_num) (struct script_state* st, struct reg_db *n, int64 num, const char* name, int val);
+	void (*set_reg_pc_ref_num) (struct script_state* st, struct reg_db *n, int64 num, const char* name, int val);
 	void (*set_reg_scope_num) (struct script_state* st, struct reg_db *n, int64 num, const char* name, int val);
 	void (*set_reg_npc_num) (struct script_state* st, struct reg_db *n, int64 num, const char* name, int val);
 	void (*set_reg_instance_num) (struct script_state* st, int64 num, const char* name, int val);
