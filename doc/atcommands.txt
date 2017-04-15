@@ -578,6 +578,12 @@ Opens the Identification window if any unappraised items are in your inventory.
 
 ---------------------------------------
 
+@identifyall
+
+Identify all of the unappraised items are in your inventory.
+
+---------------------------------------
+
 @trade <player name>
 
 Opens the trade window with the specified player.

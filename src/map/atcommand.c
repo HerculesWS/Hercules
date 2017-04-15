@@ -9308,6 +9308,29 @@ ACMD(costume){
 
 	return true;
 }
+//Identifies all items [Heaven]
+// Reviced by [Mhalicot]
+ACMD(identifyall)
+{
+    int i,num;
+    struct item it;
+
+    nullpo_retr(-1,sd);
+
+    for(i=num=0;i < MAX_INVENTORY;i++){
+        if(!sd->status.inventory[i].identify && sd->status.inventory[i].nameid){
+            it=sd->status.inventory[i];
+            pc->delitem(sd,i,it.amount,0,0, LOG_TYPE_COMMAND);
+            it.identify=1;
+            pc->additem(sd,&it,it.amount, LOG_TYPE_COMMAND);
+            num++;
+        }
+    }
+    clif->message(fd,(num) ? "All items have been identified." : msg_txt(1238));
+	
+    return true;
+}
+
 /* for debugging purposes (so users can easily provide us with debug info) */
 /* should be trashed as soon as its no longer necessary */
 ACMD(skdebug)
@@ -9574,6 +9597,7 @@ void atcommand_basecommands(void) {
 		ACMD_DEF(refresh),
 		ACMD_DEF(refreshall),
 		ACMD_DEF(identify),
+		ACMD_DEF(identifyall),
 		ACMD_DEF(misceffect),
 		ACMD_DEF(mobsearch),
 		ACMD_DEF(cleanmap),
