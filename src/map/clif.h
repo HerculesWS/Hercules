@@ -1361,6 +1361,27 @@ struct clif_interface {
 	void (*pSelectCart) (int fd, struct map_session_data *sd);
 
 	const char *(*get_bl_name) (const struct block_list *bl);
+
+	/* RoDEX */
+	void(*pRodexOpenWriteMail) (int fd, struct map_session_data *sd);
+	void(*pRodexAddItem) (int fd, struct map_session_data *sd);
+	void(*pRodexRemoveItem) (int fd, struct map_session_data *sd);
+	void(*pRodexSendMail) (int fd, struct map_session_data *sd);
+	void(*rodex_send_mail_result) (int fd, struct map_session_data *sd, int8 result);
+	void(*rodex_send_maillist) (int fd, struct map_session_data *sd, int8 open_type, int64 page_start);
+	void(*rodex_send_refresh) (int fd, struct map_session_data *sd, int8 open_type, int count);
+	void(*pRodexReadMail) (int fd, struct map_session_data *sd);
+	void(*pRodexNextMaillist) (int fd, struct map_session_data *sd);
+	void(*rodex_close_mailbox) (int fd, struct map_session_data *sd);
+	void(*rodex_cancel_write_mail) (int fd, struct map_session_data *sd);
+	void(*rodex_open_mailbox) (int fd, struct map_session_data *sd);
+	void(*pRodexCheckName) (int fd, struct map_session_data *sd);
+	void(*rodex_checkname_result) (struct map_session_data *sd, int char_id, short class_, int base_level, char name[NAME_LENGTH]);
+	void(*rodex_delete_mail) (int fd, struct map_session_data *sd);
+	void(*rodex_refresh_maillist) (int fd, struct map_session_data *sd);
+	void(*rodex_request_zeny) (int fd, struct map_session_data *sd);
+	void(*rodex_request_items) (int fd, struct map_session_data *sd);
+	void(*rodex_icon) (int fd, bool show);
 };
 
 #ifdef HERCULES_CORE

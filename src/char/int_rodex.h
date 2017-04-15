@@ -18,24 +18,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef MAP_DATE_H
-#define MAP_DATE_H
+#ifndef CHAR_INT_RODEX_H
+#define CHAR_INT_RODEX_H
 
-#include "common/cbasetypes.h"
+#include "common/mmo.h"
+#include "common/db.h"
+
+struct item;
+
+/**
+ * inter_rodex interface
+ **/
+struct inter_rodex_interface {
+	int (*sql_init) (void);
+	void (*sql_final) (void);
+	int (*parse_frommap) (int fd);
+	bool (*hasnew) (int char_id, int account_id);
+	bool (*checkname) (char name[NAME_LENGTH], int *target_char_id, short *target_class, int *target_level);
+	int64 (*savemessage) (struct rodex_message* msg);
+};
 
 #ifdef HERCULES_CORE
-// TODO: Interface
-int date_get_year(void);
-int date_get_month(void);
-int date_get_day(void);
-int date_get_hour(void);
-int date_get_min(void);
-int date_get_sec(void);
-int date_get_date(void);
-
-bool is_day_of_sun(void);
-bool is_day_of_moon(void);
-bool is_day_of_star(void);
+void inter_rodex_defaults(void);
 #endif // HERCULES_CORE
 
-#endif /* MAP_DATE_H */
+HPShared struct inter_rodex_interface *inter_rodex;
+
+#endif /* CHAR_INT_RODEX_H */

@@ -7333,6 +7333,8 @@ static const struct battle_data {
 	{ "max_summoner_parameter",             &battle_config.max_summoner_parameter,          120,    10,     10000,          },
 	{ "mvp_exp_reward_message",             &battle_config.mvp_exp_reward_message,          0,      0,      1,              },
 	{ "monster_eye_range_bonus",            &battle_config.mob_eye_range_bonus,             0,      0,      10,             },
+	{ "features/rodex",                     &battle_config.feature_rodex,                   1,      0,      1,              },
+	{ "features/rodex_use_accountmail",     &battle_config.feature_rodex_use_accountmail,   0,      0,      1,              },
 };
 #ifndef STATS_OPT_OUT
 /**

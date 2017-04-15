@@ -1136,6 +1136,8 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 	}
 
 	memcpy(&sd->status, st, sizeof(*st));
+	memset(&sd->rodex, 0x0, sizeof(sd->rodex));
+	VECTOR_INIT(sd->rodex.messages);
 
 	if (st->sex != sd->status.sex) {
 		clif->authfail_fd(sd->fd, 0);
@@ -1484,6 +1486,7 @@ int pc_reg_received(struct map_session_data *sd)
 
 	intif->Mail_requestinbox(sd->status.char_id, 0); // MAIL SYSTEM - Request Mail Inbox
 	intif->request_questlog(sd);
+	intif->rodex_checkhasnew(sd);
 
 	if (sd->state.connect_new == 0 && sd->fd) { //Character already loaded map! Gotta trigger LoadEndAck manually.
 		sd->state.connect_new = 1;

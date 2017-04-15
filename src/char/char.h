@@ -327,6 +327,8 @@ extern char pet_db[256];
 extern char mail_db[256];
 extern char auction_db[256];
 extern char quest_db[256];
+extern char rodex_db[256];
+extern char rodex_item_db[256];
 extern char homunculus_db[256];
 extern char skill_homunculus_db[256];
 extern char mercenary_db[256];

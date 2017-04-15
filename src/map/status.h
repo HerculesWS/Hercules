@@ -840,6 +840,9 @@ typedef enum sc_type {
 	SC_TUNAPARTY,
 	SC_SHRIMP,	// 650
 	SC_FRESHSHRIMP,
+
+	// Rodex
+	SC_DAILYSENDMAILCNT = 824,
 #ifndef SC_MAX
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 #endif
@@ -1689,7 +1692,7 @@ enum si_type {
 	//SI_SHOW_NPCHPBAR                       = 821,
 	SI_FLOWERSMOKE                           = 822,
 	SI_FSTONE                                = 823,
-	//SI_DAILYSENDMAILCNT                    = 824,
+	SI_DAILYSENDMAILCNT                      = 824,
 	//SI_QSCARABA                            = 825,
 	SI_LJOSALFAR                             = 826,
 	//SI_PAD_READER_KNIGHT                   = 827,

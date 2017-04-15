@@ -46,6 +46,7 @@
 #include "map/pc.h"
 #include "map/pet.h"
 #include "map/quest.h"
+#include "map/rodex.h"
 #include "map/script.h"
 #include "map/skill.h"
 #include "map/status.h"
@@ -19097,6 +19098,381 @@ unsigned short clif_parse_cmd_optional( int fd, struct map_session_data *sd ) {
 }
 
 /*==========================================
+ * RoDEX
+ *------------------------------------------*/
+
+void clif_parse_rodex_open_write_mail(int fd, struct map_session_data *sd)
+{
+	const struct PACKET_CZ_REQ_OPEN_WRITE_MAIL *rPacket = RFIFOP(fd, 0);
+	struct PACKET_ZC_ACK_OPEN_WRITE_MAIL *sPacket = NULL;
+	WFIFOHEAD(fd, sizeof(*sPacket));
+	sPacket = WFIFOP(fd, 0);
+	sPacket->PacketType = rodexopenwrite;
+	strncpy(sPacket->receiveName, rPacket->receiveName, sizeof(sPacket->receiveName));
+	sPacket->result = (rodex->isenabled() == true) ? 1 : 0;
+	WFIFOSET(fd, sizeof(*sPacket));
+}
+
+void clif_parse_rodex_add_item(int fd, struct map_session_data *sd)
+{
+	struct PACKET_ZC_ADD_ITEM_TO_MAIL *packet;
+	const struct PACKET_CZ_ADD_ITEM_TO_MAIL *rPacket = RFIFOP(fd, 0);
+	int16 idx = rPacket->index - 2;
+	int j;
+
+	WFIFOHEAD(fd, sizeof(*packet));
+	packet = WFIFOP(fd, 0);
+	memset(packet, 0x0, sizeof(*packet));
+	packet->PacketType = rodexadditem;
+	packet->result = rodex->add_item(sd, idx, (int16)rPacket->count);
+
+	if (packet->result != RODEX_ADD_ITEM_SUCCESS) { //No need to continue building the packet if it failed
+		WFIFOSET(fd, sizeof(*packet));
+		return;
+	}
+
+	packet->index = rPacket->index;
+	packet->count = rPacket->count;
+	packet->ITID = sd->status.inventory[idx].nameid;
+	packet->type = itemtype(sd->inventory_data[idx]->type);
+	packet->IsIdentified = sd->status.inventory[idx].identify ? 1 : 0;
+	packet->IsDamaged = (sd->status.inventory[idx].attribute & ATTR_BROKEN) != 0 ? 1 : 0;
+	packet->refiningLevel = sd->status.inventory[idx].refine;
+	for (j = 0; j < ARRAYLENGTH(packet->slot.card); ++j) {
+		packet->slot.card[j] = sd->status.inventory[idx].card[j];
+	}
+	for (j = 0; j < MAX_ITEM_OPTIONS; ++j) {
+		packet->optionData[j].index = sd->status.inventory[idx].option[j].index;
+		packet->optionData[j].param = sd->status.inventory[idx].option[j].param;
+		packet->optionData[j].value = sd->status.inventory[idx].option[j].value;
+	}
+	packet->weight = sd->rodex.tmp.weight / 10;
+	WFIFOSET(fd, sizeof(*packet));
+}
+
+void clif_parse_rodex_remove_item(int fd, struct map_session_data *sd)
+{
+	const struct PACKET_CZ_REQ_REMOVE_ITEM_MAIL *rPacket = RFIFOP(fd, 0);
+	struct PACKET_ZC_ACK_REMOVE_ITEM_MAIL *packet;
+	int result;
+	int16 idx = rPacket->index - 2;
+
+	result = rodex->remove_item(sd, idx, (int16)rPacket->cnt);
+
+	WFIFOHEAD(fd, sizeof(*packet));
+	packet = WFIFOP(fd, 0);
+	packet->PacketType = rodexremoveitem;
+	packet->result = (result < 0) ? 0 : 1;
+	packet->cnt = (result < 0) ? 0 : sd->status.inventory[idx].amount - result;
+	packet->index = rPacket->index;
+	packet->weight = sd->rodex.tmp.weight / 10;
+	WFIFOSET(fd, sizeof(*packet));
+}
+
+void clif_parse_rodex_checkname(int fd, struct map_session_data *sd)
+{
+	const struct PACKET_CZ_CHECKNAME *rPacket = RFIFOP(fd, 0);
+
+	int char_id = 0, base_level = 0;
+	short class = 0;
+
+	rodex->check_player(sd, rPacket->Name, &base_level, &char_id, &class);
+}
+
+void clif_rodex_checkname_result(struct map_session_data *sd, int char_id, short class_, int base_level, char name[NAME_LENGTH])
+{
+	struct PACKET_ZC_CHECKNAME *sPacket;
+	int fd;
+
+	nullpo_retv(sd);
+
+	fd = sd->fd;
+	WFIFOHEAD(fd, sizeof(*sPacket));
+	sPacket = WFIFOP(fd, 0);
+	sPacket->PacketType = rodexcheckplayer;
+	if (char_id == 0) {
+		sPacket->CharId = 0;
+		WFIFOSET(fd, sizeof(*sPacket));
+		return;
+	}
+	sPacket->CharId = char_id;
+	sPacket->Class = class_;
+	sPacket->BaseLevel = base_level;
+#if PACKETVER >= 20160316
+	strncpy(sPacket->Name, name, NAME_LENGTH);
+#endif
+	WFIFOSET(fd, sizeof(*sPacket));
+}
+
+void clif_parse_rodex_send_mail(int fd, struct map_session_data *sd)
+{
+	const struct PACKET_CZ_SEND_MAIL *rPacket = RFIFOP(fd, 0);
+	int8 result;
+
+	if (rPacket->TextcontentsLength + rPacket->Titlelength > rPacket->PacketLength - sizeof(*rPacket))
+		result = RODEX_SEND_MAIL_FATAL_ERROR;
+	else if (rPacket->TextcontentsLength > RODEX_BODY_LENGTH || rPacket->Titlelength > RODEX_TITLE_LENGTH)
+		result = RODEX_SEND_MAIL_FATAL_ERROR;
+	else
+		result = rodex->send_mail(sd, rPacket->receiveName, &rPacket->string[rPacket->Titlelength], rPacket->string, rPacket->zeny);
+
+	if (result != RODEX_SEND_MAIL_SUCCESS)
+		clif->rodex_send_mail_result(fd, sd, result);
+	rodex->clean(sd, 1);
+}
+
+void clif_rodex_send_mail_result(int fd, struct map_session_data *sd, int8 result)
+{
+	struct PACKET_ZC_WRITE_MAIL_RESULT *sPacket;
+
+	WFIFOHEAD(fd, sizeof(*sPacket));
+	sPacket = WFIFOP(fd, 0);
+	sPacket->PacketType = rodexwriteresult;
+	sPacket->result = result;
+	WFIFOSET(fd, sizeof(*sPacket));
+}
+
+void clif_rodex_send_maillist(int fd, struct map_session_data *sd, int8 open_type, int64 page_start)
+{
+	struct PACKET_ZC_MAIL_LIST *packet;
+	struct maillistinfo *inner;
+	int16 size = sizeof(*packet);
+	int8 count = 0;
+	WFIFOHEAD(fd, sizeof(*packet) + (sizeof(*inner) + RODEX_TITLE_LENGTH) * 7);
+	packet = WFIFOP(fd, 0);
+	packet->PacketType = ((page_start == (VECTOR_LENGTH(sd->rodex.messages) - 1)) ? rodexmailList : rodexnextpage);
+	packet->opentype = open_type;
+
+	inner = WFIFOP(fd, size);
+
+	while (page_start >= 0 && count < RODEX_MAIL_PER_PAGE) {
+		struct rodex_message *msg = &VECTOR_INDEX(sd->rodex.messages, page_start);
+		--page_start;
+
+		if (msg->is_deleted)
+			continue;
+
+		inner->MailID = msg->id;
+		inner->Isread = msg->is_readed == true ? 1 : 0;
+		inner->type = msg->type;
+		inner->regDateTime = (int)time(NULL) - msg->send_date;
+		inner->expireDateTime = msg->expire_date - (int)time(NULL);
+		if (open_type == RODEX_OPENTYPE_RETURN) {
+			inner->expireDateTime += RODEX_EXPIRE;
+		}
+		inner->Titlelength = (int16)strlen(msg->title) + 1;
+		if (open_type != RODEX_OPENTYPE_RETURN) {
+			strncpy(inner->SenderName, msg->sender_name, sizeof(msg->sender_name));
+		}
+		else {
+			strncpy(inner->SenderName, msg->receiver_name, sizeof(msg->receiver_name));
+		}
+		strncpy(inner->title, msg->title, inner->Titlelength);
+		size += sizeof(*inner) + inner->Titlelength;
+		inner = WFIFOP(fd, size);
+		++count;
+	}
+
+	packet->PacketLength = size;
+	packet->cnt = count;
+	packet->IsEnd = page_start > 0 ? 0 : 1;
+	WFIFOSET(fd, size);
+}
+
+void clif_rodex_send_refresh(int fd, struct map_session_data *sd, int8 open_type, int count)
+{
+	struct PACKET_ZC_MAIL_LIST *packet;
+	struct maillistinfo *inner;
+	int16 size = sizeof(*packet);
+	int i, j;
+	WFIFOHEAD(fd, sizeof(*packet) + (sizeof(*inner) + RODEX_TITLE_LENGTH) * 7);
+	packet = WFIFOP(fd, 0);
+	packet->PacketType = rodexmailList;
+	packet->opentype = open_type;
+
+	inner = WFIFOP(fd, size);
+
+	i = VECTOR_LENGTH(sd->rodex.messages) - 1;
+	j = count;
+	while (i >= 0 && j > 0) {
+		struct rodex_message *msg = &VECTOR_INDEX(sd->rodex.messages, i);
+		--i;
+
+		if (msg->is_deleted)
+			continue;
+
+		inner->MailID = msg->id;
+		inner->Isread = msg->is_readed == true ? 1 : 0;
+		inner->type = msg->type;
+		inner->regDateTime = (int)time(NULL) - msg->send_date;
+		inner->expireDateTime = msg->expire_date - (int)time(NULL);
+		if (open_type == RODEX_OPENTYPE_RETURN) {
+			inner->expireDateTime += RODEX_EXPIRE;
+		}
+		inner->Titlelength = (int16)strlen(msg->title) + 1;
+		if (open_type != RODEX_OPENTYPE_RETURN) {
+			strncpy(inner->SenderName, msg->sender_name, sizeof(msg->sender_name));
+		}
+		else {
+			strncpy(inner->SenderName, msg->receiver_name, sizeof(msg->receiver_name));
+		}
+		strncpy(inner->title, msg->title, inner->Titlelength);
+		size += sizeof(*inner) + inner->Titlelength;
+		inner = WFIFOP(fd, size);
+		--j;
+	}
+
+	packet->PacketLength = size;
+	packet->cnt = count;
+	packet->IsEnd = 1;
+	WFIFOSET(fd, size);
+}
+
+void clif_parse_rodex_next_maillist(int fd, struct map_session_data *sd)
+{
+	const struct PACKET_CZ_REQ_NEXT_MAIL_LIST *packet = RFIFOP(fd, 0);
+	rodex->next_page(sd, packet->opentype, packet->Lower_MailID);
+}
+
+void clif_parse_rodex_read_mail(int fd, struct map_session_data *sd)
+{
+	const struct PACKET_CZ_REQ_READ_MAIL *rPacket = RFIFOP(fd, 0);
+	struct PACKET_ZC_READ_MAIL *sPacket;
+	struct rodex_message *msg = rodex->get_mail(sd, rPacket->MailID, true);
+	struct mail_item *item;
+	int i, body_len, size;
+
+	if (msg == NULL)
+		return;
+
+	body_len = (int)strlen(msg->body) + 1;
+	size = sizeof(*sPacket);
+
+	WFIFOHEAD(fd, sizeof(*sPacket) + body_len + (sizeof(*item) * RODEX_MAX_ITEM));
+	sPacket = WFIFOP(fd, 0);
+	sPacket->PacketType = rodexread;
+	sPacket->opentype = rPacket->opentype;
+	sPacket->MailID = msg->id;
+	sPacket->TextcontentsLength = body_len;
+	sPacket->zeny = msg->zeny;
+	sPacket->ItemCnt = msg->items_count;
+	strncpy(WFIFOP(fd, size), msg->body, body_len);
+	size += body_len;
+	for (i = 0; i < RODEX_MAX_ITEM; ++i) {
+		struct item *it = &msg->items[i].item;
+		int j;
+
+		if (it->nameid == 0) {
+			continue;
+		}
+
+		item = WFIFOP(fd, size);
+		memset(item, 0x0, sizeof(*item));
+		item->ITID = it->nameid;
+		item->count = it->amount;
+		item->type = itemtype(itemdb->search(it->nameid)->type);
+		item->IsIdentified = it->identify ? 1 : 0;
+		item->IsDamaged = (it->attribute & ATTR_BROKEN) != 0 ? 1 : 0;
+		item->refiningLevel = it->refine;
+		item->slot.card[0] = it->card[0];
+		item->slot.card[1] = it->card[1];
+		item->slot.card[2] = it->card[2];
+		item->slot.card[3] = it->card[3];
+
+		for (j = 0; j < MAX_ITEM_OPTIONS; ++j) {
+			item->optionData[j].index = it->option[j].index;
+			item->optionData[j].value = it->option[j].value;
+		}
+
+		size += sizeof(*item);
+	}
+	sPacket->PacketLength = size;
+	WFIFOSET(fd, size);
+}
+
+void clif_rodex_delete_mail(int fd, struct map_session_data *sd)
+{
+	const struct PACKET_CZ_REQ_DELETE_MAIL *rPacket = RFIFOP(fd, 0);
+	struct PACKET_ZC_ACK_DELETE_MAIL *sPacket;
+
+	if (rodex->delete_mail(sd, rPacket->MailID) == false)
+		return;
+
+	WFIFOHEAD(fd, sizeof(*sPacket));
+	sPacket = WFIFOP(fd, 0);
+	sPacket->PacketType = rodexdelete;
+	sPacket->opentype = rPacket->opentype;
+	sPacket->MailID = rPacket->MailID;
+	WFIFOSET(fd, sizeof(*sPacket));
+}
+
+void clif_rodex_request_zeny(int fd, struct map_session_data *sd)
+{
+	const struct PACKET_CZ_REQ_ZENY_FROM_MAIL *rPacket = RFIFOP(fd, 0);
+	struct PACKET_ZC_ACK_ZENY_FROM_MAIL *sPacket;
+	int8 result;
+
+	result = rodex->get_zeny(sd, rPacket->MailID);
+
+	WFIFOHEAD(fd, sizeof(*sPacket));
+	sPacket = WFIFOP(fd, 0);
+	sPacket->PacketType = rodexgetzeny;
+	sPacket->MailID = rPacket->MailID;
+	sPacket->opentype = rPacket->opentype;
+	sPacket->result = result;
+	WFIFOSET(fd, sizeof(*sPacket));
+}
+
+void clif_rodex_request_items(int fd, struct map_session_data *sd)
+{
+	const struct PACKET_CZ_REQ_ITEM_FROM_MAIL *rPacket = RFIFOP(fd, 0);
+	struct PACKET_ZC_ACK_ITEM_FROM_MAIL *sPacket;
+	int8 result;
+
+	result = rodex->get_items(sd, rPacket->MailID);
+
+	WFIFOHEAD(fd, sizeof(*sPacket));
+	sPacket = WFIFOP(fd, 0);
+	sPacket->PacketType = rodexgetitem;
+	sPacket->MailID = rPacket->MailID;
+	sPacket->opentype = rPacket->opentype;
+	sPacket->result = result;
+	WFIFOSET(fd, sizeof(*sPacket));
+}
+
+void clif_rodex_icon(int fd, bool show)
+{
+	WFIFOHEAD(fd, 3);
+	WFIFOW(fd, 0) = rodexicon;
+	WFIFOB(fd, 2) = (show == true ? 1 : 0);
+	WFIFOSET(fd, 3);
+}
+
+void clif_rodex_refresh_maillist(int fd, struct map_session_data *sd)
+{
+	const struct PACKET_CZ_REQ_REFRESH_MAIL_LIST *packet = RFIFOP(fd, 0);
+	rodex->refresh(sd, packet->opentype, packet->Upper_MailID);
+}
+
+void clif_rodex_open_mailbox(int fd, struct map_session_data *sd)
+{
+	const struct PACKET_CZ_REQ_OPEN_MAIL *packet = RFIFOP(fd, 0);
+	rodex->open(sd, packet->opentype);
+	rodex->clean(sd, 1);
+}
+
+void clif_rodex_close_mailbox(int fd, struct map_session_data *sd)
+{
+	rodex->clean(sd, 0);
+	intif->rodex_checkhasnew(sd);
+}
+
+void clif_rodex_cancel_write_mail(int fd, struct map_session_data *sd)
+{
+	rodex->clean(sd, 1);
+}
+
+/*==========================================
  * Main client packet processing function
  *------------------------------------------*/
 int clif_parse(int fd) {
@@ -20135,4 +20511,24 @@ void clif_defaults(void) {
 	clif->dressroom_open = clif_dressroom_open;
 	clif->pOneClick_ItemIdentify = clif_parse_OneClick_ItemIdentify;
 	clif->get_bl_name = clif_get_bl_name;
+	/* RODEX */
+	clif->pRodexOpenWriteMail = clif_parse_rodex_open_write_mail;
+	clif->pRodexAddItem = clif_parse_rodex_add_item;
+	clif->pRodexRemoveItem = clif_parse_rodex_remove_item;
+	clif->pRodexCheckName = clif_parse_rodex_checkname;
+	clif->rodex_checkname_result = clif_rodex_checkname_result;
+	clif->pRodexSendMail = clif_parse_rodex_send_mail;
+	clif->rodex_send_mail_result = clif_rodex_send_mail_result;
+	clif->rodex_open_mailbox = clif_rodex_open_mailbox;
+	clif->rodex_close_mailbox = clif_rodex_close_mailbox;
+	clif->rodex_cancel_write_mail = clif_rodex_cancel_write_mail;
+	clif->rodex_send_maillist = clif_rodex_send_maillist;
+	clif->rodex_send_refresh = clif_rodex_send_refresh;
+	clif->pRodexNextMaillist = clif_parse_rodex_next_maillist;
+	clif->rodex_refresh_maillist = clif_rodex_refresh_maillist;
+	clif->pRodexReadMail = clif_parse_rodex_read_mail;
+	clif->rodex_delete_mail = clif_rodex_delete_mail;
+	clif->rodex_request_zeny = clif_rodex_request_zeny;
+	clif->rodex_request_items = clif_rodex_request_items;
+	clif->rodex_icon = clif_rodex_icon;
 }

@@ -3731,6 +3731,23 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0923,36,clif->pStoragePassword,0);
 	packet(0x0a27,8); // ZC_RECOVERY2
 	packet(0x09f7,75); // ZC_PROPERTY_HOMUN_2
+	packet(0x09E8,11,clif->rodex_open_mailbox); // CZ_OPEN_MAILBOX
+	packet(0x0A08, 26, clif->pRodexOpenWriteMail);
+	packet(0x0A13, 26, clif->pRodexCheckName);
+	packet(0x0A04, 6, clif->pRodexAddItem);
+	packet(0x0A05, 53); // ZC_ATTACH_ITEM_RESULT
+	packet(0x0A07, 9); // ZC_ATTACH_ITEM_REMOVE_RESULT
+	packet(0x0A03, 2, clif->rodex_cancel_write_mail);
+	packet(0x0A12, 27); // ZC_WRITE_RESULT
+	packet(0x09E9, 2, clif->rodex_close_mailbox);
+	packet(0x0A06, 6, clif->pRodexRemoveItem);
+	packet(0x09EA, 11, clif->pRodexReadMail);
+	packet(0x09EC, -1, clif->pRodexSendMail);
+	packet(0x09EE, 11, clif->pRodexNextMaillist);
+	packet(0x09F5, 11, clif->rodex_delete_mail);
+	packet(0x09EF, 11, clif->rodex_refresh_maillist);
+	packet(0x09F1, 11, clif->rodex_request_zeny);
+	packet(0x09F3, 11, clif->rodex_request_items);
 #endif
 
 // 2015-05-20aRagexeRE
@@ -4303,6 +4320,16 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x095f,2,clif->pReqCloseBuyingStore,0);  // CZ_REQ_CLOSE_BUYING_STORE
 	packet(0x0965,36,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD
 	packet(0x0967,12,clif->pSearchStoreInfoListItemClick,2,6,10);  // CZ_SSILIST_ITEM_CLICK
+#endif
+
+// 2016-03-30aRagexeRE
+#if PACKETVER >= 20160330
+	packet(0x0A6E, -1, clif->pRodexSendMail); // CZ_RODEX_SEND_MAIL
+#endif
+
+// 2016-06-01aRagexeRE
+#if PACKETVER >= 20160601
+	packet(0x0A7D, -1); // ZC_RODEX_MAILLIST
 #endif
 
 /* PacketKeys: http://herc.ws/board/topic/1105-hercules-wpe-free-june-14th-patch/ */

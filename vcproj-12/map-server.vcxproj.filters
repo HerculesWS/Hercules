@@ -205,6 +205,9 @@
     <ClCompile Include="..\src\map\channel.c">
       <Filter>map</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\map\rodex.c">
+      <Filter>map</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\map\atcommand.h">
@@ -461,6 +464,9 @@
     </ClInclude>
     <ClInclude Include="..\src\config\secure.h">
       <Filter>config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\map\rodex.h">
+      <Filter>map</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

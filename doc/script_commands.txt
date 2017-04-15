@@ -8682,6 +8682,17 @@ Directions are the same as NPC sprite facing directions: (DIR_ constants).
 This will open a book item at the specified page.
 
 ---------------------------------------
+
+*rodex_sendmail <char id>, "<sender name>", "<title>", "<body>"{, <zeny>{, <items>{, <amount>{, <refine>{, <attribute>, <card0>, <card1>, <card2>, <card3>}}}}}
+*rodex_sendmail2 <account id>, "<sender name>", "<title>", "<body>"{, <zeny>{, <items>{, <amount>{, <refine>{, <attribute>, <card0>, <card1>, <card2>, <card3>}}}}}
+
+This will send a mail using the RoDEX mail system, in newer clients the message will be marked as a NPC mail (that you can't reply).
+items, amount, refine, attribute and card ids can be an array or a single value and you can attach up to RODEX_MAX_ITEM (5) items.
+items can be in Name or ID format.
+
+For examples of usage, see /doc/sample/npc_rodex.txt
+
+---------------------------------------
 //=====================================
 7 - Instance-Related Commands
 //=====================================
