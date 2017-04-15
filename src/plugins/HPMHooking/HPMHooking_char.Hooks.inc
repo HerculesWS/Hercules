@@ -1667,10 +1667,10 @@ void HP_chr_global_accreg_to_login_send(void) {
 	}
 	return;
 }
-void HP_chr_global_accreg_to_login_add(const char *key, unsigned int index, intptr_t val, bool is_string) {
+void HP_chr_global_accreg_to_login_add(const char *key, int index, intptr_t val, bool is_string) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_chr_global_accreg_to_login_add_pre > 0) {
-		void (*preHookFunc) (const char **key, unsigned int *index, intptr_t *val, bool *is_string);
+		void (*preHookFunc) (const char **key, int *index, intptr_t *val, bool *is_string);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_global_accreg_to_login_add_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_chr_global_accreg_to_login_add_pre[hIndex].func;
@@ -1685,7 +1685,7 @@ void HP_chr_global_accreg_to_login_add(const char *key, unsigned int index, intp
 		HPMHooks.source.chr.global_accreg_to_login_add(key, index, val, is_string);
 	}
 	if (HPMHooks.count.HP_chr_global_accreg_to_login_add_post > 0) {
-		void (*postHookFunc) (const char *key, unsigned int index, intptr_t val, bool is_string);
+		void (*postHookFunc) (const char *key, int index, intptr_t val, bool is_string);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_global_accreg_to_login_add_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_chr_global_accreg_to_login_add_post[hIndex].func;
 			postHookFunc(key, index, val, is_string);
@@ -6780,10 +6780,10 @@ void HP_inter_vmsg_to_fd(int fd, int u_fd, int aid, char *msg, va_list ap) {
 	}
 	return;
 }
-void HP_inter_savereg(int account_id, int char_id, const char *key, unsigned int index, intptr_t val, bool is_string) {
+void HP_inter_savereg(int account_id, int char_id, const char *key, int index, intptr_t val, bool is_string) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_inter_savereg_pre > 0) {
-		void (*preHookFunc) (int *account_id, int *char_id, const char **key, unsigned int *index, intptr_t *val, bool *is_string);
+		void (*preHookFunc) (int *account_id, int *char_id, const char **key, int *index, intptr_t *val, bool *is_string);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_savereg_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_inter_savereg_pre[hIndex].func;
@@ -6798,7 +6798,7 @@ void HP_inter_savereg(int account_id, int char_id, const char *key, unsigned int
 		HPMHooks.source.inter.savereg(account_id, char_id, key, index, val, is_string);
 	}
 	if (HPMHooks.count.HP_inter_savereg_post > 0) {
-		void (*postHookFunc) (int account_id, int char_id, const char *key, unsigned int index, intptr_t val, bool is_string);
+		void (*postHookFunc) (int account_id, int char_id, const char *key, int index, intptr_t val, bool is_string);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_savereg_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_inter_savereg_post[hIndex].func;
 			postHookFunc(account_id, char_id, key, index, val, is_string);

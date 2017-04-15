@@ -5008,8 +5008,6 @@ struct {
 	struct HPMHookPoint *HP_script_reg_destroy_single_post;
 	struct HPMHookPoint *HP_script_reg_destroy_pre;
 	struct HPMHookPoint *HP_script_reg_destroy_post;
-	struct HPMHookPoint *HP_script_generic_ui_array_expand_pre;
-	struct HPMHookPoint *HP_script_generic_ui_array_expand_post;
 	struct HPMHookPoint *HP_script_array_cpy_list_pre;
 	struct HPMHookPoint *HP_script_array_cpy_list_post;
 	struct HPMHookPoint *HP_script_hardcoded_constants_pre;
@@ -11217,8 +11215,6 @@ struct {
 	int HP_script_reg_destroy_single_post;
 	int HP_script_reg_destroy_pre;
 	int HP_script_reg_destroy_post;
-	int HP_script_generic_ui_array_expand_pre;
-	int HP_script_generic_ui_array_expand_post;
 	int HP_script_array_cpy_list_pre;
 	int HP_script_array_cpy_list_post;
 	int HP_script_hardcoded_constants_pre;
