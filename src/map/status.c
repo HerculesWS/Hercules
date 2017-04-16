@@ -9837,6 +9837,9 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			case SC_DARKCROW:
 				val2 = 30 * val1;
 				break;
+			case SC_UNLIMIT:
+				val2 = 50 * val1;
+				break;
 			case SC_MONSTER_TRANSFORM:
 				if (!mob->db_checkid(val1))
 					val1 = MOBID_PORING;
