@@ -1,0 +1,92 @@
+
+-	shop	event_shop_shop	-1,5254:10000000. //Deviling hat default
+
+prontera,164,171,4	script	Tienda de Eventos::event_shop_titans	871,{
+	if(countitem(.REWARD_ITEM)>=getvariableofnpc(.BUY_REQUIRED_QUANTITY,"event_shop_es")) {
+		for(set .@i,0; .@i< getvariableofnpc(.haveTicketsSize,"event_shop_es");set .@i,.@i+1){ //NPC Text
+			mes	getvariableofnpc(.haveTickets$[.@i],"event_shop_es");
+		}
+		next;
+		set .@Menu$,getvariableofnpc(.menuTrade$[0],"event_shop_es")+":"+getvariableofnpc(.menuTrade$[1],"event_shop_es");
+		if(select(.@Menu$) == 1) {
+			callshop "event_shop_shop",1;
+			npcshopattach "event_shop_shop";
+			end;
+		}
+	} else {
+		for(set .@i,0; .@i< getvariableofnpc(.explainSize,"event_shop_es");set .@i,.@i+1){ //NPC Text
+			mes	getvariableofnpc(.explain$[.@i],"event_shop_es");
+		}
+	}
+	close;
+	
+	OnBuyItem:
+		set .@bought,0;
+		set .@weight,readparam(24);
+		set .@total,0;
+		for (.@i = 0; .@i < getarraysize(@bought_nameid); ++.@i) {
+				set .@weight,.@weight+getiteminfo(@bought_nameid[.@i],6);
+				set .@total, .@total+ .PRIZE_ITEMS[.@j+1];
+		}
+		
+		if(.@weight>=readparam(25)) {
+			mes getvariableofnpc(.weightLimit$,"event_shop_es");
+			close;
+		} else {
+			for (.@i = 0; .@i < getarraysize(@bought_nameid); ++.@i) {
+				if (@bought_quantity[.@i] <= 0) {
+					mes "omgh4x!";
+					close;
+				} else {
+					for(.@j=0;.@j<getarraysize(.PRIZE_ITEMS);++.@j) {
+						if(.PRIZE_ITEMS[.@j] == @bought_nameid[.@i]) {
+							if(zeny >= .@total) {
+								getitem  @bought_nameid[.@i],@bought_quantity[.@i] ;
+								dispbottom getvariableofnpc(.gotItem$,"event_shop_es")+getitemname(@bought_nameid[.@i]);
+								Zeny -= .PRIZE_ITEMS[.@j+1];
+								set .@bought,1;
+							} else {
+								mes getvariableofnpc(.bankHack$,"event_shop_es");
+							}
+						}
+					}
+					
+				}
+			}
+		}
+		
+		if(.@bought>=1) {
+			delitem .REWARD_ITEM,getvariableofnpc(.BUY_REQUIRED_QUANTITY,"event_shop_es");
+			deletearray @bought_quantity, getarraysize(@bought_quantity);
+			deletearray @bought_nameid, getarraysize(@bought_nameid);
+		}
+			
+		
+	end;
+
+	
+	OnInit:
+		setarray .PRIZE_ITEMS[0],5254,20000000,5783,20000000,5690,20000000,18539,40000000,18600,40000000,2576,50000000;//DEVILING HAT,YellowBunny Hairband,Red Wing Hat,CAT EAR BEARET,skull cap,Adventurer's Backpack
+		for(set .@i,2;.@i<getarraysize(.PRIZE_ITEMS);set .@i,.@i+1) {
+			if((.@i%2)==0)
+				npcshopadditem "event_shop_shop",.PRIZE_ITEMS[.@i],.PRIZE_ITEMS[.@i+1];
+		}
+		set .REWARD_ITEM,7711;
+	end;
+}
+
+-	script	event_shop_es	-1,{
+	OnInit:
+		set .rewardItemName$,getitemname(7711);
+		set .BUY_REQUIRED_QUANTITY,50;
+		setarray .explain$[0],"^00CED1[ Tienda de Eventos ]^000000","En este server tenemos eventos automaticos.","Cada Evento Automatico te premia con mas de un ^0000FF"+.rewardItemName$+"^000000","Te dejare comprar en mi tienda" ," si me traes ^FF0000"+.BUY_REQUIRED_QUANTITY+"^000000 "+"^0000FF"+.rewardItemName$+"^000000";
+		set .explainSize,getarraysize(.explain$);
+		set .gotItem$,"Obtuvistes un ";
+		setarray .haveTickets$[0],"Veo que has conseguido","^FF0000"+.rewardItemName$+"^000000","Deseas cambiar algunos por premios?";
+		set .haveTicketsSize,getarraysize(.haveTickets$);
+		set .bankHack$,"Nah, sin zeny no te llevas nada de esta tienda";
+		set .weightLimit$,"Excedes el ^FF0000limite de peso^000000 para comprar. Regresa cuando tengas espacio.";
+		setarray .menuTrade$[0],"Si","No";
+	end;
+	
+}
