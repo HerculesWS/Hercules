@@ -2305,7 +2305,8 @@ void intif_parse_RequestRodexOpenInbox(int fd) {
 	struct map_session_data *sd;
 	int8 opentype = RFIFOB(fd, 8);
 	int8 flag = RFIFOB(fd, 9);
-	int count = RFIFOL(fd, 10);
+	int8 is_end = RFIFOB(fd, 10);
+	int count = RFIFOL(fd, 11);
 	int i, j;
 
 	sd = map->charid2sd(RFIFOL(fd, 4));
@@ -2314,52 +2315,27 @@ void intif_parse_RequestRodexOpenInbox(int fd) {
 		return;
 
 	sd->rodex.total = count;
-	if (RFIFOW(fd, 2) - 14 != sd->rodex.total * sizeof(struct rodex_message)) {
-		ShowError("intif_parse_RodexInboxOpenReceived: data size mismatch %d != %"PRIuS"\n", RFIFOW(fd, 2) - 14, sd->rodex.total * sizeof(struct rodex_message));
+	if (RFIFOW(fd, 2) - 15 != sd->rodex.total * sizeof(struct rodex_message)) {
+		ShowError("intif_parse_RodexInboxOpenReceived: data size mismatch %d != %"PRIuS"\n", RFIFOW(fd, 2) - 15, sd->rodex.total * sizeof(struct rodex_message));
 		return;
 	}
 
 	if (flag == 0)
 		VECTOR_CLEAR(sd->rodex.messages);
 
-	for (i = 0, j = 14; i < count; ++i, j += sizeof(struct rodex_message)) {
+	for (i = 0, j = 15; i < count; ++i, j += sizeof(struct rodex_message)) {
 		struct rodex_message msg = { 0 };
 		VECTOR_ENSURE(sd->rodex.messages, 1, 1);
 		memcpy(&msg, RFIFOP(fd, j), sizeof(struct rodex_message));
 		VECTOR_PUSH(sd->rodex.messages, msg);
 	}
-	if (flag == 0)
-		clif->rodex_send_maillist(sd->fd, sd, opentype, VECTOR_LENGTH(sd->rodex.messages) - 1);
-	else
-		clif->rodex_send_refresh(sd->fd, sd, opentype, count);
-}
 
-void intif_parse_RequestRodexInboxPage(int fd) {
-	struct rodex_message messages[RODEX_MAIL_PER_PAGE];
-	struct map_session_data *sd;
-	int8 opentype = RFIFOB(fd, 8);
-	int count = RFIFOL(fd, 9);
-	int i, page_start;
-
-	sd = map->charid2sd(RFIFOL(fd, 4));
-
-	if (sd == NULL) // user is not online anymore
-		return;
-
-	if (RFIFOW(fd, 2) - 13 != RODEX_MAIL_PER_PAGE * sizeof(struct rodex_message)) {
-		ShowError("intif_parse_RequestRodexInboxPage: data size mismatch %d != %"PRIuS"\n", RFIFOW(fd, 2) - 13, RODEX_MAIL_PER_PAGE * sizeof(struct rodex_message));
-		return;
+	if (is_end == true) {
+		if (flag == 0)
+			clif->rodex_send_maillist(sd->fd, sd, opentype, VECTOR_LENGTH(sd->rodex.messages) - 1);
+		else
+			clif->rodex_send_refresh(sd->fd, sd, opentype, count);
 	}
-
-	memcpy(messages, RFIFOP(fd, 13), RODEX_MAIL_PER_PAGE * sizeof(struct rodex_message));
-
-	page_start = VECTOR_LENGTH(sd->rodex.messages) - 1;
-	for (i = 0; i < count; ++i) {
-		VECTOR_ENSURE(sd->rodex.messages, 1, 1);
-		VECTOR_PUSH(sd->rodex.messages, messages[i]);
-	}
-
-	clif->rodex_send_maillist(sd->fd, sd, opentype, page_start);
 }
 
 /*------------------------------------------
@@ -2427,6 +2403,8 @@ int intif_rodex_sendmail(struct rodex_message *msg)
 	if (intif->CheckForCharServer())
 		return 0;
 
+	nullpo_retr(0, msg);
+
 	WFIFOHEAD(inter_fd, 4 + sizeof(struct rodex_message));
 	WFIFOW(inter_fd, 0) = 0x3098;
 	WFIFOW(inter_fd, 2) = 4 + sizeof(struct rodex_message);
@@ -2462,6 +2440,9 @@ int intif_rodex_checkname(struct map_session_data *sd, const char *name)
 	if (intif->CheckForCharServer())
 		return 0;
 
+	nullpo_retr(0, sd);
+	nullpo_retr(0, name);
+
 	WFIFOHEAD(inter_fd, 6 + NAME_LENGTH);
 	WFIFOW(inter_fd, 0) = 0x3099;
 	WFIFOL(inter_fd, 2) = sd->status.char_id;
@@ -2484,8 +2465,8 @@ void intif_parse_RodexCheckName(int fd)
 
 	if (reqchar_id <= 0)
 		return;
-	else
-		sd = map->charid2sd(reqchar_id);
+	
+	sd = map->charid2sd(reqchar_id);
 
 	if (sd == NULL) // User is not online anymore
 		return;
@@ -2612,10 +2593,9 @@ int intif_parse(int fd)
 
 		// RoDEX
 		case 0x3895: intif->pRequestRodexOpenInbox(fd); break;
-		case 0x3896: intif->pRequestRodexInboxPage(fd); break;
-		case 0x3897: intif->pRodexHasNew(fd); break;
-		case 0x3898: intif->pRodexSendMail(fd); break;
-		case 0x3899: intif->pRodexCheckName(fd); break;
+		case 0x3896: intif->pRodexHasNew(fd); break;
+		case 0x3897: intif->pRodexSendMail(fd); break;
+		case 0x3898: intif->pRodexCheckName(fd); break;
 	default:
 		ShowError("intif_parse : unknown packet %d %x\n",fd,RFIFOW(fd,0));
 		return 0;
@@ -2641,7 +2621,7 @@ void intif_defaults(void) {
 		-1, 7, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3860  Quests [Kevin] [Inkfish]
 		-1, 3, 3, 0,  0, 0, 0, 0,  0, 0, 0, 0, -1, 3,  3, 0, //0x3870  Mercenaries [Zephyrus] / Elemental [pakpil]
 		12,-1, 7, 3,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3880
-		-1,-1, 7, 3,  0,-1,-1, 7, 15,16 + NAME_LENGTH, 0, 0,  0, 0,  0, 0, //0x3890  Homunculus [albator] / RoDEX [KirieZ]
+		-1,-1, 7, 3,  0,-1, 7, 15,16 + NAME_LENGTH, 0, 0, 0, 0, 0, 0, 0, //0x3890  Homunculus [albator] / RoDEX [KirieZ]
 	};
 
 	intif = &intif_s;
@@ -2798,7 +2778,6 @@ void intif_defaults(void) {
 	intif->pDeleteHomunculusOk = intif_parse_DeleteHomunculusOk;
 	/* RoDEX */
 	intif->pRequestRodexOpenInbox = intif_parse_RequestRodexOpenInbox;
-	intif->pRequestRodexInboxPage = intif_parse_RequestRodexInboxPage;
 	intif->pRodexHasNew = intif_parse_RodexNotifications;
 	intif->pRodexSendMail = intif_parse_RodexSendMail;
 	intif->pRodexCheckName = intif_parse_RodexCheckName;

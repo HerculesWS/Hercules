@@ -1263,12 +1263,6 @@ struct packet_whisper_message {
 } __attribute__((packed));
 
 /* RoDEX */
-struct ITEM_OPT_DATA {
-	int16 OptIndex;
-	int16 Value;
-	int8 Parm1;
-} __attribute__((packed));
-
 struct PACKET_CZ_ADD_ITEM_TO_MAIL {
 	int16 PacketType;
 	int16 index;
@@ -1306,7 +1300,7 @@ struct mail_item {
 
 struct PACKET_CZ_REQ_OPEN_WRITE_MAIL {
 	int16 PacketType;
-	char receiveName[24];
+	char receiveName[NAME_LENGTH];
 } __attribute__((packed));
 
 struct PACKET_ZC_ACK_OPEN_WRITE_MAIL {

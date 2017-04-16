@@ -486,7 +486,7 @@ END_ZEROED_BLOCK;
 	// RoDEX
 	struct {
 		struct rodex_message tmp;
-		VECTOR_DECL(struct rodex_message) messages;
+		struct rodex_maillist messages;
 		int total;
 		bool new_mail;
 	} rodex;

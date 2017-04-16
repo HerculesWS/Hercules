@@ -21352,7 +21352,7 @@ BUILDIN(rodex_sendmail)
 	const char *send_name, *title, *body, *arr_name;
 	bool items_array = false;
 
-	if (!strcmp(script->getfuncname(st), "rodex_sendmail2"))
+	if (!strcmp(script->getfuncname(st), "rodex_sendmail_acc"))
 		msg.receiver_accountid = script_getnum(st, 2);
 	else
 		msg.receiver_id = script_getnum(st, 2);
@@ -21412,26 +21412,7 @@ BUILDIN(rodex_sendmail)
 				}
 			}
 
-			if (is_string_variable(arr_name) == true) {
-				// Item Names
-				int i;
-
-				for (i = 0; i < item_count; ++i) {
-					const char *name = (const char *)script->get_val2(st, reference_uid(arr_id, arr_idx + i), reference_getref(data));
-					struct item_data *idata = itemdb->search_name(name);
-					script_removetop(st, -1, 0);
-
-					if (idata == NULL) {
-						ShowError("script:rodex_sendmail: Unknown item name %s.\n", name);
-						script_pushint(st, 6);
-						return false;
-					}
-
-					++msg.items_count;
-					msg.items[i].item.nameid = idata->nameid;
-					msg.items[i].item.identify = 1;
-				}
-			} else {
+			if (is_string_variable(arr_name) == false) {
 				// Item Ids
 				int i;
 
@@ -21450,22 +21431,16 @@ BUILDIN(rodex_sendmail)
 					msg.items[i].item.nameid = idata->nameid;
 					msg.items[i].item.identify = 1;
 				}
+			} else {
+				ShowError("script:rodex_sendmail: Items must be passed as Numbers.\n");
+				return false;
 			}
 		} else {
 			// Single Item
 			struct item_data *idata;
 			item_count = 1;
 
-			if (data_isstring(script_getdata(st, 7))) {
-				// as Name
-				const char *item_name = script_getstr(st, 7);
-				idata = itemdb->search_name(item_name);
-				
-				if (idata == NULL) {
-					ShowError("script:rodex_sendmail: Unknown item name %s.\n", item_name);
-					return false;
-				}
-			} else {
+			if (data_isstring(script_getdata(st, 7)) == false) {
 				// as ID
 				int itemid = script_getnum(st, 7);
 
@@ -21475,6 +21450,9 @@ BUILDIN(rodex_sendmail)
 				}
 
 				idata = itemdb->search(itemid);
+			} else {
+				ShowError("script:rodex_sendmail: Item must be passed as Number.\n");
+				return false;
 			}
 
 			msg.items_count = 1;
@@ -22513,7 +22491,7 @@ void script_parse_builtin(void) {
 
 		// -- RoDEX
 		BUILDIN_DEF(rodex_sendmail, "isss?????????"),
-		BUILDIN_DEF2(rodex_sendmail, "rodex_sendmail2", "isss??????????"),
+		BUILDIN_DEF2(rodex_sendmail, "rodex_sendmail_acc", "isss??????????"),
 		BUILDIN_DEF(_,"s"),
 		BUILDIN_DEF2(_, "_$", "s"),
 	};

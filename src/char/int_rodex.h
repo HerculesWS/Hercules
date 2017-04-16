@@ -2,8 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2016  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2017 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,6 +32,7 @@ struct inter_rodex_interface {
 	int (*sql_init) (void);
 	void (*sql_final) (void);
 	int (*parse_frommap) (int fd);
+	int (*fromsql) (int char_id, int account_id, int8 opentype, int64 mail_id, struct rodex_maillist *mails);
 	bool (*hasnew) (int char_id, int account_id);
 	bool (*checkname) (char name[NAME_LENGTH], int *target_char_id, short *target_class, int *target_level);
 	int64 (*savemessage) (struct rodex_message* msg);

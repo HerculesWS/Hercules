@@ -2,8 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2016  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2017 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,15 +44,17 @@ struct rodex_interface rodex_s;
 struct rodex_interface *rodex;
 
 /// Checks if RoDEX System is enabled in the server
+/// Returns true if it's enabled, false otherwise
 bool rodex_isenabled(void)
 {
-	if (battle_config.feature_rodex != true)
-		return false;
+	if (battle_config.feature_rodex == 1)
+		return true;
 
-	return true;
+	return false;
 }
 
 /// Checks and refreshes the user daily number of Stamps
+/// @param sd : The player who's being checked
 void rodex_refresh_stamps(struct map_session_data *sd) {
 	int today = date_get_date();
 	nullpo_retv(sd);
@@ -74,23 +75,29 @@ void rodex_refresh_stamps(struct map_session_data *sd) {
 /// @param sd : The player who's writting
 /// @param idx : the inventory idx of the item
 /// @param amount : Amount of the item to be attached
-int rodex_add_item(struct map_session_data *sd, int16 idx, int16 amount)
+void rodex_add_item(struct map_session_data *sd, int16 idx, int16 amount)
 {
 	int i;
 	bool is_stack = false;
 
-	nullpo_retr(RODEX_ADD_ITEM_FATEL_ERROR, sd);
+	nullpo_retv(sd);
 
-	if (idx < 0 || idx >= MAX_INVENTORY)
-		return RODEX_ADD_ITEM_FATEL_ERROR;
+	if (idx < 0 || idx >= MAX_INVENTORY) {
+		clif->rodex_add_item_result(sd, idx, amount, RODEX_ADD_ITEM_FATAL_ERROR);
+		return;
+	}
 
-	if (amount < 0 || amount > sd->status.inventory[idx].amount)
-		return RODEX_ADD_ITEM_FATEL_ERROR;
+	if (amount < 0 || amount > sd->status.inventory[idx].amount) {
+		clif->rodex_add_item_result(sd, idx, amount, RODEX_ADD_ITEM_FATAL_ERROR);
+		return;
+	}
 
 	if (!pc_can_give_items(sd) || sd->status.inventory[idx].expire_time ||
 		!itemdb_canmail(&sd->status.inventory[idx], pc_get_group_level(sd)) ||
-		(sd->status.inventory[idx].bound && !pc_can_give_bound_items(sd)))
-		return RODEX_ADD_ITEM_NOT_TRADEABLE;
+		(sd->status.inventory[idx].bound && !pc_can_give_bound_items(sd))) {
+		clif->rodex_add_item_result(sd, idx, amount, RODEX_ADD_ITEM_NOT_TRADEABLE);
+		return;
+	}
 
 	if (itemdb->isstackable(sd->status.inventory[idx].nameid) == 1) {
 		for (i = 0; i < RODEX_MAX_ITEM; ++i) {
@@ -103,21 +110,29 @@ int rodex_add_item(struct map_session_data *sd, int16 idx, int16 amount)
 			}
 		}
 
-		if (i == RODEX_MAX_ITEM) {
+		if (i == RODEX_MAX_ITEM && sd->rodex.tmp.items_count < RODEX_MAX_ITEM) {
 			ARR_FIND(0, RODEX_MAX_ITEM, i, sd->rodex.tmp.items[i].idx == 0);
 		}
-	} else {
+	} else if (sd->rodex.tmp.items_count < RODEX_MAX_ITEM) {
 		ARR_FIND(0, RODEX_MAX_ITEM, i, sd->rodex.tmp.items[i].idx == 0);
+	} else {
+		i = RODEX_MAX_ITEM;
 	}
 
-	if (i == RODEX_MAX_ITEM)
-		return RODEX_ADD_ITEM_NO_SPACE;
+	if (i == RODEX_MAX_ITEM) {
+		clif->rodex_add_item_result(sd, idx, amount, RODEX_ADD_ITEM_NO_SPACE);
+		return;
+	}
 	
-	if (sd->rodex.tmp.items[i].item.amount + amount > sd->status.inventory[idx].amount)
-		return RODEX_ADD_ITEM_FATEL_ERROR;
+	if (sd->rodex.tmp.items[i].item.amount + amount > sd->status.inventory[idx].amount) {
+		clif->rodex_add_item_result(sd, idx, amount, RODEX_ADD_ITEM_FATAL_ERROR);
+		return;
+	}
 
-	if (sd->rodex.tmp.weight + sd->inventory_data[idx]->weight * amount > RODEX_WEIGHT_LIMIT)
-		return RODEX_ADD_ITEM_WEIGHT_ERROR;
+	if (sd->rodex.tmp.weight + sd->inventory_data[idx]->weight * amount > RODEX_WEIGHT_LIMIT) {
+		clif->rodex_add_item_result(sd, idx, amount, RODEX_ADD_ITEM_FATAL_ERROR);
+		return;
+	}
 
 	sd->rodex.tmp.items[i].idx = idx;
 	sd->rodex.tmp.weight += sd->inventory_data[idx]->weight * amount;
@@ -130,33 +145,37 @@ int rodex_add_item(struct map_session_data *sd, int16 idx, int16 amount)
 	}
 	sd->rodex.tmp.type |= MAIL_TYPE_ITEM;
 
-	return RODEX_ADD_ITEM_SUCCESS;
+	clif->rodex_add_item_result(sd, idx, amount, RODEX_ADD_ITEM_SUCCESS);
 }
 
 /// Removes an item attached to a message being writen
 /// @param sd : The player who's writting the message
 /// @param idx : The index of the item
 /// @param amount : How much to remove
-int rodex_remove_item(struct map_session_data *sd, int16 idx, int16 amount)
+void rodex_remove_item(struct map_session_data *sd, int16 idx, int16 amount)
 {
 	int i;
 	struct item *it;
 	struct item_data *itd;
 
-	nullpo_retr(-1, sd);
+	nullpo_retv(sd);
 
 	for (i = 0; i < RODEX_MAX_ITEM; ++i) {
 		if (sd->rodex.tmp.items[i].idx == idx)
 			break;
 	}
 
-	if (i == RODEX_MAX_ITEM)
-		return -1;
+	if (i == RODEX_MAX_ITEM) {
+		clif->rodex_remove_item_result(sd, idx, -1);
+		return;
+	}
 
 	it = &sd->rodex.tmp.items[i].item;
 
-	if (amount < 0 || amount > it->amount)
-		return -1;
+	if (amount <= 0 || amount > it->amount) {
+		clif->rodex_remove_item_result(sd, idx, -1);
+		return;
+	}
 
 	itd = itemdb->search(it->nameid);
 
@@ -167,12 +186,14 @@ int rodex_remove_item(struct map_session_data *sd, int16 idx, int16 amount)
 			sd->rodex.tmp.type &= ~MAIL_TYPE_ITEM;
 		}
 		memset(&sd->rodex.tmp.items[i], 0x0, sizeof(sd->rodex.tmp.items[0]));
-		return 0;
+		clif->rodex_remove_item_result(sd, idx, 0);
+		return;
 	}
 
 	it->amount -= amount;
 	sd->rodex.tmp.weight -= itd->weight * amount;
-	return it->amount;
+	
+	clif->rodex_remove_item_result(sd, idx, it->amount);
 }
 
 /// Request if character with given name exists and returns information about him
@@ -181,14 +202,9 @@ int rodex_remove_item(struct map_session_data *sd, int16 idx, int16 amount)
 /// @param base_level : Reference to return the character base level, if he exists
 /// @param char_id : Reference to return the character id, if he exists
 /// @param class : Reference to return the character class id, if he exists
-bool rodex_check_player(struct map_session_data *sd, const char *name, int *base_level, int *char_id, short *class)
+void rodex_check_player(struct map_session_data *sd, const char *name, int *base_level, int *char_id, short *class)
 {
-	nullpo_retr(false, sd);
-	nullpo_retr(false, name);
-
 	intif->rodex_checkname(sd, name);
-
-	return true;
 }
 
 /// Sends a Mail to an character
@@ -197,6 +213,12 @@ bool rodex_check_player(struct map_session_data *sd, const char *name, int *base
 /// @param body : Mail message
 /// @param title : Mail Title
 /// @param zeny : Amount of zeny attached
+/// Returns result code:
+/// 	RODEX_SEND_MAIL_SUCCESS = 0,
+///		RODEX_SEND_MAIL_FATAL_ERROR = 1,
+///		RODEX_SEND_MAIL_COUNT_ERROR = 2,
+///		RODEX_SEND_MAIL_ITEM_ERROR = 3,
+///		RODEX_SEND_MAIL_RECEIVER_ERROR = 4
 int rodex_send_mail(struct map_session_data *sd, const char *receiver_name, const char *body, const char *title, int64 zeny)
 {
 	int i;
@@ -208,10 +230,10 @@ int rodex_send_mail(struct map_session_data *sd, const char *receiver_name, cons
 	nullpo_retr(RODEX_SEND_MAIL_FATAL_ERROR, title);
 
 	total_zeny = zeny + sd->rodex.tmp.items_count * ATTACHITEM_COST + (2 * zeny)/100;
-
+	
 	if (strcmp(receiver_name, sd->rodex.tmp.receiver_name) != 0) {
 		rodex->clean(sd, 1);
-		return RODEX_SEND_MAIL_RECIEVE_ERROR;
+		return RODEX_SEND_MAIL_RECEIVER_ERROR;
 	}
 
 	if (total_zeny > sd->status.zeny || total_zeny < 0) {
@@ -223,7 +245,7 @@ int rodex_send_mail(struct map_session_data *sd, const char *receiver_name, cons
 
 	if (sd->sc.data[SC_DAILYSENDMAILCNT]->val2 >= DAILY_MAX_MAILS) {
 		rodex->clean(sd, 1);
-		return RODEX_ADD_ITEM_FATEL_ERROR;
+		return RODEX_SEND_MAIL_COUNT_ERROR;
 	}
 
 	sc_start2(NULL, &sd->bl, SC_DAILYSENDMAILCNT, 100, sd->sc.data[SC_DAILYSENDMAILCNT]->val1, sd->sc.data[SC_DAILYSENDMAILCNT]->val2 + 1, INFINITE_DURATION);
@@ -262,7 +284,7 @@ int rodex_send_mail(struct map_session_data *sd, const char *receiver_name, cons
 	}
 
 	sd->rodex.tmp.zeny = zeny;
-	sd->rodex.tmp.is_readed = false;
+	sd->rodex.tmp.is_read = false;
 	sd->rodex.tmp.is_deleted = false;
 	sd->rodex.tmp.send_date = (int)time(NULL);
 	sd->rodex.tmp.expire_date = (int)time(NULL) + RODEX_EXPIRE;
@@ -302,11 +324,11 @@ void rodex_send_mail_result(struct map_session_data *ssd, struct map_session_dat
 	return;
 }
 
-/// Opens one mail
-/// @param sd : Who's opening
-/// @param mail_id : Mail ID that's being open
-/// @param is_read : Is this a read request? (Sets is_readed = true)
-struct rodex_message *rodex_get_mail(struct map_session_data *sd, int64 mail_id, bool is_read)
+/// Retrieves one message from character
+/// @param sd : Character
+/// @param mail_id : Mail ID that's being retrieved
+/// Returns the message
+struct rodex_message *rodex_get_mail(struct map_session_data *sd, int64 mail_id)
 {
 	int i;
 	struct rodex_message *msg;
@@ -318,82 +340,103 @@ struct rodex_message *rodex_get_mail(struct map_session_data *sd, int64 mail_id,
 		return NULL;
 
 	msg = &VECTOR_INDEX(sd->rodex.messages, i);
-	if (is_read == true) {
-		if (msg->is_readed == false) {
-			intif->rodex_updatemail(msg->id, 0);
-			msg->is_readed = true;
-		}
-	}
 	
 	return msg;
+}
+
+/// Request to read a mail by its ID
+/// @param sd : Who's reading
+/// @param mail_id : Mail ID to be read
+void rodex_read_mail(struct map_session_data *sd, int64 mail_id)
+{
+	struct rodex_message *msg;
+
+	nullpo_retv(sd);
+
+	msg = rodex->get_mail(sd, mail_id);
+	nullpo_retv(msg);
+
+	if (msg->is_read == false) {
+		intif->rodex_updatemail(msg->id, 0);
+		msg->is_read = true;
+	}
+
+	clif->rodex_read_mail(sd, msg->opentype, msg);
 }
 
 /// Deletes a mail
 /// @param sd : Who's deleting
 /// @param mail_id : Mail ID to be deleted
-bool rodex_delete_mail(struct map_session_data *sd, int64 mail_id)
+void rodex_delete_mail(struct map_session_data *sd, int64 mail_id)
 {
 	struct rodex_message *msg;
 
-	nullpo_retr(false, sd);
+	nullpo_retv(sd);
 
-	msg = rodex->get_mail(sd, mail_id, false);
-
-	if (msg == NULL) {
-		return false;
-	}
+	msg = rodex->get_mail(sd, mail_id);
+	nullpo_retv(msg);
 
 	msg->is_deleted = true;
 	intif->rodex_updatemail(msg->id, 3);
 
-	return true;
+	clif->rodex_delete_mail(sd, msg->opentype, msg->id);
 }
 
 /// Gets attached zeny
 /// @param sd : Who's getting
 /// @param mail_id : Mail ID that we're getting zeny from
-int rodex_get_zeny(struct map_session_data *sd, int64 mail_id)
+void rodex_get_zeny(struct map_session_data *sd, int8 opentype, int64 mail_id)
 {
 	struct rodex_message *msg;
 
-	nullpo_retr(RODEX_GET_ZENY_FATEL_ERROR, sd);
+	nullpo_retv(sd);
 
-	msg = rodex->get_mail(sd, mail_id, false);
+	msg = rodex->get_mail(sd, mail_id);
 
-	if (msg == NULL)
-		return RODEX_GET_ZENY_FATEL_ERROR;
+	if (msg == NULL) {
+		clif->rodex_request_zeny(sd, opentype, mail_id, RODEX_GET_ZENY_FATAL_ERROR);
+		return;
+	}
 
-	if ((int64)sd->status.zeny + msg->zeny > MAX_ZENY)
-		return RODEX_GET_ZENY_LIMIT_ERROR;
+	if ((int64)sd->status.zeny + msg->zeny > MAX_ZENY) {
+		clif->rodex_request_zeny(sd, opentype, mail_id, RODEX_GET_ZENY_LIMIT_ERROR);
+		return;
+	}
 
-	if (pc->getzeny(sd, (int)msg->zeny, LOG_TYPE_MAIL, NULL) != 0)
-		return RODEX_GET_ZENY_FATEL_ERROR;
+	if (pc->getzeny(sd, (int)msg->zeny, LOG_TYPE_MAIL, NULL) != 0) {
+		clif->rodex_request_zeny(sd, opentype, mail_id, RODEX_GET_ZENY_FATAL_ERROR);
+		return;
+	}
 
 	msg->zeny = 0;
 	intif->rodex_updatemail(mail_id, 1);
 
-	return RODEX_GET_ZENY_SUCCESS;
+	clif->rodex_request_zeny(sd, opentype, mail_id, RODEX_GET_ZENY_SUCCESS);
 }
 
 /// Gets attached item
 /// @param sd : Who's getting
 /// @param mail_id : Mail ID that we're getting items from
-int rodex_get_items(struct map_session_data *sd, int64 mail_id)
+void rodex_get_items(struct map_session_data *sd, int8 opentype, int64 mail_id)
 {
 	struct rodex_message *msg;
 	int weight = 0;
 	int empty_slots = 0;
 	int i;
 
-	nullpo_retr(RODEX_GET_ITEM_FATEL_ERROR, sd);
+	nullpo_retv(sd);
 
-	msg = rodex->get_mail(sd, mail_id, false);
+	msg = rodex->get_mail(sd, mail_id);
 
-	if (msg == NULL)
-		return RODEX_GET_ITEM_FATEL_ERROR;
+	if (msg == NULL) {
+		clif->rodex_request_items(sd, opentype, mail_id, RODEX_GET_ITEM_FATAL_ERROR);
+		return;
+	}
 
-	if (msg->items_count < 1)
-		return RODEX_GET_ITEM_FATEL_ERROR;
+	if (msg->items_count < 1) {
+		clif->rodex_request_items(sd, opentype, mail_id, RODEX_GET_ITEM_FATAL_ERROR);
+		return;
+	}
 
 	for (i = 0; i < RODEX_MAX_ITEM; ++i) {
 		if (msg->items[i].item.nameid != 0) {
@@ -401,8 +444,10 @@ int rodex_get_items(struct map_session_data *sd, int64 mail_id)
 		}
 	}
 
-	if ((sd->weight + weight > sd->max_weight))
-		return RODEX_GET_ITEM_FULL_ERROR;
+	if ((sd->weight + weight > sd->max_weight)) {
+		clif->rodex_request_items(sd, opentype, mail_id, RODEX_GET_ITEM_FULL_ERROR);
+		return;
+	}
 
 	for (i = 0; i < MAX_INVENTORY; ++i) {
 		if (sd->status.inventory[i].nameid == 0) {
@@ -410,8 +455,10 @@ int rodex_get_items(struct map_session_data *sd, int64 mail_id)
 		}
 	}
 
-	if (empty_slots < msg->items_count)
-		return RODEX_GET_ITEM_FULL_ERROR;
+	if (empty_slots < msg->items_count) {
+		clif->rodex_request_items(sd, opentype, mail_id, RODEX_GET_ITEM_FULL_ERROR);
+		return;
+	}
 
 	for (i = 0; i < RODEX_MAX_ITEM; ++i) {
 		struct item *it = &msg->items[i].item;
@@ -421,7 +468,8 @@ int rodex_get_items(struct map_session_data *sd, int64 mail_id)
 		}
 
 		if (pc->additem(sd, it, it->amount, LOG_TYPE_MAIL) != 0) {
-			return RODEX_GET_ITEM_FULL_ERROR;
+			clif->rodex_request_items(sd, opentype, mail_id, RODEX_GET_ITEM_FULL_ERROR);
+			return;
 		} else {
 			memset(it, 0x0, sizeof(*it));
 		}
@@ -429,7 +477,7 @@ int rodex_get_items(struct map_session_data *sd, int64 mail_id)
 
 	intif->rodex_updatemail(mail_id, 2);
 
-	return RODEX_GET_ITEMS_SUCCESS;
+	clif->rodex_request_items(sd, opentype, mail_id, RODEX_GET_ITEMS_SUCCESS);
 }
 
 /// Cleans user's RoDEX related data
@@ -524,6 +572,7 @@ void rodex_defaults(void)
 	rodex->send_mail = rodex_send_mail;
 	rodex->send_mail_result = rodex_send_mail_result;
 	rodex->get_mail = rodex_get_mail;
+	rodex->read_mail = rodex_read_mail;
 	rodex->delete_mail = rodex_delete_mail;
 	rodex->get_zeny = rodex_get_zeny;
 	rodex->get_items = rodex_get_items;

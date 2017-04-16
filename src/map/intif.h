@@ -205,7 +205,6 @@ struct intif_interface {
 	void (*pDeleteHomunculusOk) (int fd);
 	/* RoDEX */
 	void(*pRequestRodexOpenInbox) (int fd);
-	void(*pRequestRodexInboxPage) (int fd);
 	void(*pRodexHasNew) (int fd);
 	void(*pRodexSendMail) (int fd);
 	void(*pRodexCheckName) (int fd);

@@ -2,8 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2016  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2017 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +30,7 @@ struct rodex_message;
 enum rodex_add_item {
 	RODEX_ADD_ITEM_SUCCESS = 0,
 	RODEX_ADD_ITEM_WEIGHT_ERROR = 1,
-	RODEX_ADD_ITEM_FATEL_ERROR = 2,
+	RODEX_ADD_ITEM_FATAL_ERROR = 2,
 	RODEX_ADD_ITEM_NO_SPACE = 3,
 	RODEX_ADD_ITEM_NOT_TRADEABLE = 4,
 };
@@ -39,20 +38,20 @@ enum rodex_add_item {
 enum rodex_send_mail {
 	RODEX_SEND_MAIL_SUCCESS = 0,
 	RODEX_SEND_MAIL_FATAL_ERROR = 1,
-	RODEX_SEND_MAIL_COUNT_ERROR = 2, //unknow yet
+	RODEX_SEND_MAIL_COUNT_ERROR = 2,
 	RODEX_SEND_MAIL_ITEM_ERROR = 3,
-	RODEX_SEND_MAIL_RECIEVE_ERROR = 4
+	RODEX_SEND_MAIL_RECEIVER_ERROR = 4
 };
 
 enum rodex_get_zeny {
 	RODEX_GET_ZENY_SUCCESS = 0,
-	RODEX_GET_ZENY_FATEL_ERROR = 1,
+	RODEX_GET_ZENY_FATAL_ERROR = 1,
 	RODEX_GET_ZENY_LIMIT_ERROR = 2
 };
 
 enum rodex_get_items {
 	RODEX_GET_ITEMS_SUCCESS = 0,
-	RODEX_GET_ITEM_FATEL_ERROR = 1,
+	RODEX_GET_ITEM_FATAL_ERROR = 1,
 	RODEX_GET_ITEM_FULL_ERROR = 2,
 };
 
@@ -61,15 +60,16 @@ struct rodex_interface {
 	void (*open) (struct map_session_data *sd, int8 open_type);
 	void (*next_page) (struct map_session_data *sd, int8 open_type, int64 last_mail_id);
 	void (*refresh) (struct map_session_data *sd, int8 open_type, int64 first_mail_id);
-	int  (*add_item) (struct map_session_data *sd, int16 idx, int16 amount);
-	int  (*remove_item) (struct map_session_data *sd, int16 idx, int16 amount);
-	bool (*check_player) (struct map_session_data *sd, const char *name, int *base_level, int *char_id, short *class);
+	void (*add_item) (struct map_session_data *sd, int16 idx, int16 amount);
+	void (*remove_item) (struct map_session_data *sd, int16 idx, int16 amount);
+	void (*check_player) (struct map_session_data *sd, const char *name, int *base_level, int *char_id, short *class);
 	int (*send_mail) (struct map_session_data *sd, const char *recieve_name, const char *body, const char *title, int64 zeny);
 	void (*send_mail_result) (struct map_session_data *ssd, struct map_session_data *rsd, bool result);
-	struct rodex_message *(*get_mail) (struct map_session_data *sd, int64 mail_id, bool is_read);
-	int (*get_zeny) (struct map_session_data *sd, int64 mail_id);
-	int (*get_items) (struct map_session_data *sd, int64 mail_id);
-	bool (*delete_mail) (struct map_session_data *sd, int64 mail_id);
+	struct rodex_message *(*get_mail) (struct map_session_data *sd, int64 mail_id);
+	void (*read_mail) (struct map_session_data *sd, int64 mail_id);
+	void (*get_zeny) (struct map_session_data *sd, int8 opentype, int64 mail_id);
+	void (*get_items) (struct map_session_data *sd, int8 opentype, int64 mail_id);
+	void (*delete_mail) (struct map_session_data *sd, int64 mail_id);
 	void (*clean) (struct map_session_data *sd, int8 flag);
 };
 

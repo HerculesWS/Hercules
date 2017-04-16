@@ -2627,6 +2627,11 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x09e0,-1); // SC_LOGIN_ANSWER_WITH_ID
 #endif
 
+#if PACKETVER >= 20131211
+// new packets
+	packet(0x09e9,2,clif->pRodexCloseMailbox); // CZ_CLOSE_RODEXBOX
+#endif
+
 // 2013-12-18bRagexe - Yommy
 #if PACKETVER >= 20131218
 	packet(0x0369,7,clif->pActionRequest,2,6);
@@ -2664,6 +2669,9 @@ packet(0x96e,-1,clif->ackmergeitems);
 	/* NPC Market */
 	packet(0x09d8,2,clif->pNPCMarketClosed);
 	packet(0x09d6,-1,clif->pNPCMarketPurchase);
+	packet(0x09f5,11,clif->pRodexDeleteMail); // CZ_REQ_DELETE_RODEX
+	packet(0x09ee,11,clif->pRodexNextMaillist); // CZ_REQ_NEXT_RODEX
+	packet(0x09ef,11,clif->pRodexRefreshMaillist); // CZ_REQ_REFRESH_RODEX
 #endif
 
 // 2013-12-23cRagexe - Yommy
@@ -2698,6 +2706,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0363,8,clif->pDull); // CZ_JOIN_BATTLE_FIELD
 	packet(0x0436,4,clif->pDull); // CZ_GANGSI_RANK
 	packet(0x09cb,17);
+	packet(0x09ea,11,clif->pRodexReadMail); // CZ_REQ_READ_RODEX
 #endif
 
 // 2013-12-30aRagexe - Yommy
@@ -2731,6 +2740,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x091D,36,clif->pStoragePassword,0);
 	packet(0x087e,4,clif->pDull); // CZ_GANGSI_RANK
 	packet(0x093e,8,clif->pDull); // CZ_JOIN_BATTLE_FIELD
+	packet(0x09ec,-1,clif->pRodexSendMail); // CZ_REQ_SEND_RODEX
 #endif
 
 // 2014 Packet Data
@@ -2848,7 +2858,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 // new packets
 	packet(0x0a02,4); // ZC_DRESSROOM_OPEN
 // changed packet sizes
-	packet(0x09e8,11,clif->pDull/*,XXX*/); // CZ_OPEN_RODEXBOX
+	packet(0x09e8,11,clif->pRodexOpenMailbox); // CZ_OPEN_RODEXBOX
 #endif
 
 // 2014-02-19aRagexeRE
@@ -2942,11 +2952,11 @@ packet(0x96e,-1,clif->ackmergeitems);
 // 2014-03-26cRagexeRE
 #if PACKETVER >= 20140326
 // changed packet sizes
-	packet(0x09f1,11,clif->pDull/*,XXX*/); // CZ_REQ_ZENY_FROM_RODEX
+	packet(0x09f1,11,clif->pRodexRequestZeny); // CZ_REQ_ZENY_FROM_RODEX
 	packet(0x09f2,4); // ZC_ACK_ZENY_FROM_RODEX
-	packet(0x09f3,11,clif->pDull/*,XXX*/); // CZ_REQ_ITEM_FROM_RODEX
+	packet(0x09f3,11,clif->pRodexRequestItems); // CZ_REQ_ITEM_FROM_RODEX
 	packet(0x09f4,4); // ZC_ACK_ITEM_FROM_RODEX
-	packet(0x0a03,2,clif->pDull/*,XXX*/); // CZ_REQ_CANCEL_WRITE_RODEX
+	packet(0x0a03,2,clif->pRodexCancelWriteMail); // CZ_REQ_CANCEL_WRITE_RODEX
 	packet(0x0a07,6); // ZC_ACK_REMOVE_RODEX_ITEM
 	packet(0x0a08,7,clif->pDull/*,XXX*/); // CZ_REQ_OPEN_WRITE_RODEX
 #endif
@@ -3036,14 +3046,14 @@ packet(0x96e,-1,clif->ackmergeitems);
 // 2014-04-16aRagexeRE
 #if PACKETVER >= 20140416
 // new packets
-	packet(0x0a04,6,clif->pDull/*,XXX*/); // CZ_REQ_ADD_ITEM_RODEX
+	packet(0x0a04,6,clif->pRodexAddItem); // CZ_REQ_ADD_ITEM_RODEX
 	packet(0x0a12,27); // ZC_ACK_OPEN_WRITE_RODEX
-	packet(0x0a13,2,clif->pDull/*,XXX*/); // CZ_CHECK_RECEIVE_CHARACTER_NAME
+	packet(0x0a13,2,clif->pRodexCheckName); // CZ_CHECK_RECEIVE_CHARACTER_NAME
 // changed packet sizes
 	packet(0x0a05,48); // ZC_ACK_ADD_ITEM_RODEX
-	packet(0x0a06,6,clif->pDull/*,XXX*/); // CZ_REQ_REMOVE_RODEX_ITEM
+	packet(0x0a06,6,clif->pRodexRemoveItem); // CZ_REQ_REMOVE_RODEX_ITEM
 	packet(0x0a07,7); // ZC_ACK_REMOVE_RODEX_ITEM
-	packet(0x0a08,26,clif->pDull/*,XXX*/); // CZ_REQ_OPEN_WRITE_RODEX
+	packet(0x0a08,26,clif->pRodexOpenWriteMail); // CZ_REQ_OPEN_WRITE_RODEX
 #endif
 
 // 2014-04-23aRagexeRE
@@ -3051,7 +3061,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 // new packets
 	packet(0x0a14,6); // ZC_CHECK_RECEIVE_CHARACTER_NAME
 // changed packet sizes
-	packet(0x0a13,26,clif->pDull/*,XXX*/); // CZ_CHECK_RECEIVE_CHARACTER_NAME
+	packet(0x0a13,26,clif->pRodexCheckName); // CZ_CHECK_RECEIVE_CHARACTER_NAME
 #endif
 
 // 2014-04-30aRagexeRE
@@ -3731,23 +3741,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0923,36,clif->pStoragePassword,0);
 	packet(0x0a27,8); // ZC_RECOVERY2
 	packet(0x09f7,75); // ZC_PROPERTY_HOMUN_2
-	packet(0x09E8,11,clif->rodex_open_mailbox); // CZ_OPEN_MAILBOX
-	packet(0x0A08, 26, clif->pRodexOpenWriteMail);
-	packet(0x0A13, 26, clif->pRodexCheckName);
-	packet(0x0A04, 6, clif->pRodexAddItem);
-	packet(0x0A05, 53); // ZC_ATTACH_ITEM_RESULT
-	packet(0x0A07, 9); // ZC_ATTACH_ITEM_REMOVE_RESULT
-	packet(0x0A03, 2, clif->rodex_cancel_write_mail);
-	packet(0x0A12, 27); // ZC_WRITE_RESULT
-	packet(0x09E9, 2, clif->rodex_close_mailbox);
-	packet(0x0A06, 6, clif->pRodexRemoveItem);
-	packet(0x09EA, 11, clif->pRodexReadMail);
-	packet(0x09EC, -1, clif->pRodexSendMail);
-	packet(0x09EE, 11, clif->pRodexNextMaillist);
-	packet(0x09F5, 11, clif->rodex_delete_mail);
-	packet(0x09EF, 11, clif->rodex_refresh_maillist);
-	packet(0x09F1, 11, clif->rodex_request_zeny);
-	packet(0x09F3, 11, clif->rodex_request_items);
 #endif
 
 // 2015-05-20aRagexeRE
