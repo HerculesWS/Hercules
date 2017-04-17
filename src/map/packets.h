@@ -2697,6 +2697,13 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0436,4,clif->pDull); // CZ_GANGSI_RANK
 #endif
 
+// 2013-08-07aRagexe
+#if PACKETVER >= 20130807
+// new packets
+	packet(0x09cd,8); // ZC_MSG_COLOR
+// changed packet sizes
+#endif
+
 //2013-08-14aRagexe - Themon
 #if PACKETVER >= 20130814
 	packet(0x0874,7,clif->pActionRequest,2,6);
