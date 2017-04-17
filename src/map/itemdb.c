@@ -673,8 +673,11 @@ int itemdb_isequip2(struct item_data *data) {
  *------------------------------------------*/
 int itemdb_isstackable(int nameid)
 {
-	int type=itemdb_type(nameid);
-	switch(type) {
+	struct item_data *data = itemdb->exists(nameid);
+	nullpo_ret(data);
+	if (data->flag.force_serial)
+		return 0;
+	switch(data->type) {
 		case IT_WEAPON:
 		case IT_ARMOR:
 		case IT_PETEGG:
@@ -691,6 +694,8 @@ int itemdb_isstackable(int nameid)
 int itemdb_isstackable2(struct item_data *data)
 {
 	nullpo_ret(data);
+	if (data->flag.force_serial)
+		return 0;
 	switch(data->type) {
 		case IT_WEAPON:
 		case IT_ARMOR:
