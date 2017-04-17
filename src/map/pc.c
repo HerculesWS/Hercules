@@ -4847,10 +4847,40 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 			if( pc_issit(sd) )
 				return 0;
 			break;
+
+		case ITEMID_GIANT_FLY_WING: {
+			struct party_data *p;
+
+			if (!sd->status.party_id) {
+				clif->msgtable(sd, MSG_PARTY_MEMBER_NOT_SUMMONED);
+				break;
+			}
+
+			if ((p = party->search(sd->status.party_id)) != NULL) {
+				int i;
+				int16 m;
+
+				ARR_FIND(0, MAX_PARTY, i, p->data[i].sd == sd);
+
+				if (i == MAX_PARTY || !p->party.member[i].leader) {
+					clif->msgtable(sd, MSG_PARTY_MEMBER_NOT_SUMMONED);
+					break;
+				}
+
+				m = sd->bl.m;
+
+				ARR_FIND(0, MAX_PARTY, i, p->data[i].sd && p->data[i].sd != sd && p->data[i].sd->bl.m == m);
+
+				if (i == MAX_PARTY || pc_isdead(p->data[i].sd)) {
+					clif->msgtable(sd, MSG_PARTY_NO_MEMBER_IN_MAP);
+					break;
+				}
+			}
+		}
+
 		case ITEMID_WING_OF_FLY:
-		case ITEMID_GIANT_FLY_WING:
-			if( map->list[sd->bl.m].flag.noteleport || map_flag_gvg2(sd->bl.m) ) {
-				clif->skill_mapinfomessage(sd,0);
+			if (map->list[sd->bl.m].flag.noteleport || map_flag_gvg2(sd->bl.m)) {
+				clif->skill_mapinfomessage(sd, 0);
 				return 0;
 			}
 			/* Fall through */
