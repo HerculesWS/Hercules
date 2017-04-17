@@ -2638,6 +2638,12 @@ packet(0x96e,-1,clif->ackmergeitems);
 // changed packet sizes
 #endif
 
+// 2013-06-05Ragexe
+#if PACKETVER >= 20130605
+// new packets
+	packet(0x09c4,8); // ZC_ACK_COUNT_BARGAIN_SALE_ITEM
+#endif
+
 //2013-08-07Ragexe (Shakto)
 #if PACKETVER >= 20130807
 	packet(0x0369,7,clif->pActionRequest,2,6);
