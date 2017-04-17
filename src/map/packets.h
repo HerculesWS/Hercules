@@ -2222,6 +2222,12 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0436,4,clif->pDull); // CZ_GANGSI_RANK
 #endif
 
+// 2012-09-25aRagexe
+#if PACKETVER >= 20120925
+// new packets (not all)
+	packet(0x0998,8,clif->pEquipItem,2,4);
+#endif
+
 // 2013-02-06aRagexe
 #if PACKETVER >= 20130206
 // new packets
@@ -2293,7 +2299,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	// Shuffle End
 
 	// New Packets
-	packet(0x0998,8,clif->pEquipItem,2,4);
 	packet(0x0447,2); // PACKET_CZ_BLOCKING_PLAY_CANCEL
 	packet(0x099f,24);
 	// New Packets End
