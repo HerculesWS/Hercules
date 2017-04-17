@@ -2612,6 +2612,15 @@ packet(0x96e,-1,clif->ackmergeitems);
 // changed packet sizes
 #endif
 
+// 2013-05-02aRagexe
+#if PACKETVER >= 20130502
+// new packets
+	packet(0x09be,6,clif->pDull/*,XXX*/); // CZ_REQ_CLOSE_GUILD_STORAGE
+	packet(0x09bf,4); // ZC_ACK_CLOSE_GUILD_STORAGE
+// changed packet sizes
+	packet(0x09bb,6); // ZC_ACK_OPEN_GUILD_STORAGE
+#endif
+
 /* Bank System [Yommy/Hercules] */
 #if PACKETVER >= 20130724
 // shuffle packets not added
