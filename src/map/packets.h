@@ -2621,11 +2621,14 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x09bb,6); // ZC_ACK_OPEN_GUILD_STORAGE
 #endif
 
-/* Bank System [Yommy/Hercules] */
-#if PACKETVER >= 20130724
-// shuffle packets not added
-	packet(0x09A8,16); // ZC_ACK_BANKING_DEPOSIT
-	packet(0x09AA,16); // ZC_ACK_BANKING_WITHDRAW
+// 2013-05-15aRagexe
+#if PACKETVER >= 20130515
+// new packets
+	packet(0x09c0,11); // ZC_ACTION_MOVE
+	packet(0x09c1,11); // ZC_C_MARKERINFO
+// changed packet sizes
+	packet(0x09a8,16); // ZC_ACK_BANKING_DEPOSIT
+	packet(0x09aa,16); // ZC_ACK_BANKING_WITHDRAW
 #endif
 
 //2013-08-07Ragexe (Shakto)
