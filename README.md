@@ -1,6 +1,8 @@
 Hercules
 ========
 
+[![Join the chat at https://gitter.im/HerculesWS/Hercules](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/HerculesWS/Hercules?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Build Status:  
 [![Build Status](https://travis-ci.org/HerculesWS/Hercules.svg?branch=master)](https://travis-ci.org/HerculesWS/Hercules)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/cm9xbwurpbltqjop?svg=true)](https://ci.appveyor.com/project/Haru/hercules)
