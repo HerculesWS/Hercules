@@ -2222,6 +2222,13 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0436,4,clif->pDull); // CZ_GANGSI_RANK
 #endif
 
+// 2013-02-06aRagexe
+#if PACKETVER >= 20130206
+// new packets
+	packet(0x09a4,18); // ZC_DISPATCH_TIMING_INFO_CHN
+// changed packet sizes
+#endif
+
 //2013-03-20Ragexe (Judas + Yommy)
 #if PACKETVER >= 20130320
 	// Shuffle Start
