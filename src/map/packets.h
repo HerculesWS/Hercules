@@ -2767,6 +2767,13 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x09be,2,clif->pDull/*,XXX*/); // CZ_REQ_CLOSE_GUILD_STORAGE
 #endif
 
+// 2013-09-04aRagexe
+#if PACKETVER >= 20130904
+// new packets
+// changed packet sizes
+	packet(0x09ca,-1); // ZC_SKILL_ENTRY5
+#endif
+
 // 2013-10-30aRagexe
 #if PACKETVER >= 20131030
 // new packets
