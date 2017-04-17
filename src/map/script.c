@@ -6690,9 +6690,10 @@ BUILDIN(warpchar) {
 	return true;
 }
 /*==========================================
- * Warpparty - [Fredzilla] [Paradox924X]
- * Syntax: warpparty "to_mapname",x,y,Party_ID,{"from_mapname"};
+ * Warpparty - [Fredzilla] [Paradox924X] [Jedzkie] [Dastgir]
+ * Syntax: warpparty("<to_mapname>", <x>, <y>, <party_id>, {"<from_mapname>"}, {<include_leader>})
  * If 'from_mapname' is specified, only the party members on that map will be warped
+ * If 'include_leader' option is set to false, the leader will be warped too.
  *------------------------------------------*/
 BUILDIN(warpparty)
 {
@@ -6702,78 +6703,83 @@ BUILDIN(warpparty)
 	int type;
 	int map_index;
 	int i;
+	bool include_leader = true;
 
-	const char* str = script_getstr(st,2);
-	int x = script_getnum(st,3);
-	int y = script_getnum(st,4);
-	int p_id = script_getnum(st,5);
+	const char* str = script_getstr(st, 2);
+	int x = script_getnum(st, 3);
+	int y = script_getnum(st, 4);
+	int p_id = script_getnum(st, 5);
 	const char* str2 = NULL;
-	if ( script_hasdata(st,6) )
-		str2 = script_getstr(st,6);
+	if (script_hasdata(st, 6))
+		str2 = script_getstr(st, 6);
+	if (script_hasdata(st, 7))
+		include_leader = script_getnum(st, 7);
 
 	p = party->search(p_id);
-	if(!p)
+
+	if (p == NULL)
 		return true;
 
-	type = ( strcmp(str,"Random")==0 ) ? 0
-	: ( strcmp(str,"SavePointAll")==0 ) ? 1
-	: ( strcmp(str,"SavePoint")==0 ) ? 2
-	: ( strcmp(str,"Leader")==0 ) ? 3
+	type = (strcmp(str, "Random") == 0) ? 0
+	: (strcmp(str, "SavePointAll") == 0) ? 1
+	: (strcmp(str, "SavePoint") == 0) ? 2
+	: (strcmp(str, "Leader") == 0) ? 3
 	: 4;
 
-	switch (type)
-	{
-		case 3:
-			for(i = 0; i < MAX_PARTY && !p->party.member[i].leader; i++);
-			if (i == MAX_PARTY || !p->data[i].sd) //Leader not found / not online
-				return true;
-			pl_sd = p->data[i].sd;
-			map_index = pl_sd->mapindex;
-			x = pl_sd->bl.x;
-			y = pl_sd->bl.y;
-			break;
-		case 4:
-			map_index = script->mapindexname2id(st,str);
-			break;
-		case 2:
-			//"SavePoint" uses save point of the currently attached player
-			if (( sd = script->rid2sd(st) ) == NULL )
-				return true;
-			/* Fall through */
-		default:
-			map_index = 0;
-			break;
+	switch (type) {
+	case 3:
+		ARR_FIND(0, MAX_PARTY, i, p->party.member[i].leader);
+		if (i == MAX_PARTY || !p->data[i].sd) // Leader not found / not online
+			return true;
+		pl_sd = p->data[i].sd;
+		map_index = pl_sd->mapindex;
+		x = pl_sd->bl.x;
+		y = pl_sd->bl.y;
+		break;
+	case 4:
+		map_index = script->mapindexname2id(st, str);
+		break;
+	case 2:
+		// "SavePoint" uses save point of the currently attached player
+		if ((sd = script->rid2sd(st)) == NULL)
+			return true;
+		/* Fall through */
+	default:
+		map_index = 0;
+		break;
 	}
 
 	for (i = 0; i < MAX_PARTY; i++) {
-		if( !(pl_sd = p->data[i].sd) || pl_sd->status.party_id != p_id )
+		if (!(pl_sd = p->data[i].sd) || pl_sd->status.party_id != p_id)
 			continue;
 
-		if( str2 && strcmp(str2, map->list[pl_sd->bl.m].name) != 0 )
+		if (str2 && strcmp(str2, map->list[pl_sd->bl.m].name) != 0)
 			continue;
 
-		if( pc_isdead(pl_sd) )
+		if (pc_isdead(pl_sd))
 			continue;
 
-		switch( type )
-		{
-			case 0: // Random
-				if(!map->list[pl_sd->bl.m].flag.nowarp)
-					pc->randomwarp(pl_sd,CLR_TELEPORT);
-				break;
-			case 1: // SavePointAll
-				if(!map->list[pl_sd->bl.m].flag.noreturn)
-					pc->setpos(pl_sd,pl_sd->status.save_point.map,pl_sd->status.save_point.x,pl_sd->status.save_point.y,CLR_TELEPORT);
-				break;
-			case 2: // SavePoint
-				if(!map->list[pl_sd->bl.m].flag.noreturn)
-					pc->setpos(pl_sd,sd->status.save_point.map,sd->status.save_point.x,sd->status.save_point.y,CLR_TELEPORT);
-				break;
-			case 3: // Leader
-			case 4: // m,x,y
-				if(!map->list[pl_sd->bl.m].flag.noreturn && !map->list[pl_sd->bl.m].flag.nowarp)
-					pc->setpos(pl_sd,map_index,x,y,CLR_TELEPORT);
-				break;
+		if (include_leader == false && p->party.member[i].leader)
+			continue;
+
+		switch( type ) {
+		case 0: // Random
+			if (!map->list[pl_sd->bl.m].flag.nowarp)
+				pc->randomwarp(pl_sd, CLR_TELEPORT);
+			break;
+		case 1: // SavePointAll
+			if (!map->list[pl_sd->bl.m].flag.noreturn)
+				pc->setpos(pl_sd, pl_sd->status.save_point.map, pl_sd->status.save_point.x, pl_sd->status.save_point.y, CLR_TELEPORT);
+			break;
+		case 2: // SavePoint
+			if (!map->list[pl_sd->bl.m].flag.noreturn)
+				pc->setpos(pl_sd, sd->status.save_point.map, sd->status.save_point.x, sd->status.save_point.y, CLR_TELEPORT);
+			break;
+		case 3: // Leader
+		case 4: // m,x,y
+			if (!map->list[pl_sd->bl.m].flag.noreturn && !map->list[pl_sd->bl.m].flag.nowarp)
+				pc->setpos(pl_sd, map_index, x, y, CLR_TELEPORT);
+			break;
 		}
 	}
 
@@ -21524,7 +21530,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(warp,"sii?"),
 		BUILDIN_DEF(areawarp,"siiiisii??"),
 		BUILDIN_DEF(warpchar,"siii"), // [LuzZza]
-		BUILDIN_DEF(warpparty,"siii?"), // [Fredzilla] [Paradox924X]
+		BUILDIN_DEF(warpparty,"siii??"), // [Fredzilla] [Paradox924X] [Jedzkie] [Dastgir]
 		BUILDIN_DEF(warpguild,"siii?"), // [Fredzilla]
 		BUILDIN_DEF(setlook,"ii"),
 		BUILDIN_DEF(changelook,"ii"), // Simulates but don't Store it
