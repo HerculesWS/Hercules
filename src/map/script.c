@@ -20640,7 +20640,7 @@ BUILDIN(qicheck)
 
 	it = &VECTOR_INDEX(script->hqi, idx);
 
-	if (it->pos <= 0 || it->pos > VECTOR_LENGTH(it->entries)) {
+	if (it->pos <= 0 || it->pos >= VECTOR_LENGTH(it->entries)) {
 		script_pushint(st, 0);
 	} else {
 		script_pushint(st, 1);
