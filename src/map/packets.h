@@ -2750,6 +2750,13 @@ packet(0x96e,-1,clif->ackmergeitems);
 // changed packet sizes
 #endif
 
+// 2013-08-21bRagexe
+#if PACKETVER >= 20130821
+// new packets
+	packet(0x09d1,14); // ZC_PROGRESS_ACTOR
+// changed packet sizes
+#endif
+
 // 2013-10-30aRagexe
 #if PACKETVER >= 20131030
 // new packets
