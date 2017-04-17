@@ -2631,6 +2631,13 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x09aa,16); // ZC_ACK_BANKING_WITHDRAW
 #endif
 
+// 2013-05-29Ragexe
+#if PACKETVER >= 20130529
+// new packets
+	packet(0x09c3,8,clif->pDull/*,XXX*/); // CZ_REQ_COUNT_BARGAIN_SALE_ITEM
+// changed packet sizes
+#endif
+
 //2013-08-07Ragexe (Shakto)
 #if PACKETVER >= 20130807
 	packet(0x0369,7,clif->pActionRequest,2,6);
