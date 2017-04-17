@@ -2741,6 +2741,15 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0896,8,clif->pDull); // CZ_JOIN_BATTLE_FIELD
 #endif
 
+// 2013-08-14aRagexe
+#if PACKETVER >= 20130814
+// new packets
+	packet(0x09ce,102,clif->pGM_Monster_Item,2); // CZ_ITEM_CREATE_EX
+	packet(0x09cf,-1); // ZC_NPROTECTGAMEGUARDCSAUTH
+	packet(0x09d0,-1,clif->pDull/*,XXX*/); // CZ_NPROTECTGAMEGUARDCSAUTH
+// changed packet sizes
+#endif
+
 // 2013-10-30aRagexe
 #if PACKETVER >= 20131030
 // new packets
@@ -2782,7 +2791,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x087b,4,clif->pDull); // CZ_GANGSI_RANK
 	/* New */
 	packet(0x09d4,2,clif->pNPCShopClosed);
-	packet(0x09ce,102,clif->pGM_Monster_Item,2);
 	/* NPC Market */
 	packet(0x09d8,2,clif->pNPCMarketClosed);
 	packet(0x09d6,-1,clif->pNPCMarketPurchase);
