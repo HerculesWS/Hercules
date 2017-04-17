@@ -2590,16 +2590,23 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0436,4,clif->pDull); // CZ_GANGSI_RANK
 #endif
 
+// 2013-04-17aRagexe
+#if PACKETVER >= 20130417
+// new packets
+	packet(0x09b4,6,clif->pDull/*,XXX*/); // CZ_OPEN_BARGAIN_SALE_TOOL
+	packet(0x09b5,2); // ZC_OPEN_BARGAIN_SALE_TOOL
+	packet(0x09b6,6,clif->pBankOpen,2,4); // CZ_REQ_OPEN_BANKING
+	packet(0x09b7,4); // ZC_ACK_OPEN_BANKING
+	packet(0x09b8,6,clif->pBankClose,2,4); // CZ_REQ_CLOSE_BANKING
+	packet(0x09b9,4); // ZC_ACK_CLOSE_BANKING
+// changed packet sizes
+#endif
+
 /* Bank System [Yommy/Hercules] */
 #if PACKETVER >= 20130724
 // shuffle packets not added
 	packet(0x09A8,16); // ZC_ACK_BANKING_DEPOSIT
 	packet(0x09AA,16); // ZC_ACK_BANKING_WITHDRAW
-	////
-	packet(0x09B6,6,clif->pBankOpen,2,4);
-	packet(0x09B7,4); // ZC_ACK_OPEN_BANKING
-	packet(0x09B8,6,clif->pBankClose,2,4);
-	packet(0x09B9,4); // ZC_ACK_CLOSE_BANKING
 #endif
 
 //2013-08-07Ragexe (Shakto)
