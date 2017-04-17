@@ -2651,6 +2651,15 @@ packet(0x96e,-1,clif->ackmergeitems);
 // changed packet sizes
 #endif
 
+// 2013-07-17cRagexe
+#if PACKETVER >= 20130717
+// new packets
+	packet(0x09cb,17); // ZC_USE_SKILL2
+	packet(0x09cc,-1); // ZC_SECRETSCAN_DATA
+// changed packet sizes
+	packet(0x09c1,10); // ZC_C_MARKERINFO
+#endif
+
 //2013-08-07Ragexe (Shakto)
 #if PACKETVER >= 20130807
 	packet(0x0369,7,clif->pActionRequest,2,6);
@@ -2803,7 +2812,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x08A4,36,clif->pStoragePassword,0);
 	packet(0x0363,8,clif->pDull); // CZ_JOIN_BATTLE_FIELD
 	packet(0x0436,4,clif->pDull); // CZ_GANGSI_RANK
-	packet(0x09cb,17);
 #endif
 
 // 2013-12-30aRagexe - Yommy
