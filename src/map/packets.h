@@ -2314,6 +2314,20 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x09ab,6,clif->pBankCheck,2,4); // CZ_REQ_BANKING_CHECK
 #endif
 
+// 2013-03-27bRagexe
+#if PACKETVER >= 20130327
+// new packets
+	packet(0x09ac,-1,clif->pDull/*,XXX*/); // CZ_REQ_CASH_BARGAIN_SALE_ITEM_INFO
+	packet(0x09ad,10); // ZC_ACK_CASH_BARGAIN_SALE_ITEM_INFO
+	packet(0x09ae,17,clif->pDull/*,XXX*/); // CZ_REQ_APPLY_BARGAIN_SALE_ITEM
+	packet(0x09af,4); // ZC_ACK_APPLY_BARGAIN_SALE_ITEM
+	packet(0x09b0,8,clif->pDull/*,XXX*/); // CZ_REQ_REMOVE_BARGAIN_SALE_ITEM
+	packet(0x09b1,4); // ZC_ACK_REMOVE_BARGAIN_SALE_ITEM
+	packet(0x09b2,6); // ZC_NOTIFY_BARGAIN_SALE_SELLING
+	packet(0x09b3,6); // ZC_NOTIFY_BARGAIN_SALE_CLOSE
+// changed packet sizes
+#endif
+
 //2013-05-15aRagexe (Shakto)
 #if PACKETVER >= 20130515
 	// Shuffle Start
