@@ -2229,6 +2229,17 @@ packet(0x96e,-1,clif->ackmergeitems);
 // changed packet sizes
 #endif
 
+// 2013-03-06aRagexe
+#if PACKETVER >= 20130306
+// new packets
+	packet(0x09a6,12); // ZC_BANKING_CHECK
+	packet(0x09a7,14,clif->pDull/*,XXX*/); // CZ_REQ_BANKING_DEPOSIT
+	packet(0x09a8,4); // ZC_ACK_BANKING_DEPOSIT
+	packet(0x09a9,14,clif->pDull/*,XXX*/); // CZ_REQ_BANKING_WITHDRAW
+	packet(0x09aa,4); // ZC_ACK_BANKING_WITHDRAW
+// changed packet sizes
+#endif
+
 //2013-03-20Ragexe (Judas + Yommy)
 #if PACKETVER >= 20130320
 	// Shuffle Start
@@ -2539,7 +2550,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 /* Bank System [Yommy/Hercules] */
 #if PACKETVER >= 20130724
 // shuffle packets not added
-	packet(0x09A6,12); // ZC_BANKING_CHECK
 	packet(0x09A7,10,clif->pBankDeposit,2,4,6);
 	packet(0x09A8,16); // ZC_ACK_BANKING_DEPOSIT
 	packet(0x09A9,10,clif->pBankWithdraw,2,4,6);
