@@ -10632,9 +10632,9 @@ void clif_parse_NpcClicked(int fd,struct map_session_data *sd)
 		clif->clearunit_area(&sd->bl,CLR_DEAD);
 		return;
 	}
-	if( sd->npc_id || sd->state.workinprogress&2 ){
-#ifdef RENEWAL
-		clif->msgtable(sd, MSG_NPC_WORK_IN_PROGRESS); // TODO look for the client date that has this message.
+	if (sd->npc_id || sd->state.workinprogress&2) {
+#if PACKETVER >= 20110309
+		clif->msgtable(sd, MSG_NPC_WORK_IN_PROGRESS);
 #endif
 		return;
 	}
@@ -10647,8 +10647,8 @@ void clif_parse_NpcClicked(int fd,struct map_session_data *sd)
 			clif->pActionRequest_sub(sd, 0x07, bl->id, timer->gettick());
 			break;
 		case BL_NPC:
-			if( sd->ud.skill_id < RK_ENCHANTBLADE && sd->ud.skilltimer != INVALID_TIMER ) {// TODO: should only work with none 3rd job skills
-#ifdef RENEWAL
+			if (sd->ud.skill_id < RK_ENCHANTBLADE && sd->ud.skilltimer != INVALID_TIMER) {// TODO: should only work with none 3rd job skills
+#if PACKETVER >= 20110309
 				clif->msgtable(sd, MSG_NPC_WORK_IN_PROGRESS);
 #endif
 				break;
@@ -11032,12 +11032,12 @@ void clif_parse_ChangeCart(int fd,struct map_session_data *sd)
 	if( pc->checkskill(sd, MC_CHANGECART) < 1 )
 		return;
 
-#ifdef RENEWAL
-	if( sd->npc_id || sd->state.workinprogress&1 ){
+	if (sd->npc_id || sd->state.workinprogress&1) {
+#if PACKETVER >= 20110309
 		clif->msgtable(sd, MSG_NPC_WORK_IN_PROGRESS);
+#endif
 		return;
 	}
-#endif
 
 	type = RFIFOW(fd,2);
 #ifdef NEW_CARTS
@@ -11244,9 +11244,9 @@ void clif_parse_UseSkillToId(int fd, struct map_session_data *sd)
 	// Whether skill fails or not is irrelevant, the char ain't idle. [Skotlex]
 	pc->update_idle_time(sd, BCIDLE_USESKILLTOID);
 
-	if( sd->npc_id || sd->state.workinprogress&1 ){
-#ifdef RENEWAL
-		clif->msgtable(sd, MSG_NPC_WORK_IN_PROGRESS); // TODO look for the client date that has this message.
+	if (sd->npc_id || sd->state.workinprogress&1) {
+#if PACKETVER >= 20110309
+		clif->msgtable(sd, MSG_NPC_WORK_IN_PROGRESS);
 #endif
 		return;
 	}
@@ -11341,12 +11341,12 @@ void clif_parse_UseSkillToPosSub(int fd, struct map_session_data *sd, uint16 ski
 		return;
 	}
 
-#ifdef RENEWAL
-	if( sd->state.workinprogress&1 ){
-		clif->msgtable(sd, MSG_NPC_WORK_IN_PROGRESS); // TODO look for the client date that has this message.
+	if (sd->state.workinprogress&1) {
+#if PACKETVER >= 20110309
+		clif->msgtable(sd, MSG_NPC_WORK_IN_PROGRESS);
+#endif
 		return;
 	}
-#endif
 
 	//Whether skill fails or not is irrelevant, the char ain't idle. [Skotlex]
 	pc->update_idle_time(sd, BCIDLE_USESKILLTOPOS);
