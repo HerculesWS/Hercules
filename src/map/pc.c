@@ -4918,11 +4918,6 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 		return 0;
 
 	/**
-	 * Only Rune Knights may use runes
-	 **/
-	if (itemdb_is_rune(nameid) && (sd->job & MAPID_THIRDMASK) != MAPID_RUNE_KNIGHT)
-		return 0;
-	/**
 	 * Only GCross may use poisons
 	 **/
 	else if (itemdb_is_poison(nameid) && (sd->job & MAPID_THIRDMASK) != MAPID_GUILLOTINE_CROSS)
