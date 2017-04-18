@@ -2985,6 +2985,16 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x093e,8,clif->pDull); // CZ_JOIN_BATTLE_FIELD
 #endif
 
+// 2013-12-30aRagexe
+#if PACKETVER >= 20131230
+// new packets
+	packet(0x09ec,-1,clif->pDull/*,XXX*/); // CZ_REQ_SEND_RODEX
+	packet(0x09ed,3); // ZC_ACK_SEND_RODEX
+	packet(0x09f7,75); // ZC_PROPERTY_HOMUN_2
+// changed packet sizes
+	packet(0x09eb,23); // ZC_ACK_READ_RODEX
+#endif
+
 // 2014 Packet Data
 
 // 2014-01-15eRagexe
@@ -3980,7 +3990,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0817,5,clif->pHomMenu,2,4);
 	packet(0x0923,36,clif->pStoragePassword,0);
 	packet(0x0a27,8); // ZC_RECOVERY2
-	packet(0x09f7,75); // ZC_PROPERTY_HOMUN_2
 #endif
 
 // 2015-05-20aRagexeRE
