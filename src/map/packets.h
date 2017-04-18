@@ -2845,6 +2845,14 @@ packet(0x96e,-1,clif->ackmergeitems);
 // changed packet sizes
 #endif
 
+// 2013-11-27bRagexe
+#if PACKETVER >= 20131127
+// new packets
+// changed packet sizes
+	packet(0x09e5,18); // ZC_DELETEITEM_FROM_MCSTORE2
+	packet(0x09e6,22); // ZC_UPDATE_ITEM_FROM_BUYING_STORE2
+#endif
+
 // 2013-12-18bRagexe - Yommy
 #if PACKETVER >= 20131218
 	packet(0x0369,7,clif->pActionRequest,2,6);
@@ -3424,8 +3432,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0936,36,clif->pStoragePassword,0);
 	packet(0x0363,8,clif->pDull); // CZ_JOIN_BATTLE_FIELD
 	packet(0x0922,4,clif->pDull); // CZ_GANGSI_RANK
-	packet(0x09e5,18); // ZC_DELETEITEM_FROM_MCSTORE2
-	packet(0x09e6,22); // ZC_UPDATE_ITEM_FROM_BUYING_STORE2
 #endif
 
 // 2014-10-22bRagexe - YomRawr
