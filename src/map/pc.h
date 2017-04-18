@@ -73,6 +73,14 @@ enum equip_index {
 	EQI_MAX
 };
 
+enum prevent_logout_trigger {
+	PLT_NONE   = 0x0,
+	PLT_LOGIN  = 0x1,
+	PLT_ATTACK = 0x2,
+	PLT_SKILL  = 0x4,
+	PLT_DAMAGE = 0x8
+};
+
 enum pc_unequipitem_flag {
 	PCUNEQUIPITEM_NONE   = 0x0, ///< Just unequip
 	PCUNEQUIPITEM_RECALC = 0x1, ///< Recalculate status after unequipping
