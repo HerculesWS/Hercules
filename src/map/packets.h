@@ -2944,6 +2944,14 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0436,4,clif->pDull); // CZ_GANGSI_RANK
 #endif
 
+// 2013-12-23bRagexe
+#if PACKETVER >= 20131223
+// new packets
+// changed packet sizes
+	packet(0x09ea,11,clif->pDull/*,XXX*/); // CZ_REQ_READ_RODEX
+	packet(0x09eb,24); // ZC_ACK_READ_RODEX
+#endif
+
 // 2013-12-30aRagexe - Yommy
 #if PACKETVER >= 20131230
 	packet(0x0871,7,clif->pActionRequest,2,6);
