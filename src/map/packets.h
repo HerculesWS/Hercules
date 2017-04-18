@@ -2853,6 +2853,17 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x09e6,22); // ZC_UPDATE_ITEM_FROM_BUYING_STORE2
 #endif
 
+// 2013-12-11dRagexe
+#if PACKETVER >= 20131211
+// new packets
+	packet(0x09e7,2); // ZC_NOTIFY_UNREAD_RODEX
+	packet(0x09e8,18,clif->pDull/*,XXX*/); // CZ_OPEN_RODEXBOX
+	packet(0x09e9,2,clif->pDull/*,XXX*/); // CZ_CLOSE_RODEXBOX
+	packet(0x09ed,-1); // ZC_ACK_SEND_RODEX
+	packet(0x09ee,-1,clif->pDull/*,XXX*/); // CZ_REQ_NEXT_RODEX
+// changed packet sizes
+#endif
+
 // 2013-12-18bRagexe - Yommy
 #if PACKETVER >= 20131218
 	packet(0x0369,7,clif->pActionRequest,2,6);
