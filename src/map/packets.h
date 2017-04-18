@@ -2897,6 +2897,20 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x087b,4,clif->pDull); // CZ_GANGSI_RANK
 #endif
 
+// 2013-12-18bRagexe
+#if PACKETVER >= 20131218
+// new packets
+	packet(0x09ea,10,clif->pDull/*,XXX*/); // CZ_REQ_READ_RODEX
+	packet(0x09eb,14); // ZC_ACK_READ_RODEX
+	packet(0x09ef,11,clif->pDull/*,XXX*/); // CZ_REQ_REFRESH_RODEX
+	packet(0x09f0,-1); // ZC_ACK_RODEX_LIST
+	packet(0x09f5,11,clif->pDull/*,XXX*/); // CZ_REQ_DELETE_RODEX
+	packet(0x09f6,11); // ZC_ACK_DELETE_RODEX
+// changed packet sizes
+	packet(0x09e8,10,clif->pDull/*,XXX*/); // CZ_OPEN_RODEXBOX
+	packet(0x09ee,11,clif->pDull/*,XXX*/); // CZ_REQ_NEXT_RODEX
+#endif
+
 // 2013-12-23cRagexe - Yommy
 #if PACKETVER >= 20131223
 	packet(0x0369,7,clif->pActionRequest,2,6);
