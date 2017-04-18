@@ -69,6 +69,7 @@ struct view_data;
 #define COLOR_RED     0xff0000U
 #define COLOR_GREEN   0x00ff00U
 #define COLOR_WHITE   0xffffffU
+#define COLOR_YELLOW  0xffff00U
 #define COLOR_DEFAULT COLOR_GREEN
 
 /**
