@@ -2809,6 +2809,16 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x09d9,6,clif->pDull/*,XXX*/); // CZ_REQ_GUILDSTORAGE_LOG
 #endif
 
+// 2013-10-23aRagexe
+#if PACKETVER >= 20131023
+// new packets
+	packet(0x09db,-1); // ZC_NOTIFY_MOVEENTRY10
+	packet(0x09dc,-1); // ZC_NOTIFY_NEWENTRY10
+	packet(0x09dd,-1); // ZC_NOTIFY_STANDENTRY10
+// changed packet sizes
+	packet(0x09d9,4,clif->pDull/*,XXX*/); // CZ_REQ_GUILDSTORAGE_LOG
+#endif
+
 // 2013-10-30aRagexe
 #if PACKETVER >= 20131030
 // new packets
