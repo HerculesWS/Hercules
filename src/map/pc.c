@@ -5063,15 +5063,22 @@ int pc_useitem(struct map_session_data *sd,int n) {
 	if( sd->inventory_data[n]->flag.delay_consume && ( sd->ud.skilltimer != INVALID_TIMER /*|| !status->check_skilluse(&sd->bl, &sd->bl, ALL_RESURRECTION, 0)*/ ) )
 		return 0;
 
-	if( sd->inventory_data[n]->delay > 0 ) {
-		ARR_FIND(0, MAX_ITEMDELAYS, i, sd->item_delay[i].nameid == nameid );
-			if( i == MAX_ITEMDELAYS ) /* item not found. try first empty now */
-				ARR_FIND(0, MAX_ITEMDELAYS, i, !sd->item_delay[i].nameid );
-		if( i < MAX_ITEMDELAYS ) {
-			if( sd->item_delay[i].nameid ) {// found
-				if( DIFF_TICK(sd->item_delay[i].tick, tick) > 0 ) {
-					int e_tick = (int)(DIFF_TICK(sd->item_delay[i].tick, tick)/1000);
-					clif->msgtable_num(sd, MSG_SECONDS_UNTIL_USE, e_tick + 1); // [%d] seconds left until you can use
+	if (sd->inventory_data[n]->delay > 0) {
+		ARR_FIND(0, MAX_ITEMDELAYS, i, sd->item_delay[i].nameid == nameid);
+		if (i == MAX_ITEMDELAYS) /* item not found. try first empty now */
+			ARR_FIND(0, MAX_ITEMDELAYS, i, sd->item_delay[i].nameid == 0);
+		if (i < MAX_ITEMDELAYS) {
+			if (sd->item_delay[i].nameid != 0) {// found
+				if (DIFF_TICK(sd->item_delay[i].tick, tick) > 0) {
+					int delay_tick = (int)(DIFF_TICK(sd->item_delay[i].tick, tick) / 1000);
+#if PACKETVER >= 20101123
+					clif->msgtable_num(sd, MSG_SECONDS_UNTIL_USE, delay_tick + 1); // [%d] seconds left until you can use
+#else
+					char delay_msg[100];
+					clif->msgtable_num(sd, MSG_SECONDS_UNTIL_USE, delay_tick + 1); // [%d] seconds left until you can use
+					sprintf(delay_msg, msg_sd(sd, 26), delay_tick + 1);
+					clif->messagecolor_self(sd->fd, COLOR_YELLOW, delay_msg);
+#endif
 					return 0; // Delay has not expired yet
 				}
 			} else {// not yet used item (all slots are initially empty)
