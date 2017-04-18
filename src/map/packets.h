@@ -2774,6 +2774,19 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x09ca,-1); // ZC_SKILL_ENTRY5
 #endif
 
+// 2013-09-11aRagexe
+#if PACKETVER >= 20130911
+// new packets
+	packet(0x09d4,2,clif->pNPCShopClosed); // CZ_NPC_TRADE_QUIT
+	packet(0x09d5,-1); // ZC_NPC_MARKET_OPEN
+	packet(0x09d6,-1,clif->pNPCMarketPurchase); // CZ_NPC_MARKET_PURCHASE
+	packet(0x09d7,-1); // ZC_NPC_MARKET_PURCHASE_RESULT
+	packet(0x09d8,2,clif->pNPCMarketClosed); // CZ_NPC_MARKET_CLOSE
+	packet(0x09d9,2,clif->pDull/*,XXX*/); // CZ_REQ_GUILDSTORAGE_LOG
+	packet(0x09da,2); // ZC_ACK_GUILDSTORAGE_LOG
+// changed packet sizes
+#endif
+
 // 2013-10-30aRagexe
 #if PACKETVER >= 20131030
 // new packets
@@ -2813,11 +2826,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x085C,36,clif->pStoragePassword,0);
 	packet(0x0363,8,clif->pDull); // CZ_JOIN_BATTLE_FIELD
 	packet(0x087b,4,clif->pDull); // CZ_GANGSI_RANK
-	/* New */
-	packet(0x09d4,2,clif->pNPCShopClosed);
-	/* NPC Market */
-	packet(0x09d8,2,clif->pNPCMarketClosed);
-	packet(0x09d6,-1,clif->pNPCMarketPurchase);
 #endif
 
 // 2013-12-23cRagexe - Yommy
