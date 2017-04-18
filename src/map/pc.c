@@ -5019,10 +5019,11 @@ int pc_useitem(struct map_session_data *sd,int n) {
 	nullpo_ret(sd);
 	Assert_ret(n >= 0 && n < MAX_INVENTORY);
 
-	if( sd->npc_id || sd->state.workinprogress&1 ){
-		/* TODO: add to clif->messages enum */
-#ifdef RENEWAL
-		clif->msgtable(sd, MSG_NPC_WORK_IN_PROGRESS); // TODO look for the client date that has this message.
+	if (sd->npc_id || sd->state.workinprogress & 1) {
+#if PACKETVER >= 20110309
+		clif->msgtable(sd, MSG_NPC_WORK_IN_PROGRESS);
+#else
+		clif->messagecolor_self(fd, COLOR_WHITE, msg_fd(fd, 48));
 #endif
 		return 0;
 	}
