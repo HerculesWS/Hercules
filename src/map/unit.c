@@ -1667,6 +1667,9 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 	} else
 		skill->castend_id(ud->skilltimer,tick,src->id,0);
 
+	if (sd && battle_config.prevent_logout_trigger&PLT_SKILL)
+		sd->canlog_tick = timer->gettick();
+
 	return 1;
 }
 
@@ -1813,6 +1816,10 @@ int unit_skilluse_pos2( struct block_list *src, short skill_x, short skill_y, ui
 		ud->skilltimer = INVALID_TIMER;
 		skill->castend_pos(ud->skilltimer,tick,src->id,0);
 	}
+
+	if (sd && battle_config.prevent_logout_trigger&PLT_SKILL)
+		sd->canlog_tick = timer->gettick();
+
 	return 1;
 }
 
@@ -2252,6 +2259,9 @@ int unit_attack_timer_sub(struct block_list* src, int tid, int64 tick)
 			pc->update_idle_time(sd, BCIDLE_ATTACK);
 		ud->attacktimer = timer->add(ud->attackabletime,unit->attack_timer,src->id,0);
 	}
+
+	if (sd && battle_config.prevent_logout_trigger&PLT_ATTACK)
+		sd->canlog_tick = timer->gettick();
 
 	return 1;
 }
