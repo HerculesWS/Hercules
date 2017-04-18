@@ -268,18 +268,6 @@ enum mercenary_scroll_item_list {
 };
 
 /**
- * Cash Food
- */
-enum cash_food_item_list {
-	ITEMID_STR_DISH10_   = 12202,
-	ITEMID_AGI_DISH10_, // 12203
-	ITEMID_INT_DISH10_, // 12204
-	ITEMID_DEX_DISH10_, // 12205
-	ITEMID_LUK_DISH10_, // 12206
-	ITEMID_VIT_DISH10_, // 12207
-};
-
-/**
  * Geneticist
  */
 enum geneticist_item_list {
@@ -557,7 +545,6 @@ struct item_data {
 #define itemdb_is_spellbook(n)   ((n) >= ITEMID_MAGIC_BOOK_FB && (n) <= ITEMID_MAGIC_BOOK_DL)
 #define itemdb_is_poison(n)      ((n) >= ITEMID_POISON_PARALYSIS && (n) <= ITEMID_POISON_FATIGUE)
 #define itemid_isgemstone(n)     ((n) >= ITEMID_YELLOW_GEMSTONE && (n) <= ITEMID_BLUE_GEMSTONE)
-#define itemdb_iscashfood(n)     ((n) >= ITEMID_STR_DISH10_ && (n) <= ITEMID_VIT_DISH10_)
 #define itemdb_is_GNbomb(n)      ((n) >= ITEMID_APPLE_BOMB && (n) <= ITEMID_VERY_HARD_LUMP)
 #define itemdb_is_GNthrowable(n) ((n) >= ITEMID_MYSTERIOUS_POWDER && (n) <= ITEMID_BLACK_THING_TO_THROW)
 #define itemid_is_pilebunker(n)  ((n) == ITEMID_PILEBUNCKER || (n) == ITEMID_PILEBUNCKER_P || (n) == ITEMID_PILEBUNCKER_S || (n) == ITEMID_PILEBUNCKER_T)

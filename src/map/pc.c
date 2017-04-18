@@ -4903,25 +4903,6 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 			if( map->list[sd->bl.m].flag.nobranch || map_flag_gvg2(sd->bl.m) )
 				return 0;
 			break;
-		case ITEMID_BUBBLE_GUM:
-		case ITEMID_COMP_BUBBLE_GUM:
-			if( sd->sc.data[SC_CASH_RECEIVEITEM] )
-				return 0;
-			break;
-		case ITEMID_BATTLE_MANUAL:
-		case ITEMID_COMP_BATTLE_MANUAL:
-		case ITEMID_THICK_MANUAL50:
-		case ITEMID_NOBLE_NAMEPLATE:
-		case ITEMID_BATTLE_MANUAL25:
-		case ITEMID_BATTLE_MANUAL100:
-		case ITEMID_BATTLE_MANUAL_X3:
-			if( sd->sc.data[SC_CASH_PLUSEXP] )
-				return 0;
-			break;
-		case ITEMID_JOB_MANUAL50:
-			if( sd->sc.data[SC_CASH_PLUSONLYJOBEXP] )
-				return 0;
-			break;
 
 		// Mercenary Items
 		case ITEMID_MERCENARY_RED_POTION:
@@ -5075,10 +5056,8 @@ int pc_useitem(struct map_session_data *sd,int n) {
 	    ))
 		return 0;
 
-	//Prevent mass item usage. [Skotlex]
-	if( DIFF_TICK(sd->canuseitem_tick, tick) > 0 ||
-		(itemdb_iscashfood(nameid) && DIFF_TICK(sd->canusecashfood_tick, tick) > 0)
-	)
+	// Prevent mass item usage. [Skotlex]
+	if (DIFF_TICK(sd->canuseitem_tick, tick) > 0)
 		return 0;
 
 	/* Items with delayed consume are not meant to work while in mounts except reins of mount(12622) */
@@ -5171,10 +5150,8 @@ int pc_useitem(struct map_session_data *sd,int n) {
 			script->potion_flag = 3; //Even more effective potions.
 	}
 
-	//Update item use time.
+	// Update item use time.
 	sd->canuseitem_tick = tick + battle_config.item_use_interval;
-	if( itemdb_iscashfood(nameid) )
-		sd->canusecashfood_tick = tick + battle_config.cashfood_use_interval;
 
 	script->run_use_script(sd, sd->inventory_data[n], npc->fake_nd->bl.id);
 	script->potion_flag = 0;
