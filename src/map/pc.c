@@ -4917,12 +4917,6 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 	if( nameid >= ITEMID_BOW_MERCENARY_SCROLL1 && nameid <= ITEMID_SPEARMERCENARY_SCROLL10 && sd->md != NULL ) // Mercenary Scrolls
 		return 0;
 
-	/**
-	 * Only GCross may use poisons
-	 **/
-	else if (itemdb_is_poison(nameid) && (sd->job & MAPID_THIRDMASK) != MAPID_GUILLOTINE_CROSS)
-		return 0;
-
 	if( item->package || item->group ) {
 		if (pc_is90overweight(sd)) {
 			clif->msgtable(sd, MSG_ITEM_CANT_OBTAIN_WEIGHT);
