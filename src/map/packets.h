@@ -2837,6 +2837,14 @@ packet(0x96e,-1,clif->ackmergeitems);
 // changed packet sizes
 #endif
 
+// 2013-11-20dRagexe
+#if PACKETVER >= 20131120
+// new packets
+	packet(0x09e5,14); // ZC_DELETEITEM_FROM_MCSTORE2
+	packet(0x09e6,18); // ZC_UPDATE_ITEM_FROM_BUYING_STORE2
+// changed packet sizes
+#endif
+
 // 2013-12-18bRagexe - Yommy
 #if PACKETVER >= 20131218
 	packet(0x0369,7,clif->pActionRequest,2,6);
