@@ -1,0 +1,220 @@
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2017  Hercules Dev Team
+//= Copyright (C) Jedzkie
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Jellopy Quest
+//================= Description ===========================================
+//= A quest that trades your 100 Jellopies to 5 Beginner Battle Manuals
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
+prontera,204,53,4	script	Errand Man	4_M_EINMAN,{
+
+	.@pong = questprogress(9024);
+
+	disable_items();
+	if (checkweight(Knife, 1) == 0) { // Custom check
+		mes("- Wait a minute !! -");
+		mes("- Currently you're carrying -");
+		mes("- too many items with you. -");
+		mes("- Please try again -");
+		mes("- after you loose some weight. -");
+		close();
+	}
+	if (.@pong == 0) {
+		mes("[Errand Man]");
+		mes("aaah, why I..??");
+		mes("There are lots of men");
+		mes("but why should I do.");
+		mes("I'm not a slave.");
+		mes("Times have changed ~");
+		next();
+		if (select("What's the matter?", "Seem serious, ignore.") == 2) {
+			emotion(e_an);
+			mes("[Errand Man]");
+			mes("as expected.. those who lives in kingdom");
+			mes("doesn't have sympathy.");
+			mes("if you won't help me");
+			mes("don't bother me");
+			mes("and just keep going.");
+			close2();
+			playbgm("08.mp3");
+			end;
+		}
+		playbgm("02.mp3");
+		mes("[Errand Man]");
+		mes("The matter?");
+		mes("If I say to you will you help me?");
+		next();
+		mes("[Errand Man]");
+		mes("Do you know ^006400Jellopy^000000");
+		mes("^FF0000Poring^000000 is bring it");
+		mes("every time.");
+		mes("do you know that?");
+		next();
+		mes("[Errand Man]");
+		mes("um.. look at your eyes...");
+		mes(" ");
+		mes("You~");
+		mes("did you image idea,");
+		mes("with my clothes?");
+		next();
+		select("The idea?");
+		mes("[Errand Man]");
+		mes("Yes!");
+		mes("I'm an engineer in ^8B4513Einbroach^000000");
+		mes("didn't you!");
+		next();
+		mes("[Errand Man]");
+		mes("actually, that's not wrong.");
+		mes("but please don't look at me");
+		mes("with that your eyes!");
+		next();
+		mes("[Errand Man]");
+		mes("ah!");
+		mes("That's not important thing.");
+		mes("whatever will you help me?");
+		next();
+		if (select("I will!", "I'm busy.") == 2) {
+			emotion(e_otl);
+			mes("[Errand Man]");
+			mes("eeeheeeew~");
+			mes("Where am I here...");
+			mes("How can I");
+			mes("get all of them!");
+			close();
+		}
+		emotion(e_no1);
+		mes("[Errand Man]");
+		mes("umm~ unexpected answer!!");
+		mes("I have been expected that");
+		mes("those who is living in the Kingdom");
+		mes("haughty and don't care others.");
+		next();
+		mes("[Errand Man]");
+		mes("Anyway!");
+		mes("There is a man with strange characteristic");
+		mes("inspector in our factory.");
+		mes("The ^006400Jellopy^000000, he wants it");
+		mes("due to it getting annoying to us...");
+		next();
+		mes("[Errand Man]");
+		mes("Can you imagine?");
+		mes("That man asked me");
+		mes("to get it. Gosh..");
+		mes("go to ^8B4513Prontera^000000");
+		mes("and get some ^006400Jellopy^000000.");
+		next();
+		mes("[Errand Man]");
+		mes("perhaps in kingdom is easy to get it.");
+		mes("I reached here difficult but..");
+		mes("no one in here...");
+		mes("is here...");
+		mes("^8B4513prontera^000000? Am I right?");
+		emotion(e_no);
+		next();
+		mes("[Errand Man]");
+		mes("please, can you help me?");
+		mes("find ^006400100 Jellopy^000000 for me.");
+		mes("of course I will pay for that!");
+		mes("You seem an adventurer");
+		mes("I will give a gift");
+		mes("what you will be interested in it.");
+		next();
+		emotion(e_gg);
+		mes("[Errand Man]");
+		mes("Shouldn't tell it to others.");
+		mes("anyway, please help me~!!");
+		mes("I believe you. ^006400100 Jellopy^000000");
+		close2();
+		setquest(9024);
+		playbgm("08.mp3");
+		end;
+	} else if (.@pong == 1) {
+		mes("[Errand Man]");
+		mes("Yes!");
+		mes("Did you collect all of ^006400Jellopy^000000?");
+		next();
+		if (select("Of course.", "Not yet~") == 2) {
+			mes("[Errand Man]");
+			mes("what? what are you doing?!");
+			mes("100 ^006400100 Jellopy^000000!!");
+			mes("around this city");
+			mes("it is called ^FF0000Poring^000000");
+			mes("one of the brutal monster ");
+			mes("can get them!");
+			emotion(e_wah);
+			close();
+		}
+		if (countitem(Jellopy) < 100) {
+			mes("[Errand Man]");
+			mes("What are you doing?? please~?");
+			mes("Are you testing me?");
+			mes("I said 100 ^006400100 Jellopy^000000!");
+			next();
+			mes("[Errand Man]");
+			mes("^FF0000Poring^000000 or not anyway");
+			mes("If you are an adventurer");
+			mes("aren't you able to find it easily?");
+			close();
+		} else {
+			playbgm("23.mp3");
+			mes("[Errand Man]");
+			mes("um... is it correct 100?");
+			mes("Let me count.");
+			mes("one, two, three, four, five,");
+			mes(".......");
+			next();
+			emotion(e_bzz);
+			mes("[Errand Man]");
+			mes("um~");
+			mes("it seems correct approximately.");
+			mes("Thanks. Here is my gift.");
+			mes("it's popular one to adventurer");
+			mes("like you.");
+			close2();
+			completequest(9024);
+			delitem(Jellopy, 100);
+			getitem(Comp_Battle_Manual, 5);
+			playbgm("08.mp3");
+			end;
+		}
+	} else {
+		mes("[Errand Man]");
+		mes("mutter mutter...");
+		mes(" ");
+		mes("wait, What....");
+		mes("am I doing now?");
+		emotion(e_swt);
+		next();
+		mes("[Errand Man]");
+		mes("ahh, you haven't ever");
+		mes("help me before...");
+		mes("Come to my home town ^8B4513einbroach^000000");
+		mes("It's really nice place to travel~!");
+		close();
+	}
+}
