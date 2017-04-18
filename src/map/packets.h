@@ -2827,6 +2827,16 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x09e0,-1); // SC_LOGIN_ANSWER_WITH_ID
 #endif
 
+// 2013-11-06aRagexe
+#if PACKETVER >= 20131106
+// new packets
+	packet(0x09e1,8,clif->pDull/*,XXX*/); // CZ_MOVE_ITEM_FROM_BODY_TO_GUILDSTORAGE
+	packet(0x09e2,8,clif->pDull/*,XXX*/); // CZ_MOVE_ITEM_FROM_GUILDSTORAGE_TO_BODY
+	packet(0x09e3,8,clif->pDull/*,XXX*/); // CZ_MOVE_ITEM_FROM_CART_TO_GUILDSTORAGE
+	packet(0x09e4,8,clif->pDull/*,XXX*/); // CZ_MOVE_ITEM_FROM_GUILDSTORAGE_TO_CART
+// changed packet sizes
+#endif
+
 // 2013-12-18bRagexe - Yommy
 #if PACKETVER >= 20131218
 	packet(0x0369,7,clif->pActionRequest,2,6);
