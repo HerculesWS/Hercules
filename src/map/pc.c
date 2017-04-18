@@ -5071,10 +5071,10 @@ int pc_useitem(struct map_session_data *sd,int n) {
 			if (sd->item_delay[i].nameid) {// found
 				if (DIFF_TICK(sd->item_delay[i].tick, tick) > 0) {
 					int delay_tick = (int)(DIFF_TICK(sd->item_delay[i].tick, tick) / 1000);
-					char delay_msg[100];
 #if PACKETVER >= 20101123
 					clif->msgtable_num(sd, MSG_SECONDS_UNTIL_USE, delay_tick + 1); // [%d] seconds left until you can use
 #else
+					char delay_msg[100];
 					sprintf(delay_msg, msg_txt(26), delay_tick + 1);
 					clif->messagecolor_self(sd->fd, COLOR_YELLOW, delay_msg);
 #endif
