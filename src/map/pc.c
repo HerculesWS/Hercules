@@ -4840,11 +4840,7 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 
 	switch( nameid ) { // TODO: Is there no better way to handle this, other than hardcoding item IDs?
 		case ITEMID_ANODYNE:
-			if( map_flag_gvg2(sd->bl.m) )
-				return 0;
-			/* Fall through */
-		case ITEMID_ALOEBERA:
-			if( pc_issit(sd) )
+			if (map_flag_gvg2(sd->bl.m))
 				return 0;
 			break;
 		case ITEMID_WING_OF_FLY:
