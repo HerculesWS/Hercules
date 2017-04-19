@@ -6875,26 +6875,20 @@ void status_set_viewdata(struct block_list *bl, int class_)
 			sd->vd.sex = sd->status.sex;
 
 			if (sd->vd.cloth_color) {
-				if (sd->sc.option&OPTION_WEDDING && battle_config.wedding_ignorepalette)
-				       sd->vd.cloth_color = 0;
-				if (sd->sc.option&OPTION_XMAS && battle_config.xmas_ignorepalette)
-				       sd->vd.cloth_color = 0;
-				if (sd->sc.option&OPTION_SUMMER && battle_config.summer_ignorepalette)
-				       sd->vd.cloth_color = 0;
-				if (sd->sc.option&OPTION_HANBOK && battle_config.hanbok_ignorepalette)
-				       sd->vd.cloth_color = 0;
-				if (sd->sc.option&OPTION_OKTOBERFEST && battle_config.oktoberfest_ignorepalette)
+				if ((sd->sc.option & OPTION_WEDDING) != 0 && battle_config.wedding_ignorepalette == true)
 					sd->vd.cloth_color = 0;
-				if (sd->sc.option&OPTION_SUMMER2 && battle_config.summer2_ignorepalette)
+				if ((sd->sc.option & OPTION_XMAS) != 0 && battle_config.xmas_ignorepalette == true)
+					sd->vd.cloth_color = 0;
+				if ((sd->sc.option & OPTION_SUMMER) != 0 && battle_config.summer_ignorepalette == true)
+					sd->vd.cloth_color = 0;
+				if ((sd->sc.option & OPTION_HANBOK) != 0 && battle_config.hanbok_ignorepalette == true)
+					sd->vd.cloth_color = 0;
+				if ((sd->sc.option & OPTION_OKTOBERFEST) != 0 && battle_config.oktoberfest_ignorepalette == true)
+					sd->vd.cloth_color = 0;
+				if ((sd->sc.option & OPTION_SUMMER2) != 0 && battle_config.summer2_ignorepalette == true)
 					sd->vd.cloth_color = 0;
 			}
-			if (sd->vd.body_style
-			 && (sd->sc.option&OPTION_WEDDING
-			  || sd->sc.option&OPTION_XMAS
-			  || sd->sc.option&OPTION_SUMMER
-			  || sd->sc.option&OPTION_HANBOK
-			  || sd->sc.option&OPTION_OKTOBERFEST
-			  || sd->sc.option&OPTION_SUMMER2))
+			if (sd->vd.body_style != 0 && (sd->sc.option & OPTION_COSTUME) != 0)
 				sd->vd.body_style = 0;
 		} else if (vd != NULL) {
 			memcpy(&sd->vd, vd, sizeof(struct view_data));
@@ -8499,8 +8493,9 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			case SC_HANBOK:
 			case SC_OKTOBERFEST:
 			case SC_DRESS_UP:
-				if (!vd) return 0;
-				//Store previous values as they could be removed.
+				if (vd == NULL)
+					return 0;
+				// Store previous values as they could be removed.
 				unit->stop_attack(bl);
 				break;
 			case SC_NOCHAT:
@@ -9895,20 +9890,21 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 					return 0;
 				}
 		}
-	} else { //Special considerations when loading SC data.
-		switch( type ) {
+	} else { // Special considerations when loading SC data.
+		switch (type) {
 			case SC_WEDDING:
 			case SC_XMAS:
 			case SC_SUMMER:
 			case SC_HANBOK:
 			case SC_OKTOBERFEST:
 			case SC_DRESS_UP:
-				if( !vd ) break;
+				if (vd == NULL)
+					break;
 				clif->changelook(bl, LOOK_BASE, vd->class);
-				clif->changelook(bl,LOOK_WEAPON,0);
-				clif->changelook(bl,LOOK_SHIELD,0);
-				clif->changelook(bl,LOOK_CLOTHES_COLOR,vd->cloth_color);
-				clif->changelook(bl,LOOK_BODY2,0);
+				clif->changelook(bl, LOOK_WEAPON, 0);
+				clif->changelook(bl, LOOK_SHIELD, 0);
+				clif->changelook(bl, LOOK_CLOTHES_COLOR, vd->cloth_color);
+				clif->changelook(bl, LOOK_BODY2, 0);
 				break;
 			case SC_KAAHI:
 				val4 = INVALID_TIMER;
