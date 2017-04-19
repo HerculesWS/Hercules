@@ -46,7 +46,7 @@ prontera,204,53,4	script	Errand Man	4_M_EINMAN,{
 	}
 	if (.@pong == 0) {
 		mes("[Errand Man]");
-		mes("aaah, why I..??");
+		mes("Aaah, why I..??");
 		mes("There are lots of men");
 		mes("but why should I do.");
 		mes("I'm not a slave.");
@@ -55,9 +55,9 @@ prontera,204,53,4	script	Errand Man	4_M_EINMAN,{
 		if (select("What's the matter?", "Seem serious, ignore.") == 2) {
 			emotion(e_an);
 			mes("[Errand Man]");
-			mes("as expected.. those who lives in kingdom");
+			mes("As expected.. those who lives in kingdom");
 			mes("doesn't have sympathy.");
-			mes("if you won't help me");
+			mes("If you won't help me");
 			mes("don't bother me");
 			mes("and just keep going.");
 			close2();
@@ -76,7 +76,7 @@ prontera,204,53,4	script	Errand Man	4_M_EINMAN,{
 		mes("do you know that?");
 		next();
 		mes("[Errand Man]");
-		mes("um.. look at your eyes...");
+		mes("Um.. look at your eyes...");
 		mes(" ");
 		mes("You~");
 		mes("did you image idea,");
@@ -85,23 +85,23 @@ prontera,204,53,4	script	Errand Man	4_M_EINMAN,{
 		select("The idea?");
 		mes("[Errand Man]");
 		mes("Yes!");
-		mes("I'm an engineer in ^8B4513Einbroach^000000");
+		mes("I'm an engineer in ^8B4513Einbroch^000000");
 		mes("didn't you!");
 		next();
 		mes("[Errand Man]");
-		mes("actually, that's not wrong.");
+		mes("Actually, that's not wrong.");
 		mes("but please don't look at me");
 		mes("with that your eyes!");
 		next();
 		mes("[Errand Man]");
-		mes("ah!");
+		mes("Ah!");
 		mes("That's not important thing.");
 		mes("whatever will you help me?");
 		next();
 		if (select("I will!", "I'm busy.") == 2) {
 			emotion(e_otl);
 			mes("[Errand Man]");
-			mes("eeeheeeew~");
+			mes("Eeeheeeew~");
 			mes("Where am I here...");
 			mes("How can I");
 			mes("get all of them!");
@@ -109,7 +109,7 @@ prontera,204,53,4	script	Errand Man	4_M_EINMAN,{
 		}
 		emotion(e_no1);
 		mes("[Errand Man]");
-		mes("umm~ unexpected answer!!");
+		mes("Umm~ unexpected answer!!");
 		mes("I have been expected that");
 		mes("those who is living in the Kingdom");
 		mes("haughty and don't care others.");
@@ -129,16 +129,16 @@ prontera,204,53,4	script	Errand Man	4_M_EINMAN,{
 		mes("and get some ^006400Jellopy^000000.");
 		next();
 		mes("[Errand Man]");
-		mes("perhaps in kingdom is easy to get it.");
+		mes("Perhaps in kingdom is easy to get it.");
 		mes("I reached here difficult but..");
 		mes("no one in here...");
 		mes("is here...");
-		mes("^8B4513prontera^000000? Am I right?");
+		mes("^8B4513Prontera^000000? Am I right?");
 		emotion(e_no);
 		next();
 		mes("[Errand Man]");
-		mes("please, can you help me?");
-		mes("find ^006400100 Jellopy^000000 for me.");
+		mes("Please, can you help me?");
+		mes("Find ^006400100 Jellopy^000000 for me.");
 		mes("of course I will pay for that!");
 		mes("You seem an adventurer");
 		mes("I will give a gift");
@@ -160,7 +160,7 @@ prontera,204,53,4	script	Errand Man	4_M_EINMAN,{
 		next();
 		if (select("Of course.", "Not yet~") == 2) {
 			mes("[Errand Man]");
-			mes("what? what are you doing?!");
+			mes("What? what are you doing?!");
 			mes("100 ^006400100 Jellopy^000000!!");
 			mes("around this city");
 			mes("it is called ^FF0000Poring^000000");
@@ -183,17 +183,17 @@ prontera,204,53,4	script	Errand Man	4_M_EINMAN,{
 		} else {
 			playbgm("23.mp3");
 			mes("[Errand Man]");
-			mes("um... is it correct 100?");
+			mes("Um... is it correct 100?");
 			mes("Let me count.");
-			mes("one, two, three, four, five,");
+			mes("One, two, three, four, five,");
 			mes(".......");
 			next();
 			emotion(e_bzz);
 			mes("[Errand Man]");
-			mes("um~");
+			mes("Um~");
 			mes("it seems correct approximately.");
 			mes("Thanks. Here is my gift.");
-			mes("it's popular one to adventurer");
+			mes("It's popular one to adventurer");
 			mes("like you.");
 			close2();
 			completequest(9024);
@@ -204,16 +204,16 @@ prontera,204,53,4	script	Errand Man	4_M_EINMAN,{
 		}
 	} else {
 		mes("[Errand Man]");
-		mes("mutter mutter...");
+		mes("Mutter mutter...");
 		mes(" ");
 		mes("wait, What....");
 		mes("am I doing now?");
 		emotion(e_swt);
 		next();
 		mes("[Errand Man]");
-		mes("ahh, you haven't ever");
+		mes("Ahh, you haven't ever");
 		mes("help me before...");
-		mes("Come to my home town ^8B4513einbroach^000000");
+		mes("Come to my home town ^8B4513Einbroch^000000");
 		mes("It's really nice place to travel~!");
 		close();
 	}
