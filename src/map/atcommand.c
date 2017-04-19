@@ -9248,7 +9248,12 @@ ACMD(searchstore){
 	searchstore->open(sd, 99, val);
 	return true;
 }
-ACMD(costume){
+
+/*==========================================
+* @costume
+*------------------------------------------*/
+ACMD(costume)
+{
 	const char* names[] = {
 		"Wedding",
 		"Xmas",
@@ -9276,37 +9281,40 @@ ACMD(costume){
 	unsigned short k = 0, len = ARRAYLENGTH(names);
 
 	if (!*message) {
-		for( k = 0; k < len; k++ ) {
-			if( sd->sc.data[name2id[k]] ) {
-				safesnprintf(atcmd_output, sizeof(atcmd_output),msg_fd(fd,1473),names[k]);//Costume '%s' removed.
-				clif->message(sd->fd,atcmd_output);
-				status_change_end(&sd->bl,name2id[k],INVALID_TIMER);
+		for (k = 0; k < len; k++) {
+			if (sd->sc.data[name2id[k]]) {
+				safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1473), names[k]); // Costume '%s' removed.
+				clif->message(sd->fd, atcmd_output);
+				status_change_end(&sd->bl, name2id[k], INVALID_TIMER);
 				return true;
 			}
 		}
-		clif->message(sd->fd,msg_fd(fd,1472));
-		for( k = 0; k < len; k++ ) {
-			safesnprintf(atcmd_output, sizeof(atcmd_output),msg_fd(fd,1471),names[k]);//-- %s
-			clif->message(sd->fd,atcmd_output);
+
+		clif->message(sd->fd, msg_fd(fd, 1472)); // - Available Costumes
+
+		for (k = 0; k < len; k++) {
+			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1471), names[k]); //-- %s
+			clif->message(sd->fd, atcmd_output);
 		}
 		return false;
 	}
 
-	for( k = 0; k < len; k++ ) {
-		if( sd->sc.data[name2id[k]] ) {
-			safesnprintf(atcmd_output, sizeof(atcmd_output),msg_fd(fd,1470),names[k]);// You're already with a '%s' costume, type '@costume' to remove it.
-			clif->message(sd->fd,atcmd_output);
+	for (k = 0; k < len; k++) {
+		if (sd->sc.data[name2id[k]]) {
+			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1470), names[k]); // You're already with a '%s' costume, type '@costume' to remove it.
+			clif->message(sd->fd, atcmd_output);
 			return false;
 		}
 	}
 
-	for( k = 0; k < len; k++ ) {
-		if( strcmpi(message,names[k]) == 0 )
+	for (k = 0; k < len; k++) {
+		if (strcmpi(message,names[k]) == 0)
 			break;
 	}
-	if( k == len ) {
-		safesnprintf(atcmd_output, sizeof(atcmd_output),msg_fd(fd,1469),message);// '%s' is not a known costume
-		clif->message(sd->fd,atcmd_output);
+
+	if (k == len) {
+		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1469), message); // '%s' is not a known costume
+		clif->message(sd->fd, atcmd_output);
 		return false;
 	}
 
@@ -9314,6 +9322,7 @@ ACMD(costume){
 
 	return true;
 }
+
 /* for debugging purposes (so users can easily provide us with debug info) */
 /* should be trashed as soon as its no longer necessary */
 ACMD(skdebug)
