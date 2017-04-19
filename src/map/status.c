@@ -6883,7 +6883,7 @@ void status_set_viewdata(struct block_list *bl, int class_)
 				       sd->vd.cloth_color = 0;
 				if (sd->sc.option&OPTION_HANBOK && battle_config.hanbok_ignorepalette)
 				       sd->vd.cloth_color = 0;
-				if (sd->sc.option&OPTION_OKTOBERFEST /* TODO: config? */)
+				if (sd->sc.option&OPTION_OKTOBERFEST && battle_config.oktoberfest_ignorepalette)
 					sd->vd.cloth_color = 0;
 				if (sd->sc.option&OPTION_SUMMER2 && battle_config.summer2_ignorepalette)
 					sd->vd.cloth_color = 0;

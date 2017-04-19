@@ -3213,7 +3213,7 @@ void clif_changelook(struct block_list *bl,int type,int val)
 					vd->cloth_color = 0;
 				if (sd->sc.option&OPTION_HANBOK && battle_config.hanbok_ignorepalette)
 					vd->cloth_color = 0;
-				if (sd->sc.option&OPTION_OKTOBERFEST /* TODO: config? */)
+				if (sd->sc.option&OPTION_OKTOBERFEST && battle_config.oktoberfest_ignorepalette)
 					vd->cloth_color = 0;
 				if (sd->sc.option&OPTION_SUMMER2 && battle_config.summer2_ignorepalette)
 					vd->cloth_color = 0;
@@ -3248,7 +3248,7 @@ void clif_changelook(struct block_list *bl,int type,int val)
 						val = 0;
 					if( sd->sc.option&OPTION_HANBOK && battle_config.hanbok_ignorepalette )
 						val = 0;
-					if( sd->sc.option&OPTION_OKTOBERFEST /* TODO: config? */ )
+					if( sd->sc.option&OPTION_OKTOBERFEST && battle_config.oktoberfest_ignorepalette)
 						val = 0;
 					if (sd->sc.option&OPTION_SUMMER2 && battle_config.summer2_ignorepalette)
 						val = 0;
