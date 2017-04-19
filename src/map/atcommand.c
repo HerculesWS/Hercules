@@ -9257,6 +9257,9 @@ ACMD(costume){
 #if PACKETVER >= 20131218
 		"Oktoberfest",
 #endif
+#if PACKETVER >= 20141022
+		"Summer2",
+#endif
 	};
 	const int name2id[] = {
 		SC_WEDDING,
@@ -9265,6 +9268,9 @@ ACMD(costume){
 		SC_HANBOK,
 #if PACKETVER >= 20131218
 		SC_OKTOBERFEST,
+#endif
+#if PACKETVER >= 20141022
+		SC_DRESS_UP,
 #endif
 	};
 	unsigned short k = 0, len = ARRAYLENGTH(names);

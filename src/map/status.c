@@ -1000,6 +1000,7 @@ void initChangeTables(void)
 	status->dbs->IconChangeTable[SC_MONSTER_TRANSFORM] = SI_MONSTER_TRANSFORM;
 
 	// Costumes
+	status->dbs->IconChangeTable[SC_DRESS_UP] = SI_DRESS_UP;
 	status->dbs->IconChangeTable[SC_MOONSTAR] = SI_MOONSTAR;
 	status->dbs->IconChangeTable[SC_SUPER_STAR] = SI_SUPER_STAR;
 	status->dbs->IconChangeTable[SC_STRANGELIGHTS] = SI_STRANGELIGHTS;
@@ -1178,6 +1179,7 @@ void initChangeTables(void)
 	status->dbs->ChangeFlagTable[SC_MVPCARD_ORCLORD] |= SCB_ALL;
 
 	// Costumes
+	status->dbs->ChangeFlagTable[SC_DRESS_UP] |= SCB_NONE;
 	status->dbs->ChangeFlagTable[SC_MOONSTAR] |= SCB_NONE;
 	status->dbs->ChangeFlagTable[SC_SUPER_STAR] |= SCB_NONE;
 	status->dbs->ChangeFlagTable[SC_STRANGELIGHTS] |= SCB_NONE;
@@ -6883,13 +6885,16 @@ void status_set_viewdata(struct block_list *bl, int class_)
 				       sd->vd.cloth_color = 0;
 				if (sd->sc.option&OPTION_OKTOBERFEST /* TODO: config? */)
 					sd->vd.cloth_color = 0;
+				if (sd->sc.option&OPTION_SUMMER2 && battle_config.summer2_ignorepalette)
+					sd->vd.cloth_color = 0;
 			}
 			if (sd->vd.body_style
 			 && (sd->sc.option&OPTION_WEDDING
 			  || sd->sc.option&OPTION_XMAS
 			  || sd->sc.option&OPTION_SUMMER
 			  || sd->sc.option&OPTION_HANBOK
-			  || sd->sc.option&OPTION_OKTOBERFEST))
+			  || sd->sc.option&OPTION_OKTOBERFEST
+			  || sd->sc.option&OPTION_SUMMER2))
 				sd->vd.body_style = 0;
 		} else if (vd != NULL) {
 			memcpy(&sd->vd, vd, sizeof(struct view_data));
@@ -8493,6 +8498,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			case SC_SUMMER:
 			case SC_HANBOK:
 			case SC_OKTOBERFEST:
+			case SC_DRESS_UP:
 				if (!vd) return 0;
 				//Store previous values as they could be removed.
 				unit->stop_attack(bl);
@@ -9896,6 +9902,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			case SC_SUMMER:
 			case SC_HANBOK:
 			case SC_OKTOBERFEST:
+			case SC_DRESS_UP:
 				if( !vd ) break;
 				clif->changelook(bl, LOOK_BASE, vd->class);
 				clif->changelook(bl,LOOK_WEAPON,0);
@@ -10282,6 +10289,10 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			break;
 		case SC_OKTOBERFEST:
 			sc->option |= OPTION_OKTOBERFEST;
+			opt_flag |= 0x4;
+			break;
+		case SC_DRESS_UP:
+			sc->option |= OPTION_SUMMER2;
 			opt_flag |= 0x4;
 			break;
 		case SC__FEINTBOMB_MASTER:
@@ -11090,6 +11101,10 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 			break;
 		case SC_OKTOBERFEST:
 			sc->option &= ~OPTION_OKTOBERFEST;
+			opt_flag |= 0x4;
+			break;
+		case SC_DRESS_UP:
+			sc->option &= ~OPTION_SUMMER2;
 			opt_flag |= 0x4;
 			break;
 		case SC__FEINTBOMB_MASTER:

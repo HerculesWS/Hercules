@@ -3215,10 +3215,12 @@ void clif_changelook(struct block_list *bl,int type,int val)
 					vd->cloth_color = 0;
 				if (sd->sc.option&OPTION_OKTOBERFEST /* TODO: config? */)
 					vd->cloth_color = 0;
+				if (sd->sc.option&OPTION_SUMMER2 && battle_config.summer2_ignorepalette)
+					vd->cloth_color = 0;
 				if (vd->body_style && (
 					sd->sc.option&OPTION_WEDDING || sd->sc.option&OPTION_XMAS ||
 					sd->sc.option&OPTION_SUMMER || sd->sc.option&OPTION_HANBOK ||
-					sd->sc.option&OPTION_OKTOBERFEST))
+					sd->sc.option&OPTION_OKTOBERFEST || sd->sc.option&OPTION_SUMMER2))
 					vd->body_style = 0;
 			break;
 			case LOOK_HAIR:
@@ -3247,6 +3249,8 @@ void clif_changelook(struct block_list *bl,int type,int val)
 					if( sd->sc.option&OPTION_HANBOK && battle_config.hanbok_ignorepalette )
 						val = 0;
 					if( sd->sc.option&OPTION_OKTOBERFEST /* TODO: config? */ )
+						val = 0;
+					if (sd->sc.option&OPTION_SUMMER2 && battle_config.summer2_ignorepalette)
 						val = 0;
 				}
 				vd->cloth_color = val;
