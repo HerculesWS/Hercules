@@ -1714,9 +1714,11 @@ ACMD(bodystyle)
 
 	memset(atcmd_output, '\0', sizeof(atcmd_output));
 
-	if (((sd->job & MAPID_THIRDMASK) == MAPID_GUILLOTINE_CROSS || (sd->job & MAPID_THIRDMASK) == MAPID_GENETIC || (sd->job & MAPID_THIRDMASK) == MAPID_MECHANIC ||
-		(sd->job & MAPID_THIRDMASK) == MAPID_ROYAL_GUARD || (sd->job & MAPID_THIRDMASK) == MAPID_ARCH_BISHOP || (sd->job & MAPID_THIRDMASK) == MAPID_RANGER ||
-		(sd->job & MAPID_THIRDMASK) == MAPID_WARLOCK || (sd->job & MAPID_THIRDMASK) == MAPID_SHADOW_CHASER || (sd->job & MAPID_THIRDMASK) == MAPID_MINSTRELWANDERER) == 0) {
+	if (((sd->job & MAPID_THIRDMASK) == MAPID_GUILLOTINE_CROSS || (sd->job & MAPID_THIRDMASK) == MAPID_GENETIC ||
+		(sd->job & MAPID_THIRDMASK) == MAPID_MECHANIC || (sd->job & MAPID_THIRDMASK) == MAPID_ROYAL_GUARD ||
+		(sd->job & MAPID_THIRDMASK) == MAPID_ARCH_BISHOP || (sd->job & MAPID_THIRDMASK) == MAPID_RANGER ||
+		(sd->job & MAPID_THIRDMASK) == MAPID_WARLOCK || (sd->job & MAPID_THIRDMASK) == MAPID_SHADOW_CHASER ||
+		(sd->job & MAPID_THIRDMASK) == MAPID_MINSTRELWANDERER) == 0) {
 		clif->message(fd, msg_txt(35));	// This job has no alternate body styles.
 		return false;
 	}
