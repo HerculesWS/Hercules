@@ -4840,11 +4840,7 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 
 	switch( nameid ) { // TODO: Is there no better way to handle this, other than hardcoding item IDs?
 		case ITEMID_ANODYNE:
-			if( map_flag_gvg2(sd->bl.m) )
-				return 0;
-			/* Fall through */
-		case ITEMID_ALOEBERA:
-			if( pc_issit(sd) )
+			if (map_flag_gvg2(sd->bl.m))
 				return 0;
 			break;
 		case ITEMID_WING_OF_FLY:
@@ -4919,17 +4915,6 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 	}
 
 	if( nameid >= ITEMID_BOW_MERCENARY_SCROLL1 && nameid <= ITEMID_SPEARMERCENARY_SCROLL10 && sd->md != NULL ) // Mercenary Scrolls
-		return 0;
-
-	/**
-	 * Only Rune Knights may use runes
-	 **/
-	if (itemdb_is_rune(nameid) && (sd->job & MAPID_THIRDMASK) != MAPID_RUNE_KNIGHT)
-		return 0;
-	/**
-	 * Only GCross may use poisons
-	 **/
-	else if (itemdb_is_poison(nameid) && (sd->job & MAPID_THIRDMASK) != MAPID_GUILLOTINE_CROSS)
 		return 0;
 
 	if( item->package || item->group ) {
@@ -5078,15 +5063,22 @@ int pc_useitem(struct map_session_data *sd,int n) {
 	if( sd->inventory_data[n]->flag.delay_consume && ( sd->ud.skilltimer != INVALID_TIMER /*|| !status->check_skilluse(&sd->bl, &sd->bl, ALL_RESURRECTION, 0)*/ ) )
 		return 0;
 
-	if( sd->inventory_data[n]->delay > 0 ) {
-		ARR_FIND(0, MAX_ITEMDELAYS, i, sd->item_delay[i].nameid == nameid );
-			if( i == MAX_ITEMDELAYS ) /* item not found. try first empty now */
-				ARR_FIND(0, MAX_ITEMDELAYS, i, !sd->item_delay[i].nameid );
-		if( i < MAX_ITEMDELAYS ) {
-			if( sd->item_delay[i].nameid ) {// found
-				if( DIFF_TICK(sd->item_delay[i].tick, tick) > 0 ) {
-					int e_tick = (int)(DIFF_TICK(sd->item_delay[i].tick, tick)/1000);
-					clif->msgtable_num(sd, MSG_SECONDS_UNTIL_USE, e_tick + 1); // [%d] seconds left until you can use
+	if (sd->inventory_data[n]->delay > 0) {
+		ARR_FIND(0, MAX_ITEMDELAYS, i, sd->item_delay[i].nameid == nameid);
+		if (i == MAX_ITEMDELAYS) /* item not found. try first empty now */
+			ARR_FIND(0, MAX_ITEMDELAYS, i, sd->item_delay[i].nameid == 0);
+		if (i < MAX_ITEMDELAYS) {
+			if (sd->item_delay[i].nameid != 0) {// found
+				if (DIFF_TICK(sd->item_delay[i].tick, tick) > 0) {
+					int delay_tick = (int)(DIFF_TICK(sd->item_delay[i].tick, tick) / 1000);
+#if PACKETVER >= 20101123
+					clif->msgtable_num(sd, MSG_SECONDS_UNTIL_USE, delay_tick + 1); // [%d] seconds left until you can use
+#else
+					char delay_msg[100];
+					clif->msgtable_num(sd, MSG_SECONDS_UNTIL_USE, delay_tick + 1); // [%d] seconds left until you can use
+					sprintf(delay_msg, msg_sd(sd, 26), delay_tick + 1);
+					clif->messagecolor_self(sd->fd, COLOR_YELLOW, delay_msg);
+#endif
 					return 0; // Delay has not expired yet
 				}
 			} else {// not yet used item (all slots are initially empty)
