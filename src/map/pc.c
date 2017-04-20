@@ -742,7 +742,7 @@ int pc_setnewpc(struct map_session_data *sd, int account_id, int char_id, int lo
 	sd->state.active = 0; //to be set to 1 after player is fully authed and loaded.
 	sd->bl.type      = BL_PC;
 	if (battle_config.prevent_logout_trigger & PLT_LOGIN)
-		sd->canlog_tick  = timer->gettick();
+		sd->canlog_tick = timer->gettick();
 	//Required to prevent homunculus copuing a base speed of 0.
 	sd->battle_status.speed = sd->base_status.speed = DEFAULT_WALK_SPEED;
 	sd->state.warp_clean = 1;
