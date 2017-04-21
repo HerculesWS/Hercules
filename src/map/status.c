@@ -7891,19 +7891,21 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 	//Before overlapping fail, one must check for status cured.
 	switch (type) {
 		case SC_BLESSING:
-			//TO-DO Blessing and Agi up should do 1 damage against players on Undead Status, even on PvM
-			//but cannot be plagiarized (this requires aegis investigation on packets and official behavior) [Brainstorm]
-			if ((!undead_flag && st->race!=RC_DEMON) || bl->type == BL_PC) {
-				status_change_end(bl, SC_CURSE, INVALID_TIMER);
-				if (sc->data[SC_STONE] && sc->opt1 == OPT1_STONE)
+			// TO-DO Blessing and Agi up should do 1 damage against players on Undead Status, even on PvM
+			// but cannot be plagiarized (this requires aegis investigation on packets and official behavior) [Brainstorm]
+			if ((!undead_flag && st->race != RC_DEMON) || bl->type == BL_PC) {
+				if ((sc->data[SC_STONE] && sc->opt1 == OPT1_STONE) || sc->data[SC_CURSE]) {
 					status_change_end(bl, SC_STONE, INVALID_TIMER);
+					status_change_end(bl, SC_CURSE, INVALID_TIMER);
+					return 0;
+				}
 			}
-			if(sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_HIGH)
+			if (sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_HIGH)
 				status_change_end(bl, SC_SOULLINK, INVALID_TIMER);
 			break;
 		case SC_INC_AGI:
 			status_change_end(bl, SC_DEC_AGI, INVALID_TIMER);
-			if(sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_HIGH)
+			if (sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_HIGH)
 				status_change_end(bl, SC_SOULLINK, INVALID_TIMER);
 			break;
 		case SC_QUAGMIRE:
