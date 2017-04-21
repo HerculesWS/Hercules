@@ -10189,8 +10189,8 @@ void status_change_start_stop_action(struct block_list *bl, enum sc_type type)
  * @param val3 Additional value (meaning depends on type).
  * @param val4 Additional value (meaning depends on type).
  *
- * @retval 0 if no status change happened.
- * @retval 1 if the status change was successfully applied.
+ * @retval false if no status change happened, or the other sc can be started regardless.
+ * @retval true  if the status change was successfully applied and the other sc shouldn't be started.
  */
 bool status_end_sc_before_start(struct block_list *bl, struct status_data *st, struct status_change* sc, enum sc_type type, int undead_flag, int val1, int val2, int val3, int val4)
 {
@@ -10200,14 +10200,22 @@ bool status_end_sc_before_start(struct block_list *bl, struct status_data *st, s
 
 	switch (type) {
 		case SC_BLESSING:
-			//TO-DO Blessing and Agi up should do 1 damage against players on Undead Status, even on PvM
-			//but cannot be plagiarized (this requires aegis investigation on packets and official behavior) [Brainstorm]
-			if ((!undead_flag && st->race != RC_DEMON) || bl->type == BL_PC) {
-				status_change_end(bl, SC_CURSE, INVALID_TIMER);
-				if (sc->data[SC_STONE] && sc->opt1 == OPT1_STONE)
+			// TODO: Blessing and Agi up should do 1 damage against players on Undead Status, even on PvM
+			// but cannot be plagiarized (this requires aegis investigation on packets and official behavior) [Brainstorm]
+			if ((undead_flag == 0 && st->race != RC_DEMON) || bl->type == BL_PC) {
+				bool prevent_start = false;
+				if (sc->data[SC_CURSE] != NULL) {
+					prevent_start = true;
+					status_change_end(bl, SC_CURSE, INVALID_TIMER);
+				}
+				if (sc->data[SC_STONE] != NULL && sc->opt1 == OPT1_STONE) {
+					prevent_start = true;
 					status_change_end(bl, SC_STONE, INVALID_TIMER);
+				}
+				if (prevent_start)
+					return true;
 			}
-			if (sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_HIGH)
+			if (sc->data[SC_SOULLINK] != NULL && sc->data[SC_SOULLINK]->val2 == SL_HIGH)
 				status_change_end(bl, SC_SOULLINK, INVALID_TIMER);
 			break;
 		case SC_INC_AGI:
