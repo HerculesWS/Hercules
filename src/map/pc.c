@@ -7611,22 +7611,42 @@ int pc_skillatk_bonus(struct map_session_data *sd, uint16 skill_id)
 	return bonus;
 }
 
-int pc_skillheal_bonus(struct map_session_data *sd, uint16 skill_id) {
+int pc_skillheal_bonus(struct map_session_data *sd, uint16 skill_id)
+{
 	int i, bonus = sd->bonus.add_heal_rate;
 
-	if( bonus ) {
-		switch( skill_id ) {
-			case AL_HEAL:           if( !(battle_config.skill_add_heal_rate&1) ) bonus = 0; break;
-			case PR_SANCTUARY:      if( !(battle_config.skill_add_heal_rate&2) ) bonus = 0; break;
-			case AM_POTIONPITCHER:  if( !(battle_config.skill_add_heal_rate&4) ) bonus = 0; break;
-			case CR_SLIMPITCHER:    if( !(battle_config.skill_add_heal_rate&8) ) bonus = 0; break;
-			case BA_APPLEIDUN:      if( !(battle_config.skill_add_heal_rate&16)) bonus = 0; break;
+	if (bonus) {
+		switch (skill_id) {
+		case AL_HEAL:
+			if ((battle_config.skill_add_heal_rate & 1) == 0)
+				bonus = 0;
+			break;
+		case PR_SANCTUARY:
+			if ((battle_config.skill_add_heal_rate & 2) == 0)
+				bonus = 0;
+			break;
+		case AM_POTIONPITCHER:
+			if ((battle_config.skill_add_heal_rate & 4) == 0)
+				bonus = 0;
+			break;
+		case CR_SLIMPITCHER:
+			if ((battle_config.skill_add_heal_rate & 8) == 0)
+				bonus = 0;
+			break;
+		case BA_APPLEIDUN:
+			if ((battle_config.skill_add_heal_rate & 16) == 0)
+				bonus = 0;
+			break;
+		case AB_HIGHNESSHEAL:
+			if ((battle_config.skill_add_heal_rate & 32) == 0)
+				bonus = 0;
+			break;
 		}
 	}
 
 	ARR_FIND(0, ARRAYLENGTH(sd->skillheal), i, sd->skillheal[i].id == skill_id);
 
-	if( i < ARRAYLENGTH(sd->skillheal) )
+	if (i < ARRAYLENGTH(sd->skillheal))
 		bonus += sd->skillheal[i].val;
 
 	return bonus;
