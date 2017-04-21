@@ -6750,16 +6750,17 @@ int pc_checkjoblevelup(struct map_session_data *sd)
 /**
  * Alters EXP based on self bonuses that do not get shared with the party
  **/
-void pc_calcexp(struct map_session_data *sd, unsigned int *base_exp, unsigned int *job_exp, struct block_list *src) {
+void pc_calcexp(struct map_session_data *sd, unsigned int *base_exp, unsigned int *job_exp, struct block_list *src)
+{
 	int buff_ratio = 0, buff_job_ratio = 0, race_ratio = 0, pk_ratio = 0;
-	int64 jexp, bexp;
+	int64 bexp, jexp;
 
 	nullpo_retv(sd);
 	nullpo_retv(base_exp);
 	nullpo_retv(job_exp);
 
-	jexp = *job_exp;
 	bexp = *base_exp;
+	jexp = *job_exp;
 
 	if (src != NULL) {
 		const struct status_data *st = status->get_status_data(src);
@@ -6774,20 +6775,20 @@ void pc_calcexp(struct map_session_data *sd, unsigned int *base_exp, unsigned in
 		}
 #endif
 
-		//Race modifier
-		if (sd->expaddrace[st->race])
+		// Race modifier
+		if (sd->expaddrace[st->race]) {
 			race_ratio += sd->expaddrace[st->race];
+		}
 		race_ratio += sd->expaddrace[(st->mode&MD_BOSS) ? RC_BOSS : RC_NONBOSS];
 	}
 
-
-	//PK modifier
+	// PK modifier
 	/* this doesn't exist in Aegis, instead there's a CrazyKiller check which double all EXP from this point */
-	if (battle_config.pk_mode && status->get_lv(src) - sd->status.base_level >= 20)
+	if (battle_config.pk_mode && status->get_lv(src) - sd->status.base_level >= 20) {
 		pk_ratio += 15; // pk_mode additional exp if monster >20 levels [Valaris]
+	}
 
-
-	//Buffs modifier
+	// Buffs modifier
 	if (sd->sc.data[SC_CASH_PLUSEXP]) {
 		buff_job_ratio += sd->sc.data[SC_CASH_PLUSEXP]->val1;
 		buff_ratio += sd->sc.data[SC_CASH_PLUSEXP]->val1;
@@ -6796,30 +6797,30 @@ void pc_calcexp(struct map_session_data *sd, unsigned int *base_exp, unsigned in
 		buff_job_ratio  += sd->sc.data[SC_OVERLAPEXPUP]->val1;
 		buff_ratio += sd->sc.data[SC_OVERLAPEXPUP]->val1;
 	}
-	if (sd->sc.data[SC_CASH_PLUSONLYJOBEXP])
+	if (sd->sc.data[SC_CASH_PLUSONLYJOBEXP]) {
 		buff_job_ratio += sd->sc.data[SC_CASH_PLUSONLYJOBEXP]->val1;
+	}
 
-	//Applying Race and PK modifier First then Premium (Perment modifier) and finally buff modifier
-	jexp += apply_percentrate64(jexp, race_ratio, 100);
-	jexp += apply_percentrate64(jexp, pk_ratio, 100);
-
+	// Applying Race and PK modifier First then Premium (Perment modifier) and finally buff modifier
 	bexp += apply_percentrate64(bexp, race_ratio, 100);
 	bexp += apply_percentrate64(bexp, pk_ratio, 100);
 
+	jexp += apply_percentrate64(jexp, race_ratio, 100);
+	jexp += apply_percentrate64(jexp, pk_ratio, 100);
 
 	if (sd->status.mod_exp != 100) {
-		jexp = apply_percentrate64(jexp, sd->status.mod_exp, 100);
 		bexp = apply_percentrate64(bexp, sd->status.mod_exp, 100);
+		jexp = apply_percentrate64(jexp, sd->status.mod_exp, 100);
 	}
 
 	bexp += apply_percentrate64(bexp, buff_ratio, 100);
 	jexp += apply_percentrate64(jexp, buff_ratio + buff_job_ratio, 100);
 
-	if (*job_exp) {
-		*job_exp = (unsigned int)cap_value(jexp, 1, UINT_MAX);
-	}
 	if (*base_exp) {
 		*base_exp = (unsigned int)cap_value(bexp, 1, UINT_MAX);
+	}
+	if (*job_exp) {
+		*job_exp = (unsigned int)cap_value(jexp, 1, UINT_MAX);
 	}
 }
 
@@ -6829,9 +6830,11 @@ void pc_calcexp(struct map_session_data *sd, unsigned int *base_exp, unsigned in
  * @param is_quest Used to let client know that the EXP was from a quest (clif->displayexp) PACKETVER >= 20091027
  * @retval true success
  **/
-bool pc_gainexp(struct map_session_data *sd, struct block_list *src, unsigned int base_exp,unsigned int job_exp,bool is_quest) {
-	float nextbp=0, nextjp=0;
-	unsigned int nextb=0, nextj=0;
+bool pc_gainexp(struct map_session_data *sd, struct block_list *src, unsigned int base_exp, unsigned int job_exp, bool is_quest)
+{
+	float nextbp = 0, nextjp = 0;
+	unsigned int nextb = 0, nextj = 0;
+
 	nullpo_ret(sd);
 
 	if (sd->bl.prev == NULL || pc_isdead(sd))
@@ -6840,36 +6843,40 @@ bool pc_gainexp(struct map_session_data *sd, struct block_list *src, unsigned in
 	if (!battle_config.pvp_exp && map->list[sd->bl.m].flag.pvp)  // [MouseJstr]
 		return false; // no exp on pvp maps
 
-	if (pc_has_permission(sd,PC_PERM_DISABLE_EXP))
+	if (pc_has_permission(sd, PC_PERM_DISABLE_EXP))
 		return false;
 
 	if (src)
 		pc->calcexp(sd, &base_exp, &job_exp, src);
 
 	if (sd->status.guild_id > 0)
-		base_exp -= guild->payexp(sd,base_exp);
+		base_exp -= guild->payexp(sd, base_exp);
 
 	nextb = pc->nextbaseexp(sd);
 	nextj = pc->nextjobexp(sd);
 
 	if (sd->state.showexp || battle_config.max_exp_gain_rate) {
-		if (nextb > 0)
-			nextbp = (float) base_exp / (float) nextb;
-		if (nextj > 0)
-			nextjp = (float) job_exp / (float) nextj;
+		if (nextb > 0) {
+			nextbp = (float)base_exp / (float)nextb;
+		}
+		if (nextj > 0) {
+			nextjp = (float)job_exp / (float)nextj;
+		}
 
-		if(battle_config.max_exp_gain_rate) {
-			if (nextbp > battle_config.max_exp_gain_rate/1000.) {
-				//Note that this value should never be greater than the original
-				//base_exp, therefore no overflow checks are needed. [Skotlex]
-				base_exp = (unsigned int)(battle_config.max_exp_gain_rate/1000.*nextb);
-				if (sd->state.showexp)
-					nextbp = (float) base_exp / (float) nextb;
+		if (battle_config.max_exp_gain_rate) {
+			if (nextbp > battle_config.max_exp_gain_rate / 1000.) {
+				// Note that this value should never be greater than the original
+				// base_exp, therefore no overflow checks are needed. [Skotlex]
+				base_exp = (unsigned int)(battle_config.max_exp_gain_rate / 1000. * nextb);
+				if (sd->state.showexp) {
+					nextbp = (float)base_exp / (float)nextb;
+				}
 			}
-			if (nextjp > battle_config.max_exp_gain_rate/1000.) {
-				job_exp = (unsigned int)(battle_config.max_exp_gain_rate/1000.*nextj);
-				if (sd->state.showexp)
-					nextjp = (float) job_exp / (float) nextj;
+			if (nextjp > battle_config.max_exp_gain_rate / 1000.) {
+				job_exp = (unsigned int)(battle_config.max_exp_gain_rate / 1000. * nextj);
+				if (sd->state.showexp) {
+					nextjp = (float)job_exp / (float)nextj;
+				}
 			}
 		}
 	}
@@ -6877,36 +6884,40 @@ bool pc_gainexp(struct map_session_data *sd, struct block_list *src, unsigned in
 	// Cap exp to the level up requirement of the previous level when you are at max level,
 	// otherwise cap at UINT_MAX (this is required for some S. Novice bonuses). [Skotlex]
 	if (base_exp) {
-		nextb = nextb?UINT_MAX:pc->thisbaseexp(sd);
-		if(sd->status.base_exp > nextb - base_exp)
+		nextb = nextb ? UINT_MAX : pc->thisbaseexp(sd);
+		if (sd->status.base_exp > nextb - base_exp) {
 			sd->status.base_exp = nextb;
-		else
+		} else {
 			sd->status.base_exp += base_exp;
+		}
 		pc->checkbaselevelup(sd);
-		clif->updatestatus(sd,SP_BASEEXP);
+		clif->updatestatus(sd, SP_BASEEXP);
 	}
 
 	if (job_exp) {
-		nextj = nextj?UINT_MAX:pc->thisjobexp(sd);
-		if(sd->status.job_exp > nextj - job_exp)
+		nextj = nextj ? UINT_MAX : pc->thisjobexp(sd);
+		if (sd->status.job_exp > nextj - job_exp) {
 			sd->status.job_exp = nextj;
-		else
+		} else {
 			sd->status.job_exp += job_exp;
+		}
 		pc->checkjoblevelup(sd);
-		clif->updatestatus(sd,SP_JOBEXP);
+		clif->updatestatus(sd, SP_JOBEXP);
 	}
 
 #if PACKETVER >= 20091027
-	if(base_exp)
+	if (base_exp) {
 		clif->displayexp(sd, base_exp, SP_BASEEXP, is_quest);
-	if(job_exp)
-		clif->displayexp(sd, job_exp,  SP_JOBEXP, is_quest);
+	}
+	if (job_exp) {
+		clif->displayexp(sd, job_exp, SP_JOBEXP, is_quest);
+	}
 #endif
 
-	if(sd->state.showexp) {
+	if (sd->state.showexp) {
 		char output[256];
 		sprintf(output,
-			"Experience Gained Base:%u (%.2f%%) Job:%u (%.2f%%)",base_exp,nextbp*(float)100,job_exp,nextjp*(float)100);
+			"Experience Gained Base: %u (%.2f%%) Job: %u (%.2f%%)", base_exp, nextbp * (float)100, job_exp, nextjp * (float)100);
 		clif_disp_onlyself(sd, output);
 	}
 
