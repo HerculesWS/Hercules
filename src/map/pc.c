@@ -6815,8 +6815,12 @@ void pc_calcexp(struct map_session_data *sd, unsigned int *base_exp, unsigned in
 	bexp += apply_percentrate64(bexp, buff_ratio, 100);
 	jexp += apply_percentrate64(jexp, buff_ratio + buff_job_ratio, 100);
 
-	*job_exp = (unsigned int)cap_value(jexp, 1, UINT_MAX);
-	*base_exp = (unsigned int)cap_value(bexp, 1, UINT_MAX);
+	if (*job_exp) {
+		*job_exp = (unsigned int)cap_value(jexp, 1, UINT_MAX);
+	}
+	if (*base_exp) {
+		*base_exp = (unsigned int)cap_value(bexp, 1, UINT_MAX);
+	}
 }
 
 /**
