@@ -6710,6 +6710,7 @@ BUILDIN(warpparty)
 	int y = script_getnum(st, 4);
 	int p_id = script_getnum(st, 5);
 	const char* str2 = NULL;
+
 	if (script_hasdata(st, 6))
 		str2 = script_getstr(st, 6);
 	if (script_hasdata(st, 7))
