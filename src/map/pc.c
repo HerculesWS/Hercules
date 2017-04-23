@@ -5022,6 +5022,8 @@ int pc_useitem(struct map_session_data *sd,int n) {
 	if (sd->npc_id || sd->state.workinprogress & 1) {
 #if PACKETVER >= 20110309
 		clif->msgtable(sd, MSG_NPC_WORK_IN_PROGRESS);
+#else
+		clif->messagecolor_self(fd, COLOR_WHITE, msg_fd(fd, 48));
 #endif
 		return 0;
 	}
