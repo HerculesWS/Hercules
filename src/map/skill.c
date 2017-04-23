@@ -14052,11 +14052,51 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 			}
 			break;
 		case RA_WUGDASH:
-			if(!pc_isridingwug(sd)) {
-				clif->skill_fail(sd,skill_id,USESKILL_FAIL_CONDITION,0);
+			if (!pc_isridingwug(sd)) {
+				clif->skill_fail(sd, skill_id, USESKILL_FAIL_CONDITION, 0);
 				return 0;
 			}
+			else {
+				int16 sx = sd->bl.x, sy = sd->bl.y;
+				uint8 dir = (unit->getdir(&sd->bl)) % 8;
+
+				switch (dir) {
+				case 0:
+					sy++;
+					break;
+				case 1:
+					sx--;
+					sy++;
+					break;
+				case 2:
+					sx--;
+					break;
+				case 3:
+					sx--;
+					sy--;
+					break;
+				case 4:
+					sy--;
+					break;
+				case 5:
+					sx++;
+					sy--;
+					break;
+				case 6:
+					sx++;
+					break;
+				case 7:
+					sx++;
+					sy++;
+					break;
+				}
+
+				if (map->count_oncell(sd->bl.m, sx, sy, BL_CHAR | BL_MOB, 1) > 0) {
+					return false;
+				}
+			}
 			break;
+
 		/**
 		 * Royal Guard
 		 **/
