@@ -21268,12 +21268,16 @@ BUILDIN(makerune)
 BUILDIN(hascashmount)
 {
 	struct map_session_data *sd = script->rid2sd(st);
+
 	if (sd == NULL)
 		return true;
-	if( sd->sc.data[SC_ALL_RIDING] )
-		script_pushint(st,1);
-	else
-		script_pushint(st,0);
+
+	if (sd->sc.data[SC_ALL_RIDING]) {
+		script_pushint(st, 1);
+	} else {
+		script_pushint(st, 0);
+	}
+
 	return true;
 }
 
@@ -21287,18 +21291,22 @@ BUILDIN(hascashmount)
 BUILDIN(setcashmount)
 {
 	struct map_session_data *sd = script->rid2sd(st);
+
 	if (sd == NULL)
 		return true;
+
 	if (pc_hasmount(sd)) {
 		clif->msgtable(sd, MSG_REINS_CANT_USE_MOUNTED);
-		script_pushint(st,0);//can't mount with one of these
+		script_pushint(st, 0); // Can't mount with one of these
 	} else {
-		if (sd->sc.data[SC_ALL_RIDING])
+		if (sd->sc.data[SC_ALL_RIDING]) {
 			status_change_end(&sd->bl, SC_ALL_RIDING, INVALID_TIMER);
-		else
-			sc_start(NULL, &sd->bl, SC_ALL_RIDING, 100, 25, INFINITE_DURATION);
-		script_pushint(st,1);//in both cases, return 1.
+		} else {
+			sc_start(NULL, &sd->bl, SC_ALL_RIDING, 100, battle_config.boarding_halter_speed, INFINITE_DURATION);
+		}
+		script_pushint(st, 1); // In both cases, return 1.
 	}
+
 	return true;
 }
 
