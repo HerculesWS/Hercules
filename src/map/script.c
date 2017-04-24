@@ -9950,7 +9950,13 @@ BUILDIN(end) {
 BUILDIN(checkoption)
 {
 	int option;
-	struct map_session_data *sd = script->rid2sd(st);
+	struct map_session_data *sd;
+
+	if (script_hasdata(st, 3))
+		sd = map->id2sd(script_getnum(st, 3));
+	else
+		sd = script->rid2sd(st);
+
 	if (sd == NULL)
 		return true;// no player attached, report source
 
@@ -9969,7 +9975,13 @@ BUILDIN(checkoption)
 BUILDIN(checkoption1)
 {
 	int opt1;
-	struct map_session_data *sd = script->rid2sd(st);
+	struct map_session_data *sd;
+
+	if (script_hasdata(st, 3))
+		sd = map->id2sd(script_getnum(st, 3));
+	else
+		sd = script->rid2sd(st);
+
 	if (sd == NULL)
 		return true;// no player attached, report source
 
@@ -9988,7 +10000,13 @@ BUILDIN(checkoption1)
 BUILDIN(checkoption2)
 {
 	int opt2;
-	struct map_session_data *sd = script->rid2sd(st);
+	struct map_session_data *sd;
+
+	if (script_hasdata(st, 3))
+		sd = map->id2sd(script_getnum(st, 3));
+	else
+		sd = script->rid2sd(st);
+
 	if (sd == NULL)
 		return true;// no player attached, report source
 
@@ -10012,7 +10030,13 @@ BUILDIN(setoption)
 {
 	int option;
 	int flag = 1;
-	struct map_session_data *sd = script->rid2sd(st);
+	struct map_session_data *sd;
+
+	if (script_hasdata(st, 4))
+		sd = map->id2sd(script_getnum(st, 4));
+	else
+		sd = script->rid2sd(st);
+
 	if (sd == NULL)
 		return true;// no player attached, report source
 
@@ -23190,8 +23214,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(setgroupid, "i?"),
 		BUILDIN_DEF(getgroupid,""),
 		BUILDIN_DEF(end,""),
-		BUILDIN_DEF(checkoption,"i"),
-		BUILDIN_DEF(setoption,"i?"),
+		BUILDIN_DEF(checkoption,"i?"),
+		BUILDIN_DEF(setoption,"i??"),
 		BUILDIN_DEF(setcart,"?"),
 		BUILDIN_DEF(checkcart,""),
 		BUILDIN_DEF(setfalcon,"?"),
@@ -23341,8 +23365,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(setnpcdir,"*"), // [4144]
 		BUILDIN_DEF(getnpcclass,"?"), // [4144]
 		BUILDIN_DEF(getmapxy,"rrri?"), //by Lorky [Lupus]
-		BUILDIN_DEF(checkoption1,"i"),
-		BUILDIN_DEF(checkoption2,"i"),
+		BUILDIN_DEF(checkoption1,"i?"),
+		BUILDIN_DEF(checkoption2,"i?"),
 		BUILDIN_DEF(guildgetexp,"i"),
 		BUILDIN_DEF(guildchangegm,"is"),
 		BUILDIN_DEF(logmes,"s"), //this command actls as MES but rints info into LOG file either SQL/TXT [Lupus]
