@@ -7760,6 +7760,68 @@ scripts-atcommands this way.
 
 ---------------------------------------
 
+*can_use_command("<command>"{, <account id>})
+
+Checks if the attached or specified player can use the specified
+atcommand and returns true or false accordingly.
+
+---------------------------------------
+
+*has_permission(<permission>{, <account id>})
+*has_permission("<permission>"{, <account id>})
+
+Check if the attached or specified player has the specified permission
+and returns true or false accordingly. See doc/permissions.txt for
+details about permissions.
+
+Valid <permission> are:
+
+	PERM_TRADE
+	PERM_PARTY
+	PERM_ALL_SKILL
+	PERM_USE_ALL_EQUIPMENT
+	PERM_SKILL_UNCONDITIONAL
+	PERM_JOIN_ALL_CHAT
+	PERM_NO_CHAT_KICK
+	PERM_HIDE_SESSION
+	PERM_WHO_DISPLAY_AID
+	PERM_RECEIVE_HACK_INFO
+	PERM_WARP_ANYWHERE
+	PERM_VIEW_HPMETER
+	PERM_VIEW_EQUIPMENT
+	PERM_USE_CHECK
+	PERM_USE_CHANGEMAPTYPE
+	PERM_USE_ALL_COMMANDS
+	PERM_RECEIVE_REQUESTS
+	PERM_SHOW_BOSS
+	PERM_DISABLE_PVM
+	PERM_DISABLE_PVP
+	PERM_DISABLE_CMD_DEAD
+	PERM_HCHSYS_ADMIN
+	PERM_TRADE_BOUND
+	PERM_DISABLE_PICK_UP
+	PERM_DISABLE_STORE
+	PERM_DISABLE_EXP
+	PERM_DISABLE_SKILL_USAGE
+
+Example:
+
+	if (has_permission(PERM_WARP_ANYWHERE)) {
+		//do something
+	}
+
+It is also possible to pass a string for plugin permissions:
+
+	if (has_permission("show_version")) {
+		//do something
+	}
+
+** Passing a string is slower than passing a constant because
+   the engine has to loop through the array to find the permission.
+   In most cases you should use the PERM_ constants.
+
+---------------------------------------
+
 *unitskilluseid(<GID>, <skill id>, <skill lvl>{, <target id>})
 *unitskilluseid(<GID>, "<skill name>", <skill lvl>{, <target id>})
 *unitskillusepos(<GID>, <skill id>, <skill lvl>, <x>, <y>)

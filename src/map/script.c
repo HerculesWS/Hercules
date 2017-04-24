@@ -21593,6 +21593,67 @@ BUILDIN(useatcmd)
 	return true;
 }
 
+BUILDIN(has_permission)
+{
+	struct map_session_data *sd;
+	enum e_pc_permission perm;
+
+	if (script_hasdata(st, 3)) {
+		sd = map->id2sd(script_getnum(st, 3));
+	} else {
+		sd = script->rid2sd(st);
+	}
+
+	if (sd == NULL) {
+		script_pushint(st, 0);
+		return false;
+	}
+
+	if (script_isstringtype(st, 2)) {
+		// to check for plugin permissions
+		int i = 0, j = -1;
+		const char *name = script_getstr(st, 2);
+		for (; i < pcg->permission_count; ++i) {
+			if (strcmp(pcg->permissions[i].name, name) == 0) {
+				j = i;
+				break;
+			}
+		}
+		if (j < 0) {
+			ShowError("script:has_permission: unknown permission: %s\n", name);
+			script_pushint(st, 0);
+			return false;
+		}
+		script_pushint(st, pc_has_permission(sd, pcg->permissions[j].permission));
+		return true;
+	}
+
+	// to ckeck for built-in permission
+	perm = script_getnum(st, 2);
+	script_pushint(st, pc_has_permission(sd, perm));
+	return true;
+}
+
+BUILDIN(can_use_command)
+{
+	struct map_session_data *sd;
+	const char *cmd = script_getstr(st, 2);
+
+	if (script_hasdata(st, 3)) {
+		sd = map->id2sd(script_getnum(st, 3));
+	} else {
+		sd = script->rid2sd(st);
+	}
+
+	if (sd == NULL) {
+		script_pushint(st, 0);
+		return false;
+	}
+
+	script_pushint(st, pc->can_use_command(sd, cmd));
+	return true;
+}
+
 /* getrandgroupitem <container_item_id>,<quantity> */
 BUILDIN(getrandgroupitem)
 {
@@ -23567,6 +23628,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(bindatcmd, "ss???"),
 		BUILDIN_DEF(unbindatcmd, "s"),
 		BUILDIN_DEF(useatcmd, "s"),
+		BUILDIN_DEF(has_permission, "v?"),
+		BUILDIN_DEF(can_use_command, "s?"),
 
 		/**
 		 * Item bound [Xantara] [Akinari] [Mhalicot/Hercules]
@@ -23810,6 +23873,34 @@ void script_hardcoded_constants(void)
 	script->set_constant("BL_ELEM",BL_ELEM,false, false);
 	script->set_constant("BL_CHAR",BL_CHAR,false, false);
 	script->set_constant("BL_ALL",BL_ALL,false, false);
+
+	script->constdb_comment("Player permissions");
+	script->set_constant("PERM_TRADE", PC_PERM_TRADE, false, false);
+	script->set_constant("PERM_PARTY", PC_PERM_PARTY, false, false);
+	script->set_constant("PERM_ALL_SKILL", PC_PERM_ALL_SKILL, false, false);
+	script->set_constant("PERM_USE_ALL_EQUIPMENT", PC_PERM_USE_ALL_EQUIPMENT, false, false);
+	script->set_constant("PERM_SKILL_UNCONDITIONAL", PC_PERM_SKILL_UNCONDITIONAL, false, false);
+	script->set_constant("PERM_JOIN_ALL_CHAT", PC_PERM_JOIN_ALL_CHAT, false, false);
+	script->set_constant("PERM_NO_CHAT_KICK", PC_PERM_NO_CHAT_KICK, false, false);
+	script->set_constant("PERM_HIDE_SESSION", PC_PERM_HIDE_SESSION, false, false);
+	script->set_constant("PERM_RECEIVE_HACK_INFO", PC_PERM_RECEIVE_HACK_INFO, false, false);
+	script->set_constant("PERM_WARP_ANYWHERE", PC_PERM_WARP_ANYWHERE, false, false);
+	script->set_constant("PERM_VIEW_HPMETER", PC_PERM_VIEW_HPMETER, false, false);
+	script->set_constant("PERM_VIEW_EQUIPMENT", PC_PERM_VIEW_EQUIPMENT, false, false);
+	script->set_constant("PERM_USE_CHECK", PC_PERM_USE_CHECK, false, false);
+	script->set_constant("PERM_USE_CHANGEMAPTYPE", PC_PERM_USE_CHANGEMAPTYPE, false, false);
+	script->set_constant("PERM_USE_ALL_COMMANDS", PC_PERM_USE_ALL_COMMANDS, false, false);
+	script->set_constant("PERM_RECEIVE_REQUESTS", PC_PERM_RECEIVE_REQUESTS, false, false);
+	script->set_constant("PERM_SHOW_BOSS", PC_PERM_SHOW_BOSS, false, false);
+	script->set_constant("PERM_DISABLE_PVM", PC_PERM_DISABLE_PVM, false, false);
+	script->set_constant("PERM_DISABLE_PVP", PC_PERM_DISABLE_PVP, false, false);
+	script->set_constant("PERM_DISABLE_CMD_DEAD", PC_PERM_DISABLE_CMD_DEAD, false, false);
+	script->set_constant("PERM_HCHSYS_ADMIN", PC_PERM_HCHSYS_ADMIN, false, false);
+	script->set_constant("PERM_TRADE_BOUND", PC_PERM_TRADE_BOUND, false, false);
+	script->set_constant("PERM_DISABLE_PICK_UP", PC_PERM_DISABLE_PICK_UP, false, false);
+	script->set_constant("PERM_DISABLE_STORE", PC_PERM_DISABLE_STORE, false, false);
+	script->set_constant("PERM_DISABLE_EXP", PC_PERM_DISABLE_EXP, false, false);
+	script->set_constant("PERM_DISABLE_SKILL_USAGE", PC_PERM_DISABLE_SKILL_USAGE, false, false);
 
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL
