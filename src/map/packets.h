@@ -4564,6 +4564,379 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0967,12,clif->pSearchStoreInfoListItemClick,2,6,10);  // CZ_SSILIST_ITEM_CLICK
 #endif
 
+// 2016-01-27aRagexeRE
+#if PACKETVER >= 20160127
+// new packets
+	packet(0x0a4d,-1);
+// changed packet sizes
+#endif
+
+// 2016-03-02bRagexeRE
+#if PACKETVER >= 20160302
+// new packets
+	packet(0x0a4e,4);
+	packet(0x0a4f,-1,clif->pDull/*,XXX*/);
+	packet(0x0a50,6);
+	packet(0x0a51,34);
+// changed packet sizes
+#endif
+
+// 2016-03-16aRagexeRE
+#if PACKETVER >= 20160316
+// new packets
+	packet(0x0a52,20,clif->pDull/*,XXX*/);
+	packet(0x0a53,10);
+	packet(0x0a54,-1);
+	packet(0x0a55,2);
+	packet(0x0a56,6,clif->pDull/*,XXX*/);
+	packet(0x0a57,6);
+	packet(0x0a58,8);
+	packet(0x0a59,-1);
+	packet(0x0a5a,2,clif->pDull/*,XXX*/);
+	packet(0x0a5b,7);
+	packet(0x0a5c,18,clif->pDull/*,XXX*/);
+	packet(0x0a5d,6);
+// changed packet sizes
+#endif
+
+// 2016-03-23aRagexeRE
+#if PACKETVER >= 20160323
+// new packets
+	packet(0x0a68,3);
+	packet(0x0a69,6);
+	packet(0x0a6a,12);
+	packet(0x0a6b,-1);
+// changed packet sizes
+#endif
+
+// 2016-03-30aRagexeRE
+#if PACKETVER >= 20160330
+// new packets
+	packet(0x0a6c,7,clif->pDull/*,XXX*/);
+	packet(0x0a6d,-1);
+	packet(0x0a6e,-1);
+	packet(0x0a6f,-1);
+// changed packet sizes
+#endif
+
+// 2016-04-27aRagexeRE
+#if PACKETVER >= 20160427
+// new packets
+// changed packet sizes
+	packet(0x0a50,4);
+#endif
+
+// 2016-05-04aRagexeRE
+#if PACKETVER >= 20160504
+// new packets
+	packet(0x0a70,2,clif->pDull/*,XXX*/);
+	packet(0x0a71,-1);
+	packet(0x0a72,61);
+// changed packet sizes
+#endif
+
+// 2016-05-11aRagexeRE
+#if PACKETVER >= 20160511
+// new packets
+	packet(0x0a73,6);
+	packet(0x0a74,8);
+// changed packet sizes
+#endif
+
+// 2016-05-18aRagexeRE
+#if PACKETVER >= 20160518
+// new packets
+	packet(0x0a76,80);
+// changed packet sizes
+	packet(0x0a73,2);
+#endif
+
+// 2016-05-25aRagexeRE
+#if PACKETVER >= 20160525
+// new packets
+	packet(0x0a77,15);
+	packet(0x0a78,15);
+// changed packet sizes
+#endif
+
+// 2016-06-01aRagexeRE
+#if PACKETVER >= 20160601
+// new packets
+	packet(0x0a79,-1);
+	packet(0x0a7b,-1);
+	packet(0x0a7c,-1);
+	packet(0x0a7d,-1);
+// changed packet sizes
+#endif
+
+// 2016-06-15aRagexeRE
+#if PACKETVER >= 20160615
+// new packets
+	packet(0x0a7e,4);
+	packet(0x0a7f,-1);
+	packet(0x0a80,2);
+	packet(0x0a81,3);
+// changed packet sizes
+#endif
+
+// 2016-06-22aRagexeRE
+#if PACKETVER >= 20160622
+// new packets
+	packet(0x0a82,46);
+	packet(0x0a83,46);
+	packet(0x0a84,94);
+	packet(0x0a85,82);
+	packet(0x0a86,-1);
+	packet(0x0a87,4);
+	packet(0x0a88,2);
+// changed packet sizes
+#endif
+
+// 2016-06-29aRagexeRE
+#if PACKETVER >= 20160629
+// new packets
+	packet(0x0a89,32);
+	packet(0x0a8a,6);
+	packet(0x0a8b,2);
+	packet(0x0a8c,2);
+	packet(0x0a8d,-1);
+// changed packet sizes
+	packet(0x0a80,6);
+#endif
+
+// 2016-07-06cRagexeRE
+#if PACKETVER >= 20160706
+// new packets
+	packet(0x0a81,3);
+// changed packet sizes
+	packet(0x0a7e,-1);
+	packet(0x0a89,57);
+#endif
+
+// 2016-07-13aRagexeRE
+#if PACKETVER >= 20160713
+// new packets
+// changed packet sizes
+	packet(0x0a87,-1);
+#endif
+
+// 2016-07-20aRagexeRE
+#if PACKETVER >= 20160720
+// new packets
+	packet(0x0a8e,2);
+	packet(0x0a8f,2);
+	packet(0x0a90,3);
+// changed packet sizes
+#endif
+
+// 2016-07-27aRagexeRE
+#if PACKETVER >= 20160727
+// new packets
+	packet(0x0a91,-1);
+	packet(0x0a92,-1);
+	packet(0x0a93,3);
+// changed packet sizes
+#endif
+
+// 2016-08-03bRagexeRE
+#if PACKETVER >= 20160803
+// new packets
+	packet(0x0a94,2);
+// changed packet sizes
+	packet(0x0a81,4);
+#endif
+
+// 2016-09-07aRagexeRE
+#if PACKETVER >= 20160907
+// new packets
+	packet(0x0a95,4);
+// changed packet sizes
+#endif
+
+// 2016-09-21bRagexeRE
+#if PACKETVER >= 20160921
+// new packets
+	packet(0x0a96,51);
+// changed packet sizes
+	packet(0x0a37,59); // ZC_ITEM_PICKUP_ACK_V7
+#endif
+
+// 2016-09-28cRagexeRE
+#if PACKETVER >= 20160928
+// new packets
+	packet(0x0a97,8);
+	packet(0x0a98,12);
+	packet(0x0a99,8);
+	packet(0x0a9a,10);
+	packet(0x0a9b,-1);
+	packet(0x0a9c,2);
+	packet(0x0a9d,4);
+	packet(0x0a9e,2);
+	packet(0x0a9f,2);
+// changed packet sizes
+#endif
+
+// 2016-10-05aRagexeRE
+#if PACKETVER >= 20161005
+// new packets
+	packet(0x0aa0,2,clif->pDull/*,XXX*/);
+	packet(0x0aa1,4);
+	packet(0x0aa2,-1);
+	packet(0x0aa3,7);
+	packet(0x0aa4,2);
+// changed packet sizes
+#endif
+
+// 2016-10-26bRagexeRE
+#if PACKETVER >= 20161026
+// new packets
+	packet(0x0aa5,-1);
+	packet(0x0aa6,36);
+// changed packet sizes
+#endif
+
+// 2016-11-30aRagexeRE
+#if PACKETVER >= 20161130
+// new packets
+	packet(0x0aa7,6);
+	packet(0x0aa8,5);
+	packet(0x0aa9,-1);
+	packet(0x0aaa,-1);
+	packet(0x0aab,-1);
+// changed packet sizes
+#endif
+
+// 2016-12-07cRagexeRE
+#if PACKETVER >= 20161207
+// new packets
+	packet(0x0aac,67);
+// changed packet sizes
+#endif
+
+// 2016-12-21aRagexeRE
+#if PACKETVER >= 20161221
+// new packets
+	packet(0x0aad,47);
+	packet(0x0aae,2);
+	packet(0x0aaf,6);
+	packet(0x0ab0,6);
+	packet(0x0ab1,10);
+// changed packet sizes
+#endif
+
+// 2016-12-28aRagexeRE
+#if PACKETVER >= 20161228
+// new packets
+// changed packet sizes
+	packet(0x0ab1,14);
+#endif
+
+// 2017-01-04bRagexeRE
+#if PACKETVER >= 20170104
+// new packets
+	packet(0x0ab2,7);
+	packet(0x0ab3,15);
+// changed packet sizes
+#endif
+
+// 2017-01-11aRagexeRE
+#if PACKETVER >= 20170111
+// new packets
+	packet(0x0ab4,4);
+	packet(0x0ab5,2);
+	packet(0x0ab6,6);
+	packet(0x0ab7,4);
+	packet(0x0ab8,2);
+	packet(0x0ab9,39);
+// changed packet sizes
+#endif
+
+// 2017-01-18aRagexeRE
+#if PACKETVER >= 20170118
+// new packets
+	packet(0x0aba,2);
+	packet(0x0abb,2);
+// changed packet sizes
+	packet(0x0aad,51);
+	packet(0x0ab3,19);
+#endif
+
+// 2017-02-01aRagexeRE
+#if PACKETVER >= 20170201
+// new packets
+	packet(0x0abc,-1);
+// changed packet sizes
+#endif
+
+// 2017-02-15aRagexeRE
+#if PACKETVER >= 20170215
+// new packets
+	packet(0x0abd,10);
+// changed packet sizes
+#endif
+
+// 2017-02-22aRagexeRE
+#if PACKETVER >= 20170222
+// new packets
+	packet(0x0abe,116);
+	packet(0x0abf,114);
+// changed packet sizes
+#endif
+
+// 2017-02-28aRagexeRE
+#if PACKETVER >= 20170228
+// new packets
+	packet(0x0ac0,26);
+	packet(0x0ac1,26);
+	packet(0x0ac2,-1);
+	packet(0x0ac3,2);
+	packet(0x0ac4,-1);
+	packet(0x0ac5,156,clif->pDull/*,XXX*/);
+	packet(0x0ac6,156);
+	packet(0x0ac7,156);
+// changed packet sizes
+	packet(0x0abe,-1);
+	packet(0x0abf,-1);
+#endif
+
+// 2017-03-08bRagexeRE
+#if PACKETVER >= 20170308
+// new packets
+	packet(0x0ac8,2);
+	packet(0x0ac9,-1);
+// changed packet sizes
+#endif
+
+// 2017-03-22aRagexeRE
+#if PACKETVER >= 20170322
+// new packets
+	packet(0x0aca,3);
+// changed packet sizes
+#endif
+
+// 2017-03-29cRagexeRE
+#if PACKETVER >= 20170329
+// new packets
+// changed packet sizes
+	packet(0x0aac,69);
+#endif
+
+// 2017-04-05bRagexeRE
+#if PACKETVER >= 20170405
+// new packets
+	packet(0x0acb,12);
+	packet(0x0acc,18);
+// changed packet sizes
+#endif
+
+// 2017-04-19bRagexeRE
+#if PACKETVER >= 20170419
+// new packets
+	packet(0x0acd,23);
+// changed packet sizes
+	packet(0x0a99,4);
+#endif
+
 /* PacketKeys: http://herc.ws/board/topic/1105-hercules-wpe-free-june-14th-patch/ */
 #if PACKETVER >= 20110817
 	packetKeys(0x053D5CED,0x3DED6DED,0x6DED6DED); /* Thanks to Shakto */
