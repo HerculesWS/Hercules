@@ -17760,9 +17760,9 @@ BUILDIN(setunitdata)
 	const char *mapname = NULL, *udtype = NULL;
 	int type = 0, val = 0, val2 = 0, val3 = 0;
 	struct map_session_data *tsd = NULL;
-	
+
 	bl = map->id2bl(script_getnum(st, 2));
-	
+
 	if (bl == NULL) {
 		ShowWarning("buildin_setunitdata: Error in finding object with given GID %d!\n", script_getnum(st, 2));
 		script_pushint(st, 0);
@@ -17772,7 +17772,7 @@ BUILDIN(setunitdata)
 	type = script_getnum(st, 3);
 
 	/* type bounds */
-	if (type < UDT_SIZE || type >= UDT_MAX) {
+	if (type < UDT_SIZE || type >= UDT_MAX) { // Note: UDT_TYPE is not valid here
 		ShowError("buildin_setunitdata: Invalid unit data type %d provided.\n", type);
 		script_pushint(st, 0);
 		return false;
@@ -17797,26 +17797,17 @@ BUILDIN(setunitdata)
 /* checks if value is out of bounds. */
 #define setunitdata_check_bounds(arg, min, max) \
 	do { \
-		if (script_getnum(st, arg) < min || script_getnum(st, arg) > max) { \
-			ShowError("buildin_setunitdata: Invalid value %d for argument #%d. (min: %d, max: %d)\n", script_getnum(st, arg), arg-1, min, max); \
+		if (script_getnum(st, (arg)) < (min) || script_getnum(st, (arg)) > (max)) { \
+			ShowError("buildin_setunitdata: Invalid value %d for argument #%d. (min: %d, max: %d)\n", script_getnum(st, (arg)), (arg)-1, (min), (max)); \
 			script_pushint(st, 0); \
 			return false; \
 		} \
 	} while(0);
 /* checks if value is out of bounds. */
-#define setunitdata_check_unsigned(arg, max) \
+#define setunitdata_check_min(arg, min) \
 	do { \
-		if (script_getnum(st, arg) < 0 || script_getnum(st, arg) > max) { \
-			ShowError("buildin_setunitdata: Invalid value %d for argument #%d. (min: 0, max: %u)\n", script_getnum(st, arg), arg-1, max); \
-			script_pushint(st, 0); \
-			return false; \
-		} \
-	} while(0);
-/* checks if uint64 value is out of bounds. */
-#define setunitdata_check_uint64(arg, min, max) \
-	do { \
-		if (script_getnum(st, arg) < min || script_getnum(st, arg) > max) { \
-			ShowError("buildin_setunitdata: Invalid value %d for argument #%d. (min: %d, max: %"PRIu64")\n", script_getnum(st, arg), arg-1, min, max); \
+		if (script_getnum(st, (arg)) < (min)) { \
+			ShowError("buildin_setunitdata: Invalid value %d for argument #%d. (min: %d)\n", script_getnum(st, (arg)), (arg)-1, (min)); \
 			script_pushint(st, 0); \
 			return false; \
 		} \
@@ -17825,12 +17816,12 @@ BUILDIN(setunitdata)
  * also checks if the argument exists, if not required. */
 #define setunitdata_assert_arg(arg, required) \
 	do { \
-		if (required && !script_hasdata(st, arg)) { \
-			ShowError("buildin_setunitdata: Type %d reqires argument #%d.\n", type, arg-1); \
+		if (required && !script_hasdata(st, (arg))) { \
+			ShowError("buildin_setunitdata: Type %d reqires argument #%d.\n", type, (arg)-1); \
 			script_pushint(st, 0); \
 			return false; \
 		} else if (!required && script_hasdata(st, arg)) { \
-			ShowError("buildin_setunitdata: Argument %d is not required for type %d.\n", arg-1, type); \
+			ShowError("buildin_setunitdata: Argument %d is not required for type %d.\n", (arg)-1, type); \
 			script_pushint(st, 0); \
 			return false; \
 		} \
@@ -17838,9 +17829,9 @@ BUILDIN(setunitdata)
 /* checks if the data is an integer. */
 #define setunitdata_check_int(arg) \
 	do { \
-		setunitdata_assert_arg(arg, true); \
-		if (script_isstringtype(st, arg)) { \
-			ShowError("buildin_setunitdata: Argument #%d expects integer, string given.\n", arg-1); \
+		setunitdata_assert_arg((arg), true); \
+		if (script_isstringtype(st, (arg))) { \
+			ShowError("buildin_setunitdata: Argument #%d expects integer, string given.\n", (arg)-1); \
 			script_pushint(st, 0); \
 			return false; \
 		} \
@@ -17848,9 +17839,9 @@ BUILDIN(setunitdata)
 /* checks if the data is a string. */
 #define setunitdata_check_string(arg) \
 	do { \
-		setunitdata_assert_arg(arg, true); \
-		if (script_isinttype(st, arg)) { \
-			ShowError("buildin_setunitdata: Argument #%d expects string, integer given.\n", arg-1); \
+		setunitdata_assert_arg((arg), true); \
+		if (script_isinttype(st, (arg))) { \
+			ShowError("buildin_setunitdata: Argument #%d expects string, integer given.\n", (arg)-1); \
 			script_pushint(st, 0); \
 			return false; \
 		} \
@@ -17881,10 +17872,10 @@ BUILDIN(setunitdata)
 	case UDT_INTIMACY:
 	case UDT_LIFETIME:
 	case UDT_MERC_KILLCOUNT:
-		setunitdata_check_unsigned(4, UINT_MAX);
+		setunitdata_check_min(4, 0);
 		break;
 	case UDT_MASTERAID:
-		setunitdata_check_unsigned(4, UINT_MAX);
+		setunitdata_check_min(4, 0);
 		tsd = map->id2sd(val);
 		if (tsd == NULL) {
 			ShowWarning("buildin_setunitdata: Account ID %d not found for master change!\n",val);
@@ -17893,8 +17884,8 @@ BUILDIN(setunitdata)
 		}
 		break;
 	case UDT_MASTERCID:
-		setunitdata_check_unsigned(4, UINT_MAX);
-		tsd = map->charid2sd((uint32) val);
+		setunitdata_check_min(4, 0);
+		tsd = map->charid2sd(val);
 		if (tsd == NULL) {
 			ShowWarning("buildin_setunitdata: Character ID %d not found for master change!\n",val);
 			script_pushint(st, 0);
@@ -17906,7 +17897,7 @@ BUILDIN(setunitdata)
 			ShowError("buildin_setunitdata: Non-existent map %s provided.\n", mapname);
 			return false;
 		}
-		setunitdata_check_int(5); 
+		setunitdata_check_int(5);
 		setunitdata_check_int(6);
 		setunitdata_check_bounds(5, 0, MAX_MAP_SIZE/2);
 		setunitdata_check_bounds(6, 0, MAX_MAP_SIZE/2);
@@ -17945,7 +17936,7 @@ BUILDIN(setunitdata)
 		setunitdata_check_bounds(4, 0, 7);
 		break;
 	case UDT_CANMOVETICK:
-		setunitdata_check_uint64(4, 0, UINT64_MAX);
+		setunitdata_check_min(4, 0);
 		break;
 	case UDT_STR:
 	case UDT_AGI:
@@ -17962,7 +17953,7 @@ BUILDIN(setunitdata)
 	case UDT_AMOTION:
 	case UDT_ADELAY:
 	case UDT_DMOTION:
-	setunitdata_check_bounds(4, 0, USHRT_MAX);
+		setunitdata_check_bounds(4, 0, USHRT_MAX);
 		break;
 	case UDT_DEF:
 	case UDT_MDEF:
@@ -17985,7 +17976,6 @@ BUILDIN(setunitdata)
 	}
 
 #undef setunitdata_check_bounds
-#undef setunitdata_check_uint64
 #undef setunitdata_assert_arg
 #undef setunitdata_check_int
 #undef setunitdata_check_string
@@ -17996,13 +17986,13 @@ BUILDIN(setunitdata)
 	{
 		struct mob_data *md = BL_UCAST(BL_MOB, bl);
 		nullpo_retr(false, md);
-		
+
 		switch (type)
 		{
-		case UDT_SIZE: 
+		case UDT_SIZE:
 			md->status.size = (unsigned char) val;
 			break;
-		case UDT_LEVEL: 
+		case UDT_LEVEL:
 			md->level = val;
 			break;
 		case UDT_HP:
@@ -18040,7 +18030,7 @@ BUILDIN(setunitdata)
 			md->special_state.ai = (enum ai) val;
 			break;
 		case UDT_SCOPTION:
-			md->sc.option = (char) val;
+			md->sc.option = (unsigned int) val;
 			break;
 		case UDT_SEX:
 			md->vd->sex = (char) val;
@@ -18049,34 +18039,34 @@ BUILDIN(setunitdata)
 			mob->class_change(md, val);
 			break;
 		case UDT_HAIRSTYLE:
-			clif->changelook(bl, LOOK_HAIR, (unsigned short) val);
+			clif->changelook(bl, LOOK_HAIR, val);
 			break;
 		case UDT_HAIRCOLOR:
-			clif->changelook(bl, LOOK_HAIR_COLOR, (unsigned short) val);
+			clif->changelook(bl, LOOK_HAIR_COLOR, val);
 			break;
 		case UDT_HEADBOTTOM:
-			clif->changelook(bl, LOOK_HEAD_BOTTOM, (unsigned short) val);
+			clif->changelook(bl, LOOK_HEAD_BOTTOM, val);
 			break;
 		case UDT_HEADMIDDLE:
-			clif->changelook(bl, LOOK_HEAD_MID, (unsigned short) val);
+			clif->changelook(bl, LOOK_HEAD_MID, val);
 			break;
 		case UDT_HEADTOP:
-			clif->changelook(bl, LOOK_HEAD_TOP, (unsigned short) val);
+			clif->changelook(bl, LOOK_HEAD_TOP, val);
 			break;
 		case UDT_CLOTHCOLOR:
-			clif->changelook(bl, LOOK_CLOTHES_COLOR, (unsigned short) val);
+			clif->changelook(bl, LOOK_CLOTHES_COLOR, val);
 			break;
 		case UDT_SHIELD:
-			clif->changelook(bl, LOOK_SHIELD, (unsigned short) val);
+			clif->changelook(bl, LOOK_SHIELD, val);
 			break;
 		case UDT_WEAPON:
-			clif->changelook(bl, LOOK_WEAPON, (unsigned short) val);
+			clif->changelook(bl, LOOK_WEAPON, val);
 			break;
 		case UDT_LOOKDIR:
 			unit->setdir(bl, (uint8) val);
 			break;
 		case UDT_CANMOVETICK:
-			md->ud.canmove_tick = (int64) val;
+			md->ud.canmove_tick = val;
 			break;
 		case UDT_STR:
 			md->status.str = (unsigned short) val;
@@ -18103,7 +18093,7 @@ BUILDIN(setunitdata)
 			status->calc_misc(bl, &md->status, md->level);
 			break;
 		case UDT_ATKRANGE:
-    		md->status.rhw.range = (unsigned short) val;
+			md->status.rhw.range = (unsigned short) val;
 			break;
 		case UDT_ATKMIN:
 			md->status.rhw.atk = (unsigned short) val;
@@ -18130,28 +18120,28 @@ BUILDIN(setunitdata)
 			md->status.flee = (short) val;
 			break;
 		case UDT_PDODGE:
-			md->status.flee2 = (short) val; 
+			md->status.flee2 = (short) val;
 			break;
 		case UDT_CRIT:
-			md->status.cri = (short) val; 
+			md->status.cri = (short) val;
 			break;
 		case UDT_RACE:
-			md->status.race = (unsigned char) val; 
+			md->status.race = (unsigned char) val;
 			break;
 		case UDT_ELETYPE:
-			md->status.def_ele = (unsigned char) val; 
+			md->status.def_ele = (unsigned char) val;
 			break;
 		case UDT_ELELEVEL:
-			md->status.ele_lv = (unsigned char) val; 
+			md->status.ele_lv = (unsigned char) val;
 			break;
 		case UDT_AMOTION:
-			md->status.amotion = (unsigned short) val; 
+			md->status.amotion = (unsigned short) val;
 			break;
 		case UDT_ADELAY:
-			md->status.adelay = (unsigned short) val; 
+			md->status.adelay = (unsigned short) val;
 			break;
 		case UDT_DMOTION:
-			md->status.dmotion = (unsigned short) val; 
+			md->status.dmotion = (unsigned short) val;
 			break;
 		default:
 			ShowWarning("buildin_setunitdata: Invalid data type '%s' for mob unit.\n", udtype);
@@ -18163,9 +18153,9 @@ BUILDIN(setunitdata)
 	case BL_HOM:
 	{
 		struct homun_data *hd = BL_UCAST(BL_HOM, bl);
-		
+
 		nullpo_retr(false, hd);
-		
+
 		switch (type)
 		{
 		case UDT_SIZE:
@@ -18174,13 +18164,13 @@ BUILDIN(setunitdata)
 		case UDT_LEVEL:
 			hd->homunculus.level = (short) val;
 			break;
-		case UDT_HP: 
+		case UDT_HP:
 			status->set_hp(bl, (unsigned int) val, 0);
 			break;
 		case UDT_MAXHP:
 			hd->homunculus.max_hp = val;
 			break;
-		case UDT_SP: 
+		case UDT_SP:
 			status->set_sp(bl, (unsigned int) val, 0);
 			break;
 		case UDT_MAXSP:
@@ -18205,7 +18195,7 @@ BUILDIN(setunitdata)
 			unit->setdir(bl, (unsigned char) val);
 			break;
 		case UDT_CANMOVETICK:
-			hd->ud.canmove_tick = (int64) val;
+			hd->ud.canmove_tick = val;
 			break;
 		case UDT_STR:
 			hd->base_status.str = (unsigned short) val;
@@ -18295,16 +18285,16 @@ BUILDIN(setunitdata)
 			script_pushint(st, 0);
 			return false;
 		}
-		
+
 		clif->send_homdata(hd->master, SP_ACK, 0); // send homun data
 	}
 		break;
 	case BL_PET:
 	{
 		struct pet_data *pd = BL_UCAST(BL_PET, bl);
-		
+
 		nullpo_retr(false, pd);
-		
+
 		switch (type)
 		{
 		case UDT_SIZE:
@@ -18326,7 +18316,7 @@ BUILDIN(setunitdata)
 			pd->status.max_sp = (unsigned int) val;
 			break;
 		case UDT_MASTERAID:
-			pd->pet.account_id = (int) val;
+			pd->pet.account_id = val;
 			pd->msd = tsd;
 			break;
 		case UDT_MAPIDXY:
@@ -18344,7 +18334,7 @@ BUILDIN(setunitdata)
 			unit->setdir(bl, (unsigned char) val);
 			break;
 		case UDT_CANMOVETICK:
-			pd->ud.canmove_tick = (int64) val;
+			pd->ud.canmove_tick = val;
 			break;
 		case UDT_STR:
 			pd->status.str = (unsigned short) val;
@@ -18422,10 +18412,11 @@ BUILDIN(setunitdata)
 			pd->status.dmotion = (unsigned short) val;
 			break;
 		case UDT_INTIMACY:
-				pet->set_intimate(pd, val);
-				clif->send_petdata(pd->msd,pd,1,pd->pet.intimate);
-				break;
-		case UDT_HUNGER:      pd->pet.hungry = (short) val; 
+			pet->set_intimate(pd, val);
+			clif->send_petdata(pd->msd, pd, 1, pd->pet.intimate);
+			break;
+		case UDT_HUNGER:
+			pd->pet.hungry = (short) val;
 			break;
 		default:
 			ShowWarning("buildin_setunitdata: Invalid data type '%s' for pet unit.\n", udtype);
@@ -18438,9 +18429,9 @@ BUILDIN(setunitdata)
 	case BL_MER:
 	{
 		struct mercenary_data *mc = BL_UCAST(BL_MER, bl);
-		
+
 		nullpo_retr(false, mc);
-		
+
 		switch (type)
 		{
 		case UDT_SIZE:
@@ -18459,7 +18450,7 @@ BUILDIN(setunitdata)
 			mc->base_status.max_sp = (unsigned int) val;
 			break;
 		case UDT_MASTERCID:
-			mc->mercenary.char_id = (uint32) val;
+			mc->mercenary.char_id = val;
 			break;
 		case UDT_MAPIDXY:
 			unit->warp(bl, (short) val, (short) val2, (short) val3, CLR_TELEPORT);
@@ -18476,7 +18467,7 @@ BUILDIN(setunitdata)
 			unit->setdir(bl, (unsigned char) val);
 			break;
 		case UDT_CANMOVETICK:
-			mc->ud.canmove_tick = (int64) val;
+			mc->ud.canmove_tick = val;
 			break;
 		case UDT_STR:
 			mc->base_status.str = (unsigned short) val;
@@ -18564,7 +18555,7 @@ BUILDIN(setunitdata)
 			script_pushint(st, 0);
 			return false;
 		}
-		
+
 		clif->mercenary_info(map->charid2sd(mc->mercenary.char_id));
 		clif->mercenary_skillblock(map->charid2sd(mc->mercenary.char_id));
 	}
@@ -18572,9 +18563,9 @@ BUILDIN(setunitdata)
 	case BL_ELEM:
 	{
 		struct elemental_data *ed = BL_UCAST(BL_ELEM, bl);
-		
+
 		nullpo_retr(false, ed);
-		
+
 		switch (type)
 		{
 		case UDT_SIZE:
@@ -18610,7 +18601,7 @@ BUILDIN(setunitdata)
 			unit->setdir(bl, (unsigned char) val);
 			break;
 		case UDT_CANMOVETICK:
-			ed->ud.canmove_tick = (int64) val;
+			ed->ud.canmove_tick = val;
 			break;
 		case UDT_STR:
 			ed->base_status.str = (unsigned short) val;
@@ -18649,7 +18640,7 @@ BUILDIN(setunitdata)
 			ed->base_status.matk_min = (unsigned short) val;
 			break;
 		case UDT_MATKMAX:
-    		ed->base_status.matk_max = (unsigned short) val;
+			ed->base_status.matk_max = (unsigned short) val;
 			break;
 		case UDT_DEF:
 			ed->base_status.def = (defType) val;
@@ -18688,7 +18679,7 @@ BUILDIN(setunitdata)
 			ed->base_status.dmotion = (unsigned short) val;
 			break;
 		case UDT_LIFETIME:
-			ed->elemental.life_time = (int) val;
+			ed->elemental.life_time = val;
 			break;
 		default:
 			ShowWarning("buildin_setunitdata: Invalid data type '%s' for elemental unit.\n", udtype);
@@ -18701,9 +18692,9 @@ BUILDIN(setunitdata)
 	case BL_NPC:
 	{
 		struct npc_data *nd = BL_UCAST(BL_NPC, bl);
-		
+
 		nullpo_retr(false, nd);
-		
+
 		switch (type)
 		{
 		case UDT_SIZE:
@@ -18831,7 +18822,7 @@ BUILDIN(setunitdata)
 		script_pushint(st, 0);
 		return false;
 	} // end of bl->type switch
-	
+
 	script_pushint(st, 1);
 	return true;
 }
@@ -18852,9 +18843,9 @@ BUILDIN(getunitdata)
 	int type = 0;
 	char* name = NULL;
 	struct script_data *data = script_hasdata(st,4)?script_getdata(st, 4):NULL;
-	
+
 	bl = map->id2bl(script_getnum(st, 2));
-	
+
 	if (bl == NULL) {
 		ShowWarning("buildin_getunitdata: Error in finding object with given GID %d!\n", script_getnum(st, 2));
 		script_pushint(st, 0);
@@ -18864,7 +18855,7 @@ BUILDIN(getunitdata)
 	type = script_getnum(st, 3);
 
 	/* Type check */
-	if (type < UDT_SIZE || type >= UDT_MAX) {
+	if (type < UDT_TYPE || type >= UDT_MAX) {
 		ShowError("buildin_getunitdata: Invalid unit data type %d provided.\n", type);
 		script_pushint(st, 0);
 		return false;
@@ -18877,9 +18868,9 @@ BUILDIN(getunitdata)
 			script_pushint(st, 0);
 			return false;
 		}
-		
+
 		name = reference_getname(data);
-		
+
 		if (not_server_variable(*name)) {
 			sd = script->rid2sd(st);
 			if (sd == NULL) {
@@ -18889,16 +18880,16 @@ BUILDIN(getunitdata)
 			}
 		}
 	}
-	
+
 #define getunitdata_sub(idx__,var__) script->setd_sub(st,NULL,name,(idx__),(void *)h64BPTRSIZE((int)(var__)),data->ref);
-	
+
 	switch (bl->type) {
 	case BL_MOB:
 	{
 		const struct mob_data *md = BL_UCAST(BL_MOB, bl);
-		
+
 		nullpo_retr(false, md);
-		
+
 		switch (type)
 		{
 		case UDT_TYPE:        script_pushint(st, BL_MOB); break;
@@ -18962,9 +18953,9 @@ BUILDIN(getunitdata)
 	case BL_HOM:
 	{
 		const struct homun_data *hd = BL_UCAST(BL_HOM, bl);
-		
+
 		nullpo_retr(false, hd);
-		
+
 		switch (type)
 		{
 		case UDT_TYPE:        script_pushint(st, BL_HOM); break;
@@ -19019,9 +19010,9 @@ BUILDIN(getunitdata)
 	case BL_PET:
 	{
 		const struct pet_data *pd = BL_UCAST(BL_PET, bl);
-		
+
 		nullpo_retr(false, pd);
-		
+
 		switch (type)
 		{
 		case UDT_TYPE:        script_pushint(st, BL_PET); break;
@@ -19076,9 +19067,9 @@ BUILDIN(getunitdata)
 	case BL_MER:
 	{
 		const struct mercenary_data *mc = BL_UCAST(BL_MER, bl);
-		
+
 		nullpo_retr(false, mc);
-		
+
 		switch (type)
 		{
 		case UDT_TYPE:        script_pushint(st, BL_MER); break;
@@ -19132,9 +19123,9 @@ BUILDIN(getunitdata)
 	case BL_ELEM:
 	{
 		const struct elemental_data *ed = BL_UCAST(BL_ELEM, bl);
-		
+
 		nullpo_retr(false, ed);
-		
+
 		switch (type)
 		{
 		case UDT_TYPE:        script_pushint(st, BL_ELEM); break;
@@ -19186,9 +19177,9 @@ BUILDIN(getunitdata)
 	case BL_NPC:
 	{
 		const struct npc_data *nd = BL_UCAST(BL_NPC, bl);
-		
+
 		nullpo_retr(false, nd);
-		
+
 		switch (type)
 		{
 		case UDT_TYPE:        script_pushint(st, BL_NPC); break;
@@ -19259,17 +19250,17 @@ BUILDIN(getunitdata)
 BUILDIN(getunitname)
 {
 	const struct block_list* bl = NULL;
-	
+
 	bl = map->id2bl(script_getnum(st, 2));
-	
+
 	if (bl == NULL) {
 		ShowWarning("buildin_getunitname: Error in finding object with given game ID %d!\n", script_getnum(st, 2));
 		script_pushconststr(st, "Unknown");
 		return false;
 	}
-	
+
 	script_pushstrcopy(st, status->get_name(bl));
-	
+
 	return true;
 }
 
@@ -19286,13 +19277,13 @@ BUILDIN(getunitname)
 BUILDIN(setunitname)
 {
 	struct block_list* bl = map->id2bl(script_getnum(st, 2));
-	
+
 	if (bl == NULL) {
 		ShowWarning("buildin_setunitname: Game object with ID %d was not found!\n", script_getnum(st, 2));
 		script_pushint(st, 0);
 		return false;
 	}
-	
+
 	switch (bl->type) {
 		case BL_MOB:
 		{
@@ -19332,10 +19323,10 @@ BUILDIN(setunitname)
 			ShowWarning("buildin_setunitname: Unknown object type!\n");
 			return false;
 	}
-	
+
 	script_pushint(st, 1);
 	clif->charnameack(0, bl); // Send update to client.
-	
+
 	return true;
 }
 
