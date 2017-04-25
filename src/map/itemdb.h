@@ -510,6 +510,7 @@ struct item_data {
 		unsigned keepafteruse : 1;
 		unsigned force_serial : 1;
 		unsigned no_options: 1; // < disallows use of item options on the item. (non-equippable items are automatically flagged) [Smokexyz]
+		unsigned drop_announce : 1; // Official Drop Announce [Jedzkie]
 	} flag;
 	struct {// item stacking limitation
 		unsigned short amount;
