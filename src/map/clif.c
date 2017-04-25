@@ -6442,7 +6442,7 @@ void clif_openvending(struct map_session_data* sd, int id, struct s_vending* ven
 		WFIFOB(fd,21+i*item_length) = sd->status.cart[index].refine;
 		clif->addcards(WFIFOP(fd,22+i*item_length), &sd->status.cart[index]);
 #if PACKETVER >= 20150226
-		clif->add_item_options(WFIFOP(fd,30+22+i*item_length), &sd->status.cart[index]);
+		clif->add_item_options(WFIFOP(fd,30+i*item_length), &sd->status.cart[index]);
 #endif
 	}
 	WFIFOSET(fd,WFIFOW(fd,2));
