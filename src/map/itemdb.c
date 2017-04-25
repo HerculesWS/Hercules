@@ -2073,6 +2073,9 @@ int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const char *
 	if ((t = libconfig->setting_get_member(it, "KeepAfterUse")))
 		id.flag.keepafteruse = libconfig->setting_get_bool(t) ? 1 : 0;
 
+	if ((t = libconfig->setting_get_member(it, "DropAnnounce")))
+		id.flag.drop_announce = libconfig->setting_get_bool(t) ? 1 : 0;
+
 	if (itemdb->lookup_const(it, "Delay", &i32) && i32 >= 0)
 		id.delay = i32;
 
