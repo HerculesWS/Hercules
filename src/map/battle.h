@@ -407,7 +407,6 @@ struct Battle_Config {
 	int mob_npc_event_type; //Determines on who the npc_event is executed. [Skotlex]
 
 	int character_size; // if riders have size=2, and baby class riders size=1 [Lupus]
-	int rare_drop_announce; // chance <= to show rare drops global announces
 
 	int retaliate_to_master; //Whether when a mob is attacked by another mob, it will retaliate versus the mob or the mob's master. [Skotlex]
 

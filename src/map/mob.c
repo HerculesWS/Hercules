@@ -2440,14 +2440,6 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 
 			ditem = mob->setdropitem(md->db->dropitem[i].nameid, 1, it);
 
-			//A Rare Drop Global Announce by Lupus
-			if( mvp_sd && drop_rate <= battle_config.rare_drop_announce ) {
-				char message[128];
-				sprintf (message, msg_txt(541), mvp_sd->status.name, md->name, it->jname, (float)drop_rate/100);
-				//MSG: "'%s' won %s's %s (chance: %0.02f%%)"
-				intif->broadcast(message, (int)strlen(message)+1, BC_DEFAULT);
-			}
-
 			// Official Drop Announce [Jedzkie]
 			if (mvp_sd != NULL && id->flag.drop_announce) {
 				if ((id = itemdb->search(it->nameid)) != NULL) {
@@ -2590,14 +2582,6 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 					item.identify = itemdb->isidentified2(data);
 					clif->mvp_item(mvp_sd, item.nameid);
 					log_mvp[0] = item.nameid;
-
-					//A Rare MVP Drop Global Announce by Lupus
-					if (rate <= battle_config.rare_drop_announce) {
-						char message[128];
-						sprintf(message, msg_txt(541), mvp_sd->status.name, md->name, data->jname, rate/100.);
-						//MSG: "'%s' won %s's %s (chance: %0.02f%%)"
-						intif->broadcast(message, (int)strlen(message)+1, BC_DEFAULT);
-					}
 
 					if((temp = pc->additem(mvp_sd,&item,1,LOG_TYPE_PICKDROP_PLAYER)) != 0) {
 						clif->additem(mvp_sd,0,0,temp);
