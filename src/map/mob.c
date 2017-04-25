@@ -2441,8 +2441,8 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 			ditem = mob->setdropitem(md->db->dropitem[i].nameid, 1, it);
 
 			// Official Drop Announce [Jedzkie]
-			if (mvp_sd != NULL && id->flag.drop_announce) {
-				if ((id = itemdb->search(it->nameid)) != NULL) {
+			if (mvp_sd != NULL) {
+				if ((id = itemdb->search(it->nameid)) != NULL && id->flag.drop_announce) {
 					clif->item_drop_announce(mvp_sd, it->nameid, md->name);
 				}
 			}
