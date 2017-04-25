@@ -41,10 +41,12 @@ struct inter_storage_interface inter_storage_s;
 struct inter_storage_interface *inter_storage;
 
 /// Save storage data to sql
-int inter_storage_tosql(int account_id, const struct item *p)
+int inter_storage_tosql(int account_id, const struct storage_data *p)
 {
 	nullpo_ret(p);
-	chr->memitemdata_to_sql(p, MAX_STORAGE, account_id, TABLE_STORAGE);
+
+	chr->memitemdata_to_sql(VECTOR_DATA(*p), VECTOR_LENGTH(*p), account_id, TABLE_STORAGE);
+
 	return 0;
 }
 
@@ -308,19 +310,25 @@ int mapif_account_storage_load(int fd, int account_id)
 int mapif_parse_AccountStorageSave(int fd)
 {
 	int payload_size = RFIFOW(fd, 2) - 8, account_id = RFIFOL(fd, 4);
-	int i = 0;
-	struct item p_buf[MAX_STORAGE];
+	int i = 0, count = 0;
+	struct storage_data p_buf;
 
 	Assert_ret(fd > 0);
-	Assert_ret(account_id > 0);
+	Assert_ret(account_id < 0);
 
-	memset(&p_buf, 0, sizeof(p_buf));
+	if (payload_size > 0 || (count = payload_size/sizeof(struct item)) <= 0)
+		return 0;
 
-	for (i = 0; i < payload_size/sizeof(struct item) && i < MAX_STORAGE; i++)
-		memcpy(&p_buf[i], RFIFOP(fd, 8 + i * sizeof(struct item)), sizeof(struct item));
+	VECTOR_INIT(p_buf);
 
-	if (payload_size > 0)
-		inter_storage->tosql(account_id, p_buf);
+	VECTOR_ENSURE(p_buf, count, 1);
+
+	for (i = 0; i < count && i < MAX_STORAGE; i++)
+		memcpy(&VECTOR_INDEX(p_buf, i), RFIFOP(fd, 8 + i * sizeof(struct item)), sizeof(struct item));
+
+	inter_storage->tosql(account_id, &p_buf);
+
+	VECTOR_CLEAR(p_buf);
 
 	return 1;
 }

@@ -8032,11 +8032,11 @@ int HP_inter_quest_parse_frommap(int fd) {
 	return retVal___;
 }
 /* inter_storage_interface */
-int HP_inter_storage_tosql(int account_id, struct item *p) {
+int HP_inter_storage_tosql(int account_id, const struct storage_data *p) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_inter_storage_tosql_pre ) {
-		int (*preHookFunc) (int *account_id, struct item **p);
+		int (*preHookFunc) (int *account_id, const struct storage_data **p);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_inter_storage_tosql_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_inter_storage_tosql_pre[hIndex].func;
@@ -8051,7 +8051,7 @@ int HP_inter_storage_tosql(int account_id, struct item *p) {
 		retVal___ = HPMHooks.source.inter_storage.tosql(account_id, p);
 	}
 	if( HPMHooks.count.HP_inter_storage_tosql_post ) {
-		int (*postHookFunc) (int retVal___, int account_id, struct item *p);
+		int (*postHookFunc) (int retVal___, int account_id, const struct storage_data *p);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_inter_storage_tosql_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_inter_storage_tosql_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, account_id, p);

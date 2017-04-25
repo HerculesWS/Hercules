@@ -10167,7 +10167,7 @@ int pc_checkitem(struct map_session_data *sd)
 				sd->status.cart[i].unique_id = itemdb->unique_id(sd);
 		}
 
-		for (i = 0; i < MAX_STORAGE; i++) {
+		for (i = 0; i < VECTOR_LENGTH(sd->storage); i++) {
 			struct item *it = &VECTOR_INDEX(sd->storage, i);
 			id = it->nameid;
 

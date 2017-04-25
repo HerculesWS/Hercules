@@ -180,7 +180,7 @@ int storage_additem(struct map_session_data* sd, struct item* item_data, int amo
 
 	if( itemdb->isstackable2(data) )
 	{//Stackable
-		for( i = 0; i < MAX_STORAGE; i++ )
+		for( i = 0; i < VECTOR_LENGTH(sd->storage); i++ )
 		{
 			it = &VECTOR_INDEX(sd->storage, i);
 			if( compare_item(it, item_data) )
@@ -223,7 +223,7 @@ int storage_delitem(struct map_session_data* sd, int n, int amount)
 	struct item *it = NULL;
 
 	nullpo_retr(1, sd);
-	Assert_retr(1, n >= 0 && n < MAX_STORAGE);
+	Assert_retr(1, n >= 0 && n < VECTOR_LENGTH(sd->storage));
 
 	it = &VECTOR_INDEX(sd->storage, n);
 
@@ -290,7 +290,7 @@ int storage_storageget(struct map_session_data* sd, int index, int amount)
 
 	nullpo_ret(sd);
 
-	if (index < 0 || index >= MAX_STORAGE)
+	if (index < 0 || index >= VECTOR_LENGTH(sd->storage))
 		return 0;
 
 	it = &VECTOR_INDEX(sd->storage, index);
@@ -352,7 +352,7 @@ int storage_storagegettocart(struct map_session_data* sd, int index, int amount)
 
 	nullpo_ret(sd);
 
-	if (index < 0 || index >= MAX_STORAGE)
+	if (index < 0 || index >= VECTOR_LENGTH(sd->storage))
 		return 0;
 
 	it = &VECTOR_INDEX(sd->storage, index);
