@@ -2151,6 +2151,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 	struct map_session_data *sd = BL_CAST(BL_PC, src);
 	struct map_session_data *tmpsd[DAMAGELOG_SIZE] = { NULL };
 	struct map_session_data *mvp_sd = sd, *second_sd = NULL, *third_sd = NULL;
+	struct item_data *id = NULL;
 
 	struct {
 		struct party_data *p;
@@ -2447,14 +2448,12 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 				intif->broadcast(message, (int)strlen(message)+1, BC_DEFAULT);
 			}
 
-			/* heres the thing we got the feature set up however we're still discussing how to best define the ids,
-			 * so while we discuss, for a small period of time, the list is hardcoded (yes officially only those 2 use it,
-			 * thus why we're unsure on how to best place the setting) */
-			/* temp, will not be hardcoded for long thudu. */
-			// TODO: This should be a field in the item db.
-			if (mvp_sd != NULL
-			 && (it->nameid == ITEMID_GOLD_KEY77 || it->nameid == ITEMID_SILVER_KEY77)) /* for when not hardcoded: add a check on mvp bonus drop as well */
-				clif->item_drop_announce(mvp_sd, it->nameid, md->name);
+			// Official Drop Announce [Jedzkie]
+			if (mvp_sd != NULL) {
+				if ((id = itemdb->search(it->nameid)) != NULL && id->flag.drop_announce) {
+					clif->item_drop_announce(mvp_sd, it->nameid, md->name);
+				}
+			}
 
 			// Announce first, or else ditem will be freed. [Lance]
 			// By popular demand, use base drop rate for autoloot code. [Skotlex]
