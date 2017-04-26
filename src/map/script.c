@@ -23855,6 +23855,7 @@ void script_hardcoded_constants(void)
 	script->set_constant("RENEWAL_ASPD", 0, false, false);
 #endif
 	script->constdb_comment(NULL);
+#include "constants.inc"
 }
 
 /**
