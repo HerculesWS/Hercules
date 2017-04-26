@@ -2146,6 +2146,8 @@ packet(0x96e,-1,clif->ackmergeitems);
 // shuffle packets not added
 	packet(0x097d,288); // ZC_ACK_RANKING
 	packet(0x097e,12); // ZC_UPDATE_RANKING_POINT
+	packet(0x097f,-1);  // ZC_SELECTCART
+	packet(0x0980,7,clif->pSelectCart); // CZ_SELECTCART
 #endif
 
 #ifndef PACKETVER_RE
@@ -2220,6 +2222,44 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0436,4,clif->pDull); // CZ_GANGSI_RANK
 #endif
 
+// 2012-09-25aRagexe
+#if PACKETVER >= 20120925
+// new packets (not all)
+	packet(0x0998,8,clif->pEquipItem,2,4);
+#endif
+
+// 2013-02-06aRagexe
+#if PACKETVER >= 20130206
+// new packets
+	packet(0x09a4,18); // ZC_DISPATCH_TIMING_INFO_CHN
+// changed packet sizes
+#endif
+
+// 2013-03-06aRagexe
+#if PACKETVER >= 20130306
+// new packets
+	packet(0x09a6,12); // ZC_BANKING_CHECK
+	packet(0x09a7,14,clif->pDull/*,XXX*/); // CZ_REQ_BANKING_DEPOSIT
+	packet(0x09a8,4); // ZC_ACK_BANKING_DEPOSIT
+	packet(0x09a9,14,clif->pDull/*,XXX*/); // CZ_REQ_BANKING_WITHDRAW
+	packet(0x09aa,4); // ZC_ACK_BANKING_WITHDRAW
+// changed packet sizes
+#endif
+
+// 2013-03-13aRagexe
+#if PACKETVER >= 20130313
+// new packets
+	packet(0x09ab,-1,clif->pDull/*,XXX*/); // CZ_REQ_BANKING_CHECK
+	packet(0x09ac,20,clif->pDull/*,XXX*/); // CZ_REQ_CASH_BARGAIN_SALE_ITEM_INFO
+	packet(0x09ad,6); // ZC_ACK_CASH_BARGAIN_SALE_ITEM_INFO
+	packet(0x09ae,-1,clif->pDull/*,XXX*/); // CZ_REQ_APPLY_BARGAIN_SALE_ITEM
+	packet(0x09af,-1); // ZC_ACK_APPLY_BARGAIN_SALE_ITEM
+	packet(0x09b0,8,clif->pDull/*,XXX*/); // CZ_REQ_REMOVE_BARGAIN_SALE_ITEM
+	packet(0x09b1,6); // ZC_ACK_REMOVE_BARGAIN_SALE_ITEM
+	packet(0x09b2,-1); // ZC_NOTIFY_BARGAIN_SALE_SELLING
+// changed packet sizes
+#endif
+
 //2013-03-20Ragexe (Judas + Yommy)
 #if PACKETVER >= 20130320
 	// Shuffle Start
@@ -2258,11 +2298,34 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x095a,8,clif->pDull); // CZ_JOIN_BATTLE_FIELD
 	// Shuffle End
 
-	// New Packets
-	packet(0x0998,8,clif->pEquipItem,2,4);
+	// New Packets (wrong version or packet not exists)
 	packet(0x0447,2); // PACKET_CZ_BLOCKING_PLAY_CANCEL
 	packet(0x099f,24);
 	// New Packets End
+#endif
+
+#if PACKETVER >= 20130320
+// new packets
+// changed packet sizes
+	packet(0x09a7,10,clif->pBankDeposit,2,4,6); // CZ_REQ_BANKING_DEPOSIT
+	packet(0x09a8,12); // ZC_ACK_BANKING_DEPOSIT
+	packet(0x09a9,10,clif->pBankWithdraw,2,4,6); // CZ_REQ_BANKING_WITHDRAW
+	packet(0x09aa,12); // ZC_ACK_BANKING_WITHDRAW
+	packet(0x09ab,6,clif->pBankCheck,2,4); // CZ_REQ_BANKING_CHECK
+#endif
+
+// 2013-03-27bRagexe
+#if PACKETVER >= 20130327
+// new packets
+	packet(0x09ac,-1,clif->pDull/*,XXX*/); // CZ_REQ_CASH_BARGAIN_SALE_ITEM_INFO
+	packet(0x09ad,10); // ZC_ACK_CASH_BARGAIN_SALE_ITEM_INFO
+	packet(0x09ae,17,clif->pDull/*,XXX*/); // CZ_REQ_APPLY_BARGAIN_SALE_ITEM
+	packet(0x09af,4); // ZC_ACK_APPLY_BARGAIN_SALE_ITEM
+	packet(0x09b0,8,clif->pDull/*,XXX*/); // CZ_REQ_REMOVE_BARGAIN_SALE_ITEM
+	packet(0x09b1,4); // ZC_ACK_REMOVE_BARGAIN_SALE_ITEM
+	packet(0x09b2,6); // ZC_NOTIFY_BARGAIN_SALE_SELLING
+	packet(0x09b3,6); // ZC_NOTIFY_BARGAIN_SALE_CLOSE
+// changed packet sizes
 #endif
 
 //2013-05-15aRagexe (Shakto)
@@ -2527,20 +2590,74 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0436,4,clif->pDull); // CZ_GANGSI_RANK
 #endif
 
-/* Bank System [Yommy/Hercules] */
-#if PACKETVER >= 20130724
-// shuffle packets not added
-	packet(0x09A6,12); // ZC_BANKING_CHECK
-	packet(0x09A7,10,clif->pBankDeposit,2,4,6);
-	packet(0x09A8,16); // ZC_ACK_BANKING_DEPOSIT
-	packet(0x09A9,10,clif->pBankWithdraw,2,4,6);
-	packet(0x09AA,16); // ZC_ACK_BANKING_WITHDRAW
-	packet(0x09AB,6,clif->pBankCheck,2,4);
-	////
-	packet(0x09B6,6,clif->pBankOpen,2,4);
-	packet(0x09B7,4); // ZC_ACK_OPEN_BANKING
-	packet(0x09B8,6,clif->pBankClose,2,4);
-	packet(0x09B9,4); // ZC_ACK_CLOSE_BANKING
+// 2013-04-17aRagexe
+#if PACKETVER >= 20130417
+// new packets
+	packet(0x09b4,6,clif->pDull/*,XXX*/); // CZ_OPEN_BARGAIN_SALE_TOOL
+	packet(0x09b5,2); // ZC_OPEN_BARGAIN_SALE_TOOL
+	packet(0x09b6,6,clif->pBankOpen,2,4); // CZ_REQ_OPEN_BANKING
+	packet(0x09b7,4); // ZC_ACK_OPEN_BANKING
+	packet(0x09b8,6,clif->pBankClose,2,4); // CZ_REQ_CLOSE_BANKING
+	packet(0x09b9,4); // ZC_ACK_CLOSE_BANKING
+// changed packet sizes
+#endif
+
+// 2013-04-24aRagexe
+#if PACKETVER >= 20130424
+// new packets
+	packet(0x09ba,6,clif->pDull/*,XXX*/); // CZ_REQ_OPEN_GUILD_STORAGE
+	packet(0x09bb,4); // ZC_ACK_OPEN_GUILD_STORAGE
+	packet(0x09bc,6,clif->pDull/*,XXX*/); // CZ_CLOSE_BARGAIN_SALE_TOOL
+	packet(0x09bd,2); // ZC_CLOSE_BARGAIN_SALE_TOOL
+// changed packet sizes
+#endif
+
+// 2013-05-02aRagexe
+#if PACKETVER >= 20130502
+// new packets
+	packet(0x09be,6,clif->pDull/*,XXX*/); // CZ_REQ_CLOSE_GUILD_STORAGE
+	packet(0x09bf,4); // ZC_ACK_CLOSE_GUILD_STORAGE
+// changed packet sizes
+	packet(0x09bb,6); // ZC_ACK_OPEN_GUILD_STORAGE
+#endif
+
+// 2013-05-15aRagexe
+#if PACKETVER >= 20130515
+// new packets
+	packet(0x09c0,11); // ZC_ACTION_MOVE
+	packet(0x09c1,11); // ZC_C_MARKERINFO
+// changed packet sizes
+	packet(0x09a8,16); // ZC_ACK_BANKING_DEPOSIT
+	packet(0x09aa,16); // ZC_ACK_BANKING_WITHDRAW
+#endif
+
+// 2013-05-29Ragexe
+#if PACKETVER >= 20130529
+// new packets
+	packet(0x09c3,8,clif->pDull/*,XXX*/); // CZ_REQ_COUNT_BARGAIN_SALE_ITEM
+// changed packet sizes
+#endif
+
+// 2013-06-05Ragexe
+#if PACKETVER >= 20130605
+// new packets
+	packet(0x09c4,8); // ZC_ACK_COUNT_BARGAIN_SALE_ITEM
+#endif
+
+// 2013-06-18aRagexe
+#if PACKETVER >= 20130618
+// new packets
+	packet(0x09ca,23); // ZC_SKILL_ENTRY5
+// changed packet sizes
+#endif
+
+// 2013-07-17cRagexe
+#if PACKETVER >= 20130717
+// new packets
+	packet(0x09cb,17); // ZC_USE_SKILL2
+	packet(0x09cc,-1); // ZC_SECRETSCAN_DATA
+// changed packet sizes
+	packet(0x09c1,10); // ZC_C_MARKERINFO
 #endif
 
 //2013-08-07Ragexe (Shakto)
@@ -2580,6 +2697,13 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0436,4,clif->pDull); // CZ_GANGSI_RANK
 #endif
 
+// 2013-08-07aRagexe
+#if PACKETVER >= 20130807
+// new packets
+	packet(0x09cd,8); // ZC_MSG_COLOR
+// changed packet sizes
+#endif
+
 //2013-08-14aRagexe - Themon
 #if PACKETVER >= 20130814
 	packet(0x0874,7,clif->pActionRequest,2,6);
@@ -2617,12 +2741,127 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0896,8,clif->pDull); // CZ_JOIN_BATTLE_FIELD
 #endif
 
+// 2013-08-14aRagexe
+#if PACKETVER >= 20130814
+// new packets
+	packet(0x09ce,102,clif->pGM_Monster_Item,2); // CZ_ITEM_CREATE_EX
+	packet(0x09cf,-1); // ZC_NPROTECTGAMEGUARDCSAUTH
+	packet(0x09d0,-1,clif->pDull/*,XXX*/); // CZ_NPROTECTGAMEGUARDCSAUTH
+// changed packet sizes
+#endif
+
+// 2013-08-21bRagexe
+#if PACKETVER >= 20130821
+// new packets
+	packet(0x09d1,14); // ZC_PROGRESS_ACTOR
+// changed packet sizes
+#endif
+
+// 2013-08-28bRagexe
+#if PACKETVER >= 20130828
+// new packets
+	packet(0x09d2,-1); // ZC_GUILDSTORAGE_ITEMLIST_NORMAL_V5
+	packet(0x09d3,-1); // ZC_GUILDSTORAGE_ITEMLIST_EQUIP_V5
+// changed packet sizes
+	packet(0x09ba,2,clif->pDull/*,XXX*/); // CZ_REQ_OPEN_GUILD_STORAGE
+	packet(0x09be,2,clif->pDull/*,XXX*/); // CZ_REQ_CLOSE_GUILD_STORAGE
+#endif
+
+// 2013-09-04aRagexe
+#if PACKETVER >= 20130904
+// new packets
+// changed packet sizes
+	packet(0x09ca,-1); // ZC_SKILL_ENTRY5
+#endif
+
+// 2013-09-11aRagexe
+#if PACKETVER >= 20130911
+// new packets
+	packet(0x09d4,2,clif->pNPCShopClosed); // CZ_NPC_TRADE_QUIT
+	packet(0x09d5,-1); // ZC_NPC_MARKET_OPEN
+	packet(0x09d6,-1,clif->pNPCMarketPurchase); // CZ_NPC_MARKET_PURCHASE
+	packet(0x09d7,-1); // ZC_NPC_MARKET_PURCHASE_RESULT
+	packet(0x09d8,2,clif->pNPCMarketClosed); // CZ_NPC_MARKET_CLOSE
+	packet(0x09d9,2,clif->pDull/*,XXX*/); // CZ_REQ_GUILDSTORAGE_LOG
+	packet(0x09da,2); // ZC_ACK_GUILDSTORAGE_LOG
+// changed packet sizes
+#endif
+
+// 2013-09-25aRagexe
+#if PACKETVER >= 20130925
+// new packets
+// changed packet sizes
+	packet(0x09da,10); // ZC_ACK_GUILDSTORAGE_LOG
+#endif
+
+// 2013-10-02aRagexe
+#if PACKETVER >= 20131002
+// new packets
+// changed packet sizes
+	packet(0x09d9,4,clif->pDull/*,XXX*/); // CZ_REQ_GUILDSTORAGE_LOG
+	packet(0x09da,-1); // ZC_ACK_GUILDSTORAGE_LOG
+#endif
+
+// 2013-10-16aRagexe
+#if PACKETVER >= 20131016
+// new packets
+// changed packet sizes
+	packet(0x09d9,6,clif->pDull/*,XXX*/); // CZ_REQ_GUILDSTORAGE_LOG
+#endif
+
+// 2013-10-23aRagexe
+#if PACKETVER >= 20131023
+// new packets
+	packet(0x09db,-1); // ZC_NOTIFY_MOVEENTRY10
+	packet(0x09dc,-1); // ZC_NOTIFY_NEWENTRY10
+	packet(0x09dd,-1); // ZC_NOTIFY_STANDENTRY10
+// changed packet sizes
+	packet(0x09d9,4,clif->pDull/*,XXX*/); // CZ_REQ_GUILDSTORAGE_LOG
+#endif
+
 // 2013-10-30aRagexe
 #if PACKETVER >= 20131030
 // new packets
 	packet(0x09de,-1); // ZC_WHISPER02
 	packet(0x09df,7); // ZC_ACK_WHISPER02
 	packet(0x09e0,-1); // SC_LOGIN_ANSWER_WITH_ID
+#endif
+
+// 2013-11-06aRagexe
+#if PACKETVER >= 20131106
+// new packets
+	packet(0x09e1,8,clif->pDull/*,XXX*/); // CZ_MOVE_ITEM_FROM_BODY_TO_GUILDSTORAGE
+	packet(0x09e2,8,clif->pDull/*,XXX*/); // CZ_MOVE_ITEM_FROM_GUILDSTORAGE_TO_BODY
+	packet(0x09e3,8,clif->pDull/*,XXX*/); // CZ_MOVE_ITEM_FROM_CART_TO_GUILDSTORAGE
+	packet(0x09e4,8,clif->pDull/*,XXX*/); // CZ_MOVE_ITEM_FROM_GUILDSTORAGE_TO_CART
+// changed packet sizes
+#endif
+
+// 2013-11-20dRagexe
+#if PACKETVER >= 20131120
+// new packets
+	packet(0x09e5,14); // ZC_DELETEITEM_FROM_MCSTORE2
+	packet(0x09e6,18); // ZC_UPDATE_ITEM_FROM_BUYING_STORE2
+// changed packet sizes
+#endif
+
+// 2013-11-27bRagexe
+#if PACKETVER >= 20131127
+// new packets
+// changed packet sizes
+	packet(0x09e5,18); // ZC_DELETEITEM_FROM_MCSTORE2
+	packet(0x09e6,22); // ZC_UPDATE_ITEM_FROM_BUYING_STORE2
+#endif
+
+// 2013-12-11dRagexe
+#if PACKETVER >= 20131211
+// new packets
+	packet(0x09e7,2); // ZC_NOTIFY_UNREAD_RODEX
+	packet(0x09e8,18,clif->pDull/*,XXX*/); // CZ_OPEN_RODEXBOX
+	packet(0x09e9,2,clif->pDull/*,XXX*/); // CZ_CLOSE_RODEXBOX
+	packet(0x09ed,-1); // ZC_ACK_SEND_RODEX
+	packet(0x09ee,-1,clif->pDull/*,XXX*/); // CZ_REQ_NEXT_RODEX
+// changed packet sizes
 #endif
 
 // 2013-12-18bRagexe - Yommy
@@ -2656,12 +2895,20 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x085C,36,clif->pStoragePassword,0);
 	packet(0x0363,8,clif->pDull); // CZ_JOIN_BATTLE_FIELD
 	packet(0x087b,4,clif->pDull); // CZ_GANGSI_RANK
-	/* New */
-	packet(0x09d4,2,clif->pNPCShopClosed);
-	packet(0x09ce,102,clif->pGM_Monster_Item,2);
-	/* NPC Market */
-	packet(0x09d8,2,clif->pNPCMarketClosed);
-	packet(0x09d6,-1,clif->pNPCMarketPurchase);
+#endif
+
+// 2013-12-18bRagexe
+#if PACKETVER >= 20131218
+// new packets
+	packet(0x09ea,10,clif->pDull/*,XXX*/); // CZ_REQ_READ_RODEX
+	packet(0x09eb,14); // ZC_ACK_READ_RODEX
+	packet(0x09ef,11,clif->pDull/*,XXX*/); // CZ_REQ_REFRESH_RODEX
+	packet(0x09f0,-1); // ZC_ACK_RODEX_LIST
+	packet(0x09f5,11,clif->pDull/*,XXX*/); // CZ_REQ_DELETE_RODEX
+	packet(0x09f6,11); // ZC_ACK_DELETE_RODEX
+// changed packet sizes
+	packet(0x09e8,10,clif->pDull/*,XXX*/); // CZ_OPEN_RODEXBOX
+	packet(0x09ee,11,clif->pDull/*,XXX*/); // CZ_REQ_NEXT_RODEX
 #endif
 
 // 2013-12-23cRagexe - Yommy
@@ -2695,7 +2942,14 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x08A4,36,clif->pStoragePassword,0);
 	packet(0x0363,8,clif->pDull); // CZ_JOIN_BATTLE_FIELD
 	packet(0x0436,4,clif->pDull); // CZ_GANGSI_RANK
-	packet(0x09cb,17);
+#endif
+
+// 2013-12-23bRagexe
+#if PACKETVER >= 20131223
+// new packets
+// changed packet sizes
+	packet(0x09ea,11,clif->pDull/*,XXX*/); // CZ_REQ_READ_RODEX
+	packet(0x09eb,24); // ZC_ACK_READ_RODEX
 #endif
 
 // 2013-12-30aRagexe - Yommy
@@ -2731,40 +2985,50 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x093e,8,clif->pDull); // CZ_JOIN_BATTLE_FIELD
 #endif
 
+// 2013-12-30aRagexe
+#if PACKETVER >= 20131230
+// new packets
+	packet(0x09ec,-1,clif->pDull/*,XXX*/); // CZ_REQ_SEND_RODEX
+	packet(0x09ed,3); // ZC_ACK_SEND_RODEX
+	packet(0x09f7,75); // ZC_PROPERTY_HOMUN_2
+// changed packet sizes
+	packet(0x09eb,23); // ZC_ACK_READ_RODEX
+#endif
+
 // 2014 Packet Data
 
-// 2014-01-15eRagexe - YomRawr
-#if PACKETVER >= 20140115
-// probably for some shuffle packets used wrong id
-	packet(0x0369,7,clif->pActionRequest,2,6);
-	packet(0x083C,10,clif->pUseSkillToId,2,4,6);
-	packet(0x0437,5,clif->pWalkToXY,2);
-	packet(0x035F,6,clif->pTickSend,2);
-	packet(0x08A7,5,clif->pChangeDir,2,4);
-	packet(0x0940,6,clif->pTakeItem,2);
-	packet(0x0361,6,clif->pDropItem,2,4);
-	packet(0x088E,8,clif->pMoveToKafra,2,4);
-	packet(0x0367,8,clif->pMoveFromKafra,2,4);
-	packet(0x0438,10,clif->pUseSkillToPos,2,4,6,8);
-	packet(0x0366,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);
-	packet(0x0802,6,clif->pGetCharNameRequest,2);
-	packet(0x0368,6,clif->pSolveCharName,2);
-	packet(0x0360,12,clif->pSearchStoreInfoListItemClick,2,6,10);
-	packet(0x0817,2,clif->pSearchStoreInfoNextPage,0);
-	packet(0x0815,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);
-	packet(0x096A,-1,clif->pReqTradeBuyingStore,2,4,8,12);
-	packet(0x088A,6,clif->pReqClickBuyingStore,2);
-	packet(0x0965,2,clif->pReqCloseBuyingStore,0);
-	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
-	packet(0x096A,18,clif->pPartyBookingRegisterReq,2,4);
-	// packet(0x088A,8,clif->pDull); // CZ_JOIN_BATTLE_FIELD
-	packet(0x0965,-1,clif->pItemListWindowSelected,2,4,8);
-	packet(0x0966,19,clif->pWantToConnection,2,6,10,14,18);
-	packet(0x095D,26,clif->pPartyInvite2,2);
-	// packet(0x095B,4,clif->pDull); // CZ_GANGSI_RANK
-	packet(0x089B,26,clif->pFriendsListAdd,2);
-	packet(0x092D,5,clif->pHomMenu,2,4);
-	packet(0x0865,36,clif->pStoragePassword,0);
+// 2014-01-15eRagexe
+#if PACKETVER == 20140115
+// shuffle packets
+	packet(0x035f,6,clif->pTickSend,2); // CZ_REQUEST_MOVE2
+	packet(0x0360,6,clif->pReqClickBuyingStore,2); // CZ_REQUEST_TIME2
+	packet(0x0361,6,clif->pDropItem,2,4); // CZ_CHANGE_DIRECTION2
+	packet(0x0366,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10); // CZ_USE_SKILL_TOGROUND2
+	packet(0x0367,8,clif->pMoveFromKafra,2,4); // CZ_USE_SKILL_TOGROUND_WITHTALKBOX2
+	packet(0x0368,6,clif->pSolveCharName,2); // CZ_REQNAME2
+	packet(0x0369,7,clif->pActionRequest,2,6); // CZ_REQNAME_BYGID2
+	packet(0x0437,5,clif->pWalkToXY,2); // CZ_REQUEST_ACT2
+	packet(0x0438,10,clif->pUseSkillToPos,2,4,6,8); // CZ_USE_SKILL2
+	packet(0x0802,6,clif->pGetCharNameRequest,2); // CZ_PARTY_BOOKING_REQ_REGISTER
+	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89); // CZ_REQ_CLOSE_BUYING_STORE
+	packet(0x0817,2,clif->pReqCloseBuyingStore,0); // CZ_REQ_CLICK_TO_BUYING_STORE
+	packet(0x0819,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15); // CZ_REQ_TRADE_BUYING_STORE
+	packet(0x0835,2,clif->pSearchStoreInfoNextPage,0); // CZ_SEARCH_STORE_INFO
+	packet(0x0838,12,clif->pSearchStoreInfoListItemClick,2,6,10); // CZ_SEARCH_STORE_INFO_NEXT_PAGE
+	packet(0x083c,10,clif->pUseSkillToId,2,4,6); // CZ_SSILIST_ITEM_CLICK
+	packet(0x0865,36,clif->pStoragePassword,0); // ZC_REASSEMBLY_AUTH12
+	packet(0x0887,-1,clif->pReqTradeBuyingStore,2,4,8,12); // CZ_REASSEMBLY_AUTH04
+	packet(0x088a,8,clif->pDull/*,XXX*/); // CZ_REASSEMBLY_AUTH07
+	packet(0x088e,8,clif->pMoveToKafra,2,4); // CZ_REASSEMBLY_AUTH11
+	packet(0x089b,26,clif->pFriendsListAdd,2); // CZ_REASSEMBLY_AUTH24
+	packet(0x08a7,5,clif->pChangeDir,2,4); // CZ_REASSEMBLY_AUTH36
+	packet(0x092d,5,clif->pHomMenu,2,4); // ZC_REASSEMBLY_AUTH65
+	packet(0x0940,6,clif->pTakeItem,2); // ZC_REASSEMBLY_AUTH84
+	packet(0x095b,4,clif->pDull/*,XXX*/); // CZ_REASSEMBLY_AUTH69
+	packet(0x095d,26,clif->pPartyInvite2,2); // CZ_REASSEMBLY_AUTH71
+	packet(0x0965,-1,clif->pItemListWindowSelected,2,4,8); // CZ_REASSEMBLY_AUTH79
+	packet(0x0966,19,clif->pWantToConnection,2,6,10,14,18); // CZ_REASSEMBLY_AUTH80
+	packet(0x096a,18,clif->pPartyBookingRegisterReq,2,4); // CZ_REASSEMBLY_AUTH84
 #endif
 
 // 2014-01-15cRagexeRE
@@ -2915,10 +3179,12 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0a0c,61); // ZC_ITEM_PICKUP_ACK_V6
 	packet(0x0a0d,4); // ZC_INVENTORY_ITEMLIST_EQUIP_V6
 // changed packet sizes
+#ifdef PACKETVER_RE
 	packet(0x01c4,22); // ZC_ADD_ITEM_TO_STORE2
 	packet(0x01c5,22); // ZC_ADD_ITEM_TO_CART2
 	packet(0x080f,20); // ZC_ADD_EXCHANGE_ITEM2
 	packet(0x0990,31); // ZC_ITEM_PICKUP_ACK_V5
+#endif  // PACKETVER_RE
 	packet(0x09f3,10,clif->pDull/*,XXX*/); // CZ_REQ_ITEM_FROM_RODEX
 	packet(0x09f4,3); // ZC_ACK_ITEM_FROM_RODEX
 #endif
@@ -3209,8 +3475,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0936,36,clif->pStoragePassword,0);
 	packet(0x0363,8,clif->pDull); // CZ_JOIN_BATTLE_FIELD
 	packet(0x0922,4,clif->pDull); // CZ_GANGSI_RANK
-	packet(0x09e5,18); // ZC_DELETEITEM_FROM_MCSTORE2
-	packet(0x09e6,22); // ZC_UPDATE_ITEM_FROM_BUYING_STORE2
 #endif
 
 // 2014-10-22bRagexe - YomRawr
@@ -3261,16 +3525,247 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0a37,57); // ZC_ITEM_PICKUP_ACK_V7
 #endif
 
+// 2015-01-07aRagexeRE
+#if PACKETVER == 20150107
+// shuffle packets
+	packet(0x0281,-1,clif->pItemListWindowSelected,2,4,8);  // CZ_ITEMLISTWIN_RES
+	packet(0x035f,6,clif->pTickSend,2);  // CZ_REQUEST_TIME
+	packet(0x0360,6,clif->pReqClickBuyingStore,2);  // CZ_REQ_CLICK_TO_BUYING_STORE
+	packet(0x0362,6,clif->pDropItem,2,4);  // CZ_ITEM_THROW
+	packet(0x0363,8,clif->pDull/*,XXX*/);  // CZ_JOIN_BATTLE_FIELD
+	packet(0x0364,8,clif->pMoveFromKafra,2,4);  // CZ_MOVE_ITEM_FROM_STORE_TO_BODY
+	packet(0x0365,18,clif->pPartyBookingRegisterReq,2,4);  // CZ_PARTY_BOOKING_REQ_REGISTER
+	packet(0x0366,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);  // CZ_USE_SKILL_TOGROUND_WITHTALKBOX
+	packet(0x0368,6,clif->pSolveCharName,2);  // CZ_REQNAME_BYGID
+	packet(0x0369,7,clif->pActionRequest,2,6);  // CZ_REQUEST_ACT
+	packet(0x0436,4,clif->pDull/*,XXX*/);  // CZ_GANGSI_RANK
+	packet(0x0437,5,clif->pWalkToXY,2);  // CZ_REQUEST_MOVE
+	packet(0x0438,10,clif->pUseSkillToPos,2,4,6,8);  // CZ_USE_SKILL_TOGROUND
+	packet(0x07e4,6,clif->pTakeItem,2);  // CZ_ITEM_PICKUP
+	packet(0x07ec,8,clif->pMoveToKafra,2,4);  // CZ_MOVE_ITEM_FROM_BODY_TO_STORE
+	packet(0x0802,26,clif->pPartyInvite2,2);  // CZ_PARTY_JOIN_REQ
+	packet(0x0811,-1,clif->pReqTradeBuyingStore,2,4,8,12);  // CZ_REQ_TRADE_BUYING_STORE
+	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);  // CZ_REQ_OPEN_BUYING_STORE
+	packet(0x0817,2,clif->pReqCloseBuyingStore,0);  // CZ_REQ_CLOSE_BUYING_STORE
+	packet(0x0819,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);  // CZ_SEARCH_STORE_INFO
+	packet(0x0835,2,clif->pSearchStoreInfoNextPage,0);  // CZ_SEARCH_STORE_INFO_NEXT_PAGE
+	packet(0x0838,12,clif->pSearchStoreInfoListItemClick,2,6,10);  // CZ_SSILIST_ITEM_CLICK
+	packet(0x083c,10,clif->pUseSkillToId,2,4,6);  // CZ_USE_SKILL
+	packet(0x087c,26,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS
+	packet(0x0895,36,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD
+	packet(0x092d,5,clif->pHomMenu,2,4);  // CZ_COMMAND_MER
+	packet(0x0943,5,clif->pChangeDir,2,4);  // CZ_CHANGE_DIRECTION
+	packet(0x0947,19,clif->pWantToConnection,2,6,10,14,18);  // CZ_ENTER
+	packet(0x096a,6,clif->pGetCharNameRequest,2);  // CZ_REQNAME
+#endif
+
+// 2015-01-14aRagexe
+#if PACKETVER == 20150114
+// shuffle packets
+	packet(0x0281,-1,clif->pItemListWindowSelected,2,4,8);  // CZ_ITEMLISTWIN_RES
+	packet(0x035f,6,clif->pTickSend,2);  // CZ_REQUEST_TIME
+	packet(0x0360,6,clif->pReqClickBuyingStore,2);  // CZ_REQ_CLICK_TO_BUYING_STORE
+	packet(0x0362,6,clif->pDropItem,2,4);  // CZ_ITEM_THROW
+	packet(0x0363,8,clif->pDull/*,XXX*/);  // CZ_JOIN_BATTLE_FIELD
+	packet(0x0364,8,clif->pMoveFromKafra,2,4);  // CZ_MOVE_ITEM_FROM_STORE_TO_BODY
+	packet(0x0365,18,clif->pPartyBookingRegisterReq,2,4);  // CZ_PARTY_BOOKING_REQ_REGISTER
+	packet(0x0366,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);  // CZ_USE_SKILL_TOGROUND_WITHTALKBOX
+	packet(0x0368,6,clif->pSolveCharName,2);  // CZ_REQNAME_BYGID
+	packet(0x0369,7,clif->pActionRequest,2,6);  // CZ_REQUEST_ACT
+	packet(0x0436,10,clif->pUseSkillToId,2,4,6);  // CZ_USE_SKILL
+	packet(0x0437,5,clif->pWalkToXY,2);  // CZ_REQUEST_MOVE
+	packet(0x0438,10,clif->pUseSkillToPos,2,4,6,8);  // CZ_USE_SKILL_TOGROUND
+	packet(0x07e4,6,clif->pTakeItem,2);  // CZ_ITEM_PICKUP
+	packet(0x07ec,8,clif->pMoveToKafra,2,4);  // CZ_MOVE_ITEM_FROM_BODY_TO_STORE
+	packet(0x0802,26,clif->pPartyInvite2,2);  // CZ_PARTY_JOIN_REQ
+	packet(0x0811,-1,clif->pReqTradeBuyingStore,2,4,8,12);  // CZ_REQ_TRADE_BUYING_STORE
+	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);  // CZ_REQ_OPEN_BUYING_STORE
+	packet(0x0817,2,clif->pReqCloseBuyingStore,0);  // CZ_REQ_CLOSE_BUYING_STORE
+	packet(0x0819,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);  // CZ_SEARCH_STORE_INFO
+	packet(0x0835,2,clif->pSearchStoreInfoNextPage,0);  // CZ_SEARCH_STORE_INFO_NEXT_PAGE
+	packet(0x0838,12,clif->pSearchStoreInfoListItemClick,2,6,10);  // CZ_SSILIST_ITEM_CLICK
+	packet(0x083c,19,clif->pWantToConnection,2,6,10,14,18);  // CZ_ENTER
+	packet(0x0868,26,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS
+	packet(0x0899,5,clif->pHomMenu,2,4);  // CZ_COMMAND_MER
+	packet(0x0946,36,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD
+	packet(0x0955,4,clif->pDull/*,XXX*/);  // CZ_GANGSI_RANK
+	packet(0x0957,5,clif->pChangeDir,2,4);  // CZ_CHANGE_DIRECTION
+	packet(0x096a,6,clif->pGetCharNameRequest,2);  // CZ_REQNAME
+#endif
+
+// 2015-01-28aRagexe
+#if PACKETVER == 20150128
+// shuffle packets
+	packet(0x0202,12,clif->pSearchStoreInfoListItemClick,2,6,10);  // CZ_SSILIST_ITEM_CLICK
+	packet(0x023b,5,clif->pChangeDir,2,4);  // CZ_CHANGE_DIRECTION
+	packet(0x035f,6,clif->pReqClickBuyingStore,2);  // CZ_REQ_CLICK_TO_BUYING_STORE
+	packet(0x0365,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);  // CZ_SEARCH_STORE_INFO
+	packet(0x0368,8,clif->pDull/*,XXX*/);  // CZ_JOIN_BATTLE_FIELD
+	packet(0x0838,7,clif->pActionRequest,2,6);  // CZ_REQUEST_ACT
+	packet(0x085a,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);  // CZ_REQ_OPEN_BUYING_STORE
+	packet(0x0864,10,clif->pUseSkillToPos,2,4,6,8);  // CZ_USE_SKILL_TOGROUND
+	packet(0x086d,8,clif->pMoveToKafra,2,4);  // CZ_MOVE_ITEM_FROM_BODY_TO_STORE
+	packet(0x0870,5,clif->pWalkToXY,2);  // CZ_REQUEST_MOVE
+	packet(0x0874,6,clif->pGetCharNameRequest,2);  // CZ_REQNAME
+	packet(0x0875,-1,clif->pReqTradeBuyingStore,2,4,8,12);  // CZ_REQ_TRADE_BUYING_STORE
+	packet(0x0876,5,clif->pHomMenu,2,4);  // CZ_COMMAND_MER
+	packet(0x087d,6,clif->pSolveCharName,2);  // CZ_REQNAME_BYGID
+	packet(0x0888,-1,clif->pItemListWindowSelected,2,4,8);  // CZ_ITEMLISTWIN_RES
+	packet(0x089a,18,clif->pPartyBookingRegisterReq,2,4);  // CZ_PARTY_BOOKING_REQ_REGISTER
+	packet(0x08ab,6,clif->pTakeItem,2);  // CZ_ITEM_PICKUP
+	packet(0x091f,6,clif->pTickSend,2);  // CZ_REQUEST_TIME
+	packet(0x0927,26,clif->pPartyInvite2,2);  // CZ_PARTY_JOIN_REQ
+	packet(0x0929,36,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD
+	packet(0x092d,2,clif->pSearchStoreInfoNextPage,0);  // CZ_SEARCH_STORE_INFO_NEXT_PAGE
+	packet(0x0938,4,clif->pDull/*,XXX*/);  // CZ_GANGSI_RANK
+	packet(0x093a,10,clif->pUseSkillToId,2,4,6);  // CZ_USE_SKILL
+	packet(0x0944,19,clif->pWantToConnection,2,6,10,14,18);  // CZ_ENTER
+	packet(0x094d,2,clif->pReqCloseBuyingStore,0);  // CZ_REQ_CLOSE_BUYING_STORE
+	packet(0x094e,8,clif->pMoveFromKafra,2,4);  // CZ_MOVE_ITEM_FROM_STORE_TO_BODY
+	packet(0x0952,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);  // CZ_USE_SKILL_TOGROUND_WITHTALKBOX
+	packet(0x0963,26,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS
+	packet(0x0968,6,clif->pDropItem,2,4);  // CZ_ITEM_THROW
+#endif
 // 2015-01-28aRagexeRE
 #if PACKETVER >= 20150128
 // new packets
 	packet(0x0a38,3);
 #endif
 
-#if PACKETVER >= 20150226
-// shuffle packets not added
-	packet(0x0A0F,-1);
-	packet(0x0A10,-1);
+// 2015-02-04aRagexe
+#if PACKETVER == 20150204
+// shuffle packets
+	packet(0x0202,5,clif->pChangeDir,2,4);  // CZ_CHANGE_DIRECTION
+	packet(0x022d,19,clif->pWantToConnection,2,6,10,14,18);  // CZ_ENTER
+	packet(0x023b,26,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS
+	packet(0x0281,-1,clif->pItemListWindowSelected,2,4,8);  // CZ_ITEMLISTWIN_RES
+	packet(0x035f,6,clif->pTickSend,2);  // CZ_REQUEST_TIME
+	packet(0x0360,6,clif->pReqClickBuyingStore,2);  // CZ_REQ_CLICK_TO_BUYING_STORE
+	packet(0x0361,5,clif->pHomMenu,2,4);  // CZ_COMMAND_MER
+	packet(0x0362,6,clif->pDropItem,2,4);  // CZ_ITEM_THROW
+	packet(0x0363,8,clif->pDull/*,XXX*/);  // CZ_JOIN_BATTLE_FIELD
+	packet(0x0364,8,clif->pMoveFromKafra,2,4);  // CZ_MOVE_ITEM_FROM_STORE_TO_BODY
+	packet(0x0365,18,clif->pPartyBookingRegisterReq,2,4);  // CZ_PARTY_BOOKING_REQ_REGISTER
+	packet(0x0366,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);  // CZ_USE_SKILL_TOGROUND_WITHTALKBOX
+	packet(0x0368,6,clif->pSolveCharName,2);  // CZ_REQNAME_BYGID
+	packet(0x0369,7,clif->pActionRequest,2,6);  // CZ_REQUEST_ACT
+	packet(0x0436,4,clif->pDull/*,XXX*/);  // CZ_GANGSI_RANK
+	packet(0x0437,5,clif->pWalkToXY,2);  // CZ_REQUEST_MOVE
+	packet(0x0438,10,clif->pUseSkillToPos,2,4,6,8);  // CZ_USE_SKILL_TOGROUND
+	packet(0x07e4,6,clif->pTakeItem,2);  // CZ_ITEM_PICKUP
+	packet(0x07ec,8,clif->pMoveToKafra,2,4);  // CZ_MOVE_ITEM_FROM_BODY_TO_STORE
+	packet(0x0802,26,clif->pPartyInvite2,2);  // CZ_PARTY_JOIN_REQ
+	packet(0x0811,-1,clif->pReqTradeBuyingStore,2,4,8,12);  // CZ_REQ_TRADE_BUYING_STORE
+	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);  // CZ_REQ_OPEN_BUYING_STORE
+	packet(0x0817,2,clif->pReqCloseBuyingStore,0);  // CZ_REQ_CLOSE_BUYING_STORE
+	packet(0x0819,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);  // CZ_SEARCH_STORE_INFO
+	packet(0x0835,2,clif->pSearchStoreInfoNextPage,0);  // CZ_SEARCH_STORE_INFO_NEXT_PAGE
+	packet(0x0838,12,clif->pSearchStoreInfoListItemClick,2,6,10);  // CZ_SSILIST_ITEM_CLICK
+	packet(0x083c,10,clif->pUseSkillToId,2,4,6);  // CZ_USE_SKILL
+	packet(0x0966,36,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD
+	packet(0x096a,6,clif->pGetCharNameRequest,2);  // CZ_REQNAME
+#endif
+
+// 2015-02-25aRagexeRE
+#if PACKETVER == 20150225
+// shuffle packets
+	packet(0x02c4,6,clif->pReqClickBuyingStore,2);  // CZ_REQ_CLICK_TO_BUYING_STORE
+	packet(0x035f,6,clif->pTickSend,2);  // CZ_REQUEST_TIME
+	packet(0x0360,26,clif->pPartyInvite2,2);  // CZ_PARTY_JOIN_REQ
+	packet(0x0362,2,clif->pReqCloseBuyingStore,0);  // CZ_REQ_CLOSE_BUYING_STORE
+	packet(0x0366,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);  // CZ_USE_SKILL_TOGROUND_WITHTALKBOX
+	packet(0x0368,6,clif->pSolveCharName,2);  // CZ_REQNAME_BYGID
+	packet(0x0369,7,clif->pActionRequest,2,6);  // CZ_REQUEST_ACT
+	packet(0x0436,6,clif->pGetCharNameRequest,2);  // CZ_REQNAME
+	packet(0x0437,5,clif->pWalkToXY,2);  // CZ_REQUEST_MOVE
+	packet(0x0438,10,clif->pUseSkillToPos,2,4,6,8);  // CZ_USE_SKILL_TOGROUND
+	packet(0x0811,-1,clif->pReqTradeBuyingStore,2,4,8,12);  // CZ_REQ_TRADE_BUYING_STORE
+	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);  // CZ_REQ_OPEN_BUYING_STORE
+	packet(0x0817,6,clif->pTakeItem,2);  // CZ_ITEM_PICKUP
+	packet(0x0819,2,clif->pSearchStoreInfoNextPage,0);  // CZ_SEARCH_STORE_INFO_NEXT_PAGE
+	packet(0x0838,12,clif->pSearchStoreInfoListItemClick,2,6,10);  // CZ_SSILIST_ITEM_CLICK
+	packet(0x083c,10,clif->pUseSkillToId,2,4,6);  // CZ_USE_SKILL
+	packet(0x0867,18,clif->pPartyBookingRegisterReq,2,4);  // CZ_PARTY_BOOKING_REQ_REGISTER
+	packet(0x0885,4,clif->pDull/*,XXX*/);  // CZ_GANGSI_RANK
+	packet(0x0896,-1,clif->pItemListWindowSelected,2,4,8);  // CZ_ITEMLISTWIN_RES
+	packet(0x089b,8,clif->pDull/*,XXX*/);  // CZ_JOIN_BATTLE_FIELD
+	packet(0x089c,8,clif->pMoveToKafra,2,4);  // CZ_MOVE_ITEM_FROM_BODY_TO_STORE
+	packet(0x08a4,36,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD
+	packet(0x0940,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);  // CZ_SEARCH_STORE_INFO
+	packet(0x0946,26,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS
+	packet(0x0948,6,clif->pDropItem,2,4);  // CZ_ITEM_THROW
+	packet(0x094f,5,clif->pHomMenu,2,4);  // CZ_COMMAND_MER
+	packet(0x0952,8,clif->pMoveFromKafra,2,4);  // CZ_MOVE_ITEM_FROM_STORE_TO_BODY
+	packet(0x0955,5,clif->pChangeDir,2,4);  // CZ_CHANGE_DIRECTION
+	packet(0x096a,19,clif->pWantToConnection,2,6,10,14,18);  // CZ_ENTER
+#endif
+
+// 2015-02-26aRagexeRE
+#if PACKETVER == 20150226
+// shuffle packets
+	packet(0x02c4,6,clif->pReqClickBuyingStore,2);  // CZ_REQ_CLICK_TO_BUYING_STORE
+	packet(0x035f,6,clif->pTickSend,2);  // CZ_REQUEST_TIME
+	packet(0x0360,26,clif->pPartyInvite2,2);  // CZ_PARTY_JOIN_REQ
+	packet(0x0362,2,clif->pReqCloseBuyingStore,0);  // CZ_REQ_CLOSE_BUYING_STORE
+	packet(0x0366,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);  // CZ_USE_SKILL_TOGROUND_WITHTALKBOX
+	packet(0x0368,6,clif->pSolveCharName,2);  // CZ_REQNAME_BYGID
+	packet(0x0369,7,clif->pActionRequest,2,6);  // CZ_REQUEST_ACT
+	packet(0x0436,6,clif->pGetCharNameRequest,2);  // CZ_REQNAME
+	packet(0x0437,5,clif->pWalkToXY,2);  // CZ_REQUEST_MOVE
+	packet(0x0438,10,clif->pUseSkillToPos,2,4,6,8);  // CZ_USE_SKILL_TOGROUND
+	packet(0x0811,-1,clif->pReqTradeBuyingStore,2,4,8,12);  // CZ_REQ_TRADE_BUYING_STORE
+	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);  // CZ_REQ_OPEN_BUYING_STORE
+	packet(0x0817,6,clif->pTakeItem,2);  // CZ_ITEM_PICKUP
+	packet(0x0819,2,clif->pSearchStoreInfoNextPage,0);  // CZ_SEARCH_STORE_INFO_NEXT_PAGE
+	packet(0x0838,12,clif->pSearchStoreInfoListItemClick,2,6,10);  // CZ_SSILIST_ITEM_CLICK
+	packet(0x083c,10,clif->pUseSkillToId,2,4,6);  // CZ_USE_SKILL
+	packet(0x0867,18,clif->pPartyBookingRegisterReq,2,4);  // CZ_PARTY_BOOKING_REQ_REGISTER
+	packet(0x0885,4,clif->pDull/*,XXX*/);  // CZ_GANGSI_RANK
+	packet(0x0896,-1,clif->pItemListWindowSelected,2,4,8);  // CZ_ITEMLISTWIN_RES
+	packet(0x089b,8,clif->pDull/*,XXX*/);  // CZ_JOIN_BATTLE_FIELD
+	packet(0x089c,8,clif->pMoveToKafra,2,4);  // CZ_MOVE_ITEM_FROM_BODY_TO_STORE
+	packet(0x08a4,36,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD
+	packet(0x0940,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);  // CZ_SEARCH_STORE_INFO
+	packet(0x0946,26,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS
+	packet(0x0948,6,clif->pDropItem,2,4);  // CZ_ITEM_THROW
+	packet(0x094f,5,clif->pHomMenu,2,4);  // CZ_COMMAND_MER
+	packet(0x0952,8,clif->pMoveFromKafra,2,4);  // CZ_MOVE_ITEM_FROM_STORE_TO_BODY
+	packet(0x0955,5,clif->pChangeDir,2,4);  // CZ_CHANGE_DIRECTION
+	packet(0x096a,19,clif->pWantToConnection,2,6,10,14,18);  // CZ_ENTER
+#endif
+
+// 2015-03-11aRagexeRE
+#if PACKETVER == 20150311
+// shuffle packets
+	packet(0x023b,5,clif->pHomMenu,2,4);  // CZ_COMMAND_MER
+	packet(0x0360,2,clif->pReqCloseBuyingStore,0);  // CZ_REQ_CLOSE_BUYING_STORE
+	packet(0x0436,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);  // CZ_SEARCH_STORE_INFO
+	packet(0x0438,-1,clif->pReqTradeBuyingStore,2,4,8,12);  // CZ_REQ_TRADE_BUYING_STORE
+	packet(0x0815,19,clif->pWantToConnection,2,6,10,14,18);  // CZ_ENTER
+	packet(0x0838,10,clif->pUseSkillToPos,2,4,6,8);  // CZ_USE_SKILL_TOGROUND
+	packet(0x086a,6,clif->pGetCharNameRequest,2);  // CZ_REQNAME
+	packet(0x086c,36,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD
+	packet(0x087b,18,clif->pPartyBookingRegisterReq,2,4);  // CZ_PARTY_BOOKING_REQ_REGISTER
+	packet(0x0883,-1,clif->pItemListWindowSelected,2,4,8);  // CZ_ITEMLISTWIN_RES
+	packet(0x0886,5,clif->pWalkToXY,2);  // CZ_REQUEST_MOVE
+	packet(0x0888,2,clif->pSearchStoreInfoNextPage,0);  // CZ_SEARCH_STORE_INFO_NEXT_PAGE
+	packet(0x0896,7,clif->pActionRequest,2,6);  // CZ_REQUEST_ACT
+	packet(0x08a1,10,clif->pUseSkillToId,2,4,6);  // CZ_USE_SKILL
+	packet(0x08a3,6,clif->pTakeItem,2);  // CZ_ITEM_PICKUP
+	packet(0x08a5,12,clif->pSearchStoreInfoListItemClick,2,6,10);  // CZ_SSILIST_ITEM_CLICK
+	packet(0x08a6,26,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS
+	packet(0x091c,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);  // CZ_USE_SKILL_TOGROUND_WITHTALKBOX
+	packet(0x0928,5,clif->pChangeDir,2,4);  // CZ_CHANGE_DIRECTION
+	packet(0x092a,8,clif->pDull/*,XXX*/);  // CZ_JOIN_BATTLE_FIELD
+	packet(0x092e,8,clif->pMoveFromKafra,2,4);  // CZ_MOVE_ITEM_FROM_STORE_TO_BODY
+	packet(0x093b,26,clif->pPartyInvite2,2);  // CZ_PARTY_JOIN_REQ
+	packet(0x0943,6,clif->pSolveCharName,2);  // CZ_REQNAME_BYGID
+	packet(0x0946,4,clif->pDull/*,XXX*/);  // CZ_GANGSI_RANK
+	packet(0x0957,6,clif->pReqClickBuyingStore,2);  // CZ_REQ_CLICK_TO_BUYING_STORE
+	packet(0x0958,6,clif->pTickSend,2);  // CZ_REQUEST_TIME
+	packet(0x095b,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);  // CZ_REQ_OPEN_BUYING_STORE
+	packet(0x0963,6,clif->pDropItem,2,4);  // CZ_ITEM_THROW
+	packet(0x0964,8,clif->pMoveToKafra,2,4);  // CZ_MOVE_ITEM_FROM_BODY_TO_STORE
 #endif
 
 // 2015-03-11aRagexeRE
@@ -3280,6 +3775,74 @@ packet(0x96e,-1,clif->ackmergeitems);
 // changed packet sizes
 #endif
 
+// 2015-03-25aRagexe
+#if PACKETVER == 20150325
+// shuffle packets
+	packet(0x0202,26,clif->pPartyInvite2,2);  // CZ_PARTY_JOIN_REQ
+	packet(0x0363,6,clif->pDropItem,2,4);  // CZ_ITEM_THROW
+	packet(0x0365,10,clif->pUseSkillToId,2,4,6);  // CZ_USE_SKILL
+	packet(0x0438,2,clif->pSearchStoreInfoNextPage,0);  // CZ_SEARCH_STORE_INFO_NEXT_PAGE
+	packet(0x0802,4,clif->pDull/*,XXX*/);  // CZ_GANGSI_RANK
+	packet(0x0819,6,clif->pReqClickBuyingStore,2);  // CZ_REQ_CLICK_TO_BUYING_STORE
+	packet(0x085d,6,clif->pSolveCharName,2);  // CZ_REQNAME_BYGID
+	packet(0x086f,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);  // CZ_REQ_OPEN_BUYING_STORE
+	packet(0x087c,8,clif->pMoveToKafra,2,4);  // CZ_MOVE_ITEM_FROM_BODY_TO_STORE
+	packet(0x087e,5,clif->pChangeDir,2,4);  // CZ_CHANGE_DIRECTION
+	packet(0x0883,12,clif->pSearchStoreInfoListItemClick,2,6,10);  // CZ_SSILIST_ITEM_CLICK
+	packet(0x0885,10,clif->pUseSkillToPos,2,4,6,8);  // CZ_USE_SKILL_TOGROUND
+	packet(0x0891,6,clif->pGetCharNameRequest,2);  // CZ_REQNAME
+	packet(0x0893,8,clif->pDull/*,XXX*/);  // CZ_JOIN_BATTLE_FIELD
+	packet(0x0897,-1,clif->pReqTradeBuyingStore,2,4,8,12);  // CZ_REQ_TRADE_BUYING_STORE
+	packet(0x0899,18,clif->pPartyBookingRegisterReq,2,4);  // CZ_PARTY_BOOKING_REQ_REGISTER
+	packet(0x08a1,7,clif->pActionRequest,2,6);  // CZ_REQUEST_ACT
+	packet(0x08a7,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);  // CZ_USE_SKILL_TOGROUND_WITHTALKBOX
+	packet(0x0919,36,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD
+	packet(0x092c,6,clif->pTakeItem,2);  // CZ_ITEM_PICKUP
+	packet(0x0931,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);  // CZ_SEARCH_STORE_INFO
+	packet(0x0932,5,clif->pWalkToXY,2);  // CZ_REQUEST_MOVE
+	packet(0x0938,5,clif->pHomMenu,2,4);  // CZ_COMMAND_MER
+	packet(0x0940,26,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS
+	packet(0x0947,2,clif->pReqCloseBuyingStore,0);  // CZ_REQ_CLOSE_BUYING_STORE
+	packet(0x094a,19,clif->pWantToConnection,2,6,10,14,18);  // CZ_ENTER
+	packet(0x0950,-1,clif->pItemListWindowSelected,2,4,8);  // CZ_ITEMLISTWIN_RES
+	packet(0x0954,6,clif->pTickSend,2);  // CZ_REQUEST_TIME
+	packet(0x0969,8,clif->pMoveFromKafra,2,4);  // CZ_MOVE_ITEM_FROM_STORE_TO_BODY
+#endif
+
+// 2015-04-01aRagexe
+#if PACKETVER == 20150401
+// shuffle packets
+	packet(0x0362,7,clif->pActionRequest,2,6);  // CZ_REQUEST_ACT
+	packet(0x0367,6,clif->pGetCharNameRequest,2);  // CZ_REQNAME
+	packet(0x0437,6,clif->pReqClickBuyingStore,2);  // CZ_REQ_CLICK_TO_BUYING_STORE
+	packet(0x083c,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);  // CZ_SEARCH_STORE_INFO
+	packet(0x085e,12,clif->pSearchStoreInfoListItemClick,2,6,10);  // CZ_SSILIST_ITEM_CLICK
+	packet(0x086f,5,clif->pWalkToXY,2);  // CZ_REQUEST_MOVE
+	packet(0x0875,-1,clif->pItemListWindowSelected,2,4,8);  // CZ_ITEMLISTWIN_RES
+	packet(0x087e,8,clif->pDull/*,XXX*/);  // CZ_JOIN_BATTLE_FIELD
+	packet(0x088c,6,clif->pDropItem,2,4);  // CZ_ITEM_THROW
+	packet(0x088f,6,clif->pTickSend,2);  // CZ_REQUEST_TIME
+	packet(0x0895,8,clif->pMoveFromKafra,2,4);  // CZ_MOVE_ITEM_FROM_STORE_TO_BODY
+	packet(0x0898,5,clif->pHomMenu,2,4);  // CZ_COMMAND_MER
+	packet(0x089c,36,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD
+	packet(0x08a5,8,clif->pMoveToKafra,2,4);  // CZ_MOVE_ITEM_FROM_BODY_TO_STORE
+	packet(0x091b,26,clif->pPartyInvite2,2);  // CZ_PARTY_JOIN_REQ
+	packet(0x091c,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);  // CZ_USE_SKILL_TOGROUND_WITHTALKBOX
+	packet(0x0922,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);  // CZ_REQ_OPEN_BUYING_STORE
+	packet(0x0924,18,clif->pPartyBookingRegisterReq,2,4);  // CZ_PARTY_BOOKING_REQ_REGISTER
+	packet(0x0938,2,clif->pReqCloseBuyingStore,0);  // CZ_REQ_CLOSE_BUYING_STORE
+	packet(0x0939,19,clif->pWantToConnection,2,6,10,14,18);  // CZ_ENTER
+	packet(0x093a,10,clif->pUseSkillToPos,2,4,6,8);  // CZ_USE_SKILL_TOGROUND
+	packet(0x093b,-1,clif->pReqTradeBuyingStore,2,4,8,12);  // CZ_REQ_TRADE_BUYING_STORE
+	packet(0x093e,2,clif->pSearchStoreInfoNextPage,0);  // CZ_SEARCH_STORE_INFO_NEXT_PAGE
+	packet(0x0946,4,clif->pDull/*,XXX*/);  // CZ_GANGSI_RANK
+	packet(0x0949,6,clif->pTakeItem,2);  // CZ_ITEM_PICKUP
+	packet(0x094b,10,clif->pUseSkillToId,2,4,6);  // CZ_USE_SKILL
+	packet(0x0953,26,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS
+	packet(0x095f,6,clif->pSolveCharName,2);  // CZ_REQNAME_BYGID
+	packet(0x0964,5,clif->pChangeDir,2,4);  // CZ_CHANGE_DIRECTION
+#endif
+
 // 2015-04-15aRagexeRE
 #if PACKETVER >= 20150415
 // changed packet sizes
@@ -3287,10 +3850,112 @@ packet(0x96e,-1,clif->ackmergeitems);
 #endif
 
 // 2015-04-22aRagexeRE
+#if PACKETVER == 20150422
+// shuffle packets
+	packet(0x0202,5,clif->pChangeDir,2,4);  // CZ_CHANGE_DIRECTION
+	packet(0x022d,19,clif->pWantToConnection,2,6,10,14,18);  // CZ_ENTER
+	packet(0x023b,26,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS
+	packet(0x0281,-1,clif->pItemListWindowSelected,2,4,8);  // CZ_ITEMLISTWIN_RES
+	packet(0x035f,6,clif->pTickSend,2);  // CZ_REQUEST_TIME
+	packet(0x0360,6,clif->pReqClickBuyingStore,2);  // CZ_REQ_CLICK_TO_BUYING_STORE
+	packet(0x0361,5,clif->pHomMenu,2,4);  // CZ_COMMAND_MER
+	packet(0x0362,6,clif->pDropItem,2,4);  // CZ_ITEM_THROW
+	packet(0x0363,8,clif->pDull/*,XXX*/);  // CZ_JOIN_BATTLE_FIELD
+	packet(0x0364,8,clif->pMoveFromKafra,2,4);  // CZ_MOVE_ITEM_FROM_STORE_TO_BODY
+	packet(0x0365,18,clif->pPartyBookingRegisterReq,2,4);  // CZ_PARTY_BOOKING_REQ_REGISTER
+	packet(0x0366,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);  // CZ_USE_SKILL_TOGROUND_WITHTALKBOX
+	packet(0x0368,6,clif->pSolveCharName,2);  // CZ_REQNAME_BYGID
+	packet(0x0369,7,clif->pActionRequest,2,6);  // CZ_REQUEST_ACT
+	packet(0x0436,4,clif->pDull/*,XXX*/);  // CZ_GANGSI_RANK
+	packet(0x0437,5,clif->pWalkToXY,2);  // CZ_REQUEST_MOVE
+	packet(0x0438,10,clif->pUseSkillToPos,2,4,6,8);  // CZ_USE_SKILL_TOGROUND
+	packet(0x07e4,6,clif->pTakeItem,2);  // CZ_ITEM_PICKUP
+	packet(0x07ec,8,clif->pMoveToKafra,2,4);  // CZ_MOVE_ITEM_FROM_BODY_TO_STORE
+	packet(0x0802,26,clif->pPartyInvite2,2);  // CZ_PARTY_JOIN_REQ
+	packet(0x0811,-1,clif->pReqTradeBuyingStore,2,4,8,12);  // CZ_REQ_TRADE_BUYING_STORE
+	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);  // CZ_REQ_OPEN_BUYING_STORE
+	packet(0x0817,2,clif->pReqCloseBuyingStore,0);  // CZ_REQ_CLOSE_BUYING_STORE
+	packet(0x0819,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);  // CZ_SEARCH_STORE_INFO
+	packet(0x0835,2,clif->pSearchStoreInfoNextPage,0);  // CZ_SEARCH_STORE_INFO_NEXT_PAGE
+	packet(0x0838,12,clif->pSearchStoreInfoListItemClick,2,6,10);  // CZ_SSILIST_ITEM_CLICK
+	packet(0x083c,10,clif->pUseSkillToId,2,4,6);  // CZ_USE_SKILL
+	packet(0x0955,36,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD
+	packet(0x096a,6,clif->pGetCharNameRequest,2);  // CZ_REQNAME
+#endif
+
+// 2015-04-22aRagexeRE
 #if PACKETVER >= 20150422
 // new packets
 	packet(0x0a3b,-1);
 // changed packet sizes
+#endif
+
+// 2015-04-29aRagexe
+#if PACKETVER == 20150429
+// shuffle packets
+	packet(0x035f,6,clif->pTickSend,2);  // CZ_REQUEST_TIME
+	packet(0x0360,6,clif->pReqClickBuyingStore,2);  // CZ_REQ_CLICK_TO_BUYING_STORE
+	packet(0x0363,5,clif->pChangeDir,2,4);  // CZ_CHANGE_DIRECTION
+	packet(0x0366,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);  // CZ_USE_SKILL_TOGROUND_WITHTALKBOX
+	packet(0x0368,6,clif->pSolveCharName,2);  // CZ_REQNAME_BYGID
+	packet(0x0369,7,clif->pActionRequest,2,6);  // CZ_REQUEST_ACT
+	packet(0x0437,5,clif->pWalkToXY,2);  // CZ_REQUEST_MOVE
+	packet(0x0438,10,clif->pUseSkillToPos,2,4,6,8);  // CZ_USE_SKILL_TOGROUND
+	packet(0x0811,-1,clif->pReqTradeBuyingStore,2,4,8,12);  // CZ_REQ_TRADE_BUYING_STORE
+	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);  // CZ_REQ_OPEN_BUYING_STORE
+	packet(0x0817,2,clif->pReqCloseBuyingStore,0);  // CZ_REQ_CLOSE_BUYING_STORE
+	packet(0x0819,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);  // CZ_SEARCH_STORE_INFO
+	packet(0x0835,2,clif->pSearchStoreInfoNextPage,0);  // CZ_SEARCH_STORE_INFO_NEXT_PAGE
+	packet(0x0838,12,clif->pSearchStoreInfoListItemClick,2,6,10);  // CZ_SSILIST_ITEM_CLICK
+	packet(0x083c,10,clif->pUseSkillToId,2,4,6);  // CZ_USE_SKILL
+	packet(0x0867,36,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD
+	packet(0x086a,19,clif->pWantToConnection,2,6,10,14,18);  // CZ_ENTER
+	packet(0x0886,26,clif->pPartyInvite2,2);  // CZ_PARTY_JOIN_REQ
+	packet(0x088f,5,clif->pHomMenu,2,4);  // CZ_COMMAND_MER
+	packet(0x0894,6,clif->pDropItem,2,4);  // CZ_ITEM_THROW
+	packet(0x0899,8,clif->pMoveToKafra,2,4);  // CZ_MOVE_ITEM_FROM_BODY_TO_STORE
+	packet(0x089f,-1,clif->pItemListWindowSelected,2,4,8);  // CZ_ITEMLISTWIN_RES
+	packet(0x08a6,8,clif->pDull/*,XXX*/);  // CZ_JOIN_BATTLE_FIELD
+	packet(0x08a8,4,clif->pDull/*,XXX*/);  // CZ_GANGSI_RANK
+	packet(0x08ad,18,clif->pPartyBookingRegisterReq,2,4);  // CZ_PARTY_BOOKING_REQ_REGISTER
+	packet(0x0929,8,clif->pMoveFromKafra,2,4);  // CZ_MOVE_ITEM_FROM_STORE_TO_BODY
+	packet(0x093d,26,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS
+	packet(0x0943,6,clif->pTakeItem,2);  // CZ_ITEM_PICKUP
+	packet(0x096a,6,clif->pGetCharNameRequest,2);  // CZ_REQNAME
+#endif
+
+// 2015-05-07bRagexe
+#if PACKETVER == 20150507
+// shuffle packets
+	packet(0x023b,5,clif->pHomMenu,2,4);  // CZ_COMMAND_MER
+	packet(0x035f,6,clif->pTickSend,2);  // CZ_REQUEST_TIME
+	packet(0x0360,6,clif->pReqClickBuyingStore,2);  // CZ_REQ_CLICK_TO_BUYING_STORE
+	packet(0x0362,2,clif->pReqCloseBuyingStore,0);  // CZ_REQ_CLOSE_BUYING_STORE
+	packet(0x0366,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);  // CZ_USE_SKILL_TOGROUND_WITHTALKBOX
+	packet(0x0368,6,clif->pSolveCharName,2);  // CZ_REQNAME_BYGID
+	packet(0x0369,7,clif->pActionRequest,2,6);  // CZ_REQUEST_ACT
+	packet(0x0437,5,clif->pWalkToXY,2);  // CZ_REQUEST_MOVE
+	packet(0x0438,10,clif->pUseSkillToPos,2,4,6,8);  // CZ_USE_SKILL_TOGROUND
+	packet(0x0811,-1,clif->pReqTradeBuyingStore,2,4,8,12);  // CZ_REQ_TRADE_BUYING_STORE
+	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);  // CZ_REQ_OPEN_BUYING_STORE
+	packet(0x0817,6,clif->pTakeItem,2);  // CZ_ITEM_PICKUP
+	packet(0x0819,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);  // CZ_SEARCH_STORE_INFO
+	packet(0x0835,2,clif->pSearchStoreInfoNextPage,0);  // CZ_SEARCH_STORE_INFO_NEXT_PAGE
+	packet(0x0838,12,clif->pSearchStoreInfoListItemClick,2,6,10);  // CZ_SSILIST_ITEM_CLICK
+	packet(0x083c,10,clif->pUseSkillToId,2,4,6);  // CZ_USE_SKILL
+	packet(0x085a,8,clif->pMoveToKafra,2,4);  // CZ_MOVE_ITEM_FROM_BODY_TO_STORE
+	packet(0x0864,26,clif->pPartyInvite2,2);  // CZ_PARTY_JOIN_REQ
+	packet(0x0887,8,clif->pDull/*,XXX*/);  // CZ_JOIN_BATTLE_FIELD
+	packet(0x0889,18,clif->pPartyBookingRegisterReq,2,4);  // CZ_PARTY_BOOKING_REQ_REGISTER
+	packet(0x0924,19,clif->pWantToConnection,2,6,10,14,18);  // CZ_ENTER
+	packet(0x092e,-1,clif->pItemListWindowSelected,2,4,8);  // CZ_ITEMLISTWIN_RES
+	packet(0x093b,5,clif->pChangeDir,2,4);  // CZ_CHANGE_DIRECTION
+	packet(0x0941,8,clif->pMoveFromKafra,2,4);  // CZ_MOVE_ITEM_FROM_STORE_TO_BODY
+	packet(0x0942,4,clif->pDull/*,XXX*/);  // CZ_GANGSI_RANK
+	packet(0x0953,36,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD
+	packet(0x0955,6,clif->pDropItem,2,4);  // CZ_ITEM_THROW
+	packet(0x0958,26,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS
+	packet(0x096a,6,clif->pGetCharNameRequest,2);  // CZ_REQNAME
 #endif
 
 // 2015-05-13aRagexe
@@ -3325,7 +3990,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0817,5,clif->pHomMenu,2,4);
 	packet(0x0923,36,clif->pStoragePassword,0);
 	packet(0x0a27,8); // ZC_RECOVERY2
-	packet(0x09f7,75); // ZC_PROPERTY_HOMUN_2
 #endif
 
 // 2015-05-20aRagexeRE
@@ -3335,10 +3999,112 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0a3d,18,clif->pDull/*,XXX*/);
 #endif
 
+// 2015-05-27aRagexe
+#if PACKETVER == 20150527
+// shuffle packets
+	packet(0x0202,5,clif->pChangeDir,2,4);  // CZ_CHANGE_DIRECTION
+	packet(0x022d,19,clif->pWantToConnection,2,6,10,14,18);  // CZ_ENTER
+	packet(0x023b,26,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS
+	packet(0x0281,-1,clif->pItemListWindowSelected,2,4,8);  // CZ_ITEMLISTWIN_RES
+	packet(0x035f,6,clif->pTickSend,2);  // CZ_REQUEST_TIME
+	packet(0x0360,6,clif->pReqClickBuyingStore,2);  // CZ_REQ_CLICK_TO_BUYING_STORE
+	packet(0x0361,5,clif->pHomMenu,2,4);  // CZ_COMMAND_MER
+	packet(0x0362,6,clif->pDropItem,2,4);  // CZ_ITEM_THROW
+	packet(0x0363,8,clif->pDull/*,XXX*/);  // CZ_JOIN_BATTLE_FIELD
+	packet(0x0364,8,clif->pMoveFromKafra,2,4);  // CZ_MOVE_ITEM_FROM_STORE_TO_BODY
+	packet(0x0365,18,clif->pPartyBookingRegisterReq,2,4);  // CZ_PARTY_BOOKING_REQ_REGISTER
+	packet(0x0366,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);  // CZ_USE_SKILL_TOGROUND_WITHTALKBOX
+	packet(0x0368,6,clif->pSolveCharName,2);  // CZ_REQNAME_BYGID
+	packet(0x0369,7,clif->pActionRequest,2,6);  // CZ_REQUEST_ACT
+	packet(0x0436,4,clif->pDull/*,XXX*/);  // CZ_GANGSI_RANK
+	packet(0x0437,5,clif->pWalkToXY,2);  // CZ_REQUEST_MOVE
+	packet(0x0438,10,clif->pUseSkillToPos,2,4,6,8);  // CZ_USE_SKILL_TOGROUND
+	packet(0x07e4,6,clif->pTakeItem,2);  // CZ_ITEM_PICKUP
+	packet(0x07ec,8,clif->pMoveToKafra,2,4);  // CZ_MOVE_ITEM_FROM_BODY_TO_STORE
+	packet(0x0802,26,clif->pPartyInvite2,2);  // CZ_PARTY_JOIN_REQ
+	packet(0x0811,-1,clif->pReqTradeBuyingStore,2,4,8,12);  // CZ_REQ_TRADE_BUYING_STORE
+	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);  // CZ_REQ_OPEN_BUYING_STORE
+	packet(0x0817,2,clif->pReqCloseBuyingStore,0);  // CZ_REQ_CLOSE_BUYING_STORE
+	packet(0x0819,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);  // CZ_SEARCH_STORE_INFO
+	packet(0x0835,2,clif->pSearchStoreInfoNextPage,0);  // CZ_SEARCH_STORE_INFO_NEXT_PAGE
+	packet(0x0838,10,clif->pUseSkillToId,2,4,6);  // CZ_USE_SKILL
+	packet(0x083c,36,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD
+	packet(0x0940,12,clif->pSearchStoreInfoListItemClick,2,6,10);  // CZ_SSILIST_ITEM_CLICK
+	packet(0x096a,6,clif->pGetCharNameRequest,2);  // CZ_REQNAME
+#endif
+
 // 2015-06-03bRagexeRE
 #if PACKETVER >= 20150603
 // new packets
 	packet(0x0a3e,-1);
+#endif
+
+// 2015-06-17aRagexeRE
+#if PACKETVER == 20150617
+// shuffle packets
+	packet(0x035f,6,clif->pTickSend,2);  // CZ_REQUEST_TIME
+	packet(0x0360,6,clif->pTakeItem,2);  // CZ_ITEM_PICKUP
+	packet(0x0362,6,clif->pReqClickBuyingStore,2);  // CZ_REQ_CLICK_TO_BUYING_STORE
+	packet(0x0363,36,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD
+	packet(0x0365,-1,clif->pItemListWindowSelected,2,4,8);  // CZ_ITEMLISTWIN_RES
+	packet(0x0366,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);  // CZ_USE_SKILL_TOGROUND_WITHTALKBOX
+	packet(0x0368,6,clif->pSolveCharName,2);  // CZ_REQNAME_BYGID
+	packet(0x0369,7,clif->pActionRequest,2,6);  // CZ_REQUEST_ACT
+	packet(0x0436,19,clif->pWantToConnection,2,6,10,14,18);  // CZ_ENTER
+	packet(0x0437,5,clif->pWalkToXY,2);  // CZ_REQUEST_MOVE
+	packet(0x0438,10,clif->pUseSkillToPos,2,4,6,8);  // CZ_USE_SKILL_TOGROUND
+	packet(0x07ec,-1,clif->pReqTradeBuyingStore,2,4,8,12);  // CZ_REQ_TRADE_BUYING_STORE
+	packet(0x0811,8,clif->pDull/*,XXX*/);  // CZ_JOIN_BATTLE_FIELD
+	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);  // CZ_REQ_OPEN_BUYING_STORE
+	packet(0x0817,2,clif->pReqCloseBuyingStore,0);  // CZ_REQ_CLOSE_BUYING_STORE
+	packet(0x0819,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);  // CZ_SEARCH_STORE_INFO
+	packet(0x0835,2,clif->pSearchStoreInfoNextPage,0);  // CZ_SEARCH_STORE_INFO_NEXT_PAGE
+	packet(0x0838,12,clif->pSearchStoreInfoListItemClick,2,6,10);  // CZ_SSILIST_ITEM_CLICK
+	packet(0x083c,10,clif->pUseSkillToId,2,4,6);  // CZ_USE_SKILL
+	packet(0x0869,8,clif->pMoveFromKafra,2,4);  // CZ_MOVE_ITEM_FROM_STORE_TO_BODY
+	packet(0x086a,18,clif->pPartyBookingRegisterReq,2,4);  // CZ_PARTY_BOOKING_REQ_REGISTER
+	packet(0x086b,5,clif->pChangeDir,2,4);  // CZ_CHANGE_DIRECTION
+	packet(0x0870,26,clif->pPartyInvite2,2);  // CZ_PARTY_JOIN_REQ
+	packet(0x087a,8,clif->pMoveToKafra,2,4);  // CZ_MOVE_ITEM_FROM_BODY_TO_STORE
+	packet(0x0886,5,clif->pHomMenu,2,4);  // CZ_COMMAND_MER
+	packet(0x0894,4,clif->pDull/*,XXX*/);  // CZ_GANGSI_RANK
+	packet(0x0940,6,clif->pDropItem,2,4);  // CZ_ITEM_THROW
+	packet(0x094e,26,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS
+	packet(0x096a,6,clif->pGetCharNameRequest,2);  // CZ_REQNAME
+#endif
+
+// 2015-06-18aRagexeRE
+#if PACKETVER == 20150618
+// shuffle packets
+	packet(0x035f,6,clif->pTickSend,2);  // CZ_REQUEST_TIME
+	packet(0x0360,6,clif->pTakeItem,2);  // CZ_ITEM_PICKUP
+	packet(0x0362,6,clif->pReqClickBuyingStore,2);  // CZ_REQ_CLICK_TO_BUYING_STORE
+	packet(0x0363,36,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD
+	packet(0x0365,-1,clif->pItemListWindowSelected,2,4,8);  // CZ_ITEMLISTWIN_RES
+	packet(0x0366,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);  // CZ_USE_SKILL_TOGROUND_WITHTALKBOX
+	packet(0x0368,6,clif->pSolveCharName,2);  // CZ_REQNAME_BYGID
+	packet(0x0369,7,clif->pActionRequest,2,6);  // CZ_REQUEST_ACT
+	packet(0x0436,19,clif->pWantToConnection,2,6,10,14,18);  // CZ_ENTER
+	packet(0x0437,5,clif->pWalkToXY,2);  // CZ_REQUEST_MOVE
+	packet(0x0438,10,clif->pUseSkillToPos,2,4,6,8);  // CZ_USE_SKILL_TOGROUND
+	packet(0x07ec,-1,clif->pReqTradeBuyingStore,2,4,8,12);  // CZ_REQ_TRADE_BUYING_STORE
+	packet(0x0811,8,clif->pDull/*,XXX*/);  // CZ_JOIN_BATTLE_FIELD
+	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);  // CZ_REQ_OPEN_BUYING_STORE
+	packet(0x0817,2,clif->pReqCloseBuyingStore,0);  // CZ_REQ_CLOSE_BUYING_STORE
+	packet(0x0819,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);  // CZ_SEARCH_STORE_INFO
+	packet(0x0835,2,clif->pSearchStoreInfoNextPage,0);  // CZ_SEARCH_STORE_INFO_NEXT_PAGE
+	packet(0x0838,12,clif->pSearchStoreInfoListItemClick,2,6,10);  // CZ_SSILIST_ITEM_CLICK
+	packet(0x083c,10,clif->pUseSkillToId,2,4,6);  // CZ_USE_SKILL
+	packet(0x0869,8,clif->pMoveFromKafra,2,4);  // CZ_MOVE_ITEM_FROM_STORE_TO_BODY
+	packet(0x086a,18,clif->pPartyBookingRegisterReq,2,4);  // CZ_PARTY_BOOKING_REQ_REGISTER
+	packet(0x086b,5,clif->pChangeDir,2,4);  // CZ_CHANGE_DIRECTION
+	packet(0x0870,26,clif->pPartyInvite2,2);  // CZ_PARTY_JOIN_REQ
+	packet(0x087a,8,clif->pMoveToKafra,2,4);  // CZ_MOVE_ITEM_FROM_BODY_TO_STORE
+	packet(0x0886,5,clif->pHomMenu,2,4);  // CZ_COMMAND_MER
+	packet(0x0894,4,clif->pDull/*,XXX*/);  // CZ_GANGSI_RANK
+	packet(0x0940,6,clif->pDropItem,2,4);  // CZ_ITEM_THROW
+	packet(0x094e,26,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS
+	packet(0x096a,6,clif->pGetCharNameRequest,2);  // CZ_REQNAME
 #endif
 
 // 2015-06-24aRagexeRE
@@ -3347,19 +4113,78 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0a3f,9);
 #endif
 
-// ---
-// this packet was added in 2012-05-02aRagexeRE / 2012-05-03aRagexe probably if should be allowed in this versions?
-#if PACKETVER >= 20150805 // RagexeRE
-// shuffle packets not added
-	packet(0x097f,-1);  // ZC_SELECTCART
-	packet(0x0980,7,clif->pSelectCart); // CZ_SELECTCART
-#endif
-// ---
-
 // 2015-08-12aRagexeRE
 #if PACKETVER >= 20150812
 // new packets
 	packet(0x0a40,11);
+#endif
+
+// 2015-08-19aRagexeRE
+#if PACKETVER == 20150819
+// shuffle packets
+	packet(0x0202,-1,clif->pItemListWindowSelected,2,4,8);  // CZ_ITEMLISTWIN_RES
+	packet(0x022d,10,clif->pUseSkillToId,2,4,6);  // CZ_USE_SKILL
+	packet(0x0281,6,clif->pTakeItem,2);  // CZ_ITEM_PICKUP
+	packet(0x035f,6,clif->pTickSend,2);  // CZ_REQUEST_TIME
+	packet(0x0360,6,clif->pReqClickBuyingStore,2);  // CZ_REQ_CLICK_TO_BUYING_STORE
+	packet(0x0366,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);  // CZ_USE_SKILL_TOGROUND_WITHTALKBOX
+	packet(0x0368,6,clif->pSolveCharName,2);  // CZ_REQNAME_BYGID
+	packet(0x0369,7,clif->pActionRequest,2,6);  // CZ_REQUEST_ACT
+	packet(0x0436,4,clif->pDull/*,XXX*/);  // CZ_GANGSI_RANK
+	packet(0x0437,5,clif->pWalkToXY,2);  // CZ_REQUEST_MOVE
+	packet(0x0438,10,clif->pUseSkillToPos,2,4,6,8);  // CZ_USE_SKILL_TOGROUND
+	packet(0x0811,-1,clif->pReqTradeBuyingStore,2,4,8,12);  // CZ_REQ_TRADE_BUYING_STORE
+	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);  // CZ_REQ_OPEN_BUYING_STORE
+	packet(0x0817,2,clif->pReqCloseBuyingStore,0);  // CZ_REQ_CLOSE_BUYING_STORE
+	packet(0x0819,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);  // CZ_SEARCH_STORE_INFO
+	packet(0x0835,2,clif->pSearchStoreInfoNextPage,0);  // CZ_SEARCH_STORE_INFO_NEXT_PAGE
+	packet(0x0838,12,clif->pSearchStoreInfoListItemClick,2,6,10);  // CZ_SSILIST_ITEM_CLICK
+	packet(0x085d,8,clif->pMoveFromKafra,2,4);  // CZ_MOVE_ITEM_FROM_STORE_TO_BODY
+	packet(0x0862,8,clif->pDull/*,XXX*/);  // CZ_JOIN_BATTLE_FIELD
+	packet(0x0865,26,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS
+	packet(0x0871,18,clif->pPartyBookingRegisterReq,2,4);  // CZ_PARTY_BOOKING_REQ_REGISTER
+	packet(0x0888,5,clif->pHomMenu,2,4);  // CZ_COMMAND_MER
+	packet(0x0919,8,clif->pMoveToKafra,2,4);  // CZ_MOVE_ITEM_FROM_BODY_TO_STORE
+	packet(0x091e,36,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD
+	packet(0x0927,19,clif->pWantToConnection,2,6,10,14,18);  // CZ_ENTER
+	packet(0x0940,6,clif->pDropItem,2,4);  // CZ_ITEM_THROW
+	packet(0x0961,26,clif->pPartyInvite2,2);  // CZ_PARTY_JOIN_REQ
+	packet(0x0967,5,clif->pChangeDir,2,4);  // CZ_CHANGE_DIRECTION
+	packet(0x096a,6,clif->pGetCharNameRequest,2);  // CZ_REQNAME
+#endif
+
+// 2015-08-26aRagexeRE
+#if PACKETVER == 20150826
+// shuffle packets
+	packet(0x0362,36,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD
+	packet(0x0368,8,clif->pMoveFromKafra,2,4);  // CZ_MOVE_ITEM_FROM_STORE_TO_BODY
+	packet(0x0436,18,clif->pPartyBookingRegisterReq,2,4);  // CZ_PARTY_BOOKING_REQ_REGISTER
+	packet(0x07ec,7,clif->pActionRequest,2,6);  // CZ_REQUEST_ACT
+	packet(0x0819,6,clif->pReqClickBuyingStore,2);  // CZ_REQ_CLICK_TO_BUYING_STORE
+	packet(0x0861,8,clif->pDull/*,XXX*/);  // CZ_JOIN_BATTLE_FIELD
+	packet(0x0865,5,clif->pWalkToXY,2);  // CZ_REQUEST_MOVE
+	packet(0x086b,10,clif->pUseSkillToPos,2,4,6,8);  // CZ_USE_SKILL_TOGROUND
+	packet(0x0870,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);  // CZ_REQ_OPEN_BUYING_STORE
+	packet(0x087b,6,clif->pSolveCharName,2);  // CZ_REQNAME_BYGID
+	packet(0x088b,26,clif->pPartyInvite2,2);  // CZ_PARTY_JOIN_REQ
+	packet(0x088d,26,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS
+	packet(0x0890,2,clif->pSearchStoreInfoNextPage,0);  // CZ_SEARCH_STORE_INFO_NEXT_PAGE
+	packet(0x0891,10,clif->pUseSkillToId,2,4,6);  // CZ_USE_SKILL
+	packet(0x08a0,12,clif->pSearchStoreInfoListItemClick,2,6,10);  // CZ_SSILIST_ITEM_CLICK
+	packet(0x08a1,8,clif->pMoveToKafra,2,4);  // CZ_MOVE_ITEM_FROM_BODY_TO_STORE
+	packet(0x08a4,6,clif->pTakeItem,2);  // CZ_ITEM_PICKUP
+	packet(0x08a8,-1,clif->pReqTradeBuyingStore,2,4,8,12);  // CZ_REQ_TRADE_BUYING_STORE
+	packet(0x0924,6,clif->pDropItem,2,4);  // CZ_ITEM_THROW
+	packet(0x0928,2,clif->pReqCloseBuyingStore,0);  // CZ_REQ_CLOSE_BUYING_STORE
+	packet(0x092e,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);  // CZ_USE_SKILL_TOGROUND_WITHTALKBOX
+	packet(0x093b,6,clif->pGetCharNameRequest,2);  // CZ_REQNAME
+	packet(0x0945,5,clif->pHomMenu,2,4);  // CZ_COMMAND_MER
+	packet(0x094f,5,clif->pChangeDir,2,4);  // CZ_CHANGE_DIRECTION
+	packet(0x0951,6,clif->pTickSend,2);  // CZ_REQUEST_TIME
+	packet(0x0959,-1,clif->pItemListWindowSelected,2,4,8);  // CZ_ITEMLISTWIN_RES
+	packet(0x0964,19,clif->pWantToConnection,2,6,10,14,18);  // CZ_ENTER
+	packet(0x0968,4,clif->pDull/*,XXX*/);  // CZ_GANGSI_RANK
+	packet(0x0969,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);  // CZ_SEARCH_STORE_INFO
 #endif
 
 // 2015-09-09aRagexeRE
@@ -3374,37 +4199,72 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0a42,43);
 #endif
 
-// 2015-10-01bRagexeRE
-#if PACKETVER >= 20151001
-	packet(0x0369,7,clif->pActionRequest,2,6);
-	packet(0x083C,10,clif->pUseSkillToId,2,4,6);
-	packet(0x0437,5,clif->pWalkToXY,2);
-	packet(0x035F,6,clif->pTickSend,2);
-	packet(0x0202,5,clif->pChangeDir,2,4);
-	packet(0x07E4,6,clif->pTakeItem,2);
-	packet(0x0362,6,clif->pDropItem,2,4);
-	packet(0x07EC,8,clif->pMoveToKafra,2,4);
-	packet(0x0364,8,clif->pMoveFromKafra,2,4);
-	packet(0x0438,10,clif->pUseSkillToPos,2,4,6,8);
-	packet(0x0366,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);
-	packet(0x096A,6,clif->pGetCharNameRequest,2);
-	packet(0x0368,6,clif->pSolveCharName,2);
-	packet(0x0838,12,clif->pSearchStoreInfoListItemClick,2,6,10);
-	packet(0x0835,2,clif->pSearchStoreInfoNextPage,0);
-	packet(0x0819,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);
-	packet(0x0811,-1,clif->pReqTradeBuyingStore,2,4,8,12);
-	packet(0x0360,6,clif->pReqClickBuyingStore,2);
-	packet(0x0817,2,clif->pReqCloseBuyingStore,0);
-	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
-	packet(0x0365,18,clif->pPartyBookingRegisterReq,2,4);
-	packet(0x0281,-1,clif->pItemListWindowSelected,2,4,8);
-	packet(0x022D,19,clif->pWantToConnection,2,6,10,14,18);
-	packet(0x0802,26,clif->pPartyInvite2,2);
-	packet(0x023B,26,clif->pFriendsListAdd,2);
-	packet(0x0361,5,clif->pHomMenu,2,4);
-	packet(0x0860,36,clif->pStoragePassword,0);
-	packet(0x0363,8,clif->pDull); // CZ_JOIN_BATTLE_FIELD
-	packet(0x0436,4,clif->pDull); // CZ_GANGSI_RANK
+// 2015-10-01aRagexe
+#if PACKETVER == 20151001
+// shuffle packets
+	packet(0x0202,5,clif->pChangeDir,2,4);  // CZ_CHANGE_DIRECTION
+	packet(0x022d,19,clif->pWantToConnection,2,6,10,14,18);  // CZ_ENTER
+	packet(0x023b,26,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS
+	packet(0x0281,-1,clif->pItemListWindowSelected,2,4,8);  // CZ_ITEMLISTWIN_RES
+	packet(0x035f,6,clif->pTickSend,2);  // CZ_REQUEST_TIME
+	packet(0x0360,6,clif->pReqClickBuyingStore,2);  // CZ_REQ_CLICK_TO_BUYING_STORE
+	packet(0x0361,5,clif->pHomMenu,2,4);  // CZ_COMMAND_MER
+	packet(0x0362,6,clif->pDropItem,2,4);  // CZ_ITEM_THROW
+	packet(0x0363,8,clif->pDull/*,XXX*/);  // CZ_JOIN_BATTLE_FIELD
+	packet(0x0364,8,clif->pMoveFromKafra,2,4);  // CZ_MOVE_ITEM_FROM_STORE_TO_BODY
+	packet(0x0365,18,clif->pPartyBookingRegisterReq,2,4);  // CZ_PARTY_BOOKING_REQ_REGISTER
+	packet(0x0366,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);  // CZ_USE_SKILL_TOGROUND_WITHTALKBOX
+	packet(0x0368,6,clif->pSolveCharName,2);  // CZ_REQNAME_BYGID
+	packet(0x0369,7,clif->pActionRequest,2,6);  // CZ_REQUEST_ACT
+	packet(0x0436,4,clif->pDull/*,XXX*/);  // CZ_GANGSI_RANK
+	packet(0x0437,5,clif->pWalkToXY,2);  // CZ_REQUEST_MOVE
+	packet(0x0438,10,clif->pUseSkillToPos,2,4,6,8);  // CZ_USE_SKILL_TOGROUND
+	packet(0x07e4,6,clif->pTakeItem,2);  // CZ_ITEM_PICKUP
+	packet(0x07ec,8,clif->pMoveToKafra,2,4);  // CZ_MOVE_ITEM_FROM_BODY_TO_STORE
+	packet(0x0802,26,clif->pPartyInvite2,2);  // CZ_PARTY_JOIN_REQ
+	packet(0x0811,-1,clif->pReqTradeBuyingStore,2,4,8,12);  // CZ_REQ_TRADE_BUYING_STORE
+	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);  // CZ_REQ_OPEN_BUYING_STORE
+	packet(0x0817,2,clif->pReqCloseBuyingStore,0);  // CZ_REQ_CLOSE_BUYING_STORE
+	packet(0x0819,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);  // CZ_SEARCH_STORE_INFO
+	packet(0x0835,2,clif->pSearchStoreInfoNextPage,0);  // CZ_SEARCH_STORE_INFO_NEXT_PAGE
+	packet(0x0838,12,clif->pSearchStoreInfoListItemClick,2,6,10);  // CZ_SSILIST_ITEM_CLICK
+	packet(0x083c,10,clif->pUseSkillToId,2,4,6);  // CZ_USE_SKILL
+	packet(0x0960,36,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD
+	packet(0x096a,6,clif->pGetCharNameRequest,2);  // CZ_REQNAME
+#endif
+
+// 2015-10-07aRagexeRE
+#if PACKETVER == 20151007
+// shuffle packets
+	packet(0x0202,-1,clif->pReqTradeBuyingStore,2,4,8,12);  // CZ_REQ_TRADE_BUYING_STORE
+	packet(0x0281,-1,clif->pItemListWindowSelected,2,4,8);  // CZ_ITEMLISTWIN_RES
+	packet(0x035f,6,clif->pTickSend,2);  // CZ_REQUEST_TIME
+	packet(0x0360,6,clif->pReqClickBuyingStore,2);  // CZ_REQ_CLICK_TO_BUYING_STORE
+	packet(0x0362,6,clif->pDropItem,2,4);  // CZ_ITEM_THROW
+	packet(0x0363,8,clif->pDull/*,XXX*/);  // CZ_JOIN_BATTLE_FIELD
+	packet(0x0364,8,clif->pMoveFromKafra,2,4);  // CZ_MOVE_ITEM_FROM_STORE_TO_BODY
+	packet(0x0365,18,clif->pPartyBookingRegisterReq,2,4);  // CZ_PARTY_BOOKING_REQ_REGISTER
+	packet(0x0366,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);  // CZ_USE_SKILL_TOGROUND_WITHTALKBOX
+	packet(0x0368,6,clif->pSolveCharName,2);  // CZ_REQNAME_BYGID
+	packet(0x0369,7,clif->pActionRequest,2,6);  // CZ_REQUEST_ACT
+	packet(0x0437,5,clif->pWalkToXY,2);  // CZ_REQUEST_MOVE
+	packet(0x0438,10,clif->pUseSkillToPos,2,4,6,8);  // CZ_USE_SKILL_TOGROUND
+	packet(0x07e4,6,clif->pTakeItem,2);  // CZ_ITEM_PICKUP
+	packet(0x07ec,8,clif->pMoveToKafra,2,4);  // CZ_MOVE_ITEM_FROM_BODY_TO_STORE
+	packet(0x0802,26,clif->pPartyInvite2,2);  // CZ_PARTY_JOIN_REQ
+	packet(0x0811,26,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS
+	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);  // CZ_REQ_OPEN_BUYING_STORE
+	packet(0x0817,2,clif->pReqCloseBuyingStore,0);  // CZ_REQ_CLOSE_BUYING_STORE
+	packet(0x0819,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);  // CZ_SEARCH_STORE_INFO
+	packet(0x0835,2,clif->pSearchStoreInfoNextPage,0);  // CZ_SEARCH_STORE_INFO_NEXT_PAGE
+	packet(0x0838,12,clif->pSearchStoreInfoListItemClick,2,6,10);  // CZ_SSILIST_ITEM_CLICK
+	packet(0x083c,10,clif->pUseSkillToId,2,4,6);  // CZ_USE_SKILL
+	packet(0x0862,4,clif->pDull/*,XXX*/);  // CZ_GANGSI_RANK
+	packet(0x093f,5,clif->pHomMenu,2,4);  // CZ_COMMAND_MER
+	packet(0x095f,5,clif->pChangeDir,2,4);  // CZ_CHANGE_DIRECTION
+	packet(0x0961,19,clif->pWantToConnection,2,6,10,14,18);  // CZ_ENTER
+	packet(0x0967,36,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD
+	packet(0x096a,6,clif->pGetCharNameRequest,2);  // CZ_REQNAME
 #endif
 
 // 2015-10-07aRagexeRE
@@ -3412,6 +4272,74 @@ packet(0x96e,-1,clif->ackmergeitems);
 // new packets
 	packet(0x0a43,85);
 	packet(0x0a44,-1);
+#endif
+
+// 2015-10-14bRagexeRE
+#if PACKETVER == 20151014
+// shuffle packets
+	packet(0x0202,18,clif->pPartyBookingRegisterReq,2,4);  // CZ_PARTY_BOOKING_REQ_REGISTER
+	packet(0x0817,26,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS
+	packet(0x0838,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);  // CZ_SEARCH_STORE_INFO
+	packet(0x085a,10,clif->pUseSkillToId,2,4,6);  // CZ_USE_SKILL
+	packet(0x085c,7,clif->pActionRequest,2,6);  // CZ_REQUEST_ACT
+	packet(0x0860,6,clif->pDropItem,2,4);  // CZ_ITEM_THROW
+	packet(0x0863,5,clif->pChangeDir,2,4);  // CZ_CHANGE_DIRECTION
+	packet(0x0867,-1,clif->pReqTradeBuyingStore,2,4,8,12);  // CZ_REQ_TRADE_BUYING_STORE
+	packet(0x0872,5,clif->pHomMenu,2,4);  // CZ_COMMAND_MER
+	packet(0x0874,10,clif->pUseSkillToPos,2,4,6,8);  // CZ_USE_SKILL_TOGROUND
+	packet(0x0881,8,clif->pMoveFromKafra,2,4);  // CZ_MOVE_ITEM_FROM_STORE_TO_BODY
+	packet(0x0883,6,clif->pTickSend,2);  // CZ_REQUEST_TIME
+	packet(0x0884,-1,clif->pItemListWindowSelected,2,4,8);  // CZ_ITEMLISTWIN_RES
+	packet(0x0889,6,clif->pReqClickBuyingStore,2);  // CZ_REQ_CLICK_TO_BUYING_STORE
+	packet(0x088e,8,clif->pDull/*,XXX*/);  // CZ_JOIN_BATTLE_FIELD
+	packet(0x089a,4,clif->pDull/*,XXX*/);  // CZ_GANGSI_RANK
+	packet(0x089b,2,clif->pReqCloseBuyingStore,0);  // CZ_REQ_CLOSE_BUYING_STORE
+	packet(0x089f,5,clif->pWalkToXY,2);  // CZ_REQUEST_MOVE
+	packet(0x08aa,6,clif->pTakeItem,2);  // CZ_ITEM_PICKUP
+	packet(0x091c,26,clif->pPartyInvite2,2);  // CZ_PARTY_JOIN_REQ
+	packet(0x091d,36,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD
+	packet(0x0930,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);  // CZ_USE_SKILL_TOGROUND_WITHTALKBOX
+	packet(0x0934,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);  // CZ_REQ_OPEN_BUYING_STORE
+	packet(0x0944,12,clif->pSearchStoreInfoListItemClick,2,6,10);  // CZ_SSILIST_ITEM_CLICK
+	packet(0x094f,2,clif->pSearchStoreInfoNextPage,0);  // CZ_SEARCH_STORE_INFO_NEXT_PAGE
+	packet(0x0956,6,clif->pSolveCharName,2);  // CZ_REQNAME_BYGID
+	packet(0x095e,8,clif->pMoveToKafra,2,4);  // CZ_MOVE_ITEM_FROM_BODY_TO_STORE
+	packet(0x0961,6,clif->pGetCharNameRequest,2);  // CZ_REQNAME
+	packet(0x0964,19,clif->pWantToConnection,2,6,10,14,18);  // CZ_ENTER
+#endif
+
+// 2015-10-28cRagexeRE
+#if PACKETVER == 20151028
+// shuffle packets
+	packet(0x0202,5,clif->pChangeDir,2,4);  // CZ_CHANGE_DIRECTION
+	packet(0x022d,19,clif->pWantToConnection,2,6,10,14,18);  // CZ_ENTER
+	packet(0x023b,26,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS
+	packet(0x0281,-1,clif->pItemListWindowSelected,2,4,8);  // CZ_ITEMLISTWIN_RES
+	packet(0x035f,6,clif->pTickSend,2);  // CZ_REQUEST_TIME
+	packet(0x0360,6,clif->pReqClickBuyingStore,2);  // CZ_REQ_CLICK_TO_BUYING_STORE
+	packet(0x0361,5,clif->pHomMenu,2,4);  // CZ_COMMAND_MER
+	packet(0x0362,6,clif->pDropItem,2,4);  // CZ_ITEM_THROW
+	packet(0x0363,8,clif->pDull/*,XXX*/);  // CZ_JOIN_BATTLE_FIELD
+	packet(0x0364,8,clif->pMoveFromKafra,2,4);  // CZ_MOVE_ITEM_FROM_STORE_TO_BODY
+	packet(0x0365,18,clif->pPartyBookingRegisterReq,2,4);  // CZ_PARTY_BOOKING_REQ_REGISTER
+	packet(0x0366,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);  // CZ_USE_SKILL_TOGROUND_WITHTALKBOX
+	packet(0x0368,6,clif->pSolveCharName,2);  // CZ_REQNAME_BYGID
+	packet(0x0369,7,clif->pActionRequest,2,6);  // CZ_REQUEST_ACT
+	packet(0x0436,4,clif->pDull/*,XXX*/);  // CZ_GANGSI_RANK
+	packet(0x0437,5,clif->pWalkToXY,2);  // CZ_REQUEST_MOVE
+	packet(0x0438,10,clif->pUseSkillToPos,2,4,6,8);  // CZ_USE_SKILL_TOGROUND
+	packet(0x07e4,6,clif->pTakeItem,2);  // CZ_ITEM_PICKUP
+	packet(0x07ec,8,clif->pMoveToKafra,2,4);  // CZ_MOVE_ITEM_FROM_BODY_TO_STORE
+	packet(0x0802,26,clif->pPartyInvite2,2);  // CZ_PARTY_JOIN_REQ
+	packet(0x0811,-1,clif->pReqTradeBuyingStore,2,4,8,12);  // CZ_REQ_TRADE_BUYING_STORE
+	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);  // CZ_REQ_OPEN_BUYING_STORE
+	packet(0x0817,2,clif->pReqCloseBuyingStore,0);  // CZ_REQ_CLOSE_BUYING_STORE
+	packet(0x0819,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);  // CZ_SEARCH_STORE_INFO
+	packet(0x0835,2,clif->pSearchStoreInfoNextPage,0);  // CZ_SEARCH_STORE_INFO_NEXT_PAGE
+	packet(0x0838,12,clif->pSearchStoreInfoListItemClick,2,6,10);  // CZ_SSILIST_ITEM_CLICK
+	packet(0x083c,10,clif->pUseSkillToId,2,4,6);  // CZ_USE_SKILL
+	packet(0x0860,36,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD
+	packet(0x096a,6,clif->pGetCharNameRequest,2);  // CZ_REQNAME
 #endif
 
 // 2015-10-28cRagexeRE
@@ -3493,12 +4421,80 @@ packet(0x96e,-1,clif->ackmergeitems);
 #endif
 
 // 2015-11-18aRagexeRE
+#if PACKETVER == 20151118
+// shuffle packets
+	packet(0x022d,6,clif->pTickSend,2);  // CZ_REQUEST_TIME
+	packet(0x035f,5,clif->pHomMenu,2,4);  // CZ_COMMAND_MER
+	packet(0x0360,6,clif->pReqClickBuyingStore,2);  // CZ_REQ_CLICK_TO_BUYING_STORE
+	packet(0x0365,26,clif->pPartyInvite2,2);  // CZ_PARTY_JOIN_REQ
+	packet(0x0366,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);  // CZ_USE_SKILL_TOGROUND_WITHTALKBOX
+	packet(0x0368,6,clif->pSolveCharName,2);  // CZ_REQNAME_BYGID
+	packet(0x0369,7,clif->pActionRequest,2,6);  // CZ_REQUEST_ACT
+	packet(0x0437,5,clif->pWalkToXY,2);  // CZ_REQUEST_MOVE
+	packet(0x0438,10,clif->pUseSkillToPos,2,4,6,8);  // CZ_USE_SKILL_TOGROUND
+	packet(0x0811,-1,clif->pReqTradeBuyingStore,2,4,8,12);  // CZ_REQ_TRADE_BUYING_STORE
+	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);  // CZ_REQ_OPEN_BUYING_STORE
+	packet(0x0817,2,clif->pReqCloseBuyingStore,0);  // CZ_REQ_CLOSE_BUYING_STORE
+	packet(0x0819,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);  // CZ_SEARCH_STORE_INFO
+	packet(0x0835,2,clif->pSearchStoreInfoNextPage,0);  // CZ_SEARCH_STORE_INFO_NEXT_PAGE
+	packet(0x0838,12,clif->pSearchStoreInfoListItemClick,2,6,10);  // CZ_SSILIST_ITEM_CLICK
+	packet(0x083c,10,clif->pUseSkillToId,2,4,6);  // CZ_USE_SKILL
+	packet(0x086b,8,clif->pMoveToKafra,2,4);  // CZ_MOVE_ITEM_FROM_BODY_TO_STORE
+	packet(0x088b,36,clif->pStoragePassword,2,4,20);  // CZ_ACK_STORE_PASSWORD
+	packet(0x08ab,8,clif->pMoveFromKafra,2,4);  // CZ_MOVE_ITEM_FROM_STORE_TO_BODY
+	packet(0x0921,26,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS
+	packet(0x0925,19,clif->pWantToConnection,2,6,10,14,18);  // CZ_ENTER
+	packet(0x092e,5,clif->pChangeDir,2,4);  // CZ_CHANGE_DIRECTION
+	packet(0x092f,8,clif->pDull/*,XXX*/);  // CZ_JOIN_BATTLE_FIELD
+	packet(0x093c,6,clif->pDropItem,2,4);  // CZ_ITEM_THROW
+	packet(0x0943,6,clif->pTakeItem,2);  // CZ_ITEM_PICKUP
+	packet(0x0946,-1,clif->pItemListWindowSelected,2,4,8,12);  // CZ_ITEMLISTWIN_RES
+	packet(0x0957,4,clif->pDull/*,XXX*/);  // CZ_GANGSI_RANK
+	packet(0x095c,18,clif->pPartyBookingRegisterReq,2,4,6);  // CZ_PARTY_BOOKING_REQ_REGISTER
+	packet(0x096a,6,clif->pGetCharNameRequest,2);  // CZ_REQNAME
+#endif
+
+// 2015-11-18aRagexeRE
 #if PACKETVER >= 20151118
 // new packets
 	packet(0x0a49,22);
 	packet(0x0a4a,6);
 	packet(0x0a4b,22);
 	packet(0x0a4c,28);
+#endif
+
+// 2015-12-02bRagexeRE
+#if PACKETVER == 20151202
+// shuffle packets
+	packet(0x0202,5,clif->pChangeDir,2,4);  // CZ_CHANGE_DIRECTION
+	packet(0x022d,19,clif->pWantToConnection,2,6,10,14,18);  // CZ_ENTER
+	packet(0x023b,26,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS
+	packet(0x0281,-1,clif->pItemListWindowSelected,2,4,8,12);  // CZ_ITEMLISTWIN_RES
+	packet(0x035f,6,clif->pTickSend,2);  // CZ_REQUEST_TIME
+	packet(0x0360,6,clif->pReqClickBuyingStore,2);  // CZ_REQ_CLICK_TO_BUYING_STORE
+	packet(0x0361,5,clif->pHomMenu,2,4);  // CZ_COMMAND_MER
+	packet(0x0362,6,clif->pDropItem,2,4);  // CZ_ITEM_THROW
+	packet(0x0363,8,clif->pDull/*,XXX*/);  // CZ_JOIN_BATTLE_FIELD
+	packet(0x0364,8,clif->pMoveFromKafra,2,4);  // CZ_MOVE_ITEM_FROM_STORE_TO_BODY
+	packet(0x0365,18,clif->pPartyBookingRegisterReq,2,4,6);  // CZ_PARTY_BOOKING_REQ_REGISTER
+	packet(0x0366,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);  // CZ_USE_SKILL_TOGROUND_WITHTALKBOX
+	packet(0x0368,6,clif->pSolveCharName,2);  // CZ_REQNAME_BYGID
+	packet(0x0369,7,clif->pActionRequest,2,6);  // CZ_REQUEST_ACT
+	packet(0x0436,4,clif->pDull/*,XXX*/);  // CZ_GANGSI_RANK
+	packet(0x0437,5,clif->pWalkToXY,2);  // CZ_REQUEST_MOVE
+	packet(0x0438,10,clif->pUseSkillToPos,2,4,6,8);  // CZ_USE_SKILL_TOGROUND
+	packet(0x07e4,6,clif->pTakeItem,2);  // CZ_ITEM_PICKUP
+	packet(0x07ec,8,clif->pMoveToKafra,2,4);  // CZ_MOVE_ITEM_FROM_BODY_TO_STORE
+	packet(0x0802,26,clif->pPartyInvite2,2);  // CZ_PARTY_JOIN_REQ
+	packet(0x0811,-1,clif->pReqTradeBuyingStore,2,4,8,12);  // CZ_REQ_TRADE_BUYING_STORE
+	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);  // CZ_REQ_OPEN_BUYING_STORE
+	packet(0x0817,2,clif->pReqCloseBuyingStore,0);  // CZ_REQ_CLOSE_BUYING_STORE
+	packet(0x0819,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);  // CZ_SEARCH_STORE_INFO
+	packet(0x0835,2,clif->pSearchStoreInfoNextPage,0);  // CZ_SEARCH_STORE_INFO_NEXT_PAGE
+	packet(0x0838,12,clif->pSearchStoreInfoListItemClick,2,6,10);  // CZ_SSILIST_ITEM_CLICK
+	packet(0x083c,10,clif->pUseSkillToId,2,4,6);  // CZ_USE_SKILL
+	packet(0x0870,36,clif->pStoragePassword,2,4,20);  // CZ_ACK_STORE_PASSWORD
+	packet(0x096a,6,clif->pGetCharNameRequest,2);  // CZ_REQNAME
 #endif
 
 // 2015-12-16aRagexe
@@ -3532,6 +4528,40 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0885,36,clif->pStoragePassword,0);
 	packet(0x0364,4,clif->pDull); // CZ_GANGSI_RANK
 	packet(0x086a,8,clif->pDull); // CZ_JOIN_BATTLE_FIELD
+#endif
+
+// 2015-12-23bRagexeRE
+#if PACKETVER == 20151223
+// shuffle packets
+	packet(0x02c4,8,clif->pMoveToKafra,2,4);  // CZ_MOVE_ITEM_FROM_BODY_TO_STORE
+	packet(0x0362,8,clif->pDull/*,XXX*/);  // CZ_JOIN_BATTLE_FIELD
+	packet(0x0364,6,clif->pTakeItem,2);  // CZ_ITEM_PICKUP
+	packet(0x0802,4,clif->pDull/*,XXX*/);  // CZ_GANGSI_RANK
+	packet(0x0815,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);  // CZ_SEARCH_STORE_INFO
+	packet(0x0864,6,clif->pGetCharNameRequest,2);  // CZ_REQNAME
+	packet(0x0866,19,clif->pWantToConnection,2,6,10,14,18);  // CZ_ENTER
+	packet(0x086e,10,clif->pUseSkillToPos,2,4,6,8);  // CZ_USE_SKILL_TOGROUND
+	packet(0x0872,18,clif->pPartyBookingRegisterReq,2,4);  // CZ_PARTY_BOOKING_REQ_REGISTER
+	packet(0x0875,10,clif->pUseSkillToId,2,4,6);  // CZ_USE_SKILL
+	packet(0x0876,6,clif->pDropItem,2,4);  // CZ_ITEM_THROW
+	packet(0x0881,7,clif->pActionRequest,2,6);  // CZ_REQUEST_ACT
+	packet(0x0884,8,clif->pMoveFromKafra,2,4);  // CZ_MOVE_ITEM_FROM_STORE_TO_BODY
+	packet(0x0886,-1,clif->pReqTradeBuyingStore,2,4,8,12);  // CZ_REQ_TRADE_BUYING_STORE
+	packet(0x088d,5,clif->pHomMenu,2,4);  // CZ_COMMAND_MER
+	packet(0x0890,-1,clif->pItemListWindowSelected,2,4,8);  // CZ_ITEMLISTWIN_RES
+	packet(0x0891,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);  // CZ_REQ_OPEN_BUYING_STORE
+	packet(0x0898,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);  // CZ_USE_SKILL_TOGROUND_WITHTALKBOX
+	packet(0x08aa,26,clif->pPartyInvite2,2);  // CZ_PARTY_JOIN_REQ
+	packet(0x0918,2,clif->pSearchStoreInfoNextPage,0);  // CZ_SEARCH_STORE_INFO_NEXT_PAGE
+	packet(0x091a,6,clif->pReqClickBuyingStore,2);  // CZ_REQ_CLICK_TO_BUYING_STORE
+	packet(0x091b,26,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS
+	packet(0x0920,5,clif->pWalkToXY,2);  // CZ_REQUEST_MOVE
+	packet(0x0923,5,clif->pChangeDir,2,4);  // CZ_CHANGE_DIRECTION
+	packet(0x0924,6,clif->pTickSend,2);  // CZ_REQUEST_TIME
+	packet(0x095e,6,clif->pSolveCharName,2);  // CZ_REQNAME_BYGID
+	packet(0x095f,2,clif->pReqCloseBuyingStore,0);  // CZ_REQ_CLOSE_BUYING_STORE
+	packet(0x0965,36,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD
+	packet(0x0967,12,clif->pSearchStoreInfoListItemClick,2,6,10);  // CZ_SSILIST_ITEM_CLICK
 #endif
 
 /* PacketKeys: http://herc.ws/board/topic/1105-hercules-wpe-free-june-14th-patch/ */
@@ -3775,12 +4805,92 @@ packet(0x96e,-1,clif->ackmergeitems);
 
 // 2015 Packet Keys
 
+#if PACKETVER == 20150107
+	packetKeys(0x6C494A14,0x4DDB6427,0x3E6D7B65); /* 4144 */
+#endif
+
+#if PACKETVER == 20150114
+	packetKeys(0x21C96102,0x13142934,0x1ABF4EA3); /* 4144 */
+#endif
+
+#if PACKETVER == 20150128
+	packetKeys(0x77CA2D55,0x28B608F0,0x75B47957); /* 4144 */
+#endif
+
+#if PACKETVER == 20150204
+	packetKeys(0x134529DB,0x5B4F6CEF,0x29EF11EF); /* 4144 */
+#endif
+
+#if PACKETVER == 20150225
+	packetKeys(0x57FD4B7B,0x19CC16FB,0x0D255D72); /* 4144 */
+#endif
+
+#if PACKETVER == 20150226
+	packetKeys(0x57FD4B7B,0x19CC16FB,0x0D255D72); /* 4144 */
+#endif
+
+#if PACKETVER == 20150311
+	packetKeys(0x48C45D97,0x06CE09B0,0x5836642F); /* 4144 */
+#endif
+
+#if PACKETVER == 20150325
+	packetKeys(0x68F62B8C,0x337C3468,0x38FC0AC7); /* 4144 */
+#endif
+
+#if PACKETVER == 20150401
+	packetKeys(0x207F3A08,0x57E6160C,0x02A60382); /* 4144 */
+#endif
+
+#if PACKETVER == 20150422
+	packetKeys(0x10D22CE2,0x69E279E2,0x79E279E2); /* 4144 */
+#endif
+
+#if PACKETVER == 20150429
+	packetKeys(0x2BF61A71,0x565D5DDF,0x0FB90019); /* 4144 */
+#endif
+
+#if PACKETVER == 20150507
+	packetKeys(0x55B54373,0x58967821,0x67F41832); /* 4144 */
+#endif
+
 #if PACKETVER >= 20150513
 	packetKeys(0x62C86D09,0x75944F17,0x112C133D); /* Dastgir */
 #endif
 
+#if PACKETVER == 20150527
+	packetKeys(0x35AE7BAE,0x3BAE3BAE,0x3BAE3BAE); /* 4144 */
+#endif
+
+#if PACKETVER == 20150617
+	packetKeys(0x250F7E09,0x25416076,0x029A780E); /* 4144 */
+#endif
+
+#if PACKETVER == 20150618
+	packetKeys(0x250F7E09,0x25416076,0x029A780E); /* 4144 */
+#endif
+
+#if PACKETVER == 20150819
+	packetKeys(0x1A2400E0,0x736E5686,0x10F315D5); /* 4144 */
+#endif
+
+#if PACKETVER == 20150826
+	packetKeys(0x77883C56,0x1829359F,0x0DE635B6); /* 4144 */
+#endif
+
 #if PACKETVER >= 20151001
 	packetKeys(0x5CFF4561,0x32514AD1,0x06D126D1); /* Dastgir */
+#endif
+
+#if PACKETVER == 20151007
+	packetKeys(0x3C6447A8,0x032170D7,0x6490476C); /* 4144 */
+#endif
+
+#if PACKETVER == 20151014
+	packetKeys(0x402728A8,0x5D0E309F,0x240018FD); /* 4144 */
+#endif
+
+#if PACKETVER == 20151028
+	packetKeys(0x45B945B9,0x45B945B9,0x45B945B9); /* 4144 */
 #endif
 
 #if PACKETVER >= 20151029
@@ -3791,8 +4901,20 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packetKeys(0x4C17382A,0x7ED174C9,0x29961E4F);  /* ossi0110 */
 #endif
 
+#if PACKETVER == 20151118
+	packetKeys(0x734C3241,0x6E846F34,0x731C06D6); /* 4144 */
+#endif
+
+#if PACKETVER == 20151202
+	packetKeys(0x4EDE52DE,0x52DE52DE,0x52DE52DE); /* 4144 */
+#endif
+
 #if PACKETVER >= 20151216
 	packetKeys(0x25DD643D,0x61AC39DE,0x77A8206D); /* Dastgir */
+#endif
+
+#if PACKETVER == 20151223
+	packetKeys(0x347D68D0,0x2C705320,0x7B4A199D); /* 4144 */
 #endif
 
 #if defined(OBFUSCATIONKEY1) && defined(OBFUSCATIONKEY2) && defined(OBFUSCATIONKEY3)

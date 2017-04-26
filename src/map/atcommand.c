@@ -8420,22 +8420,24 @@ ACMD(charcommands)
 	return true;
 }
 
-/* for new mounts */
+/* For new mounts */
 ACMD(cashmount)
 {
 	if (pc_hasmount(sd)) {
-		clif->message(fd, msg_fd(fd,1476)); // You are already mounting something else
+		clif->message(fd, msg_fd(fd, 1476)); // You are already mounting something else
 		return false;
 	}
 
-	clif->message(sd->fd,msg_fd(fd,1362)); // NOTICE: If you crash with mount your LUA is outdated.
+	clif->message(sd->fd, msg_fd(fd, 1362)); // NOTICE: If you crash with mount your LUA is outdated.
+
 	if (!sd->sc.data[SC_ALL_RIDING]) {
-		clif->message(sd->fd,msg_fd(fd,1363)); // You have mounted.
-		sc_start(NULL, &sd->bl, SC_ALL_RIDING, 100, 25, INFINITE_DURATION);
+		clif->message(sd->fd, msg_fd(fd, 1363)); // You have mounted.
+		sc_start(NULL, &sd->bl, SC_ALL_RIDING, 100, battle_config.boarding_halter_speed, INFINITE_DURATION);
 	} else {
-		clif->message(sd->fd,msg_fd(fd,1364)); // You have released your mount.
+		clif->message(sd->fd, msg_fd(fd, 1364)); // You have released your mount.
 		status_change_end(&sd->bl, SC_ALL_RIDING, INVALID_TIMER);
 	}
+
 	return true;
 }
 

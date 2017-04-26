@@ -96,26 +96,25 @@ OnTouch:
 	@bingo_e4$ = 0;
 	@bingo_e5$ = 0;
 	@bingo_case = 1;
-L_Fill:
-	@bingo_fill = callfunc("Func_Bingo",@bingo_case);
-	if (!@bingo_fill) {
-		mes "The numbers you have entered";
-  		mes "exceed the limit, or you have";
-		mes "already entered these numbers.";
-		mes "Please enter your numbers again.";
-		next;
-	} else if (@bingo_fill) {
-		if(@bingoplate[25] < 10) @bingo_e5$ = "0"+@bingoplate[25]+""; else @bingo_e5$ = @bingoplate[25];
-		donpcevent "start#bingo::OnEnter";
-		mes "["+@bingo_a1$+"] ["+@bingo_a2$+"] ["+@bingo_a3$+"] ["+@bingo_a4$+"] ["+@bingo_a5$+"]";
-		mes "["+@bingo_b1$+"] ["+@bingo_b2$+"] ["+@bingo_b3$+"] ["+@bingo_b4$+"] ["+@bingo_b5$+"]";
-		mes "["+@bingo_c1$+"] ["+@bingo_c2$+"] ["+@bingo_c3$+"] ["+@bingo_c4$+"] ["+@bingo_c5$+"]";
-		mes "["+@bingo_d1$+"] ["+@bingo_d2$+"] ["+@bingo_d3$+"] ["+@bingo_d4$+"] ["+@bingo_d5$+"]";
-		mes "["+@bingo_e1$+"] ["+@bingo_e2$+"] ["+@bingo_e3$+"] ["+@bingo_e4$+"] ["+@bingo_e5$+"]";
-		close;
-
+	while (true) {
+		@bingo_fill = callfunc("Func_Bingo",@bingo_case);
+		if (!@bingo_fill) {
+			mes "The numbers you have entered";
+			mes "exceed the limit, or you have";
+			mes "already entered these numbers.";
+			mes "Please enter your numbers again.";
+			next;
+		} else if (@bingo_fill) {
+			if(@bingoplate[25] < 10) @bingo_e5$ = "0"+@bingoplate[25]+""; else @bingo_e5$ = @bingoplate[25];
+			donpcevent "start#bingo::OnEnter";
+			mes "["+@bingo_a1$+"] ["+@bingo_a2$+"] ["+@bingo_a3$+"] ["+@bingo_a4$+"] ["+@bingo_a5$+"]";
+			mes "["+@bingo_b1$+"] ["+@bingo_b2$+"] ["+@bingo_b3$+"] ["+@bingo_b4$+"] ["+@bingo_b5$+"]";
+			mes "["+@bingo_c1$+"] ["+@bingo_c2$+"] ["+@bingo_c3$+"] ["+@bingo_c4$+"] ["+@bingo_c5$+"]";
+			mes "["+@bingo_d1$+"] ["+@bingo_d2$+"] ["+@bingo_d3$+"] ["+@bingo_d4$+"] ["+@bingo_d5$+"]";
+			mes "["+@bingo_e1$+"] ["+@bingo_e2$+"] ["+@bingo_e3$+"] ["+@bingo_e4$+"] ["+@bingo_e5$+"]";
+			close;
+		}
 	}
-	goto L_Fill;
 }
 
 que_bingo,53,121,0	duplicate(plate1#bingo)	plate2#bingo	HIDDEN_WARP_NPC,1,1

@@ -2569,13 +2569,13 @@ void clif_item_equip(short idx, struct EQUIPITEM_INFO *p, struct item *it, struc
 	p->type = itemtype(id->type);
 
 #if PACKETVER < 20120925
-	p->IsIdentified = i->identify ? 1 : 0;
+	p->IsIdentified = it->identify ? 1 : 0;
 #endif
 
 	p->location = eqp_pos;
 	p->WearState = it->equip;
 #if PACKETVER < 20120925
-	p->IsDamaged = (i->attribute & ATTR_BROKEN) != 0 ? 1 : 0;
+	p->IsDamaged = (it->attribute & ATTR_BROKEN) != 0 ? 1 : 0;
 #endif
 	p->RefiningLevel = it->refine;
 
@@ -4174,7 +4174,7 @@ void clif_storageitemadded(struct map_session_data* sd, struct item* i, int inde
 	WFIFOB(fd,12+offset) = i->refine; //refine
 	clif->addcards(WFIFOP(fd,13+offset), i);
 #if PACKETVER >= 20150226
-	clif->add_item_options(WFIFOP(fd,21+offset), i);
+	clif->add_item_options(WFIFOP(fd, 21 + offset), i);
 #endif
 	WFIFOSET(fd,packet_len(storageaddType));
 }
@@ -6248,7 +6248,7 @@ void clif_cart_additem(struct map_session_data *sd,int n,int amount,int fail)
 	WBUFB(buf,12+offset)=sd->status.cart[n].refine;
 	clif->addcards(WBUFP(buf,13+offset), &sd->status.cart[n]);
 #if PACKETVER >= 20150226
-	clif->add_item_options(WBUFP(buf,21+offset), &sd->status.cart[n]);
+	clif->add_item_options(WBUFP(buf, 21 + offset), &sd->status.cart[n]);
 #endif
 	WFIFOSET(fd,packet_len(cartaddType));
 }
@@ -6376,7 +6376,7 @@ void clif_vendinglist(struct map_session_data* sd, unsigned int id, struct s_ven
 		WFIFOB(fd,offset+13+i*item_length) = vsd->status.cart[index].refine;
 		clif->addcards(WFIFOP(fd,offset+14+i*item_length), &vsd->status.cart[index]);
 #if PACKETVER >= 20150226
-		clif->add_item_options(WFIFOP(fd,offset+22+i*item_length), &vsd->status.cart[index]);
+		clif->add_item_options(WFIFOP(fd, offset + 22 + i * item_length), &vsd->status.cart[index]);
 #endif
 	}
 	WFIFOSET(fd,WFIFOW(fd,2));
@@ -6442,7 +6442,7 @@ void clif_openvending(struct map_session_data* sd, int id, struct s_vending* ven
 		WFIFOB(fd,21+i*item_length) = sd->status.cart[index].refine;
 		clif->addcards(WFIFOP(fd,22+i*item_length), &sd->status.cart[index]);
 #if PACKETVER >= 20150226
-		clif->add_item_options(WFIFOP(fd,30+22+i*item_length), &sd->status.cart[index]);
+		clif->add_item_options(WFIFOP(fd, 30 + i * item_length), &sd->status.cart[index]);
 #endif
 	}
 	WFIFOSET(fd,WFIFOW(fd,2));
@@ -10634,9 +10634,11 @@ void clif_parse_NpcClicked(int fd,struct map_session_data *sd)
 		clif->clearunit_area(&sd->bl,CLR_DEAD);
 		return;
 	}
-	if( sd->npc_id || sd->state.workinprogress&2 ){
-#ifdef RENEWAL
-		clif->msgtable(sd, MSG_NPC_WORK_IN_PROGRESS); // TODO look for the client date that has this message.
+	if (sd->npc_id || sd->state.workinprogress & 2) {
+#if PACKETVER >= 20110309
+		clif->msgtable(sd, MSG_NPC_WORK_IN_PROGRESS);
+#else
+		clif->messagecolor_self(fd, COLOR_WHITE, msg_fd(fd, 48));
 #endif
 		return;
 	}
@@ -10649,9 +10651,11 @@ void clif_parse_NpcClicked(int fd,struct map_session_data *sd)
 			clif->pActionRequest_sub(sd, 0x07, bl->id, timer->gettick());
 			break;
 		case BL_NPC:
-			if( sd->ud.skill_id < RK_ENCHANTBLADE && sd->ud.skilltimer != INVALID_TIMER ) {// TODO: should only work with none 3rd job skills
-#ifdef RENEWAL
+			if (sd->ud.skill_id < RK_ENCHANTBLADE && sd->ud.skilltimer != INVALID_TIMER) { // TODO: should only work with none 3rd job skills
+#if PACKETVER >= 20110309
 				clif->msgtable(sd, MSG_NPC_WORK_IN_PROGRESS);
+#else
+				clif->messagecolor_self(fd, COLOR_WHITE, msg_fd(fd, 48));
 #endif
 				break;
 			}
@@ -11027,39 +11031,38 @@ void clif_parse_RemoveOption(int fd,struct map_session_data *sd)
 void clif_parse_ChangeCart(int fd,struct map_session_data *sd) __attribute__((nonnull (2)));
 /// Request to change cart's visual look (CZ_REQ_CHANGECART).
 /// 01af <num>.W
-void clif_parse_ChangeCart(int fd,struct map_session_data *sd)
+void clif_parse_ChangeCart(int fd, struct map_session_data *sd)
 {// TODO: State tracking?
 	int type;
 
-	if( pc->checkskill(sd, MC_CHANGECART) < 1 )
+	if (pc->checkskill(sd, MC_CHANGECART) == 0)
 		return;
 
-#ifdef RENEWAL
-	if( sd->npc_id || sd->state.workinprogress&1 ){
+	if (sd->npc_id || sd->state.workinprogress & 1) {
+#if PACKETVER >= 20110309
 		clif->msgtable(sd, MSG_NPC_WORK_IN_PROGRESS);
+#else
+		clif->messagecolor_self(fd, COLOR_WHITE, msg_fd(fd, 48));
+#endif
 		return;
 	}
-#endif
 
-	type = RFIFOW(fd,2);
+	type = RFIFOW(fd, 2);
+
+	if (
 #ifdef NEW_CARTS
-	if( (type == 9 && sd->status.base_level > 131) ||
-		(type == 8 && sd->status.base_level > 121) ||
-		(type == 7 && sd->status.base_level > 111) ||
-		(type == 6 && sd->status.base_level > 101) ||
+		(type == 9 && sd->status.base_level > 130) ||
+		(type == 8 && sd->status.base_level > 120) ||
+		(type == 7 && sd->status.base_level > 110) ||
+		(type == 6 && sd->status.base_level > 100) ||
+#endif
 		(type == 5 && sd->status.base_level >  90) ||
 		(type == 4 && sd->status.base_level >  80) ||
 		(type == 3 && sd->status.base_level >  65) ||
 		(type == 2 && sd->status.base_level >  40) ||
 		(type == 1))
-#else
-	if( (type == 5 && sd->status.base_level > 90) ||
-	    (type == 4 && sd->status.base_level > 80) ||
-	    (type == 3 && sd->status.base_level > 65) ||
-	    (type == 2 && sd->status.base_level > 40) ||
-	    (type == 1))
-#endif
-		pc->setcart(sd,type);
+
+		pc->setcart(sd, type);
 }
 
 /// Request to select cart's visual look for new cart design (CZ_SELECTCART).
@@ -11246,9 +11249,11 @@ void clif_parse_UseSkillToId(int fd, struct map_session_data *sd)
 	// Whether skill fails or not is irrelevant, the char ain't idle. [Skotlex]
 	pc->update_idle_time(sd, BCIDLE_USESKILLTOID);
 
-	if( sd->npc_id || sd->state.workinprogress&1 ){
-#ifdef RENEWAL
-		clif->msgtable(sd, MSG_NPC_WORK_IN_PROGRESS); // TODO look for the client date that has this message.
+	if (sd->npc_id || sd->state.workinprogress & 1) {
+#if PACKETVER >= 20110309
+		clif->msgtable(sd, MSG_NPC_WORK_IN_PROGRESS);
+#else
+		clif->messagecolor_self(fd, COLOR_WHITE, msg_fd(fd, 48));
 #endif
 		return;
 	}
@@ -11343,12 +11348,14 @@ void clif_parse_UseSkillToPosSub(int fd, struct map_session_data *sd, uint16 ski
 		return;
 	}
 
-#ifdef RENEWAL
-	if( sd->state.workinprogress&1 ){
-		clif->msgtable(sd, MSG_NPC_WORK_IN_PROGRESS); // TODO look for the client date that has this message.
+	if (sd->state.workinprogress & 1) {
+#if PACKETVER >= 20110309
+		clif->msgtable(sd, MSG_NPC_WORK_IN_PROGRESS);
+#else
+		clif->messagecolor_self(fd, COLOR_WHITE, msg_fd(fd, 48));
+#endif
 		return;
 	}
-#endif
 
 	//Whether skill fails or not is irrelevant, the char ain't idle. [Skotlex]
 	pc->update_idle_time(sd, BCIDLE_USESKILLTOPOS);

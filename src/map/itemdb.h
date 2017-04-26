@@ -147,6 +147,23 @@ enum item_itemid {
 	ITEMID_BLACK_THING           = 12435,
 	ITEMID_BOARDING_HALTER       = 12622,
 	ITEMID_NOBLE_NAMEPLATE       = 12705,
+	ITEMID_POISON_PARALYSIS      = 12717,
+	ITEMID_POISON_LEECH          = 12718,
+	ITEMID_POISON_OBLIVION       = 12719,
+	ITEMID_POISON_CONTAMINATION  = 12720,
+	ITEMID_POISON_NUMB           = 12721,
+	ITEMID_POISON_FEVER          = 12722,
+	ITEMID_POISON_LAUGHING       = 12723,
+	ITEMID_POISON_FATIGUE        = 12724,
+	ITEMID_NAUTHIZ               = 12725,
+	ITEMID_RAIDO                 = 12726,
+	ITEMID_BERKANA               = 12727,
+	ITEMID_ISA                   = 12728,
+	ITEMID_OTHILA                = 12729,
+	ITEMID_URUZ                  = 12730,
+	ITEMID_THURISAZ              = 12731,
+	ITEMID_WYRD                  = 12732,
+	ITEMID_HAGALAZ               = 12733,
 	ITEMID_DUN_TELE_SCROLL1      = 14527,
 	ITEMID_BATTLE_MANUAL25       = 14532,
 	ITEMID_BATTLE_MANUAL100      = 14533,
@@ -161,6 +178,7 @@ enum item_itemid {
 	ITEMID_PILEBUNCKER_S         = 16030,
 	ITEMID_PILEBUNCKER_P         = 16031,
 	ITEMID_PILEBUNCKER_T         = 16032,
+	ITEMID_LUX_ANIMA             = 22540,
 };
 
 enum cards_item_list {
@@ -259,37 +277,6 @@ enum cash_food_item_list {
 	ITEMID_DEX_DISH10_, // 12205
 	ITEMID_LUK_DISH10_, // 12206
 	ITEMID_VIT_DISH10_, // 12207
-};
-
-/**
- * GC Poison
- */
-enum poison_item_list {
-	ITEMID_POISON_PARALYSIS       = 12717,
-	ITEMID_POISON_LEECH,         // 12718
-	ITEMID_POISON_OBLIVION,      // 12719
-	ITEMID_POISON_CONTAMINATION, // 12720
-	ITEMID_POISON_NUMB,          // 12721
-	ITEMID_POISON_FEVER,         // 12722
-	ITEMID_POISON_LAUGHING,      // 12723
-	ITEMID_POISON_FATIGUE,       // 12724
-};
-
-
-/**
- * Rune Knight
- **/
-enum rune_item_list {
-	ITEMID_NAUTHIZ    = 12725,
-	ITEMID_RAIDO,    // 12726
-	ITEMID_BERKANA,  // 12727
-	ITEMID_ISA,      // 12728
-	ITEMID_OTHILA,   // 12729
-	ITEMID_URUZ,     // 12730
-	ITEMID_THURISAZ, // 12731
-	ITEMID_WYRD,     // 12732
-	ITEMID_HAGALAZ,  // 12733
-	ITEMID_LUX_ANIMA  = 22540,
 };
 
 /**
@@ -566,7 +553,6 @@ struct item_data {
 #define itemdb_canrefine(n)   (!itemdb->search(n)->flag.no_refine)
 #define itemdb_allowoption(n) (!itemdb->search(n)->flag.no_options)
 
-#define itemdb_is_rune(n)        (((n) >= ITEMID_NAUTHIZ && (n) <= ITEMID_HAGALAZ) || (n) == ITEMID_LUX_ANIMA)
 #define itemdb_is_element(n)     ((n) >= ITEMID_SCARLET_PTS && (n) <= ITEMID_LIME_GREEN_PTS)
 #define itemdb_is_spellbook(n)   ((n) >= ITEMID_MAGIC_BOOK_FB && (n) <= ITEMID_MAGIC_BOOK_DL)
 #define itemdb_is_poison(n)      ((n) >= ITEMID_POISON_PARALYSIS && (n) <= ITEMID_POISON_FATIGUE)

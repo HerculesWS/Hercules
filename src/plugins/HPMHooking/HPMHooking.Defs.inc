@@ -5798,6 +5798,8 @@ typedef struct script_data* (*HPMHOOK_pre_script_get_val) (struct script_state *
 typedef struct script_data* (*HPMHOOK_post_script_get_val) (struct script_data* retVal___, struct script_state *st, struct script_data *data);
 typedef char* (*HPMHOOK_pre_script_get_val_ref_str) (struct script_state **st, struct reg_db **n, struct script_data **data);
 typedef char* (*HPMHOOK_post_script_get_val_ref_str) (char* retVal___, struct script_state *st, struct reg_db *n, struct script_data *data);
+typedef char* (*HPMHOOK_pre_script_get_val_pc_ref_str) (struct script_state **st, struct reg_db **n, struct script_data **data);
+typedef char* (*HPMHOOK_post_script_get_val_pc_ref_str) (char* retVal___, struct script_state *st, struct reg_db *n, struct script_data *data);
 typedef char* (*HPMHOOK_pre_script_get_val_scope_str) (struct script_state **st, struct reg_db **n, struct script_data **data);
 typedef char* (*HPMHOOK_post_script_get_val_scope_str) (char* retVal___, struct script_state *st, struct reg_db *n, struct script_data *data);
 typedef char* (*HPMHOOK_pre_script_get_val_npc_str) (struct script_state **st, struct reg_db **n, struct script_data **data);
@@ -5806,6 +5808,8 @@ typedef char* (*HPMHOOK_pre_script_get_val_instance_str) (struct script_state **
 typedef char* (*HPMHOOK_post_script_get_val_instance_str) (char* retVal___, struct script_state *st, const char *name, struct script_data *data);
 typedef int (*HPMHOOK_pre_script_get_val_ref_num) (struct script_state **st, struct reg_db **n, struct script_data **data);
 typedef int (*HPMHOOK_post_script_get_val_ref_num) (int retVal___, struct script_state *st, struct reg_db *n, struct script_data *data);
+typedef int (*HPMHOOK_pre_script_get_val_pc_ref_num) (struct script_state **st, struct reg_db **n, struct script_data **data);
+typedef int (*HPMHOOK_post_script_get_val_pc_ref_num) (int retVal___, struct script_state *st, struct reg_db *n, struct script_data *data);
 typedef int (*HPMHOOK_pre_script_get_val_scope_num) (struct script_state **st, struct reg_db **n, struct script_data **data);
 typedef int (*HPMHOOK_post_script_get_val_scope_num) (int retVal___, struct script_state *st, struct reg_db *n, struct script_data *data);
 typedef int (*HPMHOOK_pre_script_get_val_npc_num) (struct script_state **st, struct reg_db **n, struct script_data **data);
@@ -5960,6 +5964,8 @@ typedef int (*HPMHOOK_pre_script_set_reg) (struct script_state **st, struct map_
 typedef int (*HPMHOOK_post_script_set_reg) (int retVal___, struct script_state *st, struct map_session_data *sd, int64 num, const char *name, const void *value, struct reg_db *ref);
 typedef void (*HPMHOOK_pre_script_set_reg_ref_str) (struct script_state **st, struct reg_db **n, int64 *num, const char **name, const char **str);
 typedef void (*HPMHOOK_post_script_set_reg_ref_str) (struct script_state *st, struct reg_db *n, int64 num, const char *name, const char *str);
+typedef void (*HPMHOOK_pre_script_set_reg_pc_ref_str) (struct script_state **st, struct reg_db **n, int64 *num, const char **name, const char **str);
+typedef void (*HPMHOOK_post_script_set_reg_pc_ref_str) (struct script_state *st, struct reg_db *n, int64 num, const char *name, const char *str);
 typedef void (*HPMHOOK_pre_script_set_reg_scope_str) (struct script_state **st, struct reg_db **n, int64 *num, const char **name, const char **str);
 typedef void (*HPMHOOK_post_script_set_reg_scope_str) (struct script_state *st, struct reg_db *n, int64 num, const char *name, const char *str);
 typedef void (*HPMHOOK_pre_script_set_reg_npc_str) (struct script_state **st, struct reg_db **n, int64 *num, const char **name, const char **str);
@@ -5968,6 +5974,8 @@ typedef void (*HPMHOOK_pre_script_set_reg_instance_str) (struct script_state **s
 typedef void (*HPMHOOK_post_script_set_reg_instance_str) (struct script_state *st, int64 num, const char *name, const char *str);
 typedef void (*HPMHOOK_pre_script_set_reg_ref_num) (struct script_state **st, struct reg_db **n, int64 *num, const char **name, int *val);
 typedef void (*HPMHOOK_post_script_set_reg_ref_num) (struct script_state *st, struct reg_db *n, int64 num, const char *name, int val);
+typedef void (*HPMHOOK_pre_script_set_reg_pc_ref_num) (struct script_state **st, struct reg_db **n, int64 *num, const char **name, int *val);
+typedef void (*HPMHOOK_post_script_set_reg_pc_ref_num) (struct script_state *st, struct reg_db *n, int64 num, const char *name, int val);
 typedef void (*HPMHOOK_pre_script_set_reg_scope_num) (struct script_state **st, struct reg_db **n, int64 *num, const char **name, int *val);
 typedef void (*HPMHOOK_post_script_set_reg_scope_num) (struct script_state *st, struct reg_db *n, int64 num, const char *name, int val);
 typedef void (*HPMHOOK_pre_script_set_reg_npc_num) (struct script_state **st, struct reg_db **n, int64 *num, const char **name, int *val);
