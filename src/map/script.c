@@ -29,6 +29,7 @@
 #include "map/channel.h"
 #include "map/chat.h"
 #include "map/chrif.h"
+#include "map/clan.h"
 #include "map/clif.h"
 #include "map/elemental.h"
 #include "map/guild.h"
@@ -5581,6 +5582,8 @@ int script_reload(void)
 
 	itemdb->name_constants();
 
+	clan->constants();
+
 	sysinfo->vcsrevision_reload();
 
 	return 0;
@@ -8592,6 +8595,7 @@ BUILDIN(readparam) {
  * 2 : guild_id
  * 3 : account_id
  * 4 : bg_id
+ * 5 : clan_id
  *------------------------------------------*/
 BUILDIN(getcharid) {
 	int num;
@@ -8614,6 +8618,7 @@ BUILDIN(getcharid) {
 		case 2: script_pushint(st,sd->status.guild_id); break;
 		case 3: script_pushint(st,sd->status.account_id); break;
 		case 4: script_pushint(st,sd->bg_id); break;
+		case 5: script_pushint(st, sd->status.clan_id); break;
 		default:
 			ShowError("buildin_getcharid: invalid parameter (%d).\n", num);
 			script_pushint(st,0);
@@ -8865,10 +8870,12 @@ BUILDIN(getguildmember)
  * 1 : party_name or ""
  * 2 : guild_name or ""
  * 3 : map_name
+ * 4 : clan_name or ""
  * - : ""
  *------------------------------------------*/
 BUILDIN(strcharinfo)
 {
+  struct clan *c;
 	struct guild* g;
 	struct party_data* p;
 	struct map_session_data *sd;
@@ -8907,6 +8914,13 @@ BUILDIN(strcharinfo)
 		break;
 	case 3:
 		script_pushconststr(st, map->list[sd->bl.m].name);
+		break;
+	case 4:
+		if ((c = sd->clan) != NULL) {
+			script_pushstrcopy(st, c->name);
+		} else {
+			script_pushconststr(st, "");
+		}
 		break;
 	default:
 		ShowWarning("script:strcharinfo: unknown parameter.\n");
@@ -22946,6 +22960,70 @@ BUILDIN(navigateto)
 }
 
 /**
+ * Clan System: Add a player to a clan
+ */
+BUILDIN(clan_join)
+{
+	struct map_session_data *sd = NULL;
+	int clan_id = script_getnum(st, 2);
+
+	if (script_hasdata(st, 3))
+		sd = script->charid2sd(st, script_getnum(st, 3));
+	else
+		sd = map->id2sd(st->rid);
+
+	if (sd == NULL)
+		return false;
+
+	if (clan->join(sd, clan_id))
+		script_pushint(st, true);
+	else
+		script_pushint(st, false);
+
+	return true;
+}
+
+/**
+ * Clan System: Remove a player from clan
+ */
+BUILDIN(clan_leave)
+{
+	struct map_session_data *sd = NULL;
+
+	if (script_hasdata(st, 2))
+		sd = script->charid2sd(st, script_getnum(st, 2));
+	else
+		sd = map->id2sd(st->rid);
+
+	if (sd == NULL)
+		return false;
+
+	if (clan->leave(sd, false))
+		script_pushint(st, true);
+	else
+		script_pushint(st, false);
+
+	return true;
+}
+
+/**
+ * Clan System: Show clan emblem next to npc name
+ */
+BUILDIN(clan_master)
+{
+	struct block_list *bl = map->id2bl(st->oid);
+	int clan_id = script_getnum(st, 2);
+	
+	if (bl == NULL)
+		return false;
+
+	sc_start2(NULL, bl, SC_CLAN_INFO, 10000, 0, clan_id, INFINITE_DURATION);
+	clif->sc_load(bl, bl->id, AREA, status->dbs->IconChangeTable[SC_CLAN_INFO], 0, clan_id, 0);
+
+	return true;
+}
+
+/**
  * Adds a built-in script function.
  *
  * @param buildin Script function data
@@ -23632,6 +23710,11 @@ void script_parse_builtin(void) {
 		/* Navigation */
 		BUILDIN_DEF(navigateto, "s??????"),
 
+		/* Clan System */
+		BUILDIN_DEF(clan_join,"i?"),
+		BUILDIN_DEF(clan_leave,"?"),
+		BUILDIN_DEF(clan_master,"i"),
+		
 		BUILDIN_DEF(channelmes, "ss"),
 		BUILDIN_DEF(showscript, "s?"),
 		BUILDIN_DEF(mergeitem,""),

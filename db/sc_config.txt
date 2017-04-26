@@ -11,7 +11,8 @@
 //         32 - SC considered as debuff and be removed by Gospel and etc.
 //         64 - SC cannot be reset when MADO Gear is taken off.
 //        128 - SC cannot be reset by 'sc_end SC_ALL' and status change clear.
-//        256 - SC can be visible for all players
+//        256 - SC cannot be reset by Banishing Buster
+//        512 - SC can be visible for all players
 // Example:
 // SC_ENDURE, 21 //SC_ENDURE: cannot be removed by death and dispell and cosidered as buff. (16 + 4 + 1 = 21)
 
@@ -498,3 +499,4 @@ SC_BITESCAR, 4
 
 // Cant Clear
 SC_ALL_RIDING, 397
+SC_CLAN_INFO, 973

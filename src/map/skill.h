@@ -1769,6 +1769,7 @@ struct skill_unit_group {
 	int party_id;
 	int guild_id;
 	int bg_id;
+	int clan_id;
 	int map;
 	int target_flag; //Holds BCT_* flag for battle_check_target
 	int bl_flag;     //Holds BL_* flag for map_foreachin* functions
