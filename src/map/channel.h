@@ -23,6 +23,8 @@
 #include "common/hercules.h"
 #include "common/mmo.h"
 
+#include "map/map.h" // EVENT_NAME_LENGTH, MAX_EVENTQUEUE
+
 /**
  * Declarations
  **/
@@ -85,6 +87,7 @@ struct channel_data {
 	unsigned char color;
 	struct DBMap *users;
 	struct DBMap *banned;
+	char handlers[MAX_EVENTQUEUE][EVENT_NAME_LENGTH];
 	unsigned int options;
 	unsigned int owner;
 	enum channel_types type;
