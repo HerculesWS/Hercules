@@ -2384,6 +2384,7 @@ void script_load_parameters(void)
 		{"SkillPoint", SP_SKILLPOINT},
 		{"Class", SP_CLASS},
 		{"Zeny", SP_ZENY},
+		{"BankVault", SP_BANKVAULT},
 		{"Sex", SP_SEX},
 		{"NextBaseExp", SP_NEXTBASEEXP},
 		{"NextJobExp", SP_NEXTJOBEXP},
@@ -23679,6 +23680,7 @@ void script_hardcoded_constants(void)
 	script->set_constant("MAX_CART",MAX_INVENTORY,false, false);
 	script->set_constant("MAX_INVENTORY",MAX_INVENTORY,false, false);
 	script->set_constant("MAX_ZENY",MAX_ZENY,false, false);
+	script->set_constant("MAX_BANK_ZENY", MAX_BANK_ZENY, false, false);
 	script->set_constant("MAX_BG_MEMBERS",MAX_BG_MEMBERS,false, false);
 	script->set_constant("MAX_CHAT_USERS",MAX_CHAT_USERS,false, false);
 	script->set_constant("MAX_REFINE",MAX_REFINE,false, false);
