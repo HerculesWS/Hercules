@@ -22925,6 +22925,55 @@ BUILDIN(channelmes)
 	return true;
 }
 
+BUILDIN(addchannelhandler)
+{
+	int i;
+	const char *channelname = script_getstr(st, 2);
+	const char *eventname = script_getstr(st, 3);
+	struct channel_data *chan = channel->search(channelname, NULL);
+
+	if (!chan) {
+		script_pushint(st, 0);
+		return true;
+	}
+
+	ARR_FIND(0, MAX_EVENTQUEUE, i, chan->handlers[i][0] == '\0');
+
+	if (i < MAX_EVENTQUEUE) {
+		safestrncpy(chan->handlers[i], eventname, EVENT_NAME_LENGTH); //Event enqueued.
+		script_pushint(st, 1);
+		return true;
+	}
+
+	ShowWarning("script:addchannelhandler: too many handlers for channel %s.\n", channelname);
+	script_pushint(st, 0);
+	return true;
+}
+
+BUILDIN(removechannelhandler)
+{
+	int i;
+	const char *channelname = script_getstr(st, 2);
+	const char *eventname = script_getstr(st, 3);
+	struct channel_data *chan = channel->search(channelname, NULL);
+
+	if (!chan) {
+		script_pushint(st, 0);
+		return true;
+	}
+
+	for (i = 0; i < MAX_EVENTQUEUE; i++) {
+		if (strcmp(chan->handlers[i], eventname) == 0) {
+			chan->handlers[i][0] = '\0';
+			script_pushint(st, 1);
+			return true;
+		}
+	}
+
+	script_pushint(st, 0);
+	return true;
+}
+
 /** By Cydh
 Display script message
 showscript "<message>"{,<GID>};
@@ -23721,6 +23770,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(navigateto, "s??????"),
 
 		BUILDIN_DEF(channelmes, "ss"),
+		BUILDIN_DEF(addchannelhandler, "ss"),
+		BUILDIN_DEF(removechannelhandler, "ss"),
 		BUILDIN_DEF(showscript, "s?"),
 		BUILDIN_DEF(mergeitem,""),
 		BUILDIN_DEF(_,"s"),
