@@ -110,6 +110,8 @@ typedef enum send_target {
 	BG_AREA_WOS,
 
 	BG_QUEUE,
+	
+	CLAN,               // Clan System
 } send_target;
 
 typedef enum broadcast_flags {
@@ -1362,8 +1364,14 @@ struct clif_interface {
 	/* Cart Deco */
 	void (*selectcart) (struct map_session_data *sd);
 	void (*pSelectCart) (int fd, struct map_session_data *sd);
-
+	/* */
 	const char *(*get_bl_name) (const struct block_list *bl);
+	/* Clan System */
+	void (*clan_basicinfo) (struct map_session_data *sd);
+	void (*clan_onlinecount) (struct clan *c);
+	void (*clan_leave) (struct map_session_data *sd);
+	void (*clan_message) (struct clan *c, const char *mes, int len);
+	void (*pClanMessage) (int fd, struct map_session_data* sd);
 };
 
 #ifdef HERCULES_CORE

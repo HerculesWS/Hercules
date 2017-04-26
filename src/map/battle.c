@@ -25,6 +25,7 @@
 
 #include "map/battleground.h"
 #include "map/chrif.h"
+#include "map/clan.h"
 #include "map/clif.h"
 #include "map/elemental.h"
 #include "map/guild.h"
@@ -6804,26 +6805,33 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 		return (flag&state)?1:-1;
 	}
 
-	if( map_flag_vs(m) ) {
+	if (map_flag_vs(m)) {
 		//Check rivalry settings.
-		int sbg_id = 0, tbg_id = 0;
-		if( map->list[m].flag.battleground ) {
+		int sbg_id = 0, tbg_id = 0, s_clan = 0, t_clan = 0;
+		if (map->list[m].flag.battleground) {
 			sbg_id = bg->team_get_id(s_bl);
 			tbg_id = bg->team_get_id(t_bl);
 		}
-		if( flag&(BCT_PARTY|BCT_ENEMY) ) {
+		if (map->list[m].flag.cvc) {
+			s_clan = clan->get_id(s_bl);
+			t_clan = clan->get_id(t_bl);
+		}
+		if (flag&(BCT_PARTY|BCT_ENEMY)) {
 			int s_party = status->get_party_id(s_bl);
 			int s_guild = status->get_guild_id(s_bl);
 			int t_guild = status->get_guild_id(t_bl);
 
 			if (s_party != 0 && s_party == status->get_party_id(t_bl)) {
 				if (map_flag_gvg(m) && map->list[m].flag.gvg_noparty) {
-					if (s_guild != 0 && t_guild != 0 && (s_guild == t_guild || guild->isallied(s_guild, t_guild)))
+					if (s_guild != 0 && t_guild != 0 && (s_guild == t_guild || guild->isallied(s_guild, t_guild))) {
 						state |= BCT_PARTY;
-					else
+					} else {
 						state |= flag&BCT_ENEMY ? BCT_ENEMY : BCT_PARTY;
+					}
 				} else if (!(map->list[m].flag.pvp && map->list[m].flag.pvp_noparty)
 					&& (!map->list[m].flag.battleground || sbg_id == tbg_id)) {
+					state |= BCT_PARTY;
+				} else if (!map->list[m].flag.cvc || s_clan == t_clan) { 
 					state |= BCT_PARTY;
 				} else {
 					state |= BCT_ENEMY;
@@ -6832,18 +6840,22 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 				state |= BCT_ENEMY;
 			}
 		}
-		if( flag&(BCT_GUILD|BCT_ENEMY) ) {
+		if (flag&(BCT_GUILD|BCT_ENEMY)) {
 			int s_guild = status->get_guild_id(s_bl);
 			int t_guild = status->get_guild_id(t_bl);
-			if( !(map->list[m].flag.pvp && map->list[m].flag.pvp_noguild)
+			if (!(map->list[m].flag.pvp && map->list[m].flag.pvp_noguild)
 			 && s_guild && t_guild
 			 && (s_guild == t_guild || (!(flag&BCT_SAMEGUILD) && guild->isallied(s_guild, t_guild)))
-			 && (!map->list[m].flag.battleground || sbg_id == tbg_id) )
+			 && (!map->list[m].flag.battleground || sbg_id == tbg_id)
+			 && (!map->list[m].flag.cvc || s_clan == t_clan)
+			) {
 				state |= BCT_GUILD;
-			else
+			} else {
 				state |= BCT_ENEMY;
+			}
 		}
-		if( state&BCT_ENEMY && map->list[m].flag.battleground && sbg_id && sbg_id == tbg_id )
+
+		if (state&BCT_ENEMY && (map->list[m].flag.battleground && sbg_id && sbg_id == tbg_id || map->list[m].flag.cvc && s_clan && s_clan == t_clan))
 			state &= ~BCT_ENEMY;
 
 		if (state&BCT_ENEMY && battle_config.pk_mode && !map_flag_gvg(m) && s_bl->type == BL_PC && t_bl->type == BL_PC) {

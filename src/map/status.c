@@ -25,6 +25,7 @@
 
 #include "map/battle.h"
 #include "map/chrif.h"
+#include "map/clan.h"
 #include "map/clif.h"
 #include "map/elemental.h"
 #include "map/guild.h"
@@ -1018,6 +1019,9 @@ void initChangeTables(void)
 	// Summoner
 	status->dbs->IconChangeTable[SC_SPRITEMABLE] = SI_SPRITEMABLE;
 
+	// Clan System
+	status->dbs->IconChangeTable[SC_CLAN_INFO] = SI_CLAN_INFO;
+
 	// Other SC which are not necessarily associated to skills.
 	status->dbs->ChangeFlagTable[SC_ATTHASTE_POTION1] |= SCB_ASPD;
 	status->dbs->ChangeFlagTable[SC_ATTHASTE_POTION2] |= SCB_ASPD;
@@ -1177,6 +1181,9 @@ void initChangeTables(void)
 	status->dbs->ChangeFlagTable[SC_MVPCARD_ORCHERO] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_MVPCARD_ORCLORD] |= SCB_ALL;
 
+	// Clan System
+	status->dbs->ChangeFlagTable[SC_CLAN_INFO] |= SCB_NONE;
+
 	// Costumes
 	status->dbs->ChangeFlagTable[SC_MOONSTAR] |= SCB_NONE;
 	status->dbs->ChangeFlagTable[SC_SUPER_STAR] |= SCB_NONE;
@@ -1194,7 +1201,9 @@ void initChangeTables(void)
 	status->dbs->ChangeFlagTable[SC_BLOSSOM_FLUTTERING] |= SCB_NONE;
 
 	if( !battle_config.display_hallucination ) //Disable Hallucination.
-		status->dbs->IconChangeTable[SC_ILLUSION] = SI_BLANK;
+	  status->dbs->IconChangeTable[SC_ILLUSION] = SI_BLANK;
+
+	status->dbs->RelevantBLTypes[SC_CLAN_INFO] |= BL_NPC;
 #undef add_sc
 #undef set_sc_with_vfx
 }
@@ -2679,6 +2688,11 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 
 	status->current_equip_option_index = -1;
 	status->current_equip_item_index = -1;
+
+	// Clan Buffs
+	if (sd->status.clan_id > 0) {
+	  clan->buff_start(sd, sd->clan);
+	}
 
 	status->calc_pc_additional(sd, opt);
 
@@ -9911,145 +9925,153 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 
 	/* values that must be set regardless of SCFLAG_LOADED e.g. val_flag */
 	switch(type) {
-		case SC_FIGHTINGSPIRIT:
-			val_flag |= 1|2;
-			break;
-		case SC_VENOMIMPRESS:
-			val_flag |= 1|2;
-			break;
-		case SC_POISONINGWEAPON:
-			val_flag |= 1|2|4;
-			break;
-		case SC_WEAPONBLOCKING:
-			val_flag |= 1|2;
-			break;
-		case SC_ROLLINGCUTTER:
-			val_flag |= 1;
-			break;
-		case SC_CLOAKINGEXCEED:
-			val_flag |= 1|2|4;
-			break;
-		case SC_HALLUCINATIONWALK:
-			val_flag |= 1|2|4;
-			break;
-		case SC_SUMMON1:
-		case SC_SUMMON2:
-		case SC_SUMMON3:
-		case SC_SUMMON4:
-		case SC_SUMMON5:
-			val_flag |= 1;
-			break;
-		case SC__SHADOWFORM:
-			val_flag |= 1|2|4;
-			break;
-		case SC__INVISIBILITY:
-			val_flag |= 1|2;
-			break;
-		case SC__ENERVATION:
-			val_flag |= 1|2;
-			break;
-		case SC__GROOMY:
-			val_flag |= 1|2|4;
-			break;
-		case SC__LAZINESS:
-			val_flag |= 1|2|4;
-			break;
-		case SC__UNLUCKY:
-			val_flag |= 1|2|4;
-			break;
-		case SC__WEAKNESS:
-			val_flag |= 1|2;
-			break;
-		case SC_PROPERTYWALK:
-			val_flag |= 1|2;
-			break;
-		case SC_FORCEOFVANGUARD:
-			val_flag |= 1|2|4;
-			break;
-		case SC_PRESTIGE:
-			val_flag |= 1|2;
-			break;
-		case SC_BANDING:
-			val_flag |= 1;
-			break;
-		case SC_SHIELDSPELL_DEF:
-		case SC_SHIELDSPELL_MDEF:
-		case SC_SHIELDSPELL_REF:
-			val_flag |= 1|2;
-			break;
-		case SC_SPELLFIST:
-		case SC_CURSEDCIRCLE_ATKER:
-			val_flag |= 1|2|4;
-			break;
-		case SC_CRESCENTELBOW:
-			val_flag |= 1|2;
-			break;
-		case SC_LIGHTNINGWALK:
-			val_flag |= 1;
-			break;
-		case SC_PYROTECHNIC_OPTION:
-			val_flag |= 1|2|4;
-			break;
-		case SC_HEATER_OPTION:
-			val_flag |= 1|2|4;
-			break;
-		case SC_AQUAPLAY_OPTION:
-			val_flag |= 1|2|4;
-			break;
-		case SC_COOLER_OPTION:
-			val_flag |= 1|2|4;
-			break;
-		case SC_CHILLY_AIR_OPTION:
-			val_flag |= 1|2;
-			break;
-		case SC_GUST_OPTION:
-			val_flag |= 1|2;
-			break;
-		case SC_BLAST_OPTION:
-			val_flag |= 1|2|4;
-			break;
-		case SC_WILD_STORM_OPTION:
-			val_flag |= 1|2;
-			break;
-		case SC_PETROLOGY_OPTION:
-			val_flag |= 1|2|4;
-			break;
-		case SC_CURSED_SOIL_OPTION:
-			val_flag |= 1|2|4;
-			break;
-		case SC_UPHEAVAL_OPTION:
-			val_flag |= 1|2;
-			break;
-		case SC_CIRCLE_OF_FIRE_OPTION:
-			val_flag |= 1|2;
-			break;
-		case SC_WATER_BARRIER:
-			val_flag |= 1|2|4;
-			break;
-		case SC_KYOUGAKU:
-			val_flag |= 1;
-			break;
-		case SC_CASH_PLUSEXP:
-		case SC_CASH_PLUSONLYJOBEXP:
-		case SC_MONSTER_TRANSFORM:
-		case SC_CASH_RECEIVEITEM:
-		case SC_OVERLAPEXPUP:
-			val_flag |= 1;
-			break;
+	case SC_CLAN_INFO:
+		val_flag |= 1|2;
+		break;
+	case SC_FIGHTINGSPIRIT:
+		val_flag |= 1|2;
+		break;
+	case SC_VENOMIMPRESS:
+		val_flag |= 1|2;
+		break;
+	case SC_POISONINGWEAPON:
+		val_flag |= 1|2|4;
+		break;
+	case SC_WEAPONBLOCKING:
+		val_flag |= 1|2;
+		break;
+	case SC_ROLLINGCUTTER:
+		val_flag |= 1;
+		break;
+	case SC_CLOAKINGEXCEED:
+		val_flag |= 1|2|4;
+		break;
+	case SC_HALLUCINATIONWALK:
+		val_flag |= 1|2|4;
+		break;
+	case SC_SUMMON1:
+	case SC_SUMMON2:
+	case SC_SUMMON3:
+	case SC_SUMMON4:
+	case SC_SUMMON5:
+		val_flag |= 1;
+		break;
+	case SC__SHADOWFORM:
+		val_flag |= 1|2|4;
+		break;
+	case SC__INVISIBILITY:
+		val_flag |= 1|2;
+		break;
+	case SC__ENERVATION:
+		val_flag |= 1|2;
+		break;
+	case SC__GROOMY:
+		val_flag |= 1|2|4;
+		break;
+	case SC__LAZINESS:
+		val_flag |= 1|2|4;
+		break;
+	case SC__UNLUCKY:
+		val_flag |= 1|2|4;
+		break;
+	case SC__WEAKNESS:
+		val_flag |= 1|2;
+		break;
+	case SC_PROPERTYWALK:
+		val_flag |= 1|2;
+		break;
+	case SC_FORCEOFVANGUARD:
+		val_flag |= 1|2|4;
+		break;
+	case SC_PRESTIGE:
+		val_flag |= 1|2;
+		break;
+	case SC_BANDING:
+		val_flag |= 1;
+		break;
+	case SC_SHIELDSPELL_DEF:
+	case SC_SHIELDSPELL_MDEF:
+	case SC_SHIELDSPELL_REF:
+		val_flag |= 1|2;
+		break;
+	case SC_SPELLFIST:
+	case SC_CURSEDCIRCLE_ATKER:
+		val_flag |= 1|2|4;
+		break;
+	case SC_CRESCENTELBOW:
+		val_flag |= 1|2;
+		break;
+	case SC_LIGHTNINGWALK:
+		val_flag |= 1;
+		break;
+	case SC_PYROTECHNIC_OPTION:
+		val_flag |= 1|2|4;
+		break;
+	case SC_HEATER_OPTION:
+		val_flag |= 1|2|4;
+		break;
+	case SC_AQUAPLAY_OPTION:
+		val_flag |= 1|2|4;
+		break;
+	case SC_COOLER_OPTION:
+		val_flag |= 1|2|4;
+		break;
+	case SC_CHILLY_AIR_OPTION:
+		val_flag |= 1|2;
+		break;
+	case SC_GUST_OPTION:
+		val_flag |= 1|2;
+		break;
+	case SC_BLAST_OPTION:
+		val_flag |= 1|2|4;
+		break;
+	case SC_WILD_STORM_OPTION:
+		val_flag |= 1|2;
+		break;
+	case SC_PETROLOGY_OPTION:
+		val_flag |= 1|2|4;
+		break;
+	case SC_CURSED_SOIL_OPTION:
+		val_flag |= 1|2|4;
+		break;
+	case SC_UPHEAVAL_OPTION:
+		val_flag |= 1|2;
+		break;
+	case SC_CIRCLE_OF_FIRE_OPTION:
+		val_flag |= 1|2;
+		break;
+	case SC_WATER_BARRIER:
+		val_flag |= 1|2|4;
+		break;
+	case SC_KYOUGAKU:
+		val_flag |= 1;
+		break;
+	case SC_CASH_PLUSEXP:
+	case SC_CASH_PLUSONLYJOBEXP:
+	case SC_MONSTER_TRANSFORM:
+	case SC_CASH_RECEIVEITEM:
+	case SC_OVERLAPEXPUP:
+		val_flag |= 1;
+		break;
 	}
 
 	/* [Ind/Hercules] */
-	if( sd && status->dbs->DisplayType[type] ) {
+	if (sd && status->dbs->DisplayType[type]) {
 		int dval1 = 0, dval2 = 0, dval3 = 0;
-		switch( type ) {
-			case SC_ALL_RIDING:
-				dval1 = 1;
-				break;
-			default: /* all others: just copy val1 */
-				dval1 = val1;
-				break;
+		switch (type) {
+		case SC_ALL_RIDING:
+			dval1 = 1;
+			break;
+		case SC_CLAN_INFO:
+			dval1 = val1;
+			dval2 = val2;
+			dval3 = val3;
+			break;
+		default: /* all others: just copy val1 */
+			dval1 = val1;
+			break;
 		}
-		status->display_add(sd,type,dval1,dval2,dval3);
+		status->display_add(sd, type, dval1, dval2, dval3);
 	}
 
 	//Those that make you stop attacking/walking....

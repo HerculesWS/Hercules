@@ -2942,6 +2942,11 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x08A4,36,clif->pStoragePassword,0);
 	packet(0x0363,8,clif->pDull); // CZ_JOIN_BATTLE_FIELD
 	packet(0x0436,4,clif->pDull); // CZ_GANGSI_RANK
+	packet(0x0988, 6);
+	packet(0x0989, 2);
+	packet(0x098a, -1);
+	packet(0x098d, -1, clif->pClanMessage, 2, 4);
+	packet(0x098e, -1);
 #endif
 
 // 2013-12-23bRagexe

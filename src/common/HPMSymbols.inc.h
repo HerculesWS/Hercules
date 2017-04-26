@@ -53,6 +53,9 @@ struct chat_interface *chat;
 #ifdef MAP_CHRIF_H /* chrif */
 struct chrif_interface *chrif;
 #endif // MAP_CHRIF_H
+#ifdef MAP_CLAN_H /* clan */
+struct clan_interface *clan;
+#endif // MAP_CLAN_H
 #ifdef MAP_CLIF_H /* clif */
 struct clif_interface *clif;
 #endif // MAP_CLIF_H
@@ -309,6 +312,9 @@ HPExport const char *HPM_shared_symbols(int server_type)
 	if ((server_type&(SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("chrif", chrif))
 		return "chrif";
 #endif // MAP_CHRIF_H
+#ifdef MAP_CLAN_H /* clan */
+if ((server_type&(SERVER_TYPE_MAP)) && !HPM_SYMBOL("clan", clan)) return "clan";
+#endif // MAP_CLAN_H
 #ifdef MAP_CLIF_H /* clif */
 	if ((server_type&(SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("clif", clif))
 		return "clif";

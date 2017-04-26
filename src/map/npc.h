@@ -86,6 +86,7 @@ struct npc_data {
 	unsigned size : 2;
 
 	struct status_data status;
+	struct status_change sc;
 	unsigned short level;
 	unsigned short stat_point;
 
