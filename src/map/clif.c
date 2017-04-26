@@ -4174,7 +4174,7 @@ void clif_storageitemadded(struct map_session_data* sd, struct item* i, int inde
 	WFIFOB(fd,12+offset) = i->refine; //refine
 	clif->addcards(WFIFOP(fd,13+offset), i);
 #if PACKETVER >= 20150226
-	clif->add_item_options(WFIFOP(fd,21+offset), i);
+	clif->add_item_options(WFIFOP(fd, 21 + offset), i);
 #endif
 	WFIFOSET(fd,packet_len(storageaddType));
 }
@@ -6248,7 +6248,7 @@ void clif_cart_additem(struct map_session_data *sd,int n,int amount,int fail)
 	WBUFB(buf,12+offset)=sd->status.cart[n].refine;
 	clif->addcards(WBUFP(buf,13+offset), &sd->status.cart[n]);
 #if PACKETVER >= 20150226
-	clif->add_item_options(WBUFP(buf,21+offset), &sd->status.cart[n]);
+	clif->add_item_options(WBUFP(buf, 21 + offset), &sd->status.cart[n]);
 #endif
 	WFIFOSET(fd,packet_len(cartaddType));
 }
@@ -6376,7 +6376,7 @@ void clif_vendinglist(struct map_session_data* sd, unsigned int id, struct s_ven
 		WFIFOB(fd,offset+13+i*item_length) = vsd->status.cart[index].refine;
 		clif->addcards(WFIFOP(fd,offset+14+i*item_length), &vsd->status.cart[index]);
 #if PACKETVER >= 20150226
-		clif->add_item_options(WFIFOP(fd,offset+22+i*item_length), &vsd->status.cart[index]);
+		clif->add_item_options(WFIFOP(fd, offset + 22 + i * item_length), &vsd->status.cart[index]);
 #endif
 	}
 	WFIFOSET(fd,WFIFOW(fd,2));
@@ -6442,7 +6442,7 @@ void clif_openvending(struct map_session_data* sd, int id, struct s_vending* ven
 		WFIFOB(fd,21+i*item_length) = sd->status.cart[index].refine;
 		clif->addcards(WFIFOP(fd,22+i*item_length), &sd->status.cart[index]);
 #if PACKETVER >= 20150226
-		clif->add_item_options(WFIFOP(fd,30+22+i*item_length), &sd->status.cart[index]);
+		clif->add_item_options(WFIFOP(fd, 30 + i * item_length), &sd->status.cart[index]);
 #endif
 	}
 	WFIFOSET(fd,WFIFOW(fd,2));
