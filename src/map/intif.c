@@ -439,6 +439,131 @@ int intif_request_registry(struct map_session_data *sd, int flag)
 	return 0;
 }
 
+//=================================================================
+// Account Storage
+//-----------------------------------------------------------------
+
+/**
+ * Request the inter-server for a character's storage data.
+ * @packet 0x3010  [out] <account_id>.L
+ * @param  sd      [in]  pointer to session data.
+ */
+void intif_request_account_storage(const struct map_session_data *sd)
+{
+	nullpo_retv(sd);
+
+	/* Check for character server availability */
+	if (intif->CheckForCharServer())
+		return;
+
+	WFIFOHEAD(inter_fd, 6);
+	WFIFOW(inter_fd, 0) = 0x3010;
+	WFIFOL(inter_fd, 2) = sd->status.account_id;
+	WFIFOSET(inter_fd, 6);
+}
+
+/**
+ * Parse the reception of account storage from the inter-server.
+ * @packet 0x3805 [in] <packet_len>.W <account_id>.L <struct item[]>.P
+ * @param  fd     [in] file/socket descriptor.
+ */
+void intif_parse_account_storage(int fd)
+{
+	int account_id = 0, payload_size = 0, storage_count = 0;
+	int i = 0;
+	struct map_session_data *sd = NULL;
+
+	Assert_retv(fd > 0);
+
+	payload_size = RFIFOW(fd, 2) - 8;
+
+	if ((account_id = RFIFOL(fd, 4)) == 0 || (sd = map->id2sd(account_id)) == NULL) {
+		ShowError("intif_parse_account_storage: Session pointer was null for account id %d!\n", account_id);
+		return;
+	}
+
+	if (sd->storage_received == true) {
+		ShowError("intif_parse_account_storage: Multiple calls from the inter-server received.\n");
+		return;
+	}
+
+	storage_count = (payload_size/sizeof(struct item));
+
+	VECTOR_ENSURE(sd->storage.item, storage_count, 1);
+
+	sd->storage.aggregate = storage_count; //< Total items in storage.
+
+	for (i = 0; i < storage_count; i++) {
+		const struct item *it = RFIFOP(fd, 8 + i * sizeof(struct item));
+		VECTOR_PUSH(sd->storage.item, *it);
+	}
+
+	sd->storage_received = true; //< Mark the storage as received.
+	sd->storage.save = false; //< Initialize the save flag as false.
+}
+
+/**
+ * Send account storage information for saving.
+ * @packet 0x3011 [out] <packet_len>.W <account_id>.L <struct item[]>.P
+ * @param  sd     [in]  pointer to session data.
+ */
+void intif_send_account_storage(const struct map_session_data *sd)
+{
+	int len = 0, i = 0, total = 0;
+
+	if (intif->CheckForCharServer())
+		return;
+
+	if (sd->storage.save == false)
+		return;
+
+	len = 8 + VECTOR_LENGTH(sd->storage.item) * sizeof(struct item);
+
+	WFIFOHEAD(inter_fd, len);
+	WFIFOW(inter_fd, 0) = 0x3011;
+	WFIFOW(inter_fd, 2) = (uint16) len;
+	WFIFOL(inter_fd, 4) = sd->status.account_id;
+
+	for (i = 0, total = 0; i < VECTOR_LENGTH(sd->storage.item) && total < MAX_STORAGE; i++) {
+		if (VECTOR_INDEX(sd->storage.item, i).nameid == 0)
+			continue;
+
+		memcpy(WFIFOP(inter_fd, 8 + total * sizeof(struct item)), &VECTOR_INDEX(sd->storage.item, i), sizeof(struct item));
+		total++; //< total # of items counter.
+	}
+
+	WFIFOSET(inter_fd, len);
+}
+
+/**
+ * Parse acknowledgement packet for the saving of an account's storage.
+ * @packet 0x3808 [in] <account_id>.L <saved_flag>.B
+ * @param fd      [in] file/socket descriptor.
+ */
+void intif_parse_account_storage_save_ack(int fd)
+{
+	int account_id = RFIFOL(fd, 2);
+	uint8 saved = RFIFOB(fd, 6);
+	struct map_session_data *sd = NULL;
+
+	Assert_retv(account_id > 0);
+	Assert_retv(fd > 0);
+
+	if ((sd = map->id2sd(account_id)) == NULL)
+		return; //< character is most probably offline.
+
+	if (saved == 0) {
+		ShowError("intif_parse_account_storage_save_ack: Storage has not been saved! (AID: %d)\n", account_id);
+		return;
+	}
+
+	sd->storage.save = false; //< Storage has been saved.
+}
+
+//=================================================================
+// Guild Storage
+//-----------------------------------------------------------------
+
 int intif_request_guild_storage(int account_id,int guild_id)
 {
 	if (intif->CheckForCharServer())
@@ -2306,8 +2431,10 @@ int intif_parse(int fd)
 		case 0x3802: intif->pWisEnd(fd); break;
 		case 0x3803: intif->pWisToGM(fd); break;
 		case 0x3804: intif->pRegisters(fd); break;
+		case 0x3805: intif->pAccountStorage(fd); break;
 		case 0x3806: intif->pChangeNameOk(fd); break;
 		case 0x3807: intif->pMessageToFD(fd); break;
+		case 0x3808: intif->pAccountStorageSaveAck(fd); break;
 		case 0x3818: intif->pLoadGuildStorage(fd); break;
 		case 0x3819: intif->pSaveGuildStorage(fd); break;
 		case 0x3820: intif->pPartyCreated(fd); break;
@@ -2394,7 +2521,7 @@ int intif_parse(int fd)
 *-------------------------------------*/
 void intif_defaults(void) {
 	const int packet_len_table [INTIF_PACKET_LEN_TABLE_SIZE] = {
-		-1,-1,27,-1, -1, 0,37,-1,  0, 0, 0, 0,  0, 0,  0, 0, //0x3800-0x380f
+		-1,-1,27,-1, -1,-1,37,-1,  7, 0, 0, 0,  0, 0,  0, 0, //0x3800-0x380f
 		 0, 0, 0, 0,  0, 0, 0, 0, -1,11, 0, 0,  0, 0,  0, 0, //0x3810
 		39,-1,15,15, 14,19, 7,-1,  0, 0, 0, 0,  0, 0,  0, 0, //0x3820
 		10,-1,15, 0, 79,19, 7,-1,  0,-1,-1,-1, 14,67,186,-1, //0x3830
@@ -2421,6 +2548,8 @@ void intif_defaults(void) {
 	intif->wis_message_to_gm = intif_wis_message_to_gm;
 	intif->saveregistry = intif_saveregistry;
 	intif->request_registry = intif_request_registry;
+	intif->request_account_storage = intif_request_account_storage;
+	intif->send_account_storage = intif_send_account_storage;
 	intif->request_guild_storage = intif_request_guild_storage;
 	intif->send_guild_storage = intif_send_guild_storage;
 	intif->create_party = intif_create_party;
@@ -2497,6 +2626,8 @@ void intif_defaults(void) {
 	intif->pRegisters = intif_parse_Registers;
 	intif->pChangeNameOk = intif_parse_ChangeNameOk;
 	intif->pMessageToFD = intif_parse_MessageToFD;
+	intif->pAccountStorage = intif_parse_account_storage;
+	intif->pAccountStorageSaveAck = intif_parse_account_storage_save_ack;
 	intif->pLoadGuildStorage = intif_parse_LoadGuildStorage;
 	intif->pSaveGuildStorage = intif_parse_SaveGuildStorage;
 	intif->pPartyCreated = intif_parse_PartyCreated;
