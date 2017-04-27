@@ -8594,30 +8594,39 @@ BUILDIN(readparam) {
  * 4 : bg_id
  *------------------------------------------*/
 BUILDIN(getcharid) {
-	int num;
+	int num = script_getnum(st, 2);
 	struct map_session_data *sd;
-
-	num = script_getnum(st,2);
-	if( script_hasdata(st,3) )
-		sd=map->nick2sd(script_getstr(st,3));
+	
+	if (script_hasdata(st, 3))
+		sd = map->nick2sd(script_getstr(st, 3));
 	else
-		sd=script->rid2sd(st);
+		sd = script->rid2sd(st);
 
-	if(sd==NULL) {
-		script_pushint(st,0); //return 0, according docs
+	if (sd == NULL) {
+		script_pushint(st, 0); //return 0, according docs
 		return true;
 	}
 
-	switch( num ) {
-		case 0: script_pushint(st,sd->status.char_id); break;
-		case 1: script_pushint(st,sd->status.party_id); break;
-		case 2: script_pushint(st,sd->status.guild_id); break;
-		case 3: script_pushint(st,sd->status.account_id); break;
-		case 4: script_pushint(st,sd->bg_id); break;
-		default:
-			ShowError("buildin_getcharid: invalid parameter (%d).\n", num);
-			script_pushint(st,0);
-			break;
+	switch (num) {
+	case 0: 
+		script_pushint(st, sd->status.char_id);
+		break;
+	case 1: 
+		script_pushint(st, sd->status.party_id);
+		break;
+	case 2: 
+		script_pushint(st, sd->status.guild_id);
+		break;
+	case 3: 
+		script_pushint(st, sd->status.account_id);
+		break;
+	case 4: 
+		script_pushint(st, sd->bg_id);
+		break;
+	default:
+		ShowError("buildin_getcharid: invalid parameter (%d).\n", num);
+		script_pushint(st, 0);
+		break;
 	}
 
 	return true;
