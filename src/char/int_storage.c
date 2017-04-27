@@ -41,24 +41,144 @@ struct inter_storage_interface inter_storage_s;
 struct inter_storage_interface *inter_storage;
 
 /// Save storage data to sql
-int inter_storage_tosql(int account_id, struct storage_data* p)
+int inter_storage_tosql(int account_id, struct storage_data *cp, const struct storage_data *p)
 {
+	int i = 0, j = 0;
+	bool updated_p[MAX_STORAGE] = { false };
+	int delete[MAX_STORAGE] = { 0 };
+	int total_deletes = 0, total_updates = 0, total_inserts = 0;
+	int total_changes = 0;
+	StringBuf buf;
+
+	nullpo_ret(cp);
 	nullpo_ret(p);
-	chr->memitemdata_to_sql(p->items, MAX_STORAGE, account_id, TABLE_STORAGE);
-	return 0;
+
+	StrBuf->Init(&buf);
+
+	/**
+	 * Compare and update items, if any.
+	 */
+	for (i = 0; i < VECTOR_LENGTH(cp->item); i++) {
+		struct item *cp_it = &VECTOR_INDEX(cp->item, i);
+		struct item *p_it = NULL;
+
+		ARR_FIND(0, VECTOR_LENGTH(p->item), j,
+				(p_it = &VECTOR_INDEX(p->item, j)) != NULL
+				&& cp_it->nameid == p_it->nameid
+				&& cp_it->unique_id == p_it->unique_id
+				&& memcmp(p_it->card, cp_it->card, sizeof(short) * MAX_SLOTS) == 0
+				&& memcmp(p_it->option, cp_it->option, 5 * MAX_ITEM_OPTIONS) == 0);
+
+		if (j < VECTOR_LENGTH(p->item)) {
+			int k = 0;
+			if (memcmp(cp_it, p_it, sizeof(struct item)) != 0) {
+				if (total_updates == 0) {
+					StrBuf->Printf(&buf, "REPLACE INTO `%s` (`id`, `account_id`, `amount`, `equip`, `identify`, `refine`, `attribute`", storage_db);
+					for (k = 0; k < MAX_SLOTS; k++)
+						StrBuf->Printf(&buf, ", `card%d`", k);
+					for (k = 0; k < MAX_ITEM_OPTIONS; k++)
+						StrBuf->Printf(&buf, ", `opt_idx%d`, `opt_val%d`", k, k);
+					StrBuf->Printf(&buf, ", `expire_time`, `bound`, `unique_id`) VALUES");
+				}
+
+				StrBuf->Printf(&buf, "('%d', '%d', '%d', '%u', '%d', '%d', '%d'",
+							   cp_it->id, account_id, p_it->amount, p_it->equip, p_it->identify, p_it->refine, p_it->attribute);
+				for (k = 0; k < MAX_SLOTS; k++)
+					StrBuf->Printf(&buf, "'%d'", p_it->card[k]);
+				for (k = 0; k < MAX_ITEM_OPTIONS; ++k)
+					StrBuf->Printf(&buf, "'%d', '%d'", p_it->option[k].index, p_it->option[k].value);
+				StrBuf->Printf(&buf, ", '%u', '%d', '%"PRIu64"')%s", p_it->expire_time, p_it->bound, p_it->unique_id, total_updates > 0 ? ", " : "");
+
+				total_updates++;
+				updated_p[j] = true;
+			}
+		} else { // Does not exist, so set for deletion.
+			delete[total_deletes++] = cp_it->id;
+		}
+	}
+
+	if (total_updates > 0 && SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf)))
+		Sql_ShowDebug(inter->sql_handle);
+
+	/**
+	 * Handle deletions, if any.
+	 */
+	if (total_deletes > 0) {
+		StrBuf->Clear(&buf);
+		StrBuf->Printf(&buf, "DELETE FROM `%s` WHERE `id` IN (", storage_db);
+		for (i = 0; i < total_deletes; i++) {
+			StrBuf->Printf(&buf, ", '%d'", delete[i]);
+		}
+		StrBuf->Printf(&buf, ");");
+
+		if (SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf)))
+			Sql_ShowDebug(inter->sql_handle);
+	}
+
+	/**
+	 * Check for new items.
+	 */
+	for (i = 0; i < VECTOR_LENGTH(p->item); i++) {
+		struct item *p_it = &VECTOR_INDEX(p->item, i);
+
+		if (updated_p[i] == true)
+			continue; // Item already dealt with, lets continue.
+
+		// Store the remaining items.
+		if (total_inserts == 0) {
+			StrBuf->Clear(&buf);
+			StrBuf->Printf(&buf, "INSERT INTO `%s`(`account_id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `bound`, `unique_id`", storage_db);
+			for (j = 0; j < MAX_SLOTS; ++j)
+				StrBuf->Printf(&buf, ", `card%d`", j);
+			for (j = 0; j < MAX_ITEM_OPTIONS; ++j)
+				StrBuf->Printf(&buf, ", `opt_idx%d`, `opt_val%d`", j, j);
+			StrBuf->AppendStr(&buf, ") VALUES ");
+		}
+
+		StrBuf->Printf(&buf, "('%d', '%d', '%d', '%u', '%d', '%d', '%d', '%u', '%d', '%"PRIu64"'",
+				account_id, p_it->nameid, p_it->amount, p_it->equip, p_it->identify, p_it->refine,
+				p_it->attribute, p_it->expire_time, p_it->bound, p_it->unique_id);
+		for (j = 0; j < MAX_SLOTS; ++j)
+			StrBuf->Printf(&buf, ", '%d'", p_it->card[j]);
+		for (j = 0; j < MAX_ITEM_OPTIONS; ++j)
+			StrBuf->Printf(&buf, ", '%d', '%d'", p_it->option[j].index, p_it->option[j].value);
+		StrBuf->Printf(&buf, ")%s", total_inserts > 0 ? ", " : "");
+
+		total_inserts++;
+	}
+
+	if (total_inserts > 0 && SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf)))
+		Sql_ShowDebug(inter->sql_handle);
+
+	StrBuf->Destroy(&buf);
+
+	/**
+	 * Sync map-storage with inter-storage
+	 */
+	VECTOR_CLEAR(cp->item);
+	VECTOR_ENSURE(cp->item, VECTOR_LENGTH(p->item), 1);
+	VECTOR_PUSHARRAY(cp->item, VECTOR_DATA(p->item), VECTOR_LENGTH(p->item));
+
+	total_changes = total_inserts + total_updates + total_deletes;
+
+	ShowInfo("storage save complete - id: %d (total: %d)\n", account_id, total_changes);
+
+	return total_changes;
 }
 
 /// Load storage data to mem
-int inter_storage_fromsql(int account_id, struct storage_data* p)
+int inter_storage_fromsql(int account_id, struct storage_data *p)
 {
 	StringBuf buf;
 	char* data;
 	int i;
 	int j;
+	int num_rows = 0;
 
 	nullpo_ret(p);
-	memset(p, 0, sizeof(struct storage_data)); //clean up memory
-	p->storage_amount = 0;
+
+	if (VECTOR_LENGTH(p->item) > 0)
+		VECTOR_CLEAR(p->item);
 
 	// storage {`account_id`/`id`/`nameid`/`amount`/`equip`/`identify`/`refine`/`attribute`/`card0`/`card1`/`card2`/`card3`}
 	StrBuf->Init(&buf);
@@ -74,36 +194,46 @@ int inter_storage_fromsql(int account_id, struct storage_data* p)
 
 	StrBuf->Destroy(&buf);
 
-	for (i = 0; i < MAX_STORAGE && SQL_SUCCESS == SQL->NextRow(inter->sql_handle); ++i) {
-		struct item *item = &p->items[i];
-		SQL->GetData(inter->sql_handle, 0, &data, NULL); item->id = atoi(data);
-		SQL->GetData(inter->sql_handle, 1, &data, NULL); item->nameid = atoi(data);
-		SQL->GetData(inter->sql_handle, 2, &data, NULL); item->amount = atoi(data);
-		SQL->GetData(inter->sql_handle, 3, &data, NULL); item->equip = atoi(data);
-		SQL->GetData(inter->sql_handle, 4, &data, NULL); item->identify = atoi(data);
-		SQL->GetData(inter->sql_handle, 5, &data, NULL); item->refine = atoi(data);
-		SQL->GetData(inter->sql_handle, 6, &data, NULL); item->attribute = atoi(data);
-		SQL->GetData(inter->sql_handle, 7, &data, NULL); item->expire_time = (unsigned int)atoi(data);
-		SQL->GetData(inter->sql_handle, 8, &data, NULL); item->bound = atoi(data);
-		SQL->GetData(inter->sql_handle, 9, &data, NULL); item->unique_id = strtoull(data, NULL, 10);
-		/* Card Slots */
-		for (j = 0; j < MAX_SLOTS; ++j) {
-			SQL->GetData(inter->sql_handle, 10 + j, &data, NULL);
-			item->card[j] = atoi(data);
-		}
-		/* Item Options */
-		for (j = 0; j < MAX_ITEM_OPTIONS; ++j) {
-			SQL->GetData(inter->sql_handle, 10 + MAX_SLOTS + j * 2, &data, NULL);
-			item->option[j].index = atoi(data);
-			SQL->GetData(inter->sql_handle, 11 + MAX_SLOTS + j * 2, &data, NULL);
-			item->option[j].value = atoi(data);
+	if ((num_rows = (int)SQL->NumRows(inter->sql_handle)) != 0) {
+
+		VECTOR_ENSURE(p->item, num_rows > MAX_STORAGE ? MAX_STORAGE : num_rows, 1);
+
+		for (i = 0; i < MAX_STORAGE && SQL_SUCCESS == SQL->NextRow(inter->sql_handle); ++i) {
+			struct item item = { 0 };
+			SQL->GetData(inter->sql_handle, 0, &data, NULL); item.id = atoi(data);
+			SQL->GetData(inter->sql_handle, 1, &data, NULL); item.nameid = atoi(data);
+			SQL->GetData(inter->sql_handle, 2, &data, NULL); item.amount = atoi(data);
+			SQL->GetData(inter->sql_handle, 3, &data, NULL); item.equip = atoi(data);
+			SQL->GetData(inter->sql_handle, 4, &data, NULL); item.identify = atoi(data);
+			SQL->GetData(inter->sql_handle, 5, &data, NULL); item.refine = atoi(data);
+			SQL->GetData(inter->sql_handle, 6, &data, NULL); item.attribute = atoi(data);
+			SQL->GetData(inter->sql_handle, 7, &data, NULL); item.expire_time = (unsigned int)atoi(data);
+			SQL->GetData(inter->sql_handle, 8, &data, NULL); item.bound = atoi(data);
+			SQL->GetData(inter->sql_handle, 9, &data, NULL); item.unique_id = strtoull(data, NULL, 10);
+
+			/* Card Slots */
+			for (j = 0; j < MAX_SLOTS; ++j) {
+				SQL->GetData(inter->sql_handle, 10 + j, &data, NULL);
+				item.card[j] = atoi(data);
+			}
+
+			/* Item Options */
+			for (j = 0; j < MAX_ITEM_OPTIONS; ++j) {
+				SQL->GetData(inter->sql_handle, 10 + MAX_SLOTS + j * 2, &data, NULL);
+				item.option[j].index = atoi(data);
+				SQL->GetData(inter->sql_handle, 11 + MAX_SLOTS + j * 2, &data, NULL);
+				item.option[j].value = atoi(data);
+			}
+
+			VECTOR_PUSH(p->item, item);
 		}
 	}
-	p->storage_amount = i;
+
 	SQL->FreeResult(inter->sql_handle);
 
-	ShowInfo("storage load complete from DB - id: %d (total: %d)\n", account_id, p->storage_amount);
-	return 1;
+	ShowInfo("storage load complete from DB - id: %d (total: %d)\n", account_id, VECTOR_LENGTH(p->item));
+
+	return VECTOR_LENGTH(p->item);
 }
 
 /// Save guild_storage data to sql
@@ -174,15 +304,37 @@ int inter_storage_guild_storage_fromsql(int guild_id, struct guild_storage* p)
 	return 0;
 }
 
+/**
+ * Ensures storage data entity for a character.
+ * @see DBCreateData
+ */
+static struct DBData inter_storage_ensure_account_storage(union DBKey key, va_list args)
+{
+	struct storage_data *stor = NULL;
+
+	CREATE(stor, struct storage_data, 1);
+
+	stor->save = false;
+	stor->aggregate = 0;
+
+	VECTOR_INIT(stor->item);
+
+	return DB->ptr2data(stor);
+}
+
 //---------------------------------------------------------
 // storage data initialize
 int inter_storage_sql_init(void)
 {
+	inter_storage->account_storage = idb_alloc(DB_OPT_RELEASE_DATA);
+
 	return 1;
 }
 // storage data finalize
 void inter_storage_sql_final(void)
 {
+	inter_storage->account_storage->destroy(inter_storage->account_storage, NULL);
+
 	return;
 }
 
@@ -240,13 +392,126 @@ int mapif_save_guild_storage_ack(int fd, int account_id, int guild_id, int fail)
 	return 0;
 }
 
+//=========================================================
+// Account Storage
 //---------------------------------------------------------
-// packet from map server
+/**
+ * Parses account storage load request from map server.
+ * @packet 0x3010 [in] <account_id>.L
+ * @param  fd     [in] file/socket descriptor
+ * @return 1 on success, 0 on failure.
+ */
+int mapif_parse_AccountStorageLoad(int fd)
+{
+	int account_id = RFIFOL(fd, 2);
 
+	Assert_ret(fd > 0);
+	Assert_ret(account_id > 0);
+
+	mapif->account_storage_load(fd, account_id);
+
+	return 1;
+}
+
+/**
+ * Loads the account storage and send to the map server.
+ * @packet 0x3805     [out] <account_id>.L <struct item[]>.P
+ * @param  fd         [in]  file/socket descriptor.
+ * @param  account_id [in]  account id of the session.
+ * @return 1 on success, 0 on failure.
+ */
+int mapif_account_storage_load(int fd, int account_id)
+{
+	struct storage_data *stor = NULL;
+	int count = 0, i = 0, len = 0;
+
+	Assert_ret(account_id > 0);
+
+	stor = (struct storage_data *) idb_ensure(inter_storage->account_storage, account_id, inter_storage->ensure_account_storage);
+
+	count = inter_storage->fromsql(account_id, stor);
+
+	len = 8 + count * sizeof(struct item);
+
+	WFIFOHEAD(fd, len);
+	WFIFOW(fd, 0) = 0x3805;
+	WFIFOW(fd, 2) = (uint16) len;
+	WFIFOL(fd, 4) = account_id;
+	for (i = 0; i < count; i++)
+		memcpy(WFIFOP(fd, 8 + i * sizeof(struct item)), &VECTOR_INDEX(stor->item, i), sizeof(struct item));
+	WFIFOSET(fd, len);
+
+	return 1;
+}
+
+/**
+ * Parses an account storage save request from the map server.
+ * @packet 0x3011 [in] <packet_len>.W <account_id>.L <struct item[]>.P
+ * @param  fd     [in] file/socket descriptor.
+ * @return 1 on success, 0 on failure.
+ */
+int mapif_parse_AccountStorageSave(int fd)
+{
+	int payload_size = RFIFOW(fd, 2) - 8, account_id = RFIFOL(fd, 4);
+	int i = 0, count = 0;
+	struct storage_data *cp_stor = NULL, p_stor = { 0 };
+
+	Assert_ret(fd > 0);
+	Assert_ret(account_id > 0);
+
+	cp_stor = (struct storage_data *) idb_ensure(inter_storage->account_storage, account_id, inter_storage->ensure_account_storage);
+
+	count = payload_size/sizeof(struct item);
+
+	VECTOR_INIT(p_stor.item);
+
+	if (count > 0) {
+		VECTOR_ENSURE(p_stor.item, count, 1);
+
+		for (i = 0; i < count; i++) {
+			const struct item *it = RFIFOP(fd, 8 + i * sizeof(struct item));
+
+			VECTOR_PUSH(p_stor.item, *it);
+		}
+
+		p_stor.aggregate = count;
+
+		inter_storage->tosql(account_id, cp_stor, &p_stor);
+
+		VECTOR_CLEAR(p_stor.item);
+	}
+
+	mapif->sAccountStorageSaveAck(fd, account_id, true);
+
+	return 1;
+}
+
+/**
+ * Sends an acknowledgement for the save
+ * status of the account storage.
+ * @packet 0x3808     [out] <account_id>.L <save_flag>.B
+ * @param  fd         [in]  File/Socket Descriptor.
+ * @param  account_id [in]  Account ID of the storage in question.
+ * @param  flag       [in]  Save flag, true for success and false for failure.
+ */
+void mapif_send_AccountStorageSaveAck(int fd, int account_id, bool flag)
+{
+	WFIFOHEAD(fd, 7);
+	WFIFOW(fd, 0) = 0x3808;
+	WFIFOL(fd, 2) = account_id;
+	WFIFOB(fd, 6) = flag ? 1 : 0;
+	WFIFOSET(fd, 7);
+}
+
+//=========================================================
+// Guild Storage
+//---------------------------------------------------------
 int mapif_parse_LoadGuildStorage(int fd)
 {
 	RFIFOHEAD(fd);
+
 	mapif->load_guild_storage(fd,RFIFOL(fd,2),RFIFOL(fd,6),1);
+
 	return 0;
 }
 
@@ -274,6 +539,7 @@ int mapif_parse_SaveGuildStorage(int fd)
 		SQL->FreeResult(inter->sql_handle);
 	}
 	mapif->save_guild_storage_ack(fd, RFIFOL(fd,4), guild_id, 1);
+
 	return 0;
 }
 
@@ -487,6 +753,8 @@ int inter_storage_parse_frommap(int fd)
 {
 	RFIFOHEAD(fd);
 	switch(RFIFOW(fd,0)){
+		case 0x3010: mapif->pAccountStorageLoad(fd); break;
+		case 0x3011: mapif->pAccountStorageSave(fd); break;
 		case 0x3018: mapif->parse_LoadGuildStorage(fd); break;
 		case 0x3019: mapif->parse_SaveGuildStorage(fd); break;
 #ifdef GP_BOUND_ITEMS
@@ -502,6 +770,7 @@ void inter_storage_defaults(void)
 {
 	inter_storage = &inter_storage_s;
 
+	inter_storage->ensure_account_storage = inter_storage_ensure_account_storage;
 	inter_storage->tosql = inter_storage_tosql;
 	inter_storage->fromsql = inter_storage_fromsql;
 	inter_storage->guild_storage_tosql = inter_storage_guild_storage_tosql;
