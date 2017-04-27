@@ -4187,12 +4187,13 @@ void clif_storageitemremoved(struct map_session_data* sd, int index, int amount)
 
 	nullpo_retv(sd);
 
-	fd=sd->fd;
-	WFIFOHEAD(fd,packet_len(0xf6));
-	WFIFOW(fd,0)=0xf6; // Storage item removed
-	WFIFOW(fd,2)=index+1;
-	WFIFOL(fd,4)=amount;
-	WFIFOSET(fd,packet_len(0xf6));
+	fd = sd->fd;
+
+	WFIFOHEAD(fd, packet_len(0xf6));
+	WFIFOW(fd, 0) = 0xf6; // Storage item removed
+	WFIFOW(fd, 2) = index + 1;
+	WFIFOL(fd, 4) = amount;
+	WFIFOSET(fd, packet_len(0xf6));
 }
 
 /// Closes storage (ZC_CLOSE_STORE).
@@ -8429,9 +8430,11 @@ void clif_refresh_storagewindow(struct map_session_data *sd)
 	nullpo_retv(sd);
 	// Notify the client that the storage is open
 	if (sd->state.storage_flag == STORAGE_FLAG_NORMAL) {
-		storage->sortitem(sd->status.storage.items, ARRAYLENGTH(sd->status.storage.items));
-		clif->storagelist(sd, sd->status.storage.items, ARRAYLENGTH(sd->status.storage.items));
-		clif->updatestorageamount(sd, sd->status.storage.storage_amount, MAX_STORAGE);
+		if (sd->storage.aggregate > 0) {
+			storage->sortitem(VECTOR_DATA(sd->storage.item), VECTOR_LENGTH(sd->storage.item));
+			clif->storagelist(sd, VECTOR_DATA(sd->storage.item), VECTOR_LENGTH(sd->storage.item));
+		}
+		clif->updatestorageamount(sd, sd->storage.aggregate, MAX_STORAGE);
 	}
 	// Notify the client that the gstorage is open otherwise it will
 	// remain locked forever and nobody will be able to access it

@@ -324,6 +324,8 @@ bool chrif_save(struct map_session_data *sd, int flag) {
 	if( sd->save_quest )
 		intif->quest_save(sd);
 
+	intif->send_account_storage(sd);
+
 	return true;
 }
 
