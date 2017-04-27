@@ -3950,17 +3950,18 @@ things might in some cases be required.
 
 ---------------------------------------
 
-*checkoption(<option number>)
-*checkoption1(<option number>)
-*checkoption2(<option number>)
-*setoption(<option number>{, <flag>});
+*checkoption(<option number>{, <account id>})
+*checkoption1(<option number>{, <account id>})
+*checkoption2(<option number>{, <account id>})
+*setoption(<option number>{, <flag>{, <account id>}});
 
 The setoption() series of functions check for a so-called option that is
 set on the invoking character. 'Options' are used to store status 
 conditions and a lot of other non-permanent character data of the yes-no 
 kind. For most common cases, it is better to use checkcart(),
 checkfalcon(), checkmount() and other similar functions, but there are
-some options which you cannot get at this way.
+some options which you cannot get at this way. If <account id> is given,
+this player will be used instead of the invoking character.
 
 Option numbers valid for the first (option) version of this command are:
 
