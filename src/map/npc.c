@@ -4813,8 +4813,10 @@ int npc_reload(void) {
 	for (bl = mapit->first(iter); mapit->exists(iter); bl = mapit->next(iter)) {
 		switch(bl->type) {
 			case BL_NPC:
-				if( bl->id != npc->fake_nd->bl.id )// don't remove fake_nd
+				if (bl->id != npc->fake_nd->bl.id ) {// don't remove fake_nd
 					npc->unload(BL_UCAST(BL_NPC, bl), false);
+					status->change_clear(bl, 1);
+				}
 				break;
 			case BL_MOB:
 				unit->free(bl,CLR_OUTSIGHT);
