@@ -54,6 +54,7 @@
 #include "map/channel.h"
 #include "map/chat.h"
 #include "map/chrif.h"
+#include "map/clan.h"
 #include "map/clif.h"
 #include "map/date.h"
 #include "map/duel.h"
@@ -124,6 +125,7 @@ bool HPM_map_data_store_validate(enum HPluginDataTypes type, struct hplugin_data
 	case HPDT_ITEMDATA:
 	case HPDT_BGDATA:
 	case HPDT_AUTOTRADE_VEND:
+	case HPDT_CLAN:
 		// Initialized by the caller.
 		return true;
 	default:
