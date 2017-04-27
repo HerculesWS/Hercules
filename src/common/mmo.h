@@ -23,6 +23,7 @@
 
 #include "config/core.h"
 #include "common/cbasetypes.h"
+#include "common/db.h" // VECTORS
 
 // server->client protocol version
 //        0 - pre-?
@@ -479,8 +480,10 @@ struct status_change_data {
 };
 
 struct storage_data {
-	int storage_amount;
-	struct item items[MAX_STORAGE];
+	bool save;                     ///< save flag.
+	bool received;                 ///< received flag.
+	int aggregate;                 ///< total item count.
+	VECTOR_DECL(struct item) item; ///< item vector.
 };
 
 struct guild_storage {
@@ -616,7 +619,6 @@ struct mmo_charstatus {
 
 	struct point last_point,save_point,memo_point[MAX_MEMOPOINTS];
 	struct item inventory[MAX_INVENTORY],cart[MAX_CART];
-	struct storage_data storage;
 	struct s_skill skill[MAX_SKILL];
 
 	struct s_friend friends[MAX_FRIENDS]; //New friend system [Skotlex]
