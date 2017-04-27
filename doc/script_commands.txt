@@ -2370,6 +2370,7 @@ the invoking character. Whatever it returns is determined by type.
 (1) PC_PARTY	- The name of the party they're in if any.
 (2) PC_GUILD	- The name of the guild they're in if any.
 (3) PC_MAP		- The name of the map the character is in.
+(4) PC_CLAN   - The name of the clan they're in if any.
 
 If <GID> is passed, it will return the value of the specified player instead
 the attached player. If the player is not found, it will return
@@ -2500,6 +2501,7 @@ Type is the kind of associated ID number required:
 (2) CHAR_ID_GUILD - Guild ID number.
 (3) CHAR_ID_ACCOUNT - Account ID number.
 (4) CHAR_ID_BG - Battle ground ID
+(5) CHAR_ID_CLAN - Clan ID number.
 
 For most purposes other than printing it, a number is better to have than 
 a name (people do horrifying things to their character names).
@@ -9626,3 +9628,37 @@ Changes the name of a unit.
 Supported Types - [ MOB | HOM | PET ].
 
 returns 1 on success, 0 on failure.
+
+---------------------------------------
+//=====================================
+13 - Clan System Related Commands
+//=====================================
+---------------------------------------
+
+*join_clan(<ClanID>{,<CharID>})
+
+Joins a player into the given clan.
+If no CharID is given, will run with the current attached player.
+
+returns true on success, false on failure.
+
+---------------------------------------
+
+*clan_leave({<CharID>})
+
+Removes a player from its clan.
+If no CharID is given, will run with the current attached player.
+
+returns true on success, false on failure.
+
+---------------------------------------
+
+*clan_master(<ClanID>)
+
+Enables the Emblem of the given Clan to the current NPC
+
+---------------------------------------
+//=====================================
+13 - End of Clan System Related Commands
+//=====================================
+---------------------------------------

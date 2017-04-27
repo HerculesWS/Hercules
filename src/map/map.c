@@ -30,6 +30,7 @@
 #include "map/channel.h"
 #include "map/chat.h"
 #include "map/chrif.h"
+#include "map/clan.h"
 #include "map/clif.h"
 #include "map/duel.h"
 #include "map/elemental.h"
@@ -1895,6 +1896,9 @@ int map_quit(struct map_session_data *sd) {
 
 	if (sd->bg_id && !sd->bg_queue.arena) /* TODO: dump this chunk after bg_queue is fully enabled */
 		bg->team_leave(sd,BGTL_QUIT);
+
+	if (sd->status.clan_id)
+	  clan->member_offline(sd);
 
 	if (sd->state.autotrade && core->runflag != MAPSERVER_ST_SHUTDOWN && !channel->config->closing)
 		pc->autotrade_update(sd,PAUC_REMOVE);
@@ -4806,6 +4810,15 @@ bool map_zone_mf_cache(int m, char *flag, char *params) {
 			else if( map->list[m].flag.battleground )
 				map_zone_mf_cache_add(m,"battleground");
 		}
+	} else if (!strcmpi(flag,"cvc")) {
+		if (state && map->list[m].flag.cvc) {
+			;/* nothing to do */
+		} else {
+			if (state)
+				map_zone_mf_cache_add(m,"cvc\toff");
+			else if (map->list[m].flag.cvc)
+				map_zone_mf_cache_add(m,"cvc");
+		}
 	} else if (!strcmpi(flag,"noexppenalty")) {
 		if( state && map->list[m].flag.noexppenalty )
 			;/* nothing to do */
@@ -5830,6 +5843,8 @@ void read_map_zone_db(void) {
 			zone->merge_type = MZMT_MERGEABLE;
 		if ((zone = strdb_get(map->zone_db, MAP_ZONE_BG_NAME)))
 			zone->merge_type = MZMT_MERGEABLE;
+		if ((zone = strdb_get(map->zone_db, MAP_ZONE_CVC_NAME)))
+		  zone->merge_type = MZMT_MERGEABLE;
 	}
 	/* not supposed to go in here but in skill_final whatever */
 	libconfig->destroy(&map_zone_db);
@@ -5990,6 +6005,7 @@ int do_final(void) {
 	ircbot->final();/* before channel. */
 	channel->final();
 	chrif->final();
+	clan->final();
 	clif->final();
 	npc->final();
 	quest->final();
@@ -6175,6 +6191,7 @@ void map_load_defaults(void) {
 	battleground_defaults();
 	buyingstore_defaults();
 	channel_defaults();
+	clan_defaults();
 	clif_defaults();
 	chrif_defaults();
 	guild_defaults();
@@ -6506,6 +6523,7 @@ int do_init(int argc, char *argv[])
 	ircbot->init(minimal);
 	script->init(minimal);
 	itemdb->init(minimal);
+	clan->init(minimal);
 	skill->init(minimal);
 	if (!minimal)
 		map->read_zone_db();/* read after item and skill initialization */

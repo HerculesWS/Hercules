@@ -28,6 +28,7 @@
 #include "map/channel.h"
 #include "map/chat.h"
 #include "map/chrif.h"
+#include "map/clan.h"
 #include "map/clif.h"
 #include "map/duel.h"
 #include "map/elemental.h"
@@ -1670,6 +1671,45 @@ ACMD(gvgon)
 	clif->map_property_mapall(sd->bl.m, MAPPROPERTY_AGITZONE);
 	clif->maptypeproperty2(&sd->bl,ALL_SAMEMAP);
 	clif->message(fd, msg_fd(fd,34)); // GvG: On.
+
+	return true;
+}
+
+/*==========================================
+ *
+ *------------------------------------------*/
+ACMD(cvcoff)
+{
+	if (!map->list[sd->bl.m].flag.cvc) {
+		clif->message(fd, msg_fd(fd, 141)); // CvC is already Off.
+		return false;
+	}
+
+	map->zone_change2(sd->bl.m, map->list[sd->bl.m].prev_zone);
+	map->list[sd->bl.m].flag.cvc = 0;
+	clif->map_property_mapall(sd->bl.m, MAPPROPERTY_NOTHING);
+	clif->maptypeproperty2(&sd->bl, ALL_SAMEMAP);
+	map->foreachinmap(atcommand->stopattack, sd->bl.m, BL_CHAR, 0);
+	clif->message(fd, msg_fd(fd, 26)); // CvC: Off.
+
+	return true;
+}
+
+/*==========================================
+ *
+ *------------------------------------------*/
+ACMD(cvcon)
+{
+	if (map->list[sd->bl.m].flag.cvc) {
+		clif->message(fd, msg_fd(fd, 142)); // CvC is already On.
+		return false;
+	}
+
+	map->zone_change2(sd->bl.m, strdb_get(map->zone_db, MAP_ZONE_CVC_NAME));
+	map->list[sd->bl.m].flag.cvc = 1;
+	clif->map_property_mapall(sd->bl.m, MAPPROPERTY_AGITZONE);
+	clif->maptypeproperty2(&sd->bl, ALL_SAMEMAP);
+	clif->message(fd, msg_fd(fd, 27)); // CvC: On.
 
 	return true;
 }
@@ -3781,6 +3821,9 @@ ACMD(mapinfo)
 
 	if (map->list[m_id].flag.battleground)
 		clif->message(fd, msg_fd(fd,1045)); // Battlegrounds ON
+
+	if (map->list[m_id].flag.cvc)
+		clif->message(fd, msg_fd(fd, 1063)); // CvC ON
 
 	strcpy(atcmd_output,msg_fd(fd,1046)); // PvP Flags:
 	if (map->list[m_id].flag.pvp)
@@ -7521,11 +7564,11 @@ ACMD(mapflag) {
 		CHECKFLAG(noreturn);          CHECKFLAG(monster_noteleport); CHECKFLAG(nosave);       CHECKFLAG(nobranch);
 		CHECKFLAG(noexppenalty);      CHECKFLAG(pvp);                CHECKFLAG(pvp_noparty);  CHECKFLAG(pvp_noguild);
 		CHECKFLAG(pvp_nightmaredrop); CHECKFLAG(pvp_nocalcrank);     CHECKFLAG(gvg_castle);   CHECKFLAG(gvg);
-		CHECKFLAG(gvg_dungeon);       CHECKFLAG(gvg_noparty);        CHECKFLAG(battleground); CHECKFLAG(nozenypenalty);
-		CHECKFLAG(notrade);           CHECKFLAG(noskill);            CHECKFLAG(nowarp);       CHECKFLAG(nowarpto);
-		CHECKFLAG(noicewall);         CHECKFLAG(snow);               CHECKFLAG(clouds);       CHECKFLAG(clouds2);
-		CHECKFLAG(fog);               CHECKFLAG(fireworks);          CHECKFLAG(sakura);       CHECKFLAG(leaves);
-		CHECKFLAG(nobaseexp);
+		CHECKFLAG(gvg_dungeon);       CHECKFLAG(gvg_noparty);        CHECKFLAG(battleground); CHECKFLAG(cvc);
+		CHECKFLAG(nozenypenalty);     CHECKFLAG(notrade);            CHECKFLAG(noskill);      CHECKFLAG(nowarp); 
+		CHECKFLAG(nowarpto);          CHECKFLAG(noicewall);          CHECKFLAG(snow);         CHECKFLAG(clouds);
+		CHECKFLAG(clouds2);           CHECKFLAG(fog);                CHECKFLAG(fireworks);    CHECKFLAG(sakura);
+		CHECKFLAG(leaves);            CHECKFLAG(nobaseexp);
 		CHECKFLAG(nojobexp);          CHECKFLAG(nomobloot);          CHECKFLAG(nomvploot);    CHECKFLAG(nightenabled);
 		CHECKFLAG(nodrop);            CHECKFLAG(novending);          CHECKFLAG(loadevent);
 		CHECKFLAG(nochat);            CHECKFLAG(partylock);          CHECKFLAG(guildlock);    CHECKFLAG(src4instance);
@@ -7552,33 +7595,38 @@ ACMD(mapflag) {
 			map->zone_change2(sd->bl.m, strdb_get(map->zone_db, MAP_ZONE_BG_NAME));
 		else if (!flag && map->list[sd->bl.m].flag.battleground)
 			map->zone_change2(sd->bl.m, map->list[sd->bl.m].prev_zone);
+	} else if (strcmp(flag_name, "cvc") == 0) {
+		if (flag && !map->list[sd->bl.m].flag.cvc)
+			map->zone_change2(sd->bl.m, strdb_get(map->zone_db, MAP_ZONE_CVC_NAME));
+		else if (!flag && map->list[sd->bl.m].flag.cvc)
+			map->zone_change2(sd->bl.m, map->list[sd->bl.m].prev_zone);
 	}
 
 	SETFLAG(autotrade);         SETFLAG(allowks);            SETFLAG(nomemo);       SETFLAG(noteleport);
 	SETFLAG(noreturn);          SETFLAG(monster_noteleport); SETFLAG(nosave);       SETFLAG(nobranch);
 	SETFLAG(noexppenalty);      SETFLAG(pvp);                SETFLAG(pvp_noparty);  SETFLAG(pvp_noguild);
 	SETFLAG(pvp_nightmaredrop); SETFLAG(pvp_nocalcrank);     SETFLAG(gvg_castle);   SETFLAG(gvg);
-	SETFLAG(gvg_dungeon);       SETFLAG(gvg_noparty);        SETFLAG(battleground); SETFLAG(nozenypenalty);
-	SETFLAG(notrade);           SETFLAG(noskill);            SETFLAG(nowarp);       SETFLAG(nowarpto);
-	SETFLAG(noicewall);         SETFLAG(snow);               SETFLAG(clouds);       SETFLAG(clouds2);
-	SETFLAG(fog);               SETFLAG(fireworks);          SETFLAG(sakura);       SETFLAG(leaves);
-	SETFLAG(nobaseexp);
-	SETFLAG(nojobexp);          SETFLAG(nomobloot);          SETFLAG(nomvploot);    SETFLAG(nightenabled);
-	SETFLAG(nodrop);            SETFLAG(novending);          SETFLAG(loadevent);
-	SETFLAG(nochat);            SETFLAG(partylock);          SETFLAG(guildlock);    SETFLAG(src4instance);
-	SETFLAG(notomb);            SETFLAG(nocashshop);         SETFLAG(noviewid);
+	SETFLAG(gvg_dungeon);       SETFLAG(gvg_noparty);        SETFLAG(battleground); SETFLAG(cvc);
+	SETFLAG(nozenypenalty);     SETFLAG(notrade);            SETFLAG(noskill);      SETFLAG(nowarp);
+	SETFLAG(nowarpto);          SETFLAG(noicewall);          SETFLAG(snow);         SETFLAG(clouds);
+	SETFLAG(clouds2);           SETFLAG(fog);                SETFLAG(fireworks);    SETFLAG(sakura);
+	SETFLAG(leaves);            SETFLAG(nobaseexp);          SETFLAG(nojobexp);     SETFLAG(nomobloot);
+	SETFLAG(nomvploot);         SETFLAG(nightenabled);       SETFLAG(nodrop);       SETFLAG(novending);
+	SETFLAG(loadevent);         SETFLAG(nochat);             SETFLAG(partylock);    SETFLAG(guildlock);
+	SETFLAG(src4instance);      SETFLAG(notomb);             SETFLAG(nocashshop);   SETFLAG(noviewid);
 
-	clif->message(sd->fd,msg_fd(fd,1314)); // Invalid flag name or flag.
-	clif->message(sd->fd,msg_fd(fd,1312)); // Usage: "@mapflag monster_noteleport 1" (0=Off | 1=On)
-	clif->message(sd->fd,msg_fd(fd,1315)); // Available Flags:
-	clif->message(sd->fd,"----------------------------------");
-	clif->message(sd->fd,"town, autotrade, allowks, nomemo, noteleport, noreturn, monster_noteleport, nosave,");
-	clif->message(sd->fd,"nobranch, noexppenalty, pvp, pvp_noparty, pvp_noguild, pvp_nightmaredrop,");
-	clif->message(sd->fd,"pvp_nocalcrank, gvg_castle, gvg, gvg_dungeon, gvg_noparty, battleground,");
-	clif->message(sd->fd,"nozenypenalty, notrade, noskill, nowarp, nowarpto, noicewall, snow, clouds, clouds2,");
-	clif->message(sd->fd,"fog, fireworks, sakura, leaves, nobaseexp, nojobexp, nomobloot,");
-	clif->message(sd->fd,"nomvploot, nightenabled, nodrop, novending, loadevent, nochat, partylock,");
-	clif->message(sd->fd,"guildlock, src4instance, notomb, nocashshop, noviewid");
+
+	clif->message(sd->fd, msg_fd(fd, 1314)); // Invalid flag name or flag.
+	clif->message(sd->fd, msg_fd(fd, 1312)); // Usage: "@mapflag monster_noteleport 1" (0=Off | 1=On)
+	clif->message(sd->fd, msg_fd(fd, 1315)); // Available Flags:
+	clif->message(sd->fd, "----------------------------------");
+	clif->message(sd->fd, "town, autotrade, allowks, nomemo, noteleport, noreturn, monster_noteleport, nosave,");
+	clif->message(sd->fd, "nobranch, noexppenalty, pvp, pvp_noparty, pvp_noguild, pvp_nightmaredrop,");
+	clif->message(sd->fd, "pvp_nocalcrank, gvg_castle, gvg, gvg_dungeon, gvg_noparty, battleground, cvc,");
+	clif->message(sd->fd, "nozenypenalty, notrade, noskill, nowarp, nowarpto, noicewall, snow, clouds, clouds2,");
+	clif->message(sd->fd, "fog, fireworks, sakura, leaves, nobaseexp, nojobexp, nomobloot,");
+	clif->message(sd->fd, "nomvploot, nightenabled, nodrop, novending, loadevent, nochat, partylock,");
+	clif->message(sd->fd, "guildlock, src4instance, notomb, nocashshop, noviewid");
 #undef CHECKFLAG
 #undef SETFLAG
 
@@ -9404,6 +9452,64 @@ ACMD(lang) {
 
 	return true;
 }
+
+/**
+ * Clan System: Joins in the given clan
+ */
+ACMD(joinclan)
+{
+	int clan_id;
+
+	if (!*message) {
+		clif->message(fd, "Please enter a Clan ID (usage: @joinclan <clan ID>).");
+		return false;
+	}
+	if (sd->status.clan_id) {
+		clif->messagecolor_self(fd, COLOR_RED, "You are already in a clan.");
+		return false;
+	} else if (sd->status.guild_id) {
+		clif->messagecolor_self(fd, COLOR_RED, "You must leave your guild before enter in a clan.");
+		return false;
+	}
+
+	clan_id = atoi(message);
+	if (clan_id <= 0) {
+		clif->messagecolor_self(fd, COLOR_RED, "Invalid Clan ID.");
+		return false;
+	}
+	if (!clan->join(sd, clan_id)) {
+		clif->messagecolor_self(fd, COLOR_RED, "Failed on joing clan.");
+		return false;
+	}
+	return true;
+}
+
+/**
+ * Clan System: Leaves current clan
+ */
+ACMD(leaveclan)
+{
+	if (!sd->status.clan_id) {
+		clif->messagecolor_self(fd, COLOR_RED, "You aren't in a clan.");
+		return false;
+	}
+	if (!clan->leave(sd, false)) {
+		clif->messagecolor_self(fd, COLOR_RED, "Failed on leaving clan.");
+		return false;
+	}
+	return true;
+}
+
+/**
+ * Clan System: Reloads clan db
+ */
+ACMD(reloadclans)
+{
+	clan->reload();
+	clif->messagecolor_self(fd, COLOR_DEFAULT, "Clan database has been reloaded.");
+	return true;
+}
+
 /**
  * Fills the reference of available commands in atcommand DBMap
  **/
@@ -9676,6 +9782,11 @@ void atcommand_basecommands(void) {
 		ACMD_DEF(cddebug),
 		ACMD_DEF(lang),
 		ACMD_DEF(bodystyle),
+		ACMD_DEF(cvcoff),
+		ACMD_DEF(cvcon),
+		ACMD_DEF(joinclan),
+		ACMD_DEF(leaveclan),
+		ACMD_DEF(reloadclans),
 	};
 	int i;
 
