@@ -961,10 +961,69 @@
 	//script->set_constant("SI_AID_PERIOD_RECEIVEITEM", SI_AID_PERIOD_RECEIVEITEM, false, false);
 	//script->set_constant("SI_AID_PERIOD_PLUSEXP", SI_AID_PERIOD_PLUSEXP, false, false);
 	//script->set_constant("SI_AID_PERIOD_PLUSJOBEXP", SI_AID_PERIOD_PLUSJOBEXP, false, false);
-
+	//script->set_constant("SI_AID_PERIOD_DEADPENALTY", SI_AID_PERIOD_DEADPENALTY, false, false);
+	//script->set_constant("SI_AID_PERIOD_ADDSTOREITEMCOUNT", SI_AID_PERIOD_ADDSTOREITEMCOUNT, false, false);
+	// 943
+	// 944
+	// 945
+	// 946
+	// 947
+	// 948
+	// 949
+	//script->set_constant("SI_HISS", SI_HISS, false, false);
+	// 951
+	//script->set_constant("SI_NYANGGRASS", SI_NYANGGRASS, false, false);
+	//script->set_constant("SI_CHATTERING", SI_CHATTERING, false, false);
+	// 954
+	// 955
+	// 956
+	// 957
+	// 958
+	// 959
+	// 960
+	//script->set_constant("SI_GROOMING", SI_GROOMING, false, false);
+	//script->set_constant("SI_PROTECTIONOFSHRIMP", SI_PROTECTIONOFSHRIMP, false, false);
 	//script->set_constant("SI_EP16_2_BUFF_SS", SI_EP16_2_BUFF_SS, false, false);
 	//script->set_constant("SI_EP16_2_BUFF_SC", SI_EP16_2_BUFF_SC, false, false);
 	//script->set_constant("SI_EP16_2_BUFF_AC", SI_EP16_2_BUFF_AC, false, false);
 	//script->set_constant("SI_GS_MAGICAL_BULLET", SI_GS_MAGICAL_BULLET, false, false);
-
+	// 967
+	// 968
+	// 969
+	// 970
+	// 971
+	// 972
+	// 973
+	// 974
+	// 975
 	//script->set_constant("SI_FALLEN_ANGEL", SI_FALLEN_ANGEL, false, false);
+	// 977
+	// 978
+	//script->set_constant("SI_BLAZE_BEAD", SI_BLAZE_BEAD, false, false);
+	//script->set_constant("SI_FROZEN_BEAD", SI_FROZEN_BEAD, false, false);
+	//script->set_constant("SI_BREEZE_BEAD", SI_BREEZE_BEAD, false, false);
+	// 982
+	//script->set_constant("SI_AID_PERIOD_RECEIVEITEM_2ND", SI_AID_PERIOD_RECEIVEITEM_2ND, false, false);
+	//script->set_constant("SI_AID_PERIOD_PLUSEXP_2ND", SI_AID_PERIOD_PLUSEXP_2ND, false, false);
+	//script->set_constant("SI_AID_PERIOD_PLUSJOBEXP_2ND", SI_AID_PERIOD_PLUSJOBEXP_2ND, false, false);
+	//script->set_constant("SI_PRONTERA_JP", SI_PRONTERA_JP, false, false);
+	// 987
+	//script->set_constant("SI_GLOOM_CARD", SI_GLOOM_CARD, false, false);
+	//script->set_constant("SI_PHARAOH_CARD", SI_PHARAOH_CARD, false, false);
+	//script->set_constant("SI_KIEL_CARD", SI_KIEL_CARD, false, false);
+	// 991
+	//script->set_constant("SI_CHEERUP", SI_CHEERUP, false, false);
+	// 993
+	// 994
+	//script->set_constant("SI_S_MANAPOTION", SI_S_MANAPOTION, false, false);
+	//script->set_constant("SI_M_DEFSCROLL", SI_M_DEFSCROLL, false, false);
+	// 997
+	// 998
+	// 999
+	//script->set_constant("SI_AS_RAGGED_GOLEM_CARD", SI_AS_RAGGED_GOLEM_CARD, false, false);
+	//script->set_constant("SI_LHZ_DUN_N1", SI_LHZ_DUN_N1, false, false);
+	//script->set_constant("SI_LHZ_DUN_N2", SI_LHZ_DUN_N2, false, false);
+	//script->set_constant("SI_LHZ_DUN_N3", SI_LHZ_DUN_N3, false, false);
+	//script->set_constant("SI_LHZ_DUN_N4", SI_LHZ_DUN_N4, false, false);
+
+	script->set_constant("SI_MAX", SI_MAX, false, false);
