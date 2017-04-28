@@ -76,9 +76,12 @@ struct clan *clan_search(int clan_id)
  */
 struct clan *clan_searchname(const char *name)
 {
-	nullpo_retr(NULL, name);
 	struct clan *c;
-	struct DBIterator *iter = db_iterator(clan->db);
+	struct DBIterator *iter;
+
+	nullpo_retr(NULL, name);
+
+	iter = db_iterator(clan->db);
 	for (c = dbi_first(iter); dbi_exists(iter); c = dbi_next(iter)) {
 		if (strncmpi(c->name, name, NAME_LENGTH) == 0) {
 			break;
