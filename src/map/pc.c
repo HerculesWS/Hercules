@@ -5491,13 +5491,6 @@ int pc_steal_item(struct map_session_data *sd,struct block_list *bl, uint16 skil
 	//Logs items, Stolen from mobs [Lupus]
 	logs->pick_mob(md, LOG_TYPE_STEAL, -1, &tmp_item, data);
 
-	//A Rare Steal Global Announce by Lupus
-	if(md->db->dropitem[i].p<=battle_config.rare_drop_announce) {
-		char message[128];
-		sprintf (message, msg_txt(542), sd->status.name, md->db->jname, data->jname, (float)md->db->dropitem[i].p / 100);
-		//MSG: "'%s' stole %s's %s (chance: %0.02f%%)"
-		intif->broadcast(message, (int)strlen(message)+1, BC_DEFAULT);
-	}
 	return 1;
 }
 

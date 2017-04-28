@@ -111,8 +111,6 @@ enum item_itemid {
 	ITEMID_FRAGMENT_OF_CRYSTAL   = 7321,
 	ITEMID_SKULL_                = 7420,
 	ITEMID_TOKEN_OF_SIEGFRIED    = 7621,
-	ITEMID_GOLD_KEY77            = 7782,
-	ITEMID_SILVER_KEY77          = 7783,
 	ITEMID_SPECIAL_ALLOY_TRAP    = 7940,
 	ITEMID_CATNIP_FRUIT          = 11602,
 	ITEMID_RED_POUCH_OF_SURPRISE = 12024,
@@ -510,6 +508,7 @@ struct item_data {
 		unsigned keepafteruse : 1;
 		unsigned force_serial : 1;
 		unsigned no_options: 1; // < disallows use of item options on the item. (non-equippable items are automatically flagged) [Smokexyz]
+		unsigned drop_announce : 1; // Official Drop Announce [Jedzkie]
 	} flag;
 	struct {// item stacking limitation
 		unsigned short amount;
