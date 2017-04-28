@@ -481,7 +481,7 @@ struct status_change_data {
 
 struct storage_data {
 	bool save; //< save flag.
-	uint32 aggregate; //< total item count.
+	int aggregate; //< total item count.
 	VECTOR_DECL(struct item) item; //< item vector.
 };
 

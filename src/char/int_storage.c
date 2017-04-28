@@ -63,7 +63,8 @@ int inter_storage_tosql(int account_id, struct storage_data *cp, const struct st
 		struct item *p_it = NULL;
 
 		ARR_FIND(0, VECTOR_LENGTH(p->item), j,
-				(p_it = &VECTOR_INDEX(p->item, j)) != NULL
+				updated_p[j] != true
+				&& (p_it = &VECTOR_INDEX(p->item, j)) != NULL
 				&& cp_it->nameid == p_it->nameid
 				&& cp_it->unique_id == p_it->unique_id
 				&& memcmp(p_it->card, cp_it->card, sizeof(short) * MAX_SLOTS) == 0
@@ -152,12 +153,9 @@ int inter_storage_tosql(int account_id, struct storage_data *cp, const struct st
 
 	StrBuf->Destroy(&buf);
 
-	/**
-	 * Sync map-storage with inter-storage
-	 */
+	/* re-sync loaded data with current table data. */
 	VECTOR_CLEAR(cp->item);
-	VECTOR_ENSURE(cp->item, VECTOR_LENGTH(p->item), 1);
-	VECTOR_PUSHARRAY(cp->item, VECTOR_DATA(p->item), VECTOR_LENGTH(p->item));
+	inter_storage->fromsql(account_id, cp);
 
 	total_changes = total_inserts + total_updates + total_deletes;
 
@@ -322,6 +320,18 @@ static struct DBData inter_storage_ensure_account_storage(union DBKey key, va_li
 	return DB->ptr2data(stor);
 }
 
+/**
+ * Cleaning function called through db_destroy() for vectors in storage_data.
+ */
+int inter_storage_clear_account_storage(union DBKey key, struct DBData *data, va_list args)
+{
+	struct storage_data *stor = DB->data2ptr(data);
+
+	VECTOR_CLEAR(stor->item);
+
+	return 0;
+}
+
 //---------------------------------------------------------
 // storage data initialize
 int inter_storage_sql_init(void)
@@ -333,7 +343,7 @@ int inter_storage_sql_init(void)
 // storage data finalize
 void inter_storage_sql_final(void)
 {
-	inter_storage->account_storage->destroy(inter_storage->account_storage, NULL);
+	inter_storage->account_storage->destroy(inter_storage->account_storage, inter_storage->clear_account_storage);
 
 	return;
 }
@@ -475,11 +485,11 @@ int mapif_parse_AccountStorageSave(int fd)
 		}
 
 		p_stor.aggregate = count;
-
-		inter_storage->tosql(account_id, cp_stor, &p_stor);
-
-		VECTOR_CLEAR(p_stor.item);
 	}
+
+	inter_storage->tosql(account_id, cp_stor, &p_stor);
+
+	VECTOR_CLEAR(p_stor.item);
 
 	mapif->sAccountStorageSaveAck(fd, account_id, true);
 
@@ -771,6 +781,7 @@ void inter_storage_defaults(void)
 	inter_storage = &inter_storage_s;
 
 	inter_storage->ensure_account_storage = inter_storage_ensure_account_storage;
+	inter_storage->clear_account_storage = inter_storage_clear_account_storage;
 	inter_storage->tosql = inter_storage_tosql;
 	inter_storage->fromsql = inter_storage_fromsql;
 	inter_storage->guild_storage_tosql = inter_storage_guild_storage_tosql;

@@ -36,6 +36,7 @@ struct inter_storage_interface {
 	/* */
 	/* */
 	struct DBData (*ensure_account_storage) (union DBKey key, va_list args);
+	int (*clear_account_storage) (union DBKey key, struct DBData *data, va_list args);
 	int (*tosql) (int account_id, struct storage_data *cp, const struct storage_data *p);
 	int (*fromsql) (int account_id, struct storage_data *p);
 	int (*guild_storage_tosql) (int guild_id, const struct guild_storage *p);
