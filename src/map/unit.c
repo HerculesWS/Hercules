@@ -2757,6 +2757,7 @@ int unit_free(struct block_list *bl, clr_type clrtype)
 				sd->instance = NULL;
 			}
 			VECTOR_CLEAR(sd->script_queues);
+			VECTOR_CLEAR(sd->achievement); // Achievement [Smokexyz/Hercules]
 			if( sd->quest_log != NULL ) {
 				aFree(sd->quest_log);
 				sd->quest_log = NULL;

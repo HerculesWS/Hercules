@@ -323,6 +323,8 @@ bool chrif_save(struct map_session_data *sd, int flag) {
 		elemental->save(sd->ed);
 	if( sd->save_quest )
 		intif->quest_save(sd);
+	if (VECTOR_LENGTH(sd->achievement))
+		intif->achievements_save(sd);
 
 	return true;
 }
