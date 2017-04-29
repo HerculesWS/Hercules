@@ -904,51 +904,66 @@ bool pc_isequipped(struct map_session_data *sd, int nameid)
 	return false;
 }
 
-bool pc_can_Adopt(struct map_session_data *p1_sd, struct map_session_data *p2_sd, struct map_session_data *b_sd )
+/**
+ * Check adoption rules
+ * @param p1_sd: Player 1
+ * @param p2_sd: Player 2
+ * @param b_sd: Player that will be adopted
+ * @return ADOPT_ALLOWED - Sent message to Baby to accept or deny
+ *         ADOPT_ALREADY_ADOPTED - Already adopted
+ *         ADOPT_MARRIED_AND_PARTY - Need to be married and in the same party
+ *         ADOPT_EQUIP_RINGS - Need wedding rings equipped
+ *         ADOPT_NOT_NOVICE - Adoptee is not a Novice
+ *         ADOPT_CHARACTER_NOT_FOUND - Parent or Baby not found
+ *         ADOPT_MORE_CHILDREN - Cannot adopt more than 1 Baby (client message)
+ *         ADOPT_LEVEL_70 - Parents need to be level 70+ (client message)
+ *         ADOPT_MARRIED - Cannot adopt a married person (client message)
+ */
+enum adopt_responses pc_try_adopt(struct map_session_data *p1_sd, struct map_session_data *p2_sd, struct map_session_data *b_sd)
 {
 	if( !p1_sd || !p2_sd || !b_sd )
-		return false;
+		return ADOPT_CHARACTER_NOT_FOUND;
 
 	if( b_sd->status.father || b_sd->status.mother || b_sd->adopt_invite )
-		return false; // already adopted baby / in adopt request
+		return ADOPT_ALREADY_ADOPTED; // already adopted baby / in adopt request
 
 	if( !p1_sd->status.partner_id || !p1_sd->status.party_id || p1_sd->status.party_id != b_sd->status.party_id )
-		return false; // You need to be married and in party with baby to adopt
+		return ADOPT_MARRIED_AND_PARTY; // You need to be married and in party with baby to adopt
 
 	if( p1_sd->status.partner_id != p2_sd->status.char_id || p2_sd->status.partner_id != p1_sd->status.char_id )
-		return false; // Not married, wrong married
+		return ADOPT_MARRIED_AND_PARTY; // Not married, wrong married
 
 	if( p2_sd->status.party_id != p1_sd->status.party_id )
-		return false; // Both parents need to be in the same party
+		return ADOPT_MARRIED_AND_PARTY; // Both parents need to be in the same party
 
 	// Parents need to have their ring equipped
 	if( !pc->isequipped(p1_sd, WEDDING_RING_M) && !pc->isequipped(p1_sd, WEDDING_RING_F) )
-		return false;
+		return ADOPT_EQUIP_RINGS;
 
 	if( !pc->isequipped(p2_sd, WEDDING_RING_M) && !pc->isequipped(p2_sd, WEDDING_RING_F) )
-		return false;
+		return ADOPT_EQUIP_RINGS;
 
 	// Already adopted a baby
 	if( p1_sd->status.child || p2_sd->status.child ) {
-		clif->adopt_reply(p1_sd, 0);
-		return false;
+		clif->adopt_reply(p1_sd, ADOPT_REPLY_MORE_CHILDREN);
+		return ADOPT_MORE_CHILDREN;
 	}
 
 	// Parents need at least lvl 70 to adopt
 	if( p1_sd->status.base_level < 70 || p2_sd->status.base_level < 70 ) {
-		clif->adopt_reply(p1_sd, 1);
-		return false;
+		clif->adopt_reply(p1_sd, ADOPT_REPLY_LEVEL_70);
+		return ADOPT_LEVEL_70;
 	}
 
 	if( b_sd->status.partner_id ) {
-		clif->adopt_reply(p1_sd, 2);
-		return false;
+		clif->adopt_reply(p1_sd, ADOPT_REPLY_MARRIED);
+		return ADOPT_MARRIED;
 	}
 
 	if (!(b_sd->status.class >= JOB_NOVICE && b_sd->status.class <= JOB_THIEF) && b_sd->status.class != JOB_SUPER_NOVICE)
-		return false;
+		return ADOPT_NOT_NOVICE;
 
-	return true;
+	return ADOPT_ALLOWED;
 }
 
 /*==========================================
@@ -959,7 +974,7 @@ bool pc_adoption(struct map_session_data *p1_sd, struct map_session_data *p2_sd,
 	int class, joblevel;
 	unsigned int jobexp;
 
-	if( !pc->can_Adopt(p1_sd, p2_sd, b_sd) )
+	if (!pc->try_adopt(p1_sd, p2_sd, b_sd) != ADOPT_ALLOWED)
 		return false;
 
 	nullpo_retr(false, b_sd);
@@ -12076,7 +12091,7 @@ void pc_defaults(void) {
 	pc->dropitem = pc_dropitem;
 
 	pc->isequipped = pc_isequipped;
-	pc->can_Adopt = pc_can_Adopt;
+	pc->try_adopt = pc_try_adopt;
 	pc->adoption = pc_adoption;
 
 	pc->updateweightstatus = pc_updateweightstatus;

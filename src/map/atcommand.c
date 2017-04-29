@@ -5479,6 +5479,46 @@ ACMD(divorce)
 }
 
 /*==========================================
+ * @adopt by Aleos
+ * Usage: @adopt <char name>
+ *------------------------------------------*/
+
+ACMD(adopt)
+{
+	struct map_session_data *b_sd;
+	enum adopt_responses response;
+
+	memset(atcmd_output, '\0', sizeof(atcmd_output));
+	memset(atcmd_player_name, '\0', sizeof(atcmd_player_name));
+
+	if (!message[0] || sscanf(message, "%23[^\n]", atcmd_player_name) < 1) {
+		sprintf(atcmd_output, msg_fd(fd, 435), command); // Please enter a player name (usage: %s <char name>).
+		clif->message(fd, atcmd_output);
+		return false;
+	}
+
+	if ((b_sd = map->nick2sd((char *)atcmd_player_name)) == NULL) {
+		clif->message(fd, msg_fd(fd, 3)); // Character not found.
+		return false;
+	}
+
+	response = pc->try_adopt(sd, map->charid2sd(sd->status.partner_id), b_sd);
+
+	if (response == ADOPT_ALLOWED) {
+		struct map_session_data *p_sd = map->charid2sd(sd->status.partner_id);
+
+		b_sd->adopt_invite = sd->status.account_id;
+		clif->adopt_request(b_sd, sd, p_sd->status.account_id);
+		return true;
+	}
+
+	if (response < ADOPT_MORE_CHILDREN) { // No displaymessage for client-type responses
+		clif->message(fd, msg_fd(fd, 1500 + response - 1));
+	}
+	return false;
+}
+
+/*==========================================
  * @changelook by [Celest]
  *------------------------------------------*/
 ACMD(changelook)
@@ -9587,6 +9627,7 @@ void atcommand_basecommands(void) {
 		ACMD_DEF(skilltree),
 		ACMD_DEF(marry),
 		ACMD_DEF(divorce),
+		ACMD_DEF(adopt),
 		ACMD_DEF(sound),
 		ACMD_DEF(undisguiseall),
 		ACMD_DEF(disguiseall),

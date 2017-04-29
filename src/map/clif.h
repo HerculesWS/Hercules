@@ -564,6 +564,15 @@ enum clif_unittype {
 };
 
 /**
+ * Adoption
+ **/
+enum e_adopt_reply {
+	ADOPT_REPLY_MORE_CHILDREN = 0,
+	ADOPT_REPLY_LEVEL_70,
+	ADOPT_REPLY_MARRIED,
+};
+
+/**
  * Structures
  **/
 typedef void (*pFunc)(int, struct map_session_data *); //cant help but put it first
