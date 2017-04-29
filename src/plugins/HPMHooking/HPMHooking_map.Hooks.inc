@@ -54129,14 +54129,14 @@ bool HP_pc_isequipped(struct map_session_data *sd, int nameid) {
 	}
 	return retVal___;
 }
-bool HP_pc_can_Adopt(struct map_session_data *p1_sd, struct map_session_data *p2_sd, struct map_session_data *b_sd) {
+bool HP_pc_try_adopt(struct map_session_data *p1_sd, struct map_session_data *p2_sd, struct map_session_data *b_sd) {
 	int hIndex = 0;
 	bool retVal___ = false;
-	if (HPMHooks.count.HP_pc_can_Adopt_pre > 0) {
+	if (HPMHooks.count.HP_pc_try_adopt_pre > 0) {
 		bool (*preHookFunc) (struct map_session_data **p1_sd, struct map_session_data **p2_sd, struct map_session_data **b_sd);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_can_Adopt_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_pc_can_Adopt_pre[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_try_adopt_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_pc_try_adopt_pre[hIndex].func;
 			retVal___ = preHookFunc(&p1_sd, &p2_sd, &b_sd);
 		}
 		if (*HPMforce_return) {
@@ -54145,12 +54145,12 @@ bool HP_pc_can_Adopt(struct map_session_data *p1_sd, struct map_session_data *p2
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.pc.can_Adopt(p1_sd, p2_sd, b_sd);
+		retVal___ = HPMHooks.source.pc.try_adopt(p1_sd, p2_sd, b_sd);
 	}
-	if (HPMHooks.count.HP_pc_can_Adopt_post > 0) {
+	if (HPMHooks.count.HP_pc_try_adopt_post > 0) {
 		bool (*postHookFunc) (bool retVal___, struct map_session_data *p1_sd, struct map_session_data *p2_sd, struct map_session_data *b_sd);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_can_Adopt_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_pc_can_Adopt_post[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_try_adopt_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_pc_try_adopt_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, p1_sd, p2_sd, b_sd);
 		}
 	}
