@@ -7767,30 +7767,6 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			if (sc->data[SC_FOOD_LUK_CASH] && sc->data[SC_FOOD_LUK_CASH]->val1 > val1)
 				return 0;
 			break;
-		case SC_FOOD_STR_CASH:
-			if (sc->data[SC_FOOD_STR] && sc->data[SC_FOOD_STR]->val1 > val1)
-				return 0;
-			break;
-		case SC_FOOD_AGI_CASH:
-			if (sc->data[SC_FOOD_AGI] && sc->data[SC_FOOD_AGI]->val1 > val1)
-				return 0;
-			break;
-		case SC_FOOD_VIT_CASH:
-			if (sc->data[SC_FOOD_VIT] && sc->data[SC_FOOD_VIT]->val1 > val1)
-				return 0;
-			break;
-		case SC_FOOD_INT_CASH:
-			if (sc->data[SC_FOOD_INT] && sc->data[SC_FOOD_INT]->val1 > val1)
-				return 0;
-			break;
-		case SC_FOOD_DEX_CASH:
-			if (sc->data[SC_FOOD_DEX] && sc->data[SC_FOOD_DEX]->val1 > val1)
-				return 0;
-			break;
-		case SC_FOOD_LUK_CASH:
-			if (sc->data[SC_FOOD_LUK] && sc->data[SC_FOOD_LUK]->val1 > val1)
-				return 0;
-			break;
 		case SC_CAMOUFLAGE:
 			if( sd && pc->checkskill(sd, RA_CAMOUFLAGE) < 3 && !skill->check_camouflage(bl,NULL) )
 				return 0;
@@ -8009,40 +7985,46 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			status_change_end(bl, SC_INC_AGI, INVALID_TIMER);
 			break;
 		case SC_FOOD_STR:
-			status_change_end(bl, SC_FOOD_STR_CASH, INVALID_TIMER);
+			status_change_end(bl, SC_FOOD_STR, INVALID_TIMER);
 			break;
 		case SC_FOOD_AGI:
-			status_change_end(bl, SC_FOOD_AGI_CASH, INVALID_TIMER);
+			status_change_end(bl, SC_FOOD_AGI, INVALID_TIMER);
 			break;
 		case SC_FOOD_VIT:
-			status_change_end(bl, SC_FOOD_VIT_CASH, INVALID_TIMER);
+			status_change_end(bl, SC_FOOD_VIT, INVALID_TIMER);
 			break;
 		case SC_FOOD_INT:
-			status_change_end(bl, SC_FOOD_INT_CASH, INVALID_TIMER);
+			status_change_end(bl, SC_FOOD_INT, INVALID_TIMER);
 			break;
 		case SC_FOOD_DEX:
-			status_change_end(bl, SC_FOOD_DEX_CASH, INVALID_TIMER);
+			status_change_end(bl, SC_FOOD_DEX, INVALID_TIMER);
 			break;
 		case SC_FOOD_LUK:
-			status_change_end(bl, SC_FOOD_LUK_CASH, INVALID_TIMER);
+			status_change_end(bl, SC_FOOD_LUK, INVALID_TIMER);
 			break;
 		case SC_FOOD_STR_CASH:
 			status_change_end(bl, SC_FOOD_STR, INVALID_TIMER);
+			status_change_end(bl, SC_FOOD_STR_CASH, INVALID_TIMER);
 			break;
 		case SC_FOOD_AGI_CASH:
 			status_change_end(bl, SC_FOOD_AGI, INVALID_TIMER);
+			status_change_end(bl, SC_FOOD_AGI_CASH, INVALID_TIMER);
 			break;
 		case SC_FOOD_VIT_CASH:
 			status_change_end(bl, SC_FOOD_VIT, INVALID_TIMER);
+			status_change_end(bl, SC_FOOD_VIT_CASH, INVALID_TIMER);
 			break;
 		case SC_FOOD_INT_CASH:
 			status_change_end(bl, SC_FOOD_INT, INVALID_TIMER);
+			status_change_end(bl, SC_FOOD_INT_CASH, INVALID_TIMER);
 			break;
 		case SC_FOOD_DEX_CASH:
 			status_change_end(bl, SC_FOOD_DEX, INVALID_TIMER);
+			status_change_end(bl, SC_FOOD_DEX_CASH, INVALID_TIMER);
 			break;
 		case SC_FOOD_LUK_CASH:
 			status_change_end(bl, SC_FOOD_LUK, INVALID_TIMER);
+			status_change_end(bl, SC_FOOD_LUK_CASH, INVALID_TIMER);
 			break;
 		case SC_GM_BATTLE:
 			status_change_end(bl, SC_GM_BATTLE2, INVALID_TIMER);
