@@ -9341,7 +9341,7 @@ void clif_parse_LoadEndAck(int fd, struct map_session_data *sd) {
 	sd->state.warping = 0;
 	sd->state.dialog = 0;/* reset when warping, client dialog will go missing */
 
-	// look
+	// Character Looks
 #if PACKETVER < 4
 	clif->changelook(&sd->bl,LOOK_WEAPON,sd->status.weapon);
 	clif->changelook(&sd->bl,LOOK_SHIELD,sd->status.shield);
@@ -9351,21 +9351,26 @@ void clif_parse_LoadEndAck(int fd, struct map_session_data *sd) {
 
 	if(sd->vd.cloth_color)
 		clif->refreshlook(&sd->bl,sd->bl.id,LOOK_CLOTHES_COLOR,sd->vd.cloth_color,SELF);
+
 	if (sd->vd.body_style)
 		clif->refreshlook(&sd->bl,sd->bl.id,LOOK_BODY2,sd->vd.body_style,SELF);
-	// item
-	clif->inventorylist(sd);  // inventory list first, otherwise deleted items in pc->checkitem show up as 'unknown item'
-	pc->checkitem(sd);
 
-	// cart
+	// Send character inventory to the client.
+	// call this before pc->checkitem() so that the client isn't called to delete a non-existent item.
+	clif->inventorylist(sd);
+
+	// Send the cart inventory, counts & weight to the client.
 	if(pc_iscarton(sd)) {
 		clif->cartlist(sd);
-		clif->updatestatus(sd,SP_CARTINFO);
+		clif->updatestatus(sd, SP_CARTINFO);
 	}
 
-	// weight
-	clif->updatestatus(sd,SP_WEIGHT);
-	clif->updatestatus(sd,SP_MAXWEIGHT);
+	// Check for and delete unavailable/disabled items.
+	pc->checkitem(sd);
+
+	// Send the character's weight to the client.
+	clif->updatestatus(sd, SP_WEIGHT);
+	clif->updatestatus(sd, SP_MAXWEIGHT);
 
 	// guild
 	// (needs to go before clif_spawn() to show guild emblems correctly)

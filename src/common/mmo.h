@@ -480,9 +480,10 @@ struct status_change_data {
 };
 
 struct storage_data {
-	bool save; //< save flag.
-	int aggregate; //< total item count.
-	VECTOR_DECL(struct item) item; //< item vector.
+	bool save; // save flag.
+	bool received; // received flag.
+	int aggregate; // total item count.
+	VECTOR_DECL(struct item) item; // item vector.
 };
 
 struct guild_storage {

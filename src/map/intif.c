@@ -482,7 +482,7 @@ void intif_parse_account_storage(int fd)
 		return;
 	}
 
-	if (sd->storage_received == true) {
+	if (sd->storage.received == true) {
 		ShowError("intif_parse_account_storage: Multiple calls from the inter-server received.\n");
 		return;
 	}
@@ -491,15 +491,21 @@ void intif_parse_account_storage(int fd)
 
 	VECTOR_ENSURE(sd->storage.item, storage_count, 1);
 
-	sd->storage.aggregate = storage_count; //< Total items in storage.
+	sd->storage.aggregate = storage_count; // Total items in storage.
 
 	for (i = 0; i < storage_count; i++) {
 		const struct item *it = RFIFOP(fd, 8 + i * sizeof(struct item));
 		VECTOR_PUSH(sd->storage.item, *it);
 	}
 
-	sd->storage_received = true; //< Mark the storage as received.
-	sd->storage.save = false; //< Initialize the save flag as false.
+	sd->storage.received = true; // Mark the storage state as received.
+	sd->storage.save = false; // Initialize the save flag as false.
+
+
+	if (battle->bc->item_check != PCCHECKITEM_NONE) { // Check and flag items for inspection.
+		sd->itemcheck = (enum pc_checkitem_types) battle->bc->item_check;
+		pc->checkitem(sd);
+	}
 }
 
 /**
@@ -512,10 +518,13 @@ void intif_send_account_storage(const struct map_session_data *sd)
 	int len = 0, i = 0;
 	VECTOR_VAR(struct item, items);
 
-	if (intif->CheckForCharServer())
-		return;
+	nullpo_retv(sd);
 
-	if (sd->storage.save == false)
+	// Assert that at this point in the code, both flags are true.
+	Assert_retv(sd->storage.save == true);
+	Assert_retv(sd->storage.received == true);
+
+	if (intif->CheckForCharServer())
 		return;
 
 	VECTOR_ENSURE(items, sd->storage.aggregate, 1);
@@ -556,14 +565,14 @@ void intif_parse_account_storage_save_ack(int fd)
 	Assert_retv(fd > 0);
 
 	if ((sd = map->id2sd(account_id)) == NULL)
-		return; //< character is most probably offline.
+		return; // character is most probably offline.
 
 	if (saved == 0) {
 		ShowError("intif_parse_account_storage_save_ack: Storage has not been saved! (AID: %d)\n", account_id);
 		return;
 	}
 
-	sd->storage.save = false; //< Storage has been saved.
+	sd->storage.save = false; // Storage has been saved.
 }
 
 //=================================================================

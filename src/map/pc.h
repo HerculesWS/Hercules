@@ -94,6 +94,14 @@ enum pc_resetskill_flag {
 	PCRESETSKILL_CHSEX   = 0x4, // just reset the skills if the player class is a bard/dancer type (for changesex.)
 };
 
+enum pc_checkitem_types {
+	PCCHECKITEM_NONE      = 0x0,
+	PCCHECKITEM_INVENTORY = 0x1,
+	PCCHECKITEM_CART      = 0x2,
+	PCCHECKITEM_STORAGE   = 0x4,
+	PCCHECKITEM_GSTORAGE  = 0x8
+};
+
 struct weapon_data {
 	int atkmods[3];
 BEGIN_ZEROED_BLOCK; // all the variables within this block get zero'ed in each call of status_calc_pc
@@ -225,7 +233,6 @@ struct map_session_data {
 		unsigned int hold_recalc : 1;
 		unsigned int snovice_call_flag : 3; //Summon Angel (stage 1~3)
 		unsigned int hpmeter_visible : 1;
-		unsigned int itemcheck : 1;
 		unsigned int standalone : 1;/* [Ind/Hercules <3] */
 		unsigned int loggingout : 1;
 		unsigned int warp_clean : 1;
@@ -253,7 +260,7 @@ struct map_session_data {
 	struct mmo_charstatus status;
 	struct item_data *inventory_data[MAX_INVENTORY]; // direct pointers to itemdb entries (faster than doing item_id lookups)
 	struct storage_data storage; ///< Account Storage
-	bool storage_received;
+	enum pc_checkitem_types itemcheck;
 	short equip_index[EQI_MAX];
 	unsigned int weight,max_weight;
 	int cart_weight,cart_num,cart_weight_max;

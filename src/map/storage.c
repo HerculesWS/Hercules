@@ -107,8 +107,8 @@ int storage_storageopen(struct map_session_data *sd)
 	if (sd->state.storage_flag != STORAGE_FLAG_CLOSED)
 		return 1; //Already open?
 
-	if (sd->storage_received == false) {
-		clif->message(sd->fd, msg_sd(sd, 27)); //< Storage has not been loaded yet.
+	if (sd->storage.received == false) {
+		clif->message(sd->fd, msg_sd(sd, 27)); // Storage has not been loaded yet.
 		return 1;
 	}
 
@@ -162,9 +162,11 @@ int storage_additem(struct map_session_data* sd, struct item* item_data, int amo
 	int i;
 
 	nullpo_retr(1, sd);
-	nullpo_retr(1, item_data);
+	Assert_retr(1, sd->storage.received == true);
 
+	nullpo_retr(1, item_data);
 	Assert_retr(1, item_data->nameid > 0);
+
 	Assert_retr(1, amount > 0);
 
 	data = itemdb->search(item_data->nameid);
@@ -224,7 +226,7 @@ int storage_additem(struct map_session_data* sd, struct item* item_data, int amo
 
 	clif->updatestorageamount(sd, sd->storage.aggregate, MAX_STORAGE);
 
-	sd->storage.save = true; //< set a save flag.
+	sd->storage.save = true; // set a save flag.
 
 	return 0;
 }
@@ -237,6 +239,8 @@ int storage_delitem(struct map_session_data* sd, int n, int amount)
 	struct item *it = NULL;
 
 	nullpo_retr(1, sd);
+
+	Assert_retr(1, sd->storage.received == true);
 
 	Assert_retr(1, n >= 0 && n < VECTOR_LENGTH(sd->storage.item));
 
@@ -272,6 +276,8 @@ int storage_add_from_inventory(struct map_session_data* sd, int index, int amoun
 {
 	nullpo_ret(sd);
 
+	Assert_ret(sd->storage.received == true);
+
 	if (sd->storage.aggregate > MAX_STORAGE)
 		return 0; // storage full
 
@@ -306,6 +312,8 @@ int storage_add_to_inventory(struct map_session_data* sd, int index, int amount)
 
 	nullpo_ret(sd);
 
+	Assert_ret(sd->storage.received == true);
+
 	if (index < 0 || index >= VECTOR_LENGTH(sd->storage.item))
 		return 0;
 
@@ -335,6 +343,8 @@ int storage_add_to_inventory(struct map_session_data* sd, int index, int amount)
 int storage_storageaddfromcart(struct map_session_data* sd, int index, int amount)
 {
 	nullpo_ret(sd);
+
+	Assert_ret(sd->storage.received == true);
 
 	if (sd->storage.aggregate > MAX_STORAGE)
 		return 0; // storage full / storage closed
@@ -368,6 +378,8 @@ int storage_storagegettocart(struct map_session_data* sd, int index, int amount)
 
 	nullpo_ret(sd);
 
+	Assert_ret(sd->storage.received == true);
+
 	if (index < 0 || index >= VECTOR_LENGTH(sd->storage.item))
 		return 0;
 
@@ -398,6 +410,8 @@ void storage_storageclose(struct map_session_data* sd)
 	int i = 0;
 
 	nullpo_retv(sd);
+
+	Assert_retv(sd->storage.received == true);
 
 	clif->storageclose(sd);
 

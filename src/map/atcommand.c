@@ -5145,6 +5145,11 @@ ACMD(storeall)
 		}
 	}
 
+	if (sd->storage.received == false) {
+		clif->message(fd, msg_fd(fd, 27)); // "Storage has not been loaded yet"
+		return false;
+	}
+
 	for (i = 0; i < MAX_INVENTORY; i++) {
 		if (sd->status.inventory[i].amount) {
 			if(sd->status.inventory[i].equip != 0)
@@ -5167,9 +5172,14 @@ ACMD(clearstorage)
 		return false;
 	}
 
+	if (sd->storage.received == false) {
+		clif->message(fd, msg_fd(fd, 27)); // "Storage has not been loaded yet"
+		return false;
+	}
+
 	for (i = 0; i < VECTOR_LENGTH(sd->storage.item); ++i) {
 		if (VECTOR_INDEX(sd->storage.item, i).nameid == 0)
-			continue; //< we skip the already deleted items.
+			continue; // we skip the already deleted items.
 
 		storage->delitem(sd, i, VECTOR_INDEX(sd->storage.item, i).amount);
 	}
