@@ -1257,8 +1257,8 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 
 	sd->delayed_damage = 0;
 
-	if( battle_config.item_check )
-		sd->state.itemcheck = 1;
+	if (battle->bc->item_check != PCCHECKITEM_NONE) //< Check and flag items for inspection.
+		sd->itemcheck = (enum pc_checkitem_types) battle->bc->item_check;
 
 	// Event Timers
 	for( i = 0; i < MAX_EVENTTIMER; i++ )
@@ -10185,103 +10185,101 @@ int pc_checkitem(struct map_session_data *sd)
 
 	nullpo_ret(sd);
 
-	if (sd->state.vending) //Avoid reorganizing items when we are vending, as that leads to exploits (pointed out by End of Exam)
+	if (sd->state.vending == 1) // Avoid reorganizing items when we are vending, as that leads to exploits (pointed out by End of Exam)
 		return 0;
 
-	if (sd->state.itemcheck) { // check for invalid(ated) items
-		int id;
-		for (i = 0; i < MAX_INVENTORY; i++) {
-			id = sd->status.inventory[i].nameid;
+	if (sd->itemcheck != PCCHECKITEM_NONE) { // check for invalid(ated) items
+		int id = 0;
 
-			if (!id)
-				continue;
+		if (sd->itemcheck & PCCHECKITEM_INVENTORY) {
+			for (i = 0; i < MAX_INVENTORY; i++) {
+				if ((id = sd->status.inventory[i].nameid) == 0)
+					continue;
 
-			if (!itemdb_available(id)) {
-				ShowWarning("Removed invalid/disabled item id %d from inventory (amount=%d, char_id=%d).\n", id, sd->status.inventory[i].amount, sd->status.char_id);
-				pc->delitem(sd, i, sd->status.inventory[i].amount, 0, DELITEM_NORMAL, LOG_TYPE_INV_INVALID);
-				continue;
+				if (!itemdb_available(id)) {
+					ShowWarning("pc_checkitem: Removed invalid/disabled item id %d from inventory (amount=%d, char_id=%d).\n", id, sd->status.inventory[i].amount, sd->status.char_id);
+					pc->delitem(sd, i, sd->status.inventory[i].amount, 0, DELITEM_NORMAL, LOG_TYPE_INV_INVALID);
+					continue;
+				}
+
+				if (sd->status.inventory[i].unique_id == 0 && !itemdb->isstackable(id))
+					sd->status.inventory[i].unique_id = itemdb->unique_id(sd);
 			}
-
-			if (!sd->status.inventory[i].unique_id && !itemdb->isstackable(id))
-				sd->status.inventory[i].unique_id = itemdb->unique_id(sd);
 		}
 
-		for( i = 0; i < MAX_CART; i++ ) {
-			id = sd->status.cart[i].nameid;
+		if (sd->itemcheck & PCCHECKITEM_CART) {
+			for (i = 0; i < MAX_CART; i++) {
+				if ((id = sd->status.cart[i].nameid) == 0)
+					continue;
 
-			if (!id)
-				continue;
+				if( !itemdb_available(id) ) {
+					ShowWarning("pc_checkitem: Removed invalid/disabled item id %d from cart (amount=%d, char_id=%d).\n", id, sd->status.cart[i].amount, sd->status.char_id);
+					pc->cart_delitem(sd, i, sd->status.cart[i].amount, 0, LOG_TYPE_CART_INVALID);
+					continue;
+				}
 
-			if( !itemdb_available(id) ) {
-				ShowWarning("Removed invalid/disabled item id %d from cart (amount=%d, char_id=%d).\n", id, sd->status.cart[i].amount, sd->status.char_id);
-				pc->cart_delitem(sd, i, sd->status.cart[i].amount, 0, LOG_TYPE_CART_INVALID);
-				continue;
+				if (sd->status.cart[i].unique_id == 0 && !itemdb->isstackable(id))
+					sd->status.cart[i].unique_id = itemdb->unique_id(sd);
 			}
-
-			if ( !sd->status.cart[i].unique_id && !itemdb->isstackable(id) )
-				sd->status.cart[i].unique_id = itemdb->unique_id(sd);
 		}
 
-		for (i = 0; i < VECTOR_LENGTH(sd->storage.item); i++) {
-			struct item *it = &VECTOR_INDEX(sd->storage.item, i);
+		if (sd->itemcheck & PCCHECKITEM_STORAGE && sd->storage.received == true) {
+			for (i = 0; i < VECTOR_LENGTH(sd->storage.item); i++) {
+				struct item *it = &VECTOR_INDEX(sd->storage.item, i);
 
-			if (it->nameid == 0)
-				continue;
+				if ((id = it->nameid) == 0)
+					continue;
 
-			id = it->nameid;
+				if (!itemdb_available(id)) {
+					ShowWarning("pc_checkitem: Removed invalid/disabled item id %d from storage (amount=%d, char_id=%d).\n", id, it->amount, sd->status.char_id);
 
-			if (!itemdb_available(id)) {
-				ShowWarning("Removed invalid/disabled item id %d from storage (amount=%d, char_id=%d).\n", id, it->amount, sd->status.char_id);
+					storage->delitem(sd, i, it->amount);
 
-				storage->delitem(sd, i, it->amount);
+					storage->close(sd);
+					continue;
+				}
 
-				storage->close(sd);
-				continue;
+				if (it->unique_id == 0 && itemdb->isstackable(id) == 0)
+					it->unique_id = itemdb->unique_id(sd);
 			}
-
-			if (it->unique_id == 0 && itemdb->isstackable(id) == 0)
-				it->unique_id = itemdb->unique_id(sd);
 		}
 
-		if (sd->guild) {
+		if (sd->guild && sd->itemcheck & PCCHECKITEM_GSTORAGE) {
 			struct guild_storage *guild_storage = idb_get(gstorage->db,sd->guild->guild_id);
 			if (guild_storage) {
-				for( i = 0; i < MAX_GUILD_STORAGE; i++ ) {
-					id = guild_storage->items[i].nameid;
-
-					if (!id)
+				for (i = 0; i < MAX_GUILD_STORAGE; i++) {
+					if ((id = guild_storage->items[i].nameid) == 0)
 						continue;
 
-					if( !itemdb_available(id) ) {
-						ShowWarning("Removed invalid/disabled item id %d from guild storage (amount=%d, char_id=%d, guild_id=%d).\n", id, guild_storage->items[i].amount, sd->status.char_id, sd->guild->guild_id);
+					if (!itemdb_available(id)) {
+						ShowWarning("pc_checkitem: Removed invalid/disabled item id %d from guild storage (amount=%d, char_id=%d, guild_id=%d).\n", id, guild_storage->items[i].amount, sd->status.char_id, sd->guild->guild_id);
 						gstorage->delitem(sd, guild_storage, i, guild_storage->items[i].amount);
 						gstorage->close(sd); // force closing
 						continue;
 					}
 
-					if (!guild_storage->items[i].unique_id && !itemdb->isstackable(id))
+					if (guild_storage->items[i].unique_id == 0 && !itemdb->isstackable(id))
 						guild_storage->items[i].unique_id = itemdb->unique_id(sd);
 				}
 			}
 		}
-		sd->state.itemcheck = 0;
 	}
 
-	for( i = 0; i < MAX_INVENTORY; i++) {
+	for (i = 0; i < MAX_INVENTORY; i++) {
 
-		if( sd->status.inventory[i].nameid == 0 )
+		if (sd->status.inventory[i].nameid == 0)
 			continue;
 
-		if( !sd->status.inventory[i].equip )
+		if (sd->status.inventory[i].equip == 0)
 			continue;
 
-		if( sd->status.inventory[i].equip&~pc->equippoint(sd,i) ) {
+		if (sd->status.inventory[i].equip & ~pc->equippoint(sd,i)) {
 			pc->unequipitem(sd, i, PCUNEQUIPITEM_FORCE);
 			calc_flag = 1;
 			continue;
 		}
 
-		if (battle_config.unequip_restricted_equipment&1) {
+		if (battle_config.unequip_restricted_equipment & 1) {
 			int j;
 			for (j = 0; j < map->list[sd->bl.m].zone->disabled_items_count; j++) {
 				if (map->list[sd->bl.m].zone->disabled_items[j] == sd->status.inventory[i].nameid) {
@@ -10291,7 +10289,7 @@ int pc_checkitem(struct map_session_data *sd)
 			}
 		}
 
-		if (battle_config.unequip_restricted_equipment&2) {
+		if (battle_config.unequip_restricted_equipment & 2) {
 			if (!itemdb_isspecial(sd->status.inventory[i].card[0])) {
 				int j, slot;
 				for (slot = 0; slot < MAX_SLOTS; slot++) {
@@ -10307,9 +10305,9 @@ int pc_checkitem(struct map_session_data *sd)
 
 	}
 
-	if( calc_flag && sd->state.active ) {
+	if (calc_flag != 0 && sd->state.active == 1) {
 		pc->checkallowskill(sd);
-		status_calc_pc(sd,SCO_NONE);
+		status_calc_pc(sd, SCO_NONE);
 	}
 
 	return 0;

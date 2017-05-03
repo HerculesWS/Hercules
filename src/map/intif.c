@@ -482,7 +482,7 @@ void intif_parse_account_storage(int fd)
 		return;
 	}
 
-	if (sd->storage_received == true) {
+	if (sd->storage.received == true) {
 		ShowError("intif_parse_account_storage: Multiple calls from the inter-server received.\n");
 		return;
 	}
@@ -498,7 +498,7 @@ void intif_parse_account_storage(int fd)
 		VECTOR_PUSH(sd->storage.item, *it);
 	}
 
-	sd->storage_received = true; //< Mark the storage as received.
+	sd->storage.received = true; //< Mark the storage state as received.
 	sd->storage.save = false; //< Initialize the save flag as false.
 }
 
@@ -512,10 +512,13 @@ void intif_send_account_storage(const struct map_session_data *sd)
 	int len = 0, i = 0;
 	VECTOR_VAR(struct item, items);
 
-	if (intif->CheckForCharServer())
-		return;
+	nullpo_retv(sd);
 
-	if (sd->storage.save == false)
+	//< Assert that at this point in the code, both flags are true.
+	Assert_retv(sd->storage.save == true);
+	Assert_retv(sd->storage.received == true);
+
+	if (intif->CheckForCharServer())
 		return;
 
 	VECTOR_ENSURE(items, sd->storage.aggregate, 1);

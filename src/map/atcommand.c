@@ -5145,6 +5145,11 @@ ACMD(storeall)
 		}
 	}
 
+	if (sd->storage.received == false) {
+		clif->message(fd, msg_fd(fd, 27)); //< "Storage has not been loaded yet"
+		return false;
+	}
+
 	for (i = 0; i < MAX_INVENTORY; i++) {
 		if (sd->status.inventory[i].amount) {
 			if(sd->status.inventory[i].equip != 0)
@@ -5164,6 +5169,11 @@ ACMD(clearstorage)
 
 	if (sd->state.storage_flag == STORAGE_FLAG_NORMAL) {
 		clif->message(fd, msg_fd(fd,250));
+		return false;
+	}
+
+	if (sd->storage.received == false) {
+		clif->message(fd, msg_fd(fd, 27)); //< "Storage has not been loaded yet"
 		return false;
 	}
 

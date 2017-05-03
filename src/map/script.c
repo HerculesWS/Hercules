@@ -10423,9 +10423,17 @@ BUILDIN(openstorage)
 {
 	struct map_session_data *sd = script->rid2sd(st);
 	if (sd == NULL)
-		return true;
+		return false;
+
+	if (sd->storage.received == false) {
+		script_pushint(st, 0);
+		ShowWarning("buildin_openstorage: Storage data for AID %d has not been loaded.\n", sd->bl.id);
+		return false;
+	}
 
 	storage->open(sd);
+
+	script_pushint(st, 1); //< success flag.
 	return true;
 }
 
