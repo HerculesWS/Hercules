@@ -3797,6 +3797,7 @@
 - `MAX_CART`: 100
 - `MAX_INVENTORY`: 100
 - `MAX_ZENY`: 2147483647
+- `MAX_BANK_ZENY`: 2147483647
 - `MAX_BG_MEMBERS`: 30
 - `MAX_CHAT_USERS`: 20
 - `MAX_REFINE`: 20
@@ -4003,6 +4004,7 @@
 - `SkillPoint`: [param]
 - `Class`: [param]
 - `Zeny`: [param]
+- `BankVault`: [param]
 - `Sex`: [param]
 - `NextBaseExp`: [param]
 - `NextJobExp`: [param]
