@@ -211,12 +211,7 @@ prontera,153,286,4	script	Memorial Plaque#Memorial	4_BOARD3,{
 		next;
 		Memorial08 = 9;
 		getexp 93750,43750;
-		goto L_CleanPlaque;
-	} else if (Memorial08 >= 9) {
-		goto L_CleanPlaque;
 	}
-
-L_CleanPlaque:
 	mes "- You see a message from the cleaned plaque.-";
 	next;
 	mes "-Although no sculptured marble should rise to their memory,-";
@@ -285,9 +280,9 @@ prontera,150,270,4	script	Grast#Memorial	4_M_HUMERCHANT,{
 			mes "I can provide you all the materials.";
 			next;
 			if (select("I'll gather the rest.", "Give me the materials.") == 2) {
-				goto L_GiveUp;
+				callsub L_GiveUp;
 			}
-			goto L_Continue;
+			callsub L_Continue;
 		} else {
 			mes "[Grast]";
 			mes "Oh, you've brought the materials I asked.";
@@ -313,9 +308,9 @@ prontera,150,270,4	script	Grast#Memorial	4_M_HUMERCHANT,{
 			mes "If you feel too burdened to gather them all, I can provide you all the materials.";
 			next;
 			if (select("I'll gather the rest.", "Give me the materials.") == 2) {
-				goto L_GiveUp;
+				callsub L_GiveUp;
 			}
-			goto L_Continue;
+			callsub L_Continue;
 		} else {
 			mes "[Grast]";
 			mes "Oh, you've brought everything I asked.";
@@ -342,9 +337,9 @@ prontera,150,270,4	script	Grast#Memorial	4_M_HUMERCHANT,{
 			mes "It's your call, " + strcharinfo(PC_NAME) + ".";
 			next;
 			if (select("I'll gather the rest.", "Give me the materials.") == 2) {
-				goto L_GiveUp;
+				callsub L_GiveUp;
 			}
-			goto L_Continue;
+			callsub L_Continue;
 		} else {
 			mes "[Grast]";
 			mes "Have you brought the materials I asked?";

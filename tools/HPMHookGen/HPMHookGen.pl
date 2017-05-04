@@ -3,7 +3,7 @@
 # This file is part of Hercules.
 # http://herc.ws - http://github.com/HerculesWS/Hercules
 #
-# Copyright (C) 2013-2016  Hercules Dev Team
+# Copyright (C) 2013-2017  Hercules Dev Team
 #
 # Hercules is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -240,9 +240,9 @@ sub parse($$) {
 			$rtinit = ' = BGQT_INVALID';
 		} elsif ($x =~ /^enum\s+parsefunc_rcode$/) { # Known enum parsefunc_rcode
 			$rtinit = ' = PACKET_UNKNOWN';
-		} elsif ($x =~ /^(?:enum\s+)?DBOptions$/) { # Known enum DBOptions
+		} elsif ($x =~ /^enum\s+DBOptions$/) { # Known enum DBOptions
 			$rtinit = ' = DB_OPT_BASE';
-		} elsif ($x =~ /^enum\s+thread_priority$/) { # Known enum DBOptions
+		} elsif ($x =~ /^enum\s+thread_priority$/) { # Known enum thread_priority
 			$rtinit = ' = THREADPRIO_NORMAL';
 		} elsif ($x eq 'DBComparator' or $x eq 'DBHasher' or $x eq 'DBReleaser') { # DB function pointers
 			$rtinit = ' = NULL';
@@ -538,7 +538,8 @@ EOF
 			next if $fileguards{$key}->{private};
 			print FH <<"EOF";
 #ifdef $fileguards{$key}->{guard} /* $key */
-if ((server_type&($fileguards{$key}->{type})) && !HPM_SYMBOL("$exportsymbols{$key}", $key)) return "$exportsymbols{$key}";
+	if ((server_type&($fileguards{$key}->{type})) != 0 && !HPM_SYMBOL("$exportsymbols{$key}", $key))
+		return "$exportsymbols{$key}";
 #endif // $fileguards{$key}->{guard}
 EOF
 		}
@@ -599,7 +600,7 @@ EOF
 EOF
 
 			$idx += 2;
-			$maxlen = length($key."->".$if->{name}) if( length($key."->".$if->{name}) > $maxlen );
+			$maxlen = length($key."->".$if->{name}) if (length($key."->".$if->{name}) > $maxlen);
 		}
 	}
 	print FH <<"EOF";
@@ -619,7 +620,7 @@ EOF
 	foreach my $key (@$keysref) {
 
 		print FH <<"EOF";
-memcpy(&HPMHooks.source.$key, $key2pointer{$key}, sizeof(struct $key2original{$key}));
+HPMHooks.source.$key = *$key2pointer{$key};
 EOF
 	}
 	close FH;
@@ -704,14 +705,14 @@ EOF
 			print FH <<"EOF";
 $if->{handlerdef} {$if->{notes}
 	int hIndex = 0;${initialization}
-	if( HPMHooks.count.$if->{hname}_pre ) {
+	if (HPMHooks.count.$if->{hname}_pre > 0) {
 		$if->{predef}
 		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.$if->{hname}_pre; hIndex++ ) {$beforeblock3
+		for (hIndex = 0; hIndex < HPMHooks.count.$if->{hname}_pre; hIndex++) {$beforeblock3
 			preHookFunc = HPMHooks.list.$if->{hname}_pre[hIndex].func;
 			$if->{precall}$afterblock3
 		}
-		if( *HPMforce_return ) {
+		if (*HPMforce_return) {
 			*HPMforce_return = false;
 			return$retval;
 		}
@@ -719,9 +720,9 @@ $if->{handlerdef} {$if->{notes}
 	{$beforeblock2
 		$if->{origcall}$afterblock2
 	}
-	if( HPMHooks.count.$if->{hname}_post ) {
+	if (HPMHooks.count.$if->{hname}_post > 0) {
 		$if->{postdef}
-		for(hIndex = 0; hIndex < HPMHooks.count.$if->{hname}_post; hIndex++ ) {$beforeblock3
+		for (hIndex = 0; hIndex < HPMHooks.count.$if->{hname}_post; hIndex++) {$beforeblock3
 			postHookFunc = HPMHooks.list.$if->{hname}_post[hIndex].func;
 			$if->{postcall}$afterblock3
 		}

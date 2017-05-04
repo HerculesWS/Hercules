@@ -1209,13 +1209,8 @@ function	script	F_Lottery	{
 	mes "[Kafra]";
 	mes "^FF0000Lets see.... This is...!!^000000";
 	next;
-	if(@temp <  1) goto sL_Prize1;
-	if(@temp <  2) goto sL_Prize2;
-	if(@temp <  3) goto sL_Prize3;
-	if(@temp <=  4) goto sL_Prize4;
-	goto sL_Prize5;
-
-	sL_Prize1:
+	switch (@temp) {
+	case 0:
 		mes "[Kafra]";
 		mes "WOW!!!!..... You win!!! 1st Prize~! Congratulations~~ You got the 1st prize~~";
 		if(@Lotto == 1) getitem Wooden_Mail,1;//Items: Wooden_Mail,
@@ -1227,7 +1222,7 @@ function	script	F_Lottery	{
 		}
 		if(@Lotto == 5) getitem Yggdrasilberry,3;//Items: Yggdrasilberry,
 		return;
-	sL_Prize2:
+	case 1:
 		mes "[Kafra]";
 		mes "Oh! WOW! You've won the 2nd prize! Congratulations!!";
 		if(@Lotto == 1) getitem Shoes,1;//Items: Shoes,
@@ -1239,7 +1234,7 @@ function	script	F_Lottery	{
 			getitem Royal_Jelly,10;//Items: Royal_Jelly,
 		}
 		return;
-	sL_Prize3:
+	case 2:
 		mes "[Kafra]";
 		mes "Congratulations! You've won the 3rd prize.";
 		if(@Lotto == 1) getitem Wing_Of_Butterfly,4;//Items: Butterfly_Wing,
@@ -1248,7 +1243,8 @@ function	script	F_Lottery	{
 		if(@Lotto == 4) getitem White_Potion,15;//Items: White_Potion,
 		if(@Lotto == 5) getitem White_Potion,30;//Items: White_Potion,
 		return;
-	sL_Prize4:
+	case 3:
+	case 4:
 		mes "[Kafra]";
 		mes "You've won the 4th prize.";
 		if(@Lotto == 1) getitem Sweet_Potato,100;//Items: Sweet_Potato,
@@ -1257,7 +1253,7 @@ function	script	F_Lottery	{
 		if(@Lotto == 4) getitem Blue_Potion,5;//Items: Blue_Potion,
 		if(@Lotto == 5) getitem Blue_Potion,10;//Items: Blue_Potion,
 		return;
-	sL_Prize5:
+	default:
 		mes "[Kafra]";
 		mes "You've won the 5th prize.";
 		if(@Lotto == 1) getitem Sweet_Potato,50;//Items: Sweet_Potato,
@@ -1266,18 +1262,20 @@ function	script	F_Lottery	{
 		if(@Lotto == 4) getitem Red_Potion,250;//Items: Red_Potion,
 		if(@Lotto == 5) getitem Red_Potion,300;//Items: Red_Potion,
 		return;
+	}
 
 sF_Spin:
-	mes "[Lottery Machine]";
-	mes "Number of spins remaining: "+@input;
-	next;
-	mes "[Lottery Machine]";
-	mes "(rumble~rumble~rumble~)...";
-	next;
-	@temp = rand(10);
-	--@input;
-	if(@input <= 0) return;
-	goto sF_Spin;
+	while (true) {
+		mes "[Lottery Machine]";
+		mes "Number of spins remaining: "+@input;
+		next;
+		mes "[Lottery Machine]";
+		mes "(rumble~rumble~rumble~)...";
+		next;
+		@temp = rand(10);
+		--@input;
+		if(@input <= 0) return;
+	}
 }
 
 //== Inside Clock Tower ====================================

@@ -141,7 +141,7 @@ function Dyes;
 			mes " - White: White Dyestuffs";
 			break;
 		case 4:
-			goto L_End;
+			callsub L_End;
 		}
 	}
 
@@ -158,7 +158,7 @@ function Dyes {
 		.@menu$ += "- "+.@DyeName$[getarg(.@i)]+":";
 	.@menu$ += "- ^777777Cancel^000000";
 	.@s = select(.@menu$)-1;
-	if (.@s == (getargcount()/2)+1) goto L_End;
+	if (.@s == (getargcount()/2)+1) callsub L_End;
 	mes .n$;
 	if (.@s == 0) {
 		mes "I can change your dye to";
@@ -172,7 +172,7 @@ function Dyes {
 			mes "Your clothes have been dyed "+.@DyeName$[0]+".";
 			close;
 		case 2:
-			goto L_End;
+			callsub L_End;
 		}
 	}
 	if (!countitem(.@DyeItems[getarg((.@s-1)*2)])) {

@@ -63,7 +63,34 @@ function	script	F_GldManager	{
 	switch (select("Kafra Staff Employment / Dismissal","Enter Treasure Room","Cancel")) {
 	case 1: // Employment / Dismissal
 		mes "[ "+getarg(0)+" ]";
-		if (getcastledata(getarg(1),9) == 1) goto L_Dismiss;
+		if (getcastledata(getarg(1),9) == 1) {
+			mes "Would you like to dismiss the current Kafra?";
+			next;
+			if (select("Dismissal","Cancel") != 1) {
+				mes "[ "+getarg(0)+" ]";
+				mes "Master, I think you should keep the current Kafra Staff because she is already trying her best to serve us";
+				return;
+			}
+			cutin "kafra_01",2;
+			mes "[ Kafra Staff ]";
+			mes "Have I done anything wrong? If I did, will you please forgive me?";
+			next;
+			if (select("Dismiss","Cancel") != 1) {
+				mes "[ Kafra Staff ]";
+				mes "Thank you master, I'll do my best! ^^.";
+				cutin "kafra_01",255;
+				return;
+			}
+			mes "[ Kafra Staff ]";
+			mes "It's unfortunate that I won't be able to serve your guild anymore....";
+			next;
+			disablenpc "Kafra Staff#"+getarg(4);
+			setcastledata getarg(1),9,0;
+			cutin "kafra_01",255;
+			mes "[ "+getarg(0)+" ]";
+			mes "The Kafra has been dismissed.  But... we should really get a Kafra as soon as possible!";
+			return;
+		}
 		if (getgdskilllv(@GID,10001) == 0){
 			mes "Master, you don't have a contract with the Kafra Staff Company.";
 			mes "In order to hire a Kafra, you must first learn the Guild skill ^5533FFContract With Kafra^000000.";
@@ -96,33 +123,6 @@ function	script	F_GldManager	{
 			mes "[ "+getarg(0)+" ]";
 			//mes "Your employment contract lasts ^5533FF1 month^000000.  After this term is over you will have to create a new contract.";
 			mes "I think the Kafra Staff will benefit our guild members.";
-			return;
-		L_Dismiss:
-			mes "Would you like to dismiss the current Kafra?";
-			next;
-			if (select("Dismissal","Cancel") != 1) {
-				mes "[ "+getarg(0)+" ]";
-				mes "Master, I think you should keep the current Kafra Staff because she is already trying her best to serve us";
-				return;
-			}
-			cutin "kafra_01",2;
-			mes "[ Kafra Staff ]";
-			mes "Have I done anything wrong? If I did, will you please forgive me?";
-			next;
-			if (select("Dismiss","Cancel") != 1) {
-				mes "[ Kafra Staff ]";
-				mes "Thank you master, I'll do my best! ^^.";
-				cutin "kafra_01",255;
-				return;
-			}
-			mes "[ Kafra Staff ]";
-			mes "It's unfortunate that I won't be able to serve your guild anymore....";
-			next;
-			disablenpc "Kafra Staff#"+getarg(4);
-			setcastledata getarg(1),9,0;
-			cutin "kafra_01",255;
-			mes "[ "+getarg(0)+" ]";
-			mes "The Kafra has been dismissed.  But... we should really get a Kafra as soon as possible!";
 			return;
 	case 2: // Enter Treasure Room
 		mes "[ "+getarg(0)+" ]";

@@ -677,7 +677,6 @@ my @defaults = (
 			drops_by_luk                      => {parse => \&parsecfg_int,       print => \&printcfg_int,    path => "drops:", default => 0},
 			drops_by_luk2                     => {parse => \&parsecfg_int,       print => \&printcfg_int,    path => "drops:", default => 0},
 			alchemist_summon_reward           => {parse => \&parsecfg_int,       print => \&printcfg_int,    path => "drops:", default => 1},
-			rare_drop_announce                => {parse => \&parsecfg_int,       print => \&printcfg_int,    path => "drops:", default => 0},
 			base_exp_rate                     => {parse => \&parsecfg_int,       print => \&printcfg_int,    path => "exp:", default => 100},
 			job_exp_rate                      => {parse => \&parsecfg_int,       print => \&printcfg_int,    path => "exp:", default => 100},
 			multi_level_up                    => {parse => \&parsecfg_bool,      print => \&printcfg_bool,   path => "exp:", default => "false"},

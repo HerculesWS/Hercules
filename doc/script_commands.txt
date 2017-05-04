@@ -2687,7 +2687,7 @@ Example 2: check party count (with a next() pause), before warping to event
 	}
 	
 	// Finally, it's safe to start the event!
-	warpparty("event_map", 0, 0, getcharid(CHAR_ID_PARTY));
+	warpparty("event_map", 0, 0, getcharid(CHAR_ID_PARTY), true);
 
 ---------------------------------------
 
@@ -3950,17 +3950,18 @@ things might in some cases be required.
 
 ---------------------------------------
 
-*checkoption(<option number>)
-*checkoption1(<option number>)
-*checkoption2(<option number>)
-*setoption(<option number>{, <flag>});
+*checkoption(<option number>{, <account id>})
+*checkoption1(<option number>{, <account id>})
+*checkoption2(<option number>{, <account id>})
+*setoption(<option number>{, <flag>{, <account id>}});
 
 The setoption() series of functions check for a so-called option that is
 set on the invoking character. 'Options' are used to store status 
 conditions and a lot of other non-permanent character data of the yes-no 
 kind. For most common cases, it is better to use checkcart(),
 checkfalcon(), checkmount() and other similar functions, but there are
-some options which you cannot get at this way.
+some options which you cannot get at this way. If <account id> is given,
+this player will be used instead of the invoking character.
 
 Option numbers valid for the first (option) version of this command are:
 
@@ -4355,7 +4356,7 @@ See also warp().
 
 ---------------------------------------
 
-*warpparty("<to_mapname>", <x>, <y>, <party_id>, {"<from_mapname>"})
+*warpparty("<to_mapname>", <x>, <y>, <party_id>, "<from_mapname>", <include_leader>)
 
 Warps a party to specified map and coordinate given the party ID, which 
 you can get with getcharid(CHAR_ID_PARTY). You can also request another party id given 
@@ -4375,13 +4376,15 @@ Leader:       All party members are warped to the leader's position. The
 If you specify a from_mapname, warpparty() will only affect those on
 that map.
 
+You can exclude Party leader from warping, by keeping include_leader option as false.
+
 Example:
 
 	mes("[Party Warper]");
 	mes("Here you go!");
 	close2();
 	.@id = getcharid(CHAR_ID_PARTY);
-	warpparty("prontera", 150, 100, .@id);
+	warpparty("prontera", 150, 100, .@id, true);
 	close();
 
 ---------------------------------------
@@ -7760,6 +7763,68 @@ scripts-atcommands this way.
 
 ---------------------------------------
 
+*can_use_command("<command>"{, <account id>})
+
+Checks if the attached or specified player can use the specified
+atcommand and returns true or false accordingly.
+
+---------------------------------------
+
+*has_permission(<permission>{, <account id>})
+*has_permission("<permission>"{, <account id>})
+
+Check if the attached or specified player has the specified permission
+and returns true or false accordingly. See doc/permissions.txt for
+details about permissions.
+
+Valid <permission> are:
+
+	PERM_TRADE
+	PERM_PARTY
+	PERM_ALL_SKILL
+	PERM_USE_ALL_EQUIPMENT
+	PERM_SKILL_UNCONDITIONAL
+	PERM_JOIN_ALL_CHAT
+	PERM_NO_CHAT_KICK
+	PERM_HIDE_SESSION
+	PERM_WHO_DISPLAY_AID
+	PERM_RECEIVE_HACK_INFO
+	PERM_WARP_ANYWHERE
+	PERM_VIEW_HPMETER
+	PERM_VIEW_EQUIPMENT
+	PERM_USE_CHECK
+	PERM_USE_CHANGEMAPTYPE
+	PERM_USE_ALL_COMMANDS
+	PERM_RECEIVE_REQUESTS
+	PERM_SHOW_BOSS
+	PERM_DISABLE_PVM
+	PERM_DISABLE_PVP
+	PERM_DISABLE_CMD_DEAD
+	PERM_HCHSYS_ADMIN
+	PERM_TRADE_BOUND
+	PERM_DISABLE_PICK_UP
+	PERM_DISABLE_STORE
+	PERM_DISABLE_EXP
+	PERM_DISABLE_SKILL_USAGE
+
+Example:
+
+	if (has_permission(PERM_WARP_ANYWHERE)) {
+		//do something
+	}
+
+It is also possible to pass a string for plugin permissions:
+
+	if (has_permission("show_version")) {
+		//do something
+	}
+
+** Passing a string is slower than passing a constant because
+   the engine has to loop through the array to find the permission.
+   In most cases you should use the PERM_ constants.
+
+---------------------------------------
+
 *unitskilluseid(<GID>, <skill id>, <skill lvl>{, <target id>})
 *unitskilluseid(<GID>, "<skill name>", <skill lvl>{, <target id>})
 *unitskillusepos(<GID>, <skill id>, <skill lvl>, <x>, <y>)
@@ -9488,3 +9553,149 @@ to be used within a "OnPayFunds" event of a NST_CUSTOM trader.
 Returns the amount of still-available <Item_ID> in the shop (on a NST_MARKET trader).
 
 ---------------------------------------
+
+*setunitdata(<GUID>, <DataType>, <Val1> {,<Val2>,<Val3>}) 
+
+Sets or alters the data in real-time for game objects of the following types -
+NPCs, Pets, Monsters, Homunuculus', Mercenaries, Elementals.
+
+Applicable Data Types (available as constants) -
+	Data Types          Description (parameter type)
+	UDT_SIZE:           Unit Size (int)
+	UDT_LEVEL:          Level (int)
+	UDT_HP:             Current HP (int)
+	UDT_MAXHP:          Max HP (int)
+	UDT_SP:             SP (int)
+	UDT_MAXSP:          MAX SP (int)
+	UDT_MASTERAID:      Master Account ID (for Summons) (int)
+	UDT_MASTERCID:      Master Char ID (for Summons) (int)
+	UDT_MAPIDXY:        Warp a Unit to a map. (Val1 = (string) MapName, Val2 = (int) x, Val3 = (int) y)
+	UDT_WALKTOXY:       Make a unit walk to certain co-ordinates. (Val1 = (int) x, Val2 = (int) y)
+	UDT_SPEED:          Unit Speed. (int)
+	UDT_MODE:           Mode (Mobs only) (int)
+	UDT_AI:             Unit AI Type (see constants.conf for Unit AI Types)
+	UDT_SCOPTION:       Status Options. (see constants.conf for Unit Option Types)
+	UDT_SEX:            Gender of the unit. (see constants.conf for Genders)
+	UDT_CLASS:          Class of the unit. (Monster ID) (int)
+	UDT_HAIRSTYLE:      Hair Style ID. (int)
+	UDT_HAIRCOLOR:      Hair Color ID. (int)
+	UDT_HEADBOTTOM:     Headgear Bottom Sprite ID. (int)
+	UDT_HEADMIDDLE:     Headgear Middle Sprite ID. (int)
+	UDT_HEADTOP:        Headgear Top Sprite ID. (int)
+	UDT_CLOTHCOLOR:     Cloth Color ID. (int)
+	UDT_SHIELD:         Shield Sprite ID. (int)
+	UDT_WEAPON:         Weapon Sprite ID. (int)
+	UDT_LOOKDIR:        Face direction. (int)
+	UDT_CANMOVETICK:    Stop a unit from move for n seconds. (int)
+	UDT_STR:            Unit STR. (int)
+	UDT_AGI:            Unit AGI. (int)
+	UDT_VIT:            Unit VIT. (int)
+	UDT_INT:            Unit INT. (int)
+	UDT_DEX:            Unit DEX. (int)
+	UDT_LUK:            Unit LUK. (int)
+	UDT_ATKRANGE:       Attack range of a unit. (int)
+	UDT_ATKMIN:         Min Atk of a unit. (int)
+	UDT_ATKMAX:         Max Atk of a unit. (int)
+	UDT_MATKMIN:        Min MATK of a unit. (int)
+	UDT_MATKMAX:        Max MATK of a unit. (int)
+	UDT_DEF:            DEF. (int)
+	UDT_MDEF:           MDEF. (int)
+	UDT_HIT:            HIT. (int)
+	UDT_FLEE:           FLEE. (int)
+	UDT_PDODGE:         Perfect Dodge. (int)
+	UDT_CRIT:           Critical Rate. (int)
+	UDT_RACE:           Race. (Eg. string constants RC_DemiHuman or Integer 7).
+	UDT_ELETYPE:        Element. (Eg. string constants Ele_Neutral or Integer 0).
+	UDT_ELELEVEL:       Element Level (int).
+	UDT_AMOTION:        AMotion Rate (int).
+	UDT_ADELAY:         ADelay Rate (int).
+	UDT_DMOTION:        DMotion Rate (int).
+	UDT_HUNGER:         Hunger Rate (int) - for summons.
+	UDT_INTIMACY:       Intimacy Rate (int) - for summons.
+	UDT_LIFETIME:       LifeTime (int) - for summons.
+	UDT_MERC_KILLCOUNT: Kill count for mercenaries (int).
+	UDT_STATADD:        Status Points (int) - for NPCs.
+	
+returns 0 if value could not be set, 1 if successful.
+
+---------------------------------------
+
+*getunitdata (<GUID>,<DataType>{,<Variable>})
+
+Retrieves real-time data of a game object. For data with multiple return values,
+an array variable may be passed to store the data in.
+
+Applicable Data types (available as constants) -
+	Data Types          Description (return type)
+	UDT_SIZE:           Unit Size (int)
+	UDT_LEVEL:          Level (int)
+	UDT_HP:             Current HP (int)
+	UDT_MAXHP:          Max HP (int)
+	UDT_SP:             SP (int)
+	UDT_MAXSP:          MAX SP (int)
+	UDT_MASTERAID:      Master Account ID (for Summons) (int)
+	UDT_MASTERCID:      Master Char ID (for Summons) (int)
+	UDT_MAPIDXY:        Warp a Unit to a map. (Val1 = (string) MapName, Val2 = (int) x, Val3 = (int) y)
+	UDT_SPEED:          Unit Speed. (int)
+	UDT_MODE:           Mode (Mobs only) (int)
+	UDT_AI:             Unit AI Type (see constants.conf for Unit AI Types)
+	UDT_SCOPTION:       Status Options. (see constants.conf for Unit Option Types)
+	UDT_SEX:            Gender of the unit. (see constants.conf for Genders)
+	UDT_CLASS:          Class of the unit. (Monster ID) (int)
+	UDT_HAIRSTYLE:      Hair Style ID. (int)
+	UDT_HAIRCOLOR:      Hair Color ID. (int)
+	UDT_HEADBOTTOM:     Headgear Bottom Sprite ID. (int)
+	UDT_HEADMIDDLE:     Headgear Middle Sprite ID. (int)
+	UDT_HEADTOP:        Headgear Top Sprite ID. (int)
+	UDT_CLOTHCOLOR:     Cloth Color ID. (int)
+	UDT_SHIELD:         Shield Sprite ID. (int)
+	UDT_WEAPON:         Weapon Sprite ID. (int)
+	UDT_LOOKDIR:        Face direction. (int)
+	UDT_CANMOVETICK:    Stop a unit from move for n seconds. (int)
+	UDT_STR:            Unit STR. (int)
+	UDT_AGI:            Unit AGI. (int)
+	UDT_VIT:            Unit VIT. (int)
+	UDT_INT:            Unit INT. (int)
+	UDT_DEX:            Unit DEX. (int)
+	UDT_LUK:            Unit LUK. (int)
+	UDT_ATKRANGE:       Attack range of a unit. (int)
+	UDT_ATKMIN:         Min Atk of a unit. (int)
+	UDT_ATKMAX:         Max Atk of a unit. (int)
+	UDT_MATKMIN:        Min MATK of a unit. (int)
+	UDT_MATKMAX:        Max MATK of a unit. (int)
+	UDT_DEF:            DEF. (int)
+	UDT_MDEF:           MDEF. (int)
+	UDT_HIT:            HIT. (int)
+	UDT_FLEE:           FLEE. (int)
+	UDT_PDODGE:         Perfect Dodge. (int)
+	UDT_CRIT:           Critical Rate. (int)
+	UDT_RACE:           Race. (Eg. string constants RC_DemiHuman or Integer 7).
+	UDT_ELETYPE:        Element. (Eg. string constants Ele_Neutral or Integer 0).
+	UDT_ELELEVEL:       Element Level (int).
+	UDT_AMOTION:        AMotion Rate (int).
+	UDT_ADELAY:         ADelay Rate (int).
+	UDT_DMOTION:        DMotion Rate (int).
+	UDT_HUNGER:         Hunger Rate (int) - for summons.
+	UDT_INTIMACY:       Intimacy Rate (int) - for summons.
+	UDT_LIFETIME:       LifeTime (int) - for summons.
+	UDT_MERC_KILLCOUNT: Kill count for mercenaries (int).
+
+returns 0 if value could not be retrieved.
+
+---------------------------------------
+
+*getunitname(<GID>)
+
+Retrieve the name of a unit.
+
+returns "Unknown" if the value could not be retrieved.
+
+---------------------------------------
+
+*setunitname(<GID>, <Name>)
+
+Changes the name of a unit.
+
+Supported Types - [ MOB | HOM | PET ].
+
+returns 1 on success, 0 on failure.

@@ -407,7 +407,6 @@ struct Battle_Config {
 	int mob_npc_event_type; //Determines on who the npc_event is executed. [Skotlex]
 
 	int character_size; // if riders have size=2, and baby class riders size=1 [Lupus]
-	int rare_drop_announce; // chance <= to show rare drops global announces
 
 	int retaliate_to_master; //Whether when a mob is attacked by another mob, it will retaliate versus the mob or the mob's master. [Skotlex]
 
@@ -552,6 +551,9 @@ struct Battle_Config {
 	int mvp_exp_reward_message;
 
 	int mob_eye_range_bonus; //Vulture's Eye and Snake's Eye range bonus
+
+	int prevent_logout_trigger;
+	int boarding_halter_speed;
 
 	int feature_rodex;
 	int feature_rodex_use_accountmail;

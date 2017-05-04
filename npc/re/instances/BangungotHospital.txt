@@ -48,7 +48,7 @@ ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 				else if (malaya_bang == 31)
 					callsub L_Closed,0;
 				else
-					goto L_NoParty;
+					callsub L_NoParty;
 			}
 			if (questprogress(11309,HUNTING) != 2) {
 				.@playtime = questprogress(9224,PLAYTIME);
@@ -100,7 +100,7 @@ ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 						cutin "",255;
 						end;
 					} else {
-						//if (!.@party_id) goto L_NoParty; //unneeded
+						//if (!.@party_id) callsub L_NoParty; //unneeded
 						if (malaya_bang > 39)
 							callsub L_Enter,(getcharid(CHAR_ID_CHAR) == getpartyleader(.@party_id,2))?1:0,1,1;
 						else {
@@ -122,7 +122,7 @@ ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 				end;
 			}
 		} else if (.@quest == 1) {
-			if (!.@party_id) goto L_NoParty;
+			if (!.@party_id) callsub L_NoParty;
 			if (malaya_bang > 39) {
 				if (questprogress(9222,HUNTING) == 1) {
 					.@playtime = questprogress(9224,PLAYTIME);
@@ -132,7 +132,7 @@ ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 						next;
 						callsub L_Enter,0,0;
 					} else if (.@playtime == 2) {
-						//if (!.@party_id) goto L_NoParty; //unneeded
+						//if (!.@party_id) callsub L_NoParty; //unneeded
 						if (malaya_bang > 39)
 							callsub L_Enter,(getcharid(CHAR_ID_CHAR) == getpartyleader(.@party_id,2))?1:0,1,1;
 						else {
@@ -211,7 +211,7 @@ ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 			cutin "",255;
 			end;
 		} else {
-			if (!.@party_id) goto L_NoParty;
+			if (!.@party_id) callsub L_NoParty;
 			if (malaya_bang > 39)
 				callsub L_Enter,(getcharid(CHAR_ID_CHAR) == getpartyleader(.@party_id,2))?1:0,1,1;
 			else {
