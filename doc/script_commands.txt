@@ -540,7 +540,8 @@ allows you to replace lots of numbered arguments for many commands with
 easier to read text. The special variables most commonly used are all
 permanent character-based variables:
 
-Zeny        - Amount of Zeny.
+Zeny        - Amount of Zeny in the inventory.
+BankVault   - Amount of Zeny in the bank.
 Hp          - Current amount of hit points.
 MaxHp       - Maximum amount of hit points.
 Sp          - Current spell points.
@@ -707,7 +708,8 @@ MAX_STORAGE			- Maximum storage items
 MAX_GUILD_STORAGE	- Maximum guild storage items
 MAX_CART			- Maximum cart items
 MAX_INVENTORY		- Maximum inventory items
-MAX_ZENY			- Maximum Zeny
+MAX_ZENY			- Maximum Zeny in the inventory
+MAX_BANK_ZENY		- Maximum Zeny in the bank
 MAX_BG_MEMBERS		- Maximum BattleGround members 
 MAX_CHAT_USERS		- Maximum Chat users
 MAX_REFINE			- Maximum Refine level

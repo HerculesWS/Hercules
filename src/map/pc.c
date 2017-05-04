@@ -8134,6 +8134,7 @@ int pc_readparam(const struct map_session_data *sd, int type)
 		case SP_SKILLPOINT:      val = sd->status.skill_point; break;
 		case SP_STATUSPOINT:     val = sd->status.status_point; break;
 		case SP_ZENY:            val = sd->status.zeny; break;
+		case SP_BANKVAULT:       val = sd->status.bank_vault; break;
 		case SP_BASELEVEL:       val = sd->status.base_level; break;
 		case SP_JOBLEVEL:        val = sd->status.job_level; break;
 		case SP_CLASS:           val = sd->status.class; break;
@@ -8278,6 +8279,7 @@ int pc_readparam(const struct map_session_data *sd, int type)
  *------------------------------------------*/
 int pc_setparam(struct map_session_data *sd,int type,int val)
 {
+	int delta;
 	nullpo_ret(sd);
 
 	switch(type){
@@ -8328,6 +8330,19 @@ int pc_setparam(struct map_session_data *sd,int type,int val)
 		logs->zeny(sd, LOG_TYPE_SCRIPT, sd, -(sd->status.zeny - cap_value(val, 0, MAX_ZENY)));
 		sd->status.zeny = cap_value(val, 0, MAX_ZENY);
 		break;
+	case SP_BANKVAULT:
+		val = cap_value(val, 0, MAX_BANK_ZENY);
+		delta = (val - sd->status.bank_vault);
+		sd->status.bank_vault = val;
+		if (map->save_settings & 256) {
+			chrif->save(sd, 0); // send to char server
+		}
+		if (delta > 0) {
+			clif->bank_deposit(sd, BDA_SUCCESS);
+		} else if (delta < 0) {
+			clif->bank_withdraw(sd, BWA_SUCCESS);
+		}
+		return 1; // the vault uses a different packet
 	case SP_BASEEXP:
 		if(pc->nextbaseexp(sd) > 0) {
 			sd->status.base_exp = val;
