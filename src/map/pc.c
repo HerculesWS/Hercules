@@ -6384,7 +6384,7 @@ static int pc_checkequip(struct map_session_data *sd, int pos)
 	nullpo_retr(-1, sd);
 
 	for(i=0;i<EQI_MAX;i++){
-		if(pos & pc->equip_pos[i])
+		if ((pos & pc->equip_pos[i]) != 0 && sd->equip_index[i] != -1)
 			return sd->equip_index[i];
 	}
 
@@ -10061,6 +10061,38 @@ static int pc_load_combo(struct map_session_data *sd)
 }
 
 /**
+ * Returns the position mask overlapping (costume vs regular equipment) with
+ * the given equip's position mask.
+ *
+ * @param pos The equip position mask to check.
+ * @return The overlapping position mask.
+ */
+static uint32 pc_equip_costume_overlap(uint32 pos)
+{
+	uint32 ret = EQP_NONE;
+
+	if ((pos & EQP_HEAD_TOP) != 0)
+		ret |= EQP_COSTUME_HEAD_TOP;
+	if ((pos & EQP_HEAD_MID) != 0)
+		ret |= EQP_COSTUME_HEAD_MID;
+	if ((pos & EQP_HEAD_LOW) != 0)
+		ret |= EQP_COSTUME_HEAD_LOW;
+	if ((pos & EQP_GARMENT) != 0)
+		ret |= EQP_COSTUME_GARMENT;
+
+	if ((pos & EQP_COSTUME_HEAD_TOP) != 0)
+		ret |= EQP_HEAD_TOP;
+	if ((pos & EQP_COSTUME_HEAD_MID) != 0)
+		ret |= EQP_HEAD_MID;
+	if ((pos & EQP_COSTUME_HEAD_LOW) != 0)
+		ret |= EQP_HEAD_LOW;
+	if ((pos & EQP_COSTUME_GARMENT) != 0)
+		ret |= EQP_GARMENT;
+
+	return ret;
+}
+
+/**
  * Equip item at given position.
  * @param sd the affected player structure. Must be checked before.
  * @param id item structure for equip. Must be checked before.
@@ -10104,60 +10136,92 @@ static void pc_equipitem_pos(struct map_session_data *sd, struct item_data *id, 
 	}
 	//Added check to prevent sending the same look on multiple slots ->
 	//causes client to redraw item on top of itself. (suggested by Lupus)
-	if (!map_no_view(sd->bl.m,EQP_HEAD_LOW) && pos & EQP_HEAD_LOW && pc->checkequip(sd,EQP_COSTUME_HEAD_LOW) == -1) {
-		if (id && !(pos&(EQP_HEAD_TOP|EQP_HEAD_MID)))
-			sd->status.look.head_bottom = id->view_sprite;
-		else
-			sd->status.look.head_bottom = 0;
-		clif->changelook(&sd->bl, LOOK_HEAD_BOTTOM, sd->status.look.head_bottom);
-	}
-	if (!map_no_view(sd->bl.m,EQP_HEAD_TOP) && pos & EQP_HEAD_TOP && pc->checkequip(sd,EQP_COSTUME_HEAD_TOP) == -1) {
-		if (id)
-			sd->status.look.head_top = id->view_sprite;
-		else
-			sd->status.look.head_top = 0;
-		clif->changelook(&sd->bl, LOOK_HEAD_TOP, sd->status.look.head_top);
-	}
-	if (!map_no_view(sd->bl.m,EQP_HEAD_MID) && pos & EQP_HEAD_MID && pc->checkequip(sd,EQP_COSTUME_HEAD_MID) == -1) {
-		if (id && !(pos&EQP_HEAD_TOP))
-			sd->status.look.head_mid = id->view_sprite;
-		else
-			sd->status.look.head_mid = 0;
-		clif->changelook(&sd->bl, LOOK_HEAD_MID, sd->status.look.head_mid);
-	}
-	if (!map_no_view(sd->bl.m,EQP_COSTUME_HEAD_TOP) && pos & EQP_COSTUME_HEAD_TOP) {
-		if (id){
-			sd->status.look.head_top = id->view_sprite;
-		} else
-			sd->status.look.head_top = 0;
-		clif->changelook(&sd->bl, LOOK_HEAD_TOP, sd->status.look.head_top);
-	}
-	if (!map_no_view(sd->bl.m,EQP_COSTUME_HEAD_MID) && pos & EQP_COSTUME_HEAD_MID) {
-		if(id && !(pos&EQP_HEAD_TOP)){
-			sd->status.look.head_mid = id->view_sprite;
-		} else
-			sd->status.look.head_mid = 0;
-		clif->changelook(&sd->bl, LOOK_HEAD_MID, sd->status.look.head_mid);
-	}
-	if (!map_no_view(sd->bl.m,EQP_COSTUME_HEAD_LOW) && pos & EQP_COSTUME_HEAD_LOW) {
-		if (id && !(pos&(EQP_HEAD_TOP|EQP_HEAD_MID))){
-			sd->status.look.head_bottom = id->view_sprite;
-		} else
-			sd->status.look.head_bottom = 0;
-		clif->changelook(&sd->bl, LOOK_HEAD_BOTTOM, sd->status.look.head_bottom);
+	if ((pos & EQP_VISIBLE) != 0 && !map_no_view(sd->bl.m, pos)) {
+		struct {
+			int head_top, head_mid, head_bottom, robe;
+		} old_view = { sd->status.look.head_top, sd->status.look.head_mid, sd->status.look.head_bottom, sd->status.look.robe };
+		uint32 overlap_mask = pc->equip_costume_overlap(pos);
+		if (itemdb_is_costumeequip(pos)) {
+			if (pc->checkequip(sd, overlap_mask) != -1) {
+				for (int i = 0; i < EQI_MAX; i++) {
+					int index = sd->equip_index[i];
+					if (index == n)
+						continue;
+					if ((pc->equip_pos[i] & overlap_mask) == 0)
+						continue;
+					if (sd->equip_index[i] == -1)
+						continue;
+
+					/*
+					 * Unset the view ids related to the overlapping non-costume items,
+					 * if it extends to other slots that don't have a costume in them
+					 */
+					if ((sd->inventory_data[index]->equip & EQP_HEAD_TOP) != 0
+					 && ((pos & EQP_COSTUME_HEAD_TOP) != 0 || pc->checkequip(sd, EQP_COSTUME_HEAD_TOP) == -1)
+					) {
+						sd->status.look.head_top = 0;
+					}
+					if ((sd->inventory_data[index]->equip & EQP_HEAD_MID) != 0
+					 && ((pos & EQP_COSTUME_HEAD_MID) != 0 || pc->checkequip(sd, EQP_COSTUME_HEAD_MID) == -1)
+					) {
+						sd->status.look.head_mid = 0;
+					}
+					if ((sd->inventory_data[index]->equip & EQP_HEAD_LOW) != 0
+					 && ((pos & EQP_COSTUME_HEAD_LOW) != 0 || pc->checkequip(sd, EQP_COSTUME_HEAD_LOW) == -1)
+					) {
+						sd->status.look.head_bottom = 0;
+					}
+					if ((sd->inventory_data[index]->equip & EQP_GARMENT) != 0
+					 && ((pos & EQP_COSTUME_GARMENT) != 0 || pc->checkequip(sd, EQP_COSTUME_GARMENT) == -1)
+					) {
+						sd->status.look.robe = 0;
+					}
+				}
+			}
+			// Overwrite with the costume's
+			if ((pos & EQP_COSTUME_HEAD_TOP) != 0) {
+				sd->status.look.head_top = id->view_sprite;
+			} else if ((pos & EQP_COSTUME_HEAD_MID) != 0) {
+				// Ignored if EQP_COSTUME_HEAD_TOP is also set
+				sd->status.look.head_mid = id->view_sprite;
+			} else if ((pos & EQP_COSTUME_HEAD_LOW) != 0) {
+				// Ignored if EQP_COSTUME_HEAD_TOP or EQP_COSTUME_HEAD_MID are also set
+				sd->status.look.head_bottom = id->view_sprite;
+			}
+
+			if ((pos & EQP_COSTUME_GARMENT) != 0) {
+				sd->status.look.robe = id->view_sprite;
+			}
+		} else {
+			if (pc->checkequip(sd, overlap_mask) == -1) {
+				// Only apply if there isn't a costume that would partly cover the item
+				if ((pos & EQP_HEAD_TOP) != 0) {
+					sd->status.look.head_top = id->view_sprite;
+				} else if ((pos & EQP_HEAD_MID) != 0) {
+					// Ignored if EQP_HEAD_TOP is also set
+					sd->status.look.head_mid = id->view_sprite;
+				} else if ((pos & EQP_HEAD_LOW) != 0) {
+					// Ignored if EQP_HEAD_TOP or EQP_HEAD_MID are also set
+					sd->status.look.head_bottom = id->view_sprite;
+				}
+
+				if ((pos & EQP_GARMENT) != 0) {
+					sd->status.look.robe = id->view_sprite;
+				}
+			}
+		}
+		if (old_view.head_top != sd->status.look.head_top)
+			clif->changelook(&sd->bl, LOOK_HEAD_TOP, sd->status.look.head_top);
+		if (old_view.head_mid != sd->status.look.head_mid)
+			clif->changelook(&sd->bl, LOOK_HEAD_MID, sd->status.look.head_mid);
+		if (old_view.head_bottom != sd->status.look.head_bottom)
+			clif->changelook(&sd->bl, LOOK_HEAD_BOTTOM, sd->status.look.head_bottom);
+		if (old_view.robe != sd->status.look.robe)
+			clif->changelook(&sd->bl, LOOK_ROBE, sd->status.look.robe);
 	}
 
 	if (!map_no_view(sd->bl.m,EQP_SHOES) && pos & EQP_SHOES)
 		clif->changelook(&sd->bl,LOOK_SHOES,0);
-	if (!map_no_view(sd->bl.m,EQP_GARMENT) && pos&EQP_GARMENT && pc->checkequip(sd,EQP_COSTUME_GARMENT) == -1) {
-		sd->status.look.robe = id ? id->view_sprite : 0;
-		clif->changelook(&sd->bl, LOOK_ROBE, sd->status.look.robe);
-	}
-
-	if (!map_no_view(sd->bl.m,EQP_COSTUME_GARMENT) && pos & EQP_COSTUME_GARMENT) {
-		sd->status.look.robe = id ? id->view_sprite : 0;
-		clif->changelook(&sd->bl, LOOK_ROBE, sd->status.look.robe);
-	}
 }
 
 /**
@@ -10323,6 +10387,39 @@ static int pc_equipitem(struct map_session_data *sd, int n, int req_pos)
 }
 
 /**
+ * Compares position of the to be unequipped item and overlapping equips
+ * if overlapping exists, checks if overlapping equip can now be displayed.
+ *
+ * @param sd the affected player structure. Must be checked before.
+ * @param pos_combination slot position. Must be checked before.
+ * @param look pointer of look that will be replaced.
+ * @param look_type type of look.
+ * @param pos position to check if contained in pos_combination
+ * @param pos_costume equivalent costume position to param pos.
+ */
+static void pc_unequipitem_pos_sub(struct map_session_data *sd, int pos_combination, int *look, int look_type, int pos, int pos_costume)
+{
+	nullpo_retv(sd);
+	nullpo_retv(look);
+
+	if ((pos_combination & pos) != 0 && pc->checkequip(sd, pos_costume) == -1) {
+		*look = 0;
+		clif->changelook(&sd->bl, look_type, 0);
+	}
+	if ((pos_combination & pos_costume) != 0 || pos_costume == 0) {
+		*look = 0;
+		clif->changelook(&sd->bl, look_type, 0);
+
+		int equipped_item = pc->checkequip(sd, pos); // Item that was overlapped by unequipped costume
+		if (equipped_item >= 0) { // There might still be costumes overlapping
+			struct item_data *id = sd->inventory_data[equipped_item];
+			if (id != NULL)
+				pc->equipitem_pos(sd, id, equipped_item, id->equip);
+		}
+	}
+}
+
+/**
  * Unequip an item at the given position.
  * @param sd the affected player structure. Must be checked before.
  * @param n inventory item position. Must be checked before.
@@ -10346,36 +10443,9 @@ static void pc_unequipitem_pos(struct map_session_data *sd, int n, int pos)
 		pc->calcweapontype(sd);
 		clif->changelook(&sd->bl, LOOK_SHIELD, sd->status.look.shield);
 	}
-	if (pos & EQP_HEAD_LOW && pc->checkequip(sd,EQP_COSTUME_HEAD_LOW) == -1) {
-		sd->status.look.head_bottom = 0;
-		clif->changelook(&sd->bl, LOOK_HEAD_BOTTOM, sd->status.look.head_bottom);
-	}
-	if (pos & EQP_HEAD_TOP && pc->checkequip(sd,EQP_COSTUME_HEAD_TOP) == -1) {
-		sd->status.look.head_top = 0;
-		clif->changelook(&sd->bl, LOOK_HEAD_TOP, sd->status.look.head_top);
-	}
-	if (pos & EQP_HEAD_MID && pc->checkequip(sd,EQP_COSTUME_HEAD_MID) == -1) {
-		sd->status.look.head_mid = 0;
-		clif->changelook(&sd->bl, LOOK_HEAD_MID, sd->status.look.head_mid);
-	}
-
-	if (pos & EQP_COSTUME_HEAD_TOP) {
-		int equip = pc->checkequip(sd, EQP_HEAD_TOP);
-		sd->status.look.head_top = (equip >= 0 && sd->inventory_data[equip] != NULL) ? sd->inventory_data[equip]->view_sprite : 0;
-		clif->changelook(&sd->bl, LOOK_HEAD_TOP, sd->status.look.head_top);
-	}
-
-	if (pos & EQP_COSTUME_HEAD_MID) {
-		int equip = pc->checkequip(sd, EQP_HEAD_MID);
-		sd->status.look.head_mid = (equip >= 0 && sd->inventory_data[equip] != NULL) ? sd->inventory_data[equip]->view_sprite : 0;
-		clif->changelook(&sd->bl, LOOK_HEAD_MID, sd->status.look.head_mid);
-	}
-
-	if (pos & EQP_COSTUME_HEAD_LOW) {
-		int equip = pc->checkequip(sd, EQP_HEAD_LOW);
-		sd->status.look.head_bottom = (equip >= 0 && sd->inventory_data[equip] != NULL) ? sd->inventory_data[equip]->view_sprite : 0;
-		clif->changelook(&sd->bl, LOOK_HEAD_BOTTOM, sd->status.look.head_bottom);
-	}
+	pc->unequipitem_pos_sub(sd, pos, &sd->status.look.head_top, LOOK_HEAD_TOP, EQP_HEAD_TOP, EQP_COSTUME_HEAD_TOP);
+	pc->unequipitem_pos_sub(sd, pos, &sd->status.look.head_mid, LOOK_HEAD_MID, EQP_HEAD_MID, EQP_COSTUME_HEAD_MID);
+	pc->unequipitem_pos_sub(sd, pos, &sd->status.look.head_bottom, LOOK_HEAD_BOTTOM, EQP_HEAD_LOW, EQP_COSTUME_HEAD_LOW);
 
 	if (pos & EQP_SHOES)
 		clif->changelook(&sd->bl,LOOK_SHOES,0);
@@ -12926,10 +12996,12 @@ void pc_defaults(void)
 	pc->resetskill_job = pc_resetskill_job;
 	pc->resetfeel = pc_resetfeel;
 	pc->resethate = pc_resethate;
+	pc->equip_costume_overlap = pc_equip_costume_overlap;
 	pc->equipitem = pc_equipitem;
 	pc->equipitem_pos = pc_equipitem_pos;
 	pc->unequipitem = pc_unequipitem;
 	pc->unequipitem_pos = pc_unequipitem_pos;
+	pc->unequipitem_pos_sub = pc_unequipitem_pos_sub;
 	pc->checkitem = pc_checkitem;
 	pc->useitem = pc_useitem;
 	pc->autocast_clear_current = pc_autocast_clear_current;
