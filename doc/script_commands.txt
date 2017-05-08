@@ -4292,8 +4292,9 @@ if <color> field is left out.
 
 *showscript("<message>"{, <GID>})
 
-Makes attached player or GID says a message like shouting a skill name, the message
-will be seen to everyone around but not in chat window.
+Makes the attached player or GID, display a message similiar to a chat,
+this will be seen by everyone near the invoking character but will not
+be displayed in the chat window.
 
 ---------------------------------------
 
