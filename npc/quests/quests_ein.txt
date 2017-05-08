@@ -509,7 +509,6 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 		mes "you'll see that there's no sign";
 		mes "of warmth or life. So... Just don't live here in your old age.";
 		next;
-		
 		.@choice2$ = "I won't. Thanks for the advice.";
 		if (BaseClass == Job_Blacksmith)
 			.@choice2$ = "But I like the city life~";
@@ -901,20 +900,12 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 				mes "Don't be so nervous, I don't really need those anymore. But since I know you're hard working, I'll throw in a little something extra...";
 				next;
 				mes "[Uwe]";
-				if (Class == Job_Whitesmith) {
-					mes "I usually give you cutie MasterSmiths 10 Mini Furnaces, but you can have ^EEA9B811^000000. There's the little something extra I was talking about.";
-				} else {
-					mes "I usually give you cutie Blacksmiths 10 Mini Furnaces, but you can have ^EEA9B811^000000. There's the little something extra I was talking about.";
-				}
+				mes "I usually give you cutie "+ jobname(Class) +"s 10 Mini Furnaces, but you can have ^EEA9B811^000000. There's the little something extra I was talking about.";
 			} else {
 				mes "[Uwe]";
 				mes "Well... Then... Anyway,";
 				mes "Congratulation to becoming";
-				if (Class == Job_Whitesmith) {
-					mes "a Master Smith!!";
-				} else {
-					mes "a Black Smith!!";
-				}
+				mes "a "+ jobname(Class) +"!!";
 				mes "This is my present for it.";
 				if (Sex == SEX_MALE) {
 					mes "...you ^EEA9B8naughty boy^000000.";
@@ -1047,13 +1038,10 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 						}
 						mes "[Uwe]";
 						mes "Well... Then... Anyway,";
-						mes "Congratulation to became";
-						if (Class == Job_Whitesmith) {
-							mes "a Master Smith!!";
+						mes "Congratulation to becoming";
+						mes "a "+ jobname(Class) +"!!";
 							mes "This is my present for it. Huhuhu.";
-						} else {
-							mes "a Black Smith!!";
-							mes "This is my present for it. Huhuhu.";
+						if (Class != Job_Whitesmith) {
 							if (Sex == SEX_MALE) {
 								mes "...You ^EEA9B8naughty boy^000000.";
 							} else {
@@ -1360,7 +1348,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 			case 3:
 				F_Cancel();
 			}
-		} else if ((ein_cook < 20) || (ein_cook == 219)) {
+		} else if (ein_cook < 20 || ein_cook == 219) {
 			mes "[Uwe]";
 			mes "Oh, welcome back.";
 			mes "So how's the weapon";
@@ -1414,7 +1402,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 				next;
 				switch (select("Sure.", "No, thanks.")) {
 				case 1:
-					if ((countitem(Jubilee) > 29) && (countitem(Large_Jellopy) > 3)) {
+					if (countitem(Jubilee) > 29 && countitem(Large_Jellopy) > 3) {
 						delitem Jubilee, 30;
 						delitem Large_Jellopy, 4;
 						getitem Coal, 1;
@@ -1455,7 +1443,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 				mes "Oooh...!";
 				mes "Congratulations!";
 				mes "You finally became";
-				mes "a cutie MasterSmith!";
+				mes "a cutie "+ jobname(Class) +"!";
 				next;
 				mes "[Uwe]";
 				mes "Mmmm...";
