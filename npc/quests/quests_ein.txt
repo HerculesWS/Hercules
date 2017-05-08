@@ -510,13 +510,12 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 		mes "of warmth or life. So... Just don't live here in your old age.";
 		next;
 		
-		.@rand = rand(2); //Aegis Script doesn't use randomness, but is pretty random ...
 		.@choice2$ = "I won't. Thanks for the advice.";
-		if (.@rand == 0)
+		if (BaseClass == Job_Blacksmith)
 			.@choice2$ = "But I like the city life~";
 		switch (select("Then why are you here?", .@choice2$)) {
 		case 1:
-			if (.@rand == 0) {
+			if (BaseClass == Job_Blacksmith) {
 				mes "[Uwe]";
 				mes "Well, sugar honey,";
 				mes "I've been waiting for";
@@ -547,7 +546,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 			mes "Buhbye for now, cutie~";
 			close;
 		case 2:
-			if (.@rand == 1) {
+			if (BaseClass != Job_Blacksmith) {
 				mes "[Uwe]";
 				mes "Oh, that is such";
 				mes "a good decision,";
@@ -634,10 +633,16 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 	}
 	
 	function F_RandCloseMsg {
-		switch (rand(1,3)) {
-		case 1: mes "...Ho ho~"; close;
-		case 2: mes "...*Tee Hee~*"; close;
-		case 3: mes "...Behbie~"; close;
+		switch (rand(1, 3)) {
+		case 1:
+			mes "...Ho ho~";
+			close;
+		case 2:
+			mes "...*Tee Hee~*";
+			close;
+		case 3:
+			mes "...Behbie~";
+			close;
 		}
 	}
 	
@@ -799,7 +804,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 		mes "new hammers today.";
 		mes "Would you like a couple?";
 		next;
-		if (checkweight(Spawn,50) == 0) {
+		if (checkweight(Spawn, 50) == 0) {
 			mes "[Uwe]";
 			mes "Mmmm...?";
 			mes "You're holding too many";
@@ -810,8 +815,8 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 			close;
 		}
 		ein_cook += 10;
-		getitem Golden_Hammer,1;
-		getitem Iron_Hammer,1;
+		getitem Golden_Hammer, 1;
+		getitem Iron_Hammer, 1;
 		next;
 		mes "[Uwe]";
 		mes "Well, I hope";
@@ -857,17 +862,17 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 	
 	function F_LargeJellopyForCoal {
 		if (countitem(Large_Jellopy) > 5) {
-			if (checkweight(Spawn,199) == 0) {
+			if (checkweight(Spawn, 199) == 0) {
 				F_OverWeight();
 			}
 			mes "[Uwe]";
 			mes "Thank you ^EEA9B8so^000000 much!";
 			mes "Here's the Coal I promised~";
 			mes "Oh, and take these Mini Furnaces. They were just lying around, so you know, I thought, well, why don't you take them? *Tee hee hee~*";
-			delitem Large_Jellopy,6;
+			delitem Large_Jellopy, 6;
 			ein_cook = 219;
-			getitem Coal,1;
-			getitem Portable_Furnace,10;
+			getitem Coal, 1;
+			getitem Portable_Furnace, 10;
 			next;
 			mes "[Uwe]";
 			mes "I hope you enjoy!";
@@ -917,12 +922,12 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 					mes "...you ^EEA9B8naughty girl^000000.";
 				}
 			}
-			if (checkweight(Knife,1) == 0 ||
-			    checkweight(Spawn,(.@choice == 1 ? 220 : 200)) == 0) {
+			if (checkweight(Knife, 1) == 0 ||
+			    checkweight(Spawn, (.@choice == 1 ? 220 : 200)) == 0) {
 					F_OverWeight();
 			}
 			ein_cook = 219;
-			getitem Portable_Furnace,(.@choice == 1 ? 11 : 10);
+			getitem Portable_Furnace, (.@choice == 1 ? 11 : 10);
 			next;
 			mes "[Uwe]";
 			mes "I know it's not very extravagant, but these will come in handy next time you're smithing. So make the best use of them, 'kay?";
@@ -969,11 +974,11 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 					next;
 					break;
 				}
-				if (checkweight(Spawn,200) == 0) {
+				if (checkweight(Spawn, 200) == 0) {
 					F_OverWeight();
 				}
 				ein_cook = 219;
-				getitem Portable_Furnace,10;
+				getitem Portable_Furnace, 10;
 				mes "[Uwe]";
 				mes "I had these lying";
 				mes "around, so why don't";
@@ -1006,7 +1011,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 				case 1:
 					F_LargeJellopyForCoal();
 				case 2:
-					if (checkweight(Spawn,200) == 0) {
+					if (checkweight(Spawn, 200) == 0) {
 						F_OverWeight();
 					}
 					mes "[Uwe]";
@@ -1024,7 +1029,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 						mes "...You ^EEA9B8naughty girl^000000.";
 					}
 					ein_cook = 219;
-					getitem Portable_Furnace,10;
+					getitem Portable_Furnace, 10;
 					next;
 					mes "[Uwe]";
 					mes "I know it's not very extravagant, but these will come in handy next time you're smithing. So make the best use of them, 'kay?";
@@ -1037,7 +1042,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 					case 1:
 						F_LargeJellopyForCoal();
 					case 2:
-						if (checkweight(Spawn,200) == 0) {
+						if (checkweight(Spawn, 200) == 0) {
 							F_OverWeight();
 						}
 						mes "[Uwe]";
@@ -1056,7 +1061,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 							}
 						}
 						ein_cook = 219;
-						getitem Portable_Furnace,10;
+						getitem Portable_Furnace, 10;
 						next;
 						mes "[Uwe]";
 						mes "I know it's not very extravagant, but these will come in handy next time you're smithing. So make the best use of them, 'kay?";
@@ -1129,7 +1134,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 					mes "so please have one, 'kay?";
 					mes "Welcome to Einbroch, cutie~";
 					ein_cook = 1;
-					getitem Emveretarcon,1;
+					getitem Emveretarcon, 1;
 					break;
 				case 2:
 					mes "[Uwe]";
@@ -1153,7 +1158,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 					mes "Steel. Why don't you have 2 of";
 					mes "them as my little way of saying, ''Welcome to Einbroch, cutie~!''";
 					ein_cook = 3;
-					getitem Iron,2;
+					getitem Iron, 2;
 					break;
 				case 3:
 					mes "[Uwe]";
@@ -1190,7 +1195,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 					mes "so please have one, 'kay?";
 					mes "Welcome to Einbroch, cutie~";
 					ein_cook = 5;
-					getitem Emveretarcon,1;
+					getitem Emveretarcon, 1;
 					break;
 				case 4:
 					mes "[Uwe]";
@@ -1219,7 +1224,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 					mes "my way of saying ''Welcome";
 					mes "to Einbroch, sugar honey~''";
 					ein_cook = 7;
-					getitem Iron_Hammer,1;
+					getitem Iron_Hammer, 1;
 					break;
 				}
 				next;
@@ -1410,9 +1415,9 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 				switch (select("Sure.", "No, thanks.")) {
 				case 1:
 					if ((countitem(Jubilee) > 29) && (countitem(Large_Jellopy) > 3)) {
-						delitem Jubilee,30;
-						delitem Large_Jellopy,4;
-						getitem Coal,1;
+						delitem Jubilee, 30;
+						delitem Large_Jellopy, 4;
+						getitem Coal, 1;
 						mes "[Uwe]";
 						mes "Hooray!";
 						mes "Thank you";
@@ -1461,7 +1466,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 				mes "cookies I just baked~";
 				next;
 				ein_cook = 9;
-				getitem Well_Baked_Cookie,5;
+				getitem Well_Baked_Cookie, 5;
 				mes "[Uwe]";
 				mes "Okay, enjoy!";
 				mes "I hope you have";
@@ -1609,9 +1614,9 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 						mes "[Uwe]";
 						mes "Thank you ^EEA9B8so^000000 much!";
 						mes "Here's the Coal I promised~";
-						delitem Large_Jellopy,6;
+						delitem Large_Jellopy, 6;
 						ein_cook += 100;
-						getitem Coal,1;
+						getitem Coal, 1;
 						next;
 					} else {
 						mes "[Uwe]";
