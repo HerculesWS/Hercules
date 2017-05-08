@@ -633,6 +633,14 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 		close;	
 	}
 	
+	function F_RandCloseMsg {
+		switch (rand(1,3)) {
+		case 1: mes "...Ho ho~"; close;
+		case 2: mes "...*Tee Hee~*"; close;
+		case 3: mes "...Behbie~"; close;
+		}
+	}
+	
 	function F_Ingredients {
 		mes "[Uwe]";
 		mes "Now for beginners,";
@@ -665,11 +673,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 		mes "back and visit, 'kay?";
 		mes "I'll miss you until";
 		mes "the next time~";
-		switch (rand(1,3)) {
-		case 1: mes "...Ho ho~"; close;
-		case 2: mes "...*Tee Hee~*"; close;
-		case 3: mes "...Behbie~"; close;
-		}
+		F_RandCloseMsg();
 	}
 	
 	function F_Cooking {
@@ -721,11 +725,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 		mes "waiting right";
 		mes "here until you";
 		mes "come back.";
-		switch (rand(1,3)) {
-		case 1: mes "...Ho ho~"; close;
-		case 2: mes "...*Tee Hee~*"; close;
-		case 3: mes "...Behbie~"; close;
-		}
+		F_RandCloseMsg();
 	}
 	
 	function F_Heart {
@@ -743,11 +743,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 		mes "say about that. But";
 		mes "come back and chat";
 		mes "whenever you please.";
-		switch (rand(1,3)) {
-		case 1: mes "...Ho ho~"; close;
-		case 2: mes "...*Tee Hee~*"; close;
-		case 3: mes "...Behbie~"; close;
-		}
+		F_RandCloseMsg();
 	}
 	
 	function F_Skills {
@@ -777,11 +773,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 		mes "back and visit, 'kay?";
 		mes "I'll miss you until";
 		mes "the next time~";
-		switch (rand(1,3)) {
-		case 1: mes "Hohohohoho."; close;
-		case 2: mes "Umhohohoho.*"; close;
-		case 3: mes "Umho."; close;
-		}
+		F_RandCloseMsg();
 	}
 	
 	function F_Tools {
@@ -824,11 +816,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 		mes "[Uwe]";
 		mes "Well, I hope";
 		mes "you like them~";
-		switch (rand(1,3)) {
-		case 1: mes "...Ho ho~"; close;
-		case 2: mes "...*Tee Hee~*"; close;
-		case 3: mes "...Behbie~"; close;
-		}
+		F_RandCloseMsg();
 	}
 	
 	function F_ToolsWithoutReward {
@@ -853,24 +841,24 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 		mes "back and visit, 'kay?";
 		mes "I'll miss you until";
 		mes "the next time~";
-		switch (rand(1,3)) {
-		case 1: mes "...Ho ho~"; close;
-		case 2: mes "...*Tee Hee~*"; close;
-		case 3: mes "...Behbie~"; close;
-		}
+		F_RandCloseMsg();
+	}
+	
+	function F_OverWeight {
+		mes "[Uwe]";
+		mes "Oh, I was going to give";
+		mes "you a little something,";
+		mes "but you've carrying too";
+		mes "many things. Why don't";
+		mes "you put some of it away";
+		mes "in your Kafra Storage?";
+		close;
 	}
 	
 	function F_LargeJellopyForCoal {
 		if (countitem(Large_Jellopy) > 5) {
 			if (checkweight(Spawn,199) == 0) {
-				mes "[Uwe]";
-				mes "Oh, I was going to give";
-				mes "you a little something,";
-				mes "but you've carrying too";
-				mes "many things. Why don't";
-				mes "you put some of it away";
-				mes "in your Kafra Storage?";
-				close;
+				F_OverWeight();
 			}
 			mes "[Uwe]";
 			mes "Thank you ^EEA9B8so^000000 much!";
@@ -931,14 +919,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 			}
 			if (checkweight(Knife,1) == 0 ||
 			    checkweight(Spawn,(.@choice == 1 ? 220 : 200)) == 0) {
-					mes "[Uwe]";
-					mes "Oh, I was going to give";
-					mes "you a little something,";
-					mes "but you've carrying too";
-					mes "many things. Why don't";
-					mes "you put some of it away";
-					mes "in your Kafra Storage?";
-					close;
+					F_OverWeight();
 			}
 			ein_cook = 219;
 			getitem Portable_Furnace,(.@choice == 1 ? 11 : 10);
@@ -989,14 +970,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 					break;
 				}
 				if (checkweight(Spawn,200) == 0) {
-					mes "[Uwe]";
-					mes "Oh, I was going to give";
-					mes "you a little something,";
-					mes "but you've carrying too";
-					mes "many things. Why don't";
-					mes "you put some of it away";
-					mes "in your Kafra Storage?";
-					close;
+					F_OverWeight();
 				}
 				ein_cook = 219;
 				getitem Portable_Furnace,10;
@@ -1012,11 +986,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 				mes "Alright then~";
 				mes "Hope you enjoy";
 				mes "your Mini Furances";
-				switch (rand(1,3)) {
-				case 1: mes "...Ho ho~"; close;
-				case 2: mes "...*Tee Hee~*"; close;
-				case 3: mes "...Behbie~"; close;
-				}
+				F_RandCloseMsg();
 			} else if (ein_cook > 1099) { //6 Large Jellopy for Coal Part
 				mes "[Uwe]";
 				mes "Oh hello hello~";
@@ -1037,14 +1007,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 					F_LargeJellopyForCoal();
 				case 2:
 					if (checkweight(Spawn,200) == 0) {
-						mes "[Uwe]";
-						mes "Oh, I was going to give";
-						mes "you a little something,";
-						mes "but you've carrying too";
-						mes "many things. Why don't";
-						mes "you put some of it away";
-						mes "in your Kafra Storage?";
-						close;
+						F_OverWeight();
 					}
 					mes "[Uwe]";
 					mes "Quit...?";
@@ -1075,14 +1038,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 						F_LargeJellopyForCoal();
 					case 2:
 						if (checkweight(Spawn,200) == 0) {
-							mes "[Uwe]";
-							mes "Oh, I was going to give";
-							mes "you a little something,";
-							mes "but you've carrying too";
-							mes "many things. Why don't";
-							mes "you put some of it away";
-							mes "in your Kafra Storage?";
-							close;
+							F_OverWeight();
 						}
 						mes "[Uwe]";
 						mes "Well... Then... Anyway,";
@@ -1273,11 +1229,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 				mes "come and see me";
 				mes "anytime, alright?";
 				mes "So don't be shy";
-				switch (rand(1,3)) {
-				case 1: mes "...Ho ho~"; close;
-				case 2: mes "...*Tee Hee~*"; close;
-				case 3: mes "...Behbie~"; close;
-				}
+				F_RandCloseMsg();
 			case 2:
 				mes "[Uwe]";
 				mes "Hmmm...?";
@@ -1380,11 +1332,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 						mes "[Uwe]";
 						mes "Well, I hope";
 						mes "you like them~";
-						switch (rand(1,3)) {
-						case 1: mes "...Ho ho~"; close;
-						case 2: mes "...*Tee Hee~*"; close;
-						case 3: mes "...Behbie~"; close;
-						}
+						F_RandCloseMsg();
 					case 4:
 						F_Cancel();
 					}
