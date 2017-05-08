@@ -900,12 +900,13 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 				mes "Don't be so nervous, I don't really need those anymore. But since I know you're hard working, I'll throw in a little something extra...";
 				next;
 				mes "[Uwe]";
-				mes "I usually give you cutie "+ jobname(Class) +"s 10 Mini Furnaces, but you can have ^EEA9B811^000000. There's the little something extra I was talking about.";
+				mesf("I usually give you cutie %ss 10 Mini Furnaces, but you can have ^EEA9B811^000000." /* TODO: HULD Plural Table for jobname() pls */
+				     "There's the little something extra I was talking about.", jobname(Class));
 			} else {
 				mes "[Uwe]";
 				mes "Well... Then... Anyway,";
 				mes "Congratulation to becoming";
-				mes "a "+ jobname(Class) +"!!";
+				mesf("a %s!!", jobname(Class));
 				mes "This is my present for it.";
 				if (Sex == SEX_MALE) {
 					mes "...you ^EEA9B8naughty boy^000000.";
@@ -947,7 +948,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 				next;
 				switch (select("So... You're a chef.", "Yes, I tried my best.")) {
 				case 1:
-					mes "["+ strcharinfo(PC_NAME) +"]";
+					mesf("[%s]", strcharinfo(PC_NAME));
 					mes "So...";
 					mes "You're a chef.";
 					next;
@@ -1039,7 +1040,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 						mes "[Uwe]";
 						mes "Well... Then... Anyway,";
 						mes "Congratulation to becoming";
-						mes "a "+ jobname(Class) +"!!";
+						mesf("a %s!!", jobname(Class));
 							mes "This is my present for it. Huhuhu.";
 						if (Class != Job_Whitesmith) {
 							if (Sex == SEX_MALE) {
@@ -1237,7 +1238,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 			mes "Oh! Hello again,";
 			mes "you cutie adventurer.";
 			mes "So tell me, what brings";
-			mes "you here, "+strcharinfo(PC_NAME)+"?";
+			mesf("you here, %s?", strcharinfo(PC_NAME));
 			next;
 			switch (select("Ask about Cooking.", "Ask about Einbroch.", "Cancel.")) {
 			case 1:
@@ -1443,7 +1444,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 				mes "Oooh...!";
 				mes "Congratulations!";
 				mes "You finally became";
-				mes "a cutie "+ jobname(Class) +"!";
+				mesf("a cutie %s!", jobname(Class));
 				next;
 				mes "[Uwe]";
 				mes "Mmmm...";
