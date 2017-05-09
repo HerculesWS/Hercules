@@ -1738,7 +1738,7 @@ einbroch,1,1,0	script	Einbroch Smog Alert	FAKE_NPC,{
 
 OnEnable:
 	$@AlrdEinPoll = 1;
-	mapannounce "einbroch","This is a state of emercency! Harmful smog is reaching high levels of saturation. Residents of Einbroch must find shelter immediately.",bc_map;
+	mapannounce "einbroch","This is a state of emergency! Harmful smog is reaching high levels of saturation. Residents of Einbroch must find shelter immediately.",bc_map;
 	enablenpc "Einbroch Smog Alert";
 	hideonnpc "Centzu#ein";
 	hideonnpc "Khowropher#ein";
@@ -2098,7 +2098,7 @@ ein_in01,67,242,3	script	Zelmeto	4_M_REPAIR,{
 			mes "[Zelmeto]";
 			mes "^333333*Whew*^000000";
 			mes "I haven't given that much";
-			mes "inspriration in a while, but";
+			mes "inspiration in a while, but";
 			mes "your help was well worth it.";
 			mes "I'm going to start the repairs, but once again, I'd like to thank you.";
 			close;
@@ -2138,7 +2138,7 @@ ein_in01,67,242,3	script	Zelmeto	4_M_REPAIR,{
 		mes "^333333*Sigh*^000000";
 		mes "My proposal was rejected";
 		mes "by our superintendant. But";
-		mes "maintainance and repairs";
+		mes "maintenance and repairs";
 		mes "are crucial for peak operating";
 		mes "efficiency and worker safety!";
 		next;
@@ -2313,7 +2313,7 @@ ein_in01,67,242,3	script	Zelmeto	4_M_REPAIR,{
 		mes "[Zelmeto]";
 		mes "Now, the pipe I want";
 		mes "you to inspect is located";
-		mes "near those large caultrons";
+		mes "near those large cauldrons";
 		mes "of molten metal. You should";
 		mes "be able to find it pretty easily.";
 		next;
@@ -2782,7 +2782,7 @@ einbech,165,105,7	script	Buender Hikeman#ein	4_M_EINOLD,{
 		case 1:
 			mes "[Buender Hikeman]";
 			mes "How dare you...";
-			mes "How dare you treat ";
+			mes "How dare you treat me";
 			mes "after destroying all the";
 			mes "happiness in my life!";
 			next;
@@ -3263,7 +3263,6 @@ ein_in01,231,163,7	script	Sick Old Man#ein	4_M_DIEMAN,{
 		close;
 	}
 	else if (Shinokas_Quest == 2) {
-		einbech = 0;
 		mes "[Sick Old Man]";
 		mes "...!";
 		next;
@@ -3309,7 +3308,7 @@ ein_in01,231,163,7	script	Sick Old Man#ein	4_M_DIEMAN,{
 				mes "^3355FFIt doesn't seem";
 				mes "like this old man";
 				mes "is telling the truth...^000000";
-				einbech = 0;
+				.@einbech = 0;
 				next;
 			}
 			else {
@@ -3446,7 +3445,7 @@ ein_in01,231,163,7	script	Sick Old Man#ein	4_M_DIEMAN,{
 		next;
 		mes "[Shinokas]";
 		mes "After I destroyed the tunnel,";
-		mes "they targeted me and I ended";
+		mes "they targeted me and I ended up";
 		mes "spending the rest of my life being pursued and running from place to place. What the hell was that ^3131FFore^000000 and why was it so important?";
 		next;
 		mes "[Shinokas]";
