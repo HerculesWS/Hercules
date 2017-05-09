@@ -3194,31 +3194,31 @@ void clif_changelook(struct block_list *bl,int type,int val)
 					vd->shield = val;
 			break;
 			case LOOK_BASE:
-				if( !sd ) break;
-
-				if ( val == INVISIBLE_CLASS ) /* nothing to change look */
-					return;
-
-				if( sd->sc.option&OPTION_COSTUME )
-					vd->weapon = vd->shield = 0;
-
-				if( !vd->cloth_color )
+				if (sd == NULL)
 					break;
 
-				if (sd->sc.option&OPTION_WEDDING && battle_config.wedding_ignorepalette)
+				if (val == INVISIBLE_CLASS) /* nothing to change look */
+					return;
+
+				if (sd->sc.option & OPTION_COSTUME)
+					vd->weapon = vd->shield = 0;
+
+				if (!vd->cloth_color)
+					break;
+
+				if ((sd->sc.option & OPTION_WEDDING) != 0 && battle_config.wedding_ignorepalette == true)
 					vd->cloth_color = 0;
-				if (sd->sc.option&OPTION_XMAS && battle_config.xmas_ignorepalette)
+				if ((sd->sc.option & OPTION_XMAS) != 0 && battle_config.xmas_ignorepalette == true)
 					vd->cloth_color = 0;
-				if (sd->sc.option&OPTION_SUMMER && battle_config.summer_ignorepalette)
+				if ((sd->sc.option & OPTION_SUMMER) != 0 && battle_config.summer_ignorepalette == true)
 					vd->cloth_color = 0;
-				if (sd->sc.option&OPTION_HANBOK && battle_config.hanbok_ignorepalette)
+				if ((sd->sc.option & OPTION_HANBOK) != 0 && battle_config.hanbok_ignorepalette == true)
 					vd->cloth_color = 0;
-				if (sd->sc.option&OPTION_OKTOBERFEST /* TODO: config? */)
+				if ((sd->sc.option & OPTION_OKTOBERFEST) != 0 && battle_config.oktoberfest_ignorepalette == true)
 					vd->cloth_color = 0;
-				if (vd->body_style && (
-					sd->sc.option&OPTION_WEDDING || sd->sc.option&OPTION_XMAS ||
-					sd->sc.option&OPTION_SUMMER || sd->sc.option&OPTION_HANBOK ||
-					sd->sc.option&OPTION_OKTOBERFEST))
+				if ((sd->sc.option & OPTION_SUMMER2) != 0 && battle_config.summer2_ignorepalette == true)
+					vd->cloth_color = 0;
+				if (vd->body_style != 0 && (sd->sc.option & OPTION_COSTUME) != 0)
 					vd->body_style = 0;
 			break;
 			case LOOK_HAIR:
@@ -3237,16 +3237,18 @@ void clif_changelook(struct block_list *bl,int type,int val)
 				vd->hair_color = val;
 			break;
 			case LOOK_CLOTHES_COLOR:
-				if( val && sd ) {
-					if( sd->sc.option&OPTION_WEDDING && battle_config.wedding_ignorepalette )
+				if (val && sd != NULL) {
+					if ((sd->sc.option & OPTION_WEDDING) != 0 && battle_config.wedding_ignorepalette == true)
 						val = 0;
-					if( sd->sc.option&OPTION_XMAS && battle_config.xmas_ignorepalette )
+					if ((sd->sc.option & OPTION_XMAS) != 0 && battle_config.xmas_ignorepalette == true)
 						val = 0;
-					if( sd->sc.option&OPTION_SUMMER && battle_config.summer_ignorepalette )
+					if ((sd->sc.option & OPTION_SUMMER) != 0 && battle_config.summer_ignorepalette == true)
 						val = 0;
-					if( sd->sc.option&OPTION_HANBOK && battle_config.hanbok_ignorepalette )
+					if ((sd->sc.option & OPTION_HANBOK) != 0 && battle_config.hanbok_ignorepalette == true)
 						val = 0;
-					if( sd->sc.option&OPTION_OKTOBERFEST /* TODO: config? */ )
+					if ((sd->sc.option & OPTION_OKTOBERFEST) != 0 && battle_config.oktoberfest_ignorepalette == true)
+						val = 0;
+					if ((sd->sc.option & OPTION_SUMMER2) != 0 && battle_config.summer2_ignorepalette == true)
 						val = 0;
 				}
 				vd->cloth_color = val;

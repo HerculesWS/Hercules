@@ -840,6 +840,8 @@ typedef enum sc_type {
 	SC_TUNAPARTY,
 	SC_SHRIMP,	// 650
 	SC_FRESHSHRIMP,
+	
+	SC_DRESS_UP,
 #ifndef SC_MAX
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 #endif
@@ -1722,7 +1724,7 @@ enum si_type {
 	//SI_SUMMEREVENT04                       = 853,
 	//SI_SUMMEREVENT05                       = 854,
 	//SI_MINIGAME_ROULETTE_BONUS_ITEM        = 855,
-	//SI_DRESS_UP                            = 856,
+	SI_DRESS_UP                              = 856,
 	SI_MAPLE_FALLS                           = 857,
 	//SI_ALL_NIFLHEIM_RECALL                 = 858,
 	//SI_                                    = 859,

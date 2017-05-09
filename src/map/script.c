@@ -23797,6 +23797,7 @@ void script_hardcoded_constants(void)
 	script->set_constant("Option_Dragon5",OPTION_DRAGON5,false, false);
 	script->set_constant("Option_Hanbok",OPTION_HANBOK,false, false);
 	script->set_constant("Option_Oktoberfest",OPTION_OKTOBERFEST,false, false);
+	script->set_constant("Option_Summer2", OPTION_SUMMER2, false, false);
 
 	script->constdb_comment("status option compounds");
 	script->set_constant("Option_Dragon",OPTION_DRAGON,false, false);
