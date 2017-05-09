@@ -1101,7 +1101,7 @@ ACMD(heal)
 {
 	int hp = 0, sp = 0; // [Valaris, FOV]
 	bool recovered = true; // Player not damaged
-	
+
 	sscanf(message, "%12d %12d", &hp, &sp);
 
 	// some overflow checks
@@ -1126,23 +1126,26 @@ ACMD(heal)
 
 	// if hp or sp is defined for recovery.
 	if (hp >= 0 || sp >= 0) {
-		if (hp > 0 && sp > 0)
+		if (hp > 0 && sp > 0) {
 			status->heal(&sd->bl, hp, sp, 0);
-		if (hp >= 0)
-			status->heal(&sd->bl, hp, 0, 0);
-		if (sp >= 0)
-			status->heal(&sd->bl, 0, sp, 0);
+		} else {
+			if (hp >= 0)
+				status->heal(&sd->bl, hp, 0, 0);
+			if (sp >= 0)
+				status->heal(&sd->bl, 0, sp, 0);
+		}
 	}
 
 	// if hp or sp is defined for damage reduction.
 	if (hp < 0 || sp < 0) {
-		if (hp < 0 && sp < 0)
+		if (hp < 0 && sp < 0) {
 			status->damage(NULL, &sd->bl, -hp, -sp, 0, 0);
-		if (hp < 0)
-			status->damage(NULL, &sd->bl, -hp, 0, 0, 0);
-		if (sp < 0)
-			status->damage(NULL, &sd->bl, 0, -sp, 0, 0);
-
+		} else {
+			if (hp < 0)
+				status->damage(NULL, &sd->bl, -hp, 0, 0, 0);
+			if (sp < 0)
+				status->damage(NULL, &sd->bl, 0, -sp, 0, 0);
+		}
 		recovered = false; //negative values applied.
 	}
 
@@ -1155,7 +1158,6 @@ ACMD(heal)
 	}
 
 	return true;
-
 }
 
 /*==========================================
