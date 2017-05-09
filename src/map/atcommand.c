@@ -1094,60 +1094,68 @@ ACMD(kami)
 }
 
 /*==========================================
- *
+ * @heal command (usage: @heal hp value> <sp value>)
+ * Revised by Marky291
  *------------------------------------------*/
 ACMD(heal)
 {
-	int hp = 0, sp = 0; // [Valaris] thanks to fov
-
+	int hp = 0, sp = 0; // [Valaris, FOV]
+	bool recovered = true; // Player not damaged
+	
 	sscanf(message, "%12d %12d", &hp, &sp);
 
 	// some overflow checks
-	if( hp == INT_MIN ) hp++;
-	if( sp == INT_MIN ) sp++;
+	if (hp == INT_MIN) hp++;
+	if (sp == INT_MIN) sp++;
 
-	if ( hp == 0 && sp == 0 ) {
-		if (!status_percent_heal(&sd->bl, 100, 100))
-			clif->message(fd, msg_fd(fd,157)); // HP and SP have already been recovered.
+	// If user is is dead, then we should NOT notify we 
+	// have recovered HP/SP.
+	if (pc_isdead(sd)) {
+		clif->message(fd, msg_fd(fd, 864)); // You cannot use this command when dead.
+		return false;
+	}
+
+	// if no hp or sp defined for healing.
+	if (hp == 0 && sp == 0) {
+		if (status_percent_heal(&sd->bl, 100, 100))
+			clif->message(fd, msg_fd(fd, 17)); // HP, SP recovered.	
 		else
-			clif->message(fd, msg_fd(fd,17)); // HP, SP recovered.
+			clif->message(fd, msg_fd(fd, 157)); // HP and SP have already been recovered.
 		return true;
 	}
 
-	if ( hp > 0 && sp >= 0 ) {
-		if(!status->heal(&sd->bl, hp, sp, 0))
-			clif->message(fd, msg_fd(fd,157)); // HP and SP are already with the good value.
-		else
-			clif->message(fd, msg_fd(fd,17)); // HP, SP recovered.
-		return true;
-	}
-
-	if ( hp < 0 && sp <= 0 ) {
-		status->damage(NULL, &sd->bl, -hp, -sp, 0, 0);
-		clif->damage(&sd->bl,&sd->bl, 0, 0, -hp, 0, BDT_ENDURE, 0);
-		clif->message(fd, msg_fd(fd,156)); // HP or/and SP modified.
-		return true;
-	}
-
-	//Opposing signs.
-	if ( hp ) {
-		if (hp > 0)
+	// if hp or sp is defined for recovery.
+	if (hp >= 0 || sp >= 0) {
+		if (hp && sd)
+			status->heal(&sd->bl, hp, sp, 0);
+		if (hp >= 0)
 			status->heal(&sd->bl, hp, 0, 0);
-		else {
-			status->damage(NULL, &sd->bl, -hp, 0, 0, 0);
-			clif->damage(&sd->bl,&sd->bl, 0, 0, -hp, 0, BDT_ENDURE, 0);
-		}
-	}
-
-	if ( sp ) {
-		if (sp > 0)
+		if (sp >= 0)
 			status->heal(&sd->bl, 0, sp, 0);
-		else
-			status->damage(NULL, &sd->bl, 0, -sp, 0, 0);
 	}
 
-	clif->message(fd, msg_fd(fd,156)); // HP or/and SP modified.
+	// if hp or sp is defined for damage reduction.
+	if (hp < 0 || sp < 0) {
+		if (hp && sp)
+			status->damage(NULL, &sd->bl, -hp, -sp, 0, 0);
+		if (hp < 0)
+			status->damage(NULL, &sd->bl, -hp, 0, 0, 0);
+		if (sp < 0)
+			status->damage(NULL, &sd->bl, 0, -sp, 0, 0);
+
+		recovered = false; //negative values applied.
+	}
+
+	// if we use '@heal 20 -20', we are using damage, which means we didnt recover HP/SP.
+	if (recovered)
+		clif->message(fd, msg_fd(fd, 17)); // HP, SP recovered
+	else {
+		clif->message(fd, msg_fd(fd, 156)); // HP or/and SP modified.
+		clif->damage(&sd->bl, &sd->bl, 0, 0, 0, 0, BDT_ENDURE, 0);
+	}
+
 	return true;
+
 }
 
 /*==========================================
