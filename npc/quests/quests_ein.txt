@@ -5652,7 +5652,7 @@ ein_in01,191,102,5	script	Kaijeta#ein	4_F_EINOLD,{
 		mes "[Kaijeta]";
 		mes "I can't bear to see the";
 		mes "petty hatred between our";
-		mes "two towns stop my son from";
+		mes "two towns stopping my son from";
 		mes "seeing the woman he loves...";
 		changequest 8081,8082;
 		close;
