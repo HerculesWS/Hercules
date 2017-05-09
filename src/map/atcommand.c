@@ -1126,7 +1126,7 @@ ACMD(heal)
 
 	// if hp or sp is defined for recovery.
 	if (hp >= 0 || sp >= 0) {
-		if (hp && sd)
+		if (hp > 0 && sp > 0)
 			status->heal(&sd->bl, hp, sp, 0);
 		if (hp >= 0)
 			status->heal(&sd->bl, hp, 0, 0);
@@ -1136,7 +1136,7 @@ ACMD(heal)
 
 	// if hp or sp is defined for damage reduction.
 	if (hp < 0 || sp < 0) {
-		if (hp && sp)
+		if (hp < 0 && sp < 0)
 			status->damage(NULL, &sd->bl, -hp, -sp, 0, 0);
 		if (hp < 0)
 			status->damage(NULL, &sd->bl, -hp, 0, 0, 0);
