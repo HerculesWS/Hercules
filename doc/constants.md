@@ -1316,6 +1316,7 @@
 - `SC_TUNAPARTY`: 649
 - `SC_SHRIMP`: 650
 - `SC_FRESHSHRIMP`: 651
+- `SC_DRESS_UP`: 652
 
 ### Emotes
 
@@ -3828,11 +3829,12 @@
 - `Option_Dragon5`: 67108864
 - `Option_Hanbok`: 134217728
 - `Option_Oktoberfest`: 268435456
+- `Option_Summer2`: 536870912
 
 ### status option compounds
 
 - `Option_Dragon`: 126353408
-- `Option_Costume`: 402984960
+- `Option_Costume`: 939855872
 
 ### send_target
 
