@@ -15212,8 +15212,10 @@ BUILDIN(npcspeed) {
 
 	if (nd != NULL) {
 		unit->bl2ud2(&nd->bl); // ensure nd->ud is safe to edit
-		nd->speed = speed;
-		nd->ud->state.speed_changed = 1;
+		if (nd->ud != NULL) { // nd->ud is NULL when called on an NPC which is not on a map
+			nd->speed = speed;
+			nd->ud->state.speed_changed = 1;
+		}
 	}
 
 	return true;
