@@ -7450,6 +7450,27 @@ no RID is attached), false will be returned. In case of success, true is
 returned.
 
 ---------------------------------------
+
+*addchannelhandler("<#channel>", "<NPC::OnEvent>")
+
+This command will trigger the specified event every time a player
+talks in the specified channel, with said player as attached rid.
+It assigns the message to @channelmes$
+
+OnChannelMessage:
+	channelmes("#chan", "Echo: " + @channelmes$);
+	end;
+
+OnInit:
+	addchannelhandler("#chan", "NPC::OnChannelMessage");
+
+---------------------------------------
+
+*removechannelhandler("<#channel>", "<NPC::OnEvent>")
+
+Removes a channel handler added by addchannelhandler()
+
+---------------------------------------
 *rand(<number>{, <number>})
 
 This function returns a number ...
