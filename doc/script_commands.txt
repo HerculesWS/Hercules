@@ -7773,6 +7773,17 @@ OnAtcommand:
 
 ---------------------------------------
 
+*add_group_command("<command>", <group id>, <use on self>, <use on other>)
+
+Allows to explicitly change the command permissions for a specific group.
+
+Example:
+	bindatcmd("foobar", "NPC::OnUseCommand", 99, 99, 0); // define the command
+	add_group_command("foobar", 2, true, false); // allow group 2 to use @foobar
+	add_group_command("foobar", 5, true, true); // allow group 5 to use @foobar and #foobar
+
+---------------------------------------
+
 *unbindatcmd("command")
 
 This command will unbind a NPC event label from an atcommand.
@@ -7790,7 +7801,8 @@ scripts-atcommands this way.
 *can_use_command("<command>"{, <account id>})
 
 Checks if the attached or specified player can use the specified
-atcommand and returns true or false accordingly.
+atcommand and returns true or false accordingly. Works for both
+built-in atcommands and custom atcommands.
 
 ---------------------------------------
 
