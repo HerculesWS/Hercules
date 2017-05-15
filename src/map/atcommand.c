@@ -10228,31 +10228,34 @@ void atcommand_db_load_groups(GroupSettings **groups, struct config_setting_t **
 }
 
 bool atcommand_can_use(struct map_session_data *sd, const char *command) {
-	AtCommandInfo *info = atcommand->get_info_byname(atcommand->check_alias(command + 1));
+	AtCommandInfo *acmd_d;
+	struct atcmd_binding_data *bcmd_d;
 
 	nullpo_retr(false, sd);
-	nullpo_retr(false, command);
-	if (info == NULL)
-		return false;
 
-	if ((*command == atcommand->at_symbol && info->at_groups[pcg->get_idx(sd->group)] != 0) ||
-		(*command == atcommand->char_symbol && info->char_groups[pcg->get_idx(sd->group)] != 0) ) {
-		return true;
+	if ((acmd_d = atcommand->get_info_byname(atcommand->check_alias(command + 1))) != NULL) {
+		return ((*command == atcommand->at_symbol && acmd_d->at_groups[pcg->get_idx(sd->group)] > 0) ||
+				(*command == atcommand->char_symbol && acmd_d->char_groups[pcg->get_idx(sd->group)] > 0));
+	} else if ((bcmd_d = atcommand->get_bind_byname(atcommand->check_alias(command + 1))) != NULL) {
+		return ((*command == atcommand->at_symbol && bcmd_d->at_groups[pcg->get_idx(sd->group)] > 0) ||
+				(*command == atcommand->char_symbol && bcmd_d->char_groups[pcg->get_idx(sd->group)] > 0));
 	}
 
 	return false;
 }
+
 bool atcommand_can_use2(struct map_session_data *sd, const char *command, AtCommandType type) {
-	AtCommandInfo *info = atcommand->get_info_byname(atcommand->check_alias(command));
+	AtCommandInfo *acmd_d;
+	struct atcmd_binding_data *bcmd_d;
 
 	nullpo_retr(false, sd);
-	nullpo_retr(false, command);
-	if (info == NULL)
-		return false;
 
-	if ((type == COMMAND_ATCOMMAND && info->at_groups[pcg->get_idx(sd->group)] != 0) ||
-		(type == COMMAND_CHARCOMMAND && info->char_groups[pcg->get_idx(sd->group)] != 0) ) {
-		return true;
+	if ((acmd_d = atcommand->get_info_byname(atcommand->check_alias(command))) != NULL) {
+		return ((type == COMMAND_ATCOMMAND && acmd_d->at_groups[pcg->get_idx(sd->group)] > 0) ||
+				(type == COMMAND_CHARCOMMAND && acmd_d->char_groups[pcg->get_idx(sd->group)] > 0));
+	} else if ((bcmd_d = atcommand->get_bind_byname(atcommand->check_alias(command))) != NULL) {
+		return ((type == COMMAND_ATCOMMAND && bcmd_d->at_groups[pcg->get_idx(sd->group)] > 0) ||
+				(type == COMMAND_CHARCOMMAND && bcmd_d->char_groups[pcg->get_idx(sd->group)] > 0));
 	}
 
 	return false;
