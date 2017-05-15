@@ -79,8 +79,10 @@ struct AtCommandInfo {
 struct atcmd_binding_data {
 	char command[ATCOMMAND_LENGTH];
 	char npc_event[ATCOMMAND_LENGTH];
-	int group_lv;
-	int group_lv_char;
+	int group_lv; // DEPRECATED
+	int group_lv_char; // DEPRECATED
+	char *at_groups; // quick @commands "can-use" lookup
+	char *char_groups; // quick @charcommands "can-use" lookup
 	bool log;
 };
 
