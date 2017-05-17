@@ -21491,6 +21491,38 @@ BUILDIN(issit)
 	return true;
 }
 
+BUILDIN(add_group_command)
+{
+	AtCommandInfo *acmd_d;
+	struct atcmd_binding_data *bcmd_d;
+	const char *atcmd = script_getstr(st, 2);
+	int group_id = script_getnum(st, 3);
+	bool self_perm = (script_getnum(st, 4) == 1);
+	bool char_perm = (script_getnum(st, 5) == 1);
+
+	if (!pcg->exists(group_id)) {
+		ShowWarning("script:add_group_command: group does not exist: %i\n", group_id);
+		script_pushint(st, 0);
+		return false;
+	}
+
+	if ((bcmd_d = atcommand->get_bind_byname(atcmd)) != NULL) {
+		bcmd_d->at_groups[group_id] = self_perm;
+		bcmd_d->char_groups[group_id] = char_perm;
+		script_pushint(st, 1);
+		return true;
+	} else if ((acmd_d = atcommand->get_info_byname(atcmd)) != NULL) {
+		acmd_d->at_groups[group_id] = self_perm;
+		acmd_d->char_groups[group_id] = char_perm;
+		script_pushint(st, 1);
+		return true;
+	}
+
+	ShowWarning("script:add_group_command: command does not exist: %s\n", atcmd);
+	script_pushint(st, 0);
+	return false;
+}
+
 /**
  * @commands (script based)
  **/
@@ -21540,6 +21572,8 @@ BUILDIN(bindatcmd)
 		atcommand->binding[i]->group_lv = group_lv;
 		atcommand->binding[i]->group_lv_char = group_lv_char;
 		atcommand->binding[i]->log = log;
+		CREATE(atcommand->binding[i]->at_groups, char, db_size(pcg->db));
+		CREATE(atcommand->binding[i]->char_groups, char, db_size(pcg->db));
 	}
 
 	return true;
@@ -23711,6 +23745,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(useatcmd, "s"),
 		BUILDIN_DEF(has_permission, "v?"),
 		BUILDIN_DEF(can_use_command, "s?"),
+		BUILDIN_DEF(add_group_command, "siii"),
 
 		/**
 		 * Item bound [Xantara] [Akinari] [Mhalicot/Hercules]
