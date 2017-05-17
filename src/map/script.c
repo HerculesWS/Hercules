@@ -136,6 +136,7 @@ const char* script_op2name(int op) {
 	RETURN_OP_NAME(C_ADD);
 	RETURN_OP_NAME(C_SUB);
 	RETURN_OP_NAME(C_MUL);
+	RETURN_OP_NAME(C_POW);
 	RETURN_OP_NAME(C_DIV);
 	RETURN_OP_NAME(C_MOD);
 	RETURN_OP_NAME(C_NEG);
@@ -1035,6 +1036,7 @@ const char* parse_variable(const char* p)
 	|| ( p[0] == '|' && p[1] == '=' && (type = C_OR, true) ) // |=
 	|| ( p[0] == '&' && p[1] == '=' && (type = C_AND, true) ) // &=
 	|| ( p[0] == '*' && p[1] == '=' && (type = C_MUL, true) ) // *=
+	|| ( p[0] == '*' && p[1] == '*' && p[2] == '=' && (type = C_POW, true) ) // **=
 	|| ( p[0] == '/' && p[1] == '=' && (type = C_DIV, true) ) // /=
 	|| ( p[0] == '%' && p[1] == '=' && (type = C_MOD, true) ) // %=
 	|| ( p[0] == '+' && p[1] == '+' && (type = C_ADD_POST, true) ) // post ++
@@ -1058,6 +1060,7 @@ const char* parse_variable(const char* p)
 
 		case C_L_SHIFT: // <<=
 		case C_R_SHIFT: // >>=
+		case C_POW: // **=
 			p = script->skip_space( &p[3] );
 			break;
 
@@ -1424,6 +1427,7 @@ const char* script_parse_subexpr(const char* p,int limit)
 	   (op=C_OP3,    opl=0, len=1,*p=='?')              // ?:
 	|| (op=C_ADD,    opl=9, len=1,*p=='+')              // +
 	|| (op=C_SUB,    opl=9, len=1,*p=='-')              // -
+	|| (op=C_POW,    opl=11,len=2,*p=='*' && p[1]=='*') // **
 	|| (op=C_MUL,    opl=10,len=1,*p=='*')              // *
 	|| (op=C_DIV,    opl=10,len=1,*p=='/')              // /
 	|| (op=C_MOD,    opl=10,len=1,*p=='%')              // %
@@ -4146,6 +4150,7 @@ void op_2num(struct script_state* st, int op, int i1, int i2)
 		case C_ADD: ret = i1 + i2; ret64 = (int64)i1 + i2; break;
 		case C_SUB: ret = i1 - i2; ret64 = (int64)i1 - i2; break;
 		case C_MUL: ret = i1 * i2; ret64 = (int64)i1 * i2; break;
+		case C_POW: ret = (int)pow((double)i1, (double)i2); ret64 = (int64)pow((double)i1, (double)i2); break;
 		default:
 			ShowError("script:op_2num: unexpected number operator %s i1=%d i2=%d\n", script->op2name(op), i1, i2);
 			script->reportsrc(st);
@@ -4683,6 +4688,7 @@ void run_script_main(struct script_state *st) {
 			case C_ADD:
 			case C_SUB:
 			case C_MUL:
+			case C_POW:
 			case C_DIV:
 			case C_MOD:
 			case C_EQ:
