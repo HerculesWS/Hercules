@@ -28,6 +28,7 @@
 #include "map/log.h" // struct e_log_pick_type
 #include "map/map.h" // RC_MAX, ELE_MAX
 #include "map/pc_groups.h" // GroupSettings
+#include "map/rodex.h"
 #include "map/script.h" // struct reg_db
 #include "map/searchstore.h"  // struct s_search_store_info
 #include "map/status.h" // enum sc_type, OPTION_*
@@ -489,6 +490,14 @@ END_ZEROED_BLOCK;
 		struct mail_data inbox;
 		bool changed; // if true, should sync with charserver on next mailbox request
 	} mail;
+
+	// RoDEX
+	struct {
+		struct rodex_message tmp;
+		struct rodex_maillist messages;
+		int total;
+		bool new_mail;
+	} rodex;
 
 	// Quest log system
 	int num_quests;          ///< Number of entries in quest_log

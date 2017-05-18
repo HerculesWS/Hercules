@@ -555,6 +555,9 @@ struct Battle_Config {
 
 	int prevent_logout_trigger;
 	int boarding_halter_speed;
+
+	int feature_rodex;
+	int feature_rodex_use_accountmail;
 };
 
 /* criteria for battle_config.idletime_critera */

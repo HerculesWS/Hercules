@@ -305,6 +305,27 @@ enum packet_headers {
 #else // PACKETVER < 20141022
 	questListType = 0x2b1, ///< ZC_ALL_QUEST_LIST
 #endif // PACKETVER >= 20141022
+	/* Rodex */
+	rodexicon = 0x09E7,
+	rodexread = 0x09EB,
+	rodexwriteresult = 0x09ED,
+	rodexnextpage = 0x09F0,
+	rodexgetzeny = 0x09F2,
+	rodexgetitem = 0x09F4,
+	rodexdelete = 0x09F6,
+	rodexadditem = 0x0A05,
+	rodexremoveitem = 0x0A07,
+	rodexopenwrite = 0x0A12,
+#if PACKETVER < 20160600
+	rodexmailList = 0x09F0,
+#else // PACKETVER >= 20160600
+	rodexmailList = 0x0A7D,
+#endif
+#if PACKETVER < 20160316
+	rodexcheckplayer = 0x0A14,
+#else // PACKETVER >= 20160316
+	rodexcheckplayer = 0x0A51,
+#endif
 };
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
@@ -1239,6 +1260,197 @@ struct packet_whisper_message {
 	int16 packet_len;
 	char name[NAME_LENGTH];
 	char message[];
+} __attribute__((packed));
+
+/* RoDEX */
+struct PACKET_CZ_ADD_ITEM_TO_MAIL {
+	int16 PacketType;
+	int16 index;
+	int16 count;
+} __attribute__((packed));
+
+struct PACKET_ZC_ADD_ITEM_TO_MAIL {
+	int16 PacketType;
+	int8 result;
+	int16 index;
+	int16 count;
+	uint16 ITID;
+	int8 type;
+	int8 IsIdentified;
+	int8 IsDamaged;
+	int8 refiningLevel;
+	struct EQUIPSLOTINFO slot;
+	struct ItemOptions optionData[MAX_ITEM_OPTIONS];
+	int16 weight;
+	int8 unknow[5];
+} __attribute__((packed));
+
+struct mail_item {
+	int16 count;
+	uint16 ITID;
+	int8 IsIdentified;
+	int8 IsDamaged;
+	int8 refiningLevel;
+	struct EQUIPSLOTINFO slot;
+	int8 unknow1[4];
+	int8 type;
+	int8 unknown[4];
+	struct ItemOptions optionData[MAX_ITEM_OPTIONS];
+} __attribute__((packed));
+
+struct PACKET_CZ_REQ_OPEN_WRITE_MAIL {
+	int16 PacketType;
+	char receiveName[NAME_LENGTH];
+} __attribute__((packed));
+
+struct PACKET_ZC_ACK_OPEN_WRITE_MAIL {
+	int16 PacketType;
+	char receiveName[24];
+	int8 result;
+} __attribute__((packed));
+
+struct PACKET_CZ_REQ_REMOVE_ITEM_MAIL {
+	int16 PacketType;
+	int16 index;
+	uint16 cnt;
+} __attribute__((packed));
+
+struct PACKET_ZC_ACK_REMOVE_ITEM_MAIL {
+	int16 PacketType;
+	int8 result;
+	int16 index;
+	uint16 cnt;
+	int16 weight;
+} __attribute__((packed));
+
+struct PACKET_CZ_SEND_MAIL {
+	int16 PacketType;
+	int16 PacketLength;
+	char receiveName[24];
+	char senderName[24];
+	int64 zeny;
+	int16 Titlelength;
+	int16 TextcontentsLength;
+#if PACKETVER > 20160600
+	int32 receiver_char_id;
+#endif // PACKETVER > 20160600
+	char string[];
+} __attribute__((packed));
+
+struct PACKET_ZC_WRITE_MAIL_RESULT {
+	int16 PacketType;
+	int8 result;
+} __attribute__((packed));
+
+struct PACKET_CZ_CHECKNAME {
+	int16 PacketType;
+	char Name[24];
+} __attribute__((packed));
+
+struct PACKET_ZC_CHECKNAME {
+	int16 PacketType;
+	int32 CharId;
+	int16 Class;
+	int16 BaseLevel;
+#if PACKETVER >= 20160316
+	char Name[24];
+#endif
+} __attribute__((packed));
+
+struct PACKET_ZC_NOTIFY_UNREADMAIL {
+	int16 PacketType;
+	char result;
+} __attribute__((packed));
+
+struct maillistinfo {
+	int64 MailID;
+	int8 Isread;
+	uint8 type;
+	char SenderName[24];
+	int32 regDateTime;
+	int32 expireDateTime;
+	int16 Titlelength;
+	char title[];
+} __attribute__((packed));
+
+struct PACKET_ZC_MAIL_LIST {
+	int16 PacketType;
+	int16 PacketLength;
+	int8 opentype;
+	int8 cnt;
+	int8 IsEnd;
+} __attribute__((packed));
+
+struct PACKET_CZ_REQ_NEXT_MAIL_LIST {
+	int16 PacketType;
+	int8 opentype;
+	int64 Lower_MailID;
+} __attribute__((packed));
+
+struct PACKET_CZ_REQ_OPEN_MAIL {
+	int16 PacketType;
+	int8 opentype;
+	int64 Upper_MailID;
+} __attribute__((packed));
+
+struct PACKET_CZ_REQ_READ_MAIL {
+	int16 PacketType;
+	int8 opentype;
+	int64 MailID;
+} __attribute__((packed));
+
+struct PACKET_ZC_READ_MAIL {
+	int16 PacketType;
+	int16 PacketLength;
+	int8 opentype;
+	int64 MailID;
+	int16 TextcontentsLength;
+	int64 zeny;
+	int8 ItemCnt;
+} __attribute__((packed));
+
+struct PACKET_CZ_REQ_DELETE_MAIL {
+	int16 PacketType;
+	int8 opentype;
+	int64 MailID;
+} __attribute__((packed));
+
+struct PACKET_ZC_ACK_DELETE_MAIL {
+	int16 PacketType;
+	int8 opentype;
+	int64 MailID;
+} __attribute__((packed));
+
+struct PACKET_CZ_REQ_REFRESH_MAIL_LIST {
+	int16 PacketType;
+	int8 opentype;
+	int64 Upper_MailID;
+} __attribute__((packed));
+
+struct PACKET_CZ_REQ_ZENY_FROM_MAIL {
+	int16 PacketType;
+	int64 MailID;
+	int8 opentype;
+} __attribute__((packed));
+
+struct PACKET_ZC_ACK_ZENY_FROM_MAIL {
+	int16 PacketType;
+	int64 MailID;
+	int8 opentype;
+	int8 result;
+} __attribute__((packed));
+
+struct PACKET_CZ_REQ_ITEM_FROM_MAIL {
+	int16 PacketType;
+	int64 MailID;
+	int8 opentype;
+} __attribute__((packed));
+
+struct PACKET_ZC_ACK_ITEM_FROM_MAIL {
+	int16 PacketType;
+	int64 MailID;
+	int8 opentype;
+	int8 result;
 } __attribute__((packed));
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
