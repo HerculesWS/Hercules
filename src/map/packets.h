@@ -5787,6 +5787,21 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0a99,4);
 #endif
 
+// 2017-04-26dRagexeRE
+#if PACKETVER >= 20170426
+// new packets
+// changed packet sizes
+	packet(0x0a98,10);
+#endif
+
+// 2017-05-02dRagexeRE
+#if PACKETVER >= 20170502
+// new packets
+	packet(0x0ace,4);
+// changed packet sizes
+#endif
+
+
 /* PacketKeys: http://herc.ws/board/topic/1105-hercules-wpe-free-june-14th-patch/ */
 #if PACKETVER >= 20110817
 	packetKeys(0x053D5CED,0x3DED6DED,0x6DED6DED); /* Thanks to Shakto */
