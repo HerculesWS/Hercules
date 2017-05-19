@@ -56,7 +56,12 @@ enum login_packet_id {
 	//PACKET_ID_CA_SSO_LOGIN_REQa       = 0x825a, /* unused */
 
 	// AC (Login to Client)
+
+#if PACKETVER < 20170315
 	PACKET_ID_AC_ACCEPT_LOGIN         = 0x0069,
+#else
+	PACKET_ID_AC_ACCEPT_LOGIN         = 0x0ac4,
+#endif
 	PACKET_ID_AC_REFUSE_LOGIN         = 0x006a,
 	PACKET_ID_SC_NOTIFY_BAN           = 0x0081,
 	PACKET_ID_AC_ACK_HASH             = 0x01dc,
@@ -256,6 +261,9 @@ struct packet_AC_ACCEPT_LOGIN {
 	uint32 last_login_ip;     ///< Last login IP
 	char last_login_time[26]; ///< Last login timestamp
 	uint8 sex;                ///< Account sex
+#if PACKETVER >= 20170315
+	char unknown1[17];
+#endif
 	struct {
 		uint32 ip;        ///< Server IP address
 		int16 port;       ///< Server port
@@ -263,6 +271,9 @@ struct packet_AC_ACCEPT_LOGIN {
 		uint16 usercount; ///< Online users
 		uint16 state;     ///< Server state
 		uint16 property;  ///< Server property
+#if PACKETVER >= 20170315
+		char unknown2[128];
+#endif
 	} server_list[];          ///< List of charservers
 } __attribute__((packed));
 
