@@ -9338,20 +9338,32 @@ BUILDIN(getequipweaponlv)
  * 0 : false (max refine level or unequip..)
  *------------------------------------------*/
 BUILDIN(getequippercentrefinery) {
-	int i = -1,num;
+	int i = -1, num;
 	struct map_session_data *sd;
+	int type = 0;
 
-	num = script_getnum(st,2);
+	num = script_getnum(st, 2);
+	type = (script_hasdata(st, 3)) ? script_getnum(st, 3) : REFINE_CHANCE_TYPE_NORMAL;
+
 	sd = script->rid2sd(st);
-	if( sd == NULL )
+	if (sd == NULL)
 		return true;
 
+	if (type < REFINE_CHANCE_TYPE_NORMAL || type >= REFINE_CHANCE_TYPE_MAX) {
+		ShowError("buildin_getequippercentrefinery: Invalid type (%d) provided!\n", type);
+		script_pushint(st, 0);
+		return false;
+	}
+
+
 	if (num > 0 && num <= ARRAYLENGTH(script->equip))
-		i=pc->checkequip(sd,script->equip[num-1]);
-	if(i >= 0 && sd->status.inventory[i].nameid && sd->status.inventory[i].refine < MAX_REFINE)
-		script_pushint(st,status->get_refine_chance(itemdb_wlv(sd->status.inventory[i].nameid), (int)sd->status.inventory[i].refine));
+		i = pc->checkequip(sd, script->equip[num - 1]);
+
+	if (i >= 0 && sd->status.inventory[i].nameid != 0 && sd->status.inventory[i].refine < MAX_REFINE)
+		script_pushint(st,
+			status->get_refine_chance(itemdb_wlv(sd->status.inventory[i].nameid), (int) sd->status.inventory[i].refine, (enum refine_chance_type) type));
 	else
-		script_pushint(st,0);
+		script_pushint(st, 0);
 
 	return true;
 }
@@ -23316,7 +23328,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getequipisidentify,"i"),
 		BUILDIN_DEF(getequiprefinerycnt,"i"),
 		BUILDIN_DEF(getequipweaponlv,"i"),
-		BUILDIN_DEF(getequippercentrefinery,"i"),
+		BUILDIN_DEF(getequippercentrefinery,"i?"),
 		BUILDIN_DEF(successrefitem,"i?"),
 		BUILDIN_DEF(failedrefitem,"i"),
 		BUILDIN_DEF(downrefitem,"i?"),
@@ -23958,6 +23970,12 @@ void script_hardcoded_constants(void)
 	script->set_constant("BL_ELEM",BL_ELEM,false, false);
 	script->set_constant("BL_CHAR",BL_CHAR,false, false);
 	script->set_constant("BL_ALL",BL_ALL,false, false);
+
+	script->constdb_comment("Refine Chance Types");
+	script->set_constant("REFINE_CHANCE_TYPE_NORMAL", REFINE_CHANCE_TYPE_NORMAL, false, false);
+	script->set_constant("REFINE_CHANCE_TYPE_ENRICHED", REFINE_CHANCE_TYPE_ENRICHED, false, false);
+	script->set_constant("REFINE_CHANCE_TYPE_E_NORMAL", REFINE_CHANCE_TYPE_E_NORMAL, false, false);
+	script->set_constant("REFINE_CHANCE_TYPE_E_ENRICHED", REFINE_CHANCE_TYPE_E_ENRICHED, false, false);
 
 	script->constdb_comment("Player permissions");
 	script->set_constant("PERM_TRADE", PC_PERM_TRADE, false, false);

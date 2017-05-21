@@ -12860,13 +12860,17 @@ int status_natural_heal_timer(int tid, int64 tick, int id, intptr_t data)
 * @param refine The target refine level
 * @return The chance to refine the item, in percent (0~100)
 **/
-int status_get_refine_chance(enum refine_type wlv, int refine)
+int status_get_refine_chance(enum refine_type wlv, int refine, enum refine_chance_type type)
 {
 	Assert_ret((int)wlv >= REFINE_TYPE_ARMOR && wlv < REFINE_TYPE_MAX);
-	if ( refine < 0 || refine >= MAX_REFINE)
-	return 0;
 
-	return status->dbs->refine_info[wlv].chance[refine];
+	if (refine < 0 || refine >= MAX_REFINE)
+		return 0;
+
+	if (type >= REFINE_CHANCE_TYPE_MAX)
+		return 0;
+
+	return status->dbs->refine_info[wlv].chance[type][refine];
 }
 
 int status_get_sc_type(sc_type type)
@@ -13191,54 +13195,84 @@ int status_readdb_refine_libconfig_sub(struct config_setting_t *r, const char *n
 	if ((rate=libconfig->setting_get_member(r, "Rates")) != NULL && config_setting_is_group(rate)) {
 		struct config_setting_t *t = NULL;
 		bool duplicate[MAX_REFINE];
-		int bonus[MAX_REFINE], rnd_bonus[MAX_REFINE], chance[MAX_REFINE];
-		int i;
+		int bonus[MAX_REFINE], rnd_bonus[MAX_REFINE];
+		int chance[REFINE_CHANCE_TYPE_MAX][MAX_REFINE];
+		int i, j;
+		
 		memset(&duplicate, 0, sizeof(duplicate));
 		memset(&bonus, 0, sizeof(bonus));
 		memset(&rnd_bonus, 0, sizeof(rnd_bonus));
 
-		for (i = 0; i < MAX_REFINE; i++) {
-			chance[i] = 100;
-		}
+		for (i = 0; i < REFINE_CHANCE_TYPE_MAX; i++)
+			for (j = 0; j < MAX_REFINE; j++)
+				chance[i][j] = 100; // default value for all rates.
+
 		i = 0;
+		j = 0;
 		while ((t = libconfig->setting_get_elem(rate,i++)) != NULL && config_setting_is_group(t)) {
 			int level = 0, i32;
 			char *rlvl = config_setting_name(t);
 			memset(&lv, 0, sizeof(lv));
-			if (!strspn(&rlvl[strlen(rlvl)-1], "0123456789") || (level = atoi(strncpy(lv, rlvl+2, 3))) <= 0) {
+
+			if (!strspn(&rlvl[strlen(rlvl) - 1], "0123456789") || (level = atoi(strncpy(lv, rlvl + 2, 3))) <= 0) {
 				ShowError("status_readdb_refine_libconfig_sub: Invalid refine level format '%s' for entry %s in \"%s\"... skipping.\n", rlvl, name, source);
 				continue;
 			}
+
 			if (level <= 0 || level > MAX_REFINE) {
 				ShowError("status_readdb_refine_libconfig_sub: Out of range refine level '%s' for entry %s in \"%s\"... skipping.\n", rlvl, name, source);
 				continue;
 			}
+
 			level--;
+
 			if (duplicate[level]) {
 				ShowWarning("status_readdb_refine_libconfig_sub: duplicate rate '%s' for entry %s in \"%s\", overwriting previous entry...\n", rlvl, name, source);
 			} else {
 				duplicate[level] = true;
 			}
-			if (libconfig->setting_lookup_int(t, "Chance", &i32))
-				chance[level] = i32;
+
+			if (libconfig->setting_lookup_int(t, "NormalChance", &i32) != 0)
+				chance[REFINE_CHANCE_TYPE_NORMAL][level] = i32;
 			else
-				chance[level] = 100;
-			if (libconfig->setting_lookup_int(t, "Bonus", &i32))
+				chance[REFINE_CHANCE_TYPE_NORMAL][level] = 100;
+
+			if (libconfig->setting_lookup_int(t, "EnrichedChance", &i32) != 0)
+				chance[REFINE_CHANCE_TYPE_ENRICHED][level] = i32;
+			else
+				chance[REFINE_CHANCE_TYPE_ENRICHED][level] = level > 10 ? 0 : 100; // enriched ores up to +10 only.
+
+			if (libconfig->setting_lookup_int(t, "EventNormalChance", &i32) != 0)
+				chance[REFINE_CHANCE_TYPE_E_NORMAL][level] = i32;
+			else
+				chance[REFINE_CHANCE_TYPE_E_NORMAL][level] = 100;
+
+			if (libconfig->setting_lookup_int(t, "EventEnrichedChance", &i32) != 0)
+				chance[REFINE_CHANCE_TYPE_E_ENRICHED][level] = i32;
+			else
+				chance[REFINE_CHANCE_TYPE_E_ENRICHED][level] = level > 10 ? 0 : 100; // enriched ores up to +10 only.
+
+			if (libconfig->setting_lookup_int(t, "Bonus", &i32) != 0)
 				bonus[level] += i32;
+
 			if (level >= rnd_bonus_lv - 1)
 				rnd_bonus[level] = rnd_bonus_v * (level - rnd_bonus_lv + 2);
 		}
 		for (i = 0; i < MAX_REFINE; i++) {
-			status->dbs->refine_info[type].chance[i] = chance[i];
+			status->dbs->refine_info[type].chance[REFINE_CHANCE_TYPE_NORMAL][i] = chance[REFINE_CHANCE_TYPE_NORMAL][i];
+			status->dbs->refine_info[type].chance[REFINE_CHANCE_TYPE_E_NORMAL][i] = chance[REFINE_CHANCE_TYPE_E_NORMAL][i];
+			status->dbs->refine_info[type].chance[REFINE_CHANCE_TYPE_ENRICHED][i] = chance[REFINE_CHANCE_TYPE_ENRICHED][i];
+			status->dbs->refine_info[type].chance[REFINE_CHANCE_TYPE_E_ENRICHED][i] = chance[REFINE_CHANCE_TYPE_E_ENRICHED][i];
 			status->dbs->refine_info[type].randombonus_max[i] = rnd_bonus[i];
-			bonus[i] += bonus_per_level + (i > 0 ? bonus[i-1] : 0);
+			bonus[i] += bonus_per_level + (i > 0 ? bonus[i - 1] : 0);
 			status->dbs->refine_info[type].bonus[i] = bonus[i];
 		}
 	} else {
 		ShowWarning("status_readdb_refine_libconfig_sub: Missing refine rates for entry '%s' in \"%s\", skipping.\n", name, source);
 		return 0;
 	}
-	return type+1;
+
+	return type + 1;
 }
 
 /**
@@ -13331,15 +13365,6 @@ int status_readdb(void)
 	for(i = 0; i < ARRAYLENGTH(status->dbs->atkmods); i++)
 		for(j = 0; j < MAX_SINGLE_WEAPON_TYPE; j++)
 			status->dbs->atkmods[i][j] = 100;
-
-	// refine_db.txt
-	for(i=0;i<ARRAYLENGTH(status->dbs->refine_info);i++) {
-		for(j=0;j<MAX_REFINE; j++) {
-			status->dbs->refine_info[i].chance[j] = 100;
-			status->dbs->refine_info[i].bonus[j] = 0;
-			status->dbs->refine_info[i].randombonus_max[j] = 0;
-		}
-	}
 
 	// read databases
 	//

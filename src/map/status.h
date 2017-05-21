@@ -2233,9 +2233,17 @@ struct status_change {
 #define status_calc_elemental(ed, opt)  (status->calc_bl_(&(ed)->bl, SCB_ALL, (opt)))
 #define status_calc_npc(nd, opt)        (status->calc_bl_(&(nd)->bl, SCB_ALL, (opt)))
 
+enum refine_chance_type {
+	REFINE_CHANCE_TYPE_NORMAL     = 0, // Normal Chance
+	REFINE_CHANCE_TYPE_ENRICHED   = 1, // Enriched Ore Chance
+	REFINE_CHANCE_TYPE_E_NORMAL   = 2, // Event Normal Ore Chance
+	REFINE_CHANCE_TYPE_E_ENRICHED = 3, // Event Enriched Ore Chance
+	REFINE_CHANCE_TYPE_MAX
+};
+
 // bonus values and upgrade chances for refining equipment
 struct s_refine_info {
-	int chance[MAX_REFINE]; // success chance
+	int chance[REFINE_CHANCE_TYPE_MAX][MAX_REFINE]; // success chance
 	int bonus[MAX_REFINE]; // cumulative fixed bonus damage
 	int randombonus_max[MAX_REFINE]; // cumulative maximum random bonus damage
 };
@@ -2283,7 +2291,7 @@ struct status_interface {
 	int (*init) (bool minimal);
 	void (*final) (void);
 	/* funcs */
-	int (*get_refine_chance) (enum refine_type wlv, int refine);
+	int (*get_refine_chance) (enum refine_type wlv, int refine, enum refine_chance_type type);
 	// for looking up associated data
 	sc_type (*skill2sc) (int skill_id);
 	int (*sc2skill) (sc_type sc);
