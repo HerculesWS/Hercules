@@ -344,6 +344,8 @@ struct HookingPointData HookingPoints[] = {
 /* inter_quest_interface */
 	{ HP_POP(inter_quest->parse_frommap, HP_inter_quest_parse_frommap) },
 /* inter_storage_interface */
+	{ HP_POP(inter_storage->ensure_account_storage, HP_inter_storage_ensure_account_storage) },
+	{ HP_POP(inter_storage->clear_account_storage, HP_inter_storage_clear_account_storage) },
 	{ HP_POP(inter_storage->tosql, HP_inter_storage_tosql) },
 	{ HP_POP(inter_storage->fromsql, HP_inter_storage_fromsql) },
 	{ HP_POP(inter_storage->guild_storage_tosql, HP_inter_storage_guild_storage_tosql) },
@@ -587,6 +589,10 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(mapif->save_guild_storage_ack, HP_mapif_save_guild_storage_ack) },
 	{ HP_POP(mapif->parse_LoadGuildStorage, HP_mapif_parse_LoadGuildStorage) },
 	{ HP_POP(mapif->parse_SaveGuildStorage, HP_mapif_parse_SaveGuildStorage) },
+	{ HP_POP(mapif->account_storage_load, HP_mapif_account_storage_load) },
+	{ HP_POP(mapif->pAccountStorageLoad, HP_mapif_pAccountStorageLoad) },
+	{ HP_POP(mapif->pAccountStorageSave, HP_mapif_pAccountStorageSave) },
+	{ HP_POP(mapif->sAccountStorageSaveAck, HP_mapif_sAccountStorageSaveAck) },
 	{ HP_POP(mapif->itembound_ack, HP_mapif_itembound_ack) },
 	{ HP_POP(mapif->parse_ItemBoundRetrieve_sub, HP_mapif_parse_ItemBoundRetrieve_sub) },
 	{ HP_POP(mapif->parse_ItemBoundRetrieve, HP_mapif_parse_ItemBoundRetrieve) },
