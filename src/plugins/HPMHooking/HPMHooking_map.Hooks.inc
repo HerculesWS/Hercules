@@ -74256,15 +74256,15 @@ void HP_status_final(void) {
 	}
 	return;
 }
-int HP_status_get_refine_chance(enum refine_type wlv, int refine) {
+int HP_status_get_refine_chance(enum refine_type wlv, int refine, enum refine_chance_type type) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_status_get_refine_chance_pre > 0) {
-		int (*preHookFunc) (enum refine_type *wlv, int *refine);
+		int (*preHookFunc) (enum refine_type *wlv, int *refine, enum refine_chance_type *type);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_get_refine_chance_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_status_get_refine_chance_pre[hIndex].func;
-			retVal___ = preHookFunc(&wlv, &refine);
+			retVal___ = preHookFunc(&wlv, &refine, &type);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -74272,13 +74272,13 @@ int HP_status_get_refine_chance(enum refine_type wlv, int refine) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.status.get_refine_chance(wlv, refine);
+		retVal___ = HPMHooks.source.status.get_refine_chance(wlv, refine, type);
 	}
 	if (HPMHooks.count.HP_status_get_refine_chance_post > 0) {
-		int (*postHookFunc) (int retVal___, enum refine_type wlv, int refine);
+		int (*postHookFunc) (int retVal___, enum refine_type wlv, int refine, enum refine_chance_type type);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_get_refine_chance_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_status_get_refine_chance_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, wlv, refine);
+			retVal___ = postHookFunc(retVal___, wlv, refine, type);
 		}
 	}
 	return retVal___;
