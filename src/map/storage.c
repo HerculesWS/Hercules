@@ -282,10 +282,9 @@ int storage_storageget(struct map_session_data* sd, int index, int amount)
 	if( amount < 1 || amount > sd->status.storage.items[index].amount )
 		return 0;
 
-	if( (flag = pc->additem(sd,&sd->status.storage.items[index],amount,LOG_TYPE_STORAGE)) == 0 )
-		storage->delitem(sd,index,amount);
-	else
-		clif->additem(sd,0,0,flag);
+	if ( storage->delitem(sd,index,amount) == 0 )
+		if ( (flag = pc->additem(sd,&sd->status.storage.items[index],amount,LOG_TYPE_STORAGE)) != 0 )
+			clif->additem(sd,0,0,flag);
 
 	return 1;
 }
@@ -340,11 +339,11 @@ int storage_storagegettocart(struct map_session_data* sd, int index, int amount)
 	if( amount < 1 || amount > sd->status.storage.items[index].amount )
 		return 0;
 
-	if( (flag = pc->cart_additem(sd,&sd->status.storage.items[index],amount,LOG_TYPE_STORAGE)) == 0 )
-		storage->delitem(sd,index,amount);
-	else {
-		clif->dropitem(sd, index,0);
-		clif->cart_additem_ack(sd,flag == 1?0x0:0x1);
+	if ( storage->delitem(sd,index,amount) == 0) {
+		if ( (flag = pc->cart_additem(sd,&sd->status.storage.items[index],amount,LOG_TYPE_STORAGE)) != 0 ) {
+			clif->dropitem(sd, index,0);
+			clif->cart_additem_ack(sd,flag == 1?0x0:0x1);
+		}
 	}
 
 	return 1;
@@ -606,10 +605,9 @@ int storage_guild_storageget(struct map_session_data* sd, int index, int amount)
 		return 0;
 	}
 
-	if((flag = pc->additem(sd,&stor->items[index],amount,LOG_TYPE_GSTORAGE)) == 0)
-		gstorage->delitem(sd,stor,index,amount);
-	else //inform fail
-		clif->additem(sd,0,0,flag);
+	if (gstorage->delitem(sd,stor,index,amount) == 0)
+		if ((flag = pc->additem(sd,&stor->items[index],amount,LOG_TYPE_GSTORAGE)) != 0)
+			clif->additem(sd,0,0,flag);
 	//log_fromstorage(sd, index, 1);
 
 	return 0;
@@ -673,8 +671,8 @@ int storage_guild_storagegettocart(struct map_session_data* sd, int index, int a
 	if(amount < 1 || amount > stor->items[index].amount)
 		return 0;
 
-	if(pc->cart_additem(sd,&stor->items[index],amount,LOG_TYPE_GSTORAGE)==0)
-		gstorage->delitem(sd,stor,index,amount);
+	if (gstorage->delitem(sd,stor,index,amount) == 0)
+		pc->cart_additem(sd,&stor->items[index],amount,LOG_TYPE_GSTORAGE);
 
 	return 1;
 }
