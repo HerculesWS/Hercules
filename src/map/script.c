@@ -4352,6 +4352,14 @@ bool script_check_buildin_argtype(struct script_state* st, int func)
 					invalid++;
 				}
 				break;
+			case 'x':
+				if (!data_islabel(data) && !data_isfunclabel(data) && !data_isstring(data) && !(data_isreference(data) && is_string_variable(name))) {
+					// string and label
+					ShowWarning("Unexpected type for argument %d. Expected string or label, got %s\n", idx-1,script->op2name(data->type));
+					script->reportdata(data);
+					invalid++;
+				}
+				break;
 		}
 	}
 
@@ -6278,114 +6286,166 @@ BUILDIN(goto)
 	return true;
 }
 
-/*==========================================
- * user-defined function call
- *------------------------------------------*/
+/// User-defined function call and subroutine call (Updated by [Cretino]) (Thanks to [FlavioJS])
+/// 'callfunc' support labels in the current npc "::LabelName"
+/// 'callfunc' support labels in other npcs "NpcName::LabelName"
 BUILDIN(callfunc)
 {
-	int i, j;
-	struct script_retinfo* ri;
-	struct script_code* scr;
-	const char* str = script_getstr(st,2);
+	int i, j, k = 0, pos = -1;
+	struct script_retinfo *ri;
+	struct script_code *scr = NULL;
 	struct reg_db *ref = NULL;
+	struct npc_data *nd = NULL;
+	struct script_data *data = script_getdata(st, 2);
+	const char *func_name = script->getfuncname(st);
 
-	scr = (struct script_code*)strdb_get(script->userfunc_db, str);
-	if( !scr )
+	if (!data_islabel(data) && !data_isfunclabel(data)) {
+		const char *str = script_getstr(st, 2);
+		scr = (struct script_code*)strdb_get(script->userfunc_db, str);
+
+		if (scr == NULL) {
+			if (stristr(str, "::")) {
+				char labelname[NAME_LENGTH] = "", npcname[NAME_LENGTH] = "";
+
+				if (sscanf(str, "::%23s", labelname) == 1 || sscanf(str, "%23[^:]::%23s", npcname, labelname) == 2) {
+					if (!labelname[0] && !npcname[0]) {
+						ShowError("script:%s: label not found! [%s]\n", func_name, str);
+						st->state = END;
+						return false;
+					}
+
+					if (npcname[0] != '\0')
+						nd = npc->name2id(npcname);
+					else
+						nd = map->id2nd(st->oid);
+
+					if (nd == NULL) {
+						ShowError("script:%s: no npc attached for label! [%s]\n", func_name, str);
+						st->state = END;
+						return false;
+					}
+
+					ARR_FIND(0, nd->u.scr.label_list_num, k, (strcmp(nd->u.scr.label_list[k].name, labelname) == 0));
+
+					if (k == nd->u.scr.label_list_num) {
+						ShowError("script:%s: label not found! [%s]\n", func_name, str);
+						st->state = END;
+						return false;
+					}
+				} else {
+					ShowError("script:%s: label not found! [%s]\n", func_name, str);
+					st->state = END;
+					return false;
+				}
+			} else {
+				ShowError("script:%s: argument is not a label or function not found! [%s]\n", func_name, str);
+				st->state = END;
+				return false;
+			}
+		}
+	} else {
+		pos = script_getnum(st, 2);
+	}
+
+	if (strcmp(func_name, "callsub") == 0 || (nd != NULL && nd->bl.id == st->oid) || (strcmp(func_name, "callfunc") == 0 && pos != -1))
 	{
-		ShowError("script:callfunc: function not found! [%s]\n", str);
+		ref = (struct reg_db *)aCalloc(sizeof(struct reg_db), 1);
+		ref[0].vars = st->stack->scope.vars;
+
+		if (!st->stack->scope.arrays)
+			st->stack->scope.arrays = idb_alloc(DB_OPT_BASE); // TODO: Can this happen? when?
+	
+		ref[0].arrays = st->stack->scope.arrays;
+
+		for(i = st->start+3, j = 0; i < st->end; i++, j++) {
+			data = script->push_copy(st->stack,i);
+			if (data_isreference(data) && !data->ref) {
+				const char* name = reference_getname(data);
+				if (name[0] == '.' && name[1] == '@')
+					data->ref = &ref[0];
+			}
+		}
+
+		CREATE(ri, struct script_retinfo, 1);
+		ri->script       = st->script;              // script code
+		ri->scope.vars   = st->stack->scope.vars;   // scope variables
+		ri->scope.arrays = st->stack->scope.arrays; // scope arrays
+		ri->pos          = st->pos;                 // script location
+		ri->nargs        = j;                       // argument count
+		ri->defsp        = st->stack->defsp;        // default stack pointer
+		script->push_retinfo(st->stack, ri, ref);
+
+		if (nd == NULL)
+			st->pos = pos;
+		else
+			st->pos = nd->u.scr.label_list[k].pos;
+
+		st->stack->defsp = st->stack->sp;
+		st->state = GOTO;
+		st->stack->scope.vars = i64db_alloc(DB_OPT_RELEASE_DATA);
+		st->stack->scope.arrays = idb_alloc(DB_OPT_BASE);
+	}
+	else if (strcmp(func_name, "callfunc") == 0 && (scr != NULL || (nd != NULL && nd->bl.id != st->oid)))
+	{
+		ref = (struct reg_db *)aCalloc(sizeof(struct reg_db), 2);
+		ref[0].vars = st->stack->scope.vars;
+
+		if (!st->stack->scope.arrays)
+			st->stack->scope.arrays = idb_alloc(DB_OPT_BASE); // TODO: Can this happen? when?
+
+		ref[0].arrays = st->stack->scope.arrays;
+		ref[1].vars = st->script->local.vars;
+
+		if (!st->script->local.arrays)
+			st->script->local.arrays = idb_alloc(DB_OPT_BASE); // TODO: Can this happen? when?
+
+		ref[1].arrays = st->script->local.arrays;
+
+		for(i = st->start+3, j = 0; i < st->end; i++, j++) {
+			data = script->push_copy(st->stack,i);
+			if (data_isreference(data) && !data->ref) {
+				const char* name = reference_getname(data);
+				if (name[0] == '.')
+					data->ref = (name[1] == '@' ? &ref[0] : &ref[1]);
+			}
+		}
+
+		CREATE(ri, struct script_retinfo, 1);
+		ri->script       = st->script;              // script code
+		ri->scope.vars   = st->stack->scope.vars;   // scope variables
+		ri->scope.arrays = st->stack->scope.arrays; // scope arrays
+		ri->pos          = st->pos;                 // script location
+		ri->nargs        = j;                       // argument count
+		ri->defsp        = st->stack->defsp;        // default stack pointer
+		script->push_retinfo(st->stack, ri, ref);
+
+		if (scr != NULL)
+		{
+			st->pos = 0;
+			st->script = scr;
+		}
+		else
+		{
+			st->pos = nd->u.scr.label_list[k].pos;
+			st->script = nd->u.scr.script;
+		}
+
+		st->stack->defsp = st->stack->sp;
+		st->state = GOTO;
+		st->stack->scope.vars = i64db_alloc(DB_OPT_RELEASE_DATA);
+		st->stack->scope.arrays = idb_alloc(DB_OPT_BASE);
+
+		if (!st->script->local.vars)
+			st->script->local.vars = i64db_alloc(DB_OPT_RELEASE_DATA);
+	}
+	else
+	{
+		// TODO: Can this happen? when?
+		ShowError("script:%s: Unknown problem found!\n", func_name);
+		script->reportdata(data);
 		st->state = END;
 		return false;
 	}
-
-	ref = (struct reg_db *)aCalloc(sizeof(struct reg_db), 2);
-	ref[0].vars = st->stack->scope.vars;
-	if (!st->stack->scope.arrays)
-		st->stack->scope.arrays = idb_alloc(DB_OPT_BASE); // TODO: Can this happen? when?
-	ref[0].arrays = st->stack->scope.arrays;
-	ref[1].vars = st->script->local.vars;
-	if (!st->script->local.arrays)
-		st->script->local.arrays = idb_alloc(DB_OPT_BASE); // TODO: Can this happen? when?
-	ref[1].arrays = st->script->local.arrays;
-
-	for( i = st->start+3, j = 0; i < st->end; i++, j++ ) {
-		struct script_data* data = script->push_copy(st->stack,i);
-		if( data_isreference(data) && !data->ref ) {
-			const char* name = reference_getname(data);
-			if( name[0] == '.' ) {
-				data->ref = (name[1] == '@' ? &ref[0] : &ref[1]);
-			}
-		}
-	}
-
-	CREATE(ri, struct script_retinfo, 1);
-	ri->script       = st->script;              // script code
-	ri->scope.vars   = st->stack->scope.vars;   // scope variables
-	ri->scope.arrays = st->stack->scope.arrays; // scope arrays
-	ri->pos          = st->pos;                 // script location
-	ri->nargs        = j;                       // argument count
-	ri->defsp        = st->stack->defsp;        // default stack pointer
-	script->push_retinfo(st->stack, ri, ref);
-
-	st->pos = 0;
-	st->script = scr;
-	st->stack->defsp = st->stack->sp;
-	st->state = GOTO;
-	st->stack->scope.vars = i64db_alloc(DB_OPT_RELEASE_DATA);
-	st->stack->scope.arrays = idb_alloc(DB_OPT_BASE);
-
-	if( !st->script->local.vars )
-		st->script->local.vars = i64db_alloc(DB_OPT_RELEASE_DATA);
-
-	return true;
-}
-/*==========================================
- * subroutine call
- *------------------------------------------*/
-BUILDIN(callsub)
-{
-	int i,j;
-	struct script_retinfo* ri;
-	int pos = script_getnum(st,2);
-	struct reg_db *ref = NULL;
-
-	if( !data_islabel(script_getdata(st,2)) && !data_isfunclabel(script_getdata(st,2)) )
-	{
-		ShowError("script:callsub: argument is not a label\n");
-		script->reportdata(script_getdata(st,2));
-		st->state = END;
-		return false;
-	}
-
-	ref = (struct reg_db *)aCalloc(sizeof(struct reg_db), 1);
-	ref[0].vars = st->stack->scope.vars;
-	if (!st->stack->scope.arrays)
-		st->stack->scope.arrays = idb_alloc(DB_OPT_BASE); // TODO: Can this happen? when?
-	ref[0].arrays = st->stack->scope.arrays;
-
-	for( i = st->start+3, j = 0; i < st->end; i++, j++ ) {
-		struct script_data* data = script->push_copy(st->stack,i);
-		if( data_isreference(data) && !data->ref ) {
-			const char* name = reference_getname(data);
-			if( name[0] == '.' && name[1] == '@' ) {
-				data->ref = &ref[0];
-			}
-		}
-	}
-
-	CREATE(ri, struct script_retinfo, 1);
-	ri->script       = st->script;              // script code
-	ri->scope.vars   = st->stack->scope.vars;   // scope variables
-	ri->scope.arrays = st->stack->scope.arrays; // scope arrays
-	ri->pos          = st->pos;                 // script location
-	ri->nargs        = j;                       // argument count
-	ri->defsp        = st->stack->defsp;        // default stack pointer
-	script->push_retinfo(st->stack, ri, ref);
-
-	st->pos = pos;
-	st->stack->defsp = st->stack->sp;
-	st->state = GOTO;
-	st->stack->scope.vars = i64db_alloc(DB_OPT_RELEASE_DATA);
-	st->stack->scope.arrays = idb_alloc(DB_OPT_BASE);
 
 	return true;
 }
@@ -23104,8 +23164,9 @@ bool script_add_builtin(const struct script_function *buildin, bool override)
 		// 'l' - label
 		// '?' - one optional parameter
 		// '*' - unknown number of optional parameters
+		// 'x' - value (either string or label) [Cretino]
 		char *p = buildin->arg;
-		while( *p == 'v' || *p == 's' || *p == 'i' || *p == 'r' || *p == 'l' ) ++p;
+		while( *p == 'v' || *p == 's' || *p == 'i' || *p == 'r' || *p == 'l' || *p == 'x' ) ++p;
 		while( *p == '?' ) ++p;
 		if( *p == '*' ) ++p;
 		if( *p != 0 ) {
@@ -23250,8 +23311,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(prompt,"s*"),
 		//
 		BUILDIN_DEF(goto,"l"),
-		BUILDIN_DEF(callsub,"l*"),
-		BUILDIN_DEF(callfunc,"s*"),
+		BUILDIN_DEF(callfunc,"x*"), // (Updated by [Cretino])
+		BUILDIN_DEF2(callfunc,"callsub","l*"), // (Updated by [Cretino])
 		BUILDIN_DEF(return,"?"),
 		BUILDIN_DEF(getarg,"i?"),
 		BUILDIN_DEF(jobchange,"i?"),
