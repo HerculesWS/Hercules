@@ -25,7 +25,7 @@ prontera,156,172,4	script	Tine	1_M_MERCHANT,{
 	mes "The legend says that on 14th February... on the Day of Saint Valentine...";
 	mes "Only in Run-Midgard kingdom...";
 	next;
-	specialeffect 417;
+	specialeffect EF_HITBODY;
 	mes "[Tine]";
 	mes "Some married chocolate lovers almost double their experience at trainings!";
 	mes "But everything isn't so simply...";
