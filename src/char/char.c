@@ -287,10 +287,16 @@ void char_set_char_offline(int char_id, int account_id)
 	}
 	else
 	{
-		struct mmo_charstatus* cp = (struct mmo_charstatus*)idb_get(chr->char_db_,char_id);
+		struct mmo_charstatus* cp = (struct mmo_charstatus*) idb_get(chr->char_db_,char_id);
+		struct storage_data *stor = (struct storage_data *) idb_get(inter_storage->account_storage, account_id);
+
 		inter_guild->CharOffline(char_id, cp?cp->guild_id:-1);
+
 		if (cp)
 			idb_remove(chr->char_db_,char_id);
+
+		if (stor) /* Remove inter-storage data. */
+			idb_remove(inter_storage->account_storage, account_id);
 
 		if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `online`='0' WHERE `char_id`='%d' LIMIT 1", char_db, char_id) )
 			Sql_ShowDebug(inter->sql_handle);
@@ -438,14 +444,6 @@ int char_mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 	if( memcmp(p->cart, cp->cart, sizeof(p->cart)) ) {
 		if (!chr->memitemdata_to_sql(p->cart, MAX_CART, p->char_id, TABLE_CART))
 			strcat(save_status, " cart");
-		else
-			errors++;
-	}
-
-	//map storage data
-	if( memcmp(p->storage.items, cp->storage.items, sizeof(p->storage.items)) ) {
-		if (!chr->memitemdata_to_sql(p->storage.items, MAX_STORAGE, p->account_id, TABLE_STORAGE))
-			strcat(save_status, " storage");
 		else
 			errors++;
 	}
@@ -1283,10 +1281,6 @@ int char_mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_every
 		memcpy(&p->cart[i], &tmp_item, sizeof(tmp_item));
 	
 	strcat(t_msg, " cart");
-
-	//read storage
-	inter_storage->fromsql(p->account_id, &p->storage);
-	strcat(t_msg, " storage");
 
 	//read skill
 	//`skill` (`char_id`, `id`, `lv`)
