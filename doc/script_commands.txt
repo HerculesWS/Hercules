@@ -5819,7 +5819,8 @@ map as the invoking character.
 
 ---------------------------------------
 
-*specialeffect(<effect number>{, <send_target>{, "<NPC Name>"}})
+*specialeffect(<effect number>{, <send_target>{, <unit id>{, <account id>}}})
+*specialeffect(<effect number>{, <send_target>{, "<NPC Name>"{, <account id>}}})
 
 This command will display special effect with the given number, centered 
 on the specified NPCs coordinates, if any. For a full list of special 
@@ -5832,13 +5833,25 @@ NPC specified does not exist, the command will do nothing. When specifying
 an NPC, <send_target> must be specified when specifying an <NPC Name>, 
 specifying AREA will retain the default behavior of the command.
 
-	// this will make the NPC "John Doe#1"
-	// show the effect "EF_HIT1" specified by
-	// Jane Doe. I wonder what John did...
-	mes("[Jane Doe]");
-	mes("Well, I never!");
+<unit id> behaves like <NPC Name> except it can display the effect on
+any kind of unit, not just NPC, by specifying its GID.
+
+When <send_target> is SELF you can specify which player to send the effect
+to by passing <account id>.
+
+Example usage:
+
+	// To make a NPC do an effect and show it to everyone:
 	specialeffect(EF_HIT1, AREA, "John Doe#1");
-	close();
+
+	// To make a player do an effect and show it to everyone:
+	specialeffect(EF_HIT1, AREA, getcharid(CHAR_ID_ACCOUNT, "player"));
+
+	// To make a NPC do an effect and show it only to the attached player:
+	specialeffect(EF_HIT1, SELF, "John Doe#1");
+
+	// To make a NPC do an effect and show it only to another player:
+	specialeffect(EF_HIT1, SELF, "John Doe#1", getcharid(CHAR_ID_ACCOUNT, "player"));
 
 ---------------------------------------
 
