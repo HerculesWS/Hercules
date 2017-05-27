@@ -982,9 +982,9 @@ lhz_cube,233,24,4	script	Sorcerer#Bio4Reward	4_M_UMDANCEKID,{
 		mes "[Pudding]";
 		mes "Before! I need to check if this equipment can accept the power.";
 		next;
-		specialeffect2 EF_SPHERE;
+		specialeffect(EF_SPHERE, AREA, playerattached());
 		progressbar "ffff00", 2;
-		specialeffect2 EF_SUI_EXPLOSION;
+		specialeffect(EF_SUI_EXPLOSION, AREA, playerattached());
 		emotion e_sob;
 		mes "[Pudding]";
 		mes "Hm.... This equipment cannot accept the power of '^F2766EWill of Warrior^000000' or '^952420Thirst for Blood^000000'.";
@@ -1110,7 +1110,7 @@ lhz_cube,233,24,4	script	Sorcerer#Bio4Reward	4_M_UMDANCEKID,{
 					.@equip_item = getequipid(.@position);
 					specialeffect EF_BEGINSPELL2, AREA, "Sorcerer#Bio4Reward";
 					progressbar "ffff00", 2;
-					specialeffect2 EF_FROSTWEAPON;
+					specialeffect(EF_FROSTWEAPON, AREA, playerattached());
 					delitem Goast_Chill, 10;
 					delequip .@position;
 					getitem2 .@equip_item, 1, 1, .@refine_count, 0, .@equip_card[0], .@equip_card[1], .@equip_card[2], .@equip_card[3];
@@ -1311,7 +1311,7 @@ lhz_cube,233,24,4	script	Sorcerer#Bio4Reward	4_M_UMDANCEKID,{
 			delitem Will_Of_Warrior, 10;
 		delequip .@position;
 		if (.@enchant == 0) {
-			specialeffect2 EF_SUI_EXPLOSION;
+			specialeffect(EF_SUI_EXPLOSION, AREA, playerattached());
 			emotion e_otl;
 			mes "[Pudding]";
 			mes "...Well....the equipment could not accept the power of "+((.@socket_type==3)?"'^952420Thirst for Blood^000000'":"'^F2766EWill of Warrior^000000'")+" and it got destroyed.";
@@ -1319,7 +1319,7 @@ lhz_cube,233,24,4	script	Sorcerer#Bio4Reward	4_M_UMDANCEKID,{
 			enable_items;
 			end;
 		} else {
-			specialeffect2 EF_FIREHIT;
+			specialeffect(EF_FIREHIT, AREA, playerattached());
 			getitem2 .@equip_item, 1, 1, .@refine_count, 0, .@equip_card[0], .@equip_card[1], .@equip_card[2], .@equip_card[3];
 			emotion e_ho;
 			mes "[Pudding]";
@@ -1932,7 +1932,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 			pushpc 0, 10;
 			percentheal -5,0;
 			specialeffect EF_AUTOCOUNTER;
-			specialeffect2 EF_BASH;
+			specialeffect(EF_BASH, AREA, playerattached());
 			mes "You have been wounded by laboratory entrance system attack.";
 			close;
 		} else {

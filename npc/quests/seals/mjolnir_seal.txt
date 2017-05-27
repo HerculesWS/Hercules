@@ -1150,7 +1150,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 						}
 					}
 					else if (.@p_atk == 4) {
-						specialeffect2 EF_HEAL;
+						specialeffect(EF_HEAL, AREA, playerattached());
 						.@p_vit += 10;
 						mes "--------------------";
 						mes "" + strcharinfo(PC_NAME) + "";
@@ -1186,7 +1186,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 						mes "lost " + .@damage + " HP!";
 					}
 					else if (.@p_atk == 0) {
-						specialeffect2 EF_HIT5;
+						specialeffect(EF_HIT5, AREA, playerattached());
 						.@p_vit -= 10;
 						mes "--------------------";
 						mes "You were hit by";
@@ -1245,7 +1245,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 						mes "Sudri attacks the legs!";
 					}
 					if (.@n_atk == .@p_def) {
-						specialeffect2 EF_GUARD;
+						specialeffect(EF_GUARD, AREA, playerattached());
 						if (.@p_def == 1) {
 							mes "--------------------";
 							mes "" + strcharinfo(PC_NAME) + "";
@@ -1277,7 +1277,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 						mes "" + strcharinfo(PC_NAME) + "";
 						mes "counters!";
 						if (.@count == 1) {
-							specialeffect2 EF_AUTOCOUNTER;
+							specialeffect(EF_AUTOCOUNTER, AREA, playerattached());
 							specialeffect EF_MAGNUMBREAK;
 							.@n_vit -= 20;
 							mes "You successfully";
@@ -1291,7 +1291,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 							}
 						}
 						else {
-							specialeffect2 EF_CRASHEARTH;
+							specialeffect(EF_CRASHEARTH, AREA, playerattached());
 							.@p_vit -= 30;
 							mes "You've taken";
 							mes "critical damage";
@@ -1301,7 +1301,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 						}
 					}
 					else if (.@n_atk == 1) {
-						specialeffect2 EF_HIT5;
+						specialeffect(EF_HIT5, AREA, playerattached());
 						.@p_vit -= .@damage;
 						mes "--------------------";
 						mes "Sudri successfully";
@@ -1311,7 +1311,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 						mes "" + strcharinfo(PC_NAME) + " has lost " + .@damage + " HP!";
 					}
 					else if (.@n_atk == 2) {
-						specialeffect2 EF_HIT2;
+						specialeffect(EF_HIT2, AREA, playerattached());
 						.@p_vit -= .@damage;
 						mes "--------------------";
 						mes "Sudri successfully";
@@ -1321,7 +1321,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 						mes "" + strcharinfo(PC_NAME) + " has lost " + .@damage + " HP!";
 					}
 					else if (.@n_atk == 3) {
-						specialeffect2 EF_HIT4;
+						specialeffect(EF_HIT4, AREA, playerattached());
 						.@p_vit -= .@damage;
 						mes "--------------------";
 						mes "Sudri successfully";
@@ -1331,7 +1331,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 						mes "" + strcharinfo(PC_NAME) + " has lost " + .@damage + " HP!";
 					}
 					else if (.@n_atk == 0) {
-						specialeffect2 EF_HIT5;
+						specialeffect(EF_HIT5, AREA, playerattached());
 						.@p_vit -= .@damage;
 						mes "--------------------";
 						mes "Sudri successfully";
@@ -1558,7 +1558,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 						}
 					}
 					else if (.@p_atk == 4) {
-						specialeffect2 EF_HEAL;
+						specialeffect(EF_HEAL, AREA, playerattached());
 						.@p_vit += 10;
 						mes "--------------------";
 						mes "" + strcharinfo(PC_NAME) + "";
@@ -1594,7 +1594,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 						mes "lost " + .@damage + " HP!";
 					}
 					else if (.@p_atk == 0) {
-						specialeffect2 EF_HIT5;
+						specialeffect(EF_HIT5, AREA, playerattached());
 						.@p_vit -= 10;
 						mes "--------------------";
 						mes "You were hit by";
@@ -1653,7 +1653,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 						mes "Sudri attacks the legs!";
 					}
 					if (.@n_atk == .@p_def) {
-						specialeffect2 EF_GUARD;
+						specialeffect(EF_GUARD, AREA, playerattached());
 						if (.@p_def == 1) {
 							mes "--------------------";
 							mes "" + strcharinfo(PC_NAME) + " quickly dodged,";
@@ -1684,7 +1684,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 						mes "" + strcharinfo(PC_NAME) + "";
 						mes "counters!";
 						if (.@count == 1) {
-							specialeffect2 EF_AUTOCOUNTER;
+							specialeffect(EF_AUTOCOUNTER, AREA, playerattached());
 							specialeffect EF_MAGNUMBREAK;
 							.@n_vit -= 20;
 							mes "You successfully";
@@ -1698,7 +1698,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 							}
 						}
 						else {
-							specialeffect2 EF_CRASHEARTH;
+							specialeffect(EF_CRASHEARTH, AREA, playerattached());
 							.@p_vit -= 30;
 							mes "You've taken";
 							mes "critical damage";
@@ -1708,7 +1708,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 						}
 					}
 					else if (.@n_atk == 1) {
-						specialeffect2 EF_HIT5;
+						specialeffect(EF_HIT5, AREA, playerattached());
 						.@p_vit -= .@damage;
 						mes "--------------------";
 						mes "Sudri successfully";
@@ -1718,7 +1718,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 						mes "" + strcharinfo(PC_NAME) + " has lost " + .@damage + " HP!";
 					}
 					else if (.@n_atk == 2) {
-						specialeffect2 EF_HIT2;
+						specialeffect(EF_HIT2, AREA, playerattached());
 						.@p_vit -= .@damage;
 						mes "--------------------";
 						mes "Sudri successfully";
@@ -1728,7 +1728,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 						mes "" + strcharinfo(PC_NAME) + " has lost " + .@damage + " HP!";
 					}
 					else if (.@n_atk == 3) {
-						specialeffect2 EF_HIT4;
+						specialeffect(EF_HIT4, AREA, playerattached());
 						.@p_vit -= .@damage;
 						mes "--------------------";
 						mes "Sudri successfully";
@@ -1738,7 +1738,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 						mes "" + strcharinfo(PC_NAME) + " has lost " + .@damage + " HP!";
 					}
 					else if (.@n_atk == 0) {
-						specialeffect2 EF_HIT5;
+						specialeffect(EF_HIT5, AREA, playerattached());
 						.@p_vit -= .@damage;
 						mes "--------------------";
 						mes "Sudri successfully";

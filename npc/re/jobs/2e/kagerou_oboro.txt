@@ -1662,7 +1662,7 @@ OnTouch:
 		next;
 		switch(select("Try something.", "Do nothing.")) {
 		case 1:
-			specialeffect2 EF_TALK_FROSTJOKE;
+			specialeffect(EF_TALK_FROSTJOKE, AREA, playerattached());
 			mes "Tried a recent Prontera joke to do something.";
 			next;
 			setquest 5141;
@@ -2347,7 +2347,7 @@ job_ko,131,124,0	script	Crafting Tools#ko_01	CLEAR_NPC,{
 		if (.@success_pp != 44) set .@success,1;
 	}
 	if (.@success) {
-		specialeffect2 EF_PERFECTION;
+		specialeffect(EF_PERFECTION, AREA, playerattached());
 		erasequest 5142;
 		if (.@weapon_who == 0) {
 			setquest 5143;
@@ -2361,7 +2361,7 @@ job_ko,131,124,0	script	Crafting Tools#ko_01	CLEAR_NPC,{
 		mes "Let's take it to Red Leopard Joe.";
 		close;
 	} else {
-		specialeffect2 EF_SUI_EXPLOSION;
+		specialeffect(EF_SUI_EXPLOSION, AREA, playerattached());
 		mes "The weapon was destroyed while doing the finishing touches to it.";
 		next;
 		mes "There must have been something missed while creating the weapon. Very sad this happened but you'll have to start all over again.";
@@ -2380,11 +2380,11 @@ L_ForgeWeapon:
 	set .@i, select("Grind the weapon", "Temper the weapon" + getarg(0));
 	switch (.@i) {
 	case 1:
-		specialeffect2 EF_DETOXICATION;
+		specialeffect(EF_DETOXICATION, AREA, playerattached());
 		mes "Ground the weapon.";
 		break;
 	case 2:
-		specialeffect2 EF_REPAIRWEAPON;
+		specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
 		mes "Tempered the weapon.";
 		break;
 	case 3:

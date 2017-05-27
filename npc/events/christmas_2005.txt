@@ -299,7 +299,7 @@ prontera,155,285,3	script	Enjoy#enjoy	4_M_MONK,{
 			mes "........................";
 			mes "Get lost,you devil!!!!!!";
 			specialeffect EF_BEGINASURA;
-			specialeffect2 EF_HIT2;
+			specialeffect(EF_HIT2, AREA, playerattached());
 			Hp /= 2;
 			Hp /= 2;
 			close2;
@@ -1173,7 +1173,7 @@ prontera,156,242,0	script	Oholy#pron::OholyDup	1_F_PRIEST,{
 			mes "~and tomorrow you'll see~";
 			mes "~Every wish, one and all,~";
 			mes "~waiting under the tree.~";
-			specialeffect2 EF_GLORIA;
+			specialeffect(EF_GLORIA, AREA, playerattached());
 			next;
 			mes "[Oholy]";
 			mes "Oh, my. You have a wonderful";

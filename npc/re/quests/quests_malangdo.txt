@@ -9704,7 +9704,7 @@ mal_in01,134,221,4	script	KungKung#gamer	4_M_BABYCAT,{
 				if (.@cat_hand <= 5) {
 					--.@pc_hp0;
 					cutin "cat_g_05",4;
-					specialeffect2 EF_BASH;
+					specialeffect(EF_BASH, AREA, playerattached());
 					mes "Defending has failed.";
 					mes "KungKung attacks the back of your hand with its sharp claw.";
 					next;
@@ -9729,7 +9729,7 @@ mal_in01,134,221,4	script	KungKung#gamer	4_M_BABYCAT,{
 				} else {
 					.@pc_hp -= 10;
 					cutin "cat_g_08",4;
-					specialeffect2 EF_BASH;
+					specialeffect(EF_BASH, AREA, playerattached());
 					mes "Defending has failed.";
 					mes "KungKung attacks the back of your hand with its sharp claw.";
 					next;
@@ -10579,7 +10579,7 @@ mal_in01,15,16,3	script	Fallen Angel#mal	4_F_VALKYRIE2,{
 			mes "Ok! Take your time to consider!";
 			close;
 		}
-		specialeffect2 EF_REPAIRWEAPON;
+		specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
 		progressbar "ffff00",2;
 		if (getequipisequiped(EQI_GARMENT) == 0) {
 			mes "[Fallen Angel]";
@@ -10666,7 +10666,7 @@ mal_in01,15,16,3	script	Fallen Angel#mal	4_F_VALKYRIE2,{
 			mes "Ok! Take your time to consider!";
 			close;
 		}
-		specialeffect2 EF_REPAIRWEAPON;
+		specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
 		progressbar "ffff00",2;
 		if (getequipisequiped(EQI_GARMENT) == 0) {
 			mes "[Fallen Angel]";

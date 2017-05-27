@@ -331,7 +331,7 @@ geffen,145,132,3	script	Hoirin#06_hw	4_F_NOVICE,{
 				mes "[Hoirin]";
 				mes "You are right!";
 				mes "You brought all things right. Give it to me!!";
-				specialeffect2 EF_HIT1;
+				specialeffect(EF_HIT1, AREA, playerattached());
 				next;
 				specialeffect EF_PIERCESELF;
 				mes "[Hoirin]";

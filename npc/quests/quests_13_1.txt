@@ -5401,7 +5401,7 @@ OnTouch:
 			mes "This is a really special drink I preserved. Please, drink it while it's nice and hot.";
 			next;
 			mes "- You feel so refreshed and light, as you drink the tea that the Official offered. -";
-			specialeffect2 EF_ABSORBSPIRITS;
+			specialeffect(EF_ABSORBSPIRITS, AREA, playerattached());
 			ep13_1_rhea = 100;
 			if (RENEWAL_EXP)
 				getexp 80000,3000;
@@ -8264,8 +8264,8 @@ mid_camp,69,144,0	script	Ferocious Gorurug	4_M_BOSSCAT,{
 
 spl_fild02,314,165,0	script	School of Fish#1::Fishinghole	CLEAR_NPC,{
 	if (!questprogress(12060,PLAYTIME) && countitem(Piece_Of_Fish) < 20) {
-		specialeffect2 EF_BUBBLE;
-		specialeffect2 EF_INVENOM;
+		specialeffect(EF_BUBBLE, AREA, playerattached());
+		specialeffect(EF_INVENOM, AREA, playerattached());
 		.@fcast = 15;
 		if (isequipped(2550)) //Fishers_Muffler
 			.@fcast -= 2;
@@ -8431,7 +8431,7 @@ mid_camp,88,100,7	script	Cat Hand Mining Agent	4_CAT,{
 
 -	script	Mysterious Rock#0::manukrock	FAKE_NPC,{
 	if (countitem(Unidentified_Mineral) < 3 && !questprogress(12062,PLAYTIME)) {
-		specialeffect2 EF_REPAIRWEAPON;
+		specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
 		progressbar "ffff00",10;
 		.@rhea_ran = rand(1,20);
 		if (.@rhea_ran < 13) getitem Stone,1;
@@ -9882,8 +9882,8 @@ mid_camp,206,286,3	script	Expedition Messenger	4_M_MOCASS1,{
 			mes "[???]";
 			mes "No... Noooo!";
 			next;
-			specialeffect2 EF_SOULBREAKER;
-			specialeffect2 EF_SONICBLOWHIT;
+			specialeffect(EF_SOULBREAKER, AREA, playerattached());
+			specialeffect(EF_SONICBLOWHIT, AREA, playerattached());
 			mes "[Expedition Messenger]";
 			mes "Argh... " + strcharinfo(PC_NAME) + ", are you alright? The report... The report...";
 			next;
@@ -9935,8 +9935,8 @@ mid_camp,206,286,3	script	Expedition Messenger	4_M_MOCASS1,{
 			mes "[???]";
 			mes "No... Noooo!";
 			next;
-			specialeffect2 EF_SOULBREAKER;
-			specialeffect2 EF_SONICBLOWHIT;
+			specialeffect(EF_SOULBREAKER, AREA, playerattached());
+			specialeffect(EF_SONICBLOWHIT, AREA, playerattached());
 			mes "[Expedition Messenger]";
 			mes "Argh... " + strcharinfo(PC_NAME) + ", are you alright? The report... The report...";
 			next;
@@ -11729,14 +11729,14 @@ mid_camp,256,272,3	script	Defaria#moc2	4_M_HUGRANFA,{
 					mes "[Defaria]";
 					mes "What th--! How dare you fool an old man!";
 					mes "You little punk!";
-					specialeffect2 EF_HIT2;
+					specialeffect(EF_HIT2, AREA, playerattached());
 					percentheal -10,0;
 					next;
 					mes "[Defaria]";
 					mes "I may be old,";
 					mes "but I'm a representative of great Arunafeltz's scholars!";
 					mes "It's a mistake to trifle with me like that!";
-					specialeffect2 EF_HIT2;
+					specialeffect(EF_HIT2, AREA, playerattached());
 					percentheal -10,0;
 					next;
 					mes "[Defaria]";

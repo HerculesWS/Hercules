@@ -22,7 +22,7 @@ prontera,124,201,1	script	Universal Rental NPC	4_F_JOB_BLACKSMITH,{
 				setfalcon;
 			else
 				getitem Wolfs_Flute, 1;
-			specialeffect2 EF_TEIHIT3;
+			specialeffect(EF_TEIHIT3, AREA, playerattached());
 			close;
 		} else {
 			getitem Wolfs_Flute,1;
@@ -34,7 +34,7 @@ prontera,124,201,1	script	Universal Rental NPC	4_F_JOB_BLACKSMITH,{
 			} else {
 				setmount(MOUNT_MADO);
 			}
-			specialeffect2 EF_TEIHIT3;
+			specialeffect(EF_TEIHIT3, AREA, playerattached());
 			close;
 		} else {
 			setcart;
@@ -51,7 +51,7 @@ prontera,124,201,1	script	Universal Rental NPC	4_F_JOB_BLACKSMITH,{
 		message strcharinfo(PC_NAME),"You do not meet requirements to rent.";
 		end;
 	}
-	specialeffect2 EF_TEIHIT3;
+	specialeffect(EF_TEIHIT3, AREA, playerattached());
 	end;
 }
 

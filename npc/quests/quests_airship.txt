@@ -694,7 +694,7 @@ ein_in01,125,99,3	script	Tarsha Cherno	4_F_EINWOMAN,{
 			mes "Touching another";
 			mes "man's wife...?!";
 			next;
-			specialeffect2 EF_PIERCE;
+			specialeffect(EF_PIERCE, AREA, playerattached());
 			percentheal -30,0;
 			close;
 		case 2:
@@ -748,7 +748,7 @@ ein_in01,125,99,3	script	Tarsha Cherno	4_F_EINWOMAN,{
 			mes "Touching another";
 			mes "man's wife...?!";
 			next;
-			specialeffect2 EF_PIERCE;
+			specialeffect(EF_PIERCE, AREA, playerattached());
 			percentheal -20,0;
 			close;
 		case 4:
@@ -760,7 +760,7 @@ ein_in01,125,99,3	script	Tarsha Cherno	4_F_EINWOMAN,{
 			mes "Touching another";
 			mes "man's wife...?!";
 			next;
-			specialeffect2 EF_PIERCE;
+			specialeffect(EF_PIERCE, AREA, playerattached());
 			percentheal -10,0;
 			close;
 		}
@@ -1814,7 +1814,7 @@ airplane_01,238,154,3	script	Airship Captain#01	4_M_REINDEER,{
 			mes "exaggeration.";
 			mes "It has really a strong power.";
 			next;
-			specialeffect2 EF_MAPPILLAR;
+			specialeffect(EF_MAPPILLAR, AREA, playerattached());
 			mes "[Tarlock]";
 			mes "Did you understand?";
 			mes "I'll rest a little.";
@@ -2137,7 +2137,7 @@ airplane,236,163,5	script	Airship Captain#03	4_M_REINDEER,{
 		mes "Rune Stones? Hmm. Well, this";
 		mes "is goodbye for now, adventurer.";
 		close2;
-		specialeffect2 EF_ABSORBSPIRITS;
+		specialeffect(EF_ABSORBSPIRITS, AREA, playerattached());
 		completequest 8043;
 		lhz_heart = 13;
 		if (RENEWAL_EXP)

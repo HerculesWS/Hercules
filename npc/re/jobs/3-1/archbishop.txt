@@ -469,7 +469,7 @@ OnTouch:
 		mes "- You close your eyes slowly and take a deep breath. -";
 		next;
 		mes "- * BLESSING! * -";
-		specialeffect2 EF_BLESSING;
+		specialeffect(EF_BLESSING, AREA, playerattached());
 		next;
 		mes "Your mind is refreshed with the blessing effect.";
 		mes "You continue to meditate trying to rid your mind of any ill feelings.";
@@ -525,9 +525,9 @@ OnTouch:
 		mes "- You bow respectfully holding up a Holy Water and put the glass to your lips. -";
 		next;
 		mes "- * ASPERSIO ! * -";
-		specialeffect2 EF_ASPERSIO;
+		specialeffect(EF_ASPERSIO, AREA, playerattached());
 		next;
-		specialeffect2 EF_RECOVERY;
+		specialeffect(EF_RECOVERY, AREA, playerattached());
 		mes ".............................";
 		next;
 		mes ".............................";
@@ -546,7 +546,7 @@ OnTouch:
 		next;
 		mes "- You breath in deep and start to sing a Gloria.";
 		mes "A chord crashes out in the spring of Hvergelmir and a waterfall sound gives you a refreshing feeling. -";
-		specialeffect2 EF_GLORIA;
+		specialeffect(EF_GLORIA, AREA, playerattached());
 		next;
 		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "~Descendants of Heimdal gather under the Ash tree Yggdrasil.~";
@@ -554,7 +554,7 @@ OnTouch:
 		next;
 		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "~The Curdan wolf protects me from all threats in the world.~";
-		specialeffect2 EF_GLORIA;
+		specialeffect(EF_GLORIA, AREA, playerattached());
 		next;
 		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "~The host of ballascalf, rise up from your seat. The whole world shouts for joy.~";
@@ -562,11 +562,11 @@ OnTouch:
 		next;
 		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "~The host of a glittering glass, give me a holy prediction.~";
-		specialeffect2 EF_GLORIA;
+		specialeffect(EF_GLORIA, AREA, playerattached());
 		next;
 		mes "- After you finish the song, you feel light and strong with abundant devotion. -";
-		specialeffect2 EF_BLESSING;
-		specialeffect2 EF_RESURRECTION;
+		specialeffect(EF_BLESSING, AREA, playerattached());
+		specialeffect(EF_RESURRECTION, AREA, playerattached());
 		next;
 		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "That was refreshing.";
@@ -749,7 +749,7 @@ odin_tem02,281,275,3	script	Valkyrie Illusion#arch	4_F_VALKYRIE2,{
 		case 1:
 			mes "You lose your consciousness while getting a closer view of Valkyrie's Illusion.";
 			close2;
-			specialeffect2 EF_CLOAKING;
+			specialeffect(EF_CLOAKING, AREA, playerattached());
 			warp "job3_arch01",29,29;
 			hideonnpc "Valkyrie Illusion#arch";
 			end;

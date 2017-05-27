@@ -36,7 +36,7 @@ quiz_00,49,31,4	script	MVP Arena Guide	4_M_TWTEAMAN,{
 		mes "There are eight rooms per Keeper, and sixteen MVPs in total.";
 		close;
 	case 2:
-		specialeffect2 313;
+		specialeffect(313, AREA, playerattached());
 		percentheal 100,100;
 		close;
 	case 3:
@@ -77,7 +77,7 @@ function	script	Protector	{
 		warp getarg(0),102,102;
 		end;
 	case 2:
-		specialeffect2 313;
+		specialeffect(313, AREA, playerattached());
 		percentheal 100,100;
 		close;
 	case 3:

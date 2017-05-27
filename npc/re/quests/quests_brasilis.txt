@@ -72,7 +72,7 @@ brasilis,297,307,5	script	Angelo#br	1_M_04,{
 		getexp .@randexp,0;
 		erasequest 9031;
 		setquest 9032;
-		specialeffect2 EF_ASSUMPTIO;
+		specialeffect(EF_ASSUMPTIO, AREA, playerattached());
 		consumeitem 607; //Yggdrasilberry
 		.@rand = rand(1,10);
 		if (.@rand > 4 && .@rand < 9) getitem White_Potion,2;
@@ -868,7 +868,7 @@ brasilis,56,224,7	script	Mage Paje#bra	4_M_BIBI,{
 	mes "Good luck~!";
 	brazil_gua = 6;
 	changequest 2195,2196;
-	specialeffect2 EF_ASSUMPTIO;
+	specialeffect(EF_ASSUMPTIO, AREA, playerattached());
 	close;
 }
 
@@ -925,7 +925,7 @@ OnTouch:
 		mes "Fly fly far away. bbaaaeeeccckkk--!";
 		brazil_gua = 7;
 		changequest 2196,2197;
-		specialeffect2 EF_SEISMICWEAPON;
+		specialeffect(EF_SEISMICWEAPON, AREA, playerattached());
 		close2;
 		warp "bra_fild01",68,146;
 		end;
@@ -2281,7 +2281,7 @@ bra_in01,149,184,3	script	Door#bra	CLEAR_NPC,{
 							mes "^FF0000kkkkhee- hihihihi!!!^000000";
 							mes "You hear water flushing.";
 							next;
-							specialeffect2 EF_VENOMDUST;
+							specialeffect(EF_VENOMDUST, AREA, playerattached());
 							mes "Faint laughing can be heard off in the direction of the toilet.";
 							brazil_ghost = 3;
 							changequest 2208,60351;
@@ -2327,7 +2327,7 @@ bra_in01,144,187,3	script	Toilet#bra	CLEAR_NPC,{
 			switch(select("Flush the toilet.", "Doing nothing.")) {
 			case 1:
 				mes "After flushing the toilet, you suddenly feel dizzy and are suddenly swept away somewhere.";
-				specialeffect2 EF_WATERFALL_SMALL_T2_90;
+				specialeffect(EF_WATERFALL_SMALL_T2_90, AREA, playerattached());
 				close2;
 				warp "bra_in01",206,102;
 				end;
@@ -2371,7 +2371,7 @@ bra_in01,144,187,3	script	Toilet#bra	CLEAR_NPC,{
 							mes "^FF0000kkkkhee- hihihihi!!!^000000";
 							mes "Suddenly the sink sounds like water is flowing freely from it.";
 							next;
-							specialeffect2 EF_VENOMDUST;
+							specialeffect(EF_VENOMDUST, AREA, playerattached());
 							mes "Faint laughing can be heard off in the direction of the faucet.";
 							brazil_ghost = 4;
 							changequest 60351,60352;
@@ -2450,7 +2450,7 @@ bra_in01,134,189,3	script	Faucet#bra	CLEAR_NPC,{
 							mes "^FF0000kkkkhee- hihihihi!!!^000000";
 							mes "You see the carpet move.";
 							next;
-							specialeffect2 EF_VENOMDUST;
+							specialeffect(EF_VENOMDUST, AREA, playerattached());
 							mes "Faint laughing can be heard off in the direction of the carpet.";
 							brazil_ghost = 5;
 							changequest 60352,60353;
@@ -2532,7 +2532,7 @@ bra_in01,138,184,3	script	Carpet#bra	CLEAR_NPC,{
 							mes "[Distant Sound]";
 							mes "^FF0000kkkkhee- hihihihi!!!^000000";
 							next;
-							specialeffect2 EF_VENOMDUST;
+							specialeffect(EF_VENOMDUST, AREA, playerattached());
 							mes "Faint laughing can be heard off in the direction of the mirror.";
 							brazil_ghost = 6;
 							changequest 60353,60354;
@@ -2628,7 +2628,7 @@ bra_in01,151,180,3	script	Mirror#bra	CLEAR_NPC,{
 							}
 						}
 						if (.@cpudice > .@pcdice) {
-							specialeffect2 EF_DEVIL;
+							specialeffect(EF_DEVIL, AREA, playerattached());
 							mes "[Ghost]";
 							mes "^FF0000Go away!^000000";
 							brazil_ghost = 1;

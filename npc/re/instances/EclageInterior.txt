@@ -147,7 +147,7 @@ ecl_hub01,130,15,0	script	It is closed shut.	CLEAR_NPC,{
 	next;
 	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "No...way!!!";
-	specialeffect2 EF_LORD;
+	specialeffect(EF_LORD, AREA, playerattached());
 	percentheal -99,0;
 	soundeffect "wander_man_move.wav",1;
 	sc_start SC_BLIND,60000,0;

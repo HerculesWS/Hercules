@@ -3360,7 +3360,7 @@ rachel,265,98,3	script	Hamion#aru	4_M_RACHMAN2,{
 		mes "[Hamion]";
 		mes "Here we go...!";
 		next;
-		specialeffect2 EF_CONE;
+		specialeffect(EF_CONE, AREA, playerattached());
 		mes "^3355FF*Pzzzz*^000000";
 		next;
 		mes "[Hamion]";
@@ -4847,7 +4847,7 @@ ra_temin,277,159,3	script	High Priest Zhed#rachel	4_M_RACHOLD1,{
 		cutin "",255;
 		lost_boy = 13;
 		completequest 8099;
-		specialeffect2 EF_ABSORBSPIRITS;
+		specialeffect(EF_ABSORBSPIRITS, AREA, playerattached());
 		getexp RENEWAL_EXP?90000:900000,0;
 		end;
 	}
@@ -5272,7 +5272,7 @@ ra_temin,277,159,3	script	High Priest Zhed#rachel	4_M_RACHOLD1,{
 		ra_tem_q = 0;
 		cutin "",255;
 		completequest 8105;
-		specialeffect2 EF_ABSORBSPIRITS;
+		specialeffect(EF_ABSORBSPIRITS, AREA, playerattached());
 		if (RENEWAL_EXP)
 			getexp 90000,60000;
 		else

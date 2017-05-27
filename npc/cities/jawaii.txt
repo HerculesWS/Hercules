@@ -921,7 +921,7 @@ jawaii_in,28,124,0	script	Bartender#jaw	1_ETC_01,{
 				mes "throat is burning.";
 				next;
 				mes "^3355FFYou gulped it down.^000000";
-				specialeffect2 EF_VENOMDUST;
+				specialeffect(EF_VENOMDUST, AREA, playerattached());
 				percentheal -20,0;
 				next;
 				break;
@@ -943,7 +943,7 @@ jawaii_in,28,124,0	script	Bartender#jaw	1_ETC_01,{
 				mes "^3355FFYou drank it sip by sip,";
 				mes "savoring its rich,";
 				mes "robust flavor.^000000";
-				specialeffect2 EF_FIREIVY;
+				specialeffect(EF_FIREIVY, AREA, playerattached());
 				percentheal -20,0;
 				next;
 				break;
@@ -967,7 +967,7 @@ jawaii_in,28,124,0	script	Bartender#jaw	1_ETC_01,{
 				mes "Lick the sugar before taking a sip. That will make it taste a little sweeter and will soften the taste.";
 				next;
 				mes "^3355FFYou carefully took a sip.^000000";
-				specialeffect2 EF_DECAGILITY;
+				specialeffect(EF_DECAGILITY, AREA, playerattached());
 				percentheal -20,0;
 				next;
 				break;
@@ -993,7 +993,7 @@ jawaii_in,28,124,0	script	Bartender#jaw	1_ETC_01,{
 				next;
 				mes "^3355FFYou gulp the delicious";
 				mes "Margarita down in one sip.^000000";
-				specialeffect2 EF_MAGNUMBREAK;
+				specialeffect(EF_MAGNUMBREAK, AREA, playerattached());
 				percentheal -20,0;
 				next;
 			}
@@ -1015,7 +1015,7 @@ jawaii_in,28,124,0	script	Bartender#jaw	1_ETC_01,{
 			mes "I'm a cowboy hero!";
 			mes "Bang Bang Bang!";
 			next;
-			specialeffect2 EF_STEAL;
+			specialeffect(EF_STEAL, AREA, playerattached());
 			percentheal -10,0;
 			next;
 			break;
@@ -1039,7 +1039,7 @@ jawaii_in,28,124,0	script	Bartender#jaw	1_ETC_01,{
 			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Aaaaaahhhhhh~!";
 			mes "This drink is really good!";
-			specialeffect2 EF_SANCTUARY;
+			specialeffect(EF_SANCTUARY, AREA, playerattached());
 			percentheal -10,0;
 			next;
 			break;
@@ -1059,7 +1059,7 @@ jawaii_in,28,124,0	script	Bartender#jaw	1_ETC_01,{
 			mes "gulped it down.^000000";
 			next;
 			mes "^3355FFYou feel pretty hammered.^000000";
-			specialeffect2 EF_BLASTMINEBOMB;
+			specialeffect(EF_BLASTMINEBOMB, AREA, playerattached());
 			percentheal -10,0;
 			next;
 			break;
@@ -1081,7 +1081,7 @@ jawaii_in,28,124,0	script	Bartender#jaw	1_ETC_01,{
 			mes "^3355FFYou took a sip of it and sighed.^000000";
 			next;
 			mes "^3355FFAnd promised yourself that you would never drink it ever again.^000000";
-			specialeffect2 EF_HIT6;
+			specialeffect(EF_HIT6, AREA, playerattached());
 			percentheal -10,0;
 			next;
 			break;

@@ -81,9 +81,9 @@ moc_para01,14,32,5	script	Aperture#acolytewarp	4_F_01,{
 			mes "to "+.@towns$[.@i]+" is "+.@cost[.@i]+" zeny.";
 			close;
 		}
-		specialeffect2 EF_READYPORTAL;
-		specialeffect2 EF_TELEPORTATION;
-		specialeffect2 EF_PORTAL;
+		specialeffect(EF_READYPORTAL, AREA, playerattached());
+		specialeffect(EF_TELEPORTATION, AREA, playerattached());
+		specialeffect(EF_PORTAL, AREA, playerattached());
 		next;
 		Zeny -= .@cost[.@i];
 		switch(.@i) {

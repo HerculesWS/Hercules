@@ -3369,7 +3369,7 @@ que_god02,178,127,3	script	Valkyrie#1	4_F_VALKYRIE,{
 			next;
 			mes "[Valkyrie]";
 			mes "Your soul and spirit will be reborn in Valhalla as a holy warrior preparing for the holy war.";
-			specialeffect2 EF_BLESSING;
+			specialeffect(EF_BLESSING, AREA, playerattached());
 			next;
 			mes "[Valkyrie]";
 			mes "And...";
@@ -3454,7 +3454,7 @@ que_god02,178,127,3	script	Valkyrie#1	4_F_VALKYRIE,{
 			mes "[Valkyrie]";
 			mes "Your soul and";
 			mes "spirit will be reborn in Valhalla as a holy warrior preparing for the holy war.";
-			specialeffect2 EF_BLESSING;
+			specialeffect(EF_BLESSING, AREA, playerattached());
 			next;
 			mes "[Valkyrie]";
 			mes "And...";
@@ -4443,7 +4443,7 @@ mjolnir_09,87,129,3	script	Berling#1	4_M_DWARF,{
 				next;
 				mes "[Berling]";
 				mes "Memorize all five lines of this song exactly. Now take this golden teardrop and please seek out Grer.";
-				specialeffect2 EF_IMPOSITIO;
+				specialeffect(EF_IMPOSITIO, AREA, playerattached());
 				god_brising = 44;
 				close2;
 				hideonnpc "Berling#1";

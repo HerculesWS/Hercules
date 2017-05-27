@@ -1970,7 +1970,7 @@ OnTimer80000:
 		next;
 		mes("[Hugin]");
 		mes("Varmundt's time is stopped by me. And your time will be distorted soon.");
-		specialeffect2 EF_BLIND,AREA;
+		specialeffect(EF_BLIND,AREA, AREA, playerattached());
 		soundeffect "_blind.wav",0;
 		next;
 		mes("[Hugin]");
@@ -1981,7 +1981,7 @@ OnTimer80000:
 		next;
 		mes("[Hugin]");
 		mes("Now, let me remove your memory. If you see me again, that will be brand new.");
-		specialeffect2 EF_FREEZE;
+		specialeffect(EF_FREEZE, AREA, playerattached());
 		close2;
 		getmapxy(.@map$, .@x, .@y, UNITTYPE_PC);
 		warp .@map$,.@x,.@y;
@@ -2466,10 +2466,10 @@ glast_01,212,273,4	script	Hugin's Magic Master	1_F_01,{ // Custom text due to of
 					}
 					if (.@random > .@scs) {
 						mes("Arrggg, we failed. Better luck next time.");
-						specialeffect2 EF_PHARMACY_FAIL; delitem Coagulated_Spell, .@cost; delequip .@part;
+						specialeffect(EF_PHARMACY_FAIL, AREA, playerattached()); delitem Coagulated_Spell, .@cost; delequip .@part;
 						close;
 					}
-					specialeffect2 EF_REPAIRWEAPON;
+					specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
 					delitem Coagulated_Spell, .@cost;
 					delequip .@part;
 					mes("[Hugin's Magic Master]");
@@ -2531,7 +2531,7 @@ glast_01,212,273,4	script	Hugin's Magic Master	1_F_01,{ // Custom text due to of
 			}
 			if (.@random > .@scs) {
 				mes("Arrggg, we failed. Better luck next time.");
-				specialeffect2 EF_PHARMACY_FAIL;
+				specialeffect(EF_PHARMACY_FAIL, AREA, playerattached());
 				delitem Coagulated_Spell, .@cost;
 				delequip .@part;
 				close;
@@ -2550,12 +2550,12 @@ glast_01,212,273,4	script	Hugin's Magic Master	1_F_01,{ // Custom text due to of
 	}
 	if (.@random > .@scs) {
 		mes("Arrggg, we failed. Better luck next time.");
-		specialeffect2 EF_PHARMACY_FAIL;
+		specialeffect(EF_PHARMACY_FAIL, AREA, playerattached());
 		delitem Coagulated_Spell, .@cost;
 		delequip .@part;
 		close;
 	}
-	specialeffect2 EF_REPAIRWEAPON;
+	specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
 	delitem Coagulated_Spell, .@cost;
 	delequip .@part;
 	mes("[Hugin's Magic Master]");
@@ -2651,7 +2651,7 @@ glast_01,210,270,0	script	Hugin's Craftsman	4_F_JOB_BLACKSMITH,{
 		if (.@random > .@chance) {
 			mes("[Hugin's Craftsman]");
 			mes("Arrggg, we failed. Better luck next time.");
-			specialeffect2 EF_PHARMACY_FAIL;
+			specialeffect(EF_PHARMACY_FAIL, AREA, playerattached());
 			delitem .@item, .@cost;
 			delequip .@part;
 			close;
@@ -2659,7 +2659,7 @@ glast_01,210,270,0	script	Hugin's Craftsman	4_F_JOB_BLACKSMITH,{
 		mes("[Hugin's Craftsman]");
 		mesf("Yuhuu~ we succeed. There you go... A slot has been added to your ^FF0000%s^000000. Thank you for believing in me.", getitemname(.@equip_id));
 		delitem .@item, .@cost;
-		specialeffect2 EF_PHARMACY_OK;
+		specialeffect(EF_PHARMACY_OK, AREA, playerattached());
 		delequip .@part;
 		// todo: read aegis name and attach "_" to worn constant
 		if (.@equip_id == Temporal_Str_Boots) {

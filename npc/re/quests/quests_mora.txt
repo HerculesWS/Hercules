@@ -3719,7 +3719,7 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 			} else {
 				mes "When you attempt to run away, the unidentified creature sees you and attacks. You fail to escape.";
 				next;
-				specialeffect2 EF_HIT1;
+				specialeffect(EF_HIT1, AREA, playerattached());
 				mes "The creature slams you with its tail. It's so painful that a tear rolls out of your eyes. ^FF000010^000000 damaged received.";
 				.@pc_hp -= 10;
 				next;
@@ -3839,15 +3839,15 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 		case 1:
 			switch(.@npc_attack) {
 			case 1:
-				specialeffect2 EF_ICEARROW;
+				specialeffect(EF_ICEARROW, AREA, playerattached());
 				mes "You stand still. The stream of water hits your face squarely. Your mind is clear in an instant. ^FF0000["+.@n_damage+"]^000000 damage received.";
 				break;
 			case 2:
-				specialeffect2 EF_BASH;
+				specialeffect(EF_BASH, AREA, playerattached());
 				mes "You stand still. The creature headbutts you squarely. Your mind is clear in an instant. ^FF0000["+.@n_damage+"]^000000 damage received.";
 				break;
 			case 3:
-				specialeffect2 EF_HIT1;
+				specialeffect(EF_HIT1, AREA, playerattached());
 				mes "You stand still. While you were standing stupidly, the creature comes near and bites you mercilessly. Your mind is clear in an instant. ^FF0000["+.@n_damage+"]^000000 damage received.";
 				break;
 			}
@@ -3869,7 +3869,7 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 					break;
 				// Hit.
 				default:
-					specialeffect2 EF_ICEARROW;
+					specialeffect(EF_ICEARROW, AREA, playerattached());
 					.@pc_hp -= .@n_damage;
 					switch(.@miss) {
 						case 2: .@str$ = "face"; break;
@@ -3900,7 +3900,7 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 					break;
 				// Hit.
 				default:
-					specialeffect2 EF_BASH;
+					specialeffect(EF_BASH, AREA, playerattached());
 					.@pc_hp -= .@n_damage;
 					switch(.@miss) {
 						case 2: .@str$ = "With a thud, you can feel intense pain."; break;
@@ -3940,7 +3940,7 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 					break;
 				// Hit.
 				default:
-					specialeffect2 EF_HIT1;
+					specialeffect(EF_HIT1, AREA, playerattached());
 					.@pc_hp -= .@n_damage;
 					switch(.@miss) {
 						case 2: .@str$ = "leg. Its sharp teeth penetrate your legs."; break;
@@ -3961,9 +3961,9 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 			case 1:
 				if (.@defend == 3 || .@defend == 6) {
 					.@n_damage /= 2;
-					specialeffect2 EF_GUARD;
+					specialeffect(EF_GUARD, AREA, playerattached());
 				} else
-					specialeffect2 EF_ICEARROW;
+					specialeffect(EF_ICEARROW, AREA, playerattached());
 				.@pc_hp -= .@n_damage;
 				mes "[Defense of "+strcharinfo(PC_NAME)+"]";
 				switch(.@defend) {
@@ -3986,9 +3986,9 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 			case 2:
 				if (.@defend == 1 || .@defend == 3 || .@defend == 5 || .@defend == 7) {
 					.@n_damage /= 2;
-					specialeffect2 EF_GUARD;
+					specialeffect(EF_GUARD, AREA, playerattached());
 				} else
-					specialeffect2 EF_BASH;
+					specialeffect(EF_BASH, AREA, playerattached());
 				.@pc_hp -= .@n_damage;
 				mes "[Defense of "+strcharinfo(PC_NAME)+"]";
 				switch(.@defend) {
@@ -4011,7 +4011,7 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 			case 3:
 				if (.@defend == 2 || .@defend == 4 || .@defend == 6 || .@defend == 8) {
 					.@n_damage /= 2;
-					specialeffect2 EF_GUARD;
+					specialeffect(EF_GUARD, AREA, playerattached());
 				}
 				.@pc_hp -= .@n_damage;
 				mes "[Defense of "+strcharinfo(PC_NAME)+"]";
@@ -4544,7 +4544,7 @@ mora,115,98,0	script	Hotcha#pa0829	4_ELEPHANT,{
 			mes "[Hotcha]";
 			mes "Yes, I see you've completed the task. It has been confirmed as completed.";
 			erasequest .@i;
-			specialeffect2 EF_STEAL;
+			specialeffect(EF_STEAL, AREA, playerattached());
 			if (BaseLevel > 99)
 				getexp 0, ((JobLevel < 50)?JobLevel * JobLevel * (110/100) * 50:0);
 			else
@@ -4745,7 +4745,7 @@ L_CheckQuest:
 		mes "I've received the items all right. It will be some time before I have another task for you, so why don't you visit the hot spring and relax?";
 		delitem getarg(1),getarg(2);
 		erasequest getarg(0);
-		specialeffect2 EF_STEAL;
+		specialeffect(EF_STEAL, AREA, playerattached());
 		if (BaseLevel > 99)
 			getexp 0, ((JobLevel < 50)?JobLevel * JobLevel * (110/100) * 50:0);
 		else
@@ -4941,7 +4941,7 @@ L_CheckQuest:
 		mes "I've received the items all right. I look forward to working with you again.";
 		delitem getarg(1),getarg(2);
 		erasequest getarg(0);
-		specialeffect2 EF_STEAL;
+		specialeffect(EF_STEAL, AREA, playerattached());
 		if (BaseLevel > 99)
 			getexp 0, ((JobLevel < 50)?JobLevel * JobLevel * (110/100) * 50:0);
 		else
@@ -5073,7 +5073,7 @@ mora,170,101,4	script	Soul Guide#pa0829	4_F_DOGTRAVELER,{
 	}
 	next;
 	mes "^990099Information on missing person "+.@n$+"^000000 has been found. Check your Quest Window for further information.";
-	specialeffect2 EF_STEAL;
+	specialeffect(EF_STEAL, AREA, playerattached());
 	close;
 }
 
@@ -5125,17 +5125,17 @@ function	script	mora_remains	{
 		close;
 	}
 	if (questprogress(getarg(0))) {
-		specialeffect2 EF_BLIND;
-		specialeffect2 EF_BEGINSPELL;
+		specialeffect(EF_BLIND, AREA, playerattached());
+		specialeffect(EF_BEGINSPELL, AREA, playerattached());
 		progressbar "ffff00",4;
 		erasequest getarg(0);
 		mes "These must be ["+getarg(1)+"]'s Remains. So carefully gather his remains.";
-		specialeffect2 EF_STEAL;
+		specialeffect(EF_STEAL, AREA, playerattached());
 		getitem getarg(3), rand(1,getarg(4));
 		if (rand(10)) {
 			next;
 			mes "You picked up "+getarg(2)+" Mora Coins next to the remains.";
-			specialeffect2 EF_STEAL;
+			specialeffect(EF_STEAL, AREA, playerattached());
 			getitem Mora_Coin,getarg(2);
 		}
 		close;

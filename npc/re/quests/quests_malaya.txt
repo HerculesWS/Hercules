@@ -3370,7 +3370,7 @@ ma_fild01,166,214,6	script	Old Man in Dilemma#GA	4_F_BARYO_OLD,{
 			next;
 			if(select("Create.", "No, thank you.") == 1) {
 				if (countitem(Lesser_Agimat) >= 3 && Zeny >= 1000) {
-					specialeffect2 EF_CONE;
+					specialeffect(EF_CONE, AREA, playerattached());
 					specialeffect EF_FORESTLIGHT2;
 					Zeny -= 1000;
 					getitem Ancient_Spirit_Agimat,1;
@@ -3824,7 +3824,7 @@ ma_fild01,158,243,6	script	Tribe Blacksmith#malaya	4_M_MALAYA,{
 	mes "[Bayani]";
 	mes "Pow!! Wow!! Flip... flop!";
 	next;
-	specialeffect2 EF_TRIPLEATTACK;
+	specialeffect(EF_TRIPLEATTACK, AREA, playerattached());
 	mes "[Bayani]";
 	mes "BAM!!";
 	next;
@@ -4786,7 +4786,7 @@ ma_fild02,312,259,3	script	Dog#buwaya	4_DOG01,{
 		next;
 		mes "^FF0000- Shoook-^000000";
 		enablenpc "Guard#buwayacave";
-		specialeffect2 EF_MVP;
+		specialeffect(EF_MVP, AREA, playerattached());
 		next;
 		mes "[Guard]";
 		mes "Job well done!";

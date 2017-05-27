@@ -78,7 +78,7 @@ hu_fild05,168,304,0	script	Column#abyss1	HIDDEN_NPC,{
 				mes "violently shake.^000000";
 				specialeffect EF_BOWLINGBASH;
 				donpcevent "AbyssWarp::OnWarp";
-				specialeffect2 EF_PORTAL;
+				specialeffect(EF_PORTAL, AREA, playerattached());
 				delitem 1035,1;
 				delitem 1036,1;
 				delitem 1037,1;
@@ -137,7 +137,7 @@ hu_fild05,171,211,0	script	Column#abyss2	HIDDEN_NPC,1,1,{
 			mes "begin to slowly sink away...^000000";
 			next;
 			specialeffect EF_BOWLINGBASH;
-			specialeffect2 EF_PORTAL;
+			specialeffect(EF_PORTAL, AREA, playerattached());
 			close2;
 			warp "hu_fild05",169,305;
 			end;
@@ -159,7 +159,7 @@ hu_fild05,171,211,0	script	Column#abyss2	HIDDEN_NPC,1,1,{
 			mes "are warped somewhere else...^000000";
 			next;
 			specialeffect EF_BOWLINGBASH;
-			specialeffect2 EF_PORTAL;
+			specialeffect(EF_PORTAL, AREA, playerattached());
 			close2;
 			warp "hu_fild05",157,284;
 			end;

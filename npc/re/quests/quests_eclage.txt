@@ -5029,7 +5029,7 @@ OnTouch:
 				mes "- Something hits you";
 				mes "over the head really hard.";
 				mes "Your body loses its strength and your vision goes blurry -";
-				specialeffect2 EF_HIT1;
+				specialeffect(EF_HIT1, AREA, playerattached());
 				sc_start SC_BLIND,30000,0;
 				next;
 				mes "- Oh, I can't lose my consciousness like this -";
@@ -6496,7 +6496,7 @@ eclage,222,131,3	script	Wandering Merchant#ecl	1_M_SIGNMCNT,{
 						}
 						progressbar "0xFFFF00",3;
 						.@nRand = rand(1,10);
-						specialeffect2 EF_ENHANCE;
+						specialeffect(EF_ENHANCE, AREA, playerattached());
 						Zeny -= 10000;
 						if ((.@nRand > 0) && (.@nRand < 5)) {
 							getitem Center_Potion,1; //Center_Potion
@@ -17001,7 +17001,7 @@ ecl_in03,41,90,3	script	Mayor Jun Kardui#tl01	4_M_FARIYKING,{
 			mes strcharinfo(PC_NAME) + ".";
 			mes "This is a present for you.";
 			mes "I hope my magical powers help you improve.";
-			specialeffect2 EF_FORESTLIGHT4;
+			specialeffect(EF_FORESTLIGHT4, AREA, playerattached());
 			delitem Avant_Research_Data,1; //Avant_Research_Data
 			if (ep14_2_mylord == 23) {
 				getexp 400000,300000;
@@ -17444,7 +17444,7 @@ ecl_in03,41,90,3	script	Mayor Jun Kardui#tl01	4_M_FARIYKING,{
 		mes "You've been a great help all this time.";
 		mes "Will you stay as my friend now and forever?";
 		mes "May the blessing of Yggdrasil be upon you...";
-		specialeffect2 EF_FORESTLIGHT4;
+		specialeffect(EF_FORESTLIGHT4, AREA, playerattached());
 		npcskill AL_BLESSING,1,0,0;
 		ep14_2_mylord =  33;
 		completequest 7453;

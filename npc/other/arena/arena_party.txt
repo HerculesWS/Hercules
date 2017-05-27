@@ -986,7 +986,7 @@ prt_are_in,181,135,3	script	Staff#party-1	1_F_02,{
 	mes "[Staff]";
 	mes "Let me guide you outside. I hope you had a good time.";
 	close2;
-	specialeffect2 EF_HIT5;
+	specialeffect(EF_HIT5, AREA, playerattached());
 	warp "arena_room",100,75;
 	end;
 }
@@ -1058,7 +1058,7 @@ prt_are_in,77,135,3	script	Staff#party-2	1_F_02,{
 			donpcevent "alloff#pt::OnEnable";
 			donpcevent "Ponox::OnStart";
 		}
-		specialeffect2 EH_HIT5;
+		specialeffect(EH_HIT5, AREA, playerattached());
  		donpcevent "cast#pt::OnNomal1";
 		warp "arena_room",100,75;
 		end;
@@ -1136,7 +1136,7 @@ prt_are_in,77,135,3	script	Staff#party-2	1_F_02,{
 			donpcevent "alloff#pt::OnEnable";
 			donpcevent "Ponox::OnStart";
 		}
-		specialeffect2 EF_HIT5;
+		specialeffect(EF_HIT5, AREA, playerattached());
 		warp "arena_room",100,75;
 		end;
 	}

@@ -2443,17 +2443,17 @@ hu_in01,256,40,3	script	Herico	4_M_HUGRANFA,{
 			mes "[Herico]";
 			mes "Then...SPIT THEM OUT!";
 			percentheal -5,0;
-			specialeffect2 EF_HIT4;
+			specialeffect(EF_HIT4, AREA, playerattached());
 			next;
 			mes "[Herico]";
 			mes "SPIT THEM OUT!";
 			percentheal -5,0;
-			specialeffect2 EF_HIT4;
+			specialeffect(EF_HIT4, AREA, playerattached());
 			next;
 			mes "[Herico]";
 			mes "I SAID, SPIT THEM OUUUUUT!";
 			percentheal -5,0;
-			specialeffect2 EF_HIT4;
+			specialeffect(EF_HIT4, AREA, playerattached());
 			next;
 			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Err...I was just kidding...";
@@ -3504,15 +3504,15 @@ hu_fild06,168,359,3	script	Moks Mushrooms#Mush1	HIDDEN_NPC,{
 			mes "- *Snip Snip* -";
 			mes "- *Snip Snip* -";
 			mes "- *Snip Snip* -";
-			specialeffect2 EF_CONE;
+			specialeffect(EF_CONE, AREA, playerattached());
 			next;
 			if (rand(1,5) > 4) {
 				mes "- You were being clumsy and broke the mushrooms. You have failed in gathering the mushrooms. -";
-				specialeffect2 EF_STUNATTACK;
+				specialeffect(EF_STUNATTACK, AREA, playerattached());
 				close;
 			}
 			mes "- You have successfully gathered mushrooms. -";
-			specialeffect2 EF_VALLENTINE2;
+			specialeffect(EF_VALLENTINE2, AREA, playerattached());
 			++hg_tre;
 			if (hg_tre == 11)
 				mes "Collected Moks Mushroom Solution: 1ea ";
@@ -3559,15 +3559,15 @@ hu_fild06,194,341,3	script	Moks Mushrooms#Mush2	HIDDEN_NPC,{
 			mes "- *Snip Snip* -";
 			mes "- *Snip Snip* -";
 			mes "- *Snip Snip* -";
-			specialeffect2 EF_CONE;
+			specialeffect(EF_CONE, AREA, playerattached());
 			next;
 			if (rand(1,5) > 4) {
 				mes "- You were being clumsy and broke the mushrooms. You have failed in gathering the mushrooms. -";
-				specialeffect2 EF_STUNATTACK;
+				specialeffect(EF_STUNATTACK, AREA, playerattached());
 				close;
 			}
 			mes "- You have successfully gathered mushrooms. -";
-			specialeffect2 EF_VALLENTINE2;
+			specialeffect(EF_VALLENTINE2, AREA, playerattached());
 			++hg_tre;
 			if (hg_tre == 11)
 				mes "Collected Moks Mushroom Solution: 1ea ";
@@ -3614,15 +3614,15 @@ hu_fild06,198,339,3	script	Moks Mushrooms#Mush3	HIDDEN_NPC,{
 			mes "- *Snip Snip* -";
 			mes "- *Snip Snip* -";
 			mes "- *Snip Snip* -";
-			specialeffect2 EF_CONE;
+			specialeffect(EF_CONE, AREA, playerattached());
 			next;
 			if (rand(1,5) > 4) {
 				mes "- You were being clumsy and broke the mushrooms. You have failed in gathering the mushrooms. -";
-				specialeffect2 EF_STUNATTACK;
+				specialeffect(EF_STUNATTACK, AREA, playerattached());
 				close;
 			}
 			mes "- You have successfully gathered mushrooms. -";
-			specialeffect2 EF_VALLENTINE2;
+			specialeffect(EF_VALLENTINE2, AREA, playerattached());
 			++hg_tre;
 			if (hg_tre == 11)
 				mes "Collected Moks Mushroom Solution: 1ea ";
@@ -3669,15 +3669,15 @@ hugel,209,163,3	script	Clam#C1	HIDDEN_NPC,{
 			mes "- *Snip Snip* -";
 			mes "- *Snip Snip* -";
 			mes "- *Snip Snip* -";
-			specialeffect2 EF_CONE;
+			specialeffect(EF_CONE, AREA, playerattached());
 			next;
 			if (rand(1,5) > 4) {
 				mes "- Clams are too strong to open. You have failed in gathering Clam Flesh. -";
-				specialeffect2 EF_STUNATTACK;
+				specialeffect(EF_STUNATTACK, AREA, playerattached());
 				close;
 			}
 			mes "- You have successfully gathered Clam Flesh. -";
-			specialeffect2 EF_VALLENTINE2;
+			specialeffect(EF_VALLENTINE2, AREA, playerattached());
 			++hg_tre;
 			if (hg_tre == 21)
 				mes "Collected Clam Flesh: 1ea ";
@@ -3724,7 +3724,7 @@ hugel,203,166,3	script	Clam#C2	HIDDEN_NPC,{
 			mes "- *Snip Snip* -";
 			mes "- *Snip Snip* -";
 			mes "- *Snip Snip* -";
-			specialeffect2 EF_CONE;
+			specialeffect(EF_CONE, AREA, playerattached());
 			next;
 			if (rand(1,5) > 4) {
 				mes "- Clams are too strong to open. You have failed in gathering Clam Flesh. -";
@@ -3732,7 +3732,7 @@ hugel,203,166,3	script	Clam#C2	HIDDEN_NPC,{
 				close;
 			}
 			mes "- You have successfully gathered Clam Flesh. -";
-			specialeffect2 EF_VALLENTINE2;
+			specialeffect(EF_VALLENTINE2, AREA, playerattached());
 			++hg_tre;
 			if (hg_tre == 21)
 				mes "Collected Clam Flesh: 1ea ";
@@ -3779,15 +3779,15 @@ hugel,217,158,3	script	Clam#C3	HIDDEN_NPC,{
 			mes "- *Snip Snip* -";
 			mes "- *Snip Snip* -";
 			mes "- *Snip Snip* -";
-			specialeffect2 EF_CONE;
+			specialeffect(EF_CONE, AREA, playerattached());
 			next;
 			if (rand(1,5) > 4) {
 				mes "- Clams are too strong to open. You have failed in gathering Clam Flesh. -";
-				specialeffect2 EF_STUNATTACK;
+				specialeffect(EF_STUNATTACK, AREA, playerattached());
 				close;
 			}
 			mes "- You have successfully gathered Clam Flesh. -";
-			specialeffect2 EF_VALLENTINE2;
+			specialeffect(EF_VALLENTINE2, AREA, playerattached());
 			++hg_tre;
 			if (hg_tre == 21)
 				mes "Collected Clam Flesh: 1ea ";
@@ -3834,15 +3834,15 @@ hugel,204,150,3	script	Clam#C4	HIDDEN_NPC,{
 			mes "- *Snip Snip* -";
 			mes "- *Snip Snip* -";
 			mes "- *Snip Snip* -";
-			specialeffect2 EF_CONE;
+			specialeffect(EF_CONE, AREA, playerattached());
 			next;
 			if (rand(1,5) > 4) {
 				mes "- Clams are too strong to open. You have failed in gathering Clam Flesh. -";
-				specialeffect2 EF_STUNATTACK;
+				specialeffect(EF_STUNATTACK, AREA, playerattached());
 				close;
 			}
 			mes "- You have successfully gathered Clam Flesh. -";
-			specialeffect2 EF_VALLENTINE2;
+			specialeffect(EF_VALLENTINE2, AREA, playerattached());
 			++hg_tre;
 			if (hg_tre == 21)
 				mes "Collected Clam Flesh: 1ea ";
@@ -3889,15 +3889,15 @@ hu_fild06,155,309,1	script	Moks Bugs#Bug1	THIEF_BUG_,{
 			mes "- *Whizz Whizz Bzzzz* -";
 			mes "- *Whizz Whizz*-";
 			mes "- *Whizz Whizz*-";
-			specialeffect2 EF_CONE;
+			specialeffect(EF_CONE, AREA, playerattached());
 			next;
 			if (rand(1,5) > 4) {
 				mes "- The bugs quickly ran away. You have failed to gather their shells. -";
-				specialeffect2 EF_STUNATTACK;
+				specialeffect(EF_STUNATTACK, AREA, playerattached());
 				close;
 			}
 			mes "- You have successfully gathered Moks Bugs Shells. -";
-			specialeffect2 EF_VALLENTINE2;
+			specialeffect(EF_VALLENTINE2, AREA, playerattached());
 			++hg_tre;
 			if (hg_tre == 31)
 				mes "Collected Moks Bugs Shells: 1ea ";
@@ -3944,15 +3944,15 @@ hu_fild06,218,320,1	script	Moks Bugs#Bug2	THIEF_BUG_,{
 			mes "- *Whizz Whizz Bzzzz* -";
 			mes "- *Whizz Whizz*-";
 			mes "- *Whizz Whizz*-";
-			specialeffect2 EF_CONE;
+			specialeffect(EF_CONE, AREA, playerattached());
 			next;
 			if (rand(1,5) > 4) {
 				mes "- The bugs quickly ran away. You have failed to gather their shells. -";
-				specialeffect2 EF_STUNATTACK;
+				specialeffect(EF_STUNATTACK, AREA, playerattached());
 				close;
 			}
 			mes "- You have successfully gathered Moks Bugs Shells. -";
-			specialeffect2 EF_VALLENTINE2;
+			specialeffect(EF_VALLENTINE2, AREA, playerattached());
 			++hg_tre;
 			if (hg_tre == 31)
 				mes "Collected Moks Bugs Shells: 1ea ";
@@ -3999,15 +3999,15 @@ hu_fild06,249,329,1	script	Moks Bugs#Bug3	THIEF_BUG_,{
 			mes "- *Whizz Whizz Bzzzz* -";
 			mes "- *Whizz Whizz*-";
 			mes "- *Whizz Whizz*-";
-			specialeffect2 EF_CONE;
+			specialeffect(EF_CONE, AREA, playerattached());
 			next;
 			if (rand(1,5) > 4) {
 				mes "- The bugs quickly ran away. You have failed to gather their shells. -";
-				specialeffect2 EF_STUNATTACK;
+				specialeffect(EF_STUNATTACK, AREA, playerattached());
 				close;
 			}
 			mes "- You have successfully gathered Moks Bugs Shells. -";
-			specialeffect2 EF_VALLENTINE2;
+			specialeffect(EF_VALLENTINE2, AREA, playerattached());
 			++hg_tre;
 			if (hg_tre == 31)
 				mes "Collected Moks Bugs Shells: 1ea ";
@@ -4054,15 +4054,15 @@ hu_fild06,218,373,1	script	Moks Bugs#Bug4	THIEF_BUG_,{
 			mes "- *Whizz Whizz Bzzzz* -";
 			mes "- *Whizz Whizz*-";
 			mes "- *Whizz Whizz*-";
-			specialeffect2 EF_CONE;
+			specialeffect(EF_CONE, AREA, playerattached());
 			next;
 			if (rand(1,5) > 4) {
 				mes "- The bugs quickly ran away. You have failed to gather their shells. -";
-				specialeffect2 EF_STUNATTACK;
+				specialeffect(EF_STUNATTACK, AREA, playerattached());
 				close;
 			}
 			mes "- You have successfully gathered Moks Bugs Shells. -";
-			specialeffect2 EF_VALLENTINE2;
+			specialeffect(EF_VALLENTINE2, AREA, playerattached());
 			++hg_tre;
 			if (hg_tre == 31)
 				mes "Collected Moks Bugs Shells: 1ea ";
@@ -4140,7 +4140,7 @@ lhz_dun02,244,226,0	script	Unethical Machine	HIDDEN_NPC,{
 			mes "- You threw a Marine Sphere Bottle toward the machine. -";
 			next;
 			mes "BOOM!";
-			specialeffect2 EF_SUI_EXPLOSION;
+			specialeffect(EF_SUI_EXPLOSION, AREA, playerattached());
 			enablenpc "HiddenExplosion";
 			mapannounce "lhz_dun02","Beep------------------ ",1,0x99CCFF;
 			delitem Mini_Bottle,1; //Marine sphere bottle
@@ -4202,7 +4202,7 @@ hugel,198,169,0	script	#HugelTree	HIDDEN_WARP_NPC,2,2,{
 			mes "of overwhelming comfort.^000000";
 			close;
 		} else if (hg_memory == 6) {
-			specialeffect2 EF_BEGINSPELL5;
+			specialeffect(EF_BEGINSPELL5, AREA, playerattached());
 			mes "^3355FFWhat's this strange";
 			mes "feeling of dread?";
 			mes "This peculiar chill...";
@@ -4858,7 +4858,7 @@ hugel,196,164,3	script	El Schatt	1_M_04,{
 		mes "It's... I'm Manainne...";
 		mes "^333333*Sniff*^000000 She had to go back...";
 		next;
-		specialeffect2 EF_CONE;
+		specialeffect(EF_CONE, AREA, playerattached());
 		hg_memory = 12;
 		getexp RENEWAL_EXP?8000:50000,0;
 		completequest 8063;
@@ -5153,7 +5153,7 @@ hu_fild06,190,367,3	script	Torpy's Mom	4_F_GODEMOM,{
 		mes "it's not much, but I hope";
 		mes "you accept this as our thanks.";
 		mes "Goodbye for now, adventurer~";
-		specialeffect2 (hg_ubu01 == 6)?EF_CONE:EF_MVP;
+		specialeffect((hg_ubu01 == 6)?EF_CONE:EF_MVP, AREA, playerattached());
 		hg_ubu01 = 8;
 		completequest 12048;
 		getitem Dex_Dish05,3; //Green Salad
@@ -6982,7 +6982,7 @@ hugel,56,104,3	script	Kurupe	4_M_SEAMAN,3,3,{
 			close;
 		}
 		hg_milk = 9;
-		specialeffect2 EF_CONE;
+		specialeffect(EF_CONE, AREA, playerattached());
 		getexp RENEWAL_EXP?10000:100000,0;
 		getitem 12063,3;
 		erasequest 12043;

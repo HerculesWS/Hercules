@@ -89,12 +89,12 @@ prontera,147,61,3	script	Driller#pron	4_M_BARBER,{
 	delequip .@part;
 	if (rand(1,10) > 5) {
 		getitem .@slotted,1;
-		specialeffect2 EF_REPAIRWEAPON;
+		specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
 		mes "[Driller]";
 		mes "Yay! Success! Your "+.@name$+" now has a card slot. Check it out!";
 		close;
 	} else {
-		specialeffect2 EF_LORD;
+		specialeffect(EF_LORD, AREA, playerattached());
 		mes "[Driller]";
 		mes "Awww... Damn weak "+.@str$+"... It broke during the procedure. I'm sorry.";
 		close;
@@ -293,7 +293,7 @@ prontera,147,59,3	script	Goldberg#pron	4_M_OILMAN,{
 			mes "[Goldberg]";
 			mes "Oh gosh!";
  			mes "The item was not strong enough to bear the enchantment and thus got destroyed. I am sorry.";
-			specialeffect2 EF_LORD;
+			specialeffect(EF_LORD, AREA, playerattached());
 			close;
 		}
 		if (.@enchant == 0) { // Should never happen.
@@ -303,7 +303,7 @@ prontera,147,59,3	script	Goldberg#pron	4_M_OILMAN,{
 			mes "[Goldberg]";
 			mes "Great!";
 			mes "The enchantment is a success! It will be applied in socket No.^990000"+(.@slot+1)+"^000000.";
-			specialeffect2 EF_REPAIRWEAPON;
+			specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
 		}
 
 		//GetNonSlotItemSock2 .@equip_refine .@equip_id .@equip_card[0] .@equip_card[1] .@equip_card[2] .@equip_card[3]
@@ -329,7 +329,7 @@ prontera,147,59,3	script	Goldberg#pron	4_M_OILMAN,{
 			mes "Hm... this equipment is clean. I cannot initialize it if there's nothing! Check it again.";
 			close;
 		}
-		specialeffect2 EF_REPAIRWEAPON;
+		specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
 		mes "[Goldberg]";
 		mes "The enchant option in your item will be initialized.";
 		delitem RWC_Inicializer,1;

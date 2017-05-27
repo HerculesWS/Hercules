@@ -115,7 +115,7 @@ function Chk; function Cm;
 			mes "[Hunting Missions]";
 			mes "Alright, I've dropped";
 			mes "your current mission.";
-			specialeffect2 EF_STORMKICK4;
+			specialeffect(EF_STORMKICK4, AREA, playerattached());
 			for(set .@i,0; .@i<.Quests; set .@i,.@i+1) {
 				setd "Mission"+.@i,0;
 				setd "Mission"+.@i+"_",0;
@@ -185,8 +185,8 @@ Mission_Status:
 	mes "Good work.";
 	mes "Here's your reward.";
 	emotion e_no1;
-	specialeffect2 EF_ANGEL;
-	specialeffect2 EF_TRUESIGHT;
+	specialeffect(EF_ANGEL, AREA, playerattached());
+	specialeffect(EF_TRUESIGHT, AREA, playerattached());
 	set #Mission_Points, #Mission_Points+.@Mission_Points;
 	set BaseExp, BaseExp+.@Base_Exp;
 	set JobExp, JobExp+.@Job_Exp;

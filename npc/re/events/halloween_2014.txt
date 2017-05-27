@@ -502,7 +502,7 @@ niflheim,196,185,3	script	Bolak#14hal	4_M_DRAKE,{
 				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Okay.";
 				mes "I will get that thing away from here.";
-				specialeffect2 EF_SPRINKLESAND;
+				specialeffect(EF_SPRINKLESAND, AREA, playerattached());
 				next;
 				mes "[Bolak]";
 				mes "Much better.";
@@ -1680,13 +1680,13 @@ xmas_in,160,175,1	script	Worried Wife#14hal	4_F_05,{
 			next;
 			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Well, So I will burn.. this.";
-			specialeffect2 EF_TORCH;
+			specialeffect(EF_TORCH, AREA, playerattached());
 			sleep2 1000;
-			specialeffect2 EF_SMOKE;
+			specialeffect(EF_SMOKE, AREA, playerattached());
 			sleep2 1000;
-			specialeffect2 EF_SMOKE;
+			specialeffect(EF_SMOKE, AREA, playerattached());
 			sleep2 1000;
-			specialeffect2 EF_SMOKE;
+			specialeffect(EF_SMOKE, AREA, playerattached());
 			next;
 			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "It's almost ran out.. Why not he wakes up..";

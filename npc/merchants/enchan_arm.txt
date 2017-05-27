@@ -105,7 +105,7 @@ S_EnchantArmor:
 		mes "[Apprentice Craftsman]";
 		mes "Quite of an adventurer huh? Well, shall we?";
 		close2;
-		specialeffect2 EF_MAPPILLAR;
+		specialeffect(EF_MAPPILLAR, AREA, playerattached());
 		if (Zeny < 400000) {
 			mes "[Apprentice Craftsman]";
 			mes "Sorry, but you don't have enough zeny.";
@@ -152,7 +152,7 @@ S_EnchantArmor:
 			case 35:
 			case 36: .@addpart = 4750;break;
 			default:
-				specialeffect2 EF_PHARMACY_FAIL;
+				specialeffect(EF_PHARMACY_FAIL, AREA, playerattached());
 				mes "[Apprentice Craftsman]";
 				mes "Well that's too bad.";
 				mes "The requested equipment has failed to enchant.";
