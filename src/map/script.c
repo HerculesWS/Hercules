@@ -16132,6 +16132,26 @@ BUILDIN(charat) {
 }
 
 //=======================================================
+// isstr <argument>
+//
+// returns type:
+// 0 - int
+// 1 - string
+// 2 - other
+//-------------------------------------------------------
+BUILDIN(isstr)
+{
+	if (script_isinttype(st, 2)) {
+		script_pushint(st, 0);
+	} else if (script_isstringtype(st, 2)) {
+		script_pushint(st, 1);
+	} else {
+		script_pushint(st, 2);
+	}
+	return true;
+}
+
+//=======================================================
 // chr <int>
 //-------------------------------------------------------
 BUILDIN(chr)
@@ -23529,6 +23549,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getstrlen,"s"), //strlen [Valaris]
 		BUILDIN_DEF(charisalpha,"si"), //isalpha [Valaris]
 		BUILDIN_DEF(charat,"si"),
+		BUILDIN_DEF(isstr,"v"),
 		BUILDIN_DEF(chr,"i"),
 		BUILDIN_DEF(ord,"s"),
 		BUILDIN_DEF(setchar,"ssi"),
