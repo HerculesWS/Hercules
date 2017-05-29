@@ -365,6 +365,19 @@ int inter_storage_guild_storage_delete(int guild_id)
 	return 0;
 }
 
+/**
+ * Delete storage from memory for given account_id.
+ * @param  account_id     [in] account id
+ */
+void inter_storage_delete_account_storage(int account_id)
+{
+	struct storage_data *stor = (struct storage_data *)idb_get(inter_storage->account_storage, account_id);
+	if (stor == NULL)
+		return;
+	VECTOR_CLEAR(stor->item);
+	idb_remove(inter_storage->account_storage, account_id);
+}
+
 //---------------------------------------------------------
 // packet from map server
 
@@ -792,6 +805,7 @@ void inter_storage_defaults(void)
 	inter_storage->sql_init = inter_storage_sql_init;
 	inter_storage->sql_final = inter_storage_sql_final;
 	inter_storage->delete_ = inter_storage_delete;
+	inter_storage->delete_account_storage = inter_storage_delete_account_storage;
 	inter_storage->guild_storage_delete = inter_storage_guild_storage_delete;
 	inter_storage->parse_frommap = inter_storage_parse_frommap;
 }

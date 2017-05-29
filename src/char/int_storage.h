@@ -44,6 +44,7 @@ struct inter_storage_interface {
 	int (*sql_init) (void);
 	void (*sql_final) (void);
 	int (*delete_) (int account_id);
+	void (*delete_account_storage) (int account_id);
 	int (*guild_storage_delete) (int guild_id);
 	int (*parse_frommap) (int fd);
 };

@@ -296,7 +296,7 @@ void char_set_char_offline(int char_id, int account_id)
 			idb_remove(chr->char_db_,char_id);
 
 		if (stor) /* Remove inter-storage data. */
-			idb_remove(inter_storage->account_storage, account_id);
+			inter_storage->delete_account_storage(account_id);
 
 		if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `online`='0' WHERE `char_id`='%d' LIMIT 1", char_db, char_id) )
 			Sql_ShowDebug(inter->sql_handle);
