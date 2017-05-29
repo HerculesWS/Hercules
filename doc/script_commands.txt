@@ -8247,6 +8247,18 @@ else.
 
 ---------------------------------------
 
+*isstr(<argument>)
+
+This command checks if the given <argument> is a string (1),
+an integer (0) or something else (2).
+
+Example:
+
+    isstr(69); // outputs 0
+    isstr("69"); // outputs 1
+
+---------------------------------------
+
 *charisalpha("<string>", <position>)
 
 This function will return true if the character number Position in the given
