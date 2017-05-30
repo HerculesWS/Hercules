@@ -10619,6 +10619,7 @@ BUILDIN(monster)
 
 	struct map_session_data* sd;
 	int16 m;
+	int i;
 
 	if (script_hasdata(st, 8))
 	{
@@ -10670,6 +10671,10 @@ BUILDIN(monster)
 	}
 
 	mob_id = mob->once_spawn(sd, m, x, y, str, class_, amount, event, size, ai);
+	for (i = 0; i < amount; i++) {
+		if (mob_id)
+			mapreg->setreg(reference_uid(script->add_str("$@mobid"), i), mob_id);
+	}
 	script_pushint(st, mob_id);
 	return true;
 }
@@ -10727,6 +10732,7 @@ BUILDIN(areamonster) {
 
 	struct map_session_data* sd;
 	int16 m;
+	int i;
 
 	if (script_hasdata(st,10)) {
 		event = script_getstr(st, 10);
@@ -10767,6 +10773,10 @@ BUILDIN(areamonster) {
 	}
 
 	mob_id = mob->once_spawn_area(sd, m, x0, y0, x1, y1, str, class_, amount, event, size, ai);
+	for (i = 0; i < amount; i++) {
+		if (mob_id)
+			mapreg->setreg(reference_uid(script->add_str("$@mobid"), i), mob_id);
+	}
 	script_pushint(st, mob_id);
 
 	return true;
