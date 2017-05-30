@@ -220,6 +220,8 @@ int storage_additem(struct map_session_data* sd, struct item* item_data, int amo
 		*it = *item_data;
 	}
 
+	it->amount = amount;
+
 	sd->storage.aggregate++;
 
 	clif->storageitemadded(sd, it, i, amount);
