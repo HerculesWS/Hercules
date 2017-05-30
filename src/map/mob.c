@@ -486,18 +486,22 @@ struct mob_data *mob_once_spawn_sub(struct block_list *bl, int16 m, int16 x, int
 /*==========================================
  * Spawn a single mob on the specified coordinates.
  *------------------------------------------*/
-int mob_once_spawn(struct map_session_data* sd, int16 m, int16 x, int16 y, const char* mobname, int class_, int amount, const char* event, unsigned int size, unsigned int ai) {
+struct mob_spawn_list mob_once_spawn(struct map_session_data* sd, int16 m, int16 x, int16 y, const char* mobname, int class_, int amount, const char* event, unsigned int size, unsigned int ai) {
 	struct mob_data* md = NULL;
 	int count, lv;
 	bool no_guardian_data = false;
 
-	if( ai && ai&0x200 ) {
+	if (ai && ai&0x200) {
 		no_guardian_data = true;
 		ai &=~ 0x200;
 	}
 
+	VECTOR_CLEAR(mob->spawn_list);
+
 	if (m < 0 || amount <= 0)
-		return 0; // invalid input
+		return mob->spawn_list; // invalid input
+
+	VECTOR_ENSURE(mob->spawn_list, amount, 1);
 
 	lv = (sd) ? sd->status.base_level : 255;
 
@@ -529,21 +533,25 @@ int mob_once_spawn(struct map_session_data* sd, int16 m, int16 x, int16 y, const
 			//"I understand the "Aggressive" part, but the "Can Move" and "Can Attack" is just stupid" - Poki#3
 			sc_start4(NULL, &md->bl, SC_MODECHANGE, 100, 1, 0, MD_AGGRESSIVE|MD_CANATTACK|MD_CANMOVE|MD_ANGRY, 0, 60000);
 		}
+
+		VECTOR_PUSH(mob->spawn_list, md->bl.id);
 	}
 
-	return (md) ? md->bl.id : 0; // id of last spawned mob
+	return mob->spawn_list; // id of last spawned mob
 }
 
 /*==========================================
  * Spawn mobs in the specified area.
  *------------------------------------------*/
-int mob_once_spawn_area(struct map_session_data* sd, int16 m, int16 x0, int16 y0, int16 x1, int16 y1, const char* mobname, int class_, int amount, const char* event, unsigned int size, unsigned int ai)
+struct mob_spawn_list mob_once_spawn_area(struct map_session_data* sd, int16 m, int16 x0, int16 y0, int16 x1, int16 y1, const char* mobname, int class_, int amount, const char* event, unsigned int size, unsigned int ai)
 {
 	int i, max, id = 0;
 	int lx = -1, ly = -1;
 
+	VECTOR_CLEAR(mob->spawn_list_area);
+
 	if (m < 0 || amount <= 0)
-		return 0; // invalid input
+		return mob->spawn_list_area; // invalid input
 
 	// normalize x/y coordinates
 	if (x0 > x1)
@@ -572,7 +580,7 @@ int mob_once_spawn_area(struct map_session_data* sd, int16 m, int16 x0, int16 y0
 		if (j == max)
 		{// attempt to find an available cell failed
 			if (lx == -1 && ly == -1)
-				return 0; // total failure
+				return mob->spawn_list_area; // total failure
 
 			// fallback to last good x/y pair
 			x = lx;
@@ -583,10 +591,11 @@ int mob_once_spawn_area(struct map_session_data* sd, int16 m, int16 x0, int16 y0
 		lx = x;
 		ly = y;
 
-		id = mob->once_spawn(sd, m, x, y, mobname, class_, 1, event, size, ai);
+		VECTOR_ENSURE(mob->spawn_list_area, 1, 1);
+		VECTOR_PUSH(mob->spawn_list_area, VECTOR_FIRST(mob->once_spawn(sd, m, x, y, mobname, class_, 1, event, size, ai)));
 	}
 
-	return id; // id of last spawned mob
+	return mob->spawn_list_area;
 }
 
 /**
@@ -5235,6 +5244,8 @@ int do_final_mob(void)
 	}
 	ers_destroy(item_drop_ers);
 	ers_destroy(item_drop_list_ers);
+	VECTOR_CLEAR(mob->spawn_list);
+	VECTOR_CLEAR(mob->spawn_list_area);
 	return 0;
 }
 
@@ -5267,6 +5278,8 @@ void mob_defaults(void) {
 
 	mob = &mob_s;
 
+	VECTOR_INIT(mob->spawn_list);
+	VECTOR_INIT(mob->spawn_list_area);
 	memset(mob->db_data, 0, sizeof(mob->db_data));
 	mob->dummy = NULL;
 	memset(mob->chat_db, 0, sizeof(mob->chat_db));

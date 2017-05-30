@@ -10615,29 +10615,26 @@ BUILDIN(monster)
 	const char *event = "";
 	unsigned int size = SZ_SMALL;
 	unsigned int ai   = AI_NONE;
-	int mob_id;
+	int i;
 
+	struct mob_spawn_list list;
 	struct map_session_data* sd;
 	int16 m;
 
-	if (script_hasdata(st, 8))
-	{
+	if (script_hasdata(st, 8)) {
 		event = script_getstr(st, 8);
 		script->check_event(st, event);
 	}
 
-	if (script_hasdata(st, 9))
-	{
+	if (script_hasdata(st, 9)) {
 		size = script_getnum(st, 9);
-		if (size > 3)
-		{
+		if (size > 3) {
 			ShowWarning("buildin_monster: Attempted to spawn non-existing size %u for monster class %d\n", size, class_);
 			return false;
 		}
 	}
 
-	if (script_hasdata(st, 10))
-	{
+	if (script_hasdata(st, 10)) {
 		ai = script_getnum(st, 10);
 		if (ai > AI_FLORA) {
 			ShowWarning("buildin_monster: Attempted to spawn non-existing ai %u for monster class %d\n", ai, class_);
@@ -10645,8 +10642,7 @@ BUILDIN(monster)
 		}
 	}
 
-	if (class_ >= 0 && !mob->db_checkid(class_))
-	{
+	if (class_ >= 0 && !mob->db_checkid(class_)) {
 		ShowWarning("buildin_monster: Attempted to spawn non-existing monster class %d\n", class_);
 		return false;
 	}
@@ -10669,8 +10665,16 @@ BUILDIN(monster)
 		}
 	}
 
-	mob_id = mob->once_spawn(sd, m, x, y, str, class_, amount, event, size, ai);
-	script_pushint(st, mob_id);
+	list = mob->once_spawn(sd, m, x, y, str, class_, amount, event, size, ai);
+	for (i = 0; i < VECTOR_LENGTH(list); i++) {
+		mapreg->setreg(reference_uid(script->add_str("$@mobid"), i), VECTOR_INDEX(list, i));
+	}
+	mapreg->setreg(script->add_str("$@mobid_count"), i);
+
+	if (i > 0)
+		script_pushint(st, VECTOR_LAST(list));
+	else
+		script_pushint(st, 0);
 	return true;
 }
 /*==========================================
@@ -10723,8 +10727,9 @@ BUILDIN(areamonster) {
 	const char *event = "";
 	unsigned int size = SZ_SMALL;
 	unsigned int ai   = AI_NONE;
-	int mob_id;
+	int i;
 
+	struct mob_spawn_list list;
 	struct map_session_data* sd;
 	int16 m;
 
@@ -10766,8 +10771,16 @@ BUILDIN(areamonster) {
 		}
 	}
 
-	mob_id = mob->once_spawn_area(sd, m, x0, y0, x1, y1, str, class_, amount, event, size, ai);
-	script_pushint(st, mob_id);
+	list = mob->once_spawn_area(sd, m, x0, y0, x1, y1, str, class_, amount, event, size, ai);
+	for (i = 0; i < VECTOR_LENGTH(list); i++) {
+		mapreg->setreg(reference_uid(script->add_str("$@mobid"), i), VECTOR_INDEX(list, i));
+	}
+	mapreg->setreg(script->add_str("$@mobid_count"), i);
+
+	if (i > 0)
+		script_pushint(st, VECTOR_LAST(list));
+	else
+		script_pushint(st, 0);
 
 	return true;
 }

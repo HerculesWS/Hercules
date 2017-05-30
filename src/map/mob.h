@@ -408,6 +408,7 @@ struct item_drop_list {
 	struct item_drop* item;            // linked list of drops
 };
 
+VECTOR_STRUCT_DECL(mob_spawn_list, int);
 
 #define mob_stop_walking(md, type) (unit->stop_walking(&(md)->bl, (type)))
 #define mob_stop_attack(md)        (unit->stop_attack(&(md)->bl))
@@ -426,6 +427,9 @@ struct mob_interface {
 	int manuk[8];
 	int splendide[5];
 	int mora[5];
+
+	struct mob_spawn_list spawn_list;
+	struct mob_spawn_list spawn_list_area;
 	/* */
 	int (*init) (bool mimimal);
 	int (*final) (void);
@@ -449,8 +453,8 @@ struct mob_interface {
 	int (*get_random_id) (int type, int flag, int lv);
 	bool (*ksprotected) (struct block_list *src, struct block_list *target);
 	struct mob_data* (*once_spawn_sub) (struct block_list *bl, int16 m, int16 x, int16 y, const char *mobname, int class_, const char *event, unsigned int size, unsigned int ai);
-	int (*once_spawn) (struct map_session_data *sd, int16 m, int16 x, int16 y, const char *mobname, int class_, int amount, const char *event, unsigned int size, unsigned int ai);
-	int (*once_spawn_area) (struct map_session_data *sd, int16 m, int16 x0, int16 y0, int16 x1, int16 y1, const char *mobname, int class_, int amount, const char *event, unsigned int size, unsigned int ai);
+	struct mob_spawn_list (*once_spawn) (struct map_session_data *sd, int16 m, int16 x, int16 y, const char *mobname, int class_, int amount, const char *event, unsigned int size, unsigned int ai);
+	struct mob_spawn_list (*once_spawn_area) (struct map_session_data *sd, int16 m, int16 x0, int16 y0, int16 x1, int16 y1, const char *mobname, int class_, int amount, const char *event, unsigned int size, unsigned int ai);
 	int (*spawn_guardian) (const char *mapname, short x, short y, const char *mobname, int class_, const char *event, int guardian, bool has_index);
 	int (*spawn_bg) (const char *mapname, short x, short y, const char *mobname, int class_, const char *event, unsigned int bg_id);
 	int (*can_reach) (struct mob_data *md, struct block_list *bl, int range, int state);
