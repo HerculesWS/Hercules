@@ -200,6 +200,8 @@ int storage_additem(struct map_session_data* sd, struct item* item_data, int amo
 
 				clif->storageitemadded(sd, it, i, amount);
 
+				sd->storage.save = true; // set a save flag.
+				
 				return 0;
 			}
 		}
