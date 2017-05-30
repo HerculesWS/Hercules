@@ -44,7 +44,7 @@ struct inter_storage_interface *inter_storage;
 int inter_storage_tosql(int account_id, struct storage_data *cp, const struct storage_data *p)
 {
 	int i = 0, j = 0;
-	bool updated_p[MAX_STORAGE] = { false };
+	bool matched_p[MAX_STORAGE] = { false };
 	int delete[MAX_STORAGE] = { 0 };
 	int total_deletes = 0, total_updates = 0, total_inserts = 0;
 	int total_changes = 0;
@@ -55,7 +55,6 @@ int inter_storage_tosql(int account_id, struct storage_data *cp, const struct st
 
 	StrBuf->Init(&buf);
 
-	
 	if (VECTOR_LENGTH(cp->item) > 0) {
 		/**
 		 * Compare and update items, if any.
@@ -65,7 +64,7 @@ int inter_storage_tosql(int account_id, struct storage_data *cp, const struct st
 			struct item *p_it = NULL;
 
 			ARR_FIND(0, VECTOR_LENGTH(p->item), j,
-					 updated_p[j] != true
+					 matched_p[j] != true
 					 && (p_it = &VECTOR_INDEX(p->item, j)) != NULL
 					 && cp_it->nameid == p_it->nameid
 					 && cp_it->unique_id == p_it->unique_id
@@ -93,8 +92,8 @@ int inter_storage_tosql(int account_id, struct storage_data *cp, const struct st
 					StrBuf->Printf(&buf, ", '%u', '%d', '%"PRIu64"')%s", p_it->expire_time, p_it->bound, p_it->unique_id, total_updates > 0 ? ", " : "");
 
 					total_updates++;
-					updated_p[j] = true;
 				}
+				matched_p[j] = true;
 			} else { // Does not exist, so set for deletion.
 				delete[total_deletes++] = cp_it->id;
 			}
@@ -125,7 +124,7 @@ int inter_storage_tosql(int account_id, struct storage_data *cp, const struct st
 	for (i = 0; i < VECTOR_LENGTH(p->item); i++) {
 		struct item *p_it = &VECTOR_INDEX(p->item, i);
 
-		if (p_it->id != 0)
+		if (matched_p[i])
 			continue; // Item is not a new entry, so lets continue.
 
 		// Store the remaining items.
@@ -140,8 +139,8 @@ int inter_storage_tosql(int account_id, struct storage_data *cp, const struct st
 		}
 
 		StrBuf->Printf(&buf, "%s('%d', '%d', '%d', '%u', '%d', '%d', '%d', '%u', '%d', '%"PRIu64"'",
-				total_inserts > 0 ? ", " : "", account_id, p_it->nameid, p_it->amount, p_it->equip, p_it->identify, p_it->refine,
-				p_it->attribute, p_it->expire_time, p_it->bound, p_it->unique_id);
+					   total_inserts > 0 ? ", " : "", account_id, p_it->nameid, p_it->amount, p_it->equip, p_it->identify, p_it->refine,
+					   p_it->attribute, p_it->expire_time, p_it->bound, p_it->unique_id);
 		for (j = 0; j < MAX_SLOTS; ++j)
 			StrBuf->Printf(&buf, ", '%d'", p_it->card[j]);
 		for (j = 0; j < MAX_ITEM_OPTIONS; ++j)
