@@ -353,6 +353,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(inter_storage->sql_init, HP_inter_storage_sql_init) },
 	{ HP_POP(inter_storage->sql_final, HP_inter_storage_sql_final) },
 	{ HP_POP(inter_storage->delete_, HP_inter_storage_delete_) },
+	{ HP_POP(inter_storage->delete_account_storage, HP_inter_storage_delete_account_storage) },
 	{ HP_POP(inter_storage->guild_storage_delete, HP_inter_storage_guild_storage_delete) },
 	{ HP_POP(inter_storage->parse_frommap, HP_inter_storage_parse_frommap) },
 /* libconfig_interface */

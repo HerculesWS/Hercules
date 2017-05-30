@@ -8286,6 +8286,32 @@ int HP_inter_storage_delete_(int account_id) {
 	}
 	return retVal___;
 }
+void HP_inter_storage_delete_account_storage(int account_id) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_inter_storage_delete_account_storage_pre > 0) {
+		void (*preHookFunc) (int *account_id);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_storage_delete_account_storage_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_inter_storage_delete_account_storage_pre[hIndex].func;
+			preHookFunc(&account_id);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.inter_storage.delete_account_storage(account_id);
+	}
+	if (HPMHooks.count.HP_inter_storage_delete_account_storage_post > 0) {
+		void (*postHookFunc) (int account_id);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_storage_delete_account_storage_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_inter_storage_delete_account_storage_post[hIndex].func;
+			postHookFunc(account_id);
+		}
+	}
+	return;
+}
 int HP_inter_storage_guild_storage_delete(int guild_id) {
 	int hIndex = 0;
 	int retVal___ = 0;

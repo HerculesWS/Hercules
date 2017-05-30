@@ -642,6 +642,8 @@ struct {
 	struct HPMHookPoint *HP_inter_storage_sql_final_post;
 	struct HPMHookPoint *HP_inter_storage_delete__pre;
 	struct HPMHookPoint *HP_inter_storage_delete__post;
+	struct HPMHookPoint *HP_inter_storage_delete_account_storage_pre;
+	struct HPMHookPoint *HP_inter_storage_delete_account_storage_post;
 	struct HPMHookPoint *HP_inter_storage_guild_storage_delete_pre;
 	struct HPMHookPoint *HP_inter_storage_guild_storage_delete_post;
 	struct HPMHookPoint *HP_inter_storage_parse_frommap_pre;
@@ -2131,6 +2133,8 @@ struct {
 	int HP_inter_storage_sql_final_post;
 	int HP_inter_storage_delete__pre;
 	int HP_inter_storage_delete__post;
+	int HP_inter_storage_delete_account_storage_pre;
+	int HP_inter_storage_delete_account_storage_post;
 	int HP_inter_storage_guild_storage_delete_pre;
 	int HP_inter_storage_guild_storage_delete_post;
 	int HP_inter_storage_parse_frommap_pre;

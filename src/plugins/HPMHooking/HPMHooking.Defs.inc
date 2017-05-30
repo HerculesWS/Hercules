@@ -2980,6 +2980,8 @@ typedef void (*HPMHOOK_pre_inter_storage_sql_final) (void);
 typedef void (*HPMHOOK_post_inter_storage_sql_final) (void);
 typedef int (*HPMHOOK_pre_inter_storage_delete_) (int *account_id);
 typedef int (*HPMHOOK_post_inter_storage_delete_) (int retVal___, int account_id);
+typedef void (*HPMHOOK_pre_inter_storage_delete_account_storage) (int *account_id);
+typedef void (*HPMHOOK_post_inter_storage_delete_account_storage) (int account_id);
 typedef int (*HPMHOOK_pre_inter_storage_guild_storage_delete) (int *guild_id);
 typedef int (*HPMHOOK_post_inter_storage_guild_storage_delete) (int retVal___, int guild_id);
 typedef int (*HPMHOOK_pre_inter_storage_parse_frommap) (int *fd);
