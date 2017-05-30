@@ -2750,7 +2750,9 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 	struct map_session_data *s_sd, *t_sd;
 	struct status_change *s_sc, *sc;
 	struct status_change_entry *sce;
-	int div_, flag;
+	struct map_session_data *sd = BL_UCAST(BL_PC, src);
+	struct status_data *sstatus = status->get_status_data(src);
+	int div_, flag,sp,sp1;
 
 	nullpo_ret(bl);
 	nullpo_ret(d);
@@ -2759,6 +2761,17 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 	t_sd = BL_CAST(BL_PC, bl);
 	div_ = d->div_;
 	flag = d->flag;
+	if(sstatus->sp == 0){unit->stop_attack(src);
+	clif->specialeffect(src, 626, AREA);
+	return 0;}
+
+
+			if(sstatus->sp > 0){
+			sp = sstatus->sp;
+			sp1 = sstatus->sp - 1;
+			status->set_sp(src, sp1, 3);} else { unit->stop_attack(src);
+			clif->specialeffect(src, 626, AREA);
+			return 0;}
 
 	// need check src for null pointer?
 

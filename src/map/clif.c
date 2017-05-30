@@ -17688,6 +17688,44 @@ void clif_snap( struct block_list *bl, short x, short y ) {
 #endif
 }
 
+void clif_sao_hp_bar( struct mob_data* md, struct map_session_data *sd ){
+
+		int	MAX_HP, CUR_HP, PER_HP, fd, i;
+		nullpo_retv(md);
+		nullpo_retv(sd);
+		MAX_HP = md->status.max_hp;
+		CUR_HP = md->status.hp;
+		PER_HP = (CUR_HP*100)/MAX_HP;
+		fd = sd->fd;
+		// m = sd->status.show_equip;
+
+        for (i = 0; i < sd->avail_quests; i++) {
+		//if(sd->quest_log[i].quest_id == 1020){
+				if( PER_HP <= 0 )
+					clif->specialeffect_single(&md->bl, 638, sd->fd);
+				else if( PER_HP < 10 )
+					clif->specialeffect_single(&md->bl, 639, sd->fd);
+				else if( PER_HP < 20 )
+					clif->specialeffect_single(&md->bl, 640, sd->fd);
+				else if( PER_HP < 30 )
+					clif->specialeffect_single(&md->bl, 641, sd->fd);
+				else if( PER_HP < 40 )
+					clif->specialeffect_single(&md->bl, 642, sd->fd);
+				else if( PER_HP < 50 )
+					clif->specialeffect_single(&md->bl, 739, sd->fd);
+				else if( PER_HP < 60 )
+					clif->specialeffect_single(&md->bl, 740, sd->fd);
+				else if( PER_HP < 70 )
+					clif->specialeffect_single(&md->bl, 741, sd->fd);
+				else if( PER_HP < 80 )
+					clif->specialeffect_single(&md->bl, 742, sd->fd);
+				else if( PER_HP < 100 )
+					clif->specialeffect_single(&md->bl, 743, sd->fd);
+		//}
+		 }
+		 
+}
+
 void clif_monster_hp_bar(struct mob_data *md, struct map_session_data *sd)
 {
 #if PACKETVER >= 20120228
@@ -19552,6 +19590,7 @@ void clif_defaults(void) {
 	clif->mvp_noitem = clif_mvp_noitem;
 	clif->changed_dir = clif_changed_dir;
 	clif->charnameack = clif_charnameack;
+	clif->sao_hp_bar = clif_sao_hp_bar;
 	clif->monster_hp_bar = clif_monster_hp_bar;
 	clif->hpmeter = clif_hpmeter;
 	clif->hpmeter_single = clif_hpmeter_single;

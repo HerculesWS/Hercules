@@ -4696,6 +4696,7 @@ void npc_read_event_script(void)
 		{"Die Event",script->config.die_event_name},
 		{"Kill PC Event",script->config.kill_pc_event_name},
 		{"Kill NPC Event",script->config.kill_mob_event_name},
+		{"Stat Calc Event",script->config.stat_calc_event_name},
 	};
 
 	for (i = 0; i < NPCE_MAX; i++) {

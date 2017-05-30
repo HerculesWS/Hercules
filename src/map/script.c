@@ -5878,6 +5878,30 @@ BUILDIN(mesf)
 	return true;
 }
 
+
+BUILDIN(autonext)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+	int timeout;
+	if (sd == NULL)
+		return true;
+#ifdef SECURE_NPCTIMEOUT
+	sd->npc_idle_type = NPCT_WAIT;
+#endif
+	timeout = script_getnum(st,2);	
+	if(st->sleep.tick == 0)	{
+	st->state = RERUNLINE;
+	st->sleep.tick = timeout;	}	
+	else	
+	{// sleep time is over	
+	clif->scriptclear(sd, st->oid);
+	st->state = RUN;		
+	st->sleep.tick = 0;	}
+	//clif->scriptnext(sd, st->oid);	
+	return true;
+}
+
+
 /// Displays the button 'next' in the npc dialog.
 /// The dialog text is cleared and the script continues when the button is pressed.
 ///
@@ -10435,6 +10459,16 @@ BUILDIN(openstorage)
 	storage->open(sd);
 
 	script_pushint(st, 1); // success flag.
+	return true;
+}
+
+BUILDIN(closestorage)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+	if (sd == NULL)
+		return true;
+
+	storage->close(sd);
 	return true;
 }
 
@@ -23250,6 +23284,7 @@ void script_parse_builtin(void) {
 		// NPC interaction
 		BUILDIN_DEF(mes,"s"),
 		BUILDIN_DEF(mesf,"s*"),
+		BUILDIN_DEF(autonext,"i"),
 		BUILDIN_DEF(next,""),
 		BUILDIN_DEF(close,""),
 		BUILDIN_DEF(close2,""),
@@ -23362,6 +23397,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(gettime,"i"),
 		BUILDIN_DEF(gettimestr,"si"),
 		BUILDIN_DEF(openstorage,""),
+		BUILDIN_DEF(closestorage,""),
 		BUILDIN_DEF(guildopenstorage,""),
 		BUILDIN_DEF(itemskill,"vi?"),
 		BUILDIN_DEF(produce,"i"),
@@ -24288,6 +24324,7 @@ void script_defaults(void)
 	script->config.loadmap_event_name = "OnPCLoadMapEvent";
 	script->config.baselvup_event_name = "OnPCBaseLvUpEvent";
 	script->config.joblvup_event_name = "OnPCJobLvUpEvent";
+	script->config.stat_calc_event_name = "OnPCStatCalcEvent";//stat_calc_event_name
 	script->config.ontouch_name = "OnTouch_";  //ontouch_name (runs on first visible char to enter area, picks another char if the first char leaves)
 	script->config.ontouch2_name = "OnTouch";  //ontouch2_name (run whenever a char walks into the OnTouch area)
 	script->config.onuntouch_name = "OnUnTouch";  //onuntouch_name (run whenever a char walks from the OnTouch area)

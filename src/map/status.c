@@ -2424,6 +2424,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 	pc->delautobonus(sd,sd->autobonus,ARRAYLENGTH(sd->autobonus),true);
 	pc->delautobonus(sd,sd->autobonus2,ARRAYLENGTH(sd->autobonus2),true);
 	pc->delautobonus(sd,sd->autobonus3,ARRAYLENGTH(sd->autobonus3),true);
+	npc->script_event(sd, NPCE_STATCALC);
 
 	// Parse equipment.
 	for(i=0;i<EQI_MAX;i++) {

@@ -1,0 +1,753 @@
+//===== EinherjarRO Scripts ================================== 
+//= WeaponMasteries
+//===== By: ================================================== 
+//= Stolao
+//===== Current Version: ===================================== 
+//= 1.31
+//===== Compatible With: ===================================== 
+//= rAthena SVN
+//===== Description: ========================================= 
+//= As you train using a particulat weapon type you gain
+//= passive bonuses depending on how much you have trained in
+//= that type. There are five types Onslaught, Swiftness,
+//= Safeguard, Ranged and Mystical
+//===== Comments: ============================================
+//= Masteries can go up to level 999 with curve of 2100
+//===== Additional Comments: =================================
+//= 1.00 Origioanal Make
+//= 1.01 +33% Mastery >> Atk
+//= 1.02 +50% Mastery >> Matk
+//= 1.03 Rename Masteries
+//= 1.04 Redistibute Weapons into new masteries
+//= 1.05 Wiped Mastery Bonuses
+//= 1.06 Added Starting Bonuses
+//= 1.07 Made OnPCStatCalcEvent for Mastery System
+//= 1.08 Added mastery Bonueses for Lvl 1, 2, 4, 8, 16, 32 ,64, and 128
+//= 1.09 Changed Mysticals MaxSPRate for MaxSp
+//= 1.0A Added @wi (see bindatcmd.txt)
+//= 1.0B Added @wlvl (see bindatcmd.txt)
+//= 1.0C Removed dependency from bindatcmd.txt
+//= 1.0D Rebalanced a few formulas for differant masteries
+//= 1.0E Combined with old Sect System
+//= 1.0F Added Sect give +10 total on varried stats
+//= 1.10 Added 10% Resistance to sects Element
+//= 1.11 Added 10% more damage with sects element
+//= 1.12 Changed Sect Stats from +10 -> +3
+//= 1.13 Changed Wm Stat bonus from M/9 -> M/32
+//= 1.14 Removed Wm Booster item
+//= 1.15 Lowered Wm Max Level to 99
+//= 1.16 Rewrote Onslaught Formulas for lower effect
+//= 1.17 Rewrote Switfness Formulas for lower effect
+//= 1.18 Rewrote Safegaurd Formulas for lower effect
+//= 1.19 Rewrote Ranged Formulas for lower effect
+//= 1.1A Rewrote Mystical Formulas for lower effect
+//= 1.1B Added Exprates = job_exp_rate
+//= 1.1C Changed Exp Curve to reflect new Exp Rates
+//= 1.1D Added Debugmes on Overflow
+//= 1.1E Added Increased Exp from SC_JEXPBOOST,2
+//= 1.1F Fixed Spacing/ Readability in OnInit
+//= 1.20 Fixed Typos
+//= 1.21 Fixed Bug with No gear On
+//= 1.22 Fixed Missing )
+//= 1.23 Convert to new formatting to allow both hand to recive buffs
+//= 1.24 Added a .Left Config
+//= 1.25 Added a Small boost to secondary stat based off prime stat
+//= 1.26 Added a Check for Item in Hand + Conf 
+//= 1.27 Fixed mssing ""
+//= 1.28 Fixed missing ')'
+//= 1.29 Added a missing conf setting
+//= 1.2A Fixed missing descriptions
+//= 1.2B Increased .expcurve from 2500 -> 5000 due to Jobrate
+//= 1.2C Increased .wLvBonus from 1 -> 150 due to Jobrate
+//= 1.2D Replace 10 with .FirstLevel for custmoizability
+//= 1.2E Increase .FirstLevel from 10 -> 2000 due to Jobrate
+//= 1.2F Moved Level 0 Effects to top for consistant reading
+//= 1.30 Fixed a bug with @wlvl
+//= 1.31 Fixed bug where you would recive bonus from no gear
+//===== Contact Ifo: =========================================
+//= [Stolao] 
+//= Email: Taingram11@gmail.com
+//============================================================
+//
+// Str - Onslaught:	2HSword,1HAxe,2HAxe,1HMace,2HMace(unused),Knuckle
+// Agi - Swiftness:	Dagger,Fuuma Shuriken,Katar
+// Vit - Safegaurd:	Unarmmed,1HSword,1HSpear,2HSpear,Specialty
+// Dex - Ranged:	Bow,Instrument,Whip,Revolver,Rifle,Gatling Gun,Shotgun,Grenade Launcher
+// Int - Mystical:	Rod,Book,2HStaff,Scythe
+
+function	script	Onslaught_M	{
+	bonus bStr,1+getarg(0,0)/32;
+	bonus bAtkrate,1 + getarg(0,0) / 7 + ((1 + getarg(0,0) / 7) *readparam(bStr) / 100);	
+	if(getarg(0,0) >= 1)	bonus bCritical,1+getarg(0,0)/20;
+	if(getarg(0,0) >= 2)	bonus bAtk,1+getarg(0,0)/4;
+	if(getarg(0,0) >= 4)	bonus bAtk2,1+getarg(0,0)/4;
+	if(getarg(0,0) >= 8)	bonus bPerfectHitAddRate,1+getarg(0,0)/21;
+	if(getarg(0,0) >= 16)	bonus bBaseAtk,getarg(0,0)/4+1;
+	if(getarg(0,0) >= 32)	bonus bCritAtkRate,getarg(0,0)/4+1;
+	if(getarg(0,0) >= 64)	bonus bAspdRate,getarg(0,0)/22 + 1;
+	if(getarg(0,0) >= 128)	bonus bSplashAddRange,1;
+return;
+}
+
+function	script	Swiftness_M	{
+	bonus bAgi,1+getarg(0,0)/32;
+	bonus bAspdRate,1+getarg(0,0)/7+((1+getarg(0,0)/7)*readparam(bAgi)/100);
+	if(getarg(0,0) >= 1)	bonus bSpeedAddRate,1+getarg(0,0)/9;skill 142,getarg(0,0);
+	if(getarg(0,0) >= 2)	bonus bFlee,getarg(0,0)/3;
+	if(getarg(0,0) >= 4)	bonus bDoubleAddRate,1+getarg(0,0)/9;
+	if(getarg(0,0) >= 8)	bonus bFlee2,1+getarg(0,0)/33;
+	if(getarg(0,0) >= 16)	bonus bPerfectHitAddRate,1+getarg(0,0)/11;
+	if(getarg(0,0) >= 32)	bonus bCritAtkRate,getarg(0,0)/9-1;
+	if(getarg(0,0) >= 64)	bonus bCritical,1+getarg(0,0)/10;
+	if(getarg(0,0) >= 128)	bonus2 bHPDrainRate,1+getarg(0,0),1+getarg(0,0)/24;
+return;
+}
+
+function	script	Safegaurd_M	{
+	bonus bVit,1+getarg(0,0)/32;
+	bonus bMaxHP,getarg(0,0)*5+5+((getarg(0,0)*5+5)*readparam(bVit)/100);
+	if(getarg(0,0) >= 1)	bonus bHPrecovRate,1+getarg(0,0)/2;
+	if(getarg(0,0) >= 2)	bonus bDef,1+getarg(0,0)/20;
+	if(getarg(0,0) >= 4)	bonus bMdef,1+getarg(0,0)/24;
+	if(getarg(0,0) >= 8)	bonus bMaxHPrate,1+getarg(0,0)/11;
+	if(getarg(0,0) >= 16)	bonus bNearAtkDef,getarg(0,0)/20+1;
+	if(getarg(0,0) >= 32)	bonus bLongAtkDef,getarg(0,0)/21+1;
+	if(getarg(0,0) >= 64)	bonus bMagicAtkDef,getarg(0,0)/22+1;
+	if(getarg(0,0) >= 128)	bonus bCriticalDef,getarg(0,0)/23+1;
+return;
+}
+
+function	script	Ranged_M	{
+	bonus bDex,1+getarg(0,0)/32;
+	bonus bAtkrate,1+getarg(0,0)/7+((1+getarg(0,0)/7)*readparam(bDex)/100);
+	if(getarg(0,0) >= 1)	bonus bBaseAtk,getarg(0,0)/3+2;
+	if(getarg(0,0) >= 2)	bonus bCritical,1+getarg(0,0)/21;
+	if(getarg(0,0) >= 4)	bonus bFlee,1+getarg(0,0)/11;
+	if(getarg(0,0) >= 8)	bonus bAspd,1+getarg(0,0)/11;
+	if(getarg(0,0) >= 16)	bonus bHit,1+getarg(0,0)/5;
+	if(getarg(0,0) >= 32)	bonus bLongAtkRate,getarg(0,0)/9-1;
+	if(getarg(0,0) >= 64)	bonus bCritAtkRate,4+getarg(0,0)/9;
+	if(getarg(0,0) >= 128)	bonus bAtkRange,1+getarg(0,0)/99;
+return;
+}
+
+function	script	Mystical_M	{
+	bonus bInt,1+getarg(0,0)/32;
+	bonus bMatk,1+getarg(0,0)+((1+getarg(0,0))*readparam(bInt)/100);
+	if(getarg(0,0) >= 1)	bonus bSPrecovRate,1+getarg(0,0)/2;
+	if(getarg(0,0) >= 2)	bonus bMaxSP,getarg(0,0)*2+2;
+	if(getarg(0,0) >= 4)	bonus bCastrate,-1-getarg(0,0)/20;
+	if(getarg(0,0) >= 8)	bonus bUseSPrate,-1-getarg(0,0)/21;
+	if(getarg(0,0) >= 16)	bonus bDelayrate,-1-getarg(0,0)/22;
+	if(getarg(0,0) >= 32)	bonus bHealPower,1+getarg(0,0)/2;
+	if(getarg(0,0) >= 64)	bonus bMAtkrate,1+getarg(0,0)/7;
+	if(getarg(0,0) >= 128)	bonus bNoCastCancel,1;
+	
+return;
+}
+
+prontera,5,5,5	script	PCSTATCALC	111,{
+end;
+OnWeaponInfo:
+	set .@M$,.@atcmd_parameters$[0];
+	if((.@M$ == "")){
+		switch(getiteminfo(getequipid(EQI_HAND_R),11)){
+			case 3:  	case 6: 	case 7: 	case 8:	
+			case 9:		case 12:					set .@M$,"Onslaught";	break;
+			case 1: 	case 16:	case 22:			set .@M$,"Swiftness";	break;
+			case 2: 	case 4: 	case 5:		default:	set .@M$,"Safegaurd";	break;
+			case 11:	case 13:	case 14:	case 17:
+			case 18:	case 19:	case 20:	case 21:	set .@M$,"Ranged";	break;
+			case 10:	case 15:	case 23:	case 24:	set .@M$,"Mystical";	break;
+		}
+	}
+	if(.@M$ == "Onslaught" || .@M$ == "onslaught" || .@M$ == "OnSlaught") set .@i,1;
+	if(.@M$ == "Swiftness" || .@M$ == "swiftness") set .@i,2;
+	if(.@M$ == "Safegaurd" || .@M$ == "SafeGaurd" || .@M$ == "safegaurd") set .@i,3;
+	if(.@M$ == "Ranged"    || .@M$ == "ranged"   ) set .@i,4;
+	if(.@M$ == "Mystical"  || .@M$ == "mystical" ) set .@i,5;
+	set .@X,atoi(.@atcmd_parameters$[1]);
+	if(!.@X) set .@X,getd(""+.@M$+"Master");
+	switch(.@i){
+		case 1:
+			dispbottom "Onslaught Lv: "+.@X+" [ "+OnslaughtExp+" / "+((OnslaughtMaster*OnslaughtMaster*.expcurve)+.FirstLevel+OnslaughtMaster*100)+"xp ]";
+			dispbottom "Str +"+(1+.@X/32)+"";
+			dispbottom "Atk +"+(1+.@X/9)+"%";
+			if(.@X >= 1)dispbottom "Critical Chance +"+(1+.@X/20)+"";
+			if(.@X >= 2)dispbottom "Atk +"+(1+.@X/9)+"";
+			if(.@X >= 4)dispbottom "Weapon Atk +"+(1+.@X/11)+"";
+			if(.@X >= 8)dispbottom "Perfect Hit +"+(1+.@X/21)+"";
+			if(.@X >= 16)dispbottom "Base Atk +"+(.@X/4+1)+"";
+			if(.@X >= 32)dispbottom "Crit Damage +"+(.@X/8+3)+"%";
+			if(.@X >= 64)dispbottom "Aspd +"+.@X/16+"%";
+			if(.@X >= 128)dispbottom "Splash attack radius +1";
+		break;
+		case 2:	
+			dispbottom "Swiftness Lv: "+.@X+" [ "+SwiftnessExp+" / "+((SwiftnessMaster*SwiftnessMaster*.expcurve)+.FirstLevel+SwiftnessMaster*100)+"xp ]";
+			dispbottom "Agi +"+(1+.@X/32)+"";
+			dispbottom "Aspd +"+(1+.@X/9)+"%";
+			if(.@X >= 1)dispbottom "Moving speed +"+(1+.@X/9)+"%";
+			if(.@X >= 2)dispbottom "Flee +"+(.@X/2)+"";
+			if(.@X >= 4)dispbottom "Double Attack Chance +"+(1+.@X/9)+"%";
+			if(.@X >= 8)dispbottom "Perfect Dodge +"+(1+.@X/33)+"";
+			if(.@X >= 16)dispbottom "On-target impact chance +"+(1+.@X/11)+"%";
+			if(.@X >= 32)dispbottom "Crit Damage +"+(.@X/9-1)+"%";
+			if(.@X >= 64)dispbottom "Critical Chance +"+(1+.@X/10)+"";
+			if(.@X >= 128)dispbottom ""+(1+SwiftnessMaster)/10+"."+((1+SwiftnessMaster)%10)+"% chance of healing for "+(.@X/24+1)+"% of damage dealt with each normal attack";
+		break;
+		case 3:
+			dispbottom "Safegaurd Lv: "+.@X+" [ "+SafegaurdExp+" / "+((SafegaurdMaster*SafegaurdMaster*.expcurve)+.FirstLevel+SafegaurdMaster*100)+"xp ]";
+			dispbottom "Vit +"+(1+.@X/32)+"";
+			dispbottom "Max HP +"+(.@X*5+5)+"";
+			if(.@X >= 1)dispbottom "Natural HP recovery ratio +"+(1+.@X/2)+"%";
+			if(.@X >= 2)dispbottom "Def +"+(1+.@X/20)+"";
+			if(.@X >= 4)dispbottom "Mdef +"+(1+.@X/24)+"";
+			if(.@X >= 8)dispbottom "Max HP +"+(1+.@X/9)+"%";
+			if(.@X >= 16)dispbottom "Adds "+(.@X/20+1)+" damage reduction against Critical Hits";
+			if(.@X >= 32)dispbottom "Adds "+(.@X/21+1)+" damage reduction against melee physical attacks";
+			if(.@X >= 64)dispbottom "Adds "+(.@X/22+1)+" damage reduction against ranged physical";
+			if(.@X >= 128)dispbottom "Adds "+(.@X/23+1)+" damage reduction against magical attacks";
+		break;
+		case 4:
+			dispbottom "Ranged Lv: "+.@X+" [ "+RangedExp+" / "+((RangedMaster*RangedMaster*2500)+10+RangedMaster)+"xp ]";
+			dispbottom "Dex +"+(1+.@X/32)+"";
+			dispbottom "Atk +"+(1+.@X/9)+"%";
+			if(.@X >= 1)dispbottom "Moving speed +"+(1+.@X/20)+"%";
+			if(.@X >= 2)dispbottom "Critical +"+(1+.@X/21)+"";
+			if(.@X >= 4)dispbottom "Flee +"+(1+.@X/2)+"";
+			if(.@X >= 8)dispbottom "Aspd +"+(.@X/11)+"";
+			if(.@X >= 16)dispbottom "Hit +"+(.@X/9)+"";
+			if(.@X >= 32)dispbottom "Increases damage of ranged attacks by "+(.@X/11)+"%";
+			if(.@X >= 64)dispbottom "Crit Damage +"+(4+.@X/9)+"%";
+			if(.@X >= 128)dispbottom "Atk Range +"+(1+.@X/99)+"";
+		break;
+		case 5:
+			dispbottom "Mystical Lv: "+.@X+" [ "+MysticalExp+" / "+((MysticalMaster*MysticalMaster*.expcurve)+.FirstLevel+MysticalMaster*100)+"xp ]";
+			dispbottom "Int +"+(1+.@X/32)+"";
+			dispbottom "Matk +"+(1+.@X/9)+"%";
+			if(.@X >= 1)dispbottom "Natural SP recovery ratio +"+(.@X/2+1)+"%";
+			if(.@X >= 2)dispbottom "Max SP +"+(2+.@X*2)+"";
+			if(.@X >= 4)dispbottom "Skill casting time "+(-1-.@X/20)+"%";
+			if(.@X >= 8)dispbottom "SP consumption "+(-1-.@X/21)+"%";
+			if(.@X >= 16)dispbottom "Decreases skill delay by "+(1+.@X/22)+"%";
+			if(.@X >= 32)dispbottom "Increase heal amount of all heal skills by "+(1+.@X/2)+"%";
+			if(.@X >= 64)dispbottom "Weapon magical attack power +"+(.@X+1)+"";
+			if(.@X >= 128)dispbottom "Prevents casting from being interrupted when hit";
+		break;
+		default:
+			dispbottom "@wi <Type> <Level>";
+			dispbottom "Type: Onslaught, Swiftness, Safegaurd, Ranged, Mystical";
+		break;
+	}
+end;
+OnWeaponLevel:
+	set .@M$,.@atcmd_parameters$[0];
+	set .@X,atoi(.@atcmd_parameters$[1]);
+	if((.@M$ != "Onslaught" && .@M$ != "Swiftness" && .@M$ != "Safegaurd" && .@M$ != "Ranged" && .@M$ != "Mystical" && .@M$ != "All")||!.@X){
+		dispbottom "@wlvl <type> <lvl>";
+		dispbottom "Onslaught,  Swiftness,  Safegaurd,  Ranged,  Mystical,  All";
+		end;
+	}
+	if(.MaxMastery >= .@X){
+		if(.@M$ == "All"){
+			setarray .@X$[0],"Onslaught","Swiftness","Safegaurd","Ranged","Mystical";
+			set .@i,0;
+			while(.@i < 5){
+				setd ""+.@X$[.@i]+"Master",.@X;
+				setd ""+.@X$[.@i]+"Exp",0;
+				dispbottom ""+.@X$[.@i]+" Mastery has advanced to Lv "+.@X+"!";
+				set .@i,.@i+1;
+			}
+		} else {
+			setd ""+.@M$+"Master",.@X;
+			setd ""+.@M$+"Exp",0;
+			dispbottom ""+.@M$+" Mastery has advanced to Lv "+.@X+"!";
+		}
+	} else {
+		dispbottom "Sorry. Your "+.@M$+" Mastery has reached its limit!";
+	}
+end;
+
+OnPCStatCalcEvent:
+//bonus2 bSPDrainValue,-1,0;	
+	if(.Weapon){
+		if(getequipid(EQI_HAND_R) > 500 || (getequipid(EQI_HAND_R) < 500 && .RightFist)){
+			switch(getiteminfo(getequipid(EQI_HAND_R),11)){
+				case 3:  	case 6: 	case 7: 	case 8:	
+				case 9:		case 12:					Onslaught_M(OnslaughtMaster);	break;
+				case 1: 	case 16:	case 22:			Swiftness_M(SwiftnessMaster);	break;
+				case 2: 	case 4: 	case 5:		default:	Safegaurd_M(SafegaurdMaster);	break;
+				case 11:	case 13:	case 14:	case 17:
+				case 18:	case 19:	case 20:	case 21:	Ranged_M(RangedMaster);		break;
+				case 10:	case 15:	case 23:	case 24:	Mystical_M(MysticalMaster);	break;
+			}
+		}
+		if((getequipid(EQI_HAND_L) > 500 && getiteminfo(getequipid(EQI_HAND_R),5) != 34 && .Left) || (getequipid(EQI_HAND_L) < 500 && .LeftFist)){
+			switch(getiteminfo(getequipid(EQI_HAND_L),11)){
+				case 3:  	case 6: 	case 7: 	case 8:	
+				case 9:		case 12:					Onslaught_M(OnslaughtMaster/2);	break;
+				case 1: 	case 16:	case 22:			Swiftness_M(SwiftnessMaster/2);	break;
+				case 2: 	case 4: 	case 5:		default:	Safegaurd_M(SafegaurdMaster/2);	break;
+				case 11:	case 13:	case 14:	case 17:
+				case 18:	case 19:	case 20:	case 21:	Ranged_M(RangedMaster/2);		break;
+				case 10:	case 15:	case 23:	case 24:	Mystical_M(MysticalMaster/2);	break;
+			}
+		}
+	}
+end;
+
+OnNPCKillEvent:
+	if(.Weapon){
+		set .@M$,"";
+		if(getequipid(EQI_HAND_R) > 500 || (getequipid(EQI_HAND_R) < 500 && .RightFist)){
+			switch(getiteminfo(getequipid(EQI_HAND_R),11)){
+				case 3:  	case 6: 	case 7: 	case 8:	
+				case 9:		case 12:					set .@M$,"Onslaught";	break;
+				case 1: 	case 16:	case 22:			set .@M$,"Swiftness";	break;
+				case 2: 	case 4: 	case 5:		default:	set .@M$,"Safegaurd";	break;
+				case 11:	case 13:	case 14:	case 17:
+				case 18:	case 19:	case 20:	case 21:	set .@M$,"Ranged";	break;
+				case 10:	case 15:	case 23:	case 24:	set .@M$,"Mystical";	break;
+			}
+			if(.MaxMastery > getd(""+ .@M$ + "Master")){
+				setd ""+.@M$+"Exp",getd(""+.@M$+"Exp") + (strmobinfo(3,killedrid)+.wLvBonus*getiteminfo(getequipid(EQI_HAND_R),13)) * (getbattleflag("job_exp_rate") + getbattleflag("job_exp_rate") * getstatus(SC_JEXPBOOST,2));
+				if(getd(""+.@M$+"Exp") > getd(""+.@M$+"Master")*(getd(""+.@M$+"Master")*.expcurve)+10+getd(""+.@M$+"Master")){
+					setd ""+.@M$+"Master",getd(""+.@M$+"Master")+1;
+					announce ""+.@M$+" Mastery has advanced to Lv "+getd(""+.@M$+"Master")+"!",bc_blue|bc_self;
+					setd ""+.@M$+"Exp",0;
+				}
+			}
+		}
+		if((getequipid(EQI_HAND_L) > 500 && getiteminfo(getequipid(EQI_HAND_R),5) != 34 && .Left) || (getequipid(EQI_HAND_L) < 500 && .LeftFist)){
+			set .@M$,"";
+			switch(getiteminfo(getequipid(EQI_HAND_L),11)){
+				case 3:  	case 6: 	case 7: 	case 8:	
+				case 9:		case 12:					set .@M$,"Onslaught";	break;
+				case 1:		case 16:	case 22:			set .@M$,"Swiftness";	break;
+				case 2: 	case 4: 	case 5:		default:	set .@M$,"Safegaurd";	break;
+				case 11:	case 13:	case 14:	case 17:
+				case 18:	case 19:	case 20:	case 21:	set .@M$,"Ranged";	break;
+				case 10:	case 15:	case 23:	case 24:	set .@M$,"Mystical";	break;
+			}
+			if(.MaxMastery > getd(""+ .@M$ + "Master")){
+				setd ""+.@M$+"Exp",getd(""+.@M$+"Exp") + (strmobinfo(3,killedrid)+.wLvBonus*getiteminfo(getequipid(EQI_HAND_R),13)) * (getbattleflag("job_exp_rate") + getbattleflag("job_exp_rate") * getstatus(SC_JEXPBOOST,2));
+				if(getd(""+.@M$+"Exp") > getd(""+.@M$+"Master")*(getd(""+.@M$+"Master")*.expcurve)+.FirstLevel+(getd(""+.@M$+"Master")*100)){
+					setd ""+.@M$+"Master",getd(""+.@M$+"Master")+1;
+					announce ""+.@M$+" Mastery has advanced to Lv "+getd(""+.@M$+"Master")+"!",bc_blue|bc_self;
+					setd ""+.@M$+"Exp",0;
+				}
+			}
+		}
+	}
+end;
+OnInit:
+	bindatcmd("wi"		,"PCSTATCALC::OnWeaponInfo",0,99);
+	bindatcmd("weaponinfo"	,"PCSTATCALC::OnWeaponInfo",0,99);
+	bindatcmd("wlvlup"	,"PCSTATCALC::OnWeaponLevel",60,99);
+	bindatcmd("wlvl"	,"PCSTATCALC::OnWeaponLevel",60,99);
+	set .Weapon,1;		// Toggle Exp Groth On/Off
+				//   1 = On
+				//   0 = Off
+
+	set .Left,1;		// Toggle Left Handed Mastery, left hand recives ~1/2 exp and stats
+				//   1 = On
+				//   0 = Off
+
+	set .RightFist,0;	// Toggle Right fist recive Safegaurd Mastery effect
+				//   1 = On
+				//   0 = Off
+
+	set .LeftFist,0;	// Toggle Left fist recive Safegaurd Mastery effect
+				//   1 = On
+				//   0 = Off
+
+
+	set .FirstLevel,2000;	// Exp cost to get from level 0 -> 1
+
+
+	set .expcurve,5000;	// Exp curve for weapon mastery
+				//   Lv * Lv * .expcurve + .FirstLevel + Lv
+				//   Default 5000
+
+	set .MaxMastery,128;	// sets the max Weapon Mastery Level
+				//   Default 128
+
+	set .wLvBonus,150;	// Amount of extra Weapon Exp from higher level weapons, 
+				//   Bonus exp = WLv*.wLvBonus
+				//   Default 150
+	// System Debug
+	if(.MaxMastery * .MaxMastery *(.expcurve/10) + (.MaxMastery * 100) + .FirstLevel > 214748364 ){
+		debugmes "[Weapon Mastery]: Max Exp Overflow Error, Lower .MaxMastery or .expcurve to fix";
+	}
+end;
+}
+prontera,163,167,6	script	Gamblim	4_M_MOCASS2,{
+setarray .@signs$[0],"$","#","%","&","7";
+
+
+.@1ITEM1$ = .@signs$[rand(0,4)];
+.@1ITEM2$ = .@signs$[rand(0,4)];
+.@1ITEM3$ = .@signs$[rand(0,4)];
+
+.@2ITEM1$ = .@signs$[rand(0,4)];
+.@2ITEM2$ = .@signs$[rand(0,4)];
+.@2ITEM3$ = .@signs$[rand(0,4)];
+
+.@3ITEM1$ = .@signs$[rand(0,4)];
+.@3ITEM2$ = .@signs$[rand(0,4)];
+.@3ITEM3$ = .@signs$[rand(0,4)];
+
+for(.@i = 0; .@i < 20; .@i = .@i+1){
+soundeffect "vadon_attack.wav",0;
+.@1ITEM3$ = .@1ITEM2$;
+.@1ITEM2$ = .@1ITEM1$;
+.@1ITEM1$ = .@signs$[rand(0,4)];
+mes "^6d6d6d[[[  "+.@1ITEM1$+"  ]]][[[  "+.@2ITEM1$+"  ]]][[[  "+.@3ITEM1$+"  ]]]";
+mes "^ffb600[[[  "+.@1ITEM2$+"  ]]][[[  "+.@2ITEM2$+"  ]]][[[  "+.@3ITEM2$+"  ]]]";
+mes "^6d6d6d[[[  "+.@1ITEM3$+"  ]]][[[  "+.@2ITEM3$+"  ]]][[[  "+.@3ITEM3$+"  ]]]";
+sleep2 5+.@i*10;
+autonext 1;
+}
+sleep2 500;
+for(.@i = 0; .@i < 20; .@i = .@i+1){
+soundeffect "vadon_attack.wav",0;
+.@2ITEM3$ = .@2ITEM2$;
+.@2ITEM2$ = .@2ITEM1$;
+.@2ITEM1$ = .@signs$[rand(0,4)];
+mes "^6d6d6d[[[  "+.@1ITEM1$+"  ]]][[[  "+.@2ITEM1$+"  ]]][[[  "+.@3ITEM1$+"  ]]]";
+mes "^ffb600[[[  "+.@1ITEM2$+"  ]]][[[  "+.@2ITEM2$+"  ]]][[[  "+.@3ITEM2$+"  ]]]";
+mes "^6d6d6d[[[  "+.@1ITEM3$+"  ]]][[[  "+.@2ITEM3$+"  ]]][[[  "+.@3ITEM3$+"  ]]]";
+sleep2 5+.@i*10;
+autonext 1;
+}
+sleep2 500;
+for(.@i = 0; .@i < 20; .@i = .@i+1){
+soundeffect "vadon_attack.wav",0;
+.@3ITEM3$ = .@3ITEM2$;
+.@3ITEM2$ = .@3ITEM1$;
+.@3ITEM1$ = .@signs$[rand(0,4)];
+mes "^6d6d6d[[[  "+.@1ITEM1$+"  ]]][[[  "+.@2ITEM1$+"  ]]][[[  "+.@3ITEM1$+"  ]]]";
+mes "^ffb600[[[  "+.@1ITEM2$+"  ]]][[[  "+.@2ITEM2$+"  ]]][[[  "+.@3ITEM2$+"  ]]]";
+mes "^6d6d6d[[[  "+.@1ITEM3$+"  ]]][[[  "+.@2ITEM3$+"  ]]][[[  "+.@3ITEM3$+"  ]]]";
+sleep2 5+.@i*10;
+autonext 1;
+}
+close;
+}
+
+prontera,161,167,6	script	CaseOpener	4_M_MOCASS2,{
+.@ITEM1 = rand(19500,20319);
+.@ITEM2 = rand(19500,20319);
+.@ITEM3 = rand(19500,20319);
+soundeffect "hun_anklesnare.wav",0;
+mes "^cccccc###################################";
+mes "^cccccc###################################";
+autonext 50;
+
+mes "^cebaa1###################################";
+mes "^cebaa1###################################";
+autonext 50;
+mes "^cca676###################################";
+mes " ";
+mes "^cca676###################################";
+autonext 50;
+mes "^cc9a59###################################";
+mes " ";
+mes "^aaefef @ ["+getitemname(.@ITEM1)+"]";
+mes "^cc9a59###################################";
+autonext 50;
+mes "^d19240###################################";
+mes " ";
+mes "^aaefef @ ["+getitemname(.@ITEM1)+"]";
+mes "^ff9b05 !!! ["+getitemname(.@ITEM2)+"]";
+mes "^d19240###################################";
+autonext 50;
+mes "^d68924###################################";
+mes " ";
+mes "^aaefef @ ["+getitemname(.@ITEM1)+"]";
+mes "^ff9b05 !!! ["+getitemname(.@ITEM2)+"]";
+mes "^aaefef @ [ "+getitemname(.@ITEM3)+"]";
+mes "^d68924###################################";
+autonext 50;
+mes "^d68011###################################";
+mes " ";
+mes "^aaefef @ ["+getitemname(.@ITEM1)+"]";
+mes "^ff9b05 !!! ["+getitemname(.@ITEM2)+"]";
+mes "^aaefef @ [ "+getitemname(.@ITEM3)+"]";
+mes " ";
+mes "^d68011###################################";
+autonext 50;
+
+
+
+
+
+for(.@i = 0; .@i < 40; .@i = .@i+1){
+.@ITEM3 = .@ITEM2;
+.@ITEM2 = .@ITEM1;
+.@ITEM1 = rand(19500,20319);
+soundeffect "vadon_attack.wav",0;
+mes "^e07f00###################################";
+mes " ";
+mes "^7f7f7f# ["+getitemname(.@ITEM1)+"]";
+mes "^ff9b05$ ["+getitemname(.@ITEM2)+"]";
+mes "^7f7f7f# [ "+getitemname(.@ITEM3)+"]";
+mes " ";
+mes "^e07f00###################################";
+sleep2 5+.@i*10;
+autonext 1;
+}
+soundeffect "guitar.wav",0;
+mes "^11d666 ! [ PRIZE SELECTED ] ]";
+mes "^11d666###################################";
+mes "^a85050# ["+getitemname(.@ITEM1)+"]";
+mes "^11d666$ ["+getitemname(.@ITEM2)+"]";
+mes "^a85050# [ "+getitemname(.@ITEM3)+"]";
+mes "^11d666###################################";
+mes "^11d666+<ITEMLINK>"+getitemname(.@ITEM2)+"<INFO>"+.@ITEM2+"</INFO></ITEMLINK>(1)";
+getitem(.@ITEM2, 1);
+close;
+
+
+
+
+}
+
+//===== Hercules Script ======================================
+//= Euphy's Quest Shop
+//===== By: ==================================================
+//= Euphy
+//===== Current Version: =====================================
+//= 1.6a
+//===== Description: =========================================
+//= A dynamic quest shop based on Lunar's, with easier config.
+//= Includes support for multiple shops & cashpoints.
+//= Item Preview script by ToastOfDoom.
+//===== Additional Comments: =================================
+//= 1.0 Initial script.
+//= 1.2 Added category support.
+//= 1.3 More options and fixes.
+//= 1.4 Added debug settings.
+//= 1.5 Replaced categories with shop IDs.
+//= 1.6 Added support for purchasing stackables.
+//= 1.6a Added support for previewing costumes and robes.
+//============================================================
+
+// Shop NPCs -- supplying no argument displays entire menu.
+//	callfunc "qshop"{,<shop ID>{,<shop ID>{,...}}};
+//============================================================
+prontera,164,203,6	script	Quest Shop#1	4_M_MOCASS2,{ callfunc "qshop"; }
+
+
+// Script Core
+//============================================================
+-	script	quest_shop	FAKE_NPC,{
+function Add; function Chk; function Slot; function A_An;function Previewvisuals;
+OnInit:
+	freeloop(1);
+
+// -----------------------------------------------------------
+//  Basic shop settings.
+// -----------------------------------------------------------
+
+	set .Announce,1;	// Announce quest completion? (1: yes / 0: no)
+	set .ShowSlot,1;	// Show item slots? (2: all equipment / 1: if slots > 0 / 0: never)
+	set .ShowID,0;  	// Show item IDs? (1: yes / 0: no)
+	set .ShowZeny,0;	// Show Zeny cost, if any? (1: yes / 0: no)
+	set .MaxStack,100;	// Max number of quest items purchased at one time.
+
+// -----------------------------------------------------------
+//  Points variable -- optional quest requirement.
+//	setarray .Points$[0],"<variable name>","<display name>";
+// -----------------------------------------------------------
+
+	setarray .Points$[0],"#CASHPOINTS","Cash Points";
+
+// -----------------------------------------------------------
+//  Shop IDs -- to add shops, copy dummy data at bottom of file.
+//	setarray .Shops$[1],"<Shop 1>","<Shop 2>"{,...};
+// -----------------------------------------------------------
+
+	setarray .Shops$[1],"Headgears","Weapons","Other";
+
+// -----------------------------------------------------------
+//  Quest items -- do NOT use a reward item more than once!
+//	Add(<shop ID>,<reward ID>,<reward amount>,
+//	    <Zeny cost>,<point cost>,
+//	    <required item ID>,<required item amount>{,...});
+// -----------------------------------------------------------
+	Previewvisuals(1);
+	Add(1,5022,1,0,0,7086,1,969,10,999,40,1003,50,984,2);
+	Add(1,5032,1,0,0,1059,250,2221,1,2227,1,7063,600);
+	Add(1,5027,1,0,0,2252,1,1036,400,7001,50,4052,1);
+	Add(1,5045,1,0,0,2252,1,1054,450,943,1200);
+
+	Add(2,1224,1,0,0,7297,30,969,10,999,50,714,10);
+	Add(2,1225,1,0,0,7292,30,969,10,999,50,714,10);
+
+	Add(3,531,1,3,0,512,1,713,1);
+	Add(3,532,1,3,0,513,1,713,1);
+	Add(3,533,1,3,0,514,1,713,1);
+	Add(3,534,1,3,0,515,1,713,1);
+
+// -----------------------------------------------------------
+
+	freeloop(0);
+	set .menu$,"";
+	for(set .@i,1; .@i<=getarraysize(.Shops$); set .@i,.@i+1) {
+		set .menu$, .menu$+.Shops$[.@i]+":";
+		npcshopdelitem "qshop"+.@i,909;
+	}
+	end;
+
+OnMenu:
+	set .@size, getarraysize(@i);
+	if (!.@size) set .@i, select(.menu$);
+	else if (.@size == 1) set .@i, @i[0];
+	else {
+		for(set .@j,0; .@j<.@size; set .@j,.@j+1)
+			set .@menu$, .@menu$+.Shops$[@i[.@j]]+":";
+		set .@i, @i[select(.@menu$)-1];
+	}
+	deletearray @i[0],getarraysize(@i);
+	if (.Shops$[.@i] == "") {
+		message strcharinfo(PC_NAME),"An error has occurred.";
+		end;
+	}
+	dispbottom "Select one item at a time.";
+	callshop "qshop"+.@i,1;
+	npcshopattach "qshop"+.@i;
+	end;
+
+OnBuyItem:
+	// .@q[] : RewardID, BoughtAmt, RewardAmt, BaseAmt, ReqZeny, ReqPts, { ReqItem, ReqAmt, ... }
+	setarray .@q[0],@bought_nameid[0],((@bought_quantity[0] > .MaxStack)?.MaxStack:@bought_quantity[0]);
+	copyarray .@q[3],getd(".q_"+.@q[0]+"[0]"),getarraysize(getd(".q_"+.@q[0]));
+	set .@q[2],.@q[1]*.@q[3];
+	if (!.@q[2] || .@q[2] > 30000) {
+		message strcharinfo(PC_NAME),"You can't purchase that many "+getitemname(.@q[0])+".";
+		end;
+	}
+	mes "[Quest Shop]";
+	mes "Reward: ^0055FF"+((.@q[2] > 1)?.@q[2]+"x ":"")+Slot(.@q[0])+"^000000";
+	mes "Requirements:";
+	if (.@q[4]) mes " > "+Chk(Zeny,.@q[4]*.@q[1])+(.@q[4]*.@q[1])+" Zeny^000000";
+	if (.@q[5]) mes " > "+Chk(getd(.Points$[0]),.@q[5]*.@q[1])+(.@q[5]*.@q[1])+" "+.Points$[1]+" ("+getd(.Points$[0])+"/"+(.@q[5]*.@q[1])+")^000000";
+	if (.@q[6]) for(set .@i,6; .@i<getarraysize(.@q); set .@i,.@i+2)
+		mes " > "+Chk(countitem(.@q[.@i]),.@q[.@i+1]*.@q[1])+((.ShowID)?"{"+.@q[.@i]+"} ":"")+Slot(.@q[.@i])+" ("+countitem(.@q[.@i])+"/"+(.@q[.@i+1]*.@q[1])+")^000000";
+	next;
+	setarray @qe[1], getiteminfo(.@q[0],5), getiteminfo(.@q[0],11);
+	if (@qe[2] > 0 && ((@qe[1] & 1) || (@qe[1] & 256) || (@qe[1] & 512) || (@qe[1] & 1024) || (@qe[1] & 2048) || (@qe[1] & 4096) || (@qe[1] & 4) || (@qe[1] & 8192)))
+		set .@preview,1;
+	addtimer 1000, strnpcinfo(NPC_NAME)+"::OnEnd";
+	while(1) {
+		switch(select(" ~ Purchase ^0055FF"+ getitemname(.@q[0]) +"^000000", ((.@preview && !@qe[7])?" ~ Preview...": ""), " ~ ^777777Cancel^000000")) {
+		case 1:
+			if (@qe[0]) {
+				mes "[Quest Shop]";
+				mes "You're missing one or more quest requirements.";
+				close;
+			}
+			if (!checkweight(.@q[0],.@q[2])) {
+				mes "[Quest Shop]";
+				mes "^FF0000You need "+(((.@q[2]*getiteminfo(.@q[0],6))+Weight-MaxWeight)/10)+" additional weight capacity to complete this trade.^000000";
+				close;
+			}
+			if (.@q[4]) Zeny -= (.@q[4]*.@q[1]);
+			if (.@q[5]) setd .Points$[0], getd(.Points$[0])-(.@q[5]*.@q[1]);
+			if (.@q[6]) for(set .@i,6; .@i<getarraysize(.@q); set .@i,.@i+2)
+				delitem .@q[.@i],.@q[.@i+1]*.@q[1];
+			getitem .@q[0],.@q[2];
+			if (.Announce) announce strcharinfo(PC_NAME)+" has created "+((.@q[2] > 1)?.@q[2]+"x "+getitemname(.@q[0]):A_An(getitemname(.@q[0])))+"!",0;
+			specialeffect2 EF_FLOWERLEAF;
+			close;
+		case 2:
+			setarray @qe[3], getlook(LOOK_HEAD_BOTTOM), getlook(LOOK_HEAD_TOP), getlook(LOOK_HEAD_MID), getlook(LOOK_ROBE), 1;
+			if ((@qe[1] & 1) || (@qe[1] & 4096)) changelook LOOK_HEAD_BOTTOM, @qe[2];
+			else if ((@qe[1] & 256) || (@qe[1] & 1024)) changelook LOOK_HEAD_TOP, @qe[2];
+			else if ((@qe[1] & 512) || (@qe[1] & 2048)) changelook LOOK_HEAD_MID, @qe[2];
+			else if ((@qe[1] & 4) || (@qe[1] & 8192)) changelook LOOK_ROBE, @qe[2];
+			break;
+		case 3:
+			close;
+		}
+	}
+
+OnEnd:
+	if (@qe[7]) {
+		changelook LOOK_HEAD_BOTTOM, @qe[3];
+		changelook LOOK_HEAD_TOP, @qe[4];
+		changelook LOOK_HEAD_MID, @qe[5];
+		changelook LOOK_ROBE, @qe[6];
+	}
+	deletearray @qe[0],8;
+	end;
+
+function Previewvisuals {
+for(set .@i,19500; .@i<20319; set .@i,.@i+1){
+	npcshopadditem "qshop"+1,.@i,1;
+	}
+	return;
+	}
+	
+	
+function Add {
+	if (getitemname(getarg(1)) == "null") {
+		debugmes "Quest reward #"+getarg(1)+" invalid (skipped).";
+		return;
+	}
+	setarray .@j[0],getarg(2),getarg(3),getarg(4);
+	for(set .@i,5; .@i<getargcount(); set .@i,.@i+2) {
+		if (getitemname(getarg(.@i)) == "null") {
+			debugmes "Quest requirement #"+getarg(.@i)+" invalid (skipped).";
+			return;
+		} else
+			setarray .@j[.@i-2],getarg(.@i),getarg(.@i+1);
+	}
+	copyarray getd(".q_"+getarg(1)+"[0]"),.@j[0],getarraysize(.@j);
+	npcshopadditem "qshop"+getarg(0),getarg(1),((.ShowZeny)?getarg(3):0);
+	return;
+}
+
+function Chk {
+	if (getarg(0) < getarg(1)) {
+		set @qe[0],1;
+		return "^FF0000";
+	} else
+		return "^00FF00";
+}
+
+function Slot {
+	set .@s$,getitemname(getarg(0));
+	switch(.ShowSlot) {
+		case 1: if (!getitemslots(getarg(0))) return .@s$;
+		case 2: if (getiteminfo(getarg(0),2) == 4 || getiteminfo(getarg(0),2) == 5) return .@s$+" ["+getitemslots(getarg(0))+"]";
+		default: return .@s$;
+	}
+}
+
+function A_An {
+	setarray .@A$[0],"a","e","i","o","u";
+	set .@B$, "_"+getarg(0);
+	for(set .@i,0; .@i<5; set .@i,.@i+1)
+		if (compare(.@B$,"_"+.@A$[.@i])) return "an "+getarg(0);
+	return "a "+getarg(0);
+}
+}
+
+function	script	qshop	{
+	deletearray @i[0],getarraysize(@i);
+	for(set .@i,0; .@i<getargcount(); set .@i,.@i+1)
+		set @i[.@i],getarg(.@i);
+	doevent "quest_shop::OnMenu";
+	end;
+}
+
+
+// Dummy shop data -- copy as needed.
+//============================================================
+-	shop	qshop1	FAKE_NPC,909:-1
+-	shop	qshop2	FAKE_NPC,909:-1
+-	shop	qshop3	FAKE_NPC,909:-1
+-	shop	qshop4	FAKE_NPC,909:-1
+-	shop	qshop5	FAKE_NPC,909:-1
