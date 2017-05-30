@@ -1238,7 +1238,11 @@ to that point.
 
     mes("You can <URL>Google<INFO>http://www.google.com/</INFO></URL> anything");
 
-Clicking Google will open the browser and point to Google website.
+This will allow you to visit 'Google' with your operating systems default browser and dimensions.
+
+    mes("You can <URL>Bing!<INFO>http://www.bing.com/{,800,600)</INFO></URL> anything");
+
+Clicking 'Bing!' will open your OS default browser with the specified dimensions. (800x600)
 
 ---------------------------------------
 
