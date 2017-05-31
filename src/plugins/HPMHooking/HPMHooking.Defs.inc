@@ -2962,12 +2962,8 @@ typedef int (*HPMHOOK_pre_inter_quest_parse_frommap) (int *fd);
 typedef int (*HPMHOOK_post_inter_quest_parse_frommap) (int retVal___, int fd);
 #endif // CHAR_INT_QUEST_H
 #ifdef CHAR_INT_STORAGE_H /* inter_storage */
-typedef struct DBData (*HPMHOOK_pre_inter_storage_ensure_account_storage) (union DBKey *key, va_list args);
-typedef struct DBData (*HPMHOOK_post_inter_storage_ensure_account_storage) (struct DBData retVal___, union DBKey key, va_list args);
-typedef int (*HPMHOOK_pre_inter_storage_clear_account_storage) (union DBKey *key, struct DBData **data, va_list args);
-typedef int (*HPMHOOK_post_inter_storage_clear_account_storage) (int retVal___, union DBKey key, struct DBData *data, va_list args);
-typedef int (*HPMHOOK_pre_inter_storage_tosql) (int *account_id, struct storage_data **cp, const struct storage_data **p);
-typedef int (*HPMHOOK_post_inter_storage_tosql) (int retVal___, int account_id, struct storage_data *cp, const struct storage_data *p);
+typedef int (*HPMHOOK_pre_inter_storage_tosql) (int *account_id, const struct storage_data **p);
+typedef int (*HPMHOOK_post_inter_storage_tosql) (int retVal___, int account_id, const struct storage_data *p);
 typedef int (*HPMHOOK_pre_inter_storage_fromsql) (int *account_id, struct storage_data **p);
 typedef int (*HPMHOOK_post_inter_storage_fromsql) (int retVal___, int account_id, struct storage_data *p);
 typedef int (*HPMHOOK_pre_inter_storage_guild_storage_tosql) (int *guild_id, const struct guild_storage **p);
@@ -2980,8 +2976,6 @@ typedef void (*HPMHOOK_pre_inter_storage_sql_final) (void);
 typedef void (*HPMHOOK_post_inter_storage_sql_final) (void);
 typedef int (*HPMHOOK_pre_inter_storage_delete_) (int *account_id);
 typedef int (*HPMHOOK_post_inter_storage_delete_) (int retVal___, int account_id);
-typedef void (*HPMHOOK_pre_inter_storage_delete_account_storage) (int *account_id);
-typedef void (*HPMHOOK_post_inter_storage_delete_account_storage) (int account_id);
 typedef int (*HPMHOOK_pre_inter_storage_guild_storage_delete) (int *guild_id);
 typedef int (*HPMHOOK_post_inter_storage_guild_storage_delete) (int retVal___, int guild_id);
 typedef int (*HPMHOOK_pre_inter_storage_parse_frommap) (int *fd);
