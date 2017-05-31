@@ -288,15 +288,11 @@ void char_set_char_offline(int char_id, int account_id)
 	else
 	{
 		struct mmo_charstatus* cp = (struct mmo_charstatus*) idb_get(chr->char_db_,char_id);
-		struct storage_data *stor = (struct storage_data *) idb_get(inter_storage->account_storage, account_id);
 
 		inter_guild->CharOffline(char_id, cp?cp->guild_id:-1);
 
 		if (cp)
 			idb_remove(chr->char_db_,char_id);
-
-		if (stor) /* Remove inter-storage data. */
-			inter_storage->delete_account_storage(account_id);
 
 		if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `online`='0' WHERE `char_id`='%d' LIMIT 1", char_db, char_id) )
 			Sql_ShowDebug(inter->sql_handle);
