@@ -31,20 +31,13 @@ struct guild_storage;
  * inter_storage interface
  **/
 struct inter_storage_interface {
-	/* */
-	struct DBMap *account_storage;
-	/* */
-	/* */
-	struct DBData (*ensure_account_storage) (union DBKey key, va_list args);
-	int (*clear_account_storage) (union DBKey key, struct DBData *data, va_list args);
-	int (*tosql) (int account_id, struct storage_data *cp, const struct storage_data *p);
+	int (*tosql) (int account_id, const struct storage_data *p);
 	int (*fromsql) (int account_id, struct storage_data *p);
 	int (*guild_storage_tosql) (int guild_id, const struct guild_storage *p);
 	int (*guild_storage_fromsql) (int guild_id, struct guild_storage* p);
 	int (*sql_init) (void);
 	void (*sql_final) (void);
 	int (*delete_) (int account_id);
-	void (*delete_account_storage) (int account_id);
 	int (*guild_storage_delete) (int guild_id);
 	int (*parse_frommap) (int fd);
 };

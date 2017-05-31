@@ -41,26 +41,29 @@ struct inter_storage_interface inter_storage_s;
 struct inter_storage_interface *inter_storage;
 
 /// Save storage data to sql
-int inter_storage_tosql(int account_id, struct storage_data *cp, const struct storage_data *p)
+int inter_storage_tosql(int account_id, const struct storage_data *p)
 {
 	int i = 0, j = 0;
 	bool matched_p[MAX_STORAGE] = { false };
 	int delete[MAX_STORAGE] = { 0 };
 	int total_deletes = 0, total_updates = 0, total_inserts = 0;
 	int total_changes = 0;
+	struct storage_data cp = { 0 };
 	StringBuf buf;
 
-	nullpo_ret(cp);
 	nullpo_ret(p);
+
+	VECTOR_INIT(cp.item);
+	inter_storage->fromsql(account_id, &cp);
 
 	StrBuf->Init(&buf);
 
-	if (VECTOR_LENGTH(cp->item) > 0) {
+	if (VECTOR_LENGTH(cp.item) > 0) {
 		/**
 		 * Compare and update items, if any.
 		 */
-		for (i = 0; i < VECTOR_LENGTH(cp->item); i++) {
-			struct item *cp_it = &VECTOR_INDEX(cp->item, i);
+		for (i = 0; i < VECTOR_LENGTH(cp.item); i++) {
+			struct item *cp_it = &VECTOR_INDEX(cp.item, i);
 			struct item *p_it = NULL;
 
 			ARR_FIND(0, VECTOR_LENGTH(p->item), j,
@@ -154,15 +157,10 @@ int inter_storage_tosql(int account_id, struct storage_data *cp, const struct st
 		Sql_ShowDebug(inter->sql_handle);
 
 	StrBuf->Destroy(&buf);
-
-	/* re-sync loaded data with current table data. */
-	VECTOR_CLEAR(cp->item);
-	inter_storage->fromsql(account_id, cp);
+	VECTOR_CLEAR(cp.item);
 
 	total_changes = total_inserts + total_updates + total_deletes;
-
 	ShowInfo("storage save complete - id: %d (total: %d)\n", account_id, total_changes);
-
 	return total_changes;
 }
 
@@ -304,49 +302,15 @@ int inter_storage_guild_storage_fromsql(int guild_id, struct guild_storage* p)
 	return 0;
 }
 
-/**
- * Ensures storage data entity for a character.
- * @see DBCreateData
- */
-static struct DBData inter_storage_ensure_account_storage(union DBKey key, va_list args)
-{
-	struct storage_data *stor = NULL;
-
-	CREATE(stor, struct storage_data, 1);
-
-	stor->save = false;
-	stor->aggregate = 0;
-
-	VECTOR_INIT(stor->item);
-
-	return DB->ptr2data(stor);
-}
-
-/**
- * Cleaning function called through db_destroy() for vectors in storage_data.
- */
-int inter_storage_clear_account_storage(union DBKey key, struct DBData *data, va_list args)
-{
-	struct storage_data *stor = DB->data2ptr(data);
-
-	VECTOR_CLEAR(stor->item);
-
-	return 0;
-}
-
 //---------------------------------------------------------
 // storage data initialize
 int inter_storage_sql_init(void)
 {
-	inter_storage->account_storage = idb_alloc(DB_OPT_RELEASE_DATA);
-
 	return 1;
 }
 // storage data finalize
 void inter_storage_sql_final(void)
 {
-	inter_storage->account_storage->destroy(inter_storage->account_storage, inter_storage->clear_account_storage);
-
 	return;
 }
 
@@ -362,19 +326,6 @@ int inter_storage_guild_storage_delete(int guild_id)
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `guild_id`='%d'", guild_storage_db, guild_id) )
 		Sql_ShowDebug(inter->sql_handle);
 	return 0;
-}
-
-/**
- * Delete storage from memory for given account_id.
- * @param  account_id     [in] account id
- */
-void inter_storage_delete_account_storage(int account_id)
-{
-	struct storage_data *stor = (struct storage_data *)idb_get(inter_storage->account_storage, account_id);
-	if (stor == NULL)
-		return;
-	VECTOR_CLEAR(stor->item);
-	idb_remove(inter_storage->account_storage, account_id);
 }
 
 //---------------------------------------------------------
@@ -447,14 +398,13 @@ int mapif_parse_AccountStorageLoad(int fd)
  */
 int mapif_account_storage_load(int fd, int account_id)
 {
-	struct storage_data *stor = NULL;
+	struct storage_data stor = { 0 };
 	int count = 0, i = 0, len = 0;
 
 	Assert_ret(account_id > 0);
 
-	stor = (struct storage_data *) idb_ensure(inter_storage->account_storage, account_id, inter_storage->ensure_account_storage);
-
-	count = inter_storage->fromsql(account_id, stor);
+	VECTOR_INIT(stor.item);
+	count = inter_storage->fromsql(account_id, &stor);
 
 	len = 8 + count * sizeof(struct item);
 
@@ -463,8 +413,10 @@ int mapif_account_storage_load(int fd, int account_id)
 	WFIFOW(fd, 2) = (uint16) len;
 	WFIFOL(fd, 4) = account_id;
 	for (i = 0; i < count; i++)
-		memcpy(WFIFOP(fd, 8 + i * sizeof(struct item)), &VECTOR_INDEX(stor->item, i), sizeof(struct item));
+		memcpy(WFIFOP(fd, 8 + i * sizeof(struct item)), &VECTOR_INDEX(stor.item, i), sizeof(struct item));
 	WFIFOSET(fd, len);
+
+	VECTOR_CLEAR(stor.item);
 
 	return 1;
 }
@@ -479,12 +431,10 @@ int mapif_parse_AccountStorageSave(int fd)
 {
 	int payload_size = RFIFOW(fd, 2) - 8, account_id = RFIFOL(fd, 4);
 	int i = 0, count = 0;
-	struct storage_data *cp_stor = NULL, p_stor = { 0 };
+	struct storage_data p_stor = { 0 };
 
 	Assert_ret(fd > 0);
 	Assert_ret(account_id > 0);
-
-	cp_stor = (struct storage_data *) idb_ensure(inter_storage->account_storage, account_id, inter_storage->ensure_account_storage);
 
 	count = payload_size/sizeof(struct item);
 
@@ -502,7 +452,7 @@ int mapif_parse_AccountStorageSave(int fd)
 		p_stor.aggregate = count;
 	}
 
-	inter_storage->tosql(account_id, cp_stor, &p_stor);
+	inter_storage->tosql(account_id, &p_stor);
 
 	VECTOR_CLEAR(p_stor.item);
 
@@ -795,8 +745,6 @@ void inter_storage_defaults(void)
 {
 	inter_storage = &inter_storage_s;
 
-	inter_storage->ensure_account_storage = inter_storage_ensure_account_storage;
-	inter_storage->clear_account_storage = inter_storage_clear_account_storage;
 	inter_storage->tosql = inter_storage_tosql;
 	inter_storage->fromsql = inter_storage_fromsql;
 	inter_storage->guild_storage_tosql = inter_storage_guild_storage_tosql;
@@ -804,7 +752,6 @@ void inter_storage_defaults(void)
 	inter_storage->sql_init = inter_storage_sql_init;
 	inter_storage->sql_final = inter_storage_sql_final;
 	inter_storage->delete_ = inter_storage_delete;
-	inter_storage->delete_account_storage = inter_storage_delete_account_storage;
 	inter_storage->guild_storage_delete = inter_storage_guild_storage_delete;
 	inter_storage->parse_frommap = inter_storage_parse_frommap;
 }
