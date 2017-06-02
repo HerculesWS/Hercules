@@ -47,7 +47,7 @@ struct achievement_interface *achievement;
  * @param aid as the achievement ID.
  * @return NULL or pointer to the achievement data.
  */
-struct achievement_data *achievement_get(int aid)
+const struct achievement_data *achievement_get(int aid)
 {
 	return (struct achievement_data *) idb_get(achievement->db, aid);
 }
@@ -55,35 +55,30 @@ struct achievement_data *achievement_get(int aid)
 /**
  * Searches the provided achievement data for an achievement,
  * optionally creates a new one if no key exists.
- * @param sd       [in] a pointer to map_session_data.
- * @param aid      [in] ID of the achievement provided as key.
- * @param create   [in] new key creation flag.
+ * @param[in] sd       a pointer to map_session_data.
+ * @param[in] aid      ID of the achievement provided as key.
+ * @param[in] create   new key creation flag.
  * @return pointer to the session's achievement data.
  */
-struct achievement *achievement_find_or_create(struct map_session_data *sd, int aid, bool create)
+struct achievement *achievement_ensure(struct map_session_data *sd, const struct achievement_data *ad)
 {
-	const struct achievement_data *ad = NULL;
 	struct achievement *a = NULL;
 	int i = 0;
 
 	nullpo_retr(NULL, sd);
-
-	if ((ad = achievement->get(aid)) == NULL)
-		return NULL;
+	nullpo_retr(NULL, ad);
 
 	/* Lookup for achievement entry */
 	ARR_FIND(0, VECTOR_LENGTH(sd->achievement), i, (a = &VECTOR_INDEX(sd->achievement, i)) && a->id == ad->id);
 
-	if (i == VECTOR_LENGTH(sd->achievement))
-		a = NULL;
-
-	/* Create a new one if required */
-	if (create && a == NULL) {
+	if (i == VECTOR_LENGTH(sd->achievement)) {
 		struct achievement ta = { 0 };
+		ta.id = ad->id;
+
 		VECTOR_ENSURE(sd->achievement, 1, 1);
-		ta.id = aid;
 		VECTOR_PUSH(sd->achievement, ta);
-		a = &VECTOR_INDEX(sd->achievement, VECTOR_LENGTH(sd->achievement)-1);
+
+		a = &VECTOR_LAST(sd->achievement);
 	}
 
 	return a;
@@ -91,11 +86,11 @@ struct achievement *achievement_find_or_create(struct map_session_data *sd, int 
 
 /**
  * Calculates the achievement's totals via reference.
- * @param sd               [in]     pointer to map_session_data
- * @param tota_points      [in|out] pointer to total points var
- * @param completed        [in|out] pointer to total var
- * @param rank             [in|out] pointer to completed var
- * @param curr_rank_points [in|out] pointer to achievement rank var
+ * @param[in] sd               pointer to map_session_data
+ * @param[out] tota_points      pointer to total points var
+ * @param[out] completed        pointer to total var
+ * @param[out] rank             pointer to completed var
+ * @param[out] curr_rank_points pointer to achievement rank var
  */
 void achievement_calculate_totals(const struct map_session_data *sd, int *total_points, int *completed, int *rank, int *curr_rank_points)
 {
@@ -146,20 +141,19 @@ void achievement_calculate_totals(const struct map_session_data *sd, int *total_
 
 /**
  * Checks whether all objectives of the achievement are completed.
- * @param sd       [in] as the map_session_data pointer
- * @param ad       [in] as the achievement_data pointer
+ * @param[in] sd       as the map_session_data pointer
+ * @param[in] ad       as the achievement_data pointer
  * @return true if complete, false if not.
  */
-bool achievement_check_complete(struct map_session_data *sd, struct achievement_data *ad)
+bool achievement_check_complete(struct map_session_data *sd, const struct achievement_data *ad)
 {
-	struct achievement *ach = NULL;
 	int i;
+	struct achievement *ach = NULL;
 
 	nullpo_retr(false, sd);
 	nullpo_retr(false, ad);
 
-	if ((ach = achievement->find_or_create(sd, ad->id, false)) == NULL)
-		return false;
+	ach = achievement->ensure(sd, ad);
 
 	for (i = 0; i < VECTOR_LENGTH(ad->objective); i++)
 		if (ach->objective[i] < VECTOR_INDEX(ad->objective, i).goal)
@@ -176,7 +170,7 @@ bool achievement_check_complete(struct map_session_data *sd, struct achievement_
  * @param obj_idx    [in] as the index of the objective.
  * @param progress   [in] as the progress of the objective to be added.
  */
-void achievement_progress_add(struct map_session_data *sd, struct achievement_data *ad, unsigned int obj_idx, int progress)
+void achievement_progress_add(struct map_session_data *sd, const struct achievement_data *ad, unsigned int obj_idx, int progress)
 {
 	struct achievement *ach = NULL;
 
@@ -186,11 +180,10 @@ void achievement_progress_add(struct map_session_data *sd, struct achievement_da
 	Assert_retv(progress != 0);
 	Assert_retv(obj_idx < VECTOR_LENGTH(ad->objective));
 
-	// find existing or create a new entry.
-	nullpo_retv((ach = achievement->find_or_create(sd, ad->id, true)));
+	ach = achievement->ensure(sd, ad);
 
 	if (ach->completed_at)
-		return;
+		return; // ignore the call if the achievement is completed.
 
 	// Check and increment the objective count.
 	if (!ach->objective[obj_idx] || ach->objective[obj_idx] < VECTOR_INDEX(ad->objective, obj_idx).goal) {
@@ -215,7 +208,7 @@ void achievement_progress_add(struct map_session_data *sd, struct achievement_da
  * @param obj_idx     [in] index of the objective in question.
  * @param progress  progress of the objective in question.
  */
-void achievement_progress_set(struct map_session_data *sd, struct achievement_data *ad, unsigned int obj_idx, int progress)
+void achievement_progress_set(struct map_session_data *sd, const struct achievement_data *ad, unsigned int obj_idx, int progress)
 {
 	struct achievement *ach = NULL;
 
@@ -227,7 +220,7 @@ void achievement_progress_set(struct map_session_data *sd, struct achievement_da
 
 	if (progress >= VECTOR_INDEX(ad->objective, obj_idx).goal) {
 
-		nullpo_retv((ach = achievement->find_or_create(sd, ad->id, true)));
+		ach = achievement->ensure(sd, ad);
 
 		if (ach->completed_at)
 			return;
@@ -289,10 +282,10 @@ bool achievement_check_criteria(const struct achievement_objective *objective, c
 
 /**
  * Validates an Achievement Objective of similar types.
- * @param sd         [in] as a pointer to the map session data.
- * @param type       [in] as the type of the achievement.
- * @param criteria   [in] as the criteria of the objective (mob id, job id etc.. 0 for no criteria).
- * @param progress   [in] as the current progress of the objective.
+ * @param[in] sd         as a pointer to the map session data.
+ * @param[in] type       as the type of the achievement.
+ * @param[in] criteria   as the criteria of the objective (mob id, job id etc.. 0 for no criteria).
+ * @param[in] progress   as the current progress of the objective.
  * @return total number of updated achievements on success, 0 on failure.
  */
 int achievement_validate_type(struct map_session_data *sd, enum achievement_types type, const struct achievement_objective *criteria, bool additive)
@@ -317,7 +310,7 @@ int achievement_validate_type(struct map_session_data *sd, enum achievement_type
 	for (i = 0; i < VECTOR_LENGTH(achievement->category[type]); i++) {
 		int j = 0;
 		bool updated = false;
-		struct achievement_data *ad = NULL;
+		const struct achievement_data *ad = NULL;
 
 		if ((ad = achievement->get(VECTOR_INDEX(achievement->category[type], i))) == NULL)
 			continue;
@@ -326,9 +319,12 @@ int achievement_validate_type(struct map_session_data *sd, enum achievement_type
 			// Check if objective criteria matches.
 			if (achievement->check_criteria(&VECTOR_INDEX(ad->objective, j), criteria) == false)
 				continue;
+
+			// Ensure availability of the achievement.
+			ach = achievement->ensure(sd, ad);
+
 			// Criteria passed, check if not completed and update progress.
-			if ((ach = achievement->find_or_create(sd, ad->id, false)) == NULL
-				|| (ach->completed_at == 0 && ach->objective[j] < VECTOR_INDEX(ad->objective, j).goal)) {
+			if ((ach->completed_at == 0 && ach->objective[j] < VECTOR_INDEX(ad->objective, j).goal)) {
 				if (additive == true)
 					achievement->progress_add(sd, ad, j, criteria->goal);
 				else
@@ -346,27 +342,30 @@ int achievement_validate_type(struct map_session_data *sd, enum achievement_type
 
 /**
  * Validates any achievement's specific objective index.
- * @param sd         [in] pointer to the session data.
- * @param aid        [in] ID of the achievement.
- * @param index      [in] index of the objective.
- * @param progress   [in] progress to be added towards the goal.
+ * @param[in] sd         pointer to the session data.
+ * @param[in] aid        ID of the achievement.
+ * @param[in] index      index of the objective.
+ * @param[in] progress   progress to be added towards the goal.
  */
 bool achievement_validate(struct map_session_data *sd, int aid, unsigned int obj_idx, int progress, bool additive)
 {
-	struct achievement_data *ad = achievement->get(aid);
+	const struct achievement_data *ad = NULL;
 	struct achievement *ach = NULL;
 
 	nullpo_retr(false, sd);
 	Assert_retr(false, progress > 0);
 	Assert_retr(false, obj_idx < MAX_ACHIEVEMENT_OBJECTIVES);
 
-	if (ad == NULL) {
+	if ((ad = achievement->get(aid)) == NULL) {
 		ShowError("achievement_validate: Invalid Achievement %d provided.", aid);
 		return false;
 	}
 
-	if ((ach = achievement->find_or_create(sd, ad->id, false)) == NULL
-		|| (!ach->completed_at && ach->objective[obj_idx] < VECTOR_INDEX(ad->objective, obj_idx).goal)) {
+	// Ensure availability of the achievement.
+	ach = achievement->ensure(sd, ad);
+
+	// Check if not completed and update progress.
+	if ((!ach->completed_at && ach->objective[obj_idx] < VECTOR_INDEX(ad->objective, obj_idx).goal)) {
 		if (additive == true)
 			achievement->progress_add(sd, ad, obj_idx, progress);
 		else
@@ -379,9 +378,9 @@ bool achievement_validate(struct map_session_data *sd, int aid, unsigned int obj
 /**
  * Validates monster kill type objectives.
  * @type ACH_KILL_MOB_CLASS
- * @param sd         [in] pointer to session data.
- * @param mob_id     [in] (criteria) class of the monster checked for.
- * @param progress   [in] (goal) progress to be added.
+ * @param[in] sd          pointer to session data.
+ * @param[in] mob_id      (criteria) class of the monster checked for.
+ * @param[in] progress    (goal) progress to be added.
  * @see achievement_vaildate_type()
  */
 void achievement_validate_mob_kill(struct map_session_data *sd, int mob_id)
@@ -402,8 +401,8 @@ void achievement_validate_mob_kill(struct map_session_data *sd, int mob_id)
  * Validate monster damage type objectives.
  * @types ACH_DAMAGE_MOB_REC_MAX
  *        ACH_DAMAGE_MOB_REC_TOTAL
- * @param sd          [in] pointer to session data.
- * @param damage      [in] amount of damage received/dealt.
+ * @param[in] sd       pointer to session data.
+ * @param[in] damage   amount of damage received/dealt.
  * @param received received/dealt boolean switch.
  */
 void achievement_validate_mob_damage(struct map_session_data *sd, unsigned int damage, bool received)
@@ -430,8 +429,8 @@ void achievement_validate_mob_damage(struct map_session_data *sd, unsigned int d
  * @types ACH_KILL_PC_TOTAL
  *        ACH_KILL_PC_JOB
  *        ACH_KILL_PC_JOBTYPE
- * @param sd         [in] pointer to killed player's session data.
- * @param dstsd      [in] pointer to killer's session data.
+ * @param[in] sd         pointer to killed player's session data.
+ * @param[in] dstsd      pointer to killer's session data.
  */
 void achievement_validate_pc_kill(struct map_session_data *sd, struct map_session_data *dstsd)
 {
@@ -463,9 +462,9 @@ void achievement_validate_pc_kill(struct map_session_data *sd, struct map_sessio
  *        ACH_DAMAGE_PC_TOTAL
  *        ACH_DAMAGE_PC_REC_MAX
  *        ACH_DAMAGE_PC_REC_TOTAL
- * @param sd         [in] pointer to source player's session data.
- * @param dstsd      [in] pointer to target player's session data.
- * @param damage     [in] amount of damage dealt / received.
+ * @param[in] sd         pointer to source player's session data.
+ * @param[in] dstsd      pointer to target player's session data.
+ * @param[in] damage     amount of damage dealt / received.
  */
 void achievement_validate_pc_damage(struct map_session_data *sd, struct map_session_data *dstsd, unsigned int damage)
 {
@@ -488,7 +487,7 @@ void achievement_validate_pc_damage(struct map_session_data *sd, struct map_sess
 /**
  * Validates job change objectives.
  * @type ACH_JOB_CHANGE
- * @param sd         [in] pointer to session data.
+ * @param[in] sd         pointer to session data.
  * @see achivement_validate_type()
  */
 void achievement_validate_jobchange(struct map_session_data *sd)
@@ -513,9 +512,9 @@ void achievement_validate_jobchange(struct map_session_data *sd)
  * @types ACH_STATUS
  *        ACH_STATUS_BY_JOB
  *        ACH_STATUS_BY_JOBTYPE
- * @param sd         [in] pointer to session data.
- * @param stat_type  [in] (criteria) status point type. (see status_point_types)
- * @param progress   [in] (goal) amount of absolute progress to check.
+ * @param[in] sd         pointer to session data.
+ * @param[in] stat_type  (criteria) status point type. (see status_point_types)
+ * @param[in] progress   (goal) amount of absolute progress to check.
  * @see achievement_validate_type()
  */
 void achievement_validate_stats(struct map_session_data *sd, enum status_point_types stat_type, int progress)
@@ -553,7 +552,7 @@ void achievement_validate_stats(struct map_session_data *sd, enum status_point_t
  * Validates chatroom creation type objectives.
  * @types ACH_CHATROOM_CREATE
  *        ACH_CHATROOM_CREATE_DEAD
- * @param sd         [in] pointer to session data.
+ * @param[in] sd    pointer to session data.
  * @see achievement_validate_type()
  */
 void achievement_validate_chatroom_create(struct map_session_data *sd)
@@ -574,15 +573,14 @@ void achievement_validate_chatroom_create(struct map_session_data *sd)
 /**
  * Validates chatroom member count type objectives.
  * @type ACH_CHATROOM_MEMBERS
- * @param sd         [in] pointer to session data.
- * @param progress   [in] (goal) amount of progress to be added.
+ * @param[in] sd         pointer to session data.
+ * @param[in] progress   (goal) amount of progress to be added.
  * @see achievement_validate_type()
  */
 void achievement_validate_chatroom_members(struct map_session_data *sd, int progress)
 {
 	struct achievement_objective criteria = { 0 };
 
-	nullpo_retv(sd);
 	Assert_retv(progress > 0);
 
 	criteria.goal = progress;
@@ -593,14 +591,12 @@ void achievement_validate_chatroom_members(struct map_session_data *sd, int prog
 /**
  * Validates friend add type objectives.
  * @type ACH_FRIEND_ADD
- * @param sd        [in] pointer to session data.
+ * @param[in] sd        pointer to session data.
  * @see achievement_validate_type()
  */
 void achievement_validate_friend_add(struct map_session_data *sd)
 {
 	struct achievement_objective criteria = { 0 };
-
-	nullpo_retv(sd);
 
 	criteria.goal = 1;
 
@@ -610,14 +606,12 @@ void achievement_validate_friend_add(struct map_session_data *sd)
 /**
  * Validates party creation type objectives.
  * @type ACH_PARTY_CREATE
- * @param sd        [in] pointer to session data.
+ * @param[in] sd        pointer to session data.
  * @see achievement_validate_type()
  */
 void achievement_validate_party_create(struct map_session_data *sd)
 {
 	struct achievement_objective criteria = { 0 };
-
-	nullpo_retv(sd);
 
 	criteria.goal = 1;
 	achievement->validate_type(sd, ACH_PARTY_CREATE, &criteria, true);
@@ -626,14 +620,12 @@ void achievement_validate_party_create(struct map_session_data *sd)
 /**
  * Validates marriage type objectives.
  * @type ACH_MARRY
- * @param sd        [in] pointer to session data.
+ * @param[in] sd        pointer to session data.
  * @see achievement_validate_type()
  */
 void achievement_validate_marry(struct map_session_data *sd)
 {
 	struct achievement_objective criteria = { 0 };
-
-	nullpo_retv(sd);
 
 	criteria.goal = 1;
 
@@ -644,15 +636,13 @@ void achievement_validate_marry(struct map_session_data *sd)
  * Validates adoption type objectives.
  * @types ACH_ADOPT_PARENT
  *        ACH_ADOPT_BABY
- * @param sd        [in] pointer to session data.
- * @param parent    [in] (type) boolean value to indicate if parent (true) or baby (false).
+ * @param[in] sd        pointer to session data.
+ * @param[in] parent    (type) boolean value to indicate if parent (true) or baby (false).
  * @see achievement_validate_type()
  */
 void achievement_validate_adopt(struct map_session_data *sd, bool parent)
 {
 	struct achievement_objective criteria = { 0 };
-
-	nullpo_retv(sd);
 
 	criteria.goal = 1;
 
@@ -669,8 +659,8 @@ void achievement_validate_adopt(struct map_session_data *sd, bool parent)
  *        ACH_ZENY_GET_TOTAL
  *        ACH_ZENY_SPEND_ONCE
  *        ACH_ZENY_SPEND_TOTAL
- * @param sd        [in] pointer to session data.
- * @param amount    [in] (goal) amount of zeny earned or spent.
+ * @param[in] sd        pointer to session data.
+ * @param[in] amount    (goal) amount of zeny earned or spent.
  * @see achievement_validate_type()
  */
 void achievement_validate_zeny(struct map_session_data *sd, int amount)
@@ -703,9 +693,9 @@ void achievement_validate_zeny(struct map_session_data *sd, int amount)
  *        ACH_EQUIP_REFINE_FAILURE_WLV
  *        ACH_EQUIP_REFINE_SUCCESS_ID
  *        ACH_EQUIP_REFINE_FAILURE_ID
- * @param sd         [in] pointer to session data.
- * @param idx        [in] Inventory index of the item.
- * @param success    [in] (type) boolean switch for failure / success.
+ * @param[in] sd         pointer to session data.
+ * @param[in] idx        Inventory index of the item.
+ * @param[in] success    (type) boolean switch for failure / success.
  * @see achievement_validate_type()
  */
 void achievement_validate_refine(struct map_session_data *sd, unsigned int idx, bool success)
@@ -756,9 +746,9 @@ void achievement_validate_refine(struct map_session_data *sd, unsigned int idx, 
  * @types ACH_ITEM_GET_COUNT
  *        ACH_ITEM_GET_WORTH
  *        ACH_ITEM_GET_COUNT_ITEMTYPE
- * @param sd         [in] pointer to session data.
- * @param nameid     [in] (criteria) ID of the item.
- * @param amount     [in] (goal) amount of the item collected.
+ * @param[in] sd         pointer to session data.
+ * @param[in] nameid     (criteria) ID of the item.
+ * @param[in] amount     (goal) amount of the item collected.
  */
 void achievement_validate_item_get(struct map_session_data *sd, int nameid, int amount)
 {
@@ -787,9 +777,9 @@ void achievement_validate_item_get(struct map_session_data *sd, int nameid, int 
 /**
  * Validates item sold type objectives.
  * @type ACH_ITEM_SELL_WORTH
- * @param sd         [in] pointer to session data.
- * @param nameid     [in] Item Id in question.
- * @param amount     [in] amount of item in question.
+ * @param[in] sd         pointer to session data.
+ * @param[in] nameid     Item Id in question.
+ * @param[in] amount     amount of item in question.
  */
 void achievement_validate_item_sell(struct map_session_data *sd, int nameid, int amount)
 {
@@ -809,12 +799,12 @@ void achievement_validate_item_sell(struct map_session_data *sd, int nameid, int
 /**
  * Validates achievement type objectives.
  * @type ACH_ACHIEVE
- * @param sd        [in] pointer to session data.
- * @param achid     [in] (criteria) achievement id.
+ * @param[in] sd        pointer to session data.
+ * @param[in] achid     (criteria) achievement id.
  */
 void achievement_validate_achieve(struct map_session_data *sd, int achid)
 {
-	struct achievement_data *ad = achievement->get(achid);
+	const struct achievement_data *ad = achievement->get(achid);
 	struct achievement_objective criteria = { 0 };
 
 	Assert_retv(achid > 0);
@@ -830,8 +820,8 @@ void achievement_validate_achieve(struct map_session_data *sd, int achid)
 /**
  * Validates taming type objectives.
  * @type ACH_PET_CREATE
- * @param sd        [in] pointer to session data.
- * @param class     [in] (criteria) class of the monster tamed.
+ * @param[in] sd        pointer to session data.
+ * @param[in] class     (criteria) class of the monster tamed.
  */
 void achievement_validate_taming(struct map_session_data *sd, int class)
 {
@@ -849,8 +839,8 @@ void achievement_validate_taming(struct map_session_data *sd, int class)
 /**
  * Validated achievement rank type objectives.
  * @type ACH_ACHIEVEMENT_RANK
- * @param sd         [in] pointer to session data.
- * @param rank       [in] (goal) rank of earned.
+ * @param[in] sd         pointer to session data.
+ * @param[in] rank       (goal) rank of earned.
  */
 void achievement_validate_achievement_rank(struct map_session_data *sd, int rank)
 {
@@ -865,7 +855,7 @@ void achievement_validate_achievement_rank(struct map_session_data *sd, int rank
 
 /**
  * Verifies if an achievement type requires a criteria field.
- * @param type       [in] achievement type in question.
+ * @param[in] type       achievement type in question.
  * @return true if required, false if not.
  */
 bool achievement_type_requires_criteria(enum achievement_types type)
@@ -951,11 +941,12 @@ void achievement_readdb_ranks(void)
 
 /**
  * Validates Mob Id criteria of an objective while parsing an achievement entry.
- * @param t        [in]     pointer to the config setting.
- * @param obj      [in|out] pointer to the achievement objective entry being parsed.
- * @param type     [in]     Type of the achievement being parsed.
- * @param entry_id [in]     Id of the entry being parsed.
- * @param obj_idx  [in]     Index of the objective entry being parsed.
+ * @param[in]  t        pointer to the config setting.
+ * @param[out] obj      pointer to the achievement objective entry being parsed.
+ * @param[in]  type     Type of the achievement being parsed.
+ * @param[in]  entry_id Id of the entry being parsed.
+ * @param[in]  obj_idx  Index of the objective entry being parsed.
+ * @return false on failure, true on success
  */
 bool achievement_readdb_validate_criteria_mobid(const struct config_setting_t *t, struct achievement_objective *obj, enum achievement_types type, int entry_id, int obj_idx)
 {
@@ -989,11 +980,11 @@ bool achievement_readdb_validate_criteria_mobid(const struct config_setting_t *t
 
 /**
  * Validates Job Id criteria of an objective while parsing an achievement entry.
- * @param t        [in]     pointer to the config setting.
- * @param obj      [in|out] pointer to the achievement objective entry being parsed.
- * @param type     [in]     Type of the achievement being parsed.
- * @param entry_id [in]     Id of the entry being parsed.
- * @param obj_idx  [in]     Index of the objective entry being parsed.
+ * @param[in]  t        pointer to the config setting.
+ * @param[out] obj      pointer to the achievement objective entry being parsed.
+ * @param[in]  type     Type of the achievement being parsed.
+ * @param[in]  entry_id Id of the entry being parsed.
+ * @param[in]  obj_idx  Index of the objective entry being parsed.
  * @return false on failure, true on success.
  */
 bool achievement_readdb_validate_criteria_jobid(const struct config_setting_t *t, struct achievement_objective *obj, enum achievement_types type, int entry_id, int obj_idx)
@@ -1052,11 +1043,11 @@ bool achievement_readdb_validate_criteria_jobid(const struct config_setting_t *t
 
 /**
  * Validates Item Id criteria of an objective while parsing an achievement entry.
- * @param t        [in]     pointer to the config setting.
- * @param obj      [in|out] pointer to the achievement objective entry being parsed.
- * @param type     [in]     Type of the achievement being parsed.
- * @param entry_id [in]     Id of the entry being parsed.
- * @param obj_idx  [in]     Index of the objective entry being parsed.
+ * @param[in]  t        pointer to the config setting.
+ * @param[out] obj      pointer to the achievement objective entry being parsed.
+ * @param[in]  type     Type of the achievement being parsed.
+ * @param[in]  entry_id Id of the entry being parsed.
+ * @param[in]  obj_idx  Index of the objective entry being parsed.
  * @return false on failure, true on success.
  */
 bool achievement_readdb_validate_criteria_itemid(const struct config_setting_t *t, struct achievement_objective *obj, enum achievement_types type, int entry_id, int obj_idx)
@@ -1100,11 +1091,11 @@ bool achievement_readdb_validate_criteria_itemid(const struct config_setting_t *
 
 /**
  * Validates Status Type criteria of an objective while parsing an achievement entry.
- * @param t        [in]     pointer to the config setting.
- * @param obj      [in|out] pointer to the achievement objective entry being parsed.
- * @param type     [in]     Type of the achievement being parsed.
- * @param entry_id [in]     Id of the entry being parsed.
- * @param obj_idx  [in]     Index of the objective entry being parsed.
+ * @param[in]  t        pointer to the config setting.
+ * @param[out] obj      pointer to the achievement objective entry being parsed.
+ * @param[in]  type     Type of the achievement being parsed.
+ * @param[in]  entry_id Id of the entry being parsed.
+ * @param[in]  obj_idx  Index of the objective entry being parsed.
  * @return false on failure, true on success.
  */
 bool achievement_readdb_validate_criteria_statustype(const struct config_setting_t *t, struct achievement_objective *obj, enum achievement_types type, int entry_id, int obj_idx)
@@ -1157,11 +1148,11 @@ bool achievement_readdb_validate_criteria_statustype(const struct config_setting
 
 /**
  * Validates Item Type criteria of an objective while parsing an achievement entry.
- * @param t        [in]     pointer to the config setting.
- * @param obj      [in|out] pointer to the achievement objective entry being parsed.
- * @param type     [in]     Type of the achievement being parsed.
- * @param entry_id [in]     Id of the entry being parsed.
- * @param obj_idx  [in]     Index of the objective entry being parsed.
+ * @param[in]  t        pointer to the config setting.
+ * @param[out] obj      pointer to the achievement objective entry being parsed.
+ * @param[in]  type     Type of the achievement being parsed.
+ * @param[in]  entry_id Id of the entry being parsed.
+ * @param[in]  obj_idx  Index of the objective entry being parsed.
  * @return false on failure, true on success.
  */
 bool achievement_readdb_validate_criteria_itemtype(const struct config_setting_t *t, struct achievement_objective *obj, enum achievement_types type, int entry_id, int obj_idx)
@@ -1234,11 +1225,11 @@ bool achievement_readdb_validate_criteria_itemtype(const struct config_setting_t
 
 /**
  * Validates Weapon Level criteria of an objective while parsing an achievement entry.
- * @param t        [in]     pointer to the config setting.
- * @param obj      [in|out] pointer to the achievement objective entry being parsed.
- * @param type     [in]     Type of the achievement being parsed.
- * @param entry_id [in]     Id of the entry being parsed.
- * @param obj_idx  [in]     Index of the objective entry being parsed.
+ * @param[in]  t        pointer to the config setting.
+ * @param[out] obj      pointer to the achievement objective entry being parsed.
+ * @param[in]  type     Type of the achievement being parsed.
+ * @param[in]  entry_id Id of the entry being parsed.
+ * @param[in]  obj_idx  Index of the objective entry being parsed.
  * @return false on failure, true on success.
  */
 bool achievement_readdb_validate_criteria_weaponlv(const struct config_setting_t *t, struct achievement_objective *obj, enum achievement_types type, int entry_id, int obj_idx)
@@ -1269,11 +1260,11 @@ bool achievement_readdb_validate_criteria_weaponlv(const struct config_setting_t
 
 /**
  * Validates achievement Id criteria of an objective while parsing an achievement entry.
- * @param t        [in]     pointer to the config setting.
- * @param obj      [in|out] pointer to the achievement objective entry being parsed.
- * @param type     [in]     Type of the achievement being parsed.
- * @param entry_id [in]     Id of the entry being parsed.
- * @param obj_idx  [in]     Index of the objective entry being parsed.
+ * @param[in]  t        pointer to the config setting.
+ * @param[out] obj      pointer to the achievement objective entry being parsed.
+ * @param[in]  type     Type of the achievement being parsed.
+ * @param[in]  entry_id Id of the entry being parsed.
+ * @param[in]  obj_idx  Index of the objective entry being parsed.
  * @return false on failure, true on success.
  */
 bool achievement_readdb_validate_criteria_achievement(const struct config_setting_t *t, struct achievement_objective *obj, enum achievement_types type, int entry_id, int obj_idx)
@@ -1304,9 +1295,9 @@ bool achievement_readdb_validate_criteria_achievement(const struct config_settin
 
 /**
  * Read a single objective entry of an achievement.
- * @param conf    [in]       config pointer.
- * @param index   [in]       Index of the objective being in the objective list being parsed.
- * @param entry   [in|out]   pointer to the achievement db entry being parsed.
+ * @param[in]  conf    config pointer.
+ * @param[in]  index   Index of the objective being in the objective list being parsed.
+ * @param[out] entry   pointer to the achievement db entry being parsed.
  * @return false on failure, true on success.
  */
 bool achievement_readdb_objective_sub(const struct config_setting_t *conf, int index, struct achievement_data *entry)
@@ -1381,9 +1372,8 @@ bool achievement_readdb_objective_sub(const struct config_setting_t *conf, int i
 
 /**
  * Parses achievement objective entries of the current achievement db entry being parsed.
- * @param conf       config pointer.
- * @param entry      pointer to the achievement db entry being parsed.
- * @param source     pointer to the string containing source/file name.
+ * @param[in]  conf       config pointer.
+ * @param[out] entry      pointer to the achievement db entry being parsed.
  * @return false on failure, true on success.
  */
 bool achievement_readdb_objectives(const struct config_setting_t *conf, struct achievement_data *entry)
@@ -1419,22 +1409,24 @@ bool achievement_readdb_objectives(const struct config_setting_t *conf, struct a
 
 /**
  * Validates a single reward item in the reward item list of an achievement.
- * @param t       [in]     pointer to the config setting.
- * @param index   [in]     Index of the item in the reward list.
- * @param entry   [in|out] pointer to the achievement entry being parsed.
+ * @param[in] t       pointer to the config setting.
+ * @param[in] index   Index of the item in the reward list.
+ * @param[out] entry   pointer to the achievement entry being parsed.
  * @return false on failure, true on success.
  */
 bool achievement_readdb_validate_reward_item_sub(const struct config_setting_t *t, int index, struct achievement_data *entry)
 {
 	struct config_setting_t *it = NULL;
 	struct achievement_reward_item item = { 0 };
+	const char *name = NULL;
+	int amount = 0;
 	int val = 0;
 
 	if ((it = libconfig->setting_get_elem(t, index)) == NULL)
 		return false;
 
-	const char *name = config_setting_name(it);
-	int amount = libconfig->setting_get_int(it);
+	name = config_setting_name(it);
+	amount = libconfig->setting_get_int(it);
 
 	if (name[0] == 'I' && name[1] == 'D' && itemdb->exists(atoi(name+2))) {
 		val = atoi(name);
@@ -1462,8 +1454,8 @@ bool achievement_readdb_validate_reward_item_sub(const struct config_setting_t *
 
 /**
  * Validates the reward items when parsing an achievement db entry.
- * @param t        [in]     pointer to the config setting.
- * @param entry    [in|out] pointer to the achievement entry being parsed.
+ * @param[in]  t        pointer to the config setting.
+ * @param[out] entry    pointer to the achievement entry being parsed.
  */
 void achievement_readdb_validate_reward_items(const struct config_setting_t *t, struct achievement_data *entry)
 {
@@ -1485,9 +1477,9 @@ void achievement_readdb_validate_reward_items(const struct config_setting_t *t, 
 
 /**
  * Validates the reward Bonus script when parsing an achievement db entry.
- * @param t        [in]     pointer to the config setting.
- * @param entry    [in|out] pointer to the achievement entry being parsed.
- * @param source   [in]     pointer to the source file name.
+ * @param[in] t        pointer to the config setting.
+ * @param[out] entry    pointer to the achievement entry being parsed.
+ * @param[in] source   pointer to the source file name.
  */
 void achievement_readdb_validate_reward_bonus(const struct config_setting_t *t, struct achievement_data *entry, const char *source)
 {
@@ -1503,8 +1495,8 @@ void achievement_readdb_validate_reward_bonus(const struct config_setting_t *t, 
 
 /**
  * Validates the reward Title Id when parsing an achievement entry.
- * @param t     [in]       pointer to the config setting.
- * @param entry [in|out]   pointer to the entry.
+ * @param[in] t     pointer to the config setting.
+ * @param[out] entry pointer to the entry.
  */
 void achievement_readdb_validate_reward_titleid(const struct config_setting_t *t, struct achievement_data *entry)
 {
@@ -1516,9 +1508,9 @@ void achievement_readdb_validate_reward_titleid(const struct config_setting_t *t
 
 /**
  * Validates the reward Bonus script when parsing an achievement db entry.
- * @param conf     [in]     pointer to the config setting.
- * @param entry    [in|out] pointer to the achievement entry being parsed.
- * @param source   [in]     pointer to the source file name.
+ * @param[in] conf     pointer to the config setting.
+ * @param[out] entry    pointer to the achievement entry being parsed.
+ * @param[in] source   pointer to the source file name.
  */
 bool achievement_readdb_rewards(const struct config_setting_t *conf, struct achievement_data *entry, const char *source)
 {
@@ -1548,9 +1540,9 @@ bool achievement_readdb_rewards(const struct config_setting_t *conf, struct achi
 
 /**
  * Validates the reward Bonus script when parsing an achievement db entry.
- * @param conf     [in]     pointer to the config setting.
- * @param entry    [in|out] pointer to the achievement entry being parsed.
- * @param source   [in]     pointer to the source file name.
+ * @param[in] conf     pointer to the config setting.
+ * @param[out] entry    pointer to the achievement entry being parsed.
+ * @param[in] source   pointer to the source file name.
  */
 void achievement_readdb_additional_fields(const struct config_setting_t *conf, struct achievement_data *entry, const char *source)
 {
@@ -1657,7 +1649,7 @@ void achievement_readb(void)
 
 /**
  * On server initiation.
- * @param minimal ignores alocating/reading databases.
+ * @param[in] minimal ignores alocating/reading databases.
  */
 void do_init_achievement(bool minimal)
 {
@@ -1747,7 +1739,7 @@ void achievement_defaults(void)
 	achievement->readdb_ranks = achievement_readdb_ranks;
 	/* */
 	achievement->get = achievement_get;
-	achievement->find_or_create = achievement_find_or_create;
+	achievement->ensure = achievement_ensure;
 	/* */
 	achievement->calculate_totals = achievement_calculate_totals;
 	achievement->check_complete = achievement_check_complete;
