@@ -55,6 +55,7 @@
 #include "map/storage.h"
 #include "map/trade.h"
 #include "map/unit.h"
+#include "map/achievement.h"
 #include "common/cbasetypes.h"
 #include "common/conf.h"
 #include "common/core.h"
@@ -2507,6 +2508,7 @@ ACMD(param) {
 		clif->updatestatus(sd, SP_USTR + i);
 		status_calc_pc(sd, SCO_FORCE);
 		clif->message(fd, msg_fd(fd,42)); // Stat changed.
+		achievement->validate_stats(sd, SP_STR + i, new_value); // Achievements [Smokexyz/Hercules]
 	} else {
 		if (value < 0)
 			clif->message(fd, msg_fd(fd,41)); // Unable to decrease the number/value.

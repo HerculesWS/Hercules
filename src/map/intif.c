@@ -41,6 +41,8 @@
 #include "map/quest.h"
 #include "map/rodex.h"
 #include "map/storage.h"
+#include "map/achievement.h"
+
 #include "common/memmgr.h"
 #include "common/nullpo.h"
 #include "common/showmsg.h"
@@ -1701,11 +1703,104 @@ void intif_parse_DeleteHomunculusOk(int fd) {
 		ShowError("Homunculus data delete failure\n");
 }
 
-/**************************************
+/***************************************
+ *
+ * ACHIEVEMENT SYSTEM FUNCTIONS
+ *
+ ***************************************/
+/**
+ * Sends a request to the inter-server to load
+ * and send a character's achievement data.
+ * @packet [out] 0x3098 <char_id>.L
+ * @param sd pointer to map_session_data.
+ */
+void intif_achievements_request(struct map_session_data *sd)
+{
+	nullpo_retv(sd);
 
-QUESTLOG SYSTEM FUNCTIONS
+	if (intif->CheckForCharServer())
+		return;
 
-***************************************/
+	WFIFOHEAD(inter_fd, 6);
+	WFIFOW(inter_fd, 0) = 0x3098;
+	WFIFOL(inter_fd, 2) = sd->status.char_id;
+	WFIFOSET(inter_fd, 6);
+}
+
+/**
+ * Handles reception of achievement data for a character from the inter-server.
+ * @packet [in] 0x3810 <packet_len>.W <char_id>.L <char_achievements[]>.P
+ * @param fd socket descriptor.
+ */
+void intif_parse_achievements_load(int fd)
+{
+	int size = RFIFOW(fd, 2);
+	int char_id = RFIFOL(fd, 4);
+	int payload_count = (size - 8) / sizeof(struct achievement);
+	struct map_session_data *sd = map->charid2sd(char_id);
+	int i = 0;
+
+	if (sd == NULL) {
+		ShowError("intif_parse_achievements_load: Parse request for achievements received but character is offline!\n");
+		return;
+	}
+
+	if (VECTOR_LENGTH(sd->achievement) > 0) {
+		ShowError("intif_parse_achievements_load: Achievements already loaded! Possible multiple calls from the inter-server received.\n");
+		return;
+	}
+
+	VECTOR_ENSURE(sd->achievement, payload_count, 1);
+
+	for (i = 0; i < payload_count; i++) {
+		struct achievement t_ach = { 0 };
+
+		memcpy(&t_ach, RFIFOP(fd, 8 + i * sizeof(struct achievement)), sizeof(struct achievement));
+
+		if (achievement->get(t_ach.id) == NULL) {
+			ShowError("intif_parse_achievements_load: Invalid Achievement %d received from character %d. Ignoring...\n", t_ach.id, char_id);
+			continue;
+		}
+
+		VECTOR_PUSH(sd->achievement, t_ach);
+	}
+
+	clif->achievement_send_list(fd, sd);
+}
+
+/**
+ * Send character's achievement data to the inter-server.
+ * @packet 0x3099 <packet_len>.W <char_id>.L <achievements[]>.P
+ * @param sd pointer to map session data.
+ */
+void intif_achievements_save(struct map_session_data *sd)
+{
+	int packet_len = 0, payload_size = 0, i = 0;
+
+	nullpo_retv(sd);
+	/* check for character server. */
+	if (intif->CheckForCharServer())
+		return;
+	/* Return if no data. */
+	if (!(payload_size = VECTOR_LENGTH(sd->achievement) * sizeof(struct achievement)))
+		return;
+
+	packet_len = payload_size + 8;
+
+	WFIFOHEAD(inter_fd, packet_len);
+	WFIFOW(inter_fd, 0) = 0x3099;
+	WFIFOW(inter_fd, 2) = packet_len;
+	WFIFOL(inter_fd, 4) = sd->status.char_id;
+	for (i = 0; i < VECTOR_LENGTH(sd->achievement); i++)
+		memcpy(WFIFOP(inter_fd, 8 + i * sizeof(struct achievement)), &VECTOR_INDEX(sd->achievement, i), sizeof(struct achievement));
+	WFIFOSET(inter_fd, packet_len);
+}
+
+/***************************************
+ *
+ * QUESTLOG SYSTEM FUNCTIONS
+ *
+ ***************************************/
 
 /**
  * Requests a character's quest log entries to the inter server.
@@ -2748,6 +2843,7 @@ int intif_parse(int fd)
 		case 0x3806: intif->pChangeNameOk(fd); break;
 		case 0x3807: intif->pMessageToFD(fd); break;
 		case 0x3808: intif->pAccountStorageSaveAck(fd); break;
+		case 0x3810: intif->pAchievementsLoad(fd); break;
 		case 0x3818: intif->pLoadGuildStorage(fd); break;
 		case 0x3819: intif->pSaveGuildStorage(fd); break;
 		case 0x3820: intif->pPartyCreated(fd); break;
@@ -2844,7 +2940,7 @@ int intif_parse(int fd)
 void intif_defaults(void) {
 	const int packet_len_table [INTIF_PACKET_LEN_TABLE_SIZE] = {
 		-1,-1,27,-1, -1,-1,37,-1,  7, 0, 0, 0,  0, 0,  0, 0, //0x3800-0x380f
-		 0, 0, 0, 0,  0, 0, 0, 0, -1,11, 0, 0,  0, 0,  0, 0, //0x3810
+		-1, 0, 0, 0,  0, 0, 0, 0, -1,11, 0, 0,  0, 0,  0, 0, //0x3810 Achievements [Smokexyz/Hercules]
 		39,-1,15,15, 14,19, 7,-1,  0, 0, 0, 0,  0, 0,  0, 0, //0x3820
 		10,-1,15, 0, 79,23, 7,-1,  0,-1,-1,-1, 14,67,186,-1, //0x3830
 		-1, 0, 0,14,  0, 0, 0, 0, -1,74,-1,11, 11,-1,  0, 0, //0x3840
@@ -2949,6 +3045,9 @@ void intif_defaults(void) {
 	intif->CheckForCharServer = CheckForCharServer;
 	/* */
 	intif->itembound_req = intif_itembound_req;
+	/* Achievement System */
+	intif->achievements_request = intif_achievements_request;
+	intif->achievements_save = intif_achievements_save;
 	/* parse functions */
 	intif->pWisMessage = intif_parse_WisMessage;
 	intif->pWisEnd = intif_parse_WisEnd;
@@ -3021,4 +3120,6 @@ void intif_defaults(void) {
 	intif->pRodexCheckName = intif_parse_RodexCheckName;
 	/* Clan System */
 	intif->pRecvClanMemberAction = intif_parse_RecvClanMemberAction;
+	/* Achievement System */
+	intif->pAchievementsLoad = intif_parse_achievements_load;
 }

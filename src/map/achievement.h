@@ -271,13 +271,13 @@ struct achievement_interface {
 	/* */
 	void (*readdb_ranks) (void);
 	/* */
-	struct achievement_data *(*get) (int aid);
-	struct achievement *(*find_or_create) (struct map_session_data *sd, int aid, bool create);
+	const struct achievement_data *(*get) (int aid);
+	struct achievement *(*ensure) (struct map_session_data *sd, const struct achievement_data *ad);
 	/* */
 	void (*calculate_totals) (const struct map_session_data *sd, int *points, int *completed, int *rank, int *curr_rank_points);
-	bool (*check_complete) (struct map_session_data *sd, struct achievement_data *ad);
-	void (*progress_add) (struct map_session_data *sd, struct achievement_data *ad, unsigned int obj_idx, int progress);
-	void (*progress_set) (struct map_session_data *sd, struct achievement_data *ad, unsigned int obj_idx, int progress);
+	bool (*check_complete) (struct map_session_data *sd, const struct achievement_data *ad);
+	void (*progress_add) (struct map_session_data *sd, const struct achievement_data *ad, unsigned int obj_idx, int progress);
+	void (*progress_set) (struct map_session_data *sd, const struct achievement_data *ad, unsigned int obj_idx, int progress);
 	bool (*check_criteria) (const struct achievement_objective *objective, const struct achievement_objective *criteria);
 	/* */
 	bool (*validate) (struct map_session_data *sd, int aid, unsigned int obj_idx, int progress, bool additive);

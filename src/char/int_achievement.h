@@ -36,7 +36,7 @@ struct inter_achievement_interface {
 	int (*sql_init) (void);
 	void (*sql_final) (void);
 	/* */
-	int (*tosql) (int char_id, struct char_achievements *cp, struct char_achievements *p);
+	int (*tosql) (int char_id, struct char_achievements *cp, const struct char_achievements *p);
 	bool (*fromsql) (int char_id, struct char_achievements *a);
 	/* */
 	struct DBData(*ensure_char_achievements) (union DBKey key, va_list args);

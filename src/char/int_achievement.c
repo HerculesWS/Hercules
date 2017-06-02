@@ -43,12 +43,12 @@ struct inter_achievement_interface *inter_achievement;
 
 /**
  * Saves changed achievements for a character.
- * @param  char_id     character identifier.
- * @param  cp          pointer to loaded achievements.
- * @param  p           pointer to map-sent character achievements.
+ * @param[in]   char_id     character identifier.
+ * @param[out]  cp          pointer to loaded achievements.
+ * @param[in]   p           pointer to map-sent character achievements.
  * @return number of achievements saved.
  */
-int inter_achievement_tosql(int char_id, struct char_achievements *cp, struct char_achievements *p)
+int inter_achievement_tosql(int char_id, struct char_achievements *cp, const struct char_achievements *p)
 {
 	StringBuf buf;
 	int i = 0, rows = 0;
@@ -87,7 +87,6 @@ int inter_achievement_tosql(int char_id, struct char_achievements *cp, struct ch
 	if (rows > 0 && SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf))) {
 		Sql_ShowDebug(inter->sql_handle);
 		StrBuf->Destroy(&buf); // Destroy the buffer.
-		VECTOR_CLEAR(*p); /* Free buffer data in the case of an error. */
 		return 0;
 	}
 	// Destroy the buffer.
@@ -107,8 +106,8 @@ int inter_achievement_tosql(int char_id, struct char_achievements *cp, struct ch
 
 /**
  * Retrieves all achievements of a character.
- * @param char_id  character identifier.
- * @param ca       pointer to character achievements structure.
+ * @param[in]  char_id  character identifier.
+ * @param[out] cp       pointer to character achievements structure.
  * @return true on success, false on failure.
  */
 bool inter_achievement_fromsql(int char_id, struct char_achievements *cp)
@@ -117,8 +116,9 @@ bool inter_achievement_fromsql(int char_id, struct char_achievements *cp)
 	char *data;
 	int i = 0, num_rows = 0;
 
-	Assert_ret(char_id > 0);
 	nullpo_ret(cp);
+
+	Assert_ret(char_id > 0);
 
 	// char_achievements (`char_id`, `ach_id`, `completed_at`, `rewarded_at`, `obj_0`, `obj_2`, ...`obj_9`)
 	StrBuf->Init(&buf);
@@ -133,10 +133,11 @@ bool inter_achievement_fromsql(int char_id, struct char_achievements *cp)
 		return false;
 	}
 
+	VECTOR_CLEAR(*cp);
+
 	if ((num_rows = (int) SQL->NumRows(inter->sql_handle)) != 0) {
 		int j = 0;
 
-		VECTOR_CLEAR(*cp);
 		VECTOR_ENSURE(*cp, num_rows, 1);
 
 		for (i = 0; i < num_rows && SQL_SUCCESS == SQL->NextRow(inter->sql_handle); i++) {
@@ -166,7 +167,7 @@ bool inter_achievement_fromsql(int char_id, struct char_achievements *cp)
 
 /**
  * Parse achievement load request from the map server
- * @param fd  socket descriptor.
+ * @param[in] fd  socket descriptor.
  */
 void mapif_parse_load_achievements(int fd)
 {
@@ -182,8 +183,8 @@ void mapif_parse_load_achievements(int fd)
 
 /**
  * Loads achievements and sends to the map server.
- * @param fd       socket descriptor
- * @param char_id  character Id.
+ * @param[in] fd       socket descriptor
+ * @param[in] char_id  character Id.
  */
 void mapif_achievement_load(int fd, int char_id)
 {
@@ -201,19 +202,22 @@ void mapif_achievement_load(int fd, int char_id)
 
 /**
  * Sends achievement data of a character to the map server.
- * @packet 0x3898  [out] <packet_id>.W <payload_size>.W <char_id>.L <char_achievements[]>.P
- * @param  fd      [in]  socket descriptor.
- * @param  char_id [in]  Character ID.
- * @param  cp      [in]  Pointer to character's achievement data vector.
+ * @packet[out] 0x3810  <packet_id>.W <payload_size>.W <char_id>.L <char_achievements[]>.P
+ * @param[in]  fd      socket descriptor.
+ * @param[in]  char_id Character ID.
+ * @param[in]  cp      Pointer to character's achievement data vector.
  */
-void mapif_send_achievements_to_map(int fd, int char_id, struct char_achievements *cp)
+void mapif_send_achievements_to_map(int fd, int char_id, const struct char_achievements *cp)
 {
 	int i = 0;
 	int data_size = sizeof(struct achievement) * VECTOR_LENGTH(*cp);
 
+STATIC_ASSERT((sizeof(struct achievement) * MAX_ACHIEVEMENT_DB + 8 <= UINT16_MAX),
+	"The achievements data can potentially be larger than the maximum packet size. This may cause errors at run-time.");
+
 	/* Send to the map server. */
 	WFIFOHEAD(fd, (8 + data_size));
-	WFIFOW(fd, 0) = 0x3898;
+	WFIFOW(fd, 0) = 0x3810;
 	WFIFOW(fd, 2) = (8 + data_size);
 	WFIFOL(fd, 4) = char_id;
 	for (i = 0; i < VECTOR_LENGTH(*cp); i++)
@@ -223,8 +227,8 @@ void mapif_send_achievements_to_map(int fd, int char_id, struct char_achievement
 
 /**
  * Handles achievement request and saves data from map server.
- * @packet [in] 0x3099 <packet_size>.W <char_id>.L <char_achievement>.P
- * @param fd  session socket descriptor.
+ * @packet[in] 0x3013 <packet_size>.W <char_id>.L <char_achievement>.P
+ * @param[in]      fd  session socket descriptor.
  */
 void mapif_parse_save_achievements(int fd)
 {
@@ -254,8 +258,8 @@ void mapif_parse_save_achievements(int fd)
 /**
  * Handles inter-server achievement db ensuring
  * and saves current achievements to sql.
- * @param char_id      character identifier.
- * @param p            pointer to character achievements vector.
+ * @param[in] char_id      character identifier.
+ * @param[out] p           pointer to character achievements vector.
  */
 void mapif_achievement_save(int char_id, struct char_achievements *p)
 {
@@ -280,10 +284,10 @@ int inter_achievement_parse_frommap(int fd)
 	RFIFOHEAD(fd);
 
 	switch (RFIFOW(fd,0)) {
-		case 0x3098:
+		case 0x3012:
 			mapif->pLoadAchievements(fd);
 			break;
-		case 0x3099:
+		case 0x3013:
 			mapif->pSaveAchievements(fd);
 			break;
 		default:

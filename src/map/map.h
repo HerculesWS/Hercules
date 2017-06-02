@@ -65,6 +65,16 @@ enum E_MAPSERVER_ST {
 #define block_free_max 1048576
 #define BL_LIST_MAX 1048576
 
+// The following system marks a different job ID system used by the map server,
+// which makes a lot more sense than the normal one. [Skotlex]
+// These marks the "level" of the job.
+#define JOBL_2_1   0x0100
+#define JOBL_2_2   0x0200
+#define JOBL_2     0x0300 // JOBL_2_1 | JOBL_2_2
+#define JOBL_UPPER 0x1000
+#define JOBL_BABY  0x2000
+#define JOBL_THIRD 0x4000
+
 // For filtering and quick checking.
 #define MAPID_BASEMASK 0x00ff
 #define MAPID_UPPERMASK 0x0fff
@@ -536,6 +546,7 @@ struct flooritem_data {
 };
 
 enum status_point_types { //we better clean up this enum and change it name [Hemagx]
+	SP_NONE = -1,
 	SP_SPEED,SP_BASEEXP,SP_JOBEXP,SP_KARMA,SP_MANNER,SP_HP,SP_MAXHP,SP_SP, // 0-7
 	SP_MAXSP,SP_STATUSPOINT,SP_0a,SP_BASELEVEL,SP_SKILLPOINT,SP_STR,SP_AGI,SP_VIT, // 8-15
 	SP_INT,SP_DEX,SP_LUK,SP_CLASS,SP_ZENY,SP_SEX,SP_NEXTBASEEXP,SP_NEXTJOBEXP, // 16-23

@@ -3209,7 +3209,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0a22,3); // ZC_RECV_ROULETTE_ITEM
 	packet(0x0a23,-1); // ZC_ALL_ACH_LIST
 	packet(0x0a24,35); // ZC_ACH_UPDATE
-	packet(0x0a25,6,clif->pDull/*,XXX*/); // CZ_REQ_ACH_REWARD
+	packet(0x0a25,6,clif->pAchievementGetReward, 2); // CZ_REQ_ACH_REWARD
 	packet(0x0a26,7); // ZC_REQ_ACH_REWARD_ACK
 // changed packet sizes
 	packet(0x0a18,14); // ZC_ACCEPT_ENTER3

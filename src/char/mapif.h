@@ -40,6 +40,11 @@ struct mapif_interface {
 	int (*sendallwos) (int sfd, unsigned char *buf, unsigned int len);
 	int (*send) (int fd, unsigned char *buf, unsigned int len);
 	void (*send_users_count) (int users);
+	void (*pLoadAchievements) (int fd);
+	void (*sAchievementsToMap) (int fd, int char_id, const struct char_achievements *p);
+	void (*pSaveAchievements) (int fd);
+	void (*achievement_load) (int fd, int char_id);
+	void (*achievement_save) (int char_id, struct char_achievements *p);
 	void (*auction_message) (int char_id, unsigned char result);
 	void (*auction_sendlist) (int fd, int char_id, short count, short pages, unsigned char *buf);
 	void (*parse_auction_requestlist) (int fd);
