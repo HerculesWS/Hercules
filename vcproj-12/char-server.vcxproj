@@ -174,6 +174,7 @@
     <ClInclude Include="..\src\char\HPMchar.h" />
     <ClInclude Include="..\src\char\char.h" />
     <ClInclude Include="..\src\char\geoip.h" />
+    <ClInclude Include="..\src\char\int_achievement.h" />
     <ClInclude Include="..\src\char\int_auction.h" />
     <ClInclude Include="..\src\char\int_clan.h" />
     <ClInclude Include="..\src\char\int_elemental.h" />
@@ -228,6 +229,7 @@
     <ClCompile Include="..\src\char\HPMchar.c" />
     <ClCompile Include="..\src\char\char.c" />
     <ClCompile Include="..\src\char\geoip.c" />
+    <ClCompile Include="..\src\char\int_achievement.c" />
     <ClCompile Include="..\src\char\int_auction.c" />
     <ClCompile Include="..\src\char\int_clan.c" />
     <ClCompile Include="..\src\char\int_elemental.c" />
