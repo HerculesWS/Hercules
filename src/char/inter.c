@@ -34,6 +34,7 @@
 #include "char/int_pet.h"
 #include "char/int_quest.h"
 #include "char/int_storage.h"
+#include "char/int_achievement.h"
 #include "char/mapif.h"
 #include "common/cbasetypes.h"
 #include "common/conf.h"
@@ -76,7 +77,7 @@ int inter_recv_packet_length[] = {
 	 6,-1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0,    // 3060-  Quest system [Kevin] [Inkfish]
 	-1,10, 6,-1,  0, 0, 0, 0,  0, 0, 0, 0, -1,10,  6,-1,    // 3070-  Mercenary packets [Zephyrus], Elemental packets [pakpil]
 	48,14,-1, 6,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0,    // 3080-
-	-1,10,-1, 6,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0,    // 3090-  Homunculus packets [albator]
+	-1,10,-1, 6,  0, 0, 0, 0,  6,-1, 0, 0,  0, 0,  0, 0,    // 3090-  Homunculus packets [albator] + Achievements [Smokexyz/Hercules]
 };
 
 struct WisData {
@@ -974,6 +975,7 @@ int inter_init_sql(const char *file)
 	inter_elemental->sql_init();
 	inter_mail->sql_init();
 	inter_auction->sql_init();
+	inter_achievement->sql_init();
 
 	geoip->init();
 	inter->msg_config_read("conf/messages.conf", false);
@@ -994,6 +996,7 @@ void inter_final(void)
 	inter_elemental->sql_final();
 	inter_mail->sql_final();
 	inter_auction->sql_final();
+	inter_achievement->sql_final();
 
 	geoip->final(true);
 	inter->do_final_msg();
@@ -1416,6 +1419,7 @@ int inter_parse_frommap(int fd)
 		  || inter_mail->parse_frommap(fd)
 		  || inter_auction->parse_frommap(fd)
 		  || inter_quest->parse_frommap(fd)
+		  || inter_achievement->parse_frommap(fd)
 		   )
 			break;
 		else

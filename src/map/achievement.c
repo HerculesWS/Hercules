@@ -582,7 +582,6 @@ void achievement_validate_chatroom_members(struct map_session_data *sd, int prog
 {
 	struct achievement_objective criteria = { 0 };
 
-	nullpo_retv(sd);
 	Assert_retv(progress > 0);
 
 	criteria.goal = progress;
@@ -600,8 +599,6 @@ void achievement_validate_friend_add(struct map_session_data *sd)
 {
 	struct achievement_objective criteria = { 0 };
 
-	nullpo_retv(sd);
-
 	criteria.goal = 1;
 
 	achievement->validate_type(sd, ACH_FRIEND_ADD, &criteria, true);
@@ -617,8 +614,6 @@ void achievement_validate_party_create(struct map_session_data *sd)
 {
 	struct achievement_objective criteria = { 0 };
 
-	nullpo_retv(sd);
-
 	criteria.goal = 1;
 	achievement->validate_type(sd, ACH_PARTY_CREATE, &criteria, true);
 }
@@ -632,8 +627,6 @@ void achievement_validate_party_create(struct map_session_data *sd)
 void achievement_validate_marry(struct map_session_data *sd)
 {
 	struct achievement_objective criteria = { 0 };
-
-	nullpo_retv(sd);
 
 	criteria.goal = 1;
 
@@ -651,8 +644,6 @@ void achievement_validate_marry(struct map_session_data *sd)
 void achievement_validate_adopt(struct map_session_data *sd, bool parent)
 {
 	struct achievement_objective criteria = { 0 };
-
-	nullpo_retv(sd);
 
 	criteria.goal = 1;
 
@@ -1428,13 +1419,15 @@ bool achievement_readdb_validate_reward_item_sub(const struct config_setting_t *
 {
 	struct config_setting_t *it = NULL;
 	struct achievement_reward_item item = { 0 };
+	const char *name = NULL;
+	int amount = 0;
 	int val = 0;
 
 	if ((it = libconfig->setting_get_elem(t, index)) == NULL)
 		return false;
 
-	const char *name = config_setting_name(it);
-	int amount = libconfig->setting_get_int(it);
+	name = config_setting_name(it);
+	amount = libconfig->setting_get_int(it);
 
 	if (name[0] == 'I' && name[1] == 'D' && itemdb->exists(atoi(name+2))) {
 		val = atoi(name);

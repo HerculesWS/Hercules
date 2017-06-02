@@ -135,6 +135,9 @@ struct intif_interface {
 	void (*request_accinfo) (int u_fd, int aid, int group_lv, char* query);
 	/* */
 	int (*CheckForCharServer) (void);
+	/* Achievement System [Smokexyz/Hercules] */
+	void(*achievements_request) (struct map_session_data *sd);
+	void(*achievements_save) (struct map_session_data *sd);
 	/* */
 	void (*pWisMessage) (int fd);
 	void (*pWisEnd) (int fd);
@@ -200,6 +203,7 @@ struct intif_interface {
 	void (*pRecvHomunculusData) (int fd);
 	void (*pSaveHomunculusOk) (int fd);
 	void (*pDeleteHomunculusOk) (int fd);
+	void (*pAchievementsLoad) (int fd);
 };
 
 #ifdef HERCULES_CORE
