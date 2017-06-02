@@ -29,6 +29,7 @@
 #include "map/npc.h" // npc_event_do()
 #include "map/pc.h"
 #include "map/skill.h" // ext_skill_unit_onplace()
+#include "map/achievement.h"
 #include "common/cbasetypes.h"
 #include "common/memmgr.h"
 #include "common/mmo.h"
@@ -125,6 +126,7 @@ bool chat_createpcchat(struct map_session_data* sd, const char* title, const cha
 		pc_stop_attack(sd);
 		clif->createchat(sd,0); // 0 = success
 		clif->dispchat(cd,0);
+		achievement->validate_chatroom_create(sd); // Achievements [Smokexyz/Hercules]
 		return true;
 	}
 	clif->createchat(sd,1); // 1 = Room limit exceeded
@@ -178,6 +180,9 @@ bool chat_joinchat(struct map_session_data* sd, int chatid, const char* pass) {
 	pc_stop_walking(sd, STOPWALKING_FLAG_FIXPOS);
 	cd->usersd[cd->users] = sd;
 	cd->users++;
+
+	if (cd->owner->type == BL_PC)
+		achievement->validate_chatroom_members(BL_UCAST(BL_PC, cd->owner), cd->users);
 
 	pc_setchatid(sd,cd->bl.id);
 

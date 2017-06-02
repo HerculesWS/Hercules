@@ -58,6 +58,7 @@
 #include "map/rodex.h"
 #include "map/trade.h"
 #include "map/unit.h"
+#include "map/achievement.h"
 #include "common/HPM.h"
 #include "common/cbasetypes.h"
 #include "common/conf.h"
@@ -6020,6 +6021,7 @@ int do_final(void) {
 	map->list_final();
 	vending->final();
 	rodex->final();
+	achievement->final();
 
 	HPM_map_do_final();
 
@@ -6215,6 +6217,7 @@ void map_load_defaults(void) {
 	pet_defaults();
 	path_defaults();
 	quest_defaults();
+	achievement_defaults();
 	npc_chat_defaults();
 	rodex_defaults();
 }
@@ -6529,6 +6532,7 @@ int do_init(int argc, char *argv[])
 	mercenary->init(minimal);
 	elemental->init(minimal);
 	quest->init(minimal);
+	achievement->init(minimal);
 	npc->init(minimal);
 	unit->init(minimal);
 	bg->init(minimal);
