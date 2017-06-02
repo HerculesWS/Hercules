@@ -86,13 +86,13 @@ int inter_storage_tosql(int account_id, const struct storage_data *p)
 						StrBuf->AppendStr(&buf, ", `expire_time`, `bound`, `unique_id`) VALUES");
 					}
 
-					StrBuf->Printf(&buf, "('%d', '%d', '%d', '%d', '%u', '%d', '%d', '%d'",
-								   cp_it->id, account_id, p_it->nameid, p_it->amount, p_it->equip, p_it->identify, p_it->refine, p_it->attribute);
+					StrBuf->Printf(&buf, "%s('%d', '%d', '%d', '%d', '%u', '%d', '%d', '%d'",
+								   total_updates > 0 ? ", " : "", cp_it->id, account_id, p_it->nameid, p_it->amount, p_it->equip, p_it->identify, p_it->refine, p_it->attribute);
 					for (k = 0; k < MAX_SLOTS; k++)
 						StrBuf->Printf(&buf, ", '%d'", p_it->card[k]);
 					for (k = 0; k < MAX_ITEM_OPTIONS; ++k)
 						StrBuf->Printf(&buf, ", '%d', '%d'", p_it->option[k].index, p_it->option[k].value);
-					StrBuf->Printf(&buf, ", '%u', '%d', '%"PRIu64"')%s", p_it->expire_time, p_it->bound, p_it->unique_id, total_updates > 0 ? ", " : "");
+					StrBuf->Printf(&buf, ", '%u', '%d', '%"PRIu64"')", p_it->expire_time, p_it->bound, p_it->unique_id);
 
 					total_updates++;
 				}
