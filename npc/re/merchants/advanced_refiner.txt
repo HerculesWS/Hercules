@@ -140,7 +140,7 @@ malangdo,221,174,6	script	Holink#mal_cash	4_CAT_ADV1,{
 		mes "You don't belive in refine master Holink, meow?~";
 		close;
 	}
-	if (getequippercentrefinery(.@part) < 100) {
+	if (getequippercentrefinery(.@part, REFINE_CHANCE_TYPE_ENRICHED) < 100) {
 		mes "[Holink]";
 		mes "Meow!!";
 		if (.@type$ == "armor")
@@ -177,7 +177,7 @@ malangdo,221,174,6	script	Holink#mal_cash	4_CAT_ADV1,{
 	}
 	delitem .@material,1;
 	Zeny -= .@price;
-	if (getequippercentrefinery(.@part) > rand(100) || getequippercentrefinery(.@part) > rand(100)) {
+	if (getequippercentrefinery(.@part, REFINE_CHANCE_TYPE_ENRICHED) > rand(100)) {
 		successrefitem .@part;
 		mes "[Holink]";
 		mes "Me~ Me~ Meow! Fun fun refining~";

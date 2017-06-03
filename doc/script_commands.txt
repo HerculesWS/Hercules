@@ -3008,21 +3008,32 @@ Examples:
 
 ---------------------------------------
 
-*getequippercentrefinery(<equipment slot>)
+*getequippercentrefinery(<equipment slot>{, <type>})
 
 This function calculates and returns the percent value chance to 
 successfully refine the item found in the specified equipment slot of the 
-invoking character by +1. There is no actual formula, the success rate for 
-a given weapon level of a certain refine level is found in the 
-db/refine_db.txt file. For a list of equipment slots see getequipid().
+invoking character by +1. Refine rates are defined in the db/<re/pre-re>/refine_db.conf 
+files. For a list of equipment slots see getequipid().
 
 These values can be displayed for the player to see, or used to calculate 
 the random change of a refine succeeding or failing and then going through 
 with it (which is what the official NPC refinery scripts use it for).
 
+Refine Chance Type Constants -
+REFINE_CHANCE_TYPE_NORMAL: 0        (Normal Ores)
+REFINE_CHANCE_TYPE_ENRICHED: 1      (Enriched Ores)
+REFINE_CHANCE_TYPE_E_NORMAL: 2      (Event Normal Ores)
+REFINE_CHANCE_TYPE_E_ENRICHED: 3    (Event Enriched Ores)
+
+Refine rate information -
+Normal Ores: http://ro.gnjoy.com/news/probability/View.asp?category=4&seq=1941553&curpage=1
+Enriched Ores:  http://ro.gnjoy.com/news/probability/View.asp?category=4&seq=1941565&curpage=1
+Event Normal Ores: http://ro.gnjoy.com/news/probability/View.asp?category=4&seq=1941558&curpage=1
+Event Enriched Ores: http://ro.gnjoy.com/news/probability/View.asp?category=4&seq=1941567&curpage=1
+
 // This will find a random number from 0 - 99 and if that is equal to or 
 // more than the value recovered by this command it will show a message
-	if (getequippercentrefinery(EQI_HAND_L) <= rand(100))
+	if (getequippercentrefinery(EQI_HAND_L, REFINE_CHANCE_TYPE_NORMAL) <= rand(100))
 		mes("Aww");
 
 ---------------------------------------
