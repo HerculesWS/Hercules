@@ -81,9 +81,9 @@ xmas,150,134,3	script	Union Commander Cliff	4_XMAS_CAT1,{
 		erasequest 15057;
 		setquest 15059;
 		getitem Solo_Christmas_Gift,1; //Solo_Christmas_Gift
-		specialeffect(EF_MAGICALATTHIT, AREA, playerattached());
-		specialeffect(EF_POTION2, AREA, playerattached());
-		specialeffect(EF_ANGEL2, AREA, playerattached());
+		specialeffect2 EF_MAGICALATTHIT;
+		specialeffect2 EF_POTION2;
+		specialeffect2 EF_ANGEL2;
 		close;
 	}
 	if (questprogress(15056) == 1) {
@@ -173,10 +173,10 @@ xmas,150,134,3	script	Union Commander Cliff	4_XMAS_CAT1,{
 		mes "......";
 		mes "Damn you! Taste the wrath of the Singles Union Army!!!";
 		close2;
-		specialeffect(EF_MAGICALATTHIT, AREA, playerattached());
-		specialeffect(EF_POTION2, AREA, playerattached());
-		specialeffect(EF_CRASHEARTH, AREA, playerattached());
-		specialeffect(EF_COIN, AREA, playerattached());
+		specialeffect2 EF_MAGICALATTHIT;
+		specialeffect2 EF_POTION2;
+		specialeffect2 EF_CRASHEARTH;
+		specialeffect2 EF_COIN;
 		end;
 	}
 	mes "[Union Commander Cliff]";

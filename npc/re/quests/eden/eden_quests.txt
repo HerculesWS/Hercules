@@ -116,7 +116,7 @@ moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 				callsub S_Quest3;
 			case 2:
 				mes "You are so rude!";
-				specialeffect(EF_HIT1, AREA, playerattached());
+				specialeffect2 EF_HIT1;
 				percentheal -50, 0;
 				next;
 				mes "-Beats quickly and this shining Rune Knight turns invisible.";

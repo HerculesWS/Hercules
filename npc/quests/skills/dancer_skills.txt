@@ -67,7 +67,7 @@ comodo,204,172,5	script	Canell#qsk_dan01	4_F_07,{
 				mes "Ow...!";
 				mes "Th-that whip!";
 				mes "I-i-it huuuurts!";
-				specialeffect(EF_HIT2, AREA, playerattached());
+				specialeffect2 EF_HIT2;
 				percentheal -5,0;
 				close;
 			}
@@ -83,7 +83,7 @@ comodo,204,172,5	script	Canell#qsk_dan01	4_F_07,{
 			mes "What the...? Ack!";
 			mes "S-stop wh-whipping";
 			mes "me! It... It stiiings!";
-			specialeffect(EF_HIT2, AREA, playerattached());
+			specialeffect2 EF_HIT2;
 			percentheal -10,0;
 			next;
 			mes "[Canell]";
@@ -107,7 +107,7 @@ comodo,204,172,5	script	Canell#qsk_dan01	4_F_07,{
 				mes "Not that whip";
 				mes "again! Arrgh, it's--";
 				mes "It hurts so much!";
-				specialeffect(EF_HIT2, AREA, playerattached());
+				specialeffect2 EF_HIT2;
 				percentheal -10,0;
 				close;
 			}
@@ -165,7 +165,7 @@ comodo,204,172,5	script	Canell#qsk_dan01	4_F_07,{
 				mes "I am irresistable!";
 				mes "I am the most attractive";
 				mes "woman in the whole world!";
-				specialeffect(EF_FLASHER, AREA, playerattached());
+				specialeffect2 EF_FLASHER;
 				next;
 				mes "^3355FFYour self esteem has";
 				mes "sky rocketed. Fortunately,";
@@ -251,7 +251,7 @@ comodo,204,172,5	script	Canell#qsk_dan01	4_F_07,{
 			next;
 			mes "[Canell]";
 			mes "Bam!";
-			specialeffect(EF_HIT2, AREA, playerattached());
+			specialeffect2 EF_HIT2;
 			percentheal -5,0;
 			next;
 			mes "["+ strcharinfo(PC_NAME) +"]";
@@ -301,14 +301,14 @@ comodo,204,172,5	script	Canell#qsk_dan01	4_F_07,{
 				mes "O-ow!";
 				mes "P-please...!";
 				mes "Not the whip again!";
-				specialeffect(EF_HIT2, AREA, playerattached());
+				specialeffect2 EF_HIT2;
 				percentheal -5,0;
 				close;
 			case 3:
 				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "Un, deux, trois~";
 				emotion e_no1,1;
-				specialeffect(EF_FLASHER, AREA, playerattached());
+				specialeffect2 EF_FLASHER;
 				next;
 				mes "[Canell]";
 				mes "Great, that's exactly";
@@ -337,7 +337,7 @@ comodo,204,172,5	script	Canell#qsk_dan01	4_F_07,{
 				mes "^3355FFYou have finally learned";
 				mes "the Charming Wink skill.^000000";
 				DANCER_SK = 9;
-				specialeffect(EF_ABSORBSPIRITS, AREA, playerattached());
+				specialeffect2 EF_ABSORBSPIRITS;
 				skill "DC_WINKCHARM",1,0;
 				close;
 			}
@@ -380,7 +380,7 @@ comodo,204,172,5	script	Canell#qsk_dan01	4_F_07,{
 			next;
 			mes "^3355FFYou have learned the";
 			mes "Charming Wink skill.^000000";
-			specialeffect(EF_ABSORBSPIRITS, AREA, playerattached());
+			specialeffect2 EF_ABSORBSPIRITS;
 			skill "DC_WINKCHARM",1,0;
 			close;
 		}
@@ -411,7 +411,7 @@ comodo,204,172,5	script	Canell#qsk_dan01	4_F_07,{
 			mes "handsome~";
 			mes "^333333*Wink~*^000000";
 			emotion e_kis;
-			specialeffect(EF_VALLENTINE2, AREA, playerattached());
+			specialeffect2 EF_VALLENTINE2;
 			next;
 			mes "^3355FFStrangely enough,";
 			mes "her wink has made";
@@ -583,7 +583,7 @@ prontera,183,333,1	script	Aelle#qsk_dan02	1_F_PRIEST,{
 				mes "her fists and laughs";
 				mes "maniacally to herself.^000000";
 				percentheal -10,0;
-				specialeffect(EF_HIT2, AREA, playerattached());
+				specialeffect2 EF_HIT2;
 				emotion e_dots,1;
 				delitem Alchol,1;
 				delitem Apple,1;

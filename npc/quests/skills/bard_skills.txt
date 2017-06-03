@@ -496,7 +496,7 @@ morocc_in,169,72,7	script	Spiteful-Looking Bard#bs	2_M_BARD_ORIENT,3,3,{
 				mes "voices yours, is this voice";
 				mes "mine. Head spinning, head";
 				mes "spinning, head spinning...!''";
-				specialeffect(EF_TALK_FROSTJOKE, AREA, playerattached());
+				specialeffect2 EF_TALK_FROSTJOKE;
 				delitem Munak_Doll,1;
 				skill "BA_PANGVOICE",1,0;
 				qskill_bard = 9;
@@ -578,7 +578,7 @@ morocc_in,169,72,7	script	Spiteful-Looking Bard#bs	2_M_BARD_ORIENT,3,3,{
 				mes "voices yours, is this voice";
 				mes "mine. Head spinning, head";
 				mes "spinning, head spinning...!''";
-				specialeffect(EF_TALK_FROSTJOKE, AREA, playerattached());
+				specialeffect2 EF_TALK_FROSTJOKE;
 				delitem Egg,5;
 				skill 1010,1,0;
 				qskill_bard = 9;

@@ -778,8 +778,8 @@ gef_fild07,108,161,4	script	Roda Frog#Frog_Cap	RODA_FROG,1,1,{
 			next;
 			mes "[King Froggie Vll]";
 			mes "I hearby give " + strcharinfo(PC_NAME) + ", our hero, this Frog Hat.";
-			specialeffect(EF_MAPPILLAR2, AREA, playerattached());
-			specialeffect(EF_BLESSING, AREA, playerattached());
+			specialeffect2 EF_MAPPILLAR2;
+			specialeffect2 EF_BLESSING;
 			erasequest 5004;
 			2009_hat = 6;
 			getitem Frog_Cap,1; //Frog_Cap

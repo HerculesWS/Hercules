@@ -1014,7 +1014,7 @@ tha_t03,67,70,0	script	Rune Device#tt1	HIDDEN_NPC,4,4,{
 		mes "The letters fly away in the form of a red key...";
 		thana_tower = 5;
 		changequest 7048,7049;
-		specialeffect(EF_COMBOATTACK1, AREA, playerattached());
+		specialeffect2 EF_COMBOATTACK1;
 		close;
 	}
 
@@ -1136,7 +1136,7 @@ tha_t04,195,195,0	script	Rune Device#tt2	HIDDEN_NPC,3,3,{
 					mes "It suddenly shakes, then disappears.";
 					thana_tower = 6;
 					changequest 7049,7050;
-					specialeffect(EF_COMBOATTACK1, AREA, playerattached());
+					specialeffect2 EF_COMBOATTACK1;
 					close;
 				}
 			}
@@ -1241,7 +1241,7 @@ tha_t05,62,179,0	script	Brilliant Statue#tt3	HIDDEN_NPC,3,3,{
 				mes "The illusion shakes, then melts on the surface of the key as light.";
 				thana_tower = 7;
 				changequest 7050,7051;
-				specialeffect(EF_COMBOATTACK1, AREA, playerattached());
+				specialeffect2 EF_COMBOATTACK1;
 				close;
 			case 2:
 				mes "You decide to ignore it.";
@@ -1508,8 +1508,8 @@ tha_t06,226,230,0	script	Brilliant Statue#tt4	HIDDEN_NPC,3,3,{
 					mes "and fades into the key.";
 					thana_tower = 8;
 					changequest 7051,7052;
-					specialeffect(EF_BEGINSPELL6, AREA, playerattached());
-					specialeffect(EF_SPELLBREAKER, AREA, playerattached());
+					specialeffect2 EF_BEGINSPELL6;
+					specialeffect2 EF_SPELLBREAKER;
 					close;
 				case 2:
 					mes "It was too intense to see the hallucination, so you gave up reading.";
@@ -1540,7 +1540,7 @@ tha_t06,204,181,0	script	Splendid Sword#tt5	HIDDEN_NPC,3,3,{
 		if ((countitem(Key_Red) > 0) && (countitem(Key_Yellow) > 0) && (countitem(Key_Blue) > 0) && (countitem(Key_Green) > 0)) {
 			mes "As you approach, the keys in your pocket";
 			mes "suddenly respond with a mysterious power.";
-			specialeffect(EF_ABSORBSPIRITS, AREA, playerattached());
+			specialeffect2 EF_ABSORBSPIRITS;
 			next;
 			if(select("Observe it.", "Ignore it.") == 2) {
 				mes "^3355FFYou decide to leave";
@@ -1555,7 +1555,7 @@ tha_t06,204,181,0	script	Splendid Sword#tt5	HIDDEN_NPC,3,3,{
 			case 1:
 				mes "By an unknown calling you decide to grab the blade of the sword.";
 				mes "Your hands get wounded and begin to bleed.";
-				specialeffect(EF_HIT1, AREA, playerattached());
+				specialeffect2 EF_HIT1;
 				percentheal -20,0;
 				close;
 			case 2:
@@ -1572,7 +1572,7 @@ tha_t06,204,181,0	script	Splendid Sword#tt5	HIDDEN_NPC,3,3,{
 					mes "Numerous conflicting spells act upon it, and you can tell that you chose incorrectly.";
 					mes "The sword automatically returns to the table, as it was before.";
 					specialeffect EF_HIT1;
-					specialeffect(EF_HIT1, AREA, playerattached());
+					specialeffect2 EF_HIT1;
 					percentheal -20,0;
 					close;
 				case 2:
@@ -1816,7 +1816,7 @@ tha_t12,161,57,0	script	Gold Religious Statue#tt	HIDDEN_NPC,{
 			mes "The sword appears to be missing a gem.";
 			mes "As I draw closer to the statue, the Yellow Charm Stone emits a bright light.";
 			specialeffect EF_BEGINSPELL5;
-			specialeffect(EF_BEGINSPELL5, AREA, playerattached());
+			specialeffect2 EF_BEGINSPELL5;
 			next;
 			if(select("Insert the Yellow Charm Stone.", "Run away.") == 2) close;
 			if ($@thana_summon == 0) {
@@ -1846,7 +1846,7 @@ tha_t12,154,17,0	script	Green Wiseman Statue#tt	HIDDEN_NPC,{
 			mes "The wiseman's wand seems to be missing a gem.";
 			mes "As I draw closer to the statue, the Green Charm Stone emits a bright light.";
 			specialeffect EF_BEGINSPELL4;
-			specialeffect(EF_BEGINSPELL4, AREA, playerattached());
+			specialeffect2 EF_BEGINSPELL4;
 			next;
 			if(select("Insert the Green Charm Stone.", "Run away.") == 2) close;
 			if ($@thana_summon == 1) {
@@ -1876,7 +1876,7 @@ tha_t12,103,17,0	script	Blue Angel Statue#tt	HIDDEN_NPC,{
 			mes "A gem seems to be missing from the statue's belt.";
 			mes "As I draw closer to the statue, the Blue Charm Stone emits a bright light.";
 			specialeffect EF_BEGINSPELL2;
-			specialeffect(EF_BEGINSPELL2, AREA, playerattached());
+			specialeffect2 EF_BEGINSPELL2;
 			next;
 			if(select("Insert the Blue Charm Stone.", "Run away.") == 2) close;
 			if ($@thana_summon == 2) {
@@ -1906,7 +1906,7 @@ tha_t12,96,57,0	script	Bloody Knight Statue#tt	HIDDEN_NPC,{
 			mes "A gem seems to be missing from the heart area of its armor.";
 			mes "As I draw closer to the statue, the Red Charm Stone emits a bright light.";
 			specialeffect EF_BEGINSPELL3;
-			specialeffect(EF_BEGINSPELL3, AREA, playerattached());
+			specialeffect2 EF_BEGINSPELL3;
 			next;
 			if(select("Insert the Red Charm Stone.", "Run away.") == 2) close;
 			if ($@thana_summon == 3) {
@@ -1936,7 +1936,7 @@ tha_t12,129,86,0	script	Dark Devil Statue#tt	HIDDEN_NPC,{
 			mes "The right eye seems to be missing a gem.";
 			mes "As I draw closer to the statue, the Black Charm Stone emits a bright light.";
 			specialeffect EF_BEGINSPELL7;
-			specialeffect(EF_BEGINSPELL7, AREA, playerattached());
+			specialeffect2 EF_BEGINSPELL7;
 			next;
 			if(select("Insert the Black Charm Stone.", "Run away.") == 2) close;
 			if ($@thana_summon == 4) {
@@ -2088,11 +2088,11 @@ OnTimer1000:
 OnTimer5000:
 	.@pillar = 1;
 OnTimer3000:
-	specialeffect(EF_BEGINSPELL7, AREA, getnpcid(0, "#tteffect05"));
-	specialeffect(EF_BEGINSPELL3, AREA, getnpcid(0, "#tteffect04"));
-	specialeffect(EF_BEGINSPELL2, AREA, getnpcid(0, "#tteffect03"));
-	specialeffect(EF_BEGINSPELL4, AREA, getnpcid(0, "#tteffect02"));
-	specialeffect(EF_BEGINSPELL5, AREA, getnpcid(0, "#tteffect01"));
+	specialeffect EF_BEGINSPELL7,AREA,"#tteffect05";
+	specialeffect EF_BEGINSPELL3,AREA,"#tteffect04";
+	specialeffect EF_BEGINSPELL2,AREA,"#tteffect03";
+	specialeffect EF_BEGINSPELL4,AREA,"#tteffect02";
+	specialeffect EF_BEGINSPELL5,AREA,"#tteffect01";
 	if (.@pillar) specialeffect EF_MAPPILLAR2;
 	end;
 }
@@ -2235,8 +2235,8 @@ OnDisable:
 
 thana_boss,141,218,0	script	#sommon_thanatos	FAKE_NPC,{
 OnEnable:
-	specialeffect(EF_MAPPILLAR2, AREA, getnpcid(0, "#sommon_thanatos"));
-	specialeffect(EF_SEISMICWEAPON, AREA, getnpcid(0, "#sommon_thanatos"));
+	specialeffect EF_MAPPILLAR2,AREA,"#sommon_thanatos";
+	specialeffect EF_SEISMICWEAPON,AREA,"#sommon_thanatos";
 	monster "thana_boss",141,218,"Thanatos Phantom",1708,1,"#sommon_thanatos::OnMyMobDead";
 	end;
 OnMyMobDead:

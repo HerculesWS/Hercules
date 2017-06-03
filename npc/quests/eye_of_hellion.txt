@@ -358,7 +358,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 			mes "this piece I found here in";
 			mes "Morroc, and the pieces you";
 			mes "found in Prontera and Payon. There's one more left in Geffen.";
-			specialeffect(EF_HEAL2, AREA, playerattached());
+			specialeffect2 EF_HEAL2;
 			specialeffect EF_HEAL2;
 			next;
 			mes "[Sir Chilias'Tyus]";
@@ -679,7 +679,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 
 OnTouch:
 	if (HELLIONQ == 57 && countitem(Piece_Of_Slate_2) > 0) {
-		specialeffect(EF_HEAL2, AREA, playerattached());
+		specialeffect2 EF_HEAL2;
 		specialeffect EF_HEAL2;
 		mes "^3355FFOne of the Tablet Pieces";
 		mes "that you have is beginning to";
@@ -1896,7 +1896,7 @@ pay_arche,142,28,0	script	Buddha Statue#paypuzz6	HIDDEN_NPC,5,5,{
 
 OnTouch:
 	if (HELLIONQ == 56 && countitem(Piece_Of_Slate_1) > 0) {
-		specialeffect(EF_HEAL2, AREA, playerattached());
+		specialeffect2 EF_HEAL2;
 		specialeffect EF_HEAL2;
 		mes "^3355FFThe piece of tablet";
 		mes "that you have is shining";
@@ -1924,7 +1924,7 @@ geffen,110,200,3	script	Sage Welshyun#hellion	4_M_SAGE_A,3,3,{
 		close;
 	}
 	else if (HELLIONQ == 58) {
-		specialeffect(EF_HEAL2, AREA, playerattached());
+		specialeffect2 EF_HEAL2;
 		specialeffect EF_HEAL2;
 		mes "[Welshyun]";
 		mes "That...";
@@ -2265,7 +2265,7 @@ geffen,110,200,3	script	Sage Welshyun#hellion	4_M_SAGE_A,3,3,{
 
 OnTouch:
 	if (HELLIONQ == 58 && countitem(Piece_Of_Slate_3) > 0) {
-		specialeffect(EF_HEAL2, AREA, playerattached());
+		specialeffect2 EF_HEAL2;
 		specialeffect EF_HEAL2;
 		mes "^3355FFThe piece of tablet";
 		mes "that you have is shining";
@@ -2444,7 +2444,7 @@ gef_fild09,296,59,0	script	Hidden Cave#hellion	HIDDEN_NPC,3,3,{
 
 OnTouch:
 	if (HELLIONQ == 68 && countitem(Slate) > 0) {
-		specialeffect(EF_HEAL2, AREA, playerattached());
+		specialeffect2 EF_HEAL2;
 		specialeffect EF_HEAL2;
 		mes "^3355FFThe tablet in your";
 		mes "hands begins to shine";

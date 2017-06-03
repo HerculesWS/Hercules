@@ -73,9 +73,9 @@ OnInit:
 
 OnTouch:
 	if (ROG_SK == 10) {
-		specialeffect(EF_CHANGECOLD, AREA, playerattached());
+		specialeffect2 EF_CHANGECOLD;
 		specialeffect EF_CHANGEWIND;
-		specialeffect(EF_LIGHTSPHERE, AREA, playerattached());
+		specialeffect2 EF_LIGHTSPHERE;
 		ROG_SK = 11;
 		mes "[Killer]";
 		mes "Wh-what have";
@@ -115,7 +115,7 @@ OnTouch:
 				mes "now, you're using the Close";
 				mes "Confine skill perfectly!^000000";
 				specialeffect EF_POTION1;
-				specialeffect(EF_POTION7, AREA, playerattached());
+				specialeffect2 EF_POTION7;
 			}
 			else {
 				mes "^3355FFWait--!";
@@ -157,7 +157,7 @@ in_rogue,355,179,0	script	Haijara Greg#rogueguild	1_ETC_01,{
 			mes "resulting from transcending,";
 			mes "eh? Then I will teach you the";
 			mes "Close Confine skill once again.";
-			specialeffect(EF_LIGHTSPHERE, AREA, playerattached());
+			specialeffect2 EF_LIGHTSPHERE;
 			skill 1005,1,0;
 			ROG_SK = 13;
 			close;
@@ -309,13 +309,13 @@ in_rogue,355,179,0	script	Haijara Greg#rogueguild	1_ETC_01,{
 				mes "that you covet so much...";
 				mes "^FF0000Close Confine^000000!";
 				specialeffect EF_CHANGECOLD;
-				specialeffect(EF_CHANGEWIND, AREA, playerattached());
+				specialeffect2 EF_CHANGEWIND;
 				next;
 				mes "[Haijara Greg]";
 				mes "Hmpf. Now you are";
 				mes "helpless, allowing";
 				mes "me to do this: ^FF0000Back Stab^000000!";
-				specialeffect(EF_COMBOATTACK5, AREA, playerattached());
+				specialeffect2 EF_COMBOATTACK5;
 				percentheal -95,0;
 				next;
 				mes "[Haijara Greg]";
@@ -512,7 +512,7 @@ in_rogue,355,179,0	script	Haijara Greg#rogueguild	1_ETC_01,{
 					mes "practice, and that you become as great a legend as Chae Takbae.";
 					ROG_SK = 12;
 					skill 1005,1,0;
-					specialeffect(EF_LIGHTSPHERE, AREA, playerattached());
+					specialeffect2 EF_LIGHTSPHERE;
 					close;
 				}
 				mes "[Haijara Greg]";
@@ -524,7 +524,7 @@ in_rogue,355,179,0	script	Haijara Greg#rogueguild	1_ETC_01,{
 				mes "thanks again for your help.";
 				ROG_SK = 12;
 				skill 1005,1,0;
-				specialeffect(EF_LIGHTSPHERE, AREA, playerattached());
+				specialeffect2 EF_LIGHTSPHERE;
 				close;
 			}
 			mes "[Haijara Greg]";
@@ -1205,7 +1205,7 @@ function	script	F_Kienna	{
 				mes "You blocked me!";
 				mes "Very nice work~";
 				specialeffect EF_POTION1;
-				specialeffect(EF_POTION7, AREA, playerattached());
+				specialeffect2 EF_POTION7;
 				++.@suc_1;
 			}
 			else {

@@ -49,7 +49,7 @@ gef_tower,115,36,4	script	Meow#q_wiz	4_CAT,{
 				mes "Alright, here's your lesson!";
 				next;
 				mes "^3355FF*BAM! BOOM! CRASH!*^000000";
-				specialeffect(EF_SUI_EXPLOSION, AREA, playerattached());
+				specialeffect2 EF_SUI_EXPLOSION;
 				next;
 				mes "[Meow]";
 				mes "Don't you dare get";
@@ -63,7 +63,7 @@ gef_tower,115,36,4	script	Meow#q_wiz	4_CAT,{
 				mes "the Sight Blaster skill before";
 				mes "Meow can administer another";
 				mes "vicious beating to you.";
-				specialeffect(EF_ABSORBSPIRITS, AREA, playerattached());
+				specialeffect2 EF_ABSORBSPIRITS;
 				skill "WZ_SIGHTBLASTER",1,0;
 				next;
 				mes "[Meow]";
@@ -287,7 +287,7 @@ gef_tower,115,36,4	script	Meow#q_wiz	4_CAT,{
 			mes "you to cast Sight before you";
 			mes "can activate it. Now try it.";
 			next;
-			specialeffect(EF_SUI_EXPLOSION, AREA, playerattached());
+			specialeffect2 EF_SUI_EXPLOSION;
 			mes "^3355FF*BAM! BOOM!*^000000";
 			next;
 			mes "[Meow]";
@@ -311,7 +311,7 @@ gef_tower,115,36,4	script	Meow#q_wiz	4_CAT,{
 			mes "You actually learned it!";
 			mes "That took way too much effort,";
 			mes "but at least we're done here.";
-			specialeffect(EF_ABSORBSPIRITS, AREA, playerattached());
+			specialeffect2 EF_ABSORBSPIRITS;
 			delitem Crystal_Blue,10;
 			delitem Yellow_Live,10;
 			delitem Boody_Red,10;

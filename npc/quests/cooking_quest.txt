@@ -885,7 +885,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			next;
 			cutin "nyuang_4",2;
 			emotion e_an,0,"Child with Cat#cook";
-			specialeffect(EF_HIT2, AREA, playerattached());
+			specialeffect2 EF_HIT2;
 			percentheal -10,0;
 			mes "[Child with Cat]";
 			mes "Grrrrrrr!";

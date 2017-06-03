@@ -76,7 +76,7 @@ in_moc_16,14,27,5	script	Assassin#realman	4_M_ACROSS,{
 			mes "you forgot how to do this";
 			mes "skill? I suppose that all you";
 			mes "needed was a quick refresher.";
-			specialeffect(EF_INVENOM, AREA, playerattached());
+			specialeffect2 EF_INVENOM;
 			next;
 			mes "[Killtin]";
 			mes "Alright, I think it's";
@@ -245,7 +245,7 @@ in_moc_16,14,27,5	script	Assassin#realman	4_M_ACROSS,{
 							mes "bit of credit for my excellent";
 							mes "instruction. Ah, very nice.";
 							next;
-							specialeffect(EF_INVENOM, AREA, playerattached());
+							specialeffect2 EF_INVENOM;
 							next;
 							mes "[Killtin]";
 							mes "Alright, you may need";
@@ -357,7 +357,7 @@ in_moc_16,23,27,5	script	Assassin#realgirl	4_F_ACROSS,{
 			mes "please try it so I can give";
 			mes "you feedback on your form.";
 			next;
-			specialeffect(EF_SONICBLOW, AREA, playerattached());
+			specialeffect2 EF_SONICBLOW;
 			next;
 			mes "[Esmille]";
 			mes "Hmm, you're shifting";
@@ -366,7 +366,7 @@ in_moc_16,23,27,5	script	Assassin#realgirl	4_F_ACROSS,{
 			mes "help if your center of";
 			mes "gravity was like this...";
 			next;
-			specialeffect(EF_SONICBLOW, AREA, playerattached());
+			specialeffect2 EF_SONICBLOW;
 			next;
 			mes "[Esmille]";
 			mes "Ah, you're so very";
@@ -444,7 +444,7 @@ in_moc_16,23,27,5	script	Assassin#realgirl	4_F_ACROSS,{
 		mes "please try it so I can give";
 		mes "you feedback on your form.";
 		next;
-		specialeffect(EF_SONICBLOW, AREA, playerattached());
+		specialeffect2 EF_SONICBLOW;
 		next;
 		mes "[Esmille]";
 		mes "Hmm, you're shifting";
@@ -453,7 +453,7 @@ in_moc_16,23,27,5	script	Assassin#realgirl	4_F_ACROSS,{
 		mes "help if your center of";
 		mes "gravity was like this...";
 		next;
-		specialeffect(EF_SONICBLOW, AREA, playerattached());
+		specialeffect2 EF_SONICBLOW;
 		next;
 		mes "[Esmille]";
 		mes "That's a little better.";
@@ -462,7 +462,7 @@ in_moc_16,23,27,5	script	Assassin#realgirl	4_F_ACROSS,{
 		mes "and follow through with";
 		mes "the stabbing motion.";
 		next;
-		specialeffect(EF_SONICBLOW, AREA, playerattached());
+		specialeffect2 EF_SONICBLOW;
 		next;
 		mes "[Esmille]";
 		mes "Ah, you're so very";
@@ -470,7 +470,7 @@ in_moc_16,23,27,5	script	Assassin#realgirl	4_F_ACROSS,{
 		mes "Focus more on smoothly";
 		mes "transitioning from your";
 		mes "stance to executed action.";
-		specialeffect(EF_SONICBLOW, AREA, playerattached());
+		specialeffect2 EF_SONICBLOW;
 		next;
 		mes "[Esmille]";
 		mes "Yes, that's it...!";
@@ -535,7 +535,7 @@ in_moc_16,23,27,5	script	Assassin#realgirl	4_F_ACROSS,{
 			mes "please try it so I can give";
 			mes "you feedback on your form.";
 			next;
-			specialeffect(EF_SONICBLOW, AREA, playerattached());
+			specialeffect2 EF_SONICBLOW;
 			next;
 			mes "[Esmille]";
 			mes "Hmm, you're shifting";
@@ -544,7 +544,7 @@ in_moc_16,23,27,5	script	Assassin#realgirl	4_F_ACROSS,{
 			mes "help if your center of";
 			mes "gravity was like this...";
 			next;
-			specialeffect(EF_SONICBLOW, AREA, playerattached());
+			specialeffect2 EF_SONICBLOW;
 			next;
 			mes "[Esmille]";
 			mes "That's a little better.";
@@ -553,7 +553,7 @@ in_moc_16,23,27,5	script	Assassin#realgirl	4_F_ACROSS,{
 			mes "and follow through with";
 			mes "the stabbing motion.";
 			next;
-			specialeffect(EF_SONICBLOW, AREA, playerattached());
+			specialeffect2 EF_SONICBLOW;
 			next;
 			mes "[Esmille]";
 			mes "Yes, that's it...!";

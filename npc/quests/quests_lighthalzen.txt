@@ -4428,13 +4428,13 @@ lighthalzen,346,263,3	script	Elder#lhz	4_F_EINOLD,{
 				mes "You must remember the";
 				mes "locations that I am about";
 				mes "to show you. Get ready...";
-				specialeffect(EF_SIGHT, AREA, playerattached());
+				specialeffect2 EF_SIGHT;
 				next;
 				mes "[Elder]";
 				mes "Yaaaaappp ---!";
-				specialeffect(EF_SIGHTRASHER, AREA, playerattached());
-				specialeffect(EF_VOLCANO, AREA, playerattached());
-				specialeffect(EF_MAPPILLAR, AREA, playerattached());
+				specialeffect2 EF_SIGHTRASHER;
+				specialeffect2 EF_VOLCANO;
+				specialeffect2 EF_MAPPILLAR;
 				next;
 				mes "[Elder]";
 				mes "There! The locations";
@@ -4546,11 +4546,11 @@ lighthalzen,346,263,3	script	Elder#lhz	4_F_EINOLD,{
 				mes "......";
 				mes ".........";
 				mes "Hooooooo...";
-				specialeffect(EF_BENEDICTIO, AREA, playerattached());
+				specialeffect2 EF_BENEDICTIO;
 				next;
 				mes "[Elder]";
 				mes "Yaaaaapp ---!";
-				specialeffect(EF_ASPERSIO, AREA, playerattached());
+				specialeffect2 EF_ASPERSIO;
 				next;
 				mes "[Elder]";
 				mes "Whew! I've managed";
@@ -4837,7 +4837,7 @@ lhz_in03,32,162,3	script	Crippled Girl#li_tre	1_M_INNKEEPER,{
 			mes "old pendant";
 			mes "into her hands.^000000";
 			next;
-			specialeffect(EF_FORESTLIGHT4, AREA, playerattached());
+			specialeffect2 EF_FORESTLIGHT4;
 			mes "...............";
 			next;
 			mes "["+strcharinfo(PC_NAME)+"]";
@@ -5033,7 +5033,7 @@ lhz_in03,32,162,3	script	Crippled Girl#li_tre	1_M_INNKEEPER,{
 					mes "old pendant";
 					mes "into her hands.^000000";
 					next;
-					specialeffect(EF_FORESTLIGHT4, AREA, playerattached());
+					specialeffect2 EF_FORESTLIGHT4;
 					mes "......";
 					next;
 					mes "["+strcharinfo(PC_NAME)+"]";
@@ -5203,7 +5203,7 @@ OnTouch_:
 		mes ".............";
 		next;
 		mes "*Shhhzzzzzzz!*";
-		specialeffect(EF_MAPPILLAR, AREA, playerattached());
+		specialeffect2 EF_MAPPILLAR;
 		next;
 		mes "[????]";
 		mes "...........";

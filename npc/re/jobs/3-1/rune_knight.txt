@@ -1837,7 +1837,7 @@ job3_rune02,34,46,5	script	Captain Tigris#jrt1	4_M_KNIGHT_SILVER,2,2,{
 		break;
 	case 3:
 		mapannounce "job3_rune02","Captain Tigris : Evil demons! I will send you back to your graves!",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
-		specialeffect(EF_METEORSTORM, AREA, playerattached());
+		specialeffect2 EF_METEORSTORM;
 		donpcevent "job_rune_edq#1st_tcmc::OnReset";
 		break;
 	case 4:
@@ -1928,7 +1928,7 @@ job3_rune02,43,34,1	script	Rune Knight Renoa#jrt1	4_M_KNIGHT_GOLD,2,2,{
 		break;
 	case 3:
 		mapannounce "job3_rune02","Rune Knight Renoa : I am faster than all of them! Different then the others!",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
-		specialeffect(EF_PIERCESELF, AREA, playerattached());
+		specialeffect2 EF_PIERCESELF;
 		donpcevent "job_rune_edq#1st_tcmc::OnReset";
 		break;
 	case 4:

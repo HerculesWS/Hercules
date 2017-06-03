@@ -323,7 +323,7 @@ OnTimer35000:
 	disablenpc instance_npcname("#box_call");
 	end;
 OnTouch:
-	specialeffect(EF_GUIDEDATTACK, AREA, playerattached());
+	specialeffect2 EF_GUIDEDATTACK;
 	warp instance_mapname("1@ma_c"),33,112;
 	end;
 OnDisable:

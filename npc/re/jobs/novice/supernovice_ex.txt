@@ -484,9 +484,9 @@ beach_dun2,119,92,4	script	Fishing Novice#sp2	4_M_SIT_NOVICE,{
 			mes "I can't make you stronger until you use those points.";
 			close;
 		}
-		specialeffect(EF_LORD, AREA, playerattached());
-		specialeffect(EF_SIGHTRASHER, AREA, playerattached());
-		specialeffect(EF_STORMGUST, AREA, playerattached());
+		specialeffect2 EF_LORD;
+		specialeffect2 EF_SIGHTRASHER;
+		specialeffect2 EF_STORMGUST;
 		erasequest 5100;
 		mes "[Nodor]";
 		mes "Haha ------------- !!";
@@ -586,7 +586,7 @@ beach_dun2,119,92,4	script	Fishing Novice#sp2	4_M_SIT_NOVICE,{
 		mes "[Nodor]";
 		mes "Now I am going to say greetings again.";
 		next;
-		specialeffect(EF_RECOVERY, AREA, playerattached());
+		specialeffect2 EF_RECOVERY;
 		mes "[Nodor]";
 		mes "Let Super Novice "+strcharinfo(PC_NAME)+" be blessed with the Super Novice Guardian!";
 		EXSUPNOV_Q = 6;

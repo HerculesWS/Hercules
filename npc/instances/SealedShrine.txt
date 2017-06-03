@@ -251,7 +251,7 @@ monk_test,306,151,3	script	Grave of Baphomet#edq	HIDDEN_NPC,{
 		next;
 		mes "[Friar Patrick]";
 		mes "Haaaaaaap... Wingardium Leviosa Expecto Patronum !!!!!";
-		specialeffect(EF_HOLYHIT, AREA, playerattached());
+		specialeffect2 EF_HOLYHIT;
 		erasequest 3040;
 		if (questprogress(3041)) erasequest 3041;
 		if (questprogress(3045)) erasequest 3045;
@@ -494,7 +494,7 @@ OnMyMobDead:
 		next;
 		mes "When touching the gravestone, I hear a voice.";
 		next;
-		specialeffect(EF_CONE, AREA, playerattached());
+		specialeffect2 EF_CONE;
 		mes "[Voice of the Gravestone]";
 		mes "I have waited and waited for a brave adventurer like you who will come back here again...";
 		next;
@@ -664,7 +664,7 @@ OnInstanceInit: // Temporary fix for @reloadscript.
 					mes "[Ancient Hero's Soul]";
 					mes "Now I'll carve you the symbol which shows you're a inheritor of faith. Be aware that no one in your party but you can collect the Essence of Fire.";
 					next;
-					specialeffect(EF_HOLYHIT, AREA, playerattached());
+					specialeffect2 EF_HOLYHIT;
 					mes "[Ancient Hero's Soul]";
 					mes "You should also carry a ^0000FFToken of Apostle^000000, so find one for yourself too.";
 					next;
@@ -890,7 +890,7 @@ OnInstanceInit:
 			next;
 			mes "The grand appearance and heat of the fire makes me step back... But I pluck up my courage and reach out to pick up the torch.";
 			next;
-			specialeffect(EF_HOLYHIT, AREA, playerattached());
+			specialeffect2 EF_HOLYHIT;
 			getitem Essence_Of_Fire,1;
 			mes "The symbol of inheritor shines. Then a small crystal falls into my hand from the torch.";
 			disablenpc instance_npcname(strnpcinfo(NPC_NAME));
@@ -910,7 +910,7 @@ OnInstanceInit:
 		next;
 		mes "[Unknown Voice]";
 		mes "You are not a inheritor of faith. Do not desecrate the Essence of Fire with your disrespectful hands.";
-		specialeffect(EF_FIRESPLASHHIT, AREA, playerattached());
+		specialeffect2 EF_FIRESPLASHHIT;
 		percentheal -50,0;
 		close;
 	}
@@ -1086,7 +1086,7 @@ OnTouch:
 -	script	Magical Seal#SS	FAKE_NPC,{
 	.@seal_check = questprogress(3041,PLAYTIME);
 	if (.@seal_check == 1) {
-		specialeffect(EF_SILENCEATTACK, AREA, playerattached());
+		specialeffect2 EF_SILENCEATTACK;
 		percentheal -50,0;
 		sc_start Eff_Stone,30000,0;
 		mes "Your SP has not recovered yet. You lost your SP on the altar, but it seems the power of the seal has returned.";

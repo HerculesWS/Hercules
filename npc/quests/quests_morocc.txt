@@ -2265,7 +2265,7 @@ moc_ruins,137,70,3	script	Book-Touching Man#garas	1_M_02,{
 			next;
 			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Ahchoo! Thanks to you, I couldn't find it from the library. So I travelled all the way up to Schwaltzvalt... Ahchoo!";
-			specialeffect(EF_VENOMDUST, AREA, playerattached());
+			specialeffect2 EF_VENOMDUST;
 			next;
 			mes "^660000Feeling angry at him, you exaggerated a fit of sneezing which you have had for quite a while.^000000";
 			next;
@@ -2621,7 +2621,7 @@ yuno,333,210,5	script	Library Master#garas	1_M_LIBRARYMASTER,{
 		next;
 		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "...Ahchoo!";
-		specialeffect(EF_VENOMDUST, AREA, playerattached());
+		specialeffect2 EF_VENOMDUST;
 		next;
 		mes "[Library Master]";
 		mes "God bless you. Oh, did you catch cold?";
@@ -2720,7 +2720,7 @@ OnTouch:
 		next;
 		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "...Ahchoo!";
-		specialeffect(EF_VENOMDUST, AREA, playerattached());
+		specialeffect2 EF_VENOMDUST;
 		next;
 		mes "[Library Master]";
 		mes "God bless you. Oh, did you catch cold?";
@@ -2762,7 +2762,7 @@ yuno_in04,111,57,3	script	Library Part-Timer#garas	4_F_LGTGIRL,{
 		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "I'm looking for a book called <The Crow of the Fate> written by Oliver Hilpert... Ahchoo!";
 		emotion e_wah,1;
-		specialeffect(EF_VENOMDUST, AREA, playerattached());
+		specialeffect2 EF_VENOMDUST;
 		next;
 		mes "[Library Part-Timer]";
 		mes "Ah, I remember that one... It's the one most frequently left in the cart.";
@@ -2778,7 +2778,7 @@ yuno_in04,111,57,3	script	Library Part-Timer#garas	4_F_LGTGIRL,{
 		next;
 		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Yes, umm... ahchoo! Where can I find old news articles...? Ahchoo!";
-		specialeffect(EF_VENOMDUST, AREA, playerattached());
+		specialeffect2 EF_VENOMDUST;
 		next;
 		mes "[Library Part-Timer]";
 		mes "Oh, you can find them in a corner of the right room.";
@@ -2786,7 +2786,7 @@ yuno_in04,111,57,3	script	Library Part-Timer#garas	4_F_LGTGIRL,{
 		next;
 		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Thanks... Ahchoo!";
-		specialeffect(EF_VENOMDUST, AREA, playerattached());
+		specialeffect2 EF_VENOMDUST;
 		close;
 	}
 	else if (barmunt_crow == 11) {
@@ -2799,7 +2799,7 @@ yuno_in04,111,57,3	script	Library Part-Timer#garas	4_F_LGTGIRL,{
 		next;
 		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Cough... I'm looking for a book called <The Crow of the Fate> written by Oliver Hilpert.";
-		specialeffect(EF_VENOMDUST, AREA, playerattached());
+		specialeffect2 EF_VENOMDUST;
 		next;
 		mes "[Library Part-Timer]";
 		mes "Ah, I remember that one... It's the one most frequently left in the cart.";
@@ -2817,7 +2817,7 @@ yuno_in04,111,57,3	script	Library Part-Timer#garas	4_F_LGTGIRL,{
 		next;
 		mes "[Library Part-Timer]";
 		mes "Right! When the hero was meeting his end in the burning mansion... ^FF0000-- BEEP --^000000";
-		specialeffect(EF_BASH3D2, AREA, playerattached());
+		specialeffect2 EF_BASH3D2;
 		close2;
 		warp "que_ba",264,186;
 		end;
@@ -2846,7 +2846,7 @@ yuno_in04,100,5,3	script	Hot Bestseller Corner	HIDDEN_NPC,{
 		next;
 		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Ah, luckily there's one... Ahchoo!";
-		specialeffect(EF_VENOMDUST, AREA, playerattached());
+		specialeffect2 EF_VENOMDUST;
 		next;
 		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Sniff... So now all I have to do is just check this out and deliver it to that Mammi fanatic.";
@@ -2856,7 +2856,7 @@ yuno_in04,100,5,3	script	Hot Bestseller Corner	HIDDEN_NPC,{
 		mes "^660000You were about to pull out the book, complaining and grumbling, when suddenly it felt as if your brain exploded. You black out...^000000";
 		barmunt_crow = 4;
 		close2;
-		specialeffect(EF_BASH3D2, AREA, playerattached());
+		specialeffect2 EF_BASH3D2;
 		warp "que_ba",247,33;
 		end;
 	}
@@ -2870,7 +2870,7 @@ yuno_in04,100,5,3	script	Hot Bestseller Corner	HIDDEN_NPC,{
 		next;
 		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Ah, luckily there's one... Ahchoo!";
-		specialeffect(EF_VENOMDUST, AREA, playerattached());
+		specialeffect2 EF_VENOMDUST;
 		next;
 		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Sniff... So now all I have to do is just check this out and deliver it to that Mammi fanatic.";
@@ -2879,7 +2879,7 @@ yuno_in04,100,5,3	script	Hot Bestseller Corner	HIDDEN_NPC,{
 		next;
 		mes "^660000You were about to pull out the book, complaining and grumbling, when suddenly it felt as if your brain exploded. You black out...^000000";
 		close2;
-		specialeffect(EF_BASH3D2, AREA, playerattached());
+		specialeffect2 EF_BASH3D2;
 		warp "que_ba",247,33;
 		end;
 	}
@@ -2893,7 +2893,7 @@ yuno_in04,100,5,3	script	Hot Bestseller Corner	HIDDEN_NPC,{
 		next;
 		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Ah, luckily there's one... Ahchoo!";
-		specialeffect(EF_VENOMDUST, AREA, playerattached());
+		specialeffect2 EF_VENOMDUST;
 		next;
 		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Sniff... So now all I have to do is just check this out and deliver it to that Mammi fanatic.";
@@ -2902,7 +2902,7 @@ yuno_in04,100,5,3	script	Hot Bestseller Corner	HIDDEN_NPC,{
 		next;
 		mes "^660000You were about to pull out the book, complaining and grumbling, when suddenly it felt as if your brain exploded. You black out...^000000";
 		close2;
-		specialeffect(EF_BASH3D2, AREA, playerattached());
+		specialeffect2 EF_BASH3D2;
 		warp "que_ba",247,33;
 		end;
 	}
@@ -2928,7 +2928,7 @@ OnTouch:
 		next;
 		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Phew... I guess I had a dream or something... Ahchoo!";
-		specialeffect(EF_VENOMDUST, AREA, playerattached());
+		specialeffect2 EF_VENOMDUST;
 		next;
 		mes "^660000It was an indescribable dream: a burning laboratory in an unknown place in Schwaltzvalt.";
 		mes "You tried to think hard, but could not figure out what the dream meant.^000000";
@@ -3182,7 +3182,7 @@ yuno_in04,169,123,3	script	Suspicious Man#oliver_h	4_M_ATEIL,{
 		mes "^3131FFSeclusion - A female disciple's letter^000000";
 		mes "^3131FFThe stepmother = Lover from a past life?!^000000";
 		close2;
-		specialeffect(EF_ENHANCE, AREA, playerattached());
+		specialeffect2 EF_ENHANCE;
 		delitem Mami_Photo_Album,1;
 		barmunt_crow = 14;
 		getitem Author_Autograph,1;
@@ -3215,7 +3215,7 @@ yuno_in04,169,123,3	script	Suspicious Man#oliver_h	4_M_ATEIL,{
 		next;
 		mes "(WHACK)";
 		specialeffect EF_VENOMDUST;
-		specialeffect(EF_DETOXICATION, AREA, playerattached());
+		specialeffect2 EF_DETOXICATION;
 		next;
 		mes "^660000Oliver picked up the feather more quickly than you could, and then tore it into pieces before you could even say anything.^000000";
 		next;
@@ -3426,7 +3426,7 @@ yuno_in04,167,120,3	script	Worn-out Book#garas	HIDDEN_NPC,{
 		next;
 		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Ah... Ahchoo! Mr. Hilpert, are you interested in my bag? It's just a simple bag I got from the Novice Training Grounds...";
-		specialeffect(EF_VENOMDUST, AREA, playerattached());
+		specialeffect2 EF_VENOMDUST;
 		next;
 		mes "[Oliver Hilpert]";
 		mes "No, no!";
@@ -3446,7 +3446,7 @@ yuno_in04,167,120,3	script	Worn-out Book#garas	HIDDEN_NPC,{
 		next;
 		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Ahchoo! Are you also a Mammi fan?";
-		specialeffect(EF_VENOMDUST, AREA, playerattached());
+		specialeffect2 EF_VENOMDUST;
 		next;
 		mes "[Oliver Hilpert]";
 		mes "Are you kidding?! Of course!";
@@ -3480,7 +3480,7 @@ yuno_in04,167,120,3	script	Worn-out Book#garas	HIDDEN_NPC,{
 		next;
 		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "No, I got it as a gift from someone... Ahchoo!";
-		specialeffect(EF_VENOMDUST, AREA, playerattached());
+		specialeffect2 EF_VENOMDUST;
 		next;
 		mes "[Oliver Hilpert]";
 		mes "What? Now I'm shocked!";
@@ -3552,7 +3552,7 @@ yuno_in04,167,120,3	script	Worn-out Book#garas	HIDDEN_NPC,{
 		mes "^3131FFSeclusion - A female disciple's letter^000000";
 		mes "^3131FFThe stepmother = Lover from a past life?!^000000";
 		close2;
-		specialeffect(EF_ENHANCE, AREA, playerattached());
+		specialeffect2 EF_ENHANCE;
 		delitem Mami_Photo_Album,1;
 		barmunt_crow = 14;
 		getitem Author_Autograph,1;
@@ -3597,7 +3597,7 @@ que_ba,257,39,3	script	Female Researcher#bpast	4_F_ALCHE,{
 		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Ahchoo! Ahchoo! Gosh...";
 		mes "Hey, where am I...?";
-		specialeffect(EF_VENOMDUST, AREA, playerattached());
+		specialeffect2 EF_VENOMDUST;
 		next;
 		mes "- Pzzzz -";
 		specialeffect EF_CLOAKING;
@@ -3730,7 +3730,7 @@ OnTouch:
 		next;
 		mes "^660000You were looking at their backs as they left, and then noticed that you were holding the book you were reading in your hands. Then....^000000";
 		barmunt_crow = 6;
-		specialeffect(EF_FLASHER, AREA, playerattached());
+		specialeffect2 EF_FLASHER;
 		close2;
 		warp "yuno_in04",100,3;
 	}
@@ -3895,7 +3895,7 @@ cave,82,97,3	script	Cave Settler#g1	4_M_CAVE1,3,3,{
 			mes "Ah... Ahchoo!";
 			mes "'I'm not like other outsiders... Ahchoo!";
 			mes "I have a goal to achieve in here... Ahchoo!";
-			specialeffect(EF_VENOMDUST, AREA, playerattached());
+			specialeffect2 EF_VENOMDUST;
 			next;
 			mes "^660000Although you a bit intimidated by this guard, and your sneezing definitely not helping, you continue.^000000";
 			next;
@@ -3983,7 +3983,7 @@ OnTouch:
 			mes "Ah... Ahchoo!";
 			mes "'I'm not like other outsiders... Ahchoo!";
 			mes "I have a goal to achieve in here... Ahchoo!";
-			specialeffect(EF_VENOMDUST, AREA, playerattached());
+			specialeffect2 EF_VENOMDUST;
 			next;
 			mes "^660000Although you're a bit intimidated by this guard, and your sneezing definitely not helping, you continue.^000000";
 			next;
@@ -4088,7 +4088,7 @@ cave,22,186,3	script	Monsterous Man#zid	4_M_MUT1,{
 		next;
 		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Umm... Ahchoo!";
-		specialeffect(EF_VENOMDUST, AREA, playerattached());
+		specialeffect2 EF_VENOMDUST;
 		next;
 		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Do you know a man by the name of Oliver Hilpert?";

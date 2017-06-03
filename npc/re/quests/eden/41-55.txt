@@ -84,7 +84,7 @@ moc_para01,40,38,3	script	Mission [41 - 55]	4_BOARD3,{
 			mes "Here is your reward.";
 			erasequest 12088;
 			erasequest 12072+.@i;
-			specialeffect(EF_STEAL, AREA, playerattached());
+			specialeffect2 EF_STEAL;
 			getexp .@exp[.@i],0;
 			close;
 		}

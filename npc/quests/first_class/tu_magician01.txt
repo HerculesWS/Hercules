@@ -155,7 +155,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 			getexp BaseLevel*3,BaseLevel*2;
 		else
 			getexp BaseLevel*30,BaseLevel*15;
-		specialeffect(EF_HIT5, AREA, playerattached());
+		specialeffect2 EF_HIT5;
 		close;
 	case 1:
 		mes "Are you ready";
@@ -389,7 +389,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 					mes "move on to the next";
 					mes "subject then. Ho ho ho~!";
 					tu_magician01 = 2;
-					specialeffect(EF_HIT5, AREA, playerattached());
+					specialeffect2 EF_HIT5;
 					if(.@eread_1) getexp 150,70;
 					if(.@eread_2) getexp 150,70;
 					if(.@eread_3) getexp 150,70;
@@ -415,7 +415,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 		mes "Napalm Beat. Learning these";
 		mes "enables Mages to learn their";
 		mes "more advanced skills.";
-		specialeffect(EF_NAPALMBEAT, AREA, playerattached());
+		specialeffect2 EF_NAPALMBEAT;
 		next;
 		mes "[Mana]";
 		mes "Increasing the levels of";
@@ -423,7 +423,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 		mes "access to other spells, but";
 		mes "the damage of those basic";
 		mes "attack skills is also increased.";
-		specialeffect(EF_LIGHTBOLT, AREA, playerattached());
+		specialeffect2 EF_LIGHTBOLT;
 		next;
 		mes "[Mana]";
 		mes "Other skills that are";
@@ -432,7 +432,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 		mes "Increase SP Recovery. They're";
 		mes "not really attack spells, but are useful in certain situations.";
 		next;
-		specialeffect(EF_SIGHT, AREA, playerattached());
+		specialeffect2 EF_SIGHT;
 		mes "[Mana]";
 		mes "Sight is used to";
 		mes "reveal enemies that";
@@ -440,7 +440,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 		mes "mind that this skill's";
 		mes "range doesn't go too far.";
 		next;
-		specialeffect(EF_STONECURSE, AREA, playerattached());
+		specialeffect2 EF_STONECURSE;
 		mes "[Mana]";
 		mes "Stone Curse has the chance";
 		mes "to curse a target, temporarily";
@@ -477,7 +477,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 		mes "Then bring them to me, okay?";
 		tu_magician01 = 3;
 		getexp 400,200;
-		specialeffect(EF_HIT5, AREA, playerattached());
+		specialeffect2 EF_HIT5;
 		close;
 	case 3:
 		mes "Ah, you're back?";
@@ -505,7 +505,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 			mes "Anyway, let me know when you're ready for the next lesson, okay?";
 			tu_magician01 = 5;
 			getexp 400,200;
-			specialeffect(EF_HIT5, AREA, playerattached());
+			specialeffect2 EF_HIT5;
 			close;
 		}
 	case 4:
@@ -533,7 +533,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 			mes "Anyway, let me know when you're ready for the next lesson, okay?";
 			tu_magician01 = 5;
 			getexp 400,200;
-			specialeffect(EF_HIT5, AREA, playerattached());
+			specialeffect2 EF_HIT5;
 			close;
 		}
 	case 5:
@@ -554,7 +554,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 				mes "a certain level. It attacks";
 				mes "with ancient spiritual power~";
 				next;
-				specialeffect(EF_SOULSTRIKE, AREA, playerattached());
+				specialeffect2 EF_SOULSTRIKE;
 				next;
 				mes "[Mana]";
 				mes "As you train in the use";
@@ -572,7 +572,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 				mes "Safety Wall protects against";
 				mes "most close range attacks.";
 				next;
-				specialeffect(EF_GLASSWALL, AREA, playerattached());
+				specialeffect2 EF_GLASSWALL;
 				next;
 				mes "[Mana]";
 				mes "However, Safety Wall";
@@ -591,7 +591,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 				mes "can learn after training";
 				mes "in the use of Fire Bolt.";
 				next;
-				specialeffect(EF_FIREBALL, AREA, playerattached());
+				specialeffect2 EF_FIREBALL;
 				next;
 				mes "[Mana]";
 				mes "Fire Ball can actually";
@@ -610,9 +610,9 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 				mes "learned after increasing";
 				mes "the Cold Bolt skill to";
 				mes "a certain level.";
-				specialeffect(EF_FROSTDIVER, AREA, playerattached());
+				specialeffect2 EF_FROSTDIVER;
 				next;
-				specialeffect(EF_FROSTDIVER2, AREA, playerattached());
+				specialeffect2 EF_FROSTDIVER2;
 				mes "[Mana]";
 				mes "Frost Diver will damage";
 				mes "enemies and has the chance";
@@ -638,7 +638,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 				mes "increasing the Lightning";
 				mes "Bolt skill to a certain level.";
 				next;
-				specialeffect(EF_THUNDERSTORM, AREA, playerattached());
+				specialeffect2 EF_THUNDERSTORM;
 				mes "[Mana]";
 				mes "Thunderstorm is similar";
 				mes "to Fire Ball in that it can";
@@ -658,7 +658,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 				mes "Sight. Unlike other skills,";
 				mes "Fire Wall targets an area.";
 				next;
-				specialeffect(EF_FIREWALL, AREA, playerattached());
+				specialeffect2 EF_FIREWALL;
 				mes "[Mana]";
 				mes "So you can place";
 				mes "a Fire Wall in locations";
@@ -684,7 +684,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 				mes "inside the Mage Guild to";
 				mes "teach you how to use it.";
 				next;
-				specialeffect(EF_ENERGYCOAT, AREA, playerattached());
+				specialeffect2 EF_ENERGYCOAT;
 				next;
 				mes "[Mana]";
 				mes "If you do decide to";
@@ -711,7 +711,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 				mes "in handy when fighting...";
 				tu_magician01 = 6;
 				getitem Wand,1;
-				specialeffect(EF_HIT5, AREA, playerattached());
+				specialeffect2 EF_HIT5;
 				if(.@skill_e1) getexp 300,100;
 				if(.@skill_e2) getexp 300,100;
 				if(.@skill_e3) getexp 300,100;

@@ -1032,7 +1032,7 @@ mora,140,186,3	script	Raffle Philosopher	4_M_RAFLE_OLD,{
 	mes "*thud*";
 	mes "You feel a sudden impact on the back of your head.";
 	mes "Your sight is going blurry.";
-	specialeffect(EF_HIT1, AREA, playerattached());
+	specialeffect2 EF_HIT1;
 	sc_start SC_BLIND,20000,0;
 	next;
 	mes "You feel somebody rummaging through your pockets before you pass out.";

@@ -17,7 +17,7 @@ gonryun,187,140,4	script	Yakima	4_F_EINWOMAN,{
 	mes callfunc("F_Hi");
 	mes "I can make some items for you.";
 	mes "They are quite rare novadays...";
-	specialeffect EF_HITBODY;
+	specialeffect 417;
 	next;
 	switch (select("Bird Nest", "Lion Mask", "Skeleton Manteau", "Fashion Hip Sack", "Sales Banner", "Leave")) {
 	case 1:

@@ -381,7 +381,7 @@ bat_a01,53,377,3	script	Guillaume Vintenar#tv1	4_M_KY_HEAD,{
 bat_a01,60,216,3	script	Ghost#tv13	4_GHOSTRING,{
 	mes "[Ghost in valley]";
 	mes "Boo...Boo...";
-	specialeffect(EF_HEAL, AREA, playerattached());
+	specialeffect2 312;
 	close;
 }
 
@@ -389,7 +389,7 @@ bat_a01,53,377,3	script	Therapist in battle#tv12	4_F_SISTER,{
 	mes "[Therapist in battle]";
 	mes "Just close your eyes, and take a deep breathe.";
 	mes "You can be free from pain.";
-	specialeffect(EF_HEAL, AREA, playerattached());
+	specialeffect2 312;
 	close;
 }
 
@@ -397,7 +397,7 @@ bat_a01,45,18,3	script	Therapist in battle#tv11	4_F_SISTER,{
 	mes "[Therapist in battle]";
 	mes "Just close your eyes, and take a deep breathe.";
 	mes "You can be free from pain.";
-	specialeffect(EF_HEAL, AREA, playerattached());
+	specialeffect2 312;
 	close;
 }
 
@@ -416,7 +416,7 @@ OnBGStop:
 	end;
 
 OnTimer19000:
-	specialeffect(EF_SANCTUARY);
+	misceffect 83;
 	end;
 
 OnTimer20000:
@@ -438,7 +438,7 @@ OnBGStop:
 	end;
 
 OnTimer24000:
-	specialeffect(EF_SANCTUARY);
+	misceffect 83;
 	end;
 
 OnTimer25000:
@@ -460,7 +460,7 @@ OnBGStop:
 	end;
 
 OnTimer24000:
-	specialeffect(EF_SANCTUARY);
+	misceffect 83;
 	end;
 
 OnTimer25000:

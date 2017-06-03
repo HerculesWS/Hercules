@@ -3056,7 +3056,7 @@ veins,327,185,3	script	Kid#camelcamel	4_M_DST_CHILD,{
 			mes "I'll see you later~";
 			completequest 3083;
 			rachel_camel = 25;
-			specialeffect(EF_ABSORBSPIRITS, AREA, playerattached());
+			specialeffect2 EF_ABSORBSPIRITS;
 			if (RENEWAL_EXP)
 				getexp 100000,50000;
 			else
@@ -6663,7 +6663,7 @@ thor_camp,159,74,3	script	Colonel Vito#3	4_M_DST_MASTER,{
 			mes "[Colonel Vito]";
 			mes "You idiot!";
 			percentheal -10,0;
-			specialeffect(EF_HIT2, AREA, playerattached());
+			specialeffect2 EF_HIT2;
 			next;
 		}
 		mes "[Colonel Vito]";

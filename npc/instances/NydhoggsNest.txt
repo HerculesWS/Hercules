@@ -41,7 +41,7 @@ nyd_dun02,100,201,3	script	Yggdrasil Gatekeeper	HIDDEN_NPC,8,8,{
 		next;
 		switch(select("Move closer to look more carefully.", "Step back.")) {
 		case 1:
-			specialeffect(EF_HOLYHIT, AREA, playerattached());
+			specialeffect2 EF_HOLYHIT;
 			pushpc 3,3;
 			if (ep13_1_edq == 14)
 				ep13_1_edq = 15;
@@ -73,7 +73,7 @@ nyd_dun02,100,201,3	script	Yggdrasil Gatekeeper	HIDDEN_NPC,8,8,{
 		mes "You'll have to obtain the others trust in the expendition camp by working hard.";
 		close;
 	} else if (ins_nyd == 111 || ins_nyd == 112) {
-		specialeffect(EF_CHANGECOLD, AREA, playerattached());
+		specialeffect2 EF_CHANGECOLD;
 		mes "The strange sensation surrounding your body has disappeared";
 		next;
 		mes "When you touch the stone gate, you hear a commanding voice.";
@@ -89,7 +89,7 @@ nyd_dun02,100,201,3	script	Yggdrasil Gatekeeper	HIDDEN_NPC,8,8,{
 			mes "[Yggdrasil Gatekeeper]";
 			mes "In the name of Yggdrasiliad, I will accept you as a servant of the Guardian.";
 			next;
-			specialeffect(EF_CHANGECOLD, AREA, playerattached());
+			specialeffect2 EF_CHANGECOLD;
 			ins_nyd = 200;
 			mes "[Yggdrasil Gatekeeper]";
 			mes "I accept your entrance through the Guardian's gate. You are now considered a faithful servant of the Guardian Nidhoggur.";
@@ -207,7 +207,7 @@ nyd_dun02,100,201,3	script	Yggdrasil Gatekeeper	HIDDEN_NPC,8,8,{
 		next;
 		switch(select("Move closer to look more carefully.", "Step back.")) {
 		case 1:
-			specialeffect(EF_HOLYHIT, AREA, playerattached());
+			specialeffect2 EF_HOLYHIT;
 			pushpc 3,3;
 			mes "A mysterious power prevents you from getting too close. It looks like there is something strong beyond the door...";
 			next;
@@ -234,7 +234,7 @@ L_Enter:
 
 OnTouch_:
 	if (ins_nyd == 0) {
-		specialeffect(EF_CHANGECOLD, AREA, playerattached());
+		specialeffect2 EF_CHANGECOLD;
 		specialeffect EF_CHANGECOLD;
 	}
 	end;
@@ -1013,7 +1013,7 @@ spl_in01,104,56,3	script	Aide Arioss#edq	4_F_FAIRYKID2,3,3,{
 			next;
 			mes "[Aide Arioss]";
 			mes "I will give you my proof. Don't worry, I'm just temporarily marking you as a guardian's servant.";
-			specialeffect(EF_HOLYHIT, AREA, playerattached());
+			specialeffect2 EF_HOLYHIT;
 			next;
 			mes "[Aide Arioss]";
 			mes "Also, remember this spell, it's needed to open the gate of the Guardian.";
@@ -1455,7 +1455,7 @@ man_in01,291,62,3	script	Laphine Prisoner#edq	4_F_FAIRYKID2,3,3,{
 			next;
 			mes "[Laphine Prisoner]";
 			mes "I will give you my proof. Don't worry, I'm just temporarily marking you as a guardian's servant.";
-			specialeffect(EF_HOLYHIT, AREA, playerattached());
+			specialeffect2 EF_HOLYHIT;
 			next;
 			mes "[Laphine Prisoner]";
 			mes "Also, remember this spell, it's needed to open the gate of the Guardian.";
@@ -1850,7 +1850,7 @@ OnTimer18000:
 
 2@nyd,199,178,0	script	nyd_2f_ddr_control	FAKE_NPC,6,6,{
 OnTouch:
-	specialeffect(EF_HOLYHIT, AREA, playerattached());
+	specialeffect2 EF_HOLYHIT;
 	mes "From below the gorgeous stones, a strange breeze is forming.";
 	next;
 	mes "The strange power slowly surrounds your body, the dimension is starting to shift.";

@@ -108,7 +108,7 @@ xmas_in,89,92,5	script	Louise Kim#designer	4_F_06,{
 					mes "~With the number one designer, Louise Kim,~";
 					mes "~you are the most blessed soul.~";
 					emotion e_ho;
-					specialeffect(EF_BLESSING);
+					misceffect EF_BLESSING;
 					next;
 					mes "-Immediately, she puts Rosary in an-";
 					mes "-unknown liquid and dissolves it.-";
@@ -120,7 +120,7 @@ xmas_in,89,92,5	script	Louise Kim#designer	4_F_06,{
 					mes "~With the number one designer, Louise Kim,~";
 					mes "~you are the luckiest soul.~";
 					emotion e_ho;
-					specialeffect(EF_GLORIA);
+					misceffect EF_GLORIA;
 					next;
 					mes "-She starts sewing the hat with -";
 					mes "-a Cactus Needle and a thread.-";
@@ -131,7 +131,7 @@ xmas_in,89,92,5	script	Louise Kim#designer	4_F_06,{
 					mes "~The most talented disigner,~";
 					mes "~L_O_U_I_S_E K_I_M~";
 					emotion e_lv;
-					specialeffect(EF_BENEDICTIO);
+					misceffect EF_BENEDICTIO;
 					next;
 					mes "[Designer Louise Kim]";
 					mes "Here!! All done~~";
@@ -299,7 +299,7 @@ prontera,155,285,3	script	Enjoy#enjoy	4_M_MONK,{
 			mes "........................";
 			mes "Get lost,you devil!!!!!!";
 			specialeffect EF_BEGINASURA;
-			specialeffect(EF_HIT2, AREA, playerattached());
+			specialeffect2 EF_HIT2;
 			Hp /= 2;
 			Hp /= 2;
 			close2;
@@ -408,7 +408,7 @@ prontera,155,285,3	script	Enjoy#enjoy	4_M_MONK,{
 			donpcevent "Christ#christ02::OnCommandEmotion";
 			donpcevent "Mas#mas02::OnCommandEmotion";
 			donpcevent "Event#event02::OnCommandEmotion";
-			specialeffect(EF_HITLINE2);
+			misceffect EF_HITLINE2;
 			delitem Branch_Of_Dead_Tree,5; //Branch_of_Dead_Tree
 			christ_solo05 = 6;
 			donpcevent "Happymerry#happymerry02::OnCommandOff";
@@ -1173,7 +1173,7 @@ prontera,156,242,0	script	Oholy#pron::OholyDup	1_F_PRIEST,{
 			mes "~and tomorrow you'll see~";
 			mes "~Every wish, one and all,~";
 			mes "~waiting under the tree.~";
-			specialeffect(EF_GLORIA, AREA, playerattached());
+			specialeffect2 EF_GLORIA;
 			next;
 			mes "[Oholy]";
 			mes "Oh, my. You have a wonderful";

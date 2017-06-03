@@ -22,7 +22,7 @@ prontera,149,193,4	script	WOE Information	2_BOARD1,{
 	end;
 OnAgitStart:
 	while(agitcheck()) {
-		specialeffect(EF_BEGINSPELL6);
+		misceffect EF_BEGINSPELL6;
 		sleep 425;
 	}
 	end;

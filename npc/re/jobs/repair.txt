@@ -86,7 +86,7 @@ prt_in,38,104,4	script	Valerie	4_F_VALKYRIE,{
 			mes "I understand. I will see you next time";
 			close;
 		}
-		specialeffect(EF_INVENOM, AREA, playerattached());
+		specialeffect2 EF_INVENOM;
 		progressbar "0xffff00",3;
 
 		// Warlock - quest items

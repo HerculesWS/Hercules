@@ -353,13 +353,13 @@
 
 	// Display corresponding effect.
 	if (!.@equip_safe && .@card_break)
-		specialeffect(EF_LORD, AREA, playerattached());
+		specialeffect2 EF_LORD;
 	else if (.@equip_safe && .@card_break)
-		specialeffect(EF_SUI_EXPLOSION, AREA, playerattached());
+		specialeffect2 EF_SUI_EXPLOSION;
 	else if (!.@equip_safe && !.@card_break)
-		specialeffect(EF_FIREPILLAR, AREA, playerattached());
+		specialeffect2 EF_FIREPILLAR;
 	else
-		specialeffect(EF_MAXPOWER, AREA, playerattached());
+		specialeffect2 EF_MAXPOWER;
 
 	// Output results.
 	mes "-- Result of Card Separation --";

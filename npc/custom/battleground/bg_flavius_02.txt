@@ -333,7 +333,7 @@ bat_b02,390,13,5	script	Therapist in battle#fl22	4_F_SISTER,{
 	mes "[Therapist in battle]";
 	mes "Just close your eyes, and take a deep breathe.";
 	mes "You can be free from pain.";
-	specialeffect(EF_HEAL, AREA, playerattached());
+	specialeffect2 312;
 	close;
 }
 
@@ -341,7 +341,7 @@ bat_b02,10,293,5	script	Therapist in battle#fl21	4_F_SISTER,{
 	mes "[Therapist in battle]";
 	mes "Just close your eyes, and take a deep breathe.";
 	mes "You can be free from pain.";
-	specialeffect(EF_HEAL, AREA, playerattached());
+	specialeffect2 312;
 	close;
 }
 
@@ -360,7 +360,7 @@ OnBGStop:
 	end;
 
 OnTimer24000:
-	specialeffect(EF_SANCTUARY);
+	misceffect 83;
 	end;
 
 OnTimer25000:
@@ -382,7 +382,7 @@ OnBGStop:
 	end;
 
 OnTimer24000:
-	specialeffect(EF_SANCTUARY);
+	misceffect 83;
 	end;
 
 OnTimer25000:

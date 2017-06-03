@@ -81,9 +81,9 @@ moc_para01,14,32,5	script	Aperture#acolytewarp	4_F_01,{
 			mes "to "+.@towns$[.@i]+" is "+.@cost[.@i]+" zeny.";
 			close;
 		}
-		specialeffect(EF_READYPORTAL, AREA, playerattached());
-		specialeffect(EF_TELEPORTATION, AREA, playerattached());
-		specialeffect(EF_PORTAL, AREA, playerattached());
+		specialeffect2 EF_READYPORTAL;
+		specialeffect2 EF_TELEPORTATION;
+		specialeffect2 EF_PORTAL;
 		next;
 		Zeny -= .@cost[.@i];
 		switch(.@i) {
@@ -835,8 +835,8 @@ OnInit:
 	initnpctimer;
 	end;
 OnTimer5000:
-	specialeffect(EF_REFINEOK, AREA, getnpcid(0, "Suhnmi#eden"));
-	specialeffect(EF_REFINEOK, AREA, getnpcid(0, "Mighty Hammer#ed"));
+	specialeffect EF_REFINEOK,AREA,"Suhnmi#eden";
+	specialeffect EF_REFINEOK,AREA,"Mighty Hammer#ed";
 	initnpctimer;
 	end;
 }

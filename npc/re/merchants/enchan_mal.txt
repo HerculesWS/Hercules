@@ -600,7 +600,7 @@ L_Socket:
 			close;
 		}
 		if (.@enchant == 9) { // Should never happen.
-			specialeffect(EF_SUI_EXPLOSION, AREA, playerattached());
+			specialeffect2 EF_SUI_EXPLOSION;
 			mes "[Mayomayo]";
 			mes "Oh my god!";
 			mes "This equipment is destroyed because it could not endure powerful ability. I'm so sorry.";
@@ -608,7 +608,7 @@ L_Socket:
 			delequip EQI_HAND_R;
 			close;
 		}
-		specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
+		specialeffect2 EF_REPAIRWEAPON;
 		mes "[Mayomayo]";
 		mes "I have enchanted ^990000slot "+.@socket+"^000000 of this equipment.";
 		delitem .@coin[.@coin_select],.@total[.@coin_select];
@@ -642,7 +642,7 @@ L_Socket:
 			mes "This equipment has nothing to initialize. Please check again.";
 			close;
 		}
-		specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
+		specialeffect2 EF_REPAIRWEAPON;
 		mes "[Mayomayo]";
 		mes "Initialize the enchant effect from the equipment.";
 		delitem Silvervine,1;

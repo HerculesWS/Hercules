@@ -208,7 +208,7 @@ nif_in,190,112,5	script	Deviruchi#divorce	4_DEVIRUCHI,{
 		mes "^FF0000for the rest of your life.^000000";
 		next;
 		specialeffect EF_MAGICROD;
-		specialeffect(EF_DEVIL, AREA, playerattached());
+		specialeffect2 EF_DEVIL;
 		wedding_sign = 0;
 		Zeny -= 2500000;
 		Sp = 0;

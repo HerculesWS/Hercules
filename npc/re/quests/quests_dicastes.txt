@@ -487,7 +487,7 @@ function	script	que_dic	{
 	}
 	getexp getarg(2),0;
 	erasequest getarg(1);
-	specialeffect(EF_STEAL, AREA, playerattached());
+	specialeffect2 EF_STEAL;
 	getitem 6304,1;
 	close;
 }
@@ -1043,7 +1043,7 @@ dic_in01,40,193,1	script	Papyrus#0001	4_MAN_NITT,{
 		mes "Ugh... feel dizzy from simply staring at the document. Will come back after cooling down";
 		close;
 	}
-	specialeffect(EF_DISPELL, AREA, playerattached());
+	specialeffect2 EF_DISPELL;
 	progressbar "ffff00",4;
 	.@doc = rand(1,70);
 	if (.@doc > 50 && .@doc <= 60) {
@@ -1115,7 +1115,7 @@ dic_in01,40,193,1	script	Papyrus#0001	4_MAN_NITT,{
 		mes "^660066"+getarg(3)+"^000000";
 		next;
 		mes "You've found a document about ^990099"+getarg(1)+"^000000. Check for details in the ^800080Quest Window^000000.";
-		specialeffect(EF_STEAL, AREA, playerattached());
+		specialeffect2 EF_STEAL;
 		setquest getarg(0);
 		close;
 	}
@@ -1131,17 +1131,17 @@ function	script	unknown_d	{
 		mes "You see some traces of digging.";
 		close;
 	}
-	specialeffect(EF_SPRINKLESAND, AREA, playerattached());
-	specialeffect(EF_BEGINSPELL_N1, AREA, playerattached());
+	specialeffect2 EF_SPRINKLESAND;
+	specialeffect2 EF_BEGINSPELL_N1;
 	progressbar "ffff00",4;
 	erasequest getarg(0);
 	mes "You were able to find information on the "+getitemname(getarg(1))+".";
-	specialeffect(EF_STEAL, AREA, playerattached());
+	specialeffect2 EF_STEAL;
 	getitem getarg(1),rand(1,4);
 	if (!rand(2)) {
 		next;
 		mes "In addition, you've obtained an unknown relic to report back to the Saphas.";
-		specialeffect(EF_STEAL, AREA, playerattached());
+		specialeffect2 EF_STEAL;
 		getitem Unidentified_Relic,1;
 	}
 	close;
@@ -3901,8 +3901,8 @@ dic_in01,245,119,4	script	Shay#ep133_13	4_M_ACROSS,{
 				next;
 				mes "[Shay]";
 				mes "Stop!!!!!!!!!!!!!";
-				specialeffect(EF_HIT1, AREA, playerattached());
-				specialeffect(EF_HIT2, AREA, playerattached());
+				specialeffect2 EF_HIT1;
+				specialeffect2 EF_HIT2;
 				percentheal -30,0;
 				next;
 				mes "-Shay got all upset and threw something sticky and smelly.";
@@ -6990,7 +6990,7 @@ dic_in01,42,264,3	script	Adventurer Clerk#ep133	4_MAN_NITT,{
 				mes "Ok, let's get this started.";
 				mes "I'm going to remove all enchantments from your Light of El Dicastes.";
 				mes "Haaap--!";
-				specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
+				specialeffect2 EF_REPAIRWEAPON;
 				progressbar "ffff00",3;
 				delitem Sapa_Feat_Cert,6;
 				delitem El_Dicastes_Light,1;
@@ -7169,7 +7169,7 @@ dic_in01,42,264,3	script	Adventurer Clerk#ep133	4_MAN_NITT,{
 					mes "Then, take the equipment off first.";
 					close;
 				}
-				specialeffect(EF_OVERTHRUST, AREA, playerattached());
+				specialeffect2 EF_OVERTHRUST;
 				mes .@n$;
 				if (.@re$ == "Brare") mes "I've collected all equipment and erased all records as you requested. Now all your equipment and records are clean.";
 				else mes "I only do what I'm asked to do. I've retrieved all equipment and cancelled all records.";
@@ -7248,7 +7248,7 @@ dic_in01,42,264,3	script	Adventurer Clerk#ep133	4_MAN_NITT,{
 			mes "Please come back again";
 			close;
 		}
-		specialeffect(EF_OVERTHRUST, AREA, playerattached());
+		specialeffect2 EF_OVERTHRUST;
 		mes .@n$;
 		mes "I have erased all previous records";
 		mes "of upgrades to start all over with";
@@ -7280,7 +7280,7 @@ dic_in01,42,264,3	script	Adventurer Clerk#ep133	4_MAN_NITT,{
 	mes .@n$;
 	mes "Then let's start.";
 	next;
-	specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
+	specialeffect2 EF_REPAIRWEAPON;
 	progressbar "ffff00",3;
 	delitem 6304,.@req;
 	if (getd("ep13_3_"+.@v$) == 0) {

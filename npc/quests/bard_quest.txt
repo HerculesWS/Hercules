@@ -92,7 +92,7 @@ geffen,132,38,3	script	Bard#2	1_M_BARD,{
 		mes "Goddess, Idun.";
 		mes "Keeper of the apples of youth";
 		mes "Goddess of immortality.^000000";
-		specialeffect(EF_STEAL, AREA, playerattached());
+		specialeffect2 EF_STEAL;
 		next;
 		mes "^483D8BEvery god never grows old.";
 		mes "Idun, the wife of Bragi,";
@@ -114,7 +114,7 @@ geffen,132,38,3	script	Bard#2	1_M_BARD,{
 		mes "Loki was careless once,";
 		mes "and made her lost to the gods.";
 		mes "He was forced to get her back.^000000";
-		specialeffect(EF_STEAL, AREA, playerattached());
+		specialeffect2 EF_STEAL;
 		next;
 		mes "^483D8BMy goddess stands";
 		mes "In the field of Asgard";
@@ -132,7 +132,7 @@ geffen,132,38,3	script	Bard#2	1_M_BARD,{
 		mes "You will be blessed";
 		mes "By every god...^000000";
 		next;
-		specialeffect(EF_RESURRECTION, AREA, playerattached());
+		specialeffect2 EF_RESURRECTION;
 		mes "^3355FFWhile listening to his song, you feel at ease, and your thoughts become clearer. You believe that you see the vision of an angel, and you gain some experience points.^000000";
 		gef_bard_q += 16; //30,31
 		if (RENEWAL_EXP) {
@@ -200,7 +200,7 @@ geffen,132,38,3	script	Bard#2	1_M_BARD,{
 		mes "Now, let me cast a spell...";
 		mes "*Mumble mumble...*";
 		next;
-		specialeffect(EF_CONE, AREA, playerattached());
+		specialeffect2 EF_CONE;
 		mes "^3355FFOn your left wrist, a crescent shaped mark glowing with a silver light appeared. It's only noticeable when you concentrate on finding it, but it might clearly appear under the moonlight.^000000";
 		next;
 		mes "[Errende]";
@@ -1721,7 +1721,7 @@ morocc,134,111,3	script	Bard#3	2_M_BARD_ORIENT,{
 				mes "Are one. 12 petals, our";
 				mes "Love finally blossoms.^000000";
 				next;
-				specialeffect(EF_POISONREACT2, AREA, playerattached());
+				specialeffect2 EF_POISONREACT2;
 				mes "^3355FFAfter the song, Kino smiles at you. You feel a sharp pain on your wrist. On the spot where the silver crescent was, you see a tiny black cross.^000000";
 				next;
 				mes "[Kino Kitty]";

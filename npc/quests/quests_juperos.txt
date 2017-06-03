@@ -1656,7 +1656,7 @@ OnTouch:
 		mes "Ahhhh...";
 		mes "It feels like";
 		mes "I'm floating...";
-		specialeffect(EF_LIGHTSPHERE, AREA, playerattached());
+		specialeffect2 EF_LIGHTSPHERE;
 		close2;
 		stopnpctimer;
 		warp "juperos_02",128,278;
@@ -1733,7 +1733,7 @@ OnMyMobDead:
 		mapannounce "juperos_02","Have you come seeking Juperos?! It no longer exists...",bc_map,"0xFF0000";
 	else if (.MyMobs == 0) {
 		mapannounce "juperos_02","Have you come to see me? Fine! Find me first!",bc_map,"0xFF0000";
-		specialeffect(EF_SCREEN_QUAKE, AREA, playerattached());
+		specialeffect2 563;
 		soundeffectall "earth_quake.wav",0;
 		disablenpc "3F Gate Switch#jupe";
 		donpcevent "Restricted Area#jupe::OnEnable";
@@ -4303,7 +4303,7 @@ jupe_ele_r,51,98,0	script	Switch#ufe	CLEAR_NPC,{
 							disablenpc "Switch#ufe";
 							enablenpc "Switch On#ufe";
 							initnpctimer;
-							specialeffect(EF_SCREEN_QUAKE, AREA, playerattached());
+							specialeffect2 563;
 							soundeffectall "earth_quake.wav",0;
 							close2;
 							cutin "5-1",255;
@@ -4912,7 +4912,7 @@ OnTouch:
 	next;
 	switch(select("Use it.", "Ignore it.")) {
 	case 1:
-		specialeffect(EF_LIGHTSPHERE, AREA, playerattached());
+		specialeffect2 EF_LIGHTSPHERE;
 		close2;
 		stopnpctimer;
 		warp "juperos_02",130,142;

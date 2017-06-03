@@ -314,7 +314,7 @@ malangdo,147,117,3	script	Innkeeper#malang	4_CAT_REST,{
 			if (countitem(Malang_Sp_Can) > 4) {
 				delitem Malang_Sp_Can,5;
 				percentheal 100,100;
-				specialeffect(EF_HEALSP, AREA, playerattached());
+				specialeffect2 EF_HEALSP;
 				mes "[Innkeeper]";
 				mes "Now relax.";
 				emotion e_kis;

@@ -793,7 +793,7 @@ prt_are_in,129,83,3	script	Staff#70-1	1_F_02,{
 	mes "[Staff]";
 	mes "Let me guide you outside. I hope you had a good time.";
 	close2;
-	specialeffect(EF_EXIT, AREA, playerattached());
+	specialeffect2 EF_EXIT;
 	warp "arena_room",100,75;
 	end;
 }
@@ -859,7 +859,7 @@ prt_are_in,25,84,3	script	Staff#70-2	1_F_02,{
 			mes "See you later~";
 			close2;
 		}
-		specialeffect(EF_EXIT, AREA, playerattached());
+		specialeffect2 EF_EXIT;
  		donpcevent "cast#70::OnNomal1";
 		warp "arena_room",100,75;
 		donpcevent "#arn_timer_70::OnStop";
@@ -906,7 +906,7 @@ prt_are_in,25,84,3	script	Staff#70-2	1_F_02,{
 			mes "See you later~";
 			close2;
 		}
-		specialeffect(EF_HIT5, AREA, playerattached());
+		specialeffect2 EF_HIT5;
  		donpcevent "cast#70::OnNomal2";
 		warp "arena_room",100,75;
 		donpcevent "#arn_timer_70::OnStop";

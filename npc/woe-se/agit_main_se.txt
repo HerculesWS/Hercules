@@ -1159,7 +1159,7 @@ OnEnable:
 									mes "reinforced with wood.^000000";
 									++.@rp_temp;
 									++.@ro_of02;
-									specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
+									specialeffect2 EF_REPAIRWEAPON;
 									next;
 									break;
 								case 2:
@@ -1212,7 +1212,7 @@ OnEnable:
 									mes "like this will work.^000000";
 									++.@rp_temp;
 									++.@ro_of02;
-									specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
+									specialeffect2 EF_REPAIRWEAPON;
 									next;
 									break;
 								}
@@ -1236,7 +1236,7 @@ OnEnable:
 									mes "is starting to look more solid.^000000";
 									++.@rp_temp;
 									++.@ro_of02;
-									specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
+									specialeffect2 EF_REPAIRWEAPON;
 									next;
 									break;
 								case 3:
@@ -1277,7 +1277,7 @@ OnEnable:
 									mes "much of the gate's damage.^000000";
 									++.@rp_temp;
 									++.@ro_of02;
-									specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
+									specialeffect2 EF_REPAIRWEAPON;
 									next;
 									break;
 								case 4:

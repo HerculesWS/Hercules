@@ -25,10 +25,10 @@
 		if(select("^0055FFHeal^000000", "^777777Cancel^000000") == 2) close;
 		Zeny -= .@price;
 	}
-	specialeffect(EF_HEAL2, AREA, playerattached()); percentheal 100,100;
+	specialeffect2 EF_HEAL2; percentheal 100,100;
 	if (.@Buffs) {
-		specialeffect(EF_INCAGILITY, AREA, playerattached()); sc_start SC_INC_AGI,240000,10;
-		specialeffect(EF_BLESSING, AREA, playerattached()); sc_start SC_BLESSING,240000,10;
+		specialeffect2 EF_INCAGILITY; sc_start SC_INC_AGI,240000,10;
+		specialeffect2 EF_BLESSING; sc_start SC_BLESSING,240000,10;
 	}
 	if (.@Delay) @HD = gettimetick(2)+.@Delay;
 	end;
