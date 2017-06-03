@@ -5857,13 +5857,16 @@ Example usage:
 
 *specialeffect2(<effect number>{, <send_target>{, "<Player Name>"}})
 
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 This command behaves identically to the specialeffect(), but the effect
 will be centered on the invoking character's sprite.
 
-<Player name> parameter will display <effect number> on another Player 
-than the one currently attached to the script. Like with specialeffect(),
-when specifying a player, <send_target> must be supplied, specifying AREA 
-will retain the default behavior of the command.
+This command is deprecated and it should not be used in new scripts, as it is
+likely to be removed at a later time. Please use specialeffect instead,
+ie: specialeffect(<effect number>, <send_target>, playerattached())
 
 ---------------------------------------
 
@@ -5963,7 +5966,7 @@ target in autobonus() and autobonus3()).
 //Grants a 1% chance of starting the state "all stats +10" for 10 seconds 
 //when using weapon or misc attacks (both melee and ranged skills) and 
 //shows a special effect when the bonus is active.
-	autobonus("{ bonus(bAllStats, 10); }", 10, 10000, BF_WEAPON|BF_MISC, "{ specialeffect2(EF_FIRESPLASHHIT); }");
+	autobonus("{ bonus(bAllStats, 10); }", 10, 10000, BF_WEAPON|BF_MISC, "{ specialeffect(EF_FIRESPLASHHIT, AREA, playerattached()); }");
 
 ---------------------------------------
 
@@ -7766,7 +7769,7 @@ OnInit:
 	bindatcmd("test", strnpcinfo(NPC_NAME_UNIQUE)+"::OnAtcommand");
 	end;
 OnAtcommand:
-	specialeffect2(EF_ANGEL2);
+	specialeffect(EF_ANGEL2, AREA, playerattached());
 	end;
 }
 
