@@ -3129,7 +3129,7 @@ OnTouch:
 		mes "[Pope]";
 		mes "May Freya bless you...";
 		next;
-		specialeffect2 EF_ENCHANTPOISON;
+		specialeffect(EF_ENCHANTPOISON, AREA, playerattached());
 		mes "^3355FFThe pope prayed in earnest";
 		mes "for you, and you feel a strong";
 		mes "aura of warmth and kindness";

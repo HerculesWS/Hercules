@@ -7387,7 +7387,7 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 			next;
 			sign_q = 71;
 			getitem Stars_Sob,1;
-			specialeffect2 EF_YUFITELHIT;
+			specialeffect(EF_YUFITELHIT, AREA, playerattached());
 			next;
 			mes "[Engel]";
 			mes "This was one of the most difficult jobs I've ever done. But look! It was beautiful when broken in fragments but now it's absolutely dazzling! This was really worth my effort.";
@@ -7507,7 +7507,7 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 			else if (countitem(Emperium_Anvil) > 0) delitem Emperium_Anvil,1;
 			sign_q = 71;
 			getitem Stars_Sob,1;
-			specialeffect2 EF_YUFITELHIT;
+			specialeffect(EF_YUFITELHIT, AREA, playerattached());
 			close;
 		}
 		else {
@@ -7939,7 +7939,7 @@ um_in,27,23,3	script	Fastidious-Looking Guy	2_M_MOLGENSTEIN,{
 			mes "Get out here right now!";
 			close2;
 			percentheal -30,0;
-			specialeffect2 EF_MAGNUMBREAK;
+			specialeffect(EF_MAGNUMBREAK, AREA, playerattached());
 			end;
 		}
 	}
@@ -8004,7 +8004,7 @@ um_in,27,23,3	script	Fastidious-Looking Guy	2_M_MOLGENSTEIN,{
 			mes "make me get violent...";
 			next;
 			percentheal -30,0;
-			specialeffect2 EF_MAGNUMBREAK;
+			specialeffect(EF_MAGNUMBREAK, AREA, playerattached());
 			next;
 			warp "umbala",111,121;
 			end;
@@ -8166,7 +8166,7 @@ OnTouch:
 		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "What the...?";
 		mes "What's happening?!";
-		specialeffect2 EF_BEGINSPELL6;
+		specialeffect(EF_BEGINSPELL6, AREA, playerattached());
 		next;
 		mes "^3355FFFor some reason, in";
 		mes "this particular spot, the";
@@ -8175,14 +8175,14 @@ OnTouch:
 		mes "and Coral Reefs that you're";
 		mes "holding. All the objects are";
 		mes "violently resonating...^000000";
-		specialeffect2 EF_ENHANCE;
+		specialeffect(EF_ENHANCE, AREA, playerattached());
 		next;
 		mes "^3355FFAll of a sudden these";
 		mes "objects emit a bright flash";
 		mes "of light that envelops your";
 		mes "entire body, then you gently";
 		mes "fall into unconsciousness...^000000";
-		specialeffect2 EF_FLASHER;
+		specialeffect(EF_FLASHER, AREA, playerattached());
 		next;
 		delitem Resin,4;
 		delitem Stone_Heart,12;
@@ -12289,7 +12289,7 @@ geffen,119,48,0	script	Fountain#s	HIDDEN_NPC,{
 		mes "a strange light begins to emit from the Lucifer's Lament in your pocket and from something deep within";
 		mes "the fountain's water.^000000";
 		specialeffect EF_LEVEL99;
-		specialeffect2 EF_LEVEL99;
+		specialeffect(EF_LEVEL99, AREA, playerattached());
 		next;
 		switch(select("Throw Lucifer's Lament into the fountain.", "Ignore the light.")) {
 		case 1:

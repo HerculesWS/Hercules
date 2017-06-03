@@ -44,7 +44,7 @@
 iz_int,18,26,0	script	startpoint	HIDDEN_WARP_NPC,1,1,{
 OnTouch:
 	if (!izintspawn) {
-		specialeffect2(EF_ANGEL3); // On official it is some kind of Poring Angel, but I can't find it
+		specialeffect(EF_ANGEL3, AREA, playerattached()); // On official it is some kind of Poring Angel, but I can't find it
 		navigateto("int_land", NAV_NONE, 1); // individual map name not required
 		izintspawn = 1;
 	}
@@ -135,11 +135,11 @@ int_land,58,69,5	script	Sailor#int_land	4W_SAILOR,{
 			mes("[Sailor]");
 			mes("If you want to sail with us to Izlude, jump on board!");
 			getexp(600, 0);
-			specialeffect2(EF_HEAL2);
+			specialeffect(EF_HEAL2, AREA, playerattached());
 			heal(9999, 0);
-			specialeffect2(EF_INCAGILITY);
+			specialeffect(EF_INCAGILITY, AREA, playerattached());
 			sc_start(SC_INC_AGI, 240000, 10);
-			specialeffect2(EF_BLESSING);
+			specialeffect(EF_BLESSING, AREA, playerattached());
 			sc_start(SC_BLESSING, 240000, 10);
 			next();
 			mes("[Sailor]");
@@ -212,11 +212,11 @@ int_land,78,103,5	script	Captain Carocc#int_land	4_M_REINDEER,{
 		mes("It is hard, but you look tough enough for this task.");
 		if (questprogress(21001) == 1)
 			completequest(21001);
-		specialeffect2(EF_HEAL2);
+		specialeffect(EF_HEAL2, AREA, playerattached());
 		heal(9999, 0);
-		specialeffect2(EF_INCAGILITY);
+		specialeffect(EF_INCAGILITY, AREA, playerattached());
 		sc_start(SC_INC_AGI, 240000, 10);
-		specialeffect2(EF_BLESSING);
+		specialeffect(EF_BLESSING, AREA, playerattached());
 		sc_start(SC_BLESSING, 240000, 10);
 		getexp(600, 0);
 		setquest(21002);
@@ -241,11 +241,11 @@ int_land,78,103,5	script	Captain Carocc#int_land	4_M_REINDEER,{
 		close();
 	case 1:
 		mes("[Captain Carocc]");
-		specialeffect2(EF_HEAL2);
+		specialeffect(EF_HEAL2, AREA, playerattached());
 		heal(9999, 0);
-		specialeffect2(EF_INCAGILITY);
+		specialeffect(EF_INCAGILITY, AREA, playerattached());
 		sc_start(SC_INC_AGI, 240000, 10);
-		specialeffect2(EF_BLESSING);
+		specialeffect(EF_BLESSING, AREA, playerattached());
 		sc_start(SC_BLESSING, 240000, 10);
 		mes("^4d4dffThe Ship^000000 anchored in the southwest. It will take you to Izlude.");
 		mes("Don't forget to ^4d4dffget some Lumber^000000 for the ship.");
@@ -2133,8 +2133,8 @@ iz_ac01,59,43,3	script	Therapist#ac	4_M_6THPRIN1,{
 			mes("[Therapist]");
 			mes("Recovery ratio is very minimal...");
 			mes("It can help you avoid dying but won't give you much HP.");
-			specialeffect2(EF_BEGINSPELL6);
-			specialeffect2(EF_SPELLBREAKER);
+			specialeffect(EF_BEGINSPELL6, AREA, playerattached());
+			specialeffect(EF_SPELLBREAKER, AREA, playerattached());
 			next();
 			mes("[Therapist]");
 			mes("Press ^4d4dffALT + S^000000 to open your Skill window to see your skills.");
@@ -2317,7 +2317,7 @@ izlude,140,249,7	script	Academy Student#0	4_M_NOV_RUMIN,{
 		close();
 	}
 	if (questprogress(7478) == 1 && !questprogress(7479)) {
-		specialeffect(EF_STEAL, AREA, "Cultivated Red Plant#"+strnpcinfo(NPC_NAME_HIDDEN));
+		specialeffect(EF_STEAL, AREA, getnpcid(0, "Cultivated Red Plant#"+strnpcinfo(NPC_NAME_HIDDEN)));
 		donpcevent("Cultivated Red Plant#"+strnpcinfo(NPC_NAME_HIDDEN)+"::OnDisable");
 		emotion(e_gasp, 1);
 		emotion(e_heh);
@@ -3318,7 +3318,7 @@ iz_ac01,36,52,3	script	Odd Novice#ac	4_M_SIT_NOVICE,{
 			mes("[Odd Novice]");
 			mes("OK. Where should I start?");
 			mes("First, Bash!");
-			specialeffect2(EF_BASH);
+			specialeffect(EF_BASH, AREA, playerattached());
 			next();
 			mes("[Odd Novice]");
 			mes("Hehehe.. Surprised?");
@@ -3327,13 +3327,13 @@ iz_ac01,36,52,3	script	Odd Novice#ac	4_M_SIT_NOVICE,{
 			next();
 			mes("[Odd Novice]");
 			mes("Looks like you were surprised!");
-			specialeffect2(EF_BLESSING);
+			specialeffect(EF_BLESSING, AREA, playerattached());
 			next();
 			mes("[Odd Novice]");
 			mes("Just keep calm");
 			mes("and have a potion");
 			mes("But that's not the last of it.");
-			specialeffect2(EF_STEAL);
+			specialeffect(EF_STEAL, AREA, playerattached());
 			next();
 			mes("[Odd Novice]");
 			mes("I have stolen one thread of your hair.");
@@ -5664,7 +5664,7 @@ izlude,95,146,5	script	Mom#iz	4_F_CAVE1,{
 	mes("^0000cd[Come to me, honey~]^000000");
 	next();
 	enablenpc("Etinifni#"+strnpcinfo(NPC_NAME_HIDDEN));
-	specialeffect(EF_PORTAL, AREA, "Etinifni#"+strnpcinfo(NPC_NAME_HIDDEN));
+	specialeffect(EF_PORTAL, AREA, getnpcid(0, "Etinifni#"+strnpcinfo(NPC_NAME_HIDDEN)));
 	mes("[Etinifni]");
 	mes("What's up? Where am I?");
 	next();
@@ -5750,7 +5750,7 @@ izlude,99,138,3	script	Romantic Male#iz	4_M_SITDOWN,{
 	mes("[Romantic Male]");
 	mes("Are you lifting up our good old memories renting my wedding dress and your tuxedo!! It will strenghthen our relationship, won't it?");
 	next();
-	specialeffect(EF_HEARTCASTING, AREA, "Romantic Female#"+strnpcinfo(NPC_NAME_HIDDEN));
+	specialeffect(EF_HEARTCASTING, AREA, getnpcid(0, "Romantic Female#"+strnpcinfo(NPC_NAME_HIDDEN)));
 	emotion(e_kis, 0, "Romantic Female#"+strnpcinfo(NPC_NAME_HIDDEN));
 	mes("[Romantic Male]");
 	mes("Honey~~ I love you!! Sweetheart~");
@@ -5784,7 +5784,7 @@ izlude,97,138,5	script	Romantic Female#iz	4_F_SITDOWN,{
 	mes("[Romantic Female]");
 	mes("You are tired of sitting, aren't you?");
 	next();
-	specialeffect(EF_HEARTCASTING, AREA, "Romantic Female#"+strnpcinfo(NPC_NAME_HIDDEN));
+	specialeffect(EF_HEARTCASTING, AREA, getnpcid(0, "Romantic Female#"+strnpcinfo(NPC_NAME_HIDDEN)));
 	emotion(e_kis, 0, "Romantic Female#"+strnpcinfo(NPC_NAME_HIDDEN));
 	mes("[Romantic Female]");
 	mes("My sweetheart!!! I love you!!!");
@@ -5792,7 +5792,7 @@ izlude,97,138,5	script	Romantic Female#iz	4_F_SITDOWN,{
 	mes("[Romantic Male]");
 	mes("Yes, thank you for sharing your SP! You are also tired, aren't you?");
 	next();
-	specialeffect(EF_HEARTCASTING, AREA, "Romantic Male#"+strnpcinfo(NPC_NAME_HIDDEN));
+	specialeffect(EF_HEARTCASTING, AREA, getnpcid(0, "Romantic Male#"+strnpcinfo(NPC_NAME_HIDDEN)));
 	emotion(e_kis2, 0, "Romantic Male#"+strnpcinfo(NPC_NAME_HIDDEN));
 	mes("[Romantic Male]");
 	mes("My sweetheart!! I love you!!!");
@@ -8482,7 +8482,7 @@ iz_ac02,70,85,5	script	Arang#ac	4_F_TAEKWON,{
 				cutin("arang03", 0);
 				next();
 				mes("Suddenly, you see Arang's foot flying towards you.");
-				specialeffect2(EF_TRIPLEATTACK);
+				specialeffect(EF_TRIPLEATTACK, AREA, playerattached());
 				emotion(e_wah, 1);
 				next();
 				cutin("", 255);
@@ -11927,8 +11927,8 @@ iz_ac02,62,139,3	script	Lumin#ac	4_M_NOV_RUMIN,{
 			next();
 			cutin("", 255);
 			mes("Lumin changing clothes piece by piece.");
-			specialeffect2(EF_SPHERE);
-			specialeffect2(EF_SPHERE);
+			specialeffect(EF_SPHERE, AREA, playerattached());
+			specialeffect(EF_SPHERE, AREA, playerattached());
 			classchange(4_M_THIEF_RUMIN, 0);
 			next();
 			cutin("thf_lumin01", 2);
@@ -11941,8 +11941,8 @@ iz_ac02,62,139,3	script	Lumin#ac	4_M_NOV_RUMIN,{
 			mes("Forget what you saw today, as I have to introduce to the way of Thief Guild as many people as possible.");
 			cutin("thf_lumin05", 2);
 			close2();
-			specialeffect2(EF_SPHERE);
-			specialeffect2(EF_SPHERE);
+			specialeffect(EF_SPHERE, AREA, playerattached());
+			specialeffect(EF_SPHERE, AREA, playerattached());
 			classchange(4_M_NOV_RUMIN, 0);
 			cutin("", 255);
 			end;
@@ -13775,7 +13775,7 @@ izlude,96,125,7	script	Enchanter Mounds#iz	4_CAT_SAILOR2,{
 		mes("[Mounds]");
 		mes("One! Two! Three!");
 		next();
-		specialeffect2(EF_SANCTUARY);
+		specialeffect(EF_SANCTUARY, AREA, playerattached());
 		completequest(5158);
 		delitem(Cotton_Shirt, 1); // Cotton_Shirt
 		getitem(Cotton_Shirt_, 1); // Cotton_Shirt_
@@ -14036,7 +14036,7 @@ izlude,108,139,7	script	Enchanter Almond J#iz	4_CAT_SAILOR3,{
 		mes("[Almond J]");
 		mes("Now!! Start the first hidden enchant!! Start!!!!!");
 		next();
-		specialeffect2(EF_REPAIRWEAPON);
+		specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
 		progressbar "ffff00", 2;
 		completequest(5159);
 		delequip .@part;
@@ -14169,7 +14169,7 @@ izlude,108,139,7	script	Enchanter Almond J#iz	4_CAT_SAILOR3,{
 	mes("[Almond J]");
 	mes("It is a good weapon Then!! Let's start the hidden enchant!!");
 	next();
-	specialeffect2(EF_REPAIRWEAPON);
+	specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
 	progressbar "ffff00", 3;
 	delequip .@part;
 	getitem2(.@equip,1,1,.@equip_refine,0,.@equip_card[0],.@equip_card[1],.@enchant1,.@enchant2);

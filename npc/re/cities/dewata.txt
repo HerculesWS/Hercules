@@ -543,13 +543,13 @@ dewata,89,191,6	script	Small Shrine#dew1	CLEAR_NPC,{
 		else if (.@stat & 32 && .@bonus)
 			consumeitem 12068; //Luk_Dish03
 		else if (.@stat & 64) {
-			specialeffect2 EF_ANGEL;
+			specialeffect(EF_ANGEL, AREA, playerattached());
 			mes "- A celestial entity gives you a blessing. -";
 			next;
 		} else if (.@stat & 128) {
 			mes "- The shrine envelops you in a loving aura. -";
 			if ((Sex == SEX_FEMALE && compare(.@wish$,.@wishes$[26])) || (Sex == SEX_MALE && compare(.@wish$,.@wishes$[27])))
-				specialeffect2 EF_LIGHTSPHERE;
+				specialeffect(EF_LIGHTSPHERE, AREA, playerattached());
 			next;
 		}
 		mes "It feels like this wish could come true.";
@@ -569,13 +569,13 @@ dewata,89,191,6	script	Small Shrine#dew1	CLEAR_NPC,{
 
 L_Wish:
 	mes "Mysterious energy comes out from the shrine.";
-	specialeffect EF_FLASHER,AREA,"Small Shrine#dew1";
-	specialeffect EF_FLASHER,AREA,"Small Shrine#dew2";
-	specialeffect EF_FLASHER,AREA,"Small Shrine#dew3";
-	specialeffect EF_FLASHER,AREA,"Small Shrine#dew4";
+	specialeffect(EF_FLASHER, AREA, getnpcid(0, "Small Shrine#dew1"));
+	specialeffect(EF_FLASHER, AREA, getnpcid(0, "Small Shrine#dew2"));
+	specialeffect(EF_FLASHER, AREA, getnpcid(0, "Small Shrine#dew3"));
+	specialeffect(EF_FLASHER, AREA, getnpcid(0, "Small Shrine#dew4"));
 	next;
 	mes "You have received the shrine's blessing.";
-	specialeffect2 EF_BLESSING;
+	specialeffect(EF_BLESSING, AREA, playerattached());
 	next;
 	return;
 }

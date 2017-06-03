@@ -1089,7 +1089,7 @@ prt_are_in,181,83,3	script	Staff#aco-1	1_F_02,{
 	mes "I hope you enjoyed";
 	mes "your battle in the area~";
 	close2;
-	specialeffect2 EF_EXIT;
+	specialeffect(EF_EXIT, AREA, playerattached());
 	warp "arena_room",100,75;
 	end;
 }
@@ -1289,7 +1289,7 @@ prt_are_in,25,31,3	script	Staff#aco-2	1_F_02,{
 				close2;
 				arena_point += 50;
 			}
-			specialeffect2 EF_EXIT;
+			specialeffect(EF_EXIT, AREA, playerattached());
 			warp "arena_room",100,75;
 			donpcevent "#arn_timer_aco::OnStop";
 			donpcevent "allkill#aco::OnEnable";
@@ -1353,7 +1353,7 @@ prt_are_in,25,31,3	script	Staff#aco-2	1_F_02,{
 				close2;
 				arena_point += 20;
 			}
-			specialeffect2 EF_EXIT;
+			specialeffect(EF_EXIT, AREA, playerattached());
 			warp "arena_room",100,75;
 			donpcevent "#arn_timer_aco::OnStop";
 			donpcevent "allkill#aco::OnEnable";
@@ -1451,7 +1451,7 @@ prt_are_in,25,31,3	script	Staff#aco-2	1_F_02,{
 				close2;
 				arena_point += 20;
 			}
-			specialeffect2 EF_EXIT;
+			specialeffect(EF_EXIT, AREA, playerattached());
 			warp "arena_room",100,75;
 			donpcevent "#arn_timer_aco::OnStop";
 			donpcevent "allkill#aco::OnEnable";

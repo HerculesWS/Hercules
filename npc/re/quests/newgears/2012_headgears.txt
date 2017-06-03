@@ -339,7 +339,7 @@ moc_para01,41,169,3	script	Reno#2012hat	1_M_WIZARD,{
 		mes "[Reno]";
 		mes "You might feel a slight tingle.";
 		next;
-		specialeffect2 EF_BASH3D;
+		specialeffect(EF_BASH3D, AREA, playerattached());
 		percentheal .@rate * -5,0;
 		//consumeitem ??; //Keep_Connection_[.@rate]
 		sc_start .@buffs[.@choice], 10800000, .@rate; // Atk/Matk + 5*rate (+5, +10, +15)
@@ -573,7 +573,7 @@ moc_para01,41,169,3	script	Reno#2012hat	1_M_WIZARD,{
 				close;
 			}
 		}
-		specialeffect2 EF_REPAIRWEAPON;
+		specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
 		progressbar "ffff00",2;
 		delitem .@material,1;
 		if (.@material == Safety_Ring) {

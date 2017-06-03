@@ -130,11 +130,11 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 					next;
 					mes "[Mishuna]";
 					mes "%$#@!#$% Yap~~";
-					specialeffect2 EF_RUWACH;
+					specialeffect(EF_RUWACH, AREA, playerattached());
 					next;
 					mes "[Mishuna]";
 					mes "Yap!";
-					specialeffect2 EF_BRANDISHSPEAR;
+					specialeffect(EF_BRANDISHSPEAR, AREA, playerattached());
 					next;
 					mes "^3355FFYou've successfully";
 					mes "learned the "+.@skill$[.@i]+" Elemental";
@@ -159,11 +159,11 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 			next;
 			mes "[Mishuna]";
 			mes "%$#@!#$% Yap~~";
-			specialeffect2 EF_RUWACH;
+			specialeffect(EF_RUWACH, AREA, playerattached());
 			next;
 			mes "[Mishuna]";
 			mes "Yap!";
-			specialeffect2 EF_BRANDISHSPEAR;
+			specialeffect(EF_BRANDISHSPEAR, AREA, playerattached());
 			next;
 			mes "^3355FFYou successfully recalled";
 			mes "the Elemental Coverter";
@@ -332,7 +332,7 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 			mes "Elemental Converter";
 			mes "Creation skill by reviewing";
 			mes "your copy of Barmundt's scroll.^000000";
-			specialeffect2 EF_ABSORBSPIRITS;
+			specialeffect(EF_ABSORBSPIRITS, AREA, playerattached());
 			delitem Scorpions_Tail,10;
 			delitem Horn,7; // Horn
 			delitem Colorful_Shell,12; // Rainbow_Shell
@@ -466,11 +466,11 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 		mes "a soft blue glow surrounds";
 		mes "his body and slowly grows";
 		mes "brighter and more intense.^000000";
-		specialeffect2 EF_RUWACH;
+		specialeffect(EF_RUWACH, AREA, playerattached());
 		next;
 		mes "[Mishuna]";
 		mes "@#$%^~ Yap!";
-		specialeffect2 EF_BRANDISHSPEAR;
+		specialeffect(EF_BRANDISHSPEAR, AREA, playerattached());
 		delitem .@ReqItem[.@i],20;
 		delitem Payon_Potion,1; // Payon Potion
 		delitem Morocc_Potion,1; // Morocc Potion
