@@ -7320,6 +7320,22 @@ int script_array_index_cmp(const void *a, const void *b)
 	return (*(const unsigned int *)a - *(const unsigned int *)b); // FIXME: Is the unsigned difference really intended here?
 }
 
+BUILDIN(getarrayindex)
+{
+	struct script_data *data = script_getdata(st, 2);
+
+	if (!data_isreference(data) || reference_toconstant(data))
+	{
+		ShowError("script:getarrayindex: not a variable\n");
+		script->reportdata(data);
+		st->state = END;
+		return false;// not a variable
+	}
+
+	script_pushint(st, reference_getindex(data));
+	return true;
+}
+
 /// Deletes count or all the elements in an array, from the starting index.
 /// ex: deletearray arr[4],2;
 ///
@@ -16138,6 +16154,26 @@ BUILDIN(charat) {
 }
 
 //=======================================================
+// isstr <argument>
+//
+// returns type:
+// 0 - int
+// 1 - string
+// 2 - other
+//-------------------------------------------------------
+BUILDIN(isstr)
+{
+	if (script_isinttype(st, 2)) {
+		script_pushint(st, 0);
+	} else if (script_isstringtype(st, 2)) {
+		script_pushint(st, 1);
+	} else {
+		script_pushint(st, 2);
+	}
+	return true;
+}
+
+//=======================================================
 // chr <int>
 //-------------------------------------------------------
 BUILDIN(chr)
@@ -23322,6 +23358,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(cleararray,"rvi"),
 		BUILDIN_DEF(copyarray,"rri"),
 		BUILDIN_DEF(getarraysize,"r"),
+		BUILDIN_DEF(getarrayindex,"r"),
 		BUILDIN_DEF(deletearray,"r?"),
 		BUILDIN_DEF(getelementofarray,"ri"),
 		BUILDIN_DEF(getitem,"vi?"),
@@ -23574,6 +23611,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getstrlen,"s"), //strlen [Valaris]
 		BUILDIN_DEF(charisalpha,"si"), //isalpha [Valaris]
 		BUILDIN_DEF(charat,"si"),
+		BUILDIN_DEF(isstr,"v"),
 		BUILDIN_DEF(chr,"i"),
 		BUILDIN_DEF(ord,"s"),
 		BUILDIN_DEF(setchar,"ssi"),

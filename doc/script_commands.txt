@@ -2441,6 +2441,17 @@ If you do this:
 
 ---------------------------------------
 
+*getarrayindex(<array name>)
+
+This command returns the index of the passed array. This is useful when
+used in combination with getarg()
+
+Example:
+	
+	getarrayindex(.@foo[42]) // 42
+
+---------------------------------------
+
 *getelementofarray(<array name>, <index>)
 
 This command retrieves the value of the element of given array at given 
@@ -8272,6 +8283,18 @@ This function will return the length of the string given as an argument.
 It is useful to check if anything input by the player exceeds name length 
 limits and other length limits and asking them to try to input something 
 else.
+
+---------------------------------------
+
+*isstr(<argument>)
+
+This command checks if the given <argument> is a string (1),
+an integer (0) or something else (2).
+
+Example:
+
+    isstr(69); // outputs 0
+    isstr("69"); // outputs 1
 
 ---------------------------------------
 
