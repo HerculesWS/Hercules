@@ -1242,7 +1242,11 @@ to that point.
 
     mes("You can <URL>Google<INFO>http://www.google.com/</INFO></URL> anything");
 
-Clicking Google will open the browser and point to Google website.
+This will allow you to visit 'Google' with the in-game browser using default dimensions.
+
+    mes("You can <URL>Bing!<INFO>http://www.bing.com/,800,600</INFO></URL> anything");
+
+Clicking 'Bing!' will open the in-game browser using the specified dimensions. (800x600)
 
 ---------------------------------------
 
