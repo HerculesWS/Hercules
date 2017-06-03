@@ -235,6 +235,7 @@ typedef enum c_op {
 	C_SUB_PRE, // --a
 	C_RE_EQ, // ~=
 	C_RE_NE, // ~!
+	C_POW, // **
 } c_op;
 
 /// Script queue options

@@ -203,11 +203,11 @@ function	script	F_SaveQuestSkills	{
 	ADV_QSK = 0; ADV_QSK2 = 0;
 	//1st classes quest skills
 	for (.@i = 0; .@i < 14; ++.@i) {
-		if(getskilllv(144+.@i)) ADV_QSK |= pow(2,.@i);
+		if(getskilllv(144+.@i)) ADV_QSK |= (2 ** .@i);
 	}
 	//2nd classes quest skills
 	for (.@i = 0; .@i < 19; ++.@i) {
-		if(getskilllv(1001+.@i)) ADV_QSK2 |= pow(2,.@i);
+		if(getskilllv(1001+.@i)) ADV_QSK2 |= (2 ** .@i);
 	}
 	return;
 }
@@ -217,7 +217,7 @@ function	script	F_SaveQuestSkills	{
 function	script	F_Load1Skills	{
 	//1st classes quest skills
 	for(.@i = 0; .@i < 14; ++.@i) {
-		if(ADV_QSK|pow(2,.@i) == ADV_QSK) skill 144+.@i,1,0;
+		if(ADV_QSK|(2 ** .@i) == ADV_QSK) skill 144+.@i,1,0;
 	}
 	ADV_QSK = 0; //Clear var
 	return;
@@ -228,7 +228,7 @@ function	script	F_Load1Skills	{
 function	script	F_Load2Skills	{
 	//2nd classes quest skills
 	for (.@i = 0; .@i < 19; ++.@i) {
-		if(ADV_QSK2|pow(2,.@i) == ADV_QSK2) skill 1001+.@i,1,0;
+		if(ADV_QSK2|(2 ** .@i) == ADV_QSK2) skill 1001+.@i,1,0;
 	}
 	ADV_QSK2 = 0; //Clear var
 	return;

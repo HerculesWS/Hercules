@@ -730,6 +730,7 @@ the common mathematical operations or conditional operators:
     strings.
 - - will subtract two numbers. 
 * - will multiply two numbers.
+** - will raise the first number to the power of the second number.
 / - will divide two numbers. Note that this is an integer division, i.e.
     7/2 is not equal 3.5, it's equal 3.
 % - will give you the remainder of the division. 7%2 is equal to 1.
@@ -930,42 +931,45 @@ Precedence  |  Description                                  | Associativity
             |  !  Logical NOT                               |
             |  ~  Bitwise NOT (One's Complement)            |
 ---------------------------------------------------------------------------
-3           |  *  Multiplication                            | Left to right
+3           | **  Exponentiation                            | Left to right
+---------------------------------------------------------------------------
+4           |  *  Multiplication                            | Left to right
             |  /  Division                                  |
             |  %  Modulo (remainder)                        |
 ---------------------------------------------------------------------------
-4           |  +  Addition                                  | Left to right
+5           |  +  Addition                                  | Left to right
             |  -  Subtraction                               |
 ---------------------------------------------------------------------------
-5           | <<  Bitwise left shift                        | Left to right
+6           | <<  Bitwise left shift                        | Left to right
             | >>  Bitwise right shift                       |
 ---------------------------------------------------------------------------
-6           |  <  Less than                                 | Left to right
+7           |  <  Less than                                 | Left to right
             | <=  Less than or equal to                     |
             |  >  Greater than                              |
             | >=  Greater than or equal to                  |
 ---------------------------------------------------------------------------
-7           | ==  Equal to                                  | Left to right
+8           | ==  Equal to                                  | Left to right
             | !=  Not equal to                              |
             | ~=  Regexp match                              |
             | ~!  Regexp non-match                          |
 ---------------------------------------------------------------------------
-8           |  &  Bitwise AND                               | Left to right
+9           |  &  Bitwise AND                               | Left to right
 ---------------------------------------------------------------------------
-9           |  ^  Bitwise XOR (exclusive or)                | Left to right
+10           |  ^  Bitwise XOR (exclusive or)                | Left to right
 ---------------------------------------------------------------------------
-10          |  |  Bitwise OR (inclusive or)                 | Left to right
+11          |  |  Bitwise OR (inclusive or)                 | Left to right
 ---------------------------------------------------------------------------
-11          | &&  Logical AND                               | Left to right
+12          | &&  Logical AND                               | Left to right
 ---------------------------------------------------------------------------
-12          | ||  Logical OR                                | Left to right
+13          | ||  Logical OR                                | Left to right
 ---------------------------------------------------------------------------
-13          | ?:  Ternary conditional                       | Right to left
+14          | ?:  Ternary conditional                       | Right to left
 ---------------------------------------------------------------------------
-14          |  =  Direct assignment                         | Right to left
+15          |  =  Direct assignment                         | Right to left
 (lowest)    | +=  Assignment by sum                         |
             | -=  Assignment by difference                  |
             | *=  Assignment by product                     |
+            | **= Assignment by power                       |
             | /=  Assignment by quotient                    |
             | %=  Assignment by remainder                   |
             | <<= Assignment by bitwise left shift          |
@@ -8028,10 +8032,18 @@ instead if they want it so much.
 
 *pow(<number>, <power>)
 
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 Returns the result of the calculation.
 
 Example:
 	.@i = pow(2, 3); // .@i will be 8
+
+This command is deprecated and it should not be used in new scripts, as it is
+likely to be removed at a later time. Please use the exponentiation operator,
+ie: (2 ** 3) instead of pow(2, 3)
 
 ---------------------------------------
 
