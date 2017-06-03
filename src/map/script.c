@@ -8590,20 +8590,26 @@ BUILDIN(disableitemuse)
 BUILDIN(readparam) {
 	int type;
 	struct map_session_data *sd;
+	struct script_data *data = script_getdata(st, 2);
 
-	type=script_getnum(st,2);
-	if (script_hasdata(st,3))
-		sd = script->nick2sd(st, script_getstr(st,3));
-	else
-		sd=script->rid2sd(st);
+	if (reference_toparam(data)) {
+		type = reference_getparamtype(data);
+	} else {
+		type = script->conv_num(st, data);
+	}
+
+	if (script_hasdata(st, 3)) {
+		sd = script->nick2sd(st, script_getstr(st, 3));
+	} else {
+		sd = script->rid2sd(st);
+	}
 
 	if (sd == NULL) {
-		script_pushint(st,-1);
+		script_pushint(st, -1);
 		return true;
 	}
 
-	script_pushint(st,pc->readparam(sd,type));
-
+	script_pushint(st, pc->readparam(sd, type));
 	return true;
 }
 

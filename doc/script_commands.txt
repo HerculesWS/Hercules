@@ -2466,7 +2466,7 @@ arrays:
 
 ---------------------------------------
 
-*readparam(<parameter number>)
+*readparam(<parameter number>{, "<player name>"})
 
 This function will return the basic stats of an invoking character, 
 referred to by the parameter number. Instead of a number, you can use a 
