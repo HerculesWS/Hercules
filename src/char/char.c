@@ -4432,14 +4432,21 @@ void char_parse_char_connect(int fd, struct char_session_data* sd, uint32 ipl)
 
 void char_send_map_info(int fd, int i, uint32 subnet_map_ip, struct mmo_charstatus *cd)
 {
+#if PACKETVER < 20170329
+	const int cmd = 0x71;
+	const int len = 28;
+#else
+	const int cmd = 0xac5;
+	const int len = 156;
+#endif
 	nullpo_retv(cd);
-	WFIFOHEAD(fd,28);
-	WFIFOW(fd,0) = 0x71;
-	WFIFOL(fd,2) = cd->char_id;
-	mapindex->getmapname_ext(mapindex_id2name(cd->last_point.map), WFIFOP(fd,6));
-	WFIFOL(fd,22) = htonl((subnet_map_ip) ? subnet_map_ip : chr->server[i].ip);
-	WFIFOW(fd,26) = sockt->ntows(htons(chr->server[i].port)); // [!] LE byte order here [!]
-	WFIFOSET(fd,28);
+	WFIFOHEAD(fd, len);
+	WFIFOW(fd, 0) = cmd;
+	WFIFOL(fd, 2) = cd->char_id;
+	mapindex->getmapname_ext(mapindex_id2name(cd->last_point.map), WFIFOP(fd, 6));
+	WFIFOL(fd, 22) = htonl((subnet_map_ip) ? subnet_map_ip : chr->server[i].ip);
+	WFIFOW(fd, 26) = sockt->ntows(htons(chr->server[i].port)); // [!] LE byte order here [!]
+	WFIFOSET(fd, len);
 }
 
 void char_send_wait_char_server(int fd)

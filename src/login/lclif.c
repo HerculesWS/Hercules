@@ -262,7 +262,11 @@ bool lclif_send_server_list(struct login_session_data *sd)
 	WFIFOHEAD(sd->fd, length);
 	packet = WP2PTR(sd->fd);
 
+#if PACKETVER < 20170315
 	packet->packet_id = PACKET_ID_AC_ACCEPT_LOGIN;
+#else
+	packet->packet_id = PACKET_ID_AC_ACCEPT_LOGIN2;
+#endif
 	packet->packet_len = length;
 	packet->auth_code = sd->login_id1;
 	packet->aid = sd->account_id;
