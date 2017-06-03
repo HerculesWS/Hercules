@@ -441,9 +441,9 @@ glast_01,240,366,5	script	Memory of King Schmidtz	CLEAR_NPC,{
 		mes "Congratulations! Young Royal Guard.";
 		mes "Be a symbol of honor and continue the great tradition of your new name.";
 		close2;
-		specialeffect2 EF_MAPPILLAR;
+		specialeffect(EF_MAPPILLAR, AREA, playerattached());
 		progressbar "FFFF00",7;
-		specialeffect2 EF_LORD;
+		specialeffect(EF_LORD, AREA, playerattached());
 		delitem King_Shield,1;
 		erasequest 12094;
 		jobchange roclass(eaclass()|EAJL_THIRD);
@@ -499,7 +499,7 @@ gl_church,158,100,0	script	#Clue of traces	HIDDEN_NPC,4,4,{
 	end;
 OnTouch:
 	if (job_royal == 4 && countitem(Saint_Cloth_Piece) == 0) {
-		specialeffect2 EF_FREEZE;
+		specialeffect(EF_FREEZE, AREA, playerattached());
 		mes "I can feel strong power around here. It would be better to explore around here.";
 		viewpoint 1,173,88 ,1, 0xFFFF00;
 		viewpoint 1,158,103,2, 0xFFFF00;

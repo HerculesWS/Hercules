@@ -309,7 +309,7 @@ rachel,206,30,3	script	Freya's Priest#play	4_F_TRAINEE,{
 		mes "^3355FFYou told her the first";
 		mes "funny story that you";
 		mes "could think of.^000000";
-		specialeffect2 EF_TALK_FROSTJOKE;
+		specialeffect(EF_TALK_FROSTJOKE, AREA, playerattached());
 		next;
 		mes "[Freya's Priest]";
 		mes "That's supposed to";

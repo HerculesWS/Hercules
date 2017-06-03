@@ -135,7 +135,7 @@ dew_in01,22,48,3	script	Sage Kasyapa#dew	4_M_DEWZATIMAN,{
 		mes "that you are a trustworthy sort... but...";
 		next;
 		mes "There is a brief twinkling of light ^0000FFKasyapa^000000 all of sudden seems to be taken aback.";
-		specialeffect2 EF_PNEUMA;
+		specialeffect(EF_PNEUMA, AREA, playerattached());
 		next;
 		mes "[Sage Kasyapa]";
 		mes "Ah, the feather......!";
@@ -210,7 +210,7 @@ dew_in01,22,48,3	script	Sage Kasyapa#dew	4_M_DEWZATIMAN,{
 		mes "[Sage Kasyapa]";
 		mes "The reason I asked you to embark on this important mission is because of this feather.";
 		mes "Handed down from generation to generation the legendary origin of the crown is this feather...";
-		specialeffect2 EF_PNEUMA;
+		specialeffect(EF_PNEUMA, AREA, playerattached());
 		next;
 		mes "[Sage Kasyapa]";
 		mes "I saw this feather begin to shine when you came here.";
@@ -338,7 +338,7 @@ dew_in01,15,49,4	script	Tribal Chief Paiko#dew	4_M_DEWZATICHIEF,{
 		mes "Alright, let me begin crafting the ^006400Jaty Crown^000000 I feel that I am ready.";
 		next;
 		mes "Suddenly, a large noise begins to boom as you and ^0000FFPaiko^000000 are surrounded by warm and bright sparkling energy like a thousand tinkling fireflies.";
-		specialeffect2 EF_BASH3D2;
+		specialeffect(EF_BASH3D2, AREA, playerattached());
 		close;
 	} else if (dew_legend == 6) {
 		mes "[Tribal Chief Paiko]";
@@ -1587,7 +1587,7 @@ dew_fild01,259,48,4	script	Poby#dew_drink	4_M_DEWBOY,{
 	case 14:
 	case 16:
 	case 20:
-		specialeffect2 EF_BASH;
+		specialeffect(EF_BASH, AREA, playerattached());
 		if (isequipped(5009)) { //Safety_Helmet
 			mes "something falls on your head, but since you're wearing a Safety Helmet you're safe and sound.";
 			emotion e_no1,1;
@@ -2002,7 +2002,7 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 		mes "[Gatti]";
 		mes "Great! We have enough. Wait a little.";
 		next;
-		specialeffect2 EF_REPAIRWEAPON;
+		specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
 		next;
 		emotion e_swt2;
 		next;
@@ -2046,7 +2046,7 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 				mes "[Gatti]";
 				mes "You have all the materials. Wait just a little.";
 				next;
-				specialeffect2 EF_REPAIRWEAPON;
+				specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
 				next;
 				emotion e_swt2;
 				next;
@@ -2113,7 +2113,7 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 			mes "You don't have all the materials. It's impossible to reinforce if you don't have them all. If you want to reinforce, bring 100,000 zeny and 1 Caress.";
 			close;
 		}
-		specialeffect2 EF_REPAIRWEAPON;
+		specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
 		progressbar "0xFFFF00",3;
 		Zeny -= 100000;
 

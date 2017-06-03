@@ -75,9 +75,9 @@ prontera,98,121,4	script	Acolyte#Prtclear	4_F_01,{
 			mes "to "+.@towns$[.@i]+" is "+.@cost[.@i]+" zeny.";
 			close;
 		}
-		specialeffect2 EF_READYPORTAL;
-		specialeffect2 EF_TELEPORTATION;
-		specialeffect2 EF_PORTAL;
+		specialeffect(EF_READYPORTAL, AREA, playerattached());
+		specialeffect(EF_TELEPORTATION, AREA, playerattached());
+		specialeffect(EF_PORTAL, AREA, playerattached());
 		next;
 		Zeny -= .@cost[.@i];
 		switch(.@i) {
@@ -138,9 +138,9 @@ yuno,142,184,6	script	Acolyte#Junoclear	4_F_01,{
 			mes "to "+.@towns$[.@i]+" is "+.@cost[.@i]+" zeny.";
 			close;
 		}
-		specialeffect2 EF_READYPORTAL;
-		specialeffect2 EF_TELEPORTATION;
-		specialeffect2 EF_PORTAL;
+		specialeffect(EF_READYPORTAL, AREA, playerattached());
+		specialeffect(EF_TELEPORTATION, AREA, playerattached());
+		specialeffect(EF_PORTAL, AREA, playerattached());
 		next;
 		Zeny -= .@cost[.@i];
 		switch(.@i) {

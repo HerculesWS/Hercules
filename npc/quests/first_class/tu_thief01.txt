@@ -108,7 +108,7 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 				mes "So if you're feeling like the damage you're making is pretty weak, you might want more stat points in ^2F4F2FSTR^000000. How high your raise your own STR is really up to you.";
 				tu_thief01 = 1;
 				getexp 200,100;
-				specialeffect2 EF_HIT5;
+				specialeffect(EF_HIT5, AREA, playerattached());
 				close;
 			case 2:
 				mes "[Yierhan]";
@@ -124,7 +124,7 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 				mes "also increase your attack damage, but they're insignificant compared to STR. I repeat: ^660000insignificant^000000.";
 				tu_thief01 = 1;
 				getexp 400,200;
-				specialeffect2 EF_HIT5;
+				specialeffect(EF_HIT5, AREA, playerattached());
 				close;
 			case 3:
 				mes "[Yierhan]";
@@ -139,7 +139,7 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 				mes "So if you're feeling like the damage you're making is pretty weak, you might want more stat points in ^2F4F2FSTR^000000. How high your raise your own STR is really up to you.";
 				tu_thief01 = 1;
 				getexp 200,100;
-				specialeffect2 EF_HIT5;
+				specialeffect(EF_HIT5, AREA, playerattached());
 				close;
 			}
 		} else if(tu_thief01 == 1){
@@ -249,7 +249,7 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 			mes "I can explain real quick.";
 			tu_thief01 = 3;
 			getexp BaseLevel*30,BaseLevel*15;
-			specialeffect2 EF_HIT5;
+			specialeffect(EF_HIT5, AREA, playerattached());
 			close;
 		} else if(tu_thief01 == 3){
 			mes "So...";
@@ -291,7 +291,7 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 					mes "Steal is an Active Skill that has the chance of nabbing you some";
 					mes "free items! You can't use it against other people, though.";
 					next;
-					specialeffect2 EF_STEAL;
+					specialeffect(EF_STEAL, AREA, playerattached());
 					mes "[Yierhan]";
 					mes "But you can use Steal to take items from monsters! If you're lucky, you can get some good items that way. Oh, and Steal doesn't affect monster drop rates.";
 					.@read_s = 1;
@@ -334,7 +334,7 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 					mes "after you learn the Envenom skill. Detoxify allows you to counteract the effects of poison on a target.";
 					.@read_r = 1;
 					next;
-					specialeffect2 EF_DETOXICATION;
+					specialeffect(EF_DETOXICATION, AREA, playerattached());
 					next;
 					break;
 				case 7:
@@ -346,7 +346,7 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 					mes "[Yierhan]";
 					mes "Now that you're such an expert on skills, I want you to level up your skills and come back, got it?";
 					tu_thief01 = 4;
-					specialeffect2 EF_HIT5;
+					specialeffect(EF_HIT5, AREA, playerattached());
 					if(.@read_d) getexp 300,100;
 					if(.@read_f) getexp 300,100;
 					if(.@read_s) getexp 300,100;
@@ -370,7 +370,7 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 			savepoint "moc_ruins",80,164;
 			getitem Wing_Of_Butterfly,1;
 			getexp 100,50;
-			specialeffect2 EF_HIT5;
+			specialeffect(EF_HIT5, AREA, playerattached());
 			close2;
 			warp "moc_fild12",158,373;
 			end;
@@ -428,7 +428,7 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 						tu_thief01 = 8;
 						getitem Main_Gauche,1;
 						getexp 1000,500;
-						specialeffect2 EF_HIT5;
+						specialeffect(EF_HIT5, AREA, playerattached());
 						close;
 					case 2:
 						mes "[Yierhan]";
@@ -438,7 +438,7 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 						tu_thief01 = 7;
 						getitem Main_Gauche,1;
 						getexp 500,200;
-						specialeffect2 EF_HIT5;
+						specialeffect(EF_HIT5, AREA, playerattached());
 						close;
 					}
 				} else {
@@ -465,7 +465,7 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 					tu_thief01 = 7;
 					getitem Main_Gauche,1;
 					getexp 500,200;
-					specialeffect2 EF_HIT5;
+					specialeffect(EF_HIT5, AREA, playerattached());
 					close;
 				}
 			}
@@ -508,7 +508,7 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 			mes "other there, okay?";
 			tu_thief01 = 8;
 			getexp 200,100;
-			specialeffect2 EF_HIT5;
+			specialeffect(EF_HIT5, AREA, playerattached());
 			close;
 		} else if(tu_thief01 == 8){
 			mes "Heya pal.";

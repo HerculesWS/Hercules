@@ -239,7 +239,7 @@ OnTouch:
 			mes "You light the fuse.";
 			next;
 			mes "*BOOM!*";
-			specialeffect2 EF_LORD;
+			specialeffect(EF_LORD, AREA, playerattached());
 			next;
 			mes "After A cloud of dust and smoke has dissipated,";
 			mes "You've found a box between the rocks and soil.";

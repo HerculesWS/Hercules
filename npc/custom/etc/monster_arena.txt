@@ -736,7 +736,7 @@ gon_test,55,103,6	script	Nurse	4_F_01,{
 	set @fighting,0;
 	set #heal,0;
 	set @healing,0;
-	specialeffect2 EF_VALLENTINE2;
+	specialeffect(EF_VALLENTINE2, AREA, playerattached());
 	announce "Your monster has healed.",19;
 	end;
 

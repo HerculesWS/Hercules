@@ -25,7 +25,7 @@ prontera,156,172,4	script	Tine	1_M_MERCHANT,{
 	mes "The legend says that on 14th February... on the Day of Saint Valentine...";
 	mes "Only in Run-Midgard kingdom...";
 	next;
-	specialeffect 417;
+	specialeffect EF_HITBODY;
 	mes "[Tine]";
 	mes "Some married chocolate lovers almost double their experience at trainings!";
 	mes "But everything isn't so simply...";
@@ -58,9 +58,9 @@ prontera,156,172,4	script	Tine	1_M_MERCHANT,{
 
 OnInit:
 	//559,Hand-made_Chocolate
-	setitemscript 559,"{ itemheal 50,50; if(Sex==0 || @dsv == gettime(GETTIME_HOUR)+1 || ispartneron()==0)end; set @dsv,gettime(GETTIME_HOUR)+1; misceffect 113; }";
+	setitemscript 559,"{ itemheal 50,50; if(Sex==0 || @dsv == gettime(GETTIME_HOUR)+1 || ispartneron()==0)end; set @dsv,gettime(GETTIME_HOUR)+1; specialeffect(EF_MAGNUS, AREA, playerattached()); }";
 	//560,Hand-made_White_Chocolate
-	setitemscript 560,"{ itemheal 50,50; if(Sex || @dsv == gettime(GETTIME_HOUR)+1 || ispartneron()==0)end; set @dsv,gettime(GETTIME_HOUR)+1; misceffect 113; }";
+	setitemscript 560,"{ itemheal 50,50; if(Sex || @dsv == gettime(GETTIME_HOUR)+1 || ispartneron()==0)end; set @dsv,gettime(GETTIME_HOUR)+1; specialeffect(EF_MAGNUS, AREA, playerattached()); }";
 
 	//2634,Wedding_Ring_M,Wedding Ring,5,,10,0,,0,,0,127918079,7,1,136,,0,0,0,{ skill 334,1; skill 335,1; skill 336,1; }
 	setitemscript 2634,"{ skill 334,1; skill 335,1; skill 336,1; if(@dsv == gettime(GETTIME_HOUR)+1 && ispartneron()){ bonus2 bExpAddRace,5,50; bonus2 bExpAddRace,6,50; bonus2 bExpAddRace,7,50; bonus2 bExpAddRace,8,50; bonus2 bExpAddRace,1,50; } }";

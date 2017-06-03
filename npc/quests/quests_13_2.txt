@@ -415,7 +415,7 @@ man_fild02,132,47,4	duplicate(Cat Hand Agent#spl)	Cat Hand Agent#man	4_M_BOSSCAT
 
 -	script	Mysterious Rock#30::manukrock2	FAKE_NPC,{
 	if (countitem(Unidentified_Mineral) < 3 && !questprogress(12062,PLAYTIME)) {
-		specialeffect2 EF_REPAIRWEAPON;
+		specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
 		progressbar "ffff00",10;
 		.@rhea_ran = rand(1,20);
 		if (.@rhea_ran < 13) getitem Stone,1;
@@ -455,8 +455,8 @@ man_fild02,241,227,0	duplicate(manukrock2)	Mysterious Rock#40	CLEAR_NPC
 
 spl_fild03,226,151,0	script	School of Fish#5::FishingHole_spl3	CLEAR_NPC,{
 	if (!questprogress(12060,PLAYTIME) && countitem(Piece_Of_Fish) < 20) {
-		specialeffect2 EF_BUBBLE;
-		specialeffect2 EF_INVENOM;
+		specialeffect(EF_BUBBLE, AREA, playerattached());
+		specialeffect(EF_INVENOM, AREA, playerattached());
 		.@fcast = 15;
 		if (isequipped(2550)) //Fishers_Muffler
 			.@fcast -= 2;
@@ -475,7 +475,7 @@ spl_fild03,226,151,0	script	School of Fish#5::FishingHole_spl3	CLEAR_NPC,{
 			if (rand(1,20) == 2) {
 				getitem Rough_File,1;
 				ep13_1_rhea = 14;
-				specialeffect2 EF_BUBBLE;
+				specialeffect(EF_BUBBLE, AREA, playerattached());
 				mapannounce strcharinfo(PC_MAP),strcharinfo(PC_NAME) + " has caught a Loose File.",bc_map,"0xff77ff";
 			}
 		}
@@ -5757,7 +5757,7 @@ spl_in02,139,65,3	script	Middle-Ranked Laphine#la	4_F_FAIRYKID3,{
 			mes "as Grenouille told you. -";
 			next;
 			mes "- Booowoong -";
-			specialeffect2 EF_HEALSP;
+			specialeffect(EF_HEALSP, AREA, playerattached());
 			next;
 			mes "- When the lights gone,";
 			mes "a big flower of Alfheim was lied";

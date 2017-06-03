@@ -162,8 +162,8 @@ function Job_Menu {
 				resetlvl(4);
 				SkillPoint = 0;
 			}
-			specialeffect2 EF_ANGEL2;
-			specialeffect2 EF_ELECTRIC;
+			specialeffect(EF_ANGEL2, AREA, playerattached());
+			specialeffect(EF_ELECTRIC, AREA, playerattached());
 			if (.platinum)
 				callsub Get_Platinum;
 			close;
