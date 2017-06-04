@@ -5625,7 +5625,9 @@ has no gear, script will be terminated with an error.
 //=====================================
 ---------------------------------------
 
-*openstorage()
+*openstorage(<storage_id>{, <storage_mode>})
+
+Default Storage Access Mode: STORAGE_ACCESS_ALL
 
 This will open character's Kafra storage window on the client connected to
 the invoking character. It can be used from any kind of NPC or item
@@ -5637,8 +5639,14 @@ storage window, to avoid any disruption when both windows overlap.
 
 	mes("I will now open your stash for you");
 	close2();
-	openstorage();
+	openstorage(1);
 	end;
+
+Storage Modes:
+	STORAGE_ACCESS_VIEW     // View storage only
+	STORAGE_ACCESS_GET      // Allow getting items from storage.
+	STORAGE_ACCESS_PUT      // Allow putting items to storage.
+	STORAGE_ACCESS_ALL      // Allow all actions.
 
 ---------------------------------------
 
