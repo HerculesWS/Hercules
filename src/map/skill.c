@@ -947,16 +947,16 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 
 		case HT_FREEZINGTRAP:
 		case MA_FREEZINGTRAP:
-			sc_start(src,bl,SC_FREEZE,(3*skill_lv+35),skill_lv,skill->get_time2(skill_id,skill_lv));
+			sc_start(src, bl, SC_FREEZE, 100, skill_lv, skill->get_time2(skill_id, skill_lv));
 			break;
 
 		case HT_FLASHER:
-			sc_start(src,bl,SC_BLIND,(10*skill_lv+30),skill_lv,skill->get_time2(skill_id,skill_lv));
+			sc_start(src, bl, SC_BLIND, 100, skill_lv, skill->get_time2(skill_id, skill_lv));
 			break;
 
 		case HT_LANDMINE:
 		case MA_LANDMINE:
-			sc_start(src,bl,SC_STUN,(5*skill_lv+30),skill_lv,skill->get_time2(skill_id,skill_lv));
+			sc_start(src, bl, SC_STUN, 10, skill_lv, skill->get_time2(skill_id, skill_lv));
 			break;
 
 		case HT_SHOCKWAVE:
@@ -1225,7 +1225,7 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 			}
 			break;
 		case WL_JACKFROST:
-			sc_start(src,bl,SC_FREEZE,100,skill_lv,skill->get_time(skill_id,skill_lv));
+			sc_start(src, bl, SC_FREEZE, 200, skill_lv, skill->get_time(skill_id, skill_lv));
 			break;
 		case WL_FROSTMISTY:
 			sc_start(src,bl,SC_FROSTMISTY,25 + 5 * skill_lv,skill_lv,skill->get_time(skill_id,skill_lv));
@@ -3894,6 +3894,8 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 		case LG_CANNONSPEAR:
 			//It won't shoot through walls since on castend there has to be a direct
 			//line of sight between caster and target.
+			if(skill_id == LG_CANNONSPEAR)
+				clif_skill_damage(src, bl, tick, status_get_amotion(src), 0, -30000, 1, skill_id, skill_lv, 6);
 			skill->area_temp[1] = bl->id;
 			map->foreachinpath(skill->attack_area,src->m,src->x,src->y,bl->x,bl->y,
 			                   skill->get_splash(skill_id, skill_lv),skill->get_maxcount(skill_id,skill_lv), skill->splash_target(src),
@@ -15923,8 +15925,14 @@ int skill_attack_area(struct block_list *bl, va_list ap)
 	flag = va_arg(ap,int);
 	type = va_arg(ap,int);
 
-	if (skill->area_temp[1] == bl->id) //This is the target of the skill, do a full attack and skip target checks.
-		return skill->attack(atk_type,src,dsrc,bl,skill_id,skill_lv,tick,flag);
+	if (skill_area_temp[1] == bl->id) { //This is the target of the skill, do a full attack and skip target checks.
+		switch (skill_id) {
+			case LG_CANNONSPEAR:
+ 				return (int)skill_attack(atk_type, src, dsrc, bl, skill_id, skill_lv, tick, flag|SD_ANIMATION);
+			default:
+				return (int)skill_attack(atk_type, src, dsrc, bl, skill_id, skill_lv, tick, flag);
+		}
+	}
 
 	if( battle->check_target(dsrc,bl,type) <= 0
 	 || !status->check_skilluse(NULL, bl, skill_id, 2))
