@@ -10477,16 +10477,31 @@ BUILDIN(gettimestr)
 BUILDIN(openstorage)
 {
 	struct map_session_data *sd = script->rid2sd(st);
+	int storage_id = script_getnum(st, 2);
+	int storage_access = script_hasdata(st, 3) ? script_getnum(st, 3) : STORAGE_ACCESS_ALL;
+	struct storage_data *stor = NULL;
+	const struct storage_settings *stst = NULL;
+
 	if (sd == NULL)
 		return false;
 
-	if (sd->storage.received == false) {
+	if ((stst = storage->get_settings(storage_id)) == NULL) {
+		script_pushint(st, 0);
+		ShowWarning("buildin_openstorage: Storage with ID %d was not found!\n", storage_id);
+		return false;
+	}
+
+	stor = storage->ensure(sd, storage_id);
+	
+	if (stor->received == false) {
 		script_pushint(st, 0);
 		ShowWarning("buildin_openstorage: Storage data for AID %d has not been loaded.\n", sd->bl.id);
 		return false;
 	}
 
-	storage->open(sd);
+	sd->storage.access = storage_access; // Set storage access level. [Smokexyz/Hercules]
+
+	storage->open(sd, stor); // Open storage!
 
 	script_pushint(st, 1); // success flag.
 	return true;
@@ -24112,7 +24127,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(gettimetick,"i"),
 		BUILDIN_DEF(gettime,"i"),
 		BUILDIN_DEF(gettimestr,"si"),
-		BUILDIN_DEF(openstorage,""),
+		BUILDIN_DEF(openstorage,"i?"),
 		BUILDIN_DEF(guildopenstorage,""),
 		BUILDIN_DEF(itemskill,"vi?"),
 		BUILDIN_DEF(produce,"i"),
