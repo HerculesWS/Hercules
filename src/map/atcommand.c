@@ -7564,21 +7564,26 @@ ACMD(mapflag) {
 	}
 	for (i = 0; flag_name[i]; i++) flag_name[i] = TOLOWER(flag_name[i]); //lowercase
 
-	if (strcmp( flag_name , "gvg" ) == 0) {
-		if( flag && !map->list[sd->bl.m].flag.gvg )
-			map->zone_change2(sd->bl.m,strdb_get(map->zone_db, MAP_ZONE_GVG_NAME));
-		else if ( !flag && map->list[sd->bl.m].flag.gvg )
-			map->zone_change2(sd->bl.m,map->list[sd->bl.m].prev_zone);
-	} else if ( strcmp( flag_name , "pvp" ) == 0 ) {
-		if ( flag && !map->list[sd->bl.m].flag.pvp )
-			map->zone_change2(sd->bl.m,strdb_get(map->zone_db, MAP_ZONE_PVP_NAME));
-		else if ( !flag && map->list[sd->bl.m].flag.pvp )
-			map->zone_change2(sd->bl.m,map->list[sd->bl.m].prev_zone);
-	} else if ( strcmp( flag_name , "battleground" ) == 0 ) {
-		if ( flag && !map->list[sd->bl.m].flag.battleground )
-			map->zone_change2(sd->bl.m,strdb_get(map->zone_db, MAP_ZONE_BG_NAME));
-		else if ( !flag && map->list[sd->bl.m].flag.battleground )
-			map->zone_change2(sd->bl.m,map->list[sd->bl.m].prev_zone);
+	if (strcmp(flag_name, "gvg") == 0) {
+		if (flag && !map->list[sd->bl.m].flag.gvg)
+			map->zone_change2(sd->bl.m, strdb_get(map->zone_db, MAP_ZONE_GVG_NAME));
+		else if (!flag && map->list[sd->bl.m].flag.gvg)
+			map->zone_change2(sd->bl.m, map->list[sd->bl.m].prev_zone);
+	} else if (strcmp(flag_name, "pvp") == 0) {
+		if (flag && !map->list[sd->bl.m].flag.pvp)
+			map->zone_change2(sd->bl.m, strdb_get(map->zone_db, MAP_ZONE_PVP_NAME));
+		else if (!flag && map->list[sd->bl.m].flag.pvp)
+			map->zone_change2(sd->bl.m, map->list[sd->bl.m].prev_zone);
+	} else if (strcmp(flag_name, "battleground") == 0) {
+		if (flag && !map->list[sd->bl.m].flag.battleground)
+			map->zone_change2(sd->bl.m, strdb_get(map->zone_db, MAP_ZONE_BG_NAME));
+		else if (!flag && map->list[sd->bl.m].flag.battleground)
+			map->zone_change2(sd->bl.m, map->list[sd->bl.m].prev_zone);
+	} else if (strcmp(flag_name, "cvc") == 0) {
+		if (flag && !map->list[sd->bl.m].flag.cvc)
+			map->zone_change2(sd->bl.m, strdb_get(map->zone_db, MAP_ZONE_CVC_NAME));
+		else if (!flag && map->list[sd->bl.m].flag.cvc)
+			map->zone_change2(sd->bl.m, map->list[sd->bl.m].prev_zone);
 	}
 
 	SETFLAG(autotrade);         SETFLAG(allowks);            SETFLAG(nomemo);       SETFLAG(noteleport);

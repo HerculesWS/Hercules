@@ -1362,7 +1362,7 @@ struct clif_interface {
 	/* Cart Deco */
 	void (*selectcart) (struct map_session_data *sd);
 	void (*pSelectCart) (int fd, struct map_session_data *sd);
-
+	/* */
 	const char *(*get_bl_name) (const struct block_list *bl);
 };
 

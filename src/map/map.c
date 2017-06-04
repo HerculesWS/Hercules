@@ -1893,7 +1893,7 @@ int map_quit(struct map_session_data *sd) {
 	if (sd->npc_id)
 		npc->event_dequeue(sd);
 
-	if( sd->bg_id && !sd->bg_queue.arena ) /* TODO: dump this chunk after bg_queue is fully enabled */
+	if (sd->bg_id && !sd->bg_queue.arena) /* TODO: dump this chunk after bg_queue is fully enabled */
 		bg->team_leave(sd,BGTL_QUIT);
 
 	if (sd->state.autotrade && core->runflag != MAPSERVER_ST_SHUTDOWN && !channel->config->closing)
@@ -5824,11 +5824,11 @@ void read_map_zone_db(void) {
 		ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' zones in '"CL_WHITE"%s"CL_RESET"'.\n", zone_count, config_filename);
 
 		/* post-load processing */
-		if( (zone = strdb_get(map->zone_db, MAP_ZONE_PVP_NAME)) )
+		if ((zone = strdb_get(map->zone_db, MAP_ZONE_PVP_NAME)))
 			zone->merge_type = MZMT_MERGEABLE;
-		if( (zone = strdb_get(map->zone_db, MAP_ZONE_GVG_NAME)) )
+		if ((zone = strdb_get(map->zone_db, MAP_ZONE_GVG_NAME)))
 			zone->merge_type = MZMT_MERGEABLE;
-		if( (zone = strdb_get(map->zone_db, MAP_ZONE_BG_NAME)) )
+		if ((zone = strdb_get(map->zone_db, MAP_ZONE_BG_NAME)))
 			zone->merge_type = MZMT_MERGEABLE;
 	}
 	/* not supposed to go in here but in skill_final whatever */
