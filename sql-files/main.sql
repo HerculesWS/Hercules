@@ -882,6 +882,7 @@ INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1475526420); -- 2016-10-0
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1477434595); -- 2016-10-26--10-29.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1488454834); -- 2017-03-02--11-40.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1488744559); -- 2017-03-05--08-09.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1496487154); -- 2017-06-03--10-52.sql
 
 --
 -- Table structure for table `storage`
@@ -890,6 +891,7 @@ INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1488744559); -- 2017-03-0
 CREATE TABLE IF NOT EXISTS `storage` (
   `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `account_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `storage_id` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `nameid` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   `amount` SMALLINT(11) UNSIGNED NOT NULL DEFAULT '0',
   `equip` INT(11) UNSIGNED NOT NULL DEFAULT '0',
