@@ -1065,6 +1065,7 @@ struct map_interface {
 	char *SCRIPT_CONF_NAME;
 	char *MSG_CONF_NAME;
 	char *GRF_PATH_FILENAME;
+	char *STORAGE_CONF_FILENAME;
 
 	char autotrade_merchants_db[32];
 	char autotrade_data_db[32];

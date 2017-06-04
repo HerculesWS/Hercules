@@ -297,26 +297,31 @@ static int intif_request_registry(struct map_session_data *sd, int flag)
 
 /**
  * Request the inter-server for a character's storage data.
- * @packet 0x3010  [out] <account_id>.L
+ * @packet 0x3010  [out] <account_id>.L <storage_id>.W <storage_size>.W
  * @param  sd      [in]  pointer to session data.
  */
-static void intif_request_account_storage(const struct map_session_data *sd)
+static void intif_request_account_storage(const struct map_session_data *sd, int storage_id)
 {
+	const struct storage_settings *stst = storage->get_settings(storage_id);
+
 	nullpo_retv(sd);
+	nullpo_retv(stst);
 
 	/* Check for character server availability */
 	if (intif->CheckForCharServer())
 		return;
 
-	WFIFOHEAD(inter_fd, 6);
+	WFIFOHEAD(inter_fd, 10);
 	WFIFOW(inter_fd, 0) = 0x3010;
 	WFIFOL(inter_fd, 2) = sd->status.account_id;
-	WFIFOSET(inter_fd, 6);
+	WFIFOW(inter_fd, 6) = storage_id;
+	WFIFOW(inter_fd, 8) = stst->capacity;
+	WFIFOSET(inter_fd, 10);
 }
 
 /**
  * Parse the reception of account storage from the inter-server.
- * @packet 0x3805 [in] <packet_len>.W <account_id>.L <struct item[]>.P
+ * @packet 0x3805 [in] <packet_len>.W <account_id>.L <storage_id>.W <struct item[]>.P
  * @param  fd     [in] file/socket descriptor.
  */
 static void intif_parse_account_storage(int fd)
@@ -324,67 +329,78 @@ static void intif_parse_account_storage(int fd)
 	int account_id = 0, payload_size = 0, storage_count = 0;
 	int i = 0;
 	struct map_session_data *sd = NULL;
+	struct storage_data *stor = NULL;
 
 	Assert_retv(fd > 0);
 
-	payload_size = RFIFOW(fd, 2) - 8;
+	payload_size = RFIFOW(fd, 2) - 10;
 
 	if ((account_id = RFIFOL(fd, 4)) == 0 || (sd = map->id2sd(account_id)) == NULL) {
 		ShowError("intif_parse_account_storage: Session pointer was null for account id %d!\n", account_id);
 		return;
 	}
 
-	if (sd->storage.received == true) {
+	stor = storage->ensure(sd, RFIFOW(fd, 8));
+
+	Assert_retv(stor != NULL);
+
+	if (stor->received == true) {
 		ShowError("intif_parse_account_storage: Multiple calls from the inter-server received.\n");
 		return;
 	}
 
 	storage_count = (payload_size/sizeof(struct item));
 
-	VECTOR_ENSURE(sd->storage.item, storage_count, 1);
+	VECTOR_ENSURE(stor->item, storage_count, 1);
 
-	sd->storage.aggregate = storage_count; // Total items in storage.
+	stor->aggregate = storage_count; // Total items in storage.
 
 	for (i = 0; i < storage_count; i++) {
-		const struct item *it = RFIFOP(fd, 8 + i * sizeof(struct item));
-		VECTOR_PUSH(sd->storage.item, *it);
+		const struct item *it = RFIFOP(fd, 10 + i * sizeof(struct item));
+		VECTOR_PUSH(stor->item, *it);
 	}
 
-	sd->storage.received = true; // Mark the storage state as received.
-	sd->storage.save = false; // Initialize the save flag as false.
+	stor->received = true; // Mark the storage state as received.
+	stor->save = false; // Initialize the save flag as false.
 
 	pc->checkitem(sd); // re-check remaining items.
 }
 
 /**
  * Send account storage information for saving.
- * @packet 0x3011 [out] <packet_len>.W <account_id>.L <struct item[]>.P
+ * @packet 0x3011 [out] <packet_len>.W <account_id>.L <storage_id>.W <struct item[]>.P
  * @param  sd     [in]  pointer to session data.
  */
-static void intif_send_account_storage(struct map_session_data *sd)
+static void intif_send_account_storage(struct map_session_data *sd, int storage_id)
 {
 	int len = 0, i = 0, c = 0;
+	struct storage_data *stor = NULL;
 
 	nullpo_retv(sd);
 
+	stor = storage->ensure(sd, storage_id);
+
 	// Assert that at this point in the code, both flags are true.
-	Assert_retv(sd->storage.save == true);
-	Assert_retv(sd->storage.received == true);
+	Assert_retv(stor != NULL);
+	Assert_retv(stor->save == true);
+	Assert_retv(stor->received == true);
 
 	if (intif->CheckForCharServer())
 		return;
 
-	len = 8 + sd->storage.aggregate * sizeof(struct item);
+	len = 10 + stor->aggregate * sizeof(struct item);
 
 	WFIFOHEAD(inter_fd, len);
 
 	WFIFOW(inter_fd, 0) = 0x3011;
 	WFIFOW(inter_fd, 2) = (uint16) len;
 	WFIFOL(inter_fd, 4) = sd->status.account_id;
-	for (i = 0, c = 0; i < VECTOR_LENGTH(sd->storage.item); i++) {
-		if (VECTOR_INDEX(sd->storage.item, i).nameid == 0)
+	WFIFOW(inter_fd, 8) = storage_id;
+
+	for (i = 0, c = 0; i < VECTOR_LENGTH(stor->item); i++) {
+		if (VECTOR_INDEX(stor->item, i).nameid == 0)
 			continue;
-		memcpy(WFIFOP(inter_fd, 8 + c * sizeof(struct item)), &VECTOR_INDEX(sd->storage.item, i), sizeof(struct item));
+		memcpy(WFIFOP(inter_fd, 10 + c * sizeof(struct item)), &VECTOR_INDEX(stor->item, i), sizeof(struct item));
 		c++;
 	}
 
@@ -395,26 +411,34 @@ static void intif_send_account_storage(struct map_session_data *sd)
 
 /**
  * Parse acknowledgement packet for the saving of an account's storage.
- * @packet 0x3808 [in] <account_id>.L <saved_flag>.B
+ * @packet 0x3808 [in] <account_id>.L <storage_id>.W <saved_flag>.B
  * @param fd      [in] file/socket descriptor.
  */
 static void intif_parse_account_storage_save_ack(int fd)
 {
 	int account_id = RFIFOL(fd, 2);
-	uint8 saved = RFIFOB(fd, 6);
+	int storage_id = RFIFOW(fd, 6);
+	char saved = RFIFOB(fd, 8);
 	struct map_session_data *sd = NULL;
+	struct storage_data *stor = NULL;
 
 	Assert_retv(account_id > 0);
 	Assert_retv(fd > 0);
-
+	Assert_retv(storage_id >= 0);
+	
 	if ((sd = map->id2sd(account_id)) == NULL)
 		return; // character is most probably offline.
 
 	if (saved == 0) {
-		ShowError("intif_parse_account_storage_save_ack: Storage has not been saved! (AID: %d)\n", account_id);
-		sd->storage.save = true; // Flag it as unsaved, to re-attempt later
+		ShowError("intif_parse_account_storage_save_ack: Storage id %d has not been saved! (AID: %d)\n", storage_id, account_id);
 		return;
 	}
+
+	stor = storage->ensure(sd, storage_id);
+
+	Assert_retv(stor != NULL);
+
+	stor->save = false; // Storage has been saved.
 }
 
 //=================================================================
@@ -2718,7 +2742,7 @@ static int intif_parse(int fd)
 void intif_defaults(void)
 {
 	const int packet_len_table [INTIF_PACKET_LEN_TABLE_SIZE] = {
-		 0, 0, 0, 0, -1,-1,37,-1,  7, 0, 0, 0,  0, 0,  0, 0, //0x3800-0x380f
+		 0, 0, 0, 0, -1,-1,37,-1,  9, 0, 0, 0,  0, 0,  0, 0, //0x3800-0x380f
 		-1, 0, 0, 0,  0, 0, 0, 0, -1,11, 0, 0,  0, 0,  0, 0, //0x3810 Achievements [Smokexyz/Hercules]
 		39,-1,15,15, 14,19, 7, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3820
 		10,-1,15, 0, 79,25, 7, 0,  0,-1,-1,-1, 14,67,186,-1, //0x3830

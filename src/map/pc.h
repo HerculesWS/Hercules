@@ -32,12 +32,14 @@
 #include "map/script.h" // struct reg_db
 #include "map/searchstore.h"  // struct s_search_store_info
 #include "map/status.h" // enum sc_type, OPTION_*
+#include "map/storage.h"
 #include "map/unit.h" // struct unit_data, struct view_data
 #include "map/vending.h" // struct s_vending
 #include "common/db.h"
 #include "common/ers.h" // struct eri
 #include "common/hercules.h"
 #include "common/mmo.h" // JOB_*, MAX_FAME_LIST, struct fame_list, struct mmo_charstatus, NEW_CARTS, struct s_achievement
+
 
 /**
  * Defines
@@ -283,7 +285,11 @@ struct map_session_data {
 
 	struct mmo_charstatus status;
 	struct item_data *inventory_data[MAX_INVENTORY]; // direct pointers to itemdb entries (faster than doing item_id lookups)
-	struct storage_data storage; ///< Account Storage
+	struct {
+		int current;                           ///< Marker for the current storage ID in use.
+		enum storage_access_modes access;      ///< Access level for the user.
+		VECTOR_DECL(struct storage_data) list; ///< Account Storage
+	} storage;
 	enum pc_checkitem_types itemcheck;
 	short equip_index[EQI_MAX];
 	unsigned int weight,max_weight;

@@ -2882,8 +2882,7 @@ static int unit_free(struct block_list *bl, enum clr_type clrtype)
 			sd->combo_count = 0;
 			/* [Ind/Hercules] */
 			if( sd->sc_display_count ) {
-				int i;
-				for(i = 0; i < sd->sc_display_count; i++) {
+				for(int i = 0; i < sd->sc_display_count; i++) {
 					ers_free(pc->sc_display_ers, sd->sc_display[i]);
 				}
 				sd->sc_display_count = 0;
@@ -2900,11 +2899,18 @@ static int unit_free(struct block_list *bl, enum clr_type clrtype)
 			VECTOR_CLEAR(sd->auto_cast); // Clear auto-cast vector.
 			VECTOR_CLEAR(sd->channels);
 			VECTOR_CLEAR(sd->script_queues);
+
 			VECTOR_CLEAR(sd->achievement); // Achievement [Smokexyz/Hercules]
-			VECTOR_CLEAR(sd->storage.item);
 			VECTOR_CLEAR(sd->hatEffectId);
 			VECTOR_CLEAR(sd->title_ids); // Title [Dastgir/Hercules]
-			sd->storage.received = false;
+
+			/* Storages */
+			for (int i = 0; i < VECTOR_LENGTH(sd->storage.list); i++) {
+				VECTOR_CLEAR(VECTOR_INDEX(sd->storage.list, i).item);
+				VECTOR_INDEX(sd->storage.list, i).received = false;
+			}
+			VECTOR_CLEAR(sd->storage.list);
+
 			if( sd->quest_log != NULL ) {
 				aFree(sd->quest_log);
 				sd->quest_log = NULL;

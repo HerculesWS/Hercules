@@ -33,9 +33,11 @@
 #include "map/map.h" // struct map_session_data
 #include "map/pc.h"
 #include "common/cbasetypes.h"
-#include "common/db.h"
+#include "common/conf.h"
 #include "common/memmgr.h"
+#include "common/mmo.h"
 #include "common/nullpo.h"
+#include "common/showmsg.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -95,37 +97,105 @@ static void do_reconnect_storage(void)
 	gstorage->db->foreach(gstorage->db, storage->reconnect_sub);
 }
 
+/**
+ * Get a storage id by its name (through @commands etc...)
+ * @param[in] storage_name     pointer to the storage name char array.
+ * @return id of the storage or -1 if not found.
+ */
+int storage_get_id_by_name(const char *storage_name)
+{
+	nullpo_chk(storage_name);
+	int i = 0;
+
+	ARR_FIND(0, VECTOR_LENGTH(storage->configuration), i, strcmp(VECTOR_INDEX(storage->configuration, i).name, storage_name) == 0);
+
+	if (i == VECTOR_LENGTH(storage->configuration))
+		return -1;
+
+	return VECTOR_INDEX(storage->configuration, i).uid;
+}
+
+/**
+ * Get storage with a particular ID from a player.
+ * @param[in] sd         pointer to map session data.
+ * @param[in] storage_id ID of the storage to receive.
+ * @return pointer to player's storage data structure or null if not found.
+ */
+struct storage_data *storage_ensure(struct map_session_data *sd, int storage_id)
+{
+	int i = 0;
+	struct storage_data *stor = NULL;
+
+	nullpo_retr(NULL, sd);
+	
+	ARR_FIND(0, VECTOR_LENGTH(sd->storage.list), i, (stor = &VECTOR_INDEX(sd->storage.list, i)) != NULL && stor->uid == storage_id);
+
+	if (i == VECTOR_LENGTH(sd->storage.list)) {
+		struct storage_data t_stor = { 0 };
+
+		t_stor.uid = storage_id;
+		VECTOR_INIT(t_stor.item);
+		VECTOR_ENSURE(sd->storage.list, 1, 1);
+		VECTOR_PUSH(sd->storage.list, t_stor);
+		stor = &VECTOR_LAST(sd->storage.list);
+	}
+
+	return stor;
+}
+
+/**
+ * Get a storage's settings through its ID.
+ * @param[in] storage_id   the ID of the storage to find.
+ * @return storage settings of the storage in question.
+ */
+const struct storage_settings *storage_get_settings(int storage_id)
+{
+	int i = 0;
+	struct storage_settings *tmp_stor = NULL;
+
+	ARR_FIND(0, VECTOR_LENGTH(storage->configuration), i, VECTOR_INDEX(storage->configuration, i).uid == storage_id);
+
+	if (i < VECTOR_LENGTH(storage->configuration))
+		tmp_stor = &VECTOR_INDEX(storage->configuration, i);
+
+	return tmp_stor;
+}
+
 /*==========================================
  * Opens a storage. Returns:
  * 0 - success
  * 1 - fail
  *------------------------------------------*/
-static int storage_storageopen(struct map_session_data *sd)
+static int storage_storageopen(struct map_session_data *sd, struct storage_data *stor)
 {
+	const struct storage_settings *stst = storage->get_settings(stor->uid);
+
 	nullpo_ret(sd);
+	nullpo_ret(stst);
+
+	Assert_ret(stor->received == true); // Assert the availability of data.
 
 	if (sd->state.storage_flag != STORAGE_FLAG_CLOSED)
-		return 1; //Already open?
+		return 1; // Storage is already open.
 
-	if (sd->storage.received == false) {
-		clif->message(sd->fd, msg_sd(sd, 27)); // Storage has not been loaded yet.
-		return 1;
-	}
-
-	if( !pc_can_give_items(sd) ) {
-		//check is this GM level is allowed to put items to storage
+	// GM Permission check.
+	if (!pc_can_give_items(sd)) {
 		clif->message(sd->fd, msg_sd(sd,246)); // Your GM level doesn't authorize you to perform this action.
 		return 1;
 	}
 
-	sd->state.storage_flag = STORAGE_FLAG_NORMAL;
+	sd->state.storage_flag = STORAGE_FLAG_NORMAL; // Set the storage use state.
+	sd->storage.current = stor->uid; // Set current storage ID used.
 
-	if (sd->storage.aggregate > 0) {
-		storage->sortitem(VECTOR_DATA(sd->storage.item), VECTOR_LENGTH(sd->storage.item));
+	/* Send item list to client if available. */
+	if (stor->aggregate > 0) {
+		storage->sortitem(VECTOR_DATA(stor->item), VECTOR_LENGTH(stor->item));
+		clif->storagelist(sd, VECTOR_DATA(stor->item), VECTOR_LENGTH(stor->item));
 	}
-	clif->storageList(sd, VECTOR_DATA(sd->storage.item), VECTOR_LENGTH(sd->storage.item));
 
-	clif->updatestorageamount(sd, sd->storage.aggregate, MAX_STORAGE);
+	/* Send storage total items and max amount update. */
+	clif->updatestorageamount(sd, stor->aggregate, stst->capacity);
+	
 	return 0;
 }
 
@@ -155,19 +225,20 @@ static int compare_item(struct item *a, struct item *b)
 /*==========================================
  * Internal add-item function.
  *------------------------------------------*/
-static int storage_additem(struct map_session_data *sd, struct item *item_data, int amount)
+static int storage_additem(struct map_session_data* sd, struct storage_data *stor, struct item* item_data, int amount)
 {
 	struct item_data *data = NULL;
 	struct item *it = NULL;
+	const struct storage_settings *stst;
 	int i;
 
 	nullpo_retr(1, sd);
-	Assert_retr(1, sd->storage.received == true);
-
-	nullpo_retr(1, item_data);
-	Assert_retr(1, item_data->nameid > 0);
-
-	Assert_retr(1, amount > 0);
+	nullpo_retr(1, stor);                   // Assert Storage
+	Assert_retr(1, stor->received == true); // Assert the availability of the storage.
+	nullpo_retr(1, item_data);              // Assert availability of item data.
+	Assert_retr(1, item_data->nameid > 0);  // Assert existence of item in the database.
+	Assert_retr(1, amount > 0);             // Assert quantity of item.
+	nullpo_retr(1, (stst = storage->get_settings(stor->uid))); // Assert existence of storage configuration.
 
 	data = itemdb->search(item_data->nameid);
 
@@ -186,8 +257,8 @@ static int storage_additem(struct map_session_data *sd, struct item *item_data, 
 	}
 
 	if (itemdb->isstackable2(data)) {//Stackable
-		for (i = 0; i < VECTOR_LENGTH(sd->storage.item); i++) {
-			it = &VECTOR_INDEX(sd->storage.item, i);
+		for (i = 0; i < VECTOR_LENGTH(stor->item); i++) {
+			it = &VECTOR_INDEX(stor->item, i);
 
 			if (it->nameid == 0)
 				continue;
@@ -199,38 +270,37 @@ static int storage_additem(struct map_session_data *sd, struct item *item_data, 
 				it->amount += amount;
 
 				clif->storageitemadded(sd, it, i, amount);
-
-				sd->storage.save = true; // set a save flag.
-
+				stor->save = true; // set a save flag.
+				
 				return 0;
 			}
 		}
 	}
 
 	// Check if storage exceeds limit.
-	if (sd->storage.aggregate >= MAX_STORAGE)
+	if (stor->aggregate >= stst->capacity)
 		return 1;
 
-	ARR_FIND(0, VECTOR_LENGTH(sd->storage.item), i, VECTOR_INDEX(sd->storage.item, i).nameid == 0);
+	ARR_FIND(0, VECTOR_LENGTH(stor->item), i, VECTOR_INDEX(stor->item, i).nameid == 0);
 
-	if (i == VECTOR_LENGTH(sd->storage.item)) {
-		VECTOR_ENSURE(sd->storage.item, 1, 1);
-		VECTOR_PUSH(sd->storage.item, *item_data);
-		it = &VECTOR_LAST(sd->storage.item);
+	if (i == VECTOR_LENGTH(stor->item)) {
+		VECTOR_ENSURE(stor->item, 1, 1);
+		VECTOR_PUSH(stor->item, *item_data);
+		it = &VECTOR_LAST(stor->item);
 	} else {
-		it = &VECTOR_INDEX(sd->storage.item, i);
+		it = &VECTOR_INDEX(stor->item, i);
 		*it = *item_data;
 	}
 
 	it->amount = amount;
 
-	sd->storage.aggregate++;
+	stor->aggregate++;
 
 	clif->storageitemadded(sd, it, i, amount);
 
-	clif->updatestorageamount(sd, sd->storage.aggregate, MAX_STORAGE);
+	clif->updatestorageamount(sd, stor->aggregate, stst->capacity);
 
-	sd->storage.save = true; // set a save flag.
+	stor->save = true; // set a save flag.
 
 	return 0;
 }
@@ -238,30 +308,30 @@ static int storage_additem(struct map_session_data *sd, struct item *item_data, 
 /*==========================================
  * Internal del-item function
  *------------------------------------------*/
-static int storage_delitem(struct map_session_data *sd, int n, int amount)
+static int storage_delitem(struct map_session_data* sd, struct storage_data *stor, int n, int amount)
 {
+	const struct storage_settings* stst;
 	struct item *it = NULL;
 
 	nullpo_retr(1, sd);
+	nullpo_retr(1, stor);
+	Assert_retr(1, stor->received == true);
+	nullpo_retr(1, (stst = storage->get_settings(stor->uid)));
+	Assert_retr(1, n >= 0 && n < VECTOR_LENGTH(stor->item));
 
-	Assert_retr(1, sd->storage.received == true);
-
-	Assert_retr(1, n >= 0 && n < VECTOR_LENGTH(sd->storage.item));
-
-	it = &VECTOR_INDEX(sd->storage.item, n);
-
+	it = &VECTOR_INDEX(stor->item, n);
+	
 	Assert_retr(1, amount <= it->amount);
-
 	Assert_retr(1, it->nameid > 0);
 
 	it->amount -= amount;
 
 	if (it->amount == 0) {
 		memset(it, 0, sizeof(struct item));
-		clif->updatestorageamount(sd, --sd->storage.aggregate, MAX_STORAGE);
+		clif->updatestorageamount(sd, --stor->aggregate, stst->capacity);
 	}
 
-	sd->storage.save = true;
+	stor->save = true;
 
 	if (sd->state.storage_flag == STORAGE_FLAG_NORMAL)
 		clif->storageitemremoved(sd, n, amount);
@@ -276,13 +346,16 @@ static int storage_delitem(struct map_session_data *sd, int n, int amount)
  *   0 : fail
  *   1 : success
  *------------------------------------------*/
-static int storage_add_from_inventory(struct map_session_data *sd, int index, int amount)
+static int storage_add_from_inventory(struct map_session_data* sd, struct storage_data *stor, int index, int amount)
 {
+	const struct storage_settings *stst;
+
 	nullpo_ret(sd);
+	nullpo_ret(stor);
+	Assert_ret(stor->received == true);
+	nullpo_ret((stst = storage->get_settings(stor->uid)));
 
-	Assert_ret(sd->storage.received == true);
-
-	if (sd->storage.aggregate > MAX_STORAGE)
+	if (stor->aggregate >= stst->capacity)
 		return 0; // storage full
 
 	if (index < 0 || index >= sd->status.inventorySize)
@@ -294,7 +367,7 @@ static int storage_add_from_inventory(struct map_session_data *sd, int index, in
 	if (amount < 1 || amount > sd->status.inventory[index].amount)
 		return 0;
 
-	if (storage->additem(sd, &sd->status.inventory[index], amount) == 0)
+	if (storage->additem(sd, stor, &sd->status.inventory[index], amount) == 0)
 		pc->delitem(sd, index, amount, 0, DELITEM_TOSTORAGE, LOG_TYPE_STORAGE);
 	else
 		clif->item_movefailed(sd, index);
@@ -309,19 +382,20 @@ static int storage_add_from_inventory(struct map_session_data *sd, int index, in
  *   0 : fail
  *   1 : success
  *------------------------------------------*/
-static int storage_add_to_inventory(struct map_session_data *sd, int index, int amount)
+static int storage_add_to_inventory(struct map_session_data* sd, struct storage_data *stor, int index, int amount)
 {
 	int flag;
 	struct item *it = NULL;
 
 	nullpo_ret(sd);
+	nullpo_ret(stor);
 
-	Assert_ret(sd->storage.received == true);
+	Assert_ret(stor->received == true);
 
-	if (index < 0 || index >= VECTOR_LENGTH(sd->storage.item))
+	if (index < 0 || index >= VECTOR_LENGTH(stor->item))
 		return 0;
 
-	it = &VECTOR_INDEX(sd->storage.item, index);
+	it = &VECTOR_INDEX(stor->item, index);
 
 	if (it->nameid <= 0)
 		return 0; //Nothing there
@@ -330,7 +404,7 @@ static int storage_add_to_inventory(struct map_session_data *sd, int index, int 
 		return 0;
 
 	if ((flag = pc->additem(sd, it, amount, LOG_TYPE_STORAGE)) == 0)
-		storage->delitem(sd, index, amount);
+		storage->delitem(sd, stor, index, amount);
 	else
 		clif->additem(sd, 0, 0, flag);
 
@@ -344,26 +418,30 @@ static int storage_add_to_inventory(struct map_session_data *sd, int index, int 
  *   0 : fail
  *   1 : success
  *------------------------------------------*/
-static int storage_storageaddfromcart(struct map_session_data *sd, int index, int amount)
+static int storage_storageaddfromcart(struct map_session_data* sd, struct storage_data *stor, int index, int amount)
 {
+	const struct storage_settings *stst = storage->get_settings(stor->uid);
+
 	nullpo_ret(sd);
+	nullpo_ret(stst);
+	nullpo_ret(stor);
 
-	Assert_ret(sd->storage.received == true);
+	Assert_ret(stor->received == true);
 
-	if (sd->storage.aggregate > MAX_STORAGE)
+	if (stor->aggregate >= stst->capacity)
 		return 0; // storage full / storage closed
 
 	if (index < 0 || index >= MAX_CART)
 		return 0;
 
-	if( sd->status.cart[index].nameid <= 0 )
+	if (sd->status.cart[index].nameid <= 0)
 		return 0; //No item there.
 
 	if (amount < 1 || amount > sd->status.cart[index].amount)
 		return 0;
 
-	if (storage->additem(sd,&sd->status.cart[index],amount) == 0)
-		pc->cart_delitem(sd,index,amount,0,LOG_TYPE_STORAGE);
+	if (storage->additem(sd, stor, &sd->status.cart[index], amount) == 0)
+		pc->cart_delitem(sd, index, amount, 0, LOG_TYPE_STORAGE);
 
 	return 1;
 }
@@ -375,19 +453,20 @@ static int storage_storageaddfromcart(struct map_session_data *sd, int index, in
  *   0 : fail
  *   1 : success
  *------------------------------------------*/
-static int storage_storagegettocart(struct map_session_data *sd, int index, int amount)
+static int storage_storagegettocart(struct map_session_data* sd, struct storage_data *stor, int index, int amount)
 {
 	int flag = 0;
 	struct item *it = NULL;
 
 	nullpo_ret(sd);
 
-	Assert_ret(sd->storage.received == true);
+	nullpo_ret(stor);
+	Assert_ret(stor->received == true);
 
-	if (index < 0 || index >= VECTOR_LENGTH(sd->storage.item))
+	if (index < 0 || index >= VECTOR_LENGTH(stor->item))
 		return 0;
 
-	it = &VECTOR_INDEX(sd->storage.item, index);
+	it = &VECTOR_INDEX(stor->item, index);
 
 	if (it->nameid <= 0)
 		return 0; //Nothing there.
@@ -396,7 +475,7 @@ static int storage_storagegettocart(struct map_session_data *sd, int index, int 
 		return 0;
 
 	if ((flag = pc->cart_additem(sd, it, amount, LOG_TYPE_STORAGE)) == 0)
-		storage->delitem(sd, index, amount);
+		storage->delitem(sd, stor, index, amount);
 	else {
 		// probably this line is useless? it remove inventory lock but not storage [4144]
 		clif->dropitem(sd, index,0);
@@ -414,10 +493,12 @@ static int storage_storagegettocart(struct map_session_data *sd, int index, int 
 static void storage_storageclose(struct map_session_data *sd)
 {
 	int i = 0;
+	struct storage_data *curr_stor = NULL;
 
 	nullpo_retv(sd);
 
-	Assert_retv(sd->storage.received == true);
+	curr_stor = storage->ensure(sd, sd->storage.current);
+
 
 	clif->storageclose(sd);
 
@@ -426,15 +507,18 @@ static void storage_storageclose(struct map_session_data *sd)
 
 	/* Erase deleted account storage items from memory
 	 * and resize the vector. */
-	while (i < VECTOR_LENGTH(sd->storage.item)) {
-		if (VECTOR_INDEX(sd->storage.item, i).nameid == 0) {
-			VECTOR_ERASE(sd->storage.item, i);
+
+	while (curr_stor != NULL && i < VECTOR_LENGTH(curr_stor->item)) {
+		if (VECTOR_INDEX(curr_stor->item, i).nameid == 0) {
+			VECTOR_ERASE(curr_stor->item, i);
 		} else {
 			i++;
 		}
 	}
 
 	sd->state.storage_flag = STORAGE_FLAG_CLOSED;
+	sd->storage.current = 0; // Reset current storage identifier.
+	sd->storage.access = STORAGE_ACCESS_ALL; // Reset access level to all levels.
 }
 
 /*==========================================
@@ -841,10 +925,131 @@ static int storage_guild_storage_quit(struct map_session_data *sd, int flag)
 	return 0;
 }
 
+/**
+ * Read additional storage configuration fields for plugins.
+ * @param t          [in]    pointer to the config element being parsed.
+ * @param s_conf     [in]    pointer to the config struct being written to.
+ * @param filename   [in]    pointer to the filename string.
+ */
+static void storage_config_read_additional_fields(struct config_setting_t *t, struct storage_settings *s_conf, const char *filename)
+{
+	// plugins do their own thing.
+}
+
+/**
+ * Dynamically reads storage configuration and initializes required variables.
+ *
+ * @param filename Path to configuration file.
+ * @param imported Whether the current config is imported from another file.
+ * @retval false in case of error.
+ */
+static bool storage_config_read(const char *filename, bool imported)
+{
+	struct config_t stor_libconf;
+	const struct config_setting_t *setting = NULL, *t = NULL;
+	int i = 0;
+	const char *import = NULL;
+
+	nullpo_retr(false, filename);
+
+	if (!imported)
+		VECTOR_INIT(storage->configuration);
+
+	if (libconfig->load_file(&stor_libconf, filename) == 0)
+		return false; // Error message is already shown by libconfig->load_file()
+
+	if ((setting = libconfig->setting_get_member(stor_libconf.root, "storage_conf")) == NULL && !imported) {
+		ShowError("storage_config_read: Error in reading file '%s'\n", filename);
+		libconfig->destroy(&stor_libconf);
+		return false;
+	}
+
+	while ((t = libconfig->setting_get_elem(setting, i++)) != NULL) {
+		struct config_setting_t *tt = NULL;
+		struct storage_settings s_conf = { 0 };
+		int d = 0;
+
+		/* Id */
+		if (libconfig->setting_lookup_int(t, "Id", &s_conf.uid) == 0) {
+			ShowError("storage_config_read: Id field not found for storage configuration in '%s'. Skipping...\n", filename);
+			continue;
+		}
+
+		// Duplicate ID search and report...
+		ARR_FIND(0, VECTOR_LENGTH(storage->configuration), d, VECTOR_INDEX(storage->configuration, d).uid == s_conf.uid);
+		if (d < VECTOR_LENGTH(storage->configuration)) {
+			ShowError("storage_config_read: Duplicate ID %d for storage. Skipping...\n", s_conf.uid);
+			continue;
+		}
+
+		// Check for an invalid ID...
+		if (s_conf.uid <= 0) {
+			ShowError("storage_config_read: ID for storage cannot be less than or equal to zero. Skipping...\n");
+			continue;
+		}
+
+		/* Name */
+		if (libconfig->setting_lookup_mutable_string(t, "Name", s_conf.name, NAME_LENGTH) == 0) {
+			ShowError("storage_config_read: Name field not found for storage configuration (Id: %d) in '%s'. Skipping...\n", s_conf.uid, filename);
+			continue;
+		}
+
+		/* Capacity */
+		if (libconfig->setting_lookup_int(t, "Capacity", &s_conf.capacity) == 0) {
+			ShowError("storage_config_read: Capacity field not found for storage configuration (Id: %d)  in '%s'. Skipping...\n", s_conf.uid, filename);
+			continue;
+		}
+
+		/* Additional Fields */
+		storage->config_read_additional_fields(tt, &s_conf, filename);
+
+		if (imported) {
+			ARR_FIND(0, VECTOR_LENGTH(storage->configuration), i, VECTOR_INDEX(storage->configuration, i).uid == s_conf.uid);
+			if (i < VECTOR_LENGTH(storage->configuration))
+				VECTOR_ERASE(storage->configuration, i);
+		}
+
+		VECTOR_ENSURE(storage->configuration, 1, 1);
+		VECTOR_PUSH(storage->configuration, s_conf);
+	}
+
+	// import should overwrite any previous configuration, so it should be called last
+	if (libconfig->lookup_string(&stor_libconf, "import", &import) == CONFIG_TRUE) {
+		if (strcmp(import, filename) == 0 || strcmp(import, map->STORAGE_CONF_FILENAME) == 0) {
+			ShowWarning("battle_config_read: Loop detected! Skipping 'import'...\n");
+			libconfig->destroy(&stor_libconf);
+			return false;
+		} else if (storage->config_read(import, true) == false) {
+			libconfig->destroy(&stor_libconf);
+			return false;
+		}
+	}
+
+	libconfig->destroy(&stor_libconf);
+
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", VECTOR_LENGTH(storage->configuration), map->STORAGE_CONF_FILENAME);
+	
+	return true;
+}
+
+static void do_init_storage(bool minimal)
+{
+	if (minimal)
+		return;
+}
+
+static void do_final_storage(void)
+{
+	// Clear storage configuration vector.
+	if (VECTOR_LENGTH(storage->configuration) > 0)
+		VECTOR_CLEAR(storage->configuration);
+}
+
 static void do_init_gstorage(bool minimal)
 {
 	if (minimal)
 		return;
+	
 	gstorage->db = idb_alloc(DB_OPT_RELEASE_DATA);
 }
 
@@ -857,9 +1062,16 @@ void storage_defaults(void)
 {
 	storage = &storage_s;
 
+	storage->init = do_init_storage;
+	storage->final = do_final_storage;
 	/* */
 	storage->reconnect = do_reconnect_storage;
+	storage->config_read = storage_config_read;
+	storage->config_read_additional_fields = storage_config_read_additional_fields;
 	/* */
+	storage->get_id_by_name = storage_get_id_by_name;
+	storage->ensure = storage_ensure;
+	storage->get_settings = storage_get_settings;
 	storage->delitem = storage_delitem;
 	storage->open = storage_storageopen;
 	storage->add = storage_add_from_inventory;

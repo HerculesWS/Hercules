@@ -11358,9 +11358,9 @@ static int skill_castend_map(struct map_session_data *sd, uint16 skill_id, const
 
 	switch (skill_id) {
 		case AL_TELEPORT:
-			if (strcmp(mapname, "Random") == 0)
+			if (strcmp(mapname,"Random") == 0)
 				pc->randomwarp(sd, CLR_TELEPORT);
-			else if (sd->menuskill_val > 1) // Need lv2 to be able to warp here.
+			else if (sd->menuskill_val > 1) //Need lv2 to be able to warp here.
 				pc->setpos(sd, sd->status.save_point.map, sd->status.save_point.x, sd->status.save_point.y, CLR_TELEPORT);
 
 			if (battle_config.teleport_close_storage == 1 && sd->state.storage_flag != STORAGE_FLAG_CLOSED) {

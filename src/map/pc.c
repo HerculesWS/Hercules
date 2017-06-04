@@ -1286,6 +1286,9 @@ static bool pc_authok(struct map_session_data *sd, int login_id2, time_t expirat
 	VECTOR_INIT(sd->storage.item); // initialize storage item vector.
 	VECTOR_INIT(sd->hatEffectId);
 
+	// Storage
+	VECTOR_INIT(sd->storage.list);
+
 	sd->state.dialog = 0;
 
 	sd->delayed_damage = 0;
@@ -1520,7 +1523,8 @@ static int pc_reg_received(struct map_session_data *sd)
 	sd->status.last_login = time(NULL);
 
 	// Storage Request
-	intif->request_account_storage(sd);
+	for (i = 0; i < VECTOR_LENGTH(storage->configuration); i++)
+		intif->request_account_storage(sd, VECTOR_INDEX(storage->configuration, i).uid);
 
 	intif->Mail_requestinbox(sd->status.char_id, 0); // MAIL SYSTEM - Request Mail Inbox
 	intif->request_questlog(sd);
@@ -10834,21 +10838,26 @@ static int pc_checkitem(struct map_session_data *sd)
 			sd->itemcheck &= ~PCCHECKITEM_CART;
 		}
 
-		if (sd->itemcheck & PCCHECKITEM_STORAGE && sd->storage.received == true) {
-			for (i = 0; i < VECTOR_LENGTH(sd->storage.item); i++) {
-				struct item *it = &VECTOR_INDEX(sd->storage.item, i);
+		if (sd->itemcheck & PCCHECKITEM_STORAGE) {
+			for (i = 0; i < VECTOR_LENGTH(sd->storage.list); i++) {
+				struct storage_data *stor = &VECTOR_INDEX(sd->storage.list, i);
 
-				if ((id = it->nameid) == 0)
-					continue;
+				for (int j = 0; j < VECTOR_LENGTH(sd->storage.list); j++) {
+					struct item *it = &VECTOR_INDEX(stor->item, j);
 
-				if (!itemdb_available(id)) {
-					ShowWarning("pc_checkitem: Removed invalid/disabled item id %d from storage (amount=%d, char_id=%d).\n", id, it->amount, sd->status.char_id);
-					storage->delitem(sd, i, it->amount);
-					continue;
+					if ((id = it->nameid) == 0)
+						continue;
+
+					if (!itemdb_available(id)) {
+						ShowWarning("pc_checkitem: Removed invalid/disabled item id %d from storage %d (amount=%d, char_id=%d).\n", id, stor->uid, it->amount, sd->status.char_id);
+						storage->delitem(sd, stor, i, it->amount);
+						continue;
+					}
+
+					if (it->unique_id == 0 && itemdb->isstackable(id) == 0)
+						it->unique_id = itemdb->unique_id(sd);
 				}
 
-				if (it->unique_id == 0 && itemdb->isstackable(id) == 0)
-					it->unique_id = itemdb->unique_id(sd);
 			}
 
 			storage->close(sd);

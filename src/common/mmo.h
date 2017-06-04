@@ -602,7 +602,15 @@ struct status_change_data {
 	int total_tick;             ///< Total duration.
 };
 
+/* Hercules Ultimate Storage System [Smokexyz/Hercules] */
+struct storage_settings {
+	int uid;                       ///< Storage Identifier.
+	char name[NAME_LENGTH];        ///< Storage Name
+	int capacity;                  ///< Item Capacity.
+};
+
 struct storage_data {
+	int uid;                       ///< Storage Identifier.
 	bool save;                     ///< save flag.
 	bool received;                 ///< received flag.
 	int aggregate;                 ///< total item count.

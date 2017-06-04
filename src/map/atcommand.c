@@ -869,6 +869,37 @@ ACMD(speed)
  *------------------------------------------*/
 ACMD(storage)
 {
+	char storage_name[NAME_LENGTH] = "";
+	int storage_id = 0, intval = 0;
+	struct storage_data *stor = NULL;
+
+	if (*message && sscanf(message, "%12d", &intval) == 1) {
+		if (storage->get_settings(intval) == NULL) {
+			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 67), storage_name);
+			clif->message(fd, atcmd_output); // Invalid storage name or ID.
+			return false;
+		}
+		storage_id = intval;
+	} else if (*message && sscanf(message, "%23s", storage_name) == 1) {
+		if ((storage_id = storage->get_id_by_name(storage_name)) == -1) {
+			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 67), storage_name);
+			clif->message(fd, atcmd_output); // Invalid storage name or ID.
+			return false;
+		}
+	} else {
+		clif->message(fd, msg_fd(fd, 68)); // Please specify a storage name (usage: @storage <storage name>).
+		return false;
+	}
+
+	sd->storage.access = STORAGE_ACCESS_ALL; // Default storage access for atcommands.
+	stor = storage->ensure(sd, storage_id);
+
+	if (stor->received == false) {
+		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 27), storage_name);
+		clif->message(fd, atcmd_output); // -- Storage '%s' has not been loaded yet.
+		return false;
+	}
+
 	if (sd->npc_id || sd->state.vending || sd->state.prevend || sd->state.buyingstore || sd->state.trading || sd->state.storage_flag)
 		return false;
 
@@ -877,12 +908,14 @@ ACMD(storage)
 		return false;
 	}
 
-	if (storage->open(sd) == 1) { //Already open.
-		clif->message(fd, msg_fd(fd,250)); // You have already opened your storage. Close it first.
+	if (storage->open(sd, stor) == 1) { // Already open.
+		clif->message(fd, msg_fd(fd, 250)); // You have already opened your storage. Close it first.
 		return false;
 	}
 
-	clif->message(fd, msg_fd(fd,919)); // Storage opened.
+	safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 919), storage_id);
+
+	clif->message(fd, atcmd_output); // Storage #%d opened.
 
 	return true;
 }
@@ -5489,16 +5522,43 @@ ACMD(dropall)
  *------------------------------------------*/
 ACMD(storeall)
 {
+	int i = 0;
+	char storage_name[NAME_LENGTH] = "";
+	int storage_id = 0, intval = 0;
+	struct storage_data *stor = NULL;
+
+	if (*message && sscanf(message, "%12d", &intval) == 1) {
+		if (storage->get_settings(intval) == NULL) {
+			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 67), storage_name);
+			clif->message(fd, atcmd_output); // Invalid storage name or ID.
+			return false;
+		}
+		storage_id = intval;
+	} else if (*message && sscanf(message, "%23s", storage_name) == 1) {
+		if ((storage_id = storage->get_id_by_name(storage_name)) == -1) {
+			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 67), storage_name);
+			clif->message(fd, atcmd_output); // Invalid storage name or ID.
+			return false;
+		}
+	} else {
+		clif->message(fd, msg_fd(fd, 65)); // Please specify a storage name (usage: @storeall <storage name>).
+		return false;
+	}
+
+	sd->storage.access = STORAGE_ACCESS_ALL; // Default storage access for atcommands.
+	stor = storage->ensure(sd, storage_id);
+
 	if (sd->state.storage_flag != STORAGE_FLAG_NORMAL) {
 		//Open storage.
-		if (storage->open(sd) == 1) {
-			clif->message(fd, msg_fd(fd,1161)); // You currently cannot open your storage.
+		if (storage->open(sd, stor) == 1) {
+			clif->message(fd, msg_fd(fd, 1161)); // You currently cannot open your storage.
 			return false;
 		}
 	}
 
-	if (sd->storage.received == false) {
-		clif->message(fd, msg_fd(fd, 27)); // "Storage has not been loaded yet"
+	if (stor->received == false) {
+		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 27), storage_name);
+		clif->message(fd, atcmd_output); // -- Storage '%s' has not been loaded yet.
 		return false;
 	}
 
@@ -5506,39 +5566,66 @@ ACMD(storeall)
 		if (sd->status.inventory[i].amount) {
 			if(sd->status.inventory[i].equip != 0)
 				pc->unequipitem(sd, i, PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE);
-			storage->add(sd,  i, sd->status.inventory[i].amount);
+			storage->add(sd, stor, i, sd->status.inventory[i].amount);
 		}
 	}
+
 	storage->close(sd);
 
 	clif->message(fd, msg_fd(fd,1162)); // All items stored.
+
 	return true;
 }
 
 ACMD(clearstorage)
 {
-	int i;
+	int i = 0;
+	char storage_name[NAME_LENGTH] = "";
+	int storage_id = 0, intval = 0;
+	struct storage_data *stor = NULL;
 
-	if (sd->state.storage_flag == STORAGE_FLAG_NORMAL) {
-		clif->message(fd, msg_fd(fd,250));
+	if (*message && sscanf(message, "%12d", &intval) == 1) {
+		if (storage->get_settings(intval) == NULL) {
+			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 67), storage_name);
+			clif->message(fd, atcmd_output); // Invalid storage name or ID.
+			return false;
+		}
+		storage_id = intval;
+	} else if (*message && sscanf(message, "%23s", storage_name) == 1) {
+		if ((storage_id = storage->get_id_by_name(storage_name)) == -1) {
+			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 67), storage_name);
+			clif->message(fd, atcmd_output); // Invalid storage name or ID.
+			return false;
+		}
+	} else {
+		clif->message(fd, msg_fd(fd, 66)); // Please specify a storage name (usage: @clearstorage <skill name>).
 		return false;
 	}
 
-	if (sd->storage.received == false) {
+	if (sd->state.storage_flag == STORAGE_FLAG_NORMAL) {
+		clif->message(fd, msg_fd(fd, 250)); // You have already opened your storage. Close it first.
+		return false;
+	}
+
+	sd->storage.access = STORAGE_ACCESS_ALL; // Default storage access for atcommands.
+	stor = storage->ensure(sd, storage_id);
+
+	if (stor->received == false) {
 		clif->message(fd, msg_fd(fd, 27)); // "Storage has not been loaded yet"
 		return false;
 	}
 
-	for (i = 0; i < VECTOR_LENGTH(sd->storage.item); ++i) {
-		if (VECTOR_INDEX(sd->storage.item, i).nameid == 0)
+	for (i = 0; i < VECTOR_LENGTH(stor->item); ++i) {
+		if (VECTOR_INDEX(stor->item, i).nameid == 0)
 			continue; // we skip the already deleted items.
 
-		storage->delitem(sd, i, VECTOR_INDEX(sd->storage.item, i).amount);
+		storage->delitem(sd, stor, i, VECTOR_INDEX(stor->item, i).amount);
 	}
 
 	storage->close(sd);
 
 	clif->message(fd, msg_fd(fd,1394)); // Your storage was cleaned.
+
 	return true;
 }
 
@@ -8581,7 +8668,6 @@ ACMD(resetskill)
 }
 
 /*==========================================
- * #storagelist: Displays the items list of a player's storage.
  * #cartlist: Displays contents of target's cart.
  * #itemlist: Displays contents of target's inventory.
  *------------------------------------------*/
@@ -8593,11 +8679,7 @@ ACMD(itemlist)
 	int size;
 	StringBuf buf;
 
-	if( strcmpi(info->command, "storagelist") == 0 ) {
-		location = "storage";
-		items = VECTOR_DATA(sd->storage.item);
-		size = VECTOR_LENGTH(sd->storage.item);
-	} else if( strcmpi(info->command, "cartlist") == 0 ) {
+	if( strcmpi(info->command, "cartlist") == 0 ) {
 		location = "cart";
 		items = sd->status.cart;
 		size = MAX_CART;
@@ -10462,7 +10544,6 @@ static void atcommand_basecommands(void)
 		ACMD_DEF(agitend2),
 		ACMD_DEF2("skreset", resetskill),
 		ACMD_DEF2("streset", resetstat),
-		ACMD_DEF2("storagelist", itemlist),
 		ACMD_DEF2("cartlist", itemlist),
 		ACMD_DEF2("itemlist", itemlist),
 		ACMD_DEF(stats),

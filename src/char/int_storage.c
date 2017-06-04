@@ -41,24 +41,30 @@ static struct inter_storage_interface inter_storage_s;
 struct inter_storage_interface *inter_storage;
 
 /// Save storage data to sql
-static int inter_storage_tosql(int account_id, const struct storage_data *p)
+static int inter_storage_tosql(int account_id, int storage_id, const struct storage_data *p)
 {
 	int i = 0, j = 0;
-	bool matched_p[MAX_STORAGE] = { false };
-	int delete[MAX_STORAGE] = { 0 };
+	bool *matched_p = NULL;
+	int *delete = NULL;
 	int total_deletes = 0, total_updates = 0, total_inserts = 0;
-	int total_changes = 0;
+	int cp_size = 0;
 	struct storage_data cp = { 0 };
 	StringBuf buf;
 
 	nullpo_ret(p);
 
 	VECTOR_INIT(cp.item);
-	inter_storage->fromsql(account_id, &cp);
+
+	cp_size = inter_storage->fromsql(account_id, storage_id, &cp, 0);
+
+	matched_p = aCalloc(VECTOR_LENGTH(p->item), sizeof(bool));
 
 	StrBuf->Init(&buf);
 
 	if (VECTOR_LENGTH(cp.item) > 0) {
+
+		delete = aCalloc(cp_size, sizeof(int));
+
 		/**
 		 * Compare and update items, if any.
 		 */
@@ -78,7 +84,7 @@ static int inter_storage_tosql(int account_id, const struct storage_data *p)
 				int k = 0;
 				if (memcmp(cp_it, p_it, sizeof(struct item)) != 0) {
 					if (total_updates == 0) {
-						StrBuf->Printf(&buf, "REPLACE INTO `%s` (`id`, `account_id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`", storage_db);
+						StrBuf->Printf(&buf, "REPLACE INTO `%s` (`id`, `account_id`, `storage_id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`", storage_db);
 						for (k = 0; k < MAX_SLOTS; k++)
 							StrBuf->Printf(&buf, ", `card%d`", k);
 						for (k = 0; k < MAX_ITEM_OPTIONS; k++)
@@ -86,8 +92,8 @@ static int inter_storage_tosql(int account_id, const struct storage_data *p)
 						StrBuf->AppendStr(&buf, ", `expire_time`, `bound`, `unique_id`) VALUES");
 					}
 
-					StrBuf->Printf(&buf, "%s('%d', '%d', '%d', '%d', '%u', '%d', '%d', '%d'",
-								   total_updates > 0 ? ", " : "", cp_it->id, account_id, p_it->nameid, p_it->amount, p_it->equip, p_it->identify, p_it->refine, p_it->attribute);
+					StrBuf->Printf(&buf, "%s('%d', '%d', '%d', '%d', '%d', '%u', '%d', '%d', '%d'",
+								   total_updates > 0 ? ", " : "", cp_it->id, account_id, storage_id, p_it->nameid, p_it->amount, p_it->equip, p_it->identify, p_it->refine, p_it->attribute);
 					for (k = 0; k < MAX_SLOTS; k++)
 						StrBuf->Printf(&buf, ", '%d'", p_it->card[k]);
 					for (k = 0; k < MAX_ITEM_OPTIONS; ++k)
@@ -119,6 +125,8 @@ static int inter_storage_tosql(int account_id, const struct storage_data *p)
 			if (SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf)))
 				Sql_ShowDebug(inter->sql_handle);
 		}
+
+		aFree(delete);
 	}
 
 	/**
@@ -133,7 +141,7 @@ static int inter_storage_tosql(int account_id, const struct storage_data *p)
 		// Store the remaining items.
 		if (total_inserts == 0) {
 			StrBuf->Clear(&buf);
-			StrBuf->Printf(&buf, "INSERT INTO `%s` (`account_id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `bound`, `unique_id`", storage_db);
+			StrBuf->Printf(&buf, "INSERT INTO `%s` (`account_id`, `storage_id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `bound`, `unique_id`", storage_db);
 			for (j = 0; j < MAX_SLOTS; ++j)
 				StrBuf->Printf(&buf, ", `card%d`", j);
 			for (j = 0; j < MAX_ITEM_OPTIONS; ++j)
@@ -141,8 +149,8 @@ static int inter_storage_tosql(int account_id, const struct storage_data *p)
 			StrBuf->AppendStr(&buf, ") VALUES ");
 		}
 
-		StrBuf->Printf(&buf, "%s('%d', '%d', '%d', '%u', '%d', '%d', '%d', '%u', '%d', '%"PRIu64"'",
-					   total_inserts > 0 ? ", " : "", account_id, p_it->nameid, p_it->amount, p_it->equip, p_it->identify, p_it->refine,
+		StrBuf->Printf(&buf, "%s('%d', '%d', '%d', '%d', '%u', '%d', '%d', '%d', '%u', '%d', '%"PRIu64"'",
+					   total_inserts > 0 ? ", " : "", account_id, storage_id, p_it->nameid, p_it->amount, p_it->equip, p_it->identify, p_it->refine,
 					   p_it->attribute, p_it->expire_time, p_it->bound, p_it->unique_id);
 		for (j = 0; j < MAX_SLOTS; ++j)
 			StrBuf->Printf(&buf, ", '%d'", p_it->card[j]);
@@ -159,13 +167,15 @@ static int inter_storage_tosql(int account_id, const struct storage_data *p)
 	StrBuf->Destroy(&buf);
 	VECTOR_CLEAR(cp.item);
 
-	total_changes = total_inserts + total_updates + total_deletes;
-	ShowInfo("storage save complete - id: %d (total: %d)\n", account_id, total_changes);
-	return total_changes;
+	aFree(matched_p);
+
+	ShowInfo("Storage #%d save complete - id: %d (replace: %d, insert: %d, delete: %d)\n", storage_id, account_id, total_updates, total_inserts, total_deletes);
+
+	return total_inserts + total_updates + total_deletes;
 }
 
 /// Load storage data to mem
-static int inter_storage_fromsql(int account_id, struct storage_data *p)
+static int inter_storage_fromsql(int account_id, int storage_id, struct storage_data *p, int storage_size)
 {
 	StringBuf buf;
 	char* data;
@@ -174,6 +184,7 @@ static int inter_storage_fromsql(int account_id, struct storage_data *p)
 	int num_rows = 0;
 
 	nullpo_ret(p);
+	Assert_ret(storage_size >= 0);
 
 	if (VECTOR_LENGTH(p->item) > 0)
 		VECTOR_CLEAR(p->item);
@@ -185,7 +196,7 @@ static int inter_storage_fromsql(int account_id, struct storage_data *p)
 		StrBuf->Printf(&buf, ",`card%d`", j);
 	for (j = 0; j < MAX_ITEM_OPTIONS; ++j)
 		StrBuf->Printf(&buf, ",`opt_idx%d`,`opt_val%d`", j, j);
-	StrBuf->Printf(&buf, " FROM `%s` WHERE `account_id`='%d' ORDER BY `nameid`", storage_db, account_id);
+	StrBuf->Printf(&buf, " FROM `%s` WHERE `account_id`='%d' AND `storage_id`='%d' ORDER BY `nameid`", storage_db, account_id, storage_id);
 
 	if (SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf)))
 		Sql_ShowDebug(inter->sql_handle);
@@ -194,10 +205,14 @@ static int inter_storage_fromsql(int account_id, struct storage_data *p)
 
 	if ((num_rows = (int)SQL->NumRows(inter->sql_handle)) != 0) {
 
-		VECTOR_ENSURE(p->item, num_rows > MAX_STORAGE ? MAX_STORAGE : num_rows, 1);
+		VECTOR_ENSURE(p->item, storage_size > 0 ? min(num_rows, storage_size) : num_rows, 1);
 
-		for (i = 0; i < MAX_STORAGE && SQL_SUCCESS == SQL->NextRow(inter->sql_handle); ++i) {
+		for (i = 0; SQL_SUCCESS == SQL->NextRow(inter->sql_handle); ++i) {
 			struct item item = { 0 };
+
+			if (storage_size > 0 && i > storage_size)
+				break;
+
 			SQL->GetData(inter->sql_handle, 0, &data, NULL); item.id = atoi(data);
 			SQL->GetData(inter->sql_handle, 1, &data, NULL); item.nameid = atoi(data);
 			SQL->GetData(inter->sql_handle, 2, &data, NULL); item.amount = atoi(data);
@@ -229,7 +244,7 @@ static int inter_storage_fromsql(int account_id, struct storage_data *p)
 
 	SQL->FreeResult(inter->sql_handle);
 
-	ShowInfo("storage load complete from DB - id: %d (total: %d)\n", account_id, VECTOR_LENGTH(p->item));
+	ShowInfo("Storage #%d load complete from DB - id: %d (total: %d)\n", storage_id, account_id, VECTOR_LENGTH(p->item));
 
 	return VECTOR_LENGTH(p->item);
 }
