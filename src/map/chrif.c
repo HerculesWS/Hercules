@@ -278,7 +278,10 @@ int chrif_isconnected(void) {
  * Flag = 2: Character is changing map-servers
  *------------------------------------------*/
 // TODO: Flag enum
-bool chrif_save(struct map_session_data *sd, int flag) {
+bool chrif_save(struct map_session_data *sd, int flag)
+{
+	int i = 0;
+
 	nullpo_ret(sd);
 
 	pc->makesavestatus(sd);
@@ -297,8 +300,13 @@ bool chrif_save(struct map_session_data *sd, int flag) {
 	if (sd->state.storage_flag == STORAGE_FLAG_GUILD)
 		gstorage->save(sd->status.account_id, sd->status.guild_id, flag);
 
-	if (flag)
-		sd->state.storage_flag = STORAGE_FLAG_CLOSED; //Force close it.
+	if (flag && sd->state.storage_flag != STORAGE_FLAG_CLOSED) {
+		if (sd->state.storage_flag == STORAGE_FLAG_NORMAL) {
+			storage->close(sd);
+		} else if (sd->state.storage_flag == STORAGE_FLAG_GUILD) {
+			gstorage->close(sd);
+		}
+	}
 
 	//Saving of registry values.
 	if (sd->vars_dirty)
@@ -324,8 +332,9 @@ bool chrif_save(struct map_session_data *sd, int flag) {
 	if( sd->save_quest )
 		intif->quest_save(sd);
 
-	if (sd->storage.received == true && sd->storage.save == true)
-		intif->send_account_storage(sd);
+	for (i = 0; i < VECTOR_LENGTH(sd->storage.list); i++)
+		if (VECTOR_INDEX(sd->storage.list, i).received == true && VECTOR_INDEX(sd->storage.list, i).save == true)
+			intif->send_account_storage(sd, VECTOR_INDEX(sd->storage.list, i).uid);
 
 	return true;
 }

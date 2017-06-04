@@ -5996,6 +5996,7 @@ int do_final(void) {
 	script->final();
 	itemdb->final();
 	instance->final();
+	storage->final();
 	gstorage->final();
 	guild->final();
 	party->final();
@@ -6052,6 +6053,7 @@ int do_final(void) {
 	aFree(map->GRF_PATH_FILENAME);
 	aFree(map->INTER_CONF_NAME);
 	aFree(map->LOG_CONF_NAME);
+	aFree(map->STORAGE_CONF_FILENAME);
 
 	HPM->event(HPET_POST_FINAL);
 
@@ -6293,6 +6295,19 @@ static CMDLINEARG(grfpath)
 	return true;
 }
 /**
+ * --storage-path handler
+ *
+ * Overrides the default grf configuration filename.
+ * @see cmdline->exec
+ */
+static CMDLINEARG(storagepath)
+{
+	aFree(map->STORAGE_CONF_FILENAME);
+	map->STORAGE_CONF_FILENAME = aStrdup(params);
+	return true;
+}
+
+/**
  * --inter-config handler
  *
  * Overrides the default inter-server configuration filename.
@@ -6354,6 +6369,7 @@ void cmdline_args_init_local(void)
 	CMDLINEARG_DEF2(script-config, scriptconfig, "Alternative script configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
 	CMDLINEARG_DEF2(msg-config, msgconfig, "Alternative message configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
 	CMDLINEARG_DEF2(grf-path, grfpath, "Alternative GRF path configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2(storage-path, storagepath, "Alternative Storage configuration path.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
 	CMDLINEARG_DEF2(inter-config, interconfig, "Alternative inter-server configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
 	CMDLINEARG_DEF2(log-config, logconfig, "Alternative logging configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
 	CMDLINEARG_DEF2(script-check, scriptcheck, "Doesn't run the server, only tests the scripts passed through --load-script.", CMDLINE_OPT_SILENT);
@@ -6379,6 +6395,7 @@ int do_init(int argc, char *argv[])
 	map->SCRIPT_CONF_NAME        = aStrdup("conf/map/script.conf");
 	map->MSG_CONF_NAME           = aStrdup("conf/messages.conf");
 	map->GRF_PATH_FILENAME       = aStrdup("conf/grf-files.txt");
+	map->STORAGE_CONF_FILENAME   = aStrdup("conf/map/storage.conf");
 
 	HPM_map_do_init();
 	cmdline->exec(argc, argv, CMDLINE_OPT_PREINIT);
@@ -6444,6 +6461,7 @@ int do_init(int argc, char *argv[])
 		atcommand->msg_read(map->MSG_CONF_NAME, false);
 		map->inter_config_read(map->INTER_CONF_NAME, false);
 		logs->config_read(map->LOG_CONF_NAME, false);
+		storage->config_read(map->STORAGE_CONF_FILENAME, false);
 	}
 	script->config_read(map->SCRIPT_CONF_NAME, false);
 
@@ -6514,6 +6532,7 @@ int do_init(int argc, char *argv[])
 	status->init(minimal);
 	party->init(minimal);
 	guild->init(minimal);
+	storage->init(minimal);
 	gstorage->init(minimal);
 	pet->init(minimal);
 	homun->init(minimal);
@@ -6609,6 +6628,7 @@ void map_defaults(void) {
 	map->SCRIPT_CONF_NAME = "conf/map/script.conf";
 	map->MSG_CONF_NAME = "conf/messages.conf";
 	map->GRF_PATH_FILENAME = "conf/grf-files.txt";
+	map->STORAGE_CONF_FILENAME = "conf/map/storage.conf";
 
 	map->default_codepage[0] = '\0';
 	map->server_port = 3306;

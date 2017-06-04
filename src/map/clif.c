@@ -2715,18 +2715,22 @@ void clif_equiplist(struct map_session_data *sd) {
 #endif
 }
 
-void clif_storagelist(struct map_session_data* sd, struct item* items, int items_length) {
+void clif_storagelist(struct map_session_data* sd, struct item* items, int items_length)
+{
 	int i = 0;
 	struct item_data *id;
+	const struct storage_settings *stst = storage->get_settings(sd->storage.current);
 
 	nullpo_retv(sd);
 	nullpo_retv(items);
+	nullpo_retv(stst);
+
 	do {
 		int normal = 0, equip = 0, k = 0;
 
 		for( ; i < items_length && k < 500; i++, k++ ) {
 
-			if( items[i].nameid <= 0 )
+			if (items[i].nameid <= 0)
 				continue;
 
 			id = itemdb->search(items[i].nameid);
@@ -2737,23 +2741,23 @@ void clif_storagelist(struct map_session_data* sd, struct item* items, int items
 				clif->item_normal(i+1,&storelist_normal.list[normal++],&items[i],id);
 		}
 
-		if( normal ) {
+		if (normal) {
 			storelist_normal.PacketType   = storagelistnormalType;
 			storelist_normal.PacketLength =  ( sizeof( storelist_normal ) - sizeof( storelist_normal.list ) ) + (sizeof(struct NORMALITEM_INFO) * normal);
 
 #if PACKETVER >= 20120925
-			safestrncpy(storelist_normal.name, "Storage", NAME_LENGTH);
+			safestrncpy(storelist_normal.name, stst->name, NAME_LENGTH);
 #endif
 
 			clif->send(&storelist_normal, storelist_normal.PacketLength, &sd->bl, SELF);
 		}
 
-		if( equip ) {
+		if (equip) {
 			storelist_equip.PacketType   = storagelistequipType;
 			storelist_equip.PacketLength = ( sizeof( storelist_equip ) - sizeof( storelist_equip.list ) ) + (sizeof(struct EQUIPITEM_INFO) * equip);
 
 #if PACKETVER >= 20120925
-			safestrncpy(storelist_equip.name, "Storage", NAME_LENGTH);
+			safestrncpy(storelist_equip.name, stst->name, NAME_LENGTH);
 #endif
 
 			clif->send(&storelist_equip, storelist_equip.PacketLength, &sd->bl, SELF);
@@ -8430,14 +8434,24 @@ void clif_messagecolor(struct block_list *bl, uint32 color, const char *msg)
 void clif_refresh_storagewindow(struct map_session_data *sd)
 {
 	nullpo_retv(sd);
+
 	// Notify the client that the storage is open
 	if (sd->state.storage_flag == STORAGE_FLAG_NORMAL) {
-		if (sd->storage.aggregate > 0) {
-			storage->sortitem(VECTOR_DATA(sd->storage.item), VECTOR_LENGTH(sd->storage.item));
-			clif->storagelist(sd, VECTOR_DATA(sd->storage.item), VECTOR_LENGTH(sd->storage.item));
+		const struct storage_settings *stst = storage->get_settings(sd->storage.current);
+		struct storage_data *stor = NULL;
+
+		if (stst == NULL) return;
+
+		stor = storage->ensure(sd, sd->storage.current);
+
+		if (stor->aggregate > 0) {
+			storage->sortitem(VECTOR_DATA(stor->item), VECTOR_LENGTH(stor->item));
+			clif->storagelist(sd, VECTOR_DATA(stor->item), VECTOR_LENGTH(stor->item));
 		}
-		clif->updatestorageamount(sd, sd->storage.aggregate, MAX_STORAGE);
+
+		clif->updatestorageamount(sd, stor->aggregate, stst->capacity);
 	}
+
 	// Notify the client that the gstorage is open otherwise it will
 	// remain locked forever and nobody will be able to access it
 	if (sd->state.storage_flag == STORAGE_FLAG_GUILD) {
@@ -8513,7 +8527,12 @@ void clif_refresh(struct map_session_data *sd)
 		pc->disguise(sd, disguise);
 	}
 
-	clif->refresh_storagewindow(sd);
+	// Close storage when refreshing the client
+	// to avoid an unnecessary complication of things.
+	if (sd->state.storage_flag == STORAGE_FLAG_NORMAL)
+		storage->close(sd);
+	else if (sd->state.storage_flag == STORAGE_FLAG_GUILD)
+		gstorage->close(sd);
 }
 
 /// Updates the object's (bl) name on client.
@@ -11837,6 +11856,7 @@ void clif_parse_MoveToKafra(int fd, struct map_session_data *sd)
 {
 	int item_index, item_amount;
 
+
 	if (pc_istrading(sd))
 		return;
 
@@ -11845,10 +11865,12 @@ void clif_parse_MoveToKafra(int fd, struct map_session_data *sd)
 	if (item_index < 0 || item_index >= MAX_INVENTORY || item_amount < 1)
 		return;
 
-	if (sd->state.storage_flag == STORAGE_FLAG_NORMAL)
-		storage->add(sd, item_index, item_amount);
-	else if (sd->state.storage_flag == STORAGE_FLAG_GUILD)
+	if (sd->state.storage_flag == STORAGE_FLAG_NORMAL) {
+		struct storage_data *stor = storage->ensure(sd, sd->storage.current);
+		storage->add(sd, stor, item_index, item_amount);
+	} else if (sd->state.storage_flag == STORAGE_FLAG_GUILD) {
 		gstorage->add(sd, item_index, item_amount);
+	}
 }
 
 void clif_parse_MoveFromKafra(int fd,struct map_session_data *sd) __attribute__((nonnull (2)));
@@ -11860,13 +11882,16 @@ void clif_parse_MoveFromKafra(int fd,struct map_session_data *sd)
 {
 	int item_index, item_amount;
 
+
 	item_index = RFIFOW(fd,packet_db[RFIFOW(fd,0)].pos[0])-1;
 	item_amount = RFIFOL(fd,packet_db[RFIFOW(fd,0)].pos[1]);
 
-	if (sd->state.storage_flag == STORAGE_FLAG_NORMAL)
-		storage->get(sd, item_index, item_amount);
-	else if(sd->state.storage_flag == STORAGE_FLAG_GUILD)
+	if (sd->state.storage_flag == STORAGE_FLAG_NORMAL) {
+		struct storage_data *stor = storage->ensure(sd, sd->storage.current);
+		storage->get(sd, stor, item_index, item_amount);
+	} else if(sd->state.storage_flag == STORAGE_FLAG_GUILD) {
 		gstorage->get(sd, item_index, item_amount);
+	}
 }
 
 void clif_parse_MoveToKafraFromCart(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
@@ -11874,15 +11899,18 @@ void clif_parse_MoveToKafraFromCart(int fd, struct map_session_data *sd) __attri
 /// 0129 <index>.W <amount>.L
 void clif_parse_MoveToKafraFromCart(int fd, struct map_session_data *sd)
 {
+
 	if( sd->state.vending )
 		return;
 	if (!pc_iscarton(sd))
 		return;
 
-	if (sd->state.storage_flag == STORAGE_FLAG_NORMAL)
-		storage->addfromcart(sd, RFIFOW(fd,2) - 2, RFIFOL(fd,4));
-	else if (sd->state.storage_flag == STORAGE_FLAG_GUILD)
+	if (sd->state.storage_flag == STORAGE_FLAG_NORMAL) {
+		struct storage_data *stor = storage->ensure(sd, sd->storage.current);
+		storage->addfromcart(sd, stor, RFIFOW(fd,2) - 2, RFIFOL(fd,4));
+	} else if (sd->state.storage_flag == STORAGE_FLAG_GUILD) {
 		gstorage->addfromcart(sd, RFIFOW(fd,2) - 2, RFIFOL(fd,4));
+	}
 }
 
 void clif_parse_MoveFromKafraToCart(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
@@ -11890,15 +11918,18 @@ void clif_parse_MoveFromKafraToCart(int fd, struct map_session_data *sd) __attri
 /// 0128 <index>.W <amount>.L
 void clif_parse_MoveFromKafraToCart(int fd, struct map_session_data *sd)
 {
+
 	if( sd->state.vending )
 		return;
 	if (!pc_iscarton(sd))
 		return;
 
-	if (sd->state.storage_flag == STORAGE_FLAG_NORMAL)
-		storage->gettocart(sd, RFIFOW(fd,2)-1, RFIFOL(fd,4));
-	else if (sd->state.storage_flag == STORAGE_FLAG_GUILD)
+	if (sd->state.storage_flag == STORAGE_FLAG_NORMAL) {
+		struct storage_data *stor = storage->ensure(sd, sd->storage.current);
+		storage->gettocart(sd, stor, RFIFOW(fd,2)-1, RFIFOL(fd,4));
+	} else if (sd->state.storage_flag == STORAGE_FLAG_GUILD) {
 		gstorage->gettocart(sd, RFIFOW(fd,2)-1, RFIFOL(fd,4));
+	}
 }
 
 void clif_parse_CloseKafra(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
