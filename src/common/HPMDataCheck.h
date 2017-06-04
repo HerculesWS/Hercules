@@ -243,6 +243,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "script_reg_str", sizeof(struct script_reg_str), SERVER_TYPE_ALL },
 		{ "status_change_data", sizeof(struct status_change_data), SERVER_TYPE_ALL },
 		{ "storage_data", sizeof(struct storage_data), SERVER_TYPE_ALL },
+		{ "storage_settings", sizeof(struct storage_settings), SERVER_TYPE_ALL },
 	#else
 		#define COMMON_MMO_H
 	#endif // COMMON_MMO_H

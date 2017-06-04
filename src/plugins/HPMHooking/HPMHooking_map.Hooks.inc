@@ -16798,14 +16798,14 @@ void HP_clif_guildStorageList(struct map_session_data *sd, struct item *items, i
 	}
 	return;
 }
-void HP_clif_storageItems(struct map_session_data *sd, enum inventory_type type, struct item *items, int items_length) {
+void HP_clif_storageItems(struct map_session_data *sd, enum inventory_type type, struct item *items, int items_length, const char *name) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_storageItems_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, enum inventory_type *type, struct item **items, int *items_length);
+		void (*preHookFunc) (struct map_session_data **sd, enum inventory_type *type, struct item **items, int *items_length, const char **name);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_storageItems_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_storageItems_pre[hIndex].func;
-			preHookFunc(&sd, &type, &items, &items_length);
+			preHookFunc(&sd, &type, &items, &items_length, &name);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -16813,13 +16813,13 @@ void HP_clif_storageItems(struct map_session_data *sd, enum inventory_type type,
 		}
 	}
 	{
-		HPMHooks.source.clif.storageItems(sd, type, items, items_length);
+		HPMHooks.source.clif.storageItems(sd, type, items, items_length, name);
 	}
 	if (HPMHooks.count.HP_clif_storageItems_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, enum inventory_type type, struct item *items, int items_length);
+		void (*postHookFunc) (struct map_session_data *sd, enum inventory_type type, struct item *items, int items_length, const char *name);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_storageItems_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_storageItems_post[hIndex].func;
-			postHookFunc(sd, type, items, items_length);
+			postHookFunc(sd, type, items, items_length, name);
 		}
 	}
 	return;
@@ -37789,14 +37789,14 @@ int HP_intif_request_registry(struct map_session_data *sd, int flag) {
 	}
 	return retVal___;
 }
-void HP_intif_request_account_storage(const struct map_session_data *sd) {
+void HP_intif_request_account_storage(const struct map_session_data *sd, int storage_id) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_intif_request_account_storage_pre > 0) {
-		void (*preHookFunc) (const struct map_session_data **sd);
+		void (*preHookFunc) (const struct map_session_data **sd, int *storage_id);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_request_account_storage_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_intif_request_account_storage_pre[hIndex].func;
-			preHookFunc(&sd);
+			preHookFunc(&sd, &storage_id);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -37804,25 +37804,25 @@ void HP_intif_request_account_storage(const struct map_session_data *sd) {
 		}
 	}
 	{
-		HPMHooks.source.intif.request_account_storage(sd);
+		HPMHooks.source.intif.request_account_storage(sd, storage_id);
 	}
 	if (HPMHooks.count.HP_intif_request_account_storage_post > 0) {
-		void (*postHookFunc) (const struct map_session_data *sd);
+		void (*postHookFunc) (const struct map_session_data *sd, int storage_id);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_request_account_storage_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_intif_request_account_storage_post[hIndex].func;
-			postHookFunc(sd);
+			postHookFunc(sd, storage_id);
 		}
 	}
 	return;
 }
-void HP_intif_send_account_storage(struct map_session_data *sd) {
+void HP_intif_send_account_storage(struct map_session_data *sd, int storage_id) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_intif_send_account_storage_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd);
+		void (*preHookFunc) (struct map_session_data **sd, int *storage_id);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_send_account_storage_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_intif_send_account_storage_pre[hIndex].func;
-			preHookFunc(&sd);
+			preHookFunc(&sd, &storage_id);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -37830,13 +37830,13 @@ void HP_intif_send_account_storage(struct map_session_data *sd) {
 		}
 	}
 	{
-		HPMHooks.source.intif.send_account_storage(sd);
+		HPMHooks.source.intif.send_account_storage(sd, storage_id);
 	}
 	if (HPMHooks.count.HP_intif_send_account_storage_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd);
+		void (*postHookFunc) (struct map_session_data *sd, int storage_id);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_send_account_storage_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_intif_send_account_storage_post[hIndex].func;
-			postHookFunc(sd);
+			postHookFunc(sd, storage_id);
 		}
 	}
 	return;
@@ -90383,6 +90383,58 @@ int HP_status_base_matk_max(const struct status_data *st) {
 	return retVal___;
 }
 /* storage_interface */
+void HP_storage_init(bool minimal) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_storage_init_pre > 0) {
+		void (*preHookFunc) (bool *minimal);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_storage_init_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_storage_init_pre[hIndex].func;
+			preHookFunc(&minimal);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.storage.init(minimal);
+	}
+	if (HPMHooks.count.HP_storage_init_post > 0) {
+		void (*postHookFunc) (bool minimal);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_storage_init_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_storage_init_post[hIndex].func;
+			postHookFunc(minimal);
+		}
+	}
+	return;
+}
+void HP_storage_final(void) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_storage_final_pre > 0) {
+		void (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_storage_final_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_storage_final_pre[hIndex].func;
+			preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.storage.final();
+	}
+	if (HPMHooks.count.HP_storage_final_post > 0) {
+		void (*postHookFunc) (void);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_storage_final_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_storage_final_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
+}
 void HP_storage_reconnect(void) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_storage_reconnect_pre > 0) {
@@ -90409,15 +90461,149 @@ void HP_storage_reconnect(void) {
 	}
 	return;
 }
-int HP_storage_delitem(struct map_session_data *sd, int n, int amount) {
+bool HP_storage_config_read(const char *filename, bool imported) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_storage_config_read_pre > 0) {
+		bool (*preHookFunc) (const char **filename, bool *imported);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_storage_config_read_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_storage_config_read_pre[hIndex].func;
+			retVal___ = preHookFunc(&filename, &imported);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.storage.config_read(filename, imported);
+	}
+	if (HPMHooks.count.HP_storage_config_read_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const char *filename, bool imported);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_storage_config_read_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_storage_config_read_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, filename, imported);
+		}
+	}
+	return retVal___;
+}
+void HP_storage_config_read_additional_fields(struct config_setting_t *t, struct storage_settings *s_conf, const char *filename) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_storage_config_read_additional_fields_pre > 0) {
+		void (*preHookFunc) (struct config_setting_t **t, struct storage_settings **s_conf, const char **filename);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_storage_config_read_additional_fields_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_storage_config_read_additional_fields_pre[hIndex].func;
+			preHookFunc(&t, &s_conf, &filename);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.storage.config_read_additional_fields(t, s_conf, filename);
+	}
+	if (HPMHooks.count.HP_storage_config_read_additional_fields_post > 0) {
+		void (*postHookFunc) (struct config_setting_t *t, struct storage_settings *s_conf, const char *filename);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_storage_config_read_additional_fields_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_storage_config_read_additional_fields_post[hIndex].func;
+			postHookFunc(t, s_conf, filename);
+		}
+	}
+	return;
+}
+int HP_storage_get_id_by_name(const char *storage_name) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_storage_get_id_by_name_pre > 0) {
+		int (*preHookFunc) (const char **storage_name);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_storage_get_id_by_name_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_storage_get_id_by_name_pre[hIndex].func;
+			retVal___ = preHookFunc(&storage_name);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.storage.get_id_by_name(storage_name);
+	}
+	if (HPMHooks.count.HP_storage_get_id_by_name_post > 0) {
+		int (*postHookFunc) (int retVal___, const char *storage_name);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_storage_get_id_by_name_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_storage_get_id_by_name_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, storage_name);
+		}
+	}
+	return retVal___;
+}
+struct storage_data* HP_storage_ensure(struct map_session_data *sd, int storage_id) {
+	int hIndex = 0;
+	struct storage_data* retVal___ = NULL;
+	if (HPMHooks.count.HP_storage_ensure_pre > 0) {
+		struct storage_data* (*preHookFunc) (struct map_session_data **sd, int *storage_id);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_storage_ensure_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_storage_ensure_pre[hIndex].func;
+			retVal___ = preHookFunc(&sd, &storage_id);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.storage.ensure(sd, storage_id);
+	}
+	if (HPMHooks.count.HP_storage_ensure_post > 0) {
+		struct storage_data* (*postHookFunc) (struct storage_data* retVal___, struct map_session_data *sd, int storage_id);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_storage_ensure_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_storage_ensure_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd, storage_id);
+		}
+	}
+	return retVal___;
+}
+const struct storage_settings* HP_storage_get_settings(int storage_id) {
+	int hIndex = 0;
+	const struct storage_settings* retVal___ = NULL;
+	if (HPMHooks.count.HP_storage_get_settings_pre > 0) {
+		const struct storage_settings* (*preHookFunc) (int *storage_id);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_storage_get_settings_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_storage_get_settings_pre[hIndex].func;
+			retVal___ = preHookFunc(&storage_id);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.storage.get_settings(storage_id);
+	}
+	if (HPMHooks.count.HP_storage_get_settings_post > 0) {
+		const struct storage_settings* (*postHookFunc) (const struct storage_settings* retVal___, int storage_id);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_storage_get_settings_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_storage_get_settings_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, storage_id);
+		}
+	}
+	return retVal___;
+}
+int HP_storage_delitem(struct map_session_data *sd, struct storage_data *stor, int n, int amount) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_storage_delitem_pre > 0) {
-		int (*preHookFunc) (struct map_session_data **sd, int *n, int *amount);
+		int (*preHookFunc) (struct map_session_data **sd, struct storage_data **stor, int *n, int *amount);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_storage_delitem_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_storage_delitem_pre[hIndex].func;
-			retVal___ = preHookFunc(&sd, &n, &amount);
+			retVal___ = preHookFunc(&sd, &stor, &n, &amount);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -90425,26 +90611,26 @@ int HP_storage_delitem(struct map_session_data *sd, int n, int amount) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.storage.delitem(sd, n, amount);
+		retVal___ = HPMHooks.source.storage.delitem(sd, stor, n, amount);
 	}
 	if (HPMHooks.count.HP_storage_delitem_post > 0) {
-		int (*postHookFunc) (int retVal___, struct map_session_data *sd, int n, int amount);
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, struct storage_data *stor, int n, int amount);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_storage_delitem_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_storage_delitem_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd, n, amount);
+			retVal___ = postHookFunc(retVal___, sd, stor, n, amount);
 		}
 	}
 	return retVal___;
 }
-int HP_storage_open(struct map_session_data *sd) {
+int HP_storage_open(struct map_session_data *sd, struct storage_data *stor) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_storage_open_pre > 0) {
-		int (*preHookFunc) (struct map_session_data **sd);
+		int (*preHookFunc) (struct map_session_data **sd, struct storage_data **stor);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_storage_open_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_storage_open_pre[hIndex].func;
-			retVal___ = preHookFunc(&sd);
+			retVal___ = preHookFunc(&sd, &stor);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -90452,26 +90638,26 @@ int HP_storage_open(struct map_session_data *sd) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.storage.open(sd);
+		retVal___ = HPMHooks.source.storage.open(sd, stor);
 	}
 	if (HPMHooks.count.HP_storage_open_post > 0) {
-		int (*postHookFunc) (int retVal___, struct map_session_data *sd);
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, struct storage_data *stor);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_storage_open_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_storage_open_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd);
+			retVal___ = postHookFunc(retVal___, sd, stor);
 		}
 	}
 	return retVal___;
 }
-int HP_storage_add(struct map_session_data *sd, int index, int amount) {
+int HP_storage_add(struct map_session_data *sd, struct storage_data *stor, int index, int amount) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_storage_add_pre > 0) {
-		int (*preHookFunc) (struct map_session_data **sd, int *index, int *amount);
+		int (*preHookFunc) (struct map_session_data **sd, struct storage_data **stor, int *index, int *amount);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_storage_add_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_storage_add_pre[hIndex].func;
-			retVal___ = preHookFunc(&sd, &index, &amount);
+			retVal___ = preHookFunc(&sd, &stor, &index, &amount);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -90479,26 +90665,26 @@ int HP_storage_add(struct map_session_data *sd, int index, int amount) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.storage.add(sd, index, amount);
+		retVal___ = HPMHooks.source.storage.add(sd, stor, index, amount);
 	}
 	if (HPMHooks.count.HP_storage_add_post > 0) {
-		int (*postHookFunc) (int retVal___, struct map_session_data *sd, int index, int amount);
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, struct storage_data *stor, int index, int amount);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_storage_add_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_storage_add_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd, index, amount);
+			retVal___ = postHookFunc(retVal___, sd, stor, index, amount);
 		}
 	}
 	return retVal___;
 }
-int HP_storage_get(struct map_session_data *sd, int index, int amount) {
+int HP_storage_get(struct map_session_data *sd, struct storage_data *stor, int index, int amount) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_storage_get_pre > 0) {
-		int (*preHookFunc) (struct map_session_data **sd, int *index, int *amount);
+		int (*preHookFunc) (struct map_session_data **sd, struct storage_data **stor, int *index, int *amount);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_storage_get_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_storage_get_pre[hIndex].func;
-			retVal___ = preHookFunc(&sd, &index, &amount);
+			retVal___ = preHookFunc(&sd, &stor, &index, &amount);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -90506,26 +90692,26 @@ int HP_storage_get(struct map_session_data *sd, int index, int amount) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.storage.get(sd, index, amount);
+		retVal___ = HPMHooks.source.storage.get(sd, stor, index, amount);
 	}
 	if (HPMHooks.count.HP_storage_get_post > 0) {
-		int (*postHookFunc) (int retVal___, struct map_session_data *sd, int index, int amount);
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, struct storage_data *stor, int index, int amount);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_storage_get_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_storage_get_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd, index, amount);
+			retVal___ = postHookFunc(retVal___, sd, stor, index, amount);
 		}
 	}
 	return retVal___;
 }
-int HP_storage_additem(struct map_session_data *sd, struct item *item_data, int amount) {
+int HP_storage_additem(struct map_session_data *sd, struct storage_data *stor, struct item *item_data, int amount) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_storage_additem_pre > 0) {
-		int (*preHookFunc) (struct map_session_data **sd, struct item **item_data, int *amount);
+		int (*preHookFunc) (struct map_session_data **sd, struct storage_data **stor, struct item **item_data, int *amount);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_storage_additem_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_storage_additem_pre[hIndex].func;
-			retVal___ = preHookFunc(&sd, &item_data, &amount);
+			retVal___ = preHookFunc(&sd, &stor, &item_data, &amount);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -90533,26 +90719,26 @@ int HP_storage_additem(struct map_session_data *sd, struct item *item_data, int 
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.storage.additem(sd, item_data, amount);
+		retVal___ = HPMHooks.source.storage.additem(sd, stor, item_data, amount);
 	}
 	if (HPMHooks.count.HP_storage_additem_post > 0) {
-		int (*postHookFunc) (int retVal___, struct map_session_data *sd, struct item *item_data, int amount);
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, struct storage_data *stor, struct item *item_data, int amount);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_storage_additem_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_storage_additem_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd, item_data, amount);
+			retVal___ = postHookFunc(retVal___, sd, stor, item_data, amount);
 		}
 	}
 	return retVal___;
 }
-int HP_storage_addfromcart(struct map_session_data *sd, int index, int amount) {
+int HP_storage_addfromcart(struct map_session_data *sd, struct storage_data *stor, int index, int amount) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_storage_addfromcart_pre > 0) {
-		int (*preHookFunc) (struct map_session_data **sd, int *index, int *amount);
+		int (*preHookFunc) (struct map_session_data **sd, struct storage_data **stor, int *index, int *amount);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_storage_addfromcart_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_storage_addfromcart_pre[hIndex].func;
-			retVal___ = preHookFunc(&sd, &index, &amount);
+			retVal___ = preHookFunc(&sd, &stor, &index, &amount);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -90560,26 +90746,26 @@ int HP_storage_addfromcart(struct map_session_data *sd, int index, int amount) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.storage.addfromcart(sd, index, amount);
+		retVal___ = HPMHooks.source.storage.addfromcart(sd, stor, index, amount);
 	}
 	if (HPMHooks.count.HP_storage_addfromcart_post > 0) {
-		int (*postHookFunc) (int retVal___, struct map_session_data *sd, int index, int amount);
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, struct storage_data *stor, int index, int amount);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_storage_addfromcart_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_storage_addfromcart_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd, index, amount);
+			retVal___ = postHookFunc(retVal___, sd, stor, index, amount);
 		}
 	}
 	return retVal___;
 }
-int HP_storage_gettocart(struct map_session_data *sd, int index, int amount) {
+int HP_storage_gettocart(struct map_session_data *sd, struct storage_data *stor, int index, int amount) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_storage_gettocart_pre > 0) {
-		int (*preHookFunc) (struct map_session_data **sd, int *index, int *amount);
+		int (*preHookFunc) (struct map_session_data **sd, struct storage_data **stor, int *index, int *amount);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_storage_gettocart_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_storage_gettocart_pre[hIndex].func;
-			retVal___ = preHookFunc(&sd, &index, &amount);
+			retVal___ = preHookFunc(&sd, &stor, &index, &amount);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -90587,13 +90773,13 @@ int HP_storage_gettocart(struct map_session_data *sd, int index, int amount) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.storage.gettocart(sd, index, amount);
+		retVal___ = HPMHooks.source.storage.gettocart(sd, stor, index, amount);
 	}
 	if (HPMHooks.count.HP_storage_gettocart_post > 0) {
-		int (*postHookFunc) (int retVal___, struct map_session_data *sd, int index, int amount);
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, struct storage_data *stor, int index, int amount);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_storage_gettocart_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_storage_gettocart_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd, index, amount);
+			retVal___ = postHookFunc(retVal___, sd, stor, index, amount);
 		}
 	}
 	return retVal___;
