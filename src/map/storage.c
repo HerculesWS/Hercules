@@ -354,6 +354,12 @@ int storage_add_from_inventory(struct map_session_data* sd, struct storage_data 
 
 	Assert_ret(stor->received == true);
 
+	if ((sd->storage.access & STORAGE_ACCESS_PUT) == 0) {
+		clif->delitem(sd, index, amount, DELITEM_NORMAL);
+		clif->additem(sd, index, amount, 0);
+		return 0;
+	}
+
 	if (stor->aggregate >= stst->capacity)
 		return 0; // storage full
 
@@ -391,6 +397,9 @@ int storage_add_to_inventory(struct map_session_data* sd, struct storage_data *s
 
 	Assert_ret(stor->received == true);
 
+	if ((sd->storage.access & STORAGE_ACCESS_GET) == 0)
+		return 0;
+
 	if (index < 0 || index >= VECTOR_LENGTH(stor->item))
 		return 0;
 
@@ -427,6 +436,13 @@ int storage_storageaddfromcart(struct map_session_data* sd, struct storage_data 
 
 	Assert_ret(stor->received == true);
 
+
+	if ((sd->storage.access & STORAGE_ACCESS_PUT) == 0) {
+		clif->delitem(sd, index, amount, DELITEM_NORMAL);
+		clif->additem(sd, index, amount, 0);
+		return 0;
+	}
+
 	if (stor->aggregate >= stst->capacity)
 		return 0; // storage full / storage closed
 
@@ -460,6 +476,9 @@ int storage_storagegettocart(struct map_session_data* sd, struct storage_data *s
 	nullpo_ret(sd);
 
 	Assert_ret(stor->received == true);
+
+	if ((sd->storage.access & STORAGE_ACCESS_GET) == 0)
+		return 0;
 
 	if (index < 0 || index >= VECTOR_LENGTH(stor->item))
 		return 0;
