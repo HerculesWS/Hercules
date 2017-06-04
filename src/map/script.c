@@ -28802,6 +28802,11 @@ static void script_hardcoded_constants(void)
 	script->set_constant("MF_SRC4INSTANCE", MF_SRC4INSTANCE, false, false);
 	script->set_constant("MF_CVC", MF_CVC, false, false);
 
+	script->constdb_comment("Storage Access Types");
+	script->set_constant("STORAGE_ACCESS_VIEW", STORAGE_ACCESS_VIEW, false, false);
+	script->set_constant("STORAGE_ACCESS_GET", STORAGE_ACCESS_GET, false, false);
+	script->set_constant("STORAGE_ACCESS_PUT", STORAGE_ACCESS_PUT, false, false);
+	script->set_constant("STORAGE_ACCESS_ALL", STORAGE_ACCESS_ALL, false, false);
 
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL
