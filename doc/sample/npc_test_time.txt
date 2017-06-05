@@ -3,23 +3,23 @@
 //===== By: ==================================================
 //= rAthena Dev Team
 //===== Current Version: =====================================
-//= 20070315
-//===== Description: ========================================= 
+//= 20151115
+//===== Description: =========================================
 //= Demonstrates time commands.
 //============================================================
 
 prontera,157,181,6	script	Time Sample	8W_SOLDIER,{
 	mes "[Time Sample]";
-	mes "System Tick : " + gettimetick(0);
-	mes "  Time Tick : " + gettimetick(1);
-	mes " GetTime(0) : " + gettime(0);
-	mes " GetTime(1) : " + gettime(1) + " (Sec)";
-	mes " GetTime(2) : " + gettime(2) + " (Min)";
-	mes " GetTime(3) : " + gettime(3) + " (Hour)";
-	mes " GetTime(4) : " + gettime(4) + " (WeekDay)";
-	mes " GetTime(5) : " + gettime(5) + " (MonthDay)";
-	mes " GetTime(6) : " + gettime(6) + " (Month)";
-	mes " GetTime(7) : " + gettime(7) + " (Year)";
-	mes " GetTimeStr : " + gettimestr("%Y-%m/%d %H:%M:%S",19);
+	mes "       System Tick : " + gettimetick(0);
+	mes "         Time Tick : " + gettimetick(1);
+	mes "    GETTIME_SECOND : " + gettime(GETTIME_SECOND)     + " (Sec)";
+	mes "    GETTIME_MINUTE : " + gettime(GETTIME_MINUTE)     + " (Min)";
+	mes "      GETTIME_HOUR : " + gettime(GETTIME_HOUR)       + " (Hour)";
+	mes "   GETTIME_WEEKDAY : " + gettime(GETTIME_WEEKDAY)    + " (WeekDay)";
+	mes "GETTIME_DAYOFMONTH : " + gettime(GETTIME_DAYOFMONTH) + " (MonthDay)";
+	mes "     GETTIME_MONTH : " + gettime(GETTIME_MONTH)      + " (Month)";
+	mes "      GETTIME_YEAR : " + gettime(GETTIME_YEAR)       + " (Year)";
+	mes " GETTIME_DAYOFYEAR : " + gettime(GETTIME_DAYOFYEAR)  + " (Day of Year)";
+	mes "        gettimestr : " + gettimestr("%Y-%m/%d %H:%M:%S",19);
 	close;
 }

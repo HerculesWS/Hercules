@@ -1,21 +1,47 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2016  Hercules Dev Team
+ * Copyright (C)  Athena Dev Teams
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+#ifndef CHAR_INT_PET_H
+#define CHAR_INT_PET_H
 
-#ifndef _CHAR_INT_PET_H_
-#define _CHAR_INT_PET_H_
+#include "common/hercules.h"
 
 struct s_pet;
 
-int inter_pet_init(void);
-void inter_pet_sql_final(void);
-int inter_pet_save(void);
-int inter_pet_delete(int pet_id);
+/**
+ * inter_pet interface
+ **/
+struct inter_pet_interface {
+	struct s_pet *pt;
+	int (*tosql) (const struct s_pet *p);
+	int (*fromsql) (int pet_id, struct s_pet* p);
+	int (*sql_init) (void);
+	void (*sql_final) (void);
+	int (*delete_) (int pet_id);
+	int (*parse_frommap) (int fd);
+};
 
-int inter_pet_parse_frommap(int fd);
-int inter_pet_sql_init(void);
-//extern char pet_txt[256];
+#ifdef HERCULES_CORE
+void inter_pet_defaults(void);
+#endif // HERCULES_CORE
 
-//Exported for use in the TXT-SQL converter.
-int inter_pet_tosql(int pet_id, struct s_pet *p);
+HPShared struct inter_pet_interface *inter_pet;
 
-#endif /* _CHAR_INT_PET_H_ */
+#endif /* CHAR_INT_PET_H */

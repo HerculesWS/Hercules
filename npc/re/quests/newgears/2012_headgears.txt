@@ -1,0 +1,749 @@
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2015  Hercules Dev Team
+//= Copyright (C)  -SkittleNugget-
+//= Copyright (C)  Euphy
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= 2012 Headgear Quests
+//================= Description ===========================================
+//= Enhance gears by synthesizing them with Energy Crystals.
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
+
+//== Main NPC :: 2012_hat_quest ============================
+moc_para01,41,169,3	script	Reno#2012hat	1_M_WIZARD,{
+	// iRO has (very) minor differences in dialogue from the original script.
+	// To use iRO's version, uncomment the line below.
+	//.@features_iRO = 1;
+
+	//custom translation - all checks below
+	if (checkweight(Axe,1) == 0 || MaxWeight - Weight < 800) {
+		mes "- Carrying too many items, cannot proceed. -";
+		close;
+	}
+
+	setarray .@type$,"lower","intermediate","advanced","highest";
+	setarray .@crystal$,"Rough","Purified","High";
+
+	// playtime checks
+	setarray .@quests,
+		// base, first, count
+		5161, 5162, 7, // Lower
+		5169, 5170, 4, // Intermediate
+		5174, 5175, 8; // High
+	setarray .@crystal_quests, 5225,5226,5227;
+
+	setarray .@min_level,60,80,90,100;
+
+	// hunting quest wait time
+	for (.@i = 0; .@i < getarraysize(.@quests); .@i += 3) {
+		if (questprogress(.@quests[.@i],PLAYTIME) == 2) {
+			erasequest .@quests[.@i];
+			mes "[Reno]";
+			mes "The waiting time for a "+.@type$[.@i]+" collection quest has expired."
+				" You can now take another request.";
+			close;
+		}
+	}
+	// buff wait time
+	for (.@i = 0; .@i < getarraysize(.@crystal_quests); ++.@i) {
+		if (questprogress(.@crystal_quests[.@i],PLAYTIME) == 2) {
+			erasequest .@crystal_quests[.@i];
+			mes "[Reno]";
+			mes "The waiting time for storing "+.@crystal$[.@i]+" Energy Crystals has expired."
+				" You can now store them again.";
+			close;
+		}
+	}
+
+	// hunting quest checks
+	callsub(S_CheckHunting, 5161, 5162, 7, .@type$[0], Rough_Energy_Crystal, 10);
+	callsub(S_CheckHunting, 5169, 5170, 4, .@type$[1], Purified_Energy_Crystal, 10);
+	callsub(S_CheckHunting, 5174, 5175, 4, .@type$[2], High_Purity_Energy_Xtal, 5);
+	callsub(S_CheckHunting, 5174, 5179, 4, .@type$[3], High_Purity_Energy_Xtal, 10);
+
+	// buff checks
+	.@energy_buf00 = (getstatus(SC_QUEST_BUFF1) || getstatus(SC_QUEST_BUFF2) || getstatus(SC_QUEST_BUFF3));
+	if (!.@energy_buf00) {
+		for (.@i = 0; .@i < 3; ++.@i) {
+			if (questprogress(5222 + .@i)) {
+				.@item = Rough_Energy_Crystal + .@i;
+				.@amount = 2 + rand(3);
+				mes "[Reno]";
+				mes getitemname(.@item)+" storage is now complete.";
+				next;
+				setquest .@crystal_quests[.@i];
+				erasequest 5222 + .@i;
+				getitem .@item, .@amount;
+				mes "[Reno]";
+				mes "^0000FF"+.@amount+" "+getitemname(.@item)+"s^000000 were extracted.";
+				close;
+			}
+		}
+	}
+
+	mes "[Reno]";
+	mes "Hi? I am Reno from the Energy Crystal Research Association, or ECRA.";
+	next;
+	.@opt$ = "ECRA?"
+		":Quest to get Energy Crystals"
+		":Energy Crystal Buffs"
+		":Compress Energy Crystals"
+		":Exchange Crystals for Headgear"
+		":Random Gear for Crystals";
+	if (.@features_iRO)
+		.@opt$ += ":See Equipment List";
+	switch (select(.@opt$)) {
+	case 1:
+		mes "[Reno]";
+		mes "ECRA is the institute that researches '^0000FFEnergy Crystals^000000' that"
+			" shall be used as an alternative energy source in the Rune Midgart"
+			" Kingdom, which suffers from a shortage of energy.";
+		next;
+		select("The reason for doing this?");
+		mes "[Reno]";
+		mes "I would like to explain that we are not trying to make an excuse to get away"
+			" from facing problem before I explain the reason. Never! So please let me"
+			" finish.";
+		next;
+		mes "[Reno]";
+		mes "The Research Team has sent me the results they found.";
+		next;
+		mes "[Reno]";
+		mes "Energy Crystals turned out to be ^0000FFgenerated inside the bodies of some"
+			" monsters^000000, and according to the research, stronger monsters"
+			" generate higher-class energy crystals in their bodies.";
+		next;
+		mes "[Reno]";
+		mes "The Research Team decided to collect Energy Crystals by giving requests to"
+			" adventurers, with appropriate rewards. That enables us to collect better"
+			" and be more ^FF0000efficient^000000.";
+		next;
+		mes "[Reno]";
+		mes "Energy Crystals, accumulated through hunting monsters by my request, shall be"
+			" used for my research. ^0000FFSome of them are planned to be returned to"
+			" adventurers.^000000";
+		next;
+		mes "[Reno]";
+		mes "Adventurers can use collected Energy Crystals for ^FF0000upgrading"
+			" equipments^000000 through me.";
+		next;
+		mes "[Reno]";
+		mes "If it works well, it seems to be good for both ECRA and adventurers.";
+		close;
+	case 2:
+		mes "[Reno]";
+		mes "The hunting quests are ranked by monster level and difficulty. The ranges are"
+			" lower, intermediate, high quests and can only be taken once per day.";
+		next;
+
+		.@opt$ = "Lower level hunting [61-80]"
+			":Intermediate level hunting [80-99]"
+			":High level hunting [90 and up]"
+			":Cancel my current quest.";
+		.@choice = select(.@opt$) - 1;
+		if (.@choice < 3) {
+			if (BaseLevel < .@min_level[.@choice]) {
+				mes "[Reno]";
+				mes "I am sorry but the request for the "+.@type$[.@choice]
+					+ " collection is only available for those level "
+					+ .@min_level[.@choice] + " and higher. You do not seem to"
+					" be capable of carrying out this request.";
+				close;
+			}
+			if (callsub(S_CheckQuestStatus, .@quests[.@choice*3], .@quests[.@choice*3+1], .@quests[.@choice*3+2])) {
+				mes "[Reno]";
+				mes "You seem to be under the other request of "+.@type$[.@choice]
+					+ " collection. If the quest seems to be too hard... how"
+					" about you ^FF0000give up on the request^000000?";
+				close;
+			}
+			if (questprogress(.@quests[.@choice*3], PLAYTIME) == 1) {
+				mes "[Reno]";
+				mes "Currently waiting for the "+.@type$[.@choice]+" collection"
+					" commission. Tasks in each collection can only be"
+					" completed once per day."; //custom translation
+				close;
+			}
+			mes "[Reno]";
+			mes "You selected to hunt a monster from the "+.@type$[.@choice]
+				+ " collection. After hunting these monsters you will receive "
+				+ ((.@features_iRO)?"10 ":"")+"^0000FF"+.@crystal$[.@choice]
+				+ " Energy Crystals^000000 when you return to me.";
+			next;
+			mes "[Reno]";
+			mes "Please select the monster that you think you can easily hunt from the list.";
+			next;
+			switch (.@choice) {
+			case 0:
+				.@quest = select(
+					"[Lower class] Requiem",
+					"[Lower class] Bathory",
+					"[Lower class] Spring Rabbit",
+					"[Lower class] Sleeper",
+					"[Lower class] Evil Druid",
+					"[Lower class] Ground Petite",
+					"[Lower class] Clock"
+				);
+				break;
+			case 1:
+				.@quest = select(
+					"[Intermediate class] Siroma",
+					"[Intermediate class] Dark Priest",
+					"[Intermediate class] Stapo",
+					"[Intermediate class] Solider"
+				);
+				break;
+			case 2:
+				.@quest = select(
+					"[Advanced] Desert Wolf",
+					"[Advanced] Medusa",
+					"[Advanced] Pinguicula",
+					"[Advanced] Majoruros",
+					"[Highest] Raydric",
+					"[Highest] Naga",
+					"[Highest] Ancient Mummy",
+					"[Highest] Ancient Mimic"
+				);
+				if (.@quest > 4 && BaseLevel < .@min_level[3]) {
+					mes "[Reno]";
+					mes "I am sorry but the request for the most advanced"
+						" collection is only available for those level "
+						+ .@min_level[3]+" and higher. You do not seem to"
+						" be capable of carrying out this request.";
+					close;
+				}
+				break;
+			}
+			setquest .@quests[.@choice*3+1] + .@quest - 1;
+			mes "[Reno]";
+			mes "The request for "+.@type$[.@choice]+" collection monsters has been"
+				" issued. Please check the details on the issued document.";
+			close;
+		}
+		// else: Cancel
+		for (.@i = 0; .@i<3; ++.@i) {
+			if (callsub(S_CheckQuestStatus, .@quests[.@i*3], .@quests[.@i*3+1], .@quests[.@i*3+2])) {
+				mes "[Reno]";
+				mes "You are currently under the request of the "
+					+.@type$[.@i]+" collection. If you give up now,"
+					" all your history will be lost. Do you really"
+					" want to give up?";
+				next;
+				if (select("Yes", "No") != 1) {
+					.@erase_quest = 2;
+					continue;
+				}
+				.@erase_quest = 1;
+				for (.@quest = .@quests[.@i*3+1]; .@quest < .@quests[.@i*3+1]+.@quests[.@i*3+2]; ++.@quest) {
+					if (questprogress(.@quest))
+						erasequest .@quest;
+				}
+			}
+		}
+		switch (.@erase_quest) {
+		case 0:
+			mes "[Reno]";
+			mes "You are not under any request.";
+		case 1:
+			mes "[Reno]";
+			mes "The written request for you has been withdrawn.";
+		case 2:
+			mes "[Reno]";
+			mes "Please keep up on it.";
+		}
+		close;
+	case 3:
+		mes "[Reno]";
+		mes "Do you want to accumulate Energy Crystals inside of your body to receive a buff?";
+		next;
+		.@choice = select("Accumulating Energy Crystals?"
+				":Accumulate Rough Energy Crystal"
+				":Accumulate Purified Energy Crystal"
+				":Accumulate High Energy Crystal") - 1;
+		if (!.@choice) {
+			mes "[Reno]";
+			mes "Energy Crystals are accumulated in your body when you hunt the"
+				" monsters we ask you to.";
+			next;
+			mes "[Reno]";
+			mes "Our research shows that some methods enable humans to accumulate the"
+				" energy crystals inside of the body in the form of a buff.";
+			next;
+			mes "[Reno]";
+			mes "If you spend about 3 hours, you will be able to gain a small amount"
+				" of Energy Crystals. So do you want to receive the buff?";
+			close;
+		}
+		.@quest = 5222 + .@choice;
+		.@rate = 1 + .@choice;
+		setarray .@buffs, SC_QUEST_BUFF1, SC_QUEST_BUFF2, SC_QUEST_BUFF3;
+		if (questprogress(.@crystal_quests[.@choice], PLAYTIME) == 1) {
+			mes "[Reno]";
+			mes "Were you successful? While storing other Energy Crystals will not have"
+				" much effect on your body, storing the same one may cause you harm."; //custom translation
+			close;
+		}
+		if (BaseLevel < .@min_level[.@choice]) {
+			mes "[Reno]";
+			mes "With a body like that, you can't accumulate "+.@crystal$[.@choice]
+				+" Energy Crystals. You must be level "+.@min_level[.@choice]+" or"
+				" your body will be harmed in the process."; //custom translation
+			close;
+		}
+		if (.@energy_buf00) {
+			mes "[Reno]";
+			mes "Accumulating Energy Crystal has already begun. I am sorry but it is"
+				" impossible to accumulate two different types of Energy Crystals"
+				" at a time.";
+			close;
+		}
+		if (questprogress(.@quest) > 0) {
+			erasequest .@quest;
+			mes "[Reno]";
+			mes "An error has occurred. Please forgive me for the inconvenience."; //custom translation
+			close;
+		}
+		mes "[Reno]";
+		mes "It takes 3 hours for your body to accumulate 2 to 4 "+.@crystal$[.@choice]
+			+" Energy Crystals. Do you want to start?";
+		next;
+		if (select("Cancel", "Start") == 1) {
+			mes "[Reno]";
+			mes "I recommend that you try to accumulate Energy Crystal when you have time.";
+			close;
+		}
+		mes "[Reno]";
+		mes "You might feel a slight tingle.";
+		next;
+		specialeffect(EF_BASH3D, AREA, playerattached());
+		percentheal .@rate * -5,0;
+		//consumeitem ??; //Keep_Connection_[.@rate]
+		sc_start .@buffs[.@choice], 10800000, .@rate; // Atk/Matk + 5*rate (+5, +10, +15)
+		setquest .@quest;
+		mes "[Reno]";
+		mes "- Puck -";
+		next;
+		mes "[Reno]";
+		mes "Everything seems to be in order. Let's start accumulating "+.@crystal$[.@choice]
+			+" Energy Crystals. Remember to come back to me after 3 hours to get the "
+			+.@crystal$[.@choice]+" Energy Crystals.";
+		close;
+	case 4:
+		mes "[Reno]";
+		mes "Do you want to compress the Energy Crystals?";
+		next;
+		switch(select("What does compressing do?"
+				":Compress Rough to Purified Crystal"
+				":Compress Purified to High Crystal")) {
+		case 1:
+			mes "[Reno]";
+			mes "Are you curious about Energy Crystal compression? I can compress"
+				" lower level Energy Crystals into higher ones.";
+			next;
+			mes "[Reno]";
+			mes "Here is what I can make.";
+			mes "^FF000010 Rough Energy Crystals^000000 = ^FF00001 Purified Energy Crystal^000000";
+			mes "^FF00005 Purified Energy Crystals^000000 = ^FF00001 High Energy Crystal^000000";
+			next;
+			mes "[Reno]";
+			mes "If you need higher grade Energy Crystals, this is a good way to get"
+				" them since the lower ones are easier to get.";
+			close;
+		case 2:
+			.@crystal = Rough_Energy_Crystal;
+			.@crystal_ = Purified_Energy_Crystal;
+			.@rate = 10;
+			break;
+		case 3:
+			.@crystal = Purified_Energy_Crystal;
+			.@crystal_ = High_Purity_Energy_Xtal;
+			.@rate = 5;
+			break;
+		}
+		.@crystal_count = countitem(.@crystal);
+		.@crystal_get = .@crystal_count / .@rate;
+		mes "[Reno]";
+		mes sprintf("^FF0000%d %s^000000 = ^FF00001 %s^000000",.@rate,getitemname(.@crystal),getitemname(.@crystal_));
+		next;
+		mes "[Reno]";
+		mes sprintf("%d %ss will be compressed to %d %ss.",.@crystal_count,getitemname(.@crystal),.@crystal_get,getitemname(.@crystal_));
+		mes "Do you want to compress?";
+		next;
+		if (select("Compress", "Stop") == 2) {
+			mes "[Reno]";
+			mes "Okay, please contact if you need me in the future.";
+			close;
+		}
+		while (true) {
+			//custom translation
+			if (countitem(.@crystal) < .@rate) {
+				mes "[Reno]";
+				mes "You don't have enough "+getitemname(.@crystal)+".";
+				next;
+				break;
+			}
+			delitem .@crystal,.@rate;
+			getitem .@crystal_,1;
+			.@crystal_count = countitem(.@crystal);
+			.@crystal_get = .@crystal_count / .@rate;
+			mes "[Reno]";
+			mes "The compression was very successful.";
+			mes "There are "+.@crystal_count+" Energy Crystals left, which can"
+				" compress into "+.@crystal_get+" Energy Crystals. Do you"
+				" want to continue?";
+			next;
+			if (select("Compress", "Stop") == 2)
+				break;
+		}
+		mes "[Reno]";
+		mes "Compression completed.";
+		close;
+	case 5:
+		disable_items;
+		mes "[Reno]";
+		mes "Do you want to exchange Energy Crystals for equipment? Please select the type"
+			" of Energy Crystal that you wish to exchange.";
+		next;
+		switch (select("See Equipment List"
+				":["+countitem(Rough_Energy_Crystal)+"] Rough Energy Crystal"
+				":["+countitem(Purified_Energy_Crystal)+"] Purified Energy Crystal"
+				":["+countitem(High_Purity_Energy_Xtal)+"] High Energy Crystal")) {
+		case 1:
+			mes "[Reno]";
+			mes "This is the brochure regarding the equipment upgrade that our Energy"
+				" Crystal research association provides. Please take a look around.";
+			close2;
+			readbook Energy_Xtal_Combi_Book,1;
+			end;
+
+		// Variable descriptions
+		// .@crystal: Energy Crystal used
+		// .@items:   Array of tuples <material, showslot, cost, reward>, where:
+		//            material: equipment to upgrade
+		//            showslot: display slots with equipment name (-1 to disable)
+		//            cost:     amount of Energy Crystals needed
+		//            rewards:  upgraded equipment
+		case 2:
+			.@crystal = Rough_Energy_Crystal;
+			setarray .@items,
+				// Material,showslot,cost,rewards
+				Wizardry_Hat,     -1, 100, Remodel_Wizardry_Hat,
+				Magician_Hat,     -1, 100, Remodel_Magician_Hat,
+				Mask_Of_Fox,      -1, 100, Remodel_Mask_Of_Fox,
+				Joker_Jester,     -1, 100, Remodel_Joker_Jester,
+				Bunny_Band,       -1, 100, Remodel_Bunny_Band,
+				Munak_Turban_,    -1, 100, Remodel_Munak_Turban,
+				Bongun_Hat_,      -1, 100, Remodel_Bongun_Hat,
+				Opera_Ghost_Mask, -1, 100, Remodel_Opera_Mask;
+			break;
+		case 3:
+			.@crystal = Purified_Energy_Crystal;
+			setarray .@items,
+				// Material,showslot,cost,rewards
+				Binoculars,         -1, 200, Improved_Binoculars,
+				Fin_Helm,           -1, 200, Improved_Fin_Helm,
+				Assassin_Mask_,     -1, 200, Improved_Assassin_Mask,
+				Welding_Mask,       -1, 200, Improved_Welding_Mask,
+				Safety_Ring,        -1, 200, Safety_Ring_,
+				Angels_Protection,   1, 100, Im_Angels_Protection,
+				Angels_Safeguard,    1, 100, Impr_Angels_Safeguard,
+				Angels_Arrival,      1, 100, Impr_Angels_Arrival,
+				Angels_Warmth,       1, 100, Impr_Angels_Warmth,
+				Kiss_Of_Angel,       1, 100, Improved_Kiss_Of_Angel;
+			break;
+		case 4:
+			.@crystal = High_Purity_Energy_Xtal;
+			setarray .@items,
+				// Material,showslot,cost,rewards
+				Corsair,           -1,  300, Enhanced_Corsair,
+				Bone_Helm_,         1,  300, Enhanced_Bone_Helm,
+				Helm_Of_Angel,     -1,  300, Enhanced_Helm_Of_Angel,
+				// Helm_Of_Sun,        0, 1000, Enhanced_Helm_Of_Sun,
+				Helm_Of_Sun_,       1,  300, Enhanced_Helm_Of_Sun,
+				Variant_Shoes,     -1,  300, Enhanced_Variant_Shoes,
+				Ring_Of_Flame_Lord,-1,  300, Good_Ring_Of_Flame_Lord,
+				Ring_Of_Resonance, -1,  300, Good_Ring_Of_Resonance,
+				Angels_Protection,  1,   20, Im_Angels_Protection,
+				Angels_Safeguard,   1,   20, Impr_Angels_Safeguard,
+				Angels_Arrival,     1,   20, Impr_Angels_Arrival,
+				Angels_Warmth,      1,   20, Impr_Angels_Warmth,
+				Kiss_Of_Angel,      1,   20, Improved_Kiss_Of_Angel;
+			break;
+		}
+
+		mes "[Reno]";
+		mes "Please select the equipment to exchange for "+getitemname(.@crystal)+"s.";
+		next;
+		.@crystal_count = countitem(.@crystal);
+		.@opt$ = "";
+		for (.@i = 0; .@i < getarraysize(.@items); .@i += 4) {
+			.@item_name$ = getitemname(.@items[.@i]) + ((.@items[.@i+1] > -1)?"["+.@items[.@i+1]+"]":"");
+			.@opt$ += sprintf("%s (%d/%d):",.@item_name$,.@crystal_count,.@items[.@i+2]);
+		}
+		.@index = select(.@opt$) - 1;
+		.@material = .@items[.@index*4];
+		.@item_name$ = getitemname(.@material) + ((.@items[.@index*4+1] > -1)?"["+.@items[.@index*4+1]+"]":"");
+		.@cost = .@items[.@index*4+2];
+		.@reward = .@items[.@index*4+3];
+
+		//custom translations
+		if (.@material == Safety_Ring) {
+			// Special case: Safety Ring
+			if (countitem(Safety_Ring) < 1 || countitem(Ring_) < 1
+			 || countitem(Earring_) < 1 || countitem(Glove_) < 1
+			 || countitem(Brooch_) < 1 || countitem(Necklace_) < 1
+			 || countitem(Rosary_) < 1 || countitem(.@crystal) < .@cost) {
+				mes "[Reno]";
+				mes "The materials to make a Safety Ring[1] are insufficient."
+					" Please check your inventory.";
+				close;
+			}
+			mes "[Reno]";
+			mes "Before upgrading your Safety Ring, please listen to these"
+				" ^FF0000precautions^000000.";
+			next;
+			mes "[Reno]";
+			mes "^FF0000In addition to the Safety Ring, all refinements and cards of"
+				" the required materials will also disappear.^000000";
+			next;
+		} else {
+			if (countitem(.@material) < 1 || countitem(.@crystal) < .@cost) {
+				mes "[Reno]";
+				mes "The materials are insufficient. Please check your materials.";
+				close;
+			}
+			mes "[Reno]";
+			mes "Before upgrading your equipment, please listen to these"
+				" ^FF0000precautions^000000.";
+			next;
+			mes "[Reno]";
+			mes "^FF0000When using Energy Crystals to upgrade equipment, all previous"
+				" refinements, enchantments, and cards will be lost.^000000";
+			next;
+		}
+		mes "[Reno]";
+		mes "Are you familiar with the ^FF0000precautions^000000?";
+		next;
+		if (select("I am.", "No.") == 2) {
+			mes "[Reno]";
+			mes "Okay. Next time, then.";
+			close;
+		}
+		mes "[Reno]";
+		mes "Then let's begin to upgrade "+.@item_name$+".";
+		next;
+		if (countitem(.@material) < 1 || countitem(.@crystal) < .@cost) {
+			mes "[Reno]";
+			mes "The materials are insufficient. Please check your materials.";
+			close;
+		}
+		if (.@material == Safety_Ring) {
+			// Special case: Safety Ring
+			if (countitem(Safety_Ring) < 1 || countitem(Ring_) < 1
+			 || countitem(Earring_) < 1 || countitem(Glove_) < 1
+			 || countitem(Brooch_) < 1 || countitem(Necklace_) < 1
+			 || countitem(Rosary_) < 1 || countitem(.@crystal) < .@cost) {
+				mes "[Reno]";
+				mes "The materials to make a Safety Ring[1] are insufficient."
+					" Please check your inventory.";
+				close;
+			}
+		}
+		specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
+		progressbar "ffff00",2;
+		delitem .@material,1;
+		if (.@material == Safety_Ring) {
+			delitem Ring_,1;
+			delitem Earring_,1;
+			delitem Glove_,1;
+			delitem Brooch_,1;
+			delitem Necklace_,1;
+			delitem Rosary_,1;
+		}
+		delitem .@crystal,.@cost;
+		getitem .@reward,1;
+		mes "[Reno]";
+		mes "The upgrade was successful. Your Energy Crystals will help our research greatly.";
+		close;
+	case 6:
+		mes "[Reno]";
+		mes "Do you want to donate Energy Crystals to get a random new headgear?";
+		next;
+		switch (select("Donate Energy Crystals?"
+				":Donate 300 Rough Energy Crystals."
+				":Donate 600 Purified Energy Crystals."
+				":Donate 900 High Energy Crystals.")) {
+		case 1:
+			mes "[Reno]";
+			mes "We are collecting Energy Crystals so that we can research more"
+				" combinations of headgears for adventurers.";
+			next;
+			mes "[Reno]";
+			mes "Thanks to the support of adventurers we can use these Energy"
+				" Crystals to further our research.";
+			next;
+			mes "[Reno]";
+			mes "So we receive a minimum of 300 Rough Energy Crystals, 600 Purified"
+				" Energy Crystals, and 900 High Energy Crystals.";
+			if (!.@features_iRO) {
+				next;
+				mes "[Reno]";
+				mes "You may feel that this is a burden, but for the sake of our"
+					" research, please continue."; //custom translation
+				close;
+			}
+			mes "For the donation, I'll give you a random new headgear.";
+			next;
+			mes "[Reno]";
+			mes "300 Rough Energy Crystals";
+			mes "- New Mage Hat";
+			mes "- New Magician Hat";
+			mes "- New Kitsune Mask";
+			mes "- New Joker Jester";
+			mes "- New Bunny Band";
+			mes "- New Munak Hat";
+			mes "- New Bongun Hat";
+			mes "- New Phantom Opera Mask";
+			next;
+			mes "[Reno]";
+			mes "600 Purified Energy Crystals";
+			mes "- Good Binoculars";
+			mes "- Good Fin Helm";
+			mes "- Good Assassin Mask";
+			mes "- Good Welding Mask";
+			mes "- Good Safety Ring";
+			mes "- Good Angelic Protection";
+			mes "- Good Angelic Guard";
+			mes "- Good Angelic Cardigan";
+			mes "- Good Angel's Reincarnation";
+			next;
+			mes "[Reno]";
+			mes "900 High Energy Crystals";
+			mes "- Enhanced Corsair";
+			mes "- Enhanced Bone Helm";
+			mes "- Enhanced Helm of Angel";
+			mes "- Enhanced Variant Shoes";
+			mes "- Enhanced Ring of Flame Lord";
+			mes "- Enhanced Ring of Resonance";
+			close;
+		case 2:
+			if (countitem(Rough_Energy_Crystal) < 300) {
+				mes "[Reno]";
+				mes "Thank for your support, but we need 300 Rough Energy Crystals.";
+				close;
+			}
+			delitem Rough_Energy_Crystal,300;
+			.@r = rand(1,17);
+			if (.@r <= 2)       getitem Remodel_Wizardry_Hat,1;
+			else if (.@r <= 4)  getitem Remodel_Magician_Hat,1;
+			else if (.@r <= 6)  getitem Remodel_Mask_Of_Fox,1;
+			else if (.@r <= 8)  getitem Remodel_Joker_Jester,1;
+			else if (.@r <= 10) getitem Remodel_Bunny_Band,1;
+			else if (.@r <= 13) getitem Remodel_Munak_Turban,1;
+			else if (.@r <= 16) getitem Remodel_Bongun_Hat,1;
+			else                getitem Remodel_Opera_Mask,1;
+			break;
+		case 3:
+			if (countitem(Purified_Energy_Crystal) < 600) {
+				mes "[Reno]";
+				mes "Thank for your support, but we need 600 Purified Energy Crystals.";
+				close;
+			}
+			delitem Purified_Energy_Crystal,600;
+			.@r = rand(1,18);
+			if (.@r <= 3)       getitem Improved_Binoculars,1;
+			else if (.@r <= 6)  getitem Improved_Fin_Helm,1;
+			else if (.@r <= 9)  getitem Improved_Assassin_Mask,1;
+			else if (.@r <= 12) getitem Improved_Welding_Mask,1;
+			else if (.@r <= 13) getitem Safety_Ring_,1;
+			else if (.@r <= 14) getitem Im_Angels_Protection,1;
+			else if (.@r <= 15) getitem Impr_Angels_Safeguard,1;
+			else if (.@r <= 16) getitem Impr_Angels_Arrival,1;
+			else if (.@r <= 17) getitem Impr_Angels_Warmth,1;
+			else                getitem Improved_Kiss_Of_Angel,1;
+			break;
+		case 4:
+			if (countitem(High_Purity_Energy_Xtal) < 900) {
+				mes "[Reno]";
+				mes "Thank for your support, but we need 900 High Energy Crystals.";
+				close;
+			}
+			delitem High_Purity_Energy_Xtal,900;
+			.@r = rand(1,33);
+			if (.@r <= 10)      getitem Enhanced_Corsair,1;
+			else if (.@r <= 20) getitem Enhanced_Bone_Helm,1;
+			else if (.@r <= 25) getitem Enhanced_Helm_Of_Angel,1;
+			else if (.@r <= 30) getitem Enhanced_Variant_Shoes,1;
+			else if (.@r <= 31) getitem Good_Ring_Of_Flame_Lord,1;
+			else                getitem Good_Ring_Of_Resonance,1;
+			break;
+		}
+		mes "[Reno]";
+		mes "Thank you very much. The Energy Crystals you donated will be greatly helpful"
+			" for our research. This is your reward for your donation."; //custom translation
+		close;
+	case 7: // iRO only
+		mes "[Reno]";
+		mes "This is the brochure regarding the equipment upgrade that our Energy Crystal"
+			" research association provides. Please take a look around.";
+		close2;
+		readbook Energy_Xtal_Combi_Book,1;
+		end;
+	}
+	end;
+
+// callsub(S_CheckHunting, <quest index>, <start quest>, <number of quests>, "<type>", <reward id>, <reward amount>);
+S_CheckHunting:
+	.@basequest = getarg(0);
+	.@first = getarg(1);
+	.@last = .@first + getarg(2) - 1;
+	for (.@i = .@first; .@i <= .@last; ++.@i) {
+		if (questprogress(.@i, HUNTING) == 2) {
+			mes "[Reno]";
+			mes "Finished "+ getarg(3) +" collection hunting quest.";
+			next;
+			setquest .@basequest;
+			erasequest .@i;
+			getitem getarg(4), getarg(5);
+			mes "You receive "+ getarg(5) +" "+ getitemname(getarg(4)) +" as the "+ getarg(3) +" collection reward.";
+			close;
+		}
+	}
+	return;
+
+// callsub(S_CheckQuestStatus, <quest index>, <start quest>, <number of quests>
+S_CheckQuestStatus:
+	.@basequest = getarg(0);
+	.@first = getarg(1);
+	.@last = .@first + getarg(2) - 1;
+	.@status = false;
+	for (.@i = .@first; .@i <= .@last; ++.@i) {
+		if (questprogress(.@i))
+			return true;
+	}
+	return false;
+}

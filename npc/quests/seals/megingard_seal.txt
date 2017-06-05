@@ -1,52 +1,68 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  brianluau
+//= Copyright (C)  Samuray22
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  Lupus
+//= Copyright (C)  MasterOfMuppets
+//= Copyright (C)  SinSloth
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= God Item Quest - Megingjard Seal
-//===== By: ==================================================
-//= SinSloth
-//===== Current Version: =====================================
-//= 2.2
-//===== Description: =========================================
+//================= Description ===========================================
 //= Quest for breaking the seal of Megingjard.
-//===== Additional Comments: =================================
-//= 1.0 First version. Thanks to SinSloth for scripting it. [MasterOfMuppets]
-//= 1.1 fixed exploit [Lupus]
-//= 1.2 Fixed experience gains to match upcoming rate adjustments. [SinSloth]
-//= 1.3 Updated several aspects of the script. [L0ne_W0lf]
-//= 1.4 Minor Touchups to quest. [L0ne_W0lf]
-//= 1.5 Fixed missing close2 in Rebarev Doug. [L0ne_w0lf]
-//= 1.6 Corrected mismatched variables. [L0ne_W0lf]
-//= 1.7 Replaced effect numerics with constants. [Samuray22]
-//= 1.8 Corrected how exp reward is applied. [L0ne_W0lf]
-//= 1.9 Fixed some input checks and variable types. [brianluau]
-//= 2.0 Updated RE/Pre-RE EXP. [Euphy]
-//= 2.1 Fixed minor bug with the Librarian Jekan
-//= 2.2 Renewal script update. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 2.2
+//=========================================================================
 
 prt_castle,44,151,0	script	Rebarev Doug	1_M_KNIGHTMASTER,{
-	if (checkweight(1301,3) == 0) {
+	if (checkweight(Axe,3) == 0) {
 		mes "- You are carrying too many items! -";
 		close;
 	}
 	cutin "god_rebeireb",2;
-	if ((countitem(7080) > 3) && (countitem(7081) > 4) && (countitem(7082) > 3) && (countitem(7084) > 2) && (countitem(7085) > 2)) {
+	if ((countitem(Foot_Step_Of_Cat) > 3) && (countitem(Beard_Of_Women) > 4) && (countitem(Root_Of_Stone) > 3) && (countitem(Saliva_Of_Bird) > 2) && (countitem(Tendon_Of_Bear) > 2)) {
 		mes "[Rebarev Doug]";
 		mes "What's this?";
 		mes "You...! You have";
 		mes "everything I need to";
 		mes "create Gleipnir!";
 		next;
-		switch(select("Make Gleipnir.:Cancel.")) {
+		switch(select("Make Gleipnir.", "Cancel.")) {
 		case 1:
 			mes "[Rebarev Doug]";
 			mes "I'm the only human on earth";
 			mes "blessed with the ability to create Gleipnir. Aside from the Dwarves, I'm the only person that can make this item!";
 			next;
-			delitem 7080,4;  //Foot_Step_Of_Cat
-			delitem 7081,5;  //Beard_Of_Women
-			delitem 7082,4;  //Root_Of_Stone
-			delitem 7084,3;  //Saliva_Of_Bird
-			delitem 7085,3;  //Tendon_Of_Bear
-			getitem 7058,1; // Gullraifnir
+			delitem Foot_Step_Of_Cat,4;
+			delitem Beard_Of_Women,5;
+			delitem Root_Of_Stone,4;
+			delitem Saliva_Of_Bird,3;
+			delitem Tendon_Of_Bear,3;
+			getitem Gullraifnir,1; // Gullraifnir
 			mes "[Rebarev Doug]";
 			mes "There you go!";
 			next;
@@ -71,7 +87,7 @@ prt_castle,44,151,0	script	Rebarev Doug	1_M_KNIGHTMASTER,{
 		mes "If you have any questions about Crusaders, feel free to ask me.";
 		mes "I may be too old and weak for fighting, but I will spread our message as much as I can.";
 		next;
-		switch(select("What is Holy Cross?:What is Grand Cross?:What is Sacrifice?:What is Gleipnir?")) {
+		switch(select("What is Holy Cross?", "What is Grand Cross?", "What is Sacrifice?", "What is Gleipnir?")) {
 		case 1:
 			mes "[Rebarev Doug]";
 			mes "Holy Cross is the first manifestation of a Crusader's faith. By making the sign of the cross, Crusader's can inflict a holy attack on their enemies.";
@@ -186,7 +202,7 @@ prt_castle,44,151,0	script	Rebarev Doug	1_M_KNIGHTMASTER,{
 				mes "It may be an enriching";
 				mes "experience for you. It's possible that you'll even have a greater appreciation for Crusaders.";
 				next;
-				switch(select("What is it?:I'm sick and tired of doin' favors.")) {
+				switch(select("What is it?", "I'm sick and tired of doin' favors.")) {
 				case 1:
 					mes "[Rebarev Doug]";
 					mes "I want you to find the members of the 1st Squad in the 3rd Platoon of the 3rd Company. If you happen to encounter them in your travels, please ask them how they are doing.";
@@ -195,7 +211,7 @@ prt_castle,44,151,0	script	Rebarev Doug	1_M_KNIGHTMASTER,{
 					mes "It shouldn't be that difficult to do and won't be a waste of your time if you are already planning";
 					mes "to explore the world.";
 					next;
-					switch(select("Sure, why not.:I'm sorry, but no.")) {
+					switch(select("Sure, why not.", "I'm sorry, but no.")) {
 					case 1:
 						mes "[Rebarev Doug]";
 						mes "Excellent!";
@@ -225,7 +241,7 @@ prt_castle,44,151,0	script	Rebarev Doug	1_M_KNIGHTMASTER,{
 						mes "My old comrades in arms.";
 						mes "You have no idea how much";
 						mes "I miss them...";
-						set god_eremes,1;
+						god_eremes = 1;
 						break;
 					case 2:
 						mes "[Rebarev Doug]";
@@ -280,7 +296,7 @@ prt_castle,44,151,0	script	Rebarev Doug	1_M_KNIGHTMASTER,{
 					mes "Haven't you left";
 					mes "to search for them yet?";
 					next;
-					switch(select("Where should I go?:I am about to leave.:What do you mean by final mission?")) {
+					switch(select("Where should I go?", "I am about to leave.", "What do you mean by final mission?")) {
 					case 1:
 						mes "[Rebarev Doug]";
 						mes "Well...";
@@ -324,7 +340,7 @@ prt_castle,44,151,0	script	Rebarev Doug	1_M_KNIGHTMASTER,{
 						next;
 						mes "[Rebarev Doug]";
 						mes "Let's not talk about that. What's important that our squad was disbanded because of we failed our final mission. Now, will you please go find ^0000FFThe 3rd Platoon Records^000000 in the Prontera Library for me?";
-						set god_eremes,3;
+						god_eremes = 3;
 						next;
 						mes "[Rebarev Doug]";
 						mes "Remember, it might be helpful to ask the librarian for the file with a record on ^660000the 1st squad's final mission^000000.";
@@ -343,7 +359,7 @@ prt_castle,44,151,0	script	Rebarev Doug	1_M_KNIGHTMASTER,{
 					mes "Haven't you left";
 					mes "to search for them yet?";
 					next;
-					switch(select("Where should I go?:I am about to leave.")) {
+					switch(select("Where should I go?", "I am about to leave.")) {
 					case 1:
 						mes "[Rebarev Doug]";
 						mes "Well...";
@@ -359,7 +375,7 @@ prt_castle,44,151,0	script	Rebarev Doug	1_M_KNIGHTMASTER,{
 						mes "I wonder what they";
 						mes "have been doing since";
 						mes "our ^0000FFfinal mission^000000...";
-						set god_eremes,2;
+						god_eremes = 2;
 						break;
 					}
 				}
@@ -435,7 +451,7 @@ prt_castle,44,151,0	script	Rebarev Doug	1_M_KNIGHTMASTER,{
 				mes "What's that";
 				mes "strange look for?";
 				next;
-				switch(select("Confront Rebarev Doug.:Act unsuspicious.")) {
+				switch(select("Confront Rebarev Doug.", "Act unsuspicious.")) {
 				case 1:
 					mes "^3355FFYou confront Rebarev Doug about the memory problems and migraines of the 1st Squad...^000000";
 					next;
@@ -451,7 +467,7 @@ prt_castle,44,151,0	script	Rebarev Doug	1_M_KNIGHTMASTER,{
 					mes "[Rebarev Doug]";
 					mes "I appreciate that you've delivered news of my old comrades to me.";
 					mes "Now, I need to continue my research under the command of his Majesty.";
-					set god_eremes,21;
+					god_eremes = 21;
 					break;
 				case 2:
 					mes "^3355FFYou keep your suspicions to yourself and tell Rebarev Doug about the members of";
@@ -468,7 +484,7 @@ prt_castle,44,151,0	script	Rebarev Doug	1_M_KNIGHTMASTER,{
 					mes "[Rebarev Doug]";
 					mes "I appreciate that you've delivered news of my old comrades to me.";
 					mes "Now, I need to continue my research under the command of his Majesty. Once again, thank you for your help.";
-					set god_eremes,22;
+					god_eremes = 22;
 					break;
 				}
 			}
@@ -560,7 +576,7 @@ prt_castle,48,164,0	script	Crusader#God	4_M_JOB_KNIGHT2,{
 			next;
 			mes "[Max Von Shedough]";
 			mes "However, as of now, the petition you've just given me is considered classified information. Please keep this a military secret.";
-			set $God2,$God2+1;
+			++$God2;
 			if ($God2 == $@god_check1) {
 				announce "The 2nd seal of [Megingjard] has appeared.",bc_all;
 			}
@@ -571,10 +587,10 @@ prt_castle,48,164,0	script	Crusader#God	4_M_JOB_KNIGHT2,{
 					announce "The 2nd seal of [Megingjard] has been released.",bc_all;
 			}
 			if (god_eremes == 23) {
-				set god_eremes,25;
+				god_eremes = 25;
 			}
 			else if (god_eremes == 24) {
-				set god_eremes,26;
+				god_eremes = 26;
 			}
 			close;
 		}
@@ -624,7 +640,7 @@ prt_in,172,109,0	script	A File#megin1	HIDDEN_NPC,{
 	else if (god_eremes > 6 && god_eremes < 12) {
 		if (rand(1,10) > 6 && god_eremes > 6) {
 			mes "^3355FFYou see a shelf filled with many files. You begin searching through them, one by one.^000000";
-			set god_eremes,god_eremes+1;
+			++god_eremes;
 			close;
 		}
 		else {
@@ -634,7 +650,7 @@ prt_in,172,109,0	script	A File#megin1	HIDDEN_NPC,{
 	}
 	else if (god_eremes < 7) {
 		mes "[Librarian Jekan]";
-		mes "I'm sorry "+((Sex)?"sir":"ma'am")+",";
+		mes "I'm sorry "+ (Sex == SEX_MALE ? "sir" : "ma'am") +",";
 		mes "but special authorization is required to browse that section. Otherwise, it's off limits.";
 		close;
 	}
@@ -655,7 +671,7 @@ prt_in,170,109,0	script	A File#megin2	HIDDEN_NPC,{
 	else if (god_eremes > 6 && god_eremes < 12) {
 		if (rand(1,10) > 6 && god_eremes > 6) {
 			mes "^3355FFYou see a shelf filled with many files. You begin searching through them, one by one.^000000";
-			set god_eremes,god_eremes+1;
+			++god_eremes;
 			close;
 		}
 		else {
@@ -688,7 +704,7 @@ prt_in,168,109,0	script	A File#megin3	HIDDEN_NPC,{
 	else if (god_eremes > 6 && god_eremes < 12) {
 		if (rand(1,10) > 6 && god_eremes > 6) {
 			mes "^3355FFYou see a shelf filled with many files. You begin searching through them, one by one.^000000";
-			set god_eremes,god_eremes+1;
+			++god_eremes;
 			close;
 		}
 		else {
@@ -720,7 +736,7 @@ prt_in,169,109,0	script	A File#megin4	HIDDEN_NPC,{
 	else if (god_eremes > 6 && god_eremes < 12) {
 		if (rand(1,10) > 6 && god_eremes > 6) {
 			mes "^3355FFYou see a shelf filled with many files. You begin searching through them, one by one.^000000";
-			set god_eremes,god_eremes+1;
+			++god_eremes;
 			close;
 		}
 		else {
@@ -753,7 +769,7 @@ prt_in,166,109,0	script	A File#megin5	HIDDEN_NPC,{
 	else if (god_eremes > 6 && god_eremes < 12) {
 		if (rand(1,10) > 6 && god_eremes > 6) {
 			mes "^3355FFYou see a shelf filled with many files. You begin searching through them, one by one.^000000";
-			set god_eremes,god_eremes+1;
+			++god_eremes;
 			close;
 		}
 		else {
@@ -804,19 +820,19 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 			mes "I can't read anything when the light is this dim! It's bad enough my eyes have gone bad...";
 			while(1) {
 				next;
-				switch(select("You have bad eyes?:I want to read some documents.:Let me help you find those files...:What kind of files are you looking for?")) {
+				switch(select("You have bad eyes?", "I want to read some documents.", "Let me help you find those files...", "What kind of files are you looking for?")) {
 				case 1:
 					mes "[Librarian Jekan]";
 					mes "I've worked";
 					mes "under dim light";
 					mes "for so long, my eyes have";
 					mes "gone bad. They should get me ^0000FFa new light^000000, otherwise I'll go blind sooner or later...";
-					if (god_eremes == 5 && (countitem(2203) > 0 || countitem(1041) > 0)) {
+					if (god_eremes == 5 && (countitem(Glasses) > 0 || countitem(Lantern) > 0)) {
 						next;
 						mes "[Librarian Jekan]";
 						mes "Hey, that's some pretty useful stuff that you've got with you. Do you mind letting me borrow it for a while? It'll help me in finding those files...";
 						next;
-						switch(select("Yes, I mind!:No, I don't mind.")) {
+						switch(select("Yes, I mind!", "No, I don't mind.")) {
 						case 1:
 							mes "[Librarian Jekan]";
 							mes "^333333*Sniff*^000000";
@@ -827,17 +843,17 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 							mes "Oh, you are so kind!";
 							mes "Y-you really do want";
 							mes "to help me, don't you?";
-							if (countitem(2203) && countitem(1041)) {
-								delitem 1041,countitem(1041); //Lantern
-								delitem 2203,1; //Spectacles
+							if (countitem(Glasses) && countitem(Lantern)) {
+								delitem Lantern,countitem(Lantern);
+								delitem Glasses,1; //Spectacles
 							}
-							else if (countitem(2203)) {
+							else if (countitem(Glasses)) {
 								delitem 2203,1;
 							}
-							else if (countitem(1041)) {
-								delitem 1041,countitem(1041);
+							else if (countitem(Lantern)) {
+								delitem 1041,countitem(Lantern);
 							}
-							set god_eremes,6;
+							god_eremes = 6;
 							next;
 							mes "[Librarian Jekan]";
 							mes "Thank you...";
@@ -882,7 +898,7 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 						mes "classified file as soon";
 						mes "as I can!";
 						close2;
-						set god_eremes,7;
+						god_eremes = 7;
 						end;
 					}
 					else {
@@ -910,7 +926,7 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 						mes "[Librarian Jekan]";
 						mes "Damn, my eyes are sore.";
 						mes "Working as a government official is easy except for the times when the beaucrats make you do stuff like this.";
-						set god_eremes,5;
+						god_eremes = 5;
 					}
 					else if (god_eremes > 4) {
 						mes "[Librarian Jekan]";
@@ -935,7 +951,7 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 					mes "[Librarian Jekan]";
 					mes "Hmm. I'm not really allowed to disclose any information related to that file. I'm sorry about that.";
 					next;
-					mes "[" + strcharinfo(0) + "]";
+					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "But isn't";
 					mes "the file about...";
 					input @str$;
@@ -946,7 +962,7 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 						mes "Hmm...?";
 						mes "How did you";
 						mes "know about that?";
-						set god_eremes,4;
+						god_eremes = 4;
 					}
 					else {
 						mes "[Librarian Jekan]";
@@ -969,7 +985,7 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 			mes "[Librarian Jekan]";
 			mes "So what brings you here? If you're looking for something in particular, you should try another section.";
 			next;
-			switch(select("I want to read some documents.:Do you have bad eyes?:Let me help you to find the files.:What kind of files are you looking for?")) {
+			switch(select("I want to read some documents.", "Do you have bad eyes?", "Let me help you to find the files.", "What kind of files are you looking for?")) {
 			case 1:
 				mes "[Librarian Jekan]";
 				mes "I told you already! The files in this section aren't open to the public right now! Don't make me repeat myself!";
@@ -989,10 +1005,10 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 				mes "[Librarian Jekan]";
 				mes "Hmm... I am not supposed to reveal anything related to the file.";
 				next;
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Isn't the file...";
 				input @str$;
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "^0000FF" + @str$ + "?";
 				next;
 				mes "[Librarian Jekan]";
@@ -1055,11 +1071,11 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 			mes "Okay, now...";
 			mes "Come back here";
 			mes "as soon as you can.";
-			set god_eremes,13;
+			god_eremes = 13;
 			close;
 		}
 		else if (god_eremes == 13) {
-			if (countitem(7111) > 1 && countitem(7151) && countitem(1024) > 2 && countitem(916) > 2 && countitem(717) > 19) {
+			if (countitem(Smooth_Paper) > 1 && countitem(Oil_Paper) && countitem(Chinese_Ink) > 2 && countitem(Feather_Of_Birds) > 2 && countitem(Blue_Gemstone) > 19) {
 				mes "[Librarian Jekan]";
 				mes "Oh, you came back.";
 				mes "I didn't expect you to return here so quickly. Whatever's inside must be really important for you to know.";
@@ -1069,12 +1085,12 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 				mes "give me a moment";
 				mes "while I make that";
 				mes "copy for you.";
-				delitem 7111,2;  //Smooth_Paper
-				delitem 7151,1;  //Oil_Paper
-				delitem 1024,3;  //Chinese_Ink
-				delitem 916,3;  //Feather_Of_Birds
-				delitem 717,20;  //Blue_Gemstone
-				set god_eremes,14;
+				delitem Smooth_Paper,2;
+				delitem Oil_Paper,1;
+				delitem Chinese_Ink,3;
+				delitem Feather_Of_Birds,3;
+				delitem Blue_Gemstone,20;
+				god_eremes = 14;
 				next;
 				mes "[Librarian Jekan]";
 				mes "Alright then...";
@@ -1110,7 +1126,7 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 			else {
 				mes "[Librarian Jekan]";
 				mes "Let me go over and review the document before I make a copy...";
-				set god_eremes,god_eremes+1;
+				++god_eremes;
 			}
 			close;
 		}
@@ -1120,7 +1136,7 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 			next;
 			mes "[Librarian Jekan]";
 			mes "Just remember, this copy needs to stay in the Prontera Library. That means you have to come back if you need to read the document again.";
-			set god_eremes,17;
+			god_eremes = 17;
 			close;
 		}
 		else if (god_eremes > 16) {
@@ -1129,7 +1145,7 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 			mes "So, what do you need today?";
 			next;
 			while(1) {
-				switch(select("Record Search.:Quit searching.:Search Help:Converse.")) {
+				switch(select("Record Search.", "Quit searching.", "Search Help", "Converse.")) {
 				case 1:
 					mes "^663300- Search Magic Initiated -";
 					mes "- Please enter a keyword. -";
@@ -1174,7 +1190,7 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 									mes " : Royal Myst";
 									mes " : The Nineball^000000";
 									if (god_eremes == 17) {
-										set god_eremes,18;
+										god_eremes = 18;
 									}
 									close2;
 									if (compare(.@input$,"record") == 1) {
@@ -1197,7 +1213,7 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 										mes "Most of the members of the 1st Squad were transferred to other squads or retired. Their former leader, Rebarev Doug, is currently in charge of researching godly artifacts under royal edict.^000000";
 										close2;
 										if (god_eremes == 18) {
-											set god_eremes,19;
+											god_eremes = 19;
 										}
 									}
 								}
@@ -1267,7 +1283,7 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 								mes " : The Nineball^000000";
 								close2;
 								if (god_eremes == 17) {
-									set god_eremes,18;
+									god_eremes = 18;
 								}
 								if (compare(.@input$,"record") == 1) {
 									mes "^663300[Keyword: ^9966331st Squad Record^663300]";
@@ -1289,7 +1305,7 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 									mes "Most of the members of the 1st Squad were transferred to other squads or retired. Their former leader, Rebarev Doug, is currently in charge of researching godly artifacts under royal edict.^000000";
 									close2;
 									if (god_eremes == 18) {
-										set god_eremes,19;
+										god_eremes = 19;
 									}
 								}
 							}
@@ -1483,7 +1499,7 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 			mes "[Librarian Jekan]";
 			mes "Ah, please do not touch any books in that section. ...I'm sure there's nothing there that could be useful to you.";
 			next;
-			switch(select("Ignore him and check books.:Step back.")) {
+			switch(select("Ignore him and check books.", "Step back.")) {
 			case 1:
 				mes "[Librarian Jekan]";
 				mes "Hey...!";
@@ -1512,7 +1528,7 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 		mes "nothing useful over in";
 		mes "that section anyway.";
 		next;
-		switch(select("Ignore him and check books.:Step back.")) {
+		switch(select("Ignore him and check books.", "Step back.")) {
 		case 1:
 			mes "[Librarian Jekan]";
 			mes "I told you...!";
@@ -1550,7 +1566,7 @@ geffen_in,109,161,3	script	Crusader#God1	4_M_CRU,{
 			mes "Can I help you";
 			mes "with anything?";
 			next;
-			switch(select("Ask him about the 1st Squad.:Ask him how he's been doing.:Ask him about the 1st Squad's last mission.")) {
+			switch(select("Ask him about the 1st Squad.", "Ask him how he's been doing.", "Ask him about the 1st Squad's last mission.")) {
 			case 1:
 				if (god_eremes == 18) {
 					mes "[Zan.Huadoku]";
@@ -1597,7 +1613,7 @@ geffen_in,109,161,3	script	Crusader#God1	4_M_CRU,{
 					mes "[Zan.Huadoku]";
 					mes "^3355FFZan looks very confused and his eyes begin to glaze with a dazed look. You try speaking to him again, but he doesn't respond at all.^000000";
 					if (!god_megin_1) {
-						set god_megin_1,1;
+						god_megin_1 = 1;
 					}
 					close;
 				}
@@ -1668,7 +1684,7 @@ geffen_in,109,161,3	script	Crusader#God1	4_M_CRU,{
 					next;
 					mes "^3355FFZan stood still in silence, with a pained look on his face.^000000";
 					if (god_megin_1 == 1) {
-						set god_megin_1,2;
+						god_megin_1 = 2;
 					}
 					close;
 				}
@@ -1707,7 +1723,7 @@ geffen_in,109,161,3	script	Crusader#God1	4_M_CRU,{
 			mes "I can't think about anything further than that. I can't even remember what we found. Three months after that all happened, I've had these head problems...";
 			next;
 			mes "^3355FFZan stood still in silence, with a pained look on his face.^000000";
-			set god_megin_1,3;
+			god_megin_1 = 3;
 			close;
 		}
 		else if (god_megin_1 > 2) {
@@ -1734,7 +1750,7 @@ geffen_in,109,161,3	script	Crusader#God1	4_M_CRU,{
 		mes "Do you know the";
 		mes "importance of supply?";
 		next;
-		switch(select("No.:Yes!")) {
+		switch(select("No.", "Yes!")) {
 		case 1:
 			mes "[Zan.Huadoku]";
 			mes "Any military force or party needs their supplies to be replenished if they are to continue battling for a prolonged period of time.";
@@ -1803,7 +1819,7 @@ morocc_in,146,179,0	script	Employee#megin1	1_F_01,{
 			next;
 			input @str$;
 			if (@str$ == "Cuaque Donon" || @str$ == "Cuaque" || @str$ == "Donon") {
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Do you happen to know a person named " + @str$ + " ...?";
 				if (god_eremes == 18) {
 					mes "[Inn Employee]";
@@ -1826,7 +1842,7 @@ morocc_in,146,179,0	script	Employee#megin1	1_F_01,{
 					mes "Why are you so curious?!";
 					mes "Are you one of them?!";
 					next;
-					switch(select("Rebarev Doug sent me!:Wait, is he in hiding?:Just... curious.")) {
+					switch(select("Rebarev Doug sent me!", "Wait, is he in hiding?", "Just... curious.")) {
 					case 1:
 						if (rand(1,10) > 3) {
 							mes "[Ms. Scary Inn Employee]";
@@ -1843,7 +1859,7 @@ morocc_in,146,179,0	script	Employee#megin1	1_F_01,{
 							mes "^3355FFThe Inn Employee";
 							mes "knocks you out~^000000";
 							close2;
-							percentheal -100,0;
+							unitkill getcharid(CHAR_ID_ACCOUNT);
 							end;
 						}
 						else {
@@ -1861,7 +1877,7 @@ morocc_in,146,179,0	script	Employee#megin1	1_F_01,{
 							mes "and I'm saying it just once...";
 							mes "^0000FFAragham never hoarded";
 							mes "upgrade items.^000000";
-							set god_megin_2,1;
+							god_megin_2 = 1;
 							close;
 						}
 					case 2:
@@ -1881,7 +1897,8 @@ morocc_in,146,179,0	script	Employee#megin1	1_F_01,{
 							mes "^3355FFThe Inn Employee";
 							mes "knocks you out~^000000";
 							close2;
-							percentheal -100,0;
+							unitkill getcharid(CHAR_ID_ACCOUNT);
+							end;
 						}
 						else {
 							mes "[Ms. Scary Inn Employee]";
@@ -1903,7 +1920,7 @@ morocc_in,146,179,0	script	Employee#megin1	1_F_01,{
 							mes "you this hint once...";
 							mes "^0000FFAragham never hoarded";
 							mes "upgrade items.^000000";
-							set god_megin_2,1;
+							god_megin_2 = 1;
 							close;
 						}
 					case 3:
@@ -1921,7 +1938,7 @@ morocc_in,146,179,0	script	Employee#megin1	1_F_01,{
 							mes "^3355FFThe Inn Employee";
 							mes "knocks you out~^000000";
 							close2;
-							percentheal -100,0;
+							unitkill getcharid(CHAR_ID_ACCOUNT);
 							end;
 						}
 						else {
@@ -1941,7 +1958,7 @@ morocc_in,146,179,0	script	Employee#megin1	1_F_01,{
 							mes "^0000FFAragham never";
 							mes "hoarded upgrade items.^000000";
 							mes "Now, don't forget!";
-							set god_megin_2,1;
+							god_megin_2 = 1;
 							close;
 						}
 					}
@@ -2016,39 +2033,39 @@ in_rogue,243,61,0	script	Suspicious Man#megin	4_M_ALCHE_A,{
 				next;
 				mes "^3355FFYou try your best to calm him down and to tell him what you've found in the document.^000000";
 				next;
-				if ((countitem(740) > 0) || (countitem(741) > 0) || (countitem(742) > 0) || (countitem(743) > 0) || (countitem(750) > 0) || (countitem(751) > 0) || (countitem(752) > 0) || (countitem(753) > 0) || (countitem(754) > 0) || (countitem(7206) > 0) || (countitem(7212) > 0)){
-					if (countitem(740) > 0) {
-						set .@toy$,"Puppet";
+				if ((countitem(Stuffed_Doll) > 0) || (countitem(Poring_Doll) > 0) || (countitem(Chonchon_Doll) > 0) || (countitem(Spore_Doll) > 0) || (countitem(Baphomet_Doll) > 0) || (countitem(Osiris_Doll) > 0) || (countitem(Grasshopper_Doll) > 0) || (countitem(Monkey_Doll) > 0) || (countitem(Raccoondog_Doll) > 0) || (countitem(Black_Kitty_Doll) > 0) || (countitem(Hanging_Doll) > 0)){
+					if (countitem(Stuffed_Doll) > 0) {
+						.@toy$ = "Puppet";
 					}
-					else if (countitem(741) > 0) {
-						set .@toy$,"Poring Doll";
+					else if (countitem(Poring_Doll) > 0) {
+						.@toy$ = "Poring Doll";
 					}
-					else if (countitem(742) > 0) {
-						set .@toy$,"Chonchon Doll";
+					else if (countitem(Chonchon_Doll) > 0) {
+						.@toy$ = "Chonchon Doll";
 					}
-					else if (countitem(743) > 0) {
-						set .@toy$,"Spore Doll";
+					else if (countitem(Spore_Doll) > 0) {
+						.@toy$ = "Spore Doll";
 					}
-					else if (countitem(744) > 0) {
-						set .@toy$,"Baphomet Doll";
+					else if (countitem(Bunch_Of_Flowers) > 0) {
+						.@toy$ = "Baphomet Doll";
 					}
-					else if (countitem(751) > 0) {
-						set .@toy$,"Osiris Doll";
+					else if (countitem(Osiris_Doll) > 0) {
+						.@toy$ = "Osiris Doll";
 					}
-					else if (countitem(752) > 0) {
-						set .@toy$,"Rocker Doll";
+					else if (countitem(Grasshopper_Doll) > 0) {
+						.@toy$ = "Rocker Doll";
 					}
-					else if (countitem(753) > 0) {
-						set .@toy$,"Yoyo Doll";
+					else if (countitem(Monkey_Doll) > 0) {
+						.@toy$ = "Yoyo Doll";
 					}
-					else if (countitem(754) > 0) {
-						set .@toy$,"Racoon Doll";
+					else if (countitem(Raccoondog_Doll) > 0) {
+						.@toy$ = "Racoon Doll";
 					}
-					else if (countitem(7206) > 0) {
-						set .@toy$,"Black Cat Doll";
+					else if (countitem(Black_Kitty_Doll) > 0) {
+						.@toy$ = "Black Cat Doll";
 					}
 					else {
-						set .@toy$,"Hung Doll";
+						.@toy$ = "Hung Doll";
 					}
 					mes "^3355FFYou pulled out a "+ .@toy$ +"";
 					mes "to cover your face, and wiggled its arms as if it were talking.^000000";
@@ -2065,7 +2082,7 @@ in_rogue,243,61,0	script	Suspicious Man#megin	4_M_ALCHE_A,{
 				mes "^3355FFChaque Donon nodded his head";
 				mes "and happily sucked his thumb. It saddens you to see a former Crusader reduced to this state.^000000";
 				next;
-				switch(select("Ask him about the Inn Maid.:Ask him how he's been doing.:Ask about 1st Squad's Final Mission.")) {
+				switch(select("Ask him about the Inn Maid.", "Ask him how he's been doing.", "Ask about 1st Squad's Final Mission.")) {
 				case 1:
 					mes "[Cuaque Donon]";
 					mes "S-she's my sister.";
@@ -2127,7 +2144,7 @@ in_rogue,243,61,0	script	Suspicious Man#megin	4_M_ALCHE_A,{
 						next;
 						mes "[Cuaque Donon]";
 						mes "^666666Still, this is the safest place for me for a while. But I'm always ready to run away if I have to.^000000";
-						set god_megin_2,3;
+						god_megin_2 = 3;
 					}
 					close;
 				case 2:
@@ -2150,7 +2167,7 @@ in_rogue,243,61,0	script	Suspicious Man#megin	4_M_ALCHE_A,{
 					mes "[Cuaque Donon]";
 					mes "Like anyone who works as a Crusader under my old boss will end up like me. You know... broken.";
 					if (god_megin_2 == 1) {
-						set god_megin_2,2;
+						god_megin_2 = 2;
 					}
 					close;
 				case 3:
@@ -2167,14 +2184,14 @@ in_rogue,243,61,0	script	Suspicious Man#megin	4_M_ALCHE_A,{
 						mes "just by looking at it!";
 						next;
 						if (rand(1,10) > 4) {
-							switch(select("^FF0000Megingjard^000000!:^FFFFFFListen to him quietly^000000.")) {
+							switch(select("^FF0000Megingjard^000000!", "^FFFFFFListen to him quietly^000000.")) {
 							case 1:
 								mes "[Cuaque Donon]";
 								mes "Waaaaaaaah~!";
 								mes "You're the same";
 								mes "as all the others!";
 								mes "Go away from me!";
-								set god_megin_2,0;
+								god_megin_2 = 0;
 								close;
 							case 2:
 								mes "[Cuaque Donon]";
@@ -2184,7 +2201,7 @@ in_rogue,243,61,0	script	Suspicious Man#megin	4_M_ALCHE_A,{
 								mes "Ergh...";
 								mes "I can't remember";
 								mes "more than that...";
-								set god_megin_2,4;
+								god_megin_2 = 4;
 								close;
 							}
 						}
@@ -2196,7 +2213,7 @@ in_rogue,243,61,0	script	Suspicious Man#megin	4_M_ALCHE_A,{
 								mes "You're the same";
 								mes "as all the others!";
 								mes "Go away from me!";
-								set god_megin_2,0;
+								god_megin_2 = 0;
 								close;
 							case 2:
 								mes "[Cuaque Donon]";
@@ -2204,7 +2221,7 @@ in_rogue,243,61,0	script	Suspicious Man#megin	4_M_ALCHE_A,{
 								mes "You're the same";
 								mes "as all the others!";
 								mes "Go away from me!";
-								set god_megin_2,0;
+								god_megin_2 = 0;
 								close;
 							case 3:
 								mes "[Cuaque Donon]";
@@ -2214,7 +2231,7 @@ in_rogue,243,61,0	script	Suspicious Man#megin	4_M_ALCHE_A,{
 								mes "Ergh...";
 								mes "I can't remember";
 								mes "more than that...";
-								set god_megin_2,4;
+								god_megin_2 = 4;
 								close;
 							}
 						}
@@ -2273,7 +2290,7 @@ alberta,196,146,0	script	Crusader#megin2	4_M_CRU,{
 			mes "[Jack O]";
 			mes "Eh...?";
 			next;
-			switch(select("Ask him about Rebarev Doug.:Ask him how he's been doing.:Ask him about the last mission of the 1st Squad.")) {
+			switch(select("Ask him about Rebarev Doug.", "Ask him how he's been doing.", "Ask him about the last mission of the 1st Squad.")) {
 			case 1:
 				mes "[Jack O]";
 				mes "Ah! Yeah, our old leader back in the 1st Squad. Heh. I haven't seen him since we were disbanded.";
@@ -2303,7 +2320,7 @@ alberta,196,146,0	script	Crusader#megin2	4_M_CRU,{
 				mes "[Jack O]";
 				mes "Eh...?";
 				next;
-				switch(select("Ask him about Rebarev Doug.:Ask him how he's been doing.:Ask about 1st Squad's final mission.")) {
+				switch(select("Ask him about Rebarev Doug.", "Ask him how he's been doing.", "Ask about 1st Squad's final mission.")) {
 				case 1:
 					if (god_megin_3 == 1) {
 						mes "[Jack O]";
@@ -2347,7 +2364,7 @@ alberta,196,146,0	script	Crusader#megin2	4_M_CRU,{
 						mes "[Jack O]";
 						mes "That's all I can remember.";
 						mes "I better take some Green Herbs now. My head throbs like crazy whenever I think about that time.";
-						set god_megin_3,2;
+						god_megin_3 = 2;
 						close;
 					}
 					else {
@@ -2373,7 +2390,7 @@ alberta,196,146,0	script	Crusader#megin2	4_M_CRU,{
 					mes "I might not be able to remember";
 					mes "a whole lot from back then, but the part about ^0000FFinsubordination^000000 can't be right. I'm sure of that.";
 					if (god_megin_3 == 0) {
-						set god_megin_3,1;
+						god_megin_3 = 1;
 					}
 					close;
 				}
@@ -2455,7 +2472,7 @@ alberta,196,146,0	script	Crusader#megin2	4_M_CRU,{
 }
 
 aldebaran,66,213,0	script	Lady#megin	1_F_04,{
-	if (checkweight(1301,3) == 0) {
+	if (checkweight(Axe,3) == 0) {
 		mes "- You are carrying too many items!";
 		close;
 	}
@@ -2504,9 +2521,9 @@ aldebaran,66,213,0	script	Lady#megin	1_F_04,{
 				mes "[Emma Searth]";
 				mes "^333333*Sigh...*^000000";
 				next;
-				switch(select("About her past.:Why be a Kafra Lady?:About memories she can remember.")) {
+				switch(select("About her past.", "Why be a Kafra Lady?", "About memories she can remember.")) {
 				case 1:
-					if (countitem(7015) > 0) {
+					if (countitem(Bookclip_In_Memory) > 0) {
 						mes "^3355FFThe scent of your";
 						mes "Memory Bookmark";
 						mes "seems to bring clarity";
@@ -2548,7 +2565,7 @@ aldebaran,66,213,0	script	Lady#megin	1_F_04,{
 						mes "I think I can";
 						mes "try to remember";
 						mes "my comrades...";
-						set god_megin_4,1;
+						god_megin_4 = 1;
 						close;
 					}
 					else {
@@ -2578,7 +2595,7 @@ aldebaran,66,213,0	script	Lady#megin	1_F_04,{
 					mes "I want to become a Kafra Lady.";
 					close;
 				case 3:
-					if (countitem(511) > 0 && god_megin_3 > 1) {
+					if (countitem(Green_Herb) > 0 && god_megin_3 > 1) {
 						mes "^3355FFEmma Searth clutches her head and winces as she suffers from another migraine.^000000";
 						next;
 						mes "^3355FFRemembering that a Green Herb was able to relieve Jack O, you gave a Green Herb to Emma. She takes it, and looks a little more relaxed.^000000";
@@ -2601,7 +2618,7 @@ aldebaran,66,213,0	script	Lady#megin	1_F_04,{
 						mes "have, no, was there someone";
 						mes "named that with us?";
 						close2;
-						set god_megin_4,2;
+						god_megin_4 = 2;
 						end;
 					}
 					else {
@@ -2650,9 +2667,9 @@ aldebaran,66,213,0	script	Lady#megin	1_F_04,{
 			next;
 			mes "[Emma Searth]";
 			mes "I really appreciate you coming here to talk to me about the old days. I, I want you to have this.";
-			set god_eremes,28;
-			getitem 603,1; // Old_Blue_Box
-			if (checkre(3)) {
+			god_eremes = 28;
+			getitem Old_Blue_Box,1; // Old_Blue_Box
+			if (RENEWAL_EXP) {
 				if (BaseLevel < 56) getexp 2700,0;
 				else if ((BaseLevel > 55) && (BaseLevel < 61)) getexp 3000,0;
 				else if ((BaseLevel > 60) && (BaseLevel < 66)) getexp 5605,0;
@@ -2715,7 +2732,7 @@ cmd_in02,190,94,3	script	Man#megin	4_M_ROGUE,{
 			mes "I'm busy here! Awright, now";
 			mes "which one do I bet on...?";
 			next;
-			switch(select("Speak of Rebarev Doug.:Speak of the 1st Squad.:Talk about gambling.:Discuss hobbies.")) {
+			switch(select("Speak of Rebarev Doug.", "Speak of the 1st Squad.", "Talk about gambling.", "Discuss hobbies.")) {
 			case 1:
 				mes "[Royal Myst]";
 				mes "Wha--? Him again?! Tell him I'm fine! Dandy, even! Why's he gotta send all these people just to ask";
@@ -2780,7 +2797,7 @@ cmd_in02,190,94,3	script	Man#megin	4_M_ROGUE,{
 					if (god_megin_6 == 0) {
 						mes "[Royal Myst]";
 						mes "Huh? What's that old geezer want this time? Tell 'em I'm fine, dandy even! Why the hell does he keep sending people...";
-						set god_megin_6,1;
+						god_megin_6 = 1;
 						close;
 					}
 					else if (god_megin_6 > 0 && god_megin_6 < 15) {
@@ -2837,7 +2854,7 @@ cmd_in02,190,94,3	script	Man#megin	4_M_ROGUE,{
 						next;
 						mes "[Royal Myst]";
 						mes "Hey, what do you think happens to Crusaders when they're framed and killed, huh? Where exactly do they go? Niflheim, Vahalla...?";
-						set god_eremes,20;
+						god_eremes = 20;
 						close;
 					}
 				case 4:
@@ -2851,7 +2868,7 @@ cmd_in02,190,94,3	script	Man#megin	4_M_ROGUE,{
 						close;
 					}
 					else if (god_megin_6 > 0 && god_megin_6 < 15) {
-						if (countitem(970) > 0) {
+						if (countitem(Alchol) > 0) {
 							mes "[Royal Myst]";
 							mes "Speaking of which,";
 							mes "I haven't had a drink";
@@ -2864,7 +2881,7 @@ cmd_in02,190,94,3	script	Man#megin	4_M_ROGUE,{
 							mes "^3355FFBefore you can even think,";
 							mes "Royal Myst dips his hand into your inventory and helps himself to an Alcohol.^000000";
 							delitem 970,1;
-							set god_megin_6,god_megin_6 +2;
+							god_megin_6 += 2;
 							close;
 						}
 						else {
@@ -2935,7 +2952,7 @@ jawaii_in,44,110,0	script	Security Officer#megin	4_M_JOB_KNIGHT2,{
 				mes "[The Nineball]";
 				mes "I've been told that there have";
 				mes "been many unruly drunkards here lately, but it is in our best interest to make your experience here as enjoyable as possible.";
-				set god_megin_5,god_megin_5 +1;
+				++god_megin_5;
 				close;
 			}
 			else if (god_megin_5 == 5) {
@@ -2981,7 +2998,7 @@ niflheim,109,254,0	script	Egnigem	4_M_NFDEADSWDMAN,{
 			else {
 				mes "[Egnigem]";
 				mes "Greetings...";
-				mes ""+ strcharinfo(0) +".";
+				mes ""+ strcharinfo(PC_NAME) +".";
 				mes "I've been watching you in the";
 				mes "world of the living. I see you've been busy looking for the truth about the 1st Squad, haven't you?";
 				next;
@@ -2995,7 +3012,7 @@ niflheim,109,254,0	script	Egnigem	4_M_NFDEADSWDMAN,{
 				mes "been forgotten...";
 				while(1) {
 					next;
-					switch(select("The Mission:Fate of the 1st Squad:Why are you in Niflheim?:Thanks, I've heard enough.")) {
+					switch(select("The Mission", "Fate of the 1st Squad", "Why are you in Niflheim?", "Thanks, I've heard enough.")) {
 					case 1:
 						mes "[Egnigem]";
 						mes "First of all, the official record of our mission is misleading.";
@@ -3146,10 +3163,10 @@ niflheim,109,254,0	script	Egnigem	4_M_NFDEADSWDMAN,{
 						mes "Thank you for";
 						mes "listening to me...";
 						if (god_eremes == 21) {
-							set god_eremes,23;
+							god_eremes = 23;
 						}
 						else if (god_eremes == 22) {
-							set god_eremes,24;
+							god_eremes = 24;
 						}
 						close;
 					}
@@ -3169,29 +3186,29 @@ niflheim,109,254,0	script	Egnigem	4_M_NFDEADSWDMAN,{
 			mes "imbue you with the";
 			mes "^666666last vestiges of my strength^000000...";
 			specialeffect EF_BEGINSPELL5;
-			specialeffect2 EF_HOLYHIT;
+			specialeffect(EF_HOLYHIT, AREA, playerattached());
 			next;
 			mes "[Egnigem]";
 			mes "May the heavens";
 			mes "answer me as I call upon the";
 			mes "light of justice that empowers the defenders of truth, and threaten the enemies of peace.";
 			specialeffect EF_BEGINSPELL6;
-			specialeffect2 EF_HOLYHIT;
+			specialeffect(EF_HOLYHIT, AREA, playerattached());
 			next;
 			mes "[Egnigem]";
 			mes "May you always shine with";
 			mes "the light of truth. Let the light within you eradicate the shadows";
 			mes "of deception, fear and malice.";
 			specialeffect EF_BEGINSPELL6;
-			specialeffect2 EF_HOLYHIT;
+			specialeffect(EF_HOLYHIT, AREA, playerattached());
 			next;
 			mes "[Egnigem]";
 			mes "By the holy power";
 			mes "invested in me, I humbly bestow upon you my remaining strength. Fight honorably, and do not lose sight of righteousness.";
 			specialeffect EF_LOCKON;
-			specialeffect2 EF_HOLYCROSS;
-			set god_eremes,27;
-			if (checkre(3)) {
+			specialeffect(EF_HOLYCROSS, AREA, playerattached());
+			god_eremes = 27;
+			if (RENEWAL_EXP) {
 				if (BaseLevel < 56) getexp 2700,0;
 				else if ((BaseLevel > 55) && (BaseLevel < 61)) getexp 3000,0;
 				else if ((BaseLevel > 60) && (BaseLevel < 66)) getexp 5605,0;
@@ -3227,29 +3244,29 @@ niflheim,109,254,0	script	Egnigem	4_M_NFDEADSWDMAN,{
 			mes "imbue you with the";
 			mes "^666666last vestiges of my strength^000000...";
 			specialeffect EF_BEGINSPELL5;
-			specialeffect2 EF_HOLYHIT;
+			specialeffect(EF_HOLYHIT, AREA, playerattached());
 			next;
 			mes "[Egnigem]";
 			mes "May the heavens";
 			mes "answer me as I call upon the";
 			mes "light of justice that empowers the defenders of truth, and threaten the enemies of peace.";
 			specialeffect EF_BEGINSPELL6;
-			specialeffect2 EF_HOLYHIT;
+			specialeffect(EF_HOLYHIT, AREA, playerattached());
 			next;
 			mes "[Egnigem]";
 			mes "May you always shine with";
 			mes "the light of truth. Let the light within you eradicate the shadows";
 			mes "of deception, fear and malice.";
 			specialeffect EF_BEGINSPELL6;
-			specialeffect2 EF_HOLYHIT;
+			specialeffect(EF_HOLYHIT, AREA, playerattached());
 			next;
 			mes "[Egnigem]";
 			mes "By the holy power";
 			mes "invested in me, I humbly bestow upon you my remaining strength. Fight honorably, and do not lose sight of righteousness.";
 			specialeffect EF_LOCKON;
-			specialeffect2 EF_HOLYCROSS;
-			set god_eremes,27;
-			if (checkre(3)) {
+			specialeffect(EF_HOLYCROSS, AREA, playerattached());
+			god_eremes = 27;
+			if (RENEWAL_EXP) {
 				if (BaseLevel < 56) getexp 2700,0;
 				else if ((BaseLevel > 55) && (BaseLevel < 61)) getexp 3000,0;
 				else if ((BaseLevel > 60) && (BaseLevel < 66)) getexp 5605,0;
@@ -3281,12 +3298,12 @@ niflheim,109,254,0	script	Egnigem	4_M_NFDEADSWDMAN,{
 			mes "to be in this realm of cold and suffering. But I can only help you escape by telling you what little";
 			mes "I know.";
 			next;
-			switch(select("Ask him about buildings.:Remove marks on mini-map.:Cancel.")) {
+			switch(select("Ask him about buildings.", "Remove marks on mini-map.", "Cancel.")) {
 			case 1:
 				mes "[Egnigem]";
 				mes "I see. If you better understand Niflheim's layout, you have a greater chance of surviving and escaping.";
 				next;
-				switch(select("Witch's Castle:Tool Shop:Weapon Shop:Tavern:Cancel")) {
+				switch(select("Witch's Castle", "Tool Shop", "Weapon Shop", "Tavern", "Cancel")) {
 				case 1:
 					mes "[Egnigem]";
 					mes "The witch of Niflheim...";
@@ -3361,12 +3378,12 @@ niflheim,109,254,0	script	Egnigem	4_M_NFDEADSWDMAN,{
 		mes "to be in this realm of cold and suffering. But I can only help you escape by telling you what little";
 		mes "I know.";
 		next;
-		switch(select("Ask him about buildings.:Remove marks on mini-map.:Cancel.")) {
+		switch(select("Ask him about buildings.", "Remove marks on mini-map.", "Cancel.")) {
 		case 1:
 			mes "[Egnigem]";
 			mes "...I see. Now, let me introduce you all buildings in Niflheim!";
 			next;
-			switch(select("Witch's Castle:Tool Shop:Weapon Shop:Tavern:Cancel")) {
+			switch(select("Witch's Castle", "Tool Shop", "Weapon Shop", "Tavern", "Cancel")) {
 			case 1:
 				mes "[Egnigem]";
 				mes "The witch of Niflheim...";

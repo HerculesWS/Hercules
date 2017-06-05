@@ -9,12 +9,12 @@ How does this work?
 -------------------------------------------------------------------------------
 
 Place only the settings you have changed in the import files.
-For example, if you want to change a value in conf/battle/exp.conf:
+For example, if you want to change a value in conf/map/battle/exp.conf:
 
 	// Rate at which exp. is given. (Note 2)
 	base_exp_rate: 700
 
-You could instead copy the setting into conf/import/battle_conf.txt,
+You could instead copy the setting into conf/import/battle.conf,
 and you'll eliminate any problems updating in the future.
 
 Neat, isn't it?

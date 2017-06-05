@@ -1,0 +1,1783 @@
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2013-2016  Hercules Dev Team
+//= Copyright (C)  Ridley
+//= Copyright (C)  Ziu
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Sara's Memory
+//================= Description ===========================================
+//= When Sarah Irine was only 4 years old, a terrible tragedy took place
+//= in her home: her mother was struck down by an assailant. The only
+//= suspect was her father Lord Irine, who claims to have defeated the one
+//= who attacked her mother. Too shocked and afraid by the sight of her
+//= dying mother, little Sarah is not convinced and flees while Payon
+//= guards chase her down.
+//================= Current Version =======================================
+//= 1.1
+//=========================================================================
+
+dali,130,107,5	script	Leon the Adventurer#Sara	4_M_DST_GRAND,{ // instance CD check only at the Dimensional Device
+	mes("[Leon the Adventurer]");
+	if (BaseLevel < 99) {
+		mes("You know... this place doesn't seem to be safe for you. Please returnto me once you have achieved LV. 99");
+		close;
+	}
+	if (!questprogress(15003)) {
+		if (!sarainstance) {	// doing the instance for the 1st time
+			mes("Wow! I thought I was the only one who knew about this place.");
+			next;
+			mes("[Leon the Adventurer]");
+			mes("Excuse my rudeness! I am Pon de Leon, the famous adventurer!");
+			next;
+			mes("[Leon the Adventurer]");
+			mes("My friend calls me Leon the Lion! For my tough appearance and attitude. Plus I have quite a bite!");
+			next;
+			mes("[Leon the Adventurer]");
+			mes("You know, this is such a strange location...");
+			next;
+			mes("[Leon the Adventurer]");
+			mes("As you explore it you start to see cracks in space and time. Each one covered by a dimensional device.");
+			next;
+			mes("[Leon the Adventurer]");
+			mes("For example, I think I have caught glimpses of Payon through the dimensional device closest to us.\r"
+				"But it doesn't seem right. Almost like it is a little bit older then it should be.");
+			next;
+			mes("[Leon the Adventurer]");
+			mes("I want to explore it, but with my old age and my knees I don't seem to be quite up to the task.");
+			next;
+			mes("[Leon the Adventurer]");
+			mes("So, I would like to ask something of you.");
+			next;
+			mes("[Leon the Adventurer]");
+			mes("Please venture through the dimensional device and report to me what you find within.");
+			next;
+			mes("[Leon the Adventurer]");
+			mes("Though, I should warn you. It might be unstable. Make sure you enter the first chance you get.");
+			close2;
+			setquest 15003;
+			end;
+		} else {
+			mes("You wish to relive the past again?");
+			next;
+				if (select("Yes","No") == 2)
+					close;
+			mes("[Leon the Adventurer]");
+			mes("Please venture through the dimensional device and report to me what you find within.");
+			next;
+			mes("[Leon the Adventurer]");
+			mes("Though, I should warn you. It might be unstable. Make sure you enter the first chance you get.");
+			setquest 15003;
+			close;
+		}
+	}
+	if (questprogress(15003) == 1) {
+		mes("I am not sure you have fully explored the crack in space and time yet. Perhaps you should look a bit further into it.");
+		next;
+		if (!sarainstance)
+			close;
+		switch (select("Okay", "Give up")) {
+		case 1:
+			mes("[Leon the Adventurer]");
+			mes("I am glad to hear that! Maybe	someday you can be as brave as old Leon the Lion!");
+			close;
+		case 2:
+			mes("[Leon the Adventurer]");
+			mes("Well.. I can't force you. Buf if you ever find your courage pelase talk to me again.");
+			erasequest 15003;
+			close;
+		}
+	}
+	if (questprogress(15003) == 2) {
+		if (!sarainstance) {	// 1st time reward and text
+			mes("What did you see in there?!");
+			next;
+			mes("[Leon the Adventurer]");
+			mes("Hrumpf, Sara Irene?! She's one of the 12 Valkyries. I didn't know her story was that tragic....");
+			next;
+			mes("[Leon the Adventurer]");
+			mes("It seems that you caused a huge misunderstanding between her and her father.");
+			next;
+			mes("[Leon the Adventurer]");
+			mes("I would not blame yourself for what	 occured. Or all the blood that was spilled. It seems that the\r"
+				"events that day were fated to happen no matter who was there.");
+			next;
+			mes("[Leon the Adventurer]");
+			mes("Please don't tell anyone about your time traveling adventure. We can't have anyone thinking you more\r"
+				"important then old Leon. Plus they wouldn't believe such a story anyways.");
+			next;
+			mes("[Leon the Adventurer]");
+			mes("I think that in about 20 hours after you last entered the rift will stable enough for you to transverse it again.");
+			sarainstance = 1;
+			getexp 770000, 1000000;	// reward first time
+		} else {	// 2nd time text
+			mes("What did you see in there?! Was there anything new?");
+			next;
+			select("Nothing has changed from the last time.");
+			mes("[Leon the Adventurer]");
+			mes("I am sorry to hear that... If...");
+			next;
+			mes("[Leon the Adventurer]");
+			mes("If you want to try again. I think that in about 20 hours after you last entered the rift will be stable enough\r"
+				"for you to transverse it again.");
+			next;
+			mes("[Leon the Adventurer]");
+			mes("You should rest up. Travelling Through time would make even Leon tired!");
+			getexp 550000, 550000;	// reward 2nd and following
+		}
+		erasequest 15003;
+		close;
+	}
+}
+
+dali,138,118,0	script	Dimensional Device#dimen	PORTAL,{
+	if (!questprogress(15003)) {
+		mes("[Leon the Adventurer]");
+		mes("Before you go playing around with that. Why don't you come over here and talk to me?");
+		close;
+	}
+	.@sara_time = questprogress(15002, PLAYTIME);
+	if (.@sara_time == 1) {
+		mes("[Leon the Adventurer]");
+		mes("I think that in about 20 hours after you last entered the rift will stable enough for you to\r"
+			"transverse it again.");
+		close;
+	} else if (.@sara_time == 2) {
+		erasequest 15002;
+		end;
+	} else if (!.@sara_time) {
+		.@party_id = getcharid(CHAR_ID_PARTY);
+		.@p_name$ = getpartyname(.@party_id);
+		.@md_name$ = "Sara's Memory";
+		if (!instance_check_party(.@party_id)) {
+			mes("[Leon the Adventurer]");
+			mes("Before you enter you need to organize a party! Don't know how? Type /organize PARTYNAMEHERE. You\r"
+				"can use quotes to put spaces in a party name.");
+			close;
+		}
+		if (getcharid(CHAR_ID_CHAR) == getpartyleader(.@party_id, 2))
+			.@menu1$ = "Boot up the dimensional device";
+		else
+			.@menu1$ = "";
+		switch (select(.@menu1$, "Use the dimensional device", "Cancel")) {
+		case 1:
+			if (getcharid(CHAR_ID_CHAR) != getpartyleader(.@party_id, 2))
+				end;
+			.@instance = instance_create(.@md_name$, .@party_id);
+			if (.@instance < 0) {
+				mesf("Party Name: %s", .@p_name$);
+				mesf("Party Leader: %s", strcharinfo(PC_NAME));
+				mesf("^0000FF%s^000000 - Reservation Failed!", .@md_name$);
+				close;
+			}
+			if (instance_attachmap("1@sara", .@instance) == "") {
+				mesf("^0000FF%s^000000 - Reservation Failed!", .@md_name$);
+				instance_destroy(.@instance);
+				close;
+			}
+			instance_set_timeout(3600, 300, .@instance);
+			instance_init(.@instance);
+			mes("^FF0000The dimensional boots up cleanly. Use the device to enter the crack in space and time.^000000");
+			close;
+		case 2:
+			if (has_instance("1@sara") == "") {
+				mesf("The memorial dungeon ^0000FF%s^000000 does not exist.\r"
+					"The party leader did not generate the dungeon yet.", .@md_name$);
+				close;
+			}
+			mapannounce("dali", sprintf(_$("%s, member of the party %s entered the instance %s."), strcharinfo(PC_NAME), .@p_name$, .@md_name$), bc_map, C_SPRINGGREEN);
+			setquest 15002;
+			warp "1@sara", 250, 155;
+			end;
+			break;
+		case 3:
+			close;
+		}
+	}
+}
+
+1@sara,261,156,5	script	A girl#sarains	4_F_SARAH_BABY,{
+	if (getcharid(CHAR_ID_CHAR) != getpartyleader(getcharid(CHAR_ID_PARTY), 2))
+		end;
+	mesf("[%s]", strcharinfo(PC_NAME));
+	mes("Where am I?");
+	unittalk(getcharid(CHAR_ID_ACCOUNT), _("Where am I?"));
+	next;
+	cutin "sara_9sara1.bmp", 2;
+	mes("[A girl]");
+	mes("Hello! This is the village of Payon. You don't seem to be from around here...");
+	npctalk(_("A girl : Hello! This is the village of Payon. You don't seem to be from around here..."));
+	next;
+	mesf("[%s]", strcharinfo(PC_NAME));
+	mes("Are you from here? You don't seem to quite match the locals either.");
+	unittalk(getcharid(CHAR_ID_ACCOUNT), _("Are you from here? You don't seem to quite match to locals either."));
+	next;
+	mes("[A girl]");
+	mes("Yes! I was born here! My name is Sara. Sara Irene!");
+	npctalk(_("A girl : Yes! I was born here! My name is Sara. Sara Irene!"));
+	next;
+	mes("[Sara Irene]");
+	mes("My father is doyen of this village! I just take after my mother.");
+	npctalk(_("My father is doyen of this village! I just take after my mother."), instance_npcname("Sara Irene#saratalk"));
+	next;
+	mesf("[%s]", strcharinfo(PC_NAME));
+	mes("Oh! I am sorry! Uh... Why are you standing out here all alone?");
+	unittalk(getcharid(CHAR_ID_ACCOUNT), _("Oh! I am sorry! Uh... Why are you standing out here all alone?"));
+	next;
+	mes("[Sara Irene]");
+	mes("I am waiting for my father. He said that he will be here soon.");
+	npctalk(_("I am waiting for my father. He said that he will be here soon."), instance_npcname("Sara Irene#saratalk"));
+	next;
+	mes("^FF0000An older man exits the house. Sara's face brightens at the sight of him.^000000");
+	donpcevent instance_npcname("Doyen Irene#sarains")+"::OnEnable";
+	next;
+	mes("[Sara Irene]");
+	mes("Hi daddy!");
+	npctalk(_("Hi daddy!"), instance_npcname("Sara Irene#saratalk"));
+	next;
+	cutin "sara_elder_irine1.bmp", 2;
+	mes("[Doyen Irene]");
+	mes("Sweetheart you look so happy.");
+	npctalk(_("Sweetheart you look so happy."), instance_npcname("Doyen Irene#sarains"));
+	next;
+	cutin "sara_9sara1.bmp", 2;
+	mes("[Sara Irene]");
+	mes("You said you would come back soon! I waited for you and you lied!");
+	npctalk(_("You said you would come back soon! I waited for you and you lied!"), instance_npcname("Sara Irene#saratalk"));
+	next;
+	cutin "sara_elder_irine1.bmp", 2;
+	mes("[Doyen Irene]");
+	mes("Sweetheart, I am sorry I made you wait so long. The meeting with the village elders took longer than expected.");
+	npctalk(_("Sweetheart, I am sorry I made you wait so long. The meeting with the village elders took longer than expected."), instance_npcname("Doyen Irene#sarains"));
+	next;
+	cutin "sara_9sara1.bmp", 2;
+	mes("[Sara Irene]");
+	mes("I hate those old fogeys.");
+	npctalk(_("I hate those old fogeys."), instance_npcname("Sara Irene#saratalk"));
+	next;
+	cutin "sara_elder_irine1.bmp", 2;
+	mes("[Doyen Irene]");
+	mes("Don't say that sweetheart... Who is this with you?");
+	npctalk(_("Don't say that sweetheart... Who is this with you?"), instance_npcname("Doyen Irene#sarains"));
+	next;
+	mes("^FF0000Doyen Irene stares at you with fire in this eyes.^000000");
+	dispbottom(_("Doyen Irene stares at you with fire in this eyes."));
+	next;
+	mes("^FF0000Sara starts humming and singing softly to herself. She picks some wild flowers near by and presents\r"
+		"them to the Doyen.^000000");
+	dispbottom(_("Sara starts humming and singing softly to herself. She picks some wild flowers near by and presents them to the Doyen."));
+	next;
+	cutin "sara_9sara1.bmp", 2;
+	mes("[Sara Irene]");
+	mes("Here you go daddy!");
+	npctalk(_("Here you go daddy!"), instance_npcname("Sara Irene#saratalk"));
+	next;
+	cutin "sara_elder_irine1.bmp", 2;
+	mes("[Doyen Irene]");
+	mes("Oh Sara, should I have them?");
+	npctalk(_("Oh Sara, should I have them?"), instance_npcname("Doyen Irene#sarains"));
+	next;
+	cutin "sara_9sara1.bmp", 2;
+	mes("[Sara Irene]");
+	mes("Of course silly daddy!");
+	npctalk(_("Of course silly daddy!"), instance_npcname("Sara Irene#saratalk"));
+	next;
+	mes("^FF0000After being given the flowers the Doyen's mood seems to greatly improve.^000000");
+	dispbottom(_("After being given the flowers the Doyen's mood seems to greatly improve."));
+	next;
+	cutin "sara_elder_irine1.bmp", 2;
+	mes("[Doyen Irene]");
+	mes("Alright my princess, where should we go now?");
+	npctalk(_("Alright my princess, where should we go now?"), instance_npcname("Doyen Irene#sarains"));
+	next;
+	cutin "sara_9sara1.bmp", 2;
+	mes("[Sara Irene]");
+	mes("Oh daddy! Let's go to the top of that hill over there!");
+	npctalk(_("Oh daddy! Let's go to the top of that hill over there!"), instance_npcname("Sara Irene#saratalk"));
+	next;
+	cutin "sara_elder_irine1.bmp", 2;
+	mes("[Doyen Irene]");
+	mes("Hah! Hold onto me tight!");
+	npctalk(_("Hah! Hold onto me tight!"), instance_npcname("Doyen Irene#sarains"));
+	next;
+	cutin "sara_elder_irine1.bmp", 255;
+	mes("^FF0000As they wander off you hear strange voices from around the corner...^000000");
+	donpcevent instance_npcname("Doyen Irene#sarains")+"::OnDisable";
+	donpcevent instance_npcname("A girl#sarains")+"::OnDisable";
+	dispbottom(_("As they wander off you hear strange voices from around the corner...")),"";
+	disablenpc instance_npcname("Sara Irene#saratalk");
+	next;
+	mes("[Strange Old Man A]");
+	mes("I can feel Sara's power growing. We cannot just stand by and let her achieve her full potential!");
+	npctalk(_("I can feel Sara's power growing. We cannot just stand by and let her achieve her full potential!"), instance_npcname("Strange Old Man A#stalk"));
+	next;
+	mes("[Strange Old Man B]");
+	mes("She was born under a bad sign and her mother isn't even one of us!");
+	npctalk(_("She was born under a bad sign and her mother isn't even one of us!"), instance_npcname("Strange Old Man B#stalk"));
+	next;
+	mes("[Strange Old Man B]");
+	mes("Someday she will cause blood to flow in our streets.");
+	npctalk(_("Someday she will cause blood to flow in our streets."), instance_npcname("Strange Old Man B#stalk"));
+	next;
+	mes("[Strange Old Man A]");
+	mes("We have to do something before the Holy creatures select her. I asked HIM to take care of it.");
+	npctalk(_("We have to do something before the Holy creatures select her. I asked HIM to take care of it."), instance_npcname("Strange Old Man A#stalk"));
+	next;
+	mes("[Strange Old Man B]");
+	mes("We will see... I look forward to hearing the bad news that has befallen her...");
+	npctalk(_("We will see... I look forward to hearing the bad news that has befallen her..."), instance_npcname("Strange Old Man B#stalk"));
+	next;
+	mes("^FF0000The old man wander off it seems Sara might be in danger. We have to do something!^000000");
+	dispbottom(_("The old man wander off it seems Sara might be in danger. We have to do something!"));
+	close2;
+	donpcevent instance_npcname("Strange Old Man A#stalk")+"::OnDisable";
+	donpcevent instance_npcname("Strange Old Man B#stalk")+"::OnDisable";
+	donpcevent instance_npcname("Sara Irene#sarains1")+"::OnEnable";
+	donpcevent instance_npcname("#sarawarp1")+"::OnEnable";
+	viewpoint 1, 240, 145, 1, C_GREEN;
+	specialeffect EF_BASH;
+	end;
+
+OnInstanceInit:
+	donpcevent instance_npcname("A girl#sarains")+"::OnEnable";
+	end;
+OnEnable:
+	hideoffnpc instance_npcname("A girl#sarains");
+	end;
+OnDisable:
+	hideonnpc instance_npcname("A girl#sarains");
+	end;
+}
+
+1@sara,268,158,3	script	Doyen Irene#sarains	4_M_CHIEF_IRIN,{
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("Doyen Irene#sarains")+"::OnDisable";
+	end;
+OnEnable:
+	hideoffnpc instance_npcname("Doyen Irene#sarains");
+	end;
+OnDisable:
+	hideonnpc instance_npcname("Doyen Irene#sarains");
+	end;
+}
+
+1@sara,260,156,0	script	Sara Irene#saratalk	HIDDEN_NPC,{
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("Sara Irene#saratalk")+"::OnDisable";
+	end;
+OnEnable:
+	hideoffnpc instance_npcname("Sara Irene#saratalk");
+	end;
+OnDisable:
+	hideonnpc instance_npcname("Sara Irene#saratalk");
+	end;
+}
+
+
+1@sara,260,156,0	script	Strange Old Man A#stalk	FAKE_NPC,{
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("Strange Old Man A#stalk")+"::OnDisable";
+	end;
+OnEnable:
+	hideoffnpc instance_npcname("Strange Old Man A#stalk");
+	end;
+OnDisable:
+	hideonnpc instance_npcname("Strange Old Man A#stalk");
+	end;
+}
+
+1@sara,260,156,0	script	Strange Old Man B#stalk	FAKE_NPC,{
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("Strange Old Man B#stalk")+"::OnDisable";
+	end;
+OnEnable:
+	hideoffnpc instance_npcname("Strange Old Man B#stalk");
+	end;
+OnDisable:
+	hideonnpc instance_npcname("Strange Old Man B#stalk");
+	end;
+}
+
+1@sara,240,145,0	script	#sarawarp1	WARPNPC,1,2,{
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("#sarawarp1")+"::OnDisable";
+	end;
+OnDisable:
+	disablenpc instance_npcname("#sarawarp1");
+	end;
+OnEnable:
+	enablenpc instance_npcname("#sarawarp1");
+	end;
+OnTouch:
+	.@map$ = instance_mapname("1@sara");
+	warp .@map$, 94, 320;
+	end;
+}
+
+1@sara,209,250,0	script	#sarawarp2	WARPNPC,1,2,{
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("#sarawarp2")+"::OnDisable";
+	end;
+OnDisable:
+	disablenpc instance_npcname("#sarawarp2");
+	end;
+OnEnable:
+	enablenpc instance_npcname("#sarawarp2");
+	end;
+OnTouch:
+	.@map$ = instance_mapname("1@sara");
+	warp .@map$, 230, 316;
+	end;
+}
+
+1@sara,226,190,0	script	#sarawarp3	WARPNPC,1,2,{
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("#sarawarp3")+"::OnDisable";
+	end;
+OnDisable:
+	disablenpc instance_npcname("#sarawarp3");
+	end;
+OnEnable:
+	enablenpc instance_npcname("#sarawarp3");
+	end;
+OnTouch:
+	.@map$ = instance_mapname("1@sara");
+	warp .@map$, 263, 94;
+	end;
+}
+
+1@sara,166,67,0	script	#sarawarp4	WARPNPC,1,2,{
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("#sarawarp4")+"::OnDisable";
+	end;
+OnDisable:
+	disablenpc instance_npcname("#sarawarp4");
+	end;
+OnEnable:
+	enablenpc instance_npcname("#sarawarp4");
+	end;
+OnTouch:
+	.@map$ = instance_mapname("1@sara");
+	warp .@map$, 164, 81;
+	end;
+}
+
+1@sara,155,180,0	script	#sarawarp5	WARPNPC,1,2,{
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("#sarawarp5")+"::OnDisable";
+	end;
+OnDisable:
+	disablenpc instance_npcname("#sarawarp5");
+	end;
+OnEnable:
+	enablenpc instance_npcname("#sarawarp5");
+	end;
+OnTouch:
+	.@map$ = instance_mapname("1@sara");
+	warp .@map$, 155, 196;
+	end;
+}
+
+1@sara,88,188,0	script	#sarawarp6	WARPNPC,1,2,{
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("#sarawarp6")+"::OnDisable";
+	end;
+OnDisable:
+	disablenpc instance_npcname("#sarawarp6");
+	end;
+OnEnable:
+	enablenpc instance_npcname("#sarawarp6");
+	end;
+OnTouch:
+	.@map$ = instance_mapname("1@sara");
+	warp .@map$, 89, 175;
+	if (getcharid(CHAR_ID_CHAR) == getpartyleader(getcharid(CHAR_ID_PARTY),2))
+		viewpoint 1, 39, 142, 1, C_GREEN;
+	end;
+}
+
+1@sara,19,143,0	script	#sarawarp7	WARPNPC,1,2,{
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("#sarawarp7")+"::OnDisable";
+	end;
+OnDisable:
+	disablenpc instance_npcname("#sarawarp7");
+	end;
+OnEnable:
+	enablenpc instance_npcname("#sarawarp7");
+	end;
+OnTouch:
+	completequest 15003;
+	warp "dali", 134, 111;
+	end;
+}
+
+1@sara,107,325,5	script	Sara Irene#sarains1	4_F_SARAH_BABY,{
+	if (getcharid(CHAR_ID_CHAR) != getpartyleader(getcharid(CHAR_ID_PARTY), 2))
+		end;
+	cutin "sara_9sara1.bmp", 2;
+	mes("[Sara Irene]");
+	mes("Oh! Hello again! I remember you, what's up?");
+	npctalk(_("Oh! Hello again! I remember you, what's up?"));
+	next;
+	mes("[Sara Irene]");
+	mes("I am here to give flowers to my mommy!");
+	npctalk(_("I am here to give flowers to my mommy!"));
+	next;
+	mes("^FF0000Sara leaps forward to open the door, flowers at the ready.^000000");
+	dispbottom(_("Sara leaps forward to open the door, flowers at the ready."));
+	next;
+	mes("[Sara Irene]");
+	mes("Mom! Dad! Look what I found!");
+	npctalk(_("Mom! Dad! Look what I found!"));
+	next;
+	cutin "sara_9sara1.bmp", 255;
+	cutin "sara_momdie.bmp", 4;
+	mes("^FF0000The door opens to reveal a woman laying dead on the floor and the\r"
+		"Doyen standing over the woman with a bloody sword.^000000");
+	dispbottom(_("The door opens to reveal a woman laying dead on the floor and the Doyen standing over the woman with a bloody sword."));
+	next;
+	mes("[Sara Irene]");
+	mes("...");
+	npctalk("...");
+	next;
+	mes("[Sara Irene]");
+	mes("...");
+	npctalk("...");
+	next;
+	mes("[Sara Irene]");
+	mes("...");
+	npctalk("...");
+	mapannounce(instance_mapname("1@sara"), _("[Sara's Mother] :  Sara...Ru-..away..."), bc_map, C_YELLOW);
+	next;
+	mes("[Sara Irene]");
+	mes("...");
+	npctalk("...");
+	next;
+	mes("^FF0000A gem rolls from the womans hand and comes to a rest in front of\r"
+		"Sara. Unconsciously Sara reaches down and picks up the gem.^000000");
+	dispbottom(_("A gem rolls from the womans hand and comes to a rest in front of Sara. Unconsciously Sara reaches down and picks up the gem."));
+	next;
+	mes("^FF0000The Doyen turns around and notices Sara.^000000");
+	dispbottom(_("The Doyen turns around and notices Sara."));
+	next;
+	cutin "sara_momdie.bmp", 255;
+	cutin "sara_elder_irine4.bmp", 2;
+	mes("[Doyen Irene]");
+	mes("Ahh Sara! I was just looking for you...");
+	npctalk(_("Ahh Sara! I was just looking for you..."), instance_npcname("Doyen Irene#sarains1"));
+	next;
+	cutin "sara_9sara2.bmp", 2;
+	mes("[Sara Irene]");
+	mes("...");
+	npctalk("...");
+	next;
+	select("Escape with Sara.");
+	mes("[Sara Irene]");
+	mes("...");
+	npctalk("...");
+	next;
+	cutin "sara_elder_irine3.bmp", 2;
+	mes("[Doyen Irene]");
+	mes("Guards! GUARDS! There is a murderer here! Catch him!");
+	npctalk(_("Guards! GUARDS! There is a murderer here! Catch him!"), instance_npcname("Doyen Irene#sarains1"));
+	next;
+	mes("^FF0000The sound of many pairs of boots can be heard running outside!^000000");
+	dispbottom(_("The sound of many pairs of boots can be heard running outside!"));
+	next;
+	cutin "sara_9sara3.bmp", 2;
+	mes("[Sara Irene]");
+	mes("Mommy no!!!!!!!!!!!!!!!");
+	npctalk(_("Mommy no!!!!!!!!!!!!!!!"));
+	next;
+	cutin "sara_9sara3.bmp", 255;
+	mes("^FF0000Sara runs aways and the sound of the guards is getting closer...^000000");
+	dispbottom(_("Sara runs aways and the sound of the guards is getting closer..."));
+	close2;
+	donpcevent instance_npcname("Sara Irene#sarains1")+"::OnDisable";
+	donpcevent instance_npcname("Sara Irene#sarains4")+"::OnEnable";
+	donpcevent instance_npcname("Sara Irene#sarains5")+"::OnEnable";
+	donpcevent instance_npcname("Sara Irene#sarains6")+"::OnEnable";
+	donpcevent instance_npcname("Sara Irene#sarains7")+"::OnEnable";
+	donpcevent instance_npcname("Sara Irene#sarains8")+"::OnEnable";
+	donpcevent instance_npcname("Sara Irene#sarains9")+"::OnEnable";
+	donpcevent instance_npcname("Sara Irene#sarains10")+"::OnEnable";
+	donpcevent instance_npcname("Sara Irene#sarains11")+"::OnEnable";
+	donpcevent instance_npcname("Sara Irene#sarains12")+"::OnEnable";
+	donpcevent instance_npcname("Sara Irene#sarains13")+"::OnEnable";
+	donpcevent instance_npcname("Sara Irene#sarains14")+"::OnEnable";
+	donpcevent instance_npcname("Sara Irene#sarains15")+"::OnEnable";
+	donpcevent instance_npcname("Sara Irene#sarains16")+"::OnEnable";
+	donpcevent instance_npcname("Sara Irene#sarains17")+"::OnEnable";
+	donpcevent instance_npcname("Sara Irene#sarains18")+"::OnEnable";
+	donpcevent instance_npcname("Sara Irene#sarains19")+"::OnEnable";
+	donpcevent instance_npcname("Sara Irene#sarains20")+"::OnEnable";
+	donpcevent instance_npcname("Sara Irene#sarains21")+"::OnEnable";
+	donpcevent instance_npcname("Sara Irene#sarains22")+"::OnEnable";
+	donpcevent instance_npcname("Sara Irene#sarains23")+"::OnEnable";
+	donpcevent instance_npcname("#controlsara")+"::OnEnable";
+	end;
+
+OnInstanceInit:
+	donpcevent instance_npcname("Sara Irene#sarains1")+"::OnDisable";
+	end;
+OnEnable:
+	hideoffnpc instance_npcname("Sara Irene#sarains1");
+	end;
+OnDisable:
+	hideonnpc instance_npcname("Sara Irene#sarains1");
+	end;
+}
+
+1@sara,107,325,0	script	Doyen Irene#sarains1	FAKE_NPC,{
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("Doyen Irene#sarains1")+"::OnDisable";
+	end;
+OnEnable:
+	hideoffnpc instance_npcname("Doyen Irene#sarains1");
+	end;
+OnDisable:
+	hideonnpc instance_npcname("Doyen Irene#sarains1");
+	end;
+}
+
+1@sara,107,327,0	script	#controlsara	CLEAR_NPC,{
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("#controlsara")+"::OnDisable";
+	end;
+OnEnable:
+	enablenpc instance_npcname("#controlsara");
+	hideonnpc instance_npcname("#controlsara");
+	initnpctimer;
+	end;
+OnDisable:
+	disablenpc instance_npcname("#controlsara");
+	end;
+OnTimer2000:
+	mapannounce(instance_mapname("1@sara"), _("<SYSTEM> The guards must be defeated to gain access to the next area."), bc_map, C_YELLOW);
+	end;
+OnTimer4000:
+	mapannounce(instance_mapname("1@sara"), _("<SYSTEM> The guards have formed groups of their own to fight you!"), bc_map, C_YELLOW);
+	end;
+OnTimer5000:
+	donpcevent instance_npcname("#controlsara")+"::OnRespawn";
+	stopnpctimer;
+	end;
+OnRespawn:
+	.@map$ = instance_mapname("1@sara");
+	
+	monster(.@map$, .@x, .@y, _("Maggot"), MG_ARCLOUSE, .@mobs, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 107, 325, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 115, 325, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 116, 317, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 108, 317, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 116, 311, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 108, 311, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+
+	monster(.@map$, 101, 295, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 105, 295, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 109, 295, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 113, 295, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 117, 295, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 121, 295, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+
+	monster(.@map$, 122, 227, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 122, 225, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 122, 223, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 122, 221, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 122, 219, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 122, 217, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 121, 227, _("A Gentle Guard Dog"), GUARDDOG, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 121, 225, _("A Gentle Guard Dog"), GUARDDOG, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 121, 223, _("A Gentle Guard Dog"), GUARDDOG, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 121, 221, _("A Gentle Guard Dog"), GUARDDOG, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 121, 219, _("A Gentle Guard Dog"), GUARDDOG, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 121, 217, _("A Gentle Guard Dog"), GUARDDOG, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+
+	monster(.@map$, 151, 231, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 153, 231, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 155, 231, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 157, 231, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 159, 231, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 161, 231, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+
+	monster(.@map$, 187, 215, _("A Gentle Guard Dog"), GUARDDOG, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 187, 217, _("A Gentle Guard Dog"), GUARDDOG, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 187, 219, _("A Gentle Guard Dog"), GUARDDOG, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 187, 221, _("A Gentle Guard Dog"), GUARDDOG, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 187, 223, _("A Gentle Guard Dog"), GUARDDOG, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 187, 225, _("A Gentle Guard Dog"), GUARDDOG, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 188, 215, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 188, 217, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 188, 219, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 188, 221, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 188, 223, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 188, 225, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+
+	monster(.@map$, 192, 250, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 194, 250, _("A Gentle Guard Dog"), GUARDDOG, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 196, 250, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 198, 250, _("A Gentle Guard Dog"), GUARDDOG, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+
+	monster(.@map$, 196, 254, _("A Gentle Guard Dog"), GUARDDOG, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 196, 256, _("A Gentle Guard Dog"), GUARDDOG, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 196, 258, _("A Gentle Guard Dog"), GUARDDOG, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 199, 254, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 199, 256, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 199, 258, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+
+	monster(.@map$, 204, 246, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 204, 248, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 204, 250, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 204, 252, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 204, 254, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 206, 251, _("A Gentle Guard Dog"), GUARDDOG, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	end;
+OnMyMobDead:
+	.@callnum = 58;
+	.@map$ = instance_mapname("1@sara");
+	.@a_mob_num = mobcount(.@map$, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	.@mob_dead_num = .@callnum - .@a_mob_num;
+	if (.@mob_dead_num > 57) {
+		viewpoint 1, 209, 250, 1, C_GREEN;
+		mapannounce(instance_mapname("1@sara"), _("<SYSTEM> Sara ran away again! You think she went in the 2 O'clock direction!"), bc_map, C_YELLOW);
+		donpcevent instance_npcname("#controlsara")+"::OnDisable";
+		donpcevent instance_npcname("#controlsara1")+"::OnEnable";
+		donpcevent instance_npcname("#sarawarp2")+"::OnEnable";
+	}
+	end;
+}
+
+1@sara,230,316,0	script	#controlsara1	CLEAR_NPC,{
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("#controlsara1")+"::OnDisable";
+	end;
+OnEnable:
+	enablenpc instance_npcname("#controlsara1");
+	hideonnpc instance_npcname("#controlsara1");
+	donpcevent instance_npcname("#controlsara1")+"::OnRespawn";
+	end;
+OnDisable:
+	disablenpc instance_npcname("#controlsara1");
+	end;
+OnRespawn:
+	.@map$ = instance_mapname("1@sara");
+	monster(.@map$, 228, 312, _("A Fierce Guard Dog"), GUARDDOG2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 227, 312, _("A Fierce Guard Dog"), GUARDDOG2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 229, 315, _("A Fierce Guard Dog"), GUARDDOG2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+
+	monster(.@map$, 247, 290, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 248, 290, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 249, 290, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+
+	monster(.@map$, 223, 264, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 230, 248, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 227, 248, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+
+	monster(.@map$, 238, 229, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 225, 220, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 228, 220, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+
+	monster(.@map$, 220, 212, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 223, 212, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+
+	monster(.@map$, 219, 203, _("A Fierce Guard Dog"), GUARDDOG2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 222, 203, _("A Fierce Guard Dog"), GUARDDOG2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	end;
+OnMyMobDead:
+	.@callnum = 16;
+	.@map$ = instance_mapname("1@sara");
+	.@b_mob_num = mobcount(.@map$, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	.@mob_dead_num = .@callnum - .@b_mob_num;
+	if (.@mob_dead_num > 15) {
+		viewpoint 1, 226, 190, 1, C_GREEN;
+		mapannounce(instance_mapname("1@sara"), _("<SYSTEM> Sara ran away yet again! You think she went in the 5 O'clock direction!"), bc_map, C_YELLOW);
+		donpcevent instance_npcname("#controlsara1")+"::OnDisable";
+		donpcevent instance_npcname("#controlsara2")+"::OnEnable";
+		donpcevent instance_npcname("#sarawarp3")+"::OnEnable";
+	}
+	end;
+}
+
+1@sara,263,94,0	script	#controlsara2	CLEAR_NPC,{
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("#controlsara2")+"::OnDisable";
+	end;
+OnEnable:
+	enablenpc instance_npcname("#controlsara2");
+	hideonnpc instance_npcname("#controlsara2");
+	donpcevent instance_npcname("#controlsara2")+"::OnRespawn";
+	end;
+OnDisable:
+	disablenpc instance_npcname("#controlsara2");
+	end;
+OnRespawn:
+	.@map$ = instance_mapname("1@sara");
+	monster(.@map$, 255, 91, _("A Gentle Guard Dog"), GUARDDOG, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 255, 92, _("A Gentle Guard Dog"), GUARDDOG, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 255, 93, _("A Gentle Guard Dog"), GUARDDOG, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 255, 94, _("A Gentle Guard Dog"), GUARDDOG, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 254, 91, _("A Gentle Guard Dog"), GUARDDOG, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 254, 92, _("A Gentle Guard Dog"), GUARDDOG, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 254, 93, _("A Gentle Guard Dog"), GUARDDOG, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 254, 94, _("A Gentle Guard Dog"), GUARDDOG, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+
+	monster(.@map$, 228, 65, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 228, 64, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 228, 63, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 228, 62, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+
+	monster(.@map$, 198, 62, _("A Fierce Guard Dog"), GUARDDOG2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 195, 56, _("A Fierce Guard Dog"), GUARDDOG2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 195, 60, _("A Fierce Guard Dog"), GUARDDOG2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 195, 62, _("A Fierce Guard Dog"), GUARDDOG2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 192, 56, _("A Fierce Guard Dog"), GUARDDOG2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 192, 60, _("A Fierce Guard Dog"), GUARDDOG2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 192, 62, _("A Fierce Guard Dog"), GUARDDOG2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+
+	monster(.@map$, 187, 68, _("A Fierce Guard Dog"), GUARDDOG2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 188, 63, _("A Fierce Guard Dog"), GUARDDOG2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+
+	monster(.@map$, 120, 39, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 121, 39, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 121, 39, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+
+	monster(.@map$, 93, 64, _("A Gentle Guard Dog"), GUARDDOG, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 93, 68, _("A Gentle Guard Dog"), GUARDDOG, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 93, 72, _("A Gentle Guard Dog"), GUARDDOG, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 93, 76, _("A Gentle Guard Dog"), GUARDDOG, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 90, 64, _("A Gentle Guard Dog"), GUARDDOG, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 90, 68, _("A Gentle Guard Dog"), GUARDDOG, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 90, 72, _("A Gentle Guard Dog"), GUARDDOG, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 90, 76, _("A Gentle Guard Dog"), GUARDDOG, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+
+	monster(.@map$, 87, 67, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 87, 63, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 87, 59, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 87, 55, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+
+	monster(.@map$, 84, 67, _("A Fierce Guard Dog"), GUARDDOG2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 84, 63, _("A Fierce Guard Dog"), GUARDDOG2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 84, 59, _("A Fierce Guard Dog"), GUARDDOG2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 84, 55, _("A Fierce Guard Dog"), GUARDDOG2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+
+	monster(.@map$, 81, 67, _("A Fierce Guard Dog"), GUARDDOG2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 81, 63, _("A Fierce Guard Dog"), GUARDDOG2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 81, 59, _("A Fierce Guard Dog"), GUARDDOG2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 81, 55, _("A Fierce Guard Dog"), GUARDDOG2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 81, 51, _("A Fierce Guard Dog"), GUARDDOG2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	end;
+OnMyMobDead:
+	.@callnum = 45;
+	.@map$ = instance_mapname("1@sara");
+	.@c_mob_num = mobcount(.@map$, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	.@mob_dead_num = .@callnum - .@c_mob_num;
+	if (.@mob_dead_num > 44) {
+		viewpoint 1, 166, 67, 1, C_GREEN;
+		mapannounce(instance_mapname("1@sara"), _("<SYSTEM> Sara ran away yet again! *sigh* You think she went in the 6 O'clock direction!"), bc_map, C_YELLOW);
+		donpcevent instance_npcname("#controlsara2")+"::OnDisable";
+		donpcevent instance_npcname("#controlsara3")+"::OnEnable";
+		donpcevent instance_npcname("#sarawarp4")+"::OnEnable";
+	}
+	end;
+}
+
+1@sara,164,81,0	script	#controlsara3	CLEAR_NPC,{
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("#controlsara3")+"::OnDisable";
+	end;
+OnEnable:
+	enablenpc instance_npcname("#controlsara3");
+	hideonnpc instance_npcname("#controlsara3");
+	donpcevent instance_npcname("#controlsara3")+"::OnRespawn";
+	end;
+OnDisable:
+	disablenpc instance_npcname("#controlsara3");
+	end;
+OnRespawn:
+	.@map$ = instance_mapname("1@sara");
+	monster(.@map$, 155, 97, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 157, 97, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 159, 97, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 161, 97, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+
+	monster(.@map$, 201, 113, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 204, 113, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 207, 113, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 210, 113, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 213, 113, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+
+	monster(.@map$, 201, 117, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 204, 117, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 207, 117, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 210, 117, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 213, 117, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+
+	monster(.@map$, 223, 152, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 223, 148, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 223, 144, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+
+	monster(.@map$, 221, 152, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 221, 148, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 221, 144, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+
+	monster(.@map$, 151, 174, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 153, 174, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 155, 174, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 157, 174, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 159, 174, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+
+	monster(.@map$, 151, 177, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 153, 177, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 155, 177, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 157, 177, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 159, 177, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+
+	monster(.@map$, 151, 180, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 153, 180, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 155, 180, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 157, 180, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 159, 180, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	
+	monster(.@map$, 173, 139, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 170, 139, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 167, 139, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 164, 139, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+
+	monster(.@map$, 173, 137, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 170, 137, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 167, 137, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 164, 137, _("Payon Town Guard"), PAYONSOLDIER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	end;
+OnMyMobDead:
+	.@callnum = 43;
+	.@map$ = instance_mapname("1@sara");
+	.@d_mob_num = mobcount(.@map$, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	.@mob_dead_num = .@callnum - .@d_mob_num;
+	if (.@mob_dead_num > 42) {
+		viewpoint 1, 155, 180, 1, C_GREEN;
+		mapannounce(instance_mapname("1@sara"), _("<SYSTEM> Sara ran away yet again! You think she went in the 12 O'clock direction!"), bc_map, C_YELLOW);
+		for (.@i=4; .@i<=23; .@i++) {
+			donpcevent instance_npcname("Sara Irene#sarains" + .@i)+"::OnEnable";
+			donpcevent instance_npcname("Sara Irene#sarains" + .@i)+"::OnDisable";
+		}
+		donpcevent instance_npcname("#controlsara3")+"::OnDisable";
+		donpcevent instance_npcname("#sarawarp5")+"::OnEnable";
+		donpcevent instance_npcname("Sara Irene#sarains2")+"::OnEnable";
+	}
+	end;
+}
+
+1@sara,152,233,5	script	Sara Irene#sarains2	4_F_SARAH_BABY,{
+	if (getcharid(CHAR_ID_CHAR) != getpartyleader(getcharid(CHAR_ID_PARTY), 2))
+		end;
+	cutin "sara_9sara2.bmp", 2;
+	mes("[Sara Irene]");
+	mes("Mommy!");
+	npctalk(_("Mommy!"));
+	next;
+	cutin "sara_elder_irine4.bmp", 2;
+	mes("[Doyen Irene]");
+	mes("Sara...");
+	npctalk(_("Sara..."), instance_npcname("Doyen Irene#sarains2"));
+	next;
+	cutin "sara_9sara2.bmp", 2;
+	mes("[Sara Irene]");
+	mes("No!");
+	npctalk(_("No!"));
+	next;
+	cutin "sara_elder_irine4.bmp", 2;
+	mes("[Doyen Irene]");
+	mes("I have been looking for you Sara. Please come with daddy it is very dangerous here!");
+	npctalk(_("I have been looking for you Sara. Please come with daddy it is very dangerous here!"), instance_npcname("Doyen Irene#sarains2"));
+	next;
+	mesf("[%s]", strcharinfo(PC_NAME));
+	mes("I won't let you take Sara!");
+	unittalk(getcharid(CHAR_ID_ACCOUNT), _("I won't let you take Sara!"));
+	next;
+	cutin "sara_elder_irine3.bmp", 2;
+	mes("[Doyen Irene]");
+	mes("The murderer is here! Guards! We will finish him once and for all!");
+	npctalk(_("The murderer is here! Guards! We will finish him once and for all!"), instance_npcname("Doyen Irene#sarains2"));
+	next;
+	mesf("[%s]", strcharinfo(PC_NAME));
+	mes("Sara... run! Save yourself!");
+	unittalk(getcharid(CHAR_ID_ACCOUNT), _("Sara... run! Save yourself!"));
+	next;
+	cutin "sara_9sara2.bmp", 2;
+	mes("[Sara Irene]");
+	mes("...okay.");
+	npctalk(_("...okay."));
+	close2;
+	cutin "sara_9sara2.bmp", 255;
+	donpcevent instance_npcname("Sara Irene#sarains2")+"::OnDisable";
+	donpcevent instance_npcname("#controlsara4")+"::OnEnable";
+	end;
+
+OnInstanceInit:
+	donpcevent instance_npcname("Sara Irene#sarains2")+"::OnDisable";
+	end;
+OnEnable:
+	hideoffnpc instance_npcname("Sara Irene#sarains2");
+	end;
+OnDisable:
+	hideonnpc instance_npcname("Sara Irene#sarains2");
+	end;
+}
+
+1@sara,152,233,5,0	script	Doyen Irene#sarains2	FAKE_NPC,{
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("Doyen Irene#sarains2")+"::OnDisable";
+	end;
+OnEnable:
+	hideoffnpc instance_npcname("Doyen Irene#sarains2");
+	end;
+OnDisable:
+	hideonnpc instance_npcname("Doyen Irene#sarains2");
+	end;
+}
+
+1@sara,152,233,0	script	#controlsara4	FAKE_NPC,{
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("#controlsara4")+"::OnDisable";
+	end;
+OnEnable:
+	enablenpc instance_npcname("#controlsara4");
+	donpcevent instance_npcname("#controlsara4")+"::OnRespawn";
+	end;
+OnDisable:
+	disablenpc instance_npcname("#controlsara4");
+	end;
+OnRespawn:
+	.@map$ = instance_mapname("1@sara");
+	.@mobid = monster(.@map$, 150, 232, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	unittalk(.@mobid, _("I am getting too old for this sh-"));
+	.@mobid = monster(.@map$, 150, 227, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	unittalk(.@mobid, _("For Payon!!"));
+	.@mobid = monster(.@map$, 150, 222, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	unittalk(.@mobid, _("For Payon!!"));
+	.@mobid = monster(.@map$, 150, 217, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	unittalk(.@mobid, _("For Payon!!"));
+	.@mobid = monster(.@map$, 161, 232, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	unittalk(.@mobid, _("For Payon!!"));
+	.@mobid = monster(.@map$, 161, 227, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	unittalk(.@mobid, _("For Payon!!"));
+	.@mobid = monster(.@map$, 161, 222, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	unittalk(.@mobid, _("For Payon!!"));
+	.@mobid = monster(.@map$, 161, 217, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	unittalk(.@mobid, _("For Payon!!"));
+	end;
+OnMyMobDead:
+	.@callnum = 8;
+	.@map$ = instance_mapname("1@sara");
+	.@f_mob_num = mobcount(.@map$, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	.@mob_dead_num = .@callnum - .@f_mob_num;
+	if (.@mob_dead_num > 7) {
+		mapannounce(instance_mapname("1@sara"),_("<SYSTEM> Doyen Irene draws his blade!"), bc_map, C_YELLOW);
+		donpcevent instance_npcname("#controlsara4")+"::OnDisable";
+		donpcevent instance_npcname("#controlsara5")+"::OnEnable";
+	}
+	end;
+}
+
+1@sara,155,226,0	script	#controlsara5	FAKE_NPC,{
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("#controlsara5")+"::OnDisable";
+	end;
+OnEnable:
+	enablenpc instance_npcname("#controlsara5");
+	donpcevent instance_npcname("#controlsara5")+"::OnRespawn";
+	end;
+OnDisable:
+	disablenpc instance_npcname("#controlsara5");
+	end;
+OnRespawn:
+	.@map$ = instance_mapname("1@sara");
+	.@mobid = monster(.@map$, 155, 226, _("Doyen Irene"), IRENE_ELDER, 1, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	unittalk(.@mobid, _("I will have revenge for Sara's Mom!"));
+	end;
+OnMyMobDead:
+	.@callnum = 1;
+	.@map$ = instance_mapname("1@sara");
+	.@g_mob_num = mobcount(.@map$, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	.@mob_dead_num = .@callnum - .@g_mob_num;
+	if (.@mob_dead_num > 0) {
+		mapannounce(instance_mapname("1@sara"), _("<SYSTEM> Doyen Irene has fallen."), bc_map, C_YELLOW);
+		donpcevent instance_npcname("#controlsara5")+"::OnDisable";
+		donpcevent instance_npcname("Doyen Irene#sarains3")+"::OnEnable";
+	}
+	end;
+}
+
+1@sara,156,236,3	script	Doyen Irene#sarains3	4_M_CHIEF_IRIN,{
+	if (getcharid(CHAR_ID_CHAR) != getpartyleader(getcharid(CHAR_ID_PARTY), 2))
+		end;
+	cutin "sara_elder_irine4.bmp", 2;
+	mes("[Doyen Irene]");
+	mes("You... were too strong for me.");
+	npctalk(_("You... were too strong for me."));
+	next;
+	mes("[Doyen Irene]");
+	mes("Why.. *hack* are you trying to kill my wife and daughter?");
+	npctalk(_("Why.. *hack* are you trying to kill my wife and daughter?"));
+	next;
+	mesf("[%s]", strcharinfo(PC_NAME));
+	mes("What are you talking about? We saw you standing over Sara's mother with your sword COVERED in blood!");
+	unittalk(getcharid(CHAR_ID_ACCOUNT), _("What are you talking about? We saw you standing over Sara's mother with your sword COVERED in blood!"));
+	next;
+	mes("[Doyen Irene]");
+	mes("You.. think I killed Sara's mother?");
+	npctalk(_("You.. think I killed Sara's mother?"));
+	next;
+	mes("[Doyen Irene]");
+	mes("She *cough* had already been killed by an assassin. I slew him that *hack* is why my blade was covered in blood...");
+	npctalk(_("She *cough* had already been killed by an assassin. I slew him that *hack* is why my blade was covered in blood..."));
+	next;
+	cutin "sara_elder_irine4.bmp", 255;
+	cutin "sara_momdie.bmp", 4;
+	mes("^FF0000Thinking back you seem to recall another body laying in the left\r"
+		"corner of the room. Maybe that was the assassin the Doyen is talking about.^000000");
+	dispbottom(_("Thinking back you seem to recall another body laying in the left corner of the room. Maybe that was the assassin the Doyen is talking about."));
+	next;
+	cutin "sara_momdie.bmp", 255;
+	cutin "sara_elder_irine4.bmp", 2;
+	mes("[Doyen Irene]");
+	mes("If.. you are not the assassin sent to kill my wife and daughter, who are you?");
+	npctalk(_("If.. you are not the assassin sent to kill my wife and daughter, who are you?"));
+	next;
+	mesf("[%s]", strcharinfo(PC_NAME));
+	mes("I am just an adventurer who was passing through. I heard some men plotting their deaths and needed to intervene.");
+	unittalk(getcharid(CHAR_ID_ACCOUNT), _("I am just an adventurer who was passing through. I heard some men plotting their deaths and needed to intervene."));
+	next;
+	mes("[Doyen Irene]");
+	mes("If.. you are telling the truth...\r"
+		"forgive me. I though you were one of them.");
+	npctalk(_("If.. you are telling the truth... forgive me. I though you were one of them."));
+	next;
+	mes("[Doyen Irene]");
+	mes("Strange men... I bet they were some of the village elders. Ugh...");
+	npctalk(_("Strange men... I bet they were some of the village elders. Ugh..."));
+	next;
+	mesf("[%s]", strcharinfo(PC_NAME));
+	mes("There might be more assassins so we have to find Sara as fast as we can.");
+	unittalk(getcharid(CHAR_ID_ACCOUNT), _("There might be more assassins so we have to find Sara as fast as we can."));
+	next;
+	mesf("[%s]", strcharinfo(PC_NAME));
+	mes("Sara believes that you killed her mother. We need to tell her the truth.");
+	unittalk(getcharid(CHAR_ID_ACCOUNT), _("Sara believes that you killed her mother. We need to tell her the truth."));
+	next;
+	mes("[Doyen Irene]");
+	mes("We must do our best to find her. Let's split up and search for her.\r"
+		"Please help me find my daughter and explain everything to her.");
+	npctalk(_("We must do our best to find her. Let's split up and search for her. Please help me find my daughter and explain everything to her."));
+	close2;
+	cutin "sara_elder_irine4.bmp", 255;
+	viewpoint 1, 88, 188, 1, C_GREEN;
+	mapannounce(instance_mapname("1@sara"), _("<SYSTEM> We must find Sara. You seem remember her running in the 8 O'clock direction."), bc_map, C_YELLOW);
+	donpcevent instance_npcname("Doyen Irene#sarains3")+"::OnDisable";
+	donpcevent instance_npcname("#sarawarp6")+"::OnEnable";
+	donpcevent instance_npcname("????-#saratalk")+"::OnEnable";
+	donpcevent instance_npcname("Sara Irene#sarains3")+"::OnEnable";
+	end;
+
+OnInstanceInit:
+	donpcevent instance_npcname("Doyen Irene#sarains3")+"::OnDisable";
+	end;
+OnEnable:
+	hideoffnpc instance_npcname("Doyen Irene#sarains3");
+	end;
+OnDisable:
+	hideonnpc instance_npcname("Doyen Irene#sarains3");
+	end;
+}
+
+1@sara,39,142,3	script	Sara Irene#sarains3	4_F_SARAH_BABY,{
+	if (getcharid(CHAR_ID_CHAR) != getpartyleader(getcharid(CHAR_ID_PARTY), 2))
+		end;
+	mes("^FF0000As you are about to call out to Sara a sudden blow knocks you down from behind.^000000");
+	dispbottom(_("As you are about to call out to Sara a sudden blow knocks you down from behind."));
+	next;
+	cutin "sara_beholder.bmp", 2;
+	mes("[?????]");
+	mes("The time travellers cannot interfere any longer. You cannot stop us from meeting Sara.");
+	npctalk(_("The time travellers cannot interfere any longer. You cannot stop us from meeting Sara."), instance_npcname("????-#saratalk"));
+	next;
+	mes("[?????]");
+	mes("You should go back to the time where you belong.");
+	npctalk(_("You should go back to the time where you belong."), instance_npcname("????-#saratalk"));
+	next;
+	mes("^FF0000As you fall to the ground two dark figures approach Sara.^000000");
+	dispbottom(_("As you fall to the ground two dark figures approach Sara."));
+	next;
+	mes("[?????]");
+	mes("A girl full of betrayal, despair, and hate. We will guide you to your ultimate fate.");
+	npctalk(_("A girl full of betrayal, despair, and hate. We will guide you to your ultimate fate."), instance_npcname("????-#saratalk"));
+	next;
+	cutin "sara_9sara2.bmp", 2;
+	mes("[Sara Irene]");
+	mes("...");
+	npctalk("...");
+	next;
+	cutin "sara_beholder.bmp", 2;
+	mes("[?????]");
+	mes("Sara Irene, he will make your dreams come true.");
+	npctalk(_("Sara Irene, he will make your dreams come true."), instance_npcname("????-#saratalk"));
+	next;
+	cutin "sara_beholder.bmp", 255;
+	mes("^FF0000One of the cloaked strangers covers Sara with their cloak and all three figures disappear.^000000");
+	dispbottom(_("One of the cloaked strangers covers Sara with their cloak and all three figures disappear."));
+	donpcevent instance_npcname("Sara Irene#sarains3")+"::OnDisable";
+	next;
+	mes("^FF0000At the same time as Sara disappearing this place begin to become unstable, just like what Leon said before.^000000");
+	dispbottom(_("At the same time as Sara disappearing this place begin to become unstable, just like what Leon said before."));
+	next;
+	mes("^FF0000We need to get out from this place quickly to the left. And when we at the outside let's talk to him.^000000");
+	dispbottom(_("We need to get out from this place quickly to the left. And when we at the outside let's talk to him."));
+	close2;
+	donpcevent instance_npcname("????-#saratalk")+"::OnDisable";
+	donpcevent instance_npcname("#sarawarp7")+"::OnEnable";
+	end;
+
+OnInstanceInit:
+	donpcevent instance_npcname("Sara Irene#sarains3")+"::OnDisable";
+	end;
+OnEnable:
+	hideoffnpc instance_npcname("Sara Irene#sarains3");
+	end;
+OnDisable:
+	hideonnpc instance_npcname("Sara Irene#sarains3");
+	end;
+}
+
+1@sara,152,233,0	script	????-#saratalk	FAKE_NPC,{
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("????-#saratalk")+"::OnDisable";
+	end;
+OnEnable:
+	hideoffnpc instance_npcname("????-#saratalk");
+	end;
+OnDisable:
+	hideonnpc instance_npcname("????-#saratalk");
+	end;
+}
+
+1@sara,97,304,5	script	Sara Irene#sarains4	4_F_SARAH_BABY,7,7,{
+	end;
+OnTouch:
+	npctalk(_("Why daddy?"));
+	initnpctimer;
+	donpcevent instance_npcname("Sara Irene#sarains4")+"::OnDisable";
+	end;
+OnTimer60000:
+	donpcevent instance_npcname("Sara Irene#sarains4")+"::OnEnable";
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("Sara Irene#sarains4")+"::OnDisable";
+	end;
+OnEnable:
+	enablenpc instance_npcname("Sara Irene#sarains4");
+	hideoffnpc instance_npcname("Sara Irene#sarains4");
+	stopnpctimer;
+	end;
+OnDisable:
+	hideonnpc instance_npcname("Sara Irene#sarains4");
+	disablenpc instance_npcname("Sara Irene#sarains4");
+	end;
+}
+
+1@sara,128,296,5	script	Sara Irene#sarains5	4_F_SARAH_BABY,7,7,{
+	end;
+OnTouch:
+	npctalk(_("Not mommy!"));
+	initnpctimer;
+	donpcevent instance_npcname("Sara Irene#sarains5")+"::OnDisable";
+	end;
+OnTimer60000:
+	donpcevent instance_npcname("Sara Irene#sarains5")+"::OnEnable";
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("Sara Irene#sarains5")+"::OnDisable";
+	end;
+OnEnable:
+	enablenpc instance_npcname("Sara Irene#sarains5");
+	hideoffnpc instance_npcname("Sara Irene#sarains5");
+	stopnpctimer;
+	end;
+OnDisable:
+	hideonnpc instance_npcname("Sara Irene#sarains5");
+	disablenpc instance_npcname("Sara Irene#sarains5");
+	end;
+}
+
+1@sara,90,215,5	script	Sara Irene#sarains6	4_F_SARAH_BABY,7,7,{
+	end;
+OnTouch:
+	npctalk(_("Why did he do it?!"));
+	initnpctimer;
+	donpcevent instance_npcname("Sara Irene#sarains6")+"::OnDisable";
+	end;
+OnTimer60000:
+	donpcevent instance_npcname("Sara Irene#sarains6")+"::OnEnable";
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("Sara Irene#sarains6")+"::OnDisable";
+	end;
+OnEnable:
+	enablenpc instance_npcname("Sara Irene#sarains6");
+	hideoffnpc instance_npcname("Sara Irene#sarains6");
+	stopnpctimer;
+	end;
+OnDisable:
+	hideonnpc instance_npcname("Sara Irene#sarains6");
+	disablenpc instance_npcname("Sara Irene#sarains6");
+	end;
+}
+
+1@sara,124,230,5	script	Sara Irene#sarains7	4_F_SARAH_BABY,7,7,{
+	end;
+OnTouch:
+	npctalk(_("Why.. why?!"));
+	initnpctimer;
+	donpcevent instance_npcname("Sara Irene#sarains7")+"::OnDisable";
+	end;
+OnTimer60000:
+	donpcevent instance_npcname("Sara Irene#sarains7")+"::OnEnable";
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("Sara Irene#sarains7")+"::OnDisable";
+	end;
+OnEnable:
+	enablenpc instance_npcname("Sara Irene#sarains7");
+	hideoffnpc instance_npcname("Sara Irene#sarains7");
+	stopnpctimer;
+	end;
+OnDisable:
+	hideonnpc instance_npcname("Sara Irene#sarains7");
+	disablenpc instance_npcname("Sara Irene#sarains7");
+	end;
+}
+
+1@sara,174,226,5	script	Sara Irene#sarains8	4_F_SARAH_BABY,7,7,{
+	end;
+OnTouch:
+	npctalk(_("Noooo..."));
+	initnpctimer;
+	donpcevent instance_npcname("Sara Irene#sarains8")+"::OnDisable";
+	end;
+OnTimer60000:
+	donpcevent instance_npcname("Sara Irene#sarains8")+"::OnEnable";
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("Sara Irene#sarains8")+"::OnDisable";
+	end;
+OnEnable:
+	enablenpc instance_npcname("Sara Irene#sarains8");
+	hideoffnpc instance_npcname("Sara Irene#sarains8");
+	stopnpctimer;
+	end;
+OnDisable:
+	hideonnpc instance_npcname("Sara Irene#sarains8");
+	disablenpc instance_npcname("Sara Irene#sarains8");
+	end;
+}
+
+1@sara,203,259,5	script	Sara Irene#sarains9	4_F_SARAH_BABY,7,7,{
+	end;
+OnTouch:
+	npctalk("...");
+	initnpctimer;
+	donpcevent instance_npcname("Sara Irene#sarains9")+"::OnDisable";
+	end;
+OnTimer60000:
+	donpcevent instance_npcname("Sara Irene#sarains9")+"::OnEnable";
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("Sara Irene#sarains9")+"::OnDisable";
+	end;
+OnEnable:
+	enablenpc instance_npcname("Sara Irene#sarains9");
+	hideoffnpc instance_npcname("Sara Irene#sarains9");
+	stopnpctimer;
+	end;
+OnDisable:
+	hideonnpc instance_npcname("Sara Irene#sarains9");
+	disablenpc instance_npcname("Sara Irene#sarains9");
+	end;
+}
+
+1@sara,225,298,5	script	Sara Irene#sarains10	4_F_SARAH_BABY,7,7,{
+	end;
+OnTouch:
+	npctalk(_("Why does it hurt so much?"));
+	initnpctimer;
+	donpcevent instance_npcname("Sara Irene#sarains10")+"::OnDisable";
+	end;
+OnTimer60000:
+	donpcevent instance_npcname("Sara Irene#sarains10")+"::OnEnable";
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("Sara Irene#sarains10")+"::OnDisable";
+	end;
+OnEnable:
+	enablenpc instance_npcname("Sara Irene#sarains10");
+	hideoffnpc instance_npcname("Sara Irene#sarains10");
+	stopnpctimer;
+	end;
+OnDisable:
+	hideonnpc instance_npcname("Sara Irene#sarains10");
+	disablenpc instance_npcname("Sara Irene#sarains10");
+	end;
+}
+
+1@sara,228,282,5	script	Sara Irene#sarains11	4_F_SARAH_BABY,7,7,{
+	end;
+OnTouch:
+	npctalk(_("........"));
+	initnpctimer;
+	donpcevent instance_npcname("Sara Irene#sarains11")+"::OnDisable";
+	end;
+OnTimer60000:
+	donpcevent instance_npcname("Sara Irene#sarains11")+"::OnEnable";
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("Sara Irene#sarains11")+"::OnDisable";
+	end;
+OnEnable:
+	enablenpc instance_npcname("Sara Irene#sarains11");
+	hideoffnpc instance_npcname("Sara Irene#sarains11");
+	stopnpctimer;
+	end;
+OnDisable:
+	hideonnpc instance_npcname("Sara Irene#sarains11");
+	disablenpc instance_npcname("Sara Irene#sarains11");
+	end;
+}
+
+1@sara,243,250,5	script	Sara Irene#sarains12	4_F_SARAH_BABY,7,7,{
+	end;
+OnTouch:
+	npctalk(_("...Mommy"));
+	initnpctimer;
+	donpcevent instance_npcname("Sara Irene#sarains12")+"::OnDisable";
+	end;
+OnTimer60000:
+	donpcevent instance_npcname("Sara Irene#sarains12")+"::OnEnable";
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("Sara Irene#sarains12")+"::OnDisable";
+	end;
+OnEnable:
+	enablenpc instance_npcname("Sara Irene#sarains12");
+	hideoffnpc instance_npcname("Sara Irene#sarains12");
+	stopnpctimer;
+	end;
+OnDisable:
+	hideonnpc instance_npcname("Sara Irene#sarains12");
+	disablenpc instance_npcname("Sara Irene#sarains12");
+	end;
+}
+
+1@sara,265,253,5	script	Sara Irene#sarains13	4_F_SARAH_BABY,7,7,{
+	end;
+OnTouch:
+	npctalk(_("What happened to you daddy?"));
+	initnpctimer;
+	donpcevent instance_npcname("Sara Irene#sarains13")+"::OnDisable";
+	end;
+OnTimer60000:
+	donpcevent instance_npcname("Sara Irene#sarains13")+"::OnEnable";
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("Sara Irene#sarains13")+"::OnDisable";
+	end;
+OnEnable:
+	enablenpc instance_npcname("Sara Irene#sarains13");
+	hideoffnpc instance_npcname("Sara Irene#sarains13");
+	stopnpctimer;
+	end;
+OnDisable:
+	hideonnpc instance_npcname("Sara Irene#sarains13");
+	disablenpc instance_npcname("Sara Irene#sarains13");
+	end;
+}
+
+1@sara,231,205,5	script	Sara Irene#sarains14	4_F_SARAH_BABY,7,7,{
+	end;
+OnTouch:
+	npctalk(_("All that blood..."));
+	initnpctimer;
+	donpcevent instance_npcname("Sara Irene#sarains14")+"::OnDisable";
+	end;
+OnTimer60000:
+	donpcevent instance_npcname("Sara Irene#sarains14")+"::OnEnable";
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("Sara Irene#sarains14")+"::OnDisable";
+	end;
+OnEnable:
+	enablenpc instance_npcname("Sara Irene#sarains14");
+	hideoffnpc instance_npcname("Sara Irene#sarains14");
+	stopnpctimer;
+	end;
+OnDisable:
+	hideonnpc instance_npcname("Sara Irene#sarains14");
+	disablenpc instance_npcname("Sara Irene#sarains14");
+	end;
+}
+
+1@sara,238,53,5	script	Sara Irene#sarains15	4_F_SARAH_BABY,7,7,{
+	end;
+OnTouch:
+	npctalk(_("Who are you?!"));
+	initnpctimer;
+	donpcevent instance_npcname("Sara Irene#sarains15")+"::OnDisable";
+	end;
+OnTimer60000:
+	donpcevent instance_npcname("Sara Irene#sarains15")+"::OnEnable";
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("Sara Irene#sarains15")+"::OnDisable";
+	end;
+OnEnable:
+	enablenpc instance_npcname("Sara Irene#sarains15");
+	hideoffnpc instance_npcname("Sara Irene#sarains15");
+	stopnpctimer;
+	end;
+OnDisable:
+	hideonnpc instance_npcname("Sara Irene#sarains15");
+	disablenpc instance_npcname("Sara Irene#sarains15");
+	end;
+}
+
+1@sara,184,67,5	script	Sara Irene#sarains16	4_F_SARAH_BABY,7,7,{
+	end;
+OnTouch:
+	npctalk(_("I want my mommy!"));
+	initnpctimer;
+	donpcevent instance_npcname("Sara Irene#sarains16")+"::OnDisable";
+	end;
+OnTimer60000:
+	donpcevent instance_npcname("Sara Irene#sarains16")+"::OnEnable";
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("Sara Irene#sarains16")+"::OnDisable";
+	end;
+OnEnable:
+	enablenpc instance_npcname("Sara Irene#sarains16");
+	hideoffnpc instance_npcname("Sara Irene#sarains16");
+	stopnpctimer;
+	end;
+OnDisable:
+	hideonnpc instance_npcname("Sara Irene#sarains16");
+	disablenpc instance_npcname("Sara Irene#sarains16");
+	end;
+}
+
+1@sara,150,60,5	script	Sara Irene#sarains17	4_F_SARAH_BABY,7,7,{
+	end;
+OnTouch:
+	npctalk(_("........"));
+	initnpctimer;
+	donpcevent instance_npcname("Sara Irene#sarains17")+"::OnDisable";
+	end;
+OnTimer60000:
+	donpcevent instance_npcname("Sara Irene#sarains17")+"::OnEnable";
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("Sara Irene#sarains17")+"::OnDisable";
+	end;
+OnEnable:
+	enablenpc instance_npcname("Sara Irene#sarains17");
+	hideoffnpc instance_npcname("Sara Irene#sarains17");
+	stopnpctimer;
+	end;
+OnDisable:
+	hideonnpc instance_npcname("Sara Irene#sarains17");
+	disablenpc instance_npcname("Sara Irene#sarains17");
+	end;
+}
+
+1@sara,105,63,5	script	Sara Irene#sarains18	4_F_SARAH_BABY,7,7,{
+	end;
+OnTouch:
+	npctalk(_("Nooooo..."));
+	initnpctimer;
+	donpcevent instance_npcname("Sara Irene#sarains18")+"::OnDisable";
+	end;
+OnTimer60000:
+	donpcevent instance_npcname("Sara Irene#sarains18")+"::OnEnable";
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("Sara Irene#sarains18")+"::OnDisable";
+	end;
+OnEnable:
+	enablenpc instance_npcname("Sara Irene#sarains18");
+	hideoffnpc instance_npcname("Sara Irene#sarains18");
+	stopnpctimer;
+	end;
+OnDisable:
+	hideonnpc instance_npcname("Sara Irene#sarains18");
+	disablenpc instance_npcname("Sara Irene#sarains18");
+	end;
+}
+
+1@sara,163,99,5	script	Sara Irene#sarains19	4_F_SARAH_BABY,7,7,{
+	end;
+OnTouch:
+	npctalk(_("Mommy!"));
+	initnpctimer;
+	donpcevent instance_npcname("Sara Irene#sarains19")+"::OnDisable";
+	end;
+OnTimer60000:
+	donpcevent instance_npcname("Sara Irene#sarains19")+"::OnEnable";
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("Sara Irene#sarains19")+"::OnDisable";
+	end;
+OnEnable:
+	enablenpc instance_npcname("Sara Irene#sarains19");
+	hideoffnpc instance_npcname("Sara Irene#sarains19");
+	stopnpctimer;
+	end;
+OnDisable:
+	hideonnpc instance_npcname("Sara Irene#sarains19");
+	disablenpc instance_npcname("Sara Irene#sarains19");
+	end;
+}
+
+1@sara,184,106,5	script	Sara Irene#sarains20	4_F_SARAH_BABY,7,7,{
+	end;
+OnTouch:
+	npctalk("........");
+	initnpctimer;
+	donpcevent instance_npcname("Sara Irene#sarains20")+"::OnDisable";
+	end;
+OnTimer60000:
+	donpcevent instance_npcname("Sara Irene#sarains20")+"::OnEnable";
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("Sara Irene#sarains20")+"::OnDisable";
+	end;
+OnEnable:
+	enablenpc instance_npcname("Sara Irene#sarains20");
+	hideoffnpc instance_npcname("Sara Irene#sarains20");
+	stopnpctimer;
+	end;
+OnDisable:
+	hideonnpc instance_npcname("Sara Irene#sarains20");
+	disablenpc instance_npcname("Sara Irene#sarains20");
+	end;
+}
+
+1@sara,153,124,5	script	Sara Irene#sarains21	4_F_SARAH_BABY,7,7,{
+	end;
+OnTouch:
+	npctalk(_("Daddy!"));
+	initnpctimer;
+	donpcevent instance_npcname("Sara Irene#sarains21")+"::OnDisable";
+	end;
+OnTimer60000:
+	donpcevent instance_npcname("Sara Irene#sarains21")+"::OnEnable";
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("Sara Irene#sarains21")+"::OnDisable";
+	end;
+OnEnable:
+	enablenpc instance_npcname("Sara Irene#sarains21");
+	hideoffnpc instance_npcname("Sara Irene#sarains21");
+	stopnpctimer;
+	end;
+OnDisable:
+	hideonnpc instance_npcname("Sara Irene#sarains21");
+	disablenpc instance_npcname("Sara Irene#sarains21");
+	end;
+}
+
+1@sara,141,153,5	script	Sara Irene#sarains22	4_F_SARAH_BABY,7,7,{
+	end;
+OnTouch:
+	npctalk("........");
+	initnpctimer;
+	donpcevent instance_npcname("Sara Irene#sarains22")+"::OnDisable";
+	end;
+OnTimer60000:
+	donpcevent instance_npcname("Sara Irene#sarains22")+"::OnEnable";
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("Sara Irene#sarains22")+"::OnDisable";
+	end;
+OnEnable:
+	enablenpc instance_npcname("Sara Irene#sarains22");
+	hideoffnpc instance_npcname("Sara Irene#sarains22");
+	stopnpctimer;
+	end;
+OnDisable:
+	hideonnpc instance_npcname("Sara Irene#sarains22");
+	disablenpc instance_npcname("Sara Irene#sarains22");
+	end;
+}
+
+1@sara,201,155,5	script	Sara Irene#sarains23	4_F_SARAH_BABY,7,7,{
+	end;
+OnTouch:
+	npctalk(_("Why?"));
+	initnpctimer;
+	donpcevent instance_npcname("Sara Irene#sarains23")+"::OnDisable";
+	end;
+OnTimer60000:
+	donpcevent instance_npcname("Sara Irene#sarains23")+"::OnEnable";
+	end;
+OnInstanceInit:
+	donpcevent instance_npcname("Sara Irene#sarains23")+"::OnDisable";
+	end;
+OnEnable:
+	enablenpc instance_npcname("Sara Irene#sarains23");
+	hideoffnpc instance_npcname("Sara Irene#sarains23");
+	stopnpctimer;
+	end;
+OnDisable:
+	hideonnpc instance_npcname("Sara Irene#sarains23");
+	disablenpc instance_npcname("Sara Irene#sarains23");
+	end;
+}

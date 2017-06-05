@@ -1,23 +1,47 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2013-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Mora Quest NPCs
-//===== By: ==================================================
-//= Euphy
-//===== Current Version: =====================================
-//= 1.1
-//===== Description: =========================================
-//= [Official Conversion]
+//================= File Encoding =========================================
+//= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
+//= -If the encoding is correct, the next three lines have the same length-
+//= ============ ¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä ============
+//= ============ ============================================= ============
+//= ============ ¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á ============
+//================= Description ===========================================
 //= Quest NPCs related to Mora:
-//== Theore's Request, Chesire's New Day,
-//== Helping Lope and Euridi, Mora Daily Quests,
-//== Find the Research Tools, Knights of the Neighborhood
-//===== Additional Comments: =================================
-//= 0.1 NPCs are currently placeholders. [Euphy]
-//= 1.0 Implemented all official quests. [Euphy]
-//= 1.1 Added GM management function and NPCs. [Euphy]
-//============================================================
+//= - Theore's Request, Chesire's New Day,
+//= - Helping Lope and Euridi, Mora Daily Quests,
+//= - Find the Research Tools, Knights of the Neighborhood
+//================= Current Version =======================================
+//= 1.1
+//=========================================================================
 
-// Theore's Request :: ep14_1_bs
-//============================================================
+//== Theore's Request :: ep14_1_bs =========================
 mid_camp,148,222,4	script	Theore#ep14_1_bs	4_F_SCIENCE,3,3,{
 	if (BaseLevel < 100) {
 		mes "- A person with a white gown -";
@@ -33,19 +57,19 @@ mid_camp,148,222,4	script	Theore#ep14_1_bs	4_F_SCIENCE,3,3,{
 		mes "[Theore]";
 		mes "How am I supposed to submit a report that's so bad!!! A 5-year-old could do better!!!";
 		mes "Noooo!!!";
-		set ep14_1_bs,1;
+		ep14_1_bs = 1;
 		close;
 	} else if (ep14_1_bs == 1) {
 		mes "- A person with a white gown -";
 		mes "- is pulling at his hair. -";
 		next;
-		if(select("Try talking to him.:How noisy.") == 2) {
+		if(select("Try talking to him.", "How noisy.") == 2) {
 			mes "[Theore]";
 			mes "Oh, of course, I'm sorry.";
 			mes "I'll keep it down.";
 			close;
 		}
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Sir... Are you okay?";
 		mes "You will lose all your hair like that.";
 		mes "Calm down.";
@@ -72,7 +96,7 @@ mid_camp,148,222,4	script	Theore#ep14_1_bs	4_F_SCIENCE,3,3,{
 		mes "Are you busy at the moment?";
 		mes "If you spare me a little time, I will see to it that you're rewarded handsomely!";
 		next;
-		switch(select("I'm busy.:Listen to him more.")) {
+		switch(select("I'm busy.", "Listen to him more.")) {
 		case 1:
 			mes "[Theore]";
 			mes ".......";
@@ -106,7 +130,7 @@ mid_camp,148,222,4	script	Theore#ep14_1_bs	4_F_SCIENCE,3,3,{
 			mes "So won't you give me a hand?!";
 			mes "Your help will be acknowledged fully - I will tell the professor myself!";
 			next;
-			switch(select("Help.:Don't help.")) {
+			switch(select("Help.", "Don't help.")) {
 			case 1:
 				mes "[Theore]";
 				mes "Sob sob Warrior, you're the best!";
@@ -124,7 +148,7 @@ mid_camp,148,222,4	script	Theore#ep14_1_bs	4_F_SCIENCE,3,3,{
 				mes "- The man seems to be in a manic state. -";
 				mes "- Wait until he calms down -";
 				mes "- and try speaking to him again. -";
-				set ep14_1_bs,2;
+				ep14_1_bs = 2;
 				setquest 11182;
 				close;
 			case 2:
@@ -136,7 +160,7 @@ mid_camp,148,222,4	script	Theore#ep14_1_bs	4_F_SCIENCE,3,3,{
 			}
 		}
 	} else if (ep14_1_bs == 2) {
-		if (checkquest(11182,PLAYTIME) < 2) {
+		if (questprogress(11182,PLAYTIME) != 2) {
 			mes "[Theore]";
 			mes "......";
 			switch(rand(1,4)) {
@@ -212,7 +236,7 @@ mid_camp,148,222,4	script	Theore#ep14_1_bs	4_F_SCIENCE,3,3,{
 		next;
 		mes "[Theore]";
 		mes "The Laphines are such a rowdy crew, and it's very unsettling to see how quiet they've been - almost like a period of calm before a giant thunderstorm.";
-		set ep14_1_bs,3;
+		ep14_1_bs = 3;
 		changequest 11182,11183;
 		close;
 	} else if (ep14_1_bs == 3) {
@@ -240,7 +264,7 @@ mid_camp,148,222,4	script	Theore#ep14_1_bs	4_F_SCIENCE,3,3,{
 			mes "Or they may have left something behind.";
 			close;
 		} else if (ep14_1_bs2 < 7) {
-			if (countitem(6390) == 0) {
+			if (countitem(Small_Pocket) == 0) {
 				mes "[Theore]";
 				mes "They may have left a clue, can you please look around the area?";
 				mes "If they were looking through the bushes, they may have been looking for something they've lost.";
@@ -290,7 +314,7 @@ mid_camp,148,222,4	script	Theore#ep14_1_bs	4_F_SCIENCE,3,3,{
 			mes "My poor innocent imagination!!!!";
 			next;
 			mes "- He is in no state for conversations. You should take the pouch to Splendide and look for its owner. -";
-			set ep14_1_bs2, ep14_1_bs2+3; //4,5,6 -> 7,8,9
+			ep14_1_bs2 += 3; //4,5,6 -> 7,8,9
 			changequest 11185,11186;
 			close;
 		} else {
@@ -324,9 +348,9 @@ mid_camp,148,222,4	script	Theore#ep14_1_bs	4_F_SCIENCE,3,3,{
 		mes "[Theore]";
 		mes "Then I'm off to put the finishing touches on the report!!!!!!!";
 		mes "Oh yeah!!!!";
-		set ep14_1_bs,19;
+		ep14_1_bs = 19;
 		getexp 0,200000;
-		getitem 6380,5; //Mora_Coin
+		getitem Mora_Coin,5;
 		close;
 	} else if (ep14_1_bs > 18) {
 		mes "[Theore]";
@@ -346,25 +370,25 @@ OnTouch:
 			mes "[Theore]";
 			mes "How am I supposed to submit a report that's so bad!!! A 5-year-old could do better!!!";
 			mes "Noooo!!!";
-			set ep14_1_bs,1;
+			ep14_1_bs = 1;
 			close;
 		}
 	}
 	end;
 }
 
--	script	#mora_bush	-1,{
+-	script	#mora_bush	FAKE_NPC,{
 	if (ep14_1_bs != 3 || rand(5)) {
 		mes "- It's just an ordinary bush. -";
 		close;
 	}
-	set .@i, atoi(charat(strnpcinfo(2),9));
-	set .@rand, rand(1,3);
+	.@i = atoi(charat(strnpcinfo(NPC_NAME_HIDDEN),9));
+	.@rand = rand(1,3);
 	mes "[Unarmed Laphine]";
 	mes "Aaaarrrrrggggghhhhh!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!";
 	donpcevent "Fairy#cmd"+.@i+.@rand+"::OnEnable";
-	set ep14_1_bs, .@i+3;
-	set ep14_1_bs2, .@rand;
+	ep14_1_bs = .@i+3;
+	ep14_1_bs2 = .@rand;
 	changequest 11183,11184;
 	next;
 	mes "- You try to talk to the Laphine, -";
@@ -377,33 +401,33 @@ OnTouch:
 	donpcevent "Bush"+.@i+"Timer::OnEnable";
 	close;
 OnEnable:
-	enablenpc strnpcinfo(0);
-	donpcevent "Bush"+charat(strnpcinfo(2),9)+"Timer::OnDisable";
+	enablenpc strnpcinfo(NPC_NAME);
+	donpcevent "Bush"+charat(strnpcinfo(NPC_NAME_HIDDEN),9)+"Timer::OnDisable";
 	end;
 OnDisable:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 
--	script	#mora_pouch	-1,{
+-	script	#mora_pouch	FAKE_NPC,{
 	end;
 OnTouch:
-	set .@i, atoi(charat(strnpcinfo(2),9));
+	.@i = atoi(charat(strnpcinfo(NPC_NAME_HIDDEN),9));
 	if (ep14_1_bs == .@i+3) {
-		if (countitem(6390) == 0) {
-			if (checkweight(1201,1) == 0) {
+		if (countitem(Small_Pocket) == 0) {
+			if (checkweight(Knife,1) == 0) {
 				mes " - Hang on there !! -";
 				mes " - You are carrying too many kinds of items - ";
-		   		mes " - to receive any more items. - ";
+				mes " - to receive any more items. - ";
 				mes " - Please lighten your load - ";
-		   		mes " - and try again. - ";
+				mes " - and try again. - ";
 				close;
 			}
 			if (MaxWeight - Weight < 1000) {
 				mes " - Hang on there !! -";
-			 	mes " - You are carrying too much weight - ";
+				mes " - You are carrying too much weight - ";
 				mes " - Please lighten your load - ";
-		   		mes " - and try again. - ";
+				mes " - and try again. - ";
 				close;
 			}
 			mes "- Jumble Fumble -";
@@ -412,9 +436,9 @@ OnTouch:
 			if (rand(1,5) == 4) {
 				mes "- You've found a Small pouch. -";
 				if (ep14_1_bs2 > 0 && ep14_1_bs2 < 4)
-					set ep14_1_bs2, ep14_1_bs2+3;
+					ep14_1_bs2 += 3;
 				changequest 11184,11185;
-				getitem 6390,1; //Small_Pocket
+				getitem Small_Pocket,1;
 				close;
 			} else {
 				mes "- You didn't find anything. -";
@@ -425,21 +449,21 @@ OnTouch:
 	end;
 }
 
--	script	#mora_fairy	-1,{
+-	script	#mora_fairy	FAKE_NPC,{
 	end;
 OnInit:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	initnpctimer;
 	end;
 OnDisable:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	stopnpctimer;
 	end;
 OnTimer5000:
-	donpcevent strnpcinfo(0)+"::OnDisable";
+	donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 	stopnpctimer;
 	end;
 }
@@ -480,25 +504,25 @@ spl_fild02,186,260,6	duplicate(#mora_fairy)	Fairy#cmd61	4_F_FAIRYKID5
 spl_fild02,186,260,6	duplicate(#mora_fairy)	Fairy#cmd62	4_M_FAIRYKID4
 spl_fild02,186,260,6	duplicate(#mora_fairy)	Fairy#cmd63	4_F_FAIRYKID4
 
--	script	#mora_bush_timer	-1,{
+-	script	#mora_bush_timer	FAKE_NPC,{
 	end;
 OnInit:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	initnpctimer;
 	end;
 OnDisable:
 	stopnpctimer;
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnTimer1000:
-	donpcevent "Bush#ep14_1_bs"+charat(strnpcinfo(0),4)+"::OnDisable";
+	donpcevent "Bush#ep14_1_bs"+charat(strnpcinfo(NPC_NAME),4)+"::OnDisable";
 	end;
 OnTimer600000:
-	donpcevent "Bush#ep14_1_bs"+charat(strnpcinfo(0),4)+"::OnEnable";
-	donpcevent strnpcinfo(0)+"::OnDisable";
+	donpcevent "Bush#ep14_1_bs"+charat(strnpcinfo(NPC_NAME),4)+"::OnEnable";
+	donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 	end;
 }
 spl_fild02,180,1,0	duplicate(#mora_bush_timer)	Bush1Timer	4_F_FAIRYKID5
@@ -528,7 +552,7 @@ splendide,183,117,4	script	Tired-looking Fairy	4_F_FAIRYKID3,{
 		mes "I'm tired, don't talk to me.";
 		close;
 	} else if (ep14_1_bs < 10) {
-		if (checkquest(11187) == -1) {
+		if (!questprogress(11187)) {
 			mes "[Tired-looking Fairy]";
 			mes "I'm tired, don't talk to me.";
 			next;
@@ -545,12 +569,12 @@ splendide,183,117,4	script	Tired-looking Fairy	4_F_FAIRYKID3,{
 			mes "But it won't be easy to find its owner with just the pouch...";
 			changequest 11186,11187;
 			next;
-			if(select("I think I saw a fairy that might be the owner.:I'll think about it.") == 2) {
+			if(select("I think I saw a fairy that might be the owner.", "I'll think about it.") == 2) {
 				mes "[Tired-looking Fairy]";
 				mes "Then tell me if you remember anything.";
 				close;
 			}
-		} else if (checkquest(11187) == 2) {
+		} else if (questprogress(11187) == 2) {
 			mes "[Tired-looking Fairy]";
 			mes "I hope you can find the owner.";
 			close;
@@ -565,12 +589,12 @@ splendide,183,117,4	script	Tired-looking Fairy	4_F_FAIRYKID3,{
 		setarray .@Wings$[0],"round","two pairs of","characteristic";
 
 		setarray .@i[1],
-			select("Blonde hair:Grassy-green hair:Woody-brown hair:Sea-blue hair"),
-			select("Dark-skinned:Light-skinned"),
-			select("Snow-white clothing:Grape clothing:Sky-blue clothing:Grassy-green clothing"),
-			select("Round wings:Two pairs of wings:Characteristic Wings");
+			select("Blonde hair", "Grassy-green hair", "Woody-brown hair", "Sea-blue hair"),
+			select("Dark-skinned", "Light-skinned"),
+			select("Snow-white clothing", "Grape clothing", "Sky-blue clothing", "Grassy-green clothing"),
+			select("Round wings", "Two pairs of wings", "Characteristic Wings");
 
-		set .@i[0], (1 << .@i[1]) | (1 << (.@i[2]+4)) | (1 << (.@i[3]+6)) | (1 << (.@i[4]+10));
+		.@i[0] = (1 << .@i[1]) | (1 << (.@i[2]+4)) | (1 << (.@i[3]+6)) | (1 << (.@i[4]+10));
 
 		mes "[Tired-looking Fairy]";
 		mes "A "+.@Skin$[.@i[2]-1]+"-skinned fairy with "+.@Hair$[.@i[1]-1]+" hair and "+.@Wings$[.@i[4]-1]+" wings, dressed in "+.@Clothing$[.@i[3]-1]+" clothing.......";
@@ -582,7 +606,7 @@ splendide,183,117,4	script	Tired-looking Fairy	4_F_FAIRYKID3,{
 			mes "Kusmi must be roaming the area southeast of the village.";
 			mes "Go see if she has lost her pouch.";
 			if (ep14_1_bs2 == 7)
-				set ep14_1_bs2,10;
+				ep14_1_bs2 = 10;
 			close;
 		case 2212: // Theodore: grassy-green hair, dark skin, snow-white clothing, round wings
 			mes "Hmm......That must be Theodore.";
@@ -591,7 +615,7 @@ splendide,183,117,4	script	Tired-looking Fairy	4_F_FAIRYKID3,{
 			mes "Theodore must be roaming the area northeast of the village.";
 			mes "Go see if he has lost his pouch.";
 			if (ep14_1_bs2 == 8)
-				set ep14_1_bs2,11;
+				ep14_1_bs2 = 11;
 			close;
 		case 9264: // Pauchon: sea-blue hair, dark skin, grassy-green clothing, characteristic wings
 			mes "Hmm......That must be Pauchon.";
@@ -600,7 +624,7 @@ splendide,183,117,4	script	Tired-looking Fairy	4_F_FAIRYKID3,{
 			mes "Pauchon must be roaming the area north of the village.";
 			mes "Go see if she has lost her pouch.";
 			if (ep14_1_bs2 == 9)
-				set ep14_1_bs2,12;
+				ep14_1_bs2 = 12;
 			close;
 		default:
 			next;
@@ -635,7 +659,7 @@ splendide,119,138,4	script	Kusmi#ep14_1_bs	4_F_FAIRYKID5,{
 		mes "And who mayy you be?";
 		next;
 		select("Show the pouch.");
-		if (countitem(6390) == 0) {
+		if (countitem(Small_Pocket) == 0) {
 			mes "[Kusmi]";
 			mes "What is it that you want to show mee?";
 			close;
@@ -655,8 +679,8 @@ splendide,119,138,4	script	Kusmi#ep14_1_bs	4_F_FAIRYKID5,{
 			mes "[Kusmi]";
 			mes "Promise me you won't tell anyonee!";
 			mes "If you can promise, please talk to me againn.";
-			delitem 6390,1; //Small_Pocket
-			set ep14_1_bs,10;
+			delitem Small_Pocket,1;
+			ep14_1_bs = 10;
 			changequest 11187,11188;
 			close;
 		} else {
@@ -701,7 +725,7 @@ splendide,119,138,4	script	Kusmi#ep14_1_bs	4_F_FAIRYKID5,{
 			mes "[Kusmi]";
 			mes "Oh, and you must never ever tell anyone about what happened todayy!";
 			mes "Unless that person wanted to help uss... spreading the word won't do Splendide any goood.";
-			set ep14_1_bs,11;
+			ep14_1_bs = 11;
 			completequest 11188;
 			setquest 11189;
 			close;
@@ -715,7 +739,7 @@ splendide,119,138,4	script	Kusmi#ep14_1_bs	4_F_FAIRYKID5,{
 			mes "Well if you hear that you'll have to helpp!";
 			mes "Still want to knoww?!";
 			next;
-			switch(select("Yes.:No.")) {
+			switch(select("Yes.", "No.")) {
 			case 1:
 				mes "[Kusmi]";
 				mes "It's not a special road or anythingg.";
@@ -724,7 +748,7 @@ splendide,119,138,4	script	Kusmi#ep14_1_bs	4_F_FAIRYKID5,{
 				next;
 				mes "[Kusmi]";
 				mes "If you're headed that way, please go see that all's okayy.";
-				set ep14_1_bs,12;
+				ep14_1_bs = 12;
 				changequest 11189,11190;
 				close;
 			case 2:
@@ -759,7 +783,7 @@ splendide,119,138,4	script	Kusmi#ep14_1_bs	4_F_FAIRYKID5,{
 			next;
 			mes "[Kusmi]";
 			mes "He always used to visit Splendide around this time, but the situation is no good now. I'll have to tell him to come another time.";
-			set ep14_1_bs,14;
+			ep14_1_bs = 14;
 			changequest 11191,11192;
 			close;
 		} else if (ep14_1_bs == 14) {
@@ -769,7 +793,7 @@ splendide,119,138,4	script	Kusmi#ep14_1_bs	4_F_FAIRYKID5,{
 			next;
 			mes "[Kusmi]";
 			mes "If you go to the warehouse in Mora Village, the manager will tell you moree.";
-			if (checkquest(11193) > -1 && checkquest(11193) < 2)
+			if (questprogress(11193) == 1)
 				close;
 			mes "Also, on the way back, will you check to see that my friend Rondo is in Mora Villagee?";
 			next;
@@ -777,7 +801,7 @@ splendide,119,138,4	script	Kusmi#ep14_1_bs	4_F_FAIRYKID5,{
 			mes "He always used to visit Splendide around this time, but the situation is no good now. I'll have to tell him to come another time.";
 			close;
 		} else if (ep14_1_bs > 14) {
-			if (checkquest(11193) == -1) {
+			if (!questprogress(11193)) {
 				mes "[Kusmi]";
 				mes "Will you check to see that my friend Rondo is in Mora Villagee?";
 				next;
@@ -800,7 +824,7 @@ splendide,119,138,4	script	Kusmi#ep14_1_bs	4_F_FAIRYKID5,{
 				mes "[Kusmi]";
 				mes "Oh, And Daphrer is in northwest Splendide.";
 			}
-			if (checkquest(11193) < 2) {
+			if (questprogress(11193) != 2) {
 				completequest 11192;
 				completequest 11193;
 			}
@@ -830,7 +854,7 @@ splendide,304,295,4	script	Theodore#ep14_1_bs	4_M_FAIRYKID4,{
 		mes "Who are you!";
 		next;
 		select("Show the pouch.");
-		if (countitem(6390) == 0) {
+		if (countitem(Small_Pocket) == 0) {
 			mes "[Theodore]";
 			mes "Hmm? What do you mean?";
 			close;
@@ -850,8 +874,8 @@ splendide,304,295,4	script	Theodore#ep14_1_bs	4_M_FAIRYKID4,{
 			mes "[Theodore]";
 			mes "If you really want to hear the answer, talk to me again.";
 			mes "I need time to think.";
-			delitem 6390,1; //Small_Pocket
-			set ep14_1_bs,10;
+			delitem Small_Pocket,1;
+			ep14_1_bs = 10;
 			changequest 11187,11194;
 			close;
 		} else {
@@ -892,7 +916,7 @@ splendide,304,295,4	script	Theodore#ep14_1_bs	4_M_FAIRYKID4,{
 			mes "[Theodore]";
 			mes "And as I said before, what I told you is a secret and you must not tell anyone.";
 			mes "We do need help, but we are cornered and we don't want others to know.";
-			set ep14_1_bs,11;
+			ep14_1_bs = 11;
 			completequest 11194;
 			setquest 11195;
 			close;
@@ -905,7 +929,7 @@ splendide,304,295,4	script	Theodore#ep14_1_bs	4_M_FAIRYKID4,{
 			mes "Hmm... if you hear that, you might just have to help us out?";
 			mes "Do you still want to know?";
 			next;
-			switch(select("Yes.:No.")) {
+			switch(select("Yes.", "No.")) {
 			case 1:
 				mes "[Theodore]";
 				mes "The supply route comes through Bifrost, and you can get to it from the back of the Splendide Basecamp.";
@@ -914,7 +938,7 @@ splendide,304,295,4	script	Theodore#ep14_1_bs	4_M_FAIRYKID4,{
 				next;
 				mes "[Theodore]";
 				mes "If you happen to venture there, please ask a guard what things are like there.";
-				set ep14_1_bs,12;
+				ep14_1_bs = 12;
 				changequest 11195,11196;
 				close;
 			case 2:
@@ -949,21 +973,21 @@ splendide,304,295,4	script	Theodore#ep14_1_bs	4_M_FAIRYKID4,{
 			next;
 			mes "[Theodore]";
 			mes "And if it's not too much trouble, you could drop by my friend Lilitia's also...";
-			set ep14_1_bs,14;
+			ep14_1_bs = 14;
 			changequest 11197,11198;
 			close;
 		} else if (ep14_1_bs == 14) {
 			mes "[Theodore]";
 			mes "If you speak to the Warehouse Manager of Mora Village, you'd be able to get more information.";
 			mes "If you're willing, will you go to Bifrost's 'Mora' Village and meet the Warehouse Manager?";
-			if (checkquest(11199) > -1 && checkquest(11199) < 2)
+			if (questprogress(11199) == 1)
 				close;
 			next;
 			mes "[Theodore]";
 			mes "And if it's not too much trouble, you could drop by my friend Lilitia's also...";
 			close;
 		} else if (ep14_1_bs > 14) {
-			if (checkquest(11199) == -1) {
+			if (!questprogress(11199)) {
 				mes "[Theodore]";
 				mes "And if it's not too much trouble, you could drop by my friend Lilitia's also...";
 				close;
@@ -982,7 +1006,7 @@ splendide,304,295,4	script	Theodore#ep14_1_bs	4_M_FAIRYKID4,{
 				mes "[Theodore]";
 				mes "Oh, And Daphrer is in northwest Splendide.";
 			}
-			if (checkquest(11199) < 2) {
+			if (questprogress(11199) != 2) {
 				completequest 11198;
 				completequest 11199;
 			}
@@ -1012,7 +1036,7 @@ splendide,168,301,4	script	Pauchon#ep14_1_bs	4_F_FAIRYKID4,{
 		mes "What can I do for you, sir?";
 		next;
 		select("Show the pouch.");
-		if (countitem(6390) == 0) {
+		if (countitem(Small_Pocket) == 0) {
 			mes "[Pauchon]";
 			mes "Huh? Do you see something?";
 			mes "I don't see anything...";
@@ -1030,8 +1054,8 @@ splendide,168,301,4	script	Pauchon#ep14_1_bs	4_F_FAIRYKID4,{
 			mes "That's not easy for me to answer...";
 			mes "I do appreciate you finding my pouch.... Hmm...";
 			mes "Please give me some time to think..";
-			delitem 6390,1; //Small_Pocket
-			set ep14_1_bs,10;
+			delitem Small_Pocket,1;
+			ep14_1_bs = 10;
 			changequest 11187,11200;
 			close;
 		} else {
@@ -1073,7 +1097,7 @@ splendide,168,301,4	script	Pauchon#ep14_1_bs	4_F_FAIRYKID4,{
 			mes "[Pauchon]";
 			mes "I'd eat the bark off of that tree if I could.";
 			mes "If only somebody could help. *sob*";
-			set ep14_1_bs,11;
+			ep14_1_bs = 11;
 			completequest 11200;
 			setquest 11201;
 			close;
@@ -1087,7 +1111,7 @@ splendide,168,301,4	script	Pauchon#ep14_1_bs	4_F_FAIRYKID4,{
 			mes "Are you going to help me if I tell you?";
 			mes "If not, I won't tell.";
 			next;
-			switch(select("Yes.:No.")) {
+			switch(select("Yes.", "No.")) {
 			case 1:
 				mes "[Pauchon]";
 				mes "A giant road leads away from the back of Splendide.";
@@ -1096,7 +1120,7 @@ splendide,168,301,4	script	Pauchon#ep14_1_bs	4_F_FAIRYKID4,{
 				mes "[Pauchon]";
 				mes "Oh! The guard there might know something.";
 				mes "If you're headed that way, please go find out what's up.";
-				set ep14_1_bs,12;
+				ep14_1_bs = 12;
 				changequest 11201,11202;
 				close;
 			case 2:
@@ -1129,7 +1153,7 @@ splendide,168,301,4	script	Pauchon#ep14_1_bs	4_F_FAIRYKID4,{
 			next;
 			mes "[Pauchon]";
 			mes "He's such a flighty guy, might have already left, but we were supposed to meet up in Mora Village.";
-			set ep14_1_bs,14;
+			ep14_1_bs = 14;
 			changequest 11203,11204;
 			close;
 		} else if (ep14_1_bs == 14) {
@@ -1138,7 +1162,7 @@ splendide,168,301,4	script	Pauchon#ep14_1_bs	4_F_FAIRYKID4,{
 			next;
 			mes "[Pauchon]";
 			mes "The supplies from the mainland come through the Village. If you go speak to the Warehouse Manager, he'll be able to tell you something.";
-			if (checkquest(11205) > -1 && checkquest(11205) < 2)
+			if (questprogress(11205) == 1)
 				close;
 			mes "Also, please pay a visit to my friend Humming.";
 			next;
@@ -1146,7 +1170,7 @@ splendide,168,301,4	script	Pauchon#ep14_1_bs	4_F_FAIRYKID4,{
 			mes "He's such a flighty guy, might have already left, but we were supposed to meet up in Mora Village.";
 			close;
 		} else if (ep14_1_bs > 14) {
-			if (checkquest(11205) == -1) {
+			if (!questprogress(11205)) {
 				mes "[Pauchon]";
 				mes "Please pay a visit to my friend Humming.";
 				mes "He's such a flighty guy, might have already left, but we were supposed to meet up in Mora Village.";
@@ -1165,7 +1189,7 @@ splendide,168,301,4	script	Pauchon#ep14_1_bs	4_F_FAIRYKID4,{
 				mes "[Pauchon]";
 				mes "Oh, And Daphrer is in northwest Splendide.";
 			}
-			if (checkquest(11205) < 2) {
+			if (questprogress(11205) != 2) {
 				completequest 11204;
 				completequest 11205;
 			}
@@ -1199,14 +1223,14 @@ splendide,262,376,4	script	Laphine Soldier#ep14_1	4_M_FAIRYSOLDIER,{
 	next;
 	mes "[Laphine Soldier]";
 	mes "You can get to Alfheim by making it through the Maze of the Hazy Forest. However, nobody has ever come back from the Maze of the Hazy Forest.";
-	if (checkquest(11190) > -1 && checkquest(11190) < 2) {
-		set ep14_1_bs,13;
+	if (questprogress(11190) == 1) {
+		ep14_1_bs = 13;
 		changequest 11190,11191;
-	} else if (checkquest(11196) > -1 && checkquest(11196) < 2) {
-		set ep14_1_bs,13;
+	} else if (questprogress(11196) == 1) {
+		ep14_1_bs = 13;
 		changequest 11196,11197;
-	} else if (checkquest(11202) > -1 && checkquest(11202) < 2) {
-		set ep14_1_bs,13;
+	} else if (questprogress(11202) == 1) {
+		ep14_1_bs = 13;
 		changequest 11202,11203;
 	}
 	close;
@@ -1237,7 +1261,7 @@ mora,185,163,2	script	Warehouse Manager#ep14_1	4_M_RAFLE_GR,{
 		mes "[Warehouse Manager]";
 		mes "If you plan to go back to Splendide, pay a visit to Jones at the Inn.";
 		mes "He has something that needs to be urgently delivered to the army of Splendide.";
-		set ep14_1_bs,15;
+		ep14_1_bs = 15;
 		setquest 11206;
 		close;
 	} else if (ep14_1_bs == 15) {
@@ -1268,7 +1292,7 @@ mora,35,119,4	script	Rondo#ep14_1_bs	4_M_DOGTRAVELER,{
 		mes "[Rondo]";
 		mes "Please tell Kusmi";
 		mes "that if he wants to meet, we can meet any time. There is nothing to worry about.";
-		if (checkquest(11193) == -1)
+		if (!questprogress(11193))
 			setquest 11193;
 	}
 	close;
@@ -1288,7 +1312,7 @@ mora,98,66,4	script	Lilitia#ep14_1_bs	4_F_RAFLE_PK,{
 		mes "[Lilitia]";
 		mes "What? Theodore sent you?";
 		mes "Please tell him that I'm so mad!!";
-		if (checkquest(11199) == -1)
+		if (!questprogress(11199))
 			setquest 11199;
 		close;
 	}
@@ -1314,7 +1338,7 @@ mora,139,102,2	script	Humming#ep14_1_bs	4_F_DOGTRAVELER,{
 		mes "[Humming]";
 		mes "If you reach Splendide before me, please tell Pauchon";
 		mes "that I'm going through the Maze of the Hazy Forest.";
-		if (checkquest(11205) == -1)
+		if (!questprogress(11205))
 			setquest 11205;
 		close;
 	}
@@ -1346,11 +1370,11 @@ mora,55,124,2	script	Jones#ep14_1_bs	4_M_MERCAT1,{
 		mes "[Jones]";
 		mes "Deliveries to other places have all stopped also. Ah, my credibility is suffering....";
 		next;
-		switch(select("Yes.:No.")) {
+		switch(select("Yes.", "No.")) {
 		case 1:
 			mes "[Jones]";
 			mes "Thank you.";
-			set ep14_1_bs,16;
+			ep14_1_bs = 16;
 			changequest 11206,11207;
 			close;
 		case 2:
@@ -1359,7 +1383,7 @@ mora,55,124,2	script	Jones#ep14_1_bs	4_M_MERCAT1,{
 			close;
 		}
 	} else if (ep14_1_bs == 16) {
-		if (checkweight(1201,1) == 0) {
+		if (checkweight(Knife,1) == 0) {
 			mes "[Jones]";
 			mes "You have too many kinds of items. Please lighten your load and come back.";
 			close;
@@ -1372,8 +1396,8 @@ mora,55,124,2	script	Jones#ep14_1_bs	4_M_MERCAT1,{
 		mes "[Jones]";
 		mes "Please take good care of it.";
 		mes "It's for Daphrer in Splendide.";
-		set ep14_1_bs,17;
-		getitem 6391,1; //Splendid_Supply_Kit
+		ep14_1_bs = 17;
+		getitem Splendid_Supply_Kit,1;
 		changequest 11207,11208;
 		close;
 	} else if (ep14_1_bs == 17) {
@@ -1402,7 +1426,7 @@ splendide,121,260,4	script	Daphrer#ep14_1_bs	4_F_FAIRY,{
 		mes "DRHSfhsdfGSDH FGkkmvoifk DFG DFHshfeksmn fgg FDbbd fjnnvk n skncki dfgd F FHdfkdfjkmv";
 		close;
 	}
-	if (countitem(6391)) {
+	if (countitem(Splendid_Supply_Kit)) {
 		mes "[Daphrer]";
 		mes "Oh....";
 		mes "I've been waiting for you.";
@@ -1412,14 +1436,14 @@ splendide,121,260,4	script	Daphrer#ep14_1_bs	4_F_FAIRY,{
 		next;
 		mes "[Daphrer]";
 		mes "This is probably too small to be a reward, but please accept this as a sign of my gratitude.";
-		delitem 6391,1; //Splendid_Supply_Kit
+		delitem Splendid_Supply_Kit,1;
 		if (ep14_1_bs == 17) {
-			set ep14_1_bs,18;
+			ep14_1_bs = 18;
 			completequest 11208;
 			getexp 0,500000;
-			getitem 6380,5; //Mora_Coin
+			getitem Mora_Coin,5;
 		} else
-			getitem 6380,2; //Mora_Coin
+			getitem Mora_Coin,2;
 		close;
 	}
 	if (ep14_1_bs == 17) {
@@ -1431,10 +1455,10 @@ splendide,121,260,4	script	Daphrer#ep14_1_bs	4_F_FAIRY,{
 		mes "I knew that it was probably a stretch......";
 		mes "Perhaps I've been unrealistic.";
 		mes "But I thank you for your trouble anyway. Please accept this as a sign of my gratitude.";
-		set ep14_1_bs,18;
+		ep14_1_bs = 18;
 		completequest 11208;
 		getexp 0,200000;
-		getitem 6380,2; //Mora_Coin
+		getitem Mora_Coin,2;
 		close;
 	}
 	mes "[Daphrer]";
@@ -1444,26 +1468,25 @@ splendide,121,260,4	script	Daphrer#ep14_1_bs	4_F_FAIRY,{
 
 sec_in02,35,175,0	script	Theore Set Guid	4_F_FAIRYKID,{
 	callfunc "F_GM_NPC";
-	switch(select("Set0:Set33:Set2_0")) {
+	switch(select("Set0", "Set33", "Set2_0")) {
 	case 1:
-		set ep14_1_bs,0;
+		ep14_1_bs = 0;
 		end;
 	case 2:
-		set ep4_1_bs,3;
+		ep4_1_bs = 3;
 		setquest 11183;
 		end;
 	case 3:
-		set ep14_1_bs2,0;
+		ep14_1_bs2 = 0;
 		end;
 	}
 }
 
-// Chesire's New Day :: ep14_1_cheshir2
-//============================================================
+//== Chesire's New Day :: ep14_1_cheshir2 ==================
 dic_in01,262,191,0	script	#ep14_1_xq02	HIDDEN_WARP_NPC,0,3,{
 	end;
 OnTouch:
-	if (ep13_3_secret > 22 && checkquest(7206) == -1) {
+	if (ep13_3_secret > 22 && !questprogress(7206)) {
 		enablenpc "Cheshire#ep14_1_xq01";
 		cutin "ep13_cheshire_h",1;
 		mes "[Cheshire]";
@@ -1501,12 +1524,12 @@ OnInit:
 }
 
 dic_dun01,274,114,0	script	Stacked Boxes of Goods	CLEAR_NPC,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "- You have too many items to do this quest. -";
 		close;
 	}
-	set .@playtime, checkquest(7208,PLAYTIME);
-	if (.@playtime == 0 || .@playtime == 1) {
+	.@playtime = questprogress(7208,PLAYTIME);
+	if (.@playtime == 1) {
 		mes "Boxes with all kinds of goods in them are stacked to the ceiling.";
 		mes "The marked box Cheshire was talking about doesn't seem to be here yet.";
 		close;
@@ -1515,12 +1538,12 @@ dic_dun01,274,114,0	script	Stacked Boxes of Goods	CLEAR_NPC,{
 		mes "Looking closely, you find a box with a small piece of paper stuck to it.";
 		mes "You've found the box of goods Cheshire was talking about.";
 		next;
-		switch(select("Move the box.:Give up.")) {
+		switch(select("Move the box.", "Give up.")) {
 		case 1:
 			mes "You promised to take the box of Bradium to Cheshire, who will be waiting for you near the Crevice of Bifrost.";
 			erasequest 7208;
 			setquest 7210;
-			getitem 6392,1; //Bradium_Box
+			getitem Bradium_Box,1;
 			close;
 		case 2:
 			mes "You decided to give up delivering the box.";
@@ -1529,8 +1552,8 @@ dic_dun01,274,114,0	script	Stacked Boxes of Goods	CLEAR_NPC,{
 			close;
 		}
 	} else {
-		if (checkquest(7207) == -1) {
-			if (checkquest(7206) > -1) {
+		if (!questprogress(7207)) {
+			if (questprogress(7206)) {
 				mes "Boxes with all kinds of goods in them are stacked to the ceiling.";
 				mes "Looking closely, you find a box with a small piece of paper stuck to it.";
 				next;
@@ -1540,10 +1563,10 @@ dic_dun01,274,114,0	script	Stacked Boxes of Goods	CLEAR_NPC,{
 				mes "You decide to take it to the location shown on the piece of paper.";
 				completequest 7206;
 				setquest 7207;
-				getitem 6392,1; //Bradium_Box
+				getitem Bradium_Box,1;
 				close;
 			}
-		} else if (checkquest(7207) < 2) {
+		} else if (questprogress(7207) != 2) {
 			mes "You've already obtained the box Cheshire was talking about.";
 			mes "Now you only have to take it to the Crevice of Bifrost.";
 			close;
@@ -1555,13 +1578,13 @@ dic_dun01,274,114,0	script	Stacked Boxes of Goods	CLEAR_NPC,{
 }
 
 bif_fild01,335,168,3	script	Cheshire#ep14_1_xq04	4_M_CATMAN1,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "- You have too many items to do this quest. -";
 		close;
 	}
 	cutin "ep13_cheshire",1;
-	if (checkquest(7209) > -1) {
-		if (countitem(6090) < 20) {
+	if (questprogress(7209)) {
+		if (countitem(Purified_Bradium) < 20) {
 			mes "[Cheshire]";
 			mes "Bring me 20 pieces of refined Bradium.";
 			mes "In exchange for the box, which you carelessly and irresponsibly sold to somebody.";
@@ -1581,17 +1604,17 @@ bif_fild01,335,168,3	script	Cheshire#ep14_1_xq04	4_M_CATMAN1,{
 		mes "You made a mistake of losing the box, you have to be content with this.";
 		mes "And starting tomorrow, get the box here intact.";
 		mes "Every day.";
-		delitem 6090,20; //Purified_Bradium
+		delitem Purified_Bradium,20;
 		erasequest 7209;
 		setquest 7208;
-		getitem 6304,1; //Sapa_Feat_Cert
+		getitem Sapa_Feat_Cert,1;
 		close2;
 		cutin "",255;
 		end;
 	}
 	callsub L_CheckPlaytime;
-	if (checkquest(7210) > -1) {
-		if (countitem(6392) == 0)
+	if (questprogress(7210)) {
+		if (countitem(Bradium_Box) == 0)
 			callsub L_LostQuest,7210;
 		else {
 			mes "[Cheshire]";
@@ -1605,8 +1628,8 @@ bif_fild01,335,168,3	script	Cheshire#ep14_1_xq04	4_M_CATMAN1,{
 			mes "Now, leave this place before the Laphines grow suspicious.";
 			erasequest 7210;
 			setquest 7208;
-			delitem 6392,1; //Bradium_Box
-			getitem 6304,1; //Sapa_Feat_Cert
+			delitem Bradium_Box,1;
+			getitem Sapa_Feat_Cert,1;
 			getexp 50000,40000;
 			close2;
 			cutin "",255;
@@ -1614,11 +1637,11 @@ bif_fild01,335,168,3	script	Cheshire#ep14_1_xq04	4_M_CATMAN1,{
 		}
 	}
 	if (ep13_3_secret > 22) {
-		if (checkquest(7207) == -1) {
-			if (checkquest(7206) == -1) {
+		if (!questprogress(7207)) {
+			if (!questprogress(7206)) {
 				mes "[Cheshire]";
 				mes "...Hmm? Huh?";
-				mes "It's "+strcharinfo(0)+"!";
+				mes "It's "+strcharinfo(PC_NAME)+"!";
 				mes "What are you doing here?";
 				next;
 				select("Huh? Cheshire?");
@@ -1637,9 +1660,9 @@ bif_fild01,335,168,3	script	Cheshire#ep14_1_xq04	4_M_CATMAN1,{
 				mes ".......What? Why are you staring at me like that?";
 				mes "his is all for Ahat's good.";
 				next;
-				switch(select("I guess I have no choice.:I have a lot of things to do!")) {
+				switch(select("I guess I have no choice.", "I have a lot of things to do!")) {
 				case 1:
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "(He will be suspicious if I refuse to do it... I guess I should play along for now.)";
 					mes "Okay.";
 					mes "I'll do anything for Ahat's pleasure.";
@@ -1683,8 +1706,8 @@ bif_fild01,335,168,3	script	Cheshire#ep14_1_xq04	4_M_CATMAN1,{
 				cutin "",255;
 				end;
 			}
-		} else if (checkquest(7207) < 2) {
-			if (countitem(6392) == 0)
+		} else if (questprogress(7207) != 2) {
+			if (countitem(Bradium_Box) == 0)
 				callsub L_LostQuest,7207;
 			else {
 				mes "[Cheshire]";
@@ -1713,7 +1736,7 @@ bif_fild01,335,168,3	script	Cheshire#ep14_1_xq04	4_M_CATMAN1,{
 				mes "They will grow suspicious.";
 				mes "But you humans are free from such troubles, so that's why you're the right one for the job.";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "(... I don't buy his story, but he believes I'm on his side, so I guess I should play along.)";
 				mes "What happens to this Bradium, then?";
 				next;
@@ -1732,10 +1755,10 @@ bif_fild01,335,168,3	script	Cheshire#ep14_1_xq04	4_M_CATMAN1,{
 				mes "Well, I'll leave the matter to you.";
 				mes "Try to bring the box to me every day.";
 				mes "Okay?";
-				delitem 6392,1; //Bradium_Box
+				delitem Bradium_Box,1;
 				completequest 7207;
 				setquest 7208;
-				getitem 6304,1; //Sapa_Feat_Cert
+				getitem Sapa_Feat_Cert,1;
 				getexp 50000,40000;
 				next;
 				mes "[Cheshire]";
@@ -1765,7 +1788,7 @@ bif_fild01,335,168,3	script	Cheshire#ep14_1_xq04	4_M_CATMAN1,{
 		mes "[Cheshire]";
 		mes "... Huh? I think I've seen you somewhere...";
 		mes "..........Oh!";
-		mes strcharinfo(0)+"...?!";
+		mes strcharinfo(PC_NAME)+"...?!";
 		mes "What brings you here?";
 		next;
 		mes "[Cheshire]";
@@ -1800,7 +1823,7 @@ L_LostQuest:
 	mes "What happened to the box?";
 	mes "Why are you empty-handed?";
 	next;
-	switch(select("I'll look for it again!:I lost it...")) {
+	switch(select("I'll look for it again!", "I lost it...")) {
 	case 1:
 		mes "[Cheshire]";
 		mes "Make sure you do a good job!";
@@ -1826,8 +1849,8 @@ L_LostQuest:
 	cutin "",255;
 	end;
 L_CheckPlaytime:
-	set .@playtime, checkquest(7208,PLAYTIME);
-	if (.@playtime == 0 || .@playtime == 1) {
+	.@playtime = questprogress(7208,PLAYTIME);
+	if (.@playtime == 1) {
 		mes "[Cheshire]";
 		mes "Each day, one of these boxes is sent to Kamidal Tunnel.";
 		mes "It's smuggled in among other items.";
@@ -1862,7 +1885,7 @@ OnTouch:
 			mes "There must be someone down there.";
 			if ($@cheshire_on == 0) {
 				donpcevent "Cheshire#ep14_extra::OnEnable";
-				set $@cheshire_on,1;
+				$@cheshire_on = 1;
 			}
 			close;
 		}
@@ -1877,7 +1900,7 @@ dicastes02,103,190,3	script	Cheshire#ep14_extra	4_M_CATMAN1,{
 		mes "...Eh?";
 		mes "What a surprise. What are you doing here?";
 		next;
-		switch(select("And what are YOU doing here?:Those ears...?")) {
+		switch(select("And what are YOU doing here?", "Those ears...?")) {
 		case 1:
 			mes "[Cheshire]";
 			mes "Out for a walk?";
@@ -1886,7 +1909,7 @@ dicastes02,103,190,3	script	Cheshire#ep14_extra	4_M_CATMAN1,{
 			mes "[Cheshire]";
 			mes ".. ..............";
 			next;
-			select("....:Wha... What a pretty tree.");
+			select("....", "Wha... What a pretty tree.");
 			mes "[Cheshire]";
 			mes "This tree... it's white, transparent, and shiny.";
 			mes "It's a Sapha's body.";
@@ -1945,13 +1968,12 @@ OnDisable:
 	end;
 OnTimer600000:
 	disablenpc "Cheshire#ep14_extra";
-	set $@cheshire_on,0;
+	$@cheshire_on = 0;
 	stopnpctimer;
 	end;
 }
 
-// Helping Lope and Euridi :: ep14_1_rofe
-//============================================================
+//== Helping Lope and Euridi :: ep14_1_rofe ================
 mora,117,66,3	script	Euridi#pa	4_F_MORAFINE2,{
 	if (BaseLevel < 100) {
 		mes "[Euridi]";
@@ -1967,7 +1989,7 @@ mora,117,66,3	script	Euridi#pa	4_F_MORAFINE2,{
 		mes "Did you happen to see";
 		mes "Lope, my fiance, there?";
 		next;
-		switch(select("Yes, I did.:No, I didn't.")) {
+		switch(select("Yes, I did.", "No, I didn't.")) {
 		case 1:
 			mes "[Euridi]";
 			mes "Are you sure? Where did you see him?";
@@ -1990,7 +2012,7 @@ mora,117,66,3	script	Euridi#pa	4_F_MORAFINE2,{
 			mes "My heart aches at the thought of Lope...";
 			mes "He will be desperately looking for me...";
 			next;
-			switch(select("Sorry, I'm busy!:I'll help you!")) {
+			switch(select("Sorry, I'm busy!", "I'll help you!")) {
 			case 1:
 				mes "[Euridi]";
 				mes "How heartless!";
@@ -2006,7 +2028,7 @@ mora,117,66,3	script	Euridi#pa	4_F_MORAFINE2,{
 				mes "He wouldn't see me and locked himself in the room.";
 				mes "But he might be willing to see you, because you've been to the Hazy Forest.";
 				setquest 1109;
-				set ep14_1_rope,1;
+				ep14_1_rope = 1;
 				close;
 			}
 		}
@@ -2033,9 +2055,9 @@ mora,117,66,3	script	Euridi#pa	4_F_MORAFINE2,{
 		mes "If you find the rest of ^0000FFLope's Clues^000000,";
 		mes "you'll be able to find out";
 		mes "where he is.";
-		mes "I'm counting on you, "+strcharinfo(0)+".";
+		mes "I'm counting on you, "+strcharinfo(PC_NAME)+".";
 		changequest 1110,1111;
-		set ep14_1_rope,3;
+		ep14_1_rope = 3;
 		close;
 	} else if (ep14_1_rope == 3) {
 		mes "[Euridi]";
@@ -2079,11 +2101,11 @@ mora,117,66,3	script	Euridi#pa	4_F_MORAFINE2,{
 		mes "Let's go show the letter to Pitt.";
 		changequest 1112,1113;
 
-		//delitem 6383,30; //Clue_Of_Lope
-		set .@count, countitem(6383);
-		if (.@count) delitem 6383,((.@count > 30)?30:.@count); //Clue_Of_Lope
+		//delitem Clue_Of_Lope,30;
+		.@count = countitem(Clue_Of_Lope);
+		if (.@count) delitem Clue_Of_Lope,((.@count > 30)?30:.@count);
 
-		set ep14_1_rope,5;
+		ep14_1_rope = 5;
 		close;
 	} else if (ep14_1_rope == 5) {
 		mes "[Euridi]";
@@ -2106,7 +2128,7 @@ mora,117,66,3	script	Euridi#pa	4_F_MORAFINE2,{
 		mes "Have you found Lope?";
 		mes "Is he safe?";
 		next;
-		switch(select("Tell her you can't possibly find him.:Tell her he is dead.")) {
+		switch(select("Tell her you can't possibly find him.", "Tell her he is dead.")) {
 		case 1:
 			mes "[Euridi]";
 			mes "I'll go look for him myself.";
@@ -2124,10 +2146,10 @@ mora,117,66,3	script	Euridi#pa	4_F_MORAFINE2,{
 			mes "With the ring in her hand, Euridi bursts into tears.";
 			mes "She starts to sing in a strained voice, still crying.";
 			changequest 1116,1117;
-			set ep14_1_rope,10;
+			ep14_1_rope = 10;
 
-			//delitem 6384,1; //Ring_Of_Lope
-			if (countitem(6384)) delitem 6384,1; //Ring_Of_Lope
+			//delitem Ring_Of_Lope,1;
+			if (countitem(Ring_Of_Lope)) delitem Ring_Of_Lope,1;
 
 			close;
 		}
@@ -2194,7 +2216,7 @@ mora,115,68,3	script	Euridi's Friend#pa	4_F_MORAFINE1,{
 		mes "because of the thick fog.";
 		mes "I think it's worth investigating.";
 		changequest 1114,1115;
-		set ep14_1_rope,7;
+		ep14_1_rope = 7;
 		close;
 	} else if (ep14_1_rope == 7) {
 		mes "[Euridi's Friend]";
@@ -2217,7 +2239,7 @@ mora,115,68,3	script	Euridi's Friend#pa	4_F_MORAFINE1,{
 		mes "Maybe we're responsible";
 		mes "for what happened.";
 		next;
-		if (checkweight(6380,1) == 0) {
+		if (checkweight(Mora_Coin,1) == 0) {
 			mes "[Euridi's Friend]";
 			mes "You have too many things with you.";
 			mes "Can you throw out some of them?";
@@ -2227,9 +2249,9 @@ mora,115,68,3	script	Euridi's Friend#pa	4_F_MORAFINE1,{
 		mes "Lope will be able to rest in peace now.";
 		mes "Thank you. I won't forget what you've done for me.";
 		completequest 1117;
-		set ep14_1_rope,11;
+		ep14_1_rope = 11;
 		getexp 1000000,2000000;
-		getitem 6380,10; //Mora_Coin
+		getitem Mora_Coin,10;
 		close;
 	} else if (ep14_1_rope > 10) {
 		mes "[Euridi's Friend]";
@@ -2265,7 +2287,7 @@ mora,65,145,3	script	Pitt#pa	4_M_LYINGDOG,{
 		mes "He will be alive somewhere,";
 		mes "so go and try to find him! Just stop bothering me!";
 		changequest 1109,1110;
-		set ep14_1_rope,2;
+		ep14_1_rope = 2;
 		close;
 	} else if (ep14_1_rope == 2) {
 		mes "[Pitt]";
@@ -2274,7 +2296,7 @@ mora,65,145,3	script	Pitt#pa	4_M_LYINGDOG,{
 		mes "I hate Laphines!";
 		close;
 	} else if (ep14_1_rope == 3) {
-		if (countitem(6383) < 30) {
+		if (countitem(Clue_Of_Lope) < 30) {
 			mes "[Pitt]";
 			mes "This is all because of";
 			mes "the stupid guide!";
@@ -2288,13 +2310,13 @@ mora,65,145,3	script	Pitt#pa	4_M_LYINGDOG,{
 		mes "You'd better not keep that.";
 		mes "Can I have it?";
 		next;
-		switch(select("Give it to him.:Don't give it to him.")) {
+		switch(select("Give it to him.", "Don't give it to him.")) {
 		case 1:
 			mes "[Pitt]";
 			mes "So I swallow it like this,";
 			mes "and voila! Evidence gone!";
 			mes "Now I can sleep soundly, thank you!";
-			delitem 6383,5; //Clue_Of_Lope
+			delitem Clue_Of_Lope,5;
 			close;
 		case 2:
 			mes "[Pitt]";
@@ -2306,7 +2328,7 @@ mora,65,145,3	script	Pitt#pa	4_M_LYINGDOG,{
 			mes "It's no use trying to talk to him any more.";
 			mes "Try talking to Euridi.";
 			changequest 1111,1112;
-			set ep14_1_rope,4;
+			ep14_1_rope = 4;
 			close;
 		}
 	} else if (ep14_1_rope == 4) {
@@ -2315,7 +2337,7 @@ mora,65,145,3	script	Pitt#pa	4_M_LYINGDOG,{
 		mes "This is so totally unfair!";
 		close;
 	} else if (ep14_1_rope == 5) {
-		if (checkweight(6384,1) == 0) {
+		if (checkweight(Ring_Of_Lope,1) == 0) {
 			mes "[Pitt]";
 			mes "What are you, a professional mover?";
 			mes "Stomping about with a ton of stuff on your back!";
@@ -2359,7 +2381,7 @@ mora,65,145,3	script	Pitt#pa	4_M_LYINGDOG,{
 		mes "I'll give you the ring back,";
 		mes "so please leave me alone!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Then where could Lope...?";
 		next;
 		mes "[Pitt]";
@@ -2367,8 +2389,8 @@ mora,65,145,3	script	Pitt#pa	4_M_LYINGDOG,{
 		mes "he must be somewhere around there,";
 		mes "in whatever form he might be in.";
 		changequest 1113,1114;
-		set ep14_1_rope,6;
-		getitem 6384,1; //Ring_Of_Lope
+		ep14_1_rope = 6;
+		getitem Ring_Of_Lope,1;
 		close;
 	} else if (ep14_1_rope == 6 || ep14_1_rope == 7) {
 		mes "[Pitt]";
@@ -2399,7 +2421,7 @@ bif_fild01,132,338,3	script	Lope#pa	4_M_FAIRYSOLDIER2,2,2,{
 		mes "Who's there?";
 		mes "Answer, or I'll take you as an enemy and kill you.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Euridi is looking for you.";
 		next;
 		mes "[Suspicious Man]";
@@ -2410,7 +2432,7 @@ bif_fild01,132,338,3	script	Lope#pa	4_M_FAIRYSOLDIER2,2,2,{
 		mes "I asked you to wipe the name off my mind";
 		mes "in return for bearing the curse!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Will you please calm down and listen to...";
 		next;
 		mes "[Lope]";
@@ -2442,7 +2464,7 @@ bif_fild01,132,338,3	script	Lope#pa	4_M_FAIRYSOLDIER2,2,2,{
 		mes "[Lope]";
 		mes "Now go!";
 		mes "This is my last request as a Laphine called Lope...";
-		set ep14_1_rope,9;
+		ep14_1_rope = 9;
 		changequest 1115,1116;
 		close;
 	} else {
@@ -2478,7 +2500,7 @@ OnTimer2000:
 OnTouch:
 	mes "I see a suspicious man. Should I try talking to him?";
 	next;
-	switch(select("Leave him alone.:Talk to him.")) {
+	switch(select("Leave him alone.", "Talk to him.")) {
 	case 1:
 		donpcevent "Lope#pa::OnDisable";
 		mes "[Suspicious Man]";
@@ -2494,7 +2516,7 @@ OnTouch:
 			next;
 			mes "[Suspicious Man]";
 			mes "Aaaaarrrrrggghh!!!!!";
-			set ep14_1_rope,8;
+			ep14_1_rope = 8;
 			close;
 		} else {
 			mes "[Suspicious Man]";
@@ -2504,10 +2526,9 @@ OnTouch:
 	}
 }
 
-// Find the Research Tools :: ep14_1_muk
-//============================================================
+//== Find the Research Tools :: ep14_1_muk =================
 mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 500) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 500) {
 		mes "^FF0000- Warning message -";
 		mes "- Hang on there!! -";
 		mes "- You have too many items -";
@@ -2517,7 +2538,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		close;
 	}
 	// NPC disabled from 12am ~ 5am.
-	if (gettime(3) >= 0 && gettime(3) < 5) {
+	if (gettime(GETTIME_HOUR) >= 0 && gettime(GETTIME_HOUR) < 5) {
 		if (ep14_1_muk > 0) {
 			mes "[Raffle Researcher]";
 			mes "Don't humans sleep?";
@@ -2563,7 +2584,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		mes "It's a simple experiment, so there's no need to be afraid.";
 		emotion e_gg;
 		next;
-		if(select("What a crazy Raffle. I must run away.:... ...") == 1) {
+		if(select("What a crazy Raffle. I must run away.", "... ...") == 1) {
 			mes "[Raffle Researcher]";
 			mes "You said you had made it up from the Crevice,";
 			mes "so I was wondering what race you were,";
@@ -2608,7 +2629,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		mes "That's that. You're not busy, are you?";
 		mes "I'd like you to give me a hand...";
 		next;
-		select("Help him.:Help willingly.:Although you feel a little embarrassed, help anyhow.:Help with conviction.:Help adorably.:You're suspicious, but help anyhow.:You have no choice. Help him.");
+		select("Help him.", "Help willingly.", "Although you feel a little embarrassed, help anyhow.", "Help with conviction.", "Help adorably.", "You're suspicious, but help anyhow.", "You have no choice. Help him.");
 		mes "[Raffle Researcher]";
 		mes "I haven't met many humans";
 		mes "but you clearly care about";
@@ -2653,14 +2674,14 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		mes "The sooner you get them back,";
 		mes "the sooner I can get back to my research.";
 		setquest 5016;
-		set ep14_1_muk,1;
+		ep14_1_muk = 1;
 		next;
 		mes "[Raffle Researcher]";
 		mes "Have a safe trip.";
 		emotion e_paper;
 		close;
 	} else if (ep14_1_muk == 1) {
-		if (checkquest(5016) > -1 && countitem(6385) == 0) {
+		if (questprogress(5016) && countitem(Research_Tool_Bag) == 0) {
 			mes "[Raffle Researcher]";
 			mes "You're back? Where are my research tools?";
 			emotion e_what;
@@ -2695,7 +2716,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		mes "I've always wanted a capable research assistant,";
 		mes "but it hasn't been easy to find one.";
 		next;
-		if (checkweight(6380,1) == 0) {
+		if (checkweight(Mora_Coin,1) == 0) {
 			mes "[Raffle Researcher]";
 			mes "By the way... Was it that difficult to";
 			mes "reclaim the research tools?";
@@ -2707,14 +2728,14 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		mes "It must've been hard work to retrieve the tools.";
 		mes "Why don't you take this and go to the inn";
 		mes "and rest up? There's nothing for you to do right now.";
-		delitem 6385,1; //Research_Tool_Bag
-		set ep14_1_muk,2;
-		getitem 6380,1; //Mora_Coin
+		delitem Research_Tool_Bag,1;
+		ep14_1_muk = 2;
+		getitem Mora_Coin,1;
 		erasequest 5016;
 		close;
 	} else if (ep14_1_muk == 2) {
 		// Unofficial check, but it's needed here.
-		if (checkquest(5029,PLAYTIME) == 0 || checkquest(5029,PLAYTIME) == 1) {
+		if (questprogress(5029,PLAYTIME) == 1) {
 			mes "[Raffle Researcher]";
 			mes "It must've been hard work to retrieve the tools.";
 			mes "Why don't you take this and go to the inn";
@@ -2785,7 +2806,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		mes "You can draw on his face,";
 		mes "pinch him, tickle him,";
 		mes "whatever you want. Just bully him 3 times.";
-		set ep14_1_muk,3;
+		ep14_1_muk = 3;
 		setquest 5017;
 		close;
 	} else if (ep14_1_muk  < 6) {
@@ -2829,7 +2850,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		mes "You can collect the samples";
 		mes "from that area.";
 		next;
-		if (MaxWeight - Weight < 100 || checkweight(1092,10) == 0) {
+		if (MaxWeight - Weight < 100 || checkweight(Empty_Cylinder,10) == 0) {
 			mes "[Raffle Researcher]";
 			mes "You are carrying too much weight.";
 			mes "I can't give you the sample tube.";
@@ -2839,13 +2860,13 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		mes "[Raffle Researcher]";
 		mes "Here is the sample tube for collecting.";
 		mes "Go and collect 10 samples!";
-		set ep14_1_muk,7;
-		getitem 1092,10; //Empty_Cylinder
+		ep14_1_muk = 7;
+		getitem Empty_Cylinder,10;
 		erasequest 5018;
 		setquest 5019;
 		close;
 	} else if (ep14_1_muk == 7) {
-		if (checkquest(5019) > -1 && countitem(6386) < 10) {
+		if (questprogress(5019) && countitem(Bathtub_R_Sample) < 10) {
 			mes "[Raffle Researcher]";
 			mes "Have you collected the samples yet?";
 			mes "Please hurry up.";
@@ -2857,7 +2878,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 			mes "from that area.";
 			close;
 		}
-		if (checkweight(6380,1) == 0) {
+		if (checkweight(Mora_Coin,1) == 0) {
 			mes "[Raffle Researcher]";
 			mes "I know that you've done a lot...";
 			mes "but you are carrying too many things.";
@@ -2873,14 +2894,14 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		mes "with the bath water samples.";
 		mes "It usually takes about 24 hours.";
 		mes "Why don't you come back then?";
-		delitem 6386,10; //Bathtub_R_Sample
-		getitem 6380,1; //Mora_Coin
-		set ep14_1_muk,8;
+		delitem Bathtub_R_Sample,10;
+		getitem Mora_Coin,1;
+		ep14_1_muk = 8;
 		erasequest 5019;
 		setquest 5020;
 		close;
 	} else if (ep14_1_muk == 8) {
-		if (checkquest(5020,PLAYTIME) == 0 || checkquest(5020,PLAYTIME) == 1) {
+		if (questprogress(5020,PLAYTIME) == 1) {
 			mes "[Raffle Researcher]";
 			mes "The basic tests have not been completed yet.";
 			mes "There's nothing for you to do now.";
@@ -2906,30 +2927,30 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		mes "the unidentified creature that attacked me.";
 		next;
 		if (rand(2)) {
-			set .@str$,"teeth";
-			set .@quest,5021;
+			.@str$ = "teeth";
+			.@quest = 5021;
 		} else {
-			set .@str$,"scales";
-			set .@quest,5022;
+			.@str$ = "scales";
+			.@quest = 5022;
 		}
 		mes "[Raffle Researcher]";
 		mes "I'd better compare the two.";
 		mes "Please return to the bath";
 		mes "and look for the creature's "+.@str$+".";
 		mes "If you can, please bring me 10 of them.";
-		set ep14_1_muk,9;
+		ep14_1_muk = 9;
 		erasequest 5020;
 		setquest .@quest;
 		close;
 	} else if (ep14_1_muk == 9) {
-		if (checkquest(5021) > -1 || checkquest(5022) > -1) {
-			if (checkquest(5021) > -1) {
-				set .@quest,5021;
-				set .@item,6387; //Teeth_Sample
+		if (questprogress(5021) || questprogress(5022)) {
+			if (questprogress(5021)) {
+				.@quest = 5021;
+				.@item = 6387; //Teeth_Sample
 				setarray .@str$[0],"tooth","teeth";
 			} else {
-				set .@quest,5022;
-				set .@item,6388; //Scale_Sample
+				.@quest = 5022;
+				.@item = 6388; //Scale_Sample
 				setarray .@str$[0],"scale","scales";
 			}
 			if (countitem(.@item) < 10) {
@@ -2945,7 +2966,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 			mes "As humans say,";
 			mes "I've been waiting forever for them.";
 			next;
-			if (checkweight(6380,1) == 0) {
+			if (checkweight(Mora_Coin,1) == 0) {
 				mes "[Raffle Researcher]";
 				mes "I know that you've done a lot...";
 				mes "but you are carrying too many things.";
@@ -2960,11 +2981,11 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 			mes "Why don't you go for a walk";
 			mes "and come back then?";
 			delitem .@item,10;
-			getitem 6380,1; //Mora_Coin
+			getitem Mora_Coin,1;
 			erasequest .@quest;
 			setquest 5023;
 			close;
-		} else if (checkquest(5023,PLAYTIME) == 0 || checkquest(5023,PLAYTIME) == 1) {
+		} else if (questprogress(5023,PLAYTIME) == 1) {
 			mes "[Raffle Researcher]";
 			mes "I'm still analyzing the DNA.";
 			mes "The DNA analysis takes about 6 hours.";
@@ -2974,14 +2995,14 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 			switch(rand(1,6)) {
 			case 1:
 			case 3:
-				set .@quest,5021;
-				set .@item,6387; //Teeth_Sample
+				.@quest = 5021;
+				.@item = 6387; //Teeth_Sample
 				setarray .@str$[0],"tooth","teeth";
 				break;
 			case 2:
 			case 4:
-				set .@quest,5022;
-				set .@item,6388; //Scale_Sample
+				.@quest = 5022;
+				.@item = 6388; //Scale_Sample
 				setarray .@str$[0],"scale","scales";
 				break;
 			case 5:
@@ -3043,8 +3064,8 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 			mes "You probably don't need to run around";
 			mes "like you did collecting";
 			mes "the bath water samples.";
-			set ep14_1_muk,10;
-			getitem 1092,1; //Empty_Cylinder
+			ep14_1_muk = 10;
+			getitem Empty_Cylinder,1;
 			erasequest 5023;
 			setquest 5024;
 			next;
@@ -3056,7 +3077,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 			close;
 		}
 	} else if (ep14_1_muk == 10) {
-		if (countitem(6389) == 0) {
+		if (countitem(Puddle_R_Sample) == 0) {
 			mes "[Raffle Researcher]";
 			mes "You still haven't gone to collect the puddle sample?";
 			mes "Go to the puddle to the east of the village,";
@@ -3075,9 +3096,9 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		mes "It's not completely to the west...";
 		mes "The puddle should be at 7 o'clock";
 		mes "from the village.";
-		delitem 6389,1; //Puddle_R_Sample
-		set ep14_1_muk,11;
-		getitem 1092,1; //Empty_Cylinder
+		delitem Puddle_R_Sample,1;
+		ep14_1_muk = 11;
+		getitem Empty_Cylinder,1;
 		changequest 5024,5025;
 		next;
 		mes "[Raffle Researcher]";
@@ -3085,7 +3106,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		mes "Good luck!";
 		close;
 	} else if (ep14_1_muk == 11) {
-		if (countitem(6389) == 0) {
+		if (countitem(Puddle_R_Sample) == 0) {
 			mes "[Raffle Researcher]";
 			mes "You still haven't gone to collect the puddle sample?";
 			mes "Go to the puddle to the west of the village,";
@@ -3103,9 +3124,9 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		mes "Get me a sample from the puddle from the south.";
 		mes "The puddle to the south";
 		mes "should be... at 6 o'clock from here.";
-		delitem 6389,1; //Puddle_R_Sample
-		set ep14_1_muk,12;
-		getitem 1092,1; //Empty_Cylinder
+		delitem Puddle_R_Sample,1;
+		ep14_1_muk = 12;
+		getitem Empty_Cylinder,1;
 		changequest 5025,5026;
 		next;
 		mes "[Raffle Researcher]";
@@ -3114,7 +3135,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		mes "the sample is not damaged.";
 		close;
 	} else if (ep14_1_muk == 12) {
-		if (countitem(6389) == 0) {
+		if (countitem(Puddle_R_Sample) == 0) {
 			mes "You still haven't gone to collect the puddle sample?";
 			mes "Get me a sample from the puddle from the south.";
 			mes "The puddle to the south is located";
@@ -3135,9 +3156,9 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		mes "Please get me the sample from the puddle to the north.";
 		mes "It's not completely to the north.";
 		mes "it's at 11 o'clock from the village.";
-		delitem 6389,1; //Puddle_R_Sample
-		set ep14_1_muk,13;
-		getitem 1092,1; //Empty_Cylinder
+		delitem Puddle_R_Sample,1;
+		ep14_1_muk = 13;
+		getitem Empty_Cylinder,1;
 		changequest 5026,5027;
 		next;
 		mes "[Raffle Researcher]";
@@ -3145,7 +3166,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		mes "Be careful.";
 		close;
 	} else if (ep14_1_muk == 13) {
-		if (countitem(6389) == 0) {
+		if (countitem(Puddle_R_Sample) == 0) {
 			mes "[Raffle Researcher]";
 			mes "You still haven't gone to collect the puddle sample?";
 			mes "Please get me a sample from the puddle to the north.";
@@ -3164,7 +3185,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		mes "looking at the relationship between";
 		mes "these puddles and the bath.";
 		next;
-		if (checkweight(6380,4) == 0) {
+		if (checkweight(Mora_Coin,4) == 0) {
 			mes "[Raffle Researcher]";
 			mes "I know that you've done a lot...";
 			mes "but you are carrying too many things.";
@@ -3176,9 +3197,9 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		mes "If I finish this experiment...";
 		mes "There's probably nothing else to do. While I run the experiment,";
 		mes "why don't you go and entertain yourself?";
-		delitem 6389,1; //Puddle_R_Sample
-		set ep14_1_muk,14;
-		getitem 6380,4; //Mora_Coin
+		delitem Puddle_R_Sample,1;
+		ep14_1_muk = 14;
+		getitem Mora_Coin,4;
 		erasequest 5027;
 		setquest 5028;
 		next;
@@ -3187,7 +3208,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		mes "will take about 12 hours.";
 		close;
 	} else if (ep14_1_muk == 14) {
-		if (checkquest(5028,PLAYTIME) == 0 || checkquest(5028,PLAYTIME) == 1) {
+		if (questprogress(5028,PLAYTIME) == 1) {
 			mes "[Raffle Researcher]";
 			mes "What? You're here? Well...";
 			next;
@@ -3206,7 +3227,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		mes "the experiment results are all in.";
 		mes "Do you want to look at the results?";
 		next;
-		switch(select("Actually, I don't want to.:Look at the results.")) {
+		switch(select("Actually, I don't want to.", "Look at the results.")) {
 		case 1:
 			mes "[Raffle Researcher]";
 			mes "Good thinking. Actually, it may hurt";
@@ -3291,7 +3312,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		mes "But thank you anyhow. I've been researching for a while,";
 		mes "but I've never met such an excellent research assistant as you.";
 		next;
-		if (MaxWeight - Weight < 100 || checkweight(1092,1) == 0) {
+		if (MaxWeight - Weight < 100 || checkweight(Empty_Cylinder,1) == 0) {
 			mes "[Raffle Researcher]";
 			mes "Hmm? By the way...";
 			mes "You are carrying too much weight.";
@@ -3304,11 +3325,11 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		}
 		mes "[Raffle Researcher]";
 		mes "The best research assistant in my life...";
-		mes "is you, "+strcharinfo(0)+"!!!";
-		set ep14_1_muk,15;
+		mes "is you, "+strcharinfo(PC_NAME)+"!!!";
+		ep14_1_muk = 15;
 		completequest 5028;
 		getexp 1000000,4000000;
-		getitem 6380,30; //Mora_Coin
+		getitem Mora_Coin,30;
 		next;
 		mes "[Raffle Researcher]";
 		mes "If we happen to run into each other again,";
@@ -3322,7 +3343,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		mes "Could it be that you suddenly want to look at";
 		mes "the research report???";
 		next;
-		switch(select("Look at the report.:I came to say hello.")) {
+		switch(select("Look at the report.", "I came to say hello.")) {
 		case 1:
 			mes "[Raffle Researcher]";
 			mes "Haven't I shown it to you before?";
@@ -3345,7 +3366,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 				mes "You want to look again?";
 				emotion e_what;
 				next;
-				switch(select("Look again.:Don't look again.")) {
+				switch(select("Look again.", "Don't look again.")) {
 				case 1:
 					mes "[Raffle Researcher]";
 					mes "Sure... As you wish!!";
@@ -3362,7 +3383,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		case 2:
 			mes "[Raffle Researcher]";
 			mes "Oh, You came to say hi. I see.";
-			mes "Long time no see, "+strcharinfo(0)+".";
+			mes "Long time no see, "+strcharinfo(PC_NAME)+".";
 			next;
 			mes "[Raffle Researcher]";
 			mes "I've been telling you that I lucked out in picking you as my research assistant.";
@@ -3381,27 +3402,27 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 L_ShowReport:
 	mes "[Experimental Results]";
 	mes "*** Researcher - Inffle";
-	mes "*** Research Assistant - "+strcharinfo(0);
-	mes "¡¡";
+	mes "*** Research Assistant - "+strcharinfo(PC_NAME);
+	mes " ";
 	mes "<Research topic>";
 	mes "*** Bath of Mora Village";
-	mes "¡¡";
+	mes " ";
 	mes "<Aim>";
 	mes "To investigate the mysterious power of the bath water";
 	mes "and to find out ways to better utilize";
 	mes "the water.";
-	mes "¡¡";
+	mes " ";
 	mes "<Methods>";
 	mes "1. Obtained an unidentified DNA sample.";
 	mes "Obtained a sample of an unidentified DNA,";
 	mes "and collected more samples to look further into it.";
-	mes "¡¡";
+	mes " ";
 	mes "2. A comparison analysis on the unidentified DNA";
 	mes "Concluded that the DNA belongs to";
 	mes "an unidentified creature living in the bath water.";
 	mes "combine and result in";
 	mes "from the swordfish DNA.";
-	mes "¡¡";
+	mes " ";
 	mes "3. Research on the puddles around the village";
 	mes "From the four puddles around the village,";
 	mes "confirmed that the testing substances were";
@@ -3409,9 +3430,10 @@ L_ShowReport:
 	mes "It is thought that the four puddles";
 	mes "combine and result in";
 	mes "the mysterious power.";
-	mes "¡¡";
+	mes " ";
 	mes "<Material analysis>";
-	mes "*** Temperature ***** 33.5° ";
+	mes sprintf("*** %s ***** 33.5¡Æ",
+			_("Temperature"));
 	mes "*** PH ************ 9.8";
 	mes "*** Solid residues *** 176";
 	mes "*** K+ ************ 0,23";
@@ -3434,7 +3456,7 @@ L_ShowReport:
 	next;
 	return;
 L_CheckWeight:
-	if (MaxWeight - Weight < 100 || checkweight(1092,1) == 0) {
+	if (MaxWeight - Weight < 100 || checkweight(Empty_Cylinder,1) == 0) {
 		mes "[Raffle Researcher]";
 		mes "You are carrying too much weight.";
 		mes "I can't give you the sample tube.";
@@ -3445,7 +3467,7 @@ L_CheckWeight:
 }
 
 mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 500) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 500) {
 		mes "^FF0000- Warning message -";
 		mes "- Hang on there!! -";
 		mes "- You have too many items -";
@@ -3460,8 +3482,8 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 		donpcevent "Black Shadow#ep14_muk::OnDisable";
 		end;
 	}
-	set .@playtime, checkquest(5029,PLAYTIME);
-	if (.@playtime == 0 || .@playtime == 1) {
+	.@playtime = questprogress(5029,PLAYTIME);
+	if (.@playtime == 1) {
 		mes "You see a dark hole. As you show interest, something disappears quickly into the dark hole.";
 		close2;
 		donpcevent "Black Shadow#ep14_muk::OnDisable";
@@ -3469,15 +3491,15 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 	} else if (.@playtime == 2)
 		erasequest 5029;
 	if (ep14_1_goki == 30) {
-		if (checkquest(5030) == -1 && checkquest(5031) == -1 && checkquest(5032) == -1 && checkquest(5033) == -1 && checkquest(5034) == -1) {
+		if (!questprogress(5030) && !questprogress(5031) && !questprogress(5032) && !questprogress(5033) && !questprogress(5034)) {
 			mes "[Unidentified creature]";
 			mes "Arrgghh!!!";
 			mes "Why you bother me.";
 			mes "You stop bullying me.";
 			next;
-			if(select("Bully anyway.:I'll stop.") == 1) {
+			if(select("Bully anyway.", "I'll stop.") == 1) {
 				emotion e_sob;
-				set ep14_1_goki,0;
+				ep14_1_goki = 0;
 				close2;
 				donpcevent "Black Shadow#ep14_muk::OnDisable";
 				end;
@@ -3502,9 +3524,9 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 			mes "[Fishee]";
 			mes "You... Good. Help Fishee?";
 			next;
-			if(select("Don't help.:Help.") == 1) {
+			if(select("Don't help.", "Help.") == 1) {
 				emotion e_sob;
-				set ep14_1_goki,0;
+				ep14_1_goki = 0;
 				close2;
 				donpcevent "Black Shadow#ep14_muk::OnDisable";
 				end;
@@ -3546,7 +3568,7 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 			mes "You tell me my family do okay.";
 			setquest 5030+rand(4); //5030,5031,5032,5033
 			close;
-		} else if (checkquest(5030) > -1 || checkquest(5031) > -1 || checkquest(5032) > -1 || checkquest(5033) > -1) {
+		} else if (questprogress(5030) || questprogress(5031) || questprogress(5032) || questprogress(5033)) {
 			mes "[Fishee]";
 			mes "Please. In puddle.";
 			mes "You tell me my family do okay.";
@@ -3554,7 +3576,7 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 			mes "[Fishee]";
 			mes "You forgot me name?";
 			next;
-			if(select("Please tell me your name again!:I know your name.") == 1) {
+			if(select("Please tell me your name again!", "I know your name.") == 1) {
 				mes "[Fishee]";
 				mes "Your memory, like fish.";
 				mes "Stupid. I talk.";
@@ -3565,8 +3587,8 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 			mes "Please. In puddle.";
 			mes "You tell me my family do okay.";
 			close;
-		} else if (checkquest(5034) > -1 && checkquest(5034) < 2) {
-			if (MaxWeight - Weight < 100 || checkweight(5792,1) == 0) {
+		} else if (questprogress(5034) == 1) {
+			if (MaxWeight - Weight < 100 || checkweight(Fish_Pin,1) == 0) {
 				mes "[Fishee]";
 				mes "You have lots.";
 				mes "I give. To you.";
@@ -3589,9 +3611,9 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 			mes "No. Someone left it.";
 			mes "... ... Good guy. I give you.";
 			completequest 5034;
-			getitem 5792,1; //Fish_Pin
+			getitem Fish_Pin,1;
 			close;
-		} else if (checkquest(5034) == 2) {
+		} else if (questprogress(5034) == 2) {
 			mes "[Fishee]";
 			mes "You...  I saw. Feeling. I saw. Feeling.";
 			mes "You... Name?";
@@ -3604,18 +3626,18 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 			close;
 		}
 	}
-	set .@weapon$, ((getequipisequiped(EQI_HAND_R))?getequipname(EQI_HAND_R):"Bare handed");
-	set .@pc_hp, 200;
-	set .@npc_hp, 200;
+	.@weapon$ = ((getequipisequiped(EQI_HAND_R))?getequipname(EQI_HAND_R):"Bare handed");
+	.@pc_hp = 200;
+	.@npc_hp = 200;
 	setarray .@skills$[0],"Midsection punch","Headbutt","Wiggle wiggle","Screw punch","Mumble muble";
 	mes "The unidentified creature is attacking. What will you do?";
 	next;
 	while(1) {
-		switch(select("Attack with a weapon.:Attack using a skill.:Attack using teeth.:Run away in fear.")) {
+		switch(select("Attack with a weapon.", "Attack using a skill.", "Attack using teeth.", "Run away in fear.")) {
 		case 1: // Weapon
-			set .@p_damage,10;
-			set .@pc_attack, rand(1,10);
-			mes "["+strcharinfo(0)+"'s Attack]";
+			.@p_damage = 10;
+			.@pc_attack = rand(1,10);
+			mes "["+strcharinfo(PC_NAME)+"'s Attack]";
 			switch(.@pc_attack) {
 			// Miss.
 			case 3:
@@ -3630,15 +3652,15 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 			// Hit.
 			default:
 				specialeffect EF_HIT1;
-				set .@npc_hp, .@npc_hp - .@p_damage;
+				.@npc_hp -= .@p_damage;
 				switch(.@pc_attack) {
-					case 1: set .@str$,"With your precious ^FF0000["+.@weapon$+"]^000000, you attacked the unidentified creature. The weapon pierced the creature's body."; break;
-					case 2: set .@str$,"By mistake, you use ^FF0000["+.@weapon$+"]^000000 that Holgren has thrown your way to attack the unidentified creature. With a thud, the unidentified creature's body is swaying."; break;
-					case 4: set .@str$,"You attempt to attack with your recent expensive purchase ^FF0000["+.@weapon$+"]^000000. You hit the unidentified creature's body with a thud."; break;
-					case 5: set .@str$,"You use a borrowed ^FF0000["+.@weapon$+"]^000000 to attack the unidentified creature, but the weapon slipped. But the weapon flies off and pierces the creature's body."; break;
-					case 7: set .@str$,"With your precious ^FF0000["+.@weapon$+"]^000000, you attacked the unidentified creature. It was as if the weapon was part of your body."; break;
-					case 8: set .@str$,"You use your lucky ^FF0000["+.@weapon$+"]^000000 to attack the unidentified creature."; break;
-					case 10: set .@str$,"You use a friend's ^FF0000["+.@weapon$+"]^000000 to attack the unidentified creature."; break;
+					case 1: .@str$ = "With your precious ^FF0000["+.@weapon$+"]^000000, you attacked the unidentified creature. The weapon pierced the creature's body."; break;
+					case 2: .@str$ = "By mistake, you use ^FF0000["+.@weapon$+"]^000000 that Holgren has thrown your way to attack the unidentified creature. With a thud, the unidentified creature's body is swaying."; break;
+					case 4: .@str$ = "You attempt to attack with your recent expensive purchase ^FF0000["+.@weapon$+"]^000000. You hit the unidentified creature's body with a thud."; break;
+					case 5: .@str$ = "You use a borrowed ^FF0000["+.@weapon$+"]^000000 to attack the unidentified creature, but the weapon slipped. But the weapon flies off and pierces the creature's body."; break;
+					case 7: .@str$ = "With your precious ^FF0000["+.@weapon$+"]^000000, you attacked the unidentified creature. It was as if the weapon was part of your body."; break;
+					case 8: .@str$ = "You use your lucky ^FF0000["+.@weapon$+"]^000000 to attack the unidentified creature."; break;
+					case 10: .@str$ = "You use a friend's ^FF0000["+.@weapon$+"]^000000 to attack the unidentified creature."; break;
 				}
 				mes .@str$+" ^FF0000["+.@p_damage+"]^000000 damage inflicted.";
 				break;
@@ -3646,10 +3668,10 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 			next;
 			break;
 		case 2: // Skill
-			set .@p_damage,20;
-			set .@pc_attack, rand(1,6);
-			set .@skillname$, .@skills$[rand(5)];
-			mes "["+strcharinfo(0)+"'s Attack]";
+			.@p_damage = 20;
+			.@pc_attack = rand(1,6);
+			.@skillname$ = .@skills$[rand(5)];
+			mes "["+strcharinfo(PC_NAME)+"'s Attack]";
 			switch(.@pc_attack) {
 			// Miss.
 			case 2:
@@ -3664,11 +3686,11 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 			// Hit.
 			default:
 				specialeffect EF_BASH;
-				set .@npc_hp, .@npc_hp - .@p_damage;
+				.@npc_hp -= .@p_damage;
 				switch(.@pc_attack) {
-					case 1: set .@str$, "With an attack so fast and furious, the creature is too stunned to move."; break;
-					case 3: set .@str$, "The creature dodged, but you foresaw his movements and targeted accurately."; break;
-					case 5: set .@str$, "Your skill flew in a perfect parabola and hit the creature exactly."; break;
+					case 1: .@str$ = "With an attack so fast and furious, the creature is too stunned to move."; break;
+					case 3: .@str$ = "The creature dodged, but you foresaw his movements and targeted accurately."; break;
+					case 5: .@str$ = "Your skill flew in a perfect parabola and hit the creature exactly."; break;
 				}
 				mes "You use skill ^0000FF["+.@skillname$+"]^000000 to attack the unidentified creature. "+.@str$+" ^FF0000["+.@p_damage+"]^000000 damage inflicted.";
 				break;
@@ -3676,12 +3698,12 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 			next;
 			break;
 		case 3: // Tooth
-			set .@p_damage,50;
-			set .@pc_attack, rand(1,10);
-			mes "["+strcharinfo(0)+"'s Attack]";
+			.@p_damage = 50;
+			.@pc_attack = rand(1,10);
+			mes "["+strcharinfo(PC_NAME)+"'s Attack]";
 			if (.@pc_attack == 4 || .@pc_attack == 7) {
 				specialeffect EF_HIT1;
-				set .@npc_hp, .@npc_hp - .@p_damage;
+				.@npc_hp -= .@p_damage;
 				mes "You use your well-groomed teeth to bite the unidentified creature hard until your teeth sink into its flesh. ^FF0000["+.@p_damage+"]^000000 damage inflicted.";
 			} else
 				mes "You use your steel-like teeth to bite the unidentified creature, but the frightened creature dodged. He stares at you with strange eyes.";
@@ -3690,16 +3712,16 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 		case 4: // Run
 			mes "You get scared of the unidentified creature, and attempt to run.";
 			next;
-			mes "["+strcharinfo(0)+"'s Escape]";
+			mes "["+strcharinfo(PC_NAME)+"'s Escape]";
 			if (rand(1,2) == 1) {
 				mes "Fortunately, the unidentified creature did not come after you.";
 				close;
 			} else {
 				mes "When you attempt to run away, the unidentified creature sees you and attacks. You fail to escape.";
 				next;
-				specialeffect2 EF_HIT1;
+				specialeffect(EF_HIT1, AREA, playerattached());
 				mes "The creature slams you with its tail. It's so painful that a tear rolls out of your eyes. ^FF000010^000000 damaged received.";
-				set .@pc_hp, .@pc_hp - 10;
+				.@pc_hp -= 10;
 				next;
 				// Unofficial check, but it's needed here.
 				callsub L_CheckPCAlive, .@pc_hp;
@@ -3709,11 +3731,11 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 		if (.@npc_hp <= 0) {
 			mes "You won. The unidentified creature is unconscious.";
 			next;
-			if (checkquest(5016) > -1 && countitem(6385) == 0) {
+			if (questprogress(5016) && countitem(Research_Tool_Bag) == 0) {
 				mes "What will you do?";
 				next;
 				select("Look for the research tools.");
-				if (checkweight(6385,1) == 0) {
+				if (checkweight(Research_Tool_Bag,1) == 0) {
 					mes "You attempted to look for the research tools,";
 					mes "but you are carrying too many things.";
 					mes "You'd better lighten your load";
@@ -3723,15 +3745,15 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 					end;
 				}
 				mes "Found Researcher Raffle's ^0000FF Research tool ^000000.";
-				set ep14_1_goki, ep14_1_goki+1;
-				getitem 6385,1; //Research_Tool_Bag
+				ep14_1_goki += 1;
+				getitem Research_Tool_Bag,1;
 				setquest 5029;
 				next;
 				mes "The creature wakes up and disappears into the dark hole.";
 				close2;
 				donpcevent "Black Shadow#ep14_muk::OnDisable";
 				end;
-			} else if (checkquest(5017) > -1) {
+			} else if (questprogress(5017)) {
 				mes "How will you bully the creature?";
 				next;
 				input .@inputstr$;
@@ -3750,39 +3772,39 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 					changequest 5017,5018;
 					break;
 				}
-				set ep14_1_muk, ep14_1_muk+1;
-				set ep14_1_goki, ep14_1_goki+1;
+				ep14_1_muk += 1;
+				ep14_1_goki += 1;
 				close2;
 				donpcevent "Black Shadow#ep14_muk::OnDisable";
 				end;
 			} else {
 				mes "What will you do?";
 				next;
-				if(select("Check the body of the unidentified creature.:Leave.") == 2) {
+				if(select("Check the body of the unidentified creature.", "Leave.") == 2) {
 					setquest 5029;
-					set ep14_1_goki, ep14_1_goki+1;
+					ep14_1_goki += 1;
 					close2;
 					donpcevent "Black Shadow#ep14_muk::OnDisable";
 					end;
 				}
 				if (rand(1,30) == 7) {
-					if (checkweight(6380,1) == 0) {
+					if (checkweight(Mora_Coin,1) == 0) {
 						mes "While you were checking the body of the unidentified creature, your fingers touch something. You got lucky, but due to your heavy load you failed to obtain a ^0000FF Mora Coin^000000.";
-						set ep14_1_goki, ep14_1_goki+1;
+						ep14_1_goki += 1;
 						setquest 5029;
 						close2;
 						donpcevent "Black Shadow#ep14_muk::OnDisable";
 						end;
 					}
 					mes "While you were checking the body of the unidentified creature, your fingers touch something. Lucky. Obtained a ^0000FF Mora Coin^000000.";
-					set ep14_1_goki, ep14_1_goki+1;
-					getitem 6380,1; //Mora_Coin
+					ep14_1_goki += 1;
+					getitem Mora_Coin,1;
 					setquest 5029;
 					next;
 					mes "The creature wakes up and disappears into the dark hole.";
 				} else {
 					mes "As soon as you touch the creature's body, it wakes up and disappears into the dark hole.";
-					set ep14_1_goki, ep14_1_goki+1;
+					ep14_1_goki += 1;
 					setquest 5029;
 				}
 				close2;
@@ -3791,51 +3813,51 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 			}
 		}
 		mes "[ Current Progress ]";
-		mes strcharinfo(0)+" HP = "+.@pc_hp;
+		mes strcharinfo(PC_NAME)+" HP = "+.@pc_hp;
 		mes "Unidentified Creature HP = "+.@npc_hp;
 		next;
 		mes "[Attack of the unidentified creature]";
-		set .@npc_attack, rand(1,3);
+		.@npc_attack = rand(1,3);
 		switch(.@npc_attack) {
 		case 1:
-			set .@n_damage,10;
+			.@n_damage = 10;
 			mes "The unidentified creature shoots a stream of bath water.";
 			break;
 		case 2:
-			set .@n_damage,20;
+			.@n_damage = 20;
 			mes "The unidentified creature dashes at you with great speed. It appears to be attempting a headbutt.";
 			break;
 		case 3:
-			set .@n_damage,50;
+			.@n_damage = 50;
 			mes "The unidentified creature runs at you with its teeth bared. It appears to be attempting to bite.";
 			break;
 		}
 		next;
 		mes "What will you do?";
 		next;
-		switch(select("... ... ...:Dodge.:Block.:It's too much. Run away.")) {
+		switch(select("... ... ...", "Dodge.", "Block.", "It's too much. Run away.")) {
 		case 1:
 			switch(.@npc_attack) {
 			case 1:
-				specialeffect2 EF_ICEARROW;
+				specialeffect(EF_ICEARROW, AREA, playerattached());
 				mes "You stand still. The stream of water hits your face squarely. Your mind is clear in an instant. ^FF0000["+.@n_damage+"]^000000 damage received.";
 				break;
 			case 2:
-				specialeffect2 EF_BASH;
+				specialeffect(EF_BASH, AREA, playerattached());
 				mes "You stand still. The creature headbutts you squarely. Your mind is clear in an instant. ^FF0000["+.@n_damage+"]^000000 damage received.";
 				break;
 			case 3:
-				specialeffect2 EF_HIT1;
+				specialeffect(EF_HIT1, AREA, playerattached());
 				mes "You stand still. While you were standing stupidly, the creature comes near and bites you mercilessly. Your mind is clear in an instant. ^FF0000["+.@n_damage+"]^000000 damage received.";
 				break;
 			}
-			set .@pc_hp, .@pc_hp - .@n_damage;
+			.@pc_hp -= .@n_damage;
 			next;
 			break;
 		case 2:
 			switch(.@npc_attack) {
 			case 1:
-				set .@miss, rand(1,5);
+				.@miss = rand(1,5);
 				mes "[Attack of the unidentified creature]";
 				switch(.@miss) {
 				// Miss.
@@ -3847,12 +3869,12 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 					break;
 				// Hit.
 				default:
-					specialeffect2 EF_ICEARROW;
-					set .@pc_hp, .@pc_hp - .@n_damage;
+					specialeffect(EF_ICEARROW, AREA, playerattached());
+					.@pc_hp -= .@n_damage;
 					switch(.@miss) {
-						case 2: set .@str$,"face"; break;
-						case 4: set .@str$,"stomach"; break;
-						case 5: set .@str$,"arm"; break;
+						case 2: .@str$ = "face"; break;
+						case 4: .@str$ = "stomach"; break;
+						case 5: .@str$ = "arm"; break;
 					}
 					mes "The stream of water hits your "+.@str$+" squarely. ^FF0000["+.@n_damage+"]^000000 damage received.";
 					break;
@@ -3860,7 +3882,7 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 				next;
 				break;
 			case 2:
-				set .@miss, rand(1,10);
+				.@miss = rand(1,10);
 				mes "[Attack of the unidentified creature]";
 				switch(.@miss) {
 				// Miss.
@@ -3878,15 +3900,15 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 					break;
 				// Hit.
 				default:
-					specialeffect2 EF_BASH;
-					set .@pc_hp, .@pc_hp - .@n_damage;
+					specialeffect(EF_BASH, AREA, playerattached());
+					.@pc_hp -= .@n_damage;
 					switch(.@miss) {
-						case 2: set .@str$,"With a thud, you can feel intense pain."; break;
-						case 4: set .@str$,"*thud* Your back seems to give way."; break;
-						case 6: set .@str$,"The creature's attack hits you in the shoulder."; break;
-						case 8: set .@str$,"The attack is like an arrow."; break;
-						case 9: set .@str$,"The attack was fast and accurate."; break;
-						case 10: set .@str$,"It hits your hand with a thud."; break;
+						case 2: .@str$ = "With a thud, you can feel intense pain."; break;
+						case 4: .@str$ = "*thud* Your back seems to give way."; break;
+						case 6: .@str$ = "The creature's attack hits you in the shoulder."; break;
+						case 8: .@str$ = "The attack is like an arrow."; break;
+						case 9: .@str$ = "The attack was fast and accurate."; break;
+						case 10: .@str$ = "It hits your hand with a thud."; break;
 					}
 					mes "The unidentified creature dashes at you and headbutts. "+.@str$+" ^FF0000["+.@n_damage+"]^000000 damage received.";
 					break;
@@ -3894,7 +3916,7 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 				next;
 				break;
 			case 3:
-				set .@miss, rand(1,10);
+				.@miss = rand(1,10);
 				mes "[Attack of the unidentified creature]";
 				switch(.@miss) {
 				// Miss.
@@ -3918,13 +3940,13 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 					break;
 				// Hit.
 				default:
-					specialeffect2 EF_HIT1;
-					set .@pc_hp, .@pc_hp - .@n_damage;
+					specialeffect(EF_HIT1, AREA, playerattached());
+					.@pc_hp -= .@n_damage;
 					switch(.@miss) {
-						case 2: set .@str$,"leg. Its sharp teeth penetrate your legs."; break;
-						case 4: set .@str$,"arm. Its sharp teeth penetrate your arm."; break;
-						case 6: set .@str$,"toe. You feel like your toe is being cut off."; break;
-						case 10: set .@str$,"finger. You feel like your finger is being cut off."; break;
+						case 2: .@str$ = "leg. Its sharp teeth penetrate your legs."; break;
+						case 4: .@str$ = "arm. Its sharp teeth penetrate your arm."; break;
+						case 6: .@str$ = "toe. You feel like your toe is being cut off."; break;
+						case 10: .@str$ = "finger. You feel like your finger is being cut off."; break;
 					}
 					mes "The unidentified creature runs at you with its teeth bared, and bites your "+.@str$+" ^FF0000["+.@n_damage+"]^000000 damage received.";
 					break;
@@ -3934,78 +3956,78 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 			}
 			break;
 		case 3:
-			set .@defend, rand(1,10);
+			.@defend = rand(1,10);
 			switch(.@npc_attack) {
 			case 1:
 				if (.@defend == 3 || .@defend == 6) {
-					set .@n_damage, .@n_damage / 2;
-					specialeffect2 EF_GUARD;
+					.@n_damage /= 2;
+					specialeffect(EF_GUARD, AREA, playerattached());
 				} else
-					specialeffect2 EF_ICEARROW;
-				set .@pc_hp, .@pc_hp - .@n_damage;
-				mes "[Defense of "+strcharinfo(0)+"]";
+					specialeffect(EF_ICEARROW, AREA, playerattached());
+				.@pc_hp -= .@n_damage;
+				mes "[Defense of "+strcharinfo(PC_NAME)+"]";
 				switch(.@defend) {
 					// Blocked.
-					case 3: set .@str$,"You block the stream of water with your strong butt. Feels refreshing. HP reduced only by half."; break;
-					case 6: set .@str$,"You block the stream of water with your strong hands. Your hands sting a little. HP reduced only by half."; break;
+					case 3: .@str$ = "You block the stream of water with your strong butt. Feels refreshing. HP reduced only by half."; break;
+					case 6: .@str$ = "You block the stream of water with your strong hands. Your hands sting a little. HP reduced only by half."; break;
 					// Not blocked.
-					case 1: set .@str$,"You try to block the stream of water with your strong butt, but it's too late."; break;
-					case 2: set .@str$,"You try to block the stream of water with your big gut, but to no avail."; break;
-					case 4: set .@str$,"You try to block the stream of water with your gathered hands, but the creature targets a different place."; break;
-					case 5: set .@str$,"You try to block the stream of water with your strong hands, but you fail."; break;
-					case 7: set .@str$,"You try to block the stream of water with arms crossed, but you fold them wrong."; break;
-					case 8: set .@str$,"You try to block the stream of water with your rock-like head, but it was not possible."; break;
-					case 9: set .@str$,"You try to block the stream of water with your solid muscles, but it was not possible."; break;
-					case 10: set .@str$,"You try to block the stream of water with your strong feet, but your effort was wasted."; break;
+					case 1: .@str$ = "You try to block the stream of water with your strong butt, but it's too late."; break;
+					case 2: .@str$ = "You try to block the stream of water with your big gut, but to no avail."; break;
+					case 4: .@str$ = "You try to block the stream of water with your gathered hands, but the creature targets a different place."; break;
+					case 5: .@str$ = "You try to block the stream of water with your strong hands, but you fail."; break;
+					case 7: .@str$ = "You try to block the stream of water with arms crossed, but you fold them wrong."; break;
+					case 8: .@str$ = "You try to block the stream of water with your rock-like head, but it was not possible."; break;
+					case 9: .@str$ = "You try to block the stream of water with your solid muscles, but it was not possible."; break;
+					case 10: .@str$ = "You try to block the stream of water with your strong feet, but your effort was wasted."; break;
 				}
 				mes .@str$+" ^FF0000["+.@n_damage+"]^000000 damage received.";
 				next;
 				break;
 			case 2:
 				if (.@defend == 1 || .@defend == 3 || .@defend == 5 || .@defend == 7) {
-					set .@n_damage, .@n_damage / 2;
-					specialeffect2 EF_GUARD;
+					.@n_damage /= 2;
+					specialeffect(EF_GUARD, AREA, playerattached());
 				} else
-					specialeffect2 EF_BASH;
-				set .@pc_hp, .@pc_hp - .@n_damage;
-				mes "[Defense of "+strcharinfo(0)+"]";
+					specialeffect(EF_BASH, AREA, playerattached());
+				.@pc_hp -= .@n_damage;
+				mes "[Defense of "+strcharinfo(PC_NAME)+"]";
 				switch(.@defend) {
 					// Blocked.
-					case 1: set .@str$,"You block the dash attack with your fat butt. Your butt is world class. HP reduced only by half."; break;
-					case 3: set .@str$,"You block the dash attack with your big gut. Your gut is world class. HP reduced only by half."; break;
-					case 5: set .@str$,"You block the dash attack with your strong hands. Your hands are world class. HP reduced only by half."; break;
-					case 7: set .@str$,"The unidentified creature dashed with lightning speed, but you easily block the attack with your big gut. Your gut is world class. HP reduced only by half."; break;
+					case 1: .@str$ = "You block the dash attack with your fat butt. Your butt is world class. HP reduced only by half."; break;
+					case 3: .@str$ = "You block the dash attack with your big gut. Your gut is world class. HP reduced only by half."; break;
+					case 5: .@str$ = "You block the dash attack with your strong hands. Your hands are world class. HP reduced only by half."; break;
+					case 7: .@str$ = "The unidentified creature dashed with lightning speed, but you easily block the attack with your big gut. Your gut is world class. HP reduced only by half."; break;
 					// Not blocked.
-					case 2: set .@str$,"You try to block the dash attack with your fat butt, but miss and get hit in an unmentionable place."; break;
-					case 4: set .@str$,"You try to block the dash attack with your big gut, but your gut isn't big enough to absorb the impact."; break;
-					case 6: set .@str$,"You try to block the dash attack with arms crossed, but you feel an incredible force."; break;
-					case 8: set .@str$,"You try to block the dash attack, to no avail."; break;
-					case 9: set .@str$,"You try to block the dash attack with your strong hands, to no avail."; break;
-					case 10: set .@str$,"You try to block the dash attack with your durable feet, but the pain woke you up."; break;
+					case 2: .@str$ = "You try to block the dash attack with your fat butt, but miss and get hit in an unmentionable place."; break;
+					case 4: .@str$ = "You try to block the dash attack with your big gut, but your gut isn't big enough to absorb the impact."; break;
+					case 6: .@str$ = "You try to block the dash attack with arms crossed, but you feel an incredible force."; break;
+					case 8: .@str$ = "You try to block the dash attack, to no avail."; break;
+					case 9: .@str$ = "You try to block the dash attack with your strong hands, to no avail."; break;
+					case 10: .@str$ = "You try to block the dash attack with your durable feet, but the pain woke you up."; break;
 				}
 				mes .@str$+" ^FF0000["+.@n_damage+"]^000000 damage received.";
 				next;
 				break;
 			case 3:
 				if (.@defend == 2 || .@defend == 4 || .@defend == 6 || .@defend == 8) {
-					set .@n_damage, .@n_damage / 2;
-					specialeffect2 EF_GUARD;
+					.@n_damage /= 2;
+					specialeffect(EF_GUARD, AREA, playerattached());
 				}
-				set .@pc_hp, .@pc_hp - .@n_damage;
-				mes "[Defense of "+strcharinfo(0)+"]";
+				.@pc_hp -= .@n_damage;
+				mes "[Defense of "+strcharinfo(PC_NAME)+"]";
 				switch(.@defend) {
 					// Blocked.
-					case 2: set .@str$,"but you block its attack with a branch nearby. HP reduced only by half."; break;
-					case 4: set .@str$,"but you block its attack with a weapon. HP reduced only by half."; break;
-					case 6: set .@str$,"but you block its attack using skill ^0000FFFriend Shield^000000. HP reduced only by half."; break;
-					case 8: set .@str$,"but you block its attack using a book you always carry around. HP reduced only by half."; break;
+					case 2: .@str$ = "but you block its attack with a branch nearby. HP reduced only by half."; break;
+					case 4: .@str$ = "but you block its attack with a weapon. HP reduced only by half."; break;
+					case 6: .@str$ = "but you block its attack using skill ^0000FFFriend Shield^000000. HP reduced only by half."; break;
+					case 8: .@str$ = "but you block its attack using a book you always carry around. HP reduced only by half."; break;
 					// Not blocked.
-					case 1: set .@str$,"and bites your arm."; break;
-					case 3: set .@str$,"and bites your leg."; break;
-					case 5: set .@str$,"and bites your shoulder."; break;
-					case 7: set .@str$,"and bites your finger."; break;
-					case 9: set .@str$,"and bites your finger."; break;
-					case 10: set .@str$,"and bites your toe."; break;
+					case 1: .@str$ = "and bites your arm."; break;
+					case 3: .@str$ = "and bites your leg."; break;
+					case 5: .@str$ = "and bites your shoulder."; break;
+					case 7: .@str$ = "and bites your finger."; break;
+					case 9: .@str$ = "and bites your finger."; break;
+					case 10: .@str$ = "and bites your toe."; break;
 				}
 				mes "The unidentified creature runs at you with its teeth bared, "+.@str$+" ^FF0000["+.@n_damage+"]^000000 damage received.";
 				next;
@@ -4015,7 +4037,7 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 		case 4:
 			mes "You get scared of the unidentified creature, and attempt to run.";
 			next;
-			mes "["+strcharinfo(0)+"'s Escape]";
+			mes "["+strcharinfo(PC_NAME)+"'s Escape]";
 			if (rand(1,2) == 1) {
 				mes "Fortunately ^BF2C15Unidentified creature^000000";
 				mes "did not come after you.";
@@ -4025,14 +4047,14 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 				mes "You fail to escape.";
 				next;
 				mes "The creature slams you with its tail. It's so painful that a tear rolls out of your eyes. ^FF000010^000000 damaged received.";
-				set .@pc_hp, .@pc_hp - 10;
+				.@pc_hp -= 10;
 				next;
 			}
 			break;
 		}
 		callsub L_CheckPCAlive, .@pc_hp;
 		mes "[ Current Progress ]";
-		mes strcharinfo(0)+" HP = "+.@pc_hp;
+		mes strcharinfo(PC_NAME)+" HP = "+.@pc_hp;
 		mes "Unidentified Creature HP = "+.@npc_hp;
 		next;
 	}
@@ -4073,70 +4095,70 @@ OnFullon:
 	end;
 }
 
--	script	???#mora	-1,{
-	if (checkquest(5019) > -1) {
+-	script	???#mora	FAKE_NPC,{
+	if (questprogress(5019)) {
 		mes "You find an area emitting a distinct aura.";
 		mes "You may be able to collect bath water samples.";
 		mes "What will you do?";
 		next;
-		if(select("Collect samples.:Leave.") == 2) {
-			donpcevent strnpcinfo(0)+"::OnDisable";
+		if(select("Collect samples.", "Leave.") == 2) {
+			donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 			end;
 		}
-		if (countitem(6386) >= 10) {
+		if (countitem(Bathtub_R_Sample) >= 10) {
 			mes "You will not need additional samples.";
 			close2;
-			donpcevent strnpcinfo(0)+"::OnDisable";
+			donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 			end;
 		}
-		if (countitem(1092) == 0) {
+		if (countitem(Empty_Cylinder) == 0) {
 			mes "To obtain a sample, you need a sample tube.";
 			close2;
-			donpcevent strnpcinfo(0)+"::OnDisable";
+			donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 			end;
 		}
 		mes "Collecting samples.";
 		next;
 		progressbar "ffff00",3;
 		if (!rand(3)) {
-			if (checkweight(6386,1) == 0) {
+			if (checkweight(Bathtub_R_Sample,1) == 0) {
 				mes "You have so many items";
 				mes "that it is difficult to collect samples.";
 				mes "You will have to lighten your load and come back.";
 				close2;
-				donpcevent strnpcinfo(0)+"::OnDisable";
+				donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 				end;
 			}
 			mes "Bath water sample collection complete.";
-			delitem 1092,1; //Empty_Cylinder
-			getitem 6386,1; //Bathtub_R_Sample
+			delitem Empty_Cylinder,1;
+			getitem Bathtub_R_Sample,1;
 		} else {
 			mes "Bath water sample collection failed.";
 			percentheal 5,5;
 		}
 		close2;
-		donpcevent strnpcinfo(0)+"::OnDisable";
+		donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 		end;
-	} else if (checkquest(5021) > -1 || checkquest(5022) > -1) {
-		if (checkquest(5021) > -1) {
-			set .@str$,"tooth";
-			set .@item,6387; //Teeth_Sample
+	} else if (questprogress(5021) || questprogress(5022)) {
+		if (questprogress(5021)) {
+			.@str$ = "tooth";
+			.@item = 6387; //Teeth_Sample
 		} else {
-			set .@str$,"scale";
-			set .@item,6388; //Scale_Sample
+			.@str$ = "scale";
+			.@item = 6388; //Scale_Sample
 		}
 		mes "Something is shining in the water.";
 		mes "You may be able to collect the unidentified creature's "+.@str$+" samples.";
 		mes "What do you want to do?";
 		next;
-		if(select("Look further.:Leave.") == 2) {
-			donpcevent strnpcinfo(0)+"::OnDisable";
+		if(select("Look further.", "Leave.") == 2) {
+			donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 			end;
 		}
 		if (countitem(.@item) >= 10) {
 			mes "You will not need additional samples.";
 			close2;
-			donpcevent strnpcinfo(0)+"::OnDisable";
+			donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 			end;
 		}
 		progressbar "ffff00",3;
@@ -4153,7 +4175,7 @@ OnFullon:
 		} else
 			mes "You thought you saw it on the ground, but it was an illusion.";
 		close2;
-		donpcevent strnpcinfo(0)+"::OnDisable";
+		donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 		end;
 	} else {
 		mes "???";
@@ -4164,16 +4186,16 @@ OnFullon:
 	}
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	stopnpctimer;
 	end;
 OnDisable:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	initnpctimer;
 	end;
 OnReset:
 	if (rand(2))
-		donpcevent strnpcinfo(0)+"::OnEnable";
+		donpcevent strnpcinfo(NPC_NAME)+"::OnEnable";
 	else
 		initnpctimer;
 	end;
@@ -4182,19 +4204,19 @@ OnTimer20000:
 OnTimer30000:
 OnTimer40000:
 OnTimer50000:
-	if (rand(2)) 
-		donpcevent strnpcinfo(0)+"::OnEnable";
+	if (rand(2))
+		donpcevent strnpcinfo(NPC_NAME)+"::OnEnable";
 	end;
 OnTimer60000:
-	donpcevent strnpcinfo(0)+"::OnEnable";
+	donpcevent strnpcinfo(NPC_NAME)+"::OnEnable";
 	end;
 OnTouch:
-	if (checkquest(5034) == 2 || ep14_1_muk == 0 || rand(5)) {
+	if (questprogress(5034) == 2 || ep14_1_muk == 0 || rand(5)) {
 		percentheal 5,5;
 		end;
 	}
-	set .@playtime, checkquest(5029,PLAYTIME);
-	if (.@playtime == 0 || .@playtime == 1) {
+	.@playtime = questprogress(5029,PLAYTIME);
+	if (.@playtime == 1) {
 		percentheal 5,5;
 		end;
 	} else if (.@playtime == 2) {
@@ -4215,36 +4237,36 @@ mora,113,84,0	duplicate(???#mora)	???#ep14_muk03	CLEAR_NPC,2,2
 mora,116,81,0	duplicate(???#mora)	???#ep14_muk04	CLEAR_NPC,2,2
 mora,118,86,0	duplicate(???#mora)	???#ep14_muk05	CLEAR_NPC,2,2
 
--	script	#mora_puddle	-1,{
-	set .@i, atoi(charat(strnpcinfo(2),9));
+-	script	#mora_puddle	FAKE_NPC,{
+	.@i = atoi(charat(strnpcinfo(NPC_NAME_HIDDEN),9));
 
 	// This script has a lot of checks,
 	// so arrays are only set when used.
 	setarray .@quest1[1],5024,5025,5026,5027;
 	setarray .@dir$[1],"east","west","south","north";
 
-	if (checkquest(.@quest1[.@i]) > -1) {
-		if (countitem(6389) == 0) {
+	if (questprogress(.@quest1[.@i])) {
+		if (countitem(Puddle_R_Sample) == 0) {
 			mes "This appears to be the puddle to the "+.@dir$[.@i];
 			mes "that the researcher talked about.";
 			mes "Will you collect a sample?";
 			next;
-			if(select("Collect a sample.:Don't collect a sample.") == 2)
+			if(select("Collect a sample.", "Don't collect a sample.") == 2)
 				close;
-			if (countitem(1092) == 0) {
+			if (countitem(Empty_Cylinder) == 0) {
 				mes "You have no empty sample tubes.";
 				close;
 			}
 			progressbar "ffff00",5;
-			if (checkweight(6389,1) == 0) {
+			if (checkweight(Puddle_R_Sample,1) == 0) {
 				mes "You have so many items";
 				mes "that it is difficult to collect samples.";
 				mes "You will have to lighten your load and come back.";
 				close;
 			}
 			mes "You have collected a sample from the puddle to the "+.@dir$[.@i]+".";
-			delitem 1092,1; //Empty_Cylinder
-			getitem 6389,1; //Puddle_R_Sample
+			delitem Empty_Cylinder,1;
+			getitem Puddle_R_Sample,1;
 			close;
 		} else {
 			mes "You already have a sample.";
@@ -4252,14 +4274,14 @@ mora,118,86,0	duplicate(???#mora)	???#ep14_muk05	CLEAR_NPC,2,2
 		}
 	}
 
-	set .@quest1[0], .@quest1[.@i];
-	set .@dir$[0], .@dir$[.@i];
+	.@quest1[0] = .@quest1[.@i];
+	.@dir$[0] = .@dir$[.@i];
 	deletearray .@quest1[.@i],1;
 	deletearray .@dir$[.@i],1;
 
-	if (checkquest(.@quest1[1]) > -1 || checkquest(.@quest1[2]) > -1 || checkquest(.@quest1[3]) > -1) {
-		for(set .@j,1; .@j<=3; set .@j,.@j+1) {
-			if (checkquest(.@quest1[.@j]) > -1)
+	if (questprogress(.@quest1[1]) || questprogress(.@quest1[2]) || questprogress(.@quest1[3])) {
+		for(.@j = 1; .@j<=3; ++.@j) {
+			if (questprogress(.@quest1[.@j]))
 				break;
 		}
 		mes "This is not the puddle to the "+.@dir$[.@j]+".";
@@ -4267,14 +4289,14 @@ mora,118,86,0	duplicate(???#mora)	???#ep14_muk05	CLEAR_NPC,2,2
 	}
 
 	setarray .@quest2[1],5030,5031,5032,5033;
-	set .@quest2[0], .@quest2[.@i];
+	.@quest2[0] = .@quest2[.@i];
 	deletearray .@quest2[.@i],1;
 
-	if (ep14_1_goki == 30 && checkquest(.@quest2[0]) > -1) {
+	if (ep14_1_goki == 30 && questprogress(.@quest2[0])) {
 		mes "You arrived at the puddle to the "+.@dir$[0]+".";
 		mes "You should look for the unidentified creature's family.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Fish~ Fish~";
 		next;
 		mes "When you called out, an answer came";
@@ -4327,17 +4349,17 @@ mora,118,86,0	duplicate(???#mora)	???#ep14_muk05	CLEAR_NPC,2,2
 		mes "We okay. Happy. Here. You tell son.";
 		changequest .@quest2[0],5034;
 		close;
-	} else if (checkquest(5034) > -1 && checkquest(5034) < 2) {
+	} else if (questprogress(5034) == 1) {
 		mes "[Fishee's Dad]";
 		mes "Yes... Human give son news.";
 		mes "Thanks. Son,";
 		mes "We okay. Happy. Here. You tell son.";
 		close;
-	} else if (checkquest(.@quest2[1]) > -1 || checkquest(.@quest2[2]) > -1 || checkquest(.@quest2[3]) > -1) {
+	} else if (questprogress(.@quest2[1]) || questprogress(.@quest2[2]) || questprogress(.@quest2[3])) {
 		mes "You arrived at the puddle to the "+.@dir$[0]+".";
 		mes "You should look for the unidentified creature's family.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Fish~ Fish~";
 		next;
 		mes "You yelled out loud for fish,";
@@ -4354,10 +4376,9 @@ bif_fild02,65,109,0	duplicate(#mora_puddle)	Puddle#ep14_muk02	CLEAR_NPC
 bif_fild02,223,71,0	duplicate(#mora_puddle)	Puddle#ep14_muk03	CLEAR_NPC
 bif_fild02,113,340,0	duplicate(#mora_puddle)	Puddle#ep14_muk04	CLEAR_NPC
 
-// Mora Daily Quests :: ep14_1_dealer
-//============================================================
+//== Mora Daily Quests :: ep14_1_dealer ====================
 mora,133,80,6	script	Elephantine#pa0829	4_ELEPHANT,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You have too many kinds of things with you to do that. Throw out some of them and try again.";
 		close;
 	}
@@ -4375,8 +4396,8 @@ mora,133,80,6	script	Elephantine#pa0829	4_ELEPHANT,{
 		mes "Why don't you come back when you've grown stronger? I can't give you tasks when you're in your current state.";
 		close;
 	}
-	set .@playtime, checkquest(12230,PLAYTIME);
-	if (.@playtime == 0 || .@playtime == 1) {
+	.@playtime = questprogress(12230,PLAYTIME);
+	if (.@playtime == 1) {
 		mes "[Elephantine]";
 		mes "I have no additional tasks available now. If I get some, I'll let you know when you come back.";
 		close;
@@ -4390,7 +4411,7 @@ mora,133,80,6	script	Elephantine#pa0829	4_ELEPHANT,{
 	mes "Welcome.";
 	mes "I have some tasks for you - will you take a look at them?";
 	next;
-	if(select("What kind of tasks do you have for me?:Tell me about today's task.") == 1) {
+	if(select("What kind of tasks do you have for me?", "Tell me about today's task.") == 1) {
 		mes "[Elephantine]";
 		mes "I'm the Head of the Volunteer Patrol of the Village of Mora. It didn't used to be like this, he he.";
 		next;
@@ -4416,7 +4437,7 @@ mora,133,80,6	script	Elephantine#pa0829	4_ELEPHANT,{
 		next;
 		mes "[Elephantine]";
 		mes "I'd like you to take them out as you see them, before they try to sell anything to the adventurers lost in the forest.";
-		set .@n$,"Fruit-Carrying Insects";
+		.@n$ = "Fruit-Carrying Insects";
 		break;
 	case 2:
 		setquest 12226;
@@ -4426,7 +4447,7 @@ mora,133,80,6	script	Elephantine#pa0829	4_ELEPHANT,{
 		next;
 		mes "[Elephantine]";
 		mes "No casualties have been reported yet, but it wouldn't hurt to take precautions. Please deal with them appropriately.";
-		set .@n$,"Flowery Hunters";
+		.@n$ = "Flowery Hunters";
 		break;
 	case 3:
 		setquest 12227;
@@ -4436,7 +4457,7 @@ mora,133,80,6	script	Elephantine#pa0829	4_ELEPHANT,{
 		next;
 		mes "[Elephantine]";
 		mes "They didn't look so ferocious... but the adventurer has asked me to get rid of them, so you'll have to do it.";
-		set .@n$,"Small but Ferocious...";
+		.@n$ = "Small but Ferocious...";
 		break;
 	case 4:
 		setquest 12228;
@@ -4446,7 +4467,7 @@ mora,133,80,6	script	Elephantine#pa0829	4_ELEPHANT,{
 		next;
 		mes "[Elephantine]";
 		mes "I don't know what grudge he has against the fairies, but a request is a request.";
-		set .@n$,"An Unknown Grudge";
+		.@n$ = "An Unknown Grudge";
 		break;
 	case 5:
 		setquest 12229;
@@ -4456,7 +4477,7 @@ mora,133,80,6	script	Elephantine#pa0829	4_ELEPHANT,{
 		next;
 		mes "[Elephantine]";
 		mes "They don't seem so dangerous, but they are reported to steal books and sweets from adventurers. Please deal with them appropriately.";
-		set .@n$,"Blondie Ann";
+		.@n$ = "Blondie Ann";
 		break;
 	}
 	next;
@@ -4464,8 +4485,8 @@ mora,133,80,6	script	Elephantine#pa0829	4_ELEPHANT,{
 	close;
 }
 
-mora,115,98,8	script	Hotcha#pa0829	4_ELEPHANT,{
-	if (checkweight(1201,1) == 0) {
+mora,115,98,0	script	Hotcha#pa0829	4_ELEPHANT,{
+	if (checkweight(Knife,1) == 0) {
 		mes "You have too many kinds of things with you to do that. Throw out some of them and try again.";
 		close;
 	}
@@ -4483,8 +4504,8 @@ mora,115,98,8	script	Hotcha#pa0829	4_ELEPHANT,{
 		mes "This place is like a paradise for adventurers. Not for weak ones like you, though.";
 		close;
 	}
-	set .@playtime, checkquest(12230,PLAYTIME);
-	if (.@playtime == -1) {
+	.@playtime = questprogress(12230,PLAYTIME);
+	if (!.@playtime) {
 		mes "[Hotcha]";
 		mes "I see you haven't received";
 		mes "any tasks yet.";
@@ -4501,8 +4522,8 @@ mora,115,98,8	script	Hotcha#pa0829	4_ELEPHANT,{
 		next;
 		mes "[Hotcha]";
 		mes "Once they are removed, go talk to Elephantine and you can receive new tasks.";
-		for(set .@i,12225; .@i<=12229; set .@i,.@i+1) {
-			if (checkquest(.@i) > -1)
+		for(.@i = 12225; .@i<=12229; ++.@i) {
+			if (questprogress(.@i))
 				erasequest .@i;
 		}
 		erasequest 12230;
@@ -4518,29 +4539,29 @@ mora,115,98,8	script	Hotcha#pa0829	4_ELEPHANT,{
 	mes "Please wait a minute while I check the documents.";
 	next;
 
-	for(set .@i,12225; .@i<=12229; set .@i,.@i+1) {
-		if (checkquest(.@i,HUNTING) == 2) {
+	for(.@i = 12225; .@i<=12229; ++.@i) {
+		if (questprogress(.@i,HUNTING) == 2) {
 			mes "[Hotcha]";
 			mes "Yes, I see you've completed the task. It has been confirmed as completed.";
 			erasequest .@i;
-			specialeffect2 EF_STEAL;
+			specialeffect(EF_STEAL, AREA, playerattached());
 			if (BaseLevel > 99)
 				getexp 0, ((JobLevel < 50)?JobLevel * JobLevel * (110/100) * 50:0);
 			else
 				getexp 0, ((JobLevel < 70)?JobLevel * JobLevel * (110/100) * 10:0);
-			getitem 6380,3; //Mora_Coin
+			getitem Mora_Coin,3;
 			close;
 		}
 	}
 
 	mes "[Hotcha]";
-	mes "Hmm... "+strcharinfo(0)+".";
+	mes "Hmm... "+strcharinfo(PC_NAME)+".";
 	mes "It may be a documentation error, but according to the documents, you have nothing to do with the tasks.";
 	close;
 }
 
 mora,119,103,4	script	Bow-wow#pa0829	4_M_DOGTRAVELER,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You have too many kinds of things with you to do that. Throw out some of them and try again.";
 		close;
 	}
@@ -4558,8 +4579,8 @@ mora,119,103,4	script	Bow-wow#pa0829	4_M_DOGTRAVELER,{
 		mes "You really have no clue. What could you do with such a weak body?";
 		close;
 	}
-	set .@playtime, checkquest(12241,PLAYTIME);
-	if (.@playtime == 0 || .@playtime == 1) {
+	.@playtime = questprogress(12241,PLAYTIME);
+	if (.@playtime == 1) {
 		mes "[Bow-wow]";
 		mes "I have no additional tasks available now. If I get some, I'll let you know when you come back.";
 		close;
@@ -4573,7 +4594,7 @@ mora,119,103,4	script	Bow-wow#pa0829	4_M_DOGTRAVELER,{
 	mes "Welcome.";
 	mes "I have some tasks for you - will you take a look at them?";
 	next;
-	if(select("What kind of tasks do you have for me?:Tell me about today's task.") == 1) {
+	if(select("What kind of tasks do you have for me?", "Tell me about today's task.") == 1) {
 		mes "[Bow-wow]";
 		mes "Here, we make all kinds of supplies for adventurers.";
 		next;
@@ -4599,7 +4620,7 @@ mora,119,103,4	script	Bow-wow#pa0829	4_M_DOGTRAVELER,{
 		next;
 		mes "[Bow-wow]";
 		mes "*grin* None other than... Insect Feelers! The General Goods Dealer there asked me to get four of them. I personally would not eat it for all the world...";
-		set .@n$,"Material for the Preservative";
+		.@n$ = "Material for the Preservative";
 		break;
 	case 2:
 		setquest 12232;
@@ -4609,7 +4630,7 @@ mora,119,103,4	script	Bow-wow#pa0829	4_M_DOGTRAVELER,{
 		next;
 		mes "[Bow-wow]";
 		mes "Immortal Hearts seem to be all the rage lately. The General Goods Merchant asked me to get five of them.";
-		set .@n$,"A Symbol of Resistance";
+		.@n$ = "A Symbol of Resistance";
 		break;
 	case 3:
 		setquest 12233;
@@ -4619,7 +4640,7 @@ mora,119,103,4	script	Bow-wow#pa0829	4_M_DOGTRAVELER,{
 		next;
 		mes "[Bow-wow]";
 		mes "The client is the General Goods Merchant over there. Three bunches of them will be enough.";
-		set .@n$,"Material for First Aid Kits";
+		.@n$ = "Material for First Aid Kits";
 		break;
 	case 4:
 		setquest 12234;
@@ -4629,7 +4650,7 @@ mora,119,103,4	script	Bow-wow#pa0829	4_M_DOGTRAVELER,{
 		next;
 		mes "[Bow-wow]";
 		mes "The General Goods Dealer asked me to get three Orcish Vouchers, which are to be used to make symbols of courage.";
-		set .@n$,"Symbols of Courage";
+		.@n$ = "Symbols of Courage";
 		break;
 	case 5:
 		setquest 12235;
@@ -4639,7 +4660,7 @@ mora,119,103,4	script	Bow-wow#pa0829	4_M_DOGTRAVELER,{
 		next;
 		mes "[Bow-wow]";
 		mes "The General Goods Dealer asked me to get three Skel-Bones, which are to be used to make tonic.";
-		set .@n$,"Good for Stamina...";
+		.@n$ = "Good for Stamina...";
 		break;
 	}
 	next;
@@ -4648,7 +4669,7 @@ mora,119,103,4	script	Bow-wow#pa0829	4_M_DOGTRAVELER,{
 }
 
 mora,119,118,4	script	General Good Dealer#pa0	4_M_RAFLE_GR,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You have too many kinds of things with you to do that. Throw out some of them and try again.";
 		close;
 	}
@@ -4666,8 +4687,8 @@ mora,119,118,4	script	General Good Dealer#pa0	4_M_RAFLE_GR,{
 		mes "What could you do with that fragile body? Go get some exercise.";
 		close;
 	}
-	set .@playtime, checkquest(12241,PLAYTIME);
-	if (.@playtime == -1) {
+	.@playtime = questprogress(12241,PLAYTIME);
+	if (!.@playtime) {
 		mes "[General Good Dealer]";
 		mes "I see you haven't received";
 		mes "any tasks yet.";
@@ -4684,8 +4705,8 @@ mora,119,118,4	script	General Good Dealer#pa0	4_M_RAFLE_GR,{
 		next;
 		mes "[General Good Dealer]";
 		mes "Once they are removed, go talk to Bow-wow and you can receive new tasks.";
-		for(set .@i,12231; .@i<=12235; set .@i,.@i+1) {
-			if (checkquest(.@i) > -1)
+		for(.@i = 12231; .@i<=12235; ++.@i) {
+			if (questprogress(.@i))
 				erasequest .@i;
 		}
 		erasequest 12241;
@@ -4709,12 +4730,12 @@ mora,119,118,4	script	General Good Dealer#pa0	4_M_RAFLE_GR,{
 	callsub L_CheckQuest,12235,932,3; //Skel_Bone
 
 	mes "[General Good Dealer]";
-	mes "Hmm... "+strcharinfo(0)+".";
+	mes "Hmm... "+strcharinfo(PC_NAME)+".";
 	mes "It may be a documentation error, but according to the documents, you have nothing to do with the tasks.";
 	close;
 
 L_CheckQuest:
-	if (checkquest(getarg(0)) > -1) {
+	if (questprogress(getarg(0))) {
 		if (countitem(getarg(1)) < getarg(2)) {
 			mes "[General Good Dealer]";
 			mes "The amount is not enough...";
@@ -4724,19 +4745,19 @@ L_CheckQuest:
 		mes "I've received the items all right. It will be some time before I have another task for you, so why don't you visit the hot spring and relax?";
 		delitem getarg(1),getarg(2);
 		erasequest getarg(0);
-		specialeffect2 EF_STEAL;
+		specialeffect(EF_STEAL, AREA, playerattached());
 		if (BaseLevel > 99)
 			getexp 0, ((JobLevel < 50)?JobLevel * JobLevel * (110/100) * 50:0);
 		else
 			getexp 0, ((JobLevel < 70)?JobLevel * JobLevel * (110/100) * 10:0);
-		getitem 6380,1; //Mora_Coin
+		getitem Mora_Coin,1;
 		close;
 	}
 	return;
 }
 
 mora,124,108,7	script	Woof-grrr#pa0829	4_M_DOGTRAVELER2,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You have too many kinds of things with you to do that. Throw out some of them and try again.";
 		close;
 	}
@@ -4754,8 +4775,8 @@ mora,124,108,7	script	Woof-grrr#pa0829	4_M_DOGTRAVELER2,{
 		mes "This place is not a nursery. Grow up and come back, and I'll gladly give you tasks.";
 		close;
 	}
-	set .@playtime, checkquest(12242,PLAYTIME);
-	if (.@playtime == 0 || .@playtime == 1) {
+	.@playtime = questprogress(12242,PLAYTIME);
+	if (.@playtime == 1) {
 		mes "[Woof-grrr]";
 		mes "I have no additional tasks available now. If I get some, I'll let you know when you come back.";
 		close;
@@ -4769,7 +4790,7 @@ mora,124,108,7	script	Woof-grrr#pa0829	4_M_DOGTRAVELER2,{
 	mes "Nice to see you.";
 	mes "I have some tasks for you - will you take a look at them?";
 	next;
-	if(select("What kind of tasks do you have for me?:Tell me about today's task.") == 1) {
+	if(select("What kind of tasks do you have for me?", "Tell me about today's task.") == 1) {
 		mes "[Woof-grrr]";
 		mes "Bow-wow and I are in the same industry.";
 		next;
@@ -4795,7 +4816,7 @@ mora,124,108,7	script	Woof-grrr#pa0829	4_M_DOGTRAVELER2,{
 		next;
 		mes "[Woof-grrr]";
 		mes "Mementos serve as inspirations for designers of those cases. The Commodities Dealer across from me asked me to get two of them.";
-		set .@n$,"The Latest Trend in Talismans";
+		.@n$ = "The Latest Trend in Talismans";
 		break;
 	case 2:
 		setquest 12237;
@@ -4805,7 +4826,7 @@ mora,124,108,7	script	Woof-grrr#pa0829	4_M_DOGTRAVELER2,{
 		next;
 		mes "[Woof-grrr]";
 		mes "The Commodities Dealer across from me seems to make protective cases out of Shells. I was asked to get three of them.";
-		set .@n$,"Keep Your Valuables Safe";
+		.@n$ = "Keep Your Valuables Safe";
 		break;
 	case 3:
 		setquest 12238;
@@ -4815,7 +4836,7 @@ mora,124,108,7	script	Woof-grrr#pa0829	4_M_DOGTRAVELER2,{
 		next;
 		mes "[Woof-grrr]";
 		mes "The Commodities Dealer across from me asked me to get three Scale Shells, which are to be used to make knee protectors.";
-		set .@n$,"Material for Knee Protectors";
+		.@n$ = "Material for Knee Protectors";
 		break;
 	case 4:
 		setquest 12239;
@@ -4825,7 +4846,7 @@ mora,124,108,7	script	Woof-grrr#pa0829	4_M_DOGTRAVELER2,{
 		next;
 		mes "[Woof-grrr]";
 		mes "The Commodities Dealer across from me asked me to get two Venom Canines, which are to be used in the research of the substance.";
-		set .@n$,"Poison for Poison...";
+		.@n$ = "Poison for Poison...";
 		break;
 	case 5:
 		setquest 12240;
@@ -4835,7 +4856,7 @@ mora,124,108,7	script	Woof-grrr#pa0829	4_M_DOGTRAVELER2,{
 		next;
 		mes "[Woof-grrr]";
 		mes "The Commodities Dealer across from me commissioned me to get five globs of Sticky Mucus.";
-		set .@n$,"Don't Slip and Fall";
+		.@n$ = "Don't Slip and Fall";
 		break;
 	}
 	next;
@@ -4844,7 +4865,7 @@ mora,124,108,7	script	Woof-grrr#pa0829	4_M_DOGTRAVELER2,{
 }
 
 mora,127,112,4	script	Commodities Dealer#pa08	4_F_RAFLE_PK,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You have too many kinds of things with you to do that. Throw out some of them and try again.";
 		close;
 	}
@@ -4862,8 +4883,8 @@ mora,127,112,4	script	Commodities Dealer#pa08	4_F_RAFLE_PK,{
 		mes "Go away! I can't concentrate on cataloging with you hanging around like that...";
 		close;
 	}
-	set .@playtime, checkquest(12242,PLAYTIME);
-	if (.@playtime == -1) {
+	.@playtime = questprogress(12242,PLAYTIME);
+	if (!.@playtime) {
 		mes "[Commodities Dealer]";
 		mes "I see you haven't received";
 		mes "any tasks yet.";
@@ -4880,8 +4901,8 @@ mora,127,112,4	script	Commodities Dealer#pa08	4_F_RAFLE_PK,{
 		next;
 		mes "[Commodities Dealer]";
 		mes "Once they are removed, go talk to Woof-grrr and you can receive new tasks.";
-		for(set .@i,12236; .@i<=12240; set .@i,.@i+1) {
-			if (checkquest(.@i) > -1)
+		for(.@i = 12236; .@i<=12240; ++.@i) {
+			if (questprogress(.@i))
 				erasequest .@i;
 		}
 		erasequest 12242;
@@ -4905,12 +4926,12 @@ mora,127,112,4	script	Commodities Dealer#pa08	4_F_RAFLE_PK,{
 	callsub L_CheckQuest,12240,938,5; //Sticky_Mucus
 
 	mes "[Commodities Dealer]";
-	mes "Hmm... "+strcharinfo(0)+".";
+	mes "Hmm... "+strcharinfo(PC_NAME)+".";
 	mes "It may be a documentation error, but according to the documents, you have nothing to do with the tasks.";
 	close;
 
 L_CheckQuest:
-	if (checkquest(getarg(0)) > -1) {
+	if (questprogress(getarg(0))) {
 		if (countitem(getarg(1)) < getarg(2)) {
 			mes "[Commodities Dealer]";
 			mes "The amount is not enough...";
@@ -4920,19 +4941,19 @@ L_CheckQuest:
 		mes "I've received the items all right. I look forward to working with you again.";
 		delitem getarg(1),getarg(2);
 		erasequest getarg(0);
-		specialeffect2 EF_STEAL;
+		specialeffect(EF_STEAL, AREA, playerattached());
 		if (BaseLevel > 99)
 			getexp 0, ((JobLevel < 50)?JobLevel * JobLevel * (110/100) * 50:0);
 		else
 			getexp 0, ((JobLevel < 70)?JobLevel * JobLevel * (110/100) * 10:0);
-		getitem 6380,1; //Mora_Coin
+		getitem Mora_Coin,1;
 		close;
 	}
 	return;
 }
 
 mora,170,101,4	script	Soul Guide#pa0829	4_F_DOGTRAVELER,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You have too many kinds of things with you to do that. Throw out some of them and try again.";
 		close;
 	}
@@ -4950,16 +4971,16 @@ mora,170,101,4	script	Soul Guide#pa0829	4_F_DOGTRAVELER,{
 		mes "You need to have a strong spirit to do this task. I think you need a lot more discipline.";
 		close;
 	}
-	set .@playtime, checkquest(12253,PLAYTIME);
-	if (.@playtime == 0 || .@playtime == 1) {
+	.@playtime = questprogress(12253,PLAYTIME);
+	if (.@playtime == 1) {
 		mes "You still have marks of the haunting souls on your body.";
 		next;
 		mes "You'll have to come back when the marks have disappeared.";
 		close;
 	} else if (.@playtime == 2) {
 		mes "You feel your mind has calmed down once again. You now have enough energy to go look for other souls, so talk to the Guide again.";
-		for(set .@i,12243; .@i<=12252; set .@i,.@i+1) {
-			if (checkquest(.@i) > -1)
+		for(.@i = 12243; .@i<=12252; ++.@i) {
+			if (questprogress(.@i))
 				erasequest .@i;
 		}
 		erasequest 12253;
@@ -4969,7 +4990,7 @@ mora,170,101,4	script	Soul Guide#pa0829	4_F_DOGTRAVELER,{
 	mes "Welcome.";
 	mes "Are you ready?";
 	next;
-	if(select("What kind of tasks do you have for me?:Tell me about today's task.") == 1) {
+	if(select("What kind of tasks do you have for me?", "Tell me about today's task.") == 1) {
 		mes "[Soul Guide]";
 		mes "My job is to gather the remains of the souls haunting the forest and put them to rest.";
 		next;
@@ -4988,71 +5009,71 @@ mora,170,101,4	script	Soul Guide#pa0829	4_F_DOGTRAVELER,{
 		setquest 12243;
 		setquest 12253;
 		mes "^660066Age 32. Comes from Midgard. Has been missing for 3 months since he went to the Maze of the Hazy Forest in order to collect the native plants. Low chance of survival.^000000";
-		set .@n$,"Tazar";
+		.@n$ = "Tazar";
 		break;
 	case 2:
 		setquest 12244;
 		setquest 12253;
 		mes "^660066Age 19. Adventurer who came from a far, unknown place by ship. Been missing for 2 months since he went to explore the Maze dressed in thin tights, despite dissuasion of all Mora residents.";
 		mes "Even if he's alive, he would cause trouble to the rescue team.^000000";
-		set .@n$,"Niger";
+		.@n$ = "Niger";
 		break;
 	case 3:
 		setquest 12245;
 		setquest 12253;
 		mes "^660066Age unknown. Has some mental illness. Went alone in order to purify the Maze of the Hazy forest. He insists that he has good ancestry but no one trusts him.";
 		mes "Disappearance period : 12 years. Not much chance of survival.^000000";
-		set .@n$,"Messil";
+		.@n$ = "Messil";
 		break;
 	case 4:
 		setquest 12246;
 		setquest 12253;
 		mes "^660066Age 51. Used to be a big thief who stole famous swords from all around the world.";
 		mes "Went missing in the Maze after being pursued for running an illegal casino house which caused massive casualties in his final years. Low chance of survival.^000000";
-		set .@n$,"Noirit";
+		.@n$ = "Noirit";
 		break;
 	case 5:
 		setquest 12247;
 		setquest 12253;
 		mes "^660066Age 22. An apprentice of an airship pilot. He has gone missing while drinking in Mora town, where he went for a break.";
 		mes "Rumor has it that he fled after signing somewhere. Disappearance period : 4 months. Low chance of survival.^000000";
-		set .@n$,"Pajama Sin";
+		.@n$ = "Pajama Sin";
 		break;
 	case 6:
 		setquest 12248;
 		setquest 12253;
 		mes "^660066Age Unknown. A female with long hair, dressed in black. Went on an expedition to the forest of the Maze in search of eternal life. Disappearance period : 3 months. Low chance of survival.^000000";
-		set .@n$,"Mendel";
+		.@n$ = "Mendel";
 		break;
 	case 7:
 		setquest 12249;
 		setquest 12253;
 		mes "^660066Age around 50. The current Mayor of the Mora village. He ran away to the Forest of Maze after being caught pocketing profits by cheating the residents. Survival uncertain.^000000";
-		set .@n$,"Milebit";
+		.@n$ = "Milebit";
 		break;
 	case 8:
 		setquest 12250;
 		setquest 12253;
 		mes "^660066Age 29. A young man with an unknown background.";
 		mes "Fled to the forest of maze after scamming 1200 Mora coins from Mora residents while pretending to start a lot of business and adapting himself in Mora. Survival uncertain.^000000";
-		set .@n$,"Kunmoon";
+		.@n$ = "Kunmoon";
 		break;
 	case 9:
 		setquest 12251;
 		setquest 12253;
 		mes "^660066Age 34. Flirted with several women in Mora. Fled from Mora villagers to the forest of maze. Survival uncertain.^000000";
-		set .@n$,"Chaihokin";
+		.@n$ = "Chaihokin";
 		break;
 	case 10:
 		setquest 12252;
 		setquest 12253;
 		mes "^660066Age Unknown. Disappered with coins which were joint controlled by the villagers. Low chance of survival.^000000";
-		set .@n$,"Tual";
+		.@n$ = "Tual";
 		break;
 	}
 	next;
 	mes "^990099Information on missing person "+.@n$+"^000000 has been found. Check your Quest Window for further information.";
-	specialeffect2 EF_STEAL;
+	specialeffect(EF_STEAL, AREA, playerattached());
 	close;
 }
 
@@ -5086,37 +5107,36 @@ sec_in02,29,34,5	script	Initializing Mora Sanjo	4_MAN_NITT,{
 		mes "[Initialization]";
 		mes "14.1 Initializing all quest window include related daily quest and map and so on";
 		freeloop(1);
-		for(set .@i,12225; .@i<=12353; set .@i,.@i+1) {
-			if (checkquest(.@i) > -1)
+		for(.@i = 12225; .@i<=12353; ++.@i) {
+			if (questprogress(.@i))
 				erasequest .@i;
 		}
 		freeloop(0);
-		set ep14_1_mistwoods,10;
+		ep14_1_mistwoods = 10;
 		close;
 	}
 }
 
-// Mora Daily Quests - Souls :: md_cadaver_in
-//============================================================
+//== Mora Daily Quests - Souls :: md_cadaver_in ============
 // callfunc "mora_remains",<quest ID>,<NPC name>,<Mora Coin amount>,<reward ID>,<max reward amount>;
 function	script	mora_remains	{
 	if (MaxWeight - Weight < 1000) {
 		mes "You have to make space in your inventory.";
 		close;
 	}
-	if (checkquest(getarg(0)) > -1) {
-		specialeffect2 EF_BLIND;
-		specialeffect2 EF_BEGINSPELL;
+	if (questprogress(getarg(0))) {
+		specialeffect(EF_BLIND, AREA, playerattached());
+		specialeffect(EF_BEGINSPELL, AREA, playerattached());
 		progressbar "ffff00",4;
 		erasequest getarg(0);
 		mes "These must be ["+getarg(1)+"]'s Remains. So carefully gather his remains.";
-		specialeffect2 EF_STEAL;
+		specialeffect(EF_STEAL, AREA, playerattached());
 		getitem getarg(3), rand(1,getarg(4));
 		if (rand(10)) {
 			next;
 			mes "You picked up "+getarg(2)+" Mora Coins next to the remains.";
-			specialeffect2 EF_STEAL;
-			getitem 6380,getarg(2); //Mora_Coin
+			specialeffect(EF_STEAL, AREA, playerattached());
+			getitem Mora_Coin,getarg(2);
 		}
 		close;
 	}
@@ -5128,14 +5148,13 @@ function	script	mora_remains	{
 1@mist,145,245,0	script	Meshir's Remains#33	CLEAR_NPC,{ callfunc "mora_remains",12245,"Meshir",5,943,4; }	//Solid_Shell
 1@mist,196,276,0	script	Noirit's Remains#33	CLEAR_NPC,{ callfunc "mora_remains",12246,"Noirit",6,549,3; }	//Nice_Sweet_Potato
 1@mist,304,327,0	script	Pajama God's Remains#33	CLEAR_NPC,{ callfunc "mora_remains",12247,"Pajama God",5,945,18; }	//Raccoon_Leaf
-1@mist,334,287,0	script	Mendel's Remains#33	CLEAR_NPC,{ callfunc "mora_remains",12248,"Mendel",7,946,31; }	//Snail's_Shell
+1@mist,334,287,0	script	Mendel's Remains#33	CLEAR_NPC,{ callfunc "mora_remains",12248,"Mendel",7,946,31; }	//Snails_Shell
 1@mist,330,177,0	script	Milebit's Remains#33	CLEAR_NPC,{ callfunc "mora_remains",12249,"Milebit",5,7008,17; }	//Stiff_Horn
 1@mist,284,84,0	script	Kunmun's Remains#33	CLEAR_NPC,{ callfunc "mora_remains",12250,"Kunmun",4,6380,20; }	//Mora_Coin
 1@mist,170,54,0	script	Tsaihokin's Remains#33	CLEAR_NPC,{ callfunc "mora_remains",12251,"Tsaihokin",2,929,5; }	//Immortal_Heart
 1@mist,118,43,0	script	Tuar's Remains#33	CLEAR_NPC,{ callfunc "mora_remains",12252,"Tuar",3,6380,20; }	//Mora_Coin
 
-// Knights of the Neighborhood :: ep14_1_mora_knight
-//============================================================
+//== Knights of the Neighborhood :: ep14_1_mora_knight =====
 mora,118,166,6	script	Knights Chief#mo	4_F_RAFLE_VI,{
 	mes "[Order of the Knights Chief]";
 	mes "We are the legendary order of the Neighborhood Knights, founded just five minutes ago!";
@@ -5153,21 +5172,21 @@ mora,118,166,6	script	Knights Chief#mo	4_F_RAFLE_VI,{
 }
 
 mora,116,165,5	script	Knights Boss#mo	4_M_RAFLE_VI,{
-	set .@playtime, checkquest(1119,PLAYTIME);
-	if (.@playtime == 0 || .@playtime == 1) {
+	.@playtime = questprogress(1119,PLAYTIME);
+	if (.@playtime == 1) {
 		mes "[Order of the Knights Boss]";
 		mes "We've run out of Mora Coins.";
 		mes "Come back tomorrow!";
 		close;
 	} else if (.@playtime == 2)
 		erasequest 1119;
-	if (checkweight(6380,1) == 0) {
+	if (checkweight(Mora_Coin,1) == 0) {
 		mes "[Order of the Knights Boss]";
 		mes "You have a lot of things with you!";
 		mes "Why not dump some of them in my pocket?";
 		close;
 	}
-	if (countitem(12561) >= 200) {
+	if (countitem(Mysterious_Seed) >= 200) {
 		mes "[Order of the Knights Boss]";
 		mes "So you've brought back";
 		mes "200 ^FF0000Mysterious Seeds^000000.";
@@ -5180,8 +5199,8 @@ mora,116,165,5	script	Knights Boss#mo	4_M_RAFLE_VI,{
 		mes "You made sure everyone knows";
 		mes "it's the Order of the Neighborhood Knights's work, right?";
 		setquest 1119;
-		delitem 12561,200; //Mysterious_Seed
-		getitem 6380,1; //Mora_Coin
+		delitem Mysterious_Seed,200;
+		getitem Mora_Coin,1;
 		close;
 	}
 	mes "[Order of the Knights Boss]";
@@ -5194,10 +5213,10 @@ mora,116,165,5	script	Knights Boss#mo	4_M_RAFLE_VI,{
 	mes "Soldier, I need you to do something for me.";
 	mes "Go to the Hazy Forest and gather 200 ^FF0000Mysterious Seeds^000000!";
 	next;
-	switch(select("Yes, sir!:I challenge you to a duel!")) {
+	switch(select("Yes, sir!", "I challenge you to a duel!")) {
 	case 1:
 		mes "[Order of the Knights Boss]";
-		mes "Good attitude, "+strcharinfo(0)+" Soldier!";
+		mes "Good attitude, "+strcharinfo(PC_NAME)+" Soldier!";
 		mes "I'll reward you handsomely when you get back.";
 		next;
 		mes "[Other Bosses]";
@@ -5215,7 +5234,7 @@ mora,116,165,5	script	Knights Boss#mo	4_M_RAFLE_VI,{
 }
 
 mora,114,163,5	script	Knights Head#mo	4_M_RAFLE_OR,{
-	if (checkweight(6380,1) == 0) {
+	if (checkweight(Mora_Coin,1) == 0) {
 		mes "[Order of the Knights Head]";
 		mes "You have a lot of things with you!";
 		mes "Why not dump some of them in my pocket?";
@@ -5262,7 +5281,7 @@ mora,114,163,5	script	Knights Head#mo	4_M_RAFLE_OR,{
 		mes "and bring back about 30 of them.";
 		mes "They will make great souvenirs.";
 		next;
-		switch(select("Am I doing all the work here or what?:Yes, sir!")) {
+		switch(select("Am I doing all the work here or what?", "Yes, sir!")) {
 		case 1:
 			mes "[Order of the Knights Head]";
 			mes "So you've noticed it?";
@@ -5271,18 +5290,18 @@ mora,114,163,5	script	Knights Head#mo	4_M_RAFLE_OR,{
 		case 2:
 			mes "[Order of the Knights Head]";
 			mes "It was worthwhile to have trained you after all.";
-			mes "I'm proud of you,"+strcharinfo(0)+" Soldier!";
+			mes "I'm proud of you,"+strcharinfo(PC_NAME)+" Soldier!";
 			next;
 			mes "[Other Heads]";
 			mes "I think you'll make a great right-hand man, the Chief.";
 			mes "I feel rewarded, as the Boss.";
 			mes "As the Leader, I'm so pleased to see you all improve.";
-			set ep14_1_rope,12;
+			ep14_1_rope = 12;
 			setquest 1118;
 			close;
 		}
 	} else if (ep14_1_rope == 12) {
-		if (countitem(6383) < 30) {
+		if (countitem(Clue_Of_Lope) < 30) {
 			mes "[Order of the Knights Head]";
 			mes "You still haven't gathered";
 			mes "^0000FFLope's Clues^000000?";
@@ -5311,9 +5330,9 @@ mora,114,163,5	script	Knights Head#mo	4_M_RAFLE_OR,{
 		mes "It's too much for us.";
 		mes "It's no use trying to do it.";
 		completequest 1118;
-		delitem 6383,30; //Clue_Of_Lope
-		set ep14_1_rope,13;
-		getitem 6380,2; //Mora_Coin
+		delitem Clue_Of_Lope,30;
+		ep14_1_rope = 13;
+		getitem Mora_Coin,2;
 		getexp 1000000,1000000;
 		close;
 	} else if (ep14_1_rope > 12) {
@@ -5324,7 +5343,7 @@ mora,114,163,5	script	Knights Head#mo	4_M_RAFLE_OR,{
 		mes "a circus troupe instead.";
 		mes "Are you interested in trying tightrope walking?";
 		next;
-		switch(select("Well, I could do a fire show.:This is so absurd.")) {
+		switch(select("Well, I could do a fire show.", "This is so absurd.")) {
 		case 1:
 			mes "[Order of the Knights Head]";
 			mes "No, it's impossible.";

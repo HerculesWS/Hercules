@@ -1,17 +1,38 @@
-//===== Hercules Script ======================================
-//= Lighthalzen Guides
-//===== By: ==================================================
-//= MasterOfMuppets; L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Silent
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  MasterOfMuppets
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Lighthalzen Guides (Pre-Renewal)
+//================= Description ===========================================
 //= Guides for the City of Lighthalzen
-//===== Additional Comments: =================================
-//= 1.0 First Version [MasterOfMuppets]
-//= 1.1 Removed Duplicates [Silent]
-//= 1.2 Rescripted to official 10.3 standards. [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
 
 lighthalzen,207,310,5	script	Guide#lhz::LhzGuide	4_M_EIN_SOLDIER,{
 	cutin "ein_soldier",2;
@@ -22,10 +43,10 @@ lighthalzen,207,310,5	script	Guide#lhz::LhzGuide	4_M_EIN_SOLDIER,{
 	mes "around the city, feel free";
 	mes "to ask me and I'll do my";
 	mes "very best to help you.";
-	set .@loop1,1;
+	.@loop1 = 1;
 	while (.@loop1) {
 		next;
-		switch(select("City Guide:Remove Marks from Mini-Map:Notice.:Cancel")) {
+		switch(select("City Guide", "Remove Marks from Mini-Map", "Notice.", "Cancel")) {
 		case 1:
 			mes "[Lighthalzen Guide]";
 			mes "Please be aware that I'm";
@@ -42,13 +63,13 @@ lighthalzen,207,310,5	script	Guide#lhz::LhzGuide	4_M_EIN_SOLDIER,{
 				mes "to mark locations";
 				mes "on your Mini-Map?";
 				next;
-				if (select("Yes.:No.") == 1) set .@compass_check,1;
+				if (select("Yes.", "No.") == 1) .@compass_check = 1;
 			}
-			set .@loop2,1;
+			.@loop2 = 1;
 			while(.@loop2) {
-				if (.@wait_button_chk == 0) set .@wait_button_chk,1;
+				if (.@wait_button_chk == 0) .@wait_button_chk = 1;
 				else next;
-				switch(select("^FF0000Rekenber Corporation^000000:Train Station:Police Station:Bank:Hotel:Airport:Merchant Guild:Jewelry Shop:Weapon Shop:Departement Store:Cancel")) {
+				switch(select("^FF0000Rekenber Corporation^000000", "Train Station", "Police Station", "Bank", "Hotel", "Airport", "Merchant Guild", "Jewelry Shop", "Weapon Shop", "Departement Store", "Cancel")) {
 				case 1:
 					mes "[Lighthalzen Guide]";
 					mes "Rekenber Corporation,";
@@ -154,7 +175,7 @@ lighthalzen,207,310,5	script	Guide#lhz::LhzGuide	4_M_EIN_SOLDIER,{
 					mes "no longer wish to have the";
 					mes "location marks displayed";
 					mes "on your Mini-Map.";
-					set .@loop2,0;
+					.@loop2 = 0;
 				}
 			}
 			break;
@@ -169,7 +190,7 @@ lighthalzen,207,310,5	script	Guide#lhz::LhzGuide	4_M_EIN_SOLDIER,{
 			viewpoint 2,93,110,9,0xFF9900;
 			viewpoint 2,196,46,10,0x330033;
 			viewpoint 2,199,163,11,0xFFFF00;
-			set .@compass_check,0;
+			.@compass_check = 0;
 			break;
 		case 3:
 			mes "[Lighthalzen Guide]";
@@ -211,7 +232,7 @@ lighthalzen,207,310,5	script	Guide#lhz::LhzGuide	4_M_EIN_SOLDIER,{
 			mes "We hope that you enjoy";
 			mes "our fair city, adventurer.";
 			close2;
-			set .@loop1,0;
+			.@loop1 = 0;
 		}
 	}
 	cutin "ein_soldier",255;

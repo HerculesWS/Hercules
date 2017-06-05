@@ -1,0 +1,79 @@
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2016  Hercules Dev Team
+//= Copyright (C) Ridley
+//= Copyright (C) Nova
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Dimensonal Gap warp script (Renewal)
+//================= Description ===========================================
+//= Warps for Dimensional Gap
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
+
+mid_camp,210,292,4	script	Transport Device#01	PORTAL,{
+	mes("Do you wish to enter the Dimensional Gap?");
+	next();
+	if (select("Yes", "No") == 1) {
+		warp("dali", 141, 82);
+		end;
+	}
+	close();
+}
+
+moc_fild22b,222,200,4	script	Transport Device#02	PORTAL,{
+	mes("Do you wish to enter the Dimensional Gap?");
+	next();
+	if (select("Yes", "No") == 1) {
+		warp("dali", 119, 56);
+		end;
+	}
+	close();
+}
+
+bif_fild01,318,159,4	script	Transport Device#03	PORTAL,{
+	mes("Do you wish to enter the Dimensional Gap?");
+	next();
+	if (select("Yes", "No") == 1) {
+		warp("dali", 43, 92);
+		end;
+	}
+	close();
+}
+
+dic_fild02,241,31,4	script	Transport Device#04	PORTAL,{
+	mes("Do you wish to enter the Dimensional Gap?");
+	next();
+	if (select("Yes", "No") == 1) {
+		warp("dali", 41, 134);
+		end;
+	}
+	close();
+}
+
+dali,149,82,0	warp	dg001	2,2,mid_camp,210,289
+dali,122,48,0	warp	dg002	2,2,moc_fild22b,227,200
+dali,38,87,0	warp	dg003	2,2,bif_fild01,318,155
+dali,34,139,0	warp	dg004	2,2,dic_fild02,237,32

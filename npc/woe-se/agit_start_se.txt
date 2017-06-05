@@ -1,0 +1,67 @@
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= War of Emperium SE - Auto-Start
+//================= Description ===========================================
+//= Auto Start for War of Emperium
+//================= Current Version =======================================
+//= 1.0
+//================= Addotional Comments ===================================
+//= To know how to set up WoE times, see doc/woe_time_explanation.txt
+//=========================================================================
+
+//== WoE Start/Stop times ==================================
+-	script	Agit2_Event	FAKE_NPC,{
+	end;
+
+OnClock1800:	//start time for Tues(2), Thurs(4)
+OnClock2000:	//end time for Tues(2), Thurs(4)
+OnClock2100:	//start time for Sat(6)
+OnClock2300:	//end time for Sat(6)
+
+OnAgitInit2:
+	// starting time checks
+	if((gettime(GETTIME_WEEKDAY) == 2 && gettime(GETTIME_HOUR) >= 18 && gettime(GETTIME_HOUR) < 21) ||
+	   (gettime(GETTIME_WEEKDAY) == 4 && gettime(GETTIME_HOUR) >= 18 && gettime(GETTIME_HOUR) < 21) ||
+	   (gettime(GETTIME_WEEKDAY) == 6 && gettime(GETTIME_HOUR) >= 22 && gettime(GETTIME_HOUR) < 23)) {
+		if (!agitcheck2()) {
+			agitstart2;
+		}
+		end;
+	}
+
+	// end time checks
+	if ((gettime(GETTIME_WEEKDAY) == 2 && gettime(GETTIME_HOUR) == 21) ||
+	    (gettime(GETTIME_WEEKDAY) == 4 && gettime(GETTIME_HOUR) == 21) ||
+	    (gettime(GETTIME_WEEKDAY) == 6 && gettime(GETTIME_HOUR) == 23)) {
+		if (agitcheck2()) {
+			agitend2;
+		}
+		end;
+	}
+	end;
+}

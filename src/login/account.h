@@ -1,19 +1,43 @@
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-// Portions Copyright (c) Athena Dev Teams
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2016  Hercules Dev Team
+ * Copyright (C)  Athena Dev Teams
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+#ifndef LOGIN_ACCOUNT_H
+#define LOGIN_ACCOUNT_H
 
-#ifndef _LOGIN_ACCOUNT_H_
-#define _LOGIN_ACCOUNT_H_
+#include "common/cbasetypes.h"
+#include "common/mmo.h" // ACCOUNT_REG2_NUM
 
-#include "../common/cbasetypes.h"
-#include "../common/mmo.h" // ACCOUNT_REG2_NUM
+/* Forward declarations */
+struct Sql; // common/sql.h
+
+/* Forward Declarations */
+struct config_t; // common/conf.h
 
 typedef struct AccountDB AccountDB;
 typedef struct AccountDBIterator AccountDBIterator;
 
 
+#ifdef HERCULES_CORE
 // standard engines
 AccountDB* account_db_sql(void);
+#endif // HERCULES_CORE
 
 struct mmo_account
 {
@@ -24,7 +48,7 @@ struct mmo_account
 	char email[40];             // e-mail (by default: a@a.com)
 	int group_id;               // player group id
 	uint8 char_slots;           // this accounts maximum character slots (maximum is limited to MAX_CHARS define in char server)
-	unsigned int state;         // packet 0x006a value + 1 (0: compte OK)
+	unsigned int state;         // packet 0x006a value + 1 (0: complete OK)
 	time_t unban_time;          // (timestamp): ban time limit of the account (0 = no ban)
 	time_t expiration_time;     // (timestamp): validity limit of the account (0 = unlimited)
 	unsigned int logincount;    // number of successful auth attempts
@@ -51,6 +75,10 @@ struct AccountDBIterator
 	bool (*next)(AccountDBIterator* self, struct mmo_account* acc);
 };
 
+struct Account_engine {
+	AccountDB* (*constructor)(void);
+	AccountDB* db;
+};
 
 struct AccountDB
 {
@@ -82,10 +110,9 @@ struct AccountDB
 	/// Sets a property in this database.
 	///
 	/// @param self Database
-	/// @param key Property name
-	/// @param value Property value
+	/// @param config Configuration node
 	/// @return true if successful
-	bool (*set_property)(AccountDB* self, const char* key, const char* value);
+	bool (*set_property)(AccountDB* self, struct config_t *config, bool imported);
 
 	/// Creates a new account in this database.
 	/// If acc->account_id is not -1, the provided value will be used.
@@ -134,9 +161,11 @@ struct AccountDB
 	AccountDBIterator* (*iterator)(AccountDB* self);
 };
 
-Sql *account_db_sql_up(AccountDB* self);
+#ifdef HERCULES_CORE
+struct Sql *account_db_sql_up(AccountDB* self);
 
 void mmo_send_accreg2(AccountDB* self, int fd, int account_id, int char_id);
 void mmo_save_accreg2(AccountDB* self, int fd, int account_id, int char_id);
+#endif // HERCULES_CORE
 
-#endif /* _LOGIN_ACCOUNT_H_ */
+#endif /* LOGIN_ACCOUNT_H */

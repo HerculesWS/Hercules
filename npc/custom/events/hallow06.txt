@@ -31,27 +31,26 @@ prontera,151,190,5	script	Hallows' Eve Event	1_M_SIGNMCNT,{
 	mes "[Hallows' Eve Event]";
 	mes "Trick or treat, which do you prefer?";
 	next;
-	menu "Trick",-, "Treat",L_Treat;
+	if (select("Trick", "Treat") == 1) {
+		mes "[Hallows' Eve Event]";
+		if(EVENT_HALWN06&2){
+			mes "I'm sorry but you have already had a trick. Why don't you go pick a treat now.";
+			emotion e_sry;
+			close;
+		}
+		mes "Give me a min...";
+		next;
+		set BaseExp,BaseExp+BaseLevel*1000;
+		set EVENT_HALWN06,EVENT_HALWN06|2;
 
-	mes "[Hallows' Eve Event]";
-	if(EVENT_HALWN06&2){
-		mes "I'm sorry but you have already had a trick. Why don't you go pick a treat now.";
-		emotion e_sry;
+		mes "[Hallows' Eve Event]";
+		mes "Here is your treat. Your Base EXP has been slightly increased.";
+		next;
+		mes "[Hallows' Eve Event]";
+		mes "I hope you enjoy your trick and Happy Halloween!";
 		close;
 	}
-	mes "Give me a min...";
-	next;
-	set BaseExp,BaseExp+BaseLevel*1000;
-	set EVENT_HALWN06,EVENT_HALWN06|2;
 
-	mes "[Hallows' Eve Event]";
-	mes "Here is your treat. Your Base EXP has been slightly increased.";
-	next;
-	mes "[Hallows' Eve Event]";
-	mes "I hope you enjoy your trick and Happy Halloween!";
-	close;
-
-L_Treat:
 	mes "[Hallows' Eve Event]";
 	if(EVENT_HALWN06&1){
 		mes "I'm sorry but you have already had a treat. Why don't you go pick a trick now.";
@@ -84,39 +83,39 @@ L_Treat:
 	}
 	mes "Did you get the items I requested or do you need to see the list again?";
 	next;
-	menu "Got'em",-, "Don't Have",L_Dont_Have, "See List",L_List;
-
-	mes "[Hallows' Eve Event]";
-	if((countitem(2220) < 1) || (countitem(535) < 30) || (countitem(7205) < 20)){
-		mes "You don't have enough items. Come back when you do.";
-		emotion e_sry;
+	switch (select("Got'em", "Don't Have", "See List")) {
+	case 1:
+		mes "[Hallows' Eve Event]";
+		if((countitem(Hat) < 1) || (countitem(Pumpkin) < 30) || (countitem(Piece_Of_Black_Cloth) < 20)){
+			mes "You don't have enough items. Come back when you do.";
+			emotion e_sry;
+			close;
+		}
+		delitem 2220,1;
+		delitem 535,30;
+		delitem 7205,20;
+		getitem 5134,1;
+		set EVENT_HALWN06,EVENT_HALWN06|1;
+		mes "Good job! I hope you are happy with your item.";
+		emotion e_grat;
+		next;
+		mes "[Hallows' Eve Event]";
+		mes "Enjoy the rest of your halloween.";
+		emotion e_scissors,1;
+		close;
+	case 2:
+		mes "[Hallows' Eve Event]";
+		mes "Go back out and search for them. Would you like to view the list?";
+		next;
+		if (select("No", "Yes") == 1)
+			close;
+		// Fall through
+	case 3:
+		mes "[Hallows' Eve Event]";
+		mes "I require the following items:";
+		mes "1 Hat,";
+		mes "30 Pumpkin, and";
+		mes "20 Black Piece of Cloth.";
 		close;
 	}
-	delitem 2220,1;
-	delitem 535,30;
-	delitem 7205,20;
-	getitem 5134,1;
-	set EVENT_HALWN06,EVENT_HALWN06|1;
-	mes "Good job! I hope you are happy with your item.";
-	emotion e_grat;
-	next;
-	mes "[Hallows' Eve Event]";
-	mes "Enjoy the rest of your halloween.";
-	emotion e_scissors,1;
-	close;
-
-L_Dont_Have:
-	mes "[Hallows' Eve Event]";
-	mes "Go back out and search for them. Would you like to view the list?";
-	next;
-	menu "No",-, "Yes",L_List;
-	close;
-
-L_List:
-	mes "[Hallows' Eve Event]";
-	mes "I require the following items:";
-	mes "1 Hat,";
-	mes "30 Pumpkin, and";
-	mes "20 Black Piece of Cloth.";
-	close;
 }

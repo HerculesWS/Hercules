@@ -1,0 +1,188 @@
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2017  Hercules Dev Team
+//= Copyright (C) Dastgir
+//= Copyright (C) Smokexyz (v2.0)
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Shadow Refiner
+//================= Description ===========================================
+//= Shadow item refiner
+//================= Current Version =======================================
+//= 2.0
+//=========================================================================
+
+itemmall,31,76,3	script	Shadow Blacksmith#nomal	4_F_JOB_BLACKSMITH,{
+
+	// Configuration
+	.@npc_name$ = "[Shadow Blacksmith]";
+	.@zeny_cost = 20000; // Amount of zeny to be charged for refining.
+
+	disable_items;
+	mesf("%s", .@npc_name$);
+	mes("Do you want to refine a Shadow item?");
+	mes("Please choose the part you want to refine.");
+	next;
+	setarray(.@position$[0],"Armor","Weapon","Shield","Shoes","Earring","Pendant");
+	for (.@i=EQI_SHADOW_ARMOR; .@i <= EQI_SHADOW_ACC_L; .@i++){
+		.@menu$ = .@menu$ + (getequipisequiped(.@i) ? getequipname(.@i) : ("^8C8C8C" + .@position$[.@i-EQI_SHADOW_ARMOR] + " [Not Equipped]^000000" + ":"));
+	}
+	.@menu$ = .@menu$ + "Refine Info";
+	.@SelectedPart = select(.@menu$) + EQI_SHADOW_ARMOR - 1;
+	if (.@SelectedPart == EQI_SHADOW_ACC_L + 1){	// Refine Info
+		mesf("%s", .@npc_name$);
+		mes("Shadow items gain extra bonus effects depending on their refine level, similar to normal weapon and armor items.");
+		next;
+		mesf("%s", .@npc_name$);
+		mes("Refining effects for each Shadow item parts are -");
+		mes("Weapon: ATK, MATK + 1 increase for each +1 refine success.");
+		mes("Etc: HP + 10 increase for each +1 refine success.");
+		next;
+		mesf("%s", .@npc_name$);
+		mesf("You need %s and %s as the ingredient, along with a refine fee %d Zeny.", getitemname(Oridecon), getitemname(Elunium), .@zeny_cost);
+		next;
+		mesf("%s", .@npc_name$);
+		mes("When refining to +5 or higher, you risk breaking your Shadow item.");
+		mes("You may also use Enriched or HD ingredients for the refinement.");
+		close;
+	}
+	while(true) {
+		mesf("%s", .@npc_name$);
+		mesf("%d Zeny will be spent as a refine fee.", .@zeny_cost);
+		mes("Choose the ingredient and start refining.");
+		next;
+		.@index = 0;
+		if (.@SelectedPart != EQI_SHADOW_WEAPON)
+			.@index = 1;
+		setarray .@s_material1[0], Oridecon, Elunium;
+		setarray .@s_material2[0], Enriched_Oridecon, Enriched_Elunium;
+		setarray .@s_material3[0], HD_Oridecon, HD_Elunium;
+		.@refine_type = REFINE_CHANCE_TYPE_NORMAL;
+		if (countitem(.@s_material1[.@index]))
+			.@mate$[0] = getitemname(.@s_material1[.@index]);
+		else{
+			.@mate$[0] = "^8C8C8C"+ getitemname(.@s_material1[.@index]) +"^000000";
+			.@miss[0] = 1;
+		}
+		if (countitem(.@s_material2[.@index]))
+			.@mate$[1] = getitemname(.@s_material2[.@index]);
+		else{
+			.@mate$[1] = "^8C8C8C"+ getitemname(.@s_material2[.@index]) +"^000000";
+			.@miss[1] = 1;
+		}
+		if (getequiprefinerycnt(.@SelectedPart) > 6 && countitem(.@s_material3[.@index]))
+			.@mate$[2] = getitemname(.@s_material3[.@index]);
+		else {
+			.@mate$[2] = "^8C8C8C"+ getitemname(.@s_material3[.@index]) +"^000000";
+			.@miss[2] = 1;
+		}
+		//-----------------------------------------------------------------------------
+		.@option = select("Cancel", .@mate$[0], .@mate$[1], .@mate$[2]);
+		if (.@option == 1){
+			mesf("%s", .@npc_name$);
+			mes("You've cancelled refining.");
+			close;
+		}
+		.@option -= 2;
+		.@hoihoi = false;
+		if (.@option == 2){	//HD
+			if (getequiprefinerycnt(.@SelectedPart) < 7){
+				mesf("%s", .@npc_name$);
+				mes("HD ingredients are only possible to be used when refining an item of quality +7 or higher.");
+				close;
+			}
+			.@hoihoi = true;
+		} else if (.@option == 1) {
+			.@refine_type = REFINE_CHANCE_TYPE_ENRICHED;
+		}
+		if (.@miss[.@option]){
+			mesf("%s", .@npc_name$);
+			mes("You do not have the proper ingredient to proceed with refining.");
+			close;
+		}
+		.@choose = getd(".@s_weapon"+(.@option+1)+"["+ .@index +"]");
+		if (Zeny < 20000) {
+			mesf("%s", .@npc_name$);
+			mes("You do not have enough Zeny to pay the refine fee.");
+			close;
+		}
+		if (getequiprefinerycnt(.@SelectedPart) > 9) {
+			mesf("%s", .@npc_name$);
+			mes("Shadow item refining is only possible up to +10 level.");
+			close;
+		}
+		if (!getequipisenableref(.@SelectedPart)) {
+			mesf("%s", .@npc_name$);
+			mes("This item cannot be refined.");
+			close;
+		}
+		if (getequippercentrefinery(.@SelectedPart, .@refine_type) < 100) {
+			mesf("%s", .@npc_name$);
+			mes("Safety guaranteed refine limit for shadow item is until +4.");
+			if (.@hoihoi == false) {
+				mes("If you try more refining, the item might break upon failing. Do you still want to refine?");
+			}
+			else {
+				mes("If you try more refining, the item refine level might go down when failed. Do you still want to refine?");
+			}
+			next;
+			if (select("Proceed","Cancel") == 2) {
+				mesf("%s", .@npc_name$);
+				mes("You've cancelled refining.");
+				close;
+			}
+		}
+		//-----------------------------------------------------------------------------
+		mesf("%s", .@npc_name$);
+		mes("Here we go--!!!");
+		next;
+		if (Zeny < 20000) {
+			mesf("%s", .@npc_name$);
+			mes("You do not have enough Zeny to pay the refine fee.");
+			close;
+		}
+		if (countitem(.@choose) == 0) {
+			mesf("%s", .@npc_name$);
+			mes("You do not have enough "+ getitemname(.@choose) +".");
+			close;
+		}
+		delitem(.@choose, 1);
+		Zeny -= 20000;
+		if (getequippercentrefinery(.@SelectedPart, .@refine_type) > rand(100)) {
+			successrefitem(.@SelectedPart);
+			mesf("%s", .@npc_name$);
+			mes("Refine was successful.");
+			next;
+		}
+		else {
+			if (.@hoihoi == true)
+				downrefitem(.@SelectedPart);
+			else
+				failedrefitem(.@SelectedPart);
+			mesf("%s", .@npc_name$);
+			mes("Oh no.. Refine has failed.");
+			close;
+		}
+	}
+}

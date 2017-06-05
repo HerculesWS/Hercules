@@ -1,20 +1,47 @@
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-// Portions Copyright (c) Athena Dev Teams
-#ifndef _CONFIG_RENEWAL_H_
-#define _CONFIG_RENEWAL_H_
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2016  Hercules Dev Team
+ * Copyright (C)  Athena Dev Teams
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+#ifndef CONFIG_RENEWAL_H
+#define CONFIG_RENEWAL_H
 
 /**
- * Hercules configuration file (http://hercules.ws)
- * For detailed guidance on these check http://hercules.ws/wiki/SRC/config/
+ * Hercules configuration file (http://herc.ws)
+ * For detailed guidance on these check http://herc.ws/wiki/SRC/config/
  **/
 
 /**
  * @INFO: This file holds general-purpose renewal settings, for class-specific ones check /src/config/classes folder
  **/
 
+/**
+ * Renewal full toggle switch.
+ *
+ * Uncomment this line to disable all of the below settings at once.
+ * Note: in UNIX builds, this can be easily done without touching this
+ * line, by passing --disable-renewal to the configure script:
+ * ./configure --disable-renewal
+ */
 //#define DISABLE_RENEWAL
-#ifndef DISABLE_RENEWAL
+
+
+#ifndef DISABLE_RENEWAL // Do not change this line
 
 /// game renewal server mode
 /// (disable by commenting the line)
@@ -64,7 +91,6 @@
 #define RENEWAL_EDP
 
 /// renewal ASPD [malufett]
-/// (disable by commenting the line)
 ///
 /// leave this line to enable renewal ASPD
 /// - shield penalty is applied
@@ -74,5 +100,6 @@
 #define RENEWAL_ASPD
 
 #endif // DISABLE_RENEWAL
+#undef DISABLE_RENEWAL
 
-#endif // _CONFIG_RENEWAL_H_
+#endif // CONFIG_RENEWAL_H

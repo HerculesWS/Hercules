@@ -5,8 +5,8 @@
 //===== Current Version: =====================================
 //= 1.2a
 //===== Description: =========================================
-//= Click the chicken and try retrieve the item at a low 
-//= chance. If you fail he will nuke, freeze, stone, 
+//= Click the chicken and try retrieve the item at a low
+//= chance. If you fail he will nuke, freeze, stone,
 //= stun, or make you fall asleep.
 //= The prize is configurable and triggered by the NPC.
 //===== Additional Comments: =================================
@@ -21,32 +21,32 @@ prontera,156,219,4	script	Cluckers	4_NFCOCK,{
 	set .@GMAccess,80;	// GM level required to access NPC
 
 	if (.startcluck) {
-		specialeffect2 2;
+		specialeffect(EF_HIT3, AREA, playerattached());
 		switch(rand(15)) {
-			case 0: npctalk "CLUUUUUUCK!!!"; unitskilluseid getcharid(3),"NPC_SELFDESTRUCTION",1; emotion 23; break;
+			case 0: npctalk "CLUUUUUUCK!!!"; unitskilluseid getcharid(CHAR_ID_ACCOUNT),"NPC_SELFDESTRUCTION",1; emotion 23; break;
 			case 1: npctalk "Cluuuuuck!~"; break;
-			case 2: unitskilluseid getcharid(3),"NPC_SELFDESTRUCTION",1; break;
+			case 2: unitskilluseid getcharid(CHAR_ID_ACCOUNT),"NPC_SELFDESTRUCTION",1; break;
 			case 3: sc_start SC_FREEZE,10000,0; break;
-			case 4: npctalk "CLUUUUUUUUUCK!!!"; unitskilluseid getcharid(3),"NPC_SELFDESTRUCTION",1; emotion 23; break;
+			case 4: npctalk "CLUUUUUUUUUCK!!!"; unitskilluseid getcharid(CHAR_ID_ACCOUNT),"NPC_SELFDESTRUCTION",1; emotion 23; break;
 			case 5: sc_start SC_SLEEP,10000,0; break;
 			case 6: sc_start SC_STONE,10000,0; emotion 29; break;
-			case 7: npctalk "CLUUUUUUCK!!!"; unitskilluseid getcharid(3),"NPC_SELFDESTRUCTION",1; emotion 23; break;
-			case 8: npctalk "Cluck! CLUUUCK!!"; unitskilluseid getcharid(3),"NPC_SELFDESTRUCTION",1; emotion 23; break;
+			case 7: npctalk "CLUUUUUUCK!!!"; unitskilluseid getcharid(CHAR_ID_ACCOUNT),"NPC_SELFDESTRUCTION",1; emotion 23; break;
+			case 8: npctalk "Cluck! CLUUUCK!!"; unitskilluseid getcharid(CHAR_ID_ACCOUNT),"NPC_SELFDESTRUCTION",1; emotion 23; break;
 			case 9: sc_start SC_STUN,10000,0; break;
 			case 10: sc_start SC_SLEEP,10000,0; emotion 29; break;
 			case 11: npctalk "Cluck! Cluck!"; break;
 			case 12: sc_start SC_STUN,10000,0; break;
-			case 13: unitskilluseid getcharid(3),"NPC_SELFDESTRUCTION",1; break;
+			case 13: unitskilluseid getcharid(CHAR_ID_ACCOUNT),"NPC_SELFDESTRUCTION",1; break;
 			default:
 				if (rand(50) < 4) {
 					npctalk "WOOF!...........";
-					specialeffect2 72;
-					announce "[Cluck! Cluck! Boom!] " + strcharinfo(0) + " squeezed out the prize! Well done!",0;
+					specialeffect(EF_SPHERE, AREA, playerattached());
+					announce "[Cluck! Cluck! Boom!] " + strcharinfo(PC_NAME) + " squeezed out the prize! Well done!",0;
 					getitem $cluck_item_id,$cluck_item_amount;
 					set .startcluck,0;
 				} else {
 					npctalk "Cluck! CLUUUCK!!";
-					unitskilluseid getcharid(3),"NPC_SELFDESTRUCTION",1;
+					unitskilluseid getcharid(CHAR_ID_ACCOUNT),"NPC_SELFDESTRUCTION",1;
 				}
 				break;
 		}
@@ -54,10 +54,10 @@ prontera,156,219,4	script	Cluckers	4_NFCOCK,{
 	}
 	mes "[Cluckers]";
 	if (getgmlevel() >= .@GMAccess) {
-		mes "Cluck cluck! Cluuuuuck? ^FF0000~Hi GM " + strcharinfo(0) + ", Wanna play today?~^000000";
+		mes "Cluck cluck! Cluuuuuck? ^FF0000~Hi GM " + strcharinfo(PC_NAME) + ", Wanna play today?~^000000";
 		mes "Cluck cluck... CLUCK! ^FF0000~Just tell me what to do!~^000000";
 		next;
-		while(1) switch(select("Start Event:Check Prize:Set Prize:Not today Cluckers")) {
+		while(1) switch(select("Start Event", "Check Prize", "Set Prize", "Not today Cluckers")) {
 			case 1:
 				mes "[Cluckers]";
 				mes "CLUCK! ^FF0000~Sure thing!~^000000";

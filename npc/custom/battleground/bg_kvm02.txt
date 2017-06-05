@@ -11,7 +11,7 @@ bat_room,225,227,4	script	Registration::KvM02R_Guillaume	4_M_KY_KNT,{ // KvM Gui
 OnInit:
 	waitingroom "Battle Station 5 Players",5,"KvM02_BG::OnGuillaumeJoin",1;
 	end;
-	
+
 OnEnterBG:
 	set $@KvM02BG_id1, waitingroom2bg("bat_c02",53,128,"KvM02_BG::OnGuillaumeQuit","KvM02_BG::OnGuillaumeDie");
 	end;
@@ -35,9 +35,9 @@ OnEnterBG:
 bat_c02,54,123,0	script	#bat_c02a	HIDDEN_NPC,{
 	end;
 
-OnKvM02LightA: misceffect 54; end;
-OnKvM02LightB: misceffect 55; end;
-OnKvM02LightC: misceffect 56; end;
+OnKvM02LightA: specialeffect(EF_BEGINSPELL2); end;
+OnKvM02LightB: specialeffect(EF_BEGINSPELL3); end;
+OnKvM02LightC: specialeffect(EF_BEGINSPELL4); end;
 }
 
 bat_c02,56,125,0	duplicate(#bat_c02a)	#bat_c02b	HIDDEN_NPC
@@ -49,7 +49,7 @@ bat_c02,145,60,0	duplicate(#bat_c02a)	#bat_c02f	HIDDEN_NPC
 // Battleground Engine
 // *********************************************************************
 
--	script	KvM02_BG	-1,{
+-	script	KvM02_BG	FAKE_NPC,{
 	end;
 
 OnInit:
@@ -150,7 +150,7 @@ OnTimer27000:
 OnTimer28000:
 	donpcevent "::OnKvM02LightB";
 	end;
-	
+
 OnTimer29000:
 	donpcevent "::OnKvM02LightC";
 	end;
@@ -205,7 +205,7 @@ OnTimer330000:
 OnGuillaumeWin:
 	set $@KvM02BG, 3;
 	set $@KvM02BG_Victory, 1;
-	
+
 	stopnpctimer;
 	sleep 2000;
 	mapannounce "bat_c02","The Guillaume Army has won the Battle of Kreiger Von Midgard",1,0x0000FF;
@@ -258,7 +258,7 @@ OnReset:
 	end;
 }
 
--	script	KvM02_BG_Out	-1,{
+-	script	KvM02_BG_Out	FAKE_NPC,{
 	end;
 
 OnBegin:
@@ -286,7 +286,7 @@ bat_c02,51,130,5	script	Therapist in battle::TherapistKvM02a	4_F_SISTER,{
 	mes "[Therapist in battle]";
 	mes "Just close your eyes, and take a deep breathe.";
 	mes "You can be free from pain.";
-	specialeffect2 312;
+	specialeffect(EF_HEAL, AREA, playerattached());
 	close;
 }
 
@@ -294,7 +294,7 @@ bat_c02,148,53,1	script	Therapist in battle::TherapistKvM02b	4_F_SISTER,{
 	mes "[Therapist in battle]";
 	mes "Just close your eyes, and take a deep breathe.";
 	mes "You can be free from pain.";
-	specialeffect2 312;
+	specialeffect(EF_HEAL, AREA, playerattached());
 	close;
 }
 
@@ -317,11 +317,9 @@ bat_c02,51,130,5	script	Guillaume Vintenar::VintenarKvM02a	4_M_KY_HEAD,{
 			mes "[Swandery]";
 			mes "Blessed Guillaume!!";
 			mes "Let's enjoy our glorious victory!";
-			mes "" + strcharinfo(0) + ", its a sign reflecting victory";
+			mes "" + strcharinfo(PC_NAME) + ", its a sign reflecting victory";
 			close2;
-		}
-		else
-		{ // 
+		} else {
 			set .@reward, 1;
 			mes "[Swandery]";
 			mes "You lost, but you're dedicated to this battle.";
@@ -355,14 +353,12 @@ bat_c02,148,53,1	script	Croix Vintenar::VintenarKvM02b	4_M_CRU_HEAD,{
 			mes "[Swandery]";
 			mes "Blessed Croax!!";
 			mes "Let's enjoy our glorious victory!";
-			mes "" + strcharinfo(0) + ", its a sign reflecting victory";
+			mes "" + strcharinfo(PC_NAME) + ", its a sign reflecting victory";
 			close2;
-		}
-		else
-		{ // 
+		} else {
 			set .@reward, 1;
 			mes "[Swandery]";
-			mes "Oh, " + strcharinfo(0) + ". Don't be sad.";
+			mes "Oh, " + strcharinfo(PC_NAME) + ". Don't be sad.";
 			mes "Even though we didn't win, we did our best.";
 			mes "This is a Royal gift from Croix, and please don't forget this battle. We can win the next.";
 			close2;

@@ -3,6 +3,8 @@
 .DS_Store
 ._*
 .clang_complete
+.local.vimrc
+.ycm_extra_conf.py*
 Thumbs.db
 
 # /
@@ -16,9 +18,11 @@ Thumbs.db
 /*.pid
 /*.sdf
 /*.stackdump
-/*.suo
 /*.exp
 /*.lib
+/*.VC.db
+/*.VC.opendb
+/.vs/
 /autom4te.cache/
 /start-log.txt
 /char-server
@@ -55,7 +59,8 @@ Thumbs.db
 /cache/
 
 # /conf/
-/conf/import
+/conf/import/*.conf
+/conf/import/msg_conf.txt
 
 # /log/
 /log/*.log
@@ -69,7 +74,7 @@ Thumbs.db
 /src/common/Makefile
 /src/common/obj_all
 /src/common/obj_sql
-/src/common/svnversion.h
+/src/common/sysinfo.inc
 
 # /src/login/
 /src/login/Makefile
@@ -99,6 +104,8 @@ Thumbs.db
 /tools/*.pdb
 /tools/HPMHookGen/Makefile
 /tools/HPMHookGen/doxyoutput
+/tools/doxygen/Makefile
+/tools/doxygen/docs
 
 # /vcproj-*
 /vcproj-*/*.user

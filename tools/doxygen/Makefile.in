@@ -1,0 +1,70 @@
+# This file is part of Hercules.
+# http://herc.ws - http://github.com/HerculesWS/Hercules
+#
+# Copyright (C) 2016  Hercules Dev Team
+#
+# Hercules is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# @configure_input@
+
+@SET_MAKE@
+
+COMMON_D = ../../src/common
+MAP_D = ../../src/map
+CHAR_D = ../../src/char
+LOGIN_D = ../../src/login
+PLUGIN_D = ../../src/plugins
+COMMON_C = $(wildcard $(COMMON_D)/*.c)
+COMMON_H = $(wildcard $(COMMON_D)/*.h)
+MAP_C = $(wildcard $(MAP_D)/*.c)
+MAP_H = $(wildcard $(MAP_D)/*.h)
+CHAR_C = $(wildcard $(CHAR_D)/*.c)
+CHAR_H = $(wildcard $(CHAR_D)/*.h)
+LOGIN_C = $(wildcard $(LOGIN_D)/*.c)
+LOGIN_H = $(wildcard $(LOGIN_D)/*.h)
+ALL_C = $(COMMON_C) $(MAP_C) $(CHAR_C) $(LOGIN_C)
+ALL_H = $(COMMON_H) $(MAP_H) $(CHAR_H) $(LOGIN_H)
+
+HAVE_DOXYGEN=@HAVE_DOXYGEN@
+ifeq ($(HAVE_DOXYGEN),yes)
+	ALL_DEPENDS = docs
+else
+	ALL_DEPENDS = needs_doxygen
+endif
+
+#####################################################################
+.PHONY: clean buildclean
+
+all: $(ALL_DEPENDS)
+
+buildclean:
+
+clean: buildclean
+	@echo "	CLEAN	docs"
+	@rm -rf docs
+
+Makefile: Makefile.in
+	@$(MAKE) -C ../.. tools/doxygen/Makefile
+
+#####################################################################
+
+docs: $(ALL_C) $(ALL_H) doxygen.conf
+	@echo "	Generating Doxygen documentation..."
+	@doxygen doxygen.conf
+
+#####################################################################
+
+needs_doxygen:
+	@echo "doxygen not found or disabled by the configure script"
+	@exit 1

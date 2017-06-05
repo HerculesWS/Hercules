@@ -1,21 +1,48 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Fortune Teller
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.0
-//===== Description: =========================================
-//= [Official Conversion]
+//================= File Encoding =========================================
+//= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
+//= -If the encoding is correct, the next three lines have the same length-
+//= ============ ∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞ ============
+//= ============ ============================================= ============
+//= ============ ≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠ ============
+//================= Description ===========================================
 //= Fortune teller NPC. Displays random Card image.
-//===== Additional Comments: =================================
-//= 1.0 First version. [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
 
 payon_in03,117,128,5	script	Fortune Teller	4_M_BIBI,{
 	mes "[Lhimetorra]";
-	mes "You're an adventurer of this world... " +strcharinfo(0)+ ", right? So, what can an old person like me do for you?";
+	mes "You're an adventurer of this world... " +strcharinfo(PC_NAME)+ ", right? So, what can an old person like me do for you?";
 	next;
-	switch(select("I would like a tarot card reading.:What's a tarot card reading?")) {
+	switch(select("I would like a tarot card reading.", "What's a tarot card reading?")) {
 	case 1:
 		mes "[Lhimetorra]";
 		mes "Is that so...?";
@@ -24,7 +51,7 @@ payon_in03,117,128,5	script	Fortune Teller	4_M_BIBI,{
 		mes "[Lhimetorra]";
 		mes "So, would you like a monster card reading? ";
 		next;
-		switch(select("Yes.:I would like to think it over once more.")) {
+		switch(select("Yes.", "I would like to think it over once more.")) {
 		case 1:
 			mes "[Lhimetorra]";
 			mes "Then...";
@@ -59,12 +86,12 @@ payon_in03,117,128,5	script	Fortune Teller	4_M_BIBI,{
 			mes "...";
 			mes "Once you have emptied your mind, think of the thing you most wish to know.";
 			next;
-			switch(select(" (I would like to know my love fortune.) : (How rich will I be?) : (I need advice about my future.) : (Can I get a warning of any dangers awaiting?) ")) {
+			switch(select(" (I would like to know my love fortune.) ", " (How rich will I be?) ", " (I need advice about my future.) ", " (Can I get a warning of any dangers awaiting?) ")) {
 			case 1:
 				mes "[Lhimetorra]";
 				mes " I see it... I see a sign of love... ";
 				next;
-				set .@card_1_love,rand(1,74);
+				.@card_1_love = rand(1,74);
 				if (.@card_1_love == 1) {
 					cutin "가이아스카드",4; // Giearth Card
 					mes "[Lhimetorra]";
@@ -766,7 +793,7 @@ payon_in03,117,128,5	script	Fortune Teller	4_M_BIBI,{
 				mes "[Lhimetorra]";
 				mes " Ooh... something about your fortune is starting to show... ";
 				next;
-				set .@card_1_money,rand(1,73);
+				.@card_1_money = rand(1,73);
 				if (.@card_1_money == 1) {
 					cutin "가이아스카드",4; // Giearth Card
 					mes "[Lhimetorra]";
@@ -1436,7 +1463,7 @@ payon_in03,117,128,5	script	Fortune Teller	4_M_BIBI,{
 				mes "[Lhimetorra]";
 				mes " Future... the card that sees the future is beginning to speak...... Prepare yourself... ";
 				next;
-				set .@card_1_future,rand(1,67);
+				.@card_1_future = rand(1,67);
 				if (.@card_1_future == 1) {
 					cutin "가이아스카드",4; // Giearth Card
 					mes "[Lhimetorra]";
@@ -2086,7 +2113,7 @@ payon_in03,117,128,5	script	Fortune Teller	4_M_BIBI,{
 				mes "[Lhimetorra]";
 				mes " Someone that knows of the dangers you do not, will warn you in the form of cards... so listen carefully-! ";
 				next;
-				set .@card_1_warning,rand(1,70);
+				.@card_1_warning = rand(1,70);
 				if (.@card_1_warning == 1) {
 					cutin "가이아스카드",4; // Giearth Card
 					mes "[Lhimetorra]";
@@ -2733,17 +2760,17 @@ payon_in03,117,128,5	script	Fortune Teller	4_M_BIBI,{
 
 payon_in03,75,129,5	script	Poring Fortune Teller	4_M_BIBI,{
 	mes "[Chocarle]";
-	mes " Welcome, welcome~!! " +strcharinfo(0)+ "~!";
+	mes " Welcome, welcome~!! " +strcharinfo(PC_NAME)+ "~!";
 	mes " What brings you here today!? ";
 	next;
-	switch(select(" I would like a Poring card reading. : What is a Poring card reading? ")) {
+	switch(select(" I would like a Poring card reading. ", " What is a Poring card reading? ")) {
 	case 1:
 		mes "[Chocarle]";
 		mes " Ah~ is that so! ";
 		mes " Solving the wonders of the future with these cute and adorable Poring cards! ";
 		mes " It is 1000z for each fortune! Shall we begin? ";
 		next;
-		switch(select(" Yes. : I would like to think about it once more. ")) {
+		switch(select(" Yes. ", " I would like to think about it once more. ")) {
 		//=================================================================Fortune Teller ===
 		case 1:
 			if (Zeny < 1000) {
@@ -2761,14 +2788,14 @@ payon_in03,75,129,5	script	Poring Fortune Teller	4_M_BIBI,{
 			mes "[Chocarle]";
 			mes " Then~ gently think of your wish! ";
 			next;
-			switch(select(" (I'm curious about love!) : (I would like to do well in school!) : (Will my friendship be intact?) : (I want to know about my future self!) : (Will I make a lot of money?) ")) {
+			switch(select(" (I'm curious about love!) ", " (I would like to do well in school!) ", " (Will my friendship be intact?) ", " (I want to know about my future self!) ", " (Will I make a lot of money?) ")) {
 			//=================================================================Love ===
 			case 1:
 				mes "[Chocarle]";
 				mes " Ohh! Cute love fortune! Heh! Lets look at the cards! ";
 				next;
 				mes "[Chocarle]";
-				set .@card_2_love,rand(1,33);
+				.@card_2_love = rand(1,33);
 				if (.@card_2_love == 1) {
 					cutin "고스트링카드",4; // Ghostring Card
 					mes " Oh! Your lover is about to leave your side! Hold on tight! ";
@@ -2916,7 +2943,7 @@ payon_in03,75,129,5	script	Poring Fortune Teller	4_M_BIBI,{
 				mes " Issues about studying is a serious matter! Lets take a look! Yap! ";
 				next;
 				mes "[Chocarle]";
-				set .@card_2_study,rand(1,33);
+				.@card_2_study = rand(1,33);
 				if (.@card_2_study == 1) {
 					cutin "고스트링카드",4; // Ghostring Card
 					mes " Agh! Don't die from studying! Take breaks while you're at it! You need some rest! ";
@@ -3064,7 +3091,7 @@ payon_in03,75,129,5	script	Poring Fortune Teller	4_M_BIBI,{
 				mes " Relationships among friends is more difficult than people think! Let's use the cards to try and solve this complicated puzzle of friendship! ";
 				next;
 				mes "[Chocarle]";
-				set .@card_2_buddy,rand(1,33);
+				.@card_2_buddy = rand(1,33);
 				if (.@card_2_buddy == 1) {
 					cutin "고스트링카드",4; // Ghostring Card
 					mes " Ah! Your friend has gone crazy! They need the heal of friendship! ";
@@ -3212,7 +3239,7 @@ payon_in03,75,129,5	script	Poring Fortune Teller	4_M_BIBI,{
 				mes " If you say fortunetelling! Of course it is about the future! Let's try to figure this out! ";
 				next;
 				mes "[Chocarle]";
-				set .@card_2_future,rand(1,33);
+				.@card_2_future = rand(1,33);
 				if (.@card_2_future == 1) {
 					cutin "고스트링카드",4; // Ghostring Card
 					mes " Oh no! You are not confident about the future! Trust yourself a little more! Hope! ";
@@ -3362,7 +3389,7 @@ payon_in03,75,129,5	script	Poring Fortune Teller	4_M_BIBI,{
 				mes " Ok! Let's try it! ";
 				next;
 				mes "[Chocarle]";
-				set .@card_2_fortune,rand(1,33);
+				.@card_2_fortune = rand(1,33);
 				if (.@card_2_fortune == 1) {
 					cutin "고스트링카드",4; // Ghostring Card
 					mes " Uh oh! You're about to be robbed! You must save a little first! ";
@@ -3523,7 +3550,7 @@ payon_in03,75,129,5	script	Poring Fortune Teller	4_M_BIBI,{
 	}
 	close;
 }
-	
+
 payon_in03,118,119,1	script	Ascetic	4W_F_01,2,2,{
 	mes "[Kissy-Kissy]";
 	mes "NyangNyangNyang~";

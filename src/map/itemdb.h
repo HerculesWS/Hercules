@@ -1,19 +1,34 @@
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-// Portions Copyright (c) Athena Dev Teams
-
-#ifndef _MAP_ITEMDB_H_
-#define _MAP_ITEMDB_H_
-
-#include "../common/db.h"
-#include "../common/mmo.h" // ITEM_NAME_LENGTH
-#include "map.h"
-
 /**
- * Declarations
- **/
-struct item_group;
-struct item_package;
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2016  Hercules Dev Team
+ * Copyright (C)  Athena Dev Teams
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+#ifndef MAP_ITEMDB_H
+#define MAP_ITEMDB_H
+
+/* #include "map/map.h" */
+#include "common/hercules.h"
+#include "common/db.h"
+#include "common/mmo.h" // ITEM_NAME_LENGTH
+
+struct config_setting_t;
+struct script_code;
+struct hplugin_data_store;
 
 /**
  * Defines
@@ -38,7 +53,10 @@ enum item_itemid {
 	ITEMID_YELLOW_POTION         = 503,
 	ITEMID_WHITE_POTION          = 504,
 	ITEMID_BLUE_POTION           = 505,
+	ITEMID_APPLE                 = 512,
+	ITEMID_CARROT                = 515,
 	ITEMID_HOLY_WATER            = 523,
+	ITEMID_PUMPKIN               = 535,
 	ITEMID_RED_SLIM_POTION       = 545,
 	ITEMID_YELLOW_SLIM_POTION    = 546,
 	ITEMID_WHITE_SLIM_POTION     = 547,
@@ -47,6 +65,8 @@ enum item_itemid {
 	ITEMID_BRANCH_OF_DEAD_TREE   = 604,
 	ITEMID_ANODYNE               = 605,
 	ITEMID_ALOEBERA              = 606,
+	ITEMID_SPECTACLES            = 611,
+	ITEMID_POISON_BOTTLE         = 678,
 	ITEMID_EMPTY_BOTTLE          = 713,
 	ITEMID_EMPERIUM              = 714,
 	ITEMID_YELLOW_GEMSTONE       = 715,
@@ -55,6 +75,10 @@ enum item_itemid {
 	ITEMID_ORIDECON_STONE        = 756,
 	ITEMID_ALCHOL                = 970,
 	ITEMID_ORIDECON              = 984,
+	ITEMID_ANVIL                 = 986,
+	ITEMID_ORIDECON_ANVIL        = 987,
+	ITEMID_GOLDEN_ANVIL          = 988,
+	ITEMID_EMPERIUM_ANVIL        = 989,
 	ITEMID_BOODY_RED             = 990,
 	ITEMID_CRYSTAL_BLUE          = 991,
 	ITEMID_WIND_OF_VERDURE       = 992,
@@ -69,11 +93,15 @@ enum item_itemid {
 	ITEMID_IRON_ORE              = 1002,
 	ITEMID_PHRACON               = 1010,
 	ITEMID_EMVERETARCON          = 1011,
-	ITEMID_TRAP                  = 1065,
+	ITEMID_BOOBY_TRAP            = 1065,
 	ITEMID_PILEBUNCKER           = 1549,
 	ITEMID_ANGRA_MANYU           = 1599,
 	ITEMID_STRANGE_EMBRYO        = 6415,
 	ITEMID_FACE_PAINT            = 6120,
+	ITEMID_SCARLET_PTS           = 6360,
+	ITEMID_INDIGO_PTS            = 6361,
+	ITEMID_YELLOW_WISH_PTS       = 6362,
+	ITEMID_LIME_GREEN_PTS        = 6363,
 	ITEMID_STONE                 = 7049,
 	ITEMID_FIRE_BOTTLE           = 7135,
 	ITEMID_ACID_BOTTLE           = 7136,
@@ -83,7 +111,8 @@ enum item_itemid {
 	ITEMID_FRAGMENT_OF_CRYSTAL   = 7321,
 	ITEMID_SKULL_                = 7420,
 	ITEMID_TOKEN_OF_SIEGFRIED    = 7621,
-	ITEMID_TRAP_ALLOY            = 7940,
+	ITEMID_SPECIAL_ALLOY_TRAP    = 7940,
+	ITEMID_CATNIP_FRUIT          = 11602,
 	ITEMID_RED_POUCH_OF_SURPRISE = 12024,
 	ITEMID_BLOODY_DEAD_BRANCH    = 12103,
 	ITEMID_PORING_BOX            = 12109,
@@ -108,16 +137,34 @@ enum item_itemid {
 	ITEMID_MAGIC_CASTLE          = 12308,
 	ITEMID_BULGING_HEAD          = 12309,
 	ITEMID_THICK_MANUAL50        = 12312,
-	ITEMID_ANCILLA               = 12333,
-	ITEMID_REPAIR_A              = 12392,
-	ITEMID_REPAIR_B              = 12393,
-	ITEMID_REPAIR_C              = 12394,
+	ITEMID_N_MAGNIFIER           = 12325,
+	ITEMID_ANSILA                = 12333,
+	ITEMID_REPAIRA               = 12392,
+	ITEMID_REPAIRB               = 12393,
+	ITEMID_REPAIRC               = 12394,
 	ITEMID_BLACK_THING           = 12435,
-	ITEMID_REINS_OF_MOUNT        = 12622,
+	ITEMID_BOARDING_HALTER       = 12622,
 	ITEMID_NOBLE_NAMEPLATE       = 12705,
+	ITEMID_POISON_PARALYSIS      = 12717,
+	ITEMID_POISON_LEECH          = 12718,
+	ITEMID_POISON_OBLIVION       = 12719,
+	ITEMID_POISON_CONTAMINATION  = 12720,
+	ITEMID_POISON_NUMB           = 12721,
+	ITEMID_POISON_FEVER          = 12722,
+	ITEMID_POISON_LAUGHING       = 12723,
+	ITEMID_POISON_FATIGUE        = 12724,
+	ITEMID_NAUTHIZ               = 12725,
+	ITEMID_RAIDO                 = 12726,
+	ITEMID_BERKANA               = 12727,
+	ITEMID_ISA                   = 12728,
+	ITEMID_OTHILA                = 12729,
+	ITEMID_URUZ                  = 12730,
+	ITEMID_THURISAZ              = 12731,
+	ITEMID_WYRD                  = 12732,
+	ITEMID_HAGALAZ               = 12733,
 	ITEMID_DUN_TELE_SCROLL1      = 14527,
 	ITEMID_BATTLE_MANUAL25       = 14532,
-	ITEMIDBATTLE_MANUAL100       = 14533,
+	ITEMID_BATTLE_MANUAL100      = 14533,
 	ITEMID_BATTLE_MANUAL_X3      = 14545,
 	ITEMID_DUN_TELE_SCROLL2      = 14581,
 	ITEMID_WOB_RUNE              = 14582,
@@ -126,6 +173,10 @@ enum item_itemid {
 	ITEMID_WOB_LOCAL             = 14585,
 	ITEMID_SIEGE_TELEPORT_SCROLL = 14591,
 	ITEMID_JOB_MANUAL50          = 14592,
+	ITEMID_PILEBUNCKER_S         = 16030,
+	ITEMID_PILEBUNCKER_P         = 16031,
+	ITEMID_PILEBUNCKER_T         = 16032,
+	ITEMID_LUX_ANIMA             = 22540,
 };
 
 enum cards_item_list {
@@ -215,49 +266,6 @@ enum mercenary_scroll_item_list {
 };
 
 /**
- * Cash Food
- */
-enum cash_food_item_list {
-	ITEMID_STR_DISH10_   = 12202,
-	ITEMID_AGI_DISH10_, // 12203
-	ITEMID_INT_DISH10_, // 12204
-	ITEMID_DEX_DISH10_, // 12205
-	ITEMID_LUK_DISH10_, // 12206
-	ITEMID_VIT_DISH10_, // 12207
-};
-
-/**
- * GC Poison
- */
-enum poison_item_list {
-	ITEMID_POISON_PARALYSIS       = 12717,
-	ITEMID_POISON_LEECH,         // 12718
-	ITEMID_POISON_OBLIVION,      // 12719
-	ITEMID_POISON_CONTAMINATION, // 12720
-	ITEMID_POISON_NUMB,          // 12721
-	ITEMID_POISON_FEVER,         // 12722
-	ITEMID_POISON_LAUGHING,      // 12723
-	ITEMID_POISON_FATIGUE,       // 12724
-};
-
-
-/**
- * Rune Knight
- **/
-enum rune_item_list {
-	ITEMID_NAUTHIZ    = 12725,
-	ITEMID_RAIDO,    // 12726
-	ITEMID_BERKANA,  // 12727
-	ITEMID_ISA,      // 12728
-	ITEMID_OTHILA,   // 12729
-	ITEMID_URUZ,     // 12730
-	ITEMID_THURISAZ, // 12731
-	ITEMID_WYRD,     // 12732
-	ITEMID_HAGALAZ,  // 12733
-	ITEMID_LUX_ANIMA  = 22540,
-};
-
-/**
  * Geneticist
  */
 enum geneticist_item_list {
@@ -316,10 +324,6 @@ enum geneticist_item_list {
 	ITEMID_BLACK_THING_TO_THROW,   // 13290
 };
 
-enum item_nouse_list {
-	NOUSE_SITTING = 0x01,
-};
-
 //
 enum e_chain_cache {
 	ECC_ORE,
@@ -338,69 +342,51 @@ enum item_class_upper {
 	ITEMUPPER_ALL        = 0x3f, // Sum of all the above
 };
 
-struct item_data {
-	uint16 nameid;
-	char name[ITEM_NAME_LENGTH],jname[ITEM_NAME_LENGTH];
-	
-	//Do not add stuff between value_buy and view_id (see how getiteminfo works)
-	int value_buy;
-	int value_sell;
-	int type;
-	int maxchance; //For logs, for external game info, for scripts: Max drop chance of this item (e.g. 0.01% , etc.. if it = 0, then monsters don't drop it, -1 denotes items sold in shops only) [Lupus]
-	int sex;
-	int equip;
-	int weight;
-	int atk;
-	int def;
-	int range;
-	int slot;
-	int look;
-	int elv;
-	int wlv;
-	int view_id;
-	int matk;
-	int elvmax;/* maximum level for this item */
+/**
+ * Item Trade restrictions
+ */
+enum ItemTradeRestrictions {
+	ITR_NONE            = 0x000, ///< No restrictions
+	ITR_NODROP          = 0x001, ///< Item can't be dropped
+	ITR_NOTRADE         = 0x002, ///< Item can't be traded (nor vended)
+	ITR_PARTNEROVERRIDE = 0x004, ///< Wedded partner can override ITR_NOTRADE restriction
+	ITR_NOSELLTONPC     = 0x008, ///< Item can't be sold to NPCs
+	ITR_NOCART          = 0x010, ///< Item can't be placed in the cart
+	ITR_NOSTORAGE       = 0x020, ///< Item can't be placed in the storage
+	ITR_NOGSTORAGE      = 0x040, ///< Item can't be placed in the guild storage
+	ITR_NOMAIL          = 0x080, ///< Item can't be attached to mail messages
+	ITR_NOAUCTION       = 0x100, ///< Item can't be auctioned
 
-	int delay;
-//Lupus: I rearranged order of these fields due to compatibility with ITEMINFO script command
-//		some script commands should be revised as well...
-	unsigned int class_base[3];	//Specifies if the base can wear this item (split in 3 indexes per type: 1-1, 2-1, 2-2)
-	unsigned class_upper : 6; //Specifies if the upper-type can equip it (bitfield, 0x01: normal, 0x02: upper, 0x04: baby normal, 0x08: third normal, 0x10: third upper, 0x20: third baby)
-	struct {
-		unsigned short chance;
-		int id;
-	} mob[MAX_SEARCH]; //Holds the mobs that have the highest drop rate for this item. [Skotlex]
-	struct script_code *script;	//Default script for everything.
-	struct script_code *equip_script;	//Script executed once when equipping.
-	struct script_code *unequip_script;//Script executed once when unequipping.
-	struct {
-		unsigned available : 1;
-		unsigned no_refine : 1;	// [celest]
-		unsigned delay_consume : 1;	// Signifies items that are not consumed immediately upon double-click [Skotlex]
-		unsigned trade_restriction : 9;	//Item restrictions mask [Skotlex]
-		unsigned autoequip: 1;
-		unsigned buyingstore : 1;
-		unsigned bindonequip : 1;
-	} flag;
-	struct {// item stacking limitation
-		unsigned short amount;
-		unsigned int inventory:1;
-		unsigned int cart:1;
-		unsigned int storage:1;
-		unsigned int guildstorage:1;
-	} stack;
-	struct {// used by item_nouse.txt
-		unsigned int flag;
-		unsigned short override;
-	} item_usage;
-	short gm_lv_trade_override;	//GM-level to override trade_restriction
-	/* bugreport:309 */
-	struct item_combo **combos;
-	unsigned char combos_count;
-	/* TODO add a pointer to some sort of (struct extra) and gather all the not-common vals into it to save memory */
-	struct item_group *group;
-	struct item_package *package;
+	ITR_ALL             = 0x1ff  ///< Sum of all the above values
 };
+
+/**
+ * Item No-use restrictions
+ */
+enum ItemNouseRestrictions {
+	INR_NONE    = 0x0, ///< No restrictions
+	INR_SITTING = 0x1, ///< Item can't be used while sitting
+
+	INR_ALL     = 0x1 ///< Sum of all the above values
+};
+
+/**
+ * Item Option Types
+ */
+enum ItemOptionTypes {
+	IT_OPT_INDEX = 0,
+	IT_OPT_VALUE,
+	IT_OPT_PARAM,
+	IT_OPT_MAX
+};
+
+/** Convenience item list (entry) used in various functions */
+struct itemlist_entry {
+	int id;       ///< Item ID or (inventory) index
+	int16 amount; ///< Amount
+};
+/** Convenience item list used in various functions */
+VECTOR_STRUCT_DECL(itemlist, struct itemlist_entry);
 
 struct item_combo {
 	struct script_code *script;
@@ -433,6 +419,7 @@ struct item_package_rand_entry {
 	unsigned short hours;
 	unsigned int announce : 1;
 	unsigned int named : 1;
+	unsigned int force_serial: 1;
 	struct item_package_rand_entry *next;
 };
 
@@ -442,6 +429,7 @@ struct item_package_must_entry {
 	unsigned short hours;
 	unsigned int announce : 1;
 	unsigned int named : 1;
+	unsigned int force_serial : 1;
 };
 
 struct item_package_rand_group {
@@ -455,6 +443,80 @@ struct item_package {
 	struct item_package_must_entry *must_items;
 	unsigned short random_qty;
 	unsigned short must_qty;
+};
+
+struct item_option {
+	int16 index;
+	struct script_code *script;
+};
+
+struct item_data {
+	uint16 nameid;
+	char name[ITEM_NAME_LENGTH],jname[ITEM_NAME_LENGTH];
+
+	//Do not add stuff between value_buy and view_id (see how getiteminfo works)
+	int value_buy;
+	int value_sell;
+	int type;
+	int maxchance; //For logs, for external game info, for scripts: Max drop chance of this item (e.g. 0.01% , etc.. if it = 0, then monsters don't drop it, -1 denotes items sold in shops only) [Lupus]
+	int sex;
+	int equip;
+	int weight;
+	int atk;
+	int def;
+	int range;
+	int slot;
+	int look;
+	int elv;
+	int wlv;
+	int view_id;
+	int matk;
+	int elvmax;/* maximum level for this item */
+
+	int delay;
+//Lupus: I rearranged order of these fields due to compatibility with ITEMINFO script command
+//       some script commands should be revised as well...
+	uint64 class_base[3]; ///< Specifies if the base can wear this item (split in 3 indexes per type: 1-1, 2-1, 2-2)
+	unsigned class_upper : 6;   ///< Specifies if the upper-type can equip it (bitfield, 0x01: normal, 0x02: upper, 0x04: baby normal, 0x08: third normal, 0x10: third upper, 0x20: third baby)
+	struct {
+		unsigned short chance;
+		int id;
+	} mob[MAX_SEARCH];                  ///< Holds the mobs that have the highest drop rate for this item. [Skotlex]
+	struct script_code *script;         ///< Default script for everything.
+	struct script_code *equip_script;   ///< Script executed once when equipping.
+	struct script_code *unequip_script; ///< Script executed once when unequipping.
+	struct {
+		unsigned available : 1;
+		unsigned no_refine : 1; // [celest]
+		unsigned delay_consume : 1;     ///< Signifies items that are not consumed immediately upon double-click [Skotlex]
+		unsigned trade_restriction : 9; ///< Item trade restrictions mask (@see enum ItemTradeRestrictions)
+		unsigned autoequip: 1;
+		unsigned buyingstore : 1;
+		unsigned bindonequip : 1;
+		unsigned keepafteruse : 1;
+		unsigned force_serial : 1;
+		unsigned no_options: 1; // < disallows use of item options on the item. (non-equippable items are automatically flagged) [Smokexyz]
+		unsigned drop_announce : 1; // Official Drop Announce [Jedzkie]
+	} flag;
+	struct {// item stacking limitation
+		unsigned short amount;
+		unsigned int inventory:1;
+		unsigned int cart:1;
+		unsigned int storage:1;
+		unsigned int guildstorage:1;
+	} stack;
+	struct {
+		unsigned int flag; ///< Item nouse restriction mask (@see enum ItemNouseRestrictions)
+		unsigned short override;
+	} item_usage;
+	short gm_lv_trade_override; ///< GM-level to override trade_restriction
+	/* bugreport:309 */
+	struct item_combo **combos;
+	unsigned char combos_count;
+	/* TODO add a pointer to some sort of (struct extra) and gather all the not-common vals into it to save memory */
+	struct item_group *group;
+	struct item_package *package;
+	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
 
 #define itemdb_name(n)        (itemdb->search(n)->name)
@@ -476,15 +538,17 @@ struct item_package {
 #define itemdb_value_buy(n)   (itemdb->search(n)->value_buy)
 #define itemdb_value_sell(n)  (itemdb->search(n)->value_sell)
 #define itemdb_canrefine(n)   (!itemdb->search(n)->flag.no_refine)
+#define itemdb_allowoption(n) (!itemdb->search(n)->flag.no_options)
 
-#define itemdb_is_rune(n)        (((n) >= ITEMID_NAUTHIZ && (n) <= ITEMID_HAGALAZ) || (n) == ITEMID_LUX_ANIMA)
-#define itemdb_is_element(n)     ((n) >= ITEMID_BOODY_RED && (n) <= ITEMID_YELLOW_LIVE)
+#define itemdb_is_element(n)     ((n) >= ITEMID_SCARLET_PTS && (n) <= ITEMID_LIME_GREEN_PTS)
 #define itemdb_is_spellbook(n)   ((n) >= ITEMID_MAGIC_BOOK_FB && (n) <= ITEMID_MAGIC_BOOK_DL)
 #define itemdb_is_poison(n)      ((n) >= ITEMID_POISON_PARALYSIS && (n) <= ITEMID_POISON_FATIGUE)
 #define itemid_isgemstone(n)     ((n) >= ITEMID_YELLOW_GEMSTONE && (n) <= ITEMID_BLUE_GEMSTONE)
-#define itemdb_iscashfood(n)     ((n) >= ITEMID_STR_DISH10_ && (n) <= ITEMID_VIT_DISH10_)
 #define itemdb_is_GNbomb(n)      ((n) >= ITEMID_APPLE_BOMB && (n) <= ITEMID_VERY_HARD_LUMP)
 #define itemdb_is_GNthrowable(n) ((n) >= ITEMID_MYSTERIOUS_POWDER && (n) <= ITEMID_BLACK_THING_TO_THROW)
+#define itemid_is_pilebunker(n)  ((n) == ITEMID_PILEBUNCKER || (n) == ITEMID_PILEBUNCKER_P || (n) == ITEMID_PILEBUNCKER_S || (n) == ITEMID_PILEBUNCKER_T)
+#define itemdb_is_shadowequip(n) ((n) & (EQP_SHADOW_ARMOR|EQP_SHADOW_WEAPON|EQP_SHADOW_SHIELD|EQP_SHADOW_SHOES|EQP_SHADOW_ACC_R|EQP_SHADOW_ACC_L))
+#define itemdb_is_costumeequip(n) ((n) & (EQP_COSTUME_HEAD_TOP|EQP_COSTUME_HEAD_MID|EQP_COSTUME_HEAD_LOW|EQP_COSTUME_GARMENT))
 
 //Item trade restrictions [Skotlex]
 #define itemdb_isdropable(item, gmlv)             (itemdb->isrestricted((item), (gmlv), 0, itemdb->isdropable_sub))
@@ -516,15 +580,17 @@ struct itemdb_interface {
 	struct item_combo **combos;
 	unsigned short combo_count;
 	/* */
-	DBMap *names;
+	struct DBMap *names;
 	/* */
 	struct item_data *array[MAX_ITEMDB];
-	DBMap *other;// int nameid -> struct item_data*
+	struct DBMap *other;// int nameid -> struct item_data*
+	struct DBMap *options; // int opt_id -> struct item_option*
 	struct item_data dummy; //This is the default dummy item used for non-existant items. [Skotlex]
 	/* */
 	void (*read_groups) (void);
 	void (*read_chains) (void);
 	void (*read_packages) (void);
+	void (*read_options) (void);
 	/* */
 	void (*write_cached_packages) (const char *config_filename);
 	bool (*read_cached_packages) (const char *config_filename);
@@ -535,15 +601,17 @@ struct itemdb_interface {
 	struct item_data* (*load)(int nameid);
 	struct item_data* (*search)(int nameid);
 	struct item_data* (*exists) (int nameid);
+	struct item_option* (*option_exists) (int idx);
 	bool (*in_group) (struct item_group *group, int nameid);
 	int (*group_item) (struct item_group *group);
 	int (*chain_item) (unsigned short chain_id, int *rate);
 	void (*package_item) (struct map_session_data *sd, struct item_package *package);
-	int (*searchname_sub) (DBKey key, DBData *data, va_list ap);
-	int (*searchname_array_sub) (DBKey key, DBData data, va_list ap);
+	int (*searchname_sub) (union DBKey key, struct DBData *data, va_list ap);
+	int (*searchname_array_sub) (union DBKey key, struct DBData data, va_list ap);
 	int (*searchrandomid) (struct item_group *group);
 	const char* (*typename) (int type);
-	void (*jobid2mapid) (unsigned int *bclass, unsigned int jobmask);
+	void (*jobmask2mapid) (uint64 *bclass, uint64 jobmask);
+	void (*jobid2mapid) (uint64 *bclass, int job_class, bool enable);
 	void (*create_dummy_data) (void);
 	struct item_data* (*create_item_data) (int nameid);
 	int (*isequip) (int nameid);
@@ -562,31 +630,30 @@ struct itemdb_interface {
 	int (*isrestricted) (struct item *item, int gmlv, int gmlv2, int(*func)(struct item_data *, int, int));
 	int (*isidentified) (int nameid);
 	int (*isidentified2) (struct item_data *data);
-	bool (*read_itemavail) (char *str[], int columns, int current);
-	bool (*read_itemtrade) (char *str[], int columns, int current);
-	bool (*read_itemdelay) (char *str[], int columns, int current);
-	bool (*read_stack) (char *fields[], int columns, int current);
-	bool (*read_buyingstore) (char *fields[], int columns, int current);
-	bool (*read_nouse) (char *fields[], int columns, int current);
 	int (*combo_split_atoi) (char *str, int *val);
-	void (*read_combos) ();
+	void (*read_combos) (void);
 	int (*gendercheck) (struct item_data *id);
 	int (*validate_entry) (struct item_data *entry, int n, const char *source);
-	int (*readdb_sql_sub) (Sql *handle, int n, const char *source);
-	int (*readdb_libconfig_sub) (config_setting_t *it, int n, const char *source);
+	void (*readdb_options_additional_fields) (struct item_option *ito, struct config_setting_t *t, const char *source);
+	void (*readdb_additional_fields) (int itemid, struct config_setting_t *it, int n, const char *source);
+	void (*readdb_job_sub) (struct item_data *id, struct config_setting_t *t);
+	int (*readdb_libconfig_sub) (struct config_setting_t *it, int n, const char *source);
 	int (*readdb_libconfig) (const char *filename);
-	int (*readdb_sql) (const char *tablename);
-	uint64 (*unique_id) (int8 flag, int64 value);
-	int (*uid_load) ();
+	uint64 (*unique_id) (struct map_session_data *sd);
 	void (*read) (bool minimal);
 	void (*destroy_item_data) (struct item_data *self, int free_self);
-	int (*final_sub) (DBKey key, DBData *data, va_list ap);
+	int (*final_sub) (union DBKey key, struct DBData *data, va_list ap);
+	int (*options_final_sub) (union DBKey key, struct DBData *data, va_list ap);
 	void (*clear) (bool total);
 	struct item_combo * (*id2combo) (unsigned short id);
+	bool (*is_item_usable) (struct item_data *item);
+	bool (*lookup_const) (const struct config_setting_t *it, const char *name, int *value);
 };
 
-struct itemdb_interface *itemdb;
-
+#ifdef HERCULES_CORE
 void itemdb_defaults(void);
+#endif // HERCULES_CORE
 
-#endif /* _MAP_ITEMDB_H_ */
+HPShared struct itemdb_interface *itemdb;
+
+#endif /* MAP_ITEMDB_H */

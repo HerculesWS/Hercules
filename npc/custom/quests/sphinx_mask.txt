@@ -37,7 +37,7 @@ L_Menu:
 		case 2: mes "Ahh a business man are you no?  Fine, how about..."; break;
 		case 3: mes "Hmmm... you drive a hard bargain, ok... my final offer..."; break; }
 	next;
-	if(select("Pay "+getarg(1)+"z:No deal")==2) return;
+	if(select("Pay "+getarg(1)+"z", "No deal")==2) return;
 	mes "[Turban Thief]";
 	if (Zeny < getarg(2)) {
 		mes "Are youz playin wit me? You don't have ze money!";

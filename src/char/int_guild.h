@@ -1,8 +1,28 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2016  Hercules Dev Team
+ * Copyright (C)  Athena Dev Teams
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+#ifndef CHAR_INT_GUILD_H
+#define CHAR_INT_GUILD_H
 
-#ifndef _CHAR_INT_GUILD_H_
-#define _CHAR_INT_GUILD_H_
+#include "common/db.h"
+#include "common/mmo.h"
 
 enum {
 	GS_BASIC = 0x0001,
@@ -20,18 +40,42 @@ enum {
 	GS_REMOVE = 0x8000,
 };
 
-struct guild;
-struct guild_castle;
+/**
+ * inter_guild interface
+ **/
+struct inter_guild_interface {
+	struct DBMap *guild_db; // int guild_id -> struct guild*
+	struct DBMap *castle_db;
+	unsigned int exp[MAX_GUILDLEVEL];
 
-int inter_guild_parse_frommap(int fd);
-int inter_guild_sql_init(void);
-void inter_guild_sql_final(void);
-int inter_guild_leave(int guild_id,int account_id,int char_id);
-int mapif_parse_BreakGuild(int fd,int guild_id);
-int inter_guild_broken(int guild_id);
-int inter_guild_sex_changed(int guild_id,int account_id,int char_id, short gender);
-int inter_guild_charname_changed(int guild_id,int account_id, int char_id, char *name);
-int inter_guild_CharOnline(int char_id, int guild_id);
-int inter_guild_CharOffline(int char_id, int guild_id);
+	int (*save_timer) (int tid, int64 tick, int id, intptr_t data);
+	int (*removemember_tosql) (int account_id, int char_id);
+	int (*tosql) (struct guild *g, int flag);
+	struct guild* (*fromsql) (int guild_id);
+	int (*castle_tosql) (struct guild_castle *gc);
+	struct guild_castle* (*castle_fromsql) (int castle_id);
+	bool (*exp_parse_row) (char* split[], int column, int current);
+	int (*CharOnline) (int char_id, int guild_id);
+	int (*CharOffline) (int char_id, int guild_id);
+	int (*sql_init) (void);
+	int (*db_final) (union DBKey key, struct DBData *data, va_list ap);
+	void (*sql_final) (void);
+	int (*search_guildname) (const char *str);
+	bool (*check_empty) (struct guild *g);
+	unsigned int (*nextexp) (int level);
+	int (*checkskill) (struct guild *g, int id);
+	int (*calcinfo) (struct guild *g);
+	int (*sex_changed) (int guild_id, int account_id, int char_id, short gender);
+	int (*charname_changed) (int guild_id, int account_id, int char_id, char *name);
+	int (*parse_frommap) (int fd);
+	int (*leave) (int guild_id, int account_id, int char_id);
+	int (*broken) (int guild_id);
+};
 
-#endif /* _CHAR_INT_GUILD_H_ */
+#ifdef HERCULES_CORE
+void inter_guild_defaults(void);
+#endif // HERCULES_CORE
+
+HPShared struct inter_guild_interface *inter_guild;
+
+#endif /* CHAR_INT_GUILD_H */

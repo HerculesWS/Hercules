@@ -93,7 +93,7 @@
 #define NETWARE_SET_SCREEN_MODE(A)
 #endif
 
-#include "../common/strlib.h"
+#include "common/strlib.h"
 
 /*
   The macros below are borrowed from include/linux/compiler.h in the

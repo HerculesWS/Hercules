@@ -1,26 +1,53 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  Masao
+//= Copyright (C)  Chilly
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Eden Group Quests - Mission [91 - 99]
-//===== By: ==================================================
-//= Chilly
-//===== Current Version: =====================================
-//= 1.3
-//===== Description: =========================================
+//================= File Encoding =========================================
+//= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
+//= -If the encoding is correct, the next three lines have the same length-
+//= ============ ∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞ ============
+//= ============ ============================================= ============
+//= ============ ≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠ ============
+//================= Description ===========================================
 //= Repetable Quests for Players between Baselevel 91 - 99.
-//===== Additional Comments: =================================
-//= 1.0 First Version. [Chilly]
-//= 1.1 Some little improvements here and there. [Masao]
-//= 1.2 Optimized. [Euphy]
-//= 1.3 Updated to match the official script. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.3
+//=========================================================================
 
 moc_para01,48,177,3	script	91-99 Mission Board	4_BOARD3,{
-	if (countitem(6219) < 1) {
+	if (countitem(Para_Team_Mark) < 1 && countitem(Para_Team_Mark_) < 1) {
 		mes "Wait a minute!";
 		mes "-You need to have an-";
 		mes "-^4d4dff'Eden Group Mark'^000000-";
 		mes "-to receive these missions.-";
 		next;
-		switch(select("Just walk away.:^0000FFEden Group^000000 missions?:How can I be a member of the ^0000FFEden Group^000000?")) {
+		switch(select("Just walk away.", "^0000FFEden Group^000000 missions?", "How can I be a member of the ^0000FFEden Group^000000?")) {
 		case 1:
 			close;
 		case 2:
@@ -77,9 +104,9 @@ moc_para01,48,177,3	script	91-99 Mission Board	4_BOARD3,{
 			102000,108000,
 			110000,138000,118000,96000,134000;
 		mes "You must be within level 91-99 to accept these missions.";
-		for(set .@quest,4181; .@quest<=4196; set .@quest,.@quest+1) {
-			set .@hunting, checkquest(.@quest,HUNTING);
-			if (.@hunting == 0 || .@hunting == 1) {
+		for(.@quest = 4181; .@quest<=4196; ++.@quest) {
+			.@hunting = questprogress(.@quest,HUNTING);
+			if (.@hunting == 1) {
 				next;
 				mes ":: You cannot proceed in";
 				mes ":: ^0000FF"+.@names$[.@quest-4181]+" Hunting^000000.";
@@ -105,12 +132,12 @@ moc_para01,48,177,3	script	91-99 Mission Board	4_BOARD3,{
 	mes "[91-99 Mission Board]";
 	mes "There are several requests on this board.";
 	next;
-	switch(select("^8B4513Turtle Island^000000:^8B4513Glast Heim^000000:^8B4513Rachel / Veins^000000:^8B4513Expansion Cities^000000:^8B4513Other regions^000000")) {
+	switch(select("^8B4513Turtle Island^000000", "^8B4513Glast Heim^000000", "^8B4513Rachel / Veins^000000", "^8B4513Expansion Cities^000000", "^8B4513Other regions^000000")) {
 	case 1:
 		mes "^8B4513Turtle Island^000000.";
 		mes "Which monster will you hunt or have you finished hunting?";
 		next;
-		switch(select("^0000FFSolider^000000:^0000FFFreezer^000000:^0000FFHeater^000000")) {
+		switch(select("^0000FFSolider^000000", "^0000FFFreezer^000000", "^0000FFHeater^000000")) {
 			case 1: callsub L_Quest,4181,"Solider",90000,"솔리더카드","There is a monster that only can be found on ^8B4513Turtle Island^000000.";
 			case 2: callsub L_Quest,4182,"Freezer",94000,"프리저카드","There is a monster that only can be found on ^8B4513Turtle Island^000000.";
 			case 3: callsub L_Quest,4183,"Heater",114000,"히터카드","There is a monster that only can be found on ^8B4513Turtle Island^000000.";
@@ -119,7 +146,7 @@ moc_para01,48,177,3	script	91-99 Mission Board	4_BOARD3,{
 		mes "^8B4513Glast Heim^000000.";
 		mes "Which monster will you hunt or have you finished hunting?";
 		next;
-		switch(select("^0000FFInjustice^000000:^0000FFRybio^000000:^0000FFDark Priest^000000")) {
+		switch(select("^0000FFInjustice^000000", "^0000FFRybio^000000", "^0000FFDark Priest^000000")) {
 			case 1: callsub L_Quest,4184,"Injustice",96000,"인저스티스카드","There is a monster only found in ^8B4513Glast Heim prison^000000.";
 			case 2: callsub L_Quest,4185,"Rybio",96000,"리비오카드","There is a monster only found in ^8B4513Glast Heim prison^000000.";
 			case 3: callsub L_Quest,4186,"Dark Priest",146000,"다크프리스트카드","There is a monster only found in ^8B4513Glast Heim prison^000000.";
@@ -128,7 +155,7 @@ moc_para01,48,177,3	script	91-99 Mission Board	4_BOARD3,{
 		mes "^8B4513Rachel / Veins^000000.";
 		mes "Which monster will you hunt or have you finished hunting?";
 		next;
-		switch(select("^0000FFStapo^000000:^0000FFRoween^000000:^0000FFSiroma^000000")) {
+		switch(select("^0000FFStapo^000000", "^0000FFRoween^000000", "^0000FFSiroma^000000")) {
 			case 1: callsub L_Quest,4187,"Stapo",96000,"스태포카드","There is a monster only found in ^8B4513Veins^000000.";
 			case 2: callsub L_Quest,4188,"Roween",102000,"로우윈카드","There is a monster only found in ^8B4513Rachel^000000.";
 			case 3: callsub L_Quest,4189,"Siroma",110000,"시로마카드","There is a monster only found in ^8B4513Ice Dungeon^000000.";
@@ -137,7 +164,7 @@ moc_para01,48,177,3	script	91-99 Mission Board	4_BOARD3,{
 		mes "^8B4513Expansion Cities^000000.";
 		mes "Which monster will you hunt or have you finished hunting?";
 		next;
-		switch(select("^0000FFShinobi^000000:^0000FFEvil Nymph^000000")) {
+		switch(select("^0000FFShinobi^000000", "^0000FFEvil Nymph^000000")) {
 			case 1: callsub L_Quest,4190,"Shinobi",102000,"시노비카드","There is a monster only found in ^8B4513Amatsu Dungeon^000000.";
 			case 2: callsub L_Quest,4191,"Evil Nymph",108000,"요선녀카드","There is a monster only found in ^8B4513Kunlun Dungeon^000000.";
 		}
@@ -145,7 +172,7 @@ moc_para01,48,177,3	script	91-99 Mission Board	4_BOARD3,{
 		mes "Other Regions.";
 		mes "Which monster will you hunt or have you finished hunting?";
 		next;
-		switch(select("^0000FFDeviruchi^000000:^0000FFMineral^000000:^0000FFKaho^000000:^0000FFNeraid^000000:^0000FFDisguise^000000")) {
+		switch(select("^0000FFDeviruchi^000000", "^0000FFMineral^000000", "^0000FFKaho^000000", "^0000FFNeraid^000000", "^0000FFDisguise^000000")) {
 			case 1: callsub L_Quest,4192,"Deviruchi",110000,"데비루치카드","There is a monster only found in ^8B4513Geffen Dungeon^000000.";
 			case 2: callsub L_Quest,4193,"Mineral",138000,"미네랄","There is a monster only found in ^8B4513Einbech Dungeon^000000.";
 			case 3: callsub L_Quest,4194,"Kaho",118000,"카호카드","There is a monster found in ^8B4513Nogg Road Magma 1^000000.";
@@ -157,16 +184,16 @@ moc_para01,48,177,3	script	91-99 Mission Board	4_BOARD3,{
 
 //callsub L_Quest,<quest ID>,"<monster name>",<reward EXP>,"<cutin image>","<description>"{,"s"};
 L_Quest:
-	set .@quest1, getarg(0);
-	set .@quest2, .@quest1+31;
-	set .@playtime, checkquest(.@quest2,PLAYTIME);
-	if (.@playtime == 0 || .@playtime == 1) {
+	.@quest1 = getarg(0);
+	.@quest2 = .@quest1+31;
+	.@playtime = questprogress(.@quest2,PLAYTIME);
+	if (.@playtime == 1) {
 		mes "[91-99 Mission Board]";
 		mes "You need to wait 3 hours before you can take this mission again.";
 		close;
 	}
-	set .@hunting, checkquest(.@quest1,HUNTING);
-	if (.@hunting == 0 || .@hunting == 1) {
+	.@hunting = questprogress(.@quest1,HUNTING);
+	if (.@hunting == 1) {
 		mes "[91-99 Mission Board]";
 		mes "Have you finished hunting all 30 "+getarg(1)+getarg(5,"")+" yet?";
 		close;
@@ -175,15 +202,15 @@ L_Quest:
 		mes "You have completed the hunting.";
 		mes "Please accept this reward as a compensation.";
 		erasequest .@quest1;
-		if (.@playtime > -1) erasequest .@quest2;
+		if (.@playtime) erasequest .@quest2;
 		setquest .@quest2;
 
 		// Job Experience calculation.
-		if (JobLevel > 50 && JobLevel < 56) set .@jexp,67000;
-		else if (JobLevel > 55 && JobLevel < 61) set .@jexp,94000;
-		else if (JobLevel > 60 && JobLevel < 66) set .@jexp,141000;
-		else if (JobLevel > 65 && JobLevel < 69) set .@jexp,212000;
-		else if (JobLevel == 69) set .@jexp,311000;
+		if (JobLevel < 56) .@jexp = 67000;
+		else if (JobLevel > 55 && JobLevel < 61) .@jexp = 94000;
+		else if (JobLevel > 60 && JobLevel < 66) .@jexp = 141000;
+		else if (JobLevel > 65 && JobLevel < 69) .@jexp = 212000;
+		else if (JobLevel >= 69) .@jexp = 311000;
 
 		getexp getarg(2),.@jexp;
 		close;
@@ -202,10 +229,10 @@ L_Quest:
 		mes "Hunt 30 "+getarg(1)+" monsters there and post your success on this board.";
 		next;
 		if (getarg(3) != "") cutin getarg(3),255;
-		if(select("I'll hunt them.:No thanks.") == 1) {
+		if(select("I'll hunt them.", "No thanks.") == 1) {
 			mes "[91-99 Mission Board]";
 			mes "When you have completed the mission, post it on this board and collect your reward.";
-			if (.@playtime > -1) erasequest .@quest2;
+			if (.@playtime) erasequest .@quest2;
 			setquest .@quest1;
 		}
 		close;

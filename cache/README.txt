@@ -4,5 +4,5 @@
 //= Hercules Dev Team
 //============================================================
 
-No touching these folders or the files in them!
-they are read and written by the server during runtime when it feels it is wise.
+Don't touch these folders or files inside of them!
+They are read and written by the server during runtime when it feels it is wise.

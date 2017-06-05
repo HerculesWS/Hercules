@@ -1,0 +1,2568 @@
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2014-2015  Hercules Dev Team
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  Playtester
+//= Copyright (C)  erKURITA
+//= Copyright (C)  Kisuka
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Halloween Event (2014)
+//================= Description ===========================================
+//= The Official 2014 Halloween Event
+//=
+//= Help an Exhausted Priest collect souls in exchange for Candy Holders.
+//= Help some spirits in Niflheim figure out which one among them isn't
+//= dead.
+//= Collect 10 Red Scarf and 10 Hanging Doll for a spirit by the name of
+//= Loru.
+//= Hunt 20 Hylozoists and 20 Bloody Murderers for a spirit by the name of
+//= Devi.
+//================= Current Version =======================================
+//= 1.0.0
+//=========================================================================
+
+//== Exhausted Priest ======================================
+-	script	Exhausted Priest#14hal::Hal14Priest	4_M_MINISTER,{
+	if (!checkweight("Orcish_Axe", 3)) {
+		mes "[Exhausted Priest]";
+		mes "Why don't you reduce your weight to catch the soul?";
+		mes "They are faster than you think.";
+		close;
+	}
+	if (BaseLevel < 50) {
+		mes "[Mighty Priest]";
+		mes "I..I am too exhausted!";
+		mes "Oh..Dear Odin, why have you caused this pain for me...";
+		next;
+		mes "[Mighty Priest]";
+		mes "I hope that someone very strong and patient will help me..";
+		close;
+	} else {
+		if (questprogress(14450) ==  2) {
+			mes "[Mighty Priest]";
+			mes (Sex == SEX_MALE ? "Brother" : "Sister") +", it's good to see you again!";
+			mes "came here to see me because of that?";
+			next;
+			mes "[Mighty Priest]";
+			mes "You brought the Soul, right?";
+			mes "Let's take a look at it.";
+			next;
+			if (countitem("Captured_Soul") > 4 && countitem("Black_Soul") > 0) {
+				mes "[Mighty Priest]";
+				mes "Wow, this is so strong!";
+				mes "You may be better than our priests!";
+				next;
+				mes "[Mighty Priest]";
+				mes "Let's keep doing this!";
+				mes "Here you are. See you next time!";
+				close2;
+				delitem Captured_Soul, 5;
+				delitem Black_Soul, 1;
+				getitem Something_Candy_Holder, 1;
+				getitem DARK_INVITATION, 1;
+				end;
+			} else {
+				mes "[Mighty Priest]";
+				mes "oh.. it's weird... Did they run away??";
+				mes "You should hold them firmly, or else they will get away.";
+				next;
+				mes "[Mighty Priest]";
+				mes "Well, can you catch them again?";
+				mes "You need to bring ^0000cd5 Captured Souls^000000 from Wandering Soul, and ^0000cd1 Black Soul^000000 from Dark Soul.";
+				next;
+				mes "[Mighty Priest]";
+				mes "How is that?";
+				mes "Too easy, huh?";
+				close;
+			}
+		} else if (questprogress(14450) == 1) {
+			if (countitem("Captured_Soul") > 2 && countitem("Black_Soul") > 0) {
+				mes "[Mighty Priest]";
+				mes "Welcome! Did you bring the soul?";
+				mes "Let me see~";
+				next;
+				mes "[Mighty Priest]";
+				mes "Wow, you captured a crucial one!";
+				mes "I knew you would do well!";
+				next;
+				mes "[Mighty Priest]";
+				mes "Didn't I say I would give you some gift?";
+				mes "Let me give you some snacks from the Order...";
+				next;
+				mes "[Mighty Priest]";
+				mes "I feel a bit uncomfortable for this though... oops.. no! It got a lot of sweets!!";
+				mes "Please take this invitation too. This is a Niflheim Express Ticket.";
+				next;
+				mes "[Mighty Priest]";
+				mes "It would be a great chance to go sight seeing there.";
+				mes "However, I'm too busy to go there myself.";
+				next;
+				mes "[Mighty Priest]";
+				mes "Oops! I almost forgot to say this.";
+				mes "If you bring 5 Captured Souls and 1 Black Soul next time, I will give you another invitation and Candy Holder.";
+				next;
+				mes "[Mighty Priest]";
+				mes "You might think that you got more gifts next time, but it's just not, actually!";
+				emotion e_heh, "Exhausted Priest#pron14hal";
+				next;
+				mes "[Mighty Priest]";
+				mes "You can get them from any of the other priests in town.";
+				mes "See you next time!";
+				close2;
+				delitem Captured_Soul, 3;
+				delitem Black_Soul, 1;
+				getitem Something_Candy_Holder, 1;
+				getitem DARK_INVITATION, 1;
+				completequest 14450;
+				end;
+			} else {
+				mes "[Mighty Priest]";
+				mes "Welcome! Did you bring the soul?";
+				mes "Let me see~";
+				next;
+				mes "[Mighty Priest]";
+				mes "oh.. it's weird... Did they run away??";
+				mes "You should hold them firmly, or else they will get away.";
+				next;
+				mes "[Mighty Priest]";
+				mes "Well, can you catch them again?";
+				mes "You need to bring ^0000cd5 Captured Souls^000000 from Wandering Soul, and ^0000cd 1 Black Soul^000000 from Dark Soul.";
+				next;
+				mes "[Mighty Priest]";
+				mes "How is that?";
+				mes "Too easy, huh?";
+				close;
+			}
+		} else if (!questprogress(14450)) {
+			mes "[Mighty Priest]";
+			mes "Ha... no time to rest!";
+			mes "My arms and legs hurt~";
+			next;
+			mes "["+strcharinfo(PC_NAME)+"]";
+			mes "If you're so tired... why don't you heal?";
+			next;
+			mes "[Mighty Priest]";
+			mes "Wow!! You're a genius!!!";
+			mes "Hold on...";
+			next;
+			mes "[Mighty Priest]";
+			mes "Dear Odin, show me your love!";
+			mes "Heal me with your love! Great!! Bam!!!!!";
+			specialeffect(EF_HEAL2, AREA, getnpcid(0, "Exhausted Priest#pron14hal"));
+			emotion e_swt, 1;
+			next;
+			mes "[Mighty Priest]";
+			mes "I feel much better now!";
+			mes (Sex == SEX_MALE ? "Brother" : "Sister") +", thank you so much for waking me up.";
+			next;
+			mes "["+strcharinfo(PC_NAME)+"]";
+			mes "What made you so tired?";
+			next;
+			mes "[Mighty Priest]";
+			mes (Sex == SEX_MALE ? "Brother" : "Sister") +", you didn't have any damage yet?";
+			next;
+			mes "["+strcharinfo(PC_NAME)+"]";
+			mes "What happened to you?";
+			next;
+			mes "[Mighty Priest]";
+			mes "Ha? You don't know?";
+			mes "You don't know about the power of the dead in Niflheim during Halloween?";
+			next;
+			mes "[Mighty Priest]";
+			mes "It doesn't matter if just normal dead people came here...";
+			next;
+			mes "[Mighty Priest]";
+			mes "But the problem is... dangerous people are coming here too.";
+			next;
+			mes "[Mighty Priest]";
+			mes "We priests have been given an order to capture all the dangerous one.";
+			next;
+			mes "[Mighty Priest]";
+			mes "However, our forces are so limited. We're getting very exhausted.";
+			next;
+			mes "[Mighty Priest]";
+			mes "Oh, right!!";
+			mes "Could you maybe help me out?";
+			next;
+			mes "[Mighty Priest]";
+			mes "They would not damage you at all, "+ (Sex == SEX_MALE ? "brother" : "sister") +".";
+			mes "I would also give you a reward for the trouble.";
+			next;
+			mes "[Mighty Priest]";
+			mes "What do you think?";
+			mes "Do you want to help out this pitiful priest?";
+			next;
+			if(select("Yes I want to help.", "No, I don't think so.") == 2) {
+				emotion e_sob, "Exhausted Priest#pron14hal";
+				mes "[Mighty Priest]";
+				mes "Well now...";
+				mes "You could have said it more kindly... even if you don't want to...";
+				next;
+				mes "[Mighty Priest]";
+				mes "I'm sorry for disturbing you.";
+				mes "Excuse me while I go capture more dangerous dead people now.";
+				close;
+			}
+			mes "[Mighty Priest]";
+			mes "Faith in humanity restored!!";
+			mes "So, may I ask a favor of you?";
+			next;
+			mes "[Mighty Priest]";
+			mes "Can you find ^0000cdWandering Souls^000000 in the fields? They should not be here.";
+			next;
+			mes "[Mighty Priest]";
+			mes "They got the fake skin to come to land of the living, so you don't have to capture them directly.";
+			next;
+			mes "[Mighty Priest]";
+			mes "If you killed them, they will drop a Captured Soul. You need to bring the ^0000cdCaptured Souls^000000.";
+			mes "Also, if you kill any Black Souls, then you should bring ^0000cdBlack Souls^000000 too.";
+			next;
+			mes "[Mighty Priest]";
+			mes "Let me see... since this is your first attempt, I want you to bring back only a small amount.";
+			mes "^0000cd3 Captured Souls, 1 Black Soul^000000!";
+			mes "How is that? Can you do this??";
+			next;
+			mes "[Mighty Priest]";
+			mes "See you soon! I will wait for your return.";
+			close2;
+			setquest 14450;
+			end;
+		}
+	}
+}
+
+alberta,114,66,5	duplicate(Hal14Priest)	Exhausted Priest#albe14h	4_M_MINISTER
+aldebaran,147,117,3	duplicate(Hal14Priest)	Exhausted Priest#alde14h	4_M_MINISTER
+geffen,123,75,3	duplicate(Hal14Priest)	Exhausted Priest#gef14h	4_M_MINISTER
+morocc,150,103,5	duplicate(Hal14Priest)	Exhausted Priest#moc14h	4_M_MINISTER
+payon,179,107,3	duplicate(Hal14Priest)	Exhausted Priest#pay14h	4_M_MINISTER
+prontera,156,194,3	duplicate(Hal14Priest)	Exhausted Priest#pron14h	4_M_MINISTER
+yuno,162,192,3	duplicate(Hal14Priest)	Exhausted Priest#yuno14h	4_M_MINISTER
+
+//== Bolak =================================================
+niflheim,196,185,3	script	Bolak#14hal	4_M_DRAKE,{
+	if (!checkweight("Orcish_Axe", 3)) {
+		mes "[Bolak]";
+		mes "You have too many items.";
+		mes "Please come back after making space in your inventory!";
+		close;
+	}
+	if (BaseLevel < 50) {
+		mes "[Bolak]";
+		mes "Only dead people can be here.";
+		mes "Or someone strong...";
+		next;
+		mes "[Bolak]";
+		mes "It seems you are neither.";
+		close;
+	} else {
+		if (questprogress(14457) == 2) {
+			mes "[Bolak]";
+			mes "Are you enjoying the festival?";
+			mes "Maybe it's too hard for you to enjoy?";
+			next;
+			mes "[Bolak]";
+			mes "If you come back again later, come and find me.";
+			mes "I will give you a job.";
+			close;
+		} else if (questprogress(14457) == 1) {
+			mes "[Jack]";
+			mes "Someone's Coming!";
+			next;
+			mes "[Bolak]";
+			mes "Who?";
+			next;
+			mes "["+strcharinfo(PC_NAME)+"]";
+			mes "I came back!";
+			next;
+			mes "[Bolak]";
+			mes "Oh, have you arrived?";
+			next;
+			mes "[Loru]";
+			mes "You know, that guy, fake-dead man, he suddenly-";
+			next;
+			mes "[Devi]";
+			mes "disappeared.";
+			next;
+			mes "[Loru]";
+			mes "I was going to say that!";
+			mes "Don't interrupt me when I'm speaking!";
+			next;
+			mes "[Jack]";
+			mes "I am wondering what have done-";
+			next;
+			mes "[Bolak]";
+			mes "yeah, you've done it? right??";
+			next;
+			mes "[Nathan]";
+			mes "Aww~";
+			next;
+			mes "["+strcharinfo(PC_NAME)+"]";
+			mes "Yes, I've had help from church this time as well.";
+			mes "His body is still alive. His soul is not supposed to come here yet.";
+			next;
+			mes "[Bolak]";
+			mes "Huh, that is great!";
+			next;
+			mes "[Nathan]";
+			mes "Mama~";
+			next;
+			mes "[Loru]";
+			mes "Are you jealous??";
+			next;
+			mes "[Bolak]";
+			mes "No way!";
+			next;
+			mes "[Jack]";
+			mes "The suffering continues day in, and day out";
+			next;
+			mes "[Bolak]";
+			mes "I like this place, look how peaceful and joyful this place is!";
+			next;
+			mes "[Devi]";
+			mes "It seems like you're jealous.";
+			next;
+			mes "[Bolak]";
+			mes "No, I said no! Anyway, maybe having hard time for good deed.";
+			next;
+			mes "["+strcharinfo(PC_NAME)+"]";
+			mes "By the way, that guy.. Richard? Why is he still here?";
+			next;
+			mes "[Loru]";
+			mes "Ah.. No need to bother.";
+			mes "Ah.. Bolak put that thing there, he feels like it is a bit weird without having Richard around here.";
+			next;
+			mes "[Devi]";
+			mes "He complains that he's fake, but he seems to be attached to him a lot.";
+			next;
+			mes "[Jack]";
+			mes "Hmm, it is weird-";
+			next;
+			mes "[Bolak]";
+			mes "Ah you know, look at us standing now, in a perfect circle.";
+			mes "If one person is missing, the shape would look weird!!!";
+			next;
+			mes "[Loru]";
+			mes "We would just need to move a bit...";
+			mes "Don't make excuses.";
+			next;
+			mes "[Bolak]";
+			mes "Stop saying nonsense!";
+			mes "Hey! Give me something of yours!";
+			next;
+			mes "[Loru]";
+			mes "Why??";
+			next;
+			mes "[Bolak]";
+			mes "We, of course, need to give a reward to this person who had a hard time!";
+			next;
+			mes "[Loru]";
+			mes "Are you blackmailing us??";
+			next;
+			mes "[Devi]";
+			mes "I don't have much...";
+			next;
+			mes "[Jack]";
+			mes "Come empty.. return empty...-";
+			next;
+			mes "[Nathan]";
+			mes "Bba...bba...";
+			next;
+			mes "[Bolak]";
+			mes "Nathan you are okay, I will do it for you.";
+			mes "Hey, show what you have!";
+			next;
+			mes "[Loru]";
+			mes "The only thing I have is this. Take it.";
+			next;
+			mes "[Devi]";
+			mes "Yeah, me too.";
+			next;
+			mes "[Bolak]";
+			mes "Sorry to give you such a small gift, please take this as a sign of our gratitude.";
+			next;
+			mes "["+strcharinfo(PC_NAME)+"]";
+			mes "wow... I don't know what to say...";
+			next;
+			mes "[Bolak]";
+			mes "It's nothing special, just take it!";
+			next;
+			mes "["+strcharinfo(PC_NAME)+"]";
+			mes "Thank you so much, see you around.";
+			next;
+			mes "[Loru]";
+			mes "Hey, wait!";
+			mes "Before you go ^0000cdCome here and talk with me.^000000";
+			next;
+			mes "[Devi]";
+			mes "^0000cdYeah, talk with me as well!^000000";
+			next;
+			mes "[Bolak]";
+			mes "what are you guys going to talk about?!";
+			next;
+			mes "[Jack]";
+			mes "The suffering continues day in, and day out...";
+			getitem Something_Candy_Holder, 7;
+			getitem Trans_Candy_Red, 5;
+			getitem Trans_Candy_Blue, 5;
+			getitem Trans_Candy_Yellow, 5;
+			getitem Trans_Candy_Green, 5;
+			completequest 14457;
+			setquest 14458;
+			setquest 14459;
+			close;
+		} else if (questprogress(14456) == 1 || questprogress(14455) == 1 || questprogress(14454) == 1) {
+			mes "[Bolak]";
+			mes "How's it going with the thing?";
+			mes "You are not going to run away, are you?";
+			next;
+			mes "[Bolak]";
+			mes "I prefer a person who has done their work well.";
+			mes "and don't want to be in chaos anymore.";
+			close;
+		} else if (questprogress(14453) == 1) {
+			if (countitem("Sacred_Rosary") > 0)  {
+				mes "["+strcharinfo(PC_NAME)+"]";
+				mes "Will this really work...?";
+				next;
+				mes "[Jack]";
+				mes "Something is coming.. something fierce..!";
+				next;
+				mes "[Bolak]";
+				mes "What is coming?";
+				next;
+				mes "[Nathan]";
+				mes "Aww!!!";
+				next;
+				mes "[Bolak]";
+				mes "Huh???";
+				next;
+				mes "[Loru]";
+				mes "Ah, There! There! that thing working off something weird spirit!";
+				next;
+				mes "[Devi]";
+				mes "Go away!! They've brought a ^0000cdhalidom^000000 to kill us!!!";
+				mes "Go away!!!";
+				emotion e_omg, "Bolak#14hal";
+				emotion e_an, "Devi#14hal";
+				emotion e_omg, "Nathan#14hal";
+				emotion e_omg, "Loru#14hal";
+				emotion e_what, "Richard#14hal01";
+				emotion e_omg, "Jack#14hal";
+				next;
+				mes "[Bolak]";
+				mes "What is your intention bringing us a halidom?!";
+				mes "I asked you to way to distinguish dead men with living one!! You are going to kill us!!!";
+				next;
+				mes "[Jack]";
+				mes "Dead men are already dead-";
+				next;
+				mes "["+strcharinfo(PC_NAME)+"]";
+				mes "W..Wait, There's a situation!!";
+				mes "Calm down..!";
+				next;
+				mes "[Nathan]";
+				mes "Aww....A..h....bba..bba!!";
+				next;
+				mes "[Bolak]";
+				mes "Whatever situation it is, get that thing out of my sight!!";
+				next;
+				mes "[Richard]";
+				mes "What is going on? what happened?";
+				next;
+				mes "["+strcharinfo(PC_NAME)+"]";
+				mes "^0000cdThat man is a living man^000000!!!";
+				mes "Living men don't react to a halidom!";
+				next;
+				mes "[Loru]";
+				mes "Anyway, get that thing out of my sight!";
+				next;
+				mes "["+strcharinfo(PC_NAME)+"]";
+				mes "Okay.";
+				mes "I will get that thing away from here.";
+				specialeffect(EF_SPRINKLESAND, AREA, playerattached());
+				next;
+				mes "[Bolak]";
+				mes "Much better.";
+				mes "Anyway, I knew this man was living!";
+				next;
+				mes "[Loru]";
+				mes "Well.. that's why he is a bit weird.";
+				mes "Are you showing off that you are living man?";
+				next;
+				mes "[Devi]";
+				mes "Execute him!!!";
+				mes "Make him a dead man!!!";
+				next;
+				mes "[Jack]";
+				mes "Hey guys, let him talk.";
+				next;
+				mes "[Nathan]";
+				mes "Mamang.....";
+				next;
+				mes "[Richard]";
+				mes "This is unfair!!!";
+				mes "I.. I came here yesterday!";
+				next;
+				mes "[Richard]";
+				mes "Ah... I... I... was dead...";
+				mes "I died for sure... I came here... Where strong warriors go...";
+				next;
+				mes "[Richard]";
+				mes "I died!! The fact that I am here is proof!";
+				mes "Isn't that a fake halidom?";
+				next;
+				mes "["+strcharinfo(PC_NAME)+"]";
+				mes "Hey, calm down. Thaink clearly.";
+				next;
+				mes "[Richard]";
+				mes "I was really a dead man..?";
+				mes "But how come I died?";
+				next;
+				mes "[Jack]";
+				mes "He's speaking nonsense.";
+				next;
+				mes "[Bolak]";
+				mes "Hey, Do you really think we believe in your poor acting?";
+				mes "Do you think we haven't seen a guy like you?";
+				next;
+				mes "[Richard]";
+				mes "Really... It's true! Why would I lie to you guys?!";
+				mes "I died!!! I'm dead... I came here yesterday!";
+				next;
+				mes "[Jack]";
+				mes "If you came here yesterday, there would be ^0000cd someone you might know in living man's country^000000, is that so?";
+				next;
+				mes "[Bolak]";
+				mes "True, if you were dead and came here yesterday, there must be, ^0000cdsomeone who knows about you^000000.";
+				mes "It will be more clear once we ask them.";
+				next;
+				mes "[Bolak]";
+				mes "But in any case, I am not going to the world of the living.";
+				mes "Neither is Nathan.";
+				next;
+				mes "[Nathan]";
+				mes "Da..d?";
+				next;
+				mes "[Loru]";
+				mes "Me neither.";
+				next;
+				mes "[Devi]";
+				mes "Me neither!";
+				next;
+				mes "[Richard]";
+				mes "I won't go either! You guys just want to kick me out of this place!!!";
+				next;
+				mes "[Jack]";
+				mes "There may be someone we can ask a favor from...";
+				next;
+				mes "["+strcharinfo(PC_NAME)+"]";
+				mes "Why... why are you guys looking at me like that?";
+				next;
+				mes "[Bolak]";
+				mes "I am sorry but, you should go there for us.";
+				next;
+				mes "["+strcharinfo(PC_NAME)+"]";
+				mes "Why should I?";
+				next;
+				mes "[Loru]";
+				mes "Which makes more sense? A living soul goes to the world of the living, or a dead man?";
+				next;
+				mes "[Devi]";
+				mes "Totally.";
+				next;
+				mes "["+strcharinfo(PC_NAME)+"]";
+				mes "Hold on! I am here traveling.";
+				mes "I'm just trying to have fun!";
+				next;
+				mes "[Jack]";
+				mes "You will come here again anyway once you die...";
+				next;
+				mes "[Nathan]";
+				mes "Aww~";
+				next;
+				mes "["+strcharinfo(PC_NAME)+"]";
+				mes "Hmm... it seems like I have no choice. I'll go, but where am I going?";
+				next;
+				mes "[Richard]";
+				mes "I... I... died.";
+				next;
+				mes "[Bolak]";
+				mes "Hey, you are asking us where to go?";
+				mes "Where did you live when you were alive?";
+				next;
+				mes "[Jack]";
+				mes "It's ruined...";
+				next;
+				mes "[Richard]";
+				mes "a cold place... snow all year long...";
+				mes "^0000cdWarm place... behind Lutie Santa Clause..^000000";
+				next;
+				mes "["+strcharinfo(PC_NAME)+"]";
+				mes "I will go find it.";
+				next;
+				mes "[Jack]";
+				mes "Hey babe, I will be waiting for you~";
+				next;
+				mes "[Loru]";
+				mes "What kind of joke is that?";
+				next;
+				mes "[Jack]";
+				mes "Just kidding.";
+				delitem Sacred_Rosary, 1;
+				erasequest 14453;
+				setquest 14454;
+				close;
+			} else {
+				mes "[Bolak]";
+				mes "Have you been there? Did you find a solution?";
+				mes "What have you brought? Nothing?";
+				next;
+				mes "[Bolak]";
+				mes "How can you figure out? huh? Is there any way to figure out?";
+				close;
+			}
+		} else if (questprogress(14452) == 1 || questprogress(14451) == 1) {
+			mes "[Bolak]";
+			mes "Have you been there? did you find a solution?";
+			next;
+			mes "[Jack]";
+			mes "I saw... They didn't go any where, they've just been wandering around...";
+			next;
+			mes "[Devi]";
+			mes "Don't go to the cathedral but stay here.";
+			next;
+			mes "[Bolak]";
+			mes "What are you talking about?";
+			mes "Go there! I want to have fun at the festival!";
+			close;
+		} else if (!questprogress(14451)) {
+			mes "[Bolak]";
+			mes "Is that you?";
+			next;
+			emotion e_an, "Devi#14hal";
+			mes "[Devi]";
+			mes "I am not!!! ^0000cdI am not!!!^000000";
+			mes "How dare you!";
+			next;
+			mes "[Bolak]";
+			mes "Then is that you?";
+			next;
+			emotion e_pif, "Richard#14hal01";
+			mes "[Richard]";
+			mes "Huh.. I think it's you. I am suspicious when I see someone fussing around all the time.";
+			next;
+			emotion e_ok, "Loru#14hal";
+			mes "[Loru]";
+			mes "That is true!!!";
+			next;
+			mes "[Bolak]";
+			mes "It's impossible I am a dead man. I've been dead for ^0000cd568 years^000000!";
+			mes "You've been with me this entire time! You know that.";
+			next;
+			mes "[Loru]";
+			mes "You could be a 'fake'!";
+			next;
+			mes "[Nathan]";
+			mes "Da...d...?";
+			next;
+			mes "[Bolak]";
+			mes "Nathan!! Even you doubt your own father?";
+			mes "Come on!";
+			next;
+			mes "[Nathan]";
+			mes "Ma..ma...?";
+			next;
+			mes "[Bolak]";
+			mes "No, I am not your mother!";
+			mes "I am your father!";
+			next;
+			mes "["+strcharinfo(PC_NAME)+"]";
+			mes "What is all this about?";
+			next;
+			mes "[Loru]";
+			mes "Wow, a living man! Isn't that him?";
+			next;
+			mes "[Devi]";
+			mes "No, he is different.";
+			next;
+			mes "[Bolak]";
+			mes "Ah yeah, we can ask to him!";
+			mes "As you can see, this place is ^0000cdthe land of the dead^000000.";
+			next;
+			mes "[Bolak]";
+			mes "During this time of year, there's no boundary between the land of the living and the dead.";
+			mes "We can come and go freely, but only dead men are accepted here.";
+			mes "But a foreign substance has come.";
+			next;
+			mes "[Jack]";
+			mes "We don't call people substances.";
+			next;
+			mes "[Devi]";
+			mes "There is a ^0000cdliving man^000000 among us.";
+			next;
+			mes "["+strcharinfo(PC_NAME)+"]";
+			mes "Who is that?";
+			next;
+			mes "[Loru]";
+			mes "If we knew, don't you think we would have done something?";
+			next;
+			mes "[Bolak]";
+			mes "Normally it is distinguishable. But we can't figure it out this time.";
+			mes "They all say they are dead men. I really can't find the truth.";
+			next;
+			mes "[Richard]";
+			mes "It's really bizarre that a living man is in a group of dead men.";
+			next;
+			mes "[Nathan]";
+			mes "Aww~";
+			next;
+			mes "[Bolak]";
+			mes "You are not, you are my son. I know you've been a dead man for ^0000cd568 years^000000. I know that.";
+			next;
+			mes "[Loru]";
+			mes "How about that newbie, Richard...?";
+			next;
+			mes "[Richard]";
+			mes "No way... I don't have an arm! You are insulting me! I was fighting with ^0000cd17 men and died^000000!";
+			next;
+			mes "[Devi]";
+			mes "Hmm well, I have a doubt with Loru. You look like a ^0000cdliving man^000000. Don't you?";
+			next;
+			mes "[Loru]";
+			mes "What? Then you are definitely a dead man.";
+			mes "You look like such a mess.";
+			next;
+			mes "[Devi]";
+			mes "Are you insulting me?";
+			next;
+			mes "[Jack]";
+			mes "Well... What do you think about me?";
+			next;
+			mes "[Bolak]";
+			mes "Hey! We've seen each other ^0000cdfor more than 500 years^000000. Come on.";
+			mes "You want to be a newbie?";
+			next;
+			mes "[Jack]";
+			mes "Nah... I am just saying it because nobody has mentioned me..";
+			next;
+			mes "[Bolak]";
+			mes "So who do you think is a living soul among us?";
+			next;
+			switch(select("Bolak", "Jack", "Loru", "Devi", "Richard")) {
+			case 1:
+				mes "[Bolak]";
+				mes "What? You think I am a living soul? This is so humiliating!";
+				next;
+				mes "[Nathan]";
+				mes "Da..d....?";
+				next;
+				mes "[Bolak]";
+				mes "Nathan, I told you already, I am your father!";
+				next;
+				break;
+			case 2:
+				mes "[Jack]";
+				mes "It's such an honor to be chosen as a living soul..";
+				next;
+				mes "[Bolak]";
+				mes "No! He's not! I can guarantee you!!!";
+				next;
+				break;
+			case 3:
+				mes "[Loru]";
+				mes "Wow, you are saying I am living soul? Do you think I look that attractive?";
+				next;
+				mes "[Devi]";
+				mes "Get away from me!!!!";
+				next;
+				break;
+			case 4:
+				mes "[Devi]";
+				mes "I am not a living soul!";
+				next;
+				mes "[Loru]";
+				mes "You really think Devi is living soul? haha!!";
+				next;
+				break;
+			case 5:
+				mes "[Richard]";
+				mes "Look at my arm!!!";
+				next;
+				mes "[Jack]";
+				mes "True... without his arm, he looks like a undead soul.";
+				next;
+				break;
+			}
+			mes "["+strcharinfo(PC_NAME)+"]";
+			mes "Hmm.. everyone.. please calm down.";
+			next;
+			mes "[Loru]";
+			mes "We'll never reach a decision! Never!";
+			next;
+			mes "[Devi]";
+			mes "Halloween will be over by the time we finish arguing about this!";
+			next;
+			mes "[Richard]";
+			mes "Ah.. I expected so much from Halloween. It's my first Halloween.";
+			next;
+			mes "[Nathan]";
+			mes "Mo..m.....";
+			next;
+			mes "[Bolak]";
+			mes "Hey, you adventurer. You figure out how to distinguish ^0000cddead men with living men in living men's country^000000.";
+			next;
+			mes "["+strcharinfo(PC_NAME)+"]";
+			mes "Me? why??";
+			next;
+			mes "[Bolak]";
+			mes "Because we don't want to leave here, and you know many things as you are a living soul.";
+			mes "You know many things about the ^0000cdCathedral^000000 as well.";
+			next;
+			mes "[Loru]";
+			mes "Yeah that is true.";
+			next;
+			mes "[Devi]";
+			mes "What? Cathedral? It will kill us all!!!!";
+			next;
+			mes "["+strcharinfo(PC_NAME)+"]";
+			mes "Hmm, okay then I will go and figure this out.";
+			next;
+			mes "[Nathan]";
+			mes "D..ad..a..-";
+			next;
+			mes "[Jack]";
+			mes "Such a good boy. Look after yourself.";
+			setquest 14451;
+			close;
+		} else {
+			mes "[Bolak]";
+			mes "Hmm. Some unpleasant smell...";
+			mes "something unpleasant.";
+			close;
+		}
+	}
+}
+
+//== Nathan ================================================
+niflheim,195,183,1	script	Nathan#14hal	4_LUDE,{
+	mes "[Nathan]";
+	mes "Ma?";
+	mes "Dada!!";
+	next;
+	mes "["+strcharinfo(PC_NAME)+"]";
+	mes "How cute!!~";
+	next;
+	mes "[Nathan]";
+	mes "What are you looking at? Are you look down on me since I look like a baby?";
+	next;
+	mes "[Nathan]";
+	mes "I've been living here much more than you.";
+	next;
+	mes "[Nathan]";
+	mes "Get your hands off and go away before I get really mad.";
+	close;
+}
+
+//== Jack ==================================================
+niflheim,192,182,7	script	Jack#14hal	4_JACK,{
+	mes "[Jack]";
+	mes "Come empty, return empty...";
+	mes "The suffering continues, day in, day out.";
+	next;
+	mes "[Jack]";
+	mes "Don't you want to have a peaceful life here?";
+	close;
+}
+
+//== Richard ===============================================
+niflheim,190,185,5	script	Richard#14hal01	4_M_NFDEADSWDMAN,{
+	if (questprogress(14457)) {
+		mes "A doll which resembles Richard.";
+	} else {
+		mes "[Richard]";
+		mes "Me having only one arm is like a badge of honor!";
+	}
+	close;
+}
+
+//== Loru ==================================================
+niflheim,194,189,3	script	Loru#14hal	4_LOLI_RURI,{
+	if (!checkweight("Orcish_Axe", 3)) {
+		mes "[Loru]";
+		mes "Why are you carrying so much? If you have something good, give it to me~";
+		mes "Or take these things out of my sight!";
+		close;
+	}
+	if (questprogress(14464) == 1) {
+		if (!questprogress(14464, PLAYTIME)) {
+			mes "[Loru]";
+			mes "Hmm, why do you come here?";
+			mes "Time is not over yet?";
+			next;
+			mes "[Loru]";
+			mes "I told you to come again after a day.";
+			mes "Idiot!";
+			close;
+		} else {
+			mes "[Loru]";
+			mes "You've come here again.";
+			mes "Well.. Can I ask you one more favor?";
+			next;
+			if(select("Yes", "No") == 2) {
+				mes "[Loru]";
+				mes "Yeah? okay.";
+				mes "I don't know why you can't accept my favor.. ";
+				next;
+				mes "[Loru]";
+				mes "Come visit me again if you are willing to accept my favor!";
+				close;
+			} else {
+				if (BaseLevel < 100) {
+					mes "[Loru]";
+					mes "Wow!!!";
+					mes "I like you!! you accept all my favors!";
+					next;
+					mes "[Loru]";
+					mes "Then please hunt ^0000cd10 wandering soul^000000!";
+					mes "Once you hunt them all, Niflheim comes along as well. get me 10 of them.";
+					next;
+					mes "[Loru]";
+					mes "Thank you! I will wait for you!";
+					erasequest 14464;
+					setquest 14460;
+					close;
+				} else {
+					mes "[Loru]";
+					mes "Wow!!!";
+					mes "I like you!! you accept all my favors!";
+					next;
+					mes "[Loru]";
+					mes "Please bring me ^0000cd 10 Red Scarf and 10 Hanging Doll!^000000 ?";
+					mes "Thank you! I will wait for you!";
+					erasequest 14464;
+					setquest 14461;
+					close;
+				}
+			}
+		}
+	} else {
+		if (questprogress(14461) == 1 || questprogress(14460) == 1) {
+			if (questprogress(14461) == 1) {
+				mes "[Loru]";
+				mes "Hey you are here. How's going with what I asked??";
+				mes "Huh? You are not going to disappoint me, aren't you?";
+				next;
+				if (countitem("Red_Scarf") > 9 && countitem("Hanging_Doll") > 9) {
+					mes "[Loru]";
+					mes "Hmm, let me see.. wow!";
+					mes "You bring all I asked?";
+					next;
+					mes "[Loru]";
+					mes "In additon, it looks more special and beautiful?";
+					mes "You selected beautiful ones for me? huh??";
+					next;
+					mes "["+strcharinfo(PC_NAME)+"]";
+					mes "Hmm.. no..t.. really...";
+					next;
+					mes "[Loru]";
+					mes "Haha, hey.";
+					mes "You can just say yes! i did.?";
+					next;
+					mes "[Loru]";
+					mes "Anyway, thank you.";
+					mes "Here's your reward. Then, see you ^0000cd tomorrow^000000!.";
+					next;
+					mes "["+strcharinfo(PC_NAME)+"]";
+					mes "Tomorrow? again??";
+					next;
+					mes "[Loru]";
+					mes "Ah, you didn't know. Here, we give away decoration when people leave the party.";
+					mes "We should put new decoration everyday.";
+					next;
+					mes "["+strcharinfo(PC_NAME)+"]";
+					mes "I've never heard of it..";
+					next;
+					mes "[Loru]";
+					mes "Of course, you haven't. This place is dead man's country.";
+					mes "Keep what I said in your mind as you will come here someday. Bye!~";
+					delitem Red_Scarf, 10;
+					delitem Hanging_Doll, 10;
+					getitem Trans_Candy_Yellow, 10;
+					getitem Trans_Candy_Green, 10;
+					erasequest 14461;
+					setquest 14464;
+					close;
+				} else {
+					mes "[Loru]";
+					mes "You return empty-handed?";
+					mes "Have you forgotten? or are you messing around with me??";
+					next;
+					mes "[Loru]";
+					mes "I want to have joyful and luxurious party~";
+					mes "So, Please bring me ^0000cd 10 Red Scarf and 10 Hanging Doll^000000.";
+					close;
+				}
+			} else {
+				if (questprogress(14460, HUNTING) == 2) {
+					mes "[Loru]";
+					mes "Wow~ Welcome!";
+					mes "The party gets more excited, thank you!!";
+					next;
+					mes "[Loru]";
+					mes "Everyone seems to enjoy the most of it.";
+					mes "So.. I want to repay your effort.";
+					next;
+					mes "[Loru]";
+					mes "It's not much but hope you like it! then see you ^0000cdtomorrow^000000 again!";
+					next;
+					mes "["+strcharinfo(PC_NAME)+"]";
+					mes "Tomorrow.. again??";
+					next;
+					mes "[Loru]";
+					mes "Yeah, when the party is over, everyone will leave.";
+					mes "They won't come again voluntarily, so we should make them. Then bye bye~";
+					erasequest 14460;
+					setquest 14464;
+					getitem Trans_Candy_Yellow, 10;
+					getitem Trans_Candy_Green, 10;
+					close;
+				} else {
+					mes "[Loru]";
+					mes "Why so early? you haven't done it yet?";
+					mes "You forget what to do?";
+					next;
+					mes "[Loru]";
+					mes "^0000cd 10 Wandering Soul!^000000";
+					mes "The more people there is, the funnier party will be!";
+					next;
+					mes "[Loru]";
+					mes "Please go and find them.";
+					mes "They will be nice once you hit them a bit.";
+					close;
+				}
+			}
+		} else if (questprogress(14458) == 1) {
+			mes "[Loru]";
+			mes "You didn't forget to come?";
+			mes "Hey.. I have a favor to ask. You seem to be a good. Would you do my favor??";
+			next;
+			if(select("Yes", "No") == 2) {
+				mes "[Loru]";
+				mes "Then why do you come and talk to me?";
+				mes "Go!! go away!!!";
+				close;
+			} else {
+				mes "[Loru]";
+				mes "You know, everyone gets really excited because of Halloween?";
+				mes "And people here are just gathering around and having fun.";
+				next;
+				mes "["+strcharinfo(PC_NAME)+"]";
+				mes "Yes.";
+				next;
+				if (BaseLevel < 100) {
+					mes "[Loru]";
+					mes "But people, who were supposed to have party together, have gone to living man's country.";
+					mes "You know, party is fun when there's many people. so... Could you bring them here.";
+					next;
+					mes "["+strcharinfo(PC_NAME)+"]";
+					mes "Who? and how many??";
+					next;
+					mes "[Loru]";
+					mes "Oh, You do my favor?? ^0000cd10 Wandering Soul^000000!";
+					mes "Once you hunt them all, Niflheim comes along as well. get me 10 of them.";
+					next;
+					mes "["+strcharinfo(PC_NAME)+"]";
+					mes "I can do that.";
+					next;
+					mes "[Loru]";
+					mes "Thank you so much, i will wait for you!";
+					erasequest 14458;
+					setquest 14460;
+					close;
+				} else {
+					mes "[Loru]";
+					mes "Look around. It looks so empty.";
+					mes "Nobody would dance and have fun in a place like this?";
+					next;
+					mes "["+strcharinfo(PC_NAME)+"]";
+					mes "What can I do for you?";
+					next;
+					mes "[Loru]";
+					mes "^0000cd 10 Red Scarf and 10 Hanging Doll^000000! Could you bring me all this??";
+					next;
+					mes "["+strcharinfo(PC_NAME)+"]";
+					mes "Are you decorating with those? Your taste...seems....";
+					next;
+					mes "[Loru]";
+					mes "What? do you have any problem with that!";
+					mes "You don't know nothing about latest trend. you've been living only  for decades!";
+					next;
+					mes "["+strcharinfo(PC_NAME)+"]";
+					mes "Sorry, I made a mistake.";
+					mes "so, 10 Red Scarf and 10 Hanging Doll, right??";
+					next;
+					mes "[Loru]";
+					mes "Yes! See you!!!";
+					erasequest 14458;
+					setquest 14461;
+					close;
+				}
+			}
+		} else {
+			mes "[Loru]";
+			mes "Hmm.. I am bored. How come it is so boring! It's Halloween?";
+			mes "Boring! Boring!!!";
+			close;
+		}
+	}
+}
+
+//== Devi ==================================================
+niflheim,191,188,5	script	Devi#14hal	4_DEVIRUCHI,5,5,{
+	if (!checkweight("Orcish_Axe", 3)) {
+		mes "[Devi]";
+		mes "Why do you carry so much? If you have something awesome, give it to me.";
+		mes "Otherwise, go and organize your inventory!";
+		close;
+	}
+	if (questprogress(14465) == 1) {
+		if (!questprogress(14465, PLAYTIME)) {
+			mes "[Devi]";
+			mes "Why? Do you have something to talk about?";
+			mes "Hmm, It's not because of what I said yesterday, is it?";
+			next;
+			mes "[Devi]";
+			mes "Hey, a day hasn't passed yet";
+			mes "I am not a living man but i know what 'a day' means?";
+			next;
+			mes "[Devi]";
+			mes "Come back again when you have time.";
+			close;
+		} else {
+			mes "[Devi]";
+			mes "Oh, you again.";
+			mes "You are going to help me like you did yesterday, aren't you?";
+			next;
+			mes "[Devi]";
+			mes "That's why you are here for, right??";
+			next;
+			if(select("Yes", "No") == 2) {
+				mes "[Devi]";
+				mes "Yeah? Hmm.. okay.";
+				mes "Hmm.. it's a shame.";
+				next;
+				mes "[Devi]";
+				mes "Not me, you! .";
+				close;
+			} else {
+				mes "[Devi]";
+				mes "It seems to be in the middle of chaos, today and yesterday as well.";
+				next;
+				if (BaseLevel < 100) {
+					mes "[Devi]";
+					mes "You escape from here and bring troublemakers in living man's country.";
+					mes "I can't go anywhere as I am too busy.";
+					next;
+					mes "["+strcharinfo(PC_NAME)+"]";
+					mes "Okay. I don't want dead men create chaos in living man's country.";
+					next;
+					mes "[Devi]";
+					mes "You got it. Cool.";
+					mes "Then please bring ^0000cd 10 Dark Soul^000000. Once you hunt them, they will come here.";
+					next;
+					mes "[Devi]";
+					mes "Thank you in advance.";
+					erasequest 14465;
+					setquest 14462;
+					close;
+				} else {
+					mes "[Devi]";
+					mes "Please catch them. they are making a chaos.";
+					mes "I can't go anywhere as I am too busy.";
+					next;
+					mes "["+strcharinfo(PC_NAME)+"]";
+					mes "Okay.";
+					next;
+					mes "[Devi]";
+					mes "You got it. Cool.";
+					mes "Then, please bring ^0000cd20 Hylozoist and 20 Bloody Murderer^000000.";
+					next;
+					mes "[Devi]";
+					mes "Thank you in advance.";
+					erasequest 14465;
+					setquest 14463;
+					close;
+				}
+			}
+		}
+	} else {
+		if (questprogress(14463) == 1 || questprogress(14462) == 1) {
+			mes "[Devi]";
+			mes "Oh, it's you.";
+			mes "You come here earlier than I thought you would.";
+			next;
+			if (questprogress(14463) == 1) {
+				if (questprogress(14463, HUNTING) == 2) {
+					mes "[Devi]";
+					mes "And you've done when you have to do perfectly.";
+					mes "Good, Very well done.";
+					next;
+					mes "[Devi]";
+					mes "So, if you are not busy, please come again ^0000cdtomorrow^000000.";
+					mes "I want you to do this job.";
+					next;
+					mes "[Devi]";
+					mes "Then, we will see again tomorrow.";
+					mes "See you.";
+					erasequest 14463;
+					setquest 14465;
+					getitem Trans_Candy_Red, 10;
+					getitem Trans_Candy_Blue, 10;
+					close;
+				} else {
+					mes "[Devi]";
+					mes "But you haven't done what I asked as you rush too much?";
+					mes "take your time and get them.";
+					next;
+					mes "[Devi]";
+					mes "^0000cd20 Hylozoist and 20 Bloody Murderer.^000000";
+					mes "It's not a big deal, isn't it?";
+					close;
+				}
+			} else {
+				if (questprogress(14462, HUNTING) == 2) {
+					mes "[Devi]";
+					mes "And you've done when you have to do perfectly.";
+					mes "Good, Very well done.";
+					next;
+					mes "[Devi]";
+					mes "So, if you are not busy, please come again ^0000cdtomorrow^000000.";
+					mes "I want you to do this job.";
+					next;
+					mes "[Devi]";
+					mes "Then, we will see again tomorrow.";
+					mes "See you.";
+					erasequest 14462;
+					setquest 14465;
+					getitem Trans_Candy_Red, 10;
+					getitem Trans_Candy_Blue, 10;
+					close;
+				} else {
+					mes "[Devi]";
+					mes "But you haven't done what I asked as you rush too much?";
+					mes "take your time and get them.";
+					next;
+					mes "[Devi]";
+					mes "^0000cd 10 Black Soul!^000000";
+					mes "It's not a big deal, isn't it?";
+					close;
+				}
+			}
+		} else if (questprogress(14459) == 1) {
+			mes "[Devi]";
+			mes "Oh, you really came back. I didn't expect you to come.";
+			mes "I am just kidding, you know that";
+			next;
+			mes "[Devi]";
+			mes "Yes, I have one favor to ask.";
+			mes "Hope you don't reject it..";
+			next;
+			if(select("Okay", "No, I want to reject.") == 2) {
+				mes "[Devi]";
+				mes "Yeah? Hmm.. okay.";
+				mes "Hmm.. it's a shame.";
+				next;
+				mes "[Devi]";
+				mes "Not me! you!";
+				close;
+			} else {
+				mes "[Devi]";
+				mes "Good, very good.";
+				mes "Apparently, I am kind of a leader here.";
+				next;
+				mes "[Devi]";
+				mes "You know what it takes.";
+				mes "It's hard to control when there are too many people in a group.";
+				next;
+				if (BaseLevel < 100) {
+					mes "[Devi]";
+					mes "You escape from here and bring troublemakers in living man's country.";
+					mes "I can't go anywhere as I am too busy.";
+					next;
+					mes "["+strcharinfo(PC_NAME)+"]";
+					mes "Okay. I don't want dead men create chaos in living man's country.";
+					next;
+					mes "[Devi]";
+					mes "You got it. Cool.";
+					mes "Then please bring ^0000cd 10 Dark Soul^000000. Once you hunt them, they will come here.";
+					next;
+					mes "[Devi]";
+					mes "Thank you in advance.";
+					erasequest 14459;
+					setquest 14462;
+					close;
+				} else {
+					mes "[Devi]";
+					mes "Please catch them. they are making a chaos.";
+					mes "I can't go anywhere as I am too busy.";
+					next;
+					mes "["+strcharinfo(PC_NAME)+"]";
+					mes "Okay.";
+					next;
+					mes "[Devi]";
+					mes "You got it. Cool.";
+					mes "Then, please bring ^0000cd20 Hylozoist and 20 Bloody Murderer^000000.";
+					next;
+					mes "[Devi]";
+					mes "Thank you in advance.";
+					erasequest 14459;
+					setquest 14463;
+					close;
+				}
+			}
+		} else {
+			mes "[Devi]";
+			mes "It's hard, really hard..";
+			mes "whatever it is,, It is too hard.";
+			close;
+		}
+	}
+}
+
+//== Bonfire ===============================================
+niflheim,193,186,6	script	Bonfire Spirit#14hal	4_TRACE,{
+	mes "[Bonfire Spirit]";
+	mes "Ahahah! Don't touch me with such cold hands!!!";
+	mes "Fire, fire might die!!!";
+	close;
+
+	OnInit:
+		initnpctimer;
+		end;
+
+	OnEnable:
+		stopnpctimer;
+		initnpctimer;
+		end;
+
+	OnTimer1000:
+	OnTimer3000:
+	OnTimer21000:
+	OnTimer23000:
+	OnTimer25000:
+		specialeffect(EF_TORCH, AREA, getnpcid(0, "Bonfire Spirit#14hal"));
+		specialeffect(EF_DRAGONSMOKE, AREA, getnpcid(0, "Bonfire Spirit#14hal"));
+		end;
+
+	OnTimer5000:
+	OnTimer8000:
+	OnTimer10000:
+	OnTimer13000:
+	OnTimer14000:
+	OnTimer16000:
+		specialeffect(EF_DRAGONSMOKE, AREA, getnpcid(0, "Bonfire Spirit#14hal"));
+		end;
+
+	OnTimer19000:
+		npctalk "Oh, No! The fire is dying!!!! Fire!!!!!!!!!!!!";
+		specialeffect(EF_DRAGONSMOKE, AREA, getnpcid(0, "Bonfire Spirit#14hal"));
+		end;
+
+	OnTimer20000:
+		specialeffect(EF_SIGHTRASHER, AREA, getnpcid(0, "Bonfire Spirit#14hal"));
+		end;
+
+	OnTimer27000:
+		donpcevent "Bonfire Spirit#14hal::OnEnable";
+		end;
+}
+
+//== Sister / Nun ==========================================
+prt_church,96,91,4	script	Spiritual Sister#14hal	1_F_PRIEST,5,5,{
+	if (!checkweight("Orcish_Axe", 3)) {
+		mes "[Spiritual Sister]";
+		mes "What do you carry that so heavily? it looks really heavy.";
+		mes "When you come here you should empty your body and mind.";
+		close;
+	}
+	if (questprogress(14456) == 1) {
+		mes "[Sister Haley]";
+		mes "Oh? Haven't you left yet?";
+		mes "Did you forget what you need to prepare?";
+		next;
+		mes "[Sister Haley]";
+		mes "^0000cd1 of Leaf Of Yggdrasil and 1 Live Coal^000000 should be prepared and breathe in the smoke from burning leaves.";
+		mes "And never forget to pray to the soul to return.";
+		close;
+	} else if (questprogress(14455) == 1) {
+		mes "[Sister Haley]";
+		mes "I hope all is well with everyone visiting here~";
+		mes "Oh! Is it you, "+ (Sex == SEX_MALE ? "brother" : "sister") +"? How is it going with the thing you need to do?";
+		next;
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes "Well.. I could identify the live ones.";
+		next;
+		mes "[Sister Haley]";
+		mes "I knew it! Any side effects?";
+		next;
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes "But then there was another problem.";
+		mes "this is the reason I came here..";
+		next;
+		mes "[Sister Haley]";
+		mes "Oh? What happen?";
+		mes "Tell me anything!";
+		next;
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes "There was a person who did not react on the halidom, but he insisted that he is dead.";
+		mes "So I went the place he lived, the body is alive. Just in a comma.";
+		next;
+		mes "[I told her what happened in Niflheim and story I heard from Rutie.]";
+		next;
+		mes "[Sister Haley]";
+		mes "Oh, dear, I can't believe it!!";
+		mes "Sometimes the soul is separated from the body if there was some big impact on the body, and ^0000cdsome spirits think they forget they are alive and move to the death's land^000000.";
+		next;
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes "Is there anything I can do about?";
+		next;
+		mes "[Sister Haley]";
+		mes "Simple! ";
+		mes "Make them to realize that they have their living body.";
+		next;
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes "So, How..";
+		mes "They believe they are dead, but I should talk to them to make them return?";
+		next;
+		mes "[Sister Haley]";
+		mes "Of course not. There are secret method in this church.";
+		mes "We have been trough lots of stuff, we have all kinds of solution.";
+		next;
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes "So How..";
+		next;
+		mes "[Sister Haley]";
+		mes "You know Leaf Of Yggdrasil is good for resurrection?";
+		mes "Leaf Of Yggdrasil is a leaf from Yggdrasil and has a strong power of life.";
+		next;
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes "Well, That is like common sense, so just tell me the materials and method to do that..";
+		next;
+		mes "[Sister Haley]";
+		mes "There is nothing else than Leaf of Yggdrasil to resurrect the character.";
+		mes "Even our priest used Leaf Of Yggdrasil!";
+		next;
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes "so, I mean! tell me the material I need and the method!";
+		next;
+		mes "[Sister Haley]";
+		mes "Oh.. My my.";
+		mes "I just want to explain you how good it is.";
+		next;
+		mes "[Sister Haley]";
+		mes "the material and the method is quite simple.";
+		next;
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes "Yes, I like simple thing, so tell me briefly.";
+		next;
+		mes "[Sister Haley]";
+		mes "^0000cd1 Leaf Of Yggdrasil and 1 live Coal^000000 are what you need.";
+		next;
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes "Only that?";
+		next;
+		mes "[Sister Haley]";
+		mes "Of course not~ ^0000cdyour prayer^000000 that is so desperate to bring the soul near death to here!";
+		mes "Bring these 3 things and burn the Leaf Of Yggdrasil.";
+		next;
+		mes "[Sister Haley]";
+		mes "Once they breathe in the smoke, they will remember where their bodies are and come back to real life.";
+		next;
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes "Is that all?";
+		next;
+		mes "[Sister Haley]";
+		mes "Yes. Indeed~";
+		mes "One think you must remember: The longer the soul left their body, the less chance he will get to come back.";
+		next;
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes "You should have told me earlier!";
+		next;
+		mes "[Sister Haley]";
+		mes "When you need my help, come and visit me anytime~";
+		erasequest 14455;
+		setquest 14456;
+		close;
+	} else if (questprogress(14454) == 1) {
+		mes "[Sister Haley]";
+		mes "Did you experience the holy Rosary effect?";
+		mes "We often use it since it is simple. Of course, it make evils not to approach.";
+		close;
+	} else if (questprogress(14453) == 1) {
+		mes "[Sister Haley]";
+		mes "How is it? the holy Rosary?";
+		mes "did you use it?";
+		next;
+		mes "[Sister Haley]";
+		mes "If you have any problem, please come to me any time.";
+		close;
+	} else if (questprogress(14452) == 1) {
+		if ((countitem("Rosary_") > 0 || countitem("Rosary") > 0) && countitem("Holy_Water") > 5) {
+			mes "[Sister Haley]";
+			mes "Did you prepare all?";
+			mes "Even if you hide it, I can see it~";
+			next;
+			mes "[Sister Haley]";
+			mes "Well.. 6 Rosaries and .... holy .. water..";
+			mes "Oops, you spilled the holy water little bit. but that is fine.";
+			next;
+			mes "[Sister Haley]";
+			mes "This is enough. I can make it soon.";
+			mes "Odin Crystal power! with Holy light!!!!";
+			next;
+			specialeffect(EF_HOLYHIT, AREA, getnpcid(0, "Spiritual Sister#14hal"));
+			mes "[Sister Haley]";
+			mes "Whoa~ It's done.";
+			mes "Hold  ^0000cd this in your pocket^000000 and go to the crowd with live and dead ones, you will see who is dead or live.";
+			next;
+			mes "["+strcharinfo(PC_NAME)+"]";
+			mes "Is that it? Awesome.";
+			mes "But.. Um.. you know.. is.. it affecting to me.. like in bad way?";
+			next;
+			mes "[Sister Haley]";
+			mes "Of course not!";
+			mes "if ^0000cdHoly Rosary^000000 were a dangerous stuff, we would not be alive.";
+			next;
+			mes "[Sister Haley]";
+			mes "But, For those who are dead.. Oh! I don't mean it's deadly threat, but it will give them little bit of pain.";
+			mes "So use it carefully not to damage the good dead people.";
+			next;
+			mes "["+strcharinfo(PC_NAME)+"]";
+			mes "Ok.";
+			mes "Thank you for making this!";
+			next;
+			mes "[Sister Haley]";
+			mes "No worries!";
+			mes "Please come back again if you need my help!";
+			if (countitem("Rosary") > 0)
+				delitem Rosary, 1;
+			else
+				delitem Rosary_, 1;
+			delitem Holy_Water, 6;
+			getitem Sacred_Rosary, 1;
+			erasequest 14452;
+			setquest 14453;
+			close;
+		} else {
+			mes "[Sister Haley]";
+			mes "Did you prepare all?";
+			mes "Even if you hide it, I can see it~";
+			next;
+			mes "[Sister Haley]";
+			mes "Oh, Look. You are not ready.";
+			mes "Please bring ^0000cd 1 Rosary and 6 Holy Water^000000.";
+			next;
+			mes "[Sister Haley]";
+			mes "With our church's secret, I will make more holy halidom.";
+			close;
+		}
+	} else if (questprogress(14451) == 1) {
+		mes "[Sister Haley]";
+		mes "I hope all is well with everyone visiting here~";
+		mes "What makes you come here, "+ (Sex == SEX_MALE? "brother" : "sister") +"?";
+		next;
+		mes "[I told her what happened in Nifflheim.]";
+		next;
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes "So I came here.";
+		mes "But, I cannot tell who is dead and who is alive, is there any way ^0000cdto check that^000000?";
+		next;
+		mes "[Sister Haley]";
+		mes "Of course, there is. Very ^0000cdgood method^000000!";
+		next;
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes "Really? I was not sure if I found the right place.";
+		mes "I think I found well!";
+		next;
+		mes "[Sister Haley]";
+		mes "We study everything to make dead and live ones to peace.";
+		mes "There is secret way to do that, it kept secretly in our church.";
+		next;
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes "Tell me the way..";
+		next;
+		mes "[Sister Haley]";
+		mes "That is simple! Make ^0000cdspecial halidom^000000!";
+		next;
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes "S, so how..?";
+		next;
+		mes "[Sister Haley]";
+		mes "How you make it? Bring ^0000cd1 Rosary and 6 Holy Water^000000 to me.";
+		mes "Then I will make it for you. It's simple";
+		next;
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes "Y, yes!!";
+		erasequest 14451;
+		setquest 14452;
+		close;
+	} else {
+		mes "[Sister Haley]";
+		mes "I hope all is well with everyone visiting here~";
+		close;
+	}
+
+	OnTouch:
+		if (questprogress(14451) == 1) {
+			mes "[Sister Haley]";
+			mes "I hope all is well with everyone visiting here~";
+			mes "If anyone needs help, please come to me~ I will do my best to help you.";
+			close;
+		}
+		end;
+}
+
+//== Richard's Wife ========================================
+xmas_in,160,175,1	script	Worried Wife#14hal	4_F_05,{
+	if (questprogress(14456) == 1) {
+		if (countitem("Leaf_Of_Yggdrasil") > 0 && countitem("Live_Coal") > 0) {
+			mes "[Richard's Daughter]";
+			mes "Dad, Dad~ Wake up! It's time to wake up!";
+			mes "I even made the stew for you. Wake and eat it.";
+			next;
+			mes "["+strcharinfo(PC_NAME)+"]";
+			mes "Everyone, I am here.";
+			next;
+			mes "[Richard's Wife]";
+			mes "Oh, dear, Adventurer! Welcome!";
+			mes "Did you find the way to make him back?";
+			next;
+			mes "["+strcharinfo(PC_NAME)+"]";
+			mes "Yes! But I need your help to do this.";
+			next;
+			mes "[Richard's Wife]";
+			mes "How can I help you?";
+			mes "I will do my best to do it!";
+			next;
+			mes "["+strcharinfo(PC_NAME)+"]";
+			mes "Just pray hard to get him back.";
+			next;
+			mes "[Richard's Daughter]";
+			mes "I will do it!";
+			mes "I can do it!!!";
+			next;
+			mes "[Richard's Wife]";
+			mes "I will pray hard!";
+			mes "Please!";
+			next;
+			mes "["+strcharinfo(PC_NAME)+"]";
+			mes "Well, So I will burn.. this.";
+			specialeffect(EF_TORCH, AREA, playerattached());
+			sleep2 1000;
+			specialeffect(EF_SMOKE, AREA, playerattached());
+			sleep2 1000;
+			specialeffect(EF_SMOKE, AREA, playerattached());
+			sleep2 1000;
+			specialeffect(EF_SMOKE, AREA, playerattached());
+			next;
+			mes "["+strcharinfo(PC_NAME)+"]";
+			mes "It's almost ran out.. Why not he wakes up..";
+			mes "Oh!!";
+			specialeffect(EF_RESURRECTION, AREA, getnpcid(0, "Richard#14hal02"));
+			next;
+			mes "[Richard]";
+			mes "Uhh.. Umm..";
+			mes "My arm.. ugh..";
+			emotion e_an, "Richard#14hal02";
+			next;
+			mes "[Richard's Wife]";
+			mes "Honey!! Can you see me?";
+			next;
+			mes "[Richard's Daughter]";
+			mes "Dad! is it you?";
+			mes "Are you really my dad? Are you alright?";
+			next;
+			mes "[Richard]";
+			mes "I, I was dead.. where..";
+			mes "I was dead.. ..";
+			next;
+			mes "[Richard's Wife]";
+			mes "You didn't die!";
+			mes "This is your house! It's your daughter and I!";
+			next;
+			mes "[Richard's Daughter]";
+			mes "Dad! Your home!";
+			next;
+			mes "[Richard]";
+			mes "H.. ome..? Home..?";
+			mes "am.. I.. alive..?";
+			next;
+			mes "[Richard's Wife]";
+			mes "What?";
+			mes "maybe.. it's like ...a side effect..?";
+			next;
+			mes "[Richard's Daughter]";
+			mes "Dad!!!";
+			specialeffect(EF_SONICBLOWHIT, AREA, getnpcid(0, "Richard#14hal02"));
+			next;
+			mes "[Richard]";
+			mes "O, Ouch!!!";
+			mes "I told you not to hit me!";
+			next;
+			mes "[Richard's Daughter]";
+			mes "Do you really see me now?";
+			mes "It's your home!";
+			next;
+			mes "[Richard]";
+			mes "Home.. home!!!";
+			mes "what.. what about my arm??";
+			next;
+			mes "[Richard's Wife]";
+			mes "You have been injured, but it's okay.";
+			mes "I am so happy that you are awake! Really..";
+			next;
+			mes "[Richard]";
+			mes "I.. came back.";
+			next;
+			mes "["+strcharinfo(PC_NAME)+"]";
+			mes "Thank god. Seriously.";
+			mes "It would have been really dangerous if I was a little late.";
+			next;
+			mes "[Richard]";
+			mes "You saved me?";
+			mes "Thank you! Thank you!";
+			next;
+			mes "[Richard's Daughter]";
+			mes "Dad! Mom and I also helped!!";
+			next;
+			mes "[Richard]";
+			mes "Yes, yes. You and your mom are the best!";
+			next;
+			mes "["+strcharinfo(PC_NAME)+"]";
+			mes "You can go to Niflheim later.";
+			mes "Why were you in a rush? You have a family.";
+			next;
+			mes "[Richard]";
+			mes "I know. How could I forget my family?";
+			mes "Anyway I could not even say good bye when I leave..";
+			next;
+			mes "["+strcharinfo(PC_NAME)+"]";
+			mes "I will go and send your regards.";
+			next;
+			mes "[Richard]";
+			mes "Thank you so much!";
+			next;
+			mes "[Richard's Wife]";
+			mes "I am really appreciated. There is no words to thank you on this.";
+			next;
+			mes "[Richard's Daughter]";
+			mes "Thank you!";
+			delitem Live_Coal, 1;
+			delitem Leaf_Of_Yggdrasil, 1;
+			erasequest 14456;
+			setquest 14457;
+			close;
+		} else {
+			mes "[Richard's Daughter]";
+			mes "Dad, Dad~ Wake up! It's time to wake up!";
+			mes "I even made the stew for you. Wake and eat it.";
+			next;
+			mes "["+strcharinfo(PC_NAME)+"]";
+			mes "Everyone, I am here.";
+			next;
+			mes "[Richard's Wife]";
+			mes "Oh, dear, Adventurer! Welcome!";
+			mes "Did you find a way to bring him back?";
+			next;
+			mes "["+strcharinfo(PC_NAME)+"]";
+			mes "Yes! Oh, w.wait..";
+			mes "There is something missing. I will get it and come back.";
+			close;
+		}
+	} else if (questprogress(14455) == 1) {
+		mes "[Richard's Wife]";
+		mes "How was the meeting with the sister in Prontera?";
+		mes "My sweet heart.. can he come back?";
+		close;
+	} else if (questprogress(14454) == 1) {
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes "If it's correct, it should be around here..";
+		next;
+		mes "[Richard's Wife]";
+		mes "Honey, Wake up.";
+		mes "It's.. time to wake up.";
+		emotion e_sob, "Worried Wife#14hal";
+		next;
+		mes "[Richard's Daughter]";
+		mes "Dad, I want to see your eyes.";
+		mes "Play with me~";
+		emotion e_sob, "Worried Daughter#14hal";
+		next;
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes "Hi, Is this Richard's house?";
+		mes "I think I am right..";
+		next;
+		mes "[Richard's Wife]";
+		mes "Who is this?";
+		next;
+		mes "[Richard's Daughter]";
+		mes "Who..?";
+		next;
+		mes "[Richard's Wife]";
+		mes "Did you find my husband?";
+		mes "But he is right now.. he hasn't waken up since after the accident..";
+		next;
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes "So, he is still alive?";
+		mes "And.. his... arm is attached to his body?";
+		next;
+		mes "[Richard's Wife]";
+		mes "Huh? Of course.. he is badly injured but ^0000cddidn't lose his arm.^000000";
+		mes "But for some reason ^0000cdhe won't wake up.^000000";
+		next;
+		mes "[Richard's Daughter]";
+		mes "How can you treat my ^0000cdliving dad^000000 as if he is dead?!";
+		mes "You're mean!";
+		next;
+		mes "[Richard's Wife]";
+		mes "Is there anything I can help you with..?";
+		mes "You seem to know my husband.. Do you know something?";
+		next;
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes "I think we should find out why he is like this.";
+		next;
+		mes "[Richard's Wife]";
+		mes "He used to be a swordsman. He had a dream to become the best swordsman in the world.";
+		mes "But he met me and we had a daughter, so he had to leave his dream for awhile.";
+		next;
+		mes "[Richard's Wife]";
+		mes "Here, he fixes train rails.";
+		mes "Whether it is used or not, he did his best.";
+		next;
+		mes "[Richard's Wife]";
+		mes "But the weather here isn't good.";
+		mes "There was snow storm coming, and he fell off from the rail.";
+		next;
+		mes "[Richard's Wife]";
+		mes "I told him not to go, but he eventually went there and did not come back for long time.";
+		mes "and then..";
+		next;
+		mes "[Richard's Wife]";
+		mes "Luckily he only injured his arm, but otherwise he was fine.";
+		mes "But for some reason, he is not waking up.";
+		mes "The doctor said it's nothing but a concussion and that he'll wake up soon..";
+		next;
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes "I see.";
+		mes "His soul is in Niflhiem. He thinks he is dead.";
+		next;
+		mes "[Richard's Daughter]";
+		mes "^0000cdNiflhiem?!^000000";
+		mes "The strong dead soldier's land?!";
+		next;
+		mes "[Richard's Wife]";
+		mes "Oh my god.. Niflhiem.. He always said he want to go there after he died..";
+		next;
+		mes "[Richard's Wife]";
+		mes "He wanted to be a swordsman.. He must have wanted it so deeply.";
+		mes "He never showed it to us..";
+		next;
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes "It seems he went there even though he is not dead.";
+		mes "Something must be wrong.";
+		next;
+		mes "[Richard's Wife]";
+		mes "Can.. can he come back?";
+		mes "He is still alive here..";
+		next;
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes "Hmm.. what should I do..?";
+		mes "Oh, yes! I should go to ^0000cdProntera Church^000000.";
+		next;
+		mes "[Richard's Daughter]";
+		mes "Prontera?";
+		next;
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes "There is ^0000cda nun I get help from sometimes^000000, I should ask if she can help me.";
+		next;
+		mes "[Richard's Wife]";
+		mes "Please bring him back.";
+		mes "Please.";
+		erasequest 14454;
+		setquest 14455;
+		close;
+	} else {
+		mes "[Richard's Wife]";
+		mes "My sweet heart, you are the best husband and dad ever.";
+		mes "I hope he can smile again.";
+		close;
+	}
+}
+
+//== Richard's Daughter ====================================
+xmas_in,163,178,3	script	Worried Daughter#14hal	4_F_NFLOSTGIRL,{
+	mes "[Richard's Daughter]";
+	if (questprogress(14457)) {
+		mes "Thank you for helping my dad and mom.";
+		mes "You really are a nice person.";
+	} else if (questprogress(14456) || questprogress(14455)) {
+		mes "Can you fix my dad if you go prontera?";
+		mes "I wish he could wake up again.";
+	} else if (questprogress(14454)) {
+		mes "My dad.. he won't wake up.";
+		mes "We are waiting for him to wake up...";
+	} else {
+		mes "Dad, wake up and play with me~";
+		mes "I even made a paper doll for you.";
+	}
+	close;
+}
+
+//== Richard ===============================================
+xmas_in,160,178,3	script	Richard#14hal02	4_M_DIEMAN,{
+	mes "[Richard]";
+	if (questprogress(14457) == 2) {
+		mes "I am happy to hear that everyone is doing well.";
+		mes "I am doing good here as well with my wife and daughter. Thank god to be alive.";
+	} else if (questprogress(14457) || questprogress(14456)) {
+		mes "Please send my regards to everyone in Niflheim.";
+		mes "I feel like I messed up.";
+	} else {
+		mes "......";
+		mes "......";
+	}
+	close;
+}
+
+//== Event Monsters ========================================
+gld_dun01_2,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
+gld_dun02_2,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
+gld_dun03_2,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
+gld_dun04_2,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
+gld2_ald,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+gld2_gef,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+gld2_pay,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+gld2_prt,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+lhz_dun04,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+iz_dun05,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+mal_dun01,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+dic_dun03,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+dew_fild01,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+dew_dun01,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+dew_dun02,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+mal_dun01,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+iz_dun05,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+man_fild01,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+man_fild03,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+spl_fild02,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+spl_fild03,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+man_fild02,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+spl_fild01,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+nyd_dun01,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+bra_fild01,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+bra_dun01,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+bra_dun02,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+dic_fild01,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+dic_fild02,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+dic_dun01,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+dic_dun02,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+bif_fild01,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+bif_fild02,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+abbey01,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
+abbey02,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
+abbey03,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
+abyss_01,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+abyss_02,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+abyss_03,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+alde_dun01,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+alde_dun02,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+alde_dun03,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+alde_dun04,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+ama_dun01,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+ama_dun02,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+ama_dun03,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+ama_fild01,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+anthell01,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+anthell02,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+ayo_dun01,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+ayo_dun02,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+ayo_fild01,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+ayo_fild02,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+beach_dun,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+beach_dun2,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+beach_dun3,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+c_tower1,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+c_tower2,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+c_tower3,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+c_tower4,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+cmd_fild01,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+cmd_fild02,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+cmd_fild03,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+cmd_fild04,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+cmd_fild06,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+cmd_fild07,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+cmd_fild08,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+cmd_fild09,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+ein_dun01,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+ein_dun02,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+ein_fild03,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+ein_fild04,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+ein_fild05,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+ein_fild06,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+ein_fild07,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+ein_fild08,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+ein_fild09,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+gef_dun00,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+gef_dun01,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+gef_dun02,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+gef_fild00,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+gef_fild01,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+gef_fild02,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+gef_fild03,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+gef_fild04,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+gef_fild05,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+gef_fild06,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+gef_fild07,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+gef_fild08,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+gef_fild09,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+gef_fild10,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+gef_fild11,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+gef_fild13,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+gefenia01,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+gefenia02,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+gefenia03,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+gefenia04,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+gl_cas01,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+gl_cas02,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+gl_church,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+gl_chyard,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+gl_dun01,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+gl_dun02,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+gl_in01,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
+gl_knt01,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+gl_knt02,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+gl_prison,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+gl_prison1,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+gl_sew01,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+gl_sew02,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+gl_sew03,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+gl_sew04,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+gl_step,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
+glast_01,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+gon_dun01,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+gon_dun02,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+gon_dun03,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+gon_fild01,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+hu_fild01,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+hu_fild02,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+hu_fild04,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+hu_fild05,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+hu_fild06,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+ice_dun01,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+ice_dun02,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+ice_dun03,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+in_sphinx1,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+in_sphinx2,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+in_sphinx3,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+in_sphinx4,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+in_sphinx5,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+iz_dun00,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+iz_dun01,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+iz_dun02,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+iz_dun03,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+iz_dun04,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+jupe_core,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+juperos_01,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+juperos_02,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+kh_dun01,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+kh_dun02,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+lhz_dun01,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+lhz_dun02,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+lhz_dun03,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+lhz_fild01,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+lhz_fild02,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+lhz_fild03,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+lou_dun01,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+lou_dun02,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+lou_dun03,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+lou_fild01,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+mag_dun01,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+mag_dun02,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+man_fild02,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+mjo_dun01,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+mjo_dun02,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+mjo_dun03,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+mjolnir_01,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+mjolnir_02,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+mjolnir_03,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+mjolnir_04,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+mjolnir_05,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+mjolnir_06,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+mjolnir_07,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+mjolnir_08,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+mjolnir_09,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+mjolnir_10,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+mjolnir_11,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+mjolnir_12,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+moc_fild01,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+moc_fild02,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+moc_fild03,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+moc_fild04,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+moc_fild05,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+moc_fild06,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+moc_fild07,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+moc_fild08,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+moc_fild09,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+moc_fild10,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+moc_fild11,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+moc_fild12,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+moc_fild13,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+moc_fild14,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+moc_fild15,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+moc_fild16,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+moc_fild17,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+moc_fild18,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+moc_pryd01,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+moc_pryd02,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+moc_pryd03,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+moc_pryd04,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+moc_pryd05,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+moc_pryd06,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+nameless_n,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+nif_fild01,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+nif_fild02,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+nyd_dun01,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+odin_tem01,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+odin_tem02,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+odin_tem03,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+orcsdun01,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+orcsdun02,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+pay_dun00,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+pay_dun01,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+pay_dun02,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+pay_dun03,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+pay_dun04,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+pay_fild01,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+pay_fild02,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+pay_fild03,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+pay_fild04,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+pay_fild06,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+pay_fild07,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+pay_fild08,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+pay_fild09,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+pay_fild10,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+prt_fild00,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+prt_fild01,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+prt_fild02,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+prt_fild03,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+prt_fild04,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+prt_fild05,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+prt_fild06,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+prt_fild07,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+prt_fild08,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+prt_fild09,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+prt_fild10,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+prt_fild11,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+prt_maze01,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+prt_maze02,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+prt_maze03,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+prt_sewb1,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+prt_sewb2,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+prt_sewb3,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+ra_fild01,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+ra_fild03,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+ra_fild04,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+ra_fild05,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+ra_fild06,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+ra_fild08,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+ra_fild12,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+ra_san01,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+ra_san02,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+ra_san03,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+ra_san04,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+ra_san05,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+spl_fild01,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+tha_t01,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
+tha_t02,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
+tha_t03,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
+tha_t04,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
+tha_t05,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
+tha_t06,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
+tha_t07,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
+tha_t08,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
+tha_t09,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
+tha_t10,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
+tha_t11,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
+tha_t12,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
+thor_v01,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+thor_v02,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+thor_v03,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+treasure01,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+treasure02,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+tur_dun01,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+tur_dun02,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+tur_dun03,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+tur_dun04,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+um_fild01,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+um_fild02,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+um_fild03,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+um_fild04,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+ve_fild01,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+ve_fild02,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+ve_fild03,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+ve_fild04,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+ve_fild05,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+ve_fild07,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+xmas_dun01,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+xmas_dun02,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+xmas_fild01,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
+yuno_fild01,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
+yuno_fild02,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
+yuno_fild03,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
+yuno_fild04,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
+yuno_fild06,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
+yuno_fild07,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
+yuno_fild08,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
+yuno_fild09,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
+yuno_fild10,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
+yuno_fild12,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
+ecl_fild01,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+ecl_tdun01,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+ecl_tdun02,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+ecl_tdun03,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+ecl_tdun04,0,0,0,0   	monster	Dark Soul	3381,2,5000,0,0
+moc_prydn1,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+moc_prydn2,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+prt_fild08a,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
+prt_fild08b,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
+prt_fild08c,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
+prt_fild08d,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
+gl_chyard_,0,0,0,0 	monster	Dark Soul	3381,2,5000,0,0
+gl_cas02_,0,0,0,0  	monster	Dark Soul	3381,2,5000,0,0
+gld_dun01_2,0,0,0,0	monster	Wandering Soul	3382,2,5000,0,0
+gld_dun02_2,0,0,0,0	monster	Wandering Soul	3382,2,5000,0,0
+gld_dun03_2,0,0,0,0	monster	Wandering Soul	3382,2,5000,0,0
+gld_dun04_2,0,0,0,0	monster	Wandering Soul	3382,2,5000,0,0
+gld2_ald,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+gld2_gef,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+gld2_pay,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+gld2_prt,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+lhz_dun04,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+iz_dun05,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+mal_dun01,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+dic_dun03,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+dew_fild01,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+dew_dun01,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+dew_dun02,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+mal_dun01,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+iz_dun05,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+man_fild01,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+man_fild03,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+spl_fild02,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+spl_fild03,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+man_fild02,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+spl_fild01,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+nyd_dun01,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+bra_fild01,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+bra_dun01,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+bra_dun02,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+dic_fild01,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+dic_fild02,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+dic_dun01,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+dic_dun02,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+bif_fild01,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+bif_fild02,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+abbey01,0,0,0,0	monster	Wandering Soul	3382,2,5000,0,0
+abbey02,0,0,0,0	monster	Wandering Soul	3382,2,5000,0,0
+abbey03,0,0,0,0	monster	Wandering Soul	3382,2,5000,0,0
+abyss_01,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+abyss_02,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+abyss_03,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+alde_dun01,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+alde_dun02,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+alde_dun03,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+alde_dun04,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+ama_dun01,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+ama_dun02,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+ama_dun03,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+ama_fild01,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+anthell01,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+anthell02,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+ayo_dun01,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+ayo_dun02,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+ayo_fild01,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+ayo_fild02,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+beach_dun,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+beach_dun2,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+beach_dun3,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+c_tower1,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+c_tower2,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+c_tower3,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+c_tower4,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+cmd_fild01,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+cmd_fild02,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+cmd_fild03,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+cmd_fild04,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+cmd_fild06,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+cmd_fild07,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+cmd_fild08,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+cmd_fild09,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+ein_dun01,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+ein_dun02,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+ein_fild03,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+ein_fild04,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+ein_fild05,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+ein_fild06,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+ein_fild07,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+ein_fild08,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+ein_fild09,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+gef_dun00,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+gef_dun01,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+gef_dun02,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+gef_fild00,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+gef_fild01,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+gef_fild02,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+gef_fild03,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+gef_fild04,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+gef_fild05,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+gef_fild06,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+gef_fild07,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+gef_fild08,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+gef_fild09,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+gef_fild10,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+gef_fild11,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+gef_fild13,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+gefenia01,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+gefenia02,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+gefenia03,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+gefenia04,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+gl_cas01,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+gl_cas02,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+gl_church,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+gl_chyard,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+gl_dun01,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+gl_dun02,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+gl_in01,0,0,0,0	monster	Wandering Soul	3382,2,5000,0,0
+gl_knt01,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+gl_knt02,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+gl_prison,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+gl_prison1,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+gl_sew01,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+gl_sew02,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+gl_sew03,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+gl_sew04,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+gl_step,0,0,0,0	monster	Wandering Soul	3382,2,5000,0,0
+glast_01,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+gon_dun01,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+gon_dun02,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+gon_dun03,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+gon_fild01,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+hu_fild01,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+hu_fild02,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+hu_fild04,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+hu_fild05,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+hu_fild06,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+ice_dun01,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+ice_dun02,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+ice_dun03,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+in_sphinx1,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+in_sphinx2,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+in_sphinx3,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+in_sphinx4,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+in_sphinx5,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+iz_dun00,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+iz_dun01,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+iz_dun02,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+iz_dun03,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+iz_dun04,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+jupe_core,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+juperos_01,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+juperos_02,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+kh_dun01,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+kh_dun02,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+lhz_dun01,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+lhz_dun02,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+lhz_dun03,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+lhz_fild01,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+lhz_fild02,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+lhz_fild03,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+lou_dun01,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+lou_dun02,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+lou_dun03,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+lou_fild01,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+mag_dun01,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+mag_dun02,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+man_fild02,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+mjo_dun01,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+mjo_dun02,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+mjo_dun03,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+mjolnir_01,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+mjolnir_02,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+mjolnir_03,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+mjolnir_04,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+mjolnir_05,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+mjolnir_06,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+mjolnir_07,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+mjolnir_08,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+mjolnir_09,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+mjolnir_10,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+mjolnir_11,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+mjolnir_12,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+moc_fild01,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+moc_fild02,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+moc_fild03,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+moc_fild04,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+moc_fild05,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+moc_fild06,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+moc_fild07,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+moc_fild08,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+moc_fild09,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+moc_fild10,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+moc_fild11,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+moc_fild12,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+moc_fild13,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+moc_fild14,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+moc_fild15,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+moc_fild16,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+moc_fild17,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+moc_fild18,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+moc_pryd01,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+moc_pryd02,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+moc_pryd03,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+moc_pryd04,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+moc_pryd05,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+moc_pryd06,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+nameless_n,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+nif_fild01,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+nif_fild02,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+nyd_dun01,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+odin_tem01,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+odin_tem02,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+odin_tem03,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+orcsdun01,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+orcsdun02,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+pay_dun00,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+pay_dun01,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+pay_dun02,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+pay_dun03,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+pay_dun04,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+pay_fild01,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+pay_fild02,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+pay_fild03,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+pay_fild04,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+pay_fild06,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+pay_fild07,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+pay_fild08,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+pay_fild09,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+pay_fild10,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+prt_fild00,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+prt_fild01,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+prt_fild02,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+prt_fild03,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+prt_fild04,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+prt_fild05,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+prt_fild06,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+prt_fild07,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+prt_fild08,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+prt_fild09,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+prt_fild10,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+prt_fild11,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+prt_maze01,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+prt_maze02,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+prt_maze03,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+prt_sewb1,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+prt_sewb2,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+prt_sewb3,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+ra_fild01,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+ra_fild03,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+ra_fild04,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+ra_fild05,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+ra_fild06,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+ra_fild08,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+ra_fild12,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+ra_san01,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+ra_san02,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+ra_san03,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+ra_san04,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+ra_san05,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+spl_fild01,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+tha_t01,0,0,0,0	monster	Wandering Soul	3382,2,5000,0,0
+tha_t02,0,0,0,0	monster	Wandering Soul	3382,2,5000,0,0
+tha_t03,0,0,0,0	monster	Wandering Soul	3382,2,5000,0,0
+tha_t04,0,0,0,0	monster	Wandering Soul	3382,2,5000,0,0
+tha_t05,0,0,0,0	monster	Wandering Soul	3382,2,5000,0,0
+tha_t06,0,0,0,0	monster	Wandering Soul	3382,2,5000,0,0
+tha_t07,0,0,0,0	monster	Wandering Soul	3382,2,5000,0,0
+tha_t08,0,0,0,0	monster	Wandering Soul	3382,2,5000,0,0
+tha_t09,0,0,0,0	monster	Wandering Soul	3382,2,5000,0,0
+tha_t10,0,0,0,0	monster	Wandering Soul	3382,2,5000,0,0
+tha_t11,0,0,0,0	monster	Wandering Soul	3382,2,5000,0,0
+tha_t12,0,0,0,0	monster	Wandering Soul	3382,2,5000,0,0
+thor_v01,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+thor_v02,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+thor_v03,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+treasure01,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+treasure02,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+tur_dun01,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+tur_dun02,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+tur_dun03,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+tur_dun04,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+um_fild01,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+um_fild02,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+um_fild03,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+um_fild04,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+ve_fild01,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+ve_fild02,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+ve_fild03,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+ve_fild04,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+ve_fild05,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+ve_fild07,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0
+xmas_dun01,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+xmas_dun02,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+xmas_fild01,0,0,0,0	monster	Wandering Soul	3382,2,5000,0,0
+yuno_fild01,0,0,0,0	monster	Wandering Soul	3382,2,5000,0,0
+yuno_fild02,0,0,0,0	monster	Wandering Soul	3382,2,5000,0,0
+yuno_fild03,0,0,0,0	monster	Wandering Soul	3382,2,5000,0,0
+yuno_fild04,0,0,0,0	monster	Wandering Soul	3382,2,5000,0,0
+yuno_fild06,0,0,0,0	monster	Wandering Soul	3382,2,5000,0,0
+yuno_fild07,0,0,0,0	monster	Wandering Soul	3382,2,5000,0,0
+yuno_fild08,0,0,0,0	monster	Wandering Soul	3382,2,5000,0,0
+yuno_fild09,0,0,0,0	monster	Wandering Soul	3382,2,5000,0,0
+yuno_fild10,0,0,0,0	monster	Wandering Soul	3382,2,5000,0,0
+yuno_fild12,0,0,0,0	monster	Wandering Soul	3382,2,5000,0,0
+ecl_fild01,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+ecl_tdun01,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+ecl_tdun02,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+ecl_tdun03,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+ecl_tdun04,0,0,0,0   	monster	Wandering Soul	3382,2,5000,0,0
+moc_prydn1,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+moc_prydn2,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+prt_fild08a,0,0,0,0	monster	Wandering Soul	3382,2,5000,0,0
+prt_fild08b,0,0,0,0	monster	Wandering Soul	3382,2,5000,0,0
+prt_fild08c,0,0,0,0	monster	Wandering Soul	3382,2,5000,0,0
+prt_fild08d,0,0,0,0	monster	Wandering Soul	3382,2,5000,0,0
+gl_chyard_,0,0,0,0 	monster	Wandering Soul	3382,2,5000,0,0
+gl_cas02_,0,0,0,0  	monster	Wandering Soul	3382,2,5000,0,0

@@ -13,7 +13,7 @@
 //= 2.2 Added missing next;'s [Evera]
 //============================================================
 
-payon,153,43,5	script	itinsetter	-1,{
+payon,153,43,5	script	itinsetter	FAKE_NPC,{
 	//This is just OnInit stuff to set the hourly intinerary.
 OnInit:
 	deletearray $locationsname$[0],500;
@@ -21,101 +21,101 @@ OnInit:
 	deletearray $locationsx[0],500;
 	deletearray $locationsy[0],500;
 	deletearray $alreadygoneto[0],500;
-	setarray $locationsname$[0],"Airport"; 
-	setarray $locationsname$[1],"Prontera"; 
-	setarray $locationsname$[2],"Payon"; 
-	setarray $locationsname$[3],"Aldebaran"; 
-	setarray $locationsname$[4],"Alberta"; 
-	setarray $locationsname$[5],"Geffen"; 
-	setarray $locationsname$[6],"Morocc"; 
-	setarray $locationsname$[7],"Glast Heim"; 
-	setarray $locationsname$[8],"Umbala"; 
-	setarray $locationsname$[9],"Comodo"; 
-	setarray $locationsname$[10],"Amatsu"; 
-	setarray $locationsname$[11],"Niflheim"; 
-	setarray $locationsname$[12],"Lutie"; 
-	setarray $locationsname$[13],"Louyang"; 
-	setarray $locationsname$[14],"Gonryun"; 
-	setarray $locationsname$[15],"Yuno"; 
-	setarray $locationsname$[16],"Ant Hell"; 
-	setarray $locationsname$[17],"Jawaii"; 
-	setarray $locationsname$[18],"Orc Village"; 
-	setarray $locationsname$[19],"Mjolnir Coal Mines"; 
-	setarray $locationsname$[20],"Gefenia Ruins"; 
-	setarray $locationsname$[21],"Ayothaya"; 
-	setarray $locationsname$[22],"Lighthalzen"; 
-	setarray $locationsname$[23],"Juperos"; 
-	setarray $locationsmap$[0],"airport"; 
-	setarray $locationsmap$[1],"prt_fild08"; 
-	setarray $locationsmap$[2],"pay_fild08"; 
-	setarray $locationsmap$[3],"mjolnir_12"; 
-	setarray $locationsmap$[4],"pay_fild03"; 
-	setarray $locationsmap$[5],"gef_fild00"; 
-	setarray $locationsmap$[6],"moc_fild10"; 
-	setarray $locationsmap$[7],"glast_01"; 
-	setarray $locationsmap$[8],"umbala"; 
-	setarray $locationsmap$[9],"comodo"; 
-	setarray $locationsmap$[10],"amatsu"; 
-	setarray $locationsmap$[11],"niflheim"; 
-	setarray $locationsmap$[12],"xmas"; 
-	setarray $locationsmap$[13],"louyang"; 
-	setarray $locationsmap$[14],"gonryun"; 
-	setarray $locationsmap$[15],"yuno"; 
-	setarray $locationsmap$[16],"moc_fild04"; 
-	setarray $locationsmap$[17],"jawaii"; 
-	setarray $locationsmap$[18],"gef_fild10"; 
-	setarray $locationsmap$[19],"mjolnir_02"; 
-	setarray $locationsmap$[20],"gefenia01"; 
-	setarray $locationsmap$[21],"ayothaya"; 
+	setarray $locationsname$[0],"Airport";
+	setarray $locationsname$[1],"Prontera";
+	setarray $locationsname$[2],"Payon";
+	setarray $locationsname$[3],"Aldebaran";
+	setarray $locationsname$[4],"Alberta";
+	setarray $locationsname$[5],"Geffen";
+	setarray $locationsname$[6],"Morocc";
+	setarray $locationsname$[7],"Glast Heim";
+	setarray $locationsname$[8],"Umbala";
+	setarray $locationsname$[9],"Comodo";
+	setarray $locationsname$[10],"Amatsu";
+	setarray $locationsname$[11],"Niflheim";
+	setarray $locationsname$[12],"Lutie";
+	setarray $locationsname$[13],"Louyang";
+	setarray $locationsname$[14],"Gonryun";
+	setarray $locationsname$[15],"Yuno";
+	setarray $locationsname$[16],"Ant Hell";
+	setarray $locationsname$[17],"Jawaii";
+	setarray $locationsname$[18],"Orc Village";
+	setarray $locationsname$[19],"Mjolnir Coal Mines";
+	setarray $locationsname$[20],"Gefenia Ruins";
+	setarray $locationsname$[21],"Ayothaya";
+	setarray $locationsname$[22],"Lighthalzen";
+	setarray $locationsname$[23],"Juperos";
+	setarray $locationsmap$[0],"airport";
+	setarray $locationsmap$[1],"prt_fild08";
+	setarray $locationsmap$[2],"pay_fild08";
+	setarray $locationsmap$[3],"mjolnir_12";
+	setarray $locationsmap$[4],"pay_fild03";
+	setarray $locationsmap$[5],"gef_fild00";
+	setarray $locationsmap$[6],"moc_fild10";
+	setarray $locationsmap$[7],"glast_01";
+	setarray $locationsmap$[8],"umbala";
+	setarray $locationsmap$[9],"comodo";
+	setarray $locationsmap$[10],"amatsu";
+	setarray $locationsmap$[11],"niflheim";
+	setarray $locationsmap$[12],"xmas";
+	setarray $locationsmap$[13],"louyang";
+	setarray $locationsmap$[14],"gonryun";
+	setarray $locationsmap$[15],"yuno";
+	setarray $locationsmap$[16],"moc_fild04";
+	setarray $locationsmap$[17],"jawaii";
+	setarray $locationsmap$[18],"gef_fild10";
+	setarray $locationsmap$[19],"mjolnir_02";
+	setarray $locationsmap$[20],"gefenia01";
+	setarray $locationsmap$[21],"ayothaya";
 	setarray $locationsmap$[22],"lighthalzen";
 	setarray $locationsmap$[23],"jupe_gate";
-	setarray $locationsx[0],148; 
-	setarray $locationsx[1],206; 
-	setarray $locationsx[2],159; 
-	setarray $locationsx[3],62; 
-	setarray $locationsx[4],194; 
-	setarray $locationsx[5],50; 
-	setarray $locationsx[6],163; 
-	setarray $locationsx[7],196; 
+	setarray $locationsx[0],148;
+	setarray $locationsx[1],206;
+	setarray $locationsx[2],159;
+	setarray $locationsx[3],62;
+	setarray $locationsx[4],194;
+	setarray $locationsx[5],50;
+	setarray $locationsx[6],163;
+	setarray $locationsx[7],196;
 	setarray $locationsx[8],187;
-	setarray $locationsx[9],203; 
+	setarray $locationsx[9],203;
 	setarray $locationsx[10],115;
 	setarray $locationsx[11],132;
 	setarray $locationsx[12],232;
-	setarray $locationsx[13],36; 
-	setarray $locationsx[14],82; 
+	setarray $locationsx[13],36;
+	setarray $locationsx[14],82;
 	setarray $locationsx[15],58;
 	setarray $locationsx[16],209;
-	setarray $locationsx[17],248; 
+	setarray $locationsx[17],248;
 	setarray $locationsx[18],158;
 	setarray $locationsx[19],76;
-	setarray $locationsx[20],98; 
+	setarray $locationsx[20],98;
 	setarray $locationsx[21],183;
 	setarray $locationsx[22],99;
 	setarray $locationsx[23],46;
-	setarray $locationsy[0],45; 
+	setarray $locationsy[0],45;
 	setarray $locationsy[1],280;
-	setarray $locationsy[2],92; 
+	setarray $locationsy[2],92;
 	setarray $locationsy[3],381;
 	setarray $locationsy[4],182;
 	setarray $locationsy[5],365;
 	setarray $locationsy[6],172;
 	setarray $locationsy[7],327;
 	setarray $locationsy[8],98;
-	setarray $locationsy[9],76; 
+	setarray $locationsy[9],76;
 	setarray $locationsy[10],79;
 	setarray $locationsy[11],241;
 	setarray $locationsy[12],308;
-	setarray $locationsy[13],279; 
-	setarray $locationsy[14],96; 
+	setarray $locationsy[13],279;
+	setarray $locationsy[14],96;
 	setarray $locationsy[15],194;
 	setarray $locationsy[16],326;
-	setarray $locationsy[17],175; 
+	setarray $locationsy[17],175;
 	setarray $locationsy[18],95;
 	setarray $locationsy[19],363;
-	setarray $locationsy[20],21; 
+	setarray $locationsy[20],21;
 	setarray $locationsy[21],104;
-	setarray $locationsy[22],240; 
+	setarray $locationsy[22],240;
 	setarray $locationsy[23],19;
 	goto resetgoneto;
 	end;
@@ -123,7 +123,7 @@ OnInit:
 setrandomitin:
 	set $@settervariable,$@settervariable + 1;
 	setarray $locationn[$@settervariable],rand(0,getarraysize($locationsname$) - 1);
-	if($alreadygoneto[$locationn[$@settervariable]]==1)set $@settervariable,$@settervariable - 1; 
+	if($alreadygoneto[$locationn[$@settervariable]]==1)set $@settervariable,$@settervariable - 1;
 	if($alreadygoneto[$locationn[$@settervariable]]==1)goto setrandomitin;
 	setarray $alreadygoneto[$locationn[$@settervariable]], 1;
 	if($@settervariable<12)goto setrandomitin;
@@ -244,7 +244,7 @@ Board:
 L_Yes:
 	if($destination!=getarg(0))goto Notime;
 	warp "airplane", 105, 72;
-	specialeffect2 501;
+	specialeffect(EF_CASTSPIN, AREA, playerattached());
 L_Nope:
 	mes "^FF0000[Porter]^000000";
 	mes "Have a good day.  Thank you for traveling with Airship.";
@@ -252,8 +252,10 @@ L_Nope:
 
 Notime:
 	mes "^FF0000[Porter]^000000";
-	if(Sex==0) mes "Sorry, ma'am, but the plane currently isn't ported.  However, you can view the airplane's hourly itinerary.";
-	if(Sex==1) mes "Sorry, sir, but the plane currently isn't ported.  However, you can view the airplane's hourly itinerary.";
+	if (Sex == SEX_FEMALE)
+		mes "Sorry, ma'am, but the plane currently isn't ported.  However, you can view the airplane's hourly itinerary.";
+	else
+		mes "Sorry, sir, but the plane currently isn't ported.  However, you can view the airplane's hourly itinerary.";
 	next;
 	menu "Yes, please.",Itin,"No thanks.",L_Nope;
 	close;
@@ -291,10 +293,10 @@ glast_01,196,326,1	script	Porter#07	4_M_TWBOY,{
 umbala,188,98,3	script	Porter#08	4_M_TWBOY,{
 	callfunc "F_Porter",8;
 }
-comodo,203,75,8	script	Porter#09	4_M_TWBOY,{
+comodo,203,75,0	script	Porter#09	4_M_TWBOY,{
 	callfunc "F_Porter",9;
 }
-amatsu,115,78,8	script	Porter#10	4_M_TWBOY,{
+amatsu,115,78,0	script	Porter#10	4_M_TWBOY,{
 	callfunc "F_Porter",10;
 }
 niflheim,132,242,5	script	Porter#11	4_M_TWBOY,{
@@ -303,7 +305,7 @@ niflheim,132,242,5	script	Porter#11	4_M_TWBOY,{
 xmas,232,309,5	script	Porter#12	4_M_TWBOY,{
 	callfunc "F_Porter",12;
 }
-louyang,35,279,8	script	Porter#13	4_M_TWBOY,{
+louyang,35,279,0	script	Porter#13	4_M_TWBOY,{
 	callfunc "F_Porter",13;
 }
 gonryun,82,95,7	script	Porter#14	4_M_TWBOY,{
@@ -354,7 +356,7 @@ Lyes:
 	if($destination == 250)goto Notime;
 	if($destination != @dockky)goto Notime;
 	warp $locationsmap$[$destination], $locationsx[$destination], $locationsy[$destination];
-	specialeffect2 501;
+	specialeffect(EF_CASTSPIN, AREA, playerattached());
 
 Lnope:
 	mes "^FF0000[Airplane Attendant]^000000";
@@ -363,8 +365,10 @@ Lnope:
 
 Notime:
 	mes "^FF0000[Airplane Attendant]^000000";
-	if(Sex==0) mes "Sorry, ma'am, but the plane currently isn't docked.  Please wait.";
-	if(Sex==1) mes "Sorry, sir, but the plane currently isn't docked.  Please wait.";
+	if (Sex == SEX_FEMALE)
+		mes "Sorry, ma'am, but the plane currently isn't docked.  Please wait.";
+	else
+		mes "Sorry, sir, but the plane currently isn't docked.  Please wait.";
 	close;
 
 Nowhere:
@@ -385,7 +389,7 @@ function	script	F_Itin	{
 
 seta:
 	set @tempo, @tempo + 1;
-	set @time, gettime(3);
+	set @time, gettime(GETTIME_HOUR);
 	set @minutes, 5 * @tempo - 5;
 	set @minutess, 5 * @tempo - 2;
 	if(@minutes<10)set @minutes$, "0" + @minutes;
@@ -406,7 +410,7 @@ seta:
 setb:
 	if($@currenttime - 1==@tempo)goto setc;
 	set @tempo, @tempo + 1;
-	set @time, gettime(3) + 1;
+	set @time, gettime(GETTIME_HOUR) + 1;
 	set @minutes, 5 * @tempo - 5;
 	set @minutess, 5 * @tempo - 2;
 	if(@minutes<10)set @minutes$, "0" + @minutes;

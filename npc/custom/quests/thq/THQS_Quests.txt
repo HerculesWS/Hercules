@@ -44,7 +44,7 @@ pay_arche,86,129,6	script	Archer	4_M_JOB_HUNTER,{
 	close;
 N_QuestStart:
 	mes "[Kieth]";
-	if (countitem(1072) < 1) {
+	if (countitem(Delivery_Message) < 1) {
 		mes "Weren't you supposed to deliver me a box? Where is it?";
 		close;
 	}
@@ -59,7 +59,7 @@ N_QuestStart:
 }
 //1-3
 prt_fild06,37,192,6	script	Farmer	4_M_TELEPORTER,{
-	if (one_qset == 3 && countitem(909) > 19 && countitem(955) > 19 && countitem(914) > 19 && countitem(705) > 19) goto N_QuestComp;
+	if (one_qset == 3 && countitem(Jellopy) > 19 && countitem(Worm_Peelings) > 19 && countitem(Fluff) > 19 && countitem(Clover) > 19) goto N_QuestComp;
 	if (one_qset==3) goto N_QuestStart;
 	mes "[Billy-Bob]";
 	mes "Arrrg!... Those Bastard Bugs have eaten everything, this place donest even look like my farm anymore!!";
@@ -86,7 +86,7 @@ N_QuestStart:
 }
 //1-4
 prontera,264,353,6	script	Old Lady#thq	8_F_GRANDMOTHER,{
-	if (one_qset == 4 && countitem(934) > 14) goto N_QuestComp;
+	if (one_qset == 4 && countitem(Mementos) > 14) goto N_QuestComp;
 	if (one_qset == 4) goto N_QuestStart;
 	mes "[Old Lady]";
 	mes "This is my husbands grave... I'm just paying him a little visit.";
@@ -115,7 +115,7 @@ N_QuestStart:
 ///////Job list 2///////
 //2-1;
 morocc,59,109,6	script	Erika	8_F_GIRL,{
-	if (two_qset == 1 && countitem(1072) > 0) goto N_QuestComp;
+	if (two_qset == 1 && countitem(Delivery_Message) > 0) goto N_QuestComp;
 	if (two_qset == 1) goto N_QuestStart;
 	mes "[Erika]";
 	mes "Hello my name is Erika.";
@@ -173,7 +173,7 @@ N_QuestStart:
 }
 //2-3;
 prt_fild07,316,263,6	script	Marsh Man	4_M_02,{
-	if (two_qset == 3 && countitem(518) > 19) goto N_QuestComp;
+	if (two_qset == 3 && countitem(Honey) > 19) goto N_QuestComp;
 	if (two_qset == 3) goto N_QuestStart;
 	mes "[Lenith]";
 	mes "Hello, sorry I don't have much time to talk I'm waiting for someone.";
@@ -198,7 +198,7 @@ N_QuestStart:
 }
 //2-4;
 payon,161,72,6	script	Molly	4_F_06,{
-	if (two_qset == 4 && countitem(7005) > 0) goto N_QuestComp;
+	if (two_qset == 4 && countitem(Skull) > 0) goto N_QuestComp;
 	if (two_qset == 4) goto N_QuestStart;
 	mes "[Molly]";
 	mes "Sorry can't talk, I'm waiting for someone.";
@@ -228,7 +228,7 @@ N_QuestStart:
 ///////Job list 3///////
 //3-1;
 moc_fild04,208,322,6	script	Clark	1_M_YOUNGKNIGHT,{
-	if (three_qset == 1 && countitem(1040) > 29) goto N_QuestComp;
+	if (three_qset == 1 && countitem(Elder_Pixies_Beard) > 29) goto N_QuestComp;
 	if (three_qset == 1) goto N_QuestStart;
 	mes "[Clark]";
 	mes "Love to chat, but I'm waiting for someone.";
@@ -257,7 +257,7 @@ N_QuestStart:
 }
 //3-2;
 yuno_fild01,186,162,6	script	Flank	1_F_MERCHANT_01,{
-	if (three_qset == 2 && countitem(1082) > 0) goto N_QuestComp;
+	if (three_qset == 2 && countitem(Merchant_Box_2) > 0) goto N_QuestComp;
 	if (three_qset == 2) goto N_QuestStart;
 	mes "[Flank]";
 	mes "Sorry I'm waiting for my package so I don't want to talk.";
@@ -282,7 +282,7 @@ N_QuestStart:
 }
 //3-3 Goes to 7-3 using callfunc
 prt_sewb1,120,245,6	script	Sewer Managment Knight	4_M_GEF_SOLDIER,{
-	if (three_qset == 3 && countitem(955) > 149) goto N_QuestComp;
+	if (three_qset == 3 && countitem(Worm_Peelings) > 149) goto N_QuestComp;
 	if (three_qset == 3) goto N_QuestStart;
 	if (seven_qset == 3) goto N_QuestStart2;
 	mes "[Sewer Managmant]";
@@ -310,7 +310,7 @@ N_QuestStart2:
 }
 //3-4
 mjolnir_02,87,357,6	script	Man#01	1_M_BARD,{
-	if (three_qset == 4 && countitem(1041) > 49) goto N_QuestComp;
+	if (three_qset == 4 && countitem(Lantern) > 49) goto N_QuestComp;
 	if (three_qset == 4) goto N_QuestStart;
 	mes "[Rudolfo]";
 	mes "Danger, the Coal Mine is now a hostile area.";
@@ -338,7 +338,7 @@ N_QuestStart:
 ///////Job list 4///////
 //4-1;
 pay_arche,45,138,6	script	Flora	4_F_07,{
-	if (four_qset == 1 && countitem(957) > 49) goto N_QuestComp;
+	if (four_qset == 1 && countitem(Decayed_Nail) > 49) goto N_QuestComp;
 	if (four_qset == 1) goto N_QuestStart;
 	mes "[Flora]";
 	mes "Well hello be carfull in the cave, we have heard reports of Undead monster funning around.";
@@ -397,7 +397,7 @@ N_QuestStart:
 }
 //4-3;
 prontera,176,204,6	script	Dassy	4_F_SISTER,{
-	if (four_qset == 3 && countitem(711) > 19) goto N_QuestComp;
+	if (four_qset == 3 && countitem(Shoot) > 19) goto N_QuestComp;
 	if (four_qset == 3) goto N_QuestStart;
 	mes "[Dassy]";
 	mes "Hello!";
@@ -423,7 +423,7 @@ N_QuestStart:
 }
 //4-4;
 prt_gld,157,99,6	script	Czhore	4_M_CRU_OLD,{
-	if (four_qset == 4 && countitem(714) > 0) goto N_QuestComp;
+	if (four_qset == 4 && countitem(Emperium) > 0) goto N_QuestComp;
 	if (four_qset == 4) goto N_QuestStart;
 	mes "[Czhore]";
 	mes "Hello friend";
@@ -433,7 +433,7 @@ N_QuestComp:
 	mes "[Czhore]";
 	mes "Thank god!";
 	mes " ";
-	mes "I'm so happy to see one of these Emperiums! Thank you "+strcharinfo(0)+".";
+	mes "I'm so happy to see one of these Emperiums! Thank you "+strcharinfo(PC_NAME)+".";
 	next;
 	mes "[Czhore]";
 	mes "Here have these 2 Treasure Tokens.";
@@ -456,7 +456,7 @@ N_QuestStart:
 ///////Job list 5///////
 //5-1;
 prt_maze01,18,184,6	script	Lithin#01	4_M_CRU_OLD,{
-	if (five_qset == 1 && countitem(1028) > 14) goto N_QuestComp;
+	if (five_qset == 1 && countitem(Wild_Boars_Mane) > 14) goto N_QuestComp;
 	if (five_qset == 1) goto N_QuestStart;
 	mes "[Lithin]";
 	mes "Well hello.";
@@ -483,7 +483,7 @@ N_QuestStart:
 }
 //5-2 goes to 6-2 using callfunc;
 moc_ruins,75,167,6	script	Lithin#02	4_M_BARBER,{
-	if (five_qset == 2 && countitem(932) > 29) goto N_QuestComp;
+	if (five_qset == 2 && countitem(Skel_Bone) > 29) goto N_QuestComp;
 	if (five_qset == 2) goto N_QuestStart;
 	if (six_qset == 2) goto N_QuestStart2;
 	mes "[Strange Man]";
@@ -511,7 +511,7 @@ N_QuestStart2:
 }
 //5-3;
 geffen,57,130,6	script	Blonde Girl	4_F_07,{
-	if (five_qset == 3 && countitem(744) > 0) goto N_QuestComp;
+	if (five_qset == 3 && countitem(Bunch_Of_Flowers) > 0) goto N_QuestComp;
 	if (five_qset == 3) goto N_QuestStart;
 	mes "[Blonde Girl]";
 	mes "I wonder what happened to my flowers";
@@ -535,7 +535,7 @@ N_QuestStart:
 }
 //5-4;
 gef_tower,49,27,6	script	Wizard#01	4_M_JOB_WIZARD,{
-	if (five_qset == 4 && countitem(1059) > 49) goto N_QuestComp;
+	if (five_qset == 4 && countitem(Transparent_Cloth) > 49) goto N_QuestComp;
 	if (five_qset == 4) goto N_QuestStart;
 	mes "[Wizard]";
 	mes "Hello, have you seen my Whisper friend?";
@@ -563,7 +563,7 @@ N_QuestStart:
 ///////Job list 6///////
 //6-1;
 moc_prydb1,47,132,6	script	Thief	1_M_02,{
-	if (six_qset == 1 && countitem(1083) > 0) goto N_QuestComp;
+	if (six_qset == 1 && countitem(Merchant_Box_3) > 0) goto N_QuestComp;
 	if (six_qset == 1) goto N_QuestStart;
 	mes "[Thief]";
 	mes "Welcome to the Thiefs Guild.";
@@ -586,7 +586,7 @@ N_QuestStart:
 }
 //6-2
 function	script	six_qset2	{
-	if (six_qset == 2 && countitem(930) > 29) goto N_QuestComp2;
+	if (six_qset == 2 && countitem(Rotten_Bandage) > 29) goto N_QuestComp2;
 	mes "[Strange Man]";
 	mes "Another quest for you I have.";
 	mes "Futher into the pyramid you must go.";
@@ -609,7 +609,7 @@ N_QuestComp2:
 }
 //6-3;
 xmas,144,136,6	script	Chirach	1_M_02,{
-	if (six_qset == 3 && countitem(1083) > 0) goto N_QuestComp;
+	if (six_qset == 3 && countitem(Merchant_Box_3) > 0) goto N_QuestComp;
 	if (six_qset == 3) goto N_QuestStart;
 	mes "[Chirach]";
 	mes "Welcome.";
@@ -632,7 +632,7 @@ N_QuestStart:
 }
 //6-4;
 gef_tower,52,87,6	script	Wizard#02	4_M_JOB_WIZARD,{
-	if (six_qset == 4 && countitem(944) > 19) goto N_QuestComp;
+	if (six_qset == 4 && countitem(Horseshoe) > 19) goto N_QuestComp;
 	if (six_qset == 4) goto N_QuestStart;
 	mes "[Zuuzuu]";
 	mes "Hello, welcome to geffen tower.";
@@ -664,11 +664,11 @@ N_QuestStart:
 ///////Job list 7///////
 //7-1 goes to 8-1 using callfunc;
 prontera,123,208,6	script	Little Girl#thq	4_F_KID3,{
-	if (seven_qset == 1 && countitem(531) > 4) goto N_QuestComp;
+	if (seven_qset == 1 && countitem(Apple_Juice) > 4) goto N_QuestComp;
 	if (seven_qset == 1) goto N_QuestStart;
 	if (eight_qset == 1) goto N_QuestStart2;
 	mes "[Girl]";
-	mes "Hello mister "+strcharinfo(0)+".";
+	mes "Hello mister "+strcharinfo(PC_NAME)+".";
 	close;
 N_QuestComp:
 	mes "[Girl]";
@@ -691,10 +691,10 @@ N_QuestStart2:
 }
 //7-2;
 alberta,101,84,6	script	Charles	1_M_02,{
-	if (seven_qset == 2 && countitem(1082) > 0) goto N_QuestComp;
+	if (seven_qset == 2 && countitem(Merchant_Box_2) > 0) goto N_QuestComp;
 	if (seven_qset == 2) goto N_QuestStart;
 	mes "[Charles]";
-	mes "Hello "+strcharinfo(0)+" welcome to Alberta.";
+	mes "Hello "+strcharinfo(PC_NAME)+" welcome to Alberta.";
 	close;
 N_QuestComp:
 	mes "[Charles]";
@@ -714,7 +714,7 @@ N_QuestStart:
 }
 //7-3
 function	script	seven_qset-3	{
-	if (seven_qset == 3 && countitem(969) > 0) goto N_QuestComp2;
+	if (seven_qset == 3 && countitem(Gold) > 0) goto N_QuestComp2;
 	mes "[Sewer Managment]";
 	mes "Well there have been reports of a Golden Thief Bug running around the bottem on the Culvert";
 	mes " ";
@@ -734,7 +734,7 @@ N_QuestComp2:
 }
 //7-4;
 alb2trea,94,102,6	script	Scarlet	4_F_JOB_ASSASSIN,{
-	if (seven_qset == 4 && countitem(1127) > 0) goto N_QuestComp;
+	if (seven_qset == 4 && countitem(Saber_) > 0) goto N_QuestComp;
 	if (seven_qset == 4) goto N_QuestStart;
 	mes "[Scarlet]";
 	mes "Sorry, busy.";
@@ -760,7 +760,7 @@ N_QuestStart:
 ///////Job list 8///////
 //8-1
 function	script	eight_qset1	{
-	if (eight_qset == 1 && countitem(532) > 4) goto N_QuestComp2;
+	if (eight_qset == 1 && countitem(Banana_Juice) > 4) goto N_QuestComp2;
 	mes "[Girl]";
 	mes "Hi mister person. Can you get me some Banana juice?";
 	mes "I want 5 of them.";
@@ -779,10 +779,10 @@ N_QuestComp2:
 }
 //8-2;
 morocc,165,55,6	script	Klye	1_M_02,{
-	if (eight_qset == 2 && countitem(1081) > 0) goto N_QuestComp;
+	if (eight_qset == 2 && countitem(Merchant_Box_1) > 0) goto N_QuestComp;
 	if (eight_qset == 2) goto N_QuestStart;
 	mes "[Klye]";
-	mes "Hello "+strcharinfo(0)+".";
+	mes "Hello "+strcharinfo(PC_NAME)+".";
 	close;
 N_QuestComp:
 	mes "[Klye]";
@@ -803,7 +803,7 @@ N_QuestStart:
 }
 //8-3;
 prt_maze02,103,86,6	script	Zack	4_M_CRU,{
-	if (eight_qset == 3 && countitem(923) > 0) goto N_QuestComp;
+	if (eight_qset == 3 && countitem(Evil_Horn) > 0) goto N_QuestComp;
 	if (eight_qset == 3) goto N_QuestStart;
 	mes "[Zack]";
 	mes "Hello, have you seen my Whisper friend?";
@@ -829,7 +829,7 @@ N_QuestStart:
 }
 //8-4;
 payon,136,129,6	script	Flower	4_F_KID2,{
-	if (eight_qset == 4 && countitem(746) > 9) goto N_QuestComp;
+	if (eight_qset == 4 && countitem(Glass_Bead) > 9) goto N_QuestComp;
 	if (eight_qset == 4) goto N_QuestStart;
 	mes "[Flower]";
 	mes "Sorry I'm waiting for someone. You will have to come back later.";
@@ -855,10 +855,10 @@ N_QuestStart:
 ///////Job list 9///////
 //9-1;
 geffen_in,168,124,6	script	Mage	1_M_02,{
-	if (nine_qset == 1 && countitem(1082) > 0) goto N_QuestComp;
+	if (nine_qset == 1 && countitem(Merchant_Box_2) > 0) goto N_QuestComp;
 	if (nine_qset == 1) goto N_QuestStart;
 	mes "[Mage]";
-	mes "Hello "+strcharinfo(0)+" welcome to the Mage Guild.";
+	mes "Hello "+strcharinfo(PC_NAME)+" welcome to the Mage Guild.";
 	close;
 N_QuestComp:
 	mes "[Mage]";
@@ -873,12 +873,12 @@ N_QuestComp:
 	close;
 N_QuestStart:
 	mes "[Mage]";
-	mes "Hello "+strcharinfo(0)+", Where is my box of Toad Tounges?.";
+	mes "Hello "+strcharinfo(PC_NAME)+", Where is my box of Toad Tounges?.";
 	close;
 }
 //9-2;
 pay_arche,98,74,6	script	School Girl	4_F_KID2,{
-	if (nine_qset == 2 && countitem(1020) > 19) goto N_QuestComp;
+	if (nine_qset == 2 && countitem(Long_Hair) > 19) goto N_QuestComp;
 	if (nine_qset == 2) goto N_QuestStart;
 	mes "[School Girl]";
 	mes "Sorry I'm waiting for someone, you will have to come back later";
@@ -906,7 +906,7 @@ N_QuestStart:
 }
 //9-3
 payon_in02,19,33,6	script	Jack	2_M_ALCHE,{
-	if (nine_qset == 3 && countitem(1022) > 0) goto N_QuestComp;
+	if (nine_qset == 3 && countitem(Fox_Tail) > 0) goto N_QuestComp;
 	if (nine_qset == 3) goto N_QuestStart;
 	if (nine_qset == 4) goto N_QuestStart2;
 	mes "[Jack]";
@@ -931,7 +931,7 @@ N_QuestStart:
 	close;
 N_QuestStart2:
 //9-4
-	if (nine_qset == 4 && countitem(901) > 39) goto N_QuestComp2;
+	if (nine_qset == 4 && countitem(Danggie) > 39) goto N_QuestComp2;
 	mes "[Jack]";
 	mes "Hello, we need you to investigate some crap in the 3rd level of payon.";
 	mes " ";
@@ -952,10 +952,10 @@ N_QuestComp2:
 ///////Job list 10///////
 //10-1
 morocc,193,51,6	script	Kreg	1_M_02,{
-	if (ten_qset == 1 && countitem(1082) > 0) goto N_QuestComp;
+	if (ten_qset == 1 && countitem(Merchant_Box_2) > 0) goto N_QuestComp;
 	if (ten_qset == 1) goto N_QuestStart;
 	mes "[Kreg]";
-	mes "Hello "+strcharinfo(0)+" welcome to Morroc.";
+	mes "Hello "+strcharinfo(PC_NAME)+" welcome to Morroc.";
 	close;
 N_QuestComp:
 	mes "[Kreg]";
@@ -975,7 +975,7 @@ N_QuestStart:
 }
 //10-2;
 pay_fild10,145,252,6	script	Man#02	2_M_DYEINGER,{
-	if (ten_qset == 2 && countitem(1029) > 0) goto N_QuestComp;
+	if (ten_qset == 2 && countitem(Tigers_Skin) > 0) goto N_QuestComp;
 	if (ten_qset == 2) goto N_QuestStart;
 	mes "[Man]";
 	mes "Sorry I'm waiting for someone, you will have to come back later";
@@ -995,12 +995,12 @@ N_QuestStart:
 	mes "[Man]";
 	mes "Tony the Tiger is on Crack! He must be stoped, KILL HIM!";
 	mes " ";
-	mes "Bring me back 1 Tiger's_Skin!";
+	mes "Bring me back 1 Tiger's Skin!";
 	close;
 }
 //10-3;
 cmd_fild08,328,349,4	script	Caral	2_M_SWORDMASTER,{
-	if (ten_qset == 3 && countitem(1015) > 0) goto N_QuestComp;
+	if (ten_qset == 3 && countitem(Thin_N_Long_Tongue) > 0) goto N_QuestComp;
 	if (ten_qset == 3) goto N_QuestStart;
 	mes "[Caral]";
 	mes "Sorry I'm waiting for someone, you will have to come back later.";
@@ -1025,7 +1025,7 @@ N_QuestStart:
 }
 //10-4
 moc_fild15,250,251,6	script	Jeni	4_F_JOB_HUNTER,{
-	if (ten_qset == 4 && countitem(1096) > 0) goto N_QuestComp;
+	if (ten_qset == 4 && countitem(Round_Shell) > 0) goto N_QuestComp;
 	if (ten_qset == 4) goto N_QuestStart;
 	mes "[Jeni]";
 	mes "Sorry I'm waiting for someone, You will have to come back later";

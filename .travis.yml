@@ -1,19 +1,56 @@
 language: c
-compiler:
-  - clang
-  - gcc
+sudo: false
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - gcc-5
+    - gcc-6
+
+install:
+  - ./tools/ci/travis.sh getplugins || true
   
 before_script:
-  - uname -a  
+  - uname -a
+  - ./tools/ci/travis.sh createdb ragnarok root
+  - ./tools/ci/travis.sh importdb ragnarok travis
+  - mysql -u root -e "SET PASSWORD FOR 'travis'@'localhost' = PASSWORD('travis');"
 
-script: 
-  - ./configure --enable-debug && make sql -j3
-  - make clean
-  - ./configure --disable-renewal --enable-debug && make sql -j3
+script:
+  - ./tools/ci/travis.sh build $CONFIGURE_FLAGS
+  - ./tools/ci/travis.sh test ragnarok travis travis
+
+# We can't use this, unfortunately
+# http://github.com/travis-ci/travis-ci/issues/979
+#compiler:
+#  - clang
+#  - gcc
+
+matrix:
+  exclude:
+  - env: ignore=this
+  include:
+  - compiler: clang
+    env: CONFIGURE_FLAGS="--enable-debug --enable-Werror --enable-buildbot"
+  - compiler: clang
+    env: CONFIGURE_FLAGS="--enable-debug --disable-renewal --enable-Werror --enable-buildbot"
+  - compiler: gcc
+    env: CONFIGURE_FLAGS="--enable-debug --enable-Werror --enable-buildbot"
+  - compiler: gcc
+    env: CONFIGURE_FLAGS="--enable-debug --disable-renewal --enable-Werror --enable-buildbot"
+  - compiler: gcc
+    env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug --enable-sanitize=full CC=gcc-5 --disable-manager --enable-Werror --enable-buildbot"
+  - compiler: gcc
+    env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug --enable-sanitize=full CC=gcc-5 --disable-manager --disable-renewal --enable-Werror --enable-buildbot"
+  - compiler: gcc
+    env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug --enable-sanitize=full CC=gcc-6 --disable-manager --enable-Werror --enable-buildbot"
+  - compiler: gcc
+    env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug --enable-sanitize=full CC=gcc-6 --disable-manager --disable-renewal --enable-Werror --enable-buildbot"
   
 notifications:
   email: false
   
 branches:
-  only:
-    - master
+  except:
+    - rathena

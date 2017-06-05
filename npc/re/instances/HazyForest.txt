@@ -1,27 +1,43 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2013-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Hazy Forest
-//===== By: ==================================================
-//= Euphy
-//===== Current Version: =====================================
-//= 1.1
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Cross through the Hazy Forest to reach the Bifrost.
 //= Contains the "Wandering Guardian" quest.
-//===== Additional Comments: =================================
-//= 1.0 First version. [Euphy]
-//= 1.1 Instance system rewrite. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.1
+//=========================================================================
 
-1@mist	mapflag	src4instance
-//============================================================
-
-// Instance Creation
-//============================================================
+//== Instance Creation =====================================
 bif_fild01,158,340,5	script	Laphine Soldier#mist	4_M_FAIRYSOLDIER,{
 
-	set .@party_id,getcharid(1);
-	set .@md_name$,"Mistwood Maze";
+	.@party_id = getcharid(CHAR_ID_PARTY);
+	.@md_name$ = "Mistwood Maze";
 
 	mes "[Laphine Soldier]";
 	mes "Are you going into the forest?";
@@ -32,9 +48,9 @@ bif_fild01,158,340,5	script	Laphine Soldier#mist	4_M_FAIRYSOLDIER,{
 		mes "Why don't you at least organize a party?";
 		close;
 	}
-	set .@playtime, checkquest(7211,PLAYTIME);
-	if (getcharid(0) == getpartyleader(.@party_id,2)) {
-		if (.@playtime == 0 || .@playtime == 1) {
+	.@playtime = questprogress(7211,PLAYTIME);
+	if (getcharid(CHAR_ID_CHAR) == getpartyleader(.@party_id,2)) {
+		if (.@playtime == 1) {
 			mes "[Laphine Soldier]";
 			mes "...Are you sure you're not doing too much?";
 			mes "I think you'd better get some rest.";
@@ -79,17 +95,17 @@ bif_fild01,158,340,5	script	Laphine Soldier#mist	4_M_FAIRYSOLDIER,{
 			mes "Are you going to venture into the Hazy Forest?";
 		}
 		next;
-		switch(select("Venture into the Hazy Forest.:Give up.")) {
+		switch(select("Venture into the Hazy Forest.", "Give up.")) {
 		case 1:
 			mes "[Laphine Soldier]";
 			mes "Party Name "+getpartyname(.@party_id)+"...";
-			mes "Party Leader "+strcharinfo(0)+"...";
-			set .@instance, instance_create(.@md_name$, .@party_id);
+			mes "Party Leader "+strcharinfo(PC_NAME)+"...";
+			.@instance = instance_create(.@md_name$, .@party_id);
 			if (.@instance < 0) {
 				mes "Hmm...";
 				next;
 				mes "[Laphine Soldier]";
-				if (.@playtime == -1)
+				if (!.@playtime)
 					mes "It's dangerous in the forest.";
 				else
 					mes "The atmosphere is somewhat tense in the forest.";
@@ -111,12 +127,13 @@ bif_fild01,158,340,5	script	Laphine Soldier#mist	4_M_FAIRYSOLDIER,{
 				mes "but maybe you humans can.";
 				mes "Good luck!";
 				close;
-			} else 
+			} else {
 				instance_destroy(.@instance);
+			}
 		case 2:
 			mes "[Laphine Soldier]";
 			mes "Well, you've made the right decision.";
-			if (.@playtime == -1)
+			if (!.@playtime)
 				mes "That's what's good for you.";
 			close;
 		}
@@ -144,11 +161,10 @@ bif_fild01,161,355,0	script	Log Tunnel	CLEAR_NPC,{
 	mes "I see the forest through the log tunnel.";
 	mes "It looks like I can enter the forest through the log tunnel.";
 	next;
-	if(select("Enter the tunnel.:Give up.") == 2)
+	if(select("Enter the tunnel.", "Give up.") == 2)
 		close;
-	set .@playtime, checkquest(7211,PLAYTIME);
 	if (has_instance("1@mist") == "") {
-		if (.@playtime == 0 || .@playtime == 1) {
+		if (questprogress(7211,PLAYTIME) == 1) {
 			mes "You try to crawl into the log, but some mysterious power pushes you back with a gush of wind.";
 			mes "It seems like you can't force your way into the forest.";
 			close;
@@ -156,17 +172,16 @@ bif_fild01,161,355,0	script	Log Tunnel	CLEAR_NPC,{
 		mes "The world beyond the log tunnel looks dark and suffocating.";
 		mes "Your instinct is screaming that this forest is dangerous.";
 		close;
-	} else {		
-		if (checkquest(7211,PLAYTIME) == 2) erasequest 7211;
-		if (checkquest(7211,PLAYTIME) == -1) setquest 7211;
-		mapannounce "bif_fild01",getpartyname(getcharid(1))+" party's "+strcharinfo(0)+" member is entering the Mistwood Maze.",bc_map,"0x00ff99"; //FW_NORMAL 12 0 0
+	} else {
+		if (questprogress(7211,PLAYTIME) == 2) erasequest 7211;
+		if (!questprogress(7211,PLAYTIME)) setquest 7211;
+		mapannounce "bif_fild01",getpartyname(getcharid(CHAR_ID_PARTY))+" party's "+strcharinfo(PC_NAME)+" member is entering the Mistwood Maze.",bc_map,"0x00ff99"; //FW_NORMAL 12 0 0
 		warp "1@mist",89,29;
 		close;
-	}	
+	}
 }
 
-// Instance Scripts
-//============================================================
+//== Instance Scripts ======================================
 1@mist,89,29,0	script	#Whisper_mist	CLEAR_NPC,1,1,{
 	end;
 OnInstanceInit:
@@ -194,17 +209,17 @@ OnTimer180000:
 
 // callfunc "F_Mora_Mist",<warp to enable>,<success message>,<fail message>{,<end flag>}
 function	script	F_Mora_Mist	{
-	set .@map$, instance_mapname("1@mist");
-	if (mobcount(.@map$,instance_npcname(strnpcinfo(0))+"::OnMyMobDead") == 0) {
+	.@map$ = instance_mapname("1@mist");
+	if (mobcount(.@map$,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead") == 0) {
 		mes "Obviously no one is taking care of it.";
 		mes "It seems like you can chop down the garden tree.";
 		next;
-		if(select("Chop down the garden tree.:Give up.") == 2)
+		if(select("Chop down the garden tree.", "Give up.") == 2)
 			close;
 		mes "You chop down the tree, which was blocking the path of the maze, "+((getarg(3,0))?"clearing the way out of the forest.":"so now you can continue.");
 		mapannounce .@map$,getarg(1),bc_map,"0xccffcc"; //FW_NORMAL 12 0 0
 		enablenpc instance_npcname(getarg(0));
-		disablenpc instance_npcname(strnpcinfo(0));
+		disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 		close;
 	} else
 		mapannounce .@map$,((getarg(3,0))?getarg(2):getarg(2)+"'s Cry: Huh? Who's doing bad things to my tree?!"),bc_map,"0xccffcc"; //FW_NORMAL 12 0 0
@@ -423,7 +438,7 @@ OnMyMobDead:
 		"Gardeners: We're not dead, yet!!!!",1;
 	end;
 OnInstanceInit:
-	set .@map$, instance_mapname("1@mist");
+	.@map$ = instance_mapname("1@mist");
 	monster .@map$,318,137,"Baby Tom",2136,1,instance_npcname("The Gardeners' Tree")+"::OnMyMobDead";
 	monster .@map$,321,137,"Tomba the Baby",2136,1,instance_npcname("The Gardeners' Tree")+"::OnMyMobDead";
 	monster .@map$,324,137,"Exhausted Remi",2137,1,instance_npcname("The Gardeners' Tree")+"::OnMyMobDead";
@@ -444,8 +459,8 @@ OnMyMobDead:
 
 1@mist,73,290,0	script	Mysterious Flower#1	CLEAR_NPC,{
 	specialeffect EF_LEVEL99_4;
-	disablenpc instance_npcname(strnpcinfo(0));
-	getitem 12561,1; //Mysterious_Seed
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
+	getitem Mysterious_Seed,1;
 	end;
 }
 1@mist,69,295,0	duplicate(Mysterious Flower#1)	Mysterious Flower#2	CLEAR_NPC
@@ -497,8 +512,7 @@ OnMyMobDead:
 1@mist,252,206,0	duplicate(Mysterious Flower#1)	Mysterious Flower#49	CLEAR_NPC
 1@mist,244,211,0	duplicate(Mysterious Flower#1)	Mysterious Flower#50	CLEAR_NPC
 
-// Wandering Guardian Quest
-//============================================================
+//== Wandering Guardian Quest ==============================
 1@mist,2,2,0	script	#Dragon Herder	CLEAR_NPC,{
 	end;
 OnInstanceInit:
@@ -513,7 +527,7 @@ OnInstanceInit:
 	monster instance_mapname("1@mist"),.@c[0],.@c[1],"Wandering Purple Dragon",2131,1,instance_npcname("#Dragon Herder")+"::OnMyMobDead";
 	end;
 OnMyMobDead:
-	set .@map$, instance_mapname("1@mist");
+	.@map$ = instance_mapname("1@mist");
 	if (mobcount(.@map$,instance_npcname("#Dragon Herder")+"::OnMyMobDead") == 0) {
 		donpcevent instance_npcname("Collapsed Girl#mist")+"::OnEnable";
 		donpcevent instance_npcname("Mysterious Young Man#mis")+"::OnEnable";
@@ -565,22 +579,22 @@ OnTimer3000:
 		mes "That's my name.";
 		mes "And yours?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "....";
-		mes "...."+strcharinfo(0)+" sir.";
+		mes "...."+strcharinfo(PC_NAME)+" sir.";
 		next;
 		mes "[Loki]";
-		mes "I see. "+strcharinfo(0)+".";
+		mes "I see. "+strcharinfo(PC_NAME)+".";
 		mes "I'm asking you again.";
 		mes "Do you plan to pass through this forest?";
 		next;
-		switch(select("Yes, I do.:No, I don't.")) {
+		switch(select("Yes, I do.", "No, I don't.")) {
 		case 1:
 			mes "[Loki]";
 			mes "Then I'll ask you a question.";
 			mes "Have you ever seen a guard... a girl with purple hair?";
 			next;
-			switch(select("No, I haven't.:Yes, I might have...")) {
+			switch(select("No, I haven't.", "Yes, I might have...")) {
 			case 1:
 				mes "[Loki]";
 				mes "So you haven't.";
@@ -599,7 +613,7 @@ OnTimer3000:
 			mes "[Loki]";
 			mes "Now we have to say goodbye here.";
 			mes "If you survive this forest, of course.";
-			set ep14_1_mistwoods,2;
+			ep14_1_mistwoods = 2;
 			setquest 7212;
 			close;
 		case 2:
@@ -607,7 +621,7 @@ OnTimer3000:
 			mes "I understand.";
 			mes "Step back if you aren't ready.";
 			mes "This forest doesn't like strangers.";
-			set ep14_1_mistwoods,1;
+			ep14_1_mistwoods = 1;
 			close;
 		}
 	} else if (ep14_1_mistwoods == 1) {
@@ -616,7 +630,7 @@ OnTimer3000:
 		mes "It's not easy going through the forest.";
 		mes "It may cost you your life.";
 		next;
-		switch(select("Okay.:What do you want?")) {
+		switch(select("Okay.", "What do you want?")) {
 		case 1:
 			mes "- When you step back,";
 			mes "Loki nods slightly and then looks away. -";
@@ -626,7 +640,7 @@ OnTimer3000:
 			mes "I'm looking for somebody.";
 			mes "Have you ever seen a guard... a girl with purple hair?";
 			next;
-			switch(select("No, I haven't.:Yes, I might have...")) {
+			switch(select("No, I haven't.", "Yes, I might have...")) {
 			case 1:
 				mes "[Loki]";
 				mes "So you haven't.";
@@ -645,7 +659,7 @@ OnTimer3000:
 			mes "[Loki]";
 			mes "Now we have to say goodbye here.";
 			mes "Hopefully, we will see each other again in Mora.";
-			set ep14_1_mistwoods,2;
+			ep14_1_mistwoods = 2;
 			setquest 7212;
 			close;
 		}
@@ -690,7 +704,7 @@ OnDisable:
 		mes "I guess I have to thank you.";
 		mes "You've calmed her down.";
 		next;
-		select("What's happening?:This girl...?");
+		select("What's happening?", "This girl...?");
 		mes "[Loki]";
 		mes "You might be able to change your appearance, but you cannot change your unique, innate light.";
 		mes "A scent strong enough to burn your nose.";
@@ -705,7 +719,7 @@ OnDisable:
 		mes "I'll wait for her to wake up and get out of this forest.";
 		mes "I can manage it on my own.";
 		mes "I'll see you in Mora.";
-		set ep14_1_mistwoods,3;
+		ep14_1_mistwoods = 3;
 		erasequest 7212;
 		setquest 7213;
 		close;
@@ -778,7 +792,7 @@ mora,46,152,5	script	Flower Smelling Lady	4_F_NYDHOG,{
 		mes "I thought I was forsaken...";
 		next;
 		mes "The Guardian slowly looked away as if deep in thought.";
-		set ep14_1_mistwoods,4;
+		ep14_1_mistwoods = 4;
 		close2;
 	} else if (ep14_1_mistwoods == 4) {
 		mes "- He seems to be deep in thought. -";
@@ -800,7 +814,7 @@ mora,46,152,5	script	Flower Smelling Lady	4_F_NYDHOG,{
 }
 
 mora,48,152,3	script	Sharp Eyed Man	4_M_ROKI2,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "- You have too many items to do this quest. -";
 		close;
 	}
@@ -872,7 +886,7 @@ mora,48,152,3	script	Sharp Eyed Man	4_M_ROKI2,{
 		mes "Now I know. I'll destroy Morroc with my own hands.";
 		mes "I will fulfill my duties as a guardian.";
 		next;
-		switch(select("You're not alone.:Those are very important duties.")) {
+		switch(select("You're not alone.", "Those are very important duties.")) {
 		case 1:
 			mes "[Nydhogg the Guardian]";
 			mes "You're right.";
@@ -889,7 +903,7 @@ mora,48,152,3	script	Sharp Eyed Man	4_M_ROKI2,{
 			break;
 		}
 		mes "[Nydhogg the Guardian]";
-		mes strcharinfo(0)+"...";
+		mes strcharinfo(PC_NAME)+"...";
 		mes "Thanks for listening to my long story.";
 		next;
 		mes "[Nydhogg the Guardian]";
@@ -901,10 +915,10 @@ mora,48,152,3	script	Sharp Eyed Man	4_M_ROKI2,{
 		next;
 		mes "[Nydhogg the Guardian]";
 		mes "May the blessing of Mother Yggdrasil be with you...";
-		set ep14_1_mistwoods,10;
+		ep14_1_mistwoods = 10;
 		completequest 7213;
-		getitem 2568,1; //Muffler_Of_Roki
-		getitem 2858,1; //Pendant_Of_Guardian
+		getitem Muffler_Of_Roki,1;
+		getitem Pendant_Of_Guardian,1;
 		getexp 400000,400000;
 		close;
 	} else {
@@ -919,16 +933,15 @@ mora,48,152,3	script	Sharp Eyed Man	4_M_ROKI2,{
 	}
 }
 
-// Monster Spawns
-//============================================================
+//== Monster Spawns ========================================
 1@mist,1,1,0	script	#Mist Mobs Respawn1	CLEAR_NPC,{
 	end;
 OnInstanceInit:
 	monster instance_mapname("1@mist"),0,0,"Miming",2137,15,instance_npcname("#Mist Mobs Respawn1")+"::OnMyMobDead";
 	end;
 OnMyMobDead:
-	set .@map$, instance_mapname("1@mist");
-	set .@num_mobs, 15 - mobcount(.@map$,instance_npcname("#Mist Mobs Respawn1")+"::OnMyMobDead");
+	.@map$ = instance_mapname("1@mist");
+	.@num_mobs = 15 - mobcount(.@map$,instance_npcname("#Mist Mobs Respawn1")+"::OnMyMobDead");
 	if (.@num_mobs > 0)
 		monster .@map$,0,0,"Miming",2137,.@num_mobs,instance_npcname("#Mist Mobs Respawn1")+"::OnMyMobDead";
 	end;
@@ -940,8 +953,8 @@ OnInstanceInit:
 	monster instance_mapname("1@mist"),0,0,"Pom Spider",2132,35,instance_npcname("#Mist Mobs Respawn2")+"::OnMyMobDead";
 	end;
 OnMyMobDead:
-	set .@map$, instance_mapname("1@mist");
-	set .@num_mobs, 35 - mobcount(.@map$,instance_npcname("#Mist Mobs Respawn2")+"::OnMyMobDead");
+	.@map$ = instance_mapname("1@mist");
+	.@num_mobs = 35 - mobcount(.@map$,instance_npcname("#Mist Mobs Respawn2")+"::OnMyMobDead");
 	if (.@num_mobs > 0)
 		monster .@map$,0,0,"Pom Spider",2132,.@num_mobs,instance_npcname("#Mist Mobs Respawn2")+"::OnMyMobDead";
 	end;
@@ -953,8 +966,8 @@ OnInstanceInit:
 	monster instance_mapname("1@mist"),0,0,"Angra Mantis",2133,35,instance_npcname("#Mist Mobs Respawn3")+"::OnMyMobDead";
 	end;
 OnMyMobDead:
-	set .@map$, instance_mapname("1@mist");
-	set .@num_mobs, 35 - mobcount(.@map$,instance_npcname("#Mist Mobs Respawn3")+"::OnMyMobDead");
+	.@map$ = instance_mapname("1@mist");
+	.@num_mobs = 35 - mobcount(.@map$,instance_npcname("#Mist Mobs Respawn3")+"::OnMyMobDead");
 	if (.@num_mobs > 0)
 		monster .@map$,0,0,"Angra Mantis",2133,.@num_mobs,instance_npcname("#Mist Mobs Respawn3")+"::OnMyMobDead";
 	end;
@@ -966,8 +979,8 @@ OnInstanceInit:
 	monster instance_mapname("1@mist"),0,0,"Parus",2134,35,instance_npcname("#Mist Mobs Respawn4")+"::OnMyMobDead";
 	end;
 OnMyMobDead:
-	set .@map$, instance_mapname("1@mist");
-	set .@num_mobs, 35 - mobcount(.@map$,instance_npcname("#Mist Mobs Respawn4")+"::OnMyMobDead");
+	.@map$ = instance_mapname("1@mist");
+	.@num_mobs = 35 - mobcount(.@map$,instance_npcname("#Mist Mobs Respawn4")+"::OnMyMobDead");
 	if (.@num_mobs > 0)
 		monster .@map$,0,0,"Parus",2134,.@num_mobs,instance_npcname("#Mist Mobs Respawn4")+"::OnMyMobDead";
 	end;
@@ -979,8 +992,8 @@ OnInstanceInit:
 	monster instance_mapname("1@mist"),0,0,"Little Fatum",2136,15,instance_npcname("#Mist Mobs Respawn5")+"::OnMyMobDead";
 	end;
 OnMyMobDead:
-	set .@map$, instance_mapname("1@mist");
-	set .@num_mobs, 15 - mobcount(.@map$,instance_npcname("#Mist Mobs Respawn5")+"::OnMyMobDead");
+	.@map$ = instance_mapname("1@mist");
+	.@num_mobs = 15 - mobcount(.@map$,instance_npcname("#Mist Mobs Respawn5")+"::OnMyMobDead");
 	if (.@num_mobs > 0)
 		monster .@map$,0,0,"Little Fatum",2136,.@num_mobs,instance_npcname("#Mist Mobs Respawn5")+"::OnMyMobDead";
 	end;
@@ -994,19 +1007,18 @@ OnInstanceInit:
 	end;
 }
 
-// Warp Portals
-//============================================================
+//== Warp Portals ==========================================
 bif_fild01,38,374,0	script	Mysterious Flower#ep14_1	CLEAR_NPC,{
 	mes "It's a giant flower with mysterious energy.";
-	if (countitem(12561)) {
+	if (countitem(Mysterious_Seed)) {
 		mes "It's reacting to the Mysterious Flower Seeds you have with you.";
 		next;
-		switch(select("Observe the reaction.:Stop the reaction.")) {
+		switch(select("Observe the reaction.", "Stop the reaction.")) {
 		case 1:
 			mes "The flower started to shake violently";
 			mes "and swing forward as if trying to send the seeds as far away as possible!!!";
 			close2;
-			delitem 12561,1; //Mysterious_Seed
+			delitem Mysterious_Seed,1;
 			warp "bif_fild02",160,230;
 			end;
 		case 2:
@@ -1024,7 +1036,7 @@ bif_fild01,38,374,0	script	Mysterious Flower#ep14_1	CLEAR_NPC,{
 1@mist,109,70,0	script	a1_a2	WARPNPC,1,1,{
 	end;
 OnTouch:
-	if (checkquest(7211,PLAYTIME) == -1)
+	if (!questprogress(7211,PLAYTIME))
 		setquest 7211;
 	warp instance_mapname("1@mist"),116,40;
 	end;
@@ -1123,7 +1135,7 @@ OnTouch:
 1@mist,329,171,0	warp	c11-1_c8-2	1,1,1@mist,346,120
 1@mist,301,237,0	warp	b8_b2	1,1,1@mist,289,170
 
-// Disable Garden Tree warps.
+//- Disable Garden Tree warps -
 // Custom, but saves processing and lines.
 1@mist,1,1,0	script	#mist_warp_init	CLEAR_NPC,{
 	end;

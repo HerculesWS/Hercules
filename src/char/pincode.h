@@ -1,28 +1,52 @@
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-// Portions Copyright (c) Athena Dev Teams
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2016  Hercules Dev Team
+ * Copyright (C)  Athena Dev Teams
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+#ifndef CHAR_PINCODE_H
+#define CHAR_PINCODE_H
 
-#ifndef _CHAR_PINCODE_H_
-#define _CHAR_PINCODE_H_
+#include "common/hercules.h"
 
-#include "char.h"
+/* Forward Declarations */
+struct char_session_data;
+struct config_t; // common/conf.h
 
-#define PINCODE_OK 0
-#define PINCODE_ASK 1
-#define PINCODE_NOTSET 2
-#define PINCODE_EXPIRED 3
-#define PINCODE_UNUSED 7
-#define	PINCODE_WRONG 8
+enum PincodeResponseCode {
+	PINCODE_OK      = 0,
+	PINCODE_ASK     = 1,
+	PINCODE_NOTSET  = 2,
+	PINCODE_EXPIRED = 3,
+	PINCODE_UNUSED  = 7,
+	PINCODE_WRONG   = 8,
+};
 
-/* Pincode Interface */
+/**
+ * pincode interface
+ **/
 struct pincode_interface {
 	/* vars */
-	int *enabled;
-	int *changetime;
-	int *maxtry;
-	int *charselect;
-	unsigned int *multiplier;
-	unsigned int *baseSeed;
+	int enabled;
+	int changetime;
+	int maxtry;
+	int charselect;
+	unsigned int multiplier;
+	unsigned int baseSeed;
 	/* handler */
 	void (*handle) (int fd, struct char_session_data* sd);
 	void (*decrypt) (unsigned int userSeed, char* pin);
@@ -33,11 +57,13 @@ struct pincode_interface {
 	void (*change) (int fd, struct char_session_data* sd);
 	int  (*compare) (int fd, struct char_session_data* sd, char* pin);
 	void (*check) (int fd, struct char_session_data* sd);
-	bool (*config_read) (char *w1, char *w2);
-} pincode_s;
+	bool (*config_read) (const char *filename, const struct config_t *config, bool imported);
+};
 
-struct pincode_interface *pincode;
-
+#ifdef HERCULES_CORE
 void pincode_defaults(void);
+#endif // HERCULES_CORE
 
-#endif /* _CHAR_PINCODE_H_ */
+HPShared struct pincode_interface *pincode;
+
+#endif /* CHAR_PINCODE_H */

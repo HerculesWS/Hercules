@@ -1,22 +1,45 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Dastgir
+//= Copyright (C)  Chilly
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Eclage Dungeon Warp Script
-//===== By: ==================================================
-//= Chilly
-//===== Current Version: =====================================
-//= 1.0
-//===== Description: =========================================
-//= Warp Points for Eclage Dungeon
-//===== Additional Comments: =================================
-//= 1.0 First Version.
-//============================================================
+//================= Description ===========================================
+//= Warp Portals for Eclage Dungeon
+//================= Current Version =======================================
+//= 1.0a
+//=========================================================================
 
-ecl_fild01,182,82,0	warp	eclage_dun0001	1,1,ecl_tdun01,60,13
-ecl_tdun01,61,11,0	warp	eclage_dun0002	1,1,ecl_fild01,182,85
-ecl_tdun01,67,106,0	warp	eclage_dun0003	1,1,ecl_tdun02,60,88
-ecl_tdun02,60,90,0	warp	eclage_dun0004	1,1,ecl_tdun01,70,105
-ecl_tdun02,52,9,0	warp	eclage_dun0005	1,1,ecl_tdun03,47,13
-ecl_tdun03,49,11,0	warp	eclage_dun0006	1,1,ecl_tdun02,50,11
-ecl_tdun03,50,46,0	warp	eclage_dun0007	1,1,ecl_tdun04,26,23
-ecl_tdun04,26,26,0	warp	eclage_dun0008	1,1,ecl_tdun03,50,43
-ecl_tdun04,34,17,0	warp	eclage_dun0009	1,1,ecl_fild01,183,73
-ecl_fild01,183,70,0	warp	eclage_dun0010	1,1,ecl_tdun04,32,19
+ecl_fild01,182,82,0	warp	Tenter_TOut	1,1,ecl_tdun01,60,13
+ecl_tdun01,61,11,0	warp	TOut_Tenter	1,1,ecl_fild01,182,85
+ecl_tdun01,67,106,0	warp	tdun1up_tdun2dn	1,1,ecl_tdun02,60,88
+ecl_tdun02,60,90,0	warp	tdun2dn_tdun1up	1,1,ecl_tdun01,70,105
+ecl_tdun02,52,9,0	warp	tdun2up_tdun3dn	1,1,ecl_tdun03,47,13
+ecl_tdun03,49,11,0	warp	tdun3dn_tdun2up	1,1,ecl_tdun02,50,11
+ecl_tdun03,50,46,0	warp	tdun3up_tdun4dn	1,1,ecl_tdun04,26,24
+ecl_tdun04,26,26,0	warp	tdun4dn_tdun3up	1,1,ecl_tdun03,50,44
+ecl_tdun04,34,17,0	warp	tdun4-1_ttop	1,1,ecl_fild01,183,73
+ecl_fild01,183,70,0	warp	ttop_tdun4-1	1,1,ecl_tdun04,33,19

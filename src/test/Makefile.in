@@ -1,25 +1,51 @@
+# This file is part of Hercules.
+# http://herc.ws - http://github.com/HerculesWS/Hercules
+#
+# Copyright (C) 2012-2016  Hercules Dev Team
+# Copyright (C)  Athena Dev Teams
+#
+# Hercules is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# @configure_input@
 
 CONFIG_D = ../config
 CONFIG_H = $(wildcard $(CONFIG_D)/*.h) $(wildcard $(CONFIG_D)/*/*.h)
 
 COMMON_D = ../common
-COMMON_H = $(wildcard $(COMMON_D)/*.h)
+COMMON_H = $(filter-out %.p.h, $(wildcard $(COMMON_D)/*.h))
+SYSINFO_INC = $(COMMON_D)/sysinfo.inc
+COMMON_INCLUDE = -I..
 
-LIBCONFIG_D = ../../3rdparty/libconfig
+THIRDPARTY_D = ../../3rdparty
+THIRDPARTY_INCLUDE = -I$(THIRDPARTY_D)
+
+LIBCONFIG_D = $(THIRDPARTY_D)/libconfig
 LIBCONFIG_OBJ = $(addprefix $(LIBCONFIG_D)/, libconfig.o grammar.o scanctx.o \
                 scanner.o strbuf.o)
 LIBCONFIG_H = $(addprefix $(LIBCONFIG_D)/, libconfig.h grammar.h parsectx.h \
               scanctx.h scanner.h strbuf.h wincompat.h)
-LIBCONFIG_INCLUDE = -I$(LIBCONFIG_D)
 
-MT19937AR_D = ../../3rdparty/mt19937ar
+MT19937AR_D = $(THIRDPARTY_D)/mt19937ar
 MT19937AR_OBJ = $(MT19937AR_D)/mt19937ar.o
 MT19937AR_H = $(MT19937AR_D)/mt19937ar.h
-MT19937AR_INCLUDE = -I$(MT19937AR_D)
 
-TEST_SPINLOCK_OBJ=obj/test_spinlock.o
-TEST_SPINLOCK_H=
-TEST_SPINLOCK_DEPENDS=$(TEST_SPINLOCK_OBJ) $(COMMON_D)/obj_sql/common_sql.a $(COMMON_D)/obj_all/common.a $(MT19937AR_OBJ)
+TEST_C = test_libconfig.c test_spinlock.c
+TEST_OBJ = $(addprefix obj/, $(patsubst %c,%o,%(TEST_C)))
+TEST_H =
+TEST_DEPENDS = $(COMMON_D)/obj_sql/common_sql.a $(COMMON_D)/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) $(SYSINFO_INC)
+
+TESTS_ALL = test_libconfig test_spinlock
 
 @SET_MAKE@
 
@@ -27,9 +53,9 @@ CC = @CC@
 export CC
 
 #####################################################################
-.PHONY: all test_spinlock clean buildclean
+.PHONY: all $(TESTS_ALL) clean buildclean
 
-all: test_spinlock Makefile
+all: $(TESTS_ALL) Makefile
 
 buildclean:
 	@echo "	CLEAN	test (build temp files)"
@@ -37,37 +63,44 @@ buildclean:
 
 clean: buildclean
 	@echo "	CLEAN	test"
-	@rm -rf ../../test_spinlock@EXEEXT@
+	@rm -rf ../../test_*@EXEEXT@
 
 #####################################################################
 
 Makefile: Makefile.in
 	@$(MAKE) -C ../.. src/test/Makefile
 
+$(SYSINFO_INC): $(TEST_C) $(TEST_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H)
+	@echo "	MAKE	$@"
+	@$(MAKE) -C ../.. sysinfo
+
 # object directories
 
 obj:
 	@echo "	MKDIR	obj"
 	@-mkdir obj
-	
-#executables
 
-test_spinlock: $(TEST_SPINLOCK_DEPENDS) Makefile
-	@echo "	LD	$@"
-	@$(CC) @LDFLAGS@ -o ../../test_spinlock@EXEEXT@ $(TEST_SPINLOCK_OBJ) $(COMMON_D)/obj_sql/common_sql.a \
-		$(COMMON_D)/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @MYSQL_LIBS@
+# executables
 
-# login object files
+$(TESTS_ALL): test_%: ../../test_%@EXEEXT@
+	@echo "	TEST	$@"
 
-obj/%.o: %.c $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) | obj
+../../test_%@EXEEXT@: obj/test_%.o $(TEST_DEPENDS) Makefile
+	@echo "	LD	$(notdir $@)"
+	@$(CC) @STATIC@ @LDFLAGS@ -o $@ $< $(COMMON_D)/obj_all/common.a $(COMMON_D)/obj_sql/common_sql.a \
+		$(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @MYSQL_LIBS@
+
+# object files
+
+obj/%.o: %.c $(TEST_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) | obj
 	@echo "	CC	$<"
-	@$(CC) @CFLAGS@ $(MT19937AR_INCLUDE) $(LIBCONFIG_INCLUDE) -DWITH_SQL @MYSQL_CFLAGS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
+	@$(CC) @CFLAGS@ @DEFS@ $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) @MYSQL_CFLAGS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
 
 # missing object files
 $(COMMON_D)/obj_all/common.a:
 	@echo "	MAKE	$@"
 	@$(MAKE) -C $(COMMON_D) sql
-	
+
 $(COMMON_D)/obj_sql/common_sql.a:
 	@echo "	MAKE	$@"
 	@$(MAKE) -C $(COMMON_D) sql

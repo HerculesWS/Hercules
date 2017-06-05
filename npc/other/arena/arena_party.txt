@@ -1,20 +1,40 @@
-//===== Hercules Script ======================================
-//= Izlude Party Arena 
-//===== By: ==================================================
-//= SinSloth
-//===== Current Version: =====================================
-//= 1.5
-//===== Description: =========================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  Inkfish
+//= Copyright (C)  Samuray22
+//= Copyright (C)  SinSloth
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Izlude Party Arena
+//================= Description ===========================================
 //= Izlude Party Battle Arena
-//===== Additional Comments: =================================
-//= 1.0 First version.
-//= 1.0a Fixed a typo.
-//= 1.1 Replaced effect numerics with constants. [Samuray22]
-//= 1.2 Fixed "OnMyMobDead" doesn't work sometime. [Inkfish]
-//= 1.3 Corrected donpcevent typo. (bugreport:4374) [L0ne_w0lf]
-//= 1.4 Label standardization and bug fixes. [Euphy]
-//= 1.5 Script updates, and removed a level restriction. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.5
+//=========================================================================
 
 arena_room,162,88,3	script	Ponox	4_F_TELEPORTER,{
 	end;
@@ -38,9 +58,9 @@ OnStart:
 	end;
 }
 
-prt_are_in,76,87,3	script	Helper#party	 67,4,4,{
+prt_are_in,76,87,3	script	Helper#party	1_F_02,4,4,{
 	if($arn_partywait == 0) {
-		set $arn_partywait,1;
+		$arn_partywait = 1;
 		emotion e_gasp,0;
 		mes "[Helper Iriff]";
 		mes "Good day, challengers!";
@@ -52,7 +72,7 @@ prt_are_in,76,87,3	script	Helper#party	 67,4,4,{
 		next;
 		switch( select( "No","Yes" ) ) {
 		case 1:
-			set $arn_partywait,0;
+			$arn_partywait = 0;
 			mes "[Helper Iriff]";
 			mes "I see.";
 			mes "However, please remember you have only a limited amount of time.";
@@ -80,11 +100,11 @@ OnStop:
 	end;
 
 OnInit:
-	set $arn_partywait,0;
+	$arn_partywait = 0;
 	end;
 }
 
-prt_are_in,73,78,0	script	toarena#party	-1,20,20,{
+prt_are_in,73,78,0	script	toarena#party	FAKE_NPC,20,20,{
 OnInit:
 	disablenpc "toarena#party";
 	end;
@@ -94,7 +114,7 @@ OnTouch:
 		warp "arena_room",100,75;
 	else {
 		Zeny -= 1000;
-		set $arn_partywait,0;
+		$arn_partywait = 0;
 		donpcevent "toout#party::OnStop";
 		warp "force_1-2",99,26;
 	}
@@ -104,7 +124,7 @@ OnEnter:
 	end;
 }
 
-prt_are_in,73,79,0	script	toout#party	-1,20,20,{
+prt_are_in,73,79,0	script	toout#party	FAKE_NPC,20,20,{
 OnInit:
 	disablenpc "toout#party";
 	end;
@@ -114,7 +134,7 @@ OnTimer:
 	end;
 
 OnTimer60000:
-	set $arn_partywait,0;
+	$arn_partywait = 0;
 	enablenpc "toout#party";
 	end;
 
@@ -124,7 +144,7 @@ OnTimer70000:
 	disablenpc "toout#party";
 
 OnTouch:
-	set $arn_partywait,0;
+	$arn_partywait = 0;
 	warp "arena_room",100,75;
 
 OnEnter:
@@ -132,14 +152,14 @@ OnEnter:
 	end;
 
 OnStop:
-// 	broadcastinmap "toout turns off the timer."
+//	broadcastinmap "toout turns off the timer."
 	stopnpctimer;
 	end;
 }
 
-prt_are_in,73,74,0	script	arena_out	-1,1,1,{
+prt_are_in,73,74,0	script	arena_out	FAKE_NPC,1,1,{
 OnTouch:
-	set $arn_partywait,0;
+	$arn_partywait = 0;
 	warp "arena_room",100,75;
 	end;
 }
@@ -147,8 +167,8 @@ OnTouch:
 force_1-2,99,31,4	script	Slipslowrun#party	4_F_TELEPORTER,{
 OnStart:
 	initnpctimer;
-	set $arena_minptst,gettime(2);
-	set $arena_secptst,gettime(1);
+	$arena_minptst = gettime(GETTIME_MINUTE);
+	$arena_secptst = gettime(GETTIME_SECOND);
 	end;
 
 OnTimer2000:
@@ -313,7 +333,7 @@ On10_End:
 	end;
 }
 
--	script	arena_p	-1,{
+-	script	arena_p	FAKE_NPC,{
 OnStart:
 	mapwarp "force_1-2","prt_are_in",177,138;
 	disablenpc "force_01_00";
@@ -354,8 +374,8 @@ OnStart:
 	donpcevent "force_10mob-2#party::OnReset";
 	donpcevent "force_exitmob#party::OnReset";
 	donpcevent "Slipslowrun#party::OnStart";
-	set $arn_partyc,0;
-	set $arn_partywait,0;
+	$arn_partyc = 0;
+	$arn_partywait = 0;
 	end;
 
 On04_Start:
@@ -412,8 +432,8 @@ OnReset:
 
 force_1-2,95,187,0	script	force_09_exit	WARPNPC,1,1,{
 OnTouch:
-	set $arena_minptend,gettime(2);
-	set $arena_secptend,gettime(1);
+	$arena_minptend = gettime(GETTIME_MINUTE);
+	$arena_secptend = gettime(GETTIME_SECOND);
 	warp "prt_are_in",73,139;
 	donpcevent "#arn_timer_pt::OnEnter";
 	donpcevent "arena_p::OnReset";
@@ -421,14 +441,14 @@ OnTouch:
 	end;
 }
 
-force_1-2,36,26,0	script	force_01start#party	-1,1,1,{
+force_1-2,36,26,0	script	force_01start#party	FAKE_NPC,1,1,{
 OnTouch:
 	donpcevent "force_01mob#party::OnEnable";
 	disablenpc "force_01start#party";
 	end;
 }
 
--	script	force_01mob#party	-1,{
+-	script	force_01mob#party	FAKE_NPC,{
 OnEnable:
 	monster "force_1-2",15,35,"Penomena",1441,1,"force_01mob#party::OnMyMobDead";
 	monster "force_1-2",35,35,"Penomena",1441,1,"force_01mob#party::OnMyMobDead";
@@ -466,7 +486,7 @@ OnMyMobDead:
 	if (mobcount("force_1-2","force_01mob#party::OnMyMobDead") < 1) {
 		enablenpc "force_01_00";
 		donpcevent "Slipslowrun#party::On01_End";
-		set $arn_partyc,$arn_partyc +1;
+		++$arn_partyc;
 		if($arn_partyc == 3) {
 			donpcevent "Slipslowrun#party::On04_Start";
 			enablenpc "force_03_04";
@@ -476,14 +496,14 @@ OnMyMobDead:
 	end;
 }
 
-force_1-2,162,26,0	script	force_02start#party	-1,1,1,{
+force_1-2,162,26,0	script	force_02start#party	FAKE_NPC,1,1,{
 OnTouch:
 	donpcevent "force_02mob#party::OnEnable";
 	disablenpc "force_02start#party";
 	end;
 }
 
--	script	force_02mob#party	-1,{
+-	script	force_02mob#party	FAKE_NPC,{
 OnEnable:
 	monster "force_1-2",163,36,"Penomena",1441,1,"force_02mob#party::OnMyMobDead";
 	monster "force_1-2",184,36,"Penomena",1441,1,"force_02mob#party::OnMyMobDead";
@@ -525,7 +545,7 @@ OnMyMobDead:
 	if (mobcount("force_1-2","force_02mob#party::OnMyMobDead") < 1) {
 		enablenpc "force_02_00";
 		donpcevent "Slipslowrun#party::On02_End";
-		set $arn_partyc,$arn_partyc +1;
+		++$arn_partyc;
 		if($arn_partyc == 3) {
 			donpcevent "Slipslowrun#party::On04_Start";
 			enablenpc "force_03_04";
@@ -535,14 +555,14 @@ OnMyMobDead:
 	end;
 }
 
-force_1-2,99,66,0	script	force_03start#party	-1,1,1,{
+force_1-2,99,66,0	script	force_03start#party	FAKE_NPC,1,1,{
 OnTouch:
 	donpcevent "force_03mob#party::OnEnable";
 	disablenpc "force_03start#party";
 	end;
 }
 
--	script	force_03mob#party	-1,{
+-	script	force_03mob#party	FAKE_NPC,{
 OnEnable:
 	monster "force_1-2",89,81,"Merman",1451,1,"force_03mob#party::OnMyMobDead";
 	monster "force_1-2",90,81,"Merman",1451,1,"force_03mob#party::OnMyMobDead";
@@ -580,7 +600,7 @@ OnMyMobDead:
 	if (mobcount("force_1-2","force_03mob#party::OnMyMobDead") < 1) {
 		enablenpc "force_03_00";
 		donpcevent "Slipslowrun#party::On03_End";
-		set $arn_partyc,$arn_partyc +1;
+		++$arn_partyc;
 		if($arn_partyc == 3) {
 			donpcevent "Slipslowrun#party::On04_Start";
 			enablenpc "force_03_04";
@@ -590,14 +610,14 @@ OnMyMobDead:
 	end;
 }
 
-force_1-2,162,78,0	script	force_04start#party	-1,3,3,{
+force_1-2,162,78,0	script	force_04start#party	FAKE_NPC,3,3,{
 OnTouch:
 	donpcevent "force_04mob#party::OnEnable";
 	disablenpc "force_04start#party";
 	end;
 }
 
--	script	force_04mob#party	-1,{
+-	script	force_04mob#party	FAKE_NPC,{
 OnEnable:
 	monster "force_1-2",174,78,"Penomena",1441,1,"force_04mob#party::OnMyMobDead";
 	monster "force_1-2",184,78,"Penomena",1441,1,"force_04mob#party::OnMyMobDead";
@@ -637,14 +657,14 @@ OnMyMobDead:
 	end;
 }
 
-force_1-2,36,77,0	script	force_05start#party	-1,1,1,{
+force_1-2,36,77,0	script	force_05start#party	FAKE_NPC,1,1,{
 OnTouch:
 	donpcevent "force_05mob#party::OnEnable";
 	disablenpc "force_05start#party";
 	end;
 }
 
--	script	force_05mob#party	-1,{
+-	script	force_05mob#party	FAKE_NPC,{
 OnEnable:
 	monster "force_1-2",25,68,"Penomena",1441,1,"force_05mob#party::OnMyMobDead";
 	monster "force_1-2",36,68,"Penomena",1441,1,"force_05mob#party::OnMyMobDead";
@@ -684,14 +704,14 @@ OnMyMobDead:
 	end;
 }
 
-force_1-2,26,118,0	script	force_06start#party	-1,1,1,{
+force_1-2,26,118,0	script	force_06start#party	FAKE_NPC,1,1,{
 OnTouch:
 	donpcevent "force_06mob#party::OnEnable";
 	disablenpc "force_06start#party";
 	end;
 }
 
--	script	force_06mob#party	-1,{
+-	script	force_06mob#party	FAKE_NPC,{
 OnEnable:
 	monster "force_1-2",19,135,"Cloud Hermit",1531,1,"force_06mob#party::OnMyMobDead";
 	monster "force_1-2",24,135,"Cloud Hermit",1531,1,"force_06mob#party::OnMyMobDead";
@@ -725,19 +745,19 @@ OnMyMobDead:
 	if (mobcount("force_1-2","force_06mob#party::OnMyMobDead") < 1) {
 		donpcevent "arena_p::On07_Start";
 		donpcevent "Slipslowrun#party::On06_End";
-		set $arn_partyc,$arn_partyc +1;
+		++$arn_partyc;
 	}
 	end;
 }
 
-force_1-2,92,124,0	script	force_07start#party	-1,1,1,{
+force_1-2,92,124,0	script	force_07start#party	FAKE_NPC,1,1,{
 OnTouch:
 	donpcevent "force_07mob#party::OnEnable";
 	disablenpc "force_07start#party";
 	end;
 }
 
--	script	force_07mob#party	-1,{
+-	script	force_07mob#party	FAKE_NPC,{
 OnEnable:
 	monster "force_1-2",104,134,"Greatest General",1541,1,"force_07mob#party::OnMyMobDead";
 	monster "force_1-2",104,136,"Greatest General",1541,1,"force_07mob#party::OnMyMobDead";
@@ -761,37 +781,37 @@ OnMyMobDead:
 	if (mobcount("force_1-2","force_07mob#party::OnMyMobDead") < 1) {
 		donpcevent "arena_p::On08_Start";
 		donpcevent "Slipslowrun#party::On07_End";
-		set $arn_partyc,$arn_partyc +1;
+		++$arn_partyc;
 	}
 	end;
 }
 
-force_1-2,173,118,0	script	force_08start#party	-1,1,1,{
+force_1-2,173,118,0	script	force_08start#party	FAKE_NPC,1,1,{
 OnTouch:
 	donpcevent "force_08mob#party::OnEnable";
 	disablenpc "force_08start#party";
 	end;
 }
 
--	script	force_08mob#party	-1,{
+-	script	force_08mob#party	FAKE_NPC,{
 OnEnable:
 	monster "force_1-2",172,154,"Khalitzburg",1438,1,"force_08mob#party::OnMyMobDead";
 	monster "force_1-2",174,145,"Ghostring",1576,1,"force_08mob#party::OnMyMobDead";
 	monster "force_1-2",174,145,"Chimera",1456,1,"force_08mob#party::OnMyMobDead";
-	for(set .@i,0; .@i<5; set .@i,.@i+1) {
+	for(.@i = 0; .@i<5; ++.@i) {
 		monster "force_1-2",rand(162,184),rand(122,185),"Injustice",1446,1,"force_08mob#party::OnMyMobDead";
 	}
 	monster "force_1-2",rand(162,184),rand(122,185),"Raydric Archer",1453,1,"force_08mob#party::OnMyMobDead";
-	for(set .@i,0; .@i<5; set .@i,.@i+1) {
+	for(.@i = 0; .@i<5; ++.@i) {
 		monster "force_1-2",rand(162,184),rand(122,185),"Nightmare Terror",1554,1,"force_08mob#party::OnMyMobDead";
 	}
-	for(set .@i,0; .@i<6; set .@i,.@i+1) {
+	for(.@i = 0; .@i<6; ++.@i) {
 		monster "force_1-2",rand(162,184),rand(122,185),"Ancient Mummy",1522,1,"force_08mob#party::OnMyMobDead";
 	}
-	for(set .@i,0; .@i<10; set .@i,.@i+1) {
+	for(.@i = 0; .@i<10; ++.@i) {
 		monster "force_1-2",rand(162,184),rand(122,185),"Skel Prisoner",1479,1,"force_08mob#party::OnMyMobDead";
 	}
-	for(set .@i,0; .@i<5; set .@i,.@i+1) {
+	for(.@i = 0; .@i<5; ++.@i) {
 		monster "force_1-2",rand(162,184),rand(122,185),"Hunter Fly",1422,1,"force_08mob#party::OnMyMobDead";
 	}
 	end;
@@ -804,19 +824,19 @@ OnMyMobDead:
 	if (mobcount("force_1-2","force_08mob#party::OnMyMobDead") < 1) {
 		donpcevent "arena_p::On09_Start";
 		donpcevent "Slipslowrun#party::On08_End";
-		set $arn_partyc,$arn_partyc +1;
+		++$arn_partyc;
 	}
 	end;
 }
 
-force_1-2,133,178,0	script	force_09start#party	-1,1,1,{
+force_1-2,133,178,0	script	force_09start#party	FAKE_NPC,1,1,{
 OnTouch:
 	donpcevent "force_09mob#party::OnEnable";
 	disablenpc "force_09start#party";
 	end;
 }
 
--	script	force_09mob#party	-1,{
+-	script	force_09mob#party	FAKE_NPC,{
 OnEnable:
 	monster "force_1-2",86,180,"Elder",1573,1,"force_09mob#party::OnMyMobDead";
 	monster "force_1-2",86,176,"Elder",1573,1,"force_09mob#party::OnMyMobDead";
@@ -833,7 +853,7 @@ OnEnable:
 	monster "force_1-2",122,178,"Anolian",1488,1,"force_09mob#party::OnMyMobDead";
 	monster "force_1-2",121,177,"Anolian",1488,1,"force_09mob#party::OnMyMobDead";
 	monster "force_1-2",122,177,"Anolian",1488,1,"force_09mob#party::OnMyMobDead";
-	set $force_09_pt,15;
+	$force_09_pt = 15;
 	end;
 
 OnReset:
@@ -844,19 +864,19 @@ OnMyMobDead:
 	if (mobcount("force_1-2","force_09mob#party::OnMyMobDead") < 1) {
 		donpcevent "arena_p::On10_Start";
 		donpcevent "Slipslowrun#party::On09_End";
-		set $arn_partyc,$arn_partyc +1;
+		++$arn_partyc;
 	}
 	end;
 }
 
-force_1-2,29,178,0	script	force_10start#party	-1,1,1,{
+force_1-2,29,178,0	script	force_10start#party	FAKE_NPC,1,1,{
 OnTouch:
 	donpcevent "force_10mob-1#party::OnEnable";
 	disablenpc "force_10start#party";
 	end;
 }
 
--	script	force_10mob-1#party	-1,{
+-	script	force_10mob-1#party	FAKE_NPC,{
 OnEnable:
 	switch(rand(1,2)) {
 	case 1:
@@ -878,7 +898,7 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_10mob-2#party	-1,{
+-	script	force_10mob-2#party	FAKE_NPC,{
 OnEnable:
 	monster "force_1-2",16,179,"Samurai Spector",1542,1,"force_10mob-2#party::OnMyMobDead";
 	monster "force_1-2",16,179,"Shinobi",1560,1,"force_10mob-2#party::OnMyMobDead";
@@ -896,19 +916,19 @@ OnMyMobDead:
 	if (mobcount("force_1-2","force_10mob-2#party::OnMyMobDead") < 1) {
 		donpcevent "arena_p::OnExit";
 		donpcevent "Slipslowrun#party::On10_End";
-		set $arn_partyc,0;
+		$arn_partyc = 0;
 	}
 	end;
 }
 
-force_1-2,59,178,0	script	force_exit#party	-1,1,1,{
+force_1-2,59,178,0	script	force_exit#party	FAKE_NPC,1,1,{
 OnTouch:
 	donpcevent "force_exitmob#party::OnEnable";
 	disablenpc "force_exit#party";
 	end;
 }
 
--	script	force_exitmob#party	-1,{
+-	script	force_exitmob#party	FAKE_NPC,{
 OnEnable:
 	monster "force_1-2",95,177,"Farewell",1393,1,"force_exitmob#party::OnMyMobDead";
 	monster "force_1-2",95,177,"I hate you",1543,1,"force_exitmob#party::OnMyMobDead";
@@ -960,12 +980,13 @@ prt_are_in,181,135,3	script	Staff#party-1	1_F_02,{
 		mes "You already have enough arena points.";
 		mes "Please spend some arena points later. When I see you next time, I will make sure to give you some reward.";
 		next;
+	} else {
+		++arena_point;
 	}
-	else set arena_point, arena_point + 1;
 	mes "[Staff]";
 	mes "Let me guide you outside. I hope you had a good time.";
 	close2;
-	specialeffect2 EF_HIT5;
+	specialeffect(EF_HIT5, AREA, playerattached());
 	warp "arena_room",100,75;
 	end;
 }
@@ -973,26 +994,26 @@ prt_are_in,181,135,3	script	Staff#party-1	1_F_02,{
 prt_are_in,77,135,3	script	Staff#party-2	1_F_02,{
 	if($arena_minptend < $arena_minptst) {
 		if($arena_secptend < $arena_secptst) {
-			set @record_minpt,60 - $arena_minptst + $arena_minptend -1;
-			set @record_secpt,60 - $arena_secptst + $arena_secptend;
+			@record_minpt = 60 - $arena_minptst + $arena_minptend -1;
+			@record_secpt = 60 - $arena_secptst + $arena_secptend;
 		} else {
-			set @record_minpt,60 - $arena_minptst + $arena_minptend;
-			set @record_secpt,$arena_secptend - $arena_secptst;
+			@record_minpt = 60 - $arena_minptst + $arena_minptend;
+			@record_secpt = $arena_secptend - $arena_secptst;
 		}
 	} else {
 		if($arena_secptend < $arena_secptst) {
-			set @record_minpt,$arena_minptend - $arena_minptst -1;
-			set @record_secpt,60 - $arena_secptst + $arena_secptend;
+			@record_minpt = $arena_minptend - $arena_minptst -1;
+			@record_secpt = 60 - $arena_secptst + $arena_secptend;
 		} else {
-			set @record_minpt,$arena_minptend - $arena_minptst;
-			set @record_secpt,$arena_secptend - $arena_secptst;
+			@record_minpt = $arena_minptend - $arena_minptst;
+			@record_secpt = $arena_secptend - $arena_secptst;
 		}
 	}
-	set @gappt,(60 * $top_ptmin + $top_ptsec) - (60 * @record_minpt + @record_secpt);
+	@gappt = (60 * $top_ptmin + $top_ptsec) - (60 * @record_minpt + @record_secpt);
 	mes "[Staff]";
 	mes "Wow, you did a good job~ ";
-	mes "Your name is...^3131FF" + strcharinfo(0) +"^000000, isn't it?";
-	mes "^3131FF"+ strcharinfo(0) +"^000000, total time you spent to pass the battle..";
+	mes "Your name is...^3131FF" + strcharinfo(PC_NAME) +"^000000, isn't it?";
+	mes "^3131FF"+ strcharinfo(PC_NAME) +"^000000, total time you spent to pass the battle..";
 	next;
 	mes "[Staff]";
 	mes "is "+@record_minpt+"minutes "+@record_secpt+"seconds.";
@@ -1004,7 +1025,7 @@ prt_are_in,77,135,3	script	Staff#party-2	1_F_02,{
 	mes "[Staff]";
 	mes "^3131FF"+$arena_pttopn$+"^000000's running time was ^3131FF"+$top_ptmin+"^000000minutes ^3131FF"+$top_ptsec+"^000000seconds.";
 	next;
-	set .arn_party,getcharid(1);
+	.arn_party = getcharid(CHAR_ID_PARTY);
 	if (@gappt < 0) {
 		mes "[Staff]";
 		mes "Although you failed to make a new record, I hope you will succeed next time.";
@@ -1022,7 +1043,7 @@ prt_are_in,77,135,3	script	Staff#party-2	1_F_02,{
 			mes "Thank you.";
 			close2;
 		} else {
-			set arena_point, arena_point + 40;
+			arena_point += 40;
 			mes "[Staff]";
 			mes "Let me reward you some arena points.";
 			mes "If you wish to check the amount of arena points you have, please go talk to ^3131FFVendigos^000000 at the arena entrance.";
@@ -1032,12 +1053,12 @@ prt_are_in,77,135,3	script	Staff#party-2	1_F_02,{
 			mes "See you later~";
 			close2;
 		}
-		if(getpartyleader(.arn_party,2) == getcharid(0)) {
+		if(getpartyleader(.arn_party,2) == getcharid(CHAR_ID_CHAR)) {
 			donpcevent "#arn_timer_pt::OnStop";
 			donpcevent "alloff#pt::OnEnable";
 			donpcevent "Ponox::OnStart";
 		}
-		specialeffect2 EH_HIT5;
+		specialeffect(EH_HIT5, AREA, playerattached());
  		donpcevent "cast#pt::OnNomal1";
 		warp "arena_room",100,75;
 		end;
@@ -1047,7 +1068,7 @@ prt_are_in,77,135,3	script	Staff#party-2	1_F_02,{
 		mes "Wow! You have renewed the record!";
 		mes "What a great job!";
 		next;
-		if(getpartyleader(.arn_party,2) == getcharid(0)) {
+		if(getpartyleader(.arn_party,2) == getcharid(CHAR_ID_CHAR)) {
 			mes "[Staff]";
 			mes "You can record you and your party members on ^FF0000the hall of Arena Time Force Battle party ^000000.";
 			mes "When you enter a name, the name will be remained on the top unless someone make a new record.";
@@ -1063,9 +1084,9 @@ prt_are_in,77,135,3	script	Staff#party-2	1_F_02,{
 				next;
 				switch( select( "Yes","No" ) ) {
 				case 1:
-					set $top_ptmin, @record_minpt;
-					set $top_ptsec, @record_secpt;
-					set $arena_pttopn$,.@arnparty$;
+					$top_ptmin = @record_minpt;
+					$top_ptsec = @record_secpt;
+					$arena_pttopn$ = .@arnparty$;
 					donpcevent "Vendigos::OnLineRec_pt";
 					mes "[Staff]";
 					mes "Your record has been entered.";
@@ -1100,7 +1121,7 @@ prt_are_in,77,135,3	script	Staff#party-2	1_F_02,{
 			mes "Let me reward you with some arena points.";
 			mes "At the same time, since you have renewed the record you will receive an extra amount of the points this time.";
 			next;
-			set arena_point, arena_point + 100;
+			arena_point += 100;
 			mes "[Staff]";
 			mes "Let me reward you some arena points.";
 			mes "If you wish to check the amount of arena points you have, please go talk to ^3131FFVendigos^000000 at the arena entrance.";
@@ -1110,18 +1131,18 @@ prt_are_in,77,135,3	script	Staff#party-2	1_F_02,{
 			mes "See you later~";
 			close2;
 		}
-		if(getpartyleader(.arn_party,2) == getcharid(0)) {
+		if(getpartyleader(.arn_party,2) == getcharid(CHAR_ID_CHAR)) {
 			donpcevent "#arn_timer_pt::OnStop";
 			donpcevent "alloff#pt::OnEnable";
 			donpcevent "Ponox::OnStart";
 		}
-		specialeffect2 EF_HIT5;
+		specialeffect(EF_HIT5, AREA, playerattached());
 		warp "arena_room",100,75;
 		end;
 	}
 }
 
--	script	#arn_timer_pt	-1,{
+-	script	#arn_timer_pt	FAKE_NPC,{
 OnEnter:
 	initnpctimer;
 	end;
@@ -1139,7 +1160,7 @@ OnTimer4000:
 	end;
 
 OnTimer60000:
- 	donpcevent "cast#pt::OnTimeOver2";
+	donpcevent "cast#pt::OnTimeOver2";
 	donpcevent "arn_warp_pt::OnOut";
 	donpcevent "#arn_timer_pt::OnStop";
 	donpcevent "alloff#pt::OnEnable";
@@ -1148,16 +1169,16 @@ OnTimer60000:
 
 OnStop:
 	stopnpctimer;
-	end; 
+	end;
 }
 
--	script	arn_warp_pt	-1,{
+-	script	arn_warp_pt	FAKE_NPC,{
 OnOut:
 	areawarp "prt_are_in",66,143,81,126,"arena_room",100,75;
 	end;
 }
 
--	script	cast#pt	-1,{
+-	script	cast#pt	FAKE_NPC,{
 OnTimeOver1:
 	mapannounce "force_2-1","Arena will be reactivated due to an error occurred during battle.",0,0xFFCE00;
 	end;
@@ -1175,7 +1196,7 @@ OnTimeOver2:
 	end;
 }
 
--	script	alloff#pt	-1,{
+-	script	alloff#pt	FAKE_NPC,{
 OnEnable:
 	mapwarp "force_1-2","prt_are_in",126,139,0,0;
 	donpcevent "force_01mob#party::OnReset";
@@ -1230,14 +1251,14 @@ OnEnable:
 	donpcevent "Slipslowrun#party::OnTimerOff";
 	disablenpc "Slipslowrun#party";
 	disablenpc "arn_warp_pt";
-	set $arn_partywait,0;
-	set $arn_partyc,0;
+	$arn_partywait = 0;
+	$arn_partyc = 0;
 	donpcevent "#arn_timer_pt::OnStop";
 	enablenpc "Slipslowrun#party";
 	enablenpc "arena_p";
 	end;
 
 OnInit:
-	if(!$top_ptmin && !$top_ptsec) set $top_ptmin,10;
+	if(!$top_ptmin && !$top_ptsec) $top_ptmin = 10;
 	end;
 }

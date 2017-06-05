@@ -1,25 +1,49 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  rAthena Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  eAthena Dev Team
+//= Copyright (C)  Gepard
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  Lupus
+//= Copyright (C)  Evera
+//= Copyright (C)  MasterOfMuppets
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Quest NPCs related to Amatsu
-//===== By: ==================================================
-//= rAthena Dev Team & MasterOfMuppets
-//===== Current Version: =====================================
-//= 1.5
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Momotaro Event
 //= Sushi Quest
 //= Dungeon Quest
-//===== Additional Comments: =================================
-//= 1.3 Rescripted to Aegis 10.3 Standards. [L0ne_W0lf]
-//= 1.4 Added missing checkweight. [L0ne_W0lf]
-//= 1.4a Fixed typo in condition check [Gepard]
-//= 1.5 Added questlog support. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.5
+//=========================================================================
 
-// Momotaro Event :: japan_momo_q
-//============================================================
+//== Momotaro Event :: japan_momo_q ========================
 amatsu,223,236,3	script	Publisher#ama	4_M_JPN,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a moment!! -";
 		mes "- Currently you are carrying -";
 		mes "- too many items with you. -";
@@ -45,7 +69,7 @@ amatsu,223,236,3	script	Publisher#ama	4_M_JPN,{
 		mes "Dokebis, just like in the story!";
 		mes "There will also be rewards.";
 		next;
-		switch(select("What is Momotaro Story?:I want to try!:I'm busy right now...")) {
+		switch(select("What is Momotaro Story?", "I want to try!", "I'm busy right now...")) {
 		case 1:
 			mes "[Publisher]";
 			mes "Eh~!? How can you not know about";
@@ -135,75 +159,75 @@ amatsu,223,236,3	script	Publisher#ama	4_M_JPN,{
 		mes "This is your reward for you.";
 		mes "Please continue to enjoy stories~";
 		mes " ";
-		set .@event_momo, event_momo;
-		set event_momo,4;
+		.@event_momo = event_momo;
+		event_momo = 4;
 		completequest 8128;
 		completequest 8129;
 		completequest 8130;
 		if (.@event_momo == 3) {
-			set .@gift_1,rand(1,10);
+			.@gift_1 = rand(1,10);
 			if (.@gift_1 == 1) {
-				getitem 659,1; //Heart_Of_Her
+				getitem Heart_Of_Her,1;
 			}
 			if (.@gift_1 == 2) {
-				getitem 633,1; //Baked_Yam
+				getitem Baked_Yam,1;
 			}
 			if (.@gift_1 == 3) {
-				getitem 634,1; //Tropical_Banana
+				getitem Tropical_Banana,1;
 			}
 			if (.@gift_1 == 4) {
-				getitem 639,1; //Armlet_Of_Obedience
+				getitem Armlet_Of_Obedience,1;
 			}
 			if (.@gift_1 == 5) {
-				getitem 636,1; //No_Recipient
+				getitem No_Recipient,1;
 			}
 			if (.@gift_1 == 6) {
-				getitem 628,1; //Well_Dried_Bone
+				getitem Well_Dried_Bone,1;
 			}
 			if (.@gift_1 == 7) {
-				getitem 637,1; //Old_Broom
+				getitem Old_Broom,1;
 			}
 			if (.@gift_1 == 8) {
-				getitem 635,1; //Horror_Of_Tribe
+				getitem Horror_Of_Tribe,1;
 			}
 			if (.@gift_1 == 9) {
-				getitem 626,1; //Monster_Juice
+				getitem Monster_Juice,1;
 			}
 			if (.@gift_1 == 10) {
-				getitem 641,1; //Contracts_In_Shadow
+				getitem Contracts_In_Shadow,1;
 			}
 		}
 		else {
-			set .@gift_2,rand(1,10);
+			.@gift_2 = rand(1,10);
 			if (.@gift_2 == 1) {
-				getitem 622,1; //Rainbow_Carrot
+				getitem Rainbow_Carrot,1;
 			}
 			if (.@gift_2 == 2) {
-				getitem 627,1; //Sweet_Milk
+				getitem Sweet_Milk,1;
 			}
 			if (.@gift_2 == 3) {
-				getitem 629,1; //Singing_Flower
+				getitem Singing_Flower,1;
 			}
 			if (.@gift_2 == 4) {
-				getitem 632,1; //Fatty_Chubby_Earthworm
+				getitem Fatty_Chubby_Earthworm,1;
 			}
 			if (.@gift_2 == 5) {
-				getitem 623,1; //Earthworm_The_Dude
+				getitem Earthworm_The_Dude,1;
 			}
 			if (.@gift_2 == 6) {
-				getitem 619,1; //Unripe_Apple
+				getitem Unripe_Apple,1;
 			}
 			if (.@gift_2 == 7) {
-				getitem 621,1; //Bitter_Herb
+				getitem Bitter_Herb,1;
 			}
 			if (.@gift_2 == 8) {
-				getitem 620,1; //Orange_Juice
+				getitem Orange_Juice,1;
 			}
 			if (.@gift_2 == 9) {
-				getitem 625,1; //Lusty_Iron
+				getitem Lusty_Iron,1;
 			}
 			if (.@gift_2 == 10) {
-				getitem 624,1; //Rotten_Fish
+				getitem Rotten_Fish,1;
 			}
 		}
 		close;
@@ -238,7 +262,7 @@ ama_test,52,44,3	script	Assistant#ama	4_M_MANAGER,{
 		mes "First of all...Did you hear";
 		mes "about the story from the publisher?";
 		next;
-		if (select("Yes:No") == 1) {
+		if (select("Yes", "No") == 1) {
 			mes "[Satoshi]";
 			mes "Hehe...Good.";
 			mes "Momotaro Story is our";
@@ -307,7 +331,7 @@ ama_test,52,44,3	script	Assistant#ama	4_M_MANAGER,{
 		mes "Now what are you going to do?";
 		mes "Do you want to go in again?";
 		next;
-		if (select("Yes:No, I want to go back") == 1) {
+		if (select("Yes", "No, I want to go back") == 1) {
 			mes "[Satoshi]";
 			mes "The more effort you put into this, the sweeter victory will taste.";
 			mes "Good luck in fighting!";
@@ -327,7 +351,7 @@ ama_test,52,44,3	script	Assistant#ama	4_M_MANAGER,{
 		mes "Bye-";
 		close2;
 		percentheal 100,0;
-		set event_momo,0;
+		event_momo = 0;
 		warp "amatsu",223,230;
 		end;
 	}
@@ -384,7 +408,7 @@ OnReset:
 	end;
 }
 
-ama_test,34,25,0	script	Hanako chan#ama	-1,2,2,{
+ama_test,34,25,0	script	Hanako chan#ama	FAKE_NPC,2,2,{
 OnTouch:
 	mes "[Hanako chan]";
 	mes ".......Eeeeheeheehee";
@@ -452,8 +476,8 @@ OnTouch:
 	mes "[Grandma & Grandpa]";
 	mes "So...Do me this favor, kid~";
 	close2;
-	set event_momo,1;
-	if (countitem(9010) > 0 || countitem(9005) > 0 || countitem(9016) > 0) {
+	event_momo = 1;
+	if (countitem(Baby_Desert_Wolf_Egg) > 0 || countitem(Picky_Egg) > 0 || countitem(Yoyo_Egg) > 0) {
 		disablenpc "Grandpa#ama";
 		disablenpc "Grandma#ama1";
 		donpcevent "Dokebi#ez::OnEnable";
@@ -466,14 +490,14 @@ OnTouch:
 	end;
 }
 
-ama_test,34,15,0	script	Dokebi#ez	-1,{
+ama_test,34,15,0	script	Dokebi#ez	FAKE_NPC,{
 OnInit:
 	disablenpc "Dokebi#ez";
 	end;
 
 OnEnable:
 	enablenpc "Dokebi#ez";
-	set .MyMobs,9;
+	.MyMobs = 9;
 	monster "ama_test",45,95,"Dokebi",1110,1,"Dokebi#ez::OnMyMobDead";
 	monster "ama_test",45,99,"Dokebi",1110,1,"Dokebi#ez::OnMyMobDead";
 	monster "ama_test",47,101,"Dokebi",1110,1,"Dokebi#ez::OnMyMobDead";
@@ -490,14 +514,14 @@ OnReset:
 	end;
 
 OnMyMobDead:
-	set .MyMobs,.MyMobs-1;
+	--.MyMobs;
 	if (.MyMobs < 1) {
 		mapannounce "ama_test","I...I will be baaaack~~~~!!!",bc_map;
 		enablenpc "Coach#ama";
-		set event_momo,2;
+		event_momo = 2;
 	}
 	else {
-		set .@dokebi_tel,rand(1,4);
+		.@dokebi_tel = rand(1,4);
 		if (.@dokebi_tel == 1) {
 			mapannounce "ama_test","!!IT'S A RAID!!!! RUN!!",bc_map;
 		}
@@ -514,14 +538,14 @@ OnMyMobDead:
 	end;
 }
 
-ama_test,34,16,0	script	Dokebi#hd	-1,{
+ama_test,34,16,0	script	Dokebi#hd	FAKE_NPC,{
 OnInit:
 	disablenpc "Dokebi#hd";
 	end;
 
 OnEnable:
 	enablenpc "Dokebi#hd";
-	set .MyMobs,9;
+	.MyMobs = 9;
 	monster "ama_test",45,95,"Dokebi",1110,1,"Dokebi#hd::OnMyMobDead";
 	monster "ama_test",45,99,"Dokebi",1110,1,"Dokebi#hd::OnMyMobDead";
 	monster "ama_test",47,101,"Dokebi",1110,1,"Dokebi#hd::OnMyMobDead";
@@ -538,14 +562,14 @@ OnReset:
 	end;
 
 OnMyMobDead:
-	set .MyMobs,.MyMobs-1;
+	--.MyMobs;
 	if (.MyMobs < 1) {
 		mapannounce "ama_test"," I will be baaaack~~~~!!!",bc_map;
 		enablenpc "Coach#ama";
-		set event_momo,2;
+		event_momo = 2;
 	}
 	else {
-		set .@dokebi_tel,rand(1,4);
+		.@dokebi_tel = rand(1,4);
 		if (.@dokebi_tel == 1) {
 			mapannounce "ama_test","!! IT'S A RAID!!!! RUN!!",bc_map;
 		}
@@ -573,7 +597,7 @@ ama_test,50,100,3	script	Coach#ama	4_M_JPN2,15,15,{
 	mes "Momotaro in the story!";
 	mes "Hohohoho...";
 	next;
-	switch(select("Well, well. It is nothing~:It was boring.")) {
+	switch(select("Well, well. It is nothing~", "It was boring.")) {
 	case 1:
 		mes "[Coach]";
 		mes "...Hohoho..";
@@ -622,7 +646,7 @@ ama_test,50,100,3	script	Coach#ama	4_M_JPN2,15,15,{
 		mes "^3163FFyou can't take this challenge.^000000";
 		mes "Also, this mission will be pretty hard.";
 		next;
-		if (select("Nah.. I'm good.:Bring it on, foo'!") == 1) {
+		if (select("Nah.. I'm good.", "Bring it on, foo'!") == 1) {
 			erasequest 8129;
 			mes "[Coach]";
 			mes "Hoho~I understand...";
@@ -667,14 +691,14 @@ OnTouch:
 	close;
 }
 
-ama_test,34,17,0	script	Am Mut#ama	-1,{
+ama_test,34,17,0	script	Am Mut#ama	FAKE_NPC,{
 OnInit:
 	disablenpc "Am Mut#ama";
 	end;
 
 OnEnable:
 	enablenpc "Am Mut#ama";
-	set .MyMobs,3;
+	.MyMobs = 3;
 	monster "ama_test",35,102,"Am Mut",1301,1,"Am Mut#ama::OnMyMobDead";
 	monster "ama_test",40,91,"Am Mut",1301,1,"Am Mut#ama::OnMyMobDead";
 	monster "ama_test",56,108,"Am Mut",1301,1,"Am Mut#ama::OnMyMobDead";
@@ -685,12 +709,12 @@ OnReset:
 	end;
 
 OnMyMobDead:
-	set .MyMobs,.MyMobs-1;
+	--.MyMobs;
 	if (.MyMobs < 1) {
 		enablenpc "Coach#after";
 	}
 	else {
-		set .@am_mut_tel,rand(1,3);
+		.@am_mut_tel = rand(1,3);
 		if (.@am_mut_tel == 1) {
 			mapannounce "ama_test"," Augh!! I, I made mistake...!",bc_map;
 		}
@@ -726,7 +750,7 @@ OnTouch:
 	mes "I had a great time...";
 	mes "Don't forget to get your reward~";
 	close2;
-	set event_momo,3;
+	event_momo = 3;
 	changequest 8129,8130;
 	warp "amatsu",223,230;
 	disablenpc "Coach#after";
@@ -735,7 +759,7 @@ OnTouch:
 	end;
 }
 
-ama_test,34,18,0	script	Timer#ama	-1,{
+ama_test,34,18,0	script	Timer#ama	FAKE_NPC,{
 OnInit:
 	disablenpc "Timer#ama";
 	end;
@@ -777,7 +801,7 @@ OnTimer362500:
 	end;
 }
 
-ama_test,50,100,0	script	backwarp#ama	-1,25,25,{
+ama_test,50,100,0	script	backwarp#ama	FAKE_NPC,25,25,{
 OnInit:
 	disablenpc "backwarp#ama";
 	end;
@@ -787,8 +811,7 @@ OnTouch:
 	end;
 }
 
-// Sushi Quest :: japan_sushi
-//============================================================
+//== Sushi Quest :: japan_sushi ============================
 ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 	if (MaxWeight - Weight < 5000) {
 		mes "[Magumagu]";
@@ -812,7 +835,7 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 		close;
 	}
 	else if (fish_r == 1) {
-		if (countitem(529) > 9) {
+		if (countitem(Candy) > 9) {
 			mes "[Magumagu]";
 			mes "Oh! I really appreciate it.";
 			mes "Right on time!";
@@ -822,10 +845,10 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 			mes "Thanks. It's nothing, but";
 			mes "I will give you my shop's special cuisine, Fish Slice, in return.";
 			next;
-			set fish_r,0;
+			fish_r = 0;
 			erasequest 10036;
-			delitem 529,10; //Candy
-			getitem 544,15; //Fish_Slice
+			delitem Candy,10;
+			getitem Fish_Slice,15;
 			mes "[Magumagu]";
 			mes "Here's 15 fish slices.";
 			mes "Please enjoy this food with your friends.";
@@ -844,7 +867,7 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 		close;
 	}
 	else if (fish_r == 2) {
-		if (countitem(964) > 9) {
+		if (countitem(Crap_Shell) > 9) {
 			mes "[Magumagu]";
 			mes "Oh! I really appreciate it.";
 			mes "Right on time!";
@@ -854,10 +877,10 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 			mes "Thanks. It is nothing, but";
 			mes "I will give you two sets of Sushi in return.";
 			next;
-			set fish_r,0;
+			fish_r = 0;
 			erasequest 10037;
-			delitem 964,10; //Crap_Shell
-			getitem 551,20; //Shusi
+			delitem Crap_Shell,10;
+			getitem Shusi,20;
 			mes "[Magumagu]";
 			mes "Share it with your friends";
 			mes "and family members.";
@@ -876,7 +899,7 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 		close;
 	}
 	else if (fish_r == 3) {
-		if (countitem(961) > 9) {
+		if (countitem(Conch) > 9) {
 			mes "[Magumagu]";
 			mes "Oh! I really appreciate it.";
 			mes "Right on time!";
@@ -886,10 +909,10 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 			mes "Thanks. It is nothing but";
 			mes "I will give you several sets of Sushi in return.";
 			next;
-			set fish_r,0;
+			fish_r = 0;
 			erasequest 10038;
-			delitem 961,10; //Conch
-			getitem 551,30; //Shusi
+			delitem Conch,10;
+			getitem Shusi,30;
 			mes "[Magumagu]";
 			mes "These are for three people,";
 			mes "so share them with your friends.";
@@ -908,7 +931,7 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 		close;
 	}
 	else if (fish_r == 4) {
-		if (countitem(1023) > 9) {
+		if (countitem(Fish_Tail) > 9) {
 			mes "[Magumagu]";
 			mes "Oh! I really appreciate it.";
 			mes "Right on time!";
@@ -918,11 +941,11 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 			mes "Thanks. It is nothing but";
 			mes "I will give you a large amount of food in return.";
 			next;
-			set fish_r,0;
+			fish_r = 0;
 			erasequest 10039;
-			delitem 1023,10; //Fish_Tail
-			getitem 544,20; //Fish_Slice
-			getitem 551,30; //Shusi
+			delitem Fish_Tail,10;
+			getitem Fish_Slice,20;
+			getitem Shusi,30;
 			mes "[Magumagu]";
 			mes "You can feed your guild";
 			mes "with this food.";
@@ -941,7 +964,7 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 		close;
 	}
 	else if (fish_r == 5) {
-		if (countitem(736) > 0) {
+		if (countitem(White_Platter) > 0) {
 			mes "[Magumagu]";
 			mes "Oh! I really appreciate it.";
 			mes "Right on time!";
@@ -951,10 +974,10 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 			mes "Thanks. It is nothing but";
 			mes "I will give you two sets of Sushi in return.";
 			next;
-			delitem 736,1; //White_Platter
-			set fish_r,0;
+			delitem White_Platter,1;
+			fish_r = 0;
 			erasequest 10040;
-			getitem 551,20; //Shusi
+			getitem Shusi,20;
 			mes "[Magumagu]";
 			mes "Share it with your friends";
 			mes "and family members.";
@@ -974,7 +997,7 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 		close;
 	}
 	else if (fish_r == 6) {
-		if (countitem(950) > 99) {
+		if (countitem(Heart_Of_Mermaid) > 99) {
 			if (ama_sushi == 2) {
 				mes "[Magumagu]";
 				mes "..............................";
@@ -1010,10 +1033,10 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 				mes "I'm old now. No one knows how long I can hold this knife. You have been chosen to inherit my culinary art...";
 				mes " ";
 				next;
-				delitem 950,100; //Heart_Of_Mermaid
-				set ama_sushi,4;
+				delitem Heart_Of_Mermaid,100;
+				ama_sushi = 4;
 				completequest 10041;
-				getitem 1144,1; //Sasimi
+				getitem Sasimi,1;
 				mes "[Magumagu]";
 				mes "Here, take my knife.";
 				mes "From now on, make fine cuisine with that knife.";
@@ -1042,40 +1065,40 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 				mes "Give me a moment...";
 				mes "I shall show you my ^0000FFtrue culinary skill^000000.";
 				next;
-				delitem 950,20; //Heart_Of_Mermaid
-				getitem 551,20; //Shusi
+				delitem Heart_Of_Mermaid,20;
+				getitem Shusi,20;
 				mes "[Magumagu]";
 				mes "Try these first.";
 				mes "Made from the freshest ingredients.";
 				next;
-				delitem 950,20; //Heart_Of_Mermaid
-				getitem 544,20; //Fish_Slice
+				delitem Heart_Of_Mermaid,20;
+				getitem Fish_Slice,20;
 				mes "[Magumagu]";
 				mes "Try these too.";
 				mes "My shop's fish slices are the best of the best!";
 				next;
-				delitem 950,20; //Heart_Of_Mermaid
-				getitem 551,20; //Shusi
+				delitem Heart_Of_Mermaid,20;
+				getitem Shusi,20;
 				mes "[Magumagu]";
 				mes "Have some more. Don't say no...!";
 				mes "Isn't it good? Huh? Isn't it good?";
 				next;
-				delitem 950,20; //Heart_Of_Mermaid
-				getitem 544,20; //Fish_Slice
+				delitem Heart_Of_Mermaid,20;
+				getitem Fish_Slice,20;
 				mes "[Magumagu]";
 				mes "Haha~! Not done yet!";
 				mes "It's okay, have some more!";
 				next;
-				delitem 950,20; //Heart_Of_Mermaid
-				getitem 544,10; //Fish_Slice
-				getitem 551,10; //Shusi
+				delitem Heart_Of_Mermaid,20;
+				getitem Fish_Slice,10;
+				getitem Shusi,10;
 				mes "[Magumagu]";
 				mes "Take the leftovers.";
 				mes "You look stuffed...";
 				mes "Share the rest with your friends and family.";
 				next;
-				set ama_sushi,ama_sushi+1;
-				set fish_r,0;
+				++ama_sushi;
+				fish_r = 0;
 				erasequest 10041;
 				mes "[Magumagu]";
 				mes "Thanks a lot for today! Haha!";
@@ -1111,7 +1134,7 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 	mes "highly values the freshness of";
 	mes "fish slices. What brings you down here...?";
 	next;
-	switch(select("I would like to buy Sushi:I would like to buy fish slice:Do you need assistance?:Keep up the good work")) {
+	switch(select("I would like to buy Sushi", "I would like to buy fish slice", "Do you need assistance?", "Keep up the good work")) {
 	case 1:
 		mes "[Magumagu]";
 		mes "Alright...! How many?";
@@ -1119,7 +1142,7 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 		mes "want just 1 Sushi. It is 74z.";
 		mes "If you want more, tell me.";
 		next;
-		switch(select("700z A set!:74z A piece!:I will try it later")) {
+		switch(select("700z A set!", "74z A piece!", "I will try it later")) {
 		case 1:
 			if (Zeny < 700) {
 				mes "[Magumagu]";
@@ -1128,7 +1151,7 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 				close;
 			}
 			Zeny -= 700;
-			getitem 551,10; //Shusi
+			getitem Shusi,10;
 			mes "[Magumagu]";
 			mes "There you go. If you like the taste, please order some more.";
 			close;
@@ -1141,7 +1164,7 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 				close;
 			}
 			Zeny -= 74;
-			getitem 551,1; //Shusi
+			getitem Shusi,1;
 			mes "[Magumagu]";
 			mes "There you go. If you like the taste, please order some more.";
 			close;
@@ -1160,7 +1183,7 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 		mes "1 fish slice is 37z.";
 		mes "If you want more, tell me.";
 		next;
-		switch(select("350z A set!:37z A piece!:I will try it later")) {
+		switch(select("350z A set!", "37z A piece!", "I will try it later")) {
 		case 1:
 			if (Zeny < 350) {
 				mes "[Magumagu]";
@@ -1169,7 +1192,7 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 				close;
 			}
 			Zeny -= 350;
-			getitem 544,10; //Fish_Slice
+			getitem Fish_Slice,10;
 			mes "[Magumagu]";
 			mes "There you go. If you like the taste, please order some more.";
 			close;
@@ -1182,7 +1205,7 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 				close;
 			}
 			Zeny -= 37;
-			getitem 544,1; //Fish_Slice
+			getitem Fish_Slice,1;
 			mes "[Magumagu]";
 			mes "There you go. If you like the taste, please order some more.";
 			close;
@@ -1211,9 +1234,9 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 			mes "Will you do me a favor?";
 			mes "I will reward you.";
 			next;
-			set .@fish_m1,rand(1,10);
+			.@fish_m1 = rand(1,10);
 			if (.@fish_m1 == 1 || .@fish_m1 == 2) {
-				set fish_r,1;
+				fish_r = 1;
 				setquest 10036;
 				mes "[Magumagu]";
 				mes "I need some candies to make";
@@ -1223,7 +1246,7 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 				mes " ";
 			}
 			else if (.@fish_m1 == 3 || .@fish_m1 == 4) {
-				set fish_r,2;
+				fish_r = 2;
 				setquest 10037;
 				mes "[Magumagu]";
 				mes "I need some crab shells to make";
@@ -1233,7 +1256,7 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 				mes "Okay?";
 			}
 			else if (.@fish_m1 == 5 || .@fish_m1 == 6) {
-				set fish_r,3;
+				fish_r = 3;
 				setquest 10038;
 				mes "[Magumagu]";
 				mes "I have used all of my conches.";
@@ -1243,7 +1266,7 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 				mes "Please do me this favor.";
 			}
 			else if (.@fish_m1 == 7 || .@fish_m1 == 8) {
-				set fish_r,4;
+				fish_r = 4;
 				setquest 10039;
 				mes "[Magumagu]";
 				mes "Decorative fish tails are out of";
@@ -1253,7 +1276,7 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 				mes "Please do me this favor.";
 			}
 			else if (.@fish_m1 == 9) {
-				set fish_r,5;
+				fish_r = 5;
 				setquest 10040;
 				mes "[Magumagu]";
 				mes "We are missing a platter to serve";
@@ -1264,7 +1287,7 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 			}
 			else {
 				if (rand(1,10) == 1) {
-					set fish_r,6;
+					fish_r = 6;
 					setquest 10041;
 					mes "[Magumagu]";
 					mes "Don't ask me why...";
@@ -1278,7 +1301,7 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 					mes "Just keep what I want in mind.";
 				}
 				else {
-					set fish_r,5;
+					fish_r = 5;
 					setquest 10040;
 					mes "[Magumagu]";
 					mes "We are missing a platter to serve";
@@ -1303,8 +1326,7 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 	}
 }
 
-// Dungeon Quest :: japan_mono
-//============================================================
+//== Dungeon Quest :: japan_mono ===========================
 amatsu,112,164,4	script	Gate Soldier#ama1	8_M_JPNSOLDIER,{
 	mes "[Gate Soldier]";
 	mes "This is the great palace,";
@@ -1320,7 +1342,7 @@ amatsu,112,164,4	script	Gate Soldier#ama1	8_M_JPNSOLDIER,{
 	mes " ";
 	close;
 }
-	
+
 amatsu,119,164,4	script	Gate Soldier#ama2	8_M_JPNSOLDIER,{
 	mes "[Gate Soldier]";
 	mes "Are you from Rune-Midgard?";
@@ -1335,7 +1357,7 @@ amatsu,119,164,4	script	Gate Soldier#ama2	8_M_JPNSOLDIER,{
 	mes "Amatsu, and intercontinental trade was his idea.";
 	close;
 }
-	
+
 ama_in02,207,40,6	script	Gate Soldier#ama3	8_M_JPNSOLDIER,{
 	mes "[Gate Soldier]";
 	mes "Welcome. The lord of the palace";
@@ -1347,7 +1369,7 @@ ama_in02,207,40,6	script	Gate Soldier#ama3	8_M_JPNSOLDIER,{
 	mes "Please enjoy your stay.";
 	close;
 }
-	
+
 ama_in02,207,49,6	script	Gate Soldier#ama4	8_M_JPNSOLDIER,{
 	mes "[Gate Soldier]";
 	mes "The lord is really nice guy.";
@@ -1362,14 +1384,14 @@ ama_in02,207,49,6	script	Gate Soldier#ama4	8_M_JPNSOLDIER,{
 	mes " ";
 	close;
 }
-	
+
 amatsu,164,174,4	script	Gate Soldier#ama5	8_M_JPNSOLDIER,{
 	mes "[Gate Soldier]";
 	if (event_amatsu == 0) {
 		mes "You can't enter here.";
 		mes "The mother of our lord is resting in here. She needs her rest.";
 		next;
-		set event_amatsu,1;
+		event_amatsu = 1;
 		setquest 8131;
 		mes "[Gate Soldier]";
 		mes "She has been sick for months.";
@@ -1400,7 +1422,7 @@ amatsu,164,174,4	script	Gate Soldier#ama5	8_M_JPNSOLDIER,{
 	}
 	close;
 }
-	
+
 amatsu,171,174,4	script	Gate Soldier#ama6	8_M_JPNSOLDIER,{
 	mes "[Gate Soldier]";
 	if (event_amatsu == 0) {
@@ -1408,7 +1430,7 @@ amatsu,171,174,4	script	Gate Soldier#ama6	8_M_JPNSOLDIER,{
 		mes "The mother of our lord is resting in here.";
 		mes " ";
 		next;
-		set event_amatsu,1;
+		event_amatsu = 1;
 		mes "[Gate Soldier]";
 		mes "She has been sick for months.";
 		mes "That is why she is staying in here.";
@@ -1440,7 +1462,7 @@ amatsu,171,174,4	script	Gate Soldier#ama6	8_M_JPNSOLDIER,{
 	}
 	close;
 }
-	
+
 ama_in02,187,57,2	script	Soldier#ama1	8_M_JPNSOLDIER,{
 	mes "[Ichiro]";
 	mes "Welcome.";
@@ -1453,16 +1475,16 @@ ama_in02,187,57,2	script	Soldier#ama1	8_M_JPNSOLDIER,{
 	mes "palace. This is all provided by him.";
 	close;
 }
-	
+
 ama_in02,170,62,4	script	Soldier#ama2	8_M_JPNSOLDIER,{
 	mes "[Jiro]";
 	mes "I'm Jiro, the administrator";
 	mes "of this Palace. What can I do for you?";
 	next;
-	switch(select("Issue me a Transit Permit:I want to live in Amatsu:Nothing")) {
+	switch(select("Issue me a Transit Permit", "I want to live in Amatsu", "Nothing")) {
 	case 1:
 		if (event_amatsu == 6) {
-			if (countitem(7160) > 0) {
+			if (countitem(Lords_Passable_Ticket) > 0) {
 				mes "[Jiro]";
 				mes "You already have one...";
 				mes "You don't need to have two of them.";
@@ -1473,9 +1495,9 @@ ama_in02,170,62,4	script	Soldier#ama2	8_M_JPNSOLDIER,{
 			mes "You need to pay 10,000 zeny as a tax";
 			mes "to issue another Transit Permit.";
 			next;
-			if (select("Issue one:Talk to you later") == 1) {
+			if (select("Issue one", "Talk to you later") == 1) {
 				Zeny -= 10000;
-				getitem 7160,1; //Lord's_Passable_Ticket
+				getitem Lords_Passable_Ticket,1;
 				mes "[Jiro]";
 				mes "There you go.";
 				mes "Don't lose it this time.";
@@ -1504,7 +1526,7 @@ ama_in02,170,62,4	script	Soldier#ama2	8_M_JPNSOLDIER,{
 		close;
 	}
 }
-	
+
 ama_in02,37,157,4	script	Soldier#ama3	8_M_JPNSOLDIER,{
 	mes "[Saburo]";
 	mes "This is the training ground for improving our battle skills.";
@@ -1530,7 +1552,7 @@ ama_in02,37,157,4	script	Soldier#ama3	8_M_JPNSOLDIER,{
 	mes "See ya...";
 	close;
 }
-	
+
 ama_in02,32,51,6	script	Soldier#ama4	8_M_JPNSOLDIER,{
 	mes "[Shiro]";
 	mes "*Cough, Cough* What...";
@@ -1549,7 +1571,7 @@ ama_in02,32,51,6	script	Soldier#ama4	8_M_JPNSOLDIER,{
 	mes "*Cough*... *Cough*...";
 	close;
 }
-	
+
 ama_in02,40,167,3	script	Soldier#ama5	8_M_JPNSOLDIER,{
 	mes "[Goro]";
 	mes "*Psst*... Please, be quiet.";
@@ -1577,7 +1599,7 @@ ama_in02,40,167,3	script	Soldier#ama5	8_M_JPNSOLDIER,{
 	mes "Just don't tell anyone that I've told you this, okay?";
 	close;
 }
-	
+
 ama_in02,32,167,5	script	Soldier#ama6	8_M_JPNSOLDIER,{
 	mes "[Rokuro]";
 	mes "He always talks nonsense.";
@@ -1599,7 +1621,7 @@ ama_in02,32,167,5	script	Soldier#ama6	8_M_JPNSOLDIER,{
 	mes "improve after their visits...";
 	close;
 }
-	
+
 ama_in02,42,34,2	script	Soldier#ama7	8_M_JPNSOLDIER,{
 	mes "[Shichiro]";
 	mes "Have a good time.";
@@ -1615,7 +1637,7 @@ ama_in02,42,34,2	script	Soldier#ama7	8_M_JPNSOLDIER,{
 	mes "Have a good day.";
 	close;
 }
-	
+
 ama_in02,203,156,4	script	Soldier#ama8	8_M_JPNSOLDIER,{
 	mes "[Hachiro]";
 	mes "My lord is inside.";
@@ -1629,7 +1651,7 @@ ama_in02,203,156,4	script	Soldier#ama8	8_M_JPNSOLDIER,{
 	mes "What could have happened to him...?";
 	close;
 }
-	
+
 ama_in02,195,156,4	script	Soldier#ama9	8_M_JPNSOLDIER,{
 	mes "[Kyuro]";
 	mes "This is not good.";
@@ -1644,24 +1666,24 @@ ama_in02,195,156,4	script	Soldier#ama9	8_M_JPNSOLDIER,{
 	mes "him as a soldier.";
 	close;
 }
-	
+
 ama_in02,115,177,7	script	Soldier#ama10	8_M_JPNSOLDIER,{
 	mes "[Jyuro]";
 	mes "What are you doing in here?";
 	mes "There is nothing interesting here.";
 	next;
-	if (select("That is true:Open the gate") == 1) {
+	if (select("That is true", "Open the gate") == 1) {
 		mes "[Jyuro]";
 		mes "There are much better things to enjoy in town. Have a good time...";
 		close;
 	}
 	if (event_amatsu == 6) {
-		if (countitem(7160) > 0) {
+		if (countitem(Lords_Passable_Ticket) > 0) {
 			mes "[Jyuro]";
 			mes "You have the ticket...";
 			mes "Do you want me to send you now, or do you need a little instruction?";
 			next;
-			if (select("I will go in:Instruction, please") == 1) {
+			if (select("I will go in", "Instruction, please") == 1) {
 				mes "[Jyuro]";
 				mes "I will open the gate.";
 				mes "Take care of yourself...";
@@ -1712,15 +1734,15 @@ ama_in02,115,177,7	script	Soldier#ama10	8_M_JPNSOLDIER,{
 	mes "A gate? On the top floor of the building??? Surely, you must been be mistaken.";
 	emotion e_swt;
 	next;
-	if (countitem(7160) > 0) {
-		if (select("Show him the ticket:Cancel") == 1) {
+	if (countitem(Lords_Passable_Ticket) > 0) {
+		if (select("Show him the ticket", "Cancel") == 1) {
 			mes "[Jyuro]";
 			mes "What? That pass is...?";
 			mes "That Transit Permit is from";
 			mes "the lord but I guess it has";
 			mes "been issued to the wrong person.";
 			next;
-			delitem 7160,1; //Lord's_Passable_Ticket
+			delitem Lords_Passable_Ticket,1;
 			mes "[Jyuro]";
 			mes "I will keep this ticket because";
 			mes "it was issued without permission.";
@@ -1736,12 +1758,12 @@ ama_in02,115,177,7	script	Soldier#ama10	8_M_JPNSOLDIER,{
 	mes "There are more things to enjoy in town. Have yourself a good time...";
 	close;
 }
-	
+
 ama_dun01,229,7,0	script	Soldier#ama11	8_M_JPNSOLDIER,{
 	mes "[Jyuro]";
 	mes "Do you want to go back?";
 	next;
-	if (select("Yes, I do:I will stay here") == 1) {
+	if (select("Yes, I do", "I will stay here") == 1) {
 		mes "[Jyuro]";
 		mes "Take care of yourself.";
 		close2;
@@ -1752,7 +1774,7 @@ ama_dun01,229,7,0	script	Soldier#ama11	8_M_JPNSOLDIER,{
 	mes "Take care...";
 	close;
 }
-	
+
 ama_in02,200,176,4	script	Lord of Palace#ama	8_M_JPNMASTER,{
 	if (event_amatsu == 0) {
 		mes "[Ishida Yoshinaga]";
@@ -1772,7 +1794,7 @@ ama_in02,200,176,4	script	Lord of Palace#ama	8_M_JPNMASTER,{
 		mes "you here? If it is not urgent,";
 		mes "come to me another time...!";
 		next;
-		switch(select("I heard about your mother...:Your last name is nice:Who are you?")) {
+		switch(select("I heard about your mother...", "Your last name is nice", "Who are you?")) {
 		case 1:
 			mes "[Ishida Yoshinaga]";
 			mes "Oh...So you know about her disease?";
@@ -1802,7 +1824,7 @@ ama_in02,200,176,4	script	Lord of Palace#ama	8_M_JPNMASTER,{
 			mes "You, who hail from Rune-Midgard,";
 			mes "may be able to cure my mother's disease. I will reward you well if you succeed...";
 			next;
-			set event_amatsu,2;
+			event_amatsu = 2;
 			changequest 8131,8132;
 			mes "[Ishida Yoshinaga]";
 			mes "I beg you...Please.";
@@ -1830,7 +1852,7 @@ ama_in02,200,176,4	script	Lord of Palace#ama	8_M_JPNMASTER,{
 		}
 	}
 	else if (event_amatsu == 5) {
-		if (countitem(1022) > 0) {
+		if (countitem(Fox_Tail) > 0) {
 			mes "[Ishida Yoshinaga]";
 			mes "I've hear the great news!";
 			mes "My mother seems to have gotten better. What was her disease?";
@@ -1860,10 +1882,10 @@ ama_in02,200,176,4	script	Lord of Palace#ama	8_M_JPNMASTER,{
 			mes "You can go anywhere";
 			mes "with this ticket.";
 			next;
-			set event_amatsu,6;
+			event_amatsu = 6;
 			completequest 8135;
-			delitem 1022,1; //Fox_Tail
-			getitem 7160,1; //Lord's_Passable_Ticket
+			delitem Fox_Tail,1;
+			getitem Lords_Passable_Ticket,1;
 			mes "[Ishida Yoshinaga]";
 			mes "This isn't a big reward but";
 			mes "someday it will be useful for you.";
@@ -1907,7 +1929,7 @@ ama_in02,200,176,4	script	Lord of Palace#ama	8_M_JPNMASTER,{
 	mes "I have faith in your ability.";
 	close;
 }
-	
+
 ama_in01,22,111,0	script	Grandma#ama2	4_F_JPNOBA,{
 	if (event_amatsu == 4) {
 		mes "[....]";
@@ -1921,17 +1943,17 @@ ama_in01,22,111,0	script	Grandma#ama2	4_F_JPNOBA,{
 		mes "it won't harm me!! Yelp!^000000";
 		next;
 		select("Taaaah!!");
-		if ((BaseJob == Job_Priest || BaseJob != Job_Acolyte && BaseJob != Job_Monk) || (countitem(523) < 1 || countitem(948) < 1 || countitem(1029) < 1)) {
+		if ((BaseJob == Job_Priest || BaseJob != Job_Acolyte && BaseJob != Job_Monk) || (countitem(Holy_Water) < 1 || countitem(Bears_Foot) < 1 || countitem(Tigers_Skin) < 1)) {
 			if (rand(1,4) == 1)
-				set .@fox_kill,0;
+				.@fox_kill = 0;
 			else
-				set .@fox_kill,1;
+				.@fox_kill = 1;
 		}
 		else {
 			if (rand(1,2) == 1)
-				set .@fox_kill,0;
+				.@fox_kill = 0;
 			else
-				set .@fox_kill,1;
+				.@fox_kill = 1;
 		}
 		if (.@fox_kill == 1) {
 			mes "[....]";
@@ -1946,9 +1968,9 @@ ama_in01,22,111,0	script	Grandma#ama2	4_F_JPNOBA,{
 			next;
 			monster "ama_in01",22,111,"Nine Tails",1180,1;
 			killmonsterall "ama_in01";
-			set event_amatsu,5;
+			event_amatsu = 5;
 			changequest 8134,8135;
-			getitem 1022,1; //Fox_Tail
+			getitem Fox_Tail,1;
 			mes "[....]";
 			mes "^FF6060Everything that";
 			mes "Yoshinaga does will cause you";
@@ -2051,7 +2073,7 @@ ama_in01,22,111,0	script	Grandma#ama2	4_F_JPNOBA,{
 	warp "amatsu",167,197;
 	end;
 }
-	
+
 amatsu,189,166,5	script	Kouji#ama	4_M_JPNCHIBI,{
 	mes "[Kouji]";
 	mes "Ralralrah Ralralrah Ralralrahralralrah~";
@@ -2065,7 +2087,7 @@ amatsu,189,166,5	script	Kouji#ama	4_M_JPNCHIBI,{
 		mes "That Mommy's love is best for me~";
 	}
 	else if (event_amatsu == 2) {
-		set event_amatsu,3;
+		event_amatsu = 3;
 		mes "Priest, Priest~";
 		mes "A fox is following me!";
 		mes "It's funny and a little absurd,";
@@ -2106,7 +2128,7 @@ amatsu,189,166,5	script	Kouji#ama	4_M_JPNCHIBI,{
 	mes "Ralralrah Ralralrah Ralralrahralralrah~";
 	close;
 }
-	
+
 ama_in01,169,173,1	script	Shaman#ama	4_F_JPNMU,{
 	mes "[Tokako]";
 	mes "Er, I'm not really a shaman...";
@@ -2127,7 +2149,7 @@ ama_in01,169,173,1	script	Shaman#ama	4_F_JPNMU,{
 	mes " ";
 	close;
 }
-	
+
 ama_in01,180,173,3	script	Kitsune Mask#ama	4_M_JPN2,{
 	if (event_amatsu == 3) {
 		mes "[Takehue]";
@@ -2167,7 +2189,7 @@ ama_in01,180,173,3	script	Kitsune Mask#ama	4_M_JPN2,{
 		mes " ";
 		next;
 		select("Taaaaah!!");
-		set event_amatsu,4;
+		event_amatsu = 4;
 		mes "[Takehue]";
 		mes "Good. Show that spiritual";
 		mes "energy to the fox several times.";
@@ -2197,13 +2219,3 @@ ama_in01,180,173,3	script	Kitsune Mask#ama	4_M_JPN2,{
 		close;
 	}
 }
-
-//============================================================
-// Old changelog
-//============================================================
-//= 1.0 Rewrote parts of other/momotaro.txt to make it work.
-//=     I'm sorry for the mess, I couldn't do much better with
-//=     the current code I had.
-//= 1.1 Added Sushi Quest and Amatsu Event from cities/ [Evera]
-//= 1.2 Fixed Momotaro Quest, thanks to .~Abism0~. [Lupus]
-//============================================================

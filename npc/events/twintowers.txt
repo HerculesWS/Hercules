@@ -1,17 +1,41 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  ultramage
+//= Copyright (C)  Silent
+//= Copyright (C)  Lupus
+//= Copyright (C)  massdriller
+//= Copyright (C)  sEiKaN
+//= Copyright (C)  Akaru
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Twin Towers NPCs
-//===== By: ==================================================
-//= sEiKaN (1.0)
-//===== Current Version: =====================================
-//= 1.6
-//===== Description: =========================================
+//================= Description ===========================================
 //= mRO Event: Twin Towers NPCs
-//===== Additional Comments: =================================
-//= 1.2 by Akaru 1.3 by massdriller(Fixed typos)
-//= 1.4 fixed coords, according to off. src [Lupus]
-//= 1.5 Removed Duplicates [Silent]
-//= 1.6 Fixed wrong sprite id on main npc [ultramage]
-//============================================================
+//================= Current Version =======================================
+//= 1.6
+//=========================================================================
 
 prontera,146,92,4	script	Twin Towers#tt1::Twin-Towers	TW_TOWER,{
 	mes "[Twin Towers]";
@@ -29,24 +53,22 @@ prontera,146,92,4	script	Twin Towers#tt1::Twin-Towers	TW_TOWER,{
 	mes "For this reason, we are here at your service with our special magic.";
 	mes "Kindly let us know.";
 	next;
-	menu "I shall accept your offer.",YES,"I'll ask for your service next time.",NO;
-
-	NO:
-	mes "[Twin Towers]"; 
-	mes "Er, what a pity. Traveling by yourself is still the best evidence of adventure.";
-	mes "Isn't this proving that you are still young?";
-	mes "We respect brave hearts like this";
-	next;
-	mes "[Twin Towers]";
-	mes "There are good and bad times in life, moreover, adventure isn't an easy task in the first place.";
-	mes "Isn't this true?";
-	mes "Feel free to come to us when you have time, we will always be there to serve you.";
-	next;
-	mes "[Twin Towers]";
-	mes "Forget all your troubles, and create a splendid legend in this wonderful world.";
-	mes "This is such a wonderful world, and you'll always be a great adventurer!";
-	close;
-	YES:
+	if (select("I shall accept your offer.","I'll ask for your service next time.") != 1) {
+		mes "[Twin Towers]";
+		mes "Er, what a pity. Traveling by yourself is still the best evidence of adventure.";
+		mes "Isn't this proving that you are still young?";
+		mes "We respect brave hearts like this";
+		next;
+		mes "[Twin Towers]";
+		mes "There are good and bad times in life, moreover, adventure isn't an easy task in the first place.";
+		mes "Isn't this true?";
+		mes "Feel free to come to us when you have time, we will always be there to serve you.";
+		next;
+		mes "[Twin Towers]";
+		mes "Forget all your troubles, and create a splendid legend in this wonderful world.";
+		mes "This is such a wonderful world, and you'll always be a great adventurer!";
+		close;
+	}
 	mes "[Twin Towers]";
 	mes "The flaming passion of an adventurer,";
 	mes "The desire to explore the unknown realms,";
@@ -60,28 +82,29 @@ prontera,146,92,4	script	Twin Towers#tt1::Twin-Towers	TW_TOWER,{
 	mes "[Twin Towers]";
 	mes "Come on! Where do you wish to go?";
 	mes "Just let us know you desired destination and we will send your there!";
-	menu "Hidden Temple", HiddenTemple,"Orc Dungeon",OrcDungeon,"Ant Hell",AntHell,"Mjolnir Waste Pit",MjolnirWastePit,"Sphinx",Sphinx,"Glast Heim",GlastHeim,"Comodo",Comodo;
-		HiddenTemple:
-			warp "prt_fild01",136,368;
-			close;
-		OrcDungeon:
-			warp "gef_fild10",67,334;
-			close;
-		AntHell:
-			warp "moc_fild04",210,329;
-			close;
-		MjolnirWastePit:
-			warp "mjolnir_02",79,361;
-			close;
-		Sphinx:
-			warp "moc_fild19",105,99;
-			close;
-		GlastHeim:
-			warp "gef_fild06",45,304;
-			close;
-		Comodo:
-			warp "cmd_fild01",30,317;
-			close;
+	switch (select("Hidden Temple","Orc Dungeon","Ant Hell","Mjolnir Waste Pit","Sphinx","Glast Heim","Comodo")) {
+	case 1: // HiddenTemple
+		warp "prt_fild01",136,368;
+		close;
+	case 2: // OrcDungeon
+		warp "gef_fild10",67,334;
+		close;
+	case 3: // AntHell
+		warp "moc_fild04",210,329;
+		close;
+	case 4: // MjolnirWastePit
+		warp "mjolnir_02",79,361;
+		close;
+	case 5: // Sphinx
+		warp "moc_fild19",105,99;
+		close;
+	case 6: // GlastHeim
+		warp "gef_fild06",45,304;
+		close;
+	case 7: // Comodo
+		warp "cmd_fild01",30,317;
+		close;
+	}
 }
 
 morocc,160,97,4	duplicate(Twin-Towers)	Twin Towers#tt2	TW_TOWER

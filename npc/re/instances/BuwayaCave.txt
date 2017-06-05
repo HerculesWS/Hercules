@@ -1,19 +1,38 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2013-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Buwaya Cave
-//===== By: ==================================================
-//= Euphy
-//===== Current Version: =====================================
-//= 1.0
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Defeat Buwaya in his cave.
 //= Part of the "Secret in the Woods" quest.
-//===== Additional Comments: =================================
-//= 1.0 First version. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
 
-1@ma_c	mapflag	src4instance
-//============================================================
 ma_fild02,312,317,5	script	Guard#buwaya_cave	4_MAL_SOLDIER,{
 	if (BaseLevel < 130) {
 		mes "[Guard]";
@@ -23,8 +42,8 @@ ma_fild02,312,317,5	script	Guard#buwaya_cave	4_MAL_SOLDIER,{
 		close;
 	}
 
-	set .@party_id,getcharid(1);
-	set .@md_name$,"Buwaya Cave";
+	.@party_id = getcharid(CHAR_ID_PARTY);
+	.@md_name$ = "Buwaya Cave";
 
 	if (!.@party_id) {
 		mes "[Guard]";
@@ -33,13 +52,13 @@ ma_fild02,312,317,5	script	Guard#buwaya_cave	4_MAL_SOLDIER,{
 		mes "team with other people.";
 		close;
 	}
-	if (getcharid(0) == getpartyleader(.@party_id,2)) {
+	if (getcharid(CHAR_ID_CHAR) == getpartyleader(.@party_id,2)) {
 		mes "[Guard]";
 		mes "This place is dangerous. Please go back.";
 		mes "If you dont have any business here, please go back.";
 		next;
 		while(1) {
-			switch(select("Why is it so dangerous?:I'm here to hunt down Buwaya.:End conversation.")) {
+			switch(select("Why is it so dangerous?", "I'm here to hunt down Buwaya.", "End conversation.")) {
 			case 1:
 				mes "[Guard]";
 				mes "Recently, there has been a case";
@@ -60,10 +79,10 @@ ma_fild02,312,317,5	script	Guard#buwaya_cave	4_MAL_SOLDIER,{
 				next;
 				break;
 			case 2:
-				set .@playtime, checkquest(4229,PLAYTIME);
-				if (.@playtime == -1) {
+				.@playtime = questprogress(4229,PLAYTIME);
+				if (!.@playtime) {
 					// fall through
-				} else if (.@playtime == 0 || .@playtime == 1) {
+				} else if (.@playtime == 1) {
 					mes "[Guard]";
 					mes "Buwaya is still hiding.";
 					mes "Even if you enter now, Buwaya will not come out. ";
@@ -73,11 +92,11 @@ ma_fild02,312,317,5	script	Guard#buwaya_cave	4_MAL_SOLDIER,{
 					erasequest 4229;
 					// fall through
 				}
-				set .@instance,instance_create(.@md_name$,.@party_id);
+				.@instance = instance_create(.@md_name$,.@party_id);
 				if (.@instance < 0) {
 					mes "[Guard]";
 					mes "Party name is... "+getpartyname(.@party_id)+".";;
-					mes "Party leader is... "+strcharinfo(0);
+					mes "Party leader is... "+strcharinfo(PC_NAME);
 					mes "^0000ff"+.@md_name$+"^000000 cannot be opened now.";
 					mes "Please try a moment later.";
 					close;
@@ -89,7 +108,7 @@ ma_fild02,312,317,5	script	Guard#buwaya_cave	4_MAL_SOLDIER,{
 				}
 				instance_set_timeout 3600,300,.@instance;
 				instance_init(.@instance);
-				
+
 				mes "[Guard]";
 				mes "I will open up the tunnel to ^0000ff"+.@md_name$+"^000000.";
 				mes "I wish you good luck.";
@@ -118,10 +137,10 @@ OnTouch:
 		mes "This place is dangerous. Please go back.";
 		close;
 	}
-	set .@playtime, checkquest(4229,PLAYTIME);
-	if (.@playtime == -1) {
+	.@playtime = questprogress(4229,PLAYTIME);
+	if (!.@playtime) {
 		// fall through
-	} else if (.@playtime == 0 || .@playtime == 1) {
+	} else if (.@playtime == 1) {
 		mes "[Guard]";
 		mes "Buwaya is still hiding.";
 		mes "Even if you enter now, Buwaya will not come out.";
@@ -131,18 +150,18 @@ OnTouch:
 		erasequest 4229;
 		// fall through
 	}
-	switch(select("Enter.:Turn back.")) {
+	switch(select("Enter.", "Turn back.")) {
 	case 1:
 		if( has_instance("1@ma_c") == "" ) {
 			mes "The memorial dungeon Buwaya Cave does not exist.";
 			mes "The party leader did not generate the dungeon yet.";
 			close;
 		} else {
-			mapannounce "ma_fild02",getpartyname(getcharid(1))+" party's "+strcharinfo(0)+" member began hunting Buwaya in Buwaya Cave.",bc_map,"0x00ff99"; //FW_NORMAL 12 0 0
+			mapannounce "ma_fild02",getpartyname(getcharid(CHAR_ID_PARTY))+" party's "+strcharinfo(PC_NAME)+" member began hunting Buwaya in Buwaya Cave.",bc_map,"0x00ff99"; //FW_NORMAL 12 0 0
 			setquest 4229;
 			warp "1@ma_c",35,57;
 			end;
-		}	
+		}
 	case 2:
 		mes "[Guard]";
 		mes "You must value your life.";
@@ -179,7 +198,7 @@ OnTouch:
 	mes "and new people got caught.";
 	mes "We will be stuck in here for the rest of our lives.";
 	next;
-	switch(select("Get me outta here!!:Ca...can't escape?")) {
+	switch(select("Get me outta here!!", "Ca...can't escape?")) {
 	case 1:
 		mes "[Kidnapped Residents]";
 		mes "We don't have enough power to destroy it but Buwaya has a weakness.";
@@ -210,7 +229,7 @@ OnEnable:
 	mes "Ahaa! I wish I had a little more power...";
 	mes "I know its weakness...";
 	next;
-	switch(select("Tell me.:Do you really know?")) {
+	switch(select("Tell me.", "Do you really know?")) {
 	case 1:
 		mes "[Kidnapped Residents]";
 		mes "Are you sure you can do it...?";
@@ -247,8 +266,8 @@ OnInstanceInit:
 	end;
 OnEnable:
 	enablenpc instance_npcname("#box_mob_call");
-	set .@label$, instance_npcname("#box_mob_call")+"::OnMyMobDead";
-	set .@map$, instance_mapname("1@ma_c");
+	.@label$ = instance_npcname("#box_mob_call")+"::OnMyMobDead";
+	.@map$ = instance_mapname("1@ma_c");
 	monster .@map$,30,118,"Buwaya's Weakness",2333,1,.@label$;
 	monster .@map$,35,118,"Buwaya's Weakness",2333,1,.@label$;
 	end;
@@ -271,8 +290,8 @@ OnEnable:
 	enablenpc instance_npcname("#box_out");
 	end;
 OnTouch:
-	set .@x, rand(1,20) + 97;
-	set .@y, rand(1,20) + 74;
+	.@x = rand(1,20) + 97;
+	.@y = rand(1,20) + 74;
 	warp instance_mapname("1@ma_c"),.@x,.@y;
 	end;
 }
@@ -286,7 +305,7 @@ OnInstanceInit:
 OnTimer30000:
 	mapannounce instance_mapname("1@ma_c"),"Buwaya : I will put you in my treasure box!",bc_map,"0x00ff99"; //FW_NORMAL 12 0 0
 	// Should execute OnTimer33000, but client doesn't render the effect fast enough.
-	for(set .@i,1; .@i<=9; set .@i,.@i+1)
+	for(.@i = 1; .@i<=9; ++.@i)
 		donpcevent instance_npcname("#yunobi"+.@i)+"::OnEnable";
 	end;
 OnTimer33000:
@@ -304,7 +323,7 @@ OnTimer35000:
 	disablenpc instance_npcname("#box_call");
 	end;
 OnTouch:
-	specialeffect2 EF_GUIDEDATTACK;
+	specialeffect(EF_GUIDEDATTACK, AREA, playerattached());
 	warp instance_mapname("1@ma_c"),33,112;
 	end;
 OnDisable:
@@ -316,7 +335,7 @@ OnDisable:
 1@ma_c,97,74,0	script	#yunobi1	HIDDEN_WARP_NPC,{
 	end;
 OnInstanceInit:
-	hideonnpc instance_npcname(strnpcinfo(0));
+	hideonnpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 OnEnable:
 	specialeffect EF_MAPPILLAR2;
@@ -352,8 +371,8 @@ OnTimer64000:
 	mapannounce instance_mapname("1@ma_c"),"Buwaya : This is...MY...Deadly... ATTACK!",bc_map,"0x00ff99"; //FW_NORMAL 12 0 0
 	end;
 OnTimer65000:
-	set .@label$, instance_npcname("#bunshin")+"::OnMyMobDead";
-	set .@map$, instance_mapname("1@ma_c");
+	.@label$ = instance_npcname("#bunshin")+"::OnMyMobDead";
+	.@map$ = instance_mapname("1@ma_c");
 	areamonster .@map$,112,89,122,99,"Buwaya",2332,1,.@label$;
 	areamonster .@map$,112,49,122,59,"Buwaya",2332,1,.@label$;
 	areamonster .@map$,72,49,82,59,"Buwaya",2332,1,.@label$;
@@ -386,7 +405,7 @@ OnInstanceInit:
 	areamonster instance_mapname("1@ma_c"),90,67,104,81,"Buwaya",2319,1,instance_npcname("#buwaya_con")+"::OnMyMobDead";
 	end;
 OnMyMobDead:
-	set .@map$, instance_mapname("1@ma_c");
+	.@map$ = instance_mapname("1@ma_c");
 	if (mobcount(.@map$,instance_npcname("#buwaya_con")+"::OnMyMobDead") < 1) {
 		donpcevent instance_npcname("#box_call")+"::OnDisable";
 		donpcevent instance_npcname("#bunshin")+"::OnDisable";
@@ -403,12 +422,12 @@ OnInstanceInit:
 	initnpctimer;
 	end;
 OnTimer60000:
-	set .@label$, instance_npcname("#exit_mob")+"::OnMyMobDead";
-	set .@map$, instance_mapname("1@ma_c");
+	.@label$ = instance_npcname("#exit_mob")+"::OnMyMobDead";
+	.@map$ = instance_mapname("1@ma_c");
 	if (mobcount(.@map$,.@label$) < 30)
-		set .@amount,10;
+		.@amount = 10;
 	else
-		set .@amount,1;
+		.@amount = 1;
 	areamonster .@map$,43,58,47,60,"Water Plant",2331,.@amount,.@label$;
 	areamonster .@map$,43,58,47,60,"Egg",2329,.@amount,.@label$;
 	stopnpctimer;
@@ -433,14 +452,14 @@ OnEnable:
 OnTouch:
 	mes "Would like to go out?";
 	next;
-	if(select("Yes!:No, I will stay.") == 1)
+	if(select("Yes!", "No, I will stay.") == 1)
 		warp "ma_fild02",315,315;
 	close;
 }
 
-1@ma_c,1,1,0	script	#buwaya_spawn_mobs	-1,{
+1@ma_c,1,1,0	script	#buwaya_spawn_mobs	FAKE_NPC,{
 OnInstanceInit:
-	set .@map$, instance_mapname("1@ma_c");
+	.@map$ = instance_mapname("1@ma_c");
 	areamonster .@map$,73,81,93,101,"Seaweed",2331,18;
 	areamonster .@map$,110,97,116,103,"Seaweed",2331,8;
 	areamonster .@map$,59,63,63,67,"Seaweed",2331,8;

@@ -13,13 +13,16 @@
     <ClCompile Include="..\src\common\grfio.c">
       <Filter>common</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\common\malloc.c">
+    <ClCompile Include="..\src\common\memmgr.c">
       <Filter>common</Filter>
     </ClCompile>
     <ClCompile Include="..\src\common\showmsg.c">
       <Filter>common</Filter>
     </ClCompile>
     <ClCompile Include="..\src\common\strlib.c">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common\sysinfo.c">
       <Filter>common</Filter>
     </ClCompile>
     <ClCompile Include="..\src\common\utils.c">
@@ -48,7 +51,7 @@
     <ClInclude Include="..\src\common\grfio.h">
       <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\common\malloc.h">
+    <ClInclude Include="..\src\common\memmgr.h">
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\src\common\mmo.h">
@@ -60,6 +63,9 @@
     <ClInclude Include="..\src\common\strlib.h">
       <Filter>common</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\common\sysinfo.h">
+      <Filter>common</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\common\utils.h">
       <Filter>common</Filter>
     </ClInclude>
@@ -69,7 +75,21 @@
     <ClInclude Include="..\src\common\nullpo.h">
       <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\config\renewal.h" />
+    <ClInclude Include="..\src\config\renewal.h">
+      <Filter>config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\config\const.h">
+      <Filter>config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\config\core.h">
+      <Filter>config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\config\secure.h">
+      <Filter>config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\config\classes\general.h">
+      <Filter>config</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="common">
@@ -77,6 +97,9 @@
     </Filter>
     <Filter Include="mapcache">
       <UniqueIdentifier>{5ea9d6f7-0a10-4bfb-ad39-478e4b1d8a0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="config">
+      <UniqueIdentifier>{4d14995f-43fd-4eb0-abcb-78d1d05a8606}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

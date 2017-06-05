@@ -1,0 +1,1130 @@
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2015  Hercules Dev Team
+//= Copyright (C)  Dastgir
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= 2010 Headgear Quest
+//================= Description ===========================================
+//= Quests For Headgears:
+//=     Flower Of Fairy, NeckTie, Hair Brush
+//=     Status Of Baby Angel, Frog Cap, Solo Play Box
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
+
+gonryun,149,189,0	script	Yotang#Flower_Of_Fairy	1_M_04,{
+	mes "[Yotang]";
+	mes "There lives a fairy on the 3rd floor of Gonryun.";
+	mes "She is so famous for her beauty";
+	mes "that she even got a fan club.";
+	next;
+	mes "[Yotang]";
+	mes "Of course, I am the master of the fan club.";
+	mes "How about joining the fairy fan club?";
+	next;
+	if (select("I'm not that interested!!", "I'll join it right away!!") == 1) {
+		mes "[Yotang]";
+		mes "What! I'm going to tell on you!";
+		close;
+	}
+	if ((countitem(Limpid_Celestial_Robe) > 99) && (countitem(Soft_Silk_Cloth) > 99) && countitem(Wedding_Bouquet) && countitem(Violet_Dyestuffs) && countitem(Bandana)) {
+		mes "[Yotang]";
+		mes "Oh, aren't those....!";
+		mes "the materials for the Flower of Fairy?";
+		mes "Have we met before? You already know everything...";
+		next;
+		mes "[Yotang]";
+		mes "Anyway, do you want me to make the Flower of Fairy?";
+		next;
+		mes "[Yotang]";
+		mes "^FF0000Please be aware that^000000";
+		mes "^FF0000the refinement on the matereials will all disapper^000000";
+		mes "^FF0000if you once combine those.^000000";
+		next;
+		if (select("No, next time.", "Make it right now!!") == 1) {
+			mes "[Yotang]";
+			mes "You'll regret it!";
+			close;
+		}
+		mes "[Yotang]";
+		mes "You're speedy!";
+		mes "You deserve to be a master of the fanclub for the next term.";
+		next;
+		emotion e_swt;
+		mes "Combining... ... ...";
+		next;
+		//Double-check the materials
+		if ((countitem(Limpid_Celestial_Robe) < 100) || (countitem(Soft_Silk_Cloth) < 100) || !countitem(Wedding_Bouquet) || !countitem(Violet_Dyestuffs) || !countitem(Bandana)) {
+			mes "[Yotang]";
+			mes "Huh? You don't have enough";
+			mes "materials for it..";
+			mes "Aren't you wearing Bandana?";
+			mes "Check it out!";
+			next;
+			mes "[Yotang]";
+			mes "Bring me all the materials,";
+			mes "If you want to get the Flower of Fairy.";
+			next;
+			mes "[Yotang]";
+			mes "If you bring me ^0000FF100 Limpid Celestial Robes, 100 Soft Silk Cloth,";
+			mes "1 Wedding Bouquet, 1 Violet Dyestuffs";
+			mes "and ^0000FF1 Bandana^000000 which you can find at a store,";
+			mes "I will make you a ^0000FFFlower of Fairy^000000.";
+			close;
+		}
+		// Checking weight
+		if ((MaxWeight-Weight) < 200) {
+			mes "[Yotang]";
+			mes "Your bag is too heavy, isn't it?";
+			mes "Come to me again";
+			mes "after emptying your bag.";
+			close;
+		}
+		else if (checkweight(Flower_Of_Fairy,1) == 0) {
+			mes "- Wait !! -";
+			mes "- You have too many items, so it's -";
+			mes "- impossible to have more. -";
+			mes "- Come to me again -";
+			mes "- after emptying some of it. -";
+			close;
+		}
+		mes "[Yotang]";
+		mes "Here, the Flower of Fairy.";
+		delitem Limpid_Celestial_Robe,100; //Limpid_Celestial_Robe
+		delitem Soft_Silk_Cloth,100; //Soft_Silk_Cloth
+		delitem Wedding_Bouquet,1; //Wedding_Bouquet
+		delitem Violet_Dyestuffs,1; //Violet_Dyestuffs
+		delitem Bandana,1; //Bandana
+		getitem Flower_Of_Fairy,1; //Flower_Of_Fairy
+		emotion e_no1;
+		next;
+		mes "[Yotang]";
+		mes "See you on the fan meeting!";
+		close;
+	}
+	mes "[Yotang]";
+	mes "You can meet the fairy soon";
+	mes "for there will be a fan meeting";
+	mes "in the near future.";
+	mes "The Flower of Fairy is necessary";
+	mes "for joining the fan meeting. Everyone wears it.";
+	next;
+	mes "[Yotang]";
+	mes "If you bring me some materials";
+	mes "I'll make it for you.";
+	next;
+	mes "[Yotang]";
+	mes "I need ^0000FF100 Limpid Celestial Robes, 100 Soft Silk Cloth,";
+	mes "1 Wedding Bouquet, 1 Violet Dyestuffs";
+	mes "and ^0000FF1 Bandana^000000 which you can find at a store,";
+	next;
+	mes "[Yotang]";
+	mes "If you bring me ^0000FF100 Limpid Celestial Robes, 100 Soft Silk Cloth,";
+	mes "1 Wedding Bouquet, 1 Violet Dyestuffs";
+	mes "and ^0000FF1 Bandana^000000 which you can find at a store,";
+	mes "I will make you a ^0000FFFlower of Fairy^000000.";
+	next;
+	mes "[Yotang]";
+	mes "^FF0000Please be aware that^000000";
+	mes "^FF0000the refinement on the matereials will all disapper^000000";
+	mes "^FF0000if you once combine those.^000000";
+	next;
+	if (select("I won't do it.", "Here, I have the materials!")==1) {
+		mes "[Yotang]";
+		mes "You'll regret it!";
+		close;
+	}
+	mes "[Yotang]";
+	mes "Huh? Are you kidding me?";
+	next;
+	mes "[Yotang]";
+	mes "I need ^0000FF100 Limpid Celestial Robes, 100 Soft Silk Cloth,";
+	mes "1 Wedding Bouquet, 1 Violet Dyestuffs";
+	mes "and ^0000FF1 Bandana^000000 which you can find at a store";
+	mes "to make a ^0000FFFlower of Fairy^000000.";
+	close;
+}
+
+//== 2. Making the new headgear Necktie(5442) ==============
+lhz_in02,276,281,1	script	Drunken Man#Necktie	4_M_ALCHE_A,{
+	mes "[Drunken Man]";
+	mes "Hey.. you wanna fight?!";
+	next;
+	mes "He seems to be drunken badly. What should I do?";
+	next;
+	if (select("Just ignore him.", "Fight!") == 1) {
+		mes "[Drunken Man]";
+		mes "Why are you ignoring me?";
+		mes "Are you afraid of me?";
+		close;
+	}
+	// Checking player's level
+	if (BaseLevel < 65) {
+		mes "[Drunken Man]";
+		mes "What... you're weaker than me.";
+		mes "Go and reach the higher level!";
+		emotion e_go;
+		close;
+	}
+	mes "[Drunken Man]";
+	mes "Hold! I need some armor to wear.";
+	mes "That's it, Necktie, Necktie...";
+	next;
+	mes "[Drunken Man]";
+	mes "Once I wear the Necktie on my head,";
+	mes "I will be no match for you!";
+	mes "You must be nervous...";
+	mes "Hmm... where is the Necktie?";
+	next;
+	// If having the materials
+	if ((countitem(Cobaltblue_Dyestuffs) > 0) && (countitem(Oil_Paper) > 29) && (countitem(Transparent_Cloth) > 99) && (countitem(Spool) > 19)) {
+		mes "[Drunken Man]";
+		mes "Oh, you're having the materials for Necktie! give them to me!!";
+		next;
+		if (select("No way!", "Here you are.")==1) {
+			mes "[Drunken Man]";
+			mes "Ohh, you are scared!";
+			mes "I won again!!";
+			close;
+		}
+		mes "[Drunken Man]";
+		mes "Great, wait for a moment!";
+		next;
+		mes "Combining... ch...ch... ...";
+		emotion e_swt;
+		next;
+		mes "[Drunken Man]";
+		mes "Drunk...drunk.... Zzzzz...";
+		emotion e_what,1;
+		next;
+		//Double-check the materials
+		if ((countitem(Cobaltblue_Dyestuffs) > 0) && (countitem(Oil_Paper) > 29) && (countitem(Transparent_Cloth) > 99) && (countitem(Spool) > 19)) {
+			// Checking weight
+			if ((MaxWeight - Weight) < 100) {
+				mes "Necktie is heavier than I thought.";
+				mes "Seems like the very legendary Necktie.";
+				close;
+			}
+			else if (checkweight(Necktie,1) == 0) {
+				mes "- Wait !! -";
+				mes "- You have too many items, so it's -";
+				mes "- impossible to have more. -";
+				mes "- Come to me again -";
+				mes "- after emptying some of it. -";
+				close;
+			}
+			mes "He zonked out as soon as";
+			mes "he finished it.";
+			mes "Let's just take the Necktie.";
+			delitem Cobaltblue_Dyestuffs,1; //Cobaltblue_Dyestuffs
+			delitem Oil_Paper,30; //Oil_Paper
+			delitem Transparent_Cloth,100; //Transparent_Cloth
+			delitem Spool,20; //Spool
+			getitem Necktie,1; //Necktie
+			close;
+		}
+		mes "[Drunken Man]";
+		mes "Huh? Where are all the materials gone?";
+		mes "Did you take it back that you're so afraid of me?";
+		close;
+	}
+	mes "[Drunken Man]";
+	mes "Hey, go and get";
+	mes "^FF00001 Cobaltblue Dyestuff, 30 Oil Papers, 100 Transparent Cloth, 20 Spools^000000!";
+	next;
+	mes "[Drunken Man]";
+	mes "I will beat you off wearing the legendary Necktie!";
+	next;
+	if (select("I won't.", "Let's go and get them.") == 1) {
+		mes "[Drunken Man]";
+		mes "Are you dropping out?";
+		mes "Did I win again?";
+		close;
+	}
+	mes "[Drunken Man]";
+	mes "I'm telling you once more";
+	mes "for you might forget it, dumbhead!";
+	next;
+	mes "[Drunken Man]";
+	mes "^FF00001 Cobaltblue Dyestuff, 30 Oil Papers, 100 Transparent Cloth, 20 Spools^000000!";
+	mes "Hurry! I'll be futzing around with others.";
+	emotion e_go;
+	close;
+}
+
+//== 3. Making the new headgear Hair Brush(5444) ===========
+comodo,236,164,0	script	Hat Girl#Hair_Brush	1_F_04,{
+	mes "[Hat Girl]";
+	mes "Isn't the unique hat much better";
+	mes "than the common hairbands?";
+	next;
+	if (select("I still prefer hairbands!", "Hat is the best!") == 1) {
+		mes "[Hat Girl]";
+		mes "Wear your boring hairband for the whole lifetime!";
+		emotion e_pif;
+		close;
+	}
+	mes "[Hat Girl]";
+	mes "You have a good sense!";
+	mes "I thought I would make";
+	mes "a trendy hat.";
+	next;
+	mes "[Hat Girl]";
+	mes "I will give you an honor,";
+	mes "to be a fashion superstar,";
+	mes "if you bring me the materials for it.";
+	next;
+	if ((countitem(Mixture) > 0) && (countitem(Scarlet_Dyestuffs) > 0) && (countitem(Solid_Shell) > 49) && (countitem(Elunium) > 4) && (countitem(Axe_) > 0)) {
+		mes "[Hat Girl]";
+		mes "Oh! you're bringing ^0000FFthe materials for Hair Brush^000000.";
+		mes "Do you want me to make it now?";
+		next;
+		if (select("I think the hairband is better...", "Yes, please make it!") == 1) {
+			mes "[Hat Girl]";
+			mes "Wear your boring hairband for the whole lifetime!";
+			emotion e_pif;
+			close;
+		}
+		mes "[Hat Girl]";
+		mes "Okay, I'll do it right away!";
+		next;
+		mes "Ch ch ch... combining...ch ch...";
+		emotion e_swt2,1;
+		next;
+		mes "[Hat Girl]";
+		mes "Here, it's done!";
+		mes "Now you're the fashionista!";
+		next;
+		//Double-check the materials
+		if ((countitem(Mixture) > 0) && (countitem(Scarlet_Dyestuffs) > 0) && (countitem(Solid_Shell) > 49) && (countitem(Elunium) > 4) && (countitem(Axe_) > 0)) {
+			// Checking weight
+			if ((MaxWeight - Weight) < 100) {
+				mes "[Hat Girl]";
+				mes "You're carrying too much stuff.";
+				mes "Come again after emptying your bag.";
+				close;
+			}
+			else if (checkweight(Status_Of_Baby_Angel,1) == 0) {
+				mes "- Wait !! -";
+				mes "- You have too many items, so it's -";
+				mes "- impossible to have more. -";
+				mes "- Come to me again -";
+				mes "- after emptying some of it. -";
+				close;
+			}
+			mes "[" + strcharinfo(PC_NAME) + "]";
+			mes "I got the Hair Brush.";
+			mes "...but it makes me sad.";
+			delitem Mixture,1; //Mixture
+			delitem Scarlet_Dyestuffs,1; //Scarlet_Dyestuffs
+			delitem Solid_Shell,50; //Solid_Shell
+			delitem Elunium,5; //Elunium
+			delitem Axe_,1; //Axe_
+			getitem Hair_Brush,1; //Hair_Brush
+			close;
+		}
+		mes "[Hat Girl]";
+		mes "Huh? Don't you want to be";
+		mes "the best fashionista?";
+		mes "You don't have enough materials?";
+		close;
+	}
+	mes "[Hat Girl]";
+	mes "To make the latest style ^0000FFHair_Brush^000000,";
+	mes "I need ^0000FF1 Mixture, 1 Scarlet Dyestuffs,";
+	mes "50 Solid Shells, 5 Eluniums,^000000";
+	mes "also 1 ^0000FFAxe^000000 with 4 sockets on it.";
+	next;
+	mes "[Hat Girl]";
+	mes "What are you doing? Hurry!";
+	next;
+	mes "[Hat Girl]";
+	mes "Here is one tip for you.";
+	mes "You can easily get Solid Shells and Elunium from the monsters.";
+	close;
+}
+
+//== 4. Making the new headgear Statue Of Baby Angel(5443) =
+alberta,151,78,0	script	Bebete#Baby_Angel_Status	4W_KID,{
+	// Check if wearing Ear_Of_Angels_Wing, Angelic_Chain, Flying_Angel
+	if (!isequipped(Ear_Of_Angels_Wing) && !isequipped(Angelic_Chain) && !isequipped(Flying_Angel)) {
+		mes "[Bebete]";
+		mes "A fake angel? Go away!!";
+		next;
+		mes "[Bebete]";
+		mes "The real angel has";
+		mes "the wings on the head!";
+		close;
+	}
+	if (BaseLevel < 65) {
+		mes "[Bebete]";
+		mes "A fake angel? Go away!";
+		next;
+		mes "[Bebete]";
+		mes "The real angel";
+		mes "is not as weak as you.";
+		close;
+	}
+	// If wearing Status_Of_Baby_Angel
+	if (isequipped(Status_Of_Baby_Angel) > 0) {
+		mes "[Bebete]";
+		mes "Oh, the angel came again.";
+		mes "Are you quite satisfied with ^FF0000Statue Of Baby Angel^000000, aren't you?";
+		close;
+	}
+	if ((countitem(Holy_Water) > 0) && (countitem(Feather_Of_Birds) > 499) && (countitem(Muscovite) > 9) && (countitem(Spirit_Chain) > 0) && (countitem(Shining_Stone) > 0)) {
+		mes "[Bebete]";
+		mes "Ah! Hey, angel~ angel~";
+		next;
+		mes "[Bebete]";
+		mes "Please show me the Statue of Baby Angel!";
+		mes "I heard every angel has it!";
+		next;
+		select("Statue of Baby Angel?");
+		mes "[Bebete]";
+		mes "Did you lose it?";
+		mes "Do you want me to make it for you?";
+		next;
+		if (select("No, thanks.", "Yes, I want it now.") == 1) {
+			mes "[Bebete]";
+			mes "Oh... it's not easy to make a living!";
+			close;
+		}
+		// Check weight
+		mes "[Bebete]";
+		mes "Wow, you already know all the materials, angel.";
+		emotion e_lv2;
+		next;
+		mes "[Bebete]";
+		mes "You're lucky. I have one statue on going.";
+		mes "So you don't need to wait for long.";
+		next;
+		if ((countitem(Holy_Water) > 0) && (countitem(Feather_Of_Birds) > 499) && (countitem(Muscovite) > 9) && (countitem(Spirit_Chain) > 0) && (countitem(Shining_Stone) > 0)) {
+			// Check weight
+			if ((MaxWeight - Weight) < 600) {
+				mes "[Bebete]";
+				mes "What are you carrying that much, angel?";
+				mes "I can't give you the item";
+				mes "because your bag is too full.";
+				close;
+			}
+			else if (checkweight(Status_Of_Baby_Angel,1) == 0) {
+				mes "- Wait !! -";
+				mes "- You have too many items, so it's -";
+				mes "- impossible to have more. -";
+				mes "- Come to me again -";
+				mes "- after emptying some of it. -";
+				close;
+			}
+			mes "I got the ^FF0000Statue of Baby Angel^000000.";
+			delitem Feather_Of_Birds,500; //Feather_Of_Birds
+			delitem Holy_Water,1; //Holy_Water
+			delitem Muscovite,10; //Muscovite
+			delitem Spirit_Chain,1; //Spirit_Chain
+			delitem Shining_Stone,1; //Shining_Stone
+			getitem Status_Of_Baby_Angel,1; //Status_Of_Baby_Angel
+			next;
+			mes "[Bebete]";
+			mes "See you again, my angel~!";
+			emotion e_thx;
+			next;
+			mes "[" + strcharinfo(PC_NAME) + "]";
+			mes "... ...";
+			next;
+			mes "[" + strcharinfo(PC_NAME) + "]";
+			mes "Hmm... I guess I was fooled by that little kid.";
+			close;
+		}
+		mes "[Bebete]";
+		mes "Hey, I don't see";
+		mes "any materials in your bag..";
+		emotion e_sob;
+		close;
+	}
+	mes "[Bebete]";
+	mes "Hey, angel...";
+	next;
+	mes "[Bebete]";
+	mes "Wow, the angel!";
+	emotion e_omg;
+	next;
+	mes "[Bebete]";
+	mes "Are you a real angel? Have you been to heaven?";
+	next;
+	if (select("What a bullshit!", "Let's keep the childhood innocence!") == 1) {
+		mes "[" + strcharinfo(PC_NAME) + "]";
+		mes "Angel and heaven? It's all made up! ";
+		next;
+		mes "[" + strcharinfo(PC_NAME) + "]";
+		mes "There's nothing. Everything is lie!";
+		emotion e_gg,1;
+		next;
+		mes "[Bebete]";
+		mes "You're a devil! a monster! an idiot!";
+		emotion e_sigh;
+		close;
+	}
+	mes "[" + strcharinfo(PC_NAME) + "]";
+	mes "Of course. I used to dance with the dragon and zebra";
+	mes "on the vanilla-taste clouds.";
+	next;
+	mes "[Bebete]";
+	mes "That's just what I've been imagining!";
+	next;
+	mes "[Bebete]";
+	mes "Please show me the Statue of Baby Angel!";
+	mes "I heard every angel has it!";
+	next;
+	mes "[Bebete]";
+	mes "Oops, did you lose it?";
+	mes "Do you want me to make one for you?";
+	next;
+	mes "[Bebete]";
+	mes "I made it several times before";
+	mes "for the angels like you.";
+	next;
+	mes "[Bebete]";
+	mes "I can make it with ^FF0000 500 Feather Of Birds, 1 Holy Water, 10 Muscovite, 1 Spirit Chain and 1 Shining Stone^000000.";
+	next;
+	mes "[Bebete]";
+	mes "Okay, hurry!";
+	close;
+	end;
+}
+
+//== 5. Making the new headgear Frog_Cap(5447) =============
+
+gef_fild07,108,161,4	script	Roda Frog#Frog_Cap	RODA_FROG,1,1,{
+	if (2009_hat == 0) {
+		mes "[???]";
+		mes "Hmm..Hm..";
+		mes "It seems my transformation into the child's appearance is succeessful.";
+		next;
+		mes "[" + strcharinfo(PC_NAME) + "]";
+		mes "... ... ... ...";
+		next;
+		mes "[???]";
+		mes "Human! I am here to ask you some help.";
+		next;
+		if (BaseLevel < 65) {
+			mes "[???]";
+			mes "... ... ...";
+			next;
+			mes "[???]";
+			mes "I am the great king Froggie Vll!";
+			next;
+			mes "[King Froggie Vll]";
+			mes "but I think you're not strong enough to help us.";
+			mes "Go and train more!";
+			next;
+			mes "[King Froggie Vll]";
+			mes "Over lvl 65 human will be fine for us.";
+			close2;
+			donpcevent "Roda Frog#Frog_Cap::OnDisable";
+			end;
+		}
+		mes "[???]";
+		mes "I am the great king, Froggie Vll..";
+		mes "I need your help!";
+		next;
+		if (select("Just ignore it.", "Let's help him.") == 1) {
+			mes "[" + strcharinfo(PC_NAME) + "]";
+			mes "Talking frog...";
+			next;
+			mes "[" + strcharinfo(PC_NAME) + "]";
+			mes "Now I've seen everything.";
+			next;
+			mes "[King Froggie Vll]";
+			mes "Croaking...Croaking...";
+			close2;
+			donpcevent "Roda Frog#Frog_Cap::OnDisable";
+			end;
+		}
+		mes "[" + strcharinfo(PC_NAME) + "]";
+		mes "What can I help you?";
+		next;
+		mes "[King Froggie Vll]";
+		mes "Our great frog race is now endangered because many travellers came here and take our eggs as a kind of souvenirs. I even heard there are many left on the ground here and there, so I need your help. Please bring back ^FF0000100 Frogspawn^000000.";
+		setquest 5000;
+		2009_hat = 1;
+		next;
+		mes "[" + strcharinfo(PC_NAME) + "]";
+		mes "Sure, I will.";
+		next;
+		mes "[King Froggie Vll]";
+		mes "I will be waiting for you!";
+		close2;
+		donpcevent "Roda Frog#Frog_Cap::OnDisable";
+		end;
+	}
+	else if (2009_hat == 1) {
+		if (countitem(Spawn) < 100) {
+			mes "[King Froggie Vll]";
+			mes "What are you doing here?";
+			mes "Go and get ^FF0000100 Frogspawn^000000!";
+			close2;
+			donpcevent "Roda Frog#Frog_Cap::OnDisable";
+			end;
+		}
+		mes "[King Froggie Vll]";
+		mes "Oh, you brought all of them!";
+		next;
+		mes "[King Froggie Vll]";
+		mes "Thank you so much, " + strcharinfo(PC_NAME) + ".";
+		emotion e_thx;
+		next;
+		mes "[King Froggie Vll]";
+		mes "By the way, we have another urgent matter. So I would ask you one more help.";
+		next;
+		mes "[King Froggie Vll]";
+		mes "Frogs are healthy food to the snakes.";
+		next;
+		mes "[" + strcharinfo(PC_NAME) + "]";
+		mes "I know well.";
+		next;
+		mes "[King Froggie Vll]";
+		mes "Well, that's good. Aren't you feel sorry for our race?";
+		next;
+		mes "[King Froggie Vll]";
+		mes "So, I hereby ask you to take revenge on them. Kill ^FF000050 Side Winder^000000 for us.";
+		delitem Spawn,100; //Spawn
+		changequest 5000,5001;
+		2009_hat = 2;
+		next;
+		mes "[King Froggie Vll]";
+		mes "I'll be waiting for your news!";
+		close2;
+		donpcevent "Roda Frog#Frog_Cap::OnDisable";
+		end;
+	}
+	else if (2009_hat == 2) {
+		if (questprogress(5001,HUNTING) == 1) {
+			mes "[King Froggie Vll]";
+			mes "I'm waiting for your good news.";
+			mes "It would be a piece of cake for you";
+			mes "to kill ^FF000050 Side Winders^000000. Keep it up!";
+			close2;
+			donpcevent "Roda Frog#Frog_Cap::OnDisable";
+			end;
+		}
+		else if (questprogress(5001,HUNTING) == 2) {
+			mes "[" + strcharinfo(PC_NAME) + "]";
+			mes "I'm back.";
+			next;
+			mes "[King Froggie Vll]";
+			mes "You seemingly killed all the Side Winders!";
+			next;
+			mes "[King Froggie Vll]";
+			mes "You became an example for the young frogs. Thank you again.";
+			emotion e_thx;
+			next;
+			mes "[King Froggie Vll]";
+			mes "Therefore, I'm considering adding your outstanding exploit to our frog's history book. But I need your evidence for your work.";
+			next;
+			mes "[King Froggie Vll]";
+			mes "Please bring me ^FF0000 100 ^000000 ^FF0000Poisonous Canines^000000 from the snakes.";
+			changequest 5001,5002;
+			2009_hat = 3;
+			next;
+			mes "[" + strcharinfo(PC_NAME) + "]";
+			mes "I'm happy to be added in the history book. I'll go and get them.";
+			next;
+			mes "[King Froggie Vll]";
+			mes "Obedient, hard-working... I hope I have a loyal frog like you.";
+			close2;
+			donpcevent "Roda Frog#Frog_Cap::OnDisable";
+			end;
+		}
+		close;
+	}
+	else if (2009_hat == 3) {
+		if (countitem(Posionous_Canine) < 100) {
+			mes "[King Froggie Vll]";
+			mes "How about ^FF0000100 Poisonous Canines^000000?";
+			mes "Hurry, it's a rare opportunity to be added in the frog histroy book!";
+			close2;
+			donpcevent "Roda Frog#Frog_Cap::OnDisable";
+			end;
+		}
+		mes "[King Froggie Vll]";
+		mes "Oh, you brought Poisonous Canines! Now, I'm able to put you in the frog history book officially.";
+		next;
+		mes "[" + strcharinfo(PC_NAME) + "]";
+		mes "That's good for me.";
+		next;
+		mes "[King Froggie Vll]";
+		mes "I have a better news!";
+		next;
+		mes "[King Froggie Vll]";
+		mes "I found a great method to keep our race while I was looking up the history book!";
+		next;
+		mes "[King Froggie Vll]";
+		mes "The answer was in the frog history book. In the old days, the great King Froggie lll made a secret medicine enabling us to use a hiding skill from the snakes.";
+		next;
+		mes "[King Froggie Vll]";
+		mes "I should have known this earlier...";
+		mes "Please get me ^FF000050 Scaled Skins^000000.";
+		delitem Posionous_Canine,100; //Posionous_Canine
+		changequest 5002,5003;
+		2009_hat = 4;
+		next;
+		mes "[King Froggie Vll]";
+		mes "It's not easy to get, but I'm sure you can do it.";
+		close2;
+		donpcevent "Roda Frog#Frog_Cap::OnDisable";
+		end;
+	}
+	else if (2009_hat == 4) {
+		if (countitem(Scales_Shell) < 50) {
+			mes "[King Froggie Vll]";
+			mes "Still here? Go and get ^FF000050 Scaled Skins^000000! Please hurry!";
+			close2;
+			donpcevent "Roda Frog#Frog_Cap::OnDisable";
+			end;
+		}
+		mes "[King Froggie Vll]";
+		mes "Excellent!";
+		mes "You're like the great King Froggie lll in his young days!";
+		next;
+		mes "[King Froggie Vll]";
+		mes "You are already the hero for our frogs! If I have a child, I would marry you up with my child.";
+		next;
+		mes "[" + strcharinfo(PC_NAME) + "]";
+		mes "Ah.. No, thanks.";
+		mes "^FF0000(Are you telling me to marry with A Frog???)^000000";
+		next;
+		mes "[King Froggie Vll]";
+		mes "Thanks to you, the population of frog has increased but we're short of food.";
+		next;
+		mes "[King Froggie Vll]";
+		mes "The best food for us is ^FF0000Argiope^000000.";
+		next;
+		mes "[King Froggie Vll]";
+		mes "Now, what are you doing, our hero?";
+		mes "Go and get ^FF000050 Argiopes^000000!";
+		delitem Scales_Shell,50; //Scales_Shell
+		2009_hat = 5;
+		changequest 5003,5004;
+		close2;
+		donpcevent "Roda Frog#Frog_Cap::OnDisable";
+		end;
+	}
+	else if (2009_hat == 5) {
+		if (questprogress(5004,HUNTING) == 1) {
+			mes "[King Froggie Vll]";
+			mes "My hero, are you going to starve us to death?";
+			mes "Go and bring us ^FF000050 Argiopes^000000!";
+			close2;
+			donpcevent "Roda Frog#Frog_Cap::OnDisable";
+			end;
+		}
+		else if (questprogress(5004,HUNTING) == 2) {
+			mes "[King Froggie Vll]";
+			mes "I think I saw you a while ago, but now you became the hero for the frogs...";
+			next;
+			mes "[King Froggie Vll]";
+			mes "It was really lucky for me to ask you a favor.";
+			next;
+			// checking weight
+			if ((MaxWeight - Weight) < 500) {
+				mes "[King Froggie Vll]";
+				mes "I'd like to give you a reward, our hero. But your bag is now too heavy.";
+				close2;
+				donpcevent "Roda Frog#Frog_Cap::OnDisable";
+				end;
+			}
+			else if (checkweight(Frog_Cap,1) == 0) {
+				mes "- Wait !! -";
+				mes "- You have too many items, so it's -";
+				mes "- impossible to have more. -";
+				mes "- Come to me again -";
+				mes "- after emptying some of it. -";
+				close;
+			}
+			mes "[King Froggie Vll]";
+			mes "Frogs, do you have any objection";
+			mes "to give our hero, " + strcharinfo(PC_NAME) + "";
+			mes "a Frog Hat which is one of our precious treasures?";
+			next;
+			mes "[Sounds from somewhere]";
+			mes "Croak...croak...";
+			mes "croooooaaaaak~~~";
+			mes "Croak croak";
+			next;
+			mes "[King Froggie Vll]";
+			mes "Hmm, there is no objection.";
+			next;
+			mes "[King Froggie Vll]";
+			mes "I hearby give " + strcharinfo(PC_NAME) + ", our hero, this Frog Hat.";
+			specialeffect(EF_MAPPILLAR2, AREA, playerattached());
+			specialeffect(EF_BLESSING, AREA, playerattached());
+			erasequest 5004;
+			2009_hat = 6;
+			getitem Frog_Cap,1; //Frog_Cap
+			next;
+			mes "[King Froggie Vll]";
+			mes "You are always welcome.";
+			mes "Visit here at any time.";
+			close2;
+			donpcevent "Roda Frog#Frog_Cap::OnDisable";
+			end;
+		}
+	}
+	else if (2009_hat == 6) {
+		mes "[King Froggie Vll]";
+		mes "All the frogs in the world, praise " + strcharinfo(PC_NAME) + ", our eternal hero!";
+		emotion e_thx;
+		close2;
+		donpcevent "Roda Frog#Frog_Cap::OnDisable";
+		end;
+	}
+	end;
+
+OnInit:
+	setnpcdisplay "Roda Frog#Frog_Cap",RODA_FROG;
+end;
+
+OnEnable:
+	setnpcdisplay "Roda Frog#Frog_Cap",4_M_KID2;
+	end;
+
+OnDisable:
+	hideonnpc "Roda Frog#Frog_Cap";
+	initnpctimer;
+	end;
+
+OnReset:
+	setnpcdisplay "Roda Frog#Frog_Cap",RODA_FROG;
+	hideoffnpc "Roda Frog#Frog_Cap";
+	end;
+
+OnTimer2000:
+	donpcevent "Roda Frog#Frog_Cap::OnReset";
+	stopnpctimer;
+	end;
+
+OnTouch:
+	mes "There is a frog. What should I do?";
+	next;
+	if (select("Throw it a stone.", "Have a conversation.") == 1) {
+		donpcevent "Roda Frog#Frog_Cap::OnDisable";
+		mes "Ouch~";
+		close;
+	}
+	donpcevent "Roda Frog#Frog_Cap::OnEnable";
+	if (2009_hat > 0) {
+		emotion e_dots,1;
+		mes "[" + strcharinfo(PC_NAME) + "]";
+		mes "It's so amazing to see";
+		mes "the frog which transforms itself.";
+		close;
+	}
+	emotion e_omg,1;
+	mes "[" + strcharinfo(PC_NAME) + "]";
+	mes "Oh my.. the frog transformed into a child...";
+	close;
+}
+
+//== 6. Making the new headgear Solo Playing Box 1,2 (5448,5449) =
+alberta,120,206,3	script	Alonie#Solo_Play_Box	4_M_UMKID,{
+	if (2009_1_hat == 0) {
+		mes "[Alonie]";
+		mes "I am an expert at playing alone.";
+		mes "I'm trying my best to play alone!";
+		next;
+		mes "[Alonie]";
+		mes "HuHu, Yapyap!";
+		mes "I can feel your admiration for me.";
+		mes "Wanna be my student?";
+		next;
+		if (select("You're out of your mind!", "Please let me be your disciple!") == 1) {
+			mes "[Alonie]";
+			mes "Yes, I'm out of my mind.";
+			mes "Huhu, Yapyap!";
+			close;
+		}
+		mes "[Alonie]";
+		mes "I can feel you are lack of affection. Okay!";
+		mes "Now, let's start the training!";
+		next;
+		mes "[Alonie]";
+		mes "The special training, to play alone in Sphinx Dungeon!";
+		mes "For make it";
+		mes "the fruitful training,";
+		mes "Get around and kill";
+		mes "^FF000020 Zeroms, 20 Requiems^000000!";
+		mes "Hurry!";
+		next;
+		if (select("What a bullshit!", "Let's go!") == 1) {
+			mes "[Alonie]";
+			mes "Of course, I don't care.";
+			mes "Huhu, Yapyap!";
+			close;
+		}
+		mes "[Alonie]";
+		mes "Hurry up, my student.";
+		mes "I am so capricious";
+		mes "so I don't know what I will";
+		mes "give you as a reward!";
+		setquest 1100;
+		setquest 1101;
+		2009_1_hat = 1;
+		close;
+	}
+	else if (2009_1_hat == 1) {
+		if ((questprogress(1100,HUNTING) == 2) && (questprogress(1101,HUNTING) == 2)) {
+			mes "[Alonie]";
+			mes "Already finished?";
+			mes "Good, here is the next training";
+			mes "to be a playing-alone expert!";
+			next;
+			mes "[Alonie]";
+			mes "The special training, to play alone at Clock Tower!";
+			mes "For make it";
+			mes "the fruitful training,";
+			mes "Get around and kill";
+			mes "^FF000040 Arclouses and 30 High Orcs^000000";
+			next;
+			if (select("What a bullshit!", "Let's go!") == 1) {
+				mes "[Alonie]";
+				mes "Of course, I don't care.";
+				mes "Huhu, Yapyap!";
+				close;
+			}
+			mes "[Alonie]";
+			mes "Hurry up, my student.";
+			mes "I am so capricious";
+			mes "so I don't know what I will";
+			mes "give you as a reward!";
+			changequest 1100,1102;
+			changequest 1101,1103;
+			2009_1_hat = 2;
+			close;
+		}
+		mes "[Alonie]";
+		mes "Hmm, it's not enough.";
+		mes "Playing alone is not that easy!";
+		mes "Go and kill";
+		mes "^FF000020 Zeroms, 20 Requiems^000000!";
+		close;
+	}
+	else if (2009_1_hat == 2) {
+		if ((questprogress(1102,HUNTING) == 2) && (questprogress(1103,HUNTING) == 2)) {
+			mes "[Alonie]";
+			mes "You're really good at playing alone...!";
+			mes "Are you lonely?";
+			mes "Well, here is the next training";
+			mes "to be a playing-alone expert!";
+			next;
+			mes "[Alonie]";
+			mes "The special training, to play alone in Louyang!";
+			mes "For make it";
+			mes "the fruitful training,";
+			mes "Get around and kill";
+			mes "^FF000020 Chung E and 50 Civil Servant^000000!";
+			next;
+			if (select("What a bullshit!", "Let's go!") == 1) {
+					mes "[Alonie]";
+					mes "Of course, I don't care.";
+					mes "Huhu, Yapyap!";
+					close;
+			}
+			mes "[Alonie]";
+			mes "Hurry up, my student.";
+			mes "I am so capricious";
+			mes "so I don't know what I will";
+			mes "give you as a reward!";
+			changequest 1102,1108;
+			changequest 1103,1105;
+			2009_1_hat = 3;
+			close;
+		}
+		mes "[Alonie]";
+		mes "Hmm, It's not enough.";
+		mes "Playing alone is not that easy!";
+		mes "Go and kill";
+		mes "^FF000040 Arclouses and 30 High Orcs^000000!";
+		close;
+	}
+	else if (2009_1_hat == 3) {
+		if ((questprogress(1108,HUNTING) == 2) && (questprogress(1105,HUNTING) == 2)) {
+			mes "[Alonie]";
+			mes "Great job.";
+			mes "How lonely you are!";
+			mes "Okay, here is the last training";
+			mes "to be a real playing-alone expert!";
+			next;
+			mes "[Alonie]";
+			mes "The special training, to play alone in Amatsu Dungeon!";
+			mes "For make it";
+			mes "the fruitful training,";
+			mes "Get around and kill";
+			mes "^FF000020 The Papers and 40 Antique Firelocks^000000!";
+			next;
+			if (select("What a bullshit!", "Let's go!") == 1) {
+				mes "[Alonie]";
+				mes "Of course, I don't care.";
+				mes "huhu, Yapyap!";
+				close;
+			}
+			mes "[Alonie]";
+			mes "Hurry up, my student!";
+			mes "I am so capricious";
+			mes "so I don't know what I will";
+			mes "give you as a reward!";
+			changequest 1108,1106;
+			changequest 1105,1107;
+			2009_1_hat = 4;
+			close;
+		}
+		else if ((questprogress(1104,HUNTING) == 2) && (questprogress(1105,HUNTING) == 2)) {
+			mes "[Alonie]";
+			mes "Great job.";
+			mes "How lonely you are!";
+			mes "Okay, here is the last training";
+			mes "to be a real playing-alone expert!";
+			next;
+			mes "[Alonie]";
+			mes "The special training, to play alone in Amatsu Dungeon!";
+			mes "For make it";
+			mes "the fruitful training,";
+			mes "Get around and kill";
+			mes "^FF000020 The Papers and 40 Antique Firelocks^000000!";
+			next;
+			if (select("What a bullshit!", "Let's go!") == 1) {
+				mes "[Alonie]";
+				mes "Of course, I don't care.";
+				mes "huhu, Yapyap!";
+				close;
+			}
+			mes "[Alonie]";
+			mes "Hurry up, my student!";
+			mes "I am so capricious";
+			mes "so I don't know what I will";
+			mes "give you as a reward!";
+			changequest 1104,1106;
+			changequest 1105,1107;
+			2009_1_hat = 4;
+			close;
+		}
+		mes "[Alonie]";
+		mes "Hmm, It's not enough.";
+		mes "Playing alone is not that easy!";
+		mes "Go and kill";
+		mes "^FF000020 Chung E and 50 Civil Servant^000000!";
+		if (questprogress(1104,HUNTING) == 1) {
+			erasequest 1104;
+			setquest 1108;
+		}
+		close;
+	}
+	else if (2009_1_hat == 4) {
+		if ((MaxWeight - Weight) < 300) {
+			 mes "[Alonie]";
+			 mes "Playing outside with this heavy bag?";
+			 mes "You are the real";
+			 mes "expert to play alone!";
+			 next;
+			 mes "[Alonie]";
+			 mes "If you want the reward, empty your bag, first!";
+			 close;
+		}
+		if ((questprogress(1106,HUNTING) == 2) && (questprogress(1107,HUNTING) == 2)) {
+			mes "[Alonie]";
+			mes "Finally you did it.";
+			mes "My affection-lacked student!";
+			mes "This is the end of your training!";
+			next;
+			if (gettime(GETTIME_HOUR) < 12) {
+				if (checkweight(Solo_Play_Box1,1) == 0) {
+					 mes "[Alonie]";
+					 mes "Playing outside with this heavy bag?";
+					 mes "You are the real";
+					 mes "expert to play alone!";
+					 next;
+					 mes "[Alonie]";
+					 mes "If you want the reward, empty your bag, first!";
+					 close;
+				}
+				mes "[Alonie]";
+				mes "Here! The solo play box";
+				mes "the most effective at AM!";
+				mes "After putting on this box,";
+				mes "you're the best lonely being!";
+				next;
+				mes "[Alonie]";
+				emotion e_no1;
+				mes "Fight back your tears!";
+				mes "Huhu, Yapyap!";
+				completequest 1106;
+				completequest 1107;
+				2009_1_hat = 5;
+				getitem Solo_Play_Box1,1; //Solo_Play_Box1
+				close;
+			}
+			if (checkweight(Solo_Play_Box2,1) == 0) {
+				 mes "[Alonie]";
+				 mes "Playing outside with this heavy bag?";
+				 mes "You are the real";
+				 mes "expert to play alone!";
+				 next;
+				 mes "[Alonie]";
+				 mes "If you want the reward, empty your bag, first!";
+				 close;
+			}
+			mes "[Alonie]";
+			mes "Here! The solo play box";
+			mes "the most effective at PM!";
+			mes "After putting on this box,";
+			mes "you're the best lonely being!";
+			next;
+			mes "[Alonie]";
+			emotion e_no1;
+			mes "Fight back your tears!";
+			mes "Huhu, Yapyap!";
+			completequest 1106;
+			completequest 1107;
+			2009_1_hat = 5;
+			getitem Solo_Play_Box2,1; //Solo_Play_Box2
+			close;
+		}
+		mes "[Alonie]";
+		mes "Hmmm, It's not enough.";
+		mes "Playing alone is not that easy thing!";
+		mes "Go and kill";
+		mes "^FF000020 The Papers and 40 Antique Firelocks^000000!";
+		close;
+	}
+	else if (2009_1_hat == 5) {
+		mes "[Alonie]";
+		mes "I am the playing-alone expert.";
+		mes "Always trying my best to play alone!";
+		next;
+		mes "[Alonie]";
+		mes "Huhu, Yapyap!";
+		close;
+	}
+	end;
+}
