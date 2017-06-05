@@ -1194,7 +1194,7 @@ mora,48,128,0	script	Drawer#mora_warehouse	HIDDEN_NPC,{
 			close;
 		}
 		Zeny -= 100;
-		openstorage;
+		openstorage(STORAGE_TYPE_MAIN);
 		close;
 	case 2:
 		mes "- You gave up using the warehouse. -";

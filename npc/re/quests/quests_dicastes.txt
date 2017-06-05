@@ -445,7 +445,7 @@ dic_in01,254,119,0	script	Item Storage#01	CLEAR_NPC,{
 	}
 	Zeny -= 500;
 	close2;
-	openstorage;
+	openstorage(STORAGE_TYPE_MAIN);
 	end;
 }
 

@@ -869,7 +869,7 @@ OnInit:
 				mes("have at least Novice Skill");
 				mes("Lv.6 to use the Storage.");
 			}
-			else openstorage;
+			else openstorage(STORAGE_TYPE_MAIN);
 			break;
 		case 2:
 			mes("[Kafra Employee]");

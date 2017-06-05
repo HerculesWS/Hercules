@@ -46,7 +46,7 @@ function	script	F_CashStore	{
 	mes "Welcome to the Kafra Corporation.";
 	mes "Here, let me open your Storage for you.";
 	close2;
-	openstorage;
+	openstorage(STORAGE_TYPE_MAIN);
 	cutin "",255;
 	return;
 }

@@ -367,7 +367,7 @@ OnRecvCastle:
 			mes "the Kafra Service.";
 			close2;
 			cutin "",255;
-			openstorage;
+			openstorage(STORAGE_TYPE_MAIN);
 			end;
 		case 2:
 			mes "[Kafra Employee]";

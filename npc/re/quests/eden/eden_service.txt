@@ -65,7 +65,7 @@
 					}
 					Zeny -= 500;
 					close2;
-					openstorage;
+					openstorage(STORAGE_TYPE_MAIN);
 					end;
 				}
 				mes "I don't have enough zeny.";

@@ -5422,7 +5422,7 @@ iz_ac01,95,46,5	script	Kafra Guide Trainer#ac	4_F_KAFRA1,{
 						mes("Thanks for using~!");
 						close2();
 						cutin("", 255);
-						openstorage;
+						openstorage(STORAGE_TYPE_MAIN);
 						end;
 					} else {
 						mes("[Kafra Guide Trainer]");
