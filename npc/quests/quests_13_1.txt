@@ -7678,7 +7678,7 @@ function Catwarp;
 				mes "Your storage will";
 				mes "be opened shortly.";
 				close2;
-				openstorage;
+				openstorage(STORAGE_TYPE_MAIN);
 				end;
 			}
 			else {
@@ -7725,7 +7725,7 @@ function Catwarp;
 				mes "Your storage will";
 				mes "be opened shortly.";
 				close2;
-				openstorage;
+				openstorage(STORAGE_TYPE_MAIN);
 				end;
 			}
 			else {
@@ -7847,7 +7847,7 @@ function Catwarp;
 				mes "Your storage will";
 				mes "be opened shortly.";
 				close2;
-				openstorage;
+				openstorage(STORAGE_TYPE_MAIN);
 				end;
 			}
 			else {
