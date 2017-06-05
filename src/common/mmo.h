@@ -195,6 +195,13 @@
 #define MAX_QUEST_OBJECTIVES 3           // Max quest objectives for a quest
 #endif
 
+#ifndef MAX_CLAN
+#define MAX_CLAN 500
+#endif
+#ifndef MAX_CLANALLIANCE
+#define MAX_CLANALLIANCE 6
+#endif
+
 // for produce
 #define MIN_ATTRIBUTE 0
 #define MAX_ATTRIBUTE 4
@@ -286,6 +293,7 @@ STATIC_ASSERT(MAX_ITEM_OPTIONS <= 5, "This value is limited by the client and da
 #define INFINITE_DURATION (-1) // Infinite duration for status changes
 
 struct hplugin_data_store;
+struct script_code;
 
 enum item_types {
 	IT_HEALING = 0,
@@ -597,7 +605,7 @@ struct mmo_charstatus {
 	short manner; // Defines how many minutes a char will be muted, each negative point is equivalent to a minute.
 	unsigned char karma;
 	short hair,hair_color,clothes_color,body;
-	int party_id,guild_id,pet_id,hom_id,mer_id,ele_id;
+	int party_id,guild_id,clan_id,pet_id,hom_id,mer_id,ele_id;
 	int fame;
 
 	// Mercenary Guilds Rank
@@ -618,6 +626,7 @@ struct mmo_charstatus {
 	uint32 mapip;
 	uint16 mapport;
 
+	int64 last_login;
 	struct point last_point,save_point,memo_point[MAX_MEMOPOINTS];
 	struct item inventory[MAX_INVENTORY],cart[MAX_CART];
 	struct s_skill skill[MAX_SKILL];
@@ -793,6 +802,53 @@ struct guild_castle {
 	} guardian[MAX_GUARDIANS];
 	int* temp_guardians; // ids of temporary guardians (mobs)
 	int temp_guardians_max;
+};
+
+/**
+ * Clan Member Struct
+ */
+struct clan_member {
+	int account_id;
+	int char_id;
+	short online;
+	int64 last_login;
+	struct map_session_data *sd;
+};
+
+/**
+ * Clan Buff Struct
+ */
+struct clan_buff {
+	int icon;
+	struct script_code *script;
+};
+
+/**
+ * Clan Relationship Struct
+ */
+struct clan_relationship {
+	char constant[NAME_LENGTH];
+	int clan_id;
+};
+
+/**
+ * Clan Struct
+ */
+struct clan {
+	int clan_id;
+	char constant[NAME_LENGTH];
+	char name[NAME_LENGTH];
+	char master[NAME_LENGTH];
+	char map[MAP_NAME_LENGTH_EXT];
+	struct clan_buff buff;
+	short max_member, connect_member;
+	struct clan_member member[MAX_CLAN];
+	struct clan_relationship allies[MAX_CLANALLIANCE];
+	struct clan_relationship antagonists[MAX_CLANALLIANCE];
+	int kick_time, check_time;
+	int tid;
+
+	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
 
 struct fame_list {

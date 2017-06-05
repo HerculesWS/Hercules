@@ -1455,3 +1455,21 @@ Sets the intimacy level of your homunculus, with 1000 being "Loyal".
 Sets the hunger level of your homunculus, with 100 being "Stuffed".
 
 ---------------------------------------
+
+@joinclan <ClanID>
+
+Joins the Clan with the given ID if it exists.
+
+---------------------------------------
+
+@leaveclan
+
+Leaves the Clan if any.
+
+---------------------------------------
+
+@reloadclans
+
+Reloads the 'db/clans.conf' file.
+
+---------------------------------------

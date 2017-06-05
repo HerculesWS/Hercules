@@ -29,6 +29,7 @@
 #include "map/channel.h"
 #include "map/chat.h"
 #include "map/chrif.h"
+#include "map/clan.h"
 #include "map/clif.h"
 #include "map/date.h" // is_day_of_*()
 #include "map/duel.h"
@@ -1461,6 +1462,11 @@ int pc_reg_received(struct map_session_data *sd)
 		party->member_joined(sd);
 	if (sd->status.guild_id)
 		guild->member_joined(sd);
+	if (sd->status.clan_id)
+		clan->member_online(sd, true);
+
+	//Auth is fully okay, update last_login
+	sd->status.last_login = time(NULL);
 
 	// pet
 	if (sd->status.pet_id > 0)
@@ -5662,6 +5668,8 @@ int pc_setpos(struct map_session_data* sd, unsigned short map_index, int x, int 
 		if (sd->npc_id)
 			npc->event_dequeue(sd);
 		npc->script_event(sd, NPCE_LOGOUT);
+		
+		clan->member_offline(sd);
 		//remove from map, THEN change x/y coordinates
 		unit->remove_map_pc(sd,clrtype);
 		if (battle_config.player_warp_keep_direction == 0)

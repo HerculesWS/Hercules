@@ -183,6 +183,7 @@ CREATE TABLE IF NOT EXISTS `char` (
   `manner` SMALLINT(6) NOT NULL DEFAULT '0',
   `party_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   `guild_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `clan_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   `pet_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   `homun_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   `elemental_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
@@ -196,6 +197,7 @@ CREATE TABLE IF NOT EXISTS `char` (
   `head_mid` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',
   `head_bottom` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',
   `robe` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',
+  `last_login` BIGINT(20) NULL DEFAULT '0',
   `last_map` VARCHAR(11) NOT NULL DEFAULT '',
   `last_x` SMALLINT(4) UNSIGNED NOT NULL DEFAULT '53',
   `last_y` SMALLINT(4) UNSIGNED NOT NULL DEFAULT '111',
@@ -882,6 +884,8 @@ INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1475526420); -- 2016-10-0
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1477434595); -- 2016-10-26--10-29.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1488454834); -- 2017-03-02--11-40.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1488744559); -- 2017-03-05--08-09.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1496588640); -- 2017-06-04--15-04.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1496588700); -- 2017-06-04--15-05.sql
 
 --
 -- Table structure for table `storage`

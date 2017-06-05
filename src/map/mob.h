@@ -202,6 +202,7 @@ struct mob_data {
 	int target_id,attacked_id;
 	int areanpc_id; //Required in OnTouchNPC (to avoid multiple area touchs)
 	unsigned int bg_id; // BattleGround System
+	int clan_id; // Clan System
 
 	int64 next_walktime, last_thinktime, last_linktime, last_pcneartime, dmgtick;
 	short move_fail_count;

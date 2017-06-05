@@ -840,8 +840,11 @@ typedef enum sc_type {
 	SC_TUNAPARTY,
 	SC_SHRIMP,	// 650
 	SC_FRESHSHRIMP,
-	
+
 	SC_DRESS_UP,
+
+	// Clan System
+	SC_CLAN_INFO,
 #ifndef SC_MAX
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 #endif

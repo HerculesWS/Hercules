@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS `branchlog` (
 CREATE TABLE IF NOT EXISTS `chatlog` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
   `time` DATETIME NULL,
-  `type` ENUM('O','W','P','G','M') NOT NULL DEFAULT 'O',
+  `type` ENUM('O','W','P','G','M','C') NOT NULL DEFAULT 'O',
   `type_id` INT(11) NOT NULL DEFAULT '0',
   `src_charid` INT(11) NOT NULL DEFAULT '0',
   `src_accountid` INT(11) NOT NULL DEFAULT '0',

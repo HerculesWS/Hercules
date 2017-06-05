@@ -25,6 +25,7 @@
 
 #include "map/battle.h"
 #include "map/chrif.h"
+#include "map/clan.h"
 #include "map/clif.h"
 #include "map/elemental.h"
 #include "map/guild.h"
@@ -1019,6 +1020,9 @@ void initChangeTables(void)
 	// Summoner
 	status->dbs->IconChangeTable[SC_SPRITEMABLE] = SI_SPRITEMABLE;
 
+	// Clan System
+	status->dbs->IconChangeTable[SC_CLAN_INFO] = SI_CLAN_INFO;
+
 	// Other SC which are not necessarily associated to skills.
 	status->dbs->ChangeFlagTable[SC_ATTHASTE_POTION1] |= SCB_ASPD;
 	status->dbs->ChangeFlagTable[SC_ATTHASTE_POTION2] |= SCB_ASPD;
@@ -1178,6 +1182,9 @@ void initChangeTables(void)
 	status->dbs->ChangeFlagTable[SC_MVPCARD_ORCHERO] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_MVPCARD_ORCLORD] |= SCB_ALL;
 
+	// Clan System
+	status->dbs->ChangeFlagTable[SC_CLAN_INFO] |= SCB_NONE;
+
 	// Costumes
 	status->dbs->ChangeFlagTable[SC_DRESS_UP] |= SCB_NONE;
 	status->dbs->ChangeFlagTable[SC_MOONSTAR] |= SCB_NONE;
@@ -1197,6 +1204,8 @@ void initChangeTables(void)
 
 	if( !battle_config.display_hallucination ) //Disable Hallucination.
 		status->dbs->IconChangeTable[SC_ILLUSION] = SI_BLANK;
+
+	status->dbs->RelevantBLTypes[SC_CLAN_INFO] |= BL_NPC;
 #undef add_sc
 #undef set_sc_with_vfx
 }
@@ -2681,6 +2690,11 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 
 	status->current_equip_option_index = -1;
 	status->current_equip_item_index = -1;
+
+	// Clan Buffs
+	if (sd->status.clan_id > 0) {
+		clan->buff_start(sd, sd->clan);
+	}
 
 	status->calc_pc_additional(sd, opt);
 
@@ -9896,6 +9910,9 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 
 	/* values that must be set regardless of SCFLAG_LOADED e.g. val_flag */
 	switch(type) {
+	case SC_CLAN_INFO:
+		val_flag |= 1|2;
+		break;
 	case SC_FIGHTINGSPIRIT:
 		val_flag |= 1|2;
 		break;
@@ -10029,6 +10046,11 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 		switch (type) {
 		case SC_ALL_RIDING:
 			dval1 = 1;
+			break;
+		case SC_CLAN_INFO:
+			dval1 = val1;
+			dval2 = val2;
+			dval3 = val3;
 			break;
 		default: /* all others: just copy val1 */
 			dval1 = val1;
