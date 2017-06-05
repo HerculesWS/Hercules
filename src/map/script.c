@@ -5033,6 +5033,8 @@ void do_final_script(void)
 		aFree(script->str_buf);
 
 	for( i = 0; i < atcommand->binding_count; i++ ) {
+		aFree(atcommand->binding[i]->at_groups);
+		aFree(atcommand->binding[i]->char_groups);
 		aFree(atcommand->binding[i]);
 	}
 
@@ -5567,6 +5569,8 @@ int script_reload(void)
 	script->label_count = 0;
 
 	for( i = 0; i < atcommand->binding_count; i++ ) {
+		aFree(atcommand->binding[i]->at_groups);
+		aFree(atcommand->binding[i]->char_groups);
 		aFree(atcommand->binding[i]);
 	}
 
