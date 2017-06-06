@@ -49,7 +49,7 @@ void mapif_send_users_count(int users);
 void mapif_parse_load_achievements(int fd);
 void mapif_parse_save_achievements(int fd);
 void mapif_achievement_load(int fd, int char_id);
-void mapif_send_achievements_to_map(int fd, int char_id, struct char_achievements *cp);
+void mapif_send_achievements_to_map(int fd, int char_id, const struct char_achievements *cp);
 void mapif_achievement_save(int char_id, struct char_achievements *p);
 void mapif_auction_message(int char_id, unsigned char result);
 void mapif_auction_sendlist(int fd, int char_id, short count, short pages, unsigned char *buf);

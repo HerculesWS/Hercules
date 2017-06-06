@@ -1120,9 +1120,9 @@ struct clif_interface {
 	unsigned char (*bl_type) (struct block_list *bl);
 	/* Achievement System */
 	void (*achievement_send_list) (int fd, struct map_session_data *sd);
-	void (*achievement_send_update) (int fd, struct map_session_data *sd, struct achievement_data *ad);
+	void (*achievement_send_update) (int fd, struct map_session_data *sd, const struct achievement_data *ad);
 	void (*pAchievementGetReward) (int fd, struct map_session_data *sd);
-	void (*achievement_reward_ack) (int fd, struct map_session_data *sd, int ach_id);
+	void (*achievement_reward_ack) (int fd, struct map_session_data *sd, const struct achievement_data *ad);
 	/*------------------------
 	 *- Parse Incoming Packet
 	 *------------------------*/

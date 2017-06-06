@@ -198,7 +198,7 @@
 // Achievements [Smokexyz/Hercules]
 #ifndef MAX_ACHIEVEMENT_DB
 #define MAX_ACHIEVEMENT_DB 360          // Maximum number of achievements
-#define MAX_ACHIEVEMENT_OBJECTIVES 10	// Maximum number of achievement objectives
+#define MAX_ACHIEVEMENT_OBJECTIVES 10   // Maximum number of achievement objectives
 STATIC_ASSERT(MAX_ACHIEVEMENT_OBJECTIVES <= 10, "This value is limited by the client and database layout and should only be increased if you know the consequences.");
 #define MAX_ACHIEVEMENT_RANKS 20 // Achievement Ranks
 STATIC_ASSERT(MAX_ACHIEVEMENT_RANKS <= 255, "This value is limited by the client and database layout and should only be increased if you know the consequences.");

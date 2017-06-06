@@ -297,8 +297,10 @@ void char_set_char_offline(int char_id, int account_id)
 
 		if (cp != NULL)
 			idb_remove(chr->char_db_,char_id);
-		if (c_ach != NULL)
+		if (c_ach != NULL) {
+			VECTOR_CLEAR(*c_ach);
 			idb_remove(inter_achievement->char_achievements, char_id);
+		}
 
 		if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `online`='0' WHERE `char_id`='%d' LIMIT 1", char_db, char_id) )
 			Sql_ShowDebug(inter->sql_handle);

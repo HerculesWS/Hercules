@@ -20396,7 +20396,7 @@ BUILDIN(achievement_progress)
 	int progress = script_getnum(st, 4);
 	int incremental = script_getnum(st, 5);
 	int char_id = script_hasdata(st, 6) ? script_getnum(st, 6) : 0;
-	struct achievement_data *ad = NULL;
+	const struct achievement_data *ad = NULL;
 
 	nullpo_retr(false, sd);
 

@@ -19138,7 +19138,7 @@ void clif_achievement_send_list(int fd, struct map_session_data *sd)
 	for (i = 0; i < VECTOR_LENGTH(sd->achievement); i++) {
 		int j = 0;
 		struct achievement *a = &VECTOR_INDEX(sd->achievement, i);
-		struct achievement_data *ad = NULL;
+		const struct achievement_data *ad = NULL;
 
 		/* Sanity check for nonull pointers. */
 		if (a == NULL || (ad = achievement->get(a->id)) == NULL)
@@ -19196,7 +19196,7 @@ void clif_achievement_send_list(int fd, struct map_session_data *sd)
  * @param sd    pointer to struct map_session_data
  * @param ad    const pointer to struct achievement_data from the achievement db.
  */
-void clif_achievement_send_update(int fd, struct map_session_data *sd, struct achievement_data *ad)
+void clif_achievement_send_update(int fd, struct map_session_data *sd, const struct achievement_data *ad)
 {
 #if PACKETVER >= 20141016
 	struct packet_achievement_update p = { 0 };
@@ -19207,8 +19207,7 @@ void clif_achievement_send_update(int fd, struct map_session_data *sd, struct ac
 	nullpo_retv(ad);
 
 	/* Get Session Achievement Data */
-	if ((a = achievement->find_or_create(sd, ad->id, false)) == NULL)
-		return;
+	a = achievement->ensure(sd, ad);
 
 	/* Get total points, current rank and current rank points from the session. */
 	achievement->calculate_totals(sd, &points, NULL, &rank, &curr_rank_points);
@@ -19254,14 +19253,13 @@ void clif_parse_achievement_get_reward(int fd, struct map_session_data *sd)
 {
 #if PACKETVER >= 20141016
 	int ach_id = RFIFOL(fd, 2);
-	struct achievement_data *ad = NULL;
+	const struct achievement_data *ad = NULL;
 	struct achievement *ach = NULL;
 
 	if (ach_id <= 0 || (ad = achievement->get(ach_id)) == NULL)
 		return;
 
-	if ((ach = achievement->find_or_create(sd, ach_id, false)) == NULL)
-		return;
+	ach = achievement->ensure(sd, ad);
 
 	if (achievement->check_complete(sd, ad) && ach->completed_at && ach->rewarded_at == 0) {
 		int i = 0;
@@ -19298,7 +19296,7 @@ void clif_parse_achievement_get_reward(int fd, struct map_session_data *sd)
 
 		clif->achievement_send_update(fd, sd, ad); // send update.
 
-		clif->achievement_reward_ack(fd, sd, ach_id);
+		clif->achievement_reward_ack(fd, sd, ad);
 	}
 #endif // PACKETVER >= 20141016
 }
@@ -19307,16 +19305,17 @@ void clif_parse_achievement_get_reward(int fd, struct map_session_data *sd)
  * Sends achievement reward collection acknowledgement to the client.
  * @packet [out] 0x0A26 <packet_id>.W <received
  */
-void clif_achievement_reward_ack(int fd, struct map_session_data *sd, int ach_id)
+void clif_achievement_reward_ack(int fd, struct map_session_data *sd, const struct achievement_data *ad)
 {
 #if PACKETVER >= 20141016
 	struct packet_achievement_reward_ack p = { 0 };
 
 	nullpo_retv(sd);
+	nullpo_retv(ad);
 
 	p.packet_id = achievementRewardAckType;
 	p.received = 1;
-	p.ach_id = ach_id;
+	p.ach_id = ad->id;
 
 	clif->send(&p, packet_len(achievementRewardAckType), &sd->bl, SELF);
 #endif // PACKETVER >= 20141016

@@ -41,7 +41,7 @@ struct mapif_interface {
 	int (*send) (int fd, unsigned char *buf, unsigned int len);
 	void (*send_users_count) (int users);
 	void (*pLoadAchievements) (int fd);
-	void (*sAchievementsToMap) (int fd, int char_id, struct char_achievements *p);
+	void (*sAchievementsToMap) (int fd, int char_id, const struct char_achievements *p);
 	void (*pSaveAchievements) (int fd);
 	void (*achievement_load) (int fd, int char_id);
 	void (*achievement_save) (int char_id, struct char_achievements *p);
