@@ -21690,6 +21690,8 @@ BUILDIN(unbindatcmd)
 	ARR_FIND(0, atcommand->binding_count, i, strcmp(atcommand->binding[i]->command, atcmd) == 0);
 	if( i < atcommand->binding_count ) {
 		int cursor = 0;
+		aFree(atcommand->binding[i]->at_groups);
+		aFree(atcommand->binding[i]->char_groups);
 		aFree(atcommand->binding[i]);
 		atcommand->binding[i] = NULL;
 		/* compact the list now that we freed a slot somewhere */
