@@ -673,16 +673,7 @@ int itemdb_isequip2(struct item_data *data) {
  *------------------------------------------*/
 int itemdb_isstackable(int nameid)
 {
-	int type=itemdb_type(nameid);
-	switch(type) {
-		case IT_WEAPON:
-		case IT_ARMOR:
-		case IT_PETEGG:
-		case IT_PETARMOR:
-			return 0;
-		default:
-			return 1;
-	}
+	return itemdb->isstackable2(itemdb->search(nameid));
 }
 
 /*==========================================
@@ -1336,11 +1327,11 @@ void itemdb_read_options(void)
 
 	if (!libconfig->load_file(&item_options_db, filepath))
 		return;
-	
+
 #ifdef ENABLE_CASE_CHECK
 	script->parser_current_file = filepath;
 #endif // ENABLE_CASE_CHECK
-	
+
 	if ((ito=libconfig->setting_get_member(item_options_db.root, "item_options_db")) == NULL) {
 		ShowError("itemdb_read_options: '%s' could not be loaded.\n", filepath);
 		libconfig->destroy(&item_options_db);
@@ -1399,7 +1390,7 @@ void itemdb_read_options(void)
 			ShowError("itemdb_read_options: Script code not found for entry %s (Id: %d) in '%s', skipping...\n", str, t_opt.index, filepath);
 			continue;
 		}
-		
+
 		/* Set Script */
 		t_opt.script = *str ? script->parse(str, filepath, t_opt.index, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
 
@@ -1416,11 +1407,11 @@ void itemdb_read_options(void)
 
 		count++;
 	}
-	
+
 #ifdef ENABLE_CASE_CHECK
 	script->parser_current_file = NULL;
 #endif // ENABLE_CASE_CHECK
-	
+
 	libconfig->destroy(&item_options_db);
 
 	VECTOR_CLEAR(duplicate_id);
@@ -1803,10 +1794,10 @@ int itemdb_validate_entry(struct item_data *entry, int n, const char *source) {
 
 	if( entry->type != IT_ARMOR && entry->type != IT_WEAPON && !entry->flag.no_refine )
 		entry->flag.no_refine = 1;
-	
+
 	if (entry->type != IT_ARMOR && entry->type != IT_WEAPON && !entry->flag.no_options)
 		entry->flag.no_options = 1;
-	
+
 	if (entry->flag.available != 1) {
 		entry->flag.available = 1;
 		entry->view_id = 0;
@@ -2054,7 +2045,7 @@ int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const char *
 
 	if( (t = libconfig->setting_get_member(it, "Refine")) )
 		id.flag.no_refine = libconfig->setting_get_bool(t) ? 0 : 1;
-	
+
 	if ((t = libconfig->setting_get_member(it, "DisableOptions")))
 		id.flag.no_options = libconfig->setting_get_bool(t) ? 1 : 0;
 
@@ -2369,10 +2360,10 @@ int itemdb_final_sub(union DBKey key, struct DBData *data, va_list ap)
 int itemdb_options_final_sub(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct item_option *ito = DB->data2ptr(data);
-	
+
 	if (ito->script != NULL)
 		script->free_code(ito->script);
-	
+
 	return 0;
 }
 
