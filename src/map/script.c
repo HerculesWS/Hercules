@@ -14098,7 +14098,7 @@ BUILDIN(getequippedoptioninfo)
 
 /**
  * Gets the option information of an equipment.
- * *getequipoptioninfo(<equip_index>,<slot>,<type>);
+ * *getequipoption(<equip_index>,<slot>,<type>);
  *
  * @param equip_index as the Index of the Equipment.
  * @param slot        as the slot# of the Item Option (1 to MAX_ITEM_OPTIONS)
@@ -14115,24 +14115,24 @@ BUILDIN(getequipoption)
 
 	if (sd == NULL) {
 		script_pushint(st, -1);
-		ShowError("buildin_getequipoptioninfo: Player not attached!\n");
+		ShowError("buildin_getequipoption: Player not attached!\n");
 		return false;
 	}
 
 	if (slot <= 0 || slot > MAX_ITEM_OPTIONS) {
 		script_pushint(st, -1);
-		ShowError("buildin_getequipoptioninfo: Invalid option slot %d (Min: 1, Max: %d) provided.\n", slot, MAX_ITEM_OPTIONS);
+		ShowError("buildin_getequipoption: Invalid option slot %d (Min: 1, Max: %d) provided.\n", slot, MAX_ITEM_OPTIONS);
 		return false;
 	}
 
 	if (equip_index > 0 && equip_index <= ARRAYLENGTH(script->equip)) {
 		if ((i = pc->checkequip(sd, script->equip[equip_index - 1])) == -1) {
-			ShowError("buildin_getequipoptioninfo: No equipment is equipped in the given index %d.\n", equip_index);
+			ShowError("buildin_getequipoption: No equipment is equipped in the given index %d.\n", equip_index);
 			script_pushint(st, -1);
 			return false;
 		}
 	} else {
-		ShowError("buildin_getequipoptioninfo: Invalid equipment index %d provided.\n", equip_index);
+		ShowError("buildin_getequipoption: Invalid equipment index %d provided.\n", equip_index);
 		script_pushint(st, 0);
 		return false;
 	}
@@ -14146,7 +14146,7 @@ BUILDIN(getequipoption)
 			val = sd->status.inventory[i].option[slot-1].value;
 			break;
 		default:
-			ShowError("buildin_geteqiupoptioninfo: Invalid option data type %d provided.\n", opt_type);
+			ShowError("buildin_getequipoption: Invalid option data type %d provided.\n", opt_type);
 			script_pushint(st, -1);
 			break;
 		}
