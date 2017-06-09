@@ -23209,6 +23209,465 @@ BUILDIN(navigateto)
 #endif
 }
 
+BUILDIN(rodex_sendmail)
+{
+	struct map_session_data *sd;
+	struct rodex_message msg = { 0 };
+	int item_count = 0, arr_id, arr_idx = 0;
+	const char *send_name, *title, *body, *arr_name;
+	bool items_array = false;
+
+	if (!strcmp(script->getfuncname(st), "rodex_sendmail_acc"))
+		msg.receiver_accountid = script_getnum(st, 2);
+	else
+		msg.receiver_id = script_getnum(st, 2);
+	
+	send_name = script_getstr(st, 3);
+	if (strlen(send_name) >= NAME_LENGTH) {
+		ShowError("script:rodex_sendmail: Sender name must not be bigger than %d!\n", NAME_LENGTH - 1);
+		return false;
+	}
+	safestrncpy(msg.sender_name, send_name, NAME_LENGTH);
+
+	title = script_getstr(st, 4);
+	if (strlen(title) >= RODEX_TITLE_LENGTH) {
+		ShowError("script:rodex_sendmail: Mail Title must not be bigger than %d!\n", RODEX_TITLE_LENGTH - 1);
+		return false;
+	}
+	safestrncpy(msg.title, title, RODEX_TITLE_LENGTH);
+
+	body = script_getstr(st, 5);
+	if (strlen(body) >= MAIL_BODY_LENGTH) {
+		ShowError("script:rodex_sendmail: Mail Message must not be bigger than %d!\n", RODEX_BODY_LENGTH - 1);
+		return false;
+	}
+	safestrncpy(msg.body, body, MAIL_BODY_LENGTH);
+
+	if (script_hasdata(st, 6)) {
+		msg.zeny = script_getnum(st, 6);
+		if (msg.zeny < 0 || msg.zeny > MAX_ZENY) {
+			ShowError("script:rodex_sendmail: Invalid Zeny value %"PRId64"!\n", msg.zeny);
+			return false;
+		}
+	}
+
+	// Item IDs
+	if (script_hasdata(st, 7)) {
+		struct script_data* data;
+
+		data = script_getdata(st, 7);
+
+		if (data_isreference(data)) {
+			// Array of items
+			items_array = true;
+			item_count = script->array_highest_key(st, st->rid ? script->rid2sd(st) : NULL, reference_getname(data), reference_getref(data));
+
+			if (item_count > RODEX_MAX_ITEM) {
+				ShowError("script:rodex_sendmail: Invalid number of items (%d)!\n", item_count);
+				return false;
+			}
+
+			arr_name = reference_getname(data);
+			arr_id = reference_getid(data);
+
+			if (not_server_variable(*arr_name)) {
+				sd = script->rid2sd(st);
+				if (sd == NULL) {
+					return false;
+				}
+			}
+
+			if (is_string_variable(arr_name) == false) {
+				// Item Ids
+				int i;
+
+				for (i = 0; i < item_count; ++i) {
+					int item_id = (int)(long)script->get_val2(st, reference_uid(arr_id, arr_idx + i), reference_getref(data));
+					struct item_data *idata;
+					script_removetop(st, -1, 0);
+
+					if (itemdb->exists(item_id) == false) {
+						ShowError("script:rodex_sendmail: Unknown item id %d.\n", item_id);
+						return false;
+					}
+
+					idata = itemdb->search(item_id);
+					++msg.items_count;
+					msg.items[i].item.nameid = idata->nameid;
+					msg.items[i].item.identify = 1;
+				}
+			} else {
+				ShowError("script:rodex_sendmail: Items must be passed as Numbers.\n");
+				return false;
+			}
+		} else {
+			// Single Item
+			struct item_data *idata;
+			item_count = 1;
+
+			if (data_isstring(script_getdata(st, 7)) == false) {
+				// as ID
+				int itemid = script_getnum(st, 7);
+
+				if (itemdb->exists(itemid) == false) {
+					ShowError("script:rodex_sendmail: Unknown item ID %d.\n", itemid);
+					return false;
+				}
+
+				idata = itemdb->search(itemid);
+			} else {
+				ShowError("script:rodex_sendmail: Item must be passed as Number.\n");
+				return false;
+			}
+
+			msg.items_count = 1;
+			msg.items[0].item.nameid = idata->nameid;
+			msg.items[0].item.identify = 1;
+		}
+	}
+
+	// Item Amount
+	if (script_hasdata(st, 8)) {
+		struct script_data* data;
+
+		data = script_getdata(st, 8);
+
+		if (data_isreference(data)) {
+			// Array of amount
+			int i;
+
+			if (items_array == false) {
+				ShowError("script:rodex_sendmail: You can't use an array of item amount for one item!\n");
+				return false;
+			}
+			
+			arr_name = reference_getname(data);
+			arr_id = reference_getid(data);
+
+			if (not_server_variable(*arr_name)) {
+				sd = script->rid2sd(st);
+				if (sd == NULL) {
+					return false;
+				}
+			}
+
+			for (i = 0; i < item_count; ++i) {
+				int amount = (int)(long)script->get_val2(st, reference_uid(arr_id, arr_idx + i), reference_getref(data));
+				script_removetop(st, -1, 0);
+
+				if (amount < 0 || amount > MAX_AMOUNT) {
+					ShowError("script:rodex_sendmail: Invalid item amount %d.\n", amount);
+					return false;
+				}
+
+				if (itemdb->isstackable(msg.items[i].item.nameid)) {
+					msg.items[i].item.amount = amount;
+				} else {
+					msg.items[i].item.amount = 1;
+				}
+			}
+		} else {
+			int amount = script_getnum(st, 8);
+			int i;
+
+			if (amount < 0 || amount > MAX_AMOUNT) {
+				ShowError("script:rodex_sendmail: Invalid item amount %d.\n", amount);
+				return false;
+			}
+
+			if (items_array == true) {
+				// Item Array, same amount
+				for (i = 0; i < item_count; ++i) {
+					if (itemdb->isstackable(msg.items[i].item.nameid)) {
+						msg.items[i].item.amount = amount;
+					} else {
+						msg.items[i].item.amount = 1;
+					}
+				}
+			} else {
+				if (itemdb->isstackable(msg.items[0].item.nameid)) {
+					msg.items[0].item.amount = amount;
+				} else {
+					msg.items[0].item.amount = 1;
+				}
+			}
+		}
+	} else if (script_hasdata(st, 7)) {
+		int i;
+		for (i = 0; i < item_count; ++i) {
+			msg.items[i].item.amount = 1;
+		}
+	}
+
+	// Item Refine
+	if (script_hasdata(st, 9)) {
+		struct script_data* data;
+		data = script_getdata(st, 9);
+
+		// Refine array
+		if (items_array == true) {
+			int i;
+
+			if (data_isreference(data) == false) {
+				ShowError("script:rodex_sendmail: When using an array of items, you must use an array of refines!\n");
+				return false;
+			}
+			arr_name = reference_getname(data);
+			arr_id = reference_getid(data);
+
+			if (not_server_variable(*arr_name)) {
+				sd = script->rid2sd(st);
+				if (sd == NULL) {
+					return false;
+				}
+			}
+
+			for (i = 0; i < item_count; ++i) {
+				int refine = (int)(long)script->get_val2(st, reference_uid(arr_id, arr_idx + i), reference_getref(data));
+				script_removetop(st, -1, 0);
+
+				if (refine < 0 || refine > MAX_REFINE) {
+					ShowError("script:rodex_sendmail: Invalid item refine %d.\n", refine);
+					return false;
+				}
+
+				msg.items[i].item.refine = refine;
+			}
+		}
+		else {
+			int refine = script_getnum(st, 9);
+			if (refine < 0 || refine > MAX_REFINE) {
+				ShowError("script:rodex_sendmail: Invalid item refine %d.\n", refine);
+				return false;
+			}
+
+			msg.items[0].item.refine = refine;
+		}
+		
+		if (script_hasdata(st, 10) && script_hasdata(st, 11) && script_hasdata(st, 12) && script_hasdata(st, 13) && script_hasdata(st, 14)) {
+			data = script_getdata(st, 10);
+			if (items_array == true) {
+				int i;
+
+				if (data_isreference(data) == false) {
+					ShowError("script:rodex_sendmail: When using an array of items, you must use an array of attributes and cards!\n");
+					return false;
+				}
+				arr_name = reference_getname(data);
+				arr_id = reference_getid(data);
+
+				if (not_server_variable(*arr_name)) {
+					sd = script->rid2sd(st);
+					if (sd == NULL) {
+						return false;
+					}
+				}
+
+				for (i = 0; i < item_count; ++i) {
+					int attribute = (int)(long)script->get_val2(st, reference_uid(arr_id, arr_idx + i), reference_getref(data));
+					script_removetop(st, -1, 0);
+
+					if (attribute < 0 || attribute > MAX_ATTRIBUTE) {
+						ShowError("script:rodex_sendmail: Invalid item attribute %d.\n", attribute);
+						return false;
+					}
+
+					msg.items[i].item.attribute = attribute;
+				}
+			}
+			else {
+				int attribute = script_getnum(st, 10);
+				if (attribute < 0 || attribute > MAX_ATTRIBUTE) {
+					ShowError("script:rodex_sendmail: Invalid item attribute %d.\n", attribute);
+					return false;
+				}
+
+				msg.items[0].item.attribute = attribute;
+			}
+
+			// Card 0
+			data = script_getdata(st, 11);
+			if (items_array == true) {
+				int i;
+
+				if (data_isreference(data) == false) {
+					ShowError("script:rodex_sendmail: When using an array of items, you must use an array of attributes and cards!\n");
+					return false;
+				}
+				arr_name = reference_getname(data);
+				arr_id = reference_getid(data);
+
+				if (not_server_variable(*arr_name)) {
+					sd = script->rid2sd(st);
+					if (sd == NULL) {
+						return false;
+					}
+				}
+
+				for (i = 0; i < item_count; ++i) {
+					int card0 = (int)(long)script->get_val2(st, reference_uid(arr_id, arr_idx + i), reference_getref(data));
+					script_removetop(st, -1, 0);
+
+					if (card0 < 0 || card0 > MAX_ITEMDB) {
+						ShowError("script:rodex_sendmail: Invalid card0 %d.\n", card0);
+						return false;
+					}
+
+					msg.items[i].item.card[0] = card0;
+				}
+			}
+			else {
+				int card0 = script_getnum(st, 11);
+				if (card0 < 0 || card0 > MAX_ITEMDB) {
+					ShowError("script:rodex_sendmail: Invalid card0 %d.\n", card0);
+					return false;
+				}
+
+				msg.items[0].item.card[0] = card0;
+			}
+
+			// Card 1
+			data = script_getdata(st, 12);
+			if (items_array == true) {
+				int i;
+
+				if (data_isreference(data) == false) {
+					ShowError("script:rodex_sendmail: When using an array of items, you must use an array of attributes and cards!\n");
+					return false;
+				}
+				arr_name = reference_getname(data);
+				arr_id = reference_getid(data);
+
+				if (not_server_variable(*arr_name)) {
+					sd = script->rid2sd(st);
+					if (sd == NULL) {
+						return false;
+					}
+				}
+
+				for (i = 0; i < item_count; ++i) {
+					int card1 = (int)(long)script->get_val2(st, reference_uid(arr_id, arr_idx + i), reference_getref(data));
+					script_removetop(st, -1, 0);
+
+					if (card1 < 0 || card1 > MAX_ITEMDB) {
+						ShowError("script:rodex_sendmail: Invalid card1 %d.\n", card1);
+						return false;
+					}
+
+					msg.items[i].item.card[1] = card1;
+				}
+			}
+			else {
+				int card1 = script_getnum(st, 12);
+				if (card1 < 0 || card1 > MAX_ITEMDB) {
+					ShowError("script:rodex_sendmail: Invalid item card1 %d.\n", card1);
+					return false;
+				}
+
+				msg.items[0].item.card[1] = card1;
+			}
+			
+			// Card 2
+			data = script_getdata(st, 13);
+			if (items_array == true) {
+				int i;
+
+				if (data_isreference(data) == false) {
+					ShowError("script:rodex_sendmail: When using an array of items, you must use an array of attributes and cards!\n");
+					return false;
+				}
+				arr_name = reference_getname(data);
+				arr_id = reference_getid(data);
+
+				if (not_server_variable(*arr_name)) {
+					sd = script->rid2sd(st);
+					if (sd == NULL) {
+						return false;
+					}
+				}
+
+				for (i = 0; i < item_count; ++i) {
+					int card2 = (int)(long)script->get_val2(st, reference_uid(arr_id, arr_idx + i), reference_getref(data));
+					script_removetop(st, -1, 0);
+
+					if (card2 < 0 || card2 > MAX_ITEMDB) {
+						ShowError("script:rodex_sendmail: Invalid card2 %d.\n", card2);
+						return false;
+					}
+
+					msg.items[i].item.card[2] = card2;
+				}
+			}
+			else {
+				int card2 = script_getnum(st, 13);
+				if (card2 < 0 || card2 > MAX_ITEMDB) {
+					ShowError("script:rodex_sendmail: Invalid item card2 %d.\n", card2);
+					return false;
+				}
+
+				msg.items[0].item.card[2] = card2;
+			}
+			
+			// Card 3
+			data = script_getdata(st, 14);
+			if (items_array == true) {
+				int i;
+
+				if (data_isreference(data) == false) {
+					ShowError("script:rodex_sendmail: When using an array of items, you must use an array of attributes and cards!\n");
+					return false;
+				}
+				arr_name = reference_getname(data);
+				arr_id = reference_getid(data);
+
+				if (not_server_variable(*arr_name)) {
+					sd = script->rid2sd(st);
+					if (sd == NULL) {
+						return false;
+					}
+				}
+
+				for (i = 0; i < item_count; ++i) {
+					int card3 = (int)(long)script->get_val2(st, reference_uid(arr_id, arr_idx + i), reference_getref(data));
+					script_removetop(st, -1, 0);
+
+					if (card3 < 0 || card3 > MAX_ITEMDB) {
+						ShowError("script:rodex_sendmail: Invalid card3 %d.\n", card3);
+						return false;
+					}
+
+					msg.items[i].item.card[3] = card3;
+				}
+			}
+			else {
+				int card3 = script_getnum(st, 14);
+				if (card3 < 0 || card3 > MAX_ITEMDB) {
+					ShowError("script:rodex_sendmail: Invalid item card3 %d.\n", card3);
+					return false;
+				}
+
+				msg.items[0].item.card[3] = card3;
+			}
+		}
+		else {
+			ShowError("script:rodex_sendmail: Not enough arguments for attibute or cards !\n");
+			return false;
+		}
+	}
+
+	msg.type = MAIL_TYPE_NPC;
+	if (msg.zeny > 0)
+		msg.type |= MAIL_TYPE_ZENY;
+	if (msg.items_count > 0)
+		msg.type |= MAIL_TYPE_ITEM;
+	msg.send_date = (int)time(NULL);
+	msg.expire_date = (int)time(NULL) + RODEX_EXPIRE;
+
+	intif->rodex_sendmail(&msg);
+
+	return true;
+}
+
 /**
  * Adds a built-in script function.
  *
@@ -23906,6 +24365,10 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(removechannelhandler, "ss"),
 		BUILDIN_DEF(showscript, "s?"),
 		BUILDIN_DEF(mergeitem,""),
+
+		// -- RoDEX
+		BUILDIN_DEF(rodex_sendmail, "isss?????????"),
+		BUILDIN_DEF2(rodex_sendmail, "rodex_sendmail_acc", "isss??????????"),
 		BUILDIN_DEF(_,"s"),
 		BUILDIN_DEF2(_, "_$", "s"),
 	};

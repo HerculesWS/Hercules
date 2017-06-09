@@ -22,6 +22,7 @@
 #define COMMON_MMO_H
 
 #include "config/core.h"
+#include "common/db.h"
 #include "common/cbasetypes.h"
 #include "common/db.h" // VECTORS
 
@@ -270,6 +271,13 @@
 #define MAX_ITEM_OPTIONS 5
 #endif
 STATIC_ASSERT(MAX_ITEM_OPTIONS <= 5, "This value is limited by the client and database layout and should only be increased if you know the consequences.");
+
+// RoDEX
+#define RODEX_TITLE_LENGTH (40 + 1)
+#define RODEX_BODY_LENGTH (500 + 1)
+#define RODEX_MAX_ITEM (5)
+#define RODEX_EXPIRE (1 * 15 * 24 * 60 * 60)
+#define RODEX_MAIL_PER_PAGE 7
 
 // The following system marks a different job ID system used by the map server,
 // which makes a lot more sense than the normal one. [Skotlex]
@@ -807,6 +815,46 @@ enum fame_list_type {
 	RANKTYPE_ALCHEMIST  = 1,
 	RANKTYPE_TAEKWON    = 2,
 	RANKTYPE_PK         = 3, //Not supported yet
+};
+
+struct rodex_message {
+	int64 id;
+	int sender_id;
+	char sender_name[NAME_LENGTH];
+	int receiver_id;
+	int receiver_accountid;
+	char receiver_name[NAME_LENGTH];
+	char title[RODEX_TITLE_LENGTH];
+	char body[RODEX_BODY_LENGTH];
+	struct {
+		struct item item;
+		int idx;
+		
+	} items[RODEX_MAX_ITEM];
+	int64 zeny;
+	uint8 type;
+	int8 opentype;
+	bool is_read;
+	bool is_deleted;
+	int send_date;
+	int expire_date;
+	int weight;
+	int items_count;
+};
+
+VECTOR_STRUCT_DECL(rodex_maillist, struct rodex_message);
+
+enum rodex_opentype {
+	RODEX_OPENTYPE_MAIL = 0,
+	RODEX_OPENTYPE_ACCOUNT = 1,
+	RODEX_OPENTYPE_RETURN = 2,
+};
+
+enum MAIL_TYPE {
+	MAIL_TYPE_TEXT = 0x0,
+	MAIL_TYPE_ZENY = 0x2,
+	MAIL_TYPE_ITEM = 0x4,
+	MAIL_TYPE_NPC = 0x8
 };
 
 /**

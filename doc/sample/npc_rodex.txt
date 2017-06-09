@@ -1,0 +1,58 @@
+//===== Hercules Script =======================================
+//= Sample: RoDEX Send Mail
+//===== By: ==================================================
+//= KirieZ
+//===== Current Version: =====================================
+//= 20170322
+//===== Description: =========================================
+//= Demonstrates sending mails through RoDEX.
+//============================================================
+
+prontera,150,150,4	script	Rodex Mail	1_M_01,{
+	// Sends a message from "Official" with title "Message Title"
+	// and body "My Message" to attached player character.
+	rodex_sendmail(getcharid(CHAR_ID_CHAR), "Official", "Message Title", "My Message");
+	
+	// Sends a message from "Official" with title "Message Title"
+	// and body "My Message" to attached player character, with 100 zeny attached.
+	rodex_sendmail(getcharid(CHAR_ID_CHAR), "Official", "Message Title", "My Message", 100);
+	
+	// Sends a message from "Official" with title "Message Title"
+	// and body "My Message" to attached player character,
+	// with 1 Red Potion attached.
+	rodex_sendmail(getcharid(CHAR_ID_CHAR), "Official", "Message Title", "My Message", 0, Red_Potion, 1);
+	
+	// Sends a message from "Official" with title "Message Title"
+	// and body "My Message" to attached player account,
+	// with a +10 Knife with 3 Poring Cards attached.
+	rodex_sendmail_acc(getcharid(CHAR_ID_ACCOUNT), "Official", "Message Title", "My Message", 0, Knife, 1, 10, 0, Poring_Card, Poring_Card, Poring_Card, 0);
+
+	// Prepare arrays for following examples
+	setarray(.@item[0], Knife, Knife, Red_Potion);
+	setarray(.@amount[0], 1, 1, 5);
+	setarray(.@refine[0], 0, 5, 0);
+	setarray(.@attribute[0], 0, 0, 0);
+	setarray(.@card0[0], Poring_Card, Poring_Card, 0);
+	setarray(.@card1[0], Poring_Card, 0, 0);
+	setarray(.@card2[0], Poring_Card, 0, 0);
+	setarray(.@card3[0], Poring_Card, 0, 0);
+	
+	// Sends a message from "Official" with title "Message Title"
+	// and body "My Message" to attached player character,
+	// with following items attached:
+	//  - 1x Knife with 4 Poring Cards
+	//  - 1x +5 Knife with 1 Poring Card
+	//  - 5x Red Potion (501)
+	rodex_sendmail(getcharid(CHAR_ID_CHAR), "Official", "Message Title", "My Message", 0, .@item, .@amount, .@refine, .@attribute, .@card0, .@card1, .@card2, .@card3);
+	
+	// Sends a message from "Official" with title "Message Title"
+	// and body "My Message" to attached player character,
+	// with following items attached:
+	//  - 1x Knife with 4 Poring Cards
+	//  - 1x +5 Knife with 1 Poring Card
+	//  - 2x Red Potion (501)
+	// Note that in this case we put amount = 2, but not stackable items (Knife)
+	// are automatically forced to 1.
+	rodex_sendmail(getcharid(CHAR_ID_CHAR), "Official", "Message Title", "My Message", 0, .@item, 2, .@refine, .@attribute, .@card0, .@card1, .@card2, .@card3);
+	end;
+}

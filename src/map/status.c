@@ -1019,6 +1019,9 @@ void initChangeTables(void)
 	// Summoner
 	status->dbs->IconChangeTable[SC_SPRITEMABLE] = SI_SPRITEMABLE;
 
+	// RoDEX
+	status->dbs->IconChangeTable[SC_DAILYSENDMAILCNT] = SI_DAILYSENDMAILCNT;
+
 	// Other SC which are not necessarily associated to skills.
 	status->dbs->ChangeFlagTable[SC_ATTHASTE_POTION1] |= SCB_ASPD;
 	status->dbs->ChangeFlagTable[SC_ATTHASTE_POTION2] |= SCB_ASPD;
@@ -8612,6 +8615,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			case SC_TURNKICK_READY:
 			case SC_DODGE_READY:
 			case SC_PUSH_CART:
+			case SC_DAILYSENDMAILCNT:
 				tick = INFINITE_DURATION;
 				break;
 
@@ -10020,6 +10024,9 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 		case SC_CASH_RECEIVEITEM:
 		case SC_OVERLAPEXPUP:
 			val_flag |= 1;
+			break;
+		case SC_DAILYSENDMAILCNT:
+			val_flag |= 1 | 2;
 			break;
 	}
 

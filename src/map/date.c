@@ -77,6 +77,15 @@ int date_get_sec(void)
 	return lt->tm_sec;
 }
 
+// Returns YYYYMMDD of now
+int date_get_date(void)
+{
+	return
+		date_get_year() * 10000 +
+		date_get_month() * 100 +
+		date_get_day();
+}
+
 /*==========================================
  * Star gladiator related checks
  *------------------------------------------*/
