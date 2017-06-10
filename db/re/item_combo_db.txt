@@ -103,6 +103,7 @@
 2171:15053,{ bonus bAgi,2; }
 2171:15056,{ bonus bAgi,2; }
 2173:15055,{ bonus bFlee,10; bonus bFlee2,10; }
+2183:15068:18776:20710:22015,{ bonus(bMaxHP, 900); bonus(bMaxSP, 100); bonus3(bAutoSpellWhenHit, HP_ASSUMPTIO, 1, 30); }
 2198:5966,{ if (isequipped(4441)) {} else { if(getequiprefinerycnt(EQI_HAND_L)>6) { bonus2 bSkillCooldown,WL_COMET,-20000; } if(getequiprefinerycnt(EQI_HAND_L)>9) { bonus2 bSkillCooldown,WL_COMET,-20000; } } }
 2254:18912,{ bonus2 bExpAddRace, RC_All, 5; }
 2269:5781,{ bonus bMaxSP,30; bonus bInt,1; }
@@ -294,6 +295,7 @@
 13035:28704,{ bonus bMaxSP,20; bonus bMaxHPrate,5; bonus bHit,10; bonus2 bAddSize,Size_Large,30; autobonus "{ bonus bAspdRate,100; }",1,7000,BF_WEAPON,"{ specialeffect(EF_POTION_BERSERK, AREA, playerattached()); }"; }
 15041:18659,{ bonus2 bAddEle,Ele_Earth,10; bonus bDefEle,Ele_Fire; }
 15061:19026,{ bonus2 bAddRaceTolerance,RC_Fish,10+getequiprefinerycnt(EQI_ARMOR); }
+15068:20710,{ bonus(bAgi, 5); bonus(bFlee, 10); }
 15128:20773,{ bonus bDelayrate,-10; bonus bFlee2,6; if(BaseLevel>130) { bonus bDelayrate,-10;} }
 18507:18539,{ bonus bUseSPrate,-3; }
 18607:18672,{ bonus bSPrecovRate,3; }
@@ -305,7 +307,8 @@
 15117:20744:22047,{ bonus bMaxHP,25; bonus bMaxSP,25; bonus bSpeedRate,25; if (getequiprefinerycnt(EQI_GARMENT)+getequiprefinerycnt(EQI_SHOES)+getequiprefinerycnt(EQI_ARMOR) >= 30) { bonus bMaxHP,5; bonus bMaxSP,5; } }
 18510:18511,{ bonus2 bAddRace,RC_Angel,3; }
 18728:15061:2495:20700,{ bonus bAllStats, 1; bonus2 bSubEle, Ele_Water, 50; }
-18776:20710,{ bonus bAgi,5; bonus bFlee,10; }
+18776:20710,{ bonus(bBaseAtk, 10); }
+18776:22015,{ bonus(bMatk, 20); }
 18824:18825,{ bonus bMaxHP,100; bonus2 bSubEle,Ele_Neutral,getequiprefinerycnt(EQI_HEAD_TOP); }
 18874:2109:2971,{ bonus bHPrecovRate,15; bonus bSPrecovRate,15; bonus bMatkRate,7; }
 18997:28326:28327,{ bonus bSpeedRate,10; bonus bBaseAtk,50; bonus bMatk,50; if(getequiprefinerycnt(EQI_HEAD_TOP)>=9){ bonus bMaxHPrate,10; bonus bMaxSPrate,50; } }
