@@ -966,6 +966,6 @@ CREATE TABLE IF NOT EXISTS `rodex_mail` (
   KEY `sender_id` (`sender_id`),
   KEY `receiver_id` (`receiver_id`),
   KEY `receiver_accountid` (`receiver_accountid`),
-  KEY `send_date` (`sender_id`),
+  KEY `send_date` (`send_date`),
   KEY `expire_date` (`expire_date`)
 ) ENGINE=MyISAM;

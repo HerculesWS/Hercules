@@ -19118,6 +19118,7 @@ unsigned short clif_parse_cmd_optional( int fd, struct map_session_data *sd ) {
  * RoDEX
  *------------------------------------------*/
 
+void clif_parse_rodex_open_write_mail(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
 void clif_parse_rodex_open_write_mail(int fd, struct map_session_data *sd)
 {
 	const struct PACKET_CZ_REQ_OPEN_WRITE_MAIL *rPacket = RFIFOP(fd, 0);
@@ -19130,6 +19131,9 @@ void clif_rodex_open_write_mail(int fd, const char receiver_name[NAME_LENGTH], i
 {
 #if PACKETVER >= 20140416
 	struct PACKET_ZC_ACK_OPEN_WRITE_MAIL *sPacket = NULL;
+	
+	nullpo_retv(receiver_name);
+
 	WFIFOHEAD(fd, sizeof(*sPacket));
 	sPacket = WFIFOP(fd, 0);
 	sPacket->PacketType = rodexopenwrite;
@@ -19139,12 +19143,11 @@ void clif_rodex_open_write_mail(int fd, const char receiver_name[NAME_LENGTH], i
 #endif
 }
 
+void clif_parse_rodex_add_item(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
 void clif_parse_rodex_add_item(int fd, struct map_session_data *sd)
 {
 	const struct PACKET_CZ_ADD_ITEM_TO_MAIL *rPacket = RFIFOP(fd, 0);
 	int16 idx = rPacket->index - 2;
-
-	nullpo_retv(sd);
 
 	rodex->add_item(sd, idx, (int16)rPacket->count);
 }
@@ -19188,12 +19191,11 @@ void clif_rodex_add_item_result(struct map_session_data *sd, int16 idx, int16 am
 #endif
 }
 
+void clif_parse_rodex_remove_item(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
 void clif_parse_rodex_remove_item(int fd, struct map_session_data *sd)
 {
 	const struct PACKET_CZ_REQ_REMOVE_ITEM_MAIL *rPacket = RFIFOP(fd, 0);
 	int16 idx = rPacket->index - 2;
-
-	nullpo_retv(sd);
 
 	rodex->remove_item(sd, idx, (int16)rPacket->cnt);
 }
@@ -19204,6 +19206,7 @@ void clif_rodex_remove_item_result(struct map_session_data *sd, int16 idx, int16
 	int fd;
 
 	nullpo_retv(sd);
+	Assert_retv(idx >= 0 || idx < MAX_INVENTORY);
 
 	fd = sd->fd;
 
@@ -19218,14 +19221,17 @@ void clif_rodex_remove_item_result(struct map_session_data *sd, int16 idx, int16
 #endif
 }
 
+void clif_parse_rodex_checkname(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
 void clif_parse_rodex_checkname(int fd, struct map_session_data *sd)
 {
 	const struct PACKET_CZ_CHECKNAME *rPacket = RFIFOP(fd, 0);
-
 	int char_id = 0, base_level = 0;
 	short class = 0;
+	char name[24];
+	
+	safestrncpy(name, rPacket->Name, 24);
 
-	rodex->check_player(sd, rPacket->Name, &base_level, &char_id, &class);
+	rodex->check_player(sd, name, &base_level, &char_id, &class);
 }
 
 void clif_rodex_checkname_result(struct map_session_data *sd, int char_id, short class_, int base_level, char name[NAME_LENGTH])
@@ -19256,6 +19262,7 @@ void clif_rodex_checkname_result(struct map_session_data *sd, int char_id, short
 #endif
 }
 
+void clif_parse_rodex_send_mail(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
 void clif_parse_rodex_send_mail(int fd, struct map_session_data *sd)
 {
 	const struct PACKET_CZ_SEND_MAIL *rPacket = RFIFOP(fd, 0);
@@ -19392,20 +19399,18 @@ void clif_rodex_send_refresh(int fd, struct map_session_data *sd, int8 open_type
 #endif
 }
 
+void clif_parse_rodex_next_maillist(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
 void clif_parse_rodex_next_maillist(int fd, struct map_session_data *sd)
 {
 	const struct PACKET_CZ_REQ_NEXT_MAIL_LIST *packet = RFIFOP(fd, 0);
 
-	nullpo_retv(sd);
-
 	rodex->next_page(sd, packet->opentype, packet->Lower_MailID);
 }
 
+void clif_parse_rodex_read_mail(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
 void clif_parse_rodex_read_mail(int fd, struct map_session_data *sd)
 {
 	const struct PACKET_CZ_REQ_READ_MAIL *rPacket = RFIFOP(fd, 0);
-
-	nullpo_retv(sd);
 
 	rodex->read_mail(sd, rPacket->MailID);
 }
@@ -19466,11 +19471,10 @@ void clif_rodex_read_mail(struct map_session_data *sd, int8 opentype, struct rod
 #endif
 }
 
+void clif_parse_rodex_delete_mail(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
 void clif_parse_rodex_delete_mail(int fd, struct map_session_data *sd)
 {
 	const struct PACKET_CZ_REQ_DELETE_MAIL *rPacket = RFIFOP(fd, 0);
-
-	nullpo_retv(sd);
 
 	rodex->delete_mail(sd, rPacket->MailID);
 }
@@ -19494,11 +19498,10 @@ void clif_rodex_delete_mail(struct map_session_data *sd, int8 opentype, int64 ma
 #endif
 }
 
+void clif_parse_rodex_request_zeny(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
 void clif_parse_rodex_request_zeny(int fd, struct map_session_data *sd)
 {
 	const struct PACKET_CZ_REQ_ZENY_FROM_MAIL *rPacket = RFIFOP(fd, 0);
-	
-	nullpo_retv(sd);
 	
 	rodex->get_zeny(sd, rPacket->opentype, rPacket->MailID);
 }
@@ -19523,11 +19526,10 @@ void clif_rodex_request_zeny(struct map_session_data *sd, int8 opentype, int64 m
 #endif
 }
 
+void clif_parse_rodex_request_items(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
 void clif_parse_rodex_request_items(int fd, struct map_session_data *sd)
 {
 	const struct PACKET_CZ_REQ_ITEM_FROM_MAIL *rPacket = RFIFOP(fd, 0);
-
-	nullpo_retv(sd);
 
 	rodex->get_items(sd, rPacket->opentype, rPacket->MailID);
 }
@@ -19562,12 +19564,14 @@ void clif_rodex_icon(int fd, bool show)
 #endif
 }
 
+void clif_parse_rodex_refresh_maillist(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
 void clif_parse_rodex_refresh_maillist(int fd, struct map_session_data *sd)
 {
 	const struct PACKET_CZ_REQ_REFRESH_MAIL_LIST *packet = RFIFOP(fd, 0);
 	rodex->refresh(sd, packet->opentype, packet->Upper_MailID);
 }
 
+void clif_parse_rodex_open_mailbox(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
 void clif_parse_rodex_open_mailbox(int fd, struct map_session_data *sd)
 {
 	const struct PACKET_CZ_REQ_OPEN_MAIL *packet = RFIFOP(fd, 0);
@@ -19575,12 +19579,14 @@ void clif_parse_rodex_open_mailbox(int fd, struct map_session_data *sd)
 	rodex->clean(sd, 1);
 }
 
+void clif_parse_rodex_close_mailbox(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
 void clif_parse_rodex_close_mailbox(int fd, struct map_session_data *sd)
 {
 	rodex->clean(sd, 0);
 	intif->rodex_checkhasnew(sd);
 }
 
+void clif_parse_rodex_cancel_write_mail(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
 void clif_parse_rodex_cancel_write_mail(int fd, struct map_session_data *sd)
 {
 	rodex->clean(sd, 1);

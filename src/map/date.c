@@ -80,10 +80,15 @@ int date_get_sec(void)
 // Returns YYYYMMDD of now
 int date_get_date(void)
 {
+	time_t t;
+	struct tm * lt;
+	t = time(NULL);
+	lt = localtime(&t);
+
 	return
-		date_get_year() * 10000 +
-		date_get_month() * 100 +
-		date_get_day();
+		(lt->tm_year+1900) * 10000 +
+		(lt->tm_mon + 1) * 100 +
+		(lt->tm_mday);
 }
 
 /*==========================================

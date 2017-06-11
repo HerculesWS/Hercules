@@ -2222,7 +2222,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0436,4,clif->pDull); // CZ_GANGSI_RANK
 #endif
 
-//2013-03-20Ragexe (Judas + Yommy)
+// 2012-09-25aRagexe
 #if PACKETVER >= 20120925
 // new packets (not all)
 	packet(0x0998,8,clif->pEquipItem,2,4);
@@ -2298,14 +2298,14 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x095a,8,clif->pDull); // CZ_JOIN_BATTLE_FIELD
 	// Shuffle End
 
-	// New Packets
+	// New Packets (wrong version or packet not exists)
 	packet(0x0447,2); // PACKET_CZ_BLOCKING_PLAY_CANCEL
 	packet(0x099f,24);
 	// New Packets End
 #endif
 
 #if PACKETVER >= 20130320
-//2013-05-15aRagexe (Shakto)
+// new packets
 // changed packet sizes
 	packet(0x09a7,10,clif->pBankDeposit,2,4,6); // CZ_REQ_BANKING_DEPOSIT
 	packet(0x09a8,12); // ZC_ACK_BANKING_DEPOSIT
@@ -2590,9 +2590,9 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0436,4,clif->pDull); // CZ_GANGSI_RANK
 #endif
 
-/* Bank System [Yommy/Hercules] */
+// 2013-04-17aRagexe
 #if PACKETVER >= 20130417
-// shuffle packets not added
+// new packets
 	packet(0x09b4,6,clif->pDull/*,XXX*/); // CZ_OPEN_BARGAIN_SALE_TOOL
 	packet(0x09b5,2); // ZC_OPEN_BARGAIN_SALE_TOOL
 	packet(0x09b6,6,clif->pBankOpen,2,4); // CZ_REQ_OPEN_BANKING
@@ -2602,7 +2602,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 // changed packet sizes
 #endif
 
-//2013-08-07Ragexe (Shakto)
+// 2013-04-24aRagexe
 #if PACKETVER >= 20130424
 // new packets
 	packet(0x09ba,6,clif->pDull/*,XXX*/); // CZ_REQ_OPEN_GUILD_STORAGE
@@ -2697,7 +2697,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0436,4,clif->pDull); // CZ_GANGSI_RANK
 #endif
 
-//2013-08-14aRagexe - Themon
+// 2013-08-07aRagexe
 #if PACKETVER >= 20130807
 // new packets
 	packet(0x09cd,8); // ZC_MSG_COLOR
@@ -2741,7 +2741,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0896,8,clif->pDull); // CZ_JOIN_BATTLE_FIELD
 #endif
 
-// 2013-10-30aRagexe
+// 2013-08-14aRagexe
 #if PACKETVER >= 20130814
 // new packets
 	packet(0x09ce,102,clif->pGM_Monster_Item,2); // CZ_ITEM_CREATE_EX
@@ -2895,23 +2895,20 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x085C,36,clif->pStoragePassword,0);
 	packet(0x0363,8,clif->pDull); // CZ_JOIN_BATTLE_FIELD
 	packet(0x087b,4,clif->pDull); // CZ_GANGSI_RANK
-	packet(0x09f5,11,clif->pRodexDeleteMail); // CZ_REQ_DELETE_RODEX
-	packet(0x09ee,11,clif->pRodexNextMaillist); // CZ_REQ_NEXT_RODEX
-	packet(0x09ef,11,clif->pRodexRefreshMaillist); // CZ_REQ_REFRESH_RODEX
 #endif
 
-// 2013-12-23cRagexe - Yommy
+// 2013-12-18bRagexe
 #if PACKETVER >= 20131218
 // new packets
 	packet(0x09ea,10,clif->pDull/*,XXX*/); // CZ_REQ_READ_RODEX
 	packet(0x09eb,14); // ZC_ACK_READ_RODEX
-	packet(0x09ef,11,clif->pDull/*,XXX*/); // CZ_REQ_REFRESH_RODEX
+	packet(0x09ef,11,clif->pRodexRefreshMaillist); // CZ_REQ_REFRESH_RODEX
 	packet(0x09f0,-1); // ZC_ACK_RODEX_LIST
-	packet(0x09f5,11,clif->pDull/*,XXX*/); // CZ_REQ_DELETE_RODEX
+	packet(0x09f5,11,clif->pRodexDeleteMail); // CZ_REQ_DELETE_RODEX
 	packet(0x09f6,11); // ZC_ACK_DELETE_RODEX
 // changed packet sizes
 	packet(0x09e8,10,clif->pDull/*,XXX*/); // CZ_OPEN_RODEXBOX
-	packet(0x09ee,11,clif->pDull/*,XXX*/); // CZ_REQ_NEXT_RODEX
+	packet(0x09ee,11,clif->pRodexNextMaillist); // CZ_REQ_NEXT_RODEX
 #endif
 
 // 2013-12-23cRagexe - Yommy
@@ -2948,11 +2945,11 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x09ea,11,clif->pRodexReadMail); // CZ_REQ_READ_RODEX
 #endif
 
-// 2013-12-30aRagexe - Yommy
+// 2013-12-23bRagexe
 #if PACKETVER >= 20131223
 // new packets
 // changed packet sizes
-	packet(0x09ea,11,clif->pDull/*,XXX*/); // CZ_REQ_READ_RODEX
+	packet(0x09ea,11,clif->pRodexReadMail); // CZ_REQ_READ_RODEX
 	packet(0x09eb,24); // ZC_ACK_READ_RODEX
 #endif
 
@@ -2990,13 +2987,13 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x09ec,-1,clif->pRodexSendMail); // CZ_REQ_SEND_RODEX
 #endif
 
-// 2014 Packet Data
+// 2013-12-30aRagexe
 #if PACKETVER >= 20131230
-
-	packet(0x09ec,-1,clif->pDull/*,XXX*/); // CZ_REQ_SEND_RODEX
+// new packets
+	packet(0x09ec,-1,clif->pRodexSendMail); // CZ_REQ_SEND_RODEX
 	packet(0x09ed,3); // ZC_ACK_SEND_RODEX
 	packet(0x09f7,75); // ZC_PROPERTY_HOMUN_2
-// 2014-01-15eRagexe
+// changed packet sizes
 	packet(0x09eb,23); // ZC_ACK_READ_RODEX
 #endif
 

@@ -1366,32 +1366,32 @@ struct clif_interface {
 	const char *(*get_bl_name) (const struct block_list *bl);
 
 	/* RoDEX */
-	void(*pRodexOpenWriteMail) (int fd, struct map_session_data *sd);
-	void(*rodex_open_write_mail) (int fd, const char receiver_name[NAME_LENGTH], int8 result);
-	void(*pRodexAddItem) (int fd, struct map_session_data *sd);
-	void(*rodex_add_item_result) (struct map_session_data *sd, int16 idx, int16 amount, int8 result);
-	void(*pRodexRemoveItem) (int fd, struct map_session_data *sd);
-	void(*rodex_remove_item_result) (struct map_session_data *sd, int16 idx, int16 amount);
-	void(*pRodexSendMail) (int fd, struct map_session_data *sd);
-	void(*rodex_send_mail_result) (int fd, struct map_session_data *sd, int8 result);
-	void(*rodex_send_maillist) (int fd, struct map_session_data *sd, int8 open_type, int64 page_start);
-	void(*rodex_send_refresh) (int fd, struct map_session_data *sd, int8 open_type, int count);
-	void(*pRodexReadMail) (int fd, struct map_session_data *sd);
-	void(*rodex_read_mail) (struct map_session_data *sd, int8 opentype, struct rodex_message *msg);
-	void(*pRodexNextMaillist) (int fd, struct map_session_data *sd);
-	void(*pRodexCloseMailbox) (int fd, struct map_session_data *sd);
-	void(*pRodexCancelWriteMail) (int fd, struct map_session_data *sd);
-	void(*pRodexOpenMailbox) (int fd, struct map_session_data *sd);
-	void(*pRodexCheckName) (int fd, struct map_session_data *sd);
-	void(*rodex_checkname_result) (struct map_session_data *sd, int char_id, short class_, int base_level, char name[NAME_LENGTH]);
-	void(*pRodexDeleteMail) (int fd, struct map_session_data *sd);
-	void(*rodex_delete_mail) (struct map_session_data *sd, int8 opentype, int64 mail_id);
-	void(*pRodexRefreshMaillist) (int fd, struct map_session_data *sd);
-	void(*pRodexRequestZeny) (int fd, struct map_session_data *sd);
-	void(*rodex_request_zeny) (struct map_session_data *sd, int8 opentype, int64 mail_id, int8 result);
-	void(*pRodexRequestItems) (int fd, struct map_session_data *sd);
-	void(*rodex_request_items) (struct map_session_data *sd, int8 opentype, int64 mail_id, int8 result);
-	void(*rodex_icon) (int fd, bool show);
+	void (*pRodexOpenWriteMail) (int fd, struct map_session_data *sd);
+	void (*rodex_open_write_mail) (int fd, const char receiver_name[NAME_LENGTH], int8 result);
+	void (*pRodexAddItem) (int fd, struct map_session_data *sd);
+	void (*rodex_add_item_result) (struct map_session_data *sd, int16 idx, int16 amount, int8 result);
+	void (*pRodexRemoveItem) (int fd, struct map_session_data *sd);
+	void (*rodex_remove_item_result) (struct map_session_data *sd, int16 idx, int16 amount);
+	void (*pRodexSendMail) (int fd, struct map_session_data *sd);
+	void (*rodex_send_mail_result) (int fd, struct map_session_data *sd, int8 result);
+	void (*rodex_send_maillist) (int fd, struct map_session_data *sd, int8 open_type, int64 page_start);
+	void (*rodex_send_refresh) (int fd, struct map_session_data *sd, int8 open_type, int count);
+	void (*pRodexReadMail) (int fd, struct map_session_data *sd);
+	void (*rodex_read_mail) (struct map_session_data *sd, int8 opentype, struct rodex_message *msg);
+	void (*pRodexNextMaillist) (int fd, struct map_session_data *sd);
+	void (*pRodexCloseMailbox) (int fd, struct map_session_data *sd);
+	void (*pRodexCancelWriteMail) (int fd, struct map_session_data *sd);
+	void (*pRodexOpenMailbox) (int fd, struct map_session_data *sd);
+	void (*pRodexCheckName) (int fd, struct map_session_data *sd);
+	void (*rodex_checkname_result) (struct map_session_data *sd, int char_id, short class_, int base_level, char name[NAME_LENGTH]);
+	void (*pRodexDeleteMail) (int fd, struct map_session_data *sd);
+	void (*rodex_delete_mail) (struct map_session_data *sd, int8 opentype, int64 mail_id);
+	void (*pRodexRefreshMaillist) (int fd, struct map_session_data *sd);
+	void (*pRodexRequestZeny) (int fd, struct map_session_data *sd);
+	void (*rodex_request_zeny) (struct map_session_data *sd, int8 opentype, int64 mail_id, int8 result);
+	void (*pRodexRequestItems) (int fd, struct map_session_data *sd);
+	void (*rodex_request_items) (struct map_session_data *sd, int8 opentype, int64 mail_id, int8 result);
+	void (*rodex_icon) (int fd, bool show);
 };
 
 #ifdef HERCULES_CORE

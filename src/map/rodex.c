@@ -159,6 +159,7 @@ void rodex_remove_item(struct map_session_data *sd, int16 idx, int16 amount)
 	struct item_data *itd;
 
 	nullpo_retv(sd);
+	Assert_retv(idx >= 0 && idx < MAX_INVENTORY);
 
 	for (i = 0; i < RODEX_MAX_ITEM; ++i) {
 		if (sd->rodex.tmp.items[i].idx == idx)
