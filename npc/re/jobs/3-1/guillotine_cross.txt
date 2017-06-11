@@ -300,7 +300,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 			case 3:
 				mes "[Daora]";
 				mes "Don't show me your nervousness!";
-				specialeffect2 EF_HIT1;
+				specialeffect(EF_HIT1, AREA, playerattached());
 				percentheal -30,0;
 				close;
 			case 4:
@@ -355,7 +355,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 				mes "[Daora]";
 				mes "Don't talk to me like I'm one of your friends!";
 				mes "You have no right to be that way!";
-				specialeffect2 EF_HIT1;
+				specialeffect(EF_HIT1, AREA, playerattached());
 				percentheal -30,0;
 				close;
 			}
@@ -746,7 +746,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 				case 2:
 					mes "[Daora]";
 					mes "An impertinent fellow!";
-					specialeffect2 EF_HIT1;
+					specialeffect(EF_HIT1, AREA, playerattached());
 					percentheal -30,0;
 					close;
 				}
@@ -857,7 +857,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 		case 3:
 			mes "[Daora]";
 			mes "Don't show me your nervousness!";
-			specialeffect2 EF_HIT1;
+			specialeffect(EF_HIT1, AREA, playerattached());
 			percentheal -30,0;
 			close;
 		}

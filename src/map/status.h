@@ -840,6 +840,8 @@ typedef enum sc_type {
 	SC_TUNAPARTY,
 	SC_SHRIMP,	// 650
 	SC_FRESHSHRIMP,
+	
+	SC_DRESS_UP,
 
 	// Rodex
 	SC_DAILYSENDMAILCNT = 824,
@@ -1725,7 +1727,7 @@ enum si_type {
 	//SI_SUMMEREVENT04                       = 853,
 	//SI_SUMMEREVENT05                       = 854,
 	//SI_MINIGAME_ROULETTE_BONUS_ITEM        = 855,
-	//SI_DRESS_UP                            = 856,
+	SI_DRESS_UP                              = 856,
 	SI_MAPLE_FALLS                           = 857,
 	//SI_ALL_NIFLHEIM_RECALL                 = 858,
 	//SI_                                    = 859,
@@ -2234,9 +2236,17 @@ struct status_change {
 #define status_calc_elemental(ed, opt)  (status->calc_bl_(&(ed)->bl, SCB_ALL, (opt)))
 #define status_calc_npc(nd, opt)        (status->calc_bl_(&(nd)->bl, SCB_ALL, (opt)))
 
+enum refine_chance_type {
+	REFINE_CHANCE_TYPE_NORMAL     = 0, // Normal Chance
+	REFINE_CHANCE_TYPE_ENRICHED   = 1, // Enriched Ore Chance
+	REFINE_CHANCE_TYPE_E_NORMAL   = 2, // Event Normal Ore Chance
+	REFINE_CHANCE_TYPE_E_ENRICHED = 3, // Event Enriched Ore Chance
+	REFINE_CHANCE_TYPE_MAX
+};
+
 // bonus values and upgrade chances for refining equipment
 struct s_refine_info {
-	int chance[MAX_REFINE]; // success chance
+	int chance[REFINE_CHANCE_TYPE_MAX][MAX_REFINE]; // success chance
 	int bonus[MAX_REFINE]; // cumulative fixed bonus damage
 	int randombonus_max[MAX_REFINE]; // cumulative maximum random bonus damage
 };
@@ -2284,7 +2294,7 @@ struct status_interface {
 	int (*init) (bool minimal);
 	void (*final) (void);
 	/* funcs */
-	int (*get_refine_chance) (enum refine_type wlv, int refine);
+	int (*get_refine_chance) (enum refine_type wlv, int refine, enum refine_chance_type type);
 	// for looking up associated data
 	sc_type (*skill2sc) (int skill_id);
 	int (*sc2skill) (sc_type sc);

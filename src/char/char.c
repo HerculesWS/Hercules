@@ -290,8 +290,10 @@ void char_set_char_offline(int char_id, int account_id)
 	}
 	else
 	{
-		struct mmo_charstatus* cp = (struct mmo_charstatus*)idb_get(chr->char_db_,char_id);
+		struct mmo_charstatus* cp = (struct mmo_charstatus*) idb_get(chr->char_db_,char_id);
+
 		inter_guild->CharOffline(char_id, cp?cp->guild_id:-1);
+
 		if (cp)
 			idb_remove(chr->char_db_,char_id);
 
@@ -441,14 +443,6 @@ int char_mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 	if( memcmp(p->cart, cp->cart, sizeof(p->cart)) ) {
 		if (!chr->memitemdata_to_sql(p->cart, MAX_CART, p->char_id, TABLE_CART))
 			strcat(save_status, " cart");
-		else
-			errors++;
-	}
-
-	//map storage data
-	if( memcmp(p->storage.items, cp->storage.items, sizeof(p->storage.items)) ) {
-		if (!chr->memitemdata_to_sql(p->storage.items, MAX_STORAGE, p->account_id, TABLE_STORAGE))
-			strcat(save_status, " storage");
 		else
 			errors++;
 	}
@@ -1286,10 +1280,6 @@ int char_mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_every
 		memcpy(&p->cart[i], &tmp_item, sizeof(tmp_item));
 	
 	strcat(t_msg, " cart");
-
-	//read storage
-	inter_storage->fromsql(p->account_id, &p->storage);
-	strcat(t_msg, " storage");
 
 	//read skill
 	//`skill` (`char_id`, `id`, `lv`)
@@ -4445,14 +4435,21 @@ void char_parse_char_connect(int fd, struct char_session_data* sd, uint32 ipl)
 
 void char_send_map_info(int fd, int i, uint32 subnet_map_ip, struct mmo_charstatus *cd)
 {
+#if PACKETVER < 20170329
+	const int cmd = 0x71;
+	const int len = 28;
+#else
+	const int cmd = 0xac5;
+	const int len = 156;
+#endif
 	nullpo_retv(cd);
-	WFIFOHEAD(fd,28);
-	WFIFOW(fd,0) = 0x71;
-	WFIFOL(fd,2) = cd->char_id;
-	mapindex->getmapname_ext(mapindex_id2name(cd->last_point.map), WFIFOP(fd,6));
-	WFIFOL(fd,22) = htonl((subnet_map_ip) ? subnet_map_ip : chr->server[i].ip);
-	WFIFOW(fd,26) = sockt->ntows(htons(chr->server[i].port)); // [!] LE byte order here [!]
-	WFIFOSET(fd,28);
+	WFIFOHEAD(fd, len);
+	WFIFOW(fd, 0) = cmd;
+	WFIFOL(fd, 2) = cd->char_id;
+	mapindex->getmapname_ext(mapindex_id2name(cd->last_point.map), WFIFOP(fd, 6));
+	WFIFOL(fd, 22) = htonl((subnet_map_ip) ? subnet_map_ip : chr->server[i].ip);
+	WFIFOW(fd, 26) = sockt->ntows(htons(chr->server[i].port)); // [!] LE byte order here [!]
+	WFIFOSET(fd, len);
 }
 
 void char_send_wait_char_server(int fd)

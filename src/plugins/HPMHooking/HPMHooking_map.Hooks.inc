@@ -31323,6 +31323,58 @@ int HP_intif_request_registry(struct map_session_data *sd, int flag) {
 	}
 	return retVal___;
 }
+void HP_intif_request_account_storage(const struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_intif_request_account_storage_pre > 0) {
+		void (*preHookFunc) (const struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_request_account_storage_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_intif_request_account_storage_pre[hIndex].func;
+			preHookFunc(&sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.intif.request_account_storage(sd);
+	}
+	if (HPMHooks.count.HP_intif_request_account_storage_post > 0) {
+		void (*postHookFunc) (const struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_request_account_storage_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_intif_request_account_storage_post[hIndex].func;
+			postHookFunc(sd);
+		}
+	}
+	return;
+}
+void HP_intif_send_account_storage(const struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_intif_send_account_storage_pre > 0) {
+		void (*preHookFunc) (const struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_send_account_storage_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_intif_send_account_storage_pre[hIndex].func;
+			preHookFunc(&sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.intif.send_account_storage(sd);
+	}
+	if (HPMHooks.count.HP_intif_send_account_storage_post > 0) {
+		void (*postHookFunc) (const struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_send_account_storage_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_intif_send_account_storage_post[hIndex].func;
+			postHookFunc(sd);
+		}
+	}
+	return;
+}
 int HP_intif_request_guild_storage(int account_id, int guild_id) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -33077,6 +33129,32 @@ void HP_intif_pRegisters(int fd) {
 	}
 	return;
 }
+void HP_intif_pAccountStorage(int fd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_intif_pAccountStorage_pre > 0) {
+		void (*preHookFunc) (int *fd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_pAccountStorage_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_intif_pAccountStorage_pre[hIndex].func;
+			preHookFunc(&fd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.intif.pAccountStorage(fd);
+	}
+	if (HPMHooks.count.HP_intif_pAccountStorage_post > 0) {
+		void (*postHookFunc) (int fd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_pAccountStorage_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_intif_pAccountStorage_post[hIndex].func;
+			postHookFunc(fd);
+		}
+	}
+	return;
+}
 void HP_intif_pChangeNameOk(int fd) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_intif_pChangeNameOk_pre > 0) {
@@ -33124,6 +33202,32 @@ void HP_intif_pMessageToFD(int fd) {
 		void (*postHookFunc) (int fd);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_pMessageToFD_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_intif_pMessageToFD_post[hIndex].func;
+			postHookFunc(fd);
+		}
+	}
+	return;
+}
+void HP_intif_pAccountStorageSaveAck(int fd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_intif_pAccountStorageSaveAck_pre > 0) {
+		void (*preHookFunc) (int *fd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_pAccountStorageSaveAck_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_intif_pAccountStorageSaveAck_pre[hIndex].func;
+			preHookFunc(&fd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.intif.pAccountStorageSaveAck(fd);
+	}
+	if (HPMHooks.count.HP_intif_pAccountStorageSaveAck_post > 0) {
+		void (*postHookFunc) (int fd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_pAccountStorageSaveAck_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_intif_pAccountStorageSaveAck_post[hIndex].func;
 			postHookFunc(fd);
 		}
 	}
@@ -74256,15 +74360,15 @@ void HP_status_final(void) {
 	}
 	return;
 }
-int HP_status_get_refine_chance(enum refine_type wlv, int refine) {
+int HP_status_get_refine_chance(enum refine_type wlv, int refine, enum refine_chance_type type) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_status_get_refine_chance_pre > 0) {
-		int (*preHookFunc) (enum refine_type *wlv, int *refine);
+		int (*preHookFunc) (enum refine_type *wlv, int *refine, enum refine_chance_type *type);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_get_refine_chance_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_status_get_refine_chance_pre[hIndex].func;
-			retVal___ = preHookFunc(&wlv, &refine);
+			retVal___ = preHookFunc(&wlv, &refine, &type);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -74272,13 +74376,13 @@ int HP_status_get_refine_chance(enum refine_type wlv, int refine) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.status.get_refine_chance(wlv, refine);
+		retVal___ = HPMHooks.source.status.get_refine_chance(wlv, refine, type);
 	}
 	if (HPMHooks.count.HP_status_get_refine_chance_post > 0) {
-		int (*postHookFunc) (int retVal___, enum refine_type wlv, int refine);
+		int (*postHookFunc) (int retVal___, enum refine_type wlv, int refine, enum refine_chance_type type);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_get_refine_chance_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_status_get_refine_chance_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, wlv, refine);
+			retVal___ = postHookFunc(retVal___, wlv, refine, type);
 		}
 	}
 	return retVal___;

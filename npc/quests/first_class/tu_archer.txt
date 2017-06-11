@@ -78,7 +78,7 @@ payon_in02,67,65,3	script	Bard Jet#tu	1_M_BARD,{
 		next;
 		if (Sex == SEX_MALE) {
 			select("A joke, eh?");
-			specialeffect2 EF_TALK_FROSTJOKE;
+			specialeffect(EF_TALK_FROSTJOKE, AREA, playerattached());
 			mes "[Jet]";
 			mes "Oh...";
 			mes "My...";
@@ -92,7 +92,7 @@ payon_in02,67,65,3	script	Bard Jet#tu	1_M_BARD,{
 			mes "just have to become a Bard!";
 		} else {
 			select("Scream!");
-			specialeffect2 EF_TALK_SCREAM;
+			specialeffect(EF_TALK_SCREAM, AREA, playerattached());
 			mes "[Jet]";
 			mes "W-Wow...";
 			mes "I don't know why, but that was truly amazing. You must have";
@@ -118,7 +118,7 @@ payon_in02,67,65,3	script	Bard Jet#tu	1_M_BARD,{
 		mes "Ooh...!";
 		mes "You're...!";
 		next;
-		specialeffect2 EF_TALK_FROSTJOKE;
+		specialeffect(EF_TALK_FROSTJOKE, AREA, playerattached());
 		//specialeffect EF_TALK_FROSTJOKE,"Bard Jet#tu";
 		emotion e_no1;
 		mes "[Jet]";
@@ -657,7 +657,7 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 				mes "[Reidin Corse]";
 				mes "Ah, but your eyes look a lot sharper than they used to be.";
 				mes "Here, this is a small, special reward for you.";
-				specialeffect2 EF_WIND;
+				specialeffect(EF_WIND, AREA, playerattached());
 				tu_archer01 = 7;
 				getexp 500,0;
 				next;
@@ -884,7 +884,7 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 				mes "enough and you'll get used to it!";
 				next;
 				if(.@eagle == 0){
-					specialeffect2 EF_WIND;
+					specialeffect(EF_WIND, AREA, playerattached());
 					tu_archer01 = 10;
 					getexp 0,500;
 				}
@@ -962,7 +962,7 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 				mes "[Reidin Corse]";
 				mes "Good! You pass.";
 				mes "Don't forget that you gotta keep training and improve your skills. Before you know it, you'll be an expert almost as good as me!";
-				specialeffect2 EF_WIND;
+				specialeffect(EF_WIND, AREA, playerattached());
 				tu_archer01 = 12;
 				if (RENEWAL)
 					delitem Grasshoppers_Leg,10;
@@ -1095,7 +1095,7 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 			mes "you that you've passed";
 			mes "my final exam! Here, take";
 			mes "this little reward!";
-			specialeffect2 EF_WIND;
+			specialeffect(EF_WIND, AREA, playerattached());
 			tu_archer01 = 16;
 			if (RENEWAL_EXP)
 				getexp 1000,1000;
@@ -1383,7 +1383,7 @@ pay_arche,84,139,3	script	Seisner	4_F_JOB_HUNTER,{
 		mes "[Seisner]";
 		mes "If you feel comfortable enough with the knowledge I've taught you, you should go back to Master Kavaruk. But if you still have questions, you can always come and ask me.";
 		close2;
-		specialeffect2 EF_WIND;
+		specialeffect(EF_WIND, AREA, playerattached());
 		tu_archer01 = 3;
 		if(JobLevel == 1){
 			getexp 0,30;

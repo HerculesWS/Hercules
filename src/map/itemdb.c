@@ -2490,16 +2490,20 @@ void itemdb_reload(void) {
 	for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
 		memset(sd->item_delay, 0, sizeof(sd->item_delay));  // reset item delays
 		pc->setinventorydata(sd);
-		if( battle_config.item_check )
-			sd->state.itemcheck = 1;
+
+		if (battle->bc->item_check != PCCHECKITEM_NONE) // Check and flag items for inspection.
+			sd->itemcheck = (enum pc_checkitem_types) battle->bc->item_check;
+
 		/* clear combo bonuses */
-		if( sd->combo_count ) {
+		if (sd->combo_count) {
 			aFree(sd->combos);
 			sd->combos = NULL;
 			sd->combo_count = 0;
 			if( pc->load_combo(sd) > 0 )
 				status_calc_pc(sd,SCO_FORCE);
 		}
+
+		// Check for and delete unavailable/disabled items.
 		pc->checkitem(sd);
 	}
 	mapit->free(iter);

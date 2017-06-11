@@ -180,7 +180,7 @@ pay_arche,109,169,3	script	Arpesto	4_M_05,{
 				mes "[Arpesto]";
 				mes "ARRRRRRRROOOOOOW~!";
 				specialeffect EF_FLASHER;
-				specialeffect2 EF_FLASHER;
+				specialeffect(EF_FLASHER, AREA, playerattached());
 				next;
 				mes "[Arpesto]";
 				mes "^333333*Pant Pant*^000000";

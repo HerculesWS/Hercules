@@ -1316,6 +1316,7 @@
 - `SC_TUNAPARTY`: 649
 - `SC_SHRIMP`: 650
 - `SC_FRESHSHRIMP`: 651
+- `SC_DRESS_UP`: 652
 
 ### Emotes
 
@@ -3797,6 +3798,7 @@
 - `MAX_CART`: 100
 - `MAX_INVENTORY`: 100
 - `MAX_ZENY`: 2147483647
+- `MAX_BANK_ZENY`: 2147483647
 - `MAX_BG_MEMBERS`: 30
 - `MAX_CHAT_USERS`: 20
 - `MAX_REFINE`: 20
@@ -3827,11 +3829,12 @@
 - `Option_Dragon5`: 67108864
 - `Option_Hanbok`: 134217728
 - `Option_Oktoberfest`: 268435456
+- `Option_Summer2`: 536870912
 
 ### status option compounds
 
 - `Option_Dragon`: 126353408
-- `Option_Costume`: 402984960
+- `Option_Costume`: 939855872
 
 ### send_target
 
@@ -3945,6 +3948,13 @@
 - `BL_CHAR`: 539
 - `BL_ALL`: 4095
 
+### Refine Chance Types
+
+- `REFINE_CHANCE_TYPE_NORMAL`: 0
+- `REFINE_CHANCE_TYPE_ENRICHED`: 1
+- `REFINE_CHANCE_TYPE_E_NORMAL`: 2
+- `REFINE_CHANCE_TYPE_E_ENRICHED`: 3
+
 ### Player permissions
 
 - `PERM_TRADE`: 1
@@ -4003,6 +4013,7 @@
 - `SkillPoint`: [param]
 - `Class`: [param]
 - `Zeny`: [param]
+- `BankVault`: [param]
 - `Sex`: [param]
 - `NextBaseExp`: [param]
 - `NextJobExp`: [param]

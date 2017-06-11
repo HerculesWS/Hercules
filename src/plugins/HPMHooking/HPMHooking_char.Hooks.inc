@@ -8032,11 +8032,11 @@ int HP_inter_quest_parse_frommap(int fd) {
 	return retVal___;
 }
 /* inter_storage_interface */
-int HP_inter_storage_tosql(int account_id, struct storage_data *p) {
+int HP_inter_storage_tosql(int account_id, const struct storage_data *p) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_inter_storage_tosql_pre > 0) {
-		int (*preHookFunc) (int *account_id, struct storage_data **p);
+		int (*preHookFunc) (int *account_id, const struct storage_data **p);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_storage_tosql_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_inter_storage_tosql_pre[hIndex].func;
@@ -8051,7 +8051,7 @@ int HP_inter_storage_tosql(int account_id, struct storage_data *p) {
 		retVal___ = HPMHooks.source.inter_storage.tosql(account_id, p);
 	}
 	if (HPMHooks.count.HP_inter_storage_tosql_post > 0) {
-		int (*postHookFunc) (int retVal___, int account_id, struct storage_data *p);
+		int (*postHookFunc) (int retVal___, int account_id, const struct storage_data *p);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_storage_tosql_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_inter_storage_tosql_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, account_id, p);
@@ -14429,6 +14429,113 @@ int HP_mapif_parse_SaveGuildStorage(int fd) {
 		}
 	}
 	return retVal___;
+}
+int HP_mapif_account_storage_load(int fd, int account_id) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_mapif_account_storage_load_pre > 0) {
+		int (*preHookFunc) (int *fd, int *account_id);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_account_storage_load_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mapif_account_storage_load_pre[hIndex].func;
+			retVal___ = preHookFunc(&fd, &account_id);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.mapif.account_storage_load(fd, account_id);
+	}
+	if (HPMHooks.count.HP_mapif_account_storage_load_post > 0) {
+		int (*postHookFunc) (int retVal___, int fd, int account_id);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_account_storage_load_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mapif_account_storage_load_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, fd, account_id);
+		}
+	}
+	return retVal___;
+}
+int HP_mapif_pAccountStorageLoad(int fd) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_mapif_pAccountStorageLoad_pre > 0) {
+		int (*preHookFunc) (int *fd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_pAccountStorageLoad_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mapif_pAccountStorageLoad_pre[hIndex].func;
+			retVal___ = preHookFunc(&fd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.mapif.pAccountStorageLoad(fd);
+	}
+	if (HPMHooks.count.HP_mapif_pAccountStorageLoad_post > 0) {
+		int (*postHookFunc) (int retVal___, int fd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_pAccountStorageLoad_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mapif_pAccountStorageLoad_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, fd);
+		}
+	}
+	return retVal___;
+}
+int HP_mapif_pAccountStorageSave(int fd) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_mapif_pAccountStorageSave_pre > 0) {
+		int (*preHookFunc) (int *fd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_pAccountStorageSave_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mapif_pAccountStorageSave_pre[hIndex].func;
+			retVal___ = preHookFunc(&fd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.mapif.pAccountStorageSave(fd);
+	}
+	if (HPMHooks.count.HP_mapif_pAccountStorageSave_post > 0) {
+		int (*postHookFunc) (int retVal___, int fd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_pAccountStorageSave_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mapif_pAccountStorageSave_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, fd);
+		}
+	}
+	return retVal___;
+}
+void HP_mapif_sAccountStorageSaveAck(int fd, int account_id, bool save) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_mapif_sAccountStorageSaveAck_pre > 0) {
+		void (*preHookFunc) (int *fd, int *account_id, bool *save);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_sAccountStorageSaveAck_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mapif_sAccountStorageSaveAck_pre[hIndex].func;
+			preHookFunc(&fd, &account_id, &save);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.mapif.sAccountStorageSaveAck(fd, account_id, save);
+	}
+	if (HPMHooks.count.HP_mapif_sAccountStorageSaveAck_post > 0) {
+		void (*postHookFunc) (int fd, int account_id, bool save);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_sAccountStorageSaveAck_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mapif_sAccountStorageSaveAck_post[hIndex].func;
+			postHookFunc(fd, account_id, save);
+		}
+	}
+	return;
 }
 int HP_mapif_itembound_ack(int fd, int aid, int guild_id) {
 	int hIndex = 0;

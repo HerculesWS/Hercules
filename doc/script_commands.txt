@@ -540,7 +540,8 @@ allows you to replace lots of numbered arguments for many commands with
 easier to read text. The special variables most commonly used are all
 permanent character-based variables:
 
-Zeny        - Amount of Zeny.
+Zeny        - Amount of Zeny in the inventory.
+BankVault   - Amount of Zeny in the bank.
 Hp          - Current amount of hit points.
 MaxHp       - Maximum amount of hit points.
 Sp          - Current spell points.
@@ -707,7 +708,8 @@ MAX_STORAGE			- Maximum storage items
 MAX_GUILD_STORAGE	- Maximum guild storage items
 MAX_CART			- Maximum cart items
 MAX_INVENTORY		- Maximum inventory items
-MAX_ZENY			- Maximum Zeny
+MAX_ZENY			- Maximum Zeny in the inventory
+MAX_BANK_ZENY		- Maximum Zeny in the bank
 MAX_BG_MEMBERS		- Maximum BattleGround members 
 MAX_CHAT_USERS		- Maximum Chat users
 MAX_REFINE			- Maximum Refine level
@@ -728,6 +730,7 @@ the common mathematical operations or conditional operators:
     strings.
 - - will subtract two numbers. 
 * - will multiply two numbers.
+** - will raise the first number to the power of the second number.
 / - will divide two numbers. Note that this is an integer division, i.e.
     7/2 is not equal 3.5, it's equal 3.
 % - will give you the remainder of the division. 7%2 is equal to 1.
@@ -928,42 +931,45 @@ Precedence  |  Description                                  | Associativity
             |  !  Logical NOT                               |
             |  ~  Bitwise NOT (One's Complement)            |
 ---------------------------------------------------------------------------
-3           |  *  Multiplication                            | Left to right
+3           | **  Exponentiation                            | Left to right
+---------------------------------------------------------------------------
+4           |  *  Multiplication                            | Left to right
             |  /  Division                                  |
             |  %  Modulo (remainder)                        |
 ---------------------------------------------------------------------------
-4           |  +  Addition                                  | Left to right
+5           |  +  Addition                                  | Left to right
             |  -  Subtraction                               |
 ---------------------------------------------------------------------------
-5           | <<  Bitwise left shift                        | Left to right
+6           | <<  Bitwise left shift                        | Left to right
             | >>  Bitwise right shift                       |
 ---------------------------------------------------------------------------
-6           |  <  Less than                                 | Left to right
+7           |  <  Less than                                 | Left to right
             | <=  Less than or equal to                     |
             |  >  Greater than                              |
             | >=  Greater than or equal to                  |
 ---------------------------------------------------------------------------
-7           | ==  Equal to                                  | Left to right
+8           | ==  Equal to                                  | Left to right
             | !=  Not equal to                              |
             | ~=  Regexp match                              |
             | ~!  Regexp non-match                          |
 ---------------------------------------------------------------------------
-8           |  &  Bitwise AND                               | Left to right
+9           |  &  Bitwise AND                               | Left to right
 ---------------------------------------------------------------------------
-9           |  ^  Bitwise XOR (exclusive or)                | Left to right
+10           |  ^  Bitwise XOR (exclusive or)                | Left to right
 ---------------------------------------------------------------------------
-10          |  |  Bitwise OR (inclusive or)                 | Left to right
+11          |  |  Bitwise OR (inclusive or)                 | Left to right
 ---------------------------------------------------------------------------
-11          | &&  Logical AND                               | Left to right
+12          | &&  Logical AND                               | Left to right
 ---------------------------------------------------------------------------
-12          | ||  Logical OR                                | Left to right
+13          | ||  Logical OR                                | Left to right
 ---------------------------------------------------------------------------
-13          | ?:  Ternary conditional                       | Right to left
+14          | ?:  Ternary conditional                       | Right to left
 ---------------------------------------------------------------------------
-14          |  =  Direct assignment                         | Right to left
+15          |  =  Direct assignment                         | Right to left
 (lowest)    | +=  Assignment by sum                         |
             | -=  Assignment by difference                  |
             | *=  Assignment by product                     |
+            | **= Assignment by power                       |
             | /=  Assignment by quotient                    |
             | %=  Assignment by remainder                   |
             | <<= Assignment by bitwise left shift          |
@@ -1236,7 +1242,11 @@ to that point.
 
     mes("You can <URL>Google<INFO>http://www.google.com/</INFO></URL> anything");
 
-Clicking Google will open the browser and point to Google website.
+This will allow you to visit 'Google' with the in-game browser using default dimensions.
+
+    mes("You can <URL>Bing!<INFO>http://www.bing.com/,800,600</INFO></URL> anything");
+
+Clicking 'Bing!' will open the in-game browser using the specified dimensions. (800x600)
 
 ---------------------------------------
 
@@ -2435,6 +2445,17 @@ If you do this:
 
 ---------------------------------------
 
+*getarrayindex(<array name>)
+
+This command returns the index of the passed array. This is useful when
+used in combination with getarg()
+
+Example:
+	
+	getarrayindex(.@foo[42]) // 42
+
+---------------------------------------
+
 *getelementofarray(<array name>, <index>)
 
 This command retrieves the value of the element of given array at given 
@@ -2449,7 +2470,7 @@ arrays:
 
 ---------------------------------------
 
-*readparam(<parameter number>)
+*readparam(<parameter number>{, "<player name>"})
 
 This function will return the basic stats of an invoking character, 
 referred to by the parameter number. Instead of a number, you can use a 
@@ -2991,21 +3012,32 @@ Examples:
 
 ---------------------------------------
 
-*getequippercentrefinery(<equipment slot>)
+*getequippercentrefinery(<equipment slot>{, <type>})
 
 This function calculates and returns the percent value chance to 
 successfully refine the item found in the specified equipment slot of the 
-invoking character by +1. There is no actual formula, the success rate for 
-a given weapon level of a certain refine level is found in the 
-db/refine_db.txt file. For a list of equipment slots see getequipid().
+invoking character by +1. Refine rates are defined in the db/<re/pre-re>/refine_db.conf 
+files. For a list of equipment slots see getequipid().
 
 These values can be displayed for the player to see, or used to calculate 
 the random change of a refine succeeding or failing and then going through 
 with it (which is what the official NPC refinery scripts use it for).
 
+Refine Chance Type Constants -
+REFINE_CHANCE_TYPE_NORMAL: 0        (Normal Ores)
+REFINE_CHANCE_TYPE_ENRICHED: 1      (Enriched Ores)
+REFINE_CHANCE_TYPE_E_NORMAL: 2      (Event Normal Ores)
+REFINE_CHANCE_TYPE_E_ENRICHED: 3    (Event Enriched Ores)
+
+Refine rate information -
+Normal Ores: http://ro.gnjoy.com/news/probability/View.asp?category=4&seq=1941553&curpage=1
+Enriched Ores:  http://ro.gnjoy.com/news/probability/View.asp?category=4&seq=1941565&curpage=1
+Event Normal Ores: http://ro.gnjoy.com/news/probability/View.asp?category=4&seq=1941558&curpage=1
+Event Enriched Ores: http://ro.gnjoy.com/news/probability/View.asp?category=4&seq=1941567&curpage=1
+
 // This will find a random number from 0 - 99 and if that is equal to or 
 // more than the value recovered by this command it will show a message
-	if (getequippercentrefinery(EQI_HAND_L) <= rand(100))
+	if (getequippercentrefinery(EQI_HAND_L, REFINE_CHANCE_TYPE_NORMAL) <= rand(100))
 		mes("Aww");
 
 ---------------------------------------
@@ -4290,8 +4322,9 @@ if <color> field is left out.
 
 *showscript("<message>"{, <GID>})
 
-Makes attached player or GID says a message like shouting a skill name, the message
-will be seen to everyone around but not in chat window.
+Makes the attached player or GID, display a message similiar to a chat,
+this will be seen by everyone near the invoking character but will not
+be displayed in the chat window.
 
 ---------------------------------------
 
@@ -5786,7 +5819,8 @@ map as the invoking character.
 
 ---------------------------------------
 
-*specialeffect(<effect number>{, <send_target>{, "<NPC Name>"}})
+*specialeffect(<effect number>{, <send_target>{, <unit id>{, <account id>}}})
+*specialeffect(<effect number>{, <send_target>{, "<NPC Name>"{, <account id>}}})
 
 This command will display special effect with the given number, centered 
 on the specified NPCs coordinates, if any. For a full list of special 
@@ -5799,25 +5833,40 @@ NPC specified does not exist, the command will do nothing. When specifying
 an NPC, <send_target> must be specified when specifying an <NPC Name>, 
 specifying AREA will retain the default behavior of the command.
 
-	// this will make the NPC "John Doe#1"
-	// show the effect "EF_HIT1" specified by
-	// Jane Doe. I wonder what John did...
-	mes("[Jane Doe]");
-	mes("Well, I never!");
+<unit id> behaves like <NPC Name> except it can display the effect on
+any kind of unit, not just NPC, by specifying its GID.
+
+When <send_target> is SELF you can specify which player to send the effect
+to by passing <account id>.
+
+Example usage:
+
+	// To make a NPC do an effect and show it to everyone:
 	specialeffect(EF_HIT1, AREA, "John Doe#1");
-	close();
+
+	// To make a player do an effect and show it to everyone:
+	specialeffect(EF_HIT1, AREA, getcharid(CHAR_ID_ACCOUNT, "player"));
+
+	// To make a NPC do an effect and show it only to the attached player:
+	specialeffect(EF_HIT1, SELF, "John Doe#1");
+
+	// To make a NPC do an effect and show it only to another player:
+	specialeffect(EF_HIT1, SELF, "John Doe#1", getcharid(CHAR_ID_ACCOUNT, "player"));
 
 ---------------------------------------
 
 *specialeffect2(<effect number>{, <send_target>{, "<Player Name>"}})
 
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 This command behaves identically to the specialeffect(), but the effect
 will be centered on the invoking character's sprite.
 
-<Player name> parameter will display <effect number> on another Player 
-than the one currently attached to the script. Like with specialeffect(),
-when specifying a player, <send_target> must be supplied, specifying AREA 
-will retain the default behavior of the command.
+This command is deprecated and it should not be used in new scripts, as it is
+likely to be removed at a later time. Please use specialeffect instead,
+ie: specialeffect(<effect number>, <send_target>, playerattached())
 
 ---------------------------------------
 
@@ -5917,7 +5966,7 @@ target in autobonus() and autobonus3()).
 //Grants a 1% chance of starting the state "all stats +10" for 10 seconds 
 //when using weapon or misc attacks (both melee and ranged skills) and 
 //shows a special effect when the bonus is active.
-	autobonus("{ bonus(bAllStats, 10); }", 10, 10000, BF_WEAPON|BF_MISC, "{ specialeffect2(EF_FIRESPLASHHIT); }");
+	autobonus("{ bonus(bAllStats, 10); }", 10, 10000, BF_WEAPON|BF_MISC, "{ specialeffect(EF_FIRESPLASHHIT, AREA, playerattached()); }");
 
 ---------------------------------------
 
@@ -7447,6 +7496,27 @@ no RID is attached), false will be returned. In case of success, true is
 returned.
 
 ---------------------------------------
+
+*addchannelhandler("<#channel>", "<NPC::OnEvent>")
+
+This command will trigger the specified event every time a player
+talks in the specified channel, with said player as attached rid.
+It assigns the message to @channelmes$
+
+OnChannelMessage:
+	channelmes("#chan", "Echo: " + @channelmes$);
+	end;
+
+OnInit:
+	addchannelhandler("#chan", "NPC::OnChannelMessage");
+
+---------------------------------------
+
+*removechannelhandler("<#channel>", "<NPC::OnEvent>")
+
+Removes a channel handler added by addchannelhandler()
+
+---------------------------------------
 *rand(<number>{, <number>})
 
 This function returns a number ...
@@ -7565,6 +7635,10 @@ without event labels. If specified name is not found, command does nothing.
 
 *misceffect(<effect number>)
 
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 This command, if run from an NPC object that has a sprite, will call up a 
 specified effect number, centered on the NPC sprite. If the running code 
 does not have an object ID (a 'floating' NPC) or is not running from an 
@@ -7573,8 +7647,9 @@ character who's RID got attached to the script, if any. For usable item
 scripts, this command will create an effect centered on the player using 
 the item.
 
-A full list of known effects is found in 'doc/effect_list.txt'. The list 
-of those that actually work may differ greatly between client versions.
+This command is deprecated and it should not be used in new scripts, as it is
+likely to be removed at a later time. Please use specialeffect instead,
+ie: specialeffect(<effect number>, <send target>, <unit id>)
 
 ---------------------------------------
 
@@ -7699,7 +7774,7 @@ OnInit:
 	bindatcmd("test", strnpcinfo(NPC_NAME_UNIQUE)+"::OnAtcommand");
 	end;
 OnAtcommand:
-	specialeffect2(EF_ANGEL2);
+	specialeffect(EF_ANGEL2, AREA, playerattached());
 	end;
 }
 
@@ -7749,6 +7824,21 @@ OnAtcommand:
 
 ---------------------------------------
 
+*add_group_command("<command>", <group id>, <use on self>, <use on other>)
+
+Allows to explicitly change the command permissions for a specific group.
+
+This command bypasses group inheritance, which means groups inheriting from
+the specified <group id> will NOT inherit the specified permission. You should
+use add_group_command() for every group you want to give permission to.
+
+Example:
+	bindatcmd("foobar", "NPC::OnUseCommand", 99, 99, 0); // define the command
+	add_group_command("foobar", 2, true, false); // allow group 2 to use @foobar
+	add_group_command("foobar", 5, true, true); // allow group 5 to use @foobar and #foobar
+
+---------------------------------------
+
 *unbindatcmd("command")
 
 This command will unbind a NPC event label from an atcommand.
@@ -7766,7 +7856,8 @@ scripts-atcommands this way.
 *can_use_command("<command>"{, <account id>})
 
 Checks if the attached or specified player can use the specified
-atcommand and returns true or false accordingly.
+atcommand and returns true or false accordingly. Works for both
+built-in atcommands and custom atcommands.
 
 ---------------------------------------
 
@@ -8004,10 +8095,18 @@ instead if they want it so much.
 
 *pow(<number>, <power>)
 
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 Returns the result of the calculation.
 
 Example:
 	.@i = pow(2, 3); // .@i will be 8
+
+This command is deprecated and it should not be used in new scripts, as it is
+likely to be removed at a later time. Please use the exponentiation operator,
+ie: (2 ** 3) instead of pow(2, 3)
 
 ---------------------------------------
 
@@ -8220,6 +8319,18 @@ This function will return the length of the string given as an argument.
 It is useful to check if anything input by the player exceeds name length 
 limits and other length limits and asking them to try to input something 
 else.
+
+---------------------------------------
+
+*isstr(<argument>)
+
+This command checks if the given <argument> is a string (1),
+an integer (0) or something else (2).
+
+Example:
+
+    isstr(69); // outputs 0
+    isstr("69"); // outputs 1
 
 ---------------------------------------
 

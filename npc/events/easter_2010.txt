@@ -95,7 +95,7 @@ prontera,202,297,3	script	Rina#Easter	4_F_JOB_HUNTER,{
 		mes " ";
 		mes "^787878( A mysterious atmosphere hangs in the air. )^000000";
 		next;
-		specialeffect2 EF_COUPLECASTING;
+		specialeffect(EF_COUPLECASTING, AREA, playerattached());
 		next;
 		mes "[Rina]";
 		mes "Blah blah blah...";
@@ -104,7 +104,7 @@ prontera,202,297,3	script	Rina#Easter	4_F_JOB_HUNTER,{
 		mes " ";
 		mes "^787878( ... This is a strange spell. )^000000";
 		next;
-		specialeffect2 EF_SIGNUM;
+		specialeffect(EF_SIGNUM, AREA, playerattached());
 		mes "[Rina]";
 		mes "Haaaaah~";
 		mes "^800080Oath-taking ceremony^000000 is done enough now.";
@@ -319,7 +319,7 @@ OnRelease:
 		specialeffect EF_PATTACK;
 		mes "- I found ^0000FFthe strange mark^000000. -";
 		next;
-		specialeffect2 EF_HOLYHIT;
+		specialeffect(EF_HOLYHIT, AREA, playerattached());
 		mes "- I can definitely feel that";
 		mes "- ^0000FFRina^000000 has been released";
 		mes "- from the curse.";

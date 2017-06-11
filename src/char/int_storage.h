@@ -21,6 +21,7 @@
 #ifndef CHAR_INT_STORAGE_H
 #define CHAR_INT_STORAGE_H
 
+#include "common/db.h"
 #include "common/hercules.h"
 
 struct storage_data;
@@ -30,8 +31,8 @@ struct guild_storage;
  * inter_storage interface
  **/
 struct inter_storage_interface {
-	int (*tosql) (int account_id, struct storage_data* p);
-	int (*fromsql) (int account_id, struct storage_data* p);
+	int (*tosql) (int account_id, const struct storage_data *p);
+	int (*fromsql) (int account_id, struct storage_data *p);
 	int (*guild_storage_tosql) (int guild_id, const struct guild_storage *p);
 	int (*guild_storage_fromsql) (int guild_id, struct guild_storage* p);
 	int (*sql_init) (void);

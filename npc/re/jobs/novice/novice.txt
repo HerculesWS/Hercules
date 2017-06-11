@@ -544,8 +544,8 @@ new_5-2,100,105,3	duplicate(NvBradeA)	Brade#nv5a	4_M_JOB_KNIGHT1
 			mes "[Jinha]";
 			mes "It's recovery amount is small.";
 			mes "Still, it will help you not to faint from a critical hit.";
-			specialeffect2 EF_BEGINSPELL6;
-			specialeffect2 EF_SPELLBREAKER;
+			specialeffect(EF_BEGINSPELL6, AREA, playerattached());
+			specialeffect(EF_SPELLBREAKER, AREA, playerattached());
 			next;
 			mes "[Jinha]";
 			mes "You can open the Skill Window by pressing the ^4d4dffskill^000000 button in the Basic Window.";

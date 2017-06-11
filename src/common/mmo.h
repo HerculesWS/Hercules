@@ -24,6 +24,7 @@
 #include "config/core.h"
 #include "common/db.h"
 #include "common/cbasetypes.h"
+#include "common/db.h" // VECTORS
 
 // server->client protocol version
 //        0 - pre-?
@@ -444,6 +445,7 @@ enum {
 	OPTION_DRAGON5      = 0x04000000,
 	OPTION_HANBOK       = 0x08000000,
 	OPTION_OKTOBERFEST  = 0x10000000,
+	OPTION_SUMMER2      = 0x20000000,
 #ifndef NEW_CARTS
 	OPTION_CART1     = 0x00000008,
 	OPTION_CART2     = 0x00000080,
@@ -455,7 +457,7 @@ enum {
 #endif
 	// compound constants
 	OPTION_DRAGON    = OPTION_DRAGON1|OPTION_DRAGON2|OPTION_DRAGON3|OPTION_DRAGON4|OPTION_DRAGON5,
-	OPTION_COSTUME   = OPTION_WEDDING|OPTION_XMAS|OPTION_SUMMER|OPTION_HANBOK|OPTION_OKTOBERFEST,
+	OPTION_COSTUME   = OPTION_WEDDING | OPTION_XMAS | OPTION_SUMMER | OPTION_HANBOK | OPTION_OKTOBERFEST | OPTION_SUMMER2,
 };
 
 struct s_skill {
@@ -487,8 +489,10 @@ struct status_change_data {
 };
 
 struct storage_data {
-	int storage_amount;
-	struct item items[MAX_STORAGE];
+	bool save;                     ///< save flag.
+	bool received;                 ///< received flag.
+	int aggregate;                 ///< total item count.
+	VECTOR_DECL(struct item) item; ///< item vector.
 };
 
 struct guild_storage {
@@ -624,7 +628,6 @@ struct mmo_charstatus {
 
 	struct point last_point,save_point,memo_point[MAX_MEMOPOINTS];
 	struct item inventory[MAX_INVENTORY],cart[MAX_CART];
-	struct storage_data storage;
 	struct s_skill skill[MAX_SKILL];
 
 	struct s_friend friends[MAX_FRIENDS]; //New friend system [Skotlex]

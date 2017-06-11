@@ -1000,6 +1000,7 @@ void initChangeTables(void)
 	status->dbs->IconChangeTable[SC_MONSTER_TRANSFORM] = SI_MONSTER_TRANSFORM;
 
 	// Costumes
+	status->dbs->IconChangeTable[SC_DRESS_UP] = SI_DRESS_UP;
 	status->dbs->IconChangeTable[SC_MOONSTAR] = SI_MOONSTAR;
 	status->dbs->IconChangeTable[SC_SUPER_STAR] = SI_SUPER_STAR;
 	status->dbs->IconChangeTable[SC_STRANGELIGHTS] = SI_STRANGELIGHTS;
@@ -1181,6 +1182,7 @@ void initChangeTables(void)
 	status->dbs->ChangeFlagTable[SC_MVPCARD_ORCLORD] |= SCB_ALL;
 
 	// Costumes
+	status->dbs->ChangeFlagTable[SC_DRESS_UP] |= SCB_NONE;
 	status->dbs->ChangeFlagTable[SC_MOONSTAR] |= SCB_NONE;
 	status->dbs->ChangeFlagTable[SC_SUPER_STAR] |= SCB_NONE;
 	status->dbs->ChangeFlagTable[SC_STRANGELIGHTS] |= SCB_NONE;
@@ -6876,23 +6878,20 @@ void status_set_viewdata(struct block_list *bl, int class_)
 			sd->vd.sex = sd->status.sex;
 
 			if (sd->vd.cloth_color) {
-				if (sd->sc.option&OPTION_WEDDING && battle_config.wedding_ignorepalette)
-				       sd->vd.cloth_color = 0;
-				if (sd->sc.option&OPTION_XMAS && battle_config.xmas_ignorepalette)
-				       sd->vd.cloth_color = 0;
-				if (sd->sc.option&OPTION_SUMMER && battle_config.summer_ignorepalette)
-				       sd->vd.cloth_color = 0;
-				if (sd->sc.option&OPTION_HANBOK && battle_config.hanbok_ignorepalette)
-				       sd->vd.cloth_color = 0;
-				if (sd->sc.option&OPTION_OKTOBERFEST /* TODO: config? */)
+				if ((sd->sc.option & OPTION_WEDDING) != 0 && battle_config.wedding_ignorepalette == true)
+					sd->vd.cloth_color = 0;
+				if ((sd->sc.option & OPTION_XMAS) != 0 && battle_config.xmas_ignorepalette == true)
+					sd->vd.cloth_color = 0;
+				if ((sd->sc.option & OPTION_SUMMER) != 0 && battle_config.summer_ignorepalette == true)
+					sd->vd.cloth_color = 0;
+				if ((sd->sc.option & OPTION_HANBOK) != 0 && battle_config.hanbok_ignorepalette == true)
+					sd->vd.cloth_color = 0;
+				if ((sd->sc.option & OPTION_OKTOBERFEST) != 0 && battle_config.oktoberfest_ignorepalette == true)
+					sd->vd.cloth_color = 0;
+				if ((sd->sc.option & OPTION_SUMMER2) != 0 && battle_config.summer2_ignorepalette == true)
 					sd->vd.cloth_color = 0;
 			}
-			if (sd->vd.body_style
-			 && (sd->sc.option&OPTION_WEDDING
-			  || sd->sc.option&OPTION_XMAS
-			  || sd->sc.option&OPTION_SUMMER
-			  || sd->sc.option&OPTION_HANBOK
-			  || sd->sc.option&OPTION_OKTOBERFEST))
+			if (sd->vd.body_style != 0 && (sd->sc.option & OPTION_COSTUME) != 0)
 				sd->vd.body_style = 0;
 		} else if (vd != NULL) {
 			memcpy(&sd->vd, vd, sizeof(struct view_data));
@@ -7770,30 +7769,6 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			if (sc->data[SC_FOOD_LUK_CASH] && sc->data[SC_FOOD_LUK_CASH]->val1 > val1)
 				return 0;
 			break;
-		case SC_FOOD_STR_CASH:
-			if (sc->data[SC_FOOD_STR] && sc->data[SC_FOOD_STR]->val1 > val1)
-				return 0;
-			break;
-		case SC_FOOD_AGI_CASH:
-			if (sc->data[SC_FOOD_AGI] && sc->data[SC_FOOD_AGI]->val1 > val1)
-				return 0;
-			break;
-		case SC_FOOD_VIT_CASH:
-			if (sc->data[SC_FOOD_VIT] && sc->data[SC_FOOD_VIT]->val1 > val1)
-				return 0;
-			break;
-		case SC_FOOD_INT_CASH:
-			if (sc->data[SC_FOOD_INT] && sc->data[SC_FOOD_INT]->val1 > val1)
-				return 0;
-			break;
-		case SC_FOOD_DEX_CASH:
-			if (sc->data[SC_FOOD_DEX] && sc->data[SC_FOOD_DEX]->val1 > val1)
-				return 0;
-			break;
-		case SC_FOOD_LUK_CASH:
-			if (sc->data[SC_FOOD_LUK] && sc->data[SC_FOOD_LUK]->val1 > val1)
-				return 0;
-			break;
 		case SC_CAMOUFLAGE:
 			if( sd && pc->checkskill(sd, RA_CAMOUFLAGE) < 3 && !skill->check_camouflage(bl,NULL) )
 				return 0;
@@ -8012,40 +7987,46 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			status_change_end(bl, SC_INC_AGI, INVALID_TIMER);
 			break;
 		case SC_FOOD_STR:
-			status_change_end(bl, SC_FOOD_STR_CASH, INVALID_TIMER);
+			status_change_end(bl, SC_FOOD_STR, INVALID_TIMER);
 			break;
 		case SC_FOOD_AGI:
-			status_change_end(bl, SC_FOOD_AGI_CASH, INVALID_TIMER);
+			status_change_end(bl, SC_FOOD_AGI, INVALID_TIMER);
 			break;
 		case SC_FOOD_VIT:
-			status_change_end(bl, SC_FOOD_VIT_CASH, INVALID_TIMER);
+			status_change_end(bl, SC_FOOD_VIT, INVALID_TIMER);
 			break;
 		case SC_FOOD_INT:
-			status_change_end(bl, SC_FOOD_INT_CASH, INVALID_TIMER);
+			status_change_end(bl, SC_FOOD_INT, INVALID_TIMER);
 			break;
 		case SC_FOOD_DEX:
-			status_change_end(bl, SC_FOOD_DEX_CASH, INVALID_TIMER);
+			status_change_end(bl, SC_FOOD_DEX, INVALID_TIMER);
 			break;
 		case SC_FOOD_LUK:
-			status_change_end(bl, SC_FOOD_LUK_CASH, INVALID_TIMER);
+			status_change_end(bl, SC_FOOD_LUK, INVALID_TIMER);
 			break;
 		case SC_FOOD_STR_CASH:
 			status_change_end(bl, SC_FOOD_STR, INVALID_TIMER);
+			status_change_end(bl, SC_FOOD_STR_CASH, INVALID_TIMER);
 			break;
 		case SC_FOOD_AGI_CASH:
 			status_change_end(bl, SC_FOOD_AGI, INVALID_TIMER);
+			status_change_end(bl, SC_FOOD_AGI_CASH, INVALID_TIMER);
 			break;
 		case SC_FOOD_VIT_CASH:
 			status_change_end(bl, SC_FOOD_VIT, INVALID_TIMER);
+			status_change_end(bl, SC_FOOD_VIT_CASH, INVALID_TIMER);
 			break;
 		case SC_FOOD_INT_CASH:
 			status_change_end(bl, SC_FOOD_INT, INVALID_TIMER);
+			status_change_end(bl, SC_FOOD_INT_CASH, INVALID_TIMER);
 			break;
 		case SC_FOOD_DEX_CASH:
 			status_change_end(bl, SC_FOOD_DEX, INVALID_TIMER);
+			status_change_end(bl, SC_FOOD_DEX_CASH, INVALID_TIMER);
 			break;
 		case SC_FOOD_LUK_CASH:
 			status_change_end(bl, SC_FOOD_LUK, INVALID_TIMER);
+			status_change_end(bl, SC_FOOD_LUK_CASH, INVALID_TIMER);
 			break;
 		case SC_GM_BATTLE:
 			status_change_end(bl, SC_GM_BATTLE2, INVALID_TIMER);
@@ -8496,8 +8477,10 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			case SC_SUMMER:
 			case SC_HANBOK:
 			case SC_OKTOBERFEST:
-				if (!vd) return 0;
-				//Store previous values as they could be removed.
+			case SC_DRESS_UP:
+				if (vd == NULL)
+					return 0;
+				// Store previous values as they could be removed.
 				unit->stop_attack(bl);
 				break;
 			case SC_NOCHAT:
@@ -9893,19 +9876,21 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 					return 0;
 				}
 		}
-	} else { //Special considerations when loading SC data.
-		switch( type ) {
+	} else { // Special considerations when loading SC data.
+		switch (type) {
 			case SC_WEDDING:
 			case SC_XMAS:
 			case SC_SUMMER:
 			case SC_HANBOK:
 			case SC_OKTOBERFEST:
-				if( !vd ) break;
+			case SC_DRESS_UP:
+				if (vd == NULL)
+					break;
 				clif->changelook(bl, LOOK_BASE, vd->class);
-				clif->changelook(bl,LOOK_WEAPON,0);
-				clif->changelook(bl,LOOK_SHIELD,0);
-				clif->changelook(bl,LOOK_CLOTHES_COLOR,vd->cloth_color);
-				clif->changelook(bl,LOOK_BODY2,0);
+				clif->changelook(bl, LOOK_WEAPON, 0);
+				clif->changelook(bl, LOOK_SHIELD, 0);
+				clif->changelook(bl, LOOK_CLOTHES_COLOR, vd->cloth_color);
+				clif->changelook(bl, LOOK_BODY2, 0);
 				break;
 			case SC_KAAHI:
 				val4 = INVALID_TIMER;
@@ -10289,6 +10274,10 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			break;
 		case SC_OKTOBERFEST:
 			sc->option |= OPTION_OKTOBERFEST;
+			opt_flag |= 0x4;
+			break;
+		case SC_DRESS_UP:
+			sc->option |= OPTION_SUMMER2;
 			opt_flag |= 0x4;
 			break;
 		case SC__FEINTBOMB_MASTER:
@@ -11097,6 +11086,10 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 			break;
 		case SC_OKTOBERFEST:
 			sc->option &= ~OPTION_OKTOBERFEST;
+			opt_flag |= 0x4;
+			break;
+		case SC_DRESS_UP:
+			sc->option &= ~OPTION_SUMMER2;
 			opt_flag |= 0x4;
 			break;
 		case SC__FEINTBOMB_MASTER:
@@ -12874,13 +12867,17 @@ int status_natural_heal_timer(int tid, int64 tick, int id, intptr_t data)
 * @param refine The target refine level
 * @return The chance to refine the item, in percent (0~100)
 **/
-int status_get_refine_chance(enum refine_type wlv, int refine)
+int status_get_refine_chance(enum refine_type wlv, int refine, enum refine_chance_type type)
 {
 	Assert_ret((int)wlv >= REFINE_TYPE_ARMOR && wlv < REFINE_TYPE_MAX);
-	if ( refine < 0 || refine >= MAX_REFINE)
-	return 0;
 
-	return status->dbs->refine_info[wlv].chance[refine];
+	if (refine < 0 || refine >= MAX_REFINE)
+		return 0;
+
+	if (type >= REFINE_CHANCE_TYPE_MAX)
+		return 0;
+
+	return status->dbs->refine_info[wlv].chance[type][refine];
 }
 
 int status_get_sc_type(sc_type type)
@@ -13205,54 +13202,84 @@ int status_readdb_refine_libconfig_sub(struct config_setting_t *r, const char *n
 	if ((rate=libconfig->setting_get_member(r, "Rates")) != NULL && config_setting_is_group(rate)) {
 		struct config_setting_t *t = NULL;
 		bool duplicate[MAX_REFINE];
-		int bonus[MAX_REFINE], rnd_bonus[MAX_REFINE], chance[MAX_REFINE];
-		int i;
+		int bonus[MAX_REFINE], rnd_bonus[MAX_REFINE];
+		int chance[REFINE_CHANCE_TYPE_MAX][MAX_REFINE];
+		int i, j;
+		
 		memset(&duplicate, 0, sizeof(duplicate));
 		memset(&bonus, 0, sizeof(bonus));
 		memset(&rnd_bonus, 0, sizeof(rnd_bonus));
 
-		for (i = 0; i < MAX_REFINE; i++) {
-			chance[i] = 100;
-		}
+		for (i = 0; i < REFINE_CHANCE_TYPE_MAX; i++)
+			for (j = 0; j < MAX_REFINE; j++)
+				chance[i][j] = 100; // default value for all rates.
+
 		i = 0;
+		j = 0;
 		while ((t = libconfig->setting_get_elem(rate,i++)) != NULL && config_setting_is_group(t)) {
 			int level = 0, i32;
 			char *rlvl = config_setting_name(t);
 			memset(&lv, 0, sizeof(lv));
-			if (!strspn(&rlvl[strlen(rlvl)-1], "0123456789") || (level = atoi(strncpy(lv, rlvl+2, 3))) <= 0) {
+
+			if (!strspn(&rlvl[strlen(rlvl) - 1], "0123456789") || (level = atoi(strncpy(lv, rlvl + 2, 3))) <= 0) {
 				ShowError("status_readdb_refine_libconfig_sub: Invalid refine level format '%s' for entry %s in \"%s\"... skipping.\n", rlvl, name, source);
 				continue;
 			}
+
 			if (level <= 0 || level > MAX_REFINE) {
 				ShowError("status_readdb_refine_libconfig_sub: Out of range refine level '%s' for entry %s in \"%s\"... skipping.\n", rlvl, name, source);
 				continue;
 			}
+
 			level--;
+
 			if (duplicate[level]) {
 				ShowWarning("status_readdb_refine_libconfig_sub: duplicate rate '%s' for entry %s in \"%s\", overwriting previous entry...\n", rlvl, name, source);
 			} else {
 				duplicate[level] = true;
 			}
-			if (libconfig->setting_lookup_int(t, "Chance", &i32))
-				chance[level] = i32;
+
+			if (libconfig->setting_lookup_int(t, "NormalChance", &i32) != 0)
+				chance[REFINE_CHANCE_TYPE_NORMAL][level] = i32;
 			else
-				chance[level] = 100;
-			if (libconfig->setting_lookup_int(t, "Bonus", &i32))
+				chance[REFINE_CHANCE_TYPE_NORMAL][level] = 100;
+
+			if (libconfig->setting_lookup_int(t, "EnrichedChance", &i32) != 0)
+				chance[REFINE_CHANCE_TYPE_ENRICHED][level] = i32;
+			else
+				chance[REFINE_CHANCE_TYPE_ENRICHED][level] = level > 10 ? 0 : 100; // enriched ores up to +10 only.
+
+			if (libconfig->setting_lookup_int(t, "EventNormalChance", &i32) != 0)
+				chance[REFINE_CHANCE_TYPE_E_NORMAL][level] = i32;
+			else
+				chance[REFINE_CHANCE_TYPE_E_NORMAL][level] = 100;
+
+			if (libconfig->setting_lookup_int(t, "EventEnrichedChance", &i32) != 0)
+				chance[REFINE_CHANCE_TYPE_E_ENRICHED][level] = i32;
+			else
+				chance[REFINE_CHANCE_TYPE_E_ENRICHED][level] = level > 10 ? 0 : 100; // enriched ores up to +10 only.
+
+			if (libconfig->setting_lookup_int(t, "Bonus", &i32) != 0)
 				bonus[level] += i32;
+
 			if (level >= rnd_bonus_lv - 1)
 				rnd_bonus[level] = rnd_bonus_v * (level - rnd_bonus_lv + 2);
 		}
 		for (i = 0; i < MAX_REFINE; i++) {
-			status->dbs->refine_info[type].chance[i] = chance[i];
+			status->dbs->refine_info[type].chance[REFINE_CHANCE_TYPE_NORMAL][i] = chance[REFINE_CHANCE_TYPE_NORMAL][i];
+			status->dbs->refine_info[type].chance[REFINE_CHANCE_TYPE_E_NORMAL][i] = chance[REFINE_CHANCE_TYPE_E_NORMAL][i];
+			status->dbs->refine_info[type].chance[REFINE_CHANCE_TYPE_ENRICHED][i] = chance[REFINE_CHANCE_TYPE_ENRICHED][i];
+			status->dbs->refine_info[type].chance[REFINE_CHANCE_TYPE_E_ENRICHED][i] = chance[REFINE_CHANCE_TYPE_E_ENRICHED][i];
 			status->dbs->refine_info[type].randombonus_max[i] = rnd_bonus[i];
-			bonus[i] += bonus_per_level + (i > 0 ? bonus[i-1] : 0);
+			bonus[i] += bonus_per_level + (i > 0 ? bonus[i - 1] : 0);
 			status->dbs->refine_info[type].bonus[i] = bonus[i];
 		}
 	} else {
 		ShowWarning("status_readdb_refine_libconfig_sub: Missing refine rates for entry '%s' in \"%s\", skipping.\n", name, source);
 		return 0;
 	}
-	return type+1;
+
+	return type + 1;
 }
 
 /**
@@ -13345,15 +13372,6 @@ int status_readdb(void)
 	for(i = 0; i < ARRAYLENGTH(status->dbs->atkmods); i++)
 		for(j = 0; j < MAX_SINGLE_WEAPON_TYPE; j++)
 			status->dbs->atkmods[i][j] = 100;
-
-	// refine_db.txt
-	for(i=0;i<ARRAYLENGTH(status->dbs->refine_info);i++) {
-		for(j=0;j<MAX_REFINE; j++) {
-			status->dbs->refine_info[i].chance[j] = 100;
-			status->dbs->refine_info[i].bonus[j] = 0;
-			status->dbs->refine_info[i].randombonus_max[j] = 0;
-		}
-	}
 
 	// read databases
 	//

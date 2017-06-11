@@ -136,6 +136,7 @@ const char* script_op2name(int op) {
 	RETURN_OP_NAME(C_ADD);
 	RETURN_OP_NAME(C_SUB);
 	RETURN_OP_NAME(C_MUL);
+	RETURN_OP_NAME(C_POW);
 	RETURN_OP_NAME(C_DIV);
 	RETURN_OP_NAME(C_MOD);
 	RETURN_OP_NAME(C_NEG);
@@ -1035,6 +1036,7 @@ const char* parse_variable(const char* p)
 	|| ( p[0] == '|' && p[1] == '=' && (type = C_OR, true) ) // |=
 	|| ( p[0] == '&' && p[1] == '=' && (type = C_AND, true) ) // &=
 	|| ( p[0] == '*' && p[1] == '=' && (type = C_MUL, true) ) // *=
+	|| ( p[0] == '*' && p[1] == '*' && p[2] == '=' && (type = C_POW, true) ) // **=
 	|| ( p[0] == '/' && p[1] == '=' && (type = C_DIV, true) ) // /=
 	|| ( p[0] == '%' && p[1] == '=' && (type = C_MOD, true) ) // %=
 	|| ( p[0] == '+' && p[1] == '+' && (type = C_ADD_POST, true) ) // post ++
@@ -1058,6 +1060,7 @@ const char* parse_variable(const char* p)
 
 		case C_L_SHIFT: // <<=
 		case C_R_SHIFT: // >>=
+		case C_POW: // **=
 			p = script->skip_space( &p[3] );
 			break;
 
@@ -1424,6 +1427,7 @@ const char* script_parse_subexpr(const char* p,int limit)
 	   (op=C_OP3,    opl=0, len=1,*p=='?')              // ?:
 	|| (op=C_ADD,    opl=9, len=1,*p=='+')              // +
 	|| (op=C_SUB,    opl=9, len=1,*p=='-')              // -
+	|| (op=C_POW,    opl=11,len=2,*p=='*' && p[1]=='*') // **
 	|| (op=C_MUL,    opl=10,len=1,*p=='*')              // *
 	|| (op=C_DIV,    opl=10,len=1,*p=='/')              // /
 	|| (op=C_MOD,    opl=10,len=1,*p=='%')              // %
@@ -2384,6 +2388,7 @@ void script_load_parameters(void)
 		{"SkillPoint", SP_SKILLPOINT},
 		{"Class", SP_CLASS},
 		{"Zeny", SP_ZENY},
+		{"BankVault", SP_BANKVAULT},
 		{"Sex", SP_SEX},
 		{"NextBaseExp", SP_NEXTBASEEXP},
 		{"NextJobExp", SP_NEXTJOBEXP},
@@ -4145,6 +4150,7 @@ void op_2num(struct script_state* st, int op, int i1, int i2)
 		case C_ADD: ret = i1 + i2; ret64 = (int64)i1 + i2; break;
 		case C_SUB: ret = i1 - i2; ret64 = (int64)i1 - i2; break;
 		case C_MUL: ret = i1 * i2; ret64 = (int64)i1 * i2; break;
+		case C_POW: ret = (int)pow((double)i1, (double)i2); ret64 = (int64)pow((double)i1, (double)i2); break;
 		default:
 			ShowError("script:op_2num: unexpected number operator %s i1=%d i2=%d\n", script->op2name(op), i1, i2);
 			script->reportsrc(st);
@@ -4682,6 +4688,7 @@ void run_script_main(struct script_state *st) {
 			case C_ADD:
 			case C_SUB:
 			case C_MUL:
+			case C_POW:
 			case C_DIV:
 			case C_MOD:
 			case C_EQ:
@@ -5026,6 +5033,8 @@ void do_final_script(void)
 		aFree(script->str_buf);
 
 	for( i = 0; i < atcommand->binding_count; i++ ) {
+		aFree(atcommand->binding[i]->at_groups);
+		aFree(atcommand->binding[i]->char_groups);
 		aFree(atcommand->binding[i]);
 	}
 
@@ -5560,6 +5569,8 @@ int script_reload(void)
 	script->label_count = 0;
 
 	for( i = 0; i < atcommand->binding_count; i++ ) {
+		aFree(atcommand->binding[i]->at_groups);
+		aFree(atcommand->binding[i]->char_groups);
 		aFree(atcommand->binding[i]);
 	}
 
@@ -7313,6 +7324,22 @@ int script_array_index_cmp(const void *a, const void *b)
 	return (*(const unsigned int *)a - *(const unsigned int *)b); // FIXME: Is the unsigned difference really intended here?
 }
 
+BUILDIN(getarrayindex)
+{
+	struct script_data *data = script_getdata(st, 2);
+
+	if (!data_isreference(data) || reference_toconstant(data))
+	{
+		ShowError("script:getarrayindex: not a variable\n");
+		script->reportdata(data);
+		st->state = END;
+		return false;// not a variable
+	}
+
+	script_pushint(st, reference_getindex(data));
+	return true;
+}
+
 /// Deletes count or all the elements in an array, from the starting index.
 /// ex: deletearray arr[4],2;
 ///
@@ -8567,20 +8594,26 @@ BUILDIN(disableitemuse)
 BUILDIN(readparam) {
 	int type;
 	struct map_session_data *sd;
+	struct script_data *data = script_getdata(st, 2);
 
-	type=script_getnum(st,2);
-	if (script_hasdata(st,3))
-		sd = script->nick2sd(st, script_getstr(st,3));
-	else
-		sd=script->rid2sd(st);
+	if (reference_toparam(data)) {
+		type = reference_getparamtype(data);
+	} else {
+		type = script->conv_num(st, data);
+	}
+
+	if (script_hasdata(st, 3)) {
+		sd = script->nick2sd(st, script_getstr(st, 3));
+	} else {
+		sd = script->rid2sd(st);
+	}
 
 	if (sd == NULL) {
-		script_pushint(st,-1);
+		script_pushint(st, -1);
 		return true;
 	}
 
-	script_pushint(st,pc->readparam(sd,type));
-
+	script_pushint(st, pc->readparam(sd, type));
 	return true;
 }
 
@@ -9337,20 +9370,32 @@ BUILDIN(getequipweaponlv)
  * 0 : false (max refine level or unequip..)
  *------------------------------------------*/
 BUILDIN(getequippercentrefinery) {
-	int i = -1,num;
+	int i = -1, num;
 	struct map_session_data *sd;
+	int type = 0;
 
-	num = script_getnum(st,2);
+	num = script_getnum(st, 2);
+	type = (script_hasdata(st, 3)) ? script_getnum(st, 3) : REFINE_CHANCE_TYPE_NORMAL;
+
 	sd = script->rid2sd(st);
-	if( sd == NULL )
+	if (sd == NULL)
 		return true;
 
+	if (type < REFINE_CHANCE_TYPE_NORMAL || type >= REFINE_CHANCE_TYPE_MAX) {
+		ShowError("buildin_getequippercentrefinery: Invalid type (%d) provided!\n", type);
+		script_pushint(st, 0);
+		return false;
+	}
+
+
 	if (num > 0 && num <= ARRAYLENGTH(script->equip))
-		i=pc->checkequip(sd,script->equip[num-1]);
-	if(i >= 0 && sd->status.inventory[i].nameid && sd->status.inventory[i].refine < MAX_REFINE)
-		script_pushint(st,status->get_refine_chance(itemdb_wlv(sd->status.inventory[i].nameid), (int)sd->status.inventory[i].refine));
+		i = pc->checkequip(sd, script->equip[num - 1]);
+
+	if (i >= 0 && sd->status.inventory[i].nameid != 0 && sd->status.inventory[i].refine < MAX_REFINE)
+		script_pushint(st,
+			status->get_refine_chance(itemdb_wlv(sd->status.inventory[i].nameid), (int) sd->status.inventory[i].refine, (enum refine_chance_type) type));
 	else
-		script_pushint(st,0);
+		script_pushint(st, 0);
 
 	return true;
 }
@@ -10423,9 +10468,17 @@ BUILDIN(openstorage)
 {
 	struct map_session_data *sd = script->rid2sd(st);
 	if (sd == NULL)
-		return true;
+		return false;
+
+	if (sd->storage.received == false) {
+		script_pushint(st, 0);
+		ShowWarning("buildin_openstorage: Storage data for AID %d has not been loaded.\n", sd->bl.id);
+		return false;
+	}
 
 	storage->open(sd);
+
+	script_pushint(st, 1); // success flag.
 	return true;
 }
 
@@ -14841,24 +14894,40 @@ BUILDIN(npcskilleffect) {
  *------------------------------------------*/
 BUILDIN(specialeffect) {
 	struct block_list *bl = NULL;
-	int type = script_getnum(st,2);
-	enum send_target target = script_hasdata(st,3) ? (send_target)script_getnum(st,3) : AREA;
+	int type = script_getnum(st, 2);
+	enum send_target target = AREA;
 
-	if (script_hasdata(st,4)) {
-		struct npc_data *nd = npc->name2id(script_getstr(st,4));
-		if (nd != NULL)
-			bl = &nd->bl;
+	if (script_hasdata(st, 3)) {
+		target = script_getnum(st, 3);
+	}
+
+	if (script_hasdata(st, 4)) {
+		if (script_isstringtype(st, 4)) {
+			struct npc_data *nd = npc->name2id(script_getstr(st, 4));
+			if (nd != NULL) {
+				bl = &nd->bl;
+			}
+		} else {
+			bl = map->id2bl(script_getnum(st, 4));
+		}
 	} else {
 		bl = map->id2bl(st->oid);
 	}
 
-	if (bl == NULL)
+	if (bl == NULL) {
 		return true;
+	}
 
 	if (target == SELF) {
-		struct map_session_data *sd = script->rid2sd(st);
-		if (sd != NULL)
+		struct map_session_data *sd;
+		if (script_hasdata(st, 5)) {
+			sd = map->id2sd(script_getnum(st, 5));
+		} else {
+			sd = script->rid2sd(st);
+		}
+		if (sd != NULL) {
 			clif->specialeffect_single(bl, type, sd->fd);
+		}
 	} else {
 		clif->specialeffect(bl, type, target);
 	}
@@ -16119,6 +16188,26 @@ BUILDIN(charat) {
 		script_pushstrcopy(st, output);
 	} else
 		script_pushconststr(st, "");
+	return true;
+}
+
+//=======================================================
+// isstr <argument>
+//
+// returns type:
+// 0 - int
+// 1 - string
+// 2 - other
+//-------------------------------------------------------
+BUILDIN(isstr)
+{
+	if (script_isinttype(st, 2)) {
+		script_pushint(st, 0);
+	} else if (script_isstringtype(st, 2)) {
+		script_pushint(st, 1);
+	} else {
+		script_pushint(st, 2);
+	}
 	return true;
 }
 
@@ -21490,6 +21579,43 @@ BUILDIN(issit)
 	return true;
 }
 
+BUILDIN(add_group_command)
+{
+	AtCommandInfo *acmd_d;
+	struct atcmd_binding_data *bcmd_d;
+	GroupSettings *group;
+	int group_index;
+	const char *atcmd = script_getstr(st, 2);
+	int group_id = script_getnum(st, 3);
+	bool self_perm = (script_getnum(st, 4) == 1);
+	bool char_perm = (script_getnum(st, 5) == 1);
+
+	if (!pcg->exists(group_id)) {
+		ShowWarning("script:add_group_command: group does not exist: %i\n", group_id);
+		script_pushint(st, 0);
+		return false;
+	}
+
+	group = pcg->id2group(group_id);
+	group_index = pcg->get_idx(group);
+
+	if ((bcmd_d = atcommand->get_bind_byname(atcmd)) != NULL) {
+		bcmd_d->at_groups[group_index] = self_perm;
+		bcmd_d->char_groups[group_index] = char_perm;
+		script_pushint(st, 1);
+		return true;
+	} else if ((acmd_d = atcommand->get_info_byname(atcmd)) != NULL) {
+		acmd_d->at_groups[group_index] = self_perm;
+		acmd_d->char_groups[group_index] = char_perm;
+		script_pushint(st, 1);
+		return true;
+	}
+
+	ShowWarning("script:add_group_command: command does not exist: %s\n", atcmd);
+	script_pushint(st, 0);
+	return false;
+}
+
 /**
  * @commands (script based)
  **/
@@ -21539,6 +21665,8 @@ BUILDIN(bindatcmd)
 		atcommand->binding[i]->group_lv = group_lv;
 		atcommand->binding[i]->group_lv_char = group_lv_char;
 		atcommand->binding[i]->log = log;
+		CREATE(atcommand->binding[i]->at_groups, char, db_size(pcg->db));
+		CREATE(atcommand->binding[i]->char_groups, char, db_size(pcg->db));
 	}
 
 	return true;
@@ -21562,6 +21690,8 @@ BUILDIN(unbindatcmd)
 	ARR_FIND(0, atcommand->binding_count, i, strcmp(atcommand->binding[i]->command, atcmd) == 0);
 	if( i < atcommand->binding_count ) {
 		int cursor = 0;
+		aFree(atcommand->binding[i]->at_groups);
+		aFree(atcommand->binding[i]->char_groups);
 		aFree(atcommand->binding[i]);
 		atcommand->binding[i] = NULL;
 		/* compact the list now that we freed a slot somewhere */
@@ -22924,6 +23054,55 @@ BUILDIN(channelmes)
 	return true;
 }
 
+BUILDIN(addchannelhandler)
+{
+	int i;
+	const char *channelname = script_getstr(st, 2);
+	const char *eventname = script_getstr(st, 3);
+	struct channel_data *chan = channel->search(channelname, NULL);
+
+	if (!chan) {
+		script_pushint(st, 0);
+		return true;
+	}
+
+	ARR_FIND(0, MAX_EVENTQUEUE, i, chan->handlers[i][0] == '\0');
+
+	if (i < MAX_EVENTQUEUE) {
+		safestrncpy(chan->handlers[i], eventname, EVENT_NAME_LENGTH); //Event enqueued.
+		script_pushint(st, 1);
+		return true;
+	}
+
+	ShowWarning("script:addchannelhandler: too many handlers for channel %s.\n", channelname);
+	script_pushint(st, 0);
+	return true;
+}
+
+BUILDIN(removechannelhandler)
+{
+	int i;
+	const char *channelname = script_getstr(st, 2);
+	const char *eventname = script_getstr(st, 3);
+	struct channel_data *chan = channel->search(channelname, NULL);
+
+	if (!chan) {
+		script_pushint(st, 0);
+		return true;
+	}
+
+	for (i = 0; i < MAX_EVENTQUEUE; i++) {
+		if (strcmp(chan->handlers[i], eventname) == 0) {
+			chan->handlers[i][0] = '\0';
+			script_pushint(st, 1);
+			return true;
+		}
+	}
+
+	script_pushint(st, 0);
+	return true;
+}
+
 /** By Cydh
 Display script message
 showscript "<message>"{,<GID>};
@@ -23678,6 +23857,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(cleararray,"rvi"),
 		BUILDIN_DEF(copyarray,"rri"),
 		BUILDIN_DEF(getarraysize,"r"),
+		BUILDIN_DEF(getarrayindex,"r"),
 		BUILDIN_DEF(deletearray,"r?"),
 		BUILDIN_DEF(getelementofarray,"ri"),
 		BUILDIN_DEF(getitem,"vi?"),
@@ -23725,7 +23905,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getequipisidentify,"i"),
 		BUILDIN_DEF(getequiprefinerycnt,"i"),
 		BUILDIN_DEF(getequipweaponlv,"i"),
-		BUILDIN_DEF(getequippercentrefinery,"i"),
+		BUILDIN_DEF(getequippercentrefinery,"i?"),
 		BUILDIN_DEF(successrefitem,"i?"),
 		BUILDIN_DEF(failedrefitem,"i"),
 		BUILDIN_DEF(downrefitem,"i?"),
@@ -23865,7 +24045,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getskilllist,""),
 		BUILDIN_DEF(clearitem,""),
 		BUILDIN_DEF(classchange,"ii?"),
-		BUILDIN_DEF(misceffect,"i"),
+		BUILDIN_DEF_DEPRECATED(misceffect,"i"),
 		BUILDIN_DEF(playbgm,"s"),
 		BUILDIN_DEF(playbgmall,"s?????"),
 		BUILDIN_DEF(soundeffect,"si"),
@@ -23880,8 +24060,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(petskillsupport,"viiii"), // [Skotlex]
 		BUILDIN_DEF(skilleffect,"vi"), // skill effect [Celest]
 		BUILDIN_DEF(npcskilleffect,"viii"), // npc skill effect [Valaris]
-		BUILDIN_DEF(specialeffect,"i??"), // npc skill effect [Valaris]
-		BUILDIN_DEF(specialeffect2,"i??"), // skill effect on players[Valaris]
+		BUILDIN_DEF(specialeffect,"i???"), // npc skill effect [Valaris]
+		BUILDIN_DEF_DEPRECATED(specialeffect2,"i??"), // skill effect on players[Valaris]
 		BUILDIN_DEF(nude,""), // nude command [Valaris]
 		BUILDIN_DEF(mapwarp,"ssii??"), // Added by RoVeRT
 		BUILDIN_DEF(atcommand,"s"), // [MouseJstr]
@@ -23930,6 +24110,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getstrlen,"s"), //strlen [Valaris]
 		BUILDIN_DEF(charisalpha,"si"), //isalpha [Valaris]
 		BUILDIN_DEF(charat,"si"),
+		BUILDIN_DEF(isstr,"v"),
 		BUILDIN_DEF(chr,"i"),
 		BUILDIN_DEF(ord,"s"),
 		BUILDIN_DEF(setchar,"ssi"),
@@ -23960,7 +24141,7 @@ void script_parse_builtin(void) {
 		// List of mathematics commands --->
 		BUILDIN_DEF(log10,"i"),
 		BUILDIN_DEF(sqrt,"i"), //[zBuffer]
-		BUILDIN_DEF(pow,"ii"), //[zBuffer]
+		BUILDIN_DEF_DEPRECATED(pow,"ii"), //[zBuffer]
 		BUILDIN_DEF(distance,"iiii"), //[zBuffer]
 		// <--- List of mathematics commands
 		BUILDIN_DEF(min, "i*"),
@@ -24120,6 +24301,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(useatcmd, "s"),
 		BUILDIN_DEF(has_permission, "v?"),
 		BUILDIN_DEF(can_use_command, "s?"),
+		BUILDIN_DEF(add_group_command, "siii"),
 
 		/**
 		 * Item bound [Xantara] [Akinari] [Mhalicot/Hercules]
@@ -24179,6 +24361,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(navigateto, "s??????"),
 
 		BUILDIN_DEF(channelmes, "ss"),
+		BUILDIN_DEF(addchannelhandler, "ss"),
+		BUILDIN_DEF(removechannelhandler, "ss"),
 		BUILDIN_DEF(showscript, "s?"),
 		BUILDIN_DEF(mergeitem,""),
 
@@ -24229,6 +24413,7 @@ void script_hardcoded_constants(void)
 	script->set_constant("MAX_CART",MAX_INVENTORY,false, false);
 	script->set_constant("MAX_INVENTORY",MAX_INVENTORY,false, false);
 	script->set_constant("MAX_ZENY",MAX_ZENY,false, false);
+	script->set_constant("MAX_BANK_ZENY", MAX_BANK_ZENY, false, false);
 	script->set_constant("MAX_BG_MEMBERS",MAX_BG_MEMBERS,false, false);
 	script->set_constant("MAX_CHAT_USERS",MAX_CHAT_USERS,false, false);
 	script->set_constant("MAX_REFINE",MAX_REFINE,false, false);
@@ -24258,6 +24443,7 @@ void script_hardcoded_constants(void)
 	script->set_constant("Option_Dragon5",OPTION_DRAGON5,false, false);
 	script->set_constant("Option_Hanbok",OPTION_HANBOK,false, false);
 	script->set_constant("Option_Oktoberfest",OPTION_OKTOBERFEST,false, false);
+	script->set_constant("Option_Summer2", OPTION_SUMMER2, false, false);
 
 	script->constdb_comment("status option compounds");
 	script->set_constant("Option_Dragon",OPTION_DRAGON,false, false);
@@ -24367,6 +24553,12 @@ void script_hardcoded_constants(void)
 	script->set_constant("BL_ELEM",BL_ELEM,false, false);
 	script->set_constant("BL_CHAR",BL_CHAR,false, false);
 	script->set_constant("BL_ALL",BL_ALL,false, false);
+
+	script->constdb_comment("Refine Chance Types");
+	script->set_constant("REFINE_CHANCE_TYPE_NORMAL", REFINE_CHANCE_TYPE_NORMAL, false, false);
+	script->set_constant("REFINE_CHANCE_TYPE_ENRICHED", REFINE_CHANCE_TYPE_ENRICHED, false, false);
+	script->set_constant("REFINE_CHANCE_TYPE_E_NORMAL", REFINE_CHANCE_TYPE_E_NORMAL, false, false);
+	script->set_constant("REFINE_CHANCE_TYPE_E_ENRICHED", REFINE_CHANCE_TYPE_E_ENRICHED, false, false);
 
 	script->constdb_comment("Player permissions");
 	script->set_constant("PERM_TRADE", PC_PERM_TRADE, false, false);

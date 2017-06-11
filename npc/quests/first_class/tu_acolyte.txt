@@ -310,7 +310,7 @@ prt_monk,230,106,3	script	Asthe#tu	1_F_PRIEST,{
 		tu_acolyte01 = 3;
 		if(getskilllv("AL_HEAL") == 0){
 			getexp 0,100;
-			specialeffect2 EF_CONE;
+			specialeffect(EF_CONE, AREA, playerattached());
 		}
 		close;
 	case 3:
@@ -399,11 +399,11 @@ prt_monk,230,106,3	script	Asthe#tu	1_F_PRIEST,{
 				delitem Mace, 1;
 				if(Class == Job_Acolyte_High) {
 					getexp 2000,1000;
-					specialeffect2 EF_CONE;
+					specialeffect(EF_CONE, AREA, playerattached());
 					close;
 				} else {
 					getexp 1000,500;
-					specialeffect2 EF_CONE;
+					specialeffect(EF_CONE, AREA, playerattached());
 					close;
 				}
 			} else {
@@ -654,7 +654,7 @@ prt_monk,230,106,3	script	Asthe#tu	1_F_PRIEST,{
 		mes "[Asthe]";
 		mes "Pneuma shields characters";
 		mes "within a 3*3 block, or a 9 cell area, from ^FF0000long range attacks^000000. If you party with Archers or other Bow users, be careful since you might accidentally block their attacks.";
-		specialeffect2 EF_PNEUMA;
+		specialeffect(EF_PNEUMA, AREA, playerattached());
 		next;
 		mes "[Asthe]";
 		mes "There are some Undead monsters";
@@ -795,7 +795,7 @@ prt_monk,230,106,3	script	Asthe#tu	1_F_PRIEST,{
 			getexp 1000,1000;
 		else
 			getexp 5000,3000;
-		specialeffect2 EF_CONE;
+		specialeffect(EF_CONE, AREA, playerattached());
 		close;
 	}
 	mes "If you get into an";
@@ -873,7 +873,7 @@ monk_in,18,38,6	script	Priest Gardron#tu	4_M_MINISTER,{
 				getexp 1000,1000;
 			else
 				getexp 2000,2000;
-			specialeffect2 EF_CONE;
+			specialeffect(EF_CONE, AREA, playerattached());
 			//getitem Blue_Potion,1;
 			close;
 		} else {
@@ -1145,7 +1145,7 @@ prt_monk,226,257,6	script	Ill Girl#tu	4_F_04,{
 						getexp 0,500;
 					else
 						getexp 0,1000;
-					specialeffect2 EF_CONE;
+					specialeffect(EF_CONE, AREA, playerattached());
 					next;
 					break;
 				} else {

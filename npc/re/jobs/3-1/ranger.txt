@@ -979,7 +979,7 @@ OnReset:
 	killmonster "job3_rang02","CallCorrectAnswer#jr::OnMyMobDead";
 	end;
 OnMyMobDead:
-	specialeffect2 EF_POTION_CON;
+	specialeffect(EF_POTION_CON, AREA, playerattached());
 	++$@job_rang_point01;
 	mapannounce "job3_rang02","Test Supervisor, Notice : Correct Target! You have very good eyesight!",bc_map,"0xffb6c1"; //FW_NORMAL 12 0 0
 	end;
@@ -1069,7 +1069,7 @@ OnReset:
 	killmonster "job3_rang02","CallWrongAnswer#jr::OnMyMobDead";
 	end;
 OnMyMobDead:
-	specialeffect2 EF_DEVIL;
+	specialeffect(EF_DEVIL, AREA, playerattached());
 	--$@job_rang_point01;
 	mapannounce "job3_rang02","Test Supervisor, Notice : Wrong Target! Pull yourself together!",bc_map,"0xffb6c1"; //FW_NORMAL 12 0 0
 	end;
@@ -1186,7 +1186,7 @@ job3_rang02,111,56,3	script	Staff Rust#jr_09	4_M_ORIENT02,{
 	if (job_ranger01 == 6) {
 		if (countitem(Bombring_Box) < 1) {
 			percentheal 100,0;
-			specialeffect2 EF_ABSORBSPIRITS;
+			specialeffect(EF_ABSORBSPIRITS, AREA, playerattached());
 			mes "[Staff Rust]";
 			mes "I'll give you the 'Bombring Capsules.";
 			mes "The 'Bombring Capsules' can be given again only for the one who used it all, so please keep that in mind.";
@@ -1269,7 +1269,7 @@ OnDisable:
 	end;
 OnTouch:
 	percentheal 10,0;
-	specialeffect2 EF_ABSORBSPIRITS;
+	specialeffect(EF_ABSORBSPIRITS, AREA, playerattached());
 	mapannounce "job3_rang02","Test Supervisor, Caution : You are doing well! If you come closer a little more, you should be able to see me.",bc_map,"0x87ceeb"; //FW_NORMAL 12 0 0
 	end;
 OnMyMobDead:
