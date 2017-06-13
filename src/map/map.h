@@ -649,7 +649,7 @@ struct mapflag_skill_adjust {
 };
 
 enum map_zone_skill_subtype {
-	MZS_NONE  = 0x0,
+	MZS_NONE  = 0x00,
 	MZS_CLONE = 0x01,
 	MZS_BOSS  = 0x02,
 
@@ -661,6 +661,7 @@ struct map_zone_disabled_skill_entry {
 	enum bl_type type;
 	enum map_zone_skill_subtype subtype;
 };
+
 struct map_zone_disabled_command_entry {
 	AtCommandFunc cmd;
 	int group_lv;
@@ -684,6 +685,10 @@ struct map_zone_data {
 	enum map_zone_merge_type merge_type;
 	struct map_zone_disabled_skill_entry **disabled_skills;
 	int disabled_skills_count;
+	int *disabled_status;
+	int disabled_status_count;
+	int *cant_disable_status;
+	int cant_disable_status_count;
 	int *disabled_items;
 	int disabled_items_count;
 	int *cant_disable_items; /** when a zone wants to ensure such a item is never disabled (i.e. gvg zone enables a item that is restricted everywhere else) **/
