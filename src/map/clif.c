@@ -6539,25 +6539,26 @@ void clif_party_member_info(struct party_data *p, struct map_session_data *sd)
 	nullpo_retv(p);
 	nullpo_retv(sd);
 	if (!sd) { //Pick any party member (this call is used when changing item share rules)
-		ARR_FIND( 0, MAX_PARTY, i, p->data[i].sd != 0 );
+		ARR_FIND(0, MAX_PARTY, i, p->data[i].sd != 0);
 	} else {
-		ARR_FIND( 0, MAX_PARTY, i, p->data[i].sd == sd );
+		ARR_FIND(0, MAX_PARTY, i, p->data[i].sd == sd);
 	}
-	if (i >= MAX_PARTY) return; //Should never happen...
+	if (i >= MAX_PARTY)
+		return; //Should never happen...
 	sd = p->data[i].sd;
 
 	WBUFW(buf, 0) = 0x1e9;
 	WBUFL(buf, 2) = sd->status.account_id;
-	WBUFL(buf, 6) = (p->party.member[i].leader)?0:1;
-	WBUFW(buf,10) = sd->bl.x;
-	WBUFW(buf,12) = sd->bl.y;
-	WBUFB(buf,14) = (p->party.member[i].online)?0:1;
-	memcpy(WBUFP(buf,15), p->party.name, NAME_LENGTH);
-	memcpy(WBUFP(buf,39), sd->status.name, NAME_LENGTH);
-	mapindex->getmapname_ext(map->list[sd->bl.m].custom_name ? map->list[map->list[sd->bl.m].instance_src_map].name : map->list[sd->bl.m].name, WBUFP(buf,63));
-	WBUFB(buf,79) = (p->party.item&1)?1:0;
-	WBUFB(buf,80) = (p->party.item&2)?1:0;
-	clif->send(buf,packet_len(0x1e9),&sd->bl,PARTY);
+	WBUFL(buf, 6) = (p->party.member[i].leader) ? 0 : 1;
+	WBUFW(buf, 10) = sd->bl.x;
+	WBUFW(buf, 12) = sd->bl.y;
+	WBUFB(buf, 14) = (p->party.member[i].online) ? 0 : 1;
+	memcpy(WBUFP(buf, 15), p->party.name, NAME_LENGTH);
+	memcpy(WBUFP(buf, 39), sd->status.name, NAME_LENGTH);
+	mapindex->getmapname_ext(map->list[sd->bl.m].custom_name ? map->list[map->list[sd->bl.m].instance_src_map].name : map->list[sd->bl.m].name, WBUFP(buf, 63));
+	WBUFB(buf, 79) = (p->party.item & 1) ? 1 : 0;
+	WBUFB(buf, 80) = (p->party.item & 2) ? 1 : 0;
+	clif->send(buf, packet_len(0x1e9), &sd->bl, PARTY);
 }
 
 /// Sends party information (ZC_GROUP_LIST).
