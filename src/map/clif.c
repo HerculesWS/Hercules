@@ -6543,7 +6543,7 @@ void clif_party_created(struct map_session_data *sd,int result)
 void clif_party_member_info(struct party_data *p, struct map_session_data *sd)
 {
 	int i;
-#if PACKETVER < 20170524
+#if PACKETVER < 20170502
 	unsigned char buf[81];
 	const int cmd = 0x1e9;
 	const int offset = 0;
@@ -6568,7 +6568,7 @@ void clif_party_member_info(struct party_data *p, struct map_session_data *sd)
 	WBUFW(buf, 0) = cmd;
 	WBUFL(buf, 2) = sd->status.account_id;
 	WBUFL(buf, 6) = (p->party.member[i].leader) ? 0 : 1;
-#if PACKETVER >= 20170524
+#if PACKETVER >= 20170502
 	WBUFW(buf, 10) = sd->status.class;
 	WBUFW(buf, 12) = sd->status.base_level;
 #endif
@@ -6596,7 +6596,7 @@ void clif_party_info(struct party_data* p, struct map_session_data *sd)
 {
 	struct map_session_data* party_sd = NULL;
 	int i, c;
-#if PACKETVER < 20170524
+#if PACKETVER < 20170502
 	const int cmd = 0xfb;
 	const int size = 46;
 	unsigned char buf[2 + 2 + NAME_LENGTH + 46 * MAX_PARTY];
@@ -6625,13 +6625,13 @@ void clif_party_info(struct party_data* p, struct map_session_data *sd)
 		mapindex->getmapname_ext(mapindex_id2name(m->map), WBUFP(buf, 28 + c * size + 28));
 		WBUFB(buf, 28 + c * size + 44) = (m->leader) ? 0 : 1;
 		WBUFB(buf, 28 + c * size + 45) = (m->online) ? 0 : 1;
-#if PACKETVER >= 20170524
+#if PACKETVER >= 20170502
 		WBUFW(buf, 28 + c * size + 46) = m->class;
 		WBUFW(buf, 28 + c * size + 48) = m->lv;
 #endif
 		c++;
 	}
-#if PACKETVER < 20170524
+#if PACKETVER < 20170502
 	WBUFW(buf, 2) = 28 + c * size;
 #else
 	WBUFB(buf, 28 + c * size) = (p->party.item & 1) ? 1 : 0;
@@ -6651,8 +6651,8 @@ void clif_party_info(struct party_data* p, struct map_session_data *sd)
 /// 0abd <account id>.L <job>.W <level>.W
 void clif_party_job_and_level(struct map_session_data *sd)
 {
-// [4144] packet 0xabd added in client in 2017-02-15 because this probably it can works for clients older than 20170524
-#if PACKETVER >= 20170524
+// [4144] packet 0xabd added in client in 2017-02-15 because this probably it can works for clients older than 20170502
+#if PACKETVER >= 20170502
 	unsigned char buf[10];
 
 	nullpo_retv(sd);
