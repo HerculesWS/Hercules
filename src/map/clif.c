@@ -7532,33 +7532,33 @@ void clif_guild_memberlist(struct map_session_data *sd)
 	struct guild *g;
 	nullpo_retv(sd);
 
-	if( (fd = sd->fd) == 0 )
+	if ((fd = sd->fd) == 0)
 		return;
-	if( (g = sd->guild) == NULL )
+	if ((g = sd->guild) == NULL)
 		return;
 
 	WFIFOHEAD(fd, g->max_member * 104 + 4);
-	WFIFOW(fd, 0)=0x154;
-	for(i=0,c=0;i<g->max_member;i++){
-		struct guild_member *m=&g->member[i];
-		if(m->account_id==0)
+	WFIFOW(fd, 0) = 0x154;
+	for (i = 0, c = 0; i < g->max_member; i++) {
+		struct guild_member *m = &g->member[i];
+		if (m->account_id == 0)
 			continue;
-		WFIFOL(fd,c*104+ 4)=m->account_id;
-		WFIFOL(fd,c*104+ 8)=m->char_id;
-		WFIFOW(fd,c*104+12)=m->hair;
-		WFIFOW(fd,c*104+14)=m->hair_color;
-		WFIFOW(fd,c*104+16)=m->gender;
-		WFIFOW(fd,c*104+18)=m->class;
-		WFIFOW(fd,c*104+20)=m->lv;
-		WFIFOL(fd,c*104+22)=(int)cap_value(m->exp,0,INT32_MAX);
-		WFIFOL(fd,c*104+26)=m->online;
-		WFIFOL(fd,c*104+30)=m->position;
-		memset(WFIFOP(fd,c*104+34),0,50); //[Ind] - This is displayed in the 'note' column but being you can't edit it it's sent empty.
-		memcpy(WFIFOP(fd,c*104+84),m->name,NAME_LENGTH);
+		WFIFOL(fd, c * 104 + 4) = m->account_id;
+		WFIFOL(fd, c * 104 + 8) = m->char_id;
+		WFIFOW(fd, c * 104 + 12) = m->hair;
+		WFIFOW(fd, c * 104 + 14) = m->hair_color;
+		WFIFOW(fd, c * 104 + 16) = m->gender;
+		WFIFOW(fd, c * 104 + 18) = m->class;
+		WFIFOW(fd, c * 104 + 20) = m->lv;
+		WFIFOL(fd, c * 104 + 22) = (int)cap_value(m->exp, 0, INT32_MAX);
+		WFIFOL(fd, c * 104 + 26) = m->online;
+		WFIFOL(fd, c * 104 + 30) = m->position;
+		memset(WFIFOP(fd, c * 104 + 34), 0, 50);  //[Ind] - This is displayed in the 'note' column but being you can't edit it it's sent empty.
+		memcpy(WFIFOP(fd, c * 104 + 84), m->name, NAME_LENGTH);
 		c++;
 	}
-	WFIFOW(fd, 2)=c*104+4;
-	WFIFOSET(fd,WFIFOW(fd,2));
+	WFIFOW(fd, 2) = c * 104 + 4;
+	WFIFOSET(fd, WFIFOW(fd, 2));
 }
 
 /// Guild position name information (ZC_POSITION_ID_NAME_INFO).
