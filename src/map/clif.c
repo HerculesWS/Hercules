@@ -7530,6 +7530,14 @@ void clif_guild_memberlist(struct map_session_data *sd)
 	int fd;
 	int i,c;
 	struct guild *g;
+#if PACKETVER < 20161026
+	const int cmd = 0x154;
+	const int size = 104;
+#else
+	const int cmd = 0xaa5;
+	const int size = 34;
+#endif
+
 	nullpo_retv(sd);
 
 	if ((fd = sd->fd) == 0)
@@ -7537,27 +7545,31 @@ void clif_guild_memberlist(struct map_session_data *sd)
 	if ((g = sd->guild) == NULL)
 		return;
 
-	WFIFOHEAD(fd, g->max_member * 104 + 4);
-	WFIFOW(fd, 0) = 0x154;
+	WFIFOHEAD(fd, g->max_member * size + 4);
+	WFIFOW(fd, 0) = cmd;
 	for (i = 0, c = 0; i < g->max_member; i++) {
 		struct guild_member *m = &g->member[i];
 		if (m->account_id == 0)
 			continue;
-		WFIFOL(fd, c * 104 + 4) = m->account_id;
-		WFIFOL(fd, c * 104 + 8) = m->char_id;
-		WFIFOW(fd, c * 104 + 12) = m->hair;
-		WFIFOW(fd, c * 104 + 14) = m->hair_color;
-		WFIFOW(fd, c * 104 + 16) = m->gender;
-		WFIFOW(fd, c * 104 + 18) = m->class;
-		WFIFOW(fd, c * 104 + 20) = m->lv;
-		WFIFOL(fd, c * 104 + 22) = (int)cap_value(m->exp, 0, INT32_MAX);
-		WFIFOL(fd, c * 104 + 26) = m->online;
-		WFIFOL(fd, c * 104 + 30) = m->position;
-		memset(WFIFOP(fd, c * 104 + 34), 0, 50);  //[Ind] - This is displayed in the 'note' column but being you can't edit it it's sent empty.
-		memcpy(WFIFOP(fd, c * 104 + 84), m->name, NAME_LENGTH);
+		WFIFOL(fd, c * size + 4) = m->account_id;
+		WFIFOL(fd, c * size + 8) = m->char_id;
+		WFIFOW(fd, c * size + 12) = m->hair;
+		WFIFOW(fd, c * size + 14) = m->hair_color;
+		WFIFOW(fd, c * size + 16) = m->gender;
+		WFIFOW(fd, c * size + 18) = m->class;
+		WFIFOW(fd, c * size + 20) = m->lv;
+		WFIFOL(fd, c * size + 22) = (int)cap_value(m->exp, 0, INT32_MAX);
+		WFIFOL(fd, c * size + 26) = m->online;
+		WFIFOL(fd, c * size + 30) = m->position;
+#if PACKETVER < 20161026
+		memset(WFIFOP(fd, c * size + 34), 0, 50);  //[Ind] - This is displayed in the 'note' column but being you can't edit it it's sent empty.
+		memcpy(WFIFOP(fd, c * size + 84), m->name, NAME_LENGTH);
+#else
+		WFIFOL(fd, c * size + 34) = 0;  // [4144] this is member last login time. But in hercules it not present.
+#endif
 		c++;
 	}
-	WFIFOW(fd, 2) = c * 104 + 4;
+	WFIFOW(fd, 2) = c * size + 4;
 	WFIFOSET(fd, WFIFOW(fd, 2));
 }
 
