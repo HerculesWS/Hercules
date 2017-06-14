@@ -7452,14 +7452,20 @@ void clif_guild_basicinfo(struct map_session_data *sd)
 	int fd;
 	struct guild *g;
 
+#if PACKETVER < 20160622
+	const int cmd = 0x1b6;  //0x150; [4144] this is packet for older versions?
+#else
+	const int cmd = 0xa84;
+#endif
+
 	nullpo_retv(sd);
 	fd = sd->fd;
 
 	if ((g = sd->guild) == NULL)
 		return;
 
-	WFIFOHEAD(fd, packet_len(0x1b6));
-	WFIFOW(fd, 0) = 0x1b6;  //0x150;
+	WFIFOHEAD(fd, packet_len(cmd));
+	WFIFOW(fd, 0) = cmd;
 	WFIFOL(fd, 2) = g->guild_id;
 	WFIFOL(fd, 6) = g->guild_lv;
 	WFIFOL(fd, 10) = g->connect_member;
@@ -7472,12 +7478,17 @@ void clif_guild_basicinfo(struct map_session_data *sd)
 	WFIFOL(fd, 38) = 0;  // Virtue: (down) Wicked [-100,100] Righteous (up)
 	WFIFOL(fd, 42) = g->emblem_id;
 	memcpy(WFIFOP(fd, 46), g->name, NAME_LENGTH);
+#if PACKETVER < 20160622
 	memcpy(WFIFOP(fd, 70), g->master, NAME_LENGTH);
-
 	safestrncpy(WFIFOP(fd, 94), msg_sd(sd, 300 + guild->checkcastles(g)), 16);  // "'N' castles"
 	WFIFOL(fd, 110) = 0;  // zeny
+#else
+	safestrncpy(WFIFOP(fd, 70), msg_sd(sd, 300 + guild->checkcastles(g)), 16);  // "'N' castles"
+	WFIFOL(fd, 86) = 0;  // zeny
+	WFIFOL(fd, 90) = g->member[0].char_id;  // leader
+#endif
 
-	WFIFOSET(fd, packet_len(0x1b6));
+	WFIFOSET(fd, packet_len(cmd));
 }
 
 /// Guild alliance and opposition list (ZC_MYGUILD_BASIC_INFO).
