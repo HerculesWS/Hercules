@@ -8793,6 +8793,7 @@ int pc_jobchange(struct map_session_data *sd, int class, int upper)
 	status_calc_pc(sd,SCO_FORCE);
 	pc->checkallowskill(sd);
 	pc->equiplookall(sd);
+	pc->update_job_and_level(sd);
 
 	//if you were previously famous, not anymore.
 	if (fame_flag != 0) {
@@ -11951,6 +11952,24 @@ void pc_check_supernovice_call(struct map_session_data *sd, const char *message)
 	}
 }
 
+void pc_update_job_and_level(struct map_session_data *sd)
+{
+	nullpo_retv(sd);
+
+	if (sd->status.party_id) {
+		struct party_data *p;
+		int i;
+
+		if ((p = party->search(sd->status.party_id)) != NULL) {
+			ARR_FIND(0, MAX_PARTY, i, p->party.member[i].char_id == sd->status.char_id);
+			if (i < MAX_PARTY) {
+				p->party.member[i].lv = sd->status.base_level;
+				clif->party_job_and_level(sd);
+			}
+		}
+	}
+}
+
 void do_final_pc(void) {
 	db_destroy(pc->itemcd_db);
 	pc->at_db->destroy(pc->at_db,pc->autotrade_final);
@@ -12293,6 +12312,7 @@ void pc_defaults(void) {
 	pc->checkcombo = pc_checkcombo;
 	pc->calcweapontype = pc_calcweapontype;
 	pc->removecombo = pc_removecombo;
+	pc->update_job_and_level = pc_update_job_and_level;
 
 	pc->bank_withdraw = pc_bank_withdraw;
 	pc->bank_deposit = pc_bank_deposit;

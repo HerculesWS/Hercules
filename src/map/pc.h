@@ -1096,6 +1096,7 @@ END_ZEROED_BLOCK; /* End */
 	bool (*db_checkid) (int class);
 
 	void (*validate_levels) (void);
+	void (*update_job_and_level) (struct map_session_data *sd);
 
 	/**
 	 * Autotrade persistency [Ind/Hercules <3]

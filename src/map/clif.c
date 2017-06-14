@@ -2984,13 +2984,6 @@ void clif_updatestatus(struct map_session_data *sd,int type)
 			break;
 		case SP_HP:
 			WFIFOL(fd,4)=sd->battle_status.hp;
-			// TODO: Won't these overwrite the current packet?
-			if( map->list[sd->bl.m].hpmeter_visible )
-				clif->hpmeter(sd);
-			if( !battle_config.party_hp_mode && sd->status.party_id )
-				clif->party_hp(sd);
-			if( sd->bg_id )
-				clif->bg_hp(sd);
 			break;
 		case SP_SP:
 			WFIFOL(fd,4)=sd->battle_status.sp;
@@ -3140,6 +3133,21 @@ void clif_updatestatus(struct map_session_data *sd,int type)
 			return;
 	}
 	WFIFOSET(fd,len);
+
+	// Additional update packets that should be sent right after
+	switch (type) {
+		case SP_BASELEVEL:
+			pc->update_job_and_level(sd);
+			break;
+		case SP_HP:
+			if (map->list[sd->bl.m].hpmeter_visible)
+				clif->hpmeter(sd);
+			if (!battle_config.party_hp_mode && sd->status.party_id)
+				clif->party_hp(sd);
+			if (sd->bg_id)
+				clif->bg_hp(sd);
+			break;
+	}
 }
 
 /// Notifies client of a parameter change of an another player (ZC_PAR_CHANGE_USER).
@@ -6637,6 +6645,25 @@ void clif_party_info(struct party_data* p, struct map_session_data *sd)
 	} else if (party_sd) { // send to whole party
 		clif->send(buf, WBUFW(buf, 2), &party_sd->bl, PARTY);
 	}
+}
+
+/// Updates the job and level of a party member
+/// 0abd <account id>.L <job>.W <level>.W
+void clif_party_job_and_level(struct map_session_data *sd)
+{
+// [4144] packet 0xabd added in client in 2017-02-15 because this probably it can works for clients older than 20170524
+#if PACKETVER >= 20170524
+	unsigned char buf[10];
+
+	nullpo_retv(sd);
+
+	WBUFW(buf, 0) = 0xabd;
+	WBUFL(buf, 2) = sd->status.account_id;
+	WBUFW(buf, 6) = sd->status.class;
+	WBUFW(buf, 8) = sd->status.base_level;
+
+	clif_send(buf, packet_len(0xabd), &sd->bl, PARTY);
+#endif
 }
 
 /// The player's 'party invite' state, sent during login (ZC_PARTY_CONFIG).
@@ -19778,6 +19805,7 @@ void clif_defaults(void) {
 	clif->party_created = clif_party_created;
 	clif->party_member_info = clif_party_member_info;
 	clif->party_info = clif_party_info;
+	clif->party_job_and_level = clif_party_job_and_level;
 	clif->party_invite = clif_party_invite;
 	clif->party_inviteack = clif_party_inviteack;
 	clif->party_option = clif_party_option;
