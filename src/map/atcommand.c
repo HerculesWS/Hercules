@@ -5605,7 +5605,7 @@ ACMD(changegm) {
 		return false;
 	}
 
-	guild->gm_change(sd->status.guild_id, pl_sd);
+	guild->gm_change(sd->status.guild_id, pl_sd->status.char_id);
 	return true;
 }
 

@@ -1814,23 +1814,28 @@ int guild_broken(int guild_id,int flag)
 }
 
 //Changes the Guild Master to the specified player. [Skotlex]
-int guild_gm_change(int guild_id, struct map_session_data *sd)
+int guild_gm_change(int guild_id, int char_id)
 {
-	struct guild *g;
-	nullpo_ret(sd);
-
-	if (sd->status.guild_id != guild_id)
-		return 0;
-
-	g=guild->search(guild_id);
+	struct guild *g = guild->search(guild_id);
+	char *name;
+	int i;
 
 	nullpo_ret(g);
 
-	if (strcmp(g->master, sd->status.name) == 0) //Nothing to change.
+	ARR_FIND(0, MAX_GUILD, i, g->member[i].char_id == char_id);
+	
+	if (i == MAX_GUILD ) {
+		// Not part of the guild
+		return 0;
+	}
+
+	name = g->member[i].name;
+
+	if (strcmp(g->master, name) == 0) //Nothing to change.
 		return 0;
 
 	//Notify servers that master has changed.
-	intif->guild_change_gm(guild_id, sd->status.name, (int)strlen(sd->status.name)+1);
+	intif->guild_change_gm(guild_id, name, (int)strlen(name) + 1);
 	return 1;
 }
 
@@ -1864,6 +1869,7 @@ int guild_gm_changed(int guild_id, int account_id, int char_id)
 	if (g->member[pos].sd && g->member[pos].sd->fd) {
 		clif->message(g->member[pos].sd->fd, msg_sd(g->member[pos].sd,878)); //"You no longer are the Guild Master."
 		g->member[pos].sd->state.gmaster_flag = 0;
+		clif->charnameack(0, &g->member[pos].sd->bl);
 	}
 
 	if (g->member[0].sd && g->member[0].sd->fd) {
@@ -1871,6 +1877,7 @@ int guild_gm_changed(int guild_id, int account_id, int char_id)
 		g->member[0].sd->state.gmaster_flag = 1;
 		//Block his skills for 5 minutes to prevent abuse.
 		guild->block_skill(g->member[0].sd, 300000);
+		clif->charnameack(0, &g->member[pos].sd->bl);
 	}
 
 	// announce the change to all guild members
@@ -1880,6 +1887,7 @@ int guild_gm_changed(int guild_id, int account_id, int char_id)
 		{
 			clif->guild_basicinfo(g->member[i].sd);
 			clif->guild_memberlist(g->member[i].sd);
+			clif->guild_belonginfo(g->member[i].sd, g); // Update clientside guildmaster flag
 		}
 	}
 

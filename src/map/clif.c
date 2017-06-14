@@ -13056,13 +13056,22 @@ void clif_parse_GuildChangeMemberPosition(int fd, struct map_session_data *sd) _
 void clif_parse_GuildChangeMemberPosition(int fd, struct map_session_data *sd)
 {
 	int i;
+	int len = RFIFOW(fd, 2);
 
 	if(!sd->state.gmaster_flag)
 		return;
 
+	// Guild leadership change
+	if (len == 16 && RFIFOL(fd, 12) == 0) {
+		guild->gm_change(sd->status.guild_id, RFIFOL(fd, 8));
+		return;
+	}
+
 	for(i=4;i<RFIFOW(fd,2);i+=12){
-		guild->change_memberposition(sd->status.guild_id,
-			RFIFOL(fd,i),RFIFOL(fd,i+4),RFIFOL(fd,i+8));
+		int position = RFIFOL(fd, i + 8);
+		if (position > 0) {
+			guild->change_memberposition(sd->status.guild_id, RFIFOL(fd, i), RFIFOL(fd, i + 4), position);
+		}
 	}
 }
 

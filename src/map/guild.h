@@ -141,7 +141,7 @@ struct guild_interface {
 	int (*skillupack) (int guild_id,uint16 skill_id,int account_id);
 	int (*dobreak) (struct map_session_data *sd, const char *name);
 	int (*broken) (int guild_id,int flag);
-	int (*gm_change) (int guild_id, struct map_session_data *sd);
+	int (*gm_change) (int guild_id, int char_id);
 	int (*gm_changed) (int guild_id, int account_id, int char_id);
 	/* */
 	void (*castle_map_init) (void);
