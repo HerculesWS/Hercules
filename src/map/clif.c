@@ -6525,6 +6525,7 @@ void clif_party_created(struct map_session_data *sd,int result)
 /// Adds new member to a party.
 /// 0104 <account id>.L <role>.L <x>.W <y>.W <state>.B <party name>.24B <char name>.24B <map name>.16B (ZC_ADD_MEMBER_TO_GROUP)
 /// 01e9 <account id>.L <role>.L <x>.W <y>.W <state>.B <party name>.24B <char name>.24B <map name>.16B <item pickup rule>.B <item share rule>.B (ZC_ADD_MEMBER_TO_GROUP2)
+/// 0a43 <account id>.L <role>.L <class>.W <base level>.W <x>.W <y>.W <state>.B <party name>.24B <char name>.24B <map name>.16B <item pickup rule>.B <item share rule>.B (ZC_ADD_MEMBER_TO_GROUP3)
 /// role:
 ///     0 = leader
 ///     1 = normal
@@ -6533,8 +6534,17 @@ void clif_party_created(struct map_session_data *sd,int result)
 ///     1 = disconnected
 void clif_party_member_info(struct party_data *p, struct map_session_data *sd)
 {
-	unsigned char buf[81];
 	int i;
+#if PACKETVER < 20170524
+	unsigned char buf[81];
+	const int cmd = 0x1e9;
+	const int offset = 0;
+#else
+	unsigned char buf[85];
+// [4144] probably 0xa43 packet can works on older clients because in client was added in 2015-10-07
+	const int cmd = 0xa43;
+	int offset = 4;
+#endif
 
 	nullpo_retv(p);
 	nullpo_retv(sd);
@@ -6547,18 +6557,22 @@ void clif_party_member_info(struct party_data *p, struct map_session_data *sd)
 		return; //Should never happen...
 	sd = p->data[i].sd;
 
-	WBUFW(buf, 0) = 0x1e9;
+	WBUFW(buf, 0) = cmd;
 	WBUFL(buf, 2) = sd->status.account_id;
 	WBUFL(buf, 6) = (p->party.member[i].leader) ? 0 : 1;
-	WBUFW(buf, 10) = sd->bl.x;
-	WBUFW(buf, 12) = sd->bl.y;
-	WBUFB(buf, 14) = (p->party.member[i].online) ? 0 : 1;
-	memcpy(WBUFP(buf, 15), p->party.name, NAME_LENGTH);
-	memcpy(WBUFP(buf, 39), sd->status.name, NAME_LENGTH);
-	mapindex->getmapname_ext(map->list[sd->bl.m].custom_name ? map->list[map->list[sd->bl.m].instance_src_map].name : map->list[sd->bl.m].name, WBUFP(buf, 63));
-	WBUFB(buf, 79) = (p->party.item & 1) ? 1 : 0;
-	WBUFB(buf, 80) = (p->party.item & 2) ? 1 : 0;
-	clif->send(buf, packet_len(0x1e9), &sd->bl, PARTY);
+#if PACKETVER >= 20170524
+	WBUFW(buf, 10) = sd->status.class;
+	WBUFW(buf, 12) = sd->status.base_level;
+#endif
+	WBUFW(buf, offset + 10) = sd->bl.x;
+	WBUFW(buf, offset + 12) = sd->bl.y;
+	WBUFB(buf, offset + 14) = (p->party.member[i].online) ? 0 : 1;
+	memcpy(WBUFP(buf, offset + 15), p->party.name, NAME_LENGTH);
+	memcpy(WBUFP(buf, offset + 39), sd->status.name, NAME_LENGTH);
+	mapindex->getmapname_ext(map->list[sd->bl.m].custom_name ? map->list[map->list[sd->bl.m].instance_src_map].name : map->list[sd->bl.m].name, WBUFP(buf, offset + 63));
+	WBUFB(buf, offset + 79) = (p->party.item & 1) ? 1 : 0;
+	WBUFB(buf, offset + 80) = (p->party.item & 2) ? 1 : 0;
+	clif->send(buf, packet_len(cmd), &sd->bl, PARTY);
 }
 
 /// Sends party information (ZC_GROUP_LIST).
