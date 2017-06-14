@@ -6585,34 +6585,35 @@ void clif_party_member_info(struct party_data *p, struct map_session_data *sd)
 ///     1 = disconnected
 void clif_party_info(struct party_data* p, struct map_session_data *sd)
 {
-	unsigned char buf[2+2+NAME_LENGTH+(4+NAME_LENGTH+MAP_NAME_LENGTH_EXT+1+1)*MAX_PARTY];
+	unsigned char buf[2 + 2 + NAME_LENGTH + (4 + NAME_LENGTH + MAP_NAME_LENGTH_EXT + 1 + 1) * MAX_PARTY];
 	struct map_session_data* party_sd = NULL;
 	int i, c;
 
 	nullpo_retv(p);
 
-	WBUFW(buf,0) = 0xfb;
-	memcpy(WBUFP(buf,4), p->party.name, NAME_LENGTH);
+	WBUFW(buf, 0) = 0xfb;
+	memcpy(WBUFP(buf, 4), p->party.name, NAME_LENGTH);
 	for(i = 0, c = 0; i < MAX_PARTY; i++)
 	{
-		struct party_member* m = &p->party.member[i];
-		if(!m->account_id) continue;
+		struct party_member *m = &p->party.member[i];
+		if (!m->account_id) continue;
 
-		if(party_sd == NULL) party_sd = p->data[i].sd;
+		if (party_sd == NULL)
+			party_sd = p->data[i].sd;
 
-		WBUFL(buf,28+c*46) = m->account_id;
-		memcpy(WBUFP(buf,28+c*46+4), m->name, NAME_LENGTH);
-		mapindex->getmapname_ext(mapindex_id2name(m->map), WBUFP(buf,28+c*46+28));
-		WBUFB(buf,28+c*46+44) = (m->leader) ? 0 : 1;
-		WBUFB(buf,28+c*46+45) = (m->online) ? 0 : 1;
+		WBUFL(buf, 28 + c * 46) = m->account_id;
+		memcpy(WBUFP(buf, 28 + c * 46 + 4), m->name, NAME_LENGTH);
+		mapindex->getmapname_ext(mapindex_id2name(m->map), WBUFP(buf, 28 + c * 46 + 28));
+		WBUFB(buf, 28 + c * 46 + 44) = (m->leader) ? 0 : 1;
+		WBUFB(buf, 28 + c * 46 + 45) = (m->online) ? 0 : 1;
 		c++;
 	}
-	WBUFW(buf,2) = 28+c*46;
+	WBUFW(buf, 2) = 28 + c * 46;
 
-	if(sd) { // send only to self
-		clif->send(buf, WBUFW(buf,2), &sd->bl, SELF);
+	if (sd) { // send only to self
+		clif->send(buf, WBUFW(buf, 2), &sd->bl, SELF);
 	} else if (party_sd) { // send to whole party
-		clif->send(buf, WBUFW(buf,2), &party_sd->bl, PARTY);
+		clif->send(buf, WBUFW(buf, 2), &party_sd->bl, PARTY);
 	}
 }
 
