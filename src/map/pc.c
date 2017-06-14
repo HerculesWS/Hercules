@@ -750,6 +750,7 @@ int pc_setnewpc(struct map_session_data *sd, int account_id, int char_id, int lo
 	return 0;
 }
 
+// [4144] probably pc_equippoint should be replaced to pc_item_equippoint
 int pc_equippoint(struct map_session_data *sd,int n)
 {
 	int ep = 0;
@@ -776,6 +777,33 @@ int pc_equippoint(struct map_session_data *sd,int n)
 			if( ep == EQP_HAND_R )
 				return EQP_ARMS;
 			if( ep == EQP_SHADOW_WEAPON )
+				return EQP_SHADOW_ARMS;
+		}
+	}
+	return ep;
+}
+
+int pc_item_equippoint(struct map_session_data *sd, struct item_data* id)
+{
+	int ep = 0;
+
+	nullpo_ret(sd);
+	nullpo_ret(id);
+
+	if (!itemdb->isequip2(id))
+		return 0; //Not equippable by players.
+
+	ep = id->equip;
+	if (id->look == W_DAGGER ||
+	    id->look == W_1HSWORD ||
+	    id->look == W_1HAXE) {
+		if (pc->checkskill(sd, AS_LEFT) > 0 ||
+		    (sd->job & MAPID_UPPERMASK) == MAPID_ASSASSIN ||
+		    (sd->job & MAPID_UPPERMASK) == MAPID_KAGEROUOBORO) {
+			// Kagerou and Oboro can dual wield daggers. [Rytech]
+			if (ep == EQP_HAND_R)
+				return EQP_ARMS;
+			if (ep == EQP_SHADOW_WEAPON)
 				return EQP_SHADOW_ARMS;
 		}
 	}
@@ -12044,6 +12072,7 @@ void pc_defaults(void) {
 
 	pc->isequip = pc_isequip;
 	pc->equippoint = pc_equippoint;
+	pc->item_equippoint = pc_item_equippoint;
 	pc->setinventorydata = pc_setinventorydata;
 
 	pc->checkskill = pc_checkskill;

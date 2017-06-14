@@ -6351,10 +6351,13 @@ void clif_vendinglist(struct map_session_data* sd, unsigned int id, struct s_ven
 	const int offset = 12;
 #endif
 
-#if PACKETVER >= 20150226
+#if PACKETVER < 20150226
+	const int item_length = 22;
+// [4144] date 20160921 not confirmend. Can be bigger or smaller
+#elif PACKETVER < 20160921
 	const int item_length = 47;
 #else
-	const int item_length = 22;
+	const int item_length = 53;
 #endif
 
 	nullpo_retv(sd);
@@ -6386,6 +6389,11 @@ void clif_vendinglist(struct map_session_data* sd, unsigned int id, struct s_ven
 		clif->addcards(WFIFOP(fd,offset+14+i*item_length), &vsd->status.cart[index]);
 #if PACKETVER >= 20150226
 		clif->add_item_options(WFIFOP(fd, offset + 22 + i * item_length), &vsd->status.cart[index]);
+#endif
+// [4144] date 20160921 not confirmend. Can be bigger or smaller
+#if PACKETVER >= 20160921
+		WFIFOL(fd, offset + 47 + i * item_length) = pc->item_equippoint(sd, data);
+		WFIFOW(fd, offset + 51 + i * item_length) = data->look;
 #endif
 	}
 	WFIFOSET(fd,WFIFOW(fd,2));

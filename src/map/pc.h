@@ -859,6 +859,7 @@ END_ZEROED_BLOCK; /* End */
 
 	int (*isequip) (struct map_session_data *sd,int n);
 	int (*equippoint) (struct map_session_data *sd,int n);
+	int (*item_equippoint) (struct map_session_data *sd, struct item_data* id);
 	int (*setinventorydata) (struct map_session_data *sd);
 
 	int (*checkskill) (struct map_session_data *sd,uint16 skill_id);
