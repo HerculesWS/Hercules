@@ -2442,7 +2442,9 @@ void clif_addcards2(unsigned short *cards, struct item* item) {
 /// 02d4 <index>.W <amount>.W <name id>.W <identified>.B <damaged>.B <refine>.B <card1>.W <card2>.W <card3>.W <card4>.W <equip location>.W <item type>.B <result>.B <expire time>.L <bindOnEquipType>.W (ZC_ITEM_PICKUP_ACK3)
 /// 0990 <index>.W <amount>.W <name id>.W <identified>.B <damaged>.B <refine>.B <card1>.W <card2>.W <card3>.W <card4>.W <equip location>.L <item type>.B <result>.B <expire time>.L <bindOnEquipType>.W (ZC_ITEM_PICKUP_ACK_V5)
 /// 0a0c <index>.W <amount>.W <name id>.W <identified>.B <damaged>.B <refine>.B <card1>.W <card2>.W <card3>.W <card4>.W <equip location>.L <item type>.B <result>.B <expire time>.L <bindOnEquipType>.W (ZC_ITEM_PICKUP_ACK_V6)
-void clif_additem(struct map_session_data *sd, int n, int amount, int fail) {
+/// 0a37 <index>.W <amount>.W <name id>.W <identified>.B <damaged>.B <refine>.B <card1>.W <card2>.W <card3>.W <card4>.W <equip location>.L <item type>.B <result>.B <expire time>.L <bindOnEquipType>.W <favorite>.B <view id>.W (ZC_ITEM_PICKUP_ACK_V7)
+void clif_additem(struct map_session_data *sd, int n, int amount, int fail)
+{
 	struct packet_additem p;
 	nullpo_retv(sd);
 
@@ -2482,6 +2484,10 @@ void clif_additem(struct map_session_data *sd, int n, int amount, int fail) {
 #endif
 #if PACKETVER >= 20150226
 		clif->add_item_options(&p.option_data[0], &sd->status.inventory[n]);
+#endif
+#if PACKETVER >= 20160921
+		p.favorite = sd->status.inventory[n].favorite;
+		p.look = sd->inventory_data[n]->look;
 #endif
 	}
 	p.result = (unsigned char)fail;
