@@ -6577,6 +6577,7 @@ void clif_party_member_info(struct party_data *p, struct map_session_data *sd)
 
 /// Sends party information (ZC_GROUP_LIST).
 /// 00fb <packet len>.W <party name>.24B { <account id>.L <nick>.24B <map name>.16B <role>.B <state>.B }*
+/// 0a44 <packet len>.W <party name>.24B { <account id>.L <nick>.24B <map name>.16B <role>.B <state>.B <class>.W <base level>.W }* <item pickup rule>.B <item share rule>.B <unknown>.L
 /// role:
 ///     0 = leader
 ///     1 = normal
@@ -6585,30 +6586,51 @@ void clif_party_member_info(struct party_data *p, struct map_session_data *sd)
 ///     1 = disconnected
 void clif_party_info(struct party_data* p, struct map_session_data *sd)
 {
-	unsigned char buf[2 + 2 + NAME_LENGTH + (4 + NAME_LENGTH + MAP_NAME_LENGTH_EXT + 1 + 1) * MAX_PARTY];
 	struct map_session_data* party_sd = NULL;
 	int i, c;
+#if PACKETVER < 20170524
+	const int cmd = 0xfb;
+	const int size = 46;
+	unsigned char buf[2 + 2 + NAME_LENGTH + 46 * MAX_PARTY];
+#else
+// [4144] probably 0xa44 packet can works on older clients because in client was added in 2015-10-07
+	const int cmd = 0xa44;
+	const int size = 50;
+	unsigned char buf[2 + 2 + NAME_LENGTH + 50 * MAX_PARTY + 6];
+#endif
 
 	nullpo_retv(p);
 
-	WBUFW(buf, 0) = 0xfb;
+	WBUFW(buf, 0) = cmd;
 	memcpy(WBUFP(buf, 4), p->party.name, NAME_LENGTH);
 	for(i = 0, c = 0; i < MAX_PARTY; i++)
 	{
 		struct party_member *m = &p->party.member[i];
-		if (!m->account_id) continue;
+		if (!m->account_id)
+			continue;
 
 		if (party_sd == NULL)
 			party_sd = p->data[i].sd;
 
-		WBUFL(buf, 28 + c * 46) = m->account_id;
-		memcpy(WBUFP(buf, 28 + c * 46 + 4), m->name, NAME_LENGTH);
-		mapindex->getmapname_ext(mapindex_id2name(m->map), WBUFP(buf, 28 + c * 46 + 28));
-		WBUFB(buf, 28 + c * 46 + 44) = (m->leader) ? 0 : 1;
-		WBUFB(buf, 28 + c * 46 + 45) = (m->online) ? 0 : 1;
+		WBUFL(buf, 28 + c * size) = m->account_id;
+		memcpy(WBUFP(buf, 28 + c * size + 4), m->name, NAME_LENGTH);
+		mapindex->getmapname_ext(mapindex_id2name(m->map), WBUFP(buf, 28 + c * size + 28));
+		WBUFB(buf, 28 + c * size + 44) = (m->leader) ? 0 : 1;
+		WBUFB(buf, 28 + c * size + 45) = (m->online) ? 0 : 1;
+#if PACKETVER >= 20170524
+		WBUFW(buf, 28 + c * size + 46) = m->class;
+		WBUFW(buf, 28 + c * size + 48) = m->lv;
+#endif
 		c++;
 	}
-	WBUFW(buf, 2) = 28 + c * 46;
+#if PACKETVER < 20170524
+	WBUFW(buf, 2) = 28 + c * size;
+#else
+	WBUFB(buf, 28 + c * size) = (p->party.item & 1) ? 1 : 0;
+	WBUFB(buf, 28 + c * size + 1) = (p->party.item & 2) ? 1 : 0;
+	WBUFL(buf, 28 + c * size + 2) = 0; // unknown
+	WBUFW(buf, 2) = 28 + c * size + 6;
+#endif
 
 	if (sd) { // send only to self
 		clif->send(buf, WBUFW(buf, 2), &sd->bl, SELF);
