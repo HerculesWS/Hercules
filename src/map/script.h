@@ -854,6 +854,8 @@ struct script_interface {
 	int (*db_free_code_sub) (union DBKey key, struct DBData *data, va_list ap);
 	void (*add_autobonus) (const char *autobonus);
 	int (*menu_countoptions) (const char *str, int max_count, int *total);
+	int (*buildin_recovery_pc_sub) (struct map_session_data *sd, va_list ap);
+	int (*buildin_recovery_sub) (struct block_list *bl, va_list ap);
 	int (*buildin_areawarp_sub) (struct block_list *bl, va_list ap);
 	int (*buildin_areapercentheal_sub) (struct block_list *bl, va_list ap);
 	void (*buildin_delitem_delete) (struct map_session_data *sd, int idx, int *amount, bool delete_items);
