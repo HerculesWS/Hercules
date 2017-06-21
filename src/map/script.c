@@ -16211,6 +16211,60 @@ BUILDIN(isstr)
 	return true;
 }
 
+enum datatype {
+	DATATYPE_NIL    = 1 << 7, // we don't start at 1, to leave room for primitives
+	DATATYPE_STR    = 1 << 8,
+	DATATYPE_INT    = 1 << 9,
+	DATATYPE_CONST  = 1 << 10,
+	DATATYPE_PARAM  = 1 << 11,
+	DATATYPE_VAR    = 1 << 12,
+	DATATYPE_LABEL  = 1 << 13,
+};
+
+BUILDIN(getdatatype) {
+	int type;
+
+	if (script_hasdata(st, 2)) {
+		struct script_data *data = script_getdata(st, 2);
+
+		if (data_isstring(data)) {
+			type = DATATYPE_STR;
+			if (data->type == C_CONSTSTR) {
+				type |= DATATYPE_CONST;
+			}
+		} else if (data_isint(data)) {
+			type = DATATYPE_INT;
+		} else if (data_islabel(data)) {
+			type = DATATYPE_LABEL;
+		} else if (data_isreference(data)) {
+			if (reference_toconstant(data)) {
+				type = DATATYPE_CONST | DATATYPE_INT;
+			} else if (reference_toparam(data)) {
+				type = DATATYPE_PARAM | DATATYPE_INT;
+			} else if (reference_tovariable(data)) {
+				type = DATATYPE_VAR;
+				if (is_string_variable(reference_getname(data))) {
+					type |= DATATYPE_STR;
+				} else {
+					type |= DATATYPE_INT;
+				}
+			} else {
+				ShowError("script:getdatatype: Unknown reference type!\n");
+				script->reportdata(data);
+				st->state = END;
+				return false;
+			}
+		} else {
+			type = data->type; // fallback to primitive type if unknown
+		}
+	} else {
+		type = DATATYPE_NIL; // nothing was passed
+	}
+
+	script_pushint(st, type);
+	return true;
+}
+
 //=======================================================
 // chr <int>
 //-------------------------------------------------------
@@ -23652,6 +23706,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(charisalpha,"si"), //isalpha [Valaris]
 		BUILDIN_DEF(charat,"si"),
 		BUILDIN_DEF(isstr,"v"),
+		BUILDIN_DEF(getdatatype, "?"),
 		BUILDIN_DEF(chr,"i"),
 		BUILDIN_DEF(ord,"s"),
 		BUILDIN_DEF(setchar,"ssi"),
@@ -24124,6 +24179,15 @@ void script_hardcoded_constants(void)
 	script->set_constant("PERM_DISABLE_STORE", PC_PERM_DISABLE_STORE, false, false);
 	script->set_constant("PERM_DISABLE_EXP", PC_PERM_DISABLE_EXP, false, false);
 	script->set_constant("PERM_DISABLE_SKILL_USAGE", PC_PERM_DISABLE_SKILL_USAGE, false, false);
+
+	script->constdb_comment("Data types");
+	script->set_constant("DATATYPE_NIL", DATATYPE_NIL, false, false);
+	script->set_constant("DATATYPE_STR", DATATYPE_STR, false, false);
+	script->set_constant("DATATYPE_INT", DATATYPE_INT, false, false);
+	script->set_constant("DATATYPE_CONST", DATATYPE_CONST, false, false);
+	script->set_constant("DATATYPE_PARAM", DATATYPE_PARAM, false, false);
+	script->set_constant("DATATYPE_VAR", DATATYPE_VAR, false, false);
+	script->set_constant("DATATYPE_LABEL", DATATYPE_LABEL, false, false);
 
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL
