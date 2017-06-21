@@ -23154,13 +23154,15 @@ BUILDIN(mergeitem)
 BUILDIN(getcalendartime)
 {
 	struct tm info = { 0 };
-	int day_of_month = script_hasdata(st, 4) ? script_getnum(st, 4) : -1,
-		day_of_week = script_hasdata(st, 5) ? script_getnum(st, 5) : -1,
-		year = date_get_year(),
-		month = date_get_month(),
-		day = date_get_day(),
-		hour = script_getnum(st, 2),
-		minute = script_getnum(st, 3);
+	int day_of_month = script_hasdata(st, 4) ? script_getnum(st, 4) : -1;
+	int day_of_week = script_hasdata(st, 5) ? script_getnum(st, 5) : -1;
+	int year = date_get_year();
+	int month = date_get_month();
+	int day = date_get_day();
+	int cur_hour = date_get_hour();
+	int cur_min = date_get_min();
+	int hour = script_getnum(st, 2);
+	int minute = script_getnum(st, 3);
 
 	info.tm_sec = 0;
 	info.tm_min = minute;
@@ -23184,6 +23186,16 @@ BUILDIN(getcalendartime)
 		script_pushint(st, -1);
 		return false;
 	}
+	if (hour > -1 && (hour > 23)) {
+		ShowError("script:getcalendartime: Hour in invalid range. Must be between 0 and 23.\n");
+		script_pushint(st, -1);
+		return false;
+	}
+	if (minute > -1 && (minute > 59)) {
+		ShowError("script:getcalendartime: Minute in invalid range. Must be between 0 and 59.\n");
+		script_pushint(st, -1);
+		return false;
+	}
 	if (hour == -1 || minute == -1) {
 		ShowError("script:getcalendartime: Minutes and Hours are required\n");
 		script_pushint(st, -1);
@@ -23194,28 +23206,38 @@ BUILDIN(getcalendartime)
 		if (day_of_month < day) { // Next Month
 			info.tm_mon++;
 		} else if (day_of_month == day) { // Today
-			if (hour < date_get_hour() ||
-				(hour == date_get_hour() && minute < date_get_min())) { // But past time, next month
+			if (hour < cur_hour ||
+				(hour == cur_hour && minute < cur_min)) { // But past time, next month
 				info.tm_mon++;
 			}
 		}
-		info.tm_mday = day_of_month;
+
+		// Loops until month has finding a month
+		// that has day_of_month
+		do {
+			time_t t;
+			struct tm *lt;
+			info.tm_mday = day_of_month;
+			t = mktime(&info);
+			lt = localtime(&t);
+			info = *lt;
+		} while (info.tm_mday != day_of_month);
 	} else if (day_of_week > -1) {
 		int cur_wday = date_get_dayofweek();
 
 		if (day_of_week > cur_wday) { // This week
 			info.tm_mday += (day_of_week - cur_wday);
 		} else if (day_of_week == cur_wday) { // Today
-			if (hour < date_get_hour() ||
-				(hour == date_get_hour() && minute < date_get_min())) {
+			if (hour < cur_hour ||
+				(hour == cur_hour && minute <= cur_min)) {
 				info.tm_mday += 7; // Next week
 			}
 		} else if (day_of_week < cur_wday) { // Next week
 			info.tm_mday += (7 - cur_wday + day_of_week);
 		}
 	} else if (day_of_week == -1 && day_of_month == -1) { // Next occurence of hour/min
-		if (hour < date_get_hour() ||
-			(hour == date_get_hour() && minute < date_get_min())) {
+		if (hour < cur_hour ||
+			(hour == cur_hour && minute < cur_min)) {
 			info.tm_mday++;
 		}
 	}
