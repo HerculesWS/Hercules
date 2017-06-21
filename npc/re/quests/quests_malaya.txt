@@ -2426,67 +2426,64 @@ malaya,326,68,2	script	Pedro the Sailor	4W_SAILOR,{
 				end;
 			} else if (.@playtime == 2) {
 				erasequest 7401;
-				goto L_SetQuest;
 			} else {
 				if (!questprogress(7403)) {
-					if (!questprogress(7402)) {
-						goto L_SetQuest;
+					if (questprogress(7402)) {
+						mes "[Pedro the Sailor]";
+						mes "You know what to do.";
+						mes "Gather the flowers and take it to Mumbaki to get an Offering Bouquet made.";
+						next;
+						mes "[Pedro the Sailor]";
+						mes "Give the Bouquet to Miss Diwata to cheer her up.";
+						mes "....Thank you.";
+						close;
 					}
+				} else {
 					mes "[Pedro the Sailor]";
-					mes "You know what to do.";
-					mes "Gather the flowers and take it to Mumbaki to get an Offering Bouquet made.";
+					mes "Diwata is calm!";
+					mes "I can even feel the difference out here.";
+					mes "I am always in your debt.";
 					next;
 					mes "[Pedro the Sailor]";
-					mes "Give the Bouquet to Miss Diwata to cheer her up.";
-					mes "....Thank you.";
+					mes "You know what? Why don't you do this on a more regular basis?";
+					mes "I think you kind of like doing it.";
+					setquest 7401;
+					erasequest 7403;
+//					if (IsPremiumPcCafe == 10)
+						getitem Lesser_Agimat, 2; // Lesser_Agimat
+//					else
+//						getitem Lesser_Agimat, 1; // Lesser_Agimat
+					getexp 200000,200000;
+					if (!rand(3))
+						$malayaNames$[0] = strcharinfo(PC_NAME);
 					close;
 				}
+			}
+			mes "[Pedro the Sailor]";
+			mes "Ah, the thing is...";
+			mes "We can't go right now..";
+			mes "You see, the ghosts are back...";
+			mes "I'm fed up with nuisance.";
+			next;
+			mes "[Pedro the Sailor]";
+			mes "I mean... Miss Diwata... Isn't feeling very well and, even with the Spiritual Protection";
+			mes "a normal person can't stand it.";
+			next;
+			if (select("I see. Take care then.", "How about a Floral Tribute?") == 1) {
 				mes "[Pedro the Sailor]";
-				mes "Diwata is calm!";
-				mes "I can even feel the difference out here.";
-				mes "I am always in your debt.";
-				next;
-				mes "[Pedro the Sailor]";
-				mes "You know what? Why don't you do this on a more regular basis?";
-				mes "I think you kind of like doing it.";
-				setquest 7401;
-				erasequest 7403;
-//				if (IsPremiumPcCafe == 10)
-					getitem Lesser_Agimat, 2; // Lesser_Agimat
-//				else
-//					getitem Lesser_Agimat, 1; // Lesser_Agimat
-				getexp 200000,200000;
-				if (!rand(3))
-					$malayaNames$[0] = strcharinfo(PC_NAME);
+				mes "I'm glad you understand.";
+				mes "Sigh...";
 				close;
 			}
+			mes "[Pedro the Sailor]";
+			mes "Hmmm. That would be nice.";
+			mes "If she can be soothed with flowers...!";
+			mes "Good luck.";
+			setquest 7402;
+			close;
 		}
 	}
 	end;
-
-L_SetQuest:
-	mes "[Pedro the Sailor]";
-	mes "Ah, the thing is...";
-	mes "We can't go right now..";
-	mes "You see, the ghosts are back...";
-	mes "I'm fed up with nuisance.";
-	next;
-	mes "[Pedro the Sailor]";
-	mes "I mean... Miss Diwata... Isn't feeling very well and, even with the Spiritual Protection";
-	mes "a normal person can't stand it.";
-	next;
-	if (select("I see. Take care then.", "How about a Floral Tribute?") == 1) {
-		mes "[Pedro the Sailor]";
-		mes "I'm glad you understand.";
-		mes "Sigh...";
-		close;
-	}
-	mes "[Pedro the Sailor]";
-	mes "Hmmm. That would be nice.";
-	mes "If she can be soothed with flowers...!";
-	mes "Good luck.";
-	setquest 7402;
-	close;
 }
 
 ma_in01,125,107,3	script	Ghost Diwata	G_SKOGUL,4,4,{
@@ -3373,7 +3370,7 @@ ma_fild01,166,214,6	script	Old Man in Dilemma#GA	4_F_BARYO_OLD,{
 			next;
 			if(select("Create.", "No, thank you.") == 1) {
 				if (countitem(Lesser_Agimat) >= 3 && Zeny >= 1000) {
-					specialeffect2 EF_CONE;
+					specialeffect(EF_CONE, AREA, playerattached());
 					specialeffect EF_FORESTLIGHT2;
 					Zeny -= 1000;
 					getitem Ancient_Spirit_Agimat,1;
@@ -3827,7 +3824,7 @@ ma_fild01,158,243,6	script	Tribe Blacksmith#malaya	4_M_MALAYA,{
 	mes "[Bayani]";
 	mes "Pow!! Wow!! Flip... flop!";
 	next;
-	specialeffect2 EF_TRIPLEATTACK;
+	specialeffect(EF_TRIPLEATTACK, AREA, playerattached());
 	mes "[Bayani]";
 	mes "BAM!!";
 	next;
@@ -4789,7 +4786,7 @@ ma_fild02,312,259,3	script	Dog#buwaya	4_DOG01,{
 		next;
 		mes "^FF0000- Shoook-^000000";
 		enablenpc "Guard#buwayacave";
-		specialeffect2 EF_MVP;
+		specialeffect(EF_MVP, AREA, playerattached());
 		next;
 		mes "[Guard]";
 		mes "Job well done!";
@@ -7333,14 +7330,14 @@ malaya,55,72,4	script	Nurse#ma_n1	4_F_NURSE,{
 			close;
 		}
 		mes "The voice seems to be coming from the bushes near the entrance of the hospital.";
-		specialeffect EF_STEAL,AREA,"Bushes#ma";
+		specialeffect(EF_STEAL, AREA, getnpcid(0, "Bushes#ma"));
 		malaya_bang = 13;
 		changequest 11293,11294;
 		close;
 	} else if (malaya_bang == 13) {
 		mes "The voice seems to be coming from the bushes near the entrance of the hospital.";
 		mes "Let's check around.";
-		specialeffect EF_STEAL,AREA,"Bushes#ma";
+		specialeffect(EF_STEAL, AREA, getnpcid(0, "Bushes#ma"));
 		close;
 	} else if (malaya_bang == 14) {
 		mes "[Nurse Las]";
@@ -8792,11 +8789,11 @@ ma_fild01,172,223,6	script	Tattooist#pin	4_M_BARYO_OLD,{
 	next;
 	mes "The Tattooist placed the Ancient Grudges around the workplace.";
 	next;
-	specialeffect EF_FLAMELAUNCHER,AREA,"Ancient Grudge#01";
-	specialeffect EF_FLAMELAUNCHER,AREA,"Ancient Grudge#02";
-	specialeffect EF_FLAMELAUNCHER,AREA,"Ancient Grudge#03";
-	specialeffect EF_FLAMELAUNCHER,AREA,"Ancient Grudge#04";
-	specialeffect EF_FLAMELAUNCHER,AREA,"Ancient Grudge#05";
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid(0, "Ancient Grudge#01"));
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid(0, "Ancient Grudge#02"));
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid(0, "Ancient Grudge#03"));
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid(0, "Ancient Grudge#04"));
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid(0, "Ancient Grudge#05"));
 	mes "The Ancient Grudge lit up and tools starts to glow. He smiled satisfyingly at the glowing tools and materials.";
 	next;
 	mes "And then "+.@name$+" stared intensely at the doll as if to remember every detail of it in his head.";
@@ -8906,11 +8903,11 @@ ma_fild01,172,223,6	script	Tattooist#pin	4_M_BARYO_OLD,{
 	}
 	mes "He held up the powder in both hands and then blew it onto the drawing.";
 	next;
-	specialeffect EF_FLAMELAUNCHER,AREA,"Ancient Grudge#01";
-	specialeffect EF_FLAMELAUNCHER,AREA,"Ancient Grudge#02";
-	specialeffect EF_FLAMELAUNCHER,AREA,"Ancient Grudge#03";
-	specialeffect EF_FLAMELAUNCHER,AREA,"Ancient Grudge#04";
-	specialeffect EF_FLAMELAUNCHER,AREA,"Ancient Grudge#05";
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid(0, "Ancient Grudge#01"));
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid(0, "Ancient Grudge#02"));
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid(0, "Ancient Grudge#03"));
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid(0, "Ancient Grudge#04"));
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid(0, "Ancient Grudge#05"));
 	mes "All Ancient Grudges started to burn and then the glowing light from the "+.@name$+" drawing faded away.";
 	next;
 	specialeffect EF_LIGHTSPHERE;

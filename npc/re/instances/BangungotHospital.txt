@@ -33,8 +33,6 @@
 //= 1.1
 //=========================================================================
 
-1@ma_h	mapflag	src4instance
-
 //== Instance Creation =====================================
 ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 	if (BaseLevel < 100) end;
@@ -50,7 +48,7 @@ ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 				else if (malaya_bang == 31)
 					callsub L_Closed,0;
 				else
-					goto L_NoParty;
+					callsub L_NoParty;
 			}
 			if (questprogress(11309,HUNTING) != 2) {
 				.@playtime = questprogress(9224,PLAYTIME);
@@ -102,7 +100,7 @@ ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 						cutin "",255;
 						end;
 					} else {
-						//if (!.@party_id) goto L_NoParty; //unneeded
+						//if (!.@party_id) callsub L_NoParty; //unneeded
 						if (malaya_bang > 39)
 							callsub L_Enter,(getcharid(CHAR_ID_CHAR) == getpartyleader(.@party_id,2))?1:0,1,1;
 						else {
@@ -124,7 +122,7 @@ ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 				end;
 			}
 		} else if (.@quest == 1) {
-			if (!.@party_id) goto L_NoParty;
+			if (!.@party_id) callsub L_NoParty;
 			if (malaya_bang > 39) {
 				if (questprogress(9222,HUNTING) == 1) {
 					.@playtime = questprogress(9224,PLAYTIME);
@@ -134,7 +132,7 @@ ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 						next;
 						callsub L_Enter,0,0;
 					} else if (.@playtime == 2) {
-						//if (!.@party_id) goto L_NoParty; //unneeded
+						//if (!.@party_id) callsub L_NoParty; //unneeded
 						if (malaya_bang > 39)
 							callsub L_Enter,(getcharid(CHAR_ID_CHAR) == getpartyleader(.@party_id,2))?1:0,1,1;
 						else {
@@ -213,7 +211,7 @@ ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 			cutin "",255;
 			end;
 		} else {
-			if (!.@party_id) goto L_NoParty;
+			if (!.@party_id) callsub L_NoParty;
 			if (malaya_bang > 39)
 				callsub L_Enter,(getcharid(CHAR_ID_CHAR) == getpartyleader(.@party_id,2))?1:0,1,1;
 			else {
@@ -408,7 +406,7 @@ OnInstanceInit:
 	disablenpc instance_npcname("#Memorial Start_time");
 	end;
 OnEnable:
-	specialeffect EF_BAT2,AREA,instance_npcname("#Memorial Start");
+	specialeffect(EF_BAT2, AREA, getnpcid(0, instance_npcname("#Memorial Start")));
 	initnpctimer;
 	end;
 OnDisable:
@@ -894,19 +892,19 @@ OnStopTimer:
 	end;
 OnTimer1000:
 	mapannounce instance_mapname("1@ma_h"),"- Bangungot's Pillar of Spirit is curing Bangungot. If you don't hunt it now, he will fully recover!! -",bc_map,"0xFF8200";
-	specialeffect EF_MAPPILLAR2,AREA,instance_npcname("#Patternwarp45");
+	specialeffect(EF_MAPPILLAR2, AREA, getnpcid(0, instance_npcname("#Patternwarp45")));
 	end;
 OnTimer7000:
 	mapannounce instance_mapname("1@ma_h"),"Bangungot: I never die!!!!",bc_map,"0xFF82FF";
-	specialeffect EF_MAPPILLAR2,AREA,instance_npcname("#Patternwarp45");
+	specialeffect(EF_MAPPILLAR2, AREA, getnpcid(0, instance_npcname("#Patternwarp45")));
 	end;
 OnTimer14000:
 	mapannounce instance_mapname("1@ma_h"),"Bangungot: If you dare, kill me!! I will revive soon!!!",bc_map,"0xFF82FF";
-	specialeffect EF_MAPPILLAR2,AREA,instance_npcname("#Patternwarp45");
+	specialeffect(EF_MAPPILLAR2, AREA, getnpcid(0, instance_npcname("#Patternwarp45")));
 	end;
 OnTimer21000:
 	mapannounce instance_mapname("1@ma_h"),"Bangungot: I cannot die this way...!!!!",bc_map,"0xFF82FF";
-	specialeffect EF_MAPPILLAR2,AREA,instance_npcname("#Patternwarp45");
+	specialeffect(EF_MAPPILLAR2, AREA, getnpcid(0, instance_npcname("#Patternwarp45")));
 	end;
 OnTimer30000:
 	donpcevent instance_npcname("#Summon Pillar")+"::OnReset";

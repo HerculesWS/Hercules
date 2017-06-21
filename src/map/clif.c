@@ -677,7 +677,8 @@ void clif_authok(struct map_session_data *sd)
 #if PACKETVER >= 20080102
 	p.font = sd->status.font;
 #endif
-#if PACKETVER >= 20141016
+// Some clients smaller than 20160330 cant be tested [4144]
+#if PACKETVER >= 20141016 && PACKETVER < 20160330
 	p.sex = sd->status.sex;
 #endif
 	clif->send(&p,sizeof(p),&sd->bl,SELF);
@@ -2402,23 +2403,37 @@ void clif_addcards2(unsigned short *cards, struct item* item) {
 }
 
 /**
- * Fills in RandomOptions(Bonuses) of items into the buffer
+ * Fills in ItemOptions(Bonuses) of items into the buffer
  *
- * Dummy datais used since this feature isn't supported yet (ITEM_RDM_OPT).
- * A maximum of 5 random options can be supported.
+ * A maximum of 5 item options can be supported.
  *
  * @param buf[in,out] The buffer to write to. The pointer must be valid and initialized.
  * @param item[in]    The source item.
  */
-void clif_add_random_options(unsigned char* buf, struct item* item)
+ int clif_add_item_options(struct ItemOptions *buf, const struct item *it)
 {
-	int i;
-	nullpo_retv(buf);
-	for (i = 0; i < 5; i++){
-		WBUFW(buf,i*5+0) = 0; // OptIndex
-		WBUFW(buf,i*5+2) = 0; // Value
-		WBUFB(buf,i*5+4) = 0; // Param1
+	int i = 0, j = 0, total_options = 0;
+	
+	nullpo_ret(buf);
+	
+	// Append the buffer with existing options first.
+	for (i = 0; i < MAX_ITEM_OPTIONS; i++) {
+		if (it->option[i].index) {
+			WBUFW(buf, j * 5 + 0) = it->option[i].index; // OptIndex
+			WBUFW(buf, j * 5 + 2) = it->option[i].value; // Value
+			WBUFB(buf, j * 5 + 4) = it->option[i].param; // Param1
+			total_options++;
+			j++;
+		}
 	}
+	// Append the remaining buffer with no values;
+	for (; j < MAX_ITEM_OPTIONS || j < 5; j++) {
+		WBUFW(buf, j * 5 + 0) = 0;
+		WBUFW(buf, j * 5 + 2) = 0;
+		WBUFB(buf, j * 5 + 4) = 0;
+	}
+	
+	return total_options;
 }
 
 /// Notifies the client, about a received inventory item or the result of a pick-up request.
@@ -2442,9 +2457,6 @@ void clif_additem(struct map_session_data *sd, int n, int amount, int fail) {
 	p.count = amount;
 
 	if( !fail ) {
-#if PACKETVER >= 20150226
-		int i;
-#endif
 		if( n < 0 || n >= MAX_INVENTORY || sd->status.inventory[n].nameid <=0 || sd->inventory_data[n] == NULL )
 			return;
 
@@ -2469,11 +2481,7 @@ void clif_additem(struct map_session_data *sd, int n, int amount, int fail) {
 		p.bindOnEquipType = sd->status.inventory[n].bound && !itemdb->isstackable2(sd->inventory_data[n]) ? 2 : sd->inventory_data[n]->flag.bindonequip ? 1 : 0;
 #endif
 #if PACKETVER >= 20150226
-		for (i=0; i<5; i++){
-			p.option_data[i].index = 0;
-			p.option_data[i].value = 0;
-			p.option_data[i].param = 0;
-		}
+		clif->add_item_options(&p.option_data[0], &sd->status.inventory[n]);
 #endif
 	}
 	p.result = (unsigned char)fail;
@@ -2546,41 +2554,39 @@ void clif_item_sub(unsigned char *buf, int n, struct item *i, struct item_data *
 
 }
 
-void clif_item_equip(short idx, struct EQUIPITEM_INFO *p, struct item *i, struct item_data *id, int eqp_pos) {
-#if PACKETVER >= 20150226
-	int j;
-#endif
+void clif_item_equip(short idx, struct EQUIPITEM_INFO *p, struct item *it, struct item_data *id, int eqp_pos)
+{
 	nullpo_retv(p);
-	nullpo_retv(i);
+	nullpo_retv(it);
 	nullpo_retv(id);
 	p->index = idx;
 
 	if (id->view_id > 0)
 		p->ITID = id->view_id;
 	else
-		p->ITID = i->nameid;
+		p->ITID = it->nameid;
 
 	p->type = itemtype(id->type);
 
 #if PACKETVER < 20120925
-	p->IsIdentified = i->identify ? 1 : 0;
+	p->IsIdentified = it->identify ? 1 : 0;
 #endif
 
 	p->location = eqp_pos;
-	p->WearState = i->equip;
+	p->WearState = it->equip;
 #if PACKETVER < 20120925
-	p->IsDamaged = (i->attribute & ATTR_BROKEN) != 0 ? 1 : 0;
+	p->IsDamaged = (it->attribute & ATTR_BROKEN) != 0 ? 1 : 0;
 #endif
-	p->RefiningLevel = i->refine;
+	p->RefiningLevel = it->refine;
 
-	clif->addcards2(&p->slot.card[0], i);
+	clif->addcards2(&p->slot.card[0], it);
 
 #if PACKETVER >= 20071002
-	p->HireExpireDate = i->expire_time;
+	p->HireExpireDate = it->expire_time;
 #endif
 
 #if PACKETVER >= 20080102
-	p->bindOnEquipType = i->bound ? 2 : id->flag.bindonequip ? 1 : 0;
+	p->bindOnEquipType = it->bound ? 2 : id->flag.bindonequip ? 1 : 0;
 #endif
 
 #if PACKETVER >= 20100629
@@ -2588,19 +2594,14 @@ void clif_item_equip(short idx, struct EQUIPITEM_INFO *p, struct item *i, struct
 #endif
 
 #if PACKETVER >= 20120925
-	p->Flag.IsIdentified = i->identify ? 1 : 0;
-	p->Flag.IsDamaged    = (i->attribute & ATTR_BROKEN) != 0 ? 1 : 0;
-	p->Flag.PlaceETCTab  = i->favorite ? 1 : 0;
+	p->Flag.IsIdentified = it->identify ? 1 : 0;
+	p->Flag.IsDamaged    = (it->attribute & ATTR_BROKEN) != 0 ? 1 : 0;
+	p->Flag.PlaceETCTab  = it->favorite ? 1 : 0;
 	p->Flag.SpareBits    = 0;
 #endif
 
 #if PACKETVER >= 20150226
-	p->option_count = 0;
-	for (j=0; j<5; j++){
-		p->option_data[j].index = 0;
-		p->option_data[j].value = 0;
-		p->option_data[j].param = 0;
-	}
+	p->option_count = clif->add_item_options(p->option_data, it);
 #endif
 }
 
@@ -3193,31 +3194,31 @@ void clif_changelook(struct block_list *bl,int type,int val)
 					vd->shield = val;
 			break;
 			case LOOK_BASE:
-				if( !sd ) break;
-
-				if ( val == INVISIBLE_CLASS ) /* nothing to change look */
-					return;
-
-				if( sd->sc.option&OPTION_COSTUME )
-					vd->weapon = vd->shield = 0;
-
-				if( !vd->cloth_color )
+				if (sd == NULL)
 					break;
 
-				if (sd->sc.option&OPTION_WEDDING && battle_config.wedding_ignorepalette)
+				if (val == INVISIBLE_CLASS) /* nothing to change look */
+					return;
+
+				if (sd->sc.option & OPTION_COSTUME)
+					vd->weapon = vd->shield = 0;
+
+				if (!vd->cloth_color)
+					break;
+
+				if ((sd->sc.option & OPTION_WEDDING) != 0 && battle_config.wedding_ignorepalette == true)
 					vd->cloth_color = 0;
-				if (sd->sc.option&OPTION_XMAS && battle_config.xmas_ignorepalette)
+				if ((sd->sc.option & OPTION_XMAS) != 0 && battle_config.xmas_ignorepalette == true)
 					vd->cloth_color = 0;
-				if (sd->sc.option&OPTION_SUMMER && battle_config.summer_ignorepalette)
+				if ((sd->sc.option & OPTION_SUMMER) != 0 && battle_config.summer_ignorepalette == true)
 					vd->cloth_color = 0;
-				if (sd->sc.option&OPTION_HANBOK && battle_config.hanbok_ignorepalette)
+				if ((sd->sc.option & OPTION_HANBOK) != 0 && battle_config.hanbok_ignorepalette == true)
 					vd->cloth_color = 0;
-				if (sd->sc.option&OPTION_OKTOBERFEST /* TODO: config? */)
+				if ((sd->sc.option & OPTION_OKTOBERFEST) != 0 && battle_config.oktoberfest_ignorepalette == true)
 					vd->cloth_color = 0;
-				if (vd->body_style && (
-					sd->sc.option&OPTION_WEDDING || sd->sc.option&OPTION_XMAS ||
-					sd->sc.option&OPTION_SUMMER || sd->sc.option&OPTION_HANBOK ||
-					sd->sc.option&OPTION_OKTOBERFEST))
+				if ((sd->sc.option & OPTION_SUMMER2) != 0 && battle_config.summer2_ignorepalette == true)
+					vd->cloth_color = 0;
+				if (vd->body_style != 0 && (sd->sc.option & OPTION_COSTUME) != 0)
 					vd->body_style = 0;
 			break;
 			case LOOK_HAIR:
@@ -3236,16 +3237,18 @@ void clif_changelook(struct block_list *bl,int type,int val)
 				vd->hair_color = val;
 			break;
 			case LOOK_CLOTHES_COLOR:
-				if( val && sd ) {
-					if( sd->sc.option&OPTION_WEDDING && battle_config.wedding_ignorepalette )
+				if (val && sd != NULL) {
+					if ((sd->sc.option & OPTION_WEDDING) != 0 && battle_config.wedding_ignorepalette == true)
 						val = 0;
-					if( sd->sc.option&OPTION_XMAS && battle_config.xmas_ignorepalette )
+					if ((sd->sc.option & OPTION_XMAS) != 0 && battle_config.xmas_ignorepalette == true)
 						val = 0;
-					if( sd->sc.option&OPTION_SUMMER && battle_config.summer_ignorepalette )
+					if ((sd->sc.option & OPTION_SUMMER) != 0 && battle_config.summer_ignorepalette == true)
 						val = 0;
-					if( sd->sc.option&OPTION_HANBOK && battle_config.hanbok_ignorepalette )
+					if ((sd->sc.option & OPTION_HANBOK) != 0 && battle_config.hanbok_ignorepalette == true)
 						val = 0;
-					if( sd->sc.option&OPTION_OKTOBERFEST /* TODO: config? */ )
+					if ((sd->sc.option & OPTION_OKTOBERFEST) != 0 && battle_config.oktoberfest_ignorepalette == true)
+						val = 0;
+					if ((sd->sc.option & OPTION_SUMMER2) != 0 && battle_config.summer2_ignorepalette == true)
 						val = 0;
 				}
 				vd->cloth_color = val;
@@ -4016,7 +4019,7 @@ void clif_tradeadditem(struct map_session_data* sd, struct map_session_data* tsd
 		WBUFW(buf,15)= 0; //card (4w)
 		WBUFW(buf,17)= 0; //card (4w)
 #if PACKETVER >= 20150226
-		clif->add_random_options(WBUFP(buf, 19), &sd->status.inventory[index]);
+		clif->add_item_options(WBUFP(buf, 19), &sd->status.inventory[index]);
 #endif
 	}
 	else
@@ -4042,7 +4045,7 @@ void clif_tradeadditem(struct map_session_data* sd, struct map_session_data* tsd
 		WBUFB(buf,10)= sd->status.inventory[index].refine; //refine
 		clif->addcards(WBUFP(buf, 11), &sd->status.inventory[index]);
 #if PACKETVER >= 20150226
-		clif->add_random_options(WBUFP(buf, 19), &sd->status.inventory[index]);
+		clif->add_item_options(WBUFP(buf, 19), &sd->status.inventory[index]);
 #endif
 	}
 	WFIFOSET(fd,packet_len(tradeaddType));
@@ -4173,7 +4176,7 @@ void clif_storageitemadded(struct map_session_data* sd, struct item* i, int inde
 	WFIFOB(fd,12+offset) = i->refine; //refine
 	clif->addcards(WFIFOP(fd,13+offset), i);
 #if PACKETVER >= 20150226
-	clif->add_random_options(WFIFOP(fd,21+offset), i);
+	clif->add_item_options(WFIFOP(fd, 21 + offset), i);
 #endif
 	WFIFOSET(fd,packet_len(storageaddType));
 }
@@ -4186,12 +4189,13 @@ void clif_storageitemremoved(struct map_session_data* sd, int index, int amount)
 
 	nullpo_retv(sd);
 
-	fd=sd->fd;
-	WFIFOHEAD(fd,packet_len(0xf6));
-	WFIFOW(fd,0)=0xf6; // Storage item removed
-	WFIFOW(fd,2)=index+1;
-	WFIFOL(fd,4)=amount;
-	WFIFOSET(fd,packet_len(0xf6));
+	fd = sd->fd;
+
+	WFIFOHEAD(fd, packet_len(0xf6));
+	WFIFOW(fd, 0) = 0xf6; // Storage item removed
+	WFIFOW(fd, 2) = index + 1;
+	WFIFOL(fd, 4) = amount;
+	WFIFOSET(fd, packet_len(0xf6));
 }
 
 /// Closes storage (ZC_CLOSE_STORE).
@@ -6247,7 +6251,7 @@ void clif_cart_additem(struct map_session_data *sd,int n,int amount,int fail)
 	WBUFB(buf,12+offset)=sd->status.cart[n].refine;
 	clif->addcards(WBUFP(buf,13+offset), &sd->status.cart[n]);
 #if PACKETVER >= 20150226
-	clif->add_random_options(WBUFP(buf,21+offset), &sd->status.cart[n]);
+	clif->add_item_options(WBUFP(buf, 21 + offset), &sd->status.cart[n]);
 #endif
 	WFIFOSET(fd,packet_len(cartaddType));
 }
@@ -6375,7 +6379,7 @@ void clif_vendinglist(struct map_session_data* sd, unsigned int id, struct s_ven
 		WFIFOB(fd,offset+13+i*item_length) = vsd->status.cart[index].refine;
 		clif->addcards(WFIFOP(fd,offset+14+i*item_length), &vsd->status.cart[index]);
 #if PACKETVER >= 20150226
-		clif->add_random_options(WFIFOP(fd,offset+22+i*item_length), &vsd->status.cart[index]);
+		clif->add_item_options(WFIFOP(fd, offset + 22 + i * item_length), &vsd->status.cart[index]);
 #endif
 	}
 	WFIFOSET(fd,WFIFOW(fd,2));
@@ -6441,7 +6445,7 @@ void clif_openvending(struct map_session_data* sd, int id, struct s_vending* ven
 		WFIFOB(fd,21+i*item_length) = sd->status.cart[index].refine;
 		clif->addcards(WFIFOP(fd,22+i*item_length), &sd->status.cart[index]);
 #if PACKETVER >= 20150226
-		clif->add_random_options(WFIFOP(fd,30+22+i*item_length), &sd->status.cart[index]);
+		clif->add_item_options(WFIFOP(fd, 30 + i * item_length), &sd->status.cart[index]);
 #endif
 	}
 	WFIFOSET(fd,WFIFOW(fd,2));
@@ -7256,6 +7260,13 @@ void clif_mvp_item(struct map_session_data *sd,int nameid)
 /// 010b <exp>.L
 void clif_mvp_exp(struct map_session_data *sd, unsigned int exp)
 {
+#if PACKETVER >= 20131223		// Kro removed this packet [Napster]
+	if (battle_config.mvp_exp_reward_message) {
+		char e_msg[CHAT_SIZE_MAX];
+		sprintf(e_msg, msg_txt(855), exp);
+		clif->messagecolor_self(sd->fd, COLOR_CYAN, e_msg); // Congratulations! You are the MVP! Your reward EXP Points are %u !!
+	}
+#else
 	int fd;
 
 	nullpo_retv(sd);
@@ -7265,6 +7276,7 @@ void clif_mvp_exp(struct map_session_data *sd, unsigned int exp)
 	WFIFOW(fd,0)=0x10b;
 	WFIFOL(fd,2)=cap_value(exp,0,INT32_MAX);
 	WFIFOSET(fd,packet_len(0x10b));
+#endif
 }
 
 /// Dropped MVP item reward message (ZC_THROW_MVPITEM).
@@ -8420,9 +8432,11 @@ void clif_refresh_storagewindow(struct map_session_data *sd)
 	nullpo_retv(sd);
 	// Notify the client that the storage is open
 	if (sd->state.storage_flag == STORAGE_FLAG_NORMAL) {
-		storage->sortitem(sd->status.storage.items, ARRAYLENGTH(sd->status.storage.items));
-		clif->storagelist(sd, sd->status.storage.items, ARRAYLENGTH(sd->status.storage.items));
-		clif->updatestorageamount(sd, sd->status.storage.storage_amount, MAX_STORAGE);
+		if (sd->storage.aggregate > 0) {
+			storage->sortitem(VECTOR_DATA(sd->storage.item), VECTOR_LENGTH(sd->storage.item));
+			clif->storagelist(sd, VECTOR_DATA(sd->storage.item), VECTOR_LENGTH(sd->storage.item));
+		}
+		clif->updatestorageamount(sd, sd->storage.aggregate, MAX_STORAGE);
 	}
 	// Notify the client that the gstorage is open otherwise it will
 	// remain locked forever and nobody will be able to access it
@@ -9329,7 +9343,7 @@ void clif_parse_LoadEndAck(int fd, struct map_session_data *sd) {
 	sd->state.warping = 0;
 	sd->state.dialog = 0;/* reset when warping, client dialog will go missing */
 
-	// look
+	// Character Looks
 #if PACKETVER < 4
 	clif->changelook(&sd->bl,LOOK_WEAPON,sd->status.weapon);
 	clif->changelook(&sd->bl,LOOK_SHIELD,sd->status.shield);
@@ -9339,21 +9353,26 @@ void clif_parse_LoadEndAck(int fd, struct map_session_data *sd) {
 
 	if(sd->vd.cloth_color)
 		clif->refreshlook(&sd->bl,sd->bl.id,LOOK_CLOTHES_COLOR,sd->vd.cloth_color,SELF);
+
 	if (sd->vd.body_style)
 		clif->refreshlook(&sd->bl,sd->bl.id,LOOK_BODY2,sd->vd.body_style,SELF);
-	// item
-	clif->inventorylist(sd);  // inventory list first, otherwise deleted items in pc->checkitem show up as 'unknown item'
-	pc->checkitem(sd);
 
-	// cart
+	// Send character inventory to the client.
+	// call this before pc->checkitem() so that the client isn't called to delete a non-existent item.
+	clif->inventorylist(sd);
+
+	// Send the cart inventory, counts & weight to the client.
 	if(pc_iscarton(sd)) {
 		clif->cartlist(sd);
-		clif->updatestatus(sd,SP_CARTINFO);
+		clif->updatestatus(sd, SP_CARTINFO);
 	}
 
-	// weight
-	clif->updatestatus(sd,SP_WEIGHT);
-	clif->updatestatus(sd,SP_MAXWEIGHT);
+	// Check for and delete unavailable/disabled items.
+	pc->checkitem(sd);
+
+	// Send the character's weight to the client.
+	clif->updatestatus(sd, SP_WEIGHT);
+	clif->updatestatus(sd, SP_MAXWEIGHT);
 
 	// guild
 	// (needs to go before clif_spawn() to show guild emblems correctly)
@@ -10623,9 +10642,11 @@ void clif_parse_NpcClicked(int fd,struct map_session_data *sd)
 		clif->clearunit_area(&sd->bl,CLR_DEAD);
 		return;
 	}
-	if( sd->npc_id || sd->state.workinprogress&2 ){
-#ifdef RENEWAL
-		clif->msgtable(sd, MSG_NPC_WORK_IN_PROGRESS); // TODO look for the client date that has this message.
+	if (sd->npc_id || sd->state.workinprogress & 2) {
+#if PACKETVER >= 20110309
+		clif->msgtable(sd, MSG_NPC_WORK_IN_PROGRESS);
+#else
+		clif->messagecolor_self(fd, COLOR_WHITE, msg_fd(fd, 48));
 #endif
 		return;
 	}
@@ -10638,9 +10659,11 @@ void clif_parse_NpcClicked(int fd,struct map_session_data *sd)
 			clif->pActionRequest_sub(sd, 0x07, bl->id, timer->gettick());
 			break;
 		case BL_NPC:
-			if( sd->ud.skill_id < RK_ENCHANTBLADE && sd->ud.skilltimer != INVALID_TIMER ) {// TODO: should only work with none 3rd job skills
-#ifdef RENEWAL
+			if (sd->ud.skill_id < RK_ENCHANTBLADE && sd->ud.skilltimer != INVALID_TIMER) { // TODO: should only work with none 3rd job skills
+#if PACKETVER >= 20110309
 				clif->msgtable(sd, MSG_NPC_WORK_IN_PROGRESS);
+#else
+				clif->messagecolor_self(fd, COLOR_WHITE, msg_fd(fd, 48));
 #endif
 				break;
 			}
@@ -11016,39 +11039,38 @@ void clif_parse_RemoveOption(int fd,struct map_session_data *sd)
 void clif_parse_ChangeCart(int fd,struct map_session_data *sd) __attribute__((nonnull (2)));
 /// Request to change cart's visual look (CZ_REQ_CHANGECART).
 /// 01af <num>.W
-void clif_parse_ChangeCart(int fd,struct map_session_data *sd)
+void clif_parse_ChangeCart(int fd, struct map_session_data *sd)
 {// TODO: State tracking?
 	int type;
 
-	if( pc->checkskill(sd, MC_CHANGECART) < 1 )
+	if (pc->checkskill(sd, MC_CHANGECART) == 0)
 		return;
 
-#ifdef RENEWAL
-	if( sd->npc_id || sd->state.workinprogress&1 ){
+	if (sd->npc_id || sd->state.workinprogress & 1) {
+#if PACKETVER >= 20110309
 		clif->msgtable(sd, MSG_NPC_WORK_IN_PROGRESS);
+#else
+		clif->messagecolor_self(fd, COLOR_WHITE, msg_fd(fd, 48));
+#endif
 		return;
 	}
-#endif
 
-	type = RFIFOW(fd,2);
+	type = RFIFOW(fd, 2);
+
+	if (
 #ifdef NEW_CARTS
-	if( (type == 9 && sd->status.base_level > 131) ||
-		(type == 8 && sd->status.base_level > 121) ||
-		(type == 7 && sd->status.base_level > 111) ||
-		(type == 6 && sd->status.base_level > 101) ||
+		(type == 9 && sd->status.base_level > 130) ||
+		(type == 8 && sd->status.base_level > 120) ||
+		(type == 7 && sd->status.base_level > 110) ||
+		(type == 6 && sd->status.base_level > 100) ||
+#endif
 		(type == 5 && sd->status.base_level >  90) ||
 		(type == 4 && sd->status.base_level >  80) ||
 		(type == 3 && sd->status.base_level >  65) ||
 		(type == 2 && sd->status.base_level >  40) ||
 		(type == 1))
-#else
-	if( (type == 5 && sd->status.base_level > 90) ||
-	    (type == 4 && sd->status.base_level > 80) ||
-	    (type == 3 && sd->status.base_level > 65) ||
-	    (type == 2 && sd->status.base_level > 40) ||
-	    (type == 1))
-#endif
-		pc->setcart(sd,type);
+
+		pc->setcart(sd, type);
 }
 
 /// Request to select cart's visual look for new cart design (CZ_SELECTCART).
@@ -11235,9 +11257,11 @@ void clif_parse_UseSkillToId(int fd, struct map_session_data *sd)
 	// Whether skill fails or not is irrelevant, the char ain't idle. [Skotlex]
 	pc->update_idle_time(sd, BCIDLE_USESKILLTOID);
 
-	if( sd->npc_id || sd->state.workinprogress&1 ){
-#ifdef RENEWAL
-		clif->msgtable(sd, MSG_NPC_WORK_IN_PROGRESS); // TODO look for the client date that has this message.
+	if (sd->npc_id || sd->state.workinprogress & 1) {
+#if PACKETVER >= 20110309
+		clif->msgtable(sd, MSG_NPC_WORK_IN_PROGRESS);
+#else
+		clif->messagecolor_self(fd, COLOR_WHITE, msg_fd(fd, 48));
 #endif
 		return;
 	}
@@ -11332,12 +11356,14 @@ void clif_parse_UseSkillToPosSub(int fd, struct map_session_data *sd, uint16 ski
 		return;
 	}
 
-#ifdef RENEWAL
-	if( sd->state.workinprogress&1 ){
-		clif->msgtable(sd, MSG_NPC_WORK_IN_PROGRESS); // TODO look for the client date that has this message.
+	if (sd->state.workinprogress & 1) {
+#if PACKETVER >= 20110309
+		clif->msgtable(sd, MSG_NPC_WORK_IN_PROGRESS);
+#else
+		clif->messagecolor_self(fd, COLOR_WHITE, msg_fd(fd, 48));
+#endif
 		return;
 	}
-#endif
 
 	//Whether skill fails or not is irrelevant, the char ain't idle. [Skotlex]
 	pc->update_idle_time(sd, BCIDLE_USESKILLTOPOS);
@@ -11618,7 +11644,12 @@ void clif_parse_NpcStringInput(int fd, struct map_session_data* sd) __attribute_
 /// 01d5 <packet len>.W <npc id>.L <string>.?B
 void clif_parse_NpcStringInput(int fd, struct map_session_data* sd)
 {
-	int message_len = RFIFOW(fd,2)-8;
+// [4144] can't confirm exact client version. At least >= correct for 20150513
+#if PACKETVER >= 20151029
+	int message_len = RFIFOW(fd, 2) - 7;
+#else
+	int message_len = RFIFOW(fd, 2) - 8;
+#endif
 	int npcid = RFIFOL(fd,4);
 	const char *message = RFIFOP(fd,8);
 
@@ -16225,7 +16256,7 @@ void clif_bg_hp(struct map_session_data *sd)
 {
 	unsigned char buf[34];
 
-// packet version can be wrong, because inconsistend data in other servers.
+// packet version can be wrong, because inconsistend data in other servers. From packets table it start from 20140312 [4144]
 #if PACKETVER < 20140613
 	const int cmd = 0x2e0;
 	nullpo_retv(sd);
@@ -20116,7 +20147,7 @@ void clif_defaults(void) {
 	clif->pNPCMarketClosed = clif_parse_NPCMarketClosed;
 	clif->pNPCMarketPurchase = clif_parse_NPCMarketPurchase;
 	/* */
-	clif->add_random_options = clif_add_random_options;
+	clif->add_item_options = clif_add_item_options;
 	clif->pHotkeyRowShift = clif_parse_HotkeyRowShift;
 	clif->dressroom_open = clif_dressroom_open;
 	clif->pOneClick_ItemIdentify = clif_parse_OneClick_ItemIdentify;

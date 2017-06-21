@@ -49,6 +49,7 @@ CREATE TABLE `item_db2` (
   `equip_level_min` smallint(5) UNSIGNED DEFAULT NULL,
   `equip_level_max` smallint(5) UNSIGNED DEFAULT NULL,
   `refineable` tinyint(1) UNSIGNED DEFAULT NULL,
+  `disable_options` tinyint(1) UNSIGNED DEFAULT NULL,
   `view` smallint(3) UNSIGNED DEFAULT NULL,
   `bindonequip` tinyint(1) UNSIGNED DEFAULT NULL,
   `forceserial` tinyint(1) UNSIGNED DEFAULT NULL,

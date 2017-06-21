@@ -321,6 +321,16 @@ struct item_data* itemdb_exists(int nameid)
 	return item;
 }
 
+/**
+ * Searches for the item_option data.
+ * @param option_index as the index of the item option (client side).
+ * @return pointer to struct item_option data or NULL.
+ */
+struct item_option *itemdb_option_exists(int idx)
+{
+	return (struct item_option *)idb_get(itemdb->options, idx);
+}
+
 /// Returns human readable name for given item type.
 /// @param type Type id to retrieve name for ( IT_* ).
 const char* itemdb_typename(int type)
@@ -1299,6 +1309,125 @@ void itemdb_read_packages(void) {
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, config_filename);
 }
 
+/**
+ * Processes any (plugin-defined) additional fields for a itemdb_options entry.
+ *
+ * @param[in,out] entry  The destination ito entry, already initialized
+ *                       (item_opt.index, status.mode are expected to be already set).
+ * @param[in]     t      The libconfig entry.
+ * @param[in]     source Source of the entry (file name), to be displayed in
+ *                       case of validation errors.
+ */
+void itemdb_readdb_options_additional_fields(struct item_option *ito, struct config_setting_t *t, const char *source)
+{
+	// do nothing. plugins can do their own work
+}
+
+/**
+ * Reads the Item Options configuration file.
+ */
+void itemdb_read_options(void)
+{
+	struct config_t item_options_db;
+	struct config_setting_t *ito = NULL, *conf = NULL;
+	int index = 0, count = 0;
+	const char *filepath = "db/item_options.conf";
+	VECTOR_DECL(int) duplicate_id;
+
+	if (!libconfig->load_file(&item_options_db, filepath))
+		return;
+	
+#ifdef ENABLE_CASE_CHECK
+	script->parser_current_file = filepath;
+#endif // ENABLE_CASE_CHECK
+	
+	if ((ito=libconfig->setting_get_member(item_options_db.root, "item_options_db")) == NULL) {
+		ShowError("itemdb_read_options: '%s' could not be loaded.\n", filepath);
+		libconfig->destroy(&item_options_db);
+		return;
+	}
+
+	VECTOR_INIT(duplicate_id);
+
+	VECTOR_ENSURE(duplicate_id, libconfig->setting_length(ito), 1);
+
+	while ((conf = libconfig->setting_get_elem(ito, index++))) {
+		struct item_option t_opt = { 0 }, *s_opt = NULL;
+		const char *str = NULL;
+		int i = 0;
+
+		/* Id Lookup */
+		if (!libconfig->setting_lookup_int16(conf, "Id", &t_opt.index) || t_opt.index <= 0) {
+			ShowError("itemdb_read_options: Invalid Option Id provided for entry %d in '%s', skipping...\n", t_opt.index, filepath);
+			continue;
+		}
+
+		/* Checking for duplicate entries. */
+		ARR_FIND(0, VECTOR_LENGTH(duplicate_id), i, VECTOR_INDEX(duplicate_id, i) == t_opt.index);
+
+		if (i != VECTOR_LENGTH(duplicate_id)) {
+			ShowError("itemdb_read_options: Duplicate entry for Option Id %d in '%s', skipping...\n", t_opt.index, filepath);
+			continue;
+		}
+
+		VECTOR_PUSH(duplicate_id, t_opt.index);
+
+		/* Name Lookup */
+		if (!libconfig->setting_lookup_string(conf, "Name", &str)) {
+			ShowError("itemdb_read_options: Invalid Option Name '%s' provided for Id %d in '%s', skipping...\n", str, t_opt.index, filepath);
+			continue;
+		}
+
+		/* check for illegal characters in the constant. */
+		{
+			const char *c = str;
+
+			while (ISALNUM(*c) || *c == '_')
+				++c;
+
+			if (*c != '\0') {
+				ShowError("itemdb_read_options: Invalid characters in Option Name '%s' for Id %d in '%s', skipping...\n", str, t_opt.index, filepath);
+				continue;
+			}
+		}
+
+		/* Set name as a script constant with index as value. */
+		script->set_constant2(str, t_opt.index, false, false);
+
+		/* Script Code Lookup */
+		if (!libconfig->setting_lookup_string(conf, "Script", &str)) {
+			ShowError("itemdb_read_options: Script code not found for entry %s (Id: %d) in '%s', skipping...\n", str, t_opt.index, filepath);
+			continue;
+		}
+		
+		/* Set Script */
+		t_opt.script = *str ? script->parse(str, filepath, t_opt.index, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
+
+		/* Additional fields through plugins */
+		itemdb->readdb_options_additional_fields(&t_opt, ito, filepath);
+
+		/* Allocate memory and copy contents */
+		CREATE(s_opt, struct item_option, 1);
+
+		*s_opt = t_opt;
+
+		/* Store ptr in the database */
+		idb_put(itemdb->options, t_opt.index, s_opt);
+
+		count++;
+	}
+	
+#ifdef ENABLE_CASE_CHECK
+	script->parser_current_file = NULL;
+#endif // ENABLE_CASE_CHECK
+	
+	libconfig->destroy(&item_options_db);
+
+	VECTOR_CLEAR(duplicate_id);
+
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+}
+
 void itemdb_read_chains(void) {
 	struct config_t item_chain_conf;
 	struct config_setting_t *itc = NULL;
@@ -1674,7 +1803,10 @@ int itemdb_validate_entry(struct item_data *entry, int n, const char *source) {
 
 	if( entry->type != IT_ARMOR && entry->type != IT_WEAPON && !entry->flag.no_refine )
 		entry->flag.no_refine = 1;
-
+	
+	if (entry->type != IT_ARMOR && entry->type != IT_WEAPON && !entry->flag.no_options)
+		entry->flag.no_options = 1;
+	
 	if (entry->flag.available != 1) {
 		entry->flag.available = 1;
 		entry->view_id = 0;
@@ -1922,6 +2054,9 @@ int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const char *
 
 	if( (t = libconfig->setting_get_member(it, "Refine")) )
 		id.flag.no_refine = libconfig->setting_get_bool(t) ? 0 : 1;
+	
+	if ((t = libconfig->setting_get_member(it, "DisableOptions")))
+		id.flag.no_options = libconfig->setting_get_bool(t) ? 1 : 0;
 
 	if( itemdb->lookup_const(it, "View", &i32) && i32 >= 0 )
 		id.look = i32;
@@ -1937,6 +2072,9 @@ int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const char *
 
 	if ((t = libconfig->setting_get_member(it, "KeepAfterUse")))
 		id.flag.keepafteruse = libconfig->setting_get_bool(t) ? 1 : 0;
+
+	if ((t = libconfig->setting_get_member(it, "DropAnnounce")))
+		id.flag.drop_announce = libconfig->setting_get_bool(t) ? 1 : 0;
 
 	if (itemdb->lookup_const(it, "Delay", &i32) && i32 >= 0)
 		id.delay = i32;
@@ -2165,6 +2303,7 @@ void itemdb_read(bool minimal) {
 	itemdb->read_groups();
 	itemdb->read_chains();
 	itemdb->read_packages();
+	itemdb->read_options();
 
 }
 
@@ -2226,6 +2365,17 @@ int itemdb_final_sub(union DBKey key, struct DBData *data, va_list ap)
 
 	return 0;
 }
+
+int itemdb_options_final_sub(union DBKey key, struct DBData *data, va_list ap)
+{
+	struct item_option *ito = DB->data2ptr(data);
+	
+	if (ito->script != NULL)
+		script->free_code(ito->script);
+	
+	return 0;
+}
+
 void itemdb_clear(bool total) {
 	int i;
 	// clear the previous itemdb data
@@ -2289,6 +2439,7 @@ void itemdb_clear(bool total) {
 		return;
 
 	itemdb->other->clear(itemdb->other, itemdb->final_sub);
+	itemdb->options->clear(itemdb->options, itemdb->options_final_sub);
 
 	memset(itemdb->array, 0, sizeof(itemdb->array));
 
@@ -2339,16 +2490,20 @@ void itemdb_reload(void) {
 	for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
 		memset(sd->item_delay, 0, sizeof(sd->item_delay));  // reset item delays
 		pc->setinventorydata(sd);
-		if( battle_config.item_check )
-			sd->state.itemcheck = 1;
+
+		if (battle->bc->item_check != PCCHECKITEM_NONE) // Check and flag items for inspection.
+			sd->itemcheck = (enum pc_checkitem_types) battle->bc->item_check;
+
 		/* clear combo bonuses */
-		if( sd->combo_count ) {
+		if (sd->combo_count) {
 			aFree(sd->combos);
 			sd->combos = NULL;
 			sd->combo_count = 0;
 			if( pc->load_combo(sd) > 0 )
 				status_calc_pc(sd,SCO_FORCE);
 		}
+
+		// Check for and delete unavailable/disabled items.
 		pc->checkitem(sd);
 	}
 	mapit->free(iter);
@@ -2373,6 +2528,7 @@ void do_final_itemdb(void) {
 	itemdb->clear(true);
 
 	itemdb->other->destroy(itemdb->other, itemdb->final_sub);
+	itemdb->options->destroy(itemdb->options, itemdb->options_final_sub);
 	itemdb->destroy_item_data(&itemdb->dummy, 0);
 	db_destroy(itemdb->names);
 }
@@ -2380,6 +2536,7 @@ void do_final_itemdb(void) {
 void do_init_itemdb(bool minimal) {
 	memset(itemdb->array, 0, sizeof(itemdb->array));
 	itemdb->other = idb_alloc(DB_OPT_BASE);
+	itemdb->options = idb_alloc(DB_OPT_RELEASE_DATA);
 	itemdb->names = strdb_alloc(DB_OPT_BASE,ITEM_NAME_LENGTH);
 	itemdb->create_dummy_data(); //Dummy data item.
 	itemdb->read(minimal);
@@ -2422,6 +2579,7 @@ void itemdb_defaults(void) {
 	itemdb->read_groups = itemdb_read_groups;
 	itemdb->read_chains = itemdb_read_chains;
 	itemdb->read_packages = itemdb_read_packages;
+	itemdb->read_options = itemdb_read_options;
 	/* */
 	itemdb->write_cached_packages = itemdb_write_cached_packages;
 	itemdb->read_cached_packages = itemdb_read_cached_packages;
@@ -2432,6 +2590,7 @@ void itemdb_defaults(void) {
 	itemdb->load = itemdb_load;
 	itemdb->search = itemdb_search;
 	itemdb->exists = itemdb_exists;
+	itemdb->option_exists = itemdb_option_exists;
 	itemdb->in_group = itemdb_in_group;
 	itemdb->group_item = itemdb_searchrandomid;
 	itemdb->chain_item = itemdb_chain_item;
@@ -2464,6 +2623,7 @@ void itemdb_defaults(void) {
 	itemdb->read_combos = itemdb_read_combos;
 	itemdb->gendercheck = itemdb_gendercheck;
 	itemdb->validate_entry = itemdb_validate_entry;
+	itemdb->readdb_options_additional_fields = itemdb_readdb_options_additional_fields;
 	itemdb->readdb_additional_fields = itemdb_readdb_additional_fields;
 	itemdb->readdb_job_sub = itemdb_readdb_job_sub;
 	itemdb->readdb_libconfig_sub = itemdb_readdb_libconfig_sub;
@@ -2472,6 +2632,7 @@ void itemdb_defaults(void) {
 	itemdb->read = itemdb_read;
 	itemdb->destroy_item_data = destroy_item_data;
 	itemdb->final_sub = itemdb_final_sub;
+	itemdb->options_final_sub = itemdb_options_final_sub;
 	itemdb->clear = itemdb_clear;
 	itemdb->id2combo = itemdb_id2combo;
 	itemdb->is_item_usable = itemdb_is_item_usable;

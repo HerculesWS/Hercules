@@ -3360,7 +3360,7 @@ rachel,265,98,3	script	Hamion#aru	4_M_RACHMAN2,{
 		mes "[Hamion]";
 		mes "Here we go...!";
 		next;
-		specialeffect2 EF_CONE;
+		specialeffect(EF_CONE, AREA, playerattached());
 		mes "^3355FF*Pzzzz*^000000";
 		next;
 		mes "[Hamion]";
@@ -3722,10 +3722,10 @@ OnStart:
 	enablenpc "#ice_4f_2";
 	enablenpc "#ice_4f_3";
 	enablenpc "#ice_4f_4";
-	specialeffect EF_MAPPILLAR2,AREA,"#ice_4f_1";
-	specialeffect EF_MAPPILLAR2,AREA,"#ice_4f_2";
-	specialeffect EF_MAPPILLAR2,AREA,"#ice_4f_3";
-	specialeffect EF_MAPPILLAR2,AREA,"#ice_4f_4";
+	specialeffect(EF_MAPPILLAR2, AREA, getnpcid(0, "#ice_4f_1"));
+	specialeffect(EF_MAPPILLAR2, AREA, getnpcid(0, "#ice_4f_2"));
+	specialeffect(EF_MAPPILLAR2, AREA, getnpcid(0, "#ice_4f_3"));
+	specialeffect(EF_MAPPILLAR2, AREA, getnpcid(0, "#ice_4f_4"));
 	end;
 
 OnTimer60000:
@@ -3817,7 +3817,7 @@ ra_temple,116,174,3	script	Nemma#ra_temple	4_F_TRAINEE,{
 				mes "wouldn't come here to pray...";
 				mes "Well, I hope you enjoy your";
 				mes "time here, adventurer.";
-				goto L_End;
+				callsub L_End;
 			}
 			mes "[Priestess Nemma]";
 			mes "Oh! I'm glad to see that";
@@ -3870,7 +3870,7 @@ ra_temple,116,174,3	script	Nemma#ra_temple	4_F_TRAINEE,{
 				mes "all your journeys. May the";
 				mes "grace of the goddess always";
 				mes "support us in all that we do~";
-				goto L_End;
+				callsub L_End;
 			}
 			mes "[Priestess Nemma]";
 			mes "Great! How much would you";
@@ -3899,7 +3899,7 @@ ra_temple,116,174,3	script	Nemma#ra_temple	4_F_TRAINEE,{
 				mes "protecting you, wherever you go~";
 				break;
 			}
-			goto L_End;
+			callsub L_End;
 		}
 		else {
 			cutin "ra_nemma03",2;
@@ -3940,7 +3940,7 @@ ra_temple,116,174,3	script	Nemma#ra_temple	4_F_TRAINEE,{
 					mes "protecting you, wherever you go~";
 					break;
 				}
-				goto L_End;
+				callsub L_End;
 			case 2:
 				mes "[Priestess Nemma]";
 				mes "Oh! If you'd like some";
@@ -3969,7 +3969,7 @@ ra_temple,116,174,3	script	Nemma#ra_temple	4_F_TRAINEE,{
 				mes "Oh, how sweet of you~";
 				break;
 			}
-			goto L_End;
+			callsub L_End;
 		}
 	}
 	else {
@@ -3977,7 +3977,7 @@ ra_temple,116,174,3	script	Nemma#ra_temple	4_F_TRAINEE,{
 			cutin "ra_nemma01",2;
 			mes "[Priestess Nemma]";
 			mes "Welcome to our temple!";
-			goto L_End;
+			callsub L_End;
 		}
 		if (ra_tem_q < 1) {
 			mes "[Priestess Nemma]";
@@ -4010,7 +4010,7 @@ ra_temple,116,174,3	script	Nemma#ra_temple	4_F_TRAINEE,{
 			mes "to go inside. ^333333*Sob*^000000 P-Panno!";
 			mes "Panno, I neeeed heeeeelp~!";
 			ra_tem_q = 1;
-			goto L_End;
+			callsub L_End;
 		}
 		else if ((ra_tem_q >= 1) && (ra_tem_q < 10)) {
 			mes "[Priestess Nemma]";
@@ -4025,7 +4025,7 @@ ra_temple,116,174,3	script	Nemma#ra_temple	4_F_TRAINEE,{
 			mes "Panno would know";
 			mes "what to do... I think.";
 			mes "Ooh, Panno, help me!";
-			goto L_End;
+			callsub L_End;
 		}
 		else if (ra_tem_q == 10) {
 			cutin "ra_nemma04",2;
@@ -4051,7 +4051,7 @@ ra_temple,116,174,3	script	Nemma#ra_temple	4_F_TRAINEE,{
 			mes "I'm outside. What if";
 			mes "the gate locks up again?";
 			mes "Oooh, what should I do?!";
-			goto L_End;
+			callsub L_End;
 		}
 		else if (ra_tem_q == 11) {
 			emotion e_ho;
@@ -4063,7 +4063,7 @@ ra_temple,116,174,3	script	Nemma#ra_temple	4_F_TRAINEE,{
 			mes "longer asking for donations,";
 			mes "but you can still redeem your";
 			mes "Lottery Tickets inside, okay?";
-			goto L_End;
+			callsub L_End;
 		}
 		else if (ra_tem_q == 12) {
 			mes "[Priestess Nemma]";
@@ -4090,7 +4090,7 @@ ra_temple,116,174,3	script	Nemma#ra_temple	4_F_TRAINEE,{
 			mes "like, ^FF000020 of them^000000! Thank";
 			mes "you thank you thank you!";
 			ra_tem_q = 13;
-			goto L_End;
+			callsub L_End;
 		}
 		else if (ra_tem_q == 13) {
 			mes "[Priestess Nemma]";
@@ -4125,7 +4125,7 @@ ra_temple,116,174,3	script	Nemma#ra_temple	4_F_TRAINEE,{
 					mes "to play! Hm, maybe";
 					mes "our pope would like";
 					mes "to see these too?";
-					goto L_End;
+					callsub L_End;
 				}
 				cutin "ra_nemma02",2;
 				mes "[Priestess Nemma]";
@@ -4144,14 +4144,14 @@ ra_temple,116,174,3	script	Nemma#ra_temple	4_F_TRAINEE,{
 				mes "have much to pay you";
 				mes "back with, anyway~";
 			}
-			goto L_End;
+			callsub L_End;
 		}
 		else {
 			cutin "ra_nemma01",2;
 			mes "[Priestess Nemma]";
 			mes "Welcome to our temple!";
 		}
-		goto L_End;
+		callsub L_End;
 	}
 
 L_End:
@@ -4847,7 +4847,7 @@ ra_temin,277,159,3	script	High Priest Zhed#rachel	4_M_RACHOLD1,{
 		cutin "",255;
 		lost_boy = 13;
 		completequest 8099;
-		specialeffect2 EF_ABSORBSPIRITS;
+		specialeffect(EF_ABSORBSPIRITS, AREA, playerattached());
 		getexp RENEWAL_EXP?90000:900000,0;
 		end;
 	}
@@ -5272,7 +5272,7 @@ ra_temin,277,159,3	script	High Priest Zhed#rachel	4_M_RACHOLD1,{
 		ra_tem_q = 0;
 		cutin "",255;
 		completequest 8105;
-		specialeffect2 EF_ABSORBSPIRITS;
+		specialeffect(EF_ABSORBSPIRITS, AREA, playerattached());
 		if (RENEWAL_EXP)
 			getexp 90000,60000;
 		else
@@ -6318,15 +6318,16 @@ ra_temin,170,46,3	script	Panno#rachel	4_F_TRAINEE,{
 		mes "Have you come to";
 		mes "redeem Lottery Tickets?";
 		next;
-		if (select("Yes", "No") == 1) goto L_Lottery;
-		if (ra_tem_q == 12) {
-			cutin "ra_fano01",2;
-			mes "[Priestess Panno]";
-			mes "I already told you";
-			mes "everything I know.";
-			mes "Remember to keep";
-			mes "quiet about what I said.";
-			goto L_End;
+		if (select("Yes", "No") == 2) {
+			if (ra_tem_q == 12) {
+				cutin "ra_fano01",2;
+				mes "[Priestess Panno]";
+				mes "I already told you";
+				mes "everything I know.";
+				mes "Remember to keep";
+				mes "quiet about what I said.";
+				callsub L_End;
+			}
 		}
 	}
 	else if (ra_tem_q < 2) {
@@ -6347,15 +6348,17 @@ ra_temin,170,46,3	script	Panno#rachel	4_F_TRAINEE,{
 			mes "know, in case you were saving";
 			mes "them for some weird reason.";
 			next;
-			if (select("Yes", "No") == 1) goto L_Lottery;
-			cutin "ra_fano03",2;
-			mes "[Priestess Panno]";
-			mes "You can redeem your";
-			mes "Lottery Tickets at any";
-			mes "time, so please visit";
-			mes "me at your leisure.";
-			mes "Go with Freya.";
-			goto L_End;
+			if (select("Yes", "No") == 2) {
+				cutin "ra_fano03",2;
+				mes "[Priestess Panno]";
+				mes "You can redeem your";
+				mes "Lottery Tickets at any";
+				mes "time, so please visit";
+				mes "me at your leisure.";
+				mes "Go with Freya.";
+				callsub L_End;
+			}
+			break;
 
 		case 2:
 			cutin "ra_fano01",2;
@@ -6394,14 +6397,14 @@ ra_temin,170,46,3	script	Panno#rachel	4_F_TRAINEE,{
 			mes "side of the hallway. However,";
 			mes "you can only enter if you've";
 			mes "been permitted beforehand.";
-			goto L_End;
+			callsub L_End;
 
 		case 3:
 			mes "[Priestess Panno]";
 			mes "......................";
 			mes "No chit-chat";
 			mes "inside the temple.";
-			goto L_End;
+			callsub L_End;
 		}
 	}
 	else if (ra_tem_q == 10) {
@@ -6429,14 +6432,16 @@ ra_temin,170,46,3	script	Panno#rachel	4_F_TRAINEE,{
 			mes "know, in case you were saving";
 			mes "them for some weird reason.";
 			next;
-			if (select("Yes", "No") == 1) goto L_Lottery;
-			mes "[Priestess Panno]";
-			mes "You can redeem your";
-			mes "Lottery Tickets at any";
-			mes "time, so please visit";
-			mes "me at your leisure.";
-			mes "Go with Freya.";
-			goto L_End;
+			if (select("Yes", "No") == 2) {
+				mes "[Priestess Panno]";
+				mes "You can redeem your";
+				mes "Lottery Tickets at any";
+				mes "time, so please visit";
+				mes "me at your leisure.";
+				mes "Go with Freya.";
+				callsub L_End;
+			}
+			break;
 
 		case 2:
 			cutin "ra_fano01",2;
@@ -6475,7 +6480,7 @@ ra_temin,170,46,3	script	Panno#rachel	4_F_TRAINEE,{
 			mes "side of the hallway. However,";
 			mes "you can only enter if you've";
 			mes "been permitted beforehand.";
-			goto L_End;
+			callsub L_End;
 
 		case 3:
 			cutin "ra_fano02",2;
@@ -6522,7 +6527,7 @@ ra_temin,170,46,3	script	Panno#rachel	4_F_TRAINEE,{
 			mes "[Priestess Panno]";
 			mes ".........";
 			ra_tem_q = 11;
-			goto L_End;
+			callsub L_End;
 		}
 	}
 	else if (ra_tem_q == 11) {
@@ -6657,17 +6662,17 @@ ra_temin,170,46,3	script	Panno#rachel	4_F_TRAINEE,{
 		mes "Excuse me now, I need";
 		mes "to get back to work.";
 		ra_tem_q = 12;
-		goto L_End;
+		callsub L_End;
 	}
-	cutin "ra_fano02",2;
-	mes "[Priestess Panno]";
-	mes "This is a holy place";
-	mes "Behave yourself, and";
-	mes "respect those who have";
-	mes "come here just to worship.";
-	goto L_End;
-
-L_Lottery:
+	else {
+		cutin "ra_fano02",2;
+		mes "[Priestess Panno]";
+		mes "This is a holy place";
+		mes "Behave yourself, and";
+		mes "respect those who have";
+		mes "come here just to worship.";
+		callsub L_End;
+	}
 	if(checkweight(Yggdrasilberry,1) == 0){
 		cutin "ra_fano02",2;
 		mes "[Priestess Panno]";
@@ -6677,7 +6682,7 @@ L_Lottery:
 		mes "something large, unwieldy";
 		mes "and heavy? Put your junk";
 		mes "away in Storage first.";
-		goto L_End;
+		callsub L_End;
 	}
 	mes "[Priestess Panno]";
 	mes "Here we go";
@@ -6713,7 +6718,7 @@ L_Lottery:
 		else if (.@bonus_donate > 5 && .@bonus_donate < 11) getitem Honey,1;	//Honey 5%
 		else if (.@bonus_donate > 0 && .@bonus_donate < 6) getitem Royal_Jelly,1;	//Royal Jelly 5%
 		else getitem White_Slim_Potion,1; //Condensed White Potion 39%
-		goto L_End;
+		callsub L_End;
 	}
 	mes "[Priestess Panno]";
 	mes "You...";
@@ -6733,7 +6738,7 @@ L_Lottery:
 	cutin "ra_fano03",2;
 	mes "[Priestess Panno]";
 	mes "May Freya be with you.";
-	goto L_End;
+	callsub L_End;
 
 L_End:
 	close2;
@@ -7441,8 +7446,8 @@ OnTouch:
 }
 
 rachel,142,167,5	script	Seeking Follower#rachel	4_F_MASK1,6,6,{
+OnTouch:
 	if ((lost_boy == 13) && (ra_tem_q == 20)) {
-		L_Mes:
 		mes "[Arunafeltz Follower]";
 		mes "Excuse me, but";
 		mes "are you "+strcharinfo(PC_NAME)+"?";
@@ -7469,8 +7474,5 @@ rachel,142,167,5	script	Seeking Follower#rachel	4_F_MASK1,6,6,{
 		mes "on your journeys...";
 		close;
 	}
-
-OnTouch:
-	if ((lost_boy == 13) && (ra_tem_q == 20)) goto L_Mes;
 	end;
 }

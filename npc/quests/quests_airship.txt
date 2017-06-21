@@ -694,7 +694,7 @@ ein_in01,125,99,3	script	Tarsha Cherno	4_F_EINWOMAN,{
 			mes "Touching another";
 			mes "man's wife...?!";
 			next;
-			specialeffect2 EF_PIERCE;
+			specialeffect(EF_PIERCE, AREA, playerattached());
 			percentheal -30,0;
 			close;
 		case 2:
@@ -748,7 +748,7 @@ ein_in01,125,99,3	script	Tarsha Cherno	4_F_EINWOMAN,{
 			mes "Touching another";
 			mes "man's wife...?!";
 			next;
-			specialeffect2 EF_PIERCE;
+			specialeffect(EF_PIERCE, AREA, playerattached());
 			percentheal -20,0;
 			close;
 		case 4:
@@ -760,7 +760,7 @@ ein_in01,125,99,3	script	Tarsha Cherno	4_F_EINWOMAN,{
 			mes "Touching another";
 			mes "man's wife...?!";
 			next;
-			specialeffect2 EF_PIERCE;
+			specialeffect(EF_PIERCE, AREA, playerattached());
 			percentheal -10,0;
 			close;
 		}
@@ -784,16 +784,16 @@ ein_in01,125,99,3	script	Tarsha Cherno	4_F_EINWOMAN,{
 ein_in01,127,94,3	script	#exp_ein	HIDDEN_NPC,{ end; }
 
 function	script	F_Cherno	{
-	specialeffect EF_COMBOATTACK1,AREA,"#exp_ein";
+	specialeffect(EF_COMBOATTACK1, AREA, getnpcid(0, "#exp_ein"));
 	mes "^33355F*Bang*^000000";
 	next;
-	specialeffect EF_COMBOATTACK2,AREA,"#exp_ein";
+	specialeffect(EF_COMBOATTACK2, AREA, getnpcid(0, "#exp_ein"));
 	mes "^33355F*Bang*^000000";
 	next;
-	specialeffect EF_COMBOATTACK3,AREA,"#exp_ein";
+	specialeffect(EF_COMBOATTACK3, AREA, getnpcid(0, "#exp_ein"));
 	mes "^33355F*Bang*^000000";
 	next;
-	specialeffect EF_POISONATTACK,AREA,"#exp_ein";
+	specialeffect(EF_POISONATTACK, AREA, getnpcid(0, "#exp_ein"));
 	mes "^33355F*Crash!*^000000";
 	mes ".....";
 	emotion e_swt,0,"Theo Cherno";
@@ -1294,65 +1294,65 @@ OnTimer68000:
 	end;
 OnTimer73000:
 	mapannounce "airplane_01", "*Kzzz...Drrrr...Boom! CRASH!*",bc_map,0x00FF00;
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom6#airplane";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom6#airplane"));
 	end;
 OnTimer73500:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom7#airplane";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom7#airplane"));
 	end;
 OnTimer74000:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom8#airplane";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom8#airplane"));
 	end;
 OnTimer74500:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom9#airplane";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom9#airplane"));
 	end;
 OnTimer75000:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom10#airplane";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom10#airplane"));
 	end;
 OnTimer75500:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom6#airplane";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom6#airplane"));
 	end;
 OnTimer76000:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom7#airplane";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom7#airplane"));
 	end;
 OnTimer76500:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom8#airplane";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom8#airplane"));
 	end;
 OnTimer77000:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom9#airplane";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom9#airplane"));
 	end;
 OnTimer77500:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom10#airplane";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom10#airplane"));
 	end;
 OnTimer78000:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom6#airplane";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom6#airplane"));
 	mapannounce "airplane_01", "Engineer: Oh no! We've got a problem with the Number One Rear Engine!",bc_map,0x00FF00;
 	end;
 OnTimer79000:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom7#airplane";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom7#airplane"));
 	end;
 OnTimer80000:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom8#airplane";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom8#airplane"));
 	end;
 OnTimer81000:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom9#airplane";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom9#airplane"));
 	end;
 OnTimer82000:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom10#airplane";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom10#airplane"));
 	end;
 OnTimer83000:
 	mapannounce "airplane_01", "Pilot: Hurry! Get the women, old people and children somewhere safe first! Hurry!",bc_map,0x00FF00;
 	end;
 OnTimer84000:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom6#airplane";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom6#airplane"));
 	end;
 OnTimer85000:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom7#airplane";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom7#airplane"));
 	end;
 OnTimer86000:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom8#airplane";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom8#airplane"));
 	end;
 OnTimer87000:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom7#airplane";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom7#airplane"));
 	end;
 OnTimer88000:
 	emotion e_ag,0,"Airship Captain#02";
@@ -1368,46 +1368,46 @@ OnTimer98000:
 	end;
 OnTimer103000:
 	mapannounce "airplane_01", "*Bang! Bang Bang! Bang Bang! Bang Bang Bang!*",bc_map,0x00FF00;
-	specialeffect EF_HIT5,AREA,"Airship Captain#02";
+	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
 	end;
 OnTimer103500:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom1#airplane";
-	specialeffect EF_HIT5,AREA,"Airship Captain#02";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom1#airplane"));
+	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
 	end;
 OnTimer104000:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom2#airplane";
-	specialeffect EF_HIT5,AREA,"Airship Captain#02";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom2#airplane"));
+	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
 	end;
 OnTimer104500:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom3#airplane";
-	specialeffect EF_HIT5,AREA,"Airship Captain#02";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom3#airplane"));
+	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
 	end;
 OnTimer105000:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom4#airplane";
-	specialeffect EF_HIT5,AREA,"Airship Captain#02";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom4#airplane"));
+	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
 	end;
 OnTimer105500:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom5#airplane";
-	specialeffect EF_HIT5,AREA,"Airship Captain#02";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom5#airplane"));
+	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
 	end;
 OnTimer106000:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom0#airplane";
-	specialeffect EF_HIT5,AREA,"Airship Captain#02";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom0#airplane"));
+	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
 	end;
 OnTimer106500:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom1#airplane";
-	specialeffect EF_HIT5,AREA,"Airship Captain#02";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom1#airplane"));
+	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
 	end;
 OnTimer107000:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom2#airplane";
-	specialeffect EF_HIT5,AREA,"Airship Captain#02";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom2#airplane"));
+	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
 	end;
 OnTimer107500:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom4#airplane";
-	specialeffect EF_HIT5,AREA,"Airship Captain#02";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom4#airplane"));
+	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
 	end;
 OnTimer108000:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom5#airplane";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom5#airplane"));
 	killmonster "airplane_01","Airship#airplane02::OnCaptainMobDead";
 	end;
 OnTimer113000:
@@ -1416,59 +1416,59 @@ OnTimer113000:
 	end;
 OnTimer118000:
 	mapannounce "airplane_01", "*Bang! Bang Bang! Bang Bang! Bang Bang Bang!*",bc_map,0x00FF00;
-	specialeffect EF_HIT5,AREA,"Airship Captain#02";
+	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
 	end;
 OnTimer118500:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom6#airplane";
-	specialeffect EF_HIT5,AREA,"Airship Captain#02";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom6#airplane"));
+	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
 	end;
 OnTimer119000:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom7#airplane";
-	specialeffect EF_HIT5,AREA,"Airship Captain#02";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom7#airplane"));
+	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
 	end;
 OnTimer119500:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom8#airplane";
-	specialeffect EF_HIT5,AREA,"Airship Captain#02";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom8#airplane"));
+	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
 	end;
 OnTimer120000:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom9#airplane";
-	specialeffect EF_HIT5,AREA,"Airship Captain#02";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom9#airplane"));
+	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
 	end;
 OnTimer120500:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom10#airplane";
-	specialeffect EF_HIT5,AREA,"Airship Captain#02";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom10#airplane"));
+	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
 	end;
 OnTimer121000:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom6#airplane";
-	specialeffect EF_HIT5,AREA,"Airship Captain#02";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom6#airplane"));
+	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
 	end;
 OnTimer121500:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom7#airplane";
-	specialeffect EF_HIT5,AREA,"Airship Captain#02";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom7#airplane"));
+	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
 	end;
 OnTimer122000:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom8#airplane";
-	specialeffect EF_HIT5,AREA,"Airship Captain#02";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom8#airplane"));
+	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
 	end;
 OnTimer122500:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom9#airplane";
-	specialeffect EF_HIT5,AREA,"Airship Captain#02";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom9#airplane"));
+	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
 	end;
 OnTimer123000:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom8#airplane";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom8#airplane"));
 	mapannounce "airplane_01", "*Boom! Boom Boom! Boom Boom! Boom!*",bc_map,0x00FF00;
 	end;
 OnTimer124000:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom9#airplane";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom9#airplane"));
 	end;
 OnTimer125000:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom10#airplane";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom10#airplane"));
 	end;
 OnTimer126000:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom6#airplane";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom6#airplane"));
 	end;
 OnTimer127000:
-	specialeffect EF_SUI_EXPLOSION,AREA,"boom7#airplane";
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom7#airplane"));
 	end;
 OnTimer128000:
 	emotion e_an,0,"Airship Captain#02";
@@ -1814,7 +1814,7 @@ airplane_01,238,154,3	script	Airship Captain#01	4_M_REINDEER,{
 			mes "exaggeration.";
 			mes "It has really a strong power.";
 			next;
-			specialeffect2 EF_MAPPILLAR;
+			specialeffect(EF_MAPPILLAR, AREA, playerattached());
 			mes "[Tarlock]";
 			mes "Did you understand?";
 			mes "I'll rest a little.";
@@ -2137,7 +2137,7 @@ airplane,236,163,5	script	Airship Captain#03	4_M_REINDEER,{
 		mes "Rune Stones? Hmm. Well, this";
 		mes "is goodbye for now, adventurer.";
 		close2;
-		specialeffect2 EF_ABSORBSPIRITS;
+		specialeffect(EF_ABSORBSPIRITS, AREA, playerattached());
 		completequest 8043;
 		lhz_heart = 13;
 		if (RENEWAL_EXP)
@@ -2831,87 +2831,89 @@ airplane,33,69,4	script	Kaci	1_F_MERCHANT_01,{
 		mes "do it himself. Reading that";
 		mes "letter really made my day~";
 		next;
-L_Ask:
-		switch(select("Ask about Hallen", "Ask about Mawong", "Ask about the Airship")) {
-		case 1:
-			.@mesa = 1;
+		while (true) {
+			switch (select("Ask about Hallen", "Ask about Mawong", "Ask about the Airship")) {
+			case 1:
+				.@mesa = 1;
+				mes "[Kaci]";
+				mes "Hallen? Well, he and I are";
+				mes "pretty close. Did you know";
+				mes "that we're cousins? In fact,";
+				mes "his dad, my uncle, brought";
+				mes "me as a child after my father";
+				mes "passed away 20 years ago.";
+				next;
+				mes "[Kaci]";
+				mes "There was some kind of";
+				mes "mine explosion accident in";
+				mes "Einbech. I don't remember.";
+				mes "Anyway, me and Hallen are";
+				mes "like sister and brother, and";
+				mes "we always stick together.";
+				next;
+				mes "[Kaci]";
+				mes "When Captain Ferlock saw me";
+				mes "host a Dice game by coincidence";
+				mes "and then hired me to work on his Airship, Hallen insisted on coming";
+				mes "along. He's stubborn like that,";
+				mes "but he's also very sweet.";
+				next;
+				break;
+			case 2:
+				.@mesb = 1;
+				mes "[Kaci]";
+				mes "Mr. Mawong? Oh, don't get";
+				mes "the wrong idea! He's my";
+				mes "mentor, the one who taught";
+				mes "me how to play all of these";
+				mes "wonderful games. He's pretty";
+				mes "famous around Juno, you know.";
+				next;
+				mes "[Kaci]";
+				mes "I used to be so depressed,";
+				mes "not caring about the world";
+				mes "at all, after my father died.";
+				mes "Then, I ran into Mr. Mawong,";
+				mes "and he taught me how to find";
+				mes "the joy in life once again.";
+				next;
+				mes "[Kaci]";
+				mes "Because of him, I decided";
+				mes "to learn his games and to";
+				mes "help people forget their";
+				mes "worries and just enjoy";
+				mes "themselves, even if it's";
+				mes "just for a little while.";
+				next;
+				break;
+			case 3:
+				.@mesc = 1;
+				mes "[Kaci]";
+				mes "The Airship? It's so";
+				mes "huge and beautiful, and";
+				mes "I'm always amazed that it";
+				mes "can fly so gracefully through";
+				mes "the air. I've always wanted to live someplace close to the sky...";
+				next;
+				mes "[Kaci]";
+				mes "A place where I can see";
+				mes "the clouds and bask in the";
+				mes "sun. So, when Captain Ferlock";
+				mes "invited me to work here, it was";
+				mes "like a dream come true~";
+				next;
+				break;
+			}
 			mes "[Kaci]";
-			mes "Hallen? Well, he and I are";
-			mes "pretty close. Did you know";
-			mes "that we're cousins? In fact,";
-			mes "his dad, my uncle, brought";
-			mes "me as a child after my father";
-			mes "passed away 20 years ago.";
+			mes "Please don't hesitate";
+			mes "to ask me anything if";
+			mes "you need a small favor,";
+			mes "or if you're just curious";
+			mes "about me in general~";
 			next;
-			mes "[Kaci]";
-			mes "There was some kind of";
-			mes "mine explosion accident in";
-			mes "Einbech. I don't remember.";
-			mes "Anyway, me and Hallen are";
-			mes "like sister and brother, and";
-			mes "we always stick together.";
-			next;
-			mes "[Kaci]";
-			mes "When Captain Ferlock saw me";
-			mes "host a Dice game by coincidence";
-			mes "and then hired me to work on his Airship, Hallen insisted on coming";
-			mes "along. He's stubborn like that,";
-			mes "but he's also very sweet.";
-			next;
-			break;
-		case 2:
-			.@mesb = 1;
-			mes "[Kaci]";
-			mes "Mr. Mawong? Oh, don't get";
-			mes "the wrong idea! He's my";
-			mes "mentor, the one who taught";
-			mes "me how to play all of these";
-			mes "wonderful games. He's pretty";
-			mes "famous around Juno, you know.";
-			next;
-			mes "[Kaci]";
-			mes "I used to be so depressed,";
-			mes "not caring about the world";
-			mes "at all, after my father died.";
-			mes "Then, I ran into Mr. Mawong,";
-			mes "and he taught me how to find";
-			mes "the joy in life once again.";
-			next;
-			mes "[Kaci]";
-			mes "Because of him, I decided";
-			mes "to learn his games and to";
-			mes "help people forget their";
-			mes "worries and just enjoy";
-			mes "themselves, even if it's";
-			mes "just for a little while.";
-			next;
-			break;
-		case 3:
-			.@mesc = 1;
-			mes "[Kaci]";
-			mes "The Airship? It's so";
-			mes "huge and beautiful, and";
-			mes "I'm always amazed that it";
-			mes "can fly so gracefully through";
-			mes "the air. I've always wanted to live someplace close to the sky...";
-			next;
-			mes "[Kaci]";
-			mes "A place where I can see";
-			mes "the clouds and bask in the";
-			mes "sun. So, when Captain Ferlock";
-			mes "invited me to work here, it was";
-			mes "like a dream come true~";
-			next;
-			break;
+			if (.@mesa && .@mesb && .@mesc)
+				break;
 		}
-		mes "[Kaci]";
-		mes "Please don't hesitate";
-		mes "to ask me anything if";
-		mes "you need a small favor,";
-		mes "or if you're just curious";
-		mes "about me in general~";
-		next;
-		if (!.@mesa || !.@mesb || !.@mesc) goto L_Ask;
 		mes "[Kaci]";
 		mes "By the way, if Hallen";
 		mes "bothers you with another";
@@ -3077,7 +3079,6 @@ OnTouch:
 		}
 		while (1) {
 			while (1) {
-L_Retry:
 				next;
 				input @input;
 				if (@input < 100 || @input > 999) {
@@ -3218,7 +3219,6 @@ L_Retry:
 				case 3: mes "Initialing 4th attempt...^000000"; break;
 				case 4: mes "Initialing final attempt...^000000"; break;
 			}
-			goto L_Retry;
 		}
 	}
 	end;

@@ -4428,13 +4428,13 @@ lighthalzen,346,263,3	script	Elder#lhz	4_F_EINOLD,{
 				mes "You must remember the";
 				mes "locations that I am about";
 				mes "to show you. Get ready...";
-				specialeffect2 EF_SIGHT;
+				specialeffect(EF_SIGHT, AREA, playerattached());
 				next;
 				mes "[Elder]";
 				mes "Yaaaaappp ---!";
-				specialeffect2 EF_SIGHTRASHER;
-				specialeffect2 EF_VOLCANO;
-				specialeffect2 EF_MAPPILLAR;
+				specialeffect(EF_SIGHTRASHER, AREA, playerattached());
+				specialeffect(EF_VOLCANO, AREA, playerattached());
+				specialeffect(EF_MAPPILLAR, AREA, playerattached());
 				next;
 				mes "[Elder]";
 				mes "There! The locations";
@@ -4546,11 +4546,11 @@ lighthalzen,346,263,3	script	Elder#lhz	4_F_EINOLD,{
 				mes "......";
 				mes ".........";
 				mes "Hooooooo...";
-				specialeffect2 EF_BENEDICTIO;
+				specialeffect(EF_BENEDICTIO, AREA, playerattached());
 				next;
 				mes "[Elder]";
 				mes "Yaaaaapp ---!";
-				specialeffect2 EF_ASPERSIO;
+				specialeffect(EF_ASPERSIO, AREA, playerattached());
 				next;
 				mes "[Elder]";
 				mes "Whew! I've managed";
@@ -4837,7 +4837,7 @@ lhz_in03,32,162,3	script	Crippled Girl#li_tre	1_M_INNKEEPER,{
 			mes "old pendant";
 			mes "into her hands.^000000";
 			next;
-			specialeffect2 EF_FORESTLIGHT4;
+			specialeffect(EF_FORESTLIGHT4, AREA, playerattached());
 			mes "...............";
 			next;
 			mes "["+strcharinfo(PC_NAME)+"]";
@@ -5033,7 +5033,7 @@ lhz_in03,32,162,3	script	Crippled Girl#li_tre	1_M_INNKEEPER,{
 					mes "old pendant";
 					mes "into her hands.^000000";
 					next;
-					specialeffect2 EF_FORESTLIGHT4;
+					specialeffect(EF_FORESTLIGHT4, AREA, playerattached());
 					mes "......";
 					next;
 					mes "["+strcharinfo(PC_NAME)+"]";
@@ -5203,7 +5203,7 @@ OnTouch_:
 		mes ".............";
 		next;
 		mes "*Shhhzzzzzzz!*";
-		specialeffect2 EF_MAPPILLAR;
+		specialeffect(EF_MAPPILLAR, AREA, playerattached());
 		next;
 		mes "[????]";
 		mes "...........";
@@ -7737,136 +7737,138 @@ yuno_pre,69,79,4	script	Mr. President	4_M_PRESIDENT,{
 		mes "Now, I'm sure that you must";
 		mes "have some questions for me...";
 		next;
-L_Mission:
-		switch( select( "Secret Wing's Background","Rekenber's Purpose","Secret Wing's Goal","Details about my mission","I'm ready for my mission." ) )
-		{
-			case 1:
-				mes "[Karl]";
-				mes "Rekenber has been";
-				mes "unopposed for a very long";
-				mes "time. Our nation is unhappy";
-				mes "with their rule, but since our";
-				mes "country lacks solidarity, the";
-				mes "people can do nothing.";
-				next;
-				mes "[Karl]";
-				mes "But one day, I was contacted";
-				mes "by some people who claimed to";
-				mes "share my sentiments against";
-				mes "the Rekenber Corporation.";
-				mes "Later, I learned that they were";
-				mes "from the Kafra Corporation.";
-				next;
-				mes "[Karl]";
-				mes "Apparently, they were";
-				mes "facing some aggressive";
-				mes "competition from Cool";
-				mes "Event Corp, which is";
-				mes "actually backed by the";
-				mes "Rekenber Corporation.";
-				next;
-				mes "[Karl]";
-				mes "We decided to pool our";
-				mes "resources to deal with what";
-				mes "we perceived as a common";
-				mes "enemy. Before long, we gathered";
-				mes "more devotees to our cause and";
-				mes "formed the ''Secret Wing.''";
-				next;
-				mes "[Karl]";
-				mes "It may be helpful for";
-				mes "you to know that our";
-				mes "direct contact to the";
-				mes "Kafra Corporation is the";
-				mes "^FF00003rd Security Team^000000. Oh, did";
-				mes "you have any other questions?";
-				next;
-				goto L_Mission;
+		while (true) {
+			switch( select( "Secret Wing's Background","Rekenber's Purpose","Secret Wing's Goal","Details about my mission","I'm ready for my mission." ) )
+			{
+				case 1:
+					mes "[Karl]";
+					mes "Rekenber has been";
+					mes "unopposed for a very long";
+					mes "time. Our nation is unhappy";
+					mes "with their rule, but since our";
+					mes "country lacks solidarity, the";
+					mes "people can do nothing.";
+					next;
+					mes "[Karl]";
+					mes "But one day, I was contacted";
+					mes "by some people who claimed to";
+					mes "share my sentiments against";
+					mes "the Rekenber Corporation.";
+					mes "Later, I learned that they were";
+					mes "from the Kafra Corporation.";
+					next;
+					mes "[Karl]";
+					mes "Apparently, they were";
+					mes "facing some aggressive";
+					mes "competition from Cool";
+					mes "Event Corp, which is";
+					mes "actually backed by the";
+					mes "Rekenber Corporation.";
+					next;
+					mes "[Karl]";
+					mes "We decided to pool our";
+					mes "resources to deal with what";
+					mes "we perceived as a common";
+					mes "enemy. Before long, we gathered";
+					mes "more devotees to our cause and";
+					mes "formed the ''Secret Wing.''";
+					next;
+					mes "[Karl]";
+					mes "It may be helpful for";
+					mes "you to know that our";
+					mes "direct contact to the";
+					mes "Kafra Corporation is the";
+					mes "^FF00003rd Security Team^000000. Oh, did";
+					mes "you have any other questions?";
+					next;
+					break;
 
-			case 2:
-				mes "[Karl]";
-				mes "It's true that companies";
-				mes "exist to create money, but";
-				mes "the Rekenber Corporation";
-				mes "is much more nefarious.";
-				mes "They actually want to dominate the entire Rune-Midgard continent.";
-				next;
-				mes "[Karl]";
-				mes "In fact, the chairman of";
-				mes "that company is shrouded";
-				mes "in mystery. Although I'm";
-				mes "the president, I go through";
-				mes "many difficulties just to";
-				mes "send a message to him.";
-				next;
-				mes "[Karl]";
-				mes "It's disheartening,";
-				mes "but we really have no";
-				mes "idea what their true goals";
-				mes "and plans might be. Now, did";
-				mes "you have any other questions?";
-				next;
-				goto L_Mission;
+				case 2:
+					mes "[Karl]";
+					mes "It's true that companies";
+					mes "exist to create money, but";
+					mes "the Rekenber Corporation";
+					mes "is much more nefarious.";
+					mes "They actually want to dominate the entire Rune-Midgard continent.";
+					next;
+					mes "[Karl]";
+					mes "In fact, the chairman of";
+					mes "that company is shrouded";
+					mes "in mystery. Although I'm";
+					mes "the president, I go through";
+					mes "many difficulties just to";
+					mes "send a message to him.";
+					next;
+					mes "[Karl]";
+					mes "It's disheartening,";
+					mes "but we really have no";
+					mes "idea what their true goals";
+					mes "and plans might be. Now, did";
+					mes "you have any other questions?";
+					next;
+					break;
 
-			case 3:
-				mes "[Karl]";
-				mes "''Secret Wing's'' only";
-				mes "goal is to destroy the";
-				mes "Rekenber Corporation in";
-				mes "order to break the Schwaltzvalt Republic free from its oppression.";
-				next;
-				mes "[Karl]";
-				mes "Of course, we realize";
-				mes "that it will take time and";
-				mes "a lot of sacrifice to make";
-				mes "this a reality. Now, do you";
-				mes "have anything else to ask?";
-				next;
-				goto L_Mission;
+				case 3:
+					mes "[Karl]";
+					mes "''Secret Wing's'' only";
+					mes "goal is to destroy the";
+					mes "Rekenber Corporation in";
+					mes "order to break the Schwaltzvalt Republic free from its oppression.";
+					next;
+					mes "[Karl]";
+					mes "Of course, we realize";
+					mes "that it will take time and";
+					mes "a lot of sacrifice to make";
+					mes "this a reality. Now, do you";
+					mes "have anything else to ask?";
+					next;
+					break;
 
-			case 4:
-				mes "[Karl]";
-				mes "Ah, your next mission.";
-				mes "I'm ready to give you";
-				mes "some of the details if";
-				mes "you no longer have any";
-				mes "questions to ask. Let me";
-				mes "know when you are ready.";
-				next;
-				goto L_Mission;
+				case 4:
+					mes "[Karl]";
+					mes "Ah, your next mission.";
+					mes "I'm ready to give you";
+					mes "some of the details if";
+					mes "you no longer have any";
+					mes "questions to ask. Let me";
+					mes "know when you are ready.";
+					next;
+					break;
 
-			case 5:
-				mes "[Karl]";
-				mes "Very well, then.";
-				mes "Your mission will not";
-				mes "be too difficult, but it does";
-				mes "have great urgency so you";
-				mes "must accomplish it as soon";
-				mes "as you can. Understood?";
-				next;
-				switch( select( "Wait, I have one more question!","Yes sir, Mr. President." ) )
-				{
-					case 1:
-						mes "[Karl]";
-						mes "Hm? I thought you";
-						mes "didn't have any more";
-						mes "questions. However, I still";
-						mes "have the luxury to give you";
-						mes "any answers that I can provide.";
-						next;
-						goto L_Mission;
+				case 5:
+					mes "[Karl]";
+					mes "Very well, then.";
+					mes "Your mission will not";
+					mes "be too difficult, but it does";
+					mes "have great urgency so you";
+					mes "must accomplish it as soon";
+					mes "as you can. Understood?";
+					next;
+					switch( select( "Wait, I have one more question!","Yes sir, Mr. President." ) )
+					{
+						case 1:
+							mes "[Karl]";
+							mes "Hm? I thought you";
+							mes "didn't have any more";
+							mes "questions. However, I still";
+							mes "have the luxury to give you";
+							mes "any answers that I can provide.";
+							next;
+							break;
 
-					case 2:
-						mes "[Karl]";
-						mes "I'm glad to hear that.";
-						mes "Alright, give me a second";
-						mes "to search for this file before";
-						mes "I explain the mission.";
-						lhz_boss = 15;
-						close2;
-						cutin "",255;
-						end;
-				}
+						case 2:
+							mes "[Karl]";
+							mes "I'm glad to hear that.";
+							mes "Alright, give me a second";
+							mes "to search for this file before";
+							mes "I explain the mission.";
+							lhz_boss = 15;
+							close2;
+							cutin "",255;
+							end;
+					}
+					break;
+			}
 		}
 	}
 	else if(lhz_boss == 15)
@@ -9690,68 +9692,68 @@ OnTouch:
 							mes "You need to input the correct";
 							mes "password to open the door.^000000";
 							next;
-L_Enter:
-							input @sneakpass;
-							if(@sneakpass == 738495)
-							{
-								mes "^3355FF*Beep~*";
-								mes "You hear a pleasant";
-								mes "sounding electronic chirp,";
-								mes "signaling that you have input";
-								mes "the correct password. The door";
-								mes "automatically slides open.";
-								next;
-								switch( select( "Enter","Retreat" ) )
+							while (true) {
+								input @sneakpass;
+								if(@sneakpass == 738495)
 								{
-									case 1:
-										mes "[Security System]";
-										mes "You have 3 minutes to";
-										mes "search the Information Archive.";
-										mes "When this time elapses, you";
-										mes "will be automatically sent";
-										mes "outside for security reasons.";
-										close2;
-										lhz_boss = 29;
-										donpcevent "Timer_Sneak::OnEnter";
-										warp "lhz_in01",177,35;
-										end;
-
-									case 2:
-										mes "^3355FFPerhaps now would";
-										mes "not be the best time to";
-										mes "enter the Secret Archive.";
-										mes "Or at least, that's what";
-										mes "you've decided for yourself.^000000";
-										close;
-								}
-							}
-							mes "^3355FF*Eeeeeee*";
-							mes "The door emits an";
-							mes "unnerving, high pitched";
-							mes "screech after you input";
-							mes "the password. You really";
-							mes "should try to input it again.^000000";
-							++@sneakerror;
-							next;
-							if(@sneakerror > 2)
-							{
-									mes "[Security System]";
-									mes "*Gzzzzz*";
-									mes "You have entered the";
-									mes "password incorrectly";
-									mes "3 times. Please stand by";
-									mes "for managerial assistance.";
+									mes "^3355FF*Beep~*";
+									mes "You hear a pleasant";
+									mes "sounding electronic chirp,";
+									mes "signaling that you have input";
+									mes "the correct password. The door";
+									mes "automatically slides open.";
 									next;
-									mes "^3355FFUh oh!";
-									mes "You better get";
-									mes "out of here before";
-									mes "you get caught!^000000";
-									close2;
-									warp "lhz_in01",191,49;
-									end;
-							}
+									switch( select( "Enter","Retreat" ) )
+									{
+										case 1:
+											mes "[Security System]";
+											mes "You have 3 minutes to";
+											mes "search the Information Archive.";
+											mes "When this time elapses, you";
+											mes "will be automatically sent";
+											mes "outside for security reasons.";
+											close2;
+											lhz_boss = 29;
+											donpcevent "Timer_Sneak::OnEnter";
+											warp "lhz_in01",177,35;
+											end;
 
-							goto L_Enter;
+										case 2:
+											mes "^3355FFPerhaps now would";
+											mes "not be the best time to";
+											mes "enter the Secret Archive.";
+											mes "Or at least, that's what";
+											mes "you've decided for yourself.^000000";
+											close;
+									}
+								}
+								mes "^3355FF*Eeeeeee*";
+								mes "The door emits an";
+								mes "unnerving, high pitched";
+								mes "screech after you input";
+								mes "the password. You really";
+								mes "should try to input it again.^000000";
+								++@sneakerror;
+								next;
+								if(@sneakerror > 2)
+								{
+										mes "[Security System]";
+										mes "*Gzzzzz*";
+										mes "You have entered the";
+										mes "password incorrectly";
+										mes "3 times. Please stand by";
+										mes "for managerial assistance.";
+										next;
+										mes "^3355FFUh oh!";
+										mes "You better get";
+										mes "out of here before";
+										mes "you get caught!^000000";
+										close2;
+										warp "lhz_in01",191,49;
+										end;
+								}
+
+							}
 
 						case 2:
 							mes "^3355FFPerhaps now would";
@@ -9812,113 +9814,114 @@ lhz_in01,182,35,0	script	File Search Engine	HIDDEN_NPC,{
 		mes "keywords to in order to find";
 		mes "specific file locations.";
 		next;
-L_Search:
-		switch( select( "Search Engine.","Cancel." ) )
-		{
-			case 1:
-				mes "^663300- Search Engine Initiated -";
-				mes "- Please enter a keyword -";
-				mes " ";
-				mes "*Search Engine";
-				mes "is case sensitve.";
-				mes "Please do not use";
-				mes "capital letters.^000000";
-				next;
-				input @sneaksearch$;
-				if((@sneaksearch$ == "kafra") || (@sneaksearch$ == "cool event"))
-				{
-					mes "^663300[Search Result]";
-					mes "Documents regarding";
-					mes "Kafra Corporation and";
-					mes "Cool Event Corp are";
-					mes "located in Arena 3-2.^000000";
-					lhz_boss = 30;
-					close;
-				}
-				else if(@sneaksearch$ == "shinokas")
-				{
-					mes "^663300[Search Result]";
-					mes "Documents regarding";
-					mes "Shinokas are located";
-					mes "in Arena 1-5.^000000";
-					lhz_boss = 31;
-					close;
-				}
-				else if((@sneaksearch$ == "stein") || (@sneaksearch$ == "STEIN") || (@sneaksearch$ == "S.T.E.I.N"))
-				{
-					mes "^663300[Search Result]";
-					mes "Documents regarding";
-					mes "S.T.E.I.N are considered";
-					mes "highly classified and";
-					mes "cannot be accessed";
-					mes "through this system.^000000";
-					close;
-				}
-				else if(@sneaksearch$ == "ymir")
-				{
-					mes "^663300[Search Result]";
-					mes "Documents regarding";
-					mes "Ymir's Heart are ranked";
-					mes "as highly classified and";
-					mes "cannot be accessed";
-					mes "through this system.^000000";
-					close;
-				}
-				else if((@sneaksearch$ == "president") || (@sneaksearch$ == "karl") || (@sneaksearch$ == "weierstrass"))
-				{
-					mes "^663300[Search Result]";
-					mes "2nd Class documents on";
-					mes "President Karl Weierstrass";
-					mes "are located in Area 1-7. For";
-					mes "more highly classified files";
-					mes "on Weierstrass, please use";
-					mes "a higher security archive.^000000";
-					lhz_boss = 32;
-					close;
-				}
-				else if(@sneaksearch$ == "einbroch")
-				{
-					mes "^663300[Search Result]";
-					mes "Documents regarding";
-					mes "Einbroch are stored";
-					mes "in Area 6-1.^000000";
-					lhz_boss = 33;
-					close;
-				}
-				else if(@sneaksearch$ == "lighthalzen")
-				{
-					mes "^663300[Search Result]" ;
-					mes "Documents regarding";
-					mes "Lighthalzen are stored";
-					mes "in Area 3-3.^000000";
-					lhz_boss = 34;
-					close;
-				}
-				else if(@sneaksearch$ == "rekenber")
-				{
-					mes "^663300[Search Result]";
-					mes "Documents regarding";
-					mes "Rekenber are highly classified and cannot be accessed by this system.^000000";
+		while (true) {
+			switch( select( "Search Engine.","Cancel." ) )
+			{
+				case 1:
+					mes "^663300- Search Engine Initiated -";
+					mes "- Please enter a keyword -";
+					mes " ";
+					mes "*Search Engine";
+					mes "is case sensitve.";
+					mes "Please do not use";
+					mes "capital letters.^000000";
 					next;
-					goto L_Search;
-				}
-				else
-				{
-					mes "^663300[Search Result]";
-					mes "Keyword not found.";
-					mes "Please search another";
-					mes "archive or increase";
-					mes "access permissions.^000000";
-					close;
-				}
+					input @sneaksearch$;
+					if((@sneaksearch$ == "kafra") || (@sneaksearch$ == "cool event"))
+					{
+						mes "^663300[Search Result]";
+						mes "Documents regarding";
+						mes "Kafra Corporation and";
+						mes "Cool Event Corp are";
+						mes "located in Arena 3-2.^000000";
+						lhz_boss = 30;
+						close;
+					}
+					else if(@sneaksearch$ == "shinokas")
+					{
+						mes "^663300[Search Result]";
+						mes "Documents regarding";
+						mes "Shinokas are located";
+						mes "in Arena 1-5.^000000";
+						lhz_boss = 31;
+						close;
+					}
+					else if((@sneaksearch$ == "stein") || (@sneaksearch$ == "STEIN") || (@sneaksearch$ == "S.T.E.I.N"))
+					{
+						mes "^663300[Search Result]";
+						mes "Documents regarding";
+						mes "S.T.E.I.N are considered";
+						mes "highly classified and";
+						mes "cannot be accessed";
+						mes "through this system.^000000";
+						close;
+					}
+					else if(@sneaksearch$ == "ymir")
+					{
+						mes "^663300[Search Result]";
+						mes "Documents regarding";
+						mes "Ymir's Heart are ranked";
+						mes "as highly classified and";
+						mes "cannot be accessed";
+						mes "through this system.^000000";
+						close;
+					}
+					else if((@sneaksearch$ == "president") || (@sneaksearch$ == "karl") || (@sneaksearch$ == "weierstrass"))
+					{
+						mes "^663300[Search Result]";
+						mes "2nd Class documents on";
+						mes "President Karl Weierstrass";
+						mes "are located in Area 1-7. For";
+						mes "more highly classified files";
+						mes "on Weierstrass, please use";
+						mes "a higher security archive.^000000";
+						lhz_boss = 32;
+						close;
+					}
+					else if(@sneaksearch$ == "einbroch")
+					{
+						mes "^663300[Search Result]";
+						mes "Documents regarding";
+						mes "Einbroch are stored";
+						mes "in Area 6-1.^000000";
+						lhz_boss = 33;
+						close;
+					}
+					else if(@sneaksearch$ == "lighthalzen")
+					{
+						mes "^663300[Search Result]" ;
+						mes "Documents regarding";
+						mes "Lighthalzen are stored";
+						mes "in Area 3-3.^000000";
+						lhz_boss = 34;
+						close;
+					}
+					else if(@sneaksearch$ == "rekenber")
+					{
+						mes "^663300[Search Result]";
+						mes "Documents regarding";
+						mes "Rekenber are highly classified and cannot be accessed by this system.^000000";
+						next;
+						break;
+					}
+					else
+					{
+						mes "^663300[Search Result]";
+						mes "Keyword not found.";
+						mes "Please search another";
+						mes "archive or increase";
+						mes "access permissions.^000000";
+						close;
+					}
 
-			case 2:
-				mes "^663300[Search Engine Close]";
-				mes "File search has been";
-				mes "canceled. Please be aware";
-				mes "that sudden shutdown may";
-				mes "cause system errors.^000000";
-				close;
+				case 2:
+					mes "^663300[Search Engine Close]";
+					mes "File search has been";
+					mes "canceled. Please be aware";
+					mes "that sudden shutdown may";
+					mes "cause system errors.^000000";
+					close;
+			}
 		}
 	}
 	mes "^3355FFThis machine can be";

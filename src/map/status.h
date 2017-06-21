@@ -840,6 +840,8 @@ typedef enum sc_type {
 	SC_TUNAPARTY,
 	SC_SHRIMP,	// 650
 	SC_FRESHSHRIMP,
+	
+	SC_DRESS_UP,
 #ifndef SC_MAX
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 #endif
@@ -1722,7 +1724,7 @@ enum si_type {
 	//SI_SUMMEREVENT04                       = 853,
 	//SI_SUMMEREVENT05                       = 854,
 	//SI_MINIGAME_ROULETTE_BONUS_ITEM        = 855,
-	//SI_DRESS_UP                            = 856,
+	SI_DRESS_UP                              = 856,
 	SI_MAPLE_FALLS                           = 857,
 	//SI_ALL_NIFLHEIM_RECALL                 = 858,
 	//SI_                                    = 859,
@@ -1759,10 +1761,10 @@ enum si_type {
 	//SI_HEALTHSTATE_HEAVYPOISON             = 890,
 	//SI_HEALTHSTATE_FEAR                    = 891,
 	//SI_CHERRY_BLOSSOM_CAKE                 = 892,
-	SI_SU_STOOP                            = 893,
-	SI_CATNIPPOWDER                        = 894,
+	SI_SU_STOOP                              = 893,
+	SI_CATNIPPOWDER                          = 894,
 	SI_BLOSSOM_FLUTTERING                    = 895,
-	SI_SV_ROOTTWIST                        = 896,
+	SI_SV_ROOTTWIST                          = 896,
 	//SI_ATTACK_PROPERTY_NOTHING             = 897,
 	//SI_ATTACK_PROPERTY_WATER               = 898,
 	//SI_ATTACK_PROPERTY_GROUND              = 899,
@@ -1784,11 +1786,11 @@ enum si_type {
 	//SI_RESIST_PROPERTY_DARKNESS            = 914,
 	//SI_RESIST_PROPERTY_TELEKINESIS         = 915,
 	//SI_RESIST_PROPERTY_UNDEAD              = 916,
-	SI_BITESCAR                            = 917,
-	SI_ARCLOUSEDASH                        = 918,
-	SI_TUNAPARTY                           = 919,
-	SI_SHRIMP                              = 920,
-	SI_FRESHSHRIMP                         = 921,
+	SI_BITESCAR                              = 917,
+	SI_ARCLOUSEDASH                          = 918,
+	SI_TUNAPARTY                             = 919,
+	SI_SHRIMP                                = 920,
+	SI_FRESHSHRIMP                           = 921,
 	//SI_PERIOD_RECEIVEITEM                  = 922,
 	//SI_PERIOD_PLUSEXP                      = 923,
 	//SI_PERIOD_PLUSJOBEXP                   = 924,
@@ -1800,14 +1802,78 @@ enum si_type {
 	//SI_HELM_ISIA                           = 930,
 	//SI_HELM_ASIR                           = 931,
 	//SI_HELM_URJ                            = 932,
-	SI_SUHIDE                              = 933,
+	SI_SUHIDE                                = 933,
 	//SI_                                    = 934,
 	//SI_DORAM_BUF_01                        = 935,
 	//SI_DORAM_BUF_02                        = 936,
-	SI_SPRITEMABLE                         = 937,
+	SI_SPRITEMABLE                           = 937,
+	//SI_AID_PERIOD_RECEIVEITEM              = 938,
+	//SI_AID_PERIOD_PLUSEXP                  = 939,
+	//SI_AID_PERIOD_PLUSJOBEXP               = 940,
+	//SI_AID_PERIOD_DEADPENALTY              = 941,
+	//SI_AID_PERIOD_ADDSTOREITEMCOUNT        = 942,
+	//SI_                                    = 943,
+	//SI_                                    = 944,
+	//SI_                                    = 945,
+	//SI_                                    = 946,
+	//SI_                                    = 947,
+	//SI_                                    = 948,
+	//SI_                                    = 949,
+	//SI_HISS                                = 950,
+	//SI_                                    = 951,
+	//SI_NYANGGRASS                          = 952,
+	//SI_CHATTERING                          = 953,
+	//SI_                                    = 954,
+	//SI_                                    = 955,
+	//SI_                                    = 956,
+	//SI_                                    = 957,
+	//SI_                                    = 958,
+	//SI_                                    = 959,
+	//SI_                                    = 960,
+	//SI_GROOMING                            = 961,
+	//SI_PROTECTIONOFSHRIMP                  = 962,
 	//SI_EP16_2_BUFF_SS                      = 963,
 	//SI_EP16_2_BUFF_SC                      = 964,
 	//SI_EP16_2_BUFF_AC                      = 965,
+	//SI_GS_MAGICAL_BULLET                   = 966,
+	//SI_                                    = 967,
+	//SI_                                    = 968,
+	//SI_                                    = 969,
+	//SI_                                    = 970,
+	//SI_                                    = 971,
+	//SI_                                    = 972,
+	//SI_                                    = 973,
+	//SI_                                    = 974,
+	//SI_                                    = 975,
+	//SI_FALLEN_ANGEL                        = 976,
+	//SI_                                    = 977,
+	//SI_                                    = 978,
+	//SI_BLAZE_BEAD                          = 979,
+	//SI_FROZEN_BEAD                         = 980,
+	//SI_BREEZE_BEAD                         = 981,
+	//SI_                                    = 982,
+	//SI_AID_PERIOD_RECEIVEITEM_2ND          = 983,
+	//SI_AID_PERIOD_PLUSEXP_2ND              = 984,
+	//SI_AID_PERIOD_PLUSJOBEXP_2ND           = 985,
+	//SI_PRONTERA_JP                         = 986,
+	//SI_                                    = 987,
+	//SI_GLOOM_CARD                          = 988,
+	//SI_PHARAOH_CARD                        = 989,
+	//SI_KIEL_CARD                           = 990,
+	//SI_                                    = 991,
+	//SI_CHEERUP                             = 992,
+	//SI_                                    = 993,
+	//SI_                                    = 994,
+	//SI_S_MANAPOTION                        = 995,
+	//SI_M_DEFSCROLL                         = 996,
+	//SI_                                    = 997,
+	//SI_                                    = 998,
+	//SI_                                    = 999,
+	//SI_AS_RAGGED_GOLEM_CARD                = 1000,
+	//SI_LHZ_DUN_N1                          = 1001,
+	//SI_LHZ_DUN_N2                          = 1002,
+	//SI_LHZ_DUN_N3                          = 1003,
+	//SI_LHZ_DUN_N4                          = 1004,
 #ifndef SI_MAX
 	SI_MAX,
 #endif
@@ -2167,9 +2233,17 @@ struct status_change {
 #define status_calc_elemental(ed, opt)  (status->calc_bl_(&(ed)->bl, SCB_ALL, (opt)))
 #define status_calc_npc(nd, opt)        (status->calc_bl_(&(nd)->bl, SCB_ALL, (opt)))
 
+enum refine_chance_type {
+	REFINE_CHANCE_TYPE_NORMAL     = 0, // Normal Chance
+	REFINE_CHANCE_TYPE_ENRICHED   = 1, // Enriched Ore Chance
+	REFINE_CHANCE_TYPE_E_NORMAL   = 2, // Event Normal Ore Chance
+	REFINE_CHANCE_TYPE_E_ENRICHED = 3, // Event Enriched Ore Chance
+	REFINE_CHANCE_TYPE_MAX
+};
+
 // bonus values and upgrade chances for refining equipment
 struct s_refine_info {
-	int chance[MAX_REFINE]; // success chance
+	int chance[REFINE_CHANCE_TYPE_MAX][MAX_REFINE]; // success chance
 	int bonus[MAX_REFINE]; // cumulative fixed bonus damage
 	int randombonus_max[MAX_REFINE]; // cumulative maximum random bonus damage
 };
@@ -2205,6 +2279,7 @@ struct status_interface {
 	/* vars */
 	int current_equip_item_index;
 	int current_equip_card_id;
+	int current_equip_option_index;
 
 	struct s_status_dbs *dbs;
 
@@ -2216,7 +2291,7 @@ struct status_interface {
 	int (*init) (bool minimal);
 	void (*final) (void);
 	/* funcs */
-	int (*get_refine_chance) (enum refine_type wlv, int refine);
+	int (*get_refine_chance) (enum refine_type wlv, int refine, enum refine_chance_type type);
 	// for looking up associated data
 	sc_type (*skill2sc) (int skill_id);
 	int (*sc2skill) (sc_type sc);

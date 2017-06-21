@@ -125,7 +125,6 @@ struct npc_data {
 	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
 
-
 #define START_NPC_NUM 110000000
 
 enum actor_classes {
@@ -142,7 +141,7 @@ enum actor_classes {
 #define MAX_NPC_CLASS 1000
 // New NPC range
 #define MAX_NPC_CLASS2_START 10001
-#define MAX_NPC_CLASS2_END 10203
+#define MAX_NPC_CLASS2_END 10248
 
 //Script NPC events.
 enum npce_event {

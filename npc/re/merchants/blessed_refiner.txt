@@ -172,7 +172,7 @@
 		close;
 	}
 	specialeffect EF_CURSEATTACK;
-	specialeffect2 EF_SUI_EXPLOSION;
+	specialeffect(EF_SUI_EXPLOSION, AREA, playerattached());
 	next;
 	emotion (!rand(5))?e_ag:e_omg;
 	mes "[Blacksmith Dister]";

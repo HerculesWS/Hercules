@@ -33,8 +33,6 @@
 //= 1.0
 //=========================================================================
 
-1@ma_c	mapflag	src4instance
-
 ma_fild02,312,317,5	script	Guard#buwaya_cave	4_MAL_SOLDIER,{
 	if (BaseLevel < 130) {
 		mes "[Guard]";
@@ -325,7 +323,7 @@ OnTimer35000:
 	disablenpc instance_npcname("#box_call");
 	end;
 OnTouch:
-	specialeffect2 EF_GUIDEDATTACK;
+	specialeffect(EF_GUIDEDATTACK, AREA, playerattached());
 	warp instance_mapname("1@ma_c"),33,112;
 	end;
 OnDisable:

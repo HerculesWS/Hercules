@@ -26,6 +26,7 @@
 #include "map/instance.h"
 #include "map/irc-bot.h"
 #include "map/map.h"
+#include "map/npc.h"
 #include "map/pc.h"
 #include "common/cbasetypes.h"
 #include "common/conf.h"
@@ -278,12 +279,21 @@ void channel_send(struct channel_data *chan, struct map_session_data *sd, const 
 		clif->messagecolor_self(sd->fd, COLOR_RED, msg_sd(sd,1455));
 		return;
 	} else if (sd) {
+		int i;
+
 		safesnprintf(message, 150, "[ #%s ] %s : %s", chan->name, sd->status.name, msg);
 		clif->channel_msg(chan,sd,message);
 		if (chan->type == HCS_TYPE_IRC)
 			ircbot->relay(sd->status.name,msg);
 		if (chan->msg_delay != 0)
 			sd->hchsysch_tick = timer->gettick();
+
+		for (i = 0; i < MAX_EVENTQUEUE; i++) {
+			if (chan->handlers[i][0] != '\0') {
+				pc->setregstr(sd, script->add_str("@channelmes$"), msg);
+				npc->event(sd, chan->handlers[i], 0);
+			}
+		}
 	} else {
 		safesnprintf(message, 150, "[ #%s ] %s", chan->name, msg);
 		clif->channel_msg2(chan, message);

@@ -23,6 +23,7 @@
 
 #include "config/core.h"
 #include "common/cbasetypes.h"
+#include "common/db.h" // VECTORS
 
 // server->client protocol version
 //        0 - pre-?
@@ -114,7 +115,15 @@
 
 #define MAX_INVENTORY 100
 //Max number of characters per account. Note that changing this setting alone is not enough if the client is not hexed to support more characters as well.
-#define MAX_CHARS 9
+#if PACKETVER >= 20100413
+#ifndef MAX_CHARS
+	#define MAX_CHARS 12
+#endif
+#else
+#ifndef MAX_CHARS
+	#define MAX_CHARS 9
+#endif
+#endif
 //Number of slots carded equipment can have. Never set to less than 4 as they are also used to keep the data of forged items/equipment. [Skotlex]
 //Note: The client seems unable to receive data for more than 4 slots due to all related packets having a fixed size.
 #define MAX_SLOTS 4
@@ -256,6 +265,12 @@
 #define MAX_ELESKILLTREE 3
 #endif
 
+// Maximum item options [Smokexyz]
+#ifndef MAX_ITEM_OPTIONS
+#define MAX_ITEM_OPTIONS 5
+#endif
+STATIC_ASSERT(MAX_ITEM_OPTIONS <= 5, "This value is limited by the client and database layout and should only be increased if you know the consequences.");
+
 // The following system marks a different job ID system used by the map server,
 // which makes a lot more sense than the normal one. [Skotlex]
 // These marks the "level" of the job.
@@ -326,6 +341,12 @@ struct item {
 	char favorite;
 	unsigned char bound;
 	uint64 unique_id;
+	
+	struct {
+		int16 index;
+		int16 value;
+		uint8 param;
+	} option[MAX_ITEM_OPTIONS];
 };
 
 //Equip position constants
@@ -416,6 +437,7 @@ enum {
 	OPTION_DRAGON5      = 0x04000000,
 	OPTION_HANBOK       = 0x08000000,
 	OPTION_OKTOBERFEST  = 0x10000000,
+	OPTION_SUMMER2      = 0x20000000,
 #ifndef NEW_CARTS
 	OPTION_CART1     = 0x00000008,
 	OPTION_CART2     = 0x00000080,
@@ -427,7 +449,7 @@ enum {
 #endif
 	// compound constants
 	OPTION_DRAGON    = OPTION_DRAGON1|OPTION_DRAGON2|OPTION_DRAGON3|OPTION_DRAGON4|OPTION_DRAGON5,
-	OPTION_COSTUME   = OPTION_WEDDING|OPTION_XMAS|OPTION_SUMMER|OPTION_HANBOK|OPTION_OKTOBERFEST,
+	OPTION_COSTUME   = OPTION_WEDDING | OPTION_XMAS | OPTION_SUMMER | OPTION_HANBOK | OPTION_OKTOBERFEST | OPTION_SUMMER2,
 };
 
 struct s_skill {
@@ -459,8 +481,10 @@ struct status_change_data {
 };
 
 struct storage_data {
-	int storage_amount;
-	struct item items[MAX_STORAGE];
+	bool save;                     ///< save flag.
+	bool received;                 ///< received flag.
+	int aggregate;                 ///< total item count.
+	VECTOR_DECL(struct item) item; ///< item vector.
 };
 
 struct guild_storage {
@@ -596,7 +620,6 @@ struct mmo_charstatus {
 
 	struct point last_point,save_point,memo_point[MAX_MEMOPOINTS];
 	struct item inventory[MAX_INVENTORY],cart[MAX_CART];
-	struct storage_data storage;
 	struct s_skill skill[MAX_SKILL];
 
 	struct s_friend friends[MAX_FRIENDS]; //New friend system [Skotlex]

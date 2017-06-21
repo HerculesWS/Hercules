@@ -705,22 +705,36 @@ yuno_in03,105,177,5	script	Written Test Professor#s	4_M_SAGE_A,{
 		mes "Come again when you finish the application.";
 		close;
 	}
-	else if (SAGE_Q == 4) {
-		mes "Welcome to the Schweicherbil Magic Academy.";
-		mes "You applied for this test already, didn't you?";
-		next;
-		mes "[Claytos Verdo]";
-		mes "Let's see, your name is " + strcharinfo(PC_NAME) + "...";
-		mes "Okay, let's get started!";
-		next;
-		mes "[Claytos Verdo]";
-		mes "The test that I am going to give you will test your knowledge on all of the academic subjects in the world.";
-		mes "I will give you 20 questions, with each question being worth 5 points. When you earn a grade of 80 points, you will pass the test.";
-		next;
-		mes "[Claytos Verdo]";
-		mes "Okay, there's no need to wait. Let's start right away";
-		mes "Oh, and if you don't answer immediately, the test will be cancelled.";
-L_AskQuestions:
+	else if (SAGE_Q == 4 || SAGE_Q == 5) {
+		if (SAGE_Q == 4) {
+			mes "Welcome to the Schweicherbil Magic Academy.";
+			mes "You applied for this test already, didn't you?";
+			next;
+			mes "[Claytos Verdo]";
+			mes "Let's see, your name is " + strcharinfo(PC_NAME) + "...";
+			mes "Okay, let's get started!";
+			next;
+			mes "[Claytos Verdo]";
+			mes "The test that I am going to give you will test your knowledge on all of the academic subjects in the world.";
+			mes "I will give you 20 questions, with each question being worth 5 points. When you earn a grade of 80 points, you will pass the test.";
+			next;
+			mes "[Claytos Verdo]";
+			mes "Okay, there's no need to wait. Let's start right away";
+			mes "Oh, and if you don't answer immediately, the test will be cancelled.";
+		} else if (SAGE_Q == 5) {
+			mes "Welcome back.";
+			mes "So, did you study harder this time?";
+			next;
+			mes "[Claytos Verdo]";
+			mes "You will take the written test under the same conditions as the test you took before. I'll give you 20 questions.";
+			mes "Each correct answer will give you 5 points. When your score reaches 80 points, you pass the test.";
+			next;
+			sage_m2 = rand(1,3);
+			mes "[Claytos Verdo]";
+			mes "Okay, there's no need to wait.";
+			mes "Answer immediately, or I'll fail you again.";
+			SAGE_Q = 5;
+		}
 		next;
 		switch(rand(1,3)) {
 		case 1:
@@ -1024,22 +1038,6 @@ L_AskQuestions:
 			}
 		}
 		close;
-	}
-	else if (SAGE_Q == 5) {
-		mes "Welcome back.";
-		mes "So, did you study harder this time?";
-		next;
-		mes "[Claytos Verdo]";
-		mes "You will take the written test under the same conditions as the test you took before. I'll give you 20 questions.";
-		mes "Each correct answer will give you 5 points. When your score reaches 80 points, you pass the test.";
-		next;
-		sage_m2 = rand(1,3);
-		mes "[Claytos Verdo]";
-		mes "Okay, there's no need to wait.";
-		mes "Answer immediately, or I'll fail you again.";
-		SAGE_Q = 5;
-		goto L_AskQuestions;
-		end;
 	}
 	else if (SAGE_Q == 6) {
 		mes "What else do you want?! Do you want to take this test again?";

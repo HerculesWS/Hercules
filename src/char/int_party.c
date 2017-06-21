@@ -633,31 +633,21 @@ int mapif_parse_PartyLeave(int fd, int party_id, int account_id, int char_id)
 		return 0; //Member not found?
 
 	mapif->party_withdraw(party_id, account_id, char_id);
-
-	if (p->party.member[i].leader){
-		p->party.member[i].account_id = 0;
-		for (j = 0; j < MAX_PARTY; j++) {
-			if (!p->party.member[j].account_id)
-				continue;
-			mapif->party_withdraw(party_id, p->party.member[j].account_id, p->party.member[j].char_id);
-			p->party.member[j].account_id = 0;
-		}
-		//Party gets deleted on the check_empty call below.
-	} else {
-		inter_party->tosql(&p->party,PS_DELMEMBER,i);
-		j = p->party.member[i].lv;
-		if(p->party.member[i].online) p->party.count--;
-		memset(&p->party.member[i], 0, sizeof(struct party_member));
-		p->size--;
-		if (j == p->min_lv || j == p->max_lv || p->family)
-		{
-			if(p->family) p->family = 0; //Family state broken.
-			inter_party->check_lv(p);
-		}
+	
+	j = p->party.member[i].lv;
+	if (p->party.member[i].online > 0)
+		p->party.count--;
+	memset(&p->party.member[i], 0, sizeof(struct party_member));
+	p->size--;
+	if (j == p->min_lv || j == p->max_lv || p->family) {
+		if(p->family) p->family = 0; //Family state broken.
+		inter_party->check_lv(p);
 	}
 
-	if (inter_party->check_empty(p) == 0)
+	if (inter_party->check_empty(p) == 0) {
+		inter_party->tosql(&p->party, PS_DELMEMBER, i);
 		mapif->party_info(-1, &p->party, 0);
+	}
 	return 0;
 }
 // When member goes to other map or levels up.
@@ -727,7 +717,7 @@ int mapif_parse_BreakParty(int fd, int party_id)
 	if(!p)
 		return 0;
 	inter_party->tosql(&p->party,PS_BREAK,0);
-	mapif->party_broken(fd,party_id);
+	mapif->party_broken(party_id, 1);
 	return 0;
 }
 

@@ -320,7 +320,7 @@ prt_church,111,112,1	script	Sister Linus	1_F_PRIEST,{
 					}
 
 					if (.@success) {
-						specialeffect2 EF_HEALSP;
+						specialeffect(EF_HEALSP, AREA, playerattached());
 						mes "[Sister Linus]";
 						mes "Congratulations!";
 						mes "You successfully";
@@ -335,7 +335,7 @@ prt_church,111,112,1	script	Sister Linus	1_F_PRIEST,{
 						close;
 					}
 					else {
-						specialeffect2 EF_POISONHIT;
+						specialeffect(EF_POISONHIT, AREA, playerattached());
 						mes "[Sister Linus]";
 						mes "Oh no! I'm sorry,";
 						mes "but you failed to";

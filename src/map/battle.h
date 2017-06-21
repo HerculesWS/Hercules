@@ -240,12 +240,13 @@ struct Battle_Config {
 	int combo_delay_rate;
 	int item_check;
 	int item_use_interval; //[Skotlex]
-	int cashfood_use_interval;
 	int wedding_modifydisplay;
 	int wedding_ignorepalette; //[Skotlex]
 	int xmas_ignorepalette; // [Valaris]
 	int summer_ignorepalette; // [Zephyrus]
 	int hanbok_ignorepalette;
+	int oktoberfest_ignorepalette;
+	int summer2_ignorepalette;
 	int natural_healhp_interval;
 	int natural_healsp_interval;
 	int natural_heal_skill_interval;
@@ -407,7 +408,6 @@ struct Battle_Config {
 	int mob_npc_event_type; //Determines on who the npc_event is executed. [Skotlex]
 
 	int character_size; // if riders have size=2, and baby class riders size=1 [Lupus]
-	int rare_drop_announce; // chance <= to show rare drops global announces
 
 	int retaliate_to_master; //Whether when a mob is attacked by another mob, it will retaliate versus the mob or the mob's master. [Skotlex]
 
@@ -545,8 +545,16 @@ struct Battle_Config {
 	int player_warp_keep_direction;
 
 	int atcommand_levelup_events;	// Enable atcommands trigger level up events for NPCs
+	
+	int bow_unequip_arrow;
 
 	int max_summoner_parameter; // Summoner Max Stats
+	int mvp_exp_reward_message;
+
+	int mob_eye_range_bonus; //Vulture's Eye and Snake's Eye range bonus
+
+	int prevent_logout_trigger;
+	int boarding_halter_speed;
 };
 
 /* criteria for battle_config.idletime_critera */

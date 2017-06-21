@@ -141,8 +141,11 @@ enum packet_headers {
 	authokType = 0x73,
 #elif PACKETVER < 20141022
 	authokType = 0x2eb,
-#else
+// Some clients smaller than 20160330 cant be tested [4144]
+#elif PACKETVER < 20160330
 	authokType = 0xa18,
+#else
+	authokType = 0x2eb,
 #endif
 	script_clearType = 0x8d6,
 	package_item_announceType = 0x7fd,
@@ -286,7 +289,7 @@ enum packet_headers {
 	maptypeproperty2Type = 0x99b,
 	npcmarketresultackType = 0x9d7,
 	npcmarketopenType = 0x9d5,
-#if PACKETVER >= 20131223
+#if PACKETVER >= 20131223  // version probably can be 20131030 [4144]
 	wisendType = 0x9df,
 #else
 	wisendType = 0x98,
@@ -343,7 +346,7 @@ struct NORMALITEM_INFO {
 #endif
 } __attribute__((packed));
 
-struct RndOptions {
+struct ItemOptions {
 	int16 index;
 	int16 value;
 	uint8 param;
@@ -379,7 +382,7 @@ struct EQUIPITEM_INFO {
 #endif
 #if PACKETVER >= 20150226
 	uint8 option_count;
-	struct RndOptions option_data[5];
+	struct ItemOptions option_data[MAX_ITEM_OPTIONS];
 #endif
 #if PACKETVER >= 20120925
 	struct {
@@ -400,7 +403,8 @@ struct packet_authok {
 #if PACKETVER >= 20080102
 	int16 font;
 #endif
-#if PACKETVER >= 20141022
+// Some clients smaller than 20160330 cant be tested [4144]
+#if PACKETVER >= 20141022 && PACKETVER < 20160330
 	uint8 sex;
 #endif
 } __attribute__((packed));
@@ -442,7 +446,7 @@ struct packet_additem {
 	uint16 bindOnEquipType;
 #endif
 #if PACKETVER >= 20150226
-	struct RndOptions option_data[5];
+	struct ItemOptions option_data[MAX_ITEM_OPTIONS];
 #endif
 } __attribute__((packed));
 

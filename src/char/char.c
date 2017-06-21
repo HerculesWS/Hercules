@@ -287,8 +287,10 @@ void char_set_char_offline(int char_id, int account_id)
 	}
 	else
 	{
-		struct mmo_charstatus* cp = (struct mmo_charstatus*)idb_get(chr->char_db_,char_id);
+		struct mmo_charstatus* cp = (struct mmo_charstatus*) idb_get(chr->char_db_,char_id);
+
 		inter_guild->CharOffline(char_id, cp?cp->guild_id:-1);
+
 		if (cp)
 			idb_remove(chr->char_db_,char_id);
 
@@ -438,14 +440,6 @@ int char_mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 	if( memcmp(p->cart, cp->cart, sizeof(p->cart)) ) {
 		if (!chr->memitemdata_to_sql(p->cart, MAX_CART, p->char_id, TABLE_CART))
 			strcat(save_status, " cart");
-		else
-			errors++;
-	}
-
-	//map storage data
-	if( memcmp(p->storage.items, cp->storage.items, sizeof(p->storage.items)) ) {
-		if (!chr->memitemdata_to_sql(p->storage.items, MAX_STORAGE, p->account_id, TABLE_STORAGE))
-			strcat(save_status, " storage");
 		else
 			errors++;
 	}
@@ -745,6 +739,9 @@ int char_memitemdata_to_sql(const struct item items[], int max, int id, int tabl
 	StrBuf->AppendStr(&buf, "SELECT `id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `bound`, `unique_id`");
 	for (j = 0; j < MAX_SLOTS; ++j)
 		StrBuf->Printf(&buf, ", `card%d`", j);
+	for (j = 0; j < MAX_ITEM_OPTIONS; ++j)
+		StrBuf->Printf(&buf, ", `opt_idx%d`, `opt_val%d`", j, j);
+	
 	if (has_favorite)
 		StrBuf->AppendStr(&buf, ", `favorite`");
 	StrBuf->Printf(&buf, " FROM `%s` WHERE `%s`='%d'", tablename, selectoption, id);
@@ -769,9 +766,13 @@ int char_memitemdata_to_sql(const struct item items[], int max, int id, int tabl
 	SQL->StmtBindColumn(stmt, 8, SQLDT_UCHAR,     &item.bound,       0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 9, SQLDT_UINT64,    &item.unique_id,   0, NULL, NULL);
 	for (j = 0; j < MAX_SLOTS; ++j)
-		SQL->StmtBindColumn(stmt, 10+j, SQLDT_SHORT, &item.card[j], 0, NULL, NULL);
+		SQL->StmtBindColumn(stmt, 10 + j, SQLDT_SHORT, &item.card[j], 0, NULL, NULL);
+	for (j = 0; j < MAX_ITEM_OPTIONS; ++j) {
+		SQL->StmtBindColumn(stmt, 10 + MAX_SLOTS + j * 2, SQLDT_INT16, &item.option[j].index, 0, NULL, NULL);
+		SQL->StmtBindColumn(stmt, 11 + MAX_SLOTS + j * 2, SQLDT_INT16, &item.option[j].value, 0, NULL, NULL);
+	}
 	if (has_favorite)
-		SQL->StmtBindColumn(stmt, 10+MAX_SLOTS, SQLDT_UCHAR, &item.favorite, 0, NULL, NULL);
+		SQL->StmtBindColumn(stmt, 10 + MAX_SLOTS + MAX_ITEM_OPTIONS * 2, SQLDT_UCHAR, &item.favorite, 0, NULL, NULL);
 
 	// bit array indicating which inventory items have already been matched
 	flag = aCalloc(max, sizeof(bool));
@@ -790,9 +791,12 @@ int char_memitemdata_to_sql(const struct item items[], int max, int id, int tabl
 			 && items[i].card[2] == item.card[2]
 			 && items[i].card[3] == item.card[3]
 			) {
+				int k = 0;
 				// They are the same item.
 				ARR_FIND(0, MAX_SLOTS, j, items[i].card[j] != item.card[j]);
-				if (j == MAX_SLOTS
+				ARR_FIND(0, MAX_ITEM_OPTIONS, k, items[i].option[k].index != item.option[k].index || items[i].option[k].value != item.option[k].value);
+				
+				if (j == MAX_SLOTS && k == MAX_ITEM_OPTIONS
 				 && items[i].amount == item.amount
 				 && items[i].equip == item.equip
 				 && items[i].identify == item.identify
@@ -810,6 +814,8 @@ int char_memitemdata_to_sql(const struct item items[], int max, int id, int tabl
 						tablename, items[i].amount, items[i].equip, items[i].identify, items[i].refine, items[i].attribute, items[i].expire_time, items[i].bound);
 					for (j = 0; j < MAX_SLOTS; ++j)
 						StrBuf->Printf(&buf, ", `card%d`='%d'", j, items[i].card[j]);
+					for (j = 0; j < MAX_ITEM_OPTIONS; ++j)
+						StrBuf->Printf(&buf, ", `opt_idx%d`='%d', `opt_val%d`='%d'", j, items[i].option[j].index, j, items[i].option[j].value);
 					if (has_favorite)
 						StrBuf->Printf(&buf, ", `favorite`='%d'", items[i].favorite);
 					StrBuf->Printf(&buf, " WHERE `id`='%d' LIMIT 1", item.id);
@@ -838,6 +844,8 @@ int char_memitemdata_to_sql(const struct item items[], int max, int id, int tabl
 	StrBuf->Printf(&buf, "INSERT INTO `%s`(`%s`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `bound`, `unique_id`", tablename, selectoption);
 	for (j = 0; j < MAX_SLOTS; ++j)
 		StrBuf->Printf(&buf, ", `card%d`", j);
+	for (j = 0; j < MAX_ITEM_OPTIONS; ++j)
+		StrBuf->Printf(&buf, ", `opt_idx%d`, `opt_val%d`", j, j);
 	if (has_favorite)
 		StrBuf->AppendStr(&buf, ", `favorite`");
 	StrBuf->AppendStr(&buf, ") VALUES ");
@@ -858,6 +866,8 @@ int char_memitemdata_to_sql(const struct item items[], int max, int id, int tabl
 			id, items[i].nameid, items[i].amount, items[i].equip, items[i].identify, items[i].refine, items[i].attribute, items[i].expire_time, items[i].bound, items[i].unique_id);
 		for (j = 0; j < MAX_SLOTS; ++j)
 			StrBuf->Printf(&buf, ", '%d'", items[i].card[j]);
+		for (j = 0; j < MAX_ITEM_OPTIONS; ++j)
+			StrBuf->Printf(&buf, ", '%d', '%d'", items[i].option[j].index, items[i].option[j].value);
 		if (has_favorite)
 			StrBuf->Printf(&buf, ", '%d'", items[i].favorite);
 		StrBuf->AppendStr(&buf, ")");
@@ -1188,8 +1198,10 @@ int char_mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_every
 	//`inventory` (`id`,`char_id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `card0`, `card1`, `card2`, `card3`, `expire_time`, `favorite`, `bound`, `unique_id`)
 	StrBuf->Init(&buf);
 	StrBuf->AppendStr(&buf, "SELECT `id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `favorite`, `bound`, `unique_id`");
-	for( i = 0; i < MAX_SLOTS; ++i )
+	for (i = 0; i < MAX_SLOTS; ++i)
 		StrBuf->Printf(&buf, ", `card%d`", i);
+	for (i = 0; i < MAX_ITEM_OPTIONS; ++i)
+		StrBuf->Printf(&buf, ", `opt_idx%d`, `opt_val%d`", i, i);
 	StrBuf->Printf(&buf, " FROM `%s` WHERE `char_id`=? LIMIT %d", inventory_db, MAX_INVENTORY);
 
 	memset(&tmp_item, 0, sizeof(tmp_item));
@@ -1209,8 +1221,14 @@ int char_mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_every
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 10, SQLDT_UINT64,    &tmp_item.unique_id, 0, NULL, NULL)
 	)
 		SqlStmt_ShowDebug(stmt);
-	for( i = 0; i < MAX_SLOTS; ++i )
-		if( SQL_ERROR == SQL->StmtBindColumn(stmt, 11+i, SQLDT_SHORT, &tmp_item.card[i], 0, NULL, NULL) )
+	/* Card Slots */
+	for (i = 0; i < MAX_SLOTS; ++i)
+		if (SQL_ERROR == SQL->StmtBindColumn(stmt, 11 + i, SQLDT_SHORT, &tmp_item.card[i], 0, NULL, NULL))
+			SqlStmt_ShowDebug(stmt);
+	/* Item Options */
+	for (i = 0; i < MAX_ITEM_OPTIONS; i++)
+		if (SQL_ERROR == SQL->StmtBindColumn(stmt, 11 + MAX_SLOTS + i * 2, SQLDT_INT16, &tmp_item.option[i].index, 0, NULL, NULL)
+			|| SQL_ERROR == SQL->StmtBindColumn(stmt, 12 + MAX_SLOTS + i * 2, SQLDT_INT16, &tmp_item.option[i].value, 0, NULL, NULL))
 			SqlStmt_ShowDebug(stmt);
 
 	for( i = 0; i < MAX_INVENTORY && SQL_SUCCESS == SQL->StmtNextRow(stmt); ++i )
@@ -1222,8 +1240,10 @@ int char_mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_every
 	//`cart_inventory` (`id`,`char_id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `card0`, `card1`, `card2`, `card3`, expire_time`, `bound`, `unique_id`)
 	StrBuf->Clear(&buf);
 	StrBuf->AppendStr(&buf, "SELECT `id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `bound`, `unique_id`");
-	for( j = 0; j < MAX_SLOTS; ++j )
+	for (j = 0; j < MAX_SLOTS; ++j)
 		StrBuf->Printf(&buf, ", `card%d`", j);
+	for (j = 0; j < MAX_ITEM_OPTIONS; ++j)
+		StrBuf->Printf(&buf, ", `opt_idx%d`, `opt_val%d`", j, j);
 	StrBuf->Printf(&buf, " FROM `%s` WHERE `char_id`=? LIMIT %d", cart_db, MAX_CART);
 
 	memset(&tmp_item, 0, sizeof(tmp_item));
@@ -1243,17 +1263,20 @@ int char_mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_every
 	) {
 		SqlStmt_ShowDebug(stmt);
 	}
-	for( i = 0; i < MAX_SLOTS; ++i )
-		if( SQL_ERROR == SQL->StmtBindColumn(stmt, 10+i, SQLDT_SHORT, &tmp_item.card[i], 0, NULL, NULL) )
+	/* Card Slots */
+	for (i = 0; i < MAX_SLOTS; ++i)
+		if( SQL_ERROR == SQL->StmtBindColumn(stmt, 10 + i, SQLDT_SHORT, &tmp_item.card[i], 0, NULL, NULL) )
+			SqlStmt_ShowDebug(stmt);
+	/* Item Options */
+	for (i = 0; i < MAX_ITEM_OPTIONS; ++i)
+		if (SQL_ERROR == SQL->StmtBindColumn(stmt, 10 + MAX_SLOTS + i * 2, SQLDT_INT16, &tmp_item.option[i].index, 0, NULL, NULL)
+			|| SQL_ERROR == SQL->StmtBindColumn(stmt, 11 + MAX_SLOTS + i * 2, SQLDT_INT16, &tmp_item.option[i].value, 0, NULL, NULL))
 			SqlStmt_ShowDebug(stmt);
 
 	for( i = 0; i < MAX_CART && SQL_SUCCESS == SQL->StmtNextRow(stmt); ++i )
 		memcpy(&p->cart[i], &tmp_item, sizeof(tmp_item));
+	
 	strcat(t_msg, " cart");
-
-	//read storage
-	inter_storage->fromsql(p->account_id, &p->storage);
-	strcat(t_msg, " storage");
 
 	//read skill
 	//`skill` (`char_id`, `id`, `lv`)
@@ -1544,7 +1567,7 @@ int char_check_char_name(char * name, char * esc_name)
  *  -5: 'Symbols in Character Names are forbidden'
  *  char_id: Success
  **/
-int char_make_new_char_sql(struct char_session_data *sd, const char *name_, int str, int agi, int vit, int int_, int dex, int luk, int slot, int hair_color, int hair_style, int16 starting_class)
+int char_make_new_char_sql(struct char_session_data *sd, const char *name_, int str, int agi, int vit, int int_, int dex, int luk, int slot, int hair_color, int hair_style, int16 starting_class, uint8 sex)
 {
 	char name[NAME_LENGTH];
 	char esc_name[NAME_LENGTH*2+1];
@@ -1587,17 +1610,17 @@ int char_make_new_char_sql(struct char_session_data *sd, const char *name_, int 
 	if( sd->found_char[slot] != -1 )
 		return -2; /* character account limit exceeded */
 
+
 #if PACKETVER >= 20120307
 	// Insert the new char entry to the database
 	if (SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` (`account_id`, `char_num`, `name`, `class`, `zeny`, `status_point`,`str`, `agi`, `vit`, `int`, `dex`, `luk`, `max_hp`, `hp`,"
-		"`max_sp`, `sp`, `hair`, `hair_color`, `last_map`, `last_x`, `last_y`, `save_map`, `save_x`, `save_y`) VALUES ("
-		"'%d', '%d', '%s', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d','%d', '%d','%d', '%d', '%s', '%d', '%d', '%s', '%d', '%d')",
+		"`max_sp`, `sp`, `hair`, `hair_color`, `last_map`, `last_x`, `last_y`, `save_map`, `save_x`, `save_y`, `sex`) VALUES ("
+		"'%d', '%d', '%s', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d','%d', '%d','%d', '%d', '%s', '%d', '%d', '%s', '%d', '%d', '%c')",
 		char_db, sd->account_id , slot, esc_name, starting_class, start_zeny, 48, str, agi, vit, int_, dex, luk,
 		(40 * (100 + vit)/100) , (40 * (100 + vit)/100 ),  (11 * (100 + int_)/100), (11 * (100 + int_)/100), hair_style, hair_color,
-		mapindex_id2name(start_point.map), start_point.x, start_point.y, mapindex_id2name(start_point.map), start_point.x, start_point.y) )
-	{
-		Sql_ShowDebug(inter->sql_handle);
-		return -2; //No, stop the procedure!
+		mapindex_id2name(start_point.map), start_point.x, start_point.y, mapindex_id2name(start_point.map), start_point.x, start_point.y, sex)) {
+			Sql_ShowDebug(inter->sql_handle);
+			return -2; //No, stop the procedure!
 	}
 #else
 	//Insert the new char entry to the database
@@ -1647,7 +1670,7 @@ int char_make_new_char_sql(struct char_session_data *sd, const char *name_, int 
 		}
 	}
 
-	ShowInfo("Created char: account: %d, char: %d, slot: %d, name: %s\n", sd->account_id, char_id, slot, name);
+	ShowInfo("Created char: account: %d, char: %d, slot: %d, name: %s, sex: %c\n", sd->account_id, char_id, slot, name, sex);
 	return char_id;
 }
 
@@ -4409,14 +4432,21 @@ void char_parse_char_connect(int fd, struct char_session_data* sd, uint32 ipl)
 
 void char_send_map_info(int fd, int i, uint32 subnet_map_ip, struct mmo_charstatus *cd)
 {
+#if PACKETVER < 20170329
+	const int cmd = 0x71;
+	const int len = 28;
+#else
+	const int cmd = 0xac5;
+	const int len = 156;
+#endif
 	nullpo_retv(cd);
-	WFIFOHEAD(fd,28);
-	WFIFOW(fd,0) = 0x71;
-	WFIFOL(fd,2) = cd->char_id;
-	mapindex->getmapname_ext(mapindex_id2name(cd->last_point.map), WFIFOP(fd,6));
-	WFIFOL(fd,22) = htonl((subnet_map_ip) ? subnet_map_ip : chr->server[i].ip);
-	WFIFOW(fd,26) = sockt->ntows(htons(chr->server[i].port)); // [!] LE byte order here [!]
-	WFIFOSET(fd,28);
+	WFIFOHEAD(fd, len);
+	WFIFOW(fd, 0) = cmd;
+	WFIFOL(fd, 2) = cd->char_id;
+	mapindex->getmapname_ext(mapindex_id2name(cd->last_point.map), WFIFOP(fd, 6));
+	WFIFOL(fd, 22) = htonl((subnet_map_ip) ? subnet_map_ip : chr->server[i].ip);
+	WFIFOW(fd, 26) = sockt->ntows(htons(chr->server[i].port)); // [!] LE byte order here [!]
+	WFIFOSET(fd, len);
 }
 
 void char_send_wait_char_server(int fd)
@@ -4633,13 +4663,27 @@ void char_parse_char_create_new_char(int fd, struct char_session_data* sd)
 		//turn character creation on/off [Kevin]
 		result = -2;
 	} else {
-	#if PACKETVER >= 20151001
-		result = chr->make_new_char_sql(sd, RFIFOP(fd,2), 1, 1, 1, 1, 1, 1, RFIFOB(fd,26), RFIFOW(fd,27), RFIFOW(fd,29), RFIFOW(fd, 31));
-	#elif PACKETVER >= 20120307
-		result = chr->make_new_char_sql(sd, RFIFOP(fd,2), 1, 1, 1, 1, 1, 1, RFIFOB(fd,26), RFIFOW(fd,27), RFIFOW(fd,29), JOB_NOVICE);
-	#else
-		result = chr->make_new_char_sql(sd, RFIFOP(fd,2), RFIFOB(fd,26), RFIFOB(fd,27), RFIFOB(fd,28), RFIFOB(fd,29), RFIFOB(fd,30), RFIFOB(fd,31), RFIFOB(fd,32), RFIFOW(fd,33), RFIFOW(fd,35), JOB_NOVICE);
-	#endif
+#if PACKETVER >= 20151001
+		uint8 sex = RFIFOB(fd, 35);
+
+		switch (sex) {
+			case SEX_FEMALE:
+				sex = 'F';
+				break;
+			case SEX_MALE:
+				sex = 'M';
+				break;
+			default:
+				chr->creation_failed(fd, -2);  // Char Creation Denied
+				RFIFOSKIP(fd, 36);
+				return;
+		}
+		result = chr->make_new_char_sql(sd, RFIFOP(fd, 2), 1, 1, 1, 1, 1, 1, RFIFOB(fd, 26), RFIFOW(fd, 27), RFIFOW(fd, 29), RFIFOW(fd, 31), sex);
+#elif PACKETVER >= 20120307
+		result = chr->make_new_char_sql(sd, RFIFOP(fd, 2), 1, 1, 1, 1, 1, 1, RFIFOB(fd, 26), RFIFOW(fd, 27), RFIFOW(fd, 29), JOB_NOVICE, 'U');
+#else
+		result = chr->make_new_char_sql(sd, RFIFOP(fd, 2), RFIFOB(fd, 26), RFIFOB(fd, 27), RFIFOB(fd, 28), RFIFOB(fd, 29), RFIFOB(fd, 30), RFIFOB(fd, 31), RFIFOB(fd, 32), RFIFOW(fd, 33), RFIFOW(fd, 35), JOB_NOVICE, 'U');
+#endif
 	}
 
 	//'Charname already exists' (-1), 'Char creation denied' (-2) and 'You are underaged' (-3)
@@ -5042,7 +5086,7 @@ int char_parse_char(int fd)
 			// S 0a39 <name>.24B <slot>.B <hair color>.W <hair style>.W <starting job class ID>.W <Unknown>.(W or 2 B's)??? <sex>.B
 			case 0xa39:
 			{
-				FIFOSD_CHECK(36);	
+				FIFOSD_CHECK(36);
 #elif PACKETVER >= 20120307
 			// S 0970 <name>.24B <slot>.B <hair color>.W <hair style>.W
 			case 0x970:

@@ -36,13 +36,6 @@
 //= 2.4
 //=========================================================================
 
-1@tower	mapflag	src4instance
-2@tower	mapflag	src4instance
-3@tower	mapflag	src4instance
-4@tower	mapflag	src4instance
-5@tower	mapflag	src4instance
-6@tower	mapflag	src4instance
-
 alberta,214,77,6	script	Captain Janssen	4_M_SEAMAN,{
 	if (checkweight(Knife,1) == 0) {
 		mes "^008800Wait here!!";

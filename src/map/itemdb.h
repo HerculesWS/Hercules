@@ -111,8 +111,6 @@ enum item_itemid {
 	ITEMID_FRAGMENT_OF_CRYSTAL   = 7321,
 	ITEMID_SKULL_                = 7420,
 	ITEMID_TOKEN_OF_SIEGFRIED    = 7621,
-	ITEMID_GOLD_KEY77            = 7782,
-	ITEMID_SILVER_KEY77          = 7783,
 	ITEMID_SPECIAL_ALLOY_TRAP    = 7940,
 	ITEMID_CATNIP_FRUIT          = 11602,
 	ITEMID_RED_POUCH_OF_SURPRISE = 12024,
@@ -147,6 +145,23 @@ enum item_itemid {
 	ITEMID_BLACK_THING           = 12435,
 	ITEMID_BOARDING_HALTER       = 12622,
 	ITEMID_NOBLE_NAMEPLATE       = 12705,
+	ITEMID_POISON_PARALYSIS      = 12717,
+	ITEMID_POISON_LEECH          = 12718,
+	ITEMID_POISON_OBLIVION       = 12719,
+	ITEMID_POISON_CONTAMINATION  = 12720,
+	ITEMID_POISON_NUMB           = 12721,
+	ITEMID_POISON_FEVER          = 12722,
+	ITEMID_POISON_LAUGHING       = 12723,
+	ITEMID_POISON_FATIGUE        = 12724,
+	ITEMID_NAUTHIZ               = 12725,
+	ITEMID_RAIDO                 = 12726,
+	ITEMID_BERKANA               = 12727,
+	ITEMID_ISA                   = 12728,
+	ITEMID_OTHILA                = 12729,
+	ITEMID_URUZ                  = 12730,
+	ITEMID_THURISAZ              = 12731,
+	ITEMID_WYRD                  = 12732,
+	ITEMID_HAGALAZ               = 12733,
 	ITEMID_DUN_TELE_SCROLL1      = 14527,
 	ITEMID_BATTLE_MANUAL25       = 14532,
 	ITEMID_BATTLE_MANUAL100      = 14533,
@@ -161,6 +176,7 @@ enum item_itemid {
 	ITEMID_PILEBUNCKER_S         = 16030,
 	ITEMID_PILEBUNCKER_P         = 16031,
 	ITEMID_PILEBUNCKER_T         = 16032,
+	ITEMID_LUX_ANIMA             = 22540,
 };
 
 enum cards_item_list {
@@ -247,49 +263,6 @@ enum mercenary_scroll_item_list {
 	ITEMID_SPEARMERCENARY_SCROLL8,  // 12180
 	ITEMID_SPEARMERCENARY_SCROLL9,  // 12181
 	ITEMID_SPEARMERCENARY_SCROLL10, // 12182
-};
-
-/**
- * Cash Food
- */
-enum cash_food_item_list {
-	ITEMID_STR_DISH10_   = 12202,
-	ITEMID_AGI_DISH10_, // 12203
-	ITEMID_INT_DISH10_, // 12204
-	ITEMID_DEX_DISH10_, // 12205
-	ITEMID_LUK_DISH10_, // 12206
-	ITEMID_VIT_DISH10_, // 12207
-};
-
-/**
- * GC Poison
- */
-enum poison_item_list {
-	ITEMID_POISON_PARALYSIS       = 12717,
-	ITEMID_POISON_LEECH,         // 12718
-	ITEMID_POISON_OBLIVION,      // 12719
-	ITEMID_POISON_CONTAMINATION, // 12720
-	ITEMID_POISON_NUMB,          // 12721
-	ITEMID_POISON_FEVER,         // 12722
-	ITEMID_POISON_LAUGHING,      // 12723
-	ITEMID_POISON_FATIGUE,       // 12724
-};
-
-
-/**
- * Rune Knight
- **/
-enum rune_item_list {
-	ITEMID_NAUTHIZ    = 12725,
-	ITEMID_RAIDO,    // 12726
-	ITEMID_BERKANA,  // 12727
-	ITEMID_ISA,      // 12728
-	ITEMID_OTHILA,   // 12729
-	ITEMID_URUZ,     // 12730
-	ITEMID_THURISAZ, // 12731
-	ITEMID_WYRD,     // 12732
-	ITEMID_HAGALAZ,  // 12733
-	ITEMID_LUX_ANIMA  = 22540,
 };
 
 /**
@@ -388,13 +361,23 @@ enum ItemTradeRestrictions {
 };
 
 /**
- * Iten No-use restrictions
+ * Item No-use restrictions
  */
 enum ItemNouseRestrictions {
 	INR_NONE    = 0x0, ///< No restrictions
 	INR_SITTING = 0x1, ///< Item can't be used while sitting
 
 	INR_ALL     = 0x1 ///< Sum of all the above values
+};
+
+/**
+ * Item Option Types
+ */
+enum ItemOptionTypes {
+	IT_OPT_INDEX = 0,
+	IT_OPT_VALUE,
+	IT_OPT_PARAM,
+	IT_OPT_MAX
 };
 
 /** Convenience item list (entry) used in various functions */
@@ -462,6 +445,11 @@ struct item_package {
 	unsigned short must_qty;
 };
 
+struct item_option {
+	int16 index;
+	struct script_code *script;
+};
+
 struct item_data {
 	uint16 nameid;
 	char name[ITEM_NAME_LENGTH],jname[ITEM_NAME_LENGTH];
@@ -507,6 +495,8 @@ struct item_data {
 		unsigned bindonequip : 1;
 		unsigned keepafteruse : 1;
 		unsigned force_serial : 1;
+		unsigned no_options: 1; // < disallows use of item options on the item. (non-equippable items are automatically flagged) [Smokexyz]
+		unsigned drop_announce : 1; // Official Drop Announce [Jedzkie]
 	} flag;
 	struct {// item stacking limitation
 		unsigned short amount;
@@ -548,13 +538,12 @@ struct item_data {
 #define itemdb_value_buy(n)   (itemdb->search(n)->value_buy)
 #define itemdb_value_sell(n)  (itemdb->search(n)->value_sell)
 #define itemdb_canrefine(n)   (!itemdb->search(n)->flag.no_refine)
+#define itemdb_allowoption(n) (!itemdb->search(n)->flag.no_options)
 
-#define itemdb_is_rune(n)        (((n) >= ITEMID_NAUTHIZ && (n) <= ITEMID_HAGALAZ) || (n) == ITEMID_LUX_ANIMA)
 #define itemdb_is_element(n)     ((n) >= ITEMID_SCARLET_PTS && (n) <= ITEMID_LIME_GREEN_PTS)
 #define itemdb_is_spellbook(n)   ((n) >= ITEMID_MAGIC_BOOK_FB && (n) <= ITEMID_MAGIC_BOOK_DL)
 #define itemdb_is_poison(n)      ((n) >= ITEMID_POISON_PARALYSIS && (n) <= ITEMID_POISON_FATIGUE)
 #define itemid_isgemstone(n)     ((n) >= ITEMID_YELLOW_GEMSTONE && (n) <= ITEMID_BLUE_GEMSTONE)
-#define itemdb_iscashfood(n)     ((n) >= ITEMID_STR_DISH10_ && (n) <= ITEMID_VIT_DISH10_)
 #define itemdb_is_GNbomb(n)      ((n) >= ITEMID_APPLE_BOMB && (n) <= ITEMID_VERY_HARD_LUMP)
 #define itemdb_is_GNthrowable(n) ((n) >= ITEMID_MYSTERIOUS_POWDER && (n) <= ITEMID_BLACK_THING_TO_THROW)
 #define itemid_is_pilebunker(n)  ((n) == ITEMID_PILEBUNCKER || (n) == ITEMID_PILEBUNCKER_P || (n) == ITEMID_PILEBUNCKER_S || (n) == ITEMID_PILEBUNCKER_T)
@@ -595,11 +584,13 @@ struct itemdb_interface {
 	/* */
 	struct item_data *array[MAX_ITEMDB];
 	struct DBMap *other;// int nameid -> struct item_data*
+	struct DBMap *options; // int opt_id -> struct item_option*
 	struct item_data dummy; //This is the default dummy item used for non-existant items. [Skotlex]
 	/* */
 	void (*read_groups) (void);
 	void (*read_chains) (void);
 	void (*read_packages) (void);
+	void (*read_options) (void);
 	/* */
 	void (*write_cached_packages) (const char *config_filename);
 	bool (*read_cached_packages) (const char *config_filename);
@@ -610,6 +601,7 @@ struct itemdb_interface {
 	struct item_data* (*load)(int nameid);
 	struct item_data* (*search)(int nameid);
 	struct item_data* (*exists) (int nameid);
+	struct item_option* (*option_exists) (int idx);
 	bool (*in_group) (struct item_group *group, int nameid);
 	int (*group_item) (struct item_group *group);
 	int (*chain_item) (unsigned short chain_id, int *rate);
@@ -642,6 +634,7 @@ struct itemdb_interface {
 	void (*read_combos) (void);
 	int (*gendercheck) (struct item_data *id);
 	int (*validate_entry) (struct item_data *entry, int n, const char *source);
+	void (*readdb_options_additional_fields) (struct item_option *ito, struct config_setting_t *t, const char *source);
 	void (*readdb_additional_fields) (int itemid, struct config_setting_t *it, int n, const char *source);
 	void (*readdb_job_sub) (struct item_data *id, struct config_setting_t *t);
 	int (*readdb_libconfig_sub) (struct config_setting_t *it, int n, const char *source);
@@ -650,6 +643,7 @@ struct itemdb_interface {
 	void (*read) (bool minimal);
 	void (*destroy_item_data) (struct item_data *self, int free_self);
 	int (*final_sub) (union DBKey key, struct DBData *data, va_list ap);
+	int (*options_final_sub) (union DBKey key, struct DBData *data, va_list ap);
 	void (*clear) (bool total);
 	struct item_combo * (*id2combo) (unsigned short id);
 	bool (*is_item_usable) (struct item_data *item);

@@ -235,6 +235,7 @@ typedef enum c_op {
 	C_SUB_PRE, // --a
 	C_RE_EQ, // ~=
 	C_RE_NE, // ~!
+	C_POW, // **
 } c_op;
 
 /// Script queue options
@@ -347,6 +348,81 @@ enum navigation_service {
 	NAV_KAFRA_AND_AIRSHIP  = NAV_KAFRA_ONLY + NAV_AIRSHIP_ONLY, // 101
 	NAV_KAFRA_AND_SCROLL   = NAV_KAFRA_ONLY + NAV_SCROLL_ONLY, // 110
 	NAV_ALL                = NAV_AIRSHIP_ONLY + NAV_SCROLL_ONLY + NAV_KAFRA_ONLY // 111-255
+};
+
+/**
+ * Unit Types for script handling.
+ */
+enum script_unit_types {
+	UNIT_PC = 0,
+	UNIT_NPC,
+	UNIT_PET,
+	UNIT_MOB,
+	UNIT_HOM,
+	UNIT_MER,
+	UNIT_ELEM,
+};
+
+/**
+ * Unit Data Types for script handling.
+ */
+enum script_unit_data_types {
+	UDT_TYPE = 0,
+	UDT_SIZE,
+	UDT_LEVEL,
+	UDT_HP,
+	UDT_MAXHP,
+	UDT_SP,
+	UDT_MAXSP,
+	UDT_MASTERAID,
+	UDT_MASTERCID,
+	UDT_MAPIDXY,
+	UDT_WALKTOXY,
+	UDT_SPEED,
+	UDT_MODE,
+	UDT_AI,
+	UDT_SCOPTION,
+	UDT_SEX,
+	UDT_CLASS,
+	UDT_HAIRSTYLE,
+	UDT_HAIRCOLOR,
+	UDT_HEADBOTTOM,
+	UDT_HEADMIDDLE,
+	UDT_HEADTOP,
+	UDT_CLOTHCOLOR,
+	UDT_SHIELD,
+	UDT_WEAPON,
+	UDT_LOOKDIR,
+	UDT_CANMOVETICK,
+	UDT_STR,
+	UDT_AGI,
+	UDT_VIT,
+	UDT_INT,
+	UDT_DEX,
+	UDT_LUK,
+	UDT_ATKRANGE,
+	UDT_ATKMIN,
+	UDT_ATKMAX,
+	UDT_MATKMIN,
+	UDT_MATKMAX,
+	UDT_DEF,
+	UDT_MDEF,
+	UDT_HIT,
+	UDT_FLEE,
+	UDT_PDODGE,
+	UDT_CRIT,
+	UDT_RACE,
+	UDT_ELETYPE,
+	UDT_ELELEVEL,
+	UDT_AMOTION,
+	UDT_ADELAY,
+	UDT_DMOTION,
+	UDT_HUNGER,
+	UDT_INTIMACY,
+	UDT_LIFETIME,
+	UDT_MERC_KILLCOUNT,
+	UDT_STATPOINT,
+	UDT_MAX
 };
 
 /**
@@ -672,10 +748,12 @@ struct script_interface {
 	struct script_data* (*push_val)(struct script_stack* stack, enum c_op type, int64 val, struct reg_db *ref);
 	struct script_data *(*get_val) (struct script_state* st, struct script_data* data);
 	char* (*get_val_ref_str) (struct script_state* st, struct reg_db *n, struct script_data* data);
+	char* (*get_val_pc_ref_str) (struct script_state* st, struct reg_db *n, struct script_data* data);
 	char* (*get_val_scope_str) (struct script_state* st, struct reg_db *n, struct script_data* data);
 	char* (*get_val_npc_str) (struct script_state* st, struct reg_db *n, struct script_data* data);
 	char* (*get_val_instance_str) (struct script_state* st, const char* name, struct script_data* data);
 	int (*get_val_ref_num) (struct script_state* st, struct reg_db *n, struct script_data* data);
+	int (*get_val_pc_ref_num) (struct script_state* st, struct reg_db *n, struct script_data* data);
 	int (*get_val_scope_num) (struct script_state* st, struct reg_db *n, struct script_data* data);
 	int (*get_val_npc_num) (struct script_state* st, struct reg_db *n, struct script_data* data);
 	int (*get_val_instance_num) (struct script_state* st, const char* name, struct script_data* data);
@@ -755,10 +833,12 @@ struct script_interface {
 	void (*errorwarning_sub) (StringBuf *buf, const char *src, const char *file, int start_line, const char *error_msg, const char *error_pos);
 	int (*set_reg) (struct script_state *st, struct map_session_data *sd, int64 num, const char *name, const void *value, struct reg_db *ref);
 	void (*set_reg_ref_str) (struct script_state* st, struct reg_db *n, int64 num, const char* name, const char *str);
+	void (*set_reg_pc_ref_str) (struct script_state* st, struct reg_db *n, int64 num, const char* name, const char *str);
 	void (*set_reg_scope_str) (struct script_state* st, struct reg_db *n, int64 num, const char* name, const char *str);
 	void (*set_reg_npc_str) (struct script_state* st, struct reg_db *n, int64 num, const char* name, const char *str);
 	void (*set_reg_instance_str) (struct script_state* st, int64 num, const char* name, const char *str);
 	void (*set_reg_ref_num) (struct script_state* st, struct reg_db *n, int64 num, const char* name, int val);
+	void (*set_reg_pc_ref_num) (struct script_state* st, struct reg_db *n, int64 num, const char* name, int val);
 	void (*set_reg_scope_num) (struct script_state* st, struct reg_db *n, int64 num, const char* name, int val);
 	void (*set_reg_npc_num) (struct script_state* st, struct reg_db *n, int64 num, const char* name, int val);
 	void (*set_reg_instance_num) (struct script_state* st, int64 num, const char* name, int val);

@@ -1408,7 +1408,7 @@ ACMD(baselevelup)
 	pc->baselevelchanged(sd);
 	if(sd->status.party_id)
 		party->send_levelup(sd);
-	
+
 	if (level > 0 && battle_config.atcommand_levelup_events)
 		npc->script_event(sd, NPCE_BASELVUP); // Trigger OnPCBaseLvUpEvent
 
@@ -1714,7 +1714,21 @@ ACMD(bodystyle)
 
 	memset(atcmd_output, '\0', sizeof(atcmd_output));
 
-	if (!*message || sscanf(message, "%d", &body_style) < 1) {
+	if ((sd->job & MAPID_THIRDMASK) != MAPID_GUILLOTINE_CROSS
+	 && (sd->job & MAPID_THIRDMASK) != MAPID_GENETIC
+	 && (sd->job & MAPID_THIRDMASK) != MAPID_MECHANIC
+	 && (sd->job & MAPID_THIRDMASK) != MAPID_ROYAL_GUARD
+	 && (sd->job & MAPID_THIRDMASK) != MAPID_ARCH_BISHOP
+	 && (sd->job & MAPID_THIRDMASK) != MAPID_RANGER
+	 && (sd->job & MAPID_THIRDMASK) != MAPID_WARLOCK
+	 && (sd->job & MAPID_THIRDMASK) != MAPID_SHADOW_CHASER
+	 && (sd->job & MAPID_THIRDMASK) != MAPID_MINSTRELWANDERER
+	 ) {
+		clif->message(fd, msg_fd(fd, 35)); // This job has no alternate body styles.
+		return false;
+	}
+
+	if (*message == '\0' || sscanf(message, "%d", &body_style) < 1) {
 		sprintf(atcmd_output, "Please, enter a body style (usage: @bodystyle <body ID: %d-%d>).", MIN_BODY_STYLE, MAX_BODY_STYLE);
 		clif->message(fd, atcmd_output);
 		return false;
@@ -1722,9 +1736,9 @@ ACMD(bodystyle)
 
 	if (body_style >= MIN_BODY_STYLE && body_style <= MAX_BODY_STYLE) {
 		pc->changelook(sd, LOOK_BODY2, body_style);
-		clif->message(fd, msg_txt(36)); // Appearence changed.
+		clif->message(fd, msg_fd(fd, 36)); // Appearence changed.
 	} else {
-		clif->message(fd, msg_txt(37)); // An invalid number was specified.
+		clif->message(fd, msg_fd(fd, 37)); // An invalid number was specified.
 		return false;
 	}
 
@@ -5145,6 +5159,11 @@ ACMD(storeall)
 		}
 	}
 
+	if (sd->storage.received == false) {
+		clif->message(fd, msg_fd(fd, 27)); // "Storage has not been loaded yet"
+		return false;
+	}
+
 	for (i = 0; i < MAX_INVENTORY; i++) {
 		if (sd->status.inventory[i].amount) {
 			if(sd->status.inventory[i].equip != 0)
@@ -5160,17 +5179,25 @@ ACMD(storeall)
 
 ACMD(clearstorage)
 {
-	int i, j;
+	int i;
 
 	if (sd->state.storage_flag == STORAGE_FLAG_NORMAL) {
 		clif->message(fd, msg_fd(fd,250));
 		return false;
 	}
 
-	j = sd->status.storage.storage_amount;
-	for (i = 0; i < j; ++i) {
-		storage->delitem(sd, i, sd->status.storage.items[i].amount);
+	if (sd->storage.received == false) {
+		clif->message(fd, msg_fd(fd, 27)); // "Storage has not been loaded yet"
+		return false;
 	}
+
+	for (i = 0; i < VECTOR_LENGTH(sd->storage.item); ++i) {
+		if (VECTOR_INDEX(sd->storage.item, i).nameid == 0)
+			continue; // we skip the already deleted items.
+
+		storage->delitem(sd, i, VECTOR_INDEX(sd->storage.item, i).amount);
+	}
+
 	storage->close(sd);
 
 	clif->message(fd, msg_fd(fd,1394)); // Your storage was cleaned.
@@ -8027,8 +8054,8 @@ ACMD(itemlist)
 
 	if( strcmpi(info->command, "storagelist") == 0 ) {
 		location = "storage";
-		items = sd->status.storage.items;
-		size = MAX_STORAGE;
+		items = VECTOR_DATA(sd->storage.item);
+		size = VECTOR_LENGTH(sd->storage.item);
 	} else if( strcmpi(info->command, "cartlist") == 0 ) {
 		location = "cart";
 		items = sd->status.cart;
@@ -8049,7 +8076,7 @@ ACMD(itemlist)
 		const struct item* it = &items[i];
 		struct item_data* itd;
 
-		if( it->nameid == 0 || (itd = itemdb->exists(it->nameid)) == NULL )
+		if (it->nameid == 0 || (itd = itemdb->exists(it->nameid)) == NULL)
 			continue;
 
 		counter += it->amount;
@@ -8366,6 +8393,38 @@ void atcommand_commands_sub(struct map_session_data* sd, const int fd, AtCommand
 	dbi_destroy(iter);
 	clif->message(fd,line_buff);
 
+	if (atcommand->binding_count > 0) {
+		int i, count_bind = 0;
+		int gm_lvl = pc_get_group_level(sd);
+
+		for (i = 0; i < atcommand->binding_count; i++) {
+			if (gm_lvl >= ((type == COMMAND_ATCOMMAND) ? atcommand->binding[i]->group_lv : atcommand->binding[i]->group_lv_char)
+				|| (type == COMMAND_ATCOMMAND && atcommand->binding[i]->at_groups[pcg->get_idx(sd->group)] > 0)
+				|| (type == COMMAND_CHARCOMMAND && atcommand->binding[i]->char_groups[pcg->get_idx(sd->group)] > 0)) {
+				size_t slen = strlen(atcommand->binding[i]->command);
+				if (count_bind == 0) {
+					cur = line_buff;
+					memset(line_buff, ' ', CHATBOX_SIZE);
+					line_buff[CHATBOX_SIZE - 1] = 0;
+					clif->message(fd, "------------------");
+					clif->message(fd, "Custom commands:");
+				}
+				if (slen + cur - line_buff >= CHATBOX_SIZE) {
+					clif->message(fd, line_buff);
+					cur = line_buff;
+					memset(line_buff, ' ', CHATBOX_SIZE);
+					line_buff[CHATBOX_SIZE - 1] = 0;
+				}
+				memcpy(cur, atcommand->binding[i]->command, slen);
+				cur += slen + (10 - slen % 10);
+				count_bind++;
+			}
+		}
+		if (count_bind > 0)
+			clif->message(fd, line_buff);	// Last Line
+		count += count_bind;
+	}
+
 	safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,274), count); // "%d commands found."
 	clif->message(fd, atcmd_output);
 
@@ -8390,22 +8449,24 @@ ACMD(charcommands)
 	return true;
 }
 
-/* for new mounts */
+/* For new mounts */
 ACMD(cashmount)
 {
 	if (pc_hasmount(sd)) {
-		clif->message(fd, msg_fd(fd,1476)); // You are already mounting something else
+		clif->message(fd, msg_fd(fd, 1476)); // You are already mounting something else
 		return false;
 	}
 
-	clif->message(sd->fd,msg_fd(fd,1362)); // NOTICE: If you crash with mount your LUA is outdated.
+	clif->message(sd->fd, msg_fd(fd, 1362)); // NOTICE: If you crash with mount your LUA is outdated.
+
 	if (!sd->sc.data[SC_ALL_RIDING]) {
-		clif->message(sd->fd,msg_fd(fd,1363)); // You have mounted.
-		sc_start(NULL, &sd->bl, SC_ALL_RIDING, 100, 25, INFINITE_DURATION);
+		clif->message(sd->fd, msg_fd(fd, 1363)); // You have mounted.
+		sc_start(NULL, &sd->bl, SC_ALL_RIDING, 100, battle_config.boarding_halter_speed, INFINITE_DURATION);
 	} else {
-		clif->message(sd->fd,msg_fd(fd,1364)); // You have released your mount.
+		clif->message(sd->fd, msg_fd(fd, 1364)); // You have released your mount.
 		status_change_end(&sd->bl, SC_ALL_RIDING, INVALID_TIMER);
 	}
+
 	return true;
 }
 
@@ -9218,7 +9279,12 @@ ACMD(searchstore){
 	searchstore->open(sd, 99, val);
 	return true;
 }
-ACMD(costume){
+
+/*==========================================
+* @costume
+*------------------------------------------*/
+ACMD(costume)
+{
 	const char* names[] = {
 		"Wedding",
 		"Xmas",
@@ -9226,6 +9292,9 @@ ACMD(costume){
 		"Hanbok",
 #if PACKETVER >= 20131218
 		"Oktoberfest",
+#endif
+#if PACKETVER >= 20141022
+		"Summer2",
 #endif
 	};
 	const int name2id[] = {
@@ -9236,41 +9305,47 @@ ACMD(costume){
 #if PACKETVER >= 20131218
 		SC_OKTOBERFEST,
 #endif
+#if PACKETVER >= 20141022
+		SC_DRESS_UP,
+#endif
 	};
 	unsigned short k = 0, len = ARRAYLENGTH(names);
 
 	if (!*message) {
-		for( k = 0; k < len; k++ ) {
-			if( sd->sc.data[name2id[k]] ) {
-				safesnprintf(atcmd_output, sizeof(atcmd_output),msg_fd(fd,1473),names[k]);//Costume '%s' removed.
-				clif->message(sd->fd,atcmd_output);
-				status_change_end(&sd->bl,name2id[k],INVALID_TIMER);
+		for (k = 0; k < len; k++) {
+			if (sd->sc.data[name2id[k]]) {
+				safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1473), names[k]); // Costume '%s' removed.
+				clif->message(sd->fd, atcmd_output);
+				status_change_end(&sd->bl, name2id[k], INVALID_TIMER);
 				return true;
 			}
 		}
-		clif->message(sd->fd,msg_fd(fd,1472));
-		for( k = 0; k < len; k++ ) {
-			safesnprintf(atcmd_output, sizeof(atcmd_output),msg_fd(fd,1471),names[k]);//-- %s
-			clif->message(sd->fd,atcmd_output);
+
+		clif->message(sd->fd, msg_fd(fd, 1472)); // - Available Costumes
+
+		for (k = 0; k < len; k++) {
+			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1471), names[k]); //-- %s
+			clif->message(sd->fd, atcmd_output);
 		}
 		return false;
 	}
 
-	for( k = 0; k < len; k++ ) {
-		if( sd->sc.data[name2id[k]] ) {
-			safesnprintf(atcmd_output, sizeof(atcmd_output),msg_fd(fd,1470),names[k]);// You're already with a '%s' costume, type '@costume' to remove it.
-			clif->message(sd->fd,atcmd_output);
+	for (k = 0; k < len; k++) {
+		if (sd->sc.data[name2id[k]]) {
+			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1470), names[k]); // You're already with a '%s' costume, type '@costume' to remove it.
+			clif->message(sd->fd, atcmd_output);
 			return false;
 		}
 	}
 
-	for( k = 0; k < len; k++ ) {
-		if( strcmpi(message,names[k]) == 0 )
+	for (k = 0; k < len; k++) {
+		if (strcmpi(message,names[k]) == 0)
 			break;
 	}
-	if( k == len ) {
-		safesnprintf(atcmd_output, sizeof(atcmd_output),msg_fd(fd,1469),message);// '%s' is not a known costume
-		clif->message(sd->fd,atcmd_output);
+
+	if (k == len) {
+		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1469), message); // '%s' is not a known costume
+		clif->message(sd->fd, atcmd_output);
 		return false;
 	}
 
@@ -9278,6 +9353,7 @@ ACMD(costume){
 
 	return true;
 }
+
 /* for debugging purposes (so users can easily provide us with debug info) */
 /* should be trashed as soon as its no longer necessary */
 ACMD(skdebug)
@@ -9887,6 +9963,8 @@ bool atcommand_exec(const int fd, struct map_session_data *sd, const char *messa
 		 && (
 		       (is_atcommand && pc_get_group_level(sd) >= binding->group_lv)
 		    || (!is_atcommand && pc_get_group_level(sd) >= binding->group_lv_char)
+		    || (is_atcommand && binding->at_groups[pcg->get_idx(sd->group)] > 0)
+		    || (!is_atcommand && binding->char_groups[pcg->get_idx(sd->group)] > 0)
 		    )
 		) {
 			if (binding->log) /* log only if this command should be logged [Ind/Hercules] */
@@ -10150,31 +10228,34 @@ void atcommand_db_load_groups(GroupSettings **groups, struct config_setting_t **
 }
 
 bool atcommand_can_use(struct map_session_data *sd, const char *command) {
-	AtCommandInfo *info = atcommand->get_info_byname(atcommand->check_alias(command + 1));
+	AtCommandInfo *acmd_d;
+	struct atcmd_binding_data *bcmd_d;
 
 	nullpo_retr(false, sd);
-	nullpo_retr(false, command);
-	if (info == NULL)
-		return false;
 
-	if ((*command == atcommand->at_symbol && info->at_groups[pcg->get_idx(sd->group)] != 0) ||
-		(*command == atcommand->char_symbol && info->char_groups[pcg->get_idx(sd->group)] != 0) ) {
-		return true;
+	if ((acmd_d = atcommand->get_info_byname(atcommand->check_alias(command + 1))) != NULL) {
+		return ((*command == atcommand->at_symbol && acmd_d->at_groups[pcg->get_idx(sd->group)] > 0) ||
+				(*command == atcommand->char_symbol && acmd_d->char_groups[pcg->get_idx(sd->group)] > 0));
+	} else if ((bcmd_d = atcommand->get_bind_byname(atcommand->check_alias(command + 1))) != NULL) {
+		return ((*command == atcommand->at_symbol && bcmd_d->at_groups[pcg->get_idx(sd->group)] > 0) ||
+				(*command == atcommand->char_symbol && bcmd_d->char_groups[pcg->get_idx(sd->group)] > 0));
 	}
 
 	return false;
 }
+
 bool atcommand_can_use2(struct map_session_data *sd, const char *command, AtCommandType type) {
-	AtCommandInfo *info = atcommand->get_info_byname(atcommand->check_alias(command));
+	AtCommandInfo *acmd_d;
+	struct atcmd_binding_data *bcmd_d;
 
 	nullpo_retr(false, sd);
-	nullpo_retr(false, command);
-	if (info == NULL)
-		return false;
 
-	if ((type == COMMAND_ATCOMMAND && info->at_groups[pcg->get_idx(sd->group)] != 0) ||
-		(type == COMMAND_CHARCOMMAND && info->char_groups[pcg->get_idx(sd->group)] != 0) ) {
-		return true;
+	if ((acmd_d = atcommand->get_info_byname(atcommand->check_alias(command))) != NULL) {
+		return ((type == COMMAND_ATCOMMAND && acmd_d->at_groups[pcg->get_idx(sd->group)] > 0) ||
+				(type == COMMAND_CHARCOMMAND && acmd_d->char_groups[pcg->get_idx(sd->group)] > 0));
+	} else if ((bcmd_d = atcommand->get_bind_byname(atcommand->check_alias(command))) != NULL) {
+		return ((type == COMMAND_ATCOMMAND && bcmd_d->at_groups[pcg->get_idx(sd->group)] > 0) ||
+				(type == COMMAND_CHARCOMMAND && bcmd_d->char_groups[pcg->get_idx(sd->group)] > 0));
 	}
 
 	return false;

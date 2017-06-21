@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2016  Hercules Dev Team
+ * Copyright (C) 2012-2017  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -303,7 +303,7 @@ int skill_get_range2(struct block_list *bl, uint16 skill_id, uint16 skill_lv)
 			if (sd != NULL)
 				range += pc->checkskill(sd, AC_VULTURE);
 			else
-				range += 10; //Assume level 10?
+				range += battle->bc->mob_eye_range_bonus;
 			break;
 		// added to allow GS skills to be effected by the range of Snake Eyes [Reddozen]
 		case GS_RAPIDSHOWER:
@@ -314,7 +314,7 @@ int skill_get_range2(struct block_list *bl, uint16 skill_id, uint16 skill_lv)
 			if (sd != NULL)
 				range += pc->checkskill(sd, GS_SNAKEEYE);
 			else
-				range += 10; //Assume level 10?
+				range += battle->bc->mob_eye_range_bonus;
 			break;
 		case NJ_KIRIKAGE:
 			if (sd != NULL)
@@ -2555,7 +2555,7 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 			dmg.dmotion = clif->skill_damage(src,bl,tick,dmg.amotion,dmg.dmotion,damage,dmg.div_,skill_id,skill_lv,BDT_MULTIHIT);
 			break;
 		case WL_CHAINLIGHTNING_ATK:
-			dmg.dmotion = clif->skill_damage(src,bl,tick,dmg.amotion,dmg.dmotion,damage,1,WL_CHAINLIGHTNING,-2,BDT_SKILL);
+			dmg.dmotion = clif->skill_damage(src,bl,tick,dmg.amotion,dmg.dmotion,damage,1,WL_CHAINLIGHTNING_ATK,-2,BDT_SKILL);
 			break;
 		case LG_OVERBRAND_BRANDISH:
 		case LG_OVERBRAND:
@@ -7470,8 +7470,8 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 
 		case NPC_LICK:
 			status_zap(bl, 0, 100);
-			clif->skill_nodamage(src,bl,skill_id,skill_lv,
-				sc_start(src,bl,type,(skill_lv*5),skill_lv,skill->get_time2(skill_id,skill_lv)));
+			clif->skill_nodamage(src, bl, skill_id, skill_lv,
+				sc_start(src, bl, type, (skill_lv * 20), skill_lv, skill->get_time2(skill_id, skill_lv)));
 			break;
 
 		case NPC_SUICIDE:
@@ -8181,8 +8181,14 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				int x,y;
 				x = src->x;
 				y = src->y;
-				if (hd)
-					skill->blockhomun_start(hd, skill_id, skill->get_time2(skill_id,skill_lv));
+				if (hd) {
+#ifdef RENEWAL
+					skill->blockhomun_start(hd, skill_id, skill->get_cooldown(skill_id, skill_lv));
+#else
+					skill->blockhomun_start(hd, skill_id, skill->get_time2(skill_id, skill_lv));
+#endif
+				}
+
 
 				if (unit->movepos(src,bl->x,bl->y,0,0)) {
 					clif->skill_nodamage(src,src,skill_id,skill_lv,1); // Homun
@@ -12150,7 +12156,7 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 	struct skill_unit_group *sg;
 	struct block_list *ss;
 	struct map_session_data *tsd;
-	struct status_data *tstatus, *bst;
+	struct status_data *tstatus;
 	struct status_change *tsc, *ssc;
 	struct skill_unit_group_tickset *ts;
 	enum sc_type type;
@@ -12175,8 +12181,6 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 
 	tstatus = status->get_status_data(bl);
 	nullpo_ret(tstatus);
-	bst = status->get_base_status(bl);
-	nullpo_ret(bst);
 	type = status->skill2sc(sg->skill_id);
 	skill_id = sg->skill_id;
 
@@ -12852,6 +12856,8 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 			if (tsc && (tsc->data[SC_HALLUCINATIONWALK] || tsc->data[SC_VACUUM_EXTREME])) {
 				return 0;
 			} else {
+				struct status_data *bst = status->get_base_status(bl);
+				nullpo_ret(bst);
 				sg->limit -= 1000 * bst->str/20;
 				sc_start(ss, bl, SC_VACUUM_EXTREME, 100, sg->skill_lv, sg->limit);
 
@@ -15646,7 +15652,7 @@ void skill_weaponrefine (struct map_session_data *sd, int idx)
 				return;
 			}
 
-			per = status->get_refine_chance(ditem->wlv, (int)item->refine) * 10;
+			per = status->get_refine_chance(ditem->wlv, (int)item->refine, REFINE_CHANCE_TYPE_NORMAL) * 10;
 
 			// Aegis leaked formula. [malufett]
 			if (sd->status.class == JOB_MECHANIC_T)

@@ -1860,8 +1860,8 @@ struct {
 	struct HPMHookPoint *HP_clif_pNPCMarketClosed_post;
 	struct HPMHookPoint *HP_clif_pNPCMarketPurchase_pre;
 	struct HPMHookPoint *HP_clif_pNPCMarketPurchase_post;
-	struct HPMHookPoint *HP_clif_add_random_options_pre;
-	struct HPMHookPoint *HP_clif_add_random_options_post;
+	struct HPMHookPoint *HP_clif_add_item_options_pre;
+	struct HPMHookPoint *HP_clif_add_item_options_post;
 	struct HPMHookPoint *HP_clif_pHotkeyRowShift_pre;
 	struct HPMHookPoint *HP_clif_pHotkeyRowShift_post;
 	struct HPMHookPoint *HP_clif_dressroom_open_pre;
@@ -2386,6 +2386,10 @@ struct {
 	struct HPMHookPoint *HP_intif_saveregistry_post;
 	struct HPMHookPoint *HP_intif_request_registry_pre;
 	struct HPMHookPoint *HP_intif_request_registry_post;
+	struct HPMHookPoint *HP_intif_request_account_storage_pre;
+	struct HPMHookPoint *HP_intif_request_account_storage_post;
+	struct HPMHookPoint *HP_intif_send_account_storage_pre;
+	struct HPMHookPoint *HP_intif_send_account_storage_post;
 	struct HPMHookPoint *HP_intif_request_guild_storage_pre;
 	struct HPMHookPoint *HP_intif_request_guild_storage_post;
 	struct HPMHookPoint *HP_intif_send_guild_storage_pre;
@@ -2516,10 +2520,14 @@ struct {
 	struct HPMHookPoint *HP_intif_pWisToGM_post;
 	struct HPMHookPoint *HP_intif_pRegisters_pre;
 	struct HPMHookPoint *HP_intif_pRegisters_post;
+	struct HPMHookPoint *HP_intif_pAccountStorage_pre;
+	struct HPMHookPoint *HP_intif_pAccountStorage_post;
 	struct HPMHookPoint *HP_intif_pChangeNameOk_pre;
 	struct HPMHookPoint *HP_intif_pChangeNameOk_post;
 	struct HPMHookPoint *HP_intif_pMessageToFD_pre;
 	struct HPMHookPoint *HP_intif_pMessageToFD_post;
+	struct HPMHookPoint *HP_intif_pAccountStorageSaveAck_pre;
+	struct HPMHookPoint *HP_intif_pAccountStorageSaveAck_post;
 	struct HPMHookPoint *HP_intif_pLoadGuildStorage_pre;
 	struct HPMHookPoint *HP_intif_pLoadGuildStorage_post;
 	struct HPMHookPoint *HP_intif_pSaveGuildStorage_pre;
@@ -2682,6 +2690,8 @@ struct {
 	struct HPMHookPoint *HP_itemdb_read_chains_post;
 	struct HPMHookPoint *HP_itemdb_read_packages_pre;
 	struct HPMHookPoint *HP_itemdb_read_packages_post;
+	struct HPMHookPoint *HP_itemdb_read_options_pre;
+	struct HPMHookPoint *HP_itemdb_read_options_post;
 	struct HPMHookPoint *HP_itemdb_write_cached_packages_pre;
 	struct HPMHookPoint *HP_itemdb_write_cached_packages_post;
 	struct HPMHookPoint *HP_itemdb_read_cached_packages_pre;
@@ -2698,6 +2708,8 @@ struct {
 	struct HPMHookPoint *HP_itemdb_search_post;
 	struct HPMHookPoint *HP_itemdb_exists_pre;
 	struct HPMHookPoint *HP_itemdb_exists_post;
+	struct HPMHookPoint *HP_itemdb_option_exists_pre;
+	struct HPMHookPoint *HP_itemdb_option_exists_post;
 	struct HPMHookPoint *HP_itemdb_in_group_pre;
 	struct HPMHookPoint *HP_itemdb_in_group_post;
 	struct HPMHookPoint *HP_itemdb_group_item_pre;
@@ -2762,6 +2774,8 @@ struct {
 	struct HPMHookPoint *HP_itemdb_gendercheck_post;
 	struct HPMHookPoint *HP_itemdb_validate_entry_pre;
 	struct HPMHookPoint *HP_itemdb_validate_entry_post;
+	struct HPMHookPoint *HP_itemdb_readdb_options_additional_fields_pre;
+	struct HPMHookPoint *HP_itemdb_readdb_options_additional_fields_post;
 	struct HPMHookPoint *HP_itemdb_readdb_additional_fields_pre;
 	struct HPMHookPoint *HP_itemdb_readdb_additional_fields_post;
 	struct HPMHookPoint *HP_itemdb_readdb_job_sub_pre;
@@ -2778,6 +2792,8 @@ struct {
 	struct HPMHookPoint *HP_itemdb_destroy_item_data_post;
 	struct HPMHookPoint *HP_itemdb_final_sub_pre;
 	struct HPMHookPoint *HP_itemdb_final_sub_post;
+	struct HPMHookPoint *HP_itemdb_options_final_sub_pre;
+	struct HPMHookPoint *HP_itemdb_options_final_sub_post;
 	struct HPMHookPoint *HP_itemdb_clear_pre;
 	struct HPMHookPoint *HP_itemdb_clear_post;
 	struct HPMHookPoint *HP_itemdb_id2combo_pre;
@@ -4586,6 +4602,8 @@ struct {
 	struct HPMHookPoint *HP_script_get_val_post;
 	struct HPMHookPoint *HP_script_get_val_ref_str_pre;
 	struct HPMHookPoint *HP_script_get_val_ref_str_post;
+	struct HPMHookPoint *HP_script_get_val_pc_ref_str_pre;
+	struct HPMHookPoint *HP_script_get_val_pc_ref_str_post;
 	struct HPMHookPoint *HP_script_get_val_scope_str_pre;
 	struct HPMHookPoint *HP_script_get_val_scope_str_post;
 	struct HPMHookPoint *HP_script_get_val_npc_str_pre;
@@ -4594,6 +4612,8 @@ struct {
 	struct HPMHookPoint *HP_script_get_val_instance_str_post;
 	struct HPMHookPoint *HP_script_get_val_ref_num_pre;
 	struct HPMHookPoint *HP_script_get_val_ref_num_post;
+	struct HPMHookPoint *HP_script_get_val_pc_ref_num_pre;
+	struct HPMHookPoint *HP_script_get_val_pc_ref_num_post;
 	struct HPMHookPoint *HP_script_get_val_scope_num_pre;
 	struct HPMHookPoint *HP_script_get_val_scope_num_post;
 	struct HPMHookPoint *HP_script_get_val_npc_num_pre;
@@ -4748,6 +4768,8 @@ struct {
 	struct HPMHookPoint *HP_script_set_reg_post;
 	struct HPMHookPoint *HP_script_set_reg_ref_str_pre;
 	struct HPMHookPoint *HP_script_set_reg_ref_str_post;
+	struct HPMHookPoint *HP_script_set_reg_pc_ref_str_pre;
+	struct HPMHookPoint *HP_script_set_reg_pc_ref_str_post;
 	struct HPMHookPoint *HP_script_set_reg_scope_str_pre;
 	struct HPMHookPoint *HP_script_set_reg_scope_str_post;
 	struct HPMHookPoint *HP_script_set_reg_npc_str_pre;
@@ -4756,6 +4778,8 @@ struct {
 	struct HPMHookPoint *HP_script_set_reg_instance_str_post;
 	struct HPMHookPoint *HP_script_set_reg_ref_num_pre;
 	struct HPMHookPoint *HP_script_set_reg_ref_num_post;
+	struct HPMHookPoint *HP_script_set_reg_pc_ref_num_pre;
+	struct HPMHookPoint *HP_script_set_reg_pc_ref_num_post;
 	struct HPMHookPoint *HP_script_set_reg_scope_num_pre;
 	struct HPMHookPoint *HP_script_set_reg_scope_num_post;
 	struct HPMHookPoint *HP_script_set_reg_npc_num_pre;
@@ -7899,8 +7923,8 @@ struct {
 	int HP_clif_pNPCMarketClosed_post;
 	int HP_clif_pNPCMarketPurchase_pre;
 	int HP_clif_pNPCMarketPurchase_post;
-	int HP_clif_add_random_options_pre;
-	int HP_clif_add_random_options_post;
+	int HP_clif_add_item_options_pre;
+	int HP_clif_add_item_options_post;
 	int HP_clif_pHotkeyRowShift_pre;
 	int HP_clif_pHotkeyRowShift_post;
 	int HP_clif_dressroom_open_pre;
@@ -8425,6 +8449,10 @@ struct {
 	int HP_intif_saveregistry_post;
 	int HP_intif_request_registry_pre;
 	int HP_intif_request_registry_post;
+	int HP_intif_request_account_storage_pre;
+	int HP_intif_request_account_storage_post;
+	int HP_intif_send_account_storage_pre;
+	int HP_intif_send_account_storage_post;
 	int HP_intif_request_guild_storage_pre;
 	int HP_intif_request_guild_storage_post;
 	int HP_intif_send_guild_storage_pre;
@@ -8555,10 +8583,14 @@ struct {
 	int HP_intif_pWisToGM_post;
 	int HP_intif_pRegisters_pre;
 	int HP_intif_pRegisters_post;
+	int HP_intif_pAccountStorage_pre;
+	int HP_intif_pAccountStorage_post;
 	int HP_intif_pChangeNameOk_pre;
 	int HP_intif_pChangeNameOk_post;
 	int HP_intif_pMessageToFD_pre;
 	int HP_intif_pMessageToFD_post;
+	int HP_intif_pAccountStorageSaveAck_pre;
+	int HP_intif_pAccountStorageSaveAck_post;
 	int HP_intif_pLoadGuildStorage_pre;
 	int HP_intif_pLoadGuildStorage_post;
 	int HP_intif_pSaveGuildStorage_pre;
@@ -8721,6 +8753,8 @@ struct {
 	int HP_itemdb_read_chains_post;
 	int HP_itemdb_read_packages_pre;
 	int HP_itemdb_read_packages_post;
+	int HP_itemdb_read_options_pre;
+	int HP_itemdb_read_options_post;
 	int HP_itemdb_write_cached_packages_pre;
 	int HP_itemdb_write_cached_packages_post;
 	int HP_itemdb_read_cached_packages_pre;
@@ -8737,6 +8771,8 @@ struct {
 	int HP_itemdb_search_post;
 	int HP_itemdb_exists_pre;
 	int HP_itemdb_exists_post;
+	int HP_itemdb_option_exists_pre;
+	int HP_itemdb_option_exists_post;
 	int HP_itemdb_in_group_pre;
 	int HP_itemdb_in_group_post;
 	int HP_itemdb_group_item_pre;
@@ -8801,6 +8837,8 @@ struct {
 	int HP_itemdb_gendercheck_post;
 	int HP_itemdb_validate_entry_pre;
 	int HP_itemdb_validate_entry_post;
+	int HP_itemdb_readdb_options_additional_fields_pre;
+	int HP_itemdb_readdb_options_additional_fields_post;
 	int HP_itemdb_readdb_additional_fields_pre;
 	int HP_itemdb_readdb_additional_fields_post;
 	int HP_itemdb_readdb_job_sub_pre;
@@ -8817,6 +8855,8 @@ struct {
 	int HP_itemdb_destroy_item_data_post;
 	int HP_itemdb_final_sub_pre;
 	int HP_itemdb_final_sub_post;
+	int HP_itemdb_options_final_sub_pre;
+	int HP_itemdb_options_final_sub_post;
 	int HP_itemdb_clear_pre;
 	int HP_itemdb_clear_post;
 	int HP_itemdb_id2combo_pre;
@@ -10625,6 +10665,8 @@ struct {
 	int HP_script_get_val_post;
 	int HP_script_get_val_ref_str_pre;
 	int HP_script_get_val_ref_str_post;
+	int HP_script_get_val_pc_ref_str_pre;
+	int HP_script_get_val_pc_ref_str_post;
 	int HP_script_get_val_scope_str_pre;
 	int HP_script_get_val_scope_str_post;
 	int HP_script_get_val_npc_str_pre;
@@ -10633,6 +10675,8 @@ struct {
 	int HP_script_get_val_instance_str_post;
 	int HP_script_get_val_ref_num_pre;
 	int HP_script_get_val_ref_num_post;
+	int HP_script_get_val_pc_ref_num_pre;
+	int HP_script_get_val_pc_ref_num_post;
 	int HP_script_get_val_scope_num_pre;
 	int HP_script_get_val_scope_num_post;
 	int HP_script_get_val_npc_num_pre;
@@ -10787,6 +10831,8 @@ struct {
 	int HP_script_set_reg_post;
 	int HP_script_set_reg_ref_str_pre;
 	int HP_script_set_reg_ref_str_post;
+	int HP_script_set_reg_pc_ref_str_pre;
+	int HP_script_set_reg_pc_ref_str_post;
 	int HP_script_set_reg_scope_str_pre;
 	int HP_script_set_reg_scope_str_post;
 	int HP_script_set_reg_npc_str_pre;
@@ -10795,6 +10841,8 @@ struct {
 	int HP_script_set_reg_instance_str_post;
 	int HP_script_set_reg_ref_num_pre;
 	int HP_script_set_reg_ref_num_post;
+	int HP_script_set_reg_pc_ref_num_pre;
+	int HP_script_set_reg_pc_ref_num_post;
 	int HP_script_set_reg_scope_num_pre;
 	int HP_script_set_reg_scope_num_post;
 	int HP_script_set_reg_npc_num_pre;

@@ -18,11 +18,11 @@ Thumbs.db
 /*.pid
 /*.sdf
 /*.stackdump
-/*.suo
 /*.exp
 /*.lib
 /*.VC.db
 /*.VC.opendb
+/.vs/
 /autom4te.cache/
 /start-log.txt
 /char-server

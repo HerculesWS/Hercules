@@ -35,9 +35,6 @@
 //= 1.1
 //=========================================================================
 
-1@pump	mapflag	src4instance
-2@pump	mapflag	src4instance
-
 //== Quest NPCs ============================================
 mal_in01,172,28,2	script	Albo#mal	4_CAT_SAILOR5,{
 	if (checkweight(Knife,1) == 0) {
@@ -203,9 +200,9 @@ mal_in01,172,26,2	script	Madeca#mal	4_CAT_SAILOR1,{
 	mes "[Madeca]";
 	mes "I can't give you compensation for an expired request, so let me check if any of yours have expired.";
 	next;
-	specialeffect2 EF_SPHERE;
+	specialeffect(EF_SPHERE, AREA, playerattached());
 	progressbar "0xFFFF00",3;
-	specialeffect2 EF_STEAL;
+	specialeffect(EF_STEAL, AREA, playerattached());
 	switch(.@i) {
 	case 1: // General Culvert Daily Service
 		if (questprogress(12271,PLAYTIME) == 2)
@@ -276,7 +273,7 @@ L_CheckQuest:
 		mes "You've punished ^0000ff"+getarg(1)+"^000000!";
 		mes "Here's your pay!";
 		erasequest getarg(0);
-		specialeffect2 EF_STEAL;
+		specialeffect(EF_STEAL, AREA, playerattached());
 		getitem getarg(2),getarg(3);
 		close;
 	}

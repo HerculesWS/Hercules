@@ -668,11 +668,12 @@ void unit_run_hit(struct block_list *bl, struct status_change *sc, struct map_se
 	ud->state.running = 0;
 	status_change_end(bl, type, INVALID_TIMER);
 
-	if( type == SC_RUN ) {
-		skill->blown(bl,bl,skill->get_blewcount(TK_RUN,lv),unit->getdir(bl),0);
+	if (type == SC_RUN) {
+		if (lv > 0)
+			skill->blown(bl, bl, skill->get_blewcount(TK_RUN, lv), unit->getdir(bl), 0);
 		clif->fixpos(bl); //Why is a clif->slide (skill->blown) AND a fixpos needed? Ask Aegis.
-		clif->sc_end(bl,bl->id,AREA,SI_TING);
-	} else if( sd ) {
+		clif->sc_end(bl, bl->id, AREA, SI_TING);
+	} else if (sd) {
 		clif->fixpos(bl);
 		skill->castend_damage_id(bl, &sd->bl, RA_WUGDASH, lv, timer->gettick(), SD_LEVEL);
 	}
@@ -1666,6 +1667,9 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 	} else
 		skill->castend_id(ud->skilltimer,tick,src->id,0);
 
+	if (sd != NULL && battle_config.prevent_logout_trigger & PLT_SKILL)
+		sd->canlog_tick = timer->gettick();
+
 	return 1;
 }
 
@@ -1812,6 +1816,10 @@ int unit_skilluse_pos2( struct block_list *src, short skill_x, short skill_y, ui
 		ud->skilltimer = INVALID_TIMER;
 		skill->castend_pos(ud->skilltimer,tick,src->id,0);
 	}
+
+	if (sd != NULL && battle_config.prevent_logout_trigger & PLT_SKILL)
+		sd->canlog_tick = timer->gettick();
+
 	return 1;
 }
 
@@ -2251,6 +2259,9 @@ int unit_attack_timer_sub(struct block_list* src, int tid, int64 tick)
 			pc->update_idle_time(sd, BCIDLE_ATTACK);
 		ud->attacktimer = timer->add(ud->attackabletime,unit->attack_timer,src->id,0);
 	}
+
+	if (sd != NULL && battle_config.prevent_logout_trigger & PLT_ATTACK)
+		sd->canlog_tick = timer->gettick();
 
 	return 1;
 }
@@ -2746,6 +2757,8 @@ int unit_free(struct block_list *bl, clr_type clrtype)
 				sd->instance = NULL;
 			}
 			VECTOR_CLEAR(sd->script_queues);
+			VECTOR_CLEAR(sd->storage.item);
+			sd->storage.received = false;
 			if( sd->quest_log != NULL ) {
 				aFree(sd->quest_log);
 				sd->quest_log = NULL;

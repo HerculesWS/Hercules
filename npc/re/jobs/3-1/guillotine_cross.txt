@@ -35,103 +35,110 @@
 //=========================================================================
 
 que_job01,75,96,3	script	Guild Member#3rdgc01	4_M_MOCASS1,{
-	if (job_3rd_gc == 0) {
-		if (Class == Job_Assassin || Class == Job_Assassin_Cross || Class == Job_Baby_Assassin) {
-			if (BaseLevel >= 99) {
-			L_Mission:
-				mes "[Ahcart]";
-				mes "Finally, it's time...";
-				mes "Hey, what's your name?";
-				next;
-				switch(select(strcharinfo(PC_NAME),".....")) {
-				case 1:
+	if (job_3rd_gc == 0 || job_3rd_gc == 1) {
+		if (job_3rd_gc == 0) {
+			if (Class == Job_Assassin || Class == Job_Assassin_Cross || Class == Job_Baby_Assassin) {
+				if (BaseLevel < 99) {
 					mes "[Ahcart]";
-					mes strcharinfo(PC_NAME)+"?";
-					mes "Got it. I'll remember your name.";
-					mes "A master told me that you are a person with ability.";
-					break;
-				case 2:
-					mes "[Ahcart]";
-					mes "What? You are a distrustful person.";
-					mes "Hmm, whatever.";
-					mes "I heard that you are a person with ability.";
-					break;
-				}
-				next;
-				mes "[Ahcart]";
-				mes "My duty is delivering a guild message to a capable assassin.";
-				mes "I think that you are suitable to perform the guild's duty.";
-				next;
-				mes "[Ahcart]";
-				mes "So, would you perform this duty for us?";
-				mes "Of course, I'm going to offer a reward for completing your task.";
-				next;
-				select("What is the request?");
-				mes "[Ahcart]";
-				mes "It's unclear.";
-				mes "I told you. It's a special task.";
-				mes "The only thing I know is the condition to bring a person with the master's ability.";
-				next;
-				mes "[Ahcart]";
-				mes "First, one who has patience.";
-				mes "Second, one who is quiet.";
-				mes "Third, one who is focused.";
-				next;
-				mes "[Ahcart]";
-				mes "What do you think about what I told you?";
-				mes "This task means that it needs a person who can perform a task irrespective of their own will.";
-				next;
-				mes "[Ahcart]";
-				mes "It's necessary to keep this request secret.";
-				mes "But it's also your duty not to tell anyone.";
-				next;
-				mes "[Ahcart]";
-				mes "This is all your choice.";
-				mes "Will you help us with this request?";
-				next;
-				switch(select("I'll do it.", "Give me time to think.")) {
-				case 1:
-					mes "[Ahcart]";
-					mes "Ok, to Veins.";
-					mes "I'll contact them.";
-					mes "It's your first duty to go to Veins.";
+					mes "Hmm, you are my peer.";
+					mes "I'm Ahcart. I'm from Veins.";
+					mes "Hmm...";
 					next;
 					mes "[Ahcart]";
-					mes "You should be able to find it easily.";
-					mes "Go now.";
-					job_3rd_gc = 3;
-					setquest 7101;
-					close;
-				case 2:
-					mes "[Ahcart]";
-					mes "Got it.";
-					mes "But don't think about it for too long.";
-					job_3rd_gc = 2;
+					mes "Of course, a chapter of the assassin guild is not only in Morroc. If you have a chance to go there, visit there.";
+					mes "I think you might go there.";
+					job_3rd_gc = 1;
 					close;
 				}
+			} else {
+				mes "[A man of a sharp impression]";
+				mes "....";
+				mes "What the...?";
+				mes "You are not an assassin.";
+				close;
 			}
+		} else if (job_3rd_gc == 1) {
+			if (BaseLevel < 99) {
+				mes "[Ahcart]";
+				mes "If you become stronger and more skillful, then the assassin's guild will give you a special task.";
+				mes "Go for it.";
+				close;
+			}
+		}
+		mes "[Ahcart]";
+		mes "Finally, it's time...";
+		mes "Hey, what's your name?";
+		next;
+		switch(select(strcharinfo(PC_NAME),".....")) {
+		case 1:
 			mes "[Ahcart]";
-			mes "Hmm, you are my peer.";
-			mes "I'm Ahcart. I'm from Veins.";
-			mes "Hmm...";
+			mes strcharinfo(PC_NAME)+"?";
+			mes "Got it. I'll remember your name.";
+			mes "A master told me that you are a person with ability.";
+			break;
+		case 2:
+			mes "[Ahcart]";
+			mes "What? You are a distrustful person.";
+			mes "Hmm, whatever.";
+			mes "I heard that you are a person with ability.";
+			break;
+		}
+		next;
+		mes "[Ahcart]";
+		mes "My duty is delivering a guild message to a capable assassin.";
+		mes "I think that you are suitable to perform the guild's duty.";
+		next;
+		mes "[Ahcart]";
+		mes "So, would you perform this duty for us?";
+		mes "Of course, I'm going to offer a reward for completing your task.";
+		next;
+		select("What is the request?");
+		mes "[Ahcart]";
+		mes "It's unclear.";
+		mes "I told you. It's a special task.";
+		mes "The only thing I know is the condition to bring a person with the master's ability.";
+		next;
+		mes "[Ahcart]";
+		mes "First, one who has patience.";
+		mes "Second, one who is quiet.";
+		mes "Third, one who is focused.";
+		next;
+		mes "[Ahcart]";
+		mes "What do you think about what I told you?";
+		mes "This task means that it needs a person who can perform a task irrespective of their own will.";
+		next;
+		mes "[Ahcart]";
+		mes "It's necessary to keep this request secret.";
+		mes "But it's also your duty not to tell anyone.";
+		next;
+		mes "[Ahcart]";
+		mes "This is all your choice.";
+		mes "Will you help us with this request?";
+		next;
+		switch(select("I'll do it.", "Give me time to think.")) {
+		case 1:
+			mes "[Ahcart]";
+			mes "Ok, to Veins.";
+			mes "I'll contact them.";
+			mes "It's your first duty to go to Veins.";
 			next;
 			mes "[Ahcart]";
-			mes "Of course, a chapter of the assassin guild is not only in Morroc. If you have a chance to go there, visit there.";
-			mes "I think you might go there.";
-			job_3rd_gc = 1;
+			mes "You should be able to find it easily.";
+			mes "Go now.";
+			job_3rd_gc = 3;
+			setquest 7101;
+			close;
+		case 2:
+			mes "[Ahcart]";
+			mes "Got it.";
+			mes "But don't think about it for too long.";
+			job_3rd_gc = 2;
 			close;
 		}
-		mes "[A man of a sharp impression]";
-		mes "....";
-		mes "What the...?";
-		mes "You are not an assassin.";
-		close;
-	} else if (job_3rd_gc == 1) {
-		if (BaseLevel >= 99) goto L_Mission;
-		mes "[Ahcart]";
-		mes "If you become stronger and more skillful, then the assassin's guild will give you a special task.";
-		mes "Go for it.";
-		close;
+		
+		
+		
+
 	} else if (job_3rd_gc == 2) {
 		mes "[Ahcart]";
 		mes "Have you thought about it more?";
@@ -293,7 +300,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 			case 3:
 				mes "[Daora]";
 				mes "Don't show me your nervousness!";
-				specialeffect2 EF_HIT1;
+				specialeffect(EF_HIT1, AREA, playerattached());
 				percentheal -30,0;
 				close;
 			case 4:
@@ -348,7 +355,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 				mes "[Daora]";
 				mes "Don't talk to me like I'm one of your friends!";
 				mes "You have no right to be that way!";
-				specialeffect2 EF_HIT1;
+				specialeffect(EF_HIT1, AREA, playerattached());
 				percentheal -30,0;
 				close;
 			}
@@ -739,7 +746,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 				case 2:
 					mes "[Daora]";
 					mes "An impertinent fellow!";
-					specialeffect2 EF_HIT1;
+					specialeffect(EF_HIT1, AREA, playerattached());
 					percentheal -30,0;
 					close;
 				}
@@ -850,7 +857,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 		case 3:
 			mes "[Daora]";
 			mes "Don't show me your nervousness!";
-			specialeffect2 EF_HIT1;
+			specialeffect(EF_HIT1, AREA, playerattached());
 			percentheal -30,0;
 			close;
 		}
@@ -3649,83 +3656,85 @@ job3_guil01,148,53,3	script	Bercasell#3rdgc16	4_M_GUILLOTINE,{
 						next;
 						switch(select("Yes, change my job.", "I need to think about it.")) {
 						case 1:
-							L_JobChange:
-							mes "[Bercasell]";
-							mes "You don't regret it?";
-							callsub L_Info;
-							mes "[Bercasell]";
-							mes "You can become a living offensive weapon.";
-							mes "Do you really want to become a Guillotine Cross?";
-							next;
-							switch(select("Yes, change my job.", "I need to rethink it.")) {
-							case 1:
-								mes "[Bercasell]";
-								if (hascashmount()) {
-									mes "I cannot perform the job change.";
-									mes "Please remove your mount and try again.";
-									close;
-								} else if (SkillPoint != 0) {
-									mes "You still have unspent skill points.";
-									mes "Please use all your skill points and try again.";
-									close;
-								}
-								mes "Is your decision final?";
-								mes "Good.";
-								next;
-								mes "[Bercasell]";
-								mes "Now, you are an assassin, yet you are not an assassin anymore.";
-								mes "You are in the shadows, but it's different from the other shadows.";
-								next;
-								mes "[Bercasell]";
-								mes "Your enemy is everything you can see.";
-								mes "Don't forget yourself.";
-								mes "A weight of the blood on your weapons.";
-								next;
-								mes "[Bercasell]";
-								mes "Ok, change your clothes to your new uniform.";
-								mes "You are now a Guillotine Cross.";
-								next;
-								mes "[Bercasell]";
-								mes "A sword of the shadow...";
-								setlook 7,0;
-								jobchange roclass(eaclass()|EAJL_THIRD);
-								if (questprogress(7096) == 1) {
-									job_3rd_gc = 25;
-									erasequest 7096;
-								} else if (questprogress(7097) == 1) {
-									job_3rd_gc = 26;
-									erasequest 7097;
-								} else if (questprogress(7098) == 1) {
-									job_3rd_gc = 27;
-									erasequest 7098;
-								} else if (questprogress(7099) == 1) {
-									job_3rd_gc = 28;
-									erasequest 7099;
-								}
-								getitem Green_Apple_Ring,1;
-								getitem Silent_Executer,1;
-								next;
-								mes "[Bercasell]";
-								mes "And... these are presents to celebrate your becoming a Guillotine Cross.";
-								close;
-							case 2:
-								mes "[Bercasell]";
-								mes "You are prudent. That's a good thing.";
-								mes "I'll wait for the day that you decide to join us as a Guillotine Cross.";
-								close;
-							}
+							break;
 						case 2:
 							mes "[Bercasell]";
 							mes "You are prudent. That's a good thing.";
 							mes "I'll wait for the day that you decide to join us as a Guillotine Cross.";
 							close;
 						}
+						break;
 					}
+					break;
 				case 2:
-					goto L_JobChange;
+					break;
 				case 3:
 					mes "[Bercasell]";
 					mes "Don't bother me.";
+					close;
+				}
+				mes "[Bercasell]";
+				mes "You don't regret it?";
+				callsub L_Info;
+				mes "[Bercasell]";
+				mes "You can become a living offensive weapon.";
+				mes "Do you really want to become a Guillotine Cross?";
+				next;
+				switch(select("Yes, change my job.", "I need to rethink it.")) {
+				case 1:
+					mes "[Bercasell]";
+					if (hascashmount()) {
+						mes "I cannot perform the job change.";
+						mes "Please remove your mount and try again.";
+						close;
+					} else if (SkillPoint != 0) {
+						mes "You still have unspent skill points.";
+						mes "Please use all your skill points and try again.";
+						close;
+					}
+					mes "Is your decision final?";
+					mes "Good.";
+					next;
+					mes "[Bercasell]";
+					mes "Now, you are an assassin, yet you are not an assassin anymore.";
+					mes "You are in the shadows, but it's different from the other shadows.";
+					next;
+					mes "[Bercasell]";
+					mes "Your enemy is everything you can see.";
+					mes "Don't forget yourself.";
+					mes "A weight of the blood on your weapons.";
+					next;
+					mes "[Bercasell]";
+					mes "Ok, change your clothes to your new uniform.";
+					mes "You are now a Guillotine Cross.";
+					next;
+					mes "[Bercasell]";
+					mes "A sword of the shadow...";
+					setlook 7,0;
+					jobchange roclass(eaclass()|EAJL_THIRD);
+					if (questprogress(7096) == 1) {
+						job_3rd_gc = 25;
+						erasequest 7096;
+					} else if (questprogress(7097) == 1) {
+						job_3rd_gc = 26;
+						erasequest 7097;
+					} else if (questprogress(7098) == 1) {
+						job_3rd_gc = 27;
+						erasequest 7098;
+					} else if (questprogress(7099) == 1) {
+						job_3rd_gc = 28;
+						erasequest 7099;
+					}
+					getitem Green_Apple_Ring,1;
+					getitem Silent_Executer,1;
+					next;
+					mes "[Bercasell]";
+					mes "And... these are presents to celebrate your becoming a Guillotine Cross.";
+					close;
+				case 2:
+					mes "[Bercasell]";
+					mes "You are prudent. That's a good thing.";
+					mes "I'll wait for the day that you decide to join us as a Guillotine Cross.";
 					close;
 				}
 			}

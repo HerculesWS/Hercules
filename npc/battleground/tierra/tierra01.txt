@@ -481,7 +481,7 @@ OnInit:
 }
 
 bat_a01,53,377,3	script	Battle Therapist#a01_a	4_F_SISTER,{
-	specialeffect2 EF_HEAL;
+	specialeffect(EF_HEAL, AREA, playerattached());
 	mes("[Battle Therapist]");
 	mes("Just close your eyes,\r"
 		"and take a deep breath.");
@@ -531,7 +531,7 @@ OnTouch_:
 }
 
 bat_a01,45,19,3	script	Battle Therapist#a01_b	4_F_SISTER,{
-	specialeffect2 EF_HEAL;
+	specialeffect(EF_HEAL, AREA, playerattached());
 	mes("[Battle Therapist]");
 	mes("Just close your eyes,\r"
 		"and take a deep breath.");
@@ -581,7 +581,7 @@ OnTouch:
 }
 
 bat_a01,60,216,3	script	Valley Ghost#bat_a01_n	4_GHOSTRING,{
-	specialeffect2 EF_HEAL;
+	specialeffect(EF_HEAL, AREA, playerattached());
 	mes("[Valley Ghost]");
 	mes("Boo...Boo...");
 	close;

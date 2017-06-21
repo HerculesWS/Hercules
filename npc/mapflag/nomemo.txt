@@ -656,18 +656,8 @@ que_qaru03	mapflag	nomemo
 que_qaru04	mapflag	nomemo
 que_qaru05	mapflag	nomemo
 
-//Sealed Shrine ==================
-1@cata	mapflag	nomemo
-2@cata	mapflag	nomemo
-
 //Endless Tower ==================
 e_tower	mapflag	nomemo
-1@tower	mapflag	nomemo
-2@tower	mapflag	nomemo
-3@tower	mapflag	nomemo
-4@tower	mapflag	nomemo
-5@tower	mapflag	nomemo
-6@tower	mapflag	nomemo
 
 // Battle Grounds ================
 bat_c01	mapflag	nomemo
@@ -731,7 +721,6 @@ dic_dun02	mapflag	nomemo
 // Episode 14 ====================
 bif_fild01	mapflag	nomemo
 bif_fild02	mapflag	nomemo
-1@mist	mapflag	nomemo
 mora	mapflag	nomemo
 dew_dun01	mapflag	nomemo
 dew_dun02	mapflag	nomemo
@@ -740,13 +729,9 @@ dic_dun03	mapflag	nomemo
 mal_in01	mapflag	nomemo
 mal_in02	mapflag	nomemo
 mal_dun01	mapflag	nomemo
-1@cash	mapflag	nomemo
-1@pump	mapflag	nomemo
-2@pump	mapflag	nomemo
 iz_dun05	mapflag	nomemo
 lhz_dun04	mapflag	nomemo
 que_lhz	mapflag	nomemo
-1@lhz	mapflag	nomemo
 gld_dun01_2	mapflag	nomemo
 gld_dun02_2	mapflag	nomemo
 gld_dun03_2	mapflag	nomemo
@@ -758,9 +743,6 @@ gld2_prt	mapflag	nomemo
 ma_scene01	mapflag	nomemo
 ma_in01	mapflag	nomemo
 ma_dun01	mapflag	nomemo
-1@ma_h	mapflag	nomemo
-1@ma_c	mapflag	nomemo
-1@ma_b	mapflag	nomemo
 ma_zif01	mapflag	nomemo
 ma_zif02	mapflag	nomemo
 ma_zif03	mapflag	nomemo
@@ -776,7 +758,6 @@ ecl_in01	mapflag	nomemo
 ecl_in02	mapflag	nomemo
 ecl_in03	mapflag	nomemo
 ecl_in04	mapflag	nomemo
-1@ecl	mapflag	nomemo
 ecl_tdun01	mapflag	nomemo
 ecl_tdun02	mapflag	nomemo
 ecl_tdun03	mapflag	nomemo
@@ -790,20 +771,6 @@ c_tower2_	mapflag	nomemo
 c_tower3_	mapflag	nomemo
 gl_chyard_	mapflag	nomemo
 gl_cas02_	mapflag	nomemo
-
-//Orc's Memory ===================
-1@orcs	mapflag	nomemo
-2@orcs	mapflag	nomemo
-
-// Nidhoggr's Instance ===========
-1@nyd	mapflag	nomemo
-2@nyd	mapflag	nomemo
-
-// Ghost Palace ===========
-1@spa	mapflag	nomemo
-
-// Sara's Memory Instance ===========
-1@sara	mapflag	nomemo
 
 //evt_zombie	mapflag	nomemo
 

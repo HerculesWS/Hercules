@@ -33,8 +33,6 @@
 //= 1.0.2
 //=========================================================================
 
-1@lhz	mapflag	src4instance
-
 //== Giacomo Girolam =======================================
 lighthalzen,303,303,6	script	Giacomo Girolamo#kiup2	4_M_KHMAN,3,3,{
 	if ((MaxWeight - Weight) < 1000 || !checkweight(Knife, 1)) {
@@ -984,9 +982,9 @@ lhz_cube,233,24,4	script	Sorcerer#Bio4Reward	4_M_UMDANCEKID,{
 		mes "[Pudding]";
 		mes "Before! I need to check if this equipment can accept the power.";
 		next;
-		specialeffect2 EF_SPHERE;
+		specialeffect(EF_SPHERE, AREA, playerattached());
 		progressbar "ffff00", 2;
-		specialeffect2 EF_SUI_EXPLOSION;
+		specialeffect(EF_SUI_EXPLOSION, AREA, playerattached());
 		emotion e_sob;
 		mes "[Pudding]";
 		mes "Hm.... This equipment cannot accept the power of '^F2766EWill of Warrior^000000' or '^952420Thirst for Blood^000000'.";
@@ -1110,9 +1108,9 @@ lhz_cube,233,24,4	script	Sorcerer#Bio4Reward	4_M_UMDANCEKID,{
 					if (.@menu==2){ .@equip_card[3] = 0; }
 					else { .@equip_card[2] = 0; }
 					.@equip_item = getequipid(.@position);
-					specialeffect EF_BEGINSPELL2, AREA, "Sorcerer#Bio4Reward";
+					specialeffect(EF_BEGINSPELL2, AREA, getnpcid(0, "Sorcerer#Bio4Reward"));
 					progressbar "ffff00", 2;
-					specialeffect2 EF_FROSTWEAPON;
+					specialeffect(EF_FROSTWEAPON, AREA, playerattached());
 					delitem Goast_Chill, 10;
 					delequip .@position;
 					getitem2 .@equip_item, 1, 1, .@refine_count, 0, .@equip_card[0], .@equip_card[1], .@equip_card[2], .@equip_card[3];
@@ -1305,7 +1303,7 @@ lhz_cube,233,24,4	script	Sorcerer#Bio4Reward	4_M_UMDANCEKID,{
 		setarray .@equip_card[0], getequipcardid(.@position,0),getequipcardid(.@position,1),getequipcardid(.@position,2),getequipcardid(.@position,3);
 		.@equip_card[(.@socket_type-1)] = .@enchant;
 		.@equip_item = getequipid(.@position);
-		specialeffect EF_BEGINSPELL3, AREA, "Sorcerer#Bio4Reward";
+		specialeffect(EF_BEGINSPELL3, AREA, getnpcid(0, "Sorcerer#Bio4Reward"));
 		progressbar "ffff00", 2;
 		if (.@socket_type == 3)
 			delitem Blood_Thirst, 10;
@@ -1313,7 +1311,7 @@ lhz_cube,233,24,4	script	Sorcerer#Bio4Reward	4_M_UMDANCEKID,{
 			delitem Will_Of_Warrior, 10;
 		delequip .@position;
 		if (.@enchant == 0) {
-			specialeffect2 EF_SUI_EXPLOSION;
+			specialeffect(EF_SUI_EXPLOSION, AREA, playerattached());
 			emotion e_otl;
 			mes "[Pudding]";
 			mes "...Well....the equipment could not accept the power of "+((.@socket_type==3)?"'^952420Thirst for Blood^000000'":"'^F2766EWill of Warrior^000000'")+" and it got destroyed.";
@@ -1321,7 +1319,7 @@ lhz_cube,233,24,4	script	Sorcerer#Bio4Reward	4_M_UMDANCEKID,{
 			enable_items;
 			end;
 		} else {
-			specialeffect2 EF_FIREHIT;
+			specialeffect(EF_FIREHIT, AREA, playerattached());
 			getitem2 .@equip_item, 1, 1, .@refine_count, 0, .@equip_card[0], .@equip_card[1], .@equip_card[2], .@equip_card[3];
 			emotion e_ho;
 			mes "[Pudding]";
@@ -1610,42 +1608,42 @@ que_lhz,1,1,0	script	#Eventctrl	FAKE_NPC,{
 		end;
 
 	OnTimer1000:
-		specialeffect EF_SUI_EXPLOSION,AREA, "#01";
+		specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "#01"));
 		specialeffect EF_BEGINASURA, "Human Guinea pig#01";
 		end;
 
 	OnTimer2000:
-		specialeffect EF_SUI_EXPLOSION,AREA, "#02";
+		specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "#02"));
 		specialeffect EF_BEGINASURA, "Human Guinea pig#02";
 		end;
 
 	OnTimer3000:
-		specialeffect EF_SUI_EXPLOSION,AREA, "#03";
+		specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "#03"));
 		specialeffect EF_BEGINASURA, "Human Guinea pig#03";
 		end;
 
 	OnTimer4000:
-		specialeffect EF_SUI_EXPLOSION,AREA, "#04";
+		specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "#04"));
 		specialeffect EF_BEGINASURA, "Human Guinea pig#04";
 		end;
 
 	OnTimer5000:
-		specialeffect EF_SUI_EXPLOSION,AREA, "#05";
+		specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "#05"));
 		specialeffect EF_BEGINASURA, "Human Guinea pig#05";
 		end;
 
 	OnTimer6000:
-		specialeffect EF_SUI_EXPLOSION,AREA, "#06";
+		specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "#06"));
 		specialeffect EF_BEGINASURA, "Human Guinea pig#06";
 		end;
 
 	OnTimer7000:
-		specialeffect EF_SUI_EXPLOSION,AREA, "#07";
+		specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "#07"));
 		specialeffect EF_BEGINASURA, "Human Guinea pig#07";
 		end;
 
 	OnTimer8000:
-		specialeffect EF_SUI_EXPLOSION,AREA, "#08";
+		specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "#08"));
 		specialeffect EF_BEGINASURA, "Human Guinea pig#08";
 		stopnpctimer;
 		end;
@@ -1934,7 +1932,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 			pushpc 0, 10;
 			percentheal -5,0;
 			specialeffect EF_AUTOCOUNTER;
-			specialeffect2 EF_BASH;
+			specialeffect(EF_BASH, AREA, playerattached());
 			mes "You have been wounded by laboratory entrance system attack.";
 			close;
 		} else {
@@ -2444,7 +2442,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 
 	OnTimer63000:
 		for(.@i = 1; .@i < 7; .@i++) {
-			specialeffect EF_SUI_EXPLOSION, AREA, instance_npcname("Valve#2_"+.@i+"");
+			specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0,  instance_npcname("Valve#2_"+.@i+"")));
 			disablenpc instance_npcname("Valve#2_"+.@i+"");
 		}
 		'broken_pipes += 1;
@@ -2848,73 +2846,73 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 
 	OnTimer1000:
 		mapannounce instance_mapname("1@lhz"),"Whisper: Who are you....",bc_map,"0x7DCBF0";
-		specialeffect EF_SPHERE,AREA,instance_npcname("Seyren Windsor#boss01");
+		specialeffect(EF_SPHERE, AREA, getnpcid(0, instance_npcname("Seyren Windsor#boss01")));
 		end;
 
 	OnTimer2000:
-		specialeffect EF_SPHERE,AREA,instance_npcname("Cecile Damon#boss02");
+		specialeffect(EF_SPHERE, AREA, getnpcid(0, instance_npcname("Cecile Damon#boss02")));
 		end;
 
 	OnTimer3000:
 		mapannounce instance_mapname("1@lhz"),"Whisper: Do not approach more...",bc_map,"0x7DCBF0";
-		specialeffect EF_SPHERE,AREA,instance_npcname("Gertie Wie#boss03");
+		specialeffect(EF_SPHERE, AREA, getnpcid(0, instance_npcname("Gertie Wie#boss03")));
 		end;
 
 	OnTimer4000:
-		specialeffect EF_SPHERE,AREA,instance_npcname("Eremes Guile#boss04");
+		specialeffect(EF_SPHERE, AREA, getnpcid(0, instance_npcname("Eremes Guile#boss04")));
 		end;
 
 	OnTimer5000:
 		mapannounce instance_mapname("1@lhz"),"Whisper: This is a very dangerous place..",bc_map,"0x7DCBF0";
-		specialeffect EF_SPHERE,AREA,instance_npcname("Trentini#boss05");
+		specialeffect(EF_SPHERE, AREA, getnpcid(0, instance_npcname("Trentini#boss05")));
 		end;
 
 	OnTimer6000:
-		specialeffect EF_SPHERE,AREA,instance_npcname("Chen Liu#boss06");
+		specialeffect(EF_SPHERE, AREA, getnpcid(0, instance_npcname("Chen Liu#boss06")));
 		end;
 
 	OnTimer7000:
 		mapannounce instance_mapname("1@lhz"),"Whisper: You won't go out alive....",bc_map,"0x7DCBF0";
-		specialeffect EF_SPHERE,AREA,instance_npcname("Alphochio Basil#boss07");
+		specialeffect(EF_SPHERE, AREA, getnpcid(0, instance_npcname("Alphochio Basil#boss07")));
 		end;
 
 	OnTimer8000:
-		specialeffect EF_SPHERE,AREA,instance_npcname("Flamel Emul#boss08");
+		specialeffect(EF_SPHERE, AREA, getnpcid(0, instance_npcname("Flamel Emul#boss08")));
 		end;
 
 	OnTimer9000:
 		mapannounce instance_mapname("1@lhz"),"Whisper: If you don't want to be a part of us....",bc_map,"0x7DCBF0";
-		specialeffect EF_SPHERE,AREA,instance_npcname("Randel Lawrence#boss09");
+		specialeffect(EF_SPHERE, AREA, getnpcid(0, instance_npcname("Randel Lawrence#boss09")));
 		end;
 
 	OnTimer10000:
-		specialeffect EF_SPHERE,AREA,instance_npcname("Celia Alde#boss10");
+		specialeffect(EF_SPHERE, AREA, getnpcid(0, instance_npcname("Celia Alde#boss10")));
 		end;
 
 	OnTimer11000:
 		mapannounce instance_mapname("1@lhz"),"Whisper: Leave now....",bc_map,"0x7DCBF0";
-		specialeffect EF_SPHERE,AREA,instance_npcname("Kathryne Keyron#boss11");
+		specialeffect(EF_SPHERE, AREA, getnpcid(0, instance_npcname("Kathryne Keyron#boss11")));
 		end;
 
 	OnTimer12000:
-		specialeffect EF_SPHERE,AREA,instance_npcname("Margaretha Sorin#boss12");
+		specialeffect(EF_SPHERE, AREA, getnpcid(0, instance_npcname("Margaretha Sorin#boss12")));
 		end;
 
 	OnTimer13000:
 		mapannounce instance_mapname("1@lhz"),"Whisper: Before this place is thoroughly filled with sorrow and pain....",bc_map,"0x7DCBF0";
-		specialeffect EF_SPHERE,AREA,instance_npcname("Howard Alt-Eisen#boss13");
+		specialeffect(EF_SPHERE, AREA, getnpcid(0, instance_npcname("Howard Alt-Eisen#boss13")));
 		end;
 
 	OnTimer14000:
-		specialeffect EF_SPHERE,AREA,instance_npcname("Type_**Gren#boss14");
+		specialeffect(EF_SPHERE, AREA, getnpcid(0, instance_npcname("Type_**Gren#boss14")));
 		end;
 
 	OnTimer15000:
-		specialeffect EF_SPHERE,AREA,instance_npcname("Type_**Roke#boss15");
+		specialeffect(EF_SPHERE, AREA, getnpcid(0, instance_npcname("Type_**Roke#boss15")));
 		end;
 
 	OnTimer16000:
-		specialeffect EF_SPHERE,AREA,instance_npcname("Type_**Dree#boss16");
+		specialeffect(EF_SPHERE, AREA, getnpcid(0, instance_npcname("Type_**Dree#boss16")));
 		end;
 
 	OnTimer17000:

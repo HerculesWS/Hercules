@@ -1174,10 +1174,49 @@ mal_in02,140,94,0	script	Bob#mal	4_CAT_DOWN,{
 	} else if (ma_tomas == 14) {
 		// Dialogue in repeatable quest is identical.
 		// Uses a variable to determine the quest mode.
-		@mal_bob_q = 1;
-	L_Quest1:
-		.@i = @mal_bob_q;
-		@mal_bob_q = 0;
+		.@i = 1;
+	} else if (ma_tomas == 15) {
+		.@i = 3;
+	} else if (ma_tomas == 16) {
+		mes "[Bob]";
+		mes "Khhh~~~~~~~~~~~~~~~~~~~~~~";
+		mes "That was perfect!";
+		emotion e_no1;
+		next;
+		mes "[Bob]";
+		mes "The adhesive filled in just right!!";
+		mes "The perfect stapler job!!";
+		mes "The speechless and marvelous finishing skill!!";
+		next;
+		mes "[Bob]";
+		mes "Impressed!";
+		mes "Mysterious!";
+		mes "Shocked!";
+		emotion e_omg;
+		next;
+		mes "[Bob]";
+		mes "You did a great job indeed!!!";
+		mes "I will tell Dr. Mali!";
+		if (countitem(Fix_Kit) > 0)
+			delitem Fix_Kit,1;
+		ma_tomas = 17;
+		changequest 11223,11224;
+		close;
+	} else if (ma_tomas > 99) {
+		if (questprogress(11240))
+			.@i = 2;
+		else if (questprogress(11241))
+			.@i = 3;
+	} else {
+		mes "[Bob]";
+		mes "You bow-wow! bow! wow! I mew! mew! mew!";
+		mes "I'm into juice from delicious fish, mew~";
+		emotion e_ho;
+		close;
+	}
+	switch (.@i) {
+	case 1:
+	case 2:
 		mes "[Bob]";
 		mes "You bow-wow! bow! wow! I mew! mew! mew!";
 		mes "I'm into juice from delicious fish, mew~";
@@ -1251,8 +1290,7 @@ mal_in02,140,94,0	script	Bob#mal	4_CAT_DOWN,{
 			emotion e_otl;
 			close;
 		}
-	} else if (ma_tomas == 15) {
-	L_Quest2:
+	case 3:
 		if (checkweight(Knife,1) == 0) {
 			mes " - Notice !! -";
 			mes " - Since you have too many items - ";
@@ -1283,43 +1321,7 @@ mal_in02,140,94,0	script	Bob#mal	4_CAT_DOWN,{
 		mes "Ah, right...";
 		mes "^0000ffYou may fall into the gap of the crack, unfortunately, so please watch out.^000000";
 		close;
-	} else if (ma_tomas == 16) {
-		mes "[Bob]";
-		mes "Khhh~~~~~~~~~~~~~~~~~~~~~~";
-		mes "That was perfect!";
-		emotion e_no1;
-		next;
-		mes "[Bob]";
-		mes "The adhesive filled in just right!!";
-		mes "The perfect stapler job!!";
-		mes "The speechless and marvelous finishing skill!!";
-		next;
-		mes "[Bob]";
-		mes "Impressed!";
-		mes "Mysterious!";
-		mes "Shocked!";
-		emotion e_omg;
-		next;
-		mes "[Bob]";
-		mes "You did a great job indeed!!!";
-		mes "I will tell Dr. Mali!";
-		if (countitem(Fix_Kit) > 0)
-			delitem Fix_Kit,1;
-		ma_tomas = 17;
-		changequest 11223,11224;
-		close;
-	} else if (ma_tomas > 99) {
-		if (questprogress(11240)) {
-			@mal_bob_q = 2;
-			goto L_Quest1;
-		} else if (questprogress(11241))
-			goto L_Quest2;
 	}
-	mes "[Bob]";
-	mes "You bow-wow! bow! wow! I mew! mew! mew!";
-	mes "I'm into juice from delicious fish, mew~";
-	emotion e_ho;
-	close;
 }
 
 -	script	Crack#mal0	FAKE_NPC,{
@@ -2221,38 +2223,7 @@ mal_dun01,136,122,3	script	Biscuit#mal	4_ASTER,{
 	} else if (ma_tomas == 26) {
 		// Dialogue in repeatable quest is identical.
 		// Uses a variable to determine the quest mode.
-		@mal_bob_q = 1;
-	L_Quest:
-		.@i = @mal_bob_q;
-		@mal_bob_q = 0;
-		if (countitem(Delicious_Jelly) < 30) {
-			mes "[Biscuit]";
-			mes "It's not enough at all~";
-			mes "I need at least 30 Delicious Jelly.";
-			close;
-		}
-		mes "[Biscuit]";
-		mes "You got them well.";
-		mes "There won't be any problem to prepare her meal.";
-		delitem Delicious_Jelly,30;
-		if (.@i == 1) {
-			ma_tomas = 27;
-			changequest 11231,11232;
-		} else {
-			erasequest 11244;
-			setquest 11245;
-			getitem Egrade_Coin,5;
-		}
-		next;
-		mes "[Biscuit]";
-		mes "Though the jelly looks strange, it tastes good...";
-		mes "Star Candy seems to like it a lot as well.";
-		next;
-		mes "[Biscuit]";
-		mes "Have your meal, Star Candy~";
-		mes "Uhhh, why don't you eat it?";
-		mes "You have no appetite?";
-		close;
+		.@i = 1;
 	} else if (ma_tomas == 27) {
 		mes "[Biscuit]";
 		mes "Hooo.. it's natural that you have no appetite...";
@@ -2403,8 +2374,7 @@ mal_dun01,136,122,3	script	Biscuit#mal	4_ASTER,{
 		close;
 	} else if (ma_tomas > 99) {
 		if (questprogress(11244)) {
-			@mal_bob_q = 2;
-			goto L_Quest;
+			.@i = 2;
 		} else if (questprogress(11245,PLAYTIME) == 1) {
 			mes "[Biscuit]";
 			mes "I'll call you when I need you, so don't worry!";
@@ -2430,10 +2400,39 @@ mal_dun01,136,122,3	script	Biscuit#mal	4_ASTER,{
 				close;
 			}
 		}
+	} else {
+		mes "[Biscuit]";
+		mes "Star Candy is really good.";
+		mes "She never loses her smile, even though it's so hard to stand...";
+		close;
+	}
+	if (countitem(Delicious_Jelly) < 30) {
+		mes "[Biscuit]";
+		mes "It's not enough at all~";
+		mes "I need at least 30 Delicious Jelly.";
+		close;
 	}
 	mes "[Biscuit]";
-	mes "Star Candy is really good.";
-	mes "She never loses her smile, even though it's so hard to stand...";
+	mes "You got them well.";
+	mes "There won't be any problem to prepare her meal.";
+	delitem Delicious_Jelly,30;
+	if (.@i == 1) {
+		ma_tomas = 27;
+		changequest 11231,11232;
+	} else {
+		erasequest 11244;
+		setquest 11245;
+		getitem Egrade_Coin,5;
+	}
+	next;
+	mes "[Biscuit]";
+	mes "Though the jelly looks strange, it tastes good...";
+	mes "Star Candy seems to like it a lot as well.";
+	next;
+	mes "[Biscuit]";
+	mes "Have your meal, Star Candy~";
+	mes "Uhhh, why don't you eat it?";
+	mes "You have no appetite?";
 	close;
 }
 
@@ -9705,7 +9704,7 @@ mal_in01,134,221,4	script	KungKung#gamer	4_M_BABYCAT,{
 				if (.@cat_hand <= 5) {
 					--.@pc_hp0;
 					cutin "cat_g_05",4;
-					specialeffect2 EF_BASH;
+					specialeffect(EF_BASH, AREA, playerattached());
 					mes "Defending has failed.";
 					mes "KungKung attacks the back of your hand with its sharp claw.";
 					next;
@@ -9730,7 +9729,7 @@ mal_in01,134,221,4	script	KungKung#gamer	4_M_BABYCAT,{
 				} else {
 					.@pc_hp -= 10;
 					cutin "cat_g_08",4;
-					specialeffect2 EF_BASH;
+					specialeffect(EF_BASH, AREA, playerattached());
 					mes "Defending has failed.";
 					mes "KungKung attacks the back of your hand with its sharp claw.";
 					next;
@@ -10580,7 +10579,7 @@ mal_in01,15,16,3	script	Fallen Angel#mal	4_F_VALKYRIE2,{
 			mes "Ok! Take your time to consider!";
 			close;
 		}
-		specialeffect2 EF_REPAIRWEAPON;
+		specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
 		progressbar "ffff00",2;
 		if (getequipisequiped(EQI_GARMENT) == 0) {
 			mes "[Fallen Angel]";
@@ -10667,7 +10666,7 @@ mal_in01,15,16,3	script	Fallen Angel#mal	4_F_VALKYRIE2,{
 			mes "Ok! Take your time to consider!";
 			close;
 		}
-		specialeffect2 EF_REPAIRWEAPON;
+		specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
 		progressbar "ffff00",2;
 		if (getequipisequiped(EQI_GARMENT) == 0) {
 			mes "[Fallen Angel]";

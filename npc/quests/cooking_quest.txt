@@ -85,7 +85,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 		mes "be careful and watch your";
 		mes "step when you climb up";
 		mes "the stairs for me, alright?";
-		goto L_End;
+		callsub L_End;
 	}
 	else if (getequipid(1) != 5026) {
 		if (Sex == SEX_MALE) {
@@ -123,7 +123,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			mes "But I do find that you";
 			mes "adventurers do have";
 			mes "your strong points...";
-			goto L_End;
+			callsub L_End;
 		}
 		cutin "orleans_1",0;
 		mes "[Charles Orleans]";
@@ -236,7 +236,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 		mes "treats that only I can offer.";
 		mes "Until that day comes, I shall";
 		mes "reluctantly bid you adieu.";
-		goto L_End;
+		callsub L_End;
 	}
 	else if (cooking_q == 0) {
 		cutin "orleans_5",0;
@@ -342,7 +342,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			mes "^4D4DFF1 Cooking Oil^000000, and";
 			mes "^4D4DFF1 Old Frying Pan^000000.";
 			mes "Then, we can begin.";
-			goto L_End;
+			callsub L_End;
 		}
 		else if (.@cook_m1 == 2) {
 			cooking_q = 2;
@@ -359,7 +359,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			mes "^4D4DFF2 Red Potions^000000";
 			mes "so that we can";
 			mes "begin the lesson~";
-			goto L_End;
+			callsub L_End;
 		}
 		else if (.@cook_m1 == 3) {
 			cooking_q = 3;
@@ -375,7 +375,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			mes "^4D4DFF1 Honey^000000,";
 			mes "^4D4DFF2 Grapes^000000, and";
 			mes "^4D4DFF1 Red Potion^000000.";
-			goto L_End;
+			callsub L_End;
 		}
 		else if (.@cook_m1 == 4) {
 			cooking_q = 4;
@@ -393,7 +393,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			mes "^4D4DFF1 Bag of Grain^000000,";
 			mes "^4D4DFF10 Spawns^000000, and";
 			mes "^4D4DFF1 Squid Ink^000000.";
-			goto L_End;
+			callsub L_End;
 		}
 		else if (.@cook_m1 == 5) {
 			cooking_q = 5;
@@ -410,7 +410,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			mes "^4D4DFF10 Green Herbs^000000,";
 			mes "^4D4DFF10 Nippers^000000, and";
 			mes "^4D4DFF1 Yellow Potion^000000.";
-			goto L_End;
+			callsub L_End;
 		}
 		cooking_q = 6;
 		mes "[Charles Orleans]";
@@ -426,7 +426,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 		mes "^4D4DFF1 Frying Pan^000000,";
 		mes "^4D4DFF5 Yoyo Tails^000000, and";
 		mes "^4D4DFF1 Cooking Oil^000000.";
-		goto L_End;
+		callsub L_End;
 	}
 	else if (cooking_q == 1) {
 		if (countitem(Grasshoppers_Leg) > 4 && countitem(Old_Frying_Pan) > 0 && countitem(Cooking_Oil) > 0) {
@@ -467,7 +467,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			delitem Cooking_Oil,1;
 			cooking_q = 7;
 			getitem Str_Dish01,1;
-			goto L_End;
+			callsub L_End;
 		}
 		cutin "orleans_6",0;
 		.@talk_j = rand(1,2);
@@ -479,14 +479,14 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			mes "If a restaurant patron had";
 			mes "ordered this, then you'd";
 			mes "already be making him wait!";
-			goto L_End;
+			callsub L_End;
 		}
 		mes "[Charles Orleans]";
 		mes "Just go and ambush those";
 		mes "happy-go-lucky grasshoppers";
 		mes "just playing in the fields. Hurry and smash them, then rip their";
 		mes "legs off--but be humane about it! ";
-		goto L_End;
+		callsub L_End;
 	}
 	else if (cooking_q == 2) {
 		if (countitem(Grape) > 2 && countitem(Red_Potion) > 1) {
@@ -524,7 +524,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			delitem Red_Potion,2;
 			cooking_q = 7;
 			getitem Int_Dish01,1;
-			goto L_End;
+			callsub L_End;
 		}
 		cutin "orleans_6",0;
 		.@talk_j = rand(1,2);
@@ -535,7 +535,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			mes "ingredients for Grape Juice";
 			mes "Herbal Tea! At a real restaurant, you'd never be able to take your";
 			mes "time like this! Quickly, now!";
-			goto L_End;
+			callsub L_End;
 		}
 		mes "[Charles Orleans]";
 		mes "Having trouble finding";
@@ -543,7 +543,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 		mes "those cute little Poporings...";
 		mes "Of course, you should try to";
 		mes "be humane when you hunt them...";
-		goto L_End;
+		callsub L_End;
 	}
 	else if (cooking_q == 3) {
 		if (countitem(Honey) > 0 && countitem(Grape) > 1 && countitem(Red_Potion) > 0) {
@@ -585,7 +585,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			delitem Red_Potion,1;
 			cooking_q = 7;
 			getitem Dex_Dish01,1;
-			goto L_End;
+			callsub L_End;
 		}
 		cutin "orleans_6",0;
 		.@talk_j = rand(1,2);
@@ -596,7 +596,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			mes "brought me the ingredients";
 			mes "to make Honey Grape Juice";
 			mes "a while ago. Hurry it up!";
-			goto L_End;
+			callsub L_End;
 		}
 		mes "[Charles Orleans]";
 		mes "You're having trouble";
@@ -605,7 +605,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 		mes "Just go and hunt some bears,";
 		mes "they're always carrying some";
 		mes "of that Honey around.";
-		goto L_End;
+		callsub L_End;
 	}
 	else if (cooking_q == 4) {
 		if (countitem(Grain) > 0 && countitem(Spawn) > 9 && countitem(Chinese_Ink) > 0) {
@@ -646,7 +646,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			delitem Chinese_Ink,1; //Chinese_ink
 			cooking_q = 7;
 			getitem Agi_Dish01,1;
-			goto L_End;
+			callsub L_End;
 		}
 		cutin "orleans_6",0;
 		.@talk_j = rand(1,2);
@@ -657,7 +657,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			mes "preparing ingredients";
 			mes "for Frog Egg and Squid";
 			mes "Ink Soup right now!";
-			goto L_End;
+			callsub L_End;
 		}
 		mes "[Charles Orleans]";
 		mes "You have to be careful";
@@ -665,7 +665,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 		mes "Eggs. If you feed them raw to";
 		mes "somebody, well, their flavor is";
 		mes "decidely less than magnifique.";
-		goto L_End;
+		callsub L_End;
 	}
 	else if (cooking_q == 5) {
 		if (countitem(Nipper) > 9 && countitem(Green_Herb) > 9 && countitem(Yellow_Potion) > 0) {
@@ -706,7 +706,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			delitem Yellow_Potion,1;
 			cooking_q = 7;
 			getitem Vit_Dish01,1;
-			goto L_End;
+			callsub L_End;
 		}
 		cutin "orleans_6",0;
 		.@talk_j = rand(1,2);
@@ -718,7 +718,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			mes "Crab Nippers? You need";
 			mes "to work quickly for those";
 			mes "hungry restaurant patrons!";
-			goto L_End;
+			callsub L_End;
 		}
 		mes "[Charles Orleans]";
 		mes "It shouldn't be too hard";
@@ -726,7 +726,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 		mes "find some Vadons and crush";
 		mes "them, making sure to rip off";
 		mes "their Nippers. That sounds strange, I know, but just do it.";
-		goto L_End;
+		callsub L_End;
 	}
 	else if (cooking_q == 6) {
 		if (countitem(Yoyo_Tail) > 4 && countitem(Old_Frying_Pan) > 0 && countitem(Cooking_Oil) > 0) {
@@ -767,7 +767,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			delitem Cooking_Oil,1;
 			cooking_q = 7;
 			getitem Luk_Dish01,1;
-			goto L_End;
+			callsub L_End;
 		}
 		cutin "orleans_6",0;
 		.@talk_j = rand(1,2);
@@ -779,7 +779,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			mes "you can. In a real restaurant,";
 			mes "you'd never able to take your";
 			mes "time like this. Toute allure!";
-			goto L_End;
+			callsub L_End;
 		}
 		mes "[Charles Orleans]";
 		mes "You need more tails?";
@@ -788,7 +788,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 		mes "and then slice off their tails.";
 		mes "You're a beginner, but I won't";
 		mes "allow you to be inhumane!";
-		goto L_End;
+		callsub L_End;
 	}
 	else if (cooking_q == 7) {
 		cutin "orleans_7",0;
@@ -808,7 +808,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 		mes "teaching until one of you can";
 		mes "become a worthy successor.";
 		mes "It will take some time...";
-		goto L_End;
+		callsub L_End;
 	}
 	else if (cooking_q == 8) {
 		cutin "orleans_5",0;
@@ -847,7 +847,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			mes ".....Who told you";
 			mes "to ask her name?";
 			mes "You don't even understand what she is saying.";
-			goto L_End;
+			callsub L_End;
 		case 2:
 			cutin "nyuang_2",2;
 			emotion e_pif,0,"Child with Cat#cook";
@@ -863,7 +863,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			mes "the child won't talk to us...";
 			mes "Still, we need to get those";
 			mes "two out of the kitchen.";
-			goto L_End;
+			callsub L_End;
 		case 3:
 			cutin "nyuang_3",2;
 			emotion e_heh,0,"Child with Cat#cook";
@@ -876,7 +876,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			mes "[Charles Orleans]";
 			mes "...Are you playing with that kid...?";
 			mes "...Then I don't need you to be here.";
-			goto L_End;
+			callsub L_End;
 		case 4:
 			emotion e_dots,0,"Child with Cat#cook";
 			mes "[Child with Cat]";
@@ -885,7 +885,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			next;
 			cutin "nyuang_4",2;
 			emotion e_an,0,"Child with Cat#cook";
-			specialeffect2 EF_HIT2;
+			specialeffect(EF_HIT2, AREA, playerattached());
 			percentheal -10,0;
 			mes "[Child with Cat]";
 			mes "Grrrrrrr!";
@@ -897,7 +897,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			mes "You should have";
 			mes "been more careful";
 			mes "handling that cat...";
-			goto L_End;
+			callsub L_End;
 		}
 	}
 	else if (cooking_q == 9) {
@@ -1029,7 +1029,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 		mes "Ah...";
 		mes "There goes a true";
 		mes "lady... Madam Wickebine...";
-		goto L_End;
+		callsub L_End;
 	}
 	else if (cooking_q == 10) {
 		cutin "orleans_5",0;
@@ -1071,7 +1071,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 		mes "Praise the glories of the";
 		mes "Rune-Midgarts Kingdom!";
 		mes "Long live King Tristram III!";
-		goto L_End;
+		callsub L_End;
 	}
 	else if (cooking_q == 11) {
 		cutin "orleans_5",0;
@@ -1112,7 +1112,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 				mes "1 to 5. Those are the";
 				mes "only cookbooks that I will";
 				mes "lend out to my students.";
-				goto L_End;
+				callsub L_End;
 			}
 			else if (.@new_book == 0) {
 				cutin "orleans_5",0;
@@ -1122,7 +1122,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 				mes "study the recipes that you";
 				mes "have right now before trying";
 				mes "something new, I suppose.";
-				goto L_End;
+				callsub L_End;
 			}
 			mes "[Charles Orleans]";
 			mes "So you wanted to borrow a";
@@ -1140,7 +1140,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 				mes "levels 1 to 5. Hmm, well, ask";
 				mes "me again when you remember";
 				mes "which cookbook you have, okay?";
-				goto L_End;
+				callsub L_End;
 			}
 			else if (.@old_book == 0) {
 				cutin "orleans_5",0;
@@ -1150,7 +1150,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 				mes "study the recipes that you";
 				mes "have right now before trying";
 				mes "something new, I suppose.";
-				goto L_End;
+				callsub L_End;
 			}
 			else if (.@old_book == .@new_book) {
 				cutin "orleans_4",0;
@@ -1161,7 +1161,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 				mes "cookbook that you already";
 				mes "have? I guess you made";
 				mes "some sort of mistake?";
-				goto L_End;
+				callsub L_End;
 			}
 			else {
 				if (countitem(7471+.@old_book) < 1) {
@@ -1172,7 +1172,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 					mes "that you'd return to me?";
 					mes "Find it first, and then I can";
 					mes "lend another cookbook to you.";
-					goto L_End;
+					callsub L_End;
 				}
 				cutin "orleans_2",0;
 				mes "[Charles Orleans]";
@@ -1264,10 +1264,10 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 						mes "Oh, how I miss the";
 						mes "taste of Pumpkins!";
 						mes "Ahhh, how nostalgic~";
-						goto L_End;
+						callsub L_End;
 					}
 				}
-				else goto L_End;
+				else callsub L_End;
 			}
 			else if (.@new_book== 2) {
 				cutin "orleans_7",0;
@@ -1298,10 +1298,10 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 						mes "soon... But the experience";
 						mes "isn't complete without any";
 						mes "Well-Baked Cookies to munch~";
-						goto L_End;
+						callsub L_End;
 					}
 				}
-				else goto L_End;
+				else callsub L_End;
 			}
 			else if (.@new_book== 3) {
 				cutin "orleans_7",0;
@@ -1330,10 +1330,10 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 						mes "things I don't know";
 						mes "how to make extremely";
 						mes "well. Can you believe that?";
-						goto L_End;
+						callsub L_End;
 					}
 				}
-				else goto L_End;
+				else callsub L_End;
 			}
 			else if (.@new_book== 4) {
 				cutin "orleans_7",0;
@@ -1364,10 +1364,10 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 						mes "of that delicious Bao.";
 						mes "I'd cook it myself, but";
 						mes "I don't know the secret!";
-						goto L_End;
+						callsub L_End;
 					}
 				}
-				else goto L_End;
+				else callsub L_End;
 			}
 			else if (.@new_book== 5) {
 				cutin "orleans_7",0;
@@ -1396,10 +1396,10 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 						mes "cook with those Shoots";
 						mes "soon, so I'd appreciate it";
 						mes "if you'd do this little favor~";
-						goto L_End;
+						callsub L_End;
 					}
 				}
-				else goto L_End;
+				else callsub L_End;
 			}
 
 			if (.@old_book == 1) delitem Cookbook01,1;
@@ -1434,7 +1434,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			mes "good care of it--don't sell";
 			mes "it or lose it or anything like";
 			mes "that. Good luck cooking now~";
-			goto L_End;
+			callsub L_End;
 
 		case 2:
 			cutin "orleans_3",0;
@@ -1462,7 +1462,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			mes "why my spirit to create";
 			mes "culinary masterpieces has";
 			mes "been reinvigorated lately...";
-			goto L_End;
+			callsub L_End;
 
 		case 3:
 			cutin "orleans_5",0;
@@ -1470,7 +1470,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			mes "Please, do not worry";
 			mes "yourself about it. Just";
 			mes "let me rest for now~";
-			goto L_End;
+			callsub L_End;
 
 		}
 	}
@@ -1479,7 +1479,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 		mes "Mon dieu!";
 		mes "An error has";
 		mes "occurred!";
-		goto L_End;
+		callsub L_End;
 	}
 
 L_End:
