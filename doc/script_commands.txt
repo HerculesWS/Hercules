@@ -8334,6 +8334,30 @@ Example:
 
 ---------------------------------------
 
+*getdatatype(<argument>)
+
+This command returns the raw type of the given <argument>. Unlike
+isstr, this command does not evaluate the argument. The returned type
+is bitmasked.
+
+types include:
+
+	DATATYPE_NIL
+	DATATYPE_STR
+	DATATYPE_INT
+	DATATYPE_CONST
+	DATATYPE_PARAM
+	DATATYPE_VAR
+	DATATYPE_LABEL
+
+Example:
+
+	getdatatype() // DATATYPE_NIL
+	getdatatype("foo") // DATATYPE_STR
+	getdatatype(@foo$) // (DATATYPE_VAR | DATATYPE_STR)
+
+---------------------------------------
+
 *charisalpha("<string>", <position>)
 
 This function will return true if the character number Position in the given
