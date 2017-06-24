@@ -23039,7 +23039,7 @@ BUILDIN(shopcount)
  */
 BUILDIN(channelmes)
 {
-	struct map_session_data *sd = script->rid2sd(st);
+	struct map_session_data *sd = map->id2sd(st->rid);
 	const char *channelname = script_getstr(st, 2);
 	struct channel_data *chan = channel->search(channelname, sd);
 
