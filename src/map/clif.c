@@ -19159,7 +19159,7 @@ void clif_rodex_add_item_result(struct map_session_data *sd, int16 idx, int16 am
 	int fd, j;
 
 	nullpo_retv(sd);
-	if (idx >= 0 || idx < MAX_INVENTORY)
+	if (idx < 0 || idx >= MAX_INVENTORY)
 		result = RODEX_ADD_ITEM_FATAL_ERROR;
 
 	fd = sd->fd;
