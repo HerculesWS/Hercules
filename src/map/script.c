@@ -13565,7 +13565,7 @@ BUILDIN(failedremovecards)
 			clif->delitem(sd, i, 1, DELITEM_MATERIALCHANGE);
 			clif->additem(sd, i, 1, 0);
 			pc->equipitem(sd, i, sd->status.inventory[i].equip);
-		}		
+		}
 	}
 	clif->misceffect(&sd->bl, 2);
 
@@ -15009,22 +15009,54 @@ BUILDIN(dispbottom)
  * All The Players Full Recovery
  * (HP/SP full restore and resurrect if need)
  *------------------------------------------*/
-BUILDIN(recovery)
-{
-	struct map_session_data *sd;
-	struct s_mapiterator* iter;
+int buildin_recovery_pc_sub(struct map_session_data *sd, va_list ap) {
+	nullpo_retr(0, sd);
 
-	iter = mapit_getallusers();
-	for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
-		if(pc_isdead(sd))
-			status->revive(&sd->bl, 100, 100);
-		else
-			status_percent_heal(&sd->bl, 100, 100);
-		clif->message(sd->fd,msg_sd(sd,880)); // "You have been recovered!"
+	if (pc_isdead(sd)) {
+		status->revive(&sd->bl, 100, 100);
+	} else {
+		status_percent_heal(&sd->bl, 100, 100);
 	}
-	mapit->free(iter);
+
+	return 0;
+}
+
+int buildin_recovery_sub(struct block_list *bl, va_list ap) {
+	return script->buildin_recovery_pc_sub(BL_CAST(BL_PC, bl), ap);
+}
+
+BUILDIN(recovery) {
+	if (script_hasdata(st, 2)) {
+		if (script_isstringtype(st, 2)) {
+			int16 m = map->mapname2mapid(script_getstr(st, 2));
+
+			if (m == -1) {
+				ShowWarning("script:recovery: invalid map!\n");
+				return false;
+			}
+
+			if (script_hasdata(st, 6)) {
+				int16 x1 = script_getnum(st, 3);
+				int16 y1 = script_getnum(st, 4);
+				int16 x2 = script_getnum(st, 5);
+				int16 y2 = script_getnum(st, 6);
+				map->foreachinarea(script->buildin_recovery_sub, m, x1, y1, x2, y2, BL_PC);
+			} else {
+				map->foreachinmap(script->buildin_recovery_sub, m, BL_PC);
+			}
+		} else {
+			struct map_session_data *sd = script->id2sd(st, script_getnum(st, 2));
+
+			if (sd) {
+				script->buildin_recovery_pc_sub(sd, NULL);
+			}
+		}
+	} else {
+		map->foreachpc(script->buildin_recovery_pc_sub);
+	}
 	return true;
 }
+
 /*==========================================
  * Get your pet info: getpetinfo(n)
  * n -> 0:pet_id 1:pet_class 2:pet_name
@@ -23610,7 +23642,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(pcre_match,"ss"),
 		BUILDIN_DEF(dispbottom,"s?"), //added from jA [Lupus]
 		BUILDIN_DEF(getusersname,""),
-		BUILDIN_DEF(recovery,""),
+		BUILDIN_DEF(recovery,"?????"),
 		BUILDIN_DEF(getpetinfo,"i"),
 		BUILDIN_DEF(gethominfo,"i"),
 		BUILDIN_DEF(getmercinfo,"i?"),
@@ -24346,6 +24378,8 @@ void script_defaults(void)
 	script->db_free_code_sub = db_script_free_code_sub;
 	script->add_autobonus = script_add_autobonus;
 	script->menu_countoptions = menu_countoptions;
+	script->buildin_recovery_sub = buildin_recovery_sub;
+	script->buildin_recovery_pc_sub = buildin_recovery_pc_sub;
 	script->buildin_areawarp_sub = buildin_areawarp_sub;
 	script->buildin_areapercentheal_sub = buildin_areapercentheal_sub;
 	script->buildin_delitem_delete = buildin_delitem_delete;

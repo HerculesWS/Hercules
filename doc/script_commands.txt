@@ -4536,9 +4536,12 @@ effects.
 ---------------------------------------
 
 *recovery()
+*recovery(<account id>)
+*recovery("<map name>"{, <x1>, <y1>, <x2>, <y2>})
 
-This command will revive and restore full HP and SP to all characters 
-currently connected to the server.
+In its first form, this command will revive and restore full HP and SP to all
+characters currently connected to the server. In its second form, it will only
+affect the target player. In its third form it will affect a whole map or area.
 
 ---------------------------------------
 
