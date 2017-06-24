@@ -10635,7 +10635,7 @@ BUILDIN(guildchangegm)
 	if (sd == NULL)
 		script_pushint(st,0);
 	else
-		script_pushint(st,guild->gm_change(guild_id, sd));
+		script_pushint(st, guild->gm_change(guild_id, sd->status.char_id));
 
 	return true;
 }

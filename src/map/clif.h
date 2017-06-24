@@ -917,6 +917,7 @@ struct clif_interface {
 	void (*party_created) (struct map_session_data *sd,int result);
 	void (*party_member_info) (struct party_data *p, struct map_session_data *sd);
 	void (*party_info) (struct party_data* p, struct map_session_data *sd);
+	void (*party_job_and_level) (struct map_session_data *sd);
 	void (*party_invite) (struct map_session_data *sd,struct map_session_data *tsd);
 	void (*party_inviteack) (struct map_session_data* sd, const char* nick, int result);
 	void (*party_option) (struct party_data *p,struct map_session_data *sd,int flag);

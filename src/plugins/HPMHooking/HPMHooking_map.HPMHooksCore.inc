@@ -1062,6 +1062,8 @@ struct {
 	struct HPMHookPoint *HP_clif_party_member_info_post;
 	struct HPMHookPoint *HP_clif_party_info_pre;
 	struct HPMHookPoint *HP_clif_party_info_post;
+	struct HPMHookPoint *HP_clif_party_job_and_level_pre;
+	struct HPMHookPoint *HP_clif_party_job_and_level_post;
 	struct HPMHookPoint *HP_clif_party_invite_pre;
 	struct HPMHookPoint *HP_clif_party_invite_post;
 	struct HPMHookPoint *HP_clif_party_inviteack_pre;
@@ -4016,6 +4018,8 @@ struct {
 	struct HPMHookPoint *HP_pc_isequip_post;
 	struct HPMHookPoint *HP_pc_equippoint_pre;
 	struct HPMHookPoint *HP_pc_equippoint_post;
+	struct HPMHookPoint *HP_pc_item_equippoint_pre;
+	struct HPMHookPoint *HP_pc_item_equippoint_post;
 	struct HPMHookPoint *HP_pc_setinventorydata_pre;
 	struct HPMHookPoint *HP_pc_setinventorydata_post;
 	struct HPMHookPoint *HP_pc_checkskill_pre;
@@ -4398,6 +4402,8 @@ struct {
 	struct HPMHookPoint *HP_pc_db_checkid_post;
 	struct HPMHookPoint *HP_pc_validate_levels_pre;
 	struct HPMHookPoint *HP_pc_validate_levels_post;
+	struct HPMHookPoint *HP_pc_update_job_and_level_pre;
+	struct HPMHookPoint *HP_pc_update_job_and_level_post;
 	struct HPMHookPoint *HP_pc_autotrade_load_pre;
 	struct HPMHookPoint *HP_pc_autotrade_load_post;
 	struct HPMHookPoint *HP_pc_autotrade_update_pre;
@@ -7129,6 +7135,8 @@ struct {
 	int HP_clif_party_member_info_post;
 	int HP_clif_party_info_pre;
 	int HP_clif_party_info_post;
+	int HP_clif_party_job_and_level_pre;
+	int HP_clif_party_job_and_level_post;
 	int HP_clif_party_invite_pre;
 	int HP_clif_party_invite_post;
 	int HP_clif_party_inviteack_pre;
@@ -10083,6 +10091,8 @@ struct {
 	int HP_pc_isequip_post;
 	int HP_pc_equippoint_pre;
 	int HP_pc_equippoint_post;
+	int HP_pc_item_equippoint_pre;
+	int HP_pc_item_equippoint_post;
 	int HP_pc_setinventorydata_pre;
 	int HP_pc_setinventorydata_post;
 	int HP_pc_checkskill_pre;
@@ -10465,6 +10475,8 @@ struct {
 	int HP_pc_db_checkid_post;
 	int HP_pc_validate_levels_pre;
 	int HP_pc_validate_levels_post;
+	int HP_pc_update_job_and_level_pre;
+	int HP_pc_update_job_and_level_post;
 	int HP_pc_autotrade_load_pre;
 	int HP_pc_autotrade_load_post;
 	int HP_pc_autotrade_update_pre;

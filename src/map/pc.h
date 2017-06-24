@@ -859,6 +859,7 @@ END_ZEROED_BLOCK; /* End */
 
 	int (*isequip) (struct map_session_data *sd,int n);
 	int (*equippoint) (struct map_session_data *sd,int n);
+	int (*item_equippoint) (struct map_session_data *sd, struct item_data* id);
 	int (*setinventorydata) (struct map_session_data *sd);
 
 	int (*checkskill) (struct map_session_data *sd,uint16 skill_id);
@@ -1095,6 +1096,7 @@ END_ZEROED_BLOCK; /* End */
 	bool (*db_checkid) (int class);
 
 	void (*validate_levels) (void);
+	void (*update_job_and_level) (struct map_session_data *sd);
 
 	/**
 	 * Autotrade persistency [Ind/Hercules <3]
