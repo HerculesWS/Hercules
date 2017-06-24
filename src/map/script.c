@@ -16998,6 +16998,7 @@ BUILDIN(swap)
 {
 	struct map_session_data *sd = NULL;
 	struct script_data *data1, *data2;
+	struct reg_db *ref1, *ref2;
 	const char *varname1, *varname2;
 	int64 uid1, uid2;
 
@@ -17038,6 +17039,8 @@ BUILDIN(swap)
 
 	uid1 = reference_getuid(data1);
 	uid2 = reference_getuid(data2);
+	ref1 = reference_getref(data1);
+	ref2 = reference_getref(data2);
 
 	if (is_string_variable(varname1)) {
 		const char *value1, *value2;
@@ -17046,8 +17049,8 @@ BUILDIN(swap)
 		value2 = script_getstr(st,3);
 
 		if (strcmpi(value1, value2)) {
-			script->set_reg(st, sd, uid1, varname1, value2, script_getref(st,3));
-			script->set_reg(st, sd, uid2, varname2, value1, script_getref(st,2));
+			script->set_reg(st, sd, uid1, varname1, value2, ref1);
+			script->set_reg(st, sd, uid2, varname2, value1, ref2);
 		}
 	}
 	else {
@@ -17057,8 +17060,8 @@ BUILDIN(swap)
 		value2 = script_getnum(st,3);
 
 		if (value1 != value2) {
-			script->set_reg(st, sd, uid1, varname1, (const void *)h64BPTRSIZE(value2), script_getref(st,3));
-			script->set_reg(st, sd, uid2, varname2, (const void *)h64BPTRSIZE(value1), script_getref(st,2));
+			script->set_reg(st, sd, uid1, varname1, (const void *)h64BPTRSIZE(value2), ref1);
+			script->set_reg(st, sd, uid2, varname2, (const void *)h64BPTRSIZE(value1), ref2);
 		}
 	}
 	return true;
