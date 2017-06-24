@@ -2430,7 +2430,8 @@ int intif_rodex_requestinbox(int char_id, int account_id, int8 flag, int8 openty
 	return 0;
 }
 
-void intif_parse_RequestRodexOpenInbox(int fd) {
+void intif_parse_RequestRodexOpenInbox(int fd)
+{
 	struct map_session_data *sd;
 	int8 opentype = RFIFOB(fd, 8);
 	int8 flag = RFIFOB(fd, 9);

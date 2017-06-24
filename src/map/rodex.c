@@ -55,7 +55,8 @@ bool rodex_isenabled(void)
 
 /// Checks and refreshes the user daily number of Stamps
 /// @param sd : The player who's being checked
-void rodex_refresh_stamps(struct map_session_data *sd) {
+void rodex_refresh_stamps(struct map_session_data *sd)
+{
 	int today = date_get_date();
 	nullpo_retv(sd);
 
@@ -230,6 +231,11 @@ int rodex_send_mail(struct map_session_data *sd, const char *receiver_name, cons
 	nullpo_retr(RODEX_SEND_MAIL_FATAL_ERROR, body);
 	nullpo_retr(RODEX_SEND_MAIL_FATAL_ERROR, title);
 
+	if (zeny < 0) {
+		rodex->clean(sd, 1);
+		return RODEX_SEND_MAIL_FATAL_ERROR;
+	}
+
 	total_zeny = zeny + sd->rodex.tmp.items_count * ATTACHITEM_COST + (2 * zeny)/100;
 	
 	if (strcmp(receiver_name, sd->rodex.tmp.receiver_name) != 0) {
@@ -244,12 +250,16 @@ int rodex_send_mail(struct map_session_data *sd, const char *receiver_name, cons
 
 	rodex_refresh_stamps(sd);
 
-	if (sd->sc.data[SC_DAILYSENDMAILCNT]->val2 >= DAILY_MAX_MAILS) {
-		rodex->clean(sd, 1);
-		return RODEX_SEND_MAIL_COUNT_ERROR;
-	}
+	if (sd->sc.data[SC_DAILYSENDMAILCNT] != NULL) {
+		if (sd->sc.data[SC_DAILYSENDMAILCNT]->val2 >= DAILY_MAX_MAILS) {
+			rodex->clean(sd, 1);
+			return RODEX_SEND_MAIL_COUNT_ERROR;
+		}
 
-	sc_start2(NULL, &sd->bl, SC_DAILYSENDMAILCNT, 100, sd->sc.data[SC_DAILYSENDMAILCNT]->val1, sd->sc.data[SC_DAILYSENDMAILCNT]->val2 + 1, INFINITE_DURATION);
+		sc_start2(NULL, &sd->bl, SC_DAILYSENDMAILCNT, 100, sd->sc.data[SC_DAILYSENDMAILCNT]->val1, sd->sc.data[SC_DAILYSENDMAILCNT]->val2 + 1, INFINITE_DURATION);
+	} else {
+		sc_start2(NULL, &sd->bl, SC_DAILYSENDMAILCNT, 100, date_get_date(), 1, INFINITE_DURATION);
+	}
 	
 	for (i = 0; i < RODEX_MAX_ITEM; i++) {
 		int16 idx = sd->rodex.tmp.items[i].idx;

@@ -223,7 +223,8 @@ static bool inter_rodex_hasnew(int char_id, int account_id)
 }
 
 /// Checks player name and retrieves some data
-static bool inter_rodex_checkname(char name[NAME_LENGTH], int *target_char_id, short *target_class, int *target_level) {
+static bool inter_rodex_checkname(char name[NAME_LENGTH], int *target_char_id, short *target_class, int *target_level)
+{
 	char esc_name[NAME_LENGTH * 2 + 1];
 	bool found = false;
 
@@ -382,6 +383,9 @@ void mapif_parse_rodex_checkhasnew(int fd)
 	int account_id = RFIFOL(fd, 6);
 	bool has_new = inter_rodex->hasnew(char_id, account_id);
 
+	assert(account_id >= START_ACCOUNT_NUM && account_id <= END_ACCOUNT_NUM);
+	assert(char_id >= START_CHAR_NUM);
+
 	mapif->rodex_sendhasnew(fd, char_id, has_new);
 }
 
@@ -448,7 +452,7 @@ void mapif_parse_rodex_send(int fd)
 		return;
 
 	memcpy(&msg, RFIFOP(fd,4), sizeof(struct rodex_message));
-	if(msg.receiver_id > 0 || msg.receiver_accountid > 0)
+	if (msg.receiver_id > 0 || msg.receiver_accountid > 0)
 		msg.id = inter_rodex->savemessage(&msg);
 
 	mapif->rodex_send(fd, msg.sender_id, msg.receiver_id, msg.receiver_accountid, msg.id > 0 ? true : false);
@@ -457,7 +461,8 @@ void mapif_parse_rodex_send(int fd)
 /*------------------------------------------
  * Check Player
  *------------------------------------------*/
-void mapif_rodex_checkname(int fd, int reqchar_id, int target_char_id, short target_class, int target_level, char name[NAME_LENGTH]) {
+void mapif_rodex_checkname(int fd, int reqchar_id, int target_char_id, short target_class, int target_level, char name[NAME_LENGTH])
+{
 	nullpo_retv(name);
 	Assert_retv(reqchar_id > 0);
 	Assert_retv(target_char_id >= 0);

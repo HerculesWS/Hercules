@@ -2984,7 +2984,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x091D,36,clif->pStoragePassword,0);
 	packet(0x087e,4,clif->pDull); // CZ_GANGSI_RANK
 	packet(0x093e,8,clif->pDull); // CZ_JOIN_BATTLE_FIELD
-	packet(0x09ec,-1,clif->pRodexSendMail); // CZ_REQ_SEND_RODEX
 #endif
 
 // 2013-12-30aRagexe

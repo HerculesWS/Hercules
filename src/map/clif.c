@@ -19152,12 +19152,15 @@ void clif_parse_rodex_add_item(int fd, struct map_session_data *sd)
 	rodex->add_item(sd, idx, (int16)rPacket->count);
 }
 
-void clif_rodex_add_item_result(struct map_session_data *sd, int16 idx, int16 amount, int8 result) {
+void clif_rodex_add_item_result(struct map_session_data *sd, int16 idx, int16 amount, int8 result)
+{
 #if PACKETVER >= 20140416
 	struct PACKET_ZC_ADD_ITEM_TO_MAIL *packet;
 	int fd, j;
 
 	nullpo_retv(sd);
+	if (idx >= 0 || idx < MAX_INVENTORY)
+		result = RODEX_ADD_ITEM_FATAL_ERROR;
 
 	fd = sd->fd;
 
@@ -19200,7 +19203,8 @@ void clif_parse_rodex_remove_item(int fd, struct map_session_data *sd)
 	rodex->remove_item(sd, idx, (int16)rPacket->cnt);
 }
 
-void clif_rodex_remove_item_result(struct map_session_data *sd, int16 idx, int16 amount) {
+void clif_rodex_remove_item_result(struct map_session_data *sd, int16 idx, int16 amount)
+{
 #if PACKETVER >= 20140521
 	struct PACKET_ZC_ACK_REMOVE_ITEM_MAIL *packet;
 	int fd;
@@ -19268,12 +19272,21 @@ void clif_parse_rodex_send_mail(int fd, struct map_session_data *sd)
 	const struct PACKET_CZ_SEND_MAIL *rPacket = RFIFOP(fd, 0);
 	int8 result;
 
-	if (rPacket->TextcontentsLength + rPacket->Titlelength > rPacket->PacketLength - sizeof(*rPacket))
+	if (rPacket->TextcontentsLength + rPacket->Titlelength > rPacket->PacketLength - sizeof(*rPacket)) {
 		result = RODEX_SEND_MAIL_FATAL_ERROR;
-	else if (rPacket->TextcontentsLength > RODEX_BODY_LENGTH || rPacket->Titlelength > RODEX_TITLE_LENGTH)
+	} else if (rPacket->TextcontentsLength > RODEX_BODY_LENGTH || rPacket->Titlelength > RODEX_TITLE_LENGTH) {
 		result = RODEX_SEND_MAIL_FATAL_ERROR;
-	else
-		result = rodex->send_mail(sd, rPacket->receiveName, &rPacket->string[rPacket->Titlelength], rPacket->string, rPacket->zeny);
+	} else {
+		char rname[NAME_LENGTH];
+		char title[RODEX_TITLE_LENGTH];
+		char body[RODEX_BODY_LENGTH];
+
+		safestrncpy(rname, rPacket->receiveName, NAME_LENGTH);
+		safestrncpy(title, rPacket->string, RODEX_TITLE_LENGTH);
+		safestrncpy(body, &rPacket->string[rPacket->Titlelength], RODEX_BODY_LENGTH);
+
+		result = rodex->send_mail(sd, rname, body, title, rPacket->zeny);
+	}
 
 	if (result != RODEX_SEND_MAIL_SUCCESS)
 		clif->rodex_send_mail_result(fd, sd, result);
@@ -19415,7 +19428,8 @@ void clif_parse_rodex_read_mail(int fd, struct map_session_data *sd)
 	rodex->read_mail(sd, rPacket->MailID);
 }
 
-void clif_rodex_read_mail(struct map_session_data *sd, int8 opentype, struct rodex_message *msg) {
+void clif_rodex_read_mail(struct map_session_data *sd, int8 opentype, struct rodex_message *msg)
+{
 #if PACKETVER >= 20131223
 	struct PACKET_ZC_READ_MAIL *sPacket;
 	struct mail_item *item;

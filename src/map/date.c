@@ -86,7 +86,7 @@ int date_get_date(void)
 	lt = localtime(&t);
 
 	return
-		(lt->tm_year+1900) * 10000 +
+		(lt->tm_year + 1900) * 10000 +
 		(lt->tm_mon + 1) * 100 +
 		(lt->tm_mday);
 }
