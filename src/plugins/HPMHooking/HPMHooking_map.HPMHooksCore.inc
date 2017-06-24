@@ -4810,6 +4810,10 @@ struct {
 	struct HPMHookPoint *HP_script_add_autobonus_post;
 	struct HPMHookPoint *HP_script_menu_countoptions_pre;
 	struct HPMHookPoint *HP_script_menu_countoptions_post;
+	struct HPMHookPoint *HP_script_buildin_recovery_pc_sub_pre;
+	struct HPMHookPoint *HP_script_buildin_recovery_pc_sub_post;
+	struct HPMHookPoint *HP_script_buildin_recovery_sub_pre;
+	struct HPMHookPoint *HP_script_buildin_recovery_sub_post;
 	struct HPMHookPoint *HP_script_buildin_areawarp_sub_pre;
 	struct HPMHookPoint *HP_script_buildin_areawarp_sub_post;
 	struct HPMHookPoint *HP_script_buildin_areapercentheal_sub_pre;
@@ -10873,6 +10877,10 @@ struct {
 	int HP_script_add_autobonus_post;
 	int HP_script_menu_countoptions_pre;
 	int HP_script_menu_countoptions_post;
+	int HP_script_buildin_recovery_pc_sub_pre;
+	int HP_script_buildin_recovery_pc_sub_post;
+	int HP_script_buildin_recovery_sub_pre;
+	int HP_script_buildin_recovery_sub_post;
 	int HP_script_buildin_areawarp_sub_pre;
 	int HP_script_buildin_areawarp_sub_post;
 	int HP_script_buildin_areapercentheal_sub_pre;
