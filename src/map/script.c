@@ -23057,9 +23057,10 @@ BUILDIN(channelmes)
 BUILDIN(addchannelhandler)
 {
 	int i;
+	struct map_session_data *sd = map->id2sd(st->rid);
 	const char *channelname = script_getstr(st, 2);
 	const char *eventname = script_getstr(st, 3);
-	struct channel_data *chan = channel->search(channelname, NULL);
+	struct channel_data *chan = channel->search(channelname, sd);
 
 	if (!chan) {
 		script_pushint(st, 0);
