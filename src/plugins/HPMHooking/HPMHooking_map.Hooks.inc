@@ -64195,6 +64195,33 @@ int HP_script_menu_countoptions(const char *str, int max_count, int *total) {
 	}
 	return retVal___;
 }
+int HP_script_buildin_recovery_sub(struct map_session_data *sd) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_script_buildin_recovery_sub_pre > 0) {
+		int (*preHookFunc) (struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_buildin_recovery_sub_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_script_buildin_recovery_sub_pre[hIndex].func;
+			retVal___ = preHookFunc(&sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.script.buildin_recovery_sub(sd);
+	}
+	if (HPMHooks.count.HP_script_buildin_recovery_sub_post > 0) {
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_buildin_recovery_sub_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_script_buildin_recovery_sub_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd);
+		}
+	}
+	return retVal___;
+}
 int HP_script_buildin_recovery_pc_sub(struct map_session_data *sd, va_list ap) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -64228,15 +64255,15 @@ int HP_script_buildin_recovery_pc_sub(struct map_session_data *sd, va_list ap) {
 	}
 	return retVal___;
 }
-int HP_script_buildin_recovery_sub(struct block_list *bl, va_list ap) {
+int HP_script_buildin_recovery_bl_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
 	int retVal___ = 0;
-	if (HPMHooks.count.HP_script_buildin_recovery_sub_pre > 0) {
+	if (HPMHooks.count.HP_script_buildin_recovery_bl_sub_pre > 0) {
 		int (*preHookFunc) (struct block_list **bl, va_list ap);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_buildin_recovery_sub_pre; hIndex++) {
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_buildin_recovery_bl_sub_pre; hIndex++) {
 			va_list ap___copy; va_copy(ap___copy, ap);
-			preHookFunc = HPMHooks.list.HP_script_buildin_recovery_sub_pre[hIndex].func;
+			preHookFunc = HPMHooks.list.HP_script_buildin_recovery_bl_sub_pre[hIndex].func;
 			retVal___ = preHookFunc(&bl, ap___copy);
 			va_end(ap___copy);
 		}
@@ -64247,14 +64274,14 @@ int HP_script_buildin_recovery_sub(struct block_list *bl, va_list ap) {
 	}
 	{
 		va_list ap___copy; va_copy(ap___copy, ap);
-		retVal___ = HPMHooks.source.script.buildin_recovery_sub(bl, ap___copy);
+		retVal___ = HPMHooks.source.script.buildin_recovery_bl_sub(bl, ap___copy);
 		va_end(ap___copy);
 	}
-	if (HPMHooks.count.HP_script_buildin_recovery_sub_post > 0) {
+	if (HPMHooks.count.HP_script_buildin_recovery_bl_sub_post > 0) {
 		int (*postHookFunc) (int retVal___, struct block_list *bl, va_list ap);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_buildin_recovery_sub_post; hIndex++) {
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_buildin_recovery_bl_sub_post; hIndex++) {
 			va_list ap___copy; va_copy(ap___copy, ap);
-			postHookFunc = HPMHooks.list.HP_script_buildin_recovery_sub_post[hIndex].func;
+			postHookFunc = HPMHooks.list.HP_script_buildin_recovery_bl_sub_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, bl, ap___copy);
 			va_end(ap___copy);
 		}
