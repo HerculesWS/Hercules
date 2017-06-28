@@ -15009,7 +15009,8 @@ BUILDIN(dispbottom)
  * All The Players Full Recovery
  * (HP/SP full restore and resurrect if need)
  *------------------------------------------*/
-int buildin_recovery_pc_sub(struct map_session_data *sd, va_list ap) {
+int buildin_recovery_sub(struct map_session_data *sd)
+{
 	nullpo_retr(0, sd);
 
 	if (pc_isdead(sd)) {
@@ -15021,11 +15022,18 @@ int buildin_recovery_pc_sub(struct map_session_data *sd, va_list ap) {
 	return 0;
 }
 
-int buildin_recovery_sub(struct block_list *bl, va_list ap) {
-	return script->buildin_recovery_pc_sub(BL_CAST(BL_PC, bl), ap);
+int buildin_recovery_pc_sub(struct map_session_data *sd, va_list ap)
+{
+	return script->buildin_recovery_sub(sd);
 }
 
-BUILDIN(recovery) {
+int buildin_recovery_bl_sub(struct block_list *bl, va_list ap)
+{
+	return script->buildin_recovery_sub(BL_CAST(BL_PC, bl));
+}
+
+BUILDIN(recovery)
+{
 	if (script_hasdata(st, 2)) {
 		if (script_isstringtype(st, 2)) {
 			int16 m = map->mapname2mapid(script_getstr(st, 2));
@@ -15040,15 +15048,15 @@ BUILDIN(recovery) {
 				int16 y1 = script_getnum(st, 4);
 				int16 x2 = script_getnum(st, 5);
 				int16 y2 = script_getnum(st, 6);
-				map->foreachinarea(script->buildin_recovery_sub, m, x1, y1, x2, y2, BL_PC);
+				map->foreachinarea(script->buildin_recovery_bl_sub, m, x1, y1, x2, y2, BL_PC);
 			} else {
-				map->foreachinmap(script->buildin_recovery_sub, m, BL_PC);
+				map->foreachinmap(script->buildin_recovery_bl_sub, m, BL_PC);
 			}
 		} else {
 			struct map_session_data *sd = script->id2sd(st, script_getnum(st, 2));
 
-			if (sd) {
-				script->buildin_recovery_pc_sub(sd, NULL);
+			if (sd != NULL) {
+				script->buildin_recovery_sub(sd);
 			}
 		}
 	} else {
@@ -24380,6 +24388,7 @@ void script_defaults(void)
 	script->menu_countoptions = menu_countoptions;
 	script->buildin_recovery_sub = buildin_recovery_sub;
 	script->buildin_recovery_pc_sub = buildin_recovery_pc_sub;
+	script->buildin_recovery_bl_sub = buildin_recovery_bl_sub;
 	script->buildin_areawarp_sub = buildin_areawarp_sub;
 	script->buildin_areapercentheal_sub = buildin_areapercentheal_sub;
 	script->buildin_delitem_delete = buildin_delitem_delete;
