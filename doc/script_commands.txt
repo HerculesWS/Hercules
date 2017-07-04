@@ -3212,7 +3212,7 @@ If the equip was not found or the type is invalid, -1 is returned.
 
 ---------------------------------------
 
-*getequipoptioninfo(<equip_index>,<slot>,<type>);
+*getequipoption(<equip_index>,<slot>,<type>);
 
 Gets the option information of an equipment.
 
