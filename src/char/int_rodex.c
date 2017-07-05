@@ -448,7 +448,7 @@ void mapif_parse_rodex_send(int fd)
 {
 	struct rodex_message msg = { 0 };
 
-	if(RFIFOW(fd,2) != 4 + sizeof(struct rodex_message))
+	if (RFIFOW(fd,2) != 4 + sizeof(struct rodex_message))
 		return;
 
 	memcpy(&msg, RFIFOP(fd,4), sizeof(struct rodex_message));
