@@ -2481,7 +2481,7 @@ int intif_rodex_hasnew(struct map_session_data *sd)
 	WFIFOHEAD(inter_fd, 10);
 	WFIFOW(inter_fd, 0) = 0x3096;
 	WFIFOL(inter_fd, 2) = sd->status.char_id;
-	WFIFOB(inter_fd, 6) = sd->status.account_id;
+	WFIFOL(inter_fd, 6) = sd->status.account_id;
 	WFIFOSET(inter_fd, 10);
 
 	return 0;
