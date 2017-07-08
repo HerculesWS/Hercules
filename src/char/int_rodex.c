@@ -381,11 +381,12 @@ void mapif_parse_rodex_checkhasnew(int fd)
 {
 	int char_id = RFIFOL(fd, 2);
 	int account_id = RFIFOL(fd, 6);
-	bool has_new = inter_rodex->hasnew(char_id, account_id);
+	bool has_new;
 
-	assert(account_id >= START_ACCOUNT_NUM && account_id <= END_ACCOUNT_NUM);
-	assert(char_id >= START_CHAR_NUM);
+	Assert_retv(account_id >= START_ACCOUNT_NUM && account_id <= END_ACCOUNT_NUM);
+	Assert_retv(char_id >= START_CHAR_NUM);
 
+	has_new = inter_rodex->hasnew(char_id, account_id);
 	mapif->rodex_sendhasnew(fd, char_id, has_new);
 }
 

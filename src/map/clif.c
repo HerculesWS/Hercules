@@ -19231,9 +19231,9 @@ void clif_parse_rodex_checkname(int fd, struct map_session_data *sd)
 	const struct PACKET_CZ_CHECKNAME *rPacket = RFIFOP(fd, 0);
 	int char_id = 0, base_level = 0;
 	short class = 0;
-	char name[24];
+	char name[NAME_LENGTH];
 	
-	safestrncpy(name, rPacket->Name, 24);
+	safestrncpy(name, rPacket->Name, NAME_LENGTH);
 
 	rodex->check_player(sd, name, &base_level, &char_id, &class);
 }
