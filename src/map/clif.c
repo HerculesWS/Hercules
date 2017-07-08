@@ -19210,7 +19210,7 @@ void clif_rodex_remove_item_result(struct map_session_data *sd, int16 idx, int16
 	int fd;
 
 	nullpo_retv(sd);
-	Assert_retv(idx >= 0 || idx < MAX_INVENTORY);
+	Assert_retv(idx >= 0 && idx < MAX_INVENTORY);
 
 	fd = sd->fd;
 

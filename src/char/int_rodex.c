@@ -395,7 +395,7 @@ void mapif_parse_rodex_checkhasnew(int fd)
  *------------------------------------------*/
 void mapif_parse_rodex_updatemail(int fd)
 {
-	int64 mail_id = RFIFOL(fd,2);
+	int64 mail_id = RFIFOL(fd, 2);
 	int8 flag = RFIFOB(fd, 10);
 
 	Assert_retv(mail_id > 0);
