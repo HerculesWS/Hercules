@@ -7038,6 +7038,7 @@ BUILDIN(__setr)
 	int64 num;
 	const char* name;
 	char prefix;
+	struct reg_db *ref;
 
 	data = script_getdata(st,2);
 	//datavalue = script_getdata(st,3);
@@ -7050,11 +7051,11 @@ BUILDIN(__setr)
 
 	num = reference_getuid(data);
 	name = reference_getname(data);
+	ref = reference_getref(data);
 	prefix = *name;
 
 	if (not_server_variable(prefix)) {
-		sd = script->rid2sd(st);
-		if (sd == NULL) {
+		if (ref == NULL && (sd = script->rid2sd(st)) == NULL) {
 			ShowError("script:set: no player attached for player variable '%s'\n", name);
 			return true;
 		}
@@ -7102,9 +7103,9 @@ BUILDIN(__setr)
 	}
 
 	if (is_string_variable(name))
-		script->set_reg(st, sd, num, name, script_getstr(st, 3), script_getref(st, 2));
+		script->set_reg(st, sd, num, name, script_getstr(st, 3), ref);
 	else
-		script->set_reg(st, sd, num, name, (const void *)h64BPTRSIZE(script_getnum(st, 3)), script_getref(st, 2));
+		script->set_reg(st, sd, num, name, (const void *)h64BPTRSIZE(script_getnum(st, 3)), ref);
 
 	return true;
 }
