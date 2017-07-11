@@ -9,8 +9,8 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2013-2015  Hercules Dev Team
-//= Copyright (C) 2013-2015  Haru
+//= Copyright (C) 2013-2017  Hercules Dev Team
+//= Copyright (C) 2013-2017  Haru
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -742,6 +742,19 @@ function	script	HerculesSelfTestHelper	{
 	callsub(OnCheckStr, "sprintf (positional)", sprintf("'%2$+05d'", 5, 6), "'+0006'");
 	callsub(OnCheckStr, "sprintf (positional)", sprintf("'%2$s' '%1$c'", "First", "Second"), "'Second' 'F'");
 
+	callsub(OnCheck, "Getdatatype (integer)",              getdatatype(5), DATATYPE_INT);
+	callsub(OnCheck, "Getdatatype (constant string)",      getdatatype("foo"), DATATYPE_STR | DATATYPE_CONST);
+	callsub(OnCheck, "Getdatatype (parameter)",            getdatatype(Hp), DATATYPE_INT | DATATYPE_PARAM);
+	callsub(OnCheck, "Getdatatype (numeric variable)",     getdatatype(.@x), DATATYPE_INT | DATATYPE_VAR);
+	callsub(OnCheck, "Getdatatype (string variable)",      getdatatype(.@x$), DATATYPE_STR | DATATYPE_VAR);
+	callsub(OnCheck, "Getdatatype (label)",                getdatatype(OnTestGetdatatype), DATATYPE_LABEL);
+	//callsub(OnCheck, "Getdatatype (constant)",             getdatatype(DATATYPE_CONST), DATATYPE_CONST); // FIXME
+	callsub(OnCheck, "Getdatatype (returned integer)",     getdatatype(callsub(OnTestReturnValue, 5)), DATATYPE_INT);
+	callsub(OnCheck, "Getdatatype (returned string)",      getdatatype(callsub(OnTestReturnValue, "foo")), DATATYPE_STR | DATATYPE_CONST);
+	callsub(OnCheck, "Getdatatype (getarg default value)", callsub(OnTestGetdatatypeDefault), DATATYPE_INT);
+	callsub(OnCheck, "Getdatatype (getarg integer value)", callsub(OnTestGetdatatype, 5), DATATYPE_INT);
+	callsub(OnCheck, "Getdatatype (getarg string)",        callsub(OnTestGetdatatype, "foo"), DATATYPE_STR | DATATYPE_CONST);
+
 	if (.errors) {
 		debugmes "Script engine self-test   [ \033[0;31mFAILED\033[0m ]";
 		debugmes "**** The test was completed with " + .errors + " errors. ****";
@@ -785,6 +798,12 @@ OnTestScopeArrays:
 
 OnTestVarOfAnotherNPC:
 	return getvariableofnpc(.x, getarg(0));
+
+OnTestGetdatatypeDefault:
+	return getdatatype(getarg(0, 0));
+
+OnTestGetdatatype:
+	return getdatatype(getarg(0));
 
 OnReportError:
 	.@msg$ = getarg(0,"Unknown Error");
