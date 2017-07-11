@@ -30,6 +30,7 @@
 #include "map/chat.h"
 #include "map/chrif.h"
 #include "map/clif.h"
+#include "map/date.h"
 #include "map/elemental.h"
 #include "map/guild.h"
 #include "map/homunculus.h"
@@ -20336,19 +20337,21 @@ BUILDIN(setquest)
 {
 	unsigned short i;
 	int quest_id;
+	unsigned int time_limit;
 	struct map_session_data *sd = script->rid2sd(st);
 
 	if (sd == NULL)
 		return true;
 
 	quest_id = script_getnum(st, 2);
+	time_limit = script_hasdata(st, 3) ? script_getnum(st, 3) : 0;
 
-	quest->add(sd, quest_id);
+	quest->add(sd, quest_id, time_limit);
 
 	// If questinfo is set, remove quest bubble once quest is set.
-	for(i = 0; i < map->list[sd->bl.m].qi_count; i++) {
+	for (i = 0; i < map->list[sd->bl.m].qi_count; i++) {
 		struct questinfo *qi = &map->list[sd->bl.m].qi_data[i];
-		if( qi->quest_id == quest_id ) {
+		if (qi->quest_id == quest_id) {
 #if PACKETVER >= 20120410
 			clif->quest_show_event(sd, &qi->nd->bl, 9999, 0);
 #else
@@ -23209,6 +23212,100 @@ BUILDIN(mergeitem)
 	return true;
 }
 
+// getcalendartime(<day of month>, <day of week>{, <hour>{, <minute>}});
+// Returns the UNIX Timestamp of next ocurrency of given time
+BUILDIN(getcalendartime)
+{
+	struct tm info = { 0 };
+	int day_of_month = script_hasdata(st, 4) ? script_getnum(st, 4) : -1;
+	int day_of_week = script_hasdata(st, 5) ? script_getnum(st, 5) : -1;
+	int year = date_get_year();
+	int month = date_get_month();
+	int day = date_get_day();
+	int cur_hour = date_get_hour();
+	int cur_min = date_get_min();
+	int hour = script_getnum(st, 2);
+	int minute = script_getnum(st, 3);
+
+	info.tm_sec = 0;
+	info.tm_min = minute;
+	info.tm_hour = hour;
+	info.tm_mday = day;
+	info.tm_mon = month - 1;
+	info.tm_year = year - 1900;
+
+	if (day_of_month > -1 && day_of_week > -1) {
+		ShowError("script:getcalendartime: You must only specify a day_of_week or a day_of_month, not both\n");
+		script_pushint(st, -1);
+		return false;
+	}
+	if (day_of_month > -1 && (day_of_month < 1 || day_of_month > 31)) {
+		ShowError("script:getcalendartime: Day of Month in invalid range. Must be between 1 and 31.\n");
+		script_pushint(st, -1);
+		return false;
+	}
+	if (day_of_week > -1 && (day_of_week < 0 || day_of_week > 6)) {
+		ShowError("script:getcalendartime: Day of Week in invalid range. Must be between 0 and 6.\n");
+		script_pushint(st, -1);
+		return false;
+	}
+	if (hour > -1 && (hour > 23)) {
+		ShowError("script:getcalendartime: Hour in invalid range. Must be between 0 and 23.\n");
+		script_pushint(st, -1);
+		return false;
+	}
+	if (minute > -1 && (minute > 59)) {
+		ShowError("script:getcalendartime: Minute in invalid range. Must be between 0 and 59.\n");
+		script_pushint(st, -1);
+		return false;
+	}
+	if (hour == -1 || minute == -1) {
+		ShowError("script:getcalendartime: Minutes and Hours are required\n");
+		script_pushint(st, -1);
+		return false;
+	}
+
+	if (day_of_month > -1) {
+		if (day_of_month < day) { // Next Month
+			info.tm_mon++;
+		} else if (day_of_month == day) { // Today
+			if (hour < cur_hour || (hour == cur_hour && minute < cur_min)) { // But past time, next month
+				info.tm_mon++;
+			}
+		}
+
+		// Loops until month has finding a month that has day_of_month
+		do {
+			time_t t;
+			struct tm *lt;
+			info.tm_mday = day_of_month;
+			t = mktime(&info);
+			lt = localtime(&t);
+			info = *lt;
+		} while (info.tm_mday != day_of_month);
+	} else if (day_of_week > -1) {
+		int cur_wday = date_get_dayofweek();
+
+		if (day_of_week > cur_wday) { // This week
+			info.tm_mday += (day_of_week - cur_wday);
+		} else if (day_of_week == cur_wday) { // Today
+			if (hour < cur_hour || (hour == cur_hour && minute <= cur_min)) {
+				info.tm_mday += 7; // Next week
+			}
+		} else if (day_of_week < cur_wday) { // Next week
+			info.tm_mday += (7 - cur_wday + day_of_week);
+		}
+	} else if (day_of_week == -1 && day_of_month == -1) { // Next occurence of hour/min
+		if (hour < cur_hour || (hour == cur_hour && minute < cur_min)) {
+			info.tm_mday++;
+		}
+	}
+
+	script_pushint(st, mktime(&info));
+
+	return true;
+}
+
 /** place holder for the translation macro **/
 BUILDIN(_)
 {
@@ -23918,7 +24015,7 @@ void script_parse_builtin(void) {
 
 		//Quest Log System [Inkfish]
 		BUILDIN_DEF(questinfo, "ii??"),
-		BUILDIN_DEF(setquest, "i"),
+		BUILDIN_DEF(setquest, "i?"),
 		BUILDIN_DEF(erasequest, "i?"),
 		BUILDIN_DEF(completequest, "i?"),
 		BUILDIN_DEF(questprogress, "i?"),
@@ -23970,6 +24067,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(removechannelhandler, "ss"),
 		BUILDIN_DEF(showscript, "s?"),
 		BUILDIN_DEF(mergeitem,""),
+		BUILDIN_DEF(getcalendartime, "ii??"),
 		BUILDIN_DEF(_,"s"),
 		BUILDIN_DEF2(_, "_$", "s"),
 	};

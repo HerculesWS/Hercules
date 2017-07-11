@@ -103,22 +103,23 @@ int quest_pc_login(struct map_session_data *sd)
  *
  * New quest will be added as Q_ACTIVE.
  *
- * @param sd       Player's data
- * @param quest_id ID of the quest to add.
+ * @param sd         Player's data
+ * @param quest_id   ID of the quest to add.
+ * @param time_limit Custom time, in UNIX epoch, for this quest
  * @return 0 in case of success, nonzero otherwise
  */
-int quest_add(struct map_session_data *sd, int quest_id)
+int quest_add(struct map_session_data *sd, int quest_id, unsigned int time_limit)
 {
 	int n;
 	struct quest_db *qi = quest->db(quest_id);
 
 	nullpo_retr(-1, sd);
-	if( qi == &quest->dummy ) {
+	if (qi == &quest->dummy) {
 		ShowError("quest_add: quest %d not found in DB.\n", quest_id);
 		return -1;
 	}
 
-	if( quest->check(sd, quest_id, HAVEQUEST) >= 0 ) {
+	if (quest->check(sd, quest_id, HAVEQUEST) >= 0) {
 		ShowError("quest_add: Character %d already has quest %d.\n", sd->status.char_id, quest_id);
 		return -1;
 	}
@@ -130,7 +131,7 @@ int quest_add(struct map_session_data *sd, int quest_id)
 	sd->avail_quests++;
 	RECREATE(sd->quest_log, struct quest, sd->num_quests);
 
-	if( sd->avail_quests != sd->num_quests ) {
+	if (sd->avail_quests != sd->num_quests) {
 		// The character has some completed quests, make room before them so that they will stay at the end of the array
 		memmove(&sd->quest_log[n+1], &sd->quest_log[n], sizeof(struct quest)*(sd->num_quests-sd->avail_quests));
 	}
@@ -138,7 +139,9 @@ int quest_add(struct map_session_data *sd, int quest_id)
 	memset(&sd->quest_log[n], 0, sizeof(struct quest));
 
 	sd->quest_log[n].quest_id = qi->id;
-	if( qi->time )
+	if (time_limit != 0)
+		sd->quest_log[n].time = time_limit;
+	else if (qi->time != 0)
 		sd->quest_log[n].time = (unsigned int)(time(NULL) + qi->time);
 	sd->quest_log[n].state = Q_ACTIVE;
 
@@ -147,8 +150,8 @@ int quest_add(struct map_session_data *sd, int quest_id)
 	clif->quest_add(sd, &sd->quest_log[n]);
 	clif->quest_update_objective(sd, &sd->quest_log[n]);
 
-	if( map->save_settings&64 )
-		chrif->save(sd,0);
+	if ((map->save_settings & 64) != 0)
+		chrif->save(sd, 0);
 
 	return 0;
 }
