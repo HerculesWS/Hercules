@@ -56,6 +56,9 @@ enum rodex_get_items {
 };
 
 struct rodex_interface {
+	void (*init) (bool minimal);
+	void (*final) (void);
+
 	bool (*isenabled) (void);
 	void (*open) (struct map_session_data *sd, int8 open_type);
 	void (*next_page) (struct map_session_data *sd, int8 open_type, int64 last_mail_id);

@@ -22,7 +22,6 @@
 #define COMMON_MMO_H
 
 #include "config/core.h"
-#include "common/db.h"
 #include "common/cbasetypes.h"
 #include "common/db.h" // VECTORS
 

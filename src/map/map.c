@@ -6014,6 +6014,7 @@ int do_final(void) {
 	elemental->final();
 	map->list_final();
 	vending->final();
+	rodex->final();
 
 	HPM_map_do_final();
 
@@ -6528,6 +6529,7 @@ int do_init(int argc, char *argv[])
 	bg->init(minimal);
 	duel->init(minimal);
 	vending->init(minimal);
+	rodex->init(minimal);
 
 	if (map->scriptcheck) {
 		bool failed = map->extra_scripts_count > 0 ? false : true;

@@ -138,7 +138,7 @@ void rodex_add_item(struct map_session_data *sd, int16 idx, int16 amount)
 	sd->rodex.tmp.items[i].idx = idx;
 	sd->rodex.tmp.weight += sd->inventory_data[idx]->weight * amount;
 	if (is_stack == false) {
-		memcpy(&sd->rodex.tmp.items[i].item, &sd->status.inventory[idx], sizeof(sd->status.inventory[0]));
+		sd->rodex.tmp.items[i].item = sd->status.inventory[idx];
 		sd->rodex.tmp.items[i].item.amount = amount;
 		sd->rodex.tmp.items_count++;
 	} else {
@@ -432,7 +432,7 @@ void rodex_get_items(struct map_session_data *sd, int8 opentype, int64 mail_id)
 {
 	struct rodex_message *msg;
 	int weight = 0;
-	int empty_slots = 0;
+	int empty_slots = 0, required_slots;
 	int i;
 
 	nullpo_retv(sd);
@@ -451,7 +451,7 @@ void rodex_get_items(struct map_session_data *sd, int8 opentype, int64 mail_id)
 
 	for (i = 0; i < RODEX_MAX_ITEM; ++i) {
 		if (msg->items[i].item.nameid != 0) {
-			weight += itemdb->search(msg->items[i].item.nameid)->weight;
+			weight += itemdb->search(msg->items[i].item.nameid)->weight * msg->items[i].item.amount;
 		}
 	}
 
@@ -460,13 +460,28 @@ void rodex_get_items(struct map_session_data *sd, int8 opentype, int64 mail_id)
 		return;
 	}
 
+	required_slots = msg->items_count;
 	for (i = 0; i < MAX_INVENTORY; ++i) {
 		if (sd->status.inventory[i].nameid == 0) {
 			empty_slots++;
+		} else if (itemdb->isstackable(sd->status.inventory[i].nameid) == 1) {
+			int j;
+			ARR_FIND(0, msg->items_count, j, sd->status.inventory[i].nameid == msg->items[j].item.nameid);
+			if (j < msg->items_count) {
+				struct item_data *idata = itemdb->search(sd->status.inventory[i].nameid);
+
+				if ((idata->stack.inventory && sd->status.inventory[i].amount + msg->items[i].item.amount > idata->stack.amount) ||
+					sd->status.inventory[i].amount + msg->items[i].item.amount > MAX_AMOUNT) {
+					clif->rodex_request_items(sd, opentype, mail_id, RODEX_GET_ITEM_FULL_ERROR);
+					return;
+				}
+
+				required_slots--;
+			}
 		}
 	}
 
-	if (empty_slots < msg->items_count) {
+	if (empty_slots < required_slots) {
 		clif->rodex_request_items(sd, opentype, mail_id, RODEX_GET_ITEM_FULL_ERROR);
 		return;
 	}
@@ -480,6 +495,7 @@ void rodex_get_items(struct map_session_data *sd, int8 opentype, int64 mail_id)
 
 		if (pc->additem(sd, it, it->amount, LOG_TYPE_MAIL) != 0) {
 			clif->rodex_request_items(sd, opentype, mail_id, RODEX_GET_ITEM_FULL_ERROR);
+			intif->rodex_updatemail(mail_id, 2);
 			return;
 		} else {
 			memset(it, 0x0, sizeof(*it));
@@ -569,9 +585,23 @@ void rodex_refresh(struct map_session_data *sd, int8 open_type, int64 first_mail
 	}
 }
 
+void do_init_rodex(bool minimal)
+{
+	if (minimal)
+		return;
+}
+
+void do_final_rodex(void)
+{
+
+}
+
 void rodex_defaults(void)
 {
 	rodex = &rodex_s;
+
+	rodex->init = do_init_rodex;
+	rodex->final = do_final_rodex;
 
 	rodex->open = rodex_open;
 	rodex->next_page = rodex_next_page;

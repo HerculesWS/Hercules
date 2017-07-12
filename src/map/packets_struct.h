@@ -1305,7 +1305,7 @@ struct PACKET_CZ_REQ_OPEN_WRITE_MAIL {
 
 struct PACKET_ZC_ACK_OPEN_WRITE_MAIL {
 	int16 PacketType;
-	char receiveName[24];
+	char receiveName[NAME_LENGTH];
 	int8 result;
 } __attribute__((packed));
 

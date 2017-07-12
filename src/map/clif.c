@@ -19127,7 +19127,7 @@ void clif_parse_rodex_open_write_mail(int fd, struct map_session_data *sd)
 	clif->rodex_open_write_mail(fd, rPacket->receiveName, result);
 }
 
-void clif_rodex_open_write_mail(int fd, const char receiver_name[NAME_LENGTH], int8 result)
+void clif_rodex_open_write_mail(int fd, const char *receiver_name, int8 result)
 {
 #if PACKETVER >= 20140416
 	struct PACKET_ZC_ACK_OPEN_WRITE_MAIL *sPacket = NULL;
@@ -19137,7 +19137,7 @@ void clif_rodex_open_write_mail(int fd, const char receiver_name[NAME_LENGTH], i
 	WFIFOHEAD(fd, sizeof(*sPacket));
 	sPacket = WFIFOP(fd, 0);
 	sPacket->PacketType = rodexopenwrite;
-	strncpy(sPacket->receiveName, receiver_name, sizeof(sPacket->receiveName));
+	strncpy(sPacket->receiveName, receiver_name, NAME_LENGTH);
 	sPacket->result = result;
 	WFIFOSET(fd, sizeof(*sPacket));
 #endif
@@ -19238,7 +19238,7 @@ void clif_parse_rodex_checkname(int fd, struct map_session_data *sd)
 	rodex->check_player(sd, name, &base_level, &char_id, &class);
 }
 
-void clif_rodex_checkname_result(struct map_session_data *sd, int char_id, short class_, int base_level, char name[NAME_LENGTH])
+void clif_rodex_checkname_result(struct map_session_data *sd, int char_id, short class_, int base_level, const char *name)
 {
 #if PACKETVER >= 20140521
 	struct PACKET_ZC_CHECKNAME *sPacket;
@@ -19277,9 +19277,9 @@ void clif_parse_rodex_send_mail(int fd, struct map_session_data *sd)
 	} else if (rPacket->TextcontentsLength > RODEX_BODY_LENGTH || rPacket->Titlelength > RODEX_TITLE_LENGTH) {
 		result = RODEX_SEND_MAIL_FATAL_ERROR;
 	} else {
-		char rname[NAME_LENGTH];
-		char title[RODEX_TITLE_LENGTH];
-		char body[RODEX_BODY_LENGTH];
+		char rname[NAME_LENGTH] = "";
+		char title[RODEX_TITLE_LENGTH] = "";
+		char body[RODEX_BODY_LENGTH] = "";
 
 		safestrncpy(rname, rPacket->receiveName, NAME_LENGTH);
 		safestrncpy(title, rPacket->string, RODEX_TITLE_LENGTH);
@@ -19341,8 +19341,7 @@ void clif_rodex_send_maillist(int fd, struct map_session_data *sd, int8 open_typ
 		inner->Titlelength = (int16)strlen(msg->title) + 1;
 		if (open_type != RODEX_OPENTYPE_RETURN) {
 			strncpy(inner->SenderName, msg->sender_name, sizeof(msg->sender_name));
-		}
-		else {
+		} else {
 			strncpy(inner->SenderName, msg->receiver_name, sizeof(msg->receiver_name));
 		}
 		strncpy(inner->title, msg->title, inner->Titlelength);
@@ -19395,8 +19394,7 @@ void clif_rodex_send_refresh(int fd, struct map_session_data *sd, int8 open_type
 		inner->Titlelength = (int16)strlen(msg->title) + 1;
 		if (open_type != RODEX_OPENTYPE_RETURN) {
 			strncpy(inner->SenderName, msg->sender_name, sizeof(msg->sender_name));
-		}
-		else {
+		} else {
 			strncpy(inner->SenderName, msg->receiver_name, sizeof(msg->receiver_name));
 		}
 		strncpy(inner->title, msg->title, inner->Titlelength);
@@ -19454,7 +19452,7 @@ void clif_rodex_read_mail(struct map_session_data *sd, int8 opentype, struct rod
 	size += body_len;
 	for (i = 0; i < RODEX_MAX_ITEM; ++i) {
 		struct item *it = &msg->items[i].item;
-		int j;
+		int j, k;
 
 		if (it->nameid == 0) {
 			continue;
@@ -19468,11 +19466,9 @@ void clif_rodex_read_mail(struct map_session_data *sd, int8 opentype, struct rod
 		item->IsIdentified = it->identify ? 1 : 0;
 		item->IsDamaged = (it->attribute & ATTR_BROKEN) != 0 ? 1 : 0;
 		item->refiningLevel = it->refine;
-		item->slot.card[0] = it->card[0];
-		item->slot.card[1] = it->card[1];
-		item->slot.card[2] = it->card[2];
-		item->slot.card[3] = it->card[3];
-
+		for (k = 0; k < MAX_SLOTS; ++k) {
+			item->slot.card[k] = it->card[k];
+		}
 		for (j = 0; j < MAX_ITEM_OPTIONS; ++j) {
 			item->optionData[j].index = it->option[j].index;
 			item->optionData[j].value = it->option[j].value;

@@ -45,11 +45,12 @@ static int inter_rodex_fromsql(int char_id, int account_id, int8 opentype, int64
 {
 	int i, count = 0;
 	struct rodex_message msg = { 0 };
-	struct SqlStmt *stmt = SQL->StmtMalloc(inter->sql_handle);
+	struct SqlStmt *stmt;
 	struct SqlStmt *stmt_items;
 
-	nullpo_retr(-1, stmt);
 	nullpo_retr(-1, mails);
+
+	stmt = SQL->StmtMalloc(inter->sql_handle);
 
 	switch (opentype) {
 	case RODEX_OPENTYPE_MAIL:
@@ -223,7 +224,7 @@ static bool inter_rodex_hasnew(int char_id, int account_id)
 }
 
 /// Checks player name and retrieves some data
-static bool inter_rodex_checkname(char name[NAME_LENGTH], int *target_char_id, short *target_class, int *target_level)
+static bool inter_rodex_checkname(const char *name, int *target_char_id, short *target_class, int *target_level)
 {
 	char esc_name[NAME_LENGTH * 2 + 1];
 	bool found = false;
@@ -270,9 +271,9 @@ int64 inter_rodex_savemessage(struct rodex_message* msg)
 
 	if (SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` (`sender_name`, `sender_id`, `receiver_name`, `receiver_id`, `receiver_accountid`, `title`, `body`,"
 		"`zeny`, `type`, `is_read`, `send_date`, `expire_date`, `weight`) VALUES "
-		"('%s', '%d', '%s', '%d', '%d', '%s', '%s', '%d', '%d', '%d', '%d', '%d', '%d')",
+		"('%s', '%d', '%s', '%d', '%d', '%s', '%s', '%"PRId64"', '%d', '%d', '%d', '%d', '%d')",
 		rodex_db, sender_name, msg->sender_id, receiver_name, msg->receiver_id, msg->receiver_accountid,
-		title, body, (int)msg->zeny, msg->type, msg->is_read == true ? 1 : 0, msg->send_date, msg->expire_date, msg->weight)) {
+		title, body, msg->zeny, msg->type, msg->is_read == true ? 1 : 0, msg->send_date, msg->expire_date, msg->weight)) {
 		Sql_ShowDebug(inter->sql_handle);
 		return 0;
 	}
