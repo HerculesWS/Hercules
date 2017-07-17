@@ -528,15 +528,15 @@ int HP_chr_mmo_char_tosql(int char_id, struct mmo_charstatus *p) {
 	}
 	return retVal___;
 }
-int HP_chr_memitemdata_to_sql(const struct item items[], int max, int id, int tableswitch) {
+int HP_chr_getitemdata_from_sql(struct item *items, int max, int guid, enum inventory_table_type table) {
 	int hIndex = 0;
 	int retVal___ = 0;
-	if (HPMHooks.count.HP_chr_memitemdata_to_sql_pre > 0) {
-		int (*preHookFunc) (const struct item *items[], int *max, int *id, int *tableswitch);
+	if (HPMHooks.count.HP_chr_getitemdata_from_sql_pre > 0) {
+		int (*preHookFunc) (struct item **items, int *max, int *guid, enum inventory_table_type *table);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_memitemdata_to_sql_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_chr_memitemdata_to_sql_pre[hIndex].func;
-			retVal___ = preHookFunc(&items, &max, &id, &tableswitch);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_getitemdata_from_sql_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_chr_getitemdata_from_sql_pre[hIndex].func;
+			retVal___ = preHookFunc(&items, &max, &guid, &table);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -544,13 +544,40 @@ int HP_chr_memitemdata_to_sql(const struct item items[], int max, int id, int ta
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.chr.memitemdata_to_sql(items, max, id, tableswitch);
+		retVal___ = HPMHooks.source.chr.getitemdata_from_sql(items, max, guid, table);
+	}
+	if (HPMHooks.count.HP_chr_getitemdata_from_sql_post > 0) {
+		int (*postHookFunc) (int retVal___, struct item *items, int max, int guid, enum inventory_table_type table);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_getitemdata_from_sql_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_chr_getitemdata_from_sql_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, items, max, guid, table);
+		}
+	}
+	return retVal___;
+}
+int HP_chr_memitemdata_to_sql(const struct item items[], int id, enum inventory_table_type table) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_chr_memitemdata_to_sql_pre > 0) {
+		int (*preHookFunc) (const struct item *items[], int *id, enum inventory_table_type *table);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_memitemdata_to_sql_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_chr_memitemdata_to_sql_pre[hIndex].func;
+			retVal___ = preHookFunc(&items, &id, &table);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.chr.memitemdata_to_sql(items, id, table);
 	}
 	if (HPMHooks.count.HP_chr_memitemdata_to_sql_post > 0) {
-		int (*postHookFunc) (int retVal___, const struct item items[], int max, int id, int tableswitch);
+		int (*postHookFunc) (int retVal___, const struct item items[], int id, enum inventory_table_type table);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_memitemdata_to_sql_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_chr_memitemdata_to_sql_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, items, max, id, tableswitch);
+			retVal___ = postHookFunc(retVal___, items, id, table);
 		}
 	}
 	return retVal___;
