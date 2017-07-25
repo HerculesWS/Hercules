@@ -8118,6 +8118,10 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 		case SC_MAGICPOWER:
 			status_change_end(bl, type, INVALID_TIMER);
 			break;
+		case SC_IMPOSITIO:
+			if (sc && sc->data[SC_IMPOSITIO] && sc->data[SC_IMPOSITIO]->val1 > val1)
+				status_change_end(bl, SC_IMPOSITIO, INVALID_TIMER);
+			break;
 	}
 
 	//Check for overlapping fails
