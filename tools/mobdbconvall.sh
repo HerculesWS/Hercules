@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # This file is part of Hercules.
 # http://herc.ws - http://github.com/HerculesWS/Hercules
