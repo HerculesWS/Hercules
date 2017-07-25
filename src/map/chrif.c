@@ -306,7 +306,7 @@ bool chrif_save(struct map_session_data *sd, int flag) {
 
 	WFIFOHEAD(chrif->fd, sizeof(sd->status) + 13);
 	WFIFOW(chrif->fd,0) = 0x2b01;
-	WFIFOW(chrif->fd,2) = sizeof(sd->status) + 13;
+	WFIFOW(chrif->fd,2) = (uint16)sizeof(sd->status) + 13;
 	WFIFOL(chrif->fd,4) = sd->status.account_id;
 	WFIFOL(chrif->fd,8) = sd->status.char_id;
 	WFIFOB(chrif->fd,12) = (flag==1)?1:0; //Flag to tell char-server this character is quitting.
