@@ -9500,9 +9500,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				val3 = 25 * val1; // Move speed reduction
 				break;
 			default:
-				if (calc_flag == SCB_NONE && status->dbs->SkillChangeTable[type] == 0 && status->dbs->IconChangeTable[type] == 0) {
-					//Status change with no calc, no icon, and no skill associated...?
-					ShowError("UnknownStatusChange [%d]\n", type);
+				if (status->change_start_unknown_sc(src, bl, type, calc_flag, rate, val1, val2, val3, val4, tick, flag)) {
 					return 0;
 				}
 		}
@@ -9700,6 +9698,17 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 		npc->touchnext_areanpc(sd,false); // run OnTouch_ on next char in range
 
 	return 1;
+}
+
+bool status_change_start_unknown_sc(struct block_list *src, struct block_list *bl, enum sc_type type, int calc_flag, int rate, int val1, int val2, int val3, int val4, int tick, int flag)
+{
+	Assert_retr(false, type >= SC_NONE && type < SC_MAX);
+	if (calc_flag == SCB_NONE && status->dbs->SkillChangeTable[type] == 0 && status->dbs->IconChangeTable[type] == 0) {
+		//Status change with no calc, no icon, and no skill associated...?
+		ShowError("UnknownStatusChange [%d]\n", type);
+		return true;
+	}
+	return false;
 }
 
 void status_change_start_display(struct map_session_data *sd, enum sc_type type, int val1, int val2, int val3, int val4)
@@ -13669,6 +13678,7 @@ void status_defaults(void)
 	status->calc_bl_main = status_calc_bl_main;
 	status->display_add = status_display_add;
 	status->change_start_display = status_change_start_display;
+	status->change_start_unknown_sc = status_change_start_unknown_sc;
 	status->display_remove = status_display_remove;
 	status->natural_heal = status_natural_heal;
 	status->natural_heal_timer = status_natural_heal_timer;

@@ -2338,6 +2338,7 @@ struct status_interface {
 	int (*change_start_set_option) (struct block_list *bl, struct status_change* sc, enum sc_type type, int val1, int val2, int val3, int val4);
 	int (*get_val_flag) (enum sc_type type);
 	void (*change_start_display) (struct map_session_data *sd, enum sc_type type, int val1, int val2, int val3, int val4);
+	bool (*change_start_unknown_sc) (struct block_list *src, struct block_list *bl, enum sc_type type, int calc_flag, int rate, int val1, int val2, int val3, int val4, int tick, int flag);
 	int (*kaahi_heal_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*change_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*change_timer_sub) (struct block_list* bl, va_list ap);
