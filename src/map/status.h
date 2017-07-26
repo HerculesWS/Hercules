@@ -2333,6 +2333,7 @@ struct status_interface {
 	int (*change_end_) (struct block_list* bl, enum sc_type type, int tid, const char* file, int line);
 	bool (*is_immune_to_status) (struct status_change* sc, enum sc_type type);
 	bool (*is_boss_resist_sc) (enum sc_type type);
+	bool (*end_sc_before_start) (struct block_list *bl, struct status_data *st, struct status_change* sc, enum sc_type type, int undead_flag, int val1, int val2, int val3, int val4);
 	int (*kaahi_heal_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*change_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*change_timer_sub) (struct block_list* bl, va_list ap);
