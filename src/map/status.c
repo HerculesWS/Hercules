@@ -9532,18 +9532,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 	val_flag = status->get_val_flag(type);
 
 	/* [Ind/Hercules] */
-	if( sd && status->dbs->DisplayType[type] ) {
-		int dval1 = 0, dval2 = 0, dval3 = 0;
-		switch( type ) {
-			case SC_ALL_RIDING:
-				dval1 = 1;
-				break;
-			default: /* all others: just copy val1 */
-				dval1 = val1;
-				break;
-		}
-		status->display_add(sd,type,dval1,dval2,dval3);
-	}
+	status->change_start_display(sd, type, val1, val2, val3, val4);
 
 	//Those that make you stop attacking/walking....
 	status->change_start_stop_action(bl, type);
@@ -9711,6 +9700,24 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 		npc->touchnext_areanpc(sd,false); // run OnTouch_ on next char in range
 
 	return 1;
+}
+
+void status_change_start_display(struct map_session_data *sd, enum sc_type type, int val1, int val2, int val3, int val4)
+{
+	Assert_retv(type >= SC_NONE && type < SC_MAX);
+
+	if (sd && status->dbs->DisplayType[type]) {
+		int dval1 = 0, dval2 = 0, dval3 = 0;
+		switch (type) {
+			case SC_ALL_RIDING:
+				dval1 = 1;
+				break;
+			default: /* all others: just copy val1 */
+				dval1 = val1;
+				break;
+		}
+		status->display_add(sd, type, dval1, dval2, dval3);
+	}
 }
 
 /**
@@ -13661,6 +13668,7 @@ void status_defaults(void)
 	status->calc_ematk = status_calc_ematk;
 	status->calc_bl_main = status_calc_bl_main;
 	status->display_add = status_display_add;
+	status->change_start_display = status_change_start_display;
 	status->display_remove = status_display_remove;
 	status->natural_heal = status_natural_heal;
 	status->natural_heal_timer = status_natural_heal_timer;
