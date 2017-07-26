@@ -7416,6 +7416,7 @@ void status_display_remove(struct map_session_data *sd, enum sc_type type)
 		}
 	}
 }
+
 /**
  * Starts a status change.
  *
@@ -7467,73 +7468,8 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 #endif // 0
 	}
 
-	if( sc->data[SC_REFRESH] ) {
-		if( type >= SC_COMMON_MIN && type <= SC_COMMON_MAX) // Confirmed.
-			return 0; // Immune to status ailements
-		switch( type ) {
-			case SC_DEEP_SLEEP:
-			case SC__CHAOS:
-			case SC_BURNING:
-			case SC_STUN:
-			case SC_SLEEP:
-			case SC_CURSE:
-			case SC_STONE:
-			case SC_POISON:
-			case SC_BLIND:
-			case SC_SILENCE:
-			case SC_BLOODING:
-			case SC_FREEZE:
-			case SC_FROSTMISTY:
-			case SC_COLD:
-			case SC_TOXIN:
-			case SC_PARALYSE:
-			case SC_VENOMBLEED:
-			case SC_MAGICMUSHROOM:
-			case SC_DEATHHURT:
-			case SC_PYREXIA:
-			case SC_OBLIVIONCURSE:
-			case SC_MARSHOFABYSS:
-			case SC_MANDRAGORA:
-				return 0;
-		}
-	} else if( sc->data[SC_INSPIRATION] ) {
-		if( type >= SC_COMMON_MIN && type <= SC_COMMON_MAX )
-			return 0; // Immune to status ailements
-		switch( type ) {
-			case SC_POISON:
-			case SC_BLIND:
-			case SC_STUN:
-			case SC_SILENCE:
-			case SC__CHAOS:
-			case SC_STONE:
-			case SC_SLEEP:
-			case SC_BLOODING:
-			case SC_CURSE:
-			case SC_BURNING:
-			case SC_FROSTMISTY:
-			case SC_FREEZE:
-			case SC_COLD:
-			case SC_FEAR:
-			case SC_TOXIN:
-			case SC_PARALYSE:
-			case SC_VENOMBLEED:
-			case SC_MAGICMUSHROOM:
-			case SC_DEATHHURT:
-			case SC_PYREXIA:
-			case SC_OBLIVIONCURSE:
-			case SC_LEECHESEND:
-			case SC_DEEP_SLEEP:
-			case SC_SATURDAY_NIGHT_FEVER:
-			case SC__BODYPAINT:
-			case SC__ENERVATION:
-			case SC__GROOMY:
-			case SC__IGNORANCE:
-			case SC__LAZINESS:
-			case SC__UNLUCKY:
-			case SC__WEAKNESS:
-				return 0;
-		}
-	}
+	if (status->is_immune_to_status(sc, type))
+		return 0;
 
 	sd = BL_CAST(BL_PC, bl);
 
@@ -7543,8 +7479,8 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 		if( !tick ) return 0;
 	}
 
-	undead_flag = battle->check_undead(st->race,st->def_ele);
-	//Check for inmunities / sc fails
+	undead_flag = battle->check_undead(st->race, st->def_ele);
+	// Check for inmunities / sc fails
 	switch (type) {
 		case SC_DRUMBATTLE:
 		case SC_NIBELUNGEN:
@@ -7809,58 +7745,9 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 	}
 
 	//Check for BOSS resistances
-	if(st->mode&MD_BOSS && !(flag&SCFLAG_NOAVOID)) {
-		if (type>=SC_COMMON_MIN && type <= SC_COMMON_MAX)
+	if (st->mode & MD_BOSS && !(flag & SCFLAG_NOAVOID)) {
+		if (status->is_boss_resist_sc(type))
 			return 0;
-		switch (type) {
-			case SC_BLESSING:
-			case SC_DEC_AGI:
-			case SC_PROVOKE:
-			case SC_COMA:
-			case SC_GRAVITATION:
-			case SC_NJ_SUITON:
-			case SC_RICHMANKIM:
-			case SC_ROKISWEIL:
-			case SC_FOGWALL:
-			case SC_FROSTMISTY:
-			case SC_BURNING:
-			case SC_MARSHOFABYSS:
-			case SC_ADORAMUS:
-			case SC_NEEDLE_OF_PARALYZE:
-			case SC_DEEP_SLEEP:
-			case SC_COLD:
-
-				// Exploit prevention - kRO Fix
-			case SC_PYREXIA:
-			case SC_DEATHHURT:
-			case SC_TOXIN:
-			case SC_PARALYSE:
-			case SC_VENOMBLEED:
-			case SC_MAGICMUSHROOM:
-			case SC_OBLIVIONCURSE:
-			case SC_LEECHESEND:
-
-			// Ranger Effects
-			case SC_WUGBITE:
-			case SC_ELECTRICSHOCKER:
-			case SC_MAGNETICFIELD:
-
-			// Masquerades
-			case SC__ENERVATION:
-			case SC__GROOMY:
-			case SC__LAZINESS:
-			case SC__UNLUCKY:
-			case SC__WEAKNESS:
-			case SC__IGNORANCE:
-
-			// Other Effects
-			case SC_VACUUM_EXTREME:
-			case SC_NETHERWORLD:
-			case SC_FRESHSHRIMP:
-			case SC_SV_ROOTTWIST:
-			case SC_BITESCAR:
-				return 0;
-		}
 	}
 
 	//Before overlapping fail, one must check for status cured.
@@ -10441,6 +10328,152 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 		npc->touchnext_areanpc(sd,false); // run OnTouch_ on next char in range
 
 	return 1;
+}
+
+/**
+ * Check is boss resist to given sc.
+ *
+ * @param type Status change type.
+ *
+ * @retval true if boss resist.
+ * @retval false if boss not resist.
+ */
+bool status_is_boss_resist_sc(enum sc_type type)
+{
+	if (type >= SC_COMMON_MIN && type <= SC_COMMON_MAX)
+		return true;
+	switch (type) {
+		case SC_BLESSING:
+		case SC_DEC_AGI:
+		case SC_PROVOKE:
+		case SC_COMA:
+		case SC_GRAVITATION:
+		case SC_NJ_SUITON:
+		case SC_RICHMANKIM:
+		case SC_ROKISWEIL:
+		case SC_FOGWALL:
+		case SC_FROSTMISTY:
+		case SC_BURNING:
+		case SC_MARSHOFABYSS:
+		case SC_ADORAMUS:
+		case SC_NEEDLE_OF_PARALYZE:
+		case SC_DEEP_SLEEP:
+		case SC_COLD:
+
+		// Exploit prevention - kRO Fix
+		case SC_PYREXIA:
+		case SC_DEATHHURT:
+		case SC_TOXIN:
+		case SC_PARALYSE:
+		case SC_VENOMBLEED:
+		case SC_MAGICMUSHROOM:
+		case SC_OBLIVIONCURSE:
+		case SC_LEECHESEND:
+
+		// Ranger Effects
+		case SC_WUGBITE:
+		case SC_ELECTRICSHOCKER:
+		case SC_MAGNETICFIELD:
+
+		// Masquerades
+		case SC__ENERVATION:
+		case SC__GROOMY:
+		case SC__LAZINESS:
+		case SC__UNLUCKY:
+		case SC__WEAKNESS:
+		case SC__IGNORANCE:
+
+		// Other Effects
+		case SC_VACUUM_EXTREME:
+		case SC_NETHERWORLD:
+		case SC_FRESHSHRIMP:
+		case SC_SV_ROOTTWIST:
+		case SC_BITESCAR:
+			return true;
+	}
+	return false;
+}
+
+/**
+ * Initial check for current statuses immune to given sc.
+ *
+ * @param sc   Current statuses.
+ * @param type Status change type.
+ *
+ * @retval true if immune resist.
+ * @retval false if not immune resist.
+ */
+bool status_is_immune_to_status(struct status_change* sc, enum sc_type type)
+{
+	nullpo_retr(true, sc);
+	if (sc->data[SC_REFRESH]) {
+		if (type >= SC_COMMON_MIN && type <= SC_COMMON_MAX) // Confirmed.
+			return true; // Immune to status ailements
+		switch (type) {
+			case SC_DEEP_SLEEP:
+			case SC__CHAOS:
+			case SC_BURNING:
+			case SC_STUN:
+			case SC_SLEEP:
+			case SC_CURSE:
+			case SC_STONE:
+			case SC_POISON:
+			case SC_BLIND:
+			case SC_SILENCE:
+			case SC_BLOODING:
+			case SC_FREEZE:
+			case SC_FROSTMISTY:
+			case SC_COLD:
+			case SC_TOXIN:
+			case SC_PARALYSE:
+			case SC_VENOMBLEED:
+			case SC_MAGICMUSHROOM:
+			case SC_DEATHHURT:
+			case SC_PYREXIA:
+			case SC_OBLIVIONCURSE:
+			case SC_MARSHOFABYSS:
+			case SC_MANDRAGORA:
+				return true;
+		}
+	} else if (sc->data[SC_INSPIRATION]) {
+		if (type >= SC_COMMON_MIN && type <= SC_COMMON_MAX)
+			return true; // Immune to status ailements
+		switch (type) {
+			case SC_POISON:
+			case SC_BLIND:
+			case SC_STUN:
+			case SC_SILENCE:
+			case SC__CHAOS:
+			case SC_STONE:
+			case SC_SLEEP:
+			case SC_BLOODING:
+			case SC_CURSE:
+			case SC_BURNING:
+			case SC_FROSTMISTY:
+			case SC_FREEZE:
+			case SC_COLD:
+			case SC_FEAR:
+			case SC_TOXIN:
+			case SC_PARALYSE:
+			case SC_VENOMBLEED:
+			case SC_MAGICMUSHROOM:
+			case SC_DEATHHURT:
+			case SC_PYREXIA:
+			case SC_OBLIVIONCURSE:
+			case SC_LEECHESEND:
+			case SC_DEEP_SLEEP:
+			case SC_SATURDAY_NIGHT_FEVER:
+			case SC__BODYPAINT:
+			case SC__ENERVATION:
+			case SC__GROOMY:
+			case SC__IGNORANCE:
+			case SC__LAZINESS:
+			case SC__UNLUCKY:
+			case SC__WEAKNESS:
+				return true;
+		}
+	}
+	return false;
 }
 
 /*==========================================
@@ -13477,6 +13510,8 @@ void status_defaults(void)
 	status->change_clear = status_change_clear;
 	status->change_clear_buffs = status_change_clear_buffs;
 
+	status->is_immune_to_status = status_is_immune_to_status;
+	status->is_boss_resist_sc = status_is_boss_resist_sc;
 	status->calc_bl_ = status_calc_bl_;
 	status->calc_mob_ = status_calc_mob_;
 	status->calc_pet_ = status_calc_pet_;
