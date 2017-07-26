@@ -9675,182 +9675,8 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 	status->change_start_stop_action(bl, type);
 
 	// Set option as needed.
-	opt_flag = 1;
-	switch(type) {
-		//OPT1
-		case SC_STONE:         sc->opt1 = OPT1_STONEWAIT;  break;
-		case SC_FREEZE:        sc->opt1 = OPT1_FREEZE;     break;
-		case SC_STUN:          sc->opt1 = OPT1_STUN;       break;
-		case SC_SLEEP:         sc->opt1 = OPT1_SLEEP;      break;
-		case SC_BURNING:       sc->opt1 = OPT1_BURNING;    break; // Burning need this to be showed correctly. [pakpil]
-		case SC_WHITEIMPRISON: sc->opt1 = OPT1_IMPRISON;   break;
-		case SC_COLD:          sc->opt1 = OPT1_CRYSTALIZE; break;
-		//OPT2
-		case SC_POISON:       sc->opt2 |= OPT2_POISON;       break;
-		case SC_CURSE:        sc->opt2 |= OPT2_CURSE;        break;
-		case SC_SILENCE:      sc->opt2 |= OPT2_SILENCE;      break;
+	opt_flag = status->change_start_set_option(bl, sc, type, val1, val2, val3, val4);
 
-		case SC_CRUCIS:
-		case SC__CHAOS:
-			sc->opt2 |= OPT2_SIGNUMCRUCIS;
-			break;
-
-		case SC_BLIND:        sc->opt2 |= OPT2_BLIND;        break;
-		case SC_ANGELUS:      sc->opt2 |= OPT2_ANGELUS;      break;
-		case SC_BLOODING:     sc->opt2 |= OPT2_BLEEDING;     break;
-		case SC_DPOISON:      sc->opt2 |= OPT2_DPOISON;      break;
-		//OPT3
-		case SC_TWOHANDQUICKEN:
-		case SC_ONEHANDQUICKEN:
-		case SC_SPEARQUICKEN:
-		case SC_LKCONCENTRATION:
-		case SC_MER_QUICKEN:
-			sc->opt3 |= OPT3_QUICKEN;
-			opt_flag = 0;
-			break;
-		case SC_OVERTHRUSTMAX:
-		case SC_OVERTHRUST:
-		case SC_SWOO: //Why does it shares the same opt as Overthrust? Perhaps we'll never know...
-			sc->opt3 |= OPT3_OVERTHRUST;
-			opt_flag = 0;
-			break;
-		case SC_ENERGYCOAT:
-		case SC_SKE:
-			sc->opt3 |= OPT3_ENERGYCOAT;
-			opt_flag = 0;
-			break;
-		case SC_INCATKRATE:
-			//Simulate Explosion Spirits effect for NPC_POWERUP [Skotlex]
-			if (bl->type != BL_MOB) {
-				opt_flag = 0;
-				break;
-			}
-			FALLTHROUGH
-		case SC_EXPLOSIONSPIRITS:
-			sc->opt3 |= OPT3_EXPLOSIONSPIRITS;
-			opt_flag = 0;
-			break;
-		case SC_STEELBODY:
-		case SC_SKA:
-			sc->opt3 |= OPT3_STEELBODY;
-			opt_flag = 0;
-			break;
-		case SC_BLADESTOP:
-			sc->opt3 |= OPT3_BLADESTOP;
-			opt_flag = 0;
-			break;
-		case SC_AURABLADE:
-			sc->opt3 |= OPT3_AURABLADE;
-			opt_flag = 0;
-			break;
-		case SC_BERSERK:
-			opt_flag = 0;
-			sc->opt3 |= OPT3_BERSERK;
-			break;
-#if 0
-		case ???: // doesn't seem to do anything
-			sc->opt3 |= OPT3_LIGHTBLADE;
-			opt_flag = 0;
-			break;
-#endif // 0
-		case SC_DANCING:
-			if ((val1&0xFFFF) == CG_MOONLIT)
-				sc->opt3 |= OPT3_MOONLIT;
-			opt_flag = 0;
-			break;
-		case SC_MARIONETTE_MASTER:
-		case SC_MARIONETTE:
-			sc->opt3 |= OPT3_MARIONETTE;
-			opt_flag = 0;
-			break;
-		case SC_ASSUMPTIO:
-			sc->opt3 |= OPT3_ASSUMPTIO;
-			opt_flag = 0;
-			break;
-		case SC_WARM: //SG skills [Komurka]
-			sc->opt3 |= OPT3_WARM;
-			opt_flag = 0;
-			break;
-		case SC_KAITE:
-			sc->opt3 |= OPT3_KAITE;
-			opt_flag = 0;
-			break;
-		case SC_NJ_BUNSINJYUTSU:
-			sc->opt3 |= OPT3_BUNSIN;
-			opt_flag = 0;
-			break;
-		case SC_SOULLINK:
-			sc->opt3 |= OPT3_SOULLINK;
-			opt_flag = 0;
-			break;
-		case SC_PROPERTYUNDEAD:
-			sc->opt3 |= OPT3_UNDEAD;
-			opt_flag = 0;
-			break;
-#if 0
-		case ???: // from DA_CONTRACT (looks like biolab mobs aura)
-			sc->opt3 |= OPT3_CONTRACT;
-			opt_flag = 0;
-			break;
-#endif // 0
-		//OPTION
-		case SC_HIDING:
-			sc->option |= OPTION_HIDE;
-			opt_flag = 2;
-			break;
-		case SC_CLOAKING:
-		case SC_CLOAKINGEXCEED:
-			sc->option |= OPTION_CLOAK;
-			opt_flag = 2;
-			break;
-		case SC__INVISIBILITY:
-		case SC_CHASEWALK:
-			sc->option |= OPTION_CHASEWALK|OPTION_CLOAK;
-			opt_flag = 2;
-			break;
-		case SC_SIGHT:
-			sc->option |= OPTION_SIGHT;
-			break;
-		case SC_RUWACH:
-			sc->option |= OPTION_RUWACH;
-			break;
-		case SC_WEDDING:
-			sc->option |= OPTION_WEDDING;
-			opt_flag |= 0x4;
-			break;
-		case SC_XMAS:
-			sc->option |= OPTION_XMAS;
-			opt_flag |= 0x4;
-			break;
-		case SC_SUMMER:
-			sc->option |= OPTION_SUMMER;
-			opt_flag |= 0x4;
-			break;
-		case SC_HANBOK:
-			sc->option |= OPTION_HANBOK;
-			opt_flag |= 0x4;
-			break;
-		case SC_ORCISH:
-			sc->option |= OPTION_ORCISH;
-			break;
-		case SC_FUSION:
-			sc->option |= OPTION_FLYING;
-			break;
-		case SC_OKTOBERFEST:
-			sc->option |= OPTION_OKTOBERFEST;
-			opt_flag |= 0x4;
-			break;
-		case SC_DRESS_UP:
-			sc->option |= OPTION_SUMMER2;
-			opt_flag |= 0x4;
-			break;
-		case SC__FEINTBOMB_MASTER:
-			sc->option |= OPTION_INVISIBLE;
-			opt_flag |= 0x4;
-			break;
-		default:
-			opt_flag = 0;
-	}
 
 	//On Aegis, when turning on a status change, first goes the option packet, then the sc packet.
 	if(opt_flag) {
@@ -10012,6 +9838,203 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 		npc->touchnext_areanpc(sd,false); // run OnTouch_ on next char in range
 
 	return 1;
+}
+
+/**
+ * Set new status values.
+ *
+ * @param bl   Status change target bl.
+ * @param sc   Current statuses.
+ * @param type Status change type.
+ * @param val1 Additional value (meaning depends on type).
+ * @param val2 Additional value (meaning depends on type).
+ * @param val3 Additional value (meaning depends on type).
+ * @param val4 Additional value (meaning depends on type).
+ *
+ * @retval option flag.
+ */
+int status_change_start_set_option(struct block_list *bl, struct status_change* sc, enum sc_type type, int val1, int val2, int val3, int val4)
+{
+	int opt_flag = 1;
+
+	nullpo_retr(true, bl);
+	nullpo_retr(true, sc);
+	switch (type) {
+		//OPT1
+		case SC_STONE:         sc->opt1 = OPT1_STONEWAIT;  break;
+		case SC_FREEZE:        sc->opt1 = OPT1_FREEZE;     break;
+		case SC_STUN:          sc->opt1 = OPT1_STUN;       break;
+		case SC_SLEEP:         sc->opt1 = OPT1_SLEEP;      break;
+		case SC_BURNING:       sc->opt1 = OPT1_BURNING;    break; // Burning need this to be showed correctly. [pakpil]
+		case SC_WHITEIMPRISON: sc->opt1 = OPT1_IMPRISON;   break;
+		case SC_COLD:          sc->opt1 = OPT1_CRYSTALIZE; break;
+		//OPT2
+		case SC_POISON:       sc->opt2 |= OPT2_POISON;       break;
+		case SC_CURSE:        sc->opt2 |= OPT2_CURSE;        break;
+		case SC_SILENCE:      sc->opt2 |= OPT2_SILENCE;      break;
+
+		case SC_CRUCIS:
+		case SC__CHAOS:
+			sc->opt2 |= OPT2_SIGNUMCRUCIS;
+			break;
+
+		case SC_BLIND:        sc->opt2 |= OPT2_BLIND;        break;
+		case SC_ANGELUS:      sc->opt2 |= OPT2_ANGELUS;      break;
+		case SC_BLOODING:     sc->opt2 |= OPT2_BLEEDING;     break;
+		case SC_DPOISON:      sc->opt2 |= OPT2_DPOISON;      break;
+		//OPT3
+		case SC_TWOHANDQUICKEN:
+		case SC_ONEHANDQUICKEN:
+		case SC_SPEARQUICKEN:
+		case SC_LKCONCENTRATION:
+		case SC_MER_QUICKEN:
+			sc->opt3 |= OPT3_QUICKEN;
+			opt_flag = 0;
+			break;
+		case SC_OVERTHRUSTMAX:
+		case SC_OVERTHRUST:
+		case SC_SWOO: //Why does it shares the same opt as Overthrust? Perhaps we'll never know...
+			sc->opt3 |= OPT3_OVERTHRUST;
+			opt_flag = 0;
+			break;
+		case SC_ENERGYCOAT:
+		case SC_SKE:
+			sc->opt3 |= OPT3_ENERGYCOAT;
+			opt_flag = 0;
+			break;
+		case SC_INCATKRATE:
+			//Simulate Explosion Spirits effect for NPC_POWERUP [Skotlex]
+			if (bl->type != BL_MOB) {
+				opt_flag = 0;
+				break;
+			}
+			FALLTHROUGH
+		case SC_EXPLOSIONSPIRITS:
+			sc->opt3 |= OPT3_EXPLOSIONSPIRITS;
+			opt_flag = 0;
+			break;
+		case SC_STEELBODY:
+		case SC_SKA:
+			sc->opt3 |= OPT3_STEELBODY;
+			opt_flag = 0;
+			break;
+		case SC_BLADESTOP:
+			sc->opt3 |= OPT3_BLADESTOP;
+			opt_flag = 0;
+			break;
+		case SC_AURABLADE:
+			sc->opt3 |= OPT3_AURABLADE;
+			opt_flag = 0;
+			break;
+		case SC_BERSERK:
+			opt_flag = 0;
+			sc->opt3 |= OPT3_BERSERK;
+			break;
+#if 0
+		case ???: // doesn't seem to do anything
+			sc->opt3 |= OPT3_LIGHTBLADE;
+			opt_flag = 0;
+			break;
+#endif // 0
+		case SC_DANCING:
+			if ((val1 & 0xFFFF) == CG_MOONLIT)
+				sc->opt3 |= OPT3_MOONLIT;
+			opt_flag = 0;
+			break;
+		case SC_MARIONETTE_MASTER:
+		case SC_MARIONETTE:
+			sc->opt3 |= OPT3_MARIONETTE;
+			opt_flag = 0;
+			break;
+		case SC_ASSUMPTIO:
+			sc->opt3 |= OPT3_ASSUMPTIO;
+			opt_flag = 0;
+			break;
+		case SC_WARM: //SG skills [Komurka]
+			sc->opt3 |= OPT3_WARM;
+			opt_flag = 0;
+			break;
+		case SC_KAITE:
+			sc->opt3 |= OPT3_KAITE;
+			opt_flag = 0;
+			break;
+		case SC_NJ_BUNSINJYUTSU:
+			sc->opt3 |= OPT3_BUNSIN;
+			opt_flag = 0;
+			break;
+		case SC_SOULLINK:
+			sc->opt3 |= OPT3_SOULLINK;
+			opt_flag = 0;
+			break;
+		case SC_PROPERTYUNDEAD:
+			sc->opt3 |= OPT3_UNDEAD;
+			opt_flag = 0;
+			break;
+#if 0
+		case ???: // from DA_CONTRACT (looks like biolab mobs aura)
+			sc->opt3 |= OPT3_CONTRACT;
+			opt_flag = 0;
+			break;
+#endif // 0
+		//OPTION
+		case SC_HIDING:
+			sc->option |= OPTION_HIDE;
+			opt_flag = 2;
+			break;
+		case SC_CLOAKING:
+		case SC_CLOAKINGEXCEED:
+			sc->option |= OPTION_CLOAK;
+			opt_flag = 2;
+			break;
+		case SC__INVISIBILITY:
+		case SC_CHASEWALK:
+			sc->option |= OPTION_CHASEWALK|OPTION_CLOAK;
+			opt_flag = 2;
+			break;
+		case SC_SIGHT:
+			sc->option |= OPTION_SIGHT;
+			break;
+		case SC_RUWACH:
+			sc->option |= OPTION_RUWACH;
+			break;
+		case SC_WEDDING:
+			sc->option |= OPTION_WEDDING;
+			opt_flag |= 0x4;
+			break;
+		case SC_XMAS:
+			sc->option |= OPTION_XMAS;
+			opt_flag |= 0x4;
+			break;
+		case SC_SUMMER:
+			sc->option |= OPTION_SUMMER;
+			opt_flag |= 0x4;
+			break;
+		case SC_HANBOK:
+			sc->option |= OPTION_HANBOK;
+			opt_flag |= 0x4;
+			break;
+		case SC_ORCISH:
+			sc->option |= OPTION_ORCISH;
+			break;
+		case SC_FUSION:
+			sc->option |= OPTION_FLYING;
+			break;
+		case SC_OKTOBERFEST:
+			sc->option |= OPTION_OKTOBERFEST;
+			opt_flag |= 0x4;
+			break;
+		case SC_DRESS_UP:
+			sc->option |= OPTION_SUMMER2;
+			opt_flag |= 0x4;
+			break;
+		case SC__FEINTBOMB_MASTER:
+			sc->option |= OPTION_INVISIBLE;
+			opt_flag |= 0x4;
+			break;
+		default:
+			opt_flag = 0;
+	}
+	return opt_flag;
 }
 
 /**
@@ -13556,6 +13579,7 @@ void status_defaults(void)
 	status->is_boss_resist_sc = status_is_boss_resist_sc;
 	status->end_sc_before_start = status_end_sc_before_start;
 	status->change_start_stop_action = status_change_start_stop_action;
+	status->change_start_set_option = status_change_start_set_option;
 	status->calc_bl_ = status_calc_bl_;
 	status->calc_mob_ = status_calc_mob_;
 	status->calc_pet_ = status_calc_pet_;
