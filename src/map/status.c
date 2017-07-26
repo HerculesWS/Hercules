@@ -13416,7 +13416,7 @@ int status_readdb_refine_libconfig(const char *filename)
 	char filepath[256];
 	int i = 0, count = 0;
 
-	sprintf(filepath, "%s/%s", map->db_path, filename);
+	safesnprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, filename);
 	if (!libconfig->load_file(&refine_db_conf, filepath))
 		return 0;
 

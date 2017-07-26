@@ -426,7 +426,7 @@ void mapif_parse_mail_return(int fd)
 			safestrncpy(msg.dest_name, temp_, NAME_LENGTH);
 
 			// set reply message title
-			snprintf(temp_, MAIL_TITLE_LENGTH, "RE:%s", msg.title);
+			safesnprintf(temp_, MAIL_TITLE_LENGTH, "RE:%s", msg.title);
 			safestrncpy(msg.title, temp_, MAIL_TITLE_LENGTH);
 
 			msg.status = MAIL_NEW;
