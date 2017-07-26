@@ -9672,70 +9672,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 	}
 
 	//Those that make you stop attacking/walking....
-	switch (type) {
-		case SC_VACUUM_EXTREME:
-			if(!map_flag_gvg(bl->m))
-				unit->stop_walking(bl,1);
-			break;
-		case SC_FREEZE:
-		case SC_STUN:
-		case SC_SLEEP:
-		case SC_STONE:
-		case SC_DEEP_SLEEP:
-			if (sd && pc_issit(sd)) //Avoid sprite sync problems.
-				pc->setstand(sd);
-			FALLTHROUGH
-		case SC_TRICKDEAD:
-			status_change_end(bl, SC_DANCING, INVALID_TIMER);
-			// Cancel cast when get status [LuzZza]
-			if (battle_config.sc_castcancel&bl->type)
-				unit->skillcastcancel(bl, 0);
-			FALLTHROUGH
-		case SC_FALLENEMPIRE:
-		case SC_WHITEIMPRISON:
-			unit->stop_attack(bl);
-			FALLTHROUGH
-		case SC_STOP:
-		case SC_CONFUSION:
-		case SC_RG_CCONFINE_M:
-		case SC_RG_CCONFINE_S:
-		case SC_SPIDERWEB:
-		case SC_ELECTRICSHOCKER:
-		case SC_WUGBITE:
-		case SC_THORNS_TRAP:
-		case SC__MANHOLE:
-		case SC__CHAOS:
-		case SC_COLD:
-		case SC_CURSEDCIRCLE_ATKER:
-		case SC_CURSEDCIRCLE_TARGET:
-		case SC_FEAR:
-		case SC_MEIKYOUSISUI:
-		case SC_NEEDLE_OF_PARALYZE:
-		case SC_DEATHBOUND:
-		case SC_NETHERWORLD:
-		case SC_SV_ROOTTWIST:
-			unit->stop_walking(bl, STOPWALKING_FLAG_FIXPOS);
-			break;
-		case SC_ANKLESNARE:
-			if( battle_config.skill_trap_type || !map_flag_gvg(bl->m) )
-				unit->stop_walking(bl, STOPWALKING_FLAG_FIXPOS);
-			break;
-		case SC_HIDING:
-		case SC_CLOAKING:
-		case SC_CLOAKINGEXCEED:
-		case SC_CHASEWALK:
-		case SC_WEIGHTOVER90:
-		case SC_CAMOUFLAGE:
-		case SC_SIREN:
-		case SC_ALL_RIDING:
-		case SC_SUHIDE:
-			unit->stop_attack(bl);
-			break;
-		case SC_SILENCE:
-			if (battle_config.sc_castcancel&bl->type)
-				unit->skillcastcancel(bl, 0);
-			break;
-	}
+	status->change_start_stop_action(bl, type);
 
 	// Set option as needed.
 	opt_flag = 1;
@@ -10075,6 +10012,83 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 		npc->touchnext_areanpc(sd,false); // run OnTouch_ on next char in range
 
 	return 1;
+}
+
+/**
+ * Stop actions before start new sc.
+ *
+ * @param bl   Status change target bl.
+ * @param type Status change type.
+ */
+void status_change_start_stop_action(struct block_list *bl, enum sc_type type)
+{
+	nullpo_retv(bl);
+	switch (type) {
+		case SC_VACUUM_EXTREME:
+			if (!map_flag_gvg(bl->m))
+				unit->stop_walking(bl,1);
+			break;
+		case SC_FREEZE:
+		case SC_STUN:
+		case SC_SLEEP:
+		case SC_STONE:
+		case SC_DEEP_SLEEP: {
+			struct map_session_data *sd = BL_CAST(BL_PC, bl);
+			if (sd && pc_issit(sd)) //Avoid sprite sync problems.
+				pc->setstand(sd);
+			FALLTHROUGH
+		}
+		case SC_TRICKDEAD:
+			status_change_end(bl, SC_DANCING, INVALID_TIMER);
+			// Cancel cast when get status [LuzZza]
+			if (battle_config.sc_castcancel&bl->type)
+				unit->skillcastcancel(bl, 0);
+			FALLTHROUGH
+		case SC_FALLENEMPIRE:
+		case SC_WHITEIMPRISON:
+			unit->stop_attack(bl);
+			FALLTHROUGH
+		case SC_STOP:
+		case SC_CONFUSION:
+		case SC_RG_CCONFINE_M:
+		case SC_RG_CCONFINE_S:
+		case SC_SPIDERWEB:
+		case SC_ELECTRICSHOCKER:
+		case SC_WUGBITE:
+		case SC_THORNS_TRAP:
+		case SC__MANHOLE:
+		case SC__CHAOS:
+		case SC_COLD:
+		case SC_CURSEDCIRCLE_ATKER:
+		case SC_CURSEDCIRCLE_TARGET:
+		case SC_FEAR:
+		case SC_MEIKYOUSISUI:
+		case SC_NEEDLE_OF_PARALYZE:
+		case SC_DEATHBOUND:
+		case SC_NETHERWORLD:
+		case SC_SV_ROOTTWIST:
+			unit->stop_walking(bl, STOPWALKING_FLAG_FIXPOS);
+			break;
+		case SC_ANKLESNARE:
+			if (battle_config.skill_trap_type || !map_flag_gvg(bl->m))
+				unit->stop_walking(bl, STOPWALKING_FLAG_FIXPOS);
+			break;
+		case SC_HIDING:
+		case SC_CLOAKING:
+		case SC_CLOAKINGEXCEED:
+		case SC_CHASEWALK:
+		case SC_WEIGHTOVER90:
+		case SC_CAMOUFLAGE:
+		case SC_SIREN:
+		case SC_ALL_RIDING:
+		case SC_SUHIDE:
+			unit->stop_attack(bl);
+			break;
+		case SC_SILENCE:
+			if (battle_config.sc_castcancel & bl->type)
+				unit->skillcastcancel(bl, 0);
+			break;
+	}
 }
 
 /**
@@ -13541,6 +13555,7 @@ void status_defaults(void)
 	status->is_immune_to_status = status_is_immune_to_status;
 	status->is_boss_resist_sc = status_is_boss_resist_sc;
 	status->end_sc_before_start = status_end_sc_before_start;
+	status->change_start_stop_action = status_change_start_stop_action;
 	status->calc_bl_ = status_calc_bl_;
 	status->calc_mob_ = status_calc_mob_;
 	status->calc_pet_ = status_calc_pet_;
