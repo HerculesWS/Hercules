@@ -9529,133 +9529,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 	}
 
 	/* values that must be set regardless of SCFLAG_LOADED e.g. val_flag */
-	switch(type) {
-		case SC_FIGHTINGSPIRIT:
-			val_flag |= 1|2;
-			break;
-		case SC_VENOMIMPRESS:
-			val_flag |= 1|2;
-			break;
-		case SC_POISONINGWEAPON:
-			val_flag |= 1|2|4;
-			break;
-		case SC_WEAPONBLOCKING:
-			val_flag |= 1|2;
-			break;
-		case SC_ROLLINGCUTTER:
-			val_flag |= 1;
-			break;
-		case SC_CLOAKINGEXCEED:
-			val_flag |= 1|2|4;
-			break;
-		case SC_HALLUCINATIONWALK:
-			val_flag |= 1|2|4;
-			break;
-		case SC_SUMMON1:
-		case SC_SUMMON2:
-		case SC_SUMMON3:
-		case SC_SUMMON4:
-		case SC_SUMMON5:
-			val_flag |= 1;
-			break;
-		case SC__SHADOWFORM:
-			val_flag |= 1|2|4;
-			break;
-		case SC__INVISIBILITY:
-			val_flag |= 1|2;
-			break;
-		case SC__ENERVATION:
-			val_flag |= 1|2;
-			break;
-		case SC__GROOMY:
-			val_flag |= 1|2|4;
-			break;
-		case SC__LAZINESS:
-			val_flag |= 1|2|4;
-			break;
-		case SC__UNLUCKY:
-			val_flag |= 1|2|4;
-			break;
-		case SC__WEAKNESS:
-			val_flag |= 1|2;
-			break;
-		case SC_PROPERTYWALK:
-			val_flag |= 1|2;
-			break;
-		case SC_FORCEOFVANGUARD:
-			val_flag |= 1|2|4;
-			break;
-		case SC_PRESTIGE:
-			val_flag |= 1|2;
-			break;
-		case SC_BANDING:
-			val_flag |= 1;
-			break;
-		case SC_SHIELDSPELL_DEF:
-		case SC_SHIELDSPELL_MDEF:
-		case SC_SHIELDSPELL_REF:
-			val_flag |= 1|2;
-			break;
-		case SC_SPELLFIST:
-		case SC_CURSEDCIRCLE_ATKER:
-			val_flag |= 1|2|4;
-			break;
-		case SC_CRESCENTELBOW:
-			val_flag |= 1|2;
-			break;
-		case SC_LIGHTNINGWALK:
-			val_flag |= 1;
-			break;
-		case SC_PYROTECHNIC_OPTION:
-			val_flag |= 1|2|4;
-			break;
-		case SC_HEATER_OPTION:
-			val_flag |= 1|2|4;
-			break;
-		case SC_AQUAPLAY_OPTION:
-			val_flag |= 1|2|4;
-			break;
-		case SC_COOLER_OPTION:
-			val_flag |= 1|2|4;
-			break;
-		case SC_CHILLY_AIR_OPTION:
-			val_flag |= 1|2;
-			break;
-		case SC_GUST_OPTION:
-			val_flag |= 1|2;
-			break;
-		case SC_BLAST_OPTION:
-			val_flag |= 1|2|4;
-			break;
-		case SC_WILD_STORM_OPTION:
-			val_flag |= 1|2;
-			break;
-		case SC_PETROLOGY_OPTION:
-			val_flag |= 1|2|4;
-			break;
-		case SC_CURSED_SOIL_OPTION:
-			val_flag |= 1|2|4;
-			break;
-		case SC_UPHEAVAL_OPTION:
-			val_flag |= 1|2;
-			break;
-		case SC_CIRCLE_OF_FIRE_OPTION:
-			val_flag |= 1|2;
-			break;
-		case SC_WATER_BARRIER:
-			val_flag |= 1|2|4;
-			break;
-		case SC_KYOUGAKU:
-			val_flag |= 1;
-			break;
-		case SC_CASH_PLUSEXP:
-		case SC_CASH_PLUSONLYJOBEXP:
-		case SC_MONSTER_TRANSFORM:
-		case SC_CASH_RECEIVEITEM:
-		case SC_OVERLAPEXPUP:
-			val_flag |= 1;
-			break;
-	}
+	val_flag = status->get_val_flag(type);
 
 	/* [Ind/Hercules] */
 	if( sd && status->dbs->DisplayType[type] ) {
@@ -9676,7 +9550,6 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 
 	// Set option as needed.
 	opt_flag = status->change_start_set_option(bl, sc, type, val1, val2, val3, val4);
-
 
 	//On Aegis, when turning on a status change, first goes the option packet, then the sc packet.
 	if(opt_flag) {
@@ -9838,6 +9711,146 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 		npc->touchnext_areanpc(sd,false); // run OnTouch_ on next char in range
 
 	return 1;
+}
+
+/**
+ * Return val_flag based on sc type.
+ *
+ * @param type Status change type.
+ *
+ * @retval val_flag.
+ */
+int status_get_val_flag(enum sc_type type)
+{
+	int val_flag = 0;
+	switch (type) {
+		case SC_FIGHTINGSPIRIT:
+			val_flag |= 1 | 2;
+			break;
+		case SC_VENOMIMPRESS:
+			val_flag |= 1 | 2;
+			break;
+		case SC_POISONINGWEAPON:
+			val_flag |= 1 | 2 | 4;
+			break;
+		case SC_WEAPONBLOCKING:
+			val_flag |= 1 | 2;
+			break;
+		case SC_ROLLINGCUTTER:
+			val_flag |= 1;
+			break;
+		case SC_CLOAKINGEXCEED:
+			val_flag |= 1 | 2 | 4;
+			break;
+		case SC_HALLUCINATIONWALK:
+			val_flag |= 1 | 2 | 4;
+			break;
+		case SC_SUMMON1:
+		case SC_SUMMON2:
+		case SC_SUMMON3:
+		case SC_SUMMON4:
+		case SC_SUMMON5:
+			val_flag |= 1;
+			break;
+		case SC__SHADOWFORM:
+			val_flag |= 1 | 2 | 4;
+			break;
+		case SC__INVISIBILITY:
+			val_flag |= 1 | 2;
+			break;
+		case SC__ENERVATION:
+			val_flag |= 1 | 2;
+			break;
+		case SC__GROOMY:
+			val_flag |= 1 | 2 | 4;
+			break;
+		case SC__LAZINESS:
+			val_flag |= 1 | 2 | 4;
+			break;
+		case SC__UNLUCKY:
+			val_flag |= 1 | 2 | 4;
+			break;
+		case SC__WEAKNESS:
+			val_flag |= 1 | 2;
+			break;
+		case SC_PROPERTYWALK:
+			val_flag |= 1 | 2;
+			break;
+		case SC_FORCEOFVANGUARD:
+			val_flag |= 1 | 2 | 4;
+			break;
+		case SC_PRESTIGE:
+			val_flag |= 1 | 2;
+			break;
+		case SC_BANDING:
+			val_flag |= 1;
+			break;
+		case SC_SHIELDSPELL_DEF:
+		case SC_SHIELDSPELL_MDEF:
+		case SC_SHIELDSPELL_REF:
+			val_flag |= 1 | 2;
+			break;
+		case SC_SPELLFIST:
+		case SC_CURSEDCIRCLE_ATKER:
+			val_flag |= 1 | 2 | 4;
+			break;
+		case SC_CRESCENTELBOW:
+			val_flag |= 1 | 2;
+			break;
+		case SC_LIGHTNINGWALK:
+			val_flag |= 1;
+			break;
+		case SC_PYROTECHNIC_OPTION:
+			val_flag |= 1 | 2 | 4;
+			break;
+		case SC_HEATER_OPTION:
+			val_flag |= 1 | 2 | 4;
+			break;
+		case SC_AQUAPLAY_OPTION:
+			val_flag |= 1 | 2 | 4;
+			break;
+		case SC_COOLER_OPTION:
+			val_flag |= 1 | 2 | 4;
+			break;
+		case SC_CHILLY_AIR_OPTION:
+			val_flag |= 1 | 2;
+			break;
+		case SC_GUST_OPTION:
+			val_flag |= 1 | 2;
+			break;
+		case SC_BLAST_OPTION:
+			val_flag |= 1 | 2 | 4;
+			break;
+		case SC_WILD_STORM_OPTION:
+			val_flag |= 1 | 2;
+			break;
+		case SC_PETROLOGY_OPTION:
+			val_flag |= 1 | 2 | 4;
+			break;
+		case SC_CURSED_SOIL_OPTION:
+			val_flag |= 1 | 2 | 4;
+			break;
+		case SC_UPHEAVAL_OPTION:
+			val_flag |= 1 | 2;
+			break;
+		case SC_CIRCLE_OF_FIRE_OPTION:
+			val_flag |= 1 | 2;
+			break;
+		case SC_WATER_BARRIER:
+			val_flag |= 1 | 2 | 4;
+			break;
+		case SC_KYOUGAKU:
+			val_flag |= 1;
+			break;
+		case SC_CASH_PLUSEXP:
+		case SC_CASH_PLUSONLYJOBEXP:
+		case SC_MONSTER_TRANSFORM:
+		case SC_CASH_RECEIVEITEM:
+		case SC_OVERLAPEXPUP:
+			val_flag |= 1;
+			break;
+	}
+	return val_flag;
 }
 
 /**
@@ -13580,6 +13593,7 @@ void status_defaults(void)
 	status->end_sc_before_start = status_end_sc_before_start;
 	status->change_start_stop_action = status_change_start_stop_action;
 	status->change_start_set_option = status_change_start_set_option;
+	status->get_val_flag = status_get_val_flag;
 	status->calc_bl_ = status_calc_bl_;
 	status->calc_mob_ = status_calc_mob_;
 	status->calc_pet_ = status_calc_pet_;

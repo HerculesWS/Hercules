@@ -2336,6 +2336,7 @@ struct status_interface {
 	bool (*end_sc_before_start) (struct block_list *bl, struct status_data *st, struct status_change* sc, enum sc_type type, int undead_flag, int val1, int val2, int val3, int val4);
 	void (*change_start_stop_action) (struct block_list *bl, enum sc_type type);
 	int (*change_start_set_option) (struct block_list *bl, struct status_change* sc, enum sc_type type, int val1, int val2, int val3, int val4);
+	int (*get_val_flag) (enum sc_type type);
 	int (*kaahi_heal_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*change_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*change_timer_sub) (struct block_list* bl, va_list ap);
