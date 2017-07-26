@@ -1313,6 +1313,8 @@ case $enable_renewal in
 		;;
 esac
 
+AC_CHECK_FLAG(-fno-var-tracking)
+
 #
 # Host specific stuff
 #
