@@ -75529,6 +75529,220 @@ int HP_status_change_end_(struct block_list *bl, enum sc_type type, int tid, con
 	}
 	return retVal___;
 }
+bool HP_status_is_immune_to_status(struct status_change *sc, enum sc_type type) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_status_is_immune_to_status_pre > 0) {
+		bool (*preHookFunc) (struct status_change **sc, enum sc_type *type);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_is_immune_to_status_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_status_is_immune_to_status_pre[hIndex].func;
+			retVal___ = preHookFunc(&sc, &type);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.status.is_immune_to_status(sc, type);
+	}
+	if (HPMHooks.count.HP_status_is_immune_to_status_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct status_change *sc, enum sc_type type);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_is_immune_to_status_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_status_is_immune_to_status_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sc, type);
+		}
+	}
+	return retVal___;
+}
+bool HP_status_is_boss_resist_sc(enum sc_type type) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_status_is_boss_resist_sc_pre > 0) {
+		bool (*preHookFunc) (enum sc_type *type);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_is_boss_resist_sc_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_status_is_boss_resist_sc_pre[hIndex].func;
+			retVal___ = preHookFunc(&type);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.status.is_boss_resist_sc(type);
+	}
+	if (HPMHooks.count.HP_status_is_boss_resist_sc_post > 0) {
+		bool (*postHookFunc) (bool retVal___, enum sc_type type);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_is_boss_resist_sc_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_status_is_boss_resist_sc_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, type);
+		}
+	}
+	return retVal___;
+}
+bool HP_status_end_sc_before_start(struct block_list *bl, struct status_data *st, struct status_change *sc, enum sc_type type, int undead_flag, int val1, int val2, int val3, int val4) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_status_end_sc_before_start_pre > 0) {
+		bool (*preHookFunc) (struct block_list **bl, struct status_data **st, struct status_change **sc, enum sc_type *type, int *undead_flag, int *val1, int *val2, int *val3, int *val4);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_end_sc_before_start_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_status_end_sc_before_start_pre[hIndex].func;
+			retVal___ = preHookFunc(&bl, &st, &sc, &type, &undead_flag, &val1, &val2, &val3, &val4);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.status.end_sc_before_start(bl, st, sc, type, undead_flag, val1, val2, val3, val4);
+	}
+	if (HPMHooks.count.HP_status_end_sc_before_start_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct block_list *bl, struct status_data *st, struct status_change *sc, enum sc_type type, int undead_flag, int val1, int val2, int val3, int val4);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_end_sc_before_start_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_status_end_sc_before_start_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, bl, st, sc, type, undead_flag, val1, val2, val3, val4);
+		}
+	}
+	return retVal___;
+}
+void HP_status_change_start_stop_action(struct block_list *bl, enum sc_type type) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_status_change_start_stop_action_pre > 0) {
+		void (*preHookFunc) (struct block_list **bl, enum sc_type *type);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_change_start_stop_action_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_status_change_start_stop_action_pre[hIndex].func;
+			preHookFunc(&bl, &type);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.status.change_start_stop_action(bl, type);
+	}
+	if (HPMHooks.count.HP_status_change_start_stop_action_post > 0) {
+		void (*postHookFunc) (struct block_list *bl, enum sc_type type);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_change_start_stop_action_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_status_change_start_stop_action_post[hIndex].func;
+			postHookFunc(bl, type);
+		}
+	}
+	return;
+}
+int HP_status_change_start_set_option(struct block_list *bl, struct status_change *sc, enum sc_type type, int val1, int val2, int val3, int val4) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_status_change_start_set_option_pre > 0) {
+		int (*preHookFunc) (struct block_list **bl, struct status_change **sc, enum sc_type *type, int *val1, int *val2, int *val3, int *val4);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_change_start_set_option_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_status_change_start_set_option_pre[hIndex].func;
+			retVal___ = preHookFunc(&bl, &sc, &type, &val1, &val2, &val3, &val4);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.status.change_start_set_option(bl, sc, type, val1, val2, val3, val4);
+	}
+	if (HPMHooks.count.HP_status_change_start_set_option_post > 0) {
+		int (*postHookFunc) (int retVal___, struct block_list *bl, struct status_change *sc, enum sc_type type, int val1, int val2, int val3, int val4);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_change_start_set_option_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_status_change_start_set_option_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, bl, sc, type, val1, val2, val3, val4);
+		}
+	}
+	return retVal___;
+}
+int HP_status_get_val_flag(enum sc_type type) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_status_get_val_flag_pre > 0) {
+		int (*preHookFunc) (enum sc_type *type);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_get_val_flag_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_status_get_val_flag_pre[hIndex].func;
+			retVal___ = preHookFunc(&type);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.status.get_val_flag(type);
+	}
+	if (HPMHooks.count.HP_status_get_val_flag_post > 0) {
+		int (*postHookFunc) (int retVal___, enum sc_type type);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_get_val_flag_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_status_get_val_flag_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, type);
+		}
+	}
+	return retVal___;
+}
+void HP_status_change_start_display(struct map_session_data *sd, enum sc_type type, int val1, int val2, int val3, int val4) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_status_change_start_display_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, enum sc_type *type, int *val1, int *val2, int *val3, int *val4);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_change_start_display_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_status_change_start_display_pre[hIndex].func;
+			preHookFunc(&sd, &type, &val1, &val2, &val3, &val4);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.status.change_start_display(sd, type, val1, val2, val3, val4);
+	}
+	if (HPMHooks.count.HP_status_change_start_display_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, enum sc_type type, int val1, int val2, int val3, int val4);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_change_start_display_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_status_change_start_display_post[hIndex].func;
+			postHookFunc(sd, type, val1, val2, val3, val4);
+		}
+	}
+	return;
+}
+bool HP_status_change_start_unknown_sc(struct block_list *src, struct block_list *bl, enum sc_type type, int calc_flag, int rate, int val1, int val2, int val3, int val4, int tick, int flag) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_status_change_start_unknown_sc_pre > 0) {
+		bool (*preHookFunc) (struct block_list **src, struct block_list **bl, enum sc_type *type, int *calc_flag, int *rate, int *val1, int *val2, int *val3, int *val4, int *tick, int *flag);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_change_start_unknown_sc_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_status_change_start_unknown_sc_pre[hIndex].func;
+			retVal___ = preHookFunc(&src, &bl, &type, &calc_flag, &rate, &val1, &val2, &val3, &val4, &tick, &flag);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.status.change_start_unknown_sc(src, bl, type, calc_flag, rate, val1, val2, val3, val4, tick, flag);
+	}
+	if (HPMHooks.count.HP_status_change_start_unknown_sc_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct block_list *src, struct block_list *bl, enum sc_type type, int calc_flag, int rate, int val1, int val2, int val3, int val4, int tick, int flag);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_change_start_unknown_sc_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_status_change_start_unknown_sc_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, src, bl, type, calc_flag, rate, val1, val2, val3, val4, tick, flag);
+		}
+	}
+	return retVal___;
+}
 int HP_status_kaahi_heal_timer(int tid, int64 tick, int id, intptr_t data) {
 	int hIndex = 0;
 	int retVal___ = 0;
