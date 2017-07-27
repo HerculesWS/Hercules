@@ -3741,7 +3741,7 @@ int map_readallmaps (void) {
 		ShowStatus("Loading maps (using GRF files)...\n");
 	else {
 		char mapcachefilepath[256];
-		snprintf(mapcachefilepath, 256, "%s/%s%s", map->db_path, DBPATH, "map_cache.dat");
+		safesnprintf(mapcachefilepath, 256, "%s/%s%s", map->db_path, DBPATH, "map_cache.dat");
 		ShowStatus("Loading maps (using %s as map cache)...\n", mapcachefilepath);
 		if( (fp = fopen(mapcachefilepath, "rb")) == NULL ) {
 			ShowFatalError("Unable to open map cache file "CL_WHITE"%s"CL_RESET"\n", mapcachefilepath);
@@ -4396,7 +4396,7 @@ struct map_zone_data *map_merge_zone(struct map_zone_data *main, struct map_zone
 	nullpo_retr(NULL, main);
 	nullpo_retr(NULL, other);
 
-	snprintf(newzone, MAP_ZONE_NAME_LENGTH, "%s+%s", main->name, other->name);
+	safesnprintf(newzone, MAP_ZONE_NAME_LENGTH, "%s+%s", main->name, other->name);
 
 	if( (zone = strdb_get(map->zone_db, newzone)) )
 		return zone;/* this zone has already been merged */

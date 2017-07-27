@@ -2296,7 +2296,7 @@ void read_constdb(void)
 	struct config_setting_t *t;
 	int i = 0;
 
-	snprintf(filepath, 256, "%s/constants.conf", map->db_path);
+	safesnprintf(filepath, 256, "%s/constants.conf", map->db_path);
 
 	if (!libconfig->load_file(&constants_conf, filepath))
 		return;

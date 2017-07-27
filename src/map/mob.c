@@ -3350,7 +3350,7 @@ int mobskill_use(struct mob_data *md, int64 tick, int event) {
 			char name[NAME_LENGTH];
 			snprintf(name, sizeof name,"%s", md->name);
 			strtok(name, "#"); // discard extra name identifier if present [Daegaladh]
-			snprintf(temp, sizeof temp,"%s : %s", name, mc->msg);
+			safesnprintf(temp, sizeof temp,"%s : %s", name, mc->msg);
 			clif->messagecolor(&md->bl, mc->color, temp);
 		}
 		if(!(battle_config.mob_ai&0x200)) { //pass on delay to same skill.
@@ -4494,7 +4494,7 @@ int mob_read_libconfig(const char *filename, bool ignore_missing)
 	int i = 0, count = 0;
 
 	nullpo_ret(filename);
-	sprintf(filepath, "%s/%s", map->db_path, filename);
+	safesnprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, filename);
 
 	if (ignore_missing && !exists(filepath))
 		return 0;
@@ -4720,7 +4720,7 @@ void mob_readchatdb(void) {
 	char line[1024], filepath[256];
 	int i, tmp=0;
 	FILE *fp;
-	sprintf(filepath, "%s/%s", map->db_path, arc);
+	safesnprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, arc);
 	fp=fopen(filepath, "r");
 	if(fp == NULL) {
 		ShowWarning("mob_readchatdb: File not found \"%s\", skipping.\n", filepath);
@@ -5046,7 +5046,7 @@ void mob_readskilldb(void) {
 	for( fi = 0; fi < ARRAYLENGTH(filename); ++fi ) {
 		if(fi > 0) {
 			char filepath[256];
-			snprintf(filepath, 256, "%s/%s", map->db_path, filename[fi]);
+			safesnprintf(filepath, 256, "%s/%s", map->db_path, filename[fi]);
 			if(!exists(filepath)) {
 				continue;
 			}

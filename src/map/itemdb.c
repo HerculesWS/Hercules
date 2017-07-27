@@ -1527,7 +1527,7 @@ void itemdb_read_combos(void)
 	char filepath[256];
 	FILE* fp;
 
-	snprintf(filepath, 256, "%s/%s", map->db_path, DBPATH"item_combo_db.txt");
+	safesnprintf(filepath, 256, "%s/%s", map->db_path, DBPATH"item_combo_db.txt");
 
 	if ((fp = fopen(filepath, "r")) == NULL) {
 		ShowError("itemdb_read_combos: File not found \"%s\".\n", filepath);
@@ -2231,7 +2231,7 @@ int itemdb_readdb_libconfig(const char *filename) {
 
 	nullpo_ret(filename);
 
-	sprintf(filepath, "%s/%s", map->db_path, filename);
+	safesnprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, filename);
 	if (!libconfig->load_file(&item_db_conf, filepath))
 		return 0;
 

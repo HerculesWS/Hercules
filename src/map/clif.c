@@ -17726,7 +17726,7 @@ void clif_cashshop_db(void) {
 	if( cashshop != NULL && (cats = libconfig->setting_get_elem(cashshop, 0)) != NULL ) {
 		for(i = 0; i < CASHSHOP_TAB_MAX; i++) {
 			struct config_setting_t *cat;
-			char entry_name[10];
+			char entry_name[15];
 
 			sprintf(entry_name,"cat_%d",i);
 

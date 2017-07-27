@@ -2724,10 +2724,10 @@ struct npc_data* npc_add_warp(char* name, short from_mapid, short from_x, short 
 		flag = 1;
 
 	if (flag == 1)
-		snprintf(nd->exname, ARRAYLENGTH(nd->exname), "warp_%d_%d_%d", from_mapid, from_x, from_y);
+		safesnprintf(nd->exname, ARRAYLENGTH(nd->exname), "warp_%d_%d_%d", from_mapid, from_x, from_y);
 
 	for( i = 0; npc->name2id(nd->exname) != NULL; ++i )
-		snprintf(nd->exname, ARRAYLENGTH(nd->exname), "warp%d_%d_%d_%d", i, from_mapid, from_x, from_y);
+		safesnprintf(nd->exname, ARRAYLENGTH(nd->exname), "warp%d_%d_%d_%d", i, from_mapid, from_x, from_y);
 	safestrncpy(nd->name, nd->exname, ARRAYLENGTH(nd->name));
 
 	nd->u.warp.mapindex = to_mapindex;
