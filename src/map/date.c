@@ -84,6 +84,20 @@ int date_get_dayofweek(void)
 	return lt->tm_wday;
 }
 
+// Returns YYYYMMDD of now
+int date_get_date(void)
+{
+	time_t t;
+	struct tm * lt;
+	t = time(NULL);
+	lt = localtime(&t);
+
+	return
+		(lt->tm_year + 1900) * 10000 +
+		(lt->tm_mon + 1) * 100 +
+		(lt->tm_mday);
+}
+
 /*==========================================
  * Star gladiator related checks
  *------------------------------------------*/

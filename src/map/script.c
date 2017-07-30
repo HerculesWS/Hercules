@@ -23372,6 +23372,181 @@ BUILDIN(navigateto)
 #endif
 }
 
+bool rodex_sendmail_sub(struct script_state* st, struct rodex_message *msg)
+{
+	const char *sender_name, *title, *body;
+
+	if (!strcmp(script->getfuncname(st), "rodex_sendmail_acc2"))
+		msg->receiver_accountid = script_getnum(st, 2);
+	else
+		msg->receiver_id = script_getnum(st, 2);
+
+	sender_name = script_getstr(st, 3);
+	if (strlen(sender_name) >= NAME_LENGTH) {
+		ShowError("script:rodex_sendmail: Sender name must not be bigger than %d!\n", NAME_LENGTH - 1);
+		return false;
+	}
+	safestrncpy(msg->sender_name, sender_name, NAME_LENGTH);
+
+	title = script_getstr(st, 4);
+	if (strlen(title) >= RODEX_TITLE_LENGTH) {
+		ShowError("script:rodex_sendmail: Mail Title must not be bigger than %d!\n", RODEX_TITLE_LENGTH - 1);
+		return false;
+	}
+	safestrncpy(msg->title, title, RODEX_TITLE_LENGTH);
+
+	body = script_getstr(st, 5);
+	if (strlen(body) >= MAIL_BODY_LENGTH) {
+		ShowError("script:rodex_sendmail: Mail Message must not be bigger than %d!\n", RODEX_BODY_LENGTH - 1);
+		return false;
+	}
+	safestrncpy(msg->body, body, MAIL_BODY_LENGTH);
+
+	if (script_hasdata(st, 6)) {
+		msg->zeny = script_getnum(st, 6);
+		if (msg->zeny < 0 || msg->zeny > MAX_ZENY) {
+			ShowError("script:rodex_sendmail: Invalid Zeny value %"PRId64"!\n", msg->zeny);
+			return false;
+		}
+	}
+
+	return true;
+}
+
+BUILDIN(rodex_sendmail)
+{
+	struct rodex_message msg = { 0 };
+	int item_count = 0, i = 0, param = 7;
+
+	// Common parameters - sender/message/zeny
+	if (rodex_sendmail_sub(st, &msg) == false)
+		return false;
+	
+	// Item list
+	while (i < RODEX_MAX_ITEM && script_hasdata(st, param)) {
+		struct item_data *idata;
+
+		if (!script_hasdata(st, param + 1)) {
+			ShowError("script:rodex_sendmail: Missing Item %d amount!\n", (i + 1));
+			return false;
+		}
+
+		++item_count;
+		if (data_isstring(script_getdata(st, param)) == false) {
+			int itemid = script_getnum(st, param);
+
+			if (itemdb->exists(itemid) == false) {
+				ShowError("script:rodex_sendmail: Unknown item ID %d.\n", itemid);
+				return false;
+			}
+
+			idata = itemdb->search(itemid);
+		}
+		else {
+			ShowError("script:rodex_sendmail: Item %d must be passed as Number.\n", (i + 1));
+			return false;
+		}
+
+		msg.items[i].item.nameid = idata->nameid;
+		msg.items[i].item.amount = script_getnum(st, (param + 1));
+		msg.items[i].item.identify = 1;
+		
+		++i;
+		param += 2;
+	}
+	msg.items_count = item_count;
+
+	msg.type = MAIL_TYPE_NPC;
+	if (msg.zeny > 0)
+		msg.type |= MAIL_TYPE_ZENY;
+	if (msg.items_count > 0)
+		msg.type |= MAIL_TYPE_ITEM;
+	msg.send_date = (int)time(NULL);
+	msg.expire_date = (int)time(NULL) + RODEX_EXPIRE;
+
+	intif->rodex_sendmail(&msg);
+
+	return true;
+}
+
+BUILDIN(rodex_sendmail2)
+{
+	struct rodex_message msg = { 0 };
+	int item_count = 0, i = 0, param = 7;
+
+	// Common parameters - sender/message/zeny
+	if (rodex_sendmail_sub(st, &msg) == false)
+		return false;
+
+	// Item list
+	while (i < RODEX_MAX_ITEM && script_hasdata(st, param)) {
+		struct item_data *idata;
+		int j;
+
+		// Tests
+		if (!script_hasdata(st, param + 1)) {
+			ShowError("script:rodex_sendmail: Missing Item %d amount!\n", (i + 1));
+			return false;
+		}
+		if (!script_hasdata(st, param + 2)) {
+			ShowError("script:rodex_sendmail: Missing Item %d refine!\n", (i + 1));
+			return false;
+		}
+		if (!script_hasdata(st, param + 3)) {
+			ShowError("script:rodex_sendmail: Missing Item %d attribute!\n", (i + 1));
+			return false;
+		}
+		for (j = 0; j < MAX_SLOTS; ++j) {
+			if (!script_hasdata(st, param + 4 + j)) {
+				ShowError("script:rodex_sendmail: Missing Item %d card %d!\n", (i + 1), j);
+				return false;
+			}
+		}
+
+		// Set data to message
+		++item_count;
+		if (data_isstring(script_getdata(st, param)) == false) {
+			int itemid = script_getnum(st, param);
+
+			if (itemdb->exists(itemid) == false) {
+				ShowError("script:rodex_sendmail: Unknown item ID %d.\n", itemid);
+				return false;
+			}
+
+			idata = itemdb->search(itemid);
+		} else {
+			ShowError("script:rodex_sendmail: Item %d must be passed as Number.\n", (i + 1));
+			return false;
+		}
+
+		msg.items[i].item.nameid = idata->nameid;
+		msg.items[i].item.amount = script_getnum(st, (param + 1));
+		msg.items[i].item.refine = script_getnum(st, (param + 2));
+		msg.items[i].item.attribute = script_getnum(st, (param + 3));
+		msg.items[i].item.identify = 1;
+
+		for (j = 0; j < MAX_SLOTS; ++j) {
+			msg.items[i].item.card[j] = script_getnum(st, param + 4 + j);
+		}
+		
+		++i;
+		param += 4 + MAX_SLOTS;
+	}
+	msg.items_count = item_count;
+
+	msg.type = MAIL_TYPE_NPC;
+	if (msg.zeny > 0)
+		msg.type |= MAIL_TYPE_ZENY;
+	if (msg.items_count > 0)
+		msg.type |= MAIL_TYPE_ITEM;
+	msg.send_date = (int)time(NULL);
+	msg.expire_date = (int)time(NULL) + RODEX_EXPIRE;
+
+	intif->rodex_sendmail(&msg);
+
+	return true;
+}
+
 /**
  * Adds a built-in script function.
  *
@@ -24071,6 +24246,12 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(showscript, "s?"),
 		BUILDIN_DEF(mergeitem,""),
 		BUILDIN_DEF(getcalendartime, "ii??"),
+
+		// -- RoDEX
+		BUILDIN_DEF(rodex_sendmail, "isss???????????"),
+		BUILDIN_DEF2(rodex_sendmail, "rodex_sendmail_acc", "isss???????????"),
+		BUILDIN_DEF(rodex_sendmail2, "isss?????????????????????????????????????????"),
+		BUILDIN_DEF2(rodex_sendmail2, "rodex_sendmail_acc2", "isss?????????????????????????????????????????"),
 		BUILDIN_DEF(_,"s"),
 		BUILDIN_DEF2(_, "_$", "s"),
 	};

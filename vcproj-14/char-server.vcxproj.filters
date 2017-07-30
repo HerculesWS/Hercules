@@ -136,6 +136,9 @@
     <ClCompile Include="..\src\common\des.c">
       <Filter>common</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\char\int_rodex.c">
+      <Filter>char</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\common\cbasetypes.h">
@@ -320,6 +323,9 @@
     </ClInclude>
     <ClInclude Include="..\src\config\classes\general.h">
       <Filter>config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\char\int_rodex.h">
+      <Filter>char</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
