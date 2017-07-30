@@ -1368,7 +1368,7 @@ struct clif_interface {
 
 	/* RoDEX */
 	void (*pRodexOpenWriteMail) (int fd, struct map_session_data *sd);
-	void (*rodex_open_write_mail) (int fd, const char receiver_name[NAME_LENGTH], int8 result);
+	void (*rodex_open_write_mail) (int fd, const char *receiver_name, int8 result);
 	void (*pRodexAddItem) (int fd, struct map_session_data *sd);
 	void (*rodex_add_item_result) (struct map_session_data *sd, int16 idx, int16 amount, int8 result);
 	void (*pRodexRemoveItem) (int fd, struct map_session_data *sd);
@@ -1384,7 +1384,7 @@ struct clif_interface {
 	void (*pRodexCancelWriteMail) (int fd, struct map_session_data *sd);
 	void (*pRodexOpenMailbox) (int fd, struct map_session_data *sd);
 	void (*pRodexCheckName) (int fd, struct map_session_data *sd);
-	void (*rodex_checkname_result) (struct map_session_data *sd, int char_id, short class_, int base_level, char name[NAME_LENGTH]);
+	void (*rodex_checkname_result) (struct map_session_data *sd, int char_id, short class_, int base_level, const char *name);
 	void (*pRodexDeleteMail) (int fd, struct map_session_data *sd);
 	void (*rodex_delete_mail) (struct map_session_data *sd, int8 opentype, int64 mail_id);
 	void (*pRodexRefreshMaillist) (int fd, struct map_session_data *sd);
