@@ -46,6 +46,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(chr->set_all_offline_sql, HP_chr_set_all_offline_sql) },
 	{ HP_POP(chr->create_charstatus, HP_chr_create_charstatus) },
 	{ HP_POP(chr->mmo_char_tosql, HP_chr_mmo_char_tosql) },
+	{ HP_POP(chr->getitemdata_from_sql, HP_chr_getitemdata_from_sql) },
 	{ HP_POP(chr->memitemdata_to_sql, HP_chr_memitemdata_to_sql) },
 	{ HP_POP(chr->mmo_gender, HP_chr_mmo_gender) },
 	{ HP_POP(chr->mmo_chars_fromsql, HP_chr_mmo_chars_fromsql) },

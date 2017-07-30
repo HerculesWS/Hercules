@@ -750,6 +750,7 @@ int pc_setnewpc(struct map_session_data *sd, int account_id, int char_id, int lo
 	return 0;
 }
 
+// [4144] probably pc_equippoint should be replaced to pc_item_equippoint
 int pc_equippoint(struct map_session_data *sd,int n)
 {
 	int ep = 0;
@@ -776,6 +777,33 @@ int pc_equippoint(struct map_session_data *sd,int n)
 			if( ep == EQP_HAND_R )
 				return EQP_ARMS;
 			if( ep == EQP_SHADOW_WEAPON )
+				return EQP_SHADOW_ARMS;
+		}
+	}
+	return ep;
+}
+
+int pc_item_equippoint(struct map_session_data *sd, struct item_data* id)
+{
+	int ep = 0;
+
+	nullpo_ret(sd);
+	nullpo_ret(id);
+
+	if (!itemdb->isequip2(id))
+		return 0; //Not equippable by players.
+
+	ep = id->equip;
+	if (id->look == W_DAGGER ||
+	    id->look == W_1HSWORD ||
+	    id->look == W_1HAXE) {
+		if (pc->checkskill(sd, AS_LEFT) > 0 ||
+		    (sd->job & MAPID_UPPERMASK) == MAPID_ASSASSIN ||
+		    (sd->job & MAPID_UPPERMASK) == MAPID_KAGEROUOBORO) {
+			// Kagerou and Oboro can dual wield daggers. [Rytech]
+			if (ep == EQP_HAND_R)
+				return EQP_ARMS;
+			if (ep == EQP_SHADOW_WEAPON)
 				return EQP_SHADOW_ARMS;
 		}
 	}
@@ -5093,9 +5121,8 @@ int pc_useitem(struct map_session_data *sd,int n) {
 					clif->msgtable_num(sd, MSG_SECONDS_UNTIL_USE, delay_tick + 1); // [%d] seconds left until you can use
 #else
 					char delay_msg[100];
-					clif->msgtable_num(sd, MSG_SECONDS_UNTIL_USE, delay_tick + 1); // [%d] seconds left until you can use
 					sprintf(delay_msg, msg_sd(sd, 26), delay_tick + 1);
-					clif->messagecolor_self(sd->fd, COLOR_YELLOW, delay_msg);
+					clif->messagecolor_self(sd->fd, COLOR_YELLOW, delay_msg); // [%d] seconds left until you can use
 #endif
 					return 0; // Delay has not expired yet
 				}
@@ -8768,6 +8795,7 @@ int pc_jobchange(struct map_session_data *sd, int class, int upper)
 	status_calc_pc(sd,SCO_FORCE);
 	pc->checkallowskill(sd);
 	pc->equiplookall(sd);
+	pc->update_job_and_level(sd);
 
 	//if you were previously famous, not anymore.
 	if (fame_flag != 0) {
@@ -11926,6 +11954,24 @@ void pc_check_supernovice_call(struct map_session_data *sd, const char *message)
 	}
 }
 
+void pc_update_job_and_level(struct map_session_data *sd)
+{
+	nullpo_retv(sd);
+
+	if (sd->status.party_id) {
+		struct party_data *p;
+		int i;
+
+		if ((p = party->search(sd->status.party_id)) != NULL) {
+			ARR_FIND(0, MAX_PARTY, i, p->party.member[i].char_id == sd->status.char_id);
+			if (i < MAX_PARTY) {
+				p->party.member[i].lv = sd->status.base_level;
+				clif->party_job_and_level(sd);
+			}
+		}
+	}
+}
+
 void do_final_pc(void) {
 	db_destroy(pc->itemcd_db);
 	pc->at_db->destroy(pc->at_db,pc->autotrade_final);
@@ -12047,6 +12093,7 @@ void pc_defaults(void) {
 
 	pc->isequip = pc_isequip;
 	pc->equippoint = pc_equippoint;
+	pc->item_equippoint = pc_item_equippoint;
 	pc->setinventorydata = pc_setinventorydata;
 
 	pc->checkskill = pc_checkskill;
@@ -12267,6 +12314,7 @@ void pc_defaults(void) {
 	pc->checkcombo = pc_checkcombo;
 	pc->calcweapontype = pc_calcweapontype;
 	pc->removecombo = pc_removecombo;
+	pc->update_job_and_level = pc_update_job_and_level;
 
 	pc->bank_withdraw = pc_bank_withdraw;
 	pc->bank_deposit = pc_bank_deposit;

@@ -69,7 +69,7 @@ struct quest_interface {
 	/* */
 	struct quest_db *(*db) (int quest_id);
 	int (*pc_login) (struct map_session_data *sd);
-	int (*add) (struct map_session_data *sd, int quest_id);
+	int (*add) (struct map_session_data *sd, int quest_id, unsigned int time_limit);
 	int (*change) (struct map_session_data *sd, int qid1, int qid2);
 	int (*delete) (struct map_session_data *sd, int quest_id);
 	int (*update_objective_sub) (struct block_list *bl, va_list ap);

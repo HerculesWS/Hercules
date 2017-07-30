@@ -3212,7 +3212,7 @@ If the equip was not found or the type is invalid, -1 is returned.
 
 ---------------------------------------
 
-*getequipoptioninfo(<equip_index>,<slot>,<type>);
+*getequipoption(<equip_index>,<slot>,<type>);
 
 Gets the option information of an equipment.
 
@@ -3405,6 +3405,30 @@ Example :
 	} else if (gettime(GETTIME_MONTH) == OCTOBER && gettime(GETTIME_DAYOFMONTH) == 31) {
 		mes("It's Halloween.");
 	}
+
+---------------------------------------
+
+*getcalendartime(<hour>, <minute>{, <day of month>{, <day of week>}})
+
+This function returns the timestamp of the next ocurrence of given time.
+
+Day of Month specifies a day between 1 and 31 in the future, by default its value is -1 (don't use).
+Day of Week specifies a day in the week and its valid values are:
+	0 - SUNDAY
+	1 - MONDAY
+	2 - TUESDAY
+	3 - WEDNESDAY
+	4 - THURSDAY
+	5 - FRIDAY
+	6 - SATURDAY
+
+In order to use Day of Week, you must use Day of Month as -1.
+If for some reason the command fails, it'll return -1.
+
+Examples :
+	getcalendartime(19, 00); // Next 7 pm
+	getcalendartime(19, 00, 6); // Next day 6 of the month, at 7pm
+	getcalendartime(19, 10, -1, 1); // Next Monday, at 7:10pm
 
 ---------------------------------------
 
@@ -4536,9 +4560,12 @@ effects.
 ---------------------------------------
 
 *recovery()
+*recovery(<account id>)
+*recovery("<map name>"{, <x1>, <y1>, <x2>, <y2>})
 
-This command will revive and restore full HP and SP to all characters 
-currently connected to the server.
+In its first form, this command will revive and restore full HP and SP to all
+characters currently connected to the server. In its second form, it will only
+affect the target player. In its third form it will affect a whole map or area.
 
 ---------------------------------------
 
@@ -8334,6 +8361,30 @@ Example:
 
 ---------------------------------------
 
+*getdatatype(<argument>)
+
+This command returns the raw type of the given <argument>. Unlike
+isstr, this command does not evaluate the argument. The returned type
+is bitmasked.
+
+types include:
+
+	DATATYPE_NIL
+	DATATYPE_STR
+	DATATYPE_INT
+	DATATYPE_CONST
+	DATATYPE_PARAM
+	DATATYPE_VAR
+	DATATYPE_LABEL
+
+Example:
+
+	getdatatype() // DATATYPE_NIL
+	getdatatype("foo") // DATATYPE_STR
+	getdatatype(@foo$) // (DATATYPE_VAR | DATATYPE_STR)
+
+---------------------------------------
+
 *charisalpha("<string>", <position>)
 
 This function will return true if the character number Position in the given
@@ -9148,9 +9199,11 @@ Example
 
 ---------------------------------------
 
-*setquest(<ID>)
+*setquest(<ID>{, <Time Limit>})
 
 Place quest of <ID> in the users quest log, the state of which is "active".
+If Time Limit is given, this quest will have its expire time set to <Time Limit>, an UNIX epoch time,
+ignoring quest_db setting.
 
 If questinfo() is set, and the same ID is specified here, the icon will be cleared when the quest is set.
 

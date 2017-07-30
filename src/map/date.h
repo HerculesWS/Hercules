@@ -31,6 +31,7 @@ int date_get_day(void);
 int date_get_hour(void);
 int date_get_min(void);
 int date_get_sec(void);
+int date_get_dayofweek(void);
 int date_get_date(void);
 
 bool is_day_of_sun(void);

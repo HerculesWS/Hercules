@@ -76,8 +76,10 @@ enum packet_headers {
 	additemType = 0x2d4,
 #elif PACKETVER < 20150226
 	additemType = 0x990,
-#else
+#elif PACKETVER < 20160921
 	additemType = 0xa0c,
+#else
+	additemType = 0xa37,
 #endif
 #if PACKETVER < 4
 	idle_unitType = 0x78,
@@ -468,6 +470,10 @@ struct packet_additem {
 #endif
 #if PACKETVER >= 20150226
 	struct ItemOptions option_data[MAX_ITEM_OPTIONS];
+#endif
+#if PACKETVER >= 20160921
+	uint8 favorite;
+	uint16 look;
 #endif
 } __attribute__((packed));
 

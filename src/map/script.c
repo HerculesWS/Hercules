@@ -30,6 +30,7 @@
 #include "map/chat.h"
 #include "map/chrif.h"
 #include "map/clif.h"
+#include "map/date.h"
 #include "map/elemental.h"
 #include "map/guild.h"
 #include "map/homunculus.h"
@@ -2295,7 +2296,7 @@ void read_constdb(void)
 	struct config_setting_t *t;
 	int i = 0;
 
-	snprintf(filepath, 256, "%s/constants.conf", map->db_path);
+	safesnprintf(filepath, 256, "%s/constants.conf", map->db_path);
 
 	if (!libconfig->load_file(&constants_conf, filepath))
 		return;
@@ -7038,6 +7039,7 @@ BUILDIN(__setr)
 	int64 num;
 	const char* name;
 	char prefix;
+	struct reg_db *ref;
 
 	data = script_getdata(st,2);
 	//datavalue = script_getdata(st,3);
@@ -7050,11 +7052,11 @@ BUILDIN(__setr)
 
 	num = reference_getuid(data);
 	name = reference_getname(data);
+	ref = reference_getref(data);
 	prefix = *name;
 
 	if (not_server_variable(prefix)) {
-		sd = script->rid2sd(st);
-		if (sd == NULL) {
+		if (ref == NULL && (sd = script->rid2sd(st)) == NULL) {
 			ShowError("script:set: no player attached for player variable '%s'\n", name);
 			return true;
 		}
@@ -7102,9 +7104,9 @@ BUILDIN(__setr)
 	}
 
 	if (is_string_variable(name))
-		script->set_reg(st, sd, num, name, script_getstr(st, 3), script_getref(st, 2));
+		script->set_reg(st, sd, num, name, script_getstr(st, 3), ref);
 	else
-		script->set_reg(st, sd, num, name, (const void *)h64BPTRSIZE(script_getnum(st, 3)), script_getref(st, 2));
+		script->set_reg(st, sd, num, name, (const void *)h64BPTRSIZE(script_getnum(st, 3)), ref);
 
 	return true;
 }
@@ -10635,7 +10637,7 @@ BUILDIN(guildchangegm)
 	if (sd == NULL)
 		script_pushint(st,0);
 	else
-		script_pushint(st,guild->gm_change(guild_id, sd));
+		script_pushint(st, guild->gm_change(guild_id, sd->status.char_id));
 
 	return true;
 }
@@ -13459,113 +13461,98 @@ BUILDIN(getequipcardcnt)
 
 /// Removes all cards from the item found in the specified equipment slot of the invoking character,
 /// and give them to the character. If any cards were removed in this manner, it will also show a success effect.
-/// successremovecards <slot>;
+/// successremovecards(<slot>);
 BUILDIN(successremovecards)
 {
-	int i=-1,c,cardflag=0;
+	int i = -1, c, cardflag = 0;
 
 	struct map_session_data *sd = script->rid2sd(st);
-	int num = script_getnum(st,2);
+	int num = script_getnum(st, 2);
 
 	if (sd == NULL)
 		return true;
 
 	if (num > 0 && num <= ARRAYLENGTH(script->equip))
-		i=pc->checkequip(sd,script->equip[num-1]);
+		i = pc->checkequip(sd,script->equip[num - 1]);
 
-	if (i < 0 || !sd->inventory_data[i]) {
-		return true;
-	}
-
-	if(itemdb_isspecial(sd->status.inventory[i].card[0]))
+	if (i < 0 || sd->inventory_data[i] == NULL)
 		return true;
 
-	for( c = sd->inventory_data[i]->slot - 1; c >= 0; --c ) {
-		if( sd->status.inventory[i].card[c] && itemdb_type(sd->status.inventory[i].card[c]) == IT_CARD ) {// extract this card from the item
+	if (itemdb_isspecial(sd->status.inventory[i].card[0]))
+		return true;
+
+	for (c = sd->inventory_data[i]->slot - 1; c >= 0; --c) {
+		if (sd->status.inventory[i].card[c] > 0 && itemdb_type(sd->status.inventory[i].card[c]) == IT_CARD) {
 			int flag;
 			struct item item_tmp;
-			memset(&item_tmp,0,sizeof(item_tmp));
-			cardflag = 1;
-			item_tmp.nameid   = sd->status.inventory[i].card[c];
-			item_tmp.identify = 1;
 
-			if((flag=pc->additem(sd,&item_tmp,1,LOG_TYPE_SCRIPT))) {
-				// get back the cart in inventory
-				clif->additem(sd,0,0,flag);
+			memset(&item_tmp, 0, sizeof(item_tmp));
+
+			cardflag = 1;
+			item_tmp.nameid = sd->status.inventory[i].card[c];
+			item_tmp.identify = 1;
+			sd->status.inventory[i].card[c] = 0;
+
+			if ((flag = pc->additem(sd, &item_tmp, 1, LOG_TYPE_SCRIPT))) {
+				clif->additem(sd, 0, 0, flag);
 				map->addflooritem(&sd->bl, &item_tmp, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0);
 			}
 		}
 	}
 
 	if (cardflag == 1) {
-		//if card was remove replace item with no card
-		int flag, j;
-		struct item item_tmp;
-		memset(&item_tmp,0,sizeof(item_tmp));
-
-		item_tmp.nameid      = sd->status.inventory[i].nameid;
-		item_tmp.identify    = 1;
-		item_tmp.refine      = sd->status.inventory[i].refine;
-		item_tmp.attribute   = sd->status.inventory[i].attribute;
-		item_tmp.expire_time = sd->status.inventory[i].expire_time;
-		item_tmp.bound       = sd->status.inventory[i].bound;
-
-		for (j = sd->inventory_data[i]->slot; j < MAX_SLOTS; j++)
-			item_tmp.card[j]=sd->status.inventory[i].card[j];
-
-		pc->delitem(sd, i, 1, 0, DELITEM_MATERIALCHANGE, LOG_TYPE_SCRIPT);
-		if ((flag=pc->additem(sd,&item_tmp,1,LOG_TYPE_SCRIPT))) {
-			//chk if can be spawn in inventory otherwise put on floor
-			clif->additem(sd,0,0,flag);
-			map->addflooritem(&sd->bl, &item_tmp, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0);
-		}
-
+		pc->unequipitem(sd, i, PCUNEQUIPITEM_FORCE);
+		clif->delitem(sd, i, 1, DELITEM_MATERIALCHANGE);
+		clif->additem(sd, i, 1, 0);
+		pc->equipitem(sd, i, sd->status.inventory[i].equip);
 		clif->misceffect(&sd->bl,3);
 	}
 	return true;
 }
 
 /// Removes all cards from the item found in the specified equipment slot of the invoking character.
-/// failedremovecards <slot>, <type>;
+/// failedremovecards(<slot>, <type>);
 /// <type>=0 : will destroy both the item and the cards.
 /// <type>=1 : will keep the item, but destroy the cards.
 /// <type>=2 : will keep the cards, but destroy the item.
-/// <type>=? : will just display the failure effect.
+/// <type>=3 : will just display the failure effect.
 BUILDIN(failedremovecards)
 {
-	int i=-1,c,cardflag=0;
+	int i = -1, c, cardflag = 0;
+	int num = script_getnum(st, 2);
+	int typefail = script_getnum(st, 3);
 
 	struct map_session_data *sd = script->rid2sd(st);
-	int num = script_getnum(st,2);
-	int typefail = script_getnum(st,3);
 
 	if (sd == NULL)
 		return true;
 
 	if (num > 0 && num <= ARRAYLENGTH(script->equip))
-		i=pc->checkequip(sd,script->equip[num-1]);
+		i = pc->checkequip(sd, script->equip[num - 1]);
 
-	if (i < 0 || !sd->inventory_data[i])
+	if (i < 0 || sd->inventory_data[i] == NULL)
 		return true;
 
-	if(itemdb_isspecial(sd->status.inventory[i].card[0]))
+	if (itemdb_isspecial(sd->status.inventory[i].card[0]))
 		return true;
 
-	for( c = sd->inventory_data[i]->slot - 1; c >= 0; --c ) {
-		if( sd->status.inventory[i].card[c] && itemdb_type(sd->status.inventory[i].card[c]) == IT_CARD ) {
+	for (c = sd->inventory_data[i]->slot - 1; c >= 0; --c) {
+		if (sd->status.inventory[i].card[c] > 0 && itemdb_type(sd->status.inventory[i].card[c]) == IT_CARD) {
 			cardflag = 1;
 
-			if(typefail == 2) {// add cards to inventory, clear
+			sd->status.inventory[i].card[c] = 0;
+
+			if (typefail == 2) { // add cards to inventory, clear
 				int flag;
 				struct item item_tmp;
 
-				memset(&item_tmp,0,sizeof(item_tmp));
+				memset(&item_tmp, 0, sizeof(item_tmp));
 
-				item_tmp.nameid   = sd->status.inventory[i].card[c];
+				item_tmp.nameid = sd->status.inventory[i].card[c];
 				item_tmp.identify = 1;
 
-				if((flag=pc->additem(sd,&item_tmp,1,LOG_TYPE_SCRIPT))) {
-					clif->additem(sd,0,0,flag);
+				if ((flag = pc->additem(sd, &item_tmp, 1, LOG_TYPE_SCRIPT))) {
+					clif->additem(sd, 0, 0, flag);
 					map->addflooritem(&sd->bl, &item_tmp, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0);
 				}
 			}
@@ -13573,35 +13560,16 @@ BUILDIN(failedremovecards)
 	}
 
 	if (cardflag == 1) {
-		if (typefail == 0 || typefail == 2) {
-			// destroy the item
+		if (typefail == 0 || typefail == 2) { // destroy the item
 			pc->delitem(sd, i, 1, 0, DELITEM_FAILREFINE, LOG_TYPE_SCRIPT);
 		} else if (typefail == 1) {
-			// destroy the card
-			int flag, j;
-			struct item item_tmp;
-
-			memset(&item_tmp,0,sizeof(item_tmp));
-
-			item_tmp.nameid      = sd->status.inventory[i].nameid;
-			item_tmp.identify    = 1;
-			item_tmp.refine      = sd->status.inventory[i].refine;
-			item_tmp.attribute   = sd->status.inventory[i].attribute;
-			item_tmp.expire_time = sd->status.inventory[i].expire_time;
-			item_tmp.bound       = sd->status.inventory[i].bound;
-
-			for (j = sd->inventory_data[i]->slot; j < MAX_SLOTS; j++)
-				item_tmp.card[j]=sd->status.inventory[i].card[j];
-
-			pc->delitem(sd, i, 1, 0, DELITEM_FAILREFINE, LOG_TYPE_SCRIPT);
-
-			if((flag=pc->additem(sd,&item_tmp,1,LOG_TYPE_SCRIPT))) {
-				clif->additem(sd,0,0,flag);
-				map->addflooritem(&sd->bl, &item_tmp, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0);
-			}
+			pc->unequipitem(sd, i, PCUNEQUIPITEM_FORCE);
+			clif->delitem(sd, i, 1, DELITEM_MATERIALCHANGE);
+			clif->additem(sd, i, 1, 0);
+			pc->equipitem(sd, i, sd->status.inventory[i].equip);
 		}
-		clif->misceffect(&sd->bl,2);
 	}
+	clif->misceffect(&sd->bl, 2);
 
 	return true;
 }
@@ -14098,7 +14066,7 @@ BUILDIN(getequippedoptioninfo)
 
 /**
  * Gets the option information of an equipment.
- * *getequipoptioninfo(<equip_index>,<slot>,<type>);
+ * *getequipoption(<equip_index>,<slot>,<type>);
  *
  * @param equip_index as the Index of the Equipment.
  * @param slot        as the slot# of the Item Option (1 to MAX_ITEM_OPTIONS)
@@ -14115,24 +14083,24 @@ BUILDIN(getequipoption)
 
 	if (sd == NULL) {
 		script_pushint(st, -1);
-		ShowError("buildin_getequipoptioninfo: Player not attached!\n");
+		ShowError("buildin_getequipoption: Player not attached!\n");
 		return false;
 	}
 
 	if (slot <= 0 || slot > MAX_ITEM_OPTIONS) {
 		script_pushint(st, -1);
-		ShowError("buildin_getequipoptioninfo: Invalid option slot %d (Min: 1, Max: %d) provided.\n", slot, MAX_ITEM_OPTIONS);
+		ShowError("buildin_getequipoption: Invalid option slot %d (Min: 1, Max: %d) provided.\n", slot, MAX_ITEM_OPTIONS);
 		return false;
 	}
 
 	if (equip_index > 0 && equip_index <= ARRAYLENGTH(script->equip)) {
 		if ((i = pc->checkequip(sd, script->equip[equip_index - 1])) == -1) {
-			ShowError("buildin_getequipoptioninfo: No equipment is equipped in the given index %d.\n", equip_index);
+			ShowError("buildin_getequipoption: No equipment is equipped in the given index %d.\n", equip_index);
 			script_pushint(st, -1);
 			return false;
 		}
 	} else {
-		ShowError("buildin_getequipoptioninfo: Invalid equipment index %d provided.\n", equip_index);
+		ShowError("buildin_getequipoption: Invalid equipment index %d provided.\n", equip_index);
 		script_pushint(st, 0);
 		return false;
 	}
@@ -14146,7 +14114,7 @@ BUILDIN(getequipoption)
 			val = sd->status.inventory[i].option[slot-1].value;
 			break;
 		default:
-			ShowError("buildin_geteqiupoptioninfo: Invalid option data type %d provided.\n", opt_type);
+			ShowError("buildin_getequipoption: Invalid option data type %d provided.\n", opt_type);
 			script_pushint(st, -1);
 			break;
 		}
@@ -15043,22 +15011,62 @@ BUILDIN(dispbottom)
  * All The Players Full Recovery
  * (HP/SP full restore and resurrect if need)
  *------------------------------------------*/
+int buildin_recovery_sub(struct map_session_data *sd)
+{
+	nullpo_retr(0, sd);
+
+	if (pc_isdead(sd)) {
+		status->revive(&sd->bl, 100, 100);
+	} else {
+		status_percent_heal(&sd->bl, 100, 100);
+	}
+
+	return 0;
+}
+
+int buildin_recovery_pc_sub(struct map_session_data *sd, va_list ap)
+{
+	return script->buildin_recovery_sub(sd);
+}
+
+int buildin_recovery_bl_sub(struct block_list *bl, va_list ap)
+{
+	return script->buildin_recovery_sub(BL_CAST(BL_PC, bl));
+}
+
 BUILDIN(recovery)
 {
-	struct map_session_data *sd;
-	struct s_mapiterator* iter;
+	if (script_hasdata(st, 2)) {
+		if (script_isstringtype(st, 2)) {
+			int16 m = map->mapname2mapid(script_getstr(st, 2));
 
-	iter = mapit_getallusers();
-	for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
-		if(pc_isdead(sd))
-			status->revive(&sd->bl, 100, 100);
-		else
-			status_percent_heal(&sd->bl, 100, 100);
-		clif->message(sd->fd,msg_sd(sd,880)); // "You have been recovered!"
+			if (m == -1) {
+				ShowWarning("script:recovery: invalid map!\n");
+				return false;
+			}
+
+			if (script_hasdata(st, 6)) {
+				int16 x1 = script_getnum(st, 3);
+				int16 y1 = script_getnum(st, 4);
+				int16 x2 = script_getnum(st, 5);
+				int16 y2 = script_getnum(st, 6);
+				map->foreachinarea(script->buildin_recovery_bl_sub, m, x1, y1, x2, y2, BL_PC);
+			} else {
+				map->foreachinmap(script->buildin_recovery_bl_sub, m, BL_PC);
+			}
+		} else {
+			struct map_session_data *sd = script->id2sd(st, script_getnum(st, 2));
+
+			if (sd != NULL) {
+				script->buildin_recovery_sub(sd);
+			}
+		}
+	} else {
+		map->foreachpc(script->buildin_recovery_pc_sub);
 	}
-	mapit->free(iter);
 	return true;
 }
+
 /*==========================================
  * Get your pet info: getpetinfo(n)
  * n -> 0:pet_id 1:pet_class 2:pet_name
@@ -16211,6 +16219,60 @@ BUILDIN(isstr)
 	return true;
 }
 
+enum datatype {
+	DATATYPE_NIL    = 1 << 7, // we don't start at 1, to leave room for primitives
+	DATATYPE_STR    = 1 << 8,
+	DATATYPE_INT    = 1 << 9,
+	DATATYPE_CONST  = 1 << 10,
+	DATATYPE_PARAM  = 1 << 11,
+	DATATYPE_VAR    = 1 << 12,
+	DATATYPE_LABEL  = 1 << 13,
+};
+
+BUILDIN(getdatatype) {
+	int type;
+
+	if (script_hasdata(st, 2)) {
+		struct script_data *data = script_getdata(st, 2);
+
+		if (data_isstring(data)) {
+			type = DATATYPE_STR;
+			if (data->type == C_CONSTSTR) {
+				type |= DATATYPE_CONST;
+			}
+		} else if (data_isint(data)) {
+			type = DATATYPE_INT;
+		} else if (data_islabel(data)) {
+			type = DATATYPE_LABEL;
+		} else if (data_isreference(data)) {
+			if (reference_toconstant(data)) {
+				type = DATATYPE_CONST | DATATYPE_INT;
+			} else if (reference_toparam(data)) {
+				type = DATATYPE_PARAM | DATATYPE_INT;
+			} else if (reference_tovariable(data)) {
+				type = DATATYPE_VAR;
+				if (is_string_variable(reference_getname(data))) {
+					type |= DATATYPE_STR;
+				} else {
+					type |= DATATYPE_INT;
+				}
+			} else {
+				ShowError("script:getdatatype: Unknown reference type!\n");
+				script->reportdata(data);
+				st->state = END;
+				return false;
+			}
+		} else {
+			type = data->type; // fallback to primitive type if unknown
+		}
+	} else {
+		type = DATATYPE_NIL; // nothing was passed
+	}
+
+	script_pushint(st, type);
+	return true;
+}
+
 //=======================================================
 // chr <int>
 //-------------------------------------------------------
@@ -17032,6 +17094,7 @@ BUILDIN(swap)
 {
 	struct map_session_data *sd = NULL;
 	struct script_data *data1, *data2;
+	struct reg_db *ref1, *ref2;
 	const char *varname1, *varname2;
 	int64 uid1, uid2;
 
@@ -17072,6 +17135,8 @@ BUILDIN(swap)
 
 	uid1 = reference_getuid(data1);
 	uid2 = reference_getuid(data2);
+	ref1 = reference_getref(data1);
+	ref2 = reference_getref(data2);
 
 	if (is_string_variable(varname1)) {
 		const char *value1, *value2;
@@ -17080,8 +17145,8 @@ BUILDIN(swap)
 		value2 = script_getstr(st,3);
 
 		if (strcmpi(value1, value2)) {
-			script->set_reg(st, sd, uid1, varname1, value2, script_getref(st,3));
-			script->set_reg(st, sd, uid2, varname2, value1, script_getref(st,2));
+			script->set_reg(st, sd, uid1, varname1, value2, ref1);
+			script->set_reg(st, sd, uid2, varname2, value1, ref2);
 		}
 	}
 	else {
@@ -17091,8 +17156,8 @@ BUILDIN(swap)
 		value2 = script_getnum(st,3);
 
 		if (value1 != value2) {
-			script->set_reg(st, sd, uid1, varname1, (const void *)h64BPTRSIZE(value2), script_getref(st,3));
-			script->set_reg(st, sd, uid2, varname2, (const void *)h64BPTRSIZE(value1), script_getref(st,2));
+			script->set_reg(st, sd, uid1, varname1, (const void *)h64BPTRSIZE(value2), ref1);
+			script->set_reg(st, sd, uid2, varname2, (const void *)h64BPTRSIZE(value1), ref2);
 		}
 	}
 	return true;
@@ -20273,19 +20338,21 @@ BUILDIN(setquest)
 {
 	unsigned short i;
 	int quest_id;
+	unsigned int time_limit;
 	struct map_session_data *sd = script->rid2sd(st);
 
 	if (sd == NULL)
 		return true;
 
 	quest_id = script_getnum(st, 2);
+	time_limit = script_hasdata(st, 3) ? script_getnum(st, 3) : 0;
 
-	quest->add(sd, quest_id);
+	quest->add(sd, quest_id, time_limit);
 
 	// If questinfo is set, remove quest bubble once quest is set.
-	for(i = 0; i < map->list[sd->bl.m].qi_count; i++) {
+	for (i = 0; i < map->list[sd->bl.m].qi_count; i++) {
 		struct questinfo *qi = &map->list[sd->bl.m].qi_data[i];
-		if( qi->quest_id == quest_id ) {
+		if (qi->quest_id == quest_id) {
 #if PACKETVER >= 20120410
 			clif->quest_show_event(sd, &qi->nd->bl, 9999, 0);
 #else
@@ -23039,7 +23106,7 @@ BUILDIN(shopcount)
  */
 BUILDIN(channelmes)
 {
-	struct map_session_data *sd = script->rid2sd(st);
+	struct map_session_data *sd = map->id2sd(st->rid);
 	const char *channelname = script_getstr(st, 2);
 	struct channel_data *chan = channel->search(channelname, sd);
 
@@ -23057,9 +23124,10 @@ BUILDIN(channelmes)
 BUILDIN(addchannelhandler)
 {
 	int i;
+	struct map_session_data *sd = map->id2sd(st->rid);
 	const char *channelname = script_getstr(st, 2);
 	const char *eventname = script_getstr(st, 3);
-	struct channel_data *chan = channel->search(channelname, NULL);
+	struct channel_data *chan = channel->search(channelname, sd);
 
 	if (!chan) {
 		script_pushint(st, 0);
@@ -23082,9 +23150,10 @@ BUILDIN(addchannelhandler)
 BUILDIN(removechannelhandler)
 {
 	int i;
+	struct map_session_data *sd = map->id2sd(st->rid);
 	const char *channelname = script_getstr(st, 2);
 	const char *eventname = script_getstr(st, 3);
-	struct channel_data *chan = channel->search(channelname, NULL);
+	struct channel_data *chan = channel->search(channelname, sd);
 
 	if (!chan) {
 		script_pushint(st, 0);
@@ -23142,6 +23211,100 @@ BUILDIN(mergeitem)
 		return true;
 
 	clif->openmergeitem(sd->fd, sd);
+
+	return true;
+}
+
+// getcalendartime(<day of month>, <day of week>{, <hour>{, <minute>}});
+// Returns the UNIX Timestamp of next ocurrency of given time
+BUILDIN(getcalendartime)
+{
+	struct tm info = { 0 };
+	int day_of_month = script_hasdata(st, 4) ? script_getnum(st, 4) : -1;
+	int day_of_week = script_hasdata(st, 5) ? script_getnum(st, 5) : -1;
+	int year = date_get_year();
+	int month = date_get_month();
+	int day = date_get_day();
+	int cur_hour = date_get_hour();
+	int cur_min = date_get_min();
+	int hour = script_getnum(st, 2);
+	int minute = script_getnum(st, 3);
+
+	info.tm_sec = 0;
+	info.tm_min = minute;
+	info.tm_hour = hour;
+	info.tm_mday = day;
+	info.tm_mon = month - 1;
+	info.tm_year = year - 1900;
+
+	if (day_of_month > -1 && day_of_week > -1) {
+		ShowError("script:getcalendartime: You must only specify a day_of_week or a day_of_month, not both\n");
+		script_pushint(st, -1);
+		return false;
+	}
+	if (day_of_month > -1 && (day_of_month < 1 || day_of_month > 31)) {
+		ShowError("script:getcalendartime: Day of Month in invalid range. Must be between 1 and 31.\n");
+		script_pushint(st, -1);
+		return false;
+	}
+	if (day_of_week > -1 && (day_of_week < 0 || day_of_week > 6)) {
+		ShowError("script:getcalendartime: Day of Week in invalid range. Must be between 0 and 6.\n");
+		script_pushint(st, -1);
+		return false;
+	}
+	if (hour > -1 && (hour > 23)) {
+		ShowError("script:getcalendartime: Hour in invalid range. Must be between 0 and 23.\n");
+		script_pushint(st, -1);
+		return false;
+	}
+	if (minute > -1 && (minute > 59)) {
+		ShowError("script:getcalendartime: Minute in invalid range. Must be between 0 and 59.\n");
+		script_pushint(st, -1);
+		return false;
+	}
+	if (hour == -1 || minute == -1) {
+		ShowError("script:getcalendartime: Minutes and Hours are required\n");
+		script_pushint(st, -1);
+		return false;
+	}
+
+	if (day_of_month > -1) {
+		if (day_of_month < day) { // Next Month
+			info.tm_mon++;
+		} else if (day_of_month == day) { // Today
+			if (hour < cur_hour || (hour == cur_hour && minute < cur_min)) { // But past time, next month
+				info.tm_mon++;
+			}
+		}
+
+		// Loops until month has finding a month that has day_of_month
+		do {
+			time_t t;
+			struct tm *lt;
+			info.tm_mday = day_of_month;
+			t = mktime(&info);
+			lt = localtime(&t);
+			info = *lt;
+		} while (info.tm_mday != day_of_month);
+	} else if (day_of_week > -1) {
+		int cur_wday = date_get_dayofweek();
+
+		if (day_of_week > cur_wday) { // This week
+			info.tm_mday += (day_of_week - cur_wday);
+		} else if (day_of_week == cur_wday) { // Today
+			if (hour < cur_hour || (hour == cur_hour && minute <= cur_min)) {
+				info.tm_mday += 7; // Next week
+			}
+		} else if (day_of_week < cur_wday) { // Next week
+			info.tm_mday += (7 - cur_wday + day_of_week);
+		}
+	} else if (day_of_week == -1 && day_of_month == -1) { // Next occurence of hour/min
+		if (hour < cur_hour || (hour == cur_hour && minute < cur_min)) {
+			info.tm_mday++;
+		}
+	}
+
+	script_pushint(st, mktime(&info));
 
 	return true;
 }
@@ -23816,7 +23979,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(pcre_match,"ss"),
 		BUILDIN_DEF(dispbottom,"s?"), //added from jA [Lupus]
 		BUILDIN_DEF(getusersname,""),
-		BUILDIN_DEF(recovery,""),
+		BUILDIN_DEF(recovery,"?????"),
 		BUILDIN_DEF(getpetinfo,"i"),
 		BUILDIN_DEF(gethominfo,"i"),
 		BUILDIN_DEF(getmercinfo,"i?"),
@@ -23827,6 +23990,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(charisalpha,"si"), //isalpha [Valaris]
 		BUILDIN_DEF(charat,"si"),
 		BUILDIN_DEF(isstr,"v"),
+		BUILDIN_DEF(getdatatype, "?"),
 		BUILDIN_DEF(chr,"i"),
 		BUILDIN_DEF(ord,"s"),
 		BUILDIN_DEF(setchar,"ssi"),
@@ -24029,7 +24193,7 @@ void script_parse_builtin(void) {
 
 		//Quest Log System [Inkfish]
 		BUILDIN_DEF(questinfo, "ii??"),
-		BUILDIN_DEF(setquest, "i"),
+		BUILDIN_DEF(setquest, "i?"),
 		BUILDIN_DEF(erasequest, "i?"),
 		BUILDIN_DEF(completequest, "i?"),
 		BUILDIN_DEF(questprogress, "i?"),
@@ -24081,6 +24245,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(removechannelhandler, "ss"),
 		BUILDIN_DEF(showscript, "s?"),
 		BUILDIN_DEF(mergeitem,""),
+		BUILDIN_DEF(getcalendartime, "ii??"),
 
 		// -- RoDEX
 		BUILDIN_DEF(rodex_sendmail, "isss???????????"),
@@ -24305,6 +24470,15 @@ void script_hardcoded_constants(void)
 	script->set_constant("PERM_DISABLE_STORE", PC_PERM_DISABLE_STORE, false, false);
 	script->set_constant("PERM_DISABLE_EXP", PC_PERM_DISABLE_EXP, false, false);
 	script->set_constant("PERM_DISABLE_SKILL_USAGE", PC_PERM_DISABLE_SKILL_USAGE, false, false);
+
+	script->constdb_comment("Data types");
+	script->set_constant("DATATYPE_NIL", DATATYPE_NIL, false, false);
+	script->set_constant("DATATYPE_STR", DATATYPE_STR, false, false);
+	script->set_constant("DATATYPE_INT", DATATYPE_INT, false, false);
+	script->set_constant("DATATYPE_CONST", DATATYPE_CONST, false, false);
+	script->set_constant("DATATYPE_PARAM", DATATYPE_PARAM, false, false);
+	script->set_constant("DATATYPE_VAR", DATATYPE_VAR, false, false);
+	script->set_constant("DATATYPE_LABEL", DATATYPE_LABEL, false, false);
 
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL
@@ -24558,6 +24732,9 @@ void script_defaults(void)
 	script->db_free_code_sub = db_script_free_code_sub;
 	script->add_autobonus = script_add_autobonus;
 	script->menu_countoptions = menu_countoptions;
+	script->buildin_recovery_sub = buildin_recovery_sub;
+	script->buildin_recovery_pc_sub = buildin_recovery_pc_sub;
+	script->buildin_recovery_bl_sub = buildin_recovery_bl_sub;
 	script->buildin_areawarp_sub = buildin_areawarp_sub;
 	script->buildin_areapercentheal_sub = buildin_areapercentheal_sub;
 	script->buildin_delitem_delete = buildin_delitem_delete;

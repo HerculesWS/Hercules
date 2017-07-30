@@ -368,7 +368,7 @@ pre_re:debian-stable:
   image: debian:stable
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mysql-client libmysqlclient-dev
+    INSTALL_PACKAGES: gcc mariadb-client libmariadbclient-dev-compat
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
@@ -380,7 +380,7 @@ re:debian-stable:
   image: debian:stable
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mysql-client libmysqlclient-dev
+    INSTALL_PACKAGES: gcc mariadb-client libmariadbclient-dev-compat
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql

@@ -2119,6 +2119,17 @@ int npc_selllist_sub(struct map_session_data *sd, struct itemlist *item_list, st
 		script->cleararray_pc(sd, card_slot, (void*)0);
 	}
 
+	for (j = 0; j < MAX_ITEM_OPTIONS; j++) { // Clear Each item option entry
+		key_opt_idx[j] = 0;
+		key_opt_value[j] = 0;
+
+		snprintf(opt_index_str, sizeof(opt_index_str), "@slot_opt_idx%d", j + 1);
+		script->cleararray_pc(sd, opt_index_str, (void*)0);
+
+		snprintf(opt_value_str, sizeof(opt_value_str), "@slot_opt_val%d", j + 1);
+		script->cleararray_pc(sd, opt_value_str, (void*)0);
+	}
+
 	// save list of to be sold items
 	for (i = 0; i < VECTOR_LENGTH(*item_list); i++) {
 		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
@@ -2713,10 +2724,10 @@ struct npc_data* npc_add_warp(char* name, short from_mapid, short from_x, short 
 		flag = 1;
 
 	if (flag == 1)
-		snprintf(nd->exname, ARRAYLENGTH(nd->exname), "warp_%d_%d_%d", from_mapid, from_x, from_y);
+		safesnprintf(nd->exname, ARRAYLENGTH(nd->exname), "warp_%d_%d_%d", from_mapid, from_x, from_y);
 
 	for( i = 0; npc->name2id(nd->exname) != NULL; ++i )
-		snprintf(nd->exname, ARRAYLENGTH(nd->exname), "warp%d_%d_%d_%d", i, from_mapid, from_x, from_y);
+		safesnprintf(nd->exname, ARRAYLENGTH(nd->exname), "warp%d_%d_%d_%d", i, from_mapid, from_x, from_y);
 	safestrncpy(nd->name, nd->exname, ARRAYLENGTH(nd->name));
 
 	nd->u.warp.mapindex = to_mapindex;
