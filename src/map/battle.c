@@ -7097,6 +7097,7 @@ static const struct battle_data {
 	{ "vending_over_max",                   &battle_config.vending_over_max,                1,      0,      1,              },
 	{ "show_steal_in_same_party",           &battle_config.show_steal_in_same_party,        0,      0,      1,              },
 	{ "party_hp_mode",                      &battle_config.party_hp_mode,                   0,      0,      1,              },
+	{ "party_change_leader_same_map",       &battle_config.party_change_leader_same_map,    0,      0,      1,              },
 	{ "show_party_share_picker",            &battle_config.party_show_share_picker,         1,      0,      1,              },
 	{ "show_picker_item_type",              &battle_config.show_picker_item_type,           112,    0,      INT_MAX,        },
 	{ "party_update_interval",              &battle_config.party_update_interval,           1000,   100,    INT_MAX,        },

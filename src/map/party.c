@@ -731,6 +731,11 @@ bool party_changeleader(struct map_session_data *sd, struct map_session_data *ts
 		return false;
 	}
 
+	if (battle_config.party_change_leader_same_map && sd->bl.m != tsd->bl.m) {
+		clif->message(sd->fd, msg_sd(sd, 289)); // Target character must be in the same map.
+		return false;
+	}
+
 	if( map->list[sd->bl.m].flag.partylock ) {
 		clif->message(sd->fd, msg_sd(sd,287)); // You cannot change party leaders in this map.
 		return false;

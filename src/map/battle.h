@@ -298,6 +298,7 @@ struct Battle_Config {
 	int show_steal_in_same_party;
 	int party_share_type;
 	int party_hp_mode;
+	int party_change_leader_same_map;
 	int party_show_share_picker;
 	int show_picker_item_type;
 	int attack_attr_none;
@@ -545,7 +546,7 @@ struct Battle_Config {
 	int player_warp_keep_direction;
 
 	int atcommand_levelup_events;	// Enable atcommands trigger level up events for NPCs
-	
+
 	int bow_unequip_arrow;
 
 	int max_summoner_parameter; // Summoner Max Stats
