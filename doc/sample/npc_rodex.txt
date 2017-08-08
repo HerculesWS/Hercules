@@ -1,0 +1,39 @@
+//===== Hercules Script =======================================
+//= Sample: RoDEX Send Mail
+//===== By: ==================================================
+//= KirieZ
+//===== Current Version: =====================================
+//= 20170322
+//===== Description: =========================================
+//= Demonstrates sending mails through RoDEX.
+//============================================================
+
+prontera,150,150,4	script	Rodex Mail	1_M_01,{
+	// Sends a messsage to attached player from "Rodex Test", with title "Rodex Test1",
+	// with message "Hello World, How are You?", 1000 Zenies and 5 Red Potions attached
+	rodex_sendmail(
+		getcharid(CHAR_ID_CHAR), "Rodex Test", "Rodex Test1", "Hello World, How are You?",
+		1000,
+		Red_Potion, 5
+	);
+
+	// Sends a messsage to attached player "Account Box" from "Rodex Test", with title "Rodex Test3",
+	// with message "Hello World, How are You?", 1000 Zenies and 5 Red Potions attached
+	rodex_sendmail_acc(
+		getcharid(CHAR_ID_CHAR), "Rodex Test", "Rodex Test3", "Hello World, How are You?",
+		1000,
+		Red_Potion, 5
+	);
+
+	// Sends a messsage to attached player "Account Box" from "Rodex Test", with title "Rodex Test6",
+	// with message "Hello World, How are You?", 1000 Zenies, 5 Red Potions and
+	// 1 +10 Knife[3] with 3 Poring Cards (Broken)
+	rodex_sendmail2(
+		getcharid(CHAR_ID_CHAR), "Rodex Test", "Rodex Test6", "Hello World, How are You?",
+		1000,
+		Red_Potion, 5, 0, 0, 0, 0, 0, 0,
+		Knife, 1, 10, 1, Poring_Card, Poring_Card, Poring_Card, 0
+	);
+
+	end;
+}

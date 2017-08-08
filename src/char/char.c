@@ -34,6 +34,7 @@
 #include "char/int_party.h"
 #include "char/int_pet.h"
 #include "char/int_quest.h"
+#include "char/int_rodex.h"
 #include "char/int_storage.h"
 #include "char/inter.h"
 #include "char/loginif.h"
@@ -97,6 +98,8 @@ char auction_db[256] = "auction"; // Auctions System
 char friend_db[256] = "friends";
 char hotkey_db[256] = "hotkey";
 char quest_db[256] = "quest";
+char rodex_db[256] = "rodex_mail";
+char rodex_item_db[256] = "rodex_items";
 char homunculus_db[256] = "homunculus";
 char skill_homunculus_db[256] = "skill_homunculus";
 char mercenary_db[256] = "mercenary";
@@ -6412,6 +6415,7 @@ void char_load_defaults(void)
 	inter_pet_defaults();
 	inter_quest_defaults();
 	inter_storage_defaults();
+	inter_rodex_defaults();
 	inter_defaults();
 	geoip_defaults();
 }

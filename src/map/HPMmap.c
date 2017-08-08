@@ -78,6 +78,7 @@
 #include "map/pc_groups.h"
 #include "map/pet.h"
 #include "map/quest.h"
+#include "map/rodex.h"
 #include "map/script.h"
 #include "map/searchstore.h"
 #include "map/skill.h"

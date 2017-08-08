@@ -7335,6 +7335,8 @@ static const struct battle_data {
 	{ "monster_eye_range_bonus",            &battle_config.mob_eye_range_bonus,             0,      0,      10,             },
 	{ "prevent_logout_trigger",             &battle_config.prevent_logout_trigger,          0xE,    0,      0xF,            },
 	{ "boarding_halter_speed",              &battle_config.boarding_halter_speed,           25,     0,      100,            },
+	{ "features/rodex",                     &battle_config.feature_rodex,                   1,      0,      1,              },
+	{ "features/rodex_use_accountmail",     &battle_config.feature_rodex_use_accountmail,   0,      0,      1,              },
 };
 #ifndef STATS_OPT_OUT
 /**

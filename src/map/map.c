@@ -55,6 +55,7 @@
 #include "map/skill.h"
 #include "map/status.h"
 #include "map/storage.h"
+#include "map/rodex.h"
 #include "map/trade.h"
 #include "map/unit.h"
 #include "common/HPM.h"
@@ -1915,6 +1916,7 @@ int map_quit(struct map_session_data *sd) {
 	}
 
 	npc->script_event(sd, NPCE_LOGOUT);
+	rodex->clean(sd, 0);
 
 	//Unit_free handles clearing the player related data,
 	//map->quit handles extra specific data which is related to quitting normally
@@ -6012,6 +6014,7 @@ int do_final(void) {
 	elemental->final();
 	map->list_final();
 	vending->final();
+	rodex->final();
 
 	HPM_map_do_final();
 
@@ -6208,6 +6211,7 @@ void map_load_defaults(void) {
 	path_defaults();
 	quest_defaults();
 	npc_chat_defaults();
+	rodex_defaults();
 }
 /**
  * --run-once handler
@@ -6525,6 +6529,7 @@ int do_init(int argc, char *argv[])
 	bg->init(minimal);
 	duel->init(minimal);
 	vending->init(minimal);
+	rodex->init(minimal);
 
 	if (map->scriptcheck) {
 		bool failed = map->extra_scripts_count > 0 ? false : true;

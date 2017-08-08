@@ -37,6 +37,7 @@ struct s_elemental;
 struct s_homunculus;
 struct s_mercenary;
 struct s_pet;
+struct rodex_message;
 
 /**
  * Defines
@@ -131,6 +132,12 @@ struct intif_interface {
 	int (*elemental_request) (int ele_id, int char_id);
 	int (*elemental_delete) (int ele_id);
 	int (*elemental_save) (struct s_elemental *ele);
+	// RoDEX
+	int(*rodex_requestinbox) (int char_id, int account_id, int8 flag, int8 opentype, int64 mail_id);
+	int(*rodex_checkhasnew) (struct map_session_data *sd);
+	int(*rodex_updatemail) (int64 mail_id, int8 flag);
+	int(*rodex_sendmail) (struct rodex_message *msg);
+	int(*rodex_checkname) (struct map_session_data *sd, const char *name);
 	/* @accinfo */
 	void (*request_accinfo) (int u_fd, int aid, int group_lv, char* query);
 	/* */
@@ -200,6 +207,11 @@ struct intif_interface {
 	void (*pRecvHomunculusData) (int fd);
 	void (*pSaveHomunculusOk) (int fd);
 	void (*pDeleteHomunculusOk) (int fd);
+	/* RoDEX */
+	void(*pRequestRodexOpenInbox) (int fd);
+	void(*pRodexHasNew) (int fd);
+	void(*pRodexSendMail) (int fd);
+	void(*pRodexCheckName) (int fd);
 };
 
 #ifdef HERCULES_CORE

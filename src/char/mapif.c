@@ -26,6 +26,7 @@
 #include "char/int_auction.h"
 #include "char/int_guild.h"
 #include "char/int_homun.h"
+#include "char/int_rodex.h"
 #include "common/cbasetypes.h"
 #include "common/mmo.h"
 #include "common/random.h"
@@ -182,6 +183,16 @@ void mapif_quest_save_ack(int fd, int char_id, bool success);
 int mapif_parse_quest_save(int fd);
 void mapif_send_quests(int fd, int char_id, struct quest *tmp_questlog, int num_quests);
 int mapif_parse_quest_load(int fd);
+/* RoDEX */
+int mapif_parse_rodex_requestinbox(int fd);
+void mapif_rodex_sendinbox(int fd, int char_id, int8 opentype, int8 flag, int count, struct rodex_maillist *mails);
+int mapif_parse_rodex_checkhasnew(int fd);
+void mapif_rodex_sendhasnew(int fd, int char_id, bool has_new);
+int mapif_parse_rodex_updatemail(int fd);
+int mapif_parse_rodex_send(int fd);
+void mapif_rodex_send(int fd, int sender_id, int receiver_id, int receiver_accountid, bool result);
+int mapif_parse_rodex_checkname(int fd);
+void mapif_rodex_checkname(int fd, int reqchar_id, int target_char_id, short target_class, int target_level, char name[NAME_LENGTH]);
 int mapif_load_guild_storage(int fd,int account_id,int guild_id, char flag);
 int mapif_save_guild_storage_ack(int fd, int account_id, int guild_id, int fail);
 int mapif_parse_LoadGuildStorage(int fd);
@@ -363,6 +374,16 @@ void mapif_defaults(void) {
 	mapif->parse_quest_save = mapif_parse_quest_save;
 	mapif->send_quests = mapif_send_quests;
 	mapif->parse_quest_load = mapif_parse_quest_load;
+	/* RoDEX */
+	mapif->parse_rodex_requestinbox = mapif_parse_rodex_requestinbox;
+	mapif->rodex_sendinbox = mapif_rodex_sendinbox;
+	mapif->parse_rodex_checkhasnew = mapif_parse_rodex_checkhasnew;
+	mapif->rodex_sendhasnew = mapif_rodex_sendhasnew;
+	mapif->parse_rodex_updatemail = mapif_parse_rodex_updatemail;
+	mapif->parse_rodex_send = mapif_parse_rodex_send;
+	mapif->rodex_send = mapif_rodex_send;
+	mapif->parse_rodex_checkname = mapif_parse_rodex_checkname;
+	mapif->rodex_checkname = mapif_rodex_checkname;
 	mapif->load_guild_storage = mapif_load_guild_storage;
 	mapif->save_guild_storage_ack = mapif_save_guild_storage_ack;
 	mapif->parse_LoadGuildStorage = mapif_parse_LoadGuildStorage;
