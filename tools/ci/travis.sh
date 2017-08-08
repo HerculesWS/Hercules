@@ -125,6 +125,11 @@ case "$MODE" in
 		make plugin.script_mapquit -j3 || aborterror "Build failed."
 		make test || aborterror "Build failed."
 		;;
+	buildhpm)
+		./configure $@ || (cat config.log && aborterror "Configure error, aborting build.")
+		cd tools/HPMHookGen
+		make
+		;;
 	test)
 		cat > conf/travis_sql_connection.conf << EOF
 sql_connection: {
