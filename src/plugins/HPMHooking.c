@@ -26,6 +26,8 @@
 #include "common/mmo.h"
 #include "common/socket.h"
 
+PRAGMA_GCC5(GCC diagnostic push)
+PRAGMA_GCC5(GCC diagnostic ignored "-Wdiscarded-qualifiers")
 #if defined (HPMHOOKING_LOGIN)
 #define HPM_SERVER_TYPE SERVER_TYPE_LOGIN
 #define HPM_CORE_INCLUDE "HPMHooking/HPMHooking_login.HPMHooksCore.inc"
@@ -109,6 +111,7 @@
 #define HPM_SOURCES_INCLUDE "HPMHooking/HPMHooking.sources.inc"
 #error HPMHooking plugin needs to be compiled for a specific server type. Please make sure your Makefiles are up to date.
 #endif
+PRAGMA_GCC5(GCC diagnostic pop)
 #include "common/conf.h"
 #include "common/console.h"
 #include "common/db.h"
@@ -212,7 +215,10 @@ HPExport bool HPM_Plugin_AddHook(enum HPluginHookType type, const char *target, 
 	return false;
 }
 
+PRAGMA_GCC5(GCC diagnostic push)
+PRAGMA_GCC5(GCC diagnostic ignored "-Wdiscarded-qualifiers")
 #include HPM_HOOKS_INCLUDE
+PRAGMA_GCC5(GCC diagnostic pop)
 
 void HPM_HP_final(void) {
 	int i, len = HPMHooks.data.total * 2;
