@@ -463,7 +463,7 @@ void mapif_parse_rodex_send(int fd)
 /*------------------------------------------
  * Check Player
  *------------------------------------------*/
-void mapif_rodex_checkname(int fd, int reqchar_id, int target_char_id, short target_class, int target_level, char name[NAME_LENGTH])
+void mapif_rodex_checkname(int fd, int reqchar_id, int target_char_id, short target_class, int target_level, char *name)
 {
 	nullpo_retv(name);
 	Assert_retv(reqchar_id > 0);

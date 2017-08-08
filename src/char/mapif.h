@@ -184,7 +184,7 @@ struct mapif_interface {
 	int(*parse_rodex_send) (int fd);
 	void(*rodex_send) (int fd, int sender_id, int receiver_id, int receiver_accountid, bool result);
 	int(*parse_rodex_checkname) (int fd);
-	void(*rodex_checkname) (int fd, int reqchar_id, int target_char_id, short target_class, int target_level, char name[NAME_LENGTH]);
+	void(*rodex_checkname) (int fd, int reqchar_id, int target_char_id, short target_class, int target_level, char *name);
 	int (*load_guild_storage) (int fd, int account_id, int guild_id, char flag);
 	int (*save_guild_storage_ack) (int fd, int account_id, int guild_id, int fail);
 	int (*parse_LoadGuildStorage) (int fd);

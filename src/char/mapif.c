@@ -192,7 +192,7 @@ int mapif_parse_rodex_updatemail(int fd);
 int mapif_parse_rodex_send(int fd);
 void mapif_rodex_send(int fd, int sender_id, int receiver_id, int receiver_accountid, bool result);
 int mapif_parse_rodex_checkname(int fd);
-void mapif_rodex_checkname(int fd, int reqchar_id, int target_char_id, short target_class, int target_level, char name[NAME_LENGTH]);
+void mapif_rodex_checkname(int fd, int reqchar_id, int target_char_id, short target_class, int target_level, char *name);
 int mapif_load_guild_storage(int fd,int account_id,int guild_id, char flag);
 int mapif_save_guild_storage_ack(int fd, int account_id, int guild_id, int fail);
 int mapif_parse_LoadGuildStorage(int fd);

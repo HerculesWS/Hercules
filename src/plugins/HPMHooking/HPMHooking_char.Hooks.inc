@@ -14751,16 +14751,14 @@ int HP_mapif_parse_rodex_checkname(int fd) {
 	}
 	return retVal___;
 }
-void HP_mapif_rodex_checkname(int fd, int reqchar_id, int target_char_id, short target_class, int target_level, ) {
-/* Error: Unexpected character '+' */
-/* Error: Unhandled var type 'char name[(23+1)]' */
+void HP_mapif_rodex_checkname(int fd, int reqchar_id, int target_char_id, short target_class, int target_level, char *name) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_mapif_rodex_checkname_pre > 0) {
-		void (*preHookFunc) (int *fd, int *reqchar_id, int *target_char_id, short *target_class, int *target_level, );
+		void (*preHookFunc) (int *fd, int *reqchar_id, int *target_char_id, short *target_class, int *target_level, char **name);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_rodex_checkname_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_mapif_rodex_checkname_pre[hIndex].func;
-			preHookFunc(&fd, &reqchar_id, &target_char_id, &target_class, &target_level, );
+			preHookFunc(&fd, &reqchar_id, &target_char_id, &target_class, &target_level, &name);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -14768,13 +14766,13 @@ void HP_mapif_rodex_checkname(int fd, int reqchar_id, int target_char_id, short 
 		}
 	}
 	{
-		HPMHooks.source.mapif.rodex_checkname(fd, reqchar_id, target_char_id, target_class, target_level, );
+		HPMHooks.source.mapif.rodex_checkname(fd, reqchar_id, target_char_id, target_class, target_level, name);
 	}
 	if (HPMHooks.count.HP_mapif_rodex_checkname_post > 0) {
-		void (*postHookFunc) (int fd, int reqchar_id, int target_char_id, short target_class, int target_level, );
+		void (*postHookFunc) (int fd, int reqchar_id, int target_char_id, short target_class, int target_level, char *name);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_rodex_checkname_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_mapif_rodex_checkname_post[hIndex].func;
-			postHookFunc(fd, reqchar_id, target_char_id, target_class, target_level, );
+			postHookFunc(fd, reqchar_id, target_char_id, target_class, target_level, name);
 		}
 	}
 	return;

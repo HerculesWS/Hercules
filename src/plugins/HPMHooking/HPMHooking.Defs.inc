@@ -4472,8 +4472,8 @@ typedef void (*HPMHOOK_pre_mapif_rodex_send) (int *fd, int *sender_id, int *rece
 typedef void (*HPMHOOK_post_mapif_rodex_send) (int fd, int sender_id, int receiver_id, int receiver_accountid, bool result);
 typedef int (*HPMHOOK_pre_mapif_parse_rodex_checkname) (int *fd);
 typedef int (*HPMHOOK_post_mapif_parse_rodex_checkname) (int retVal___, int fd);
-typedef void (*HPMHOOK_pre_mapif_rodex_checkname) (int *fd, int *reqchar_id, int *target_char_id, short *target_class, int *target_level, );
-typedef void (*HPMHOOK_post_mapif_rodex_checkname) (int fd, int reqchar_id, int target_char_id, short target_class, int target_level, );
+typedef void (*HPMHOOK_pre_mapif_rodex_checkname) (int *fd, int *reqchar_id, int *target_char_id, short *target_class, int *target_level, char **name);
+typedef void (*HPMHOOK_post_mapif_rodex_checkname) (int fd, int reqchar_id, int target_char_id, short target_class, int target_level, char *name);
 typedef int (*HPMHOOK_pre_mapif_load_guild_storage) (int *fd, int *account_id, int *guild_id, char *flag);
 typedef int (*HPMHOOK_post_mapif_load_guild_storage) (int retVal___, int fd, int account_id, int guild_id, char flag);
 typedef int (*HPMHOOK_pre_mapif_save_guild_storage_ack) (int *fd, int *account_id, int *guild_id, int *fail);
