@@ -125,6 +125,9 @@ struct inter_pet_interface *inter_pet;
 #ifdef CHAR_INT_QUEST_H /* inter_quest */
 struct inter_quest_interface *inter_quest;
 #endif // CHAR_INT_QUEST_H
+#ifdef CHAR_INT_RODEX_H /* inter_rodex */
+struct inter_rodex_interface *inter_rodex;
+#endif // CHAR_INT_RODEX_H
 #ifdef CHAR_INT_STORAGE_H /* inter_storage */
 struct inter_storage_interface *inter_storage;
 #endif // CHAR_INT_STORAGE_H
@@ -218,6 +221,9 @@ struct quest_interface *quest;
 #ifdef COMMON_RANDOM_H /* rnd */
 struct rnd_interface *rnd;
 #endif // COMMON_RANDOM_H
+#ifdef MAP_RODEX_H /* rodex */
+struct rodex_interface *rodex;
+#endif // MAP_RODEX_H
 #ifdef MAP_SCRIPT_H /* script */
 struct script_interface *script;
 #endif // MAP_SCRIPT_H
@@ -405,6 +411,10 @@ HPExport const char *HPM_shared_symbols(int server_type)
 	if ((server_type&(SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("inter_quest", inter_quest))
 		return "inter_quest";
 #endif // CHAR_INT_QUEST_H
+#ifdef CHAR_INT_RODEX_H /* inter_rodex */
+	if ((server_type&(SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("inter_rodex", inter_rodex))
+		return "inter_rodex";
+#endif // CHAR_INT_RODEX_H
 #ifdef CHAR_INT_STORAGE_H /* inter_storage */
 	if ((server_type&(SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("inter_storage", inter_storage))
 		return "inter_storage";
@@ -529,6 +539,10 @@ HPExport const char *HPM_shared_symbols(int server_type)
 	if ((server_type&(SERVER_TYPE_ALL)) != 0 && !HPM_SYMBOL("rnd", rnd))
 		return "rnd";
 #endif // COMMON_RANDOM_H
+#ifdef MAP_RODEX_H /* rodex */
+	if ((server_type&(SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("rodex", rodex))
+		return "rodex";
+#endif // MAP_RODEX_H
 #ifdef MAP_SCRIPT_H /* script */
 	if ((server_type&(SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("script", script))
 		return "script";

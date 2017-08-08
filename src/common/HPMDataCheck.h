@@ -101,6 +101,11 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define CHAR_INT_QUEST_H
 	#endif // CHAR_INT_QUEST_H
+	#ifdef CHAR_INT_RODEX_H
+		{ "inter_rodex_interface", sizeof(struct inter_rodex_interface), SERVER_TYPE_CHAR },
+	#else
+		#define CHAR_INT_RODEX_H
+	#endif // CHAR_INT_RODEX_H
 	#ifdef CHAR_INT_STORAGE_H
 		{ "inter_storage_interface", sizeof(struct inter_storage_interface), SERVER_TYPE_CHAR },
 	#else
@@ -207,6 +212,8 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "party_member", sizeof(struct party_member), SERVER_TYPE_ALL },
 		{ "point", sizeof(struct point), SERVER_TYPE_ALL },
 		{ "quest", sizeof(struct quest), SERVER_TYPE_ALL },
+		{ "rodex_maillist", sizeof(struct rodex_maillist), SERVER_TYPE_ALL },
+		{ "rodex_message", sizeof(struct rodex_message), SERVER_TYPE_ALL },
 		{ "s_elemental", sizeof(struct s_elemental), SERVER_TYPE_ALL },
 		{ "s_friend", sizeof(struct s_friend), SERVER_TYPE_ALL },
 		{ "s_homunculus", sizeof(struct s_homunculus), SERVER_TYPE_ALL },
@@ -545,6 +552,31 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "EQUIPSLOTINFO", sizeof(struct EQUIPSLOTINFO), SERVER_TYPE_MAP },
 		{ "ItemOptions", sizeof(struct ItemOptions), SERVER_TYPE_MAP },
 		{ "NORMALITEM_INFO", sizeof(struct NORMALITEM_INFO), SERVER_TYPE_MAP },
+		{ "PACKET_CZ_ADD_ITEM_TO_MAIL", sizeof(struct PACKET_CZ_ADD_ITEM_TO_MAIL), SERVER_TYPE_MAP },
+		{ "PACKET_CZ_CHECKNAME", sizeof(struct PACKET_CZ_CHECKNAME), SERVER_TYPE_MAP },
+		{ "PACKET_CZ_REQ_DELETE_MAIL", sizeof(struct PACKET_CZ_REQ_DELETE_MAIL), SERVER_TYPE_MAP },
+		{ "PACKET_CZ_REQ_ITEM_FROM_MAIL", sizeof(struct PACKET_CZ_REQ_ITEM_FROM_MAIL), SERVER_TYPE_MAP },
+		{ "PACKET_CZ_REQ_NEXT_MAIL_LIST", sizeof(struct PACKET_CZ_REQ_NEXT_MAIL_LIST), SERVER_TYPE_MAP },
+		{ "PACKET_CZ_REQ_OPEN_MAIL", sizeof(struct PACKET_CZ_REQ_OPEN_MAIL), SERVER_TYPE_MAP },
+		{ "PACKET_CZ_REQ_OPEN_WRITE_MAIL", sizeof(struct PACKET_CZ_REQ_OPEN_WRITE_MAIL), SERVER_TYPE_MAP },
+		{ "PACKET_CZ_REQ_READ_MAIL", sizeof(struct PACKET_CZ_REQ_READ_MAIL), SERVER_TYPE_MAP },
+		{ "PACKET_CZ_REQ_REFRESH_MAIL_LIST", sizeof(struct PACKET_CZ_REQ_REFRESH_MAIL_LIST), SERVER_TYPE_MAP },
+		{ "PACKET_CZ_REQ_REMOVE_ITEM_MAIL", sizeof(struct PACKET_CZ_REQ_REMOVE_ITEM_MAIL), SERVER_TYPE_MAP },
+		{ "PACKET_CZ_REQ_ZENY_FROM_MAIL", sizeof(struct PACKET_CZ_REQ_ZENY_FROM_MAIL), SERVER_TYPE_MAP },
+		{ "PACKET_CZ_SEND_MAIL", sizeof(struct PACKET_CZ_SEND_MAIL), SERVER_TYPE_MAP },
+		{ "PACKET_ZC_ACK_DELETE_MAIL", sizeof(struct PACKET_ZC_ACK_DELETE_MAIL), SERVER_TYPE_MAP },
+		{ "PACKET_ZC_ACK_ITEM_FROM_MAIL", sizeof(struct PACKET_ZC_ACK_ITEM_FROM_MAIL), SERVER_TYPE_MAP },
+		{ "PACKET_ZC_ACK_OPEN_WRITE_MAIL", sizeof(struct PACKET_ZC_ACK_OPEN_WRITE_MAIL), SERVER_TYPE_MAP },
+		{ "PACKET_ZC_ACK_REMOVE_ITEM_MAIL", sizeof(struct PACKET_ZC_ACK_REMOVE_ITEM_MAIL), SERVER_TYPE_MAP },
+		{ "PACKET_ZC_ACK_ZENY_FROM_MAIL", sizeof(struct PACKET_ZC_ACK_ZENY_FROM_MAIL), SERVER_TYPE_MAP },
+		{ "PACKET_ZC_ADD_ITEM_TO_MAIL", sizeof(struct PACKET_ZC_ADD_ITEM_TO_MAIL), SERVER_TYPE_MAP },
+		{ "PACKET_ZC_CHECKNAME", sizeof(struct PACKET_ZC_CHECKNAME), SERVER_TYPE_MAP },
+		{ "PACKET_ZC_MAIL_LIST", sizeof(struct PACKET_ZC_MAIL_LIST), SERVER_TYPE_MAP },
+		{ "PACKET_ZC_NOTIFY_UNREADMAIL", sizeof(struct PACKET_ZC_NOTIFY_UNREADMAIL), SERVER_TYPE_MAP },
+		{ "PACKET_ZC_READ_MAIL", sizeof(struct PACKET_ZC_READ_MAIL), SERVER_TYPE_MAP },
+		{ "PACKET_ZC_WRITE_MAIL_RESULT", sizeof(struct PACKET_ZC_WRITE_MAIL_RESULT), SERVER_TYPE_MAP },
+		{ "mail_item", sizeof(struct mail_item), SERVER_TYPE_MAP },
+		{ "maillistinfo", sizeof(struct maillistinfo), SERVER_TYPE_MAP },
 		{ "packet_additem", sizeof(struct packet_additem), SERVER_TYPE_MAP },
 		{ "packet_authok", sizeof(struct packet_authok), SERVER_TYPE_MAP },
 		{ "packet_banking_check", sizeof(struct packet_banking_check), SERVER_TYPE_MAP },
@@ -672,6 +704,11 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define MAP_QUEST_H
 	#endif // MAP_QUEST_H
+	#ifdef MAP_RODEX_H
+		{ "rodex_interface", sizeof(struct rodex_interface), SERVER_TYPE_MAP },
+	#else
+		#define MAP_RODEX_H
+	#endif // MAP_RODEX_H
 	#ifdef MAP_SCRIPT_H
 		{ "Script_Config", sizeof(struct Script_Config), SERVER_TYPE_MAP },
 		{ "casecheck_data", sizeof(struct casecheck_data), SERVER_TYPE_MAP },

@@ -43,6 +43,7 @@ HPMHooks.source.inter_mercenary = *inter_mercenary;
 HPMHooks.source.inter_party = *inter_party;
 HPMHooks.source.inter_pet = *inter_pet;
 HPMHooks.source.inter_quest = *inter_quest;
+HPMHooks.source.inter_rodex = *inter_rodex;
 HPMHooks.source.inter_storage = *inter_storage;
 HPMHooks.source.libconfig = *libconfig;
 HPMHooks.source.loginif = *loginif;

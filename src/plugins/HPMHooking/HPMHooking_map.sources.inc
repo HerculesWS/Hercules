@@ -71,6 +71,7 @@ HPMHooks.source.libpcre = *libpcre;
 HPMHooks.source.pet = *pet;
 HPMHooks.source.quest = *quest;
 HPMHooks.source.rnd = *rnd;
+HPMHooks.source.rodex = *rodex;
 HPMHooks.source.script = *script;
 HPMHooks.source.searchstore = *searchstore;
 HPMHooks.source.showmsg = *showmsg;
