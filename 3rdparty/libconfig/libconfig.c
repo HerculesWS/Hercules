@@ -860,6 +860,7 @@ static int __config_setting_get_int(const struct config_setting_t *setting,
       }
       else
       { /* fall through */ }
+      return(CONFIG_FALSE);
 
     default:
       return(CONFIG_FALSE);
@@ -898,6 +899,7 @@ static int __config_setting_get_int64(const struct config_setting_t *setting,
       }
       else
       { /* fall through */ }
+      return(CONFIG_FALSE);
 
     default:
       return(CONFIG_FALSE);
@@ -965,6 +967,7 @@ static int __config_setting_get_float(const struct config_setting_t *setting,
       }
       else
       { /* fall through */ }
+      return(CONFIG_FALSE);
 
     default:
       return(CONFIG_FALSE);
