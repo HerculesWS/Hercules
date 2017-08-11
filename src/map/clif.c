@@ -19266,7 +19266,7 @@ void clif_parse_rodex_add_item(int fd, struct map_session_data *sd)
 
 void clif_rodex_add_item_result(struct map_session_data *sd, int16 idx, int16 amount, int8 result)
 {
-#if PACKETVER >= 20140416
+#if PACKETVER >= 20141119
 	struct PACKET_ZC_ADD_ITEM_TO_MAIL *packet;
 	int fd, j;
 
@@ -19428,7 +19428,7 @@ void clif_rodex_send_maillist(int fd, struct map_session_data *sd, int8 open_typ
 
 	nullpo_retv(sd);
 
-	WFIFOHEAD(fd, sizeof(*packet) + (sizeof(*inner) + RODEX_TITLE_LENGTH) * 7);
+	WFIFOHEAD(fd, sizeof(*packet) + (sizeof(*inner) + RODEX_TITLE_LENGTH) * RODEX_MAIL_PER_PAGE);
 	packet = WFIFOP(fd, 0);
 	packet->PacketType = ((page_start == (VECTOR_LENGTH(sd->rodex.messages) - 1)) ? rodexmailList : rodexnextpage);
 	packet->opentype = open_type;
@@ -19479,7 +19479,7 @@ void clif_rodex_send_refresh(int fd, struct map_session_data *sd, int8 open_type
 
 	nullpo_retv(sd);
 
-	WFIFOHEAD(fd, sizeof(*packet) + (sizeof(*inner) + RODEX_TITLE_LENGTH) * 7);
+	WFIFOHEAD(fd, sizeof(*packet) + (sizeof(*inner) + RODEX_TITLE_LENGTH) * RODEX_MAIL_PER_PAGE);
 	packet = WFIFOP(fd, 0);
 	packet->PacketType = rodexmailList;
 	packet->opentype = open_type;
@@ -19540,7 +19540,7 @@ void clif_parse_rodex_read_mail(int fd, struct map_session_data *sd)
 
 void clif_rodex_read_mail(struct map_session_data *sd, int8 opentype, struct rodex_message *msg)
 {
-#if PACKETVER >= 20131223
+#if PACKETVER >= 20140115
 	struct PACKET_ZC_READ_MAIL *sPacket;
 	struct mail_item *item;
 	int fd, i, body_len, size;
