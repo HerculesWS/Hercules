@@ -19235,7 +19235,7 @@ void clif_parse_rodex_open_write_mail(int fd, struct map_session_data *sd)
 {
 	const struct PACKET_CZ_REQ_OPEN_WRITE_MAIL *rPacket = RFIFOP(fd, 0);
 	int8 result = (rodex->isenabled() == true) ? 1 : 0;
-	
+
 	clif->rodex_open_write_mail(fd, rPacket->receiveName, result);
 }
 
@@ -19243,7 +19243,7 @@ void clif_rodex_open_write_mail(int fd, const char *receiver_name, int8 result)
 {
 #if PACKETVER >= 20140416
 	struct PACKET_ZC_ACK_OPEN_WRITE_MAIL *sPacket = NULL;
-	
+
 	nullpo_retv(receiver_name);
 
 	WFIFOHEAD(fd, sizeof(*sPacket));

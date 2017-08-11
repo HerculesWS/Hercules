@@ -2595,7 +2595,7 @@ void intif_parse_RodexCheckName(int fd)
 
 	if (reqchar_id <= 0)
 		return;
-	
+
 	sd = map->charid2sd(reqchar_id);
 
 	if (sd == NULL) // User is not online anymore

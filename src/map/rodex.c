@@ -124,7 +124,7 @@ void rodex_add_item(struct map_session_data *sd, int16 idx, int16 amount)
 		clif->rodex_add_item_result(sd, idx, amount, RODEX_ADD_ITEM_NO_SPACE);
 		return;
 	}
-	
+
 	if (sd->rodex.tmp.items[i].item.amount + amount > sd->status.inventory[idx].amount) {
 		clif->rodex_add_item_result(sd, idx, amount, RODEX_ADD_ITEM_FATAL_ERROR);
 		return;
@@ -194,7 +194,7 @@ void rodex_remove_item(struct map_session_data *sd, int16 idx, int16 amount)
 
 	it->amount -= amount;
 	sd->rodex.tmp.weight -= itd->weight * amount;
-	
+
 	clif->rodex_remove_item_result(sd, idx, it->amount);
 }
 
@@ -237,7 +237,7 @@ int rodex_send_mail(struct map_session_data *sd, const char *receiver_name, cons
 	}
 
 	total_zeny = zeny + sd->rodex.tmp.items_count * ATTACHITEM_COST + (2 * zeny)/100;
-	
+
 	if (strcmp(receiver_name, sd->rodex.tmp.receiver_name) != 0) {
 		rodex->clean(sd, 1);
 		return RODEX_SEND_MAIL_RECEIVER_ERROR;
@@ -260,7 +260,7 @@ int rodex_send_mail(struct map_session_data *sd, const char *receiver_name, cons
 	} else {
 		sc_start2(NULL, &sd->bl, SC_DAILYSENDMAILCNT, 100, date_get_date(), 1, INFINITE_DURATION);
 	}
-	
+
 	for (i = 0; i < RODEX_MAX_ITEM; i++) {
 		int16 idx = sd->rodex.tmp.items[i].idx;
 
@@ -351,7 +351,7 @@ struct rodex_message *rodex_get_mail(struct map_session_data *sd, int64 mail_id)
 		return NULL;
 
 	msg = &VECTOR_INDEX(sd->rodex.messages, i);
-	
+
 	return msg;
 }
 
@@ -543,7 +543,7 @@ void rodex_next_page(struct map_session_data *sd, int8 open_type, int64 last_mai
 {
 	int64 msg_count, page_start = 0;
 	nullpo_retv(sd);
-	
+
 	if (open_type == RODEX_OPENTYPE_ACCOUNT && battle_config.feature_rodex_use_accountmail == false) {
 		// Should not happen
 		open_type = RODEX_OPENTYPE_MAIL;
