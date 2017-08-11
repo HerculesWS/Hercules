@@ -19249,7 +19249,7 @@ void clif_rodex_open_write_mail(int fd, const char *receiver_name, int8 result)
 	WFIFOHEAD(fd, sizeof(*sPacket));
 	sPacket = WFIFOP(fd, 0);
 	sPacket->PacketType = rodexopenwrite;
-	strncpy(sPacket->receiveName, receiver_name, NAME_LENGTH);
+	safestrncpy(sPacket->receiveName, receiver_name, NAME_LENGTH);
 	sPacket->result = result;
 	WFIFOSET(fd, sizeof(*sPacket));
 #endif

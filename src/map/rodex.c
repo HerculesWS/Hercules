@@ -304,9 +304,9 @@ int rodex_send_mail(struct map_session_data *sd, const char *receiver_name, cons
 	if (sd->rodex.tmp.zeny > 0)
 		sd->rodex.tmp.type |= MAIL_TYPE_ZENY;
 	sd->rodex.tmp.sender_id = sd->status.char_id;
-	strncpy(sd->rodex.tmp.sender_name, sd->status.name, NAME_LENGTH);
-	strncpy(sd->rodex.tmp.title, title, RODEX_TITLE_LENGTH);
-	strncpy(sd->rodex.tmp.body, body, RODEX_BODY_LENGTH);
+	safestrncpy(sd->rodex.tmp.sender_name, sd->status.name, NAME_LENGTH);
+	safestrncpy(sd->rodex.tmp.title, title, RODEX_TITLE_LENGTH);
+	safestrncpy(sd->rodex.tmp.body, body, RODEX_BODY_LENGTH);
 
 	intif->rodex_sendmail(&sd->rodex.tmp);
 	return RODEX_SEND_MAIL_SUCCESS; // this will not inform client of the success yet. (see rodex_send_mail_result)
@@ -470,8 +470,8 @@ void rodex_get_items(struct map_session_data *sd, int8 opentype, int64 mail_id)
 			if (j < msg->items_count) {
 				struct item_data *idata = itemdb->search(sd->status.inventory[i].nameid);
 
-				if ((idata->stack.inventory && sd->status.inventory[i].amount + msg->items[i].item.amount > idata->stack.amount) ||
-					sd->status.inventory[i].amount + msg->items[i].item.amount > MAX_AMOUNT) {
+				if ((idata->stack.inventory && sd->status.inventory[i].amount + msg->items[j].item.amount > idata->stack.amount) ||
+					sd->status.inventory[i].amount + msg->items[j].item.amount > MAX_AMOUNT) {
 					clif->rodex_request_items(sd, opentype, mail_id, RODEX_GET_ITEM_FULL_ERROR);
 					return;
 				}

@@ -2607,7 +2607,7 @@ void intif_parse_RodexCheckName(int fd)
 	}
 
 	sd->rodex.tmp.receiver_id = target_char_id;
-	strncpy(sd->rodex.tmp.receiver_name, name, NAME_LENGTH);
+	safestrncpy(sd->rodex.tmp.receiver_name, name, NAME_LENGTH);
 
 	clif->rodex_checkname_result(sd, target_char_id, target_class, target_level, name);
 }
