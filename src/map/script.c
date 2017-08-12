@@ -8720,34 +8720,93 @@ BUILDIN(getpartyname)
  *------------------------------------------*/
 BUILDIN(getpartymember)
 {
+	int32 var_id = 0;
+	uint32 var_start = 0;
+	struct reg_db *var_ref = NULL;
+	const char *var_name = NULL;
+	struct map_session_data *sd = NULL;
+
 	struct party_data *p;
-	int j=0,type=0;
+	int j = 0;
+	int type = 0;
 
-	p=party->search(script_getnum(st,2));
+	p = party->search(script_getnum(st, 2));
 
-	if (script_hasdata(st,3))
-		type=script_getnum(st,3);
+	if (script_hasdata(st, 3)) {
+		type=script_getnum(st, 3);
+	}
 
-	if ( p != NULL) {
+	if (script_hasdata(st, 4)) {
+		struct script_data *data = script_getdata(st, 4);
+
+		if (!data_isreference(data) || reference_toconstant(data)) {
+			ShowError("script:getpartymember: third argument must be a variable\n");
+			script->reportdata(data);
+			st->state = END;
+			return false;
+		}
+
+		var_id = reference_getid(data);
+		var_start = reference_getindex(data);
+		var_name = reference_getname(data);
+		var_ref = reference_getref(data);
+
+		if (not_server_variable(*var_name) && !var_ref) {
+			sd = script->rid2sd(st);
+			if (sd == NULL) {
+				return true; // player variable but no player attached
+			}
+		}
+	}
+
+	if (p != NULL) {
 		int i;
 		for (i = 0; i < MAX_PARTY; i++) {
-			if(p->party.member[i].account_id) {
+			if (p->party.member[i].account_id) {
 				switch (type) {
 					case 2:
-						mapreg->setreg(reference_uid(script->add_str("$@partymemberaid"), j),p->party.member[i].account_id);
+						if (script_hasdata(st, 4)) {
+							script->set_reg(st, sd, reference_uid(var_id, var_start + j), var_name,
+								(const void *)h64BPTRSIZE(p->party.member[i].account_id), var_ref);
+						} else {
+							/** deprecated, kept for backward-compatibility */
+							mapreg->setreg(reference_uid(script->add_str("$@partymemberaid"), j),
+								p->party.member[i].account_id);
+						}
 						break;
 					case 1:
-						mapreg->setreg(reference_uid(script->add_str("$@partymembercid"), j),p->party.member[i].char_id);
+						if (script_hasdata(st, 4)) {
+							script->set_reg(st, sd, reference_uid(var_id, var_start + j), var_name,
+								(const void *)h64BPTRSIZE(p->party.member[i].char_id), var_ref);
+						} else {
+							/** deprecated, kept for backward-compatibility */
+							mapreg->setreg(reference_uid(script->add_str("$@partymembercid"), j),
+								p->party.member[i].account_id);
+						}
 						break;
 					default:
-						mapreg->setregstr(reference_uid(script->add_str("$@partymembername$"), j),p->party.member[i].name);
+						if (script_hasdata(st, 4)) {
+							script->set_reg(st, sd, reference_uid(var_id, var_start + j), var_name,
+								p->party.member[i].name, var_ref);
+						} else {
+							/** deprecated, kept for backward-compatibility */
+							mapreg->setregstr(reference_uid(script->add_str("$@partymemberaid"), j),
+								p->party.member[i].name);
+						}
 				}
 				j++;
 			}
 		}
 	}
-	mapreg->setreg(script->add_str("$@partymembercount"),j);
 
+	if (!script_hasdata(st, 4)) {
+		/** deprecated, kept for backward-compatibility */
+		mapreg->setreg(script->add_str("$@partymembercount"), j);
+
+		ShowWarning("script:getpartymember: variable name not specified; using deprecated hard-coded variables instead.\n");
+	}
+
+	script_pushint(st, j);
 	return true;
 }
 
@@ -23421,7 +23480,7 @@ BUILDIN(rodex_sendmail)
 	// Common parameters - sender/message/zeny
 	if (rodex_sendmail_sub(st, &msg) == false)
 		return false;
-	
+
 	// Item list
 	while (i < RODEX_MAX_ITEM && script_hasdata(st, param)) {
 		struct item_data *idata;
@@ -23450,7 +23509,7 @@ BUILDIN(rodex_sendmail)
 		msg.items[i].item.nameid = idata->nameid;
 		msg.items[i].item.amount = script_getnum(st, (param + 1));
 		msg.items[i].item.identify = 1;
-		
+
 		++i;
 		param += 2;
 	}
@@ -23528,7 +23587,7 @@ BUILDIN(rodex_sendmail2)
 		for (j = 0; j < MAX_SLOTS; ++j) {
 			msg.items[i].item.card[j] = script_getnum(st, param + 4 + j);
 		}
-		
+
 		++i;
 		param += 4 + MAX_SLOTS;
 	}
@@ -23764,7 +23823,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getcharid,"i?"),
 		BUILDIN_DEF(getnpcid,"i?"),
 		BUILDIN_DEF(getpartyname,"i"),
-		BUILDIN_DEF(getpartymember,"i?"),
+		BUILDIN_DEF(getpartymember,"i??"),
 		BUILDIN_DEF(getpartyleader,"i?"),
 		BUILDIN_DEF(getguildname,"i"),
 		BUILDIN_DEF(getguildmaster,"i"),
