@@ -432,6 +432,7 @@ enum script_unit_data_types {
 struct Script_Config {
 	bool warn_func_mismatch_argtypes;
 	bool warn_func_mismatch_paramnum;
+	bool use_deprecated_variables;
 	int check_cmdcount;
 	int check_gotocount;
 	int input_min_value;

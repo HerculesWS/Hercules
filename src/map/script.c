@@ -4798,6 +4798,7 @@ bool script_config_read(const char *filename, bool imported)
 
 	libconfig->setting_lookup_bool_real(setting, "warn_func_mismatch_paramnum", &script->config.warn_func_mismatch_paramnum);
 	libconfig->setting_lookup_bool_real(setting, "warn_func_mismatch_argtypes", &script->config.warn_func_mismatch_argtypes);
+	libconfig->setting_lookup_bool_real(setting, "use_deprecated_variables", &script->config.use_deprecated_variables);
 	libconfig->setting_lookup_int(setting, "check_cmdcount", &script->config.check_cmdcount);
 	libconfig->setting_lookup_int(setting, "check_gotocount", &script->config.check_gotocount);
 	libconfig->setting_lookup_int(setting, "input_min_value", &script->config.input_min_value);
@@ -25069,6 +25070,7 @@ void script_defaults(void)
 	/* script_config base */
 	script->config.warn_func_mismatch_argtypes = true;
 	script->config.warn_func_mismatch_paramnum = true;
+	script->config.use_deprecated_variables = true; // backward-compatibility for old installations
 	script->config.check_cmdcount = 65535;
 	script->config.check_gotocount = 2048;
 	script->config.input_min_value = 0;
