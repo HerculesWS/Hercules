@@ -20775,40 +20775,68 @@ BUILDIN(showevent)
  * BattleGround System
  *------------------------------------------*/
 BUILDIN(waitingroom2bg) {
+	int32 var_id = 0;
+	uint32 var_start = 0;
+	struct reg_db *var_ref = NULL;
+	const char *var_name = NULL;
+	struct map_session_data *sd = NULL;
+
 	struct npc_data *nd;
 	struct chat_data *cd;
 	const char *map_name, *ev = "", *dev = "";
 	int x, y, i, map_index = 0, bg_id, n;
 
-	if( script_hasdata(st,7) )
-		nd = npc->name2id(script_getstr(st,7));
-	else
+	if (script_hasdata(st, 7)) {
+		nd = npc->name2id(script_getstr(st, 7));
+	} else {
 		nd = map->id2nd(st->oid);
+	}
+
+	if (script_hasdata(st, 8)) {
+		struct script_data *data = script_getdata(st, 8);
+
+		if (!data_isreference(data) || reference_toconstant(data)) {
+			ShowError("script:getguildmember: seventh argument must be a variable\n");
+			script->reportdata(data);
+			st->state = END;
+			return false;
+		}
+
+		var_id = reference_getid(data);
+		var_start = reference_getindex(data);
+		var_name = reference_getname(data);
+		var_ref = reference_getref(data);
+
+		if (not_server_variable(*var_name) && !var_ref) {
+			sd = script->rid2sd(st);
+			if (sd == NULL) {
+				script_pushint(st, 0);
+				return true; // player variable but no player attached
+			}
+		}
+	}
 
 	if (nd == NULL || (cd = map->id2cd(nd->chat_id)) == NULL) {
-		script_pushint(st,0);
+		script_pushint(st, -1); // NPC or waiting room not found
 		return true;
 	}
 
 	map_name = script_getstr(st,2);
-	if( strcmp(map_name,"-") != 0 )
-	{
-		map_index = script->mapindexname2id(st,map_name);
-		if( map_index == 0 )
-		{ // Invalid Map
-			script_pushint(st,0);
+	if (strcmp(map_name, "-") != 0) {
+		map_index = script->mapindexname2id(st, map_name);
+		if (map_index == 0) {
+			script_pushint(st, -1); // Invalid map
 			return true;
 		}
 	}
 
-	x = script_getnum(st,3);
-	y = script_getnum(st,4);
-	ev = script_getstr(st,5); // Logout Event
-	dev = script_getstr(st,6); // Die Event
+	x = script_getnum(st, 3);
+	y = script_getnum(st, 4);
+	ev = script_getstr(st, 5); // Logout event
+	dev = script_getstr(st, 6); // Die event
 
 	if ((bg_id = bg->create(map_index, x, y, ev, dev)) == 0) {
-		// Creation failed
-		script_pushint(st,0);
+		script_pushint(st, -1); // BG creation failed
 		return true;
 	}
 
@@ -20816,15 +20844,29 @@ BUILDIN(waitingroom2bg) {
 	n = cd->users; // This is always < MAX_CHAT_USERS
 
 	for (i = 0; i < n && i < MAX_BG_MEMBERS; i++) {
-		struct map_session_data *sd = cd->usersd[i];
-		if (sd != NULL && bg->team_join(bg_id, sd))
-			mapreg->setreg(reference_uid(script->add_str("$@arenamembers"), i), sd->bl.id);
-		else
-			mapreg->setreg(reference_uid(script->add_str("$@arenamembers"), i), 0);
+		struct map_session_data *p_sd = cd->usersd[i];
+
+		if (p_sd == NULL || !bg->team_join(bg_id, p_sd)) {
+			continue;
+		}
+
+		if (script_hasdata(st, 8)) {
+			script->set_reg(st, sd, reference_uid(var_id, var_start + i), var_name,
+				(const void *)h64BPTRSIZE(p_sd->bl.id), var_ref);
+		} else {
+			/** deprecated, kept for backward-compatibility */
+			mapreg->setreg(reference_uid(script->add_str("$@arenamembers"), i),
+				p_sd->bl.id);
+		}
 	}
 
-	mapreg->setreg(script->add_str("$@arenamembersnum"), i);
-	script_pushint(st,bg_id);
+	if (!script_hasdata(st, 8)) {
+		mapreg->setreg(script->add_str("$@arenamembersnum"), i);
+
+		ShowWarning("script:waitingroom2bg: variable name not specified; using deprecated hard-coded variables instead.\n");
+	}
+
+	script_pushint(st, bg_id);
 	return true;
 }
 
@@ -24384,7 +24426,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(agitend2,""),
 		BUILDIN_DEF(agitcheck2,""),
 		// BattleGround
-		BUILDIN_DEF(waitingroom2bg,"siiss?"),
+		BUILDIN_DEF(waitingroom2bg,"siiss??"),
 		BUILDIN_DEF(waitingroom2bg_single,"isiis"),
 		BUILDIN_DEF(bg_team_setxy,"iii"),
 		BUILDIN_DEF(bg_warp,"isii"),
