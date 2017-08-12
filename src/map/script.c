@@ -12861,51 +12861,100 @@ BUILDIN(getwaitingroomstate)
 /// warpwaitingpc "<map name>",<x>,<y>;
 BUILDIN(warpwaitingpc)
 {
+	int32 var_id = 0;
+	uint32 var_start = 0;
+	struct reg_db *var_ref = NULL;
+	const char *var_name = NULL;
+	struct map_session_data *sd = NULL;
+
 	int x, y, i, n;
 	const char* map_name;
 	struct npc_data* nd;
 	struct chat_data* cd;
 
-	nd = map->id2nd(st->oid);
-	if (nd == NULL || (cd=map->id2cd(nd->chat_id)) == NULL)
+	if ((nd = map->id2nd(st->oid)) == NULL ||
+		(cd = map->id2cd(nd->chat_id)) == NULL) {
+		script_pushint(st, -1);
 		return true;
+	}
 
-	map_name = script_getstr(st,2);
-	x = script_getnum(st,3);
-	y = script_getnum(st,4);
-	n = cd->trigger&0x7f;
+	map_name = script_getstr(st, 2);
+	x = script_getnum(st, 3);
+	y = script_getnum(st, 4);
+	n = cd->trigger & 0x7f;
 
-	if( script_hasdata(st,5) )
-		n = script_getnum(st,5);
+	if (script_hasdata(st, 5)) {
+		int max = script_getnum(st, 5);
+		n = max > 0 ? max : n;
+	}
+
+	if (script_hasdata(st, 6)) {
+		struct script_data *data = script_getdata(st, 6);
+
+		if (!data_isreference(data) || reference_toconstant(data)) {
+			ShowError("script:warpwaitingpc: third argument must be a variable\n");
+			script->reportdata(data);
+			st->state = END;
+			return false;
+		}
+
+		var_id = reference_getid(data);
+		var_start = reference_getindex(data);
+		var_name = reference_getname(data);
+		var_ref = reference_getref(data);
+
+		if (not_server_variable(*var_name) && !var_ref) {
+			sd = script->rid2sd(st);
+			if (sd == NULL) {
+				script_pushint(st, 0);
+				return true; // player variable but no player attached
+			}
+		}
+	}
 
 	for (i = 0; i < n && cd->users > 0; i++) {
-		struct map_session_data *sd = cd->usersd[0];
+		struct map_session_data *p_sd = cd->usersd[0];
 
-		nullpo_retr(false, sd);
-		if (strcmp(map_name,"SavePoint") == 0 && map->list[sd->bl.m].flag.noteleport) {
-			// can't teleport on this map
-			break;
+		if (p_sd == NULL ||
+			(strcmp(map_name, "SavePoint") == 0 && map->list[p_sd->bl.m].flag.noteleport)) {
+			continue;
 		}
 
 		if (cd->zeny) {
-			// fee set
-			if( (uint32)sd->status.zeny < cd->zeny ) {
+			if ((uint32)p_sd->status.zeny < cd->zeny) {
 				// no zeny to cover set fee
-				break;
+				continue;
 			}
-			pc->payzeny(sd, cd->zeny, LOG_TYPE_NPC, NULL);
+
+			pc->payzeny(p_sd, cd->zeny, LOG_TYPE_NPC, NULL);
 		}
 
-		mapreg->setreg(reference_uid(script->add_str("$@warpwaitingpc"), i), sd->bl.id);
+		if (script_hasdata(st, 6)) {
+			script->set_reg(st, sd, reference_uid(var_id, var_start + i), var_name,
+				(const void *)h64BPTRSIZE(p_sd->bl.id), var_ref);
+		} else {
+			/** deprecated, kept for backward-compatibility */
+			mapreg->setreg(reference_uid(script->add_str("$@warpwaitingpc"), i),
+				p_sd->bl.id);
+		}
 
-		if( strcmp(map_name,"Random") == 0 )
-			pc->randomwarp(sd,CLR_TELEPORT);
-		else if( strcmp(map_name,"SavePoint") == 0 )
-			pc->setpos(sd, sd->status.save_point.map, sd->status.save_point.x, sd->status.save_point.y, CLR_TELEPORT);
-		else
-			pc->setpos(sd, script->mapindexname2id(st,map_name), x, y, CLR_OUTSIGHT);
+		if (strcmp(map_name,"Random") == 0) {
+			pc->randomwarp(p_sd, CLR_TELEPORT);
+		} else if (strcmp(map_name,"SavePoint") == 0) {
+			pc->setpos(p_sd, p_sd->status.save_point.map, p_sd->status.save_point.x, p_sd->status.save_point.y, CLR_TELEPORT);
+		} else {
+			pc->setpos(p_sd, script->mapindexname2id(st,map_name), x, y, CLR_OUTSIGHT);
+		}
 	}
-	mapreg->setreg(script->add_str("$@warpwaitingpcnum"), i);
+
+	if (!script_hasdata(st, 6)) {
+		/** deprecated, kept for backward-compatibility */
+		mapreg->setreg(script->add_str("$@warpwaitingpcnum"), i);
+
+		ShowWarning("script:warpwaitingpc: variable name not specified; using deprecated hard-coded variables instead.\n");
+	}
+
+	script_pushint(st, i);
 	return true;
 }
 
@@ -24095,7 +24144,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(enablewaitingroomevent,"?"),
 		BUILDIN_DEF(disablewaitingroomevent,"?"),
 		BUILDIN_DEF(getwaitingroomstate,"i??"),
-		BUILDIN_DEF(warpwaitingpc,"sii?"),
+		BUILDIN_DEF(warpwaitingpc,"sii??"),
 		BUILDIN_DEF(attachrid,"i"),
 		BUILDIN_DEF(detachrid,""),
 		BUILDIN_DEF(isloggedin,"i?"),
