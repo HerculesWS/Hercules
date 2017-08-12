@@ -12762,28 +12762,71 @@ BUILDIN(disablewaitingroomevent) {
 /// getwaitingroomstate(<type>) -> <info>
 BUILDIN(getwaitingroomstate)
 {
+	int32 var_id = 0;
+	uint32 var_start = 0;
+	struct reg_db *var_ref = NULL;
+	const char *var_name = NULL;
+	struct map_session_data *sd = NULL;
+
 	const struct npc_data *nd;
 	const struct chat_data *cd;
-	int type;
-	int i;
+	int type = script_getnum(st, 2);
+	int i = 0;
 
-	type = script_getnum(st,2);
-	if( script_hasdata(st,3) )
+	if (script_hasdata(st, 3)) {
 		nd = npc->name2id(script_getstr(st, 3));
-	else
+	} else {
 		nd = map->id2nd(st->oid);
+	}
 
-	if (nd == NULL || (cd=map->id2cd(nd->chat_id)) == NULL) {
+	if (nd == NULL || (cd = map->id2cd(nd->chat_id)) == NULL) {
 		script_pushint(st, -1);
 		return true;
 	}
 
+	if (script_hasdata(st, 4)) {
+		struct script_data *data = script_getdata(st, 4);
+
+		if (!data_isreference(data) || reference_toconstant(data)) {
+			ShowError("script:getwaitingroomstate: third argument must be a variable\n");
+			script->reportdata(data);
+			st->state = END;
+			return false;
+		}
+
+		var_id = reference_getid(data);
+		var_start = reference_getindex(data);
+		var_name = reference_getname(data);
+		var_ref = reference_getref(data);
+
+		if (not_server_variable(*var_name) && !var_ref) {
+			sd = script->rid2sd(st);
+			if (sd == NULL) {
+				script_pushint(st, 0);
+				return true; // player variable but no player attached
+			}
+		}
+	}
+
 	switch(type) {
 		case 0:
-			for (i = 0; i < cd->users; i++) {
-				struct map_session_data *sd = cd->usersd[i];
-				nullpo_retr(false, sd);
-				mapreg->setreg(reference_uid(script->add_str("$@chatmembers"), i), sd->bl.id);
+			for (; i < cd->users; i++) {
+				struct map_session_data *p_sd = cd->usersd[i];
+
+				if (p_sd == NULL) {
+					continue;
+				}
+
+				if (script_hasdata(st, 4)) {
+					script->set_reg(st, sd, reference_uid(var_id, var_start + i), var_name,
+						(const void *)h64BPTRSIZE(p_sd->bl.id), var_ref);
+				} else {
+					/** deprecated, kept for backward-compatibility */
+					mapreg->setreg(reference_uid(script->add_str("$@chatmembers"), i),
+						p_sd->bl.id);
+
+					ShowWarning("script:getwaitingroomstate: variable name not specified; using deprecated hard-coded variables instead.\n");
+				}
 			}
 			script_pushint(st, cd->users);
 			break;
@@ -24051,7 +24094,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF2(waitingroomkickall,"kickwaitingroomall","?"),
 		BUILDIN_DEF(enablewaitingroomevent,"?"),
 		BUILDIN_DEF(disablewaitingroomevent,"?"),
-		BUILDIN_DEF(getwaitingroomstate,"i?"),
+		BUILDIN_DEF(getwaitingroomstate,"i??"),
 		BUILDIN_DEF(warpwaitingpc,"sii?"),
 		BUILDIN_DEF(attachrid,"i"),
 		BUILDIN_DEF(detachrid,""),
