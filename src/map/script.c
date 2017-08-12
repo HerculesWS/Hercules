@@ -8920,35 +8920,97 @@ BUILDIN(getguildmasterid)
  *------------------------------------------*/
 BUILDIN(getguildmember)
 {
+	int32 var_id = 0;
+	uint32 var_start = 0;
+	struct reg_db *var_ref = NULL;
+	const char *var_name = NULL;
+	struct map_session_data *sd = NULL;
+
 	struct guild *g = NULL;
 	int j = 0;
+	int i = 0;
+	int type = 0;
 
-	g = guild->search(script_getnum(st,2));
+	if ((g = guild->search(script_getnum(st,2))) == NULL) {
+		script_pushint(st, -1); // guild not found
+		return true;
+	}
 
-	if (g) {
-		int i, type = 0;
 
-		if (script_hasdata(st,3))
-			type = script_getnum(st,3);
+	if (script_hasdata(st,3)) {
+		type = script_getnum(st,3);
+	}
 
-		for ( i = 0; i < MAX_GUILD; i++ ) {
-			if ( g->member[i].account_id ) {
-				switch (type) {
-				case 2:
-					mapreg->setreg(reference_uid(script->add_str("$@guildmemberaid"), j),g->member[i].account_id);
-					break;
-				case 1:
-					mapreg->setreg(reference_uid(script->add_str("$@guildmembercid"), j), g->member[i].char_id);
-					break;
-				default:
-					mapreg->setregstr(reference_uid(script->add_str("$@guildmembername$"), j), g->member[i].name);
-					break;
-				}
-				j++;
+	if (script_hasdata(st, 4)) {
+		struct script_data *data = script_getdata(st, 4);
+
+		if (!data_isreference(data) || reference_toconstant(data)) {
+			ShowError("script:getguildmember: third argument must be a variable\n");
+			script->reportdata(data);
+			st->state = END;
+			return false;
+		}
+
+		var_id = reference_getid(data);
+		var_start = reference_getindex(data);
+		var_name = reference_getname(data);
+		var_ref = reference_getref(data);
+
+		if (not_server_variable(*var_name) && !var_ref) {
+			sd = script->rid2sd(st);
+			if (sd == NULL) {
+				script_pushint(st, 0);
+				return true; // player variable but no player attached
 			}
 		}
 	}
-	mapreg->setreg(script->add_str("$@guildmembercount"), j);
+
+	for (; i < MAX_GUILD; i++) {
+		if (g->member[i].account_id) {
+			switch (type) {
+			case 2:
+				if (script_hasdata(st, 4)) {
+					script->set_reg(st, sd, reference_uid(var_id, var_start + j), var_name,
+						(const void *)h64BPTRSIZE(g->member[i].account_id), var_ref);
+				} else {
+					/** deprecated, kept for backward-compatibility */
+					mapreg->setreg(reference_uid(script->add_str("$@guildmemberaid"), j),
+						g->member[i].account_id);
+				}
+				break;
+			case 1:
+				if (script_hasdata(st, 4)) {
+					script->set_reg(st, sd, reference_uid(var_id, var_start + j), var_name,
+						(const void *)h64BPTRSIZE(g->member[i].char_id), var_ref);
+				} else {
+					/** deprecated, kept for backward-compatibility */
+					mapreg->setreg(reference_uid(script->add_str("$@guildmembercid"), j),
+						g->member[i].char_id);
+				}
+				break;
+			default:
+				if (script_hasdata(st, 4)) {
+					script->set_reg(st, sd, reference_uid(var_id, var_start + j), var_name,
+						g->member[i].name, var_ref);
+				} else {
+					/** deprecated, kept for backward-compatibility */
+					mapreg->setregstr(reference_uid(script->add_str("$@guildmembername$"), j),
+						g->member[i].name);
+				}
+				break;
+			}
+			j++;
+		}
+	}
+
+	if (!script_hasdata(st, 4)) {
+		/** deprecated, kept for backward-compatibility */
+		mapreg->setreg(script->add_str("$@guildmembercount"), j);
+
+		ShowWarning("script:getguildmember: variable name not specified; using deprecated hard-coded variables instead.\n");
+	}
+
+	script_pushint(st, j);
 	return true;
 }
 
@@ -23828,7 +23890,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getguildname,"i"),
 		BUILDIN_DEF(getguildmaster,"i"),
 		BUILDIN_DEF(getguildmasterid,"i"),
-		BUILDIN_DEF(getguildmember,"i?"),
+		BUILDIN_DEF(getguildmember,"i??"),
 		BUILDIN_DEF(strcharinfo,"i??"),
 		BUILDIN_DEF(strnpcinfo,"i??"),
 		BUILDIN_DEF(charid2rid,"i"),
