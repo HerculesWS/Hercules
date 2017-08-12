@@ -10845,34 +10845,84 @@ BUILDIN(monster)
  *------------------------------------------*/
 BUILDIN(getmobdrops)
 {
-	int class_ = script_getnum(st,2);
-	int i, j = 0;
+	int32 var_item_id = 0, var_rate_id = 0;
+	uint32 var_item_start = 0, var_rate_start = 0;
+	struct reg_db *var_item_ref = NULL, *var_rate_ref = NULL;
+	const char *var_item_name = NULL, *var_rate_name = NULL;
+	struct map_session_data *sd = NULL;
+
+	int class_ = script_getnum(st, 2);
+	int i = 0, j = 0;
 	struct mob_db *monster;
 
-	if( !mob->db_checkid(class_) )
+	if (!mob->db_checkid(class_) || (monster = mob->db(class_)) == NULL)
 	{
-		script_pushint(st, 0);
+		script_pushint(st, -1);
 		return true;
 	}
 
-	monster = mob->db(class_);
+	if (script_hasdata(st, 4)) {
+		struct script_data *data_item = script_getdata(st, 3);
+		struct script_data *data_rate = script_getdata(st, 4);
 
-	for( i = 0; i < MAX_MOB_DROP; i++ )
+		if (!data_isreference(data_item) || reference_toconstant(data_item) ||
+			!data_isreference(data_rate) || reference_toconstant(data_rate)) {
+			ShowError("script:getmobdrops: third and fourth arguments must be variables\n");
+			script->reportdata(data_item);
+			script->reportdata(data_rate);
+			st->state = END;
+			return false;
+		}
+
+		var_item_id = reference_getid(data_item);
+		var_item_start = reference_getindex(data_item);
+		var_item_name = reference_getname(data_item);
+		var_item_ref = reference_getref(data_item);
+
+		var_rate_id = reference_getid(data_rate);
+		var_rate_start = reference_getindex(data_rate);
+		var_rate_name = reference_getname(data_rate);
+		var_rate_ref = reference_getref(data_rate);
+
+		if ((not_server_variable(*var_item_name) && !var_item_ref) ||
+			(not_server_variable(*var_rate_name) && !var_rate_ref)) {
+			if ((sd = script->rid2sd(st)) == NULL) {
+				script_pushint(st, 0);
+				return true; // player variable but no player attached
+			}
+		}
+	}
+
+	for (; i < MAX_MOB_DROP; i++)
 	{
-		if( monster->dropitem[i].nameid < 1 )
+		if (monster->dropitem[i].nameid < 1 ||
+			itemdb->exists(monster->dropitem[i].nameid) == NULL) {
 			continue;
-		if( itemdb->exists(monster->dropitem[i].nameid) == NULL )
-			continue;
+		}
 
-		mapreg->setreg(reference_uid(script->add_str("$@MobDrop_item"), j), monster->dropitem[i].nameid);
-		mapreg->setreg(reference_uid(script->add_str("$@MobDrop_rate"), j), monster->dropitem[i].p);
-
+		if (script_hasdata(st, 4)) {
+			script->set_reg(st, sd, reference_uid(var_item_id, var_item_start + j), var_item_name,
+				(const void *)h64BPTRSIZE(monster->dropitem[i].nameid), var_item_ref);
+			script->set_reg(st, sd, reference_uid(var_rate_id, var_rate_start + j), var_rate_name,
+				(const void *)h64BPTRSIZE(monster->dropitem[i].p), var_rate_ref);
+		} else {
+			/** deprecated, kept for backward-compatibility */
+			mapreg->setreg(reference_uid(script->add_str("$@MobDrop_item"), j),
+				monster->dropitem[i].nameid);
+			mapreg->setreg(reference_uid(script->add_str("$@MobDrop_rate"), j),
+				monster->dropitem[i].p);
+		}
 		j++;
 	}
 
-	mapreg->setreg(script->add_str("$@MobDrop_count"), j);
-	script_pushint(st, 1);
+	if (!script_hasdata(st, 4)) {
+		/** deprecated, kept for backward-compatibility */
+		mapreg->setreg(script->add_str("$@MobDrop_count"), j);
 
+		ShowWarning("script:getmobdrops: variable names not specified; using deprecated hard-coded variables instead.\n");
+	}
+
+	script_pushint(st, j);
 	return true;
 }
 /*==========================================
@@ -23948,7 +23998,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(produce,"i"),
 		BUILDIN_DEF(cooking,"i"),
 		BUILDIN_DEF(monster,"siisii???"),
-		BUILDIN_DEF(getmobdrops,"i"),
+		BUILDIN_DEF(getmobdrops,"i??"),
 		BUILDIN_DEF(areamonster,"siiiisii???"),
 		BUILDIN_DEF(killmonster,"ss?"),
 		BUILDIN_DEF(killmonsterall,"s?"),
