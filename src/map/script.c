@@ -4078,10 +4078,18 @@ void op_2str(struct script_state* st, int op, const char* s1, const char* s2)
 				int i;
 				for (i = 0; i < offsetcount; i++) {
 					libpcre->get_substring(s1, offsets, offsetcount, i, &pcre_match);
-					mapreg->setregstr(reference_uid(script->add_str("$@regexmatch$"), i), pcre_match);
+					if (script->config.use_deprecated_variables) {
+						/** deprecated, kept for backward-compatibility */
+						mapreg->setregstr(reference_uid(script->add_str("$@regexmatch$"), i), pcre_match);
+					} else {
+						script->setd_sub(st, NULL, ".@regexmatch$", i, pcre_match, NULL);
+					}
 					libpcre->free_substring(pcre_match);
 				}
-				mapreg->setreg(script->add_str("$@regexmatchcount"), i);
+				if (script->config.use_deprecated_variables) {
+					/** deprecated, kept for backward-compatibility */
+					mapreg->setreg(script->add_str("$@regexmatchcount"), i);
+				}
 				a = offsetcount;
 			} else { // C_RE_NE
 				a = (offsetcount == 0);
