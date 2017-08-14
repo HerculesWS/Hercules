@@ -844,7 +844,7 @@ typedef enum sc_type {
 	SC_DRESS_UP,
 
 	// Rodex
-	SC_DAILYSENDMAILCNT = 824,
+	SC_DAILYSENDMAILCNT,
 #ifndef SC_MAX
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 #endif
