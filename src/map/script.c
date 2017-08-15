@@ -4485,6 +4485,30 @@ void run_script(struct script_code *rootscript, int pos, int rid, int oid) {
 	script->run_main(st);
 }
 
+void run_script_and_inject(struct script_code *rootscript, int pos, int rid, int oid, struct argrec_vector *argrec) {
+	struct script_state *st;
+	uint32 i = 0;
+	struct map_session_data *sd = map->id2sd(rid);
+
+	if (rootscript == NULL || pos < 0) {
+		return;
+	}
+
+	st = script->alloc_state(rootscript, pos, rid, oid);
+
+	for (; i < VECTOR_LENGTH(*argrec); i++) {
+		struct argrec_t rec = VECTOR_INDEX(*argrec, i);
+		if (is_string_variable(rec.name)) {
+			script->set_reg(st, sd, rec.uid, rec.name, rec.v.str, NULL);
+		} else {
+			script->set_reg(st, sd, rec.uid, rec.name, (const void *)h64BPTRSIZE(rec.v.num), NULL);
+		}
+	}
+
+	VECTOR_CLEAR(*argrec);
+	script->run_main(st);
+}
+
 void script_stop_instances(struct script_code *code)
 {
 	struct DBIterator *iter;
@@ -24959,6 +24983,7 @@ void script_defaults(void)
 	script->label_add = script_label_add;
 	script->run = run_script;
 	script->run_npc = run_script;
+	script->run_npc_inject = run_script_and_inject;
 	script->run_pet = run_script;
 	script->run_main = run_script_main;
 	script->run_timer = run_script_timer;
