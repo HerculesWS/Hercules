@@ -33,6 +33,7 @@ function usage {
 	echo "usage:"
 	echo "    $0 createdb <dbname> [dbuser] [dbpassword] [dbhost]"
 	echo "    $0 importdb <dbname> [dbuser] [dbpassword] [dbhost]"
+	echo "    $0 adduser <dbname> <new_user> <new_user_password> [dbuser] [dbpassword] [dbhost]"
 	echo "    $0 build [configure args]"
 	echo "    $0 test <dbname> [dbuser] [dbpassword] [dbhost]"
 	echo "    $0 getplugins"
@@ -93,29 +94,53 @@ case "$MODE" in
 		fi
 		DBNAME="$1"
 		if [ -n "$2" ]; then
-			DBUSER_ARG="-u $2"
+			DBUSER_ARG="--user=$2"
 			DBUSER="$2"
 		fi
 		if [ -n "$3" ]; then
-			DBPASS_ARG="-p$3"
+			DBPASS_ARG="--password=$3"
 			DBPASS="$3"
 		fi
 		if [ -n "$4" ]; then
-			DBHOST_ARG="-h $4"
+			DBHOST_ARG="--host=$4"
 			DBHOST="$4"
+		fi
+		;;
+	adduser)
+		if [ -z "$3" ]; then
+			usage
+		fi
+		DBNAME="$1"
+		NEWUSER="$2"
+		NEWPASS="$3"
+		if [ -n "$4" ]; then
+			DBUSER_ARG="--user=$4"
+			DBUSER="$4"
+		fi
+		if [ -n "$5" ]; then
+			DBPASS_ARG="--password=$5"
+			DBPASS="$5"
+		fi
+		if [ -n "$6" ]; then
+			DBHOST_ARG="--host=$6"
+			DBHOST="$6"
 		fi
 		;;
 esac
 
 case "$MODE" in
 	createdb)
-		echo "Creating database $DBNAME..."
-		mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG -e "create database $DBNAME;" || aborterror "Unable to create database."
+		echo "Creating database $DBNAME as $DBUSER..."
+		mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG --execute="CREATE DATABASE $DBNAME;" || aborterror "Unable to create database."
 		;;
 	importdb)
-		echo "Importing tables into $DBNAME..."
-		mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG $DBNAME < sql-files/main.sql || aborterror "Unable to import main database."
-		mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG $DBNAME < sql-files/logs.sql || aborterror "Unable to import logs database."
+		echo "Importing tables into $DBNAME as $DBUSER..."
+		mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG --database=$DBNAME < sql-files/main.sql || aborterror "Unable to import main database."
+		mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG --database=$DBNAME < sql-files/logs.sql || aborterror "Unable to import logs database."
+		;;
+	adduser)
+		echo "Adding user $NEWUSER as $DBUSER, with access to database $DBNAME..."
+		mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG --execute="GRANT SELECT,INSERT,UPDATE,DELETE ON $DBNAME.* TO '$NEWUSER'@'$DBHOST' IDENTIFIED BY '$NEWPASS';"
 		;;
 	build)
 		(cd tools && ./validateinterfaces.py silent) || aborterror "Interface validation error."
