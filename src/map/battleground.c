@@ -631,34 +631,36 @@ void bg_begin(struct bg_arena *arena) {
 	} else {
 		arena->ongoing = true;
 
-		if( bg->afk_timer_id == INVALID_TIMER && bg->mafksec > 0 )
-			bg->afk_timer_id = timer->add(timer->gettick()+10000,bg->afk_timer,0,0);
-
-		/* TODO: make this a arena-independent var? or just .@? */
-		mapreg->setreg(script->add_str("$@bg_queue_id"),arena->queue_id);
-		mapreg->setregstr(script->add_str("$@bg_delay_var$"),bg->gdelay_var);
-
-		count = 0;
-		for (i = 0; i < VECTOR_LENGTH(queue->entries); i++) {
-			struct map_session_data *sd = map->id2sd(VECTOR_INDEX(queue->entries, i));
-
-			if (sd == NULL || sd->bg_queue.ready != 1)
-				continue;
-
-			mapreg->setreg(reference_uid(script->add_str("$@bg_member"), count), sd->status.account_id);
-			mapreg->setreg(reference_uid(script->add_str("$@bg_member_group"), count),
-			               sd->bg_queue.type == BGQT_GUILD ? sd->status.guild_id :
-			               sd->bg_queue.type == BGQT_PARTY ? sd->status.party_id :
-			               0
-			               );
-			mapreg->setreg(reference_uid(script->add_str("$@bg_member_type"), count),
-			               sd->bg_queue.type == BGQT_GUILD ? 1 :
-			               sd->bg_queue.type == BGQT_PARTY ? 2 :
-			               0
-			               );
-			count++;
+		if(bg->afk_timer_id == INVALID_TIMER && bg->mafksec > 0) {
+			bg->afk_timer_id = timer->add(timer->gettick() + 10000, bg->afk_timer, 0, 0);
 		}
-		mapreg->setreg(script->add_str("$@bg_member_size"),count);
+
+		if (script->config.use_deprecated_variables) {
+			mapreg->setreg(script->add_str("$@bg_queue_id"),arena->queue_id);
+			mapreg->setregstr(script->add_str("$@bg_delay_var$"),bg->gdelay_var);
+
+			count = 0;
+			for (i = 0; i < VECTOR_LENGTH(queue->entries); i++) {
+				struct map_session_data *sd = map->id2sd(VECTOR_INDEX(queue->entries, i));
+
+				if (sd == NULL || sd->bg_queue.ready != 1)
+					continue;
+
+				mapreg->setreg(reference_uid(script->add_str("$@bg_member"), count), sd->status.account_id);
+				mapreg->setreg(reference_uid(script->add_str("$@bg_member_group"), count),
+				               sd->bg_queue.type == BGQT_GUILD ? sd->status.guild_id :
+				               sd->bg_queue.type == BGQT_PARTY ? sd->status.party_id :
+				               0
+				               );
+				mapreg->setreg(reference_uid(script->add_str("$@bg_member_type"), count),
+				               sd->bg_queue.type == BGQT_GUILD ? 1 :
+				               sd->bg_queue.type == BGQT_PARTY ? 2 :
+				               0
+				               );
+				count++;
+			}
+			mapreg->setreg(script->add_str("$@bg_member_size"),count);
+		}
 
 		npc->event_do(arena->npc_event);
 	}
