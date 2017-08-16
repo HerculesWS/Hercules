@@ -1,6 +1,6 @@
 language: c
 sudo: false
-dist: precise
+dist: trusty
 addons:
   apt:
     sources:
@@ -12,8 +12,8 @@ install:
 before_script:
   - uname -a
   - ./tools/ci/travis.sh createdb ragnarok root
-  - ./tools/ci/travis.sh importdb ragnarok travis
   - mysql -u root -e "SET PASSWORD FOR 'travis'@'localhost' = PASSWORD('travis');"
+  - ./tools/ci/travis.sh importdb ragnarok travis
 
 script:
   - if [[ ! -z "${HPM}" ]]; then ./tools/ci/travis.sh buildhpm $CONFIGURE_FLAGS; fi
