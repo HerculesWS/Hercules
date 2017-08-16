@@ -9967,12 +9967,27 @@ BUILDIN(setgroupid) {
 
 /// Returns the group ID of the player.
 ///
-/// getgroupid() -> <int>
+/// getgroupid({<account ID>/<character ID>/<character name>})
 BUILDIN(getgroupid)
 {
-	struct map_session_data *sd = script->rid2sd(st);
-	if (sd == NULL)
+	struct map_session_data *sd = NULL;
+
+	/* check if a character name is specified */
+	if (script_hasdata(st, 2)) {
+		if (script_isstringtype(st, 2)) {
+			sd = map->nick2sd(script_getstr(st, 2));
+		} else {
+			int id = script_getnum(st, 2);
+			sd = (map->id2sd(id) ? map->id2sd(id) : map->charid2sd(id));
+		}
+	} else {
+		sd = script->rid2sd(st);
+	}
+
+	if (sd == NULL) {
+		script_pushint(st, -1); // Failure, no player found.
 		return true; // no player attached, report source
+	}
 	script_pushint(st, pc_get_group_id(sd));
 
 	return true;
@@ -15279,11 +15294,15 @@ BUILDIN(message)
 
 /*==========================================
  * npctalk (sends message to surrounding area)
- * usage: npctalk "<message>"{,"<npc name>"};
+ * usage: npctalk "<message>"{,"<npc name>"{,<show_npcname>}};
+ *  <show_npcname>:
+ *      true: shows npc name like "Npc : message" (default)
+ *      false: hide npc name
  *------------------------------------------*/
 BUILDIN(npctalk)
 {
 	struct npc_data* nd;
+	int show_npcname = 1;
 	const char *str = script_getstr(st,2);
 
 	if (script_hasdata(st, 3)) {
@@ -15292,11 +15311,19 @@ BUILDIN(npctalk)
 		nd = map->id2nd(st->oid);
 	}
 
+	if (script_hasdata(st, 4)) {
+		show_npcname = script_getnum(st, 4);
+	}
+
 	if (nd != NULL) {
 		char name[NAME_LENGTH], message[256];
 		safestrncpy(name, nd->name, sizeof(name));
 		strtok(name, "#"); // discard extra name identifier if present
-		safesnprintf(message, sizeof(message), "%s : %s", name, str);
+		if (show_npcname) {
+			safesnprintf(message, sizeof(message), "%s", str);
+		} else {
+			safesnprintf(message, sizeof(message), "%s : %s", name, str);
+		}
 		clif->disp_overhead(&nd->bl, message);
 	}
 
@@ -19674,14 +19701,18 @@ BUILDIN(unitstop) {
 
 /// Makes the unit say the message
 ///
-/// unittalk <unit_id>,"<message>";
-BUILDIN(unittalk) {
-	int unit_id;
+/// unittalk <unit_id>,"<message>"{, show_unitname};
+BUILDIN(unittalk)
+{
+	int unit_id, show_unitname = 1;
 	const char* message;
 	struct block_list* bl;
 
 	unit_id = script_getnum(st,2);
 	message = script_getstr(st, 3);
+
+	if (script_hasdata(st, 4))
+		show_unitname = script_getnum(st, 4);
 
 	bl = map->id2bl(unit_id);
 	if( bl != NULL ) {
@@ -19689,9 +19720,14 @@ BUILDIN(unittalk) {
 		char blname[NAME_LENGTH];
 		StrBuf->Init(&sbuf);
 		safestrncpy(blname, clif->get_bl_name(bl), sizeof(blname));
-		if(bl->type == BL_NPC)
+		if(bl->type == BL_NPC) {
 			strtok(blname, "#");
-		StrBuf->Printf(&sbuf, "%s : %s", blname, message);
+		}
+		if (show_unitname) {
+			StrBuf->Printf(&sbuf, "%s : %s", blname, message);
+		} else {
+			StrBuf->Printf(&sbuf, "%s", message);
+		}
 		clif->disp_overhead(bl, StrBuf->Value(&sbuf));
 		StrBuf->Destroy(&sbuf);
 	}
@@ -23806,7 +23842,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(basicskillcheck,""),
 		BUILDIN_DEF(getgmlevel,""),
 		BUILDIN_DEF(setgroupid, "i?"),
-		BUILDIN_DEF(getgroupid,""),
+		BUILDIN_DEF(getgroupid,"?"),
 		BUILDIN_DEF(end,""),
 		BUILDIN_DEF(checkoption,"i?"),
 		BUILDIN_DEF(setoption,"i??"),
@@ -23947,7 +23983,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF2(atcommand,"charcommand","s"), // [MouseJstr]
 		BUILDIN_DEF(movenpc,"sii?"), // [MouseJstr]
 		BUILDIN_DEF(message,"vs"), // [MouseJstr]
-		BUILDIN_DEF(npctalk,"s?"), // [Valaris]
+		BUILDIN_DEF(npctalk,"s??"), // [Valaris][Murilo BiO]
 		BUILDIN_DEF(mobcount,"ss"),
 		BUILDIN_DEF(getlook,"i"),
 		BUILDIN_DEF(getsavepoint,"i"),
@@ -24073,7 +24109,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(unitwarp,"isii"),
 		BUILDIN_DEF(unitattack,"iv?"),
 		BUILDIN_DEF(unitstop,"i"),
-		BUILDIN_DEF(unittalk,"is"),
+		BUILDIN_DEF(unittalk,"is?"),
 		BUILDIN_DEF(unitemote,"ii"),
 		BUILDIN_DEF(unitskilluseid,"ivi?"), // originally by Qamera [Celest]
 		BUILDIN_DEF(unitskillusepos,"iviii"), // [Celest]
