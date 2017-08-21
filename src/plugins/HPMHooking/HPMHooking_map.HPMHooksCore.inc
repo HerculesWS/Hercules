@@ -2874,6 +2874,8 @@ struct {
 	struct HPMHookPoint *HP_itemdb_is_item_usable_post;
 	struct HPMHookPoint *HP_itemdb_lookup_const_pre;
 	struct HPMHookPoint *HP_itemdb_lookup_const_post;
+	struct HPMHookPoint *HP_itemdb_lookup_const_mask_pre;
+	struct HPMHookPoint *HP_itemdb_lookup_const_mask_post;
 	struct HPMHookPoint *HP_libconfig_read_pre;
 	struct HPMHookPoint *HP_libconfig_read_post;
 	struct HPMHookPoint *HP_libconfig_write_pre;
@@ -9069,6 +9071,8 @@ struct {
 	int HP_itemdb_is_item_usable_post;
 	int HP_itemdb_lookup_const_pre;
 	int HP_itemdb_lookup_const_post;
+	int HP_itemdb_lookup_const_mask_pre;
+	int HP_itemdb_lookup_const_mask_post;
 	int HP_libconfig_read_pre;
 	int HP_libconfig_read_post;
 	int HP_libconfig_write_pre;
