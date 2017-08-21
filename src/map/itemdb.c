@@ -2047,7 +2047,7 @@ int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const char *
 	else if( !inherit )
 		id.sex = 2;
 
-	if( itemdb->lookup_const(it, "Loc", &i32) && i32 >= 0 )
+	if (itemdb->lookup_const_mask(it, "Loc", &i32) && i32 >= 0)
 		id.equip = i32;
 
 	if( itemdb->lookup_const(it, "WeaponLv", &i32) && i32 >= 0 )

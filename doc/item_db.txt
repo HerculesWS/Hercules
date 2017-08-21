@@ -60,7 +60,7 @@ item_db: (
 	Job: Job mask                 (alternate synxtax, int, defaults to all jobs = 0xFFFFFFFF)
 	Upper: Upper mask             (bitmask array, string or int, defaults to "ITEMUPPER_ALL")
 	Gender: Gender                (string, defaults to "SEX_ANY")
-	Loc: Equip location           (int, required value for equipment)
+	Loc: Equip location           (bitmask array, string or int, required value for equipment)
 	WeaponLv: Weapon Level        (int, defaults to 0)
 	EquipLv: Equip required level (int, defaults to 0)
 	EquipLv: [min, max]           (alternative syntax with min / max level)
@@ -208,28 +208,34 @@ Gender: Gender restriction.
 	When not specified, becomes "SEX_ANY".
 
 Loc: Equipment's placement. A value needs to be specified if the item is an
-     equipment piece. Values are:
+     equipment piece. Values are (bitmask arrays are supported):
 
-	2^0  001 = Lower Headgear
-	2^1  002 = Weapon
-	2^2  004 = Garment
-	2^3  008 = Accessory 1
-	2^4  016 = Armor
-	2^5  032 = Shield
-	2^6  064 = Footgear
-	2^7  128 = Accessory 2
-	2^8  256 = Upper Headgear
-	2^9  512 = Middle Headgear
-	2^10 1024 = Costume Top Headgear
-	2^11 2048 = Costume Mid Headgear
-	2^12 4096 = Costume Low Headgear
-	2^13 8192 = Costume Garment/Robe
-	2^16 65536 = Shadow Armor
-	2^17 131072 = Shadow Weapon
-	2^18 262144 = Shadow Shield
-	2^18 524288 = Shadow Shoes
-	2^20 1048576 = Shadow Accessory 2
-	2^21 2097152 = Shadow Accessory 1
+	Lower Headgear:       EQP_HEAD_LOW             (2^00 = 0x000001)
+	Weapon:               EQP_HAND_R or EQP_WEAPON (2^01 = 0x000002)
+	Garment:              EQP_GARMENT              (2^02 = 0x000004)
+	Accessory 1:          EQP_ACC_L                (2^03 = 0x000008)
+	Armor:                EQP_ARMOR                (2^04 = 0x000010)
+	Shield:               EQP_HAND_L or EQP_SHIELD (2^05 = 0x000020)
+	(Both Hands):         EQP_ARMS                 (EQP_HAND_L | EQP_HAND_R = 0x000022)
+	Footgear:             EQP_SHOES                (2^06 = 0x000040)
+	Accessory 2:          EQP_ACC_R                (2^07 = 0x000080)
+	(Both Accessories):   EQP_ACC                  (EQP_ACC_R | EQP_ACC_L = 0x000088)
+	Upper Headgear:       EQP_HEAD_TOP             (2^08 = 0x000100)
+	Middle Headgear:      EQP_HEAD_MID             (2^09 = 0x000200)
+	(T+M+B Headgear):     EQP_HELM                 (EQP_HEAD_LOW | EQP_HEAD_MID | EQP_HEAD_TOP = 0x000301)
+	Costume Top Headgear: EQP_COSTUME_HEAD_TOP     (2^10 = 0x000400)
+	Costume Mid Headgear: EQP_COSTUME_HEAD_MID     (2^11 = 0x000800)
+	Costume Low Headgear: EQP_COSTUME_HEAD_LOW     (2^12 = 0x001000)
+	Costume Garment/Robe: EQP_COSTUME_GARMENT      (2^13 = 0x002000)
+	Ammunition:           EQP_AMMO                 (2^15 = 0x008000)
+	Shadow Armor:         EQP_SHADOW_ARMOR         (2^16 = 0x010000)
+	Shadow Weapon:        EQP_SHADOW_WEAPON        (2^17 = 0x020000)
+	Shadow Shield:        EQP_SHADOW_SHIELD        (2^18 = 0x040000)
+	(Shadow 2H Weapon):   EQP_SHADOW_ARMS          (EQP_SHADOW_WEAPON | EQP_SHADOW_SHIELD = 0x060000)
+	Shadow Shoes:         EQP_SHADOW_SHOES         (2^19 = 0x080000)
+	Shadow Accessory 2:   EQP_SHADOW_ACC_R         (2^20 = 0x100000)
+	Shadow Accessory 1:   EQP_SHADOW_ACC_L         (2^21 = 0x200000)
+	(Shadow Accessories): EQP_SHADOW_ACC           (EQP_SHADOW_ACC_R | EQP_SHADOW_ACC_L = 0x300000)
 
 WeaponLv: Weapon level. Becomes 0 when not specified.
 

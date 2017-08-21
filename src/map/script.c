@@ -24459,6 +24459,15 @@ void script_hardcoded_constants(void)
 	script->set_constant("EQP_SHADOW_SHOES", EQP_SHADOW_SHOES, false, false);
 	script->set_constant("EQP_SHADOW_ACC_R", EQP_SHADOW_ACC_R, false, false);
 	script->set_constant("EQP_SHADOW_ACC_L", EQP_SHADOW_ACC_L, false, false);
+	// Synonyms and combined values
+	script->set_constant("EQP_WEAPON", EQP_WEAPON, false, false);
+	script->set_constant("EQP_SHIELD", EQP_SHIELD, false, false);
+	script->set_constant("EQP_ARMS", EQP_ARMS, false, false);
+	script->set_constant("EQP_HELM", EQP_HELM, false, false);
+	script->set_constant("EQP_ACC", EQP_ACC, false, false);
+	script->set_constant("EQP_COSTUME", EQP_COSTUME, false, false);
+	script->set_constant("EQP_SHADOW_ACC", EQP_SHADOW_ACC, false, false);
+	script->set_constant("EQP_SHADOW_ARMS", EQP_SHADOW_ARMS, false, false);
 
 	script->constdb_comment("Item Option Types");
 	script->set_constant("IT_OPT_INDEX", IT_OPT_INDEX, false, false);
