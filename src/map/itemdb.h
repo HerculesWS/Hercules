@@ -647,6 +647,7 @@ struct itemdb_interface {
 	struct item_combo * (*id2combo) (unsigned short id);
 	bool (*is_item_usable) (struct item_data *item);
 	bool (*lookup_const) (const struct config_setting_t *it, const char *name, int *value);
+	bool (*lookup_const_mask) (const struct config_setting_t *it, const char *name, int *value);
 };
 
 #ifdef HERCULES_CORE
