@@ -5032,7 +5032,7 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 				break;
 		}
 		// Upper third classes
-		if ((item->class_upper & ITEMUPPER_THURDUPPER) != 0) {
+		if ((item->class_upper & ITEMUPPER_THIRDUPPER) != 0) {
 			if ((sd->job & JOBL_THIRD) != 0 && (sd->job & JOBL_UPPER) != 0)
 				break;
 		}
