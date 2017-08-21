@@ -3510,6 +3510,8 @@ typedef bool (*HPMHOOK_pre_itemdb_is_item_usable) (struct item_data **item);
 typedef bool (*HPMHOOK_post_itemdb_is_item_usable) (bool retVal___, struct item_data *item);
 typedef bool (*HPMHOOK_pre_itemdb_lookup_const) (const struct config_setting_t **it, const char **name, int **value);
 typedef bool (*HPMHOOK_post_itemdb_lookup_const) (bool retVal___, const struct config_setting_t *it, const char *name, int *value);
+typedef bool (*HPMHOOK_pre_itemdb_lookup_const_mask) (const struct config_setting_t **it, const char **name, int **value);
+typedef bool (*HPMHOOK_post_itemdb_lookup_const_mask) (bool retVal___, const struct config_setting_t *it, const char *name, int *value);
 #endif // MAP_ITEMDB_H
 #ifdef LOGIN_LCLIF_H /* lclif */
 typedef void (*HPMHOOK_pre_lclif_init) (void);
