@@ -337,7 +337,7 @@ enum item_class_upper {
 	ITEMUPPER_UPPER      = 0x02,
 	ITEMUPPER_BABY       = 0x04,
 	ITEMUPPER_THIRD      = 0x08,
-	ITEMUPPER_THURDUPPER = 0x10,
+	ITEMUPPER_THIRDUPPER = 0x10,
 	ITEMUPPER_THIRDBABY  = 0x20,
 	ITEMUPPER_ALL        = 0x3f, // Sum of all the above
 };
