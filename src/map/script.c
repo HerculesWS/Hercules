@@ -24572,6 +24572,16 @@ void script_hardcoded_constants(void)
 	script->set_constant("A_CANNONBALL", A_CANNONBALL, false, false);
 	script->set_constant("A_THROWWEAPON", A_THROWWEAPON, false, false);
 
+	script->constdb_comment("Item Upper Masks");
+	script->set_constant("ITEMUPPER_NONE", ITEMUPPER_NONE, false, false);
+	script->set_constant("ITEMUPPER_NORMAL", ITEMUPPER_NORMAL, false, false);
+	script->set_constant("ITEMUPPER_UPPER", ITEMUPPER_UPPER, false, false);
+	script->set_constant("ITEMUPPER_BABY", ITEMUPPER_BABY, false, false);
+	script->set_constant("ITEMUPPER_THIRD", ITEMUPPER_THIRD, false, false);
+	script->set_constant("ITEMUPPER_THIRDUPPER", ITEMUPPER_THIRDUPPER, false, false);
+	script->set_constant("ITEMUPPER_THIRDBABY", ITEMUPPER_THIRDBABY, false, false);
+	script->set_constant("ITEMUPPER_ALL", ITEMUPPER_ALL, false, false);
+
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL
 	script->set_constant("RENEWAL", 1, false, false);

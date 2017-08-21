@@ -297,10 +297,11 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source)
 		StrBuf->Printf(&buf, "'%"PRIu64"',", ui64);
 
 		// equip_upper
-		if (libconfig->setting_lookup_int(entry, "Upper", &i32) && i32 >= 0)
+		if (itemdb->lookup_const_mask(entry, "Upper", &i32) && i32 >= 0)
 			ui32 = (uint32)i32;
 		else
 			ui32 = ITEMUPPER_ALL;
+
 		StrBuf->Printf(&buf, "'%u',", ui32);
 
 		// equip_genders
@@ -323,7 +324,7 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source)
 
 		// refineable
 		StrBuf->Printf(&buf, "'%d',", it->flag.no_refine?0:1);
-		
+
 		// disable_options
 		StrBuf->Printf(&buf, "'%d',", it->flag.no_options?1:0);
 

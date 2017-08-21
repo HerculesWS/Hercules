@@ -2037,7 +2037,7 @@ int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const char *
 		itemdb->jobmask2mapid(id.class_base, UINT64_MAX);
 	}
 
-	if( itemdb->lookup_const(it, "Upper", &i32) && i32 >= 0 )
+	if (itemdb->lookup_const_mask(it, "Upper", &i32) && i32 >= 0)
 		id.class_upper = (unsigned int)i32;
 	else if( !inherit )
 		id.class_upper = ITEMUPPER_ALL;
