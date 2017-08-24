@@ -17351,41 +17351,43 @@ BUILDIN(petstat)
 
 BUILDIN(callshop)
 {
-	struct npc_data *nd;
-	const char *shopname;
-	int flag = 0;
+	const char *shopname = script_getstr(st, 2);
+	struct npc_data *nd = npc->name2id(shopname);
+	int flag = script_hasdata(st, 3) ? script_getnum(st, 3) : 0;
 	struct map_session_data *sd = script->rid2sd(st);
 
-	if (sd == NULL)
+	if (sd == NULL) {
+		ShowWarning("script:callshop: no player attached.\n");
+		script_pushint(st, 0);
 		return true;
-	shopname = script_getstr(st, 2);
-	if( script_hasdata(st,3) )
-		flag = script_getnum(st,3);
-	nd = npc->name2id(shopname);
-	if( !nd || nd->bl.type != BL_NPC || (nd->subtype != SHOP && nd->subtype != CASHSHOP) )
-	{
+	}
+
+	if (!nd || nd->bl.type != BL_NPC || (nd->subtype != SHOP && nd->subtype != CASHSHOP)) {
 		ShowError("buildin_callshop: Shop [%s] not found (or NPC is not shop type)\n", shopname);
 		script_pushint(st,0);
 		return false;
 	}
 
-	if( nd->subtype == SHOP )
-	{
+	if (nd->subtype == SHOP) {
 		// flag the user as using a valid script call for opening the shop (for floating NPCs)
 		sd->state.callshop = 1;
 
-		switch( flag )
-		{
-			case 1: npc->buysellsel(sd,nd->bl.id,0); break; //Buy window
-			case 2: npc->buysellsel(sd,nd->bl.id,1); break; //Sell window
-			default: clif->npcbuysell(sd,nd->bl.id); break; //Show menu
+		switch (flag) {
+		case 1:
+			npc->buysellsel(sd, nd->bl.id, 0); // Buy window
+			break;
+		case 2:
+			npc->buysellsel(sd, nd->bl.id, 1); // Sell window
+			break;
+		default:
+			clif->npcbuysell(sd, nd->bl.id); // Show buy/sell menu
 		}
-	}
-	else
+	} else {
 		clif->cashshop_show(sd, nd);
+	}
 
 	sd->npc_shopid = nd->bl.id;
-	script_pushint(st,1);
+	script_pushint(st, 1);
 	return true;
 }
 
