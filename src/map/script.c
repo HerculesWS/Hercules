@@ -17362,13 +17362,21 @@ BUILDIN(callshop)
 		return true;
 	}
 
-	if (!nd || nd->bl.type != BL_NPC || (nd->subtype != SHOP && nd->subtype != CASHSHOP)) {
-		ShowError("buildin_callshop: Shop [%s] not found (or NPC is not shop type)\n", shopname);
-		script_pushint(st,0);
+
+	if (nd == NULL || nd->bl.type != BL_NPC || (nd->subtype != SHOP && nd->subtype != CASHSHOP &&
+		!(nd->subtype == SCRIPT && nd->u.scr.shop != NULL && nd->u.scr.shop->items > 0))) {
+		if (nd != NULL && nd->subtype == SCRIPT) {
+			ShowError("script:callshop: trader '%s' has no shop list.\n", nd->exname);
+		} else if (nd != NULL) {
+			ShowError("script:callshop: npc '%s' is not a shop.\n", nd->exname);
+		} else {
+			ShowError("script:callshop: npc '%s' does not exist.\n", shopname);
+		}
+		script_pushint(st, 0);
 		return false;
 	}
 
-	if (nd->subtype == SHOP) {
+	if (nd->subtype != SCRIPT) {
 		// flag the user as using a valid script call for opening the shop (for floating NPCs)
 		sd->state.callshop = 1;
 
@@ -17383,7 +17391,7 @@ BUILDIN(callshop)
 			clif->npcbuysell(sd, nd->bl.id); // Show buy/sell menu
 		}
 	} else {
-		clif->cashshop_show(sd, nd);
+		npc->trader_open(sd, nd);
 	}
 
 	sd->npc_shopid = nd->bl.id;
