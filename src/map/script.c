@@ -24239,7 +24239,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(bg_match_over,"s?"),
 
 		/* New Shop Support */
-		BUILDIN_DEF(openshop,"?"),
+		BUILDIN_DEF_DEPRECATED(openshop,"?"),
 		BUILDIN_DEF(sellitem,"i??"),
 		BUILDIN_DEF(stopselling,"i"),
 		BUILDIN_DEF(setcurrency,"i?"),
