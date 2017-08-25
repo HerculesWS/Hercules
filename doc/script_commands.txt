@@ -6611,12 +6611,16 @@ Examples:
 *unitwarp(<GID>, <Mapname>, <x>, <y>)
 *unitattack(<GID>, <Target ID>)
 *unitstop(<GID>)
-*unittalk(<GID>, <Text>)
+*unittalk(<GID>, <Text>{, show_name})
 *unitemote(<GID>, <Emote>)
 
 Okay, these commands should be fairly self explaining.
 For the emotions, you can look in db/constants.conf for prefixes with e_
 PS: unitwarp() supports a <GID> of zero, which causes the executor of the
+PS: unittalk() can receive a third parameter:
+	show_name:
+		true: Shows Unit name like "UnitName : Message" (default)
+		false: Hides Unit name
 script to be affected. This can be used with OnTouchNPC to warp
 monsters:
 
@@ -6730,12 +6734,16 @@ A debug message also shows on the console when no events are triggered.
 
 ---------------------------------------
 
-*npctalk("<message>"{, "<npc name>"})
+*npctalk("<message>"{, "<npc name>"{, <show_name>}})
+
+show_npcname values:
+	true: shows npc name (default)
+	false: hide npc name
 
 This command will display a message to the surrounding area as if the NPC
 object running it was a player talking - that is, above their head and in
-the chat window. The display name of the NPC will get appended in front of
-the message to complete the effect.
+the chat window. If show_npcname is true the name of the NPC will get appended in front of
+the message, otherwise the npc name will not be shown.
 
 	// This will make everyone in the area see the NPC greet the character
 	// who just invoked it.
