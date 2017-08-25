@@ -43,6 +43,42 @@ matrix:
         - libxml-sax-perl
         - libxml-parser-perl
   - compiler: clang
+    env: CONFIGURE_FLAGS="--enable-debug CC=clang-5.0 --enable-Werror --enable-buildbot"
+    addons:
+      apt:
+        sources:
+        - llvm-toolchain-trusty-5.0
+        - ubuntu-toolchain-r-test
+        packages:
+        - clang-5.0
+  - compiler: clang
+    env: CONFIGURE_FLAGS="--enable-debug CC=clang-5.0 --disable-renewal --enable-Werror --enable-buildbot"
+    addons:
+      apt:
+        sources:
+        - llvm-toolchain-trusty-5.0
+        - ubuntu-toolchain-r-test
+        packages:
+        - clang-5.0
+  - compiler: clang
+    env: CONFIGURE_FLAGS="--enable-debug CC=clang-4.0 --enable-Werror --enable-buildbot"
+    addons:
+      apt:
+        sources:
+        - llvm-toolchain-trusty-4.0
+        - ubuntu-toolchain-r-test
+        packages:
+        - clang-4.0
+  - compiler: clang
+    env: CONFIGURE_FLAGS="--enable-debug CC=clang-4.0 --disable-renewal --enable-Werror --enable-buildbot"
+    addons:
+      apt:
+        sources:
+        - llvm-toolchain-trusty-4.0
+        - ubuntu-toolchain-r-test
+        packages:
+        - clang-4.0
+  - compiler: clang
     env: CONFIGURE_FLAGS="--enable-debug --enable-Werror --enable-buildbot"
   - compiler: clang
     env: CONFIGURE_FLAGS="--enable-debug --disable-renewal --enable-Werror --enable-buildbot"
