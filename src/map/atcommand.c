@@ -3906,6 +3906,8 @@ ACMD(mapinfo)
 		strcat(atcmd_output, msg_fd(fd,1096)); // PartyLock |
 	if (map->list[m_id].flag.guildlock)
 		strcat(atcmd_output, msg_fd(fd,1097)); // GuildLock |
+	if (map->list[m_id].flag.noautoloot)
+		strcat(atcmd_output, "No Autoloot |"); // NoViewID |
 	if (map->list[m_id].flag.noviewid != EQP_NONE)
 		strcat(atcmd_output, msg_fd(fd,1079)); // NoViewID |
 	clif->message(fd, atcmd_output);
@@ -5676,6 +5678,12 @@ ACMD(autoloot)
 {
 	int rate;
 
+	// Disable autoloot
+	if (map->list[sd->bl.m].flag.noautoloot) {
+		clif->message(fd, "Autoloot are currently disabled on this map.");
+		return true;
+	}
+
 	// autoloot command without value
 	if (!*message)
 	{
@@ -5709,6 +5717,12 @@ ACMD(autolootitem)
 	struct item_data *item_data = NULL;
 	int i;
 	int action = 3; // 1=add, 2=remove, 3=help+list (default), 4=reset
+
+					// Disable autoloot
+	if (map->list[sd->bl.m].flag.noautoloot) {
+		clif->message(fd, "Autoloot are currently disabled on this map.");
+		return true;
+	}
 
 	if (*message) {
 		if (message[0] == '+') {
@@ -5806,6 +5820,12 @@ ACMD(autoloottype) {
 	uint8 action = 3; // 1=add, 2=remove, 3=help+list (default), 4=reset
 	enum item_types type = -1;
 	int ITEM_NONE = 0;
+
+	// Disable autoloot
+	if (map->list[sd->bl.m].flag.noautoloot) {
+		clif->message(fd, "Autoloot are currently disabled on this map.");
+		return true;
+	}
 
 	if (*message) {
 		if (message[0] == '+') {

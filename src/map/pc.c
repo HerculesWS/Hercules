@@ -5561,6 +5561,13 @@ int pc_setpos(struct map_session_data* sd, unsigned short map_index, int x, int 
 		pc->setrestartvalue(sd,1);
 	}
 
+	if (map->list[m].flag.noautoloot) { // Disable autoloot
+		memset(sd->state.autolootid, 0, sizeof(sd->state.autolootid));
+		sd->state.autolooting = 0;
+		sd->state.autoloot = 0;
+		sd->state.autoloottype = 0;
+	}
+
 	if( map->list[m].flag.src4instance ) {
 		struct party_data *p;
 		bool stop = false;
