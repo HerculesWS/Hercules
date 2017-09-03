@@ -269,18 +269,32 @@ function	script	F_GetWeaponType	{
 // Determines equipment type by equip location
 function	script	F_GetArmorType	{
 	switch(getiteminfo(getarg(0),5)) {
-		case 001: return "Lower Headgear"; break;
-		case 2: return "Weapon"; break;
+		case 1: return "Lower Headgear"; break;
+		case 2: return callfunc("F_GetWeaponType", getarg(0)); break;
 		case 4: return "Garment"; break;
 		case 8: return "Accessory"; break;
 		case 16: return "Armor"; break;
 		case 32: return "Shield"; break;
 		case 64: return "Shoes"; break;
 		case 128: return "Accessory"; break;
+		case 136: return "Accessory"; break;
 		case 256: return "Upper Headgear"; break;
 		case 512: return "Middle Headgear"; break;
-		default: return "Unable to Determine Equip Location"; break;
+		case 1024: return "Costume Upper Headgear"; break;
+		case 2048: return "Costume Midle Headgear"; break;
+		case 4096: return "Costume Lower Headgear"; break;
+		case 8192: return "Costume Garment"; break;
+		case 32768: return "Ammo"; break;
+		case 65536: return "Shadow Armor"; break;
+		case 131072: return "Shadow Weapon"; break;
+		case 262144: return "Shadow Shield"; break;
+		case 524288: return "Shadow Shoes"; break;
+		case 1048576: return "Shadow Accessory"; break;
+		case 2097152: return "Shadow Accessory"; break;
+		case 3145728: return "Shadow Accessory"; break;
+		default: return "Unknown Equip Type"; break;
 	}
+	end;
 	end;
 }
 
