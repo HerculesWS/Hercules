@@ -541,13 +541,13 @@ mjolnir_02,85,362,3	script	Blacksmith Miner	4_F_JOB_BLACKSMITH,{
 		mes "please enter '0' to cancel.";
 		next;
 		input .@amount;
-		if (.@amount == 0){
+		if (.@amount == 0) {
 			mes "[Dwayne]";
 			mes "Alright, you've";
 			mes "canceled the trade.";
 			mes "Take care!";
 			close;
-		}else if (.@amount < 1 || .@amount > 500){
+		} else if (.@amount < 1 || .@amount > 500){
 			mes "[Dwayne]";
 			mes "The maximum";
 			mes "amount is 500.";
@@ -555,8 +555,7 @@ mjolnir_02,85,362,3	script	Blacksmith Miner	4_F_JOB_BLACKSMITH,{
 			close;
 		}
 		.@cost = .@amount * 55000;
-		.@weight = .@amount * 100;
-		if (Zeny < .@cost){
+		if (Zeny < .@cost) {
 			mes "[Dwayne]";
 			mes "Errr...";
 			mes "I'm sorry, but you";
@@ -565,7 +564,7 @@ mjolnir_02,85,362,3	script	Blacksmith Miner	4_F_JOB_BLACKSMITH,{
 			mes "I sell them at that price.";
 			close;
 		}
-		if (Weight < .@weight){
+		if (!checkweight(Crystal_Jewel__, .@amount)) {
 			mes "[Dwayne]";
 			mes "Errr...";
 			mes "You're carrying too many items.";
@@ -573,7 +572,7 @@ mjolnir_02,85,362,3	script	Blacksmith Miner	4_F_JOB_BLACKSMITH,{
 			close;
 		}
 		Zeny -= .@cost;
-		getitem 732,.@amount;
+		getitem(Crystal_Jewel__, .@amount);
 		mes "[Dwayne]";
 		mes "Thank you for";
 		mes "buying my diamonds!";
