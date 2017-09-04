@@ -263,16 +263,37 @@ int rodex_send_mail(struct map_session_data *sd, const char *receiver_name, cons
 
 	for (i = 0; i < RODEX_MAX_ITEM; i++) {
 		int16 idx = sd->rodex.tmp.items[i].idx;
+		int j;
+		struct item *tmpItem = &sd->rodex.tmp.items[i].item;
+		struct item *invItem = &sd->status.inventory[idx];
 
-		if (sd->rodex.tmp.items[i].item.nameid == 0)
+		if (tmpItem->nameid == 0)
 			continue;
 
-		if (sd->rodex.tmp.items[i].item.nameid != sd->status.inventory[idx].nameid
-			|| sd->rodex.tmp.items[i].item.unique_id != sd->status.inventory[idx].unique_id
-			|| sd->rodex.tmp.items[i].item.amount > sd->status.inventory[idx].amount
-			|| sd->rodex.tmp.items[i].item.amount < 1) {
+		if (tmpItem->nameid != invItem->nameid ||
+		    tmpItem->unique_id != invItem->unique_id ||
+		    tmpItem->refine != invItem->refine ||
+		    tmpItem->attribute != invItem->attribute ||
+		    tmpItem->expire_time != invItem->expire_time ||
+		    tmpItem->bound != invItem->bound ||
+		    tmpItem->amount > invItem->amount ||
+		    tmpItem->amount < 1) {
 			rodex->clean(sd, 1);
 			return RODEX_SEND_MAIL_ITEM_ERROR;
+		}
+		for (j = 0; j < MAX_SLOTS; j++) {
+			if (tmpItem->card[j] != invItem->card[j]) {
+				rodex->clean(sd, 1);
+				return RODEX_SEND_MAIL_ITEM_ERROR;
+			}
+		}
+		for (j = 0; j < MAX_ITEM_OPTIONS; j++) {
+			if (tmpItem->option[j].index != invItem->option[j].index ||
+			    tmpItem->option[j].value != invItem->option[j].value ||
+			    tmpItem->option[j].param != invItem->option[j].param) {
+				rodex->clean(sd, 1);
+				return RODEX_SEND_MAIL_ITEM_ERROR;
+			}
 		}
 	}
 
