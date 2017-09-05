@@ -19679,7 +19679,7 @@ void clif_rodex_request_items(struct map_session_data *sd, int8 opentype, int64 
 void clif_rodex_icon(int fd, bool show)
 {
 // packet add date is 20140716, but from players reports it wrong. Using closer known correct version.
-#if PACKETVER >= 20150513
+#if PACKETVER >= 20141112
 	WFIFOHEAD(fd, 3);
 	WFIFOW(fd, 0) = rodexicon;
 	WFIFOB(fd, 2) = (show == true ? 1 : 0);
