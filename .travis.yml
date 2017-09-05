@@ -20,15 +20,22 @@ script:
   - ./tools/ci/travis.sh build $CONFIGURE_FLAGS
   - ./tools/ci/travis.sh test ragnarok travis travis
 
-# We can't use this, unfortunately
-# http://github.com/travis-ci/travis-ci/issues/979
-#compiler:
-#  - clang
-#  - gcc
+compiler: false # Necessary at the top level because referenced by allow_failures
+env: ignore=this # Necessary at the top level because referenced by allow_failures
 
 matrix:
+  allow_failures:
+  - compiler: clang
+    env: CONFIGURE_FLAGS="--enable-debug CC=clang-5.0 --enable-Werror --enable-buildbot"
+  - compiler: clang
+    env: CONFIGURE_FLAGS="--enable-debug CC=clang-5.0 --disable-renewal --enable-Werror --enable-buildbot"
+  - compiler: clang
+    env: CONFIGURE_FLAGS="--enable-debug CC=clang-4.0 --enable-Werror --enable-buildbot"
+  - compiler: clang
+    env: CONFIGURE_FLAGS="--enable-debug CC=clang-4.0 --disable-renewal --enable-Werror --enable-buildbot"
   exclude:
   - env: ignore=this
+  - compiler: false
   include:
   - compiler: gcc
     env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug CC=gcc-6 --disable-manager --enable-Werror --enable-buildbot" HPM="1"
