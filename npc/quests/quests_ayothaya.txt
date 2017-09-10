@@ -52,7 +52,7 @@ ayothaya,233,105,3	script	Powerful-Looking Woman	4_F_THAIAYO,2,2,{
 		mes "[Shuda]";
 		mes "You haven't";
 		mes "found him yet?";
-		mes "Then where the";
+		mes "Then where the hell";
 		mes "is he, then?!";
 		next;
 		mes "[Shuda]";
@@ -278,7 +278,7 @@ ayothaya,233,105,3	script	Powerful-Looking Woman	4_F_THAIAYO,2,2,{
 					next;
 					mes "[Powerful-Looking Woman]";
 					mes "Let me introduce myself.";
-					mes "My name is Shuda, I've lived in Ayotaya all my life. Since you don't have anything to do, I have";
+					mes "My name is Shuda, I've lived in Ayothaya all my life. Since you don't have anything to do, I have";
 					mes "a favor to ask of you.";
 					next;
 					mes "[Shuda]";
@@ -357,7 +357,7 @@ ayothaya,233,105,3	script	Powerful-Looking Woman	4_F_THAIAYO,2,2,{
 					mes "[Shuda]";
 					mes "And her savior";
 					mes "would be known as";
-					mes "the hero of Ayotaya.";
+					mes "the hero of Ayothaya.";
 					next;
 					mes "[" +strcharinfo(PC_NAME)+ "]";
 					mes " ...Say what?!";
@@ -1179,7 +1179,7 @@ ayothaya,193,171,3	script	Old Man#02	4_M_THAIOLD,{
 		mes "Ah! I think, in his intense fear, he was screaming something about some kind of '^FF0000Shuda^000000,' or whatever. But what could it possibly mean?";
 		next;
 		mes "[Tham]";
-		mes "Oh well, don't worry. All of our villagers aren't like that. Anyway, I hope you enjoy your travels in Ayotaya.";
+		mes "Oh well, don't worry. All of our villagers aren't like that. Anyway, I hope you enjoy your travels in Ayothaya.";
 		thai_find = 4;
 		changequest 12031,12032;
 		close;
@@ -1201,7 +1201,7 @@ ayothaya,193,171,3	script	Old Man#02	4_M_THAIOLD,{
 			mes "Ah...";
 			mes "While you're here,";
 			mes "why don't you taste some";
-			mes "authentic Ayotayan cuisine";
+			mes "authentic Ayothayan cuisine";
 			mes "for yourself?";
 			next;
 			mes "[Tham]";
@@ -1211,7 +1211,7 @@ ayothaya,193,171,3	script	Old Man#02	4_M_THAIOLD,{
 			mes "restaurants around here.";
 			next;
 			mes "[Tham]";
-			mes "Anyway, I'm sure that you'll like it. I hope that you come visit Ayotaya as often as you can~";
+			mes "Anyway, I'm sure that you'll like it. I hope that you come visit Ayothaya as often as you can~";
 			close;
 		} else if (.@randayo > 4 && .@randayo < 7) {
 			mes "[Tham]";
@@ -2111,9 +2111,9 @@ ayothaya,196,265,3	script	Einon#ayo	4_M_THAIOLD,{
 		mes "of this village is?";
 		next;
 		mes "[Einon]";
-		mes "Ayotaya is world famous";
+		mes "Ayothaya is world famous";
 		mes "for its regional cuisine, but";
-		mes "out of all Ayotayan dishes,";
+		mes "out of all Ayothayan dishes,";
 		mes "'^3131FFTom Yum Goong^000000' is the best.";
 		next;
 		mes "[Einon]";
@@ -2166,7 +2166,7 @@ ayothaya,196,265,3	script	Einon#ayo	4_M_THAIOLD,{
 		close;
 	}
 	mes "[Einon]";
-	mes "Golden Ayotaya...";
+	mes "Golden Ayothaya...";
 	mes "Although I've grown";
 	mes "up in this village,";
 	mes "I still think my village";
@@ -2498,7 +2498,7 @@ ayo_in01,145,163,3	script	Cook#ayo	4_F_THAIGIRL,{
 				mes "Thank you for all the trouble that you have been though to get these ingredients. It would make me happy if you shared Tom Yum Goong with your friends.";
 				next;
 				mes "[Mali the Spicy]";
-				mes "Share the flavor of Ayotaya, and let them know how beautiful our land is. It was good to see you, take care now~";
+				mes "Share the flavor of Ayothaya, and let them know how beautiful our land is. It was good to see you, take care now~";
 				close;
 			}
 			mes "[Mali the Spicy]";
@@ -3048,7 +3048,7 @@ ayothaya,213,94,7	script	Merchant#ayo	4_M_THAIAYO,{
 	mes "it has a very strong flavor. It's also hot and spicy, so you should be careful when you eat one.";
 	next;
 	mes "[Merchant Thongdum]";
-	mes "The people of Ayotaya enjoy sensational food with distinct, spicy flavors. In Ayotayan cuisine, we use things like Chilis, garlic, ginger and cilantro.";
+	mes "The people of Ayothaya enjoy sensational food with distinct, spicy flavors. In Ayothayan cuisine, we use things like Chilis, garlic, ginger and cilantro.";
 	next;
 	mes "[Merchant Thongdum]";
 	mes "I'm selling Chilis,";

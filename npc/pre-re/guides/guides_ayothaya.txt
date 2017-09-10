@@ -35,13 +35,13 @@
 
 ayothaya,203,169,3	script	Noi#ayo	4_F_THAIGIRL,{
 	mes "[Noi]";
-	mes "Welcome to Ayotaya.";
+	mes "Welcome to Ayothaya.";
 	mes "Our beautiful village is built";
 	mes "above the water, surrounded";
 	mes "by a dense forest.";
 	next;
 	mes "[Noi]";
-	mes "There are many tourist attractions in this village that you won't be able to find anywhere else. Our fish markets and the the unique architecture of our buildings is enough reason to visit Ayotaya.";
+	mes "There are many tourist attractions in this village that you won't be able to find anywhere else. Our fish markets and the the unique architecture of our buildings is enough reason to visit Ayothaya.";
 	next;
 	mes "[Noi]";
 	mes "Please feel free";
@@ -58,7 +58,7 @@ ayothaya,203,169,3	script	Noi#ayo	4_F_THAIGIRL,{
 			mes "[Noi]";
 			mes "At our Weapon Shop,";
 			mes "you will find great weapons";
-			mes "favored by brave Ayotayan seafarers.";
+			mes "favored by brave Ayothayan seafarers.";
 			next;
 			mes "[Noi]";
 			mes "Our Weapon Shop";
@@ -67,7 +67,7 @@ ayothaya,203,169,3	script	Noi#ayo	4_F_THAIGIRL,{
 			close;
 		case 2:
 			mes "[Noi]";
-			mes "We Ayotayans always make sure we have everything we need before we go traveling. It never hurts to be prepared, doesn't it?";
+			mes "We Ayothayans always make sure we have everything we need before we go traveling. It never hurts to be prepared, doesn't it?";
 			next;
 			mes "[Noi]";
 			mes "Our Tool Shop";

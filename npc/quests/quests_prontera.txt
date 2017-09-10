@@ -431,7 +431,7 @@ prontera,248,212,3	script	Busy Boy#prt	4_M_KID1,3,3,{
 		mes "me alone and let me work?";
 		mes "I've got something important";
 		mes "to do! When I finish arranging";
-		mes "these books,  need to... I need to make some preparations!";
+		mes "these books, need to... I need to make some preparations!";
 		close;
 	}
 	mes "[Busy-Looking Boy]";
@@ -2236,7 +2236,7 @@ prt_church,185,106,3	script	Father Bamph	1_M_PASTOR,{
 		mes "the first place? You didn't";
 		mes "forget that, did you?";
 		next;
-		mes "[Father Bampf]";
+		mes "[Father Bamph]";
 		mes "......";
 		mes ".........";
 		mes "............";

@@ -1556,7 +1556,7 @@ morocc_in,114,162,4	script	Young Man#sign	2_M_THIEFMASTER,{
 	mes "[Gaanan]";
 	if (sign_q < 11) {
 		mes "The weather here in";
-		mes "Morocc is too hot for me.";
+		mes "Morroc is too hot for me.";
 		mes "I'm having a hard time just";
 		mes "trying to live here. Do you";
 		mes "know a nice and cool place";
@@ -4006,7 +4006,6 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			if (select("30", "31", "32", "33") == 2) .@user_p += 1;
 			break;
 		}
-		zis_5 = rand(1,10);
 		if (rand(1,10) < 9 ) {
 			donpcevent "Jesqurienne#sign::OnHo";
 			mes "[Jesqurienne]";

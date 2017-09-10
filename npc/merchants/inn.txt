@@ -75,7 +75,7 @@ payon_in01,132,62,5	script	Inn Employee#Ahee	1_M_INNKEEPER,{
 	warp "payon_in01",132,11; end;
 }
 
-//== Morocc ================================================
+//== Morroc ================================================
 //- North East -
 /*
 morocc_in,147,141,3	script	Inn Employee#Hasna	1_M_INNKEEPER,{
@@ -112,7 +112,7 @@ lhz_in02,230,284,4	script	Hotel Employee#01	4_M_04,{
 	mes "Welcome to";
 	mes "the Royal Dragon,";
 	mes "where you can find the";
-	mes "finest accomodations";
+	mes "finest accommodations";
 	mes "and the best service.";
 	next;
 	switch(select("Save Point", "Rest - 5,000 zeny", "Cancel")) {

@@ -48,10 +48,9 @@ izlude_in,118,175,4	script	Knight De Thomas	4W_M_02,{
 		mes "Being a swordsman must come with a lot of responsibility and sacrifice.";
 		next;
 		mes "[De Thomas]";
-		if (Sex == SEX_FEMALE) {
+		if (Sex == SEX_MALE) {
 			mes "For these swordsmen and knights, there is a wonderful skill.";
-		}
-		else {
+		} else {
 			mes "For these swordswomen and knights, there is a wonderful skill young lady.";
 		}
 		mes "I present to you - HP Recovery While Moving!";
@@ -70,7 +69,7 @@ izlude_in,118,175,4	script	Knight De Thomas	4W_M_02,{
 			mes "[De Thomas]";
 			mes "Very well. I will tell you what you need to learn this skill.";
 			mes "First, your job level must be higher than ^00880035^000000.";
-			mes "You will also need ^008800200 empty bottles^000000.";
+			mes "You will also need ^008800200 Empty Bottles^000000.";
 			mes "Why? Because it is proof that you fought fiercely to have used that many potions.";
 			next;
 			mes "[De Thomas]";

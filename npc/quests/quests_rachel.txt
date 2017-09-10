@@ -63,7 +63,7 @@ ra_in01,384,246,3	script	Vincent#ra_in01	1_M_01,{
 	}
 	if (lost_boy < 1) {
 		mes "[Vincent]";
-		mes "I am Vincert, steward of";
+		mes "I am Vincent, steward of";
 		mes "this mansion and faithful";
 		mes "servant to its master, Sir";
 		mes "Zhed, the most powerful";
@@ -5418,7 +5418,7 @@ ra_temin,277,159,3	script	High Priest Zhed#rachel	4_M_RACHOLD1,{
 				mes "violent methods if they believe";
 				mes "it to be the will of Freya, and";
 				mes "are the ones that established";
-				mes "the military camp  at Thor Volcano.";
+				mes "the military camp at Thor Volcano.";
 				next;
 				mes "[High Priest Zhed]";
 				mes "Of course, it's also";

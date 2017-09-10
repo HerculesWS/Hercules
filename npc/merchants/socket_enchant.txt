@@ -142,7 +142,7 @@
 			mes "Armor, you said?";
 			mes "Sure, no problem.";
 			mes "Armor is divided into 4 different classes, depending on the work difficulty.";
-			mes "C Class is the easiest one, and S Class he hardest one.";
+			mes "C Class is the easiest one, and S Class the hardest one.";
 			mes "Which class would you like to try?";
 			next;
 			switch(select("C Class", "B Class", "A Class", "S Class"))
@@ -236,7 +236,7 @@
 			mes "[Seiyablem]";
 			mes "In some towns, Slot addition attempts are more successful for equipment with fewer upgrades.";
 			mes "In other towns, the opposite is true.";
-			mes "isn't that really peculiar?";
+			mes "Isn't that really peculiar?";
 			next;
 			mes "[Seiyablem]";
 			mes "Oh, there's also something really important that you should know.";

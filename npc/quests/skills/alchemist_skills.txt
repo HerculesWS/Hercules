@@ -1394,7 +1394,7 @@ lhz_in01,224,140,3	script	Kellasus#qsk_al	1_M_LIBRARYMASTER,{
 	if (BaseJob == Job_Alchemist && bioeth == 8) {
 		mes "[Kellasus]";
 		mes "Although I admit that";
-		mes "you're capabile of learning";
+		mes "you're capable of learning";
 		mes "what I might be able to teach";
 		mes "you about Homunculi, I can't";
 		mes "in good conscience do it. I'm";
@@ -1805,7 +1805,7 @@ lhz_in01,225,122,5	script	Skrajjad#qsk_al	4_M_SAGE_A,{
 		mes "you are about this, then Kellasus might change his mind about you.";
 		next;
 		mes "[Skrajjad]";
-		mes "Let give teach you my";
+		mes "Let me teach you my";
 		mes "Homunculus specialty,";
 		mes "the ^FF0000Vaporize^000000 skill. Actually,";
 		mes "it's useless without Kellasus's";
@@ -2015,7 +2015,7 @@ lhz_in02,278,273,3	script	Broncher#qsk_al	4_M_SEAMAN,{
 		mes "is great! Yeah. Yeah,";
 		mes "this really hits the spot.";
 		next;
-		mes "[Brocher]";
+		mes "[Broncher]";
 		mes "Holy crap! Y-you're that";
 		mes "Alchemist that Skrajjad";
 		mes "told me to expect! Wha--?";

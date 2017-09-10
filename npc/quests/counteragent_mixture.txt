@@ -129,7 +129,6 @@ alberta_in,133,55,3	script	Louitz#cm	4_M_02,{
 			mes "[Merchant Louitz]";
 			mes "Hmm... You better";
 			mes "go around Geffen and";
-			mes "around first. I know for";
 			mes "ask around first. I know for";
 			mes "sure that somebody knows";
 			mes "where you can find Molgenstein.";
@@ -199,7 +198,6 @@ alberta_in,133,55,3	script	Louitz#cm	4_M_02,{
 			mes "[Merchant Louitz]";
 			mes "Hmm... You better";
 			mes "go around Geffen and";
-			mes "around first. I know for";
 			mes "ask around first. I know for";
 			mes "sure that somebody knows";
 			mes "where you can find Molgenstein.";
@@ -269,7 +267,6 @@ alberta_in,133,55,3	script	Louitz#cm	4_M_02,{
 			mes "[Merchant Louitz]";
 			mes "Hmm... You better";
 			mes "go around Geffen and";
-			mes "around first. I know for";
 			mes "ask around first. I know for";
 			mes "sure that somebody knows";
 			mes "where you can find Molgenstein.";

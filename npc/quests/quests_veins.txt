@@ -3078,7 +3078,7 @@ veins,327,185,3	script	Kid#camelcamel	4_M_DST_CHILD,{
 			else if (aru_monas == 15) {
 				mes "[Kid Karyn]";
 				mes "Hi! It's good to see";
-				mes "you again! Kurdi just came";
+				mes "you again! Curdie just came";
 				mes "back home from the hospital,";
 				mes "and is getting better everyday!";
 				mes "Ah, and I've been taking care";
@@ -3151,7 +3151,7 @@ veins,327,185,3	script	Kid#camelcamel	4_M_DST_CHILD,{
 				mes "[Kid Karyn]";
 				mes "Hi! How do you like";
 				mes "fishing on my dad's boat?";
-				mes "Oh, and Kurdi says hi!";
+				mes "Oh, and Curdie says hi!";
 				close;
 			}
 			else {
@@ -3875,7 +3875,7 @@ veins,181,166,3	script	Lockenlock	4_M_HUMERCHANT,{
 		mes "town, so no one's really had";
 		mes "to send in any orders lately.";
 		mes "That's why I didn't have any";
-		mes "materials onhand. Sorry.";
+		mes "materials on hand. Sorry.";
 		next;
 		mes "[Locksmith Lockenlock]";
 		mes "All I need is ^4D4DFF1 Steel^000000.";

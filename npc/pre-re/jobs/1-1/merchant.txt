@@ -542,7 +542,7 @@ alberta_in,28,29,2	script	Merchant Guildsman#mer	4_M_01,{
 		close;
 	}
 	else if (job_merchant_q == 6 || job_merchant_q == 5) {
-		mes " [Union Staff Kay] ";
+		mes "[Union Staff Kay] ";
 		mes "Oh, yeah? Okay, lemme check. Your name is " + strcharinfo(PC_NAME) + "? Alright, your destination was...";
 		next;
 		mes "[Union Staff Kay]";
@@ -574,17 +574,17 @@ alberta_in,28,29,2	script	Merchant Guildsman#mer	4_M_01,{
 		else {
 			next;
 			job_merchant_q = 9;
-			mes " [Union Staff Kay] ";
+			mes "[Union Staff Kay]";
 			mes "Wait a sec.";
 			mes "Where's the receipt?";
 			mes "What happened?";
 			next;
-			mes " [Union Staff Kay] ";
+			mes "[Union Staff Kay] ";
 			mes "If you don't have the receipt, you fail the test! You better talk to Mahnsoo if you wanna retake it, alright? Pay attention next time!";
 			close;
 		}
 		next;
-		mes " [Union Staff Kay] ";
+		mes "[Union Staff Kay] ";
 		mes "...Great! Everything's perfect! I'll report your success to the Guildmaster. You should talk to Chief Mahnsoo now, alright?";
 		close2;
 		if (job_merchant_q == 6)
@@ -594,7 +594,7 @@ alberta_in,28,29,2	script	Merchant Guildsman#mer	4_M_01,{
 		end;
 	}
 	else if (job_merchant_q == 4 || job_merchant_q == 3 && countitem(Merchant_Box_1) == 0 && countitem(Merchant_Box_2) == 0 && countitem(Merchant_Box_Etc) == 0) {
-		mes " [Union Staff Kay] ";
+		mes "[Union Staff Kay] ";
 		mes "Huh?";
 		mes "You're back?";
 		mes "So how did";
@@ -694,7 +694,7 @@ alberta_in,28,29,2	script	Merchant Guildsman#mer	4_M_01,{
 			mes "[Union Staff Kay]";
 			mes "Alright, there you go. Lemme give you the package. Now, choose the destination of the delivery.";
 			next;
-			switch(select("Prontera.", "Geffen.", "Morocc.", "Byalan Island.")) {
+			switch(select("Prontera.", "Geffen.", "Morroc.", "Byalan Island.")) {
 			case 1: .@where_village = 1; break;
 			case 2: .@where_village = 2; break;
 			case 3: .@where_village = 3; break;
@@ -729,7 +729,7 @@ alberta_in,28,29,2	script	Merchant Guildsman#mer	4_M_01,{
 				else if (.@where_village == 2)
 					mes "Destination is Geffen. Phew! That's really far! The Serial Number is " + .@input + ". Are you positive?";
 				else if (.@where_village == 3)
-					mes "Destination is Morocc. That's pretty far away! The Serial Number is " + .@input + ". Are you positive?";
+					mes "Destination is Morroc. That's pretty far away! The Serial Number is " + .@input + ". Are you positive?";
 				else
 					mes "Lucky you! Your destination is Byalan Island. The Serial Number is " + .@input + ". Are you positive?";
 				next;
