@@ -2333,7 +2333,7 @@ airplane,236,163,5	script	Airship Captain#03	4_M_REINDEER,{
 		mes("- Captain Ferlock was carefully listening to you while you were explaining the reason why you have been looking for Thierry. -");
 		next();
 		mes("[Ferlock]");
-		mes("Ummm....I see, I fully understand the siatuation. But, this is my situation that I am not allowed to release our passenger lists to unauthorized people...");
+		mes("Ummm....I see, I fully understand the situation. But, this is my situation that I am not allowed to release our passenger lists to unauthorized people...");
 		next();
 		mes("[Ferlock]");
 		mes("*Sigh*....I guess that rules exist only to be broken one of these days... Okay, I will let you check our passenger lists. Please give me a moment.");

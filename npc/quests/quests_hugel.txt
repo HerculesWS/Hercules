@@ -1125,7 +1125,7 @@ ein_in01,16,36,3	script	Morriphen	4_M_04,{
 		next;
 		mes "[Morriphen]";
 		mes "The people we met were very";
-		mes "accomdating, welcome, and";
+		mes "accommodating, welcome, and";
 		mes "friendly. They also didn't";
 		mes "ask us any questions: we were";
 		mes "just accepted. The girl I saved didn't know how to speak then...";
@@ -1207,7 +1207,7 @@ ein_in01,16,36,3	script	Morriphen	4_M_04,{
 		mes "your medicine, right? I'm";
 		mes "sure you can repay him by";
 		mes "visiting him, and living";
-		mes "happily with your Seria.";
+		mes "happily with your Siria.";
 		next;
 		mes "[Morriphen]";
 		mes "^333333*Sob*^000000 You're right...";
@@ -1215,7 +1215,7 @@ ein_in01,16,36,3	script	Morriphen	4_M_04,{
 		mes "Thank you so much. If you";
 		mes "ever visit Hugel again, come";
 		mes "by and see me. You've really";
-		mes "helped me and Seria so much.";
+		mes "helped me and Siria so much.";
 		next;
 		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Don't worry about it.";
@@ -6978,7 +6978,7 @@ hugel,56,104,3	script	Kurupe	4_M_SEAMAN,3,3,{
 			mes "Currently you are carrying";
 			mes "too many items with you.";
 			mes "Please come back again";
-			mes "after you store some items into kafra storage.";
+			mes "after you store some items into Kafra storage.";
 			close;
 		}
 		hg_milk = 9;
@@ -7083,7 +7083,7 @@ hugel,56,104,3	script	Kurupe	4_M_SEAMAN,3,3,{
 				mes "Currently you are carrying";
 				mes "too many items with you.";
 				mes "Please come back again";
-				mes "after you store some items into kafra storage.";
+				mes "after you store some items into Kafra storage.";
 				close;
 			}
 			hg_milk = 9;
@@ -7104,7 +7104,7 @@ hugel,56,104,3	script	Kurupe	4_M_SEAMAN,3,3,{
 				mes "Currently you are carrying";
 				mes "too many items with you.";
 				mes "Please come back again";
-				mes "after you store some items into kafra storage.";
+				mes "after you store some items into Kafra storage.";
 				close;
 			}
 			hg_milk = 9;
@@ -7126,7 +7126,7 @@ hugel,56,104,3	script	Kurupe	4_M_SEAMAN,3,3,{
 				mes "Currently you are carrying";
 				mes "too many items with you.";
 				mes "Please come back again";
-				mes "after you store some items into kafra storage.";
+				mes "after you store some items into Kafra storage.";
 				close;
 			}
 			hg_milk = 9;
@@ -7150,7 +7150,7 @@ hugel,56,104,3	script	Kurupe	4_M_SEAMAN,3,3,{
 					mes "Currently you are carrying";
 					mes "too many items with you.";
 					mes "Please come back again";
-					mes "after you store some items into kafra storage.";
+					mes "after you store some items into Kafra storage.";
 					close;
 				}
 				hg_milk = 9;
@@ -7172,7 +7172,7 @@ hugel,56,104,3	script	Kurupe	4_M_SEAMAN,3,3,{
 				mes "Currently you are carrying";
 				mes "too many items with you.";
 				mes "Please come back again";
-				mes "after you store some items into kafra storage.";
+				mes "after you store some items into Kafra storage.";
 				close;
 			}
 			hg_milk = 9;

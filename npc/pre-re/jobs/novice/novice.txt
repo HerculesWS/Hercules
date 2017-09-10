@@ -43,7 +43,7 @@
 //== Bulletin Board ========================================
 new_1-1,66,114,4	script	Bulletin Board#nv	HIDDEN_NPC,{
 	mes "^FF0000=================================^000000";
-	mes "^FF0000 ^000000 ^E40CAA[Welcome]^CC0000 to ^FF9000Novice^7FFF00 Training ^00FF00Grounds ^E40CAA[Welcome]^FF0000^000000";
+	mes "^E40CAA[Welcome]^CC0000 to ^FF9000Novice^7FFF00 Training ^00FF00Grounds ^E40CAA[Welcome]^000000";
 	mes "^FF0000=================================^000000";
 	close;
 }
@@ -1442,7 +1442,7 @@ new_1-2,118,108,3	script	Kafra Employee#nv1	4_F_KAFRA1,{
 				mes "Your Respawn Point is always the last place where you have saved. Using a Butterfly Wing will return you to the place where you";
 				mes "last saved.";
 				next;
-				mes "[Kafra Employoee]";
+				mes "[Kafra Employee]";
 				mes "The Save Service";
 				mes "is also provided by";
 				mes "the Kafra Corporation";
@@ -2037,7 +2037,7 @@ new_1-2,184,172,1	script	Understandings of Skills	1_M_01,{
 					mes "You can organize";
 					mes "a party by typing";
 					mes "the command:";
-					mes "^4F4FFF//organize ''Party Name''^000000";
+					mes "^4F4FFF/organize ''Party Name''^000000";
 					mes "in your Chat Window.";
 					next;
 					mes "[Leo Handerson]";
@@ -2148,10 +2148,10 @@ new_1-2,184,172,1	script	Understandings of Skills	1_M_01,{
 			mes "by pressing the '^4D4DFFCtrl^000000' and the '^4D4DFF - ^000000,' '^4D4DFF = ^000000,' or '^4D4DFF \\ ^000000' keys.";
 			next;
 			mes "[Leo Handerson]";
-			mes "Of course, you can type ^4D4DFF//bawi^000000, ^4D4DFF//bo^000000 and ^4D4DFF//gawi^000000, which mean rock, paper, scissors in Korean, into your Chat Window.";
+			mes "Of course, you can type ^4D4DFF/bawi^000000, ^4D4DFF/bo^000000 and ^4D4DFF/gawi^000000, which mean rock, paper, scissors in Korean, into your Chat Window.";
 			next;
 			mes "[Leo Handerson]";
-			mes "To check out the commands for even more emoticons, type the command ^4d4dff//emotion^000000 into your Chat Window to see the list~";
+			mes "To check out the commands for even more emoticons, type the command ^4d4dff/emotion^000000 into your Chat Window to see the list~";
 			emotion e_lv;
 			next;
 			break;
@@ -2205,7 +2205,7 @@ new_1-2,17,182,5	script	Helper#nv	4_M_02,{
 			mes "You can also just hold down the left mouse button while the cursor is on the monster. Still, there are some people who are even too lazy to use the '^4D4DFFCtrl^000000' key every time they attack a monster.";
 			next;
 			mes "[Elmeen]";
-			mes "If you're one of them, type the command ^E79E29//nc^000000 in your Chat Window. Then, when you left click";
+			mes "If you're one of them, type the command ^E79E29/nc^000000 in your Chat Window. Then, when you left click";
 			mes "a monster, you'll just continuously attack it!";
 			next;
 			mes "[Elmeen]";
@@ -2215,7 +2215,7 @@ new_1-2,17,182,5	script	Helper#nv	4_M_02,{
 			mes "When you use the Heal skill while holding down the '^4D4DFFShift^000000' key, you can target the monster with the Heal skill to damage it.";
 			next;
 			mes "[Elmeen]";
-			mes "Of course for this skill, we do have a very convenient option for lazy people too. Type the command ^E79E29//ns^000000 in your Chat Window.";
+			mes "Of course for this skill, we do have a very convenient option for lazy people too. Type the command ^E79E29/ns^000000 in your Chat Window.";
 			next;
 			mes "[Elmeen]";
 			mes "This will allow you to attack monsters by using the Heal skill without holding the shift key. Handy, huh?";
@@ -2324,7 +2324,7 @@ new_1-2,17,182,5	script	Helper#nv	4_M_02,{
 					mes "For instance, somebody does damage to a monster while you're already hitting it, and he did the same amount of damage you did.";
 					next;
 					mes "[Elmeen]";
-					mes "In this case, you will receive 2//3 of the whole experience points that monster can give you, the other one will receive 1//3.";
+					mes "In this case, you will receive 2/3 of the whole experience points that monster can give you, the other one will receive 1/3.";
 					next;
 					mes "[Elmeen]";
 					mes "However, attacking a monster that somebody already started to hit is not suggested in Ragnarok Online. That action is regarded as ill-mannered behavior.";

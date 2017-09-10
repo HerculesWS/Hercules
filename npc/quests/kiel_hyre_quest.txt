@@ -833,7 +833,7 @@ kh_school,179,39,0	script	Cute Student#kh	4_F_KHELLY,{
 				select("Yeah, that's right.");
 				mes "Listen, I know you";
 				mes "probably have your own";
-				mes "plans, but do  you think";
+				mes "plans, but do you think";
 				mes "you can help me with this";
 				mes "huge problem that I have?";
 				next;
@@ -1764,7 +1764,7 @@ yuno_fild08,71,170,0	script	Grave#kh	HIDDEN_NPC,{
 			close;
 		}
 		else {
-			mes "As you aproach the";
+			mes "As you approach the";
 			mes "grave, it begins to";
 			mes "emit flashes of light.^000000";
 			next;
@@ -3877,7 +3877,7 @@ kh_mansion,22,28,4	script	Kiel Hyre#kh	4_M_KHKYEL,{
 		mes "Allysia must have been the";
 		mes "woman that you loved, and";
 		mes "that you based your robot's";
-		mes "apperance on her.";
+		mes "appearance on her.";
 		next;
 		cutin "kh_kyel02",2;
 		mes "[Kiel Hyre]";
@@ -4065,7 +4065,7 @@ kh_mansion,22,28,4	script	Kiel Hyre#kh	4_M_KHKYEL,{
 		next;
 		select("Show K.H.'s note");
 		mes "["+strcharinfo(PC_NAME)+"]";
-		mes "This note was  written by";
+		mes "This note was written by";
 		mes "a man with your initials,";
 		mes "K.H. These initials were also";
 		mes "signed on her portrait. You";
@@ -6285,7 +6285,7 @@ kh_kiehl02,50,52,4	script	Kiehl#Original	4_M_KHKIEL,{
 		mes "you to stop turning all of";
 		mes "the Third Generation robots";
 		mes "into killing machines! How";
-		mes "can do something like that";
+		mes "can you do something like that";
 		mes "to other robots like you?";
 		next;
 		cutin "kh_kiel01",2;
@@ -6310,7 +6310,7 @@ kh_kiehl02,50,52,4	script	Kiehl#Original	4_M_KHKIEL,{
 		mes "feel pain or emotions...";
 		mes "Not unless they're specially";
 		mes "programmed. Sorry, but I don't";
-		mes "plans to stop what I'm doing.";
+		mes "plan to stop what I'm doing.";
 		next;
 		cutin "kh_kiel04",2;
 		mes "[Kiehl]";

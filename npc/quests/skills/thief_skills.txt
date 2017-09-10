@@ -210,7 +210,7 @@ moc_prydb1,154,128,4	script	Alcouskou	2_M_THIEFMASTER,{
 		mes "have realized while fighting that";
 		mes "despite the fact that our dodging";
 		mes "is superior, if we are hit once we are";
-		mes "serious danger.";
+		mes "in serious danger.";
 		next;
 		mes "[Alcouskou]";
 		mes "It is true that at times we";
