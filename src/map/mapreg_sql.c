@@ -211,9 +211,9 @@ void script_load_mapreg(void) {
 
 	mapreg->skip_insert = true;
 
-	SQL->StmtBindColumn(stmt, 0, SQLDT_STRING, &varname[0], sizeof(varname), &length, NULL);
-	SQL->StmtBindColumn(stmt, 1, SQLDT_INT, &index, 0, NULL, NULL);
-	SQL->StmtBindColumn(stmt, 2, SQLDT_STRING, &value[0], sizeof(value), NULL, NULL);
+	SQL->StmtBindColumn(stmt, 0, SQLDT_STRING, &varname, sizeof varname, &length, NULL);
+	SQL->StmtBindColumn(stmt, 1, SQLDT_INT,    &index,   sizeof index,   NULL,    NULL);
+	SQL->StmtBindColumn(stmt, 2, SQLDT_STRING, &value,   sizeof value,   NULL,    NULL);
 
 	while ( SQL_SUCCESS == SQL->StmtNextRow(stmt) ) {
 		int s = script->add_str(varname);

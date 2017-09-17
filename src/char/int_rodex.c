@@ -108,21 +108,21 @@ static int inter_rodex_fromsql(int char_id, int account_id, int8 opentype, int64
 	}
 
 	if (SQL_ERROR == SQL->StmtExecute(stmt)
-		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 0, SQLDT_INT64, &msg.id, 0, NULL, NULL)
-		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 1, SQLDT_STRING, &msg.sender_name, sizeof(msg.sender_name), NULL, NULL)
-		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 2, SQLDT_INT, &msg.sender_id, 0, NULL, NULL)
-		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 3, SQLDT_STRING, &msg.receiver_name, sizeof(msg.receiver_name), NULL, NULL)
-		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 4, SQLDT_INT, &msg.receiver_id, 0, NULL, NULL)
-		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 5, SQLDT_INT, &msg.receiver_accountid, 0, NULL, NULL)
-		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 6, SQLDT_STRING, &msg.title, sizeof(msg.title), NULL, NULL)
-		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 7, SQLDT_STRING, &msg.body, sizeof(msg.body), NULL, NULL)
-		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 8, SQLDT_INT, &msg.zeny, 0, NULL, NULL)
-		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 9, SQLDT_UINT8, &msg.type, 0, NULL, NULL)
-		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 10, SQLDT_INT8, &msg.is_read, 0, NULL, NULL)
-		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 11, SQLDT_INT, &msg.send_date, 0, NULL, NULL)
-		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 12, SQLDT_INT, &msg.expire_date, 0, NULL, NULL)
-		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 13, SQLDT_INT, &msg.weight, 0, NULL, NULL)
-		) {
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 0,  SQLDT_INT64,  &msg.id,                 sizeof msg.id,                 NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 1,  SQLDT_STRING, &msg.sender_name,        sizeof msg.sender_name,        NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 2,  SQLDT_INT,    &msg.sender_id,          sizeof msg.sender_id,          NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 3,  SQLDT_STRING, &msg.receiver_name,      sizeof msg.receiver_name,      NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 4,  SQLDT_INT,    &msg.receiver_id,        sizeof msg.receiver_id,        NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 5,  SQLDT_INT,    &msg.receiver_accountid, sizeof msg.receiver_accountid, NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 6,  SQLDT_STRING, &msg.title,              sizeof msg.title,              NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 7,  SQLDT_STRING, &msg.body,               sizeof msg.body,               NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 8,  SQLDT_INT64,  &msg.zeny,               sizeof msg.zeny,               NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 9,  SQLDT_UINT8,  &msg.type,               sizeof msg.type,               NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 10, SQLDT_BOOL,   &msg.is_read,            sizeof msg.is_read,            NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 11, SQLDT_INT,    &msg.send_date,          sizeof msg.send_date,          NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 12, SQLDT_INT,    &msg.expire_date,        sizeof msg.expire_date,        NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 13, SQLDT_INT,    &msg.weight,             sizeof msg.weight,             NULL, NULL)
+	) {
 		SqlStmt_ShowDebug(stmt);
 		SQL->StmtFree(stmt);
 		return -1;
@@ -145,30 +145,31 @@ static int inter_rodex_fromsql(int char_id, int account_id, int8 opentype, int64
 				"`opt_idx1`, `opt_val1`, `opt_idx2`, `opt_val2`, `opt_idx3`, `opt_val3`, `opt_idx4`, `opt_val4`,"
 				"`expire_time`, `bound`, `unique_id`"
 				"FROM `%s` WHERE mail_id = '%"PRId64"' ORDER BY `mail_id` ASC", rodex_item_db, msg.id)
-				|| SQL_ERROR == SQL->StmtExecute(stmt_items)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 0, SQLDT_INT, &it.nameid, 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 1, SQLDT_INT, &it.amount, 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 2, SQLDT_UINT, &it.equip, 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 3, SQLDT_INT8, &it.identify, 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 4, SQLDT_INT8, &it.refine, 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 5, SQLDT_INT8, &it.attribute, 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 6, SQLDT_INT16, &it.card[0], 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 7, SQLDT_INT16, &it.card[1], 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 8, SQLDT_INT16, &it.card[2], 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 9, SQLDT_INT16, &it.card[3], 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 10, SQLDT_INT16, &it.option[0].index, 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 11, SQLDT_INT16, &it.option[0].value, 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 12, SQLDT_INT16, &it.option[1].index, 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 13, SQLDT_INT16, &it.option[1].value, 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 14, SQLDT_INT16, &it.option[2].index, 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 15, SQLDT_INT16, &it.option[2].value, 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 16, SQLDT_INT16, &it.option[3].index, 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 17, SQLDT_INT16, &it.option[3].value, 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 18, SQLDT_INT16, &it.option[4].index, 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 19, SQLDT_INT16, &it.option[4].value, 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 20, SQLDT_INT, &it.expire_time, 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 21, SQLDT_UINT8, &it.bound, 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 22, SQLDT_UINT64, &it.unique_id, 0, NULL, NULL)) {
+			 || SQL_ERROR == SQL->StmtExecute(stmt_items)
+			 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 0,  SQLDT_SHORT,  &it.nameid,          sizeof it.nameid,          NULL, NULL)
+			 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 1,  SQLDT_SHORT,  &it.amount,          sizeof it.amount,          NULL, NULL)
+			 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 2,  SQLDT_UINT,   &it.equip,           sizeof it.equip,           NULL, NULL)
+			 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 3,  SQLDT_CHAR,   &it.identify,        sizeof it.identify,        NULL, NULL)
+			 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 4,  SQLDT_CHAR,   &it.refine,          sizeof it.refine,          NULL, NULL)
+			 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 5,  SQLDT_CHAR,   &it.attribute,       sizeof it.attribute,       NULL, NULL)
+			 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 6,  SQLDT_SHORT,  &it.card[0],         sizeof it.card[0],         NULL, NULL) // FIXME: Build dynamically
+			 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 7,  SQLDT_SHORT,  &it.card[1],         sizeof it.card[1],         NULL, NULL)
+			 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 8,  SQLDT_SHORT,  &it.card[2],         sizeof it.card[2],         NULL, NULL)
+			 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 9,  SQLDT_SHORT,  &it.card[3],         sizeof it.card[3],         NULL, NULL)
+			 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 10, SQLDT_INT16,  &it.option[0].index, sizeof it.option[0].index, NULL, NULL) // FIXME: Build dynamically
+			 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 11, SQLDT_INT16,  &it.option[0].value, sizeof it.option[0].value, NULL, NULL)
+			 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 12, SQLDT_INT16,  &it.option[1].index, sizeof it.option[1].index, NULL, NULL)
+			 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 13, SQLDT_INT16,  &it.option[1].value, sizeof it.option[1].value, NULL, NULL)
+			 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 14, SQLDT_INT16,  &it.option[2].index, sizeof it.option[2].index, NULL, NULL)
+			 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 15, SQLDT_INT16,  &it.option[2].value, sizeof it.option[2].value, NULL, NULL)
+			 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 16, SQLDT_INT16,  &it.option[3].index, sizeof it.option[3].index, NULL, NULL)
+			 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 17, SQLDT_INT16,  &it.option[3].value, sizeof it.option[3].value, NULL, NULL)
+			 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 18, SQLDT_INT16,  &it.option[4].index, sizeof it.option[4].index, NULL, NULL)
+			 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 19, SQLDT_INT16,  &it.option[4].value, sizeof it.option[4].value, NULL, NULL)
+			 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 20, SQLDT_UINT,   &it.expire_time,     sizeof it.expire_time,     NULL, NULL)
+			 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 21, SQLDT_UCHAR,  &it.bound,           sizeof it.bound,           NULL, NULL)
+			 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 22, SQLDT_UINT64, &it.unique_id,       sizeof it.unique_id,       NULL, NULL)
+			) {
 				SqlStmt_ShowDebug(stmt_items);
 			}
 

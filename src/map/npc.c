@@ -1560,9 +1560,9 @@ void npc_market_fromsql(void)
 		return;
 	}
 
-	SQL->StmtBindColumn(stmt, 0, SQLDT_STRING, &name[0], sizeof(name), NULL, NULL);
-	SQL->StmtBindColumn(stmt, 1, SQLDT_INT, &itemid, 0, NULL, NULL);
-	SQL->StmtBindColumn(stmt, 2, SQLDT_INT, &amount, 0, NULL, NULL);
+	SQL->StmtBindColumn(stmt, 0, SQLDT_STRING, &name,    sizeof name,   NULL, NULL);
+	SQL->StmtBindColumn(stmt, 1, SQLDT_INT,    &itemid,  sizeof itemid, NULL, NULL);
+	SQL->StmtBindColumn(stmt, 2, SQLDT_INT,    &amount,  sizeof amount, NULL, NULL);
 
 	while ( SQL_SUCCESS == SQL->StmtNextRow(stmt) ) {
 		struct npc_data *nd = NULL;
