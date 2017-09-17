@@ -3722,6 +3722,7 @@
 
 - `SEX_FEMALE`: 0
 - `SEX_MALE`: 1
+- `SEX_ANY`: 2
 
 ### Script Unit Data Types
 
@@ -3912,6 +3913,14 @@
 - `EQP_SHADOW_SHOES`: 524288
 - `EQP_SHADOW_ACC_R`: 1048576
 - `EQP_SHADOW_ACC_L`: 2097152
+- `EQP_WEAPON`: 2
+- `EQP_SHIELD`: 32
+- `EQP_ARMS`: 34
+- `EQP_HELM`: 769
+- `EQP_ACC`: 136
+- `EQP_COSTUME`: 15360
+- `EQP_SHADOW_ACC`: 3145728
+- `EQP_SHADOW_ARMS`: 393216
 
 ### Item Option Types
 
@@ -3994,6 +4003,56 @@
 - `DATATYPE_PARAM`: 2048
 - `DATATYPE_VAR`: 4096
 - `DATATYPE_LABEL`: 8192
+
+### Item Subtypes (Weapon types)
+
+- `W_FIST`: 0
+- `W_DAGGER`: 1
+- `W_1HSWORD`: 2
+- `W_2HSWORD`: 3
+- `W_1HSPEAR`: 4
+- `W_2HSPEAR`: 5
+- `W_1HAXE`: 6
+- `W_2HAXE`: 7
+- `W_MACE`: 8
+- `W_2HMACE`: 9
+- `W_STAFF`: 10
+- `W_BOW`: 11
+- `W_KNUCKLE`: 12
+- `W_MUSICAL`: 13
+- `W_WHIP`: 14
+- `W_BOOK`: 15
+- `W_KATAR`: 16
+- `W_REVOLVER`: 17
+- `W_RIFLE`: 18
+- `W_GATLING`: 19
+- `W_SHOTGUN`: 20
+- `W_GRENADE`: 21
+- `W_HUUMA`: 22
+- `W_2HSTAFF`: 23
+
+### Item Subtypes (Ammunition types)
+
+- `A_ARROW`: 1
+- `A_DAGGER`: 2
+- `A_BULLET`: 3
+- `A_SHELL`: 4
+- `A_GRENADE`: 5
+- `A_SHURIKEN`: 6
+- `A_KUNAI`: 7
+- `A_CANNONBALL`: 8
+- `A_THROWWEAPON`: 9
+
+### Item Upper Masks
+
+- `ITEMUPPER_NONE`: 0
+- `ITEMUPPER_NORMAL`: 1
+- `ITEMUPPER_UPPER`: 2
+- `ITEMUPPER_BABY`: 4
+- `ITEMUPPER_THIRD`: 8
+- `ITEMUPPER_THIRDUPPER`: 16
+- `ITEMUPPER_THIRDBABY`: 32
+- `ITEMUPPER_ALL`: 63
 
 ### Renewal
 
@@ -8477,7 +8536,7 @@
 - `Egir_Shoes`: 2495
 - `TE_Woe_Shoes`: 2496
 - `TE_Woe_Boots`: 2497
-- `TE_WoE_Magic_Sandal`: 2498
+- `TE_Woe_Magic_Sandal`: 2498
 - `Temporal_Boots`: 2499
 - `Hood`: 2501
 - `Hood_`: 2502
