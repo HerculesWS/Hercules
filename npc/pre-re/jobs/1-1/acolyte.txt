@@ -88,7 +88,7 @@ prt_church,184,41,4	script	Cleric#aco	1_M_PASTOR,{
 	mes "[Father Mareusis]";
 	mes "What is it that you seek?";
 	next;
-	switch(select("Father, I want to be a Acolyte.", "Acolyte Requirements.", "Just looking around.")) {
+	switch(select("Father, I want to be an Acolyte.", "Acolyte Requirements.", "Just looking around.")) {
 	case 1:
 		mes "[Father Mareusis]";
 		if (BaseJob == Job_Acolyte) {

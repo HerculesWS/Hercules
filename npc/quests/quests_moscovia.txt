@@ -11124,7 +11124,7 @@ treasure01,27,115,0	script	Opened Treasure Chest#41	HIDDEN_NPC,{
 		mes "...!? What is this?!";
 		next;
 		.@russ_key02 = rand(1,7);
-		if (rand(1,7) == 3) {
+		if (.@russ_key02 == 3) {
 			mes "- ^0000ffYou find the handle of a broken key in the junk !!^000000 -";
 			next;
 		} else {

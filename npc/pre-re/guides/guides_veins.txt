@@ -78,7 +78,7 @@ veins,210,345,5	script	Veins Guide#1::ve_guide	4_M_RASWORD,{
 					break;
 				case 4:
 					mes "[Veins Guide]";
-					mes "Have you packed enough necessities  for your adventure?";
+					mes "Have you packed enough necessities for your adventure?";
 					mes "If not, I suggest you check what the Veins in the Center can offer you.";
 					if (.@compass_check == 1) viewpoint 1,230,161,4,0x0000FF;
 					break;

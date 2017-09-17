@@ -280,7 +280,7 @@ OnTouch:
 				}
 			case 2:
 				mes "[Litheron]";
-				mes "Not the saavy type,";
+				mes "Not the savvy type,";
 				mes "are you...? Fine, fine.";
 				mes "If you're not gonna do";
 				mes "me any favors, then why";
@@ -2120,7 +2120,7 @@ moc_ruins,137,70,3	script	Book-Touching Man#garas	1_M_02,{
 			mes "[Book-Touching Man]";
 			mes "Your smile outshines the aura of the gods of Valhalla. You are a living gospel. Your smile even makes Goddess Freya hide in the shadows in shame! Ah.... Mammi, my Mammi!";
 			next;
-			mes "^660000You wave your hand close to his face to get his attention. He seems, however, to be in his own dreams, completely oblivious of your presense.^000000";
+			mes "^660000You wave your hand close to his face to get his attention. He seems, however, to be in his own dreams, completely oblivious of your presence.^000000";
 			next;
 			switch(select("Speak", "Pass Him By")) {
 			case 1:
@@ -2249,7 +2249,7 @@ moc_ruins,137,70,3	script	Book-Touching Man#garas	1_M_02,{
 			mes "[Benjamin]";
 			mes "Oh... Mammi... My Mammi...";
 			next;
-			mes "^660000Just like the last time that you saw him, Bejamin is living in his dreams, rubbing a book on his face.^000000";
+			mes "^660000Just like the last time that you saw him, Benjamin is living in his dreams, rubbing a book on his face.^000000";
 			next;
 			mes "^660000You carefully approached him, and then gave him a pat on the shoulder.^000000";
 			next;
@@ -2631,7 +2631,7 @@ yuno,333,210,5	script	Library Master#garas	1_M_LIBRARYMASTER,{
 		next;
 		mes "[Library Master]";
 		mes "Try to drink hot Jellopy broth mixed with honey. My mother used to make that for me whenever I caught cold.";
-		mes "I gurantee you that you'll get better quickly.";
+		mes "I guarantee you that you'll get better quickly.";
 		next;
 		mes "^660000He sounded sincere, but it doesn't sound like that kind of broth would even be effective...^000000";
 		emotion e_dots,1;
@@ -2730,7 +2730,7 @@ OnTouch:
 		next;
 		mes "[Library Master]";
 		mes "Try to drink hot Jellopy broth mixed with honey. My mother used to make that for me whenever I caught cold.";
-		mes "I gurantee you that you'll get better quickly.";
+		mes "I guarantee you that you'll get better quickly.";
 		next;
 		mes "^660000He sounded sincere, but it doesn't sound like that kind of broth would even be effective...^000000";
 		emotion e_dots,1;
@@ -3003,7 +3003,7 @@ yuno_in04,117,102,3	script	Old News Scrapbook	CLEAR_NPC,{
 				mes "saying, 'This is ridiculous.";
 				mes "Assassins must live alone under the shadows.'";
 				mes "Hopefully the fans' reaction won't cause too much worry";
-				mes "to Siglinde and his soon-to-be wife.";
+				mes "to Sieglinde and his soon-to-be wife.";
 				mes " ";
 				next;
 			}
@@ -3278,7 +3278,7 @@ yuno_in04,169,123,3	script	Suspicious Man#oliver_h	4_M_ATEIL,{
 			next;
 			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Argh, that was all because of the library master!";
-			mes "Luckily the feather is gone, so hopefuly I won't suffer any more disaster.";
+			mes "Luckily the feather is gone, so hopefully I won't suffer any more disaster.";
 			next;
 			break;
 		case 2:
@@ -3365,7 +3365,7 @@ yuno_in04,167,120,3	script	Worn-out Book#garas	HIDDEN_NPC,{
 		mes "- What's your name? -";
 		mes "-......Al.-";
 		mes "- Do you know why you're on the street? Where do you live? Your parents must be dying to see you.-";
-		mes "Haeji's comment instantly brought the monsterous image of Eva to Al's mind. Inwardly, he screamed in fear.";
+		mes "Haeji's comment instantly brought the monstrous image of Eva to Al's mind. Inwardly, he screamed in fear.";
 		mes "- I live nowhere, and I don't have parents. -";
 		mes "Al had to lie no matter how long, he thought. The old man seemed to understand him: his eyes showed sympathy for the little boy. Haeji insisted that Al could stay in his mansion as long as he wanted.";
 		mes "Later, after learning that Haeji was a professor of Juno City University, Al was convinced that the fates were on his side.>";
@@ -5192,7 +5192,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 					mes "Behind the soldier, you can find a secret door. If you talk to the soldier, the soldier will allow you to get in.";
 					next;
 					mes "[Inspector]";
-					mes "As I have expressed, this is a very important issue for the Rune Midgarts kingdom. Although I've stressed this point repeateadly, I cannot stress it enough.";
+					mes "As I have expressed, this is a very important issue for the Rune Midgarts kingdom. Although I've stressed this point repeatedly, I cannot stress it enough.";
 					next;
 					mes "[Inspector]";
 					mes "Please behave accordingly.";
@@ -5242,7 +5242,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 			mes "I really appreciate your assistance thus far. Due to your help, the future of the kingdom is indebted to you.";
 			next;
 			mes "[" + strcharinfo(PC_NAME) + "]";
-			mes "(He doesn't seem to be suprised too much.. Could there be a reason? Now I am suspicious...)";
+			mes "(He doesn't seem to be surprised too much.. Could there be a reason? Now I am suspicious...)";
 			next;
 			mes "[Inspector]";
 			mes "Hey, the things you experienced here cannot be disclosed to others. You understand that this situation is fully confidential.";
@@ -5321,7 +5321,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 
 prt_castle,272,375,4	script	Prince	4_M_SITDOWN,{
 	if (nk_prince > 6) {
-		mes "-Obssessed with making";
+		mes "-Obsessed with making";
 		mes "lock and key.-";
 		close;
 	}
@@ -5333,7 +5333,7 @@ prt_castle,272,375,4	script	Prince	4_M_SITDOWN,{
 	}
 	else if (questprogress(10020) == 1) {
 		mes "[Erich]";
-		mes "These days, I have bad luck... Only harrassments happen to me...";
+		mes "These days, I have bad luck... Only harassments happen to me...";
 		close;
 	}
 	if (nk_prince < 5) {
@@ -5375,7 +5375,7 @@ prt_castle,272,375,4	script	Prince	4_M_SITDOWN,{
 		mes "......My conscience!";
 		mes "It doesn't work well...";
 		next;
-		mes "-He seems to be so obssessed to care about anything else.-";
+		mes "-He seems to be so obsessed to care about anything else.-";
 		close;
 	}
 }
@@ -6133,7 +6133,7 @@ aldebaran,132,184,3	script	Girl#prince	4W_KID,{
 	if (questprogress(10013) == 1) {
 		if (countitem(Bunch_Of_Flowers) > 0) {
 			mes "[Girl]";
-			mes "Wooah, Uncle Peter sent these flowers";
+			mes "Woah, Uncle Peter sent these flowers";
 			mes "for me?";
 			mes "Hmmm~ They smell really good.";
 			next;
@@ -6502,7 +6502,7 @@ prt_castle,314,373,4	script	Prince#eisen	4_M_1STPRIN1,{
 				mes "But I am not sensitive to that, and I think a good king should neglect those trifles.";
 				next;
 				mes "[Ahrum]";
-				mes "Others can say that my behavior makes them embarrased, but if something ends well, they are all satisfied in the end. Am I wrong?";
+				mes "Others can say that my behavior makes them embarrassed, but if something ends well, they are all satisfied in the end. Am I wrong?";
 				next;
 				mes "[Ahrum]";
 				mes "Although I've skipped some lessons in life, I can back up missing lessons easily. Who cares who can swear to me as King! This is how I am.";
@@ -6552,7 +6552,7 @@ prt_castle,314,373,4	script	Prince#eisen	4_M_1STPRIN1,{
 				next;
 				mes "[Ahrum]";
 				mes "I know quite well about";
-				mes "other king cadidates, personally.";
+				mes "other king candidates, personally.";
 				mes "But I can't find one distinguished person who can lead this kingdom well.";
 				next;
 				mes "[Ahrum]";
@@ -6711,7 +6711,7 @@ prt_castle,368,312,4	script	Prince#ern	4_M_2NDPRIN1,{
 	else if (nk_prince > 4) {
 		mes "[Prince]";
 		mes "Hi";
-		mes "you are the judege.";
+		mes "you are the judge.";
 		mes "I am Ernst, prince of Geoborg.";
 		next;
 		mes "[Ernst]";
@@ -6726,7 +6726,7 @@ prt_castle,368,312,4	script	Prince#ern	4_M_2NDPRIN1,{
 		while(1) {
 			mes "-Well, what questions.-";
 			next;
-			switch(select("backgroud first.", "I want to know your spirit of nationalism.", " Your habbit and tastes.", "I will be back.")) {
+			switch(select("background first.", "I want to know your spirit of nationalism.", " Your habit and tastes.", "I will be back.")) {
 			case 1:
 				mes "[Ernst]";
 				mes "Since I was young, I have grown up with a royal education. I haven't quarreled with others seriously, but I was not very polite either.";
@@ -7327,7 +7327,7 @@ OnDisable:
 
 prt_castle,388,205,6	script	Prince#eisen4	4_M_1STPRIN1,{
 	mes "[Ahrum]";
-	mes "You always care about gambling. But, why don't you care about your surrondings first, eh? Young master of Richard?";
+	mes "You always care about gambling. But, why don't you care about your surroundings first, eh? Young master of Richard?";
 	next;
 	mes "[Poe]";
 	mes "Why are you teasing me, now? At least I feel I have dice with higher numbers than you... You don't think so?";

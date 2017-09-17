@@ -200,7 +200,7 @@ gon_in,17,93,5	script	Chief#gon	4_M_TWMASKMAN,{
 				mes "Haven't found it yet?";
 				mes "There's no rush, take it easy.";
 				mes "You have to take care of";
-				mes "youself first before";
+				mes "yourself first before";
 				mes "doing favors for others.";
 				close;
 			case 6:
@@ -584,7 +584,7 @@ gon_in,165,16,4	script	Man in hangover#gon	4_M_ALCHE_A,{
 						mes "[Xue Bong]";
 						mes "Ah, a thief~";
 						mes "Hmm...let me see..";
-						mes "I went out for walk in the middle";
+						mes "I went out for a walk in the middle";
 						mes "of the night while I was drinking.";
 						mes "And I heard a noise.";
 						next;
@@ -629,7 +629,7 @@ gon_in,165,16,4	script	Man in hangover#gon	4_M_ALCHE_A,{
 				case 1:
 					mes "[Xue Bong]";
 					mes "Ah, a thief, eh? Let's see...";
-					mes "I went out for walk in the middle";
+					mes "I went out for a walk in the middle";
 					mes "of the night while I was drinking.";
 					mes "All of a sudden, I heard a strange noise...";
 					next;
@@ -649,7 +649,7 @@ gon_in,165,16,4	script	Man in hangover#gon	4_M_ALCHE_A,{
 						mes "It came from... and head to...um...";
 						mes "murmur..";
 						next;
-						mes "^3355FFHe started mumbling for a bit^000000";
+						mes "^3355FFHe starts mumbling for a bit^000000";
 						mes "......";
 						next;
 						mes "[Xue Bong]";
@@ -724,7 +724,7 @@ gon_in,165,16,4	script	Man in hangover#gon	4_M_ALCHE_A,{
 				mes "[Xue Bong]";
 				mes "Ah~ a thief...?";
 				mes "Hmm...let me see...";
-				mes "I went out for walk in the middle";
+				mes "I went out for a walk in the middle";
 				mes "of the night while I was drinking.";
 				mes "All of a sudden, I heard a strange noise...";
 				next;
@@ -2109,13 +2109,12 @@ gon_in,18,27,5	script	Madam#gnbs	4_F_TWGRANDMOM,{
 
 gon_dun03,62,222,0	script	Strange dead body#gnbs	HIDDEN_NPC,{
 	if (b_sword < 7) {
-		mes "Here's a decomposing corpse.";
+		mes "You see a decomposing corpse.";
 		mes "It seems like monsters devoured it.";
 		close;
 	}
 	else if (b_sword > 6 && b_sword < 11) {
 		mes "There's a written message between the bones of the corpse.";
-		mes "of the corpse.";
 		mes "Take a look?";
 		next;
 		if (select("Yes.", "Eew, no!") == 1) {
@@ -2152,7 +2151,7 @@ gon_dun03,62,222,0	script	Strange dead body#gnbs	HIDDEN_NPC,{
 	}
 	mes "^3355FFA skeleton chewed up by";
 	mes "monsters...I feel sorry for";
-	mes "him, but start getting this";
+	mes "him, but I'm getting this";
 	mes "really creepy feeling after staring at it for a while.^000000";
 	close;
 }
@@ -2244,7 +2243,7 @@ gonryun,100,241,0	script	Stranger#gnbs	4_M_JOB_KNIGHT1,{
 				}
 				mes "[Zuo Hei]";
 				mes "Grr...";
-				mes "Why should you care about the";
+				mes "Why should you care about";
 				mes "someone else's personality?";
 				mes "That's none of your business.";
 				mes "Take a look in the mirror first";
@@ -2300,7 +2299,7 @@ gonryun,100,241,0	script	Stranger#gnbs	4_M_JOB_KNIGHT1,{
 				}
 				mes "[Zuo Hei]";
 				mes "Grr...";
-				mes "Why should you care about the";
+				mes "Why should you care about";
 				mes "someone else's personality?";
 				mes "That's none of your business.";
 				mes "Take a look in the mirror first";
@@ -2335,7 +2334,7 @@ gonryun,100,241,0	script	Stranger#gnbs	4_M_JOB_KNIGHT1,{
 				mes "[Zuo Hei]";
 				mes "Hmm......";
 				mes "You're not done with the";
-				mes "requirement I've given you...";
+				mes "requirements I've given you...";
 				mes "I can't give you any information";
 				mes "until you finish your job.";
 				close;
@@ -2384,7 +2383,7 @@ gonryun,100,241,0	script	Stranger#gnbs	4_M_JOB_KNIGHT1,{
 				}
 				mes "[Zuo Hei]";
 				mes "Grr...";
-				mes "Why should you care about the";
+				mes "Why should you care about";
 				mes "someone else's personality?";
 				mes "That's none of your business.";
 				mes "Take a look in the mirror first";
@@ -2542,7 +2541,7 @@ geffen_in,71,112,2	script	Blacksmith#SaYumMoon	4_M_JOB_BLACKSMITH,{
 					mes "Hmmmm......";
 					mes "............";
 					next;
-					mes "^0000FFHe intently studied the pieces of the sword for a while.^000000";
+					mes "^0000FFHe intently studies the pieces of the sword for a while.^000000";
 					next;
 					mes "[Aumgarl]";
 					mes "Hmm...";
@@ -2674,7 +2673,7 @@ geffen_in,71,112,2	script	Blacksmith#SaYumMoon	4_M_JOB_BLACKSMITH,{
 							mes "I'm going to try my best to";
 							mes "make her happy until the";
 							mes "very end..";
-							mes "Please come by sometime";
+							mes "Please stop by sometime";
 							mes "to say hi to Lyroo.";
 							close;
 						case 3:
@@ -2757,7 +2756,7 @@ geffen_in,71,112,2	script	Blacksmith#SaYumMoon	4_M_JOB_BLACKSMITH,{
 			mes "[Aumgarl]";
 			mes "Ahh...";
 			mes "Lyroo is upstairs...";
-			mes "Bue she's in pain.";
+			mes "But she's in pain.";
 			mes "Try not to talk to her";
 			mes "for too long.";
 			close;
@@ -2801,7 +2800,7 @@ geffen_in,71,112,2	script	Blacksmith#SaYumMoon	4_M_JOB_BLACKSMITH,{
 				mes "^0000FFYou Show the pieces of the";
 				mes "broken sword to Aumgarl.";
 				mes "....................";
-				mes "Aumgarl took a careful look";
+				mes "Aumgarl takes a careful look";
 				mes "at the pieces for awhile...^000000";
 				next;
 				mes "...";
@@ -2884,7 +2883,7 @@ geffen_in,71,112,2	script	Blacksmith#SaYumMoon	4_M_JOB_BLACKSMITH,{
 				mes "^0000FFYou show the pieces of the";
 				mes "broken sword to Aumgarl.";
 				mes "....................";
-				mes "Aumgarl took a careful look";
+				mes "Aumgarl takes a careful look";
 				mes "at the pieces for a while...^000000";
 				next;
 				mes "...";
@@ -2990,7 +2989,7 @@ geffen_in,71,112,2	script	Blacksmith#SaYumMoon	4_M_JOB_BLACKSMITH,{
 				next;
 				mes "[Aumgarl]";
 				mes "I haven't seen quality";
-				mes "of this magnitude in a";
+				mes "of this magnitude";
 				mes "in a long time.";
 				mes "I envy you...";
 				mes "Hehehe......";
@@ -3038,7 +3037,7 @@ geffen_in,106,106,7	script	Girl#gnbs2	4_M_KID2,{
 		mes "..tha... thank you....";
 		next;
 		mes "^0000FFBetter stop talking to her and";
-		mes "hurry and find a cure.^000000";
+		mes "hurry to find a cure.^000000";
 		close;
 	}
 	else if (b_sword == 24 || b_sword == 25 || b_sword == 26) {
@@ -3405,9 +3404,9 @@ yuno_in01,99,101,4	script	Doctor#gnbs	4_F_ALCHE,{
 			}
 			mes "[Cylrnel]";
 			mes "Okay...";
-			mes "Now, about physiological condition.";
+			mes "Now, about her physiological condition.";
 			next;
-			switch(select("No sweating at all.", "Sweating all over the body.", "Runny nose.", "No tears, sweats at all.")) {
+			switch(select("No sweating at all.", "Sweating all over the body.", "Runny nose.", "No tears or sweat at all.")) {
 			case 1:
 				.@sick2$ = "No sweating at all.";
 				++.@sick;
@@ -3419,7 +3418,7 @@ yuno_in01,99,101,4	script	Doctor#gnbs	4_F_ALCHE,{
 				.@sick2$ = "Runny nose.";
 				break;
 			case 4:
-				.@sick2$ = "No tears, sweats at all.";
+				.@sick2$ = "No tears or sweat at all.";
 				break;
 			}
 			mes "[Cylrnel]";
@@ -3760,8 +3759,8 @@ gonryun,237,226,3	script	Han Ran Jiao#gon	4_M_TWMIDMAN,{
 		mes "here! Where did you get it!?";
 		next;
 		mes "[Han Ran Jiao]";
-		mes "I dropped that knife from being";
-		mes "careless. It belongs to one of my";
+		mes "I carelessly dropped it.";
+		mes "It belongs to one of my";
 		mes "ancestors. I know it looks like";
 		mes "a cheap knife...";
 		next;
@@ -3807,7 +3806,7 @@ gonryun,237,226,3	script	Han Ran Jiao#gon	4_M_TWMIDMAN,{
 	}
 	if (nakha == 3) {
 		mes "[Han Ran Jiao]";
-		mes "My neighbor seemed looked pretty bothered about something...";
+		mes "My neighbor seemed to look pretty bothered about something...";
 		mes "Oh well, I have better things to worry about than his fancy tea.";
 		close;
 	}
@@ -3819,7 +3818,7 @@ OnTouch:
 		nakha = 2;
 		mes "^3355FFHm? What's this?";
 		mes " ";
-		mes "Something was hidden beneath the leaves...^000000";
+		mes "Something is hidden beneath the leaves...^000000";
 		mes " ";
 		mes "- You have found an old knife -";
 		close2;

@@ -215,7 +215,7 @@ prt_in,73,87,4	script	Chivalry Member	1_M_YOUNGKNIGHT,{
 	if ((Class == Job_Novice || Class == Job_Baby) && (JobLevel > 6) && ((skill_nov >= 3) && (skill_nov <= 5))) {
 		mes "[Bulma]";
 		mes "Yeah. . . I look great. . .";
-		mes "I am a knight in the knight's";
+		mes "I am a knight in the knights'";
 		mes "guild of Prontera! Kuhahhahhahah !!";
 		mes "It hasn't been long since I became a";
 		mes " knight, but I still look great huh?";
@@ -442,7 +442,7 @@ prt_castle,175,146,4	script	Nursing Instructor	1_M_04,{
 		case 2:
 			mes "[Dread Lord]";
 			mes "Look, if your business is done";
-			mes "get out of my site! ! !";
+			mes "get out of my sight! ! !";
 			mes "I have no time for this nonsense ..";
 			mes ". . . . .";
 			mes "- Click Click *Walks away* . . . . . -";

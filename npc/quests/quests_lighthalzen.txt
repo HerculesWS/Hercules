@@ -5345,67 +5345,65 @@ lhz_in01,114,181,5	script	Representative#li_01	1_F_LIBRARYGIRL,{
 		mes "to the Rekenber Corporation.";
 		mes "How may I be of service today?";
 		next;
-		switch(select("Building Information.")) {
-		case 1:
-			mes "[Representative]";
-			mes "Please tell me";
-			mes "which floor you'd like";
-			mes "to know more about.";
-			next;
-			while (1) {
-				switch(select("1F", "2F", "B1", "Cancel")) {
-				case 1:
-					mes "[Representative]";
-					mes "The ^3131FFRekenber Library^000000 can";
-					mes "be found at the end of the";
-					mes "left hallway. Our library is";
-					mes "a great resource of innovative";
-					mes "ideas and information for our";
-					mes "system development employees.";
-					next;
-					mes "[Representative]";
-					mes "The ^3131FFBall Room^000000, where";
-					mes "various official events are";
-					mes "usually held, can be accessed";
-					mes "through the right hallway.";
-					next;
-					break;
-				case 2:
-					mes "[Representative]";
-					mes "Please use the stairs";
-					mes "located on both sides of";
-					mes "the Help Desk to go to the";
-					mes "Second Floor. The Second";
-					mes "Floor is mostly used for";
-					mes "administrative purposes.";
-					next;
-					mes "[Representative]";
-					mes "There, you can find";
-					mes "the ^3131FFConference Room^000000,";
-					mes "^3131FFSecretary's Office^000000, the";
-					mes "^3131FFAuditorium^000000 and the";
-					mes "^3131FFChairman's Office^000000.";
-					next;
-					break;
-				case 3:
-					mes "[Representative]";
-					mes "The first underground floor";
-					mes "is used by ^3131FFRegenschirm^000000,";
-					mes "our laboratory affiliate. For";
-					mes "security reasons, this floor";
-					mes "is not accessible to visitors.";
-					next;
-					break;
-				case 4:
-					mes "[Representative]";
-					mes "We are always doing our";
-					mes "best to provide the best";
-					mes "services to our customers.";
-					mes "Remember that Rekenber";
-					mes "is the name you can trust.";
-					mes "Thank you and have a nice day.";
-					close;
-				}
+		select("Building Information.");
+		mes "[Representative]";
+		mes "Please tell me";
+		mes "which floor you'd like";
+		mes "to know more about.";
+		next;
+		while (1) {
+			switch(select("1F", "2F", "B1", "Cancel")) {
+			case 1:
+				mes "[Representative]";
+				mes "The ^3131FFRekenber Library^000000 can";
+				mes "be found at the end of the";
+				mes "left hallway. Our library is";
+				mes "a great resource of innovative";
+				mes "ideas and information for our";
+				mes "system development employees.";
+				next;
+				mes "[Representative]";
+				mes "The ^3131FFBall Room^000000, where";
+				mes "various official events are";
+				mes "usually held, can be accessed";
+				mes "through the right hallway.";
+				next;
+				break;
+			case 2:
+				mes "[Representative]";
+				mes "Please use the stairs";
+				mes "located on both sides of";
+				mes "the Help Desk to go to the";
+				mes "Second Floor. The Second";
+				mes "Floor is mostly used for";
+				mes "administrative purposes.";
+				next;
+				mes "[Representative]";
+				mes "There, you can find";
+				mes "the ^3131FFConference Room^000000,";
+				mes "^3131FFSecretary's Office^000000, the";
+				mes "^3131FFAuditorium^000000 and the";
+				mes "^3131FFChairman's Office^000000.";
+				next;
+				break;
+			case 3:
+				mes "[Representative]";
+				mes "The first underground floor";
+				mes "is used by ^3131FFRegenschirm^000000,";
+				mes "our laboratory affiliate. For";
+				mes "security reasons, this floor";
+				mes "is not accessible to visitors.";
+				next;
+				break;
+			case 4:
+				mes "[Representative]";
+				mes "We are always doing our";
+				mes "best to provide the best";
+				mes "services to our customers.";
+				mes "Remember that Rekenber";
+				mes "is the name you can trust.";
+				mes "Thank you and have a nice day.";
+				close;
 			}
 		}
 	}
@@ -5487,67 +5485,65 @@ lhz_in01,27,247,5	script	Representative#li_02	1_F_LIBRARYGIRL,{
 		mes "Rekenber Corporation.";
 		mes "How may I help you?";
 		next;
-		switch(select("Building Information.")) {
-		case 1:
-			mes "[Representative]";
-			mes "Please tell me";
-			mes "which floor you'd like";
-			mes "to know more about.";
-			next;
-			while (1) {
-				switch(select("1F", "2F", "B1", "Cancel")) {
-				case 1:
-					mes "[Representative]";
-					mes "The ^3131FFRekenber Library^000000 can";
-					mes "be found at the end of the";
-					mes "left hallway. Our library is";
-					mes "a great resource of innovative";
-					mes "ideas and information for our";
-					mes "system development employees.";
-					next;
-					mes "[Representative]";
-					mes "The ^3131FFBall Room^000000, where";
-					mes "various official events are";
-					mes "usually held, can be accessed";
-					mes "through the right hallway.";
-					next;
-					break;
-				case 2:
-					mes "[Representative]";
-					mes "Please use the stairs";
-					mes "located on both sides of";
-					mes "the Help Desk to go to the";
-					mes "Second Floor. The Second";
-					mes "Floor is mostly used for";
-					mes "administrative purposes.";
-					next;
-					mes "[Representative]";
-					mes "There, you can find";
-					mes "the ^3131FFConference Room^000000,";
-					mes "^3131FFSecretary's Office^000000, the";
-					mes "^3131FFAuditorium^000000 and the";
-					mes "^3131FFChairman's Office^000000.";
-					next;
-					break;
-				case 3:
-					mes "[Representative]";
-					mes "The first underground floor";
-					mes "is used by ^3131FFRegenschirm^000000,";
-					mes "our laboratory affiliate. For";
-					mes "security reasons, this floor";
-					mes "is not accessible to visitors.";
-					next;
-					break;
-				case 4:
-					mes "[Representative]";
-					mes "We are always doing our";
-					mes "best to provide the best";
-					mes "services to our customers.";
-					mes "Remember that Rekenber";
-					mes "is the name you can trust.";
-					mes "Thank you and have a nice day.";
-					close;
-				}
+		select("Building Information.");
+		mes "[Representative]";
+		mes "Please tell me";
+		mes "which floor you'd like";
+		mes "to know more about.";
+		next;
+		while (1) {
+			switch(select("1F", "2F", "B1", "Cancel")) {
+			case 1:
+				mes "[Representative]";
+				mes "The ^3131FFRekenber Library^000000 can";
+				mes "be found at the end of the";
+				mes "left hallway. Our library is";
+				mes "a great resource of innovative";
+				mes "ideas and information for our";
+				mes "system development employees.";
+				next;
+				mes "[Representative]";
+				mes "The ^3131FFBall Room^000000, where";
+				mes "various official events are";
+				mes "usually held, can be accessed";
+				mes "through the right hallway.";
+				next;
+				break;
+			case 2:
+				mes "[Representative]";
+				mes "Please use the stairs";
+				mes "located on both sides of";
+				mes "the Help Desk to go to the";
+				mes "Second Floor. The Second";
+				mes "Floor is mostly used for";
+				mes "administrative purposes.";
+				next;
+				mes "[Representative]";
+				mes "There, you can find";
+				mes "the ^3131FFConference Room^000000,";
+				mes "^3131FFSecretary's Office^000000, the";
+				mes "^3131FFAuditorium^000000 and the";
+				mes "^3131FFChairman's Office^000000.";
+				next;
+				break;
+			case 3:
+				mes "[Representative]";
+				mes "The first underground floor";
+				mes "is used by ^3131FFRegenschirm^000000,";
+				mes "our laboratory affiliate. For";
+				mes "security reasons, this floor";
+				mes "is not accessible to visitors.";
+				next;
+				break;
+			case 4:
+				mes "[Representative]";
+				mes "We are always doing our";
+				mes "best to provide the best";
+				mes "services to our customers.";
+				mes "Remember that Rekenber";
+				mes "is the name you can trust.";
+				mes "Thank you and have a nice day.";
+				close;
 			}
 		}
 	}
@@ -7538,15 +7534,15 @@ yuno_pre,69,20,4	script	Secretary#1	4_F_LGTGIRL,{
 		close2;
 		warp "yuno_pre",113,53;
 		end;
-        }
-        else if(hg_tre > 56)
-        {
+	}
+	else if(hg_tre > 56)
+	{
 		mes "[Hes O'Neil]";
 		mes "The president said that you're welcome to visit him anytime.";
 		close2;
 		warp "yuno_pre",113,53;
 		end;
-        }
+	}
 	else
 	{
 		mes "[Hes O'Neil]";

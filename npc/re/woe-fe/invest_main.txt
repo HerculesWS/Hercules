@@ -741,7 +741,7 @@ OnAgitInvest:
 		mes "It is only called the Abyss Gate for convenience but it's simply a ^4d4dffgap to another dimension^000000.";
 		next;
 		mes .@n$;
-		mes "More of these gaps are found here and there after Morocc created the Crack of Dimension.";
+		mes "More of these gaps are found here and there after Morroc created the Crack of Dimension.";
 		mes "I personally think that the Abyss Gate found recently is part of the past or even from the future.";
 		next;
 		mes .@n$;

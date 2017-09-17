@@ -295,7 +295,7 @@ geffen,132,38,3	script	Bard#2	1_M_BARD,{
 			next;
 			mes "[Errende]";
 			mes "Let me ask you a favor.";
-			mes "If perchance you happen to meet ^483D8BGunther Doubleharmony^000000, please inform him of my dilemna.";
+			mes "If perchance you happen to meet ^483D8BGunther Doubleharmony^000000, please inform him of my dilemma.";
 			next;
 			mes "[Errende]";
 			mes "Tell him that ^483D8BMinty Errende^000000 happened to forget a line of the song, ^483D8BAt One, I Fall in Love^000000. The line is called ^483D8B8th love^000000.";
@@ -655,7 +655,7 @@ geffen,132,38,3	script	Bard#2	1_M_BARD,{
 			mes "Gunther!";
 			next;
 			mes "[Errende]";
-			mes "Let me ask you a favor. If perchance you happen to meet ^3355FFGunther Doubleharmony^000000, please inform him of my dilemna.";
+			mes "Let me ask you a favor. If perchance you happen to meet ^3355FFGunther Doubleharmony^000000, please inform him of my dilemma.";
 			next;
 			mes "[Errende]";
 			mes "Tell him that ^483D8BMinty Errende^000000 happened to forget a line of the song, ^483D8BAt One, I Fall in Love^000000. The line is called ^483D8B8th love^000000.";
@@ -1311,7 +1311,7 @@ S_StorySong:
 						mes "I've got it! Gunther!";
 						next;
 						mes "[Errende]";
-						mes "If perchance you happen to meet ^483D8BGunther Doubleharmony^000000, please inform him of my dilemna.";
+						mes "If perchance you happen to meet ^483D8BGunther Doubleharmony^000000, please inform him of my dilemma.";
 						next;
 						mes "[Errende]";
 						mes "Tell him that ^483D8BMinty Errende^000000 happened to forget a line of the song, ^483D8BAt One, I Fall in Love^000000. The line is called ^483D8B8th love^000000.";
