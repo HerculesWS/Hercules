@@ -888,8 +888,8 @@ void clif_get_weapon_view(struct map_session_data* sd, unsigned short *rhand, un
 	}
 
 #if PACKETVER < 4
-	*rhand = sd->status.weapon;
-	*lhand = sd->status.shield;
+	*rhand = sd->status.look.weapon;
+	*lhand = sd->status.look.shield;
 #else
 	if (sd->equip_index[EQI_HAND_R] >= 0 &&
 		sd->inventory_data[sd->equip_index[EQI_HAND_R]])
@@ -1491,8 +1491,8 @@ bool clif_spawn(struct block_list *bl)
 			}
 			if (sd->charm_type != CHARM_TYPE_NONE && sd->charm_count > 0)
 				clif->spiritcharm(sd);
-			if (sd->status.robe)
-				clif->refreshlook(bl,bl->id,LOOK_ROBE,sd->status.robe,AREA);
+			if (sd->status.look.robe != 0)
+				clif->refreshlook(bl, bl->id, LOOK_ROBE, sd->status.look.robe, AREA);
 		}
 			break;
 		case BL_MOB:
@@ -2597,7 +2597,7 @@ void clif_item_equip(short idx, struct EQUIPITEM_INFO *p, struct item *it, struc
 #endif
 
 #if PACKETVER >= 20100629
-	p->wItemSpriteNumber = (id->equip&EQP_VISIBLE) ? id->look : 0;
+	p->wItemSpriteNumber = (id->equip&EQP_VISIBLE) ? id->view_sprite : 0;
 #endif
 
 #if PACKETVER >= 20120925
@@ -3527,7 +3527,7 @@ void clif_equipitemack(struct map_session_data *sd,int n,int pos,enum e_EQUIP_IT
 	p.wearLocation = pos;
 #if PACKETVER >= 20100629
 	if (result == EIA_SUCCESS && sd->inventory_data[n]->equip&EQP_VISIBLE)
-		p.wItemSpriteNumber = sd->inventory_data[n]->look;
+		p.wItemSpriteNumber = sd->inventory_data[n]->view_sprite;
 	else
 		p.wItemSpriteNumber = 0;
 #endif
@@ -4309,8 +4309,8 @@ void clif_getareachar_unit(struct map_session_data* sd,struct block_list *bl) {
 				clif->specialeffect_single(bl,421,sd->fd);
 			if (tsd->bg_id != 0 && map->list[tsd->bl.m].flag.battleground)
 				clif->sendbgemblem_single(sd->fd,tsd);
-			if (tsd->status.robe)
-				clif->refreshlook(&sd->bl,bl->id,LOOK_ROBE,tsd->status.robe,SELF);
+			if (tsd->status.look.robe != 0)
+				clif->refreshlook(&sd->bl, bl->id, LOOK_ROBE, tsd->status.look.robe, SELF);
 		}
 			break;
 		case BL_MER: // Devotion Effects
@@ -9449,8 +9449,8 @@ void clif_parse_LoadEndAck(int fd, struct map_session_data *sd) {
 
 	// Character Looks
 #if PACKETVER < 4
-	clif->changelook(&sd->bl,LOOK_WEAPON,sd->status.weapon);
-	clif->changelook(&sd->bl,LOOK_SHIELD,sd->status.shield);
+	clif->changelook(&sd->bl, LOOK_WEAPON, sd->status.look.weapon);
+	clif->changelook(&sd->bl, LOOK_SHIELD, sd->status.look.shield);
 #else
 	clif->changelook(&sd->bl,LOOK_WEAPON,0);
 #endif

@@ -806,7 +806,7 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 				break; // If a normal attack is a skill, it's splash damage. [Inkfish]
 			if(sd) {
 				// Automatic trigger of Blitz Beat
-				if (pc_isfalcon(sd) && sd->status.weapon == W_BOW && (temp=pc->checkskill(sd,HT_BLITZBEAT))>0 &&
+				if (pc_isfalcon(sd) && sd->weapontype == W_BOW && (temp=pc->checkskill(sd,HT_BLITZBEAT))>0 &&
 					rnd()%1000 <= sstatus->luk*3 ) {
 					rate = sd->status.job_level / 10 + 1;
 					skill->castend_damage_id(src,bl,HT_BLITZBEAT,(temp<rate)?temp:rate,tick,SD_LEVEL);
@@ -815,7 +815,7 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 				if( pc_iswug(sd) && (temp=pc->checkskill(sd,RA_WUGSTRIKE)) > 0 && rnd()%1000 <= sstatus->luk*3 )
 					skill->castend_damage_id(src,bl,RA_WUGSTRIKE,temp,tick,0);
 				// Gank
-				if(dstmd && sd->status.weapon != W_BOW &&
+				if(dstmd && sd->weapontype != W_BOW &&
 					(temp=pc->checkskill(sd,RG_SNATCHER)) > 0 &&
 					(temp*15 + 55) + pc->checkskill(sd,TF_STEAL)*10 > rnd()%1000) {
 					if(pc->steal_item(sd,bl,pc->checkskill(sd,TF_STEAL)))
@@ -2012,7 +2012,7 @@ int skill_break_equip (struct block_list *bl, unsigned short where, int rate, in
 		if (sd->bonus.unbreakable)
 			rate -= rate*sd->bonus.unbreakable/100;
 		if (where&EQP_WEAPON) {
-			switch (sd->status.weapon) {
+			switch (sd->weapontype) {
 				case W_FIST: //Bare fists should not break :P
 				case W_1HAXE:
 				case W_2HAXE:
@@ -5917,7 +5917,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 		case SA_LIGHTNINGLOADER:
 		case SA_SEISMICWEAPON:
 			if (dstsd) {
-				if(dstsd->status.weapon == W_FIST ||
+				if (dstsd->weapontype == W_FIST ||
 					(dstsd->sc.count && !dstsd->sc.data[type] &&
 					( //Allow re-enchanting to lengthen time. [Skotlex]
 						dstsd->sc.data[SC_PROPERTYFIRE] ||
@@ -13391,7 +13391,7 @@ int skill_isammotype (struct map_session_data *sd, int skill_id)
 	nullpo_ret(sd);
 	return (
 		battle_config.arrow_decrement==2 &&
-		(sd->status.weapon == W_BOW || (sd->status.weapon >= W_REVOLVER && sd->status.weapon <= W_GRENADE)) &&
+		(sd->weapontype == W_BOW || (sd->weapontype >= W_REVOLVER && sd->weapontype <= W_GRENADE)) &&
 		skill_id != HT_PHANTASMIC &&
 		skill->get_type(skill_id) == BF_WEAPON &&
 		!(skill->get_nk(skill_id)&NK_NO_DAMAGE) &&
@@ -14245,7 +14245,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 			}
 			break;
 		case ST_SHIELD:
-			if(sd->status.shield <= 0) {
+			if (!sd->has_shield) {
 				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 				return 0;
 			}
@@ -14555,7 +14555,7 @@ int skill_check_condition_castend(struct map_session_data* sd, uint16 skill_id, 
 			clif->messagecolor_self(sd->fd, COLOR_RED, e_msg);
 			return 0;
 		}
-		if (!(require.ammo&1<<sd->inventory_data[i]->look)) { //Ammo type check. Send the "wrong weapon type" message
+		if (!(require.ammo&1<<sd->inventory_data[i]->subtype)) { //Ammo type check. Send the "wrong weapon type" message
 			//which is the closest we have to wrong ammo type. [Skotlex]
 			clif->arrow_fail(sd,0); //Haplo suggested we just send the equip-arrows message instead. [Skotlex]
 			//clif->skill_fail(sd,skill_id,USESKILL_FAIL_THIS_WEAPON,0);

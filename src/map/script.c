@@ -13982,43 +13982,70 @@ BUILDIN(getitemslots)
 	return true;
 }
 
-// TODO: add matk here if needed/once we get rid of RENEWAL
+// TODO: add matk here if needed
 
 /*==========================================
  * Returns some values of an item [Lupus]
  * Price, Weight, etc...
- * getiteminfo(itemID,n), where n
- * 0 value_buy;
- * 1 value_sell;
- * 2 type;
- * 3 maxchance = Max drop chance of this item e.g. 1 = 0.01% , etc..
- * if = 0, then monsters don't drop it at all (rare or a quest item)
- * if = -1, then this item is sold in NPC shops only
- * 4 sex;
- * 5 equip;
- * 6 weight;
- * 7 atk;
- * 8 def;
- * 9 range;
- * 10 slot;
- * 11 look;
- * 12 elv;
- * 13 wlv;
- * 14 view id
  *------------------------------------------*/
 BUILDIN(getiteminfo)
 {
-	int item_id,n;
-	struct item_data *i_data;
+	int item_id = script_getnum(st, 2);
+	int n = script_getnum(st, 3);
+	struct item_data *it = itemdb->exists(item_id);
 
-	item_id = script_getnum(st,2);
-	n       = script_getnum(st,3);
-	i_data  = itemdb->exists(item_id);
+	if (it == NULL) {
+		script_pushint(st, -1);
+		return true;
+	}
 
-	if (i_data && n>=0 && n<=14) {
-		int *item_arr =  (int*)&i_data->value_buy;
-		script_pushint(st,item_arr[n]);
-	} else {
+	switch (n) {
+	case 0:
+		script_pushint(st, it->value_buy);
+		break;
+	case 1:
+		script_pushint(st, it->value_sell);
+		break;
+	case 2:
+		script_pushint(st, it->type);
+		break;
+	case 3:
+		script_pushint(st, it->maxchance);
+		break;
+	case 4:
+		script_pushint(st, it->sex);
+		break;
+	case 5:
+		script_pushint(st, it->equip);
+		break;
+	case 6:
+		script_pushint(st, it->weight);
+		break;
+	case 7:
+		script_pushint(st, it->atk);
+		break;
+	case 8:
+		script_pushint(st, it->def);
+		break;
+	case 9:
+		script_pushint(st, it->range);
+		break;
+	case 10:
+		script_pushint(st, it->slot);
+		break;
+	case 11:
+		script_pushint(st, it->subtype);
+		break;
+	case 12:
+		script_pushint(st, it->elv);
+		break;
+	case 13:
+		script_pushint(st, it->wlv);
+		break;
+	case 14:
+		script_pushint(st, it->view_id);
+		break;
+	default:
 		script_pushint(st,-1);
 	}
 	return true;
@@ -14211,43 +14238,71 @@ BUILDIN(setequipoption)
 /*==========================================
  * Set some values of an item [Lupus]
  * Price, Weight, etc...
- * setiteminfo(itemID,n,Value), where n
- * 0 value_buy;
- * 1 value_sell;
- * 2 type;
- * 3 maxchance = Max drop chance of this item e.g. 1 = 0.01% , etc..
- * if = 0, then monsters don't drop it at all (rare or a quest item)
- * if = -1, then this item is sold in NPC shops only
- * 4 sex;
- * 5 equip;
- * 6 weight;
- * 7 atk;
- * 8 def;
- * 9 range;
- * 10 slot;
- * 11 look;
- * 12 elv;
- * 13 wlv;
- * 14 view id
- * Returns Value or -1 if the wrong field's been set
  *------------------------------------------*/
 BUILDIN(setiteminfo)
 {
-	int item_id,n,value;
-	struct item_data *i_data;
+	// TODO: Validate data in a similar way as during database load
+	int item_id = script_getnum(st, 2);
+	int n = script_getnum(st, 3);
+	int value = script_getnum(st,4);
+	struct item_data *it = itemdb->exists(item_id);
 
-	item_id = script_getnum(st,2);
-	n       = script_getnum(st,3);
-	value   = script_getnum(st,4);
-	i_data  = itemdb->exists(item_id);
-
-	if (i_data && n>=0 && n<=14) {
-		int *item_arr = (int*)&i_data->value_buy;
-		item_arr[n] = value;
-		script_pushint(st,value);
-	} else {
-		script_pushint(st,-1);
+	if (it == NULL) {
+		script_pushint(st, -1);
+		return true;
 	}
+
+	switch (n) {
+	case 0:
+		it->value_buy = value;
+		break;
+	case 1:
+		it->value_sell = value;
+		break;
+	case 2:
+		it->type = value;
+		break;
+	case 3:
+		it->maxchance = value;
+		break;
+	case 4:
+		it->sex = value;
+		break;
+	case 5:
+		it->equip = value;
+		break;
+	case 6:
+		it->weight = value;
+		break;
+	case 7:
+		it->atk = value;
+		break;
+	case 8:
+		it->def = value;
+		break;
+	case 9:
+		it->range = value;
+		break;
+	case 10:
+		it->slot = value;
+		break;
+	case 11:
+		it->subtype = value;
+		break;
+	case 12:
+		it->elv = value;
+		break;
+	case 13:
+		it->wlv = value;
+		break;
+	case 14:
+		it->view_id = value;
+		break;
+	default:
+		script_pushint(st,-1);
+		return true;
+	}
+	script_pushint(st,value);
 	return true;
 }
 
@@ -15464,15 +15519,15 @@ BUILDIN(getlook)
 	type=script_getnum(st,2);
 	switch(type) {
 		case LOOK_HAIR:          val = sd->status.hair;          break; //1
-		case LOOK_WEAPON:        val = sd->status.weapon;        break; //2
-		case LOOK_HEAD_BOTTOM:   val = sd->status.head_bottom;   break; //3
-		case LOOK_HEAD_TOP:      val = sd->status.head_top;      break; //4
-		case LOOK_HEAD_MID:      val = sd->status.head_mid;      break; //5
+		case LOOK_WEAPON:        val = sd->status.look.weapon;   break; //2
+		case LOOK_HEAD_BOTTOM:   val = sd->status.look.head_bottom; break; //3
+		case LOOK_HEAD_TOP:      val = sd->status.look.head_top; break; //4
+		case LOOK_HEAD_MID:      val = sd->status.look.head_mid; break; //5
 		case LOOK_HAIR_COLOR:    val = sd->status.hair_color;    break; //6
 		case LOOK_CLOTHES_COLOR: val = sd->status.clothes_color; break; //7
-		case LOOK_SHIELD:        val = sd->status.shield;        break; //8
+		case LOOK_SHIELD:        val = sd->status.look.shield;   break; //8
 		case LOOK_SHOES:                                         break; //9
-		case LOOK_ROBE:          val = sd->status.robe;          break; //12
+		case LOOK_ROBE:          val = sd->status.look.robe;     break; //12
 		case LOOK_BODY2:         val=sd->status.body;            break; //13
 	}
 
@@ -24404,6 +24459,15 @@ void script_hardcoded_constants(void)
 	script->set_constant("EQP_SHADOW_SHOES", EQP_SHADOW_SHOES, false, false);
 	script->set_constant("EQP_SHADOW_ACC_R", EQP_SHADOW_ACC_R, false, false);
 	script->set_constant("EQP_SHADOW_ACC_L", EQP_SHADOW_ACC_L, false, false);
+	// Synonyms and combined values
+	script->set_constant("EQP_WEAPON", EQP_WEAPON, false, false);
+	script->set_constant("EQP_SHIELD", EQP_SHIELD, false, false);
+	script->set_constant("EQP_ARMS", EQP_ARMS, false, false);
+	script->set_constant("EQP_HELM", EQP_HELM, false, false);
+	script->set_constant("EQP_ACC", EQP_ACC, false, false);
+	script->set_constant("EQP_COSTUME", EQP_COSTUME, false, false);
+	script->set_constant("EQP_SHADOW_ACC", EQP_SHADOW_ACC, false, false);
+	script->set_constant("EQP_SHADOW_ARMS", EQP_SHADOW_ARMS, false, false);
 
 	script->constdb_comment("Item Option Types");
 	script->set_constant("IT_OPT_INDEX", IT_OPT_INDEX, false, false);
@@ -24479,6 +24543,53 @@ void script_hardcoded_constants(void)
 	script->set_constant("DATATYPE_PARAM", DATATYPE_PARAM, false, false);
 	script->set_constant("DATATYPE_VAR", DATATYPE_VAR, false, false);
 	script->set_constant("DATATYPE_LABEL", DATATYPE_LABEL, false, false);
+
+	script->constdb_comment("Item Subtypes (Weapon types)");
+	script->set_constant("W_FIST", W_FIST, false, false);
+	script->set_constant("W_DAGGER", W_DAGGER, false, false);
+	script->set_constant("W_1HSWORD", W_1HSWORD, false, false);
+	script->set_constant("W_2HSWORD", W_2HSWORD, false, false);
+	script->set_constant("W_1HSPEAR", W_1HSPEAR, false, false);
+	script->set_constant("W_2HSPEAR", W_2HSPEAR, false, false);
+	script->set_constant("W_1HAXE", W_1HAXE, false, false);
+	script->set_constant("W_2HAXE", W_2HAXE, false, false);
+	script->set_constant("W_MACE", W_MACE, false, false);
+	script->set_constant("W_2HMACE", W_2HMACE, false, false);
+	script->set_constant("W_STAFF", W_STAFF, false, false);
+	script->set_constant("W_BOW", W_BOW, false, false);
+	script->set_constant("W_KNUCKLE", W_KNUCKLE, false, false);
+	script->set_constant("W_MUSICAL", W_MUSICAL, false, false);
+	script->set_constant("W_WHIP", W_WHIP, false, false);
+	script->set_constant("W_BOOK", W_BOOK, false, false);
+	script->set_constant("W_KATAR", W_KATAR, false, false);
+	script->set_constant("W_REVOLVER", W_REVOLVER, false, false);
+	script->set_constant("W_RIFLE", W_RIFLE, false, false);
+	script->set_constant("W_GATLING", W_GATLING, false, false);
+	script->set_constant("W_SHOTGUN", W_SHOTGUN, false, false);
+	script->set_constant("W_GRENADE", W_GRENADE, false, false);
+	script->set_constant("W_HUUMA", W_HUUMA, false, false);
+	script->set_constant("W_2HSTAFF", W_2HSTAFF, false, false);
+
+	script->constdb_comment("Item Subtypes (Ammunition types)");
+	script->set_constant("A_ARROW", A_ARROW, false, false);
+	script->set_constant("A_DAGGER", A_DAGGER, false, false);
+	script->set_constant("A_BULLET", A_BULLET, false, false);
+	script->set_constant("A_SHELL", A_SHELL, false, false);
+	script->set_constant("A_GRENADE", A_GRENADE, false, false);
+	script->set_constant("A_SHURIKEN", A_SHURIKEN, false, false);
+	script->set_constant("A_KUNAI", A_KUNAI, false, false);
+	script->set_constant("A_CANNONBALL", A_CANNONBALL, false, false);
+	script->set_constant("A_THROWWEAPON", A_THROWWEAPON, false, false);
+
+	script->constdb_comment("Item Upper Masks");
+	script->set_constant("ITEMUPPER_NONE", ITEMUPPER_NONE, false, false);
+	script->set_constant("ITEMUPPER_NORMAL", ITEMUPPER_NORMAL, false, false);
+	script->set_constant("ITEMUPPER_UPPER", ITEMUPPER_UPPER, false, false);
+	script->set_constant("ITEMUPPER_BABY", ITEMUPPER_BABY, false, false);
+	script->set_constant("ITEMUPPER_THIRD", ITEMUPPER_THIRD, false, false);
+	script->set_constant("ITEMUPPER_THIRDUPPER", ITEMUPPER_THIRDUPPER, false, false);
+	script->set_constant("ITEMUPPER_THIRDBABY", ITEMUPPER_THIRDBABY, false, false);
+	script->set_constant("ITEMUPPER_ALL", ITEMUPPER_ALL, false, false);
 
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL

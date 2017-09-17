@@ -337,7 +337,7 @@ enum item_class_upper {
 	ITEMUPPER_UPPER      = 0x02,
 	ITEMUPPER_BABY       = 0x04,
 	ITEMUPPER_THIRD      = 0x08,
-	ITEMUPPER_THURDUPPER = 0x10,
+	ITEMUPPER_THIRDUPPER = 0x10,
 	ITEMUPPER_THIRDBABY  = 0x20,
 	ITEMUPPER_ALL        = 0x3f, // Sum of all the above
 };
@@ -454,10 +454,10 @@ struct item_data {
 	uint16 nameid;
 	char name[ITEM_NAME_LENGTH],jname[ITEM_NAME_LENGTH];
 
-	//Do not add stuff between value_buy and view_id (see how getiteminfo works)
 	int value_buy;
 	int value_sell;
 	int type;
+	int subtype;
 	int maxchance; //For logs, for external game info, for scripts: Max drop chance of this item (e.g. 0.01% , etc.. if it = 0, then monsters don't drop it, -1 denotes items sold in shops only) [Lupus]
 	int sex;
 	int equip;
@@ -466,7 +466,7 @@ struct item_data {
 	int def;
 	int range;
 	int slot;
-	int look;
+	int view_sprite;
 	int elv;
 	int wlv;
 	int view_id;
@@ -474,8 +474,6 @@ struct item_data {
 	int elvmax;/* maximum level for this item */
 
 	int delay;
-//Lupus: I rearranged order of these fields due to compatibility with ITEMINFO script command
-//       some script commands should be revised as well...
 	uint64 class_base[3]; ///< Specifies if the base can wear this item (split in 3 indexes per type: 1-1, 2-1, 2-2)
 	unsigned class_upper : 6;   ///< Specifies if the upper-type can equip it (bitfield, 0x01: normal, 0x02: upper, 0x04: baby normal, 0x08: third normal, 0x10: third upper, 0x20: third baby)
 	struct {
@@ -524,7 +522,8 @@ struct item_data {
 #define itemdb_type(n)        (itemdb->search(n)->type)
 #define itemdb_atk(n)         (itemdb->search(n)->atk)
 #define itemdb_def(n)         (itemdb->search(n)->def)
-#define itemdb_look(n)        (itemdb->search(n)->look)
+#define itemdb_subtype(n)     (itemdb->search(n)->subtype)
+#define itemdb_sprite(n)      (itemdb->search(n)->view_sprite)
 #define itemdb_weight(n)      (itemdb->search(n)->weight)
 #define itemdb_equip(n)       (itemdb->search(n)->equip)
 #define itemdb_usescript(n)   (itemdb->search(n)->script)
@@ -648,6 +647,7 @@ struct itemdb_interface {
 	struct item_combo * (*id2combo) (unsigned short id);
 	bool (*is_item_usable) (struct item_data *item);
 	bool (*lookup_const) (const struct config_setting_t *it, const char *name, int *value);
+	bool (*lookup_const_mask) (const struct config_setting_t *it, const char *name, int *value);
 };
 
 #ifdef HERCULES_CORE

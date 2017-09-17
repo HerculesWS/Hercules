@@ -255,6 +255,9 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source)
 		// type
 		StrBuf->Printf(&buf, "'%d',", it->flag.delay_consume ? IT_DELAYCONSUME : it->type);
 
+		// subtype
+		StrBuf->Printf(&buf, "'%d',", it->subtype);
+
 		// price_buy
 		StrBuf->Printf(&buf, "'%d',", it->value_buy);
 
@@ -294,10 +297,11 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source)
 		StrBuf->Printf(&buf, "'%"PRIu64"',", ui64);
 
 		// equip_upper
-		if (libconfig->setting_lookup_int(entry, "Upper", &i32) && i32 >= 0)
+		if (itemdb->lookup_const_mask(entry, "Upper", &i32) && i32 >= 0)
 			ui32 = (uint32)i32;
 		else
 			ui32 = ITEMUPPER_ALL;
+
 		StrBuf->Printf(&buf, "'%u',", ui32);
 
 		// equip_genders
@@ -320,12 +324,12 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source)
 
 		// refineable
 		StrBuf->Printf(&buf, "'%d',", it->flag.no_refine?0:1);
-		
+
 		// disable_options
 		StrBuf->Printf(&buf, "'%d',", it->flag.no_options?1:0);
 
-		// view
-		StrBuf->Printf(&buf, "'%d',", it->look);
+		// view_sprite
+		StrBuf->Printf(&buf, "'%d',", it->view_sprite);
 
 		// bindonequip
 		StrBuf->Printf(&buf, "'%d',", it->flag.bindonequip?1:0);
@@ -449,6 +453,7 @@ void itemdb2sql_tableheader(void)
 			"  `name_english` varchar(50) NOT NULL DEFAULT '',\n"
 			"  `name_japanese` varchar(50) NOT NULL DEFAULT '',\n"
 			"  `type` tinyint(2) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `subtype` tinyint(2) UNSIGNED DEFAULT NULL,\n"
 			"  `price_buy` mediumint(10) DEFAULT NULL,\n"
 			"  `price_sell` mediumint(10) DEFAULT NULL,\n"
 			"  `weight` smallint(5) UNSIGNED DEFAULT NULL,\n"
@@ -466,7 +471,7 @@ void itemdb2sql_tableheader(void)
 			"  `equip_level_max` smallint(5) UNSIGNED DEFAULT NULL,\n"
 			"  `refineable` tinyint(1) UNSIGNED DEFAULT NULL,\n"
 			"  `disable_options` tinyint(1) UNSIGNED DEFAULT NULL,\n"
-			"  `view` smallint(3) UNSIGNED DEFAULT NULL,\n"
+			"  `view_sprite` smallint(3) UNSIGNED DEFAULT NULL,\n"
 			"  `bindonequip` tinyint(1) UNSIGNED DEFAULT NULL,\n"
 			"  `forceserial` tinyint(1) UNSIGNED DEFAULT NULL,\n"
 			"  `buyingstore` tinyint(1) UNSIGNED DEFAULT NULL,\n"

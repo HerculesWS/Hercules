@@ -875,7 +875,7 @@ int64 battle_calc_masteryfix(struct block_list *src, struct block_list *target, 
 	}
 #else
 	if( skill_id != ASC_BREAKER && weapon ) // Adv Katar Mastery is does not applies to ASC_BREAKER, but other masteries DO apply >_>
-		if( sd->status.weapon == W_KATAR && (skill2_lv=pc->checkskill(sd,ASC_KATAR)) > 0 )
+		if (sd->weapontype == W_KATAR && (skill2_lv=pc->checkskill(sd,ASC_KATAR)) > 0)
 			damage += damage * (10 + 2 * skill2_lv) / 100;
 #endif
 
@@ -2032,7 +2032,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					skillratio += 100 + 100 * skill_lv + 100 * (skill_lv / 2);
 					break;
 				case RG_BACKSTAP:
-					if( sd && sd->status.weapon == W_BOW && battle_config.backstab_bow_penalty )
+					if (sd != NULL && sd->weapontype == W_BOW && battle_config.backstab_bow_penalty)
 						skillratio += (200 + 40 * skill_lv) / 2;
 					else
 						skillratio += 200 + 40 * skill_lv;
@@ -2053,10 +2053,10 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 				case CR_HOLYCROSS:
 				{
 					int ratio = 35 * skill_lv;
-					#ifdef RENEWAL
-						if(sd && sd->status.weapon == W_2HSPEAR)
-							ratio *= 2;
-					#endif
+#ifdef RENEWAL
+					if (sd != NULL && sd->weapontype == W_2HSPEAR)
+						ratio *= 2;
+#endif
 					skillratio += ratio;
 					break;
 				}
@@ -2714,7 +2714,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					skillratio += 2*sc->data[SC_TRUESIGHT]->val1;
 				if( sc->data[SC_LKCONCENTRATION] )
 					skillratio += sc->data[SC_LKCONCENTRATION]->val2;
-				if( sd && sd->status.weapon == W_KATAR && (i=pc->checkskill(sd,ASC_KATAR)) > 0 )
+				if (sd != NULL && sd->weapontype == W_KATAR && (i=pc->checkskill(sd,ASC_KATAR)) > 0)
 					skillratio += skillratio * (10 + 2 * i) / 100;
 #endif
 				if( (!skill_id || skill_id == KN_AUTOCOUNTER) && sc->data[SC_CRUSHSTRIKE] ){
@@ -3023,7 +3023,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 				status_change_end(bl,SC_DEEP_SLEEP,INVALID_TIMER);
 			}
 			if( s_sd && t_sd && sc->data[SC_COLD] && flag&BF_WEAPON ){
-				switch(s_sd->status.weapon){
+				switch (s_sd->weapontype) {
 					case W_MACE:
 					case W_2HMACE:
 					case W_1HAXE:
@@ -3165,7 +3165,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 		if( (sce = sc->data[SC_STONEHARDSKIN]) && flag&(BF_SHORT|BF_WEAPON) && damage > 0 ) {
 			sce->val2 -= (int)cap_value(damage,INT_MIN,INT_MAX);
 			if( src->type == BL_PC ) {
-				if (s_sd && s_sd->status.weapon != W_BOW)
+				if (s_sd != NULL && s_sd->weapontype != W_BOW)
 					skill->break_equip(src, EQP_WEAPON, 3000, BCT_SELF);
 			} else
 				skill->break_equip(src, EQP_WEAPON, 3000, BCT_SELF);
@@ -4575,8 +4575,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 
 	if(!skill_id) {
 		//Skills ALWAYS use ONLY your right-hand weapon (tested on Aegis 10.2)
-		if (sd && sd->weapontype1 == 0 && sd->weapontype2 > 0)
-		{
+		if (sd && sd->weapontype1 == W_FIST && sd->weapontype2 != W_FIST) {
 			flag.rh=0;
 			flag.lh=1;
 		}
@@ -4649,7 +4648,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 		short cri = sstatus->cri;
 		if (sd != NULL) {
 			// if show_katar_crit_bonus is enabled, it already done the calculation in status.c
-			if (!battle_config.show_katar_crit_bonus && sd->status.weapon == W_KATAR) {
+			if (!battle_config.show_katar_crit_bonus && sd->weapontype == W_KATAR) {
 				cri <<= 1;
 			}
 
@@ -4822,8 +4821,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 			if ((temp = pc->checkskill(sd,BS_WEAPONRESEARCH)) > 0)
 				hitrate += hitrate * ( 2 * temp ) / 100;
 
-			if( (sd->status.weapon == W_1HSWORD || sd->status.weapon == W_DAGGER) &&
-			   (temp = pc->checkskill(sd, GN_TRAINING_SWORD))>0 )
+			if ((sd->weapontype == W_1HSWORD || sd->weapontype == W_DAGGER) && (temp = pc->checkskill(sd, GN_TRAINING_SWORD)) > 0)
 				hitrate += 3 * temp;
 		}
 
@@ -4957,7 +4955,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 					(!skill_id && sc && sc->data[SC_HLIF_CHANGE]?4:0)|
 					(sc && sc->data[SC_WEAPONPERFECT]?8:0);
 				if (flag.arrow && sd)
-				switch(sd->status.weapon) {
+				switch (sd->weapontype) {
 					case W_BOW:
 					case W_REVOLVER:
 					case W_GATLING:
@@ -5583,7 +5581,8 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 			if(wd.damage < 1) wd.damage = 1;
 			if(wd.damage2 < 1) wd.damage2 = 1;
 #endif
-		} else if(sd->status.weapon == W_KATAR && !skill_id) { //Katars (offhand damage only applies to normal attacks, tested on Aegis 10.2)
+		} else if (sd->weapontype == W_KATAR && skill_id == 0) {
+			// Katars (offhand damage only applies to normal attacks, tested on Aegis 10.2)
 			temp = pc->checkskill(sd,TF_DOUBLE);
 			wd.damage2 = wd.damage * (1 + (temp * 2))/100;
 
@@ -5702,7 +5701,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 	}
 	//Reject Sword bugreport:4493 by Daegaladh
 	if (wd.damage != 0 && tsc != NULL && tsc->data[SC_SWORDREJECT] != NULL
-	 && (sd == NULL || sd->weapontype1 == W_DAGGER || sd->weapontype1 == W_1HSWORD || sd->status.weapon == W_2HSWORD)
+	 && (sd == NULL || sd->weapontype1 == W_DAGGER || sd->weapontype1 == W_1HSWORD || sd->weapontype == W_2HSWORD)
 	 && rnd()%100 < tsc->data[SC_SWORDREJECT]->val2
 	) {
 		ATK_RATER(50);
@@ -6100,9 +6099,9 @@ bool battle_check_arrows(struct map_session_data *sd)
 	}
 	//Ammo check by Ishizu-chan
 	if (sd->inventory_data[index]) {
-		switch (sd->status.weapon) {
+		switch (sd->weapontype) {
 			case W_BOW:
-				if (sd->inventory_data[index]->look != A_ARROW) {
+				if (sd->inventory_data[index]->subtype != A_ARROW) {
 					clif->arrow_fail(sd, 0);
 					return false;
 				}
@@ -6111,13 +6110,13 @@ bool battle_check_arrows(struct map_session_data *sd)
 			case W_RIFLE:
 			case W_GATLING:
 			case W_SHOTGUN:
-				if (sd->inventory_data[index]->look != A_BULLET) {
+				if (sd->inventory_data[index]->subtype != A_BULLET) {
 					clif->skill_fail(sd, 0, USESKILL_FAIL_NEED_MORE_BULLET, 0);
 					return false;
 				}
 				break;
 			case W_GRENADE:
-				if (sd->inventory_data[index]->look != A_GRENADE) {
+				if (sd->inventory_data[index]->subtype != A_GRENADE) {
 					clif->skill_fail(sd, 0, USESKILL_FAIL_NEED_MORE_BULLET, 0);
 					return false;
 				}
@@ -6161,7 +6160,7 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 
 	if (sd)
 	{
-		sd->state.arrow_atk = (sd->status.weapon == W_BOW || (sd->status.weapon >= W_REVOLVER && sd->status.weapon <= W_GRENADE));
+		sd->state.arrow_atk = (sd->weapontype == W_BOW || (sd->weapontype >= W_REVOLVER && sd->weapontype <= W_GRENADE));
 		if (sd->state.arrow_atk)
 		{
 			if (battle->check_arrows(sd) == false)
@@ -6187,7 +6186,7 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 			return ATK_BLOCK;
 		}
 	}
-	if( tsc && tsc->data[SC_BLADESTOP_WAIT] && !is_boss(src) && (src->type == BL_PC || tsd == NULL || distance_bl(src, target) <= (tsd->status.weapon == W_FIST ? 1 : 2)) )
+	if( tsc && tsc->data[SC_BLADESTOP_WAIT] && !is_boss(src) && (src->type == BL_PC || tsd == NULL || distance_bl(src, target) <= (tsd->weapontype == W_FIST ? 1 : 2)) )
 	{
 		uint16 skill_lv = tsc->data[SC_BLADESTOP_WAIT]->val1;
 		int duration = skill->get_time2(MO_BLADESTOP,skill_lv);

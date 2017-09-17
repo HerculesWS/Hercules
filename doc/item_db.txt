@@ -58,14 +58,15 @@ item_db: (
 		Summoner: true/false          (boolean, defaults to false)
 	}
 	Job: Job mask                 (alternate synxtax, int, defaults to all jobs = 0xFFFFFFFF)
-	Upper: Upper mask             (int, defaults to any = 0x3f)
-	Gender: Gender                (int, defaults to both = 2)
-	Loc: Equip location           (int, required value for equipment)
+	Upper: Upper mask             (bitmask array, string or int, defaults to "ITEMUPPER_ALL")
+	Gender: Gender                (string, defaults to "SEX_ANY")
+	Loc: Equip location           (bitmask array, string or int, required value for equipment)
 	WeaponLv: Weapon Level        (int, defaults to 0)
 	EquipLv: Equip required level (int, defaults to 0)
 	EquipLv: [min, max]           (alternative syntax with min / max level)
 	Refine: Refineable            (boolean, defaults to true)
-	View: View ID                 (int, defaults to 0)
+	Subtype: Item Subtype         (int, defaults to 0)
+	ViewSprite: Sprite view ID    (int, defaults to 0)
 	BindOnEquip: true/false       (boolean, defaults to false)
 	ForceSerial: true/false       (boolean, defaults to false)
 	BuyingStore: true/false       (boolean, defaults to false)
@@ -187,43 +188,54 @@ Job:  Job restrictions. If this block is omitted, item can be equipped by all cl
 		All (default value):   0xFFFFFFFF
 
 Upper: Equippable upper-types. Uses the following bitmasks:
-	Normal jobs:      0x01 (1)
-	Upper jobs:       0x02 (2)
-	Baby jobs:        0x04 (4)
-	Third jobs:       0x08 (8)
-	Upper Third jobs: 0x10 (16)
-	Baby Third jobs:  0x20 (32)
+	Normal jobs:      ITEMUPPER_NORMAL     (0x01)
+	Upper jobs:       ITEMUPPER_UPPER      (0x02)
+	Baby jobs:        ITEMUPPER_BABY       (0x04)
+	Third jobs:       ITEMUPPER_THIRD      (0x08)
+	Upper Third jobs: ITEMUPPER_THIRDUPPER (0x10)
+	Baby Third jobs:  ITEMUPPER_THIRDBABY  (0x20)
 
 	Under pre-re mode third classes are considered upper, making use of
-	the 8 and above masks is therefore not necessary unless in renewal
-	mode. When no value is specified, all classes (mask 0x3f) are able to
-	equip the item.
+	the ITEMUPPER_THIRD and above masks is therefore not necessary unless
+	in renewal mode. When no value is specified, all classes (mask
+	ITEMUPPER_ALL = 0x3f) are able to equip the item.
 
-Gender: Gender restriction. 0 is female, 1 is male, 2 for both (default value).
+Gender: Gender restriction.
+	Available genders:
+		SEX_FEMALE: 0
+		SEX_MALE:   1
+		SEX_ANY:    2
+	When not specified, becomes "SEX_ANY".
 
 Loc: Equipment's placement. A value needs to be specified if the item is an
-     equipment piece. Values are:
+     equipment piece. Values are (bitmask arrays are supported):
 
-	2^0  001 = Lower Headgear
-	2^1  002 = Weapon
-	2^2  004 = Garment
-	2^3  008 = Accessory 1
-	2^4  016 = Armor
-	2^5  032 = Shield
-	2^6  064 = Footgear
-	2^7  128 = Accessory 2
-	2^8  256 = Upper Headgear
-	2^9  512 = Middle Headgear
-	2^10 1024 = Costume Top Headgear
-	2^11 2048 = Costume Mid Headgear
-	2^12 4096 = Costume Low Headgear
-	2^13 8192 = Costume Garment/Robe
-	2^16 65536 = Shadow Armor
-	2^17 131072 = Shadow Weapon
-	2^18 262144 = Shadow Shield
-	2^18 524288 = Shadow Shoes
-	2^20 1048576 = Shadow Accessory 2
-	2^21 2097152 = Shadow Accessory 1
+	Lower Headgear:       EQP_HEAD_LOW             (2^00 = 0x000001)
+	Weapon:               EQP_HAND_R or EQP_WEAPON (2^01 = 0x000002)
+	Garment:              EQP_GARMENT              (2^02 = 0x000004)
+	Accessory 1:          EQP_ACC_L                (2^03 = 0x000008)
+	Armor:                EQP_ARMOR                (2^04 = 0x000010)
+	Shield:               EQP_HAND_L or EQP_SHIELD (2^05 = 0x000020)
+	(Both Hands):         EQP_ARMS                 (EQP_HAND_L | EQP_HAND_R = 0x000022)
+	Footgear:             EQP_SHOES                (2^06 = 0x000040)
+	Accessory 2:          EQP_ACC_R                (2^07 = 0x000080)
+	(Both Accessories):   EQP_ACC                  (EQP_ACC_R | EQP_ACC_L = 0x000088)
+	Upper Headgear:       EQP_HEAD_TOP             (2^08 = 0x000100)
+	Middle Headgear:      EQP_HEAD_MID             (2^09 = 0x000200)
+	(T+M+B Headgear):     EQP_HELM                 (EQP_HEAD_LOW | EQP_HEAD_MID | EQP_HEAD_TOP = 0x000301)
+	Costume Top Headgear: EQP_COSTUME_HEAD_TOP     (2^10 = 0x000400)
+	Costume Mid Headgear: EQP_COSTUME_HEAD_MID     (2^11 = 0x000800)
+	Costume Low Headgear: EQP_COSTUME_HEAD_LOW     (2^12 = 0x001000)
+	Costume Garment/Robe: EQP_COSTUME_GARMENT      (2^13 = 0x002000)
+	Ammunition:           EQP_AMMO                 (2^15 = 0x008000)
+	Shadow Armor:         EQP_SHADOW_ARMOR         (2^16 = 0x010000)
+	Shadow Weapon:        EQP_SHADOW_WEAPON        (2^17 = 0x020000)
+	Shadow Shield:        EQP_SHADOW_SHIELD        (2^18 = 0x040000)
+	(Shadow 2H Weapon):   EQP_SHADOW_ARMS          (EQP_SHADOW_WEAPON | EQP_SHADOW_SHIELD = 0x060000)
+	Shadow Shoes:         EQP_SHADOW_SHOES         (2^19 = 0x080000)
+	Shadow Accessory 2:   EQP_SHADOW_ACC_R         (2^20 = 0x100000)
+	Shadow Accessory 1:   EQP_SHADOW_ACC_L         (2^21 = 0x200000)
+	(Shadow Accessories): EQP_SHADOW_ACC           (EQP_SHADOW_ACC_R | EQP_SHADOW_ACC_L = 0x300000)
 
 WeaponLv: Weapon level. Becomes 0 when not specified.
 
@@ -239,45 +251,47 @@ EquipLv: Base level required to be able to equip. It is possible to specify
 Refineable: true if the item can be refined, false otherwise. If no value is
             specified, it defaults to true.
 
-View: For normal items, defines a replacement view-sprite for the item (eg:
-      Making apples look like apple juice). The special case are weapons
-      and ammo where this value indicates the weapon-class of the item.
+ViewSprite: Defines a replacement view-sprite for the item (eg:
+      Making apples look like apple juice).
+
+Subtype: For weapons and ammo, indicates the weapon-class of the item.
 
 	For weapons, the types are:
-		0: bare fist
-		1: Daggers
-		2: One-handed swords
-		3: Two-handed swords
-		4: One-handed spears
-		5: Two-handed spears
-		6: One-handed axes
-		7: Two-handed axes
-		8: Maces
-		9: Unused
-		10: Staves
-		11: Bows
-		12: Knuckles
-		13: Musical Instruments
-		14: Whips
-		15: Books
-		16: Katars
-		17: Revolvers
-		18: Rifles
-		19: Gatling guns
-		20: Shotguns
-		21: Grenade launchers
-		22: Fuuma Shurikens
+		W_FIST      0: Bare fist
+		W_DAGGER    1: Daggers
+		W_1HSWORD   2: One-handed swords
+		W_2HSWORD   3: Two-handed swords
+		W_1HSPEAR   4: One-handed spears
+		W_2HSPEAR   5: Two-handed spears
+		W_1HAXE     6: One-handed axes
+		W_2HAXE     7: Two-handed axes
+		W_MACE      8: Maces
+		W_2HMACE    9: Unused
+		W_STAFF    10: Staves
+		W_BOW      11: Bows
+		W_KNUCKLE  12: Knuckles
+		W_MUSICAL  13: Musical instruments
+		W_WHIP     14: Whips
+		W_BOOK     15: Books
+		W_KATAR    16: Katars
+		W_REVOLVER 17: Reveolvers
+		W_RIFLE    18: Rifles
+		W_GATLING  19: Gatling guns
+		W_SHOTGUN  20: Shotguns
+		W_GRENADE  21: Grenade launchers
+		W_HUUMA    22: Fuuma shurikens
+		W_2HSTAFF  23: Two-handed staves
 
 	For ammo, the types are:
-		1: Arrows
-		2: Throwable daggers
-		3: Bullets
-		4: Shells
-		5: Grenades
-		6: Shuriken
-		7: Kunai
-		8: Cannonballs
-		9: Throwable Items (Sling Item)
+		A_ARROW       1: Arrows
+		A_DAGGER      2: Throwable daggers
+		A_BULLET      3: Bullets
+		A_SHELL       4: Shells
+		A_GRENADE     5: Grenades
+		A_SHURIKEN    6: Shuriken
+		A_KUNAI       7: Kunai
+		A_CANNONBALL  8: Cannon balls
+		A_THROWWEAPON 9: Throwable items (Sling Item)
 
 BindOnEquip: Whether the item will automatically bind to the character when it
              is equipped for the first time. An item that has this field set,

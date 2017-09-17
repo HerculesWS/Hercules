@@ -612,10 +612,14 @@ struct mmo_charstatus {
 	int spear_faith, spear_calls;
 	int sword_faith, sword_calls;
 
-	short weapon; // enum weapon_type
-	short shield; // view-id
-	short head_top,head_mid,head_bottom;
-	short robe;
+	struct {
+		short weapon;      ///< Weapon view sprite id.
+		short shield;      ///< Shield view sprite id.
+		short head_top;    ///< Top headgear view sprite id.
+		short head_mid;    ///< Middle headgear view sprite id.
+		short head_bottom; ///< Bottom headgear view sprite id.
+		short robe;        ///< Robe view sprite id.
+	} look;
 
 	char name[NAME_LENGTH];
 	int base_level, job_level;
@@ -1132,6 +1136,7 @@ enum ammo_type {
 	A_KUNAI,       //7
 	A_CANNONBALL,  //8
 	A_THROWWEAPON, //9
+	MAX_AMMO_TYPE
 };
 
 enum e_char_server_type {
