@@ -24233,7 +24233,7 @@ void script_parse_builtin(void) {
 		 **/
 		BUILDIN_DEF(bindatcmd, "ss???"),
 		BUILDIN_DEF(unbindatcmd, "s"),
-		BUILDIN_DEF(useatcmd, "s"),
+		BUILDIN_DEF_DEPRECATED(useatcmd, "s"),
 		BUILDIN_DEF(has_permission, "v?"),
 		BUILDIN_DEF(can_use_command, "s?"),
 		BUILDIN_DEF(add_group_command, "siii"),
