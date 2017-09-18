@@ -3319,7 +3319,7 @@ Type is the type of unit to search for:
 	BL_PET   - Pet object
 	BL_HOM   - Homunculus object
 	BL_MER   - Mercenary object
-	BL_IEM   - Item object (item drops)
+	BL_ITEM  - Item object (item drops)
 	BL_SKILL - Skill object (skill fx & sfx)
 	BL_NPC   - NPC object
 	BL_CHAT  - Chat object
