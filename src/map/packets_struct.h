@@ -632,7 +632,7 @@ struct packet_unit_walking {
 #if PACKETVER >= 20091103
 	int16 PacketLength;
 #endif
-#if PACKETVER > 20071106
+#if PACKETVER >= 20071106
 	uint8 objecttype;
 #endif
 #if PACKETVER >= 20131223

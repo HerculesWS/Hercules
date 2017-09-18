@@ -679,7 +679,7 @@ void clif_authok(struct map_session_data *sd)
 	p.font = sd->status.font;
 #endif
 // Some clients smaller than 20160330 cant be tested [4144]
-#if PACKETVER >= 20141016 && PACKETVER < 20160330
+#if PACKETVER >= 20141022 && PACKETVER < 20160330
 	p.sex = sd->status.sex;
 #endif
 	clif->send(&p,sizeof(p),&sd->bl,SELF);
@@ -2488,7 +2488,7 @@ void clif_additem(struct map_session_data *sd, int n, int amount, int fail)
 #endif
 #if PACKETVER >= 20160921
 		p.favorite = sd->status.inventory[n].favorite;
-		p.look = sd->inventory_data[n]->look;
+		p.look = sd->inventory_data[n]->view_sprite;
 #endif
 	}
 	p.result = (unsigned char)fail;
@@ -3183,7 +3183,9 @@ void clif_changelook(struct block_list *bl,int type,int val)
 	struct status_change* sc;
 	struct view_data* vd;
 	enum send_target target = AREA;
+#if PACKETVER >= 4
 	int val2 = 0;
+#endif
 	nullpo_retv(bl);
 
 	sd = BL_CAST(BL_PC, bl);
@@ -6402,7 +6404,7 @@ void clif_vendinglist(struct map_session_data* sd, unsigned int id, struct s_ven
 // [4144] date 20160921 not confirmend. Can be bigger or smaller
 #if PACKETVER >= 20160921
 		WFIFOL(fd, offset + 47 + i * item_length) = pc->item_equippoint(sd, data);
-		WFIFOW(fd, offset + 51 + i * item_length) = data->look;
+		WFIFOW(fd, offset + 51 + i * item_length) = data->view_sprite;
 #endif
 	}
 	WFIFOSET(fd,WFIFOW(fd,2));
