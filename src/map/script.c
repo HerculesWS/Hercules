@@ -23476,7 +23476,7 @@ BUILDIN(rodex_sendmail)
 	// Common parameters - sender/message/zeny
 	if (rodex_sendmail_sub(st, &msg) == false)
 		return false;
-	
+
 	// Item list
 	while (i < RODEX_MAX_ITEM && script_hasdata(st, param)) {
 		struct item_data *idata;
@@ -23505,7 +23505,7 @@ BUILDIN(rodex_sendmail)
 		msg.items[i].item.nameid = idata->nameid;
 		msg.items[i].item.amount = script_getnum(st, (param + 1));
 		msg.items[i].item.identify = 1;
-		
+
 		++i;
 		param += 2;
 	}
@@ -23583,7 +23583,7 @@ BUILDIN(rodex_sendmail2)
 		for (j = 0; j < MAX_SLOTS; ++j) {
 			msg.items[i].item.card[j] = script_getnum(st, param + 4 + j);
 		}
-		
+
 		++i;
 		param += 4 + MAX_SLOTS;
 	}
@@ -24233,7 +24233,7 @@ void script_parse_builtin(void) {
 		 **/
 		BUILDIN_DEF(bindatcmd, "ss???"),
 		BUILDIN_DEF(unbindatcmd, "s"),
-		BUILDIN_DEF(useatcmd, "s"),
+		BUILDIN_DEF_DEPRECATED(useatcmd, "s"),
 		BUILDIN_DEF(has_permission, "v?"),
 		BUILDIN_DEF(can_use_command, "s?"),
 		BUILDIN_DEF(add_group_command, "siii"),
