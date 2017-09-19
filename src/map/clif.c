@@ -2414,9 +2414,9 @@ void clif_addcards2(unsigned short *cards, struct item* item) {
  int clif_add_item_options(struct ItemOptions *buf, const struct item *it)
 {
 	int i = 0, j = 0, total_options = 0;
-	
+
 	nullpo_ret(buf);
-	
+
 	// Append the buffer with existing options first.
 	for (i = 0; i < MAX_ITEM_OPTIONS; i++) {
 		if (it->option[i].index) {
@@ -2433,7 +2433,7 @@ void clif_addcards2(unsigned short *cards, struct item* item) {
 		WBUFW(buf, j * 5 + 2) = 0;
 		WBUFB(buf, j * 5 + 4) = 0;
 	}
-	
+
 	return total_options;
 }
 
@@ -19346,7 +19346,7 @@ void clif_parse_rodex_checkname(int fd, struct map_session_data *sd)
 	int char_id = 0, base_level = 0;
 	short class = 0;
 	char name[NAME_LENGTH];
-	
+
 	safestrncpy(name, rPacket->Name, NAME_LENGTH);
 
 	rodex->check_player(sd, name, &base_level, &char_id, &class);
@@ -19549,7 +19549,7 @@ void clif_rodex_read_mail(struct map_session_data *sd, int8 opentype, struct rod
 
 	nullpo_retv(sd);
 	nullpo_retv(msg);
-	
+
 	fd = sd->fd;
 	body_len = (int)strlen(msg->body) + 1;
 	size = sizeof(*sPacket);
@@ -19626,7 +19626,7 @@ void clif_parse_rodex_request_zeny(int fd, struct map_session_data *sd) __attrib
 void clif_parse_rodex_request_zeny(int fd, struct map_session_data *sd)
 {
 	const struct PACKET_CZ_REQ_ZENY_FROM_MAIL *rPacket = RFIFOP(fd, 0);
-	
+
 	rodex->get_zeny(sd, rPacket->opentype, rPacket->MailID);
 }
 
@@ -19667,7 +19667,7 @@ void clif_rodex_request_items(struct map_session_data *sd, int8 opentype, int64 
 	nullpo_retv(sd);
 
 	fd = sd->fd;
-	
+
 	WFIFOHEAD(fd, sizeof(*sPacket));
 	sPacket = WFIFOP(fd, 0);
 	sPacket->PacketType = rodexgetitem;

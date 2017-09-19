@@ -927,7 +927,7 @@ int char_memitemdata_to_sql(const struct item *p_items, int guid, enum inventory
 			if (SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf)))
 				Sql_ShowDebug(inter->sql_handle);
 		}
-		
+
 		aFree(deletes);
 	}
 

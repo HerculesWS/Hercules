@@ -2508,7 +2508,7 @@ void intif_parse_RodexNotifications(int fd)
 /// Updates a mail
 /// flag:
 ///		0 - user Read
-///		1 - user got Zeny 
+///		1 - user got Zeny
 ///		2 - user got Items
 ///		3 - delete
 int intif_rodex_updatemail(int64 mail_id, int8 flag)

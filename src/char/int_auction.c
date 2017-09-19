@@ -113,7 +113,7 @@ unsigned int inter_auction_create(struct auction_data *auction)
 		StrBuf->Printf(&buf, ",'%d'", auction->item.card[j]);
 	for (j = 0; j < MAX_ITEM_OPTIONS; j++)
 		StrBuf->Printf(&buf, ",'%d','%d'", auction->item.option[j].index, auction->item.option[j].value);
-	
+
 	StrBuf->AppendStr(&buf, ")");
 
 	stmt = SQL->StmtMalloc(inter->sql_handle);

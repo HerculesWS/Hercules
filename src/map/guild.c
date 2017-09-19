@@ -1823,7 +1823,7 @@ int guild_gm_change(int guild_id, int char_id)
 	nullpo_ret(g);
 
 	ARR_FIND(0, MAX_GUILD, i, g->member[i].char_id == char_id);
-	
+
 	if (i == MAX_GUILD ) {
 		// Not part of the guild
 		return 0;

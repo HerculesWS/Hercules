@@ -201,7 +201,7 @@ int storage_additem(struct map_session_data* sd, struct item* item_data, int amo
 				clif->storageitemadded(sd, it, i, amount);
 
 				sd->storage.save = true; // set a save flag.
-				
+
 				return 0;
 			}
 		}
@@ -249,7 +249,7 @@ int storage_delitem(struct map_session_data* sd, int n, int amount)
 	Assert_retr(1, n >= 0 && n < VECTOR_LENGTH(sd->storage.item));
 
 	it = &VECTOR_INDEX(sd->storage.item, n);
-	
+
 	Assert_retr(1, amount <= it->amount);
 
 	Assert_retr(1, it->nameid > 0);

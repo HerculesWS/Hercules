@@ -2651,31 +2651,31 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 			}
 		}
 	}
-	
+
 	/* parse item options [Smokexyz] */
 	for (i = 0; i < EQI_MAX; i++) {
 		status->current_equip_item_index = index = sd->equip_index[i];
 		status->current_equip_option_index = -1;
-		
+
 		if (i == EQI_HAND_R && sd->equip_index[EQI_HAND_L] == index)
 			continue;
 		else if (i == EQI_HEAD_MID && sd->equip_index[EQI_HEAD_LOW] == index)
 			continue;
 		else if (i == EQI_HEAD_TOP && (sd->equip_index[EQI_HEAD_MID] == index || sd->equip_index[EQI_HEAD_LOW] == index))
 			continue;
-		
+
 		if (index >= 0 && sd->inventory_data[index]) {
 			int j = 0;
 			for (j = 0; j < MAX_ITEM_OPTIONS; j++) {
 				int16 option_index = sd->status.inventory[index].option[j].index;
 				struct item_option *ito = NULL;
-				
+
 				if (option_index == 0 || (ito = itemdb->option_exists(option_index)) == NULL || ito->script == NULL)
 					continue;
-				
+
 				status->current_equip_option_index = j;
 				script->run(ito->script, 0, sd->bl.id, 0);
-				
+
 				if (calculating == 0) //Abort, script->run his function. [Skotlex]
 					return 1;
 			}
@@ -13329,7 +13329,7 @@ int status_readdb_refine_libconfig_sub(struct config_setting_t *r, const char *n
 		int bonus[MAX_REFINE], rnd_bonus[MAX_REFINE];
 		int chance[REFINE_CHANCE_TYPE_MAX][MAX_REFINE];
 		int i, j;
-		
+
 		memset(&duplicate, 0, sizeof(duplicate));
 		memset(&bonus, 0, sizeof(bonus));
 		memset(&rnd_bonus, 0, sizeof(rnd_bonus));

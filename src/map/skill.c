@@ -476,9 +476,9 @@ int can_copy (struct map_session_data *sd, uint16 skill_id, struct block_list* b
 		return 0;
 
 	// Couldn't preserve 3rd Class/Summoner skills except only when using Reproduce skill. [Jobbie]
-	if (!(sd->sc.data[SC__REPRODUCE]) && 
-		((skill_id >= RK_ENCHANTBLADE && skill_id <= LG_OVERBRAND_PLUSATK) || 
-		 (skill_id >= RL_GLITTERING_GREED && skill_id <= OB_AKAITSUKI) || 
+	if (!(sd->sc.data[SC__REPRODUCE]) &&
+		((skill_id >= RK_ENCHANTBLADE && skill_id <= LG_OVERBRAND_PLUSATK) ||
+		 (skill_id >= RL_GLITTERING_GREED && skill_id <= OB_AKAITSUKI) ||
 		 (skill_id >= GC_DARKCROW && skill_id <= SU_FRESHSHRIMP)))
 		return 0;
 	// Reproduce will only copy skills according on the list. [Jobbie]
@@ -19530,7 +19530,7 @@ void skill_validate_skilltype(struct config_setting_t *conf, struct s_skill_db *
 		}
 	}
 }
-	
+
 /**
  * Validates "SkillInfo" when reading skill_db.conf
  * @param conf   struct, pointer to skill configuration
@@ -20442,7 +20442,7 @@ void skill_validate_additional_fields(struct config_setting_t *conf, struct s_sk
 bool skill_validate_skilldb(struct s_skill_db *sk, const char *source)
 {
 	int idx;
-	
+
 	nullpo_retr(false, sk);
 	idx = skill->get_index(sk->nameid);
 	if (idx  == 0) {
@@ -20460,10 +20460,10 @@ bool skill_validate_skilldb(struct s_skill_db *sk, const char *source)
 	strdb_iput(skill->name2id_db, skill->dbs->db[idx].name, skill->dbs->db[idx].nameid);
 	/* Set Name to Id script constants */
 	script->set_constant2(skill->dbs->db[idx].name, (int)skill->dbs->db[idx].nameid, false, false);
-	
+
 	return true;
 }
-	
+
 /**
  * Reads skill_db.conf from relative filepath and processes [ Smokexyz/Hercules ]
  * entries into the skill database.
@@ -20477,11 +20477,11 @@ bool skill_read_skilldb(const char *filename)
 	char filepath[256];
 	int count=0, index=0;
 	bool duplicate[MAX_SKILL] = {0};
-	
+
 	nullpo_retr(false, filename);
 
 	sprintf(filepath,"db/%s",filename);
-	
+
 	if (!libconfig->load_file(&skilldb, filepath)) {
 		return false; // Libconfig error report.
 	}
@@ -20503,9 +20503,9 @@ bool skill_read_skilldb(const char *filename)
 			ShowError("skill_read_skilldb: Skill Id not specified for entry %d in '%s', skipping...\n", index, filepath );
 			continue;
 		}
-		
+
 		tmp_db.nameid = skill_id;
-		
+
 		if((idx = skill->get_index(skill_id)) == 0) {
 			ShowError("skill_read_skilldb: Skill Id %d is out of range, or within a reserved range (for guild, homunculus, mercenary or elemental skills). skipping...\n", idx);
 			continue;
@@ -20515,7 +20515,7 @@ bool skill_read_skilldb(const char *filename)
 			ShowWarning("skill_read_skilldb: Duplicate Skill Id %d in entry %d in '%s', skipping...\n", skill_id, index, filepath);
 			continue;
 		}
-		
+
 		/* Skill Name Constant */
 		if (!libconfig->setting_lookup_mutable_string(conf, "Name", tmp_db.name, sizeof(tmp_db.name))) {
 			ShowError("skill_read_skilldb: Name not specified for skill Id %d in '%s', skipping...\n", skill_id, filepath);
@@ -20705,12 +20705,12 @@ bool skill_read_skilldb(const char *filename)
 
 		/* Additional Fields for Plugins */
 		skill->validate_additional_fields(conf, &tmp_db);
-		
+
 		// Validate the skill entry, add it to the duplicate array and increment count on success.
 		if ((duplicate[idx] = skill->validate_skilldb(&tmp_db, filepath)))
 			count++;
 	}
-	
+
 	libconfig->destroy(&skilldb);
 
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
@@ -20742,7 +20742,7 @@ void skill_readdb(bool minimal)
 	safestrncpy(skill->dbs->db[0].desc, "Unknown Skill", sizeof(skill->dbs->db[0].desc));
 
 	itemdb->name_constants(); // refresh ItemDB constants before loading of skills
-	
+
 #ifdef ENABLE_CASE_CHECK
 	script->parser_current_file = DBPATH"skill_db.conf";
 #endif // ENABLE_CASE_CHECK
@@ -20753,7 +20753,7 @@ void skill_readdb(bool minimal)
 
 	if (minimal)
 		return;
-	
+
 	skill->init_unit_layout();
 	sv->readdb(map->db_path, "produce_db.txt",               ',',   4, 4+2*MAX_PRODUCE_RESOURCE,       MAX_SKILL_PRODUCE_DB, skill->parse_row_producedb);
 	sv->readdb(map->db_path, "create_arrow_db.txt",          ',', 1+2,   1+2*MAX_ARROW_RESOURCE,         MAX_SKILL_ARROW_DB, skill->parse_row_createarrowdb);

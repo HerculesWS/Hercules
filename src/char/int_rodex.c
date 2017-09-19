@@ -200,8 +200,8 @@ static bool inter_rodex_hasnew(int char_id, int account_id)
 {
 	int count = 0;
 	char *data;
-	
-	if (SQL_ERROR == SQL->Query(inter->sql_handle, 
+
+	if (SQL_ERROR == SQL->Query(inter->sql_handle,
 		"SELECT count(*) FROM `%s` WHERE ("
 		"(`expire_date` > '%d' AND (`receiver_id` = '%d' OR `receiver_accountid` = '%d')) OR"
 		"(`sender_id` = '%d' AND `expire_date` <= '%d' AND `send_date` + '%d' > '%d')"
@@ -212,7 +212,7 @@ static bool inter_rodex_hasnew(int char_id, int account_id)
 		Sql_ShowDebug(inter->sql_handle);
 		return -1;
 	}
-	
+
 	if (SQL_SUCCESS != SQL->NextRow(inter->sql_handle))
 		return false;
 
@@ -407,12 +407,12 @@ void mapif_parse_rodex_updatemail(int fd)
 		if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `is_read` = 1 WHERE `mail_id` = '%"PRId64"'", rodex_db, mail_id))
 			Sql_ShowDebug(inter->sql_handle);
 		break;
-	
+
 	case 1: // Get Zeny
 		if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `zeny` = 0, `type` = `type` & (~2) WHERE `mail_id` = '%"PRId64"'", rodex_db, mail_id))
 			Sql_ShowDebug(inter->sql_handle);
 		break;
-	
+
 	case 2: // Get Items
 		if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `mail_id` = '%"PRId64"'", rodex_item_db, mail_id))
 			Sql_ShowDebug(inter->sql_handle);
@@ -436,7 +436,7 @@ void mapif_rodex_send(int fd, int sender_id, int receiver_id, int receiver_accou
 {
 	Assert_retv(sender_id >= 0);
 	Assert_retv(receiver_id + receiver_accountid > 0);
-	
+
 	WFIFOHEAD(fd,15);
 	WFIFOW(fd,0) = 0x3897;
 	WFIFOL(fd,2) = sender_id;

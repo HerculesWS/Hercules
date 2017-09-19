@@ -633,7 +633,7 @@ int mapif_parse_PartyLeave(int fd, int party_id, int account_id, int char_id)
 		return 0; //Member not found?
 
 	mapif->party_withdraw(party_id, account_id, char_id);
-	
+
 	j = p->party.member[i].lv;
 	if (p->party.member[i].online > 0)
 		p->party.count--;
