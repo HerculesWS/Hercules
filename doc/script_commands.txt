@@ -3364,10 +3364,10 @@ Return true if successful, otherwise it will return false.
 
 ---------------------------------------
 
-*getgroupid()
+*getgroupid({<account id>})
 
-This function will return the id of player group the account to which the
-invoking player belongs.
+This command returns the id of the group of the attached or specified player.
+If the player is not found, returns -1.
 
 ---------------------------------------
 
