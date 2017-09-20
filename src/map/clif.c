@@ -19928,9 +19928,10 @@ void packetdb_loaddb(void) {
 	memset(packet_db,0,sizeof(packet_db));
 
 #define packet(id, size, ...) packetdb_addpacket((id), (size), ##__VA_ARGS__, 0xFFFF)
-#define packetKeys(a,b,c) do { clif->cryptKey[0] = (a); clif->cryptKey[1] = (b); clif->cryptKey[2] = (c); } while(0)
 #include "packets.h" /* load structure data */
 #undef packet
+#define packetKeys(a,b,c) do { clif->cryptKey[0] = (a); clif->cryptKey[1] = (b); clif->cryptKey[2] = (c); } while(0)
+#include "packets_keys.h"
 #undef packetKeys
 }
 void clif_bc_ready(void) {
