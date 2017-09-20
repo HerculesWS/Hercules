@@ -3035,12 +3035,12 @@ void clif_updatestatus(struct map_session_data *sd,int type)
 			break;
 		case SP_BASEEXP:
 			WFIFOW(fd,0)=0xb1;
-			WFIFOL(fd,4)=sd->status.base_exp;
+			WFIFOL(fd,4)=(uint32)(sd->status.base_exp);
 			len = packet_len(0xb1);
 			break;
 		case SP_JOBEXP:
 			WFIFOW(fd,0)=0xb1;
-			WFIFOL(fd,4)=sd->status.job_exp;
+			WFIFOL(fd,4)=(uint32)(sd->status.job_exp);
 			len = packet_len(0xb1);
 			break;
 		case SP_NEXTBASEEXP:
