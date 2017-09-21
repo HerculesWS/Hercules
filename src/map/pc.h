@@ -994,8 +994,8 @@ END_ZEROED_BLOCK; /* End */
 	int (*changelook) (struct map_session_data *sd,int type,int val);
 	int (*equiplookall) (struct map_session_data *sd);
 
-	int (*readparam) (const struct map_session_data *sd, int type);
-	int (*setparam) (struct map_session_data *sd,int type,int val);
+	int64 (*readparam) (const struct map_session_data *sd, int type);
+	int (*setparam) (struct map_session_data *sd, int type, int64 val);
 	int (*readreg) (struct map_session_data *sd, int64 reg);
 	void (*setreg) (struct map_session_data *sd, int64 reg,int val);
 	char * (*readregstr) (struct map_session_data *sd, int64 reg);

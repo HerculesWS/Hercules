@@ -995,7 +995,7 @@ bool pc_can_Adopt(struct map_session_data *p1_sd, struct map_session_data *p2_sd
 bool pc_adoption(struct map_session_data *p1_sd, struct map_session_data *p2_sd, struct map_session_data *b_sd)
 {
 	int class, joblevel;
-	unsigned int jobexp;
+	uint64 jobexp;
 
 	if( !pc->can_Adopt(p1_sd, p2_sd, b_sd) )
 		return false;
@@ -7960,7 +7960,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 	if ((sd->job & MAPID_UPPERMASK) == MAPID_SUPER_NOVICE && !sd->state.snovice_dead_flag) {
 		unsigned int next = pc->nextbaseexp(sd);
 		if( next == 0 ) next = pc->thisbaseexp(sd);
-		if( get_percentage(sd->status.base_exp,next) >= 99 ) {
+		if (get_percentage64(sd->status.base_exp, next) >= 99) {
 			sd->state.snovice_dead_flag = 1;
 			pc->setstand(sd);
 			status_percent_heal(&sd->bl, 100, 100);
@@ -8145,9 +8145,9 @@ void pc_revive(struct map_session_data *sd,unsigned int hp, unsigned int sp) {
 /*==========================================
  * script reading pc status registry
  *------------------------------------------*/
-int pc_readparam(const struct map_session_data *sd, int type)
+int64 pc_readparam(const struct map_session_data *sd, int type)
 {
-	int val = 0;
+	int64 val = 0;
 
 	nullpo_ret(sd);
 
@@ -8298,7 +8298,7 @@ int pc_readparam(const struct map_session_data *sd, int type)
 /*==========================================
  * script set pc status registry
  *------------------------------------------*/
-int pc_setparam(struct map_session_data *sd,int type,int val)
+int pc_setparam(struct map_session_data *sd, int type, int64 val)
 {
 	int delta;
 	nullpo_ret(sd);
@@ -8313,7 +8313,7 @@ int pc_setparam(struct map_session_data *sd,int type,int val)
 				stat += pc->gets_status_point(sd->status.base_level + i);
 			sd->status.status_point += stat;
 		}
-		sd->status.base_level = val;
+		sd->status.base_level = (int32)val;
 		sd->status.base_exp = 0;
 		// clif->updatestatus(sd, SP_BASELEVEL);  // Gets updated at the bottom
 		clif->updatestatus(sd, SP_NEXTBASEEXP);
@@ -8332,7 +8332,7 @@ int pc_setparam(struct map_session_data *sd,int type,int val)
 			sd->status.skill_point += val - sd->status.job_level;
 			clif->updatestatus(sd, SP_SKILLPOINT);
 		}
-		sd->status.job_level = val;
+		sd->status.job_level = (int32)val;
 		sd->status.job_exp = 0;
 		// clif->updatestatus(sd, SP_JOBLEVEL);  // Gets updated at the bottom
 		clif->updatestatus(sd, SP_NEXTJOBEXP);
@@ -8340,21 +8340,21 @@ int pc_setparam(struct map_session_data *sd,int type,int val)
 		status_calc_pc(sd, SCO_FORCE);
 		break;
 	case SP_SKILLPOINT:
-		sd->status.skill_point = val;
+		sd->status.skill_point = (int32)val;
 		break;
 	case SP_STATUSPOINT:
-		sd->status.status_point = val;
+		sd->status.status_point = (int32)val;
 		break;
 	case SP_ZENY:
 		if( val < 0 )
 			return 0;// can't set negative zeny
-		logs->zeny(sd, LOG_TYPE_SCRIPT, sd, -(sd->status.zeny - cap_value(val, 0, MAX_ZENY)));
-		sd->status.zeny = cap_value(val, 0, MAX_ZENY);
+		logs->zeny(sd, LOG_TYPE_SCRIPT, sd, -(sd->status.zeny - cap_value((int32)val, 0, MAX_ZENY)));
+		sd->status.zeny = cap_value((int32)val, 0, MAX_ZENY);
 		break;
 	case SP_BANKVAULT:
 		val = cap_value(val, 0, MAX_BANK_ZENY);
-		delta = (val - sd->status.bank_vault);
-		sd->status.bank_vault = val;
+		delta = ((int32)val - sd->status.bank_vault);
+		sd->status.bank_vault = (int32)val;
 		if (map->save_settings & 256) {
 			chrif->save(sd, 0); // send to char server
 		}
@@ -8380,16 +8380,16 @@ int pc_setparam(struct map_session_data *sd,int type,int val)
 		sd->status.sex = val ? SEX_MALE : SEX_FEMALE;
 		break;
 	case SP_WEIGHT:
-		sd->weight = val;
+		sd->weight = (int32)val;
 		break;
 	case SP_MAXWEIGHT:
-		sd->max_weight = val;
+		sd->max_weight = (int32)val;
 		break;
 	case SP_HP:
-		sd->battle_status.hp = cap_value(val, 1, (int)sd->battle_status.max_hp);
+		sd->battle_status.hp = cap_value((int32)val, 1, (int)sd->battle_status.max_hp);
 		break;
 	case SP_MAXHP:
-		sd->battle_status.max_hp = cap_value(val, 1, battle_config.max_hp);
+		sd->battle_status.max_hp = cap_value((int32)val, 1, battle_config.max_hp);
 
 		if( sd->battle_status.max_hp < sd->battle_status.hp )
 		{
@@ -8398,10 +8398,10 @@ int pc_setparam(struct map_session_data *sd,int type,int val)
 		}
 		break;
 	case SP_SP:
-		sd->battle_status.sp = cap_value(val, 0, (int)sd->battle_status.max_sp);
+		sd->battle_status.sp = cap_value((int32)val, 0, (int)sd->battle_status.max_sp);
 		break;
 	case SP_MAXSP:
-		sd->battle_status.max_sp = cap_value(val, 1, battle_config.max_sp);
+		sd->battle_status.max_sp = cap_value((int32)val, 1, battle_config.max_sp);
 
 		if( sd->battle_status.max_sp < sd->battle_status.sp )
 		{
@@ -8440,28 +8440,28 @@ int pc_setparam(struct map_session_data *sd,int type,int val)
 		}
 		return 1; // status_change_start/status_change_end already sends packets warning the client
 	case SP_FAME:
-		sd->status.fame = val;
+		sd->status.fame = (int32)val;
 		break;
 	case SP_KILLERRID:
-		sd->killerrid = val;
+		sd->killerrid = (int32)val;
 		return 1;
 	case SP_KILLEDRID:
-		sd->killedrid = val;
+		sd->killedrid = (int32)val;
 		return 1;
 	case SP_SLOTCHANGE:
-		sd->status.slotchange = val;
+		sd->status.slotchange = (int32)val;
 		return 1;
 	case SP_CHARRENAME:
-		sd->status.rename = val;
+		sd->status.rename = (int32)val;
 		return 1;
 	case SP_MOD_EXP:
-		sd->status.mod_exp = val;
+		sd->status.mod_exp = (int32)val;
 		return 1;
 	case SP_MOD_DROP:
-		sd->status.mod_drop = val;
+		sd->status.mod_drop = (int32)val;
 		return 1;
 	case SP_MOD_DEATH:
-		sd->status.mod_death = val;
+		sd->status.mod_death = (int32)val;
 		return 1;
 	default:
 		ShowError("pc_setparam: Attempted to set unknown parameter '%d'.\n", type);
