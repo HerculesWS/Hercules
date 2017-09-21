@@ -44,6 +44,7 @@ bool exists(const char* filename);
 
 /// calculates the value of A / B, in percent (rounded down)
 unsigned int get_percentage(const unsigned int A, const unsigned int B);
+uint64 get_percentage64(const uint64 A, const uint64 B);
 
 int64 apply_percentrate64(int64 value, int rate, int maxrate);
 int apply_percentrate(int value, int rate, int maxrate);

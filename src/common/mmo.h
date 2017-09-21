@@ -593,7 +593,7 @@ struct mmo_charstatus {
 	int mother;
 	int child;
 
-	unsigned int base_exp,job_exp;
+	uint64 base_exp, job_exp;
 	int zeny;
 	int bank_vault;
 

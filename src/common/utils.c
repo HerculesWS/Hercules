@@ -359,6 +359,28 @@ unsigned int get_percentage(const unsigned int A, const unsigned int B)
 	return (unsigned int)floor(result);
 }
 
+/// calculates the value of A / B, in percent (rounded down)
+uint64 get_percentage64(const uint64 A, const uint64 B)
+{
+	double result;
+
+	if( B == 0 )
+	{
+		ShowError("get_percentage(): division by zero! (A=%"PRIu64",B=%"PRIu64")\n", A, B);
+		return ~0U;
+	}
+
+	result = 100 * ((double)A / (double)B);
+
+	if( result > UINT_MAX )
+	{
+		ShowError("get_percentage(): result percentage too high! (A=%"PRIu64",B=%"PRIu64",result=%g)\n", A, B, result);
+		return UINT_MAX;
+	}
+
+	return (uint64)floor(result);
+}
+
 /**
  * Applies a percentual rate modifier.
  *

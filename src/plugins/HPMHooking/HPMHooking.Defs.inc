@@ -5502,10 +5502,10 @@ typedef int (*HPMHOOK_pre_pc_changelook) (struct map_session_data **sd, int *typ
 typedef int (*HPMHOOK_post_pc_changelook) (int retVal___, struct map_session_data *sd, int type, int val);
 typedef int (*HPMHOOK_pre_pc_equiplookall) (struct map_session_data **sd);
 typedef int (*HPMHOOK_post_pc_equiplookall) (int retVal___, struct map_session_data *sd);
-typedef int (*HPMHOOK_pre_pc_readparam) (const struct map_session_data **sd, int *type);
-typedef int (*HPMHOOK_post_pc_readparam) (int retVal___, const struct map_session_data *sd, int type);
-typedef int (*HPMHOOK_pre_pc_setparam) (struct map_session_data **sd, int *type, int *val);
-typedef int (*HPMHOOK_post_pc_setparam) (int retVal___, struct map_session_data *sd, int type, int val);
+typedef int64 (*HPMHOOK_pre_pc_readparam) (const struct map_session_data **sd, int *type);
+typedef int64 (*HPMHOOK_post_pc_readparam) (int64 retVal___, const struct map_session_data *sd, int type);
+typedef int (*HPMHOOK_pre_pc_setparam) (struct map_session_data **sd, int *type, int64 *val);
+typedef int (*HPMHOOK_post_pc_setparam) (int retVal___, struct map_session_data *sd, int type, int64 val);
 typedef int (*HPMHOOK_pre_pc_readreg) (struct map_session_data **sd, int64 *reg);
 typedef int (*HPMHOOK_post_pc_readreg) (int retVal___, struct map_session_data *sd, int64 reg);
 typedef void (*HPMHOOK_pre_pc_setreg) (struct map_session_data **sd, int64 *reg, int *val);
