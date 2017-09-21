@@ -57054,11 +57054,11 @@ int HP_pc_equiplookall(struct map_session_data *sd) {
 	}
 	return retVal___;
 }
-int HP_pc_readparam(const struct map_session_data *sd, int type) {
+int64 HP_pc_readparam(const struct map_session_data *sd, int type) {
 	int hIndex = 0;
-	int retVal___ = 0;
+	int64 retVal___ = 0;
 	if (HPMHooks.count.HP_pc_readparam_pre > 0) {
-		int (*preHookFunc) (const struct map_session_data **sd, int *type);
+		int64 (*preHookFunc) (const struct map_session_data **sd, int *type);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_readparam_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_pc_readparam_pre[hIndex].func;
@@ -57073,7 +57073,7 @@ int HP_pc_readparam(const struct map_session_data *sd, int type) {
 		retVal___ = HPMHooks.source.pc.readparam(sd, type);
 	}
 	if (HPMHooks.count.HP_pc_readparam_post > 0) {
-		int (*postHookFunc) (int retVal___, const struct map_session_data *sd, int type);
+		int64 (*postHookFunc) (int64 retVal___, const struct map_session_data *sd, int type);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_readparam_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_pc_readparam_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd, type);
@@ -57081,11 +57081,11 @@ int HP_pc_readparam(const struct map_session_data *sd, int type) {
 	}
 	return retVal___;
 }
-int HP_pc_setparam(struct map_session_data *sd, int type, int val) {
+int HP_pc_setparam(struct map_session_data *sd, int type, int64 val) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_pc_setparam_pre > 0) {
-		int (*preHookFunc) (struct map_session_data **sd, int *type, int *val);
+		int (*preHookFunc) (struct map_session_data **sd, int *type, int64 *val);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_setparam_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_pc_setparam_pre[hIndex].func;
@@ -57100,7 +57100,7 @@ int HP_pc_setparam(struct map_session_data *sd, int type, int val) {
 		retVal___ = HPMHooks.source.pc.setparam(sd, type, val);
 	}
 	if (HPMHooks.count.HP_pc_setparam_post > 0) {
-		int (*postHookFunc) (int retVal___, struct map_session_data *sd, int type, int val);
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, int type, int64 val);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_setparam_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_pc_setparam_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd, type, val);
