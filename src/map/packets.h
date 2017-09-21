@@ -6103,4 +6103,72 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0964,6,clif->pTakeItem,2);  // CZ_ITEM_PICKUP
 #endif
 
+// 2017-06-14bRagexeRE
+#if PACKETVER >= 20170614
+// new packets
+	packet(0x0acf,52);
+	packet(0x0ad0,11);
+	packet(0x0ad1,-1);
+#endif
+
+// 2017-06-21aRagexeRE
+#if PACKETVER >= 20170621
+// changed packet sizes
+	packet(0x0acf,57);
+#endif
+
+// 2017-07-05aRagexeRE
+#if PACKETVER >= 20170705
+// changed packet sizes
+	packet(0x0acf,64);
+#endif
+
+// 2017-07-19aRagexeRE
+#if PACKETVER >= 20170719
+// new packets
+	packet(0x0ad2,30);
+	packet(0x0ad3,-1);
+	packet(0x0ad4,-1);
+	packet(0x0ad5,2);
+	packet(0x0ad6,2);
+	packet(0x0ad7,8);
+	packet(0x0ad8,8);
+	packet(0x0ad9,-1);
+// changed packet sizes
+#endif
+
+// 2017-07-26cRagexeRE
+#if PACKETVER >= 20170726
+// new packets
+	packet(0x0ada,30);
+#endif
+
+// 2017-08-30aRagexeRE
+#if PACKETVER >= 20170830
+// new packets
+	packet(0x0adb,-1);
+// changed packet sizes
+	packet(0x006d,157); // HC_ACCEPT_MAKECHAR
+	packet(0x08e3,157); // HC_UPDATE_CHARINFO
+	packet(0x0a49,20);
+#endif
+
+// 2017-09-06cRagexeRE
+#if PACKETVER >= 20170906
+// new packets
+	packet(0x0adc,6);
+#endif
+
+// 2017-09-13bRagexeRE
+#if PACKETVER >= 20170913
+// new packets
+	packet(0x0add,22);
+#endif
+
+#if PACKETVER >= 20170920
+// new packets
+	packet(0x0ade,6);
+	packet(0x0adf,58);
+#endif
+
 #endif /* MAP_PACKETS_H */
