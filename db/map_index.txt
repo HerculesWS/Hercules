@@ -938,6 +938,7 @@ moro_cav
 1@jtb
 c_tower2_
 c_tower3_
+paramk
 
 // Only add maps under this line if they are not standard maps!
 //======================================================================================
