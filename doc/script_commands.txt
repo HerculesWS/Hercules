@@ -9884,3 +9884,27 @@ Changes the name of a unit.
 Supported Types - [ MOB | HOM | PET ].
 
 returns 1 on success, 0 on failure.
+
+---------------------------------------
+
+*opendressroom();
+
+This will open the Dress Room window on the client connected to the invoking character.
+
+	mes "Close this window to open the Dress Room window.";
+	close2;
+	opendressroom();
+	end;
+
+---------------------------------------
+
+*closedressroom();
+
+This will close an open Dress Room window on the client connected to the invoking character.
+
+	mes "Close this window to close the Dress Room window.";
+	close2;
+	closedressroom();
+	end;
+
+---------------------------------------

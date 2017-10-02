@@ -23384,6 +23384,44 @@ BUILDIN(activatepset);
 BUILDIN(deactivatepset);
 BUILDIN(deletepset);
 
+/**
+ * opendressroom();
+ */
+BUILDIN(opendressroom)
+{
+#if PACKETVER >= 20150513
+	struct map_session_data *sd = script->rid2sd(st);
+	
+	if (sd == NULL)
+		return false;
+
+	clif_dressroom_open(sd, 1);
+
+	return true;
+#else
+	return false;
+#endif
+}
+
+/**
+ * closedressroom();
+ */
+BUILDIN(closedressroom)
+{
+#if PACKETVER >= 20150513
+	struct map_session_data *sd = script->rid2sd(st);
+
+	if (sd == NULL)
+		return false;
+
+	clif_dressroom_open(sd, 0);
+
+	return true;
+#else
+	return false;
+#endif
+}
+
 BUILDIN(pcre_match)
 {
 	const char *input = script_getstr(st, 2);
