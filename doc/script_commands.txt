@@ -9887,24 +9887,20 @@ returns 1 on success, 0 on failure.
 
 ---------------------------------------
 
-*opendressroom();
+*opendressroom({true/false});
 
 This will open the Dress Room window on the client connected to the invoking character.
+Takes parameter 'true'/'false'. Parameter 'true' will open the Dress Room window and 
+parameter 'false' will close it. Default 'true'.
 
 	mes "Close this window to open the Dress Room window.";
 	close2;
-	opendressroom();
+	opendressroom(true); // or just use opendressroom();
 	end;
-
----------------------------------------
-
-*closedressroom();
-
-This will close an open Dress Room window on the client connected to the invoking character.
 
 	mes "Close this window to close the Dress Room window.";
 	close2;
-	closedressroom();
+	closedressroom(false);
 	end;
 
 ---------------------------------------

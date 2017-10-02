@@ -23385,7 +23385,7 @@ BUILDIN(deactivatepset);
 BUILDIN(deletepset);
 
 /**
- * opendressroom();
+ * opendressroom(true/false);
  */
 BUILDIN(opendressroom)
 {
@@ -23395,26 +23395,15 @@ BUILDIN(opendressroom)
 	if (sd == NULL)
 		return false;
 
-	clif_dressroom_open(sd, 1);
-
-	return true;
-#else
-	return false;
-#endif
-}
-
-/**
- * closedressroom();
- */
-BUILDIN(closedressroom)
-{
-#if PACKETVER >= 20150513
-	struct map_session_data *sd = script->rid2sd(st);
-
-	if (sd == NULL)
-		return false;
-
-	clif_dressroom_open(sd, 0);
+	if (!script_hasdata(st, 2)) {
+		clif_dressroom_open(sd, 1);
+	}
+	else {
+		if( script_getnum(st,2) )
+			clif_dressroom_open(sd, 1);
+		else
+			clif_dressroom_open(sd, 0);
+	}
 
 	return true;
 #else
