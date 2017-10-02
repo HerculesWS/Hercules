@@ -9900,7 +9900,7 @@ parameter 'false' will close it. Default 'true'.
 
 	mes "Close this window to close the Dress Room window.";
 	close2;
-	closedressroom(false);
+	opendressroom(false);
 	end;
 
 ---------------------------------------
