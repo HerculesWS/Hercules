@@ -1723,6 +1723,8 @@ ACMD(bodystyle)
 	 && (sd->job & MAPID_THIRDMASK) != MAPID_WARLOCK
 	 && (sd->job & MAPID_THIRDMASK) != MAPID_SHADOW_CHASER
 	 && (sd->job & MAPID_THIRDMASK) != MAPID_MINSTRELWANDERER
+	 && (sd->job & MAPID_THIRDMASK) != MAPID_SORCERER
+	 && (sd->job & MAPID_THIRDMASK) != MAPID_SURA
 	 ) {
 		clif->message(fd, msg_fd(fd, 35)); // This job has no alternate body styles.
 		return false;
