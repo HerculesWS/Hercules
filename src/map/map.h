@@ -1224,6 +1224,7 @@ END_ZEROED_BLOCK;
 	const char* (*charid2nick) (int charid);
 	struct map_session_data* (*charid2sd) (int charid);
 
+	void (*foreachbl) (int (*func)(struct block_list *bl, va_list args), enum bl_type type, ...);
 	void (*vforeachpc) (int (*func)(struct map_session_data* sd, va_list args), va_list args);
 	void (*foreachpc) (int (*func)(struct map_session_data* sd, va_list args), ...);
 	void (*vforeachmob) (int (*func)(struct mob_data* md, va_list args), va_list args);

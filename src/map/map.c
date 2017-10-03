@@ -2324,6 +2324,35 @@ uint32 map_race_id2mask(int race)
 	return RCMASK_NONE;
 }
 
+// Applies func to units of the desired BL_ type
+// Stops iterating if func returns 1.
+// This is similar to foreachiddb but it also filters by bl type
+void map_foreachbl(int (*func)(struct block_list *bl, va_list args), enum bl_type type, ...) {
+	va_list args;
+	struct DBIterator *iter = db_iterator(map->id_db);
+	struct block_list *bl = NULL;
+
+	va_start(args, type);
+
+	for (bl = dbi_first(iter); dbi_exists(iter); bl = dbi_next(iter)) {
+		if (bl->type & type) {
+			va_list argscopy;
+			int ret;
+
+			va_copy(argscopy, args);
+			ret = func(bl, argscopy);
+			va_end(argscopy);
+
+			if (ret == 1) {
+				break; // stop iterating
+			}
+		}
+	}
+	dbi_destroy(iter);
+
+	va_end(args);
+}
+
 /// Applies func to all the players in the db.
 /// Stops iterating if func returns -1.
 void map_vforeachpc(int (*func)(struct map_session_data* sd, va_list args), va_list args)
@@ -6758,6 +6787,7 @@ void map_defaults(void) {
 	map->charid2nick = map_charid2nick;
 	map->charid2sd = map_charid2sd;
 
+	map->foreachbl = map_foreachbl;
 	map->vforeachpc = map_vforeachpc;
 	map->foreachpc = map_foreachpc;
 	map->vforeachmob = map_vforeachmob;
