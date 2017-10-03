@@ -11237,14 +11237,14 @@ int buildin_getunits_sub(struct block_list *bl, va_list ap)
 
 BUILDIN(getunits)
 {
-	const char *mapname, *name;
-	int16 m, x1, y1, x2, y2;
+	const char *name;
 	int32 id;
 	uint32 start;
 	struct reg_db *ref;
 	enum bl_type type = script_getnum(st, 2);
 	struct script_data *data = script_getdata(st, 3);
-	uint32 count = 0, limit = script_getnum(st, 4);
+	uint32 count = 0;
+	uint32 limit = script_getnum(st, 4);
 	struct map_session_data *sd = NULL;
 
 	if (!data_isreference(data) || reference_toconstant(data)) {
@@ -11277,19 +11277,24 @@ BUILDIN(getunits)
 		limit = SCRIPT_MAX_ARRAYSIZE;
 	}
 
-	mapname = script_getstr(st, 5);
-	m = map->mapname2mapid(mapname);
+	if (script_hasdata(st, 5)) {
+		const char *mapname = script_getstr(st, 5);
+		int16 m = map->mapname2mapid(mapname);
 
-	if (script_hasdata(st, 9)) {
-		x1 = script_getnum(st, 6);
-		y1 = script_getnum(st, 7);
-		x2 = script_getnum(st, 8);
-		y2 = script_getnum(st, 9);
+		if (script_hasdata(st, 9)) {
+			int16 x1 = script_getnum(st, 6);
+			int16 y1 = script_getnum(st, 7);
+			int16 x2 = script_getnum(st, 8);
+			int16 y2 = script_getnum(st, 9);
 
-		map->foreachinarea(buildin_getunits_sub, m, x1, y1, x2, y2, type,
-			st, sd, id, start, &count, limit, name, ref);
+			map->foreachinarea(buildin_getunits_sub, m, x1, y1, x2, y2, type,
+				st, sd, id, start, &count, limit, name, ref);
+		} else {
+			map->foreachinmap(buildin_getunits_sub, m, type,
+				st, sd, id, start, &count, limit, name, ref);
+		}
 	} else {
-		map->foreachinmap(buildin_getunits_sub, m, type,
+		map->foreachbl(buildin_getunits_sub, type,
 			st, sd, id, start, &count, limit, name, ref);
 	}
 
@@ -24318,7 +24323,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(deltimer,"s?"),
 		BUILDIN_DEF(addtimercount,"si?"),
 		BUILDIN_DEF(gettimer,"i??"),
-		BUILDIN_DEF(getunits,"iris????"),
+		BUILDIN_DEF(getunits,"iri?????"),
 		BUILDIN_DEF(initnpctimer,"??"),
 		BUILDIN_DEF(stopnpctimer,"??"),
 		BUILDIN_DEF(startnpctimer,"??"),
