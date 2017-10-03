@@ -23384,27 +23384,41 @@ BUILDIN(activatepset);
 BUILDIN(deactivatepset);
 BUILDIN(deletepset);
 
+enum dressroom_mode {
+	DRESSROOM_CLOSE = 0,
+	DRESSROOM_OPEN  = 1
+};
+
 /**
- * opendressroom(true/false);
+ * dressroom(true/false);
  */
-BUILDIN(opendressroom)
+BUILDIN(dressroom)
 {
 #if PACKETVER >= 20150513
 	struct map_session_data *sd = script->rid2sd(st);
-	
+	enum dressroom_mode mode = DRESSROOM_OPEN;
+
 	if (sd == NULL)
 		return false;
 
-	if (!script_hasdata(st, 2)) {
-		clif_dressroom_open(sd, 1);
-	}
-	else {
-		if( script_getnum(st,2) )
-			clif_dressroom_open(sd, 1);
-		else
-			clif_dressroom_open(sd, 0);
+	if (script_hasdata(st, 2)) {
+		mode = script_getnum(st, 2);
 	}
 
+	switch (mode) {
+		case DRESSROOM_OPEN:
+			clif->dressroom_open(sd, 1);
+			break;
+		case DRESSROOM_CLOSE:
+			clif->dressroom_open(sd, 0);
+			break;
+		default:
+			ShowWarning("script:opendressroom: unknown mode (%i)\n", mode);
+			script_pushint(st, 0);
+			return false;
+	}
+
+	script_pushint(st, 1);
 	return true;
 #else
 	return false;
@@ -24066,6 +24080,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(activatepset,"i"), // Activate a pattern set [MouseJstr]
 		BUILDIN_DEF(deactivatepset,"i"), // Deactive a pattern set [MouseJstr]
 		BUILDIN_DEF(deletepset,"i"), // Delete a pattern set [MouseJstr]
+		BUILDIN_DEF(dressroom,""),
 		BUILDIN_DEF(pcre_match,"ss"),
 		BUILDIN_DEF(dispbottom,"s?"), //added from jA [Lupus]
 		BUILDIN_DEF(getusersname,""),
@@ -24625,6 +24640,10 @@ void script_hardcoded_constants(void)
 	script->set_constant("ITEMUPPER_THIRDUPPER", ITEMUPPER_THIRDUPPER, false, false);
 	script->set_constant("ITEMUPPER_THIRDBABY", ITEMUPPER_THIRDBABY, false, false);
 	script->set_constant("ITEMUPPER_ALL", ITEMUPPER_ALL, false, false);
+
+	script->constdb_comment("dressroom modes");
+	script->set_constant("DRESSROOM_OPEN", DRESSROOM_OPEN, false, false);
+	script->set_constant("DRESSROOM_CLOSE", DRESSROOM_CLOSE, false, false);
 
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL
