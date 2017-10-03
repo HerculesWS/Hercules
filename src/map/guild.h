@@ -100,7 +100,7 @@ struct guild_interface {
 	struct map_session_data *(*getavailablesd) (struct guild *g);
 	int (*getindex) (const struct guild *g, int account_id, int char_id);
 	int (*getposition) (struct guild *g, struct map_session_data *sd);
-	unsigned int (*payexp) (struct map_session_data *sd,unsigned int exp);
+	uint64 (*payexp) (struct map_session_data *sd, uint64 exp);
 	int (*getexp) (struct map_session_data *sd,int exp); // [Celest]
 	/* */
 	int (*create) (struct map_session_data *sd, const char *name);

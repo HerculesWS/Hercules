@@ -829,7 +829,7 @@ struct pc_interface {
 	/* */
 
 BEGIN_ZEROED_BLOCK; /* Everything within this block will be memset to 0 when status_defaults() is executed */
-	unsigned int exp_table[CLASS_COUNT][2][MAX_LEVEL];
+	uint64 exp_table[CLASS_COUNT][2][MAX_LEVEL];
 	int max_level[CLASS_COUNT][2];
 	unsigned int statp[MAX_LEVEL+1];
 	unsigned int level_penalty[3][RC_MAX][MAX_LEVEL*2+1];
@@ -949,11 +949,11 @@ END_ZEROED_BLOCK; /* End */
 	int (*maxjoblv) (const struct map_session_data *sd);
 	int (*checkbaselevelup) (struct map_session_data *sd);
 	int (*checkjoblevelup) (struct map_session_data *sd);
-	bool (*gainexp) (struct map_session_data *sd, struct block_list *src, unsigned int base_exp, unsigned int job_exp, bool is_quest);
-	unsigned int (*nextbaseexp) (const struct map_session_data *sd);
-	unsigned int (*thisbaseexp) (const struct map_session_data *sd);
-	unsigned int (*nextjobexp) (const struct map_session_data *sd);
-	unsigned int (*thisjobexp) (const struct map_session_data *sd);
+	bool (*gainexp) (struct map_session_data *sd, struct block_list *src, uint64 base_exp, uint64 job_exp, bool is_quest);
+	uint64 (*nextbaseexp) (const struct map_session_data *sd);
+	uint64 (*thisbaseexp) (const struct map_session_data *sd);
+	uint64 (*nextjobexp) (const struct map_session_data *sd);
+	uint64 (*thisjobexp) (const struct map_session_data *sd);
 	int (*gets_status_point) (int level);
 	int (*need_status_point) (struct map_session_data *sd,int type,int val);
 	int (*maxparameterincrease) (struct map_session_data* sd, int type);
@@ -1079,7 +1079,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*bonus_addeff) (struct s_addeffect* effect, int max, enum sc_type id, int16 rate, int16 arrow_rate, uint8 flag, uint16 duration);
 	int (*bonus_addeff_onskill) (struct s_addeffectonskill* effect, int max, enum sc_type id, short rate, short skill_id, unsigned char target);
 	int (*bonus_item_drop) (struct s_add_drop *drop, const short max, short id, short group, int race, int rate);
-	void (*calcexp) (struct map_session_data *sd, unsigned int *base_exp, unsigned int *job_exp, struct block_list *src);
+	void (*calcexp) (struct map_session_data *sd, uint64 *base_exp, uint64 *job_exp, struct block_list *src);
 	int (*respawn_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*jobchange_killclone) (struct block_list *bl, va_list ap);
 	int (*getstat) (struct map_session_data* sd, int type);

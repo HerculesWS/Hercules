@@ -1282,7 +1282,8 @@ struct DBData create_expcache(union DBKey key, va_list args)
 /*====================================================
  * Return taxed experience from player sd to guild
  *---------------------------------------------------*/
-unsigned int guild_payexp(struct map_session_data *sd,unsigned int exp) {
+uint64 guild_payexp(struct map_session_data *sd, uint64 exp)
+{
 	struct guild *g;
 	struct guild_expcache *c;
 	int per;

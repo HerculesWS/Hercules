@@ -13832,8 +13832,8 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 			break;
 		case PR_REDEMPTIO:
 			{
-				int exp;
-				if( ((exp = pc->nextbaseexp(sd)) > 0 && get_percentage64(sd->status.base_exp, exp) < 1) ||
+				int64 exp;
+				if (((exp = pc->nextbaseexp(sd)) > 0 && get_percentage64(sd->status.base_exp, exp) < 1) ||
 					((exp = pc->nextjobexp(sd)) > 0 && get_percentage64(sd->status.job_exp, exp) < 1)) {
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0); //Not enough exp.
 					return 0;

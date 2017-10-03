@@ -3033,27 +3033,50 @@ void clif_updatestatus(struct map_session_data *sd,int type)
 			WFIFOL(fd,4)=sd->status.zeny;
 			len = packet_len(0xb1);
 			break;
+// [4144] unconfirment exact version can be from 20170405 to 20170913
+#if PACKETVER >= 20170830
 		case SP_BASEEXP:
-			WFIFOW(fd,0)=0xb1;
-			WFIFOL(fd,4)=(uint32)(sd->status.base_exp);
+			WFIFOW(fd, 0) = 0xacb;
+			WFIFOQ(fd, 4) = sd->status.base_exp;
+			len = packet_len(0xacb);
+			break;
+		case SP_JOBEXP:
+			WFIFOW(fd, 0) = 0xacb;
+			WFIFOQ(fd, 4) = sd->status.job_exp;
+			len = packet_len(0xacb);
+			break;
+		case SP_NEXTBASEEXP:
+			WFIFOW(fd, 0) = 0xacb;
+			WFIFOQ(fd, 4) = pc->nextbaseexp(sd);
+			len = packet_len(0xacb);
+			break;
+		case SP_NEXTJOBEXP:
+			WFIFOW(fd, 0) = 0xacb;
+			WFIFOQ(fd, 4) = pc->nextjobexp(sd);
+			len = packet_len(0xacb);
+			break;
+#else
+		case SP_BASEEXP:
+			WFIFOW(fd, 0) = 0xb1;
+			WFIFOL(fd, 4) = (uint32)(sd->status.base_exp);
 			len = packet_len(0xb1);
 			break;
 		case SP_JOBEXP:
-			WFIFOW(fd,0)=0xb1;
-			WFIFOL(fd,4)=(uint32)(sd->status.job_exp);
+			WFIFOW(fd, 0) = 0xb1;
+			WFIFOL(fd, 4) = (uint32)(sd->status.job_exp);
 			len = packet_len(0xb1);
 			break;
 		case SP_NEXTBASEEXP:
-			WFIFOW(fd,0)=0xb1;
-			WFIFOL(fd,4)=pc->nextbaseexp(sd);
+			WFIFOW(fd, 0) = 0xb1;
+			WFIFOL(fd, 4) = (uint32)pc->nextbaseexp(sd);
 			len = packet_len(0xb1);
 			break;
 		case SP_NEXTJOBEXP:
-			WFIFOW(fd,0)=0xb1;
-			WFIFOL(fd,4)=pc->nextjobexp(sd);
+			WFIFOW(fd, 0) = 0xb1;
+			WFIFOL(fd, 4) = (uint32)pc->nextjobexp(sd);
 			len = packet_len(0xb1);
 			break;
-
+#endif
 		/**
 		 * SP_U<STAT> are used to update the amount of points necessary to increase that stat
 		 **/
@@ -14027,7 +14050,7 @@ void clif_parse_NoviceExplosionSpirits(int fd, struct map_session_data *sd)
 	/* it sends the request when the criteria doesn't match (and of course we let it fail) */
 	/* so restoring the old parse_globalmes method. */
 	if ((sd->job & MAPID_UPPERMASK) == MAPID_SUPER_NOVICE) {
-		unsigned int next = pc->nextbaseexp(sd);
+		uint64 next = pc->nextbaseexp(sd);
 		if( next == 0 ) next = pc->thisbaseexp(sd);
 		if( next ) {
 			int percent = (int)( ( (float)sd->status.base_exp/(float)next )*1000. );
@@ -16697,20 +16720,34 @@ void clif_party_show_picker(struct map_session_data * sd, struct item * item_dat
 /// exp type:
 ///     0 = normal exp gain/loss
 ///     1 = quest exp gain/loss
-void clif_displayexp(struct map_session_data *sd, unsigned int exp, char type, bool is_quest) {
+void clif_displayexp(struct map_session_data *sd, uint64 exp, char type, bool is_quest)
+{
 	int fd;
 
+// [4144] unconfirment exact version can be from 20170405 to 20170913
+#if PACKETVER >= 20170830
+	const int cmd = 0xacc;
+#else
+	const int cmd = 0x7f6;
+#endif
 	nullpo_retv(sd);
 
 	fd = sd->fd;
 
-	WFIFOHEAD(fd, packet_len(0x7f6));
-	WFIFOW(fd,0) = 0x7f6;
-	WFIFOL(fd,2) = sd->bl.id;
-	WFIFOL(fd,6) = exp;
-	WFIFOW(fd,10) = type;
-	WFIFOW(fd,12) = is_quest?1:0;// Normal exp is shown in yellow, quest exp is shown in purple.
-	WFIFOSET(fd,packet_len(0x7f6));
+	WFIFOHEAD(fd, packet_len(cmd));
+	WFIFOW(fd, 0) = cmd;
+	WFIFOL(fd, 2) = sd->bl.id;
+// [4144] unconfirment exact version can be from 20170405 to 20170913
+#if PACKETVER >= 20170830
+	WFIFOQ(fd, 6) = exp;
+	WFIFOW(fd, 14) = type;
+	WFIFOW(fd, 16) = is_quest ? 1 : 0; // Normal exp is shown in yellow, quest exp is shown in purple.
+#else
+	WFIFOL(fd, 6) = (uint32)exp;
+	WFIFOW(fd, 10) = type;
+	WFIFOW(fd, 12) = is_quest ? 1 : 0; // Normal exp is shown in yellow, quest exp is shown in purple.
+#endif
+	WFIFOSET(fd, packet_len(cmd));
 }
 
 /// Displays digital clock digits on top of the screen (ZC_SHOWDIGIT).

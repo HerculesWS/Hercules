@@ -784,7 +784,7 @@ struct clif_interface {
 	void (*equiptickack) (struct map_session_data* sd, int flag);
 	void (*viewequip_ack) (struct map_session_data* sd, struct map_session_data* tsd);
 	void (*equpcheckbox) (struct map_session_data* sd);
-	void (*displayexp) (struct map_session_data *sd, unsigned int exp, char type, bool is_quest);
+	void (*displayexp) (struct map_session_data *sd, uint64 exp, char type, bool is_quest);
 	void (*font) (struct map_session_data *sd);
 	void (*progressbar) (struct map_session_data * sd, unsigned int color, unsigned int second);
 	void (*progressbar_abort) (struct map_session_data * sd);
