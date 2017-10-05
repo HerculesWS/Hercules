@@ -5622,6 +5622,23 @@ character.
 	end;
 
 ---------------------------------------
+
+*dressroom({<mode>})
+
+This command controls the dressing room for the attached player. If no <mode>
+is passed, DRESSROOM_OPEN is used by default.
+
+Valid <mode> for dressroom() are:
+	DRESSROOM_OPEN     opens the dressing room window
+	DRESSROOM_CLOSE    closes the dressing room window
+
+Example:
+	mes("Close this window to open the Dress Room window.");
+	close2();
+	dressroom(DRESSROOM_OPEN);
+	end;
+
+---------------------------------------
 //=====================================
 4.2 - Guild-Related Commands
 //=====================================
