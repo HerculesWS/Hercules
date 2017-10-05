@@ -3305,6 +3305,27 @@ Notice that NPC objects disabled with disablenpc() will still be located.
 
 ---------------------------------------
 
+*getmapinfo(<info>{, "<map name>"})
+*getmapinfo(<info>{, <map id>})
+
+This command returns various information about a specific map. If the second
+argument is omitted, it will try to use the map of the attached NPC, or the
+map of the attached player if the NPC can't be found.
+
+Valid <info> are:
+	MAPINFO_NAME     name of the map
+	MAPINFO_ID       numeric ID of the map
+	MAPINFO_ZONE     name of the zone used by the map
+	MAPINFO_SIZE_X   width of the map (cells on the x axis)
+	MAPINFO_SIZE_Y   height of the map (cells on the y axis)
+
+Examples:
+	getmapinfo(MAPINFO_ID, "map name"); // ID from name
+	getmapinfo(MAPINFO_NAME, 3); // name from ID
+	getmapinfo(MAPINFO_ZONE); // zone, ie Normal, PvP, Jail, ...
+
+---------------------------------------
+
 *getunits(<type>, <variable>, <limit>, "<map>"{, <x1>, <y1>, <x2>, <y2>})
 
 This function searches a whole map or area for units and adds their GID to
