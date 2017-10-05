@@ -4054,6 +4054,11 @@
 - `ITEMUPPER_THIRDBABY`: 32
 - `ITEMUPPER_ALL`: 63
 
+### dressroom modes
+
+- `DRESSROOM_OPEN`: 1
+- `DRESSROOM_CLOSE`: 0
+
 ### Renewal
 
 - `RENEWAL`: 1
