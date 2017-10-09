@@ -7800,10 +7800,10 @@ ACMD(cash)
 	}
 
 	if (!strcmpi(info->command,"cash")) {
-		if( value > 0 ) {
-			if( (pc->getcash(sd, value, 0)) >= 0){
+		if (value > 0) {
+			if ((pc->getcash(sd, value, 0)) >= 0) {
 				// If this option is set, the message is already sent by pc function
-				if( !battle_config.cashshop_show_points ){
+				if (!battle_config.cashshop_show_points) {
 					sprintf(output, msg_fd(fd,505), value, sd->cashPoints);
 					clif_disp_onlyself(sd, output);
 					clif->message(fd, output);
@@ -7811,7 +7811,7 @@ ACMD(cash)
 			} else
 				clif->message(fd, msg_fd(fd,149)); // Unable to decrease the number/value.
 		} else {
-			if( (pc->paycash(sd, -value, 0)) >= 0){
+			if ((pc->paycash(sd, -value, 0)) >= 0) {
 			    sprintf(output, msg_fd(fd,410), -value, sd->cashPoints);
 				clif_disp_onlyself(sd, output);
 				clif->message(fd, output);
@@ -7819,10 +7819,10 @@ ACMD(cash)
 				clif->message(fd, msg_fd(fd,41)); // Unable to decrease the number/value.
 		}
 	} else { // @points
-		if( value > 0 ) {
-			if( (pc->getcash(sd, 0, value)) >= 0) {
+		if (value > 0) {
+			if ((pc->getcash(sd, 0, value)) >= 0) {
 				// If this option is set, the message is already sent by pc function
-				if( !battle_config.cashshop_show_points ){
+				if (!battle_config.cashshop_show_points) {
 					sprintf(output, msg_fd(fd,506), value, sd->kafraPoints);
 					clif_disp_onlyself(sd, output);
 					clif->message(fd, output);
@@ -7830,7 +7830,7 @@ ACMD(cash)
 			} else
 				clif->message(fd, msg_fd(fd,149)); // Unable to decrease the number/value.
 		} else {
-			if( (pc->paycash(sd, -value, -value)) >= 0){
+			if ((pc->paycash(sd, -value, -value)) >= 0) {
 			    sprintf(output, msg_fd(fd,411), -value, sd->kafraPoints);
 				clif_disp_onlyself(sd, output);
 				clif->message(fd, output);
