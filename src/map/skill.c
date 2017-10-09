@@ -18881,7 +18881,7 @@ void skill_init_unit_layout (void)
 				}
 				break;
 			default:
-				skill->init_unit_layout_unknown(i);
+				skill->init_unit_layout_unknown(skill->dbs->db[i].nameid);
 				break;
 		}
 		if (!skill->dbs->unit_layout[pos].count)
