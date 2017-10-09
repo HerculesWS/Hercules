@@ -18984,7 +18984,7 @@ void skill_init_unit_layout (void)
 
 void skill_init_unit_layout_unknown(int skill_idx)
 {
-	ShowError("unknown unit layout at skill %d\n", skill_idx);
+	ShowError("unknown unit layout at skill %d\n", skill->dbs->db[skill_idx].nameid);
 }
 
 int skill_block_check(struct block_list *bl, sc_type type , uint16 skill_id)
