@@ -9476,8 +9476,8 @@ packet(0x96e,-1,clif->ackmergeitems);
 // 2017-02-28aRagexeRE
 #if PACKETVER >= 20170228
 // new packets
-	packet(0x0ac0,26);
-	packet(0x0ac1,26);
+	packet(0x0ac0,26,clif->pRodexOpenMailbox); // CZ_OPEN_RODEXBOX
+	packet(0x0ac1,26,clif->pRodexRefreshMaillist); // CZ_REQ_REFRESH_RODEX
 	packet(0x0ac2,-1);
 	packet(0x0ac3,2);
 	packet(0x0ac4,-1);

@@ -60,7 +60,7 @@ struct rodex_interface {
 	void (*final) (void);
 
 	bool (*isenabled) (void);
-	void (*open) (struct map_session_data *sd, int8 open_type);
+	void (*open) (struct map_session_data *sd, int8 open_type, int64 first_mail_id);
 	void (*next_page) (struct map_session_data *sd, int8 open_type, int64 last_mail_id);
 	void (*refresh) (struct map_session_data *sd, int8 open_type, int64 first_mail_id);
 	void (*add_item) (struct map_session_data *sd, int16 idx, int16 amount);

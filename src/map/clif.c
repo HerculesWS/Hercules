@@ -19470,8 +19470,9 @@ void clif_rodex_send_maillist(int fd, struct map_session_data *sd, int8 open_typ
 	WFIFOHEAD(fd, sizeof(*packet) + (sizeof(*inner) + RODEX_TITLE_LENGTH) * RODEX_MAIL_PER_PAGE);
 	packet = WFIFOP(fd, 0);
 	packet->PacketType = ((page_start == (VECTOR_LENGTH(sd->rodex.messages) - 1)) ? rodexmailList : rodexnextpage);
+#if PACKETVER < 20170419
 	packet->opentype = open_type;
-
+#endif
 	inner = WFIFOP(fd, size);
 
 	while (page_start >= 0 && count < RODEX_MAIL_PER_PAGE) {
@@ -19484,7 +19485,11 @@ void clif_rodex_send_maillist(int fd, struct map_session_data *sd, int8 open_typ
 		inner->MailID = msg->id;
 		inner->Isread = msg->is_read == true ? 1 : 0;
 		inner->type = msg->type;
+#if PACKETVER >= 20170419
+		inner->openType = msg->opentype;
+#else
 		inner->regDateTime = (int)time(NULL) - msg->send_date;
+#endif
 		inner->expireDateTime = msg->expire_date - (int)time(NULL);
 		if (open_type == RODEX_OPENTYPE_RETURN) {
 			inner->expireDateTime += RODEX_EXPIRE;
@@ -19502,9 +19507,77 @@ void clif_rodex_send_maillist(int fd, struct map_session_data *sd, int8 open_typ
 	}
 
 	packet->PacketLength = size;
+#if PACKETVER < 20170419
 	packet->cnt = count;
+#endif
 	packet->IsEnd = page_start > 0 ? 0 : 1;
 	WFIFOSET(fd, size);
+#endif
+}
+
+void clif_rodex_send_mails_all(int fd, struct map_session_data *sd)
+{
+#if PACKETVER >= 20170419
+	struct PACKET_ZC_MAIL_LIST *packet;
+	struct maillistinfo *inner;
+	int16 size = sizeof(*packet);
+	int packetMailCount = 0;
+	int mailListCount = 0;
+	int mailsSize = VECTOR_LENGTH(sd->rodex.messages);
+	int i;
+
+	nullpo_retv(sd);
+
+	WFIFOHEAD(fd, sizeof(*packet) + (sizeof(*inner) + RODEX_TITLE_LENGTH) * RODEX_MAIL_PER_PAGE);
+	packet = WFIFOP(fd, 0);
+	packet->PacketType = rodexmailList;
+	inner = WFIFOP(fd, size);
+
+	i = mailsSize - 1;
+	while (i >= 0) {
+		struct rodex_message *msg = &VECTOR_INDEX(sd->rodex.messages, i);
+		--i;
+
+		if (msg->is_deleted)
+			continue;
+
+		inner->MailID = msg->id;
+		inner->Isread = msg->is_read == true ? 1 : 0;
+		inner->type = msg->type;
+		inner->openType = msg->opentype;
+		inner->expireDateTime = msg->expire_date - (int)time(NULL);
+		if (msg->opentype == RODEX_OPENTYPE_RETURN) {
+			inner->expireDateTime += RODEX_EXPIRE;
+		}
+		inner->Titlelength = (int16)strlen(msg->title) + 1;
+		if (msg->opentype != RODEX_OPENTYPE_RETURN) {
+			strncpy(inner->SenderName, msg->sender_name, sizeof(msg->sender_name));
+		} else {
+			strncpy(inner->SenderName, msg->receiver_name, sizeof(msg->receiver_name));
+		}
+		strncpy(inner->title, msg->title, inner->Titlelength);
+		size += sizeof(*inner) + inner->Titlelength;
+		inner = WFIFOP(fd, size);
+		packetMailCount ++;
+		mailListCount ++;
+		if (packetMailCount == RODEX_MAIL_PER_PAGE) {
+			packet->PacketLength = size;
+			packet->IsEnd = mailListCount > mailsSize ? 1 : 0;
+			WFIFOSET(fd, size);
+			WFIFOHEAD(fd, sizeof(*packet) + (sizeof(*inner) + RODEX_TITLE_LENGTH) * RODEX_MAIL_PER_PAGE);
+			packet = WFIFOP(fd, 0);
+			packet->PacketType = rodexmailList;
+			size = sizeof(*packet);
+			inner = WFIFOP(fd, size);
+			packetMailCount = 0;
+		}
+	}
+
+	if (packetMailCount > 0 || mailListCount == 0) {
+		packet->PacketLength = size;
+		packet->IsEnd = 1;
+		WFIFOSET(fd, size);
+	}
 #endif
 }
 
@@ -19521,8 +19594,9 @@ void clif_rodex_send_refresh(int fd, struct map_session_data *sd, int8 open_type
 	WFIFOHEAD(fd, sizeof(*packet) + (sizeof(*inner) + RODEX_TITLE_LENGTH) * RODEX_MAIL_PER_PAGE);
 	packet = WFIFOP(fd, 0);
 	packet->PacketType = rodexmailList;
+#if PACKETVER < 20170419
 	packet->opentype = open_type;
-
+#endif
 	inner = WFIFOP(fd, size);
 
 	i = VECTOR_LENGTH(sd->rodex.messages) - 1;
@@ -19537,7 +19611,11 @@ void clif_rodex_send_refresh(int fd, struct map_session_data *sd, int8 open_type
 		inner->MailID = msg->id;
 		inner->Isread = msg->is_read == true ? 1 : 0;
 		inner->type = msg->type;
+#if PACKETVER >= 20170419
+		inner->openType = msg->opentype;
+#else
 		inner->regDateTime = (int)time(NULL) - msg->send_date;
+#endif
 		inner->expireDateTime = msg->expire_date - (int)time(NULL);
 		if (open_type == RODEX_OPENTYPE_RETURN) {
 			inner->expireDateTime += RODEX_EXPIRE;
@@ -19555,7 +19633,9 @@ void clif_rodex_send_refresh(int fd, struct map_session_data *sd, int8 open_type
 	}
 
 	packet->PacketLength = size;
+#if PACKETVER < 20170419
 	packet->cnt = count;
+#endif
 	packet->IsEnd = 1;
 	WFIFOSET(fd, size);
 #endif
@@ -19730,14 +19810,22 @@ void clif_parse_rodex_refresh_maillist(int fd, struct map_session_data *sd) __at
 void clif_parse_rodex_refresh_maillist(int fd, struct map_session_data *sd)
 {
 	const struct PACKET_CZ_REQ_REFRESH_MAIL_LIST *packet = RFIFOP(fd, 0);
+#if PACKETVER >= 20170419
+	rodex->refresh(sd, RODEX_OPENTYPE_UNSET, packet->Upper_MailID);
+#else
 	rodex->refresh(sd, packet->opentype, packet->Upper_MailID);
+#endif
 }
 
 void clif_parse_rodex_open_mailbox(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
 void clif_parse_rodex_open_mailbox(int fd, struct map_session_data *sd)
 {
 	const struct PACKET_CZ_REQ_OPEN_MAIL *packet = RFIFOP(fd, 0);
-	rodex->open(sd, packet->opentype);
+#if PACKETVER >= 20170419
+	rodex->open(sd, RODEX_OPENTYPE_UNSET, packet->Upper_MailID);
+#else
+	rodex->open(sd, packet->opentype, packet->Upper_MailID);
+#endif
 	rodex->clean(sd, 1);
 }
 
@@ -20822,4 +20910,5 @@ void clif_defaults(void) {
 	clif->pRodexRequestItems = clif_parse_rodex_request_items;
 	clif->rodex_request_items = clif_rodex_request_items;
 	clif->rodex_icon = clif_rodex_icon;
+	clif->rodex_send_mails_all = clif_rodex_send_mails_all;
 }

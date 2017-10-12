@@ -2433,7 +2433,9 @@ int intif_rodex_requestinbox(int char_id, int account_id, int8 flag, int8 openty
 void intif_parse_RequestRodexOpenInbox(int fd)
 {
 	struct map_session_data *sd;
+#if PACKETVER < 20170419
 	int8 opentype = RFIFOB(fd, 8);
+#endif
 	int8 flag = RFIFOB(fd, 9);
 	int8 is_end = RFIFOB(fd, 10);
 	int count = RFIFOL(fd, 11);
@@ -2461,10 +2463,14 @@ void intif_parse_RequestRodexOpenInbox(int fd)
 	}
 
 	if (is_end == true) {
+#if PACKETVER >= 20170419
+		clif->rodex_send_mails_all(sd->fd, sd);
+#else
 		if (flag == 0)
 			clif->rodex_send_maillist(sd->fd, sd, opentype, VECTOR_LENGTH(sd->rodex.messages) - 1);
 		else
 			clif->rodex_send_refresh(sd->fd, sd, opentype, count);
+#endif
 	}
 }
 

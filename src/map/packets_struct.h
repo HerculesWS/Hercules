@@ -318,10 +318,12 @@ enum packet_headers {
 	rodexadditem = 0x0A05,
 	rodexremoveitem = 0x0A07,
 	rodexopenwrite = 0x0A12,
-#if PACKETVER < 20160600
+#if PACKETVER < 20160601
 	rodexmailList = 0x09F0,
-#else // PACKETVER >= 20160600
+#elif PACKETVER < 20170419
 	rodexmailList = 0x0A7D,
+#else // PACKETVER >= 20170419
+	rodexmailList = 0x0Ac2,
 #endif
 #if PACKETVER < 20160316
 	rodexcheckplayer = 0x0A14,
@@ -1369,11 +1371,16 @@ struct PACKET_ZC_NOTIFY_UNREADMAIL {
 } __attribute__((packed));
 
 struct maillistinfo {
+#if PACKETVER >= 20170419
+	uint8 openType;
+#endif
 	int64 MailID;
 	int8 Isread;
 	uint8 type;
 	char SenderName[24];
+#if PACKETVER < 20170419
 	int32 regDateTime;
+#endif
 	int32 expireDateTime;
 	int16 Titlelength;
 	char title[];
@@ -1382,8 +1389,10 @@ struct maillistinfo {
 struct PACKET_ZC_MAIL_LIST {
 	int16 PacketType;
 	int16 PacketLength;
+#if PACKETVER < 20170419
 	int8 opentype;
 	int8 cnt;
+#endif
 	int8 IsEnd;
 } __attribute__((packed));
 
@@ -1395,8 +1404,13 @@ struct PACKET_CZ_REQ_NEXT_MAIL_LIST {
 
 struct PACKET_CZ_REQ_OPEN_MAIL {
 	int16 PacketType;
+#if PACKETVER >= 20170419
+	int64 Upper_MailID;
+	int8 unknown[16];
+#else
 	int8 opentype;
 	int64 Upper_MailID;
+#endif
 } __attribute__((packed));
 
 struct PACKET_CZ_REQ_READ_MAIL {
@@ -1429,8 +1443,13 @@ struct PACKET_ZC_ACK_DELETE_MAIL {
 
 struct PACKET_CZ_REQ_REFRESH_MAIL_LIST {
 	int16 PacketType;
+#if PACKETVER >= 20170419
+	int64 Upper_MailID;
+	int8 unknown[16];
+#else
 	int8 opentype;
 	int64 Upper_MailID;
+#endif
 } __attribute__((packed));
 
 struct PACKET_CZ_REQ_ZENY_FROM_MAIL {

@@ -10602,10 +10602,10 @@ void HP_clif_equpcheckbox(struct map_session_data *sd) {
 	}
 	return;
 }
-void HP_clif_displayexp(struct map_session_data *sd, unsigned int exp, char type, bool is_quest) {
+void HP_clif_displayexp(struct map_session_data *sd, uint64 exp, char type, bool is_quest) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_displayexp_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, unsigned int *exp, char *type, bool *is_quest);
+		void (*preHookFunc) (struct map_session_data **sd, uint64 *exp, char *type, bool *is_quest);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_displayexp_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_displayexp_pre[hIndex].func;
@@ -10620,7 +10620,7 @@ void HP_clif_displayexp(struct map_session_data *sd, unsigned int exp, char type
 		HPMHooks.source.clif.displayexp(sd, exp, type, is_quest);
 	}
 	if (HPMHooks.count.HP_clif_displayexp_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, unsigned int exp, char type, bool is_quest);
+		void (*postHookFunc) (struct map_session_data *sd, uint64 exp, char type, bool is_quest);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_displayexp_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_displayexp_post[hIndex].func;
 			postHookFunc(sd, exp, type, is_quest);
@@ -27645,11 +27645,11 @@ int HP_guild_getposition(struct guild *g, struct map_session_data *sd) {
 	}
 	return retVal___;
 }
-unsigned int HP_guild_payexp(struct map_session_data *sd, unsigned int exp) {
+uint64 HP_guild_payexp(struct map_session_data *sd, uint64 exp) {
 	int hIndex = 0;
-	unsigned int retVal___ = 0;
+	uint64 retVal___ = 0;
 	if (HPMHooks.count.HP_guild_payexp_pre > 0) {
-		unsigned int (*preHookFunc) (struct map_session_data **sd, unsigned int *exp);
+		uint64 (*preHookFunc) (struct map_session_data **sd, uint64 *exp);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_guild_payexp_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_guild_payexp_pre[hIndex].func;
@@ -27664,7 +27664,7 @@ unsigned int HP_guild_payexp(struct map_session_data *sd, unsigned int exp) {
 		retVal___ = HPMHooks.source.guild.payexp(sd, exp);
 	}
 	if (HPMHooks.count.HP_guild_payexp_post > 0) {
-		unsigned int (*postHookFunc) (unsigned int retVal___, struct map_session_data *sd, unsigned int exp);
+		uint64 (*postHookFunc) (uint64 retVal___, struct map_session_data *sd, uint64 exp);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_guild_payexp_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_guild_payexp_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd, exp);
@@ -55930,11 +55930,11 @@ int HP_pc_checkjoblevelup(struct map_session_data *sd) {
 	}
 	return retVal___;
 }
-bool HP_pc_gainexp(struct map_session_data *sd, struct block_list *src, unsigned int base_exp, unsigned int job_exp, bool is_quest) {
+bool HP_pc_gainexp(struct map_session_data *sd, struct block_list *src, uint64 base_exp, uint64 job_exp, bool is_quest) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if (HPMHooks.count.HP_pc_gainexp_pre > 0) {
-		bool (*preHookFunc) (struct map_session_data **sd, struct block_list **src, unsigned int *base_exp, unsigned int *job_exp, bool *is_quest);
+		bool (*preHookFunc) (struct map_session_data **sd, struct block_list **src, uint64 *base_exp, uint64 *job_exp, bool *is_quest);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_gainexp_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_pc_gainexp_pre[hIndex].func;
@@ -55949,7 +55949,7 @@ bool HP_pc_gainexp(struct map_session_data *sd, struct block_list *src, unsigned
 		retVal___ = HPMHooks.source.pc.gainexp(sd, src, base_exp, job_exp, is_quest);
 	}
 	if (HPMHooks.count.HP_pc_gainexp_post > 0) {
-		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, struct block_list *src, unsigned int base_exp, unsigned int job_exp, bool is_quest);
+		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, struct block_list *src, uint64 base_exp, uint64 job_exp, bool is_quest);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_gainexp_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_pc_gainexp_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd, src, base_exp, job_exp, is_quest);
@@ -55957,11 +55957,11 @@ bool HP_pc_gainexp(struct map_session_data *sd, struct block_list *src, unsigned
 	}
 	return retVal___;
 }
-unsigned int HP_pc_nextbaseexp(const struct map_session_data *sd) {
+uint64 HP_pc_nextbaseexp(const struct map_session_data *sd) {
 	int hIndex = 0;
-	unsigned int retVal___ = 0;
+	uint64 retVal___ = 0;
 	if (HPMHooks.count.HP_pc_nextbaseexp_pre > 0) {
-		unsigned int (*preHookFunc) (const struct map_session_data **sd);
+		uint64 (*preHookFunc) (const struct map_session_data **sd);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_nextbaseexp_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_pc_nextbaseexp_pre[hIndex].func;
@@ -55976,7 +55976,7 @@ unsigned int HP_pc_nextbaseexp(const struct map_session_data *sd) {
 		retVal___ = HPMHooks.source.pc.nextbaseexp(sd);
 	}
 	if (HPMHooks.count.HP_pc_nextbaseexp_post > 0) {
-		unsigned int (*postHookFunc) (unsigned int retVal___, const struct map_session_data *sd);
+		uint64 (*postHookFunc) (uint64 retVal___, const struct map_session_data *sd);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_nextbaseexp_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_pc_nextbaseexp_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd);
@@ -55984,11 +55984,11 @@ unsigned int HP_pc_nextbaseexp(const struct map_session_data *sd) {
 	}
 	return retVal___;
 }
-unsigned int HP_pc_thisbaseexp(const struct map_session_data *sd) {
+uint64 HP_pc_thisbaseexp(const struct map_session_data *sd) {
 	int hIndex = 0;
-	unsigned int retVal___ = 0;
+	uint64 retVal___ = 0;
 	if (HPMHooks.count.HP_pc_thisbaseexp_pre > 0) {
-		unsigned int (*preHookFunc) (const struct map_session_data **sd);
+		uint64 (*preHookFunc) (const struct map_session_data **sd);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_thisbaseexp_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_pc_thisbaseexp_pre[hIndex].func;
@@ -56003,7 +56003,7 @@ unsigned int HP_pc_thisbaseexp(const struct map_session_data *sd) {
 		retVal___ = HPMHooks.source.pc.thisbaseexp(sd);
 	}
 	if (HPMHooks.count.HP_pc_thisbaseexp_post > 0) {
-		unsigned int (*postHookFunc) (unsigned int retVal___, const struct map_session_data *sd);
+		uint64 (*postHookFunc) (uint64 retVal___, const struct map_session_data *sd);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_thisbaseexp_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_pc_thisbaseexp_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd);
@@ -56011,11 +56011,11 @@ unsigned int HP_pc_thisbaseexp(const struct map_session_data *sd) {
 	}
 	return retVal___;
 }
-unsigned int HP_pc_nextjobexp(const struct map_session_data *sd) {
+uint64 HP_pc_nextjobexp(const struct map_session_data *sd) {
 	int hIndex = 0;
-	unsigned int retVal___ = 0;
+	uint64 retVal___ = 0;
 	if (HPMHooks.count.HP_pc_nextjobexp_pre > 0) {
-		unsigned int (*preHookFunc) (const struct map_session_data **sd);
+		uint64 (*preHookFunc) (const struct map_session_data **sd);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_nextjobexp_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_pc_nextjobexp_pre[hIndex].func;
@@ -56030,7 +56030,7 @@ unsigned int HP_pc_nextjobexp(const struct map_session_data *sd) {
 		retVal___ = HPMHooks.source.pc.nextjobexp(sd);
 	}
 	if (HPMHooks.count.HP_pc_nextjobexp_post > 0) {
-		unsigned int (*postHookFunc) (unsigned int retVal___, const struct map_session_data *sd);
+		uint64 (*postHookFunc) (uint64 retVal___, const struct map_session_data *sd);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_nextjobexp_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_pc_nextjobexp_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd);
@@ -56038,11 +56038,11 @@ unsigned int HP_pc_nextjobexp(const struct map_session_data *sd) {
 	}
 	return retVal___;
 }
-unsigned int HP_pc_thisjobexp(const struct map_session_data *sd) {
+uint64 HP_pc_thisjobexp(const struct map_session_data *sd) {
 	int hIndex = 0;
-	unsigned int retVal___ = 0;
+	uint64 retVal___ = 0;
 	if (HPMHooks.count.HP_pc_thisjobexp_pre > 0) {
-		unsigned int (*preHookFunc) (const struct map_session_data **sd);
+		uint64 (*preHookFunc) (const struct map_session_data **sd);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_thisjobexp_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_pc_thisjobexp_pre[hIndex].func;
@@ -56057,7 +56057,7 @@ unsigned int HP_pc_thisjobexp(const struct map_session_data *sd) {
 		retVal___ = HPMHooks.source.pc.thisjobexp(sd);
 	}
 	if (HPMHooks.count.HP_pc_thisjobexp_post > 0) {
-		unsigned int (*postHookFunc) (unsigned int retVal___, const struct map_session_data *sd);
+		uint64 (*postHookFunc) (uint64 retVal___, const struct map_session_data *sd);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_thisjobexp_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_pc_thisjobexp_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd);
@@ -58826,10 +58826,10 @@ int HP_pc_bonus_item_drop(struct s_add_drop *drop, const short max, short id, sh
 	}
 	return retVal___;
 }
-void HP_pc_calcexp(struct map_session_data *sd, unsigned int *base_exp, unsigned int *job_exp, struct block_list *src) {
+void HP_pc_calcexp(struct map_session_data *sd, uint64 *base_exp, uint64 *job_exp, struct block_list *src) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_pc_calcexp_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, unsigned int **base_exp, unsigned int **job_exp, struct block_list **src);
+		void (*preHookFunc) (struct map_session_data **sd, uint64 **base_exp, uint64 **job_exp, struct block_list **src);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_calcexp_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_pc_calcexp_pre[hIndex].func;
@@ -58844,7 +58844,7 @@ void HP_pc_calcexp(struct map_session_data *sd, unsigned int *base_exp, unsigned
 		HPMHooks.source.pc.calcexp(sd, base_exp, job_exp, src);
 	}
 	if (HPMHooks.count.HP_pc_calcexp_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, unsigned int *base_exp, unsigned int *job_exp, struct block_list *src);
+		void (*postHookFunc) (struct map_session_data *sd, uint64 *base_exp, uint64 *job_exp, struct block_list *src);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_calcexp_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_pc_calcexp_post[hIndex].func;
 			postHookFunc(sd, base_exp, job_exp, src);
@@ -61893,14 +61893,14 @@ bool HP_rodex_isenabled(void) {
 	}
 	return retVal___;
 }
-void HP_rodex_open(struct map_session_data *sd, int8 open_type) {
+void HP_rodex_open(struct map_session_data *sd, int8 open_type, int64 first_mail_id) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_rodex_open_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, int8 *open_type);
+		void (*preHookFunc) (struct map_session_data **sd, int8 *open_type, int64 *first_mail_id);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_rodex_open_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_rodex_open_pre[hIndex].func;
-			preHookFunc(&sd, &open_type);
+			preHookFunc(&sd, &open_type, &first_mail_id);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -61908,13 +61908,13 @@ void HP_rodex_open(struct map_session_data *sd, int8 open_type) {
 		}
 	}
 	{
-		HPMHooks.source.rodex.open(sd, open_type);
+		HPMHooks.source.rodex.open(sd, open_type, first_mail_id);
 	}
 	if (HPMHooks.count.HP_rodex_open_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, int8 open_type);
+		void (*postHookFunc) (struct map_session_data *sd, int8 open_type, int64 first_mail_id);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_rodex_open_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_rodex_open_post[hIndex].func;
-			postHookFunc(sd, open_type);
+			postHookFunc(sd, open_type, first_mail_id);
 		}
 	}
 	return;

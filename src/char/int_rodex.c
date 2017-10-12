@@ -92,6 +92,19 @@ static int inter_rodex_fromsql(int char_id, int account_id, int8 opentype, int64
 			return -1;
 		}
 		break;
+
+	case RODEX_OPENTYPE_UNSET:
+		if (SQL_ERROR == SQL->StmtPrepare(stmt,
+			"SELECT `mail_id`, `sender_name`, `sender_id`, `receiver_name`, `receiver_id`, `receiver_accountid`,"
+			"`title`, `body`, `zeny`, `type`, `is_read`, `send_date`, `expire_date`, `weight`"
+			"FROM `%s` WHERE `expire_date` > '%d' AND (`receiver_id` = '%d' or `receiver_accountid` = '%d') AND `mail_id` > '%"PRId64"'"
+			"ORDER BY `mail_id` ASC", rodex_db, (int)time(NULL), char_id, account_id, mail_id)
+			) {
+			SqlStmt_ShowDebug(stmt);
+			SQL->StmtFree(stmt);
+			return -1;
+		}
+		break;
 	}
 
 	if (SQL_ERROR == SQL->StmtExecute(stmt)
@@ -173,7 +186,18 @@ static int inter_rodex_fromsql(int char_id, int account_id, int8 opentype, int64
 			msg.type &= ~MAIL_TYPE_ZENY;
 		}
 
+#if PACKETVER >= 20170419
+		if (opentype == RODEX_OPENTYPE_UNSET) {
+			if (msg.receiver_id != 0)
+				msg.opentype = RODEX_OPENTYPE_MAIL;
+			else
+				msg.opentype = RODEX_OPENTYPE_ACCOUNT;
+		} else {
+			msg.opentype = opentype;
+		}
+#else
 		msg.opentype = opentype;
+#endif
 #if PACKETVER < 20160601
 		// NPC Message Type isn't supported in old clients
 		msg.type &= ~MAIL_TYPE_NPC;

@@ -276,7 +276,11 @@ STATIC_ASSERT(MAX_ITEM_OPTIONS <= 5, "This value is limited by the client and da
 #define RODEX_BODY_LENGTH (500 + 1)
 #define RODEX_MAX_ITEM (5)
 #define RODEX_EXPIRE (1 * 15 * 24 * 60 * 60)
+#if PACKETVER >= 20170419
+#define RODEX_MAIL_PER_PAGE 32
+#else
 #define RODEX_MAIL_PER_PAGE 7
+#endif
 
 // The following system marks a different job ID system used by the map server,
 // which makes a lot more sense than the normal one. [Skotlex]
@@ -851,6 +855,7 @@ enum rodex_opentype {
 	RODEX_OPENTYPE_MAIL = 0,
 	RODEX_OPENTYPE_ACCOUNT = 1,
 	RODEX_OPENTYPE_RETURN = 2,
+	RODEX_OPENTYPE_UNSET = 3,
 };
 
 enum MAIL_TYPE {
