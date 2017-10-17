@@ -260,6 +260,7 @@ pre_re:gcc-6_sanitize:
   script:
     - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot --disable-renewal --disable-manager --enable-sanitize=full
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+  allow_failure: true
 
 re:gcc-6_sanitize:
   <<: *branch_exceptions
@@ -272,6 +273,7 @@ re:gcc-6_sanitize:
   script:
     - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot --disable-manager --enable-sanitize=full
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+  allow_failure: true
 
 pre_re:gcc-6_i386_sanitize:
   <<: *branch_exceptions
