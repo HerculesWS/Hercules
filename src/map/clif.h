@@ -385,6 +385,7 @@ enum clif_messages {
 	MSG_SECONDS_UNTIL_USE          = 0x746, ///< %d seconds left until you can use
 	MSG_NPC_WORK_IN_PROGRESS       = 0x783, // FIXME[Haru]: This seems to be 0x784 in the msgstringtable files I found.
 	MSG_REINS_CANT_USE_MOUNTED     = 0x78b, // FIXME[Haru]: This seems to be 0x785 in the msgstringtalbe files I found.
+	MSG_PARTY_LEADER_SAMEMAP       = 0x82e, //< It is only possible to change the party leader while on the same map.
 };
 
 /**
