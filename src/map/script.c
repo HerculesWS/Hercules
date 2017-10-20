@@ -14197,31 +14197,36 @@ BUILDIN(setequipoption)
 
 	if (equip_index > 0 && equip_index <= ARRAYLENGTH(script->equip)) {
 		if ((i = pc->checkequip(sd, script->equip[equip_index - 1])) == -1) {
-			ShowError("buildin_setequipoptioninfo: No equipment is equipped in the given index %d.\n", equip_index);
+			ShowError("buildin_setequipoption: No equipment is equipped in the given index %d.\n", equip_index);
 			script_pushint(st, 0);
 			return false;
 		}
 	} else {
-		ShowError("buildin_setequipoptioninfo: Invalid equipment index %d provided.\n", equip_index);
+		ShowError("buildin_setequipoption: Invalid equipment index %d provided.\n", equip_index);
 		script_pushint(st, 0);
 		return false;
 	}
 
 	if (sd->status.inventory[i].nameid != 0) {
-
-		if ((ito = itemdb->option_exists(opt_index)) == NULL) {
-			script_pushint(st, 0);
-			ShowError("buildin_setequipotion: Option index %d does not exist!\n", opt_index);
-			return false;
-		} else if (value < -INT16_MAX || value > INT16_MAX) {
-			script_pushint(st, 0);
-			ShowError("buildin_setequipotion: Option value %d exceeds maximum limit (%d to %d) for type!\n", value, -INT16_MAX, INT16_MAX);
-			return false;
+		if (opt_index == 0) {
+			// Remove the option
+			sd->status.inventory[i].option[slot-1].index = 0;
+			sd->status.inventory[i].option[slot-1].value = 0;
+		} else {
+			if ((ito = itemdb->option_exists(opt_index)) == NULL) {
+				script_pushint(st, 0);
+				ShowError("buildin_setequipotion: Option index %d does not exist!\n", opt_index);
+				return false;
+			} else if (value < -INT16_MAX || value > INT16_MAX) {
+				script_pushint(st, 0);
+				ShowError("buildin_setequipotion: Option value %d exceeds maximum limit (%d to %d) for type!\n", value, -INT16_MAX, INT16_MAX);
+				return false;
+			}
+			/* Add Option Index */
+			sd->status.inventory[i].option[slot-1].index = ito->index;
+			/* Add Option Value */
+			sd->status.inventory[i].option[slot-1].value = value;
 		}
-		/* Add Option Index */
-		sd->status.inventory[i].option[slot-1].index = ito->index;
-		/* Add Option Value */
-		sd->status.inventory[i].option[slot-1].value = value;
 
 		/* Unequip and simulate deletion of the item. */
 		pc->unequipitem(sd, i, PCUNEQUIPITEM_FORCE); // status calc will happen in pc->equipitem() below
