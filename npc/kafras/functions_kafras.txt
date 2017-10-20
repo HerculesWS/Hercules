@@ -216,14 +216,23 @@ function	script	F_KafStor	{
 		// Niflheim Specific Message
 		if (getarg(2) == 1) {
 			mes "^666666S-s-ssoooorry,";
-			mes "y-you're a-a-aaaa";
-			mes "Nooviiice... N-neeeds";
-			mes "B-basic sssskill l-level 6...^000000";
+			if (Class == Job_Summoner) {
+				mes "y-you n-neeed";
+				mes "N-new b-basic sssskill...^000000";
+			} else {
+				mes "y-you're a-a-aaaa";
+				mes "Nooviiice... N-neeeds";
+				mes "B-basic sssskill l-level 6...^000000";
+			}
 			return;
 		}
 		mes "I'm sorry, but you";
-		mes "need the Novice's";
-		mes "Basic Skill Level 6 to";
+		if (Class == Job_Summoner) {
+			mes "need the New Basic Skill to";
+		} else {
+			mes "need the Novice's";
+			mes "Basic Skill Level 6 to";
+		}
 		mes "use the Storage Service.";
 		return;
 	}
