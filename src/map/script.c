@@ -12779,6 +12779,76 @@ BUILDIN(setmapflagnosave) {
 	return true;
 }
 
+enum mapinfo_info {
+	MAPINFO_NAME,
+	MAPINFO_ID,
+	MAPINFO_SIZE_X,
+	MAPINFO_SIZE_Y,
+	MAPINFO_ZONE
+};
+
+BUILDIN(getmapinfo)
+{
+	enum mapinfo_info mode = script_getnum(st, 2);
+	int16 m;
+
+	if (script_hasdata(st, 3)) {
+		if (script_isstringtype(st, 3)) {
+			const char *str = script_getstr(st, 3);
+			m = map->mapname2mapid(str);
+		} else {
+			m = script_getnum(st, 3);
+		}
+	} else {
+		struct block_list *bl = NULL;
+
+		if (st->oid) {
+			bl = map->id2bl(st->oid);
+		} else if (st->rid) {
+			bl = map->id2bl(st->rid);
+		}
+
+		if (bl == NULL) {
+			ShowError("script:getmapinfo: map not supplied and NPC/PC not attached!\n");
+			script_pushint(st, -3);
+			return false;
+		}
+
+		m = bl->m;
+	}
+
+	if (m < 0) {
+		// here we don't throw an error, so the command can be used
+		// to detect whether or not a map exists
+		script_pushint(st, -1);
+		return true;
+	}
+
+	switch (mode) {
+	case MAPINFO_NAME:
+		script_pushconststr(st, map->list[m].name);
+		break;
+	case MAPINFO_ID:
+		script_pushint(st, m);
+		break;
+	case MAPINFO_SIZE_X:
+		script_pushint(st, map->list[m].xs);
+		break;
+	case MAPINFO_SIZE_Y:
+		script_pushint(st, map->list[m].ys);
+		break;
+	case MAPINFO_ZONE:
+		script_pushstrcopy(st, map->list[m].zone->name);
+		break;
+	default:
+		ShowError("script:getmapinfo: unknown option in second argument (%u).\n", mode);
+		script_pushint(st, -2);
+		return false;
+	}
+
+	return true;
+}
+
 BUILDIN(getmapflag)
 {
 	int16 m,i;
@@ -24012,6 +24082,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(isloggedin,"i?"),
 		BUILDIN_DEF(setmapflagnosave,"ssii"),
 		BUILDIN_DEF(getmapflag,"si"),
+		BUILDIN_DEF(getmapinfo,"i?"),
 		BUILDIN_DEF(setmapflag,"si?"),
 		BUILDIN_DEF(removemapflag,"si"),
 		BUILDIN_DEF(pvpon,"s"),
@@ -24669,6 +24740,13 @@ void script_hardcoded_constants(void)
 	script->constdb_comment("dressroom modes");
 	script->set_constant("DRESSROOM_OPEN", DRESSROOM_OPEN, false, false);
 	script->set_constant("DRESSROOM_CLOSE", DRESSROOM_CLOSE, false, false);
+
+	script->constdb_comment("getmapinfo options");
+	script->set_constant("MAPINFO_NAME", MAPINFO_NAME, false, false);
+	script->set_constant("MAPINFO_ID", MAPINFO_ID, false, false);
+	script->set_constant("MAPINFO_SIZE_X", MAPINFO_SIZE_X, false, false);
+	script->set_constant("MAPINFO_SIZE_Y", MAPINFO_SIZE_Y, false, false);
+	script->set_constant("MAPINFO_ZONE", MAPINFO_ZONE, false, false);
 
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL
