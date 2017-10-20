@@ -136,6 +136,7 @@ char char_name_letters[1024] = ""; // list of letters/symbols allowed (or not) i
 int char_del_level = 0; ///< From which level you can delete character [Lupus]
 int char_del_delay = 86400;
 bool char_aegis_delete = false; ///< Verify if char is in guild/party or char and reacts as Aegis does (disallow deletion), @see chr->delete2_req.
+bool char_aegis_rename = false; // whether or not the player can be renamed while in party/guild
 
 int max_connect_user = -1;
 int gm_allow_group = -1;
@@ -1487,6 +1488,29 @@ int char_rename_char_sql(struct char_session_data *sd, int char_id)
 
 	if( char_dat.rename == 0 )
 		return 1;
+
+	if (char_aegis_rename) {
+		int party_id = 0;
+		int guild_id = 0;
+		char *data;
+
+		if (SQL_SUCCESS != SQL->Query(inter->sql_handle, "SELECT `party_id`, `guild_id` FROM `%s` WHERE `char_id`='%d'", char_db, char_id)
+			|| SQL_SUCCESS != SQL->NextRow(inter->sql_handle)) {
+			Sql_ShowDebug(inter->sql_handle);
+			return 3; // A database error occurred
+		}
+
+		SQL->GetData(inter->sql_handle, 0, &data, NULL); party_id = atoi(data);
+		SQL->GetData(inter->sql_handle, 1, &data, NULL); guild_id = atoi(data);
+
+		if (guild_id > 0) {
+			return 1; // FIXME: unknown flag
+		}
+
+		if (party_id > 0) {
+			return 1; // FIXME: unknown flag
+		}
+	}
 
 	SQL->EscapeStringLen(inter->sql_handle, esc_name, sd->new_name, strnlen(sd->new_name, NAME_LENGTH));
 
@@ -5950,6 +5974,7 @@ bool char_config_read_player_name(const char *filename, const struct config_t *c
 	libconfig->setting_lookup_mutable_string(setting, "name_letters", char_name_letters, sizeof(char_name_letters));
 	libconfig->setting_lookup_int(setting, "name_option", &char_name_option);
 	libconfig->setting_lookup_bool_real(setting, "name_ignoring_case", &name_ignoring_case);
+	libconfig->setting_lookup_bool_real(setting, "use_aegis_rename", &char_aegis_rename);
 
 	return true;
 }
