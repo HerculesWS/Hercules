@@ -15785,19 +15785,37 @@ BUILDIN(getmapxy)
 	return true;
 }
 
+enum logmes_type {
+	LOGMES_NPC,
+	LOGMES_ATCOMMAND
+};
+
 /*==========================================
- * Allows player to write NPC logs (i.e. Bank NPC, etc) [Lupus]
+ * Allows player to write logs (i.e. Bank NPC, etc) [Lupus]
  *------------------------------------------*/
-BUILDIN(logmes)
-{
-	const char *str;
+BUILDIN(logmes) {
+	const char *str = script_getstr(st, 2);
 	struct map_session_data *sd = script->rid2sd(st);
+	enum logmes_type type = LOGMES_NPC;
+	nullpo_retr(sd, false);
 
-	if (sd == NULL)
-		return true;
+	if (script_hasdata(st, 3)) {
+		type = script_getnum(st, 3);
+	}
 
-	str = script_getstr(st,2);
-	logs->npc(sd,str);
+	switch (type) {
+	case LOGMES_ATCOMMAND:
+		logs->atcommand(sd, str);
+		break;
+	case LOGMES_NPC:
+		logs->npc(sd, str);
+		break;
+	default:
+		ShowError("script:logmes: Unknown log type!\n");
+		st->state = END;
+		return false;
+	}
+
 	return true;
 }
 
@@ -24070,7 +24088,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(checkoption2,"i?"),
 		BUILDIN_DEF(guildgetexp,"i"),
 		BUILDIN_DEF(guildchangegm,"is"),
-		BUILDIN_DEF(logmes,"s"), //this command actls as MES but rints info into LOG file either SQL/TXT [Lupus]
+		BUILDIN_DEF(logmes,"s?"), //this command actls as MES but rints info into LOG file either SQL/TXT [Lupus]
 		BUILDIN_DEF(summon,"si??"), // summons a slave monster [Celest]
 		BUILDIN_DEF(isnight,""), // check whether it is night time [Celest]
 		BUILDIN_DEF(isequipped,"i*"), // check whether another item/card has been equipped [Celest]
@@ -24596,6 +24614,10 @@ void script_hardcoded_constants(void)
 	script->set_constant("DATATYPE_PARAM", DATATYPE_PARAM, false, false);
 	script->set_constant("DATATYPE_VAR", DATATYPE_VAR, false, false);
 	script->set_constant("DATATYPE_LABEL", DATATYPE_LABEL, false, false);
+
+	script->constdb_comment("Logmes types");
+	script->set_constant("LOGMES_NPC", LOGMES_NPC, false, false);
+	script->set_constant("LOGMES_ATCOMMAND", LOGMES_ATCOMMAND, false, false);
 
 	script->constdb_comment("Item Subtypes (Weapon types)");
 	script->set_constant("W_FIST", W_FIST, false, false);

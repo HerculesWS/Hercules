@@ -7506,13 +7506,21 @@ window). It will not be displayed anywhere else.
 	debugmes("\033[38D\033[K ==Message== \n"); // enable colour code.
 ---------------------------------------
 
-*logmes("<message>")
+*logmes("<message>"{, <log type>})
 
-This command will write the message given to the map server NPC log file,
-as specified in 'conf/map/logs.conf'. If SQL logging is enabled, the message
-will go to the 'npclog' table.
+This command will write the message given to the map server log files, as
+specified in 'conf/map/logs.conf'. If SQL logging is enabled, the message will
+go to the specified log table. If logs are not enabled, nothing will happen.
 
-If logs are not enabled for NPCs, nothing will happen.
+Log types are:
+
+LOGMES_NPC - log to the 'npclog' table (Default)
+LOGMES_ATCOMMAND - log to the 'atcommandlog' table
+
+Example:
+
+    logmes("foobar");
+    logmes("foobar", LOGMES_ATCOMMAND);
 
 ---------------------------------------
 
