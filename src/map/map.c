@@ -447,6 +447,11 @@ int map_count_oncell(int16 m, int16 x, int16 y, int type, int flag) {
 					struct status_change *sc = status->get_sc(bl);
 					if (sc && (sc->option&OPTION_INVISIBLE))
 						continue;
+					if (bl->type == BL_NPC) {
+						const struct npc_data *nd = BL_UCCAST(BL_NPC, bl);
+						if (nd->class_ == FAKE_NPC || nd->class_ == HIDDEN_WARP_CLASS)
+							continue;
+					}
 				}
 				if (flag&0x1) {
 					struct unit_data *ud = unit->bl2ud(bl);
