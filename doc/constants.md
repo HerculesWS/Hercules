@@ -4004,6 +4004,11 @@
 - `DATATYPE_VAR`: 4096
 - `DATATYPE_LABEL`: 8192
 
+### Logmes types
+
+- `LOGMES_NPC`: 0
+- `LOGMES_ATCOMMAND`: 1
+
 ### Item Subtypes (Weapon types)
 
 - `W_FIST`: 0
@@ -4058,6 +4063,14 @@
 
 - `DRESSROOM_OPEN`: 1
 - `DRESSROOM_CLOSE`: 0
+
+### getmapinfo options
+
+- `MAPINFO_NAME`: 0
+- `MAPINFO_ID`: 1
+- `MAPINFO_SIZE_X`: 2
+- `MAPINFO_SIZE_Y`: 3
+- `MAPINFO_ZONE`: 4
 
 ### Renewal
 
