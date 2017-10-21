@@ -4300,6 +4300,8 @@ const char *npc_parse_mapflag(const char *w1, const char *w2, const char *w3, co
 		map->list[m].flag.reset=state;
 	else if (!strcmpi(w3,"notomb"))
 		map->list[m].flag.notomb=state;
+	else if (!strcmpi(w3, "noautoloot"))
+		map->list[m].flag.noautoloot = state;
 	else if (!strcmpi(w3,"adjust_unit_duration")) {
 		int skill_id, k;
 		char skill_name[MAP_ZONE_MAPFLAG_LENGTH], modifier[MAP_ZONE_MAPFLAG_LENGTH];
