@@ -970,6 +970,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->rodex_send_mail_result, HP_clif_rodex_send_mail_result) },
 	{ HP_POP(clif->rodex_send_maillist, HP_clif_rodex_send_maillist) },
 	{ HP_POP(clif->rodex_send_refresh, HP_clif_rodex_send_refresh) },
+	{ HP_POP(clif->rodex_send_mails_all, HP_clif_rodex_send_mails_all) },
 	{ HP_POP(clif->pRodexReadMail, HP_clif_pRodexReadMail) },
 	{ HP_POP(clif->rodex_read_mail, HP_clif_rodex_read_mail) },
 	{ HP_POP(clif->pRodexNextMaillist, HP_clif_pRodexNextMaillist) },

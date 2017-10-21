@@ -24671,6 +24671,32 @@ void HP_clif_rodex_send_refresh(int fd, struct map_session_data *sd, int8 open_t
 	}
 	return;
 }
+void HP_clif_rodex_send_mails_all(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_rodex_send_mails_all_pre > 0) {
+		void (*preHookFunc) (int *fd, struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_rodex_send_mails_all_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_rodex_send_mails_all_pre[hIndex].func;
+			preHookFunc(&fd, &sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.rodex_send_mails_all(fd, sd);
+	}
+	if (HPMHooks.count.HP_clif_rodex_send_mails_all_post > 0) {
+		void (*postHookFunc) (int fd, struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_rodex_send_mails_all_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_rodex_send_mails_all_post[hIndex].func;
+			postHookFunc(fd, sd);
+		}
+	}
+	return;
+}
 void HP_clif_pRodexReadMail(int fd, struct map_session_data *sd) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_pRodexReadMail_pre > 0) {

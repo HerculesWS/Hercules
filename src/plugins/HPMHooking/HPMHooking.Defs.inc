@@ -2260,6 +2260,8 @@ typedef void (*HPMHOOK_pre_clif_rodex_send_maillist) (int *fd, struct map_sessio
 typedef void (*HPMHOOK_post_clif_rodex_send_maillist) (int fd, struct map_session_data *sd, int8 open_type, int64 page_start);
 typedef void (*HPMHOOK_pre_clif_rodex_send_refresh) (int *fd, struct map_session_data **sd, int8 *open_type, int *count);
 typedef void (*HPMHOOK_post_clif_rodex_send_refresh) (int fd, struct map_session_data *sd, int8 open_type, int count);
+typedef void (*HPMHOOK_pre_clif_rodex_send_mails_all) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_rodex_send_mails_all) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pRodexReadMail) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pRodexReadMail) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_rodex_read_mail) (struct map_session_data **sd, int8 *opentype, struct rodex_message **msg);

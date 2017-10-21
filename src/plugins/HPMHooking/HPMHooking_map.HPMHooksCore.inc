@@ -1896,6 +1896,8 @@ struct {
 	struct HPMHookPoint *HP_clif_rodex_send_maillist_post;
 	struct HPMHookPoint *HP_clif_rodex_send_refresh_pre;
 	struct HPMHookPoint *HP_clif_rodex_send_refresh_post;
+	struct HPMHookPoint *HP_clif_rodex_send_mails_all_pre;
+	struct HPMHookPoint *HP_clif_rodex_send_mails_all_post;
 	struct HPMHookPoint *HP_clif_pRodexReadMail_pre;
 	struct HPMHookPoint *HP_clif_pRodexReadMail_post;
 	struct HPMHookPoint *HP_clif_rodex_read_mail_pre;
@@ -8093,6 +8095,8 @@ struct {
 	int HP_clif_rodex_send_maillist_post;
 	int HP_clif_rodex_send_refresh_pre;
 	int HP_clif_rodex_send_refresh_post;
+	int HP_clif_rodex_send_mails_all_pre;
+	int HP_clif_rodex_send_mails_all_post;
 	int HP_clif_pRodexReadMail_pre;
 	int HP_clif_pRodexReadMail_post;
 	int HP_clif_rodex_read_mail_pre;
