@@ -562,6 +562,8 @@ struct Battle_Config {
 	int feature_rodex_use_accountmail;
 
 	int feature_enable_homun_autofeed;
+
+	int storage_use_item;
 };
 
 /* criteria for battle_config.idletime_critera */
