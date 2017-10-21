@@ -8332,7 +8332,7 @@ int pc_setparam(struct map_session_data *sd, int type, int64 val)
 		if (val >= sd->status.job_level) {
 			if (val > pc->maxjoblv(sd))
 				val = pc->maxjoblv(sd);
-			sd->status.skill_point += val - sd->status.job_level;
+			sd->status.skill_point += (int)val - sd->status.job_level;
 			clif->updatestatus(sd, SP_SKILLPOINT);
 		}
 		sd->status.job_level = (int32)val;
@@ -8413,28 +8413,28 @@ int pc_setparam(struct map_session_data *sd, int type, int64 val)
 		}
 		break;
 	case SP_STR:
-		sd->status.str = cap_value(val, 1, pc_maxparameter(sd));
+		sd->status.str = cap_value((int)val, 1, pc_maxparameter(sd));
 		break;
 	case SP_AGI:
-		sd->status.agi = cap_value(val, 1, pc_maxparameter(sd));
+		sd->status.agi = cap_value((int)val, 1, pc_maxparameter(sd));
 		break;
 	case SP_VIT:
-		sd->status.vit = cap_value(val, 1, pc_maxparameter(sd));
+		sd->status.vit = cap_value((int)val, 1, pc_maxparameter(sd));
 		break;
 	case SP_INT:
-		sd->status.int_ = cap_value(val, 1, pc_maxparameter(sd));
+		sd->status.int_ = cap_value((int)val, 1, pc_maxparameter(sd));
 		break;
 	case SP_DEX:
-		sd->status.dex = cap_value(val, 1, pc_maxparameter(sd));
+		sd->status.dex = cap_value((int)val, 1, pc_maxparameter(sd));
 		break;
 	case SP_LUK:
-		sd->status.luk = cap_value(val, 1, pc_maxparameter(sd));
+		sd->status.luk = cap_value((int)val, 1, pc_maxparameter(sd));
 		break;
 	case SP_KARMA:
-		sd->status.karma = val;
+		sd->status.karma = (int)val;
 		break;
 	case SP_MANNER:
-		sd->status.manner = val;
+		sd->status.manner = (int)val;
 		if( val < 0 )
 			sc_start(NULL, &sd->bl, SC_NOCHAT, 100, 0, 0);
 		else {
