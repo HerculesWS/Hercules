@@ -358,7 +358,8 @@
 - `mf_reset`: 52
 - `mf_notomb`: 53
 - `mf_nocashshop`: 54
-- `mf_noviewid`: 55
+- `mf_noautoloot`: 55
+- `mf_noviewid`: 56
 
 ### Cell Properties
 
