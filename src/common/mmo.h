@@ -422,7 +422,7 @@ enum e_item_bound_type {
 #endif
 };
 
-enum {
+enum e_option {
 	OPTION_NOTHING      = 0x00000000,
 	OPTION_SIGHT        = 0x00000001,
 	OPTION_HIDE         = 0x00000002,
@@ -922,7 +922,7 @@ enum {
 };
 
 //These mark the ID of the jobs, as expected by the client. [Skotlex]
-enum {
+enum e_class {
 	JOB_NOVICE,
 	JOB_SWORDMAN,
 	JOB_MAGE,
