@@ -784,7 +784,7 @@ struct clif_interface {
 	void (*equiptickack) (struct map_session_data* sd, int flag);
 	void (*viewequip_ack) (struct map_session_data* sd, struct map_session_data* tsd);
 	void (*equpcheckbox) (struct map_session_data* sd);
-	void (*displayexp) (struct map_session_data *sd, unsigned int exp, char type, bool is_quest);
+	void (*displayexp) (struct map_session_data *sd, uint64 exp, char type, bool is_quest);
 	void (*font) (struct map_session_data *sd);
 	void (*progressbar) (struct map_session_data * sd, unsigned int color, unsigned int second);
 	void (*progressbar_abort) (struct map_session_data * sd);
@@ -1378,6 +1378,7 @@ struct clif_interface {
 	void (*rodex_send_mail_result) (int fd, struct map_session_data *sd, int8 result);
 	void (*rodex_send_maillist) (int fd, struct map_session_data *sd, int8 open_type, int64 page_start);
 	void (*rodex_send_refresh) (int fd, struct map_session_data *sd, int8 open_type, int count);
+	void (*rodex_send_mails_all) (int fd, struct map_session_data *sd);
 	void (*pRodexReadMail) (int fd, struct map_session_data *sd);
 	void (*rodex_read_mail) (struct map_session_data *sd, int8 opentype, struct rodex_message *msg);
 	void (*pRodexNextMaillist) (int fd, struct map_session_data *sd);

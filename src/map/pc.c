@@ -6698,8 +6698,9 @@ int pc_follow(struct map_session_data *sd,int target_id) {
 	return 0;
 }
 
-int pc_checkbaselevelup(struct map_session_data *sd) {
-	unsigned int next = pc->nextbaseexp(sd);
+int pc_checkbaselevelup(struct map_session_data *sd)
+{
+	uint64 next = pc->nextbaseexp(sd);
 
 	nullpo_ret(sd);
 	if (!next || sd->status.base_exp < next)
@@ -6763,7 +6764,7 @@ void pc_baselevelchanged(struct map_session_data *sd) {
 
 int pc_checkjoblevelup(struct map_session_data *sd)
 {
-	unsigned int next = pc->nextjobexp(sd);
+	uint64 next = pc->nextjobexp(sd);
 
 	nullpo_ret(sd);
 	if(!next || sd->status.job_exp < next)
@@ -6796,7 +6797,7 @@ int pc_checkjoblevelup(struct map_session_data *sd)
 /**
  * Alters EXP based on self bonuses that do not get shared with the party
  **/
-void pc_calcexp(struct map_session_data *sd, unsigned int *base_exp, unsigned int *job_exp, struct block_list *src) {
+void pc_calcexp(struct map_session_data *sd, uint64 *base_exp, uint64 *job_exp, struct block_list *src) {
 	int buff_ratio = 0, buff_job_ratio = 0, race_ratio = 0, pk_ratio = 0;
 	int64 jexp, bexp;
 
@@ -6861,8 +6862,8 @@ void pc_calcexp(struct map_session_data *sd, unsigned int *base_exp, unsigned in
 	bexp += apply_percentrate64(bexp, buff_ratio, 100);
 	jexp += apply_percentrate64(jexp, buff_ratio + buff_job_ratio, 100);
 
-	*job_exp = (unsigned int)cap_value(jexp, 1, UINT_MAX);
-	*base_exp = (unsigned int)cap_value(bexp, 1, UINT_MAX);
+	*job_exp = cap_value(jexp, 1, UINT64_MAX);
+	*base_exp = cap_value(bexp, 1, UINT64_MAX);
 }
 
 /**
@@ -6871,9 +6872,10 @@ void pc_calcexp(struct map_session_data *sd, unsigned int *base_exp, unsigned in
  * @param is_quest Used to let client know that the EXP was from a quest (clif->displayexp) PACKETVER >= 20091027
  * @retval true success
  **/
-bool pc_gainexp(struct map_session_data *sd, struct block_list *src, unsigned int base_exp,unsigned int job_exp,bool is_quest) {
-	float nextbp=0, nextjp=0;
-	unsigned int nextb=0, nextj=0;
+bool pc_gainexp(struct map_session_data *sd, struct block_list *src, uint64 base_exp, uint64 job_exp, bool is_quest)
+{
+	float nextbp = 0, nextjp = 0;
+	uint64 nextb = 0, nextj = 0;
 	nullpo_ret(sd);
 
 	if (sd->bl.prev == NULL || pc_isdead(sd))
@@ -6889,7 +6891,7 @@ bool pc_gainexp(struct map_session_data *sd, struct block_list *src, unsigned in
 		pc->calcexp(sd, &base_exp, &job_exp, src);
 
 	if (sd->status.guild_id > 0)
-		base_exp -= guild->payexp(sd,base_exp);
+		base_exp -= guild->payexp(sd, base_exp);
 
 	nextb = pc->nextbaseexp(sd);
 	nextj = pc->nextjobexp(sd);
@@ -6900,16 +6902,16 @@ bool pc_gainexp(struct map_session_data *sd, struct block_list *src, unsigned in
 		if (nextj > 0)
 			nextjp = (float) job_exp / (float) nextj;
 
-		if(battle_config.max_exp_gain_rate) {
+		if (battle_config.max_exp_gain_rate) {
 			if (nextbp > battle_config.max_exp_gain_rate/1000.) {
 				//Note that this value should never be greater than the original
 				//base_exp, therefore no overflow checks are needed. [Skotlex]
-				base_exp = (unsigned int)(battle_config.max_exp_gain_rate/1000.*nextb);
+				base_exp = (uint64)(battle_config.max_exp_gain_rate / 1000. * nextb);
 				if (sd->state.showexp)
 					nextbp = (float) base_exp / (float) nextb;
 			}
 			if (nextjp > battle_config.max_exp_gain_rate/1000.) {
-				job_exp = (unsigned int)(battle_config.max_exp_gain_rate/1000.*nextj);
+				job_exp = (uint64)(battle_config.max_exp_gain_rate / 1000. * nextj);
 				if (sd->state.showexp)
 					nextjp = (float) job_exp / (float) nextj;
 			}
@@ -6919,23 +6921,23 @@ bool pc_gainexp(struct map_session_data *sd, struct block_list *src, unsigned in
 	// Cap exp to the level up requirement of the previous level when you are at max level,
 	// otherwise cap at UINT_MAX (this is required for some S. Novice bonuses). [Skotlex]
 	if (base_exp) {
-		nextb = nextb?UINT_MAX:pc->thisbaseexp(sd);
-		if(sd->status.base_exp > nextb - base_exp)
+		nextb = nextb ? UINT64_MAX : pc->thisbaseexp(sd);
+		if (sd->status.base_exp > nextb - base_exp)
 			sd->status.base_exp = nextb;
 		else
 			sd->status.base_exp += base_exp;
 		pc->checkbaselevelup(sd);
-		clif->updatestatus(sd,SP_BASEEXP);
+		clif->updatestatus(sd, SP_BASEEXP);
 	}
 
 	if (job_exp) {
-		nextj = nextj?UINT_MAX:pc->thisjobexp(sd);
-		if(sd->status.job_exp > nextj - job_exp)
+		nextj = nextj ? UINT64_MAX : pc->thisjobexp(sd);
+		if (sd->status.job_exp > nextj - job_exp)
 			sd->status.job_exp = nextj;
 		else
 			sd->status.job_exp += job_exp;
 		pc->checkjoblevelup(sd);
-		clif->updatestatus(sd,SP_JOBEXP);
+		clif->updatestatus(sd, SP_JOBEXP);
 	}
 
 #if PACKETVER >= 20091027
@@ -6948,7 +6950,8 @@ bool pc_gainexp(struct map_session_data *sd, struct block_list *src, unsigned in
 	if(sd->state.showexp) {
 		char output[256];
 		sprintf(output,
-			"Experience Gained Base:%u (%.2f%%) Job:%u (%.2f%%)",base_exp,nextbp*(float)100,job_exp,nextjp*(float)100);
+			"Experience Gained Base:%"PRIu64" (%.2f%%) Job:%"PRIu64" (%.2f%%)",
+			base_exp, nextbp * (float)100, job_exp, nextjp * (float)100);
 		clif_disp_onlyself(sd, output);
 	}
 
@@ -6973,7 +6976,7 @@ int pc_maxjoblv(const struct map_session_data *sd)
  *------------------------------------------*/
 
 //Base exp needed for next level.
-unsigned int pc_nextbaseexp(const struct map_session_data *sd)
+uint64 pc_nextbaseexp(const struct map_session_data *sd)
 {
 	nullpo_ret(sd);
 
@@ -6984,7 +6987,7 @@ unsigned int pc_nextbaseexp(const struct map_session_data *sd)
 }
 
 //Base exp needed for this level.
-unsigned int pc_thisbaseexp(const struct map_session_data *sd)
+uint64 pc_thisbaseexp(const struct map_session_data *sd)
 {
 	if (sd->status.base_level > pc->maxbaselv(sd) || sd->status.base_level <= 1)
 		return 0;
@@ -7000,7 +7003,7 @@ unsigned int pc_thisbaseexp(const struct map_session_data *sd)
  *------------------------------------------*/
 
 //Job exp needed for next level.
-unsigned int pc_nextjobexp(const struct map_session_data *sd)
+uint64 pc_nextjobexp(const struct map_session_data *sd)
 {
 	nullpo_ret(sd);
 
@@ -7010,7 +7013,7 @@ unsigned int pc_nextjobexp(const struct map_session_data *sd)
 }
 
 //Job exp needed for this level.
-unsigned int pc_thisjobexp(const struct map_session_data *sd)
+uint64 pc_thisjobexp(const struct map_session_data *sd)
 {
 	if (sd->status.job_level > pc->maxjoblv(sd) || sd->status.job_level <= 1)
 		return 0;
@@ -7958,7 +7961,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 
 	// activate Steel body if a super novice dies at 99+% exp [celest]
 	if ((sd->job & MAPID_UPPERMASK) == MAPID_SUPER_NOVICE && !sd->state.snovice_dead_flag) {
-		unsigned int next = pc->nextbaseexp(sd);
+		uint64 next = pc->nextbaseexp(sd);
 		if( next == 0 ) next = pc->thisbaseexp(sd);
 		if (get_percentage64(sd->status.base_exp, next) >= 99) {
 			sd->state.snovice_dead_flag = 1;
@@ -10988,6 +10991,35 @@ int pc_split_atoui(char* str, unsigned int* val, char sep, int max)
 	return i;
 }
 
+int pc_split_atoui64(char* str, uint64* val, char sep, int max)
+{
+	static int warning=0;
+	int i,j;
+	nullpo_ret(val);
+	for (i=0; i<max; i++) {
+		double f;
+		if (!str) break;
+		f = atof(str);
+		if (f < 0)
+			val[i] = 0;
+		else if (f > UINT64_MAX) {
+			val[i] = UINT64_MAX;
+			if (!warning) {
+				warning = 1;
+				ShowWarning("pc_readdb (exp.txt): Required exp per level is capped to %"PRIu64"\n", UINT64_MAX);
+			}
+		} else
+			val[i] = (uint64)f;
+		str = strchr(str,sep);
+		if (str)
+			*str++=0;
+	}
+	//Zero up the remaining.
+	for(j=i; j < max; j++)
+		val[j] = 0;
+	return i;
+}
+
 /**
  * Parses the skill tree config file.
  *
@@ -11295,7 +11327,7 @@ int pc_readdb(void) {
 		count++;
 		job = jobs[0] = pc->class2idx(job_id);
 		//We send one less and then one more because the last entry in the exp array should hold 0.
-		pc->max_level[job][type] = pc_split_atoui(split[3], pc->exp_table[job][type],',',maxlv-1)+1;
+		pc->max_level[job][type] = pc_split_atoui64(split[3], pc->exp_table[job][type], ',', maxlv - 1) + 1;
 		//Reverse check in case the array has a bunch of trailing zeros... [Skotlex]
 		//The reasoning behind the -2 is this... if the max level is 5, then the array
 		//should look like this:
@@ -11932,7 +11964,7 @@ bool pc_process_chat_message(struct map_session_data *sd, const char *message)
  */
 void pc_check_supernovice_call(struct map_session_data *sd, const char *message)
 {
-	unsigned int next = pc->nextbaseexp(sd);
+	uint64 next = pc->nextbaseexp(sd);
 	int percent = 0;
 
 	nullpo_retv(sd);

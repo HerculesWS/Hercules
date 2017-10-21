@@ -3033,27 +3033,50 @@ void clif_updatestatus(struct map_session_data *sd,int type)
 			WFIFOL(fd,4)=sd->status.zeny;
 			len = packet_len(0xb1);
 			break;
+// [4144] unconfirment exact version can be from 20170405 to 20170913
+#if PACKETVER >= 20170830
 		case SP_BASEEXP:
-			WFIFOW(fd,0)=0xb1;
-			WFIFOL(fd,4)=(uint32)(sd->status.base_exp);
+			WFIFOW(fd, 0) = 0xacb;
+			WFIFOQ(fd, 4) = sd->status.base_exp;
+			len = packet_len(0xacb);
+			break;
+		case SP_JOBEXP:
+			WFIFOW(fd, 0) = 0xacb;
+			WFIFOQ(fd, 4) = sd->status.job_exp;
+			len = packet_len(0xacb);
+			break;
+		case SP_NEXTBASEEXP:
+			WFIFOW(fd, 0) = 0xacb;
+			WFIFOQ(fd, 4) = pc->nextbaseexp(sd);
+			len = packet_len(0xacb);
+			break;
+		case SP_NEXTJOBEXP:
+			WFIFOW(fd, 0) = 0xacb;
+			WFIFOQ(fd, 4) = pc->nextjobexp(sd);
+			len = packet_len(0xacb);
+			break;
+#else
+		case SP_BASEEXP:
+			WFIFOW(fd, 0) = 0xb1;
+			WFIFOL(fd, 4) = (uint32)(sd->status.base_exp);
 			len = packet_len(0xb1);
 			break;
 		case SP_JOBEXP:
-			WFIFOW(fd,0)=0xb1;
-			WFIFOL(fd,4)=(uint32)(sd->status.job_exp);
+			WFIFOW(fd, 0) = 0xb1;
+			WFIFOL(fd, 4) = (uint32)(sd->status.job_exp);
 			len = packet_len(0xb1);
 			break;
 		case SP_NEXTBASEEXP:
-			WFIFOW(fd,0)=0xb1;
-			WFIFOL(fd,4)=pc->nextbaseexp(sd);
+			WFIFOW(fd, 0) = 0xb1;
+			WFIFOL(fd, 4) = (uint32)pc->nextbaseexp(sd);
 			len = packet_len(0xb1);
 			break;
 		case SP_NEXTJOBEXP:
-			WFIFOW(fd,0)=0xb1;
-			WFIFOL(fd,4)=pc->nextjobexp(sd);
+			WFIFOW(fd, 0) = 0xb1;
+			WFIFOL(fd, 4) = (uint32)pc->nextjobexp(sd);
 			len = packet_len(0xb1);
 			break;
-
+#endif
 		/**
 		 * SP_U<STAT> are used to update the amount of points necessary to increase that stat
 		 **/
@@ -14027,7 +14050,7 @@ void clif_parse_NoviceExplosionSpirits(int fd, struct map_session_data *sd)
 	/* it sends the request when the criteria doesn't match (and of course we let it fail) */
 	/* so restoring the old parse_globalmes method. */
 	if ((sd->job & MAPID_UPPERMASK) == MAPID_SUPER_NOVICE) {
-		unsigned int next = pc->nextbaseexp(sd);
+		uint64 next = pc->nextbaseexp(sd);
 		if( next == 0 ) next = pc->thisbaseexp(sd);
 		if( next ) {
 			int percent = (int)( ( (float)sd->status.base_exp/(float)next )*1000. );
@@ -16697,20 +16720,34 @@ void clif_party_show_picker(struct map_session_data * sd, struct item * item_dat
 /// exp type:
 ///     0 = normal exp gain/loss
 ///     1 = quest exp gain/loss
-void clif_displayexp(struct map_session_data *sd, unsigned int exp, char type, bool is_quest) {
+void clif_displayexp(struct map_session_data *sd, uint64 exp, char type, bool is_quest)
+{
 	int fd;
 
+// [4144] unconfirment exact version can be from 20170405 to 20170913
+#if PACKETVER >= 20170830
+	const int cmd = 0xacc;
+#else
+	const int cmd = 0x7f6;
+#endif
 	nullpo_retv(sd);
 
 	fd = sd->fd;
 
-	WFIFOHEAD(fd, packet_len(0x7f6));
-	WFIFOW(fd,0) = 0x7f6;
-	WFIFOL(fd,2) = sd->bl.id;
-	WFIFOL(fd,6) = exp;
-	WFIFOW(fd,10) = type;
-	WFIFOW(fd,12) = is_quest?1:0;// Normal exp is shown in yellow, quest exp is shown in purple.
-	WFIFOSET(fd,packet_len(0x7f6));
+	WFIFOHEAD(fd, packet_len(cmd));
+	WFIFOW(fd, 0) = cmd;
+	WFIFOL(fd, 2) = sd->bl.id;
+// [4144] unconfirment exact version can be from 20170405 to 20170913
+#if PACKETVER >= 20170830
+	WFIFOQ(fd, 6) = exp;
+	WFIFOW(fd, 14) = type;
+	WFIFOW(fd, 16) = is_quest ? 1 : 0; // Normal exp is shown in yellow, quest exp is shown in purple.
+#else
+	WFIFOL(fd, 6) = (uint32)exp;
+	WFIFOW(fd, 10) = type;
+	WFIFOW(fd, 12) = is_quest ? 1 : 0; // Normal exp is shown in yellow, quest exp is shown in purple.
+#endif
+	WFIFOSET(fd, packet_len(cmd));
 }
 
 /// Displays digital clock digits on top of the screen (ZC_SHOWDIGIT).
@@ -19433,8 +19470,9 @@ void clif_rodex_send_maillist(int fd, struct map_session_data *sd, int8 open_typ
 	WFIFOHEAD(fd, sizeof(*packet) + (sizeof(*inner) + RODEX_TITLE_LENGTH) * RODEX_MAIL_PER_PAGE);
 	packet = WFIFOP(fd, 0);
 	packet->PacketType = ((page_start == (VECTOR_LENGTH(sd->rodex.messages) - 1)) ? rodexmailList : rodexnextpage);
+#if PACKETVER < 20170419
 	packet->opentype = open_type;
-
+#endif
 	inner = WFIFOP(fd, size);
 
 	while (page_start >= 0 && count < RODEX_MAIL_PER_PAGE) {
@@ -19447,7 +19485,11 @@ void clif_rodex_send_maillist(int fd, struct map_session_data *sd, int8 open_typ
 		inner->MailID = msg->id;
 		inner->Isread = msg->is_read == true ? 1 : 0;
 		inner->type = msg->type;
+#if PACKETVER >= 20170419
+		inner->openType = msg->opentype;
+#else
 		inner->regDateTime = (int)time(NULL) - msg->send_date;
+#endif
 		inner->expireDateTime = msg->expire_date - (int)time(NULL);
 		if (open_type == RODEX_OPENTYPE_RETURN) {
 			inner->expireDateTime += RODEX_EXPIRE;
@@ -19465,9 +19507,77 @@ void clif_rodex_send_maillist(int fd, struct map_session_data *sd, int8 open_typ
 	}
 
 	packet->PacketLength = size;
+#if PACKETVER < 20170419
 	packet->cnt = count;
+#endif
 	packet->IsEnd = page_start > 0 ? 0 : 1;
 	WFIFOSET(fd, size);
+#endif
+}
+
+void clif_rodex_send_mails_all(int fd, struct map_session_data *sd)
+{
+#if PACKETVER >= 20170419
+	struct PACKET_ZC_MAIL_LIST *packet;
+	struct maillistinfo *inner;
+	int16 size = sizeof(*packet);
+	int packetMailCount = 0;
+	int mailListCount = 0;
+	int mailsSize = VECTOR_LENGTH(sd->rodex.messages);
+	int i;
+
+	nullpo_retv(sd);
+
+	WFIFOHEAD(fd, sizeof(*packet) + (sizeof(*inner) + RODEX_TITLE_LENGTH) * RODEX_MAIL_PER_PAGE);
+	packet = WFIFOP(fd, 0);
+	packet->PacketType = rodexmailList;
+	inner = WFIFOP(fd, size);
+
+	i = mailsSize - 1;
+	while (i >= 0) {
+		struct rodex_message *msg = &VECTOR_INDEX(sd->rodex.messages, i);
+		--i;
+
+		if (msg->is_deleted)
+			continue;
+
+		inner->MailID = msg->id;
+		inner->Isread = msg->is_read == true ? 1 : 0;
+		inner->type = msg->type;
+		inner->openType = msg->opentype;
+		inner->expireDateTime = msg->expire_date - (int)time(NULL);
+		if (msg->opentype == RODEX_OPENTYPE_RETURN) {
+			inner->expireDateTime += RODEX_EXPIRE;
+		}
+		inner->Titlelength = (int16)strlen(msg->title) + 1;
+		if (msg->opentype != RODEX_OPENTYPE_RETURN) {
+			strncpy(inner->SenderName, msg->sender_name, sizeof(msg->sender_name));
+		} else {
+			strncpy(inner->SenderName, msg->receiver_name, sizeof(msg->receiver_name));
+		}
+		strncpy(inner->title, msg->title, inner->Titlelength);
+		size += sizeof(*inner) + inner->Titlelength;
+		inner = WFIFOP(fd, size);
+		packetMailCount ++;
+		mailListCount ++;
+		if (packetMailCount == RODEX_MAIL_PER_PAGE) {
+			packet->PacketLength = size;
+			packet->IsEnd = mailListCount > mailsSize ? 1 : 0;
+			WFIFOSET(fd, size);
+			WFIFOHEAD(fd, sizeof(*packet) + (sizeof(*inner) + RODEX_TITLE_LENGTH) * RODEX_MAIL_PER_PAGE);
+			packet = WFIFOP(fd, 0);
+			packet->PacketType = rodexmailList;
+			size = sizeof(*packet);
+			inner = WFIFOP(fd, size);
+			packetMailCount = 0;
+		}
+	}
+
+	if (packetMailCount > 0 || mailListCount == 0) {
+		packet->PacketLength = size;
+		packet->IsEnd = 1;
+		WFIFOSET(fd, size);
+	}
 #endif
 }
 
@@ -19484,8 +19594,9 @@ void clif_rodex_send_refresh(int fd, struct map_session_data *sd, int8 open_type
 	WFIFOHEAD(fd, sizeof(*packet) + (sizeof(*inner) + RODEX_TITLE_LENGTH) * RODEX_MAIL_PER_PAGE);
 	packet = WFIFOP(fd, 0);
 	packet->PacketType = rodexmailList;
+#if PACKETVER < 20170419
 	packet->opentype = open_type;
-
+#endif
 	inner = WFIFOP(fd, size);
 
 	i = VECTOR_LENGTH(sd->rodex.messages) - 1;
@@ -19500,7 +19611,11 @@ void clif_rodex_send_refresh(int fd, struct map_session_data *sd, int8 open_type
 		inner->MailID = msg->id;
 		inner->Isread = msg->is_read == true ? 1 : 0;
 		inner->type = msg->type;
+#if PACKETVER >= 20170419
+		inner->openType = msg->opentype;
+#else
 		inner->regDateTime = (int)time(NULL) - msg->send_date;
+#endif
 		inner->expireDateTime = msg->expire_date - (int)time(NULL);
 		if (open_type == RODEX_OPENTYPE_RETURN) {
 			inner->expireDateTime += RODEX_EXPIRE;
@@ -19518,7 +19633,9 @@ void clif_rodex_send_refresh(int fd, struct map_session_data *sd, int8 open_type
 	}
 
 	packet->PacketLength = size;
+#if PACKETVER < 20170419
 	packet->cnt = count;
+#endif
 	packet->IsEnd = 1;
 	WFIFOSET(fd, size);
 #endif
@@ -19693,14 +19810,22 @@ void clif_parse_rodex_refresh_maillist(int fd, struct map_session_data *sd) __at
 void clif_parse_rodex_refresh_maillist(int fd, struct map_session_data *sd)
 {
 	const struct PACKET_CZ_REQ_REFRESH_MAIL_LIST *packet = RFIFOP(fd, 0);
+#if PACKETVER >= 20170419
+	rodex->refresh(sd, RODEX_OPENTYPE_UNSET, packet->Upper_MailID);
+#else
 	rodex->refresh(sd, packet->opentype, packet->Upper_MailID);
+#endif
 }
 
 void clif_parse_rodex_open_mailbox(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
 void clif_parse_rodex_open_mailbox(int fd, struct map_session_data *sd)
 {
 	const struct PACKET_CZ_REQ_OPEN_MAIL *packet = RFIFOP(fd, 0);
-	rodex->open(sd, packet->opentype);
+#if PACKETVER >= 20170419
+	rodex->open(sd, RODEX_OPENTYPE_UNSET, packet->Upper_MailID);
+#else
+	rodex->open(sd, packet->opentype, packet->Upper_MailID);
+#endif
 	rodex->clean(sd, 1);
 }
 
@@ -20785,4 +20910,5 @@ void clif_defaults(void) {
 	clif->pRodexRequestItems = clif_parse_rodex_request_items;
 	clif->rodex_request_items = clif_rodex_request_items;
 	clif->rodex_icon = clif_rodex_icon;
+	clif->rodex_send_mails_all = clif_rodex_send_mails_all;
 }

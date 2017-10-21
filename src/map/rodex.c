@@ -547,13 +547,18 @@ void rodex_clean(struct map_session_data *sd, int8 flag)
 /// User request to open rodex, load mails from char-server
 /// @param sd : Who's requesting
 /// @param open_type : Box Type (see RODEX_OPENTYPE)
-void rodex_open(struct map_session_data *sd, int8 open_type)
+void rodex_open(struct map_session_data *sd, int8 open_type, int64 first_mail_id)
 {
+#if PACKETVER >= 20170419
+	const int type = 1;
+#else
+	const int type = 0;
+#endif
 	nullpo_retv(sd);
 	if (open_type == RODEX_OPENTYPE_ACCOUNT && battle_config.feature_rodex_use_accountmail == false)
 		open_type = RODEX_OPENTYPE_MAIL;
 
-	intif->rodex_requestinbox(sd->status.char_id, sd->status.account_id, 0, open_type, 0);
+	intif->rodex_requestinbox(sd->status.char_id, sd->status.account_id, type, open_type, first_mail_id);
 }
 
 /// User request to read next page of mails
@@ -568,7 +573,7 @@ void rodex_next_page(struct map_session_data *sd, int8 open_type, int64 last_mai
 	if (open_type == RODEX_OPENTYPE_ACCOUNT && battle_config.feature_rodex_use_accountmail == false) {
 		// Should not happen
 		open_type = RODEX_OPENTYPE_MAIL;
-		rodex->open(sd, open_type);
+		rodex->open(sd, open_type, 0);
 		return;
 	}
 
