@@ -558,6 +558,8 @@ struct Battle_Config {
 
 	int feature_rodex;
 	int feature_rodex_use_accountmail;
+
+	int storage_use_item;
 };
 
 /* criteria for battle_config.idletime_critera */

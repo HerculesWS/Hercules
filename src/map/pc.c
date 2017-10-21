@@ -4879,11 +4879,6 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 		return 0; // You cannot use this item while sitting.
 	}
 
-	if (sd->state.storage_flag != STORAGE_FLAG_CLOSED && item->type != IT_CASH) {
-		clif->messagecolor_self(sd->fd, COLOR_RED, msg_sd(sd,1475));
-		return 0; // You cannot use this item while storage is open.
-	}
-
 	switch( nameid ) { // TODO: Is there no better way to handle this, other than hardcoding item IDs?
 		case ITEMID_ANODYNE:
 			if (map_flag_gvg2(sd->bl.m))
@@ -5068,6 +5063,11 @@ int pc_useitem(struct map_session_data *sd,int n) {
 		clif->messagecolor_self(sd->fd, COLOR_WHITE, msg_sd(sd, 48));
 #endif
 		return 0;
+	}
+
+	if (battle_config.storage_use_item == true && sd->state.storage_flag != STORAGE_FLAG_CLOSED) {
+		clif->messagecolor_self(sd->fd, COLOR_RED, msg_sd(sd, 1475));
+		return 0; // You cannot use this item while storage is open.
 	}
 
 	if( sd->status.inventory[n].nameid <= 0 || sd->status.inventory[n].amount <= 0 )
