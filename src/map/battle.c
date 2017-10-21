@@ -993,11 +993,7 @@ int64 battle_calc_cardfix2(struct block_list *src, struct block_list *bl, int64 
 // FIXME: wflag is undocumented
 int64 battle_calc_cardfix(int attack_type, struct block_list *src, struct block_list *target, int nk, int s_ele, int s_ele_, int64 damage, int cflag, int wflag){
 	struct map_session_data *sd, *tsd;
-#ifdef RENEWAL
-	short cardfix = 100;
-#else
-	short cardfix = 1000;
-#endif
+	int cardfix = 1000;
 	short t_class, s_class, s_race2, t_race2;
 	struct status_data *sstatus, *tstatus;
 	int i;
@@ -1073,24 +1069,14 @@ int64 battle_calc_cardfix(int attack_type, struct block_list *src, struct block_
 				if( tsd->sc.data[SC_PROTECT_MDEF] )
 					cardfix = cardfix * ( 100 - tsd->sc.data[SC_PROTECT_MDEF]->val1 ) / 100;
 			}
-#ifdef RENEWAL
-			if ( cardfix != 100 )
-				damage += damage * (cardfix - 100) / 100;
-#else
 			if ( cardfix != 1000 )
 				damage = damage * cardfix / 1000;
-#endif
 			break;
 		case BF_WEAPON:
 			t_race2 = status->get_race2(target);
 			if( cflag&2 ){
 				if( sd && !(nk&NK_NO_CARDFIX_ATK) ){
-					short cardfix_ =
-#ifdef RENEWAL
-						100;
-#else
-						1000;
-#endif
+					int cardfix_ = 1000;
 					if( sd->state.arrow_atk ){
 						cardfix = cardfix * (100 + sd->right_weapon.addrace[tstatus->race] + sd->arrow_addrace[tstatus->race]) / 100;
 						if( !(nk&NK_NO_ELEFIX) ){
@@ -1190,16 +1176,11 @@ int64 battle_calc_cardfix(int attack_type, struct block_list *src, struct block_
 #ifndef RENEWAL
 					if( wflag&BF_LONG )
 						cardfix = cardfix * (100 + sd->bonus.long_attack_atk_rate) / 100;
+#endif
 					if( (cflag&1) && cardfix_ != 1000 )
 						damage = damage * cardfix_ / 1000;
 					else if( cardfix != 1000 )
 						damage = damage * cardfix / 1000;
-#else
-					if ((cflag & 1) && cardfix_ != 100)
-						damage += damage * (cardfix_ - 100) / 100;
-					else if (cardfix != 100)
-						damage += damage * (cardfix - 100) / 100;
-#endif
 				}
 			}else{
 				// Target side
@@ -1249,13 +1230,8 @@ int64 battle_calc_cardfix(int attack_type, struct block_list *src, struct block_
 #endif
 					if( tsd->sc.data[SC_PROTECT_DEF] )
 						cardfix = cardfix * (100 - tsd->sc.data[SC_PROTECT_DEF]->val1) / 100;
-#ifdef RENEWAL
-					if ( cardfix != 100 )
-						damage += damage * (cardfix - 100) / 100;
-#else
 					if( cardfix != 1000 )
 						damage = damage * cardfix / 1000;
-#endif
 				}
 			}
 			break;
@@ -1287,13 +1263,8 @@ int64 battle_calc_cardfix(int attack_type, struct block_list *src, struct block_
 				cardfix = cardfix*(100 - tsd->subsize[sstatus->size]) / 100;
 				cardfix = cardfix*(100 - tsd->subrace2[s_race2]) / 100;
 				cardfix = cardfix * (100 - tsd->bonus.misc_def_rate) / 100;
-#ifdef RENEWAL
-				if ( cardfix != 100 )
-					damage += damage * (cardfix - 100) / 100;
-#else
 				if ( cardfix != 1000 )
 					damage = damage * cardfix / 1000;
-#endif
 			}
 			break;
 	}
