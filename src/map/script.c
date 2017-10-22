@@ -15866,11 +15866,12 @@ enum logmes_type {
 /*==========================================
  * Allows player to write logs (i.e. Bank NPC, etc) [Lupus]
  *------------------------------------------*/
-BUILDIN(logmes) {
+BUILDIN(logmes)
+{
 	const char *str = script_getstr(st, 2);
 	struct map_session_data *sd = script->rid2sd(st);
 	enum logmes_type type = LOGMES_NPC;
-	nullpo_retr(sd, false);
+	nullpo_retr(false, sd);
 
 	if (script_hasdata(st, 3)) {
 		type = script_getnum(st, 3);
