@@ -478,20 +478,20 @@ lighthalzen,342,291,4	script	Weird old man#Bio4Reward	4_M_EINOLD,{
 					break;
 				case 2:
 					mes("<<Giant Shield[1]>>");
-					mes("Decrease 5% of Damage from Large Monsters, if Refine Lv is 9, decrease 5% more of the Damage.");
+					mesf("Decrease 5%% of Damage from Large Monsters, if Refine Lv is 9, decrease 5%% more of the Damage.");
 					mes("Shield / Def 130 / Weight 280 / Required Lv 100 / Socket 1 / for 3rd Swordman Classes");
 					callsub(L_Reward, Giant_Shield, 100, 50, 35);
 					break;
 				case 3:
 					mes("<<Ancient Book of Geffenia-Water[1]>>");
 					mes("INT + 1, MDEF + 2. If Original INT point is 120, MATK + 10, MHP + 800.");
-					mes("When equipping with Lacryma Stick, the casting % from Storm Gust, Frost Misty and Jack frost will discount equivalent to 4 times Refine Lv.");
+					mesf("When equipping with Lacryma Stick, the casting %% from Storm Gust, Frost Misty and Jack frost will discount equivalent to 4 times Refine Lv.");
 					mes("Shield / Def 30 / Weight 100 / Required Lv 100 / Socket 1 / for Warlock");
 					callsub(L_Reward, Geffenia_Book_Water, 100, 50, 22);
 					break;
 				case 4:
 					mes("<<Bible of Promise(2nd Vol.)[1]>>");
-					mes("MDEF + 5, Allow to use 'Odin's Power'(Lv 2). Increase 5% more for Heal skill.");
+					mesf("MDEF + 5, Allow to use 'Odin's Power'(Lv 2). Increase 5%% more for Heal skill.");
 					mes("Shield / Def 20 / Weight 50 / Required Lv 140 / Socket 1 / for Archbishop");
 					callsub(L_Reward, Bible_Of_Promise2, 100, 50, 22);
 					break;
@@ -503,7 +503,7 @@ lighthalzen,342,291,4	script	Weird old man#Bio4Reward	4_M_EINOLD,{
 					break;
 				case 6:
 					mes("<<Assassin's Handcuffs[1]>>");
-					mes("MSP + 20, CRI + 3. When equipping with Krishna, ATK + 50, ATK power from 'Sonic Blow' 50% increased, FLEE - 30. When equipping with Cakram CRI + 4, Critical ATK power 40% increased, MHP - 10%.");
+					mesf("MSP + 20, CRI + 3. When equipping with Krishna, ATK + 50, ATK power from 'Sonic Blow' 50% increased, FLEE - 30. When equipping with Cakram CRI + 4, Critical ATK power 40% increased, MHP - 10%%.");
 					mes("Accessory / Def 3 / Weight 40 / Required Lv 100 / Socket 1 / for Guillotine Cross");
 					callsub(L_Reward, Assassin_Handcuffs, 100, 50, 35);
 					break;
@@ -515,7 +515,7 @@ lighthalzen,342,291,4	script	Weird old man#Bio4Reward	4_M_EINOLD,{
 					break;
 				case 8:
 					mes("<<Ancient Gold Decoration>>");
-					mes("If the base Lv is 150, All State + 2. for Swordman, Merchant, Thief classes ATK + 8%, for Magician, Acolyte classes MATK + 8%, Heal Power + 7%, for Archer classes DEX + 3, Long Distance ATK power + 10%.");
+					mesf("If the base Lv is 150, All State + 2. for Swordman, Merchant, Thief classes ATK + 8%%, for Magician, Acolyte classes MATK + 8%%, Heal Power + 7%%, for Archer classes DEX + 3, Long Distance ATK power + 10%%.");
 					mes("Helm / Def 7 / Location - Upper / Weight 40 / Required Lv 100 / Socket 1 / for 3rd Job Classes ");
 					callsub(L_Reward, Ancient_Gold_Deco, 300, 300, 400);
 					break;
@@ -578,7 +578,7 @@ lighthalzen,342,291,4	script	Weird old man#Bio4Reward	4_M_EINOLD,{
 					break;
 				case 3:
 					mes("<<Guillotine Katar[1]>>");
-					mes("DEX + 2. FLEE - 30. 50% more damage to Human monsters. Add 30% more damage for Cross Impact skill.");
+					mesf("DEX + 2. FLEE - 30. 50%% more damage to Human monsters. Add 30%% more damage for Cross Impact skill.");
 					mes("Katar / ATK 200 / Weight 150 / Weapon Lv 4 / Required Lv 140 / Socket 1 / for Guillotine Cross");
 					callsub(L_Reward, Guillotine_Katar, 50, 100, 85);
 					break;
@@ -596,7 +596,7 @@ lighthalzen,342,291,4	script	Weird old man#Bio4Reward	4_M_EINOLD,{
 					break;
 				case 6:
 					mes("<<Cannon Spear[1]>>");
-					mes("MSP - 100, Increases 10% of Damage impacted with Cannon Spear, Additional ATK power of Cannon Spear equivalent to 3 times Refine Lv.");
+					mesf("MSP - 100, Increases 10%% of Damage impacted with Cannon Spear, Additional ATK power of Cannon Spear equivalent to 3 times Refine Lv.");
 					mes("One-Handed Spear / ATK 180 / Weight 160 / Weapon Lv 4 / Required Lv 100 / Socket 1 / for Royal Guard");
 					callsub(L_Reward, Cannon_Spear, 50, 100, 40);
 					break;
@@ -608,7 +608,7 @@ lighthalzen,342,291,4	script	Weird old man#Bio4Reward	4_M_EINOLD,{
 					break;
 				case 8:
 					mes("<<Chilly Spell Book[2]>>");
-					mes("MATK + 160, DEX + 1. Increases ATK % of Cold Bolt, Diamond Dust equivalent to 3 times Refine Lv, also SP consumption from those skills increased equivalent to 5 times Refine Lv. Undestroyable.");
+					mesf("MATK + 160, DEX + 1. Increases ATK %% of Cold Bolt, Diamond Dust equivalent to 3 times Refine Lv, also SP consumption from those skills increased equivalent to 5 times Refine Lv. Undestroyable.");
 					mes("Book / ATK 100 / Weight 100 / Water Property / Weapon Lv 4 / Required Lv 100 / Socket 2 / for Sorcerer");
 					callsub(L_Reward, Chilly_Spell_Book, 50, 100, 40);
 					break;
@@ -638,13 +638,13 @@ lighthalzen,342,291,4	script	Weird old man#Bio4Reward	4_M_EINOLD,{
 					break;
 				case 13:
 					mes("<<Catapult[2]>>");
-					mes("Increases ATK % of 'Triangle Shot' equivalent to 2 times Refine Lv, Also SP consumption from the skill increased.");
+					mesf("Increases ATK %% of 'Triangle Shot' equivalent to 2 times Refine Lv, Also SP consumption from the skill increased.");
 					mes("Bow / ATK 150 / Weight 110 / Weapon Lv 4 / Required Lv 100 / Socket 2 / for Shadow Chaser");
 					callsub(L_Reward, Catapult, 50, 100, 35);
 					break;
 				case 14:
 					mes("<<Big CrossBow[2]>>");
-					mes("Increases ATK % of 'Arrow Storm' equivalent to 5 times Refine Lv. Also SP consumption from the skill increased, If the Original AGI points are 120, ASPD + 1.");
+					mesf("Increases ATK %% of 'Arrow Storm' equivalent to 5 times Refine Lv. Also SP consumption from the skill increased, If the Original AGI points are 120, ASPD + 1.");
 					mes("Bow / ATK 160 / Weight 90 / Weapon Lv 4 / Required Lv 110 / Socket 2 / for Ranger");
 					callsub(L_Reward, Big_CrossBow, 50, 100, 35);
 					break;
