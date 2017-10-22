@@ -217,7 +217,8 @@ e_tower,81,105,0	script	Tower Protection Stone	2_MONEMUS,{
 		if (getcharid(CHAR_ID_CHAR) == getpartyleader(.@party_id,2)) {
 			mes "Confirmed the party has been made. Would you like to reserve entrance to the Endless Tower?";
 			next;
-			switch(select("Generate dungeon "+.@md_name$, "Enter the dungeon", "Return to Alberta", "Cancel")) {
+			.@str$ = sprintf(_$("Generate Dungeon %s"), .@md_name$);
+			switch(select(.@str$, "Enter the Dungeon", "Return to Alberta", "Cancel")) {
 			case 1:
 				.@instance = instance_create(.@md_name$,.@party_id);
 				if (.@instance < 0) {
@@ -249,7 +250,9 @@ e_tower,81,105,0	script	Tower Protection Stone	2_MONEMUS,{
 				close;
 			}
 		}
-		switch(select("Enter the "+.@md_name$, "Return to Alberta", "Cancel")) {
+		mes "If you have the dungeon generated already, you can enter it.";
+		next();
+		switch (select("Enter the Dungeon", "Return to Alberta", "Cancel")) {
 		case 1:
 			callsub L_Enter,1,1,.@md_name$,.@p_name$;
 		case 2:
@@ -277,9 +280,9 @@ e_tower,81,105,0	script	Tower Protection Stone	2_MONEMUS,{
 		warp "alberta",223,36;
 		end;
 	} else if (.@etower_timer == 1) {
-		mes "If you have the dungeon generated already, you can enter it. ";
+		mes "If you have the dungeon generated already, you can enter it.";
 		next;
-		switch(select("Enter the "+.@md_name$, "Return to Alberta", "Cancel")) {
+		switch(select("Enter the Dungeon", "Return to Alberta", "Cancel")) {
 		case 1:
 			callsub L_Enter,0,0,.@md_name$,.@p_name$;
 		case 2:
@@ -1080,109 +1083,30 @@ function	script	F_Tower_Monster	{
 
 function	script	F_Tower_Warp	{
 
+	setarray(.@x[2], 136, 224, 310, 395, 52, 136, 224, 310, 395,	//  2 - 10
+				 52, 136, 224, 310, 395, 52, 136, 224, 310, 395,	// 11 - 20
+				 52, 136, 224, 310, 395,  0, 136, 224, 310, 395,	// 21 - 30
+				 52, 136, 224, 310, 395, 52, 136, 224, 310, 395,	// 31 - 40
+				 52, 136, 224, 310, 395, 52, 136, 224, 310, 395,	// 41 - 50
+				  0, 136, 224, 310, 395, 52, 136, 224, 310, 395,	// 51 - 60
+				 52, 136, 224, 310, 395, 52, 136, 224, 310, 395,	// 61 - 70
+				 52, 136, 224, 310, 395,  0, 136, 224, 310, 395,	// 71 - 80
+				 52, 136, 224, 310, 395, 52, 136, 224, 310, 395,	// 81 - 90
+				 52, 136, 224, 310, 395, 52, 136, 224, 309);		// 91 - 99
+	setarray(.@y[2], 354, 354, 354, 354, 270, 270, 270, 270, 270,	//  2 - 10
+				183, 183, 183, 183, 183,  99,  99,  99,  99,  99,	// 11 - 20
+				 12,  12,  12,  12,  12,   0, 354, 354, 354, 354,	// 21 - 30
+				270, 270, 270, 270, 270, 183, 183, 183, 183, 183,	// 31 - 40
+				 99,  99,  99,  99,  99,  12,  12,  12,  12,  12,	// 41 - 50
+				  0, 354, 354, 354, 354, 270, 270, 270, 270, 270,	// 51 - 60
+				183, 183, 183, 183, 183,  99,  99,  99,  99,  99,	// 61 - 70
+				 12,  12,  12,  12,  12,   0, 354, 354, 354, 354,	// 71 - 80
+				270, 270, 270, 270, 270, 183, 183, 183, 183, 183,	// 81 - 90
+				 99,  99,  99,  99,  99, 12,  12,  12,  12);		// 91 - 99
 	.@level = getarg(0);
 	.@map$ = getarg(1);
-
-	switch(.@level) {
-		case 2: warp .@map$,136,354; break;
-		case 3: warp .@map$,224,354; break;
-		case 4: warp .@map$,310,354; break;
-		case 5: warp .@map$,395,354; break;
-		case 6: warp .@map$,52,270; break;
-		case 7: warp .@map$,136,270; break;
-		case 8: warp .@map$,224,270; break;
-		case 9: warp .@map$,310,270; break;
-		case 10: warp .@map$,395,270; break;
-		case 11: warp .@map$,52,183; break;
-		case 12: warp .@map$,136,183; break;
-		case 13: warp .@map$,224,183; break;
-		case 14: warp .@map$,310,183; break;
-		case 15: warp .@map$,395,183; break;
-		case 16: warp .@map$,52,99; break;
-		case 17: warp .@map$,136,99; break;
-		case 18: warp .@map$,224,99; break;
-		case 19: warp .@map$,310,99; break;
-		case 20: warp .@map$,395,99; break;
-		case 21: warp .@map$,52,12; break;
-		case 22: warp .@map$,136,12; break;
-		case 23: warp .@map$,224,12; break;
-		case 24: warp .@map$,310,12; break;
-		case 25: warp .@map$,395,12; break;
-
-		case 27: warp .@map$,136,354; break;
-		case 28: warp .@map$,224,354; break;
-		case 29: warp .@map$,310,354; break;
-		case 30: warp .@map$,395,354; break;
-		case 31: warp .@map$,52,270; break;
-		case 32: warp .@map$,136,270; break;
-		case 33: warp .@map$,224,270; break;
-		case 34: warp .@map$,310,270; break;
-		case 35: warp .@map$,395,270; break;
-		case 36: warp .@map$,52,183; break;
-		case 37: warp .@map$,136,183; break;
-		case 38: warp .@map$,224,183; break;
-		case 39: warp .@map$,310,183; break;
-		case 40: warp .@map$,395,183; break;
-		case 41: warp .@map$,52,99; break;
-		case 42: warp .@map$,136,99; break;
-		case 43: warp .@map$,224,99; break;
-		case 44: warp .@map$,310,99; break;
-		case 45: warp .@map$,395,99; break;
-		case 46: warp .@map$,52,12; break;
-		case 47: warp .@map$,136,12; break;
-		case 48: warp .@map$,224,12; break;
-		case 49: warp .@map$,310,12; break;
-		case 50: warp .@map$,395,12; break;
-
-		case 52: warp .@map$,136,354; break;
-		case 53: warp .@map$,224,354; break;
-		case 54: warp .@map$,310,354; break;
-		case 55: warp .@map$,395,354; break;
-		case 56: warp .@map$,52,270; break;
-		case 57: warp .@map$,136,270; break;
-		case 58: warp .@map$,224,270; break;
-		case 59: warp .@map$,310,270; break;
-		case 60: warp .@map$,395,270; break;
-		case 61: warp .@map$,52,183; break;
-		case 62: warp .@map$,136,183; break;
-		case 63: warp .@map$,224,183; break;
-		case 64: warp .@map$,310,183; break;
-		case 65: warp .@map$,395,183; break;
-		case 66: warp .@map$,52,99; break;
-		case 67: warp .@map$,136,99; break;
-		case 68: warp .@map$,224,99; break;
-		case 69: warp .@map$,310,99; break;
-		case 70: warp .@map$,395,99; break;
-		case 71: warp .@map$,52,12; break;
-		case 72: warp .@map$,136,12; break;
-		case 73: warp .@map$,224,12; break;
-		case 74: warp .@map$,310,12; break;
-		case 75: warp .@map$,395,12; break;
-
-		case 77: warp .@map$,136,354; break;
-		case 78: warp .@map$,224,354; break;
-		case 79: warp .@map$,310,354; break;
-		case 80: warp .@map$,395,354; break;
-		case 81: warp .@map$,52,270; break;
-		case 82: warp .@map$,136,270; break;
-		case 83: warp .@map$,224,270; break;
-		case 84: warp .@map$,310,270; break;
-		case 85: warp .@map$,395,270; break;
-		case 86: warp .@map$,52,183; break;
-		case 87: warp .@map$,136,183; break;
-		case 88: warp .@map$,224,183; break;
-		case 89: warp .@map$,310,183; break;
-		case 90: warp .@map$,395,183; break;
-		case 91: warp .@map$,52,99; break;
-		case 92: warp .@map$,136,99; break;
-		case 93: warp .@map$,224,99; break;
-		case 94: warp .@map$,310,99; break;
-		case 95: warp .@map$,395,99; break;
-		case 96: warp .@map$,52,12; break;
-		case 97: warp .@map$,136,12; break;
-		case 98: warp .@map$,224,12; break;
-		case 99: warp .@map$,309,12; break;
-	}
+	if (.@x[.@level] > 0 && .@y[.@level] > 0)
+		warp(.@map$, .@x[.@level], .@y[.@level]);
 	return;
 }
 
