@@ -4868,21 +4868,19 @@ ACMD(undisguiseguild)
  *------------------------------------------*/
 ACMD(exp)
 {
-	char output[CHAT_SIZE_MAX];
-	double nextb, nextj;
-
-	memset(output, '\0', sizeof(output));
+	double percentb = 0.0, percentj = 0.0;
+	uint64 nextb, nextj;
 
 	nextb = pc->nextbaseexp(sd);
-	if (nextb)
-		nextb = sd->status.base_exp*100.0/nextb;
+	if (nextb != 0)
+		percentb = sd->status.base_exp * 100.0 / nextb;
 
 	nextj = pc->nextjobexp(sd);
-	if (nextj)
-		nextj = sd->status.job_exp*100.0/nextj;
+	if (nextj != 0)
+		percentj = sd->status.job_exp * 100.0 / nextj;
 
-	sprintf(output, msg_fd(fd,1148), sd->status.base_level, nextb, sd->status.job_level, nextj); // Base Level: %d (%.3f%%) | Job Level: %d (%.3f%%)
-	clif->message(fd, output);
+	sprintf(atcmd_output, msg_fd(fd,1148), sd->status.base_level, percentb, sd->status.job_level, percentj); // Base Level: %d (%.3f%%) | Job Level: %d (%.3f%%)
+	clif->message(fd, atcmd_output);
 	return true;
 }
 
