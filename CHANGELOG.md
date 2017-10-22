@@ -9,6 +9,10 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+## [v2017.10.22-1] `October 22 2017` `PATCH 1`
+### Fixed
+- Fixed a wrong null pointer check in `logmes()`, which caused the command to never log and instead print debug information.
+
 ## [v2017.10.22] `October 22 2017`
 ### Added
 - Added the script command `getmapinfo()`, which allows to obtain misc information about a map. (#1852)
@@ -32,4 +36,5 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2017.10.22-1]: https://github.com/HerculesWS/Hercules/compare/v2017.10.22...v2017.10.22-1
 [v2017.10.22]: https://github.com/HerculesWS/Hercules/compare/6b1fe2d...v2017.10.22
