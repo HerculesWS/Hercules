@@ -37,51 +37,52 @@
 mal_dun01,151,235,5	script	Starfish	4_ASTER,{
 
 	.@party_id = getcharid(CHAR_ID_PARTY);
-	.@md_name$ = "Octopus Cave";
+	.@md_name$ = _("Octopus Cave");
 
 	if (!.@party_id) {
 		mes("[Starfish]");
 		mes("You alone is powerless, hehe! Better get someone to help you out. Make a party, and come back later.");
-		close;
+		close();
 	}
 	if (getcharid(CHAR_ID_CHAR) != getpartyleader(.@party_id, 2)) {
 		mes("[Starfish]");
 		mes("Where is your leader, hehe. I don't talk to some random people. Bring your boss to me.");
-		close;
+		close();
 	}
 	mes("[Starfish]");
 	mes("I am guarding here, hehe! It is just roughly blocked for now. But someday this cave must be sealed forever, hehe!");
-	next;
-	while(1) {
+	next();
+	while (true) {
 		switch (select("Ask what's going on.", "Ask to open the gate.", "Go to other location.")) {
 		case 1:
 			mes("[Starfish]");
 			mes("Lately, our Starfish lady is suffering with some issues, ooh ooh. Something bad happen in this peaceful place, hehe!");
-			next;
+			next();
 			mes("[Starfish]");
 			mes("Weird looking limbs came out from the hole there, tried to kidnap our lady Starfish. Ooh Ooh.");
-			next;
+			next();
 			mes("[Starfish]");
 			mes("It seems those limbs belong to that ugly octopus. That monster should be taken care of,\r"
 				"but it's hard for ourselves only to make it happen, hehe.");
-			next;
+			next();
 			mes("[Starfish]");
 			mes("I want to find someone special, and ask to punish this ugly octopus.\r"
 				"I hope this octopus won't ever harass our lady, hehe.");
-			next;
+			next();
 			mes("[Starfish]");
 			mes("Go catch that octopus and stick it to this pick. If you bring back the pick,\r"
 				"I will open this gate for a while. You should challenge if you are interested, hehe.");
-			next;
+			next();
 			break;
 		case 2:
 			.@playtime = questprogress(4197, PLAYTIME);
 			if (.@playtime == 1) {
 				mes("[Starfish]");
 				mes("Octopus is not around now, hehe. Please come back later.");
-				close;
+				close();
 			}
-			if (.@playtime == 2) erasequest 4197;
+			if (.@playtime == 2)
+				erasequest(4197);
 			if (countitem(Octopus_Hunt_Stick)) {
 				.@instance = instance_create(.@md_name$, .@party_id);
 				if (.@instance < 0) {
@@ -90,12 +91,12 @@ mal_dun01,151,235,5	script	Starfish	4_ASTER,{
 					mesf("Party leader is... %s.", strcharinfo(PC_NAME));
 					mesf("^0000FF%s^000000, I cannot open now, hehe.", .@md_name$);
 					mes("Now is not the time, please wait.");
-					close;
+					close();
 				}
 				if (instance_attachmap("1@cash", .@instance) == "") {
 					mesf("^0000FF%s^000000 - Reservation Failed!", .@md_name$);
 					instance_destroy(.@instance);
-					close;
+					close();
 				}
 				instance_set_timeout(3600, 300, .@instance);
 				instance_init(.@instance);
@@ -103,23 +104,23 @@ mal_dun01,151,235,5	script	Starfish	4_ASTER,{
 				mes("[Starfish]");
 				mesf("I will open the gate for a while to ^0000FF%s^000000.", .@md_name$);
 				mes("Please catch that pervert octopus, and come back with it sticked to the pick, hehe.");
-				close;
+				close();
 			}
 			mes("[Starfish]");
 			mes("Prepare a pick first, so you can thread that octopus with that pick.\r"
 				"Then, I will let you in for a while, hehe.");
-			close;
+			close();
 		case 3:
 			mes("[Starfish]");
 			mes("This is not a good location, check someplace else.");
-			close;
+			close();
 		}
 	}
 }
 
 mal_dun01,153,237,5	script	Weird Entrance	CLEAR_NPC,{
 	mes("There is a strange entrance blocked roughly with some boards.");
-	next;
+	next();
 	switch (select("Go in.", "Stop.")) {
 	case 1:
 		if (countitem(Octopus_Hunt_Stick)) {
@@ -127,25 +128,26 @@ mal_dun01,153,237,5	script	Weird Entrance	CLEAR_NPC,{
 				if (questprogress(4197, PLAYTIME) == 1) {
 					mes("[Starfish]");
 					mes("Ah, now is not the time... Would you come back later? Hehe.");
-					close;
+					close();
 				}
 				mes("[Starfish]");
 				mes("Shhh... Weird aura is coming from that entrance. Big trouble is waiting, if you go in now.");
-				close;
+				close();
 			}
 
 			mapannounce("mal_dun01", sprintf(_$("%s party's %s member started to hunt the Octopus!"), getpartyname(getcharid(CHAR_ID_PARTY)), strcharinfo(PC_NAME)), bc_map, C_SPRINGGREEN);
-			if (!questprogress(4197)) setquest 4197;
-			warp "1@cash", 199, 99;
+			if (!questprogress(4197))
+				setquest(4197);
+			warp("1@cash", 199, 99);
 			end;
 		}
 		mes("[Starfish]");
 		mes("You should definitely prepare hunting stick if you want to punish the Octopus. Or I will not let you in! Hehe.");
-		close;
+		close();
 	case 2:
 		mes("[Starfish]");
 		mes("Yes Yes, you better quit.");
-		close;
+		close();
 	}
 }
 
@@ -153,25 +155,25 @@ mal_dun01,153,237,5	script	Weird Entrance	CLEAR_NPC,{
 1@cash,199,99,0	script	oct_enter	HIDDEN_WARP_NPC,4,4,{
 	end;
 OnTouch:
-	donpcevent instance_npcname("oct_enter_broad")+"::OnEnable";
-	specialeffect EF_BASH;
-	disablenpc instance_npcname("oct_enter");
+	donpcevent(instance_npcname("oct_enter_broad")+"::OnEnable");
+	specialeffect(EF_BASH);
+	disablenpc(instance_npcname("oct_enter"));
 	end;
 }
 
 1@cash,1,1,0	script	oct_enter_broad	FAKE_NPC,{
 	end;
 OnInstanceInit:
-	donpcevent instance_npcname("oct_enter_broad")+"::OnDisable";
+	donpcevent(instance_npcname("oct_enter_broad")+"::OnDisable");
 	end;
 OnEnable:
-	enablenpc instance_npcname("oct_enter_broad");
-	donpcevent instance_npcname("oct_foot_4")+"::OnEnable";
-	donpcevent instance_npcname("oct_mob_con")+"::OnEnable";
-	initnpctimer;
+	enablenpc(instance_npcname("oct_enter_broad"));
+	donpcevent(instance_npcname("oct_foot_4")+"::OnEnable");
+	donpcevent(instance_npcname("oct_mob_con")+"::OnEnable");
+	initnpctimer();
 	end;
 OnDisable:
-	disablenpc instance_npcname("oct_enter_broad");
+	disablenpc(instance_npcname("oct_enter_broad"));
 	end;
 OnTimer1000:
 	mapannounce(instance_mapname("1@cash"), _("Pervert Octopus : How dare you to come inside of my place!"), bc_map, C_YELLOW);
@@ -181,22 +183,22 @@ OnTimer4000:
 	end;
 OnTimer7000:
 	mapannounce(instance_mapname("1@cash"), _("Pervert Octopus : My juniors~ There is your toy! Play with it~ kakaka"), bc_map, C_YELLOW);
-	stopnpctimer;
-	donpcevent instance_npcname("oct_enter_broad")+"::OnDisable";
+	stopnpctimer();
+	donpcevent(instance_npcname("oct_enter_broad")+"::OnDisable");
 	end;
 }
 
 1@cash,3,3,0	script	oct_foot_4	FAKE_NPC,{
 	end;
 OnInstanceInit:
-	donpcevent instance_npcname("oct_foot_4")+"::OnDisable";
+	donpcevent(instance_npcname("oct_foot_4")+"::OnDisable");
 	end;
 OnEnable:
-	enablenpc instance_npcname("oct_foot_4");
-	donpcevent instance_npcname("oct_foot1")+"::OnEnable";
-	donpcevent instance_npcname("oct_foot2")+"::OnEnable";
-	donpcevent instance_npcname("oct_foot3")+"::OnEnable";
-	donpcevent instance_npcname("oct_foot4")+"::OnEnable";
+	enablenpc(instance_npcname("oct_foot_4"));
+	donpcevent(instance_npcname("oct_foot1")+"::OnEnable");
+	donpcevent(instance_npcname("oct_foot2")+"::OnEnable");
+	donpcevent(instance_npcname("oct_foot3")+"::OnEnable");
+	donpcevent(instance_npcname("oct_foot4")+"::OnEnable");
 	.@map$ = instance_mapname("1@cash");
 	monster(.@map$, 20, 114, _("Octopus Leg#1"), MD_OCTOPUS_LEG, 1, instance_npcname("oct_foot_4")+"::OnMyMobDead");
 	monster(.@map$, 88, 190, _("Octopus Leg#2"), MD_OCTOPUS_LEG, 1, instance_npcname("oct_foot_4")+"::OnMyMobDead");
@@ -204,15 +206,15 @@ OnEnable:
 	monster(.@map$, 372, 131, _("Octopus Leg#4"), MD_OCTOPUS_LEG, 1, instance_npcname("oct_foot_4")+"::OnMyMobDead");
 	end;
 OnDisable:
-	disablenpc instance_npcname("oct_foot_4");
+	disablenpc(instance_npcname("oct_foot_4"));
 	end;
 OnMyMobDead:
 	.@map$ = instance_mapname("1@cash");
-	if (mobcount(.@map$,instance_npcname("oct_foot_4")+"::OnMyMobDead") < 1) {
-		donpcevent instance_npcname("oct_boss_con")+"::OnEnable";
+	if (mobcount(.@map$, instance_npcname("oct_foot_4")+"::OnMyMobDead") < 1) {
+		donpcevent(instance_npcname("oct_boss_con")+"::OnEnable");
 		mapannounce(.@map$, _("Hey you!! I'll personally take care of you all! Let's bring it on!"), bc_map, C_SPRINGGREEN);
-		enablenpc instance_npcname("oct_boss_warp");
-		instance_warpall .@map$, 199, 99;
+		enablenpc(instance_npcname("oct_boss_warp"));
+		instance_warpall(.@map$, 199, 99);
 		end;
 	}
 	mapannounce(.@map$, _("Arrgg!! That hurts!!! I need another strategy..."), bc_map, C_SPRINGGREEN);
@@ -222,12 +224,12 @@ OnMyMobDead:
 1@cash,20,114,0	script	oct_foot1	HIDDEN_WARP_NPC,6,6,{
 	end;
 OnInstanceInit:
-	donpcevent instance_npcname(strnpcinfo(NPC_NAME))+"::OnDisable";
+	donpcevent(instance_npcname(strnpcinfo(NPC_NAME))+"::OnDisable");
 	end;
 OnEnable:
-	enablenpc instance_npcname(strnpcinfo(NPC_NAME));
+	enablenpc(instance_npcname(strnpcinfo(NPC_NAME)));
 	.@label$ = instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead";
-	.@i = atoi(charat(strnpcinfo(NPC_NAME),8));
+	.@i = atoi(charat(strnpcinfo(NPC_NAME), 8));
 	.@map$ = instance_mapname("1@cash");
 	switch (.@i) {
 	case 1:
@@ -249,7 +251,7 @@ OnEnable:
 		areamonster(.@map$, 123, 93, 127, 97, _("Octopus's Henchman"), MD_OCTOPUS, 3, .@label$);
 		areamonster(.@map$, 113, 90, 115, 92, _("Octopus's Henchman"), MD_OCTOPUS, 2, .@label$);
 		areamonster(.@map$, 103, 89, 105, 91, _("Octopus's Henchman"), MD_OCTOPUS, 2, .@label$);
-		areamonster(.@map$, 89, 90, 91,92, _("Octopus's Henchman"), MD_OCTOPUS, 2, .@label$);
+		areamonster(.@map$, 89, 90, 91, 92, _("Octopus's Henchman"), MD_OCTOPUS, 2, .@label$);
 		areamonster(.@map$, 74, 104, 76, 106, _("Octopus's Henchman"), MD_OCTOPUS, 2, .@label$);
 		areamonster(.@map$, 74, 120, 76, 122, _("Octopus's Henchman"), MD_OCTOPUS, 2, .@label$);
 		areamonster(.@map$, 83, 131, 87, 135, _("Octopus's Henchman"), MD_OCTOPUS, 3, .@label$);
@@ -285,56 +287,57 @@ OnEnable:
 	}
 	end;
 OnDisable:
-	killmonster instance_mapname("1@cash"), instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead"; // Not in official script.
-	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
+	killmonster(instance_mapname("1@cash"), instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead"); // Not in official script.
+	disablenpc(instance_npcname(strnpcinfo(NPC_NAME)));
 	end;
 OnTouch:
-	if (getd("."+strnpcinfo(NPC_NAME)+instance_id())) end;
-	setd "."+strnpcinfo(NPC_NAME)+instance_id(),1;
-	hideonnpc instance_npcname(strnpcinfo(NPC_NAME));
+	if (getd("."+strnpcinfo(NPC_NAME)+instance_id()))
+		end;
+	setd("."+strnpcinfo(NPC_NAME)+instance_id(), 1);
+	hideonnpc(instance_npcname(strnpcinfo(NPC_NAME)));
 	mapannounce(instance_mapname("1@cash"), _("Come out all my babies and help me out!"), bc_map, C_YELLOW);
-	initnpctimer;
+	initnpctimer();
 	end;
 OnTimer5000:
 	.@map$ = instance_mapname("1@cash");
 	mapannounce(.@map$, _("Let's give them a lesson!"), bc_map, C_YELLOW);
 	.@label$ = instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead";
-	.@i = atoi(charat(strnpcinfo(NPC_NAME),8));
+	.@i = atoi(charat(strnpcinfo(NPC_NAME), 8));
 	switch (.@i) {
 	case 1:
-		areamonster(.@map$, 18, 112, 22,116, _("Octopus's Henchman"), MD_OCTOPUS, 3, .@label$);
-		areamonster(.@map$, 18, 112, 22,116, _("Octopus's Henchman"), MD_OCTOPUS, 3, .@label$);
+		areamonster(.@map$, 18, 112, 22, 116, _("Octopus's Henchman"), MD_OCTOPUS, 3, .@label$);
+		areamonster(.@map$, 18, 112, 22, 116, _("Octopus's Henchman"), MD_OCTOPUS, 3, .@label$);
 		break;
 	case 2:
-		areamonster(.@map$, 86, 188, 90,192, _("Octopus's Henchman"), MD_OCTOPUS, 3, .@label$);
-		areamonster(.@map$, 96, 98, 100,102, _("Octopus's Henchman"), MD_OCTOPUS, 3, .@label$);
+		areamonster(.@map$, 86, 188, 90, 192, _("Octopus's Henchman"), MD_OCTOPUS, 3, .@label$);
+		areamonster(.@map$, 96, 98, 100, 102, _("Octopus's Henchman"), MD_OCTOPUS, 3, .@label$);
 		break;
 	case 3:
-		areamonster(.@map$, 305, 213, 309,217, _("Octopus's Henchman"), MD_OCTOPUS, 3, .@label$);
-		areamonster(.@map$, 305, 213, 309,217, _("Octopus's Henchman"), MD_OCTOPUS, 3, .@label$);
+		areamonster(.@map$, 305, 213, 309, 217, _("Octopus's Henchman"), MD_OCTOPUS, 3, .@label$);
+		areamonster(.@map$, 305, 213, 309, 217, _("Octopus's Henchman"), MD_OCTOPUS, 3, .@label$);
 		break;
 	case 4:
-		areamonster(.@map$, 370, 129, 374,133, _("Octopus's Henchman"), MD_OCTOPUS, 3, .@label$);
-		areamonster(.@map$, 370, 129, 374,133, _("Octopus's Henchman"), MD_OCTOPUS, 3, .@label$);
+		areamonster(.@map$, 370, 129, 374, 133, _("Octopus's Henchman"), MD_OCTOPUS, 3, .@label$);
+		areamonster(.@map$, 370, 129, 374, 133, _("Octopus's Henchman"), MD_OCTOPUS, 3, .@label$);
 		break;
 	}
 	end;
 OnTimer30000:
-	setd "."+strnpcinfo(NPC_NAME)+instance_id(),0;
-	stopnpctimer;
-	.@i = atoi(charat(strnpcinfo(NPC_NAME),8));
-	donpcevent instance_npcname("oct_foot_exit"+.@i)+"::OnEnable";
-	donpcevent instance_npcname(strnpcinfo(NPC_NAME))+"::OnDisable";
+	setd("."+strnpcinfo(NPC_NAME)+instance_id(), 0);
+	stopnpctimer();
+	.@i = atoi(charat(strnpcinfo(NPC_NAME), 8));
+	donpcevent(instance_npcname("oct_foot_exit"+.@i)+"::OnEnable");
+	donpcevent(instance_npcname(strnpcinfo(NPC_NAME))+"::OnDisable");
 	end;
 OnMyMobDead:
 	.@map$ = instance_mapname("1@cash");
-	if (mobcount(.@map$,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead") < 1) {
+	if (mobcount(.@map$, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead") < 1) {
 		mapannounce(.@map$, _("You hurt my babies!!? You'll have to pay for this!!!"), bc_map, C_SPRINGGREEN);
-		setd "."+strnpcinfo(NPC_NAME)+instance_id(),0;
-		stopnpctimer;
-		.@i = atoi(charat(strnpcinfo(NPC_NAME),8));
-		donpcevent instance_npcname("oct_foot_exit"+.@i)+"::OnEnable";
-		donpcevent instance_npcname(strnpcinfo(NPC_NAME))+"::OnDisable";
+		setd("."+strnpcinfo(NPC_NAME)+instance_id(), 0);
+		stopnpctimer();
+		.@i = atoi(charat(strnpcinfo(NPC_NAME), 8));
+		donpcevent(instance_npcname("oct_foot_exit"+.@i)+"::OnEnable");
+		donpcevent(instance_npcname(strnpcinfo(NPC_NAME))+"::OnDisable");
 		end;
 	}
 	end;
@@ -346,13 +349,13 @@ OnMyMobDead:
 1@cash,16,117,0	script	oct_foot_exit1	WARPNPC,2,2,{
 	end;
 OnInstanceInit:
-	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
+	disablenpc(instance_npcname(strnpcinfo(NPC_NAME)));
 	end;
 OnEnable:
-	enablenpc instance_npcname(strnpcinfo(NPC_NAME));
+	enablenpc(instance_npcname(strnpcinfo(NPC_NAME)));
 	end;
 OnTouch:
-	warp instance_mapname("1@cash"), 198, 99;
+	warp(instance_mapname("1@cash"), 198, 99);
 	end;
 }
 1@cash,77,193,0	duplicate(oct_foot_exit1)	oct_foot_exit2	WARPNPC,2,2
@@ -362,11 +365,11 @@ OnTouch:
 1@cash,15,15,0	script	oct_mob_con	FAKE_NPC,{
 	end;
 OnInstanceInit:
-	donpcevent instance_npcname("oct_mob_con")+"::OnDisable";
+	donpcevent(instance_npcname("oct_mob_con")+"::OnDisable");
 	end;
 OnEnable:
 	.@map$ = instance_mapname("1@cash");
-	enablenpc instance_npcname("oct_mob_con");
+	enablenpc(instance_npcname("oct_mob_con"));
 	monster(.@map$, 32, 94, _("Hydra"), HYDRA, 1);
 	monster(.@map$, 41, 101, _("Hydra"), HYDRA, 1);
 	monster(.@map$, 35, 78, _("Hydra"), HYDRA, 1);
@@ -410,21 +413,21 @@ OnEnable:
 	areamonster(.@map$, 292, 97, 312, 117,  _("Stapo"), STAPO, 1);
 	areamonster(.@map$, 355, 64, 375, 84,  _("Stapo"), STAPO, 1);
 	areamonster(.@map$, 317, 17, 337, 37,  _("Stapo"), STAPO, 1);
-	donpcevent instance_npcname("oct_backattack1")+"::OnEnable";
-	donpcevent instance_npcname("oct_backattack2")+"::OnEnable";
-	donpcevent instance_npcname("oct_backattack3")+"::OnEnable";
-	donpcevent instance_npcname("oct_backattack4")+"::OnEnable";
-	donpcevent instance_npcname("oct_mob_con")+"::OnDisable";
+	donpcevent(instance_npcname("oct_backattack1")+"::OnEnable");
+	donpcevent(instance_npcname("oct_backattack2")+"::OnEnable");
+	donpcevent(instance_npcname("oct_backattack3")+"::OnEnable");
+	donpcevent(instance_npcname("oct_backattack4")+"::OnEnable");
+	donpcevent(instance_npcname("oct_mob_con")+"::OnDisable");
 	end;
 OnDisable:
-	disablenpc instance_npcname("oct_mob_con");
+	disablenpc(instance_npcname("oct_mob_con"));
 	end;
 }
 
 1@cash,45,53,0	script	oct_backattack1	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnInstanceInit:
-	disablenpc instance_npcname("oct_backattack1");
+	disablenpc(instance_npcname("oct_backattack1"));
 	end;
 OnTouch:
 	.@map$ = instance_mapname("1@cash");
@@ -436,27 +439,28 @@ OnTouch:
 	monster(.@map$, 49, 50, _("Hydra"), HYDRA, 1);
 	monster(.@map$, 41, 53, _("Octopus's Henchman"), MD_OCTOPUS, 1);
 	mapannounce(.@map$, _("Don't let them break through, stop them!!!"), bc_map, C_SPRINGGREEN);
-	specialeffect EF_BASH;
-	disablenpc instance_npcname("oct_backattack1");
+	specialeffect(EF_BASH);
+	disablenpc(instance_npcname("oct_backattack1"));
 	end;
 OnEnable:
-	enablenpc instance_npcname("oct_backattack1");
+	enablenpc(instance_npcname("oct_backattack1"));
 	end;
 }
 
 1@cash,78,99,0	script	oct_backattack2	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnInstanceInit:
-	disablenpc instance_npcname("oct_backattack2");
+	disablenpc(instance_npcname("oct_backattack2"));
 	end;
 OnTouch:
-	if (getd("."+instance_id())) end;
-	setd "."+instance_id(),1;
-	initnpctimer;
+	if (getd("."+instance_id()))
+		end;
+	setd("."+instance_id(), 1);
+	initnpctimer();
 	.@map$ = instance_mapname("1@cash");
 	monster(.@map$, 71, 105, _("Octopus's Henchman"), MD_OCTOPUS, 1);
 	mapannounce(.@map$, _("Headquarters are empty, GO!!!"), bc_map, C_SPRINGGREEN);
-	hideonnpc instance_npcname("oct_backattack2");
+	hideonnpc(instance_npcname("oct_backattack2"));
 	end;
 OnTimer2000:
 	.@map$ = instance_mapname("1@cash");
@@ -477,21 +481,22 @@ OnTimer8000:
 	.@map$ = instance_mapname("1@cash");
 	monster(.@map$, 71, 105, _("Octopus's Henchman"), MD_OCTOPUS, 1);
 	mapannounce(.@map$, _("There is no time to lose, hurry up!!!"), bc_map, C_SPRINGGREEN);
-	stopnpctimer;
+	stopnpctimer();
 	end;
 OnEnable:
-	enablenpc instance_npcname("oct_backattack2");
+	enablenpc(instance_npcname("oct_backattack2"));
 	end;
 }
 
 1@cash,299,144,0	script	oct_backattack3	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnInstanceInit:
-	disablenpc instance_npcname("oct_backattack3");
+	disablenpc(instance_npcname("oct_backattack3"));
 	end;
 OnTouch:
-	if (getd("."+instance_id())) end;
-	setd "."+instance_id(),1;
+	if (getd("."+instance_id()))
+		end;
+	setd("."+instance_id(), 1);
 	.@map$ = instance_mapname("1@cash");
 	monster(.@map$, 293, 153, _("Octopus's Henchman"), MD_OCTOPUS, 1);
 	monster(.@map$, 294, 152, _("Octopus's Henchman"), MD_OCTOPUS, 1);
@@ -499,26 +504,27 @@ OnTouch:
 	monster(.@map$, 293, 151, _("Octopus's Henchman"), MD_OCTOPUS, 1);
 	monster(.@map$, 293, 152, _("Octopus's Henchman ?"), MD_MARSE, 1);
 	mapannounce(.@map$, _("Kakaka! Suprised??!!"), bc_map, C_SPRINGGREEN);
-	initnpctimer;
-	hideonnpc instance_npcname("oct_backattack3");
+	initnpctimer();
+	hideonnpc(instance_npcname("oct_backattack3"));
 	end;
 OnTimer5000:
 	mapannounce(instance_mapname("1@cash"), _("... Looks like we have a spy among us."), bc_map, C_SPRINGGREEN);
-	stopnpctimer;
+	stopnpctimer();
 	end;
 OnEnable:
-	enablenpc instance_npcname("oct_backattack3");
+	enablenpc(instance_npcname("oct_backattack3"));
 	end;
 }
 
 1@cash,336,36,0	script	oct_backattack4	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnInstanceInit:
-	disablenpc instance_npcname("oct_backattack4");
+	disablenpc(instance_npcname("oct_backattack4"));
 	end;
 OnTouch:
-	if (getd("."+instance_id())) end;
-	setd "."+instance_id(),1;
+	if (getd("."+instance_id()))
+		end;
+	setd("."+instance_id(), 1);
 	.@map$ = instance_mapname("1@cash");
 	monster(.@map$, 332, 37, _("Octopus's Henchman"), MD_OCTOPUS, 1);
 	monster(.@map$, 332, 36, _("Octopus's Henchman"), MD_OCTOPUS, 1);
@@ -534,34 +540,34 @@ OnTouch:
 	monster(.@map$, 259, 40, _("Mercenary Squid"), MD_MARSE, 1);
 	monster(.@map$, 261, 40, _("Mercenary Squid"), MD_MARSE, 1);
 	mapannounce(.@map$, _("What a successful pincer tactic! The enemy is strong! Let's not lose yourselves! Anyway, where are all the mercenaries??"), bc_map, C_SPRINGGREEN);
-	initnpctimer;
-	hideonnpc instance_npcname("oct_backattack4");
+	initnpctimer();
+	hideonnpc(instance_npcname("oct_backattack4"));
 	end;
 OnTimer5000:
 	mapannounce(instance_mapname("1@cash"), _("Mercenary Squid : eh...eh... wrong direction. No enemies are shown in this direction."), bc_map, C_SPRINGGREEN);
 	end;
 OnTimer7000:
 	mapannounce(instance_mapname("1@cash"), _("Pervert Octopus : Fools! Can't you read the map??!! Useless!!"), bc_map, C_SPRINGGREEN);
-	stopnpctimer;
+	stopnpctimer();
 	end;
 OnEnable:
-	enablenpc instance_npcname("oct_backattack4");
+	enablenpc(instance_npcname("oct_backattack4"));
 	end;
 }
 
 1@cash,2,2,0	script	oct_boss_con	FAKE_NPC,{
 	end;
 OnInstanceInit:
-	donpcevent instance_npcname("oct_boss_con")+"::OnDisable";
+	donpcevent(instance_npcname("oct_boss_con")+"::OnDisable");
 	end;
 OnDisable:
-	disablenpc instance_npcname("oct_boss_con");
+	disablenpc(instance_npcname("oct_boss_con"));
 	end;
 OnEnable:
-	enablenpc instance_npcname("oct_boss_con");
-	donpcevent instance_npcname("oct_boss_foot")+"::OnEnable";
+	enablenpc(instance_npcname("oct_boss_con"));
+	donpcevent(instance_npcname("oct_boss_foot")+"::OnEnable");
 	monster(instance_mapname("1@cash"), 199, 188, _("Disgusting Octopus"), MD_GIANT_OCTOPUS, 1, instance_npcname("oct_boss_con")+"::OnMyMobDead");
-	initnpctimer;
+	initnpctimer();
 	end;
 OnTimer7000:
 	callsub OnAnnounce,
@@ -604,21 +610,21 @@ OnTimer49000:
 		"errrrrrrrrrrrrrrrrrrrrrrrr... Cough! Cough!",
 		"Disgusting Octopus : Violence cannot be justified in any case.",
 		"This is my place!!!";
-	stopnpctimer;
-	initnpctimer;
+	stopnpctimer();
+	initnpctimer();
 	end;
 OnAnnounce:
 	mapannounce(instance_mapname("1@cash"), sprintf(_$("Disgusting Octopus : %s"), getarg(rand(3))), bc_map, C_YELLOW);
 	return;
 OnMyMobDead:
 	.@map$ = instance_mapname("1@cash");
-	if (mobcount(.@map$,instance_npcname("oct_boss_con")+"::OnMyMobDead") < 1) {
+	if (mobcount(.@map$, instance_npcname("oct_boss_con")+"::OnMyMobDead") < 1) {
 		mapannounce(.@map$, _("Disgusting Octopus : That's it for the today! Next time, I will play with you badly!"), bc_map, C_YELLOW);
-		enablenpc instance_npcname("oct_exit_1");
-		enablenpc instance_npcname("oct_exit_2");
-		donpcevent instance_npcname("oct_boss_foot")+"::OnDisable";
-		stopnpctimer;
-		donpcevent instance_npcname("oct_boss_con")+"::OnDisable";
+		enablenpc(instance_npcname("oct_exit_1"));
+		enablenpc(instance_npcname("oct_exit_2"));
+		donpcevent(instance_npcname("oct_boss_foot")+"::OnDisable");
+		stopnpctimer();
+		donpcevent(instance_npcname("oct_boss_con")+"::OnDisable");
 		end;
 	}
 	end;
@@ -627,16 +633,16 @@ OnMyMobDead:
 1@cash,4,4,0	script	oct_boss_foot	FAKE_NPC,{
 	end;
 OnInstanceInit:
-	donpcevent instance_npcname("oct_boss_foot")+"::OnDisable";
+	donpcevent(instance_npcname("oct_boss_foot")+"::OnDisable");
 	end;
 OnEnable:
-	enablenpc instance_npcname("oct_boss_foot");
-	initnpctimer;
+	enablenpc(instance_npcname("oct_boss_foot"));
+	initnpctimer();
 	end;
 OnCall:
 	.@map$ = instance_mapname("1@cash");
-	if (mobcount(.@map$,instance_npcname("oct_boss_foot")+"::OnMyMobDead") < 100) {
-		switch(rand(2)) {
+	if (mobcount(.@map$, instance_npcname("oct_boss_foot")+"::OnMyMobDead") < 100) {
+		switch (rand(2)) {
 		case 0:
 			mapannounce(.@map$, _("Disgusting Octopus : Do you know how many legs octopus have? It doesn't matter, I have unlimited legs!!"), bc_map, C_YELLOW);
 			areamonster(.@map$, 192, 181, 206, 195, _("Octopus Leg"), MD_OCTOPUS_LEG, 1, instance_npcname("oct_boss_foot")+"::OnMyMobDead");
@@ -647,16 +653,16 @@ OnCall:
 			break;
 		}
 	}
-	initnpctimer;
+	initnpctimer();
 	end;
 OnTimer10000:
-	stopnpctimer;
-	donpcevent instance_npcname("oct_boss_foot")+"::OnCall";
+	stopnpctimer();
+	donpcevent(instance_npcname("oct_boss_foot")+"::OnCall");
 	end;
 OnDisable:
-	stopnpctimer;
-	killmonster instance_mapname("1@cash"), instance_npcname("oct_boss_foot")+"::OnMyMobDead"; // Not in official script.
-	disablenpc instance_npcname("oct_boss_foot");
+	stopnpctimer();
+	killmonster(instance_mapname("1@cash"), instance_npcname("oct_boss_foot")+"::OnMyMobDead"); // Not in official script.
+	disablenpc(instance_npcname("oct_boss_foot"));
 	end;
 OnMyMobDead:
 	end;
@@ -665,24 +671,24 @@ OnMyMobDead:
 1@cash,198,116,0	script	oct_boss_warp	WARPNPC,2,2,{
 	end;
 OnInstanceInit:
-	disablenpc instance_npcname("oct_boss_warp");
+	disablenpc(instance_npcname("oct_boss_warp"));
 	end;
 OnTouch:
-	warp instance_mapname("1@cash"), 210, 172;
+	warp(instance_mapname("1@cash"), 210, 172);
 	end;
 }
 
 1@cash,190,208,0	script	oct_exit_1	WARPNPC,2,2,{
 	end;
 OnInstanceInit:
-	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
+	disablenpc(instance_npcname(strnpcinfo(NPC_NAME)));
 	end;
 OnTouch:
 	mes("Do you want to go out from the octopus dungeon?");
-	next;
+	next();
 	if (select("No!", "Yes!") == 2)
-		warp "mal_dun01", 153, 233;
-	close;
+		warp("mal_dun01", 153, 233);
+	close();
 }
 1@cash,198,82,0	duplicate(oct_exit_1)	oct_exit_2	WARPNPC,2,2
 // This is never enabled in the official script.
