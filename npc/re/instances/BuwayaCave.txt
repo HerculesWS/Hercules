@@ -152,7 +152,7 @@ OnTouch:
 	}
 	switch (select("Enter.", "Turn back.")) {
 	case 1:
-		if( has_instance("1@ma_c") == "" ) {
+		if (has_instance("1@ma_c") == "") {
 			mes("The memorial dungeon Buwaya Cave does not exist.");
 			mes("The party leader did not generate the dungeon yet.");
 			close();
@@ -452,7 +452,7 @@ OnEnable:
 OnTouch:
 	mes("Would like to go out?");
 	next();
-	if(select("Yes!", "No, I will stay.") == 1)
+	if (select("Yes!", "No, I will stay.") == 1)
 		warp("ma_fild02", 315, 315);
 	close();
 }
