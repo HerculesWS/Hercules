@@ -325,7 +325,7 @@ dali,138,118,0	script	Dimensional Device#dimen	PORTAL,{
 	mes("^FF0000As they wander off you hear strange voices from around the corner...^000000");
 	donpcevent(instance_npcname("Doyen Irene#sarains")+"::OnDisable");
 	donpcevent(instance_npcname("A girl#sarains")+"::OnDisable");
-	dispbottom(_("As they wander off you hear strange voices from around the corner...")), "";
+	dispbottom(_("As they wander off you hear strange voices from around the corner..."), "");
 	disablenpc(instance_npcname("Sara Irene#saratalk"));
 	next();
 	mes("[Strange Old Man A]");
