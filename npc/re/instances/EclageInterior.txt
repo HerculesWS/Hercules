@@ -372,7 +372,7 @@ OnInstanceInit:
 	next();
 	cutin("minuel01", 4);
 	mes("[Minuel]");
-	mesf("%s Sir, ", strcharinfo(PC_NAME));
+	mesf("%s Sir,", strcharinfo(PC_NAME));
 	mes("Although you're detained on suspicion of being responsible for the recent incident in the lighting room,");
 	mes("there are some witnesses to prove your innocence.");
 	next();
