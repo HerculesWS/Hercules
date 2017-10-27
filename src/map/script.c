@@ -23506,7 +23506,7 @@ BUILDIN(dressroom)
 		clif->dressroom_open(sd, 0);
 		break;
 	default:
-		ShowWarning("script:dressroom: unknown mode (%i).\n", mode);
+		ShowWarning("script:dressroom: unknown mode (%u).\n", mode);
 		script_pushint(st, 0);
 		return false;
 	}
