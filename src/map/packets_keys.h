@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2015  Hercules Dev Team
+ * Copyright (C) 2013-2017  Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -2057,7 +2057,7 @@
 	packetKeys(0x03FA5A97,0x20B802D5,0x339F1977);
 #endif
 
-// 2017-06-07bRagexeRE
+// 2017-06-07bRagexeRE, 2017-06-07cRagexeRE
 #if PACKETVER == 20170607
 	packetKeys(0x50564ACD,0x79CA4E15,0x405F4894);
 #endif
@@ -2150,6 +2150,11 @@
 // 2017-10-18aRagexeRE
 #if PACKETVER == 20171018
 	packetKeys(0x2CAA109C,0x158C1EC2,0x7A5E58F3);
+#endif
+
+// 2017-10-25bRagexeRE, 2017-10-25cRagexeRE, 2017-10-25dRagexeRE, 2017-10-25eRagexeRE
+#if PACKETVER == 20171025
+	packetKeys(0x165C565C,0x565C565C,0x565C565C);
 #endif
 
 
