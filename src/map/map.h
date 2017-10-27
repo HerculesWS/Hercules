@@ -519,7 +519,7 @@ struct spawn_data {
 		//0: Normal mob | 1: Standard summon, attacks mobs
 		//2: Alchemist Marine Sphere | 3: Alchemist Summon Flora | 4: Summon Zanzou
 		unsigned int dynamic : 1; ///< Whether this data is indexed by a map's dynamic mob list
-		unsigned int boss : 1;    ///< 0: Non-boss monster | 1: Boss monster
+		uint8 boss;    ///< 0: Non-boss monster | 1: Boss monster | 2: MVP
 	} state;
 	char name[NAME_LENGTH], eventname[EVENT_NAME_LENGTH]; //Name/event
 };
