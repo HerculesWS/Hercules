@@ -1067,14 +1067,17 @@ void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enu
 #endif
 #if PACKETVER >= 20120221
 	if (battle_config.show_monster_hp_bar && bl->type == BL_MOB && status_get_hp(bl) < status_get_max_hp(bl)) {
-		const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
 		p.maxHP = status_get_max_hp(bl);
 		p.HP = status_get_hp(bl);
-		p.isBoss = (md->spawn != NULL && md->spawn->state.boss) ? 1 : 0;
 	} else {
 		p.maxHP = -1;
 		p.HP = -1;
-		p.isBoss = 0;
+	}
+	if (bl->type == BL_MOB) {
+		const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
+		p.isBoss = (md->spawn != NULL) ? md->spawn->state.boss : BTYPE_NONE;
+	} else {
+		p.isBoss = BTYPE_NONE;
 	}
 #endif
 #if PACKETVER >= 20150513
@@ -1216,14 +1219,17 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 #endif
 #if PACKETVER >= 20120221
 	if (battle_config.show_monster_hp_bar && bl->type == BL_MOB && status_get_hp(bl) < status_get_max_hp(bl)) {
-		const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
 		p.maxHP = status_get_max_hp(bl);
 		p.HP = status_get_hp(bl);
-		p.isBoss = (md->spawn != NULL && md->spawn->state.boss) ? 1 : 0;
 	} else {
 		p.maxHP = -1;
 		p.HP = -1;
-		p.isBoss = 0;
+	}
+	if (bl->type == BL_MOB) {
+		const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
+		p.isBoss = (md->spawn != NULL) ? md->spawn->state.boss : BTYPE_NONE;
+	} else {
+		p.isBoss = BTYPE_NONE;
 	}
 #endif
 #if PACKETVER >= 20150513
@@ -1315,14 +1321,17 @@ void clif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd, 
 #endif
 #if PACKETVER >= 20120221
 	if (battle_config.show_monster_hp_bar && bl->type == BL_MOB && status_get_hp(bl) < status_get_max_hp(bl)) {
-		const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
 		p.maxHP = status_get_max_hp(bl);
 		p.HP = status_get_hp(bl);
-		p.isBoss = (md->spawn != NULL && md->spawn->state.boss) ? 1 : 0;
 	} else {
 		p.maxHP = -1;
 		p.HP = -1;
-		p.isBoss = 0;
+	}
+	if (bl->type == BL_MOB) {
+		const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
+		p.isBoss = (md->spawn != NULL) ? md->spawn->state.boss : BTYPE_NONE;
+	} else {
+		p.isBoss = BTYPE_NONE;
 	}
 #endif
 #if PACKETVER >= 20150513

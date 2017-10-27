@@ -189,6 +189,7 @@ There are two optional fields for monster size and AI. Size can be 0
 
 Alternately, a monster spawned using 'boss_monster' instead of 'monster' is able to be
 detected on the map with the SC_CASH_BOSS_ALARM status (used by Convex Mirror, item ID# 12214).
+A monster spawned using 'miniboss_monster' is spawn monster as mini boss view.
 
 ** NPC names
 
