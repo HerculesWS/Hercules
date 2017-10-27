@@ -32,6 +32,8 @@
 
 struct mmo_account;
 struct AccountDB;
+struct config_t;
+struct config_setting_t;
 
 enum E_LOGINSERVER_ST
 {
@@ -209,6 +211,17 @@ struct login_interface {
 	void (*parse_request_connection) (int fd, struct login_session_data* sd, const char *ip, uint32 ipl);
 	void (*config_set_defaults) (void);
 	bool (*config_read) (const char *filename, bool included);
+	bool (*config_read_inter) (const char *filename, struct config_t *config, bool imported);
+	bool (*config_read_console) (const char *filename, struct config_t *config, bool imported);
+	bool (*config_read_log) (const char *filename, struct config_t *config, bool imported);
+	bool (*config_read_account) (const char *filename, struct config_t *config, bool imported);
+	bool (*config_read_permission) (const char *filename, struct config_t *config, bool imported);
+	bool (*config_read_permission_hash) (const char *filename, struct config_t *config, bool imported);
+	bool (*config_read_permission_blacklist) (const char *filename, struct config_t *config, bool imported);
+	void (*clear_dnsbl_servers) (void);
+	void (*config_set_dnsbl_servers) (struct config_setting_t *setting);
+	void (*clear_client_hash_nodes) (void);
+	void (*config_set_md5hash) (struct config_setting_t *setting);
 	char *LOGIN_CONF_NAME;
 	char *NET_CONF_NAME; ///< Network configuration filename
 };

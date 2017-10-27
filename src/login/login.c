@@ -1604,7 +1604,7 @@ bool login_config_read_account(const char *filename, struct config_t *config, bo
 /**
  * Frees login->config->client_hash_nodes
  **/
-void clear_client_hash_nodes(void)
+void login_clear_client_hash_nodes(void)
 {
 	struct client_hash_node *node = login->config->client_hash_nodes;
 
@@ -1618,7 +1618,7 @@ void clear_client_hash_nodes(void)
 }
 
 /**
- * Reads information from login_configuration.permission.hash.md5_hashes.
+ * Reads information from login_configuration.permission.hash.md5_hashes (unused function)
  *
  * @param setting The setting to read from.
  */
@@ -1627,7 +1627,7 @@ void login_config_set_md5hash(struct config_setting_t *setting)
 	int i;
 	int count = libconfig->setting_length(setting);
 
-	clear_client_hash_nodes();
+	login->clear_client_hash_nodes();
 
 	// There's no need to parse if it's disabled or if there's no list
 	if (count <= 0 || !login->config->client_hash_check)
@@ -1702,7 +1702,7 @@ bool login_config_read_permission_hash(const char *filename, struct config_t *co
 	libconfig->setting_lookup_bool_real(setting, "enabled", &login->config->client_hash_check);
 
 	if ((setting = libconfig->lookup(config, "login_configuration/permission/hash/MD5_hashes")) != NULL)
-		login_config_set_md5hash(setting);
+		login->config_set_md5hash(setting);
 
 	return true;
 }
@@ -1710,7 +1710,7 @@ bool login_config_read_permission_hash(const char *filename, struct config_t *co
 /**
  * Clears login->config->dnsbl_servers, freeing any allocated memory.
  */
-void clear_dnsbl_servers(void)
+void login_clear_dnsbl_servers(void)
 {
 	while (VECTOR_LENGTH(login->config->dnsbl_servers) > 0) {
 		aFree(&VECTOR_POP(login->config->dnsbl_servers));
@@ -1728,7 +1728,7 @@ void login_config_set_dnsbl_servers(struct config_setting_t *setting)
 	int i;
 	int count = libconfig->setting_length(setting);
 
-	clear_dnsbl_servers();
+	login->clear_dnsbl_servers();
 
 	// There's no need to parse if it's disabled
 	if (count <= 0 || !login->config->use_dnsbl)
@@ -1772,7 +1772,7 @@ bool login_config_read_permission_blacklist(const char *filename, struct config_
 	libconfig->setting_lookup_bool_real(setting, "enabled", &login->config->use_dnsbl);
 
 	if ((setting = libconfig->lookup(config, "login_configuration/permission/DNS_blacklist/dnsbl_servers")) != NULL)
-		login_config_set_dnsbl_servers(setting);
+		login->config_set_dnsbl_servers(setting);
 
 	return true;
 }
@@ -1806,9 +1806,9 @@ bool login_config_read_permission(const char *filename, struct config_t *config,
 	libconfig->setting_lookup_bool_real(setting, "check_client_version", &login->config->check_client_version);
 	libconfig->setting_lookup_uint32(setting, "client_version_to_connect", &login->config->client_version_to_connect);
 
-	if (!login_config_read_permission_hash(filename, config, imported))
+	if (!login->config_read_permission_hash(filename, config, imported))
 		retval = false;
-	if (!login_config_read_permission_blacklist(filename, config, imported))
+	if (!login->config_read_permission_blacklist(filename, config, imported))
 		retval = false;
 
 	return retval;
@@ -1833,15 +1833,15 @@ bool login_config_read(const char *filename, bool imported)
 	if (!libconfig->load_file(&config, filename))
 		return false; // Error message is already shown by libconfig->load_file
 
-	if (!login_config_read_inter(filename, &config, imported))
+	if (!login->config_read_inter(filename, &config, imported))
 		retval = false;
-	if (!login_config_read_console(filename, &config, imported))
+	if (!login->config_read_console(filename, &config, imported))
 		retval = false;
-	if (!login_config_read_log(filename, &config, imported))
+	if (!login->config_read_log(filename, &config, imported))
 		retval = false;
-	if (!login_config_read_account(filename, &config, imported))
+	if (!login->config_read_account(filename, &config, imported))
 		retval = false;
-	if (!login_config_read_permission(filename, &config, imported))
+	if (!login->config_read_permission(filename, &config, imported))
 		retval = false;
 
 	if (!loginlog_config_read("conf/common/inter-server.conf", imported)) // Only inter-server
@@ -1877,8 +1877,8 @@ int do_final(void)
 
 	HPM->event(HPET_FINAL);
 
-	clear_client_hash_nodes();
-	clear_dnsbl_servers();
+	login->clear_client_hash_nodes();
+	login->clear_dnsbl_servers();
 
 	login_log(0, "login server", 100, "login server shutdown");
 
@@ -2168,6 +2168,18 @@ void login_defaults(void) {
 
 	login->config_set_defaults = login_config_set_defaults;
 	login->config_read = login_config_read;
+	login->config_read_inter = login_config_read_inter;
+	login->config_read_console = login_config_read_console;
+	login->config_read_log = login_config_read_log;
+	login->config_read_account = login_config_read_account;
+	login->config_read_permission = login_config_read_permission;
+	login->config_read_permission_hash = login_config_read_permission_hash;
+	login->config_read_permission_blacklist = login_config_read_permission_blacklist;
+	login->config_set_dnsbl_servers = login_config_set_dnsbl_servers;
+
+	login->clear_dnsbl_servers = login_clear_dnsbl_servers;
+	login->clear_client_hash_nodes = login_clear_client_hash_nodes;
+	login->config_set_md5hash = login_config_set_md5hash;
 	login->LOGIN_CONF_NAME = NULL;
 	login->NET_CONF_NAME = NULL;
 }
