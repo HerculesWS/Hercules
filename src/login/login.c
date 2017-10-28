@@ -1815,6 +1815,38 @@ bool login_config_read_permission(const char *filename, struct config_t *config,
 }
 
 /**
+ * Reads 'login_configuration.users_count' and initializes required variables.
+ *
+ * @param filename Path to configuration file (used in error and warning messages).
+ * @param config   The current config being parsed.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+bool login_config_read_users(const char *filename, struct config_t *config, bool imported)
+{
+	struct config_setting_t *setting = NULL;
+	bool retval = true;
+
+	nullpo_retr(false, filename);
+	nullpo_retr(false, config);
+
+	if ((setting = libconfig->lookup(config, "login_configuration/users_count")) == NULL) {
+		if (imported)
+			return true;
+		ShowError("login_config_read: login_configuration/users_count was not found in %s!\n", filename);
+		return false;
+	}
+
+	libconfig->setting_lookup_bool_real(setting, "send_user_count_description", &login->config->send_user_count_description);
+	libconfig->setting_lookup_uint32(setting, "low", &login->config->users_low);
+	libconfig->setting_lookup_uint32(setting, "medium", &login->config->users_medium);
+	libconfig->setting_lookup_uint32(setting, "high", &login->config->users_high);
+
+	return retval;
+}
+
+/**
  * Reads the 'login-config' configuration file and initializes required variables.
  *
  * @param filename Path to configuration file.
@@ -1843,6 +1875,8 @@ bool login_config_read(const char *filename, bool imported)
 		retval = false;
 	if (!login->config_read_permission(filename, &config, imported))
 		retval = false;
+	if (!login->config_read_users(filename, &config, imported))
+		retval = false;
 
 	if (!loginlog_config_read("conf/common/inter-server.conf", imported)) // Only inter-server
 		retval = false;
@@ -1864,6 +1898,30 @@ bool login_config_read(const char *filename, bool imported)
 
 	config_destroy(&config);
 	return retval;
+}
+
+/**
+ * Convert users count to colors.
+ *
+ * @param users Actual users count.
+ *
+ * @retval users count or color id.
+ **/
+uint16 login_convert_users_to_colors(uint16 users)
+{
+#if PACKETVER >= 20170726
+	if (!login->config->send_user_count_description)
+		return 4;
+	if (users <= login->config->users_low)
+		return 0;
+	else if (users <= login->config->users_medium)
+		return 1;
+	else if (users <= login->config->users_high)
+		return 2;
+	return 3;
+#else
+	return users;
+#endif
 }
 
 //--------------------------------------
@@ -2175,11 +2233,13 @@ void login_defaults(void) {
 	login->config_read_permission = login_config_read_permission;
 	login->config_read_permission_hash = login_config_read_permission_hash;
 	login->config_read_permission_blacklist = login_config_read_permission_blacklist;
+	login->config_read_users = login_config_read_users;
 	login->config_set_dnsbl_servers = login_config_set_dnsbl_servers;
 
 	login->clear_dnsbl_servers = login_clear_dnsbl_servers;
 	login->clear_client_hash_nodes = login_clear_client_hash_nodes;
 	login->config_set_md5hash = login_config_set_md5hash;
+	login->convert_users_to_colors = login_convert_users_to_colors;
 	login->LOGIN_CONF_NAME = NULL;
 	login->NET_CONF_NAME = NULL;
 }

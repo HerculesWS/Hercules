@@ -121,6 +121,11 @@ struct Login_Config {
 	bool use_dnsbl;                                 ///< dns blacklist blocking ?
 	VECTOR_DECL(char *) dnsbl_servers;              ///< dnsbl servers
 
+	bool send_user_count_description;
+	uint32 users_low;
+	uint32 users_medium;
+	uint32 users_high;
+
 	bool client_hash_check;                         ///< flags for checking client md5
 	// TODO: VECTOR candidate
 	struct client_hash_node *client_hash_nodes;     ///< linked list containg md5 hash for each gm group
@@ -218,10 +223,12 @@ struct login_interface {
 	bool (*config_read_permission) (const char *filename, struct config_t *config, bool imported);
 	bool (*config_read_permission_hash) (const char *filename, struct config_t *config, bool imported);
 	bool (*config_read_permission_blacklist) (const char *filename, struct config_t *config, bool imported);
+	bool (*config_read_users) (const char *filename, struct config_t *config, bool imported);
 	void (*clear_dnsbl_servers) (void);
 	void (*config_set_dnsbl_servers) (struct config_setting_t *setting);
 	void (*clear_client_hash_nodes) (void);
 	void (*config_set_md5hash) (struct config_setting_t *setting);
+	uint16 (*convert_users_to_colors) (uint16 users);
 	char *LOGIN_CONF_NAME;
 	char *NET_CONF_NAME; ///< Network configuration filename
 };
