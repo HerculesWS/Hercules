@@ -16478,7 +16478,7 @@ void clif_bg_message(struct battleground_data *bgd, int src_id, const char *name
 	if (!bgd->count || (sd = bg->getavailablesd(bgd)) == NULL)
 		return;
 
-	len = (int)strlen(mes);
+	len = (int)strlen(mes) + 1;
 	Assert_retv(len <= INT16_MAX - NAME_LENGTH - 8);
 	buf = (unsigned char*)aMalloc((len + NAME_LENGTH + 8)*sizeof(unsigned char));
 
