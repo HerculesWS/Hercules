@@ -16618,15 +16618,16 @@ struct skill_unit_group* skill_id2group(int group_id)
 /// Fatal error if nothing is available.
 int skill_get_new_group_id(void)
 {
-	if( skill->unit_group_newid >= MAX_SKILL_DB && skill->id2group(skill->unit_group_newid) == NULL )
+	if (skill->unit_group_newid > MAX_SKILL_ID && skill->id2group(skill->unit_group_newid) == NULL)
 		return skill->unit_group_newid++;// available
-	{// find next id
+
+	{
+		// find next id
 		int base_id = skill->unit_group_newid;
-		while( base_id != ++skill->unit_group_newid )
-		{
-			if( skill->unit_group_newid < MAX_SKILL_DB )
-				skill->unit_group_newid = MAX_SKILL_DB;
-			if( skill->id2group(skill->unit_group_newid) == NULL )
+		while (base_id != ++skill->unit_group_newid) {
+			if (skill->unit_group_newid <= MAX_SKILL_ID)
+				skill->unit_group_newid = MAX_SKILL_ID + 1;
+			if (skill->id2group(skill->unit_group_newid) == NULL)
 				return skill->unit_group_newid++;// available
 		}
 		// full loop, nothing available
