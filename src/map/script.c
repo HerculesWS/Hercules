@@ -14291,6 +14291,8 @@ BUILDIN(setequipoption)
 			ShowError("buildin_setequipotion: Option value %d exceeds maximum limit (%d to %d) for type!\n", value, -INT16_MAX, INT16_MAX);
 			return false;
 		}
+		/* Store equip info */
+		int ep = sd->status.inventory[i].equip;
 		/* Add Option Index */
 		sd->status.inventory[i].option[slot-1].index = ito->index;
 		/* Add Option Value */
@@ -14306,8 +14308,8 @@ BUILDIN(setequipoption)
 		clif->additem(sd, i, 1, 0); // notify client to simulate item addition.
 		/* Log addition of the item. */
 		logs->pick_pc(sd, LOG_TYPE_SCRIPT, 1, &sd->status.inventory[i], sd->inventory_data[i]);
-		pc->equipitem(sd, i, sd->status.inventory[i].equip); // force equip the item at the original position.
-		clif->misceffect(&sd->bl, 2); // show effect
+		pc->equipitem(sd, i, ep); // force equip the item at the original position.
+		clif->misceffect(&sd->bl, 3); // show effect
 	}
 
 	script_pushint(st, 1);
