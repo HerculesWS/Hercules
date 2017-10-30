@@ -284,7 +284,7 @@ bool lclif_send_server_list(struct login_session_data *sd)
 		packet->server_list[n].ip = htonl((subnet_char_ip) ? subnet_char_ip : server[i].ip);
 		packet->server_list[n].port = sockt->ntows(htons(server[i].port)); // [!] LE byte order here [!]
 		safestrncpy(packet->server_list[n].name, server[i].name, 20);
-		packet->server_list[n].usercount = server[i].users;
+		packet->server_list[n].usercount = login->convert_users_to_colors(server[i].users);
 
 		if (server[i].type == CST_PAYING && sd->expiration_time > time(NULL))
 			packet->server_list[n].property = CST_NORMAL;
