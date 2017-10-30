@@ -1560,7 +1560,7 @@ int pc_calc_skillpoint(struct map_session_data* sd) {
 
 	nullpo_ret(sd);
 
-	for (i = 1; i < MAX_SKILL; i++) {
+	for (i = 1; i < MAX_SKILL_DB; i++) {
 		int skill_lv = pc->checkskill2(sd,i);
 		if (skill_lv > 0) {
 			inf2 = skill->dbs->db[i].inf2;
@@ -1596,7 +1596,7 @@ int pc_calc_skilltree(struct map_session_data *sd)
 	}
 	classidx = pc->class2idx(class);
 
-	for( i = 0; i < MAX_SKILL; i++ ) {
+	for (i = 0; i < MAX_SKILL_DB; i++) {
 		if( sd->status.skill[i].flag != SKILL_FLAG_PLAGIARIZED && sd->status.skill[i].flag != SKILL_FLAG_PERM_GRANTED ) //Don't touch these
 			sd->status.skill[i].id = 0; //First clear skills.
 		/* permanent skills that must be re-checked */
@@ -1613,7 +1613,7 @@ int pc_calc_skilltree(struct map_session_data *sd)
 		}
 	}
 
-	for( i = 0; i < MAX_SKILL; i++ ) {
+	for (i = 0; i < MAX_SKILL_DB; i++) {
 		if( sd->status.skill[i].flag != SKILL_FLAG_PERMANENT && sd->status.skill[i].flag != SKILL_FLAG_PERM_GRANTED && sd->status.skill[i].flag != SKILL_FLAG_PLAGIARIZED )
 		{ // Restore original level of skills after deleting earned skills.
 			sd->status.skill[i].lv = (sd->status.skill[i].flag == SKILL_FLAG_TEMPORARY) ? 0 : sd->status.skill[i].flag - SKILL_FLAG_REPLACED_LV_0;
@@ -1649,7 +1649,7 @@ int pc_calc_skilltree(struct map_session_data *sd)
 	}
 
 	if( pc_has_permission(sd, PC_PERM_ALL_SKILL) ) {
-		for( i = 0; i < MAX_SKILL; i++ ) {
+		for (i = 0; i < MAX_SKILL_DB; i++) {
 			switch(skill->dbs->db[i].nameid) {
 				/**
 				 * Dummy skills must be added here otherwise they'll be displayed in the,
@@ -1843,7 +1843,7 @@ int pc_clean_skilltree(struct map_session_data *sd)
 {
 	int i;
 	nullpo_ret(sd);
-	for (i = 0; i < MAX_SKILL; i++){
+	for (i = 0; i < MAX_SKILL_DB; i++) {
 		if (sd->status.skill[i].flag == SKILL_FLAG_TEMPORARY || sd->status.skill[i].flag == SKILL_FLAG_PLAGIARIZED) {
 			sd->status.skill[i].id = 0;
 			sd->status.skill[i].lv = 0;
@@ -5895,8 +5895,9 @@ int pc_checkskill(struct map_session_data *sd,uint16 skill_id) {
 	return 0;
 }
 int pc_checkskill2(struct map_session_data *sd,uint16 index) {
-	if(sd == NULL) return 0;
-	if(index >= ARRAYLENGTH(sd->status.skill) ) {
+	if (sd == NULL)
+		return 0;
+	if (index >= MAX_SKILL_DB) {
 		ShowError("pc_checkskill: Invalid skill index %d (char_id=%d).\n", index, sd->status.char_id);
 		return 0;
 	}
@@ -7293,7 +7294,7 @@ int pc_allskillup(struct map_session_data *sd)
 
 	nullpo_ret(sd);
 
-	for(i=0;i<MAX_SKILL;i++){
+	for (i = 0; i < MAX_SKILL_DB; i++) {
 		if (sd->status.skill[i].flag != SKILL_FLAG_PERMANENT && sd->status.skill[i].flag != SKILL_FLAG_PERM_GRANTED && sd->status.skill[i].flag != SKILL_FLAG_PLAGIARIZED) {
 			sd->status.skill[i].lv = (sd->status.skill[i].flag == SKILL_FLAG_TEMPORARY) ? 0 : sd->status.skill[i].flag - SKILL_FLAG_REPLACED_LV_0;
 			sd->status.skill[i].flag = SKILL_FLAG_PERMANENT;
@@ -7304,7 +7305,7 @@ int pc_allskillup(struct map_session_data *sd)
 
 	if (pc_has_permission(sd, PC_PERM_ALL_SKILL)) { //Get ALL skills except npc/guild ones. [Skotlex]
 		//and except SG_DEVIL [Komurka] and MO_TRIPLEATTACK and RG_SNATCHER [ultramage]
-		for(i=0;i<MAX_SKILL;i++){
+		for (i = 0; i < MAX_SKILL_DB; i++) {
 			switch( skill->dbs->db[i].nameid ) {
 				case SG_DEVIL:
 				case MO_TRIPLEATTACK:
@@ -7544,9 +7545,7 @@ int pc_resetskill(struct map_session_data* sd, int flag)
 			status_change_end(&sd->bl, SC_SPRITEMABLE, INVALID_TIMER);
 	}
 
-	for( i = 1; i < MAX_SKILL; i++ ) {
-		// FIXME: We're looping on i = [1..MAX_SKILL-1] (which makes sense as index for sd->status.skill[]) but then we're using the
-		// same i to access skill->dbs->db[], and especially to check skill_ischangesex(). This is wrong.
+	for (i = 1; i < MAX_SKILL_DB; i++) {
 		uint16 skill_id = 0;
 		int lv = sd->status.skill[i].lv;
 		if (lv < 1) continue;

@@ -25,7 +25,7 @@
 #include "map/status.h" // enum sc_type
 #include "common/hercules.h"
 #include "common/db.h"
-#include "common/mmo.h" // MAX_SKILL, struct square
+#include "common/mmo.h" // MAX_SKILL_DB, struct square
 
 /**
  * Declarations
@@ -43,7 +43,6 @@ struct status_change_entry;
 /**
  * Defines
  **/
-#define MAX_SKILL_DB              MAX_SKILL
 #define MAX_SKILL_PRODUCE_DB      270
 #define MAX_PRODUCE_RESOURCE      10
 #define MAX_SKILL_ARROW_DB        140

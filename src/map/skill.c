@@ -18813,7 +18813,7 @@ int skill_blockpc_end(int tid, int64 tick, int id, intptr_t data)
 	struct map_session_data *sd = map->id2sd(id);
 	struct skill_cd * cd = NULL;
 
-	if (data <= 0 || data >= MAX_SKILL)
+	if (data <= 0 || data >= MAX_SKILL_DB)
 		return 0;
 	if (!sd || !sd->blockskill[data])
 		return 0;
@@ -18949,7 +18949,7 @@ int skill_blockpc_start_(struct map_session_data *sd, uint16 skill_id, int tick)
 int skill_blockhomun_end(int tid, int64 tick, int id, intptr_t data)
 {
 	struct homun_data *hd = map->id2hd(id);
-	if (data <= 0 || data >= MAX_SKILL)
+	if (data <= 0 || data >= MAX_SKILL_DB)
 		return 0;
 	if (hd != NULL)
 		hd->blockskill[data] = 0;
@@ -18978,7 +18978,7 @@ int skill_blockhomun_start(struct homun_data *hd, uint16 skill_id, int tick)
 int skill_blockmerc_end(int tid, int64 tick, int id, intptr_t data)
 {
 	struct mercenary_data *md = map->id2mc(id);
-	if (data <= 0 || data >= MAX_SKILL)
+	if (data <= 0 || data >= MAX_SKILL_DB)
 		return 0;
 	if (md != NULL)
 		md->blockskill[data] = 0;
@@ -20855,7 +20855,7 @@ bool skill_read_skilldb(const char *filename)
 	struct config_setting_t *sk, *conf;
 	char filepath[256];
 	int count=0, index=0;
-	bool duplicate[MAX_SKILL] = {0};
+	bool duplicate[MAX_SKILL_DB] = {0};
 
 	nullpo_retr(false, filename);
 

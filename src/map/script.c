@@ -14590,7 +14590,7 @@ BUILDIN(getskilllist)
 	int i,j=0;
 	if (sd == NULL)
 		return true;
-	for(i=0;i<MAX_SKILL;i++) {
+	for (i = 0; i < MAX_SKILL_DB; i++) {
 		if(sd->status.skill[i].id > 0 && sd->status.skill[i].lv > 0) {
 			pc->setreg(sd,reference_uid(script->add_str("@skilllist_id"), j),sd->status.skill[i].id);
 			pc->setreg(sd,reference_uid(script->add_str("@skilllist_lv"), j),sd->status.skill[i].lv);
