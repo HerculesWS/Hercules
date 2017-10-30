@@ -5296,12 +5296,13 @@ ACMD(skillid)
 	iter = db_iterator(skill->name2id_db);
 
 	for (data = iter->first(iter,&key); iter->exists(iter); data = iter->next(iter,&key)) {
-		int idx = skill->get_index(DB->data2i(data));
-		if (strnicmp(key.str, message, skillen) == 0 || strnicmp(skill->dbs->db[idx].desc, message, skillen) == 0) {
-			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1164), DB->data2i(data), skill->dbs->db[idx].desc, key.str); // skill %d: %s (%s)
+		int skill_id = DB->data2i(data);
+		const char *skill_desc = skill->get_desc(skill_id);
+		if (strnicmp(key.str, message, skillen) == 0 || strnicmp(skill_desc, message, skillen) == 0) {
+			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1164), skill_id, skill_desc, key.str); // skill %d: %s (%s)
 			clif->message(fd, atcmd_output);
-		} else if ( found < MAX_SKILLID_PARTIAL_RESULTS && ( stristr(key.str,message) || stristr(skill->dbs->db[idx].desc,message) ) ) {
-			snprintf(partials[found], MAX_SKILLID_PARTIAL_RESULTS_LEN, msg_fd(fd,1164), DB->data2i(data), skill->dbs->db[idx].desc, key.str);
+		} else if (found < MAX_SKILLID_PARTIAL_RESULTS && (stristr(key.str, message) != NULL || stristr(skill_desc, message) != NULL)) {
+			snprintf(partials[found], MAX_SKILLID_PARTIAL_RESULTS_LEN, msg_fd(fd, 1164), skill_id, skill_desc, key.str);
 			found++;
 		}
 	}
@@ -5428,7 +5429,7 @@ ACMD(skilltree)
 	for (j = 0; j < VECTOR_LENGTH(entry->need); j++) {
 		struct skill_tree_requirement *req = &VECTOR_INDEX(entry->need, j);
 		if (pc->checkskill(sd, req->id) < req->lv) {
-			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1170), req->lv, skill->dbs->db[req->id].desc); // Player requires level %d of skill %s.
+			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1170), req->lv, skill->get_desc(req->id)); // Player requires level %d of skill %s.
 			clif->message(fd, atcmd_output);
 			meets = 0;
 		}
@@ -8686,7 +8687,7 @@ ACMD(cart) {
 
 	int val = atoi(message);
 	bool need_skill = pc->checkskill(sd, MC_PUSHCART) ? false : true;
-	unsigned int index = skill->get_index(MC_PUSHCART);
+	int index = skill->get_index(MC_PUSHCART);
 
 	if (!*message || val < 0 || val > MAX_CARTS) {
 		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1390),command,MAX_CARTS); // Unknown Cart (usage: %s <0-%d>).
