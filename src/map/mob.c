@@ -4846,7 +4846,7 @@ bool mob_parse_row_mobskilldb(char** str, int columns, int current)
 	struct mob_skill *ms, gms;
 	int mob_id;
 	int i =0, j, tmp;
-	uint16 sidx = 0;
+	int sidx = 0;
 
 	nullpo_retr(false, str);
 	mob_id = atoi(str[0]);

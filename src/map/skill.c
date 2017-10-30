@@ -3546,8 +3546,8 @@ int skill_check_condition_mercenary(struct block_list *bl, int skill_id, int lv,
 	struct status_data *st;
 	struct map_session_data *sd = NULL;
 	int i, hp, sp, hp_rate, sp_rate, state, mhp;
-	uint16 idx;
-	int itemid[MAX_SKILL_ITEM_REQUIRE],amount[ARRAYLENGTH(itemid)],index[ARRAYLENGTH(itemid)];
+	int idx;
+	int itemid[MAX_SKILL_ITEM_REQUIRE], amount[MAX_SKILL_ITEM_REQUIRE], index[MAX_SKILL_ITEM_REQUIRE];
 
 	if( lv < 1 || lv > MAX_SKILL_LEVEL )
 		return 0;
@@ -3563,8 +3563,7 @@ int skill_check_condition_mercenary(struct block_list *bl, int skill_id, int lv,
 		return 0;
 
 	// Requirements
-	for( i = 0; i < ARRAYLENGTH(itemid); i++ )
-	{
+	for (i = 0; i < MAX_SKILL_ITEM_REQUIRE; i++) {
 		itemid[i] = skill->dbs->db[idx].itemid[i];
 		amount[i] = skill->dbs->db[idx].amount[i];
 	}
@@ -7037,7 +7036,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				// custom hack to make the mob display the skill, because these skills don't show the skill use text themselves
 				//NOTE: mobs don't have the sprite animation that is used when performing this skill (will cause glitches)
 				char temp[70];
-				snprintf(temp, sizeof(temp), "%s : %s !!",md->name,skill->dbs->db[skill_id].desc);
+				snprintf(temp, sizeof(temp), "%s : %s !!", md->name, skill->get_desc(skill_id));
 				clif->disp_overhead(&md->bl,temp);
 			}
 			break;
@@ -7236,7 +7235,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 					return 1;
 				}
 				if( sd->skillitem != skill_id )
-					status_zap(src,0,skill->dbs->db[skill->get_index(skill_id)].sp[skill_lv]); // consume sp only if succeeded
+					status_zap(src, 0, skill->get_sp(skill_id, skill_lv)); // consume sp only if succeeded
 			}
 			break;
 
@@ -7412,21 +7411,22 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 					return 1;
 				}
 				if( sd ) {
-					int x,bonus=100, potion = min(500+skill_lv,505);
-					x = skill_lv%11 - 1;
-					i = pc->search_inventory(sd,skill->dbs->db[skill_id].itemid[x]);
-					if (i == INDEX_NOT_FOUND || skill->dbs->db[skill_id].itemid[x] <= 0) {
+					int bonus = 100, potion = min(500+skill_lv,505);
+					int item_idx = skill_lv%11 - 1;
+					int item_id = skill->get_itemid(skill_id, item_idx);
+					int inventory_idx = pc->search_inventory(sd, item_id);
+					if (inventory_idx == INDEX_NOT_FOUND || item_id <= 0) {
 						clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 						map->freeblock_unlock();
 						return 1;
 					}
-					if(sd->inventory_data[i] == NULL || sd->status.inventory[i].amount < skill->dbs->db[skill_id].amount[x]) {
+					if (sd->inventory_data[inventory_idx] == NULL || sd->status.inventory[inventory_idx].amount < skill->get_itemqty(skill_id, item_idx)) {
 						clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 						map->freeblock_unlock();
 						return 1;
 					}
 					if( skill_id == AM_BERSERKPITCHER ) {
-						if (dstsd && dstsd->status.base_level < sd->inventory_data[i]->elv) {
+						if (dstsd != NULL && dstsd->status.base_level < sd->inventory_data[inventory_idx]->elv) {
 							clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 							map->freeblock_unlock();
 							return 1;
@@ -7435,7 +7435,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 					script->potion_flag = 1;
 					script->potion_hp = script->potion_sp = script->potion_per_hp = script->potion_per_sp = 0;
 					script->potion_target = bl->id;
-					script->run_use_script(sd, sd->inventory_data[i], 0);
+					script->run_use_script(sd, sd->inventory_data[inventory_idx], 0);
 					script->potion_flag = script->potion_target = 0;
 					if( sd->sc.data[SC_SOULLINK] && sd->sc.data[SC_SOULLINK]->val2 == SL_ALCHEMIST )
 						bonus += sd->status.base_level;
@@ -7962,14 +7962,14 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 
 		case WE_MALE:
 		{
-			int hp_rate = (!skill_lv)? 0:skill->dbs->db[skill_id].hp_rate[skill_lv-1];
+			int hp_rate = skill_lv == 0 ? 0 : skill->get_hp_rate(skill_id, skill_lv);
 			int gain_hp = tstatus->max_hp*abs(hp_rate)/100; // The earned is the same % of the target HP than it cost the caster. [Skotlex]
 			clif->skill_nodamage(src,bl,skill_id,status->heal(bl, gain_hp, 0, 0),1);
 		}
 			break;
 		case WE_FEMALE:
 		{
-			int sp_rate = (!skill_lv)? 0:skill->dbs->db[skill_id].sp_rate[skill_lv-1];
+			int sp_rate = skill_lv == 0 ? 0 : skill->get_sp_rate(skill_id, skill_lv);
 			int gain_sp = tstatus->max_sp*abs(sp_rate)/100;// The earned is the same % of the target SP than it cost the caster. [Skotlex]
 			clif->skill_nodamage(src,bl,skill_id,status->heal(bl, 0, gain_sp, 0),1);
 		}
@@ -8032,16 +8032,17 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 						if( battle_config.skill_removetrap_type ) {
 							int i;
 							// get back all items used to deploy the trap
-							for( i = 0; i < 10; i++ ) {
-								if( skill->dbs->db[su->group->skill_id].itemid[i] > 0 ) {
+							for (i = 0; i < MAX_SKILL_ITEM_REQUIRE; i++) {
+								int nameid = skill->get_itemid(su->group->skill_id, i);
+								if (nameid > 0) {
 									int success;
-									struct item item_tmp;
-									memset(&item_tmp,0,sizeof(item_tmp));
-									item_tmp.nameid = skill->dbs->db[su->group->skill_id].itemid[i];
+									struct item item_tmp = { 0 };
+									int amount = skill->get_itemqty(su->group->skill_id, i);
+									item_tmp.nameid = nameid;
 									item_tmp.identify = 1;
-									if (item_tmp.nameid && (success=pc->additem(sd,&item_tmp,skill->dbs->db[su->group->skill_id].amount[i],LOG_TYPE_SKILL)) != 0) {
+									if ((success = pc->additem(sd, &item_tmp, amount, LOG_TYPE_SKILL)) != 0) {
 										clif->additem(sd,0,0,success);
-										map->addflooritem(&sd->bl, &item_tmp, skill->dbs->db[su->group->skill_id].amount[i], sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0);
+										map->addflooritem(&sd->bl, &item_tmp, amount, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0);
 									}
 								}
 							}
@@ -8273,7 +8274,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 					map->freeblock_unlock();
 					return 0;
 				}
-				status_zap(src,0,skill->dbs->db[skill->get_index(skill_id)].sp[skill_lv]); // consume sp only if succeeded [Inkfish]
+				status_zap(src, 0, skill->get_sp(skill_id, skill_lv)); // consume sp only if succeeded [Inkfish]
 				do {
 					int eff = rnd() % 14;
 					if( eff == 5 )
@@ -11208,10 +11209,13 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 		// Slim Pitcher [Celest]
 		case CR_SLIMPITCHER:
 			if (sd) {
-				int i = skill_lv%11 - 1;
-				int j = pc->search_inventory(sd,skill->dbs->db[skill_id].itemid[i]);
-				if (j == INDEX_NOT_FOUND || skill->dbs->db[skill_id].itemid[i] <= 0
-				 || sd->inventory_data[j] == NULL || sd->status.inventory[j].amount < skill->dbs->db[skill_id].amount[i]
+				int item_idx = skill_lv%11 - 1;
+				int item_id = skill->get_itemid(skill_id, item_idx);
+				int inventory_idx = pc->search_inventory(sd, item_id);
+				int bonus;
+				if (inventory_idx == INDEX_NOT_FOUND || item_id <= 0
+				 || sd->inventory_data[inventory_idx] == NULL
+				 || sd->status.inventory[inventory_idx].amount < skill->get_itemqty(skill_id, item_idx)
 				) {
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 					return 1;
@@ -11219,44 +11223,44 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 				script->potion_flag = 1;
 				script->potion_hp = 0;
 				script->potion_sp = 0;
-				script->run_use_script(sd, sd->inventory_data[j], 0);
+				script->run_use_script(sd, sd->inventory_data[inventory_idx], 0);
 				script->potion_flag = 0;
 				//Apply skill bonuses
-				i = pc->checkskill(sd,CR_SLIMPITCHER)*10
+				bonus = pc->checkskill(sd,CR_SLIMPITCHER)*10
 					+ pc->checkskill(sd,AM_POTIONPITCHER)*10
 					+ pc->checkskill(sd,AM_LEARNINGPOTION)*5
 					+ pc->skillheal_bonus(sd, skill_id);
 
-				script->potion_hp = script->potion_hp * (100+i)/100;
-				script->potion_sp = script->potion_sp * (100+i)/100;
+				script->potion_hp = script->potion_hp * (100 + bonus) / 100;
+				script->potion_sp = script->potion_sp * (100 + bonus) / 100;
 
-				if(script->potion_hp > 0 || script->potion_sp > 0) {
-					i = skill->get_splash(skill_id, skill_lv);
+				if (script->potion_hp > 0 || script->potion_sp > 0) {
+					r = skill->get_splash(skill_id, skill_lv);
 					map->foreachinarea(skill->area_sub,
-					                   src->m,x-i,y-i,x+i,y+i,BL_CHAR,
-					                   src,skill_id,skill_lv,tick,flag|BCT_PARTY|BCT_GUILD|1,
+					                   src->m, x - r, y - r, x + r, y + r, BL_CHAR,
+					                   src, skill_id, skill_lv, tick, flag|BCT_PARTY|BCT_GUILD|1,
 					                   skill->castend_nodamage_id);
 				}
 			} else {
-				int i = skill_lv%11 - 1;
-				struct item_data *item;
-				i = skill->dbs->db[skill_id].itemid[i];
-				item = itemdb->search(i);
+				int item_idx = skill_lv%11 - 1;
+				int item_id = skill->get_itemid(skill_id, item_idx);
+				struct item_data *item = itemdb->search(item_id);
+				int bonus;
 				script->potion_flag = 1;
 				script->potion_hp = 0;
 				script->potion_sp = 0;
 				script->run(item->script,0,src->id,0);
 				script->potion_flag = 0;
-				i = skill->get_max(CR_SLIMPITCHER)*10;
+				bonus = skill->get_max(CR_SLIMPITCHER)*10;
 
-				script->potion_hp = script->potion_hp * (100+i)/100;
-				script->potion_sp = script->potion_sp * (100+i)/100;
+				script->potion_hp = script->potion_hp * (100 + bonus)/100;
+				script->potion_sp = script->potion_sp * (100 + bonus)/100;
 
-				if(script->potion_hp > 0 || script->potion_sp > 0) {
-					i = skill->get_splash(skill_id, skill_lv);
+				if (script->potion_hp > 0 || script->potion_sp > 0) {
+					r = skill->get_splash(skill_id, skill_lv);
 					map->foreachinarea(skill->area_sub,
-					                   src->m,x-i,y-i,x+i,y+i,BL_CHAR,
-					                   src,skill_id,skill_lv,tick,flag|BCT_PARTY|BCT_GUILD|1,
+					                   src->m, x - r, y - r, x + r, y + r, BL_CHAR,
+					                   src, skill_id, skill_lv, tick, flag|BCT_PARTY|BCT_GUILD|1,
 					                   skill->castend_nodamage_id);
 				}
 			}

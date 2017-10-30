@@ -1627,13 +1627,20 @@ int pc_calc_skilltree(struct map_session_data *sd)
 				// i can be < 8?
 				if( sd->status.skill[i-8].lv < 10 )
 					continue;
+				if (i < 8) {
+					Assert_report(i >= 8);
+					continue;
+				}
 				sd->status.skill[i].id = skill->dbs->db[i].nameid;
 				sd->status.skill[i].lv = sd->status.skill[i-8].lv; // Set the level to the same as the linking skill
 				sd->status.skill[i].flag = SKILL_FLAG_TEMPORARY; // Tag it as a non-savable, non-uppable, bonus skill
 			} else { //Link bard skills to dancer.
 				if( sd->status.skill[i].lv < 10 )
 					continue;
-				// i can be < 8?
+				if (i < 8) {
+					Assert_report(i >= 8);
+					continue;
+				}
 				sd->status.skill[i-8].id = skill->dbs->db[i-8].nameid;
 				sd->status.skill[i-8].lv = sd->status.skill[i].lv; // Set the level to the same as the linking skill
 				sd->status.skill[i-8].flag = SKILL_FLAG_TEMPORARY; // Tag it as a non-savable, non-uppable, bonus skill
@@ -4143,7 +4150,7 @@ int pc_bonus5(struct map_session_data *sd,int type,int type2,int type3,int type4
  *------------------------------------------*/
 int pc_skill(struct map_session_data *sd, int id, int level, int flag)
 {
-	uint16 index = 0;
+	int index = 0;
 	nullpo_ret(sd);
 
 	if (!(index = skill->get_index(id))) {
@@ -5869,7 +5876,7 @@ int pc_memo(struct map_session_data* sd, int pos) {
  * Return player sd skill_lv learned for given skill
  *------------------------------------------*/
 int pc_checkskill(struct map_session_data *sd,uint16 skill_id) {
-	uint16 index = 0;
+	int index = 0;
 	if(sd == NULL) return 0;
 	if( skill_id >= GD_SKILLBASE && skill_id < GD_MAX ) {
 		struct guild *g;
@@ -7229,7 +7236,7 @@ int pc_statusup2(struct map_session_data* sd, int type, int val)
  * Skill point allocation
  *------------------------------------------*/
 int pc_skillup(struct map_session_data *sd,uint16 skill_id) {
-	uint16 index = 0;
+	int index = 0;
 	nullpo_ret(sd);
 
 	if( skill_id >= GD_SKILLBASE && skill_id < GD_SKILLBASE+MAX_GUILDSKILL ) {
