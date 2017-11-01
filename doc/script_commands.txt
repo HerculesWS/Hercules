@@ -5102,8 +5102,8 @@ Example:
 	close();
 ---------------------------------------
 
-*getnameditem(<item id>, <character name|character ID>)
-*getnameditem("<item name>", <character name|character ID>)
+*getnameditem(<item id>, <character name|character ID>{, <Account ID>})
+*getnameditem("<item name>", <character name|character ID>{, <Account ID>})
 
 Create an item signed with the given character's name.
 

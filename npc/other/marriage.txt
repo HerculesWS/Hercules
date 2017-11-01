@@ -695,10 +695,10 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 										wedding();
 										//Give ring to Bride, and change to wedding sprite.
 										sc_start(SC_WEDDING, 3600000, 1);
-										getitem(Bride_Ring, 1);
+										getnameditem(Bride_Ring, $@wed_groom$);
 										//Give ring to Groom, and change to wedding sprite.
 										sc_start(SC_WEDDING, 3600000, 1, 10000,  SCFLAG_NOAVOID, getcharid(CHAR_ID_ACCOUNT,$@wed_groom$));
-										getitem(Bridegroom_Ring, 1, getcharid(CHAR_ID_ACCOUNT,$@wed_groom$));
+										getnameditem(Bridegroom_Ring, $@wed_bride$, getcharid(CHAR_ID_ACCOUNT, $@wed_groom$));
 										cutin("wedding_bomars02", 2);
 										mapannounce("prt_church","I now pronounce you, "+$@wed_groom$+" and "+$@wed_bride$+", husband and wife.", bc_map);
 										mes("[Vomars]");

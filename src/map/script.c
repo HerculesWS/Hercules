@@ -8097,16 +8097,19 @@ BUILDIN(getnameditem) {
 	struct item item_tmp;
 	struct map_session_data *sd, *tsd;
 
-	sd = script->rid2sd(st);
+	if (script_hasdata(st, 4))
+		sd = script->id2sd(st, script_getnum(st, 4)); // <Account ID>
+	else
+		sd = script->rid2sd(st); // Attached player
 	if (sd == NULL) // Player not attached!
 		return true;
 
-	if( script_isstringtype(st, 2) ) {
+	if (script_isstringtype(st, 2)) {
 		const char *name = script_getstr(st, 2);
 		struct item_data *item_data = itemdb->search_name(name);
-		if( item_data == NULL) {
+		if (item_data == NULL) {
 			//Failed
-			script_pushint(st,0);
+			script_pushint(st, 0);
 			return true;
 		}
 		nameid = item_data->nameid;
@@ -8114,9 +8117,9 @@ BUILDIN(getnameditem) {
 		nameid = script_getnum(st, 2);
 	}
 
-	if(!itemdb->exists(nameid)/* || itemdb->isstackable(nameid)*/) {
+	if (!itemdb->exists(nameid)/* || itemdb->isstackable(nameid)*/) {
 		//Even though named stackable items "could" be risky, they are required for certain quests.
-		script_pushint(st,0);
+		script_pushint(st, 0);
 		return true;
 	}
 
@@ -8127,23 +8130,23 @@ BUILDIN(getnameditem) {
 
 	if (tsd == NULL) {
 		//Failed
-		script_pushint(st,0);
+		script_pushint(st, 0);
 		return true;
 	}
 
-	memset(&item_tmp,0,sizeof(item_tmp));
-	item_tmp.nameid=nameid;
-	item_tmp.amount=1;
-	item_tmp.identify=1;
-	item_tmp.card[0]=CARD0_CREATE; //we don't use 255! because for example SIGNED WEAPON shouldn't get TOP10 BS Fame bonus [Lupus]
-	item_tmp.card[2]=tsd->status.char_id;
-	item_tmp.card[3]=tsd->status.char_id >> 16;
-	if(pc->additem(sd,&item_tmp,1,LOG_TYPE_SCRIPT)) {
+	memset(&item_tmp, 0, sizeof(item_tmp));
+	item_tmp.nameid = nameid;
+	item_tmp.amount = 1;
+	item_tmp.identify = 1;
+	item_tmp.card[0] = CARD0_CREATE; //we don't use 255! because for example SIGNED WEAPON shouldn't get TOP10 BS Fame bonus [Lupus]
+	item_tmp.card[2] = tsd->status.char_id;
+	item_tmp.card[3] = tsd->status.char_id >> 16;
+	if (pc->additem(sd, &item_tmp, 1, LOG_TYPE_SCRIPT)) {
 		script_pushint(st,0);
 		return true; //Failed to add item, we will not drop if they don't fit
 	}
 
-	script_pushint(st,1);
+	script_pushint(st, 1);
 	return true;
 }
 
@@ -23941,7 +23944,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getitem,"vi?"),
 		BUILDIN_DEF(rentitem,"vi"),
 		BUILDIN_DEF(getitem2,"viiiiiiii?"),
-		BUILDIN_DEF(getnameditem,"vv"),
+		BUILDIN_DEF(getnameditem,"vv?"),
 		BUILDIN_DEF2(grouprandomitem,"groupranditem","i"),
 		BUILDIN_DEF(makeitem,"visii"),
 		BUILDIN_DEF(makeitem2,"viiiiiiii????"),
