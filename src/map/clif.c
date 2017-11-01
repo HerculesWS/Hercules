@@ -293,7 +293,11 @@ unsigned char clif_bl_type(struct block_list *bl)
 	case BL_NPC:
 		vd = status->get_viewdata(bl);
 		nullpo_retr(CLUT_NPC, vd);
+#if PACKETVER >= 20171101
+		return CLUT_EVENT;
+#else
 		return pc->db_checkid(vd->class) ? CLUT_PC : CLUT_EVENT;
+#endif
 	case BL_PET:
 		vd = status->get_viewdata(bl);
 		nullpo_retr(CLUT_NPC, vd);

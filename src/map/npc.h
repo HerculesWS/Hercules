@@ -70,7 +70,7 @@ struct npc_parse;
 struct npc_data {
 	struct block_list bl;
 	struct unit_data *ud;
-	struct view_data *vd;
+	struct view_data vd;
 	unsigned int option;
 	struct npc_data *master_nd;
 	short class_;
