@@ -114,6 +114,8 @@ bool npc_db_checkid(int id)
 		return true;
 	if (id >= MAX_NPC_CLASS2_START && id < MAX_NPC_CLASS2_END) // Second range
 		return true;
+	if (pc->db_checkid(id))
+		return true;
 	// Anything else is invalid
 	return false;
 }
@@ -2706,6 +2708,7 @@ struct npc_data *npc_create_npc(enum npc_subtype subtype, int m, int x, int y, u
 	nd->area_size = AREA_SIZE + 1;
 	nd->class_ = class_;
 	nd->speed = 200;
+	nd->vd.class = 0;
 
 	return nd;
 }
@@ -4999,7 +5002,6 @@ int do_init_npc(bool minimal) {
 		npc_viewdb[i].class = i;
 	for( i = MAX_NPC_CLASS2_START; i < MAX_NPC_CLASS2_END; i++ )
 		npc_viewdb2[i - MAX_NPC_CLASS2_START].class = i;
-
 	npc->ev_db = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, EVENT_NAME_LENGTH);
 	npc->ev_label_db = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, NAME_LENGTH);
 	npc->name_db = strdb_alloc(DB_OPT_BASE, NAME_LENGTH);
