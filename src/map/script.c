@@ -19155,6 +19155,33 @@ BUILDIN(setunitdata)
 		case UDT_DMOTION:
 			nd->status.dmotion = (unsigned short) val;
 			break;
+		case UDT_SEX:
+			nd->vd.sex = (char) val;
+			break;
+		case UDT_HAIRSTYLE:
+			clif->changelook(bl, LOOK_HAIR, val);
+			break;
+		case UDT_HAIRCOLOR:
+			clif->changelook(bl, LOOK_HAIR_COLOR, val);
+			break;
+		case UDT_HEADBOTTOM:
+			clif->changelook(bl, LOOK_HEAD_BOTTOM, val);
+			break;
+		case UDT_HEADMIDDLE:
+			clif->changelook(bl, LOOK_HEAD_MID, val);
+			break;
+		case UDT_HEADTOP:
+			clif->changelook(bl, LOOK_HEAD_TOP, val);
+			break;
+		case UDT_CLOTHCOLOR:
+			clif->changelook(bl, LOOK_CLOTHES_COLOR, val);
+			break;
+		case UDT_SHIELD:
+			clif->changelook(bl, LOOK_SHIELD, val);
+			break;
+		case UDT_WEAPON:
+			clif->changelook(bl, LOOK_WEAPON, val);
+			break;
 		default:
 			ShowWarning("buildin_setunitdata: Invalid data type '%s' for NPC unit.\n", udtype);
 			script_pushint(st, 0);
@@ -19565,6 +19592,16 @@ BUILDIN(getunitdata)
 		case UDT_AMOTION:     script_pushint(st, nd->status.amotion); break;
 		case UDT_ADELAY:      script_pushint(st, nd->status.adelay); break;
 		case UDT_DMOTION:     script_pushint(st, nd->status.dmotion); break;
+		case UDT_SEX:         script_pushint(st, nd->vd.sex); break;
+		case UDT_CLASS:       script_pushint(st, nd->vd.class); break;
+		case UDT_HAIRSTYLE:   script_pushint(st, nd->vd.hair_style); break;
+		case UDT_HAIRCOLOR:   script_pushint(st, nd->vd.hair_color); break;
+		case UDT_HEADBOTTOM:  script_pushint(st, nd->vd.head_bottom); break;
+		case UDT_HEADMIDDLE:  script_pushint(st, nd->vd.head_mid); break;
+		case UDT_HEADTOP:     script_pushint(st, nd->vd.head_top); break;
+		case UDT_CLOTHCOLOR:  script_pushint(st, nd->vd.cloth_color); break;
+		case UDT_SHIELD:      script_pushint(st, nd->vd.shield); break;
+		case UDT_WEAPON:      script_pushint(st, nd->vd.weapon); break;
 		default:
 			ShowWarning("buildin_getunitdata: Invalid data type '%s' for NPC unit.\n", udtype);
 			script_pushint(st, 0);
