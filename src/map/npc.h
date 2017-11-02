@@ -309,6 +309,7 @@ struct npc_interface {
 	void (*market_delfromsql) (struct npc_data *nd, unsigned short index);
 	void (*market_delfromsql_sub) (const char *npcname, unsigned short index);
 	bool (*db_checkid) (const int id);
+	void (*refresh) (struct npc_data* nd);
 	/**
 	 * For the Secure NPC Timeout option (check config/Secure.h) [RR]
 	 **/

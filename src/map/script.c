@@ -19153,7 +19153,8 @@ BUILDIN(setunitdata)
 			nd->status.dmotion = (unsigned short) val;
 			break;
 		case UDT_SEX:
-			nd->vd.sex = (char) val;
+			nd->vd.sex = (char)val;
+			npc->refresh(nd);
 			break;
 		case UDT_HAIRSTYLE:
 			clif->changelook(bl, LOOK_HAIR, val);

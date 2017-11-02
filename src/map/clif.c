@@ -3336,17 +3336,22 @@ void clif_changelook(struct block_list *bl,int type,int val)
 #if PACKETVER < 4
 	clif->sendlook(bl, bl->id, type, val, 0, target);
 #else
-	if(type == LOOK_WEAPON || type == LOOK_SHIELD) {
-		nullpo_retv(vd);
-		type = LOOK_WEAPON;
-		val = vd->weapon;
-		val2 = vd->shield;
-	}
-	if (clif->isdisguised(bl)) {
-		clif->sendlook(bl, bl->id, type, val, val2, AREA_WOS);
-		clif->sendlook(bl, -bl->id, type, val, val2, SELF);
+	if (bl->type != BL_NPC) {
+		if(type == LOOK_WEAPON || type == LOOK_SHIELD) {
+			nullpo_retv(vd);
+			type = LOOK_WEAPON;
+			val = vd->weapon;
+			val2 = vd->shield;
+		}
+		if (clif->isdisguised(bl)) {
+			clif->sendlook(bl, bl->id, type, val, val2, AREA_WOS);
+			clif->sendlook(bl, -bl->id, type, val, val2, SELF);
+		} else {
+			clif->sendlook(bl, bl->id, type, val, val2, target);
+		}
 	} else {
-		clif->sendlook(bl, bl->id, type, val, val2, target);
+		struct npc_data *nd = BL_UCAST(BL_NPC, bl);
+		npc->refresh(nd);
 	}
 #endif
 }
