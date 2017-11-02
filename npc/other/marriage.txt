@@ -600,7 +600,7 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 						mes("I know the name of your bride?");
 						next();
 						input($@wed_bride$);
-						.@Sex = getsex(getcharid(CHAR_ID_ACCOUNT, $@wed_bride$));
+						.@Sex = readparam(Sex, $@wed_bride$);
 						mes("[Vomars]");
 						mesf("%s %s...", (Sex ? "Mr." : "Miss"), strcharinfo(PC_NAME));
 						mes("Do you swear on your life");
@@ -654,7 +654,7 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 				if (.@partymembercount == 2) {
 					if (Sex == SEX_FEMALE || (getbattleflag("features/same_sex_marriage") == true && Sex == SEX_MALE)) {
 						if (strcharinfo(PC_NAME) == $@wed_bride$) {
-							.@Sex = getsex(getcharid(CHAR_ID_ACCOUNT, $@wed_groom$));
+							.@Sex = readparam(Sex, $@wed_groom$);
 							mes("[Vomars]");
 							mes("Young lovers, please");
 							mes("remember this moment for");
@@ -702,14 +702,14 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 										sc_start(SC_WEDDING, 3600000, 1, 10000,  SCFLAG_NOAVOID, getcharid(CHAR_ID_ACCOUNT,$@wed_groom$));
 										getnameditem(Bridegroom_Ring, $@wed_bride$, getcharid(CHAR_ID_ACCOUNT, $@wed_groom$));
 										cutin("wedding_bomars02", 2);
-										.@Sex2 = getsex(getcharid(CHAR_ID_ACCOUNT, $@wed_groom$));
+										.@Sex2 = readparam(Sex, $@wed_groom$);
 										mapannounce("prt_church", sprintf("I now pronounce you, %s and %s, %s and %s.", $@wed_groom$, $@wed_bride$, (.@Sex ? "husband" : "wife"), (.@Sex2 ? "husband" : "wife")), bc_map);
 										mes("[Vomars]");
 										mes("By the power invested");
 										mes("in me as Royal Bishop of");
 										mes("the Rune-Midgarts Kingdom,");
-										mes("I now pronounce you %s", (.@Sex ? "husband" : "wife"));
-										mes("and %s. May your future be", (.@Sex2 ? "husband" : "wife"));
+										mesf("I now pronounce you %s", (.@Sex ? "husband" : "wife"));
+										mesf("and %s. May your future be", (.@Sex2 ? "husband" : "wife"));
 										mes("blessed with many great joys.");
 										next();
 										mes("[Vomars]");
@@ -788,8 +788,8 @@ L_End:
 
 S_Busy:
 	if ($@wed_groom$ != "" && $@wed_bride$ != "") {
-		.@Sex = getsex(getcharid(CHAR_ID_ACCOUNT, $@wed_bride$));
-		.@Sex2 = getsex(getcharid(CHAR_ID_ACCOUNT, $@wed_groom$));
+		.@Sex = readparam(Sex, $@wed_bride$);
+		.@Sex2 = readparam(Sex, $@wed_groom$);
 		mes("[Vomars]");
 		mes("The wedding of");
 		mesf("%s %s and", (.@Sex ? "Mister" : "Miss"), $@wed_bride$);
