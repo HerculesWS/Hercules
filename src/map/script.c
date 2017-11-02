@@ -20447,15 +20447,18 @@ BUILDIN(questinfo)
 	quest_id = script_getnum(st, 2);
 	icon = script_getnum(st, 3);
 
-	#if PACKETVER >= 20120410
-		if(icon < 0 || (icon > 8 && icon != 9999) || icon == 7)
-			icon = 9999; // Default to nothing if icon id is invalid.
-	#else
-		if(icon < 0 || icon > 7)
-			icon = 0;
-		else
-			icon = icon + 1;
-	#endif
+#if PACKETVER >= 20170315
+	if (icon < 0 || (icon > 10 && icon != 9999))
+		icon = 9999;
+#elif PACKETVER >= 20120410
+	if (icon < 0 || (icon > 8 && icon != 9999) || icon == 7)
+		icon = 9999; // Default to nothing if icon id is invalid.
+#else
+	if (icon < 0 || icon > 7)
+		icon = 0;
+	else
+		icon = icon + 1;
+#endif
 
 	qi.quest_id = quest_id;
 	qi.icon = (unsigned char)icon;
@@ -20649,15 +20652,18 @@ BUILDIN(showevent)
 		}
 	}
 
-	#if PACKETVER >= 20120410
-		if(icon < 0 || (icon > 8 && icon != 9999) || icon == 7)
-			icon = 9999; // Default to nothing if icon id is invalid.
-	#else
-		if(icon < 0 || icon > 7)
-			icon = 0;
-		else
-			icon = icon + 1;
-	#endif
+#if PACKETVER >= 20170315
+	if (icon < 0 || (icon > 10 && icon != 9999))
+		icon = 9999;
+#elif PACKETVER >= 20120410
+	if (icon < 0 || (icon > 8 && icon != 9999) || icon == 7)
+		icon = 9999; // Default to nothing if icon id is invalid.
+#else
+	if (icon < 0 || icon > 7)
+		icon = 0;
+	else
+		icon = icon + 1;
+#endif
 
 	clif->quest_show_event(sd, &nd->bl, icon, color);
 	return true;
