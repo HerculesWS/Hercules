@@ -3659,6 +3659,18 @@ void npc_setclass(struct npc_data* nd, short class_) {
 		clif->spawn(&nd->bl);// fade in
 }
 
+void npc_refresh(struct npc_data* nd)
+{
+	nullpo_retv(nd);
+
+	if (map->list[nd->bl.m].users) {
+		// using here CLR_TRICKDEAD because other flags show effects.
+		// probably need use other flag or other way to refresh npc.
+		clif->clearunit_area(&nd->bl, CLR_TRICKDEAD); // fade out
+		clif->spawn(&nd->bl); // fade in
+	}
+}
+
 // @commands (script based)
 int npc_do_atcmd_event(struct map_session_data* sd, const char* command, const char* message, const char* eventname)
 {
@@ -5196,4 +5208,5 @@ void npc_defaults(void) {
 	npc->market_delfromsql = npc_market_delfromsql;
 	npc->market_delfromsql_sub = npc_market_delfromsql_sub;
 	npc->db_checkid = npc_db_checkid;
+	npc->refresh = npc_refresh;
 }
