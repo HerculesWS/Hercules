@@ -423,6 +423,8 @@ enum script_unit_data_types {
 	UDT_LIFETIME,
 	UDT_MERC_KILLCOUNT,
 	UDT_STATPOINT,
+	UDT_ROBE,
+	UDT_BODY2,
 	UDT_MAX
 };
 
