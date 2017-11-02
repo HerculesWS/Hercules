@@ -559,6 +559,8 @@ struct Battle_Config {
 
 	int feature_rodex;
 	int feature_rodex_use_accountmail;
+
+	int feature_same_sex_marriage;
 };
 
 /* criteria for battle_config.idletime_critera */

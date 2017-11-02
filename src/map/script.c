@@ -12463,6 +12463,25 @@ BUILDIN(changecharsex)
 }
 
 /*==========================================
+ * Returns the Sex of specified RID
+ *------------------------------------------*/
+BUILDIN(getsex)
+{
+	struct map_session_data *sd;
+
+	if (script_hasdata(st, 2))
+		sd = script->id2sd(st, script_getnum(st, 2)); // <Account ID>
+	else
+		sd = script->rid2sd(st); // Attached player
+
+	if (sd == NULL)
+		return true;
+
+	script_pushint(st, sd->status.sex);
+	return true;
+}
+
+/*==========================================
  * Works like 'announce' but outputs in the common chat window
  *------------------------------------------*/
 BUILDIN(globalmes)
@@ -24077,6 +24096,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(changebase,"i?"),
 		BUILDIN_DEF(changesex,""),
 		BUILDIN_DEF(changecharsex,""), // [4144]
+		BUILDIN_DEF(getsex,"?"),
 		BUILDIN_DEF(waitingroom,"si?????"),
 		BUILDIN_DEF(delwaitingroom,"?"),
 		BUILDIN_DEF2(waitingroomkickall,"kickwaitingroomall","?"),
