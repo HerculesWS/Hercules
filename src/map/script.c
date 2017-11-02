@@ -18217,6 +18217,8 @@ BUILDIN(setunitdata)
 	case UDT_INTIMACY:
 	case UDT_LIFETIME:
 	case UDT_MERC_KILLCOUNT:
+	case UDT_ROBE:
+	case UDT_BODY2:
 		setunitdata_check_min(4, 0);
 		break;
 	case UDT_MASTERAID:
@@ -19182,6 +19184,12 @@ BUILDIN(setunitdata)
 		case UDT_WEAPON:
 			clif->changelook(bl, LOOK_WEAPON, val);
 			break;
+		case UDT_ROBE:
+			clif->changelook(bl, LOOK_ROBE, val);
+			break;
+		case UDT_BODY2:
+			clif->changelook(bl, LOOK_BODY2, val);
+			break;
 		default:
 			ShowWarning("buildin_setunitdata: Invalid data type '%s' for NPC unit.\n", udtype);
 			script_pushint(st, 0);
@@ -19602,6 +19610,8 @@ BUILDIN(getunitdata)
 		case UDT_CLOTHCOLOR:  script_pushint(st, nd->vd.cloth_color); break;
 		case UDT_SHIELD:      script_pushint(st, nd->vd.shield); break;
 		case UDT_WEAPON:      script_pushint(st, nd->vd.weapon); break;
+		case UDT_ROBE:        script_pushint(st, nd->vd.robe); break;
+		case UDT_BODY2:       script_pushint(st, nd->vd.body_style); break;
 		default:
 			ShowWarning("buildin_getunitdata: Invalid data type '%s' for NPC unit.\n", udtype);
 			script_pushint(st, 0);
