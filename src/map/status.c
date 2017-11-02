@@ -6929,11 +6929,9 @@ void status_set_viewdata(struct block_list *bl, int class_)
 		struct npc_data *nd = BL_UCAST(BL_NPC, bl);
 		if (vd != NULL) {
 			memcpy(&nd->vd, vd, sizeof(struct view_data));
-#if PACKETVER >= 20171101
 		} else if (pc->db_checkid(class_)) {
 			memset(&nd->vd, 0, sizeof(struct view_data));
 			nd->vd.class = class_;
-#endif
 		} else {
 			ShowError("status_set_viewdata (NPC): No view data for class %d (name=%s)\n", class_, nd->name);
 		}
