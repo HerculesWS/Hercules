@@ -3232,6 +3232,7 @@ Set an equipment's option index or value for the specified option slot.
 <equipment_index> For a list of equipment indexes see getequipid().
 <option_slot> can range from 1 to MAX_ITEM_OPTIONS
 <type> can be IT_OPT_INDEX (the ID of the option bonus, @see "Id" or "Name" in db/item_options.conf)
+       removes the equip option if type is 0.
 <value> The value of the type to be set.
 
 returns 0 if value couldn't be set, 1 on success.
