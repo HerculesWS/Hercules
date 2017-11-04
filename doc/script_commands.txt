@@ -9227,7 +9227,14 @@ No Icon		: QTYPE_NONE
 ! Event Icon	: QTYPE_EVENT
 ? Event Icon	: QTYPE_EVENT2
 Warg		: QTYPE_WARG
-Warg Face	: QTYPE_WARG2 (Only for packetver >= 20120410)
+Warg Face	: QTYPE_WARG2 (Only for packetver >= 20120410 && packetver < 20170315)
+
+- Only for packetver >= 20170315
+Click Me Icon      : QTYPE_CLICKME
+! Daily Quest Icon : QTYPE_DAILYQUEST
+! Green Event Icon : QTYPE_EVENT3
+! Job Quest Icon   : QTYPE_JOBQUEST
+Jumping Poring     : QTYPE_JUMPING_PORING
 
 Map Mark Color, when used, creates a mark in the user's mini map on the position of the NPC,
 the available color values are:
@@ -9336,7 +9343,14 @@ Remove Icon	: QTYPE_NONE
 ! Event Icon	: QTYPE_EVENT
 ? Event Icon	: QTYPE_EVENT2
 Warg		: QTYPE_WARG
-Warg Face	: QTYPE_WARG2 (Only for packetver >= 20120410)
+Warg Face	: QTYPE_WARG2 (Only for packetver >= 20120410 && packetver < 20170315)
+
+- Only for packetver >= 20170315
+Click Me Icon      : QTYPE_CLICKME
+! Daily Quest Icon : QTYPE_DAILYQUEST
+! Green Event Icon : QTYPE_EVENT3
+! Job Quest Icon   : QTYPE_JOBQUEST
+Jumping Poring     : QTYPE_JUMPING_PORING
 
 Mark Color:
 0 - No Mark
