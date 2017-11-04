@@ -1840,7 +1840,7 @@ void map_addiddb(struct block_list *bl)
 		struct mob_data *md = BL_UCAST(BL_MOB, bl);
 		idb_put(map->mobid_db,bl->id,bl);
 
-		if( md->state.boss )
+		if (md->state.boss == BTYPE_MVP)
 			idb_put(map->bossid_db, bl->id, bl);
 	}
 

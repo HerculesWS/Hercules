@@ -3843,7 +3843,12 @@ const char *npc_parse_mob(const char *w1, const char *w2, const char *w3, const 
 
 	memset(&mobspawn, 0, sizeof(struct spawn_data));
 
-	mobspawn.state.boss = (strcmp(w2,"boss_monster") == 0 ? 1 : 0);
+	if (strcmp(w2, "boss_monster") == 0)
+		mobspawn.state.boss = BTYPE_MVP;
+	else if (strcmp(w2, "miniboss_monster") == 0)
+		mobspawn.state.boss = BTYPE_BOSS;
+	else
+		mobspawn.state.boss = BTYPE_NONE;
 
 	// w1=<map name>,<x>,<y>,<xs>,<ys>
 	// w3=<mob name>{,<mob level>}
@@ -4662,7 +4667,7 @@ int npc_parsesrcfile(const char* filepath, bool runOnInit) {
 		{
 			p = npc->parse_duplicate(w1,w2,w3,w4, p, buffer, filepath, (runOnInit?NPO_ONINIT:NPO_NONE), &success);
 		}
-		else if( (strcmp(w2,"monster") == 0 || strcmp(w2,"boss_monster") == 0) )
+		else if (strcmp(w2,"monster") == 0 || strcmp(w2,"boss_monster") == 0 || strcmp(w2,"miniboss_monster") == 0)
 		{
 			p = npc->parse_mob(w1, w2, w3, w4, p, buffer, filepath, &success);
 		}
