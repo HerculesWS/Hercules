@@ -3787,6 +3787,8 @@
 - `UDT_LIFETIME`: 52
 - `UDT_MERC_KILLCOUNT`: 53
 - `UDT_STATADD`: 54
+- `UDT_ROBE`: 55
+- `UDT_BODY2`: 56
 
 
 ## Hardcoded Constants (source)
