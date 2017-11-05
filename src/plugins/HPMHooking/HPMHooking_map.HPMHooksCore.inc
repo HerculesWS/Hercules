@@ -3918,6 +3918,8 @@ struct {
 	struct HPMHookPoint *HP_npc_market_delfromsql_sub_post;
 	struct HPMHookPoint *HP_npc_db_checkid_pre;
 	struct HPMHookPoint *HP_npc_db_checkid_post;
+	struct HPMHookPoint *HP_npc_refresh_pre;
+	struct HPMHookPoint *HP_npc_refresh_post;
 	struct HPMHookPoint *HP_npc_secure_timeout_timer_pre;
 	struct HPMHookPoint *HP_npc_secure_timeout_timer_post;
 	struct HPMHookPoint *HP_nullpo_assert_report_pre;
@@ -10117,6 +10119,8 @@ struct {
 	int HP_npc_market_delfromsql_sub_post;
 	int HP_npc_db_checkid_pre;
 	int HP_npc_db_checkid_post;
+	int HP_npc_refresh_pre;
+	int HP_npc_refresh_post;
 	int HP_npc_secure_timeout_timer_pre;
 	int HP_npc_secure_timeout_timer_post;
 	int HP_nullpo_assert_report_pre;

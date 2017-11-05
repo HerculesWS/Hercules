@@ -2009,6 +2009,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(npc->market_delfromsql, HP_npc_market_delfromsql) },
 	{ HP_POP(npc->market_delfromsql_sub, HP_npc_market_delfromsql_sub) },
 	{ HP_POP(npc->db_checkid, HP_npc_db_checkid) },
+	{ HP_POP(npc->refresh, HP_npc_refresh) },
 	{ HP_POP(npc->secure_timeout_timer, HP_npc_secure_timeout_timer) },
 /* nullpo_interface */
 	{ HP_POP(nullpo->assert_report, HP_nullpo_assert_report) },

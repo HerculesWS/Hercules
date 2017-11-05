@@ -52089,6 +52089,32 @@ bool HP_npc_db_checkid(const int id) {
 	}
 	return retVal___;
 }
+void HP_npc_refresh(struct npc_data *nd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_npc_refresh_pre > 0) {
+		void (*preHookFunc) (struct npc_data **nd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_npc_refresh_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_npc_refresh_pre[hIndex].func;
+			preHookFunc(&nd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.npc.refresh(nd);
+	}
+	if (HPMHooks.count.HP_npc_refresh_post > 0) {
+		void (*postHookFunc) (struct npc_data *nd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_npc_refresh_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_npc_refresh_post[hIndex].func;
+			postHookFunc(nd);
+		}
+	}
+	return;
+}
 int HP_npc_secure_timeout_timer(int tid, int64 tick, int id, intptr_t data) {
 	int hIndex = 0;
 	int retVal___ = 0;

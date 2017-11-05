@@ -5150,6 +5150,8 @@ typedef void (*HPMHOOK_pre_npc_market_delfromsql_sub) (const char **npcname, uns
 typedef void (*HPMHOOK_post_npc_market_delfromsql_sub) (const char *npcname, unsigned short index);
 typedef bool (*HPMHOOK_pre_npc_db_checkid) (const int *id);
 typedef bool (*HPMHOOK_post_npc_db_checkid) (bool retVal___, const int id);
+typedef void (*HPMHOOK_pre_npc_refresh) (struct npc_data **nd);
+typedef void (*HPMHOOK_post_npc_refresh) (struct npc_data *nd);
 typedef int (*HPMHOOK_pre_npc_secure_timeout_timer) (int *tid, int64 *tick, int *id, intptr_t *data);
 typedef int (*HPMHOOK_post_npc_secure_timeout_timer) (int retVal___, int tid, int64 tick, int id, intptr_t data);
 #endif // MAP_NPC_H
