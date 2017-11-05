@@ -7414,7 +7414,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				}
 				if( sd ) {
 					int bonus = 100, potion = min(500+skill_lv,505);
-					int item_idx = skill_lv%11 - 1;
+					int item_idx = (skill_lv - 1) % MAX_SKILL_ITEM_REQUIRE;
 					int item_id = skill->get_itemid(skill_id, item_idx);
 					int inventory_idx = pc->search_inventory(sd, item_id);
 					if (inventory_idx == INDEX_NOT_FOUND || item_id <= 0) {
@@ -7757,7 +7757,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 					maxlv = skill_lv - 4;
 				}
 				else if(skill_lv >=2) {
-					int i = rnd()%3;
+					int i = rnd() % ARRAYLENGTH(spellarray);
 					spellid = spellarray[i];
 					maxlv = skill_lv - 1;
 				}
@@ -8300,7 +8300,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 							clif->damage(src,bl,0,0,1000,0,BDT_NORMAL,0);
 							if( !status->isdead(bl) ) {
 								int where[] = { EQP_ARMOR, EQP_SHIELD, EQP_HELM, EQP_SHOES, EQP_GARMENT };
-								skill->break_equip(bl, where[rnd()%5], 10000, BCT_ENEMY);
+								skill->break_equip(bl, where[rnd() % ARRAYLENGTH(where)], 10000, BCT_ENEMY);
 							}
 						}
 						break;
@@ -8321,7 +8321,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 					case 7: // stop freeze or stoned
 						{
 							enum sc_type sc[] = { SC_STOP, SC_FREEZE, SC_STONE };
-							sc_start(src,bl,sc[rnd()%3],100,skill_lv,skill->get_time2(skill_id,skill_lv));
+							sc_start(src,bl,sc[rnd() % ARRAYLENGTH(sc)],100,skill_lv,skill->get_time2(skill_id,skill_lv));
 						}
 						break;
 					case 8: // curse coma and poison
@@ -11211,7 +11211,7 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 		// Slim Pitcher [Celest]
 		case CR_SLIMPITCHER:
 			if (sd) {
-				int item_idx = skill_lv%11 - 1;
+				int item_idx = (skill_lv - 1) % MAX_SKILL_ITEM_REQUIRE;
 				int item_id = skill->get_itemid(skill_id, item_idx);
 				int inventory_idx = pc->search_inventory(sd, item_id);
 				int bonus;
@@ -11244,7 +11244,7 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 					                   skill->castend_nodamage_id);
 				}
 			} else {
-				int item_idx = skill_lv%11 - 1;
+				int item_idx = (skill_lv - 1) % MAX_SKILL_ITEM_REQUIRE;
 				int item_id = skill->get_itemid(skill_id, item_idx);
 				struct item_data *item = itemdb->search(item_id);
 				int bonus;
@@ -12013,27 +12013,27 @@ struct skill_unit_group* skill_unitsetting(struct block_list *src, uint16 skill_
 			int element[5]={ELE_WIND,ELE_DARK,ELE_POISON,ELE_WATER,ELE_FIRE};
 
 			val1 = st->rhw.ele;
-			if (!val1)
-				val1=element[rnd()%5];
+			if (val1 == ELE_NEUTRAL)
+				val1 = element[rnd() % ARRAYLENGTH(element)];
 
-			switch (val1)
-			{
+			switch (val1) {
 				case ELE_FIRE:
-					subunt++;
-					FALLTHROUGH
+					subunt = 4;
+					break;
 				case ELE_WATER:
-					subunt++;
-					FALLTHROUGH
+					subunt = 3;
+					break;
 				case ELE_POISON:
-					subunt++;
-					FALLTHROUGH
+					subunt = 2;
+					break;
 				case ELE_DARK:
-					subunt++;
-					FALLTHROUGH
+					subunt = 1;
+					break;
 				case ELE_WIND:
+					subunt = 0;
 					break;
 				default:
-					subunt=rnd()%5;
+					subunt = rnd() % 5;
 					break;
 			}
 
@@ -15201,7 +15201,8 @@ struct skill_condition skill_get_requirement(struct map_session_data* sd, uint16
 	}
 
 	for( i = 0; i < MAX_SKILL_ITEM_REQUIRE; i++ ) {
-		if( (skill_id == AM_POTIONPITCHER || skill_id == CR_SLIMPITCHER || skill_id == CR_CULTIVATION) && i != skill_lv%11 - 1 )
+		int item_idx = (skill_lv - 1) % MAX_SKILL_ITEM_REQUIRE;
+		if ((skill_id == AM_POTIONPITCHER || skill_id == CR_SLIMPITCHER || skill_id == CR_CULTIVATION) && i != item_idx)
 			continue;
 
 		switch( skill_id ) {
@@ -18097,7 +18098,7 @@ int skill_produce_mix(struct map_session_data *sd, uint16 skill_id, int nameid, 
 					int difficulty = 30 + rnd()%120; // Random number between (30 ~ 150)
 
 					make_per = sd->status.job_level / 4 + st->luk / 2 + st->dex / 3; // (Caster?s Job Level / 4) + (Caster?s LUK / 2) + (Caster?s DEX / 3)
-					qty = ~(5 + rnd()%5) + 1;
+					qty = ~(5 + rnd()%5) + 1; // FIXME[Haru]: This smells, if anyone knows the intent, please rewrite the expression in a more clear form.
 
 					switch(nameid){// difficulty factor
 						case ITEMID_APPLE_BOMB:
@@ -18133,7 +18134,7 @@ int skill_produce_mix(struct map_session_data *sd, uint16 skill_id, int nameid, 
 						qty = 5;
 
 					if( qty < 0 || (skill_lv == 1 && make_per < difficulty)){
-						qty = ~qty + 1;
+						qty = ~qty + 1; // FIXME[Haru]: This smells. If anyone knows the intent, please rewrite the expression in a more clear form.
 						make_per = 0;
 					}else
 						make_per = 10000;
@@ -18390,7 +18391,7 @@ int skill_produce_mix(struct map_session_data *sd, uint16 skill_id, int nameid, 
 					int rate = rnd()%500;
 					memset(&tmp_item,0,sizeof(tmp_item));
 					if( rate < 50) i = 4;
-					else if( rate < 100) i = 2+rnd()%1;
+					else if( rate < 100) i = 2+rnd()%1; // FIXME[Haru]: This '%1' is certainly not intended. If anyone knows the purpose, please rewrite this code.
 					else if( rate < 250 ) i = 1;
 					else if( rate < 500 ) i = 0;
 					tmp_item.nameid = compensation[i];

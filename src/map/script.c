@@ -12190,7 +12190,7 @@ BUILDIN(homunculus_mutate)
 		if (script_hasdata(st,2))
 			homun_id = script_getnum(st,2);
 		else
-			homun_id = 6048 + (rnd() % 4);
+			homun_id = HOMID_EIRA + (rnd() % 4);
 
 		m_class = homun->class2type(sd->hd->homunculus.class_);
 		m_id    = homun->class2type(homun_id);

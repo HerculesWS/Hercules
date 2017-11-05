@@ -885,7 +885,7 @@ int read_elementaldb(void) {
 		estatus->race = atoi(str[20]);
 
 		ele = atoi(str[21]);
-		estatus->def_ele = ele%10;
+		estatus->def_ele = ele % ELE_MAX;
 		estatus->ele_lv = ele/20;
 		if( estatus->def_ele >= ELE_MAX ) {
 			ShowWarning("Elemental %d has invalid element type %d (max element is %d)\n", db->class_, estatus->def_ele, ELE_MAX - 1);
