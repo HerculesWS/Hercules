@@ -6809,7 +6809,7 @@ struct view_data *status_get_viewdata(struct block_list *bl)
 		case BL_PC:  return &BL_UCAST(BL_PC, bl)->vd;
 		case BL_MOB: return BL_UCAST(BL_MOB, bl)->vd;
 		case BL_PET: return &BL_UCAST(BL_PET, bl)->vd;
-		case BL_NPC: return BL_UCAST(BL_NPC, bl)->vd;
+		case BL_NPC: return &BL_UCAST(BL_NPC, bl)->vd;
 		case BL_HOM: return BL_UCAST(BL_HOM, bl)->vd;
 		case BL_MER: return BL_UCAST(BL_MER, bl)->vd;
 		case BL_ELEM: return BL_UCAST(BL_ELEM, bl)->vd;
@@ -6927,10 +6927,14 @@ void status_set_viewdata(struct block_list *bl, int class_)
 	case BL_NPC:
 	{
 		struct npc_data *nd = BL_UCAST(BL_NPC, bl);
-		if (vd != NULL)
-			nd->vd = vd;
-		else
+		if (vd != NULL) {
+			memcpy(&nd->vd, vd, sizeof(struct view_data));
+		} else if (pc->db_checkid(class_)) {
+			memset(&nd->vd, 0, sizeof(struct view_data));
+			nd->vd.class = class_;
+		} else {
 			ShowError("status_set_viewdata (NPC): No view data for class %d (name=%s)\n", class_, nd->name);
+		}
 	}
 		break;
 	case BL_HOM: //[blackhole89]

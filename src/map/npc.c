@@ -114,6 +114,8 @@ bool npc_db_checkid(int id)
 		return true;
 	if (id >= MAX_NPC_CLASS2_START && id < MAX_NPC_CLASS2_END) // Second range
 		return true;
+	if (pc->db_checkid(id))
+		return true;
 	// Anything else is invalid
 	return false;
 }
@@ -2706,6 +2708,7 @@ struct npc_data *npc_create_npc(enum npc_subtype subtype, int m, int x, int y, u
 	nd->area_size = AREA_SIZE + 1;
 	nd->class_ = class_;
 	nd->speed = 200;
+	nd->vd.class = 0;
 
 	return nd;
 }
@@ -3654,6 +3657,18 @@ void npc_setclass(struct npc_data* nd, short class_) {
 	status->set_viewdata(&nd->bl, class_);
 	if( map->list[nd->bl.m].users )
 		clif->spawn(&nd->bl);// fade in
+}
+
+void npc_refresh(struct npc_data* nd)
+{
+	nullpo_retv(nd);
+
+	if (map->list[nd->bl.m].users) {
+		// using here CLR_TRICKDEAD because other flags show effects.
+		// probably need use other flag or other way to refresh npc.
+		clif->clearunit_area(&nd->bl, CLR_TRICKDEAD); // fade out
+		clif->spawn(&nd->bl); // fade in
+	}
 }
 
 // @commands (script based)
@@ -4999,7 +5014,6 @@ int do_init_npc(bool minimal) {
 		npc_viewdb[i].class = i;
 	for( i = MAX_NPC_CLASS2_START; i < MAX_NPC_CLASS2_END; i++ )
 		npc_viewdb2[i - MAX_NPC_CLASS2_START].class = i;
-
 	npc->ev_db = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, EVENT_NAME_LENGTH);
 	npc->ev_label_db = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, NAME_LENGTH);
 	npc->name_db = strdb_alloc(DB_OPT_BASE, NAME_LENGTH);
@@ -5194,4 +5208,5 @@ void npc_defaults(void) {
 	npc->market_delfromsql = npc_market_delfromsql;
 	npc->market_delfromsql_sub = npc_market_delfromsql_sub;
 	npc->db_checkid = npc_db_checkid;
+	npc->refresh = npc_refresh;
 }

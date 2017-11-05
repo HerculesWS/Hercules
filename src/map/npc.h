@@ -70,7 +70,7 @@ struct npc_parse;
 struct npc_data {
 	struct block_list bl;
 	struct unit_data *ud;
-	struct view_data *vd;
+	struct view_data vd;
 	unsigned int option;
 	struct npc_data *master_nd;
 	short class_;
@@ -309,6 +309,7 @@ struct npc_interface {
 	void (*market_delfromsql) (struct npc_data *nd, unsigned short index);
 	void (*market_delfromsql_sub) (const char *npcname, unsigned short index);
 	bool (*db_checkid) (const int id);
+	void (*refresh) (struct npc_data* nd);
 	/**
 	 * For the Secure NPC Timeout option (check config/Secure.h) [RR]
 	 **/
