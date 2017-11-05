@@ -1151,7 +1151,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x02d5,2);
 	packet(0x02d6,6,clif->pViewPlayerEquip,2);
 	packet(0x02d7,-1);
-	packet(0x02d8,10,clif->pEquipTick,6);
+	packet(0x02d8,10,clif->p_cz_config,6);
 	packet(0x02d9,10);
 	packet(0x02da,3);
 	packet(0x02db,-1,clif->pBattleChat,2,4);
