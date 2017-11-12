@@ -33,5 +33,6 @@ prontera,156,179,6	script	test_getiteminfo	4_F_KAFRA1,{
 	mesf("Weapon Level: %d", getiteminfo(.@value, ITEMINFO_WLV));
 	mesf("View ID: %d", getiteminfo(.@value, ITEMINFO_VIEWID));
 	mesf("MATK: %d", getiteminfo(.@value, ITEMINFO_MATK));
+	mesf("View Sprite: %d", getiteminfo(.@value, ITEMINFO_VIEWSPRITE));
 	close;
 }

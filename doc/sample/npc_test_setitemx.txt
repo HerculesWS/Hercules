@@ -21,7 +21,7 @@ prontera,164,161,5	script	Lupus	WOLF,{
 		mes "Ok. We made Apple equippable.";
 		setiteminfo(Apple, ITEMINFO_TYPE, IT_ARMOR);
 		setiteminfo(Apple, ITEMINFO_LOC, EQP_HEAD_MID); //where to equip to (equip = 512)
-		//setiteminfo(Apple, 14, 85); //set Headgear Sprite ID (view id = 85)
+		setiteminfo(Apple, ITEMINFO_VIEWID, 85); //set Headgear Sprite ID (view id = 85)
 		setitemscript(Apple, "{dispbottom \"* Other item's changed\";}", 0);
 		setitemscript(Apple, "{dispbottom \"* Equipped\";}", 1);
 		setitemscript(Apple, "{dispbottom \"* Unequipped\";}", 2);
