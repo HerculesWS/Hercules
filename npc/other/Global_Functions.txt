@@ -237,6 +237,9 @@ function	script	F_Load2Skills	{
 //== Function F_GetWeaponType ==============================
 // Determines weapon type by subtype
 function	script	F_GetWeaponType	{
+	if (getiteminfo(getarg(0), ITEMINFO_TYPE) != IT_WEAPON)
+		return "Not a weapon";
+
 	switch (getiteminfo(getarg(0), ITEMINFO_SUBTYPE)) {
 		case W_DAGGER: return "Dagger"; break;
 		case W_1HSWORD: return "One-handed Sword"; break;
@@ -260,7 +263,29 @@ function	script	F_GetWeaponType	{
 		case W_SHOTGUN: return "Shotgun"; break;
 		case W_GRENADE: return "Grenade Launcher"; break;
 		case W_HUUMA: return "Shuriken"; break;
+		case W_2HSTAFF: return "Two-handed Staff"; break;
 		default: return "Unable to Determine Equip Type"; break;
+	}
+	end;
+}
+
+//== Function F_GetAmmoType ================================
+// Determines ammunition type by subtype
+function	script	F_GetAmmoType	{
+	if (getiteminfo(getarg(0), ITEMINFO_TYPE) != IT_AMMO)
+		return "Not an ammunition";
+
+	switch (getiteminfo(getarg(0), ITEMINFO_SUBTYPE)) {
+		case A_ARROW: return "Arrow"; break;
+		case A_DAGGER: return "Throwing Dagger"; break;
+		case A_BULLET: return "Bullet"; break;
+		case A_SHELL: return "Shell"; break;
+		case A_GRENADE: return "Grenade"; break;
+		case A_SHURIKEN: return "Huuma Shuriken"; break;
+		case A_KUNAI: return "Kunai"; break;
+		case A_CANNONBALL: return "Cannon Ball"; break;
+		case A_THROWWEAPON: return "Throwing Weapon"; break;
+		default: return "Unable to Determine Ammunition Type"; break;
 	}
 	end;
 }
