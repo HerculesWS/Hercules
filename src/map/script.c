@@ -14126,6 +14126,9 @@ BUILDIN(getiteminfo)
 	case ITEMINFO_VIEWID:
 		script_pushint(st, it->view_id);
 		break;
+	case ITEMINFO_MATK:
+		script_pushint(st, it->matk);
+		break;
 	default:
 		ShowError("buildin_getiteminfo: Invalid item type %d.\n", n);
 		script_pushint(st,-1);
@@ -14385,6 +14388,9 @@ BUILDIN(setiteminfo)
 		break;
 	case ITEMINFO_VIEWID:
 		it->view_id = value;
+		break;
+	case ITEMINFO_MATK:
+		it->matk = value;
 		break;
 	default:
 		ShowError("buildin_setiteminfo: invalid type %d.\n", n);
@@ -24830,6 +24836,7 @@ void script_hardcoded_constants(void)
 	script->set_constant("ITEMINFO_ELV", ITEMINFO_ELV, false, false);
 	script->set_constant("ITEMINFO_WLV", ITEMINFO_WLV, false, false);
 	script->set_constant("ITEMINFO_VIEWID", ITEMINFO_VIEWID, false, false);
+	script->set_constant("ITEMINFO_MATK", ITEMINFO_MATK, false, false);
 
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL

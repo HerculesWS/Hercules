@@ -3201,8 +3201,7 @@ Valid types are:
 	ITEMINFO_ELV        - Equip min. level
 	ITEMINFO_WLV        - Weapon level
 	ITEMINFO_VIEWID     - View ID ("Sprite" field in the Item DB)
-
-	If RENEWAL is defined, 15 - matk
+	ITEMINFO_MATK       - MATK (only relevant if RENEWAL is set)
 
 Check sample in doc/sample/getiteminfo.txt
 

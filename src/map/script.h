@@ -447,6 +447,7 @@ enum script_iteminfo_types {
 	ITEMINFO_ELV,
 	ITEMINFO_WLV,
 	ITEMINFO_VIEWID,
+	ITEMINFO_MATK,
 
 	ITEMINFO_MAX
 };
