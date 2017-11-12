@@ -268,17 +268,16 @@ function	script	Func_Socket	{
 	mes "Ah, and don't forget to bring that " + getitemname(getarg(0)) + "!";
 	next;
 	mes "[Seiyablem]";
-	if (getiteminfo(getarg(0),5)&2) // EQP_HAND_R = 2, it's a weapon
-	{
+	if (getiteminfo(getarg(0), ITEMINFO_LOC) & EQP_HAND_R) {
+		// EQP_HAND_R = 2, it's a weapon
 		mes "I can try to add a slot now if you have the required items and zeny.";
 		mes "However, you should know that there's a chance that I might fail.";
 		mes "Therefore, I need to give you a fair warning...";
 		next;
 		mes "[Seiyablem]";
 		mes "If this attempt to add a Slot to your Weapon fails, then the ^FF0000Weapon^000000, ^FF0000and any Cards compounded to it will be destroyed^000000.";
-	}
-	else // armor
-	{
+	} else {
+		// armor
 		mes "If you have all the required materials, my zeny service fee and the Armor, then we can go ahead with the Slot Addition attempt.";
 		mes "But before that, I must warn you of the risk.";
 		next;

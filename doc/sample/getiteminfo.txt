@@ -16,8 +16,21 @@ prontera,156,179,6	script	test_getiteminfo	4_F_KAFRA1,{
 	// ^nItemID^XXXX -> Item Name
 	mes "Item ID: "+.@value+" ^nItemID^"+.@value;
 
-	mes "Current item info:";
-	for (.@id = 0; .@id < 14; ++.@id)
-		mes " getiteminfo("+.@value+","+.@id+") = "+getiteminfo(.@value,.@id);
+	mes("Current item info:");
+	mesf("Buy Price: %d", getiteminfo(.@value, ITEMINFO_BUYPRICE));
+	mesf("Sell Price: %d", getiteminfo(.@value, ITEMINFO_SELLPRICE));
+	mesf("Type: %d", getiteminfo(.@value, ITEMINFO_TYPE));
+	mesf("Max drop chance: %d.%02d", getiteminfo(.@value, ITEMINFO_MAXCHANCE) / 100, getiteminfo(.@value, ITEMINFO_MAXCHANCE) % 100);
+	mesf("Sex: %d", getiteminfo(.@value, ITEMINFO_SEX));
+	mesf("Equip location: %d", getiteminfo(.@value, ITEMINFO_LOC));
+	mesf("Weight: %d.%d", getiteminfo(.@value, ITEMINFO_WEIGHT) / 10, getiteminfo(.@value, ITEMINFO_WEIGHT) % 10);
+	mesf("Attack: %d", getiteminfo(.@value, ITEMINFO_ATK));
+	mesf("Defense: %d", getiteminfo(.@value, ITEMINFO_DEF));
+	mesf("Range: %d", getiteminfo(.@value, ITEMINFO_RANGE));
+	mesf("Slots: %d", getiteminfo(.@value, ITEMINFO_SLOTS));
+	mesf("Subtype: %d", getiteminfo(.@value, ITEMINFO_SUBTYPE));
+	mesf("Equip Level: %d", getiteminfo(.@value, ITEMINFO_ELV));
+	mesf("Weapon Level: %d", getiteminfo(.@value, ITEMINFO_WLV));
+	mesf("View ID: %d", getiteminfo(.@value, ITEMINFO_VIEWID));
 	close;
 }

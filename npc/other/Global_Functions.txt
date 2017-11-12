@@ -235,31 +235,31 @@ function	script	F_Load2Skills	{
 }
 
 //== Function F_GetWeaponType ==============================
-// Determines weapon type by view
+// Determines weapon type by subtype
 function	script	F_GetWeaponType	{
-	switch(getiteminfo(getarg(0),11)) {
-		case 1: return "Dagger"; break;
-		case 2: return "One-handed Sword"; break;
-		case 3: return "Two-handed Sword"; break;
-		case 4: return "One-handed Spear"; break;
-		case 5: return "Two-handed Spear"; break;
-		case 6: return "One-handed Axe"; break;
-		case 7: return "Two-handed Axe"; break;
-		case 8: return "Mace"; break;
-		//case 9: return "Unused"; break;
-		case 10: return "Staff"; break;
-		case 11: return "Bow"; break;
-		case 12: return "Knuckle"; break;
-		case 13: return "Instrument"; break;
-		case 14: return "Whip"; break;
-		case 15: return "Book"; break;
-		case 16: return "Katar"; break;
-		case 17: return "Revolver"; break;
-		case 18: return "Rifle"; break;
-		case 19: return "Gatling gun"; break;
-		case 20: return "Shotgun"; break;
-		case 21: return "Grenade Launcher"; break;
-		case 22: return "Shuriken"; break;
+	switch (getiteminfo(getarg(0), ITEMINFO_SUBTYPE)) {
+		case W_DAGGER: return "Dagger"; break;
+		case W_1HSWORD: return "One-handed Sword"; break;
+		case W_2HSWORD: return "Two-handed Sword"; break;
+		case W_1HSPEAR: return "One-handed Spear"; break;
+		case W_2HSPEAR: return "Two-handed Spear"; break;
+		case W_1HAXE: return "One-handed Axe"; break;
+		case W_2HAXE: return "Two-handed Axe"; break;
+		case W_MACE: return "Mace"; break;
+		//case W_2HMACE: return "Two-handed Mace"; break; // Unused
+		case W_STAFF: return "Staff"; break;
+		case W_BOW: return "Bow"; break;
+		case W_KNUCKLE: return "Knuckle"; break;
+		case W_MUSICAL: return "Instrument"; break;
+		case W_WHIP: return "Whip"; break;
+		case W_BOOK: return "Book"; break;
+		case W_KATAR: return "Katar"; break;
+		case W_REVOLVER: return "Revolver"; break;
+		case W_RIFLE: return "Rifle"; break;
+		case W_GATLING: return "Gatling gun"; break;
+		case W_SHOTGUN: return "Shotgun"; break;
+		case W_GRENADE: return "Grenade Launcher"; break;
+		case W_HUUMA: return "Shuriken"; break;
 		default: return "Unable to Determine Equip Type"; break;
 	}
 	end;
@@ -268,30 +268,31 @@ function	script	F_GetWeaponType	{
 //== Function F_GetArmorType ===============================
 // Determines equipment type by equip location
 function	script	F_GetArmorType	{
-	switch(getiteminfo(getarg(0),5)) {
-		case 1: return "Lower Headgear"; break;
-		case 2: return callfunc("F_GetWeaponType", getarg(0)); break;
-		case 4: return "Garment"; break;
-		case 8: return "Accessory"; break;
-		case 16: return "Armor"; break;
-		case 32: return "Shield"; break;
-		case 64: return "Shoes"; break;
-		case 128: return "Accessory"; break;
-		case 136: return "Accessory"; break;
-		case 256: return "Upper Headgear"; break;
-		case 512: return "Middle Headgear"; break;
-		case 1024: return "Costume Upper Headgear"; break;
-		case 2048: return "Costume Midle Headgear"; break;
-		case 4096: return "Costume Lower Headgear"; break;
-		case 8192: return "Costume Garment"; break;
-		case 32768: return "Ammo"; break;
-		case 65536: return "Shadow Armor"; break;
-		case 131072: return "Shadow Weapon"; break;
-		case 262144: return "Shadow Shield"; break;
-		case 524288: return "Shadow Shoes"; break;
-		case 1048576: return "Shadow Accessory"; break;
-		case 2097152: return "Shadow Accessory"; break;
-		case 3145728: return "Shadow Accessory"; break;
+	switch (getiteminfo(getarg(0), ITEMINFO_LOC)) {
+		// FIXME
+		case EQP_HEAD_LOW: return "Lower Headgear"; break;
+		case EQP_HAND_R: return callfunc("F_GetWeaponType", getarg(0)); break;
+		case EQP_GARMENT: return "Garment"; break;
+		case EQP_ACC_L: return "Accessory"; break;
+		case EQP_ARMOR: return "Armor"; break;
+		case EQP_HAND_L: return "Shield"; break;
+		case EQP_SHOES: return "Shoes"; break;
+		case EQP_ACC_R: return "Accessory"; break;
+		case EQP_ACC: return "Accessory"; break;
+		case EQP_HEAD_TOP: return "Upper Headgear"; break;
+		case EQP_HEAD_MID: return "Middle Headgear"; break;
+		case EQP_COSTUME_HEAD_TOP: return "Costume Upper Headgear"; break;
+		case EQP_COSTUME_HEAD_MID: return "Costume Middle Headgear"; break;
+		case EQP_COSTUME_HEAD_LOW: return "Costume Lower Headgear"; break;
+		case EQP_COSTUME_GARMENT: return "Costume Garment"; break;
+		case EQP_AMMO: return "Ammo"; break;
+		case EQP_SHADOW_ARMOR: return "Shadow Armor"; break;
+		case EQP_SHADOW_WEAPON: return "Shadow Weapon"; break;
+		case EQP_SHADOW_SHIELD: return "Shadow Shield"; break;
+		case EQP_SHADOW_SHOES: return "Shadow Shoes"; break;
+		case EQP_SHADOW_ACC_R: return "Shadow Accessory"; break;
+		case EQP_SHADOW_ACC_L: return "Shadow Accessory"; break;
+		case EQP_SHADOW_ACC: return "Shadow Accessory"; break;
 		default: return "Unknown Equip Type"; break;
 	}
 	end;

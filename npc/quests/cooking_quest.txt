@@ -2069,8 +2069,8 @@ prt_castle,45,35,5	script	Madeleine Chu#cook	4_COOK,{
 	close;
 
 S_SellSets:
-	.@item_cost = getiteminfo(getarg(0),0);
-	.@item_weight = getiteminfo(getarg(0),6);
+	.@item_cost = getiteminfo(getarg(0), ITEMINFO_BUYPRICE);
+	.@item_weight = getiteminfo(getarg(0), ITEMINFO_WEIGHT);
 	mes "[Madeleine Chu]";
 	mes "How many " + (getarg(0)==12125 ? "Outdoor":"Indoor");
 	mes "Cooking Kits would";

@@ -429,6 +429,29 @@ enum script_unit_data_types {
 };
 
 /**
+ * Item Info types.
+ */
+enum script_iteminfo_types {
+	ITEMINFO_BUYPRICE = 0,
+	ITEMINFO_SELLPRICE,
+	ITEMINFO_TYPE,
+	ITEMINFO_MAXCHANCE,
+	ITEMINFO_SEX,
+	ITEMINFO_LOC,
+	ITEMINFO_WEIGHT,
+	ITEMINFO_ATK,
+	ITEMINFO_DEF,
+	ITEMINFO_RANGE,
+	ITEMINFO_SLOTS,
+	ITEMINFO_SUBTYPE,
+	ITEMINFO_ELV,
+	ITEMINFO_WLV,
+	ITEMINFO_VIEWID,
+
+	ITEMINFO_MAX
+};
+
+/**
  * Structures
  **/
 

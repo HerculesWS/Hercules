@@ -14081,53 +14081,55 @@ BUILDIN(getiteminfo)
 	}
 
 	switch (n) {
-	case 0:
+	case ITEMINFO_BUYPRICE:
 		script_pushint(st, it->value_buy);
 		break;
-	case 1:
+	case ITEMINFO_SELLPRICE:
 		script_pushint(st, it->value_sell);
 		break;
-	case 2:
+	case ITEMINFO_TYPE:
 		script_pushint(st, it->type);
 		break;
-	case 3:
+	case ITEMINFO_MAXCHANCE:
 		script_pushint(st, it->maxchance);
 		break;
-	case 4:
+	case ITEMINFO_SEX:
 		script_pushint(st, it->sex);
 		break;
-	case 5:
+	case ITEMINFO_LOC:
 		script_pushint(st, it->equip);
 		break;
-	case 6:
+	case ITEMINFO_WEIGHT:
 		script_pushint(st, it->weight);
 		break;
-	case 7:
+	case ITEMINFO_ATK:
 		script_pushint(st, it->atk);
 		break;
-	case 8:
+	case ITEMINFO_DEF:
 		script_pushint(st, it->def);
 		break;
-	case 9:
+	case ITEMINFO_RANGE:
 		script_pushint(st, it->range);
 		break;
-	case 10:
+	case ITEMINFO_SLOTS:
 		script_pushint(st, it->slot);
 		break;
-	case 11:
+	case ITEMINFO_SUBTYPE:
 		script_pushint(st, it->subtype);
 		break;
-	case 12:
+	case ITEMINFO_ELV:
 		script_pushint(st, it->elv);
 		break;
-	case 13:
+	case ITEMINFO_WLV:
 		script_pushint(st, it->wlv);
 		break;
-	case 14:
+	case ITEMINFO_VIEWID:
 		script_pushint(st, it->view_id);
 		break;
 	default:
+		ShowError("buildin_getiteminfo: Invalid item type %d.\n", n);
 		script_pushint(st,-1);
+		return false;
 	}
 	return true;
 }
@@ -14339,54 +14341,55 @@ BUILDIN(setiteminfo)
 	}
 
 	switch (n) {
-	case 0:
+	case ITEMINFO_BUYPRICE:
 		it->value_buy = value;
 		break;
-	case 1:
+	case ITEMINFO_SELLPRICE:
 		it->value_sell = value;
 		break;
-	case 2:
+	case ITEMINFO_TYPE:
 		it->type = value;
 		break;
-	case 3:
+	case ITEMINFO_MAXCHANCE:
 		it->maxchance = value;
 		break;
-	case 4:
+	case ITEMINFO_SEX:
 		it->sex = value;
 		break;
-	case 5:
+	case ITEMINFO_LOC:
 		it->equip = value;
 		break;
-	case 6:
+	case ITEMINFO_WEIGHT:
 		it->weight = value;
 		break;
-	case 7:
+	case ITEMINFO_ATK:
 		it->atk = value;
 		break;
-	case 8:
+	case ITEMINFO_DEF:
 		it->def = value;
 		break;
-	case 9:
+	case ITEMINFO_RANGE:
 		it->range = value;
 		break;
-	case 10:
+	case ITEMINFO_SLOTS:
 		it->slot = value;
 		break;
-	case 11:
+	case ITEMINFO_SUBTYPE:
 		it->subtype = value;
 		break;
-	case 12:
+	case ITEMINFO_ELV:
 		it->elv = value;
 		break;
-	case 13:
+	case ITEMINFO_WLV:
 		it->wlv = value;
 		break;
-	case 14:
+	case ITEMINFO_VIEWID:
 		it->view_id = value;
 		break;
 	default:
+		ShowError("buildin_setiteminfo: invalid type %d.\n", n);
 		script_pushint(st,-1);
-		return true;
+		return false;
 	}
 	script_pushint(st,value);
 	return true;
@@ -24810,6 +24813,23 @@ void script_hardcoded_constants(void)
 	script->set_constant("MAPINFO_SIZE_X", MAPINFO_SIZE_X, false, false);
 	script->set_constant("MAPINFO_SIZE_Y", MAPINFO_SIZE_Y, false, false);
 	script->set_constant("MAPINFO_ZONE", MAPINFO_ZONE, false, false);
+
+	script->constdb_comment("set/getiteminfo options");
+	script->set_constant("ITEMINFO_BUYPRICE", ITEMINFO_BUYPRICE, false, false);
+	script->set_constant("ITEMINFO_SELLPRICE", ITEMINFO_SELLPRICE, false, false);
+	script->set_constant("ITEMINFO_TYPE", ITEMINFO_TYPE, false, false);
+	script->set_constant("ITEMINFO_MAXCHANCE", ITEMINFO_MAXCHANCE, false, false);
+	script->set_constant("ITEMINFO_SEX", ITEMINFO_SEX, false, false);
+	script->set_constant("ITEMINFO_LOC", ITEMINFO_LOC, false, false);
+	script->set_constant("ITEMINFO_WEIGHT", ITEMINFO_WEIGHT, false, false);
+	script->set_constant("ITEMINFO_ATK", ITEMINFO_ATK, false, false);
+	script->set_constant("ITEMINFO_DEF", ITEMINFO_DEF, false, false);
+	script->set_constant("ITEMINFO_RANGE", ITEMINFO_RANGE, false, false);
+	script->set_constant("ITEMINFO_SLOTS", ITEMINFO_SLOTS, false, false);
+	script->set_constant("ITEMINFO_SUBTYPE", ITEMINFO_SUBTYPE, false, false);
+	script->set_constant("ITEMINFO_ELV", ITEMINFO_ELV, false, false);
+	script->set_constant("ITEMINFO_WLV", ITEMINFO_WLV, false, false);
+	script->set_constant("ITEMINFO_VIEWID", ITEMINFO_VIEWID, false, false);
 
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL

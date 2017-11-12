@@ -425,8 +425,8 @@ function	script	Func_Socket2	{
 	mes "[Leablem]";
 	mes "Did you already bring all of them?";
 	mes "For your information, if you fail to create a slot,";
-	mes "you will lose all the item requirement as well as the target " + (getiteminfo(getarg(0),5)&2 ? "weapon" : "armor") + "."; // EQP_HAND_R = 2, it's a weapon, otherwise armor
-	mes "Also remember, if the " + (getiteminfo(getarg(0),5)&2 ? "weapon" : "armor") + " has been upgraded, and has been inserted with a card,";
+	mes "you will lose all the item requirement as well as the target " + ((getiteminfo(getarg(0), ITEMINFO_LOC) & EQP_HAND_R) ? "weapon" : "armor") + "."; // EQP_HAND_R = 2, it's a weapon, otherwise armor
+	mes "Also remember, if the " + ((getiteminfo(getarg(0), ITEMINFO_LOC) & EQP_HAND_R) ? "weapon" : "armor") + " has been upgraded, and has been inserted with a card,";
 	mes "you will lose them even if you succeed in creating a slot.";
 	next;
 	switch(select("Ask for slot creation.", "Try next time."))
