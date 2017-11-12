@@ -19651,6 +19651,12 @@ void skill_validate_skillinfo(struct config_setting_t *conf, struct s_skill_db *
 				} else {
 					sk->inf2 &= ~INF2_FREE_CAST_REDUCED;
 				}
+			} else if (strcmpi(type, "ShowSkillScale") == 0) {
+				if (on) {
+					sk->inf2 |= INF2_SHOW_SKILL_SCALE;
+				} else {
+					sk->inf2 &= ~INF2_SHOW_SKILL_SCALE;
+				}
 			} else if (strcmpi(type, "None") != 0) {
 				skilldb_invalid_error(type, config_setting_name(t), sk->nameid);
 			}

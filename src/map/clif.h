@@ -1395,6 +1395,7 @@ struct clif_interface {
 	void (*pRodexRequestItems) (int fd, struct map_session_data *sd);
 	void (*rodex_request_items) (struct map_session_data *sd, int8 opentype, int64 mail_id, int8 result);
 	void (*rodex_icon) (int fd, bool show);
+	void (*skill_scale) (struct block_list *bl, int src_id, int x, int y, uint16 skill_id, uint16 skill_lv, int casttime);
 };
 
 #ifdef HERCULES_CORE

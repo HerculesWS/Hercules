@@ -120,6 +120,7 @@ enum e_skill_inf2 {
 	INF2_CHORUS_SKILL      = 0x04000, // Chorus skill
 	INF2_FREE_CAST_NORMAL  = 0x08000,
 	INF2_FREE_CAST_REDUCED = 0x10000,
+	INF2_SHOW_SKILL_SCALE  = 0x20000,
 };
 
 
