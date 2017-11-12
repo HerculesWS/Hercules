@@ -293,34 +293,79 @@ function	script	F_GetAmmoType	{
 //== Function F_GetArmorType ===============================
 // Determines equipment type by equip location
 function	script	F_GetArmorType	{
-	switch (getiteminfo(getarg(0), ITEMINFO_LOC)) {
-		// FIXME
-		case EQP_HEAD_LOW: return "Lower Headgear"; break;
-		case EQP_HAND_R: return callfunc("F_GetWeaponType", getarg(0)); break;
-		case EQP_GARMENT: return "Garment"; break;
-		case EQP_ACC_L: return "Accessory"; break;
-		case EQP_ARMOR: return "Armor"; break;
-		case EQP_HAND_L: return "Shield"; break;
-		case EQP_SHOES: return "Shoes"; break;
-		case EQP_ACC_R: return "Accessory"; break;
-		case EQP_ACC: return "Accessory"; break;
-		case EQP_HEAD_TOP: return "Upper Headgear"; break;
-		case EQP_HEAD_MID: return "Middle Headgear"; break;
-		case EQP_COSTUME_HEAD_TOP: return "Costume Upper Headgear"; break;
-		case EQP_COSTUME_HEAD_MID: return "Costume Middle Headgear"; break;
-		case EQP_COSTUME_HEAD_LOW: return "Costume Lower Headgear"; break;
-		case EQP_COSTUME_GARMENT: return "Costume Garment"; break;
-		case EQP_AMMO: return "Ammo"; break;
-		case EQP_SHADOW_ARMOR: return "Shadow Armor"; break;
-		case EQP_SHADOW_WEAPON: return "Shadow Weapon"; break;
-		case EQP_SHADOW_SHIELD: return "Shadow Shield"; break;
-		case EQP_SHADOW_SHOES: return "Shadow Shoes"; break;
-		case EQP_SHADOW_ACC_R: return "Shadow Accessory"; break;
-		case EQP_SHADOW_ACC_L: return "Shadow Accessory"; break;
-		case EQP_SHADOW_ACC: return "Shadow Accessory"; break;
-		default: return "Unknown Equip Type"; break;
+	switch (getiteminfo(getarg(0), ITEMINFO_TYPE)) {
+	case IT_WEAPON:
+		return callfunc("F_GetWeaponType", getarg(0));
+	case IT_AMMO:
+		return callfunc("F_GetAmmoType", getarg(0));
+	case IT_ARMOR:
+		break;
+	default:
+		return "Unknown Equip Type";
 	}
-	end;
+
+	.@loc = getiteminfo(getarg(0), ITEMINFO_LOC);
+
+	if ((.@loc & EQP_HELM) != 0) {
+		.@name$ = "";
+		if ((.@loc & EQP_HEAD_TOP) != 0) {
+			.@name$ += "Top";
+		}
+		if ((.@loc & EQP_HEAD_MID) != 0) {
+			if ((.@loc & EQP_HEAD_TOP) != 0)
+				.@name$ += " + ";
+			.@name$ += "Middle";
+		}
+		if ((.@loc & EQP_HEAD_LOW) != 0) {
+			if ((.@loc & (EQP_HEAD_TOP | EQP_HEAD_MID)) != 0)
+				.@name$ += " + ";
+			.@name$ += "Lower";
+		}
+		.@name$ += " Headgear";
+		return .@name$;
+	}
+	if ((.@loc & EQP_GARMENT) != 0)
+		return "Garment";
+	if ((.@loc & EQP_ACC) != 0)
+		return "Accessory";
+	if ((.@loc & EQP_ARMOR) != 0)
+		return "Armor";
+	if ((.@loc & EQP_SHIELD) != 0)
+		return "Shield";
+	if ((.@loc & EQP_SHOES) != 0)
+		return "Shoes";
+	if ((.@loc & EQP_COSTUE_GARMENT) != 0)
+		return "Costume Garment";
+	if ((.@loc & EQP_COSTUME) != 0) {
+		.@name = "Costume ";
+		if ((.@loc & EQP_COSTUME_HEAD_TOP) != 0) {
+			.@name$ += "Top";
+		}
+		if ((.@loc & EQP_COSTUME_HEAD_MID) != 0) {
+			if ((.@loc & EQP_COSTUME_HEAD_TOP) != 0)
+				.@name$ += " + ";
+			.@name$ += "Middle";
+		}
+		if ((.@loc & EQP_COSTUME_HEAD_LOW) != 0) {
+			if ((.@loc & (EQP_COSTUME_HEAD_TOP | EQP_COSTUME_HEAD_MID)) != 0)
+				.@name$ += " + ";
+			.@name$ += "Lower";
+		}
+		.@name$ += " Headgear";
+		return .@name$;
+	}
+	if ((.@loc & EQP_SHADOW_ARMOR) != 0)
+		return "Shadow Armor";
+	if ((.@loc & EQP_SHADOW_WEAPON) != 0)
+		return "Shadow Weapon";
+	if ((.@loc & EQP_SHADOW_SHIELD) != 0)
+		return "Shadow Shield";
+	if ((.@loc & EQP_SHADOW_SHOES) != 0)
+		return "Shadow Shoes";
+	if ((.@loc & EQP_SHADOW_ACC) != 0)
+		return "Shadow Accessory";
+
+	return "Unknown Equip Type";
 }
 
 //== Function Time2Str =====================================
