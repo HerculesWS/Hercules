@@ -330,6 +330,9 @@ enum packet_headers {
 #else // PACKETVER >= 20160316
 	rodexcheckplayer = 0x0A51,
 #endif
+#if PACKETVER >= 20151223
+	skillscale = 0xA41,
+#endif
 };
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
@@ -1476,6 +1479,16 @@ struct PACKET_ZC_ACK_ITEM_FROM_MAIL {
 	int64 MailID;
 	int8 opentype;
 	int8 result;
+} __attribute__((packed));
+
+struct PACKET_ZC_SKILL_SCALE {
+	int16 PacketType;
+	uint32 AID;
+	int16 skill_id;
+	int16 skill_lv;
+	int16 x;
+	int16 y;
+	uint32 casttime;
 } __attribute__((packed));
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
