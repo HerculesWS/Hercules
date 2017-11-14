@@ -1679,8 +1679,7 @@ void clif_homskillinfoblock(struct map_session_data *sd) {
 		if ( id != 0 ) {
 			j = id - HM_SKILLBASE;
 			WFIFOW(fd, len) = id;
-			WFIFOW(fd, len + 2) = skill->get_inf(id);
-			WFIFOW(fd, len + 4) = 0;
+			WFIFOL(fd, len + 2) = skill->get_inf(id);
 			WFIFOW(fd, len + 6) = hd->homunculus.hskill[j].lv;
 			if ( hd->homunculus.hskill[j].lv ) {
 				WFIFOW(fd, len + 8) = skill->get_sp(id, hd->homunculus.hskill[j].lv);
@@ -6270,8 +6269,7 @@ void clif_item_skill(struct map_session_data *sd,uint16 skill_id,uint16 skill_lv
 	WFIFOHEAD(fd,packet_len(0x147));
 	WFIFOW(fd, 0)=0x147;
 	WFIFOW(fd, 2)=skill_id;
-	WFIFOW(fd, 4)=skill->get_inf(skill_id);
-	WFIFOW(fd, 6)=0;
+	WFIFOL(fd, 4)=skill->get_inf(skill_id);
 	WFIFOW(fd, 8)=skill_lv;
 	WFIFOW(fd,10)=skill->get_sp(skill_id,skill_lv);
 	WFIFOW(fd,12)=skill->get_range2(&sd->bl, skill_id,skill_lv);
