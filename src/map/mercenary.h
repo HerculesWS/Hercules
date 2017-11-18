@@ -92,7 +92,7 @@ struct mercenary_data {
 	struct regen_data regen;
 	struct s_mercenary_db *db;
 	struct s_mercenary mercenary;
-	char blockskill[MAX_SKILL];
+	char blockskill[MAX_SKILL_DB];
 
 	struct map_session_data *master;
 	int contract_timer;

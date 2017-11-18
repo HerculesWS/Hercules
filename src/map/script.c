@@ -12190,7 +12190,7 @@ BUILDIN(homunculus_mutate)
 		if (script_hasdata(st,2))
 			homun_id = script_getnum(st,2);
 		else
-			homun_id = 6048 + (rnd() % 4);
+			homun_id = HOMID_EIRA + (rnd() % 4);
 
 		m_class = homun->class2type(sd->hd->homunculus.class_);
 		m_id    = homun->class2type(homun_id);
@@ -14590,7 +14590,7 @@ BUILDIN(getskilllist)
 	int i,j=0;
 	if (sd == NULL)
 		return true;
-	for(i=0;i<MAX_SKILL;i++) {
+	for (i = 0; i < MAX_SKILL_DB; i++) {
 		if(sd->status.skill[i].id > 0 && sd->status.skill[i].lv > 0) {
 			pc->setreg(sd,reference_uid(script->add_str("@skilllist_id"), j),sd->status.skill[i].id);
 			pc->setreg(sd,reference_uid(script->add_str("@skilllist_lv"), j),sd->status.skill[i].lv);

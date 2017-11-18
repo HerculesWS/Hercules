@@ -2257,7 +2257,7 @@ BEGIN_ZEROED_BLOCK; /* Everything within this block will be memset to 0 when sta
 	int HP_table[CLASS_COUNT][MAX_LEVEL + 1];
 	int SP_table[CLASS_COUNT][MAX_LEVEL + 1];
 	int aspd_base[CLASS_COUNT][MAX_SINGLE_WEAPON_TYPE+1]; // +1 for RENEWAL_ASPD
-	sc_type Skill2SCTable[MAX_SKILL];  // skill  -> status
+	sc_type Skill2SCTable[MAX_SKILL_DB];  // skill  -> status
 	int IconChangeTable[SC_MAX];          // status -> "icon" (icon is a bit of a misnomer, since there exist values with no icon associated)
 	unsigned int ChangeFlagTable[SC_MAX]; // status -> flags
 	int SkillChangeTable[SC_MAX];         // status -> skill

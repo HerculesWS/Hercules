@@ -159,7 +159,7 @@ void initChangeTables(void)
 	for (i = 0; i < SC_MAX; i++)
 		status->dbs->IconChangeTable[i] = SI_BLANK;
 
-	for (i = 0; i < MAX_SKILL; i++)
+	for (i = 0; i < MAX_SKILL_DB; i++)
 		status->dbs->Skill2SCTable[i] = SC_NONE;
 
 	for (i = 0; i < SI_MAX; i++)
@@ -2329,7 +2329,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 	static int calculating = 0; //Check for recursive call preemption. [Skotlex]
 	struct status_data *bstatus; // pointer to the player's base status
 	const struct status_change *sc;
-	struct s_skill b_skill[MAX_SKILL]; // previous skill tree
+	struct s_skill b_skill[MAX_SKILL_DB]; // previous skill tree
 	int b_weight, b_max_weight, b_cart_weight_max, // previous weight
 		i, k, index, skill_lv,refinedef=0;
 	int64 i64;

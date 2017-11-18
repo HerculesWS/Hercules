@@ -465,7 +465,7 @@ bool read_mercenarydb_sub(char* str[], int columns, int current) {
 	mstatus->race = atoi(str[20]);
 
 	ele = atoi(str[21]);
-	mstatus->def_ele = ele%10;
+	mstatus->def_ele = ele % ELE_MAX;
 	mstatus->ele_lv = ele/20;
 	if( mstatus->def_ele >= ELE_MAX ) {
 		ShowWarning("Mercenary %d has invalid element type %d (max element is %d)\n", db->class_, mstatus->def_ele, ELE_MAX - 1);

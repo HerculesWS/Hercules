@@ -25,7 +25,7 @@
 #include "map/status.h" // enum sc_type
 #include "common/hercules.h"
 #include "common/db.h"
-#include "common/mmo.h" // MAX_SKILL, struct square
+#include "common/mmo.h" // MAX_SKILL_DB, struct square
 
 /**
  * Declarations
@@ -43,7 +43,6 @@ struct status_change_entry;
 /**
  * Defines
  **/
-#define MAX_SKILL_DB              MAX_SKILL
 #define MAX_SKILL_PRODUCE_DB      270
 #define MAX_PRODUCE_RESOURCE      10
 #define MAX_SKILL_ARROW_DB        140
@@ -1930,54 +1929,56 @@ struct skill_interface {
 	int unit_temp[20];  // temporary storage for tracking skill unit skill ids as players move in/out of them
 	int unit_group_newid;
 	/* accesssors */
-	int (*get_index) ( uint16 skill_id );
-	int (*get_type) ( uint16 skill_id );
-	int (*get_hit) ( uint16 skill_id );
-	int (*get_inf) ( uint16 skill_id );
-	int (*get_ele) ( uint16 skill_id, uint16 skill_lv );
-	int (*get_nk) ( uint16 skill_id );
-	int (*get_max) ( uint16 skill_id );
-	int (*get_range) ( uint16 skill_id, uint16 skill_lv );
-	int (*get_range2) (struct block_list *bl, uint16 skill_id, uint16 skill_lv);
-	int (*get_splash) ( uint16 skill_id, uint16 skill_lv );
-	int (*get_hp) ( uint16 skill_id, uint16 skill_lv );
-	int (*get_mhp) ( uint16 skill_id, uint16 skill_lv );
-	int (*get_sp) ( uint16 skill_id, uint16 skill_lv );
-	int (*get_state) (uint16 skill_id);
-	int (*get_spiritball) (uint16 skill_id, uint16 skill_lv);
-	int (*get_zeny) ( uint16 skill_id, uint16 skill_lv );
-	int (*get_num) ( uint16 skill_id, uint16 skill_lv );
-	int (*get_cast) ( uint16 skill_id, uint16 skill_lv );
-	int (*get_delay) ( uint16 skill_id, uint16 skill_lv );
-	int (*get_walkdelay) ( uint16 skill_id, uint16 skill_lv );
-	int (*get_time) ( uint16 skill_id, uint16 skill_lv );
-	int (*get_time2) ( uint16 skill_id, uint16 skill_lv );
-	int (*get_castnodex) ( uint16 skill_id, uint16 skill_lv );
-	int (*get_delaynodex) ( uint16 skill_id ,uint16 skill_lv );
-	int (*get_castdef) ( uint16 skill_id );
-	int (*get_weapontype) ( uint16 skill_id );
-	int (*get_ammotype) ( uint16 skill_id );
-	int (*get_ammo_qty) ( uint16 skill_id, uint16 skill_lv );
-	int (*get_unit_id) (uint16 skill_id,int flag);
-	int (*get_inf2) ( uint16 skill_id );
-	int (*get_castcancel) ( uint16 skill_id );
-	int (*get_maxcount) ( uint16 skill_id, uint16 skill_lv );
-	int (*get_blewcount) ( uint16 skill_id, uint16 skill_lv );
-	int (*get_unit_flag) ( uint16 skill_id );
-	int (*get_unit_target) ( uint16 skill_id );
-	int (*get_unit_interval) ( uint16 skill_id );
-	int (*get_unit_bl_target) ( uint16 skill_id );
-	int (*get_unit_layout_type) ( uint16 skill_id ,uint16 skill_lv );
-	int (*get_unit_range) ( uint16 skill_id, uint16 skill_lv );
-	int (*get_cooldown) ( uint16 skill_id, uint16 skill_lv );
-	int (*tree_get_max) (uint16 skill_id, int class);
-	const char *(*get_name) ( uint16 skill_id );
-	const char *(*get_desc) ( uint16 skill_id );
-	/* check */
-	void (*chk) (uint16* skill_id);
+	int (*get_index) (int skill_id);
+	int (*get_type) (int skill_id);
+	int (*get_hit) (int skill_id);
+	int (*get_inf) (int skill_id);
+	int (*get_ele) (int skill_id, int skill_lv);
+	int (*get_nk) (int skill_id);
+	int (*get_max) (int skill_id);
+	int (*get_range) (int skill_id, int skill_lv);
+	int (*get_range2) (struct block_list *bl, int skill_id, int skill_lv);
+	int (*get_splash) (int skill_id, int skill_lv);
+	int (*get_hp) (int skill_id, int skill_lv);
+	int (*get_mhp) (int skill_id, int skill_lv);
+	int (*get_sp) (int skill_id, int skill_lv);
+	int (*get_hp_rate) (int skill_id, int skill_lv);
+	int (*get_sp_rate) (int skill_id, int skill_lv);
+	int (*get_state) (int skill_id);
+	int (*get_spiritball) (int skill_id, int skill_lv);
+	int (*get_itemid) (int skill_id, int item_idx);
+	int (*get_itemqty) (int skill_id, int item_idx);
+	int (*get_zeny) (int skill_id, int skill_lv);
+	int (*get_num) (int skill_id, int skill_lv);
+	int (*get_cast) (int skill_id, int skill_lv);
+	int (*get_delay) (int skill_id, int skill_lv);
+	int (*get_walkdelay) (int skill_id, int skill_lv);
+	int (*get_time) (int skill_id, int skill_lv);
+	int (*get_time2) (int skill_id, int skill_lv);
+	int (*get_castnodex) (int skill_id, int skill_lv);
+	int (*get_delaynodex) (int skill_id, int skill_lv);
+	int (*get_castdef) (int skill_id);
+	int (*get_weapontype) (int skill_id);
+	int (*get_ammotype) (int skill_id);
+	int (*get_ammo_qty) (int skill_id, int skill_lv);
+	int (*get_unit_id) (int skill_id, int flag);
+	int (*get_inf2) (int skill_id);
+	int (*get_castcancel) (int skill_id);
+	int (*get_maxcount) (int skill_id, int skill_lv);
+	int (*get_blewcount) (int skill_id, int skill_lv);
+	int (*get_unit_flag) (int skill_id);
+	int (*get_unit_target) (int skill_id);
+	int (*get_unit_interval) (int skill_id);
+	int (*get_unit_bl_target) (int skill_id);
+	int (*get_unit_layout_type) (int skill_id, int skill_lv);
+	int (*get_unit_range) (int skill_id, int skill_lv);
+	int (*get_cooldown) (int skill_id, int skill_lv);
+	int (*tree_get_max) (int skill_id, int class);
+	const char *(*get_name) (int skill_id);
+	const char *(*get_desc) (int skill_id);
 	/* whether its CAST_GROUND, CAST_DAMAGE or CAST_NODAMAGE */
-	int (*get_casttype) (uint16 skill_id);
-	int (*get_casttype2) (uint16 index);
+	int (*get_casttype) (int skill_id);
+	int (*get_casttype2) (int index);
 	bool (*is_combo) (int skill_id);
 	int (*name2id) (const char* name);
 	int (*isammotype) (struct map_session_data *sd, int skill_id);
@@ -2071,7 +2072,7 @@ struct skill_interface {
 	int (*check_condition_mob_master_sub) (struct block_list *bl, va_list ap);
 	void (*brandishspear_first) (struct square *tc, uint8 dir, int16 x, int16 y);
 	void (*brandishspear_dir) (struct square* tc, uint8 dir, int are);
-	int (*get_fixed_cast) ( uint16 skill_id ,uint16 skill_lv );
+	int (*get_fixed_cast) (int skill_id, int skill_lv);
 	int (*sit_count) (struct block_list *bl, va_list ap);
 	int (*sit_in) (struct block_list *bl, va_list ap);
 	int (*sit_out) (struct block_list *bl, va_list ap);

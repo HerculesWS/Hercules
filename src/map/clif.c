@@ -4866,9 +4866,9 @@ void clif_skillinfoblock(struct map_session_data *sd)
 	fd=sd->fd;
 	if (!fd) return;
 
-	WFIFOHEAD(fd, MAX_SKILL * 37 + 4);
+	WFIFOHEAD(fd, MAX_SKILL_DB * 37 + 4);
 	WFIFOW(fd,0) = 0x10f;
-	for ( i = 0, len = 4; i < MAX_SKILL; i++) {
+	for ( i = 0, len = 4; i < MAX_SKILL_DB; i++) {
 		if( (id = sd->status.skill[i].id) != 0 ) {
 			int level;
 			// workaround for bugreport:5348
@@ -4899,7 +4899,7 @@ void clif_skillinfoblock(struct map_session_data *sd)
 	WFIFOSET(fd,len);
 
 	// workaround for bugreport:5348; send the remaining skills one by one to bypass packet size limit
-	for ( ; i < MAX_SKILL; i++) {
+	for ( ; i < MAX_SKILL_DB; i++) {
 		if( (id = sd->status.skill[i].id) != 0 ) {
 			clif->addskill(sd, id);
 			clif->skillinfo(sd, id, 0);
@@ -5001,7 +5001,7 @@ void clif_skillinfo(struct map_session_data *sd,int skill_id, int inf)
 	int skill_lv;
 
 	nullpo_retv(sd);
-	Assert_retv(idx >= 0 && idx < MAX_SKILL);
+	Assert_retv(idx >= 0 && idx < MAX_SKILL_DB);
 
 	skill_lv = sd->status.skill[idx].lv;
 
@@ -17642,7 +17642,7 @@ int clif_autoshadowspell_list(struct map_session_data *sd) {
 
 	WFIFOHEAD(fd, 2 * 6 + 4);
 	WFIFOW(fd,0) = 0x442;
-	for( i = 0, c = 0; i < MAX_SKILL; i++ )
+	for (i = 0, c = 0; i < MAX_SKILL_DB; i++)
 		if( sd->status.skill[i].flag == SKILL_FLAG_PLAGIARIZED && sd->status.skill[i].id > 0 &&
 				sd->status.skill[i].id < GS_GLITTERING && skill->get_type(sd->status.skill[i].id) == BF_MAGIC )
 		{ // Can't auto cast both Extended class and 3rd class skills.

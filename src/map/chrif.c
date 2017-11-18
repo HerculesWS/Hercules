@@ -1360,10 +1360,10 @@ void chrif_skillid2idx(int fd) {
 	if (!sockt->session_is_valid(fd))
 		return;
 
-	WFIFOHEAD(fd,4 + (MAX_SKILL * 4));
+	WFIFOHEAD(fd,4 + (MAX_SKILL_DB * 4));
 	WFIFOW(fd,0) = 0x2b0b;
-	for(i = 0; i < MAX_SKILL; i++) {
-		if( skill->dbs->db[i].nameid ) {
+	for (i = 0; i < MAX_SKILL_DB; i++) {
+		if (skill->dbs->db[i].nameid != 0) {
 			WFIFOW(fd, 4 + (count*4)) = skill->dbs->db[i].nameid;
 			WFIFOW(fd, 6 + (count*4)) = i;
 			count++;
