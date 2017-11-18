@@ -810,8 +810,8 @@ struct {
 	struct HPMHookPoint *HP_clif_feel_hate_reset_post;
 	struct HPMHookPoint *HP_clif_partytickack_pre;
 	struct HPMHookPoint *HP_clif_partytickack_post;
-	struct HPMHookPoint *HP_clif_equiptickack_pre;
-	struct HPMHookPoint *HP_clif_equiptickack_post;
+	struct HPMHookPoint *HP_clif_zc_config_pre;
+	struct HPMHookPoint *HP_clif_zc_config_post;
 	struct HPMHookPoint *HP_clif_viewequip_ack_pre;
 	struct HPMHookPoint *HP_clif_viewequip_ack_post;
 	struct HPMHookPoint *HP_clif_equpcheckbox_pre;
@@ -1768,8 +1768,8 @@ struct {
 	struct HPMHookPoint *HP_clif_pAdopt_reply_post;
 	struct HPMHookPoint *HP_clif_pViewPlayerEquip_pre;
 	struct HPMHookPoint *HP_clif_pViewPlayerEquip_post;
-	struct HPMHookPoint *HP_clif_pEquipTick_pre;
-	struct HPMHookPoint *HP_clif_pEquipTick_post;
+	struct HPMHookPoint *HP_clif_p_cz_config_pre;
+	struct HPMHookPoint *HP_clif_p_cz_config_post;
 	struct HPMHookPoint *HP_clif_pquestStateAck_pre;
 	struct HPMHookPoint *HP_clif_pquestStateAck_post;
 	struct HPMHookPoint *HP_clif_pmercenary_action_pre;
@@ -7009,8 +7009,8 @@ struct {
 	int HP_clif_feel_hate_reset_post;
 	int HP_clif_partytickack_pre;
 	int HP_clif_partytickack_post;
-	int HP_clif_equiptickack_pre;
-	int HP_clif_equiptickack_post;
+	int HP_clif_zc_config_pre;
+	int HP_clif_zc_config_post;
 	int HP_clif_viewequip_ack_pre;
 	int HP_clif_viewequip_ack_post;
 	int HP_clif_equpcheckbox_pre;
@@ -7967,8 +7967,8 @@ struct {
 	int HP_clif_pAdopt_reply_post;
 	int HP_clif_pViewPlayerEquip_pre;
 	int HP_clif_pViewPlayerEquip_post;
-	int HP_clif_pEquipTick_pre;
-	int HP_clif_pEquipTick_post;
+	int HP_clif_p_cz_config_pre;
+	int HP_clif_p_cz_config_post;
 	int HP_clif_pquestStateAck_pre;
 	int HP_clif_pquestStateAck_post;
 	int HP_clif_pmercenary_action_pre;
