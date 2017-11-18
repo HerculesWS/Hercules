@@ -423,68 +423,99 @@ static int Sql_P_BindSqlDataType(MYSQL_BIND* bind, enum SqlDataType buffer_type,
 	memset(bind, 0, sizeof(MYSQL_BIND));
 	switch( buffer_type )
 	{
-	case SQLDT_NULL: bind->buffer_type = MYSQL_TYPE_NULL;
+	case SQLDT_NULL:
+		bind->buffer_type = MYSQL_TYPE_NULL;
 		buffer_len = 0;// FIXME length = ? [FlavioJS]
 		break;
 		// fixed size
-	case SQLDT_UINT8: bind->is_unsigned = 1;
+	case SQLDT_UINT8:
+		bind->is_unsigned = 1;
 		FALLTHROUGH
-	case SQLDT_INT8: bind->buffer_type = MYSQL_TYPE_TINY;
-		buffer_len = 1;
+	case SQLDT_INT8:
+		bind->buffer_type = MYSQL_TYPE_TINY;
+		Assert_retr(SQL_ERROR, buffer_len == 1);
 		break;
-	case SQLDT_UINT16: bind->is_unsigned = 1;
+	case SQLDT_UINT16:
+		bind->is_unsigned = 1;
 		FALLTHROUGH
-	case SQLDT_INT16: bind->buffer_type = MYSQL_TYPE_SHORT;
-		buffer_len = 2;
+	case SQLDT_INT16:
+		bind->buffer_type = MYSQL_TYPE_SHORT;
+		Assert_retr(SQL_ERROR, buffer_len == 2);
 		break;
-	case SQLDT_UINT32: bind->is_unsigned = 1;
+	case SQLDT_UINT32:
+		bind->is_unsigned = 1;
 		FALLTHROUGH
-	case SQLDT_INT32: bind->buffer_type = MYSQL_TYPE_LONG;
-		buffer_len = 4;
+	case SQLDT_INT32:
+		bind->buffer_type = MYSQL_TYPE_LONG;
+		Assert_retr(SQL_ERROR, buffer_len == 4);
 		break;
-	case SQLDT_UINT64: bind->is_unsigned = 1;
+	case SQLDT_UINT64:
+		bind->is_unsigned = 1;
 		FALLTHROUGH
-	case SQLDT_INT64: bind->buffer_type = MYSQL_TYPE_LONGLONG;
-		buffer_len = 8;
+	case SQLDT_INT64:
+		bind->buffer_type = MYSQL_TYPE_LONGLONG;
+		Assert_retr(SQL_ERROR, buffer_len == 8);
 		break;
 		// platform dependent size
-	case SQLDT_UCHAR: bind->is_unsigned = 1;
+	case SQLDT_UCHAR:
+		bind->is_unsigned = 1;
 		FALLTHROUGH
-	case SQLDT_CHAR: bind->buffer_type = Sql_P_SizeToMysqlIntType(sizeof(char));
-		buffer_len = sizeof(char);
+	case SQLDT_CHAR:
+		bind->buffer_type = Sql_P_SizeToMysqlIntType(sizeof(char));
+		Assert_retr(SQL_ERROR, buffer_len == sizeof(char));
 		break;
-	case SQLDT_USHORT: bind->is_unsigned = 1;
+	case SQLDT_USHORT:
+		bind->is_unsigned = 1;
 		FALLTHROUGH
-	case SQLDT_SHORT: bind->buffer_type = Sql_P_SizeToMysqlIntType(sizeof(short));
-		buffer_len = sizeof(short);
+	case SQLDT_SHORT:
+		bind->buffer_type = Sql_P_SizeToMysqlIntType(sizeof(short));
+		Assert_retr(SQL_ERROR, buffer_len == sizeof(short));
 		break;
-	case SQLDT_UINT: bind->is_unsigned = 1;
+	case SQLDT_UINT:
+		bind->is_unsigned = 1;
 		FALLTHROUGH
-	case SQLDT_INT: bind->buffer_type = Sql_P_SizeToMysqlIntType(sizeof(int));
-		buffer_len = sizeof(int);
+	case SQLDT_INT:
+		bind->buffer_type = Sql_P_SizeToMysqlIntType(sizeof(int));
+		Assert_retr(SQL_ERROR, buffer_len == sizeof(int));
 		break;
-	case SQLDT_ULONG: bind->is_unsigned = 1;
+	case SQLDT_ULONG:
+		bind->is_unsigned = 1;
 		FALLTHROUGH
-	case SQLDT_LONG: bind->buffer_type = Sql_P_SizeToMysqlIntType(sizeof(long));
-		buffer_len = sizeof(long);
+	case SQLDT_LONG:
+		bind->buffer_type = Sql_P_SizeToMysqlIntType(sizeof(long));
+		Assert_retr(SQL_ERROR, buffer_len == sizeof(long));
 		break;
-	case SQLDT_ULONGLONG: bind->is_unsigned = 1;
+	case SQLDT_ULONGLONG:
+		bind->is_unsigned = 1;
 		FALLTHROUGH
-	case SQLDT_LONGLONG: bind->buffer_type = Sql_P_SizeToMysqlIntType(sizeof(int64));
-		buffer_len = sizeof(int64);
+	case SQLDT_LONGLONG:
+		bind->buffer_type = Sql_P_SizeToMysqlIntType(sizeof(long long));
+		Assert_retr(SQL_ERROR, buffer_len == sizeof(long long));
+		break;
+	case SQLDT_BOOL:
+		bind->buffer_type = Sql_P_SizeToMysqlIntType(sizeof(bool));
+		Assert_retr(SQL_ERROR, buffer_len == sizeof(bool));
+		break;
+	case SQLDT_TIME:
+		bind->buffer_type = Sql_P_SizeToMysqlIntType(sizeof(time_t));
+		Assert_retr(SQL_ERROR, buffer_len == sizeof(time_t));
 		break;
 		// floating point
-	case SQLDT_FLOAT: bind->buffer_type = MYSQL_TYPE_FLOAT;
-		buffer_len = 4;
+	case SQLDT_FLOAT:
+		bind->buffer_type = MYSQL_TYPE_FLOAT;
+		Assert_retr(SQL_ERROR, buffer_len == 4);
 		break;
-	case SQLDT_DOUBLE: bind->buffer_type = MYSQL_TYPE_DOUBLE;
-		buffer_len = 8;
+	case SQLDT_DOUBLE:
+		bind->buffer_type = MYSQL_TYPE_DOUBLE;
+		Assert_retr(SQL_ERROR, buffer_len == 8);
 		break;
 		// other
 	case SQLDT_STRING:
-	case SQLDT_ENUM: bind->buffer_type = MYSQL_TYPE_STRING;
+	case SQLDT_ENUM:
+		bind->buffer_type = MYSQL_TYPE_STRING;
 		break;
-	case SQLDT_BLOB: bind->buffer_type = MYSQL_TYPE_BLOB;
+	case SQLDT_BLOB:
+		bind->buffer_type = MYSQL_TYPE_BLOB;
 		break;
 	default:
 		ShowDebug("Sql_P_BindSqlDataType: unsupported buffer type (%u)\n", buffer_type);

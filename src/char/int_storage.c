@@ -566,23 +566,23 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 	}
 
 	memset(&item, 0, sizeof(item));
-	SQL->StmtBindColumn(stmt, 0, SQLDT_INT,       &item.id,          0, NULL, NULL);
-	SQL->StmtBindColumn(stmt, 1, SQLDT_SHORT,     &item.nameid,      0, NULL, NULL);
-	SQL->StmtBindColumn(stmt, 2, SQLDT_SHORT,     &item.amount,      0, NULL, NULL);
-	SQL->StmtBindColumn(stmt, 3, SQLDT_USHORT,    &item.equip,       0, NULL, NULL);
-	SQL->StmtBindColumn(stmt, 4, SQLDT_CHAR,      &item.identify,    0, NULL, NULL);
-	SQL->StmtBindColumn(stmt, 5, SQLDT_CHAR,      &item.refine,      0, NULL, NULL);
-	SQL->StmtBindColumn(stmt, 6, SQLDT_CHAR,      &item.attribute,   0, NULL, NULL);
-	SQL->StmtBindColumn(stmt, 7, SQLDT_UINT,      &item.expire_time, 0, NULL, NULL);
-	SQL->StmtBindColumn(stmt, 8, SQLDT_UCHAR,     &item.bound,       0, NULL, NULL);
-	SQL->StmtBindColumn(stmt, 9, SQLDT_UINT64,    &item.unique_id,   0, NULL, NULL);
+	SQL->StmtBindColumn(stmt, 0, SQLDT_INT,       &item.id,          sizeof item.id,          NULL, NULL);
+	SQL->StmtBindColumn(stmt, 1, SQLDT_SHORT,     &item.nameid,      sizeof item.nameid,      NULL, NULL);
+	SQL->StmtBindColumn(stmt, 2, SQLDT_SHORT,     &item.amount,      sizeof item.amount,      NULL, NULL);
+	SQL->StmtBindColumn(stmt, 3, SQLDT_UINT,      &item.equip,       sizeof item.equip,       NULL, NULL);
+	SQL->StmtBindColumn(stmt, 4, SQLDT_CHAR,      &item.identify,    sizeof item.identify,    NULL, NULL);
+	SQL->StmtBindColumn(stmt, 5, SQLDT_CHAR,      &item.refine,      sizeof item.refine,      NULL, NULL);
+	SQL->StmtBindColumn(stmt, 6, SQLDT_CHAR,      &item.attribute,   sizeof item.attribute,   NULL, NULL);
+	SQL->StmtBindColumn(stmt, 7, SQLDT_UINT,      &item.expire_time, sizeof item.expire_time, NULL, NULL);
+	SQL->StmtBindColumn(stmt, 8, SQLDT_UCHAR,     &item.bound,       sizeof item.bound,       NULL, NULL);
+	SQL->StmtBindColumn(stmt, 9, SQLDT_UINT64,    &item.unique_id,   sizeof item.unique_id,   NULL, NULL);
 	/* Card Slots */
 	for (j = 0; j < MAX_SLOTS; ++j)
-		SQL->StmtBindColumn(stmt, 10 + j, SQLDT_SHORT, &item.card[j], 0, NULL, NULL);
+		SQL->StmtBindColumn(stmt, 10 + j, SQLDT_SHORT, &item.card[j], sizeof item.card[j], NULL, NULL);
 	/* Item Options */
 	for (j = 0; j < MAX_ITEM_OPTIONS; ++j) {
-		SQL->StmtBindColumn(stmt, 10 + MAX_SLOTS + j * 2, SQLDT_INT16, &item.option[j].index, 0, NULL, NULL);
-		SQL->StmtBindColumn(stmt, 11 + MAX_SLOTS + j * 2, SQLDT_INT16, &item.option[j].value, 0, NULL, NULL);
+		SQL->StmtBindColumn(stmt, 10 + MAX_SLOTS + j * 2, SQLDT_INT16, &item.option[j].index, sizeof item.option[j].index, NULL, NULL);
+		SQL->StmtBindColumn(stmt, 11 + MAX_SLOTS + j * 2, SQLDT_INT16, &item.option[j].value, sizeof item.option[j].value, NULL, NULL);
 	}
 	while (SQL_SUCCESS == SQL->StmtNextRow(stmt)) {
 		Assert_retb(i < MAX_INVENTORY);

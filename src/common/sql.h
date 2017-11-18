@@ -59,6 +59,8 @@ enum SqlDataType {
 	SQLDT_UINT,
 	SQLDT_ULONG,
 	SQLDT_ULONGLONG,
+	SQLDT_BOOL,
+	SQLDT_TIME,
 	// floating point
 	SQLDT_FLOAT,
 	SQLDT_DOUBLE,
