@@ -2294,6 +2294,8 @@ typedef void (*HPMHOOK_pre_clif_rodex_request_items) (struct map_session_data **
 typedef void (*HPMHOOK_post_clif_rodex_request_items) (struct map_session_data *sd, int8 opentype, int64 mail_id, int8 result);
 typedef void (*HPMHOOK_pre_clif_rodex_icon) (int *fd, bool *show);
 typedef void (*HPMHOOK_post_clif_rodex_icon) (int fd, bool show);
+typedef void (*HPMHOOK_pre_clif_skill_scale) (struct block_list **bl, int *src_id, int *x, int *y, uint16 *skill_id, uint16 *skill_lv, int *casttime);
+typedef void (*HPMHOOK_post_clif_skill_scale) (struct block_list *bl, int src_id, int x, int y, uint16 skill_id, uint16 skill_lv, int casttime);
 #endif // MAP_CLIF_H
 #ifdef COMMON_CORE_H /* cmdline */
 typedef void (*HPMHOOK_pre_cmdline_init) (void);

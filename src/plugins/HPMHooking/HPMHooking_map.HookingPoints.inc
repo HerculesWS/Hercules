@@ -987,6 +987,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->pRodexRequestItems, HP_clif_pRodexRequestItems) },
 	{ HP_POP(clif->rodex_request_items, HP_clif_rodex_request_items) },
 	{ HP_POP(clif->rodex_icon, HP_clif_rodex_icon) },
+	{ HP_POP(clif->skill_scale, HP_clif_skill_scale) },
 /* cmdline_interface */
 	{ HP_POP(cmdline->init, HP_cmdline_init) },
 	{ HP_POP(cmdline->final, HP_cmdline_final) },

@@ -1930,6 +1930,8 @@ struct {
 	struct HPMHookPoint *HP_clif_rodex_request_items_post;
 	struct HPMHookPoint *HP_clif_rodex_icon_pre;
 	struct HPMHookPoint *HP_clif_rodex_icon_post;
+	struct HPMHookPoint *HP_clif_skill_scale_pre;
+	struct HPMHookPoint *HP_clif_skill_scale_post;
 	struct HPMHookPoint *HP_cmdline_init_pre;
 	struct HPMHookPoint *HP_cmdline_init_post;
 	struct HPMHookPoint *HP_cmdline_final_pre;
@@ -8137,6 +8139,8 @@ struct {
 	int HP_clif_rodex_request_items_post;
 	int HP_clif_rodex_icon_pre;
 	int HP_clif_rodex_icon_post;
+	int HP_clif_skill_scale_pre;
+	int HP_clif_skill_scale_post;
 	int HP_cmdline_init_pre;
 	int HP_cmdline_init_post;
 	int HP_cmdline_final_pre;

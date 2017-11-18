@@ -25113,6 +25113,32 @@ void HP_clif_rodex_icon(int fd, bool show) {
 	}
 	return;
 }
+void HP_clif_skill_scale(struct block_list *bl, int src_id, int x, int y, uint16 skill_id, uint16 skill_lv, int casttime) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_skill_scale_pre > 0) {
+		void (*preHookFunc) (struct block_list **bl, int *src_id, int *x, int *y, uint16 *skill_id, uint16 *skill_lv, int *casttime);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_skill_scale_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_skill_scale_pre[hIndex].func;
+			preHookFunc(&bl, &src_id, &x, &y, &skill_id, &skill_lv, &casttime);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.skill_scale(bl, src_id, x, y, skill_id, skill_lv, casttime);
+	}
+	if (HPMHooks.count.HP_clif_skill_scale_post > 0) {
+		void (*postHookFunc) (struct block_list *bl, int src_id, int x, int y, uint16 skill_id, uint16 skill_lv, int casttime);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_skill_scale_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_skill_scale_post[hIndex].func;
+			postHookFunc(bl, src_id, x, y, skill_id, skill_lv, casttime);
+		}
+	}
+	return;
+}
 /* cmdline_interface */
 void HP_cmdline_init(void) {
 	int hIndex = 0;
