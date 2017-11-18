@@ -5068,6 +5068,10 @@ void clif_useskill(struct block_list* bl, int src_id, int dst_id, int dst_x, int
 	} else {
 		clif->send(buf,packet_len(cmd), bl, AREA);
 	}
+#if PACKETVER >= 20151223
+	if ((skill->get_inf2(skill_id) & INF2_SHOW_SKILL_SCALE) != 0)
+		clif->skill_scale(bl, src_id, bl->x, bl->y, skill_id, skill_lv, casttime);
+#endif
 }
 
 /// Notifies clients in area, that an object canceled casting (ZC_DISPEL).
@@ -19860,6 +19864,32 @@ void clif_parse_rodex_cancel_write_mail(int fd, struct map_session_data *sd)
 	rodex->clean(sd, 1);
 }
 
+void clif_skill_scale(struct block_list *bl, int src_id, int x, int y, uint16 skill_id, uint16 skill_lv, int casttime)
+{
+#if PACKETVER >= 20151223
+	struct PACKET_ZC_SKILL_SCALE p;
+
+	p.PacketType = skillscale;
+	p.AID = src_id;
+	p.skill_id = skill_id;
+	p.skill_lv = skill_lv;
+	p.x = x;
+	p.y = y;
+	p.casttime = casttime;
+
+	if (clif->isdisguised(bl)) {
+		clif->send(&p, sizeof(p), bl, AREA_WOS);
+		p.AID = -src_id;
+		clif->send(&p, sizeof(p), bl, SELF);
+	} else {
+		clif->send(&p, sizeof(p), bl, AREA);
+	}
+#else
+	ShowWarning("clif_skill_scale: showing skill scale available only for clients >= 20151223.");
+	return;
+#endif
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -20929,4 +20959,5 @@ void clif_defaults(void) {
 	clif->rodex_request_items = clif_rodex_request_items;
 	clif->rodex_icon = clif_rodex_icon;
 	clif->rodex_send_mails_all = clif_rodex_send_mails_all;
+	clif->skill_scale = clif_skill_scale;
 }
