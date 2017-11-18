@@ -191,7 +191,7 @@ dew_in01,22,48,3	script	Sage Kasyapa#dew	4_M_DEWZATIMAN,{
 		mes "Please, it would honor us if you would take it.";
 		next;
 		if (checkweight(Cendrawasih_SF,1) == 0) {
-			if (Weight + getiteminfo(6406,6) > MaxWeight) {
+			if (Weight + getiteminfo(Cendrawasih_SF, ITEMINFO_WEIGHT) > MaxWeight) {
 				mes "[Sage Kasyapa]";
 				mes "You are carrying too much weight over the limit.";
 				mes "I cannot get you your reward unless you reduce the amount of weighty items you are carrying.";
