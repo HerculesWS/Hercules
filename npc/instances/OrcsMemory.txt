@@ -107,6 +107,31 @@ gef_fild10,242,202,0	script	Dimensional Gorge Piece	2_MONEMUS,{
 		mes("If your dungeon has been destroyed you must wait 7 days before re-entering.");
 		close();
 	}
+	// Instance entrance mode. Changes behavior of entrance with these values:
+	// 0 - Classic behaviour with exploit entrance (not recommended)
+	// 1 - Classic behaviour without exploit entrance (default)
+	// 2 - Updated behaviour to disable re-entrance on same instance
+	.@entrance_mode = 1;
+	switch (.@entrance_mode) {
+	case 0:
+		break;
+	case 1:
+		.@instance = has_instance2("1@orcs");
+		instance_attach(.@instance);
+		if (!'ins_orc_id) {
+			$@ins_global_id[.@instance] = gettimetick(2);
+			'ins_orc_id = $@ins_global_id[.@instance];
+		}
+		if (!questprogress(12059, PLAYTIME))
+			ins_orc_id = 'ins_orc_id;
+		if (ins_orc_id == 'ins_orc_id)
+			break;
+		// fall through
+	case 2:
+		// custom message
+		mes "Your dungeon has expired. You must wait before trying to re-enter.";
+		close;
+	}
 
 	mapannounce("gef_fild10", sprintf(_$("%s of the party, %s is entering the %s."), strcharinfo(PC_NAME), .@p_name$, .@md_name$), bc_map, C_SPRINGGREEN);
 	if (!questprogress(12059))

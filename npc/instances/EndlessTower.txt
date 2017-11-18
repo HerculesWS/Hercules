@@ -305,6 +305,38 @@ L_Enter:
 		mes "The party leader did not generate the dungeon yet.";
 		close;
 	} else {
+		// Instance entrance mode. Changes behavior of entrance with these values:
+		// 0 - Classic behaviour with exploit entrance (not recommended)
+		// 1 - Classic behaviour without exploit entrance (default)
+		// 2 - Updated behaviour to disable re-entrance on same instance
+		.@entrance_mode = 1;
+		switch (.@entrance_mode) {
+		case 0:
+			break;
+		case 1:
+			.@instance = has_instance2("1@tower");
+			instance_attach(.@instance);
+			if (!'ins_etower_id) {
+				$@ins_global_id[.@instance] = gettimetick(2);
+				'ins_etower_id = $@ins_global_id[.@instance];
+			}
+			if (!questprogress(60200, PLAYTIME))
+				ins_etower_id = 'ins_etower_id;
+			if (ins_etower_id == 'ins_etower_id)
+				break;
+			// fall through
+		case 2:
+			.@dun_ent_t = ((etower_timer+604800) - gettimetick(2));
+			.@dun_h = (.@dun_ent_t / 3600);
+			.@dun_m = (.@dun_ent_t - (.@dun_h * 3600)) / 60;
+			.@dun_s = .@dun_ent_t - ((.@dun_h * 3600) + (.@dun_m * 60));
+			mesf("Due to the tower's aftereffects, you cannot enter the dungeon right now, %d hours %d minutes %d seconds left to enter the next dungeon.", .@dun_h, .@dun_m, .@dun_s);
+			next;
+			mes "It is dangerous here. Let me move you to Alberta.";
+			close2;
+			warp "alberta", 223, 36;
+			end;
+		}
 		mapannounce "e_tower", strcharinfo(PC_NAME)+" of the party, " +getarg(3)+", is entering the dungeon, Endless Tower.",bc_map,"0x00ff99",FW_NORMAL,12;
 		if (getarg(1)) {
 			etower_timer = gettimetick(2);
