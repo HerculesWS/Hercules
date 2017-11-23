@@ -21003,19 +21003,27 @@ BUILDIN(instance_create)
 	}
 
 	res = instance->create(owner_id, name, (enum instance_owner_type) type);
-	if( res == -4 ) { // Already exists
-		script_pushint(st, -1);
+	if (res == -4) { // Already exists
+		script_pushint(st, -4);
 		return true;
-	} else if( res < 0 ) {
+	} else if (res < 0) {
 		const char *err;
-		switch(res) {
-			case -3: err = "No free instances"; break;
-			case -2: err = "Invalid party ID"; break;
-			case -1: err = "Invalid type"; break;
-			default: err = "Unknown"; break;
+		switch (res) {
+		case -3:
+			err = "No free instances";
+			break;
+		case -2:
+			err = "Invalid party ID";
+			break;
+		case -1:
+			err = "Invalid type";
+			break;
+		default:
+			err = "Unknown";
+			break;
 		}
 		ShowError("buildin_instance_create: %s [%d].\n", err, res);
-		script_pushint(st, -2);
+		script_pushint(st, res);
 		return true;
 	}
 
