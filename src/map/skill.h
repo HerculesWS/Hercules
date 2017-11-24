@@ -76,6 +76,7 @@ struct status_change_entry;
 
 //Constants to identify the skill's inf value:
 enum e_skill_inf {
+	INF_NONE          = 0x00,
 	INF_ATTACK_SKILL  = 0x01,
 	INF_GROUND_SKILL  = 0x02,
 	INF_SELF_SKILL    = 0x04, // Skills casted on self where target is automatically chosen
@@ -88,6 +89,7 @@ enum e_skill_inf {
 //The NK value applies only to non INF_GROUND_SKILL skills
 //when determining skill castend function to invoke.
 enum e_skill_nk {
+	NK_NONE           = 0x00,
 	NK_NO_DAMAGE      = 0x01,
 	NK_SPLASH         = 0x02|0x04, // 0x4 = splash & split
 	NK_SPLASH_ONLY    = 0x02,
@@ -102,6 +104,7 @@ enum e_skill_nk {
 //A skill with 3 would be no damage + splash: area of effect.
 //Constants to identify a skill's inf2 value.
 enum e_skill_inf2 {
+	INF2_NONE              = 0x00000,
 	INF2_QUEST_SKILL       = 0x00001,
 	INF2_NPC_SKILL         = 0x00002, // NPC skills are those that players can't have in their skill tree.
 	INF2_WEDDING_SKILL     = 0x00004,
@@ -132,6 +135,7 @@ enum e_skill_display {
 };
 
 enum {
+	UF_NONE             = 0x0000,
 	UF_DEFNOTENEMY      = 0x0001, // If 'defunit_not_enemy' is set, the target is changed to 'friend'
 	UF_NOREITERATION    = 0x0002, // Spell cannot be stacked
 	UF_NOFOOTSET        = 0x0004, // Spell cannot be cast near/on targets
@@ -158,7 +162,7 @@ enum wl_spheres {
 };
 
 enum {
-	ST_NONE,
+	ST_NONE = 0,
 	ST_HIDING,
 	ST_CLOAKING,
 	ST_HIDDEN,
