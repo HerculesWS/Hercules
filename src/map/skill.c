@@ -161,23 +161,32 @@ const char *skill_get_desc(int skill_id)
 
 int skill_get_hit(int skill_id)
 {
-	int idx = skill->get_index(skill_id);
+	int idx;
+	if (skill_id == 0)
+		return 0;
+	idx = skill->get_index(skill_id);
 	Assert_ret(idx != 0);
 	return skill->dbs->db[idx].hit;
 }
 
 int skill_get_inf(int skill_id)
 {
-	int idx = skill->get_index(skill_id);
-	Assert_ret(idx != 0);
+	int idx;
+	if (skill_id == 0)
+		return INF_NONE;
+	idx = skill->get_index(skill_id);
+	Assert_retr(INF_NONE, idx != 0);
 	return skill->dbs->db[idx].inf;
 }
 
 int skill_get_ele(int skill_id, int skill_lv)
 {
-	int idx = skill->get_index(skill_id);
-	Assert_ret(idx != 0);
-	Assert_ret(skill_lv > 0);
+	int idx;
+	if (skill_id == 0)
+		return ELE_NEUTRAL;
+	idx = skill->get_index(skill_id);
+	Assert_retr(ELE_NEUTRAL, idx != 0);
+	Assert_retr(ELE_NEUTRAL, skill_lv > 0);
 	if (skill_lv > MAX_SKILL_LEVEL) {
 		int val = skill->dbs->db[idx].element[skill_get_lvl_idx(skill_lv)];
 		return skill_adjust_over_level(val, skill_lv, skill->dbs->db[idx].max);
@@ -187,21 +196,30 @@ int skill_get_ele(int skill_id, int skill_lv)
 
 int skill_get_nk(int skill_id)
 {
-	int idx = skill->get_index(skill_id);
-	Assert_ret(idx != 0);
+	int idx;
+	if (skill_id == 0)
+		return NK_NONE;
+	idx = skill->get_index(skill_id);
+	Assert_retr(NK_NONE, idx != 0);
 	return skill->dbs->db[idx].nk;
 }
 
 int skill_get_max(int skill_id)
 {
-	int idx = skill->get_index(skill_id);
+	int idx;
+	if (skill_id == 0)
+		return 0;
+	idx = skill->get_index(skill_id);
 	Assert_ret(idx != 0);
 	return skill->dbs->db[idx].max;
 }
 
 int skill_get_range(int skill_id, int skill_lv)
 {
-	int idx = skill->get_index(skill_id);
+	int idx;
+	if (skill_id == 0)
+		return 0;
+	idx = skill->get_index(skill_id);
 	Assert_ret(idx != 0);
 	Assert_ret(skill_lv > 0);
 	if (skill_lv > MAX_SKILL_LEVEL) {
@@ -213,7 +231,10 @@ int skill_get_range(int skill_id, int skill_lv)
 
 int skill_get_splash(int skill_id, int skill_lv)
 {
-	int idx = skill->get_index(skill_id);
+	int idx;
+	if (skill_id == 0)
+		return 0;
+	idx = skill->get_index(skill_id);
 	Assert_ret(idx != 0);
 	Assert_ret(skill_lv > 0);
 	if (skill_lv > MAX_SKILL_LEVEL) {
@@ -225,7 +246,10 @@ int skill_get_splash(int skill_id, int skill_lv)
 
 int skill_get_hp(int skill_id, int skill_lv)
 {
-	int idx = skill->get_index(skill_id);
+	int idx;
+	if (skill_id == 0)
+		return 0;
+	idx = skill->get_index(skill_id);
 	Assert_ret(idx != 0);
 	Assert_ret(skill_lv > 0);
 	if (skill_lv > MAX_SKILL_LEVEL) {
@@ -237,7 +261,10 @@ int skill_get_hp(int skill_id, int skill_lv)
 
 int skill_get_sp(int skill_id, int skill_lv)
 {
-	int idx = skill->get_index(skill_id);
+	int idx;
+	if (skill_id == 0)
+		return 0;
+	idx = skill->get_index(skill_id);
 	Assert_ret(idx != 0);
 	Assert_ret(skill_lv > 0);
 	if (skill_lv > MAX_SKILL_LEVEL) {
@@ -249,7 +276,10 @@ int skill_get_sp(int skill_id, int skill_lv)
 
 int skill_get_hp_rate(int skill_id, int skill_lv)
 {
-	int idx = skill->get_index(skill_id);
+	int idx;
+	if (skill_id == 0)
+		return 0;
+	idx = skill->get_index(skill_id);
 	Assert_ret(idx != 0);
 	Assert_ret(skill_lv > 0);
 	if (skill_lv > MAX_SKILL_LEVEL) {
@@ -261,7 +291,10 @@ int skill_get_hp_rate(int skill_id, int skill_lv)
 
 int skill_get_sp_rate(int skill_id, int skill_lv)
 {
-	int idx = skill->get_index(skill_id);
+	int idx;
+	if (skill_id == 0)
+		return 0;
+	idx = skill->get_index(skill_id);
 	Assert_ret(idx != 0);
 	Assert_ret(skill_lv > 0);
 	if (skill_lv > MAX_SKILL_LEVEL) {
@@ -273,14 +306,20 @@ int skill_get_sp_rate(int skill_id, int skill_lv)
 
 int skill_get_state(int skill_id)
 {
-	int idx = skill->get_index(skill_id);
-	Assert_ret(idx != 0);
+	int idx;
+	if (skill_id == 0)
+		return ST_NONE;
+	idx = skill->get_index(skill_id);
+	Assert_retr(ST_NONE, idx != 0);
 	return skill->dbs->db[idx].state;
 }
 
 int skill_get_spiritball(int skill_id, int skill_lv)
 {
-	int idx = skill->get_index(skill_id);
+	int idx;
+	if (skill_id == 0)
+		return 0;
+	idx = skill->get_index(skill_id);
 	Assert_ret(idx != 0);
 	Assert_ret(skill_lv > 0);
 	if (skill_lv > MAX_SKILL_LEVEL) {
@@ -292,7 +331,10 @@ int skill_get_spiritball(int skill_id, int skill_lv)
 
 int skill_get_itemid(int skill_id, int item_idx)
 {
-	int idx = skill->get_index(skill_id);
+	int idx;
+	if (skill_id == 0)
+		return 0;
+	idx = skill->get_index(skill_id);
 	Assert_ret(idx != 0);
 	Assert_ret(item_idx >= 0 && item_idx < MAX_SKILL_ITEM_REQUIRE);
 	return skill->dbs->db[idx].itemid[item_idx];
@@ -300,7 +342,10 @@ int skill_get_itemid(int skill_id, int item_idx)
 
 int skill_get_itemqty(int skill_id, int item_idx)
 {
-	int idx = skill->get_index(skill_id);
+	int idx;
+	if (skill_id == 0)
+		return 0;
+	idx = skill->get_index(skill_id);
 	Assert_ret(idx != 0);
 	Assert_ret(item_idx >= 0 && item_idx < MAX_SKILL_ITEM_REQUIRE);
 	return skill->dbs->db[idx].amount[item_idx];
@@ -308,7 +353,10 @@ int skill_get_itemqty(int skill_id, int item_idx)
 
 int skill_get_zeny(int skill_id, int skill_lv)
 {
-	int idx = skill->get_index(skill_id);
+	int idx;
+	if (skill_id == 0)
+		return 0;
+	idx = skill->get_index(skill_id);
 	Assert_ret(idx != 0);
 	Assert_ret(skill_lv > 0);
 	if (skill_lv > MAX_SKILL_LEVEL) {
@@ -320,7 +368,10 @@ int skill_get_zeny(int skill_id, int skill_lv)
 
 int skill_get_num(int skill_id, int skill_lv)
 {
-	int idx = skill->get_index(skill_id);
+	int idx;
+	if (skill_id == 0)
+		return 0;
+	idx = skill->get_index(skill_id);
 	Assert_ret(idx != 0);
 	Assert_ret(skill_lv > 0);
 	if (skill_lv > MAX_SKILL_LEVEL) {
@@ -332,7 +383,10 @@ int skill_get_num(int skill_id, int skill_lv)
 
 int skill_get_cast(int skill_id, int skill_lv)
 {
-	int idx = skill->get_index(skill_id);
+	int idx;
+	if (skill_id == 0)
+		return 0;
+	idx = skill->get_index(skill_id);
 	Assert_ret(idx != 0);
 	Assert_ret(skill_lv > 0);
 	if (skill_lv > MAX_SKILL_LEVEL) {
@@ -344,7 +398,10 @@ int skill_get_cast(int skill_id, int skill_lv)
 
 int skill_get_delay(int skill_id, int skill_lv)
 {
-	int idx = skill->get_index(skill_id);
+	int idx;
+	if (skill_id == 0)
+		return 0;
+	idx = skill->get_index(skill_id);
 	Assert_ret(idx != 0);
 	Assert_ret(skill_lv > 0);
 	if (skill_lv > MAX_SKILL_LEVEL) {
@@ -356,7 +413,10 @@ int skill_get_delay(int skill_id, int skill_lv)
 
 int skill_get_walkdelay(int skill_id, int skill_lv)
 {
-	int idx = skill->get_index(skill_id);
+	int idx;
+	if (skill_id == 0)
+		return 0;
+	idx = skill->get_index(skill_id);
 	Assert_ret(idx != 0);
 	Assert_ret(skill_lv > 0);
 	if (skill_lv > MAX_SKILL_LEVEL) {
@@ -368,7 +428,10 @@ int skill_get_walkdelay(int skill_id, int skill_lv)
 
 int skill_get_time(int skill_id, int skill_lv)
 {
-	int idx = skill->get_index(skill_id);
+	int idx;
+	if (skill_id == 0)
+		return 0;
+	idx = skill->get_index(skill_id);
 	Assert_ret(idx != 0);
 	Assert_ret(skill_lv > 0);
 	if (skill_lv > MAX_SKILL_LEVEL) {
@@ -380,7 +443,10 @@ int skill_get_time(int skill_id, int skill_lv)
 
 int skill_get_time2(int skill_id, int skill_lv)
 {
-	int idx = skill->get_index(skill_id);
+	int idx;
+	if (skill_id == 0)
+		return 0;
+	idx = skill->get_index(skill_id);
 	Assert_ret(idx != 0);
 	Assert_ret(skill_lv > 0);
 	if (skill_lv > MAX_SKILL_LEVEL) {
@@ -392,28 +458,40 @@ int skill_get_time2(int skill_id, int skill_lv)
 
 int skill_get_castdef(int skill_id)
 {
-	int idx = skill->get_index(skill_id);
+	int idx;
+	if (skill_id == 0)
+		return 0;
+	idx = skill->get_index(skill_id);
 	Assert_ret(idx != 0);
 	return skill->dbs->db[idx].cast_def_rate;
 }
 
 int skill_get_weapontype(int skill_id)
 {
-	int idx = skill->get_index(skill_id);
+	int idx;
+	if (skill_id == 0)
+		return 0;
+	idx = skill->get_index(skill_id);
 	Assert_ret(idx != 0);
 	return skill->dbs->db[idx].weapon;
 }
 
 int skill_get_ammotype(int skill_id)
 {
-	int idx = skill->get_index(skill_id);
+	int idx;
+	if (skill_id == 0)
+		return 0;
+	idx = skill->get_index(skill_id);
 	Assert_ret(idx != 0);
 	return skill->dbs->db[idx].ammo;
 }
 
 int skill_get_ammo_qty(int skill_id, int skill_lv)
 {
-	int idx = skill->get_index(skill_id);
+	int idx;
+	if (skill_id == 0)
+		return 0;
+	idx = skill->get_index(skill_id);
 	Assert_ret(idx != 0);
 	Assert_ret(skill_lv > 0);
 	if (skill_lv > MAX_SKILL_LEVEL) {
@@ -425,21 +503,30 @@ int skill_get_ammo_qty(int skill_id, int skill_lv)
 
 int skill_get_inf2(int skill_id)
 {
-	int idx = skill->get_index(skill_id);
-	Assert_ret(idx != 0);
+	int idx;
+	if (skill_id == 0)
+		return INF2_NONE;
+	idx = skill->get_index(skill_id);
+	Assert_retr(INF2_NONE, idx != 0);
 	return skill->dbs->db[idx].inf2;
 }
 
 int skill_get_castcancel(int skill_id)
 {
-	int idx = skill->get_index(skill_id);
+	int idx;
+	if (skill_id == 0)
+		return 0;
+	idx = skill->get_index(skill_id);
 	Assert_ret(idx != 0);
 	return skill->dbs->db[idx].castcancel;
 }
 
 int skill_get_maxcount(int skill_id, int skill_lv)
 {
-	int idx = skill->get_index(skill_id);
+	int idx;
+	if (skill_id == 0)
+		return 0;
+	idx = skill->get_index(skill_id);
 	Assert_ret(idx != 0);
 	Assert_ret(skill_lv > 0);
 	if (skill_lv > MAX_SKILL_LEVEL) {
@@ -451,7 +538,10 @@ int skill_get_maxcount(int skill_id, int skill_lv)
 
 int skill_get_blewcount(int skill_id, int skill_lv)
 {
-	int idx = skill->get_index(skill_id);
+	int idx;
+	if (skill_id == 0)
+		return 0;
+	idx = skill->get_index(skill_id);
 	Assert_ret(idx != 0);
 	Assert_ret(skill_lv > 0);
 	if (skill_lv > MAX_SKILL_LEVEL) {
@@ -463,7 +553,10 @@ int skill_get_blewcount(int skill_id, int skill_lv)
 
 int skill_get_mhp(int skill_id, int skill_lv)
 {
-	int idx = skill->get_index(skill_id);
+	int idx;
+	if (skill_id == 0)
+		return 0;
+	idx = skill->get_index(skill_id);
 	Assert_ret(idx != 0);
 	Assert_ret(skill_lv > 0);
 	if (skill_lv > MAX_SKILL_LEVEL) {
@@ -475,7 +568,10 @@ int skill_get_mhp(int skill_id, int skill_lv)
 
 int skill_get_castnodex(int skill_id, int skill_lv)
 {
-	int idx = skill->get_index(skill_id);
+	int idx;
+	if (skill_id == 0)
+		return 0;
+	idx = skill->get_index(skill_id);
 	Assert_ret(idx != 0);
 	Assert_ret(skill_lv > 0);
 	if (skill_lv > MAX_SKILL_LEVEL) {
@@ -487,7 +583,10 @@ int skill_get_castnodex(int skill_id, int skill_lv)
 
 int skill_get_delaynodex(int skill_id, int skill_lv)
 {
-	int idx = skill->get_index(skill_id);
+	int idx;
+	if (skill_id == 0)
+		return 0;
+	idx = skill->get_index(skill_id);
 	Assert_ret(idx != 0);
 	Assert_ret(skill_lv > 0);
 	if (skill_lv > MAX_SKILL_LEVEL) {
@@ -499,14 +598,20 @@ int skill_get_delaynodex(int skill_id, int skill_lv)
 
 int skill_get_type(int skill_id)
 {
-	int idx = skill->get_index(skill_id);
-	Assert_ret(idx != 0);
+	int idx;
+	if (skill_id == 0)
+		return BF_NONE;
+	idx = skill->get_index(skill_id);
+	Assert_retr(BF_NONE, idx != 0);
 	return skill->dbs->db[idx].skill_type;
 }
 
 int skill_get_unit_id(int skill_id, int flag)
 {
-	int idx = skill->get_index(skill_id);
+	int idx;
+	if (skill_id == 0)
+		return 0;
+	idx = skill->get_index(skill_id);
 	Assert_ret(idx != 0);
 	Assert_ret(flag >= 0 && flag < ARRAYLENGTH(skill->dbs->db[0].unit_id));
 	return skill->dbs->db[idx].unit_id[flag];
@@ -514,14 +619,20 @@ int skill_get_unit_id(int skill_id, int flag)
 
 int skill_get_unit_interval(int skill_id)
 {
-	int idx = skill->get_index(skill_id);
+	int idx;
+	if (skill_id == 0)
+		return 0;
+	idx = skill->get_index(skill_id);
 	Assert_ret(idx != 0);
 	return skill->dbs->db[idx].unit_interval;
 }
 
 int skill_get_unit_range(int skill_id, int skill_lv)
 {
-	int idx = skill->get_index(skill_id);
+	int idx;
+	if (skill_id == 0)
+		return 0;
+	idx = skill->get_index(skill_id);
 	Assert_ret(idx != 0);
 	Assert_ret(skill_lv > 0);
 	if (skill_lv > MAX_SKILL_LEVEL) {
@@ -533,28 +644,40 @@ int skill_get_unit_range(int skill_id, int skill_lv)
 
 int skill_get_unit_target(int skill_id)
 {
-	int idx = skill->get_index(skill_id);
-	Assert_ret(idx != 0);
+	int idx;
+	if (skill_id == 0)
+		return BCT_NOONE;
+	idx = skill->get_index(skill_id);
+	Assert_retr(BCT_NOONE, idx != 0);
 	return skill->dbs->db[idx].unit_target & BCT_ALL;
 }
 
 int skill_get_unit_bl_target(int skill_id)
 {
-	int idx = skill->get_index(skill_id);
-	Assert_ret(idx != 0);
+	int idx;
+	if (skill_id == 0)
+		return BL_NUL;
+	idx = skill->get_index(skill_id);
+	Assert_retr(BL_NUL, idx != 0);
 	return skill->dbs->db[idx].unit_target & BL_ALL;
 }
 
 int skill_get_unit_flag(int skill_id)
 {
-	int idx = skill->get_index(skill_id);
-	Assert_ret(idx != 0);
+	int idx;
+	if (skill_id == 0)
+		return UF_NONE;
+	idx = skill->get_index(skill_id);
+	Assert_retr(UF_NONE, idx != 0);
 	return skill->dbs->db[idx].unit_flag;
 }
 
 int skill_get_unit_layout_type(int skill_id, int skill_lv)
 {
-	int idx = skill->get_index(skill_id);
+	int idx;
+	if (skill_id == 0)
+		return 0;
+	idx = skill->get_index(skill_id);
 	Assert_ret(idx != 0);
 	Assert_ret(skill_lv > 0);
 	if (skill_lv > MAX_SKILL_LEVEL) {
@@ -566,7 +689,10 @@ int skill_get_unit_layout_type(int skill_id, int skill_lv)
 
 int skill_get_cooldown(int skill_id, int skill_lv)
 {
-	int idx = skill->get_index(skill_id);
+	int idx;
+	if (skill_id == 0)
+		return 0;
+	idx = skill->get_index(skill_id);
 	Assert_ret(idx != 0);
 	Assert_ret(skill_lv > 0);
 	if (skill_lv > MAX_SKILL_LEVEL) {
@@ -578,7 +704,10 @@ int skill_get_cooldown(int skill_id, int skill_lv)
 
 int skill_get_fixed_cast(int skill_id, int skill_lv)
 {
-	int idx = skill->get_index(skill_id);
+	int idx;
+	if (skill_id == 0)
+		return 0;
+	idx = skill->get_index(skill_id);
 	Assert_ret(idx != 0);
 	Assert_ret(skill_lv > 0);
 #ifdef RENEWAL_CAST
