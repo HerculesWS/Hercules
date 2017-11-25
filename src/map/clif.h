@@ -367,6 +367,7 @@ enum clif_messages {
 	MSG_MERCENARY_ESCAPED          = 0x4f5, ///< The mercenary has run away.
 	MSG_PARTY_MEMBER_NOT_SUMMONED  = 0x4c5, ///< The party member was not summoned because you are not the party leader.
 	MSG_PARTY_NO_MEMBER_IN_MAP     = 0x4c6, ///< There is no party member to summon in the current map.
+	MSG_INSTANCE_ALREADY_EXIST     = 0x528, ///< Memorial Dungeon, '%s' is already in progress.
 	MSG_SKILL_CANT_USE_AREA        = 0x536, ///< This skill cannot be used within this area
 	MSG_ITEM_CANT_USE_AREA         = 0x537, ///< This item cannot be used within this area.
 	MSG_EQUIP_NOT_PUBLIC           = 0x54d, ///< This character's equipment information is not open to the public.

@@ -20991,6 +20991,9 @@ BUILDIN(instance_create)
 	const char *name;
 	int owner_id, res;
 	int type = IOT_PARTY;
+	struct map_session_data *sd = script->rid2sd(st);
+
+	nullpo_ret(sd);
 
 	name = script_getstr(st, 2);
 	owner_id = script_getnum(st, 3);
@@ -21004,6 +21007,7 @@ BUILDIN(instance_create)
 
 	res = instance->create(owner_id, name, (enum instance_owner_type) type);
 	if (res == -4) { // Already exists
+		clif->msgtable_str(sd, MSG_INSTANCE_ALREADY_EXIST, name);
 		script_pushint(st, -4);
 		return true;
 	} else if (res < 0) {
