@@ -2255,7 +2255,7 @@ int char_parse_fromlogin_connection_state(int fd)
 		ShowError("Can not connect to login-server.\n");
 		ShowError("The server communication passwords (default s1/p1) are probably invalid.\n");
 		ShowError("Also, please make sure your login db has the correct communication username/passwords and the gender of the account is S.\n");
-		ShowError("The communication passwords are set in /conf/map-server.conf and /conf/char/char-server.conf\n");
+		ShowError("The communication passwords are set in /conf/map/map-server.conf and /conf/char/char-server.conf\n");
 		sockt->eof(fd);
 		return 1;
 	} else {
