@@ -231,17 +231,20 @@ int skill_get_range(int skill_id, int skill_lv)
 
 int skill_get_splash(int skill_id, int skill_lv)
 {
-	int idx;
+	int idx, val;
 	if (skill_id == 0)
 		return 0;
 	idx = skill->get_index(skill_id);
 	Assert_ret(idx != 0);
 	Assert_ret(skill_lv > 0);
+	val = skill->dbs->db[idx].splash[skill_get_lvl_idx(skill_lv)];
+	if (val < 0) {
+		val = AREA_SIZE;
+	}
 	if (skill_lv > MAX_SKILL_LEVEL) {
-		int val = skill->dbs->db[idx].splash[skill_get_lvl_idx(skill_lv)];
 		return skill_adjust_over_level(val, skill_lv, skill->dbs->db[idx].max);
 	}
-	return skill->dbs->db[idx].splash[skill_get_lvl_idx(skill_lv)];
+	return val;
 }
 
 int skill_get_hp(int skill_id, int skill_lv)
