@@ -2708,7 +2708,7 @@ struct npc_data *npc_create_npc(enum npc_subtype subtype, int m, int x, int y, u
 	nd->area_size = AREA_SIZE + 1;
 	nd->class_ = class_;
 	nd->speed = 200;
-	nd->vd.class = 0;
+	nd->vd.class = INVISIBLE_CLASS;
 
 	return nd;
 }
