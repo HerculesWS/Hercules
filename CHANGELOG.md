@@ -9,12 +9,12 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
-## [v2017.11.19-2] `November 28 2017` `PATCH 2`
+## [v2017.11.19+2] `November 28 2017` `PATCH 2`
 ### Fixed
 - Fixed an item loading failure in RODEX. (#1917, issue #1912)
 - Fixed invisible NPCs (such as `FAKE_NPC`) being displayed as novices. (#1918, issue #1916)
 
-## [v2017.11.19-1] `November 24 2017` `PATCH 1`
+## [v2017.11.19+1] `November 24 2017` `PATCH 1`
 ### Fixed
 - Suppressed assertions in the Skill DB accessors when called with `skill_id = 0` (normal attacks). (#1910, issue #1909)
 
@@ -58,7 +58,7 @@ If you are reading this in a text editor, simply ignore this section
 - Corrected some incorrect data types passed to the SQL `StmtBind` functions, causing query errors and data loss. Said functions will now have a runtime assertion to ensure the right data type is passed. Third party code needs to be updated to reflect this stricter requirement. (#1901, issue #1531)
 - Corrected some RODEX related queries in case `MAX_SLOTS` or `MAX_ITEM_OPTIONS` are set to custom values. (part of #1901)
 
-## [v2017.10.22-1] `October 22 2017` `PATCH 1`
+## [v2017.10.22+1] `October 22 2017` `PATCH 1`
 ### Fixed
 - Fixed a wrong null pointer check in `logmes()`, which caused the command to never log and instead print debug information.
 
@@ -85,8 +85,8 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
-[v2017.11.19-2]: https://github.com/HerculesWS/Hercules/compare/v2017.11.19-1...v2017.11.19-2
-[v2017.11.19-1]: https://github.com/HerculesWS/Hercules/compare/v2017.11.19...v2017.11.19-1
-[v2017.11.19]: https://github.com/HerculesWS/Hercules/compare/v2017.10.22-1...v2017.11.19
-[v2017.10.22-1]: https://github.com/HerculesWS/Hercules/compare/v2017.10.22...v2017.10.22-1
+[v2017.11.19+2]: https://github.com/HerculesWS/Hercules/compare/v2017.11.19+1...v2017.11.19+2
+[v2017.11.19+1]: https://github.com/HerculesWS/Hercules/compare/v2017.11.19...v2017.11.19+1
+[v2017.11.19]: https://github.com/HerculesWS/Hercules/compare/v2017.10.22+1...v2017.11.19
+[v2017.10.22+1]: https://github.com/HerculesWS/Hercules/compare/v2017.10.22...v2017.10.22+1
 [v2017.10.22]: https://github.com/HerculesWS/Hercules/compare/6b1fe2d...v2017.10.22
