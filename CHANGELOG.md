@@ -9,6 +9,11 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+## [v2017.11.19-2] `November 28 2017` `PATCH 2`
+### Fixed
+- Fixed an item loading failure in RODEX. (#1917, issue #1912)
+- Fixed invisible NPCs (such as `FAKE_NPC`) being displayed as novices. (#1918, issue #1916)
+
 ## [v2017.11.19-1] `November 24 2017` `PATCH 1`
 ### Fixed
 - Suppressed assertions in the Skill DB accessors when called with `skill_id = 0` (normal attacks). (#1910, issue #1909)
@@ -80,6 +85,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2017.11.19-2]: https://github.com/HerculesWS/Hercules/compare/v2017.11.19-1...v2017.11.19-2
 [v2017.11.19-1]: https://github.com/HerculesWS/Hercules/compare/v2017.11.19...v2017.11.19-1
 [v2017.11.19]: https://github.com/HerculesWS/Hercules/compare/v2017.10.22-1...v2017.11.19
 [v2017.10.22-1]: https://github.com/HerculesWS/Hercules/compare/v2017.10.22...v2017.10.22-1
