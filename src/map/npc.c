@@ -2708,7 +2708,7 @@ struct npc_data *npc_create_npc(enum npc_subtype subtype, int m, int x, int y, u
 	nd->area_size = AREA_SIZE + 1;
 	nd->class_ = class_;
 	nd->speed = 200;
-	nd->vd.class = 0;
+	nd->vd = npc_viewdb[0]; // Copy INVISIBLE_CLASS view data. Actual view data is set by npc->add_to_location() later.
 
 	return nd;
 }
