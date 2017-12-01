@@ -3835,11 +3835,32 @@ packet(0x96e,-1,clif->ackmergeitems);
 // changed packet sizes
 #endif
 
+#ifdef PACKETVER_ZERO
+// 2017-10-25bRagexe_zero
+#if PACKETVER >= 20171025
+// new packets
+	packet(0x0ae1,28);
+#endif
+#endif  // PACKETVER_ZERO
+
 // 2017-11-01bRagexeRE
 #if PACKETVER >= 20171101
 // new packets
 	packet(0x0ae1,28);
 #endif
+
+#ifdef PACKETVER_ZERO
+// 2017-11-09aRagexe
+#if PACKETVER >= 20171109
+// new packets
+	packet(0x0ae2,7);
+#endif
+// 2017-11-13aRagexe
+#if PACKETVER >= 20171113
+// changed packet sizes
+	packet(0x0acf,68);
+#endif
+#endif  // PACKETVER_ZERO
 
 // 2017-11-15aRagexeRE
 #if PACKETVER >= 20171115
@@ -3848,5 +3869,21 @@ packet(0x96e,-1,clif->ackmergeitems);
 // changed packet sizes
 	packet(0x0acf,68);
 #endif
+
+#ifdef PACKETVER_ZERO
+// 2017-11-23dRagexe
+#if PACKETVER >= 20171123
+// new packets
+	packet(0x0ae3,-1);
+#endif
+
+// 2017-11-30bRagexe
+#if PACKETVER >= 20171130
+// new packets
+	packet(0x0ae4,89);
+	packet(0x0ae5,-1);
+// changed packet sizes
+#endif
+#endif  // PACKETVER_ZERO
 
 #endif /* MAP_PACKETS_H */
