@@ -35,7 +35,7 @@
 
 // Packet DB
 #define MIN_PACKET_DB 0x0064
-#define MAX_PACKET_DB 0x08ff
+#define MAX_PACKET_DB 0x0acf
 
 /* Enums */
 
@@ -51,6 +51,7 @@ enum login_packet_id {
 	PACKET_ID_CA_LOGIN4               = 0x027c,
 	PACKET_ID_CA_LOGIN_HAN            = 0x02b0,
 	PACKET_ID_CA_SSO_LOGIN_REQ        = 0x0825,
+	PACKET_ID_CA_LOGIN_OTP            = 0x0acf,
 	PACKET_ID_CA_REQ_HASH             = 0x01db,
 	PACKET_ID_CA_CHARSERVERCONNECT    = 0x2710, // Custom Hercules Packet
 	//PACKET_ID_CA_SSO_LOGIN_REQa       = 0x825a, /* unused */
@@ -158,6 +159,17 @@ struct packet_CA_SSO_LOGIN_REQ {
 	int8 mac_address[17]; ///< MAC Address
 	char ip[15];          ///< IP Address
 	char t1[];            ///< SSO Login Token (variable length)
+} __attribute__((packed));
+
+/**
+ * Packet structure for CA_LOGIN_OTP.
+ */
+struct packet_CA_LOGIN_OTP {
+	int16 packet_id;      ///< Packet ID (#PACKET_ID_CA_LOGIN_OTP)
+	uint32 devFlags;      ///< flags including dev flag
+	char login[25];       ///< Username
+	char password[32];    ///< Password encrypted by rijndael
+	char flagsStr[5];     ///< Unknown flags. Normally string: G000
 } __attribute__((packed));
 
 #if 0 // Unused
@@ -325,6 +337,7 @@ struct lclif_interface_private {
 	LoginParseFunc *parse_CA_LOGIN_PCBANG;         ///< Packet handler for #packet_CA_LOGIN_PCBANG.
 	LoginParseFunc *parse_CA_LOGIN_HAN;            ///< Packet handler for #packet_CA_LOGIN_HAN.
 	LoginParseFunc *parse_CA_SSO_LOGIN_REQ;        ///< Packet handler for #packet_CA_SSO_LOGIN_REQ.
+	LoginParseFunc *parse_CA_LOGIN_OTP;            ///< Packet handler for #packet_CA_LOGIN_OTP.
 	LoginParseFunc *parse_CA_REQ_HASH;             ///< Packet handler for #packet_CA_REQ_HASH.
 	LoginParseFunc *parse_CA_CHARSERVERCONNECT;    ///< Packet handler for #packet_CA_CHARSERVERCONNECT.
 };

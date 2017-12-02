@@ -1360,6 +1360,33 @@ bool login_client_login(int fd, struct login_session_data *sd)
 	return false;
 }
 
+bool login_client_login_otp(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
+bool login_client_login_otp(int fd, struct login_session_data *sd)
+{
+	// send ok response with fake token
+#ifdef PACKETVER_ZERO
+#if PACKETVER >= 20171123
+	WFIFOHEAD(fd, 19);
+	WFIFOW(fd, 0) = 0x0ae3;
+	WFIFOW(fd, 2) = 19;  // len
+	WFIFOL(fd, 4) = 0;  // normal login
+	safestrncpy(WFIFOP(fd, 8), "S1000", 6);
+	safestrncpy(WFIFOP(fd, 14), "token", 6);
+	WFIFOSET(fd, 19);
+#else
+	WFIFOHEAD(fd, 13);
+	WFIFOW(fd, 0) = 0x0ad1;
+	WFIFOW(fd, 2) = 13;  // len
+	WFIFOL(fd, 4) = 0;  // normal login
+	safestrncpy(WFIFOP(fd, 8), "token", 6);
+	WFIFOSET(fd, 13);
+#endif
+	return true;
+#else  // PACKETVER_ZERO
+	return false;
+#endif  // PACKETVER_ZERO
+}
+
 void login_char_server_connection_status(int fd, struct login_session_data* sd, uint8 status) __attribute__((nonnull (2)));
 void login_char_server_connection_status(int fd, struct login_session_data* sd, uint8 status)
 {
@@ -2218,6 +2245,7 @@ void login_defaults(void) {
 
 	login->parse_fromchar = login_parse_fromchar;
 	login->client_login = login_client_login;
+	login->client_login_otp = login_client_login_otp;
 	login->parse_request_connection = login_parse_request_connection;
 	login->auth_ok = login_auth_ok;
 	login->auth_failed = login_auth_failed;
