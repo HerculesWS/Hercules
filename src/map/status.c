@@ -11542,24 +11542,26 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			break;
 
 		case SC_POISON:
-			if(st->hp <= max(st->max_hp>>2, sce->val4)) //Stop damaging after 25% HP left.
+			if (st->hp <= max(st->max_hp / 4, sce->val4)) //Stop damaging after 25% HP left.
 				break;
 			FALLTHROUGH
 		case SC_DPOISON:
 			if (--(sce->val3) > 0) {
-				if (!sc->data[SC_SLOWPOISON]) {
-					if( sce->val2 && bl->type == BL_MOB ) {
-						struct block_list* src = map->id2bl(sce->val2);
-						if (src != NULL)
-							mob->log_damage(BL_UCAST(BL_MOB, bl), src, sce->val4);
-					}
-					map->freeblock_lock();
-					status_zap(bl, sce->val4, 0);
-					if (sc->data[type]) { // Check if the status still last ( can be dead since then ).
-						sc_timer_next(1000 + tick, status->change_timer, bl->id, data );
-					}
-					map->freeblock_unlock();
+				if (sc->data[SC_SLOWPOISON] != NULL) {
+					sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
+					return 0;
 				}
+				if (sce->val2 != 0 && bl->type == BL_MOB) {
+					struct block_list* src = map->id2bl(sce->val2);
+					if (src != NULL)
+						mob->log_damage(BL_UCAST(BL_MOB, bl), src, sce->val4);
+				}
+				map->freeblock_lock();
+				status_zap(bl, sce->val4, 0);
+				if (sc->data[type] != NULL) { // Check if the status still last (can be dead since then).
+					sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
+				}
+				map->freeblock_unlock();
 				return 0;
 			}
 			break;
