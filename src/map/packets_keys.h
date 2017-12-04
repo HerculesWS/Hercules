@@ -1562,7 +1562,7 @@
 	packetKeys(0x76725C17,0x72FE4EC1,0x07A91BFD);
 #endif
 
-// 2016-11-09aRagexe, 2016-11-09bRagexeRE, 2016-11-09cRagexeRE, 2016-11-09dRagexeRE
+// 2016-11-09aRagexe, 2016-11-09aRagexeRE, 2016-11-09bRagexeRE, 2016-11-09cRagexeRE, 2016-11-09dRagexeRE
 #if PACKETVER == 20161109
 	packetKeys(0x0A5277C0,0x2DB17506,0x0E8F26DA);
 #endif
@@ -1752,6 +1752,11 @@
 	packetKeys(0x26B52A7F,0x5377619D,0x4F580AC4);
 #endif
 
+// 2017-08-09cRagexeRE
+#if PACKETVER == 20170809
+	packetKeys(0x452156CB,0x71442624,0x2EE66D1C);
+#endif
+
 // 2017-08-16cRagexeRE, 2017-08-16dRagexeRE
 #if PACKETVER == 20170816
 	packetKeys(0x78914673,0x3F8B7634,0x55B814BC);
@@ -1832,6 +1837,16 @@
 	packetKeys(0x581B77A7,0x62F74D7A,0x4F102173);
 #endif
 
+// 2017-12-06aRagexeRE, 2017-12-06cRagexe
+#if PACKETVER == 20171206
+	packetKeys(0x39D54BD3,0x577A0C21,0x4C1C316E);
+#endif
+
+// 2017-12-13bRagexe, 2017-12-13bRagexeRE
+#if PACKETVER == 20171213
+	packetKeys(0x44E41107,0x3B126921,0x00E06AAC);
+#endif
+
 // keys for zero clients
 #ifdef PACKETVER_ZERO
 // 2017-10-18aRagexe_zero, 2017-10-19aRagexe_zero, 2017-10-23aRagexe_zero, 2017-10-23bRagexe_zero, 2017-10-23cRagexe_zero, 2017-10-24aRagexe_zero, 2017-10-25bRagexe_zero, 2017-10-27aRagexe_zero, 2017-10-27bRagexe_zero, 2017-10-30aRagexe_zero, 2017-10-31aRagexe_zero, 2017-11-09aRagexe_zero, 2017-11-13aRagexe_zero, 2017-11-13bRagexe_zero
@@ -1862,6 +1877,21 @@
 // 2017-11-30bRagexe_zero
 #if PACKETVER == 20171130
 	packetKeys(0x31A04B32,0x3AC96B76,0x1742085D);
+#endif
+
+// 2017-12-04bRagexe_zero
+#if PACKETVER == 20171204
+	packetKeys(0x06A109F1,0x6A953256,0x0A6040A3);
+#endif
+
+// 2017-12-06aRagexe_zero, 2017-12-06bRagexe_zero, 2017-12-06cRagexe_zero, 2017-12-06dRagexe_zero, 2017-12-08aRagexe_zero, 2017-12-08cRagexe_zero, 2017-12-08dRagexe_zero, 2017-12-09bRagexe_zero, 2017-12-09cRagexe_zero, 2017-12-10aRagexe_zero, 2017-12-11bRagexe_zero, 2017-12-12aRagexe_zero, 2017-12-13aRagexe_zero, 2017-12-13bRagexe_zero, 2017-12-13cRagexe_zero
+#if PACKETVER == 20171206 || PACKETVER == 20171208 || PACKETVER == 20171209 || PACKETVER == 20171210 || PACKETVER == 20171211 || PACKETVER == 20171212 || PACKETVER == 20171213
+	packetKeys(0x718D0388,0x56A11525,0x20042F67);
+#endif
+
+// 2017-12-14cRagexe_zero
+#if PACKETVER == 20171214
+	packetKeys(0x6CE1021D,0x77703B04,0x4E722232);
 #endif
 
 #endif  // PACKETVER_ZERO

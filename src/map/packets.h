@@ -3874,7 +3874,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 // 2017-11-23dRagexe
 #if PACKETVER >= 20171123
 // new packets
-	packet(0x0ae3,-1);
+	packet(0x0ae3,-1); // AC_LOGIN_OTP
 #endif
 
 // 2017-11-30bRagexe
@@ -3882,6 +3882,34 @@ packet(0x96e,-1,clif->ackmergeitems);
 // new packets
 	packet(0x0ae4,89);
 	packet(0x0ae5,-1);
+// changed packet sizes
+#endif
+#endif  // PACKETVER_ZERO
+
+// 2017-12-06aRagexeRE
+#if PACKETVER >= 20171206
+// new packets
+	packet(0x0ae4,89);
+	packet(0x0ae5,-1);
+// changed packet sizes
+#endif
+
+#ifndef PACKETVER_ZERO
+#if PACKETVER >= 20171213
+// new packets
+	packet(0x0ae3,-1); // AC_LOGIN_OTP
+	packet(0x0ae6,30);
+	packet(0x0ae7,30);
+// changed packet sizes
+#endif
+#endif  // PACKETVER_ZERO
+
+#ifdef PACKETVER_ZERO
+#if PACKETVER >= 20171214
+// new packets
+	packet(0x0ae6,30);
+	packet(0x0ae7,30);
+	packet(0x0ae8,2);
 // changed packet sizes
 #endif
 #endif  // PACKETVER_ZERO
