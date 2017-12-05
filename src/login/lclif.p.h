@@ -166,7 +166,9 @@ struct packet_CA_SSO_LOGIN_REQ {
  */
 struct packet_CA_LOGIN_OTP {
 	int16 packet_id;      ///< Packet ID (#PACKET_ID_CA_LOGIN_OTP)
+#if PACKETVER >= 20171113
 	uint32 devFlags;      ///< flags including dev flag
+#endif
 	char login[25];       ///< Username
 	char password[32];    ///< Password encrypted by rijndael
 	char flagsStr[5];     ///< Unknown flags. Normally string: G000
