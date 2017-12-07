@@ -1365,7 +1365,15 @@ bool login_client_login_otp(int fd, struct login_session_data *sd)
 {
 	// send ok response with fake token
 #ifdef PACKETVER_ZERO
-#if PACKETVER >= 20171123
+#if PACKETVER >= 20171127
+	WFIFOHEAD(fd, 33);
+	WFIFOW(fd, 0) = 0x0ae3;
+	WFIFOW(fd, 2) = 33;  // len
+	WFIFOL(fd, 4) = 0;  // normal login
+	safestrncpy(WFIFOP(fd, 8), "S1000", 6);
+	safestrncpy(WFIFOP(fd, 28), "token", 6);
+	WFIFOSET(fd, 33);
+#elif PACKETVER >= 20171123
 	WFIFOHEAD(fd, 19);
 	WFIFOW(fd, 0) = 0x0ae3;
 	WFIFOW(fd, 2) = 19;  // len
