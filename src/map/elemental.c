@@ -97,13 +97,13 @@ int elemental_create(struct map_session_data *sd, int class_, unsigned int lifet
 	summon_level = db->status.size+1; // summon level
 
 	//[(Caster's Max HP/ 3 ) + (Caster's INT x 10 )+ (Caster's Job Level x 20 )] x [(Elemental Summon Level + 2) / 3]
-	ele.hp = ele.max_hp = (sd->battle_status.max_hp/3 + sd->battle_status.int_*10 + sd->status.job_level) * ((summon_level + 2) / 3);
+	ele.hp = ele.max_hp = ((sd->battle_status.max_hp / 3) + (sd->battle_status.int_ * 10) + (sd->status.job_level * 20)) * ((summon_level + 2) / 3);
 	//Caster's Max SP /4
 	ele.sp = ele.max_sp = sd->battle_status.max_sp/4;
 	//Caster's [ Max SP / (18 / Elemental Summon Skill Level) 1- 100 ]
 	ele.atk = (sd->battle_status.max_sp / (18 / summon_level)  * 1 - 100);
 	//Caster's [ Max SP / (18 / Elemental Summon Skill Level) ]
-	ele.atk2 = sd->battle_status.max_sp / 18;
+	ele.atk2 = sd->battle_status.max_sp / (18 / summon_level);
 	//Caster's HIT + (Caster's Base Level)
 	ele.hit = sd->battle_status.hit + sd->status.base_level;
 	//[Elemental Summon Skill Level x (Caster's INT / 2 + Caster's DEX / 4)]
@@ -115,7 +115,7 @@ int elemental_create(struct map_session_data *sd, int class_, unsigned int lifet
 	//Caster's MDEF + (Caster's INT / (5 - Elemental Summon Skill Level)
 	ele.mdef = sd->battle_status.mdef + sd->battle_status.int_ / (5-summon_level);
 	//Caster's FLEE + (Caster's Base Level / (5 - Elemental Summon Skill Level)
-	ele.flee = sd->status.base_level / (5-summon_level);
+	ele.flee = sd->battle_status.flee + (sd->status.base_level / (5 - summon_level));
 	//Caster's HIT + (Caster's Base Level)
 	ele.hit = sd->battle_status.hit + sd->status.base_level;
 
