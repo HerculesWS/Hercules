@@ -9043,14 +9043,15 @@ void clif_feel_hate_reset(struct map_session_data *sd)
 	clif->starskill(sd, "", 0, 0, 30);
 }
 
-/// Equip window (un)tick ack (ZC_CONFIG).
+/// Send configurations (ZC_CONFIG).
 /// 02d9 <type>.L <value>.L
 /// type:
 ///     0 = open equip window
+///     3 = homunculus autofeeding
 ///     value:
 ///         0 = disabled
 ///         1 = enabled
-void clif_equiptickack(struct map_session_data* sd, int flag)
+void clif_zc_config(struct map_session_data* sd, int type, int flag)
 {
 	int fd;
 	nullpo_retv(sd);
@@ -9058,7 +9059,7 @@ void clif_equiptickack(struct map_session_data* sd, int flag)
 
 	WFIFOHEAD(fd, packet_len(0x2d9));
 	WFIFOW(fd, 0) = 0x2d9;
-	WFIFOL(fd, 2) = 0;
+	WFIFOL(fd, 2) = type;
 	WFIFOL(fd, 6) = flag;
 	WFIFOSET(fd, packet_len(0x2d9));
 }
@@ -15942,19 +15943,32 @@ void clif_parse_ViewPlayerEquip(int fd, struct map_session_data* sd) {
 		clif->msgtable(sd, MSG_EQUIP_NOT_PUBLIC);
 }
 
-void clif_parse_EquipTick(int fd, struct map_session_data* sd) __attribute__((nonnull (2)));
-/// Request to change equip window tick (CZ_CONFIG).
+void clif_parse_cz_config(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+/// Receive configurations (CZ_CONFIG).
 /// 02d8 <type>.L <value>.L
 /// type:
 ///     0 = open equip window
+///     3 = homunculus autofeeding
 ///     value:
 ///         0 = disabled
 ///         1 = enabled
-void clif_parse_EquipTick(int fd, struct map_session_data* sd)
+void clif_parse_cz_config(int fd, struct map_session_data *sd)
 {
-	bool flag = (RFIFOL(fd,6) != 0) ? true : false;
-	sd->status.show_equip = flag;
-	clif->equiptickack(sd, flag);
+	int type = RFIFOL(fd, 2);
+	int flag = RFIFOL(fd, 6);
+
+	if (type == CZ_CONFIG_OPEN_EQUIPMENT_WINDOW) {
+		sd->status.show_equip = flag;
+	} else if (type == CZ_CONFIG_HOMUNCULUS_AUTOFEEDING) {
+		struct homun_data *hd;
+		hd = sd->hd;
+		nullpo_retv(hd);
+		hd->homunculus.autofeed = flag;
+	} else {
+		ShowWarning("clif_parse_cz_config: Unsupported type has been received (%d).", type);
+		return;
+	}
+	clif->zc_config(sd, type, flag);
 }
 
 void clif_parse_PartyTick(int fd, struct map_session_data* sd) __attribute__((nonnull (2)));
@@ -20344,7 +20358,7 @@ void clif_defaults(void) {
 	clif->mission_info = clif_mission_info;
 	clif->feel_hate_reset = clif_feel_hate_reset;
 	clif->partytickack = clif_partytickack;
-	clif->equiptickack = clif_equiptickack;
+	clif->zc_config = clif_zc_config;
 	clif->viewequip_ack = clif_viewequip_ack;
 	clif->equpcheckbox = clif_equpcheckbox;
 	clif->displayexp = clif_displayexp;
@@ -20869,7 +20883,7 @@ void clif_defaults(void) {
 	clif->pAdopt_request = clif_parse_Adopt_request;
 	clif->pAdopt_reply = clif_parse_Adopt_reply;
 	clif->pViewPlayerEquip = clif_parse_ViewPlayerEquip;
-	clif->pEquipTick = clif_parse_EquipTick;
+	clif->p_cz_config = clif_parse_cz_config;
 	clif->pquestStateAck = clif_parse_questStateAck;
 	clif->pmercenary_action = clif_parse_mercenary_action;
 	clif->pBattleChat = clif_parse_BattleChat;
