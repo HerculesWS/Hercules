@@ -21570,7 +21570,29 @@ BUILDIN(progressbar)
 	clif->progressbar(sd, (unsigned int)strtoul(color, (char **)NULL, 0), second);
 	return true;
 }
+BUILDIN(progressbar_unit)
+{
+	const char *color = script_getstr(st, 2);
+	uint32 second = script_getnum(st, 3);
 
+	if (script_hasdata(st, 4)) {
+		struct block_list *bl = map->id2bl(script_getnum(st, 4));
+
+		if (bl == NULL) {
+			ShowWarning("buildin_progressbar: Error in finding object with given GID %d!\n", script_getnum(st, 4));
+			return true;
+		}
+		clif->progressbar_unit(bl, (unsigned int)strtoul(color, (char **)NULL, 0), second);
+	} else {
+		struct map_session_data *sd = script->rid2sd(st);
+
+		if (sd == NULL)
+			return false;
+
+		clif->progressbar_unit(&sd->bl, (unsigned int)strtoul(color, (char **)NULL, 0), second);
+	}
+	return true;
+}
 BUILDIN(pushpc)
 {
 	uint8 dir;
@@ -24405,6 +24427,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(setfont,"i"),
 		BUILDIN_DEF(areamobuseskill,"siiiiviiiii"),
 		BUILDIN_DEF(progressbar,"si"),
+		BUILDIN_DEF(progressbar_unit,"si?"),
 		BUILDIN_DEF(pushpc,"ii"),
 		BUILDIN_DEF(buyingstore,"i"),
 		BUILDIN_DEF(searchstores,"ii"),

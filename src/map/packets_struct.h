@@ -333,6 +333,9 @@ enum packet_headers {
 #if PACKETVER >= 20151223
 	skillscale = 0xA41,
 #endif
+#if PACKETVER >= 20130821
+	progressbarunit = 0x09D1,
+#endif
 };
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
@@ -1489,6 +1492,13 @@ struct PACKET_ZC_SKILL_SCALE {
 	int16 x;
 	int16 y;
 	uint32 casttime;
+} __attribute__((packed));
+
+struct ZC_PROGRESS_ACTOR {
+	int16 PacketType;
+	int32 GID;
+	int32 color;
+	uint32 time;
 } __attribute__((packed));
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
