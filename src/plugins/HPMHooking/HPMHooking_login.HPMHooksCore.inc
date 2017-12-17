@@ -138,6 +138,8 @@ struct {
 	struct HPMHookPoint *HP_PRIV__lclif_parse_CA_LOGIN_HAN_post;
 	struct HPMHookPoint *HP_PRIV__lclif_parse_CA_SSO_LOGIN_REQ_pre;
 	struct HPMHookPoint *HP_PRIV__lclif_parse_CA_SSO_LOGIN_REQ_post;
+	struct HPMHookPoint *HP_PRIV__lclif_parse_CA_LOGIN_OTP_pre;
+	struct HPMHookPoint *HP_PRIV__lclif_parse_CA_LOGIN_OTP_post;
 	struct HPMHookPoint *HP_PRIV__lclif_parse_CA_REQ_HASH_pre;
 	struct HPMHookPoint *HP_PRIV__lclif_parse_CA_REQ_HASH_post;
 	struct HPMHookPoint *HP_PRIV__lclif_parse_CA_CHARSERVERCONNECT_pre;
@@ -368,6 +370,8 @@ struct {
 	struct HPMHookPoint *HP_login_auth_failed_post;
 	struct HPMHookPoint *HP_login_client_login_pre;
 	struct HPMHookPoint *HP_login_client_login_post;
+	struct HPMHookPoint *HP_login_client_login_otp_pre;
+	struct HPMHookPoint *HP_login_client_login_otp_post;
 	struct HPMHookPoint *HP_login_char_server_connection_status_pre;
 	struct HPMHookPoint *HP_login_char_server_connection_status_post;
 	struct HPMHookPoint *HP_login_parse_request_connection_pre;
@@ -837,6 +841,8 @@ struct {
 	int HP_PRIV__lclif_parse_CA_LOGIN_HAN_post;
 	int HP_PRIV__lclif_parse_CA_SSO_LOGIN_REQ_pre;
 	int HP_PRIV__lclif_parse_CA_SSO_LOGIN_REQ_post;
+	int HP_PRIV__lclif_parse_CA_LOGIN_OTP_pre;
+	int HP_PRIV__lclif_parse_CA_LOGIN_OTP_post;
 	int HP_PRIV__lclif_parse_CA_REQ_HASH_pre;
 	int HP_PRIV__lclif_parse_CA_REQ_HASH_post;
 	int HP_PRIV__lclif_parse_CA_CHARSERVERCONNECT_pre;
@@ -1067,6 +1073,8 @@ struct {
 	int HP_login_auth_failed_post;
 	int HP_login_client_login_pre;
 	int HP_login_client_login_post;
+	int HP_login_client_login_otp_pre;
+	int HP_login_client_login_otp_post;
 	int HP_login_char_server_connection_status_pre;
 	int HP_login_char_server_connection_status_post;
 	int HP_login_parse_request_connection_pre;

@@ -325,6 +325,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "packet_CA_LOGIN3", sizeof(struct packet_CA_LOGIN3), SERVER_TYPE_LOGIN },
 		{ "packet_CA_LOGIN4", sizeof(struct packet_CA_LOGIN4), SERVER_TYPE_LOGIN },
 		{ "packet_CA_LOGIN_HAN", sizeof(struct packet_CA_LOGIN_HAN), SERVER_TYPE_LOGIN },
+		{ "packet_CA_LOGIN_OTP", sizeof(struct packet_CA_LOGIN_OTP), SERVER_TYPE_LOGIN },
 		{ "packet_CA_LOGIN_PCBANG", sizeof(struct packet_CA_LOGIN_PCBANG), SERVER_TYPE_LOGIN },
 		{ "packet_CA_SSO_LOGIN_REQ", sizeof(struct packet_CA_SSO_LOGIN_REQ), SERVER_TYPE_LOGIN },
 		{ "packet_SC_NOTIFY_BAN", sizeof(struct packet_SC_NOTIFY_BAN), SERVER_TYPE_LOGIN },

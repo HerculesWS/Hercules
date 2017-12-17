@@ -3562,6 +3562,8 @@ typedef enum parsefunc_rcode (*HPMHOOK_pre_PRIV__lclif_parse_CA_LOGIN_HAN) (int 
 typedef enum parsefunc_rcode (*HPMHOOK_post_PRIV__lclif_parse_CA_LOGIN_HAN) (enum parsefunc_rcode retVal___, int fd, struct login_session_data *sd);
 typedef enum parsefunc_rcode (*HPMHOOK_pre_PRIV__lclif_parse_CA_SSO_LOGIN_REQ) (int *fd, struct login_session_data **sd);
 typedef enum parsefunc_rcode (*HPMHOOK_post_PRIV__lclif_parse_CA_SSO_LOGIN_REQ) (enum parsefunc_rcode retVal___, int fd, struct login_session_data *sd);
+typedef enum parsefunc_rcode (*HPMHOOK_pre_PRIV__lclif_parse_CA_LOGIN_OTP) (int *fd, struct login_session_data **sd);
+typedef enum parsefunc_rcode (*HPMHOOK_post_PRIV__lclif_parse_CA_LOGIN_OTP) (enum parsefunc_rcode retVal___, int fd, struct login_session_data *sd);
 typedef enum parsefunc_rcode (*HPMHOOK_pre_PRIV__lclif_parse_CA_REQ_HASH) (int *fd, struct login_session_data **sd);
 typedef enum parsefunc_rcode (*HPMHOOK_post_PRIV__lclif_parse_CA_REQ_HASH) (enum parsefunc_rcode retVal___, int fd, struct login_session_data *sd);
 typedef enum parsefunc_rcode (*HPMHOOK_pre_PRIV__lclif_parse_CA_CHARSERVERCONNECT) (int *fd, struct login_session_data **sd);
@@ -3842,6 +3844,8 @@ typedef void (*HPMHOOK_pre_login_auth_failed) (struct login_session_data **sd, i
 typedef void (*HPMHOOK_post_login_auth_failed) (struct login_session_data *sd, int result);
 typedef bool (*HPMHOOK_pre_login_client_login) (int *fd, struct login_session_data **sd);
 typedef bool (*HPMHOOK_post_login_client_login) (bool retVal___, int fd, struct login_session_data *sd);
+typedef bool (*HPMHOOK_pre_login_client_login_otp) (int *fd, struct login_session_data **sd);
+typedef bool (*HPMHOOK_post_login_client_login_otp) (bool retVal___, int fd, struct login_session_data *sd);
 typedef void (*HPMHOOK_pre_login_char_server_connection_status) (int *fd, struct login_session_data **sd, uint8 *status);
 typedef void (*HPMHOOK_post_login_char_server_connection_status) (int fd, struct login_session_data *sd, uint8 status);
 typedef void (*HPMHOOK_pre_login_parse_request_connection) (int *fd, struct login_session_data **sd, const char **ip, uint32 *ipl);
