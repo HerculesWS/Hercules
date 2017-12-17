@@ -74,6 +74,13 @@
 	#undef ENABLE_PACKETVER_RE
 #endif // DISABLE_PACKETVER_RE
 
+//Uncomment the following line if your client is zero ragexe instead of normal kro clients
+//#define ENABLE_PACKETVER_ZERO
+#ifdef ENABLE_PACKETVER_ZERO
+	#define PACKETVER_ZERO
+	#undef ENABLE_PACKETVER_ZERO
+#endif // DISABLE_PACKETVER_ZERO
+
 // Client support for experimental RagexeRE UI present in 2012-04-10 and 2012-04-18
 #if defined(PACKETVER_RE) && ( PACKETVER == 20120410 || PACKETVER == 20120418 )
 #define PARTY_RECRUIT
