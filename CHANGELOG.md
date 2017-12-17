@@ -9,6 +9,19 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+## [v2017.12.17] `December 17 2017`
+# Added
+- Implemented Homunculus Autofeeding, available on the 2017 clients. The feature can be disabled by flipping `features.enable_homun_autofeed` in feature.conf. (#1898)
+- Added support for the newly released Ragnarok Zero clients. The client type is controlled with the `--enable-packetver-zero` configure-time flag (disabled by default). (#1923)
+
+### Changed
+- Applied script standardization to the Old Glast Heim instance script. (#1883)
+- Split packets.h into two files: packets.h and packets_shuffle.h. (part of #1923)
+
+## Fixed
+- Corrected a wrong path displayed in an error message pointing to the map-server configuration. (#1913)
+- Fixed the natural expiration of the Poison status when under the effect of Slow Poison. (#1925)
+
 ## [v2017.11.19+2] `November 28 2017` `PATCH 2`
 ### Fixed
 - Fixed an item loading failure in RODEX. (#1917, issue #1912)
@@ -85,6 +98,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2017.12.17]: https://github.com/HerculesWS/Hercules/compare/v2017.11.19+2...v2017.12.17
 [v2017.11.19+2]: https://github.com/HerculesWS/Hercules/compare/v2017.11.19+1...v2017.11.19+2
 [v2017.11.19+1]: https://github.com/HerculesWS/Hercules/compare/v2017.11.19...v2017.11.19+1
 [v2017.11.19]: https://github.com/HerculesWS/Hercules/compare/v2017.10.22+1...v2017.11.19
