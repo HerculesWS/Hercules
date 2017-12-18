@@ -231,6 +231,11 @@ int rodex_send_mail(struct map_session_data *sd, const char *receiver_name, cons
 	nullpo_retr(RODEX_SEND_MAIL_FATAL_ERROR, body);
 	nullpo_retr(RODEX_SEND_MAIL_FATAL_ERROR, title);
 
+	if (!rodex->isenabled() || sd->npc_id > 0) {
+		rodex->clean(sd, 1);
+		return RODEX_SEND_MAIL_FATAL_ERROR;
+	}
+
 	if (zeny < 0) {
 		rodex->clean(sd, 1);
 		return RODEX_SEND_MAIL_FATAL_ERROR;
