@@ -1500,18 +1500,21 @@ fi
 
 MYSQL_OLD_LIBS="$LIBS" ; LIBS="$LIBS $MYSQL_LIBS"
 MYSQL_OLD_CPPFLAGS="$CPPFLAGS" ; CPPFLAGS="$CPPFLAGS $MYSQL_CFLAGS"
-AC_CHECK_FUNC([mysql_init], [HAVE_MYSQL="yes"])
-AC_CHECK_HEADER([mysql.h], [], [HAVE_MYSQL=""])
+# Note that for AC_CHECK_FUNC to succeed, LIBS has to be correctly defined.
+AC_CHECK_FUNC(mysql_init, [
+		HAVE_MYSQL="yes"
+	], [
+		AC_MSG_ERROR([MySQL Library not found or incompatible])
+		HAVE_MYSQL=""
+	])
+AC_CHECK_HEADER([mysql/mysql.h], [
+		HAVE_MYSQL="$HAVE_MYSQL"
+	], [ 
+		AC_MSG_ERROR([MySQL Header not found.])
+		HAVE_MYSQL=""
+	])
 CPPFLAGS="$MYSQL_OLD_CPPFLAGS"
 LIBS="$MYSQL_OLD_LIBS"
-
-AC_MSG_CHECKING([MySQL library (required)])
-if test "$HAVE_MYSQL" = "yes" ; then
-	AC_MSG_RESULT([yes ($MYSQL_VERSION)])
-else
-	AC_MSG_RESULT([no])
-	AC_MSG_ERROR([MySQL not found or incompatible])
-fi
 
 AC_SUBST([HAVE_MYSQL])
 AC_SUBST([MYSQL_VERSION])
