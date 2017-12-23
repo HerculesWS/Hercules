@@ -41256,15 +41256,15 @@ void HP_map_clearflooritem(struct block_list *bl) {
 	}
 	return;
 }
-int HP_map_addflooritem(const struct block_list *bl, struct item *item_data, int amount, int16 m, int16 x, int16 y, int first_charid, int second_charid, int third_charid, int flags) {
+int HP_map_addflooritem(const struct block_list *bl, struct item *item_data, int amount, int16 m, int16 x, int16 y, int first_charid, int second_charid, int third_charid, int flags, bool showdropeffect) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_map_addflooritem_pre > 0) {
-		int (*preHookFunc) (const struct block_list **bl, struct item **item_data, int *amount, int16 *m, int16 *x, int16 *y, int *first_charid, int *second_charid, int *third_charid, int *flags);
+		int (*preHookFunc) (const struct block_list **bl, struct item **item_data, int *amount, int16 *m, int16 *x, int16 *y, int *first_charid, int *second_charid, int *third_charid, int *flags, bool *showdropeffect);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_addflooritem_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_map_addflooritem_pre[hIndex].func;
-			retVal___ = preHookFunc(&bl, &item_data, &amount, &m, &x, &y, &first_charid, &second_charid, &third_charid, &flags);
+			retVal___ = preHookFunc(&bl, &item_data, &amount, &m, &x, &y, &first_charid, &second_charid, &third_charid, &flags, &showdropeffect);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -41272,13 +41272,13 @@ int HP_map_addflooritem(const struct block_list *bl, struct item *item_data, int
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.map.addflooritem(bl, item_data, amount, m, x, y, first_charid, second_charid, third_charid, flags);
+		retVal___ = HPMHooks.source.map.addflooritem(bl, item_data, amount, m, x, y, first_charid, second_charid, third_charid, flags, showdropeffect);
 	}
 	if (HPMHooks.count.HP_map_addflooritem_post > 0) {
-		int (*postHookFunc) (int retVal___, const struct block_list *bl, struct item *item_data, int amount, int16 m, int16 x, int16 y, int first_charid, int second_charid, int third_charid, int flags);
+		int (*postHookFunc) (int retVal___, const struct block_list *bl, struct item *item_data, int amount, int16 m, int16 x, int16 y, int first_charid, int second_charid, int third_charid, int flags, bool showdropeffect);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_addflooritem_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_map_addflooritem_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, bl, item_data, amount, m, x, y, first_charid, second_charid, third_charid, flags);
+			retVal___ = postHookFunc(retVal___, bl, item_data, amount, m, x, y, first_charid, second_charid, third_charid, flags, showdropeffect);
 		}
 	}
 	return retVal___;
