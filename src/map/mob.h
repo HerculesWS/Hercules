@@ -406,6 +406,7 @@ enum mob_id {
 // The data structures for storing delayed item drops
 struct item_drop {
 	struct item item_data;
+	bool showdropeffect;
 	struct item_drop* next;
 };
 struct item_drop_list {

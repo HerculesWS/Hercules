@@ -1838,11 +1838,13 @@ int mob_ai_hard(int tid, int64 tick, int id, intptr_t data) {
 /*==========================================
  * Initializes the delay drop structure for mob-dropped items.
  *------------------------------------------*/
-struct item_drop* mob_setdropitem(int nameid, int qty, struct item_data *data) {
+struct item_drop* mob_setdropitem(int nameid, int qty, struct item_data *data)
+{
 	struct item_drop *drop = ers_alloc(item_drop_ers, struct item_drop);
 	drop->item_data.nameid = nameid;
 	drop->item_data.amount = qty;
 	drop->item_data.identify = data ? itemdb->isidentified2(data) : itemdb->isidentified(nameid);
+	drop->showdropeffect = true;
 	drop->next = NULL;
 	return drop;
 }
@@ -1857,6 +1859,7 @@ struct item_drop* mob_setlootitem(struct item* item)
 	nullpo_retr(NULL, item);
 	drop = ers_alloc(item_drop_ers, struct item_drop);
 	memcpy(&drop->item_data, item, sizeof(struct item));
+	drop->showdropeffect = false;
 	drop->next = NULL;
 	return drop;
 }
@@ -1864,7 +1867,8 @@ struct item_drop* mob_setlootitem(struct item* item)
 /*==========================================
  * item drop with delay (timer function)
  *------------------------------------------*/
-int mob_delay_item_drop(int tid, int64 tick, int id, intptr_t data) {
+int mob_delay_item_drop(int tid, int64 tick, int id, intptr_t data)
+{
 	struct item_drop_list *list;
 	struct item_drop *ditem;
 	list=(struct item_drop_list *)data;
@@ -1872,8 +1876,9 @@ int mob_delay_item_drop(int tid, int64 tick, int id, intptr_t data) {
 	while (ditem) {
 		struct item_drop *ditem_prev;
 		map->addflooritem(NULL, &ditem->item_data,ditem->item_data.amount,
-		                  list->m,list->x,list->y,
-		                  list->first_charid,list->second_charid,list->third_charid,0,true);
+		    list->m,list->x,list->y,
+		    list->first_charid,list->second_charid,list->third_charid,0,
+		    ditem->showdropeffect);
 		ditem_prev = ditem;
 		ditem = ditem->next;
 		ers_free(item_drop_ers, ditem_prev);
