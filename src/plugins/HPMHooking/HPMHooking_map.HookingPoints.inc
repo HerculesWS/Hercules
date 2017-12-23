@@ -2789,7 +2789,6 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(skill->parse_row_abradb, HP_skill_parse_row_abradb) },
 	{ HP_POP(skill->parse_row_spellbookdb, HP_skill_parse_row_spellbookdb) },
 	{ HP_POP(skill->parse_row_magicmushroomdb, HP_skill_parse_row_magicmushroomdb) },
-	{ HP_POP(skill->parse_row_reproducedb, HP_skill_parse_row_reproducedb) },
 	{ HP_POP(skill->parse_row_improvisedb, HP_skill_parse_row_improvisedb) },
 	{ HP_POP(skill->parse_row_changematerialdb, HP_skill_parse_row_changematerialdb) },
 	{ HP_POP(skill->usave_add, HP_skill_usave_add) },
