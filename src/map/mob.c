@@ -1873,7 +1873,7 @@ int mob_delay_item_drop(int tid, int64 tick, int id, intptr_t data) {
 		struct item_drop *ditem_prev;
 		map->addflooritem(NULL, &ditem->item_data,ditem->item_data.amount,
 		                  list->m,list->x,list->y,
-		                  list->first_charid,list->second_charid,list->third_charid,0);
+		                  list->first_charid,list->second_charid,list->third_charid,0,true);
 		ditem_prev = ditem;
 		ditem = ditem->next;
 		ers_free(item_drop_ers, ditem_prev);
@@ -2586,7 +2586,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 
 					if((temp = pc->additem(mvp_sd,&item,1,LOG_TYPE_PICKDROP_PLAYER)) != 0) {
 						clif->additem(mvp_sd,0,0,temp);
-						map->addflooritem(&md->bl, &item, 1, mvp_sd->bl.m, mvp_sd->bl.x, mvp_sd->bl.y, mvp_sd->status.char_id, (second_sd?second_sd->status.char_id : 0), (third_sd ? third_sd->status.char_id : 0), 1);
+						map->addflooritem(&md->bl, &item, 1, mvp_sd->bl.m, mvp_sd->bl.x, mvp_sd->bl.y, mvp_sd->status.char_id, (second_sd?second_sd->status.char_id : 0), (third_sd ? third_sd->status.char_id : 0), 1, true);
 					}
 
 					//Logs items, MVP prizes [Lupus]

@@ -1694,8 +1694,9 @@ bool map_closest_freecell(int16 m, const struct block_list *bl, int16 *x, int16 
  * @m, @x, @y mapid,x,y
  * @first_charid, @second_charid, @third_charid, looting priority
  * @flag: &1 MVP item. &2 do stacking check.
+ * @showdropeffect: show effect when the item is dropped.
  *------------------------------------------*/
-int map_addflooritem(const struct block_list *bl, struct item *item_data, int amount, int16 m, int16 x, int16 y, int first_charid, int second_charid, int third_charid, int flags)
+int map_addflooritem(const struct block_list *bl, struct item *item_data, int amount, int16 m, int16 x, int16 y, int first_charid, int second_charid, int third_charid, int flags, bool showdropeffect)
 {
 	int r;
 	struct flooritem_data *fitem=NULL;
@@ -1714,6 +1715,7 @@ int map_addflooritem(const struct block_list *bl, struct item *item_data, int am
 	fitem->bl.x = x;
 	fitem->bl.y = y;
 	fitem->bl.id = map->get_new_object_id();
+	fitem->showdropeffect = showdropeffect;
 	if(fitem->bl.id==0){
 		ers_free(map->flooritem_ers, fitem);
 		return 0;

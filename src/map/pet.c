@@ -325,7 +325,7 @@ int pet_return_egg(struct map_session_data *sd, struct pet_data *pd)
 	tmp_item.card[3] = pd->pet.rename_flag;
 	if((flag = pc->additem(sd,&tmp_item,1,LOG_TYPE_EGG))) {
 		clif->additem(sd,0,0,flag);
-		map->addflooritem(&sd->bl, &tmp_item, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0);
+		map->addflooritem(&sd->bl, &tmp_item, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0, false);
 	}
 	pd->pet.incubate = 1;
 	unit->free(&pd->bl,CLR_OUTSIGHT);
@@ -610,7 +610,7 @@ bool pet_get_egg(int account_id, short pet_class, int pet_id ) {
 	tmp_item.card[3] = 0; //New pets are not named.
 	if((ret = pc->additem(sd,&tmp_item,1,LOG_TYPE_PICKDROP_PLAYER))) {
 		clif->additem(sd,0,0,ret);
-		map->addflooritem(&sd->bl, &tmp_item, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0);
+		map->addflooritem(&sd->bl, &tmp_item, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0, false);
 	}
 
 	return true;
@@ -751,7 +751,7 @@ int pet_unequipitem(struct map_session_data *sd, struct pet_data *pd) {
 	tmp_item.identify = 1;
 	if((flag = pc->additem(sd,&tmp_item,1,LOG_TYPE_CONSUME))) {
 		clif->additem(sd,0,0,flag);
-		map->addflooritem(&sd->bl, &tmp_item, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0);
+		map->addflooritem(&sd->bl, &tmp_item, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0, false);
 	}
 	if( battle_config.pet_equip_required )
 	{ // Skotlex: halt support timers if needed
@@ -1026,7 +1026,7 @@ int pet_delay_item_drop(int tid, int64 tick, int id, intptr_t data) {
 		struct item_drop *ditem_prev;
 		map->addflooritem(NULL, &ditem->item_data, ditem->item_data.amount,
 			list->m, list->x, list->y,
-			list->first_charid, list->second_charid, list->third_charid, 0);
+			list->first_charid, list->second_charid, list->third_charid, 0, false);
 		ditem_prev = ditem;
 		ditem = ditem->next;
 		ers_free(pet->item_drop_ers, ditem_prev);

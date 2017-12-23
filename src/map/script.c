@@ -7923,7 +7923,7 @@ BUILDIN(getitem) {
 			if ((flag = pc->additem(sd, &it, get_count, LOG_TYPE_SCRIPT))) {
 				clif->additem(sd, 0, 0, flag);
 				if( pc->candrop(sd,&it) )
-					map->addflooritem(&sd->bl, &it, get_count, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0);
+					map->addflooritem(&sd->bl, &it, get_count, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0, false);
 			}
 		}
 	}
@@ -8031,7 +8031,7 @@ BUILDIN(getitem2)
 				if ((flag = pc->additem(sd, &item_tmp, get_count, LOG_TYPE_SCRIPT))) {
 					clif->additem(sd, 0, 0, flag);
 					if( pc->candrop(sd,&item_tmp) )
-						map->addflooritem(&sd->bl, &item_tmp, get_count, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0);
+						map->addflooritem(&sd->bl, &item_tmp, get_count, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0, false);
 				}
 			}
 		}
@@ -8224,7 +8224,7 @@ BUILDIN(makeitem)
 	item_tmp.nameid = nameid;
 	item_tmp.identify=1;
 
-	map->addflooritem(NULL, &item_tmp, amount, m, x, y, 0, 0, 0, 0);
+	map->addflooritem(NULL, &item_tmp, amount, m, x, y, 0, 0, 0, 0, false);
 
 	return true;
 }
@@ -8308,7 +8308,7 @@ BUILDIN(makeitem2)
 	item_tmp.card[2] = (short)script_getnum(st, 9);
 	item_tmp.card[3] = (short)script_getnum(st, 10);
 
-	map->addflooritem(NULL, &item_tmp, amount, m, x, y, 0, 0, 0, 0);
+	map->addflooritem(NULL, &item_tmp, amount, m, x, y, 0, 0, 0, 0, false);
 
 	return true;
 }
@@ -13576,7 +13576,7 @@ BUILDIN(successremovecards)
 
 			if ((flag = pc->additem(sd, &item_tmp, 1, LOG_TYPE_SCRIPT))) {
 				clif->additem(sd, 0, 0, flag);
-				map->addflooritem(&sd->bl, &item_tmp, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0);
+				map->addflooritem(&sd->bl, &item_tmp, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0, false);
 			}
 		}
 	}
@@ -13634,7 +13634,7 @@ BUILDIN(failedremovecards)
 
 				if ((flag = pc->additem(sd, &item_tmp, 1, LOG_TYPE_SCRIPT))) {
 					clif->additem(sd, 0, 0, flag);
-					map->addflooritem(&sd->bl, &item_tmp, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0);
+					map->addflooritem(&sd->bl, &item_tmp, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0, false);
 				}
 			}
 		}
@@ -22171,7 +22171,7 @@ BUILDIN(getrandgroupitem)
 				if ((flag = pc->additem(sd, &it, get_count, LOG_TYPE_SCRIPT))) {
 					clif->additem(sd, 0, 0, flag);
 					if( pc->candrop(sd,&it) )
-						map->addflooritem(&sd->bl, &it, get_count, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0);
+						map->addflooritem(&sd->bl, &it, get_count, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0, false);
 				}
 			}
 		}
