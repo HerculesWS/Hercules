@@ -62,14 +62,14 @@ const struct achievement_data *achievement_get(int aid)
  */
 struct achievement *achievement_ensure(struct map_session_data *sd, const struct achievement_data *ad)
 {
-	struct achievement *a = NULL;
+	struct achievement *s_ad = NULL;
 	int i = 0;
 
 	nullpo_retr(NULL, sd);
 	nullpo_retr(NULL, ad);
 
 	/* Lookup for achievement entry */
-	ARR_FIND(0, VECTOR_LENGTH(sd->achievement), i, (a = &VECTOR_INDEX(sd->achievement, i)) && a->id == ad->id);
+	ARR_FIND(0, VECTOR_LENGTH(sd->achievement), i, (s_ad = &VECTOR_INDEX(sd->achievement, i)) && s_ad->id == ad->id);
 
 	if (i == VECTOR_LENGTH(sd->achievement)) {
 		struct achievement ta = { 0 };
@@ -78,10 +78,10 @@ struct achievement *achievement_ensure(struct map_session_data *sd, const struct
 		VECTOR_ENSURE(sd->achievement, 1, 1);
 		VECTOR_PUSH(sd->achievement, ta);
 
-		a = &VECTOR_LAST(sd->achievement);
+		s_ad = &VECTOR_LAST(sd->achievement);
 	}
 
-	return a;
+	return s_ad;
 }
 
 /**
@@ -388,8 +388,10 @@ void achievement_validate_mob_kill(struct map_session_data *sd, int mob_id)
 	struct achievement_objective criteria = { 0 };
 
 	nullpo_retv(sd);
-
 	Assert_retv(mob_id > 0 && mob->db(mob_id) != NULL);
+
+	if (sd->achievements_received == false)
+		return;
 
 	criteria.mobid = mob_id;
 	criteria.goal = 1;
@@ -411,6 +413,9 @@ void achievement_validate_mob_damage(struct map_session_data *sd, unsigned int d
 
 	nullpo_retv(sd);
 	Assert_retv(damage > 0);
+
+	if (sd->achievements_received == false)
+		return;
 
 	criteria.goal = (int) damage;
 
@@ -436,7 +441,11 @@ void achievement_validate_pc_kill(struct map_session_data *sd, struct map_sessio
 {
 	struct achievement_objective criteria = { 0 };
 
+	nullpo_retv(sd);
 	nullpo_retv(dstsd);
+
+	if (sd->achievements_received == false)
+		return;
 
 	criteria.goal = 1;
 
@@ -470,6 +479,11 @@ void achievement_validate_pc_damage(struct map_session_data *sd, struct map_sess
 {
 	struct achievement_objective criteria = { 0 };
 
+	nullpo_retv(sd);
+
+	if (sd->achievements_received == false)
+		return;
+
 	if (damage == 0)
 		return;
 
@@ -495,6 +509,9 @@ void achievement_validate_jobchange(struct map_session_data *sd)
 	struct achievement_objective criteria = { 0 };
 
 	nullpo_retv(sd);
+
+	if (sd->achievements_received == false)
+		return;
 
 	VECTOR_INIT(criteria.jobid);
 	VECTOR_ENSURE(criteria.jobid, 1, 1);
@@ -523,6 +540,9 @@ void achievement_validate_stats(struct map_session_data *sd, enum status_point_t
 
 	nullpo_retv(sd);
 	Assert_retv(progress > 0);
+
+	if (sd->achievements_received == false)
+		return;
 
 	if (!achievement_valid_status_types(stat_type)) {
 		ShowError("achievement_validate_stats: Invalid status type %d given.\n", (int) stat_type);
@@ -558,7 +578,11 @@ void achievement_validate_stats(struct map_session_data *sd, enum status_point_t
 void achievement_validate_chatroom_create(struct map_session_data *sd)
 {
 	struct achievement_objective criteria = { 0 };
+
 	nullpo_retv(sd);
+
+	if (sd->achievements_received == false)
+		return;
 
 	criteria.goal = 1;
 
@@ -581,6 +605,11 @@ void achievement_validate_chatroom_members(struct map_session_data *sd, int prog
 {
 	struct achievement_objective criteria = { 0 };
 
+	nullpo_retv(sd);
+
+	if (sd->achievements_received == false)
+		return;
+
 	Assert_retv(progress > 0);
 
 	criteria.goal = progress;
@@ -598,6 +627,11 @@ void achievement_validate_friend_add(struct map_session_data *sd)
 {
 	struct achievement_objective criteria = { 0 };
 
+	nullpo_retv(sd);
+
+	if (sd->achievements_received == false)
+		return;
+
 	criteria.goal = 1;
 
 	achievement->validate_type(sd, ACH_FRIEND_ADD, &criteria, true);
@@ -613,6 +647,11 @@ void achievement_validate_party_create(struct map_session_data *sd)
 {
 	struct achievement_objective criteria = { 0 };
 
+	nullpo_retv(sd);
+
+	if (sd->achievements_received == false)
+		return;
+
 	criteria.goal = 1;
 	achievement->validate_type(sd, ACH_PARTY_CREATE, &criteria, true);
 }
@@ -626,6 +665,11 @@ void achievement_validate_party_create(struct map_session_data *sd)
 void achievement_validate_marry(struct map_session_data *sd)
 {
 	struct achievement_objective criteria = { 0 };
+
+	nullpo_retv(sd);
+
+	if (sd->achievements_received == false)
+		return;
 
 	criteria.goal = 1;
 
@@ -643,6 +687,11 @@ void achievement_validate_marry(struct map_session_data *sd)
 void achievement_validate_adopt(struct map_session_data *sd, bool parent)
 {
 	struct achievement_objective criteria = { 0 };
+
+	nullpo_retv(sd);
+
+	if (sd->achievements_received == false)
+		return;
 
 	criteria.goal = 1;
 
@@ -668,6 +717,10 @@ void achievement_validate_zeny(struct map_session_data *sd, int amount)
 	struct achievement_objective criteria = { 0 };
 
 	nullpo_retv(sd);
+
+	if (sd->achievements_received == false)
+		return;
+
 	Assert_retv(amount != 0);
 
 	if (amount > 0) {
@@ -704,6 +757,10 @@ void achievement_validate_refine(struct map_session_data *sd, unsigned int idx, 
 	struct item_data *id = itemdb->exists(sd->status.inventory[idx].nameid);
 
 	nullpo_retv(sd);
+
+	if (sd->achievements_received == false)
+		return;
+
 	Assert_retv(idx < MAX_INVENTORY);
 	Assert_retv(id != NULL);
 
@@ -755,6 +812,11 @@ void achievement_validate_item_get(struct map_session_data *sd, int nameid, int 
 	struct item_data *it = itemdb->exists(nameid);
 	struct achievement_objective criteria = { 0 };
 
+	nullpo_retv(sd);
+
+	if (sd->achievements_received == false)
+		return;
+
 	Assert_retv(amount > 0);
 	nullpo_retv(it);
 
@@ -764,7 +826,7 @@ void achievement_validate_item_get(struct map_session_data *sd, int nameid, int 
 	criteria.unique.itemid = 0; // cleanup
 
 	/* Item Buy Value*/
-	criteria.goal = it->value_buy;
+	criteria.goal = max(it->value_buy, 1);
 	achievement->validate_type(sd, ACH_ITEM_GET_WORTH, &criteria, false);
 
 	/* Item Type */
@@ -786,12 +848,17 @@ void achievement_validate_item_sell(struct map_session_data *sd, int nameid, int
 	struct item_data *it = itemdb->exists(nameid);
 	struct achievement_objective criteria = { 0 };
 
+	nullpo_retv(sd);
+
+	if (sd->achievements_received == false)
+		return;
+
 	Assert_retv(amount > 0);
 	nullpo_retv(it);
 
 	criteria.unique.itemid = it->nameid;
 
-	criteria.goal = it->value_sell;
+	criteria.goal = max(it->value_sell, 1);
 
 	achievement->validate_type(sd, ACH_ITEM_SELL_WORTH, &criteria, false);
 }
@@ -807,8 +874,13 @@ void achievement_validate_achieve(struct map_session_data *sd, int achid)
 	const struct achievement_data *ad = achievement->get(achid);
 	struct achievement_objective criteria = { 0 };
 
-	Assert_retv(achid > 0);
+	nullpo_retv(sd);
 	nullpo_retv(ad);
+
+	if (sd->achievements_received == false)
+		return;
+
+	Assert_retv(achid > 0);
 
 	criteria.unique.achieve_id = ad->id;
 
@@ -827,8 +899,13 @@ void achievement_validate_taming(struct map_session_data *sd, int class)
 {
 	struct achievement_objective criteria = { 0 };
 
+	nullpo_retv(sd);
+
+	if (sd->achievements_received == false)
+		return;
+
 	Assert_retv(class > 0);
-	nullpo_retv(mob->db(class));
+	Assert_retv(mob->db(class) != mob->dummy);
 
 	criteria.mobid = class;
 	criteria.goal = 1;
@@ -846,7 +923,12 @@ void achievement_validate_achievement_rank(struct map_session_data *sd, int rank
 {
 	struct achievement_objective criteria = { 0 };
 
-	Assert_retv(rank > 0 && rank <= VECTOR_LENGTH(achievement->rank_exp));
+	nullpo_retv(sd);
+
+	if (sd->achievements_received == false)
+		return;
+
+	Assert_retv(rank >= 0 && rank <= VECTOR_LENGTH(achievement->rank_exp));
 
 	criteria.goal = 1;
 
@@ -929,12 +1011,13 @@ void achievement_readdb_ranks(void)
 
 	if (libconfig->setting_length(ardb) > MAX_ACHIEVEMENT_RANKS)
 		ShowWarning("achievement_rankdb_ranks: Maximum number of achievement ranks exceeded. Skipping all after entry %d...\n", entry);
+
+	libconfig->destroy(&ar_conf);
+
 	if (!entry) {
 		ShowError("achievement_readdb_ranks: No ranks provided in '%s'!\n", filename);
 		return;
 	}
-
-	libconfig->destroy(&ar_conf);
 
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", entry, filename);
 }
@@ -1343,7 +1426,8 @@ bool achievement_readdb_objective_sub(const struct config_setting_t *conf, int i
 				return false;
 
 			/**
-			 * Vectors are read last to avoid memory leaks if either of the above break, in cases where they are stacked with other criteria. Note to future editors - be sure to cleanup previous vectors before breaks.
+			 * Vectors are read last to avoid memory leaks if either of the above break, in cases where they are stacked with other criteria.
+			 * Note to future editors - be sure to cleanup previous vectors before breaks.
 			 */
 			/* JobId */
 			if (achievement->readdb_validate_criteria_jobid(c, &obj, entry->type, entry->id, index) == false)
@@ -1533,7 +1617,7 @@ bool achievement_readdb_rewards(const struct config_setting_t *conf, struct achi
 		// @TODO Check Title ID against title DB!
 		achievement->readdb_validate_reward_titleid(t, entry);
 
-	} // end of "Rewards"
+	}
 
 	return true;
 }
@@ -1546,7 +1630,7 @@ bool achievement_readdb_rewards(const struct config_setting_t *conf, struct achi
  */
 void achievement_readdb_additional_fields(const struct config_setting_t *conf, struct achievement_data *entry, const char *source)
 {
-	// plugins do their own thing... or something.
+	// plugins do their own thing.
 }
 
 /**
@@ -1674,7 +1758,7 @@ void do_init_achievement(bool minimal)
 /**
  * Cleaning function called through achievement->db->destroy()
  */
-int achievement_db_clear(union DBKey key, struct DBData *data, va_list args)
+int achievement_db_finalise(union DBKey key, struct DBData *data, va_list args)
 {
 	int i = 0;
 	struct achievement_data *ad = DB->data2ptr(data);
@@ -1695,7 +1779,7 @@ void do_final_achievement(void)
 {
 	int i = 0;
 
-	achievement->db->destroy(achievement->db, achievement->db_clear);
+	achievement->db->destroy(achievement->db, achievement->db_finalise);
 
 	for (i = 0; i < ACH_TYPE_MAX; i++)
 		VECTOR_CLEAR(achievement->category[i]);
@@ -1713,7 +1797,7 @@ void achievement_defaults(void)
 	achievement->init = do_init_achievement;
 	achievement->final = do_final_achievement;
 	/* */
-	achievement->db_clear = achievement_db_clear;
+	achievement->db_finalise = achievement_db_finalise;
 	/* */
 	achievement->readdb = achievement_readb;
 	/* */

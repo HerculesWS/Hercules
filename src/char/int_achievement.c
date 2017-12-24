@@ -228,7 +228,7 @@ STATIC_ASSERT((sizeof(struct achievement) * MAX_ACHIEVEMENT_DB + 8 <= UINT16_MAX
 /**
  * Handles achievement request and saves data from map server.
  * @packet[in] 0x3013 <packet_size>.W <char_id>.L <char_achievement>.P
- * @param[in]      fd  session socket descriptor.
+ * @param[in]  fd     session socket descriptor.
  */
 void mapif_parse_save_achievements(int fd)
 {
@@ -258,8 +258,8 @@ void mapif_parse_save_achievements(int fd)
 /**
  * Handles inter-server achievement db ensuring
  * and saves current achievements to sql.
- * @param[in] char_id      character identifier.
- * @param[out] p           pointer to character achievements vector.
+ * @param[in]  char_id      character identifier.
+ * @param[out] p            pointer to character achievements vector.
  */
 void mapif_achievement_save(int char_id, struct char_achievements *p)
 {
