@@ -1409,6 +1409,10 @@ ACMD(baselevelup)
 	clif->updatestatus(sd, SP_BASEEXP);
 	clif->updatestatus(sd, SP_NEXTBASEEXP);
 	pc->baselevelchanged(sd);
+
+	// achievements
+	achievement->validate_stats(sd, SP_BASELEVEL, sd->status.base_level);
+
 	if(sd->status.party_id)
 		party->send_levelup(sd);
 

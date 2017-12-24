@@ -620,6 +620,7 @@ END_ZEROED_BLOCK;
 
 	/* Achievement System [Smokexyz/Hercules] */
 	struct char_achievements achievement;
+	bool achievements_received;
 	// HatEffect
 	VECTOR_DECL(int) hatEffectId;
 
