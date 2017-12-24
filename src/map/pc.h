@@ -619,6 +619,7 @@ END_ZEROED_BLOCK;
 
 	/* Achievement System [Smokexyz/Hercules] */
 	struct char_achievements achievement;
+	bool achievements_received;
 };
 
 #define EQP_WEAPON EQP_HAND_R

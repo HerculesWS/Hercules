@@ -146,9 +146,7 @@ struct achievement_objective {
 	int goal;
 	char description[OBJECTIVE_DESCRIPTION_LENGTH];
 	/**
-	 * Those criteria that do not make sense if stacked together
-	 * are held as a unique member.
-	 * @see achievement_objective_unique()
+	 * Those criteria that do not make sense if stacked together.
 	 * union identifier is set in unique_type. (@see unique_criteria_type)
 	 */
 	union {
@@ -230,13 +228,6 @@ struct achievement_data {
 		|| (s) ==  SP_LUK \
 		|| (s) ==  SP_BASELEVEL || (s) ==  SP_JOBLEVEL )
 
-// Checks if a (unique) union member from the objective structure is used.
-#define achievement_objective_unique(u) ( \
-		   (u).achieve_id != 0 \
-		|| (u).itemid != 0 \
-		|| achievement_valid_status_types((u).status_type) \
-		|| (u).weapon_lv > 0 )
-
 struct achievement_interface {
 	struct DBMap *db; // int id -> struct achievement_data *
 	/* */
@@ -246,7 +237,7 @@ struct achievement_interface {
 	void (*init) (bool minimal);
 	void (*final) (void);
 	/* */
-	int (*db_clear) (union DBKey key, struct DBData *data, va_list args);
+	int (*db_finalise) (union DBKey key, struct DBData *data, va_list args);
 	/* */
 	void (*readdb)(void);
 	/* */

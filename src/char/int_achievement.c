@@ -210,7 +210,11 @@ void mapif_achievement_load(int fd, int char_id)
 void mapif_send_achievements_to_map(int fd, int char_id, const struct char_achievements *cp)
 {
 	int i = 0;
-	int data_size = sizeof(struct achievement) * VECTOR_LENGTH(*cp);
+	int data_size = 0;
+
+	nullpo_retv(cp);
+
+	data_size = sizeof(struct achievement) * VECTOR_LENGTH(*cp);
 
 STATIC_ASSERT((sizeof(struct achievement) * MAX_ACHIEVEMENT_DB + 8 <= UINT16_MAX),
 	"The achievements data can potentially be larger than the maximum packet size. This may cause errors at run-time.");
@@ -228,7 +232,7 @@ STATIC_ASSERT((sizeof(struct achievement) * MAX_ACHIEVEMENT_DB + 8 <= UINT16_MAX
 /**
  * Handles achievement request and saves data from map server.
  * @packet[in] 0x3013 <packet_size>.W <char_id>.L <char_achievement>.P
- * @param[in]      fd  session socket descriptor.
+ * @param[in]  fd     session socket descriptor.
  */
 void mapif_parse_save_achievements(int fd)
 {
@@ -258,8 +262,8 @@ void mapif_parse_save_achievements(int fd)
 /**
  * Handles inter-server achievement db ensuring
  * and saves current achievements to sql.
- * @param[in] char_id      character identifier.
- * @param[out] p           pointer to character achievements vector.
+ * @param[in]  char_id      character identifier.
+ * @param[out] p            pointer to character achievements vector.
  */
 void mapif_achievement_save(int char_id, struct char_achievements *p)
 {
