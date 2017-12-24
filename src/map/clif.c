@@ -19865,7 +19865,8 @@ void clif_achievement_send_update(int fd, struct map_session_data *sd, const str
 	nullpo_retv(ad);
 
 	/* Get Session Achievement Data */
-	a = achievement->ensure(sd, ad);
+	if ((a = achievement->ensure(sd, ad)) == NULL)
+		return;
 
 	/* Get total points, current rank and current rank points from the session. */
 	achievement->calculate_totals(sd, &points, NULL, &rank, &curr_rank_points);
@@ -19917,7 +19918,8 @@ void clif_parse_achievement_get_reward(int fd, struct map_session_data *sd)
 	if (ach_id <= 0 || (ad = achievement->get(ach_id)) == NULL)
 		return;
 
-	ach = achievement->ensure(sd, ad);
+	if ((ach = achievement->ensure(sd, ad)) == NULL)
+		return;
 
 	if (achievement->check_complete(sd, ad) && ach->completed_at && ach->rewarded_at == 0) {
 		int i = 0;
@@ -19928,7 +19930,7 @@ void clif_parse_achievement_get_reward(int fd, struct map_session_data *sd)
 		/* Give Items */
 		for (i = 0; i < VECTOR_LENGTH(ad->rewards.item); i++) {
 			struct item it = { 0 };
-			int j = 0, total = 0;
+			int total = 0;
 
 			it.nameid = VECTOR_INDEX(ad->rewards.item, i).id;
 			total = VECTOR_INDEX(ad->rewards.item, i).amount;
@@ -19936,15 +19938,12 @@ void clif_parse_achievement_get_reward(int fd, struct map_session_data *sd)
 			it.identify = 1;
 
 			//Check if it's stackable.
-			if (!itemdb->isstackable(it.nameid))
-				it.amount = 1;
-			else
-				it.amount = total;
-
-			for (j = 0; j < it.amount; j += total) {
-				if (!pet->create_egg(sd, it.nameid)) {
-					clif->additem(sd, 0, 0, pc->additem(sd, &it, total, LOG_TYPE_SCRIPT));
-				}
+			if (!itemdb->isstackable(it.nameid)) {
+				int j = 0;
+				for (j = 0; j < total; ++j)
+					pc->additem(sd, &it, (it.amount = 1), LOG_TYPE_SCRIPT);
+			} else {
+				pc->additem(sd, &it, (it.amount = total), LOG_TYPE_SCRIPT);
 			}
 		}
 

@@ -20922,12 +20922,12 @@ BUILDIN(showevent)
  * Validates an objective index for the given achievement.
  * Can be used for any achievement type.
  * @command achievement_progress(<ach_id>,<obj_idx>,<progress>,<incremental?>{,<char_id>});
- * @param aid  - achievement ID
- * @param obj_idx - achievement objective index.
- * @param progress - objective progress towards goal.
+ * @param aid         - achievement ID
+ * @param obj_idx     - achievement objective index.
+ * @param progress    - objective progress towards goal.
  * @Param incremental - (boolean) true to add the progress towards the goal,
  *                      false to use the progress only as a comparand.
- * @param char_id - (optional) character ID to perform on.
+ * @param account_id  - (optional) character ID to perform on.
  * @return true on success, false on failure.
  * @push 1 on success, 0 on failure.
  */
@@ -20938,10 +20938,8 @@ BUILDIN(achievement_progress)
 	int obj_idx = script_getnum(st, 3);
 	int progress = script_getnum(st, 4);
 	int incremental = script_getnum(st, 5);
-	int char_id = script_hasdata(st, 6) ? script_getnum(st, 6) : 0;
+	int account_id = script_hasdata(st, 6) ? script_getnum(st, 6) : 0;
 	const struct achievement_data *ad = NULL;
-
-	nullpo_retr(false, sd);
 
 	if ((ad = achievement->get(aid)) == NULL) {
 		ShowError("buildin_achievement_progress: Invalid achievement ID %d received.\n", aid);
@@ -20970,12 +20968,12 @@ BUILDIN(achievement_progress)
 	}
 
 	if (script_hasdata(st, 6)) {
-		if (char_id <= 0) {
-			ShowError("buildin_achievement_progress: Invalid char id %d provided.\n", char_id);
+		if (account_id <= 0) {
+			ShowError("buildin_achievement_progress: Invalid Account id %d provided.\n", account_id);
 			script_pushint(st, 0);
 			return false;
-		} else if (sd != map->charid2sd(char_id)) {
-			ShowError("buildin_achievement_progress: Character with id %d was not found.\n", char_id);
+		} else if ((sd = map->id2sd(account_id)) == NULL) {
+			ShowError("buildin_achievement_progress: Account with id %d was not found.\n", account_id);
 			script_pushint(st, 0);
 			return false;
 		}

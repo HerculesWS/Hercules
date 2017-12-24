@@ -47,6 +47,8 @@
 #include "common/sysinfo.h"
 #include "common/timer.h"
 #include "common/utils.h"
+
+#include "map/achievement.h"
 #include "map/atcommand.h"
 #include "map/battle.h"
 #include "map/battleground.h"
