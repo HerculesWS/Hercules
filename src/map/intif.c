@@ -489,7 +489,8 @@ void intif_parse_account_storage(int fd)
 		return;
 	}
 
-	stor = storage->ensure(sd, RFIFOW(fd, 8));
+	if ((stor = storage->ensure(sd, RFIFOW(fd, 8))) == NULL)
+		return;
 
 	if (stor->received == true) {
 		ShowError("intif_parse_account_storage: Multiple calls from the inter-server received.\n");
@@ -525,7 +526,8 @@ void intif_send_account_storage(struct map_session_data *sd, int storage_id)
 
 	nullpo_retv(sd);
 
-	stor = storage->ensure(sd, storage_id);
+	if ((stor = storage->ensure(sd, storage_id)) == NULL)
+		return;
 
 	// Assert that at this point in the code, both flags are true.
 	Assert_retv(stor->save == true);
@@ -578,7 +580,8 @@ void intif_parse_account_storage_save_ack(int fd)
 		return;
 	}
 
-	stor = storage->ensure(sd, storage_id);
+	if ((stor = storage->ensure(sd, storage_id)) == NULL)
+		return;
 
 	stor->save = false; // Storage has been saved.
 }

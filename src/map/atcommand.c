@@ -873,7 +873,11 @@ ACMD(storage)
 	}
 
 	sd->storage.access = STORAGE_ACCESS_ALL; // Default storage access for atcommands.
-	stor = storage->ensure(sd, storage_id);
+
+	if ((stor = storage->ensure(sd, storage_id)) == NULL) {
+		ShowError("atcommand_storage: Error ensuring storage for player %d, storage_id %d\n", sd->bl.id, storage_id);
+		return false;
+	}
 
 	if (stor->received == false) {
 		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 27), storage_name);
@@ -5208,7 +5212,11 @@ ACMD(storeall)
 	}
 
 	sd->storage.access = STORAGE_ACCESS_ALL; // Default storage access for atcommands.
-	stor = storage->ensure(sd, storage_id);
+
+	if ((stor = storage->ensure(sd, storage_id)) == NULL) {
+		ShowError("atcommand_storeall: Error ensuring storage for player %d, storage_id %d\n", sd->bl.id, storage_id);
+		return false;
+	}
 
 	if (sd->state.storage_flag != STORAGE_FLAG_NORMAL) {
 		//Open storage.
@@ -5270,7 +5278,11 @@ ACMD(clearstorage)
 	}
 
 	sd->storage.access = STORAGE_ACCESS_ALL; // Default storage access for atcommands.
-	stor = storage->ensure(sd, storage_id);
+
+	if ((stor = storage->ensure(sd, storage_id)) == NULL) {
+		ShowError("atcommand_clearstorage: Error ensuring storage for player %d, storage_id %d\n", sd->bl.id, storage_id);
+		return false;
+	}
 
 	if (stor->received == false) {
 		clif->message(fd, msg_fd(fd, 27)); // "Storage has not been loaded yet"
