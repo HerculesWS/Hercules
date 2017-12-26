@@ -9389,7 +9389,9 @@ static void clif_refresh_storagewindow(struct map_session_data *sd)
 
 		nullpo_retv(stst);
 
-		stor = storage->ensure(sd, sd->storage.current);
+		if ((stor = storage->ensure(sd, sd->storage.current)) == NULL) {
+			return;
+		}
 
 		nullpo_retv(stor);
 
@@ -13772,7 +13774,8 @@ static void clif_parse_MoveToKafra(int fd, struct map_session_data *sd)
 
 	if (sd->state.storage_flag == STORAGE_FLAG_NORMAL) {
 		struct storage_data *stor = storage->ensure(sd, sd->storage.current);
-		storage->add(sd, stor, item_index, item_amount);
+		if (stor != NULL)
+			storage->add(sd, stor, item_index, item_amount);
 	} else if (sd->state.storage_flag == STORAGE_FLAG_GUILD) {
 		gstorage->add(sd, item_index, item_amount);
 	}
@@ -13796,7 +13799,8 @@ static void clif_parse_MoveFromKafra(int fd, struct map_session_data *sd)
 
 	if (sd->state.storage_flag == STORAGE_FLAG_NORMAL) {
 		struct storage_data *stor = storage->ensure(sd, sd->storage.current);
-		storage->get(sd, stor, item_index, item_amount);
+		if (stor != NULL)
+			storage->get(sd, stor, item_index, item_amount);
 	} else if(sd->state.storage_flag == STORAGE_FLAG_GUILD) {
 		gstorage->get(sd, item_index, item_amount);
 	}
@@ -13814,7 +13818,8 @@ static void clif_parse_MoveToKafraFromCart(int fd, struct map_session_data *sd)
 
 	if (sd->state.storage_flag == STORAGE_FLAG_NORMAL) {
 		struct storage_data *stor = storage->ensure(sd, sd->storage.current);
-		storage->addfromcart(sd, stor, RFIFOW(fd,2) - 2, RFIFOL(fd,4));
+		if (stor != NULL)
+			storage->addfromcart(sd, stor, RFIFOW(fd, 2) - 2, RFIFOL(fd, 4));
 	} else if (sd->state.storage_flag == STORAGE_FLAG_GUILD) {
 		gstorage->addfromcart(sd, RFIFOW(fd,2) - 2, RFIFOL(fd,4));
 	}
@@ -13832,7 +13837,8 @@ static void clif_parse_MoveFromKafraToCart(int fd, struct map_session_data *sd)
 
 	if (sd->state.storage_flag == STORAGE_FLAG_NORMAL) {
 		struct storage_data *stor = storage->ensure(sd, sd->storage.current);
-		storage->gettocart(sd, stor, RFIFOW(fd,2)-1, RFIFOL(fd,4));
+		if (stor != NULL)
+			storage->gettocart(sd, stor, RFIFOW(fd,2) - 1, RFIFOL(fd, 4));
 	} else if (sd->state.storage_flag == STORAGE_FLAG_GUILD) {
 		gstorage->gettocart(sd, RFIFOW(fd,2)-1, RFIFOL(fd,4));
 	}

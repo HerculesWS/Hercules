@@ -340,7 +340,8 @@ static void intif_parse_account_storage(int fd)
 		return;
 	}
 
-	stor = storage->ensure(sd, RFIFOW(fd, 8));
+	if ((stor = storage->ensure(sd, RFIFOW(fd, 8))) == NULL)
+		return;
 
 	Assert_retv(stor != NULL);
 
@@ -378,7 +379,8 @@ static void intif_send_account_storage(struct map_session_data *sd, int storage_
 
 	nullpo_retv(sd);
 
-	stor = storage->ensure(sd, storage_id);
+	if ((stor = storage->ensure(sd, storage_id)) == NULL)
+		return;
 
 	// Assert that at this point in the code, both flags are true.
 	Assert_retv(stor != NULL);
@@ -434,7 +436,8 @@ static void intif_parse_account_storage_save_ack(int fd)
 		return;
 	}
 
-	stor = storage->ensure(sd, storage_id);
+	if ((stor = storage->ensure(sd, storage_id)) == NULL)
+		return;
 
 	Assert_retv(stor != NULL);
 

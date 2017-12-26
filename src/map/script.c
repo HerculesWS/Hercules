@@ -11377,16 +11377,19 @@ static BUILDIN(openstorage)
 	struct storage_data *stor = NULL;
 	const struct storage_settings *stst = NULL;
 
-	if (sd == NULL)
+	nullpo_retr(false, sd);
+
+	if ((stor = storage->ensure(sd, storage_id)) == NULL) {
+		script_pushint(st, 0);
+		ShowError("buildin_openstorage: Error ensuring storage for player aid %d, storage id %d.\n", sd->bl.id, storage_id);
 		return false;
+	}
 
 	if ((stst = storage->get_settings(storage_id)) == NULL) {
 		script_pushint(st, 0);
 		ShowWarning("buildin_openstorage: Storage with ID %d was not found!\n", storage_id);
 		return false;
 	}
-
-	stor = storage->ensure(sd, storage_id);
 	
 	if (stor == NULL || stor->received == false) {
 		script_pushint(st, 0);
