@@ -1090,6 +1090,15 @@ enum e_class {
 #endif
 };
 
+#define job_is_dummy(job) \
+	(  (job) == JOB_KNIGHT2      || (job) == JOB_CRUSADER2 \
+	|| (job) == JOB_WEDDING      || (job) == JOB_XMAS          || (job) == JOB_SUMMER \
+	|| (job) == JOB_LORD_KNIGHT2 || (job) == JOB_PALADIN2 \
+	|| (job) == JOB_BABY_KNIGHT2 || (job) == JOB_BABY_CRUSADER2 \
+	|| (job) == JOB_STAR_GLADIATOR2 \
+	|| ((job) >= JOB_RUNE_KNIGHT2 && (job) <= JOB_MECHANIC_T2) \
+	|| ((job) >= JOB_BABY_RUNE2 && (job) <= JOB_BABY_MECHANIC2))
+
 //Total number of classes (for data storage)
 #define CLASS_COUNT (JOB_MAX - JOB_NOVICE_HIGH + JOB_MAX_BASIC)
 
