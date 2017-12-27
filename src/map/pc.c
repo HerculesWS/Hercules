@@ -79,6 +79,8 @@
 struct pc_interface pc_s;
 struct pc_interface *pc;
 
+struct class_exp_tables exptables;
+
 //Converts a class to its array index for CLASS_COUNT defined arrays.
 //Note that it does not do a validity check for speed purposes, where parsing
 //player input make sure to use a pc->db_checkid first!
@@ -1921,7 +1923,7 @@ int pc_calc_skilltree_normalize_job(struct map_session_data *sd)
 
 	skill_point = pc->calc_skillpoint(sd);
 
-	novice_skills = pc->max_level[pc->class2idx(JOB_NOVICE)][1] - 1;
+	novice_skills = pc->dbs->class_exp_table[pc->class2idx(JOB_NOVICE)][CLASS_EXP_TABLE_JOB]->max_level - 1;
 
 	sd->sktree.second = sd->sktree.third = 0;
 
@@ -1935,7 +1937,7 @@ int pc_calc_skilltree_normalize_job(struct map_session_data *sd)
 			if ((sd->job & JOBL_THIRD) != 0) {
 				// if neither 2nd nor 3rd jobchange levels are known, we have to assume a default for 2nd
 				if (sd->change_level_3rd == 0) {
-					sd->change_level_2nd = pc->max_level[pc->class2idx(pc->mapid2jobid(sd->job & MAPID_UPPERMASK, sd->status.sex))][1];
+					sd->change_level_2nd = pc->dbs->class_exp_table[pc->class2idx(pc->mapid2jobid(sd->job & MAPID_UPPERMASK, sd->status.sex))][CLASS_EXP_TABLE_JOB]->max_level;
 				} else {
 					sd->change_level_2nd = 1 + skill_point + sd->status.skill_point
 						- (sd->status.job_level - 1)
@@ -7086,12 +7088,16 @@ bool pc_gainexp(struct map_session_data *sd, struct block_list *src, uint64 base
  *------------------------------------------*/
 int pc_maxbaselv(const struct map_session_data *sd)
 {
-	return pc->max_level[pc->class2idx(sd->status.class)][0];
+	nullpo_ret(sd);
+
+	return pc->dbs->class_exp_table[pc->class2idx(sd->status.class)][CLASS_EXP_TABLE_BASE]->max_level;
 }
 
 int pc_maxjoblv(const struct map_session_data *sd)
 {
-	return pc->max_level[pc->class2idx(sd->status.class)][1];
+	nullpo_ret(sd);
+
+	return pc->dbs->class_exp_table[pc->class2idx(sd->status.class)][CLASS_EXP_TABLE_JOB]->max_level;
 }
 
 /*==========================================
@@ -7101,21 +7107,35 @@ int pc_maxjoblv(const struct map_session_data *sd)
 //Base exp needed for next level.
 uint64 pc_nextbaseexp(const struct map_session_data *sd)
 {
+	const struct class_exp_group *exp_group = NULL;
+
 	nullpo_ret(sd);
 
 	if (sd->status.base_level >= pc->maxbaselv(sd) || sd->status.base_level <= 0)
 		return 0;
 
-	return pc->exp_table[pc->class2idx(sd->status.class)][0][sd->status.base_level-1];
+	exp_group = pc->dbs->class_exp_table[pc->class2idx(sd->status.class)][CLASS_EXP_TABLE_BASE];
+
+	nullpo_ret(exp_group);
+
+	return VECTOR_INDEX(exp_group->exp, sd->status.base_level >= exp_group->max_level ? 0 : sd->status.base_level - 1);
 }
 
 //Base exp needed for this level.
 uint64 pc_thisbaseexp(const struct map_session_data *sd)
 {
+	const struct class_exp_group *exp_group = NULL;
+
+	nullpo_ret(sd);
+
 	if (sd->status.base_level > pc->maxbaselv(sd) || sd->status.base_level <= 1)
 		return 0;
 
-	return pc->exp_table[pc->class2idx(sd->status.class)][0][sd->status.base_level-2];
+	exp_group = pc->dbs->class_exp_table[pc->class2idx(sd->status.class)][CLASS_EXP_TABLE_BASE];
+
+	nullpo_ret(exp_group);
+
+	return VECTOR_INDEX(exp_group->exp, sd->status.base_level - 2);
 }
 
 /*==========================================
@@ -7128,19 +7148,33 @@ uint64 pc_thisbaseexp(const struct map_session_data *sd)
 //Job exp needed for next level.
 uint64 pc_nextjobexp(const struct map_session_data *sd)
 {
+	const struct class_exp_group *exp_group = NULL;
+
 	nullpo_ret(sd);
 
 	if (sd->status.job_level >= pc->maxjoblv(sd) || sd->status.job_level <= 0)
 		return 0;
-	return pc->exp_table[pc->class2idx(sd->status.class)][1][sd->status.job_level-1];
+
+	exp_group = pc->dbs->class_exp_table[pc->class2idx(sd->status.class)][CLASS_EXP_TABLE_JOB];
+
+	nullpo_ret(exp_group);
+
+	return VECTOR_INDEX(exp_group->exp, sd->status.job_level >= exp_group->max_level ? 0 : sd->status.job_level - 1);
 }
 
 //Job exp needed for this level.
 uint64 pc_thisjobexp(const struct map_session_data *sd)
 {
+	const struct class_exp_group *exp_group = NULL;
+
+	nullpo_ret(sd);
+	
 	if (sd->status.job_level > pc->maxjoblv(sd) || sd->status.job_level <= 1)
 		return 0;
-	return pc->exp_table[pc->class2idx(sd->status.class)][1][sd->status.job_level-2];
+
+	exp_group = pc->dbs->class_exp_table[pc->class2idx(sd->status.class)][CLASS_EXP_TABLE_JOB];
+
+	return VECTOR_INDEX(exp_group->exp, sd->status.job_level - 2);
 }
 
 /// Returns the value of the specified stat.
@@ -11074,94 +11108,6 @@ int pc_level_penalty_mod(int diff, unsigned char race, uint32 mode, int type)
 	return 100;
 #endif
 }
-int pc_split_str(char *str,char **val,int num)
-{
-	int i;
-
-	nullpo_ret(val);
-	for (i=0; i<num && str; i++){
-		val[i] = str;
-		str = strchr(str,',');
-		if (str && i<num-1) //Do not remove a trailing comma.
-			*str++=0;
-	}
-	return i;
-}
-
-int pc_split_atoi(char* str, int* val, char sep, int max)
-{
-	int i,j;
-	nullpo_ret(val);
-	for (i=0; i<max; i++) {
-		if (!str) break;
-		val[i] = atoi(str);
-		str = strchr(str,sep);
-		if (str)
-			*str++=0;
-	}
-	//Zero up the remaining.
-	for(j=i; j < max; j++)
-		val[j] = 0;
-	return i;
-}
-
-int pc_split_atoui(char* str, unsigned int* val, char sep, int max)
-{
-	static int warning=0;
-	int i,j;
-	nullpo_ret(val);
-	for (i=0; i<max; i++) {
-		double f;
-		if (!str) break;
-		f = atof(str);
-		if (f < 0)
-			val[i] = 0;
-		else if (f > UINT_MAX) {
-			val[i] = UINT_MAX;
-			if (!warning) {
-				warning = 1;
-				ShowWarning("pc_readdb (exp.txt): Required exp per level is capped to %u\n", UINT_MAX);
-			}
-		} else
-			val[i] = (unsigned int)f;
-		str = strchr(str,sep);
-		if (str)
-			*str++=0;
-	}
-	//Zero up the remaining.
-	for(j=i; j < max; j++)
-		val[j] = 0;
-	return i;
-}
-
-int pc_split_atoui64(char* str, uint64* val, char sep, int max)
-{
-	static int warning=0;
-	int i,j;
-	nullpo_ret(val);
-	for (i=0; i<max; i++) {
-		double f;
-		if (!str) break;
-		f = atof(str);
-		if (f < 0)
-			val[i] = 0;
-		else if (f > UINT64_MAX) {
-			val[i] = UINT64_MAX;
-			if (!warning) {
-				warning = 1;
-				ShowWarning("pc_readdb (exp.txt): Required exp per level is capped to %"PRIu64"\n", UINT64_MAX);
-			}
-		} else
-			val[i] = (uint64)f;
-		str = strchr(str,sep);
-		if (str)
-			*str++=0;
-	}
-	//Zero up the remaining.
-	for(j=i; j < max; j++)
-		val[j] = 0;
-	return i;
-}
 
 bool pc_read_skill_job_skip(short skill_id, int job_id)
 {
@@ -11421,6 +11367,115 @@ bool pc_readdb_levelpenalty(char* fields[], int columns, int current) {
 	return true;
 }
 
+bool pc_read_exp_db_sub_class(struct config_setting_t *t, bool base)
+{
+	struct class_exp_group entry = { { 0 } };
+	struct config_setting_t *exp_t = NULL;
+	int maxlv = 0;
+
+	nullpo_retr(false, t);
+
+	safestrncpy(entry.name, config_setting_name(t), SCRIPT_VARNAME_LENGTH);
+
+	if (libconfig->setting_lookup_int(t, "MaxLevel", &maxlv) == 0
+		|| (maxlv <= 0 || maxlv > MAX_LEVEL)) {
+		ShowError("pc_read_exp_db_sub_class: Invalid max %s level '%d' set for entry '%s'. Defaulting to %d...", base ? "base" : "job", maxlv, entry.name, MAX_LEVEL);
+		maxlv = MAX_LEVEL;
+	}
+
+	entry.max_level = maxlv;
+
+	if ((exp_t = libconfig->setting_lookup(t, "Exp")) != NULL && config_setting_is_array(exp_t)) {
+		int j = 0;
+
+		VECTOR_ENSURE(entry.exp, maxlv - 2, 10);
+
+		if (libconfig->setting_length(exp_t) > maxlv - 1) {
+			ShowWarning("pc_read_exp_db_sub_class: Exp table length (%d) for %s exp group '%s' exceeds specified max level %d. Skipping remaining entries...\n", libconfig->setting_length(exp_t), base ? "base" : "job", entry.name, maxlv);
+		}
+
+		while (j < libconfig->setting_length(exp_t) && j <= maxlv - 2)
+			VECTOR_PUSH(entry.exp, libconfig->setting_get_int64_elem(exp_t, j++));
+
+		if (j - 1 < maxlv - 2) {
+			ShowError("pc_read_exp_db_sub_class: Specified max %d for group '%s', but that group's %s exp table only goes up to level %d.\n", maxlv, entry.name, base ? "base" : "job", VECTOR_LENGTH(entry.exp));
+			ShowInfo("Filling the missing values with the last exp entry.\n");
+			while (j++ <= maxlv - 2)
+				VECTOR_PUSH(entry.exp, VECTOR_LAST(entry.exp));
+		}
+	} else {
+		ShowError("pc_read_exp_db_sub_class: Invalid or non-existent 'Exp' field set for %s level entry '%s'. Skipping...\n", entry.name, base ? "base" : "job");
+		return false;
+	}
+
+	VECTOR_ENSURE(pc->class_exp_groups[base ? CLASS_EXP_TABLE_BASE : CLASS_EXP_TABLE_JOB], 1, 1);
+	VECTOR_PUSH(pc->class_exp_groups[base ? CLASS_EXP_TABLE_BASE : CLASS_EXP_TABLE_JOB], entry);
+	return true;
+}
+
+/**
+ * Description: Helper function to read a root configuration in the exp_db.conf file.
+ * @param[in]  t       pointer to the root config setting
+ * @param[in]  base    boolean switch determining whether to read either base or job exp.
+ * @return total number of valid entries read from the setting.
+ */
+int pc_read_exp_db_sub(struct config_setting_t *t, bool base)
+{
+	int i = 0, entry_count = 0;
+	struct config_setting_t *tt = NULL;
+
+	nullpo_ret(t);
+
+	while ((tt = libconfig->setting_get_elem(t, i++)) != NULL) {
+		pc->read_exp_db_sub_class(tt, base);
+		entry_count++;
+	}
+
+	return entry_count;
+}
+
+/**
+ * Description: Initiates reading of the exp_group_db.conf.
+ * @return true success, false on failure.
+ */
+bool pc_read_exp_db(void)
+{
+	struct config_t exp_db_conf;
+	struct config_setting_t *edb = NULL;
+	int entry_count = 0;
+
+#ifdef RENEWAL
+	const char *config_filename = "db/re/exp_group_db.conf";
+#else
+	const char *config_filename = "db/pre-re/exp_group_db.conf";
+#endif
+
+	if (!libconfig->load_file(&exp_db_conf, config_filename))
+		return false;
+
+	if ((edb = libconfig->setting_lookup(exp_db_conf.root, "base_exp_group_db")) != NULL) {
+		entry_count += pc->read_exp_db_sub(edb, true);
+	} else {
+		ShowError("pc_read_exp_db: Error reading base exp group db in '%s'.\n", config_filename);
+		libconfig->destroy(&exp_db_conf);
+		return false;
+	}
+
+	if ((edb = libconfig->setting_lookup(exp_db_conf.root, "job_exp_group_db")) != NULL) {
+		entry_count += pc->read_exp_db_sub(edb, false);
+	} else {
+		ShowError("pc_read_exp_db: Error reading job exp group db in '%s'.\n", config_filename);
+		libconfig->destroy(&exp_db_conf);
+		return false;
+	}
+
+	libconfig->destroy(&exp_db_conf);
+
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", entry_count, config_filename);
+
+	return true;
+}
+
 /*==========================================
  * pc DB reading.
  * exp.txt        - required experience values
@@ -11433,81 +11488,12 @@ int pc_readdb(void) {
 	FILE *fp;
 	char line[24000],*p;
 
-	//reset
-	memset(pc->exp_table,0,sizeof(pc->exp_table));
-	memset(pc->max_level,0,sizeof(pc->max_level));
+	/**
+	 * Read and load into memory, the exp_group_db.conf file.
+	 */
+	pc->clear_exp_groups();
+	pc->read_exp_db();
 
-	sprintf(line, "%s/"DBPATH"exp.txt", map->db_path);
-
-	fp=fopen(line, "r");
-	if(fp==NULL){
-		ShowError("can't read %s\n", line);
-		return 1;
-	}
-	while(fgets(line, sizeof(line), fp)) {
-		int jobs[CLASS_COUNT], job_count, job, job_id;
-		int type;
-		int maxlv;
-		char *split[4];
-		if(line[0]=='/' && line[1]=='/')
-			continue;
-		if (pc_split_str(line,split,4) < 4)
-			continue;
-
-		job_count = pc_split_atoi(split[1],jobs,':',CLASS_COUNT);
-		if (job_count < 1)
-			continue;
-		job_id = jobs[0];
-		if (!pc->db_checkid(job_id)) {
-			ShowError("pc_readdb: Invalid job ID %d.\n", job_id);
-			continue;
-		}
-		type = atoi(split[2]);
-		if (type < 0 || type > 1) {
-			ShowError("pc_readdb: Invalid type %d (must be 0 for base levels, 1 for job levels).\n", type);
-			continue;
-		}
-		maxlv = atoi(split[0]);
-		if (maxlv > MAX_LEVEL) {
-			ShowWarning("pc_readdb: Specified max level %d for job %d is beyond server's limit (%d).\n ", maxlv, job_id, MAX_LEVEL);
-			maxlv = MAX_LEVEL;
-		}
-		count++;
-		job = jobs[0] = pc->class2idx(job_id);
-		//We send one less and then one more because the last entry in the exp array should hold 0.
-		pc->max_level[job][type] = pc_split_atoui64(split[3], pc->exp_table[job][type], ',', maxlv - 1) + 1;
-		//Reverse check in case the array has a bunch of trailing zeros... [Skotlex]
-		//The reasoning behind the -2 is this... if the max level is 5, then the array
-		//should look like this:
-		//0: x, 1: x, 2: x: 3: x 4: 0 <- last valid value is at 3.
-		while ((i = pc->max_level[job][type]) >= 2 && pc->exp_table[job][type][i-2] <= 0)
-			pc->max_level[job][type]--;
-		if (pc->max_level[job][type] < maxlv) {
-			ShowWarning("pc_readdb: Specified max %d for job %d, but that job's exp table only goes up to level %d.\n", maxlv, job_id, pc->max_level[job][type]);
-			ShowInfo("Filling the missing values with the last exp entry.\n");
-			//Fill the requested values with the last entry.
-			i = (pc->max_level[job][type] <= 2 ? 0: pc->max_level[job][type]-2);
-			for (; i+2 < maxlv; i++)
-				pc->exp_table[job][type][i] = pc->exp_table[job][type][i-1];
-			pc->max_level[job][type] = maxlv;
-		}
-		//ShowDebug("%s - Class %d: %d\n", type?"Job":"Base", job_id, pc->max_level[job][type]);
-		for (i = 1; i < job_count; i++) {
-			job_id = jobs[i];
-			if (!pc->db_checkid(job_id)) {
-				ShowError("pc_readdb: Invalid job ID %d.\n", job_id);
-				continue;
-			}
-			job = pc->class2idx(job_id);
-			memcpy(pc->exp_table[job][type], pc->exp_table[jobs[0]][type], sizeof(pc->exp_table[0][0]));
-			pc->max_level[job][type] = maxlv;
-			//ShowDebug("%s - Class %d: %d\n", type?"Job":"Base", job_id, pc->max_level[job][type]);
-		}
-	}
-	fclose(fp);
-	pc->validate_levels();
-	ShowStatus("Done reading '"CL_WHITE"%u"CL_RESET"' entries in '"CL_WHITE"%s/"DBPATH"%s"CL_RESET"'.\n",count,map->db_path,"exp.txt");
-	count = 0;
 	// Reset and read skilltree
 	pc->clear_skill_tree();
 	pc->read_skill_tree();
@@ -11621,18 +11607,31 @@ int pc_readdb(void) {
 	return 0;
 }
 
+bool pc_job_is_dummy(int job)
+{
+	if (job == JOB_KNIGHT2      || job == JOB_CRUSADER2
+	 || job == JOB_WEDDING      || job == JOB_XMAS || job == JOB_SUMMER
+	 || job == JOB_LORD_KNIGHT2 || job == JOB_PALADIN2
+	 || job == JOB_BABY_KNIGHT2 || job == JOB_BABY_CRUSADER2
+	 || job == JOB_STAR_GLADIATOR2
+	 || (job >= JOB_RUNE_KNIGHT2 && job <= JOB_MECHANIC_T2)
+	 || (job >= JOB_BABY_RUNE2 && job <= JOB_BABY_MECHANIC2))
+		return true;
+	return false;
+}
+
 void pc_validate_levels(void) {
 	int i;
 	int j;
 	for (i = 0; i < JOB_MAX; i++) {
 		if (!pc->db_checkid(i)) continue;
-		if (i == JOB_WEDDING || i == JOB_XMAS || i == JOB_SUMMER)
+		if (pc->job_is_dummy(i))
 			continue; //Classes that do not need exp tables.
 		j = pc->class2idx(i);
-		if (pc->max_level[j][0] == 0)
-			ShowWarning("Class %s (%d) does not has a base exp table.\n", pc->job_name(i), i);
-		if (pc->max_level[j][1] == 0)
-			ShowWarning("Class %s (%d) does not has a job exp table.\n", pc->job_name(i), i);
+		if (pc->dbs->class_exp_table[j][CLASS_EXP_TABLE_BASE] == NULL)
+			ShowWarning("Class %s (%d - %d) does not have a base exp table.\n", pc->job_name(i), i, j);
+		if (pc->dbs->class_exp_table[j][CLASS_EXP_TABLE_JOB] == NULL)
+			ShowWarning("Class %s (%d - %d) does not have a job exp table.\n", pc->job_name(i), i, j);
 	}
 }
 
@@ -12172,13 +12171,37 @@ void pc_update_job_and_level(struct map_session_data *sd)
 	}
 }
 
-void do_final_pc(void) {
+void pc_clear_exp_groups(void)
+{
+	int i, k, size;
+	for (k = 0; k < 2; k++) {
+		size = VECTOR_LENGTH(pc->class_exp_groups[k]);
+
+		for (i = 0; i < size; i++)
+			VECTOR_CLEAR(VECTOR_INDEX(pc->class_exp_groups[k], i).exp);
+		VECTOR_CLEAR(pc->class_exp_groups[k]);
+	}
+}
+
+void pc_init_exp_groups(void)
+{
+	int i;
+	for (i = 0; i < 2; i++) {
+		VECTOR_INIT(pc->class_exp_groups[i]);
+	}
+}
+
+void do_final_pc(void)
+{
+
 	db_destroy(pc->itemcd_db);
 	pc->at_db->destroy(pc->at_db,pc->autotrade_final);
 
 	pcg->final();
 
 	pc->clear_skill_tree();
+
+	pc->clear_exp_groups();
 
 	ers_destroy(pc->sc_display_ers);
 	ers_destroy(pc->num_reg_ers);
@@ -12194,6 +12217,7 @@ void do_init_pc(bool minimal) {
 	pc->itemcd_db = idb_alloc(DB_OPT_RELEASE_DATA);
 	pc->at_db = idb_alloc(DB_OPT_RELEASE_DATA);
 
+	pc->init_exp_groups();
 	pc->readdb();
 
 	timer->add_func_list(pc->invincible_timer, "pc_invincible_timer");
@@ -12248,6 +12272,7 @@ void pc_defaults(void) {
 	unsigned int equip_pos[EQI_MAX]={EQP_ACC_L,EQP_ACC_R,EQP_SHOES,EQP_GARMENT,EQP_HEAD_LOW,EQP_HEAD_MID,EQP_HEAD_TOP,EQP_ARMOR,EQP_HAND_L,EQP_HAND_R,EQP_COSTUME_HEAD_TOP,EQP_COSTUME_HEAD_MID,EQP_COSTUME_HEAD_LOW,EQP_COSTUME_GARMENT,EQP_AMMO, EQP_SHADOW_ARMOR, EQP_SHADOW_WEAPON, EQP_SHADOW_SHIELD, EQP_SHADOW_SHOES, EQP_SHADOW_ACC_R, EQP_SHADOW_ACC_L };
 
 	pc = &pc_s;
+	pc->dbs = &exptables;
 
 	/* vars */
 	pc->at_db = NULL;
@@ -12468,6 +12493,9 @@ void pc_defaults(void) {
 	pc->getmaxspiritball = pc_getmaxspiritball;
 
 	pc->readdb = pc_readdb;
+	pc->read_exp_db = pc_read_exp_db;
+	pc->read_exp_db_sub = pc_read_exp_db_sub;
+	pc->read_exp_db_sub_class = pc_read_exp_db_sub_class;
 	pc->map_day_timer = map_day_timer; // by [yor]
 	pc->map_night_timer = map_night_timer; // by [yor]
 	// Rental System
@@ -12522,6 +12550,9 @@ void pc_defaults(void) {
 	pc->calcweapontype = pc_calcweapontype;
 	pc->removecombo = pc_removecombo;
 	pc->update_job_and_level = pc_update_job_and_level;
+	pc->clear_exp_groups = pc_clear_exp_groups;
+	pc->init_exp_groups = pc_init_exp_groups;
+	pc->job_is_dummy = pc_job_is_dummy;
 
 	pc->bank_withdraw = pc_bank_withdraw;
 	pc->bank_deposit = pc_bank_deposit;
