@@ -2447,6 +2447,11 @@ void intif_parse_RequestRodexOpenInbox(int fd)
 	if (sd == NULL) // user is not online anymore
 		return;
 
+	if (is_first == false && sd->rodex.total == 0) {
+		ShowError("intif_parse_RodexInboxOpenReceived: mail list received in wrong order.\n");
+		return;
+	}
+
 	if (is_first)
 		sd->rodex.total = count;
 	else
