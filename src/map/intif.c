@@ -2438,7 +2438,8 @@ void intif_parse_RequestRodexOpenInbox(int fd)
 #endif
 	int8 flag = RFIFOB(fd, 9);
 	int8 is_end = RFIFOB(fd, 10);
-	int count = RFIFOL(fd, 11);
+	int is_first = RFIFOB(fd, 11);
+	int count = RFIFOL(fd, 12);
 	int i, j;
 
 	sd = map->charid2sd(RFIFOL(fd, 4));
@@ -2446,16 +2447,20 @@ void intif_parse_RequestRodexOpenInbox(int fd)
 	if (sd == NULL) // user is not online anymore
 		return;
 
-	sd->rodex.total = count;
-	if (RFIFOW(fd, 2) - 15 != sd->rodex.total * sizeof(struct rodex_message)) {
-		ShowError("intif_parse_RodexInboxOpenReceived: data size mismatch %d != %"PRIuS"\n", RFIFOW(fd, 2) - 15, sd->rodex.total * sizeof(struct rodex_message));
+	if (is_first)
+		sd->rodex.total = count;
+	else
+		sd->rodex.total += count;
+
+	if (RFIFOW(fd, 2) - 16 != count * sizeof(struct rodex_message)) {
+		ShowError("intif_parse_RodexInboxOpenReceived: data size mismatch %d != %"PRIuS"\n", RFIFOW(fd, 2) - 16, count * sizeof(struct rodex_message));
 		return;
 	}
 
-	if (flag == 0)
+	if (flag == 0 && is_first)
 		VECTOR_CLEAR(sd->rodex.messages);
 
-	for (i = 0, j = 15; i < count; ++i, j += sizeof(struct rodex_message)) {
+	for (i = 0, j = 16; i < count; ++i, j += sizeof(struct rodex_message)) {
 		struct rodex_message msg = { 0 };
 		VECTOR_ENSURE(sd->rodex.messages, 1, 1);
 		memcpy(&msg, RFIFOP(fd, j), sizeof(struct rodex_message));
