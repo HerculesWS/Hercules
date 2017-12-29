@@ -5402,8 +5402,8 @@ typedef int (*HPMHOOK_pre_pc_dropitem) (struct map_session_data **sd, int *n, in
 typedef int (*HPMHOOK_post_pc_dropitem) (int retVal___, struct map_session_data *sd, int n, int amount);
 typedef bool (*HPMHOOK_pre_pc_isequipped) (struct map_session_data **sd, int *nameid);
 typedef bool (*HPMHOOK_post_pc_isequipped) (bool retVal___, struct map_session_data *sd, int nameid);
-typedef bool (*HPMHOOK_pre_pc_can_Adopt) (struct map_session_data **p1_sd, struct map_session_data **p2_sd, struct map_session_data **b_sd);
-typedef bool (*HPMHOOK_post_pc_can_Adopt) (bool retVal___, struct map_session_data *p1_sd, struct map_session_data *p2_sd, struct map_session_data *b_sd);
+typedef enum adopt_responses (*HPMHOOK_pre_pc_try_adopt) (struct map_session_data **p1_sd, struct map_session_data **p2_sd, struct map_session_data **b_sd);
+typedef enum adopt_responses (*HPMHOOK_post_pc_try_adopt) (enum adopt_responses retVal___, struct map_session_data *p1_sd, struct map_session_data *p2_sd, struct map_session_data *b_sd);
 typedef bool (*HPMHOOK_pre_pc_adoption) (struct map_session_data **p1_sd, struct map_session_data **p2_sd, struct map_session_data **b_sd);
 typedef bool (*HPMHOOK_post_pc_adoption) (bool retVal___, struct map_session_data *p1_sd, struct map_session_data *p2_sd, struct map_session_data *b_sd);
 typedef int (*HPMHOOK_pre_pc_updateweightstatus) (struct map_session_data **sd);

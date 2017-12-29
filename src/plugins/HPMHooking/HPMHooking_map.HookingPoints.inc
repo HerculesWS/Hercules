@@ -2133,7 +2133,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(pc->takeitem, HP_pc_takeitem) },
 	{ HP_POP(pc->dropitem, HP_pc_dropitem) },
 	{ HP_POP(pc->isequipped, HP_pc_isequipped) },
-	{ HP_POP(pc->can_Adopt, HP_pc_can_Adopt) },
+	{ HP_POP(pc->try_adopt, HP_pc_try_adopt) },
 	{ HP_POP(pc->adoption, HP_pc_adoption) },
 	{ HP_POP(pc->updateweightstatus, HP_pc_updateweightstatus) },
 	{ HP_POP(pc->addautobonus, HP_pc_addautobonus) },
