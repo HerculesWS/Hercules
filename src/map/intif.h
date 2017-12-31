@@ -138,6 +138,9 @@ struct intif_interface {
 	int(*rodex_updatemail) (int64 mail_id, int8 flag);
 	int(*rodex_sendmail) (struct rodex_message *msg);
 	int(*rodex_checkname) (struct map_session_data *sd, const char *name);
+	/* Clan System */
+	int (*clan_kickoffline) (int clan_id, int kick_interval);
+	int (*clan_membercount) (int clan_id, int kick_interval);
 	/* @accinfo */
 	void (*request_accinfo) (int u_fd, int aid, int group_lv, char* query);
 	/* */
@@ -212,6 +215,8 @@ struct intif_interface {
 	void(*pRodexHasNew) (int fd);
 	void(*pRodexSendMail) (int fd);
 	void(*pRodexCheckName) (int fd);
+	/* Clan System */
+	void (*pRecvClanMemberAction) (int fd);
 };
 
 #ifdef HERCULES_CORE

@@ -29,6 +29,7 @@
 #include "map/channel.h"
 #include "map/chat.h"
 #include "map/chrif.h"
+#include "map/clan.h"
 #include "map/elemental.h"
 #include "map/guild.h"
 #include "map/homunculus.h"
@@ -655,6 +656,19 @@ bool clif_send(const void* buf, int len, struct block_list* bl, enum send_target
 						memcpy(WFIFOP(qsd->fd,0), buf, len);
 						WFIFOSET(qsd->fd,len);
 					}
+				}
+			}
+			break;
+
+		case CLAN:
+			if (sd && sd->status.clan_id) {
+				struct clan *c = clan->search(sd->status.clan_id);
+				for (i = 0; i < VECTOR_LENGTH(c->members); i++) {
+					if ((sd = VECTOR_INDEX(c->members, i).sd) == NULL || !(fd = sd->fd))
+						continue;
+					WFIFOHEAD(fd, len);
+					memcpy(WFIFOP(fd, 0), buf, len);
+					WFIFOSET(fd, len);
 				}
 			}
 			break;
@@ -1526,6 +1540,8 @@ bool clif_spawn(struct block_list *bl)
 				clif->specialeffect(&nd->bl,423,AREA);
 			else if (nd->size == SZ_MEDIUM)
 				clif->specialeffect(&nd->bl,421,AREA);
+			if (nd->clan_id > 0)
+				clif->sc_load(&nd->bl, nd->bl.id, AREA, status->dbs->IconChangeTable[SC_CLAN_INFO], 0, nd->clan_id, 0);
 		}
 			break;
 		case BL_PET:
@@ -4374,6 +4390,8 @@ void clif_getareachar_unit(struct map_session_data* sd,struct block_list *bl) {
 				clif->specialeffect_single(bl,423,sd->fd);
 			else if (nd->size == SZ_MEDIUM)
 				clif->specialeffect_single(bl,421,sd->fd);
+			if (nd->clan_id > 0)
+				clif->sc_load(&nd->bl, nd->bl.id, AREA, status->dbs->IconChangeTable[SC_CLAN_INFO], 0, nd->clan_id, 0);
 		}
 			break;
 		case BL_MOB:
@@ -13323,6 +13341,12 @@ bool clif_sub_guild_invite(int fd, struct map_session_data *sd, struct map_sessi
 		return false;
 	}
 
+	// Players in a clan can't join a guild
+	if (t_sd->clan != NULL) {
+		clif->message(fd, msg_fd(fd, 140)); // You can't join in a clan if you're in a guild.
+		return false;
+	}
+
 	guild->invite(sd,t_sd);
 	return true;
 }
@@ -19265,6 +19289,153 @@ const char *clif_get_bl_name(const struct block_list *bl)
 	return name;
 }
 
+/**
+ * Clan System: Sends the basic clan informations to client.
+ * 098a <length>.W <clan id>.L <clan name>.24B <clan master>.24B <clan map>.16B <alliance count>.B
+ *      <antagonist count>.B { <alliance>.24B } * alliance count { <antagonist>.24B } * antagonist count (ZC_CLANINFO)
+ */
+void clif_clan_basicinfo(struct map_session_data *sd)
+{
+#if PACKETVER >= 20120716
+	int fd, offset, length, i;
+	struct clan *c, *ally, *antagonist;
+	char mapname[MAP_NAME_LENGTH_EXT];
+
+	nullpo_retv(sd);
+	nullpo_retv(c = sd->clan);
+
+	length = 8 + 2 * NAME_LENGTH + MAP_NAME_LENGTH_EXT + 2;
+	fd = sd->fd;
+
+	WFIFOHEAD(fd, length);
+	memset(WFIFOP(fd, 0), 0, length);
+	WFIFOW(fd, 0) = 0x98a;
+	WFIFOL(fd, 4) = c->clan_id;
+	offset = 8;
+	memcpy(WFIFOP(fd, offset), c->name, NAME_LENGTH);
+	offset += NAME_LENGTH;
+	memcpy(WFIFOP(fd, offset), c->master, NAME_LENGTH);
+	offset += NAME_LENGTH;
+	mapindex->getmapname_ext(c->map, mapname);
+	safestrncpy(WFIFOP(fd, offset), mapname, MAP_NAME_LENGTH_EXT);
+	offset += MAP_NAME_LENGTH_EXT;
+
+	WFIFOB(fd, offset++) = VECTOR_LENGTH(c->allies);
+	WFIFOB(fd, offset++) = VECTOR_LENGTH(c->antagonists);
+
+	for (i = 0; i < VECTOR_LENGTH(c->allies); i++) {
+		struct clan_relationship *al = &VECTOR_INDEX(c->allies, i);
+
+		if (al->clan_id > 0) {
+			ally = clan->search(al->clan_id);
+			if (ally != NULL) {
+				safestrncpy(WFIFOP(fd, offset), ally->name, NAME_LENGTH);
+				offset += NAME_LENGTH;
+			}
+		}
+	}
+
+	for (i = 0; i < VECTOR_LENGTH(c->antagonists); i++) {
+		struct clan_relationship *an = &VECTOR_INDEX(c->antagonists, i);
+
+		if (an->clan_id > 0) {
+			antagonist = clan->search(an->clan_id);
+			if (antagonist != NULL) {
+				safestrncpy(WFIFOP(fd, offset), antagonist->name, NAME_LENGTH);
+				offset += NAME_LENGTH;
+			}
+		}
+	}
+
+	WFIFOW(fd, 2) = offset;
+	WFIFOSET(fd, offset);
+#endif
+}
+
+/**
+ * Clan System: Updates the online and maximum player count of a clan.
+ * 0988 <online count>.W <maximum member amount>.W (ZC_NOTIFY_CLAN_CONNECTINFO)
+ */
+void clif_clan_onlinecount(struct clan *c)
+{
+#if PACKETVER >= 20120716
+	uint8 buf[6];
+	struct map_session_data *sd;
+
+	WBUFW(buf, 0) = 0x988;
+	WBUFW(buf, 2) = c->connect_member;
+	WBUFW(buf, 4) = c->max_member;
+
+	if ((sd = clan->getonlinesd(c)) != NULL) {
+		clif->send(buf, 6, &sd->bl, CLAN);
+	}
+#endif
+}
+
+/**
+* Clan System: Notifies the client that the player has left his clan.
+* 0989 (ZC_ACK_CLAN_LEAVE)
+**/
+void clif_clan_leave(struct map_session_data* sd)
+{
+#if PACKETVER >= 20131223
+	int fd;
+	
+	nullpo_retv (sd);
+	
+	fd = sd->fd;
+
+	WFIFOHEAD(fd, 2);
+	WFIFOW(fd, 0) = 0x989;
+	WFIFOSET(fd, 2);
+#endif
+}
+
+/**
+ * Clan System: Sends a clan message to a player
+ * 098e <length>.W <name>.24B <message>.?B (ZC_NOTIFY_CLAN_CHAT)
+ */
+void clif_clan_message(struct clan *c, const char *mes, int len)
+{
+#if PACKETVER >= 20120716
+	struct map_session_data *sd;
+	uint8 buf[256];
+
+	if (len == 0) {
+		return;
+	} else if (len > (sizeof(buf) - 5 - NAME_LENGTH)) {
+		ShowWarning("clif_clan_message: Truncated message '%s' (len=%d, max=%"PRIuS", clan_id=%d).\n", mes, len, sizeof(buf) - 5, c->clan_id);
+		len = sizeof(buf) - 5 - NAME_LENGTH;
+	}
+
+	WBUFW(buf, 0) = 0x98e;
+	WBUFW(buf, 2) = len + 5 + NAME_LENGTH;
+	
+	safestrncpy(WBUFP(buf, 4 + NAME_LENGTH), mes, len + 1);
+
+	if ((sd = clan->getonlinesd(c)) != NULL)
+	  clif->send(buf, WBUFW(buf, 2), &sd->bl, CLAN);
+#endif
+}
+
+void clif_parse_ClanMessage(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+/**
+ * Clan System: Parses a clan message from a player.
+ * 098d <length>.W <text>.?B (<name> : <message>) (CZ_CLAN_CHAT)
+ */
+void clif_parse_ClanMessage(int fd, struct map_session_data *sd)
+{
+#if PACKETVER >= 20120716
+	const struct packet_chat_message *packet = RP2PTR(fd);
+	char message[CHAT_SIZE_MAX + NAME_LENGTH + 3 + 1];
+
+	if (clif->process_chat_message(sd, packet, message, sizeof message) == NULL)
+		return;
+
+	clan->send_message(sd, message);
+#endif
+}
+
 /* */
 unsigned short clif_decrypt_cmd( int cmd, struct map_session_data *sd ) {
 	if( sd ) {
@@ -20976,4 +21147,10 @@ void clif_defaults(void) {
 	clif->rodex_icon = clif_rodex_icon;
 	clif->rodex_send_mails_all = clif_rodex_send_mails_all;
 	clif->skill_scale = clif_skill_scale;
+	// -- Clan system
+	clif->clan_basicinfo = clif_clan_basicinfo;
+	clif->clan_onlinecount = clif_clan_onlinecount;
+	clif->clan_leave = clif_clan_leave;
+	clif->clan_message = clif_clan_message;
+	clif->pClanMessage = clif_parse_ClanMessage;
 }

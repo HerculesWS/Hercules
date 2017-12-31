@@ -1455,3 +1455,40 @@ Sets the intimacy level of your homunculus, with 1000 being "Loyal".
 Sets the hunger level of your homunculus, with 100 being "Stuffed".
 
 ---------------------------------------
+
+@cvcon
+
+Set the mapflag cvc on the map (Turn on Clans vs Clans mode)
+
+---------------------------------------
+
+@cvcoff
+
+Unset the mapflag cvc on the map (Turn off Clans vs Clans mode)
+
+---------------------------------------
+
+@claninfo
+
+Lists all informations of all clans
+
+---------------------------------------
+
+@joinclan <ClanID>
+
+Joins the Clan with the given ID if it exists.
+
+---------------------------------------
+
+@leaveclan
+
+Leaves the Clan if any.
+
+---------------------------------------
+
+@reloadclans
+
+Reloads the 'conf/clans.conf' file.
+Obs: it will reload 'db/clans.conf' too since it's included inside 'conf/clans.conf'
+
+---------------------------------------

@@ -2177,6 +2177,8 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x094a,6,clif->pGetCharNameRequest,2);  // CZ_REQNAME
 	packet(0x0953,5,clif->pWalkToXY,2);  // CZ_REQUEST_MOVE
 	packet(0x0960,5,clif->pChangeDir,2,4);  // CZ_CHANGE_DIRECTION
+// new packets
+	packet(0x098a, -1); // ZC_CLANINFO
 #endif
 
 //2012-07-10
@@ -2216,6 +2218,11 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0368,6,clif->pSolveCharName,2);  // CZ_REQNAME_BYGID
 	packet(0x0363,8,clif->pDull); // CZ_JOIN_BATTLE_FIELD
 	packet(0x0436,4,clif->pDull); // CZ_GANGSI_RANK
+// new packets
+	packet(0x0988, 6); // ZC_NOTIFY_CLAN_CONNECTINFO
+	packet(0x0989, 2); // ZC_ACK_CLAN_LEAVE
+	packet(0x098d, -1, clif->pClanMessage, 2, 4); // CZ_CLAN_CHAT
+	packet(0x098e, -1); // ZC_NOTIFY_CLAN_CHAT
 #endif
 
 // 2012-09-25aRagexe

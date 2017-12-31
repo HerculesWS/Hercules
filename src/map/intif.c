@@ -26,6 +26,7 @@
 #include "map/atcommand.h"
 #include "map/battle.h"
 #include "map/chrif.h"
+#include "map/clan.h"
 #include "map/clif.h"
 #include "map/elemental.h"
 #include "map/guild.h"
@@ -742,6 +743,81 @@ int intif_party_leaderchange(int party_id,int account_id,int char_id)
 	WFIFOL(inter_fd,10)=char_id;
 	WFIFOSET(inter_fd,14);
 	return 0;
+}
+
+//=========================
+// Clan System
+//-------------------------
+
+/**
+ * Request clan member count
+ * 
+ * @param clan_id Id of the clan to have members counted
+ * @param kick_interval Interval of the inactivity kick
+ */
+int intif_clan_membercount(int clan_id, int kick_interval)
+{
+	if (intif->CheckForCharServer() || clan_id == 0 || kick_interval <= 0)
+		return 0;
+	
+	WFIFOHEAD(inter_fd, 10);
+	WFIFOW(inter_fd, 0) = 0x3044;
+	WFIFOL(inter_fd, 2) = clan_id;
+	WFIFOL(inter_fd, 6) = kick_interval;
+	WFIFOSET(inter_fd, 10);
+	return 1;
+}
+
+int intif_clan_kickoffline(int clan_id, int kick_interval)
+{
+	if (intif->CheckForCharServer() || clan_id == 0 || kick_interval <= 0)
+		return 0;
+
+	WFIFOHEAD(inter_fd, 10);
+	WFIFOW(inter_fd, 0) = 0x3045;
+	WFIFOL(inter_fd, 2) = clan_id;
+	WFIFOL(inter_fd, 6) = kick_interval;
+	WFIFOSET(inter_fd, 10);
+	return 1;
+}
+
+void intif_parse_RecvClanMemberAction(int fd)
+{
+	struct clan *c;
+	int clan_id = RFIFOL(fd, 2);
+	int count = RFIFOL(fd, 6);
+
+	if ((c = clan->search(clan_id)) == NULL) {
+		ShowError("intif_parse_RecvClanMemberAction: Received invalid clan_id '%d'\n", clan_id);
+		return;
+	}
+	
+	if (count < 0) {
+		ShowError("intif_parse_RecvClanMemberAction: Received invalid member count value '%d'\n", count);
+		return;
+	}
+
+	c->received = true;
+	if (c->req_count_tid != INVALID_TIMER) {
+		timer->delete(c->req_count_tid, clan->request_membercount);
+		c->req_count_tid = INVALID_TIMER;
+	}
+
+	c->member_count = count;
+	switch (c->req_state) {
+	case CLAN_REQ_AFTER_KICK:
+		if (c->req_kick_tid != INVALID_TIMER) {
+			timer->delete(c->req_kick_tid, clan->request_kickoffline);
+			c->req_kick_tid = INVALID_TIMER;
+		}
+		break;
+	case CLAN_REQ_RELOAD:
+		map->foreachpc(clan->rejoin);
+		break;
+	default:
+		break;
+	}
+	c->req_state = CLAN_REQ_NONE;
 }
 
 // Request a Guild creation
@@ -2734,6 +2810,9 @@ int intif_parse(int fd)
 		case 0x3896: intif->pRodexHasNew(fd); break;
 		case 0x3897: intif->pRodexSendMail(fd); break;
 		case 0x3898: intif->pRodexCheckName(fd); break;
+
+		// Clan System
+		case 0x3858: intif->pRecvClanMemberAction(fd); break;
 	default:
 		ShowError("intif_parse : unknown packet %d %x\n",fd,RFIFOW(fd,0));
 		return 0;
@@ -2755,7 +2834,7 @@ void intif_defaults(void) {
 		39,-1,15,15, 14,19, 7,-1,  0, 0, 0, 0,  0, 0,  0, 0, //0x3820
 		10,-1,15, 0, 79,19, 7,-1,  0,-1,-1,-1, 14,67,186,-1, //0x3830
 		-1, 0, 0,14,  0, 0, 0, 0, -1,74,-1,11, 11,-1,  0, 0, //0x3840
-		-1,-1, 7, 7,  7,11, 8, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3850  Auctions [Zephyrus] itembound[Akinari]
+		-1,-1, 7, 7,  7,11, 8, 0, 10, 0, 0, 0,  0, 0,  0, 0, //0x3850  Auctions [Zephyrus] itembound[Akinari] Clan System[Murilo BiO]
 		-1, 7, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3860  Quests [Kevin] [Inkfish]
 		-1, 3, 3, 0,  0, 0, 0, 0,  0, 0, 0, 0, -1, 3,  3, 0, //0x3870  Mercenaries [Zephyrus] / Elemental [pakpil]
 		12,-1, 7, 3,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3880
@@ -2847,6 +2926,9 @@ void intif_defaults(void) {
 	intif->rodex_updatemail = intif_rodex_updatemail;
 	intif->rodex_sendmail = intif_rodex_sendmail;
 	intif->rodex_checkname = intif_rodex_checkname;
+	/* Clan System */
+	intif->clan_kickoffline = intif_clan_kickoffline;
+	intif->clan_membercount = intif_clan_membercount;
 	/* @accinfo */
 	intif->request_accinfo = intif_request_accinfo;
 	/* */
@@ -2923,4 +3005,6 @@ void intif_defaults(void) {
 	intif->pRodexHasNew = intif_parse_RodexNotifications;
 	intif->pRodexSendMail = intif_parse_RodexSendMail;
 	intif->pRodexCheckName = intif_parse_RodexCheckName;
+	/* Clan System */
+	intif->pRecvClanMemberAction = intif_parse_RecvClanMemberAction;
 }

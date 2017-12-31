@@ -70,6 +70,9 @@
     <ClCompile Include="..\src\char\int_auction.c">
       <Filter>char</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\char\int_clan.c">
+      <Filter>char</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\char\int_elemental.c">
       <Filter>char</Filter>
     </ClCompile>
@@ -217,6 +220,9 @@
       <Filter>char</Filter>
     </ClInclude>
     <ClInclude Include="..\src\char\int_auction.h">
+      <Filter>char</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\char\int_clan.h">
       <Filter>char</Filter>
     </ClInclude>
     <ClInclude Include="..\src\char\int_elemental.h">

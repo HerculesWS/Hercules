@@ -352,6 +352,7 @@ STATIC_ASSERT(((MAPID_1_1_MAX - 1) | MAPID_BASEMASK) == MAPID_BASEMASK, "First c
 		|| map->list[m].flag.gvg \
 		|| ((map->agit_flag || map->agit2_flag) && map->list[m].flag.gvg_castle) \
 		|| map->list[m].flag.battleground \
+		|| map->list[m].flag.cvc \
 		)
 // Specifies maps that have special GvG/WoE restrictions
 #define map_flag_gvg(m) (map->list[m].flag.gvg || ((map->agit_flag || map->agit2_flag) && map->list[m].flag.gvg_castle))
@@ -736,6 +737,7 @@ enum map_zone_merge_type {
 #define MAP_ZONE_PVP_NAME "PvP"
 #define MAP_ZONE_GVG_NAME "GvG"
 #define MAP_ZONE_BG_NAME "Battlegrounds"
+#define MAP_ZONE_CVC_NAME "CvC"
 #define MAP_ZONE_PK_NAME "PK Mode"
 #define MAP_ZONE_MAPFLAG_LENGTH 50
 
@@ -822,6 +824,7 @@ struct map_data {
 		unsigned gvg_dungeon : 1; // Celest
 		unsigned gvg_noparty : 1;
 		unsigned battleground : 2; // [BattleGround System]
+		unsigned cvc : 1;
 		unsigned nozenypenalty : 1;
 		unsigned notrade : 1;
 		unsigned noskill : 1;

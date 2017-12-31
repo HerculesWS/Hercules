@@ -213,6 +213,9 @@ struct mapif_interface {
 	int (*parse_RegistryRequest) (int fd);
 	void (*namechange_ack) (int fd, int account_id, int char_id, int type, int flag, const char *name);
 	int (*parse_NameChangeRequest) (int fd);
+	// Clan System
+	int (*parse_ClanMemberKick) (int fd, int clan_id, int kick_interval);
+	int (*parse_ClanMemberCount) (int fd, int clan_id, int kick_interval);
 };
 
 #ifdef HERCULES_CORE

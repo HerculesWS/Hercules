@@ -27,6 +27,7 @@
 #include "map/battleground.h"
 #include "map/chat.h"
 #include "map/chrif.h"
+#include "map/clan.h"
 #include "map/clif.h"
 #include "map/duel.h"
 #include "map/elemental.h"
@@ -2725,6 +2726,7 @@ int unit_free(struct block_list *bl, clr_type clrtype)
 			map->foreachpc(clif->friendslist_toggle_sub, sd->status.account_id, sd->status.char_id, 0);
 			party->send_logout(sd);
 			guild->send_memberinfoshort(sd,0);
+			clan->member_offline(sd);
 			pc->cleareventtimer(sd);
 			pc->inventory_rental_clear(sd);
 			pc->delspiritball(sd,sd->spiritball,1);

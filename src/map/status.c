@@ -25,6 +25,7 @@
 
 #include "map/battle.h"
 #include "map/chrif.h"
+#include "map/clan.h"
 #include "map/clif.h"
 #include "map/elemental.h"
 #include "map/guild.h"
@@ -1019,6 +1020,9 @@ void initChangeTables(void)
 	// Summoner
 	status->dbs->IconChangeTable[SC_SPRITEMABLE] = SI_SPRITEMABLE;
 
+	// Clan System
+	status->dbs->IconChangeTable[SC_CLAN_INFO] = SI_CLAN_INFO;
+
 	// RoDEX
 	status->dbs->IconChangeTable[SC_DAILYSENDMAILCNT] = SI_DAILYSENDMAILCNT;
 
@@ -1180,6 +1184,9 @@ void initChangeTables(void)
 	status->dbs->ChangeFlagTable[SC_MVPCARD_MISTRESS] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_MVPCARD_ORCHERO] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_MVPCARD_ORCLORD] |= SCB_ALL;
+
+	// Clan System
+	status->dbs->ChangeFlagTable[SC_CLAN_INFO] |= SCB_NONE;
 
 	// Costumes
 	status->dbs->ChangeFlagTable[SC_DRESS_UP] |= SCB_NONE;
@@ -2684,6 +2691,12 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 
 	status->current_equip_option_index = -1;
 	status->current_equip_item_index = -1;
+
+	// Clan Buffs
+	if (sd->status.clan_id > 0) {
+		struct clan *c = clan->search(sd->status.clan_id);
+		clan->buff_start(sd, c);
+	}
 
 	status->calc_pc_additional(sd, opt);
 
@@ -9726,6 +9739,11 @@ void status_change_start_display(struct map_session_data *sd, enum sc_type type,
 			case SC_ALL_RIDING:
 				dval1 = 1;
 				break;
+			case SC_CLAN_INFO:
+				dval1 = val1;
+				dval2 = val2;
+				dval3 = val3;
+				break;
 			default: /* all others: just copy val1 */
 				dval1 = val1;
 				break;
@@ -9745,6 +9763,9 @@ int status_get_val_flag(enum sc_type type)
 {
 	int val_flag = 0;
 	switch (type) {
+		case SC_CLAN_INFO: 
+			val_flag |= 1 | 2; 
+			break;
 		case SC_FIGHTINGSPIRIT:
 			val_flag |= 1 | 2;
 			break;

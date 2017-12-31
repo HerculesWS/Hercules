@@ -29,6 +29,7 @@
 #include "map/channel.h"
 #include "map/chat.h"
 #include "map/chrif.h"
+#include "map/clan.h"
 #include "map/clif.h"
 #include "map/date.h" // is_day_of_*()
 #include "map/duel.h"
@@ -1523,6 +1524,12 @@ int pc_reg_received(struct map_session_data *sd)
 
 	status_calc_pc(sd,SCO_FIRST|SCO_FORCE);
 	chrif->scdata_request(sd->status.account_id, sd->status.char_id);
+	
+	if (sd->status.clan_id)
+		clan->member_online(sd, true);
+
+	//Auth is fully okay, update last_login
+	sd->status.last_login = time(NULL);
 
 	// Storage Request
 	intif->request_account_storage(sd);
