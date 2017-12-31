@@ -61,6 +61,11 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define CHAR_INT_AUCTION_H
 	#endif // CHAR_INT_AUCTION_H
+	#ifdef CHAR_INT_CLAN_H
+		{ "inter_clan_interface", sizeof(struct inter_clan_interface), SERVER_TYPE_CHAR },
+	#else
+		#define CHAR_INT_CLAN_H
+	#endif // CHAR_INT_CLAN_H
 	#ifdef CHAR_INT_ELEMENTAL_H
 		{ "inter_elemental_interface", sizeof(struct inter_elemental_interface), SERVER_TYPE_CHAR },
 	#else
@@ -194,6 +199,10 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#endif // COMMON_MEMMGR_H
 	#ifdef COMMON_MMO_H
 		{ "auction_data", sizeof(struct auction_data), SERVER_TYPE_ALL },
+		{ "clan", sizeof(struct clan), SERVER_TYPE_ALL },
+		{ "clan_buff", sizeof(struct clan_buff), SERVER_TYPE_ALL },
+		{ "clan_member", sizeof(struct clan_member), SERVER_TYPE_ALL },
+		{ "clan_relationship", sizeof(struct clan_relationship), SERVER_TYPE_ALL },
 		{ "fame_list", sizeof(struct fame_list), SERVER_TYPE_ALL },
 		{ "guild", sizeof(struct guild), SERVER_TYPE_ALL },
 		{ "guild_alliance", sizeof(struct guild_alliance), SERVER_TYPE_ALL },
@@ -394,6 +403,11 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define MAP_CHRIF_H
 	#endif // MAP_CHRIF_H
+	#ifdef MAP_CLAN_H
+		{ "clan_interface", sizeof(struct clan_interface), SERVER_TYPE_MAP },
+	#else
+		#define MAP_CLAN_H
+	#endif // MAP_CLAN_H
 	#ifdef MAP_CLIF_H
 		{ "cdelayed_damage", sizeof(struct cdelayed_damage), SERVER_TYPE_MAP },
 		{ "clif_interface", sizeof(struct clif_interface), SERVER_TYPE_MAP },

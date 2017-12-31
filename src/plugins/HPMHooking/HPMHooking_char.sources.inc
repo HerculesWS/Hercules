@@ -34,6 +34,7 @@ HPMHooks.source.DB = *DB;
 HPMHooks.source.des = *des;
 HPMHooks.source.geoip = *geoip;
 HPMHooks.source.inter_auction = *inter_auction;
+HPMHooks.source.inter_clan = *inter_clan;
 HPMHooks.source.inter_elemental = *inter_elemental;
 HPMHooks.source.inter_guild = *inter_guild;
 HPMHooks.source.inter_homunculus = *inter_homunculus;

@@ -53,6 +53,9 @@ struct chat_interface *chat;
 #ifdef MAP_CHRIF_H /* chrif */
 struct chrif_interface *chrif;
 #endif // MAP_CHRIF_H
+#ifdef MAP_CLAN_H /* clan */
+struct clan_interface *clan;
+#endif // MAP_CLAN_H
 #ifdef MAP_CLIF_H /* clif */
 struct clif_interface *clif;
 #endif // MAP_CLIF_H
@@ -98,6 +101,9 @@ struct instance_interface *instance;
 #ifdef CHAR_INT_AUCTION_H /* inter_auction */
 struct inter_auction_interface *inter_auction;
 #endif // CHAR_INT_AUCTION_H
+#ifdef CHAR_INT_CLAN_H /* inter_clan */
+struct inter_clan_interface *inter_clan;
+#endif // CHAR_INT_CLAN_H
 #ifdef CHAR_INT_ELEMENTAL_H /* inter_elemental */
 struct inter_elemental_interface *inter_elemental;
 #endif // CHAR_INT_ELEMENTAL_H
@@ -315,6 +321,10 @@ HPExport const char *HPM_shared_symbols(int server_type)
 	if ((server_type&(SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("chrif", chrif))
 		return "chrif";
 #endif // MAP_CHRIF_H
+#ifdef MAP_CLAN_H /* clan */
+	if ((server_type&(SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("clan", clan))
+		return "clan";
+#endif // MAP_CLAN_H
 #ifdef MAP_CLIF_H /* clif */
 	if ((server_type&(SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("clif", clif))
 		return "clif";
@@ -375,6 +385,10 @@ HPExport const char *HPM_shared_symbols(int server_type)
 	if ((server_type&(SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("inter_auction", inter_auction))
 		return "inter_auction";
 #endif // CHAR_INT_AUCTION_H
+#ifdef CHAR_INT_CLAN_H /* inter_clan */
+	if ((server_type&(SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("inter_clan", inter_clan))
+		return "inter_clan";
+#endif // CHAR_INT_CLAN_H
 #ifdef CHAR_INT_ELEMENTAL_H /* inter_elemental */
 	if ((server_type&(SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("inter_elemental", inter_elemental))
 		return "inter_elemental";
