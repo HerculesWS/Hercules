@@ -20151,7 +20151,11 @@ void packetdb_loaddb(void) {
 #include "packets_shuffle.h"
 #undef packet
 #define packetKeys(a,b,c) do { clif->cryptKey[0] = (a); clif->cryptKey[1] = (b); clif->cryptKey[2] = (c); } while(0)
+#if defined(OBFUSCATIONKEY1) && defined(OBFUSCATIONKEY2) && defined(OBFUSCATIONKEY3)
+	packetKeys(OBFUSCATIONKEY1,OBFUSCATIONKEY2,OBFUSCATIONKEY3);
+#else
 #include "packets_keys.h"
+#endif
 #undef packetKeys
 }
 void clif_bc_ready(void) {
