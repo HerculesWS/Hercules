@@ -20148,7 +20148,11 @@ void packetdb_loaddb(void) {
 
 #define packet(id, size, ...) packetdb_addpacket((id), (size), ##__VA_ARGS__, 0xFFFF)
 #include "packets.h" /* load structure data */
-#include "packets_shuffle.h"
+#ifdef PACKETVER_ZERO
+#include "packets_shuffle_zero.h"
+#else  // PACKETVER_ZERO
+#include "packets_shuffle_main.h"
+#endif  // PACKETVER_ZERO
 #undef packet
 #define packetKeys(a,b,c) do { clif->cryptKey[0] = (a); clif->cryptKey[1] = (b); clif->cryptKey[2] = (c); } while(0)
 #if defined(OBFUSCATIONKEY1) && defined(OBFUSCATIONKEY2) && defined(OBFUSCATIONKEY3)
