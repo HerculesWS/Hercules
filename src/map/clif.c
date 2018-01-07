@@ -18462,19 +18462,19 @@ void clif_parse_BankWithdraw(int fd, struct map_session_data *sd)
 void clif_parse_BankCheck(int fd, struct map_session_data* sd) __attribute__((nonnull (2)));
 void clif_parse_BankCheck(int fd, struct map_session_data* sd)
 {
-#if PACKETVER >= 20130313
+#if PACKETVER >= 20130320
 	struct packet_banking_check p;
 
+	p.PacketType = banking_checkType;
 	if (!battle_config.feature_banking) {
-		clif->messagecolor_self(fd, COLOR_RED, msg_fd(fd,1483));
-		return;
+		p.Money = 0;
+		p.Reason = (short)1;
+	} else {
+		p.Money = (int)sd->status.bank_vault;
+		p.Reason = (short)0;
 	}
 
-	p.PacketType = banking_checkType;
-	p.Money = (int)sd->status.bank_vault;
-	p.Reason = (short)0;
-
-	clif->send(&p,sizeof(p), &sd->bl, SELF);
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
 #endif
 }
 
