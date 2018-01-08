@@ -6594,9 +6594,6 @@ void clif_party_created(struct map_session_data *sd,int result)
 }
 
 /// Adds new member to a party.
-/// 0104 <account id>.L <role>.L <x>.W <y>.W <state>.B <party name>.24B <char name>.24B <map name>.16B (ZC_ADD_MEMBER_TO_GROUP)
-/// 01e9 <account id>.L <role>.L <x>.W <y>.W <state>.B <party name>.24B <char name>.24B <map name>.16B <item pickup rule>.B <item share rule>.B (ZC_ADD_MEMBER_TO_GROUP2)
-/// 0a43 <account id>.L <role>.L <class>.W <base level>.W <x>.W <y>.W <state>.B <party name>.24B <char name>.24B <map name>.16B <item pickup rule>.B <item share rule>.B (ZC_ADD_MEMBER_TO_GROUP3)
 /// role:
 ///     0 = leader
 ///     1 = normal
@@ -6606,19 +6603,12 @@ void clif_party_created(struct map_session_data *sd,int result)
 void clif_party_member_info(struct party_data *p, struct map_session_data *sd)
 {
 	int i;
-#if PACKETVER < 20170502
-	unsigned char buf[81];
-	const int cmd = 0x1e9;
-	const int offset = 0;
-#else
-	unsigned char buf[85];
-// [4144] probably 0xa43 packet can works on older clients because in client was added in 2015-10-07
-	const int cmd = 0xa43;
-	int offset = 4;
-#endif
+	struct PACKET_ZC_ADD_MEMBER_TO_GROUP packet;
 
 	nullpo_retv(p);
 	nullpo_retv(sd);
+
+	memset(&packet, 0, sizeof(packet));
 	if (!sd) { //Pick any party member (this call is used when changing item share rules)
 		ARR_FIND(0, MAX_PARTY, i, p->data[i].sd != 0);
 	} else {
@@ -6628,27 +6618,28 @@ void clif_party_member_info(struct party_data *p, struct map_session_data *sd)
 		return; //Should never happen...
 	sd = p->data[i].sd;
 
-	WBUFW(buf, 0) = cmd;
-	WBUFL(buf, 2) = sd->status.account_id;
-	WBUFL(buf, 6) = (p->party.member[i].leader) ? 0 : 1;
-#if PACKETVER >= 20170502
-	WBUFW(buf, 10) = sd->status.class;
-	WBUFW(buf, 12) = sd->status.base_level;
+	packet.packetType = partymemberinfo;
+	packet.AID = sd->status.account_id;
+#if PACKETVER >= 20171207
+	packet.GID = sd->status.char_id;
 #endif
-	WBUFW(buf, offset + 10) = sd->bl.x;
-	WBUFW(buf, offset + 12) = sd->bl.y;
-	WBUFB(buf, offset + 14) = (p->party.member[i].online) ? 0 : 1;
-	memcpy(WBUFP(buf, offset + 15), p->party.name, NAME_LENGTH);
-	memcpy(WBUFP(buf, offset + 39), sd->status.name, NAME_LENGTH);
-	mapindex->getmapname_ext(map->list[sd->bl.m].custom_name ? map->list[map->list[sd->bl.m].instance_src_map].name : map->list[sd->bl.m].name, WBUFP(buf, offset + 63));
-	WBUFB(buf, offset + 79) = (p->party.item & 1) ? 1 : 0;
-	WBUFB(buf, offset + 80) = (p->party.item & 2) ? 1 : 0;
-	clif->send(buf, packet_len(cmd), &sd->bl, PARTY);
+	packet.leader = (p->party.member[i].leader) ? 0 : 1;
+#if PACKETVER >= 20170502
+	packet.class = sd->status.class;
+	packet.baseLevel = sd->status.base_level;
+#endif
+	packet.x = sd->bl.x;
+	packet.y = sd->bl.y;
+	packet.offline = (p->party.member[i].online) ? 0 : 1;
+	memcpy(packet.partyName, p->party.name, NAME_LENGTH);
+	memcpy(packet.playerName, sd->status.name, NAME_LENGTH);
+	mapindex->getmapname_ext(map->list[sd->bl.m].custom_name ? map->list[map->list[sd->bl.m].instance_src_map].name : map->list[sd->bl.m].name, packet.mapName);
+	packet.sharePickup = (p->party.item & 1) ? 1 : 0;
+	packet.shareLoot = (p->party.item & 2) ? 1 : 0;
+	clif->send(&packet, sizeof(packet), &sd->bl, PARTY);
 }
 
 /// Sends party information (ZC_GROUP_LIST).
-/// 00fb <packet len>.W <party name>.24B { <account id>.L <nick>.24B <map name>.16B <role>.B <state>.B }*
-/// 0a44 <packet len>.W <party name>.24B { <account id>.L <nick>.24B <map name>.16B <role>.B <state>.B <class>.W <base level>.W }* <item pickup rule>.B <item share rule>.B <unknown>.L
 /// role:
 ///     0 = leader
 ///     1 = normal
@@ -6657,23 +6648,16 @@ void clif_party_member_info(struct party_data *p, struct map_session_data *sd)
 ///     1 = disconnected
 void clif_party_info(struct party_data* p, struct map_session_data *sd)
 {
+	struct PACKET_ZC_GROUP_LIST *packet;
 	struct map_session_data* party_sd = NULL;
 	int i, c;
-#if PACKETVER < 20170502
-	const int cmd = 0xfb;
-	const int size = 46;
-	unsigned char buf[2 + 2 + NAME_LENGTH + 46 * MAX_PARTY];
-#else
-// [4144] probably 0xa44 packet can works on older clients because in client was added in 2015-10-07
-	const int cmd = 0xa44;
-	const int size = 50;
-	unsigned char buf[2 + 2 + NAME_LENGTH + 50 * MAX_PARTY + 6];
-#endif
-
+	unsigned char buf[sizeof(*packet) + sizeof(struct PACKET_ZC_GROUP_LIST_SUB) * MAX_PARTY];
 	nullpo_retv(p);
 
-	WBUFW(buf, 0) = cmd;
-	memcpy(WBUFP(buf, 4), p->party.name, NAME_LENGTH);
+	memset(buf, 0, sizeof(buf));
+	packet = (struct PACKET_ZC_GROUP_LIST *)buf;
+	packet->packetType = partyinfo;
+	memcpy(packet->partyName, p->party.name, NAME_LENGTH);
 	for(i = 0, c = 0; i < MAX_PARTY; i++)
 	{
 		struct party_member *m = &p->party.member[i];
@@ -6683,30 +6667,26 @@ void clif_party_info(struct party_data* p, struct map_session_data *sd)
 		if (party_sd == NULL)
 			party_sd = p->data[i].sd;
 
-		WBUFL(buf, 28 + c * size) = m->account_id;
-		memcpy(WBUFP(buf, 28 + c * size + 4), m->name, NAME_LENGTH);
-		mapindex->getmapname_ext(mapindex_id2name(m->map), WBUFP(buf, 28 + c * size + 28));
-		WBUFB(buf, 28 + c * size + 44) = (m->leader) ? 0 : 1;
-		WBUFB(buf, 28 + c * size + 45) = (m->online) ? 0 : 1;
+		packet->members[c].AID = m->account_id;
+#if PACKETVER >= 20171207
+		packet->members[c].GID = m->char_id;
+#endif
+		memcpy(packet->members[c].playerName, m->name, NAME_LENGTH);
+		mapindex->getmapname_ext(mapindex_id2name(m->map), packet->members[c].mapName);
+		packet->members[c].leader = (m->leader) ? 0 : 1;
+		packet->members[c].offline = (m->online) ? 0 : 1;
 #if PACKETVER >= 20170502
-		WBUFW(buf, 28 + c * size + 46) = m->class;
-		WBUFW(buf, 28 + c * size + 48) = m->lv;
+		packet->members[c].class = m->class;
+		packet->members[c].baseLevel = m->lv;
 #endif
 		c++;
 	}
-#if PACKETVER < 20170502
-	WBUFW(buf, 2) = 28 + c * size;
-#else
-	WBUFB(buf, 28 + c * size) = (p->party.item & 1) ? 1 : 0;
-	WBUFB(buf, 28 + c * size + 1) = (p->party.item & 2) ? 1 : 0;
-	WBUFL(buf, 28 + c * size + 2) = 0; // unknown
-	WBUFW(buf, 2) = 28 + c * size + 6;
-#endif
+	packet->packetLen = sizeof(*packet) + c * sizeof(struct PACKET_ZC_GROUP_LIST_SUB);
 
 	if (sd) { // send only to self
-		clif->send(buf, WBUFW(buf, 2), &sd->bl, SELF);
+		clif->send(buf, packet->packetLen, &sd->bl, SELF);
 	} else if (party_sd) { // send to whole party
-		clif->send(buf, WBUFW(buf, 2), &party_sd->bl, PARTY);
+		clif->send(buf, packet->packetLen, &party_sd->bl, PARTY);
 	}
 }
 
