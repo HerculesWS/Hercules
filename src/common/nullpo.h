@@ -23,15 +23,10 @@
 
 #include "common/hercules.h"
 
-// enabled by default on debug builds
-#if defined(DEBUG) && !defined(NULLPO_CHECK)
+// if need disable nullpo checks this line can be commented
 #define NULLPO_CHECK
-#endif
-
-// Skip assert checks on release builds
-#if !defined(RELEASE) && !defined(ASSERT_CHECK)
+// if need disable asserts checks this line can be commented
 #define ASSERT_CHECK
-#endif
 
 /** Assert */
 
