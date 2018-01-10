@@ -72951,33 +72951,6 @@ bool HP_skill_parse_row_magicmushroomdb(char *split[], int column, int current) 
 	}
 	return retVal___;
 }
-bool HP_skill_parse_row_reproducedb(char *split[], int column, int current) {
-	int hIndex = 0;
-	bool retVal___ = false;
-	if (HPMHooks.count.HP_skill_parse_row_reproducedb_pre > 0) {
-		bool (*preHookFunc) (char **split[], int *column, int *current);
-		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_parse_row_reproducedb_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_skill_parse_row_reproducedb_pre[hIndex].func;
-			retVal___ = preHookFunc(&split, &column, &current);
-		}
-		if (*HPMforce_return) {
-			*HPMforce_return = false;
-			return retVal___;
-		}
-	}
-	{
-		retVal___ = HPMHooks.source.skill.parse_row_reproducedb(split, column, current);
-	}
-	if (HPMHooks.count.HP_skill_parse_row_reproducedb_post > 0) {
-		bool (*postHookFunc) (bool retVal___, char *split[], int column, int current);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_parse_row_reproducedb_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_skill_parse_row_reproducedb_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, split, column, current);
-		}
-	}
-	return retVal___;
-}
 bool HP_skill_parse_row_improvisedb(char *split[], int columns, int current) {
 	int hIndex = 0;
 	bool retVal___ = false;

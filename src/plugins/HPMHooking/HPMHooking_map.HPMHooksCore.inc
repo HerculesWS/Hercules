@@ -5450,8 +5450,6 @@ struct {
 	struct HPMHookPoint *HP_skill_parse_row_spellbookdb_post;
 	struct HPMHookPoint *HP_skill_parse_row_magicmushroomdb_pre;
 	struct HPMHookPoint *HP_skill_parse_row_magicmushroomdb_post;
-	struct HPMHookPoint *HP_skill_parse_row_reproducedb_pre;
-	struct HPMHookPoint *HP_skill_parse_row_reproducedb_post;
 	struct HPMHookPoint *HP_skill_parse_row_improvisedb_pre;
 	struct HPMHookPoint *HP_skill_parse_row_improvisedb_post;
 	struct HPMHookPoint *HP_skill_parse_row_changematerialdb_pre;
@@ -11659,8 +11657,6 @@ struct {
 	int HP_skill_parse_row_spellbookdb_post;
 	int HP_skill_parse_row_magicmushroomdb_pre;
 	int HP_skill_parse_row_magicmushroomdb_post;
-	int HP_skill_parse_row_reproducedb_pre;
-	int HP_skill_parse_row_reproducedb_post;
 	int HP_skill_parse_row_improvisedb_pre;
 	int HP_skill_parse_row_improvisedb_post;
 	int HP_skill_parse_row_changematerialdb_pre;

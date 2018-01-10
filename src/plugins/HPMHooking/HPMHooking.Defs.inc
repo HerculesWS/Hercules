@@ -6736,8 +6736,6 @@ typedef bool (*HPMHOOK_pre_skill_parse_row_spellbookdb) (char **split[], int *co
 typedef bool (*HPMHOOK_post_skill_parse_row_spellbookdb) (bool retVal___, char *split[], int columns, int current);
 typedef bool (*HPMHOOK_pre_skill_parse_row_magicmushroomdb) (char **split[], int *column, int *current);
 typedef bool (*HPMHOOK_post_skill_parse_row_magicmushroomdb) (bool retVal___, char *split[], int column, int current);
-typedef bool (*HPMHOOK_pre_skill_parse_row_reproducedb) (char **split[], int *column, int *current);
-typedef bool (*HPMHOOK_post_skill_parse_row_reproducedb) (bool retVal___, char *split[], int column, int current);
 typedef bool (*HPMHOOK_pre_skill_parse_row_improvisedb) (char **split[], int *columns, int *current);
 typedef bool (*HPMHOOK_post_skill_parse_row_improvisedb) (bool retVal___, char *split[], int columns, int current);
 typedef bool (*HPMHOOK_pre_skill_parse_row_changematerialdb) (char **split[], int *columns, int *current);

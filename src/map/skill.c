@@ -987,7 +987,7 @@ int can_copy (struct map_session_data *sd, uint16 skill_id, struct block_list* b
 		 (skill_id >= GC_DARKCROW && skill_id <= SU_FRESHSHRIMP)))
 		return 0;
 	// Reproduce will only copy skills according on the list. [Jobbie]
-	else if( sd->sc.data[SC__REPRODUCE] && !skill->dbs->reproduce_db[skill->get_index(skill_id)] )
+	else if (sd->sc.data[SC__REPRODUCE] && (skill->get_inf2(skill_id) & INF2_ALLOW_REPRODUCE) == 0)
 		return 0;
 
 	return 1;
@@ -19849,21 +19849,6 @@ bool skill_parse_row_magicmushroomdb(char* split[], int column, int current)
 	return true;
 }
 
-bool skill_parse_row_reproducedb(char* split[], int column, int current)
-{
-	uint16 skill_id;
-	uint16 idx;
-	nullpo_retr(false, split);
-	skill_id = atoi(split[0]);
-	idx = skill->get_index(skill_id);
-	if( !idx )
-		return false;
-
-	skill->dbs->reproduce_db[idx] = true;
-
-	return true;
-}
-
 bool skill_parse_row_abradb(char* split[], int columns, int current)
 {
 // skill_id,DummyName,RequiredHocusPocusLevel,Rate
@@ -20167,6 +20152,12 @@ void skill_validate_skillinfo(struct config_setting_t *conf, struct s_skill_db *
 					sk->inf2 |= INF2_SHOW_SKILL_SCALE;
 				} else {
 					sk->inf2 &= ~INF2_SHOW_SKILL_SCALE;
+				}
+			} else if (strcmpi(type, "AllowReproduce") == 0) {
+				if (on) {
+					sk->inf2 |= INF2_ALLOW_REPRODUCE;
+				} else {
+					sk->inf2 &= ~INF2_ALLOW_REPRODUCE;
 				}
 			} else if (strcmpi(type, "None") != 0) {
 				skilldb_invalid_error(type, config_setting_name(t), sk->nameid);
@@ -21280,7 +21271,6 @@ void skill_readdb(bool minimal)
 	sv->readdb(map->db_path, "spellbook_db.txt",             ',',   3,                        3,     MAX_SKILL_SPELLBOOK_DB, skill->parse_row_spellbookdb);
 	//Guillotine Cross
 	sv->readdb(map->db_path, "magicmushroom_db.txt",         ',',   1,                        1, MAX_SKILL_MAGICMUSHROOM_DB, skill->parse_row_magicmushroomdb);
-	sv->readdb(map->db_path, "skill_reproduce_db.txt",       ',',   1,                        1,               MAX_SKILL_DB, skill->parse_row_reproducedb);
 	sv->readdb(map->db_path, "skill_improvise_db.txt",       ',',   2,                        2,     MAX_SKILL_IMPROVISE_DB, skill->parse_row_improvisedb);
 	sv->readdb(map->db_path, "skill_changematerial_db.txt",  ',',   4,                    4+2*5,       MAX_SKILL_PRODUCE_DB, skill->parse_row_changematerialdb);
 }
@@ -21594,7 +21584,6 @@ void skill_defaults(void)
 	skill->parse_row_abradb = skill_parse_row_abradb;
 	skill->parse_row_spellbookdb = skill_parse_row_spellbookdb;
 	skill->parse_row_magicmushroomdb = skill_parse_row_magicmushroomdb;
-	skill->parse_row_reproducedb = skill_parse_row_reproducedb;
 	skill->parse_row_improvisedb = skill_parse_row_improvisedb;
 	skill->parse_row_changematerialdb = skill_parse_row_changematerialdb;
 	skill->usave_add = skill_usave_add;
