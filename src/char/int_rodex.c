@@ -346,27 +346,28 @@ int64 inter_rodex_savemessage(struct rodex_message* msg)
  *------------------------------------------*/
 void mapif_rodex_sendinbox(int fd, int char_id, int8 opentype, int8 flag, int count, struct rodex_maillist *mails)
 {
-	int per_packet = (UINT16_MAX - 15) / sizeof(struct rodex_message);
+	int per_packet = (UINT16_MAX - 16) / sizeof(struct rodex_message);
 	int sent = 0;
+	bool is_first = true;
 	nullpo_retv(mails);
 	Assert_retv(char_id > 0);
 	Assert_retv(count >= 0);
 
 	do {
-		int i = 15, j, size, limit;
+		int i = 16, j, size, limit;
+		int to_send = count - sent;
 		bool is_last = true;
 
-		if (count <= per_packet) {
-			size = count * sizeof(struct rodex_message) + 15;
-			limit = count;
+		if (to_send <= per_packet) {
+			size = to_send * sizeof(struct rodex_message) + 16;
+			limit = to_send;
 			is_last = true;
 		} else {
-			int to_send = count - sent;
 			limit = min(to_send, per_packet);
 			if (limit != to_send) {
 				is_last = false;
 			}
-			size = limit * sizeof(struct rodex_message) + 15;
+			size = limit * sizeof(struct rodex_message) + 16;
 		}
 
 		WFIFOHEAD(fd, size);
@@ -376,11 +377,14 @@ void mapif_rodex_sendinbox(int fd, int char_id, int8 opentype, int8 flag, int co
 		WFIFOB(fd, 8) = opentype;
 		WFIFOB(fd, 9) = flag;
 		WFIFOB(fd, 10) = is_last;
-		WFIFOL(fd, 11) = count;
+		WFIFOB(fd, 11) = is_first;
+		WFIFOL(fd, 12) = limit;
 		for (j = 0; j < limit; ++j, ++sent, i += sizeof(struct rodex_message)) {
 			memcpy(WFIFOP(fd, i), &VECTOR_INDEX(*mails, sent), sizeof(struct rodex_message));
 		}
 		WFIFOSET(fd, size);
+
+		is_first = false;
 	} while (sent < count);
 }
 
