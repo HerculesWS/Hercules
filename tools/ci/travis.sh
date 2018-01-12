@@ -203,6 +203,12 @@ EOF
 		ARGS="--load-plugin script_mapquit $ARGS --load-script npc/dev/ci_test.txt"
 		PLUGINS="--load-plugin HPMHooking --load-plugin sample"
 		echo "run tests"
+		if [[ $DBUSER == "travis" ]]; then
+			echo "Disable leak dection on travis"
+			export ASAN_OPTIONS=detect_leaks=0:detect_stack_use_after_return=true:strict_init_order=true
+		else
+			export ASAN_OPTIONS=detect_leaks=1:detect_stack_use_after_return=true:strict_init_order=true
+		fi
 		# run_test spinlock # Not running the spinlock test for the time being (too time consuming)
 		run_test libconfig
 		echo "run all servers without HPM"
