@@ -824,6 +824,8 @@ struct {
 	struct HPMHookPoint *HP_clif_progressbar_post;
 	struct HPMHookPoint *HP_clif_progressbar_abort_pre;
 	struct HPMHookPoint *HP_clif_progressbar_abort_post;
+	struct HPMHookPoint *HP_clif_progressbar_unit_pre;
+	struct HPMHookPoint *HP_clif_progressbar_unit_post;
 	struct HPMHookPoint *HP_clif_showdigit_pre;
 	struct HPMHookPoint *HP_clif_showdigit_post;
 	struct HPMHookPoint *HP_clif_elementalconverter_list_pre;
@@ -7031,6 +7033,8 @@ struct {
 	int HP_clif_progressbar_post;
 	int HP_clif_progressbar_abort_pre;
 	int HP_clif_progressbar_abort_post;
+	int HP_clif_progressbar_unit_pre;
+	int HP_clif_progressbar_unit_post;
 	int HP_clif_showdigit_pre;
 	int HP_clif_showdigit_post;
 	int HP_clif_elementalconverter_list_pre;

@@ -434,6 +434,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->font, HP_clif_font) },
 	{ HP_POP(clif->progressbar, HP_clif_progressbar) },
 	{ HP_POP(clif->progressbar_abort, HP_clif_progressbar_abort) },
+	{ HP_POP(clif->progressbar_unit, HP_clif_progressbar_unit) },
 	{ HP_POP(clif->showdigit, HP_clif_showdigit) },
 	{ HP_POP(clif->elementalconverter_list, HP_clif_elementalconverter_list) },
 	{ HP_POP(clif->spellbook_list, HP_clif_spellbook_list) },

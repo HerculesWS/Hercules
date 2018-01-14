@@ -1188,6 +1188,8 @@ typedef void (*HPMHOOK_pre_clif_progressbar) (struct map_session_data **sd, unsi
 typedef void (*HPMHOOK_post_clif_progressbar) (struct map_session_data *sd, unsigned int color, unsigned int second);
 typedef void (*HPMHOOK_pre_clif_progressbar_abort) (struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_progressbar_abort) (struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_progressbar_unit) (struct block_list **bl, uint32 *color, uint32 *time);
+typedef void (*HPMHOOK_post_clif_progressbar_unit) (struct block_list *bl, uint32 color, uint32 time);
 typedef void (*HPMHOOK_pre_clif_showdigit) (struct map_session_data **sd, unsigned char *type, int *value);
 typedef void (*HPMHOOK_post_clif_showdigit) (struct map_session_data *sd, unsigned char type, int value);
 typedef int (*HPMHOOK_pre_clif_elementalconverter_list) (struct map_session_data **sd);

@@ -10706,6 +10706,32 @@ void HP_clif_progressbar_abort(struct map_session_data *sd) {
 	}
 	return;
 }
+void HP_clif_progressbar_unit(struct block_list *bl, uint32 color, uint32 time) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_progressbar_unit_pre > 0) {
+		void (*preHookFunc) (struct block_list **bl, uint32 *color, uint32 *time);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_progressbar_unit_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_progressbar_unit_pre[hIndex].func;
+			preHookFunc(&bl, &color, &time);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.progressbar_unit(bl, color, time);
+	}
+	if (HPMHooks.count.HP_clif_progressbar_unit_post > 0) {
+		void (*postHookFunc) (struct block_list *bl, uint32 color, uint32 time);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_progressbar_unit_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_progressbar_unit_post[hIndex].func;
+			postHookFunc(bl, color, time);
+		}
+	}
+	return;
+}
 void HP_clif_showdigit(struct map_session_data *sd, unsigned char type, int value) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_showdigit_pre > 0) {
