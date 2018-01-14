@@ -9915,7 +9915,6 @@ void clif_parse_Hotkey(int fd, struct map_session_data *sd) {
 
 /// Displays cast-like progress bar (ZC_PROGRESS).
 /// 02f0 <color>.L <time>.L
-/* TODO ZC_PROGRESS_ACTOR <account_id>.L */
 void clif_progressbar(struct map_session_data * sd, unsigned int color, unsigned int second)
 {
 	int fd;
@@ -9942,6 +9941,30 @@ void clif_progressbar_abort(struct map_session_data * sd)
 	WFIFOHEAD(fd,packet_len(0x2f2));
 	WFIFOW(fd,0) = 0x2f2;
 	WFIFOSET(fd,packet_len(0x2f2));
+}
+
+/**
+* Displays cast-like progress bar on a unit.
+* 09d1 <id>.L <color>.L <time>.L
+*
+* @param bl       Source block list.
+* @param color    Message color (RGB format: 0xRRGGBB).
+* @param time   Time in seconds.
+*/
+void clif_progressbar_unit(struct block_list *bl, uint32 color, uint32 time)
+{
+#if PACKETVER >= 20130821
+	struct ZC_PROGRESS_ACTOR p;
+	nullpo_retv(bl);
+
+	p.PacketType = progressbarunit;
+	p.GID = bl->id;
+	p.color = color;
+	p.time = time;
+	clif->send(&p, sizeof(p), bl, AREA);
+#else
+	ShowWarning("clif_progressbar_unit: Using progressbar with units available for PACKETVER >= 20130821 only.");
+#endif
 }
 
 void clif_parse_progressbar(int fd, struct map_session_data * sd) __attribute__((nonnull (2)));
@@ -20367,6 +20390,7 @@ void clif_defaults(void) {
 	clif->font = clif_font;
 	clif->progressbar = clif_progressbar;
 	clif->progressbar_abort = clif_progressbar_abort;
+	clif->progressbar_unit = clif_progressbar_unit;
 	clif->showdigit = clif_showdigit;
 	clif->elementalconverter_list = clif_elementalconverter_list;
 	clif->spellbook_list = clif_spellbook_list;

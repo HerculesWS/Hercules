@@ -796,6 +796,7 @@ struct clif_interface {
 	void (*font) (struct map_session_data *sd);
 	void (*progressbar) (struct map_session_data * sd, unsigned int color, unsigned int second);
 	void (*progressbar_abort) (struct map_session_data * sd);
+	void (*progressbar_unit) (struct block_list *bl, uint32 color, uint32 time);
 	void (*showdigit) (struct map_session_data* sd, unsigned char type, int value);
 	int (*elementalconverter_list) (struct map_session_data *sd);
 	int (*spellbook_list) (struct map_session_data *sd);
