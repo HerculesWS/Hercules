@@ -39,6 +39,7 @@
 #include "map/skill.h"
 #include "map/status.h"
 #include "map/unit.h"
+#include "map/achievement.h"
 #include "common/db.h"
 #include "common/ers.h"
 #include "common/memmgr.h"
@@ -547,8 +548,8 @@ int pet_catch_process2(struct map_session_data* sd, int target_id) {
 	pet_catch_rate = (pet->db[i].capture + (sd->status.base_level - md->level)*30 + sd->battle_status.luk*20)*(200 - get_percentage(md->status.hp, md->status.max_hp))/100;
 
 	if(pet_catch_rate < 1) pet_catch_rate = 1;
-	if(battle_config.pet_catch_rate != 100)
-		pet_catch_rate = (pet_catch_rate*battle_config.pet_catch_rate)/100;
+	if(battle->bc->pet_catch_rate != 100)
+		pet_catch_rate = (pet_catch_rate*battle->bc->pet_catch_rate)/100;
 
 	if(rnd()%10000 < pet_catch_rate)
 	{
@@ -557,6 +558,8 @@ int pet_catch_process2(struct map_session_data* sd, int target_id) {
 		clif->pet_roulette(sd,1);
 		intif->create_pet(sd->status.account_id,sd->status.char_id,pet->db[i].class_,mob->db(pet->db[i].class_)->lv,
 			pet->db[i].EggID,0,pet->db[i].intimate,100,0,1,pet->db[i].jname);
+
+		achievement->validate_taming(sd, pet->db[i].class_);
 	}
 	else
 	{

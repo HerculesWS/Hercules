@@ -118,6 +118,28 @@ CREATE TABLE IF NOT EXISTS `autotrade_merchants` (
 ) ENGINE=MyISAM;
 
 --
+-- Table structure for table `char_achievements`
+--
+
+CREATE TABLE `char_achievements` (
+	`char_id` INT(11) UNSIGNED NOT NULL,
+	`ach_id` INT(11) UNSIGNED NOT NULL,
+	`completed_at` INT(10) UNSIGNED NOT NULL DEFAULT '0',
+	`rewarded_at` INT(10) UNSIGNED NOT NULL DEFAULT '0',
+	`obj_0` INT(10) UNSIGNED NOT NULL DEFAULT '0',
+	`obj_1` INT(10) UNSIGNED NOT NULL DEFAULT '0',
+	`obj_2` INT(10) UNSIGNED NOT NULL DEFAULT '0',
+	`obj_3` INT(10) UNSIGNED NOT NULL DEFAULT '0',
+	`obj_4` INT(10) UNSIGNED NOT NULL DEFAULT '0',
+	`obj_5` INT(10) UNSIGNED NOT NULL DEFAULT '0',
+	`obj_6` INT(10) UNSIGNED NOT NULL DEFAULT '0',
+	`obj_7` INT(10) UNSIGNED NOT NULL DEFAULT '0',
+	`obj_8` INT(10) UNSIGNED NOT NULL DEFAULT '0',
+	`obj_9` INT(10) UNSIGNED NOT NULL DEFAULT '0',
+	PRIMARY KEY (`char_id`, `ach_id`)
+) ENGINE=MyISAM;
+
+--
 -- Table structure for table `cart_inventory`
 --
 
@@ -885,6 +907,8 @@ INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1488454834); -- 2017-03-0
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1488744559); -- 2017-03-05--08-09.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1489588190); -- 2017-03-15--14-29.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1509835214); -- 2017-11-04--10-39.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1514265655); -- 2017-12-26--05-20.sql
+
 --
 -- Table structure for table `storage`
 --

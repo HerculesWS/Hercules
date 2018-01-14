@@ -37,7 +37,7 @@
 #include "common/db.h"
 #include "common/ers.h" // struct eri
 #include "common/hercules.h"
-#include "common/mmo.h" // JOB_*, MAX_FAME_LIST, struct fame_list, struct mmo_charstatus, NEW_CARTS
+#include "common/mmo.h" // JOB_*, MAX_FAME_LIST, struct fame_list, struct mmo_charstatus, NEW_CARTS, struct s_achievement
 
 /**
  * Defines
@@ -617,6 +617,9 @@ END_ZEROED_BLOCK;
 	const char* delunit_prevfile;
 	int delunit_prevline;
 
+	/* Achievement System [Smokexyz/Hercules] */
+	struct char_achievements achievement;
+	bool achievements_received;
 };
 
 #define EQP_WEAPON EQP_HAND_R
