@@ -3984,8 +3984,8 @@ typedef int (*HPMHOOK_pre_map_removemobs_timer) (int *tid, int64 *tick, int *id,
 typedef int (*HPMHOOK_post_map_removemobs_timer) (int retVal___, int tid, int64 tick, int id, intptr_t data);
 typedef void (*HPMHOOK_pre_map_clearflooritem) (struct block_list **bl);
 typedef void (*HPMHOOK_post_map_clearflooritem) (struct block_list *bl);
-typedef int (*HPMHOOK_pre_map_addflooritem) (const struct block_list **bl, struct item **item_data, int *amount, int16 *m, int16 *x, int16 *y, int *first_charid, int *second_charid, int *third_charid, int *flags);
-typedef int (*HPMHOOK_post_map_addflooritem) (int retVal___, const struct block_list *bl, struct item *item_data, int amount, int16 m, int16 x, int16 y, int first_charid, int second_charid, int third_charid, int flags);
+typedef int (*HPMHOOK_pre_map_addflooritem) (const struct block_list **bl, struct item **item_data, int *amount, int16 *m, int16 *x, int16 *y, int *first_charid, int *second_charid, int *third_charid, int *flags, bool *showdropeffect);
+typedef int (*HPMHOOK_post_map_addflooritem) (int retVal___, const struct block_list *bl, struct item *item_data, int amount, int16 m, int16 x, int16 y, int first_charid, int second_charid, int third_charid, int flags, bool showdropeffect);
 typedef void (*HPMHOOK_pre_map_addnickdb) (int *charid, const char **nick);
 typedef void (*HPMHOOK_post_map_addnickdb) (int charid, const char *nick);
 typedef void (*HPMHOOK_pre_map_delnickdb) (int *charid, const char **nick);

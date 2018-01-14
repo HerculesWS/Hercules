@@ -472,6 +472,7 @@ struct item_data {
 	int view_id;
 	int matk;
 	int elvmax;/* maximum level for this item */
+	int dropeffectmode;
 
 	int delay;
 	uint64 class_base[3]; ///< Specifies if the base can wear this item (split in 3 indexes per type: 1-1, 2-1, 2-2)
@@ -495,6 +496,7 @@ struct item_data {
 		unsigned force_serial : 1;
 		unsigned no_options: 1; // < disallows use of item options on the item. (non-equippable items are automatically flagged) [Smokexyz]
 		unsigned drop_announce : 1; // Official Drop Announce [Jedzkie]
+		unsigned showdropeffect: 1; // < Allow showing effect on item drop [Asheraf]
 	} flag;
 	struct {// item stacking limitation
 		unsigned short amount;
@@ -538,6 +540,8 @@ struct item_data {
 #define itemdb_value_sell(n)  (itemdb->search(n)->value_sell)
 #define itemdb_canrefine(n)   (!itemdb->search(n)->flag.no_refine)
 #define itemdb_allowoption(n) (!itemdb->search(n)->flag.no_options)
+#define itemdb_showdropeffect(n) (itemdb->search(n)->flag.showdropeffect)
+#define itemdb_dropeffectmode(n) (itemdb->search(n)->dropeffectmode)
 
 #define itemdb_is_element(n)     ((n) >= ITEMID_SCARLET_PTS && (n) <= ITEMID_LIME_GREEN_PTS)
 #define itemdb_is_spellbook(n)   ((n) >= ITEMID_MAGIC_BOOK_FB && (n) <= ITEMID_MAGIC_BOOK_DL)

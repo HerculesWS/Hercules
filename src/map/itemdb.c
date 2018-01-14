@@ -2070,6 +2070,12 @@ int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const char *
 	if ((t = libconfig->setting_get_member(it, "DisableOptions")))
 		id.flag.no_options = libconfig->setting_get_bool(t) ? 1 : 0;
 
+	if ((t = libconfig->setting_get_member(it, "ShowDropEffect")))
+		id.flag.showdropeffect = libconfig->setting_get_bool(t) ? 1 : 0;
+
+	if (itemdb->lookup_const(it, "DropEffectMode", &i32) && i32 >= 0)
+		id.dropeffectmode = i32;
+
 	if (itemdb->lookup_const(it, "ViewSprite", &i32) && i32 >= 0)
 		id.view_sprite = i32;
 

@@ -73,6 +73,8 @@ item_db: (
 	Delay: Delay to use item      (int, defaults to 0)
 	KeepAfterUse: true/false      (boolean, defaults to false)
 	DropAnnounce: true/false      (boolean, defaults to false)
+	ShowDropEffect: true/false    (boolean, defaults to false)
+	DropEffectMode: Effect Type   (int, default to 0)
 	Trade: {                      (defaults to no restrictions)
 		override: GroupID             (int, defaults to 100)
 		nodrop: true/false            (boolean, defaults to false)
@@ -368,3 +370,12 @@ OnUnequipScript: Script to execute when the item is unequipped.
 Inherit: This can be used only in item_db2.conf, and if set to true, and the
          item already exists in item_db.conf, all the missing fields will be
          inherited from there rather than using their default values.
+
+ShowDropEffect: Allow showing an effect when the item dropped by a monster. [ZERO client only]
+DropEffectMode: Set attribute for ShowDropEffect. [ZERO client only]
+				0 - Client Based (itemInfo EffectID)
+				1 - White effect
+				2 - Blue effect
+				3 - Yellow effect
+				4 - Purple effect
+				5 - Orange effect
