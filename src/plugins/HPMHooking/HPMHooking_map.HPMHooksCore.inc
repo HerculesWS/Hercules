@@ -4158,8 +4158,8 @@ struct {
 	struct HPMHookPoint *HP_pc_dropitem_post;
 	struct HPMHookPoint *HP_pc_isequipped_pre;
 	struct HPMHookPoint *HP_pc_isequipped_post;
-	struct HPMHookPoint *HP_pc_can_Adopt_pre;
-	struct HPMHookPoint *HP_pc_can_Adopt_post;
+	struct HPMHookPoint *HP_pc_try_adopt_pre;
+	struct HPMHookPoint *HP_pc_try_adopt_post;
 	struct HPMHookPoint *HP_pc_adoption_pre;
 	struct HPMHookPoint *HP_pc_adoption_post;
 	struct HPMHookPoint *HP_pc_updateweightstatus_pre;
@@ -10367,8 +10367,8 @@ struct {
 	int HP_pc_dropitem_post;
 	int HP_pc_isequipped_pre;
 	int HP_pc_isequipped_post;
-	int HP_pc_can_Adopt_pre;
-	int HP_pc_can_Adopt_post;
+	int HP_pc_try_adopt_pre;
+	int HP_pc_try_adopt_post;
 	int HP_pc_adoption_pre;
 	int HP_pc_adoption_post;
 	int HP_pc_updateweightstatus_pre;

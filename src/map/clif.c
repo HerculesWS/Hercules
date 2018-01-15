@@ -15833,9 +15833,9 @@ void clif_parse_cashshop_buy(int fd, struct map_session_data *sd)
 /// Adoption message (ZC_BABYMSG).
 /// 0216 <msg>.L
 /// msg:
-///     0 = "You cannot adopt more than 1 child."
-///     1 = "You must be at least character level 70 in order to adopt someone."
-///     2 = "You cannot adopt a married person."
+///     ADOPT_REPLY_MORE_CHILDREN = "You cannot adopt more than 1 child."
+///     ADOPT_REPLY_LEVEL_70 = "You must be at least character level 70 in order to adopt someone."
+///     ADOPT_REPLY_MARRIED = "You cannot adopt a married person."
 void clif_Adopt_reply(struct map_session_data *sd, int type)
 {
 	int fd;
@@ -15870,7 +15870,7 @@ void clif_parse_Adopt_request(int fd, struct map_session_data *sd) __attribute__
 void clif_parse_Adopt_request(int fd, struct map_session_data *sd) {
 	struct map_session_data *tsd = map->id2sd(RFIFOL(fd,2)), *p_sd = map->charid2sd(sd->status.partner_id);
 
-	if( pc->can_Adopt(sd, p_sd, tsd) ) {
+	if (pc->try_adopt(sd, p_sd, tsd) == ADOPT_ALLOWED) {
 		tsd->adopt_invite = sd->status.account_id;
 		clif->adopt_request(tsd, sd, p_sd->status.account_id);
 	}
