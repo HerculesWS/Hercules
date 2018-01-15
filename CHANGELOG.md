@@ -9,8 +9,32 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+## [v2018.01.14] `January 14 2018`
+### Added
+- Added support for the `AllowReproduce` flag in the skill DB. This supersedes the skill_reproduce_db. (#1943)
+- Added support for the `ZC_PROGRESS_ACTOR` packet. The packet is exposed to the script engine through the `progressbar_unit()` command (available on PACKETVER 20130821 and newer). (#1929)
+- Added support for the new item drop packet for the Zero clients. The packet is controlled by the `ShowDropEffect` and `DropEffectMode` item DB flags and ignored by non-Zero clients. (#1939)
+- Added support for the new Map Server Change packet 0x0ac7. (part of #1948)
+
+### Changed
+- Always enabled assertions and null pointer checks. In order to disable them (very discouraged, as it may lead to security issues), it is now necessary to edit `nullpo.h`. (#1937)
+- Disabled the address sanitizer's memory leak detector in the travis builds, since it produced failures in third libraries. (#1949, #1952)
+- Applied script standardization to the Nydhogg's Nest instance script. (#1871)
+- Split packet_keys.h into separate files for main clients and zero clients. (part of #1948)
+- Split packets_shuffle.h into separate files for main clients and zero clients. (part of #1948)
+- Replaced the custom bank unavailable error message with the actual bank check error packet. (part of #1948)
+- Updated and corrected the party member and party info packets. (part of #1948)
+- Updated README.md with more relevant badges and links (added Discord, removed Waffle, added more GitHub information). (#1951)
+
+### Fixed
+- Updated Xcode project to include the RODEX related files. (#1942)
+- Fixed RODEX loading mails when it requires multiple packets. (#1945, issue #1933)
+
+### Removed
+- Removed the skill_reproduce_db, now superseded by the `AllowReproduce` skill flag. (part of #1943)
+
 ## [v2017.12.17] `December 17 2017`
-# Added
+### Added
 - Implemented Homunculus Autofeeding, available on the 2017 clients. The feature can be disabled by flipping `features.enable_homun_autofeed` in feature.conf. (#1898)
 - Added support for the newly released Ragnarok Zero clients. The client type is controlled with the `--enable-packetver-zero` configure-time flag (disabled by default). (#1923)
 
@@ -18,7 +42,7 @@ If you are reading this in a text editor, simply ignore this section
 - Applied script standardization to the Old Glast Heim instance script. (#1883)
 - Split packets.h into two files: packets.h and packets_shuffle.h. (part of #1923)
 
-## Fixed
+### Fixed
 - Corrected a wrong path displayed in an error message pointing to the map-server configuration. (#1913)
 - Fixed the natural expiration of the Poison status when under the effect of Slow Poison. (#1925)
 
@@ -98,6 +122,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2018.01.14]: https://github.com/HerculesWS/Hercules/compare/v2017.12.17...v2018.01.14
 [v2017.12.17]: https://github.com/HerculesWS/Hercules/compare/v2017.11.19+2...v2017.12.17
 [v2017.11.19+2]: https://github.com/HerculesWS/Hercules/compare/v2017.11.19+1...v2017.11.19+2
 [v2017.11.19+1]: https://github.com/HerculesWS/Hercules/compare/v2017.11.19...v2017.11.19+1
