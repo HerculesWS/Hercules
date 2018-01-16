@@ -73,7 +73,7 @@ unsigned long loginlog_failedattempts(uint32 ip, unsigned int minutes)
  * Records an event in the login log
  *---------------------------------------------*/
 // TODO: add an enum of rcode values
-void login_log(uint32 ip, const char* username, int rcode, const char* message)
+void loginlog_log(uint32 ip, const char* username, int rcode, const char* message)
 {
 	char esc_username[NAME_LENGTH*2+1];
 	char esc_message[255*2+1];
