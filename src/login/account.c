@@ -85,8 +85,8 @@ static AccountDBIterator* account_db_sql_iterator(AccountDB* self);
 static void account_db_sql_iter_destroy(AccountDBIterator* self);
 static bool account_db_sql_iter_next(AccountDBIterator* self, struct mmo_account* acc);
 
-static bool mmo_auth_fromsql(AccountDB_SQL* db, struct mmo_account* acc, int account_id);
-static bool mmo_auth_tosql(AccountDB_SQL* db, const struct mmo_account* acc, bool is_new);
+static bool account_mmo_auth_fromsql(AccountDB_SQL* db, struct mmo_account* acc, int account_id);
+static bool account_mmo_auth_tosql(AccountDB_SQL* db, const struct mmo_account* acc, bool is_new);
 
 /// public constructor
 AccountDB* account_db_sql(void)
@@ -381,7 +381,7 @@ static bool account_db_sql_create(AccountDB* self, struct mmo_account* acc)
 
 	// insert the data into the database
 	acc->account_id = account_id;
-	return mmo_auth_tosql(db, acc, true);
+	return account_mmo_auth_tosql(db, acc, true);
 }
 
 /// delete an existing account entry + its regs
@@ -411,14 +411,14 @@ static bool account_db_sql_remove(AccountDB* self, const int account_id)
 static bool account_db_sql_save(AccountDB* self, const struct mmo_account* acc)
 {
 	AccountDB_SQL* db = (AccountDB_SQL*)self;
-	return mmo_auth_tosql(db, acc, false);
+	return account_mmo_auth_tosql(db, acc, false);
 }
 
 /// retrieve data from db and store it in the provided data structure
 static bool account_db_sql_load_num(AccountDB* self, struct mmo_account* acc, const int account_id)
 {
 	AccountDB_SQL* db = (AccountDB_SQL*)self;
-	return mmo_auth_fromsql(db, acc, account_id);
+	return account_mmo_auth_fromsql(db, acc, account_id);
 }
 
 /// retrieve data from db and store it in the provided data structure
@@ -516,7 +516,7 @@ static bool account_db_sql_iter_next(AccountDBIterator* self, struct mmo_account
 	{// get account data
 		int account_id;
 		account_id = atoi(data);
-		if( mmo_auth_fromsql(db, acc, account_id) )
+		if( account_mmo_auth_fromsql(db, acc, account_id) )
 		{
 			iter->last_account_id = account_id;
 			SQL->FreeResult(sql_handle);
@@ -528,7 +528,7 @@ static bool account_db_sql_iter_next(AccountDBIterator* self, struct mmo_account
 }
 
 
-static bool mmo_auth_fromsql(AccountDB_SQL* db, struct mmo_account* acc, int account_id)
+static bool account_mmo_auth_fromsql(AccountDB_SQL* db, struct mmo_account* acc, int account_id)
 {
 	struct Sql *sql_handle;
 	char* data;
@@ -573,7 +573,7 @@ static bool mmo_auth_fromsql(AccountDB_SQL* db, struct mmo_account* acc, int acc
 	return true;
 }
 
-static bool mmo_auth_tosql(AccountDB_SQL* db, const struct mmo_account* acc, bool is_new)
+static bool account_mmo_auth_tosql(AccountDB_SQL* db, const struct mmo_account* acc, bool is_new)
 {
 	struct Sql *sql_handle;
 	struct SqlStmt *stmt;
@@ -673,7 +673,8 @@ struct Sql *account_db_sql_up(AccountDB* self)
 	AccountDB_SQL* db = (AccountDB_SQL*)self;
 	return db ? db->accounts : NULL;
 }
-void mmo_save_accreg2(AccountDB* self, int fd, int account_id, int char_id)
+
+void account_mmo_save_accreg2(AccountDB* self, int fd, int account_id, int char_id)
 {
 	struct Sql *sql_handle;
 	AccountDB_SQL* db = (AccountDB_SQL*)self;
@@ -725,7 +726,7 @@ void mmo_save_accreg2(AccountDB* self, int fd, int account_id, int char_id)
 	}
 }
 
-void mmo_send_accreg2(AccountDB* self, int fd, int account_id, int char_id)
+void account_mmo_send_accreg2(AccountDB* self, int fd, int account_id, int char_id)
 {
 	struct Sql *sql_handle;
 	AccountDB_SQL* db = (AccountDB_SQL*)self;

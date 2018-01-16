@@ -164,8 +164,8 @@ struct AccountDB
 #ifdef HERCULES_CORE
 struct Sql *account_db_sql_up(AccountDB* self);
 
-void mmo_send_accreg2(AccountDB* self, int fd, int account_id, int char_id);
-void mmo_save_accreg2(AccountDB* self, int fd, int account_id, int char_id);
+void account_mmo_send_accreg2(AccountDB* self, int fd, int account_id, int char_id);
+void account_mmo_save_accreg2(AccountDB* self, int fd, int account_id, int char_id);
 #endif // HERCULES_CORE
 
 #endif /* LOGIN_ACCOUNT_H */

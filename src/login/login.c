@@ -624,7 +624,7 @@ void login_fromchar_parse_account_reg2(int fd, int id, const char *const ip)
 	if( !accounts->load_num(accounts, &acc, account_id) )
 		ShowStatus("Char-server '%s': receiving (from the char-server) of account_reg2 (account: %d not found, ip: %s).\n", server[id].name, account_id, ip);
 	else {
-		mmo_save_accreg2(accounts,fd,account_id,RFIFOL(fd, 8));
+		account_mmo_save_accreg2(accounts,fd,account_id,RFIFOL(fd, 8));
 	}
 	RFIFOSKIP(fd,RFIFOW(fd,2));
 }
@@ -684,7 +684,7 @@ void login_fromchar_parse_request_account_reg2(int fd)
 	int char_id = RFIFOL(fd,6);
 	RFIFOSKIP(fd,10);
 
-	mmo_send_accreg2(accounts,fd,account_id,char_id);
+	account_mmo_send_accreg2(accounts,fd,account_id,char_id);
 }
 
 void login_fromchar_parse_update_wan_ip(int fd, int id)
