@@ -803,6 +803,22 @@ enum pc_skill_flag {
 };
 
 /**
+ * Flag values for pc->can_adopt
+ */
+ 
+enum adopt_responses {
+	ADOPT_ALLOWED = 0,
+	ADOPT_ALREADY_ADOPTED,
+	ADOPT_MARRIED_AND_PARTY,
+	ADOPT_EQUIP_RINGS,
+	ADOPT_NOT_NOVICE,
+	ADOPT_CHARACTER_NOT_FOUND,
+	ADOPT_MORE_CHILDREN,
+	ADOPT_LEVEL_70,
+	ADOPT_MARRIED,
+};
+
+/**
  * Used to temporarily remember vending data
  **/
 struct autotrade_vending {
@@ -915,7 +931,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*dropitem) (struct map_session_data *sd,int n,int amount);
 
 	bool (*isequipped) (struct map_session_data *sd, int nameid);
-	bool (*can_Adopt) (struct map_session_data *p1_sd, struct map_session_data *p2_sd, struct map_session_data *b_sd);
+	enum adopt_responses (*can_adopt) (struct map_session_data *p1_sd, struct map_session_data *p2_sd, struct map_session_data *b_sd);
 	bool (*adoption) (struct map_session_data *p1_sd, struct map_session_data *p2_sd, struct map_session_data *b_sd);
 
 	int (*updateweightstatus) (struct map_session_data *sd);
