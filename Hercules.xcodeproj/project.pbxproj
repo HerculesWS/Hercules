@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		755495841FEE5A0000CE4B7D /* int_rodex.c in Sources */ = {isa = PBXBuildFile; fileRef = 755495831FEE5A0000CE4B7D /* int_rodex.c */; };
+		755495871FEE5A1F00CE4B7D /* rodex.c in Sources */ = {isa = PBXBuildFile; fileRef = 755495851FEE5A1F00CE4B7D /* rodex.c */; };
 		A5296FCD1CAC40CF001ABCAC /* lclif.c in Sources */ = {isa = PBXBuildFile; fileRef = A5296FCA1CAC40CF001ABCAC /* lclif.c */; };
 		A5380CD71856CE3C0090CBC4 /* mapcache.c in Sources */ = {isa = PBXBuildFile; fileRef = A5380CD61856CE3C0090CBC4 /* mapcache.c */; };
 		A5380CD81856CE8A0090CBC4 /* console.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC692185643BB009EB79C /* console.c */; };
@@ -219,6 +221,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		755495821FEE5A0000CE4B7D /* int_rodex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = int_rodex.h; path = src/char/int_rodex.h; sourceTree = SOURCE_ROOT; };
+		755495831FEE5A0000CE4B7D /* int_rodex.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = int_rodex.c; path = src/char/int_rodex.c; sourceTree = SOURCE_ROOT; };
+		755495851FEE5A1F00CE4B7D /* rodex.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = rodex.c; path = src/map/rodex.c; sourceTree = SOURCE_ROOT; };
+		755495861FEE5A1F00CE4B7D /* rodex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = rodex.h; path = src/map/rodex.h; sourceTree = SOURCE_ROOT; };
 		A5296FCA1CAC40CF001ABCAC /* lclif.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = lclif.c; path = src/login/lclif.c; sourceTree = SOURCE_ROOT; };
 		A5296FCB1CAC40CF001ABCAC /* lclif.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lclif.h; path = src/login/lclif.h; sourceTree = SOURCE_ROOT; };
 		A5296FCC1CAC40CF001ABCAC /* lclif.p.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lclif.p.h; path = src/login/lclif.p.h; sourceTree = SOURCE_ROOT; };
@@ -602,6 +608,8 @@
 				A56CC754185657D9009EB79C /* int_pet.h */,
 				A56CC755185657D9009EB79C /* int_quest.c */,
 				A56CC756185657D9009EB79C /* int_quest.h */,
+				755495831FEE5A0000CE4B7D /* int_rodex.c */,
+				755495821FEE5A0000CE4B7D /* int_rodex.h */,
 				A56CC757185657D9009EB79C /* int_storage.c */,
 				A56CC758185657D9009EB79C /* int_storage.h */,
 				A56CC759185657D9009EB79C /* inter.c */,
@@ -680,6 +688,8 @@
 				A56CC7A618565812009EB79C /* pet.h */,
 				A56CC7A718565812009EB79C /* quest.c */,
 				A56CC7A818565812009EB79C /* quest.h */,
+				755495851FEE5A1F00CE4B7D /* rodex.c */,
+				755495861FEE5A1F00CE4B7D /* rodex.h */,
 				A56CC7A918565812009EB79C /* script.c */,
 				A56CC7AA18565812009EB79C /* script.h */,
 				A56CC7AB18565812009EB79C /* searchstore.c */,
@@ -1229,6 +1239,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				755495841FEE5A0000CE4B7D /* int_rodex.c in Sources */,
 				A56CC766185657D9009EB79C /* int_quest.c in Sources */,
 				A56CC709185643BB009EB79C /* sql.c in Sources */,
 				A56CC75E185657D9009EB79C /* int_auction.c in Sources */,
@@ -1338,6 +1349,7 @@
 				A56CC73318564C05009EB79C /* libconfig.c in Sources */,
 				A56CC74218564C23009EB79C /* mt19937ar.c in Sources */,
 				A56CC7BD18565812009EB79C /* chat.c in Sources */,
+				755495871FEE5A1F00CE4B7D /* rodex.c in Sources */,
 				A56CC7CF18565812009EB79C /* mob.c in Sources */,
 				A56CC7BB18565812009EB79C /* battleground.c in Sources */,
 				A56CC73618564C05009EB79C /* scanctx.c in Sources */,

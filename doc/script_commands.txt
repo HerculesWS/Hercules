@@ -189,6 +189,7 @@ There are two optional fields for monster size and AI. Size can be 0
 
 Alternately, a monster spawned using 'boss_monster' instead of 'monster' is able to be
 detected on the map with the SC_CASH_BOSS_ALARM status (used by Convex Mirror, item ID# 12214).
+A monster spawned using 'miniboss_monster' is spawn monster as mini boss view.
 
 ** NPC names
 
@@ -3175,22 +3176,42 @@ Example:
 ---------------------------------------
 
 *getiteminfo(<item ID>, <type>)
+*setiteminfo(<item ID>, <type>, <value>)
 
 This function will look up the item with the specified ID number in the
 database and return the info set by TYPE argument.
 It will return -1 if there is no such item.
 
 Valid types are:
-	0 - Buy Price; 1 - Sell Price; 2 - Item Type;
-	3 - maxchance (Max drop chance of this item e.g. 1 = 0.01% , etc..
+
+	ITEMINFO_BUYPRICE   - Buy Price
+	ITEMINFO_SELLPRICE  - Sell Price
+	ITEMINFO_TYPE       - Item Type
+	ITEMINFO_MAXCHANCE  - Max drop chance of this item e.g. 1 = 0.01% , etc..
 		if = 0, then monsters don't drop it at all (rare or a quest item)
 		if = 10000, then this item is sold in NPC shops only
-	4 - sex; 5 - equip; 6 - weight; 7 - atk; 8 - def; 9 - range;
-	10 - slot; 11 - subtype; 12 - elv; 13 - wlv; 14 - view id
-
-	If RENEWAL is defined, 15 - matk
+	ITEMINFO_SEX        - Sex
+	ITEMINFO_LOC        - Equip location
+	ITEMINFO_WEIGHT     - Weight (note: 1/10 of unit)
+	ITEMINFO_ATK        - Attack
+	ITEMINFO_DEF        - Defense
+	ITEMINFO_RANGE      - Range
+	ITEMINFO_SLOTS      - Slots
+	ITEMINFO_SUBTYPE    - Item subtype
+	ITEMINFO_ELV        - Equip min. level
+	ITEMINFO_WLV        - Weapon level
+	ITEMINFO_VIEWID     - View ID ("Sprite" field in the Item DB)
+	ITEMINFO_MATK       - MATK (only relevant if RENEWAL is set)
+	ITEMINFO_VIEWSPRITE - View Sprite ("ViewSprite" field in the Item DB)
 
 Check sample in doc/sample/getiteminfo.txt
+
+The setiteminfo function will, instead, set the item's parameters. It returns
+the new value on success, or -1 on failure (item_id not found).
+
+Example:
+
+	setiteminfo(Stone, ITEMINFO_WEIGHT, 9990); // Stone now weighs 999.0
 
 ---------------------------------------
 
@@ -3232,6 +3253,7 @@ Set an equipment's option index or value for the specified option slot.
 <equipment_index> For a list of equipment indexes see getequipid().
 <option_slot> can range from 1 to MAX_ITEM_OPTIONS
 <type> can be IT_OPT_INDEX (the ID of the option bonus, @see "Id" or "Name" in db/item_options.conf)
+       removes the equip option if type is 0.
 <value> The value of the type to be set.
 
 returns 0 if value couldn't be set, 1 on success.
@@ -6893,6 +6915,7 @@ Examples:
 ---------------------------------------
 
 *progressbar("<color>", <seconds>)
+*progressbar_unit("<color>", <seconds>{, <GID>})
 
 This command works almost like sleep2(), but displays a progress bar above
 the head of the currently attached character (like cast bar). Once the
@@ -6900,6 +6923,11 @@ given amount of seconds passes, the script resumes. If the character moves
 while the progress bar progresses, it is aborted and the script ends. The
 color format is in RGB (0xRRGGBB). The color is currently ignored by the
 client and appears always green.
+
+progressbar_unit works only for PACKETVER >= 20130821
+The progressbar will show on the given unit id but it will not
+put the unit in timeout (the progressbar would be just an animation).
+if GID is not given use the attached player.
 
 ---------------------------------------
 //=====================================
@@ -8294,26 +8322,6 @@ Example:
 
 ---------------------------------------
 
-*setiteminfo(<item id>, <type>, <value>)
-
-This function will set some value of an item.
-Returns the new value on success, or -1 on fail (item_id not found or
-invalid type).
-
-Valid types are:
-	0 - Buy Price; 1 - Sell Price; 2 - Item Type;
-	3 - maxchance (Max drop chance of this item e.g. 1 = 0.01% , etc..
-		if = 0, then monsters don't drop it at all (rare or a quest item)
-		if = 10000, then this item is sold in NPC shops only
-	4 - sex; 5 - equip; 6 - weight; 7 - atk; 8 - def; 9 - range;
-	10 - slot; 11 - subtype; 12 - elv; 13 - wlv; 14 - view id
-
-Example:
-
-setiteminfo Stone, 6, 9990; // Stone now weighs 999.0
-
----------------------------------------
-
 *setitemscript(<item id>, <"{ new item script }">{, <type>})
 
 Set a new script bonus to the Item. Very useful for game events.
@@ -9226,7 +9234,14 @@ No Icon		: QTYPE_NONE
 ! Event Icon	: QTYPE_EVENT
 ? Event Icon	: QTYPE_EVENT2
 Warg		: QTYPE_WARG
-Warg Face	: QTYPE_WARG2 (Only for packetver >= 20120410)
+Warg Face	: QTYPE_WARG2 (Only for packetver >= 20120410 && packetver < 20170315)
+
+- Only for packetver >= 20170315
+Click Me Icon      : QTYPE_CLICKME
+! Daily Quest Icon : QTYPE_DAILYQUEST
+! Green Event Icon : QTYPE_EVENT3
+! Job Quest Icon   : QTYPE_JOBQUEST
+Jumping Poring     : QTYPE_JUMPING_PORING
 
 Map Mark Color, when used, creates a mark in the user's mini map on the position of the NPC,
 the available color values are:
@@ -9335,7 +9350,14 @@ Remove Icon	: QTYPE_NONE
 ! Event Icon	: QTYPE_EVENT
 ? Event Icon	: QTYPE_EVENT2
 Warg		: QTYPE_WARG
-Warg Face	: QTYPE_WARG2 (Only for packetver >= 20120410)
+Warg Face	: QTYPE_WARG2 (Only for packetver >= 20120410 && packetver < 20170315)
+
+- Only for packetver >= 20170315
+Click Me Icon      : QTYPE_CLICKME
+! Daily Quest Icon : QTYPE_DAILYQUEST
+! Green Event Icon : QTYPE_EVENT3
+! Job Quest Icon   : QTYPE_JOBQUEST
+Jumping Poring     : QTYPE_JUMPING_PORING
 
 Mark Color:
 0 - No Mark

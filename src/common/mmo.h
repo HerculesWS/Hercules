@@ -74,6 +74,13 @@
 	#undef ENABLE_PACKETVER_RE
 #endif // DISABLE_PACKETVER_RE
 
+//Uncomment the following line if your client is zero ragexe instead of normal kro clients
+//#define ENABLE_PACKETVER_ZERO
+#ifdef ENABLE_PACKETVER_ZERO
+	#define PACKETVER_ZERO
+	#undef ENABLE_PACKETVER_ZERO
+#endif // DISABLE_PACKETVER_ZERO
+
 // Client support for experimental RagexeRE UI present in 2012-04-10 and 2012-04-18
 #if defined(PACKETVER_RE) && ( PACKETVER == 20120410 || PACKETVER == 20120418 )
 #define PARTY_RECRUIT
@@ -139,8 +146,8 @@
 #endif
 #define MAX_FAME 1000000000
 #define MAX_CART 100
-#ifndef MAX_SKILL
-#define MAX_SKILL 1510
+#ifndef MAX_SKILL_DB
+#define MAX_SKILL_DB 1510 ///< Maximum number of skills in the skill DB (compacted array size)
 #endif
 #ifndef MAX_SKILL_ID
 #define MAX_SKILL_ID 10015   // [Ind/Hercules] max used skill ID
@@ -552,6 +559,7 @@ struct s_homunculus { //[orn]
 	int luk_value;
 
 	int8 spiritball; //for homun S [lighta]
+	int autofeed;
 };
 
 struct s_mercenary {
@@ -635,7 +643,7 @@ struct mmo_charstatus {
 
 	struct point last_point,save_point,memo_point[MAX_MEMOPOINTS];
 	struct item inventory[MAX_INVENTORY],cart[MAX_CART];
-	struct s_skill skill[MAX_SKILL];
+	struct s_skill skill[MAX_SKILL_DB];
 
 	struct s_friend friends[MAX_FRIENDS]; //New friend system [Skotlex]
 #ifdef HOTKEY_SAVING
@@ -1201,6 +1209,10 @@ enum hz_char_ask_name_answer {
 
 #if MAX_SLOTS < 4
 #error MAX_SLOTS it too small
+#endif
+
+#ifdef MAX_SKILL
+#error MAX_SKILL has been replaced by MAX_SKILL_DB. Please update your custom definitions.
 #endif
 
 #endif /* COMMON_MMO_H */

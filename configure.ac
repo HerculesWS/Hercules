@@ -144,6 +144,27 @@ AC_ARG_ENABLE(
 
 
 #
+# packetver-Zero
+#
+AC_ARG_ENABLE(
+	[packetver-zero],
+	AC_HELP_STRING(
+		[--enable-packetver-zero],
+		[Sets or unsets the PACKETVER_ZERO define - see src/common/mmo.h (currently disabled by default)]
+	),
+	[
+		enable_packetver_zero="$enableval"
+		case $enableval in
+			"no");;
+			"yes");;
+			*) AC_MSG_ERROR([[invalid argument --enable-packetver-zero=$enableval... stopping]]);;
+		esac
+	],
+	[enable_packetver_zero="no"]
+)
+
+
+#
 # Epoll
 #
 AC_ARG_ENABLE([epoll],
@@ -1218,6 +1239,18 @@ fi
 case $enable_packetver_re in
 	"yes")
 		CPPFLAGS="$CPPFLAGS -DENABLE_PACKETVER_RE"
+		;;
+	"no")
+		# default value
+		;;
+esac
+
+#
+# Packetver-Zero
+#
+case $enable_packetver_zero in
+	"yes")
+		CPPFLAGS="$CPPFLAGS -DENABLE_PACKETVER_ZERO"
 		;;
 	"no")
 		# default value

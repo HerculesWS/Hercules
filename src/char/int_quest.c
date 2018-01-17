@@ -56,6 +56,7 @@ struct quest *mapif_quests_fromsql(int char_id, int *count)
 	StringBuf buf;
 	int i;
 	int sqlerror = SQL_SUCCESS;
+	int quest_state = 0;
 
 	if (!count)
 		return NULL;
@@ -77,11 +78,11 @@ struct quest *mapif_quests_fromsql(int char_id, int *count)
 	memset(&tmp_quest, 0, sizeof(struct quest));
 
 	if (SQL_ERROR == SQL->StmtPrepareStr(stmt, StrBuf->Value(&buf))
-	 || SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT, &char_id, 0)
+	 || SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT, &char_id, sizeof char_id)
 	 || SQL_ERROR == SQL->StmtExecute(stmt)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 0, SQLDT_INT,  &tmp_quest.quest_id, 0, NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 1, SQLDT_INT,  &tmp_quest.state,    0, NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 2, SQLDT_UINT, &tmp_quest.time,     0, NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 0, SQLDT_INT,  &tmp_quest.quest_id, sizeof tmp_quest.quest_id, NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 1, SQLDT_INT,  &quest_state,        sizeof quest_state,        NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 2, SQLDT_UINT, &tmp_quest.time,     sizeof tmp_quest.time,     NULL, NULL)
 	) {
 		sqlerror = SQL_ERROR;
 	}
@@ -89,7 +90,7 @@ struct quest *mapif_quests_fromsql(int char_id, int *count)
 	StrBuf->Destroy(&buf);
 
 	for (i = 0; sqlerror != SQL_ERROR && i < MAX_QUEST_OBJECTIVES; i++) { // Stop on the first error
-		sqlerror = SQL->StmtBindColumn(stmt, 3+i, SQLDT_INT,  &tmp_quest.count[i], 0, NULL, NULL);
+		sqlerror = SQL->StmtBindColumn(stmt, 3+i, SQLDT_INT,  &tmp_quest.count[i], sizeof tmp_quest.count[i], NULL, NULL);
 	}
 
 	if (sqlerror == SQL_ERROR) {
@@ -105,9 +106,10 @@ struct quest *mapif_quests_fromsql(int char_id, int *count)
 		questlog = (struct quest *)aCalloc(*count, sizeof(struct quest));
 
 		while (SQL_SUCCESS == SQL->StmtNextRow(stmt)) {
+			tmp_quest.state = quest_state;
 			if (i >= *count) // Sanity check, should never happen
 				break;
-			memcpy(&questlog[i++], &tmp_quest, sizeof(tmp_quest));
+			questlog[i++] = tmp_quest;
 		}
 		if (i < *count) {
 			// Should never happen. Compact array

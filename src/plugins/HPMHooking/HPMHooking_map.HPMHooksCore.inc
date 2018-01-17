@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2017  Hercules Dev Team
+ * Copyright (C) 2013-2018  Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -810,8 +810,8 @@ struct {
 	struct HPMHookPoint *HP_clif_feel_hate_reset_post;
 	struct HPMHookPoint *HP_clif_partytickack_pre;
 	struct HPMHookPoint *HP_clif_partytickack_post;
-	struct HPMHookPoint *HP_clif_equiptickack_pre;
-	struct HPMHookPoint *HP_clif_equiptickack_post;
+	struct HPMHookPoint *HP_clif_zc_config_pre;
+	struct HPMHookPoint *HP_clif_zc_config_post;
 	struct HPMHookPoint *HP_clif_viewequip_ack_pre;
 	struct HPMHookPoint *HP_clif_viewequip_ack_post;
 	struct HPMHookPoint *HP_clif_equpcheckbox_pre;
@@ -824,6 +824,8 @@ struct {
 	struct HPMHookPoint *HP_clif_progressbar_post;
 	struct HPMHookPoint *HP_clif_progressbar_abort_pre;
 	struct HPMHookPoint *HP_clif_progressbar_abort_post;
+	struct HPMHookPoint *HP_clif_progressbar_unit_pre;
+	struct HPMHookPoint *HP_clif_progressbar_unit_post;
 	struct HPMHookPoint *HP_clif_showdigit_pre;
 	struct HPMHookPoint *HP_clif_showdigit_post;
 	struct HPMHookPoint *HP_clif_elementalconverter_list_pre;
@@ -1768,8 +1770,8 @@ struct {
 	struct HPMHookPoint *HP_clif_pAdopt_reply_post;
 	struct HPMHookPoint *HP_clif_pViewPlayerEquip_pre;
 	struct HPMHookPoint *HP_clif_pViewPlayerEquip_post;
-	struct HPMHookPoint *HP_clif_pEquipTick_pre;
-	struct HPMHookPoint *HP_clif_pEquipTick_post;
+	struct HPMHookPoint *HP_clif_p_cz_config_pre;
+	struct HPMHookPoint *HP_clif_p_cz_config_post;
 	struct HPMHookPoint *HP_clif_pquestStateAck_pre;
 	struct HPMHookPoint *HP_clif_pquestStateAck_post;
 	struct HPMHookPoint *HP_clif_pmercenary_action_pre;
@@ -1930,6 +1932,8 @@ struct {
 	struct HPMHookPoint *HP_clif_rodex_request_items_post;
 	struct HPMHookPoint *HP_clif_rodex_icon_pre;
 	struct HPMHookPoint *HP_clif_rodex_icon_post;
+	struct HPMHookPoint *HP_clif_skill_scale_pre;
+	struct HPMHookPoint *HP_clif_skill_scale_post;
 	struct HPMHookPoint *HP_cmdline_init_pre;
 	struct HPMHookPoint *HP_cmdline_init_post;
 	struct HPMHookPoint *HP_cmdline_final_pre;
@@ -3918,6 +3922,8 @@ struct {
 	struct HPMHookPoint *HP_npc_market_delfromsql_sub_post;
 	struct HPMHookPoint *HP_npc_db_checkid_pre;
 	struct HPMHookPoint *HP_npc_db_checkid_post;
+	struct HPMHookPoint *HP_npc_refresh_pre;
+	struct HPMHookPoint *HP_npc_refresh_post;
 	struct HPMHookPoint *HP_npc_secure_timeout_timer_pre;
 	struct HPMHookPoint *HP_npc_secure_timeout_timer_post;
 	struct HPMHookPoint *HP_nullpo_assert_report_pre;
@@ -5100,10 +5106,18 @@ struct {
 	struct HPMHookPoint *HP_skill_get_mhp_post;
 	struct HPMHookPoint *HP_skill_get_sp_pre;
 	struct HPMHookPoint *HP_skill_get_sp_post;
+	struct HPMHookPoint *HP_skill_get_hp_rate_pre;
+	struct HPMHookPoint *HP_skill_get_hp_rate_post;
+	struct HPMHookPoint *HP_skill_get_sp_rate_pre;
+	struct HPMHookPoint *HP_skill_get_sp_rate_post;
 	struct HPMHookPoint *HP_skill_get_state_pre;
 	struct HPMHookPoint *HP_skill_get_state_post;
 	struct HPMHookPoint *HP_skill_get_spiritball_pre;
 	struct HPMHookPoint *HP_skill_get_spiritball_post;
+	struct HPMHookPoint *HP_skill_get_itemid_pre;
+	struct HPMHookPoint *HP_skill_get_itemid_post;
+	struct HPMHookPoint *HP_skill_get_itemqty_pre;
+	struct HPMHookPoint *HP_skill_get_itemqty_post;
 	struct HPMHookPoint *HP_skill_get_zeny_pre;
 	struct HPMHookPoint *HP_skill_get_zeny_post;
 	struct HPMHookPoint *HP_skill_get_num_pre;
@@ -5160,8 +5174,6 @@ struct {
 	struct HPMHookPoint *HP_skill_get_name_post;
 	struct HPMHookPoint *HP_skill_get_desc_pre;
 	struct HPMHookPoint *HP_skill_get_desc_post;
-	struct HPMHookPoint *HP_skill_chk_pre;
-	struct HPMHookPoint *HP_skill_chk_post;
 	struct HPMHookPoint *HP_skill_get_casttype_pre;
 	struct HPMHookPoint *HP_skill_get_casttype_post;
 	struct HPMHookPoint *HP_skill_get_casttype2_pre;
@@ -5440,8 +5452,6 @@ struct {
 	struct HPMHookPoint *HP_skill_parse_row_spellbookdb_post;
 	struct HPMHookPoint *HP_skill_parse_row_magicmushroomdb_pre;
 	struct HPMHookPoint *HP_skill_parse_row_magicmushroomdb_post;
-	struct HPMHookPoint *HP_skill_parse_row_reproducedb_pre;
-	struct HPMHookPoint *HP_skill_parse_row_reproducedb_post;
 	struct HPMHookPoint *HP_skill_parse_row_improvisedb_pre;
 	struct HPMHookPoint *HP_skill_parse_row_improvisedb_post;
 	struct HPMHookPoint *HP_skill_parse_row_changematerialdb_pre;
@@ -7009,8 +7019,8 @@ struct {
 	int HP_clif_feel_hate_reset_post;
 	int HP_clif_partytickack_pre;
 	int HP_clif_partytickack_post;
-	int HP_clif_equiptickack_pre;
-	int HP_clif_equiptickack_post;
+	int HP_clif_zc_config_pre;
+	int HP_clif_zc_config_post;
 	int HP_clif_viewequip_ack_pre;
 	int HP_clif_viewequip_ack_post;
 	int HP_clif_equpcheckbox_pre;
@@ -7023,6 +7033,8 @@ struct {
 	int HP_clif_progressbar_post;
 	int HP_clif_progressbar_abort_pre;
 	int HP_clif_progressbar_abort_post;
+	int HP_clif_progressbar_unit_pre;
+	int HP_clif_progressbar_unit_post;
 	int HP_clif_showdigit_pre;
 	int HP_clif_showdigit_post;
 	int HP_clif_elementalconverter_list_pre;
@@ -7967,8 +7979,8 @@ struct {
 	int HP_clif_pAdopt_reply_post;
 	int HP_clif_pViewPlayerEquip_pre;
 	int HP_clif_pViewPlayerEquip_post;
-	int HP_clif_pEquipTick_pre;
-	int HP_clif_pEquipTick_post;
+	int HP_clif_p_cz_config_pre;
+	int HP_clif_p_cz_config_post;
 	int HP_clif_pquestStateAck_pre;
 	int HP_clif_pquestStateAck_post;
 	int HP_clif_pmercenary_action_pre;
@@ -8129,6 +8141,8 @@ struct {
 	int HP_clif_rodex_request_items_post;
 	int HP_clif_rodex_icon_pre;
 	int HP_clif_rodex_icon_post;
+	int HP_clif_skill_scale_pre;
+	int HP_clif_skill_scale_post;
 	int HP_cmdline_init_pre;
 	int HP_cmdline_init_post;
 	int HP_cmdline_final_pre;
@@ -10117,6 +10131,8 @@ struct {
 	int HP_npc_market_delfromsql_sub_post;
 	int HP_npc_db_checkid_pre;
 	int HP_npc_db_checkid_post;
+	int HP_npc_refresh_pre;
+	int HP_npc_refresh_post;
 	int HP_npc_secure_timeout_timer_pre;
 	int HP_npc_secure_timeout_timer_post;
 	int HP_nullpo_assert_report_pre;
@@ -11299,10 +11315,18 @@ struct {
 	int HP_skill_get_mhp_post;
 	int HP_skill_get_sp_pre;
 	int HP_skill_get_sp_post;
+	int HP_skill_get_hp_rate_pre;
+	int HP_skill_get_hp_rate_post;
+	int HP_skill_get_sp_rate_pre;
+	int HP_skill_get_sp_rate_post;
 	int HP_skill_get_state_pre;
 	int HP_skill_get_state_post;
 	int HP_skill_get_spiritball_pre;
 	int HP_skill_get_spiritball_post;
+	int HP_skill_get_itemid_pre;
+	int HP_skill_get_itemid_post;
+	int HP_skill_get_itemqty_pre;
+	int HP_skill_get_itemqty_post;
 	int HP_skill_get_zeny_pre;
 	int HP_skill_get_zeny_post;
 	int HP_skill_get_num_pre;
@@ -11359,8 +11383,6 @@ struct {
 	int HP_skill_get_name_post;
 	int HP_skill_get_desc_pre;
 	int HP_skill_get_desc_post;
-	int HP_skill_chk_pre;
-	int HP_skill_chk_post;
 	int HP_skill_get_casttype_pre;
 	int HP_skill_get_casttype_post;
 	int HP_skill_get_casttype2_pre;
@@ -11639,8 +11661,6 @@ struct {
 	int HP_skill_parse_row_spellbookdb_post;
 	int HP_skill_parse_row_magicmushroomdb_pre;
 	int HP_skill_parse_row_magicmushroomdb_post;
-	int HP_skill_parse_row_reproducedb_pre;
-	int HP_skill_parse_row_reproducedb_post;
 	int HP_skill_parse_row_improvisedb_pre;
 	int HP_skill_parse_row_improvisedb_post;
 	int HP_skill_parse_row_changematerialdb_pre;

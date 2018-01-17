@@ -32,6 +32,8 @@
 
 struct mmo_account;
 struct AccountDB;
+struct config_t;
+struct config_setting_t;
 
 enum E_LOGINSERVER_ST
 {
@@ -119,6 +121,11 @@ struct Login_Config {
 	bool use_dnsbl;                                 ///< dns blacklist blocking ?
 	VECTOR_DECL(char *) dnsbl_servers;              ///< dnsbl servers
 
+	bool send_user_count_description;
+	uint32 users_low;
+	uint32 users_medium;
+	uint32 users_high;
+
 	bool client_hash_check;                         ///< flags for checking client md5
 	// TODO: VECTOR candidate
 	struct client_hash_node *client_hash_nodes;     ///< linked list containg md5 hash for each gm group
@@ -205,10 +212,24 @@ struct login_interface {
 	void (*auth_ok) (struct login_session_data* sd);
 	void (*auth_failed) (struct login_session_data* sd, int result);
 	bool (*client_login) (int fd, struct login_session_data *sd);
+	bool (*client_login_otp) (int fd, struct login_session_data *sd);
 	void (*char_server_connection_status) (int fd, struct login_session_data* sd, uint8 status);
 	void (*parse_request_connection) (int fd, struct login_session_data* sd, const char *ip, uint32 ipl);
 	void (*config_set_defaults) (void);
 	bool (*config_read) (const char *filename, bool included);
+	bool (*config_read_inter) (const char *filename, struct config_t *config, bool imported);
+	bool (*config_read_console) (const char *filename, struct config_t *config, bool imported);
+	bool (*config_read_log) (const char *filename, struct config_t *config, bool imported);
+	bool (*config_read_account) (const char *filename, struct config_t *config, bool imported);
+	bool (*config_read_permission) (const char *filename, struct config_t *config, bool imported);
+	bool (*config_read_permission_hash) (const char *filename, struct config_t *config, bool imported);
+	bool (*config_read_permission_blacklist) (const char *filename, struct config_t *config, bool imported);
+	bool (*config_read_users) (const char *filename, struct config_t *config, bool imported);
+	void (*clear_dnsbl_servers) (void);
+	void (*config_set_dnsbl_servers) (struct config_setting_t *setting);
+	void (*clear_client_hash_nodes) (void);
+	void (*config_set_md5hash) (struct config_setting_t *setting);
+	uint16 (*convert_users_to_colors) (uint16 users);
 	char *LOGIN_CONF_NAME;
 	char *NET_CONF_NAME; ///< Network configuration filename
 };

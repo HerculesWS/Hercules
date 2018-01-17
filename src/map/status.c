@@ -159,7 +159,7 @@ void initChangeTables(void)
 	for (i = 0; i < SC_MAX; i++)
 		status->dbs->IconChangeTable[i] = SI_BLANK;
 
-	for (i = 0; i < MAX_SKILL; i++)
+	for (i = 0; i < MAX_SKILL_DB; i++)
 		status->dbs->Skill2SCTable[i] = SC_NONE;
 
 	for (i = 0; i < SI_MAX; i++)
@@ -2329,7 +2329,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 	static int calculating = 0; //Check for recursive call preemption. [Skotlex]
 	struct status_data *bstatus; // pointer to the player's base status
 	const struct status_change *sc;
-	struct s_skill b_skill[MAX_SKILL]; // previous skill tree
+	struct s_skill b_skill[MAX_SKILL_DB]; // previous skill tree
 	int b_weight, b_max_weight, b_cart_weight_max, // previous weight
 		i, k, index, skill_lv,refinedef=0;
 	int64 i64;
@@ -6809,7 +6809,7 @@ struct view_data *status_get_viewdata(struct block_list *bl)
 		case BL_PC:  return &BL_UCAST(BL_PC, bl)->vd;
 		case BL_MOB: return BL_UCAST(BL_MOB, bl)->vd;
 		case BL_PET: return &BL_UCAST(BL_PET, bl)->vd;
-		case BL_NPC: return BL_UCAST(BL_NPC, bl)->vd;
+		case BL_NPC: return &BL_UCAST(BL_NPC, bl)->vd;
 		case BL_HOM: return BL_UCAST(BL_HOM, bl)->vd;
 		case BL_MER: return BL_UCAST(BL_MER, bl)->vd;
 		case BL_ELEM: return BL_UCAST(BL_ELEM, bl)->vd;
@@ -6927,10 +6927,14 @@ void status_set_viewdata(struct block_list *bl, int class_)
 	case BL_NPC:
 	{
 		struct npc_data *nd = BL_UCAST(BL_NPC, bl);
-		if (vd != NULL)
-			nd->vd = vd;
-		else
+		if (vd != NULL) {
+			memcpy(&nd->vd, vd, sizeof(struct view_data));
+		} else if (pc->db_checkid(class_)) {
+			memset(&nd->vd, 0, sizeof(struct view_data));
+			nd->vd.class = class_;
+		} else {
 			ShowError("status_set_viewdata (NPC): No view data for class %d (name=%s)\n", class_, nd->name);
+		}
 	}
 		break;
 	case BL_HOM: //[blackhole89]
@@ -11542,24 +11546,26 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			break;
 
 		case SC_POISON:
-			if(st->hp <= max(st->max_hp>>2, sce->val4)) //Stop damaging after 25% HP left.
+			if (st->hp <= max(st->max_hp / 4, sce->val4)) //Stop damaging after 25% HP left.
 				break;
 			FALLTHROUGH
 		case SC_DPOISON:
 			if (--(sce->val3) > 0) {
-				if (!sc->data[SC_SLOWPOISON]) {
-					if( sce->val2 && bl->type == BL_MOB ) {
-						struct block_list* src = map->id2bl(sce->val2);
-						if (src != NULL)
-							mob->log_damage(BL_UCAST(BL_MOB, bl), src, sce->val4);
-					}
-					map->freeblock_lock();
-					status_zap(bl, sce->val4, 0);
-					if (sc->data[type]) { // Check if the status still last ( can be dead since then ).
-						sc_timer_next(1000 + tick, status->change_timer, bl->id, data );
-					}
-					map->freeblock_unlock();
+				if (sc->data[SC_SLOWPOISON] != NULL) {
+					sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
+					return 0;
 				}
+				if (sce->val2 != 0 && bl->type == BL_MOB) {
+					struct block_list* src = map->id2bl(sce->val2);
+					if (src != NULL)
+						mob->log_damage(BL_UCAST(BL_MOB, bl), src, sce->val4);
+				}
+				map->freeblock_lock();
+				status_zap(bl, sce->val4, 0);
+				if (sc->data[type] != NULL) { // Check if the status still last (can be dead since then).
+					sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
+				}
+				map->freeblock_unlock();
 				return 0;
 			}
 			break;

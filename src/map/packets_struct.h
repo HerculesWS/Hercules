@@ -191,7 +191,9 @@ enum packet_headers {
 	skill_entryType = 0x9ca,
 #endif
 	graffiti_entryType = 0x1c9,
-#if PACKETVER > 20130000 /* not sure date */
+#ifdef PACKETVER_ZERO
+	dropflooritemType = 0xadd,
+#elif PACKETVER > 20130000 /* not sure date */
 	dropflooritemType = 0x84b,
 #else
 	dropflooritemType = 0x9e,
@@ -329,6 +331,23 @@ enum packet_headers {
 	rodexcheckplayer = 0x0A14,
 #else // PACKETVER >= 20160316
 	rodexcheckplayer = 0x0A51,
+#endif
+#if PACKETVER >= 20151223
+	skillscale = 0xA41,
+#endif
+#if PACKETVER >= 20130821
+	progressbarunit = 0x09D1,
+#endif
+#if PACKETVER >= 20171207
+	partymemberinfo = 0x0ae4,
+	partyinfo = 0x0ae5,
+#elif PACKETVER >= 20170502
+// [4144] probably 0xa43 packet can works on older clients because in client was added in 2015-10-07
+	partymemberinfo = 0x0a43,
+	partyinfo = 0x0a44,
+#else
+	partymemberinfo = 0x01e9,
+	partyinfo = 0x00fb,
 #endif
 };
 
@@ -492,6 +511,10 @@ struct packet_dropflooritem {
 	uint8 subX;
 	uint8 subY;
 	int16 count;
+#ifdef PACKETVER_ZERO
+	int8 showdropeffect;
+	int16 dropeffectmode;
+#endif
 } __attribute__((packed));
 struct packet_idle_unit2 {
 #if PACKETVER < 20091103
@@ -1476,6 +1499,67 @@ struct PACKET_ZC_ACK_ITEM_FROM_MAIL {
 	int64 MailID;
 	int8 opentype;
 	int8 result;
+} __attribute__((packed));
+
+struct PACKET_ZC_SKILL_SCALE {
+	int16 PacketType;
+	uint32 AID;
+	int16 skill_id;
+	int16 skill_lv;
+	int16 x;
+	int16 y;
+	uint32 casttime;
+} __attribute__((packed));
+
+struct ZC_PROGRESS_ACTOR {
+	int16 PacketType;
+	int32 GID;
+	int32 color;
+	uint32 time;
+} __attribute__((packed));
+
+struct PACKET_ZC_ADD_MEMBER_TO_GROUP {
+	int16 packetType;
+	uint32 AID;
+#if PACKETVER >= 20171207
+	uint32 GID;
+#endif
+	uint32 leader;
+// [4144] probably 0xa43 packet can works on older clients because in client was added in 2015-10-07
+#if PACKETVER >= 20170502
+	int16 class;
+	int16 baseLevel;
+#endif
+	int16 x;
+	int16 y;
+	uint8 offline;
+	char partyName[NAME_LENGTH];
+	char playerName[NAME_LENGTH];
+	char mapName[MAP_NAME_LENGTH_EXT];
+	int8 sharePickup;
+	int8 shareLoot;
+} __attribute__((packed));
+
+struct PACKET_ZC_GROUP_LIST_SUB {
+	uint32 AID;
+#if PACKETVER >= 20171207
+	uint32 GID;
+#endif
+	char playerName[NAME_LENGTH];
+	char mapName[MAP_NAME_LENGTH_EXT];
+	uint8 leader;
+	uint8 offline;
+#if PACKETVER >= 20170502
+	int16 class;
+	int16 baseLevel;
+#endif
+} __attribute__((packed));
+
+struct PACKET_ZC_GROUP_LIST {
+	int16 packetType;
+	int16 packetLen;
+	char partyName[NAME_LENGTH];
+	struct PACKET_ZC_GROUP_LIST_SUB members[];
 } __attribute__((packed));
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute

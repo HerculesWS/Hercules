@@ -84,11 +84,11 @@ malangdo,213,167,4	script	Mayomayo#mal	4_CAT_3COLOR,{
 		close;
 	}
 	@mal_equip_id = getequipid(EQI_HAND_R);
-	.@equip_type = getiteminfo(@mal_equip_id,11);
+	.@equip_type = getiteminfo(@mal_equip_id, ITEMINFO_SUBTYPE);
 
 	//callsub L_Socket,<cost multiplier>,<4-x enchants possible>;
 	switch(.@equip_type) { // Check weapon type first to speed up the checks.
-	case 1: // Daggers
+	case W_DAGGER: // Daggers
 		switch(@mal_equip_id) {
 			case 1224: callsub L_Socket,1,2; //Sword_Breaker
 			case 1225: callsub L_Socket,1,2; //Mail_Breaker
@@ -114,7 +114,7 @@ malangdo,213,167,4	script	Mayomayo#mal	4_CAT_3COLOR,{
 			case 13062: callsub L_Socket,4,2; //Ancient_Dagger
 		}
 		break;
-	case 16: // Katars
+	case W_KATAR: // Katars
 		switch(@mal_equip_id) {
 			case 1271: callsub L_Socket,1,2; //Blood_Tears
 			case 1263: callsub L_Socket,1,2; //Unholy_Touch
@@ -128,13 +128,13 @@ malangdo,213,167,4	script	Mayomayo#mal	4_CAT_3COLOR,{
 			case 1266: callsub L_Socket,4,2; //Infiltrator_
 		}
 		break;
-	case 6: // 1-H Axes
+	case W_1HAXE: // 1-H Axes
 		switch(@mal_equip_id) {
 			case 1305: callsub L_Socket,1,2; //Cleaver
 			case 1311: callsub L_Socket,1,2; //Vecer_Axe
 		}
 		break;
-	case 7: // 2-H Axes
+	case W_2HAXE: // 2-H Axes
 		switch(@mal_equip_id) {
 			case 1364: callsub L_Socket,1,2; //Great_Axe
 			case 1365: callsub L_Socket,1,2; //Sabbath
@@ -151,7 +151,7 @@ malangdo,213,167,4	script	Mayomayo#mal	4_CAT_3COLOR,{
 			case 1371: callsub L_Socket,4,2; //Doom_Slayer_
 		}
 		break;
-	case 2: // 1-H Swords
+	case W_1HSWORD: // 1-H Swords
 		switch(@mal_equip_id) {
 			case 1131: callsub L_Socket,1,2; //Ice_Falchon
 			case 1133: callsub L_Socket,1,2; //Fire_Brand
@@ -170,7 +170,7 @@ malangdo,213,167,4	script	Mayomayo#mal	4_CAT_3COLOR,{
 			case 1132: callsub L_Socket,4,2; //Edge
 		}
 		break;
-	case 3: // 2-H Swords
+	case W_2HSWORD: // 2-H Swords
 		switch(@mal_equip_id) {
 			case 1164: callsub L_Socket,1,2; //Muramasa
 			case 1166: callsub L_Socket,1,2; //Dragon_Slayer
@@ -194,7 +194,7 @@ malangdo,213,167,4	script	Mayomayo#mal	4_CAT_3COLOR,{
 			case 1186: callsub L_Socket,4,2; //Death_Guidance
 		}
 		break;
-	case 4: // 1-H Spears
+	case W_1HSPEAR: // 1-H Spears
 		switch(@mal_equip_id) {
 			case 1420: callsub L_Socket,1,2; //Long_Horn
 			case 1413: callsub L_Socket,1,2; //Gungnir
@@ -207,7 +207,7 @@ malangdo,213,167,4	script	Mayomayo#mal	4_CAT_3COLOR,{
 			case 1422: callsub L_Socket,4,2; //Hunting_Spear
 		}
 		break;
-	case 5: // 2-H Spears
+	case W_2HSPEAR: // 2-H Spears
 		switch(@mal_equip_id) {
 			case 1466: callsub L_Socket,1,2; //Crescent_Scythe
 			case 1467: callsub L_Socket,1,2; //Bill_Guisarme
@@ -224,7 +224,7 @@ malangdo,213,167,4	script	Mayomayo#mal	4_CAT_3COLOR,{
 			case 1484: callsub L_Socket,2,2; //Cardo
 		}
 		break;
-	case 10: // Staves
+	case W_STAFF: // Staves
 		switch(@mal_equip_id) {
 			case 1616: callsub L_Socket,1,2; //Staff_Of_Wing
 			case 1629: callsub L_Socket,1,2; //Walking_Stick
@@ -236,7 +236,7 @@ malangdo,213,167,4	script	Mayomayo#mal	4_CAT_3COLOR,{
 			case 1473: callsub L_Socket,1,2; //Wizardy_Staff
 		}
 		break;
-	case 23: // New 2-H Staves
+	case W_2HSTAFF: // New 2-H Staves
 		switch(@mal_equip_id) {
 			case 2004: callsub L_Socket,1,2; //Kronos
 			case 2005: callsub L_Socket,1,2; //Dea_Staff
@@ -244,7 +244,7 @@ malangdo,213,167,4	script	Mayomayo#mal	4_CAT_3COLOR,{
 			case 2000: callsub L_Socket,4,2; //Destruction_Rod
 		}
 		break;
-	case 8: // Maces
+	case W_MACE: // Maces
 		switch(@mal_equip_id) {
 			case 1524: callsub L_Socket,1,2; //Golden_Mace
 			case 1525: callsub L_Socket,1,2; //Long_Mace
@@ -261,7 +261,7 @@ malangdo,213,167,4	script	Mayomayo#mal	4_CAT_3COLOR,{
 			case 1540: callsub L_Socket,4,2; //Grand_Cross_
 		}
 		break;
-	case 15: // Books
+	case W_BOOK: // Books
 		switch(@mal_equip_id) {
 			case 1557: callsub L_Socket,1,2; //Book_Of_The_Apocalypse
 			case 1558: callsub L_Socket,1,2; //Girls_Diary
@@ -271,7 +271,7 @@ malangdo,213,167,4	script	Mayomayo#mal	4_CAT_3COLOR,{
 			case 1565: callsub L_Socket,4,2; //Death_Note
 		}
 		break;
-	case 12: // Knuckles
+	case W_KNUCKLE: // Knuckles
 		switch(@mal_equip_id) {
 			case 1813: callsub L_Socket,1,2; //Kaiser_Knuckle
 			case 1814: callsub L_Socket,1,2; //Berserk
@@ -280,7 +280,7 @@ malangdo,213,167,4	script	Mayomayo#mal	4_CAT_3COLOR,{
 			case 1830: callsub L_Socket,2,2; //Sura_Rampage
 		}
 		break;
-	case 11: // Bows
+	case W_BOW: // Bows
 		switch(@mal_equip_id) {
 			case 1719: callsub L_Socket,1,2; //Bow_Of_Roguemaster
 			case 1722: callsub L_Socket,1,2; //Balistar
@@ -295,7 +295,7 @@ malangdo,213,167,4	script	Mayomayo#mal	4_CAT_3COLOR,{
 			case 1720: callsub L_Socket,2,2; //Bow_Of_Rudra
 		}
 		break;
-	case 13: // Musical Instruments
+	case W_MUSICAL: // Musical Instruments
 		switch(@mal_equip_id) {
 			case 1913: callsub L_Socket,1,2; //Electronic_Guitar
 			case 1918: callsub L_Socket,1,2; //Oriental_Lute
@@ -305,7 +305,7 @@ malangdo,213,167,4	script	Mayomayo#mal	4_CAT_3COLOR,{
 			case 1930: callsub L_Socket,2,2; //Green_Whistle
 		}
 		break;
-	case 14: // Whips
+	case W_WHIP: // Whips
 		switch(@mal_equip_id) {
 			case 1962: callsub L_Socket,1,2; //Lariat
 			case 1963: callsub L_Socket,1,2; //Rapture_Rose
@@ -320,6 +320,14 @@ malangdo,213,167,4	script	Mayomayo#mal	4_CAT_3COLOR,{
 			case 1984: callsub L_Socket,2,2; //Stem_Whip
 			case 1985: callsub L_Socket,4,2; //Rosebine
 		}
+		break;
+	case W_2HMACE:
+	case W_REVOLVER:
+	case W_RIFLE:
+	case W_GATLING:
+	case W_SHOTGUN:
+	case W_GRENADE:
+	case W_HUUMA:
 		break;
 	}
 	mes "[Mayomayo]";

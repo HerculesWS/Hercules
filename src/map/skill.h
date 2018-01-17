@@ -25,7 +25,7 @@
 #include "map/status.h" // enum sc_type
 #include "common/hercules.h"
 #include "common/db.h"
-#include "common/mmo.h" // MAX_SKILL, struct square
+#include "common/mmo.h" // MAX_SKILL_DB, struct square
 
 /**
  * Declarations
@@ -43,7 +43,6 @@ struct status_change_entry;
 /**
  * Defines
  **/
-#define MAX_SKILL_DB              MAX_SKILL
 #define MAX_SKILL_PRODUCE_DB      270
 #define MAX_PRODUCE_RESOURCE      10
 #define MAX_SKILL_ARROW_DB        140
@@ -77,6 +76,7 @@ struct status_change_entry;
 
 //Constants to identify the skill's inf value:
 enum e_skill_inf {
+	INF_NONE          = 0x00,
 	INF_ATTACK_SKILL  = 0x01,
 	INF_GROUND_SKILL  = 0x02,
 	INF_SELF_SKILL    = 0x04, // Skills casted on self where target is automatically chosen
@@ -89,6 +89,7 @@ enum e_skill_inf {
 //The NK value applies only to non INF_GROUND_SKILL skills
 //when determining skill castend function to invoke.
 enum e_skill_nk {
+	NK_NONE           = 0x00,
 	NK_NO_DAMAGE      = 0x01,
 	NK_SPLASH         = 0x02|0x04, // 0x4 = splash & split
 	NK_SPLASH_ONLY    = 0x02,
@@ -103,6 +104,7 @@ enum e_skill_nk {
 //A skill with 3 would be no damage + splash: area of effect.
 //Constants to identify a skill's inf2 value.
 enum e_skill_inf2 {
+	INF2_NONE              = 0x00000,
 	INF2_QUEST_SKILL       = 0x00001,
 	INF2_NPC_SKILL         = 0x00002, // NPC skills are those that players can't have in their skill tree.
 	INF2_WEDDING_SKILL     = 0x00004,
@@ -120,6 +122,8 @@ enum e_skill_inf2 {
 	INF2_CHORUS_SKILL      = 0x04000, // Chorus skill
 	INF2_FREE_CAST_NORMAL  = 0x08000,
 	INF2_FREE_CAST_REDUCED = 0x10000,
+	INF2_SHOW_SKILL_SCALE  = 0x20000,
+	INF2_ALLOW_REPRODUCE   = 0x40000,
 };
 
 
@@ -132,6 +136,7 @@ enum e_skill_display {
 };
 
 enum {
+	UF_NONE             = 0x0000,
 	UF_DEFNOTENEMY      = 0x0001, // If 'defunit_not_enemy' is set, the target is changed to 'friend'
 	UF_NOREITERATION    = 0x0002, // Spell cannot be stacked
 	UF_NOFOOTSET        = 0x0004, // Spell cannot be cast near/on targets
@@ -158,7 +163,7 @@ enum wl_spheres {
 };
 
 enum {
-	ST_NONE,
+	ST_NONE = 0,
 	ST_HIDING,
 	ST_CLOAKING,
 	ST_HIDDEN,
@@ -1893,7 +1898,6 @@ BEGIN_ZEROED_BLOCK; // This block will be zeroed in skill_defaults() as well as 
 	struct s_skill_improvise_db improvise_db[MAX_SKILL_IMPROVISE_DB];
 	struct s_skill_changematerial_db changematerial_db[MAX_SKILL_PRODUCE_DB];
 	struct s_skill_spellbook_db spellbook_db[MAX_SKILL_SPELLBOOK_DB];
-	bool reproduce_db[MAX_SKILL_DB];
 END_ZEROED_BLOCK;
 	struct s_skill_unit_layout unit_layout[MAX_SKILL_UNIT_LAYOUT];
 };
@@ -1930,54 +1934,56 @@ struct skill_interface {
 	int unit_temp[20];  // temporary storage for tracking skill unit skill ids as players move in/out of them
 	int unit_group_newid;
 	/* accesssors */
-	int (*get_index) ( uint16 skill_id );
-	int (*get_type) ( uint16 skill_id );
-	int (*get_hit) ( uint16 skill_id );
-	int (*get_inf) ( uint16 skill_id );
-	int (*get_ele) ( uint16 skill_id, uint16 skill_lv );
-	int (*get_nk) ( uint16 skill_id );
-	int (*get_max) ( uint16 skill_id );
-	int (*get_range) ( uint16 skill_id, uint16 skill_lv );
-	int (*get_range2) (struct block_list *bl, uint16 skill_id, uint16 skill_lv);
-	int (*get_splash) ( uint16 skill_id, uint16 skill_lv );
-	int (*get_hp) ( uint16 skill_id, uint16 skill_lv );
-	int (*get_mhp) ( uint16 skill_id, uint16 skill_lv );
-	int (*get_sp) ( uint16 skill_id, uint16 skill_lv );
-	int (*get_state) (uint16 skill_id);
-	int (*get_spiritball) (uint16 skill_id, uint16 skill_lv);
-	int (*get_zeny) ( uint16 skill_id, uint16 skill_lv );
-	int (*get_num) ( uint16 skill_id, uint16 skill_lv );
-	int (*get_cast) ( uint16 skill_id, uint16 skill_lv );
-	int (*get_delay) ( uint16 skill_id, uint16 skill_lv );
-	int (*get_walkdelay) ( uint16 skill_id, uint16 skill_lv );
-	int (*get_time) ( uint16 skill_id, uint16 skill_lv );
-	int (*get_time2) ( uint16 skill_id, uint16 skill_lv );
-	int (*get_castnodex) ( uint16 skill_id, uint16 skill_lv );
-	int (*get_delaynodex) ( uint16 skill_id ,uint16 skill_lv );
-	int (*get_castdef) ( uint16 skill_id );
-	int (*get_weapontype) ( uint16 skill_id );
-	int (*get_ammotype) ( uint16 skill_id );
-	int (*get_ammo_qty) ( uint16 skill_id, uint16 skill_lv );
-	int (*get_unit_id) (uint16 skill_id,int flag);
-	int (*get_inf2) ( uint16 skill_id );
-	int (*get_castcancel) ( uint16 skill_id );
-	int (*get_maxcount) ( uint16 skill_id, uint16 skill_lv );
-	int (*get_blewcount) ( uint16 skill_id, uint16 skill_lv );
-	int (*get_unit_flag) ( uint16 skill_id );
-	int (*get_unit_target) ( uint16 skill_id );
-	int (*get_unit_interval) ( uint16 skill_id );
-	int (*get_unit_bl_target) ( uint16 skill_id );
-	int (*get_unit_layout_type) ( uint16 skill_id ,uint16 skill_lv );
-	int (*get_unit_range) ( uint16 skill_id, uint16 skill_lv );
-	int (*get_cooldown) ( uint16 skill_id, uint16 skill_lv );
-	int (*tree_get_max) (uint16 skill_id, int class);
-	const char *(*get_name) ( uint16 skill_id );
-	const char *(*get_desc) ( uint16 skill_id );
-	/* check */
-	void (*chk) (uint16* skill_id);
+	int (*get_index) (int skill_id);
+	int (*get_type) (int skill_id);
+	int (*get_hit) (int skill_id);
+	int (*get_inf) (int skill_id);
+	int (*get_ele) (int skill_id, int skill_lv);
+	int (*get_nk) (int skill_id);
+	int (*get_max) (int skill_id);
+	int (*get_range) (int skill_id, int skill_lv);
+	int (*get_range2) (struct block_list *bl, int skill_id, int skill_lv);
+	int (*get_splash) (int skill_id, int skill_lv);
+	int (*get_hp) (int skill_id, int skill_lv);
+	int (*get_mhp) (int skill_id, int skill_lv);
+	int (*get_sp) (int skill_id, int skill_lv);
+	int (*get_hp_rate) (int skill_id, int skill_lv);
+	int (*get_sp_rate) (int skill_id, int skill_lv);
+	int (*get_state) (int skill_id);
+	int (*get_spiritball) (int skill_id, int skill_lv);
+	int (*get_itemid) (int skill_id, int item_idx);
+	int (*get_itemqty) (int skill_id, int item_idx);
+	int (*get_zeny) (int skill_id, int skill_lv);
+	int (*get_num) (int skill_id, int skill_lv);
+	int (*get_cast) (int skill_id, int skill_lv);
+	int (*get_delay) (int skill_id, int skill_lv);
+	int (*get_walkdelay) (int skill_id, int skill_lv);
+	int (*get_time) (int skill_id, int skill_lv);
+	int (*get_time2) (int skill_id, int skill_lv);
+	int (*get_castnodex) (int skill_id, int skill_lv);
+	int (*get_delaynodex) (int skill_id, int skill_lv);
+	int (*get_castdef) (int skill_id);
+	int (*get_weapontype) (int skill_id);
+	int (*get_ammotype) (int skill_id);
+	int (*get_ammo_qty) (int skill_id, int skill_lv);
+	int (*get_unit_id) (int skill_id, int flag);
+	int (*get_inf2) (int skill_id);
+	int (*get_castcancel) (int skill_id);
+	int (*get_maxcount) (int skill_id, int skill_lv);
+	int (*get_blewcount) (int skill_id, int skill_lv);
+	int (*get_unit_flag) (int skill_id);
+	int (*get_unit_target) (int skill_id);
+	int (*get_unit_interval) (int skill_id);
+	int (*get_unit_bl_target) (int skill_id);
+	int (*get_unit_layout_type) (int skill_id, int skill_lv);
+	int (*get_unit_range) (int skill_id, int skill_lv);
+	int (*get_cooldown) (int skill_id, int skill_lv);
+	int (*tree_get_max) (int skill_id, int class);
+	const char *(*get_name) (int skill_id);
+	const char *(*get_desc) (int skill_id);
 	/* whether its CAST_GROUND, CAST_DAMAGE or CAST_NODAMAGE */
-	int (*get_casttype) (uint16 skill_id);
-	int (*get_casttype2) (uint16 index);
+	int (*get_casttype) (int skill_id);
+	int (*get_casttype2) (int index);
 	bool (*is_combo) (int skill_id);
 	int (*name2id) (const char* name);
 	int (*isammotype) (struct map_session_data *sd, int skill_id);
@@ -2071,7 +2077,7 @@ struct skill_interface {
 	int (*check_condition_mob_master_sub) (struct block_list *bl, va_list ap);
 	void (*brandishspear_first) (struct square *tc, uint8 dir, int16 x, int16 y);
 	void (*brandishspear_dir) (struct square* tc, uint8 dir, int are);
-	int (*get_fixed_cast) ( uint16 skill_id ,uint16 skill_lv );
+	int (*get_fixed_cast) (int skill_id, int skill_lv);
 	int (*sit_count) (struct block_list *bl, va_list ap);
 	int (*sit_in) (struct block_list *bl, va_list ap);
 	int (*sit_out) (struct block_list *bl, va_list ap);
@@ -2115,7 +2121,6 @@ struct skill_interface {
 	bool (*parse_row_abradb) (char* split[], int columns, int current);
 	bool (*parse_row_spellbookdb) (char* split[], int columns, int current);
 	bool (*parse_row_magicmushroomdb) (char* split[], int column, int current);
-	bool (*parse_row_reproducedb) (char* split[], int column, int current);
 	bool (*parse_row_improvisedb) (char* split[], int columns, int current);
 	bool (*parse_row_changematerialdb) (char* split[], int columns, int current);
 	/* save new unit skill */

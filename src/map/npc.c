@@ -114,6 +114,8 @@ bool npc_db_checkid(int id)
 		return true;
 	if (id >= MAX_NPC_CLASS2_START && id < MAX_NPC_CLASS2_END) // Second range
 		return true;
+	if (pc->db_checkid(id))
+		return true;
 	// Anything else is invalid
 	return false;
 }
@@ -1558,9 +1560,9 @@ void npc_market_fromsql(void)
 		return;
 	}
 
-	SQL->StmtBindColumn(stmt, 0, SQLDT_STRING, &name[0], sizeof(name), NULL, NULL);
-	SQL->StmtBindColumn(stmt, 1, SQLDT_INT, &itemid, 0, NULL, NULL);
-	SQL->StmtBindColumn(stmt, 2, SQLDT_INT, &amount, 0, NULL, NULL);
+	SQL->StmtBindColumn(stmt, 0, SQLDT_STRING, &name,    sizeof name,   NULL, NULL);
+	SQL->StmtBindColumn(stmt, 1, SQLDT_INT,    &itemid,  sizeof itemid, NULL, NULL);
+	SQL->StmtBindColumn(stmt, 2, SQLDT_INT,    &amount,  sizeof amount, NULL, NULL);
 
 	while ( SQL_SUCCESS == SQL->StmtNextRow(stmt) ) {
 		struct npc_data *nd = NULL;
@@ -2706,6 +2708,7 @@ struct npc_data *npc_create_npc(enum npc_subtype subtype, int m, int x, int y, u
 	nd->area_size = AREA_SIZE + 1;
 	nd->class_ = class_;
 	nd->speed = 200;
+	nd->vd = npc_viewdb[0]; // Copy INVISIBLE_CLASS view data. Actual view data is set by npc->add_to_location() later.
 
 	return nd;
 }
@@ -3656,6 +3659,18 @@ void npc_setclass(struct npc_data* nd, short class_) {
 		clif->spawn(&nd->bl);// fade in
 }
 
+void npc_refresh(struct npc_data* nd)
+{
+	nullpo_retv(nd);
+
+	if (map->list[nd->bl.m].users) {
+		// using here CLR_TRICKDEAD because other flags show effects.
+		// probably need use other flag or other way to refresh npc.
+		clif->clearunit_area(&nd->bl, CLR_TRICKDEAD); // fade out
+		clif->spawn(&nd->bl); // fade in
+	}
+}
+
 // @commands (script based)
 int npc_do_atcmd_event(struct map_session_data* sd, const char* command, const char* message, const char* eventname)
 {
@@ -3843,7 +3858,12 @@ const char *npc_parse_mob(const char *w1, const char *w2, const char *w3, const 
 
 	memset(&mobspawn, 0, sizeof(struct spawn_data));
 
-	mobspawn.state.boss = (strcmp(w2,"boss_monster") == 0 ? 1 : 0);
+	if (strcmp(w2, "boss_monster") == 0)
+		mobspawn.state.boss = BTYPE_MVP;
+	else if (strcmp(w2, "miniboss_monster") == 0)
+		mobspawn.state.boss = BTYPE_BOSS;
+	else
+		mobspawn.state.boss = BTYPE_NONE;
 
 	// w1=<map name>,<x>,<y>,<xs>,<ys>
 	// w3=<mob name>{,<mob level>}
@@ -4662,7 +4682,7 @@ int npc_parsesrcfile(const char* filepath, bool runOnInit) {
 		{
 			p = npc->parse_duplicate(w1,w2,w3,w4, p, buffer, filepath, (runOnInit?NPO_ONINIT:NPO_NONE), &success);
 		}
-		else if( (strcmp(w2,"monster") == 0 || strcmp(w2,"boss_monster") == 0) )
+		else if (strcmp(w2,"monster") == 0 || strcmp(w2,"boss_monster") == 0 || strcmp(w2,"miniboss_monster") == 0)
 		{
 			p = npc->parse_mob(w1, w2, w3, w4, p, buffer, filepath, &success);
 		}
@@ -4994,7 +5014,6 @@ int do_init_npc(bool minimal) {
 		npc_viewdb[i].class = i;
 	for( i = MAX_NPC_CLASS2_START; i < MAX_NPC_CLASS2_END; i++ )
 		npc_viewdb2[i - MAX_NPC_CLASS2_START].class = i;
-
 	npc->ev_db = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, EVENT_NAME_LENGTH);
 	npc->ev_label_db = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, NAME_LENGTH);
 	npc->name_db = strdb_alloc(DB_OPT_BASE, NAME_LENGTH);
@@ -5189,4 +5208,5 @@ void npc_defaults(void) {
 	npc->market_delfromsql = npc_market_delfromsql;
 	npc->market_delfromsql_sub = npc_market_delfromsql_sub;
 	npc->db_checkid = npc_db_checkid;
+	npc->refresh = npc_refresh;
 }

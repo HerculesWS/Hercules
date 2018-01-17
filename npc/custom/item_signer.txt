@@ -78,7 +78,7 @@ prt_in,24,61,7	script	Perchik	1_M_01,{
 		emotion e_hmm;
 		close;
 	}
-	if (getiteminfo(.@id,10)) {
+	if (getiteminfo(.@id, ITEMINFO_SLOTS) > 0) {
 		mes "Sorry, I don't sign slotted items.";
 		emotion e_sry;
 		close;

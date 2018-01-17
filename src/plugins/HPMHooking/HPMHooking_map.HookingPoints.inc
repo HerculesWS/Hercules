@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2017  Hercules Dev Team
+ * Copyright (C) 2013-2018  Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -427,13 +427,14 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->mission_info, HP_clif_mission_info) },
 	{ HP_POP(clif->feel_hate_reset, HP_clif_feel_hate_reset) },
 	{ HP_POP(clif->partytickack, HP_clif_partytickack) },
-	{ HP_POP(clif->equiptickack, HP_clif_equiptickack) },
+	{ HP_POP(clif->zc_config, HP_clif_zc_config) },
 	{ HP_POP(clif->viewequip_ack, HP_clif_viewequip_ack) },
 	{ HP_POP(clif->equpcheckbox, HP_clif_equpcheckbox) },
 	{ HP_POP(clif->displayexp, HP_clif_displayexp) },
 	{ HP_POP(clif->font, HP_clif_font) },
 	{ HP_POP(clif->progressbar, HP_clif_progressbar) },
 	{ HP_POP(clif->progressbar_abort, HP_clif_progressbar_abort) },
+	{ HP_POP(clif->progressbar_unit, HP_clif_progressbar_unit) },
 	{ HP_POP(clif->showdigit, HP_clif_showdigit) },
 	{ HP_POP(clif->elementalconverter_list, HP_clif_elementalconverter_list) },
 	{ HP_POP(clif->spellbook_list, HP_clif_spellbook_list) },
@@ -906,7 +907,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->pAdopt_request, HP_clif_pAdopt_request) },
 	{ HP_POP(clif->pAdopt_reply, HP_clif_pAdopt_reply) },
 	{ HP_POP(clif->pViewPlayerEquip, HP_clif_pViewPlayerEquip) },
-	{ HP_POP(clif->pEquipTick, HP_clif_pEquipTick) },
+	{ HP_POP(clif->p_cz_config, HP_clif_p_cz_config) },
 	{ HP_POP(clif->pquestStateAck, HP_clif_pquestStateAck) },
 	{ HP_POP(clif->pmercenary_action, HP_clif_pmercenary_action) },
 	{ HP_POP(clif->pBattleChat, HP_clif_pBattleChat) },
@@ -987,6 +988,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->pRodexRequestItems, HP_clif_pRodexRequestItems) },
 	{ HP_POP(clif->rodex_request_items, HP_clif_rodex_request_items) },
 	{ HP_POP(clif->rodex_icon, HP_clif_rodex_icon) },
+	{ HP_POP(clif->skill_scale, HP_clif_skill_scale) },
 /* cmdline_interface */
 	{ HP_POP(cmdline->init, HP_cmdline_init) },
 	{ HP_POP(cmdline->final, HP_cmdline_final) },
@@ -2009,6 +2011,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(npc->market_delfromsql, HP_npc_market_delfromsql) },
 	{ HP_POP(npc->market_delfromsql_sub, HP_npc_market_delfromsql_sub) },
 	{ HP_POP(npc->db_checkid, HP_npc_db_checkid) },
+	{ HP_POP(npc->refresh, HP_npc_refresh) },
 	{ HP_POP(npc->secure_timeout_timer, HP_npc_secure_timeout_timer) },
 /* nullpo_interface */
 	{ HP_POP(nullpo->assert_report, HP_nullpo_assert_report) },
@@ -2614,8 +2617,12 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(skill->get_hp, HP_skill_get_hp) },
 	{ HP_POP(skill->get_mhp, HP_skill_get_mhp) },
 	{ HP_POP(skill->get_sp, HP_skill_get_sp) },
+	{ HP_POP(skill->get_hp_rate, HP_skill_get_hp_rate) },
+	{ HP_POP(skill->get_sp_rate, HP_skill_get_sp_rate) },
 	{ HP_POP(skill->get_state, HP_skill_get_state) },
 	{ HP_POP(skill->get_spiritball, HP_skill_get_spiritball) },
+	{ HP_POP(skill->get_itemid, HP_skill_get_itemid) },
+	{ HP_POP(skill->get_itemqty, HP_skill_get_itemqty) },
 	{ HP_POP(skill->get_zeny, HP_skill_get_zeny) },
 	{ HP_POP(skill->get_num, HP_skill_get_num) },
 	{ HP_POP(skill->get_cast, HP_skill_get_cast) },
@@ -2644,7 +2651,6 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(skill->tree_get_max, HP_skill_tree_get_max) },
 	{ HP_POP(skill->get_name, HP_skill_get_name) },
 	{ HP_POP(skill->get_desc, HP_skill_get_desc) },
-	{ HP_POP(skill->chk, HP_skill_chk) },
 	{ HP_POP(skill->get_casttype, HP_skill_get_casttype) },
 	{ HP_POP(skill->get_casttype2, HP_skill_get_casttype2) },
 	{ HP_POP(skill->is_combo, HP_skill_is_combo) },
@@ -2784,7 +2790,6 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(skill->parse_row_abradb, HP_skill_parse_row_abradb) },
 	{ HP_POP(skill->parse_row_spellbookdb, HP_skill_parse_row_spellbookdb) },
 	{ HP_POP(skill->parse_row_magicmushroomdb, HP_skill_parse_row_magicmushroomdb) },
-	{ HP_POP(skill->parse_row_reproducedb, HP_skill_parse_row_reproducedb) },
 	{ HP_POP(skill->parse_row_improvisedb, HP_skill_parse_row_improvisedb) },
 	{ HP_POP(skill->parse_row_changematerialdb, HP_skill_parse_row_changematerialdb) },
 	{ HP_POP(skill->usave_add, HP_skill_usave_add) },

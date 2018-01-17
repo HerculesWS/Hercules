@@ -69,6 +69,12 @@ struct hplugin_data_store;
 // Disable this to make monsters not do any path search when looking for a target (old behavior).
 #define ACTIVEPATHSEARCH
 
+enum e_bosstype {
+	BTYPE_NONE = 0,
+	BTYPE_BOSS = 1,
+	BTYPE_MVP = 2,
+};
+
 //Mob skill states.
 enum MobSkillState {
 	MSS_ANY = -1,
@@ -181,10 +187,10 @@ struct mob_data {
 		unsigned int spotted: 1;
 		unsigned int npc_killmonster: 1; //for new killmonster behavior
 		unsigned int rebirth: 1; // NPC_Rebirth used
-		unsigned int boss : 1;
 		enum MobSkillState skillstate;
 		unsigned char steal_flag; //number of steal tries (to prevent steal exploit on mobs with few items) [Lupus]
 		unsigned char attacked_count; //For rude attacked.
+		uint8 boss;
 		int provoke_flag; // Celest
 	} state;
 	struct guardian_data* guardian_data;
@@ -400,6 +406,7 @@ enum mob_id {
 // The data structures for storing delayed item drops
 struct item_drop {
 	struct item item_data;
+	bool showdropeffect;
 	struct item_drop* next;
 };
 struct item_drop_list {

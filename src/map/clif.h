@@ -563,7 +563,15 @@ enum clif_unittype {
 	CLUT_MERCNARY  = 0x9,
 	CLUT_ELEMENTAL = 0xa,
 };
-
+/**
+* Receive configuration types
+**/
+enum CZ_CONFIG {
+	CZ_CONFIG_OPEN_EQUIPMENT_WINDOW  = 0,
+	// Unknown                       = 1,
+	CZ_CONFIG_PET_AUTOFEEDING        = 2,
+	CZ_CONFIG_HOMUNCULUS_AUTOFEEDING = 3,
+};
 /**
  * Structures
  **/
@@ -781,13 +789,14 @@ struct clif_interface {
 	void (*mission_info) (struct map_session_data *sd, int mob_id, unsigned char progress);
 	void (*feel_hate_reset) (struct map_session_data *sd);
 	void (*partytickack) (struct map_session_data* sd, bool flag);
-	void (*equiptickack) (struct map_session_data* sd, int flag);
+	void (*zc_config) (struct map_session_data *sd, int type, int flag);
 	void (*viewequip_ack) (struct map_session_data* sd, struct map_session_data* tsd);
 	void (*equpcheckbox) (struct map_session_data* sd);
 	void (*displayexp) (struct map_session_data *sd, uint64 exp, char type, bool is_quest);
 	void (*font) (struct map_session_data *sd);
 	void (*progressbar) (struct map_session_data * sd, unsigned int color, unsigned int second);
 	void (*progressbar_abort) (struct map_session_data * sd);
+	void (*progressbar_unit) (struct block_list *bl, uint32 color, uint32 time);
 	void (*showdigit) (struct map_session_data* sd, unsigned char type, int value);
 	int (*elementalconverter_list) (struct map_session_data *sd);
 	int (*spellbook_list) (struct map_session_data *sd);
@@ -1302,7 +1311,7 @@ struct clif_interface {
 	void (*pAdopt_request) (int fd, struct map_session_data *sd);
 	void (*pAdopt_reply) (int fd, struct map_session_data *sd);
 	void (*pViewPlayerEquip) (int fd, struct map_session_data* sd);
-	void (*pEquipTick) (int fd, struct map_session_data* sd);
+	void (*p_cz_config) (int fd, struct map_session_data *sd);
 	void (*pquestStateAck) (int fd, struct map_session_data * sd);
 	void (*pmercenary_action) (int fd, struct map_session_data* sd);
 	void (*pBattleChat) (int fd, struct map_session_data* sd);
@@ -1395,6 +1404,7 @@ struct clif_interface {
 	void (*pRodexRequestItems) (int fd, struct map_session_data *sd);
 	void (*rodex_request_items) (struct map_session_data *sd, int8 opentype, int64 mail_id, int8 result);
 	void (*rodex_icon) (int fd, bool show);
+	void (*skill_scale) (struct block_list *bl, int src_id, int x, int y, uint16 skill_id, uint16 skill_lv, int casttime);
 };
 
 #ifdef HERCULES_CORE

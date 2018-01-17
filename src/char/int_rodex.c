@@ -43,10 +43,9 @@ struct inter_rodex_interface *inter_rodex;
 // Loads new mails of this char_id/account_id
 static int inter_rodex_fromsql(int char_id, int account_id, int8 opentype, int64 mail_id, struct rodex_maillist *mails)
 {
-	int i, count = 0;
+	int count = 0;
 	struct rodex_message msg = { 0 };
 	struct SqlStmt *stmt;
-	struct SqlStmt *stmt_items;
 
 	nullpo_retr(-1, mails);
 
@@ -108,112 +107,128 @@ static int inter_rodex_fromsql(int char_id, int account_id, int8 opentype, int64
 	}
 
 	if (SQL_ERROR == SQL->StmtExecute(stmt)
-		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 0, SQLDT_INT64, &msg.id, 0, NULL, NULL)
-		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 1, SQLDT_STRING, &msg.sender_name, sizeof(msg.sender_name), NULL, NULL)
-		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 2, SQLDT_INT, &msg.sender_id, 0, NULL, NULL)
-		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 3, SQLDT_STRING, &msg.receiver_name, sizeof(msg.receiver_name), NULL, NULL)
-		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 4, SQLDT_INT, &msg.receiver_id, 0, NULL, NULL)
-		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 5, SQLDT_INT, &msg.receiver_accountid, 0, NULL, NULL)
-		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 6, SQLDT_STRING, &msg.title, sizeof(msg.title), NULL, NULL)
-		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 7, SQLDT_STRING, &msg.body, sizeof(msg.body), NULL, NULL)
-		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 8, SQLDT_INT, &msg.zeny, 0, NULL, NULL)
-		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 9, SQLDT_UINT8, &msg.type, 0, NULL, NULL)
-		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 10, SQLDT_INT8, &msg.is_read, 0, NULL, NULL)
-		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 11, SQLDT_INT, &msg.send_date, 0, NULL, NULL)
-		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 12, SQLDT_INT, &msg.expire_date, 0, NULL, NULL)
-		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 13, SQLDT_INT, &msg.weight, 0, NULL, NULL)
-		) {
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 0,  SQLDT_INT64,  &msg.id,                 sizeof msg.id,                 NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 1,  SQLDT_STRING, &msg.sender_name,        sizeof msg.sender_name,        NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 2,  SQLDT_INT,    &msg.sender_id,          sizeof msg.sender_id,          NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 3,  SQLDT_STRING, &msg.receiver_name,      sizeof msg.receiver_name,      NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 4,  SQLDT_INT,    &msg.receiver_id,        sizeof msg.receiver_id,        NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 5,  SQLDT_INT,    &msg.receiver_accountid, sizeof msg.receiver_accountid, NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 6,  SQLDT_STRING, &msg.title,              sizeof msg.title,              NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 7,  SQLDT_STRING, &msg.body,               sizeof msg.body,               NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 8,  SQLDT_INT64,  &msg.zeny,               sizeof msg.zeny,               NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 9,  SQLDT_UINT8,  &msg.type,               sizeof msg.type,               NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 10, SQLDT_BOOL,   &msg.is_read,            sizeof msg.is_read,            NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 11, SQLDT_INT,    &msg.send_date,          sizeof msg.send_date,          NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 12, SQLDT_INT,    &msg.expire_date,        sizeof msg.expire_date,        NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 13, SQLDT_INT,    &msg.weight,             sizeof msg.weight,             NULL, NULL)
+	) {
 		SqlStmt_ShowDebug(stmt);
 		SQL->StmtFree(stmt);
 		return -1;
 	}
 
-	stmt_items = SQL->StmtMalloc(inter->sql_handle);
-	if (stmt_items == NULL) {
-		SQL->StmtFreeResult(stmt);
-		SQL->StmtFree(stmt);
-		return -1;
-	}
-
-	// Read mails
-	while (SQL_SUCCESS == SQL->StmtNextRow(stmt)) {
+	{
 		struct item it = { 0 };
+		StringBuf buf;
+		struct SqlStmt *stmt_items = SQL->StmtMalloc(inter->sql_handle);
+		int i;
 
-		if (msg.type & MAIL_TYPE_ITEM) {
-			if (SQL_ERROR == SQL->StmtPrepare(stmt_items, "SELECT `nameid`, `amount`, `equip`, `identify`,"
-				"`refine`, `attribute`, `card0`, `card1`, `card2`, `card3`, `opt_idx0`, `opt_val0`,"
-				"`opt_idx1`, `opt_val1`, `opt_idx2`, `opt_val2`, `opt_idx3`, `opt_val3`, `opt_idx4`, `opt_val4`,"
-				"`expire_time`, `bound`, `unique_id`"
-				"FROM `%s` WHERE mail_id = '%"PRId64"' ORDER BY `mail_id` ASC", rodex_item_db, msg.id)
-				|| SQL_ERROR == SQL->StmtExecute(stmt_items)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 0, SQLDT_INT, &it.nameid, 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 1, SQLDT_INT, &it.amount, 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 2, SQLDT_UINT, &it.equip, 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 3, SQLDT_INT8, &it.identify, 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 4, SQLDT_INT8, &it.refine, 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 5, SQLDT_INT8, &it.attribute, 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 6, SQLDT_INT16, &it.card[0], 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 7, SQLDT_INT16, &it.card[1], 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 8, SQLDT_INT16, &it.card[2], 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 9, SQLDT_INT16, &it.card[3], 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 10, SQLDT_INT16, &it.option[0].index, 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 11, SQLDT_INT16, &it.option[0].value, 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 12, SQLDT_INT16, &it.option[1].index, 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 13, SQLDT_INT16, &it.option[1].value, 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 14, SQLDT_INT16, &it.option[2].index, 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 15, SQLDT_INT16, &it.option[2].value, 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 16, SQLDT_INT16, &it.option[3].index, 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 17, SQLDT_INT16, &it.option[3].value, 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 18, SQLDT_INT16, &it.option[4].index, 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 19, SQLDT_INT16, &it.option[4].value, 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 20, SQLDT_INT, &it.expire_time, 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 21, SQLDT_UINT8, &it.bound, 0, NULL, NULL)
-				|| SQL_ERROR == SQL->StmtBindColumn(stmt_items, 22, SQLDT_UINT64, &it.unique_id, 0, NULL, NULL)) {
-				SqlStmt_ShowDebug(stmt_items);
+		if (stmt_items == NULL) {
+			SQL->StmtFreeResult(stmt);
+			SQL->StmtFree(stmt);
+			return -1;
+		}
+
+		StrBuf->Init(&buf);
+
+		StrBuf->AppendStr(&buf, "SELECT `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `bound`, `unique_id`");
+		for (i = 0; i < MAX_SLOTS; i++) {
+			StrBuf->Printf(&buf, ", `card%d`", i);
+		}
+		for (i = 0; i < MAX_ITEM_OPTIONS; i++) {
+			StrBuf->Printf(&buf, ", `opt_idx%d`, `opt_val%d`", i, i);
+		}
+		StrBuf->Printf(&buf, "FROM `%s` WHERE mail_id = ? ORDER BY `mail_id` ASC", rodex_item_db);
+
+		if (SQL_ERROR == SQL->StmtPrepareStr(stmt_items, StrBuf->Value(&buf))
+		 || SQL_ERROR == SQL->StmtBindParam(stmt_items, 0, SQLDT_INT64, &msg.id, sizeof msg.id)
+		) {
+			SqlStmt_ShowDebug(stmt_items);
+		}
+
+		// Read mails
+		while (SQL_SUCCESS == SQL->StmtNextRow(stmt)) {
+
+			if (msg.type & MAIL_TYPE_ITEM) {
+				if (SQL_ERROR == SQL->StmtExecute(stmt_items)
+				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 0,  SQLDT_SHORT,  &it.nameid,          sizeof it.nameid,      NULL, NULL)
+				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 1,  SQLDT_SHORT,  &it.amount,          sizeof it.amount,      NULL, NULL)
+				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 2,  SQLDT_UINT,   &it.equip,           sizeof it.equip,       NULL, NULL)
+				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 3,  SQLDT_CHAR,   &it.identify,        sizeof it.identify,    NULL, NULL)
+				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 4,  SQLDT_CHAR,   &it.refine,          sizeof it.refine,      NULL, NULL)
+				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 5,  SQLDT_CHAR,   &it.attribute,       sizeof it.attribute,   NULL, NULL)
+				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 6,  SQLDT_UINT,   &it.expire_time,     sizeof it.expire_time, NULL, NULL)
+				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 7,  SQLDT_UCHAR,  &it.bound,           sizeof it.bound,       NULL, NULL)
+				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 8,  SQLDT_UINT64, &it.unique_id,       sizeof it.unique_id,   NULL, NULL)
+				) {
+					SqlStmt_ShowDebug(stmt_items);
+				}
+				for (i = 0; i < MAX_SLOTS; i++) {
+					if (SQL_ERROR == SQL->StmtBindColumn(stmt_items, 9 + i, SQLDT_SHORT, &it.card[i], sizeof it.card[i], NULL, NULL))
+						SqlStmt_ShowDebug(stmt_items);
+				}
+				for (i = 0; i < MAX_ITEM_OPTIONS; i++) {
+					if (SQL_ERROR == SQL->StmtBindColumn(stmt_items, 9 + MAX_SLOTS + i * 2, SQLDT_INT16, &it.option[i].index, sizeof it.option[i].index, NULL, NULL)
+					 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 10 + MAX_SLOTS + i * 2, SQLDT_INT16, &it.option[i].value, sizeof it.option[i].value, NULL, NULL)
+					) {
+						SqlStmt_ShowDebug(stmt_items);
+					}
+				}
+
+				for (i = 0; i < RODEX_MAX_ITEM && SQL_SUCCESS == SQL->StmtNextRow(stmt_items); ++i) {
+					msg.items[i].item = it;
+					msg.items_count++;
+				}
 			}
 
-			for (i = 0; i < RODEX_MAX_ITEM && SQL_SUCCESS == SQL->StmtNextRow(stmt_items); ++i) {
-				msg.items[i].item = it;
-				msg.items_count++;
+			if (msg.items_count == 0) {
+				msg.type &= ~MAIL_TYPE_ITEM;
 			}
-		}
 
-		if (msg.items_count == 0) {
-			msg.type &= ~MAIL_TYPE_ITEM;
-		}
-
-		if (msg.zeny == 0) {
-			msg.type &= ~MAIL_TYPE_ZENY;
-		}
+			if (msg.zeny == 0) {
+				msg.type &= ~MAIL_TYPE_ZENY;
+			}
 
 #if PACKETVER >= 20170419
-		if (opentype == RODEX_OPENTYPE_UNSET) {
-			if (msg.receiver_id != 0)
-				msg.opentype = RODEX_OPENTYPE_MAIL;
-			else
-				msg.opentype = RODEX_OPENTYPE_ACCOUNT;
-		} else {
-			msg.opentype = opentype;
-		}
+			if (opentype == RODEX_OPENTYPE_UNSET) {
+				if (msg.receiver_id != 0)
+					msg.opentype = RODEX_OPENTYPE_MAIL;
+				else
+					msg.opentype = RODEX_OPENTYPE_ACCOUNT;
+			} else {
+				msg.opentype = opentype;
+			}
 #else
-		msg.opentype = opentype;
+			msg.opentype = opentype;
 #endif
 #if PACKETVER < 20160601
-		// NPC Message Type isn't supported in old clients
-		msg.type &= ~MAIL_TYPE_NPC;
+			// NPC Message Type isn't supported in old clients
+			msg.type &= ~MAIL_TYPE_NPC;
 #endif
 
-		++count;
-		VECTOR_ENSURE(*mails, 1, 1);
-		VECTOR_PUSH(*mails, msg);
-		memset(&msg, 0, sizeof(struct rodex_message));
+			++count;
+			VECTOR_ENSURE(*mails, 1, 1);
+			VECTOR_PUSH(*mails, msg);
+			memset(&msg, 0, sizeof(struct rodex_message));
+
+			SQL->StmtFreeResult(stmt_items);
+		}
+		StrBuf->Destroy(&buf);
+		SQL->StmtFree(stmt_items);
 	}
 
 	SQL->StmtFreeResult(stmt);
-	SQL->StmtFreeResult(stmt_items);
-
 	SQL->StmtFree(stmt);
-	SQL->StmtFree(stmt_items);
 
 	ShowInfo("rodex load complete from DB - id: %d (total: %d)\n", char_id, count);
 	return count;
@@ -331,27 +346,28 @@ int64 inter_rodex_savemessage(struct rodex_message* msg)
  *------------------------------------------*/
 void mapif_rodex_sendinbox(int fd, int char_id, int8 opentype, int8 flag, int count, struct rodex_maillist *mails)
 {
-	int per_packet = (UINT16_MAX - 15) / sizeof(struct rodex_message);
+	int per_packet = (UINT16_MAX - 16) / sizeof(struct rodex_message);
 	int sent = 0;
+	bool is_first = true;
 	nullpo_retv(mails);
 	Assert_retv(char_id > 0);
 	Assert_retv(count >= 0);
 
 	do {
-		int i = 15, j, size, limit;
+		int i = 16, j, size, limit;
+		int to_send = count - sent;
 		bool is_last = true;
 
-		if (count <= per_packet) {
-			size = count * sizeof(struct rodex_message) + 15;
-			limit = count;
+		if (to_send <= per_packet) {
+			size = to_send * sizeof(struct rodex_message) + 16;
+			limit = to_send;
 			is_last = true;
 		} else {
-			int to_send = count - sent;
 			limit = min(to_send, per_packet);
 			if (limit != to_send) {
 				is_last = false;
 			}
-			size = limit * sizeof(struct rodex_message) + 15;
+			size = limit * sizeof(struct rodex_message) + 16;
 		}
 
 		WFIFOHEAD(fd, size);
@@ -361,11 +377,14 @@ void mapif_rodex_sendinbox(int fd, int char_id, int8 opentype, int8 flag, int co
 		WFIFOB(fd, 8) = opentype;
 		WFIFOB(fd, 9) = flag;
 		WFIFOB(fd, 10) = is_last;
-		WFIFOL(fd, 11) = count;
+		WFIFOB(fd, 11) = is_first;
+		WFIFOL(fd, 12) = limit;
 		for (j = 0; j < limit; ++j, ++sent, i += sizeof(struct rodex_message)) {
 			memcpy(WFIFOP(fd, i), &VECTOR_INDEX(*mails, sent), sizeof(struct rodex_message));
 		}
 		WFIFOSET(fd, size);
+
+		is_first = false;
 	} while (sent < count);
 }
 

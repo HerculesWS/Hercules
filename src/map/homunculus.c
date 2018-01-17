@@ -683,7 +683,12 @@ int homunculus_hunger_timer(int tid, int64 tick, int id, intptr_t data) {
 	} else if(hd->homunculus.hunger == 75) {
 		clif->emotion(&hd->bl, E_OK);
 	}
-
+	if (battle_config.feature_enable_homun_autofeed != 0) {
+		if (hd->homunculus.autofeed) {
+			if (hd->homunculus.hunger < 30)
+				homun->feed(sd, hd);
+		}
+	}
 	if(hd->homunculus.hunger < 0) {
 		hd->homunculus.hunger = 0;
 		// Delete the homunculus if intimacy <= 100

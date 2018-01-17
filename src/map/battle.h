@@ -54,6 +54,7 @@ struct status_data;
 
 enum {
 	// Flag of the final calculation
+	BF_NONE       = 0x0000,
 	BF_WEAPON     = 0x0001,
 	BF_MAGIC      = 0x0002,
 	BF_MISC       = 0x0004,
@@ -559,6 +560,8 @@ struct Battle_Config {
 
 	int feature_rodex;
 	int feature_rodex_use_accountmail;
+
+	int feature_enable_homun_autofeed;
 };
 
 /* criteria for battle_config.idletime_critera */

@@ -1560,7 +1560,7 @@ int pc_calc_skillpoint(struct map_session_data* sd) {
 
 	nullpo_ret(sd);
 
-	for (i = 1; i < MAX_SKILL; i++) {
+	for (i = 1; i < MAX_SKILL_DB; i++) {
 		int skill_lv = pc->checkskill2(sd,i);
 		if (skill_lv > 0) {
 			inf2 = skill->dbs->db[i].inf2;
@@ -1596,7 +1596,7 @@ int pc_calc_skilltree(struct map_session_data *sd)
 	}
 	classidx = pc->class2idx(class);
 
-	for( i = 0; i < MAX_SKILL; i++ ) {
+	for (i = 0; i < MAX_SKILL_DB; i++) {
 		if( sd->status.skill[i].flag != SKILL_FLAG_PLAGIARIZED && sd->status.skill[i].flag != SKILL_FLAG_PERM_GRANTED ) //Don't touch these
 			sd->status.skill[i].id = 0; //First clear skills.
 		/* permanent skills that must be re-checked */
@@ -1613,7 +1613,7 @@ int pc_calc_skilltree(struct map_session_data *sd)
 		}
 	}
 
-	for( i = 0; i < MAX_SKILL; i++ ) {
+	for (i = 0; i < MAX_SKILL_DB; i++) {
 		if( sd->status.skill[i].flag != SKILL_FLAG_PERMANENT && sd->status.skill[i].flag != SKILL_FLAG_PERM_GRANTED && sd->status.skill[i].flag != SKILL_FLAG_PLAGIARIZED )
 		{ // Restore original level of skills after deleting earned skills.
 			sd->status.skill[i].lv = (sd->status.skill[i].flag == SKILL_FLAG_TEMPORARY) ? 0 : sd->status.skill[i].flag - SKILL_FLAG_REPLACED_LV_0;
@@ -1622,18 +1622,25 @@ int pc_calc_skilltree(struct map_session_data *sd)
 
 		if( sd->sc.count && sd->sc.data[SC_SOULLINK] && sd->sc.data[SC_SOULLINK]->val2 == SL_BARDDANCER && skill->dbs->db[i].nameid >= DC_HUMMING && skill->dbs->db[i].nameid <= DC_SERVICEFORYOU )
 		{ //Enable Bard/Dancer spirit linked skills.
-			if( sd->status.sex )
-			{ //Link dancer skills to bard.
-				// i can be < 8?
-				if( sd->status.skill[i-8].lv < 10 )
+			if (sd->status.sex) {
+				// Link dancer skills to bard.
+				if (i < 8) {
+					Assert_report(i >= 8);
+					continue;
+				}
+				if (sd->status.skill[i-8].lv < 10)
 					continue;
 				sd->status.skill[i].id = skill->dbs->db[i].nameid;
 				sd->status.skill[i].lv = sd->status.skill[i-8].lv; // Set the level to the same as the linking skill
 				sd->status.skill[i].flag = SKILL_FLAG_TEMPORARY; // Tag it as a non-savable, non-uppable, bonus skill
-			} else { //Link bard skills to dancer.
-				if( sd->status.skill[i].lv < 10 )
+			} else {
+				// Link bard skills to dancer.
+				if (i < 8) {
+					Assert_report(i >= 8);
 					continue;
-				// i can be < 8?
+				}
+				if (sd->status.skill[i].lv < 10)
+					continue;
 				sd->status.skill[i-8].id = skill->dbs->db[i-8].nameid;
 				sd->status.skill[i-8].lv = sd->status.skill[i].lv; // Set the level to the same as the linking skill
 				sd->status.skill[i-8].flag = SKILL_FLAG_TEMPORARY; // Tag it as a non-savable, non-uppable, bonus skill
@@ -1642,7 +1649,7 @@ int pc_calc_skilltree(struct map_session_data *sd)
 	}
 
 	if( pc_has_permission(sd, PC_PERM_ALL_SKILL) ) {
-		for( i = 0; i < MAX_SKILL; i++ ) {
+		for (i = 0; i < MAX_SKILL_DB; i++) {
 			switch(skill->dbs->db[i].nameid) {
 				/**
 				 * Dummy skills must be added here otherwise they'll be displayed in the,
@@ -1836,7 +1843,7 @@ int pc_clean_skilltree(struct map_session_data *sd)
 {
 	int i;
 	nullpo_ret(sd);
-	for (i = 0; i < MAX_SKILL; i++){
+	for (i = 0; i < MAX_SKILL_DB; i++) {
 		if (sd->status.skill[i].flag == SKILL_FLAG_TEMPORARY || sd->status.skill[i].flag == SKILL_FLAG_PLAGIARIZED) {
 			sd->status.skill[i].id = 0;
 			sd->status.skill[i].lv = 0;
@@ -4143,7 +4150,7 @@ int pc_bonus5(struct map_session_data *sd,int type,int type2,int type3,int type4
  *------------------------------------------*/
 int pc_skill(struct map_session_data *sd, int id, int level, int flag)
 {
-	uint16 index = 0;
+	int index = 0;
 	nullpo_ret(sd);
 
 	if (!(index = skill->get_index(id))) {
@@ -4774,7 +4781,7 @@ int pc_dropitem(struct map_session_data *sd,int n,int amount)
 		return 0;
 	}
 
-	if (!map->addflooritem(&sd->bl, &sd->status.inventory[n], amount, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 2))
+	if (!map->addflooritem(&sd->bl, &sd->status.inventory[n], amount, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 2, false))
 		return 0;
 
 	pc->delitem(sd, n, amount, 1, DELITEM_NORMAL, LOG_TYPE_PICKDROP_PLAYER);
@@ -5869,7 +5876,7 @@ int pc_memo(struct map_session_data* sd, int pos) {
  * Return player sd skill_lv learned for given skill
  *------------------------------------------*/
 int pc_checkskill(struct map_session_data *sd,uint16 skill_id) {
-	uint16 index = 0;
+	int index = 0;
 	if(sd == NULL) return 0;
 	if( skill_id >= GD_SKILLBASE && skill_id < GD_MAX ) {
 		struct guild *g;
@@ -5888,8 +5895,9 @@ int pc_checkskill(struct map_session_data *sd,uint16 skill_id) {
 	return 0;
 }
 int pc_checkskill2(struct map_session_data *sd,uint16 index) {
-	if(sd == NULL) return 0;
-	if(index >= ARRAYLENGTH(sd->status.skill) ) {
+	if (sd == NULL)
+		return 0;
+	if (index >= MAX_SKILL_DB) {
 		ShowError("pc_checkskill: Invalid skill index %d (char_id=%d).\n", index, sd->status.char_id);
 		return 0;
 	}
@@ -7229,7 +7237,7 @@ int pc_statusup2(struct map_session_data* sd, int type, int val)
  * Skill point allocation
  *------------------------------------------*/
 int pc_skillup(struct map_session_data *sd,uint16 skill_id) {
-	uint16 index = 0;
+	int index = 0;
 	nullpo_ret(sd);
 
 	if( skill_id >= GD_SKILLBASE && skill_id < GD_SKILLBASE+MAX_GUILDSKILL ) {
@@ -7286,7 +7294,7 @@ int pc_allskillup(struct map_session_data *sd)
 
 	nullpo_ret(sd);
 
-	for(i=0;i<MAX_SKILL;i++){
+	for (i = 0; i < MAX_SKILL_DB; i++) {
 		if (sd->status.skill[i].flag != SKILL_FLAG_PERMANENT && sd->status.skill[i].flag != SKILL_FLAG_PERM_GRANTED && sd->status.skill[i].flag != SKILL_FLAG_PLAGIARIZED) {
 			sd->status.skill[i].lv = (sd->status.skill[i].flag == SKILL_FLAG_TEMPORARY) ? 0 : sd->status.skill[i].flag - SKILL_FLAG_REPLACED_LV_0;
 			sd->status.skill[i].flag = SKILL_FLAG_PERMANENT;
@@ -7297,7 +7305,7 @@ int pc_allskillup(struct map_session_data *sd)
 
 	if (pc_has_permission(sd, PC_PERM_ALL_SKILL)) { //Get ALL skills except npc/guild ones. [Skotlex]
 		//and except SG_DEVIL [Komurka] and MO_TRIPLEATTACK and RG_SNATCHER [ultramage]
-		for(i=0;i<MAX_SKILL;i++){
+		for (i = 0; i < MAX_SKILL_DB; i++) {
 			switch( skill->dbs->db[i].nameid ) {
 				case SG_DEVIL:
 				case MO_TRIPLEATTACK:
@@ -7537,9 +7545,7 @@ int pc_resetskill(struct map_session_data* sd, int flag)
 			status_change_end(&sd->bl, SC_SPRITEMABLE, INVALID_TIMER);
 	}
 
-	for( i = 1; i < MAX_SKILL; i++ ) {
-		// FIXME: We're looping on i = [1..MAX_SKILL-1] (which makes sense as index for sd->status.skill[]) but then we're using the
-		// same i to access skill->dbs->db[], and especially to check skill_ischangesex(). This is wrong.
+	for (i = 1; i < MAX_SKILL_DB; i++) {
 		uint16 skill_id = 0;
 		int lv = sd->status.skill[i].lv;
 		if (lv < 1) continue;
@@ -7956,7 +7962,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 		item_tmp.card[1]=0;
 		item_tmp.card[2]=GetWord(sd->status.char_id,0); // CharId
 		item_tmp.card[3]=GetWord(sd->status.char_id,1);
-		map->addflooritem(&sd->bl, &item_tmp, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0);
+		map->addflooritem(&sd->bl, &item_tmp, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0, false);
 	}
 
 	// activate Steel body if a super novice dies at 99+% exp [celest]

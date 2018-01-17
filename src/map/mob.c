@@ -1838,11 +1838,13 @@ int mob_ai_hard(int tid, int64 tick, int id, intptr_t data) {
 /*==========================================
  * Initializes the delay drop structure for mob-dropped items.
  *------------------------------------------*/
-struct item_drop* mob_setdropitem(int nameid, int qty, struct item_data *data) {
+struct item_drop* mob_setdropitem(int nameid, int qty, struct item_data *data)
+{
 	struct item_drop *drop = ers_alloc(item_drop_ers, struct item_drop);
 	drop->item_data.nameid = nameid;
 	drop->item_data.amount = qty;
 	drop->item_data.identify = data ? itemdb->isidentified2(data) : itemdb->isidentified(nameid);
+	drop->showdropeffect = true;
 	drop->next = NULL;
 	return drop;
 }
@@ -1857,6 +1859,7 @@ struct item_drop* mob_setlootitem(struct item* item)
 	nullpo_retr(NULL, item);
 	drop = ers_alloc(item_drop_ers, struct item_drop);
 	memcpy(&drop->item_data, item, sizeof(struct item));
+	drop->showdropeffect = false;
 	drop->next = NULL;
 	return drop;
 }
@@ -1864,7 +1867,8 @@ struct item_drop* mob_setlootitem(struct item* item)
 /*==========================================
  * item drop with delay (timer function)
  *------------------------------------------*/
-int mob_delay_item_drop(int tid, int64 tick, int id, intptr_t data) {
+int mob_delay_item_drop(int tid, int64 tick, int id, intptr_t data)
+{
 	struct item_drop_list *list;
 	struct item_drop *ditem;
 	list=(struct item_drop_list *)data;
@@ -1872,8 +1876,9 @@ int mob_delay_item_drop(int tid, int64 tick, int id, intptr_t data) {
 	while (ditem) {
 		struct item_drop *ditem_prev;
 		map->addflooritem(NULL, &ditem->item_data,ditem->item_data.amount,
-		                  list->m,list->x,list->y,
-		                  list->first_charid,list->second_charid,list->third_charid,0);
+		    list->m,list->x,list->y,
+		    list->first_charid,list->second_charid,list->third_charid,0,
+		    ditem->showdropeffect);
 		ditem_prev = ditem;
 		ditem = ditem->next;
 		ers_free(item_drop_ers, ditem_prev);
@@ -2586,7 +2591,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 
 					if((temp = pc->additem(mvp_sd,&item,1,LOG_TYPE_PICKDROP_PLAYER)) != 0) {
 						clif->additem(mvp_sd,0,0,temp);
-						map->addflooritem(&md->bl, &item, 1, mvp_sd->bl.m, mvp_sd->bl.x, mvp_sd->bl.y, mvp_sd->status.char_id, (second_sd?second_sd->status.char_id : 0), (third_sd ? third_sd->status.char_id : 0), 1);
+						map->addflooritem(&md->bl, &item, 1, mvp_sd->bl.m, mvp_sd->bl.x, mvp_sd->bl.y, mvp_sd->status.char_id, (second_sd?second_sd->status.char_id : 0), (third_sd ? third_sd->status.char_id : 0), 1, true);
 					}
 
 					//Logs items, MVP prizes [Lupus]
@@ -2686,7 +2691,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 		return 5; // Note: Actually, it's 4. Oh well...
 
 	// MvP tomb [GreenBox]
-	if (battle_config.mvp_tomb_enabled && md->spawn->state.boss && map->list[md->bl.m].flag.notomb != 1)
+	if (battle_config.mvp_tomb_enabled && md->spawn->state.boss == BTYPE_MVP && map->list[md->bl.m].flag.notomb != 1)
 		mob->mvptomb_create(md, mvp_sd ? mvp_sd->status.name : NULL, time(NULL));
 
 	if( !rebirth ) {
@@ -4846,7 +4851,7 @@ bool mob_parse_row_mobskilldb(char** str, int columns, int current)
 	struct mob_skill *ms, gms;
 	int mob_id;
 	int i =0, j, tmp;
-	uint16 sidx = 0;
+	int sidx = 0;
 
 	nullpo_retr(false, str);
 	mob_id = atoi(str[0]);

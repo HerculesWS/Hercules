@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2017  Hercules Dev Team
+ * Copyright (C) 2013-2018  Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -90,6 +90,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(lclif->p->parse_CA_LOGIN_PCBANG, HP_PRIV__lclif_parse_CA_LOGIN_PCBANG) },
 	{ HP_POP(lclif->p->parse_CA_LOGIN_HAN, HP_PRIV__lclif_parse_CA_LOGIN_HAN) },
 	{ HP_POP(lclif->p->parse_CA_SSO_LOGIN_REQ, HP_PRIV__lclif_parse_CA_SSO_LOGIN_REQ) },
+	{ HP_POP(lclif->p->parse_CA_LOGIN_OTP, HP_PRIV__lclif_parse_CA_LOGIN_OTP) },
 	{ HP_POP(lclif->p->parse_CA_REQ_HASH, HP_PRIV__lclif_parse_CA_REQ_HASH) },
 	{ HP_POP(lclif->p->parse_CA_CHARSERVERCONNECT, HP_PRIV__lclif_parse_CA_CHARSERVERCONNECT) },
 /* libconfig_interface */
@@ -207,10 +208,24 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(login->auth_ok, HP_login_auth_ok) },
 	{ HP_POP(login->auth_failed, HP_login_auth_failed) },
 	{ HP_POP(login->client_login, HP_login_client_login) },
+	{ HP_POP(login->client_login_otp, HP_login_client_login_otp) },
 	{ HP_POP(login->char_server_connection_status, HP_login_char_server_connection_status) },
 	{ HP_POP(login->parse_request_connection, HP_login_parse_request_connection) },
 	{ HP_POP(login->config_set_defaults, HP_login_config_set_defaults) },
 	{ HP_POP(login->config_read, HP_login_config_read) },
+	{ HP_POP(login->config_read_inter, HP_login_config_read_inter) },
+	{ HP_POP(login->config_read_console, HP_login_config_read_console) },
+	{ HP_POP(login->config_read_log, HP_login_config_read_log) },
+	{ HP_POP(login->config_read_account, HP_login_config_read_account) },
+	{ HP_POP(login->config_read_permission, HP_login_config_read_permission) },
+	{ HP_POP(login->config_read_permission_hash, HP_login_config_read_permission_hash) },
+	{ HP_POP(login->config_read_permission_blacklist, HP_login_config_read_permission_blacklist) },
+	{ HP_POP(login->config_read_users, HP_login_config_read_users) },
+	{ HP_POP(login->clear_dnsbl_servers, HP_login_clear_dnsbl_servers) },
+	{ HP_POP(login->config_set_dnsbl_servers, HP_login_config_set_dnsbl_servers) },
+	{ HP_POP(login->clear_client_hash_nodes, HP_login_clear_client_hash_nodes) },
+	{ HP_POP(login->config_set_md5hash, HP_login_config_set_md5hash) },
+	{ HP_POP(login->convert_users_to_colors, HP_login_convert_users_to_colors) },
 /* md5_interface */
 	{ HP_POP(md5->string, HP_md5_string) },
 	{ HP_POP(md5->binary, HP_md5_binary) },
