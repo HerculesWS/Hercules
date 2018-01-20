@@ -717,17 +717,17 @@
 	packetKeys(0x75794A38,0x58A96BC1,0x296E6FB8);
 #endif
 
-// 2013-05-22Ragexe, 2013-05-22aRagexe, 2013-05-22aRagexeRE
+// 2013-05-22aRagexe, 2013-05-22aRagexeRE
 #if PACKETVER == 20130522
 	packetKeys(0x6948050B,0x06511D9D,0x725D4DF1);
 #endif
 
-// 2013-05-29Ragexe, 2013-05-29aRagexe, 2013-05-29aRagexeRE
+// 2013-05-29aRagexe, 2013-05-29aRagexeRE
 #if PACKETVER == 20130529
 	packetKeys(0x023A6C87,0x14BF1F1E,0x5CC70CC9);
 #endif
 
-// 2013-06-05Ragexe, 2013-06-05aRagexe, 2013-06-05bRagexe, 2013-06-05cRagexeRE
+// 2013-06-05aRagexe, 2013-06-05bRagexe, 2013-06-05cRagexeRE
 #if PACKETVER == 20130605
 	packetKeys(0x646E08D9,0x5F153AB5,0x61B509B5);
 #endif
@@ -1337,7 +1337,7 @@
 	packetKeys(0x19AB2BF0,0x04754299,0x48770736);
 #endif
 
-// 2015-09-16aRagexe, 2015-09-16aRagexeRE, 2015-09-16cRagexe, 2015-09-16cRagexeRE
+// 2015-09-16aRagexe, 2015-09-16cRagexe, 2015-09-16cRagexeRE
 #if PACKETVER == 20150916
 	packetKeys(0x17F83A19,0x116944F4,0x1CC541E9);
 #endif
@@ -1942,6 +1942,16 @@
 // 2018-01-03aRagexe, 2018-01-03aRagexeRE, 2018-01-03bRagexe, 2018-01-03bRagexeRE
 #if PACKETVER == 20180103
 	packetKeys(0x348F4BD7,0x7A425A54,0x628F589A);
+#endif
+
+// 2018-01-17aRagexe, 2018-01-17aRagexeRE
+#if PACKETVER == 20180117
+	packetKeys(0x21F477F4,0x37F437F4,0x37F437F4);
+#endif
+
+// 2018-01-24bRagexe, 2018-01-24bRagexeRE
+#if PACKETVER == 20180124
+	packetKeys(0x7EAA1CE0,0x415D1CFD,0x4C8F19FA);
 #endif
 
 
