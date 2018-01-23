@@ -1326,7 +1326,7 @@ void login_auth_failed(struct login_session_data *sd, int result)
 	}
 
 	if (result == 1 && login->config->dynamic_pass_failure_ban && !sockt->trusted_ip_check(ip))
-		ipban_log(ip); // log failed password attempt
+		ipban->log(ip); // log failed password attempt
 
 	if (result == 6) {
 		struct mmo_account acc = { 0 };
@@ -1630,7 +1630,7 @@ bool login_config_read_account(const char *filename, struct config_t *config, bo
 
 	if (!db->set_property(db, config, imported))
 		retval = false;
-	if (!ipban_config_read(filename, config, imported))
+	if (!ipban->config_read(filename, config, imported))
 		retval = false;
 
 	return retval;
@@ -1978,7 +1978,7 @@ int do_final(void)
 	if (login->config->log_login)
 		loginlog_final();
 
-	ipban_final();
+	ipban->final();
 
 	if( account_engine[0].db )
 	{// destroy account engine
@@ -2154,7 +2154,7 @@ int do_init(int argc, char** argv)
 		loginlog_init();
 
 	// initialize static and dynamic ipban system
-	ipban_init();
+	ipban->init();
 
 	// Online user database init
 	login->online_db = idb_alloc(DB_OPT_RELEASE_DATA);
