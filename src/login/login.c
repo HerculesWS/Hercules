@@ -56,7 +56,7 @@ struct s_login_dbs logindbs;
 struct Login_Config login_config_;
 
 struct Account_engine account_engine[] = {
-	{account_db_sql, NULL}
+	{NULL, NULL}
 };
 
 // account database
@@ -624,7 +624,7 @@ void login_fromchar_parse_account_reg2(int fd, int id, const char *const ip)
 	if( !accounts->load_num(accounts, &acc, account_id) )
 		ShowStatus("Char-server '%s': receiving (from the char-server) of account_reg2 (account: %d not found, ip: %s).\n", login->dbs->server[id].name, account_id, ip);
 	else {
-		account_mmo_save_accreg2(accounts,fd,account_id,RFIFOL(fd, 8));
+		account->mmo_save_accreg2(accounts,fd,account_id,RFIFOL(fd, 8));
 	}
 	RFIFOSKIP(fd,RFIFOW(fd,2));
 }
@@ -684,7 +684,7 @@ void login_fromchar_parse_request_account_reg2(int fd)
 	int char_id = RFIFOL(fd,6);
 	RFIFOSKIP(fd,10);
 
-	account_mmo_send_accreg2(accounts,fd,account_id,char_id);
+	account->mmo_send_accreg2(accounts,fd,account_id,char_id);
 }
 
 void login_fromchar_parse_update_wan_ip(int fd, int id)
@@ -2094,7 +2094,10 @@ int do_init(int argc, char** argv)
 {
 	int i;
 
+	account_defaults();
+
 	// initialize engine (to accept config settings)
+	account_engine[0].constructor = account->db_sql;
 	account_engine[0].db = account_engine[0].constructor();
 	accounts = account_engine[0].db;
 	if( accounts == NULL ) {
@@ -2102,6 +2105,7 @@ int do_init(int argc, char** argv)
 		exit(EXIT_FAILURE);
 	}
 
+	ipban_defaults();
 	login_defaults();
 	lclif_defaults();
 

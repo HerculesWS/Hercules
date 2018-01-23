@@ -69,7 +69,7 @@ bool HPM_login_data_store_validate(enum HPluginDataTypes type, struct hplugin_da
 }
 
 void HPM_login_plugin_load_sub(struct hplugin *plugin) {
-	plugin->hpi->sql_handle = account_db_sql_up(login->accounts);
+	plugin->hpi->sql_handle = account->db_sql_up(login->accounts);
 }
 
 void HPM_login_do_init(void) {

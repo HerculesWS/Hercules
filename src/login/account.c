@@ -39,54 +39,8 @@
 /// global defines
 #define ACCOUNT_SQL_DB_VERSION 20110114
 
-/// internal structure
-typedef struct AccountDB_SQL
-{
-	AccountDB vtable;    // public interface
-
-	struct Sql *accounts; // SQL accounts storage
-
-	// Sql settings
-	char   db_hostname[32];
-	uint16 db_port;
-	char   db_username[32];
-	char   db_password[100];
-	char   db_database[32];
-	char   codepage[32];
-	// other settings
-	bool case_sensitive;
-	char account_db[32];
-	char global_acc_reg_num_db[32];
-	char global_acc_reg_str_db[32];
-
-
-} AccountDB_SQL;
-
-/// internal structure
-typedef struct AccountDBIterator_SQL
-{
-	AccountDBIterator vtable;    // public interface
-
-	AccountDB_SQL* db;
-	int last_account_id;
-} AccountDBIterator_SQL;
-
-/// internal functions
-static bool account_db_sql_init(AccountDB* self);
-static void account_db_sql_destroy(AccountDB* self);
-static bool account_db_sql_get_property(AccountDB* self, const char* key, char* buf, size_t buflen);
-static bool account_db_sql_set_property(AccountDB* self, struct config_t *config, bool imported);
-static bool account_db_sql_create(AccountDB* self, struct mmo_account* acc);
-static bool account_db_sql_remove(AccountDB* self, const int account_id);
-static bool account_db_sql_save(AccountDB* self, const struct mmo_account* acc);
-static bool account_db_sql_load_num(AccountDB* self, struct mmo_account* acc, const int account_id);
-static bool account_db_sql_load_str(AccountDB* self, struct mmo_account* acc, const char* userid);
-static AccountDBIterator* account_db_sql_iterator(AccountDB* self);
-static void account_db_sql_iter_destroy(AccountDBIterator* self);
-static bool account_db_sql_iter_next(AccountDBIterator* self, struct mmo_account* acc);
-
-static bool account_mmo_auth_fromsql(AccountDB_SQL* db, struct mmo_account* acc, int account_id);
-static bool account_mmo_auth_tosql(AccountDB_SQL* db, const struct mmo_account* acc, bool is_new);
+struct account_interface account_s;
+struct account_interface *account;
 
 /// public constructor
 AccountDB* account_db_sql(void)
@@ -94,16 +48,16 @@ AccountDB* account_db_sql(void)
 	AccountDB_SQL* db = (AccountDB_SQL*)aCalloc(1, sizeof(AccountDB_SQL));
 
 	// set up the vtable
-	db->vtable.init         = &account_db_sql_init;
-	db->vtable.destroy      = &account_db_sql_destroy;
-	db->vtable.get_property = &account_db_sql_get_property;
-	db->vtable.set_property = &account_db_sql_set_property;
-	db->vtable.save         = &account_db_sql_save;
-	db->vtable.create       = &account_db_sql_create;
-	db->vtable.remove       = &account_db_sql_remove;
-	db->vtable.load_num     = &account_db_sql_load_num;
-	db->vtable.load_str     = &account_db_sql_load_str;
-	db->vtable.iterator     = &account_db_sql_iterator;
+	db->vtable.init         = account->db_sql_init;
+	db->vtable.destroy      = account->db_sql_destroy;
+	db->vtable.get_property = account->db_sql_get_property;
+	db->vtable.set_property = account->db_sql_set_property;
+	db->vtable.save         = account->db_sql_save;
+	db->vtable.create       = account->db_sql_create;
+	db->vtable.remove       = account->db_sql_remove;
+	db->vtable.load_num     = account->db_sql_load_num;
+	db->vtable.load_str     = account->db_sql_load_str;
+	db->vtable.iterator     = account->db_sql_iterator;
 
 	// initialize to default values
 	db->accounts = NULL;
@@ -123,9 +77,7 @@ AccountDB* account_db_sql(void)
 	return &db->vtable;
 }
 
-
 /* ------------------------------------------------------------------------- */
-
 
 /// establishes database connection
 static bool account_db_sql_init(AccountDB* self)
@@ -323,7 +275,7 @@ static bool account_db_sql_set_property(AccountDB* self, struct config_t *config
 	libconfig->setting_lookup_uint16(setting, "db_port", &db->db_port);
 	libconfig->setting_lookup_bool_real(setting, "case_sensitive", &db->case_sensitive);
 
-	account_db_read_inter(db, "conf/common/inter-server.conf", imported);
+	account->db_read_inter(db, "conf/common/inter-server.conf", imported);
 
 	return true;
 }
@@ -381,7 +333,7 @@ static bool account_db_sql_create(AccountDB* self, struct mmo_account* acc)
 
 	// insert the data into the database
 	acc->account_id = account_id;
-	return account_mmo_auth_tosql(db, acc, true);
+	return account->mmo_auth_tosql(db, acc, true);
 }
 
 /// delete an existing account entry + its regs
@@ -411,14 +363,14 @@ static bool account_db_sql_remove(AccountDB* self, const int account_id)
 static bool account_db_sql_save(AccountDB* self, const struct mmo_account* acc)
 {
 	AccountDB_SQL* db = (AccountDB_SQL*)self;
-	return account_mmo_auth_tosql(db, acc, false);
+	return account->mmo_auth_tosql(db, acc, false);
 }
 
 /// retrieve data from db and store it in the provided data structure
 static bool account_db_sql_load_num(AccountDB* self, struct mmo_account* acc, const int account_id)
 {
 	AccountDB_SQL* db = (AccountDB_SQL*)self;
-	return account_mmo_auth_fromsql(db, acc, account_id);
+	return account->mmo_auth_fromsql(db, acc, account_id);
 }
 
 /// retrieve data from db and store it in the provided data structure
@@ -458,7 +410,7 @@ static bool account_db_sql_load_str(AccountDB* self, struct mmo_account* acc, co
 	SQL->GetData(sql_handle, 0, &data, NULL);
 	account_id = atoi(data);
 
-	return account_db_sql_load_num(self, acc, account_id);
+	return account->db_sql_load_num(self, acc, account_id);
 }
 
 
@@ -471,8 +423,8 @@ static AccountDBIterator* account_db_sql_iterator(AccountDB* self)
 	nullpo_retr(NULL, db);
 	iter = (AccountDBIterator_SQL*)aCalloc(1, sizeof(AccountDBIterator_SQL));
 	// set up the vtable
-	iter->vtable.destroy = &account_db_sql_iter_destroy;
-	iter->vtable.next    = &account_db_sql_iter_next;
+	iter->vtable.destroy = account->db_sql_iter_destroy;
+	iter->vtable.next    = account->db_sql_iter_next;
 
 	// fill data
 	iter->db = db;
@@ -516,8 +468,7 @@ static bool account_db_sql_iter_next(AccountDBIterator* self, struct mmo_account
 	{// get account data
 		int account_id;
 		account_id = atoi(data);
-		if( account_mmo_auth_fromsql(db, acc, account_id) )
-		{
+		if (account->mmo_auth_fromsql(db, acc, account_id)) {
 			iter->last_account_id = account_id;
 			SQL->FreeResult(sql_handle);
 			return true;
@@ -869,4 +820,29 @@ void account_mmo_send_accreg2(AccountDB* self, int fd, int account_id, int char_
 	WFIFOSET(fd, plen);
 
 	SQL->FreeResult(sql_handle);
+}
+
+void account_defaults(void) {
+	account = &account_s;
+
+	account->db_sql_up = account_db_sql_up;
+	account->mmo_send_accreg2 = account_mmo_send_accreg2;
+	account->mmo_save_accreg2 = account_mmo_save_accreg2;
+	account->mmo_auth_fromsql = account_mmo_auth_fromsql;
+	account->mmo_auth_tosql = account_mmo_auth_tosql;
+
+	account->db_sql = account_db_sql;
+	account->db_sql_init = account_db_sql_init;
+	account->db_sql_destroy = account_db_sql_destroy;
+	account->db_sql_get_property = account_db_sql_get_property;
+	account->db_sql_set_property = account_db_sql_set_property;
+	account->db_sql_create = account_db_sql_create;
+	account->db_sql_remove = account_db_sql_remove;
+	account->db_sql_save = account_db_sql_save;
+	account->db_sql_load_num = account_db_sql_load_num;
+	account->db_sql_load_str = account_db_sql_load_str;
+	account->db_sql_iterator = account_db_sql_iterator;
+	account->db_sql_iter_destroy = account_db_sql_iter_destroy;
+	account->db_sql_iter_next = account_db_sql_iter_next;
+	account->db_read_inter = account_db_read_inter;
 }

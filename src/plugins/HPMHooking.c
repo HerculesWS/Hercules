@@ -34,6 +34,7 @@ PRAGMA_GCC5(GCC diagnostic ignored "-Wdiscarded-qualifiers")
 #define HPM_HOOKS_INCLUDE "HPMHooking/HPMHooking_login.Hooks.inc"
 #define HPM_POINTS_INCLUDE "HPMHooking/HPMHooking_login.HookingPoints.inc"
 #define HPM_SOURCES_INCLUDE "HPMHooking/HPMHooking_login.sources.inc"
+#include "login/account.h"
 #include "login/lclif.h"
 #include "login/lclif.p.h"
 #include "login/login.h"
