@@ -52,8 +52,8 @@
 
 struct login_interface login_s;
 struct login_interface *login;
+struct s_login_dbs logindbs;
 struct Login_Config login_config_;
-struct mmo_char_server server[MAX_SERVERS]; // char server data
 
 struct Account_engine account_engine[] = {
 	{account_db_sql, NULL}
@@ -164,9 +164,9 @@ int charif_sendallwos(int sfd, uint8* buf, size_t len)
 	int i, c;
 
 	nullpo_ret(buf);
-	for( i = 0, c = 0; i < ARRAYLENGTH(server); ++i )
+	for (i = 0, c = 0; i < ARRAYLENGTH(login->dbs->server); ++i)
 	{
-		int fd = server[i].fd;
+		int fd = login->dbs->server[i].fd;
 		if (sockt->session_is_valid(fd) && fd != sfd) {
 			WFIFOHEAD(fd,len);
 			memcpy(WFIFOP(fd,0), buf, len);
@@ -183,8 +183,8 @@ int charif_sendallwos(int sfd, uint8* buf, size_t len)
 void chrif_server_init(int id)
 {
 	Assert_retv(id >= 0 && id < MAX_SERVERS);
-	memset(&server[id], 0, sizeof(server[id]));
-	server[id].fd = -1;
+	memset(&login->dbs->server[id], 0, sizeof(login->dbs->server[id]));
+	login->dbs->server[id].fd = -1;
 }
 
 
@@ -192,10 +192,10 @@ void chrif_server_init(int id)
 void chrif_server_destroy(int id)
 {
 	Assert_retv(id >= 0 && id < MAX_SERVERS);
-	if (server[id].fd != -1)
+	if (login->dbs->server[id].fd != -1)
 	{
-		sockt->close(server[id].fd);
-		server[id].fd = -1;
+		sockt->close(login->dbs->server[id].fd);
+		login->dbs->server[id].fd = -1;
 	}
 }
 
@@ -213,7 +213,7 @@ void chrif_server_reset(int id)
 void chrif_on_disconnect(int id)
 {
 	Assert_retv(id >= 0 && id < MAX_SERVERS);
-	ShowStatus("Char-server '%s' has disconnected.\n", server[id].name);
+	ShowStatus("Char-server '%s' has disconnected.\n", login->dbs->server[id].name);
 	chrif_server_reset(id);
 }
 
@@ -324,7 +324,7 @@ void login_fromchar_parse_auth(int fd, int id, const char *const ip)
 		node->sex        == sex_num2str(sex) /*&&
 		node->ip         == ip_*/ )
 	{// found
-		//ShowStatus("Char-server '%s': authentication of the account %d accepted (ip: %s).\n", server[id].name, account_id, ip);
+		//ShowStatus("Char-server '%s': authentication of the account %d accepted (ip: %s).\n", login->dbs->server[id].name, account_id, ip);
 
 		// send ack
 		login->fromchar_auth_ack(fd, account_id, login_id1, login_id2, sex, request_id, node);
@@ -334,7 +334,7 @@ void login_fromchar_parse_auth(int fd, int id, const char *const ip)
 	else
 	{// authentication not found
 		nullpo_retv(ip);
-		ShowStatus("Char-server '%s': authentication of the account %d REFUSED (ip: %s).\n", server[id].name, account_id, ip);
+		ShowStatus("Char-server '%s': authentication of the account %d REFUSED (ip: %s).\n", login->dbs->server[id].name, account_id, ip);
 		login->fromchar_auth_ack(fd, account_id, login_id1, login_id2, sex, request_id, NULL);
 	}
 }
@@ -345,11 +345,11 @@ void login_fromchar_parse_update_users(int fd, int id)
 	RFIFOSKIP(fd,6);
 
 	// how many users on world? (update)
-	if( server[id].users != users )
+	if (login->dbs->server[id].users != users)
 	{
-		ShowStatus("set users %s : %d\n", server[id].name, users);
+		ShowStatus("set users %s : %d\n", login->dbs->server[id].name, users);
 
-		server[id].users = (uint16)users;
+		login->dbs->server[id].users = (uint16)users;
 	}
 }
 
@@ -363,13 +363,13 @@ void login_fromchar_parse_request_change_email(int fd, int id, const char *const
 	RFIFOSKIP(fd,46);
 
 	if( e_mail_check(email) == 0 )
-		ShowNotice("Char-server '%s': Attempt to create an e-mail on an account with a default e-mail REFUSED - e-mail is invalid (account: %d, ip: %s)\n", server[id].name, account_id, ip);
+		ShowNotice("Char-server '%s': Attempt to create an e-mail on an account with a default e-mail REFUSED - e-mail is invalid (account: %d, ip: %s)\n", login->dbs->server[id].name, account_id, ip);
 	else
 	if( !accounts->load_num(accounts, &acc, account_id) || strcmp(acc.email, "a@a.com") == 0 || acc.email[0] == '\0' )
-		ShowNotice("Char-server '%s': Attempt to create an e-mail on an account with a default e-mail REFUSED - account doesn't exist or e-mail of account isn't default e-mail (account: %d, ip: %s).\n", server[id].name, account_id, ip);
+		ShowNotice("Char-server '%s': Attempt to create an e-mail on an account with a default e-mail REFUSED - account doesn't exist or e-mail of account isn't default e-mail (account: %d, ip: %s).\n", login->dbs->server[id].name, account_id, ip);
 	else {
 		memcpy(acc.email, email, sizeof(acc.email));
-		ShowNotice("Char-server '%s': Create an e-mail on an account with a default e-mail (account: %d, new e-mail: %s, ip: %s).\n", server[id].name, account_id, email, ip);
+		ShowNotice("Char-server '%s': Create an e-mail on an account with a default e-mail (account: %d, new e-mail: %s, ip: %s).\n", login->dbs->server[id].name, account_id, email, ip);
 		// Save
 		accounts->save(accounts, &acc);
 	}
@@ -428,7 +428,7 @@ void login_fromchar_parse_account_data(int fd, int id, const char *const ip)
 
 	if( !accounts->load_num(accounts, &acc, account_id) )
 	{
-		ShowNotice("Char-server '%s': account %d NOT found (ip: %s).\n", server[id].name, account_id, ip);
+		ShowNotice("Char-server '%s': account %d NOT found (ip: %s).\n", login->dbs->server[id].name, account_id, ip);
 		login->fromchar_account(fd, account_id, NULL);
 	}
 	else {
@@ -461,22 +461,22 @@ void login_fromchar_parse_change_email(int fd, int id, const char *const ip)
 	RFIFOSKIP(fd, 86);
 
 	if( e_mail_check(actual_email) == 0 )
-		ShowNotice("Char-server '%s': Attempt to modify an e-mail on an account (@email GM command), but actual email is invalid (account: %d, ip: %s)\n", server[id].name, account_id, ip);
+		ShowNotice("Char-server '%s': Attempt to modify an e-mail on an account (@email GM command), but actual email is invalid (account: %d, ip: %s)\n", login->dbs->server[id].name, account_id, ip);
 	else
 	if( e_mail_check(new_email) == 0 )
-		ShowNotice("Char-server '%s': Attempt to modify an e-mail on an account (@email GM command) with a invalid new e-mail (account: %d, ip: %s)\n", server[id].name, account_id, ip);
+		ShowNotice("Char-server '%s': Attempt to modify an e-mail on an account (@email GM command) with a invalid new e-mail (account: %d, ip: %s)\n", login->dbs->server[id].name, account_id, ip);
 	else
 	if( strcmpi(new_email, "a@a.com") == 0 )
-		ShowNotice("Char-server '%s': Attempt to modify an e-mail on an account (@email GM command) with a default e-mail (account: %d, ip: %s)\n", server[id].name, account_id, ip);
+		ShowNotice("Char-server '%s': Attempt to modify an e-mail on an account (@email GM command) with a default e-mail (account: %d, ip: %s)\n", login->dbs->server[id].name, account_id, ip);
 	else
 	if( !accounts->load_num(accounts, &acc, account_id) )
-		ShowNotice("Char-server '%s': Attempt to modify an e-mail on an account (@email GM command), but account doesn't exist (account: %d, ip: %s).\n", server[id].name, account_id, ip);
+		ShowNotice("Char-server '%s': Attempt to modify an e-mail on an account (@email GM command), but account doesn't exist (account: %d, ip: %s).\n", login->dbs->server[id].name, account_id, ip);
 	else
 	if( strcmpi(acc.email, actual_email) != 0 )
-		ShowNotice("Char-server '%s': Attempt to modify an e-mail on an account (@email GM command), but actual e-mail is incorrect (account: %d (%s), actual e-mail: %s, proposed e-mail: %s, ip: %s).\n", server[id].name, account_id, acc.userid, acc.email, actual_email, ip);
+		ShowNotice("Char-server '%s': Attempt to modify an e-mail on an account (@email GM command), but actual e-mail is incorrect (account: %d (%s), actual e-mail: %s, proposed e-mail: %s, ip: %s).\n", login->dbs->server[id].name, account_id, acc.userid, acc.email, actual_email, ip);
 	else {
 		safestrncpy(acc.email, new_email, sizeof(acc.email));
-		ShowNotice("Char-server '%s': Modify an e-mail on an account (@email GM command) (account: %d (%s), new e-mail: %s, ip: %s).\n", server[id].name, account_id, acc.userid, new_email, ip);
+		ShowNotice("Char-server '%s': Modify an e-mail on an account (@email GM command) (account: %d (%s), new e-mail: %s, ip: %s).\n", login->dbs->server[id].name, account_id, acc.userid, new_email, ip);
 		// Save
 		accounts->save(accounts, &acc);
 	}
@@ -501,12 +501,12 @@ void login_fromchar_parse_account_update(int fd, int id, const char *const ip)
 	RFIFOSKIP(fd,10);
 
 	if( !accounts->load_num(accounts, &acc, account_id) )
-		ShowNotice("Char-server '%s': Error of Status change (account: %d not found, suggested status %u, ip: %s).\n", server[id].name, account_id, state, ip);
+		ShowNotice("Char-server '%s': Error of Status change (account: %d not found, suggested status %u, ip: %s).\n", login->dbs->server[id].name, account_id, state, ip);
 	else
 	if( acc.state == state )
-		ShowNotice("Char-server '%s':  Error of Status change - actual status is already the good status (account: %d, status %u, ip: %s).\n", server[id].name, account_id, state, ip);
+		ShowNotice("Char-server '%s':  Error of Status change - actual status is already the good status (account: %d, status %u, ip: %s).\n", login->dbs->server[id].name, account_id, state, ip);
 	else {
-		ShowNotice("Char-server '%s': Status change (account: %d, new status %u, ip: %s).\n", server[id].name, account_id, state, ip);
+		ShowNotice("Char-server '%s': Status change (account: %d, new status %u, ip: %s).\n", login->dbs->server[id].name, account_id, state, ip);
 
 		acc.state = state;
 		// Save
@@ -543,7 +543,7 @@ void login_fromchar_parse_ban(int fd, int id, const char *const ip)
 	RFIFOSKIP(fd,18);
 
 	if (!accounts->load_num(accounts, &acc, account_id)) {
-		ShowNotice("Char-server '%s': Error of ban request (account: %d not found, ip: %s).\n", server[id].name, account_id, ip);
+		ShowNotice("Char-server '%s': Error of ban request (account: %d not found, ip: %s).\n", login->dbs->server[id].name, account_id, ip);
 	} else {
 		time_t timestamp;
 		struct tm *tmtime;
@@ -560,14 +560,14 @@ void login_fromchar_parse_ban(int fd, int id, const char *const ip)
 		tmtime->tm_sec  += sec;
 		timestamp = mktime(tmtime);
 		if (timestamp == -1) {
-			ShowNotice("Char-server '%s': Error of ban request (account: %d, invalid date, ip: %s).\n", server[id].name, account_id, ip);
+			ShowNotice("Char-server '%s': Error of ban request (account: %d, invalid date, ip: %s).\n", login->dbs->server[id].name, account_id, ip);
 		} else if( timestamp <= time(NULL) || timestamp == 0 ) {
-			ShowNotice("Char-server '%s': Error of ban request (account: %d, new date unbans the account, ip: %s).\n", server[id].name, account_id, ip);
+			ShowNotice("Char-server '%s': Error of ban request (account: %d, new date unbans the account, ip: %s).\n", login->dbs->server[id].name, account_id, ip);
 		} else {
 			char tmpstr[24];
 			timestamp2string(tmpstr, sizeof(tmpstr), timestamp, login->config->date_format);
 			ShowNotice("Char-server '%s': Ban request (account: %d, new final date of banishment: %ld (%s), ip: %s).\n",
-			           server[id].name, account_id, (long)timestamp, tmpstr, ip);
+			           login->dbs->server[id].name, account_id, (long)timestamp, tmpstr, ip);
 
 			acc.unban_time = timestamp;
 
@@ -596,15 +596,15 @@ void login_fromchar_parse_change_sex(int fd, int id, const char *const ip)
 	RFIFOSKIP(fd,6);
 
 	if( !accounts->load_num(accounts, &acc, account_id) )
-		ShowNotice("Char-server '%s': Error of sex change (account: %d not found, ip: %s).\n", server[id].name, account_id, ip);
+		ShowNotice("Char-server '%s': Error of sex change (account: %d not found, ip: %s).\n", login->dbs->server[id].name, account_id, ip);
 	else
 	if( acc.sex == 'S' )
-		ShowNotice("Char-server '%s': Error of sex change - account to change is a Server account (account: %d, ip: %s).\n", server[id].name, account_id, ip);
+		ShowNotice("Char-server '%s': Error of sex change - account to change is a Server account (account: %d, ip: %s).\n", login->dbs->server[id].name, account_id, ip);
 	else
 	{
 		char sex = ( acc.sex == 'M' ) ? 'F' : 'M'; //Change gender
 
-		ShowNotice("Char-server '%s': Sex change (account: %d, new sex %c, ip: %s).\n", server[id].name, account_id, sex, ip);
+		ShowNotice("Char-server '%s': Sex change (account: %d, new sex %c, ip: %s).\n", login->dbs->server[id].name, account_id, sex, ip);
 
 		acc.sex = sex;
 		// Save
@@ -622,7 +622,7 @@ void login_fromchar_parse_account_reg2(int fd, int id, const char *const ip)
 	int account_id = RFIFOL(fd,4);
 
 	if( !accounts->load_num(accounts, &acc, account_id) )
-		ShowStatus("Char-server '%s': receiving (from the char-server) of account_reg2 (account: %d not found, ip: %s).\n", server[id].name, account_id, ip);
+		ShowStatus("Char-server '%s': receiving (from the char-server) of account_reg2 (account: %d not found, ip: %s).\n", login->dbs->server[id].name, account_id, ip);
 	else {
 		account_mmo_save_accreg2(accounts,fd,account_id,RFIFOL(fd, 8));
 	}
@@ -637,13 +637,13 @@ void login_fromchar_parse_unban(int fd, int id, const char *const ip)
 	RFIFOSKIP(fd,6);
 
 	if( !accounts->load_num(accounts, &acc, account_id) )
-		ShowNotice("Char-server '%s': Error of Unban request (account: %d not found, ip: %s).\n", server[id].name, account_id, ip);
+		ShowNotice("Char-server '%s': Error of Unban request (account: %d not found, ip: %s).\n", login->dbs->server[id].name, account_id, ip);
 	else
 	if( acc.unban_time == 0 )
-		ShowNotice("Char-server '%s': Error of Unban request (account: %d, no change for unban date, ip: %s).\n", server[id].name, account_id, ip);
+		ShowNotice("Char-server '%s': Error of Unban request (account: %d, no change for unban date, ip: %s).\n", login->dbs->server[id].name, account_id, ip);
 	else
 	{
-		ShowNotice("Char-server '%s': Unban request (account: %d, ip: %s).\n", server[id].name, account_id, ip);
+		ShowNotice("Char-server '%s': Unban request (account: %d, ip: %s).\n", login->dbs->server[id].name, account_id, ip);
 		acc.unban_time = 0;
 		accounts->save(accounts, &acc);
 	}
@@ -689,8 +689,8 @@ void login_fromchar_parse_request_account_reg2(int fd)
 
 void login_fromchar_parse_update_wan_ip(int fd, int id)
 {
-	server[id].ip = ntohl(RFIFOL(fd,2));
-	ShowInfo("Updated IP of Server #%d to %u.%u.%u.%u.\n",id, CONVIP(server[id].ip));
+	login->dbs->server[id].ip = ntohl(RFIFOL(fd,2));
+	ShowInfo("Updated IP of Server #%d to %u.%u.%u.%u.\n",id, CONVIP(login->dbs->server[id].ip));
 	RFIFOSKIP(fd,6);
 }
 
@@ -794,8 +794,8 @@ int login_parse_fromchar(int fd)
 	uint32 ipl;
 	char ip[16];
 
-	ARR_FIND( 0, ARRAYLENGTH(server), id, server[id].fd == fd );
-	if( id == ARRAYLENGTH(server) )
+	ARR_FIND(0, ARRAYLENGTH(login->dbs->server), id, login->dbs->server[id].fd == fd);
+	if (id == ARRAYLENGTH(login->dbs->server))
 	{// not a char server
 		ShowDebug("login_parse_fromchar: Disconnecting invalid session #%d (is not a char-server)\n", fd);
 		sockt->eof(fd);
@@ -806,12 +806,12 @@ int login_parse_fromchar(int fd)
 	if( sockt->session[fd]->flag.eof )
 	{
 		sockt->close(fd);
-		server[id].fd = -1;
+		login->dbs->server[id].fd = -1;
 		chrif_on_disconnect(id);
 		return 0;
 	}
 
-	ipl = server[id].ip;
+	ipl = login->dbs->server[id].ip;
 	sockt->ip2str(ipl, ip);
 
 	while (RFIFOREST(fd) >= 2) {
@@ -1437,18 +1437,18 @@ void login_parse_request_connection(int fd, struct login_session_data* sd, const
 		result == -1 &&
 		sd->sex == 'S' &&
 		sd->account_id >= 0 &&
-		sd->account_id < ARRAYLENGTH(server) &&
-		!sockt->session_is_valid(server[sd->account_id].fd) &&
+		sd->account_id < ARRAYLENGTH(login->dbs->server) &&
+		!sockt->session_is_valid(login->dbs->server[sd->account_id].fd) &&
 		sockt->allowed_ip_check(ipl))
 	{
 		ShowStatus("Connection of the char-server '%s' accepted.\n", server_name);
-		safestrncpy(server[sd->account_id].name, server_name, sizeof(server[sd->account_id].name));
-		server[sd->account_id].fd = fd;
-		server[sd->account_id].ip = server_ip;
-		server[sd->account_id].port = server_port;
-		server[sd->account_id].users = 0;
-		server[sd->account_id].type = type;
-		server[sd->account_id].new_ = new_;
+		safestrncpy(login->dbs->server[sd->account_id].name, server_name, sizeof(login->dbs->server[sd->account_id].name));
+		login->dbs->server[sd->account_id].fd = fd;
+		login->dbs->server[sd->account_id].ip = server_ip;
+		login->dbs->server[sd->account_id].port = server_port;
+		login->dbs->server[sd->account_id].users = 0;
+		login->dbs->server[sd->account_id].type = type;
+		login->dbs->server[sd->account_id].new_ = new_;
 
 		sockt->session[fd]->func_parse = login->parse_fromchar;
 		sockt->session[fd]->flag.server = 1;
@@ -1989,7 +1989,7 @@ int do_final(void)
 	login->online_db->destroy(login->online_db, NULL);
 	login->auth_db->destroy(login->auth_db, NULL);
 
-	for( i = 0; i < ARRAYLENGTH(server); ++i )
+	for (i = 0; i < ARRAYLENGTH(login->dbs->server); ++i)
 		chrif_server_destroy(i);
 
 	if( login->fd != -1 )
@@ -2033,7 +2033,7 @@ void do_shutdown_login(void)
 		core->runflag = LOGINSERVER_ST_SHUTDOWN;
 		ShowStatus("Shutting down...\n");
 		// TODO proper shutdown procedure; kick all characters, wait for acks, ...  [FlavioJS]
-		for( id = 0; id < ARRAYLENGTH(server); ++id )
+		for (id = 0; id < ARRAYLENGTH(login->dbs->server); ++id)
 			chrif_server_reset(id);
 		sockt->flush_fifos();
 		core->runflag = CORE_ST_STOP;
@@ -2142,7 +2142,7 @@ int do_init(int argc, char** argv)
 	login->config_read(login->LOGIN_CONF_NAME, false);
 	sockt->net_config_read(login->NET_CONF_NAME);
 
-	for( i = 0; i < ARRAYLENGTH(server); ++i )
+	for (i = 0; i < ARRAYLENGTH(login->dbs->server); ++i)
 		chrif_server_init(i);
 
 	// initialize logging
@@ -2208,6 +2208,7 @@ void login_defaults(void) {
 
 	login->config = &login_config_;
 	login->accounts = accounts;
+	login->dbs = &logindbs;
 
 	login->mmo_auth = login_mmo_auth;
 	login->mmo_auth_new = login_mmo_auth_new;
