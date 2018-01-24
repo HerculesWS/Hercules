@@ -180,7 +180,7 @@ int charif_sendallwos(int sfd, uint8* buf, size_t len)
 
 
 /// Initializes a server structure.
-void chrif_server_init(int id)
+void lchrif_server_init(int id)
 {
 	Assert_retv(id >= 0 && id < MAX_SERVERS);
 	memset(&login->dbs->server[id], 0, sizeof(login->dbs->server[id]));
@@ -189,7 +189,7 @@ void chrif_server_init(int id)
 
 
 /// Destroys a server structure.
-void chrif_server_destroy(int id)
+void lchrif_server_destroy(int id)
 {
 	Assert_retv(id >= 0 && id < MAX_SERVERS);
 	if (login->dbs->server[id].fd != -1)
@@ -201,20 +201,20 @@ void chrif_server_destroy(int id)
 
 
 /// Resets all the data related to a server.
-void chrif_server_reset(int id)
+void lchrif_server_reset(int id)
 {
 	login->online_db->foreach(login->online_db, login->online_db_setoffline, id); //Set all chars from this char server to offline.
-	chrif_server_destroy(id);
-	chrif_server_init(id);
+	lchrif_server_destroy(id);
+	lchrif_server_init(id);
 }
 
 
 /// Called when the connection to Char Server is disconnected.
-void chrif_on_disconnect(int id)
+void lchrif_on_disconnect(int id)
 {
 	Assert_retv(id >= 0 && id < MAX_SERVERS);
 	ShowStatus("Char-server '%s' has disconnected.\n", login->dbs->server[id].name);
-	chrif_server_reset(id);
+	lchrif_server_reset(id);
 }
 
 
@@ -807,7 +807,7 @@ int login_parse_fromchar(int fd)
 	{
 		sockt->close(fd);
 		login->dbs->server[id].fd = -1;
-		chrif_on_disconnect(id);
+		lchrif_on_disconnect(id);
 		return 0;
 	}
 
@@ -1990,7 +1990,7 @@ int do_final(void)
 	login->auth_db->destroy(login->auth_db, NULL);
 
 	for (i = 0; i < ARRAYLENGTH(login->dbs->server); ++i)
-		chrif_server_destroy(i);
+		lchrif_server_destroy(i);
 
 	if( login->fd != -1 )
 	{
@@ -2034,7 +2034,7 @@ void do_shutdown_login(void)
 		ShowStatus("Shutting down...\n");
 		// TODO proper shutdown procedure; kick all characters, wait for acks, ...  [FlavioJS]
 		for (id = 0; id < ARRAYLENGTH(login->dbs->server); ++id)
-			chrif_server_reset(id);
+			lchrif_server_reset(id);
 		sockt->flush_fifos();
 		core->runflag = CORE_ST_STOP;
 	}
@@ -2147,7 +2147,7 @@ int do_init(int argc, char** argv)
 	sockt->net_config_read(login->NET_CONF_NAME);
 
 	for (i = 0; i < ARRAYLENGTH(login->dbs->server); ++i)
-		chrif_server_init(i);
+		lchrif_server_init(i);
 
 	// initialize logging
 	if (login->config->log_login)
