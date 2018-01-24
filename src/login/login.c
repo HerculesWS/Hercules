@@ -53,6 +53,8 @@
 struct login_interface login_s;
 struct login_interface *login;
 struct s_login_dbs logindbs;
+struct lchrif_interface lchrif_s;
+struct lchrif_interface *lchrif;
 struct Login_Config login_config_;
 
 struct Account_engine account_engine[] = {
@@ -204,8 +206,8 @@ void lchrif_server_destroy(int id)
 void lchrif_server_reset(int id)
 {
 	login->online_db->foreach(login->online_db, login->online_db_setoffline, id); //Set all chars from this char server to offline.
-	lchrif_server_destroy(id);
-	lchrif_server_init(id);
+	lchrif->server_destroy(id);
+	lchrif->server_init(id);
 }
 
 
@@ -214,7 +216,7 @@ void lchrif_on_disconnect(int id)
 {
 	Assert_retv(id >= 0 && id < MAX_SERVERS);
 	ShowStatus("Char-server '%s' has disconnected.\n", login->dbs->server[id].name);
-	lchrif_server_reset(id);
+	lchrif->server_reset(id);
 }
 
 
@@ -807,7 +809,7 @@ int login_parse_fromchar(int fd)
 	{
 		sockt->close(fd);
 		login->dbs->server[id].fd = -1;
-		lchrif_on_disconnect(id);
+		lchrif->on_disconnect(id);
 		return 0;
 	}
 
@@ -1990,7 +1992,7 @@ int do_final(void)
 	login->auth_db->destroy(login->auth_db, NULL);
 
 	for (i = 0; i < ARRAYLENGTH(login->dbs->server); ++i)
-		lchrif_server_destroy(i);
+		lchrif->server_destroy(i);
 
 	if( login->fd != -1 )
 	{
@@ -2034,7 +2036,7 @@ void do_shutdown_login(void)
 		ShowStatus("Shutting down...\n");
 		// TODO proper shutdown procedure; kick all characters, wait for acks, ...  [FlavioJS]
 		for (id = 0; id < ARRAYLENGTH(login->dbs->server); ++id)
-			lchrif_server_reset(id);
+			lchrif->server_reset(id);
 		sockt->flush_fifos();
 		core->runflag = CORE_ST_STOP;
 	}
@@ -2106,6 +2108,7 @@ int do_init(int argc, char** argv)
 	}
 
 	ipban_defaults();
+	lchrif_defaults();
 	login_defaults();
 	lclif_defaults();
 
@@ -2147,7 +2150,7 @@ int do_init(int argc, char** argv)
 	sockt->net_config_read(login->NET_CONF_NAME);
 
 	for (i = 0; i < ARRAYLENGTH(login->dbs->server); ++i)
-		lchrif_server_init(i);
+		lchrif->server_init(i);
 
 	// initialize logging
 	if (login->config->log_login)
@@ -2207,7 +2210,8 @@ int do_init(int argc, char** argv)
 	return 0;
 }
 
-void login_defaults(void) {
+void login_defaults(void)
+{
 	login = &login_s;
 
 	login->config = &login_config_;
@@ -2283,4 +2287,13 @@ void login_defaults(void) {
 	login->convert_users_to_colors = login_convert_users_to_colors;
 	login->LOGIN_CONF_NAME = NULL;
 	login->NET_CONF_NAME = NULL;
+}
+
+void lchrif_defaults(void)
+{
+	lchrif = &lchrif_s;
+	lchrif->server_init = lchrif_server_init;
+	lchrif->server_destroy = lchrif_server_destroy;
+	lchrif->server_reset = lchrif_server_reset;
+	lchrif->on_disconnect = lchrif_on_disconnect;
 }

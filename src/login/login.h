@@ -239,10 +239,22 @@ struct login_interface {
 	char *NET_CONF_NAME; ///< Network configuration filename
 };
 
+/**
+ * Login.c Interface
+ **/
+struct lchrif_interface {
+	void (*server_init) (int id);
+	void (*server_destroy) (int id);
+	void (*server_reset) (int id);
+	void (*on_disconnect) (int id);
+};
+
 #ifdef HERCULES_CORE
 void login_defaults(void);
+void lchrif_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct login_interface *login;
+HPShared struct lchrif_interface *lchrif;
 
 #endif /* LOGIN_LOGIN_H */
