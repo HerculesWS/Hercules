@@ -867,6 +867,62 @@ typedef void (*HPMHOOK_post_chrif_save_scdata_single) (int account_id, int char_
 typedef void (*HPMHOOK_pre_chrif_del_scdata_single) (int *account_id, int *char_id, short *type);
 typedef void (*HPMHOOK_post_chrif_del_scdata_single) (int account_id, int char_id, short type);
 #endif // MAP_CHRIF_H
+#ifdef MAP_CLAN_H /* clan */
+typedef void (*HPMHOOK_pre_clan_init) (bool *minimal);
+typedef void (*HPMHOOK_post_clan_init) (bool minimal);
+typedef void (*HPMHOOK_pre_clan_final) (void);
+typedef void (*HPMHOOK_post_clan_final) (void);
+typedef bool (*HPMHOOK_pre_clan_config_read) (bool *reload);
+typedef bool (*HPMHOOK_post_clan_config_read) (bool retVal___, bool reload);
+typedef void (*HPMHOOK_pre_clan_config_read_additional_settings) (struct config_setting_t **settings, const char **source);
+typedef void (*HPMHOOK_post_clan_config_read_additional_settings) (struct config_setting_t *settings, const char *source);
+typedef void (*HPMHOOK_pre_clan_read_db) (struct config_setting_t **settings, const char **source, bool *reload);
+typedef void (*HPMHOOK_post_clan_read_db) (struct config_setting_t *settings, const char *source, bool reload);
+typedef int (*HPMHOOK_pre_clan_read_db_sub) (struct config_setting_t **settings, const char **source, bool *reload);
+typedef int (*HPMHOOK_post_clan_read_db_sub) (int retVal___, struct config_setting_t *settings, const char *source, bool reload);
+typedef void (*HPMHOOK_pre_clan_read_db_additional_fields) (struct clan **entry, struct config_setting_t **t, int *n, const char **source);
+typedef void (*HPMHOOK_post_clan_read_db_additional_fields) (struct clan *entry, struct config_setting_t *t, int n, const char *source);
+typedef void (*HPMHOOK_pre_clan_read_buffs) (struct clan **c, struct config_setting_t **buff, const char **source);
+typedef void (*HPMHOOK_post_clan_read_buffs) (struct clan *c, struct config_setting_t *buff, const char *source);
+typedef struct clan* (*HPMHOOK_pre_clan_search) (int *clan_id);
+typedef struct clan* (*HPMHOOK_post_clan_search) (struct clan* retVal___, int clan_id);
+typedef struct clan* (*HPMHOOK_pre_clan_searchname) (const char **name);
+typedef struct clan* (*HPMHOOK_post_clan_searchname) (struct clan* retVal___, const char *name);
+typedef struct map_session_data* (*HPMHOOK_pre_clan_getonlinesd) (struct clan **c);
+typedef struct map_session_data* (*HPMHOOK_post_clan_getonlinesd) (struct map_session_data* retVal___, struct clan *c);
+typedef int (*HPMHOOK_pre_clan_getindex) (const struct clan **c, int *char_id);
+typedef int (*HPMHOOK_post_clan_getindex) (int retVal___, const struct clan *c, int char_id);
+typedef bool (*HPMHOOK_pre_clan_join) (struct map_session_data **sd, int *clan_id);
+typedef bool (*HPMHOOK_post_clan_join) (bool retVal___, struct map_session_data *sd, int clan_id);
+typedef void (*HPMHOOK_pre_clan_member_online) (struct map_session_data **sd, bool *first);
+typedef void (*HPMHOOK_post_clan_member_online) (struct map_session_data *sd, bool first);
+typedef bool (*HPMHOOK_pre_clan_leave) (struct map_session_data **sd, bool *first);
+typedef bool (*HPMHOOK_post_clan_leave) (bool retVal___, struct map_session_data *sd, bool first);
+typedef bool (*HPMHOOK_pre_clan_send_message) (struct map_session_data **sd, const char **mes);
+typedef bool (*HPMHOOK_post_clan_send_message) (bool retVal___, struct map_session_data *sd, const char *mes);
+typedef void (*HPMHOOK_pre_clan_recv_message) (struct clan **c, const char **mes, int *len);
+typedef void (*HPMHOOK_post_clan_recv_message) (struct clan *c, const char *mes, int len);
+typedef void (*HPMHOOK_pre_clan_member_offline) (struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clan_member_offline) (struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clan_set_constants) (void);
+typedef void (*HPMHOOK_post_clan_set_constants) (void);
+typedef int (*HPMHOOK_pre_clan_get_id) (const struct block_list **bl);
+typedef int (*HPMHOOK_post_clan_get_id) (int retVal___, const struct block_list *bl);
+typedef void (*HPMHOOK_pre_clan_buff_start) (struct map_session_data **sd, struct clan **c);
+typedef void (*HPMHOOK_post_clan_buff_start) (struct map_session_data *sd, struct clan *c);
+typedef void (*HPMHOOK_pre_clan_buff_end) (struct map_session_data **sd, struct clan **c);
+typedef void (*HPMHOOK_post_clan_buff_end) (struct map_session_data *sd, struct clan *c);
+typedef void (*HPMHOOK_pre_clan_reload) (void);
+typedef void (*HPMHOOK_post_clan_reload) (void);
+typedef int (*HPMHOOK_pre_clan_rejoin) (struct map_session_data **sd, va_list ap);
+typedef int (*HPMHOOK_post_clan_rejoin) (int retVal___, struct map_session_data *sd, va_list ap);
+typedef int (*HPMHOOK_pre_clan_inactivity_kick) (int *tid, int64 *tick, int *id, intptr_t *data);
+typedef int (*HPMHOOK_post_clan_inactivity_kick) (int retVal___, int tid, int64 tick, int id, intptr_t data);
+typedef int (*HPMHOOK_pre_clan_request_kickoffline) (int *tid, int64 *tick, int *id, intptr_t *data);
+typedef int (*HPMHOOK_post_clan_request_kickoffline) (int retVal___, int tid, int64 tick, int id, intptr_t data);
+typedef int (*HPMHOOK_pre_clan_request_membercount) (int *tid, int64 *tick, int *id, intptr_t *data);
+typedef int (*HPMHOOK_post_clan_request_membercount) (int retVal___, int tid, int64 tick, int id, intptr_t data);
+#endif // MAP_CLAN_H
 #ifdef MAP_CLIF_H /* clif */
 typedef int (*HPMHOOK_pre_clif_init) (bool *minimal);
 typedef int (*HPMHOOK_post_clif_init) (int retVal___, bool minimal);
@@ -2298,6 +2354,16 @@ typedef void (*HPMHOOK_pre_clif_rodex_icon) (int *fd, bool *show);
 typedef void (*HPMHOOK_post_clif_rodex_icon) (int fd, bool show);
 typedef void (*HPMHOOK_pre_clif_skill_scale) (struct block_list **bl, int *src_id, int *x, int *y, uint16 *skill_id, uint16 *skill_lv, int *casttime);
 typedef void (*HPMHOOK_post_clif_skill_scale) (struct block_list *bl, int src_id, int x, int y, uint16 skill_id, uint16 skill_lv, int casttime);
+typedef void (*HPMHOOK_pre_clif_clan_basicinfo) (struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_clan_basicinfo) (struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_clan_onlinecount) (struct clan **c);
+typedef void (*HPMHOOK_post_clif_clan_onlinecount) (struct clan *c);
+typedef void (*HPMHOOK_pre_clif_clan_leave) (struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_clan_leave) (struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_clan_message) (struct clan **c, const char **mes, int *len);
+typedef void (*HPMHOOK_post_clif_clan_message) (struct clan *c, const char *mes, int len);
+typedef void (*HPMHOOK_pre_clif_pClanMessage) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pClanMessage) (int fd, struct map_session_data *sd);
 #endif // MAP_CLIF_H
 #ifdef COMMON_CORE_H /* cmdline */
 typedef void (*HPMHOOK_pre_cmdline_init) (void);
@@ -2845,6 +2911,14 @@ typedef int (*HPMHOOK_post_inter_auction_sql_init) (int retVal___);
 typedef void (*HPMHOOK_pre_inter_auction_sql_final) (void);
 typedef void (*HPMHOOK_post_inter_auction_sql_final) (void);
 #endif // CHAR_INT_AUCTION_H
+#ifdef CHAR_INT_CLAN_H /* inter_clan */
+typedef int (*HPMHOOK_pre_inter_clan_kick_inactive_members) (int *clan_id, int *kick_interval);
+typedef int (*HPMHOOK_post_inter_clan_kick_inactive_members) (int retVal___, int clan_id, int kick_interval);
+typedef int (*HPMHOOK_pre_inter_clan_count_members) (int *clan_id, int *kick_interval);
+typedef int (*HPMHOOK_post_inter_clan_count_members) (int retVal___, int clan_id, int kick_interval);
+typedef int (*HPMHOOK_pre_inter_clan_parse_frommap) (int *fd);
+typedef int (*HPMHOOK_post_inter_clan_parse_frommap) (int retVal___, int fd);
+#endif // CHAR_INT_CLAN_H
 #ifdef CHAR_INT_ELEMENTAL_H /* inter_elemental */
 typedef void (*HPMHOOK_pre_inter_elemental_sql_init) (void);
 typedef void (*HPMHOOK_post_inter_elemental_sql_init) (void);
@@ -3208,6 +3282,10 @@ typedef int (*HPMHOOK_pre_intif_rodex_sendmail) (struct rodex_message **msg);
 typedef int (*HPMHOOK_post_intif_rodex_sendmail) (int retVal___, struct rodex_message *msg);
 typedef int (*HPMHOOK_pre_intif_rodex_checkname) (struct map_session_data **sd, const char **name);
 typedef int (*HPMHOOK_post_intif_rodex_checkname) (int retVal___, struct map_session_data *sd, const char *name);
+typedef int (*HPMHOOK_pre_intif_clan_kickoffline) (int *clan_id, int *kick_interval);
+typedef int (*HPMHOOK_post_intif_clan_kickoffline) (int retVal___, int clan_id, int kick_interval);
+typedef int (*HPMHOOK_pre_intif_clan_membercount) (int *clan_id, int *kick_interval);
+typedef int (*HPMHOOK_post_intif_clan_membercount) (int retVal___, int clan_id, int kick_interval);
 typedef void (*HPMHOOK_pre_intif_request_accinfo) (int *u_fd, int *aid, int *group_lv, char **query);
 typedef void (*HPMHOOK_post_intif_request_accinfo) (int u_fd, int aid, int group_lv, char *query);
 typedef int (*HPMHOOK_pre_intif_CheckForCharServer) (void);
@@ -3348,6 +3426,8 @@ typedef void (*HPMHOOK_pre_intif_pRodexSendMail) (int *fd);
 typedef void (*HPMHOOK_post_intif_pRodexSendMail) (int fd);
 typedef void (*HPMHOOK_pre_intif_pRodexCheckName) (int *fd);
 typedef void (*HPMHOOK_post_intif_pRodexCheckName) (int fd);
+typedef void (*HPMHOOK_pre_intif_pRecvClanMemberAction) (int *fd);
+typedef void (*HPMHOOK_post_intif_pRecvClanMemberAction) (int fd);
 #endif // MAP_INTIF_H
 #ifdef MAP_IRC_BOT_H /* ircbot */
 typedef void (*HPMHOOK_pre_ircbot_init) (bool *minimal);
@@ -4566,6 +4646,10 @@ typedef void (*HPMHOOK_pre_mapif_namechange_ack) (int *fd, int *account_id, int 
 typedef void (*HPMHOOK_post_mapif_namechange_ack) (int fd, int account_id, int char_id, int type, int flag, const char *name);
 typedef int (*HPMHOOK_pre_mapif_parse_NameChangeRequest) (int *fd);
 typedef int (*HPMHOOK_post_mapif_parse_NameChangeRequest) (int retVal___, int fd);
+typedef int (*HPMHOOK_pre_mapif_parse_ClanMemberKick) (int *fd, int *clan_id, int *kick_interval);
+typedef int (*HPMHOOK_post_mapif_parse_ClanMemberKick) (int retVal___, int fd, int clan_id, int kick_interval);
+typedef int (*HPMHOOK_pre_mapif_parse_ClanMemberCount) (int *fd, int *clan_id, int *kick_interval);
+typedef int (*HPMHOOK_post_mapif_parse_ClanMemberCount) (int retVal___, int fd, int clan_id, int kick_interval);
 #endif // CHAR_MAPIF_H
 #ifdef COMMON_MAPINDEX_H /* mapindex */
 typedef int (*HPMHOOK_pre_mapindex_init) (void);

@@ -33,6 +33,7 @@ HPMHooks.source.buyingstore = *buyingstore;
 HPMHooks.source.channel = *channel;
 HPMHooks.source.chat = *chat;
 HPMHooks.source.chrif = *chrif;
+HPMHooks.source.clan = *clan;
 HPMHooks.source.clif = *clif;
 HPMHooks.source.cmdline = *cmdline;
 HPMHooks.source.console = *console;
