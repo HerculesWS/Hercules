@@ -25,6 +25,7 @@
 #include "char/char.h"
 #include "char/geoip.h"
 #include "char/int_auction.h"
+#include "char/int_clan.h"
 #include "char/int_elemental.h"
 #include "char/int_guild.h"
 #include "char/int_homun.h"
@@ -72,7 +73,7 @@ int inter_recv_packet_length[] = {
 	 6,-1, 0, 0,  0, 0, 0, 0, 10,-1, 0, 0,  0, 0,  0, 0,    // 3010- Account Storage [Smokexyz]
 	-1,10,-1,14, 14,19, 6,-1, 14,14, 0, 0,  0, 0,  0, 0,    // 3020- Party
 	-1, 6,-1,-1, 55,19, 6,-1, 14,-1,-1,-1, 18,19,186,-1,    // 3030-
-	-1, 9, 0, 0,  0, 0, 0, 0,  7, 6,10,10, 10,-1,  0, 0,    // 3040-
+	-1, 9, 0, 0, 10,10, 0, 0,  7, 6,10,10, 10,-1,  0, 0,    // 3040- Clan System(3044-3045)
 	-1,-1,10,10,  0,-1,12, 0,  0, 0, 0, 0,  0, 0,  0, 0,    // 3050-  Auction System [Zephyrus], Item Bound [Mhalicot]
 	 6,-1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0,    // 3060-  Quest system [Kevin] [Inkfish]
 	-1,10, 6,-1,  0, 0, 0, 0,  0, 0, 0, 0, -1,10,  6,-1,    // 3070-  Mercenary packets [Zephyrus], Elemental packets [pakpil]
@@ -1420,6 +1421,7 @@ int inter_parse_frommap(int fd)
 		  || inter_auction->parse_frommap(fd)
 		  || inter_quest->parse_frommap(fd)
 		  || inter_rodex->parse_frommap(fd)
+		  || inter_clan->parse_frommap(fd)
 		   )
 			break;
 		else

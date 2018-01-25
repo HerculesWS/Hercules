@@ -845,6 +845,9 @@ typedef enum sc_type {
 
 	// Rodex
 	SC_DAILYSENDMAILCNT,
+
+	// Clan System
+	SC_CLAN_INFO,
 #ifndef SC_MAX
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 #endif
