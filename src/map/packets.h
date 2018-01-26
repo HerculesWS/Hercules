@@ -3914,4 +3914,62 @@ packet(0x96e,-1,clif->ackmergeitems);
 #endif
 #endif  // PACKETVER_ZERO
 
+// 2017-12-13bRagexe
+#if PACKETVER >= 20171213
+// new packets
+	packet(0x0ae3,-1); // AC_LOGIN_OTP
+	packet(0x0ae6,30);
+	packet(0x0ae7,30);
+// changed packet sizes
+#endif
+
+// 2017-12-20aRagexe
+#if PACKETVER >= 20171220
+// new packets
+	packet(0x0ae8,2);
+	packet(0x0ae9,64);
+	packet(0x0aea,11);
+// changed packet sizes
+#endif
+
+// 2017-12-27aRagexe
+#if PACKETVER >= 20171227
+// new packets
+	packet(0x0aeb,11);
+	packet(0x0aec,2);
+// changed packet sizes
+	packet(0x0aea,2);
+#endif
+
+// 2018-01-03aRagexe
+#if PACKETVER >= 20180103
+// new packets
+	packet(0x0aed,2);
+	packet(0x0aee,2);
+// changed packet sizes
+#ifdef PACKETVER_RE
+	packet(0x09a0,6); // HC_CHARLIST_NOTIFY
+#endif
+// changed packet sizes
+#endif
+
+#if PACKETVER >= 20180117
+// new packets
+	packet(0x0aef,2);
+	packet(0x0af0,10);
+// changed packet sizes
+	packet(0x0ae9,13);
+#endif
+
+// 2018-01-24bRagexeRE
+#if PACKETVER >= 20180124
+// new packets
+	packet(0x0af2,40,clif->pDull/*,XXX*/);
+	packet(0x0af3,-1,clif->pDull/*,XXX*/);
+// changed packet sizes
+#ifndef PACKETVER_RE
+	packet(0x0821,102,clif->pDull/*,XXX*/); // AC_OTP_USER
+#endif
+#endif
+
 #endif /* MAP_PACKETS_H */
