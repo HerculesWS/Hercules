@@ -950,6 +950,7 @@ ACMD(hide) {
 		//bugreport:2266
 		map->foreachinmovearea(clif->insight, &sd->bl, AREA_SIZE, sd->bl.x, sd->bl.y, BL_ALL, &sd->bl);
 	} else {
+		clif->clearunit_area(&sd->bl, CLR_OUTSIGHT);
 		sd->sc.option |= OPTION_INVISIBLE;
 		sd->vd.class = INVISIBLE_CLASS;
 		clif->message(fd, msg_fd(fd,11)); // Invisible: On
