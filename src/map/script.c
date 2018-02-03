@@ -23861,6 +23861,45 @@ BUILDIN(rodex_sendmail2)
 }
 
 /**
+ * adopt(<parent_RID>, <baby_RID>);
+ */
+BUILDIN(adopt)
+{
+	struct map_session_data *sd = script->id2sd(st, script_getnum(st, 2));
+	struct map_session_data *b_sd = script->id2sd(st, script_getnum(st, 3));
+	enum adopt_responses response;
+
+	if (sd == NULL) {
+		ShowError("buildin_adopt: Non-existant parent character %d requested.\n", script_getnum(st, 2));
+		return false;
+	}
+	
+	if (b_sd == NULL) {
+		ShowError("buildin_adopt: Non-existant baby character %d requested.\n", script_getnum(st, 3));
+		return false;
+	}
+
+	response = pc->can_adopt(sd, script->charid2sd(st, sd->status.partner_id), b_sd);
+
+	if (response == ADOPT_ALLOWED) {
+		struct map_session_data *p_sd = script->charid2sd(st, sd->status.partner_id);
+
+		if (p_sd == NULL) {
+			ShowError("buildin_adopt: Non-existant partner character %d requested.\n", sd->status.partner_id);
+			return false;
+		}
+
+		b_sd->adopt_invite = sd->status.account_id;
+		clif->adopt_request(b_sd, sd, p_sd->status.account_id);
+		script_pushint(st, ADOPT_ALLOWED);
+		return true;
+	}
+
+	script_pushint(st, response);
+	return false;
+}
+
+/**
  * Adds a built-in script function.
  *
  * @param buildin Script function data
@@ -24489,6 +24528,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(itemeffect,"v"),
 		BUILDIN_DEF2(itemeffect,"consumeitem","v"), /* alias of itemeffect */
 		BUILDIN_DEF(delequip,"i"),
+		BUILDIN_DEF(adopt,"vv"),
 		/**
 		 * @commands (script based)
 		 **/
