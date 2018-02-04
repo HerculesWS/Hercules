@@ -3356,10 +3356,10 @@ struct {
 	struct HPMHookPoint *HP_map_create_map_data_other_server_post;
 	struct HPMHookPoint *HP_map_eraseallipport_sub_pre;
 	struct HPMHookPoint *HP_map_eraseallipport_sub_post;
-	struct HPMHookPoint *HP_map_init_mapcache_pre;
-	struct HPMHookPoint *HP_map_init_mapcache_post;
 	struct HPMHookPoint *HP_map_readfromcache_pre;
 	struct HPMHookPoint *HP_map_readfromcache_post;
+	struct HPMHookPoint *HP_map_readfromcache_v1_pre;
+	struct HPMHookPoint *HP_map_readfromcache_v1_post;
 	struct HPMHookPoint *HP_map_addmap_pre;
 	struct HPMHookPoint *HP_map_addmap_post;
 	struct HPMHookPoint *HP_map_delmapid_pre;
@@ -9635,10 +9635,10 @@ struct {
 	int HP_map_create_map_data_other_server_post;
 	int HP_map_eraseallipport_sub_pre;
 	int HP_map_eraseallipport_sub_post;
-	int HP_map_init_mapcache_pre;
-	int HP_map_init_mapcache_post;
 	int HP_map_readfromcache_pre;
 	int HP_map_readfromcache_post;
+	int HP_map_readfromcache_v1_pre;
+	int HP_map_readfromcache_v1_post;
 	int HP_map_addmap_pre;
 	int HP_map_addmap_post;
 	int HP_map_delmapid_pre;

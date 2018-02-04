@@ -44370,15 +44370,15 @@ int HP_map_eraseallipport_sub(union DBKey key, struct DBData *data, va_list va) 
 	}
 	return retVal___;
 }
-char* HP_map_init_mapcache(FILE *fp) {
+bool HP_map_readfromcache(struct map_data *m) {
 	int hIndex = 0;
-	char* retVal___ = NULL;
-	if (HPMHooks.count.HP_map_init_mapcache_pre > 0) {
-		char* (*preHookFunc) (FILE **fp);
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_map_readfromcache_pre > 0) {
+		bool (*preHookFunc) (struct map_data **m);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_init_mapcache_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_map_init_mapcache_pre[hIndex].func;
-			retVal___ = preHookFunc(&fp);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_readfromcache_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_map_readfromcache_pre[hIndex].func;
+			retVal___ = preHookFunc(&m);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -44386,26 +44386,26 @@ char* HP_map_init_mapcache(FILE *fp) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.map.init_mapcache(fp);
+		retVal___ = HPMHooks.source.map.readfromcache(m);
 	}
-	if (HPMHooks.count.HP_map_init_mapcache_post > 0) {
-		char* (*postHookFunc) (char* retVal___, FILE *fp);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_init_mapcache_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_map_init_mapcache_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, fp);
+	if (HPMHooks.count.HP_map_readfromcache_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct map_data *m);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_readfromcache_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_map_readfromcache_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, m);
 		}
 	}
 	return retVal___;
 }
-int HP_map_readfromcache(struct map_data *m, char *buffer) {
+bool HP_map_readfromcache_v1(FILE *fp, struct map_data *m, unsigned int file_size) {
 	int hIndex = 0;
-	int retVal___ = 0;
-	if (HPMHooks.count.HP_map_readfromcache_pre > 0) {
-		int (*preHookFunc) (struct map_data **m, char **buffer);
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_map_readfromcache_v1_pre > 0) {
+		bool (*preHookFunc) (FILE **fp, struct map_data **m, unsigned int *file_size);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_readfromcache_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_map_readfromcache_pre[hIndex].func;
-			retVal___ = preHookFunc(&m, &buffer);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_readfromcache_v1_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_map_readfromcache_v1_pre[hIndex].func;
+			retVal___ = preHookFunc(&fp, &m, &file_size);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -44413,13 +44413,13 @@ int HP_map_readfromcache(struct map_data *m, char *buffer) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.map.readfromcache(m, buffer);
+		retVal___ = HPMHooks.source.map.readfromcache_v1(fp, m, file_size);
 	}
-	if (HPMHooks.count.HP_map_readfromcache_post > 0) {
-		int (*postHookFunc) (int retVal___, struct map_data *m, char *buffer);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_readfromcache_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_map_readfromcache_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, m, buffer);
+	if (HPMHooks.count.HP_map_readfromcache_v1_post > 0) {
+		bool (*postHookFunc) (bool retVal___, FILE *fp, struct map_data *m, unsigned int file_size);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_readfromcache_v1_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_map_readfromcache_v1_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, fp, m, file_size);
 		}
 	}
 	return retVal___;

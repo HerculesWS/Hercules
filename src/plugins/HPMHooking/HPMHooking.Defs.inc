@@ -4304,10 +4304,10 @@ typedef struct DBData (*HPMHOOK_pre_map_create_map_data_other_server) (union DBK
 typedef struct DBData (*HPMHOOK_post_map_create_map_data_other_server) (struct DBData retVal___, union DBKey key, va_list args);
 typedef int (*HPMHOOK_pre_map_eraseallipport_sub) (union DBKey *key, struct DBData **data, va_list va);
 typedef int (*HPMHOOK_post_map_eraseallipport_sub) (int retVal___, union DBKey key, struct DBData *data, va_list va);
-typedef char* (*HPMHOOK_pre_map_init_mapcache) (FILE **fp);
-typedef char* (*HPMHOOK_post_map_init_mapcache) (char* retVal___, FILE *fp);
-typedef int (*HPMHOOK_pre_map_readfromcache) (struct map_data **m, char **buffer);
-typedef int (*HPMHOOK_post_map_readfromcache) (int retVal___, struct map_data *m, char *buffer);
+typedef bool (*HPMHOOK_pre_map_readfromcache) (struct map_data **m);
+typedef bool (*HPMHOOK_post_map_readfromcache) (bool retVal___, struct map_data *m);
+typedef bool (*HPMHOOK_pre_map_readfromcache_v1) (FILE **fp, struct map_data **m, unsigned int *file_size);
+typedef bool (*HPMHOOK_post_map_readfromcache_v1) (bool retVal___, FILE *fp, struct map_data *m, unsigned int file_size);
 typedef int (*HPMHOOK_pre_map_addmap) (const char **mapname);
 typedef int (*HPMHOOK_post_map_addmap) (int retVal___, const char *mapname);
 typedef void (*HPMHOOK_pre_map_delmapid) (int *id);
