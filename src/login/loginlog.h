@@ -21,15 +21,28 @@
 #ifndef LOGIN_LOGINLOG_H
 #define LOGIN_LOGINLOG_H
 
+#include "common/hercules.h"
 #include "common/cbasetypes.h"
 
+struct config_t;
+
+/**
+ * Loginlog.c Interface
+ **/
+struct loginlog_interface {
+	unsigned long (*failedattempts) (uint32 ip, unsigned int minutes);
+	void (*log) (uint32 ip, const char* username, int rcode, const char* message);
+	bool (*init) (void);
+	bool (*final) (void);
+	bool (*config_read_names) (const char *filename, struct config_t *config, bool imported);
+	bool (*config_read_log) (const char *filename, struct config_t *config, bool imported);
+	bool (*config_read) (const char *filename, bool imported);
+};
+
 #ifdef HERCULES_CORE
-// TODO: Interface
-unsigned long loginlog_failedattempts(uint32 ip, unsigned int minutes);
-void loginlog_log(uint32 ip, const char* username, int rcode, const char* message);
-bool loginlog_init(void);
-bool loginlog_final(void);
-bool loginlog_config_read(const char *filename, bool imported);
+void loginlog_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct loginlog_interface *loginlog;
 
 #endif /* LOGIN_LOGINLOG_H */

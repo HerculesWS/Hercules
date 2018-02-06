@@ -269,7 +269,7 @@ void ipban_log(uint32 ip)
 	if (!login->config->ipban)
 		return;// ipban disabled
 
-	failures = loginlog_failedattempts(ip, login->config->dynamic_pass_failure_ban_interval);// how many times failed account? in one ip.
+	failures = loginlog->failedattempts(ip, login->config->dynamic_pass_failure_ban_interval);// how many times failed account? in one ip.
 
 	// if over the limit, add a temporary ban entry
 	if (failures >= login->config->dynamic_pass_failure_ban_limit)

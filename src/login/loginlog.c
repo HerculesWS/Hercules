@@ -45,6 +45,9 @@ static char   log_login_db[256] = "loginlog";
 static struct Sql *sql_handle = NULL;
 static bool enabled = false;
 
+struct loginlog_interface loginlog_s;
+struct loginlog_interface *loginlog;
+
 
 // Returns the number of failed login attempts by the ip in the last minutes.
 unsigned long loginlog_failedattempts(uint32 ip, unsigned int minutes)
@@ -206,20 +209,32 @@ bool loginlog_config_read(const char *filename, bool imported)
 	if (!libconfig->load_file(&config, filename))
 		return false; // Error message is already shown by libconfig->load_file
 
-	if (!loginlog_config_read_names(filename, &config, imported))
+	if (!loginlog->config_read_names(filename, &config, imported))
 		retval = false;
-	if (!loginlog_config_read_log(filename, &config, imported))
+	if (!loginlog->config_read_log(filename, &config, imported))
 		retval = false;
 
 	if (libconfig->lookup_string(&config, "import", &import) == CONFIG_TRUE) {
 		if (strcmp(import, filename) == 0 || strcmp(import, "conf/common/inter-server.conf") == 0) {
 			ShowWarning("inter_config_read: Loop detected! Skipping 'import'...\n");
 		} else {
-			if (!loginlog_config_read(import, true))
+			if (!loginlog->config_read(import, true))
 				retval = false;
 		}
 	}
 
 	libconfig->destroy(&config);
 	return retval;
+}
+
+void loginlog_defaults(void)
+{
+	loginlog = &loginlog_s;
+	loginlog->failedattempts = loginlog_failedattempts;
+	loginlog->log = loginlog_log;
+	loginlog->init = loginlog_init;
+	loginlog->final = loginlog_final;
+	loginlog->config_read_names = loginlog_config_read_names;
+	loginlog->config_read_log = loginlog_config_read_log;
+	loginlog->config_read = loginlog_config_read;
 }

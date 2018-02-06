@@ -727,7 +727,7 @@ bool login_fromchar_parse_wrong_pincode(int fd)
 			return true;
 		}
 
-		loginlog_log(sockt->host2ip(acc.last_ip), acc.userid, 100, "PIN Code check failed"); // FIXME: Do we really want to log this with the same code as successful logins?
+		loginlog->log(sockt->host2ip(acc.last_ip), acc.userid, 100, "PIN Code check failed"); // FIXME: Do we really want to log this with the same code as successful logins?
 	}
 
 	login->remove_online_user(acc.account_id);
@@ -1260,7 +1260,7 @@ void login_auth_ok(struct login_session_data* sd)
 		return;
 	}
 
-	loginlog_log(ip, sd->userid, 100, "login ok");
+	loginlog->log(ip, sd->userid, 100, "login ok");
 	ShowStatus("Connection of the account '%s' accepted.\n", sd->userid);
 
 	// create temporary auth entry
@@ -1324,7 +1324,7 @@ void login_auth_failed(struct login_session_data *sd, int result)
 		default : error = "Unknown Error."; break;
 		}
 
-		loginlog_log(ip, sd->userid, result, error); // FIXME: result can be 100, conflicting with the value 100 we use for successful login...
+		loginlog->log(ip, sd->userid, result, error); // FIXME: result can be 100, conflicting with the value 100 we use for successful login...
 	}
 
 	if (result == 1 && login->config->dynamic_pass_failure_ban && !sockt->trusted_ip_check(ip))
@@ -1432,7 +1432,7 @@ void login_parse_request_connection(int fd, struct login_session_data* sd, const
 
 	ShowInfo("Connection request of the char-server '%s' @ %u.%u.%u.%u:%u (account: '%s', pass: '%s', ip: '%s')\n", server_name, CONVIP(server_ip), server_port, sd->userid, sd->passwd, ip);
 	sprintf(message, "charserver - %s@%u.%u.%u.%u:%u", server_name, CONVIP(server_ip), server_port);
-	loginlog_log(sockt->session[fd]->client_addr, sd->userid, 100, message);
+	loginlog->log(sockt->session[fd]->client_addr, sd->userid, 100, message);
 
 	result = login->mmo_auth(sd, true);
 	if (core->runflag == LOGINSERVER_ST_RUNNING &&
@@ -1915,7 +1915,7 @@ bool login_config_read(const char *filename, bool imported)
 	if (!login->config_read_users(filename, &config, imported))
 		retval = false;
 
-	if (!loginlog_config_read("conf/common/inter-server.conf", imported)) // Only inter-server
+	if (!loginlog->config_read("conf/common/inter-server.conf", imported)) // Only inter-server
 		retval = false;
 
 	if (!HPM->parse_conf(&config, filename, HPCT_LOGIN, imported))
@@ -1975,10 +1975,10 @@ int do_final(void)
 	login->clear_client_hash_nodes();
 	login->clear_dnsbl_servers();
 
-	loginlog_log(0, "login server", 100, "login server shutdown");
+	loginlog->log(0, "login server", 100, "login server shutdown");
 
 	if (login->config->log_login)
-		loginlog_final();
+		loginlog->final();
 
 	ipban->final();
 
@@ -2111,6 +2111,7 @@ int do_init(int argc, char** argv)
 	lchrif_defaults();
 	login_defaults();
 	lclif_defaults();
+	loginlog_defaults();
 
 	// read login-server configuration
 	login->config_set_defaults();
@@ -2154,7 +2155,7 @@ int do_init(int argc, char** argv)
 
 	// initialize logging
 	if (login->config->log_login)
-		loginlog_init();
+		loginlog->init();
 
 	// initialize static and dynamic ipban system
 	ipban->init();
@@ -2203,7 +2204,7 @@ int do_init(int argc, char** argv)
 #endif // CONSOLE_INPUT
 
 	ShowStatus("The login-server is "CL_GREEN"ready"CL_RESET" (Server is listening on the port %u).\n\n", login->config->login_port);
-	loginlog_log(0, "login server", 100, "login server started");
+	loginlog->log(0, "login server", 100, "login server started");
 
 	HPM->event(HPET_READY);
 

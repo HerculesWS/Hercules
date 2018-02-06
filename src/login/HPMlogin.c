@@ -29,6 +29,7 @@
 #include "login/lclif.h"
 #include "login/lclif.p.h"
 #include "login/login.h"
+#include "login/loginlog.h"
 #include "common/HPMi.h"
 #include "common/conf.h"
 #include "common/console.h"
