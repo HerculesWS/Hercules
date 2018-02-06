@@ -33,6 +33,46 @@ typedef bool (*HPMHOOK_post_HCache_check) (bool retVal___, const char *file);
 typedef FILE* (*HPMHOOK_pre_HCache_open) (const char **file, const char **opt);
 typedef FILE* (*HPMHOOK_post_HCache_open) (FILE* retVal___, const char *file, const char *opt);
 #endif // COMMON_UTILS_H
+#ifdef LOGIN_ACCOUNT_H /* account */
+typedef struct Sql* (*HPMHOOK_pre_account_db_sql_up) (AccountDB **self);
+typedef struct Sql* (*HPMHOOK_post_account_db_sql_up) (struct Sql* retVal___, AccountDB *self);
+typedef void (*HPMHOOK_pre_account_mmo_send_accreg2) (AccountDB **self, int *fd, int *account_id, int *char_id);
+typedef void (*HPMHOOK_post_account_mmo_send_accreg2) (AccountDB *self, int fd, int account_id, int char_id);
+typedef void (*HPMHOOK_pre_account_mmo_save_accreg2) (AccountDB **self, int *fd, int *account_id, int *char_id);
+typedef void (*HPMHOOK_post_account_mmo_save_accreg2) (AccountDB *self, int fd, int account_id, int char_id);
+typedef bool (*HPMHOOK_pre_account_mmo_auth_fromsql) (AccountDB_SQL **db, struct mmo_account **acc, int *account_id);
+typedef bool (*HPMHOOK_post_account_mmo_auth_fromsql) (bool retVal___, AccountDB_SQL *db, struct mmo_account *acc, int account_id);
+typedef bool (*HPMHOOK_pre_account_mmo_auth_tosql) (AccountDB_SQL **db, const struct mmo_account **acc, bool *is_new);
+typedef bool (*HPMHOOK_post_account_mmo_auth_tosql) (bool retVal___, AccountDB_SQL *db, const struct mmo_account *acc, bool is_new);
+typedef AccountDB* (*HPMHOOK_pre_account_db_sql) (void);
+typedef AccountDB* (*HPMHOOK_post_account_db_sql) (AccountDB* retVal___);
+typedef bool (*HPMHOOK_pre_account_db_sql_init) (AccountDB **self);
+typedef bool (*HPMHOOK_post_account_db_sql_init) (bool retVal___, AccountDB *self);
+typedef void (*HPMHOOK_pre_account_db_sql_destroy) (AccountDB **self);
+typedef void (*HPMHOOK_post_account_db_sql_destroy) (AccountDB *self);
+typedef bool (*HPMHOOK_pre_account_db_sql_get_property) (AccountDB **self, const char **key, char **buf, size_t *buflen);
+typedef bool (*HPMHOOK_post_account_db_sql_get_property) (bool retVal___, AccountDB *self, const char *key, char *buf, size_t buflen);
+typedef bool (*HPMHOOK_pre_account_db_sql_set_property) (AccountDB **self, struct config_t **config, bool *imported);
+typedef bool (*HPMHOOK_post_account_db_sql_set_property) (bool retVal___, AccountDB *self, struct config_t *config, bool imported);
+typedef bool (*HPMHOOK_pre_account_db_sql_create) (AccountDB **self, struct mmo_account **acc);
+typedef bool (*HPMHOOK_post_account_db_sql_create) (bool retVal___, AccountDB *self, struct mmo_account *acc);
+typedef bool (*HPMHOOK_pre_account_db_sql_remove) (AccountDB **self, const int *account_id);
+typedef bool (*HPMHOOK_post_account_db_sql_remove) (bool retVal___, AccountDB *self, const int account_id);
+typedef bool (*HPMHOOK_pre_account_db_sql_save) (AccountDB **self, const struct mmo_account **acc);
+typedef bool (*HPMHOOK_post_account_db_sql_save) (bool retVal___, AccountDB *self, const struct mmo_account *acc);
+typedef bool (*HPMHOOK_pre_account_db_sql_load_num) (AccountDB **self, struct mmo_account **acc, const int *account_id);
+typedef bool (*HPMHOOK_post_account_db_sql_load_num) (bool retVal___, AccountDB *self, struct mmo_account *acc, const int account_id);
+typedef bool (*HPMHOOK_pre_account_db_sql_load_str) (AccountDB **self, struct mmo_account **acc, const char **userid);
+typedef bool (*HPMHOOK_post_account_db_sql_load_str) (bool retVal___, AccountDB *self, struct mmo_account *acc, const char *userid);
+typedef AccountDBIterator* (*HPMHOOK_pre_account_db_sql_iterator) (AccountDB **self);
+typedef AccountDBIterator* (*HPMHOOK_post_account_db_sql_iterator) (AccountDBIterator* retVal___, AccountDB *self);
+typedef void (*HPMHOOK_pre_account_db_sql_iter_destroy) (AccountDBIterator **self);
+typedef void (*HPMHOOK_post_account_db_sql_iter_destroy) (AccountDBIterator *self);
+typedef bool (*HPMHOOK_pre_account_db_sql_iter_next) (AccountDBIterator **self, struct mmo_account **acc);
+typedef bool (*HPMHOOK_post_account_db_sql_iter_next) (bool retVal___, AccountDBIterator *self, struct mmo_account *acc);
+typedef bool (*HPMHOOK_pre_account_db_read_inter) (AccountDB_SQL **db, const char **filename, bool *imported);
+typedef bool (*HPMHOOK_post_account_db_read_inter) (bool retVal___, AccountDB_SQL *db, const char *filename, bool imported);
+#endif // LOGIN_ACCOUNT_H
 #ifdef MAP_ATCOMMAND_H /* atcommand */
 typedef void (*HPMHOOK_pre_atcommand_init) (bool *minimal);
 typedef void (*HPMHOOK_post_atcommand_init) (bool minimal);
@@ -3429,6 +3469,26 @@ typedef void (*HPMHOOK_post_intif_pRodexCheckName) (int fd);
 typedef void (*HPMHOOK_pre_intif_pRecvClanMemberAction) (int *fd);
 typedef void (*HPMHOOK_post_intif_pRecvClanMemberAction) (int fd);
 #endif // MAP_INTIF_H
+#ifdef LOGIN_IPBAN_H /* ipban */
+typedef void (*HPMHOOK_pre_ipban_init) (void);
+typedef void (*HPMHOOK_post_ipban_init) (void);
+typedef void (*HPMHOOK_pre_ipban_final) (void);
+typedef void (*HPMHOOK_post_ipban_final) (void);
+typedef int (*HPMHOOK_pre_ipban_cleanup) (int *tid, int64 *tick, int *id, intptr_t *data);
+typedef int (*HPMHOOK_post_ipban_cleanup) (int retVal___, int tid, int64 tick, int id, intptr_t data);
+typedef bool (*HPMHOOK_pre_ipban_config_read_inter) (const char **filename, bool *imported);
+typedef bool (*HPMHOOK_post_ipban_config_read_inter) (bool retVal___, const char *filename, bool imported);
+typedef bool (*HPMHOOK_pre_ipban_config_read_connection) (const char **filename, struct config_t **config, bool *imported);
+typedef bool (*HPMHOOK_post_ipban_config_read_connection) (bool retVal___, const char *filename, struct config_t *config, bool imported);
+typedef bool (*HPMHOOK_pre_ipban_config_read_dynamic) (const char **filename, struct config_t **config, bool *imported);
+typedef bool (*HPMHOOK_post_ipban_config_read_dynamic) (bool retVal___, const char *filename, struct config_t *config, bool imported);
+typedef bool (*HPMHOOK_pre_ipban_config_read) (const char **filename, struct config_t **config, bool *imported);
+typedef bool (*HPMHOOK_post_ipban_config_read) (bool retVal___, const char *filename, struct config_t *config, bool imported);
+typedef bool (*HPMHOOK_pre_ipban_check) (uint32 *ip);
+typedef bool (*HPMHOOK_post_ipban_check) (bool retVal___, uint32 ip);
+typedef void (*HPMHOOK_pre_ipban_log) (uint32 *ip);
+typedef void (*HPMHOOK_post_ipban_log) (uint32 ip);
+#endif // LOGIN_IPBAN_H
 #ifdef MAP_IRC_BOT_H /* ircbot */
 typedef void (*HPMHOOK_pre_ircbot_init) (bool *minimal);
 typedef void (*HPMHOOK_post_ircbot_init) (bool minimal);
@@ -3599,6 +3659,16 @@ typedef bool (*HPMHOOK_post_itemdb_lookup_const) (bool retVal___, const struct c
 typedef bool (*HPMHOOK_pre_itemdb_lookup_const_mask) (const struct config_setting_t **it, const char **name, int **value);
 typedef bool (*HPMHOOK_post_itemdb_lookup_const_mask) (bool retVal___, const struct config_setting_t *it, const char *name, int *value);
 #endif // MAP_ITEMDB_H
+#ifdef LOGIN_LOGIN_H /* lchrif */
+typedef void (*HPMHOOK_pre_lchrif_server_init) (int *id);
+typedef void (*HPMHOOK_post_lchrif_server_init) (int id);
+typedef void (*HPMHOOK_pre_lchrif_server_destroy) (int *id);
+typedef void (*HPMHOOK_post_lchrif_server_destroy) (int id);
+typedef void (*HPMHOOK_pre_lchrif_server_reset) (int *id);
+typedef void (*HPMHOOK_post_lchrif_server_reset) (int id);
+typedef void (*HPMHOOK_pre_lchrif_on_disconnect) (int *id);
+typedef void (*HPMHOOK_post_lchrif_on_disconnect) (int id);
+#endif // LOGIN_LOGIN_H
 #ifdef LOGIN_LCLIF_H /* lclif */
 typedef void (*HPMHOOK_pre_lclif_init) (void);
 typedef void (*HPMHOOK_post_lclif_init) (void);
@@ -3991,6 +4061,22 @@ typedef void (*HPMHOOK_post_loginif_send_users_count) (int users);
 typedef void (*HPMHOOK_pre_loginif_connect_to_server) (void);
 typedef void (*HPMHOOK_post_loginif_connect_to_server) (void);
 #endif // CHAR_LOGINIF_H
+#ifdef LOGIN_LOGINLOG_H /* loginlog */
+typedef unsigned long (*HPMHOOK_pre_loginlog_failedattempts) (uint32 *ip, unsigned int *minutes);
+typedef unsigned long (*HPMHOOK_post_loginlog_failedattempts) (unsigned long retVal___, uint32 ip, unsigned int minutes);
+typedef void (*HPMHOOK_pre_loginlog_log) (uint32 *ip, const char **username, int *rcode, const char **message);
+typedef void (*HPMHOOK_post_loginlog_log) (uint32 ip, const char *username, int rcode, const char *message);
+typedef bool (*HPMHOOK_pre_loginlog_init) (void);
+typedef bool (*HPMHOOK_post_loginlog_init) (bool retVal___);
+typedef bool (*HPMHOOK_pre_loginlog_final) (void);
+typedef bool (*HPMHOOK_post_loginlog_final) (bool retVal___);
+typedef bool (*HPMHOOK_pre_loginlog_config_read_names) (const char **filename, struct config_t **config, bool *imported);
+typedef bool (*HPMHOOK_post_loginlog_config_read_names) (bool retVal___, const char *filename, struct config_t *config, bool imported);
+typedef bool (*HPMHOOK_pre_loginlog_config_read_log) (const char **filename, struct config_t **config, bool *imported);
+typedef bool (*HPMHOOK_post_loginlog_config_read_log) (bool retVal___, const char *filename, struct config_t *config, bool imported);
+typedef bool (*HPMHOOK_pre_loginlog_config_read) (const char **filename, bool *imported);
+typedef bool (*HPMHOOK_post_loginlog_config_read) (bool retVal___, const char *filename, bool imported);
+#endif // LOGIN_LOGINLOG_H
 #ifdef MAP_MAIL_H /* mail */
 typedef void (*HPMHOOK_pre_mail_clear) (struct map_session_data **sd);
 typedef void (*HPMHOOK_post_mail_clear) (struct map_session_data *sd);

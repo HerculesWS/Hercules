@@ -309,11 +309,20 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#ifdef LOGIN_ACCOUNT_H
 		{ "Account_engine", sizeof(struct Account_engine), SERVER_TYPE_LOGIN },
 		{ "AccountDB", sizeof(struct AccountDB), SERVER_TYPE_LOGIN },
+		{ "AccountDB_SQL", sizeof(struct AccountDB_SQL), SERVER_TYPE_LOGIN },
 		{ "AccountDBIterator", sizeof(struct AccountDBIterator), SERVER_TYPE_LOGIN },
+		{ "AccountDBIterator_SQL", sizeof(struct AccountDBIterator_SQL), SERVER_TYPE_LOGIN },
+		{ "account_interface", sizeof(struct account_interface), SERVER_TYPE_LOGIN },
 		{ "mmo_account", sizeof(struct mmo_account), SERVER_TYPE_LOGIN },
 	#else
 		#define LOGIN_ACCOUNT_H
 	#endif // LOGIN_ACCOUNT_H
+	#ifdef LOGIN_IPBAN_H
+		{ "ipban_interface", sizeof(struct ipban_interface), SERVER_TYPE_LOGIN },
+		{ "s_ipban_dbs", sizeof(struct s_ipban_dbs), SERVER_TYPE_LOGIN },
+	#else
+		#define LOGIN_IPBAN_H
+	#endif // LOGIN_IPBAN_H
 	#ifdef LOGIN_LCLIF_H
 		{ "lclif_interface", sizeof(struct lclif_interface), SERVER_TYPE_LOGIN },
 		{ "login_packet_db", sizeof(struct login_packet_db), SERVER_TYPE_LOGIN },
@@ -341,14 +350,22 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define LOGIN_LCLIF_P_H
 	#endif // LOGIN_LCLIF_P_H
+	#ifdef LOGIN_LOGINLOG_H
+		{ "loginlog_interface", sizeof(struct loginlog_interface), SERVER_TYPE_LOGIN },
+		{ "s_loginlog_dbs", sizeof(struct s_loginlog_dbs), SERVER_TYPE_LOGIN },
+	#else
+		#define LOGIN_LOGINLOG_H
+	#endif // LOGIN_LOGINLOG_H
 	#ifdef LOGIN_LOGIN_H
 		{ "Login_Config", sizeof(struct Login_Config), SERVER_TYPE_LOGIN },
 		{ "client_hash_node", sizeof(struct client_hash_node), SERVER_TYPE_LOGIN },
+		{ "lchrif_interface", sizeof(struct lchrif_interface), SERVER_TYPE_LOGIN },
 		{ "login_auth_node", sizeof(struct login_auth_node), SERVER_TYPE_LOGIN },
 		{ "login_interface", sizeof(struct login_interface), SERVER_TYPE_LOGIN },
 		{ "login_session_data", sizeof(struct login_session_data), SERVER_TYPE_LOGIN },
 		{ "mmo_char_server", sizeof(struct mmo_char_server), SERVER_TYPE_LOGIN },
 		{ "online_login_data", sizeof(struct online_login_data), SERVER_TYPE_LOGIN },
+		{ "s_login_dbs", sizeof(struct s_login_dbs), SERVER_TYPE_LOGIN },
 	#else
 		#define LOGIN_LOGIN_H
 	#endif // LOGIN_LOGIN_H
