@@ -159,6 +159,7 @@ struct online_login_data {
 
 struct s_login_dbs {
 	struct mmo_char_server server[MAX_SERVERS];
+	struct Account_engine *account_engine;
 };
 
 /**

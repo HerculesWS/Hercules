@@ -57,9 +57,7 @@ struct lchrif_interface lchrif_s;
 struct lchrif_interface *lchrif;
 struct Login_Config login_config_;
 
-struct Account_engine account_engine[] = {
-	{NULL, NULL}
-};
+struct Account_engine account_engine;
 
 // account database
 AccountDB* accounts = NULL;
@@ -1609,7 +1607,7 @@ bool login_config_read_log(const char *filename, struct config_t *config, bool i
 bool login_config_read_account(const char *filename, struct config_t *config, bool imported)
 {
 	struct config_setting_t *setting = NULL;
-	AccountDB *db = account_engine[0].db;
+	AccountDB *db = login->dbs->account_engine->db;
 	bool retval = true;
 
 	nullpo_retr(false, filename);
@@ -1982,10 +1980,10 @@ int do_final(void)
 
 	ipban->final();
 
-	if( account_engine[0].db )
+	if (login->dbs->account_engine->db)
 	{// destroy account engine
-		account_engine[0].db->destroy(account_engine[0].db);
-		account_engine[0].db = NULL;
+		login->dbs->account_engine->db->destroy(login->dbs->account_engine->db);
+		login->dbs->account_engine->db = NULL;
 	}
 	accounts = NULL; // destroyed in account_engine
 	login->online_db->destroy(login->online_db, NULL);
@@ -2097,11 +2095,12 @@ int do_init(int argc, char** argv)
 	int i;
 
 	account_defaults();
+	login_defaults();
 
 	// initialize engine (to accept config settings)
-	account_engine[0].constructor = account->db_sql;
-	account_engine[0].db = account_engine[0].constructor();
-	accounts = account_engine[0].db;
+	login->dbs->account_engine->constructor = account->db_sql;
+	login->dbs->account_engine->db = login->dbs->account_engine->constructor();
+	accounts = login->dbs->account_engine->db;
 	if( accounts == NULL ) {
 		ShowFatalError("do_init: account engine 'sql' not found.\n");
 		exit(EXIT_FAILURE);
@@ -2109,7 +2108,6 @@ int do_init(int argc, char** argv)
 
 	ipban_defaults();
 	lchrif_defaults();
-	login_defaults();
 	lclif_defaults();
 	loginlog_defaults();
 
@@ -2218,6 +2216,9 @@ void login_defaults(void)
 	login->config = &login_config_;
 	login->accounts = accounts;
 	login->dbs = &logindbs;
+	login->dbs->account_engine = &account_engine;
+	login->dbs->account_engine->constructor = NULL;
+	login->dbs->account_engine->db = NULL;
 
 	login->mmo_auth = login_mmo_auth;
 	login->mmo_auth_new = login_mmo_auth_new;
