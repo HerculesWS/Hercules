@@ -54,6 +54,7 @@
 #include "map/channel.h"
 #include "map/chat.h"
 #include "map/chrif.h"
+#include "map/clan.h"
 #include "map/clif.h"
 #include "map/date.h"
 #include "map/duel.h"
@@ -114,21 +115,22 @@ unsigned int atcommand_list_items = 0;
 bool HPM_map_data_store_validate(enum HPluginDataTypes type, struct hplugin_data_store **storeptr, bool initialize)
 {
 	switch (type) {
-		case HPDT_MSD:
-		case HPDT_NPCD:
-		case HPDT_MAP:
-		case HPDT_PARTY:
-		case HPDT_GUILD:
-		case HPDT_INSTANCE:
-		case HPDT_MOBDB:
-		case HPDT_MOBDATA:
-		case HPDT_ITEMDATA:
-		case HPDT_BGDATA:
-		case HPDT_AUTOTRADE_VEND:
-			// Initialized by the caller.
-			return true;
-		default:
-			break;
+	case HPDT_MSD:
+	case HPDT_NPCD:
+	case HPDT_MAP:
+	case HPDT_PARTY:
+	case HPDT_GUILD:
+	case HPDT_INSTANCE:
+	case HPDT_MOBDB:
+	case HPDT_MOBDATA:
+	case HPDT_ITEMDATA:
+	case HPDT_BGDATA:
+	case HPDT_AUTOTRADE_VEND:
+	case HPDT_CLAN:
+		// Initialized by the caller.
+		return true;
+	default:
+		break;
 	}
 	return false;
 }

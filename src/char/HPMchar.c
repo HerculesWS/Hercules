@@ -28,6 +28,7 @@
 #include "char/geoip.h"
 #include "char/inter.h"
 #include "char/int_auction.h"
+#include "char/int_clan.h"
 #include "char/int_elemental.h"
 #include "char/int_guild.h"
 #include "char/int_homun.h"

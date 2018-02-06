@@ -83,6 +83,8 @@ struct npc_data {
 	uint8 dir;
 	uint8 area_size;
 
+	int clan_id;
+
 	unsigned size : 2;
 
 	struct status_data status;

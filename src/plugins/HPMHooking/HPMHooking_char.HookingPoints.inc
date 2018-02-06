@@ -255,6 +255,10 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(inter_auction->parse_frommap, HP_inter_auction_parse_frommap) },
 	{ HP_POP(inter_auction->sql_init, HP_inter_auction_sql_init) },
 	{ HP_POP(inter_auction->sql_final, HP_inter_auction_sql_final) },
+/* inter_clan_interface */
+	{ HP_POP(inter_clan->kick_inactive_members, HP_inter_clan_kick_inactive_members) },
+	{ HP_POP(inter_clan->count_members, HP_inter_clan_count_members) },
+	{ HP_POP(inter_clan->parse_frommap, HP_inter_clan_parse_frommap) },
 /* inter_elemental_interface */
 	{ HP_POP(inter_elemental->sql_init, HP_inter_elemental_sql_init) },
 	{ HP_POP(inter_elemental->sql_final, HP_inter_elemental_sql_final) },
@@ -628,6 +632,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(mapif->parse_RegistryRequest, HP_mapif_parse_RegistryRequest) },
 	{ HP_POP(mapif->namechange_ack, HP_mapif_namechange_ack) },
 	{ HP_POP(mapif->parse_NameChangeRequest, HP_mapif_parse_NameChangeRequest) },
+	{ HP_POP(mapif->parse_ClanMemberKick, HP_mapif_parse_ClanMemberKick) },
+	{ HP_POP(mapif->parse_ClanMemberCount, HP_mapif_parse_ClanMemberCount) },
 /* mapindex_interface */
 	{ HP_POP(mapindex->init, HP_mapindex_init) },
 	{ HP_POP(mapindex->final, HP_mapindex_final) },

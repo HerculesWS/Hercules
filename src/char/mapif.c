@@ -221,6 +221,9 @@ int mapif_parse_Registry(int fd);
 int mapif_parse_RegistryRequest(int fd);
 void mapif_namechange_ack(int fd, int account_id, int char_id, int type, int flag, const char *const name);
 int mapif_parse_NameChangeRequest(int fd);
+// Clan System
+int mapif_parse_ClanMemberKick(int fd, int clan_id, int kick_interval);
+int mapif_parse_ClanMemberCount(int fd, int clan_id, int kick_interval);
 
 struct mapif_interface mapif_s;
 struct mapif_interface *mapif;
@@ -411,4 +414,7 @@ void mapif_defaults(void) {
 	mapif->parse_RegistryRequest = mapif_parse_RegistryRequest;
 	mapif->namechange_ack = mapif_namechange_ack;
 	mapif->parse_NameChangeRequest = mapif_parse_NameChangeRequest;
+	/* Clan System */
+	mapif->parse_ClanMemberKick = mapif_parse_ClanMemberKick;
+	mapif->parse_ClanMemberCount = mapif_parse_ClanMemberCount;
 }

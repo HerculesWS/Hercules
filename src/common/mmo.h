@@ -304,6 +304,7 @@ STATIC_ASSERT(MAX_ITEM_OPTIONS <= 5, "This value is limited by the client and da
 #define INFINITE_DURATION (-1) // Infinite duration for status changes
 
 struct hplugin_data_store;
+struct script_code;
 
 enum item_types {
 	IT_HEALING = 0,
@@ -616,7 +617,7 @@ struct mmo_charstatus {
 	short manner; // Defines how many minutes a char will be muted, each negative point is equivalent to a minute.
 	unsigned char karma;
 	short hair,hair_color,clothes_color,body;
-	int party_id,guild_id,pet_id,hom_id,mer_id,ele_id;
+	int party_id,guild_id,clan_id,pet_id,hom_id,mer_id,ele_id;
 	int fame;
 
 	// Mercenary Guilds Rank
@@ -641,6 +642,7 @@ struct mmo_charstatus {
 	uint32 mapip;
 	uint16 mapport;
 
+	int64 last_login;
 	struct point last_point,save_point,memo_point[MAX_MEMOPOINTS];
 	struct item inventory[MAX_INVENTORY],cart[MAX_CART];
 	struct s_skill skill[MAX_SKILL_DB];
@@ -816,6 +818,59 @@ struct guild_castle {
 	} guardian[MAX_GUARDIANS];
 	int* temp_guardians; // ids of temporary guardians (mobs)
 	int temp_guardians_max;
+};
+
+/**
+ * Clan Member Struct
+ */
+struct clan_member {
+	int char_id; ///< Char Id of member
+	short online; ///< Flag to know if the player is online or not
+	int64 last_login; ///< Last login of this member, used to kick if inactive for long time
+	struct map_session_data *sd; ///< Player data of member
+};
+
+/**
+ * Clan Buff Struct
+ */
+struct clan_buff {
+	int icon; ///< Status Icon to be shown in client (Use one of the 'SI_' constants)
+	struct script_code *script; ///< The script to be executed as CLan Buff
+};
+
+/**
+ * Clan Relationship Struct
+ */
+struct clan_relationship {
+	char constant[NAME_LENGTH]; ///< Unique name of the related clan
+	int clan_id; ///< Id of the related clan
+};
+
+/**
+ * Clan Struct
+ */
+struct clan {
+	int clan_id; ///< CLan's Id
+	char constant[NAME_LENGTH]; ///< Clan's Unique Name
+	char name[NAME_LENGTH]; ///< Clan's Name
+	char master[NAME_LENGTH]; ///< Name of the clan's master (used for clan information on client)
+	char map[MAP_NAME_LENGTH_EXT]; ///< The map of that clan (used for clan information on client)
+	struct clan_buff buff; ///< The buff for a clan when a member joins it
+	short max_member; ///< Limit of Members
+	short member_count; ///< Holds the amount of members in this clan, online and offline
+	short connect_member; ///< Members that are Online
+	VECTOR_DECL(struct clan_member) members; ///< Vector of Members
+	VECTOR_DECL(struct clan_relationship) allies; ///< Vector of Allies
+	VECTOR_DECL(struct clan_relationship) antagonists; ///< Vector of Antagonists
+	int kick_time; /// Needed inactive time to be kicked
+	int check_time; ///< Interval to check for inactive players
+	int tid; ///< Timer ID for inactivity kick
+	bool received; ///< Whether or not the requested data was received
+	int req_state; ///< Flag for knowing what to do after receiving the data from inter server
+	int req_count_tid; ///< Timer ID for the timer that handles the timeout of requests for interserver to count members
+	int req_kick_tid; ///< Timer ID for the timer that handles the timeout of requests for interserver to kick inactive members
+
+	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
 
 struct fame_list {

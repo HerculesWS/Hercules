@@ -349,6 +349,14 @@ enum packet_headers {
 	partymemberinfo = 0x01e9,
 	partyinfo = 0x00fb,
 #endif
+#if PACKETVER >= 20120702
+	clanBasicInfo = 0x098A, ///< ZC_CLANINFO
+#endif
+#if PACKETVER >= 20120716
+	clanOnlineCount = 0x0988, ///< ZC_NOTIFY_CLAN_CONNECTINFO
+	clanLeave = 0x0989, ///< ZC_ACK_CLAN_LEAVE
+	clanMessage = 0x098E, ///< ZC_NOTIFY_CLAN_CHAT
+#endif
 };
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
@@ -1560,6 +1568,34 @@ struct PACKET_ZC_GROUP_LIST {
 	int16 packetLen;
 	char partyName[NAME_LENGTH];
 	struct PACKET_ZC_GROUP_LIST_SUB members[];
+} __attribute__((packed));
+
+struct PACKET_ZC_CLANINFO {
+	int16 PacketType;
+	int16 PacketLength;
+	uint32 ClanID;
+	char ClanName[NAME_LENGTH];
+	char MasterName[NAME_LENGTH];
+	char Map[MAP_NAME_LENGTH_EXT];
+	uint8 AllyCount;
+	uint8 AntagonistCount;
+} __attribute__((packed));
+
+struct PACKET_ZC_NOTIFY_CLAN_CONNECTINFO {
+	int16 PacketType;
+	int16 NumConnect;
+	int16 NumTotal;
+} __attribute__((packed));
+
+struct PACKET_ZC_ACK_CLAN_LEAVE {
+	int16 PacketType;
+} __attribute__((packed));
+
+struct PACKET_ZC_NOTIFY_CLAN_CHAT {
+	int16 PacketType;
+	int16 PacketLength;
+	char MemberName[NAME_LENGTH];
+	char Message[];
 } __attribute__((packed));
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute

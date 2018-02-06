@@ -25,6 +25,7 @@
 
 #include "map/battle.h"
 #include "map/chat.h"
+#include "map/clan.h"
 #include "map/clif.h"
 #include "map/guild.h"
 #include "map/instance.h"
@@ -4144,6 +4145,11 @@ const char *npc_parse_mapflag(const char *w1, const char *w2, const char *w3, co
 			ShowWarning("npc_parse_mapflag: You can't set PvP and GvG flags for the same map! Removing GvG flags from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer,start-buffer));
 			if (retval) *retval = EXIT_FAILURE;
 		}
+		if (state && map->list[m].flag.cvc) {
+			map->list[m].flag.cvc = 0;
+			ShowWarning("npc_parse_mapflag: You can't set CvC and PvP flags for the same map! Removing CvC flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer, start-buffer));
+			if (retval) *retval = EXIT_FAILURE;
+		}
 		if( state && map->list[m].flag.battleground ) {
 			map->list[m].flag.battleground = 0;
 			ShowWarning("npc_parse_mapflag: You can't set PvP and BattleGround flags for the same map! Removing BattleGround flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer,start-buffer));
@@ -4196,6 +4202,11 @@ const char *npc_parse_mapflag(const char *w1, const char *w2, const char *w3, co
 			ShowWarning("npc_parse_mapflag: You can't set PvP and GvG flags for the same map! Removing PvP flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer,start-buffer));
 			if (retval) *retval = EXIT_FAILURE;
 		}
+		if (state && map->list[m].flag.cvc) {
+			map->list[m].flag.cvc = 0;
+			ShowWarning("npc_parse_mapflag: You can't set CvC and GvG flags for the same map! Removing CvC flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer, start-buffer));
+			if (retval) *retval = EXIT_FAILURE;
+		}
 		if( state && map->list[m].flag.battleground ) {
 			map->list[m].flag.battleground = 0;
 			ShowWarning("npc_parse_mapflag: You can't set GvG and BattleGround flags for the same map! Removing BattleGround flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer,start-buffer));
@@ -4238,9 +4249,45 @@ const char *npc_parse_mapflag(const char *w1, const char *w2, const char *w3, co
 			ShowWarning("npc_parse_mapflag: You can't set GvG and BattleGround flags for the same map! Removing GvG flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer,start-buffer));
 			if (retval) *retval = EXIT_FAILURE;
 		}
+		if (map->list[m].flag.cvc) {
+			map->list[m].flag.cvc = 0;
+			ShowWarning("npc_parse_mapflag: You can't set CvC and BattleGround flags for the same map! Removing CvC flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer, start-buffer));
+			if (retval) *retval = EXIT_FAILURE;
+		}
 
 		if( state && (zone = strdb_get(map->zone_db, MAP_ZONE_BG_NAME)) != NULL && map->list[m].zone != zone ) {
 			map->zone_change(m,zone,start,buffer,filepath);
+		}
+	}
+	else if (!strcmpi(w3, "cvc")) {
+		struct map_zone_data *zone;
+
+		map->list[m].flag.cvc = state;
+		if (state && (map->list[m].flag.gvg || map->list[m].flag.gvg_dungeon || map->list[m].flag.gvg_castle)) {
+			map->list[m].flag.gvg = 0;
+			map->list[m].flag.gvg_dungeon = 0;
+			map->list[m].flag.gvg_castle = 0;
+			ShowWarning("npc_parse_mapflag: You can't set GvG and CvC flags for the same map! Removing GvG flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer, start-buffer));
+			if (retval) {
+				*retval = EXIT_FAILURE;
+			}
+		}
+		if (state && map->list[m].flag.pvp) {
+			map->list[m].flag.pvp = 0;
+			ShowWarning("npc_parse_mapflag: You can't set PvP and CvC flags for the same map! Removing PvP flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer, start-buffer));
+			if (retval) {
+				*retval = EXIT_FAILURE;
+			}
+		}
+		if (state && map->list[m].flag.battleground) {
+			map->list[m].flag.battleground = 0;
+			ShowWarning("npc_parse_mapflag: You can't set CvC and BattleGround flags for the same map! Removing BattleGround flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer, start-buffer));
+			if (retval) {
+				*retval = EXIT_FAILURE;
+			}
+		}
+		if (state && (zone = strdb_get(map->zone_db, MAP_ZONE_CVC_NAME)) != NULL && map->list[m].zone != zone) {
+			map->zone_change(m, zone, start, buffer, filepath);
 		}
 	}
 	else if (!strcmpi(w3,"noexppenalty"))
@@ -4887,6 +4934,7 @@ int npc_reload(void) {
 
 	// Reprocess npc files and reload constants
 	itemdb->name_constants();
+	clan->set_constants();
 	npc_process_files( npc_new_min );
 
 	instance->reload();
@@ -5026,6 +5074,7 @@ int do_init_npc(bool minimal) {
 	// Should be loaded before npc processing, otherwise labels could overwrite constant values
 	// and lead to undefined behavior [Panikon]
 	itemdb->name_constants();
+	clan->set_constants();
 
 	if (!minimal) {
 		npc->timer_event_ers = ers_new(sizeof(struct timer_event_data),"clif.c::timer_event_ers",ERS_OPT_NONE);

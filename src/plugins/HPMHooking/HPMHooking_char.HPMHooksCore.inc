@@ -466,6 +466,12 @@ struct {
 	struct HPMHookPoint *HP_inter_auction_sql_init_post;
 	struct HPMHookPoint *HP_inter_auction_sql_final_pre;
 	struct HPMHookPoint *HP_inter_auction_sql_final_post;
+	struct HPMHookPoint *HP_inter_clan_kick_inactive_members_pre;
+	struct HPMHookPoint *HP_inter_clan_kick_inactive_members_post;
+	struct HPMHookPoint *HP_inter_clan_count_members_pre;
+	struct HPMHookPoint *HP_inter_clan_count_members_post;
+	struct HPMHookPoint *HP_inter_clan_parse_frommap_pre;
+	struct HPMHookPoint *HP_inter_clan_parse_frommap_post;
 	struct HPMHookPoint *HP_inter_elemental_sql_init_pre;
 	struct HPMHookPoint *HP_inter_elemental_sql_init_post;
 	struct HPMHookPoint *HP_inter_elemental_sql_final_pre;
@@ -1184,6 +1190,10 @@ struct {
 	struct HPMHookPoint *HP_mapif_namechange_ack_post;
 	struct HPMHookPoint *HP_mapif_parse_NameChangeRequest_pre;
 	struct HPMHookPoint *HP_mapif_parse_NameChangeRequest_post;
+	struct HPMHookPoint *HP_mapif_parse_ClanMemberKick_pre;
+	struct HPMHookPoint *HP_mapif_parse_ClanMemberKick_post;
+	struct HPMHookPoint *HP_mapif_parse_ClanMemberCount_pre;
+	struct HPMHookPoint *HP_mapif_parse_ClanMemberCount_post;
 	struct HPMHookPoint *HP_mapindex_init_pre;
 	struct HPMHookPoint *HP_mapindex_init_post;
 	struct HPMHookPoint *HP_mapindex_final_pre;
@@ -1985,6 +1995,12 @@ struct {
 	int HP_inter_auction_sql_init_post;
 	int HP_inter_auction_sql_final_pre;
 	int HP_inter_auction_sql_final_post;
+	int HP_inter_clan_kick_inactive_members_pre;
+	int HP_inter_clan_kick_inactive_members_post;
+	int HP_inter_clan_count_members_pre;
+	int HP_inter_clan_count_members_post;
+	int HP_inter_clan_parse_frommap_pre;
+	int HP_inter_clan_parse_frommap_post;
 	int HP_inter_elemental_sql_init_pre;
 	int HP_inter_elemental_sql_init_post;
 	int HP_inter_elemental_sql_final_pre;
@@ -2703,6 +2719,10 @@ struct {
 	int HP_mapif_namechange_ack_post;
 	int HP_mapif_parse_NameChangeRequest_pre;
 	int HP_mapif_parse_NameChangeRequest_post;
+	int HP_mapif_parse_ClanMemberKick_pre;
+	int HP_mapif_parse_ClanMemberKick_post;
+	int HP_mapif_parse_ClanMemberCount_pre;
+	int HP_mapif_parse_ClanMemberCount_post;
 	int HP_mapindex_init_pre;
 	int HP_mapindex_init_post;
 	int HP_mapindex_final_pre;
@@ -3073,6 +3093,7 @@ struct {
 	struct des_interface des;
 	struct geoip_interface geoip;
 	struct inter_auction_interface inter_auction;
+	struct inter_clan_interface inter_clan;
 	struct inter_elemental_interface inter_elemental;
 	struct inter_guild_interface inter_guild;
 	struct inter_homunculus_interface inter_homunculus;

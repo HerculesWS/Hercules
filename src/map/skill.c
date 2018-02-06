@@ -26,6 +26,7 @@
 #include "map/battle.h"
 #include "map/battleground.h"
 #include "map/chrif.h"
+#include "map/clan.h"
 #include "map/clif.h"
 #include "map/date.h"
 #include "map/elemental.h"
@@ -17180,6 +17181,7 @@ struct skill_unit_group* skill_initunitgroup (struct block_list* src, int count,
 	group->party_id    = status->get_party_id(src);
 	group->guild_id    = status->get_guild_id(src);
 	group->bg_id       = bg->team_get_id(src);
+	group->clan_id     = clan->get_id(src);
 	group->group_id    = skill->get_new_group_id();
 	CREATE(group->unit.data, struct skill_unit, count);
 	group->unit.count  = count;

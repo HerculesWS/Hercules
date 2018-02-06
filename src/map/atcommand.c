@@ -28,6 +28,7 @@
 #include "map/channel.h"
 #include "map/chat.h"
 #include "map/chrif.h"
+#include "map/clan.h"
 #include "map/clif.h"
 #include "map/duel.h"
 #include "map/elemental.h"
@@ -1671,6 +1672,45 @@ ACMD(gvgon)
 	clif->map_property_mapall(sd->bl.m, MAPPROPERTY_AGITZONE);
 	clif->maptypeproperty2(&sd->bl,ALL_SAMEMAP);
 	clif->message(fd, msg_fd(fd,34)); // GvG: On.
+
+	return true;
+}
+
+/*==========================================
+ *
+ *------------------------------------------*/
+ACMD(cvcoff)
+{
+	if (!map->list[sd->bl.m].flag.cvc) {
+		clif->message(fd, msg_fd(fd, 141)); // CvC is already Off.
+		return false;
+	}
+
+	map->zone_change2(sd->bl.m, map->list[sd->bl.m].prev_zone);
+	map->list[sd->bl.m].flag.cvc = 0;
+	clif->map_property_mapall(sd->bl.m, MAPPROPERTY_NOTHING);
+	clif->maptypeproperty2(&sd->bl, ALL_SAMEMAP);
+	map->foreachinmap(atcommand->stopattack, sd->bl.m, BL_CHAR, 0);
+	clif->message(fd, msg_fd(fd, 26)); // CvC: Off.
+
+	return true;
+}
+
+/*==========================================
+ *
+ *------------------------------------------*/
+ACMD(cvcon)
+{
+	if (map->list[sd->bl.m].flag.cvc) {
+		clif->message(fd, msg_fd(fd, 142)); // CvC is already On.
+		return false;
+	}
+
+	map->zone_change2(sd->bl.m, strdb_get(map->zone_db, MAP_ZONE_CVC_NAME));
+	map->list[sd->bl.m].flag.cvc = 1;
+	clif->map_property_mapall(sd->bl.m, MAPPROPERTY_AGITZONE);
+	clif->maptypeproperty2(&sd->bl, ALL_SAMEMAP);
+	clif->message(fd, msg_fd(fd, 27)); // CvC: On.
 
 	return true;
 }
@@ -3798,6 +3838,9 @@ ACMD(mapinfo)
 
 	if (map->list[m_id].flag.battleground)
 		clif->message(fd, msg_fd(fd,1045)); // Battlegrounds ON
+
+	if (map->list[m_id].flag.cvc)
+		clif->message(fd, msg_fd(fd, 139)); // CvC ON
 
 	strcpy(atcmd_output,msg_fd(fd,1046)); // PvP Flags:
 	if (map->list[m_id].flag.pvp)
@@ -7552,11 +7595,11 @@ ACMD(mapflag) {
 		CHECKFLAG(noreturn);          CHECKFLAG(monster_noteleport); CHECKFLAG(nosave);       CHECKFLAG(nobranch);
 		CHECKFLAG(noexppenalty);      CHECKFLAG(pvp);                CHECKFLAG(pvp_noparty);  CHECKFLAG(pvp_noguild);
 		CHECKFLAG(pvp_nightmaredrop); CHECKFLAG(pvp_nocalcrank);     CHECKFLAG(gvg_castle);   CHECKFLAG(gvg);
-		CHECKFLAG(gvg_dungeon);       CHECKFLAG(gvg_noparty);        CHECKFLAG(battleground); CHECKFLAG(nozenypenalty);
-		CHECKFLAG(notrade);           CHECKFLAG(noskill);            CHECKFLAG(nowarp);       CHECKFLAG(nowarpto);
-		CHECKFLAG(noicewall);         CHECKFLAG(snow);               CHECKFLAG(clouds);       CHECKFLAG(clouds2);
-		CHECKFLAG(fog);               CHECKFLAG(fireworks);          CHECKFLAG(sakura);       CHECKFLAG(leaves);
-		CHECKFLAG(nobaseexp);
+		CHECKFLAG(gvg_dungeon);       CHECKFLAG(gvg_noparty);        CHECKFLAG(battleground); CHECKFLAG(cvc);
+		CHECKFLAG(nozenypenalty);     CHECKFLAG(notrade);            CHECKFLAG(noskill);      CHECKFLAG(nowarp); 
+		CHECKFLAG(nowarpto);          CHECKFLAG(noicewall);          CHECKFLAG(snow);         CHECKFLAG(clouds);
+		CHECKFLAG(clouds2);           CHECKFLAG(fog);                CHECKFLAG(fireworks);    CHECKFLAG(sakura);
+		CHECKFLAG(leaves);            CHECKFLAG(nobaseexp);
 		CHECKFLAG(nojobexp);          CHECKFLAG(nomobloot);          CHECKFLAG(nomvploot);    CHECKFLAG(nightenabled);
 		CHECKFLAG(nodrop);            CHECKFLAG(novending);          CHECKFLAG(loadevent);
 		CHECKFLAG(nochat);            CHECKFLAG(partylock);          CHECKFLAG(guildlock);    CHECKFLAG(src4instance);
@@ -7568,48 +7611,53 @@ ACMD(mapflag) {
 	}
 	for (i = 0; flag_name[i]; i++) flag_name[i] = TOLOWER(flag_name[i]); //lowercase
 
-	if (strcmp( flag_name , "gvg" ) == 0) {
-		if( flag && !map->list[sd->bl.m].flag.gvg )
-			map->zone_change2(sd->bl.m,strdb_get(map->zone_db, MAP_ZONE_GVG_NAME));
-		else if ( !flag && map->list[sd->bl.m].flag.gvg )
-			map->zone_change2(sd->bl.m,map->list[sd->bl.m].prev_zone);
-	} else if ( strcmp( flag_name , "pvp" ) == 0 ) {
-		if ( flag && !map->list[sd->bl.m].flag.pvp )
-			map->zone_change2(sd->bl.m,strdb_get(map->zone_db, MAP_ZONE_PVP_NAME));
-		else if ( !flag && map->list[sd->bl.m].flag.pvp )
-			map->zone_change2(sd->bl.m,map->list[sd->bl.m].prev_zone);
-	} else if ( strcmp( flag_name , "battleground" ) == 0 ) {
-		if ( flag && !map->list[sd->bl.m].flag.battleground )
-			map->zone_change2(sd->bl.m,strdb_get(map->zone_db, MAP_ZONE_BG_NAME));
-		else if ( !flag && map->list[sd->bl.m].flag.battleground )
-			map->zone_change2(sd->bl.m,map->list[sd->bl.m].prev_zone);
+	if (strcmp(flag_name, "gvg") == 0) {
+		if (flag && !map->list[sd->bl.m].flag.gvg)
+			map->zone_change2(sd->bl.m, strdb_get(map->zone_db, MAP_ZONE_GVG_NAME));
+		else if (!flag && map->list[sd->bl.m].flag.gvg)
+			map->zone_change2(sd->bl.m, map->list[sd->bl.m].prev_zone);
+	} else if (strcmp(flag_name, "pvp") == 0) {
+		if (flag && !map->list[sd->bl.m].flag.pvp)
+			map->zone_change2(sd->bl.m, strdb_get(map->zone_db, MAP_ZONE_PVP_NAME));
+		else if (!flag && map->list[sd->bl.m].flag.pvp)
+			map->zone_change2(sd->bl.m, map->list[sd->bl.m].prev_zone);
+	} else if (strcmp(flag_name, "battleground") == 0) {
+		if (flag && !map->list[sd->bl.m].flag.battleground)
+			map->zone_change2(sd->bl.m, strdb_get(map->zone_db, MAP_ZONE_BG_NAME));
+		else if (!flag && map->list[sd->bl.m].flag.battleground)
+			map->zone_change2(sd->bl.m, map->list[sd->bl.m].prev_zone);
+	} else if (strcmp(flag_name, "cvc") == 0) {
+		if (flag && !map->list[sd->bl.m].flag.cvc)
+			map->zone_change2(sd->bl.m, strdb_get(map->zone_db, MAP_ZONE_CVC_NAME));
+		else if (!flag && map->list[sd->bl.m].flag.cvc)
+			map->zone_change2(sd->bl.m, map->list[sd->bl.m].prev_zone);
 	}
 
 	SETFLAG(autotrade);         SETFLAG(allowks);            SETFLAG(nomemo);       SETFLAG(noteleport);
 	SETFLAG(noreturn);          SETFLAG(monster_noteleport); SETFLAG(nosave);       SETFLAG(nobranch);
 	SETFLAG(noexppenalty);      SETFLAG(pvp);                SETFLAG(pvp_noparty);  SETFLAG(pvp_noguild);
 	SETFLAG(pvp_nightmaredrop); SETFLAG(pvp_nocalcrank);     SETFLAG(gvg_castle);   SETFLAG(gvg);
-	SETFLAG(gvg_dungeon);       SETFLAG(gvg_noparty);        SETFLAG(battleground); SETFLAG(nozenypenalty);
-	SETFLAG(notrade);           SETFLAG(noskill);            SETFLAG(nowarp);       SETFLAG(nowarpto);
-	SETFLAG(noicewall);         SETFLAG(snow);               SETFLAG(clouds);       SETFLAG(clouds2);
-	SETFLAG(fog);               SETFLAG(fireworks);          SETFLAG(sakura);       SETFLAG(leaves);
-	SETFLAG(nobaseexp);
-	SETFLAG(nojobexp);          SETFLAG(nomobloot);          SETFLAG(nomvploot);    SETFLAG(nightenabled);
-	SETFLAG(nodrop);            SETFLAG(novending);          SETFLAG(loadevent);
-	SETFLAG(nochat);            SETFLAG(partylock);          SETFLAG(guildlock);    SETFLAG(src4instance);
-	SETFLAG(notomb);            SETFLAG(nocashshop);         SETFLAG(noviewid);
+	SETFLAG(gvg_dungeon);       SETFLAG(gvg_noparty);        SETFLAG(battleground); SETFLAG(cvc);
+	SETFLAG(nozenypenalty);     SETFLAG(notrade);            SETFLAG(noskill);      SETFLAG(nowarp);
+	SETFLAG(nowarpto);          SETFLAG(noicewall);          SETFLAG(snow);         SETFLAG(clouds);
+	SETFLAG(clouds2);           SETFLAG(fog);                SETFLAG(fireworks);    SETFLAG(sakura);
+	SETFLAG(leaves);            SETFLAG(nobaseexp);          SETFLAG(nojobexp);     SETFLAG(nomobloot);
+	SETFLAG(nomvploot);         SETFLAG(nightenabled);       SETFLAG(nodrop);       SETFLAG(novending);
+	SETFLAG(loadevent);         SETFLAG(nochat);             SETFLAG(partylock);    SETFLAG(guildlock);
+	SETFLAG(src4instance);      SETFLAG(notomb);             SETFLAG(nocashshop);   SETFLAG(noviewid);
 
-	clif->message(sd->fd,msg_fd(fd,1314)); // Invalid flag name or flag.
-	clif->message(sd->fd,msg_fd(fd,1312)); // Usage: "@mapflag monster_noteleport 1" (0=Off | 1=On)
-	clif->message(sd->fd,msg_fd(fd,1315)); // Available Flags:
-	clif->message(sd->fd,"----------------------------------");
-	clif->message(sd->fd,"town, autotrade, allowks, nomemo, noteleport, noreturn, monster_noteleport, nosave,");
-	clif->message(sd->fd,"nobranch, noexppenalty, pvp, pvp_noparty, pvp_noguild, pvp_nightmaredrop,");
-	clif->message(sd->fd,"pvp_nocalcrank, gvg_castle, gvg, gvg_dungeon, gvg_noparty, battleground,");
-	clif->message(sd->fd,"nozenypenalty, notrade, noskill, nowarp, nowarpto, noicewall, snow, clouds, clouds2,");
-	clif->message(sd->fd,"fog, fireworks, sakura, leaves, nobaseexp, nojobexp, nomobloot,");
-	clif->message(sd->fd,"nomvploot, nightenabled, nodrop, novending, loadevent, nochat, partylock,");
-	clif->message(sd->fd,"guildlock, src4instance, notomb, nocashshop, noviewid");
+
+	clif->message(sd->fd, msg_fd(fd, 1314)); // Invalid flag name or flag.
+	clif->message(sd->fd, msg_fd(fd, 1312)); // Usage: "@mapflag monster_noteleport 1" (0=Off | 1=On)
+	clif->message(sd->fd, msg_fd(fd, 1315)); // Available Flags:
+	clif->message(sd->fd, "----------------------------------");
+	clif->message(sd->fd, "town, autotrade, allowks, nomemo, noteleport, noreturn, monster_noteleport, nosave,");
+	clif->message(sd->fd, "nobranch, noexppenalty, pvp, pvp_noparty, pvp_noguild, pvp_nightmaredrop,");
+	clif->message(sd->fd, "pvp_nocalcrank, gvg_castle, gvg, gvg_dungeon, gvg_noparty, battleground, cvc,");
+	clif->message(sd->fd, "nozenypenalty, notrade, noskill, nowarp, nowarpto, noicewall, snow, clouds, clouds2,");
+	clif->message(sd->fd, "fog, fireworks, sakura, leaves, nobaseexp, nojobexp, nomobloot,");
+	clif->message(sd->fd, "nomvploot, nightenabled, nodrop, novending, loadevent, nochat, partylock,");
+	clif->message(sd->fd, "guildlock, src4instance, notomb, nocashshop, noviewid");
 #undef CHECKFLAG
 #undef SETFLAG
 
@@ -9452,6 +9500,145 @@ ACMD(lang) {
 
 	return true;
 }
+
+ACMD(claninfo)
+{
+	struct DBIterator *iter = db_iterator(clan->db);
+	struct clan *c;
+	int i, count;
+	
+	for (c = dbi_first(iter); dbi_exists(iter); c = dbi_next(iter)) {
+		safesnprintf(atcmd_output, sizeof(atcmd_output), "Clan #%d:", c->clan_id);
+		clif->messagecolor_self(fd, COLOR_DEFAULT, atcmd_output);
+
+		safesnprintf(atcmd_output, sizeof(atcmd_output), "- Name: %s", c->name);
+		clif->messagecolor_self(fd, COLOR_DEFAULT, atcmd_output);
+
+		safesnprintf(atcmd_output, sizeof(atcmd_output), "- Constant: %s", c->constant);
+		clif->messagecolor_self(fd, COLOR_DEFAULT, atcmd_output);
+
+		safesnprintf(atcmd_output, sizeof(atcmd_output), "- Master: %s", c->master);
+		clif->messagecolor_self(fd, COLOR_DEFAULT, atcmd_output);
+
+		safesnprintf(atcmd_output, sizeof(atcmd_output), "- Map: %s", c->map);
+		clif->messagecolor_self(fd, COLOR_DEFAULT, atcmd_output);
+
+		safesnprintf(atcmd_output, sizeof(atcmd_output), "- Max Member: %d", c->max_member);
+		clif->messagecolor_self(fd, COLOR_DEFAULT, atcmd_output);
+
+		safesnprintf(atcmd_output, sizeof(atcmd_output), "- Kick Time: %dh", c->kick_time / 3600);
+		clif->messagecolor_self(fd, COLOR_DEFAULT, atcmd_output);
+
+		safesnprintf(atcmd_output, sizeof(atcmd_output), "- Check Time: %dh", c->check_time / 3600000);
+		clif->messagecolor_self(fd, COLOR_DEFAULT, atcmd_output);
+
+		safesnprintf(atcmd_output, sizeof(atcmd_output), "- Connected Members: %d", c->connect_member);
+		clif->messagecolor_self(fd, COLOR_DEFAULT, atcmd_output);
+
+		safesnprintf(atcmd_output, sizeof(atcmd_output), "- Total Members: %d", c->member_count);
+		clif->messagecolor_self(fd, COLOR_DEFAULT, atcmd_output);
+
+		safesnprintf(atcmd_output, sizeof(atcmd_output), "- Allies: %d", VECTOR_LENGTH(c->allies));
+		clif->messagecolor_self(fd, COLOR_DEFAULT, atcmd_output);
+
+		count = 0;
+		for (i = 0; i < VECTOR_LENGTH(c->allies); i++) {
+			struct clan_relationship *ally = &VECTOR_INDEX(c->allies, i);
+
+			if (ally == NULL)
+				continue;
+			
+			safesnprintf(atcmd_output, sizeof(atcmd_output), "- - Ally #%d (Id: %d): %s", i + 1, ally->clan_id, ally->constant);
+			clif->messagecolor_self(fd, COLOR_DEFAULT, atcmd_output);
+			count++;
+		}
+
+		if (count == 0) {
+			clif->messagecolor_self(fd, COLOR_DEFAULT, "- - No Allies Found!");
+		}
+
+		safesnprintf(atcmd_output, sizeof(atcmd_output), "- Antagonists: %d", VECTOR_LENGTH(c->antagonists));
+		clif->messagecolor_self(fd, COLOR_DEFAULT, atcmd_output);
+		
+		count = 0;
+		for (i = 0; i < VECTOR_LENGTH(c->antagonists); i++) {
+			struct clan_relationship *antagonist = &VECTOR_INDEX(c->antagonists, i);
+
+			if (antagonist == NULL)
+				continue;
+			
+			safesnprintf(atcmd_output, sizeof(atcmd_output), "- - Antagonist #%d (Id: %d): %s", i + 1, antagonist->clan_id, antagonist->constant);
+			clif->messagecolor_self(fd, COLOR_DEFAULT, atcmd_output);
+			count++;
+		}
+
+		if (count == 0) {
+			clif->messagecolor_self(fd, COLOR_DEFAULT, "- - No Antagonists Found!");
+		}
+		
+		clif->messagecolor_self(fd, COLOR_DEFAULT, "============================");
+	}
+	dbi_destroy(iter);
+	return true;
+}
+
+/**
+ * Clan System: Joins in the given clan
+ */
+ACMD(joinclan)
+{
+	int clan_id;
+
+	if (*message == '\0') {
+		clif->message(fd, "Please enter a Clan ID (usage: @joinclan <clan ID>).");
+		return false;
+	}
+	if (sd->status.clan_id != 0) {
+		clif->messagecolor_self(fd, COLOR_RED, "You are already in a clan.");
+		return false;
+	} else if (sd->status.guild_id != 0) {
+		clif->messagecolor_self(fd, COLOR_RED, "You must leave your guild before enter in a clan.");
+		return false;
+	}
+
+	clan_id = atoi(message);
+	if (clan_id <= 0) {
+		clif->messagecolor_self(fd, COLOR_RED, "Invalid Clan ID.");
+		return false;
+	}
+	if (!clan->join(sd, clan_id)) {
+		clif->messagecolor_self(fd, COLOR_RED, "The clan couldn't be joined.");
+		return false;
+	}
+	return true;
+}
+
+/**
+ * Clan System: Leaves current clan
+ */
+ACMD(leaveclan)
+{
+	if (sd->status.clan_id == 0) {
+		clif->messagecolor_self(fd, COLOR_RED, "You aren't in a clan.");
+		return false;
+	}
+	if (!clan->leave(sd, false)) {
+		clif->messagecolor_self(fd, COLOR_RED, "Failed on leaving clan.");
+		return false;
+	}
+	return true;
+}
+
+/**
+ * Clan System: Reloads clan db
+ */
+ACMD(reloadclans)
+{
+	clan->reload();
+	clif->messagecolor_self(fd, COLOR_DEFAULT, "Clan configuration and database have been reloaded.");
+	return true;
+}
+
 /**
  * Fills the reference of available commands in atcommand DBMap
  **/
@@ -9724,6 +9911,12 @@ void atcommand_basecommands(void) {
 		ACMD_DEF(cddebug),
 		ACMD_DEF(lang),
 		ACMD_DEF(bodystyle),
+		ACMD_DEF(cvcoff),
+		ACMD_DEF(cvcon),
+		ACMD_DEF(claninfo),
+		ACMD_DEF(joinclan),
+		ACMD_DEF(leaveclan),
+		ACMD_DEF(reloadclans),
 	};
 	int i;
 
