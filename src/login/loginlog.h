@@ -26,10 +26,23 @@
 
 struct config_t;
 
+struct s_loginlog_dbs {
+	char log_db_hostname[32];
+	uint16 log_db_port;
+	char log_db_username[32];
+	char log_db_password[100];
+	char log_db_database[32];
+	char log_codepage[32];
+	char log_login_db[256];
+};
+
 /**
  * Loginlog.c Interface
  **/
 struct loginlog_interface {
+	struct Sql *sql_handle;
+	bool enabled;
+	struct s_loginlog_dbs *dbs;
 	unsigned long (*failedattempts) (uint32 ip, unsigned int minutes);
 	void (*log) (uint32 ip, const char* username, int rcode, const char* message);
 	bool (*init) (void);
