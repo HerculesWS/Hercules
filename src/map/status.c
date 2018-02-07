@@ -9763,8 +9763,8 @@ int status_get_val_flag(enum sc_type type)
 {
 	int val_flag = 0;
 	switch (type) {
-		case SC_CLAN_INFO: 
-			val_flag |= 1 | 2; 
+		case SC_CLAN_INFO:
+			val_flag |= 1 | 2;
 			break;
 		case SC_FIGHTINGSPIRIT:
 			val_flag |= 1 | 2;

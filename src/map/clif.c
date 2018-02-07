@@ -7409,7 +7409,7 @@ void clif_mvp_item(struct map_session_data *sd,int nameid)
 /// 010b <exp>.L
 void clif_mvp_exp(struct map_session_data *sd, unsigned int exp)
 {
-#if PACKETVER >= 20131223		// Kro removed this packet [Napster]
+#if PACKETVER >= 20131223 // Kro removed this packet [Napster]
 	if (battle_config.mvp_exp_reward_message) {
 		char e_msg[CHAT_SIZE_MAX];
 		sprintf(e_msg, msg_txt(855), exp);
@@ -11889,8 +11889,8 @@ void clif_parse_ItemIdentify(int fd,struct map_session_data *sd)
 	clif_menuskill_clear(sd);
 }
 
-///	Identifying item with right-click (CZ_REQ_ONECLICK_ITEMIDENTIFY).
-///	0A35 <index>.W
+/// Identifying item with right-click (CZ_REQ_ONECLICK_ITEMIDENTIFY).
+/// 0A35 <index>.W
 void clif_parse_OneClick_ItemIdentify(int fd, struct map_session_data *sd)
 {
 	int cmd = RFIFOW(fd,0);
@@ -19358,10 +19358,10 @@ void clif_clan_basicinfo(struct map_session_data *sd)
 			len += NAME_LENGTH;
 		}
 	}
-	
+
 	for (i = 0; i < VECTOR_LENGTH(c->antagonists); i++) {
 		struct clan_relationship *an = &VECTOR_INDEX(c->antagonists, i);
-		
+
 		if ((antagonist = clan->search(an->clan_id)) != NULL) {
 			safestrncpy(WFIFOP(fd, len), antagonist->name, NAME_LENGTH);
 			len += NAME_LENGTH;
@@ -19384,7 +19384,7 @@ void clif_clan_onlinecount(struct clan *c)
 	struct PACKET_ZC_NOTIFY_CLAN_CONNECTINFO p;
 
 	nullpo_retv(c);
-	
+
 	p.PacketType = clanOnlineCount;
 	p.NumConnect = c->connect_member;
 	p.NumTotal = c->max_member;

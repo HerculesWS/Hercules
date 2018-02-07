@@ -43,10 +43,10 @@ struct inter_clan_interface *inter_clan;
 
 /**
  * Kick offline members of a clan
- * 
+ *
  * Perform the update on the DB to reset clan id to 0
  * of the members that are inactive for too long
- * 
+ *
  * @param clan_id Id of the clan
  * @param kick_interval Time needed to consider a player inactive and kick it
  * @return 0 on failure, 1 on success
@@ -77,7 +77,7 @@ int inter_clan_kick_inactive_members(int clan_id, int kick_interval)
 
 /**
  * Count members of a clan
- * 
+ *
  * @param clan_id Id of the clan
  * @param kick_interval Time needed to consider a player inactive and ignore it on the count
  */

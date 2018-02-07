@@ -546,7 +546,7 @@ struct Battle_Config {
 	// Warp Face Direction
 	int player_warp_keep_direction;
 
-	int atcommand_levelup_events;	// Enable atcommands trigger level up events for NPCs
+	int atcommand_levelup_events; // Enable atcommands trigger level up events for NPCs
 
 	int bow_unequip_arrow;
 

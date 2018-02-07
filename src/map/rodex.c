@@ -216,11 +216,11 @@ void rodex_check_player(struct map_session_data *sd, const char *name, int *base
 /// @param title : Mail Title
 /// @param zeny : Amount of zeny attached
 /// Returns result code:
-/// 	RODEX_SEND_MAIL_SUCCESS = 0,
-///		RODEX_SEND_MAIL_FATAL_ERROR = 1,
-///		RODEX_SEND_MAIL_COUNT_ERROR = 2,
-///		RODEX_SEND_MAIL_ITEM_ERROR = 3,
-///		RODEX_SEND_MAIL_RECEIVER_ERROR = 4
+///     RODEX_SEND_MAIL_SUCCESS = 0,
+///         RODEX_SEND_MAIL_FATAL_ERROR = 1,
+///         RODEX_SEND_MAIL_COUNT_ERROR = 2,
+///         RODEX_SEND_MAIL_ITEM_ERROR = 3,
+///         RODEX_SEND_MAIL_RECEIVER_ERROR = 4
 int rodex_send_mail(struct map_session_data *sd, const char *receiver_name, const char *body, const char *title, int64 zeny)
 {
 	int i;
@@ -532,8 +532,8 @@ void rodex_get_items(struct map_session_data *sd, int8 opentype, int64 mail_id)
 /// - should be called everytime we're going to stop using rodex in this character
 /// @param sd : Target to clean
 /// @param flag :
-///		0 - clear everything
-///		1 - clear tmp only
+///     0 - clear everything
+///     1 - clear tmp only
 void rodex_clean(struct map_session_data *sd, int8 flag)
 {
 	nullpo_retv(sd);

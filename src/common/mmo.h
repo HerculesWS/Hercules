@@ -360,7 +360,7 @@ struct item {
 	char favorite;
 	unsigned char bound;
 	uint64 unique_id;
-	
+
 	struct {
 		int16 index;
 		int16 value;
@@ -899,7 +899,6 @@ struct rodex_message {
 	struct {
 		struct item item;
 		int idx;
-		
 	} items[RODEX_MAX_ITEM];
 	int64 zeny;
 	uint8 type;
