@@ -9545,9 +9545,6 @@ ACMD(claninfo)
 		for (i = 0; i < VECTOR_LENGTH(c->allies); i++) {
 			struct clan_relationship *ally = &VECTOR_INDEX(c->allies, i);
 
-			if (ally == NULL)
-				continue;
-			
 			safesnprintf(atcmd_output, sizeof(atcmd_output), "- - Ally #%d (Id: %d): %s", i + 1, ally->clan_id, ally->constant);
 			clif->messagecolor_self(fd, COLOR_DEFAULT, atcmd_output);
 			count++;
@@ -9559,14 +9556,11 @@ ACMD(claninfo)
 
 		safesnprintf(atcmd_output, sizeof(atcmd_output), "- Antagonists: %d", VECTOR_LENGTH(c->antagonists));
 		clif->messagecolor_self(fd, COLOR_DEFAULT, atcmd_output);
-		
+
 		count = 0;
 		for (i = 0; i < VECTOR_LENGTH(c->antagonists); i++) {
 			struct clan_relationship *antagonist = &VECTOR_INDEX(c->antagonists, i);
 
-			if (antagonist == NULL)
-				continue;
-			
 			safesnprintf(atcmd_output, sizeof(atcmd_output), "- - Antagonist #%d (Id: %d): %s", i + 1, antagonist->clan_id, antagonist->constant);
 			clif->messagecolor_self(fd, COLOR_DEFAULT, atcmd_output);
 			count++;
@@ -9575,7 +9569,7 @@ ACMD(claninfo)
 		if (count == 0) {
 			clif->messagecolor_self(fd, COLOR_DEFAULT, "- - No Antagonists Found!");
 		}
-		
+
 		clif->messagecolor_self(fd, COLOR_DEFAULT, "============================");
 	}
 	dbi_destroy(iter);

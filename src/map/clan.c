@@ -523,7 +523,7 @@ int clan_inactivity_kick(int tid, int64 tick, int id, intptr_t data)
 	if ((c = clan->search(id)) != NULL) {
 		if (!c->kick_time || c->tid != tid || tid == INVALID_TIMER || c->tid == INVALID_TIMER) {
 		  ShowError("Timer Mismatch (Time: %d seconds) %d != %d", c->kick_time, c->tid, tid);
-		  Assert_retr(0, 0);
+		  Assert_report(0);
 		  return 0;
 		}
 		for (i = 0; i < VECTOR_LENGTH(c->members); i++) {

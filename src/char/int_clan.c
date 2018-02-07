@@ -55,11 +55,11 @@ int inter_clan_kick_inactive_members(int clan_id, int kick_interval)
 {
 	if (clan_id <= 0) {
 		ShowError("inter_clan_kick_inactive_members: Invalid clan id received '%d'\n", clan_id);
-		Assert_retr(0, 0);
+		Assert_report(clan_id > 0);
 		return 0;
 	} else if (kick_interval <= 0) {
 		ShowError("inter_clan_kick_inactive_members: Invalid kick_interval received '%d'", kick_interval);
-		Assert_retr(0, 0);
+		Assert_report(kick_interval > 0);
 		return 0;
 	}
 
@@ -88,11 +88,11 @@ int inter_clan_count_members(int clan_id, int kick_interval)
 
 	if (clan_id <= 0) {
 		ShowError("inter_clan_count_members: Invalid clan id received '%d'\n", clan_id);
-		Assert_retr(0, 0);
+		Assert_report(clan_id > 0);
 		return 0;
 	} else if (kick_interval <= 0) {
 		ShowError("inter_clan_count_member: Invalid kick_interval received '%d'", kick_interval);
-		Assert_retr(0, 0);
+		Assert_report(kick_interval > 0);
 		return 0;
 	}
 
