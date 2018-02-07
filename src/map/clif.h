@@ -1413,6 +1413,9 @@ struct clif_interface {
 	void (*clan_leave) (struct map_session_data *sd);
 	void (*clan_message) (struct clan *c, const char *mes, int len);
 	void (*pClanMessage) (int fd, struct map_session_data* sd);
+	/* Hat Effect */
+	void (*hat_effect) (struct block_list *bl, struct block_list *tbl, enum send_target target);
+	void (*hat_effect_single) (struct block_list *bl, uint16 effectId, bool enable);
 };
 
 #ifdef HERCULES_CORE

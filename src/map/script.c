@@ -23965,6 +23965,42 @@ BUILDIN(clan_master)
 }
 
 /**
+ * hateffect(EffectID, Enable_State)
+ */
+BUILDIN(hateffect)
+{
+#if PACKETVER >= 20150422
+	struct map_session_data *sd = script_rid2sd(st);
+	int effectId, enabled = 0;
+	int i;
+
+	if (sd == NULL)
+		return false;
+
+	effectId = script_getnum(st, 2);
+	enabled = script_getnum(st, 3);
+
+	for (i = 0; i < VECTOR_LENGTH(sd->hatEffectId); ++i) {
+		if (VECTOR_INDEX(sd->hatEffectId, i) == effectId) {
+			if (enabled == 1) { // Already Enabled
+				return true;
+			} else { // Remove
+				VECTOR_ERASE(sd->hatEffectId, i);
+				clif->hat_effect_single(&sd->bl, effectId, enabled);
+				return true;
+			}
+		}
+	}
+
+	VECTOR_ENSURE(sd->hatEffectId, 1, 1);
+	VECTOR_PUSH(sd->hatEffectId, effectId);
+
+	clif->hat_effect_single(&sd->bl, effectId, enabled);
+#endif
+	return true;
+}
+
+/**
  * Adds a built-in script function.
  *
  * @param buildin Script function data
@@ -24679,6 +24715,9 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF2(rodex_sendmail2, "rodex_sendmail_acc2", "isss?????????????????????????????????????????"),
 		BUILDIN_DEF(_,"s"),
 		BUILDIN_DEF2(_, "_$", "s"),
+
+		// -- HatEffect
+		BUILDIN_DEF(hateffect, "ii"),
 	};
 	int i, len = ARRAYLENGTH(BUILDIN);
 	RECREATE(script->buildin, char *, script->buildin_count + len); // Pre-alloc to speed up
