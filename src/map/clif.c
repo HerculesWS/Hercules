@@ -673,7 +673,7 @@ bool clif_send(const void* buf, int len, struct block_list* bl, enum send_target
 				nullpo_retr(false, c);
 
 				for (i = 0; i < VECTOR_LENGTH(c->members); i++) {
-					if ((sd = VECTOR_INDEX(c->members, i).sd) == NULL || (fd = sd->fd) <= 0)
+					if (VECTOR_INDEX(c->members, i).online == 0 || (sd = VECTOR_INDEX(c->members, i).sd) == NULL || (fd = sd->fd) <= 0)
 						continue;
 					WFIFOHEAD(fd, len);
 					memcpy(WFIFOP(fd, 0), buf, len);
