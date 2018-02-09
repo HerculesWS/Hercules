@@ -8718,9 +8718,11 @@ void clif_charnameack (int fd, struct block_list *bl)
 				WBUFW(buf, 0) = cmd = 0x195;
 				memcpy(WBUFP(buf,6), ssd->fakename, NAME_LENGTH);
 				WBUFB(buf,30) = WBUFB(buf,54) = WBUFB(buf,78) = 0;
-				break;
+				if (!ssd->fakename_option)
+					break;
 			}
-			memcpy(WBUFP(buf,6), ssd->status.name, NAME_LENGTH);
+			else
+				memcpy(WBUFP(buf,6), ssd->status.name, NAME_LENGTH);
 
 			if (ssd->status.party_id != 0) {
 				p = party->search(ssd->status.party_id);
@@ -8743,12 +8745,12 @@ void clif_charnameack (int fd, struct block_list *bl)
 				break;
 
 			WBUFW(buf, 0) = cmd = 0x195;
-			if (p != NULL)
+			if (p != NULL && ssd->fakename_option != 1)
 				memcpy(WBUFP(buf,30), p->party.name, NAME_LENGTH);
 			else
 				WBUFB(buf,30) = 0;
 
-			if (g != NULL && ps >= 0 && ps < MAX_GUILDPOSITION) {
+			if (g != NULL && ps >= 0 && ps < MAX_GUILDPOSITION && ssd->fakename_option != 2) {
 				memcpy(WBUFP(buf,54), g->name,NAME_LENGTH);
 				memcpy(WBUFP(buf,78), g->position[ps].name, NAME_LENGTH);
 			} else { //Assume no guild.
