@@ -103,7 +103,7 @@ struct map_session_data *clan_getonlinesd(struct clan *c)
 	int i;
 	nullpo_retr(NULL, c);
 
-	ARR_FIND(0, VECTOR_LENGTH(c->members), i, VECTOR_INDEX(c->members, i).sd != NULL);
+	ARR_FIND(0, VECTOR_LENGTH(c->members), i, (VECTOR_INDEX(c->members, i).sd != NULL && VECTOR_INDEX(c->members, i).online == 1));
 	return (i < VECTOR_LENGTH(c->members)) ? VECTOR_INDEX(c->members, i).sd : NULL;
 }
 
@@ -294,6 +294,7 @@ void clan_member_online(struct map_session_data *sd, bool first)
 		if (c->kick_time > 0 && inactivity > c->kick_time) {
 			if (m->online == 1) {
 				m->online = 0;
+				m->sd = NULL;
 				c->connect_member--;
 				c->member_count--;
 			}
@@ -306,6 +307,7 @@ void clan_member_online(struct map_session_data *sd, bool first)
 			return;
 		}
 
+		m->sd = sd;
 		m->online = 1;
 		m->last_login = sd->status.last_login;
 	}
@@ -403,6 +405,7 @@ void clan_member_offline(struct map_session_data *sd)
 	if (i != INDEX_NOT_FOUND && VECTOR_INDEX(c->members, i).online == 1) {
 		// Only if it is online, because unit->free is called twice
 		VECTOR_INDEX(c->members, i).online = 0;
+		VECTOR_INDEX(c->members, i).sd = NULL;
 		c->connect_member--;
 	}
 	clif->clan_onlinecount(c);
