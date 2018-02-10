@@ -110,7 +110,7 @@ typedef enum send_target {
 	BG_AREA_WOS,
 
 	BG_QUEUE,
-	
+
 	CLAN,               // Clan System
 } send_target;
 

@@ -751,7 +751,7 @@ int intif_party_leaderchange(int party_id,int account_id,int char_id)
 
 /**
  * Request clan member count
- * 
+ *
  * @param clan_id Id of the clan to have members counted
  * @param kick_interval Interval of the inactivity kick
  */
@@ -759,7 +759,7 @@ int intif_clan_membercount(int clan_id, int kick_interval)
 {
 	if (intif->CheckForCharServer() || clan_id == 0 || kick_interval <= 0)
 		return 0;
-	
+
 	WFIFOHEAD(inter_fd, 10);
 	WFIFOW(inter_fd, 0) = 0x3044;
 	WFIFOL(inter_fd, 2) = clan_id;
@@ -791,7 +791,7 @@ void intif_parse_RecvClanMemberAction(int fd)
 		ShowError("intif_parse_RecvClanMemberAction: Received invalid clan_id '%d'\n", clan_id);
 		return;
 	}
-	
+
 	if (count < 0) {
 		ShowError("intif_parse_RecvClanMemberAction: Received invalid member count value '%d'\n", count);
 		return;
@@ -2599,10 +2599,10 @@ void intif_parse_RodexNotifications(int fd)
 
 /// Updates a mail
 /// flag:
-///		0 - user Read
-///		1 - user got Zeny
-///		2 - user got Items
-///		3 - delete
+///     0 - user Read
+///     1 - user got Zeny
+///     2 - user got Items
+///     3 - delete
 int intif_rodex_updatemail(int64 mail_id, int8 flag)
 {
 	if (intif->CheckForCharServer())

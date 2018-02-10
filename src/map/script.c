@@ -8284,7 +8284,7 @@ BUILDIN(makeitem2)
 			map->search_freecell(NULL, m, &x, &y, -1, -1, 1);
 		} else {
 			range = (script_hasdata(st, 14) ? cap_value(script_getnum(st, 14), 1, battle_config.area_size) : 3);
-			map->search_freecell(&sd->bl, sd->bl.m, &x, &y, range, range, 0);	// Locate spot next to player.
+			map->search_freecell(&sd->bl, sd->bl.m, &x, &y, range, range, 0); // Locate spot next to player.
 		}
 	}
 
@@ -8635,7 +8635,7 @@ BUILDIN(readparam) {
 BUILDIN(getcharid) {
 	int num = script_getnum(st, 2);
 	struct map_session_data *sd;
-	
+
 	if (script_hasdata(st, 3))
 		sd = map->nick2sd(script_getstr(st, 3));
 	else
@@ -8647,22 +8647,22 @@ BUILDIN(getcharid) {
 	}
 
 	switch (num) {
-	case 0: 
+	case 0:
 		script_pushint(st, sd->status.char_id);
 		break;
-	case 1: 
+	case 1:
 		script_pushint(st, sd->status.party_id);
 		break;
-	case 2: 
+	case 2:
 		script_pushint(st, sd->status.guild_id);
 		break;
-	case 3: 
+	case 3:
 		script_pushint(st, sd->status.account_id);
 		break;
-	case 4: 
+	case 4:
 		script_pushint(st, sd->bg_id);
 		break;
-	case 5: 
+	case 5:
 		script_pushint(st, sd->status.clan_id);
 		break;
 	default:
@@ -23943,7 +23943,7 @@ BUILDIN(clan_master)
 {
 	struct npc_data *nd = map->id2nd(st->oid);
 	int clan_id = script_getnum(st, 2);
-	
+
 	if (nd == NULL) {
 		script_pushint(st, false);
 		return false;
@@ -24664,7 +24664,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(clan_join,"i?"),
 		BUILDIN_DEF(clan_leave,"?"),
 		BUILDIN_DEF(clan_master,"i"),
-		
+
 		BUILDIN_DEF(channelmes, "ss"),
 		BUILDIN_DEF(addchannelhandler, "ss"),
 		BUILDIN_DEF(removechannelhandler, "ss"),

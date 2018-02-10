@@ -6799,7 +6799,7 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 				} else if (!(map->list[m].flag.pvp && map->list[m].flag.pvp_noparty)
 					&& (!map->list[m].flag.battleground || sbg_id == tbg_id)) {
 					state |= BCT_PARTY;
-				} else if (!map->list[m].flag.cvc || s_clan == t_clan) { 
+				} else if (!map->list[m].flag.cvc || s_clan == t_clan) {
 					state |= BCT_PARTY;
 				} else {
 					state |= BCT_ENEMY;
@@ -7309,7 +7309,7 @@ static const struct battle_data {
 	{ "max_body_style",                     &battle_config.max_body_style,                  4,      0,      SHRT_MAX,       },
 	{ "save_body_style",                    &battle_config.save_body_style,                 0,      0,      1,              },
 	{ "player_warp_keep_direction",         &battle_config.player_warp_keep_direction,      0,      0,      1,              },
-	{ "atcommand_levelup_events",	        &battle_config.atcommand_levelup_events,	    0,      0,      1,				},
+	{ "atcommand_levelup_events",           &battle_config.atcommand_levelup_events,        0,      0,      1,              },
 	{ "bow_unequip_arrow",                  &battle_config.bow_unequip_arrow,               1,      0,      1,              },
 	{ "max_summoner_parameter",             &battle_config.max_summoner_parameter,          120,    10,     10000,          },
 	{ "mvp_exp_reward_message",             &battle_config.mvp_exp_reward_message,          0,      0,      1,              },

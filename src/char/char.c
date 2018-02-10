@@ -1616,7 +1616,7 @@ int char_make_new_char_sql(struct char_session_data *sd, const char *name_, int 
 		case JOB_NOVICE:
 			break;
 		default:
-			return -2;	// Char Creation Denied
+			return -2; // Char Creation Denied
 	}
 
 	//check other inputs

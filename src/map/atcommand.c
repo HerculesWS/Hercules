@@ -7596,7 +7596,7 @@ ACMD(mapflag) {
 		CHECKFLAG(noexppenalty);      CHECKFLAG(pvp);                CHECKFLAG(pvp_noparty);  CHECKFLAG(pvp_noguild);
 		CHECKFLAG(pvp_nightmaredrop); CHECKFLAG(pvp_nocalcrank);     CHECKFLAG(gvg_castle);   CHECKFLAG(gvg);
 		CHECKFLAG(gvg_dungeon);       CHECKFLAG(gvg_noparty);        CHECKFLAG(battleground); CHECKFLAG(cvc);
-		CHECKFLAG(nozenypenalty);     CHECKFLAG(notrade);            CHECKFLAG(noskill);      CHECKFLAG(nowarp); 
+		CHECKFLAG(nozenypenalty);     CHECKFLAG(notrade);            CHECKFLAG(noskill);      CHECKFLAG(nowarp);
 		CHECKFLAG(nowarpto);          CHECKFLAG(noicewall);          CHECKFLAG(snow);         CHECKFLAG(clouds);
 		CHECKFLAG(clouds2);           CHECKFLAG(fog);                CHECKFLAG(fireworks);    CHECKFLAG(sakura);
 		CHECKFLAG(leaves);            CHECKFLAG(nobaseexp);
@@ -8473,7 +8473,7 @@ void atcommand_commands_sub(struct map_session_data* sd, const int fd, AtCommand
 			}
 		}
 		if (count_bind > 0)
-			clif->message(fd, line_buff);	// Last Line
+			clif->message(fd, line_buff); // Last Line
 		count += count_bind;
 	}
 
@@ -9506,7 +9506,7 @@ ACMD(claninfo)
 	struct DBIterator *iter = db_iterator(clan->db);
 	struct clan *c;
 	int i, count;
-	
+
 	for (c = dbi_first(iter); dbi_exists(iter); c = dbi_next(iter)) {
 		safesnprintf(atcmd_output, sizeof(atcmd_output), "Clan #%d:", c->clan_id);
 		clif->messagecolor_self(fd, COLOR_DEFAULT, atcmd_output);
@@ -9545,9 +9545,6 @@ ACMD(claninfo)
 		for (i = 0; i < VECTOR_LENGTH(c->allies); i++) {
 			struct clan_relationship *ally = &VECTOR_INDEX(c->allies, i);
 
-			if (ally == NULL)
-				continue;
-			
 			safesnprintf(atcmd_output, sizeof(atcmd_output), "- - Ally #%d (Id: %d): %s", i + 1, ally->clan_id, ally->constant);
 			clif->messagecolor_self(fd, COLOR_DEFAULT, atcmd_output);
 			count++;
@@ -9559,14 +9556,11 @@ ACMD(claninfo)
 
 		safesnprintf(atcmd_output, sizeof(atcmd_output), "- Antagonists: %d", VECTOR_LENGTH(c->antagonists));
 		clif->messagecolor_self(fd, COLOR_DEFAULT, atcmd_output);
-		
+
 		count = 0;
 		for (i = 0; i < VECTOR_LENGTH(c->antagonists); i++) {
 			struct clan_relationship *antagonist = &VECTOR_INDEX(c->antagonists, i);
 
-			if (antagonist == NULL)
-				continue;
-			
 			safesnprintf(atcmd_output, sizeof(atcmd_output), "- - Antagonist #%d (Id: %d): %s", i + 1, antagonist->clan_id, antagonist->constant);
 			clif->messagecolor_self(fd, COLOR_DEFAULT, atcmd_output);
 			count++;
@@ -9575,7 +9569,7 @@ ACMD(claninfo)
 		if (count == 0) {
 			clif->messagecolor_self(fd, COLOR_DEFAULT, "- - No Antagonists Found!");
 		}
-		
+
 		clif->messagecolor_self(fd, COLOR_DEFAULT, "============================");
 	}
 	dbi_destroy(iter);

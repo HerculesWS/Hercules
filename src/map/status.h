@@ -838,9 +838,9 @@ typedef enum sc_type {
 	SC_BITESCAR,
 	SC_ARCLOUSEDASH,
 	SC_TUNAPARTY,
-	SC_SHRIMP,	// 650
+	SC_SHRIMP, // 650
 	SC_FRESHSHRIMP,
-	
+
 	SC_DRESS_UP,
 
 	// Rodex

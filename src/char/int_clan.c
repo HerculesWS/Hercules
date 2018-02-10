@@ -43,10 +43,10 @@ struct inter_clan_interface *inter_clan;
 
 /**
  * Kick offline members of a clan
- * 
+ *
  * Perform the update on the DB to reset clan id to 0
  * of the members that are inactive for too long
- * 
+ *
  * @param clan_id Id of the clan
  * @param kick_interval Time needed to consider a player inactive and kick it
  * @return 0 on failure, 1 on success
@@ -55,11 +55,11 @@ int inter_clan_kick_inactive_members(int clan_id, int kick_interval)
 {
 	if (clan_id <= 0) {
 		ShowError("inter_clan_kick_inactive_members: Invalid clan id received '%d'\n", clan_id);
-		Assert_retr(0, 0);
+		Assert_report(clan_id > 0);
 		return 0;
 	} else if (kick_interval <= 0) {
 		ShowError("inter_clan_kick_inactive_members: Invalid kick_interval received '%d'", kick_interval);
-		Assert_retr(0, 0);
+		Assert_report(kick_interval > 0);
 		return 0;
 	}
 
@@ -77,7 +77,7 @@ int inter_clan_kick_inactive_members(int clan_id, int kick_interval)
 
 /**
  * Count members of a clan
- * 
+ *
  * @param clan_id Id of the clan
  * @param kick_interval Time needed to consider a player inactive and ignore it on the count
  */
@@ -88,11 +88,11 @@ int inter_clan_count_members(int clan_id, int kick_interval)
 
 	if (clan_id <= 0) {
 		ShowError("inter_clan_count_members: Invalid clan id received '%d'\n", clan_id);
-		Assert_retr(0, 0);
+		Assert_report(clan_id > 0);
 		return 0;
 	} else if (kick_interval <= 0) {
 		ShowError("inter_clan_count_member: Invalid kick_interval received '%d'", kick_interval);
-		Assert_retr(0, 0);
+		Assert_report(kick_interval > 0);
 		return 0;
 	}
 
