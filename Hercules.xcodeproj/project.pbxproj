@@ -25,10 +25,10 @@
 		A55AED7C1B8153F100149CF8 /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC72918564C05009EB79C /* scanner.c */; };
 		A55AED7D1B8153F300149CF8 /* strbuf.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC72B18564C05009EB79C /* strbuf.c */; };
 		A567612D185D11D700997C0D /* nullpo.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6B2185643BB009EB79C /* nullpo.c */; };
-		A56CC68918564387009EB79C /* account_sql.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC68118564387009EB79C /* account_sql.c */; };
-		A56CC68A18564387009EB79C /* ipban_sql.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC68318564387009EB79C /* ipban_sql.c */; };
+		A56CC68918564387009EB79C /* account.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC68118564387009EB79C /* account.c */; };
+		A56CC68A18564387009EB79C /* ipban.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC68318564387009EB79C /* ipban.c */; };
 		A56CC68B18564387009EB79C /* login.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC68518564387009EB79C /* login.c */; };
-		A56CC68C18564387009EB79C /* loginlog_sql.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC68718564387009EB79C /* loginlog_sql.c */; };
+		A56CC68C18564387009EB79C /* loginlog.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC68718564387009EB79C /* loginlog.c */; };
 		A56CC6C9185643BB009EB79C /* conf.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC690185643BB009EB79C /* conf.c */; };
 		A56CC6CA185643BB009EB79C /* conf.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC690185643BB009EB79C /* conf.c */; };
 		A56CC6CB185643BB009EB79C /* conf.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC690185643BB009EB79C /* conf.c */; };
@@ -239,13 +239,13 @@
 		A56CC66A18564315009EB79C /* login-server */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "login-server"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A56CC6731856434D009EB79C /* char-server */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "char-server"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A56CC67C18564356009EB79C /* map-server */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "map-server"; sourceTree = BUILT_PRODUCTS_DIR; };
-		A56CC68118564387009EB79C /* account_sql.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = account_sql.c; path = src/login/account_sql.c; sourceTree = SOURCE_ROOT; };
+		A56CC68118564387009EB79C /* account.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = account.c; path = src/login/account.c; sourceTree = SOURCE_ROOT; };
 		A56CC68218564387009EB79C /* account.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = account.h; path = src/login/account.h; sourceTree = SOURCE_ROOT; };
-		A56CC68318564387009EB79C /* ipban_sql.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ipban_sql.c; path = src/login/ipban_sql.c; sourceTree = SOURCE_ROOT; };
+		A56CC68318564387009EB79C /* ipban.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ipban.c; path = src/login/ipban.c; sourceTree = SOURCE_ROOT; };
 		A56CC68418564387009EB79C /* ipban.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ipban.h; path = src/login/ipban.h; sourceTree = SOURCE_ROOT; };
 		A56CC68518564387009EB79C /* login.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = login.c; path = src/login/login.c; sourceTree = SOURCE_ROOT; };
 		A56CC68618564387009EB79C /* login.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = login.h; path = src/login/login.h; sourceTree = SOURCE_ROOT; };
-		A56CC68718564387009EB79C /* loginlog_sql.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = loginlog_sql.c; path = src/login/loginlog_sql.c; sourceTree = SOURCE_ROOT; };
+		A56CC68718564387009EB79C /* loginlog.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = loginlog.c; path = src/login/loginlog.c; sourceTree = SOURCE_ROOT; };
 		A56CC68818564387009EB79C /* loginlog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = loginlog.h; path = src/login/loginlog.h; sourceTree = SOURCE_ROOT; };
 		A56CC68E185643BB009EB79C /* atomic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = atomic.h; path = src/common/atomic.h; sourceTree = "<group>"; };
 		A56CC68F185643BB009EB79C /* cbasetypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cbasetypes.h; path = src/common/cbasetypes.h; sourceTree = "<group>"; };
@@ -565,13 +565,13 @@
 				A5296FCC1CAC40CF001ABCAC /* lclif.p.h */,
 				A5B894A81A03CDD4005AD22E /* HPMlogin.c */,
 				A5B894A91A03CDD4005AD22E /* HPMlogin.h */,
-				A56CC68118564387009EB79C /* account_sql.c */,
+				A56CC68118564387009EB79C /* account.c */,
 				A56CC68218564387009EB79C /* account.h */,
-				A56CC68318564387009EB79C /* ipban_sql.c */,
+				A56CC68318564387009EB79C /* ipban.c */,
 				A56CC68418564387009EB79C /* ipban.h */,
 				A56CC68518564387009EB79C /* login.c */,
 				A56CC68618564387009EB79C /* login.h */,
-				A56CC68718564387009EB79C /* loginlog_sql.c */,
+				A56CC68718564387009EB79C /* loginlog.c */,
 				A56CC68818564387009EB79C /* loginlog.h */,
 			);
 			path = "login-server";
@@ -1208,7 +1208,7 @@
 				A5B894AA1A03CDD4005AD22E /* HPMlogin.c in Sources */,
 				A5296FCD1CAC40CF001ABCAC /* lclif.c in Sources */,
 				A56CC6DE185643BB009EB79C /* grfio.c in Sources */,
-				A56CC68C18564387009EB79C /* loginlog_sql.c in Sources */,
+				A56CC68C18564387009EB79C /* loginlog.c in Sources */,
 				A56CC73118564C05009EB79C /* libconfig.c in Sources */,
 				A56CC717185643BB009EB79C /* utils.c in Sources */,
 				A56CC708185643BB009EB79C /* sql.c in Sources */,
@@ -1225,13 +1225,13 @@
 				A56CC6CC185643BB009EB79C /* console.c in Sources */,
 				A56CC72E18564C05009EB79C /* grammar.c in Sources */,
 				A56CC705185643BB009EB79C /* socket.c in Sources */,
-				A56CC68918564387009EB79C /* account_sql.c in Sources */,
+				A56CC68918564387009EB79C /* account.c in Sources */,
 				A56CC6E4185643BB009EB79C /* memmgr.c in Sources */,
 				A56CC6E1185643BB009EB79C /* HPM.c in Sources */,
 				A56CC6FF185643BB009EB79C /* random.c in Sources */,
 				A56CC73418564C05009EB79C /* scanctx.c in Sources */,
 				A56CC714185643BB009EB79C /* timer.c in Sources */,
-				A56CC68A18564387009EB79C /* ipban_sql.c in Sources */,
+				A56CC68A18564387009EB79C /* ipban.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
