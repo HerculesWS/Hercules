@@ -3987,4 +3987,40 @@ packet(0x96e,-1,clif->ackmergeitems);
 #endif
 #endif
 
+#ifdef PACKETVER_ZERO
+// 2018-01-31dRagexe_zero
+#if PACKETVER >= 20180131
+// new packets
+	packet(0x0af2,40,clif->pDull/*,XXX*/);
+	packet(0x0af3,-1,clif->pDull/*,XXX*/);
+	packet(0x0af4,11,clif->pDull/*,XXX*/);
+// changed packet sizes
+	packet(0x0821,102); // AC_OTP_USER
+	packet(0x0ae6,10,clif->pDull/*,XXX*/);
+#endif
+#endif  // PACKETVER_ZERO
+
+#ifdef PACKETVER_ZERO
+// 2018-02-07bRagexe_zero
+#if PACKETVER >= 20180207
+// new packets
+	packet(0x0af5,3);
+	packet(0x0af6,88);
+	packet(0x0af7,32);
+// changed packet sizes
+#endif
+#else  // PACKETVER_ZERO
+// 2018-02-07bRagexeRE, 2018-02-07bRagexe
+#if PACKETVER >= 20180207
+// new packets
+	packet(0x0af4,11);
+	packet(0x0af5,3);
+	packet(0x0af6,88);
+	packet(0x0af7,32);
+// changed packet sizes
+	packet(0x0ae6,10);
+#endif
+#endif  // PACKETVER_ZERO
+
+
 #endif /* MAP_PACKETS_H */

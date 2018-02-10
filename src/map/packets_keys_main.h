@@ -1954,5 +1954,10 @@
 	packetKeys(0x7EAA1CE0,0x415D1CFD,0x4C8F19FA);
 #endif
 
+// 2018-02-07bRagexe, 2018-02-07bRagexeRE
+#if PACKETVER == 20180207
+	packetKeys(0x45AA1B44,0x20E716B7,0x5388105C);
+#endif
+
 
 #endif /* MAP_PACKETS_MAIN_KEYS_H */
