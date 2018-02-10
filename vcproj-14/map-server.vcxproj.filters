@@ -288,6 +288,18 @@
     <ClInclude Include="..\src\map\packets.h">
       <Filter>map</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\map\packets_keys_main.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\map\packets_keys_zero.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\map\packets_shuffle_main.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\map\packets_shuffle_zero.h">
+      <Filter>map</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\map\packets_struct.h">
       <Filter>map</Filter>
     </ClInclude>
