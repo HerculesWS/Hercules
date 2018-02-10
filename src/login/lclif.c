@@ -257,8 +257,8 @@ bool lclif_send_server_list(struct login_session_data *sd)
 	uint32 ip;
 	struct packet_AC_ACCEPT_LOGIN *packet = NULL;
 
-	for (i = 0; i < ARRAYLENGTH(server); ++i) {
-		if (sockt->session_is_active(server[i].fd))
+	for (i = 0; i < ARRAYLENGTH(login->dbs->server); ++i) {
+		if (sockt->session_is_active(login->dbs->server[i].fd))
 			server_num++;
 	}
 	if (server_num == 0)
@@ -283,24 +283,24 @@ bool lclif_send_server_list(struct login_session_data *sd)
 	packet->last_login_ip = 0; // Not used anymore
 	memset(packet->last_login_time, '\0', sizeof(packet->last_login_time)); // Not used anymore
 	packet->sex = sex_str2num(sd->sex);
-	for (i = 0, n = 0;  i < ARRAYLENGTH(server); ++i) {
+	for (i = 0, n = 0; i < ARRAYLENGTH(login->dbs->server); ++i) {
 		uint32 subnet_char_ip;
 
-		if (!sockt->session_is_valid(server[i].fd))
+		if (!sockt->session_is_valid(login->dbs->server[i].fd))
 			continue;
 
 		subnet_char_ip = login->lan_subnet_check(ip);
-		packet->server_list[n].ip = htonl((subnet_char_ip) ? subnet_char_ip : server[i].ip);
-		packet->server_list[n].port = sockt->ntows(htons(server[i].port)); // [!] LE byte order here [!]
-		safestrncpy(packet->server_list[n].name, server[i].name, 20);
-		packet->server_list[n].usercount = login->convert_users_to_colors(server[i].users);
+		packet->server_list[n].ip = htonl((subnet_char_ip) ? subnet_char_ip : login->dbs->server[i].ip);
+		packet->server_list[n].port = sockt->ntows(htons(login->dbs->server[i].port)); // [!] LE byte order here [!]
+		safestrncpy(packet->server_list[n].name, login->dbs->server[i].name, 20);
+		packet->server_list[n].usercount = login->convert_users_to_colors(login->dbs->server[i].users);
 
-		if (server[i].type == CST_PAYING && sd->expiration_time > time(NULL))
+		if (login->dbs->server[i].type == CST_PAYING && sd->expiration_time > time(NULL))
 			packet->server_list[n].property = CST_NORMAL;
 		else
-			packet->server_list[n].property = server[i].type;
+			packet->server_list[n].property = login->dbs->server[i].type;
 
-		packet->server_list[n].state = server[i].new_;
+		packet->server_list[n].state = login->dbs->server[i].new_;
 		++n;
 	}
 	WFIFOSET(sd->fd, length);
@@ -373,9 +373,9 @@ int lclif_parse(int fd)
 
 	if ((sd = sockt->session[fd]->session_data) == NULL) {
 		// Perform ip-ban check
-		if (login->config->ipban && !sockt->trusted_ip_check(ipl) && ipban_check(ipl)) {
+		if (login->config->ipban && !sockt->trusted_ip_check(ipl) && ipban->check(ipl)) {
 			ShowStatus("Connection refused: IP isn't authorized (deny/allow, ip: %s).\n", ip);
-			login_log(ipl, "unknown", -3, "ip banned");
+			loginlog->log(ipl, "unknown", -3, "ip banned");
 			lclif->login_error(fd, 3); // 3 = Rejected from Server
 			sockt->eof(fd);
 			return 0;

@@ -33,17 +33,10 @@
 
 #include <stdlib.h> // exit
 
-// Sql settings
-static char   log_db_hostname[32] = "127.0.0.1";
-static uint16 log_db_port = 3306;
-static char   log_db_username[32] = "ragnarok";
-static char   log_db_password[100] = "ragnarok";
-static char   log_db_database[32] = "ragnarok";
-static char   log_codepage[32] = "";
-static char   log_login_db[256] = "loginlog";
 
-static struct Sql *sql_handle = NULL;
-static bool enabled = false;
+struct loginlog_interface loginlog_s;
+struct loginlog_interface *loginlog;
+struct s_loginlog_dbs loginlogdbs;
 
 
 // Returns the number of failed login attempts by the ip in the last minutes.
@@ -51,19 +44,19 @@ unsigned long loginlog_failedattempts(uint32 ip, unsigned int minutes)
 {
 	unsigned long failures = 0;
 
-	if( !enabled )
+	if( !loginlog->enabled )
 		return 0;
 
-	if( SQL_ERROR == SQL->Query(sql_handle, "SELECT count(*) FROM `%s` WHERE `ip` = '%s' AND `rcode` = '1' AND `time` > NOW() - INTERVAL %u MINUTE",
-		log_login_db, sockt->ip2str(ip,NULL), minutes) )// how many times failed account? in one ip.
-		Sql_ShowDebug(sql_handle);
+	if( SQL_ERROR == SQL->Query(loginlog->sql_handle, "SELECT count(*) FROM `%s` WHERE `ip` = '%s' AND `rcode` = '1' AND `time` > NOW() - INTERVAL %u MINUTE",
+		loginlog->dbs->log_login_db, sockt->ip2str(ip,NULL), minutes) )// how many times failed account? in one ip.
+		Sql_ShowDebug(loginlog->sql_handle);
 
-	if( SQL_SUCCESS == SQL->NextRow(sql_handle) )
+	if( SQL_SUCCESS == SQL->NextRow(loginlog->sql_handle) )
 	{
 		char* data;
-		SQL->GetData(sql_handle, 0, &data, NULL);
+		SQL->GetData(loginlog->sql_handle, 0, &data, NULL);
 		failures = strtoul(data, NULL, 10);
-		SQL->FreeResult(sql_handle);
+		SQL->FreeResult(loginlog->sql_handle);
 	}
 	return failures;
 }
@@ -73,7 +66,7 @@ unsigned long loginlog_failedattempts(uint32 ip, unsigned int minutes)
  * Records an event in the login log
  *---------------------------------------------*/
 // TODO: add an enum of rcode values
-void login_log(uint32 ip, const char* username, int rcode, const char* message)
+void loginlog_log(uint32 ip, const char* username, int rcode, const char* message)
 {
 	char esc_username[NAME_LENGTH*2+1];
 	char esc_message[255*2+1];
@@ -81,43 +74,43 @@ void login_log(uint32 ip, const char* username, int rcode, const char* message)
 
 	nullpo_retv(username);
 	nullpo_retv(message);
-	if( !enabled )
+	if( !loginlog->enabled )
 		return;
 
-	SQL->EscapeStringLen(sql_handle, esc_username, username, strnlen(username, NAME_LENGTH));
-	SQL->EscapeStringLen(sql_handle, esc_message, message, strnlen(message, 255));
+	SQL->EscapeStringLen(loginlog->sql_handle, esc_username, username, strnlen(username, NAME_LENGTH));
+	SQL->EscapeStringLen(loginlog->sql_handle, esc_message, message, strnlen(message, 255));
 
-	retcode = SQL->Query(sql_handle,
+	retcode = SQL->Query(loginlog->sql_handle,
 		"INSERT INTO `%s`(`time`,`ip`,`user`,`rcode`,`log`) VALUES (NOW(), '%s', '%s', '%d', '%s')",
-		log_login_db, sockt->ip2str(ip,NULL), esc_username, rcode, esc_message);
+		loginlog->dbs->log_login_db, sockt->ip2str(ip,NULL), esc_username, rcode, esc_message);
 
 	if( retcode != SQL_SUCCESS )
-		Sql_ShowDebug(sql_handle);
+		Sql_ShowDebug(loginlog->sql_handle);
 }
 
 bool loginlog_init(void)
 {
-	sql_handle = SQL->Malloc();
+	loginlog->sql_handle = SQL->Malloc();
 
-	if (SQL_ERROR == SQL->Connect(sql_handle, log_db_username, log_db_password,
-	                              log_db_hostname, log_db_port, log_db_database)) {
-		Sql_ShowDebug(sql_handle);
-		SQL->Free(sql_handle);
+	if (SQL_ERROR == SQL->Connect(loginlog->sql_handle, loginlog->dbs->log_db_username, loginlog->dbs->log_db_password,
+	                              loginlog->dbs->log_db_hostname, loginlog->dbs->log_db_port, loginlog->dbs->log_db_database)) {
+		Sql_ShowDebug(loginlog->sql_handle);
+		SQL->Free(loginlog->sql_handle);
 		exit(EXIT_FAILURE);
 	}
 
-	if (log_codepage[0] != '\0' && SQL_ERROR == SQL->SetEncoding(sql_handle, log_codepage))
-		Sql_ShowDebug(sql_handle);
+	if (loginlog->dbs->log_codepage[0] != '\0' && SQL_ERROR == SQL->SetEncoding(loginlog->sql_handle, loginlog->dbs->log_codepage))
+		Sql_ShowDebug(loginlog->sql_handle);
 
-	enabled = true;
+	loginlog->enabled = true;
 
 	return true;
 }
 
 bool loginlog_final(void)
 {
-	SQL->Free(sql_handle);
-	sql_handle = NULL;
+	SQL->Free(loginlog->sql_handle);
+	loginlog->sql_handle = NULL;
 	return true;
 }
 
@@ -145,7 +138,7 @@ bool loginlog_config_read_names(const char *filename, struct config_t *config, b
 		return false;
 	}
 
-	libconfig->setting_lookup_mutable_string(setting, "login_db", log_login_db, sizeof(log_login_db));
+	libconfig->setting_lookup_mutable_string(setting, "login_db", loginlog->dbs->log_login_db, sizeof(loginlog->dbs->log_login_db));
 
 	return true;
 }
@@ -174,13 +167,13 @@ bool loginlog_config_read_log(const char *filename, struct config_t *config, boo
 		return false;
 	}
 
-	libconfig->setting_lookup_mutable_string(setting, "db_hostname", log_db_hostname, sizeof(log_db_hostname));
-	libconfig->setting_lookup_mutable_string(setting, "db_database", log_db_database, sizeof(log_db_database));
-	libconfig->setting_lookup_mutable_string(setting, "db_username", log_db_username, sizeof(log_db_username));
-	libconfig->setting_lookup_mutable_string(setting, "db_password", log_db_password, sizeof(log_db_password));
+	libconfig->setting_lookup_mutable_string(setting, "db_hostname", loginlog->dbs->log_db_hostname, sizeof(loginlog->dbs->log_db_hostname));
+	libconfig->setting_lookup_mutable_string(setting, "db_database", loginlog->dbs->log_db_database, sizeof(loginlog->dbs->log_db_database));
+	libconfig->setting_lookup_mutable_string(setting, "db_username", loginlog->dbs->log_db_username, sizeof(loginlog->dbs->log_db_username));
+	libconfig->setting_lookup_mutable_string(setting, "db_password", loginlog->dbs->log_db_password, sizeof(loginlog->dbs->log_db_password));
 
-	libconfig->setting_lookup_uint16(setting, "db_port", &log_db_port);
-	libconfig->setting_lookup_mutable_string(setting, "codepage", log_codepage, sizeof(log_codepage));
+	libconfig->setting_lookup_uint16(setting, "db_port", &loginlog->dbs->log_db_port);
+	libconfig->setting_lookup_mutable_string(setting, "codepage", loginlog->dbs->log_codepage, sizeof(loginlog->dbs->log_codepage));
 
 	return true;
 }
@@ -206,20 +199,46 @@ bool loginlog_config_read(const char *filename, bool imported)
 	if (!libconfig->load_file(&config, filename))
 		return false; // Error message is already shown by libconfig->load_file
 
-	if (!loginlog_config_read_names(filename, &config, imported))
+	if (!loginlog->config_read_names(filename, &config, imported))
 		retval = false;
-	if (!loginlog_config_read_log(filename, &config, imported))
+	if (!loginlog->config_read_log(filename, &config, imported))
 		retval = false;
 
 	if (libconfig->lookup_string(&config, "import", &import) == CONFIG_TRUE) {
 		if (strcmp(import, filename) == 0 || strcmp(import, "conf/common/inter-server.conf") == 0) {
 			ShowWarning("inter_config_read: Loop detected! Skipping 'import'...\n");
 		} else {
-			if (!loginlog_config_read(import, true))
+			if (!loginlog->config_read(import, true))
 				retval = false;
 		}
 	}
 
 	libconfig->destroy(&config);
 	return retval;
+}
+
+void loginlog_defaults(void)
+{
+	loginlog = &loginlog_s;
+	loginlog->dbs = &loginlogdbs;
+
+	loginlog->sql_handle = NULL;
+	loginlog->enabled = false;
+
+	// Sql settings
+	strcpy(loginlog->dbs->log_db_hostname, "127.0.0.1");
+	loginlog->dbs->log_db_port = 3306;
+	strcpy(loginlog->dbs->log_db_username, "ragnarok");
+	strcpy(loginlog->dbs->log_db_password, "ragnarok");
+	strcpy(loginlog->dbs->log_db_database, "ragnarok");
+	*loginlog->dbs->log_codepage = 0;
+	strcpy(loginlog->dbs->log_login_db, "loginlog");
+
+	loginlog->failedattempts = loginlog_failedattempts;
+	loginlog->log = loginlog_log;
+	loginlog->init = loginlog_init;
+	loginlog->final = loginlog_final;
+	loginlog->config_read_names = loginlog_config_read_names;
+	loginlog->config_read_log = loginlog_config_read_log;
+	loginlog->config_read = loginlog_config_read;
 }

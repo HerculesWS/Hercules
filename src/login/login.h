@@ -157,6 +157,11 @@ struct online_login_data {
 
 #define MAX_SERVERS 30
 
+struct s_login_dbs {
+	struct mmo_char_server server[MAX_SERVERS];
+	struct Account_engine *account_engine;
+};
+
 /**
  * Login.c Interface
  **/
@@ -166,6 +171,7 @@ struct login_interface {
 	int fd;
 	struct Login_Config *config;
 	struct AccountDB* accounts;
+	struct s_login_dbs *dbs;
 
 	int (*mmo_auth) (struct login_session_data* sd, bool isServer);
 	int (*mmo_auth_new) (const char* userid, const char* pass, const char sex, const char* last_ip);
@@ -234,12 +240,22 @@ struct login_interface {
 	char *NET_CONF_NAME; ///< Network configuration filename
 };
 
-#ifdef HERCULES_CORE
-extern struct mmo_char_server server[MAX_SERVERS];
+/**
+ * Login.c Interface
+ **/
+struct lchrif_interface {
+	void (*server_init) (int id);
+	void (*server_destroy) (int id);
+	void (*server_reset) (int id);
+	void (*on_disconnect) (int id);
+};
 
+#ifdef HERCULES_CORE
 void login_defaults(void);
+void lchrif_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct login_interface *login;
+HPShared struct lchrif_interface *lchrif;
 
 #endif /* LOGIN_LOGIN_H */
