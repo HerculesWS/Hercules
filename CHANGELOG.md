@@ -9,6 +9,38 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+## [v2018.02.11] `February 11 2018`
+### Added
+- Added/updated packets support for clients from 2017-12-13 to 2018-01-24. (part of #1957)
+- Implemented the official Clan System, including the possibility of customization and a Clan vs Clan versus mode. (#1718, #1964, #1968, related to issue #241)
+  - New GM commands: `@claninfo`, `@joinclan`, `@leaveclan`, `@reloadclans`, `@cvcon` and `@cvcoff`.
+  - New script commands: `clan_join()`, `clan_leave()` and `clan_master()`; extended `strcharinfo()` and `getcharid()`.
+  - Configuration changes: see `conf/clans.conf`, `conf/map/logs.conf`, `db/clans.conf`, `db/*/map_zone_db.conf`.
+  - Note: This requires the SQL migrations `2017-06-04--15-04.sql` and `2017-06-04--15-05.sql`.
+  - Note: The `npc/re/other/clans.txt` script is now loaded by default in renewal mode.
+- Added several (status-icon related) constants to the script engine (through the new `constants.inc` file). (part of #1718)
+- Implemented the missing HPM interfaces in the login server (account, ipban, lchrif), added the missing variables into the login interfaces. (#1963, issue #1908)
+  - The `_sql` suffix has been removed from the source files in the login server.
+  - Functions in `account.c` and `loginlog.c` have been prefixed with `account_` and `loginlog_` respectively.
+  - The `chrif_` functions of the login server have been renamed to `lchrif_`.
+  - The `server[]` array has been moved to `login->dbs->server[]`.
+  - The `account` (account.h), `ipban` (ipban.h), `lchrif` (login.h), `loginlog` (loginlog.h)
+  - Several `log_*` global variables have been moved to the loginlog interface, with their respective names.
+  - The `account_engine[0]` variable has been moved to `login->dbs->account_engine` (note: this is not an array!)
+- Added/updated packets support for clients from 2018-01-31 to 2018-02-07. (#1969)
+
+### Changed
+- Applied script standardization to the Bakonawa Lake instance script. (#1874)
+- Applied script standardization to the Buwaya Cave instance script. (#1877)
+- Applied script standardization to the Eclage Interior instance script. (#1878)
+- Applied script standardization to the Hazy Forest instance script. (#1880)
+- Applied script standardization to the Malangdo Culvert instance script. (#1881)
+
+### Fixed
+- Fixed compatibility issues with the 2013-12-23 client. (part of #1957, issue #1956)
+- Prevented the leak of a hidden GM's presence through area packets. (#1200)
+- Fixed an unterminated string in the `bg_message()` related packets, with certain client versions. (#1890)
+
 ## [v2018.01.14] `January 14 2018`
 ### Added
 - Added support for the `AllowReproduce` flag in the skill DB. This supersedes the skill_reproduce_db. (#1943)
@@ -122,6 +154,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2018.02.11]: https://github.com/HerculesWS/Hercules/compare/v2018.01.14...v2018.02.11
 [v2018.01.14]: https://github.com/HerculesWS/Hercules/compare/v2017.12.17...v2018.01.14
 [v2017.12.17]: https://github.com/HerculesWS/Hercules/compare/v2017.11.19+2...v2017.12.17
 [v2017.11.19+2]: https://github.com/HerculesWS/Hercules/compare/v2017.11.19+1...v2017.11.19+2
