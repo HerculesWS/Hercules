@@ -1691,7 +1691,7 @@ ACMD(cvcoff)
 	clif->map_property_mapall(sd->bl.m, MAPPROPERTY_NOTHING);
 	clif->maptypeproperty2(&sd->bl, ALL_SAMEMAP);
 	map->foreachinmap(atcommand->stopattack, sd->bl.m, BL_CHAR, 0);
-	clif->message(fd, msg_fd(fd, 26)); // CvC: Off.
+	clif->message(fd, msg_fd(fd, 137)); // CvC: Off.
 
 	return true;
 }
@@ -1710,7 +1710,7 @@ ACMD(cvcon)
 	map->list[sd->bl.m].flag.cvc = 1;
 	clif->map_property_mapall(sd->bl.m, MAPPROPERTY_AGITZONE);
 	clif->maptypeproperty2(&sd->bl, ALL_SAMEMAP);
-	clif->message(fd, msg_fd(fd, 27)); // CvC: On.
+	clif->message(fd, msg_fd(fd, 138)); // CvC: On.
 
 	return true;
 }
