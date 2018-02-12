@@ -4389,9 +4389,15 @@ int pc_payzeny(struct map_session_data *sd,int zeny, enum e_log_pick_type type, 
 
 	return 0;
 }
-/*==========================================
- * Cash Shop
- *------------------------------------------*/
+
+/**
+ * Calculates leftover cashpoints and kafrapoints when buying an item from cashshop
+ *
+ * @param price     Price of the item.
+ * @param points    Provided kafra points.
+ * 	
+ * @return points	Leftover kafra points.
+ */
 //Changed Kafrapoints calculation. [Normynator]
 int pc_paycash(struct map_session_data *sd, int price, int points)
 {
