@@ -4502,6 +4502,8 @@ void map_zone_change2(int m, struct map_zone_data *zone)
 {
 	const char *empty = "";
 
+	if (zone == NULL)
+		return;
 	Assert_retv(m >= 0 && m < map->count);
 	if( map->list[m].zone == zone )
 		return;
