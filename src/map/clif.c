@@ -17744,7 +17744,7 @@ void clif_parse_CashShopBuy(int fd, struct map_session_data *sd) {
 				ret = pc->paycash(sd, clif->cs.data[tab][j]->price * qty, kafra_pay);// [Ryuuzaki] //changed Kafrapoints calculation. [Normynator]
 				if (ret < 0) {
 					ShowError("clif_parse_CashShopBuy: The return from pc->paycash was negativ which is not allowed.\n");
-					return;
+					break; //This shouled never happen.
 				}
 				kafra_pay = ret;
 				for (k = 0; k < qty; k += get_count) {
