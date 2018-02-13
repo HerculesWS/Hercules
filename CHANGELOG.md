@@ -9,6 +9,12 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+## [v2018.02.11+1] `February 13 2018` `PATCH 1`
+### Fixed
+- Fixed a possible crash in `@cvcon` (and possibly other functions) when a referenced map zone doesn't exist. (#1972, issue #1971)
+- Fixed the messages displayed when enabling or disabling CvC. (part of #1972)
+- Extended the `bg_message` string termination fix to all the clients. (#1973)
+
 ## [v2018.02.11] `February 11 2018`
 ### Added
 - Added/updated packets support for clients from 2017-12-13 to 2018-01-24. (part of #1957)
@@ -154,6 +160,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2018.02.11+1]: https://github.com/HerculesWS/Hercules/compare/v2018.02.11...v2018.02.11+1
 [v2018.02.11]: https://github.com/HerculesWS/Hercules/compare/v2018.01.14...v2018.02.11
 [v2018.01.14]: https://github.com/HerculesWS/Hercules/compare/v2017.12.17...v2018.01.14
 [v2017.12.17]: https://github.com/HerculesWS/Hercules/compare/v2017.11.19+2...v2017.12.17
