@@ -16566,18 +16566,15 @@ void clif_bg_message(struct battleground_data *bgd, int src_id, const char *name
 		return;
 
 	len = (int)strlen(mes);
-#if PACKETVER <= 20120716
-	len += 1;
-#endif
-	Assert_retv(len <= INT16_MAX - NAME_LENGTH - 8);
-	buf = (unsigned char*)aMalloc((len + NAME_LENGTH + 8)*sizeof(unsigned char));
+	Assert_retv(len <= INT16_MAX - NAME_LENGTH - 9);
+	buf = (unsigned char *)aCalloc(len + NAME_LENGTH + 9, sizeof(unsigned char));
 
-	WBUFW(buf,0) = 0x2dc;
-	WBUFW(buf,2) = len + NAME_LENGTH + 8;
-	WBUFL(buf,4) = src_id;
-	memcpy(WBUFP(buf,8), name, NAME_LENGTH);
-	memcpy(WBUFP(buf,32), mes, len); // [!] no NUL terminator
-	clif->send(buf,WBUFW(buf,2), &sd->bl, BG);
+	WBUFW(buf, 0) = 0x2dc;
+	WBUFW(buf, 2) = len + NAME_LENGTH + 9;
+	WBUFL(buf, 4) = src_id;
+	safestrncpy(WBUFP(buf, 8), name, NAME_LENGTH);
+	safestrncpy(WBUFP(buf, 32), mes, len + 1);
+	clif->send(buf, WBUFW(buf, 2), &sd->bl, BG);
 
 	aFree(buf);
 }
