@@ -17734,13 +17734,13 @@ void clif_parse_CashShopBuy(int fd, struct map_session_data *sd) {
 			} else {
 				struct item item_tmp;
 				int k, get_count;
-
+				int ret = 0;
+				
 				get_count = qty;
 
 				if (!itemdb->isstackable2(data))
 					get_count = 1;
 				
-				int ret = 0;
 				ret = pc->paycash(sd, clif->cs.data[tab][j]->price * qty, kafra_pay);// [Ryuuzaki] //changed Kafrapoints calculation. [Normynator]
 				if (ret < 0) {
 					ShowError("clif_parse_CashShopBuy: The return from pc->paycash was negative which is not allowed.\n");
