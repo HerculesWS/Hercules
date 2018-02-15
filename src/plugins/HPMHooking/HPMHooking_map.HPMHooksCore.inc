@@ -5054,6 +5054,8 @@ struct {
 	struct HPMHookPoint *HP_script_cleanfloor_sub_post;
 	struct HPMHookPoint *HP_script_run_func_pre;
 	struct HPMHookPoint *HP_script_run_func_post;
+	struct HPMHookPoint *HP_script_sprintf_pre;
+	struct HPMHookPoint *HP_script_sprintf_post;
 	struct HPMHookPoint *HP_script_getfuncname_pre;
 	struct HPMHookPoint *HP_script_getfuncname_post;
 	struct HPMHookPoint *HP_script_calc_hash_ci_pre;
@@ -11333,6 +11335,8 @@ struct {
 	int HP_script_cleanfloor_sub_post;
 	int HP_script_run_func_pre;
 	int HP_script_run_func_post;
+	int HP_script_sprintf_pre;
+	int HP_script_sprintf_post;
 	int HP_script_getfuncname_pre;
 	int HP_script_getfuncname_post;
 	int HP_script_calc_hash_ci_pre;

@@ -2589,6 +2589,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(script->buildin_mobuseskill_sub, HP_script_buildin_mobuseskill_sub) },
 	{ HP_POP(script->cleanfloor_sub, HP_script_cleanfloor_sub) },
 	{ HP_POP(script->run_func, HP_script_run_func) },
+	{ HP_POP(script->sprintf, HP_script_sprintf) },
 	{ HP_POP(script->getfuncname, HP_script_getfuncname) },
 	{ HP_POP(script->calc_hash_ci, HP_script_calc_hash_ci) },
 	{ HP_POP(script->array_src, HP_script_array_src) },

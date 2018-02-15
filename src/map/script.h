@@ -909,6 +909,7 @@ struct script_interface {
 	int (*buildin_mobuseskill_sub) (struct block_list *bl, va_list ap);
 	int (*cleanfloor_sub) (struct block_list *bl, va_list ap);
 	int (*run_func) (struct script_state *st);
+	bool (*sprintf) (struct script_state *st, int start, struct StringBuf *out);
 	const char *(*getfuncname) (struct script_state *st);
 	// for ENABLE_CASE_CHECK
 	unsigned int (*calc_hash_ci) (const char *p);

@@ -25180,6 +25180,7 @@ void script_defaults(void)
 	script->search_str = script_search_str;
 	script->setd_sub = setd_sub;
 	script->attach_state = script_attach_state;
+	script->sprintf = script_sprintf;
 
 	script->queue = script_hqueue_get;
 	script->queue_add = script_hqueue_add;
