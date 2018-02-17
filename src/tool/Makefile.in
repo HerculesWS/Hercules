@@ -36,26 +36,15 @@ LIBCONFIG_OBJ = $(addprefix $(LIBCONFIG_D)/, libconfig.o grammar.o scanctx.o \
 LIBCONFIG_H = $(addprefix $(LIBCONFIG_D)/, libconfig.h grammar.h parsectx.h \
               scanctx.h scanner.h strbuf.h wincompat.h)
 
-MAPCACHE_OBJ = obj_all/mapcache.o
-MAPCACHE_C = mapcache.c
-MAPCACHE_H =
-MAPCACHE_DEPENDS = $(MAPCACHE_OBJ) $(COMMON_D)/obj_all/common_mini.a $(LIBCONFIG_OBJ) $(SYSINFO_INC)
-
 @SET_MAKE@
 
 CC = @CC@
 export CC
 
 #####################################################################
-.PHONY: all mapcache clean buildclean help
+.PHONY: all clean buildclean help
 
-all: mapcache Makefile
-
-mapcache: ../../mapcache@EXEEXT@
-
-../../mapcache@EXEEXT@: $(MAPCACHE_DEPENDS) Makefile
-	@echo "	LD	$(notdir $@)"
-	@$(CC) @STATIC@ @LDFLAGS@ -o ../../mapcache@EXEEXT@ $(MAPCACHE_OBJ) $(COMMON_D)/obj_all/common_mini.a $(LIBCONFIG_OBJ) @LIBS@
+all: Makefile
 
 buildclean:
 	@echo "	CLEAN	tool (build temp files)"
@@ -63,11 +52,9 @@ buildclean:
 
 clean: buildclean
 	@echo "	CLEAN	tool"
-	@rm -rf ../../mapcache@EXEEXT@
 
 help:
-	@echo "possible targets are 'mapcache' 'all' 'clean' 'help'"
-	@echo "'mapcache'   - mapcache generator"
+	@echo "possible targets are 'all' 'clean' 'help'"
 	@echo "'all'        - builds all above targets"
 	@echo "'clean'      - cleans builds and objects"
 	@echo "'buildclean' - cleans build temporary (object) files, without deleting the"
@@ -79,7 +66,7 @@ help:
 Makefile: Makefile.in
 	@$(MAKE) -C ../.. src/tool/Makefile
 
-$(SYSINFO_INC): $(MAPCACHE_C) $(MAPCACHE_H) $(COMMON_H) $(CONFIG_H) $(LIBCONFIG_H)
+$(SYSINFO_INC): $(COMMON_H) $(CONFIG_H) $(LIBCONFIG_H)
 	@echo "	MAKE	$@"
 	@$(MAKE) -C ../.. sysinfo
 
@@ -87,7 +74,7 @@ obj_all:
 	@echo "	MKDIR	obj_all"
 	@-mkdir obj_all
 
-obj_all/%.o: %.c $(MAPCACHE_H) $(COMMON_H) $(CONFIG_H) $(LIBCONFIG_H) | obj_all
+obj_all/%.o: %.c $(COMMON_H) $(CONFIG_H) $(LIBCONFIG_H) | obj_all
 	@echo "	CC	$<"
 	@$(CC) @CFLAGS@ @DEFS@ $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
 

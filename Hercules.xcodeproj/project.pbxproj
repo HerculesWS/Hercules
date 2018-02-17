@@ -13,11 +13,6 @@
 		A530267B202D78CE0060E394 /* clan.c in Sources */ = {isa = PBXBuildFile; fileRef = A5302673202D78B00060E394 /* clan.c */; };
 		A530267F202D793C0060E394 /* int_clan.c in Sources */ = {isa = PBXBuildFile; fileRef = A530267D202D792F0060E394 /* int_clan.c */; };
 		A5302683202D7A1F0060E394 /* HPMHooking.Defs.inc in Sources */ = {isa = PBXBuildFile; fileRef = A5302682202D7A1F0060E394 /* HPMHooking.Defs.inc */; };
-		A5380CD71856CE3C0090CBC4 /* mapcache.c in Sources */ = {isa = PBXBuildFile; fileRef = A5380CD61856CE3C0090CBC4 /* mapcache.c */; };
-		A5380CD81856CE8A0090CBC4 /* console.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC692185643BB009EB79C /* console.c */; };
-		A5380CD91856CF4A0090CBC4 /* core.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC694185643BB009EB79C /* core.c */; };
-		A5380CDA1856D0650090CBC4 /* socket.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6BA185643BB009EB79C /* socket.c */; };
-		A5380CDB1856D0690090CBC4 /* memmgr.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6A3185643BB009EB79C /* memmgr.c */; };
 		A5467AD31A16FCB4008AFAA6 /* loginif.c in Sources */ = {isa = PBXBuildFile; fileRef = A5467AD11A16FCB4008AFAA6 /* loginif.c */; };
 		A5467AD61A16FCDC008AFAA6 /* mapif.c in Sources */ = {isa = PBXBuildFile; fileRef = A5467AD41A16FCDC008AFAA6 /* mapif.c */; };
 		A5467AD91A16FD08008AFAA6 /* geoip.c in Sources */ = {isa = PBXBuildFile; fileRef = A5467AD71A16FD08008AFAA6 /* geoip.c */; };
@@ -165,11 +160,6 @@
 		A56CC7DD18565812009EB79C /* trade.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC7B318565812009EB79C /* trade.c */; };
 		A56CC7DE18565812009EB79C /* unit.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC7B518565812009EB79C /* unit.c */; };
 		A56CC7DF18565812009EB79C /* vending.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC7B718565812009EB79C /* vending.c */; };
-		A58A5A17185800A40099683E /* showmsg.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6B8185643BB009EB79C /* showmsg.c */; };
-		A58A5A18185800B80099683E /* grfio.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC69E185643BB009EB79C /* grfio.c */; };
-		A58A5A19185800C20099683E /* des.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC698185643BB009EB79C /* des.c */; };
-		A58A5A1A185800CD0099683E /* strlib.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6BF185643BB009EB79C /* strlib.c */; };
-		A58A5A1B185800E70099683E /* utils.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6C6185643BB009EB79C /* utils.c */; };
 		A58A5A281858025D0099683E /* HPMHooking.c in Sources */ = {isa = PBXBuildFile; fileRef = A58A5A271858025D0099683E /* HPMHooking.c */; };
 		A59EA4511A727D36005F2B6D /* channel.c in Sources */ = {isa = PBXBuildFile; fileRef = A59EA44F1A727D36005F2B6D /* channel.c */; };
 		A5AA94EE185796CB00C940C8 /* sample.c in Sources */ = {isa = PBXBuildFile; fileRef = A5AA94ED185796CB00C940C8 /* sample.c */; };
@@ -181,19 +171,9 @@
 		A5F7946C191CA34E002293AB /* sysinfo.c in Sources */ = {isa = PBXBuildFile; fileRef = A5F79469191CA34E002293AB /* sysinfo.c */; };
 		A5F7946D191CA34E002293AB /* sysinfo.c in Sources */ = {isa = PBXBuildFile; fileRef = A5F79469191CA34E002293AB /* sysinfo.c */; };
 		A5F7946E191CA34E002293AB /* sysinfo.c in Sources */ = {isa = PBXBuildFile; fileRef = A5F79469191CA34E002293AB /* sysinfo.c */; };
-		A5F7946F191CA34E002293AB /* sysinfo.c in Sources */ = {isa = PBXBuildFile; fileRef = A5F79469191CA34E002293AB /* sysinfo.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		A5380CCB1856CE180090CBC4 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-		};
 		A56CC66818564315009EB79C /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -244,8 +224,6 @@
 		A5302681202D79940060E394 /* hercules.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = hercules.h; path = src/common/hercules.h; sourceTree = "<group>"; };
 		A5302682202D7A1F0060E394 /* HPMHooking.Defs.inc */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = HPMHooking.Defs.inc; path = src/plugins/HPMHooking/HPMHooking.Defs.inc; sourceTree = "<group>"; };
 		A5302684202D7A2F0060E394 /* HPMHooking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HPMHooking.h; path = src/plugins/HPMHooking.h; sourceTree = "<group>"; };
-		A5380CCD1856CE180090CBC4 /* mapcache */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = mapcache; sourceTree = BUILT_PRODUCTS_DIR; };
-		A5380CD61856CE3C0090CBC4 /* mapcache.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mapcache.c; path = src/tool/mapcache.c; sourceTree = "<group>"; };
 		A5467AD11A16FCB4008AFAA6 /* loginif.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = loginif.c; path = src/char/loginif.c; sourceTree = SOURCE_ROOT; };
 		A5467AD21A16FCB4008AFAA6 /* loginif.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = loginif.h; path = src/char/loginif.h; sourceTree = SOURCE_ROOT; };
 		A5467AD41A16FCDC008AFAA6 /* mapif.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mapif.c; path = src/char/mapif.c; sourceTree = SOURCE_ROOT; };
@@ -469,13 +447,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		A5380CCA1856CE180090CBC4 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		A56CC66718564315009EB79C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -535,14 +506,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		A5380CC81856CDF70090CBC4 /* tools */ = {
-			isa = PBXGroup;
-			children = (
-				A5380CD61856CE3C0090CBC4 /* mapcache.c */,
-			);
-			name = tools;
-			sourceTree = "<group>";
-		};
 		A56CC651185642B4009EB79C = {
 			isa = PBXGroup;
 			children = (
@@ -560,7 +523,6 @@
 				A56CC66A18564315009EB79C /* login-server */,
 				A56CC6731856434D009EB79C /* char-server */,
 				A56CC67C18564356009EB79C /* map-server */,
-				A5380CCD1856CE180090CBC4 /* mapcache */,
 				A5AA94E71857956100C940C8 /* sample.dylib */,
 				A5AA94F3185799B700C940C8 /* db2sql.dylib */,
 				A58A5A26185801FF0099683E /* HPMHooking_map.dylib */,
@@ -846,7 +808,6 @@
 			isa = PBXGroup;
 			children = (
 				A5F79476191CA3F4002293AB /* sysinfogen.sh */,
-				A5380CC81856CDF70090CBC4 /* tools */,
 				A56CC71A18564AC7009EB79C /* config */,
 				A56CC68D1856439A009EB79C /* common */,
 				A56CC66B18564315009EB79C /* login-server */,
@@ -945,24 +906,6 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		A5380CCC1856CE180090CBC4 /* mapcache */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = A5380CD31856CE190090CBC4 /* Build configuration list for PBXNativeTarget "mapcache" */;
-			buildPhases = (
-				A5F79479191CA5BC002293AB /* ShellScript */,
-				A5380CC91856CE180090CBC4 /* Sources */,
-				A5380CCA1856CE180090CBC4 /* Frameworks */,
-				A5380CCB1856CE180090CBC4 /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = mapcache;
-			productName = mapcache;
-			productReference = A5380CCD1856CE180090CBC4 /* mapcache */;
-			productType = "com.apple.product-type.tool";
-		};
 		A56CC66918564315009EB79C /* login-server */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A56CC66C18564315009EB79C /* Build configuration list for PBXNativeTarget "login-server" */;
@@ -1126,7 +1069,6 @@
 				A56CC66918564315009EB79C /* login-server */,
 				A56CC6721856434D009EB79C /* char-server */,
 				A56CC67B18564356009EB79C /* map-server */,
-				A5380CCC1856CE180090CBC4 /* mapcache */,
 				A5B894B71A03CE5D005AD22E /* HPMHooking_login */,
 				A5B894AE1A03CE25005AD22E /* HPMHooking_char */,
 				A58A5A1E185801FF0099683E /* HPMHooking_map */,
@@ -1176,47 +1118,9 @@
 			shellPath = /bin/sh;
 			shellScript = "./sysinfogen.sh src/common/sysinfo_new.inc ${WARNING_CFLAGS} ${OTHER_CFLAGS} ${OTHER_LDFLAGS}\nif cmp -s src/common/sysinfo.inc src/common/sysinfo_new.inc; then\nrm src/common/sysinfo_new.inc ;\nelse\nmv src/common/sysinfo_new.inc src/common/sysinfo.inc ;\nfi\n";
 		};
-		A5F79479191CA5BC002293AB /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "./sysinfogen.sh src/common/sysinfo_new.inc ${WARNING_CFLAGS} ${OTHER_CFLAGS} ${OTHER_LDFLAGS}\nif cmp -s src/common/sysinfo.inc src/common/sysinfo_new.inc; then\nrm src/common/sysinfo_new.inc ;\nelse\nmv src/common/sysinfo_new.inc src/common/sysinfo.inc ;\nfi\n";
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		A5380CC91856CE180090CBC4 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				A55AED781B8153D800149CF8 /* conf.c in Sources */,
-				A58A5A1A185800CD0099683E /* strlib.c in Sources */,
-				A5F7946F191CA34E002293AB /* sysinfo.c in Sources */,
-				A5380CD91856CF4A0090CBC4 /* core.c in Sources */,
-				A567612D185D11D700997C0D /* nullpo.c in Sources */,
-				A5380CD81856CE8A0090CBC4 /* console.c in Sources */,
-				A58A5A19185800C20099683E /* des.c in Sources */,
-				A5380CD71856CE3C0090CBC4 /* mapcache.c in Sources */,
-				A58A5A1B185800E70099683E /* utils.c in Sources */,
-				A55AED7A1B8153EC00149CF8 /* libconfig.c in Sources */,
-				A58A5A18185800B80099683E /* grfio.c in Sources */,
-				A5380CDA1856D0650090CBC4 /* socket.c in Sources */,
-				A55AED7C1B8153F100149CF8 /* scanner.c in Sources */,
-				A58A5A17185800A40099683E /* showmsg.c in Sources */,
-				A5380CDB1856D0690090CBC4 /* memmgr.c in Sources */,
-				A55AED7B1B8153EF00149CF8 /* scanctx.c in Sources */,
-				A55AED791B8153EA00149CF8 /* grammar.c in Sources */,
-				A55AED7D1B8153F300149CF8 /* strbuf.c in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		A56CC66618564315009EB79C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1433,106 +1337,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		A5380CD41856CE190090CBC4 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				OTHER_CFLAGS = (
-					"-DMAXCONN=16384",
-					"-DHAS_TLS",
-					"-DHAVE_SETRLIMIT",
-					"-DHAVE_STRNLEN",
-					"-DPACKAGE_NAME=\\\"\\\"",
-					"-DPACKAGE_TARNAME=\\\"\\\"",
-					"-DPACKAGE_VERSION=\\\"\\\"",
-					"-DPACKAGE_STRING=\\\"\\\"",
-					"-DPACKAGE_BUGREPORT=\\\"\\\"",
-					"-DPACKAGE_URL=\\\"\\\"",
-					"-DSTDC_HEADERS=1",
-					"-DHAVE_SYS_TYPES_H=1",
-					"-DHAVE_SYS_STAT_H=1",
-					"-DHAVE_STDLIB_H=1",
-					"-DHAVE_STRING_H=1",
-					"-DHAVE_MEMORY_H=1",
-					"-DHAVE_STRINGS_H=1",
-					"-DHAVE_INTTYPES_H=1",
-					"-DHAVE_STDINT_H=1",
-					"-DHAVE_UNISTD_H=1",
-					"-D__EXTENSIONS__=1",
-					"-D_ALL_SOURCE=1",
-					"-D_GNU_SOURCE=1",
-					"-D_POSIX_PTHREAD_SEMANTICS=1",
-					"-D_TANDEM_SOURCE=1",
-					"-DHAVE_USELOCALE=1",
-					"-DHAVE_NEWLOCALE=1",
-					"-DHAVE_FREELOCALE=1",
-					"-DHAVE_XLOCALE_H=1",
-					"-DHAVE_LIBZ=1",
-					"-DHAVE_LIBPTHREAD=1",
-					"-DHAVE_LIBPTHREAD=1",
-					"-DHAVE_LIBPTHREAD=1",
-					"-DHAVE_LIBPTHREAD=1",
-					"-DHAVE_LIBPTHREAD=1",
-					"-DHAVE_LIBPTHREAD=1",
-					"-DHAVE_LIBPTHREAD=1",
-					"-DMINICORE",
-				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		A5380CD51856CE190090CBC4 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				OTHER_CFLAGS = (
-					"-DMAXCONN=16384",
-					"-DHAS_TLS",
-					"-DHAVE_SETRLIMIT",
-					"-DHAVE_STRNLEN",
-					"-DPACKAGE_NAME=\\\"\\\"",
-					"-DPACKAGE_TARNAME=\\\"\\\"",
-					"-DPACKAGE_VERSION=\\\"\\\"",
-					"-DPACKAGE_STRING=\\\"\\\"",
-					"-DPACKAGE_BUGREPORT=\\\"\\\"",
-					"-DPACKAGE_URL=\\\"\\\"",
-					"-DSTDC_HEADERS=1",
-					"-DHAVE_SYS_TYPES_H=1",
-					"-DHAVE_SYS_STAT_H=1",
-					"-DHAVE_STDLIB_H=1",
-					"-DHAVE_STRING_H=1",
-					"-DHAVE_MEMORY_H=1",
-					"-DHAVE_STRINGS_H=1",
-					"-DHAVE_INTTYPES_H=1",
-					"-DHAVE_STDINT_H=1",
-					"-DHAVE_UNISTD_H=1",
-					"-D__EXTENSIONS__=1",
-					"-D_ALL_SOURCE=1",
-					"-D_GNU_SOURCE=1",
-					"-D_POSIX_PTHREAD_SEMANTICS=1",
-					"-D_TANDEM_SOURCE=1",
-					"-DHAVE_USELOCALE=1",
-					"-DHAVE_NEWLOCALE=1",
-					"-DHAVE_FREELOCALE=1",
-					"-DHAVE_XLOCALE_H=1",
-					"-DHAVE_LIBZ=1",
-					"-DHAVE_LIBPTHREAD=1",
-					"-DHAVE_LIBPTHREAD=1",
-					"-DHAVE_LIBPTHREAD=1",
-					"-DHAVE_LIBPTHREAD=1",
-					"-DHAVE_LIBPTHREAD=1",
-					"-DHAVE_LIBPTHREAD=1",
-					"-DHAVE_LIBPTHREAD=1",
-					"-DMINICORE",
-				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
 		A56CC661185642B4009EB79C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2096,15 +1900,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		A5380CD31856CE190090CBC4 /* Build configuration list for PBXNativeTarget "mapcache" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				A5380CD41856CE190090CBC4 /* Debug */,
-				A5380CD51856CE190090CBC4 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		A56CC655185642B4009EB79C /* Build configuration list for PBXProject "Hercules" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
