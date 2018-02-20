@@ -1985,7 +1985,8 @@ int do_final(void)
 		login->dbs->account_engine->db->destroy(login->dbs->account_engine->db);
 		login->dbs->account_engine->db = NULL;
 	}
-	accounts = NULL; // destroyed in account_engine
+	login->accounts = NULL; // destroyed in account_engine
+	accounts = NULL;
 	login->online_db->destroy(login->online_db, NULL);
 	login->auth_db->destroy(login->auth_db, NULL);
 
@@ -2101,6 +2102,7 @@ int do_init(int argc, char** argv)
 	login->dbs->account_engine->constructor = account->db_sql;
 	login->dbs->account_engine->db = login->dbs->account_engine->constructor();
 	accounts = login->dbs->account_engine->db;
+	login->accounts = accounts;
 	if( accounts == NULL ) {
 		ShowFatalError("do_init: account engine 'sql' not found.\n");
 		exit(EXIT_FAILURE);
