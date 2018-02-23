@@ -10999,12 +10999,20 @@ void clif_parse_CreateChatRoom(int fd, struct map_session_data* sd) __attribute_
 void clif_parse_CreateChatRoom(int fd, struct map_session_data* sd)
 {
 	int len = RFIFOW(fd,2)-15;
-	int limit = RFIFOW(fd,4);
-	bool pub = (RFIFOB(fd,6) != 0);
-	const char *password = RFIFOP(fd,7); //not zero-terminated
-	const char *title = RFIFOP(fd,15); // not zero-terminated
+	int limit;
+	bool pub;
+	const char *password; //not zero-terminated
+	const char *title; // not zero-terminated
 	char s_password[CHATROOM_PASS_SIZE];
 	char s_title[CHATROOM_TITLE_SIZE];
+
+	if (len < 1)
+		return;
+
+	limit = RFIFOW(fd, 4);
+	pub = (RFIFOB(fd, 6) != 0);
+	password = RFIFOP(fd, 7); //not zero-terminated
+	title = RFIFOP(fd, 15); // not zero-terminated
 
 	if (pc_ismuted(&sd->sc, MANNER_NOROOM))
 		return;
@@ -11020,9 +11028,6 @@ void clif_parse_CreateChatRoom(int fd, struct map_session_data* sd)
 		clif->skill_fail(sd,1,USESKILL_FAIL_THERE_ARE_NPC_AROUND,0);
 		return;
 	}
-
-	if( len <= 0 )
-		return; // invalid input
 
 	safestrncpy(s_password, password, CHATROOM_PASS_SIZE);
 	safestrncpy(s_title, title, min(len+1,CHATROOM_TITLE_SIZE)); //NOTE: assumes that safestrncpy will not access the len+1'th byte
@@ -11050,15 +11055,20 @@ void clif_parse_ChatRoomStatusChange(int fd, struct map_session_data* sd) __attr
 void clif_parse_ChatRoomStatusChange(int fd, struct map_session_data* sd)
 {
 	int len = RFIFOW(fd,2)-15;
-	int limit = RFIFOW(fd,4);
-	bool pub = (RFIFOB(fd,6) != 0);
-	const char *password = RFIFOP(fd,7); // not zero-terminated
-	const char *title = RFIFOP(fd,15); // not zero-terminated
+	int limit;
+	bool pub;
+	const char *password; // not zero-terminated
+	const char *title; // not zero-terminated
 	char s_password[CHATROOM_PASS_SIZE];
 	char s_title[CHATROOM_TITLE_SIZE];
 
-	if( len <= 0 )
-		return; // invalid input
+	if (len < 1)
+		return;
+
+	limit = RFIFOW(fd, 4);
+	pub = (RFIFOB(fd, 6) != 0);
+	password = RFIFOP(fd, 7); // not zero-terminated
+	title = RFIFOP(fd, 15); // not zero-terminated
 
 	safestrncpy(s_password, password, CHATROOM_PASS_SIZE);
 	safestrncpy(s_title, title, min(len+1,CHATROOM_TITLE_SIZE)); //NOTE: assumes that safestrncpy will not access the len+1'th byte
@@ -11074,7 +11084,7 @@ void clif_parse_ChangeChatOwner(int fd, struct map_session_data* sd) __attribute
 ///     1 = normal
 void clif_parse_ChangeChatOwner(int fd, struct map_session_data* sd)
 {
-	chat->change_owner(sd, RFIFOP(fd,6));
+	chat->change_owner(sd, RFIFOP(fd,6)); // non null terminated
 }
 
 void clif_parse_KickFromChat(int fd,struct map_session_data *sd) __attribute__((nonnull (2)));
@@ -11082,7 +11092,7 @@ void clif_parse_KickFromChat(int fd,struct map_session_data *sd) __attribute__((
 /// 00e2 <name>.24B
 void clif_parse_KickFromChat(int fd,struct map_session_data *sd)
 {
-	chat->kick(sd, RFIFOP(fd,2));
+	chat->kick(sd, RFIFOP(fd,2)); // non null terminated
 }
 
 void clif_parse_ChatLeave(int fd, struct map_session_data* sd) __attribute__((nonnull (2)));
@@ -11841,17 +11851,21 @@ void clif_parse_NpcStringInput(int fd, struct map_session_data* sd) __attribute_
 /// 01d5 <packet len>.W <npc id>.L <string>.?B
 void clif_parse_NpcStringInput(int fd, struct map_session_data* sd)
 {
+	int len = RFIFOW(fd, 2);
 // [4144] can't confirm exact client version. At least >= correct for 20150513
 #if PACKETVER >= 20151029
-	int message_len = RFIFOW(fd, 2) - 7;
+	int message_len = len - 7;
 #else
-	int message_len = RFIFOW(fd, 2) - 8;
+	int message_len = len - 8;
 #endif
-	int npcid = RFIFOL(fd,4);
-	const char *message = RFIFOP(fd,8);
+	int npcid;
+	const char *message;
 
-	if( message_len <= 0 )
-		return; // invalid input
+	if (len < 9)
+		return;
+
+	npcid = RFIFOL(fd, 4);
+	message = RFIFOP(fd, 8);
 
 	safestrncpy(sd->npc_str, message, min(message_len,CHATBOX_SIZE));
 	npc->scriptcont(sd, npcid, false);
@@ -13005,9 +13019,15 @@ void clif_parse_PurchaseReq(int fd, struct map_session_data* sd) __attribute__((
 /// 0134 <packet len>.W <account id>.L { <amount>.W <index>.W }*
 void clif_parse_PurchaseReq(int fd, struct map_session_data* sd)
 {
-	int len = (int)RFIFOW(fd,2) - 8;
-	int id = RFIFOL(fd,4);
-	const uint8 *data = RFIFOP(fd,8);
+	int len = (int)RFIFOW(fd, 2) - 8;
+	int id;
+	const uint8 *data;
+
+	if (len < 1)
+		return;
+
+	id = RFIFOL(fd, 4);
+	data = RFIFOP(fd, 8);
 
 	vending->purchase(sd, id, sd->vended_id, data, len/4);
 
@@ -13020,10 +13040,16 @@ void clif_parse_PurchaseReq2(int fd, struct map_session_data* sd) __attribute__(
 /// 0801 <packet len>.W <account id>.L <unique id>.L { <amount>.W <index>.W }*
 void clif_parse_PurchaseReq2(int fd, struct map_session_data* sd)
 {
-	int len = (int)RFIFOW(fd,2) - 12;
-	int aid = RFIFOL(fd,4);
-	int uid = RFIFOL(fd,8);
-	const uint8 *data = RFIFOP(fd,12);
+	int len = (int)RFIFOW(fd, 2) - 12;
+	int aid;
+	int uid;
+	const uint8 *data;
+
+	if (len < 1)
+		return;
+	aid = RFIFOL(fd, 4);
+	uid = RFIFOL(fd, 8);
+	data = RFIFOP(fd, 12);
 
 	vending->purchase(sd, aid, uid, data, len/4);
 
@@ -13040,9 +13066,16 @@ void clif_parse_OpenVending(int fd, struct map_session_data* sd) __attribute__((
 ///     1 = open
 void clif_parse_OpenVending(int fd, struct map_session_data* sd) {
 	short len = (short)RFIFOW(fd,2) - 85;
-	const char *message = RFIFOP(fd,4);
-	bool flag = (RFIFOB(fd,84) != 0) ? true : false;
-	const uint8 *data = RFIFOP(fd,85);
+	const char *message;
+	bool flag;
+	const uint8 *data;
+
+	if (len < 1)
+		return;
+
+	message = RFIFOP(fd,4);
+	flag = (RFIFOB(fd,84) != 0) ? true : false;
+	data = RFIFOP(fd,85);
 
 	if( !flag )
 		sd->state.prevend = sd->state.workinprogress = 0;
@@ -13135,12 +13168,14 @@ void clif_parse_GuildChangePositionInfo(int fd, struct map_session_data *sd) __a
 void clif_parse_GuildChangePositionInfo(int fd, struct map_session_data *sd)
 {
 	int i;
+	int count = (RFIFOW(fd, 2) - 4) / 40;
 
-	if(!sd->state.gmaster_flag)
+	if (!sd->state.gmaster_flag)
 		return;
 
-	for(i = 4; i < RFIFOW(fd,2); i += 40 ){
-		guild->change_position(sd->status.guild_id, RFIFOL(fd,i), RFIFOL(fd,i+4), RFIFOL(fd,i+12), RFIFOP(fd,i+16));
+	for (i = 0; i < count; i ++ ) {
+		int idx = i * 40 + 4;
+		guild->change_position(sd->status.guild_id, RFIFOL(fd, idx), RFIFOL(fd, idx + 4), RFIFOL(fd, idx + 12), RFIFOP(fd, idx + 16));
 	}
 }
 
@@ -13151,6 +13186,7 @@ void clif_parse_GuildChangeMemberPosition(int fd, struct map_session_data *sd)
 {
 	int i;
 	int len = RFIFOW(fd, 2);
+	int count = (len - 4) / 12;
 
 	if(!sd->state.gmaster_flag)
 		return;
@@ -13161,10 +13197,11 @@ void clif_parse_GuildChangeMemberPosition(int fd, struct map_session_data *sd)
 		return;
 	}
 
-	for(i=4;i<RFIFOW(fd,2);i+=12){
-		int position = RFIFOL(fd, i + 8);
-		if (position > 0) {
-			guild->change_memberposition(sd->status.guild_id, RFIFOL(fd, i), RFIFOL(fd, i + 4), position);
+	for (i = 0; i < count; i++) {
+		int idx = i * 12 + 4;
+		int position = RFIFOL(fd, idx + 8);
+		if (position > 0 && position < MAX_GUILDPOSITION) {
+			guild->change_memberposition(sd->status.guild_id, RFIFOL(fd, idx), RFIFOL(fd, idx + 4), position);
 		}
 	}
 }
@@ -13548,12 +13585,15 @@ void clif_parse_GuildBreak(int fd, struct map_session_data *sd) __attribute__((n
 /// key:
 ///     now guild name; might have been (intended) email, since the
 ///     field name and size is same as the one in CH_DELETE_CHAR.
-void clif_parse_GuildBreak(int fd, struct map_session_data *sd) {
+void clif_parse_GuildBreak(int fd, struct map_session_data *sd)
+{
+	char key[40];
 	if( map->list[sd->bl.m].flag.guildlock ) {
 		clif->message(fd, msg_fd(fd,228)); // Guild modification is disabled in this map.
 		return;
 	}
-	guild->dobreak(sd, RFIFOP(fd,2));
+	safestrncpy(key, RFIFOP(fd, 2), 40);
+	guild->dobreak(sd, key);
 }
 
 /// Pet
@@ -15302,17 +15342,19 @@ void clif_parse_Mail_winopen(int fd, struct map_session_data *sd)
 void clif_parse_Mail_send(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 /// Request to send mail (CZ_MAIL_SEND).
 /// 0248 <packet len>.W <recipient>.24B <title>.40B <body len>.B <body>.?B
+
 void clif_parse_Mail_send(int fd, struct map_session_data *sd)
 {
 	struct mail_message msg;
 	int body_len;
+	int len = RFIFOW(fd, 2);
 
 	if( !chrif->isconnected() )
 		return;
 	if( sd->state.trading )
 		return;
 
-	if( RFIFOW(fd,2) < 69 ) {
+	if (len < 69) {
 		ShowWarning("Invalid Msg Len from account %d.\n", sd->status.account_id);
 		return;
 	}
@@ -15327,6 +15369,11 @@ void clif_parse_Mail_send(int fd, struct map_session_data *sd)
 
 	if (body_len > MAIL_BODY_LENGTH)
 		body_len = MAIL_BODY_LENGTH;
+
+	if (body_len + 69 > len) {
+		ShowWarning("Invalid Msg Len from account %d.\n", sd->status.account_id);
+		return;
+	}
 
 	memset(&msg, 0, sizeof(msg));
 	if (!mail->setattachment(sd, &msg)) { // Invalid Append condition
@@ -15833,15 +15880,24 @@ void clif_parse_cashshop_buy(int fd, struct map_session_data *sd)
 		fail = npc->cashshop_buy(sd, nameid, amount, points);
 #else
 		int len = RFIFOW(fd,2);
-		int points = RFIFOL(fd,4);
-		int count = RFIFOW(fd,8);
+		int points;
+		int count;
 		struct itemlist item_list = { 0 };
 		int i;
 
-		if( len < 10 || len != 10 + count * 4) {
+		if (len < 10) {
+			ShowWarning("Player %d sent incorrect cash shop buy packet (len %d)!\n", sd->status.char_id, len);
+			return;
+		}
+
+		points = RFIFOL(fd, 4);
+		count = RFIFOW(fd, 8);
+
+		if (len != 10 + count * 4) {
 			ShowWarning("Player %d sent incorrect cash shop buy packet (len %d:%d)!\n", sd->status.char_id, len, 10 + count * 4);
 			return;
 		}
+
 		VECTOR_INIT(item_list);
 		VECTOR_ENSURE(item_list, count, 1);
 		for (i = 0; i < count; i++) {
@@ -16879,7 +16935,7 @@ void clif_parse_ItemListWindowSelected(int fd, struct map_session_data *sd) __at
 /// S 07e4 <length>.w <option>.l <val>.l {<index>.w <amount>.w).4b*
 void clif_parse_ItemListWindowSelected(int fd, struct map_session_data *sd)
 {
-	int n = ((int)RFIFOW(fd,2) - 12) / 4;
+	int n = ((int)RFIFOW(fd, 2) - 12) / 4;
 	int type = RFIFOL(fd,4);
 	int flag = RFIFOL(fd,8); // Button clicked: 0 = Cancel, 1 = OK
 	struct itemlist item_list = { 0 };
@@ -17010,7 +17066,7 @@ void clif_parse_ReqOpenBuyingStore(int fd, struct map_session_data* sd) {
 	char storename[MESSAGE_SIZE];
 	unsigned char result;
 	int zenylimit;
-	unsigned int count, packet_len;
+	int count, packet_len;
 	struct s_packet_db* info = &packet_db[RFIFOW(fd,0)];
 
 	packet_len = RFIFOW(fd,info->pos[0]);
@@ -17018,7 +17074,7 @@ void clif_parse_ReqOpenBuyingStore(int fd, struct map_session_data* sd) {
 	// TODO: Make this check global for all variable length packets.
 	if( packet_len < 89 )
 	{// minimum packet length
-		ShowError("clif_parse_ReqOpenBuyingStore: Malformed packet (expected length=%u, length=%u, account_id=%d).\n", 89U, packet_len, sd->bl.id);
+		ShowError("clif_parse_ReqOpenBuyingStore: Malformed packet (expected length=%u, length=%d, account_id=%d).\n", 89U, packet_len, sd->bl.id);
 		return;
 	}
 
@@ -17030,9 +17086,12 @@ void clif_parse_ReqOpenBuyingStore(int fd, struct map_session_data* sd) {
 	// so that buyingstore_create knows, how many elements it has access to
 	packet_len-= info->pos[4];
 
+	if (packet_len < 0)
+		return;
+
 	if( packet_len%blocksize )
 	{
-		ShowError("clif_parse_ReqOpenBuyingStore: Unexpected item list size %u (account_id=%d, block size=%u)\n", packet_len, sd->bl.id, blocksize);
+		ShowError("clif_parse_ReqOpenBuyingStore: Unexpected item list size %d (account_id=%d, block size=%u)\n", packet_len, sd->bl.id, blocksize);
 		return;
 	}
 	count = packet_len/blocksize;
@@ -17201,14 +17260,15 @@ void clif_parse_ReqTradeBuyingStore(int fd, struct map_session_data* sd) {
 	const unsigned int blocksize = 6;
 	const uint8 *itemlist;
 	int account_id;
-	unsigned int count, packet_len, buyer_id;
+	unsigned int buyer_id;
+	int count, packet_len;
 	struct s_packet_db* info = &packet_db[RFIFOW(fd,0)];
 
 	packet_len = RFIFOW(fd,info->pos[0]);
 
 	if( packet_len < 12 )
 	{// minimum packet length
-		ShowError("clif_parse_ReqTradeBuyingStore: Malformed packet (expected length=%u, length=%u, account_id=%d).\n", 12U, packet_len, sd->bl.id);
+		ShowError("clif_parse_ReqTradeBuyingStore: Malformed packet (expected length=%u, length=%d, account_id=%d).\n", 12U, packet_len, sd->bl.id);
 		return;
 	}
 
@@ -17218,10 +17278,12 @@ void clif_parse_ReqTradeBuyingStore(int fd, struct map_session_data* sd) {
 
 	// so that buyingstore_trade knows, how many elements it has access to
 	packet_len-= info->pos[3];
+	if (packet_len < 0)
+		return;
 
 	if( packet_len%blocksize )
 	{
-		ShowError("clif_parse_ReqTradeBuyingStore: Unexpected item list size %u (account_id=%d, buyer_id=%d, block size=%u)\n", packet_len, sd->bl.id, account_id, blocksize);
+		ShowError("clif_parse_ReqTradeBuyingStore: Unexpected item list size %d (account_id=%d, buyer_id=%d, block size=%u)\n", packet_len, sd->bl.id, account_id, blocksize);
 		return;
 	}
 	count = packet_len/blocksize;
@@ -17340,14 +17402,15 @@ void clif_parse_SearchStoreInfo(int fd, struct map_session_data* sd) {
 	const uint8* itemlist;
 	const uint8* cardlist;
 	unsigned char type;
-	unsigned int min_price, max_price, packet_len, count, item_count, card_count;
+	unsigned int min_price, max_price;
+	int packet_len, count, item_count, card_count;
 	struct s_packet_db* info = &packet_db[RFIFOW(fd,0)];
 
 	packet_len = RFIFOW(fd,info->pos[0]);
 
 	if( packet_len < 15 )
 	{// minimum packet length
-		ShowError("clif_parse_SearchStoreInfo: Malformed packet (expected length=%u, length=%u, account_id=%d).\n", 15U, packet_len, sd->bl.id);
+		ShowError("clif_parse_SearchStoreInfo: Malformed packet (expected length=%u, length=%d, account_id=%d).\n", 15U, packet_len, sd->bl.id);
 		return;
 	}
 
@@ -17357,23 +17420,27 @@ void clif_parse_SearchStoreInfo(int fd, struct map_session_data* sd) {
 	item_count = RFIFOB(fd,info->pos[4]);
 	card_count = RFIFOB(fd,info->pos[5]);
 	itemlist   = RFIFOP(fd,info->pos[6]);
-	cardlist   = RFIFOP(fd,info->pos[6]+blocksize*item_count);
 
 	// check, if there is enough data for the claimed count of items
 	packet_len-= info->pos[6];
 
+	if (packet_len < 0)
+		return;
+
 	if( packet_len%blocksize )
 	{
-		ShowError("clif_parse_SearchStoreInfo: Unexpected item list size %u (account_id=%d, block size=%u)\n", packet_len, sd->bl.id, blocksize);
+		ShowError("clif_parse_SearchStoreInfo: Unexpected item list size %d (account_id=%d, block size=%u)\n", packet_len, sd->bl.id, blocksize);
 		return;
 	}
 	count = packet_len/blocksize;
 
 	if( count < item_count+card_count )
 	{
-		ShowError("clif_parse_SearchStoreInfo: Malformed packet (expected count=%u, count=%u, account_id=%d).\n", item_count+card_count, count, sd->bl.id);
+		ShowError("clif_parse_SearchStoreInfo: Malformed packet (expected count=%d, count=%d, account_id=%d).\n", item_count+card_count, count, sd->bl.id);
 		return;
 	}
+
+	cardlist   = RFIFOP(fd, info->pos[6] + blocksize * item_count);
 
 	searchstore->query(sd, type, min_price, max_price, (const unsigned short*)itemlist, item_count, (const unsigned short*)cardlist, card_count);
 }
@@ -17994,13 +18061,27 @@ void clif_parse_CashShopSchedule(int fd, struct map_session_data *sd)
 #endif
 }
 
+/// R 0848 <len>.W <limit>.W <kafra pay>.L (<item id>.L <amount>.L <tab>.W)*
 void clif_parse_CashShopBuy(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 void clif_parse_CashShopBuy(int fd, struct map_session_data *sd) {
-	unsigned short limit = RFIFOW(fd, 4), i, j;
-	unsigned int kafra_pay = RFIFOL(fd, 6);// [Ryuuzaki] - These are free cash points (strangely #CASH = main cash currently for us, confusing)
+	int len = RFIFOW(fd, 2);
+	unsigned short limit, i, j;
+	unsigned int kafra_pay;
+	int count;
 
 	if (map->list[sd->bl.m].flag.nocashshop) {
 		clif->messagecolor_self(fd, COLOR_RED, msg_fd(fd,1489)); //Cash Shop is disabled in this map
+		return;
+	}
+
+	if (len < 10)
+		return;
+
+	limit = RFIFOW(fd, 4);
+	kafra_pay = RFIFOL(fd, 6); // [Ryuuzaki] - These are free cash points (strangely #CASH = main cash currently for us, confusing)
+	count = (len - 10) / 10;
+	if (count != limit) {
+		ShowError("Wrong cash shop limit: %d\n", limit);
 		return;
 	}
 
