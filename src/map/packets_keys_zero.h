@@ -124,5 +124,15 @@
 	packetKeys(0x07CB29CB,0x69CB69CB,0x69CB69CB);
 #endif
 
+// 2018-02-13aRagexe_zero
+#if PACKETVER == 20180213
+	packetKeys(0x0513075E,0x347075AF,0x67C56C6F);
+#endif
+
+// 2018-02-21aRagexe_zero
+#if PACKETVER == 20180221
+	packetKeys(0x28ED7635,0x76591F21,0x59383498);
+#endif
+
 
 #endif /* MAP_PACKETS_ZERO_KEYS_H */

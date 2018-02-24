@@ -3995,10 +3995,14 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0af3,-1,clif->pDull/*,XXX*/);
 	packet(0x0af4,11,clif->pDull/*,XXX*/);
 // changed packet sizes
-	packet(0x0821,102); // AC_OTP_USER
 	packet(0x0ae6,10,clif->pDull/*,XXX*/);
 #endif
 #endif  // PACKETVER_ZERO
+
+#if PACKETVER >= 20180131
+// changed packet sizes
+	packet(0x0821,102); // AC_OTP_USER
+#endif
 
 #ifdef PACKETVER_ZERO
 // 2018-02-07bRagexe_zero
@@ -4022,5 +4026,13 @@ packet(0x96e,-1,clif->ackmergeitems);
 #endif
 #endif  // PACKETVER_ZERO
 
+#ifdef PACKETVER_RE
+// 2018-02-21aRagexeRE
+#if PACKETVER >= 20180221
+// new packets
+// changed packet sizes
+	packet(0x0206,35); // ZC_FRIENDS_STATE
+#endif
+#endif  // PACKETVER_RE
 
 #endif /* MAP_PACKETS_H */
