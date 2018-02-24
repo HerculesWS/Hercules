@@ -14142,6 +14142,7 @@ void clif_parse_NoviceExplosionSpirits(int fd, struct map_session_data *sd)
 
 /// Toggles a single friend online/offline [Skotlex] (ZC_FRIENDS_STATE).
 /// 0206 <account id>.L <char id>.L <state>.B
+/// 0206 <account id>.L <char id>.L <state>.B <name>.24B
 /// state:
 ///     0 = online
 ///     1 = offline
@@ -14161,7 +14162,13 @@ void clif_friendslist_toggle(struct map_session_data *sd,int account_id, int cha
 	WFIFOW(fd, 0) = 0x206;
 	WFIFOL(fd, 2) = sd->status.friends[i].account_id;
 	WFIFOL(fd, 6) = sd->status.friends[i].char_id;
-	WFIFOB(fd,10) = !online; //Yeah, a 1 here means "logged off", go figure...
+	WFIFOB(fd, 10) = !online; //Yeah, a 1 here means "logged off", go figure...
+#ifdef PACKETVER_RE
+#if PACKETVER >= 20180221
+	memcpy(WFIFOP(fd, 11), sd->status.friends[i].name, NAME_LENGTH);
+#endif
+#endif  // PACKETVER_RE
+
 	WFIFOSET(fd, packet_len(0x206));
 }
 
