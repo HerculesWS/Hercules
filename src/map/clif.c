@@ -6088,14 +6088,29 @@ void clif_wis_end(int fd, int flag) {
 
 /// Returns character name requested by char_id (ZC_ACK_REQNAME_BYGID).
 /// 0194 <char id>.L <name>.24B
+/// 0af7 <flag>.W <char id>.L <name>.24B
 void clif_solved_charname(int fd, int charid, const char* name)
 {
 	nullpo_retv(name);
-	WFIFOHEAD(fd,packet_len(0x194));
-	WFIFOW(fd,0)=0x194;
-	WFIFOL(fd,2)=charid;
-	safestrncpy(WFIFOP(fd,6), name, NAME_LENGTH);
-	WFIFOSET(fd,packet_len(0x194));
+#if !defined(PACKETVER_ZERO) && (PACKETVER >= 20180307 || (defined(PACKETVER_RE) && PACKETVER >= 20180221))
+	WFIFOHEAD(fd, packet_len(0x0af7));
+	WFIFOW(fd, 0) = 0xaf7;
+	if (*name == 0) {
+		WFIFOW(fd, 2) = 2;
+		memset(WFIFOP(fd, 8), 0, NAME_LENGTH);
+	} else {
+		WFIFOW(fd, 2) = 3;
+		safestrncpy(WFIFOP(fd, 8), name, NAME_LENGTH);
+	}
+	WFIFOL(fd, 4) = charid;
+	WFIFOSET(fd, packet_len(0x0af7));
+#else
+	WFIFOHEAD(fd, packet_len(0x194));
+	WFIFOW(fd, 0) = 0x194;
+	WFIFOL(fd, 2) = charid;
+	safestrncpy(WFIFOP(fd, 6), name, NAME_LENGTH);
+	WFIFOSET(fd, packet_len(0x194));
+#endif
 }
 
 /// Presents a list of items that can be carded/composed (ZC_ITEMCOMPOSITION_LIST).
