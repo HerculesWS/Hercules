@@ -3328,7 +3328,12 @@ void char_char_name_ack(int fd, int char_id)
 	WFIFOHEAD(fd,30);
 	WFIFOW(fd,0) = 0x2b09;
 	WFIFOL(fd,2) = char_id;
+#if defined(PACKETVER_RE) && PACKETVER >= 20180221
+	if (chr->loadName(char_id, WFIFOP(fd,6)) == 0)
+		WFIFOL(fd, 6) = 0;
+#else
 	chr->loadName(char_id, WFIFOP(fd,6));
+#endif
 	WFIFOSET(fd,30);
 }
 
