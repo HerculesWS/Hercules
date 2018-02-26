@@ -904,6 +904,7 @@ struct rodex_message {
 	uint8 type;
 	int8 opentype;
 	bool is_read;
+	bool sender_read;
 	bool is_deleted;
 	int send_date;
 	int expire_date;

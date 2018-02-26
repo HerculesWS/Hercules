@@ -19720,7 +19720,7 @@ void clif_rodex_send_maillist(int fd, struct map_session_data *sd, int8 open_typ
 			continue;
 
 		inner->MailID = msg->id;
-		inner->Isread = msg->is_read == true ? 1 : 0;
+		inner->Isread = (msg->is_read == true || msg->sender_read == true) ? 1 : 0;
 		inner->type = msg->type;
 #if PACKETVER >= 20170419
 		inner->openType = msg->opentype;
@@ -19779,7 +19779,7 @@ void clif_rodex_send_mails_all(int fd, struct map_session_data *sd)
 			continue;
 
 		inner->MailID = msg->id;
-		inner->Isread = msg->is_read == true ? 1 : 0;
+		inner->Isread = (msg->is_read == true || msg->sender_read == true) ? 1 : 0;
 		inner->type = msg->type;
 		inner->openType = msg->opentype;
 		inner->expireDateTime = msg->expire_date - (int)time(NULL);
@@ -19846,7 +19846,7 @@ void clif_rodex_send_refresh(int fd, struct map_session_data *sd, int8 open_type
 			continue;
 
 		inner->MailID = msg->id;
-		inner->Isread = msg->is_read == true ? 1 : 0;
+		inner->Isread = (msg->is_read == true || msg->sender_read == true) ? 1 : 0;
 		inner->type = msg->type;
 #if PACKETVER >= 20170419
 		inner->openType = msg->opentype;

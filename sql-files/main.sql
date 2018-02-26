@@ -889,6 +889,7 @@ INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1489588190); -- 2017-03-1
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1496588640); -- 2017-06-04--15-04.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1496588700); -- 2017-06-04--15-05.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1509835214); -- 2017-11-04--10-39.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1519671456); -- 2018-02-26--15-57.sql
 --
 -- Table structure for table `storage`
 --
@@ -965,6 +966,7 @@ CREATE TABLE IF NOT EXISTS `rodex_mail` (
 	`zeny` BIGINT(20) NOT NULL,
 	`type` TINYINT(8) UNSIGNED NOT NULL,
 	`is_read` TINYINT(8) NOT NULL,
+  `sender_read` TINYINT(2) NOT NULL,
 	`send_date` INT(11) NOT NULL,
 	`expire_date` INT(11) NOT NULL,
 	`weight` INT(11) NOT NULL,
