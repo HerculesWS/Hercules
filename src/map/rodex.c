@@ -364,14 +364,23 @@ struct rodex_message *rodex_get_mail(struct map_session_data *sd, int64 mail_id)
 {
 	int i;
 	struct rodex_message *msg;
+	int char_id;
 
 	nullpo_retr(NULL, sd);
 
-	ARR_FIND(0, VECTOR_LENGTH(sd->rodex.messages), i, VECTOR_INDEX(sd->rodex.messages, i).id == mail_id && VECTOR_INDEX(sd->rodex.messages, i).is_deleted != true);
+	ARR_FIND(0, VECTOR_LENGTH(sd->rodex.messages), i, VECTOR_INDEX(sd->rodex.messages, i).id == mail_id);
 	if (i == VECTOR_LENGTH(sd->rodex.messages))
 		return NULL;
 
 	msg = &VECTOR_INDEX(sd->rodex.messages, i);
+
+	char_id = sd->status.char_id;
+
+	if ((msg->is_deleted == true)
+		|| (msg->expire_date < time(NULL) && ((msg->receiver_accountid > 0) || (msg->receiver_id == char_id && msg->sender_id != char_id)))
+		|| ((msg->send_date + 2 * RODEX_EXPIRE) < time(NULL))
+		)
+		return NULL;
 
 	return msg;
 }
@@ -388,9 +397,16 @@ void rodex_read_mail(struct map_session_data *sd, int64 mail_id)
 	msg = rodex->get_mail(sd, mail_id);
 	nullpo_retv(msg);
 
-	if (msg->is_read == false) {
-		intif->rodex_updatemail(msg->id, 0);
-		msg->is_read = true;
+	if (msg->opentype == RODEX_OPENTYPE_RETURN) {
+		if (msg->sender_read == false) {
+			intif->rodex_updatemail(msg->id, 4);
+			msg->sender_read = true;
+		}
+	} else {
+		if (msg->is_read == false) {
+			intif->rodex_updatemail(msg->id, 0);
+			msg->is_read = true;
+		}
 	}
 
 	clif->rodex_read_mail(sd, msg->opentype, msg);
