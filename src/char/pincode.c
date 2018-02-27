@@ -172,8 +172,11 @@ void pincode_decrypt(unsigned int userSeed, char* pin) {
 		}
 	}
 
-	for( i = 0; i < 4; i++ ){
-		pin[i] = tab[pin[i] - '0'];
+	for (i = 0; i < 4; i++ ) {
+		if (pin[i] < '0' || pin[i] > '9')
+			pin[i] = '0';
+		else
+			pin[i] = tab[pin[i] - '0'];
 	}
 
 	sprintf(pin, "%d%d%d%d", pin[0], pin[1], pin[2], pin[3]);
