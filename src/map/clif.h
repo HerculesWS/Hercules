@@ -1389,7 +1389,7 @@ struct clif_interface {
 	void (*rodex_send_mail_result) (int fd, struct map_session_data *sd, int8 result);
 	void (*rodex_send_maillist) (int fd, struct map_session_data *sd, int8 open_type, int64 page_start);
 	void (*rodex_send_refresh) (int fd, struct map_session_data *sd, int8 open_type, int count);
-	void (*rodex_send_mails_all) (int fd, struct map_session_data *sd);
+	void (*rodex_send_mails_all) (int fd, struct map_session_data *sd, int64 mail_id);
 	void (*pRodexReadMail) (int fd, struct map_session_data *sd);
 	void (*rodex_read_mail) (struct map_session_data *sd, int8 opentype, struct rodex_message *msg);
 	void (*pRodexNextMaillist) (int fd, struct map_session_data *sd);

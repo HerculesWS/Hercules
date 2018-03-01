@@ -19752,7 +19752,7 @@ void clif_rodex_send_maillist(int fd, struct map_session_data *sd, int8 open_typ
 #endif
 }
 
-void clif_rodex_send_mails_all(int fd, struct map_session_data *sd)
+void clif_rodex_send_mails_all(int fd, struct map_session_data *sd, int64 mail_id)
 {
 #if PACKETVER >= 20170419
 	struct PACKET_ZC_MAIL_LIST *packet;
@@ -19760,10 +19760,15 @@ void clif_rodex_send_mails_all(int fd, struct map_session_data *sd)
 	int16 size = sizeof(*packet);
 	int packetMailCount = 0;
 	int mailListCount = 0;
-	int mailsSize = VECTOR_LENGTH(sd->rodex.messages);
-	int i;
+	int mailsSize, i;
+	int j = -1;
 
 	nullpo_retv(sd);
+
+	mailsSize = VECTOR_LENGTH(sd->rodex.messages);
+	
+	if (mail_id > 0)
+		ARR_FIND(0, VECTOR_LENGTH(sd->rodex.messages), j, (VECTOR_INDEX(sd->rodex.messages, j)).id == mail_id);
 
 	WFIFOHEAD(fd, sizeof(*packet) + (sizeof(*inner) + RODEX_TITLE_LENGTH) * RODEX_MAIL_PER_PAGE);
 	packet = WFIFOP(fd, 0);
@@ -19771,7 +19776,8 @@ void clif_rodex_send_mails_all(int fd, struct map_session_data *sd)
 	inner = WFIFOP(fd, size);
 
 	i = mailsSize - 1;
-	while (i >= 0) {
+	mailsSize -= (j + 1);
+	while (i > j) {
 		struct rodex_message *msg = &VECTOR_INDEX(sd->rodex.messages, i);
 		--i;
 

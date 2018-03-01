@@ -349,22 +349,23 @@ int64 inter_rodex_savemessage(struct rodex_message* msg)
 /*==========================================
  * Inbox Request
  *------------------------------------------*/
-void mapif_rodex_sendinbox(int fd, int char_id, int8 opentype, int8 flag, int count, struct rodex_maillist *mails)
+void mapif_rodex_sendinbox(int fd, int char_id, int8 opentype, int8 flag, int count, int64 mail_id, struct rodex_maillist *mails)
 {
-	int per_packet = (UINT16_MAX - 16) / sizeof(struct rodex_message);
+	int per_packet = (UINT16_MAX - 24) / sizeof(struct rodex_message);
 	int sent = 0;
 	bool is_first = true;
 	nullpo_retv(mails);
 	Assert_retv(char_id > 0);
 	Assert_retv(count >= 0);
+	Assert_retv(mail_id >= 0);
 
 	do {
-		int i = 16, j, size, limit;
+		int i = 24, j, size, limit;
 		int to_send = count - sent;
 		bool is_last = true;
 
 		if (to_send <= per_packet) {
-			size = to_send * sizeof(struct rodex_message) + 16;
+			size = to_send * sizeof(struct rodex_message) + 24;
 			limit = to_send;
 			is_last = true;
 		} else {
@@ -372,7 +373,7 @@ void mapif_rodex_sendinbox(int fd, int char_id, int8 opentype, int8 flag, int co
 			if (limit != to_send) {
 				is_last = false;
 			}
-			size = limit * sizeof(struct rodex_message) + 16;
+			size = limit * sizeof(struct rodex_message) + 24;
 		}
 
 		WFIFOHEAD(fd, size);
@@ -384,6 +385,7 @@ void mapif_rodex_sendinbox(int fd, int char_id, int8 opentype, int8 flag, int co
 		WFIFOB(fd, 10) = is_last;
 		WFIFOB(fd, 11) = is_first;
 		WFIFOL(fd, 12) = limit;
+		WFIFOQ(fd, 16) = mail_id;
 		for (j = 0; j < limit; ++j, ++sent, i += sizeof(struct rodex_message)) {
 			memcpy(WFIFOP(fd, i), &VECTOR_INDEX(*mails, sent), sizeof(struct rodex_message));
 		}
@@ -408,7 +410,7 @@ void mapif_parse_rodex_requestinbox(int fd)
 		count = inter_rodex->fromsql(char_id, account_id, opentype, 0, &mails);
 	else
 		count = inter_rodex->fromsql(char_id, account_id, opentype, mail_id, &mails);
-	mapif->rodex_sendinbox(fd, char_id, opentype, flag, count, &mails);
+	mapif->rodex_sendinbox(fd, char_id, opentype, flag, count, mail_id, &mails);
 	VECTOR_CLEAR(mails);
 }
 
