@@ -14647,14 +14647,14 @@ int HP_mapif_parse_rodex_requestinbox(int fd) {
 	}
 	return retVal___;
 }
-void HP_mapif_rodex_sendinbox(int fd, int char_id, int8 opentype, int8 flag, int count, struct rodex_maillist *mails) {
+void HP_mapif_rodex_sendinbox(int fd, int char_id, int8 opentype, int8 flag, int count, int64 mail_id, struct rodex_maillist *mails) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_mapif_rodex_sendinbox_pre > 0) {
-		void (*preHookFunc) (int *fd, int *char_id, int8 *opentype, int8 *flag, int *count, struct rodex_maillist **mails);
+		void (*preHookFunc) (int *fd, int *char_id, int8 *opentype, int8 *flag, int *count, int64 *mail_id, struct rodex_maillist **mails);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_rodex_sendinbox_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_mapif_rodex_sendinbox_pre[hIndex].func;
-			preHookFunc(&fd, &char_id, &opentype, &flag, &count, &mails);
+			preHookFunc(&fd, &char_id, &opentype, &flag, &count, &mail_id, &mails);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -14662,13 +14662,13 @@ void HP_mapif_rodex_sendinbox(int fd, int char_id, int8 opentype, int8 flag, int
 		}
 	}
 	{
-		HPMHooks.source.mapif.rodex_sendinbox(fd, char_id, opentype, flag, count, mails);
+		HPMHooks.source.mapif.rodex_sendinbox(fd, char_id, opentype, flag, count, mail_id, mails);
 	}
 	if (HPMHooks.count.HP_mapif_rodex_sendinbox_post > 0) {
-		void (*postHookFunc) (int fd, int char_id, int8 opentype, int8 flag, int count, struct rodex_maillist *mails);
+		void (*postHookFunc) (int fd, int char_id, int8 opentype, int8 flag, int count, int64 mail_id, struct rodex_maillist *mails);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_rodex_sendinbox_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_mapif_rodex_sendinbox_post[hIndex].func;
-			postHookFunc(fd, char_id, opentype, flag, count, mails);
+			postHookFunc(fd, char_id, opentype, flag, count, mail_id, mails);
 		}
 	}
 	return;
