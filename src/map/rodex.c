@@ -395,7 +395,8 @@ void rodex_read_mail(struct map_session_data *sd, int64 mail_id)
 	nullpo_retv(sd);
 
 	msg = rodex->get_mail(sd, mail_id);
-	nullpo_retv(msg);
+	if (msg == NULL)
+		return; /* could happen with non-official clients */
 
 	if (msg->opentype == RODEX_OPENTYPE_RETURN) {
 		if (msg->sender_read == false) {
