@@ -456,6 +456,7 @@ void rodex_get_zeny(struct map_session_data *sd, int8 opentype, int64 mail_id)
 		return;
 	}
 
+	msg->type &= ~MAIL_TYPE_ZENY;
 	msg->zeny = 0;
 	intif->rodex_updatemail(mail_id, 1);
 
@@ -539,6 +540,8 @@ void rodex_get_items(struct map_session_data *sd, int8 opentype, int64 mail_id)
 		}
 	}
 
+	msg->type &= ~MAIL_TYPE_ITEM;
+	msg->items_count = 0;
 	intif->rodex_updatemail(mail_id, 2);
 
 	clif->rodex_request_items(sd, opentype, mail_id, RODEX_GET_ITEMS_SUCCESS);
