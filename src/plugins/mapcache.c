@@ -341,6 +341,100 @@ bool mapcache_rebuild(void)
 	return true;
 }
 
+bool fix_md5_truncation_sub(FILE *fp, const char *map_name)
+{
+	unsigned int file_size;
+	struct map_cache_header mheader = { 0 };
+	uint8 *buf = NULL;
+
+	nullpo_retr(false, fp);
+	nullpo_retr(false, map_name);
+
+	fseek(fp, 0, SEEK_END);
+	file_size = (unsigned int)ftell(fp);
+	fseek(fp, 0, SEEK_SET); // Rewind file pointer before passing it to the read function.
+
+	if (file_size <= sizeof(mheader) || fread(&mheader, sizeof(mheader), 1, fp) < 1) {
+		ShowError("fix_md5_truncation: Failed to read cache header for map '%s'.\n", map_name);
+		return false;
+	}
+
+	if (mheader.len <= 0) {
+		ShowError("fix_md5_truncation: A file with negative or zero compressed length passed '%d'.\n", mheader.len);
+		return false;
+	}
+
+	if (file_size < sizeof(mheader) + mheader.len) {
+		ShowError("fix_md5_truncation: An incomplete file passed for map '%s'.\n", map_name);
+		return false;
+	}
+
+	CREATE(buf, uint8, mheader.len);
+	if (fread(buf, mheader.len, 1, fp) < 1) {
+		ShowError("fix_md5_truncation: Could not load the compressed cell data for map '%s'.\n", map_name);
+		aFree(buf);
+		return false;
+	}
+
+	md5->binary(buf, mheader.len, mheader.md5_checksum);
+	aFree(buf);
+
+	fseek(fp, 0, SEEK_SET);
+	fwrite(&mheader, sizeof(mheader), 1, fp);
+	fclose(fp);
+
+	return true;
+}
+
+bool fix_md5_truncation(void)
+{
+	int i;
+	bool retval = true;
+
+	if (mapcache_read_maplist("db/map_index.txt") == false) {
+		ShowError("mapcache_rebuild: Could not read maplist, aborting\n");
+		return false;
+	}
+
+	for (i = 0; i < VECTOR_LENGTH(maplist); ++i) {
+		const char *map_name = VECTOR_INDEX(maplist, i);
+		char file_path[255];
+		FILE *fp = NULL;
+		int16 version;
+
+		snprintf(file_path, sizeof(file_path), "%s%s%s.%s", "maps/", DBPATH, map_name, "mcache");
+
+		fp = fopen(file_path, "r+b");
+
+		if (fp == NULL) {
+			ShowWarning("fix_md5_truncation: Could not open the mapcache file for map '%s' at path '%s'.\n", map_name, file_path);
+			retval = false;
+			continue;
+		}
+
+		if (fread(&version, sizeof(version), 1, fp) < 1) {
+			ShowError("fix_md5_truncation: Could not read file version for map '%s'.\n", map_name);
+			fclose(fp);
+			retval = false;
+			continue;
+		}
+
+		if (version != 1) {
+			ShowError("fix_md5_truncation: Mapcache for map '%s' has version %d. The update is only applied to version 1.\n", map_name, version);
+			fclose(fp);
+			continue;
+		}
+
+		ShowStatus("Updating mapcache: %s'\n", map_name);
+		if (!fix_md5_truncation_sub(fp, map_name))
+			retval = false;
+
+		fclose(fp);
+	}
+
+	return retval;
+}
+
 CMDLINEARG(convertmapcache)
 {
 	map->minimal = true;
@@ -363,6 +457,12 @@ CMDLINEARG(cachemap)
 	return mapcache_cache_map(params);
 }
 
+CMDLINEARG(fixmd5)
+{
+	map->minimal = true;
+	return fix_md5_truncation();
+}
+
 HPExport void server_preinit(void)
 {
 	addArg("--convert-old-mapcache", false, convertmapcache,
@@ -371,6 +471,8 @@ HPExport void server_preinit(void)
 			"Rebuilds the entire mapcache folder (maps/"DBPATH"), using db/map_index.txt as index.");
 	addArg("--map", true, cachemap,
 			"Rebuilds an individual map's cache into maps/"DBPATH" (usage: --map <map_name_without_extension>).");
+	addArg("--fix-md5", false, fixmd5,
+			"Updates the checksum for the files in maps/"DBPATH", using db/map_index.txt as index (see PR #1981).");
 
 	needs_grfio = false;
 	VECTOR_INIT(maplist);
@@ -378,6 +480,10 @@ HPExport void server_preinit(void)
 
 HPExport void plugin_final(void)
 {
+	while (VECTOR_LENGTH(maplist) > 0) {
+		char *name = VECTOR_POP(maplist);
+		aFree(name);
+	}
 	VECTOR_CLEAR(maplist);
 	if (needs_grfio)
 		grfio->final();
