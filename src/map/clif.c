@@ -7700,7 +7700,7 @@ void clif_guild_memberlist(struct map_session_data *sd)
 		memset(WFIFOP(fd, c * size + 34), 0, 50);  //[Ind] - This is displayed in the 'note' column but being you can't edit it it's sent empty.
 		memcpy(WFIFOP(fd, c * size + 84), m->name, NAME_LENGTH);
 #else
-		WFIFOL(fd, c * size + 34) = m->login_date;  // [Megasantos] - Shows last date online
+		WFIFOL(fd, c * size + 34) = m->last_login;  // [Megasantos] - Shows in the Guild window the date of the last player login
 #endif
 		c++;
 	}

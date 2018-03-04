@@ -442,7 +442,7 @@ struct guild * inter_guild_fromsql(int guild_id)
 		if( m->position >= MAX_GUILDPOSITION ) // Fix reduction of MAX_GUILDPOSITION [PoW]
 			m->position = MAX_GUILDPOSITION - 1;
 		SQL->GetData(inter->sql_handle, 11, &data, &len); memcpy(m->name, data, min(len, NAME_LENGTH));
-		SQL->GetData(inter->sql_handle, 12, &data, NULL); m->login_date = atoi(data);
+		SQL->GetData(inter->sql_handle, 12, &data, NULL); m->last_login = atoi(data);
 		m->modified = GS_MEMBER_UNMODIFIED;
 	}
 
@@ -986,7 +986,7 @@ int mapif_guild_memberinfoshort(struct guild *g, int idx)
 	WBUFB(buf,14)=(unsigned char)g->member[idx].online;
 	WBUFW(buf,15)=g->member[idx].lv;
 	WBUFW(buf,17)=g->member[idx].class;
-	WBUFL(buf,19)=g->member[idx].login_date;
+	WBUFL(buf,19)=g->member[idx].last_login;
 	mapif->sendall(buf,23);
 	return 0;
 }
@@ -1368,7 +1368,7 @@ int mapif_parse_GuildChangeMemberInfoShort(int fd, int guild_id, int account_id,
 		g->member[i].online = online;
 		g->member[i].lv = lv;
 		g->member[i].class = class;
-		g->member[i].login_date = (int)time(NULL);
+		g->member[i].last_login = (int)time(NULL);
 		g->member[i].modified = GS_MEMBER_MODIFIED;
 		mapif->guild_memberinfoshort(g,i);
 	}
