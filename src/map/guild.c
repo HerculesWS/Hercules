@@ -275,7 +275,7 @@ void guild_makemember(struct guild_member *m,struct map_session_data *sd)
 	m->online     = 1;
 	m->position   = MAX_GUILDPOSITION-1;
 	memcpy(m->name,sd->status.name,NAME_LENGTH);
-	m->last_login = (int)time(NULL);
+	m->last_login = (int)time(NULL); // When player create or join a guild the date is updated
 	return;
 }
 
