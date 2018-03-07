@@ -87,7 +87,9 @@ int pincode_compare(int fd, struct char_session_data* sd, char* pin) {
 	} else {
 		pincode->sendstate( fd, sd, PINCODE_WRONG );
 		if( pincode->maxtry && ++sd->pincode_try >= pincode->maxtry ){
-			pincode->error( sd->account_id );
+			pincode->error(sd->account_id);
+			chr->authfail_fd(fd, 0);
+			chr->disconnect_player(sd->account_id);
 		}
 		return 0;
 	}
