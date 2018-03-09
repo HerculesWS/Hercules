@@ -68,6 +68,8 @@ void pincode_check(int fd, struct char_session_data* sd) {
 	char pin[5] = "\0\0\0\0";
 
 	nullpo_retv(sd);
+	if (strlen(sd->pincode) != 4)
+		return;
 	safestrncpy(pin, RFIFOP(fd, 6), sizeof(pin));
 	pincode->decrypt(sd->pincode_seed, pin);
 	if( pincode->compare( fd, sd, pin ) ){
@@ -87,7 +89,9 @@ int pincode_compare(int fd, struct char_session_data* sd, char* pin) {
 	} else {
 		pincode->sendstate( fd, sd, PINCODE_WRONG );
 		if( pincode->maxtry && ++sd->pincode_try >= pincode->maxtry ){
-			pincode->error( sd->account_id );
+			pincode->error(sd->account_id);
+			chr->authfail_fd(fd, 0);
+			chr->disconnect_player(sd->account_id);
 		}
 		return 0;
 	}
@@ -97,6 +101,8 @@ void pincode_change(int fd, struct char_session_data* sd) {
 	char oldpin[5] = "\0\0\0\0", newpin[5] = "\0\0\0\0";
 
 	nullpo_retv(sd);
+	if (strlen(sd->pincode) != 4)
+		return;
 	safestrncpy(oldpin, RFIFOP(fd,6), sizeof(oldpin));
 	pincode->decrypt(sd->pincode_seed,oldpin);
 	if( !pincode->compare( fd, sd, oldpin ) )
@@ -113,6 +119,8 @@ void pincode_setnew(int fd, struct char_session_data* sd) {
 	char newpin[5] = "\0\0\0\0";
 
 	nullpo_retv(sd);
+	if (strlen(sd->pincode) == 4)
+		return;
 	safestrncpy(newpin, RFIFOP(fd,6), sizeof(newpin));
 	pincode->decrypt(sd->pincode_seed,newpin);
 	pincode->update( sd->account_id, newpin );
@@ -172,8 +180,11 @@ void pincode_decrypt(unsigned int userSeed, char* pin) {
 		}
 	}
 
-	for( i = 0; i < 4; i++ ){
-		pin[i] = tab[pin[i] - '0'];
+	for (i = 0; i < 4; i++ ) {
+		if (pin[i] < '0' || pin[i] > '9')
+			pin[i] = '0';
+		else
+			pin[i] = tab[pin[i] - '0'];
 	}
 
 	sprintf(pin, "%d%d%d%d", pin[0], pin[1], pin[2], pin[3]);

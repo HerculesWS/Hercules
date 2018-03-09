@@ -10056,6 +10056,7 @@ bool atcommand_exec(const int fd, struct map_session_data *sd, const char *messa
 {
 	char params[100], command[100];
 	char output[CHAT_SIZE_MAX];
+	bool logCommand;
 
 	// Reconstructed message
 	char atcmd_msg[CHAT_SIZE_MAX];
@@ -10199,6 +10200,7 @@ bool atcommand_exec(const int fd, struct map_session_data *sd, const char *messa
 		}
 	}
 
+	logCommand = info->log;
 	//Attempt to use the command
 	if ((info->func(fd, ssd, command, params,info) != true)) {
 #ifdef AUTOTRADE_PERSISTENCY
@@ -10210,7 +10212,8 @@ bool atcommand_exec(const int fd, struct map_session_data *sd, const char *messa
 		return true;
 	}
 
-	if (info->log) /* log only if this command should be logged [Ind/Hercules] */
+	// info->log cant be used here, because info can be freed [4144]
+	if (logCommand) /* log only if this command should be logged [Ind/Hercules] */
 		logs->atcommand(sd, is_atcommand ? atcmd_msg : message);
 
 	return true;
