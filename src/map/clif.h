@@ -64,6 +64,8 @@ struct view_data;
 #define MAX_ROULETTE_LEVEL 7 /** client-defined value **/
 #define MAX_ROULETTE_COLUMNS 9 /** client-defined value **/
 #define RGB2BGR(c) (((c) & 0x0000FF) << 16 | ((c) & 0x00FF00) | ((c) & 0xFF0000) >> 16)
+#define MAX_ATTENDANCE_DAYS 20
+
 
 #define COLOR_CYAN    0x00ffffU
 #define COLOR_RED     0xff0000U
@@ -575,6 +577,20 @@ enum CZ_CONFIG {
 	CZ_CONFIG_HOMUNCULUS_AUTOFEEDING = 3,
 };
 /**
+* Client UI types
+**/
+enum ui_types {
+	BANK_UI = 0,
+	STYLIST_UI,
+	CAPTCHA_UI,
+	MACRO_UI,
+	// unknown,
+	TIPBOX_UI = 5,
+	RENEWQUEST_UI,
+	ATTENDANCE_UI
+};
+
+/**
  * Structures
  **/
 typedef void (*pFunc)(int, struct map_session_data *); //cant help but put it first
@@ -622,6 +638,11 @@ struct clif_interface {
 		int *qty[MAX_ROULETTE_LEVEL];//qty of nameid
 		int items[MAX_ROULETTE_LEVEL];//number of items in the list for each
 	} rd;
+	/* attendance data */
+	struct {
+		int nameid[MAX_ATTENDANCE_DAYS];
+		int qty[MAX_ATTENDANCE_DAYS];
+	} attendance_data;
 	/* */
 	unsigned int cryptKey[3];
 	/* */
@@ -1413,6 +1434,14 @@ struct clif_interface {
 	void (*clan_leave) (struct map_session_data *sd);
 	void (*clan_message) (struct clan *c, const char *mes, int len);
 	void (*pClanMessage) (int fd, struct map_session_data* sd);
+
+	bool (*pAttendanceDB) (void);
+	bool (*attendancedb_libconfig_sub) (struct config_setting_t *it, int n, const char *source);
+	bool (*attendance_timediff) (struct map_session_data *sd);
+	void (*pOpenUIRequest) (int fd, struct map_session_data *sd);
+	void (*open_ui) (struct map_session_data *sd, int8 UIType);
+	void (*pAttendanceRewardRequest) (int fd, struct map_session_data *sd);
+	void (*ui_action) (struct map_session_data *sd, int32 UIType, int32 data);
 };
 
 #ifdef HERCULES_CORE
