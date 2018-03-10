@@ -2637,6 +2637,8 @@ void do_init_itemdb(bool minimal) {
 	/** it failed? we disable it **/
 	if (battle_config.feature_roulette == 1 && !clif->parse_roulette_db())
 		battle_config.feature_roulette = 0;
+
+	clif->pAttendanceDB();
 }
 void itemdb_defaults(void) {
 	itemdb = &itemdb_s;

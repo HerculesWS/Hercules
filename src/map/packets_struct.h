@@ -1598,6 +1598,23 @@ struct PACKET_ZC_NOTIFY_CLAN_CHAT {
 	char Message[];
 } __attribute__((packed));
 
+struct PACKET_CZ_OPEN_UI {
+	int16 PacketType;
+	int8 UIType;
+} __attribute__((packed));
+
+struct PACKET_ZC_OPEN_UI {
+	int16 PacketType;
+	int8 UIType;
+	int32 data;
+} __attribute__((packed));
+
+struct PACKET_ZC_UI_ACTION {
+	int16 PacketType;
+	int32 UIType;
+	int32 data;
+} __attribute__((packed));
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
