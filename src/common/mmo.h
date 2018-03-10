@@ -664,6 +664,9 @@ struct mmo_charstatus {
 
 	uint32 uniqueitem_counter;
 
+	int64 attendance_timer;
+	short attendance_count;
+
 	unsigned char hotkey_rowshift;
 };
 
