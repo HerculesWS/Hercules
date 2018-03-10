@@ -3427,7 +3427,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 // 2016-03-23aRagexeRE
 #if PACKETVER >= 20160323
 // new packets
-	packet(0x0a68,3);
+	packet(0x0a68,3, clif->pOpenUIRequest);
 	packet(0x0a69,6);
 	packet(0x0a6a,12);
 	packet(0x0a6b,-1);
@@ -3970,7 +3970,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 
 #if PACKETVER >= 20180117
 // new packets
-	packet(0x0aef,2);
+	packet(0x0aef,2,clif->pAttendanceRewardRequest);
 	packet(0x0af0,10);
 // changed packet sizes
 	packet(0x0ae9,13);

@@ -665,6 +665,9 @@ struct mmo_charstatus {
 	uint32 uniqueitem_counter;
 
 	unsigned char hotkey_rowshift;
+
+	short attendance_count;
+	int64 attendance_timer;
 };
 
 typedef enum mail_status {
