@@ -20248,6 +20248,10 @@ bool clif_attendance_timediff(struct map_session_data *sd) {
 void clif_parse_open_ui_request(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
 void clif_parse_open_ui_request(int fd, struct map_session_data *sd)
 {
+
+	if (battle_config.feature_enable_attendance_system != 1)
+		return;
+
 	const struct PACKET_CZ_OPEN_UI *p = RFIFOP(fd, 0);
 
 	clif->open_ui(sd, p->UIType);
@@ -20286,6 +20290,9 @@ void clif_parse_attendance_reward_request(int fd, struct map_session_data *sd) _
 void clif_parse_attendance_reward_request(int fd, struct map_session_data *sd)
 {
 #if defined(PACKETVER_RE) && PACKETVER >= 20180307
+
+	if (battle_config.feature_enable_attendance_system != 1)
+		return;
 
 	nullpo_retv(sd);
 

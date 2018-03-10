@@ -7319,6 +7319,7 @@ static const struct battle_data {
 	{ "features/rodex",                     &battle_config.feature_rodex,                   1,      0,      1,              },
 	{ "features/rodex_use_accountmail",     &battle_config.feature_rodex_use_accountmail,   0,      0,      1,              },
 	{ "features/enable_homun_autofeed",     &battle_config.feature_enable_homun_autofeed,   1,      0,      1,              },
+	{ "features/enable_attendance_system",  &battle_config.feature_enable_attendance_system,1,      0,      1,              },
 };
 #ifndef STATS_OPT_OUT
 /**
