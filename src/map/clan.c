@@ -997,10 +997,11 @@ void clan_reload(void)
  */
 void do_init_clan(bool minimal)
 {
+	clan->db = idb_alloc(DB_OPT_RELEASE_DATA);
+
 	if (minimal) {
 		return;
 	}
-	clan->db = idb_alloc(DB_OPT_RELEASE_DATA);
 	clan->config_read(false);
 	timer->add_func_list(clan->inactivity_kick, "clan_inactivity_kick");
 }
