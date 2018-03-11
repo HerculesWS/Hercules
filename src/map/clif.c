@@ -18121,31 +18121,37 @@ void clif_parse_CashShopBuy(int fd, struct map_session_data *sd) {
 		short tab = RFIFOW(fd, 18 + ( i * 10 ));
 		enum CASH_SHOP_BUY_RESULT result = CSBR_UNKNOWN;
 
-		if( tab < 0 || tab >= CASHSHOP_TAB_MAX )
+		if(tab < 0 || tab >= CASHSHOP_TAB_MAX)
 			continue;
 
-		for( j = 0; j < clif->cs.item_count[tab]; j++ ) {
+		for(j = 0; j < clif->cs.item_count[tab]; j++) {
 			if( clif->cs.data[tab][j]->id == id )
 				break;
 		}
-		if( j < clif->cs.item_count[tab] ) {
+		if(j < clif->cs.item_count[tab]) {
 			struct item_data *data;
-			if( sd->kafraPoints < kafra_pay ) {
+			if(sd->kafraPoints < kafra_pay) {
 				result = CSBR_SHORTTAGE_CASH;
-			} else if( (sd->cashPoints+kafra_pay) < (clif->cs.data[tab][j]->price * qty) ) {
+			} else if((sd->cashPoints+kafra_pay) < (clif->cs.data[tab][j]->price * qty)) {
 				result = CSBR_SHORTTAGE_CASH;
-			} else if ( !( data = itemdb->exists(clif->cs.data[tab][j]->id) ) ) {
+			} else if (!(data = itemdb->exists(clif->cs.data[tab][j]->id))) {
 				result = CSBR_UNKONWN_ITEM;
 			} else {
 				struct item item_tmp;
 				int k, get_count;
-
+				int ret = 0;
+				
 				get_count = qty;
 
 				if (!itemdb->isstackable2(data))
 					get_count = 1;
-
-				pc->paycash(sd, clif->cs.data[tab][j]->price * qty, kafra_pay);// [Ryuuzaki]
+				
+				ret = pc->paycash(sd, clif->cs.data[tab][j]->price * qty, kafra_pay);// [Ryuuzaki] //changed Kafrapoints calculation. [Normynator]
+				if (ret < 0) {
+					ShowError("clif_parse_CashShopBuy: The return from pc->paycash was negative which is not allowed.\n");
+					break; //This should never happen.
+				}
+				kafra_pay = ret;
 				for (k = 0; k < qty; k += get_count) {
 					if (!pet->create_egg(sd, data->nameid)) {
 						memset(&item_tmp, 0, sizeof(item_tmp));
