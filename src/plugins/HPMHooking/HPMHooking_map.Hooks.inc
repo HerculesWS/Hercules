@@ -25420,14 +25420,14 @@ void HP_clif_rodex_send_refresh(int fd, struct map_session_data *sd, int8 open_t
 	}
 	return;
 }
-void HP_clif_rodex_send_mails_all(int fd, struct map_session_data *sd) {
+void HP_clif_rodex_send_mails_all(int fd, struct map_session_data *sd, int64 mail_id) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_rodex_send_mails_all_pre > 0) {
-		void (*preHookFunc) (int *fd, struct map_session_data **sd);
+		void (*preHookFunc) (int *fd, struct map_session_data **sd, int64 *mail_id);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_rodex_send_mails_all_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_rodex_send_mails_all_pre[hIndex].func;
-			preHookFunc(&fd, &sd);
+			preHookFunc(&fd, &sd, &mail_id);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -25435,13 +25435,13 @@ void HP_clif_rodex_send_mails_all(int fd, struct map_session_data *sd) {
 		}
 	}
 	{
-		HPMHooks.source.clif.rodex_send_mails_all(fd, sd);
+		HPMHooks.source.clif.rodex_send_mails_all(fd, sd, mail_id);
 	}
 	if (HPMHooks.count.HP_clif_rodex_send_mails_all_post > 0) {
-		void (*postHookFunc) (int fd, struct map_session_data *sd);
+		void (*postHookFunc) (int fd, struct map_session_data *sd, int64 mail_id);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_rodex_send_mails_all_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_rodex_send_mails_all_post[hIndex].func;
-			postHookFunc(fd, sd);
+			postHookFunc(fd, sd, mail_id);
 		}
 	}
 	return;

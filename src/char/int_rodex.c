@@ -55,7 +55,7 @@ static int inter_rodex_fromsql(int char_id, int account_id, int8 opentype, int64
 	case RODEX_OPENTYPE_MAIL:
 		if (SQL_ERROR == SQL->StmtPrepare(stmt,
 			"SELECT `mail_id`, `sender_name`, `sender_id`, `receiver_name`, `receiver_id`, `receiver_accountid`,"
-			"`title`, `body`, `zeny`, `type`, `is_read`, `send_date`, `expire_date`, `weight`"
+			"`title`, `body`, `zeny`, `type`, `is_read`, `sender_read`, `send_date`, `expire_date`, `weight`"
 			"FROM `%s` WHERE `expire_date` > '%d' AND `receiver_id` = '%d' AND `mail_id` > '%"PRId64"'"
 			"ORDER BY `mail_id` ASC", rodex_db, (int)time(NULL), char_id, mail_id)
 			) {
@@ -68,7 +68,7 @@ static int inter_rodex_fromsql(int char_id, int account_id, int8 opentype, int64
 	case RODEX_OPENTYPE_ACCOUNT:
 		if (SQL_ERROR == SQL->StmtPrepare(stmt,
 			"SELECT `mail_id`, `sender_name`, `sender_id`, `receiver_name`, `receiver_id`, `receiver_accountid`,"
-			"`title`, `body`, `zeny`, `type`, `is_read`, `send_date`, `expire_date`, `weight`"
+			"`title`, `body`, `zeny`, `type`, `is_read`, `sender_read`, `send_date`, `expire_date`, `weight`"
 			"FROM `%s` WHERE "
 			"`expire_date` > '%d' AND `receiver_accountid` = '%d' AND `mail_id` > '%"PRId64"'"
 			"ORDER BY `mail_id` ASC", rodex_db, (int)time(NULL), account_id, mail_id)
@@ -82,8 +82,8 @@ static int inter_rodex_fromsql(int char_id, int account_id, int8 opentype, int64
 	case RODEX_OPENTYPE_RETURN:
 		if (SQL_ERROR == SQL->StmtPrepare(stmt,
 			"SELECT `mail_id`, `sender_name`, `sender_id`, `receiver_name`, `receiver_id`, `receiver_accountid`,"
-			"`title`, `body`, `zeny`, `type`, `is_read`, `send_date`, `expire_date`, `weight`"
-			"FROM `%s` WHERE (`sender_id` = '%d' AND `expire_date` <= '%d' AND `send_date` + '%d' > '%d' AND `mail_id` > '%"PRId64"')"
+			"`title`, `body`, `zeny`, `type`, `is_read`, `sender_read`, `send_date`, `expire_date`, `weight`"
+			"FROM `%s` WHERE (`is_read` = 0 AND `sender_id` = '%d' AND `expire_date` <= '%d' AND `send_date` + '%d' > '%d' AND `mail_id` > '%"PRId64"')"
 			"ORDER BY `mail_id` ASC", rodex_db, char_id, (int)time(NULL), 2 * RODEX_EXPIRE, (int)time(NULL), mail_id)
 			) {
 			SqlStmt_ShowDebug(stmt);
@@ -95,9 +95,11 @@ static int inter_rodex_fromsql(int char_id, int account_id, int8 opentype, int64
 	case RODEX_OPENTYPE_UNSET:
 		if (SQL_ERROR == SQL->StmtPrepare(stmt,
 			"SELECT `mail_id`, `sender_name`, `sender_id`, `receiver_name`, `receiver_id`, `receiver_accountid`,"
-			"`title`, `body`, `zeny`, `type`, `is_read`, `send_date`, `expire_date`, `weight`"
-			"FROM `%s` WHERE `expire_date` > '%d' AND (`receiver_id` = '%d' or `receiver_accountid` = '%d') AND `mail_id` > '%"PRId64"'"
-			"ORDER BY `mail_id` ASC", rodex_db, (int)time(NULL), char_id, account_id, mail_id)
+			"`title`, `body`, `zeny`, `type`, `is_read`, `sender_read`, `send_date`, `expire_date`, `weight`"
+			"FROM `%s` WHERE "
+			"((`expire_date` > '%d' AND (`receiver_id` = '%d' OR `receiver_accountid` = '%d'))"
+			"OR (`is_read` = 0 AND `sender_id` = '%d' AND `expire_date` <= '%d' AND `send_date` + '%d' > '%d'))"
+			"ORDER BY `mail_id` ASC", rodex_db, (int)time(NULL), char_id, account_id, char_id, (int)time(NULL), 2 * RODEX_EXPIRE, (int)time(NULL))
 			) {
 			SqlStmt_ShowDebug(stmt);
 			SQL->StmtFree(stmt);
@@ -118,9 +120,10 @@ static int inter_rodex_fromsql(int char_id, int account_id, int8 opentype, int64
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 8,  SQLDT_INT64,  &msg.zeny,               sizeof msg.zeny,               NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 9,  SQLDT_UINT8,  &msg.type,               sizeof msg.type,               NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 10, SQLDT_BOOL,   &msg.is_read,            sizeof msg.is_read,            NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 11, SQLDT_INT,    &msg.send_date,          sizeof msg.send_date,          NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 12, SQLDT_INT,    &msg.expire_date,        sizeof msg.expire_date,        NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 13, SQLDT_INT,    &msg.weight,             sizeof msg.weight,             NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 11, SQLDT_BOOL,   &msg.sender_read,        sizeof msg.sender_read,        NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 12, SQLDT_INT,    &msg.send_date,          sizeof msg.send_date,          NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 13, SQLDT_INT,    &msg.expire_date,        sizeof msg.expire_date,        NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 14, SQLDT_INT,    &msg.weight,             sizeof msg.weight,             NULL, NULL)
 	) {
 		SqlStmt_ShowDebug(stmt);
 		SQL->StmtFree(stmt);
@@ -201,10 +204,12 @@ static int inter_rodex_fromsql(int char_id, int account_id, int8 opentype, int64
 
 #if PACKETVER >= 20170419
 			if (opentype == RODEX_OPENTYPE_UNSET) {
-				if (msg.receiver_id != 0)
-					msg.opentype = RODEX_OPENTYPE_MAIL;
-				else
+				if (msg.receiver_id == 0)
 					msg.opentype = RODEX_OPENTYPE_ACCOUNT;
+				else if (msg.expire_date < time(NULL))
+					msg.opentype = RODEX_OPENTYPE_RETURN;
+				else
+					msg.opentype = RODEX_OPENTYPE_MAIL;
 			} else {
 				msg.opentype = opentype;
 			}
@@ -243,8 +248,8 @@ static bool inter_rodex_hasnew(int char_id, int account_id)
 	if (SQL_ERROR == SQL->Query(inter->sql_handle,
 		"SELECT count(*) FROM `%s` WHERE ("
 		"(`expire_date` > '%d' AND (`receiver_id` = '%d' OR `receiver_accountid` = '%d')) OR"
-		"(`sender_id` = '%d' AND `expire_date` <= '%d' AND `send_date` + '%d' > '%d')"
-		") AND (`is_read` = 0 OR (`type` > 0 AND `type` != 8))",
+		"(`sender_id` = '%d' AND `expire_date` <= '%d' AND `send_date` + '%d' > '%d' AND `is_read` = 0)" // is_read is required in this line because of the OR in next condition
+		") AND ((`is_read` = 0 AND `sender_read` = 0) OR (`type` > 0 AND `type` != 8))",
 		rodex_db, (int)time(NULL), char_id, account_id,
 		char_id, (int)time(NULL), 2 * RODEX_EXPIRE, (int)time(NULL))
 		) {
@@ -309,10 +314,10 @@ int64 inter_rodex_savemessage(struct rodex_message* msg)
 	SQL->EscapeStringLen(inter->sql_handle, title, msg->title, strnlen(msg->title, RODEX_TITLE_LENGTH));
 
 	if (SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` (`sender_name`, `sender_id`, `receiver_name`, `receiver_id`, `receiver_accountid`, `title`, `body`,"
-		"`zeny`, `type`, `is_read`, `send_date`, `expire_date`, `weight`) VALUES "
-		"('%s', '%d', '%s', '%d', '%d', '%s', '%s', '%"PRId64"', '%d', '%d', '%d', '%d', '%d')",
+		"`zeny`, `type`, `is_read`, `sender_read`, `send_date`, `expire_date`, `weight`) VALUES "
+		"('%s', '%d', '%s', '%d', '%d', '%s', '%s', '%"PRId64"', '%d', '%d', '%d', '%d', '%d', '%d')",
 		rodex_db, sender_name, msg->sender_id, receiver_name, msg->receiver_id, msg->receiver_accountid,
-		title, body, msg->zeny, msg->type, msg->is_read == true ? 1 : 0, msg->send_date, msg->expire_date, msg->weight)) {
+		title, body, msg->zeny, msg->type, msg->is_read == true ? 1 : 0, msg->sender_read == true ? 1 : 0, msg->send_date, msg->expire_date, msg->weight)) {
 		Sql_ShowDebug(inter->sql_handle);
 		return 0;
 	}
@@ -344,22 +349,23 @@ int64 inter_rodex_savemessage(struct rodex_message* msg)
 /*==========================================
  * Inbox Request
  *------------------------------------------*/
-void mapif_rodex_sendinbox(int fd, int char_id, int8 opentype, int8 flag, int count, struct rodex_maillist *mails)
+void mapif_rodex_sendinbox(int fd, int char_id, int8 opentype, int8 flag, int count, int64 mail_id, struct rodex_maillist *mails)
 {
-	int per_packet = (UINT16_MAX - 16) / sizeof(struct rodex_message);
+	int per_packet = (UINT16_MAX - 24) / sizeof(struct rodex_message);
 	int sent = 0;
 	bool is_first = true;
 	nullpo_retv(mails);
 	Assert_retv(char_id > 0);
 	Assert_retv(count >= 0);
+	Assert_retv(mail_id >= 0);
 
 	do {
-		int i = 16, j, size, limit;
+		int i = 24, j, size, limit;
 		int to_send = count - sent;
 		bool is_last = true;
 
 		if (to_send <= per_packet) {
-			size = to_send * sizeof(struct rodex_message) + 16;
+			size = to_send * sizeof(struct rodex_message) + 24;
 			limit = to_send;
 			is_last = true;
 		} else {
@@ -367,7 +373,7 @@ void mapif_rodex_sendinbox(int fd, int char_id, int8 opentype, int8 flag, int co
 			if (limit != to_send) {
 				is_last = false;
 			}
-			size = limit * sizeof(struct rodex_message) + 16;
+			size = limit * sizeof(struct rodex_message) + 24;
 		}
 
 		WFIFOHEAD(fd, size);
@@ -379,6 +385,7 @@ void mapif_rodex_sendinbox(int fd, int char_id, int8 opentype, int8 flag, int co
 		WFIFOB(fd, 10) = is_last;
 		WFIFOB(fd, 11) = is_first;
 		WFIFOL(fd, 12) = limit;
+		WFIFOQ(fd, 16) = mail_id;
 		for (j = 0; j < limit; ++j, ++sent, i += sizeof(struct rodex_message)) {
 			memcpy(WFIFOP(fd, i), &VECTOR_INDEX(*mails, sent), sizeof(struct rodex_message));
 		}
@@ -403,7 +410,7 @@ void mapif_parse_rodex_requestinbox(int fd)
 		count = inter_rodex->fromsql(char_id, account_id, opentype, 0, &mails);
 	else
 		count = inter_rodex->fromsql(char_id, account_id, opentype, mail_id, &mails);
-	mapif->rodex_sendinbox(fd, char_id, opentype, flag, count, &mails);
+	mapif->rodex_sendinbox(fd, char_id, opentype, flag, count, mail_id, &mails);
 	VECTOR_CLEAR(mails);
 }
 
@@ -443,7 +450,7 @@ void mapif_parse_rodex_updatemail(int fd)
 	int8 flag = RFIFOB(fd, 10);
 
 	Assert_retv(mail_id > 0);
-	Assert_retv(flag >= 0 && flag <= 3);
+	Assert_retv(flag >= 0 && flag <= 4);
 
 	switch (flag) {
 	case 0: // Read
@@ -467,6 +474,11 @@ void mapif_parse_rodex_updatemail(int fd)
 		if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `mail_id` = '%"PRId64"'", rodex_db, mail_id))
 			Sql_ShowDebug(inter->sql_handle);
 		if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `mail_id` = '%"PRId64"'", rodex_item_db, mail_id))
+			Sql_ShowDebug(inter->sql_handle);
+		break;
+
+	case 4: // Sender Read
+		if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `sender_read` = 1 WHERE `mail_id` = '%"PRId64"'", rodex_db, mail_id))
 			Sql_ShowDebug(inter->sql_handle);
 		break;
 	}
