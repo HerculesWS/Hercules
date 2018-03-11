@@ -19621,7 +19621,7 @@ void clif_parse_rodex_open_write_mail(int fd, struct map_session_data *sd) __att
 void clif_parse_rodex_open_write_mail(int fd, struct map_session_data *sd)
 {
 	const struct PACKET_CZ_REQ_OPEN_WRITE_MAIL *rPacket = RFIFOP(fd, 0);
-	int8 result = (rodex->isenabled() == true) ? 1 : 0;
+	int8 result = (rodex->isenabled() == true && sd->npc_id == 0) ? 1 : 0;
 
 	clif->rodex_open_write_mail(fd, rPacket->receiveName, result);
 }
