@@ -20292,6 +20292,9 @@ void clif_parse_open_ui_request(int fd, struct map_session_data *sd)
 
 	const struct PACKET_CZ_OPEN_UI *p;
 
+	if (battle_config.feature_enable_attendance_system != 1)
+		return;
+
 	p = RFIFOP(fd, 0);
 	clif->open_ui(sd, p->UIType);
 }
@@ -20335,6 +20338,9 @@ void clif_parse_attendance_reward_request(int fd, struct map_session_data *sd)
 	struct rodex_message msg = { 0 };
 	int attendance_count;
 	char sender_name[NAME_LENGTH], title[RODEX_TITLE_LENGTH], body[MAIL_BODY_LENGTH];
+
+	if (battle_config.feature_enable_attendance_system != 1)
+		return;
 
 	if (clif->attendance_timediff(sd) != true)
 		return;
