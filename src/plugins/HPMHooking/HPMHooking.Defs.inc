@@ -2668,8 +2668,8 @@ typedef int (*HPMHOOK_pre_guild_check_alliance) (int *guild_id1, int *guild_id2,
 typedef int (*HPMHOOK_post_guild_check_alliance) (int retVal___, int guild_id1, int guild_id2, int flag);
 typedef int (*HPMHOOK_pre_guild_send_memberinfoshort) (struct map_session_data **sd, int *online);
 typedef int (*HPMHOOK_post_guild_send_memberinfoshort) (int retVal___, struct map_session_data *sd, int online);
-typedef int (*HPMHOOK_pre_guild_recv_memberinfoshort) (int *guild_id, int *account_id, int *char_id, int *online, int *lv, int16 *class);
-typedef int (*HPMHOOK_post_guild_recv_memberinfoshort) (int retVal___, int guild_id, int account_id, int char_id, int online, int lv, int16 class);
+typedef int (*HPMHOOK_pre_guild_recv_memberinfoshort) (int *guild_id, int *account_id, int *char_id, int *online, int *lv, int16 *class, uint32 *last_login);
+typedef int (*HPMHOOK_post_guild_recv_memberinfoshort) (int retVal___, int guild_id, int account_id, int char_id, int online, int lv, int16 class, uint32 last_login);
 typedef int (*HPMHOOK_pre_guild_change_memberposition) (int *guild_id, int *account_id, int *char_id, short *idx);
 typedef int (*HPMHOOK_post_guild_change_memberposition) (int retVal___, int guild_id, int account_id, int char_id, short idx);
 typedef int (*HPMHOOK_pre_guild_memberposition_changed) (struct guild **g, int *idx, int *pos);
