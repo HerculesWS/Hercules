@@ -383,7 +383,7 @@ struct rodex_message *rodex_get_mail(struct map_session_data *sd, int64 mail_id)
 
 	if ((msg->is_deleted == true)
 		|| (msg->expire_date < time(NULL) && ((msg->receiver_accountid > 0) || (msg->receiver_id == char_id && msg->sender_id != char_id)))
-		|| ((msg->send_date + 2 * RODEX_EXPIRE) < time(NULL))
+		|| (msg->expire_date + RODEX_EXPIRE < time(NULL))
 		)
 		return NULL;
 
