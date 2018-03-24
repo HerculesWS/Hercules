@@ -1413,6 +1413,8 @@ struct clif_interface {
 	void (*clan_leave) (struct map_session_data *sd);
 	void (*clan_message) (struct clan *c, const char *mes, int len);
 	void (*pClanMessage) (int fd, struct map_session_data* sd);
+	void (*pPrivateAirshipRequest) (int fd, struct map_session_data *sd);
+	void (*PrivateAirshipResponse) (struct map_session_data *sd, uint32 flag);
 };
 
 #ifdef HERCULES_CORE
