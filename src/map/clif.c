@@ -20610,6 +20610,49 @@ void clif_ui_action(struct map_session_data *sd, int32 UIType, int32 data)
 
 	clif->send(&p, sizeof(p), &sd->bl, SELF);
 }
+
+void clif_parse_private_airship_request(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
+void clif_parse_private_airship_request(int fd, struct map_session_data *sd)
+{
+#if defined(PACKETVER_RE) && PACKETVER >= 20180321
+	char evname[EVENT_NAME_LENGTH];
+	struct event_data *ev = NULL;
+	const struct PACKET_CZ_PRIVATE_AIRSHIP_REQUEST *p = RP2PTR(fd);
+
+	safestrncpy(evname, "private_airship::OnAirShipRequest", EVENT_NAME_LENGTH);
+	if ((ev = strdb_get(npc->ev_db, evname))) {
+		pc->setregstr(sd, script->add_str("@mapname$"), p->mapName);
+		pc->setreg(sd, script->add_str("@itemid"), p->ItemID);
+		script->run_npc(ev->nd->u.scr.script, ev->pos, sd->bl.id, ev->nd->bl.id);
+	} else {
+		ShowError("clif_parse_private_airship_request: event '%s' not found, operation failed\n", evname);
+	}
+#else
+	ShowWarning("clif_parse_private_airship_request: private airship is not supported in this client version, possible packet manipulation.");
+#endif
+}
+
+void clif_private_airship_response(struct map_session_data *sd, uint32 flag)
+{
+#if defined(PACKETVER_RE) && PACKETVER >= 20180321
+	struct PACKET_ZC_PRIVATE_AIRSHIP_RESPONSE p;
+
+	nullpo_retv(sd);
+
+	if (flag > P_AIRSHIP_ITEM_INVALID) {
+		ShowError("clif_private_airship_response: invalid flag given '%d', defaulting to 0.\n", flag);
+		flag = 0;
+	}
+
+	p.PacketType = 0xA4A;
+	p.flag = flag;
+
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
+#else
+	ShowWarning("clif_private_airship_response: private airship works only for clients >= 20180321.");
+#endif
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -21715,4 +21758,6 @@ void clif_defaults(void) {
 	clif->open_ui = clif_open_ui;
 	clif->pAttendanceRewardRequest = clif_parse_attendance_reward_request;
 	clif->ui_action = clif_ui_action;
+	clif->pPrivateAirshipRequest = clif_parse_private_airship_request;
+	clif->PrivateAirshipResponse = clif_private_airship_response;
 }

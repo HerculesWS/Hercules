@@ -3823,7 +3823,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 // changed packet sizes
 	packet(0x006d,157); // HC_ACCEPT_MAKECHAR
 	packet(0x08e3,157); // HC_UPDATE_CHARINFO
-	packet(0x0a49,20);
+	packet(0x0a49, 20, clif->pPrivateAirshipRequest);
 #endif
 
 // 2017-09-06cRagexeRE

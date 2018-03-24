@@ -9995,3 +9995,16 @@ Enables the Emblem of the given Clan to the current NPC
 13 - End of Clan System Related Commands
 //=====================================
 ---------------------------------------
+
+*airship_respond(<flag>)
+
+Send client respond to different private airship status.
+the available flags are:
+	P_AIRSHIP_NONE
+	P_AIRSHIP_RETRY
+	P_AIRSHIP_INVALID_START_MAP
+	P_AIRSHIP_INVALID_END_MAP
+	P_AIRSHIP_ITEM_NOT_ENOUGH
+	P_AIRSHIP_ITEM_INVALID
+
+---------------------------------------

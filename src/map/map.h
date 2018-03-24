@@ -857,6 +857,8 @@ struct map_data {
 		unsigned notomb : 1;
 		unsigned nocashshop : 1;
 		unsigned noautoloot : 1;
+		unsigned pairship_startable : 1;
+		unsigned pairship_endable : 1;
 		uint32 noviewid; ///< noviewid (bitmask - @see enum equip_pos)
 	} flag;
 	struct point save;
