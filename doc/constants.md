@@ -74,8 +74,8 @@
 - [getmapinfo options](#getmapinfo-options)
 - [set/getiteminfo options](#setgetiteminfo-options)
 - [Renewal](#renewal)
-- [Status Icons](#status-icons)
 
+- [Status Icons](#status-icons)
 #### 3. [Parameters (source)](#parameters-source)
 - [Parameters](#parameters)
 
@@ -84,7 +84,6 @@
 #### 5. [Mobs (db/re/mob_db.txt)](#mobs-dbremob_dbtxt)
 
 #### 6. [Items (db/re/item_db.conf)](#items-dbreitem_dbconf)
-
 ## Constants (db/constants.conf)
 
 
