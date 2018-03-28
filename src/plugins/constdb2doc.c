@@ -53,28 +53,31 @@ FILE *out_fp;
 bool torun = false;
 char *anchor;
 
-char * get_anchorid(char anchorname[])
+char * get_anchorid(char anchorstring[])
 {
-	// anchorid = anchorname;
+	char *anchor = (char *) malloc(256);
+
+	strcpy(anchor, anchorstring);
+
     int i, j;
-    for (i = 0, j = 0; anchorname[i] != 0; i++) {
-        anchorname[i] = tolower(anchorname[i]);
+    for (i = 0, j = 0; anchor[i] != 0; i++) {
+        anchor[i] = tolower(anchor[i]);
 
         // Check space
-        if (anchorname[i] == 32) {
-            anchorname[i] = 45; // Change space to hyphen
+        if (anchor[i] == 32) {
+            anchor[i] = 45; // Change space to hyphen
         }
 
         // Check allow character. number, letter, underscore or hyphen(space)
         // All special character will be remove
-        if ((anchorname[i] >= 97 && anchorname[i] <= 122) || (anchorname[i] >= 48 && anchorname[i] <= 57) || anchorname[i] == 45 || anchorname[i] == 95) {
-            anchorname[j] = anchorname[i];
+        if ((anchor[i] >= 97 && anchor[i] <= 122) || (anchor[i] >= 48 && anchor[i] <= 57) || anchor[i] == 45 || anchor[i] == 95) {
+            anchor[j] = anchor[i];
             j++;
         }
     }
-    anchorname[j] = '\0';
+    anchor[j] = '\0';
 
-	return anchorname;
+	return anchor;
 }
 
 /// To override script_constdb_comment
@@ -231,23 +234,6 @@ void do_constdb2doc(void)
 
 	fclose(out_header);
 	fclose(out_fp);
-
-
-	// char * line = NULL;
-    size_t len = 255;
-    char *line = malloc(sizeof(char) * len);
-
-	while (fgets(line, len, out_header) != NULL)  {
-		printf(line);
-	}
-	free(line);
-	// if(line) {
-	// 	free(line);
-	// }
-
-	fclose(out_header);
-
-
 
 	ShowInfo("Finish export doc\n");
 
