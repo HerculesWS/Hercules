@@ -2393,6 +2393,10 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(pet->recovery_timer, HP_pet_recovery_timer) },
 	{ HP_POP(pet->skill_support_timer, HP_pet_skill_support_timer) },
 	{ HP_POP(pet->read_db, HP_pet_read_db) },
+	{ HP_POP(pet->read_db_libconfig, HP_pet_read_db_libconfig) },
+	{ HP_POP(pet->read_db_sub, HP_pet_read_db_sub) },
+	{ HP_POP(pet->read_db_sub_intimacy, HP_pet_read_db_sub_intimacy) },
+	{ HP_POP(pet->read_db_clear, HP_pet_read_db_clear) },
 /* quest_interface */
 	{ HP_POP(quest->init, HP_quest_init) },
 	{ HP_POP(quest->final, HP_quest_final) },
