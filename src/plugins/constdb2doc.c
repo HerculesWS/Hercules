@@ -38,8 +38,8 @@
 #include <time.h>
 #include <sys/stat.h>
 
-#define OUTPUTFILEHEADER "doc" PATHSEP_STR "constants_header.md"
-#define OUTPUTFILENAME "doc" PATHSEP_STR "constants.md"
+#define OUTPUTFILEHEADER "doc" PATHSEP_STR "constants.md"
+#define OUTPUTFILECONTENT "doc" PATHSEP_STR "constants_content.md"
 
 HPExport struct hplugin_info pinfo = {
 	"constdb2doc",   // Plugin name
@@ -204,10 +204,33 @@ void constdb2doc_itemdb(void)
 	fprintf(out_fp, "\n");
 }
 
+void merge_files()
+{
+	// Open herder and content files
+	out_header = fopen(OUTPUTFILEHEADER, "a");
+	out_fp = fopen(OUTPUTFILECONTENT, "r");
+
+	if (out_header == NULL || out_fp == NULL) {
+		ShowError("do_constdb2doc: Unable to open output file.\n");
+		return;
+	}
+
+	char c;
+	// Append content to headder
+	while ((c = fgetc(out_fp)) != EOF)
+		fputc(c, out_header);
+
+	fclose(out_header);
+	fclose(out_fp);
+
+	// Remove content file
+	remove(OUTPUTFILECONTENT);
+}
+
 void do_constdb2doc(void)
 {
 	/* File Type Detector */
-	if ((out_fp = fopen(OUTPUTFILENAME, "wt+")) == NULL) {
+	if ((out_fp = fopen(OUTPUTFILECONTENT, "wt+")) == NULL) {
 		ShowError("do_constdb2doc: Unable to open output file.\n");
 		return;
 	}
@@ -235,7 +258,9 @@ void do_constdb2doc(void)
 	fclose(out_header);
 	fclose(out_fp);
 
-	ShowInfo("Finish export doc\n");
+	merge_files();
+
+	ShowInfo("Finish export constants docs\n");
 
 }
 CPCMD(constdb2doc) {
