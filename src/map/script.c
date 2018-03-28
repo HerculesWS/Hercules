@@ -12815,12 +12815,12 @@ enum mapinfo_info {
 BUILDIN(getmapinfo)
 {
 	enum mapinfo_info mode = script_getnum(st, 2);
-	int16 m;
+	int16 m = -1;
 
 	if (script_hasdata(st, 3)) {
 		if (script_isstringtype(st, 3)) {
 			const char *str = script_getstr(st, 3);
-			m = map->mapname2mapid(str);
+			m = map->mapindex2mapid(strdb_iget(mapindex->db, str));
 		} else {
 			m = script_getnum(st, 3);
 		}
