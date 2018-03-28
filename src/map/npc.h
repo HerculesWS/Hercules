@@ -122,6 +122,7 @@ struct npc_data {
 			struct mob_data *md;
 			time_t kill_time;
 			char killer_name[NAME_LENGTH];
+			int spawn_timer;
 		} tomb;
 	} u;
 	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store

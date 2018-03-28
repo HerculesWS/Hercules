@@ -490,6 +490,7 @@ struct Battle_Config {
 	int vcast_stat_scale;
 
 	int mvp_tomb_enabled;
+	int mvp_tomb_spawn_delay;
 
 	int atcommand_suggestions_enabled;
 	int min_npc_vendchat_distance;
