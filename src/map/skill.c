@@ -19032,9 +19032,7 @@ int skill_blockpc_start_(struct map_session_data *sd, uint16 skill_id, int tick)
 			if (DIFF_TICK32(cd->entry[i]->started + cd->entry[i]->duration, now) > tick)
 				return 0;
 			cd->entry[i]->duration = tick;
-#if PACKETVER >= 20120604
 			cd->entry[i]->total = tick;
-#endif
 			cd->entry[i]->started = now;
 			if( timer->settick(cd->entry[i]->timer,now+tick) != -1 )
 				return 0;
@@ -19066,9 +19064,7 @@ int skill_blockpc_start_(struct map_session_data *sd, uint16 skill_id, int tick)
 	cd->entry[cd->cursor] = ers_alloc(skill->cd_entry_ers,struct skill_cd_entry);
 
 	cd->entry[cd->cursor]->duration = tick;
-#if PACKETVER >= 20120604
 	cd->entry[cd->cursor]->total = tick;
-#endif
 	cd->entry[cd->cursor]->skidx = idx;
 	cd->entry[cd->cursor]->skill_id = skill_id;
 	cd->entry[cd->cursor]->started = now;
@@ -19717,8 +19713,16 @@ void skill_cooldown_load(struct map_session_data * sd)
 
 	// process each individual cooldown associated with the character
 	for( i = 0; i < cd->cursor; i++ ) {
-		cd->entry[i]->started = now;
-		cd->entry[i]->timer   = timer->add(timer->gettick()+cd->entry[i]->duration,skill->blockpc_end,sd->bl.id,cd->entry[i]->skidx);
+		int64 remaining;
+
+		if (battle_config.guild_skill_relog_delay == 2 && cd->entry[i]->skill_id >= GD_SKILLBASE && cd->entry[i]->skill_id < GD_MAX) {
+			remaining = cd->entry[i]->started + cd->entry[i]->total - now;
+			remaining = max(1, remaining); // expired cooldowns will be 1, so they'll expire in the normal way just after this.
+		} else {
+			cd->entry[i]->started = now;
+			remaining = cd->entry[i]->duration;
+		}
+		cd->entry[i]->timer = timer->add(timer->gettick() + remaining, skill->blockpc_end, sd->bl.id, cd->entry[i]->skidx);
 		sd->blockskill[cd->entry[i]->skidx] = true;
 	}
 }
