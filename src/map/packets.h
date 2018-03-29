@@ -3380,6 +3380,13 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0a45,-1);
 #endif
 
+// 2015-11-04aRagexeRE
+#if PACKETVER >= 20151104
+// new packets
+	packet(0x0a46,14,clif->pReqStyleChange);
+	packet(0x0a47,3);
+#endif
+
 // 2015-11-18aRagexeRE
 #if PACKETVER >= 20151118
 // new packets

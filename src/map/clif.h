@@ -599,6 +599,16 @@ struct merge_item {
 	int16 nameid;
 };
 
+#define MAX_STYLIST_TYPE 13
+/* Stylist data [Asheraf/Hercules]*/
+struct stylist_data_entry {
+	uint16 id;
+	int32 zeny;
+	int16 itemid;
+	int16 boxid;
+};
+VECTOR_DECL(struct stylist_data_entry) stylist_data[MAX_STYLIST_TYPE];
+
 /**
  * Clif.c Interface
  **/
@@ -1413,6 +1423,15 @@ struct clif_interface {
 	void (*clan_leave) (struct map_session_data *sd);
 	void (*clan_message) (struct clan *c, const char *mes, int len);
 	void (*pClanMessage) (int fd, struct map_session_data* sd);
+
+	void (*stylist_vector_init) (void);
+	void (*stylist_vector_clear) (void);
+	bool (*stylist_read_db_libconfig) (void);
+	bool (*stylist_read_db_libconfig_sub) (struct config_setting_t *it, int idx, const char *source);
+	bool (*style_change_validate_requirements) (struct map_session_data *sd, int type, uint16 idx);
+	void (*stylist_send_rodexitem) (struct map_session_data *sd, int16 itemid);
+	void (*pReqStyleChange) (int fd, struct map_session_data *sd);
+	void (*style_change_response) (struct map_session_data *sd, int8 flag);
 };
 
 #ifdef HERCULES_CORE
