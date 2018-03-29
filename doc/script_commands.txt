@@ -10063,3 +10063,9 @@ the available flags are:
 	P_AIRSHIP_ITEM_INVALID
 
 ---------------------------------------
+
+*openstylist()
+
+Opens the styling shop on client
+
+---------------------------------------
