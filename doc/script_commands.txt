@@ -9995,3 +9995,9 @@ Enables the Emblem of the given Clan to the current NPC
 13 - End of Clan System Related Commands
 //=====================================
 ---------------------------------------
+
+*openstylist()
+
+Opens the styling shop on client
+
+---------------------------------------
