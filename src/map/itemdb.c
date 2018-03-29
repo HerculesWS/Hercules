@@ -2387,12 +2387,14 @@ void itemdb_read(bool minimal) {
 	if (minimal)
 		return;
 
+	itemdb->name_constants();
+
 	itemdb->read_combos();
 	itemdb->read_groups();
 	itemdb->read_chains();
 	itemdb->read_packages();
 	itemdb->read_options();
-
+	clif->stylist_read_db_libconfig();
 }
 
 /**
@@ -2619,6 +2621,7 @@ void do_final_itemdb(void) {
 	itemdb->options->destroy(itemdb->options, itemdb->options_final_sub);
 	itemdb->destroy_item_data(&itemdb->dummy, 0);
 	db_destroy(itemdb->names);
+	clif->stylist_vector_clear();
 }
 
 void do_init_itemdb(bool minimal) {
@@ -2627,6 +2630,7 @@ void do_init_itemdb(bool minimal) {
 	itemdb->options = idb_alloc(DB_OPT_RELEASE_DATA);
 	itemdb->names = strdb_alloc(DB_OPT_BASE,ITEM_NAME_LENGTH);
 	itemdb->create_dummy_data(); //Dummy data item.
+	clif->stylist_vector_init();
 	itemdb->read(minimal);
 
 	if (minimal)
