@@ -19717,8 +19717,16 @@ void skill_cooldown_load(struct map_session_data * sd)
 
 	// process each individual cooldown associated with the character
 	for( i = 0; i < cd->cursor; i++ ) {
-		cd->entry[i]->started = now;
-		cd->entry[i]->timer   = timer->add(timer->gettick()+cd->entry[i]->duration,skill->blockpc_end,sd->bl.id,cd->entry[i]->skidx);
+		int64 remaining;
+
+		if (battle_config.guild_skill_relog_delay == 2 && cd->entry[i]->skill_id >= GD_SKILLBASE && cd->entry[i]->skill_id - GD_SKILLBASE < MAX_GUILDSKILL) {
+			remaining = cd->entry[i]->started + cd->entry[i]->total - now;
+			remaining = max(1, remaining); // expired cooldowns will be 1, so they'll expire in the normal way just after this.
+		} else {
+			cd->entry[i]->started = now;
+			remaining = cd->entry[i]->duration;
+		}
+		cd->entry[i]->timer = timer->add(timer->gettick() + remaining, skill->blockpc_end, sd->bl.id, cd->entry[i]->skidx);
 		sd->blockskill[cd->entry[i]->skidx] = true;
 	}
 }
