@@ -625,6 +625,10 @@ enum look {
 	LOOK_FLOOR,
 	LOOK_ROBE,
 	LOOK_BODY2,
+
+#ifndef LOOK_MAX
+	LOOK_MAX
+#endif
 };
 
 // used by map_setcell()

@@ -65,6 +65,10 @@ struct view_data;
 #define MAX_ROULETTE_COLUMNS 9 /** client-defined value **/
 #define RGB2BGR(c) (((c) & 0x0000FF) << 16 | ((c) & 0x00FF00) | ((c) & 0xFF0000) >> 16)
 
+#ifndef MAX_STYLIST_TYPE
+#define MAX_STYLIST_TYPE LOOK_MAX
+#endif
+
 #define COLOR_CYAN    0x00ffffU
 #define COLOR_RED     0xff0000U
 #define COLOR_GREEN   0x00ff00U
@@ -618,6 +622,15 @@ struct attendance_entry {
 	int nameid;
 	int qty;
 };
+
+/* Stylist data [Asheraf/Hercules]*/
+struct stylist_data_entry {
+	uint16 id;
+	int32 zeny;
+	int16 itemid;
+	int16 boxid;
+};
+VECTOR_DECL(struct stylist_data_entry) stylist_data[MAX_STYLIST_TYPE];
 
 /**
  * Clif.c Interface
@@ -1450,6 +1463,15 @@ struct clif_interface {
 	void (*open_ui) (struct map_session_data *sd, int8 UIType);
 	void (*pAttendanceRewardRequest) (int fd, struct map_session_data *sd);
 	void (*ui_action) (struct map_session_data *sd, int32 UIType, int32 data);
+
+	void (*stylist_vector_init) (void);
+	void (*stylist_vector_clear) (void);
+	bool (*stylist_read_db_libconfig) (void);
+	bool (*stylist_read_db_libconfig_sub) (struct config_setting_t *it, int idx, const char *source);
+	bool (*style_change_validate_requirements) (struct map_session_data *sd, int type, uint16 idx);
+	void (*stylist_send_rodexitem) (struct map_session_data *sd, int16 itemid);
+	void (*pReqStyleChange) (int fd, struct map_session_data *sd);
+	void (*style_change_response) (struct map_session_data *sd, int8 flag);
 };
 
 #ifdef HERCULES_CORE
