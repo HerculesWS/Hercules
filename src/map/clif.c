@@ -20226,6 +20226,187 @@ void clif_skill_scale(struct block_list *bl, int src_id, int x, int y, uint16 sk
 #endif
 }
 
+void clif_stylist_vector_init(void)
+{
+	int i;
+	for (i = 0; i < MAX_STYLIST_TYPE; i++) {
+		VECTOR_INIT(stylist_data[i]);
+	}
+}
+
+void clif_stylist_vector_clear(void)
+{
+	int i;
+	for (i = 0; i < MAX_STYLIST_TYPE; i++) {
+		VECTOR_CLEAR(stylist_data[i]);
+	}
+}
+
+bool clif_stylist_read_db_libconfig(void)
+{
+	struct config_t stylist_conf;
+	struct config_setting_t *stylist = NULL, *it = NULL;
+	const char *config_filename = "db/stylist_db.conf"; // FIXME hardcoded name
+	int i = 0;
+
+	if (!libconfig->load_file(&stylist_conf, config_filename))
+		return false;
+
+	if ((stylist = libconfig->setting_get_member(stylist_conf.root, "stylist_db")) == NULL) {
+		ShowError("can't read %s\n", config_filename);
+		return false;
+	}
+
+	clif->stylist_vector_clear();
+
+	while ((it = libconfig->setting_get_elem(stylist, i++))) {
+		clif->stylist_read_db_libconfig_sub(it, i - 1, config_filename);
+	}
+
+	libconfig->destroy(&stylist_conf);
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", i, config_filename);
+	return true;
+}
+
+bool clif_stylist_read_db_libconfig_sub(struct config_setting_t *it, int idx, const char *source)
+{
+	struct stylist_data_entry entry = { 0 };
+	int i32 = 0, type = 0;
+	int64 i64 = 0;
+
+	nullpo_ret(it);
+	nullpo_ret(source);
+
+	if (!itemdb->lookup_const(it, "Type", &type) || type > MAX_STYLIST_TYPE || type <= 0) {
+		ShowWarning("clif_stylist_read_db_libconfig_sub: Invalid or missing Type (%d) in \"%s\", entry #%d, skipping.\n", type, source, idx);
+		return false;
+	}
+	if (!itemdb->lookup_const(it, "Id", &i32) || i32 <= 0) {
+		ShowWarning("clif_stylist_read_db_libconfig_sub: Invalid or missing Id (%d) in \"%s\", entry #%d, skipping.\n", i32, source, idx);
+		return false;
+	}
+	entry.id = i32;
+
+	if (libconfig->setting_lookup_int64(it, "Zeny", &i64)) {
+		if (i64 > MAX_ZENY) {
+			ShowWarning("clif_stylist_read_db_libconfig_sub: zeny is too big in \"%s\", entry #%d, capping to MAX_ZENY.\n", source, idx);
+			entry.zeny = MAX_ZENY;
+		} else {
+			entry.zeny = (int)i64;
+		}
+	}
+
+	if (itemdb->lookup_const(it, "ItemID", &i32))
+		entry.itemid = i32;
+
+	if (itemdb->lookup_const(it, "BoxItemID", &i32))
+		entry.boxid = i32;
+
+	VECTOR_ENSURE(stylist_data[type], 1, 1);
+	VECTOR_PUSH(stylist_data[type], entry);
+	return true;
+}
+
+bool clif_style_change_validate_requirements(struct map_session_data *sd, int type, uint16 idx)
+{
+	struct item it;
+	struct stylist_data_entry *entry;
+
+	nullpo_retr(false, sd);
+	Assert_retr(false, type > 0 && type <= MAX_STYLIST_TYPE);
+	Assert_retr(false, idx <= VECTOR_LENGTH(stylist_data[type]));
+
+	entry = &VECTOR_INDEX(stylist_data[type], idx);
+
+	if (entry->id != 0) {
+		if (entry->zeny != 0) {
+			if (sd->status.zeny < entry->zeny)
+				return false;
+
+			sd->status.zeny -= entry->zeny;
+			clif->updatestatus(sd, SP_ZENY);
+		} else if (entry->itemid != 0) {
+			it.nameid = entry->itemid;
+			it.amount = 1;
+			return script->buildin_delitem_search(sd, &it, false);
+		} else if (entry->boxid != 0) {
+			it.nameid = entry->boxid;
+			it.amount = 1;
+			return script->buildin_delitem_search(sd, &it, false);
+		}
+		return true;
+	}
+	return false;
+}
+void clif_stylist_send_rodexitem(struct map_session_data *sd, int16 itemid)
+{
+	struct rodex_message msg = { 0 };
+
+	nullpo_retv(sd);
+
+	msg.receiver_id = sd->status.char_id;
+	msg.items[0].item.nameid = itemid;
+	msg.items[0].item.amount = 1;
+	msg.items[0].item.identify = 1;
+	msg.type = MAIL_TYPE_NPC | MAIL_TYPE_ITEM;
+
+	safestrncpy(msg.sender_name, msg_txt(366), NAME_LENGTH);
+	safestrncpy(msg.title, msg_txt(367), RODEX_TITLE_LENGTH);
+	safestrncpy(msg.body, msg_txt(368), MAIL_BODY_LENGTH);
+	msg.send_date = (int)time(NULL);
+	msg.expire_date = (int)time(NULL) + RODEX_EXPIRE;
+
+	intif->rodex_sendmail(&msg);
+}
+
+void clif_parse_cz_req_style_change(int fd, struct map_session_data *sd)
+{
+	const struct PACKET_CZ_REQ_STYLE_CHANGE *p = RP2PTR(fd);
+	struct stylist_data_entry *entry;
+
+	nullpo_retv(sd);
+
+	if (p->HeadStyle != 0) {
+		if (clif->style_change_validate_requirements(sd, LOOK_HAIR, p->HeadStyle))
+			pc->changelook(sd, LOOK_HAIR, p->HeadStyle);
+	}
+	if (p->HeadPalette != 0) {
+		if (clif->style_change_validate_requirements(sd, LOOK_HAIR_COLOR, p->HeadPalette))
+			pc->changelook(sd, LOOK_HAIR_COLOR, p->HeadPalette);
+	}
+	if (p->BodyPalette != 0) {
+		if (clif->style_change_validate_requirements(sd, LOOK_CLOTHES_COLOR, p->BodyPalette))
+			pc->changelook(sd, LOOK_CLOTHES_COLOR, p->BodyPalette);
+	}
+	if (p->TopAccessory != 0) {
+		entry = &VECTOR_INDEX(stylist_data[LOOK_HEAD_TOP], p->TopAccessory - 1);
+		if (clif->style_change_validate_requirements(sd, LOOK_HEAD_TOP, p->TopAccessory - 1))
+			clif->stylist_send_rodexitem(sd, entry->id);
+	}
+	if (p->MidAccessory != 0) {
+		entry = &VECTOR_INDEX(stylist_data[LOOK_HEAD_MID], p->MidAccessory - 1);
+		if (clif->style_change_validate_requirements(sd, LOOK_HEAD_MID, p->MidAccessory - 1))
+			clif->stylist_send_rodexitem(sd, entry->id);
+	}
+	if (p->BottomAccessory != 0) {
+		entry = &VECTOR_INDEX(stylist_data[LOOK_HEAD_BOTTOM], p->BottomAccessory - 1);
+		if (clif->style_change_validate_requirements(sd, LOOK_HEAD_BOTTOM, p->BottomAccessory - 1))
+			clif->stylist_send_rodexitem(sd, entry->id);
+	}
+	clif->style_change_response(sd, true);
+	return;
+}
+
+void clif_style_change_response(struct map_session_data *sd, int8 flag)
+{
+	struct PACKET_ZC_STYLE_CHANGE_RES p;
+
+	p.PacketType = 0x0a47;
+	p.flag = flag;
+
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -20496,7 +20677,6 @@ int do_init_clif(bool minimal)
 
 	clif->delay_clearunit_ers = ers_new(sizeof(struct block_list),"clif.c::delay_clearunit_ers",ERS_OPT_CLEAR);
 	clif->delayed_damage_ers = ers_new(sizeof(struct cdelayed_damage),"clif.c::delayed_damage_ers",ERS_OPT_CLEAR);
-
 	return 0;
 }
 
@@ -21316,4 +21496,13 @@ void clif_defaults(void) {
 	clif->clan_leave = clif_clan_leave;
 	clif->clan_message = clif_clan_message;
 	clif->pClanMessage = clif_parse_ClanMessage;
+
+	clif->stylist_vector_init = clif_stylist_vector_init;
+	clif->stylist_vector_clear = clif_stylist_vector_clear;
+	clif->stylist_read_db_libconfig = clif_stylist_read_db_libconfig;
+	clif->stylist_read_db_libconfig_sub = clif_stylist_read_db_libconfig_sub;
+	clif->style_change_validate_requirements = clif_style_change_validate_requirements;
+	clif->stylist_send_rodexitem = clif_stylist_send_rodexitem;
+	clif->pReqStyleChange = clif_parse_cz_req_style_change;
+	clif->style_change_response = clif_style_change_response;
 }
