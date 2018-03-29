@@ -6092,7 +6092,7 @@ void clif_wis_end(int fd, int flag) {
 void clif_solved_charname(int fd, int charid, const char* name)
 {
 	nullpo_retv(name);
-#if !defined(PACKETVER_ZERO) && (PACKETVER >= 20180307 || (defined(PACKETVER_RE) && PACKETVER >= 20180221))
+#if PACKETVER_MAIN_NUM >= 20180307 || PACKETVER_RE_NUM >= 20180221
 	WFIFOHEAD(fd, packet_len(0x0af7));
 	WFIFOW(fd, 0) = 0xaf7;
 	if (*name == 0) {
@@ -14218,10 +14218,8 @@ void clif_friendslist_toggle(struct map_session_data *sd,int account_id, int cha
 	WFIFOL(fd, 2) = sd->status.friends[i].account_id;
 	WFIFOL(fd, 6) = sd->status.friends[i].char_id;
 	WFIFOB(fd, 10) = !online; //Yeah, a 1 here means "logged off", go figure...
-#ifndef PACKETVER_ZERO
-#if PACKETVER >= 20180307 || (defined(PACKETVER_RE) && PACKETVER >= 20180221)
+#if PACKETVER_MAIN_NUM >= 20180307 || PACKETVER_RE_NUM >= 20180221
 	memcpy(WFIFOP(fd, 11), sd->status.friends[i].name, NAME_LENGTH);
-#endif
 #endif  // PACKETVER_ZERO
 
 	WFIFOSET(fd, packet_len(0x206));
@@ -14245,7 +14243,7 @@ void clif_friendslist_send(struct map_session_data *sd)
 {
 	int i = 0, n, fd = sd->fd;
 
-#if !defined(PACKETVER_ZERO) && (PACKETVER >= 20180307 || (defined(PACKETVER_RE) && PACKETVER >= 20180221))
+#if PACKETVER_MAIN_NUM >= 20180307 || PACKETVER_RE_NUM >= 20180221
 	const int offset = 8;
 #else
 	const int offset = 32;
@@ -14257,7 +14255,7 @@ void clif_friendslist_send(struct map_session_data *sd)
 	for(i = 0; i < MAX_FRIENDS && sd->status.friends[i].char_id; i++) {
 		WFIFOL(fd, 4 + offset * i + 0) = sd->status.friends[i].account_id;
 		WFIFOL(fd, 4 + offset * i + 4) = sd->status.friends[i].char_id;
-#if !(!defined(PACKETVER_ZERO) && (PACKETVER >= 20180307 || (defined(PACKETVER_RE) && PACKETVER >= 20180221)))
+#if !(PACKETVER_MAIN_NUM >= 20180307 || PACKETVER_RE_NUM >= 20180221)
 		memcpy(WFIFOP(fd, 4 + offset * i + 8), &sd->status.friends[i].name, NAME_LENGTH);
 #endif
 	}

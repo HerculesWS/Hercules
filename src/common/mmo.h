@@ -81,6 +81,22 @@
 	#undef ENABLE_PACKETVER_ZERO
 #endif // DISABLE_PACKETVER_ZERO
 
+#if !defined(PACKETVER_RE) && !defined(PACKETVER_ZERO)
+	#define PACKETVER_MAIN_NUM PACKETVER
+#else
+	#define PACKETVER_MAIN_NUM 0
+#endif
+#ifdef PACKETVER_RE
+	#define PACKETVER_RE_NUM PACKETVER
+#else
+	#define PACKETVER_RE_NUM 0
+#endif
+#ifdef PACKETVER_ZERO
+	#define PACKETVER_ZERO_NUM PACKETVER
+#else
+	#define PACKETVER_ZERO_NUM 0
+#endif
+
 // Client support for experimental RagexeRE UI present in 2012-04-10 and 2012-04-18
 #if defined(PACKETVER_RE) && ( PACKETVER == 20120410 || PACKETVER == 20120418 )
 #define PARTY_RECRUIT
