@@ -4044,4 +4044,27 @@ packet(0x96e,-1,clif->ackmergeitems);
 #endif
 #endif  // PACKETVER_ZERO
 
+#ifndef PACKETVER_ZERO
+// 2018-03-21aRagexe, 2018-03-21aRagexeRE
+#if PACKETVER >= 20180321
+// new packets
+	packet(0x0af8,11,clif->pDull/*,XXX*/);
+// changed packet sizes
+	packet(0x0ae7,34,clif->pDull/*,XXX*/);
+#endif
+#endif  // PACKETVER_ZERO
+
+#ifdef PACKETVER_ZERO
+// 2018-03-28_1aRagexe_zero
+#if PACKETVER >= 20180328
+// new packets
+	packet(0x0af8,11,clif->pDull/*,XXX*/);
+	packet(0x0af9,6,clif->pDull/*,XXX*/);
+	packet(0x0afa,54,clif->pDull/*,XXX*/);
+// changed packet sizes
+	packet(0x0206,35); // ZC_FRIENDS_STATE
+	packet(0x0ae7,38,clif->pDull/*,XXX*/);
+#endif
+#endif  // PACKETVER_ZERO
+
 #endif /* MAP_PACKETS_H */
