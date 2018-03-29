@@ -9756,6 +9756,13 @@ void clif_parse_LoadEndAck(int fd, struct map_session_data *sd) {
 		clif->partyinvitationstate(sd);
 		clif->equpcheckbox(sd);
 #endif
+
+#if PACKETVER >= 20171025 || defined(PACKETVER_RE) && PACKETVER >= 20170920
+	if (sd->hd != NULL)
+		clif->zc_config(sd, CZ_CONFIG_HOMUNCULUS_AUTOFEEDING, sd->hd->homunculus.autofeed);
+	else
+		clif->zc_config(sd, CZ_CONFIG_HOMUNCULUS_AUTOFEEDING, false);
+#endif
 		if( (battle_config.bg_flee_penalty != 100 || battle_config.gvg_flee_penalty != 100)
 		 && (map_flag_gvg2(sd->state.pmap) || map_flag_gvg2(sd->bl.m)
 		  || map->list[sd->state.pmap].flag.battleground || map->list[sd->bl.m].flag.battleground) )
