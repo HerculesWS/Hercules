@@ -64,13 +64,13 @@ char * get_anchorid(char anchorstring[])
 		anchor[i] = tolower(anchor[i]);
 
 		// Check space
-		if (anchor[i] == 32) {
-			anchor[i] = 45; // Change space to hyphen
+		if (anchor[i] == ' ') {
+			anchor[i] = '-'; // Change space to hyphen
 		}
 
 		// Check allow character. number, letter, underscore or hyphen(space)
 		// All special character will be remove
-		if ((anchor[i] >= 97 && anchor[i] <= 122) || (anchor[i] >= 48 && anchor[i] <= 57) || anchor[i] == 45 || anchor[i] == 95) {
+		if ((anchor[i] >= 'a' && anchor[i] <= 'z') || (anchor[i] >= '0' && anchor[i] <= '9') || anchor[i] == '-' || anchor[i] == '_') {
 			anchor[j] = anchor[i];
 			j++;
 		}
@@ -215,10 +215,16 @@ void merge_files()
 		return;
 	}
 
-	char c;
-	// Append content to headder
-	while ((c = fgetc(out_fp)) != EOF)
-		fputc(c, out_header);
+	long int len;
+	fseek(out_fp, 0, SEEK_END);
+	len = ftell(out_fp);
+
+	char buffer[len];
+
+	fseek(out_fp, 0, SEEK_SET);
+	fread(buffer, len, 1, out_fp);
+
+	fwrite(buffer , 1 , sizeof(buffer) , out_header);
 
 	fclose(out_header);
 	fclose(out_fp);
