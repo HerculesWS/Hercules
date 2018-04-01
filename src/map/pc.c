@@ -4949,6 +4949,8 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 		}
 		FALLTHROUGH
 		case ITEMID_WING_OF_FLY:
+		case ITEMID_N_FLY_WING:
+		case ITEMID_C_WING_OF_FLY:
 			if (map->list[sd->bl.m].flag.noteleport || map_flag_gvg2(sd->bl.m)) {
 #if PACKETVER >= 20080311
 				clif->skill_mapinfomessage(sd, 3);
@@ -4959,6 +4961,7 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 			}
 			/* Fall through */
 		case ITEMID_WING_OF_BUTTERFLY:
+		case ITEMID_N_BUTTERFLY_WING:
 		case ITEMID_DUN_TELE_SCROLL1:
 		case ITEMID_DUN_TELE_SCROLL2:
 		case ITEMID_WOB_RUNE:     // Yellow Butterfly Wing
