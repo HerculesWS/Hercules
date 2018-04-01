@@ -5466,6 +5466,7 @@ void clif_skill_warppoint(struct map_session_data* sd, uint16 skill_id, uint16 s
 ///     0 = "Saved location as a Memo Point for Warp skill." in color 0xFFFF00 (cyan)
 ///     1 = "Skill Level is not high enough." in color 0x0000FF (red)
 ///     2 = "You haven't learned Warp." in color 0x0000FF (red)
+///     3 = "Cannot save location as a Memo Point at current location." in color 0x0000FF (red)
 ///
 /// @param sd Who receives the message
 /// @param type What message
@@ -5488,6 +5489,7 @@ void clif_skill_memomessage(struct map_session_data* sd, int type)
 ///     0 = "Unable to Teleport in this area" in color 0xFFFF00 (cyan)
 ///     1 = "Saved point cannot be memorized." in color 0x0000FF (red)
 ///     2 = "This skill cannot be used within this area." in color 0xFFFF00 (cyan)
+///     3 = "This item cannot be used within this area." in color 0xFFFF00 (cyan)
 ///
 /// @param sd Who receives the message
 /// @param type What message

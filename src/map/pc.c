@@ -4908,8 +4908,14 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 
 	switch( nameid ) { // TODO: Is there no better way to handle this, other than hardcoding item IDs?
 		case ITEMID_ANODYNE:
-			if (map_flag_gvg2(sd->bl.m))
+			if (map_flag_gvg2(sd->bl.m)) {
+#if PACKETVER >= 20080311
+				clif->skill_mapinfomessage(sd, 3);
+#else
+				clif->messagecolor_self(sd->fd, COLOR_CYAN, msg_sd(sd, 50));
+#endif
 				return 0;
+			}
 			break;
 
 		case ITEMID_GIANT_FLY_WING: {
@@ -4944,7 +4950,11 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 		FALLTHROUGH
 		case ITEMID_WING_OF_FLY:
 			if (map->list[sd->bl.m].flag.noteleport || map_flag_gvg2(sd->bl.m)) {
-				clif->skill_mapinfomessage(sd, 0);
+#if PACKETVER >= 20080311
+				clif->skill_mapinfomessage(sd, 3);
+#else
+				clif->messagecolor_self(sd->fd, COLOR_CYAN, msg_sd(sd, 50));
+#endif
 				return 0;
 			}
 			/* Fall through */
@@ -4960,15 +4970,27 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 				clif->message(sd->fd, msg_sd(sd,863)); // "Duel: Can't use this item in duel."
 				return 0;
 			}
-			if( nameid != ITEMID_WING_OF_FLY && nameid != ITEMID_GIANT_FLY_WING && map->list[sd->bl.m].flag.noreturn )
+			if (nameid != ITEMID_WING_OF_FLY && nameid != ITEMID_GIANT_FLY_WING && map->list[sd->bl.m].flag.noreturn) {
+#if PACKETVER >= 20080311
+				clif->skill_mapinfomessage(sd, 3);
+#else
+				clif->messagecolor_self(sd->fd, COLOR_CYAN, msg_sd(sd, 50));
+#endif
 				return 0;
+			}
 			break;
 		case ITEMID_BRANCH_OF_DEAD_TREE:
 		case ITEMID_RED_POUCH_OF_SURPRISE:
 		case ITEMID_BLOODY_DEAD_BRANCH:
 		case ITEMID_PORING_BOX:
-			if( map->list[sd->bl.m].flag.nobranch || map_flag_gvg2(sd->bl.m) )
+			if (map->list[sd->bl.m].flag.nobranch || map_flag_gvg2(sd->bl.m)) {
+#if PACKETVER >= 20080311
+				clif->skill_mapinfomessage(sd, 3);
+#else
+				clif->messagecolor_self(sd->fd, COLOR_CYAN, msg_sd(sd, 50));
+#endif
 				return 0;
+			}
 			break;
 
 		// Mercenary Items
@@ -4988,8 +5010,14 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 			break;
 
 		case ITEMID_NEURALIZER:
-			if( !map->list[sd->bl.m].flag.reset )
+			if (!map->list[sd->bl.m].flag.reset) {
+#if PACKETVER >= 20080311
+				clif->skill_mapinfomessage(sd, 3);
+#else
+				clif->messagecolor_self(sd->fd, COLOR_CYAN, msg_sd(sd, 50));
+#endif
 				return 0;
+			}
 			break;
 	}
 
@@ -5178,7 +5206,11 @@ int pc_useitem(struct map_session_data *sd,int n) {
 	/* on restricted maps the item is consumed but the effect is not used */
 	for(i = 0; i < map->list[sd->bl.m].zone->disabled_items_count; i++) {
 		if( map->list[sd->bl.m].zone->disabled_items[i] == nameid ) {
-			clif->msgtable(sd, MSG_ITEM_CANT_USE_AREA); // This item cannot be used within this area
+#if PACKETVER >= 20080311
+			clif->skill_mapinfomessage(sd, 3);
+#else
+			clif->messagecolor_self(sd->fd, COLOR_CYAN, msg_sd(sd, 50));
+#endif
 			if( battle_config.item_restricted_consumption_type && sd->status.inventory[n].expire_time == 0 ) {
 				clif->useitemack(sd,n,sd->status.inventory[n].amount-1,true);
 				pc->delitem(sd, n, 1, 1, DELITEM_NORMAL, LOG_TYPE_CONSUME);
