@@ -146,7 +146,7 @@ void pincode_change(int fd, struct char_session_data* sd)
 	if (strlen(sd->pincode) != 4)
 		return;
 
-	safestrncpy(oldpin, RFIFOP(fd,6), sizeof(oldpin));
+	safestrncpy(oldpin, RFIFOP(fd, 6), sizeof(oldpin));
 	pincode->decrypt(sd->pincode_seed, oldpin);
 
 	if (!pincode->compare(fd, sd, oldpin)) {
@@ -177,7 +177,7 @@ void pincode_setnew(int fd, struct char_session_data* sd)
 	if (strlen(sd->pincode) == 4)
 		return;
 
-	safestrncpy(newpin, RFIFOP(fd,6), sizeof(newpin));
+	safestrncpy(newpin, RFIFOP(fd, 6), sizeof(newpin));
 	pincode->decrypt(sd->pincode_seed, newpin);
 
 	if (pincode->check_blacklist && pincode->isBlacklisted(newpin)) {
@@ -238,41 +238,47 @@ void pincode_editstate(int fd, struct char_session_data *sd, enum pincode_edit_r
 void pincode_loginstate(int fd, struct char_session_data* sd, enum pincode_login_response state)
 {
 	nullpo_retv(sd);
+
 	WFIFOHEAD(fd, 12);
 	WFIFOW(fd, 0) = 0x8b9;
 	WFIFOL(fd, 2) = sd->pincode_seed = rnd() % 0xFFFF;
 	WFIFOL(fd, 6) = sd->account_id;
-	WFIFOW(fd,10) = state;
-	WFIFOSET(fd,12);
+	WFIFOW(fd, 10) = state;
+	WFIFOSET(fd, 12);
 }
 
-void pincode_notifyLoginPinUpdate(int account_id, char* pin) {
+void pincode_notifyLoginPinUpdate(int account_id, char* pin)
+{
 	nullpo_retv(pin);
+
 	Assert_retv(chr->login_fd != -1);
-	WFIFOHEAD(chr->login_fd,11);
-	WFIFOW(chr->login_fd,0) = 0x2738;
-	WFIFOL(chr->login_fd,2) = account_id;
-	safestrncpy(WFIFOP(chr->login_fd,6), pin, 5);
-	WFIFOSET(chr->login_fd,11);
+	WFIFOHEAD(chr->login_fd, 11);
+	WFIFOW(chr->login_fd, 0) = 0x2738;
+	WFIFOL(chr->login_fd, 2) = account_id;
+	safestrncpy(WFIFOP(chr->login_fd, 6), pin, 5);
+	WFIFOSET(chr->login_fd, 11);
 }
 
-void pincode_notifyLoginPinError(int account_id) {
-	WFIFOHEAD(chr->login_fd,6);
-	WFIFOW(chr->login_fd,0) = 0x2739;
-	WFIFOL(chr->login_fd,2) = account_id;
-	WFIFOSET(chr->login_fd,6);
+void pincode_notifyLoginPinError(int account_id)
+{
+	WFIFOHEAD(chr->login_fd, 6);
+	WFIFOW(chr->login_fd, 0) = 0x2739;
+	WFIFOL(chr->login_fd, 2) = account_id;
+	WFIFOSET(chr->login_fd, 6);
 }
 
-void pincode_decrypt(unsigned int userSeed, char* pin) {
+void pincode_decrypt(unsigned int userSeed, char* pin)
+{
 	int i;
-	char tab[10] = {0,1,2,3,4,5,6,7,8,9};
+	char tab[10] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
 	nullpo_retv(pin);
+
 	for (i = 1; i < 10; i++) {
 		int pos;
 		userSeed = pincode->baseSeed + userSeed * pincode->multiplier;
 		pos = userSeed % (i + 1);
-		if( i != pos ){
+		if (i != pos) {
 			tab[i] ^= tab[pos];
 			tab[pos] ^= tab[i];
 			tab[i] ^= tab[pos];
@@ -378,8 +384,7 @@ bool pincode_config_read(const char *filename, const struct config_t *config, bo
 				aFree(VECTOR_POP(duplicate));
 			}
 			VECTOR_CLEAR(duplicate);
-		}
-		else if (!imported) {
+		} else if (!imported) {
 			ShowError("Pincode Blacklist Check is enabled but there's no blacklist setting! Disabling check.\n");
 			pincode->check_blacklist = false;
 		}
@@ -428,5 +433,4 @@ void pincode_defaults(void) {
 	pincode->compare = pincode_compare;
 	pincode->check = pincode_check;
 	pincode->config_read = pincode_config_read;
-
 }
