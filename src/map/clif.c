@@ -16126,6 +16126,7 @@ void clif_parse_PartyTick(int fd, struct map_session_data* sd)
 /// Sends list of all quest states (ZC_ALL_QUEST_LIST).
 /// 02b1 <packet len>.W <num>.L { <quest id>.L <active>.B }*num
 /// 097a <packet len>.W <num>.L { <quest id>.L <active>.B <remaining time>.L <time>.L <count>.W { <mob_id>.L <killed>.W <total>.W <mob name>.24B }*count }*num
+/// 09f8 <packet len>.W <num>.L { <quest id>.L <active>.B <remaining time>.L <time>.L <count>.W { <hunt identification>.L <mob type>.L <mob_id>.L <min level>.L <max level>.L <killed>.W <total>.W <mob name>.24B }*count }*num
 void clif_quest_send_list(struct map_session_data *sd)
 {
 	int i, len, real_len;
@@ -16164,8 +16165,16 @@ void clif_quest_send_list(struct map_session_data *sd)
 			real_len += sizeof(info->objectives[j]);
 
 			mob_data = mob->db(qi->objectives[j].mob);
-
+#if PACKETVER >= 20150513
+			info->objectives[j].huntIdent = (sd->quest_log[i].quest_id * 1000) + j;
+			info->objectives[j].mobType = 0; // Info Needed
+#endif
 			info->objectives[j].mob_id = qi->objectives[j].mob;
+#if PACKETVER >= 20150513
+			// Info Needed
+			info->objectives[j].levelMin = 0;
+			info->objectives[j].levelMax = 0;
+#endif
 			info->objectives[j].huntCount = sd->quest_log[i].count[j];
 			info->objectives[j].maxCount = qi->objectives[j].count;
 			safestrncpy(info->objectives[j].mobName, mob_data->jname, sizeof(info->objectives[j].mobName));
@@ -16213,33 +16222,53 @@ void clif_quest_send_mission(struct map_session_data *sd)
 
 /// Notification about a new quest (ZC_ADD_QUEST).
 /// 02b3 <quest id>.L <active>.B <start time>.L <expire time>.L <mobs>.W { <mob id>.L <mob count>.W <mob name>.24B }*3
+/// 09f9 <quest id>.L <active>.B <start time>.L <expire time>.L <mobs>.W { <hunt identification>.L <mob type>.L <mob id>.L <min level>.L <max level>.L <mob count>.W <mob name>.24B }*3
 void clif_quest_add(struct map_session_data *sd, struct quest *qd)
 {
-	int fd;
-	int i;
+	int i, len;
+	uint8 *buf = NULL;
+	struct packet_quest_add_header *packet = NULL;
 	struct quest_db *qi;
 
 	nullpo_retv(sd);
 	nullpo_retv(qd);
-	fd = sd->fd;
+
 	qi = quest->db(qd->quest_id);
-	WFIFOHEAD(fd, packet_len(0x2b3));
-	WFIFOW(fd, 0) = 0x2b3;
-	WFIFOL(fd, 2) = qd->quest_id;
-	WFIFOB(fd, 6) = qd->state;
-	WFIFOB(fd, 7) = qd->time - qi->time;
-	WFIFOL(fd, 11) = qd->time;
-	WFIFOW(fd, 15) = qi->objectives_count;
+	Assert_retv(qi->objectives_count < MAX_QUEST_OBJECTIVES);
+
+	len = sizeof(struct packet_quest_add_header)
+	            + MAX_QUEST_OBJECTIVES * sizeof(struct packet_quest_hunt_sub); // >= than the actual length
+
+	buf = aCalloc(1, len);
+	packet = (struct packet_quest_add_header *)WBUFP(buf, 0);
+
+	packet->PacketType = questAddType;
+	packet->questID = qd->quest_id;
+	packet->active = qd->state;
+	packet->quest_svrTime = qd->time - qi->time;
+	packet->quest_endTime = qd->time;
+	packet->count = qi->objectives_count;
 
 	for (i = 0; i < qi->objectives_count; i++) {
 		struct mob_db *monster;
-		WFIFOL(fd, i*30+17) = qi->objectives[i].mob;
-		WFIFOW(fd, i*30+21) = qd->count[i];
-		monster = mob->db(qi->objectives[i].mob);
-		memcpy(WFIFOP(fd, i*30+23), monster->jname, NAME_LENGTH);
-	}
 
-	WFIFOSET(fd, packet_len(0x2b3));
+		monster = mob->db(qi->objectives[i].mob);
+
+#if PACKETVER >= 20150513
+		packet->objectives[i].huntIdent = (qd->quest_id * 1000) + i;
+		packet->objectives[i].mobType = 0; // Info Needed
+#endif
+		packet->objectives[i].mob_id = qi->objectives[i].mob;
+#if PACKETVER >= 20150513
+		// Info Needed
+		packet->objectives[i].levelMin = 0;
+		packet->objectives[i].levelMax = 0;
+#endif
+		packet->objectives[i].huntCount = qd->count[i];
+		memcpy(packet->objectives[i].mobName, monster->jname, NAME_LENGTH);
+	}
+	clif->send(buf, len, &sd->bl, SELF);
+	aFree(buf);
 }
 
 /// Notification about a quest being removed (ZC_DEL_QUEST).
@@ -16257,32 +16286,82 @@ void clif_quest_delete(struct map_session_data *sd, int quest_id) {
 
 /// Notification of an update to the hunting mission counter (ZC_UPDATE_MISSION_HUNT).
 /// 02b5 <packet len>.W <mobs>.W { <quest id>.L <mob id>.L <total count>.W <current count>.W }*3
+/// 09fa <packet len>.W <mobs>.W { <quest id>.L <hunt identification>.L <total count>.W <current count>.W }*3
 void clif_quest_update_objective(struct map_session_data *sd, struct quest *qd)
 {
-	int fd;
-	int i;
+	int i, len, real_len;
+	uint8 *buf = NULL;
+	struct packet_quest_update_header *packet = NULL;
 	struct quest_db *qi;
-	int len;
 
 	nullpo_retv(sd);
 	nullpo_retv(qd);
-	fd = sd->fd;
-	qi = quest->db(qd->quest_id);
-	len = qi->objectives_count * 12 + 6;
 
-	WFIFOHEAD(fd, len);
-	WFIFOW(fd, 0) = 0x2b5;
-	WFIFOW(fd, 2) = len;
-	WFIFOW(fd, 4) = qi->objectives_count;
+	qi = quest->db(qd->quest_id);
+	Assert_retv(qi->objectives_count < MAX_QUEST_OBJECTIVES);
+	
+	len = sizeof(struct packet_quest_update_header)
+	            + MAX_QUEST_OBJECTIVES * sizeof(struct packet_quest_update_hunt); // >= than the actual length
+
+	buf = aCalloc(1, len);
+	packet = (struct packet_quest_update_header *)WBUFP(buf, 0);
+	real_len = sizeof(*packet);
+
+	packet->PacketType = questUpdateType;
+	packet->count = qi->objectives_count;
 
 	for (i = 0; i < qi->objectives_count; i++) {
-		WFIFOL(fd, i*12+6) = qd->quest_id;
-		WFIFOL(fd, i*12+10) = qi->objectives[i].mob;
-		WFIFOW(fd, i*12+14) = qi->objectives[i].count;
-		WFIFOW(fd, i*12+16) = qd->count[i];
+		real_len += sizeof(packet->objectives[i]);
+		
+		packet->objectives[i].questID = qd->quest_id;
+#if PACKETVER >= 20150513
+		packet->objectives[i].huntIdent = (qd->quest_id * 1000) + i;
+#else
+		packet->objectives[i].mob_id = qi->objectives[i].mob;
+#endif
+		packet->objectives[i].maxCount = qi->objectives[i].count;
+		packet->objectives[i].count = qd->count[i];
 	}
+	packet->PacketLength = real_len;
+	clif->send(buf, real_len, &sd->bl, SELF);
+	aFree(buf);
+}
 
-	WFIFOSET(fd, len);
+/// Notification of an hunting mission counter just after quest is added (ZC_HUNTING_QUEST_INFO).
+/// 08fe <packet len>.W  { <quest id>.L <mob id>.L <total count>.W <current count>.W }*3
+void clif_quest_notify_objective(struct map_session_data *sd, struct quest *qd)
+{
+	int i, len, real_len;
+	uint8 *buf = NULL;
+	struct packet_quest_hunt_info *packet = NULL;
+	struct quest_db *qi;
+
+	nullpo_retv(sd);
+	nullpo_retv(qd);
+
+	qi = quest->db(qd->quest_id);
+	Assert_retv(qi->objectives_count < MAX_QUEST_OBJECTIVES);
+	
+	len = sizeof(struct packet_quest_hunt_info)
+	            + MAX_QUEST_OBJECTIVES * sizeof(struct packet_quest_hunt_info_sub); // >= than the actual length
+
+	buf = aCalloc(1, len);
+	packet = (struct packet_quest_hunt_info *)WBUFP(buf, 0);
+	real_len = sizeof(*packet);
+
+	packet->PacketType = questUpdateType2;
+
+	for (i = 0; i < qi->objectives_count; i++) {
+		real_len += sizeof(packet->info[i]);
+		
+		packet->info[i].questID = qd->quest_id;
+		packet->info[i].mob_id = qi->objectives[i].mob;
+		packet->info[i].maxCount = qi->objectives[i].count;
+		packet->info[i].count = qd->count[i];
+	}
+	packet->PacketLength = real_len;
+	clif->send(buf, real_len, &sd->bl, SELF);
+	aFree(buf);
 }
 
 void clif_parse_questStateAck(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
@@ -20978,6 +21057,7 @@ void clif_defaults(void) {
 	clif->quest_delete = clif_quest_delete;
 	clif->quest_update_status = clif_quest_update_status;
 	clif->quest_update_objective = clif_quest_update_objective;
+	clif->quest_notify_objective = clif_quest_notify_objective;
 	clif->quest_show_event = clif_quest_show_event;
 	/* mail-related */
 	clif->mail_window = clif_Mail_window;
