@@ -67480,14 +67480,14 @@ int HP_script_run_func(struct script_state *st) {
 	}
 	return retVal___;
 }
-bool HP_script_sprintf(struct script_state *st, int start, struct StringBuf *out) {
+bool HP_script_sprintf_helper(struct script_state *st, int start, struct StringBuf *out) {
 	int hIndex = 0;
 	bool retVal___ = false;
-	if (HPMHooks.count.HP_script_sprintf_pre > 0) {
+	if (HPMHooks.count.HP_script_sprintf_helper_pre > 0) {
 		bool (*preHookFunc) (struct script_state **st, int *start, struct StringBuf **out);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_sprintf_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_script_sprintf_pre[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_sprintf_helper_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_script_sprintf_helper_pre[hIndex].func;
 			retVal___ = preHookFunc(&st, &start, &out);
 		}
 		if (*HPMforce_return) {
@@ -67496,12 +67496,12 @@ bool HP_script_sprintf(struct script_state *st, int start, struct StringBuf *out
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.script.sprintf(st, start, out);
+		retVal___ = HPMHooks.source.script.sprintf_helper(st, start, out);
 	}
-	if (HPMHooks.count.HP_script_sprintf_post > 0) {
+	if (HPMHooks.count.HP_script_sprintf_helper_post > 0) {
 		bool (*postHookFunc) (bool retVal___, struct script_state *st, int start, struct StringBuf *out);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_sprintf_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_script_sprintf_post[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_sprintf_helper_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_script_sprintf_helper_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, st, start, out);
 		}
 	}

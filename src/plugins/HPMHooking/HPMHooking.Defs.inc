@@ -6434,8 +6434,8 @@ typedef int (*HPMHOOK_pre_script_cleanfloor_sub) (struct block_list **bl, va_lis
 typedef int (*HPMHOOK_post_script_cleanfloor_sub) (int retVal___, struct block_list *bl, va_list ap);
 typedef int (*HPMHOOK_pre_script_run_func) (struct script_state **st);
 typedef int (*HPMHOOK_post_script_run_func) (int retVal___, struct script_state *st);
-typedef bool (*HPMHOOK_pre_script_sprintf) (struct script_state **st, int *start, struct StringBuf **out);
-typedef bool (*HPMHOOK_post_script_sprintf) (bool retVal___, struct script_state *st, int start, struct StringBuf *out);
+typedef bool (*HPMHOOK_pre_script_sprintf_helper) (struct script_state **st, int *start, struct StringBuf **out);
+typedef bool (*HPMHOOK_post_script_sprintf_helper) (bool retVal___, struct script_state *st, int start, struct StringBuf *out);
 typedef const char* (*HPMHOOK_pre_script_getfuncname) (struct script_state **st);
 typedef const char* (*HPMHOOK_post_script_getfuncname) (const char* retVal___, struct script_state *st);
 typedef unsigned int (*HPMHOOK_pre_script_calc_hash_ci) (const char **p);
