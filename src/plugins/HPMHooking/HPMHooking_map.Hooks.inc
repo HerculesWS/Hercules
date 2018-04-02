@@ -16753,6 +16753,32 @@ void HP_clif_quest_update_objective(struct map_session_data *sd, struct quest *q
 	}
 	return;
 }
+void HP_clif_quest_notify_objective(struct map_session_data *sd, struct quest *qd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_quest_notify_objective_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, struct quest **qd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_quest_notify_objective_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_quest_notify_objective_pre[hIndex].func;
+			preHookFunc(&sd, &qd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.quest_notify_objective(sd, qd);
+	}
+	if (HPMHooks.count.HP_clif_quest_notify_objective_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, struct quest *qd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_quest_notify_objective_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_quest_notify_objective_post[hIndex].func;
+			postHookFunc(sd, qd);
+		}
+	}
+	return;
+}
 void HP_clif_quest_show_event(struct map_session_data *sd, struct block_list *bl, short state, short color) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_quest_show_event_pre > 0) {

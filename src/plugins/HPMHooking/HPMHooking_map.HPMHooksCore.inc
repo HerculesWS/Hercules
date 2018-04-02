@@ -1286,6 +1286,8 @@ struct {
 	struct HPMHookPoint *HP_clif_quest_update_status_post;
 	struct HPMHookPoint *HP_clif_quest_update_objective_pre;
 	struct HPMHookPoint *HP_clif_quest_update_objective_post;
+	struct HPMHookPoint *HP_clif_quest_notify_objective_pre;
+	struct HPMHookPoint *HP_clif_quest_notify_objective_post;
 	struct HPMHookPoint *HP_clif_quest_show_event_pre;
 	struct HPMHookPoint *HP_clif_quest_show_event_post;
 	struct HPMHookPoint *HP_clif_mail_window_pre;
@@ -7571,6 +7573,8 @@ struct {
 	int HP_clif_quest_update_status_post;
 	int HP_clif_quest_update_objective_pre;
 	int HP_clif_quest_update_objective_post;
+	int HP_clif_quest_notify_objective_pre;
+	int HP_clif_quest_notify_objective_post;
 	int HP_clif_quest_show_event_pre;
 	int HP_clif_quest_show_event_post;
 	int HP_clif_mail_window_pre;

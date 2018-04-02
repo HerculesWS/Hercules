@@ -666,6 +666,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->quest_delete, HP_clif_quest_delete) },
 	{ HP_POP(clif->quest_update_status, HP_clif_quest_update_status) },
 	{ HP_POP(clif->quest_update_objective, HP_clif_quest_update_objective) },
+	{ HP_POP(clif->quest_notify_objective, HP_clif_quest_notify_objective) },
 	{ HP_POP(clif->quest_show_event, HP_clif_quest_show_event) },
 	{ HP_POP(clif->mail_window, HP_clif_mail_window) },
 	{ HP_POP(clif->mail_read, HP_clif_mail_read) },

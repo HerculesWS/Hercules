@@ -1692,6 +1692,8 @@ typedef void (*HPMHOOK_pre_clif_quest_update_status) (struct map_session_data **
 typedef void (*HPMHOOK_post_clif_quest_update_status) (struct map_session_data *sd, int quest_id, bool active);
 typedef void (*HPMHOOK_pre_clif_quest_update_objective) (struct map_session_data **sd, struct quest **qd);
 typedef void (*HPMHOOK_post_clif_quest_update_objective) (struct map_session_data *sd, struct quest *qd);
+typedef void (*HPMHOOK_pre_clif_quest_notify_objective) (struct map_session_data **sd, struct quest **qd);
+typedef void (*HPMHOOK_post_clif_quest_notify_objective) (struct map_session_data *sd, struct quest *qd);
 typedef void (*HPMHOOK_pre_clif_quest_show_event) (struct map_session_data **sd, struct block_list **bl, short *state, short *color);
 typedef void (*HPMHOOK_post_clif_quest_show_event) (struct map_session_data *sd, struct block_list *bl, short state, short color);
 typedef void (*HPMHOOK_pre_clif_mail_window) (int *fd, int *flag);
