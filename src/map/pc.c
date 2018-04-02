@@ -1293,6 +1293,7 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 
 	VECTOR_INIT(sd->script_queues);
 	VECTOR_INIT(sd->storage.item); // initialize storage item vector.
+	VECTOR_INIT(sd->hatEffectId);
 
 	sd->state.dialog = 0;
 
