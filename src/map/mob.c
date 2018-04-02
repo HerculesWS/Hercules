@@ -2127,7 +2127,7 @@ void mob_damage(struct mob_data *md, struct block_list *src, int damage) {
 
 #if PACKETVER >= 20131223
 	// Resend ZC_NOTIFY_MOVEENTRY to Update the HP
-	if (battle_config.show_monster_hp_bar)
+	if (battle_config.show_monster_hp_bar && !(md->status.mode & MD_BOSS))
 		clif->set_unit_walking(&md->bl, NULL, unit->bl2ud(&md->bl), AREA);
 #endif
 
@@ -2858,7 +2858,7 @@ void mob_heal(struct mob_data *md, unsigned int heal)
 		clif->charnameack (0, &md->bl);
 #if PACKETVER >= 20131223
 	// Resend ZC_NOTIFY_MOVEENTRY to Update the HP
-	if (battle_config.show_monster_hp_bar)
+	if (battle_config.show_monster_hp_bar && !(md->status.mode & MD_BOSS))
 		clif->set_unit_walking(&md->bl, NULL, unit->bl2ud(&md->bl), AREA);
 #endif
 
