@@ -1022,6 +1022,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->clan_leave, HP_clif_clan_leave) },
 	{ HP_POP(clif->clan_message, HP_clif_clan_message) },
 	{ HP_POP(clif->pClanMessage, HP_clif_pClanMessage) },
+	{ HP_POP(clif->hat_effect, HP_clif_hat_effect) },
+	{ HP_POP(clif->hat_effect_single, HP_clif_hat_effect_single) },
 /* cmdline_interface */
 	{ HP_POP(cmdline->init, HP_cmdline_init) },
 	{ HP_POP(cmdline->final, HP_cmdline_final) },

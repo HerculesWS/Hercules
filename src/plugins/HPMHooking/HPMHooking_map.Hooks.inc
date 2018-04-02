@@ -26018,6 +26018,58 @@ void HP_clif_pClanMessage(int fd, struct map_session_data *sd) {
 	}
 	return;
 }
+void HP_clif_hat_effect(struct block_list *bl, struct block_list *tbl, enum send_target target) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_hat_effect_pre > 0) {
+		void (*preHookFunc) (struct block_list **bl, struct block_list **tbl, enum send_target *target);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_hat_effect_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_hat_effect_pre[hIndex].func;
+			preHookFunc(&bl, &tbl, &target);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.hat_effect(bl, tbl, target);
+	}
+	if (HPMHooks.count.HP_clif_hat_effect_post > 0) {
+		void (*postHookFunc) (struct block_list *bl, struct block_list *tbl, enum send_target target);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_hat_effect_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_hat_effect_post[hIndex].func;
+			postHookFunc(bl, tbl, target);
+		}
+	}
+	return;
+}
+void HP_clif_hat_effect_single(struct block_list *bl, uint16 effectId, bool enable) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_hat_effect_single_pre > 0) {
+		void (*preHookFunc) (struct block_list **bl, uint16 *effectId, bool *enable);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_hat_effect_single_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_hat_effect_single_pre[hIndex].func;
+			preHookFunc(&bl, &effectId, &enable);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.hat_effect_single(bl, effectId, enable);
+	}
+	if (HPMHooks.count.HP_clif_hat_effect_single_post > 0) {
+		void (*postHookFunc) (struct block_list *bl, uint16 effectId, bool enable);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_hat_effect_single_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_hat_effect_single_post[hIndex].func;
+			postHookFunc(bl, effectId, enable);
+		}
+	}
+	return;
+}
 /* cmdline_interface */
 void HP_cmdline_init(void) {
 	int hIndex = 0;

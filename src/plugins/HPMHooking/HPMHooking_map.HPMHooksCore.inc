@@ -1998,6 +1998,10 @@ struct {
 	struct HPMHookPoint *HP_clif_clan_message_post;
 	struct HPMHookPoint *HP_clif_pClanMessage_pre;
 	struct HPMHookPoint *HP_clif_pClanMessage_post;
+	struct HPMHookPoint *HP_clif_hat_effect_pre;
+	struct HPMHookPoint *HP_clif_hat_effect_post;
+	struct HPMHookPoint *HP_clif_hat_effect_single_pre;
+	struct HPMHookPoint *HP_clif_hat_effect_single_post;
 	struct HPMHookPoint *HP_cmdline_init_pre;
 	struct HPMHookPoint *HP_cmdline_init_post;
 	struct HPMHookPoint *HP_cmdline_final_pre;
@@ -8279,6 +8283,10 @@ struct {
 	int HP_clif_clan_message_post;
 	int HP_clif_pClanMessage_pre;
 	int HP_clif_pClanMessage_post;
+	int HP_clif_hat_effect_pre;
+	int HP_clif_hat_effect_post;
+	int HP_clif_hat_effect_single_pre;
+	int HP_clif_hat_effect_single_post;
 	int HP_cmdline_init_pre;
 	int HP_cmdline_init_post;
 	int HP_cmdline_final_pre;

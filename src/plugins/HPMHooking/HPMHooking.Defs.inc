@@ -2404,6 +2404,10 @@ typedef void (*HPMHOOK_pre_clif_clan_message) (struct clan **c, const char **mes
 typedef void (*HPMHOOK_post_clif_clan_message) (struct clan *c, const char *mes, int len);
 typedef void (*HPMHOOK_pre_clif_pClanMessage) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pClanMessage) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_hat_effect) (struct block_list **bl, struct block_list **tbl, enum send_target *target);
+typedef void (*HPMHOOK_post_clif_hat_effect) (struct block_list *bl, struct block_list *tbl, enum send_target target);
+typedef void (*HPMHOOK_pre_clif_hat_effect_single) (struct block_list **bl, uint16 *effectId, bool *enable);
+typedef void (*HPMHOOK_post_clif_hat_effect_single) (struct block_list *bl, uint16 effectId, bool enable);
 #endif // MAP_CLIF_H
 #ifdef COMMON_CORE_H /* cmdline */
 typedef void (*HPMHOOK_pre_cmdline_init) (void);
