@@ -165,6 +165,7 @@ void pincode_change(int fd, struct char_session_data* sd)
 		safestrncpy(sd->pincode, newpin, sizeof(sd->pincode));
 		pincode->editstate(fd, sd, PINCODE_EDIT_SUCCESS);
 	}
+
 	pincode->loginstate(fd, sd, PINCODE_LOGIN_ASK);
 }
 
@@ -285,7 +286,7 @@ void pincode_decrypt(unsigned int userSeed, char* pin)
 		}
 	}
 
-	for (i = 0; i < 4; i++ ) {
+	for (i = 0; i < 4; i++) {
 		if (pin[i] < '0' || pin[i] > '9')
 			pin[i] = '0';
 		else
@@ -406,7 +407,8 @@ void do_pincode_final(void)
 	VECTOR_CLEAR(pincode->blacklist);
 }
 
-void pincode_defaults(void) {
+void pincode_defaults(void)
+{
 	pincode = &pincode_s;
 
 	pincode->enabled = 0;
