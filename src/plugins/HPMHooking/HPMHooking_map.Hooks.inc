@@ -29300,15 +29300,15 @@ int HP_guild_send_memberinfoshort(struct map_session_data *sd, int online) {
 	}
 	return retVal___;
 }
-int HP_guild_recv_memberinfoshort(int guild_id, int account_id, int char_id, int online, int lv, int16 class) {
+int HP_guild_recv_memberinfoshort(int guild_id, int account_id, int char_id, int online, int lv, int16 class, uint32 last_login) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_guild_recv_memberinfoshort_pre > 0) {
-		int (*preHookFunc) (int *guild_id, int *account_id, int *char_id, int *online, int *lv, int16 *class);
+		int (*preHookFunc) (int *guild_id, int *account_id, int *char_id, int *online, int *lv, int16 *class, uint32 *last_login);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_guild_recv_memberinfoshort_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_guild_recv_memberinfoshort_pre[hIndex].func;
-			retVal___ = preHookFunc(&guild_id, &account_id, &char_id, &online, &lv, &class);
+			retVal___ = preHookFunc(&guild_id, &account_id, &char_id, &online, &lv, &class, &last_login);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -29316,13 +29316,13 @@ int HP_guild_recv_memberinfoshort(int guild_id, int account_id, int char_id, int
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.guild.recv_memberinfoshort(guild_id, account_id, char_id, online, lv, class);
+		retVal___ = HPMHooks.source.guild.recv_memberinfoshort(guild_id, account_id, char_id, online, lv, class, last_login);
 	}
 	if (HPMHooks.count.HP_guild_recv_memberinfoshort_post > 0) {
-		int (*postHookFunc) (int retVal___, int guild_id, int account_id, int char_id, int online, int lv, int16 class);
+		int (*postHookFunc) (int retVal___, int guild_id, int account_id, int char_id, int online, int lv, int16 class, uint32 last_login);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_guild_recv_memberinfoshort_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_guild_recv_memberinfoshort_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, guild_id, account_id, char_id, online, lv, class);
+			retVal___ = postHookFunc(retVal___, guild_id, account_id, char_id, online, lv, class, last_login);
 		}
 	}
 	return retVal___;
