@@ -2387,6 +2387,8 @@ void itemdb_read(bool minimal) {
 	if (minimal)
 		return;
 
+	itemdb->name_constants();
+
 	itemdb->read_combos();
 	itemdb->read_groups();
 	itemdb->read_chains();
@@ -2619,6 +2621,7 @@ void do_final_itemdb(void) {
 	itemdb->options->destroy(itemdb->options, itemdb->options_final_sub);
 	itemdb->destroy_item_data(&itemdb->dummy, 0);
 	db_destroy(itemdb->names);
+	VECTOR_CLEAR(attendance_data);
 }
 
 void do_init_itemdb(bool minimal) {
@@ -2637,6 +2640,8 @@ void do_init_itemdb(bool minimal) {
 	/** it failed? we disable it **/
 	if (battle_config.feature_roulette == 1 && !clif->parse_roulette_db())
 		battle_config.feature_roulette = 0;
+	VECTOR_INIT(attendance_data);
+	clif->pAttendanceDB();
 }
 void itemdb_defaults(void) {
 	itemdb = &itemdb_s;

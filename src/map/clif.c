@@ -20361,6 +20361,167 @@ void clif_hat_effect_single(struct block_list *bl, uint16 effectId, bool enable)
 #endif
 }
 
+bool clif_parse_attendance_db(void)
+{
+	struct config_t attendance_conf;
+	struct config_setting_t *attendance = NULL, *it = NULL;
+	const char *config_filename = "db/attendance_db.conf"; // FIXME hardcoded name
+	int i = 0;
+
+	if (!libconfig->load_file(&attendance_conf, config_filename))
+		return false;
+	attendance = libconfig->lookup(&attendance_conf, "attendance_db");
+
+	VECTOR_CLEAR(attendance_data);
+
+	while ((it = libconfig->setting_get_elem(attendance, i++))) {
+		clif->attendancedb_libconfig_sub(it, i, config_filename);
+	}
+
+	libconfig->destroy(&attendance_conf);
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", i, config_filename);
+	return true;
+}
+
+bool clif_attendancedb_libconfig_sub(struct config_setting_t *it, int n, const char *source)
+{
+	struct attendance_entry entry = { 0 };
+	int i32 = 0;
+
+	nullpo_ret(it);
+	nullpo_ret(source);
+
+	if (!itemdb->lookup_const(it, "ItemID", &i32) || i32 < 0) {
+		ShowWarning("clif_attendancedb_libconfig_sub: unknown item %d, entry #%d, skipping.\n", i32, n);
+		return false;
+	}
+	entry.nameid = i32;
+
+	if (!libconfig->setting_lookup_int(it, "Amount", &i32) || i32 < 1) {
+		ShowWarning("clif_attendancedb_libconfig_sub: invalid amount %d, entry #%d, skipping.\n", i32, n);
+		return false;
+	}
+	entry.qty = i32;
+
+	VECTOR_ENSURE(attendance_data, 1, 1);
+	VECTOR_PUSH(attendance_data, entry);
+	return true;
+}
+
+bool clif_attendance_timediff(struct map_session_data *sd)
+{
+	int64 timediff;
+
+	nullpo_retr(false, sd);
+
+	timediff = (time(NULL) / (60 * 60 * 24)) - (sd->status.attendance_timer / (60 * 60 * 24));
+
+	if (timediff <= 0)
+		return false;
+	return true;
+}
+
+void clif_parse_open_ui_request(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
+void clif_parse_open_ui_request(int fd, struct map_session_data *sd)
+{
+
+	const struct PACKET_CZ_OPEN_UI *p = RP2PTR(fd);
+
+	if (battle_config.feature_enable_attendance_system != 1)
+		return;
+
+	clif->open_ui(sd, p->UIType);
+}
+
+void clif_open_ui(struct map_session_data *sd, int8 UIType)
+{
+#if PACKETVER_RE_NUM >= 20180307
+
+	struct PACKET_ZC_OPEN_UI p;
+
+	nullpo_retv(sd);
+
+	p.PacketType = 0xAE2;
+	switch (UIType) {
+	case 5: // client will send 5 for the request but requires to receive ATTENDANCE_UI (7) to open the correct ui.
+		int claimed = 0;
+		if (clif->attendance_timediff(sd) != true)
+			++claimed;
+		else if (sd->status.attendance_count >= VECTOR_LENGTH(attendance_data))
+			sd->status.attendance_count = 0;
+		p.UIType = ATTENDANCE_UI;
+		p.data = sd->status.attendance_count * 10 + claimed;
+		break;
+	default:
+		ShowWarning("clif_open_ui: Requested UI (%d) is not implemented yet.\n", UIType);
+		return;
+	}
+
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
+#else
+	ShowWarning("Attendance System available only for PACKETVER_RE_NUM >= 20180307.\n");
+#endif
+}
+
+void clif_parse_attendance_reward_request(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
+void clif_parse_attendance_reward_request(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_RE_NUM >= 20180307
+
+	struct rodex_message msg = { 0 };
+	struct attendance_entry entry = { 0 };
+	int attendance_count;
+	char title[RODEX_TITLE_LENGTH], body[MAIL_BODY_LENGTH];
+
+	if (battle_config.feature_enable_attendance_system != 1)
+		return;
+
+	if (clif->attendance_timediff(sd) != true)
+		return;
+
+	if (sd->status.attendance_count >= VECTOR_LENGTH(attendance_data))
+		sd->status.attendance_count = 0;
+
+	attendance_count = sd->status.attendance_count;
+	++sd->status.attendance_count;
+	sd->status.attendance_timer = time(NULL);
+
+	msg.receiver_id = sd->status.char_id;
+	sprintf(title, msg_txt(545), attendance_count + 1);
+	sprintf(body, msg_txt(545), attendance_count + 1);
+
+	entry = VECTOR_INDEX(attendance_data, attendance_count);
+	msg.items[0].item.nameid = entry.nameid;
+	msg.items[0].item.amount = entry.qty;
+	msg.items[0].item.identify = 1;
+	msg.type = MAIL_TYPE_NPC | MAIL_TYPE_ITEM;
+
+	safestrncpy(msg.sender_name, msg_txt(544), NAME_LENGTH);
+	safestrncpy(msg.title, title, RODEX_TITLE_LENGTH);
+	safestrncpy(msg.body, body, MAIL_BODY_LENGTH);
+	msg.send_date = (int)time(NULL);
+	msg.expire_date = (int)time(NULL) + RODEX_EXPIRE;
+
+	intif->rodex_sendmail(&msg);
+	clif->ui_action(sd, 0, sd->status.attendance_count);
+#else
+	ShowWarning("Attendance System available only for PACKETVER_RE_NUM >= 20180307.\n");
+#endif
+}
+
+void clif_ui_action(struct map_session_data *sd, int32 UIType, int32 data)
+{
+
+	struct PACKET_ZC_UI_ACTION p;
+
+	nullpo_retv(sd);
+
+	p.PacketType = 0xAF0;
+	p.UIType = UIType;
+	p.data = data;
+
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
+}
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -21455,4 +21616,12 @@ void clif_defaults(void) {
 	// -- Hat Effect
 	clif->hat_effect = clif_hat_effect;
 	clif->hat_effect_single = clif_hat_effect_single;
+
+	clif->pAttendanceDB = clif_parse_attendance_db;
+	clif->attendancedb_libconfig_sub = clif_attendancedb_libconfig_sub;
+	clif->attendance_timediff = clif_attendance_timediff;
+	clif->pOpenUIRequest = clif_parse_open_ui_request;
+	clif->open_ui = clif_open_ui;
+	clif->pAttendanceRewardRequest = clif_parse_attendance_reward_request;
+	clif->ui_action = clif_ui_action;
 }
