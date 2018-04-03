@@ -564,6 +564,9 @@ struct Battle_Config {
 	int feature_enable_homun_autofeed;
 
 	int storage_use_item;
+
+	int feature_enable_attendance_system;
+	int feature_attendance_endtime;
 };
 
 /* criteria for battle_config.idletime_critera */
