@@ -575,6 +575,19 @@ enum CZ_CONFIG {
 	CZ_CONFIG_HOMUNCULUS_AUTOFEEDING = 3,
 };
 /**
+* Client UI types
+* used with packet 0xAE2 to request the client to open a specific ui
+**/
+enum ui_types {
+	BANK_UI = 0,
+	STYLIST_UI,
+	CAPTCHA_UI,
+	MACRO_UI,
+	TIPBOX_UI = 5,
+	RENEWQUEST_UI,
+	ATTENDANCE_UI
+};
+/**
  * Structures
  **/
 typedef void (*pFunc)(int, struct map_session_data *); //cant help but put it first
@@ -597,6 +610,12 @@ struct cdelayed_damage {
 struct merge_item {
 	int16 position;
 	int16 nameid;
+};
+
+/* attendance data */
+struct attendance_entry {
+	int nameid;
+	int qty;
 };
 
 /**
@@ -628,6 +647,8 @@ struct clif_interface {
 	bool ally_only;
 	/* */
 	struct eri *delayed_damage_ers;
+	/* */
+	VECTOR_DECL(struct attendance_entry) attendance_data;
 	/* core */
 	int (*init) (bool minimal);
 	void (*final) (void);
@@ -1419,6 +1440,15 @@ struct clif_interface {
 	/* Hat Effect */
 	void (*hat_effect) (struct block_list *bl, struct block_list *tbl, enum send_target target);
 	void (*hat_effect_single) (struct block_list *bl, uint16 effectId, bool enable);
+
+	bool (*pAttendanceDB) (void);
+	bool (*attendancedb_libconfig_sub) (struct config_setting_t *it, int n, const char *source);
+	bool (*attendance_timediff) (struct map_session_data *sd);
+	time_t (*attendance_getendtime) (void);
+	void (*pOpenUIRequest) (int fd, struct map_session_data *sd);
+	void (*open_ui) (struct map_session_data *sd, int8 UIType);
+	void (*pAttendanceRewardRequest) (int fd, struct map_session_data *sd);
+	void (*ui_action) (struct map_session_data *sd, int32 UIType, int32 data);
 };
 
 #ifdef HERCULES_CORE
