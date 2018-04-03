@@ -83,8 +83,8 @@ static int inter_rodex_fromsql(int char_id, int account_id, int8 opentype, int64
 		if (SQL_ERROR == SQL->StmtPrepare(stmt,
 			"SELECT `mail_id`, `sender_name`, `sender_id`, `receiver_name`, `receiver_id`, `receiver_accountid`,"
 			"`title`, `body`, `zeny`, `type`, `is_read`, `sender_read`, `send_date`, `expire_date`, `weight`"
-			"FROM `%s` WHERE (`is_read` = 0 AND `sender_id` = '%d' AND `expire_date` <= '%d' AND `send_date` + '%d' > '%d' AND `mail_id` > '%"PRId64"')"
-			"ORDER BY `mail_id` ASC", rodex_db, char_id, (int)time(NULL), 2 * RODEX_EXPIRE, (int)time(NULL), mail_id)
+			"FROM `%s` WHERE (`is_read` = 0 AND `sender_id` = '%d' AND `expire_date` <= '%d' AND `expire_date` + '%d' > '%d' AND `mail_id` > '%"PRId64"')"
+			"ORDER BY `mail_id` ASC", rodex_db, char_id, (int)time(NULL), RODEX_EXPIRE, (int)time(NULL), mail_id)
 			) {
 			SqlStmt_ShowDebug(stmt);
 			SQL->StmtFree(stmt);
@@ -98,8 +98,8 @@ static int inter_rodex_fromsql(int char_id, int account_id, int8 opentype, int64
 			"`title`, `body`, `zeny`, `type`, `is_read`, `sender_read`, `send_date`, `expire_date`, `weight`"
 			"FROM `%s` WHERE "
 			"((`expire_date` > '%d' AND (`receiver_id` = '%d' OR `receiver_accountid` = '%d'))"
-			"OR (`is_read` = 0 AND `sender_id` = '%d' AND `expire_date` <= '%d' AND `send_date` + '%d' > '%d'))"
-			"ORDER BY `mail_id` ASC", rodex_db, (int)time(NULL), char_id, account_id, char_id, (int)time(NULL), 2 * RODEX_EXPIRE, (int)time(NULL))
+			"OR (`is_read` = 0 AND `sender_id` = '%d' AND `expire_date` <= '%d' AND `expire_date` + '%d' > '%d'))"
+			"ORDER BY `mail_id` ASC", rodex_db, (int)time(NULL), char_id, account_id, char_id, (int)time(NULL), RODEX_EXPIRE, (int)time(NULL))
 			) {
 			SqlStmt_ShowDebug(stmt);
 			SQL->StmtFree(stmt);
