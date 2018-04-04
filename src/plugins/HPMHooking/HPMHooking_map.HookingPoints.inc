@@ -546,6 +546,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->msgtable, HP_clif_msgtable) },
 	{ HP_POP(clif->msgtable_num, HP_clif_msgtable_num) },
 	{ HP_POP(clif->msgtable_skill, HP_clif_msgtable_skill) },
+	{ HP_POP(clif->msgtable_str, HP_clif_msgtable_str) },
+	{ HP_POP(clif->msgtable_color, HP_clif_msgtable_color) },
 	{ HP_POP(clif->message, HP_clif_message) },
 	{ HP_POP(clif->messageln, HP_clif_messageln) },
 	{ HP_POP(clif->process_chat_message, HP_clif_process_chat_message) },

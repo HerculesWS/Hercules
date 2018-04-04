@@ -13622,6 +13622,58 @@ void HP_clif_msgtable_skill(struct map_session_data *sd, uint16 skill_id, int ms
 	}
 	return;
 }
+void HP_clif_msgtable_str(struct map_session_data *sd, uint16 msg_id, const char *value) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_msgtable_str_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, uint16 *msg_id, const char **value);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_msgtable_str_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_msgtable_str_pre[hIndex].func;
+			preHookFunc(&sd, &msg_id, &value);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.msgtable_str(sd, msg_id, value);
+	}
+	if (HPMHooks.count.HP_clif_msgtable_str_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, uint16 msg_id, const char *value);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_msgtable_str_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_msgtable_str_post[hIndex].func;
+			postHookFunc(sd, msg_id, value);
+		}
+	}
+	return;
+}
+void HP_clif_msgtable_color(struct map_session_data *sd, uint16 msg_id, uint32 color) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_msgtable_color_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, uint16 *msg_id, uint32 *color);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_msgtable_color_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_msgtable_color_pre[hIndex].func;
+			preHookFunc(&sd, &msg_id, &color);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.msgtable_color(sd, msg_id, color);
+	}
+	if (HPMHooks.count.HP_clif_msgtable_color_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, uint16 msg_id, uint32 color);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_msgtable_color_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_msgtable_color_post[hIndex].func;
+			postHookFunc(sd, msg_id, color);
+		}
+	}
+	return;
+}
 void HP_clif_message(const int fd, const char *mes) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_message_pre > 0) {

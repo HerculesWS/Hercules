@@ -1452,6 +1452,10 @@ typedef void (*HPMHOOK_pre_clif_msgtable_num) (struct map_session_data **sd, uns
 typedef void (*HPMHOOK_post_clif_msgtable_num) (struct map_session_data *sd, unsigned short msg_id, int value);
 typedef void (*HPMHOOK_pre_clif_msgtable_skill) (struct map_session_data **sd, uint16 *skill_id, int *msg_id);
 typedef void (*HPMHOOK_post_clif_msgtable_skill) (struct map_session_data *sd, uint16 skill_id, int msg_id);
+typedef void (*HPMHOOK_pre_clif_msgtable_str) (struct map_session_data **sd, uint16 *msg_id, const char **value);
+typedef void (*HPMHOOK_post_clif_msgtable_str) (struct map_session_data *sd, uint16 msg_id, const char *value);
+typedef void (*HPMHOOK_pre_clif_msgtable_color) (struct map_session_data **sd, uint16 *msg_id, uint32 *color);
+typedef void (*HPMHOOK_post_clif_msgtable_color) (struct map_session_data *sd, uint16 msg_id, uint32 color);
 typedef void (*HPMHOOK_pre_clif_message) (const int *fd, const char **mes);
 typedef void (*HPMHOOK_post_clif_message) (const int fd, const char *mes);
 typedef void (*HPMHOOK_pre_clif_messageln) (const int *fd, const char **mes);

@@ -1046,6 +1046,10 @@ struct {
 	struct HPMHookPoint *HP_clif_msgtable_num_post;
 	struct HPMHookPoint *HP_clif_msgtable_skill_pre;
 	struct HPMHookPoint *HP_clif_msgtable_skill_post;
+	struct HPMHookPoint *HP_clif_msgtable_str_pre;
+	struct HPMHookPoint *HP_clif_msgtable_str_post;
+	struct HPMHookPoint *HP_clif_msgtable_color_pre;
+	struct HPMHookPoint *HP_clif_msgtable_color_post;
 	struct HPMHookPoint *HP_clif_message_pre;
 	struct HPMHookPoint *HP_clif_message_post;
 	struct HPMHookPoint *HP_clif_messageln_pre;
@@ -7333,6 +7337,10 @@ struct {
 	int HP_clif_msgtable_num_post;
 	int HP_clif_msgtable_skill_pre;
 	int HP_clif_msgtable_skill_post;
+	int HP_clif_msgtable_str_pre;
+	int HP_clif_msgtable_str_post;
+	int HP_clif_msgtable_color_pre;
+	int HP_clif_msgtable_color_post;
 	int HP_clif_message_pre;
 	int HP_clif_message_post;
 	int HP_clif_messageln_pre;
