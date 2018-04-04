@@ -1706,6 +1706,12 @@ struct PACKET_ZC_FORMATSTRING_MSG {
 	char MessageString[];
 } __attribute__((packed));
 
+struct PACKET_ZC_MSG_COLOR {
+	uint16 PacketType;
+	uint16 MessageId;
+	uint32 MessageColor;
+} __attribute__((packed));
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

@@ -9262,6 +9262,26 @@ void clif_msgtable_str(struct map_session_data *sd, uint16 msg_id, const char *v
 }
 
 /**
+* Displays a format string from msgstringtable.txt with a color (ZC_MSG_COLOR).
+*
+* @param sd     The target character.
+* @param msg_id msgstringtable message index, 0-based (@see enum clif_messages)
+* @param color  The color to use
+*/
+void clif_msgtable_color(struct map_session_data *sd, uint16 msg_id, uint32 color)
+{
+	struct PACKET_ZC_MSG_COLOR p;
+
+	nullpo_retv(sd);
+
+	p.PacketType = 0x9cd;
+	p.MessageId = msg_id;
+	p.MessageColor = RGB2BGR(color);
+
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
+}
+
+/**
  * Validates and processes a global/guild/party message packet.
  *
  * @param[in]  sd         The source character.
@@ -20954,6 +20974,7 @@ void clif_defaults(void) {
 	clif->msgtable = clif_msgtable;
 	clif->msgtable_num = clif_msgtable_num;
 	clif->msgtable_str = clif_msgtable_str;
+	clif->msgtable_color = clif_msgtable_color;
 	clif->message = clif_displaymessage;
 	clif->messageln = clif_displaymessage2;
 	clif->messages = clif_displaymessage_sprintf;
