@@ -886,6 +886,8 @@ struct clif_interface {
 	void (*msgtable) (struct map_session_data* sd, unsigned short msg_id);
 	void (*msgtable_num) (struct map_session_data *sd, unsigned short msg_id, int value);
 	void (*msgtable_skill) (struct map_session_data *sd, uint16 skill_id, int msg_id);
+	void (*msgtable_str) (struct map_session_data *sd, uint16 msg_id, const char *value);
+	void (*msgtable_color) (struct map_session_data *sd, uint16 msg_id, uint32 color);
 	void (*message) (const int fd, const char* mes);
 	void (*messageln) (const int fd, const char* mes);
 	/* message+s(printf) */
