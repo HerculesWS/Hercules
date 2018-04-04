@@ -9232,6 +9232,36 @@ void clif_msgtable_skill(struct map_session_data* sd, uint16 skill_id, int msg_i
 }
 
 /**
+* Displays a format string from msgstringtable.txt with a %s value (ZC_FORMATSTRING_MSG).
+*
+* @param sd     The target character.
+* @param msg_id msgstringtable message index, 0-based (@see enum clif_messages)
+* @param value  The value to fill %s.
+*/
+void clif_msgtable_str(struct map_session_data *sd, uint16 msg_id, const char *value)
+{
+	int message_len;
+	int len;
+	struct PACKET_ZC_FORMATSTRING_MSG *p;
+
+	nullpo_retv(sd);
+	nullpo_retv(value);
+
+	message_len = (int)strlen(value) + 1;
+	len = sizeof(*p) + message_len + 1;
+
+	p = (struct PACKET_ZC_FORMATSTRING_MSG *)aMalloc(len);
+	p->PacketType = 0x2c2;
+	p->PacketLength = len;
+	p->MessageId = msg_id;
+	safestrncpy(p->MessageString, value, message_len);
+	p->MessageString[message_len] = 0;
+
+	clif->send(p, p->PacketLength, &sd->bl, SELF);
+	aFree(p);
+}
+
+/**
  * Validates and processes a global/guild/party message packet.
  *
  * @param[in]  sd         The source character.
@@ -20923,6 +20953,7 @@ void clif_defaults(void) {
 	clif->msgtable_skill = clif_msgtable_skill;
 	clif->msgtable = clif_msgtable;
 	clif->msgtable_num = clif_msgtable_num;
+	clif->msgtable_str = clif_msgtable_str;
 	clif->message = clif_displaymessage;
 	clif->messageln = clif_displaymessage2;
 	clif->messages = clif_displaymessage_sprintf;
