@@ -14055,10 +14055,10 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 			if (!pc_isridingwug(sd)) {
 				clif->skill_fail(sd, skill_id, USESKILL_FAIL_CONDITION, 0);
 				return 0;
-			}
-			else {
-				int16 sx = sd->bl.x, sy = sd->bl.y;
-				uint8 dir = (unit->getdir(&sd->bl)) % 8;
+			} else {
+				int dir = unit->getdir(&sd->bl);
+				int16 sx = sd->bl.x + dirx[dir % 8];
+				int16 sy = sd->bl.y + diry[dir % 8];
 
 				switch (dir) {
 				case 0:
