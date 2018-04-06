@@ -16381,6 +16381,7 @@ void clif_quest_update_objective(struct map_session_data *sd, struct quest *qd)
 /// 08fe <packet len>.W  { <quest id>.L <mob id>.L <total count>.W <current count>.W }*3
 void clif_quest_notify_objective(struct map_session_data *sd, struct quest *qd)
 {
+#if PACKETVER >= 20150513
 	int i, len, real_len;
 	uint8 *buf = NULL;
 	struct packet_quest_hunt_info *packet = NULL;
@@ -16412,6 +16413,7 @@ void clif_quest_notify_objective(struct map_session_data *sd, struct quest *qd)
 	packet->PacketLength = real_len;
 	clif->send(buf, real_len, &sd->bl, SELF);
 	aFree(buf);
+#endif
 }
 
 void clif_parse_questStateAck(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
