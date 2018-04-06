@@ -6094,7 +6094,7 @@ void clif_wis_end(int fd, int flag) {
 void clif_solved_charname(int fd, int charid, const char* name)
 {
 	nullpo_retv(name);
-#if PACKETVER_MAIN_NUM >= 20180307 || PACKETVER_RE_NUM >= 20180221
+#if PACKETVER_MAIN_NUM >= 20180307 || PACKETVER_RE_NUM >= 20180221 || PACKETVER_ZERO_NUM >= 20180328
 	WFIFOHEAD(fd, packet_len(0x0af7));
 	WFIFOW(fd, 0) = 0xaf7;
 	if (*name == 0) {
