@@ -35,44 +35,10 @@
 
 // Guild Castles ========================
 //alde_gld	mapflag	nowarpto
-aldeg_cas01	mapflag	nowarpto
-aldeg_cas02	mapflag	nowarpto
-aldeg_cas03	mapflag	nowarpto
-aldeg_cas04	mapflag	nowarpto
-aldeg_cas05	mapflag	nowarpto
-gefg_cas01	mapflag	nowarpto
-gefg_cas02	mapflag	nowarpto
-gefg_cas03	mapflag	nowarpto
-gefg_cas04	mapflag	nowarpto
-gefg_cas05	mapflag	nowarpto
 //pay_gld	mapflag	nowarpto
-payg_cas01	mapflag	nowarpto
-payg_cas02	mapflag	nowarpto
-payg_cas03	mapflag	nowarpto
-payg_cas04	mapflag	nowarpto
-payg_cas05	mapflag	nowarpto
 //prt_gld	mapflag	nowarpto
-prtg_cas01	mapflag	nowarpto
-prtg_cas02	mapflag	nowarpto
-prtg_cas03	mapflag	nowarpto
-prtg_cas04	mapflag	nowarpto
-prtg_cas05	mapflag	nowarpto
-schg_cas01	mapflag	nowarpto
-schg_cas02	mapflag	nowarpto
-schg_cas03	mapflag	nowarpto
-schg_cas04	mapflag	nowarpto
-schg_cas05	mapflag	nowarpto
-arug_cas01	mapflag	nowarpto
-arug_cas02	mapflag	nowarpto
-arug_cas03	mapflag	nowarpto
-arug_cas04	mapflag	nowarpto
-arug_cas05	mapflag	nowarpto
 //Novice Guild
 n_castle	mapflag	nowarpto
-nguild_alde	mapflag	nowarpto
-nguild_gef	mapflag	nowarpto
-nguild_pay	mapflag	nowarpto
-nguild_prt	mapflag	nowarpto
 //Lighthalzen Bio-Lab 3F
 lhz_dun03	mapflag	nowarpto
 // Special Quests Places =======
@@ -81,23 +47,6 @@ gon_test	mapflag	nowarpto
 que_rachel	mapflag	nowarpto
 que_san04	mapflag	nowarpto
 cave	mapflag	nowarpto
-//Aldebaran Turbo Track ========
-turbo_n_1	mapflag	nowarpto
-turbo_n_4	mapflag	nowarpto
-turbo_n_8	mapflag	nowarpto
-turbo_n_16	mapflag	nowarpto
-turbo_e_4	mapflag	nowarpto
-turbo_e_8	mapflag	nowarpto
-turbo_e_16	mapflag	nowarpto
-// Izlude Battle Arena =========
-force_1-1	mapflag	nowarpto
-force_2-1	mapflag	nowarpto
-force_3-1	mapflag	nowarpto
-force_4-1	mapflag	nowarpto
-force_5-1	mapflag	nowarpto
-force_1-2	mapflag	nowarpto
-force_1-3	mapflag	nowarpto
-prt_are_in	mapflag	nowarpto
 
 //Monster Races ================
 p_track01	mapflag	nowarpto
@@ -119,14 +68,7 @@ que_qaru05	mapflag	nowarpto
 e_tower	mapflag	nowarpto
 
 // Battle Grounds ==============
-bat_c01	mapflag	nowarpto
-bat_c02	mapflag	nowarpto
-bat_c03	mapflag	nowarpto
 bat_room	mapflag	nowarpto
-bat_b01	mapflag	nowarpto
-bat_b02	mapflag	nowarpto
-bat_a01	mapflag	nowarpto
-bat_a02	mapflag	nowarpto
 
 // Episode 13 ====================
 mid_campin	mapflag	nowarpto

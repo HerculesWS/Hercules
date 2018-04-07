@@ -72,30 +72,6 @@ mosk_dun03	mapflag	nomemo
 nameless_in	mapflag	nomemo
 niflheim	mapflag	nomemo
 nif_in	mapflag	nomemo
-new_zone01	mapflag	nomemo
-new_zone02	mapflag	nomemo
-new_zone03	mapflag	nomemo
-new_zone04	mapflag	nomemo
-new_1-1	mapflag	nomemo
-new_1-2	mapflag	nomemo
-new_1-3	mapflag	nomemo
-new_1-4	mapflag	nomemo
-new_2-1	mapflag	nomemo
-new_2-2	mapflag	nomemo
-new_2-3	mapflag	nomemo
-new_2-4	mapflag	nomemo
-new_3-1	mapflag	nomemo
-new_3-2	mapflag	nomemo
-new_3-3	mapflag	nomemo
-new_3-4	mapflag	nomemo
-new_4-1	mapflag	nomemo
-new_4-2	mapflag	nomemo
-new_4-3	mapflag	nomemo
-new_4-4	mapflag	nomemo
-new_5-1	mapflag	nomemo
-new_5-2	mapflag	nomemo
-new_5-3	mapflag	nomemo
-new_5-4	mapflag	nomemo
 pay_arche	mapflag	nomemo
 payon_in01	mapflag	nomemo
 payon_in02	mapflag	nomemo
@@ -225,30 +201,6 @@ ve_fild03	mapflag	nomemo
 ve_fild04	mapflag	nomemo
 ve_fild06	mapflag	nomemo
 cave	mapflag	nomemo
-
-// Job Quests ================
-// First Job Class
-job_sword1	mapflag	nomemo
-job_thief1	mapflag	nomemo
-job_star	mapflag	nomemo
-// Primary Second Job Class
-job_knt	mapflag	nomemo
-job_prist	mapflag	nomemo
-job_wiz	mapflag	nomemo
-job_hunte	mapflag	nomemo
-in_hunter	mapflag	nomemo
-in_moc_16	mapflag	nomemo
-// Secondary Second Job Class
-alde_alche	mapflag	nomemo
-job_cru	mapflag	nomemo
-job_duncer	mapflag	nomemo
-job_monk	mapflag	nomemo
-monk_test	mapflag	nomemo
-monk_in	mapflag	nomemo
-in_rogue	mapflag	nomemo
-job_sage	mapflag	nomemo
-job_soul	mapflag	nomemo
-que_ng	mapflag	nomemo
 
 // Special Quests Places =====
 que_god01	mapflag	nomemo
@@ -461,61 +413,13 @@ abbey03	mapflag	nomemo
 
 // Guild Castles =============
 //alde_gld	mapflag	nomemo
-aldeg_cas01	mapflag	nomemo
-aldeg_cas02	mapflag	nomemo
-aldeg_cas03	mapflag	nomemo
-aldeg_cas04	mapflag	nomemo
-aldeg_cas05	mapflag	nomemo
-gefg_cas01	mapflag	nomemo
-gefg_cas02	mapflag	nomemo
-gefg_cas03	mapflag	nomemo
-gefg_cas04	mapflag	nomemo
-gefg_cas05	mapflag	nomemo
 //pay_gld	mapflag	nomemo
-payg_cas01	mapflag	nomemo
-payg_cas02	mapflag	nomemo
-payg_cas03	mapflag	nomemo
-payg_cas04	mapflag	nomemo
-payg_cas05	mapflag	nomemo
 //prt_gld	mapflag	nomemo
-prtg_cas01	mapflag	nomemo
-prtg_cas02	mapflag	nomemo
-prtg_cas03	mapflag	nomemo
-prtg_cas04	mapflag	nomemo
-prtg_cas05	mapflag	nomemo
-nguild_alde	mapflag	nomemo
-nguild_gef	mapflag	nomemo
-nguild_pay	mapflag	nomemo
-nguild_prt	mapflag	nomemo
-schg_cas01	mapflag	nomemo
-schg_cas02	mapflag	nomemo
-schg_cas03	mapflag	nomemo
-schg_cas04	mapflag	nomemo
-schg_cas05	mapflag	nomemo
-arug_cas01	mapflag	nomemo
-arug_cas02	mapflag	nomemo
-arug_cas03	mapflag	nomemo
-arug_cas04	mapflag	nomemo
-arug_cas05	mapflag	nomemo
 //To Protect Novices Guilds from level abusers
 n_castle	mapflag	nomemo
 
-// GvG Arenas ================
-guild_vs1	mapflag	nomemo
-guild_vs2	mapflag	nomemo
-guild_vs3	mapflag	nomemo
-guild_vs4	mapflag	nomemo
-guild_vs5	mapflag	nomemo
-
 // Arenas ====================
 arena_room	mapflag	nomemo
-force_1-1	mapflag	nomemo
-force_1-2	mapflag	nomemo
-force_1-3	mapflag	nomemo
-force_2-1	mapflag	nomemo
-force_3-1	mapflag	nomemo
-force_4-1	mapflag	nomemo
-force_5-1	mapflag	nomemo
 ordeal_1-1	mapflag	nomemo
 ordeal_1-2	mapflag	nomemo
 //ordeal_1-3	mapflag	nomemo
@@ -539,7 +443,6 @@ sec_in02	mapflag	nomemo
 //priest_1-1	mapflag	nomemo
 //priest_2-1	mapflag	nomemo
 //priest_3-1	mapflag	nomemo
-prt_are_in	mapflag	nomemo
 prt_are01	mapflag	nomemo
 //wizard_1-1	mapflag	nomemo
 //wizard_2-1	mapflag	nomemo
@@ -547,98 +450,10 @@ prt_are01	mapflag	nomemo
 
 // PvP Arenas ================
 pvp_y_room	mapflag	nomemo
-pvp_y_1-1	mapflag	nomemo
-pvp_y_1-2	mapflag	nomemo
-pvp_y_1-3	mapflag	nomemo
-pvp_y_1-4	mapflag	nomemo
-pvp_y_1-5	mapflag	nomemo
-pvp_y_2-1	mapflag	nomemo
-pvp_y_2-2	mapflag	nomemo
-pvp_y_2-3	mapflag	nomemo
-pvp_y_2-4	mapflag	nomemo
-pvp_y_2-5	mapflag	nomemo
-pvp_y_3-1	mapflag	nomemo
-pvp_y_3-2	mapflag	nomemo
-pvp_y_3-3	mapflag	nomemo
-pvp_y_3-4	mapflag	nomemo
-pvp_y_3-5	mapflag	nomemo
-pvp_y_4-1	mapflag	nomemo
-pvp_y_4-2	mapflag	nomemo
-pvp_y_4-3	mapflag	nomemo
-pvp_y_4-4	mapflag	nomemo
-pvp_y_4-5	mapflag	nomemo
-pvp_y_5-1	mapflag	nomemo
-pvp_y_5-2	mapflag	nomemo
-pvp_y_5-3	mapflag	nomemo
-pvp_y_5-4	mapflag	nomemo
-pvp_y_5-5	mapflag	nomemo
-pvp_y_6-1	mapflag	nomemo
-pvp_y_6-2	mapflag	nomemo
-pvp_y_6-3	mapflag	nomemo
-pvp_y_6-4	mapflag	nomemo
-pvp_y_6-5	mapflag	nomemo
-pvp_y_7-1	mapflag	nomemo
-pvp_y_7-2	mapflag	nomemo
-pvp_y_7-3	mapflag	nomemo
-pvp_y_7-4	mapflag	nomemo
-pvp_y_7-5	mapflag	nomemo
-pvp_y_8-1	mapflag	nomemo
-pvp_y_8-2	mapflag	nomemo
-pvp_y_8-3	mapflag	nomemo
-pvp_y_8-4	mapflag	nomemo
-pvp_y_8-5	mapflag	nomemo
 pvp_n_room	mapflag	nomemo
-pvp_n_1-1	mapflag	nomemo
-pvp_n_1-2	mapflag	nomemo
-pvp_n_1-3	mapflag	nomemo
-pvp_n_1-4	mapflag	nomemo
-pvp_n_1-5	mapflag	nomemo
-pvp_n_2-1	mapflag	nomemo
-pvp_n_2-2	mapflag	nomemo
-pvp_n_2-3	mapflag	nomemo
-pvp_n_2-4	mapflag	nomemo
-pvp_n_2-5	mapflag	nomemo
-pvp_n_3-1	mapflag	nomemo
-pvp_n_3-2	mapflag	nomemo
-pvp_n_3-3	mapflag	nomemo
-pvp_n_3-4	mapflag	nomemo
-pvp_n_3-5	mapflag	nomemo
-pvp_n_4-1	mapflag	nomemo
-pvp_n_4-2	mapflag	nomemo
-pvp_n_4-3	mapflag	nomemo
-pvp_n_4-4	mapflag	nomemo
-pvp_n_4-5	mapflag	nomemo
-pvp_n_5-1	mapflag	nomemo
-pvp_n_5-2	mapflag	nomemo
-pvp_n_5-3	mapflag	nomemo
-pvp_n_5-4	mapflag	nomemo
-pvp_n_5-5	mapflag	nomemo
-pvp_n_6-1	mapflag	nomemo
-pvp_n_6-2	mapflag	nomemo
-pvp_n_6-3	mapflag	nomemo
-pvp_n_6-4	mapflag	nomemo
-pvp_n_6-5	mapflag	nomemo
-pvp_n_7-1	mapflag	nomemo
-pvp_n_7-2	mapflag	nomemo
-pvp_n_7-3	mapflag	nomemo
-pvp_n_7-4	mapflag	nomemo
-pvp_n_7-5	mapflag	nomemo
-pvp_n_8-1	mapflag	nomemo
-pvp_n_8-2	mapflag	nomemo
-pvp_n_8-3	mapflag	nomemo
-pvp_n_8-4	mapflag	nomemo
-pvp_n_8-5	mapflag	nomemo
-pvp_2vs2	mapflag	nomemo
 
 //Aldebaran Turbo Track
 turbo_room	mapflag	nomemo
-turbo_n_1	mapflag	nomemo
-turbo_n_4	mapflag	nomemo
-turbo_n_8	mapflag	nomemo
-turbo_n_16	mapflag	nomemo
-turbo_e_4	mapflag	nomemo
-turbo_e_8	mapflag	nomemo
-turbo_e_16	mapflag	nomemo
 
 //Monster Races ================
 p_track01	mapflag	nomemo
@@ -660,14 +475,7 @@ que_qaru05	mapflag	nomemo
 e_tower	mapflag	nomemo
 
 // Battle Grounds ================
-bat_c01	mapflag	nomemo
-bat_c02	mapflag	nomemo
-bat_c03	mapflag	nomemo
 bat_room	mapflag	nomemo
-bat_b01	mapflag	nomemo
-bat_b02	mapflag	nomemo
-bat_a01	mapflag	nomemo
-bat_a02	mapflag	nomemo
 
 // Episode 13 ====================
 mid_campin	mapflag	nomemo
@@ -690,23 +498,7 @@ man_in01	mapflag	nomemo
 splendide	mapflag	nomemo
 spl_fild01	mapflag	nomemo
 spl_in01	mapflag	nomemo
-job3_arch01	mapflag	nomemo
-job3_arch02	mapflag	nomemo
-job3_arch03	mapflag	nomemo
-job3_guil01	mapflag	nomemo
-job3_guil02	mapflag	nomemo
-job3_guil03	mapflag	nomemo
-job3_rang01	mapflag	nomemo
-job3_rang02	mapflag	nomemo
-job3_rune01	mapflag	nomemo
-job3_rune02	mapflag	nomemo
-job3_rune03	mapflag	nomemo
-job3_war01	mapflag	nomemo
-job3_war02	mapflag	nomemo
-job3_gen01	mapflag	nomemo
-job3_sha01	mapflag	nomemo
-jupe_core2	mapflag	nomemo
-s_atelier	mapflag	nomemo
+spl_in02	mapflag	nomemo
 bra_in01	mapflag	nomemo
 bra_dun01	mapflag	nomemo
 bra_dun02	mapflag	nomemo

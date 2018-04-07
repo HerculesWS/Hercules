@@ -37,21 +37,5 @@
 //= Same as 'nobaseexp' and 'nojobexp' combined.
 //=========================================================================
 
-// Job Quests ========================
-//job_thief1	mapflag	noexp
-//job_sword1	mapflag	noexp
-//in_moc_16	mapflag	noexp
-//job_hunte	mapflag	noexp
-//job_knt	mapflag	noexp
-//job_prist	mapflag	noexp
-//job_wiz	mapflag	noexp
-//job_cru	mapflag	noexp
-//monk_test	mapflag	noexp
-//in_rogue	mapflag	noexp
-//job_sage	mapflag	noexp
-//job_soul	mapflag	noexp
-//job_star	mapflag	noexp
-//que_ng	mapflag	noexp
-
 // Misc Quests =======================
 // mosk_ship	mapflag	noexp
