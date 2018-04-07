@@ -6028,8 +6028,16 @@ typedef int (*HPMHOOK_pre_pet_recovery_timer) (int *tid, int64 *tick, int *id, i
 typedef int (*HPMHOOK_post_pet_recovery_timer) (int retVal___, int tid, int64 tick, int id, intptr_t data);
 typedef int (*HPMHOOK_pre_pet_skill_support_timer) (int *tid, int64 *tick, int *id, intptr_t *data);
 typedef int (*HPMHOOK_post_pet_skill_support_timer) (int retVal___, int tid, int64 tick, int id, intptr_t data);
-typedef int (*HPMHOOK_pre_pet_read_db) (void);
-typedef int (*HPMHOOK_post_pet_read_db) (int retVal___);
+typedef void (*HPMHOOK_pre_pet_read_db) (void);
+typedef void (*HPMHOOK_post_pet_read_db) (void);
+typedef int (*HPMHOOK_pre_pet_read_db_libconfig) (const char **filename, bool *ignore_missing);
+typedef int (*HPMHOOK_post_pet_read_db_libconfig) (int retVal___, const char *filename, bool ignore_missing);
+typedef int (*HPMHOOK_pre_pet_read_db_sub) (struct config_setting_t **it, int *n, const char **source);
+typedef int (*HPMHOOK_post_pet_read_db_sub) (int retVal___, struct config_setting_t *it, int n, const char *source);
+typedef bool (*HPMHOOK_pre_pet_read_db_sub_intimacy) (int *idx, struct config_setting_t **t);
+typedef bool (*HPMHOOK_post_pet_read_db_sub_intimacy) (bool retVal___, int idx, struct config_setting_t *t);
+typedef void (*HPMHOOK_pre_pet_read_db_clear) (void);
+typedef void (*HPMHOOK_post_pet_read_db_clear) (void);
 #endif // MAP_PET_H
 #ifdef CHAR_PINCODE_H /* pincode */
 typedef void (*HPMHOOK_pre_pincode_handle) (int *fd, struct char_session_data **sd);
