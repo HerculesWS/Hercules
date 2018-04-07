@@ -426,6 +426,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		#define MAP_CLAN_H
 	#endif // MAP_CLAN_H
 	#ifdef MAP_CLIF_H
+		{ "attendance_entry", sizeof(struct attendance_entry), SERVER_TYPE_MAP },
 		{ "cdelayed_damage", sizeof(struct cdelayed_damage), SERVER_TYPE_MAP },
 		{ "clif_interface", sizeof(struct clif_interface), SERVER_TYPE_MAP },
 		{ "hCSData", sizeof(struct hCSData), SERVER_TYPE_MAP },
@@ -585,6 +586,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "NORMALITEM_INFO", sizeof(struct NORMALITEM_INFO), SERVER_TYPE_MAP },
 		{ "PACKET_CZ_ADD_ITEM_TO_MAIL", sizeof(struct PACKET_CZ_ADD_ITEM_TO_MAIL), SERVER_TYPE_MAP },
 		{ "PACKET_CZ_CHECKNAME", sizeof(struct PACKET_CZ_CHECKNAME), SERVER_TYPE_MAP },
+		{ "PACKET_CZ_OPEN_UI", sizeof(struct PACKET_CZ_OPEN_UI), SERVER_TYPE_MAP },
 		{ "PACKET_CZ_REQ_DELETE_MAIL", sizeof(struct PACKET_CZ_REQ_DELETE_MAIL), SERVER_TYPE_MAP },
 		{ "PACKET_CZ_REQ_ITEM_FROM_MAIL", sizeof(struct PACKET_CZ_REQ_ITEM_FROM_MAIL), SERVER_TYPE_MAP },
 		{ "PACKET_CZ_REQ_NEXT_MAIL_LIST", sizeof(struct PACKET_CZ_REQ_NEXT_MAIL_LIST), SERVER_TYPE_MAP },
@@ -613,8 +615,10 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "PACKET_ZC_NOTIFY_CLAN_CHAT", sizeof(struct PACKET_ZC_NOTIFY_CLAN_CHAT), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_NOTIFY_CLAN_CONNECTINFO", sizeof(struct PACKET_ZC_NOTIFY_CLAN_CONNECTINFO), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_NOTIFY_UNREADMAIL", sizeof(struct PACKET_ZC_NOTIFY_UNREADMAIL), SERVER_TYPE_MAP },
+		{ "PACKET_ZC_OPEN_UI", sizeof(struct PACKET_ZC_OPEN_UI), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_READ_MAIL", sizeof(struct PACKET_ZC_READ_MAIL), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_SKILL_SCALE", sizeof(struct PACKET_ZC_SKILL_SCALE), SERVER_TYPE_MAP },
+		{ "PACKET_ZC_UI_ACTION", sizeof(struct PACKET_ZC_UI_ACTION), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_WRITE_MAIL_RESULT", sizeof(struct PACKET_ZC_WRITE_MAIL_RESULT), SERVER_TYPE_MAP },
 		{ "ZC_PROGRESS_ACTOR", sizeof(struct ZC_PROGRESS_ACTOR), SERVER_TYPE_MAP },
 		{ "mail_item", sizeof(struct mail_item), SERVER_TYPE_MAP },

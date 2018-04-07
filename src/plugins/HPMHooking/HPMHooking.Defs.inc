@@ -2414,6 +2414,22 @@ typedef void (*HPMHOOK_pre_clif_hat_effect) (struct block_list **bl, struct bloc
 typedef void (*HPMHOOK_post_clif_hat_effect) (struct block_list *bl, struct block_list *tbl, enum send_target target);
 typedef void (*HPMHOOK_pre_clif_hat_effect_single) (struct block_list **bl, uint16 *effectId, bool *enable);
 typedef void (*HPMHOOK_post_clif_hat_effect_single) (struct block_list *bl, uint16 effectId, bool enable);
+typedef bool (*HPMHOOK_pre_clif_pAttendanceDB) (void);
+typedef bool (*HPMHOOK_post_clif_pAttendanceDB) (bool retVal___);
+typedef bool (*HPMHOOK_pre_clif_attendancedb_libconfig_sub) (struct config_setting_t **it, int *n, const char **source);
+typedef bool (*HPMHOOK_post_clif_attendancedb_libconfig_sub) (bool retVal___, struct config_setting_t *it, int n, const char *source);
+typedef bool (*HPMHOOK_pre_clif_attendance_timediff) (struct map_session_data **sd);
+typedef bool (*HPMHOOK_post_clif_attendance_timediff) (bool retVal___, struct map_session_data *sd);
+typedef time_t (*HPMHOOK_pre_clif_attendance_getendtime) (void);
+typedef time_t (*HPMHOOK_post_clif_attendance_getendtime) (time_t retVal___);
+typedef void (*HPMHOOK_pre_clif_pOpenUIRequest) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pOpenUIRequest) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_open_ui) (struct map_session_data **sd, int8 *UIType);
+typedef void (*HPMHOOK_post_clif_open_ui) (struct map_session_data *sd, int8 UIType);
+typedef void (*HPMHOOK_pre_clif_pAttendanceRewardRequest) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pAttendanceRewardRequest) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_ui_action) (struct map_session_data **sd, int32 *UIType, int32 *data);
+typedef void (*HPMHOOK_post_clif_ui_action) (struct map_session_data *sd, int32 UIType, int32 data);
 #endif // MAP_CLIF_H
 #ifdef COMMON_CORE_H /* cmdline */
 typedef void (*HPMHOOK_pre_cmdline_init) (void);
