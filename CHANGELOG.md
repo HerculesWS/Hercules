@@ -1,3 +1,4 @@
+
 # Changelog
 All notable changes to this project will be documented in this file.
 
@@ -8,6 +9,36 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 <!--
 If you are reading this in a text editor, simply ignore this section
 -->
+
+## [v2018.04.08] `April 8 2018`
+### Added
+- Added/updated packets support for clients from 2018-03-14 to 2018-04-04. (#1994 and #2014)
+- Introduced macros `PACKETVER_RE_NUM`, `PACKETVER_ZERO_NUM` and `PACKETVER_MAIN_NUM` to simplify client type-specific version checks.
+  These macros are defined to `PACKETVER` only if, respectively, `PACKETVER_RE`, `PACKETVER_ZERO` or neither are defined. (part of #1994)
+- Implemented Hat Effects, available in clients starting from 2015-04-22. (#1965)
+  - The `hateffect()` script command has been implemented.
+  - The related constants (with prefix `HAT_EF_*`) have been added and made available to the script engine.
+- Added the 2015 variant of the quest-related packets. (#1111)
+- Added login date information for guild members, on clients starting from 2016-10-26. The message format can be customized on the client side, by editing line 3012 of msgstringtable.txt. (#1986)
+- Added support for the `ZC_FORMATSTRING_MSG` and `ZC_MSG_COLOR` packets, handling msgstringtable messages. (#2012)
+- Added a setting (`storage_use_item` in `items.conf`) to control the use of items (usable/consumable/boxes) when the storage is open. (#1868, issue #1806)
+- Implemented the Attendance System, requiring client 2018-03-07bRagexeRE or newer. Configuration is available in `feature.conf` and `db/attendance_db.conf`. (#1990)
+- Added a configurable delay to the MVP Tombstone. The delay can be configured through the `mvp_tomb_spawn_delay` setting in `monster.conf`. (#2001, issue #1980)
+
+### Changed
+- Updated the functions handling quest-related packets to use the struct-based form. (part of #1111)
+- Converted the Pet DB to the libconfig format. A converter script (`petdbconverter.py) has been provided for convenience. (#2000)
+- The `noteleport` mapflag has been added to the Archer Village (`pay_arche`), to match official servers. (part of #2006)
+- The `script->sprintf()` function has been renamed to `script->sprintf_helper()`. (part of #2009)
+
+### Fixed
+- Removed a duplicated line in the login server VS project that would prevent Visual Studio from loading it. (#1992)
+- Prevented a console warning when a nonexistent map is passed to the `getmapinfo()` script command. (584e8de35)
+- Fixed a RODEX loading data problem when a message's expiration date was manually edited. (#1995)
+- Corrected the error messages displayed when using various restricted items to match the official servers. (#2006)
+- Added a missing status refresh for the Homunculus Autofeed system when changing maps. (#2002)
+- Fixed a NULL pointer check failure when `TK_JUMPKICK` is used by a non-player. (#2015, issue #1875)
+- Fixed compilation of the HPMHooking plugin on systems where `sprintf()` is a macro. (#2009, issue #2003)
 
 ## [v2018.03.11] `March 11 2018`
 ### Added
@@ -190,6 +221,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2018.04.08]: https://github.com/HerculesWS/Hercules/compare/v2018.03.11...v2018.04.08
 [v2018.03.11]: https://github.com/HerculesWS/Hercules/compare/v2018.02.11+1...v2018.03.11
 [v2018.02.11+1]: https://github.com/HerculesWS/Hercules/compare/v2018.02.11...v2018.02.11+1
 [v2018.02.11]: https://github.com/HerculesWS/Hercules/compare/v2018.01.14...v2018.02.11
