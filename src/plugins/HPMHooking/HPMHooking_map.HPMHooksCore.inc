@@ -3576,6 +3576,10 @@ struct {
 	struct HPMHookPoint *HP_mob_db_searchname_post;
 	struct HPMHookPoint *HP_mob_db_searchname_array_sub_pre;
 	struct HPMHookPoint *HP_mob_db_searchname_array_sub_post;
+	struct HPMHookPoint *HP_mob_mvptomb_spawn_delayed_pre;
+	struct HPMHookPoint *HP_mob_mvptomb_spawn_delayed_post;
+	struct HPMHookPoint *HP_mob_mvptomb_delayspawn_pre;
+	struct HPMHookPoint *HP_mob_mvptomb_delayspawn_post;
 	struct HPMHookPoint *HP_mob_mvptomb_create_pre;
 	struct HPMHookPoint *HP_mob_mvptomb_create_post;
 	struct HPMHookPoint *HP_mob_mvptomb_destroy_pre;
@@ -9891,6 +9895,10 @@ struct {
 	int HP_mob_db_searchname_post;
 	int HP_mob_db_searchname_array_sub_pre;
 	int HP_mob_db_searchname_array_sub_post;
+	int HP_mob_mvptomb_spawn_delayed_pre;
+	int HP_mob_mvptomb_spawn_delayed_post;
+	int HP_mob_mvptomb_delayspawn_pre;
+	int HP_mob_mvptomb_delayspawn_post;
 	int HP_mob_mvptomb_create_pre;
 	int HP_mob_mvptomb_create_post;
 	int HP_mob_mvptomb_destroy_pre;

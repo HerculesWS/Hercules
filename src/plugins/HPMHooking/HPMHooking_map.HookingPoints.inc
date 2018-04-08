@@ -1836,6 +1836,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(mob->skill_id2skill_idx, HP_mob_skill_id2skill_idx) },
 	{ HP_POP(mob->db_searchname, HP_mob_db_searchname) },
 	{ HP_POP(mob->db_searchname_array_sub, HP_mob_db_searchname_array_sub) },
+	{ HP_POP(mob->mvptomb_spawn_delayed, HP_mob_mvptomb_spawn_delayed) },
+	{ HP_POP(mob->mvptomb_delayspawn, HP_mob_mvptomb_delayspawn) },
 	{ HP_POP(mob->mvptomb_create, HP_mob_mvptomb_create) },
 	{ HP_POP(mob->mvptomb_destroy, HP_mob_mvptomb_destroy) },
 	{ HP_POP(mob->db_searchname_array, HP_mob_db_searchname_array) },

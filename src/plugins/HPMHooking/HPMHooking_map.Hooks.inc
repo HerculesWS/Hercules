@@ -47346,6 +47346,59 @@ int HP_mob_db_searchname_array_sub(struct mob_db *monster, const char *str, int 
 	}
 	return retVal___;
 }
+void HP_mob_mvptomb_spawn_delayed(struct npc_data *nd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_mob_mvptomb_spawn_delayed_pre > 0) {
+		void (*preHookFunc) (struct npc_data **nd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_mvptomb_spawn_delayed_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mob_mvptomb_spawn_delayed_pre[hIndex].func;
+			preHookFunc(&nd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.mob.mvptomb_spawn_delayed(nd);
+	}
+	if (HPMHooks.count.HP_mob_mvptomb_spawn_delayed_post > 0) {
+		void (*postHookFunc) (struct npc_data *nd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_mvptomb_spawn_delayed_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mob_mvptomb_spawn_delayed_post[hIndex].func;
+			postHookFunc(nd);
+		}
+	}
+	return;
+}
+int HP_mob_mvptomb_delayspawn(int tid, int64 tick, int id, intptr_t data) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_mob_mvptomb_delayspawn_pre > 0) {
+		int (*preHookFunc) (int *tid, int64 *tick, int *id, intptr_t *data);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_mvptomb_delayspawn_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mob_mvptomb_delayspawn_pre[hIndex].func;
+			retVal___ = preHookFunc(&tid, &tick, &id, &data);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.mob.mvptomb_delayspawn(tid, tick, id, data);
+	}
+	if (HPMHooks.count.HP_mob_mvptomb_delayspawn_post > 0) {
+		int (*postHookFunc) (int retVal___, int tid, int64 tick, int id, intptr_t data);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_mvptomb_delayspawn_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mob_mvptomb_delayspawn_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, tid, tick, id, data);
+		}
+	}
+	return retVal___;
+}
 void HP_mob_mvptomb_create(struct mob_data *md, char *killer, time_t time) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_mob_mvptomb_create_pre > 0) {
