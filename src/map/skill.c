@@ -6503,16 +6503,14 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 
 		case TK_JUMPKICK:
 			/* Check if the target is an enemy; if not, skill should fail so the character doesn't unit->movepos (exploitable) */
-			if( battle->check_target(src, bl, BCT_ENEMY) > 0 )
-			{
-				if( unit->movepos(src, bl->x, bl->y, 1, 1) )
-				{
-					skill->attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,flag);
-					clif->slide(src,bl->x,bl->y);
+			if (battle->check_target(src, bl, BCT_ENEMY) > 0) {
+				if (unit->movepos(src, bl->x, bl->y, 1, 1)) {
+					skill->attack(BF_WEAPON, src, src, bl, skill_id, skill_lv, tick, flag);
+					clif->slide(src, bl->x, bl->y);
 				}
+			} else if (sd != NULL) {
+				clif->skill_fail(sd, skill_id, USESKILL_FAIL, 0);
 			}
-			else
-				clif->skill_fail(sd,skill_id,USESKILL_FAIL,0);
 			break;
 
 		case AL_INCAGI:
