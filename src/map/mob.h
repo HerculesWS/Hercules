@@ -447,6 +447,8 @@ struct mob_interface {
 	int (*db_searchname) (const char *str);
 	int (*db_searchname_array_sub) (struct mob_db *monster, const char *str, int flag);
 	// MvP Tomb System
+	void (*mvptomb_spawn_delayed) (struct npc_data *nd);
+	int (*mvptomb_delayspawn) (int tid, int64 tick, int id, intptr_t data);
 	void (*mvptomb_create) (struct mob_data *md, char *killer, time_t time);
 	void (*mvptomb_destroy) (struct mob_data *md);
 	int (*db_searchname_array) (struct mob_db **data, int size, const char *str, int flag);

@@ -7265,6 +7265,7 @@ static const struct battle_data {
 	{ "atcommand_max_stat_bypass",          &battle_config.atcommand_max_stat_bypass,       0,      0,      100,            },
 	{ "skill_amotion_leniency",             &battle_config.skill_amotion_leniency,          90,     0,      300             },
 	{ "mvp_tomb_enabled",                   &battle_config.mvp_tomb_enabled,                1,      0,      1               },
+	{ "mvp_tomb_spawn_delay",               &battle_config.mvp_tomb_spawn_delay,            10000,  0,      INT_MAX         },
 	{ "features/atcommand_suggestions",     &battle_config.atcommand_suggestions_enabled,   0,      0,      1               },
 	{ "min_npc_vendchat_distance",          &battle_config.min_npc_vendchat_distance,       3,      0,      100             },
 	{ "vendchat_near_hiddennpc",            &battle_config.vendchat_near_hiddennpc,         0,      0,      1               },
