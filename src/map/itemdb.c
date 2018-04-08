@@ -673,16 +673,7 @@ int itemdb_isequip2(struct item_data *data) {
  *------------------------------------------*/
 int itemdb_isstackable(int nameid)
 {
-	int type=itemdb_type(nameid);
-	switch(type) {
-		case IT_WEAPON:
-		case IT_ARMOR:
-		case IT_PETEGG:
-		case IT_PETARMOR:
-			return 0;
-		default:
-			return 1;
-	}
+	return itemdb->isstackable2(itemdb->search(nameid));
 }
 
 /*==========================================
@@ -696,6 +687,7 @@ int itemdb_isstackable2(struct item_data *data)
 		case IT_ARMOR:
 		case IT_PETEGG:
 		case IT_PETARMOR:
+		case IT_CASH:
 			return 0;
 		default:
 			return 1;
