@@ -38,7 +38,8 @@
 #include <time.h>
 #include <sys/stat.h>
 
-#define OUTPUTFILENAME "doc" PATHSEP_STR "constants.md"
+#define OUTPUTFILEHEADER "doc" PATHSEP_STR "constants.md"
+#define OUTPUTFILECONTENT "doc" PATHSEP_STR "constants_content.md"
 
 HPExport struct hplugin_info pinfo = {
 	"constdb2doc",   // Plugin name
@@ -47,17 +48,53 @@ HPExport struct hplugin_info pinfo = {
 	HPM_VERSION,     // HPM Version (don't change, macro is automatically updated)
 };
 
+FILE *out_header;
 FILE *out_fp;
 bool torun = false;
+char *anchor;
+
+char * get_anchorid(char anchorstring[])
+{
+	char *anchor = (char *) malloc(256);
+
+	strcpy(anchor, anchorstring);
+
+	int i, j;
+	for (i = 0, j = 0; anchor[i] != 0; i++) {
+		anchor[i] = tolower(anchor[i]);
+
+		// Check space
+		if (anchor[i] == ' ') {
+			anchor[i] = '-'; // Change space to hyphen
+		}
+
+		// Check allow character. number, letter, underscore or hyphen(space)
+		// All special character will be remove
+		if ((anchor[i] >= 'a' && anchor[i] <= 'z') || (anchor[i] >= '0' && anchor[i] <= '9') || anchor[i] == '-' || anchor[i] == '_') {
+			anchor[j] = anchor[i];
+			j++;
+		}
+	}
+	anchor[j] = '\0';
+
+	return anchor;
+}
 
 /// To override script_constdb_comment
 void constdb2doc_constdb_comment(const char *comment)
 {
+	nullpo_retv(out_header);
 	nullpo_retv(out_fp);
-	if (comment == NULL)
+	if (comment == NULL) {
 		fprintf(out_fp, "\n");
-	else
+		fprintf(out_header, "\n");
+	}
+	else {
 		fprintf(out_fp, "\n### %s\n\n", comment);
+		anchor = strdup(comment);
+		fprintf(out_header, "- [%s](#%s)\n", comment, get_anchorid(anchor));
+		free(anchor);
+	}
 }
 
 /// To override script_set_constant, called by script_read_constdb
@@ -77,6 +114,7 @@ void constdb2doc_constdb(void)
 	void (*script_constdb_comment) (const char *comment) = NULL;
 
 	nullpo_retv(out_fp);
+	nullpo_retv(out_header);
 
 	/* Link */
 	script_set_constant = script->set_constant;
@@ -86,14 +124,17 @@ void constdb2doc_constdb(void)
 
 	/* Run */
 	fprintf(out_fp, "## Constants (db/constants.conf)\n\n");
+	fprintf(out_header, "#### 1. [Constants (db/constants.conf)](#%s)\n", get_anchorid("Constants (db/constants.conf)"));
 	script->read_constdb();
 	fprintf(out_fp, "\n");
 
 	fprintf(out_fp, "## Hardcoded Constants (source)\n\n");
+	fprintf(out_header, "#### 2. [Hardcoded Constants (source)](#%s)\n", get_anchorid("Hardcoded Constants (source)"));
 	script->hardcoded_constants();
 	fprintf(out_fp, "\n");
 
 	fprintf(out_fp, "## Parameters (source)\n\n");
+	fprintf(out_header, "#### 3. [Parameters (source)](#%s)\n", get_anchorid("Parameters (source)"));
 	script->load_parameters();
 	fprintf(out_fp, "\n");
 
@@ -106,9 +147,11 @@ void constdb2doc_skilldb(void)
 {
 	int i;
 
+	nullpo_retv(out_header);
 	nullpo_retv(out_fp);
 
 	fprintf(out_fp, "## Skills (db/"DBPATH"skill_db.txt)\n\n");
+	fprintf(out_header, "#### 4. [Skills (db/"DBPATH"skill_db.txt)](#%s)\n\n", get_anchorid("Skills (db/"DBPATH"skill_db.txt)"));
 	for (i = 1; i < MAX_SKILL_DB; i++) {
 		if (skill->dbs->db[i].name[0] != '\0')
 			fprintf(out_fp, "- `%s`: %d\n", skill->dbs->db[i].name, skill->dbs->db[i].nameid);
@@ -120,9 +163,11 @@ void constdb2doc_mobdb(void)
 {
 	int i;
 
+	nullpo_retv(out_header);
 	nullpo_retv(out_fp);
 
 	fprintf(out_fp, "## Mobs (db/"DBPATH"mob_db.txt)\n\n");
+	fprintf(out_header, "#### 5. [Mobs (db/"DBPATH"mob_db.txt)](#%s)\n\n", get_anchorid("Mobs (db/"DBPATH"mob_db.txt)"));
 	for (i = 0; i < MAX_MOB_DB; i++) {
 		struct mob_db *md = mob->db(i);
 		if (md == mob->dummy || md->sprite[0] == '\0')
@@ -145,9 +190,11 @@ void constdb2doc_itemdb(void)
 {
 	int i;
 
+	nullpo_retv(out_header);
 	nullpo_retv(out_fp);
 
 	fprintf(out_fp, "## Items (db/"DBPATH"item_db.conf)\n");
+	fprintf(out_header, "#### 6. [Items (db/"DBPATH"item_db.conf)](#%s)\n", get_anchorid("Items (db/"DBPATH"item_db.conf"));
 	for (i = 0; i < ARRAYLENGTH(itemdb->array); i++) {
 		struct item_data *id = constdb2doc_itemdb_search(i);
 		if (id == NULL || id->name[0] == '\0')
@@ -157,17 +204,51 @@ void constdb2doc_itemdb(void)
 	fprintf(out_fp, "\n");
 }
 
-void do_constdb2doc(void)
+void merge_files()
 {
-	/* File Type Detector */
-	if ((out_fp = fopen(OUTPUTFILENAME, "wt+")) == NULL) {
+	// Open herder and content files
+	out_header = fopen(OUTPUTFILEHEADER, "a");
+	out_fp = fopen(OUTPUTFILECONTENT, "r");
+
+	if (out_header == NULL || out_fp == NULL) {
 		ShowError("do_constdb2doc: Unable to open output file.\n");
 		return;
 	}
 
-	fprintf(out_fp,
+	long int len;
+	fseek(out_fp, 0, SEEK_END);
+	len = ftell(out_fp);
+
+	char buffer[len];
+
+	fseek(out_fp, 0, SEEK_SET);
+	fread(buffer, len, 1, out_fp);
+
+	fwrite(buffer, 1, sizeof(buffer), out_header);
+
+	fclose(out_header);
+	fclose(out_fp);
+
+	// Remove content file
+	remove(OUTPUTFILECONTENT);
+}
+
+void do_constdb2doc(void)
+{
+	/* File Type Detector */
+	if ((out_fp = fopen(OUTPUTFILECONTENT, "wt+")) == NULL) {
+		ShowError("do_constdb2doc: Unable to open output file.\n");
+		return;
+	}
+	if ((out_header = fopen(OUTPUTFILEHEADER, "wt+")) == NULL) {
+		ShowError("do_constdb2doc: Unable to open output file.\n");
+		return;
+	}
+
+	fprintf(out_header,
 		"# Constants\n\n"
-		"> This document contains all the constants available to the script engine.\n\n");
+		"> This document contains all the constants available to the script engine.\n\n"
+		"## Table of contents\n");
 
 	constdb2doc_constdb();
 
@@ -180,7 +261,13 @@ void do_constdb2doc(void)
 	fprintf(out_fp, "> End of list\n\n");
 	fprintf(out_fp, "<!--GENERATED FILE DO NOT EDIT-->\n");
 
+	fclose(out_header);
 	fclose(out_fp);
+
+	merge_files();
+
+	ShowInfo("Finish export constants docs\n");
+
 }
 CPCMD(constdb2doc) {
 	do_constdb2doc();
