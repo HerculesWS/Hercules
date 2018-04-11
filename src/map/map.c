@@ -3166,13 +3166,13 @@ void map_iwall_get(struct map_session_data *sd)
 	dbi_destroy(iter);
 }
 
-void map_iwall_remove(const char *wall_name)
+bool map_iwall_remove(const char *wall_name)
 {
 	struct iwall_data *iwall;
 	int16 i, x1, y1;
 
 	if( (iwall = (struct iwall_data *)strdb_get(map->iwall_db, wall_name)) == NULL )
-		return; // Nothing to do
+		return false;
 
 	for( i = 0; i < iwall->size; i++ ) {
 		map->iwall_nextxy(iwall->x, iwall->y, iwall->dir, i, &x1, &y1);
@@ -3185,6 +3185,7 @@ void map_iwall_remove(const char *wall_name)
 
 	map->list[iwall->m].iwall_num--;
 	strdb_remove(map->iwall_db, iwall->wall_name);
+	return true;
 }
 
 /**
