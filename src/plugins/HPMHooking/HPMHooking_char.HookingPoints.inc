@@ -132,7 +132,6 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(chr->map_auth_failed, HP_chr_map_auth_failed) },
 	{ HP_POP(chr->parse_frommap_auth_request, HP_chr_parse_frommap_auth_request) },
 	{ HP_POP(chr->parse_frommap_update_ip, HP_chr_parse_frommap_update_ip) },
-	{ HP_POP(chr->parse_frommap_request_stats_report, HP_chr_parse_frommap_request_stats_report) },
 	{ HP_POP(chr->parse_frommap_scdata_update, HP_chr_parse_frommap_scdata_update) },
 	{ HP_POP(chr->parse_frommap_scdata_delete, HP_chr_parse_frommap_scdata_delete) },
 	{ HP_POP(chr->parse_frommap, HP_chr_parse_frommap) },

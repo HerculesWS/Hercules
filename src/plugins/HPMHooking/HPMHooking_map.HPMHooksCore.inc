@@ -430,8 +430,6 @@ struct {
 	struct HPMHookPoint *HP_chrif_divorce_post;
 	struct HPMHookPoint *HP_chrif_removefriend_pre;
 	struct HPMHookPoint *HP_chrif_removefriend_post;
-	struct HPMHookPoint *HP_chrif_send_report_pre;
-	struct HPMHookPoint *HP_chrif_send_report_post;
 	struct HPMHookPoint *HP_chrif_flush_pre;
 	struct HPMHookPoint *HP_chrif_flush_post;
 	struct HPMHookPoint *HP_chrif_skillid2idx_pre;
@@ -6749,8 +6747,6 @@ struct {
 	int HP_chrif_divorce_post;
 	int HP_chrif_removefriend_pre;
 	int HP_chrif_removefriend_post;
-	int HP_chrif_send_report_pre;
-	int HP_chrif_send_report_post;
 	int HP_chrif_flush_pre;
 	int HP_chrif_flush_post;
 	int HP_chrif_skillid2idx_pre;

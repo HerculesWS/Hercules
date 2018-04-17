@@ -236,7 +236,6 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(chrif->changesex, HP_chrif_changesex) },
 	{ HP_POP(chrif->divorce, HP_chrif_divorce) },
 	{ HP_POP(chrif->removefriend, HP_chrif_removefriend) },
-	{ HP_POP(chrif->send_report, HP_chrif_send_report) },
 	{ HP_POP(chrif->flush, HP_chrif_flush) },
 	{ HP_POP(chrif->skillid2idx, HP_chrif_skillid2idx) },
 	{ HP_POP(chrif->sd_to_auth, HP_chrif_sd_to_auth) },
