@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2016  Hercules Dev Team
+ * Copyright (C) 2012-2018  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -20,7 +20,7 @@
  */
 #define HERCULES_CORE
 
-#include "config/core.h" // AUTOTRADE_PERSISTENCY, STATS_OPT_OUT
+#include "config/core.h" // AUTOTRADE_PERSISTENCY
 #include "chrif.h"
 
 #include "map/battle.h"
@@ -1561,22 +1561,6 @@ bool chrif_removefriend(int char_id, int friend_id)
 	return true;
 }
 
-void chrif_send_report(char* buf, int len) {
-#ifndef STATS_OPT_OUT
-	if( chrif->fd > 0 ) {
-		nullpo_retv(buf);
-		WFIFOHEAD(chrif->fd,len + 2);
-
-		WFIFOW(chrif->fd,0) = 0x3008;
-		memcpy(WFIFOP(chrif->fd,2), buf, len);
-
-		WFIFOSET(chrif->fd,len + 2);
-
-		sockt->flush(chrif->fd); /* ensure it's sent now. */
-	}
-#endif
-}
-
 /**
  * Sends a single scdata for saving into char server, meant to ensure integrity of duration-less conditions
  **/
@@ -1756,7 +1740,6 @@ void chrif_defaults(void) {
 	chrif->divorce = chrif_divorce;
 
 	chrif->removefriend = chrif_removefriend;
-	chrif->send_report = chrif_send_report;
 
 	chrif->flush = chrif_flush;
 	chrif->skillid2idx = chrif_skillid2idx;

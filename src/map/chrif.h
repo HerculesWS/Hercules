@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2016  Hercules Dev Team
+ * Copyright (C) 2012-2018  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -124,7 +124,6 @@ struct chrif_interface {
 	bool (*divorce) (int partner_id1, int partner_id2);
 
 	bool (*removefriend) (int char_id, int friend_id);
-	void (*send_report) (char* buf, int len);
 
 	bool (*flush) (void);
 	void (*skillid2idx) (int fd);

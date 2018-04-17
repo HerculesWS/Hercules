@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2016  Hercules Dev Team
+ * Copyright (C) 2012-2018  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -20,11 +20,10 @@
  */
 #define HERCULES_CORE
 
-#include "config/core.h" // CELL_NOSTACK, CIRCULAR_AREA, CONSOLE_INPUT, HMAP_ZONE_DAMAGE_CAP_TYPE, OFFICIAL_WALKPATH, RENEWAL, RENEWAL_ASPD, RENEWAL_CAST, RENEWAL_DROP, RENEWAL_EDP, RENEWAL_EXP, RENEWAL_LVDMG, RE_LVL_DMOD(), RE_LVL_MDMOD(), RE_LVL_TMDMOD(), RE_SKILL_REDUCTION(), SCRIPT_CALLFUNC_CHECK, SECURE_NPCTIMEOUT, STATS_OPT_OUT
+#include "config/core.h" // CELL_NOSTACK, CIRCULAR_AREA, CONSOLE_INPUT, HMAP_ZONE_DAMAGE_CAP_TYPE, OFFICIAL_WALKPATH, RENEWAL, RENEWAL_ASPD, RENEWAL_CAST, RENEWAL_DROP, RENEWAL_EDP, RENEWAL_EXP, RENEWAL_LVDMG, RE_LVL_DMOD(), RE_LVL_MDMOD(), RE_LVL_TMDMOD(), RE_SKILL_REDUCTION(), SCRIPT_CALLFUNC_CHECK, SECURE_NPCTIMEOUT
 #include "battle.h"
 
 #include "map/battleground.h"
-#include "map/chrif.h"
 #include "map/clan.h"
 #include "map/clif.h"
 #include "map/elemental.h"
@@ -7324,168 +7323,6 @@ static const struct battle_data {
 	{ "features/enable_attendance_system",  &battle_config.feature_enable_attendance_system,1,      0,      1,              },
 	{ "features/feature_attendance_endtime",&battle_config.feature_attendance_endtime,      1,      0,      99999999,       },
 };
-#ifndef STATS_OPT_OUT
-/**
- * Hercules anonymous statistic usage report -- packet is built here, and sent to char server to report.
- **/
-void Hercules_report(char* date, char *time_c) {
-	int i, bd_size = ARRAYLENGTH(battle_data);
-	unsigned int config = 0;
-	char timestring[25];
-	time_t curtime;
-	char* buf;
-
-	enum config_table {
-		C_CIRCULAR_AREA         = 0x0001,
-		C_CELLNOSTACK           = 0x0002,
-		C_CONSOLE_INPUT         = 0x0004,
-		C_SCRIPT_CALLFUNC_CHECK = 0x0008,
-		C_OFFICIAL_WALKPATH     = 0x0010,
-		C_RENEWAL               = 0x0020,
-		C_RENEWAL_CAST          = 0x0040,
-		C_RENEWAL_DROP          = 0x0080,
-		C_RENEWAL_EXP           = 0x0100,
-		C_RENEWAL_LVDMG         = 0x0200,
-		C_RENEWAL_EDP           = 0x0400,
-		C_RENEWAL_ASPD          = 0x0800,
-		C_SECURE_NPCTIMEOUT     = 0x1000,
-		//C_SQL_DB_ITEM           = 0x2000,
-		C_SQL_LOGS              = 0x4000,
-		C_MEMWATCH              = 0x8000,
-		C_DMALLOC               = 0x10000,
-		C_GCOLLECT              = 0x20000,
-		C_SEND_SHORTLIST        = 0x40000,
-		//C_SQL_DB_MOB            = 0x80000,
-		//C_SQL_DB_MOBSKILL       = 0x100000,
-		C_PACKETVER_RE          = 0x200000,
-	};
-
-	/* we get the current time */
-	time(&curtime);
-	strftime(timestring, 24, "%Y-%m-%d %H:%M:%S", localtime(&curtime));
-
-#ifdef CIRCULAR_AREA
-	config |= C_CIRCULAR_AREA;
-#endif
-
-#ifdef CELL_NOSTACK
-	config |= C_CELLNOSTACK;
-#endif
-
-#ifdef CONSOLE_INPUT
-	config |= C_CONSOLE_INPUT;
-#endif
-
-#ifdef SCRIPT_CALLFUNC_CHECK
-	config |= C_SCRIPT_CALLFUNC_CHECK;
-#endif
-
-#ifdef OFFICIAL_WALKPATH
-	config |= C_OFFICIAL_WALKPATH;
-#endif
-
-#ifdef RENEWAL
-	config |= C_RENEWAL;
-#endif
-
-#ifdef RENEWAL_CAST
-	config |= C_RENEWAL_CAST;
-#endif
-
-#ifdef RENEWAL_DROP
-	config |= C_RENEWAL_DROP;
-#endif
-
-#ifdef RENEWAL_EXP
-	config |= C_RENEWAL_EXP;
-#endif
-
-#ifdef RENEWAL_LVDMG
-	config |= C_RENEWAL_LVDMG;
-#endif
-
-#ifdef RENEWAL_EDP
-	config |= C_RENEWAL_EDP;
-#endif
-
-#ifdef RENEWAL_ASPD
-	config |= C_RENEWAL_ASPD;
-#endif
-
-#ifdef SECURE_NPCTIMEOUT
-	config |= C_SECURE_NPCTIMEOUT;
-#endif
-
-#ifdef PACKETVER_RE
-	config |= C_PACKETVER_RE;
-#endif
-
-	/* non-define part */
-	if( logs->config.sql_logs )
-		config |= C_SQL_LOGS;
-
-#ifdef MEMWATCH
-	config |= C_MEMWATCH;
-#endif
-#ifdef DMALLOC
-	config |= C_DMALLOC;
-#endif
-#ifdef GCOLLECT
-	config |= C_GCOLLECT;
-#endif
-
-#ifdef SEND_SHORTLIST
-	config |= C_SEND_SHORTLIST;
-#endif
-
-#define BFLAG_LENGTH 35
-
-	CREATE(buf, char, 262 + ( bd_size * ( BFLAG_LENGTH + 4 ) ) + 1 );
-
-	/* build packet */
-
-	WBUFW(buf,0) = 0x3000;
-	WBUFW(buf,2) = 262 + ( bd_size * ( BFLAG_LENGTH + 4 ) );
-	WBUFW(buf,4) = 0x9f;
-
-	safestrncpy(WBUFP(buf,6), date, 12);
-	safestrncpy(WBUFP(buf,18), time_c, 9);
-	safestrncpy(WBUFP(buf,27), timestring, 24);
-
-	safestrncpy(WBUFP(buf,51), sysinfo->platform(), 16);
-	safestrncpy(WBUFP(buf,67), sysinfo->osversion(), 50);
-	safestrncpy(WBUFP(buf,117), sysinfo->cpu(), 32);
-	WBUFL(buf,149) = sysinfo->cpucores();
-	safestrncpy(WBUFP(buf,153), sysinfo->arch(), 8);
-	WBUFB(buf,161) = sysinfo->vcstypeid();
-	WBUFB(buf,162) = sysinfo->is64bit();
-	safestrncpy(WBUFP(buf,163), sysinfo->vcsrevision_src(), 41);
-	safestrncpy(WBUFP(buf,204), sysinfo->vcsrevision_scripts(), 41);
-	WBUFB(buf,245) = (sysinfo->is_superuser()? 1 : 0);
-	WBUFL(buf,246) = map->getusers();
-
-	WBUFL(buf,250) = config;
-	WBUFL(buf,254) = PACKETVER;
-
-	WBUFL(buf,258) = bd_size;
-	for( i = 0; i < bd_size; i++ ) {
-		safestrncpy(WBUFP(buf,262 + ( i * ( BFLAG_LENGTH + 4 ) ) ), battle_data[i].str, BFLAG_LENGTH);
-		WBUFL(buf,262 + BFLAG_LENGTH + ( i * ( BFLAG_LENGTH + 4 )  )  ) = *battle_data[i].val;
-	}
-
-	chrif->send_report(buf, 262 + ( bd_size * ( BFLAG_LENGTH + 4 ) ) );
-
-	aFree(buf);
-
-#undef BFLAG_LENGTH
-}
-static int Hercules_report_timer(int tid, int64 tick, int id, intptr_t data) {
-	if( chrif->isconnected() ) {/* char server relays it, so it must be online. */
-		Hercules_report(__DATE__,__TIME__);
-	}
-	return 0;
-}
-#endif
 
 bool battle_set_value_sub(int index, int value)
 {
@@ -7694,12 +7531,6 @@ void do_init_battle(bool minimal) {
 
 	battle->delay_damage_ers = ers_new(sizeof(struct delay_damage),"battle.c::delay_damage_ers",ERS_OPT_CLEAR);
 	timer->add_func_list(battle->delay_damage_sub, "battle_delay_damage_sub");
-
-#ifndef STATS_OPT_OUT
-	timer->add_func_list(Hercules_report_timer, "Hercules_report_timer");
-	timer->add_interval(timer->gettick()+30000, Hercules_report_timer, 0, 0, 60000 * 30);
-#endif
-
 }
 
 void do_final_battle(void) {
