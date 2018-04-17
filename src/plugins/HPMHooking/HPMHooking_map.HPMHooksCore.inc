@@ -3752,8 +3752,6 @@ struct {
 	struct HPMHookPoint *HP_mob_parse_row_chatdb_post;
 	struct HPMHookPoint *HP_mob_readchatdb_pre;
 	struct HPMHookPoint *HP_mob_readchatdb_post;
-	struct HPMHookPoint *HP_mob_parse_row_mobskilldb_pre;
-	struct HPMHookPoint *HP_mob_parse_row_mobskilldb_post;
 	struct HPMHookPoint *HP_mob_readskilldb_pre;
 	struct HPMHookPoint *HP_mob_readskilldb_post;
 	struct HPMHookPoint *HP_mob_readdb_race2_pre;
@@ -3766,6 +3764,12 @@ struct {
 	struct HPMHookPoint *HP_mob_clear_spawninfo_post;
 	struct HPMHookPoint *HP_mob_destroy_mob_db_pre;
 	struct HPMHookPoint *HP_mob_destroy_mob_db_post;
+	struct HPMHookPoint *HP_mob_skill_db_libconfig_pre;
+	struct HPMHookPoint *HP_mob_skill_db_libconfig_post;
+	struct HPMHookPoint *HP_mob_skill_db_libconfig_sub_pre;
+	struct HPMHookPoint *HP_mob_skill_db_libconfig_sub_post;
+	struct HPMHookPoint *HP_mob_skill_db_libconfig_sub_skill_pre;
+	struct HPMHookPoint *HP_mob_skill_db_libconfig_sub_skill_post;
 	struct HPMHookPoint *HP_mutex_create_pre;
 	struct HPMHookPoint *HP_mutex_create_post;
 	struct HPMHookPoint *HP_mutex_destroy_pre;
@@ -10071,8 +10075,6 @@ struct {
 	int HP_mob_parse_row_chatdb_post;
 	int HP_mob_readchatdb_pre;
 	int HP_mob_readchatdb_post;
-	int HP_mob_parse_row_mobskilldb_pre;
-	int HP_mob_parse_row_mobskilldb_post;
 	int HP_mob_readskilldb_pre;
 	int HP_mob_readskilldb_post;
 	int HP_mob_readdb_race2_pre;
@@ -10085,6 +10087,12 @@ struct {
 	int HP_mob_clear_spawninfo_post;
 	int HP_mob_destroy_mob_db_pre;
 	int HP_mob_destroy_mob_db_post;
+	int HP_mob_skill_db_libconfig_pre;
+	int HP_mob_skill_db_libconfig_post;
+	int HP_mob_skill_db_libconfig_sub_pre;
+	int HP_mob_skill_db_libconfig_sub_post;
+	int HP_mob_skill_db_libconfig_sub_skill_pre;
+	int HP_mob_skill_db_libconfig_sub_skill_post;
 	int HP_mutex_create_pre;
 	int HP_mutex_create_post;
 	int HP_mutex_destroy_pre;
