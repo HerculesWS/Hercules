@@ -8088,8 +8088,8 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 	}
 
 	// changed penalty options, added death by player if pk_mode [Valaris]
-	if( battle_config.death_penalty_type
-	   && (sd->job & MAPID_UPPERMASK) != MAPID_NOVICE // only novices will receive no penalty
+	if (battle_config.death_penalty_type
+	   && pc->isDeathPenaltyJob(sd->job)
 	   && !map->list[sd->bl.m].flag.noexppenalty && !map_flag_gvg2(sd->bl.m)
 	   && !sd->sc.data[SC_BABY] && !sd->sc.data[SC_CASH_DEATHPENALTY]
 	   ) {
@@ -8235,6 +8235,11 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 		sd->canlog_tick = timer->gettick() - battle_config.prevent_logout;
 
 	return 1;
+}
+
+bool pc_isDeathPenaltyJob(uint16 job)
+{
+    return (job & MAPID_UPPERMASK) != MAPID_NOVICE;  // only novices will receive no penalty
 }
 
 void pc_revive(struct map_session_data *sd,unsigned int hp, unsigned int sp) {
@@ -12517,4 +12522,6 @@ void pc_defaults(void) {
 	pc->have_magnifier = pc_have_magnifier;
 
 	pc->check_basicskill = pc_check_basicskill;
+
+	pc->isDeathPenaltyJob = pc_isDeathPenaltyJob;
 }
