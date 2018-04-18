@@ -4212,6 +4212,10 @@ struct {
 	struct HPMHookPoint *HP_pc_checkequip_post;
 	struct HPMHookPoint *HP_pc_calc_skilltree_pre;
 	struct HPMHookPoint *HP_pc_calc_skilltree_post;
+	struct HPMHookPoint *HP_pc_calc_skilltree_clear_pre;
+	struct HPMHookPoint *HP_pc_calc_skilltree_clear_post;
+	struct HPMHookPoint *HP_pc_calc_skilltree_bonus_pre;
+	struct HPMHookPoint *HP_pc_calc_skilltree_bonus_post;
 	struct HPMHookPoint *HP_pc_calc_skilltree_normalize_job_pre;
 	struct HPMHookPoint *HP_pc_calc_skilltree_normalize_job_post;
 	struct HPMHookPoint *HP_pc_clean_skilltree_pre;
@@ -4308,6 +4312,8 @@ struct {
 	struct HPMHookPoint *HP_pc_maxjoblv_post;
 	struct HPMHookPoint *HP_pc_checkbaselevelup_pre;
 	struct HPMHookPoint *HP_pc_checkbaselevelup_post;
+	struct HPMHookPoint *HP_pc_checkbaselevelup_sc_pre;
+	struct HPMHookPoint *HP_pc_checkbaselevelup_sc_post;
 	struct HPMHookPoint *HP_pc_checkjoblevelup_pre;
 	struct HPMHookPoint *HP_pc_checkjoblevelup_post;
 	struct HPMHookPoint *HP_pc_gainexp_pre;
@@ -4340,6 +4346,8 @@ struct {
 	struct HPMHookPoint *HP_pc_resetstate_post;
 	struct HPMHookPoint *HP_pc_resetskill_pre;
 	struct HPMHookPoint *HP_pc_resetskill_post;
+	struct HPMHookPoint *HP_pc_resetskill_job_pre;
+	struct HPMHookPoint *HP_pc_resetskill_job_post;
 	struct HPMHookPoint *HP_pc_resetfeel_pre;
 	struct HPMHookPoint *HP_pc_resetfeel_post;
 	struct HPMHookPoint *HP_pc_resethate_pre;
@@ -4460,8 +4468,12 @@ struct {
 	struct HPMHookPoint *HP_pc_delinvincibletimer_post;
 	struct HPMHookPoint *HP_pc_addspiritball_pre;
 	struct HPMHookPoint *HP_pc_addspiritball_post;
+	struct HPMHookPoint *HP_pc_addspiritball_sub_pre;
+	struct HPMHookPoint *HP_pc_addspiritball_sub_post;
 	struct HPMHookPoint *HP_pc_delspiritball_pre;
 	struct HPMHookPoint *HP_pc_delspiritball_post;
+	struct HPMHookPoint *HP_pc_delspiritball_sub_pre;
+	struct HPMHookPoint *HP_pc_delspiritball_sub_post;
 	struct HPMHookPoint *HP_pc_getmaxspiritball_pre;
 	struct HPMHookPoint *HP_pc_getmaxspiritball_post;
 	struct HPMHookPoint *HP_pc_addfame_pre;
@@ -4550,6 +4562,8 @@ struct {
 	struct HPMHookPoint *HP_pc_follow_timer_post;
 	struct HPMHookPoint *HP_pc_read_skill_tree_pre;
 	struct HPMHookPoint *HP_pc_read_skill_tree_post;
+	struct HPMHookPoint *HP_pc_read_skill_job_skip_pre;
+	struct HPMHookPoint *HP_pc_read_skill_job_skip_post;
 	struct HPMHookPoint *HP_pc_clear_skill_tree_pre;
 	struct HPMHookPoint *HP_pc_clear_skill_tree_post;
 	struct HPMHookPoint *HP_pc_isUseitem_pre;
@@ -4608,6 +4622,8 @@ struct {
 	struct HPMHookPoint *HP_pc_check_supernovice_call_post;
 	struct HPMHookPoint *HP_pc_check_basicskill_pre;
 	struct HPMHookPoint *HP_pc_check_basicskill_post;
+	struct HPMHookPoint *HP_pc_isDeathPenaltyJob_pre;
+	struct HPMHookPoint *HP_pc_isDeathPenaltyJob_post;
 	struct HPMHookPoint *HP_libpcre_compile_pre;
 	struct HPMHookPoint *HP_libpcre_compile_post;
 	struct HPMHookPoint *HP_libpcre_study_pre;
@@ -5902,6 +5918,8 @@ struct {
 	struct HPMHookPoint *HP_status_calc_pc__post;
 	struct HPMHookPoint *HP_status_calc_pc_additional_pre;
 	struct HPMHookPoint *HP_status_calc_pc_additional_post;
+	struct HPMHookPoint *HP_status_calc_pc_recover_hp_pre;
+	struct HPMHookPoint *HP_status_calc_pc_recover_hp_post;
 	struct HPMHookPoint *HP_status_calc_homunculus__pre;
 	struct HPMHookPoint *HP_status_calc_homunculus__post;
 	struct HPMHookPoint *HP_status_calc_mercenary__pre;
@@ -10531,6 +10549,10 @@ struct {
 	int HP_pc_checkequip_post;
 	int HP_pc_calc_skilltree_pre;
 	int HP_pc_calc_skilltree_post;
+	int HP_pc_calc_skilltree_clear_pre;
+	int HP_pc_calc_skilltree_clear_post;
+	int HP_pc_calc_skilltree_bonus_pre;
+	int HP_pc_calc_skilltree_bonus_post;
 	int HP_pc_calc_skilltree_normalize_job_pre;
 	int HP_pc_calc_skilltree_normalize_job_post;
 	int HP_pc_clean_skilltree_pre;
@@ -10627,6 +10649,8 @@ struct {
 	int HP_pc_maxjoblv_post;
 	int HP_pc_checkbaselevelup_pre;
 	int HP_pc_checkbaselevelup_post;
+	int HP_pc_checkbaselevelup_sc_pre;
+	int HP_pc_checkbaselevelup_sc_post;
 	int HP_pc_checkjoblevelup_pre;
 	int HP_pc_checkjoblevelup_post;
 	int HP_pc_gainexp_pre;
@@ -10659,6 +10683,8 @@ struct {
 	int HP_pc_resetstate_post;
 	int HP_pc_resetskill_pre;
 	int HP_pc_resetskill_post;
+	int HP_pc_resetskill_job_pre;
+	int HP_pc_resetskill_job_post;
 	int HP_pc_resetfeel_pre;
 	int HP_pc_resetfeel_post;
 	int HP_pc_resethate_pre;
@@ -10779,8 +10805,12 @@ struct {
 	int HP_pc_delinvincibletimer_post;
 	int HP_pc_addspiritball_pre;
 	int HP_pc_addspiritball_post;
+	int HP_pc_addspiritball_sub_pre;
+	int HP_pc_addspiritball_sub_post;
 	int HP_pc_delspiritball_pre;
 	int HP_pc_delspiritball_post;
+	int HP_pc_delspiritball_sub_pre;
+	int HP_pc_delspiritball_sub_post;
 	int HP_pc_getmaxspiritball_pre;
 	int HP_pc_getmaxspiritball_post;
 	int HP_pc_addfame_pre;
@@ -10869,6 +10899,8 @@ struct {
 	int HP_pc_follow_timer_post;
 	int HP_pc_read_skill_tree_pre;
 	int HP_pc_read_skill_tree_post;
+	int HP_pc_read_skill_job_skip_pre;
+	int HP_pc_read_skill_job_skip_post;
 	int HP_pc_clear_skill_tree_pre;
 	int HP_pc_clear_skill_tree_post;
 	int HP_pc_isUseitem_pre;
@@ -10927,6 +10959,8 @@ struct {
 	int HP_pc_check_supernovice_call_post;
 	int HP_pc_check_basicskill_pre;
 	int HP_pc_check_basicskill_post;
+	int HP_pc_isDeathPenaltyJob_pre;
+	int HP_pc_isDeathPenaltyJob_post;
 	int HP_libpcre_compile_pre;
 	int HP_libpcre_compile_post;
 	int HP_libpcre_study_pre;
@@ -12221,6 +12255,8 @@ struct {
 	int HP_status_calc_pc__post;
 	int HP_status_calc_pc_additional_pre;
 	int HP_status_calc_pc_additional_post;
+	int HP_status_calc_pc_recover_hp_pre;
+	int HP_status_calc_pc_recover_hp_post;
 	int HP_status_calc_homunculus__pre;
 	int HP_status_calc_homunculus__post;
 	int HP_status_calc_mercenary__pre;
