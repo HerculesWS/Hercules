@@ -1101,6 +1101,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*autosave) (int tid, int64 tick, int id, intptr_t data);
 	int (*follow_timer) (int tid, int64 tick, int id, intptr_t data);
 	void (*read_skill_tree) (void);
+	bool (*read_skill_job_skip) (short skill_id, int job_id);
 	void (*clear_skill_tree) (void);
 	int (*isUseitem) (struct map_session_data *sd,int n);
 	int (*show_steal) (struct block_list *bl,va_list ap);

@@ -11135,6 +11135,11 @@ int pc_split_atoui64(char* str, uint64* val, char sep, int max)
 	return i;
 }
 
+bool pc_read_skill_job_skip(short skill_id, int job_id)
+{
+	return skill_id == NV_TRICKDEAD && ((pc->jobid2mapid(job_id) & (MAPID_BASEMASK | JOBL_2)) != MAPID_NOVICE);  // skip trickdead for non-novices
+}
+
 /**
  * Parses the skill tree config file.
  *
@@ -11215,8 +11220,8 @@ void pc_read_skill_tree(void)
 						ShowWarning("pc_read_skill_tree: '%s' can't inherit '%s', skill tree is full!\n", job_name, ijob_name);
 						break;
 					}
-					if (src->id == NV_TRICKDEAD && ((pc->jobid2mapid(job_id)&(MAPID_BASEMASK | JOBL_2)) != MAPID_NOVICE))
-						continue; // skip trickdead for non-novices
+					if (pc->read_skill_job_skip(src->id, job_id))
+						continue;
 					dst = &pc->skill_tree[job_idx][cur];
 					dst->inherited = 1;
 					if (dst->id == 0) {
@@ -12481,6 +12486,7 @@ void pc_defaults(void) {
 	pc->autosave = pc_autosave;
 	pc->follow_timer = pc_follow_timer;
 	pc->read_skill_tree = pc_read_skill_tree;
+	pc->read_skill_job_skip = pc_read_skill_job_skip;
 	pc->clear_skill_tree = pc_clear_skill_tree;
 	pc->isUseitem = pc_isUseitem;
 	pc->show_steal = pc_show_steal;
