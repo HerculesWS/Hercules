@@ -1601,6 +1601,30 @@ int pc_calc_skillpoint(struct map_session_data* sd) {
 	return skill_point;
 }
 
+void pc_calc_skilltree_clear(struct map_session_data *sd)
+{
+	int i;
+
+	nullpo_retv(sd);
+
+	for (i = 0; i < MAX_SKILL_DB; i++) {
+		if (sd->status.skill[i].flag != SKILL_FLAG_PLAGIARIZED && sd->status.skill[i].flag != SKILL_FLAG_PERM_GRANTED) //Don't touch these
+			sd->status.skill[i].id = 0; //First clear skills.
+		/* permanent skills that must be re-checked */
+		if (sd->status.skill[i].flag == SKILL_FLAG_PERMANENT) {
+			switch (skill->dbs->db[i].nameid) {
+				case NV_TRICKDEAD:
+					if ((sd->job & MAPID_UPPERMASK) != MAPID_NOVICE) {
+						sd->status.skill[i].id = 0;
+						sd->status.skill[i].lv = 0;
+						sd->status.skill[i].flag = 0;
+					}
+					break;
+			}
+		}
+	}
+}
+
 /*==========================================
  * Calculation of skill level.
  *------------------------------------------*/
@@ -1619,22 +1643,7 @@ int pc_calc_skilltree(struct map_session_data *sd)
 	}
 	classidx = pc->class2idx(class);
 
-	for (i = 0; i < MAX_SKILL_DB; i++) {
-		if( sd->status.skill[i].flag != SKILL_FLAG_PLAGIARIZED && sd->status.skill[i].flag != SKILL_FLAG_PERM_GRANTED ) //Don't touch these
-			sd->status.skill[i].id = 0; //First clear skills.
-		/* permanent skills that must be re-checked */
-		if( sd->status.skill[i].flag == SKILL_FLAG_PERMANENT ) {
-			switch( skill->dbs->db[i].nameid ) {
-				case NV_TRICKDEAD:
-					if ((sd->job & MAPID_UPPERMASK) != MAPID_NOVICE) {
-						sd->status.skill[i].id = 0;
-						sd->status.skill[i].lv = 0;
-						sd->status.skill[i].flag = 0;
-					}
-					break;
-			}
-		}
-	}
+	pc->calc_skilltree_clear(sd);
 
 	for (i = 0; i < MAX_SKILL_DB; i++) {
 		if( sd->status.skill[i].flag != SKILL_FLAG_PERMANENT && sd->status.skill[i].flag != SKILL_FLAG_PERM_GRANTED && sd->status.skill[i].flag != SKILL_FLAG_PLAGIARIZED )
@@ -1761,6 +1770,19 @@ int pc_calc_skilltree(struct map_session_data *sd)
 		}
 	} while(flag);
 
+	pc->calc_skilltree_bonus(sd, classidx);
+
+	return 0;
+}
+
+void pc_calc_skilltree_bonus(struct map_session_data *sd, int classidx)
+{
+	int i;
+	int id = 0;
+
+	nullpo_retv(sd);
+	Assert_retv(classidx >= 0 && classidx < CLASS_COUNT);
+
 	//
 	if (classidx > 0 && (sd->job & MAPID_UPPERMASK) == MAPID_TAEKWON
 	 && sd->status.base_level >= 90 && sd->status.skill_point == 0
@@ -1786,8 +1808,6 @@ int pc_calc_skilltree(struct map_session_data *sd)
 			sd->status.skill[idx].lv = skill->tree_get_max(id, sd->status.class);
 		}
 	}
-
-	return 0;
 }
 
 //Checks if you can learn a new skill after having leveled up a skill.
@@ -12226,6 +12246,8 @@ void pc_defaults(void) {
 	pc->checkequip = pc_checkequip;
 
 	pc->calc_skilltree = pc_calc_skilltree;
+	pc->calc_skilltree_bonus = pc_calc_skilltree_bonus;
+	pc->calc_skilltree_clear = pc_calc_skilltree_clear;
 	pc->calc_skilltree_normalize_job = pc_calc_skilltree_normalize_job;
 	pc->clean_skilltree = pc_clean_skilltree;
 

@@ -889,6 +889,8 @@ END_ZEROED_BLOCK; /* End */
 	int (*checkequip) (struct map_session_data *sd,int pos);
 
 	int (*calc_skilltree) (struct map_session_data *sd);
+	void (*calc_skilltree_clear) (struct map_session_data *sd);
+	void (*calc_skilltree_bonus) (struct map_session_data *sd, int classidx);
 	int (*calc_skilltree_normalize_job) (struct map_session_data *sd);
 	int (*clean_skilltree) (struct map_session_data *sd);
 
