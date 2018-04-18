@@ -2333,6 +2333,18 @@ void status_calc_pc_additional(struct map_session_data* sd, enum e_status_calc_o
 	return;
 }
 
+void status_calc_pc_recover_hp(struct map_session_data* sd, struct status_data *bstatus)
+{
+	nullpo_retv(sd);
+	nullpo_retv(bstatus);
+
+	if ((sd->job & MAPID_BASEMASK) == MAPID_NOVICE && (sd->job & JOBL_2) == 0
+		&& battle_config.restart_hp_rate < 50)
+		bstatus->hp = bstatus->max_hp>>1;
+	else
+		bstatus->hp = APPLY_RATE(bstatus->max_hp, battle_config.restart_hp_rate);
+}
+
 //Calculates player data from scratch without counting SC adjustments.
 //Should be invoked whenever players raise stats, learn passive skills or change equipment.
 int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
@@ -2874,11 +2886,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 		bstatus->hp = bstatus->max_hp;
 		bstatus->sp = bstatus->max_sp;
 	} else {
-		if ((sd->job & MAPID_BASEMASK) == MAPID_NOVICE && (sd->job & JOBL_2) == 0
-			&& battle_config.restart_hp_rate < 50)
-			bstatus->hp = bstatus->max_hp>>1;
-		else
-			bstatus->hp = APPLY_RATE(bstatus->max_hp, battle_config.restart_hp_rate);
+		status->calc_pc_recover_hp(sd, bstatus);
 		if(!bstatus->hp)
 			bstatus->hp = 1;
 
@@ -13658,6 +13666,7 @@ void status_defaults(void)
 	status->calc_pet_ = status_calc_pet_;
 	status->calc_pc_ = status_calc_pc_;
 	status->calc_pc_additional = status_calc_pc_additional;
+	status->calc_pc_recover_hp = status_calc_pc_recover_hp;
 	status->calc_homunculus_ = status_calc_homunculus_;
 	status->calc_mercenary_ = status_calc_mercenary_;
 	status->calc_elemental_ = status_calc_elemental_;
