@@ -6823,18 +6823,7 @@ int pc_checkbaselevelup(struct map_session_data *sd)
 	status_calc_pc(sd,SCO_FORCE);
 	status_percent_heal(&sd->bl,100,100);
 
-	if ((sd->job & MAPID_UPPERMASK) == MAPID_SUPER_NOVICE) {
-		sc_start(NULL,&sd->bl,status->skill2sc(PR_KYRIE),100,1,skill->get_time(PR_KYRIE,1));
-		sc_start(NULL,&sd->bl,status->skill2sc(PR_IMPOSITIO),100,1,skill->get_time(PR_IMPOSITIO,1));
-		sc_start(NULL,&sd->bl,status->skill2sc(PR_MAGNIFICAT),100,1,skill->get_time(PR_MAGNIFICAT,1));
-		sc_start(NULL,&sd->bl,status->skill2sc(PR_GLORIA),100,1,skill->get_time(PR_GLORIA,1));
-		sc_start(NULL,&sd->bl,status->skill2sc(PR_SUFFRAGIUM),100,1,skill->get_time(PR_SUFFRAGIUM,1));
-		if (sd->state.snovice_dead_flag)
-			sd->state.snovice_dead_flag = 0; //Reenable steelbody resurrection on dead.
-	} else if ((sd->job & MAPID_BASEMASK) == MAPID_TAEKWON) {
-		sc_start(NULL,&sd->bl,status->skill2sc(AL_INCAGI),100,10,600000);
-		sc_start(NULL,&sd->bl,status->skill2sc(AL_BLESSING),100,10,600000);
-	}
+	pc->checkbaselevelup_sc(sd);
 	clif->misceffect(&sd->bl,0);
 	npc->script_event(sd, NPCE_BASELVUP); //LORDALFA - LVLUPEVENT
 
@@ -6843,6 +6832,24 @@ int pc_checkbaselevelup(struct map_session_data *sd)
 
 	pc->baselevelchanged(sd);
 	return 1;
+}
+
+void pc_checkbaselevelup_sc(struct map_session_data *sd)
+{
+	nullpo_retv(sd);
+
+	if ((sd->job & MAPID_UPPERMASK) == MAPID_SUPER_NOVICE) {
+		sc_start(NULL, &sd->bl, status->skill2sc(PR_KYRIE), 100, 1, skill->get_time(PR_KYRIE, 1));
+		sc_start(NULL, &sd->bl, status->skill2sc(PR_IMPOSITIO), 100, 1, skill->get_time(PR_IMPOSITIO, 1));
+		sc_start(NULL, &sd->bl, status->skill2sc(PR_MAGNIFICAT), 100, 1, skill->get_time(PR_MAGNIFICAT, 1));
+		sc_start(NULL, &sd->bl, status->skill2sc(PR_GLORIA), 100, 1, skill->get_time(PR_GLORIA, 1));
+		sc_start(NULL, &sd->bl, status->skill2sc(PR_SUFFRAGIUM), 100, 1, skill->get_time(PR_SUFFRAGIUM, 1));
+		if (sd->state.snovice_dead_flag)
+			sd->state.snovice_dead_flag = 0; //Reenable steelbody resurrection on dead.
+	} else if ((sd->job & MAPID_BASEMASK) == MAPID_TAEKWON) {
+		sc_start(NULL, &sd->bl, status->skill2sc(AL_INCAGI), 100, 10, 600000);
+		sc_start(NULL, &sd->bl, status->skill2sc(AL_BLESSING), 100, 10, 600000);
+	}
 }
 
 void pc_baselevelchanged(struct map_session_data *sd) {
@@ -12310,6 +12317,7 @@ void pc_defaults(void) {
 	pc->maxbaselv = pc_maxbaselv;
 	pc->maxjoblv = pc_maxjoblv;
 	pc->checkbaselevelup = pc_checkbaselevelup;
+	pc->checkbaselevelup_sc = pc_checkbaselevelup_sc;
 	pc->checkjoblevelup = pc_checkjoblevelup;
 	pc->gainexp = pc_gainexp;
 	pc->nextbaseexp = pc_nextbaseexp;

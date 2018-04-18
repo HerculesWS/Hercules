@@ -954,6 +954,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*maxbaselv) (const struct map_session_data *sd);
 	int (*maxjoblv) (const struct map_session_data *sd);
 	int (*checkbaselevelup) (struct map_session_data *sd);
+	void (*checkbaselevelup_sc) (struct map_session_data *sd);
 	int (*checkjoblevelup) (struct map_session_data *sd);
 	bool (*gainexp) (struct map_session_data *sd, struct block_list *src, uint64 base_exp, uint64 job_exp, bool is_quest);
 	uint64 (*nextbaseexp) (const struct map_session_data *sd);
