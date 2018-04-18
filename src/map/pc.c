@@ -294,14 +294,22 @@ int pc_delspiritball(struct map_session_data *sd,int count,int type)
 		sd->spirit_timer[i] = INVALID_TIMER;
 	}
 
-	if(!type) {
-		if ((sd->job & MAPID_THIRDMASK) == MAPID_ROYAL_GUARD)
-			clif->millenniumshield(&sd->bl,sd->spiritball);
-		else
-			clif->spiritball(&sd->bl);
+	if (!type) {
+		pc->delspiritball_sub(sd);
 	}
 	return 0;
 }
+
+int pc_delspiritball_sub(struct map_session_data *sd)
+{
+	nullpo_ret(sd);
+	if ((sd->job & MAPID_THIRDMASK) == MAPID_ROYAL_GUARD)
+		clif->millenniumshield(&sd->bl,sd->spiritball);
+	else
+		clif->spiritball(&sd->bl);
+	return 0;
+}
+
 int pc_check_banding(struct block_list *bl, va_list ap)
 {
 	int *c, *b_sd;
@@ -12372,6 +12380,7 @@ void pc_defaults(void) {
 	pc->addspiritball = pc_addspiritball;
 	pc->addspiritball_sub = pc_addspiritball_sub;
 	pc->delspiritball = pc_delspiritball;
+	pc->delspiritball_sub = pc_delspiritball_sub;
 	pc->addfame = pc_addfame;
 	pc->fame_rank = pc_fame_rank;
 	pc->famelist_type = pc_famelist_type;

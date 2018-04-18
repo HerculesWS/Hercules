@@ -1042,6 +1042,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*addspiritball) (struct map_session_data *sd,int interval,int max);
 	int (*addspiritball_sub) (struct map_session_data *sd);
 	int (*delspiritball) (struct map_session_data *sd,int count,int type);
+	int (*delspiritball_sub) (struct map_session_data *sd);
 	int (*getmaxspiritball) (struct map_session_data *sd, int min);
 	void (*addfame) (struct map_session_data *sd, int ranktype, int count);
 	int (*fame_rank) (int char_id, int ranktype);
