@@ -819,7 +819,7 @@ void clif_dropflooritem(struct flooritem_data* fitem) {
 	p.subX = fitem->subx;
 	p.subY = fitem->suby;
 	p.count = fitem->item_data.amount;
-#ifdef PACKETVER_ZERO
+#if defined(PACKETVER_ZERO) || PACKETVER >= 20180418
 	if (fitem->showdropeffect) {
 		p.showdropeffect = itemdb_showdropeffect(fitem->item_data.nameid);
 		p.dropeffectmode = itemdb_dropeffectmode(fitem->item_data.nameid);

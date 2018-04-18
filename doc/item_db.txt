@@ -371,8 +371,8 @@ Inherit: This can be used only in item_db2.conf, and if set to true, and the
          item already exists in item_db.conf, all the missing fields will be
          inherited from there rather than using their default values.
 
-ShowDropEffect: Allow showing an effect when the item dropped by a monster. [ZERO client only]
-DropEffectMode: Set attribute for ShowDropEffect. [ZERO client only]
+ShowDropEffect: Allow showing an effect when the item dropped by a monster. [ZERO client or PACKETVER >= 20180418]
+DropEffectMode: Set attribute for ShowDropEffect. [ZERO client or PACKETVER >= 20180418]
 				0 - Client Based (itemInfo EffectID)
 				1 - White effect
 				2 - Blue effect
