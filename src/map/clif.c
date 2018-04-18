@@ -20519,7 +20519,7 @@ void clif_parse_open_ui_request(int fd, struct map_session_data *sd)
 
 void clif_open_ui(struct map_session_data *sd, int8 UIType)
 {
-#if PACKETVER_RE_NUM >= 20180307 || PACKETVER_MAIN_NUM >= 20180404
+#if PACKETVER_RE_NUM >= 20180307 || PACKETVER_MAIN_NUM >= 20180404 || PACKETVER_ZERO_NUM >= 20180411
 	int claimed = 0;
 	struct PACKET_ZC_OPEN_UI p;
 
@@ -20542,14 +20542,14 @@ void clif_open_ui(struct map_session_data *sd, int8 UIType)
 
 	clif->send(&p, sizeof(p), &sd->bl, SELF);
 #else
-	ShowWarning("Attendance System available only for PACKETVER_RE_NUM >= 20180307 || PACKETVER_MAIN_NUM >= 20180404.\n");
+	ShowWarning("Attendance System available only for PACKETVER_RE_NUM >= 20180307 || PACKETVER_MAIN_NUM >= 20180404 || PACKETVER_ZERO_NUM >= 20180411.\n");
 #endif
 }
 
 void clif_parse_attendance_reward_request(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
 void clif_parse_attendance_reward_request(int fd, struct map_session_data *sd)
 {
-#if PACKETVER_RE_NUM >= 20180307 || PACKETVER_MAIN_NUM >= 20180404
+#if PACKETVER_RE_NUM >= 20180307 || PACKETVER_MAIN_NUM >= 20180404 || PACKETVER_ZERO_NUM >= 20180411
 
 	struct rodex_message msg = { 0 };
 	struct attendance_entry *entry;
@@ -20593,7 +20593,7 @@ void clif_parse_attendance_reward_request(int fd, struct map_session_data *sd)
 	intif->rodex_sendmail(&msg);
 	clif->ui_action(sd, 0, sd->status.attendance_count);
 #else
-	ShowWarning("Attendance System available only for PACKETVER_RE_NUM >= 20180307 || PACKETVER_MAIN_NUM >= 20180404.\n");
+	ShowWarning("Attendance System available only for PACKETVER_RE_NUM >= 20180307 || PACKETVER_MAIN_NUM >= 20180404 || PACKETVER_ZERO_NUM >= 20180411.\n");
 #endif
 }
 
