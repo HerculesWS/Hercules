@@ -249,11 +249,18 @@ int pc_addspiritball(struct map_session_data *sd,int interval,int max)
 		memmove(sd->spirit_timer+i+1, sd->spirit_timer+i, (sd->spiritball-i)*sizeof(int));
 	sd->spirit_timer[i] = tid;
 	sd->spiritball++;
+	pc->addspiritball_sub(sd);
+
+	return 0;
+}
+
+int pc_addspiritball_sub(struct map_session_data *sd)
+{
+	nullpo_ret(sd);
 	if ((sd->job & MAPID_THIRDMASK) == MAPID_ROYAL_GUARD)
 		clif->millenniumshield(&sd->bl,sd->spiritball);
 	else
 		clif->spiritball(&sd->bl);
-
 	return 0;
 }
 
@@ -12363,6 +12370,7 @@ void pc_defaults(void) {
 	pc->delinvincibletimer = pc_delinvincibletimer;
 
 	pc->addspiritball = pc_addspiritball;
+	pc->addspiritball_sub = pc_addspiritball_sub;
 	pc->delspiritball = pc_delspiritball;
 	pc->addfame = pc_addfame;
 	pc->fame_rank = pc_fame_rank;

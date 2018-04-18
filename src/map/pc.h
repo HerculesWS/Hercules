@@ -1040,6 +1040,7 @@ END_ZEROED_BLOCK; /* End */
 	void (*delinvincibletimer) (struct map_session_data* sd);
 
 	int (*addspiritball) (struct map_session_data *sd,int interval,int max);
+	int (*addspiritball_sub) (struct map_session_data *sd);
 	int (*delspiritball) (struct map_session_data *sd,int count,int type);
 	int (*getmaxspiritball) (struct map_session_data *sd, int min);
 	void (*addfame) (struct map_session_data *sd, int ranktype, int count);
