@@ -7639,7 +7639,6 @@ int pc_resetskill(struct map_session_data* sd, int flag)
 	}
 
 	for (i = 1; i < MAX_SKILL_DB; i++) {
-		uint16 skill_id = 0;
 		int lv = sd->status.skill[i].lv;
 		if (lv < 1) continue;
 
@@ -7648,19 +7647,7 @@ int pc_resetskill(struct map_session_data* sd, int flag)
 		if( inf2&(INF2_WEDDING_SKILL|INF2_SPIRIT_SKILL) ) //Avoid reseting wedding/linker skills.
 			continue;
 
-		skill_id = skill->dbs->db[i].nameid;
-
-		// Don't reset trick dead if not a novice/baby
-		if (skill_id == NV_TRICKDEAD && (sd->job & MAPID_UPPERMASK) != MAPID_NOVICE) {
-			sd->status.skill[i].lv = 0;
-			sd->status.skill[i].flag = 0;
-			continue;
-		}
-
-		// do not reset basic skill
-		if (skill_id == NV_BASIC && (sd->job & MAPID_UPPERMASK) != MAPID_NOVICE)
-			continue;
-		if (skill_id == SU_BASIC_SKILL && (sd->job & MAPID_BASEMASK) != MAPID_SUMMONER)
+		if (pc->resetskill_job(sd, i))
 			continue;
 
 		if( sd->status.skill[i].flag == SKILL_FLAG_PERM_GRANTED )
@@ -7713,6 +7700,30 @@ int pc_resetskill(struct map_session_data* sd, int flag)
 	}
 
 	return skill_point;
+}
+
+bool pc_resetskill_job(struct map_session_data* sd, int index)
+{
+	uint16 skill_id;
+
+	nullpo_retr(false, sd);
+	Assert_retr(false, index >= 0 && index < MAX_SKILL_DB);
+
+	skill_id = skill->dbs->db[index].nameid;
+
+	// Don't reset trick dead if not a novice/baby
+	if (skill_id == NV_TRICKDEAD && (sd->job & MAPID_UPPERMASK) != MAPID_NOVICE) {
+		sd->status.skill[index].lv = 0;
+		sd->status.skill[index].flag = 0;
+		return true;
+	}
+
+	// do not reset basic skill
+	if (skill_id == NV_BASIC && (sd->job & MAPID_UPPERMASK) != MAPID_NOVICE)
+		return true;
+	if (skill_id == SU_BASIC_SKILL && (sd->job & MAPID_BASEMASK) != MAPID_SUMMONER)
+		return true;
+	return false;
 }
 
 /*==========================================
@@ -12334,6 +12345,7 @@ void pc_defaults(void) {
 	pc->resetlvl = pc_resetlvl;
 	pc->resetstate = pc_resetstate;
 	pc->resetskill = pc_resetskill;
+	pc->resetskill_job = pc_resetskill_job;
 	pc->resetfeel = pc_resetfeel;
 	pc->resethate = pc_resethate;
 	pc->equipitem = pc_equipitem;

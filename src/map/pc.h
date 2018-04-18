@@ -971,6 +971,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*resetlvl) (struct map_session_data *sd,int type);
 	int (*resetstate) (struct map_session_data *sd);
 	int (*resetskill) (struct map_session_data *sd, int flag);
+	bool (*resetskill_job) (struct map_session_data *sd, int index);
 	int (*resetfeel) (struct map_session_data *sd);
 	int (*resethate) (struct map_session_data *sd);
 	int (*equipitem) (struct map_session_data *sd,int n,int req_pos);
