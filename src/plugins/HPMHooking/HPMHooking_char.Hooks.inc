@@ -16353,13 +16353,13 @@ void HP_pincode_update(int account_id, char *pin) {
 	}
 	return;
 }
-void HP_pincode_sendstate(int fd, struct char_session_data *sd, uint16 state) {
+void HP_pincode_makestate(int fd, struct char_session_data *sd, enum pincode_make_response state) {
 	int hIndex = 0;
-	if (HPMHooks.count.HP_pincode_sendstate_pre > 0) {
-		void (*preHookFunc) (int *fd, struct char_session_data **sd, uint16 *state);
+	if (HPMHooks.count.HP_pincode_makestate_pre > 0) {
+		void (*preHookFunc) (int *fd, struct char_session_data **sd, enum pincode_make_response *state);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_pincode_sendstate_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_pincode_sendstate_pre[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pincode_makestate_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_pincode_makestate_pre[hIndex].func;
 			preHookFunc(&fd, &sd, &state);
 		}
 		if (*HPMforce_return) {
@@ -16368,12 +16368,64 @@ void HP_pincode_sendstate(int fd, struct char_session_data *sd, uint16 state) {
 		}
 	}
 	{
-		HPMHooks.source.pincode.sendstate(fd, sd, state);
+		HPMHooks.source.pincode.makestate(fd, sd, state);
 	}
-	if (HPMHooks.count.HP_pincode_sendstate_post > 0) {
-		void (*postHookFunc) (int fd, struct char_session_data *sd, uint16 state);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_pincode_sendstate_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_pincode_sendstate_post[hIndex].func;
+	if (HPMHooks.count.HP_pincode_makestate_post > 0) {
+		void (*postHookFunc) (int fd, struct char_session_data *sd, enum pincode_make_response state);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pincode_makestate_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_pincode_makestate_post[hIndex].func;
+			postHookFunc(fd, sd, state);
+		}
+	}
+	return;
+}
+void HP_pincode_editstate(int fd, struct char_session_data *sd, enum pincode_edit_response state) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_pincode_editstate_pre > 0) {
+		void (*preHookFunc) (int *fd, struct char_session_data **sd, enum pincode_edit_response *state);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pincode_editstate_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_pincode_editstate_pre[hIndex].func;
+			preHookFunc(&fd, &sd, &state);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.pincode.editstate(fd, sd, state);
+	}
+	if (HPMHooks.count.HP_pincode_editstate_post > 0) {
+		void (*postHookFunc) (int fd, struct char_session_data *sd, enum pincode_edit_response state);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pincode_editstate_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_pincode_editstate_post[hIndex].func;
+			postHookFunc(fd, sd, state);
+		}
+	}
+	return;
+}
+void HP_pincode_loginstate(int fd, struct char_session_data *sd, enum pincode_login_response state) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_pincode_loginstate_pre > 0) {
+		void (*preHookFunc) (int *fd, struct char_session_data **sd, enum pincode_login_response *state);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pincode_loginstate_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_pincode_loginstate_pre[hIndex].func;
+			preHookFunc(&fd, &sd, &state);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.pincode.loginstate(fd, sd, state);
+	}
+	if (HPMHooks.count.HP_pincode_loginstate_post > 0) {
+		void (*postHookFunc) (int fd, struct char_session_data *sd, enum pincode_login_response state);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pincode_loginstate_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_pincode_loginstate_post[hIndex].func;
 			postHookFunc(fd, sd, state);
 		}
 	}
@@ -16430,6 +16482,33 @@ void HP_pincode_change(int fd, struct char_session_data *sd) {
 		}
 	}
 	return;
+}
+bool HP_pincode_isBlacklisted(const char *pin) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_pincode_isBlacklisted_pre > 0) {
+		bool (*preHookFunc) (const char **pin);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pincode_isBlacklisted_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_pincode_isBlacklisted_pre[hIndex].func;
+			retVal___ = preHookFunc(&pin);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.pincode.isBlacklisted(pin);
+	}
+	if (HPMHooks.count.HP_pincode_isBlacklisted_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const char *pin);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pincode_isBlacklisted_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_pincode_isBlacklisted_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, pin);
+		}
+	}
+	return retVal___;
 }
 int HP_pincode_compare(int fd, struct char_session_data *sd, char *pin) {
 	int hIndex = 0;
@@ -16510,6 +16589,58 @@ bool HP_pincode_config_read(const char *filename, const struct config_t *config,
 		}
 	}
 	return retVal___;
+}
+void HP_pincode_init(void) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_pincode_init_pre > 0) {
+		void (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pincode_init_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_pincode_init_pre[hIndex].func;
+			preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.pincode.init();
+	}
+	if (HPMHooks.count.HP_pincode_init_post > 0) {
+		void (*postHookFunc) (void);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pincode_init_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_pincode_init_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
+}
+void HP_pincode_final(void) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_pincode_final_pre > 0) {
+		void (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pincode_final_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_pincode_final_pre[hIndex].func;
+			preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.pincode.final();
+	}
+	if (HPMHooks.count.HP_pincode_final_post > 0) {
+		void (*postHookFunc) (void);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pincode_final_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_pincode_final_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
 }
 /* rnd_interface */
 void HP_rnd_init(void) {
