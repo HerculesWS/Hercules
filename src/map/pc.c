@@ -523,8 +523,7 @@ static int pc_setrestartvalue(struct map_session_data *sd, int type)
 
 	if (type&1) {
 		//Normal resurrection
-		st->hp = 1; //Otherwise status->heal may fail if dead.
-		status->heal(&sd->bl, bst->hp, 0, STATUS_HEAL_FORCED);
+		status->heal(&sd->bl, bst->hp, 0, STATUS_HEAL_FORCED | STATUS_HEAL_ALLOWREVIVE);
 		if( st->sp < bst->sp )
 			status->set_sp(&sd->bl, bst->sp, STATUS_HEAL_FORCED);
 	} else { //Just for saving on the char-server (with values as if respawned)

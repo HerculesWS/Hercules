@@ -106,6 +106,7 @@ enum status_heal_flag {
 	STATUS_HEAL_DEFAULT     = 0x00, ///< Default
 	STATUS_HEAL_FORCED      = 0x01, ///< Forced healing (bypassing Berserk and similar)
 	STATUS_HEAL_SHOWEFFECT  = 0x02, ///< Show the HP/SP heal effect
+	STATUS_HEAL_ALLOWREVIVE = 0x04, ///< Force resurrection in case of dead targets.
 };
 
 // Status changes listing. These code are for use by the server.

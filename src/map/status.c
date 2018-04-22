@@ -1555,7 +1555,9 @@ static int status_heal(struct block_list *bl, int64 in_hp, int64 in_sp, enum sta
 	nullpo_ret(bl);
 	st = status->get_status_data(bl);
 
-	if (st == &status->dummy || !st->hp)
+	if (st == &status->dummy)
+		return 0;
+	if (st->hp == 0 && (flag & STATUS_HEAL_ALLOWREVIVE) != 0)
 		return 0;
 
 	/* From here onwards, we consider it a 32-type as the client does not support higher and the value doesn't get through percentage modifiers */
