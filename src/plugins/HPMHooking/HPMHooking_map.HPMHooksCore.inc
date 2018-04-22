@@ -6242,6 +6242,10 @@ struct {
 	struct HPMHookPoint *HP_status_get_base_maxhp_post;
 	struct HPMHookPoint *HP_status_get_base_maxsp_pre;
 	struct HPMHookPoint *HP_status_get_base_maxsp_post;
+	struct HPMHookPoint *HP_status_get_restart_hp_pre;
+	struct HPMHookPoint *HP_status_get_restart_hp_post;
+	struct HPMHookPoint *HP_status_get_restart_sp_pre;
+	struct HPMHookPoint *HP_status_get_restart_sp_post;
 	struct HPMHookPoint *HP_status_calc_npc__pre;
 	struct HPMHookPoint *HP_status_calc_npc__post;
 	struct HPMHookPoint *HP_status_calc_str_pre;
@@ -12847,6 +12851,10 @@ struct {
 	int HP_status_get_base_maxhp_post;
 	int HP_status_get_base_maxsp_pre;
 	int HP_status_get_base_maxsp_post;
+	int HP_status_get_restart_hp_pre;
+	int HP_status_get_restart_hp_post;
+	int HP_status_get_restart_sp_pre;
+	int HP_status_get_restart_sp_post;
 	int HP_status_calc_npc__pre;
 	int HP_status_calc_npc__post;
 	int HP_status_calc_str_pre;
