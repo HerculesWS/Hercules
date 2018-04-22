@@ -191,7 +191,7 @@ enum packet_headers {
 	skill_entryType = 0x9ca,
 #endif
 	graffiti_entryType = 0x1c9,
-#ifdef PACKETVER_ZERO
+#if defined(PACKETVER_ZERO) || PACKETVER >= 20180418
 	dropflooritemType = 0xadd,
 #elif PACKETVER > 20130000 /* not sure date */
 	dropflooritemType = 0x84b,
@@ -530,7 +530,7 @@ struct packet_dropflooritem {
 	uint8 subX;
 	uint8 subY;
 	int16 count;
-#ifdef PACKETVER_ZERO
+#if defined(PACKETVER_ZERO) || PACKETVER >= 20180418
 	int8 showdropeffect;
 	int16 dropeffectmode;
 #endif
