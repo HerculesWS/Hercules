@@ -1842,9 +1842,7 @@ struct s_skill_magicmushroom_db {
 
 struct skill_cd_entry {
 	int duration;//milliseconds
-#if PACKETVER >= 20120604
-	int total;/* used for display on newer clients */
-#endif
+	int total;/* used when reducing offline cooldown and for display on newer clients */
 	short skidx;//the skill index entries belong to
 	int64 started;/* gettick() of when it started, used vs duration to measure how much left upon logout */
 	int timer;/* timer id */
