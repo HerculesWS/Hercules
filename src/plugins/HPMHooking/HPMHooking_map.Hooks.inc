@@ -26204,7 +26204,6 @@ bool HP_clif_attendance_timediff(struct map_session_data *sd) {
 	return retVal___;
 }
 time_t HP_clif_attendance_getendtime(void) {
-/* Unknown return type 'time_t'. Initializing to '0'. */
 	int hIndex = 0;
 	time_t retVal___ = 0;
 	if (HPMHooks.count.HP_clif_attendance_getendtime_pre > 0) {
