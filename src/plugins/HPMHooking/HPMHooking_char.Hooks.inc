@@ -2788,32 +2788,6 @@ void HP_chr_parse_frommap_update_ip(int fd, int id) {
 	}
 	return;
 }
-void HP_chr_parse_frommap_request_stats_report(int fd) {
-	int hIndex = 0;
-	if (HPMHooks.count.HP_chr_parse_frommap_request_stats_report_pre > 0) {
-		void (*preHookFunc) (int *fd);
-		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_parse_frommap_request_stats_report_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_chr_parse_frommap_request_stats_report_pre[hIndex].func;
-			preHookFunc(&fd);
-		}
-		if (*HPMforce_return) {
-			*HPMforce_return = false;
-			return;
-		}
-	}
-	{
-		HPMHooks.source.chr.parse_frommap_request_stats_report(fd);
-	}
-	if (HPMHooks.count.HP_chr_parse_frommap_request_stats_report_post > 0) {
-		void (*postHookFunc) (int fd);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_parse_frommap_request_stats_report_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_chr_parse_frommap_request_stats_report_post[hIndex].func;
-			postHookFunc(fd);
-		}
-	}
-	return;
-}
 void HP_chr_parse_frommap_scdata_update(int fd) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_chr_parse_frommap_scdata_update_pre > 0) {

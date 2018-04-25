@@ -234,8 +234,6 @@ struct {
 	struct HPMHookPoint *HP_chr_parse_frommap_auth_request_post;
 	struct HPMHookPoint *HP_chr_parse_frommap_update_ip_pre;
 	struct HPMHookPoint *HP_chr_parse_frommap_update_ip_post;
-	struct HPMHookPoint *HP_chr_parse_frommap_request_stats_report_pre;
-	struct HPMHookPoint *HP_chr_parse_frommap_request_stats_report_post;
 	struct HPMHookPoint *HP_chr_parse_frommap_scdata_update_pre;
 	struct HPMHookPoint *HP_chr_parse_frommap_scdata_update_post;
 	struct HPMHookPoint *HP_chr_parse_frommap_scdata_delete_pre;
@@ -1773,8 +1771,6 @@ struct {
 	int HP_chr_parse_frommap_auth_request_post;
 	int HP_chr_parse_frommap_update_ip_pre;
 	int HP_chr_parse_frommap_update_ip_post;
-	int HP_chr_parse_frommap_request_stats_report_pre;
-	int HP_chr_parse_frommap_request_stats_report_post;
 	int HP_chr_parse_frommap_scdata_update_pre;
 	int HP_chr_parse_frommap_scdata_update_post;
 	int HP_chr_parse_frommap_scdata_delete_pre;

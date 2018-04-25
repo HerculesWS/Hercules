@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2016  Hercules Dev Team
+ * Copyright (C) 2012-2018  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -3803,41 +3803,6 @@ void char_parse_frommap_update_ip(int fd, int id)
 	RFIFOSKIP(fd,6);
 }
 
-void char_parse_frommap_request_stats_report(int fd)
-{
-	int sfd;/* stat server fd */
-	struct hSockOpt opt;
-	RFIFOSKIP(fd, 2);/* we skip first 2 bytes which are the 0x3008, so we end up with a buffer equal to the one we send */
-
-	opt.silent = 1;
-	opt.setTimeo = 1;
-
-	if ((sfd = sockt->make_connection(sockt->host2ip("stats.herc.ws"),(uint16)25427,&opt) ) == -1) {
-		RFIFOSKIP(fd, RFIFOW(fd,2) );/* skip this packet */
-		RFIFOFLUSH(fd);
-		return;/* connection not possible, we drop the report */
-	}
-
-	sockt->session[sfd]->flag.server = 1;/* to ensure we won't drop our own packet */
-	sockt->realloc_fifo(sfd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
-
-	WFIFOHEAD(sfd, RFIFOW(fd,2) );
-
-	memcpy(WFIFOP(sfd,0), RFIFOP(fd, 0), RFIFOW(fd,2));
-
-	WFIFOSET(sfd, RFIFOW(fd,2) );
-
-	do {
-		sockt->flush(sfd);
-		HSleep(1);
-	} while( !sockt->session[sfd]->flag.eof && sockt->session[sfd]->wdata_size );
-
-	sockt->close(sfd);
-
-	RFIFOSKIP(fd, RFIFOW(fd,2) );/* skip this packet */
-	RFIFOFLUSH(fd);
-}
-
 void char_parse_frommap_scdata_update(int fd)
 {
 	int account_id = RFIFOL(fd, 2);
@@ -4066,14 +4031,6 @@ int char_parse_frommap(int fd)
 			case 0x2736: // ip address update
 				if (RFIFOREST(fd) < 6) return 0;
 				chr->parse_frommap_update_ip(fd, id);
-			break;
-
-			case 0x3008:
-				if( RFIFOREST(fd) < RFIFOW(fd,4) )
-					return 0;/* packet wasn't fully received yet (still fragmented) */
-				else {
-					chr->parse_frommap_request_stats_report(fd);
-			}
 			break;
 
 			/* individual sc data insertion/update  */
@@ -6577,7 +6534,6 @@ void char_defaults(void)
 	chr->map_auth_failed = char_map_auth_failed;
 	chr->parse_frommap_auth_request = char_parse_frommap_auth_request;
 	chr->parse_frommap_update_ip = char_parse_frommap_update_ip;
-	chr->parse_frommap_request_stats_report = char_parse_frommap_request_stats_report;
 	chr->parse_frommap_scdata_update = char_parse_frommap_scdata_update;
 	chr->parse_frommap_scdata_delete = char_parse_frommap_scdata_delete;
 	chr->parse_frommap = char_parse_frommap;

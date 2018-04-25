@@ -5499,32 +5499,6 @@ bool HP_chrif_removefriend(int char_id, int friend_id) {
 	}
 	return retVal___;
 }
-void HP_chrif_send_report(char *buf, int len) {
-	int hIndex = 0;
-	if (HPMHooks.count.HP_chrif_send_report_pre > 0) {
-		void (*preHookFunc) (char **buf, int *len);
-		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_chrif_send_report_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_chrif_send_report_pre[hIndex].func;
-			preHookFunc(&buf, &len);
-		}
-		if (*HPMforce_return) {
-			*HPMforce_return = false;
-			return;
-		}
-	}
-	{
-		HPMHooks.source.chrif.send_report(buf, len);
-	}
-	if (HPMHooks.count.HP_chrif_send_report_post > 0) {
-		void (*postHookFunc) (char *buf, int len);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_chrif_send_report_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_chrif_send_report_post[hIndex].func;
-			postHookFunc(buf, len);
-		}
-	}
-	return;
-}
 bool HP_chrif_flush(void) {
 	int hIndex = 0;
 	bool retVal___ = false;
