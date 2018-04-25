@@ -13998,9 +13998,15 @@ BUILDIN(setwall) {
 	map->iwall_set(m, x, y, size, dir, shootable, name);
 	return true;
 }
-BUILDIN(delwall) {
+
+BUILDIN(delwall)
+{
 	const char *name = script_getstr(st,2);
-	map->iwall_remove(name);
+
+	if (!map->iwall_remove(name)) {
+		ShowWarning("buildin_delwall: Non-existent '%s' provided.\n", name);
+		return false;
+	}
 
 	return true;
 }
