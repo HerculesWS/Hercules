@@ -44099,31 +44099,32 @@ void HP_map_iwall_get(struct map_session_data *sd) {
 	}
 	return;
 }
-void HP_map_iwall_remove(const char *wall_name) {
+bool HP_map_iwall_remove(const char *wall_name) {
 	int hIndex = 0;
+	bool retVal___ = false;
 	if (HPMHooks.count.HP_map_iwall_remove_pre > 0) {
-		void (*preHookFunc) (const char **wall_name);
+		bool (*preHookFunc) (const char **wall_name);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_iwall_remove_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_map_iwall_remove_pre[hIndex].func;
-			preHookFunc(&wall_name);
+			retVal___ = preHookFunc(&wall_name);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
-			return;
+			return retVal___;
 		}
 	}
 	{
-		HPMHooks.source.map.iwall_remove(wall_name);
+		retVal___ = HPMHooks.source.map.iwall_remove(wall_name);
 	}
 	if (HPMHooks.count.HP_map_iwall_remove_post > 0) {
-		void (*postHookFunc) (const char *wall_name);
+		bool (*postHookFunc) (bool retVal___, const char *wall_name);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_iwall_remove_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_map_iwall_remove_post[hIndex].func;
-			postHookFunc(wall_name);
+			retVal___ = postHookFunc(retVal___, wall_name);
 		}
 	}
-	return;
+	return retVal___;
 }
 int HP_map_addmobtolist(unsigned short m, struct spawn_data *spawn) {
 	int hIndex = 0;

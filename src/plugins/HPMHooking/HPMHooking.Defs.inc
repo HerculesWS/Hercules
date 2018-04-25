@@ -4286,8 +4286,8 @@ typedef bool (*HPMHOOK_pre_map_iwall_set) (int16 *m, int16 *x, int16 *y, int *si
 typedef bool (*HPMHOOK_post_map_iwall_set) (bool retVal___, int16 m, int16 x, int16 y, int size, int8 dir, bool shootable, const char *wall_name);
 typedef void (*HPMHOOK_pre_map_iwall_get) (struct map_session_data **sd);
 typedef void (*HPMHOOK_post_map_iwall_get) (struct map_session_data *sd);
-typedef void (*HPMHOOK_pre_map_iwall_remove) (const char **wall_name);
-typedef void (*HPMHOOK_post_map_iwall_remove) (const char *wall_name);
+typedef bool (*HPMHOOK_pre_map_iwall_remove) (const char **wall_name);
+typedef bool (*HPMHOOK_post_map_iwall_remove) (bool retVal___, const char *wall_name);
 typedef int (*HPMHOOK_pre_map_addmobtolist) (unsigned short *m, struct spawn_data **spawn);
 typedef int (*HPMHOOK_post_map_addmobtolist) (int retVal___, unsigned short m, struct spawn_data *spawn);
 typedef void (*HPMHOOK_pre_map_spawnmobs) (int16 *m);
