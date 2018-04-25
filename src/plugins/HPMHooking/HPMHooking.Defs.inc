@@ -5558,6 +5558,10 @@ typedef int (*HPMHOOK_pre_pc_checkequip) (struct map_session_data **sd, int *pos
 typedef int (*HPMHOOK_post_pc_checkequip) (int retVal___, struct map_session_data *sd, int pos);
 typedef int (*HPMHOOK_pre_pc_calc_skilltree) (struct map_session_data **sd);
 typedef int (*HPMHOOK_post_pc_calc_skilltree) (int retVal___, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_pc_calc_skilltree_clear) (struct map_session_data **sd);
+typedef void (*HPMHOOK_post_pc_calc_skilltree_clear) (struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_pc_calc_skilltree_bonus) (struct map_session_data **sd, int *classidx);
+typedef void (*HPMHOOK_post_pc_calc_skilltree_bonus) (struct map_session_data *sd, int classidx);
 typedef int (*HPMHOOK_pre_pc_calc_skilltree_normalize_job) (struct map_session_data **sd);
 typedef int (*HPMHOOK_post_pc_calc_skilltree_normalize_job) (int retVal___, struct map_session_data *sd);
 typedef int (*HPMHOOK_pre_pc_clean_skilltree) (struct map_session_data **sd);
@@ -5654,6 +5658,8 @@ typedef int (*HPMHOOK_pre_pc_maxjoblv) (const struct map_session_data **sd);
 typedef int (*HPMHOOK_post_pc_maxjoblv) (int retVal___, const struct map_session_data *sd);
 typedef int (*HPMHOOK_pre_pc_checkbaselevelup) (struct map_session_data **sd);
 typedef int (*HPMHOOK_post_pc_checkbaselevelup) (int retVal___, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_pc_checkbaselevelup_sc) (struct map_session_data **sd);
+typedef void (*HPMHOOK_post_pc_checkbaselevelup_sc) (struct map_session_data *sd);
 typedef int (*HPMHOOK_pre_pc_checkjoblevelup) (struct map_session_data **sd);
 typedef int (*HPMHOOK_post_pc_checkjoblevelup) (int retVal___, struct map_session_data *sd);
 typedef bool (*HPMHOOK_pre_pc_gainexp) (struct map_session_data **sd, struct block_list **src, uint64 *base_exp, uint64 *job_exp, bool *is_quest);
@@ -5686,6 +5692,8 @@ typedef int (*HPMHOOK_pre_pc_resetstate) (struct map_session_data **sd);
 typedef int (*HPMHOOK_post_pc_resetstate) (int retVal___, struct map_session_data *sd);
 typedef int (*HPMHOOK_pre_pc_resetskill) (struct map_session_data **sd, int *flag);
 typedef int (*HPMHOOK_post_pc_resetskill) (int retVal___, struct map_session_data *sd, int flag);
+typedef bool (*HPMHOOK_pre_pc_resetskill_job) (struct map_session_data **sd, int *index);
+typedef bool (*HPMHOOK_post_pc_resetskill_job) (bool retVal___, struct map_session_data *sd, int index);
 typedef int (*HPMHOOK_pre_pc_resetfeel) (struct map_session_data **sd);
 typedef int (*HPMHOOK_post_pc_resetfeel) (int retVal___, struct map_session_data *sd);
 typedef int (*HPMHOOK_pre_pc_resethate) (struct map_session_data **sd);
@@ -5806,8 +5814,12 @@ typedef void (*HPMHOOK_pre_pc_delinvincibletimer) (struct map_session_data **sd)
 typedef void (*HPMHOOK_post_pc_delinvincibletimer) (struct map_session_data *sd);
 typedef int (*HPMHOOK_pre_pc_addspiritball) (struct map_session_data **sd, int *interval, int *max);
 typedef int (*HPMHOOK_post_pc_addspiritball) (int retVal___, struct map_session_data *sd, int interval, int max);
+typedef int (*HPMHOOK_pre_pc_addspiritball_sub) (struct map_session_data **sd);
+typedef int (*HPMHOOK_post_pc_addspiritball_sub) (int retVal___, struct map_session_data *sd);
 typedef int (*HPMHOOK_pre_pc_delspiritball) (struct map_session_data **sd, int *count, int *type);
 typedef int (*HPMHOOK_post_pc_delspiritball) (int retVal___, struct map_session_data *sd, int count, int type);
+typedef int (*HPMHOOK_pre_pc_delspiritball_sub) (struct map_session_data **sd);
+typedef int (*HPMHOOK_post_pc_delspiritball_sub) (int retVal___, struct map_session_data *sd);
 typedef int (*HPMHOOK_pre_pc_getmaxspiritball) (struct map_session_data **sd, int *min);
 typedef int (*HPMHOOK_post_pc_getmaxspiritball) (int retVal___, struct map_session_data *sd, int min);
 typedef void (*HPMHOOK_pre_pc_addfame) (struct map_session_data **sd, int *ranktype, int *count);
@@ -5896,6 +5908,8 @@ typedef int (*HPMHOOK_pre_pc_follow_timer) (int *tid, int64 *tick, int *id, intp
 typedef int (*HPMHOOK_post_pc_follow_timer) (int retVal___, int tid, int64 tick, int id, intptr_t data);
 typedef void (*HPMHOOK_pre_pc_read_skill_tree) (void);
 typedef void (*HPMHOOK_post_pc_read_skill_tree) (void);
+typedef bool (*HPMHOOK_pre_pc_read_skill_job_skip) (short *skill_id, int *job_id);
+typedef bool (*HPMHOOK_post_pc_read_skill_job_skip) (bool retVal___, short skill_id, int job_id);
 typedef void (*HPMHOOK_pre_pc_clear_skill_tree) (void);
 typedef void (*HPMHOOK_post_pc_clear_skill_tree) (void);
 typedef int (*HPMHOOK_pre_pc_isUseitem) (struct map_session_data **sd, int *n);
@@ -5954,6 +5968,8 @@ typedef void (*HPMHOOK_pre_pc_check_supernovice_call) (struct map_session_data *
 typedef void (*HPMHOOK_post_pc_check_supernovice_call) (struct map_session_data *sd, const char *message);
 typedef bool (*HPMHOOK_pre_pc_check_basicskill) (struct map_session_data **sd, int *level);
 typedef bool (*HPMHOOK_post_pc_check_basicskill) (bool retVal___, struct map_session_data *sd, int level);
+typedef bool (*HPMHOOK_pre_pc_isDeathPenaltyJob) (uint16 *job);
+typedef bool (*HPMHOOK_post_pc_isDeathPenaltyJob) (bool retVal___, uint16 job);
 #endif // MAP_PC_H
 #ifdef MAP_NPC_H /* libpcre */
 typedef pcre* (*HPMHOOK_pre_libpcre_compile) (const char **pattern, int *options, const char ***errptr, int **erroffset, const unsigned char **tableptr);
@@ -7304,6 +7320,8 @@ typedef int (*HPMHOOK_pre_status_calc_pc_) (struct map_session_data **sd, enum e
 typedef int (*HPMHOOK_post_status_calc_pc_) (int retVal___, struct map_session_data *sd, enum e_status_calc_opt opt);
 typedef void (*HPMHOOK_pre_status_calc_pc_additional) (struct map_session_data **sd, enum e_status_calc_opt *opt);
 typedef void (*HPMHOOK_post_status_calc_pc_additional) (struct map_session_data *sd, enum e_status_calc_opt opt);
+typedef void (*HPMHOOK_pre_status_calc_pc_recover_hp) (struct map_session_data **sd, struct status_data **bstatus);
+typedef void (*HPMHOOK_post_status_calc_pc_recover_hp) (struct map_session_data *sd, struct status_data *bstatus);
 typedef int (*HPMHOOK_pre_status_calc_homunculus_) (struct homun_data **hd, enum e_status_calc_opt *opt);
 typedef int (*HPMHOOK_post_status_calc_homunculus_) (int retVal___, struct homun_data *hd, enum e_status_calc_opt opt);
 typedef int (*HPMHOOK_pre_status_calc_mercenary_) (struct mercenary_data **md, enum e_status_calc_opt *opt);

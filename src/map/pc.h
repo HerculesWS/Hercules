@@ -889,6 +889,8 @@ END_ZEROED_BLOCK; /* End */
 	int (*checkequip) (struct map_session_data *sd,int pos);
 
 	int (*calc_skilltree) (struct map_session_data *sd);
+	void (*calc_skilltree_clear) (struct map_session_data *sd);
+	void (*calc_skilltree_bonus) (struct map_session_data *sd, int classidx);
 	int (*calc_skilltree_normalize_job) (struct map_session_data *sd);
 	int (*clean_skilltree) (struct map_session_data *sd);
 
@@ -952,6 +954,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*maxbaselv) (const struct map_session_data *sd);
 	int (*maxjoblv) (const struct map_session_data *sd);
 	int (*checkbaselevelup) (struct map_session_data *sd);
+	void (*checkbaselevelup_sc) (struct map_session_data *sd);
 	int (*checkjoblevelup) (struct map_session_data *sd);
 	bool (*gainexp) (struct map_session_data *sd, struct block_list *src, uint64 base_exp, uint64 job_exp, bool is_quest);
 	uint64 (*nextbaseexp) (const struct map_session_data *sd);
@@ -968,6 +971,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*resetlvl) (struct map_session_data *sd,int type);
 	int (*resetstate) (struct map_session_data *sd);
 	int (*resetskill) (struct map_session_data *sd, int flag);
+	bool (*resetskill_job) (struct map_session_data *sd, int index);
 	int (*resetfeel) (struct map_session_data *sd);
 	int (*resethate) (struct map_session_data *sd);
 	int (*equipitem) (struct map_session_data *sd,int n,int req_pos);
@@ -1040,7 +1044,9 @@ END_ZEROED_BLOCK; /* End */
 	void (*delinvincibletimer) (struct map_session_data* sd);
 
 	int (*addspiritball) (struct map_session_data *sd,int interval,int max);
+	int (*addspiritball_sub) (struct map_session_data *sd);
 	int (*delspiritball) (struct map_session_data *sd,int count,int type);
+	int (*delspiritball_sub) (struct map_session_data *sd);
 	int (*getmaxspiritball) (struct map_session_data *sd, int min);
 	void (*addfame) (struct map_session_data *sd, int ranktype, int count);
 	int (*fame_rank) (int char_id, int ranktype);
@@ -1095,6 +1101,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*autosave) (int tid, int64 tick, int id, intptr_t data);
 	int (*follow_timer) (int tid, int64 tick, int id, intptr_t data);
 	void (*read_skill_tree) (void);
+	bool (*read_skill_job_skip) (short skill_id, int job_id);
 	void (*clear_skill_tree) (void);
 	int (*isUseitem) (struct map_session_data *sd,int n);
 	int (*show_steal) (struct block_list *bl,va_list ap);
@@ -1137,6 +1144,7 @@ END_ZEROED_BLOCK; /* End */
 	bool (*process_chat_message) (struct map_session_data *sd, const char *message);
 	void (*check_supernovice_call) (struct map_session_data *sd, const char *message);
 	bool (*check_basicskill) (struct map_session_data *sd, int level);
+	bool (*isDeathPenaltyJob) (uint16 job);
 };
 
 #ifdef HERCULES_CORE
