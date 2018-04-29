@@ -307,7 +307,6 @@ enum packet_headers {
 	achievementUpdateType = 0xa24,
 	achievementRewardAckType = 0xa26,
 #endif // PACKETVER >= 20141016
-#if 0 // Unknown
 #if PACKETVER >= 20150513  // [4144] 0x09f8 handling in client from 2014-10-29aRagexe and 2014-03-26cRagexeRE
 	questListType = 0x9f8, ///< ZC_ALL_QUEST_LIST3
 #elif PACKETVER >= 20141022
