@@ -27,6 +27,7 @@
 #include "char/char.h"
 #include "char/geoip.h"
 #include "char/inter.h"
+#include "char/int_achievement.h"
 #include "char/int_auction.h"
 #include "char/int_clan.h"
 #include "char/int_elemental.h"
@@ -42,6 +43,7 @@
 #include "char/loginif.h"
 #include "char/mapif.h"
 #include "char/pincode.h"
+
 #include "common/HPMi.h"
 #include "common/conf.h"
 #include "common/console.h"
