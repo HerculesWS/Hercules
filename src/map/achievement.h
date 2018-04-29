@@ -237,7 +237,7 @@ struct achievement_interface {
 	void (*init) (bool minimal);
 	void (*final) (void);
 	/* */
-	int (*db_finalise) (union DBKey key, struct DBData *data, va_list args);
+	int (*clear) (union DBKey key, struct DBData *data, va_list args);
 	/* */
 	void (*readdb)(void);
 	/* */
