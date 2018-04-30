@@ -202,7 +202,7 @@ static void md5_buf2binary(const uint8 *buf, const int buf_size, uint8 *output)
 
 	//1-3
 	copy_len = buf_size % 64;                               //The number of bytes which remained is computed.
-	strncpy((char *)padding_message, (const char *)pbuf, copy_len); // A message is copied to an extended bit sequence.
+	memcpy((char *)padding_message, (const char *)pbuf, copy_len); // A message is copied to an extended bit sequence.
 	memset(padding_message+copy_len, 0, 64 - copy_len);           //It buries by 0 until it becomes extended bit length.
 	padding_message[copy_len] |= 0x80;                            //The next of a message is 1.
 

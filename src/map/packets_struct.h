@@ -191,7 +191,7 @@ enum packet_headers {
 	skill_entryType = 0x9ca,
 #endif
 	graffiti_entryType = 0x1c9,
-#ifdef PACKETVER_ZERO
+#if defined(PACKETVER_ZERO) || PACKETVER >= 20180418
 	dropflooritemType = 0xadd,
 #elif PACKETVER > 20130000 /* not sure date */
 	dropflooritemType = 0x84b,
@@ -302,7 +302,7 @@ enum packet_headers {
 	rouletteinfoackType = 0xa1c,
 	roulettgenerateackType = 0xa20,
 	roulettercvitemackType = 0xa22,
-#if 0 // Unknown
+#if PACKETVER >= 20150513  // [4144] 0x09f8 handling in client from 2014-10-29aRagexe and 2014-03-26cRagexeRE
 	questListType = 0x9f8, ///< ZC_ALL_QUEST_LIST3
 #elif PACKETVER >= 20141022
 	questListType = 0x97a, ///< ZC_ALL_QUEST_LIST2
@@ -357,6 +357,17 @@ enum packet_headers {
 	clanLeave = 0x0989, ///< ZC_ACK_CLAN_LEAVE
 	clanMessage = 0x098E, ///< ZC_NOTIFY_CLAN_CHAT
 #endif
+#if PACKETVER >= 20150513 // [4144] 0x09f9 handled in client from 2014-10-29aRagexe and 2014-03-26cRagexeRE
+	questAddType = 0x9f9,
+#else
+	questAddType = 0x2b3,
+#endif // PACKETVER < 20150513
+#if PACKETVER >= 20150513
+	questUpdateType = 0x9fa,
+#else
+	questUpdateType = 0x2b5,
+#endif // PACKETVER < 20150513
+	questUpdateType2 = 0x8fe,
 };
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
@@ -519,7 +530,7 @@ struct packet_dropflooritem {
 	uint8 subX;
 	uint8 subY;
 	int16 count;
-#ifdef PACKETVER_ZERO
+#if defined(PACKETVER_ZERO) || PACKETVER >= 20180418
 	int8 showdropeffect;
 	int16 dropeffectmode;
 #endif
@@ -1248,10 +1259,19 @@ struct packet_hotkey {
 } __attribute__((packed));
 
 /**
- * MISSION_HUNT_INFO
+ * MISSION_HUNT_INFO (PACKETVER >= 20141022)
+ * MISSION_HUNT_INFO_EX (PACKETVER >= 20150513)
  */
 struct packet_mission_info_sub {
-	int32 mob_id;
+#if PACKETVER >= 20150513
+	uint32 huntIdent;
+	uint32 mobType;
+#endif
+	uint32 mob_id;
+#if PACKETVER >= 20150513
+	int16 levelMin;
+	int16 levelMax;
+#endif
 	int16 huntCount;
 	int16 maxCount;
 	char mobName[NAME_LENGTH];
@@ -1259,7 +1279,7 @@ struct packet_mission_info_sub {
 
 /**
  * PACKET_ZC_ALL_QUEST_LIST2_INFO (PACKETVER >= 20141022)
- * PACKET_ZC_ALL_QUEST_LIST3_INFO (PACKETVER Unknown) / unused
+ * PACKET_ZC_ALL_QUEST_LIST3_INFO (PACKETVER >= 20150513)
  */
 struct packet_quest_list_info {
 	int32 questID;
@@ -1276,7 +1296,7 @@ struct packet_quest_list_info {
  * Header for:
  * PACKET_ZC_ALL_QUEST_LIST (PACKETVER < 20141022)
  * PACKET_ZC_ALL_QUEST_LIST2 (PACKETVER >= 20141022)
- * PACKET_ZC_ALL_QUEST_LIST3 (PACKETVER Unknown) / unused
+ * PACKET_ZC_ALL_QUEST_LIST3 (PACKETVER >= 20150513)
  *
  * @remark
  *     Contains (is followed by) a variable-length array of packet_quest_list_info
@@ -1596,6 +1616,117 @@ struct PACKET_ZC_NOTIFY_CLAN_CHAT {
 	int16 PacketLength;
 	char MemberName[NAME_LENGTH];
 	char Message[];
+} __attribute__((packed));
+
+/**
+ * PACKET_ZC_MISSION_HUNT (PACKETVER < 20150513)
+ * PACKET_ZC_MISSION_HUNT_EX (PACKETVER >= 20150513)
+ */
+struct packet_quest_hunt_sub {
+#if PACKETVER >= 20150513
+	uint32 huntIdent;
+	uint32 mobType;
+#endif
+	uint32 mob_id;
+#if PACKETVER >= 20150513
+	int16 levelMin;
+	int16 levelMax;
+#endif
+	int16 huntCount;
+	char mobName[NAME_LENGTH];
+} __attribute__((packed));
+
+/**
+ * Header for:
+ * PACKET_ZC_ADD_QUEST (PACKETVER < 20150513)
+ * PACKET_ZC_ADD_QUEST_EX (PACKETVER >= 20150513)
+ */
+struct packet_quest_add_header {
+	uint16 PacketType;
+	uint32 questID;
+	uint8 active;
+	int32 quest_svrTime;
+	int32 quest_endTime;
+	int16 count;
+	struct packet_quest_hunt_sub objectives[];
+} __attribute__((packed));
+
+/**
+ * PACKET_MOB_HUNTING (PACKETVER < 20150513)
+ * PACKET_MOB_HUNTING_EX (PACKETVER >= 20150513)
+ */
+struct packet_quest_update_hunt {
+	uint32 questID;
+#if PACKETVER >= 20150513
+	uint32 huntIdent;
+#else
+	uint32 mob_id;
+#endif // PACKETVER < 20150513
+	int16 maxCount;
+	int16 count;
+} __attribute__((packed));
+
+/**
+ * Header for:
+ * PACKET_ZC_UPDATE_MISSION_HUNT (PACKETVER < 20150513)
+ * PACKET_ZC_UPDATE_MISSION_HUNT_EX (PACKETVER >= 20150513)
+ */
+struct packet_quest_update_header {
+	uint16 PacketType;
+	uint16 PacketLength;
+	int16 count;
+	struct packet_quest_update_hunt objectives[];
+} __attribute__((packed));
+
+/**
+ * Header for:
+ * PACKET_MOB_HUNTING (PACKETVER >= 20150513)
+ */
+struct packet_quest_hunt_info_sub {
+	uint32 questID;
+	uint32 mob_id;
+	int16 maxCount;
+	int16 count;
+} __attribute__((packed));
+
+/**
+ * Header for:
+ * ZC_HUNTING_QUEST_INFO (PACKETVER >= 20150513)
+ */
+struct packet_quest_hunt_info {
+	uint16 PacketType;
+	uint16 PacketLength;
+	struct packet_quest_hunt_info_sub info[];
+} __attribute__((packed));
+
+struct PACKET_ZC_FORMATSTRING_MSG {
+	uint16 PacketType;
+	uint16 PacketLength;
+	uint16 MessageId;
+	char MessageString[];
+} __attribute__((packed));
+
+struct PACKET_ZC_MSG_COLOR {
+	uint16 PacketType;
+	uint16 MessageId;
+	uint32 MessageColor;
+} __attribute__((packed));
+
+struct PACKET_CZ_OPEN_UI {
+	int16 PacketType;
+	int8 UIType;
+} __attribute__((packed));
+
+struct PACKET_ZC_OPEN_UI {
+	int16 PacketType;
+	int8 UIType;
+	int32 data;
+} __attribute__((packed));
+
+struct PACKET_ZC_UI_ACTION {
+	int16 PacketType;
+	int32 UIType;
+	int32 data;
 } __attribute__((packed));
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute

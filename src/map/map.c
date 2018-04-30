@@ -66,6 +66,7 @@
 #include "common/core.h"
 #include "common/ers.h"
 #include "common/grfio.h"
+#include "common/md5calc.h"
 #include "common/memmgr.h"
 #include "common/nullpo.h"
 #include "common/random.h"
@@ -2899,21 +2900,26 @@ int map_cell2gat(struct mapcell cell) {
 	ShowWarning("map_cell2gat: cell has no matching gat type\n");
 	return 1; // default to 'wall'
 }
-void map_cellfromcache(struct map_data *m) {
-	struct map_cache_map_info *info;
 
+/**
+ * Extracts a map's cell data from its compressed mapcache.
+ *
+ * @param[in, out] m The target map.
+ */
+void map_cellfromcache(struct map_data *m)
+{
 	nullpo_retv(m);
-	info = (struct map_cache_map_info *)m->cellPos;
 
-	if (info) {
+	if (m->cell_buf.data != NULL) {
 		char decode_buffer[MAX_MAP_SIZE];
 		unsigned long size, xy;
 		int i;
 
-		size = (unsigned long)info->xs*(unsigned long)info->ys;
+		size = (unsigned long)m->xs * (unsigned long)m->ys;
 
 		// TO-DO: Maybe handle the scenario, if the decoded buffer isn't the same size as expected? [Shinryo]
-		grfio->decode_zip(decode_buffer, &size, m->cellPos+sizeof(struct map_cache_map_info), info->len);
+		grfio->decode_zip(decode_buffer, &size, m->cell_buf.data, m->cell_buf.len);
+
 		CREATE(m->cell, struct mapcell, size);
 
 		// Set cell properties
@@ -3160,13 +3166,13 @@ void map_iwall_get(struct map_session_data *sd)
 	dbi_destroy(iter);
 }
 
-void map_iwall_remove(const char *wall_name)
+bool map_iwall_remove(const char *wall_name)
 {
 	struct iwall_data *iwall;
 	int16 i, x1, y1;
 
 	if( (iwall = (struct iwall_data *)strdb_get(map->iwall_db, wall_name)) == NULL )
-		return; // Nothing to do
+		return false;
 
 	for( i = 0; i < iwall->size; i++ ) {
 		map->iwall_nextxy(iwall->x, iwall->y, iwall->dir, i, &x1, &y1);
@@ -3179,6 +3185,7 @@ void map_iwall_remove(const char *wall_name)
 
 	map->list[iwall->m].iwall_num--;
 	strdb_remove(map->iwall_db, iwall->wall_name);
+	return true;
 }
 
 /**
@@ -3253,97 +3260,125 @@ int map_eraseipport(unsigned short map_index, uint32 ip, uint16 port) {
 	return 0;
 }
 
-/*==========================================
- * [Shinryo]: Init the mapcache
- *------------------------------------------*/
-char *map_init_mapcache(FILE *fp) {
-	struct map_cache_main_header header;
-	size_t size = 0;
-	char *buffer;
+/**
+ * Reads a map's compressed cell data from its mapcache file.
+ *
+ * @param[in,out] m The target map.
+ * @return The loading success state.
+ * @retval false in case of errors.
+ */
+bool map_readfromcache(struct map_data *m)
+{
+	unsigned int file_size;
+	char file_path[256];
+	FILE *fp = NULL;
+	bool retval = false;
+	int16 version;
 
-	// No file open? Return..
-	nullpo_ret(fp);
+	nullpo_retr(false, m);
 
-	// Get file size
+	snprintf(file_path, sizeof(file_path), "%s%s%s.%s", "maps/", DBPATH, m->name, "mcache");
+	fp = fopen(file_path, "rb");
+
+	if (fp == NULL) {
+		ShowWarning("map_readfromcache: Could not open the mapcache file for map '%s' at path '%s'.\n", m->name, file_path);
+		return false;
+	}
+
+	if (fread(&version, sizeof(version), 1, fp) < 1) {
+		ShowError("map_readfromcache: Could not read file version for map '%s'.\n", m->name);
+		fclose(fp);
+		return false;
+	}
+
 	fseek(fp, 0, SEEK_END);
-	size = ftell(fp);
-	fseek(fp, 0, SEEK_SET);
+	file_size = (unsigned int)ftell(fp);
+	fseek(fp, 0, SEEK_SET); // Rewind file pointer before passing it to the read function.
 
-	// Allocate enough space
-	CREATE(buffer, char, size);
-
-	// No memory? Return..
-	nullpo_ret(buffer);
-
-	// Read file into buffer..
-	if(fread(buffer, sizeof(char), size, fp) != size) {
-		ShowError("map_init_mapcache: Could not read entire mapcache file\n");
-		aFree(buffer);
-		return NULL;
+	switch(version) {
+	case 1:
+		retval = map->readfromcache_v1(fp, m, file_size);
+		break;
+	default:
+		ShowError("map_readfromcache: Mapcache file has unknown version '%d' for map '%s'.\n", version, m->name);
+		break;
 	}
 
-	rewind(fp);
-
-	// Get main header to verify if data is corrupted
-	if( fread(&header, sizeof(header), 1, fp) != 1 ) {
-		ShowError("map_init_mapcache: Error obtaining main header!\n");
-		aFree(buffer);
-		return NULL;
-	}
-	if( GetULong((unsigned char *)&(header.file_size)) != size ) {
-		ShowError("map_init_mapcache: Map cache is corrupted!\n");
-		aFree(buffer);
-		return NULL;
-	}
-
-	return buffer;
+	fclose(fp);
+	return retval;
 }
 
-/*==========================================
- * Map cache reading
- * [Shinryo]: Optimized some behaviour to speed this up
- *==========================================*/
-int map_readfromcache(struct map_data *m, char *buffer) {
-	int i;
-	struct map_cache_main_header *header = (struct map_cache_main_header *)buffer;
-	struct map_cache_map_info *info = NULL;
-	char *p = buffer + sizeof(struct map_cache_main_header);
+/**
+ * Reads a map's compressed cell data from its mapcache file (file format
+ * version 1).
+ *
+ * @param[in]     fp        The file pointer to read from (opened and closed by
+ *                          the caller).
+ * @param[in,out] m         The target map.
+ * @param[in]     file_size The size of the file to load from.
+ * @return The loading success state.
+ * @retval false in case of errors.
+ */
+bool map_readfromcache_v1(FILE *fp, struct map_data *m, unsigned int file_size)
+{
+	struct map_cache_header mheader = { 0 };
+	uint8 md5buf[16] = { 0 };
+	int map_size;
+	nullpo_retr(false, fp);
+	nullpo_retr(false, m);
 
-	nullpo_ret(m);
-	nullpo_ret(buffer);
-
-	for(i = 0; i < header->map_count; i++) {
-		info = (struct map_cache_map_info *)p;
-
-		if( strcmp(m->name, info->name) == 0 )
-			break; // Map found
-
-		// Jump to next entry..
-		p += sizeof(struct map_cache_map_info) + info->len;
+	if (file_size <= sizeof(mheader) || fread(&mheader, sizeof(mheader), 1, fp) < 1) {
+		ShowError("map_readfromcache: Failed to read cache header for map '%s'.\n", m->name);
+		return false;
 	}
 
-	if( info && i < header->map_count ) {
-		unsigned long size;
-
-		if( info->xs <= 0 || info->ys <= 0 )
-			return 0;// Invalid
-
-		m->xs = info->xs;
-		m->ys = info->ys;
-		size = (unsigned long)info->xs*(unsigned long)info->ys;
-
-		if(size > MAX_MAP_SIZE) {
-			ShowWarning("map_readfromcache: %s exceeded MAX_MAP_SIZE of %d\n", info->name, MAX_MAP_SIZE);
-			return 0; // Say not found to remove it from list.. [Shinryo]
-		}
-
-		m->cellPos = p;
-		m->cell = (struct mapcell *)0xdeadbeaf;
-
-		return 1;
+	if (mheader.len <= 0) {
+		ShowError("map_readfromcache: A file with negative or zero compressed length passed '%d'.\n", mheader.len);
+		return false;
 	}
 
-	return 0; // Not found
+	if (file_size < sizeof(mheader) + mheader.len) {
+		ShowError("map_readfromcache: An incomplete file passed for map '%s'.\n", m->name);
+		return false;
+	}
+
+	if (mheader.ys <= 0 || mheader.xs <= 0) {
+		ShowError("map_readfromcache: A map with invalid size passed '%s' xs: '%d' ys: '%d'.\n", m->name, mheader.xs, mheader.ys);
+		return false;
+	}
+
+	m->xs = mheader.xs;
+	m->ys = mheader.ys;
+	map_size = (int)mheader.xs * (int)mheader.ys;
+
+	if (map_size > MAX_MAP_SIZE) {
+		ShowWarning("map_readfromcache: %s exceeded MAX_MAP_SIZE of %d.\n", m->name, MAX_MAP_SIZE);
+		return false;
+	}
+
+	CREATE(m->cell_buf.data, uint8, mheader.len);
+	m->cell_buf.len = mheader.len;
+	if (fread(m->cell_buf.data, mheader.len, 1, fp) < 1) {
+		ShowError("mapreadfromcache: Could not load the compressed cell data for map '%s'.\n", m->name);
+		aFree(m->cell_buf.data);
+		m->cell_buf.data = NULL;
+		m->cell_buf.len = 0;
+		return false;
+	}
+
+	md5->binary(m->cell_buf.data, m->cell_buf.len, md5buf);
+
+	if (memcmp(md5buf, mheader.md5_checksum, sizeof(md5buf)) != 0) {
+		ShowError("mapreadfromcache: md5 checksum check failed for map '%s'\n", m->name);
+		aFree(m->cell_buf.data);
+		m->cell_buf.data = NULL;
+		m->cell_buf.len = 0;
+		return false;
+	}
+
+	m->cell = (struct mapcell *)0xdeadbeaf;
+
+	return true;
 }
 
 /**
@@ -3747,26 +3782,12 @@ void map_removemapdb(struct map_data *m) {
  *--------------------------------------*/
 int map_readallmaps (void) {
 	int i;
-	FILE* fp=NULL;
 	int maps_removed = 0;
 
-	if( map->enable_grf )
+	if (map->enable_grf) {
 		ShowStatus("Loading maps (using GRF files)...\n");
-	else {
-		char mapcachefilepath[256];
-		safesnprintf(mapcachefilepath, 256, "%s/%s%s", map->db_path, DBPATH, "map_cache.dat");
-		ShowStatus("Loading maps (using %s as map cache)...\n", mapcachefilepath);
-		if( (fp = fopen(mapcachefilepath, "rb")) == NULL ) {
-			ShowFatalError("Unable to open map cache file "CL_WHITE"%s"CL_RESET"\n", mapcachefilepath);
-			exit(EXIT_FAILURE); //No use launching server if maps can't be read.
-		}
-
-		// Init mapcache data.. [Shinryo]
-		map->cache_buffer = map->init_mapcache(fp);
-		if(!map->cache_buffer) {
-			ShowFatalError("Failed to initialize mapcache data (%s)..\n", mapcachefilepath);
-			exit(EXIT_FAILURE);
-		}
+	} else {
+		ShowStatus("Loading maps using map cache files...\n");
 	}
 
 	for(i = 0; i < map->count; i++) {
@@ -3780,7 +3801,7 @@ int map_readallmaps (void) {
 		if( !
 			(map->enable_grf?
 			map->readgat(&map->list[i])
-			:map->readfromcache(&map->list[i], map->cache_buffer))
+			:map->readfromcache(&map->list[i]))
 			) {
 				map->delmapid(i);
 				maps_removed++;
@@ -3821,10 +3842,6 @@ int map_readallmaps (void) {
 
 	// intialization and configuration-dependent adjustments of mapflags
 	map->flags_init();
-
-	if( !map->enable_grf ) {
-		fclose(fp);
-	}
 
 	// finished map loading
 	ShowInfo("Successfully loaded '"CL_WHITE"%d"CL_RESET"' maps."CL_CLL"\n",map->count);
@@ -4502,6 +4519,8 @@ void map_zone_change2(int m, struct map_zone_data *zone)
 {
 	const char *empty = "";
 
+	if (zone == NULL)
+		return;
 	Assert_retv(m >= 0 && m < map->count);
 	if( map->list[m].zone == zone )
 		return;
@@ -6060,15 +6079,17 @@ int do_final(void) {
 	ers_destroy(map->iterator_ers);
 	ers_destroy(map->flooritem_ers);
 
+	for (i = 0; i < map->count; ++i) {
+		if (map->list[i].cell_buf.data != NULL)
+			aFree(map->list[i].cell_buf.data);
+		map->list[i].cell_buf.len = 0;
+	}
 	aFree(map->list);
 
 	if( map->block_free )
 		aFree(map->block_free);
 	if( map->bl_list )
 		aFree(map->bl_list);
-
-	if( !map->enable_grf )
-		aFree(map->cache_buffer);
 
 	aFree(map->MAP_CONF_NAME);
 	aFree(map->BATTLE_CONF_FILENAME);
@@ -6685,7 +6706,6 @@ void map_defaults(void) {
 	map->list = NULL;
 
 	map->iterator_ers = NULL;
-	map->cache_buffer = NULL;
 
 	map->flooritem_ers = NULL;
 	/* */
@@ -6832,8 +6852,8 @@ void map_defaults(void) {
 	map->iwall_nextxy = map_iwall_nextxy;
 	map->create_map_data_other_server = create_map_data_other_server;
 	map->eraseallipport_sub = map_eraseallipport_sub;
-	map->init_mapcache = map_init_mapcache;
 	map->readfromcache = map_readfromcache;
+	map->readfromcache_v1 = map_readfromcache_v1;
 	map->addmap = map_addmap;
 	map->delmapid = map_delmapid;
 	map->zone_db_clear = map_zone_db_clear;

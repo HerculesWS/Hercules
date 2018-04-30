@@ -25,9 +25,11 @@
 #include "common/cbasetypes.h"
 
 #include "login/account.h"
+#include "login/ipban.h"
 #include "login/lclif.h"
 #include "login/lclif.p.h"
 #include "login/login.h"
+#include "login/loginlog.h"
 #include "common/HPMi.h"
 #include "common/conf.h"
 #include "common/console.h"
@@ -69,7 +71,7 @@ bool HPM_login_data_store_validate(enum HPluginDataTypes type, struct hplugin_da
 }
 
 void HPM_login_plugin_load_sub(struct hplugin *plugin) {
-	plugin->hpi->sql_handle = account_db_sql_up(login->accounts);
+	plugin->hpi->sql_handle = account->db_sql_up(login->accounts);
 }
 
 void HPM_login_do_init(void) {

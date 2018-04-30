@@ -751,7 +751,7 @@ int intif_party_leaderchange(int party_id,int account_id,int char_id)
 
 /**
  * Request clan member count
- * 
+ *
  * @param clan_id Id of the clan to have members counted
  * @param kick_interval Interval of the inactivity kick
  */
@@ -759,7 +759,7 @@ int intif_clan_membercount(int clan_id, int kick_interval)
 {
 	if (intif->CheckForCharServer() || clan_id == 0 || kick_interval <= 0)
 		return 0;
-	
+
 	WFIFOHEAD(inter_fd, 10);
 	WFIFOW(inter_fd, 0) = 0x3044;
 	WFIFOL(inter_fd, 2) = clan_id;
@@ -791,7 +791,7 @@ void intif_parse_RecvClanMemberAction(int fd)
 		ShowError("intif_parse_RecvClanMemberAction: Received invalid clan_id '%d'\n", clan_id);
 		return;
 	}
-	
+
 	if (count < 0) {
 		ShowError("intif_parse_RecvClanMemberAction: Received invalid member count value '%d'\n", count);
 		return;
@@ -1494,7 +1494,7 @@ void intif_parse_GuildMemberWithdraw(int fd) {
 
 // ACK guild member basic info
 void intif_parse_GuildMemberInfoShort(int fd) {
-	guild->recv_memberinfoshort(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOB(fd,14),RFIFOW(fd,15),RFIFOW(fd,17));
+	guild->recv_memberinfoshort(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOB(fd,14),RFIFOW(fd,15),RFIFOW(fd,17),RFIFOL(fd,19));
 }
 
 // ACK guild break
@@ -2516,6 +2516,9 @@ void intif_parse_RequestRodexOpenInbox(int fd)
 	int8 is_end = RFIFOB(fd, 10);
 	int is_first = RFIFOB(fd, 11);
 	int count = RFIFOL(fd, 12);
+#if PACKETVER >= 20170419
+	int64 mail_id = RFIFOQ(fd, 16);
+#endif
 	int i, j;
 
 	sd = map->charid2sd(RFIFOL(fd, 4));
@@ -2533,15 +2536,15 @@ void intif_parse_RequestRodexOpenInbox(int fd)
 	else
 		sd->rodex.total += count;
 
-	if (RFIFOW(fd, 2) - 16 != count * sizeof(struct rodex_message)) {
-		ShowError("intif_parse_RodexInboxOpenReceived: data size mismatch %d != %"PRIuS"\n", RFIFOW(fd, 2) - 16, count * sizeof(struct rodex_message));
+	if (RFIFOW(fd, 2) - 24 != count * sizeof(struct rodex_message)) {
+		ShowError("intif_parse_RodexInboxOpenReceived: data size mismatch %d != %"PRIuS"\n", RFIFOW(fd, 2) - 24, count * sizeof(struct rodex_message));
 		return;
 	}
 
 	if (flag == 0 && is_first)
 		VECTOR_CLEAR(sd->rodex.messages);
 
-	for (i = 0, j = 16; i < count; ++i, j += sizeof(struct rodex_message)) {
+	for (i = 0, j = 24; i < count; ++i, j += sizeof(struct rodex_message)) {
 		struct rodex_message msg = { 0 };
 		VECTOR_ENSURE(sd->rodex.messages, 1, 1);
 		memcpy(&msg, RFIFOP(fd, j), sizeof(struct rodex_message));
@@ -2550,7 +2553,7 @@ void intif_parse_RequestRodexOpenInbox(int fd)
 
 	if (is_end == true) {
 #if PACKETVER >= 20170419
-		clif->rodex_send_mails_all(sd->fd, sd);
+		clif->rodex_send_mails_all(sd->fd, sd, mail_id);
 #else
 		if (flag == 0)
 			clif->rodex_send_maillist(sd->fd, sd, opentype, VECTOR_LENGTH(sd->rodex.messages) - 1);
@@ -2599,10 +2602,11 @@ void intif_parse_RodexNotifications(int fd)
 
 /// Updates a mail
 /// flag:
-///		0 - user Read
-///		1 - user got Zeny
-///		2 - user got Items
-///		3 - delete
+///     0 - receiver Read
+///     1 - user got Zeny
+///     2 - user got Items
+///     3 - delete
+///     4 - sender Read (returned mail)
 int intif_rodex_updatemail(int64 mail_id, int8 flag)
 {
 	if (intif->CheckForCharServer())
@@ -2842,7 +2846,7 @@ void intif_defaults(void) {
 		-1,-1,27,-1, -1,-1,37,-1,  7, 0, 0, 0,  0, 0,  0, 0, //0x3800-0x380f
 		 0, 0, 0, 0,  0, 0, 0, 0, -1,11, 0, 0,  0, 0,  0, 0, //0x3810
 		39,-1,15,15, 14,19, 7,-1,  0, 0, 0, 0,  0, 0,  0, 0, //0x3820
-		10,-1,15, 0, 79,19, 7,-1,  0,-1,-1,-1, 14,67,186,-1, //0x3830
+		10,-1,15, 0, 79,23, 7,-1,  0,-1,-1,-1, 14,67,186,-1, //0x3830
 		-1, 0, 0,14,  0, 0, 0, 0, -1,74,-1,11, 11,-1,  0, 0, //0x3840
 		-1,-1, 7, 7,  7,11, 8, 0, 10, 0, 0, 0,  0, 0,  0, 0, //0x3850  Auctions [Zephyrus] itembound[Akinari] Clan System[Murilo BiO]
 		-1, 7, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3860  Quests [Kevin] [Inkfish]

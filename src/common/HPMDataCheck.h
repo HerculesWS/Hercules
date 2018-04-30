@@ -309,11 +309,20 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#ifdef LOGIN_ACCOUNT_H
 		{ "Account_engine", sizeof(struct Account_engine), SERVER_TYPE_LOGIN },
 		{ "AccountDB", sizeof(struct AccountDB), SERVER_TYPE_LOGIN },
+		{ "AccountDB_SQL", sizeof(struct AccountDB_SQL), SERVER_TYPE_LOGIN },
 		{ "AccountDBIterator", sizeof(struct AccountDBIterator), SERVER_TYPE_LOGIN },
+		{ "AccountDBIterator_SQL", sizeof(struct AccountDBIterator_SQL), SERVER_TYPE_LOGIN },
+		{ "account_interface", sizeof(struct account_interface), SERVER_TYPE_LOGIN },
 		{ "mmo_account", sizeof(struct mmo_account), SERVER_TYPE_LOGIN },
 	#else
 		#define LOGIN_ACCOUNT_H
 	#endif // LOGIN_ACCOUNT_H
+	#ifdef LOGIN_IPBAN_H
+		{ "ipban_interface", sizeof(struct ipban_interface), SERVER_TYPE_LOGIN },
+		{ "s_ipban_dbs", sizeof(struct s_ipban_dbs), SERVER_TYPE_LOGIN },
+	#else
+		#define LOGIN_IPBAN_H
+	#endif // LOGIN_IPBAN_H
 	#ifdef LOGIN_LCLIF_H
 		{ "lclif_interface", sizeof(struct lclif_interface), SERVER_TYPE_LOGIN },
 		{ "login_packet_db", sizeof(struct login_packet_db), SERVER_TYPE_LOGIN },
@@ -341,14 +350,22 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define LOGIN_LCLIF_P_H
 	#endif // LOGIN_LCLIF_P_H
+	#ifdef LOGIN_LOGINLOG_H
+		{ "loginlog_interface", sizeof(struct loginlog_interface), SERVER_TYPE_LOGIN },
+		{ "s_loginlog_dbs", sizeof(struct s_loginlog_dbs), SERVER_TYPE_LOGIN },
+	#else
+		#define LOGIN_LOGINLOG_H
+	#endif // LOGIN_LOGINLOG_H
 	#ifdef LOGIN_LOGIN_H
 		{ "Login_Config", sizeof(struct Login_Config), SERVER_TYPE_LOGIN },
 		{ "client_hash_node", sizeof(struct client_hash_node), SERVER_TYPE_LOGIN },
+		{ "lchrif_interface", sizeof(struct lchrif_interface), SERVER_TYPE_LOGIN },
 		{ "login_auth_node", sizeof(struct login_auth_node), SERVER_TYPE_LOGIN },
 		{ "login_interface", sizeof(struct login_interface), SERVER_TYPE_LOGIN },
 		{ "login_session_data", sizeof(struct login_session_data), SERVER_TYPE_LOGIN },
 		{ "mmo_char_server", sizeof(struct mmo_char_server), SERVER_TYPE_LOGIN },
 		{ "online_login_data", sizeof(struct online_login_data), SERVER_TYPE_LOGIN },
+		{ "s_login_dbs", sizeof(struct s_login_dbs), SERVER_TYPE_LOGIN },
 	#else
 		#define LOGIN_LOGIN_H
 	#endif // LOGIN_LOGIN_H
@@ -409,6 +426,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		#define MAP_CLAN_H
 	#endif // MAP_CLAN_H
 	#ifdef MAP_CLIF_H
+		{ "attendance_entry", sizeof(struct attendance_entry), SERVER_TYPE_MAP },
 		{ "cdelayed_damage", sizeof(struct cdelayed_damage), SERVER_TYPE_MAP },
 		{ "clif_interface", sizeof(struct clif_interface), SERVER_TYPE_MAP },
 		{ "hCSData", sizeof(struct hCSData), SERVER_TYPE_MAP },
@@ -507,8 +525,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "charid_request", sizeof(struct charid_request), SERVER_TYPE_MAP },
 		{ "flooritem_data", sizeof(struct flooritem_data), SERVER_TYPE_MAP },
 		{ "iwall_data", sizeof(struct iwall_data), SERVER_TYPE_MAP },
-		{ "map_cache_main_header", sizeof(struct map_cache_main_header), SERVER_TYPE_MAP },
-		{ "map_cache_map_info", sizeof(struct map_cache_map_info), SERVER_TYPE_MAP },
+		{ "map_cache_header", sizeof(struct map_cache_header), SERVER_TYPE_MAP },
 		{ "map_data", sizeof(struct map_data), SERVER_TYPE_MAP },
 		{ "map_data_other_server", sizeof(struct map_data_other_server), SERVER_TYPE_MAP },
 		{ "map_drop_list", sizeof(struct map_drop_list), SERVER_TYPE_MAP },
@@ -569,6 +586,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "NORMALITEM_INFO", sizeof(struct NORMALITEM_INFO), SERVER_TYPE_MAP },
 		{ "PACKET_CZ_ADD_ITEM_TO_MAIL", sizeof(struct PACKET_CZ_ADD_ITEM_TO_MAIL), SERVER_TYPE_MAP },
 		{ "PACKET_CZ_CHECKNAME", sizeof(struct PACKET_CZ_CHECKNAME), SERVER_TYPE_MAP },
+		{ "PACKET_CZ_OPEN_UI", sizeof(struct PACKET_CZ_OPEN_UI), SERVER_TYPE_MAP },
 		{ "PACKET_CZ_REQ_DELETE_MAIL", sizeof(struct PACKET_CZ_REQ_DELETE_MAIL), SERVER_TYPE_MAP },
 		{ "PACKET_CZ_REQ_ITEM_FROM_MAIL", sizeof(struct PACKET_CZ_REQ_ITEM_FROM_MAIL), SERVER_TYPE_MAP },
 		{ "PACKET_CZ_REQ_NEXT_MAIL_LIST", sizeof(struct PACKET_CZ_REQ_NEXT_MAIL_LIST), SERVER_TYPE_MAP },
@@ -589,14 +607,18 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "PACKET_ZC_ADD_MEMBER_TO_GROUP", sizeof(struct PACKET_ZC_ADD_MEMBER_TO_GROUP), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_CHECKNAME", sizeof(struct PACKET_ZC_CHECKNAME), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_CLANINFO", sizeof(struct PACKET_ZC_CLANINFO), SERVER_TYPE_MAP },
+		{ "PACKET_ZC_FORMATSTRING_MSG", sizeof(struct PACKET_ZC_FORMATSTRING_MSG), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_GROUP_LIST", sizeof(struct PACKET_ZC_GROUP_LIST), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_GROUP_LIST_SUB", sizeof(struct PACKET_ZC_GROUP_LIST_SUB), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_MAIL_LIST", sizeof(struct PACKET_ZC_MAIL_LIST), SERVER_TYPE_MAP },
+		{ "PACKET_ZC_MSG_COLOR", sizeof(struct PACKET_ZC_MSG_COLOR), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_NOTIFY_CLAN_CHAT", sizeof(struct PACKET_ZC_NOTIFY_CLAN_CHAT), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_NOTIFY_CLAN_CONNECTINFO", sizeof(struct PACKET_ZC_NOTIFY_CLAN_CONNECTINFO), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_NOTIFY_UNREADMAIL", sizeof(struct PACKET_ZC_NOTIFY_UNREADMAIL), SERVER_TYPE_MAP },
+		{ "PACKET_ZC_OPEN_UI", sizeof(struct PACKET_ZC_OPEN_UI), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_READ_MAIL", sizeof(struct PACKET_ZC_READ_MAIL), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_SKILL_SCALE", sizeof(struct PACKET_ZC_SKILL_SCALE), SERVER_TYPE_MAP },
+		{ "PACKET_ZC_UI_ACTION", sizeof(struct PACKET_ZC_UI_ACTION), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_WRITE_MAIL_RESULT", sizeof(struct PACKET_ZC_WRITE_MAIL_RESULT), SERVER_TYPE_MAP },
 		{ "ZC_PROGRESS_ACTOR", sizeof(struct ZC_PROGRESS_ACTOR), SERVER_TYPE_MAP },
 		{ "mail_item", sizeof(struct mail_item), SERVER_TYPE_MAP },
@@ -640,8 +662,14 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "packet_npc_market_result_ack", sizeof(struct packet_npc_market_result_ack), SERVER_TYPE_MAP },
 		{ "packet_package_item_announce", sizeof(struct packet_package_item_announce), SERVER_TYPE_MAP },
 		{ "packet_party_leader_changed", sizeof(struct packet_party_leader_changed), SERVER_TYPE_MAP },
+		{ "packet_quest_add_header", sizeof(struct packet_quest_add_header), SERVER_TYPE_MAP },
+		{ "packet_quest_hunt_info", sizeof(struct packet_quest_hunt_info), SERVER_TYPE_MAP },
+		{ "packet_quest_hunt_info_sub", sizeof(struct packet_quest_hunt_info_sub), SERVER_TYPE_MAP },
+		{ "packet_quest_hunt_sub", sizeof(struct packet_quest_hunt_sub), SERVER_TYPE_MAP },
 		{ "packet_quest_list_header", sizeof(struct packet_quest_list_header), SERVER_TYPE_MAP },
 		{ "packet_quest_list_info", sizeof(struct packet_quest_list_info), SERVER_TYPE_MAP },
+		{ "packet_quest_update_header", sizeof(struct packet_quest_update_header), SERVER_TYPE_MAP },
+		{ "packet_quest_update_hunt", sizeof(struct packet_quest_update_hunt), SERVER_TYPE_MAP },
 		{ "packet_roulette_close_ack", sizeof(struct packet_roulette_close_ack), SERVER_TYPE_MAP },
 		{ "packet_roulette_generate_ack", sizeof(struct packet_roulette_generate_ack), SERVER_TYPE_MAP },
 		{ "packet_roulette_info_ack", sizeof(struct packet_roulette_info_ack), SERVER_TYPE_MAP },

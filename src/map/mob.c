@@ -157,6 +157,44 @@ int mobdb_searchname_array_sub(struct mob_db* monster, const char *str, int flag
 /*==========================================
  *              MvP Tomb [GreenBox]
  *------------------------------------------*/
+ /// Creates a timer to spawn a tomb
+ /// @param nd : The tomb
+void mvptomb_spawn_delayed(struct npc_data *nd)
+{
+	nullpo_retv(nd);
+
+	if (nd->u.tomb.spawn_timer != INVALID_TIMER)
+		timer->delete(nd->u.tomb.spawn_timer, mob->mvptomb_delayspawn);
+
+	nd->u.tomb.spawn_timer = timer->add(timer->gettick() + battle_config.mvp_tomb_spawn_delay, mob->mvptomb_delayspawn, nd->bl.id, 0);
+}
+
+/// Spawns a tomb after the delay has ended
+/// @param tid : Timer id
+/// @param tick : current tick
+/// @param id : NPC Id
+/// @param data : 0
+int mvptomb_delayspawn(int tid, int64 tick, int id, intptr_t data)
+{
+	struct npc_data *nd = map->id2nd(id);
+
+	if (nd == NULL)
+		return 0;
+
+	if (nd->u.tomb.spawn_timer != tid) {
+		ShowError("mvptomb_delay_spawn: Timer mismatch: %d != %d\n", tid, nd->u.tomb.spawn_timer);
+		return 0;
+	}
+
+	nd->u.tomb.spawn_timer = INVALID_TIMER;
+
+	// Sets view data to make the tomb visible and notifies client
+	status->set_viewdata(&nd->bl, nd->class_);
+	clif->spawn(&(nd->bl));
+
+	return 0;
+}
+
 void mvptomb_create(struct mob_data *md, char *killer, time_t time)
 {
 	struct npc_data *nd;
@@ -172,6 +210,7 @@ void mvptomb_create(struct mob_data *md, char *killer, time_t time)
 
 	nd->u.tomb.md = md;
 	nd->u.tomb.kill_time = time;
+	nd->u.tomb.spawn_timer = INVALID_TIMER;
 
 	if (killer)
 		safestrncpy(nd->u.tomb.killer_name, killer, NAME_LENGTH);
@@ -180,8 +219,9 @@ void mvptomb_create(struct mob_data *md, char *killer, time_t time)
 
 	map->addnpc(nd->bl.m, nd);
 	map->addblock(&nd->bl);
-	status->set_viewdata(&nd->bl, nd->class_);
-	clif->spawn(&nd->bl);
+
+	// Tomb npc is created but not yet visible, we set view data and spawn it after some time
+	mob->mvptomb_spawn_delayed(nd);
 }
 
 void mvptomb_destroy(struct mob_data *md) {
@@ -203,6 +243,9 @@ void mvptomb_destroy(struct mob_data *md) {
 			map->list[m].npc[i] = map->list[m].npc[map->list[m].npc_num];
 			map->list[m].npc[map->list[m].npc_num] = NULL;
 		}
+
+		if (nd->u.tomb.spawn_timer != INVALID_TIMER)
+			timer->delete(nd->u.tomb.spawn_timer, mob->mvptomb_delayspawn);
 
 		map->deliddb(&nd->bl);
 
@@ -5189,6 +5232,7 @@ int do_init_mob(bool minimal) {
 	timer->add_func_list(mob->timer_delete,"mob_timer_delete");
 	timer->add_func_list(mob->spawn_guardian_sub,"mob_spawn_guardian_sub");
 	timer->add_func_list(mob->respawn,"mob_respawn");
+	timer->add_func_list(mob->mvptomb_delayspawn, "mvptomb_delayspawn");
 	timer->add_interval(timer->gettick()+MIN_MOBTHINKTIME,mob->ai_hard,0,0,MIN_MOBTHINKTIME);
 	timer->add_interval(timer->gettick()+MIN_MOBTHINKTIME*10,mob->ai_lazy,0,0,MIN_MOBTHINKTIME*10);
 
@@ -5295,6 +5339,8 @@ void mob_defaults(void) {
 	mob->db_searchname_array_sub = mobdb_searchname_array_sub;
 	mob->mvptomb_create = mvptomb_create;
 	mob->mvptomb_destroy = mvptomb_destroy;
+	mob->mvptomb_spawn_delayed = mvptomb_spawn_delayed;
+	mob->mvptomb_delayspawn = mvptomb_delayspawn;
 	mob->db_searchname_array = mobdb_searchname_array;
 	mob->db_checkid = mobdb_checkid;
 	mob->get_viewdata = mob_get_viewdata;

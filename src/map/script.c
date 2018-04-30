@@ -5625,7 +5625,7 @@ const char *script_getfuncname(struct script_state *st) {
  *                   already initialized)
  * @retval false if an error occurs.
  */
-bool script_sprintf(struct script_state *st, int start, struct StringBuf *out)
+bool script_sprintf_helper(struct script_state *st, int start, struct StringBuf *out)
 {
 	const char *format = NULL;
 	const char *p = NULL, *np = NULL;
@@ -5678,7 +5678,7 @@ bool script_sprintf(struct script_state *st, int start, struct StringBuf *out)
 		}
 		// placeholder = "%n" ; (ignored)
 		if (*np == 'n') {
-			ShowWarning("script_sprintf: Format %%n not supported! Skipping...\n");
+			ShowWarning("script_sprintf_helper: Format %%n not supported! Skipping...\n");
 			script->reportsrc(st);
 			lastarg = nextarg;
 			p = np + 1;
@@ -5881,7 +5881,7 @@ BUILDIN(mesf)
 
 	StrBuf->Init(&buf);
 
-	if (!script_sprintf(st, 2, &buf)) {
+	if (!script->sprintf_helper(st, 2, &buf)) {
 		StrBuf->Destroy(&buf);
 		return false;
 	}
@@ -8284,7 +8284,7 @@ BUILDIN(makeitem2)
 			map->search_freecell(NULL, m, &x, &y, -1, -1, 1);
 		} else {
 			range = (script_hasdata(st, 14) ? cap_value(script_getnum(st, 14), 1, battle_config.area_size) : 3);
-			map->search_freecell(&sd->bl, sd->bl.m, &x, &y, range, range, 0);	// Locate spot next to player.
+			map->search_freecell(&sd->bl, sd->bl.m, &x, &y, range, range, 0); // Locate spot next to player.
 		}
 	}
 
@@ -8635,7 +8635,7 @@ BUILDIN(readparam) {
 BUILDIN(getcharid) {
 	int num = script_getnum(st, 2);
 	struct map_session_data *sd;
-	
+
 	if (script_hasdata(st, 3))
 		sd = map->nick2sd(script_getstr(st, 3));
 	else
@@ -8647,22 +8647,22 @@ BUILDIN(getcharid) {
 	}
 
 	switch (num) {
-	case 0: 
+	case 0:
 		script_pushint(st, sd->status.char_id);
 		break;
-	case 1: 
+	case 1:
 		script_pushint(st, sd->status.party_id);
 		break;
-	case 2: 
+	case 2:
 		script_pushint(st, sd->status.guild_id);
 		break;
-	case 3: 
+	case 3:
 		script_pushint(st, sd->status.account_id);
 		break;
-	case 4: 
+	case 4:
 		script_pushint(st, sd->bg_id);
 		break;
-	case 5: 
+	case 5:
 		script_pushint(st, sd->status.clan_id);
 		break;
 	default:
@@ -12815,12 +12815,12 @@ enum mapinfo_info {
 BUILDIN(getmapinfo)
 {
 	enum mapinfo_info mode = script_getnum(st, 2);
-	int16 m;
+	int16 m = -1;
 
 	if (script_hasdata(st, 3)) {
 		if (script_isstringtype(st, 3)) {
 			const char *str = script_getstr(st, 3);
-			m = map->mapname2mapid(str);
+			m = map->mapindex2mapid(strdb_iget(mapindex->db, str));
 		} else {
 			m = script_getnum(st, 3);
 		}
@@ -13998,9 +13998,15 @@ BUILDIN(setwall) {
 	map->iwall_set(m, x, y, size, dir, shootable, name);
 	return true;
 }
-BUILDIN(delwall) {
+
+BUILDIN(delwall)
+{
 	const char *name = script_getstr(st,2);
-	map->iwall_remove(name);
+
+	if (!map->iwall_remove(name)) {
+		ShowWarning("buildin_delwall: Non-existent '%s' provided.\n", name);
+		return false;
+	}
 
 	return true;
 }
@@ -16793,7 +16799,7 @@ BUILDIN(sprintf)
 	struct StringBuf buf;
 	StrBuf->Init(&buf);
 
-	if (!script_sprintf(st, 2, &buf)) {
+	if (!script->sprintf_helper(st, 2, &buf)) {
 		StrBuf->Destroy(&buf);
 		script_pushconststr(st, "");
 		return false;
@@ -23943,7 +23949,7 @@ BUILDIN(clan_master)
 {
 	struct npc_data *nd = map->id2nd(st->oid);
 	int clan_id = script_getnum(st, 2);
-	
+
 	if (nd == NULL) {
 		script_pushint(st, false);
 		return false;
@@ -23961,6 +23967,42 @@ BUILDIN(clan_master)
 	clif->sc_load(&nd->bl, nd->bl.id, AREA, status->dbs->IconChangeTable[SC_CLAN_INFO], 0, clan_id, 0);
 
 	script_pushint(st, true);
+	return true;
+}
+
+/**
+ * hateffect(EffectID, Enable_State)
+ */
+BUILDIN(hateffect)
+{
+#if PACKETVER >= 20150422
+	struct map_session_data *sd = script_rid2sd(st);
+	int effectId, enabled = 0;
+	int i;
+
+	if (sd == NULL)
+		return false;
+
+	effectId = script_getnum(st, 2);
+	enabled = script_getnum(st, 3);
+
+	for (i = 0; i < VECTOR_LENGTH(sd->hatEffectId); ++i) {
+		if (VECTOR_INDEX(sd->hatEffectId, i) == effectId) {
+			if (enabled == 1) { // Already Enabled
+				return true;
+			} else { // Remove
+				VECTOR_ERASE(sd->hatEffectId, i);
+				clif->hat_effect_single(&sd->bl, effectId, enabled);
+				return true;
+			}
+		}
+	}
+
+	VECTOR_ENSURE(sd->hatEffectId, 1, 1);
+	VECTOR_PUSH(sd->hatEffectId, effectId);
+
+	clif->hat_effect_single(&sd->bl, effectId, enabled);
+#endif
 	return true;
 }
 
@@ -24664,7 +24706,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(clan_join,"i?"),
 		BUILDIN_DEF(clan_leave,"?"),
 		BUILDIN_DEF(clan_master,"i"),
-		
+
 		BUILDIN_DEF(channelmes, "ss"),
 		BUILDIN_DEF(addchannelhandler, "ss"),
 		BUILDIN_DEF(removechannelhandler, "ss"),
@@ -24679,6 +24721,9 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF2(rodex_sendmail2, "rodex_sendmail_acc2", "isss?????????????????????????????????????????"),
 		BUILDIN_DEF(_,"s"),
 		BUILDIN_DEF2(_, "_$", "s"),
+
+		// -- HatEffect
+		BUILDIN_DEF(hateffect, "ii"),
 	};
 	int i, len = ARRAYLENGTH(BUILDIN);
 	RECREATE(script->buildin, char *, script->buildin_count + len); // Pre-alloc to speed up
@@ -25180,6 +25225,7 @@ void script_defaults(void)
 	script->search_str = script_search_str;
 	script->setd_sub = setd_sub;
 	script->attach_state = script_attach_state;
+	script->sprintf_helper = script_sprintf_helper;
 
 	script->queue = script_hqueue_get;
 	script->queue_add = script_hqueue_add;

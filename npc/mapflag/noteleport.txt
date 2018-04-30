@@ -154,6 +154,7 @@ thor_camp	mapflag	noteleport
 moc_para01	mapflag	noteleport
 
 // Job Quests ====================
+pay_arche	mapflag	noteleport
 job_sword1	mapflag	noteleport
 job_thief1	mapflag	noteleport
 // 2-1 -----------------------

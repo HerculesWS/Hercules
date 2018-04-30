@@ -2058,7 +2058,7 @@ bool unit_can_reach_bl(struct block_list *bl,struct block_list *tbl, int range, 
 
 #ifdef OFFICIAL_WALKPATH
 	if( !path->search_long(NULL, bl, bl->m, bl->x, bl->y, tbl->x-dx, tbl->y-dy, CELL_CHKNOPASS) // Check if there is an obstacle between
-	  && wpd.path_len > 14	// Official number of walkable cells is 14 if and only if there is an obstacle between. [malufett]
+	  && wpd.path_len > 14 // Official number of walkable cells is 14 if and only if there is an obstacle between. [malufett]
 	  && (bl->type != BL_NPC) ) // If type is a NPC, please disregard.
 		return false;
 #endif
@@ -2210,6 +2210,7 @@ int unit_attack_timer_sub(struct block_list* src, int tid, int64 tick)
 	//Non-players use the sync packet on the walk timer. [Skotlex]
 	if (tid == INVALID_TIMER && sd) clif->fixpos(src);
 
+	map->freeblock_lock();
 	if( DIFF_TICK(ud->attackabletime,tick) <= 0 ) {
 		if (battle_config.attack_direction_change && (src->type&battle_config.attack_direction_change)) {
 			ud->dir = map->calc_dir(src, target->x,target->y );
@@ -2219,8 +2220,10 @@ int unit_attack_timer_sub(struct block_list* src, int tid, int64 tick)
 		if(md) {
 			//First attack is always a normal attack
 			if(md->state.skillstate == MSS_ANGRY || md->state.skillstate == MSS_BERSERK) {
-				if (mob->skill_use(md,tick,-1))
+				if (mob->skill_use(md,tick,-1)) {
+					map->freeblock_unlock();
 					return 1;
+				}
 			} else {
 				// Set mob's ANGRY/BERSERK states.
 				md->state.skillstate = md->state.aggressive?MSS_ANGRY:MSS_BERSERK;
@@ -2232,21 +2235,23 @@ int unit_attack_timer_sub(struct block_list* src, int tid, int64 tick)
 				map->foreachinrange(mob->linksearch, src, md->db->range2, BL_MOB, md->class_, target, tick);
 			}
 		}
-		if (src->type == BL_PET && pet->attackskill(BL_UCAST(BL_PET, src), target->id))
+		if (src->type == BL_PET && pet->attackskill(BL_UCAST(BL_PET, src), target->id)) {
+			map->freeblock_unlock();
 			return 1;
+		}
 
-		map->freeblock_lock();
 		ud->attacktarget_lv = battle->weapon_attack(src,target,tick,0);
 
 		if(sd && sd->status.pet_id > 0 && sd->pd && battle_config.pet_attack_support)
 			pet->target_check(sd,target,0);
-		map->freeblock_unlock();
 		/**
 		 * Applied when you're unable to attack (e.g. out of ammo)
 		 * We should stop here otherwise timer keeps on and this happens endlessly
 		 **/
-		if( ud->attacktarget_lv == ATK_NONE )
+		if (ud->attacktarget_lv == ATK_NONE) {
+			map->freeblock_unlock();
 			return 1;
+		}
 
 		ud->attackabletime = tick + sstatus->adelay;
 		// You can't move if you can't attack neither.
@@ -2260,6 +2265,7 @@ int unit_attack_timer_sub(struct block_list* src, int tid, int64 tick)
 			pc->update_idle_time(sd, BCIDLE_ATTACK);
 		ud->attacktimer = timer->add(ud->attackabletime,unit->attack_timer,src->id,0);
 	}
+	map->freeblock_unlock();
 
 	if (sd != NULL && battle_config.prevent_logout_trigger & PLT_ATTACK)
 		sd->canlog_tick = timer->gettick();
@@ -2760,6 +2766,7 @@ int unit_free(struct block_list *bl, clr_type clrtype)
 			}
 			VECTOR_CLEAR(sd->script_queues);
 			VECTOR_CLEAR(sd->storage.item);
+			VECTOR_CLEAR(sd->hatEffectId);
 			sd->storage.received = false;
 			if( sd->quest_log != NULL ) {
 				aFree(sd->quest_log);

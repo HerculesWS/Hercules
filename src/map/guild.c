@@ -275,6 +275,7 @@ void guild_makemember(struct guild_member *m,struct map_session_data *sd)
 	m->online     = 1;
 	m->position   = MAX_GUILDPOSITION-1;
 	memcpy(m->name,sd->status.name,NAME_LENGTH);
+	m->last_login = (uint32)time(NULL); // When player create or join a guild the date is updated
 	return;
 }
 
@@ -551,7 +552,7 @@ int guild_recv_info(const struct guild *sg)
 		if ((sd = map->nick2sd(sg->master)) != NULL) {
 			//If the guild master is online the first time the guild_info is received,
 			//that means he was the first to join, so apply guild skill blocking here.
-			if( battle_config.guild_skill_relog_delay )
+			if( battle_config.guild_skill_relog_delay == 1)
 				guild->block_skill(sd, 300000);
 
 			//Also set the guild master flag.
@@ -759,7 +760,7 @@ void guild_member_joined(struct map_session_data *sd)
 		// set the Guild Master flag
 		sd->state.gmaster_flag = 1;
 		// prevent Guild Skills from being used directly after relog
-		if( battle_config.guild_skill_relog_delay )
+		if( battle_config.guild_skill_relog_delay == 1 )
 			guild->block_skill(sd, 300000);
 	}
 	i = guild->getindex(g, sd->status.account_id, sd->status.char_id);
@@ -1001,7 +1002,7 @@ int guild_send_memberinfoshort(struct map_session_data *sd,int online)
 	return 0;
 }
 
-int guild_recv_memberinfoshort(int guild_id, int account_id, int char_id, int online, int lv, int16 class)
+int guild_recv_memberinfoshort(int guild_id, int account_id, int char_id, int online, int lv, int16 class, uint32 last_login)
 { // cleaned up [LuzZza]
 	int i, alv, c, idx = INDEX_NOT_FOUND, om = 0, oldonline = -1;
 	struct guild *g = guild->search(guild_id);
@@ -1017,6 +1018,7 @@ int guild_recv_memberinfoshort(int guild_id, int account_id, int char_id, int on
 			m->online=online;
 			m->lv=lv;
 			m->class = class;
+			m->last_login = last_login;
 			idx=i;
 		}
 		alv+=m->lv;

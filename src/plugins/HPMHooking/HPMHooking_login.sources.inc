@@ -26,15 +26,19 @@
 /* GENERATED FILE DO NOT EDIT */
 
 HPMHooks.source.HCache = *HCache;
+HPMHooks.source.account = *account;
 HPMHooks.source.cmdline = *cmdline;
 HPMHooks.source.console = *console;
 HPMHooks.source.core = *core;
 HPMHooks.source.DB = *DB;
 HPMHooks.source.des = *des;
+HPMHooks.source.ipban = *ipban;
+HPMHooks.source.lchrif = *lchrif;
 HPMHooks.source.lclif = *lclif;
 HPMHooks.source.PRIV__lclif = *lclif->p;
 HPMHooks.source.libconfig = *libconfig;
 HPMHooks.source.login = *login;
+HPMHooks.source.loginlog = *loginlog;
 HPMHooks.source.md5 = *md5;
 HPMHooks.source.mutex = *mutex;
 HPMHooks.source.nullpo = *nullpo;

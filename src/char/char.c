@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2016  Hercules Dev Team
+ * Copyright (C) 2012-2018  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -467,7 +467,8 @@ int char_mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 		(p->rename != cp->rename) || (p->slotchange != cp->slotchange) || (p->look.robe != cp->look.robe) ||
 		(p->show_equip != cp->show_equip) || (p->allow_party != cp->allow_party) || (p->font != cp->font) ||
 		(p->uniqueitem_counter != cp->uniqueitem_counter) || (p->hotkey_rowshift != cp->hotkey_rowshift) ||
-		(p->clan_id != cp->clan_id) || (p->last_login != cp->last_login)
+		(p->clan_id != cp->clan_id) || (p->last_login != cp->last_login) || (p->attendance_count != cp->attendance_count) ||
+		(p->attendance_timer != cp->attendance_timer)
 	) {
 		//Save status
 		unsigned int opt = 0;
@@ -485,7 +486,7 @@ int char_mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 			"`weapon`='%d',`shield`='%d',`head_top`='%d',`head_mid`='%d',`head_bottom`='%d',"
 			"`last_map`='%s',`last_x`='%d',`last_y`='%d',`save_map`='%s',`save_x`='%d',`save_y`='%d', `rename`='%d',"
 			"`delete_date`='%lu',`robe`='%d',`slotchange`='%d', `char_opt`='%u', `font`='%u', `uniqueitem_counter` ='%u',"
-			"`hotkey_rowshift`='%d',`clan_id`='%d',`last_login`='%"PRId64"'"
+			"`hotkey_rowshift`='%d',`clan_id`='%d',`last_login`='%"PRId64"',`attendance_count`='%d',`attendance_timer`='%"PRId64"'"
 			" WHERE  `account_id`='%d' AND `char_id` = '%d'",
 			char_db, p->base_level, p->job_level,
 			p->base_exp, p->job_exp, p->zeny,
@@ -497,7 +498,7 @@ int char_mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 			mapindex_id2name(p->save_point.map), p->save_point.x, p->save_point.y, p->rename,
 			(unsigned long)p->delete_date,  // FIXME: platform-dependent size
 			p->look.robe,p->slotchange,opt,p->font,p->uniqueitem_counter,
-			p->hotkey_rowshift,p->clan_id,p->last_login,
+			p->hotkey_rowshift,p->clan_id,p->last_login, p->attendance_count, p->attendance_timer,
 			p->account_id, p->char_id) )
 		{
 			Sql_ShowDebug(inter->sql_handle);
@@ -1175,7 +1176,7 @@ int char_mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_every
 		"`status_point`,`skill_point`,`option`,`karma`,`manner`,`party_id`,`guild_id`,`pet_id`,`homun_id`,`elemental_id`,`hair`,"
 		"`hair_color`,`clothes_color`,`body`,`weapon`,`shield`,`head_top`,`head_mid`,`head_bottom`,`last_map`,`last_x`,`last_y`,"
 		"`save_map`,`save_x`,`save_y`,`partner_id`,`father`,`mother`,`child`,`fame`,`rename`,`delete_date`,`robe`,`slotchange`,"
-		"`char_opt`,`font`,`uniqueitem_counter`,`sex`,`hotkey_rowshift`,`clan_id`,`last_login`"
+		"`char_opt`,`font`,`uniqueitem_counter`,`sex`,`hotkey_rowshift`,`clan_id`,`last_login`, `attendance_count`, `attendance_timer`"
 		" FROM `%s` WHERE `char_id`=? LIMIT 1", char_db)
 	 || SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT, &char_id, sizeof char_id)
 	 || SQL_ERROR == SQL->StmtExecute(stmt)
@@ -1240,6 +1241,8 @@ int char_mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_every
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 58, SQLDT_UCHAR,  &p->hotkey_rowshift,    sizeof p->hotkey_rowshift,    NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 59, SQLDT_INT,    &p->clan_id,            sizeof p->clan_id,            NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 60, SQLDT_INT64,  &p->last_login,         sizeof p->last_login,         NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 61, SQLDT_SHORT,  &p->attendance_count,   sizeof p->attendance_count,   NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 62, SQLDT_INT64,  &p->attendance_timer,   sizeof p->attendance_timer,   NULL, NULL)
 	) {
 		SqlStmt_ShowDebug(stmt);
 		SQL->StmtFree(stmt);
@@ -1616,7 +1619,7 @@ int char_make_new_char_sql(struct char_session_data *sd, const char *name_, int 
 		case JOB_NOVICE:
 			break;
 		default:
-			return -2;	// Char Creation Denied
+			return -2; // Char Creation Denied
 	}
 
 	//check other inputs
@@ -3328,7 +3331,12 @@ void char_char_name_ack(int fd, int char_id)
 	WFIFOHEAD(fd,30);
 	WFIFOW(fd,0) = 0x2b09;
 	WFIFOL(fd,2) = char_id;
+#if PACKETVER_MAIN_NUM >= 20180307 || PACKETVER_RE_NUM >= 20180221 || PACKETVER_ZERO_NUM >= 20180328
+	if (chr->loadName(char_id, WFIFOP(fd,6)) == 0)
+		WFIFOL(fd, 6) = 0;
+#else
 	chr->loadName(char_id, WFIFOP(fd,6));
+#endif
 	WFIFOSET(fd,30);
 }
 
@@ -3795,41 +3803,6 @@ void char_parse_frommap_update_ip(int fd, int id)
 	RFIFOSKIP(fd,6);
 }
 
-void char_parse_frommap_request_stats_report(int fd)
-{
-	int sfd;/* stat server fd */
-	struct hSockOpt opt;
-	RFIFOSKIP(fd, 2);/* we skip first 2 bytes which are the 0x3008, so we end up with a buffer equal to the one we send */
-
-	opt.silent = 1;
-	opt.setTimeo = 1;
-
-	if ((sfd = sockt->make_connection(sockt->host2ip("stats.herc.ws"),(uint16)25427,&opt) ) == -1) {
-		RFIFOSKIP(fd, RFIFOW(fd,2) );/* skip this packet */
-		RFIFOFLUSH(fd);
-		return;/* connection not possible, we drop the report */
-	}
-
-	sockt->session[sfd]->flag.server = 1;/* to ensure we won't drop our own packet */
-	sockt->realloc_fifo(sfd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
-
-	WFIFOHEAD(sfd, RFIFOW(fd,2) );
-
-	memcpy(WFIFOP(sfd,0), RFIFOP(fd, 0), RFIFOW(fd,2));
-
-	WFIFOSET(sfd, RFIFOW(fd,2) );
-
-	do {
-		sockt->flush(sfd);
-		HSleep(1);
-	} while( !sockt->session[sfd]->flag.eof && sockt->session[sfd]->wdata_size );
-
-	sockt->close(sfd);
-
-	RFIFOSKIP(fd, RFIFOW(fd,2) );/* skip this packet */
-	RFIFOFLUSH(fd);
-}
-
 void char_parse_frommap_scdata_update(int fd)
 {
 	int account_id = RFIFOL(fd, 2);
@@ -4058,14 +4031,6 @@ int char_parse_frommap(int fd)
 			case 0x2736: // ip address update
 				if (RFIFOREST(fd) < 6) return 0;
 				chr->parse_frommap_update_ip(fd, id);
-			break;
-
-			case 0x3008:
-				if( RFIFOREST(fd) < RFIFOW(fd,4) )
-					return 0;/* packet wasn't fully received yet (still fragmented) */
-				else {
-					chr->parse_frommap_request_stats_report(fd);
-			}
 			break;
 
 			/* individual sc data insertion/update  */
@@ -5004,7 +4969,7 @@ void char_parse_char_pincode_window(int fd, struct char_session_data* sd) __attr
 void char_parse_char_pincode_window(int fd, struct char_session_data* sd)
 {
 	if (RFIFOL(fd,2) == sd->account_id)
-		pincode->sendstate(fd, sd, PINCODE_NOTSET);
+		pincode->loginstate(fd, sd, PINCODE_LOGIN_NOTSET);
 
 	RFIFOSKIP(fd, 6);
 }
@@ -6151,6 +6116,7 @@ int do_final(void) {
 
 	do_final_mapif();
 	loginif->final();
+	pincode->final();
 
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s`", ragsrvinfo_db) )
 		Sql_ShowDebug(inter->sql_handle);
@@ -6297,6 +6263,7 @@ int do_init(int argc, char **argv) {
 
 	//Read map indexes
 	mapindex->init();
+	pincode->init();
 
 	#ifdef RENEWAL
 		start_point.map = mapindex->name2id("iz_int");
@@ -6567,7 +6534,6 @@ void char_defaults(void)
 	chr->map_auth_failed = char_map_auth_failed;
 	chr->parse_frommap_auth_request = char_parse_frommap_auth_request;
 	chr->parse_frommap_update_ip = char_parse_frommap_update_ip;
-	chr->parse_frommap_request_stats_report = char_parse_frommap_request_stats_report;
 	chr->parse_frommap_scdata_update = char_parse_frommap_scdata_update;
 	chr->parse_frommap_scdata_delete = char_parse_frommap_scdata_delete;
 	chr->parse_frommap = char_parse_frommap;

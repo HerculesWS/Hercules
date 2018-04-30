@@ -177,7 +177,7 @@ struct mapif_interface {
 	void (*send_quests) (int fd, int char_id, struct quest *tmp_questlog, int num_quests);
 	int (*parse_quest_load) (int fd);
 	int(*parse_rodex_requestinbox) (int fd);
-	void(*rodex_sendinbox) (int fd, int char_id, int8 opentype, int8 flag, int count, struct rodex_maillist *mails);
+	void(*rodex_sendinbox) (int fd, int char_id, int8 opentype, int8 flag, int count, int64 mail_id, struct rodex_maillist *mails);
 	int(*parse_rodex_checkhasnew) (int fd);
 	void(*rodex_sendhasnew) (int fd, int char_id, bool has_new);
 	int(*parse_rodex_updatemail) (int fd);
