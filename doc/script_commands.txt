@@ -3271,13 +3271,6 @@ produced). It's useful for when you want to check whether an item contains
 cards or if it's signed.
 
 ---------------------------------------
-
-*hateffect(<Hat Effect ID>, <State>)
-
-This will set a Hat Effect onto the player. The state field allows you to
-enable (true) or disable (false) the effect on the player.
-
----------------------------------------
 //=====================================
 2.1 - End of Item-Related Commands
 //=====================================

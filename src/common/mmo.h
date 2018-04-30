@@ -81,22 +81,6 @@
 	#undef ENABLE_PACKETVER_ZERO
 #endif // DISABLE_PACKETVER_ZERO
 
-#if !defined(PACKETVER_RE) && !defined(PACKETVER_ZERO)
-	#define PACKETVER_MAIN_NUM PACKETVER
-#else
-	#define PACKETVER_MAIN_NUM 0
-#endif
-#ifdef PACKETVER_RE
-	#define PACKETVER_RE_NUM PACKETVER
-#else
-	#define PACKETVER_RE_NUM 0
-#endif
-#ifdef PACKETVER_ZERO
-	#define PACKETVER_ZERO_NUM PACKETVER
-#else
-	#define PACKETVER_ZERO_NUM 0
-#endif
-
 // Client support for experimental RagexeRE UI present in 2012-04-10 and 2012-04-18
 #if defined(PACKETVER_RE) && ( PACKETVER == 20120410 || PACKETVER == 20120418 )
 #define PARTY_RECRUIT
@@ -376,7 +360,7 @@ struct item {
 	char favorite;
 	unsigned char bound;
 	uint64 unique_id;
-
+	
 	struct {
 		int16 index;
 		int16 value;
@@ -680,9 +664,6 @@ struct mmo_charstatus {
 
 	uint32 uniqueitem_counter;
 
-	int64 attendance_timer;
-	short attendance_count;
-
 	unsigned char hotkey_rowshift;
 };
 
@@ -765,7 +746,6 @@ struct guild_member {
 	char name[NAME_LENGTH];
 	struct map_session_data *sd;
 	unsigned char modified;
-	uint32 last_login;
 };
 
 struct guild_position {
@@ -919,12 +899,12 @@ struct rodex_message {
 	struct {
 		struct item item;
 		int idx;
+		
 	} items[RODEX_MAX_ITEM];
 	int64 zeny;
 	uint8 type;
 	int8 opentype;
 	bool is_read;
-	bool sender_read;
 	bool is_deleted;
 	int send_date;
 	int expire_date;

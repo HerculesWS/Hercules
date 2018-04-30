@@ -838,9 +838,9 @@ typedef enum sc_type {
 	SC_BITESCAR,
 	SC_ARCLOUSEDASH,
 	SC_TUNAPARTY,
-	SC_SHRIMP, // 650
+	SC_SHRIMP,	// 650
 	SC_FRESHSHRIMP,
-
+	
 	SC_DRESS_UP,
 
 	// Rodex
@@ -2355,7 +2355,6 @@ struct status_interface {
 	int (*calc_pet_) (struct pet_data* pd, enum e_status_calc_opt opt);
 	int (*calc_pc_) (struct map_session_data* sd, enum e_status_calc_opt opt);
 	void (*calc_pc_additional) (struct map_session_data* sd, enum e_status_calc_opt opt);
-	void (*calc_pc_recover_hp) (struct map_session_data* sd, struct status_data *bstatus);
 	int (*calc_homunculus_) (struct homun_data *hd, enum e_status_calc_opt opt);
 	int (*calc_mercenary_) (struct mercenary_data *md, enum e_status_calc_opt opt);
 	int (*calc_elemental_) (struct elemental_data *ed, enum e_status_calc_opt opt);

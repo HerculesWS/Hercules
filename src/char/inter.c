@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -527,15 +527,12 @@ void mapif_parse_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int acc
 	inter->msg_to_fd(map_fd, u_fd, u_aid, "-- Account %d --", account_id);
 	inter->msg_to_fd(map_fd, u_fd, u_aid, "User: %s | GM Group: %d | State: %d", userid, group_id, state);
 
-// enable this if you really know what you doing.
-#if 0
 	if (*user_pass != '\0') { /* password is only received if your gm level is greater than the one you're searching for */
 		if (pin_code && *pin_code != '\0')
 			inter->msg_to_fd(map_fd, u_fd, u_aid, "Password: %s (PIN:%s)", user_pass, pin_code);
 		else
 			inter->msg_to_fd(map_fd, u_fd, u_aid, "Password: %s", user_pass );
 	}
-#endif
 
 	inter->msg_to_fd(map_fd, u_fd, u_aid, "Account e-mail: %s | Birthdate: %s", email, birthdate);
 	inter->msg_to_fd(map_fd, u_fd, u_aid, "Last IP: %s (%s)", last_ip, geoip->getcountry(sockt->str2ip(last_ip)));
@@ -1411,6 +1408,7 @@ int inter_parse_frommap(int fd)
 	case 0x3005: mapif->parse_RegistryRequest(fd); break;
 	case 0x3006: mapif->parse_NameChangeRequest(fd); break;
 	case 0x3007: mapif->parse_accinfo(fd); break;
+	/* 0x3008 is used by the report stuff */
 	default:
 		if(  inter_party->parse_frommap(fd)
 		  || inter_guild->parse_frommap(fd)

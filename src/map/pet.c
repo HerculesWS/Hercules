@@ -39,7 +39,6 @@
 #include "map/skill.h"
 #include "map/status.h"
 #include "map/unit.h"
-#include "common/conf.h"
 #include "common/db.h"
 #include "common/ers.h"
 #include "common/memmgr.h"
@@ -1200,213 +1199,145 @@ int pet_skill_support_timer(int tid, int64 tick, int id, intptr_t data) {
 	return 0;
 }
 
-void pet_read_db(void)
+/**
+ * Loads (or reloads) the pet database.
+ */
+int read_petdb(void)
 {
 	const char *filename[] = {
-		DBPATH"pet_db.conf",
-		"pet_db2.conf"
+		DBPATH"pet_db.txt",
+		"pet_db2.txt",
 	};
-	int i;
-
-	pet->read_db_clear();
-
-	for (i = 0; i < ARRAYLENGTH(filename); ++i) {
-		pet->read_db_libconfig(filename[i], i > 0 ? true : false);
-	}
-}
-
-int pet_read_db_libconfig(const char *filename, bool ignore_missing)
-{
-	struct config_t pet_db_conf;
-	struct config_setting_t *pdb;
-	struct config_setting_t *t;
-	char filepath[256];
-	bool duplicate[MAX_MOB_DB] = { 0 };
-	int i = 0, count = 0;
-
-	nullpo_ret(filename);
-
-	safesnprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, filename);
-
-	if (!exists(filepath)) {
-		if (!ignore_missing) {
-			ShowError("pet_read_db_libconfig: can't find file %s\n", filepath);
-		}
-		return 0;
-	}
-
-	if (!libconfig->load_file(&pet_db_conf, filepath))
-		return 0;
-
-	if ((pdb = libconfig->setting_get_member(pet_db_conf.root, "pet_db")) == NULL) {
-		ShowError("can't read %s\n", filepath);
-		return 0;
-	}
-
-	while ((t = libconfig->setting_get_elem(pdb, i++))) {
-		int pet_id = pet->read_db_sub(t, i - 1, filename);
-
-		if (pet_id <= 0 || pet_id >= MAX_MOB_DB)
-			continue;
-
-		if (duplicate[pet_id]) {
-			ShowWarning("pet_read_db_libconfig:%s: duplicate entry of ID #%d\n", filename, pet_id);
-		} else {
-			duplicate[pet_id] = true;
-		}
-
-		count++;
-	}
-	libconfig->destroy(&pet_db_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filename);
-
-	return count;
-}
-
-int pet_read_db_sub(struct config_setting_t *it, int n, const char *source)
-{
-	struct config_setting_t *t = NULL;
-	struct item_data *data = NULL;
-	const char *str = NULL;
-	int i32 = 0;
-
-	nullpo_ret(it);
-	nullpo_ret(source);
-	Assert_ret(n >= 0 && n < MAX_PET_DB);
-
-	if (!libconfig->setting_lookup_int(it, "Id", &i32)) {
-		ShowWarning("pet_read_db_sub: Missing Id in \"%s\", entry #%d, skipping.\n", source, n);
-		return 0;
-	}
-	pet->db[n].class_ = i32;
-
-	if (!libconfig->setting_lookup_string(it, "SpriteName", &str) || !*str ) {
-		ShowWarning("pet_read_db_sub: Missing SpriteName in pet %d of \"%s\", skipping.\n", pet->db[n].class_, source);
-		return 0;
-	}
-	safestrncpy(pet->db[n].name, str, sizeof(pet->db[n].name));
-
-	if (!libconfig->setting_lookup_string(it, "Name", &str) || !*str) {
-		ShowWarning("pet_read_db_sub: Missing Name in pet %d of \"%s\", skipping.\n", pet->db[n].class_, source);
-		return 0;
-	}
-	safestrncpy(pet->db[n].jname, str, sizeof(pet->db[n].jname));
-
-	if (libconfig->setting_lookup_string(it, "TamingItem", &str)) {
-		if (!(data = itemdb->name2id(str))) {
-			ShowWarning("pet_read_db_sub: Invalid item '%s' in pet %d of \"%s\", defaulting to 0.\n", str, pet->db[n].class_, source);
-		} else {
-			pet->db[n].itemID = (uint16)data->nameid;
-		}
-	}
-
-	if (libconfig->setting_lookup_string(it, "EggItem", &str)) {
-		if (!(data = itemdb->name2id(str))) {
-			ShowWarning("pet_read_db_sub: Invalid item '%s' in pet %d of \"%s\", defaulting to 0.\n", str, pet->db[n].class_, source);
-		} else {
-			pet->db[n].EggID = (uint16)data->nameid;
-		}
-	}
-
-	if (libconfig->setting_lookup_string(it, "AccessoryItem", &str)) {
-		if (!(data = itemdb->name2id(str))) {
-			ShowWarning("pet_read_db_sub: Invalid item '%s' in pet %d of \"%s\", defaulting to 0.\n", str, pet->db[n].class_, source);
-		} else {
-			pet->db[n].AcceID = (uint16)data->nameid;
-		}
-	}
-
-	if (libconfig->setting_lookup_string(it, "FoodItem", &str)) {
-		if (!(data = itemdb->name2id(str))) {
-			ShowWarning("pet_read_db_sub: Invalid item '%s' in pet %d of \"%s\", defaulting to 0.\n", str, pet->db[n].class_, source);
-		} else {
-			pet->db[n].FoodID = (uint16)data->nameid;
-		}
-	}
-
-	if (libconfig->setting_lookup_int(it, "FoodEffectiveness", &i32))
-		pet->db[n].fullness = i32;
-
-	if (libconfig->setting_lookup_int(it, "HungerDelay", &i32))
-		pet->db[n].hungry_delay = i32 * 1000;
-
-	if ((t = libconfig->setting_get_member(it, "Intimacy"))) {
-		if (config_setting_is_group(t)) {
-			pet->read_db_sub_intimacy(n, t);
-		}
-	}
-	if (pet->db[n].r_hungry <= 0)
-		pet->db[n].r_hungry = 1;
-
-	if (libconfig->setting_lookup_int(it, "CaptureRate", &i32))
-		pet->db[n].capture = i32;
-
-	if (libconfig->setting_lookup_int(it, "Speed", &i32))
-		pet->db[n].speed = i32;
-
-	if ((t = libconfig->setting_get_member(it, "SpecialPerformance")) && (i32 = libconfig->setting_get_bool(t)))
-		pet->db[n].s_perfor = (char)i32;
-
-	if ((t = libconfig->setting_get_member(it, "TalkWithEmotes")) && (i32 = libconfig->setting_get_bool(t)))
-		pet->db[n].talk_convert_class = i32;
-
-	if (libconfig->setting_lookup_int(it, "AttackRate", &i32))
-		pet->db[n].attack_rate = i32;
-
-	if (libconfig->setting_lookup_int(it, "DefendRate", &i32))
-		pet->db[n].defence_attack_rate = i32;
-
-	if (libconfig->setting_lookup_int(it, "ChangeTargetRate", &i32))
-		pet->db[n].change_target_rate = i32;
-
-	if (libconfig->setting_lookup_string(it, "PetScript", &str))
-		pet->db[n].pet_script = *str ? script->parse(str, source, -pet->db[n].class_, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
-
-	if (libconfig->setting_lookup_string(it, "EquipScript", &str))
-		pet->db[n].equip_script = *str ? script->parse(str, source, -pet->db[n].class_, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
-
-	return pet->db[n].class_;
-}
-
-bool pet_read_db_sub_intimacy(int idx, struct config_setting_t *t)
-{
-	int i32 = 0;
-
-	nullpo_retr(false, t);
-	Assert_ret(idx >= 0 && idx < MAX_PET_DB);
-
-	if (libconfig->setting_lookup_int(t, "Initial", &i32))
-		pet->db[idx].intimate = i32;
-
-	if (libconfig->setting_lookup_int(t, "FeedIncrement", &i32))
-		pet->db[idx].r_hungry = i32;
-
-	if (libconfig->setting_lookup_int(t, "OverFeedDecrement", &i32))
-		pet->db[idx].r_full = i32;
-
-	if (libconfig->setting_lookup_int(t, "OwnerDeathDecrement", &i32))
-		pet->db[idx].die = i32;
-
-	return true;
-}
-
-void pet_read_db_clear(void)
-{
-	int i;
+	int i,j;
 
 	// Remove any previous scripts in case reloaddb was invoked.
-	for (i = 0; i < MAX_PET_DB; i++) {
-		if (pet->db[i].pet_script) {
-			script->free_code(pet->db[i].pet_script);
-			pet->db[i].pet_script = NULL;
+	for (j = 0; j < MAX_PET_DB; j++) {
+		if (pet->db[j].pet_script) {
+			script->free_code(pet->db[j].pet_script);
+			pet->db[j].pet_script = NULL;
 		}
-		if (pet->db[i].equip_script) {
-			script->free_code(pet->db[i].equip_script);
-			pet->db[i].equip_script = NULL;
+		if (pet->db[j].equip_script) {
+			script->free_code(pet->db[j].equip_script);
+			pet->db[j].equip_script = NULL;
 		}
 	}
-	memset(pet->db, 0, sizeof(pet->db));
-	return;
+
+	// clear database
+	memset(pet->db,0,sizeof(pet->db));
+
+	j = 0; // entry counter
+	for (i = 0; i < ARRAYLENGTH(filename); i++) {
+		char line[1024];
+		int lines, entries;
+		FILE *fp;
+
+		sprintf(line, "%s/%s", map->db_path, filename[i]);
+		fp=fopen(line,"r");
+		if (fp == NULL) {
+			if (i == 0)
+				ShowError("can't read %s\n",line);
+			continue;
+		}
+
+		lines = entries = 0;
+		while (fgets(line, sizeof(line), fp) && j < MAX_PET_DB) {
+			char *str[22], *p;
+			int nameid, k;
+			lines++;
+
+			if (line[0] == '/' && line[1] == '/')
+				continue;
+			memset(str, 0, sizeof(str));
+			p = line;
+			while (ISSPACE(*p))
+				++p;
+			if (*p == '\0')
+				continue; // empty line
+			for (k = 0; k < 20; ++k) {
+				str[k] = p;
+				p = strchr(p,',');
+				if (p == NULL)
+					break; // comma not found
+				*p = '\0';
+				++p;
+			}
+
+			if (p == NULL) {
+				ShowError("read_petdb: Insufficient columns in line %d, skipping.\n", lines);
+				continue;
+			}
+
+			// Pet Script
+			if (*p != '{') {
+				ShowError("read_petdb: Invalid format (Pet Script column) in line %d, skipping.\n", lines);
+				continue;
+			}
+
+			str[20] = p;
+			p = strstr(p+1,"},");
+			if (p == NULL) {
+				ShowError("read_petdb: Invalid format (Pet Script column) in line %d, skipping.\n", lines);
+				continue;
+			}
+			p[1] = '\0';
+			p += 2;
+
+			// Equip Script
+			if (*p != '{') {
+				ShowError("read_petdb: Invalid format (Equip Script column) in line %d, skipping.\n", lines);
+				continue;
+			}
+			str[21] = p;
+
+			nameid = atoi(str[0]);
+			if (nameid <= 0)
+				continue;
+
+			if (!mob->db_checkid(nameid)) {
+				ShowWarning("pet_db reading: Invalid mob-class %d, pet not read.\n", nameid);
+				continue;
+			}
+
+			pet->db[j].class_ = nameid;
+			safestrncpy(pet->db[j].name,str[1],NAME_LENGTH);
+			safestrncpy(pet->db[j].jname,str[2],NAME_LENGTH);
+			pet->db[j].itemID=atoi(str[3]);
+			pet->db[j].EggID=atoi(str[4]);
+			pet->db[j].AcceID=atoi(str[5]);
+			pet->db[j].FoodID=atoi(str[6]);
+			pet->db[j].fullness=atoi(str[7]);
+			pet->db[j].hungry_delay=atoi(str[8])*1000;
+			pet->db[j].r_hungry=atoi(str[9]);
+			if (pet->db[j].r_hungry <= 0)
+				pet->db[j].r_hungry=1;
+			pet->db[j].r_full=atoi(str[10]);
+			pet->db[j].intimate=atoi(str[11]);
+			pet->db[j].die=atoi(str[12]);
+			pet->db[j].capture=atoi(str[13]);
+			pet->db[j].speed=atoi(str[14]);
+			pet->db[j].s_perfor=(char)atoi(str[15]);
+			pet->db[j].talk_convert_class=atoi(str[16]);
+			pet->db[j].attack_rate=atoi(str[17]);
+			pet->db[j].defence_attack_rate=atoi(str[18]);
+			pet->db[j].change_target_rate=atoi(str[19]);
+			pet->db[j].pet_script = NULL;
+			pet->db[j].equip_script = NULL;
+
+			if (*str[20])
+				pet->db[j].pet_script = script->parse(str[20], filename[i], lines, 0, NULL);
+			if (*str[21])
+				pet->db[j].equip_script = script->parse(str[21], filename[i], lines, 0, NULL);
+
+			j++;
+			entries++;
+		}
+
+		if (j >= MAX_PET_DB)
+			ShowWarning("read_petdb: Reached max number of pets [%d]. Remaining pets were not read.\n ", MAX_PET_DB);
+		fclose(fp);
+		ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' pets in '"CL_WHITE"%s"CL_RESET"'.\n", entries, filename[i]);
+	}
+	return 0;
 }
 
 /*==========================================
@@ -1497,10 +1428,5 @@ void pet_defaults(void) {
 	pet->skill_bonus_timer = pet_skill_bonus_timer;
 	pet->recovery_timer = pet_recovery_timer;
 	pet->skill_support_timer = pet_skill_support_timer;
-
-	pet->read_db = pet_read_db;
-	pet->read_db_libconfig = pet_read_db_libconfig;
-	pet->read_db_sub = pet_read_db_sub;
-	pet->read_db_sub_intimacy = pet_read_db_sub_intimacy;
-	pet->read_db_clear = pet_read_db_clear;
+	pet->read_db = read_petdb;
 }

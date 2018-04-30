@@ -122,7 +122,7 @@ struct packet_CA_LOGIN4 {
  */
 struct packet_CA_LOGIN_PCBANG {
 	int16 packet_id;      ///< Packet ID (#PACKET_ID_CA_LOGIN_PCBANG)
-	uint32 version;       ///< Client Version
+	uint32 version;	      ///< Client Version
 	char id[24];          ///< Username
 	char password[24];    ///< Password
 	uint8 clienttype;     ///< Client Type

@@ -185,7 +185,7 @@ void mapif_send_quests(int fd, int char_id, struct quest *tmp_questlog, int num_
 int mapif_parse_quest_load(int fd);
 /* RoDEX */
 int mapif_parse_rodex_requestinbox(int fd);
-void mapif_rodex_sendinbox(int fd, int char_id, int8 opentype, int8 flag, int count, int64 mail_id, struct rodex_maillist *mails);
+void mapif_rodex_sendinbox(int fd, int char_id, int8 opentype, int8 flag, int count, struct rodex_maillist *mails);
 int mapif_parse_rodex_checkhasnew(int fd);
 void mapif_rodex_sendhasnew(int fd, int char_id, bool has_new);
 int mapif_parse_rodex_updatemail(int fd);

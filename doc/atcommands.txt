@@ -923,15 +923,10 @@ If no position is given, the command defaults to headgear.
 
 ---------------------------------------
 
-@fakename {<option> <text string>}
+@fakename {<text string>}
 
 Temporarily changes name to the specified string.
 If no string is given, the character's real name will be re-applied.
-Option is an integer of one of the following values:
-0: Hide Guild and Party Names
-1: Hide Party Name
-2: Hide Guild Name
-3: Show Guild and Party Names
 
 ---------------------------------------
 

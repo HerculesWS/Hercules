@@ -110,7 +110,7 @@ typedef enum send_target {
 	BG_AREA_WOS,
 
 	BG_QUEUE,
-
+	
 	CLAN,               // Clan System
 } send_target;
 
@@ -388,7 +388,6 @@ enum clif_messages {
 	MSG_NPC_WORK_IN_PROGRESS       = 0x783, // FIXME[Haru]: This seems to be 0x784 in the msgstringtable files I found.
 	MSG_REINS_CANT_USE_MOUNTED     = 0x78b, // FIXME[Haru]: This seems to be 0x785 in the msgstringtalbe files I found.
 	MSG_PARTY_LEADER_SAMEMAP       = 0x82e, //< It is only possible to change the party leader while on the same map.
-	MSG_ATTENDANCE_UNAVAILABLE     = 0xd92, ///< Attendance Check failed. Please try again later.
 };
 
 /**
@@ -576,19 +575,6 @@ enum CZ_CONFIG {
 	CZ_CONFIG_HOMUNCULUS_AUTOFEEDING = 3,
 };
 /**
-* Client UI types
-* used with packet 0xAE2 to request the client to open a specific ui
-**/
-enum ui_types {
-	BANK_UI = 0,
-	STYLIST_UI,
-	CAPTCHA_UI,
-	MACRO_UI,
-	TIPBOX_UI = 5,
-	RENEWQUEST_UI,
-	ATTENDANCE_UI
-};
-/**
  * Structures
  **/
 typedef void (*pFunc)(int, struct map_session_data *); //cant help but put it first
@@ -611,12 +597,6 @@ struct cdelayed_damage {
 struct merge_item {
 	int16 position;
 	int16 nameid;
-};
-
-/* attendance data */
-struct attendance_entry {
-	int nameid;
-	int qty;
 };
 
 /**
@@ -648,8 +628,6 @@ struct clif_interface {
 	bool ally_only;
 	/* */
 	struct eri *delayed_damage_ers;
-	/* */
-	VECTOR_DECL(struct attendance_entry) attendance_data;
 	/* core */
 	int (*init) (bool minimal);
 	void (*final) (void);
@@ -908,8 +886,6 @@ struct clif_interface {
 	void (*msgtable) (struct map_session_data* sd, unsigned short msg_id);
 	void (*msgtable_num) (struct map_session_data *sd, unsigned short msg_id, int value);
 	void (*msgtable_skill) (struct map_session_data *sd, uint16 skill_id, int msg_id);
-	void (*msgtable_str) (struct map_session_data *sd, uint16 msg_id, const char *value);
-	void (*msgtable_color) (struct map_session_data *sd, uint16 msg_id, uint32 color);
 	void (*message) (const int fd, const char* mes);
 	void (*messageln) (const int fd, const char* mes);
 	/* message+s(printf) */
@@ -1045,7 +1021,6 @@ struct clif_interface {
 	void (*quest_delete) (struct map_session_data *sd, int quest_id);
 	void (*quest_update_status) (struct map_session_data *sd, int quest_id, bool active);
 	void (*quest_update_objective) (struct map_session_data *sd, struct quest *qd);
-	void (*quest_notify_objective) (struct map_session_data *sd, struct quest *qd);
 	void (*quest_show_event) (struct map_session_data *sd, struct block_list *bl, short state, short color);
 	/* mail-related */
 	void (*mail_window) (int fd, int flag);
@@ -1414,7 +1389,7 @@ struct clif_interface {
 	void (*rodex_send_mail_result) (int fd, struct map_session_data *sd, int8 result);
 	void (*rodex_send_maillist) (int fd, struct map_session_data *sd, int8 open_type, int64 page_start);
 	void (*rodex_send_refresh) (int fd, struct map_session_data *sd, int8 open_type, int count);
-	void (*rodex_send_mails_all) (int fd, struct map_session_data *sd, int64 mail_id);
+	void (*rodex_send_mails_all) (int fd, struct map_session_data *sd);
 	void (*pRodexReadMail) (int fd, struct map_session_data *sd);
 	void (*rodex_read_mail) (struct map_session_data *sd, int8 opentype, struct rodex_message *msg);
 	void (*pRodexNextMaillist) (int fd, struct map_session_data *sd);
@@ -1438,18 +1413,6 @@ struct clif_interface {
 	void (*clan_leave) (struct map_session_data *sd);
 	void (*clan_message) (struct clan *c, const char *mes, int len);
 	void (*pClanMessage) (int fd, struct map_session_data* sd);
-	/* Hat Effect */
-	void (*hat_effect) (struct block_list *bl, struct block_list *tbl, enum send_target target);
-	void (*hat_effect_single) (struct block_list *bl, uint16 effectId, bool enable);
-
-	bool (*pAttendanceDB) (void);
-	bool (*attendancedb_libconfig_sub) (struct config_setting_t *it, int n, const char *source);
-	bool (*attendance_timediff) (struct map_session_data *sd);
-	time_t (*attendance_getendtime) (void);
-	void (*pOpenUIRequest) (int fd, struct map_session_data *sd);
-	void (*open_ui) (struct map_session_data *sd, int8 UIType);
-	void (*pAttendanceRewardRequest) (int fd, struct map_session_data *sd);
-	void (*ui_action) (struct map_session_data *sd, int32 UIType, int32 data);
 };
 
 #ifdef HERCULES_CORE

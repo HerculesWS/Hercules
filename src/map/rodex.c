@@ -216,11 +216,11 @@ void rodex_check_player(struct map_session_data *sd, const char *name, int *base
 /// @param title : Mail Title
 /// @param zeny : Amount of zeny attached
 /// Returns result code:
-///     RODEX_SEND_MAIL_SUCCESS = 0,
-///         RODEX_SEND_MAIL_FATAL_ERROR = 1,
-///         RODEX_SEND_MAIL_COUNT_ERROR = 2,
-///         RODEX_SEND_MAIL_ITEM_ERROR = 3,
-///         RODEX_SEND_MAIL_RECEIVER_ERROR = 4
+/// 	RODEX_SEND_MAIL_SUCCESS = 0,
+///		RODEX_SEND_MAIL_FATAL_ERROR = 1,
+///		RODEX_SEND_MAIL_COUNT_ERROR = 2,
+///		RODEX_SEND_MAIL_ITEM_ERROR = 3,
+///		RODEX_SEND_MAIL_RECEIVER_ERROR = 4
 int rodex_send_mail(struct map_session_data *sd, const char *receiver_name, const char *body, const char *title, int64 zeny)
 {
 	int i;
@@ -230,11 +230,6 @@ int rodex_send_mail(struct map_session_data *sd, const char *receiver_name, cons
 	nullpo_retr(RODEX_SEND_MAIL_FATAL_ERROR, receiver_name);
 	nullpo_retr(RODEX_SEND_MAIL_FATAL_ERROR, body);
 	nullpo_retr(RODEX_SEND_MAIL_FATAL_ERROR, title);
-
-	if (!rodex->isenabled() || sd->npc_id > 0) {
-		rodex->clean(sd, 1);
-		return RODEX_SEND_MAIL_FATAL_ERROR;
-	}
 
 	if (zeny < 0) {
 		rodex->clean(sd, 1);
@@ -369,23 +364,14 @@ struct rodex_message *rodex_get_mail(struct map_session_data *sd, int64 mail_id)
 {
 	int i;
 	struct rodex_message *msg;
-	int char_id;
 
 	nullpo_retr(NULL, sd);
 
-	ARR_FIND(0, VECTOR_LENGTH(sd->rodex.messages), i, VECTOR_INDEX(sd->rodex.messages, i).id == mail_id);
+	ARR_FIND(0, VECTOR_LENGTH(sd->rodex.messages), i, VECTOR_INDEX(sd->rodex.messages, i).id == mail_id && VECTOR_INDEX(sd->rodex.messages, i).is_deleted != true);
 	if (i == VECTOR_LENGTH(sd->rodex.messages))
 		return NULL;
 
 	msg = &VECTOR_INDEX(sd->rodex.messages, i);
-
-	char_id = sd->status.char_id;
-
-	if ((msg->is_deleted == true)
-		|| (msg->expire_date < time(NULL) && ((msg->receiver_accountid > 0) || (msg->receiver_id == char_id && msg->sender_id != char_id)))
-		|| (msg->expire_date + RODEX_EXPIRE < time(NULL))
-		)
-		return NULL;
 
 	return msg;
 }
@@ -402,16 +388,9 @@ void rodex_read_mail(struct map_session_data *sd, int64 mail_id)
 	msg = rodex->get_mail(sd, mail_id);
 	nullpo_retv(msg);
 
-	if (msg->opentype == RODEX_OPENTYPE_RETURN) {
-		if (msg->sender_read == false) {
-			intif->rodex_updatemail(msg->id, 4);
-			msg->sender_read = true;
-		}
-	} else {
-		if (msg->is_read == false) {
-			intif->rodex_updatemail(msg->id, 0);
-			msg->is_read = true;
-		}
+	if (msg->is_read == false) {
+		intif->rodex_updatemail(msg->id, 0);
+		msg->is_read = true;
 	}
 
 	clif->rodex_read_mail(sd, msg->opentype, msg);
@@ -461,7 +440,6 @@ void rodex_get_zeny(struct map_session_data *sd, int8 opentype, int64 mail_id)
 		return;
 	}
 
-	msg->type &= ~MAIL_TYPE_ZENY;
 	msg->zeny = 0;
 	intif->rodex_updatemail(mail_id, 1);
 
@@ -545,8 +523,6 @@ void rodex_get_items(struct map_session_data *sd, int8 opentype, int64 mail_id)
 		}
 	}
 
-	msg->type &= ~MAIL_TYPE_ITEM;
-	msg->items_count = 0;
 	intif->rodex_updatemail(mail_id, 2);
 
 	clif->rodex_request_items(sd, opentype, mail_id, RODEX_GET_ITEMS_SUCCESS);
@@ -556,8 +532,8 @@ void rodex_get_items(struct map_session_data *sd, int8 opentype, int64 mail_id)
 /// - should be called everytime we're going to stop using rodex in this character
 /// @param sd : Target to clean
 /// @param flag :
-///     0 - clear everything
-///     1 - clear tmp only
+///		0 - clear everything
+///		1 - clear tmp only
 void rodex_clean(struct map_session_data *sd, int8 flag)
 {
 	nullpo_retv(sd);

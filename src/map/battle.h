@@ -490,7 +490,6 @@ struct Battle_Config {
 	int vcast_stat_scale;
 
 	int mvp_tomb_enabled;
-	int mvp_tomb_spawn_delay;
 
 	int atcommand_suggestions_enabled;
 	int min_npc_vendchat_distance;
@@ -547,7 +546,7 @@ struct Battle_Config {
 	// Warp Face Direction
 	int player_warp_keep_direction;
 
-	int atcommand_levelup_events; // Enable atcommands trigger level up events for NPCs
+	int atcommand_levelup_events;	// Enable atcommands trigger level up events for NPCs
 
 	int bow_unequip_arrow;
 
@@ -563,11 +562,6 @@ struct Battle_Config {
 	int feature_rodex_use_accountmail;
 
 	int feature_enable_homun_autofeed;
-
-	int storage_use_item;
-
-	int feature_enable_attendance_system;
-	int feature_attendance_endtime;
 };
 
 /* criteria for battle_config.idletime_critera */

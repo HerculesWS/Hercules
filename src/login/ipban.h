@@ -22,44 +22,26 @@
 #define LOGIN_IPBAN_H
 
 #include "common/cbasetypes.h"
-#include "common/hercules.h"
 
 /* Forward Declarations */
 struct config_t; // common/conf.h
 
-struct s_ipban_dbs {
-	char   db_hostname[32];
-	uint16 db_port;
-	char   db_username[32];
-	char   db_password[100];
-	char   db_database[32];
-	char   codepage[32];
-	char   table[32];
-};
-
-/**
- * Ipban.c Interface
- **/
-struct ipban_interface {
-	struct s_ipban_dbs *dbs;
-	struct Sql *sql_handle;
-	int cleanup_timer_id;
-	bool inited;
-	void (*init) (void);
-	void (*final) (void);
-	int (*cleanup) (int tid, int64 tick, int id, intptr_t data);
-	bool (*config_read_inter) (const char *filename, bool imported);
-	bool (*config_read_connection) (const char *filename, struct config_t *config, bool imported);
-	bool (*config_read_dynamic) (const char *filename, struct config_t *config, bool imported);
-	bool (*config_read) (const char *filename, struct config_t *config, bool imported);
-	bool (*check) (uint32 ip);
-	void (*log) (uint32 ip);
-};
-
 #ifdef HERCULES_CORE
-void ipban_defaults(void);
-#endif // HERCULES_CORE
+// TODO: Interface
+// initialize
+void ipban_init(void);
 
-HPShared struct ipban_interface *ipban;
+// finalize
+void ipban_final(void);
+
+// check ip against ban list
+bool ipban_check(uint32 ip);
+
+// increases failure count for the specified IP
+void ipban_log(uint32 ip);
+
+// parses configuration options
+bool ipban_config_read(const char *filename, struct config_t *config, bool imported);
+#endif // HERCULES_CORE
 
 #endif /* LOGIN_IPBAN_H */

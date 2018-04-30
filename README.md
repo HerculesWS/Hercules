@@ -37,7 +37,7 @@ Table of Contents
 What is Hercules?
 -----------------
 Hercules is a collaborative software development project revolving around the
-creation of a robust Massively Multiplayer Online Role Playing Game (MMORPG)
+creation of a robust massively multiplayer online role playing game (MMORPG)
 server package. Written in C, the program is very versatile and provides NPCs,
 warps and modifications. The project is jointly managed by a group of
 volunteers located around the world as well as a tremendous community providing
@@ -45,9 +45,9 @@ QA and support. Hercules is a continuation of the original Athena project.
 
 Prerequisites
 -------------
-Before installing Hercules, you will need to install certain tools and applications.
-This differs between the varying Operating Systems available, so the
-following list is broken down into Windows and Unix (incl. Linux) prerequisites.
+Before installing Hercules there are certain tools and applications you will
+need.  This differs between the varying operating systems available, so the
+following is broken down into Windows and Unix (incl. Linux) prerequisites.
 
 For a list of supported platforms, please refer to the [Supported
 Platforms](https://github.com/HerculesWS/Hercules/wiki/Supported-Platforms) wiki page.

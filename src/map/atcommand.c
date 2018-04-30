@@ -1691,7 +1691,7 @@ ACMD(cvcoff)
 	clif->map_property_mapall(sd->bl.m, MAPPROPERTY_NOTHING);
 	clif->maptypeproperty2(&sd->bl, ALL_SAMEMAP);
 	map->foreachinmap(atcommand->stopattack, sd->bl.m, BL_CHAR, 0);
-	clif->message(fd, msg_fd(fd, 137)); // CvC: Off.
+	clif->message(fd, msg_fd(fd, 26)); // CvC: Off.
 
 	return true;
 }
@@ -1710,7 +1710,7 @@ ACMD(cvcon)
 	map->list[sd->bl.m].flag.cvc = 1;
 	clif->map_property_mapall(sd->bl.m, MAPPROPERTY_AGITZONE);
 	clif->maptypeproperty2(&sd->bl, ALL_SAMEMAP);
-	clif->message(fd, msg_fd(fd, 138)); // CvC: On.
+	clif->message(fd, msg_fd(fd, 27)); // CvC: On.
 
 	return true;
 }
@@ -7538,42 +7538,33 @@ ACMD(monsterignore)
  *------------------------------------------*/
 ACMD(fakename)
 {
-	int option = 0; // Hide both guild/party name
-	char fakename[NAME_LENGTH];
-
-	if (!*message) {
-		if (sd->fakename[0]) {
+	if (!*message)
+	{
+		if (sd->fakename[0])
+		{
 			sd->fakename[0] = '\0';
-			sd->fakename_option = 0;
 			clif->charnameack(0, &sd->bl);
-			if (sd->disguise)
+			if( sd->disguise )
 				clif->charnameack(sd->fd, &sd->bl);
-			clif->message(sd->fd, msg_fd(fd, 1307)); // Returned to real name.
+			clif->message(sd->fd, msg_fd(fd,1307)); // Returned to real name.
 			return true;
 		}
 
-		clif->message(sd->fd, msg_fd(fd, 1308)); // Please enter an option number and name (usage: @fakename <0-3> <name>)
+		clif->message(sd->fd, msg_fd(fd,1308)); // You must enter a name.
 		return false;
 	}
 
-	memset(fakename, '\0', sizeof(fakename));
-
-	if (sscanf(message, "%10d %23[^\n]", &option, fakename) < 2) {
-		clif->message(sd->fd, msg_fd(fd, 1308)); // Please enter an option number and name (usage: @fakename <0-3> <name>)
+	if (strlen(message) < 2)
+	{
+		clif->message(sd->fd, msg_fd(fd,1309)); // Fake name must be at least two characters.
 		return false;
 	}
 
-	if (strlen(fakename) < 2) {
-		clif->message(sd->fd, msg_fd(fd, 1309)); // Fake name must be at least two characters.
-		return false;
-	}
-
-	sd->fakename_option = option;
-	safestrncpy(sd->fakename, fakename, sizeof(sd->fakename));
+	safestrncpy(sd->fakename, message, sizeof(sd->fakename));
 	clif->charnameack(0, &sd->bl);
 	if (sd->disguise) // Another packet should be sent so the client updates the name for sd
 		clif->charnameack(sd->fd, &sd->bl);
-	clif->message(sd->fd, msg_fd(fd, 1310)); // Fake name enabled.
+	clif->message(sd->fd, msg_fd(fd,1310)); // Fake name enabled.
 
 	return true;
 }
@@ -7605,7 +7596,7 @@ ACMD(mapflag) {
 		CHECKFLAG(noexppenalty);      CHECKFLAG(pvp);                CHECKFLAG(pvp_noparty);  CHECKFLAG(pvp_noguild);
 		CHECKFLAG(pvp_nightmaredrop); CHECKFLAG(pvp_nocalcrank);     CHECKFLAG(gvg_castle);   CHECKFLAG(gvg);
 		CHECKFLAG(gvg_dungeon);       CHECKFLAG(gvg_noparty);        CHECKFLAG(battleground); CHECKFLAG(cvc);
-		CHECKFLAG(nozenypenalty);     CHECKFLAG(notrade);            CHECKFLAG(noskill);      CHECKFLAG(nowarp);
+		CHECKFLAG(nozenypenalty);     CHECKFLAG(notrade);            CHECKFLAG(noskill);      CHECKFLAG(nowarp); 
 		CHECKFLAG(nowarpto);          CHECKFLAG(noicewall);          CHECKFLAG(snow);         CHECKFLAG(clouds);
 		CHECKFLAG(clouds2);           CHECKFLAG(fog);                CHECKFLAG(fireworks);    CHECKFLAG(sakura);
 		CHECKFLAG(leaves);            CHECKFLAG(nobaseexp);
@@ -7881,6 +7872,7 @@ ACMD(cash)
 {
 	char output[128];
 	int value;
+	int ret=0;
 
 	if (!*message || (value = atoi(message)) == 0) {
 		clif->message(fd, msg_fd(fd,1322)); // Please enter an amount.
@@ -7888,38 +7880,38 @@ ACMD(cash)
 	}
 
 	if (!strcmpi(info->command,"cash")) {
-		if (value > 0) {
-			if ((pc->getcash(sd, value, 0)) >= 0) {
+		if( value > 0 ) {
+			if( (ret=pc->getcash(sd, value, 0)) >= 0){
 				// If this option is set, the message is already sent by pc function
-				if (!battle_config.cashshop_show_points) {
-					sprintf(output, msg_fd(fd,505), value, sd->cashPoints);
+				if( !battle_config.cashshop_show_points ){
+					sprintf(output, msg_fd(fd,505), ret, sd->cashPoints);
 					clif_disp_onlyself(sd, output);
 					clif->message(fd, output);
 				}
 			} else
 				clif->message(fd, msg_fd(fd,149)); // Unable to decrease the number/value.
 		} else {
-			if ((pc->paycash(sd, -value, 0)) >= 0) {
-			    sprintf(output, msg_fd(fd,410), -value, sd->cashPoints);
+			if( (ret=pc->paycash(sd, -value, 0)) >= 0){
+			    sprintf(output, msg_fd(fd,410), ret, sd->cashPoints);
 				clif_disp_onlyself(sd, output);
 				clif->message(fd, output);
 			} else
 				clif->message(fd, msg_fd(fd,41)); // Unable to decrease the number/value.
 		}
 	} else { // @points
-		if (value > 0) {
-			if ((pc->getcash(sd, 0, value)) >= 0) {
+		if( value > 0 ) {
+			if( (ret=pc->getcash(sd, 0, value)) >= 0) {
 				// If this option is set, the message is already sent by pc function
-				if (!battle_config.cashshop_show_points) {
-					sprintf(output, msg_fd(fd,506), value, sd->kafraPoints);
+				if( !battle_config.cashshop_show_points ){
+					sprintf(output, msg_fd(fd,506), ret, sd->kafraPoints);
 					clif_disp_onlyself(sd, output);
 					clif->message(fd, output);
 				}
 			} else
 				clif->message(fd, msg_fd(fd,149)); // Unable to decrease the number/value.
 		} else {
-			if ((pc->paycash(sd, -value, -value)) >= 0) {
-			    sprintf(output, msg_fd(fd,411), -value, sd->kafraPoints);
+			if( (ret=pc->paycash(sd, -value, -value)) >= 0){
+			    sprintf(output, msg_fd(fd,411), ret, sd->kafraPoints);
 				clif_disp_onlyself(sd, output);
 				clif->message(fd, output);
 			} else
@@ -8481,7 +8473,7 @@ void atcommand_commands_sub(struct map_session_data* sd, const int fd, AtCommand
 			}
 		}
 		if (count_bind > 0)
-			clif->message(fd, line_buff); // Last Line
+			clif->message(fd, line_buff);	// Last Line
 		count += count_bind;
 	}
 
@@ -9514,7 +9506,7 @@ ACMD(claninfo)
 	struct DBIterator *iter = db_iterator(clan->db);
 	struct clan *c;
 	int i, count;
-
+	
 	for (c = dbi_first(iter); dbi_exists(iter); c = dbi_next(iter)) {
 		safesnprintf(atcmd_output, sizeof(atcmd_output), "Clan #%d:", c->clan_id);
 		clif->messagecolor_self(fd, COLOR_DEFAULT, atcmd_output);
@@ -9553,6 +9545,9 @@ ACMD(claninfo)
 		for (i = 0; i < VECTOR_LENGTH(c->allies); i++) {
 			struct clan_relationship *ally = &VECTOR_INDEX(c->allies, i);
 
+			if (ally == NULL)
+				continue;
+			
 			safesnprintf(atcmd_output, sizeof(atcmd_output), "- - Ally #%d (Id: %d): %s", i + 1, ally->clan_id, ally->constant);
 			clif->messagecolor_self(fd, COLOR_DEFAULT, atcmd_output);
 			count++;
@@ -9564,11 +9559,14 @@ ACMD(claninfo)
 
 		safesnprintf(atcmd_output, sizeof(atcmd_output), "- Antagonists: %d", VECTOR_LENGTH(c->antagonists));
 		clif->messagecolor_self(fd, COLOR_DEFAULT, atcmd_output);
-
+		
 		count = 0;
 		for (i = 0; i < VECTOR_LENGTH(c->antagonists); i++) {
 			struct clan_relationship *antagonist = &VECTOR_INDEX(c->antagonists, i);
 
+			if (antagonist == NULL)
+				continue;
+			
 			safesnprintf(atcmd_output, sizeof(atcmd_output), "- - Antagonist #%d (Id: %d): %s", i + 1, antagonist->clan_id, antagonist->constant);
 			clif->messagecolor_self(fd, COLOR_DEFAULT, atcmd_output);
 			count++;
@@ -9577,7 +9575,7 @@ ACMD(claninfo)
 		if (count == 0) {
 			clif->messagecolor_self(fd, COLOR_DEFAULT, "- - No Antagonists Found!");
 		}
-
+		
 		clif->messagecolor_self(fd, COLOR_DEFAULT, "============================");
 	}
 	dbi_destroy(iter);
@@ -10064,7 +10062,6 @@ bool atcommand_exec(const int fd, struct map_session_data *sd, const char *messa
 {
 	char params[100], command[100];
 	char output[CHAT_SIZE_MAX];
-	bool logCommand;
 
 	// Reconstructed message
 	char atcmd_msg[CHAT_SIZE_MAX];
@@ -10208,7 +10205,6 @@ bool atcommand_exec(const int fd, struct map_session_data *sd, const char *messa
 		}
 	}
 
-	logCommand = info->log;
 	//Attempt to use the command
 	if ((info->func(fd, ssd, command, params,info) != true)) {
 #ifdef AUTOTRADE_PERSISTENCY
@@ -10220,8 +10216,7 @@ bool atcommand_exec(const int fd, struct map_session_data *sd, const char *messa
 		return true;
 	}
 
-	// info->log cant be used here, because info can be freed [4144]
-	if (logCommand) /* log only if this command should be logged [Ind/Hercules] */
+	if (info->log) /* log only if this command should be logged [Ind/Hercules] */
 		logs->atcommand(sd, is_atcommand ? atcmd_msg : message);
 
 	return true;

@@ -1780,11 +1780,7 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 			for(i = 0; i < map->list[src->m].zone->disabled_skills_count; i++) {
 				if( skill_id == map->list[src->m].zone->disabled_skills[i]->nameid && (map->list[src->m].zone->disabled_skills[i]->type&src->type) ) {
 					if (src->type == BL_PC) {
-#if PACKETVER >= 20080311
-						clif->skill_mapinfomessage(sd, 2);
-#else
-						clif->messagecolor_self(sd->fd, COLOR_CYAN, msg_sd(sd, 50));
-#endif
+						clif->msgtable(sd, MSG_SKILL_CANT_USE_AREA); // This skill cannot be used within this area
 					} else if (src->type == BL_MOB && map->list[src->m].zone->disabled_skills[i]->subtype != MZS_NONE) {
 						if( st->mode&MD_BOSS ) { /* is boss */
 							if( !( map->list[src->m].zone->disabled_skills[i]->subtype&MZS_BOSS ) )
@@ -2333,18 +2329,6 @@ void status_calc_pc_additional(struct map_session_data* sd, enum e_status_calc_o
 	return;
 }
 
-void status_calc_pc_recover_hp(struct map_session_data* sd, struct status_data *bstatus)
-{
-	nullpo_retv(sd);
-	nullpo_retv(bstatus);
-
-	if ((sd->job & MAPID_BASEMASK) == MAPID_NOVICE && (sd->job & JOBL_2) == 0
-		&& battle_config.restart_hp_rate < 50)
-		bstatus->hp = bstatus->max_hp>>1;
-	else
-		bstatus->hp = APPLY_RATE(bstatus->max_hp, battle_config.restart_hp_rate);
-}
-
 //Calculates player data from scratch without counting SC adjustments.
 //Should be invoked whenever players raise stats, learn passive skills or change equipment.
 int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
@@ -2886,7 +2870,11 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 		bstatus->hp = bstatus->max_hp;
 		bstatus->sp = bstatus->max_sp;
 	} else {
-		status->calc_pc_recover_hp(sd, bstatus);
+		if ((sd->job & MAPID_BASEMASK) == MAPID_NOVICE && (sd->job & JOBL_2) == 0
+			&& battle_config.restart_hp_rate < 50)
+			bstatus->hp = bstatus->max_hp>>1;
+		else
+			bstatus->hp = APPLY_RATE(bstatus->max_hp, battle_config.restart_hp_rate);
 		if(!bstatus->hp)
 			bstatus->hp = 1;
 
@@ -9775,8 +9763,8 @@ int status_get_val_flag(enum sc_type type)
 {
 	int val_flag = 0;
 	switch (type) {
-		case SC_CLAN_INFO:
-			val_flag |= 1 | 2;
+		case SC_CLAN_INFO: 
+			val_flag |= 1 | 2; 
 			break;
 		case SC_FIGHTINGSPIRIT:
 			val_flag |= 1 | 2;
@@ -10197,8 +10185,8 @@ void status_change_start_stop_action(struct block_list *bl, enum sc_type type)
  * @param val3 Additional value (meaning depends on type).
  * @param val4 Additional value (meaning depends on type).
  *
- * @retval false if no status change happened, or the other sc can be started regardless.
- * @retval true  if the status change was successfully applied and the other sc shouldn't be started.
+ * @retval 0 if no status change happened.
+ * @retval 1 if the status change was successfully applied.
  */
 bool status_end_sc_before_start(struct block_list *bl, struct status_data *st, struct status_change* sc, enum sc_type type, int undead_flag, int val1, int val2, int val3, int val4)
 {
@@ -10208,22 +10196,14 @@ bool status_end_sc_before_start(struct block_list *bl, struct status_data *st, s
 
 	switch (type) {
 		case SC_BLESSING:
-			// TODO: Blessing and Agi up should do 1 damage against players on Undead Status, even on PvM
-			// but cannot be plagiarized (this requires aegis investigation on packets and official behavior) [Brainstorm]
-			if ((undead_flag == 0 && st->race != RC_DEMON) || bl->type == BL_PC) {
-				bool prevent_start = false;
-				if (sc->data[SC_CURSE] != NULL) {
-					prevent_start = true;
-					status_change_end(bl, SC_CURSE, INVALID_TIMER);
-				}
-				if (sc->data[SC_STONE] != NULL && sc->opt1 == OPT1_STONE) {
-					prevent_start = true;
+			//TO-DO Blessing and Agi up should do 1 damage against players on Undead Status, even on PvM
+			//but cannot be plagiarized (this requires aegis investigation on packets and official behavior) [Brainstorm]
+			if ((!undead_flag && st->race != RC_DEMON) || bl->type == BL_PC) {
+				status_change_end(bl, SC_CURSE, INVALID_TIMER);
+				if (sc->data[SC_STONE] && sc->opt1 == OPT1_STONE)
 					status_change_end(bl, SC_STONE, INVALID_TIMER);
-				}
-				if (prevent_start)
-					return true;
 			}
-			if (sc->data[SC_SOULLINK] != NULL && sc->data[SC_SOULLINK]->val2 == SL_HIGH)
+			if (sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_HIGH)
 				status_change_end(bl, SC_SOULLINK, INVALID_TIMER);
 			break;
 		case SC_INC_AGI:
@@ -13666,7 +13646,6 @@ void status_defaults(void)
 	status->calc_pet_ = status_calc_pet_;
 	status->calc_pc_ = status_calc_pc_;
 	status->calc_pc_additional = status_calc_pc_additional;
-	status->calc_pc_recover_hp = status_calc_pc_recover_hp;
 	status->calc_homunculus_ = status_calc_homunculus_;
 	status->calc_mercenary_ = status_calc_mercenary_;
 	status->calc_elemental_ = status_calc_elemental_;

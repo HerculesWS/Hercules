@@ -1537,7 +1537,7 @@ void socket_close(int fd)
 	// Epoll based Event Dispatcher
 	epevent.data.fd = fd;
 	epevent.events = EPOLLIN;
-	epoll_ctl(epfd, EPOLL_CTL_DEL, fd, &epevent); // removing the socket from epoll when it's being closed is not required but recommended
+	epoll_ctl(epfd, EPOLL_CTL_DEL, fd, &epevent);	// removing the socket from epoll when it's being closed is not required but recommended
 #endif  // SOCKET_EPOLL
 
 	sShutdown(fd, SHUT_RDWR); // Disallow further reads/writes
@@ -1694,7 +1694,7 @@ void socket_init(void)
 
 #else  // SOCKET_EPOLL
 	// Epoll based Event Dispatcher:
-	epfd = epoll_create(FD_SETSIZE); // 2.6.8 or newer ignores the expected socket amount argument
+	epfd = epoll_create(FD_SETSIZE);	// 2.6.8 or newer ignores the expected socket amount argument
 	if(epfd == SOCKET_ERROR){
 		ShowError("Failed to Create Epoll Event Dispatcher: %s\n", error_msg());
 		exit(EXIT_FAILURE);
