@@ -67,6 +67,9 @@
 // Sara's Memory Instance ===========
 1@sara	mapflag	zone	Memorial Dungeon
 
+// Horror Toy Factory ===========
+1@xm_d	mapflag	zone	Memorial Dungeon
+
 // WoE:TE
 te_prt_gld	mapflag	zone	WoE TE
 te_prtcas01	mapflag	zone	WoE TE
