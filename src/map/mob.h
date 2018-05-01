@@ -60,6 +60,9 @@ struct hplugin_data_store;
 
 #define MAX_MOB_CHAT 250 //Max Skill's messages
 
+#define DEFAULT_MOB_NAME "--en--"
+#define DEFAULT_MOB_JNAME "--ja--"
+
 // On official servers, monsters will only seek targets that are closer to walk to than their
 // search range. The search range is affected depending on if the monster is walking or not.
 // On some maps there can be a quite long path for just walking two cells in a direction and
