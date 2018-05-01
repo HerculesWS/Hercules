@@ -6304,7 +6304,8 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			break;
 		case SA_SUMMONMONSTER:
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
-			if (sd) mob->once_spawn(sd, src->m, src->x, src->y," --ja--", -1, 1, "", SZ_SMALL, AI_NONE);
+			if (sd != NULL)
+				mob->once_spawn(sd, src->m, src->x, src->y, "--ja--", -1, 1, "", SZ_SMALL, AI_NONE);
 			break;
 		case SA_LEVELUP:
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
