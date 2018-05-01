@@ -5078,8 +5078,6 @@ typedef bool (*HPMHOOK_pre_mob_parse_row_chatdb) (char ***str, const char **sour
 typedef bool (*HPMHOOK_post_mob_parse_row_chatdb) (bool retVal___, char **str, const char *source, int line, int *last_msg_id);
 typedef void (*HPMHOOK_pre_mob_readchatdb) (void);
 typedef void (*HPMHOOK_post_mob_readchatdb) (void);
-typedef bool (*HPMHOOK_pre_mob_parse_row_mobskilldb) (char ***str, int *columns, int *current);
-typedef bool (*HPMHOOK_post_mob_parse_row_mobskilldb) (bool retVal___, char **str, int columns, int current);
 typedef void (*HPMHOOK_pre_mob_readskilldb) (void);
 typedef void (*HPMHOOK_post_mob_readskilldb) (void);
 typedef bool (*HPMHOOK_pre_mob_readdb_race2) (char **fields[], int *columns, int *current);
@@ -5092,6 +5090,12 @@ typedef void (*HPMHOOK_pre_mob_clear_spawninfo) (void);
 typedef void (*HPMHOOK_post_mob_clear_spawninfo) (void);
 typedef void (*HPMHOOK_pre_mob_destroy_mob_db) (int *index);
 typedef void (*HPMHOOK_post_mob_destroy_mob_db) (int index);
+typedef bool (*HPMHOOK_pre_mob_skill_db_libconfig) (const char **filename, bool *ignore_missing);
+typedef bool (*HPMHOOK_post_mob_skill_db_libconfig) (bool retVal___, const char *filename, bool ignore_missing);
+typedef bool (*HPMHOOK_pre_mob_skill_db_libconfig_sub) (struct config_setting_t **it, int *n);
+typedef bool (*HPMHOOK_post_mob_skill_db_libconfig_sub) (bool retVal___, struct config_setting_t *it, int n);
+typedef bool (*HPMHOOK_pre_mob_skill_db_libconfig_sub_skill) (struct config_setting_t **it, int *n, int *mob_id);
+typedef bool (*HPMHOOK_post_mob_skill_db_libconfig_sub_skill) (bool retVal___, struct config_setting_t *it, int n, int mob_id);
 #endif // MAP_MOB_H
 #ifdef COMMON_MUTEX_H /* mutex */
 typedef struct mutex_data* (*HPMHOOK_pre_mutex_create) (void);

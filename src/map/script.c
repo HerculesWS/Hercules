@@ -25040,6 +25040,60 @@ void script_hardcoded_constants(void)
 	script->set_constant("ITEMINFO_MATK", ITEMINFO_MATK, false, false);
 	script->set_constant("ITEMINFO_VIEWSPRITE", ITEMINFO_VIEWSPRITE, false, false);
 
+	script->constdb_comment("monster skill states");
+	script->set_constant("MSS_ANY", MSS_ANY, false, false);
+	script->set_constant("MSS_IDLE", MSS_IDLE, false, false);
+	script->set_constant("MSS_WALK", MSS_WALK, false, false);
+	script->set_constant("MSS_LOOT", MSS_LOOT, false, false);
+	script->set_constant("MSS_DEAD", MSS_DEAD, false, false);
+	script->set_constant("MSS_BERSERK", MSS_BERSERK, false, false);
+	script->set_constant("MSS_ANGRY", MSS_ANGRY, false, false);
+	script->set_constant("MSS_RUSH", MSS_RUSH, false, false);
+	script->set_constant("MSS_FOLLOW", MSS_FOLLOW, false, false);
+	script->set_constant("MSS_ANYTARGET", MSS_ANYTARGET, false, false);
+
+	script->constdb_comment("monster skill conditions");
+	script->set_constant("MSC_ANY", -1, false, false);
+	script->set_constant("MSC_ALWAYS", MSC_ALWAYS, false, false);
+	script->set_constant("MSC_MYHPLTMAXRATE", MSC_MYHPLTMAXRATE, false, false);
+	script->set_constant("MSC_MYHPINRATE", MSC_MYHPINRATE, false, false);
+	script->set_constant("MSC_FRIENDHPLTMAXRATE", MSC_FRIENDHPLTMAXRATE, false, false);
+	script->set_constant("MSC_FRIENDHPINRATE", MSC_FRIENDHPINRATE, false, false);
+	script->set_constant("MSC_MYSTATUSON", MSC_MYSTATUSON, false, false);
+	script->set_constant("MSC_MYSTATUSOFF", MSC_MYSTATUSOFF, false, false);
+	script->set_constant("MSC_FRIENDSTATUSON", MSC_FRIENDSTATUSON, false, false);
+	script->set_constant("MSC_FRIENDSTATUSOFF", MSC_FRIENDSTATUSOFF, false, false);
+	script->set_constant("MSC_ATTACKPCGT", MSC_ATTACKPCGT, false, false);
+	script->set_constant("MSC_ATTACKPCGE", MSC_ATTACKPCGE, false, false);
+	script->set_constant("MSC_SLAVELT", MSC_SLAVELT, false, false);
+	script->set_constant("MSC_SLAVELE", MSC_SLAVELE, false, false);
+	script->set_constant("MSC_CLOSEDATTACKED", MSC_CLOSEDATTACKED, false, false);
+	script->set_constant("MSC_LONGRANGEATTACKED", MSC_LONGRANGEATTACKED, false, false);
+	script->set_constant("MSC_SKILLUSED", MSC_SKILLUSED, false, false);
+	script->set_constant("MSC_AFTERSKILL", MSC_AFTERSKILL, false, false);
+	script->set_constant("MSC_CASTTARGETED", MSC_CASTTARGETED, false, false);
+	script->set_constant("MSC_RUDEATTACKED", MSC_RUDEATTACKED, false, false);
+	script->set_constant("MSC_MASTERHPLTMAXRATE", MSC_MASTERHPLTMAXRATE, false, false);
+	script->set_constant("MSC_MASTERATTACKED", MSC_MASTERATTACKED, false, false);
+	script->set_constant("MSC_ALCHEMIST", MSC_ALCHEMIST, false, false);
+	script->set_constant("MSC_SPAWN", MSC_SPAWN, false, false);
+
+	script->constdb_comment("monster skill targets");
+	script->set_constant("MST_TARGET", MST_TARGET, false, false);
+	script->set_constant("MST_RANDOM", MST_RANDOM , false, false);
+	script->set_constant("MST_SELF", MST_SELF, false, false);
+	script->set_constant("MST_FRIEND", MST_FRIEND , false, false);
+	script->set_constant("MST_MASTER", MST_MASTER , false, false);
+	script->set_constant("MST_AROUND5", MST_AROUND5, false, false);
+	script->set_constant("MST_AROUND6", MST_AROUND6, false, false);
+	script->set_constant("MST_AROUND7", MST_AROUND7, false, false);
+	script->set_constant("MST_AROUND8", MST_AROUND8, false, false);
+	script->set_constant("MST_AROUND1", MST_AROUND1, false, false);
+	script->set_constant("MST_AROUND2", MST_AROUND2, false, false);
+	script->set_constant("MST_AROUND3", MST_AROUND3, false, false);
+	script->set_constant("MST_AROUND4", MST_AROUND4, false, false);
+	script->set_constant("MST_AROUND", MST_AROUND , false, false);
+
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL
 	script->set_constant("RENEWAL", 1, false, false);

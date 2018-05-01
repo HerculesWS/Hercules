@@ -535,13 +535,15 @@ struct mob_interface {
 	int (*read_randommonster) (void);
 	bool (*parse_row_chatdb) (char **str, const char *source, int line, int *last_msg_id);
 	void (*readchatdb) (void);
-	bool (*parse_row_mobskilldb) (char **str, int columns, int current);
 	void (*readskilldb) (void);
 	bool (*readdb_race2) (char *fields[], int columns, int current);
 	bool (*readdb_itemratio) (char *str[], int columns, int current);
 	void (*load) (bool minimal);
 	void (*clear_spawninfo) (void);
 	void (*destroy_mob_db) (int index);
+	bool (*skill_db_libconfig) (const char *filename, bool ignore_missing);
+	bool (*skill_db_libconfig_sub) (struct config_setting_t *it, int n);
+	bool (*skill_db_libconfig_sub_skill) (struct config_setting_t *it, int n, int mob_id);
 };
 
 #ifdef HERCULES_CORE
