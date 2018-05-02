@@ -19990,9 +19990,9 @@ void clif_rodex_send_maillist(int fd, struct map_session_data *sd, int8 open_typ
 		}
 		inner->Titlelength = (int16)strlen(msg->title) + 1;
 		if (open_type != RODEX_OPENTYPE_RETURN) {
-			strncpy(inner->SenderName, msg->sender_name, sizeof(msg->sender_name));
+			strncpy(inner->SenderName, msg->sender_name, sizeof(inner->SenderName));
 		} else {
-			strncpy(inner->SenderName, msg->receiver_name, sizeof(msg->receiver_name));
+			strncpy(inner->SenderName, msg->receiver_name, sizeof(inner->SenderName));
 		}
 		strncpy(inner->title, msg->title, inner->Titlelength);
 		size += sizeof(*inner) + inner->Titlelength;
@@ -20051,9 +20051,9 @@ void clif_rodex_send_mails_all(int fd, struct map_session_data *sd, int64 mail_i
 		}
 		inner->Titlelength = (int16)strlen(msg->title) + 1;
 		if (msg->opentype != RODEX_OPENTYPE_RETURN) {
-			strncpy(inner->SenderName, msg->sender_name, sizeof(msg->sender_name));
+			strncpy(inner->SenderName, msg->sender_name, sizeof(inner->SenderName));
 		} else {
-			strncpy(inner->SenderName, msg->receiver_name, sizeof(msg->receiver_name));
+			strncpy(inner->SenderName, msg->receiver_name, sizeof(inner->SenderName));
 		}
 		strncpy(inner->title, msg->title, inner->Titlelength);
 		size += sizeof(*inner) + inner->Titlelength;
@@ -20122,9 +20122,9 @@ void clif_rodex_send_refresh(int fd, struct map_session_data *sd, int8 open_type
 		}
 		inner->Titlelength = (int16)strlen(msg->title) + 1;
 		if (open_type != RODEX_OPENTYPE_RETURN) {
-			strncpy(inner->SenderName, msg->sender_name, sizeof(msg->sender_name));
+			strncpy(inner->SenderName, msg->sender_name, sizeof(inner->SenderName));
 		} else {
-			strncpy(inner->SenderName, msg->receiver_name, sizeof(msg->receiver_name));
+			strncpy(inner->SenderName, msg->receiver_name, sizeof(inner->SenderName));
 		}
 		strncpy(inner->title, msg->title, inner->Titlelength);
 		size += sizeof(*inner) + inner->Titlelength;
