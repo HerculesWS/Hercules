@@ -786,8 +786,8 @@ static bool grfio_parse_restable_row(const char *row)
 	if (strstr(w2, ".gat") == NULL && strstr(w2, ".rsw") == NULL)
 		return false; // we only need the maps' GAT and RSW files
 
-	sprintf(src, "data\\%s", w1);
-	sprintf(dst, "data\\%s", w2);
+	safesnprintf(src, 256, "data\\%s", w1);
+	safesnprintf(dst, 256, "data\\%s", w2);
 
 	entry = grfio_filelist_find(dst);
 	if (entry != NULL) {
