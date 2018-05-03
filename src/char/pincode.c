@@ -82,6 +82,7 @@ void pincode_check(int fd, struct char_session_data* sd)
 		return;
 
 	safestrncpy(pin, RFIFOP(fd, 6), sizeof(pin));
+	pincode->decrypt(sd->pincode_seed, pin);
 
 	if (pincode->check_blacklist && pincode->isBlacklisted(pin)) {
 		pincode->loginstate(fd, sd, PINCODE_LOGIN_RESTRICT_PW);
