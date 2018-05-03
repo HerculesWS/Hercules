@@ -206,7 +206,7 @@ void pincode_makestate(int fd, struct char_session_data *sd, enum pincode_make_r
 	WFIFOHEAD(fd, 8);
 	WFIFOW(fd, 0) = 0x8bb;
 	WFIFOW(fd, 2) = state;
-	WFIFOW(fd, 4) = 0;
+	WFIFOL(fd, 4) = sd->pincode_seed;
 	WFIFOSET(fd, 8);
 }
 
@@ -224,7 +224,7 @@ void pincode_editstate(int fd, struct char_session_data *sd, enum pincode_edit_r
 	WFIFOHEAD(fd, 8);
 	WFIFOW(fd, 0) = 0x8bf;
 	WFIFOW(fd, 2) = state;
-	WFIFOW(fd, 4) = sd->pincode_seed = rnd() % 0xFFFF;
+	WFIFOL(fd, 4) = sd->pincode_seed = rnd() % 0xFFFF;
 	WFIFOSET(fd, 8);
 }
 
