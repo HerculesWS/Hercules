@@ -1761,6 +1761,9 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 	if (src != NULL && src->type != BL_PC && status->isdead(src))
 		return 0;
 
+	if (sd != NULL && sd->block_action.skill && skill_id) // *pcblock script command
+		return 0;
+
 	if (!skill_id) { //Normal attack checks.
 		if (!(st->mode&MD_CANATTACK))
 			return 0; //This mode is only needed for melee attacking.

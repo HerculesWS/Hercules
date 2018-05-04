@@ -6649,7 +6649,7 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 			if (t_bl == s_bl)
 				break;
 
-			if( sd->state.monster_ignore && flag&BCT_ENEMY )
+			if (sd->block_action.immune && flag&BCT_ENEMY)
 				return 0; // Global immunity only to Attacks
 			if (sd->status.karma && s_bl->type == BL_PC && BL_UCCAST(BL_PC, s_bl)->status.karma)
 				state |= BCT_ENEMY; // Characters with bad karma may fight amongst them
