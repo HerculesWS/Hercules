@@ -6735,7 +6735,9 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 				&& md->guardian_data && (md->guardian_data->g || md->guardian_data->castle->guild_id) )
 				return 0; // Disable guardians/emperium owned by Guilds on non-woe times.
 
-			if (md->special_state.ai == AI_NONE) {
+			if (status_get_mode(s_bl) & MD_CANATTACK_MOB && t_bl->type == BL_MOB && status_get_mode(t_bl) & MD_CANATTACK_MOB)
+				state |= BCT_ENEMY;
+			else if (md->special_state.ai == AI_NONE) {
 				//Normal mobs
 				const struct mob_data *target_md = BL_CCAST(BL_MOB, target);
 				if ((target_md != NULL && t_bl->type == BL_PC && target_md->special_state.ai != AI_ZANZOU && target_md->special_state.ai != AI_ATTACK)

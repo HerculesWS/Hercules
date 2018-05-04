@@ -1414,6 +1414,7 @@ int mob_randomwalk(struct mob_data *md, int64 tick) {
 	nullpo_ret(md);
 
 	if(DIFF_TICK(md->next_walktime,tick)>0 ||
+	   status_get_mode(&md->bl) & MD_NORANDOM_WALK ||
 	   !unit->can_move(&md->bl) ||
 	   !(status_get_mode(&md->bl)&MD_CANMOVE))
 		return 0;
@@ -3208,7 +3209,7 @@ int mobskill_use(struct mob_data *md, int64 tick, int event) {
 	nullpo_ret(md);
 	nullpo_ret(ms = md->db->skill);
 
-	if (!battle_config.mob_skill_rate || md->ud.skilltimer != INVALID_TIMER || !md->db->maxskill)
+	if (!battle_config.mob_skill_rate || md->ud.skilltimer != INVALID_TIMER || !md->db->maxskill || status_get_mode(&md->bl) & MD_NOCAST_SKILL)
 		return 0;
 
 	if (event == -1 && DIFF_TICK(md->ud.canact_tick, tick) > 0)

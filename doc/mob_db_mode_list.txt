@@ -11,23 +11,26 @@
 Bit Legend:
 -------------------------------------------------------------------------------
 
-MD_CANMOVE            | 0x00001 |      1
-MD_LOOTER             | 0x00002 |      2
-MD_AGGRESSIVE         | 0x00004 |      4
-MD_ASSIST             | 0x00008 |      8
-MD_CASTSENSOR_IDLE    | 0x00010 |     16
-MD_BOSS               | 0x00020 |     32
-MD_PLANT              | 0x00040 |     64
-MD_CANATTACK          | 0x00080 |    128
-MD_DETECTOR           | 0x00100 |    256
-MD_CASTSENSOR_CHASE   | 0x00200 |    512
-MD_CHANGECHASE        | 0x00400 |   1024
-MD_ANGRY              | 0x00800 |   2048
-MD_CHANGETARGET_MELEE | 0x01000 |   4096
-MD_CHANGETARGET_CHASE | 0x02000 |   8192
-MD_TARGETWEAK         | 0x04000 |  16384
-MD_NOKNOCKBACK        | 0x08000 |  32768
-MD_RANDOMTARGET       | 0x10000 |  65536 (not implemented)
+MD_CANMOVE            | 0x00001 |       1
+MD_LOOTER             | 0x00002 |       2
+MD_AGGRESSIVE         | 0x00004 |       4
+MD_ASSIST             | 0x00008 |       8
+MD_CASTSENSOR_IDLE    | 0x00010 |      16
+MD_BOSS               | 0x00020 |      32
+MD_PLANT              | 0x00040 |      64
+MD_CANATTACK          | 0x00080 |     128
+MD_DETECTOR           | 0x00100 |     256
+MD_CASTSENSOR_CHASE   | 0x00200 |     512
+MD_CHANGECHASE        | 0x00400 |    1024
+MD_ANGRY              | 0x00800 |    2048
+MD_CHANGETARGET_MELEE | 0x01000 |    4096
+MD_CHANGETARGET_CHASE | 0x02000 |    8192
+MD_TARGETWEAK         | 0x04000 |   16384
+MD_NOKNOCKBACK        | 0x08000 |   32768
+MD_RANDOMTARGET       | 0x10000 |   65536 (not implemented)
+MD_NORANDOM_WALK      | 0x20000 |  131072
+MD_NOCAST_SKILL       | 0x40000 |  262144
+MD_CANATTACK_MOB      | 0x80000 |  524288
 
 Explanation for modes:
 -------------------------------------------------------------------------------
@@ -79,6 +82,14 @@ NoKnockback: Monsters will be immune to Knockback's.
 
 Random Target: Picks a new random target in range on each attack / skill.
 	(not implemented)
+
+No Random Walk: Monsters will not randomly walk around during idle state.
+
+No Cast Skill: Monsters will be unable to cast skills.
+
+Can Attack Mob: Both monsters with this flag can attack each other. Best use
+	on battleground maps, as the monsters on same battleground team cannot
+	attack each other.
 
 Aegis Mob Types:
 -------------------------------------------------------------------------------

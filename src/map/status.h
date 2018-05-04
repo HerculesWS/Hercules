@@ -1922,6 +1922,9 @@ enum e_mode
 	MD_TARGETWEAK         = 0x00004000,
 	MD_NOKNOCKBACK        = 0x00008000,
 	//MD_RANDOMTARGET     = 0x00010000, // Not implemented
+	MD_NORANDOM_WALK      = 0x00020000,
+	MD_NOCAST_SKILL       = 0x00040000,
+	MD_CANATTACK_MOB      = 0x00080000,
 	// Note: This should be kept within INT_MAX, since it's often cast to int.
 	MD_MASK               = 0x7FFFFFFF,
 };
