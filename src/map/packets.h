@@ -4096,4 +4096,13 @@ packet(0x96e,-1,clif->ackmergeitems);
 #endif
 #endif
 
+#ifdef PACKETVER_ZERO
+// 2018-04-25_3aRagexe_zero
+#if PACKETVER >= 20180425
+// new packets
+	packet(0x0afb,-1,clif->pDull/*,XXX*/);
+// changed packet sizes
+#endif
+#endif  // PACKETVER_ZERO
+
 #endif /* MAP_PACKETS_H */
