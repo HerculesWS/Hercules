@@ -20597,6 +20597,11 @@ void clif_parse_attendance_reward_request(int fd, struct map_session_data *sd)
 #endif
 }
 
+void clif_parse_cz_blocking_play_cancel(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
+void clif_parse_cz_blocking_play_cancel(int fd, struct map_session_data *sd)
+{
+}
+
 void clif_ui_action(struct map_session_data *sd, int32 UIType, int32 data)
 {
 
@@ -21623,6 +21628,7 @@ void clif_defaults(void) {
 	clif->pDebug = clif_parse_debug;
 	clif->pSkillSelectMenu = clif_parse_SkillSelectMenu;
 	clif->pMoveItem = clif_parse_MoveItem;
+	clif->p_cz_blocking_play_cancel = clif_parse_cz_blocking_play_cancel;
 	/* dull */
 	clif->pDull = clif_parse_dull;
 	/* BGQueue */

@@ -1534,7 +1534,12 @@ packet(0x96e,-1,clif->ackmergeitems);
 	//packet(0x07d4,4);
 	//packet(0x07d5,4);
 	//packet(0x07d6,4);
-	//packet(0x0447,2);
+#endif
+
+// 2009-05-20aRagexe, 2009-05-20aRagexeRE
+#if PACKETVER >= 20090520
+// new packets
+	packet(0x0447,2,clif->p_cz_blocking_play_cancel); // PACKET_CZ_BLOCKING_PLAY_CANCEL
 #endif
 
 //2009-06-03aRagexeRE
@@ -2310,7 +2315,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	// Shuffle End
 
 	// New Packets (wrong version or packet not exists)
-	packet(0x0447,2); // PACKET_CZ_BLOCKING_PLAY_CANCEL
 	packet(0x099f,24);
 	// New Packets End
 #endif
