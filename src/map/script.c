@@ -19674,7 +19674,7 @@ BUILDIN(getunitdata)
 
 #undef getunitdata_sub
 
-	return false;
+	return true;
 }
 
 /**
