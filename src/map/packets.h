@@ -1534,7 +1534,12 @@ packet(0x96e,-1,clif->ackmergeitems);
 	//packet(0x07d4,4);
 	//packet(0x07d5,4);
 	//packet(0x07d6,4);
-	//packet(0x0447,2);
+#endif
+
+// 2009-05-20aRagexe, 2009-05-20aRagexeRE
+#if PACKETVER >= 20090520
+// new packets
+	packet(0x0447,2,clif->p_cz_blocking_play_cancel); // PACKET_CZ_BLOCKING_PLAY_CANCEL
 #endif
 
 //2009-06-03aRagexeRE
@@ -2310,7 +2315,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	// Shuffle End
 
 	// New Packets (wrong version or packet not exists)
-	packet(0x0447,2); // PACKET_CZ_BLOCKING_PLAY_CANCEL
 	packet(0x099f,24);
 	// New Packets End
 #endif
@@ -3993,7 +3997,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 // new packets
 	packet(0x0af2,40,clif->pDull/*,XXX*/);
 	packet(0x0af3,-1,clif->pDull/*,XXX*/);
-	packet(0x0af4,11,clif->pDull/*,XXX*/);
+	packet(0x0af4,11,clif->pUseSkillToPos,2,4,6,8,10);  // CZ_USE_SKILL_TOGROUND
 // changed packet sizes
 	packet(0x0ae6,10,clif->pDull/*,XXX*/);
 #endif
@@ -4017,7 +4021,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 // 2018-02-07bRagexeRE, 2018-02-07bRagexe
 #if PACKETVER >= 20180207
 // new packets
-	packet(0x0af4,11);
+	packet(0x0af4,11,clif->pUseSkillToPos,2,4,6,8,10);  // CZ_USE_SKILL_TOGROUND
 	packet(0x0af5,3);
 	packet(0x0af6,88);
 	packet(0x0af7,32);
@@ -4095,5 +4099,14 @@ packet(0x96e,-1,clif->ackmergeitems);
 // changed packet sizes
 #endif
 #endif
+
+#ifdef PACKETVER_ZERO
+// 2018-04-25_3aRagexe_zero
+#if PACKETVER >= 20180425
+// new packets
+	packet(0x0afb,-1,clif->pDull/*,XXX*/);
+// changed packet sizes
+#endif
+#endif  // PACKETVER_ZERO
 
 #endif /* MAP_PACKETS_H */

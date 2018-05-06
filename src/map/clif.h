@@ -1356,6 +1356,7 @@ struct clif_interface {
 	void (*pSkillSelectMenu) (int fd, struct map_session_data *sd);
 	void (*pMoveItem) (int fd, struct map_session_data *sd);
 	void (*pDull) (int fd, struct map_session_data *sd);
+	void (*p_cz_blocking_play_cancel) (int fd, struct map_session_data *sd);
 	/* BGQueue */
 	void (*pBGQueueRegister) (int fd, struct map_session_data *sd);
 	void (*pBGQueueCheckState) (int fd, struct map_session_data *sd);
