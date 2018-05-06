@@ -360,6 +360,8 @@
 - `mf_nocashshop`: 54
 - `mf_noautoloot`: 55
 - `mf_noviewid`: 56
+- `mf_pairship_startable`: 57
+- `mf_pairship_endable`: 58
 
 ### Cell Properties
 
@@ -4218,6 +4220,15 @@
 - `MST_AROUND3`: 11
 - `MST_AROUND4`: 12
 - `MST_AROUND`: 12
+
+### private airship responds
+
+- `P_AIRSHIP_NONE`: 0
+- `P_AIRSHIP_RETRY`: 1
+- `P_AIRSHIP_INVALID_START_MAP`: 2
+- `P_AIRSHIP_INVALID_END_MAP`: 3
+- `P_AIRSHIP_ITEM_NOT_ENOUGH`: 4
+- `P_AIRSHIP_ITEM_INVALID`: 5
 
 ### Renewal
 
