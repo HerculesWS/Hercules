@@ -1,4 +1,4 @@
-//================= Hercules Configuration ================================
+//================= Hercules Script =======================================
 //=       _   _                     _
 //=      | | | |                   | |
 //=      | |_| | ___ _ __ ___ _   _| | ___  ___
@@ -9,8 +9,8 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2016  Hercules Dev Team
-//= Copyright (C)  Athena Dev Teams
+//= Copyright (C) 2018  Hercules Dev Team
+//= Copyright (C)  Asheraf
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -25,36 +25,42 @@
 //= You should have received a copy of the GNU General Public License
 //= along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //=========================================================================
-//= Map Flags
+//= Private AirShip
 //=========================================================================
 
-"npc/mapflag/nopvp.txt",
-"npc/mapflag/gvg.txt",
-"npc/mapflag/jail.txt",
-"npc/mapflag/nightmare.txt",
-"npc/mapflag/nobranch.txt",
-"npc/mapflag/noexp.txt",
-"npc/mapflag/noicewall.txt",
-"npc/mapflag/noloot.txt",
-"npc/mapflag/nomemo.txt",
-"npc/mapflag/nopenalty.txt",
-"npc/mapflag/nosave.txt",
-"npc/mapflag/noteleport.txt",
-"npc/mapflag/noreturn.txt",
-"npc/mapflag/noskill.txt",
-"npc/mapflag/nowarp.txt",
-"npc/mapflag/nowarpto.txt",
-"npc/mapflag/partylock.txt",
-"npc/mapflag/pvp.txt",
-"npc/mapflag/pvp_noparty.txt",
-"npc/mapflag/pvp_noguild.txt",
-"npc/mapflag/night.txt",
-"npc/mapflag/zone.txt",
-"npc/mapflag/battleground.txt",
-"npc/mapflag/novending.txt",
-"npc/mapflag/town.txt",
-"npc/mapflag/reset.txt",
-"npc/mapflag/skillmodifier.txt",
-"npc/mapflag/skillduration.txt",
-"npc/mapflag/notomb.txt",
-"npc/mapflag/private_airship.txt",
+-	script	private_airship	FAKE_NPC,{
+	end;
+
+S_AirShipIsNeedItem:
+	for (.@i = 0; .@i < getarraysize(.needitem); ++.@i) {
+		if (@itemid == .needitem[.@i])
+			return true;
+	}
+	return false;
+
+OnAirShipRequest:
+	if (callsub(S_AirShipIsNeedItem) == false) {
+		airship_respond(P_AIRSHIP_ITEM_INVALID);
+		end;
+	}
+	if (countitem(@itemid) < 1) {
+		airship_respond(P_AIRSHIP_ITEM_NOT_ENOUGH);
+		end;
+	}
+	if (getmapflag(strcharinfo(PC_MAP), mf_pairship_startable) != true) {
+		airship_respond(P_AIRSHIP_INVALID_START_MAP);
+		end;
+	}
+	if (getmapflag(@mapname$, mf_pairship_endable) != true) {
+		airship_respond(P_AIRSHIP_INVALID_END_MAP);
+		end;
+	}
+
+	delitem(@itemid, 1);
+	warp(@mapname$, 0, 0);
+	end;
+
+OnInit:
+	setarray(.needitem, 6909, 25464);
+	end;
+}

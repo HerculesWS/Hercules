@@ -3956,6 +3956,10 @@ ACMD(mapinfo)
 		strcat(atcmd_output, msg_fd(fd, 1063)); // NoAutoloot |
 	if (map->list[m_id].flag.noviewid != EQP_NONE)
 		strcat(atcmd_output, msg_fd(fd,1079)); // NoViewID |
+	if (map->list[m_id].flag.pairship_startable)
+		strcat(atcmd_output, msg_fd(fd, 1292)); // PrivateAirshipStartable |
+	if (map->list[m_id].flag.pairship_endable)
+		strcat(atcmd_output, msg_fd(fd, 1293)); // PrivateAirshipEndable |
 	clif->message(fd, atcmd_output);
 
 	switch (list) {

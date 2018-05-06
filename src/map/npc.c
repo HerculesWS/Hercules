@@ -4517,6 +4517,10 @@ const char *npc_parse_mapflag(const char *w1, const char *w2, const char *w3, co
 		map->list[m].flag.nocashshop = (state) ? 1 : 0;
 	} else if (!strcmpi(w3,"noviewid")) {
 		map->list[m].flag.noviewid = (state) ? atoi(w4) : 0;
+	} else if (!strcmpi(w3, "pairship_startable")) {
+		map->list[m].flag.pairship_startable = (state) ? 1 : 0;
+	}  else if (!strcmpi(w3, "pairship_endable")) {
+		map->list[m].flag.pairship_endable = (state) ? 1 : 0;
 	} else {
 		npc->parse_unknown_mapflag(mapname, w3, w4, start, buffer, filepath, retval);
 	}

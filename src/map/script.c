@@ -12937,7 +12937,9 @@ BUILDIN(getmapflag)
 			case MF_NOTOMB:             script_pushint(st,map->list[m].flag.notomb); break;
 			case MF_NOCASHSHOP:         script_pushint(st,map->list[m].flag.nocashshop); break;
 			case MF_NOAUTOLOOT:         script_pushint(st, map->list[m].flag.noautoloot); break;
-			case MF_NOVIEWID:           script_pushint(st,map->list[m].flag.noviewid); break;
+			case MF_NOVIEWID:           script_pushint(st, map->list[m].flag.noviewid); break;
+			case MF_PAIRSHIP_STARTABLE: script_pushint(st, map->list[m].flag.pairship_startable); break;
+			case MF_PAIRSHIP_ENDABLE:   script_pushint(st, map->list[m].flag.pairship_endable); break;
 		}
 	}
 
@@ -13063,6 +13065,8 @@ BUILDIN(setmapflag) {
 			case MF_NOCASHSHOP:         map->list[m].flag.nocashshop = 1; break;
 			case MF_NOAUTOLOOT:         map->list[m].flag.noautoloot = 1; break;
 			case MF_NOVIEWID:           map->list[m].flag.noviewid = (val <= 0) ? EQP_NONE : val; break;
+			case MF_PAIRSHIP_STARTABLE: map->list[m].flag.pairship_startable = 1; break;
+			case MF_PAIRSHIP_ENDABLE:   map->list[m].flag.pairship_endable = 1; break;
 		}
 	}
 
@@ -23970,6 +23974,23 @@ BUILDIN(clan_master)
 	return true;
 }
 
+BUILDIN(airship_respond)
+{
+	struct map_session_data *sd = map->id2sd(st->rid);
+	int32 flag = script_getnum(st, 2);
+
+	if (sd == NULL)
+		return false;
+
+	if (flag < P_AIRSHIP_NONE || flag > P_AIRSHIP_ITEM_INVALID) {
+		ShowWarning("buildin_airship_respond: invalid flag %d has been given.", flag);
+		return false;
+	}
+
+	clif->PrivateAirshipResponse(sd, flag);
+	return true;
+}
+
 /**
  * hateffect(EffectID, Enable_State)
  */
@@ -24719,6 +24740,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF2(rodex_sendmail, "rodex_sendmail_acc", "isss???????????"),
 		BUILDIN_DEF(rodex_sendmail2, "isss?????????????????????????????????????????"),
 		BUILDIN_DEF2(rodex_sendmail2, "rodex_sendmail_acc2", "isss?????????????????????????????????????????"),
+		BUILDIN_DEF(airship_respond, "i"),
 		BUILDIN_DEF(_,"s"),
 		BUILDIN_DEF2(_, "_$", "s"),
 
@@ -25093,6 +25115,14 @@ void script_hardcoded_constants(void)
 	script->set_constant("MST_AROUND3", MST_AROUND3, false, false);
 	script->set_constant("MST_AROUND4", MST_AROUND4, false, false);
 	script->set_constant("MST_AROUND", MST_AROUND , false, false);
+
+	script->constdb_comment("private airship responds");
+	script->set_constant("P_AIRSHIP_NONE", P_AIRSHIP_NONE, false, false);
+	script->set_constant("P_AIRSHIP_RETRY", P_AIRSHIP_RETRY, false, false);
+	script->set_constant("P_AIRSHIP_INVALID_START_MAP", P_AIRSHIP_INVALID_START_MAP, false, false);
+	script->set_constant("P_AIRSHIP_INVALID_END_MAP", P_AIRSHIP_INVALID_END_MAP, false, false);
+	script->set_constant("P_AIRSHIP_ITEM_NOT_ENOUGH", P_AIRSHIP_ITEM_NOT_ENOUGH, false, false);
+	script->set_constant("P_AIRSHIP_ITEM_INVALID", P_AIRSHIP_ITEM_INVALID, false, false);
 
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL

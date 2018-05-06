@@ -589,6 +589,18 @@ enum ui_types {
 	ATTENDANCE_UI
 };
 /**
+* Private Airship Responds
+**/
+enum private_airship {
+	P_AIRSHIP_NONE,
+	P_AIRSHIP_RETRY,
+	P_AIRSHIP_INVALID_START_MAP,
+	P_AIRSHIP_INVALID_END_MAP,
+	P_AIRSHIP_ITEM_NOT_ENOUGH,
+	P_AIRSHIP_ITEM_INVALID
+};
+
+/**
  * Structures
  **/
 typedef void (*pFunc)(int, struct map_session_data *); //cant help but put it first
@@ -1451,6 +1463,8 @@ struct clif_interface {
 	void (*open_ui) (struct map_session_data *sd, int8 UIType);
 	void (*pAttendanceRewardRequest) (int fd, struct map_session_data *sd);
 	void (*ui_action) (struct map_session_data *sd, int32 UIType, int32 data);
+	void (*pPrivateAirshipRequest) (int fd, struct map_session_data *sd);
+	void (*PrivateAirshipResponse) (struct map_session_data *sd, uint32 flag);
 };
 
 #ifdef HERCULES_CORE
