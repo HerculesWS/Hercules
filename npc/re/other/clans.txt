@@ -193,7 +193,7 @@ prt_in,37,114,4	script	Berman Aire	4_M_BIRMAN,{
 	next();
 	switch (select("Introducing Clan", "Join.", "Leave.")) {
 	case 1:
-		switch (select("Clans are", "About the Crossbow Clan", "Cancel.")) {
+		switch (select("Clans are", "About the Golden Mace Clan", "Cancel.")) {
 		case 1:
 			mes("[Berman Aire]");
 			mes("The ^3131FFClans^000000 are established by the Kingdom to help adventurers connect and share information.");
@@ -323,7 +323,7 @@ prt_in,35,114,4	script	Debon Aire	4_M_DEBON,{
 	next();
 	switch (select("Introducing Clan", "Join.", "Leave.")) {
 	case 1:
-		switch (select("Clans are::About the Crossbow Clan:Cancel.")) {
+		switch (select("Clans are", "About the Arc Wand Clan", "Cancel.")) {
 		case 1:
 			mes("[Debon Aire]");
 			mes("The ^3131FFClans^000000 are ran by the Kingdom, not privately like others.");
@@ -463,7 +463,7 @@ prt_in,33,114,4	script	Laperm Oranpere	4_F_LAPERM,{
 	next();
 	switch (select("Introducing Clan", "Join.", "Leave.")) {
 	case 1:
-		switch (select("Clans are", "About the Crossbow Clan", "Cancel.")) {
+		switch (select("Clans are", "About the Sword Clan", "Cancel.")) {
 		case 1:
 			mes("[Laperm Oranpere]");
 			mes("The ^3131FFClans^000000 are a type of guild ran by the Kingdom.");
