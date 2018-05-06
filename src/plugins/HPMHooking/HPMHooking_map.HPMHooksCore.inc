@@ -2024,6 +2024,10 @@ struct {
 	struct HPMHookPoint *HP_clif_pAttendanceRewardRequest_post;
 	struct HPMHookPoint *HP_clif_ui_action_pre;
 	struct HPMHookPoint *HP_clif_ui_action_post;
+	struct HPMHookPoint *HP_clif_pPrivateAirshipRequest_pre;
+	struct HPMHookPoint *HP_clif_pPrivateAirshipRequest_post;
+	struct HPMHookPoint *HP_clif_PrivateAirshipResponse_pre;
+	struct HPMHookPoint *HP_clif_PrivateAirshipResponse_post;
 	struct HPMHookPoint *HP_cmdline_init_pre;
 	struct HPMHookPoint *HP_cmdline_init_post;
 	struct HPMHookPoint *HP_cmdline_final_pre;
@@ -8365,6 +8369,10 @@ struct {
 	int HP_clif_pAttendanceRewardRequest_post;
 	int HP_clif_ui_action_pre;
 	int HP_clif_ui_action_post;
+	int HP_clif_pPrivateAirshipRequest_pre;
+	int HP_clif_pPrivateAirshipRequest_post;
+	int HP_clif_PrivateAirshipResponse_pre;
+	int HP_clif_PrivateAirshipResponse_post;
 	int HP_cmdline_init_pre;
 	int HP_cmdline_init_post;
 	int HP_cmdline_final_pre;

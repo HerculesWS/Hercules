@@ -1035,6 +1035,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->open_ui, HP_clif_open_ui) },
 	{ HP_POP(clif->pAttendanceRewardRequest, HP_clif_pAttendanceRewardRequest) },
 	{ HP_POP(clif->ui_action, HP_clif_ui_action) },
+	{ HP_POP(clif->pPrivateAirshipRequest, HP_clif_pPrivateAirshipRequest) },
+	{ HP_POP(clif->PrivateAirshipResponse, HP_clif_PrivateAirshipResponse) },
 /* cmdline_interface */
 	{ HP_POP(cmdline->init, HP_cmdline_init) },
 	{ HP_POP(cmdline->final, HP_cmdline_final) },

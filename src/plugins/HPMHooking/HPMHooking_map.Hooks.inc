@@ -26360,6 +26360,58 @@ void HP_clif_ui_action(struct map_session_data *sd, int32 UIType, int32 data) {
 	}
 	return;
 }
+void HP_clif_pPrivateAirshipRequest(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_pPrivateAirshipRequest_pre > 0) {
+		void (*preHookFunc) (int *fd, struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pPrivateAirshipRequest_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_pPrivateAirshipRequest_pre[hIndex].func;
+			preHookFunc(&fd, &sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.pPrivateAirshipRequest(fd, sd);
+	}
+	if (HPMHooks.count.HP_clif_pPrivateAirshipRequest_post > 0) {
+		void (*postHookFunc) (int fd, struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pPrivateAirshipRequest_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_pPrivateAirshipRequest_post[hIndex].func;
+			postHookFunc(fd, sd);
+		}
+	}
+	return;
+}
+void HP_clif_PrivateAirshipResponse(struct map_session_data *sd, uint32 flag) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_PrivateAirshipResponse_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, uint32 *flag);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_PrivateAirshipResponse_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_PrivateAirshipResponse_pre[hIndex].func;
+			preHookFunc(&sd, &flag);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.PrivateAirshipResponse(sd, flag);
+	}
+	if (HPMHooks.count.HP_clif_PrivateAirshipResponse_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, uint32 flag);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_PrivateAirshipResponse_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_PrivateAirshipResponse_post[hIndex].func;
+			postHookFunc(sd, flag);
+		}
+	}
+	return;
+}
 /* cmdline_interface */
 void HP_cmdline_init(void) {
 	int hIndex = 0;

@@ -2428,6 +2428,10 @@ typedef void (*HPMHOOK_pre_clif_pAttendanceRewardRequest) (int *fd, struct map_s
 typedef void (*HPMHOOK_post_clif_pAttendanceRewardRequest) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_ui_action) (struct map_session_data **sd, int32 *UIType, int32 *data);
 typedef void (*HPMHOOK_post_clif_ui_action) (struct map_session_data *sd, int32 UIType, int32 data);
+typedef void (*HPMHOOK_pre_clif_pPrivateAirshipRequest) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pPrivateAirshipRequest) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_PrivateAirshipResponse) (struct map_session_data **sd, uint32 *flag);
+typedef void (*HPMHOOK_post_clif_PrivateAirshipResponse) (struct map_session_data *sd, uint32 flag);
 #endif // MAP_CLIF_H
 #ifdef COMMON_CORE_H /* cmdline */
 typedef void (*HPMHOOK_pre_cmdline_init) (void);
