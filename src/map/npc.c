@@ -3956,10 +3956,10 @@ const char *npc_parse_mob(const char *w1, const char *w2, const char *w3, const 
 	}
 
 	//Use db names instead of the spawn file ones.
-	if(battle_config.override_mob_names==1)
-		strcpy(mobspawn.name,"--en--");
-	else if (battle_config.override_mob_names==2)
-		strcpy(mobspawn.name,"--ja--");
+	if (battle_config.override_mob_names == 1)
+		strcpy(mobspawn.name, DEFAULT_MOB_NAME);
+	else if (battle_config.override_mob_names == 2)
+		strcpy(mobspawn.name, DEFAULT_MOB_JNAME);
 	else
 		safestrncpy(mobspawn.name, mobname, sizeof(mobspawn.name));
 

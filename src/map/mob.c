@@ -316,9 +316,9 @@ int mob_parse_dataset(struct spawn_data *data)
 			memmove(data->eventname, data->eventname+1, len-1);
 	}
 
-	if(strcmp(data->name,"--en--")==0)
+	if (strcmp(data->name, DEFAULT_MOB_NAME) == 0)
 		safestrncpy(data->name, mob->db(data->class_)->name, sizeof(data->name));
-	else if(strcmp(data->name,"--ja--")==0)
+	else if (strcmp(data->name, DEFAULT_MOB_JNAME) == 0)
 		safestrncpy(data->name, mob->db(data->class_)->jname, sizeof(data->name));
 
 	return 1;
@@ -498,13 +498,12 @@ struct mob_data *mob_once_spawn_sub(struct block_list *bl, int16 m, int16 x, int
 	data.state.size = size;
 	data.state.ai = ai;
 
-	if (mobname)
+	if (mobname != NULL)
 		safestrncpy(data.name, mobname, sizeof(data.name));
+	else if (battle_config.override_mob_names == 1)
+		strcpy(data.name, DEFAULT_MOB_NAME);
 	else
-		if (battle_config.override_mob_names == 1)
-			strcpy(data.name, "--en--");
-		else
-			strcpy(data.name, "--ja--");
+		strcpy(data.name, DEFAULT_MOB_JNAME);
 
 	if (event)
 		safestrncpy(data.eventname, event, sizeof(data.eventname));
@@ -3034,10 +3033,10 @@ int mob_summonslave(struct mob_data *md2,int *value,int amount,uint16 skill_id)
 		}
 
 		//These two need to be loaded from the db for each slave.
-		if(battle_config.override_mob_names==1)
-			strcpy(data.name,"--en--");
+		if (battle_config.override_mob_names == 1)
+			strcpy(data.name, DEFAULT_MOB_NAME);
 		else
-			strcpy(data.name,"--ja--");
+			strcpy(data.name, DEFAULT_MOB_JNAME);
 
 		if (!mob->parse_dataset(&data))
 			continue;
@@ -3649,7 +3648,7 @@ int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, cons
 	sd->fd = fd;
 
 	//Finally, spawn it.
-	md = mob->once_spawn_sub(&sd->bl, m, x, y, "--en--", class_, event, SZ_SMALL, AI_NONE);
+	md = mob->once_spawn_sub(&sd->bl, m, x, y, DEFAULT_MOB_NAME, class_, event, SZ_SMALL, AI_NONE);
 	if (!md) return 0; //Failed?
 
 	md->special_state.clone = 1;
