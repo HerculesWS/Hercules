@@ -1864,6 +1864,8 @@ struct {
 	struct HPMHookPoint *HP_clif_pMoveItem_post;
 	struct HPMHookPoint *HP_clif_pDull_pre;
 	struct HPMHookPoint *HP_clif_pDull_post;
+	struct HPMHookPoint *HP_clif_p_cz_blocking_play_cancel_pre;
+	struct HPMHookPoint *HP_clif_p_cz_blocking_play_cancel_post;
 	struct HPMHookPoint *HP_clif_pBGQueueRegister_pre;
 	struct HPMHookPoint *HP_clif_pBGQueueRegister_post;
 	struct HPMHookPoint *HP_clif_pBGQueueCheckState_pre;
@@ -8203,6 +8205,8 @@ struct {
 	int HP_clif_pMoveItem_post;
 	int HP_clif_pDull_pre;
 	int HP_clif_pDull_post;
+	int HP_clif_p_cz_blocking_play_cancel_pre;
+	int HP_clif_p_cz_blocking_play_cancel_post;
 	int HP_clif_pBGQueueRegister_pre;
 	int HP_clif_pBGQueueRegister_post;
 	int HP_clif_pBGQueueCheckState_pre;

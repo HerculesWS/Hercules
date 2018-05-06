@@ -2268,6 +2268,8 @@ typedef void (*HPMHOOK_pre_clif_pMoveItem) (int *fd, struct map_session_data **s
 typedef void (*HPMHOOK_post_clif_pMoveItem) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pDull) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pDull) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_p_cz_blocking_play_cancel) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_p_cz_blocking_play_cancel) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pBGQueueRegister) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pBGQueueRegister) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pBGQueueCheckState) (int *fd, struct map_session_data **sd);

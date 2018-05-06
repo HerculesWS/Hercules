@@ -955,6 +955,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->pSkillSelectMenu, HP_clif_pSkillSelectMenu) },
 	{ HP_POP(clif->pMoveItem, HP_clif_pMoveItem) },
 	{ HP_POP(clif->pDull, HP_clif_pDull) },
+	{ HP_POP(clif->p_cz_blocking_play_cancel, HP_clif_p_cz_blocking_play_cancel) },
 	{ HP_POP(clif->pBGQueueRegister, HP_clif_pBGQueueRegister) },
 	{ HP_POP(clif->pBGQueueCheckState, HP_clif_pBGQueueCheckState) },
 	{ HP_POP(clif->pBGQueueRevokeReq, HP_clif_pBGQueueRevokeReq) },
