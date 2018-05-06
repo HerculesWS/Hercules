@@ -10,6 +10,34 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+## [v2018.05.06] `May 6 2018`
+### Added
+- Added a configurable PIN code blacklist, to prevent use of certain codes. (#2007 and #2029, issue #769)
+- Added/updated packets support for clients from 2018-04-11 to 2018-05-02. (#2021, #2030)
+- Implemented option to allow guild skill cooldowns to continue when the leader is logged out. Enabled by default and controlled by the `guild_skill_relog_delay` flag in guild.conf. (#2005, issue #1774)
+- Implemented the Private Airship system, currently using the list of maps from the Zero server. (#1998)
+- Added the constants `DEFAULT_MOB_JNAME` and `DEFAULT_MOB_NAME` (source only) to replace hardcoded use of `"--ja--"` and `"--en--"` respectively. (part of #2027)
+
+### Changed
+- Replaced custom messages related to the PIN code system with the official ones. (part of #2007)
+- Updated the minimum client version that enables certain features: new drop packet now in `PACKETVER >= 20180418`, attendance system now in `PACKETVER_ZERO_NUM >= 20180411`. (#2020)
+- Introduced a friendly error message when the `delwall()` script command fails due to a non-existent wall. (#2017)
+- Refactored some code to move `MAPID_*` related code into separate functions. (#2022)
+- Changed the plugins Makefile to honor the `$MYPLUGIN` variable passed through the environment, to make it easier to compile specific plugins without editing files. (#2025)
+- Converted the Mob Skill DB to the libconfig format. A converter script (`mobskilldbconverter.py`) has been provided for convenience. (#2019)
+
+### Fixed
+- Fixed interaction between Curse and Blessing. When under Curse or Stone Curse, Blessing will only remove the negative statuses and will need to be cast again to obtain the buff. (#1706, issue #680)
+- Added support for `time_t` as return type in the HPMHookGen. (bb0e228bd29dd689ca76f64578de8759415a763b)
+- Fixed some possible buffer overflows. (#2028)
+- Fixed the return value of `BUILDIN(getunitdata)`. (d6785d389cbee4f34078f6762626ca61b2d6cc25)
+- Improved support for clients version 2018-02-07 and Zero 2018-01-31. (part of #2030)
+- Fixed the clan names in some clan-related NPC dialogs. (#2032)
+- Fixed the display name of monster summoned through the `SA_SUMMONMONSTER` skill. (#2027)
+
+### Removed
+- Removed all the code related to the anonymous-stat-reporting system. (#2023)
+
 ## [v2018.04.08] `April 8 2018`
 ### Added
 - Added/updated packets support for clients from 2018-03-14 to 2018-04-04. (#1994 and #2014)
@@ -27,7 +55,7 @@ If you are reading this in a text editor, simply ignore this section
 
 ### Changed
 - Updated the functions handling quest-related packets to use the struct-based form. (part of #1111)
-- Converted the Pet DB to the libconfig format. A converter script (`petdbconverter.py) has been provided for convenience. (#2000)
+- Converted the Pet DB to the libconfig format. A converter script (`petdbconverter.py`) has been provided for convenience. (#2000)
 - The `noteleport` mapflag has been added to the Archer Village (`pay_arche`), to match official servers. (part of #2006)
 - The `script->sprintf()` function has been renamed to `script->sprintf_helper()`. (part of #2009)
 
@@ -221,6 +249,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2018.05.06]: https://github.com/HerculesWS/Hercules/compare/v2018.04.08...v2018.05.06
 [v2018.04.08]: https://github.com/HerculesWS/Hercules/compare/v2018.03.11...v2018.04.08
 [v2018.03.11]: https://github.com/HerculesWS/Hercules/compare/v2018.02.11+1...v2018.03.11
 [v2018.02.11+1]: https://github.com/HerculesWS/Hercules/compare/v2018.02.11...v2018.02.11+1
