@@ -6192,7 +6192,7 @@ ACMD(cleanarea) {
  *------------------------------------------*/
 ACMD(npctalk)
 {
-	char name[NAME_LENGTH],mes[100],temp[100];
+	char name[NAME_LENGTH], mes[100], temp[200];
 	struct npc_data *nd;
 	bool ifcolor=(*(info->command + 7) != 'c' && *(info->command + 7) != 'C')?0:1;
 	unsigned int color = 0;
@@ -6229,7 +6229,7 @@ ACMD(npctalk)
 
 ACMD(pettalk)
 {
-	char mes[100],temp[100];
+	char mes[100], temp[200];
 	struct pet_data *pd;
 
 	if (battle_config.min_chat_delay) {
@@ -7034,7 +7034,7 @@ ACMD(homhungry)
  *------------------------------------------*/
 ACMD(homtalk)
 {
-	char mes[100],temp[100];
+	char mes[100], temp[200];
 
 	if (battle_config.min_chat_delay) {
 		if (DIFF_TICK(sd->cantalk_tick, timer->gettick()) > 0)
