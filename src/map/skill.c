@@ -2891,6 +2891,8 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 			if(skill_id == WZ_WATERBALL && skill_lv > 1)
 				sp = sp/((skill_lv|1)*(skill_lv|1)); //Estimate SP cost of a single water-ball
 			status->heal(bl, 0, sp, 2);
+			if (battle->bc->eathena_magicrod)
+				clif->skill_nodamage(bl, bl, SA_MAGICROD, sc->data[SC_MAGICROD]->val1, 1); // Animation is used here in old eAthena [Wolfie]
 		}
 	}
 
@@ -7860,8 +7862,9 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			}
 			break;
 		case SA_MAGICROD:
-			clif->skill_nodamage(src,src,SA_MAGICROD,skill_lv,1);
-			sc_start(src,bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv));
+			if (!battle->bc->eathena_magicrod)
+				clif->skill_nodamage(src, src, SA_MAGICROD, skill_lv, 1); // Animation here in official [Wolfie]
+			sc_start(src, bl, type, 100, skill_lv, skill->get_time(skill_id, skill_lv));
 			break;
 		case SA_AUTOSPELL:
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);

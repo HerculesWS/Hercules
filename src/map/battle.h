@@ -568,6 +568,8 @@ struct Battle_Config {
 
 	int feature_enable_attendance_system;
 	int feature_attendance_endtime;
+
+	int eathena_magicrod; // eAthena Magic Rod behavior [Wolfie]
 };
 
 /* criteria for battle_config.idletime_critera */
