@@ -11571,18 +11571,32 @@ int pc_readdb(void) {
 	return 0;
 }
 
+bool pc_job_is_dummy(int job)
+{
+
+	if (job == JOB_KNIGHT2      || job == JOB_CRUSADER2
+	 || job == JOB_WEDDING      || job == JOB_XMAS || job == JOB_SUMMER
+	 || job == JOB_LORD_KNIGHT2 || job == JOB_PALADIN2
+	 || job == JOB_BABY_KNIGHT2 || job == JOB_BABY_CRUSADER2
+	 || job == JOB_STAR_GLADIATOR2
+	 || (job >= JOB_RUNE_KNIGHT2 && job <= JOB_MECHANIC_T2)
+	 || (job >= JOB_BABY_RUNE2 && job <= JOB_BABY_MECHANIC2))
+		return true;
+	return false;
+}
+
 void pc_validate_levels(void) {
 	int i;
 	int j;
 	for (i = 0; i < JOB_MAX; i++) {
 		if (!pc->db_checkid(i)) continue;
-		if (job_is_dummy(i))
+		if (pc->job_is_dummy(i))
 			continue; //Classes that do not need exp tables.
 		j = pc->class2idx(i);
 		if (pc->class_exp_table[j][0] == NULL)
-			ShowWarning("Class %s (%d - %d) does not has a base exp table.\n", pc->job_name(i), i, j);
+			ShowWarning("Class %s (%d - %d) does not have a base exp table.\n", pc->job_name(i), i, j);
 		if (pc->class_exp_table[j][1] == NULL)
-			ShowWarning("Class %s (%d - %d) does not has a job exp table.\n", pc->job_name(i), i, j);
+			ShowWarning("Class %s (%d - %d) does not have a job exp table.\n", pc->job_name(i), i, j);
 	}
 }
 
@@ -12122,9 +12136,18 @@ void pc_update_job_and_level(struct map_session_data *sd)
 	}
 }
 
-void do_final_pc(void)
+void pc_clear_exp_groups(void)
 {
 	int i, k;
+	for (k = 0; k < 2; k++) {
+		for (i = 0; i < VECTOR_LENGTH(pc->class_exp_groups[k]); i++)
+			VECTOR_CLEAR(VECTOR_INDEX(pc->class_exp_groups[k], i).exp);
+		VECTOR_CLEAR(pc->class_exp_groups[k]);
+	}
+}
+
+void do_final_pc(void)
+{
 
 	db_destroy(pc->itemcd_db);
 	pc->at_db->destroy(pc->at_db,pc->autotrade_final);
@@ -12133,13 +12156,7 @@ void do_final_pc(void)
 
 	pc->clear_skill_tree();
 
-
-	for (k = 0; k < 2; k++) {
-		for (i = 0; i < VECTOR_LENGTH(pc->class_exp_groups[k]); i++)
-			VECTOR_CLEAR(VECTOR_INDEX(pc->class_exp_groups[k], i).exp);
-		VECTOR_CLEAR(pc->class_exp_groups[k]);
-	}
-	
+	pc->clear_exp_groups();
 
 	ers_destroy(pc->sc_display_ers);
 	ers_destroy(pc->num_reg_ers);
@@ -12485,6 +12502,8 @@ void pc_defaults(void) {
 	pc->calcweapontype = pc_calcweapontype;
 	pc->removecombo = pc_removecombo;
 	pc->update_job_and_level = pc_update_job_and_level;
+	pc->clear_exp_groups = pc_clear_exp_groups;
+	pc->job_is_dummy = pc_job_is_dummy;
 
 	pc->bank_withdraw = pc_bank_withdraw;
 	pc->bank_deposit = pc_bank_deposit;

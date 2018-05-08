@@ -1133,6 +1133,8 @@ END_ZEROED_BLOCK; /* End */
 
 	void (*validate_levels) (void);
 	void (*update_job_and_level) (struct map_session_data *sd);
+	void (*clear_exp_groups) (void);
+	bool (*job_is_dummy) (int job);
 
 	/**
 	 * Autotrade persistency [Ind/Hercules <3]
