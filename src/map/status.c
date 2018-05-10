@@ -13104,11 +13104,11 @@ void status_read_job_db_sub(int idx, const char *name, struct config_setting_t *
 	 */
 	if (libconfig->setting_lookup_string(jdb, "BaseExpGroup", &str) != 0) {
 		int i = 0;
-		ARR_FIND(0, VECTOR_LENGTH(pc->class_exp_groups[0]), i, strcmp(str, VECTOR_INDEX(pc->class_exp_groups[0], i).name) == 0);
-		if (i == VECTOR_LENGTH(pc->class_exp_groups[0])) {
+		ARR_FIND(0, VECTOR_LENGTH(pc->class_exp_groups[CLASS_EXP_TABLE_BASE]), i, strcmp(str, VECTOR_INDEX(pc->class_exp_groups[CLASS_EXP_TABLE_BASE], i).name) == 0);
+		if (i == VECTOR_LENGTH(pc->class_exp_groups[CLASS_EXP_TABLE_BASE])) {
 			ShowError("status_read_job_db: Unknown Base Exp Group '%s' provided for entry '%s'\n", str, name);
 		} else {
-			pc->class_exp_table[idx][0] = &VECTOR_INDEX(pc->class_exp_groups[0], i);
+			pc->dbs->class_exp_table[idx][CLASS_EXP_TABLE_BASE] = &VECTOR_INDEX(pc->class_exp_groups[CLASS_EXP_TABLE_BASE], i);
 		}
 	} else {
 		ShowError("status_read_job_db: BaseExpGroup setting not found for entry '%s'\n", name);
@@ -13119,11 +13119,11 @@ void status_read_job_db_sub(int idx, const char *name, struct config_setting_t *
 	 */
 	if (libconfig->setting_lookup_string(jdb, "JobExpGroup", &str) != 0) {
 		int i = 0;
-		ARR_FIND(0, VECTOR_LENGTH(pc->class_exp_groups[1]), i, strcmp(str, VECTOR_INDEX(pc->class_exp_groups[1], i).name) == 0);
-		if (i == VECTOR_LENGTH(pc->class_exp_groups[1])) {
+		ARR_FIND(0, VECTOR_LENGTH(pc->class_exp_groups[CLASS_EXP_TABLE_JOB]), i, strcmp(str, VECTOR_INDEX(pc->class_exp_groups[CLASS_EXP_TABLE_JOB], i).name) == 0);
+		if (i == VECTOR_LENGTH(pc->class_exp_groups[CLASS_EXP_TABLE_JOB])) {
 			ShowError("status_read_job_db: Unknown Job Exp Group '%s' provided for entry '%s'\n", str, name);
 		} else {
-			pc->class_exp_table[idx][1] = &VECTOR_INDEX(pc->class_exp_groups[1], i);
+			pc->dbs->class_exp_table[idx][CLASS_EXP_TABLE_JOB] = &VECTOR_INDEX(pc->class_exp_groups[CLASS_EXP_TABLE_JOB], i);
 		}
 	} else {
 		ShowError("status_read_job_db: JobExpGroup setting not found for entry '%s'\n", name);
@@ -13153,7 +13153,7 @@ void status_read_job_db_sub(int idx, const char *name, struct config_setting_t *
 			} else {
 				avg_increment = 5;
 			}
-			for ( ; i <= pc->class_exp_table[idx][0]->max_level; i++) {
+			for ( ; i <= pc->dbs->class_exp_table[idx][CLASS_EXP_TABLE_BASE]->max_level; i++) {
 				status->dbs->HP_table[idx][i] = min(base + avg_increment * i, battle_config.max_hp);
 			}
 
@@ -13168,7 +13168,7 @@ void status_read_job_db_sub(int idx, const char *name, struct config_setting_t *
 			} else {
 				avg_increment = 1;
 			}
-			for ( ; i <= pc->class_exp_table[idx][0]->max_level; i++) {
+			for ( ; i <= pc->dbs->class_exp_table[idx][CLASS_EXP_TABLE_BASE]->max_level; i++) {
 				status->dbs->SP_table[idx][i] = min(base + avg_increment * i, battle_config.max_sp);
 			}
 		}
@@ -13194,7 +13194,7 @@ void status_read_job_db_sub(int idx, const char *name, struct config_setting_t *
 			} else {
 				avg_increment = 5;
 			}
-			for ( ; i <= pc->class_exp_table[idx][0]->max_level; i++) {
+			for ( ; i <= pc->dbs->class_exp_table[idx][CLASS_EXP_TABLE_BASE]->max_level; i++) {
 				status->dbs->HP_table[idx][i] = min(base + avg_increment * i, battle_config.max_hp);
 			}
 		}
@@ -13220,7 +13220,7 @@ void status_read_job_db_sub(int idx, const char *name, struct config_setting_t *
 			} else {
 				avg_increment = 1;
 			}
-			for ( ; i <= pc->class_exp_table[idx][0]->max_level; i++) {
+			for ( ; i <= pc->dbs->class_exp_table[idx][CLASS_EXP_TABLE_BASE]->max_level; i++) {
 				status->dbs->SP_table[idx][i] = min(base + avg_increment * i, battle_config.max_sp);
 			}
 		}
@@ -13262,7 +13262,7 @@ void status_read_job_db_sub(int idx, const char *name, struct config_setting_t *
 		} else {
 			avg_increment = 5;
 		}
-		for (++level; level <= pc->class_exp_table[idx][0]->max_level; ++level) { /* limit only to possible maximum level of the given class */
+		for (++level; level <= pc->dbs->class_exp_table[idx][CLASS_EXP_TABLE_BASE]->max_level; ++level) { /* limit only to possible maximum level of the given class */
 			status->dbs->HP_table[idx][level] = min(base + avg_increment * level, battle_config.max_hp); /* some are still empty? then let's use the average increase */
 		}
 	}
@@ -13282,7 +13282,7 @@ void status_read_job_db_sub(int idx, const char *name, struct config_setting_t *
 		} else {
 			avg_increment = 1;
 		}
-		for (++level; level <= pc->class_exp_table[idx][0]->max_level; level++) {
+		for (++level; level <= pc->dbs->class_exp_table[idx][CLASS_EXP_TABLE_BASE]->max_level; level++) {
 			status->dbs->SP_table[idx][level] = min(base + avg_increment * level, battle_config.max_sp);
 		}
 	}
