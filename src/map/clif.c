@@ -9171,7 +9171,7 @@ void clif_viewequip_ack(struct map_session_data* sd, struct map_session_data* ts
  * @param sd     The target character.
  * @param msg_id msgstringtable message index, 0-based (@see enum clif_messages)
  */
-void clif_msgtable(struct map_session_data* sd, unsigned short msg_id)
+void clif_msgtable(struct map_session_data* sd, enum clif_messages msg_id)
 {
 	int fd;
 	nullpo_retv(sd);
@@ -9192,7 +9192,7 @@ void clif_msgtable(struct map_session_data* sd, unsigned short msg_id)
  * @param msg_id msgstringtable message index, 0-based (@see enum clif_messages)
  * @param value  The value to fill %d.
  */
-void clif_msgtable_num(struct map_session_data *sd, unsigned short msg_id, int value)
+void clif_msgtable_num(struct map_session_data *sd, enum clif_messages msg_id, int value)
 {
 #if PACKETVER >= 20090805
 	int fd;
@@ -9219,7 +9219,7 @@ void clif_msgtable_num(struct map_session_data *sd, unsigned short msg_id, int v
  * @param skill_id ID of the skill to display.
  * @param msg_id msgstringtable message index, 0-based (@see enum clif_messages)
  */
-void clif_msgtable_skill(struct map_session_data* sd, uint16 skill_id, int msg_id)
+void clif_msgtable_skill(struct map_session_data* sd, uint16 skill_id, enum clif_messages msg_id)
 {
 	int fd;
 
@@ -9240,7 +9240,7 @@ void clif_msgtable_skill(struct map_session_data* sd, uint16 skill_id, int msg_i
 * @param msg_id msgstringtable message index, 0-based (@see enum clif_messages)
 * @param value  The value to fill %s.
 */
-void clif_msgtable_str(struct map_session_data *sd, uint16 msg_id, const char *value)
+void clif_msgtable_str(struct map_session_data *sd, enum clif_messages msg_id, const char *value)
 {
 	int message_len;
 	int len;
@@ -9270,7 +9270,7 @@ void clif_msgtable_str(struct map_session_data *sd, uint16 msg_id, const char *v
 * @param msg_id msgstringtable message index, 0-based (@see enum clif_messages)
 * @param color  The color to use
 */
-void clif_msgtable_color(struct map_session_data *sd, uint16 msg_id, uint32 color)
+void clif_msgtable_color(struct map_session_data *sd, enum clif_messages msg_id, uint32 color)
 {
 	struct PACKET_ZC_MSG_COLOR p;
 
