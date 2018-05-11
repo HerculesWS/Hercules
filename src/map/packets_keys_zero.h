@@ -151,5 +151,8 @@
 	packetKeys(0x2FC330DD,0x01C04E1F,0x4D914DE2);
 #endif
 
-
+// 2018-05-11aRagexe_Zero , 2018-05-11bRagexe_Zero
+#if PACKETVER == 20180511
+	packetKeys(0x1C055B65,0x68CE748D,0x32AF761D);
+#endif
 #endif /* MAP_PACKETS_ZERO_KEYS_H */
