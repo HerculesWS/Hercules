@@ -21837,7 +21837,7 @@ BUILDIN(setcashmount)
 		return true;
 
 	if (pc_hasmount(sd)) {
-		clif->msgtable(sd, MSG_REINS_CANT_USE_MOUNTED);
+		clif->msgtable(sd, MSG_FAIELD_RIDING_OVERLAPPED);
 		script_pushint(st, 0); // Can't mount with one of these
 	} else {
 		if (sd->sc.data[SC_ALL_RIDING]) {

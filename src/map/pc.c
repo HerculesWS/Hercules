@@ -1073,11 +1073,11 @@ int pc_isequip(struct map_session_data *sd,int n)
 		return 1;
 
 	if (item->elv && sd->status.base_level < item->elv) {
-		clif->msgtable(sd, MSG_ITEM_CANT_EQUIP_LVL);
+		clif->msgtable(sd, MSG_CANNOT_EQUIP_ITEM_LEVEL);
 		return 0;
 	}
 	if (item->elvmax && sd->status.base_level > item->elvmax) {
-		clif->msgtable(sd, MSG_ITEM_CANT_EQUIP_LVL);
+		clif->msgtable(sd, MSG_CANNOT_EQUIP_ITEM_LEVEL);
 		return 0;
 	}
 	if(item->sex != 2 && sd->status.sex != item->sex)
@@ -1085,11 +1085,11 @@ int pc_isequip(struct map_session_data *sd,int n)
 
 	if ( item->equip & EQP_AMMO ) {
 		if (sd->state.active && !pc_iscarton(sd) && (sd->job & MAPID_THIRDMASK) == MAPID_GENETIC) { // check if sc data is already loaded.
-			clif->msgtable(sd, MSG_ITEM_NEED_CART);
+			clif->msgtable(sd, MSG_USESKILL_FAIL_CART);
 			return 0;
 		}
 		if (!pc_ismadogear(sd) && (sd->job & MAPID_THIRDMASK) == MAPID_MECHANIC) {
-			clif->msgtable(sd, MSG_ITEM_NEED_MADO);
+			clif->msgtable(sd, MSG_USESKILL_FAIL_MADOGEAR);
 			return 0;
 		}
 	}
@@ -4932,7 +4932,7 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 		return 0;
 
 	if ((item->item_usage.flag&INR_SITTING) && (pc_issit(sd) == 1) && (pc_get_group_level(sd) < item->item_usage.override)) {
-		clif->msgtable(sd, MSG_ITEM_NEED_STANDING);
+		clif->msgtable(sd, MSG_CANT_USE_WHEN_SITDOWN);
 		//clif->messagecolor_self(sd->fd, COLOR_WHITE, msg_txt(1474));
 		return 0; // You cannot use this item while sitting.
 	}
@@ -4953,7 +4953,7 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 			struct party_data *p;
 
 			if (!sd->status.party_id) {
-				clif->msgtable(sd, MSG_PARTY_MEMBER_NOT_SUMMONED);
+				clif->msgtable(sd, MSG_CANNOT_PARTYCALL);
 				break;
 			}
 
@@ -4964,7 +4964,7 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 				ARR_FIND(0, MAX_PARTY, i, p->data[i].sd == sd);
 
 				if (i == MAX_PARTY || !p->party.member[i].leader) {
-					clif->msgtable(sd, MSG_PARTY_MEMBER_NOT_SUMMONED);
+					clif->msgtable(sd, MSG_CANNOT_PARTYCALL);
 					break;
 				}
 
@@ -4973,7 +4973,7 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 				ARR_FIND(0, MAX_PARTY, i, p->data[i].sd && p->data[i].sd != sd && p->data[i].sd->bl.m == m);
 
 				if (i == MAX_PARTY || pc_isdead(p->data[i].sd)) {
-					clif->msgtable(sd, MSG_PARTY_NO_MEMBER_IN_MAP);
+					clif->msgtable(sd, MSG_NO_PARTYMEM_ON_THISMAP);
 					break;
 				}
 			}
@@ -5060,7 +5060,7 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 
 	if( item->package || item->group ) {
 		if (pc_is90overweight(sd)) {
-			clif->msgtable(sd, MSG_ITEM_CANT_OBTAIN_WEIGHT);
+			clif->msgtable(sd, MSG_CANT_GET_ITEM_BECAUSE_WEIGHT);
 			return 0;
 		}
 		if (!pc->inventoryblank(sd)) {
@@ -5074,12 +5074,12 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 		return 0;
 	//Required level check
 	if (item->elv && sd->status.base_level < item->elv) {
-		clif->msgtable(sd, MSG_ITEM_CANT_USE_LVL);
+		clif->msgtable(sd, MSG_CANNOT_USE_ITEM_LEVEL);
 		return 0;
 	}
 
 	if (item->elvmax && sd->status.base_level > item->elvmax) {
-		clif->msgtable(sd, MSG_ITEM_CANT_USE_LVL);
+		clif->msgtable(sd, MSG_CANNOT_USE_ITEM_LEVEL);
 		return 0;
 	}
 
@@ -5147,7 +5147,7 @@ int pc_useitem(struct map_session_data *sd,int n) {
 
 	if (sd->npc_id || sd->state.workinprogress & 1) {
 #if PACKETVER >= 20110309
-		clif->msgtable(sd, MSG_NPC_WORK_IN_PROGRESS);
+		clif->msgtable(sd, MSG_BUSY);
 #else
 		clif->messagecolor_self(sd->fd, COLOR_WHITE, msg_sd(sd, 48));
 #endif
@@ -5217,7 +5217,7 @@ int pc_useitem(struct map_session_data *sd,int n) {
 				if (DIFF_TICK(sd->item_delay[i].tick, tick) > 0) {
 					int delay_tick = (int)(DIFF_TICK(sd->item_delay[i].tick, tick) / 1000);
 #if PACKETVER >= 20101123
-					clif->msgtable_num(sd, MSG_SECONDS_UNTIL_USE, delay_tick + 1); // [%d] seconds left until you can use
+					clif->msgtable_num(sd, MSG_ITEM_REUSE_LIMIT_SECOND, delay_tick + 1); // [%d] seconds left until you can use
 #else
 					char delay_msg[100];
 					sprintf(delay_msg, msg_sd(sd, 26), delay_tick + 1);
@@ -7369,9 +7369,9 @@ int pc_skillup(struct map_session_data *sd,uint16 skill_id) {
 			clif->skillinfoblock(sd);
 	} else if( battle_config.skillup_limit ){
 		if (sd->sktree.second != 0)
-			clif->msgtable_num(sd, MSG_SKILL_POINTS_LEFT_JOB1, sd->sktree.second);
+			clif->msgtable_num(sd, MSG_UPGRADESKILLERROR_MORE_FIRSTJOBSKILL, sd->sktree.second);
 		else if (sd->sktree.third != 0)
-			clif->msgtable_num(sd, MSG_SKILL_POINTS_LEFT_JOB2, sd->sktree.third);
+			clif->msgtable_num(sd, MSG_UPGRADESKILLERROR_MORE_SECONDJOBSKILL, sd->sktree.third);
 		else if (pc->calc_skillpoint(sd) < 9) /* TODO: official response? */
 			clif->messagecolor_self(sd->fd, COLOR_RED, "You need the basic skills");
 	}

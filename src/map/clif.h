@@ -361,34 +361,34 @@ typedef enum useskill_fail_cause { // clif_skill_fail
 }useskill_fail_cause;
 
 enum clif_messages {
-	MSG_ITEM_CANT_OBTAIN_WEIGHT    = 0x034, ///< You cannot carry more items because you are overweight.
-	MSG_ITEM_NEED_STANDING         = 0x297, ///< You cannot use this item while sitting.
-	MSG_MERCENARY_EXPIRED          = 0x4f2, ///< The mercenary contract has expired.
-	MSG_MERCENARY_DIED             = 0x4f3, ///< The mercenary has died.
-	MSG_MERCENARY_RELEASED         = 0x4f4, ///< You have released the mercenary.
-	MSG_MERCENARY_ESCAPED          = 0x4f5, ///< The mercenary has run away.
-	MSG_PARTY_MEMBER_NOT_SUMMONED  = 0x4c5, ///< The party member was not summoned because you are not the party leader.
-	MSG_PARTY_NO_MEMBER_IN_MAP     = 0x4c6, ///< There is no party member to summon in the current map.
-	MSG_SKILL_CANT_USE_AREA        = 0x536, ///< This skill cannot be used within this area
-	MSG_ITEM_CANT_USE_AREA         = 0x537, ///< This item cannot be used within this area.
-	MSG_EQUIP_NOT_PUBLIC           = 0x54d, ///< This character's equipment information is not open to the public.
-	MSG_ITEM_NEED_MADO             = 0x59b, ///< Item can only be used when Mado Gear is mounted.
-	MSG_ITEM_NEED_CART             = 0x5ef, ///< Usable only when cart is put on
-	MSG_RUNE_STONE_MAX_AMOUNT      = 0x61b, ///< Cannot create Rune stone more than the maximum amount.
-	MSG_SKILL_POINTS_LEFT_JOB1     = 0x61e, ///< You must consume all '%d' remaining points in your 1st Job tab.
-	MSG_SKILL_POINTS_LEFT_JOB2     = 0x61f, ///< You must consume all '%d' remaining points in your 2nd Job tab. 1st Tab is already done.
-	MSG_SKILL_ITEM_NOT_FOUND       = 0x623, // FIXME[Haru]: This seems to be 0x622 in the msgstringtable files I found.
-	MSG_SKILL_SUCCESS              = 0x627, // FIXME[Haru]: This seems to be 0x626 in the msgstringtable files I found.
-	MSG_SKILL_FAILURE              = 0x628, // FIXME[Haru]: This seems to be 0x627 in the msgstringtable files I found.
-	MSG_SKILL_ITEM_NEED_IDENTIFY   = 0x62d, ///< Unable to use unchecked items as materials.
-	MSG_ITEM_CANT_EQUIP_LVL        = 0x6ed, // FIXME[Haru]: This seems to be 0x6ee in the msgstringtable files I found.
-	MSG_ITEM_CANT_USE_LVL          = 0x6ee, // FIXME[Haru]: This seems to be 0x6ef in the msgstringtable files I found.
-	MSG_COOKING_LIST_FAIL          = 0x625, // FIXME[Haru]: This might be a wrong message ID. Not sure what it should be.
-	MSG_SECONDS_UNTIL_USE          = 0x746, ///< %d seconds left until you can use
-	MSG_NPC_WORK_IN_PROGRESS       = 0x783, // FIXME[Haru]: This seems to be 0x784 in the msgstringtable files I found.
-	MSG_REINS_CANT_USE_MOUNTED     = 0x78b, // FIXME[Haru]: This seems to be 0x785 in the msgstringtalbe files I found.
-	MSG_PARTY_LEADER_SAMEMAP       = 0x82e, //< It is only possible to change the party leader while on the same map.
-	MSG_ATTENDANCE_UNAVAILABLE     = 0xd92, ///< Attendance Check failed. Please try again later.
+	MSG_CANT_GET_ITEM_BECAUSE_WEIGHT          = 0x034, ///< You cannot carry more items because you are overweight.
+	MSG_CANT_USE_WHEN_SITDOWN                 = 0x297, ///< You cannot use this item while sitting.
+	MSG_CANNOT_PARTYCALL                      = 0x4c5, ///< The party member was not summoned because you are not the party leader.
+	MSG_NO_PARTYMEM_ON_THISMAP                = 0x4c6, ///< There is no party member to summon in the current map.
+	MSG_MER_FINISH                            = 0x4f2, ///< The mercenary contract has expired.
+	MSG_MER_DIE                               = 0x4f3, ///< The mercenary has died.
+	MSG_MER_RETIRE                            = 0x4f4, ///< You have released the mercenary.
+	MSG_MER_RUNAWAY                           = 0x4f5, ///< The mercenary has run away.
+	MSG_IMPOSSIBLE_SKILL_AREA                 = 0x536, ///< This skill cannot be used within this area
+	MSG_IMPOSSIBLE_USEITEM_AREA               = 0x537, ///< This item cannot be used within this area.
+	MSG_OPEN_EQUIPEDITEM_REFUSED              = 0x54d, ///< This character's equipment information is not open to the public.
+	MSG_USESKILL_FAIL_MADOGEAR                = 0x59b, ///< Item can only be used when Mado Gear is mounted.
+	MSG_USESKILL_FAIL_CART                    = 0x5ef, ///< Usable only when cart is put on
+	MSG_RUNESTONE_MAKEERROR_OVERCOUNT         = 0x61b, ///< Cannot create Rune stone more than the maximum amount.
+	MSG_UPGRADESKILLERROR_MORE_FIRSTJOBSKILL  = 0x61e, ///< You must consume all '%d' remaining points in your 1st Job tab.
+	MSG_UPGRADESKILLERROR_MORE_SECONDJOBSKILL = 0x61f, ///< You must consume all '%d' remaining points in your 2nd Job tab. 1st Tab is already done.
+	MSG_SKILL_RECIPE_NOTEXIST                 = 0x622, ///< Inconvertible combination.
+	MSG_SKILL_MATERIAL_FAIL                   = 0x625, ///< Material doesn't exist
+	MSG_SKILL_SUCCESS                         = 0x626, ///< Successful
+	MSG_SKILL_FAIL                            = 0x627, ///< Failed
+	MSG_SKILL_FAIL_MATERIAL_IDENTITY          = 0x62d, ///< Unable to use unchecked items as materials.
+	MSG_CANNOT_EQUIP_ITEM_LEVEL               = 0x6ed, ///< You are unable to have item in this level.
+	MSG_CANNOT_USE_ITEM_LEVEL                 = 0x6ee, ///< You are unable to use item in this level
+	MSG_ITEM_REUSE_LIMIT_SECOND               = 0x746, ///< %d seconds left until you can use
+	MSG_BUSY                                  = 0x783, ///< any work in progress (NPC dialog, manufacturing...)quit and try again.
+	MSG_FAIELD_RIDING_OVERLAPPED              = 0x78b, ///< The reins of the status board items that are not available.
+	MSG_PARTY_MASTER_CHANGE_SAME_MAP          = 0x82e, ///< It is only possible to change the party leader while on the same map.
+	MSG_ATTENDANCE_UNAVAILABLE                = 0xd92, ///< Attendance Check failed. Please try again later.
 };
 
 /**
