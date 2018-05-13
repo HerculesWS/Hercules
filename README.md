@@ -68,6 +68,7 @@ Platforms](https://github.com/HerculesWS/Hercules/wiki/Supported-Platforms) wiki
   - libpcre (`pcre-devel`)
   - *Optional dependencies for development only*
     - perl (required to rebuild the HPM Hooks and HPMDataCheck)
+      - requires the XML::Simple module, which in turn requires libexpat-dev
     - Doxygen (required to rebuild the HPM Hooks and HPMDataCheck)
 
 #### Mac OS X
