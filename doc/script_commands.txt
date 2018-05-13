@@ -1192,6 +1192,8 @@ From here on, we will have the commands sorted as followed:
 10 - Mercenary Commands
 11 - Queue Commands
 12 - NPC Trader Commands
+13 - Clan-Related Commands (SHOULD BE MOVED TO 4.4)
+14 - Hash Table Commands
 
 
 ---------------------------------------
@@ -10007,4 +10009,169 @@ the available flags are:
 	P_AIRSHIP_ITEM_NOT_ENOUGH
 	P_AIRSHIP_ITEM_INVALID
 
+---------------------------------------
+
+---------------------------------------
+//=====================================
+14 - Hash Table Commands
+//=====================================
+---------------------------------------
+
+---------------------------------------
+
+*htnew();
+
+Creates a new hash table (hash map, associative array), and returns its ID.
+All hashtable functions (htdelete, htget, htput, htclear, htsize, htiterator)
+will use this ID as first argument.
+
+Example:
+	.@ht_id = htnew();
+
+** Remember to use htdelete() to free memory when you don't need the hash table
+   anymore, as they do not expire with the scope, so they are more akin to $@
+   global arrays.
+
+---------------------------------------
+
+*htdelete(<table id>);
+
+Deletes the hashtable with the given <table id>, freeing all used memory.
+
+Example:
+	.@ht_id = htnew();
+	htdelete(.@ht_id);
+
+---------------------------------------
+
+*htget(<table id>, "<key>"{, <default value>})
+*htget(<table id>, "<key>"{, "<default value>"})
+
+Returns the value associated with the given <key> in the given hash table. If
+there is no value associated with the key, returns <default value>, or returns
+0 if none is specified.
+
+Example:
+	.@val1 = htget(.@ht_id, "key1");
+	.@val2 = htget(.@ht_id, "key2", 7);
+	.@val3$ = htget(.@ht_id, "key3", "");
+
+---------------------------------------
+
+*htput(<table id>, "<key>", <value>);
+*htput(<table id>, "<key>", "<value>");
+
+Sets the value associated with <key> in the given hash table. If <key> was
+already present it will be overwritten. If <value> is an empty string or 0, the
+key will be removed from the hash table.
+
+Example:
+	htput(.@ht_id, "key1", 77);
+	htput(.@ht_id, "key1", "test");
+	htput(.@ht_id, "key1", 0);      // delete given entry from hashtable
+
+---------------------------------------
+
+*htsize(<table id>)
+
+Returns the total number of entries in the hash table.
+
+Example:
+    .@len = htsize(.@ht_id);
+
+---------------------------------------
+
+*htexists(<table id>);
+
+Checks is given hash table exists and returns true or false accordingly.
+
+Example:
+    .@exists = htexists(.@ht_id);
+
+---------------------------------------
+
+*htclear(<table id>);
+
+Removes all entries (keys and values) from the given hash table, resetting its
+size to back to 0.
+
+Example:
+    htclear(.@ht_id);
+
+---------------------------------------
+
+*htiterator(<table id>)
+
+Creates an iterator over a hash table, and returns its ID. Iterators are used to
+traverse the hash table, and support forward iteration, backward iteration and
+removing entries from the hash table. The iterator is initially positioned
+before the first entry of the hash table.
+
+Example: see htidelete() below.
+
+** While the iterator exists, the hash table is locked internally, so remember
+   to use htidelete() to remove the iterator after use. The hash table will keep
+   functioning normally but will only free internal memory when unlocked.
+
+---------------------------------------
+
+*htifirstkey(<iterator id>)
+
+Places the iterator over the first entry of the hash table and returns its key.
+If there are no entries in the hash table, returns "".
+
+Example: see htidelete() below.
+
+---------------------------------------
+
+*htilastkey(<iterator id>)
+
+Places the iterator over the last entry of the hash table and returns its key.
+If there are no entries in the hash table, returns "".
+
+---------------------------------------
+
+*htinextkey(<iterator id>)
+
+Places the iterator over the next entry of the hash table and returns its key.
+If there is no key beyond the current key, returns "".
+
+Example: see htidelete() below.
+
+---------------------------------------
+
+*htiprevkey(<iterator id>)
+
+Places the iterator over the previous entry of the hash table and returns its
+key. If there is no key before the current key, returns "".
+
+---------------------------------------
+
+*hticheck(<iterator id>)
+
+Checks if there are keys beyond the current key and returns true or false
+accordingly. This can be used to check whether the hash table was fully
+traversed, without moving the iterator.
+
+Example: see htidelete() below.
+
+---------------------------------------
+
+*htidelete(it);
+
+Deletes the iterator and frees used resources, while also unlocking the hash
+table.
+
+Example:
+	.@it = htiterator(.@ht_id);
+	for (.@key$ = htifirstkey(.@it); hticheck(.@it); .@key$ = htinextkey(.@it)) {
+		.@oldval = htget(.@ht_id, .@key$); // get the current value
+		htput(.@ht_id, .@key$, .@oldval ** 3); // raise to the power of 3
+	}
+	htidelete(.@it);
+
+---------------------------------------
+//=====================================
+14 - End of Hash Table Commands
+//=====================================
 ---------------------------------------
