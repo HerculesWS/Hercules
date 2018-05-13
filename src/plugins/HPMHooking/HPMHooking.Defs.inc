@@ -2921,6 +2921,42 @@ typedef void (*HPMHOOK_post_homun_delspiritball) (struct homun_data *hd, int cou
 typedef int8 (*HPMHOOK_pre_homun_get_intimacy_grade) (struct homun_data **hd);
 typedef int8 (*HPMHOOK_post_homun_get_intimacy_grade) (int8 retVal___, struct homun_data *hd);
 #endif // MAP_HOMUNCULUS_H
+#ifdef MAP_HASHTABLE_H /* htreg */
+typedef void (*HPMHOOK_pre_htreg_init) (void);
+typedef void (*HPMHOOK_post_htreg_init) (void);
+typedef void (*HPMHOOK_pre_htreg_final) (void);
+typedef void (*HPMHOOK_post_htreg_final) (void);
+typedef int64 (*HPMHOOK_pre_htreg_new_hashtable) (void);
+typedef int64 (*HPMHOOK_post_htreg_new_hashtable) (int64 retVal___);
+typedef bool (*HPMHOOK_pre_htreg_destroy_hashtable) (int64 *id);
+typedef bool (*HPMHOOK_post_htreg_destroy_hashtable) (bool retVal___, int64 id);
+typedef bool (*HPMHOOK_pre_htreg_hashtable_exists) (int64 *id);
+typedef bool (*HPMHOOK_post_htreg_hashtable_exists) (bool retVal___, int64 id);
+typedef int64 (*HPMHOOK_pre_htreg_hashtable_size) (int64 *id);
+typedef int64 (*HPMHOOK_post_htreg_hashtable_size) (int64 retVal___, int64 id);
+typedef bool (*HPMHOOK_pre_htreg_clear_hashtable) (int64 *id);
+typedef bool (*HPMHOOK_post_htreg_clear_hashtable) (bool retVal___, int64 id);
+typedef const struct DBData* (*HPMHOOK_pre_htreg_hashtable_getvalue) (int64 *id, const char **key);
+typedef const struct DBData* (*HPMHOOK_post_htreg_hashtable_getvalue) (const struct DBData* retVal___, int64 id, const char *key);
+typedef bool (*HPMHOOK_pre_htreg_hashtable_setvalue) (int64 *id, const char **key, const struct DBData *value);
+typedef bool (*HPMHOOK_post_htreg_hashtable_setvalue) (bool retVal___, int64 id, const char *key, const struct DBData value);
+typedef int64 (*HPMHOOK_pre_htreg_create_iterator) (int64 *id);
+typedef int64 (*HPMHOOK_post_htreg_create_iterator) (int64 retVal___, int64 id);
+typedef bool (*HPMHOOK_pre_htreg_destroy_iterator) (int64 *id);
+typedef bool (*HPMHOOK_post_htreg_destroy_iterator) (bool retVal___, int64 id);
+typedef bool (*HPMHOOK_pre_htreg_iterator_check) (int64 *id);
+typedef bool (*HPMHOOK_post_htreg_iterator_check) (bool retVal___, int64 id);
+typedef bool (*HPMHOOK_pre_htreg_iterator_exists) (int64 *id);
+typedef bool (*HPMHOOK_post_htreg_iterator_exists) (bool retVal___, int64 id);
+typedef const char* (*HPMHOOK_pre_htreg_iterator_firstkey) (int64 *id);
+typedef const char* (*HPMHOOK_post_htreg_iterator_firstkey) (const char* retVal___, int64 id);
+typedef const char* (*HPMHOOK_pre_htreg_iterator_lastkey) (int64 *id);
+typedef const char* (*HPMHOOK_post_htreg_iterator_lastkey) (const char* retVal___, int64 id);
+typedef const char* (*HPMHOOK_pre_htreg_iterator_nextkey) (int64 *id);
+typedef const char* (*HPMHOOK_post_htreg_iterator_nextkey) (const char* retVal___, int64 id);
+typedef const char* (*HPMHOOK_pre_htreg_iterator_prevkey) (int64 *id);
+typedef const char* (*HPMHOOK_post_htreg_iterator_prevkey) (const char* retVal___, int64 id);
+#endif // MAP_HASHTABLE_H
 #ifdef MAP_INSTANCE_H /* instance */
 typedef void (*HPMHOOK_pre_instance_init) (bool *minimal);
 typedef void (*HPMHOOK_post_instance_init) (bool minimal);

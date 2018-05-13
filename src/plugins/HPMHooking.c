@@ -106,6 +106,7 @@ PRAGMA_GCC5(GCC diagnostic ignored "-Wdiscarded-qualifiers")
 #include "map/storage.h"
 #include "map/trade.h"
 #include "map/unit.h"
+#include "map/hashtable.h"
 #include "common/grfio.h"
 #include "common/mapindex.h"
 #else

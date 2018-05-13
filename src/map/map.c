@@ -59,6 +59,7 @@
 #include "map/rodex.h"
 #include "map/trade.h"
 #include "map/unit.h"
+#include "map/hashtable.h"
 #include "common/HPM.h"
 #include "common/cbasetypes.h"
 #include "common/conf.h"
@@ -6254,6 +6255,7 @@ void map_load_defaults(void) {
 	mob_defaults();
 	unit_defaults();
 	mapreg_defaults();
+	htreg_defaults();
 	pet_defaults();
 	path_defaults();
 	quest_defaults();
