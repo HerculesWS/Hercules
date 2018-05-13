@@ -56,6 +56,7 @@
 #include "map/status.h"
 #include "map/storage.h"
 #include "map/unit.h"
+#include "map/hashtable.h"
 #include "common/cbasetypes.h"
 #include "common/conf.h"
 #include "common/db.h"
@@ -5025,6 +5026,7 @@ void do_final_script(void)
 	dbi_destroy(iter);
 
 	mapreg->final();
+	htreg->final();
 
 	script->userfunc_db->destroy(script->userfunc_db, script->db_free_code_sub);
 	script->autobonus_db->destroy(script->autobonus_db, script->db_free_code_sub);
@@ -5546,6 +5548,7 @@ void do_init_script(bool minimal) {
 		return;
 
 	mapreg->init();
+	htreg->init();
 	script->load_translations();
 }
 
@@ -24027,6 +24030,210 @@ BUILDIN(hateffect)
 	return true;
 }
 
+#define checkHashTableExists(id) \
+	if (!htreg->hashtable_exists(id)) { \
+		ShowError("%s: hashtable with id=%d does not exist\n", __func__, (int)id); \
+		script_pushint(st, 0); \
+		return false; \
+	}
+
+BUILDIN(htnew)
+{
+	script_pushint(st, htreg->new_hashtable());
+	return true;
+}
+
+BUILDIN(htget)
+{
+	int64 id = script_getnum(st, 2);
+	checkHashTableExists(id);
+
+	const char *key = script_getstr(st, 3);
+	const struct DBData *result = htreg->hashtable_getvalue(id, key);
+
+	if (result != NULL) {
+		switch(result->type) {
+		case DB_DATA_INT:
+		case DB_DATA_UINT:
+			script_pushint(st, result->u.i);
+			break;
+		case DB_DATA_PTR:
+			script_pushstrcopy(st, result->u.ptr);
+			break;
+		}
+	} else if (script_hasdata(st, 4)) {
+		script_pushcopy(st, 4);
+	} else {
+		script_pushint(st, 0);
+	}
+
+	return true;
+}
+
+BUILDIN(htput)
+{
+	int64 id = script_getnum(st, 2);
+	checkHashTableExists(id);
+
+	struct DBData value;
+	const char *key = script_getstr(st, 3);
+
+	if (script_isstringtype(st, 4)) {
+		value.type = DB_DATA_PTR;
+		value.u.ptr = (void *)aStrdup(script_getstr(st, 4));
+	} else if (script_isinttype(st, 4)) {
+		value.type = DB_DATA_INT;
+		value.u.i = script_getnum(st, 4);
+	} else {
+		ShowError("script:htput: illegal data type!\n");
+		script_pushint(st, 0);
+		return false;
+	}
+
+	script_pushint(st, htreg->hashtable_setvalue(id, key, value));
+	return true;
+}
+
+BUILDIN(htclear)
+{
+	int64 id = script_getnum(st, 2);
+	checkHashTableExists(id);
+
+	script_pushint(st, htreg->clear_hashtable(id));
+	return true;
+}
+
+BUILDIN(htdelete)
+{
+	int64 id = script_getnum(st, 2);
+	checkHashTableExists(id);
+
+	script_pushint(st, htreg->destroy_hashtable(id));
+	return true;
+}
+
+BUILDIN(htsize)
+{
+	int64 id = script_getnum(st, 2);
+	checkHashTableExists(id);
+
+	script_pushint(st, htreg->hashtable_size(id));
+	return true;
+}
+
+BUILDIN(htexists)
+{
+	script_pushint(st, htreg->hashtable_exists(script_getnum(st, 2)));
+	return true;
+}
+
+BUILDIN(htiterator)
+{
+	int64 id = script_getnum(st, 2);
+	checkHashTableExists(id);
+
+	script_pushint(st, htreg->create_iterator(id));
+	return true;
+}
+
+#undef checkHashTableExists
+
+#define checkHtIteratorExists(id) \
+	if (!htreg->iterator_exists(id)) { \
+		ShowError("%s: htIterator with id=%d does not exist\n", __func__, (int)id); \
+		script_pushint(st, 0); \
+		return false; \
+	}
+
+BUILDIN(htifirstkey)
+{
+	int64 id = script_getnum(st, 2);
+	checkHtIteratorExists(id);
+
+	const char *key = htreg->iterator_firstkey(id);
+
+	if (key != NULL) {
+		script_pushstrcopy(st, key);
+	} else {
+		script_pushstrcopy(st, "");
+	}
+
+	return true;
+}
+
+BUILDIN(htilastkey)
+{
+	int64 id = script_getnum(st, 2);
+	checkHtIteratorExists(id);
+
+	const char *key = htreg->iterator_lastkey(id);
+
+	if (key != NULL) {
+		script_pushstrcopy(st, key);
+	} else {
+		script_pushstrcopy(st, "");
+	}
+
+	return true;
+}
+
+BUILDIN(htinextkey)
+{
+	int64 id = script_getnum(st, 2);
+	checkHtIteratorExists(id);
+
+	const char *key = htreg->iterator_nextkey(id);
+
+	if (key != NULL) {
+		script_pushstrcopy(st, key);
+	} else {
+		script_pushstrcopy(st, "");
+	}
+
+	return true;
+}
+
+BUILDIN(htiprevkey)
+{
+	int64 id = script_getnum(st, 2);
+	checkHtIteratorExists(id);
+
+	const char *key = htreg->iterator_prevkey(id);
+
+	if (key != NULL) {
+		script_pushstrcopy(st, key);
+	} else {
+		script_pushstrcopy(st, "");
+	}
+
+	return true;
+}
+
+BUILDIN(hticheck)
+{
+	int64 id = script_getnum(st, 2);
+	checkHtIteratorExists(id);
+
+	if (htreg->iterator_check(id)) {
+		script_pushint(st, 1);
+	} else {
+		script_pushint(st, 0);
+	}
+
+	return true;
+}
+
+BUILDIN(htidelete)
+{
+	int64 id = script_getnum(st, 2);
+	checkHtIteratorExists(id);
+
+	htreg->destroy_iterator(id);
+	return true;
+}
+
+#undef checkHtIteratorExists
+
 /**
  * Adds a built-in script function.
  *
@@ -24746,6 +24953,25 @@ void script_parse_builtin(void) {
 
 		// -- HatEffect
 		BUILDIN_DEF(hateffect, "ii"),
+
+		// hashtable (strdb)
+		BUILDIN_DEF(htnew, ""),
+		BUILDIN_DEF(htget, "is?"),
+		BUILDIN_DEF(htput, "isv"),
+		BUILDIN_DEF(htclear, "i"),
+		BUILDIN_DEF(htdelete, "i"),
+		BUILDIN_DEF(htsize, "i"),
+		BUILDIN_DEF(htexists, "i"),
+
+		// hashtable iterators
+		BUILDIN_DEF(htiterator, "i"),
+		BUILDIN_DEF(htifirstkey, "i"),
+		BUILDIN_DEF(htilastkey, "i"),
+		BUILDIN_DEF(htinextkey, "i"),
+		BUILDIN_DEF(htiprevkey, "i"),
+		BUILDIN_DEF(hticheck, "i"),
+		BUILDIN_DEF(htidelete, "i"),
+
 	};
 	int i, len = ARRAYLENGTH(BUILDIN);
 	RECREATE(script->buildin, char *, script->buildin_count + len); // Pre-alloc to speed up
