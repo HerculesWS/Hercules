@@ -46,6 +46,7 @@ HPMHooks.source.grfio = *grfio;
 HPMHooks.source.guild = *guild;
 HPMHooks.source.gstorage = *gstorage;
 HPMHooks.source.homun = *homun;
+HPMHooks.source.htreg = *htreg;
 HPMHooks.source.instance = *instance;
 HPMHooks.source.intif = *intif;
 HPMHooks.source.ircbot = *ircbot;
