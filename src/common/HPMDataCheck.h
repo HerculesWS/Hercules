@@ -458,6 +458,11 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define MAP_GUILD_H
 	#endif // MAP_GUILD_H
+	#ifdef MAP_HASHTABLE_H
+		{ "htreg_interface", sizeof(struct htreg_interface), SERVER_TYPE_MAP },
+	#else
+		#define MAP_HASHTABLE_H
+	#endif // MAP_HASHTABLE_H
 	#ifdef MAP_HOMUNCULUS_H
 		{ "h_stats", sizeof(struct h_stats), SERVER_TYPE_MAP },
 		{ "homun_data", sizeof(struct homun_data), SERVER_TYPE_MAP },

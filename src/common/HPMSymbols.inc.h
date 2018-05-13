@@ -98,6 +98,9 @@ struct guild_storage_interface *gstorage;
 #ifdef MAP_HOMUNCULUS_H /* homun */
 struct homunculus_interface *homun;
 #endif // MAP_HOMUNCULUS_H
+#ifdef MAP_HASHTABLE_H /* htreg */
+struct htreg_interface *htreg;
+#endif // MAP_HASHTABLE_H
 #ifdef MAP_INSTANCE_H /* instance */
 struct instance_interface *instance;
 #endif // MAP_INSTANCE_H
@@ -393,6 +396,10 @@ HPExport const char *HPM_shared_symbols(int server_type)
 	if ((server_type&(SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("homun", homun))
 		return "homun";
 #endif // MAP_HOMUNCULUS_H
+#ifdef MAP_HASHTABLE_H /* htreg */
+	if ((server_type&(SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("htreg", htreg))
+		return "htreg";
+#endif // MAP_HASHTABLE_H
 #ifdef MAP_INSTANCE_H /* instance */
 	if ((server_type&(SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("instance", instance))
 		return "instance";
