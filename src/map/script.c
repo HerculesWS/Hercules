@@ -19941,18 +19941,23 @@ BUILDIN(unitstop) {
 
 /// Makes the unit say the message
 ///
-/// unittalk(<unit_id>,"<message>"{, show_name});
+/// unittalk(<unit_id>,"<message>"{, show_name{, <send_target>}});
 BUILDIN(unittalk) {
 	int unit_id;
 	const char* message;
 	struct block_list* bl;
 	bool show_name = true;
+	enum send_target target = AREA_CHAT_WOC;
 
 	unit_id = script_getnum(st,2);
 	message = script_getstr(st, 3);
 
 	if (script_hasdata(st, 4)) {
 		show_name = (script_getnum(st, 4) != 0) ? true : false;
+	}
+
+	if (script_hasdata(st, 5)) {
+		target = script_getnum(st, 5);
 	}
 
 	bl = map->id2bl(unit_id);
@@ -19968,7 +19973,11 @@ BUILDIN(unittalk) {
 		} else {
 			StrBuf->Printf(&sbuf, "%s", message);
 		}
-		clif->disp_overhead(bl, StrBuf->Value(&sbuf));
+		if (target == SELF) {
+			clif->notify_playerchat(bl, StrBuf->Value(&sbuf));
+		} else {
+			clif->disp_overhead(bl, StrBuf->Value(&sbuf));
+		}
 		StrBuf->Destroy(&sbuf);
 	}
 
@@ -24573,7 +24582,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(unitwarp,"isii"),
 		BUILDIN_DEF(unitattack,"iv?"),
 		BUILDIN_DEF(unitstop,"i"),
-		BUILDIN_DEF(unittalk,"is?"),
+		BUILDIN_DEF(unittalk,"is??"),
 		BUILDIN_DEF(unitemote,"ii"),
 		BUILDIN_DEF(unitskilluseid,"ivi?"), // originally by Qamera [Celest]
 		BUILDIN_DEF(unitskillusepos,"iviii"), // [Celest]
