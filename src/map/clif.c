@@ -8923,7 +8923,7 @@ void clif_slide(struct block_list *bl, int x, int y)
 
 /// Public chat message (ZC_NOTIFY_CHAT). lordalfa/Skotlex - used by @me as well
 /// 008d <packet len>.W <id>.L <message>.?B
-void clif_disp_overhead(struct block_list *bl, const char *mes)
+void clif_disp_overhead(struct block_list *bl, const char *mes, enum send_target target, struct block_list *target_bl)
 {
 	char buf[CHAT_SIZE_MAX + (int)sizeof(struct PACKET_ZC_NOTIFY_CHAT)];
 	uint32 max_len = CHAT_SIZE_MAX - (int)sizeof(struct PACKET_ZC_NOTIFY_CHAT);
@@ -8944,11 +8944,15 @@ void clif_disp_overhead(struct block_list *bl, const char *mes)
 	p->PacketLength = mes_len + (int)sizeof(struct PACKET_ZC_NOTIFY_CHAT); // len of message + 8 (command+len+id)
 	p->GID = bl->id;
 	safestrncpy(p->Message, mes, mes_len);
-	clif->send(p, p->PacketLength, bl, AREA_CHAT_WOC);
+	if (target == SELF && target_bl != NULL) {
+		clif->send(p, p->PacketLength, target_bl, SELF);
+	} else {
+		clif->send(p, p->PacketLength, bl, AREA_CHAT_WOC);
 
-	// send back message to the speaker
-	if (bl->type == BL_PC)
-		clif->notify_playerchat(bl, mes);
+		// send back message to the speaker
+		if (bl->type == BL_PC)
+			clif->notify_playerchat(bl, mes);
+	}
 }
 
 void clif_notify_playerchat(struct block_list *bl, const char *mes)
