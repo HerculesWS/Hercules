@@ -8924,31 +8924,54 @@ void clif_slide(struct block_list *bl, int x, int y)
 /// 008d <packet len>.W <id>.L <message>.?B
 void clif_disp_overhead(struct block_list *bl, const char *mes)
 {
-	unsigned char buf[256]; //This should be more than sufficient, the theoretical max is CHAT_SIZE + 8 (pads and extra inserted crap)
+	struct PACKET_ZC_NOTIFY_CHAT *p;
+	uint32 max_len = CHAT_SIZE_MAX - sizeof(*p);
 	int mes_len;
 
 	nullpo_retv(bl);
 	nullpo_retv(mes);
-	mes_len = (int)strlen(mes)+1; //Account for \0
 
-	if (mes_len > (int)sizeof(buf)-8) {
-		ShowError("clif_disp_overhead: Message too long (length %d)\n", mes_len);
-		mes_len = sizeof(buf)-8; //Trunk it to avoid problems.
+	mes_len = (int)strlen(mes) + 1; //Account for \0
+	if (mes_len > max_len) {
+		ShowError("clif_disp_overhead: Truncated message '%s' (len=%d, max=%u).\n", mes, mes_len, max_len);
+		mes_len = max_len; //Trunk it to avoid problems.
 	}
+
+	p = (struct PACKET_ZC_NOTIFY_CHAT *)aMalloc(sizeof(*p) + mes_len);
 	// send message to others
-	WBUFW(buf,0) = 0x8d;
-	WBUFW(buf,2) = mes_len + 8; // len of message + 8 (command+len+id)
-	WBUFL(buf,4) = bl->id;
-	safestrncpy(WBUFP(buf,8), mes, mes_len);
-	clif->send(buf, WBUFW(buf,2), bl, AREA_CHAT_WOC);
+	p->PacketType = 0x8d;
+	p->PacketLength = mes_len + sizeof(*p); // len of message + 8 (command+len+id)
+	p->GID = bl->id;
+	safestrncpy(p->Message, mes, mes_len);
+	clif->send(p, p->PacketLength, bl, AREA_CHAT_WOC);
+	aFree(p);
 
 	// send back message to the speaker
-	if (bl->type == BL_PC) {
-		WBUFW(buf,0) = 0x8e;
-		WBUFW(buf, 2) = mes_len + 4;
-		safestrncpy(WBUFP(buf,4), mes, mes_len);
-		clif->send(buf, WBUFW(buf,2), bl, SELF);
+	if (bl->type == BL_PC)
+		clif->notify_playerchat(bl, mes);
+}
+
+void clif_notify_playerchat(struct block_list *bl, const char *mes)
+{
+	struct PACKET_ZC_NOTIFY_PLAYERCHAT *p;
+	uint32 max_len = CHAT_SIZE_MAX - sizeof(*p);
+	int mes_len;
+
+	nullpo_retv(bl);
+	nullpo_retv(mes);
+
+	mes_len = (int)strlen(mes) + 1; // Account for \0
+	if (mes_len > max_len) {
+		ShowError("clif_notify_playerchat: Truncated message '%s' (len=%d, max=%u).\n", mes, mes_len, max_len);
+		mes_len = max_len; // Truncate to avoid problems.
 	}
+
+	p = (struct PACKET_ZC_NOTIFY_PLAYERCHAT *)aMalloc(sizeof(*p) + mes_len);
+	p->PacketType = 0x8e;
+	p->PacketLength = mes_len + sizeof(*p);
+	safestrncpy(p->Message, mes, mes_len);
+	clif->send(p, p->PacketLength, bl, SELF);
+	aFree(p);
 }
 
 /*==========================
@@ -21217,6 +21240,7 @@ void clif_defaults(void) {
 	clif->messagecolor_self = clif_messagecolor_self;
 	clif->messagecolor = clif_messagecolor;
 	clif->disp_overhead = clif_disp_overhead;
+	clif->notify_playerchat = clif_notify_playerchat;
 	clif->msgtable_skill = clif_msgtable_skill;
 	clif->msgtable = clif_msgtable;
 	clif->msgtable_num = clif_msgtable_num;
