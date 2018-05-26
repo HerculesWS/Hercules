@@ -6228,7 +6228,7 @@ ACMD(npctalk)
 	snprintf(temp, sizeof(temp), "%s : %s", name, mes);
 
 	if(ifcolor) clif->messagecolor(&nd->bl,color,temp);
-	else clif->disp_overhead(&nd->bl, temp);
+	else clif->disp_overhead(&nd->bl, temp, AREA_CHAT_WOC, NULL);
 
 	return true;
 }
@@ -6288,7 +6288,7 @@ ACMD(pettalk)
 	}
 
 	snprintf(temp, sizeof temp ,"%s : %s", pd->pet.name, mes);
-	clif->disp_overhead(&pd->bl, temp);
+	clif->disp_overhead(&pd->bl, temp, AREA_CHAT_WOC, NULL);
 
 	return true;
 }
@@ -7063,7 +7063,7 @@ ACMD(homtalk)
 	}
 
 	snprintf(temp, sizeof temp ,"%s : %s", sd->hd->homunculus.name, mes);
-	clif->disp_overhead(&sd->hd->bl, temp);
+	clif->disp_overhead(&sd->hd->bl, temp, AREA_CHAT_WOC, NULL);
 
 	return true;
 }
@@ -7423,7 +7423,7 @@ ACMD(me)
 	}
 
 	safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,270), sd->status.name, tempmes); // *%s %s*
-	clif->disp_overhead(&sd->bl, atcmd_output);
+	clif->disp_overhead(&sd->bl, atcmd_output, AREA_CHAT_WOC, NULL);
 
 	return true;
 }
