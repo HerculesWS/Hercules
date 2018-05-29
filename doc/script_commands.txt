@@ -7135,7 +7135,7 @@ The function returns false if the shop was not found, true otherwise.
 
 ---------------------------------------
 
-*waitingroom("<chatroom name>", <limit>{, <event label>, <trigger>, <required zeny>, <min lvl>, <max lvl>})
+*waitingroom("<chatroom name>", <limit>{, <event label>, <trigger>, <required zeny>, <min lvl>, <max lvl>, "<NPC Object Name>"})
 
 This command will create a chat room, owned by the NPC object running this
 script and displayed above the NPC sprite.
@@ -7234,7 +7234,7 @@ The valid information types are:
 
 ---------------------------------------
 
-*warpwaitingpc("<map name>", <x>, <y>{, <number of people>})
+*warpwaitingpc("<map name>", <x>, <y>{, <number of people>{, "<NPC object name>"}})
 
 This command will warp the amount of characters equal to the trigger
 number of the waiting room chat attached to the NPC object running this
@@ -7265,8 +7265,24 @@ one-on-one duel, for example.
 
 *kickwaitingroomall({"<NPC object name>"})
 
+	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	@ /!\ This command is deprecated @
+	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 This command kicks everybody out of a specified waiting room chat.
 
+---------------------------------------
+
+*waitingroomkick({"<NPC object name>"{,"<player name>"|<account_id>}})
+
+This command kicks target player(s) out of a waiting room chat of specific npc if any.
+
+Examples:
+	waitingroomkick();
+	waitingroomkick("target_npc_name");
+	waitingroomkick("target_npc_name", "target_player_name");
+	waitingroomkick("target_npc_name", 200001);
+	
 ---------------------------------------
 
 *setmapflagnosave("<map name>", "<alternate map name>", <x>, <y>)
