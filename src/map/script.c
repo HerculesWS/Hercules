@@ -8277,7 +8277,7 @@ static BUILDIN(makeitem)
 
 /*==========================================
  * makeitem2 <item id>, <amount>, <identify>, <refine>, <attribute>, <card1>, <card2>, <card3>, <card4>, {"<map name>", <X>, <Y>, <range>};
- *------------------------------------------*/
+*------------------------------------------*/
 static BUILDIN(makeitem2)
 {
 	struct map_session_data *sd = NULL;
@@ -12744,24 +12744,29 @@ static BUILDIN(globalmes)
 }
 
 /////////////////////////////////////////////////////////////////////
-// NPC waiting room (chat room)
-//
-
 /// Creates a waiting room (chat room) for this npc.
 ///
-/// waitingroom "<title>",<limit>{,"<event>"{,<trigger>{,<zeny>{,<minlvl>{,<maxlvl>}}}}};
+/// waitingroom "<title>",<limit>{,"<event>"{,<trigger>{,<zeny>{,<minlvl>{,<maxlvl>{,<npcname>}}}}}};
 static BUILDIN(waitingroom)
 {
-	struct npc_data* nd;
-	const char* title = script_getstr(st, 2);
+	struct npc_data *nd;
+	const char *title = script_getstr(st, 2);
 	int limit = script_getnum(st, 3);
-	const char* ev = script_hasdata(st,4) ? script_getstr(st,4) : "";
-	int trigger =  script_hasdata(st,5) ? script_getnum(st,5) : limit;
-	int zeny =  script_hasdata(st,6) ? script_getnum(st,6) : 0;
-	int minLvl =  script_hasdata(st,7) ? script_getnum(st,7) : 1;
-	int maxLvl =  script_hasdata(st,8) ? script_getnum(st,8) : MAX_LEVEL;
+	const char *ev = script_hasdata(st, 4) ? script_getstr(st, 4) : "";
+	int trigger = script_hasdata(st, 5) ? script_getnum(st, 5) : limit;
+	int zeny = script_hasdata(st, 6) ? script_getnum(st, 6) : 0;
+	int minLvl = script_hasdata(st, 7) ? script_getnum(st, 7) : 1;
+	int maxLvl = script_hasdata(st, 8) ? script_getnum(st, 8) : MAX_LEVEL;
 
-	nd = map->id2nd(st->oid);
+	if (script_hasdata(st, 9)) {
+		nd = npc->name2id(script_getstr(st, 9));
+		if (nd == NULL) {
+			ShowWarning("buildin_waitingroom: NPC '%s' not found.\n", script_getstr(st, 9));
+			return false;
+		}
+	} else
+		nd = map->id2nd(st->oid);
+
 	if (nd != NULL) {
 		int pub = 1;
 		chat->create_npc_chat(nd, title, limit, pub, trigger, ev, zeny, minLvl, maxLvl);
@@ -12774,13 +12779,19 @@ static BUILDIN(waitingroom)
 ///
 /// delwaitingroom "<npc_name>";
 /// delwaitingroom;
-static BUILDIN(delwaitingroom)
+static BUILDIN(delwaitingroom) 
 {
-	struct npc_data* nd;
-	if( script_hasdata(st,2) )
+	struct npc_data *nd;
+	if (script_hasdata(st, 2)) {
 		nd = npc->name2id(script_getstr(st, 2));
+		if (nd == NULL) {
+			ShowWarning("buildin_delwaitingroom: NPC '%s' not found.\n", script_getstr(st, 2));
+			return false;
+		}
+	}
 	else
 		nd = map->id2nd(st->oid);
+
 	if (nd != NULL)
 		chat->delete_npc_chat(nd);
 	return true;
@@ -12792,16 +12803,55 @@ static BUILDIN(delwaitingroom)
 /// kickwaitingroomall;
 static BUILDIN(waitingroomkickall)
 {
-	struct npc_data* nd;
-	struct chat_data* cd;
+	struct npc_data *nd;
+	struct chat_data *cd;
 
-	if( script_hasdata(st,2) )
-		nd = npc->name2id(script_getstr(st,2));
-	else
+	if (script_hasdata(st, 2)) {
+		nd = npc->name2id(script_getstr(st, 2));
+		if (nd == NULL) {
+			ShowWarning("buildin_waitingroomkickall: NPC '%s' not found.\n", script_getstr(st, 2));
+			return false;
+		}
+	} else
 		nd = map->id2nd(st->oid);
 
-	if (nd != NULL && (cd=map->id2cd(nd->chat_id)) != NULL)
+	if (nd != NULL && (cd = map->id2cd(nd->chat_id)) != NULL)
 		chat->npc_kick_all(cd);
+	return true;
+}
+
+/// Kicks target player from the waiting room of the current or target npc.
+///
+/// kickwaitingroom "<npc_name>"{,"<name>"|<account id>};
+/// kickwaitingroom;
+static BUILDIN(waitingroomkick) 
+{
+	struct npc_data *nd;
+	struct chat_data *cd;
+	struct map_session_data *sd = NULL;
+
+	if (script_hasdata(st, 2)) {
+		nd = npc->name2id(script_getstr(st, 2));
+		if (nd == NULL) {
+			ShowWarning("buildin_waitingroomkick: NPC '%s' not found.\n", script_getstr(st, 2));
+			return false;
+		}
+	} else
+		nd = map->id2nd(st->oid);
+
+	if (nd != NULL && (cd = map->id2cd(nd->chat_id)) != NULL) {
+		if (script_hasdata(st, 3)) {
+			if (script_isstringtype(st, 3))
+				sd = script->nick2sd(st, script_getstr(st, 3));
+			else
+				sd = script->id2sd(st, script_getnum(st, 3));
+
+			if (sd != NULL && sd->chat_id != 0)
+				chat->leave(sd, false);
+		} else
+			chat->npc_kick_all(cd);
+	}
+
 	return true;
 }
 
@@ -12811,15 +12861,19 @@ static BUILDIN(waitingroomkickall)
 /// enablewaitingroomevent;
 static BUILDIN(enablewaitingroomevent)
 {
-	struct npc_data* nd;
-	struct chat_data* cd;
+	struct npc_data *nd;
+	struct chat_data *cd;
 
-	if( script_hasdata(st,2) )
+	if (script_hasdata(st, 2)) {
 		nd = npc->name2id(script_getstr(st, 2));
-	else
+		if (nd == NULL) {
+			ShowWarning("buildin_enablewaitingroomevent: NPC '%s' not found.\n", script_getstr(st, 2));
+			return false;
+		}
+	} else
 		nd = map->id2nd(st->oid);
 
-	if (nd != NULL && (cd=map->id2cd(nd->chat_id)) != NULL)
+	if (nd != NULL && (cd = map->id2cd(nd->chat_id)) != NULL)
 		chat->enable_event(cd);
 	return true;
 }
@@ -12833,12 +12887,17 @@ static BUILDIN(disablewaitingroomevent)
 	struct npc_data *nd;
 	struct chat_data *cd;
 
-	if( script_hasdata(st,2) )
+	if (script_hasdata(st, 2)) {
 		nd = npc->name2id(script_getstr(st, 2));
+		if (nd == NULL) {
+			ShowWarning("buildin_disablewaitingroomevent: NPC '%s' not found.\n", script_getstr(st, 2));
+			return false;
+		}
+	}
 	else
 		nd = map->id2nd(st->oid);
 
-	if (nd != NULL && (cd=map->id2cd(nd->chat_id)) != NULL)
+	if (nd != NULL && (cd = map->id2cd(nd->chat_id)) != NULL)
 		chat->disable_event(cd);
 	return true;
 }
@@ -12854,7 +12913,6 @@ static BUILDIN(disablewaitingroomevent)
 /// <type>=16 : the name of the waiting room event
 /// <type>=32 : if the waiting room is full
 /// <type>=33 : if there are enough users to trigger the event
-/// -- Custom Added
 /// <type>=34 : minimum player of waiting room
 /// <type>=35 : maximum player of waiting room
 /// <type>=36 : minimum zeny required
@@ -12865,42 +12923,47 @@ static BUILDIN(getwaitingroomstate)
 {
 	const struct npc_data *nd;
 	const struct chat_data *cd;
-	int type;
+	int type = script_getnum(st, 2);
 	int i;
 
-	type = script_getnum(st,2);
-	if( script_hasdata(st,3) )
+	if (script_hasdata(st, 3)) {
 		nd = npc->name2id(script_getstr(st, 3));
-	else
+		if (nd == NULL) {
+			ShowWarning("buildin_getwaitingroomstate: NPC '%s' not found.\n", script_getstr(st, 3));
+			return false;
+		}
+	} else
 		nd = map->id2nd(st->oid);
 
-	if (nd == NULL || (cd=map->id2cd(nd->chat_id)) == NULL) {
+	if (nd == NULL || (cd = map->id2cd(nd->chat_id)) == NULL) {
 		script_pushint(st, -1);
 		return true;
 	}
 
-	switch(type) {
-		case 0:
-			for (i = 0; i < cd->users; i++) {
-				struct map_session_data *sd = cd->usersd[i];
-				nullpo_retr(false, sd);
-				mapreg->setreg(reference_uid(script->add_variable("$@chatmembers"), i), sd->bl.id);
-			}
-			script_pushint(st, cd->users);
-			break;
-		case 1:  script_pushint(st, cd->limit); break;
-		case 2:  script_pushint(st, cd->trigger&0x7f); break;
-		case 3:  script_pushint(st, ((cd->trigger&0x80)!=0)); break;
-		case 4:  script_pushstrcopy(st, cd->title); break;
-		case 5:  script_pushstrcopy(st, cd->pass); break;
-		case 16: script_pushstrcopy(st, cd->npc_event);break;
-		case 32: script_pushint(st, (cd->users >= cd->limit)); break;
-		case 33: script_pushint(st, (cd->users >= cd->trigger)); break;
-
-		case 34: script_pushint(st, cd->min_level); break;
-		case 35: script_pushint(st, cd->max_level); break;
-		case 36: script_pushint(st, cd->zeny); break;
-		default: script_pushint(st, -1); break;
+	switch (type) {
+	case 0:
+		for (i = 0; i < cd->users; i++) {
+			struct map_session_data *sd = cd->usersd[i];
+			nullpo_retr(false, sd);
+			mapreg->setreg(reference_uid(script->add_variable("$@chatmembers"), i), sd->bl.id);
+		}
+		script_pushint(st, cd->users);
+		break;
+	case 1:  script_pushint(st, cd->limit); break;
+	case 2:  script_pushint(st, cd->trigger & 0x7f); break;
+	case 3:  script_pushint(st, ((cd->trigger & 0x80) != 0)); break;
+	case 4:  script_pushstrcopy(st, cd->title); break;
+	case 5:  script_pushstrcopy(st, cd->pass); break;
+	case 16: script_pushstrcopy(st, cd->npc_event); break;
+	case 32: script_pushint(st, (cd->users >= cd->limit)); break;
+	case 33: script_pushint(st, (cd->users >= cd->trigger)); break;
+	case 34: script_pushint(st, cd->min_level); break;
+	case 35: script_pushint(st, cd->max_level); break;
+	case 36: script_pushint(st, cd->zeny); break;
+	default: 
+		script_pushint(st, -1);
+		ShowWarning("buildin_getwaitingroomstate: invalid type '%s'.\n", type);
+		return false;
 	}
 	return true;
 }
@@ -12915,39 +12978,47 @@ static BUILDIN(getwaitingroomstate)
 /// The id's of the teleported players are put into the array $@warpwaitingpc[]
 /// The total number of teleported players is put into $@warpwaitingpcnum
 ///
-/// warpwaitingpc "<map name>",<x>,<y>,<number of players>;
+/// warpwaitingpc "<map name>",<x>,<y>,<number of players>{,<npcname>};
 /// warpwaitingpc "<map name>",<x>,<y>;
 static BUILDIN(warpwaitingpc)
 {
-	int x, y, i, n;
-	const char* map_name;
-	struct npc_data* nd;
-	struct chat_data* cd;
+	int i, n;
+	const char *map_name = script_getstr(st, 2);
+	int x = script_getnum(st, 3);
+	int y = script_getnum(st, 4);
+	struct npc_data *nd;
+	struct chat_data *cd;
 
-	nd = map->id2nd(st->oid);
-	if (nd == NULL || (cd=map->id2cd(nd->chat_id)) == NULL)
+	if (script_hasdata(st, 6)) {
+		nd = npc->name2id(script_getstr(st, 6));
+		if (nd == NULL) {
+			ShowWarning("buildin_warpwaitingpc: NPC '%s' not found.\n", script_getstr(st, 6));
+			return false;
+		}
+	}
+	else
+		nd = map->id2nd(st->oid);
+
+	if (nd == NULL || (cd = map->id2cd(nd->chat_id)) == NULL)
 		return true;
 
-	map_name = script_getstr(st,2);
-	x = script_getnum(st,3);
-	y = script_getnum(st,4);
-	n = cd->trigger&0x7f;
+	n = cd->trigger & 0x7f;
 
-	if( script_hasdata(st,5) )
-		n = script_getnum(st,5);
+	if (script_hasdata(st, 5))
+		n = script_getnum(st, 5);
 
 	for (i = 0; i < n && cd->users > 0; i++) {
 		struct map_session_data *sd = cd->usersd[0];
 
 		nullpo_retr(false, sd);
-		if (strcmp(map_name,"SavePoint") == 0 && map->list[sd->bl.m].flag.noteleport) {
+		if (strcmp(map_name, "SavePoint") == 0 && map->list[sd->bl.m].flag.noteleport) {
 			// can't teleport on this map
 			break;
 		}
 
 		if (cd->zeny) {
 			// fee set
-			if( (uint32)sd->status.zeny < cd->zeny ) {
+			if ((uint32)sd->status.zeny < cd->zeny) {
 				// no zeny to cover set fee
 				break;
 			}
@@ -12956,12 +13027,12 @@ static BUILDIN(warpwaitingpc)
 
 		mapreg->setreg(reference_uid(script->add_variable("$@warpwaitingpc"), i), sd->bl.id);
 
-		if( strcmp(map_name,"Random") == 0 )
-			pc->randomwarp(sd,CLR_TELEPORT);
-		else if( strcmp(map_name,"SavePoint") == 0 )
+		if (strcmp(map_name, "Random") == 0)
+			pc->randomwarp(sd, CLR_TELEPORT);
+		else if (strcmp(map_name, "SavePoint") == 0)
 			pc->setpos(sd, sd->status.save_point.map, sd->status.save_point.x, sd->status.save_point.y, CLR_TELEPORT);
 		else
-			pc->setpos(sd, script->mapindexname2id(st,map_name), x, y, CLR_OUTSIGHT);
+			pc->setpos(sd, script->mapindexname2id(st, map_name), x, y, CLR_OUTSIGHT);
 	}
 	mapreg->setreg(script->add_variable("$@warpwaitingpcnum"), i);
 	return true;
@@ -25488,13 +25559,14 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(changebase,"i?"),
 		BUILDIN_DEF(changesex,""),
 		BUILDIN_DEF(changecharsex,""), // [4144]
-		BUILDIN_DEF(waitingroom,"si?????"),
+		BUILDIN_DEF(waitingroom,"si??????"),
 		BUILDIN_DEF(delwaitingroom,"?"),
-		BUILDIN_DEF2(waitingroomkickall,"kickwaitingroomall","?"),
+		BUILDIN_DEF2_DEPRECATED(waitingroomkickall,"kickwaitingroomall","?"),
+		BUILDIN_DEF(waitingroomkick,"??"),
 		BUILDIN_DEF(enablewaitingroomevent,"?"),
 		BUILDIN_DEF(disablewaitingroomevent,"?"),
 		BUILDIN_DEF(getwaitingroomstate,"i?"),
-		BUILDIN_DEF(warpwaitingpc,"sii?"),
+		BUILDIN_DEF(warpwaitingpc,"sii??"),
 		BUILDIN_DEF(attachrid,"i"),
 		BUILDIN_DEF(detachrid,""),
 		BUILDIN_DEF(isloggedin,"i?"),
