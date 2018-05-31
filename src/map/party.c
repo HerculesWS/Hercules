@@ -249,6 +249,8 @@ void party_check_state(struct party_data *p) {
 				p->state.monk = 1;
 				break;
 			case JOB_STAR_GLADIATOR:
+			case JOB_STAR_EMPEROR:
+			case JOB_BABY_STAR_EMPEROR:
 				p->state.sg = 1;
 				break;
 			case JOB_SUPER_NOVICE:
