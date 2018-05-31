@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2016  Hercules Dev Team
+ * Copyright (C) 2012-2018  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -4879,7 +4879,7 @@ bool mob_skill_db_libconfig_sub(struct config_setting_t *it, int n)
 
 bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n, int mob_id)
 {
-	int i, j;
+	int i, j, idx = 0;
 	int i32;
 	int skill_id = 0;
 	int skill_idx = 0;
@@ -4910,8 +4910,8 @@ bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n, int mo
 		memset(&gms, 0, sizeof (struct mob_skill));
 		ms = &gms;
 	} else {
-		ARR_FIND(0, MAX_MOBSKILL, i, (ms = &mob->db_data[mob_id]->skill[i])->skill_id == 0);
-		if (i == MAX_MOBSKILL) {
+		ARR_FIND(0, MAX_MOBSKILL, idx, (ms = &mob->db_data[mob_id]->skill[idx])->skill_id == 0);
+		if (idx == MAX_MOBSKILL) {
 			ShowError("mob_skill_db_libconfig_sub_skill: Too many skills for monster %d\n", mob_id);
 			return false;
 		}
@@ -5043,7 +5043,7 @@ bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n, int mo
 			mob->db_data[i]->maxskill = j + 1;
 		}
 	} else { //Skill set on a single mob.
-		mob->db_data[mob_id]->maxskill = i + 1;
+		mob->db_data[mob_id]->maxskill = idx + 1;
 	}
 
 	return true;
