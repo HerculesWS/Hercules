@@ -216,7 +216,7 @@ static int inter_rodex_fromsql(int char_id, int account_id, int8 opentype, int64
 #else
 			msg.opentype = opentype;
 #endif
-#if PACKETVER < 20160601
+#if PACKETVER < 20180601
 			// NPC Message Type isn't supported in old clients
 			msg.type &= ~MAIL_TYPE_NPC;
 #endif
