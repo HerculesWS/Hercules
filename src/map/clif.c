@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2016  Hercules Dev Team
+ * Copyright (C) 2012-2018  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -705,8 +705,8 @@ void clif_authok(struct map_session_data *sd)
 #if PACKETVER >= 20080102
 	p.font = sd->status.font;
 #endif
-// Some clients smaller than 20160330 cant be tested [4144]
-#if PACKETVER >= 20141022 && PACKETVER < 20160330
+// Some clients smaller than 20180330 cant be tested [4144]
+#if PACKETVER >= 20141022 && PACKETVER < 20180330
 	p.sex = sd->status.sex;
 #endif
 	clif->send(&p,sizeof(p),&sd->bl,SELF);
@@ -2541,7 +2541,7 @@ void clif_additem(struct map_session_data *sd, int n, int amount, int fail)
 #if PACKETVER >= 20150226
 		clif->add_item_options(&p.option_data[0], &sd->status.inventory[n]);
 #endif
-#if PACKETVER >= 20160921
+#if PACKETVER >= 20180921
 		p.favorite = sd->status.inventory[n].favorite;
 		p.look = sd->inventory_data[n]->view_sprite;
 #endif
@@ -6470,8 +6470,8 @@ void clif_vendinglist(struct map_session_data* sd, unsigned int id, struct s_ven
 
 #if PACKETVER < 20150226
 	const int item_length = 22;
-// [4144] date 20160921 not confirmend. Can be bigger or smaller
-#elif PACKETVER < 20160921
+// [4144] date 20180921 not confirmend. Can be bigger or smaller
+#elif PACKETVER < 20180921
 	const int item_length = 47;
 #else
 	const int item_length = 53;
@@ -6507,8 +6507,8 @@ void clif_vendinglist(struct map_session_data* sd, unsigned int id, struct s_ven
 #if PACKETVER >= 20150226
 		clif->add_item_options(WFIFOP(fd, offset + 22 + i * item_length), &vsd->status.cart[index]);
 #endif
-// [4144] date 20160921 not confirmend. Can be bigger or smaller
-#if PACKETVER >= 20160921
+// [4144] date 20180921 not confirmend. Can be bigger or smaller
+#if PACKETVER >= 20180921
 		WFIFOL(fd, offset + 47 + i * item_length) = pc->item_equippoint(sd, data);
 		WFIFOW(fd, offset + 51 + i * item_length) = data->view_sprite;
 #endif
@@ -7606,7 +7606,7 @@ void clif_guild_basicinfo(struct map_session_data *sd)
 	int fd;
 	struct guild *g;
 
-#if PACKETVER < 20160622
+#if PACKETVER < 20180622
 	const int cmd = 0x1b6;  //0x150; [4144] this is packet for older versions?
 #else
 	const int cmd = 0xa84;
@@ -7632,7 +7632,7 @@ void clif_guild_basicinfo(struct map_session_data *sd)
 	WFIFOL(fd, 38) = 0;  // Virtue: (down) Wicked [-100,100] Righteous (up)
 	WFIFOL(fd, 42) = g->emblem_id;
 	memcpy(WFIFOP(fd, 46), g->name, NAME_LENGTH);
-#if PACKETVER < 20160622
+#if PACKETVER < 20180622
 	memcpy(WFIFOP(fd, 70), g->master, NAME_LENGTH);
 	safestrncpy(WFIFOP(fd, 94), msg_sd(sd, 300 + guild->checkcastles(g)), 16);  // "'N' castles"
 	WFIFOL(fd, 110) = 0;  // zeny
@@ -7684,7 +7684,7 @@ void clif_guild_memberlist(struct map_session_data *sd)
 	int fd;
 	int i,c;
 	struct guild *g;
-#if PACKETVER < 20161026
+#if PACKETVER < 20181026
 	const int cmd = 0x154;
 	const int size = 104;
 #else
@@ -7715,7 +7715,7 @@ void clif_guild_memberlist(struct map_session_data *sd)
 		WFIFOL(fd, c * size + 22) = (int)cap_value(m->exp, 0, INT32_MAX);
 		WFIFOL(fd, c * size + 26) = m->online;
 		WFIFOL(fd, c * size + 30) = m->position;
-#if PACKETVER < 20161026
+#if PACKETVER < 20181026
 		memset(WFIFOP(fd, c * size + 34), 0, 50);  //[Ind] - This is displayed in the 'note' column but being you can't edit it it's sent empty.
 		memcpy(WFIFOP(fd, c * size + 84), m->name, NAME_LENGTH);
 #else
@@ -19904,7 +19904,7 @@ void clif_rodex_checkname_result(struct map_session_data *sd, int char_id, short
 	sPacket->CharId = char_id;
 	sPacket->Class = class_;
 	sPacket->BaseLevel = base_level;
-#if PACKETVER >= 20160316
+#if PACKETVER >= 20180316
 	strncpy(sPacket->Name, name, NAME_LENGTH);
 #endif
 	WFIFOSET(fd, sizeof(*sPacket));

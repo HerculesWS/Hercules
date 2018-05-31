@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2016  Hercules Dev Team
+ * Copyright (C) 2012-2018  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -11222,10 +11222,15 @@ int buildin_getunits_sub(struct block_list *bl, va_list ap)
 	uint32 limit = va_arg(ap, uint32);
 	const char *name = va_arg(ap, const char *);
 	struct reg_db *ref = va_arg(ap, struct reg_db *);
+	enum bl_type type = va_arg(ap, enum bl_type);
 	uint32 index = start + *count;
 
-	if (index >= SCRIPT_MAX_ARRAYSIZE || *count > limit) {
-		return 1;
+	if ((bl->type & type) == 0) {
+		return 0; // type mismatch => skip
+	}
+
+	if (index >= SCRIPT_MAX_ARRAYSIZE || *count >= limit) {
+		return -1;
 	}
 
 	script->set_reg(st, sd, reference_uid(id, index), name,
@@ -11235,16 +11240,31 @@ int buildin_getunits_sub(struct block_list *bl, va_list ap)
 	return 0;
 }
 
+static int buildin_getunits_sub_pc(struct map_session_data *sd, va_list ap)
+{
+	return buildin_getunits_sub(&sd->bl, ap);
+}
+
+static int buildin_getunits_sub_mob(struct mob_data *md, va_list ap)
+{
+	return buildin_getunits_sub(&md->bl, ap);
+}
+
+static int buildin_getunits_sub_npc(struct npc_data *nd, va_list ap)
+{
+	return buildin_getunits_sub(&nd->bl, ap);
+}
+
 BUILDIN(getunits)
 {
-	const char *mapname, *name;
-	int16 m, x1, y1, x2, y2;
+	const char *name;
 	int32 id;
 	uint32 start;
 	struct reg_db *ref;
 	enum bl_type type = script_getnum(st, 2);
 	struct script_data *data = script_getdata(st, 3);
-	uint32 count = 0, limit = script_getnum(st, 4);
+	uint32 count = 0;
+	uint32 limit = script_getnum(st, 4);
 	struct map_session_data *sd = NULL;
 
 	if (!data_isreference(data) || reference_toconstant(data)) {
@@ -11277,20 +11297,50 @@ BUILDIN(getunits)
 		limit = SCRIPT_MAX_ARRAYSIZE;
 	}
 
-	mapname = script_getstr(st, 5);
-	m = map->mapname2mapid(mapname);
+	if (script_hasdata(st, 5)) {
+		const char *mapname = script_getstr(st, 5);
+		int16 m = map->mapname2mapid(mapname);
 
-	if (script_hasdata(st, 9)) {
-		x1 = script_getnum(st, 6);
-		y1 = script_getnum(st, 7);
-		x2 = script_getnum(st, 8);
-		y2 = script_getnum(st, 9);
+		if (script_hasdata(st, 9)) {
+			int16 x1 = script_getnum(st, 6);
+			int16 y1 = script_getnum(st, 7);
+			int16 x2 = script_getnum(st, 8);
+			int16 y2 = script_getnum(st, 9);
 
-		map->foreachinarea(buildin_getunits_sub, m, x1, y1, x2, y2, type,
-			st, sd, id, start, &count, limit, name, ref);
+			// FIXME: map_foreachinarea does NOT stop iterating when the callback
+			//        function returns -1. we still limit the array size, but
+			//        this doesn't break the loop. We need a foreach function
+			//        that behaves like map_foreachiddb, but for areas
+			map->foreachinarea(buildin_getunits_sub, m, x1, y1, x2, y2, type,
+				st, sd, id, start, &count, limit, name, ref, type);
+		} else {
+			// FIXME: map_foreachinmap does NOT stop iterating when the callback
+			//        function returns -1. we still limit the array size, but
+			//        this doesn't break the loop. We need a foreach function
+			//        that behaves like map_foreachiddb, but for maps
+			map->foreachinmap(buildin_getunits_sub, m, type,
+				st, sd, id, start, &count, limit, name, ref, type);
+		}
 	} else {
-		map->foreachinmap(buildin_getunits_sub, m, type,
-			st, sd, id, start, &count, limit, name, ref);
+		// for faster lookup we try to reduce the scope of the search if possible
+		switch (type) {
+		case BL_PC:
+			map->foreachpc(buildin_getunits_sub_pc,
+				st, sd, id, start, &count, limit, name, ref, type);
+			break;
+		case BL_MOB:
+			map->foreachmob(buildin_getunits_sub_mob,
+				st, sd, id, start, &count, limit, name, ref, type);
+			break;
+		case BL_NPC:
+			map->foreachnpc(buildin_getunits_sub_npc,
+				st, sd, id, start, &count, limit, name, ref, type);
+			break;
+		default:
+			// fallback to global lookup (slowest option)
+			map->foreachiddb(buildin_getunits_sub,
+				st, sd, id, start, &count, limit, name, ref, type);
+		}
 	}
 
 	script_pushint(st, count);
@@ -24318,7 +24368,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(deltimer,"s?"),
 		BUILDIN_DEF(addtimercount,"si?"),
 		BUILDIN_DEF(gettimer,"i??"),
-		BUILDIN_DEF(getunits,"iris????"),
+		BUILDIN_DEF(getunits,"iri?????"),
 		BUILDIN_DEF(initnpctimer,"??"),
 		BUILDIN_DEF(stopnpctimer,"??"),
 		BUILDIN_DEF(startnpctimer,"??"),

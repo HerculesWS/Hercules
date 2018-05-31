@@ -3357,12 +3357,13 @@ Examples:
 
 ---------------------------------------
 
-*getunits(<type>, <variable>, <limit>, "<map>"{, <x1>, <y1>, <x2>, <y2>})
+*getunits(<type>, <variable>, <limit>{, "<map>"{, <x1>, <y1>, <x2>, <y2>}})
 
 This function searches a whole map or area for units and adds their GID to
 the provided <variable> array. It filters units by <type> and stops searching
 after <limit> units have been found. Set <limit> to false (0) if you wish to
-disable the limit altogether.
+disable the limit altogether. If <map> is omitted, this command will search
+on the whole server (slow). Returns the number of units added to the array.
 
 Type is the type of unit to search for:
 
@@ -3380,6 +3381,10 @@ Type is the type of unit to search for:
 	BL_ALL   - Any kind of object
 
 ** Do NOT use UNITTYPE_ constants here, they have different values.
+
+** If battle_config.dynamic_mobs is enabled and no player has entered the map
+   yet, the mobs will not have spawned in the map yet, so getunits() will be
+   unable to find them when searching for BL_MOB.
 
 Example:
 
