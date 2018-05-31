@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -2079,7 +2079,7 @@ int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const char *
 	if (itemdb->lookup_const(it, "ViewSprite", &i32) && i32 >= 0)
 		id.view_sprite = i32;
 
-	if (itemdb->lookup_const(it, "View", &i32) && i32 >= 0) { // TODO: Remove (Deprecated - 2018-09-04 [Haru])
+	if (itemdb->lookup_const(it, "View", &i32) && i32 >= 0) { // TODO: Remove (Deprecated - 2016-09-04 [Haru])
 		if ((id.type == IT_WEAPON || id.type == IT_AMMO) && id.subtype == 0) {
 			ShowWarning("itemdb_readdb_libconfig_sub: The 'View' field is deprecated. Please rename it to 'Subtype' (or 'ViewSprite'). (Item #%d: %s)\n",
 					id.nameid, id.name);
