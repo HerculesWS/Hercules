@@ -6179,6 +6179,7 @@ int pc_jobid2mapid(int16 class)
 		case JOB_ARCH_BISHOP:           return MAPID_ARCH_BISHOP;
 		case JOB_MECHANIC:              return MAPID_MECHANIC;
 		case JOB_GUILLOTINE_CROSS:      return MAPID_GUILLOTINE_CROSS;
+		case JOB_STAR_EMPEROR:          return MAPID_STAR_EMPEROR;
 	//3-2 Jobs
 		case JOB_ROYAL_GUARD:           return MAPID_ROYAL_GUARD;
 		case JOB_SORCERER:              return MAPID_SORCERER;
@@ -6187,6 +6188,7 @@ int pc_jobid2mapid(int16 class)
 		case JOB_SURA:                  return MAPID_SURA;
 		case JOB_GENETIC:               return MAPID_GENETIC;
 		case JOB_SHADOW_CHASER:         return MAPID_SHADOW_CHASER;
+		case JOB_SOUL_REAPER:           return MAPID_SOUL_REAPER;
 	//Trans 3-1 Jobs
 		case JOB_RUNE_KNIGHT_T:         return MAPID_RUNE_KNIGHT_T;
 		case JOB_WARLOCK_T:             return MAPID_WARLOCK_T;
@@ -6210,6 +6212,7 @@ int pc_jobid2mapid(int16 class)
 		case JOB_BABY_BISHOP:           return MAPID_BABY_BISHOP;
 		case JOB_BABY_MECHANIC:         return MAPID_BABY_MECHANIC;
 		case JOB_BABY_CROSS:            return MAPID_BABY_CROSS;
+		case JOB_BABY_STAR_EMPEROR:     return MAPID_BABY_STAR_EMPEROR;
 	//Baby 3-2 Jobs
 		case JOB_BABY_GUARD:            return MAPID_BABY_GUARD;
 		case JOB_BABY_SORCERER:         return MAPID_BABY_SORCERER;
@@ -6218,6 +6221,7 @@ int pc_jobid2mapid(int16 class)
 		case JOB_BABY_SURA:             return MAPID_BABY_SURA;
 		case JOB_BABY_GENETIC:          return MAPID_BABY_GENETIC;
 		case JOB_BABY_CHASER:           return MAPID_BABY_CHASER;
+		case JOB_BABY_SOUL_REAPER:      return MAPID_BABY_SOUL_REAPER;
 		default:
 			return -1;
 	}
@@ -6317,6 +6321,7 @@ int pc_mapid2jobid(uint16 job, int sex)
 		case MAPID_ARCH_BISHOP:           return JOB_ARCH_BISHOP;
 		case MAPID_MECHANIC:              return JOB_MECHANIC;
 		case MAPID_GUILLOTINE_CROSS:      return JOB_GUILLOTINE_CROSS;
+		case MAPID_STAR_EMPEROR:          return JOB_STAR_EMPEROR;
 	//3-2 Jobs
 		case MAPID_ROYAL_GUARD:           return JOB_ROYAL_GUARD;
 		case MAPID_SORCERER:              return JOB_SORCERER;
@@ -6324,6 +6329,7 @@ int pc_mapid2jobid(uint16 job, int sex)
 		case MAPID_SURA:                  return JOB_SURA;
 		case MAPID_GENETIC:               return JOB_GENETIC;
 		case MAPID_SHADOW_CHASER:         return JOB_SHADOW_CHASER;
+		case MAPID_SOUL_REAPER:           return JOB_SOUL_REAPER;
 	//Trans 3-1 Jobs
 		case MAPID_RUNE_KNIGHT_T:         return JOB_RUNE_KNIGHT_T;
 		case MAPID_WARLOCK_T:             return JOB_WARLOCK_T;
@@ -6346,6 +6352,7 @@ int pc_mapid2jobid(uint16 job, int sex)
 		case MAPID_BABY_BISHOP:           return JOB_BABY_BISHOP;
 		case MAPID_BABY_MECHANIC:         return JOB_BABY_MECHANIC;
 		case MAPID_BABY_CROSS:            return JOB_BABY_CROSS;
+		case MAPID_BABY_STAR_EMPEROR:     return JOB_BABY_STAR_EMPEROR;
 	//Baby 3-2 Jobs
 		case MAPID_BABY_GUARD:            return JOB_BABY_GUARD;
 		case MAPID_BABY_SORCERER:         return JOB_BABY_SORCERER;
@@ -6353,6 +6360,7 @@ int pc_mapid2jobid(uint16 job, int sex)
 		case MAPID_BABY_SURA:             return JOB_BABY_SURA;
 		case MAPID_BABY_GENETIC:          return JOB_BABY_GENETIC;
 		case MAPID_BABY_CHASER:           return JOB_BABY_CHASER;
+		case MAPID_BABY_SOUL_REAPER:      return JOB_BABY_SOUL_REAPER;
 		default:
 			return -1;
 	}
@@ -6711,6 +6719,10 @@ int pc_check_job_name(const char *name) {
 		{ "Oboro", JOB_OBORO },
 		{ "Rebellion", JOB_REBELLION },
 		{ "Summoner", JOB_SUMMONER },
+		{ "Star_Emperor", JOB_STAR_EMPEROR },
+		{ "Soul_Reaper", JOB_SOUL_REAPER },
+		{ "Baby_Star_Emperor", JOB_BABY_STAR_EMPEROR },
+		{ "Baby_Soul_Reaper", JOB_BABY_SOUL_REAPER },
 	};
 
 	nullpo_retr(-1, name);
@@ -12013,7 +12025,8 @@ bool pc_db_checkid(int class)
 		|| (class >= JOB_SUPER_NOVICE_E && class <= JOB_SUPER_BABY_E   )
 		|| (class >= JOB_KAGEROU        && class <= JOB_OBORO          )
 		|| (class == JOB_REBELLION)
-		|| (class >= JOB_SUMMONER       && class <  JOB_MAX            );
+		|| (class == JOB_SUMMONER)
+		|| (class >= JOB_STAR_EMPEROR   && class <  JOB_MAX            );
 }
 
 /**
