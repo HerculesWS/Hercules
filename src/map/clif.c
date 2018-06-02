@@ -41,6 +41,7 @@
 #include "map/mail.h"
 #include "map/map.h"
 #include "map/mercenary.h"
+#include "map/messages.h"
 #include "map/mob.h"
 #include "map/npc.h"
 #include "map/party.h"
@@ -5638,8 +5639,8 @@ void clif_cooking_list(struct map_session_data *sd, int trigger, uint16 skill_id
 		clif_menuskill_clear(sd);
 		if( skill_id != AM_PHARMACY ) { // AM_PHARMACY is used to Cooking.
 			// It fails.
-#if PACKETVER >= 20090922
-			clif->msgtable_skill(sd, skill_id, MSG_COOKING_LIST_FAIL);
+#if PACKETVER >= 20091013
+			clif->msgtable_skill(sd, skill_id, MSG_SKILL_MATERIAL_FAIL);
 #else
 			WFIFOW(fd,2) = 6 + 2 * c;
 			WFIFOSET(fd,WFIFOW(fd,2));
@@ -9171,7 +9172,7 @@ void clif_viewequip_ack(struct map_session_data* sd, struct map_session_data* ts
  * @param sd     The target character.
  * @param msg_id msgstringtable message index, 0-based (@see enum clif_messages)
  */
-void clif_msgtable(struct map_session_data* sd, unsigned short msg_id)
+void clif_msgtable(struct map_session_data* sd, enum clif_messages msg_id)
 {
 	int fd;
 	nullpo_retv(sd);
@@ -9192,7 +9193,7 @@ void clif_msgtable(struct map_session_data* sd, unsigned short msg_id)
  * @param msg_id msgstringtable message index, 0-based (@see enum clif_messages)
  * @param value  The value to fill %d.
  */
-void clif_msgtable_num(struct map_session_data *sd, unsigned short msg_id, int value)
+void clif_msgtable_num(struct map_session_data *sd, enum clif_messages msg_id, int value)
 {
 #if PACKETVER >= 20090805
 	int fd;
@@ -9219,7 +9220,7 @@ void clif_msgtable_num(struct map_session_data *sd, unsigned short msg_id, int v
  * @param skill_id ID of the skill to display.
  * @param msg_id msgstringtable message index, 0-based (@see enum clif_messages)
  */
-void clif_msgtable_skill(struct map_session_data* sd, uint16 skill_id, int msg_id)
+void clif_msgtable_skill(struct map_session_data* sd, uint16 skill_id, enum clif_messages msg_id)
 {
 	int fd;
 
@@ -9240,7 +9241,7 @@ void clif_msgtable_skill(struct map_session_data* sd, uint16 skill_id, int msg_i
 * @param msg_id msgstringtable message index, 0-based (@see enum clif_messages)
 * @param value  The value to fill %s.
 */
-void clif_msgtable_str(struct map_session_data *sd, uint16 msg_id, const char *value)
+void clif_msgtable_str(struct map_session_data *sd, enum clif_messages msg_id, const char *value)
 {
 	int message_len;
 	int len;
@@ -9270,7 +9271,7 @@ void clif_msgtable_str(struct map_session_data *sd, uint16 msg_id, const char *v
 * @param msg_id msgstringtable message index, 0-based (@see enum clif_messages)
 * @param color  The color to use
 */
-void clif_msgtable_color(struct map_session_data *sd, uint16 msg_id, uint32 color)
+void clif_msgtable_color(struct map_session_data *sd, enum clif_messages msg_id, uint32 color)
 {
 	struct PACKET_ZC_MSG_COLOR p;
 
@@ -10916,8 +10917,8 @@ void clif_parse_NpcClicked(int fd,struct map_session_data *sd)
 		return;
 	}
 	if (sd->npc_id || sd->state.workinprogress & 2) {
-#if PACKETVER >= 20110309
-		clif->msgtable(sd, MSG_NPC_WORK_IN_PROGRESS);
+#if PACKETVER >= 20110308
+		clif->msgtable(sd, MSG_BUSY);
 #else
 		clif->messagecolor_self(fd, COLOR_WHITE, msg_fd(fd, 48));
 #endif
@@ -10933,8 +10934,8 @@ void clif_parse_NpcClicked(int fd,struct map_session_data *sd)
 			break;
 		case BL_NPC:
 			if (sd->ud.skill_id < RK_ENCHANTBLADE && sd->ud.skilltimer != INVALID_TIMER) { // TODO: should only work with none 3rd job skills
-#if PACKETVER >= 20110309
-				clif->msgtable(sd, MSG_NPC_WORK_IN_PROGRESS);
+#if PACKETVER >= 20110308
+				clif->msgtable(sd, MSG_BUSY);
 #else
 				clif->messagecolor_self(fd, COLOR_WHITE, msg_fd(fd, 48));
 #endif
@@ -11330,8 +11331,8 @@ void clif_parse_ChangeCart(int fd, struct map_session_data *sd)
 		return;
 
 	if (sd->npc_id || sd->state.workinprogress & 1) {
-#if PACKETVER >= 20110309
-		clif->msgtable(sd, MSG_NPC_WORK_IN_PROGRESS);
+#if PACKETVER >= 20110308
+		clif->msgtable(sd, MSG_BUSY);
 #else
 		clif->messagecolor_self(fd, COLOR_WHITE, msg_fd(fd, 48));
 #endif
@@ -11541,8 +11542,8 @@ void clif_parse_UseSkillToId(int fd, struct map_session_data *sd)
 	pc->update_idle_time(sd, BCIDLE_USESKILLTOID);
 
 	if (sd->npc_id || sd->state.workinprogress & 1) {
-#if PACKETVER >= 20110309
-		clif->msgtable(sd, MSG_NPC_WORK_IN_PROGRESS);
+#if PACKETVER >= 20110308
+		clif->msgtable(sd, MSG_BUSY);
 #else
 		clif->messagecolor_self(fd, COLOR_WHITE, msg_fd(fd, 48));
 #endif
@@ -11640,8 +11641,8 @@ void clif_parse_UseSkillToPosSub(int fd, struct map_session_data *sd, uint16 ski
 	}
 
 	if (sd->state.workinprogress & 1) {
-#if PACKETVER >= 20110309
-		clif->msgtable(sd, MSG_NPC_WORK_IN_PROGRESS);
+#if PACKETVER >= 20110308
+		clif->msgtable(sd, MSG_BUSY);
 #else
 		clif->messagecolor_self(fd, COLOR_WHITE, msg_fd(fd, 48));
 #endif
@@ -16133,10 +16134,13 @@ void clif_parse_ViewPlayerEquip(int fd, struct map_session_data* sd) {
 	if (!tsd)
 		return;
 
-	if( tsd->status.show_equip || pc_has_permission(sd, PC_PERM_VIEW_EQUIPMENT) )
+	if (tsd->status.show_equip || pc_has_permission(sd, PC_PERM_VIEW_EQUIPMENT)) {
 		clif->viewequip_ack(sd, tsd);
-	else
-		clif->msgtable(sd, MSG_EQUIP_NOT_PUBLIC);
+	} else {
+#if PACKETVER >= 20070918
+		clif->msgtable(sd, MSG_OPEN_EQUIPEDITEM_REFUSED);
+#endif
+	}
 }
 
 void clif_parse_cz_config(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
@@ -16661,7 +16665,9 @@ void clif_parse_mercenary_action(int fd, struct map_session_data* sd)
 ///     3 = Your mercenary soldier has ran away.
 void clif_mercenary_message(struct map_session_data* sd, int message)
 {
-	clif->msgtable(sd, MSG_MERCENARY_EXPIRED + message);
+#if PACKETVER >= 20070227
+	clif->msgtable(sd, MSG_MER_FINISH + message);
+#endif
 }
 
 /// Notification about the remaining time of a rental item (ZC_CASH_TIME_COUNTER).
@@ -20507,7 +20513,9 @@ void clif_parse_open_ui_request(int fd, struct map_session_data *sd)
 	const struct PACKET_CZ_OPEN_UI *p = RP2PTR(fd);
 
 	if (clif->attendance_getendtime() < time(NULL)) {
+#if PACKETVER >= 20180207
 		clif->msgtable_color(sd, MSG_ATTENDANCE_UNAVAILABLE, COLOR_RED);
+#endif
 		return;
 	}
 

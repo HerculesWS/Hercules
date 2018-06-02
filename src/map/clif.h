@@ -55,6 +55,8 @@ struct skill_unit;
 struct unit_data;
 struct view_data;
 
+enum clif_messages;
+
 /**
  * Defines
  **/
@@ -359,37 +361,6 @@ typedef enum useskill_fail_cause { // clif_skill_fail
 	USESKILL_FAIL_THERE_ARE_NPC_AROUND = 83,
 	USESKILL_FAIL_NEED_MORE_BULLET = 84,
 }useskill_fail_cause;
-
-enum clif_messages {
-	MSG_ITEM_CANT_OBTAIN_WEIGHT    = 0x034, ///< You cannot carry more items because you are overweight.
-	MSG_ITEM_NEED_STANDING         = 0x297, ///< You cannot use this item while sitting.
-	MSG_MERCENARY_EXPIRED          = 0x4f2, ///< The mercenary contract has expired.
-	MSG_MERCENARY_DIED             = 0x4f3, ///< The mercenary has died.
-	MSG_MERCENARY_RELEASED         = 0x4f4, ///< You have released the mercenary.
-	MSG_MERCENARY_ESCAPED          = 0x4f5, ///< The mercenary has run away.
-	MSG_PARTY_MEMBER_NOT_SUMMONED  = 0x4c5, ///< The party member was not summoned because you are not the party leader.
-	MSG_PARTY_NO_MEMBER_IN_MAP     = 0x4c6, ///< There is no party member to summon in the current map.
-	MSG_SKILL_CANT_USE_AREA        = 0x536, ///< This skill cannot be used within this area
-	MSG_ITEM_CANT_USE_AREA         = 0x537, ///< This item cannot be used within this area.
-	MSG_EQUIP_NOT_PUBLIC           = 0x54d, ///< This character's equipment information is not open to the public.
-	MSG_ITEM_NEED_MADO             = 0x59b, ///< Item can only be used when Mado Gear is mounted.
-	MSG_ITEM_NEED_CART             = 0x5ef, ///< Usable only when cart is put on
-	MSG_RUNE_STONE_MAX_AMOUNT      = 0x61b, ///< Cannot create Rune stone more than the maximum amount.
-	MSG_SKILL_POINTS_LEFT_JOB1     = 0x61e, ///< You must consume all '%d' remaining points in your 1st Job tab.
-	MSG_SKILL_POINTS_LEFT_JOB2     = 0x61f, ///< You must consume all '%d' remaining points in your 2nd Job tab. 1st Tab is already done.
-	MSG_SKILL_ITEM_NOT_FOUND       = 0x623, // FIXME[Haru]: This seems to be 0x622 in the msgstringtable files I found.
-	MSG_SKILL_SUCCESS              = 0x627, // FIXME[Haru]: This seems to be 0x626 in the msgstringtable files I found.
-	MSG_SKILL_FAILURE              = 0x628, // FIXME[Haru]: This seems to be 0x627 in the msgstringtable files I found.
-	MSG_SKILL_ITEM_NEED_IDENTIFY   = 0x62d, ///< Unable to use unchecked items as materials.
-	MSG_ITEM_CANT_EQUIP_LVL        = 0x6ed, // FIXME[Haru]: This seems to be 0x6ee in the msgstringtable files I found.
-	MSG_ITEM_CANT_USE_LVL          = 0x6ee, // FIXME[Haru]: This seems to be 0x6ef in the msgstringtable files I found.
-	MSG_COOKING_LIST_FAIL          = 0x625, // FIXME[Haru]: This might be a wrong message ID. Not sure what it should be.
-	MSG_SECONDS_UNTIL_USE          = 0x746, ///< %d seconds left until you can use
-	MSG_NPC_WORK_IN_PROGRESS       = 0x783, // FIXME[Haru]: This seems to be 0x784 in the msgstringtable files I found.
-	MSG_REINS_CANT_USE_MOUNTED     = 0x78b, // FIXME[Haru]: This seems to be 0x785 in the msgstringtalbe files I found.
-	MSG_PARTY_LEADER_SAMEMAP       = 0x82e, //< It is only possible to change the party leader while on the same map.
-	MSG_ATTENDANCE_UNAVAILABLE     = 0xd92, ///< Attendance Check failed. Please try again later.
-};
 
 /**
  * Used to answer CZ_PC_BUY_CASH_POINT_ITEM (clif_parse_cashshop_buy)
@@ -917,11 +888,11 @@ struct clif_interface {
 	void (*messagecolor_self) (int fd, uint32 color, const char *msg);
 	void (*messagecolor) (struct block_list* bl, uint32 color, const char* msg);
 	void (*disp_overhead) (struct block_list *bl, const char* mes);
-	void (*msgtable) (struct map_session_data* sd, unsigned short msg_id);
-	void (*msgtable_num) (struct map_session_data *sd, unsigned short msg_id, int value);
-	void (*msgtable_skill) (struct map_session_data *sd, uint16 skill_id, int msg_id);
-	void (*msgtable_str) (struct map_session_data *sd, uint16 msg_id, const char *value);
-	void (*msgtable_color) (struct map_session_data *sd, uint16 msg_id, uint32 color);
+	void (*msgtable) (struct map_session_data* sd, enum clif_messages msg_id);
+	void (*msgtable_num) (struct map_session_data *sd, enum clif_messages msg_id, int value);
+	void (*msgtable_skill) (struct map_session_data *sd, uint16 skill_id, enum clif_messages msg_id);
+	void (*msgtable_str) (struct map_session_data *sd, enum clif_messages, const char *value);
+	void (*msgtable_color) (struct map_session_data *sd, enum clif_messages, uint32 color);
 	void (*message) (const int fd, const char* mes);
 	void (*messageln) (const int fd, const char* mes);
 	/* message+s(printf) */

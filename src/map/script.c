@@ -43,6 +43,7 @@
 #include "map/map.h"
 #include "map/mapreg.h"
 #include "map/mercenary.h"
+#include "map/messages.h"
 #include "map/mob.h"
 #include "map/npc.h"
 #include "map/party.h"
@@ -21837,7 +21838,9 @@ BUILDIN(setcashmount)
 		return true;
 
 	if (pc_hasmount(sd)) {
-		clif->msgtable(sd, MSG_REINS_CANT_USE_MOUNTED);
+#if PACKETVER >= 20110531
+		clif->msgtable(sd, MSG_FAIELD_RIDING_OVERLAPPED);
+#endif
 		script_pushint(st, 0); // Can't mount with one of these
 	} else {
 		if (sd->sc.data[SC_ALL_RIDING]) {

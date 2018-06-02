@@ -37,6 +37,7 @@
 #include "map/log.h"
 #include "map/map.h"
 #include "map/mercenary.h"
+#include "map/messages.h"
 #include "map/mob.h"
 #include "map/npc.h"
 #include "map/party.h"
@@ -18006,7 +18007,9 @@ int skill_produce_mix(struct map_session_data *sd, uint16 skill_id, int nameid, 
 			for( i = 0; i < MAX_INVENTORY; i++ ) {
 				if( sd->status.inventory[i].nameid == nameid ) {
 					if( sd->status.inventory[i].amount >= data->stack.amount ) {
-						clif->msgtable(sd, MSG_RUNE_STONE_MAX_AMOUNT);
+#if PACKETVER >= 20090729
+						clif->msgtable(sd, MSG_RUNESTONE_MAKEERROR_OVERCOUNT);
+#endif
 						return 0;
 					} else {
 						/**
@@ -18465,8 +18468,10 @@ int skill_produce_mix(struct map_session_data *sd, uint16 skill_id, int nameid, 
 					}
 					break;
 				}
-			if( k ){
+			if (k) {
+#if PACKETVER >= 20091013
 				clif->msgtable_skill(sd, skill_id, MSG_SKILL_SUCCESS);
+#endif
 				return 1;
 			}
 		} else if (tmp_item.amount) { //Success
@@ -18474,8 +18479,10 @@ int skill_produce_mix(struct map_session_data *sd, uint16 skill_id, int nameid, 
 				clif->additem(sd,0,0,flag);
 				map->addflooritem(&sd->bl, &tmp_item, tmp_item.amount, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0, false);
 			}
-			if( skill_id == GN_MIX_COOKING || skill_id == GN_MAKEBOMB || skill_id ==  GN_S_PHARMACY )
+#if PACKETVER >= 20091013
+			if (skill_id == GN_MIX_COOKING || skill_id == GN_MAKEBOMB || skill_id ==  GN_S_PHARMACY)
 				clif->msgtable_skill(sd, skill_id, MSG_SKILL_SUCCESS);
+#endif
 			return 1;
 		}
 	}
@@ -18534,13 +18541,17 @@ int skill_produce_mix(struct map_session_data *sd, uint16 skill_id, int nameid, 
 						clif->additem(sd,0,0,flag);
 						map->addflooritem(&sd->bl, &tmp_item, tmp_item.amount, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0, false);
 					}
-					clif->msgtable_skill(sd, skill_id, MSG_SKILL_FAILURE);
+#if PACKETVER >= 20091013
+					clif->msgtable_skill(sd, skill_id, MSG_SKILL_FAIL);
+#endif
 				}
 				break;
 			case GN_MAKEBOMB:
 			case GN_S_PHARMACY:
 			case GN_CHANGEMATERIAL:
-				clif->msgtable_skill(sd, skill_id, MSG_SKILL_FAILURE);
+#if PACKETVER >= 20091013
+				clif->msgtable_skill(sd, skill_id, MSG_SKILL_FAIL);
+#endif
 				break;
 			default:
 				if( skill->dbs->produce_db[idx].itemlv > 10 && skill->dbs->produce_db[idx].itemlv <= 20 )
@@ -18876,7 +18887,9 @@ int skill_changematerial(struct map_session_data *sd, const struct itemlist *ite
 							amount = entry->amount;
 							nameid = sd->status.inventory[idx].nameid;
 							if (nameid > 0 && sd->status.inventory[idx].identify == 0) {
-								clif->msgtable_skill(sd, GN_CHANGEMATERIAL, MSG_SKILL_ITEM_NEED_IDENTIFY);
+#if PACKETVER >= 20091013
+								clif->msgtable_skill(sd, GN_CHANGEMATERIAL, MSG_SKILL_FAIL_MATERIAL_IDENTITY);
+#endif
 								return 0;
 							}
 							if( nameid == skill->dbs->produce_db[i].mat_id[j] && (amount-p*skill->dbs->produce_db[i].mat_amount[j]) >= skill->dbs->produce_db[i].mat_amount[j]
@@ -18896,10 +18909,10 @@ int skill_changematerial(struct map_session_data *sd, const struct itemlist *ite
 			}
 		}
 	}
-
-	if( p == 0)
-		clif->msgtable_skill(sd, GN_CHANGEMATERIAL, MSG_SKILL_ITEM_NOT_FOUND);
-
+#if PACKETVER >= 20091013
+	if (p == 0)
+		clif->msgtable_skill(sd, GN_CHANGEMATERIAL, MSG_SKILL_RECIPE_NOTEXIST);
+#endif
 	return 0;
 }
 

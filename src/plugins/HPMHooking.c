@@ -92,6 +92,7 @@ PRAGMA_GCC5(GCC diagnostic ignored "-Wdiscarded-qualifiers")
 #include "map/map.h"
 #include "map/mapreg.h"
 #include "map/mercenary.h"
+#include "map/messages.h"
 #include "map/mob.h"
 #include "map/npc.h"
 #include "map/party.h"

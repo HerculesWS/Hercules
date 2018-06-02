@@ -31,6 +31,7 @@
 #include "map/itemdb.h"
 #include "map/log.h"
 #include "map/map.h"
+#include "map/messages.h"
 #include "map/mob.h" // struct mob_data
 #include "map/pc.h"
 #include "map/skill.h"
@@ -732,7 +733,9 @@ bool party_changeleader(struct map_session_data *sd, struct map_session_data *ts
 	}
 
 	if (battle_config.party_change_leader_same_map && sd->bl.m != tsd->bl.m) {
-		clif->msgtable(sd, MSG_PARTY_LEADER_SAMEMAP); // It is only possible to change the party leader while on the same map.
+#if PACKETVER >= 20120307
+		clif->msgtable(sd, MSG_PARTY_MASTER_CHANGE_SAME_MAP); // It is only possible to change the party leader while on the same map.
+#endif
 		return false;
 	}
 
