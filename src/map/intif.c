@@ -1711,7 +1711,7 @@ void intif_parse_DeleteHomunculusOk(int fd) {
 /**
  * Sends a request to the inter-server to load
  * and send a character's achievement data.
- * @packet [out] 0x3098 <char_id>.L
+ * @packet [out] 0x3012 <char_id>.L
  * @param sd pointer to map_session_data.
  */
 void intif_achievements_request(struct map_session_data *sd)
@@ -1722,7 +1722,7 @@ void intif_achievements_request(struct map_session_data *sd)
 		return;
 
 	WFIFOHEAD(inter_fd, 6);
-	WFIFOW(inter_fd, 0) = 0x3098;
+	WFIFOW(inter_fd, 0) = 0x3012;
 	WFIFOL(inter_fd, 2) = sd->status.char_id;
 	WFIFOSET(inter_fd, 6);
 }
@@ -1771,7 +1771,7 @@ void intif_parse_achievements_load(int fd)
 
 /**
  * Send character's achievement data to the inter-server.
- * @packet 0x3099 <packet_len>.W <char_id>.L <achievements[]>.P
+ * @packet 0x3013 <packet_len>.W <char_id>.L <achievements[]>.P
  * @param sd pointer to map session data.
  */
 void intif_achievements_save(struct map_session_data *sd)
@@ -1789,7 +1789,7 @@ void intif_achievements_save(struct map_session_data *sd)
 	packet_len = payload_size + 8;
 
 	WFIFOHEAD(inter_fd, packet_len);
-	WFIFOW(inter_fd, 0) = 0x3099;
+	WFIFOW(inter_fd, 0) = 0x3013;
 	WFIFOW(inter_fd, 2) = packet_len;
 	WFIFOL(inter_fd, 4) = sd->status.char_id;
 	for (i = 0; i < VECTOR_LENGTH(sd->achievement); i++)

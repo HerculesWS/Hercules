@@ -19775,9 +19775,6 @@ unsigned short clif_parse_cmd_optional( int fd, struct map_session_data *sd ) {
 }
 
 /**
- * Achievement System [Smokexyz/Hercules]
- */
-/**
  * Send all of a session's achievement information to client.
  * Called only once on login/char-loading. (PACKET_ZC_ALL_ACH_LIST)
  * @packet [out] 0x0A23 <ID>.W <Length>.W <ach_count>.L <total_points>.L <rank>.W <current_rank_points>.L <next_rank_points>.L <struct ach_list_info *[]>.P
@@ -19802,14 +19799,11 @@ void clif_achievement_send_list(int fd, struct map_session_data *sd)
 		if (a == NULL || (ad = achievement->get(a->id)) == NULL)
 			continue;
 
-		/* Get the achievement ID. */
 		p.ach[count].ach_id = a->id;
 
-		/* Get the objective amounts. */
 		for (j = 0; j < VECTOR_LENGTH(ad->objective); j++)
 			p.ach[count].objective[j] = a->objective[j];
 
-		/* Check if completed and perform more additions. */
 		if (a->completed_at) {
 			p.ach[count].completed = 1;
 			p.ach[count].completed_at = (uint32) a->completed_at;
@@ -19817,15 +19811,11 @@ void clif_achievement_send_list(int fd, struct map_session_data *sd)
 			p.total_points += ad->points;
 		}
 
-		/* Acknowledgement of it's existence. */
 		count++;
 	}
 
-	/* Packet ID */
 	p.packet_id = achievementListType;
-	/* Packet Length */
-	p.packet_len = 50 * count + 22;
-	/* # of achievements being sent. */
+	p.packet_len = sizeof(struct ach_list_info) * count + 22;
 	p.total_achievements = count;
 	/* Determine Achievement Rank and current exp */
 	curr_exp_tmp = p.total_points;

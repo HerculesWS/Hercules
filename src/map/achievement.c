@@ -155,7 +155,6 @@ bool achievement_check_complete(struct map_session_data *sd, const struct achiev
 
 	if ((ach = achievement->ensure(sd, ad)) == NULL)
 		return false;
-
 	for (i = 0; i < VECTOR_LENGTH(ad->objective); i++)
 		if (ach->objective[i] < VECTOR_INDEX(ad->objective, i).goal)
 			return false;
@@ -270,7 +269,7 @@ bool achievement_check_criteria(const struct achievement_objective *objective, c
 		return false;
 
 	/* Item Type */
-	if (objective->item_type > 0 && (objective->item_type & criteria->item_type) == 0)
+	if (objective->item_type > 0 && (objective->item_type & (2 << criteria->item_type)) == 0)
 		return false;
 
 	/* Job Ids */
@@ -302,10 +301,10 @@ int achievement_validate_type(struct map_session_data *sd, enum achievement_type
 	Assert_ret(criteria->goal != 0);
 
 	if (type == ACH_QUEST) {
-		ShowDebug("achievement_validate_type: ACH_QUEST is not handled by this function. (use achievement_validate())\n");
+		ShowError("achievement_validate_type: ACH_QUEST is not handled by this function. (use achievement_validate())\n");
 		return 0;
 	} else if (type >= ACH_TYPE_MAX) {
-		ShowDebug("achievement_validate_type: Invalid Achievement Type %d! (min: %d, max: %d)\n", (int)type, (int)ACH_QUEST, (int)ACH_TYPE_MAX - 1);
+		ShowError("achievement_validate_type: Invalid Achievement Type %d! (min: %d, max: %d)\n", (int)type, (int)ACH_QUEST, (int)ACH_TYPE_MAX - 1);
 		return 0;
 	}
 
@@ -322,11 +321,9 @@ int achievement_validate_type(struct map_session_data *sd, enum achievement_type
 			// Check if objective criteria matches.
 			if (achievement->check_criteria(&VECTOR_INDEX(ad->objective, j), criteria) == false)
 				continue;
-
 			// Ensure availability of the achievement.
 			if ((ach = achievement->ensure(sd, ad)) == NULL)
 				return false;
-
 			// Criteria passed, check if not completed and update progress.
 			if ((ach->completed_at == 0 && ach->objective[j] < VECTOR_INDEX(ad->objective, j).goal)) {
 				if (additive == true)
@@ -1256,19 +1253,28 @@ bool achievement_readdb_validate_criteria_itemtype(const struct config_setting_t
 	nullpo_retr(false, obj);
 
 	if (libconfig->setting_lookup_int(t, "ItemType", &val)) {
-		if (val < IT_HEALING || val >= IT_MAX) {
+		if (val < IT_HEALING || val > IT_MAX) {
 			ShowError("achievement_readdb_validate_criteria_itemtype: Invalid ItemType %d provided (Achievement: %d, Objective: %d). Skipping...\n", val, entry_id, obj_idx);
 			return false;
 		}
 
-		obj->item_type |= (enum item_types) val;
+		if (val == IT_MAX) {
+			obj->item_type |= (2 << val) - 1;
+		} else {
+			obj->item_type |= (2 << val);
+		}
+
 	} else if (libconfig->setting_lookup_string(t, "ItemType", &string)) {
 		if (!script->get_constant(string, &val) || val < IT_HEALING || val > IT_MAX) {
 			ShowError("achievement_readdb_validate_criteria_itemtype: Invalid ItemType %d provided (Achievement: %d, Objective: %d). Skipping...\n", val, entry_id, obj_idx);
 			return false;
 		}
 
-		obj->item_type = (enum item_types) val;
+		if (val == IT_MAX) {
+			obj->item_type |= (2 << val) - 1;
+		} else {
+			obj->item_type |= (2 << val);
+		}
 	} else if ((tt = libconfig->setting_get_member(t, "ItemType")) && config_setting_is_array(tt)) {
 		int j = 0;
 		uint32 it_type = 0;
@@ -1279,28 +1285,22 @@ bool achievement_readdb_validate_criteria_itemtype(const struct config_setting_t
 					ShowError("achievement_readdb_validate_criteria_itemtype: Invalid ItemType %d provided (Achievement: %d, Objective: %d). Skipping...\n", val, entry_id, obj_idx);
 					continue;
 				}
-				it_type |= val;
-			} else if ((string = libconfig->setting_get_string_elem(tt, j))) {
-				if      (strcmp(string, "IT_HEALING") == 0)       val = OBJ_IT_HEALING;
-				else if (strcmp(string, "IT_UNKNOWN") == 0)       val = OBJ_IT_UNKNOWN;
-				else if (strcmp(string, "IT_USABLE") == 0)        val = OBJ_IT_USABLE;
-				else if (strcmp(string, "IT_ETC") == 0)           val = OBJ_IT_ETC;
-				else if (strcmp(string, "IT_WEAPON") == 0)        val = OBJ_IT_WEAPON;
-				else if (strcmp(string, "IT_ARMOR") == 0)         val = OBJ_IT_ARMOR;
-				else if (strcmp(string, "IT_CARD") == 0)          val = OBJ_IT_CARD;
-				else if (strcmp(string, "IT_PETEGG") == 0)        val = OBJ_IT_PETEGG;
-				else if (strcmp(string, "IT_PETARMOR") == 0)      val = OBJ_IT_PETARMOR;
-				else if (strcmp(string, "IT_UNKNOWN2") == 0)      val = OBJ_IT_UNKNOWN2;
-				else if (strcmp(string, "IT_AMMO") == 0)          val = OBJ_IT_AMMO;
-				else if (strcmp(string, "IT_DELAYCONSUME") == 0)  val = OBJ_IT_DELAYCONSUME;
-				else if (strcmp(string, "IT_CASH") == 0)          val = OBJ_IT_CASH;
-				else if (strcmp(string, "IT_ALL") == 0)           val = OBJ_IT_ALL;
-				else {
-					ShowError("achievement_readdb_validate_criteria_itemtype: Invalid ItemType %s provided (Achievement: %d, Objective: %d). Skipping...\n", string, entry_id, obj_idx);
-					continue;
+				if (val == IT_MAX) {
+					obj->item_type |= (2 << val) - 1;
+				} else {
+					obj->item_type |= (2 << val);
 				}
-
-				it_type |= val;
+			} else if ((string = libconfig->setting_get_string_elem(tt, j))) {
+				if (!script->get_constant(string, &val)) {
+					ShowError("achievement_readdb_validate_criteria_itemtype: Invalid ItemType %s provided (Achievement: %d, Objective: %d). Skipping...\n", string, entry_id, obj_idx);
+					continue;			
+				}
+				
+				if (val == IT_MAX) {
+					obj->item_type |= (2 << val) - 1;
+				} else {
+					obj->item_type |= (2 << val);
+				}
 			}
 			j++;
 		}

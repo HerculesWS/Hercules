@@ -1544,7 +1544,6 @@ struct PACKET_ZC_SKILL_SCALE {
 	uint32 casttime;
 } __attribute__((packed));
 
-<<<<<<< HEAD
 struct ZC_PROGRESS_ACTOR {
 	int16 PacketType;
 	int32 GID;
@@ -1745,8 +1744,8 @@ struct PACKET_ZC_PRIVATE_AIRSHIP_RESPONSE {
 	int16 PacketType;
 	uint32 flag;
 } __attribute__((packed));
-=======
-/* Achievement System [Smokexyz/Hercules]*/
+
+/* Achievement System*/
 #if PACKETVER >= 20141016
 struct ach_list_info {
 	uint32 ach_id;
@@ -1782,7 +1781,6 @@ struct packet_achievement_reward_ack {
 	uint32 ach_id;
 } __attribute__((packed));
 #endif // PACKETVER >= 20141016
->>>>>>> Implementation of the official Achievement System.
 
 struct PACKET_CZ_REQ_STYLE_CHANGE {
 	int16 PacketType;

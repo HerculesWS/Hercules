@@ -102,27 +102,6 @@ enum achievement_types {
 	ACH_TYPE_MAX
 };
 
-/**
- * Achievement Objective Item Types
- *  - Used for objectives that have item types as a criteria.
- */
-enum objective_item_types {
-	OBJ_IT_HEALING        = 0x0001,
-	OBJ_IT_UNKNOWN        = 0x0002,
-	OBJ_IT_USABLE         = 0x0004,
-	OBJ_IT_ETC            = 0x0008,
-	OBJ_IT_WEAPON         = 0x0010,
-	OBJ_IT_ARMOR          = 0x0020,
-	OBJ_IT_CARD           = 0x0040,
-	OBJ_IT_PETEGG         = 0x0080,
-	OBJ_IT_PETARMOR       = 0x0100,
-	OBJ_IT_UNKNOWN2       = 0x0200,
-	OBJ_IT_AMMO           = 0x0400,
-	OBJ_IT_DELAYCONSUME   = 0x0800,
-	OBJ_IT_CASH           = 0x1000,
-	OBJ_IT_ALL            = 0xffff
-};
-
 enum unique_criteria_types {
 	CRITERIA_UNIQUE_NONE,
 	CRITERIA_UNIQUE_ACHIEVE_ID,
