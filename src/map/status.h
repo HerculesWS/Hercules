@@ -1921,7 +1921,8 @@ enum e_mode
 	MD_CHANGETARGET_CHASE = 0x00002000,
 	MD_TARGETWEAK         = 0x00004000,
 	MD_NOKNOCKBACK        = 0x00008000,
-	//MD_RANDOMTARGET     = 0x00010000, // Not implemented
+	MD_NORANDOM_WALK      = 0x00010000,
+	//MD_RANDOMTARGET     = 0x00020000, // Not implemented
 	// Note: This should be kept within INT_MAX, since it's often cast to int.
 	MD_MASK               = 0x7FFFFFFF,
 };
