@@ -18117,9 +18117,88 @@ BUILDIN(pcblockmove) {
 	else
 		sd = script->rid2sd(st);
 
-	if (sd != NULL)
-		sd->state.blockedmove = flag > 0;
+	if (!sd)
+		return true;
 
+	if (flag)
+		sd->block_action.move = 1;
+	else
+		sd->block_action.move = 0;
+
+	return true;
+}
+
+BUILDIN(setpcblock)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+	enum pcblock_action_flag type = script_getnum(st, 2);
+	int state = (script_getnum(st, 3) > 0) ? 1 : 0;
+
+	if (sd == NULL)
+		return true;
+
+	if ((type & PCBLOCK_MOVE) != 0)
+		sd->block_action.move = state;
+
+	if ((type & PCBLOCK_ATTACK) != 0)
+		sd->block_action.attack = state;
+
+	if ((type & PCBLOCK_SKILL) != 0)
+		sd->block_action.skill = state;
+
+	if ((type & PCBLOCK_USEITEM) != 0)
+		sd->block_action.useitem = state;
+
+	if ((type & PCBLOCK_CHAT) != 0)
+		sd->block_action.chat = state;
+
+	if ((type & PCBLOCK_IMMUNE) != 0)
+		sd->block_action.immune = state;
+
+	if ((type & PCBLOCK_SITSTAND) != 0) 
+		sd->block_action.sitstand = state;
+
+	if ((type & PCBLOCK_COMMANDS) != 0)
+		sd->block_action.commands = state;
+
+	return true;
+}
+
+BUILDIN(checkpcblock)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+	int retval = PCBLOCK_NONE;
+
+	if (sd == NULL) {
+		script_pushint(st, PCBLOCK_NONE);
+		return true;
+	}
+
+	if (sd->block_action.move != 0)
+		retval |= PCBLOCK_MOVE;
+
+	if (sd->block_action.attack != 0)
+		retval |= PCBLOCK_ATTACK;
+
+	if (sd->block_action.skill != 0)
+		retval |= PCBLOCK_SKILL;
+
+	if (sd->block_action.useitem != 0)
+		retval |= PCBLOCK_USEITEM;
+
+	if (sd->block_action.chat != 0)
+		retval |= PCBLOCK_CHAT;
+
+	if (sd->block_action.immune != 0)
+		retval |= PCBLOCK_IMMUNE;
+
+	if (sd->block_action.sitstand != 0)
+		retval |= PCBLOCK_SITSTAND;
+
+	if (sd->block_action.commands != 0)
+		retval |= PCBLOCK_COMMANDS;
+
+	script_pushint(st, retval);
 	return true;
 }
 
@@ -24594,7 +24673,9 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(rid2name,"i"),
 		BUILDIN_DEF(pcfollow,"ii"),
 		BUILDIN_DEF(pcstopfollow,"i"),
-		BUILDIN_DEF(pcblockmove,"ii"),
+		BUILDIN_DEF_DEPRECATED(pcblockmove,"ii"), // Deprecated 2018-05-04
+		BUILDIN_DEF(setpcblock, "ii"),
+		BUILDIN_DEF(checkpcblock, ""),
 		// <--- [zBuffer] List of player cont commands
 		// [zBuffer] List of mob control commands --->
 		BUILDIN_DEF(getunittype,"i"),
@@ -25168,6 +25249,17 @@ void script_hardcoded_constants(void)
 	script->set_constant("MST_AROUND3", MST_AROUND3, false, false);
 	script->set_constant("MST_AROUND4", MST_AROUND4, false, false);
 	script->set_constant("MST_AROUND", MST_AROUND , false, false);
+ 
+	script->constdb_comment("pc block constants, use with *setpcblock* and *checkpcblock*");
+	script->set_constant("PCBLOCK_NONE",     PCBLOCK_NONE,     false, false);
+	script->set_constant("PCBLOCK_MOVE",     PCBLOCK_MOVE,     false, false);
+	script->set_constant("PCBLOCK_ATTACK",   PCBLOCK_ATTACK,   false, false);
+	script->set_constant("PCBLOCK_SKILL",    PCBLOCK_SKILL,    false, false);
+	script->set_constant("PCBLOCK_USEITEM",  PCBLOCK_USEITEM,  false, false);
+	script->set_constant("PCBLOCK_CHAT",     PCBLOCK_CHAT,     false, false);
+	script->set_constant("PCBLOCK_IMMUNE",   PCBLOCK_IMMUNE,   false, false);
+	script->set_constant("PCBLOCK_SITSTAND", PCBLOCK_SITSTAND, false, false);
+	script->set_constant("PCBLOCK_COMMANDS", PCBLOCK_COMMANDS, false, false);
 
 	script->constdb_comment("private airship responds");
 	script->set_constant("P_AIRSHIP_NONE", P_AIRSHIP_NONE, false, false);

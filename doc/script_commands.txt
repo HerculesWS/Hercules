@@ -6189,12 +6189,15 @@ Examples:
 
 ---------------------------------------
 
-*pcblockmove(<id>, <option>)
+*pcblockmove(<account id>, <option>)
 
-Prevents the given ID from moving when the optionis true , and false
-enables the ID to move again. The ID can either be the GID of a
-monster/NPC or account ID of a character, and will run for the attached
-player if zero is supplied.
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+Prevents the player from moving when the option != 0, and 0 enables the 
+player to move again. The player has to be the account ID of a character,
+and will run for the attached player if zero is supplied.
 
 Examples:
 
@@ -6204,6 +6207,53 @@ Examples:
 // Enables the current char to move again.
 	pcblockmove(getcharid(CHAR_ID_ACCOUNT), false);
 
+---------------------------------------
+
+*setpcblock(<type>,<option>)
+*checkpcblock()
+
+Prevents the player from doing the following action.
+
+For setpcblock, when the <option> is true(1) will block them, and false(0)
+will allow those actions again.
+
+The checkpcblock command returned value is a bit mask of the currently
+enabled block flags (or PCBLOCK_NONE when none is set).
+
+The <type> listed are a bit mask of the following:
+	PCBLOCK_NONE (only used by checkpcblock)
+	PCBLOCK_MOVE
+	PCBLOCK_ATTACK
+	PCBLOCK_SKILL
+	PCBLOCK_USEITEM
+	PCBLOCK_CHAT
+	PCBLOCK_IMMUNE
+	PCBLOCK_SITSTAND
+	PCBLOCK_COMMANDS
+
+Examples:
+
+// Make the current attached player invulnerable, same as @monsterignore
+	setpcblock(PCBLOCK_IMMUNE, true);
+
+// Prevents the current char from attacking or using skills
+	setpcblock(PCBLOCK_ATTACK|PCBLOCK_SKILL, true);
+
+// Re-enables attack, skills and item use
+	setpcblock(PCBLOCK_ATTACK|PCBLOCK_SKILL|PCBLOCK_ITEM, false);
+
+// checkpcblock related checks
+	if ((checkpcblock() & PCBLOCK_IMMUNE) != 0)
+		mes "You are invulnerable!";
+
+	if ((checkpcblock() & (PCBLOCK_MOVE|PCBLOCK_SITSTAND)) == (PCBLOCK_MOVE|PCBLOCK_SITSTAND))
+		mes "You can't walk or sit";
+
+	if ((checkpcblock() & (PCBLOCK_ATTACK|PCBLOCK_SKILL)) == PCBLOCK_NONE)
+		mes "You can attack and use skills";
+
+	if ((checkpcblock() & PCBLOCK_CHAT) == PCBLOCK_NONE)
+		mes "You can't chat";
 
 ---------------------------------------
 //=====================================

@@ -456,6 +456,22 @@ enum script_iteminfo_types {
 };
 
 /**
+ * Player blocking actions related flags.
+ */
+enum pcblock_action_flag {
+	PCBLOCK_NONE     = 0x00,
+	PCBLOCK_MOVE     = 0x01,
+	PCBLOCK_ATTACK   = 0x02,
+	PCBLOCK_SKILL    = 0x04,
+	PCBLOCK_USEITEM  = 0x08,
+	PCBLOCK_CHAT     = 0x10,
+	PCBLOCK_IMMUNE   = 0x20,
+	PCBLOCK_SITSTAND = 0x40,
+	PCBLOCK_COMMANDS = 0x80,
+	PCBLOCK_ALL      = 0xFF,
+};
+
+/**
  * Structures
  **/
 
