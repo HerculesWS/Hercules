@@ -4221,6 +4221,18 @@
 - `MST_AROUND4`: 12
 - `MST_AROUND`: 12
 
+### pc block constants, use with *setpcblock* and *checkpcblock*
+
+- `PCBLOCK_NONE`: 0
+- `PCBLOCK_MOVE`: 1
+- `PCBLOCK_ATTACK`: 2
+- `PCBLOCK_SKILL`: 4
+- `PCBLOCK_USEITEM`: 8
+- `PCBLOCK_CHAT`: 16
+- `PCBLOCK_IMMUNE`: 32
+- `PCBLOCK_SITSTAND`: 64
+- `PCBLOCK_COMMANDS`: 128
+
 ### private airship responds
 
 - `P_AIRSHIP_NONE`: 0
