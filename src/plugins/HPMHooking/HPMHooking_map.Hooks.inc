@@ -13518,10 +13518,10 @@ void HP_clif_disp_overhead(struct block_list *bl, const char *mes) {
 	}
 	return;
 }
-void HP_clif_msgtable(struct map_session_data *sd, unsigned short msg_id) {
+void HP_clif_msgtable(struct map_session_data *sd, enum clif_messages msg_id) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_msgtable_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, unsigned short *msg_id);
+		void (*preHookFunc) (struct map_session_data **sd, enum clif_messages *msg_id);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_msgtable_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_msgtable_pre[hIndex].func;
@@ -13536,7 +13536,7 @@ void HP_clif_msgtable(struct map_session_data *sd, unsigned short msg_id) {
 		HPMHooks.source.clif.msgtable(sd, msg_id);
 	}
 	if (HPMHooks.count.HP_clif_msgtable_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, unsigned short msg_id);
+		void (*postHookFunc) (struct map_session_data *sd, enum clif_messages msg_id);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_msgtable_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_msgtable_post[hIndex].func;
 			postHookFunc(sd, msg_id);
@@ -13544,10 +13544,10 @@ void HP_clif_msgtable(struct map_session_data *sd, unsigned short msg_id) {
 	}
 	return;
 }
-void HP_clif_msgtable_num(struct map_session_data *sd, unsigned short msg_id, int value) {
+void HP_clif_msgtable_num(struct map_session_data *sd, enum clif_messages msg_id, int value) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_msgtable_num_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, unsigned short *msg_id, int *value);
+		void (*preHookFunc) (struct map_session_data **sd, enum clif_messages *msg_id, int *value);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_msgtable_num_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_msgtable_num_pre[hIndex].func;
@@ -13562,7 +13562,7 @@ void HP_clif_msgtable_num(struct map_session_data *sd, unsigned short msg_id, in
 		HPMHooks.source.clif.msgtable_num(sd, msg_id, value);
 	}
 	if (HPMHooks.count.HP_clif_msgtable_num_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, unsigned short msg_id, int value);
+		void (*postHookFunc) (struct map_session_data *sd, enum clif_messages msg_id, int value);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_msgtable_num_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_msgtable_num_post[hIndex].func;
 			postHookFunc(sd, msg_id, value);
@@ -13570,10 +13570,10 @@ void HP_clif_msgtable_num(struct map_session_data *sd, unsigned short msg_id, in
 	}
 	return;
 }
-void HP_clif_msgtable_skill(struct map_session_data *sd, uint16 skill_id, int msg_id) {
+void HP_clif_msgtable_skill(struct map_session_data *sd, uint16 skill_id, enum clif_messages msg_id) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_msgtable_skill_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, uint16 *skill_id, int *msg_id);
+		void (*preHookFunc) (struct map_session_data **sd, uint16 *skill_id, enum clif_messages *msg_id);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_msgtable_skill_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_msgtable_skill_pre[hIndex].func;
@@ -13588,7 +13588,7 @@ void HP_clif_msgtable_skill(struct map_session_data *sd, uint16 skill_id, int ms
 		HPMHooks.source.clif.msgtable_skill(sd, skill_id, msg_id);
 	}
 	if (HPMHooks.count.HP_clif_msgtable_skill_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, uint16 skill_id, int msg_id);
+		void (*postHookFunc) (struct map_session_data *sd, uint16 skill_id, enum clif_messages msg_id);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_msgtable_skill_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_msgtable_skill_post[hIndex].func;
 			postHookFunc(sd, skill_id, msg_id);
@@ -13596,14 +13596,14 @@ void HP_clif_msgtable_skill(struct map_session_data *sd, uint16 skill_id, int ms
 	}
 	return;
 }
-void HP_clif_msgtable_str(struct map_session_data *sd, uint16 msg_id, const char *value) {
+void HP_clif_msgtable_str(struct map_session_data *sd, enum clif_messages p1, const char *value) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_msgtable_str_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, uint16 *msg_id, const char **value);
+		void (*preHookFunc) (struct map_session_data **sd, enum clif_messages *p1, const char **value);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_msgtable_str_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_msgtable_str_pre[hIndex].func;
-			preHookFunc(&sd, &msg_id, &value);
+			preHookFunc(&sd, &p1, &value);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -13611,25 +13611,25 @@ void HP_clif_msgtable_str(struct map_session_data *sd, uint16 msg_id, const char
 		}
 	}
 	{
-		HPMHooks.source.clif.msgtable_str(sd, msg_id, value);
+		HPMHooks.source.clif.msgtable_str(sd, p1, value);
 	}
 	if (HPMHooks.count.HP_clif_msgtable_str_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, uint16 msg_id, const char *value);
+		void (*postHookFunc) (struct map_session_data *sd, enum clif_messages p1, const char *value);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_msgtable_str_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_msgtable_str_post[hIndex].func;
-			postHookFunc(sd, msg_id, value);
+			postHookFunc(sd, p1, value);
 		}
 	}
 	return;
 }
-void HP_clif_msgtable_color(struct map_session_data *sd, uint16 msg_id, uint32 color) {
+void HP_clif_msgtable_color(struct map_session_data *sd, enum clif_messages p1, uint32 color) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_msgtable_color_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, uint16 *msg_id, uint32 *color);
+		void (*preHookFunc) (struct map_session_data **sd, enum clif_messages *p1, uint32 *color);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_msgtable_color_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_msgtable_color_pre[hIndex].func;
-			preHookFunc(&sd, &msg_id, &color);
+			preHookFunc(&sd, &p1, &color);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -13637,13 +13637,13 @@ void HP_clif_msgtable_color(struct map_session_data *sd, uint16 msg_id, uint32 c
 		}
 	}
 	{
-		HPMHooks.source.clif.msgtable_color(sd, msg_id, color);
+		HPMHooks.source.clif.msgtable_color(sd, p1, color);
 	}
 	if (HPMHooks.count.HP_clif_msgtable_color_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, uint16 msg_id, uint32 color);
+		void (*postHookFunc) (struct map_session_data *sd, enum clif_messages p1, uint32 color);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_msgtable_color_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_msgtable_color_post[hIndex].func;
-			postHookFunc(sd, msg_id, color);
+			postHookFunc(sd, p1, color);
 		}
 	}
 	return;
