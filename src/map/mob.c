@@ -4312,7 +4312,7 @@ int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *source)
 
 	if (mob->lookup_const(mobt, "AttackRange", &i32) && i32 >= 0) {
 		md.status.rhw.range = i32;
-	} else {
+	} else if (!inherit) {
 		md.status.rhw.range = 1;
 	}
 
