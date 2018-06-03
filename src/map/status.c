@@ -13067,6 +13067,7 @@ void status_read_job_db_sub(int idx, const char *name, struct config_setting_t *
 {
 	struct config_setting_t *temp = NULL;
 	int i32 = 0;
+	int last_value = 0;
 
 	struct {
 		const char *name;
@@ -13126,7 +13127,11 @@ void status_read_job_db_sub(int idx, const char *name, struct config_setting_t *
 				avg_increment = 5;
 			}
 			for ( ; i <= pc->max_level[idx][0]; i++) {
-				status->dbs->HP_table[idx][i] = min(base + avg_increment * i, battle_config.max_hp);
+				if ( i == 1 )
+					last_value = 5;
+				else
+					last_value = status->dbs->HP_table[idx][i-1];
+				status->dbs->HP_table[idx][i] = min(last_value + avg_increment, battle_config.max_hp);
 			}
 
 			for (i = 1; i <= MAX_LEVEL && status->dbs->SP_table[iidx][i]; i++) {
@@ -13141,7 +13146,11 @@ void status_read_job_db_sub(int idx, const char *name, struct config_setting_t *
 				avg_increment = 1;
 			}
 			for ( ; i <= pc->max_level[idx][0]; i++) {
-				status->dbs->SP_table[idx][i] = min(base + avg_increment * i, battle_config.max_sp);
+				if ( i == 1 )
+					last_value = 5;
+				else
+					last_value = status->dbs->SP_table[idx][i-1];
+				status->dbs->SP_table[idx][i] = min(last_value + avg_increment, battle_config.max_sp);
 			}
 		}
 	}
@@ -13167,7 +13176,11 @@ void status_read_job_db_sub(int idx, const char *name, struct config_setting_t *
 				avg_increment = 5;
 			}
 			for ( ; i <= pc->max_level[idx][0]; i++) {
-				status->dbs->HP_table[idx][i] = min(base + avg_increment * i, battle_config.max_hp);
+				if ( i == 1 )
+					last_value = 5;
+				else
+					last_value = status->dbs->HP_table[idx][i-1];
+				status->dbs->HP_table[idx][i] = min(last_value + avg_increment, battle_config.max_hp);
 			}
 		}
 	}
@@ -13193,7 +13206,11 @@ void status_read_job_db_sub(int idx, const char *name, struct config_setting_t *
 				avg_increment = 1;
 			}
 			for ( ; i <= pc->max_level[idx][0]; i++) {
-				status->dbs->SP_table[idx][i] = min(base + avg_increment * i, battle_config.max_sp);
+				if ( i == 1 )
+					last_value = 5;
+				else
+					last_value = status->dbs->SP_table[idx][i-1];
+				status->dbs->SP_table[idx][i] = min(last_value + avg_increment, battle_config.max_sp);
 			}
 		}
 	}
@@ -13235,7 +13252,11 @@ void status_read_job_db_sub(int idx, const char *name, struct config_setting_t *
 			avg_increment = 5;
 		}
 		for (++level; level <= pc->max_level[idx][0]; ++level) { /* limit only to possible maximum level of the given class */
-			status->dbs->HP_table[idx][level] = min(base + avg_increment * level, battle_config.max_hp); /* some are still empty? then let's use the average increase */
+			if ( level == 1 )
+				last_value = 5;
+			else
+				last_value = status->dbs->HP_table[idx][level-1];
+			status->dbs->HP_table[idx][level] = min(last_value + avg_increment, battle_config.max_hp); /* some are still empty? then let's use the average increase */
 		}
 	}
 
@@ -13255,7 +13276,11 @@ void status_read_job_db_sub(int idx, const char *name, struct config_setting_t *
 			avg_increment = 1;
 		}
 		for (++level; level <= pc->max_level[idx][0]; level++ ) {
-			status->dbs->SP_table[idx][level] = min(base + avg_increment * level, battle_config.max_sp);
+			if ( level == 1 )
+				last_value = 5;
+			else
+				last_value = status->dbs->SP_table[idx][level-1];
+			status->dbs->SP_table[idx][level] = min(last_value + avg_increment, battle_config.max_sp);
 		}
 	}
 }
