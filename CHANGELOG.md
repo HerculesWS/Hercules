@@ -10,6 +10,29 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+## [v2018.06.03] `Jun 3 2018`
+### Added
+- Added/updated packets support for clients from 2018-05-09 to 2018-05-23. (#2043)
+- Added client/version-specific `enum clif_messages` values for msgstringtable message IDs. All the related functions have been updated. (#2038)
+- Added the script commands `setpcblock()` and `checkpcblock()`, to prevent various character actions - see the script command docs for details. (#842)
+- Implemented the Stylist UI, available in clients starting from 2015. Configurable in `stylist_db.conf`, accessible to scripts through `openstylist()`. (#2004)
+
+### Changed
+- Extended the script command `getunits()` with support to look up units globally, making the map argument optional. (#1851)
+- Updated copyright headers to year 2018. (#2054)
+- Converted `exp.txt` (now `exp_group_db.conf`) to the libconfig format, now better integrated with `job_db.conf`. (#2036, originally #1944)
+
+### Fixed
+- Fixed an issue in the mob skill db parser that limited the mob skills to a maximum of 5 (#2042, issue #2044)
+- Fixed some incorrect msgstringtable IDs. (part of #2038)
+- Fixed inheritance in the mob DB, no longer iverwriting the Range field with a default value. (#2055)
+- Fixed the skill element getter for levels above `MAX_SKILL_LEVEL`. (#2059)
+- Fixed interaction between the `pvp_nocalcrank` mapflag and the script/atcommands to toggle PvP. (#2057, issue #2056)
+
+### Deprecated
+- While not officially deprecated yet, use of `maprespawnguildid()` and `playbgmall()` has been superseded by `getunits()`. (part of #1851)
+- Deprecated the `pcblockmove()` script command. Use the more flexible `setpcblock()` instead. (part pf #842)
+
 ## [v2018.05.06] `May 6 2018`
 ### Added
 - Added a configurable PIN code blacklist, to prevent use of certain codes. (#2007 and #2029, issue #769)
@@ -249,6 +272,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2018.06.03]: https://github.com/HerculesWS/Hercules/compare/v2018.05.06...v2018.06.03
 [v2018.05.06]: https://github.com/HerculesWS/Hercules/compare/v2018.04.08...v2018.05.06
 [v2018.04.08]: https://github.com/HerculesWS/Hercules/compare/v2018.03.11...v2018.04.08
 [v2018.03.11]: https://github.com/HerculesWS/Hercules/compare/v2018.02.11+1...v2018.03.11
