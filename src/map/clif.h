@@ -1157,6 +1157,8 @@ struct clif_interface {
 	void (*achievement_send_update) (int fd, struct map_session_data *sd, const struct achievement_data *ad);
 	void (*pAchievementGetReward) (int fd, struct map_session_data *sd);
 	void (*achievement_reward_ack) (int fd, struct map_session_data *sd, const struct achievement_data *ad);
+	void (*change_title_ack) (int fd, struct map_session_data *sd, int title_id);
+	void (*pChangeTitle) (int fd, struct map_session_data *sd);
 	/*------------------------
 	 *- Parse Incoming Packet
 	 *------------------------*/

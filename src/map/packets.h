@@ -3266,7 +3266,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 // 2014-09-03aRagexeRE
 #if PACKETVER >= 20140903
 // new packets
-	packet(0x0a2e,6,clif->pDull/*,XXX*/); // CZ_REQ_CHANGE_TITLE
+	packet(0x0a2e,6,clif->pChangeTitle); // CZ_REQ_CHANGE_TITLE
 	packet(0x0a2f,7); // ZC_ACK_CHANGE_TITLE
 // changed packet sizes
 #endif

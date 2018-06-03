@@ -1765,6 +1765,7 @@ void intif_parse_achievements_load(int fd)
 		VECTOR_PUSH(sd->achievement, t_ach);
 	}
 
+	achievement->init_titles(sd);
     clif->achievement_send_list(fd, sd);
 	sd->achievements_received = true;
 }
