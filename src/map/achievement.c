@@ -3,7 +3,7 @@
 * http://herc.ws - http://github.com/HerculesWS/Hercules
 *
 * Copyright (C) 2017  Hercules Dev Team
-* Copyright (C) Smokexyz (sagunkho@hotmail.com)
+* Copyright (C) Smokexyz
 *
 * Hercules is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -1772,7 +1772,7 @@ void do_init_achievement(bool minimal)
 /**
  * Cleaning function called through achievement->db->destroy()
  */
-int achievement_db_finalise(union DBKey key, struct DBData *data, va_list args)
+int achievement_db_finalize(union DBKey key, struct DBData *data, va_list args)
 {
 	int i = 0;
 	struct achievement_data *ad = DB->data2ptr(data);
@@ -1793,7 +1793,7 @@ void do_final_achievement(void)
 {
 	int i = 0;
 
-	achievement->db->destroy(achievement->db, achievement->db_finalise);
+	achievement->db->destroy(achievement->db, achievement->db_finalize);
 
 	for (i = 0; i < ACH_TYPE_MAX; i++)
 		VECTOR_CLEAR(achievement->category[i]);
@@ -1811,7 +1811,7 @@ void achievement_defaults(void)
 	achievement->init = do_init_achievement;
 	achievement->final = do_final_achievement;
 	/* */
-	achievement->db_finalise = achievement_db_finalise;
+	achievement->db_finalize = achievement_db_finalize;
 	/* */
 	achievement->readdb = achievement_readb;
 	/* */

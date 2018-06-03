@@ -9511,13 +9511,14 @@ BUILDIN(failedrefitem)
 	if (num > 0 && num <= ARRAYLENGTH(script->equip))
 		i=pc->checkequip(sd,script->equip[num-1]);
 	if(i >= 0) {
+		// Call before changing refine to 0.
+		achievement->validate_refine(sd, i, false);
+
 		sd->status.inventory[i].refine = 0;
 		pc->unequipitem(sd, i, PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE); //recalculate bonus
 		clif->refine(sd->fd,1,i,sd->status.inventory[i].refine); //notify client of failure
 
 		pc->delitem(sd, i, 1, 0, DELITEM_FAILREFINE, LOG_TYPE_SCRIPT);
-
-		achievement->validate_refine(sd, i, false); // Achievements [Smokexyz/Hercules]
 
 		clif->misceffect(&sd->bl,2); // display failure effect
 	}

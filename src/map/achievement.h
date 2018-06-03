@@ -2,8 +2,8 @@
 * This file is part of Hercules.
 * http://herc.ws - http://github.com/HerculesWS/Hercules
 *
-* Copyright (C) 2017  Hercules Dev Team
-* Copyright (C) Smokexyz (sagunkho@hotmail.com)
+* Copyright (C) 2018  Hercules Dev Team
+* Copyright (C) Smokexyz
 *
 * Hercules is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -216,7 +216,7 @@ struct achievement_interface {
 	void (*init) (bool minimal);
 	void (*final) (void);
 	/* */
-	int (*db_finalise) (union DBKey key, struct DBData *data, va_list args);
+	int (*db_finalize) (union DBKey key, struct DBData *data, va_list args);
 	/* */
 	void (*readdb)(void);
 	/* */
