@@ -1740,6 +1740,21 @@ struct PACKET_ZC_PRIVATE_AIRSHIP_RESPONSE {
 	uint32 flag;
 } __attribute__((packed));
 
+struct PACKET_CZ_REQ_STYLE_CHANGE {
+	int16 PacketType;
+	int16 HeadPalette;
+	int16 HeadStyle;
+	int16 BodyPalette;
+	int16 TopAccessory;
+	int16 MidAccessory;
+	int16 BottomAccessory;
+} __attribute__((packed));
+
+struct PACKET_ZC_STYLE_CHANGE_RES {
+	int16 PacketType;
+	int8 flag;
+} __attribute__((packed));
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
