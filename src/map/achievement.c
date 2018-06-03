@@ -4,6 +4,7 @@
 *
 * Copyright (C) 2017  Hercules Dev Team
 * Copyright (C) Smokexyz
+* Copyright (C) Dastgir
 *
 * Hercules is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -967,6 +968,106 @@ static bool achievement_type_requires_criteria(enum achievement_types type)
 }
 
 /**
+ * Stores all the title ID that has been earned by player
+ * @param[in] sd        pointer to session data.
+ */
+static void achievement_init_titles(struct map_session_data *sd)
+{
+	int i;
+	nullpo_retv(sd);
+
+	VECTOR_INIT(sd->title_ids);
+	/* Browse through the session's achievement list and gather their values. */
+	for (i = 0; i < VECTOR_LENGTH(sd->achievement); i++) {
+		struct achievement *a = &VECTOR_INDEX(sd->achievement, i);
+		const struct achievement_data *ad = NULL;
+
+		/* Sanity check for nonull pointers. */
+		if (a == NULL || (ad = achievement->get(a->id)) == NULL)
+			continue;
+
+		if (a->completed_at > 0 && a->rewarded_at > 0 && ad->rewards.title_id > 0) {
+			VECTOR_ENSURE(sd->title_ids, 1, 1);
+			VECTOR_PUSH(sd->title_ids, ad->rewards.title_id);
+		}
+	}
+}
+
+/**
+ * Validates whether player has earned the title.
+ * @param[in]  sd              pointer to session data.
+ * @param[in]  title_id        Title ID
+ * @return true, if title has been earned, else false
+ */
+static bool achievement_check_title(struct map_session_data *sd, int title_id) {
+	int i;
+
+	nullpo_retr(false, sd);
+
+	if (title_id == 0)
+		return true;
+
+	for (i = 0; i < VECTOR_LENGTH(sd->title_ids); i++) {
+		if (VECTOR_INDEX(sd->title_ids, i) == title_id) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
+ * Achievement rewards are given to player
+ * @param  sd        session data
+ * @param  ad        achievement data
+ */
+static void achievement_get_rewards(struct map_session_data *sd, const struct achievement_data *ad) {
+	int i = 0;
+	struct achievement *ach = NULL;
+
+	nullpo_retv(sd);
+	nullpo_retv(ad);
+
+	if ((ach = achievement->ensure(sd, ad)) == NULL)
+		return;
+
+	/* Buff */
+	if (ad->rewards.bonus != NULL)
+		script->run(ad->rewards.bonus, 0, sd->bl.id, 0);
+
+	/* Give Items */
+	for (i = 0; i < VECTOR_LENGTH(ad->rewards.item); i++) {
+		struct item it = { 0 };
+		int total = 0;
+
+		it.nameid = VECTOR_INDEX(ad->rewards.item, i).id;
+		total = VECTOR_INDEX(ad->rewards.item, i).amount;
+
+		it.identify = 1;
+
+		//Check if it's stackable.
+		if (!itemdb->isstackable(it.nameid)) {
+			int j = 0;
+			for (j = 0; j < total; ++j)
+				pc->additem(sd, &it, (it.amount = 1), LOG_TYPE_SCRIPT);
+		} else {
+			pc->additem(sd, &it, (it.amount = total), LOG_TYPE_SCRIPT);
+		}
+	}
+
+	ach->rewarded_at = time(NULL);
+
+	if (ad->rewards.title_id > 0) { // Add Title
+		VECTOR_ENSURE(sd->title_ids, 1, 1);
+		VECTOR_PUSH(sd->title_ids, ad->rewards.title_id);
+		clif->achievement_send_list(sd->fd, sd);
+	} else {
+		clif->achievement_reward_ack(sd->fd, sd, ad);
+		clif->achievement_send_update(sd->fd, sd, ad); // send update.
+	}
+}
+
+/**
  * Parses the Achievement Ranks.
  * @read db/achievement_rank_db.conf
  */
@@ -1875,4 +1976,8 @@ void achievement_defaults(void)
 	achievement->validate_achievement_rank = achievement_validate_achievement_rank;
 	/* */
 	achievement->type_requires_criteria = achievement_type_requires_criteria;
+	/* */
+	achievement->init_titles = achievement_init_titles;
+	achievement->check_title = achievement_check_title;
+	achievement->get_rewards = achievement_get_rewards;
 }

@@ -705,6 +705,8 @@ struct mmo_charstatus {
 	short attendance_count;
 
 	unsigned char hotkey_rowshift;
+
+	int32 title_id; // Achievement Title[Dastgir/Hercules]
 };
 
 typedef enum mail_status {
