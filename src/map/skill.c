@@ -189,10 +189,6 @@ int skill_get_ele(int skill_id, int skill_lv)
 	idx = skill->get_index(skill_id);
 	Assert_retr(ELE_NEUTRAL, idx != 0);
 	Assert_retr(ELE_NEUTRAL, skill_lv > 0);
-	if (skill_lv > MAX_SKILL_LEVEL) {
-		int val = skill->dbs->db[idx].element[skill_get_lvl_idx(skill_lv)];
-		return skill_adjust_over_level(val, skill_lv, skill->dbs->db[idx].max);
-	}
 	return skill->dbs->db[idx].element[skill_get_lvl_idx(skill_lv)];
 }
 
