@@ -2432,6 +2432,24 @@ typedef void (*HPMHOOK_pre_clif_pPrivateAirshipRequest) (int *fd, struct map_ses
 typedef void (*HPMHOOK_post_clif_pPrivateAirshipRequest) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_PrivateAirshipResponse) (struct map_session_data **sd, uint32 *flag);
 typedef void (*HPMHOOK_post_clif_PrivateAirshipResponse) (struct map_session_data *sd, uint32 flag);
+typedef void (*HPMHOOK_pre_clif_stylist_vector_init) (void);
+typedef void (*HPMHOOK_post_clif_stylist_vector_init) (void);
+typedef void (*HPMHOOK_pre_clif_stylist_vector_clear) (void);
+typedef void (*HPMHOOK_post_clif_stylist_vector_clear) (void);
+typedef bool (*HPMHOOK_pre_clif_stylist_read_db_libconfig) (void);
+typedef bool (*HPMHOOK_post_clif_stylist_read_db_libconfig) (bool retVal___);
+typedef bool (*HPMHOOK_pre_clif_stylist_read_db_libconfig_sub) (struct config_setting_t **it, int *idx, const char **source);
+typedef bool (*HPMHOOK_post_clif_stylist_read_db_libconfig_sub) (bool retVal___, struct config_setting_t *it, int idx, const char *source);
+typedef bool (*HPMHOOK_pre_clif_style_change_validate_requirements) (struct map_session_data **sd, int *type, int16 *idx);
+typedef bool (*HPMHOOK_post_clif_style_change_validate_requirements) (bool retVal___, struct map_session_data *sd, int type, int16 idx);
+typedef void (*HPMHOOK_pre_clif_stylist_send_rodexitem) (struct map_session_data **sd, int16 *itemid);
+typedef void (*HPMHOOK_post_clif_stylist_send_rodexitem) (struct map_session_data *sd, int16 itemid);
+typedef void (*HPMHOOK_pre_clif_pReqStyleChange) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pReqStyleChange) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_cz_req_style_change_sub) (struct map_session_data **sd, int *type, int16 *idx, bool *isitem);
+typedef void (*HPMHOOK_post_clif_cz_req_style_change_sub) (struct map_session_data *sd, int type, int16 idx, bool isitem);
+typedef void (*HPMHOOK_pre_clif_style_change_response) (struct map_session_data **sd, int8 *flag);
+typedef void (*HPMHOOK_post_clif_style_change_response) (struct map_session_data *sd, int8 flag);
 #endif // MAP_CLIF_H
 #ifdef COMMON_CORE_H /* cmdline */
 typedef void (*HPMHOOK_pre_cmdline_init) (void);

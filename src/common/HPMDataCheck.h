@@ -432,6 +432,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "hCSData", sizeof(struct hCSData), SERVER_TYPE_MAP },
 		{ "merge_item", sizeof(struct merge_item), SERVER_TYPE_MAP },
 		{ "s_packet_db", sizeof(struct s_packet_db), SERVER_TYPE_MAP },
+		{ "stylist_data_entry", sizeof(struct stylist_data_entry), SERVER_TYPE_MAP },
 	#else
 		#define MAP_CLIF_H
 	#endif // MAP_CLIF_H
@@ -596,6 +597,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "PACKET_CZ_REQ_READ_MAIL", sizeof(struct PACKET_CZ_REQ_READ_MAIL), SERVER_TYPE_MAP },
 		{ "PACKET_CZ_REQ_REFRESH_MAIL_LIST", sizeof(struct PACKET_CZ_REQ_REFRESH_MAIL_LIST), SERVER_TYPE_MAP },
 		{ "PACKET_CZ_REQ_REMOVE_ITEM_MAIL", sizeof(struct PACKET_CZ_REQ_REMOVE_ITEM_MAIL), SERVER_TYPE_MAP },
+		{ "PACKET_CZ_REQ_STYLE_CHANGE", sizeof(struct PACKET_CZ_REQ_STYLE_CHANGE), SERVER_TYPE_MAP },
 		{ "PACKET_CZ_REQ_ZENY_FROM_MAIL", sizeof(struct PACKET_CZ_REQ_ZENY_FROM_MAIL), SERVER_TYPE_MAP },
 		{ "PACKET_CZ_SEND_MAIL", sizeof(struct PACKET_CZ_SEND_MAIL), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_ACK_CLAN_LEAVE", sizeof(struct PACKET_ZC_ACK_CLAN_LEAVE), SERVER_TYPE_MAP },
@@ -620,6 +622,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "PACKET_ZC_PRIVATE_AIRSHIP_RESPONSE", sizeof(struct PACKET_ZC_PRIVATE_AIRSHIP_RESPONSE), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_READ_MAIL", sizeof(struct PACKET_ZC_READ_MAIL), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_SKILL_SCALE", sizeof(struct PACKET_ZC_SKILL_SCALE), SERVER_TYPE_MAP },
+		{ "PACKET_ZC_STYLE_CHANGE_RES", sizeof(struct PACKET_ZC_STYLE_CHANGE_RES), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_UI_ACTION", sizeof(struct PACKET_ZC_UI_ACTION), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_WRITE_MAIL_RESULT", sizeof(struct PACKET_ZC_WRITE_MAIL_RESULT), SERVER_TYPE_MAP },
 		{ "ZC_PROGRESS_ACTOR", sizeof(struct ZC_PROGRESS_ACTOR), SERVER_TYPE_MAP },
