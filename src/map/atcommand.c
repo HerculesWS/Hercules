@@ -1606,7 +1606,8 @@ int atcommand_pvpon_sub(struct block_list *bl,va_list ap)
 	sd = BL_UCAST(BL_PC, bl);
 
 	if (sd->pvp_timer == INVALID_TIMER) {
-		sd->pvp_timer = timer->add(timer->gettick() + 200, pc->calc_pvprank_timer, sd->bl.id, 0);
+		if (!map->list[sd->bl.m].flag.pvp_nocalcrank)
+			sd->pvp_timer = timer->add(timer->gettick() + 200, pc->calc_pvprank_timer, sd->bl.id, 0);
 		sd->pvp_rank = 0;
 		sd->pvp_lastusers = 0;
 		sd->pvp_point = 5;
