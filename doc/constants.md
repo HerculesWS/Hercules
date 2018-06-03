@@ -12304,6 +12304,7 @@
 - `Daily_Coin`: 6674
 - `XMAS_Cookie`: 6681
 - `Bag_Of_Selling_Goods`: 6682
+- `Cash_Hair_Coupon`: 6707
 - `Lovely_Stick`: 6712
 - `Corrupted_Charm`: 6755
 - `ORGANIC_PUMPKIN`: 6804
@@ -15989,6 +15990,9 @@
 - `Universal_Catalog_Gold_Box10_`: 16776
 - `Universal_Catalog_Gold_Box50`: 16777
 - `Sagittarius_Scr_Box`: 16826
+- `Beauty_Gift_Box`: 16843
+- `Clothing_Dye_Box`: 16854
+- `Clothing_Dye_Orig_Box`: 16855
 - `Weather_Report_Box`: 16972
 - `Yellow_Hat_Box`: 16973
 - `Comin_Actor_Box`: 16974
@@ -16158,6 +16162,7 @@
 - `INT_Biscuit_Stick_Box`: 17273
 - `DEX_Biscuit_Stick_Box`: 17274
 - `LUK_Biscuit_Stick_Box`: 17275
+- `Jeremy_Beauty_Coupon_Box`: 17336
 - `Cannon_Ball`: 18000
 - `Holy_Cannon_Ball`: 18001
 - `Dark_Cannon_Ball`: 18002
