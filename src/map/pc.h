@@ -633,6 +633,8 @@ END_ZEROED_BLOCK;
 	/* Achievement System */
 	struct char_achievements achievement;
 	bool achievements_received;
+	// Title
+	VECTOR_DECL(int) title_ids;
 };
 
 #define EQP_WEAPON EQP_HAND_R
