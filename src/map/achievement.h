@@ -274,6 +274,10 @@ struct achievement_interface {
 	void (*validate_achievement_rank) (struct map_session_data *sd, int rank);
 	/* */
 	bool (*type_requires_criteria) (enum achievement_types type);
+	/* */
+	void (*init_titles) (struct map_session_data *sd);
+	bool (*check_title) (struct map_session_data *sd, int title_id);
+	void (*get_rewards) (struct map_session_data *sd, const struct achievement_data *ad);
 };
 
 #ifdef HERCULES_CORE
