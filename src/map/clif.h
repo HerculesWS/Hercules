@@ -1459,6 +1459,10 @@ struct clif_interface {
 	void (*pReqStyleChange) (int fd, struct map_session_data *sd);
 	void (*cz_req_style_change_sub) (struct map_session_data *sd, int type, int16 idx, bool isitem);
 	void (*style_change_response) (struct map_session_data *sd, int8 flag);
+
+	void (*pPetEvolution) (int fd, struct map_session_data *sd);
+	void (*petEvolutionResult) (int fd, int result);
+
 };
 
 #ifdef HERCULES_CORE

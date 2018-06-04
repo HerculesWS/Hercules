@@ -13755,6 +13755,105 @@ void clif_parse_ChangePetName(int fd, struct map_session_data *sd)
 	pet->change_name(sd, RFIFOP(fd,2));
 }
 
+void clif_parse_pet_evolution(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+/// Request to Evolve the pet (CZ_RENAME_PET) [Dastgir/Hercules]
+/// 09fb <Length>.W <EvolvedPetEggID>.W <??>
+void clif_parse_pet_evolution(int fd, struct map_session_data *sd)
+{
+	//int length = RFIFOW(fd, 2);
+	int petEgg = RFIFOW(fd, 4);
+	int i = 0, idx;
+
+	if (sd->status.pet_id == 0) {
+		clif->petEvolutionResult(fd, PET_EVOL_NO_CALLPET);
+		return;
+	}
+
+	for (idx = 0; idx < MAX_INVENTORY; idx++) {
+		if (sd->status.inventory[idx].card[0] == CARD0_PET &&
+			sd->status.pet_id == MakeDWord(sd->status.inventory[idx].card[1], sd->status.inventory[idx].card[2]))
+			break;
+	}
+	if (i == MAX_INVENTORY) {
+		clif->petEvolutionResult(fd, PET_EVOL_NO_PETEGG);
+		return;
+	}
+
+	// Not Loyal Yet
+	if (sd->pd == NULL || sd->pd->pet.intimate < 900) {
+		clif->petEvolutionResult(fd, PET_EVOL_RG_FAMILIAR);
+		return;
+	}
+
+	for (i = 0; i < VECTOR_LENGTH(pet->evolve_data); i++) {
+		struct pet_evolve_data ped = VECTOR_INDEX(pet->evolve_data, i);
+		if (ped.petEggId == petEgg && ped.fromEggId == sd->status.inveotry[idx].nameid) {
+			int j;
+			int pet_id;
+
+			if (VECTOR_LENGTH(ped.items) == 0) {
+				clif->petEvolutionResult(fd, PET_EVOL_NO_RECIPE);
+				return;
+			}
+			for (j = 0; j < VECTOR_LENGTH(ped.items); j++) {
+				struct itemlist_entry list = VECTOR_INDEX(ped.items, j);
+				int n = pc->search_inventory(sd, list.id);
+
+				if (n == INDEX_NOT_FOUND) {
+					clif->petEvolutionResult(fd, PET_EVOL_NO_MATERIAL);
+					return;
+				}
+			}
+
+			for (j = 0; j < VECTOR_LENGTH(ped.items); j++) {
+				struct itemlist_entry list = VECTOR_INDEX(ped.items, j);
+				int n = pc->search_inventory(sd, list.id);
+				
+				if (pc->delitem(sd, n, list.amount, 0, DELITEM_NORMAL, LOG_TYPE_EGG) == 1) {
+					clif->petEvolutionResult(fd, PET_EVOL_NO_MATERIAL);
+					return;
+				}
+			}
+
+			// Return to Egg
+			pet->return_egg(sd, sd->pd);
+
+			if (pc->delitem(sd, idx, 1, 0, DELITEM_NORMAL, LOG_TYPE_EGG) == 1) {
+				clif->petEvolutionResult(fd, PET_EVOL_NO_PETEGG);
+				return;
+			}
+
+			pet_id = pet->search_petDB_index(ped.petEggId, PET_EGG);
+			if (pet_id >= 0) {
+				sd->catch_target_class = pet->db[pet_id].class_;
+
+				intif->create_pet(
+						 sd->status.account_id, sd->status.char_id,
+						 (short)pet->db[pet_id].class_, (short)mob->db(pet->db[pet_id].class_)->lv,
+						 (short)pet->db[pet_id].EggID, 0, (short)pet->db[pet_id].intimate,
+						 100, 0, 1, pet->db[pet_id].jname);
+				clif->petEvolutionResult(fd, PET_EVOL_SUCCESS);
+			} else {
+				clif->petEvolutionResult(fd, PET_EVOL_UNKNOWN);
+			}
+			return;
+		}
+	}
+
+	clif->petEvolutionResult(fd, PET_EVOL_UNKNOWN);
+}
+
+/**
+ * Result of Pet Evolution (ZC_PET_EVOLUTION_RESULT)
+ * 0x9fc <Result>.L
+ */
+void clif_pet_evolution_result(int fd, int result) {
+	WFIFOHEAD(fd, packet_len(0x9fc));
+	WFIFOW(fd, 0) = 0x9fc;
+	WFIFOL(fd, 2) = result;
+	WFIFOSET(fd, packet_len(0x9fc));
+}
+
 void clif_parse_GMKick(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 /// /kill (CZ_DISCONNECT_CHARACTER).
 /// Request to disconnect a character.
@@ -21984,4 +22083,9 @@ void clif_defaults(void) {
 	clif->pReqStyleChange = clif_parse_cz_req_style_change;
 	clif->cz_req_style_change_sub = clif_cz_req_style_change_sub;
 	clif->style_change_response = clif_style_change_response;
+
+	// -- Pet Evolution
+	clif->pPetEvolution = clif_parse_pet_evolution;
+	clif->petEvolutionResult = clif_pet_evolution_result;
+
 }

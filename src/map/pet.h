@@ -123,10 +123,30 @@ struct pet_data {
 #define pet_stop_walking(pd, type) (unit->stop_walking(&(pd)->bl, (type)))
 #define pet_stop_attack(pd)        (unit->stop_attack(&(pd)->bl))
 
+
+/** Pet Evolution [Dastgir/Hercules] */
+struct pet_evolve_data {
+	int petEggId;
+	int fromEggId;
+	VECTOR_DECL(struct itemlist_entry) items;
+};
+
+enum pet_evolution_result {
+	PET_EVOL_UNKNOWN = 0x0,
+	PET_EVOL_NO_CALLPET = 0x1,
+	PET_EVOL_NO_PETEGG = 0x2,
+	PET_EVOL_NO_RECIPE = 0x3,
+	PET_EVOL_NO_MATERIAL = 0x4,
+	PET_EVOL_RG_FAMILIAR = 0x5,
+	PET_EVOL_SUCCESS = 0x6,
+};
+
 struct pet_interface {
 	struct s_pet_db db[MAX_PET_DB];
 	struct eri *item_drop_ers; //For loot drops delay structures.
 	struct eri *item_drop_list_ers;
+
+	VECTOR_DECL(struct pet_evolve_data) evolve_data;
 	/* */
 	int (*init) (bool minimal);
 	int (*final) (void);
@@ -172,6 +192,11 @@ struct pet_interface {
 	int (*read_db_sub) (struct config_setting_t *it, int n, const char *source);
 	bool (*read_db_sub_intimacy) (int idx, struct config_setting_t *t);
 	void (*read_db_clear) (void);
+
+	/* Pet Evolution [Dastgir/Hercules] */
+	void (*read_evolution_db) (const char *filename);
+	int (*read_evolution_db_sub) (struct config_setting_t *pett, int n, const char *source);
+
 };
 
 #ifdef HERCULES_CORE
