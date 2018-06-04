@@ -4804,6 +4804,7 @@ bool script_config_read(const char *filename, bool imported)
 	libconfig->setting_lookup_int(setting, "check_gotocount", &script->config.check_gotocount);
 	libconfig->setting_lookup_int(setting, "input_min_value", &script->config.input_min_value);
 	libconfig->setting_lookup_int(setting, "input_max_value", &script->config.input_max_value);
+	libconfig->setting_lookup_bool_real(setting, "kill_mob_event_type", &script->config.kill_mob_event_type);
 
 	if (!HPM->parse_conf(&config, filename, HPCT_SCRIPT, imported))
 		retval = false;
@@ -25573,6 +25574,7 @@ void script_defaults(void)
 	script->config.check_gotocount = 2048;
 	script->config.input_min_value = 0;
 	script->config.input_max_value = INT_MAX;
+	script->config.kill_mob_event_type = false;
 	script->config.die_event_name = "OnPCDieEvent";
 	script->config.kill_pc_event_name = "OnPCKillEvent";
 	script->config.kill_mob_event_name = "OnNPCKillEvent";

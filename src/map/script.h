@@ -482,6 +482,7 @@ struct Script_Config {
 	int check_gotocount;
 	int input_min_value;
 	int input_max_value;
+	bool kill_mob_event_type;
 
 	const char *die_event_name;
 	const char *kill_pc_event_name;
