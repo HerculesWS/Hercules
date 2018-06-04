@@ -8843,10 +8843,16 @@ void clif_charnameack (int fd, struct block_list *bl)
 		len = sizeof(struct packet_reqname_ack);
 	}
 	// if no recipient specified just update nearby clients
+	// if no recipient specified just update nearby clients
 	if (fd == 0) {
 		clif->send(&packet, len, bl, AREA);
 	} else {
-		clif->send(&packet, len, bl, SELF);
+		struct map_session_data *sd = sockt->session_is_valid(fd) ? sockt->session[fd]->session_data : NULL;
+		if (sd != NULL) {
+			clif->send(&packet, len, &sd->bl, SELF);
+		} else {
+			clif->send(&packet, len, bl, SELF);
+		}
 	}
 }
 
