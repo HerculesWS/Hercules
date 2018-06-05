@@ -1625,7 +1625,7 @@
 	packet(0x096a,6,clif->pGetCharNameRequest,2);  // CZ_REQNAME
 #endif
 
-// 2013-06-18#1aRagexe, 2013-06-18#1aRagexeRE, 2013-06-18aRagexe, 2013-06-18aRagexeRE
+// 2013-06-18#1aRagexe, 2013-06-18#1aRagexeRE
 #if PACKETVER == 20130618
 	packet(0x0281,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);  // CZ_SEARCH_STORE_INFO
 	packet(0x02c4,5,clif->pHomMenu,2,4);  // CZ_COMMAND_MER
@@ -1658,7 +1658,7 @@
 	packet(0x096a,10,clif->pUseSkillToPos,2,4,6,8);  // CZ_USE_SKILL_TOGROUND
 #endif
 
-// 2013-06-26_3bRagexeRE, 2013-06-26_3cRagexe, 2013-06-26aRagexeRE, 2013-06-26bRagexe, 2013-06-26bRagexeRE, 2013-06-26cRagexe
+// 2013-06-26_3bRagexeRE, 2013-06-26_3cRagexe, 2013-06-26aRagexeRE, 2013-06-26bRagexe
 #if PACKETVER == 20130626
 	packet(0x035f,6,clif->pTickSend,2);  // CZ_REQUEST_TIME
 	packet(0x0360,6,clif->pReqClickBuyingStore,2);  // CZ_REQ_CLICK_TO_BUYING_STORE
@@ -3345,7 +3345,7 @@
 	packet(0x0969,2,clif->pSearchStoreInfoNextPage,0);  // CZ_SEARCH_STORE_INFO_NEXT_PAGE
 #endif
 
-// 2014-06-11eRagexe, 2015-02-25hRagexe, 2018-03-15aRagexe, 2018-03-21aRagexe, 2018-03-21aRagexeRE, 2018-03-28bRagexe, 2018-03-28bRagexeRE, 2018-04-04bRagexe, 2018-04-04cRagexeRE, 2018-04-18aRagexe, 2018-04-18bRagexeRE, 2018-04-25cRagexe, 2018-04-25cRagexeRE, 2018-05-02bRagexe, 2018-05-02bRagexeRE, 2018-05-02dRagexeRE, 2018-05-09aRagexe, 2018-05-16cRagexe, 2018-05-16cRagexeRE, 2018-05-23aRagexe, 2018-05-23aRagexeRE
+// 2014-06-11eRagexe, 2015-02-25hRagexe, 2018-03-15aRagexe, 2018-03-21aRagexe, 2018-03-21aRagexeRE, 2018-03-28bRagexe, 2018-03-28bRagexeRE, 2018-04-04bRagexe, 2018-04-04cRagexeRE, 2018-04-18aRagexe, 2018-04-18bRagexeRE, 2018-04-25cRagexe, 2018-04-25cRagexeRE, 2018-05-02bRagexe, 2018-05-02bRagexeRE, 2018-05-02dRagexeRE, 2018-05-09aRagexe, 2018-05-16cRagexe, 2018-05-16cRagexeRE, 2018-05-23aRagexe, 2018-05-23aRagexeRE, 2018-05-30aRagexe, 2018-05-30bRagexeRE, 2018-05-30cRagexeRE, 2018-06-05bRagexe, 2018-06-05bRagexeRE, 2018-06-12aRagexeRE, 2018-06-12bRagexeRE
 #if PACKETVER == 20140611 || \
     PACKETVER == 20150225 || \
     PACKETVER == 20180315 || \
@@ -3357,7 +3357,10 @@
     PACKETVER == 20180502 || \
     PACKETVER == 20180509 || \
     PACKETVER == 20180516 || \
-    PACKETVER >= 20180523
+    PACKETVER == 20180523 || \
+    PACKETVER == 20180530 || \
+    PACKETVER == 20180605 || \
+    PACKETVER >= 20180612
 	packet(0x0202,26,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS
 	packet(0x022d,5,clif->pHomMenu,2,4);  // CZ_COMMAND_MER
 	packet(0x023b,36,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD
