@@ -85,8 +85,21 @@ void pet_set_intimate(struct pet_data *pd, int value)
 	sd = pd->msd;
 
 	pd->pet.intimate = value;
+
 	if( (intimate >= battle_config.pet_equip_min_friendly && pd->pet.intimate < battle_config.pet_equip_min_friendly) || (intimate < battle_config.pet_equip_min_friendly && pd->pet.intimate >= battle_config.pet_equip_min_friendly) )
 		status_calc_pc(sd,SCO_NONE);
+
+	/* Pet is lost, delete the egg */
+	if (value <= 0) {
+		int i;
+		for (i = 0; i < MAX_INVENTORY; i++) {
+			if(sd->status.inventory[i].card[0] == CARD0_PET &&
+				pd->pet.pet_id == MakeDWord(sd->status.inventory[i].card[1], sd->status.inventory[i].card[2])) {
+				pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_EGG);
+				break;
+			}
+		}
+	}
 }
 
 int pet_create_egg(struct map_session_data *sd, int item_id)
@@ -237,7 +250,7 @@ int pet_hungry(int tid, int64 tick, int id, intptr_t data) {
 	if (pd->petDB->autofeed == 1 && pd->pet.autofeed == 1 && pd->pet.hungry <= 25) {
 		pet->food(sd, pd);
 	}
-	
+
 	if( pd->pet.hungry < 0 )
 	{
 		pet_stop_attack(pd);
