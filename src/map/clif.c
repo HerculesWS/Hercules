@@ -13757,7 +13757,7 @@ void clif_parse_ChangePetName(int fd, struct map_session_data *sd)
 
 void clif_parse_pet_evolution(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 /// Request to Evolve the pet (CZ_RENAME_PET) [Dastgir/Hercules]
-/// 09fb <Length>.W <EvolvedPetEggID>.W <??>
+/// 09fb <Length>.W <EvolvedPetEggID>.W {<index>.W <amount>.W}*items
 void clif_parse_pet_evolution(int fd, struct map_session_data *sd)
 {
 	//int length = RFIFOW(fd, 2);
@@ -13785,9 +13785,10 @@ void clif_parse_pet_evolution(int fd, struct map_session_data *sd)
 		return;
 	}
 
+	// Client side validation is not done as it is insecure.
 	for (i = 0; i < VECTOR_LENGTH(pet->evolve_data); i++) {
 		struct pet_evolve_data ped = VECTOR_INDEX(pet->evolve_data, i);
-		if (ped.petEggId == petEgg && ped.fromEggId == sd->status.inveotry[idx].nameid) {
+		if (ped.petEggId == petEgg && ped.fromEggId == sd->status.inventory[idx].nameid) {
 			int j;
 			int pet_id;
 
