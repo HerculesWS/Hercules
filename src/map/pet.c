@@ -233,6 +233,11 @@ int pet_hungry(int tid, int64 tick, int id, intptr_t data) {
 		return 1; //You lost the pet already, the rest is irrelevant.
 
 	pd->pet.hungry--;
+	/* Pet Autofeed */
+	if (pd->petDB->autofeed == 1 && pd->pet.autofeed == 1 && pd->pet.hungry <= 25) {
+		pet->food(sd, pd);
+	}
+
 	if( pd->pet.hungry < 0 )
 	{
 		pet_stop_attack(pd);
@@ -1358,6 +1363,9 @@ int pet_read_db_sub(struct config_setting_t *it, int n, const char *source)
 
 	if (libconfig->setting_lookup_int(it, "ChangeTargetRate", &i32))
 		pet->db[n].change_target_rate = i32;
+
+	if ((t = libconfig->setting_get_member(it, "AutoFeed")) && (i32 = libconfig->setting_get_bool(t)))
+		pet->db[n].autofeed = i32;
 
 	if (libconfig->setting_lookup_string(it, "PetScript", &str))
 		pet->db[n].pet_script = *str ? script->parse(str, source, -pet->db[n].class_, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;

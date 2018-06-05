@@ -834,7 +834,7 @@ struct clif_interface {
 	void (*mission_info) (struct map_session_data *sd, int mob_id, unsigned char progress);
 	void (*feel_hate_reset) (struct map_session_data *sd);
 	void (*partytickack) (struct map_session_data* sd, bool flag);
-	void (*zc_config) (struct map_session_data *sd, int type, int flag);
+	void (*zc_config) (struct map_session_data *sd, enum CZ_CONFIG type, int flag);
 	void (*viewequip_ack) (struct map_session_data* sd, struct map_session_data* tsd);
 	void (*equpcheckbox) (struct map_session_data* sd);
 	void (*displayexp) (struct map_session_data *sd, uint64 exp, char type, bool is_quest);

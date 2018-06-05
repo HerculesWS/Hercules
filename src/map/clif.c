@@ -9093,7 +9093,7 @@ void clif_feel_hate_reset(struct map_session_data *sd)
 ///     value:
 ///         0 = disabled
 ///         1 = enabled
-void clif_zc_config(struct map_session_data* sd, int type, int flag)
+void clif_zc_config(struct map_session_data* sd, enum CZ_CONFIG type, int flag)
 {
 	int fd;
 	nullpo_retv(sd);
@@ -16154,24 +16154,38 @@ void clif_parse_cz_config(int fd, struct map_session_data *sd) __attribute__((no
 /// 02d8 <type>.L <value>.L
 /// type:
 ///     0 = open equip window
+///     2 = pet autofeeding
 ///     3 = homunculus autofeeding
 ///     value:
 ///         0 = disabled
 ///         1 = enabled
 void clif_parse_cz_config(int fd, struct map_session_data *sd)
 {
-	int type = RFIFOL(fd, 2);
+	enum CZ_CONFIG type = RFIFOL(fd, 2);
 	int flag = RFIFOL(fd, 6);
 
-	if (type == CZ_CONFIG_OPEN_EQUIPMENT_WINDOW) {
+	switch (type) {
+	case CZ_CONFIG_OPEN_EQUIPMENT_WINDOW:
 		sd->status.show_equip = flag;
-	} else if (type == CZ_CONFIG_HOMUNCULUS_AUTOFEEDING) {
-		struct homun_data *hd;
-		hd = sd->hd;
+		break;
+	case CZ_CONFIG_PET_AUTOFEEDING: {
+		struct pet_data *pd = sd->pd;
+		nullpo_retv(pd);
+		if (pd->petDB->autofeed == 0) {
+			clif->message(fd, "Autofeed is disabled for this pet.");
+			return;
+		}
+		pd->pet.autofeed = flag;
+		break;
+	}
+	case CZ_CONFIG_HOMUNCULUS_AUTOFEEDING: {
+		struct homun_data *hd = sd->hd;
 		nullpo_retv(hd);
 		hd->homunculus.autofeed = flag;
-	} else {
-		ShowWarning("clif_parse_cz_config: Unsupported type has been received (%d).", type);
+		break;
+	}
+	default:
+		ShowWarning("clif_parse_cz_config: Unsupported type has been received (%u).\n", type);
 		return;
 	}
 	clif->zc_config(sd, type, flag);
