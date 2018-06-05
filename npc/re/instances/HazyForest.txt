@@ -101,35 +101,34 @@ bif_fild01,158,340,5	script	Laphine Soldier#mist	4_M_FAIRYSOLDIER,{
 			mesf("Party Name %s...", getpartyname(.@party_id));
 			mesf("Party Leader %s...", strcharinfo(PC_NAME));
 			.@instance = instance_create(.@md_name$, .@party_id);
-			if (.@instance < 0) {
-				mes("Hmm...");
-				next();
-				mes("[Laphine Soldier]");
-				if (!.@playtime)
-					mes("It's dangerous in the forest.");
-				else
-					mes("The atmosphere is somewhat tense in the forest.");
-				mes("...Why don't you just go back today?");
-				close();
-			}
-			if (instance_attachmap("1@mist", .@instance) != "") {
+			if (.@instance >= 0) {
+				if (instance_attachmap("1@mist", .@instance) == "") {
+					mes("Hmm...");
+					next();
+					mes("[Laphine Soldier]");
+					if (!.@playtime)
+						mes("It's dangerous in the forest.");
+					else
+						mes("The atmosphere is somewhat tense in the forest.");
+					mes("...Why don't you just go back today?");
+					instance_destroy(.@instance);
+					close();
+				}
 				instance_set_timeout(7200, 300, .@instance);
 				instance_init(.@instance);
-				mes("I've got it. I've written them down on the report here.");
-				next();
-				mes("[Laphine Soldier]");
-				mes("You'll get permission soon.");
-				mes("Now go to the log tunnel, the only way to get into the Hazy Forest.");
-				mes("You understand?");
-				next();
-				mes("[Laphine Soldier]");
-				mes("We can't go against the forest,");
-				mes("but maybe you humans can.");
-				mes("Good luck!");
-				close();
-			} else {
-				instance_destroy(.@instance);
 			}
+			mes("I've got it. I've written them down on the report here.");
+			next();
+			mes("[Laphine Soldier]");
+			mes("You'll get permission soon.");
+			mes("Now go to the log tunnel, the only way to get into the Hazy Forest.");
+			mes("You understand?");
+			next();
+			mes("[Laphine Soldier]");
+			mes("We can't go against the forest,");
+			mes("but maybe you humans can.");
+			mes("Good luck!");
+			close();
 		case 2:
 			mes("[Laphine Soldier]");
 			mes("Well, you've made the right decision.");

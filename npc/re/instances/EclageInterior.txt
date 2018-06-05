@@ -55,20 +55,18 @@ ecl_hub01,132,12,3	script	Chief of Staff#tl01::EclInstance	4_F_FAIRY,{
 		switch (select("Enter it.", "Forget it.")) {
 		case 1:
 			.@instance = instance_create(.@md_name$, .@party_id);
-			if (.@instance < 0) {
-				mes("[Shenime]");
-				mes("There are some soldiers dispatched by Mayor not too long ago.");
-				mes("I should sure hope that you aren't the disturbance they're looking for, right?");
-				close();
+			if (.@instance >= 0) {
+				if (instance_attachmap("1@ecl", .@instance) == "") {
+					mes("[Shenime]");
+					mes("There are some soldiers dispatched by Mayor not too long ago.");
+					mes("I should sure hope that you aren't the disturbance they're looking for, right?");
+					instance_destroy(.@instance);
+					close();
+				}
+				ecl_interior_time = gettimetick(2) + 20 * 60;
+				instance_set_timeout(1200, 1200, .@instance);
+				instance_init(.@instance);
 			}
-			if (instance_attachmap("1@ecl", .@instance) == "") {
-				mesf("^0000ff%s^000000 - Reservation Failed!", .@md_name$);
-				instance_destroy(.@instance);
-				close();
-			}
-			ecl_interior_time = gettimetick(2) + 20 * 60;
-			instance_set_timeout(1200, 1200, .@instance);
-			instance_init(.@instance);
 			mes("[Shenime]");
 			mes("Given the tight internal security, you should prepare yourself.");
 			mes("Wait here for a minute.");

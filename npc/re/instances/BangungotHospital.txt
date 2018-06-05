@@ -274,21 +274,19 @@ L_Enter:
 	switch(select(((getarg(0))?"Prepare to enter the second floor.":""), "Enter the second floor.", "Do not enter.")) {
 	case 1:
 		.@instance = instance_create(.@md_name$,getcharid(CHAR_ID_PARTY));
-		if (.@instance < 0) {
-			mes "[Nurse Maenne]";
-			mes "A critical situation has happened.";
-			mes "You can't go up to the 2nd floor.";
-			close2;
-			cutin "",255;
-			end;
+		if (.@instance >= 0) {
+			if (instance_attachmap("1@ma_h", .@instance) == "") {
+				mes("[Nurse Maenne]");
+				mes("A critical situation has happened.");
+				mes("You can't go up to the 2nd floor.");
+				instance_destroy(.@instance);
+				close2();
+				cutin("", 255);
+				end;
+			}
+			instance_set_timeout(3600, 300, .@instance);
+			instance_init(.@instance);
 		}
-		if (instance_attachmap("1@ma_h",.@instance) == "") {
-			mes "^0000ff"+.@md_name$+"^000000 - Reservation Failed!";
-			instance_destroy(.@instance);
-			close;
-		}
-		instance_set_timeout 3600,300,.@instance;
-		instance_init(.@instance);
 		mes "[Nurse Maenne]";
 		mes "We are preparing to go up";
 		mes "to the second floor.";

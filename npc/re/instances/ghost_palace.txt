@@ -91,27 +91,24 @@ dali02,44,129,5	script	Unpleasent Royal Guard	4_M_SAKRAYROYAL,{
 	.@instance = instance_create(_("Ghost Palace"), .@party_id);
 	.@p_name$ = getpartyname(.@party_id);
 	.@md_name$ = _("Ghost Palace");
-	if (.@instance < 0) {
-		mesf("Party Name: %s", .@p_name$);
-		mesf("Party Leader: %s", strcharinfo(PC_NAME));
-		mesf("^0000FF%s^000000 - Reservation Failed!", .@md_name$);
-		close();
-	}
-	if (instance_attachmap("1@spa", .@instance) != "") {
+	if (.@instance >= 0) {
+		if (instance_attachmap("1@spa", .@instance) == "") {
+			mesf("Party Name: %s", .@p_name$);
+			mesf("Party Leader: %s", strcharinfo(PC_NAME));
+			mesf("^0000FF%s^000000 - Reservation Failed!", .@md_name$);
+			instance_destroy(.@instance);
+			close();
+		}
 		instance_set_timeout(3600, 300, .@instance);
 		instance_init(.@instance);
 		if (!questprogress(1260))
 			setquest(1260);
-		mes("[Unpleasent Royal Guard]");
-		mes("Thank You..\r"
-			"I will open the secret passage to ^0000FFGhost Palace.^000000\r"
-			"Please be ready!");
-		close();
-	} else {
-		instance_destroy(.@instance);
-		mesf("^0000FF%s^000000 - Reservation Failed!", .@md_name$);
-		close();
 	}
+	mes("[Unpleasent Royal Guard]");
+	mes("Thank You..\r"
+		"I will open the secret passage to ^0000FFGhost Palace.^000000\r"
+		"Please be ready!");
+	close();
 }
 
 dali02,41,134,0	script	Interdimensional Device::gpportal	PORTAL,{

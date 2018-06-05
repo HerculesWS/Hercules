@@ -118,37 +118,33 @@ monk_test,309,146,3	script	Friar Patrick#edq	4_M_OLDFRIAR,{
 					mesf("Party name is %s...", getpartyname(.@party_id));
 					mesf("Name of the leader is %s...", strcharinfo(PC_NAME));
 					.@instance = instance_create(_("Sealed Catacomb"), .@party_id);
-					if (.@instance < 0) {
-						mes("Umm... But it seems that there is a problem here... I'll check quickly. Please wait.");
-					} else {
+					if (.@instance >= 0) {
 						for (.@i = 1; .@i <= 2; .@i++) {
 							if (instance_attachmap(.@i + "@cata", .@instance) == "") {
-								mesf("Failed to attach %d@cata as a map!", .@i);
+								mes("Umm... But it seems that there is a problem here... I'll check quickly. Please wait.");
 								instance_destroy(.@instance);
 								close();
 							}
 						}
-
 						instance_set_timeout(7200, 300, .@instance);
 						instance_init(.@instance);
-
-						mes("Okay... I'll adjust the shrine's seal so that you and your group can enter.");
-						next();
-						mes("[Friar Patrick]");
-						mes("You will see a sign when the seal has broken. Please wait until the sign appears...");
-						next();
-						mes("[Friar Patrick]");
-						mes("When you see the sign, put your hands on the gravestone... Then you can move inside.");
-						next();
-						mes("[Friar Patrick]");
-						mes("One thing that you should remember is... Anyone who enters this shrine will be cursed by Baphomet and cannot enter or leave while they are cursed.");
-						next();
-						mes("[Friar Patrick]");
-						mes("And one more thing... In this cursed area, some skills, which are protected by outer physical power are prohibited by the effect of the seal.");
-						next();
-						mes("[Friar Patrick]");
-						mes("For example, the skills like ^0000FFSafety Wall and Assumptio^000000... So you'd better prepare before entering the shrine.");
 					}
+					mes("Okay... I'll adjust the shrine's seal so that you and your group can enter.");
+					next();
+					mes("[Friar Patrick]");
+					mes("You will see a sign when the seal has broken. Please wait until the sign appears...");
+					next();
+					mes("[Friar Patrick]");
+					mes("When you see the sign, put your hands on the gravestone... Then you can move inside.");
+					next();
+					mes("[Friar Patrick]");
+					mes("One thing that you should remember is... Anyone who enters this shrine will be cursed by Baphomet and cannot enter or leave while they are cursed.");
+					next();
+					mes("[Friar Patrick]");
+					mes("And one more thing... In this cursed area, some skills, which are protected by outer physical power are prohibited by the effect of the seal.");
+					next();
+					mes("[Friar Patrick]");
+					mes("For example, the skills like ^0000FFSafety Wall and Assumptio^000000... So you'd better prepare before entering the shrine.");
 				} else {
 					mes("[Friar Patrick]");
 					mes("Umm... I recognize your courage, but... I can't permit anyone to enter this place. I can only permit the leader of a party to enter first.");

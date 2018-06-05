@@ -93,22 +93,19 @@ ma_fild02,312,317,5	script	Guard#buwaya_cave	4_MAL_SOLDIER,{
 					// fall through
 				}
 				.@instance = instance_create(.@md_name$, .@party_id);
-				if (.@instance < 0) {
-					mes("[Guard]");
-					mesf("Party name is... %s.", getpartyname(.@party_id));
-					mesf("Party leader is... %s", strcharinfo(PC_NAME));
-					mesf("^0000ff%s^000000 cannot be opened now.", .@md_name$);
-					mes("Please try a moment later.");
-					close();
+				if (.@instance >= 0) {
+					if (instance_attachmap("1@ma_c", .@instance) == "") {
+						mes("[Guard]");
+						mesf("Party name is... %s.", getpartyname(.@party_id));
+						mesf("Party leader is... %s", strcharinfo(PC_NAME));
+						mesf("^0000ff%s^000000 cannot be opened now.", .@md_name$);
+						mes("Please try a moment later.");
+						instance_destroy(.@instance);
+						close();
+					}
+					instance_set_timeout(3600, 300, .@instance);
+					instance_init(.@instance);
 				}
-				if (instance_attachmap("1@ma_c", .@instance) == "") {
-					mesf("^0000ff%s^000000 - Reservation Failed!", .@md_name$);
-					instance_destroy(.@instance);
-					close();
-				}
-				instance_set_timeout(3600, 300, .@instance);
-				instance_init(.@instance);
-
 				mes("[Guard]");
 				mesf("I will open up the tunnel to ^0000ff%s^000000.", .@md_name$);
 				mes("I wish you good luck.");
