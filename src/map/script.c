@@ -21158,6 +21158,7 @@ BUILDIN(instance_create)
 	const char *name;
 	int owner_id, res;
 	int type = IOT_PARTY;
+	struct map_session_data *sd = map->id2sd(st->rid);
 
 	name = script_getstr(st, 2);
 	owner_id = script_getnum(st, 3);
@@ -21170,22 +21171,43 @@ BUILDIN(instance_create)
 	}
 
 	res = instance->create(owner_id, name, (enum instance_owner_type) type);
-	if( res == -4 ) { // Already exists
-		script_pushint(st, -1);
-		return true;
-	} else if( res < 0 ) {
-		const char *err;
-		switch(res) {
-			case -3: err = "No free instances"; break;
-			case -2: err = "Invalid party ID"; break;
-			case -1: err = "Invalid type"; break;
-			default: err = "Unknown"; break;
+	if (sd != NULL) {
+		switch (res) {
+		case -4: // Already exists
+			clif->msgtable_str(sd, MSG_MDUNGEON_SUBSCRIPTION_ERROR_DUPLICATE, name);
+			break;
+		case -3: // No free instances
+			clif->msgtable_str(sd, MSG_MDUNGEON_SUBSCRIPTION_ERROR_EXIST, name);
+			break;
+		case -2: // Invalid type
+			clif->msgtable_str(sd, MSG_MDUNGEON_SUBSCRIPTION_ERROR_RIGHT, name);
+			break;
+		case -1: // Unknown
+			clif->msgtable_str(sd, MSG_MDUNGEON_SUBSCRIPTION_ERROR_UNKNOWN, name);
+			break;
+		default:
+			if (res < 0)
+				ShowError("buildin_instance_create: failed to unknown reason [%d].\n", res);
 		}
-		ShowError("buildin_instance_create: %s [%d].\n", err, res);
-		script_pushint(st, -2);
-		return true;
+	} else {
+		const char *err;
+		switch (res) {
+		case -3:
+			err = "No free instances";
+			break;
+		case -2:
+			err = "Invalid party ID";
+			break;
+		case -1:
+			err = "Invalid type";
+			break;
+		default:
+			err = "Unknown";
+			break;
+		}
+		if (res < 0)
+			ShowError("buildin_instance_create: %s [%d].\n", err, res);
 	}
-
 	script_pushint(st, res);
 	return true;
 }
