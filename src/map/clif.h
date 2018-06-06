@@ -616,6 +616,14 @@ struct stylist_data_entry {
 VECTOR_DECL(struct stylist_data_entry) stylist_data[MAX_STYLIST_TYPE];
 
 /**
+* Stylist Shop Responds
+**/
+enum stylist_shop {
+	STYLIST_SHOP_SUCCESS,
+	STYLIST_SHOP_FAILURE
+};
+
+/**
  * Clif.c Interface
  **/
 struct clif_interface {
@@ -1458,7 +1466,7 @@ struct clif_interface {
 	void (*stylist_send_rodexitem) (struct map_session_data *sd, int16 itemid);
 	void (*pReqStyleChange) (int fd, struct map_session_data *sd);
 	void (*cz_req_style_change_sub) (struct map_session_data *sd, int type, int16 idx, bool isitem);
-	void (*style_change_response) (struct map_session_data *sd, int8 flag);
+	void (*style_change_response) (struct map_session_data *sd, enum stylist_shop flag);
 };
 
 #ifdef HERCULES_CORE
