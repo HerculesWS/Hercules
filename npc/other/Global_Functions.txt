@@ -434,7 +434,14 @@ function	script	F_ShuffleNumbers	{
 //== Function F_MesColor ===================================
 // Function to colorize npc dialog without having to memorize the color code
 // Examples:
-//    mes callfunc("F_MesColor", C_BLUE) +"This message is now in BLUE";
+//    mes F_MesColor(C_BLUE) +"This message is now in BLUE.";
 function	script	F_MesColor	{
 	return sprintf("^%06X", min(getarg(0), 0xFFFFFF));
+}
+
+//== Function F_MesItemInfo ===================================
+// Show the item name and a clickable link for the item description
+// Only works with mes and mesf, does not work in menu
+function	script	F_MesItemInfo	{
+	return "<ITEM>"+ getitemname(getarg(0)) +"<INFO>"+ getarg(0) +"</INFO></ITEM>";
 }
