@@ -13856,10 +13856,12 @@ void clif_parse_pet_evolution(int fd, struct map_session_data *sd)
  * 0x9fc <Result>.L
  */
 void clif_pet_evolution_result(int fd, int result) {
+#if PACKETVER >= 20140122
 	WFIFOHEAD(fd, packet_len(0x9fc));
 	WFIFOW(fd, 0) = 0x9fc;
 	WFIFOL(fd, 2) = result;
 	WFIFOSET(fd, packet_len(0x9fc));
+#endif
 }
 
 void clif_parse_GMKick(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
@@ -16298,7 +16300,7 @@ void clif_parse_cz_config(int fd, struct map_session_data *sd)
 
 	default:
 		ShowWarning("clif_parse_cz_config: Unsupported type has been received (%d).", type);
-		break;
+		return;
 	}
 	clif->zc_config(sd, type, flag);
 }
