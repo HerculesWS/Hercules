@@ -30,6 +30,12 @@
 #define MAX_PET_DB       300
 #define MAX_PETLOOT_SIZE 30
 
+/** Pet Evolution [Dastgir/Hercules] */
+struct pet_evolve_data {
+	int petEggId;
+	VECTOR_DECL(struct itemlist_entry) items;
+};
+
 struct s_pet_db {
 	short class_;
 	char name[NAME_LENGTH],jname[NAME_LENGTH];
@@ -53,6 +59,9 @@ struct s_pet_db {
 	int autofeed;
 	struct script_code *equip_script;
 	struct script_code *pet_script;
+
+	/* Pet Evolution */
+	VECTOR_DECL(struct pet_evolve_data) evolve_data;
 };
 
 enum { PET_CLASS,PET_CATCH,PET_EGG,PET_EQUIP,PET_FOOD };
@@ -124,14 +133,7 @@ struct pet_data {
 #define pet_stop_walking(pd, type) (unit->stop_walking(&(pd)->bl, (type)))
 #define pet_stop_attack(pd)        (unit->stop_attack(&(pd)->bl))
 
-
-/** Pet Evolution [Dastgir/Hercules] */
-struct pet_evolve_data {
-	int petEggId;
-	int fromEggId;
-	VECTOR_DECL(struct itemlist_entry) items;
-};
-
+/** Pet Evolution Results */
 enum pet_evolution_result {
 	PET_EVOL_UNKNOWN = 0x0,
 	PET_EVOL_NO_CALLPET = 0x1,
@@ -147,7 +149,6 @@ struct pet_interface {
 	struct eri *item_drop_ers; //For loot drops delay structures.
 	struct eri *item_drop_list_ers;
 
-	VECTOR_DECL(struct pet_evolve_data) evolve_data;
 	/* */
 	int (*init) (bool minimal);
 	int (*final) (void);
@@ -195,8 +196,7 @@ struct pet_interface {
 	void (*read_db_clear) (void);
 
 	/* Pet Evolution [Dastgir/Hercules] */
-	void (*read_evolution_db) (const char *filename);
-	int (*read_evolution_db_sub) (struct config_setting_t *pett, int n, const char *source);
+	void (*read_evolution_db_sub) (struct config_setting_t *t, int n);
 
 };
 

@@ -1377,6 +1377,11 @@ int pet_read_db_sub(struct config_setting_t *it, int n, const char *source)
 	if (libconfig->setting_lookup_int(it, "ChangeTargetRate", &i32))
 		pet->db[n].change_target_rate = i32;
 
+	// Pet Evolution
+	if ((t = libconfig->setting_get_member(it, "Evolve")) && config_setting_is_group(t)) {
+		pet->read_evolution_db_sub(t, n);
+	}
+
 	if ((t = libconfig->setting_get_member(it, "AutoFeed")) && (i32 = libconfig->setting_get_bool(t)))
 		pet->db[n].autofeed = i32;
 
@@ -1387,6 +1392,78 @@ int pet_read_db_sub(struct config_setting_t *it, int n, const char *source)
 		pet->db[n].equip_script = *str ? script->parse(str, source, -pet->db[n].class_, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
 
 	return pet->db[n].class_;
+}
+
+/**
+ * Read Pet Evolution Database [Dastgir/Hercules]
+ * @param  t         libconfig setting
+ * @param  n         Pet DB Index
+ */
+void pet_read_evolution_db_sub(struct config_setting_t *t, int n)
+{
+	struct config_setting_t *pett;
+	int i = 0;
+	const char *str = NULL;
+
+	VECTOR_INIT(pet->db[n].evolve_data);
+
+	while ((pett = libconfig->setting_get_elem(t, i))) {
+		if (config_setting_is_group(pett)) {
+			struct pet_evolve_data ped;
+			struct item_data *data;
+			struct config_setting_t *item;
+			int j = 0, i32 = 0;
+
+			str = config_setting_name(pett);
+
+			if (!(data = itemdb->name2id(str))) {
+				ShowWarning("pet_read_evolve_db_sub: Invalid Egg '%s' in Pet #%d, skipping.\n", str, pet->db[n].class_);
+				return;
+			} else {
+				ped.petEggId = data->nameid;
+			}
+
+			VECTOR_INIT(ped.items);
+
+			while ((item = libconfig->setting_get_elem(pett, j))) {
+				struct itemlist_entry list = { 0 };
+				int quantity = 0;
+
+				str = config_setting_name(item);
+				data = itemdb->search_name(str);
+
+				if (!data) {
+					ShowWarning("pet_read_evolve_db_sub: required item %s not found in egg %d\n", str, ped.petEggId);
+					j++;
+					continue;
+				}
+
+				list.id = data->nameid;
+
+				if (mob->get_const(item, &i32) && i32 >= 0) {
+					quantity = i32;
+				}
+
+				if (quantity <= 0) {
+					ShowWarning("pet_read_evolve_db_sub: invalid quantity %d for egg %d\n", quantity, ped.petEggId);
+					j++;
+					continue;
+				}
+
+				list.amount = quantity;
+
+				VECTOR_ENSURE(ped.items, 1, 1);
+				VECTOR_PUSH(ped.items, list);
+
+				j++;
+
+			}
+
+			VECTOR_ENSURE(pet->db[n].evolve_data, 1, 1);
+			VECTOR_PUSH(pet->db[n].evolve_data, ped);
+		}
+		i++;
+	}
 }
 
 bool pet_read_db_sub_intimacy(int idx, struct config_setting_t *t)
@@ -1430,125 +1507,6 @@ void pet_read_db_clear(void)
 	return;
 }
 
-/**
- * Read Pet Evolution Database [Dastgir/Hercules]
- * @param  filename  File to Read
- */
-void pet_read_evolution_db(const char *filename)
-{
-	struct config_t pet_evolve_conf;
-	struct config_setting_t *pdb;
-	struct config_setting_t *t;
-	char filepath[256];
-	int i = 0, count = 0;
-
-	nullpo_retv(filename);
-
-	safesnprintf(filepath, sizeof(filepath), "%s/%s%s", map->db_path, DBPATH, filename);
-
-	if (!exists(filepath)) {
-		ShowError("pet_evolution_read_db: can't find file %s\n", filepath);
-		return;
-	}
-
-	if (!libconfig->load_file(&pet_evolve_conf, filepath))
-		return;
-
-	if ((pdb = libconfig->setting_get_member(pet_evolve_conf.root, "pet_evolve")) == NULL) {
-		ShowError("can't read %s\n", filepath);
-		return;
-	}
-
-	while ((t = libconfig->setting_get_elem(pdb, i++))) {
-		int pet_egg_id = pet->read_evolution_db_sub(t, i - 1, filename);
-
-		if (pet_egg_id <= 0)
-			continue;
-
-		count++;
-	}
-	libconfig->destroy(&pet_evolve_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filename);
-}
-
-int pet_read_evolution_db_sub(struct config_setting_t *pett, int n, const char *source)
-{
-	int i32;
-	struct pet_evolve_data ped = { 0 };
-	struct config_setting_t *t = NULL;
-
-	if (!libconfig->setting_lookup_int(pett, "Id", &i32)) {
-		ShowWarning("pet_read_evolve_db_sub: Missing id in \"%s\", entry #%d, skipping.\n", source, n);
-		return 0;
-	}
-
-	if (itemdb->exists(i32) == NULL) {
-		ShowWarning("pet_read_evolve_db_sub: Item ID#%d does not exist.\n", i32);
-		return 0;
-	}
-
-	ped.petEggId = i32;
-
-	if (!libconfig->setting_lookup_int(pett, "From", &i32)) {
-		ShowWarning("pet_read_evolve_db_sub: Missing id in \"%s\", entry #%d, skipping.\n", source, n);
-		return 0;
-	}
-
-	if (itemdb->exists(i32) == NULL) {
-		ShowWarning("pet_read_evolve_db_sub: Item ID#%d does not exist.\n", i32);
-		return 0;
-	}
-
-	ped.fromEggId = i32;
-
-	if ((t = libconfig->setting_get_member(pett, "Items"))) {
-		if (config_setting_is_group(t)) {
-			struct config_setting_t *item;
-			int i = 0;
-
-			VECTOR_INIT(ped.items);
-
-			while ((item = libconfig->setting_get_elem(t, i))) {
-				const char *name = config_setting_name(item);
-				struct itemlist_entry list = { 0 };
-				struct item_data* id = itemdb->search_name(name);
-				int quantity = 0;
-
-				if (!id) {
-					ShowWarning("pet_read_evolve_db_sub: required item %s not found in egg %d\n", name, ped.petEggId);
-					i++;
-					continue;
-				}
-
-				list.id = id->nameid;
-
-				if (mob->get_const(item, &i32) && i32 >= 0) {
-					quantity = i32;
-				}
-
-				if (quantity <= 0) {
-					ShowWarning("pet_read_evolve_db_sub: invalid quantity %d for egg %d\n", quantity, ped.petEggId);
-					i++;
-					continue;
-				}
-
-				list.amount = quantity;
-
-				VECTOR_ENSURE(ped.items, 1, 1);
-				VECTOR_PUSH(ped.items, list);
-
-				i++;
-			}
-			
-		}
-	}
-	VECTOR_ENSURE(pet->evolve_data, 1, 1);
-	VECTOR_PUSH(pet->evolve_data, ped);
-	return ped.petEggId;
-}
-
-
-
 /*==========================================
  * Initialization process relationship skills
  *------------------------------------------*/
@@ -1556,11 +1514,7 @@ int do_init_pet(bool minimal) {
 	if (minimal)
 		return 0;
 
-	/* Pet Evolution [Dastgir/Hercules] */
-	VECTOR_INIT(pet->evolve_data);
-
 	pet->read_db();
-	pet->read_evolution_db("pet_evolve_db.conf");
 
 	pet->item_drop_ers = ers_new(sizeof(struct item_drop),"pet.c::item_drop_ers",ERS_OPT_NONE);
 	pet->item_drop_list_ers = ers_new(sizeof(struct item_drop_list),"pet.c::item_drop_list_ers",ERS_OPT_NONE);
@@ -1591,15 +1545,16 @@ int do_final_pet(void)
 			script->free_code(pet->db[i].equip_script);
 			pet->db[i].equip_script = NULL;
 		}
+
+		/* Pet Evolution [Dastgir/Hercules] */
+		for (i = 0; i < VECTOR_LENGTH(pet->db[i].evolve_data); i++) {
+			VECTOR_CLEAR(VECTOR_INDEX(pet->db[i].evolve_data, i).items);
+		}
+		VECTOR_CLEAR(pet->db[i].evolve_data);
 	}
 	ers_destroy(pet->item_drop_ers);
 	ers_destroy(pet->item_drop_list_ers);
 
-	/* Pet Evolution */
-	for (i = 0; i < VECTOR_LENGTH(pet->evolve_data); i++) {
-		VECTOR_CLEAR(VECTOR_INDEX(pet->evolve_data, i).items);
-	}
-	VECTOR_CLEAR(pet->evolve_data);
 	return 0;
 }
 void pet_defaults(void) {
@@ -1654,6 +1609,5 @@ void pet_defaults(void) {
 	pet->read_db_sub_intimacy = pet_read_db_sub_intimacy;
 	pet->read_db_clear = pet_read_db_clear;
 
-	pet->read_evolution_db = pet_read_evolution_db;
 	pet->read_evolution_db_sub = pet_read_evolution_db_sub;
 }

@@ -55,36 +55,144 @@ def printHeader():
 //= You should have received a copy of the GNU General Public License
 //= along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //=========================================================================
-//= Pet Evolution Database
+//= Pets Database
 //=========================================================================
 
-pet_evolve: (
+pet_db:(
 /**************************************************************************
  ************* Entry structure ********************************************
  **************************************************************************
 {
 	// ================ Mandatory fields ==============================
-	Id: ID                               (int, Evolved Pet EggID)
-	From: ID                             (int, Evolving Pet EggID)
-	Items: {
-		Name: Amount                     (items required to perform evolution)
+	Id: ID                               (int)
+	SpriteName: "Sprite_Name"            (string)
+	Name: "Pet Name"                     (string)
+	// ================ Optional fields ===============================
+	TamingItem: Taming Item              (string, defaults to 0)
+	EggItem: Egg Id                      (string, defaults to 0)
+	AccessoryItem: Equipment Id          (string, defaults to 0)
+	FoodItem: Food Id                    (string, defaults to 0)
+	FoodEffectiveness: hunger points     (int, defaults to 0)
+	HungerDelay: hunger time             (int, defaults to 0)
+	Intimacy: {
+		Initial: start intimacy                   (int, defaults to 0)
+		FeedIncrement: feeding intimacy           (int, defaults to 0)
+		OverFeedDecrement: overfeeding intimacy   (int, defaults to 0)
+		OwnerDeathDecrement: owner die intimacy   (int, defaults to 0)
+	}
+	CaptureRate: capture rate            (int, defaults to 0)
+	Speed: speed                         (int, defaults to 0)
+	SpecialPerformance: true/false       (boolean, defaults to false)
+	TalkWithEmotes: convert talk         (boolean, defaults to false)
+	AttackRate: attack rate              (int, defaults to 0)
+	DefendRate: Defence attack           (int, defaults to 0)
+	ChangeTargetRate: change target      (int, defaults to 0)
+	Evolve: {
+		{
+			Id: ID                               (string, Evolved Pet EggID)
+			Items: {
+				Name: Amount                     (items required to perform evolution)
+				...
+			}
+		},
 		...
 	}
+	AutoFeed: true/false                 (boolean, defaults to false)
+	PetScript: <" Pet Script (can also be multi-line) ">
+	EquipScript: <" Equip Script (can also be multi-line) ">
 },
 **************************************************************************/''')
 
-def printEntry(entry):
-	print('{')
-	print('\tId: {}'.format(entry['id']))
-	print('\tFrom: {}'.format(entry['from']))
-	print('\tItems: {')
-	for items in entry['items']:
-		if (items[2] == 1):
-			print('\t\t{}: {}'.format(items[0], items[1]))
+def printID(db, name, tabSize = 1):
+	if (name not in db or int(db[name]) == 0):
+		return
+	print('{}{}: {}'.format('\t'*tabSize, name, db[name]))
+
+def printString(db, name, tabSize = 1):
+	if (name not in db or db[name].strip() == ""):
+		return
+	print('{}{}: "{}"'.format('\t'*tabSize, name, db[name]))
+
+def printBool(db, name):
+	if (name not in db or db[name] == '0'):
+		return
+	print('\t{}: true'.format(name))
+
+def printScript(db, name):
+	if (name not in db or db[name].strip() == ""):
+		return
+	print('\t{}: <{}>'.format(name, db[name]))
+
+def printEntry(ItemDB, EvolveDB, autoFeedDB, entry, mode, serverpath):
+	PetDB = Tools.LoadDB('pet_db', mode, serverpath)
+
+	for i, db in enumerate(PetDB):
+		print('{')
+		printID(db, 'Id')
+		printString(db, 'SpriteName')
+		printString(db, 'Name')
+
+		printString(db, 'TamingItem')
+		printString(db, 'EggItem')
+		printString(db, 'AccessoryItem')
+		printString(db, 'FoodItem')
+		printID(db, 'FoodEffectiveness')
+		printID(db, 'HungerDelay')
+
+		if ('Intimacy' in db and (db['Intimacy']['Initial'] != 0 or db['Intimacy']['FeedIncrement'] != 0 or
+			db['Intimacy']['OverFeedDecrement'] != 0 or db['Intimacy']['OwnerDeathDecrement'] != 0)):
+			print('\tIntimacy: {')
+			printID(db['Intimacy'], 'Initial', 2)
+			printID(db['Intimacy'], 'FeedIncrement', 2)
+			printID(db['Intimacy'], 'OverFeedDecrement', 2)
+			printID(db['Intimacy'], 'OwnerDeathDecrement', 2)
+			print('\t}')
+		#
+		printID(db, 'CaptureRate')
+		printID(db, 'Speed')
+		printBool(db, 'SpecialPerformance')
+		printBool(db, 'TalkWithEmotes')
+		printID(db, 'AttackRate')
+		printID(db, 'DefendRate')
+		printID(db, 'ChangeTargetRate')
+		if (str(db['Id']) in autoFeedDB):
+			print('\tAutoFeed: true')
 		else:
-			print('\t\t//ID{}: {}'.format(items[0], items[1]))
-	print('\t}')
-	print('},')
+			print('\tAutoFeed: false')
+		printScript(db, 'PetScript')
+		printScript(db, 'EquipScript')
+	
+		if (db['EggItem'] in EvolveDB):
+			entry = EvolveDB[db['EggItem']]
+			print('\tEvolve: {')
+
+			for evolve in entry:
+				if ('comment' in evolve):
+					print('/*')
+				print('\t\t{}: {'.format(evolve['Id']))
+
+				for items in evolve['items']:
+					print('\t\t\t{}: {}'.format(items[0], items[1]))
+
+				print('\t\t},')
+				if ('comment' in evolve):
+					print('*/')
+
+			print('\t},')
+		print('},')
+
+def saveEntry(EvolveDB, entry):
+	if (entry['from'] not in EvolveDB):
+		EvolveDB[entry['from']] = list()
+	EvolveDB[entry['from']].append(entry)
+	return EvolveDB
+
+def getItemConstant(entry, ItemDB, itemID):
+	if (itemID in ItemDB):
+		return ItemDB[itemID]
+	print(itemID, "not found", entry)
+	entry['comment'] = 1
+	return itemID
 
 def ConvertDB(luaName, mode, serverpath):
 	ItemDB = Tools.LoadDBConsts('item_db', mode, serverpath)
@@ -93,29 +201,30 @@ def ConvertDB(luaName, mode, serverpath):
 	f.close()
 
 	recipeDB = re.findall(r'InsertEvolutionRecipeLGU\((\d+),\s*(\d+),\s*(\d+),\s*(\d+)\)', content)
+	autoFeedDB = re.findall(r'InsertPetAutoFeeding\((\d+)\)', content)
 
 	current = 0
 
 	entry = dict()
+	EvolveDB = dict()
+
 	printHeader()
 	for recipe in recipeDB:
-		fromEgg = int(recipe[0])
-		petEgg = int(recipe[1])
-		itemID = int(recipe[2])
-		quantity = int(recipe[3])
+		fromEgg = getItemConstant(entry, ItemDB, int(recipe[0]))
+		petEgg = getItemConstant(entry, ItemDB, int(recipe[1]))
 
 		if (current == 0):
 			entry = {
-				'id': petEgg,
+				'Id': petEgg,
 				'from': fromEgg,
 				'items': list()
 			}
 			current = petEgg
 
 		if (current != petEgg):
-			printEntry(entry)
+			EvolveDB = saveEntry(EvolveDB, entry)
 			entry = {
-				'id': petEgg,
+				'Id': petEgg,
 				'from': fromEgg,
 				'items': list()
 			}
@@ -123,11 +232,13 @@ def ConvertDB(luaName, mode, serverpath):
 			entry['items'] = list()
 			current = petEgg
 
-		if (itemID in ItemDB):
-			entry['items'].append((ItemDB[itemID], quantity, 1))
-		else:
-			entry['items'].append((itemID, quantity, 0))
-	printEntry(entry)
+		itemConst = getItemConstant(entry, ItemDB, int(recipe[2]))
+		quantity = int(recipe[3])
+
+		entry['items'].append((itemConst, quantity))
+	saveEntry(EvolveDB, entry)
+
+	printEntry(ItemDB, EvolveDB, autoFeedDB, entry, mode, serverpath)
 	print(')')
 
 

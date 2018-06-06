@@ -48,3 +48,18 @@ def LoadDBConsts(DBname, mode, serverpath):
 				print('LoadDBConsts: invalid database name {}'.format(DBname))
 				exit(1)
 	return consts
+
+def LoadDB(DBname, mode, serverpath):
+	filenames = [serverpath + 'db/{}/{}.conf'.format(mode, DBname)]
+
+	if os.path.isfile(serverpath + 'db/{}2.conf'.format(DBname)):
+		filenames.append(serverpath + 'db/{}2.conf'.format(DBname))
+
+	consts = dict()
+	for filename in filenames:
+		with io.open(filename) as f:
+			config = libconf.load(f)
+			db = config[DBname]
+			return db
+	print('LoadDBConsts: invalid database name {}'.format(DBname))
+	exit(1)

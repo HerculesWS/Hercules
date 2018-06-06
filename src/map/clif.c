@@ -13762,19 +13762,18 @@ void clif_parse_pet_evolution(int fd, struct map_session_data *sd)
 {
 	//int length = RFIFOW(fd, 2);
 	int petEgg = RFIFOW(fd, 4);
-	int i = 0, idx;
+	int i = 0, idx, petIndex;
 
 	if (sd->status.pet_id == 0) {
 		clif->petEvolutionResult(fd, PET_EVOL_NO_CALLPET);
 		return;
 	}
 
-	for (idx = 0; idx < MAX_INVENTORY; idx++) {
-		if (sd->status.inventory[idx].card[0] == CARD0_PET &&
-			sd->status.pet_id == MakeDWord(sd->status.inventory[idx].card[1], sd->status.inventory[idx].card[2]))
-			break;
-	}
-	if (i == MAX_INVENTORY) {
+
+	ARR_FIND(0, MAX_INVENTORY, idx, sd->status.inventory[idx].card[0] == CARD0_PET &&
+			sd->status.pet_id == MakeDWord(sd->status.inventory[idx].card[1], sd->status.inventory[idx].card[2]));
+
+	if (idx == MAX_INVENTORY) {
 		clif->petEvolutionResult(fd, PET_EVOL_NO_PETEGG);
 		return;
 	}
@@ -13785,10 +13784,18 @@ void clif_parse_pet_evolution(int fd, struct map_session_data *sd)
 		return;
 	}
 
+	ARR_FIND(0, MAX_PET_DB, petIndex, pet->db[petIndex].class_ == sd->pd->pet.class_);
+
+	if (petIndex == MAX_PET_DB) {
+		// Which error?
+		clif->petEvolutionResult(fd, PET_EVOL_UNKNOWN);
+		return;	
+	}
+
 	// Client side validation is not done as it is insecure.
-	for (i = 0; i < VECTOR_LENGTH(pet->evolve_data); i++) {
-		struct pet_evolve_data ped = VECTOR_INDEX(pet->evolve_data, i);
-		if (ped.petEggId == petEgg && ped.fromEggId == sd->status.inventory[idx].nameid) {
+	for (i = 0; i < VECTOR_LENGTH(pet->db[petIndex].evolve_data); i++) {
+		struct pet_evolve_data ped = VECTOR_INDEX(pet->db[petIndex].evolve_data, i);
+		if (ped.petEggId == petEgg) {
 			int j;
 			int pet_id;
 
