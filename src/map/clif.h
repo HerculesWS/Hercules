@@ -616,6 +616,14 @@ struct stylist_data_entry {
 VECTOR_DECL(struct stylist_data_entry) stylist_data[MAX_STYLIST_TYPE];
 
 /**
+* Stylist Shop Responds
+**/
+enum stylist_shop {
+	STYLIST_SHOP_SUCCESS,
+	STYLIST_SHOP_FAILURE
+};
+
+/**
  * Clif.c Interface
  **/
 struct clif_interface {

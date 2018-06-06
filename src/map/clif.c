@@ -20827,7 +20827,7 @@ void clif_parse_cz_req_style_change(int fd, struct map_session_data *sd)
 	if (p->BottomAccessory > 0)
 		clif->cz_req_style_change_sub(sd, LOOK_HEAD_BOTTOM, p->BottomAccessory, true);
 
-	clif->style_change_response(sd, true);
+	clif->style_change_response(sd, STYLIST_SHOP_SUCCESS);
 	return;
 }
 
