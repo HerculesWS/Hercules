@@ -92,12 +92,12 @@ void pet_set_intimate(struct pet_data *pd, int value)
 	/* Pet is lost, delete the egg */
 	if (value <= 0) {
 		int i;
-		for (i = 0; i < MAX_INVENTORY; i++) {
-			if(sd->status.inventory[i].card[0] == CARD0_PET &&
-				pd->pet.pet_id == MakeDWord(sd->status.inventory[i].card[1], sd->status.inventory[i].card[2])) {
-				pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_EGG);
-				break;
-			}
+
+		ARR_FIND(0, MAX_INVENTORY, i, sd->status.inventory[i].card[0] == CARD0_PET &&
+			pd->pet.pet_id == MakeDWord(sd->status.inventory[i].card[1], sd->status.inventory[i].card[2]));
+
+		if (i != MAX_INVENTORY) {
+			pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_EGG);
 		}
 	}
 }
@@ -336,10 +336,11 @@ int pet_return_egg(struct map_session_data *sd, struct pet_data *pd)
 	pet->lootitem_drop(pd,sd);
 
 	// Pet Evolution
-	for (i = 0; i < MAX_INVENTORY; i++) {
-		if(sd->status.inventory[i].card[0] == CARD0_PET &&
-			pd->pet.pet_id == MakeDWord(sd->status.inventory[i].card[1], sd->status.inventory[i].card[2]))
-			sd->status.inventory[i].identify = 1;
+	ARR_FIND(0, MAX_INVENTORY, i, sd->status.inventory[i].card[0] == CARD0_PET &&
+			pd->pet.pet_id == MakeDWord(sd->status.inventory[i].card[1], sd->status.inventory[i].card[2]));
+
+	if (i != MAX_INVENTORY) {
+		sd->status.inventory[i].identify = 1;
 	}
 
 	pd->pet.incubate = 1;
@@ -476,13 +477,11 @@ int pet_recv_petdata(int account_id,struct s_pet *p,int flag) {
 	}
 	if(p->incubate == 1) {
 		int i;
-		//Delete egg from inventory. [Skotlex]
-		for (i = 0; i < MAX_INVENTORY; i++) {
-			if(sd->status.inventory[i].card[0] == CARD0_PET &&
-				p->pet_id == MakeDWord(sd->status.inventory[i].card[1], sd->status.inventory[i].card[2]))
-				break;
-		}
-		if(i >= MAX_INVENTORY) {
+		// Get Egg Index
+		ARR_FIND(0, MAX_INVENTORY, i, sd->status.inventory[i].card[0] == CARD0_PET &&
+			p->pet_id == MakeDWord(sd->status.inventory[i].card[1], sd->status.inventory[i].card[2]));
+		
+		if(i == MAX_INVENTORY) {
 			ShowError("pet_recv_petdata: Hatching pet (%d:%s) aborted, couldn't find egg in inventory for removal!\n",p->pet_id, p->name);
 			sd->status.pet_id = 0;
 			return 1;
@@ -1494,6 +1493,7 @@ void pet_read_db_clear(void)
 
 	// Remove any previous scripts in case reloaddb was invoked.
 	for (i = 0; i < MAX_PET_DB; i++) {
+		int j;
 		if (pet->db[i].pet_script) {
 			script->free_code(pet->db[i].pet_script);
 			pet->db[i].pet_script = NULL;
@@ -1502,6 +1502,11 @@ void pet_read_db_clear(void)
 			script->free_code(pet->db[i].equip_script);
 			pet->db[i].equip_script = NULL;
 		}
+
+		for (j = 0; j < VECTOR_LENGTH(pet->db[i].evolve_data); j++) {
+			VECTOR_CLEAR(VECTOR_INDEX(pet->db[i].evolve_data, j).items);
+		}
+		VECTOR_CLEAR(pet->db[i].evolve_data);
 	}
 	memset(pet->db, 0, sizeof(pet->db));
 	return;
@@ -1535,6 +1540,7 @@ int do_final_pet(void)
 	int i;
 	for( i = 0; i < MAX_PET_DB; i++ )
 	{
+		int j;
 		if( pet->db[i].pet_script )
 		{
 			script->free_code(pet->db[i].pet_script);
@@ -1547,8 +1553,8 @@ int do_final_pet(void)
 		}
 
 		/* Pet Evolution [Dastgir/Hercules] */
-		for (i = 0; i < VECTOR_LENGTH(pet->db[i].evolve_data); i++) {
-			VECTOR_CLEAR(VECTOR_INDEX(pet->db[i].evolve_data, i).items);
+		for (j = 0; j < VECTOR_LENGTH(pet->db[i].evolve_data); j++) {
+			VECTOR_CLEAR(VECTOR_INDEX(pet->db[i].evolve_data, j).items);
 		}
 		VECTOR_CLEAR(pet->db[i].evolve_data);
 	}

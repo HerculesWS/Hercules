@@ -13756,7 +13756,7 @@ void clif_parse_ChangePetName(int fd, struct map_session_data *sd)
 }
 
 void clif_parse_pet_evolution(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
-/// Request to Evolve the pet (CZ_RENAME_PET) [Dastgir/Hercules]
+/// Request to Evolve the pet (CZ_PET_EVOLUTION) [Dastgir/Hercules]
 /// 09fb <Length>.W <EvolvedPetEggID>.W {<index>.W <amount>.W}*items
 void clif_parse_pet_evolution(int fd, struct map_session_data *sd)
 {
@@ -16272,33 +16272,33 @@ void clif_parse_cz_config(int fd, struct map_session_data *sd)
 	int flag = RFIFOL(fd, 6);
 
 	switch(type) {
-		case CZ_CONFIG_OPEN_EQUIPMENT_WINDOW:
-			sd->status.show_equip = flag;
-			break;
+	case CZ_CONFIG_OPEN_EQUIPMENT_WINDOW:
+		sd->status.show_equip = flag;
+		break;
 
-		case CZ_CONFIG_PET_AUTOFEEDING: {
-			struct pet_data *pd;
-			pd = sd->pd;
-			nullpo_retv(pd);
-			if (pd->petDB->autofeed == 0) {
-				clif->message(fd, "Autofeed is disabled for this pet.");
-				return;
-			}
-			pd->pet.autofeed = flag;
-			break;
+	case CZ_CONFIG_PET_AUTOFEEDING: {
+		struct pet_data *pd;
+		pd = sd->pd;
+		nullpo_retv(pd);
+		if (pd->petDB->autofeed == 0) {
+			clif->message(fd, "Autofeed is disabled for this pet.");
+			return;
 		}
+		pd->pet.autofeed = flag;
+		break;
+	}
 
-		case CZ_CONFIG_HOMUNCULUS_AUTOFEEDING: {
-			struct homun_data *hd;
-			hd = sd->hd;
-			nullpo_retv(hd);
-			hd->homunculus.autofeed = flag;
-			break;
-		}
+	case CZ_CONFIG_HOMUNCULUS_AUTOFEEDING: {
+		struct homun_data *hd;
+		hd = sd->hd;
+		nullpo_retv(hd);
+		hd->homunculus.autofeed = flag;
+		break;
+	}
 
-		default:
-			ShowWarning("clif_parse_cz_config: Unsupported type has been received (%d).", type);
-			break;
+	default:
+		ShowWarning("clif_parse_cz_config: Unsupported type has been received (%d).", type);
+		break;
 	}
 	clif->zc_config(sd, type, flag);
 }
