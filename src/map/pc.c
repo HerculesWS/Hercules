@@ -10176,7 +10176,7 @@ int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 }
 
 /**
-* Unrquip item ad given position.
+* Unequip an item at the given position.
 * @param sd the affected player structure. Must be checked before.
 * @param n inventory item position. Must be checked before.
 * @param pos slot position. Must be checked before.
