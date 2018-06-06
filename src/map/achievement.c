@@ -1884,6 +1884,12 @@ int achievement_db_finalize(union DBKey key, struct DBData *data, va_list args)
 	VECTOR_CLEAR(ad->objective);
 	VECTOR_CLEAR(ad->rewards.item);
 
+	// Free the script
+	if (ad->rewards.bonus != NULL) {
+		script->free_code(ad->rewards.bonus);
+		ad->rewards.bonus = NULL;
+	}
+
 	return 0;
 }
 
