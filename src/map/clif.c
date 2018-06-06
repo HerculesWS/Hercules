@@ -20827,7 +20827,7 @@ void clif_parse_cz_req_style_change(int fd, struct map_session_data *sd)
 	if (p->BottomAccessory > 0)
 		clif->cz_req_style_change_sub(sd, LOOK_HEAD_BOTTOM, p->BottomAccessory, true);
 
-	clif->style_change_response(sd, true);
+	clif->style_change_response(sd, STYLIST_SHOP_SUCCESS);
 	return;
 }
 
@@ -20850,7 +20850,7 @@ void clif_cz_req_style_change_sub(struct map_session_data *sd, int type, int16 i
 	}
 }
 
-void clif_style_change_response(struct map_session_data *sd, int8 flag)
+void clif_style_change_response(struct map_session_data *sd, enum stylist_shop flag)
 {
 #if PACKETVER >= 20151104
 	struct PACKET_ZC_STYLE_CHANGE_RES p;
