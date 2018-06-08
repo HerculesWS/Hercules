@@ -4684,7 +4684,7 @@ void char_parse_char_create_new_char(int fd, struct char_session_data* sd)
 				RFIFOSKIP(fd, 36);
 				return;
 		}
-		result = chr->make_new_char_sql(sd, RFIFOP(fd, 2), 1, 1, 1, 1, 1, 1, RFIFOB(fd, 26), RFIFOW(fd, 27), RFIFOW(fd, 29), RFIFOW(fd, 31), sex);
+		result = chr->make_new_char_sql(sd, RFIFOP(fd, 2), 1, 1, 1, 1, 1, 1, RFIFOB(fd, 26), RFIFOW(fd, 27), RFIFOW(fd, 29), RFIFOL(fd, 31), sex);
 #elif PACKETVER >= 20120307
 		result = chr->make_new_char_sql(sd, RFIFOP(fd, 2), 1, 1, 1, 1, 1, 1, RFIFOB(fd, 26), RFIFOW(fd, 27), RFIFOW(fd, 29), JOB_NOVICE, 'U');
 #else
