@@ -20321,12 +20321,12 @@ BUILDIN(getvariableofnpc)
 
 BUILDIN(getvariableofpc)
 {
-	const char* name;
-	struct script_data* data = script_getdata(st, 2);
+	const char *name;
+	struct script_data *data = script_getdata(st, 2);
 	struct map_session_data *sd = map->id2sd(script_getnum(st, 3));
 
 	if (!data_isreference(data)) {
-		ShowError("script:getvariableofpc: not a variable\n");
+		ShowError("buildin_getvariableofpc: Not a variable\n");
 		script->reportdata(data);
 		script_pushnil(st);
 		st->state = END;
@@ -20335,35 +20335,40 @@ BUILDIN(getvariableofpc)
 
 	name = reference_getname(data);
 
-	switch (*name)
-	{
+	switch (*name) {
 	case '$':
 	case '.':
 	case '\'':
-		ShowError("script:getvariableofpc: illegal scope (not pc variable)\n");
+		ShowError("buildin_getvariableofpc: Illegal scope (not pc variable)\n");
 		script->reportdata(data);
 		script_pushnil(st);
 		st->state = END;
 		return false;
 	}
 
-	if (sd == NULL)
-	{
+	if (sd == NULL) {
 		// player not found, return default value
 		if (script_hasdata(st, 4)) {
 			script_pushcopy(st, 4);
-		} else if (is_string_variable(name)) {
-			script_pushconststr(st, "");
+			return true;
 		} else {
-			script_pushint(st, 0);
+			ShowError("buildin_getvariableofpc: Player not found and no default value given.\n");
+			script->reportfunc(st);
+			if (is_string_variable(name))
+				script_pushconststr(st, "");
+			else
+				script_pushint(st, 0);
+			return false;
 		}
-		return true;
 	}
 
-	if (!sd->regs.vars)
-		sd->regs.vars = i64db_alloc(DB_OPT_RELEASE_DATA);
-
-	script->push_val(st->stack, C_NAME, reference_getuid(data), &sd->regs);
+	if (reference_toparam(data)) {
+		script_pushint(st, pc->readparam(sd, reference_getparamtype(data)));
+	} else {
+		if (!sd->regs.vars)
+			sd->regs.vars = i64db_alloc(DB_OPT_RELEASE_DATA);
+		script->push_val(st->stack, C_NAME, reference_getuid(data), &sd->regs);
+	}
 	return true;
 }
 
