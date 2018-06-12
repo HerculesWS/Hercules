@@ -2172,7 +2172,7 @@ struct skill_interface {
 	int (*check_condition_castbegin_mount_unknown) (struct status_change *sc, uint16 *skill_id);
 	int (*check_condition_castbegin_madogear_unknown) (struct status_change *sc, uint16 *skill_id);
 	int (*check_condition_castbegin_unknown) (struct status_change *sc, uint16 *skill_id);
-	void (*check_condition_castend_unknown) (struct map_session_data* sd, uint16 *skill_id, uint16 *skill_lv);
+	bool (*check_condition_castend_unknown) (struct map_session_data* sd, uint16 *skill_id, uint16 *skill_lv);
 	bool (*get_requirement_off_unknown) (struct status_change *sc, uint16 *skill_id);
 	bool (*get_requirement_item_unknown) (struct status_change *sc, struct map_session_data* sd, uint16 *skill_id, uint16 *skill_lv, uint16 *idx, int *i);
 	void (*get_requirement_unknown) (struct status_change *sc, struct map_session_data* sd, uint16 *skill_id, uint16 *skill_lv, struct skill_condition *req);
