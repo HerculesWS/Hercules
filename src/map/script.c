@@ -24168,7 +24168,9 @@ BUILDIN(openstylist)
 	if (sd == NULL)
 		return false;
 
+#if PACKETVER >= 20150128
 	clif->open_ui(sd, CZ_STYLIST_UI);
+#endif
 	return true;
 }
 

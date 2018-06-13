@@ -368,6 +368,11 @@ enum packet_headers {
 	questUpdateType = 0x2b5,
 #endif // PACKETVER < 20150513
 	questUpdateType2 = 0x8fe,
+#if PACKETVER >= 20171122
+	openUiType = 0xAE2,
+#elif PACKETVER >= 20150128
+	openUiType = 0xA38,
+#endif
 };
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
@@ -1720,7 +1725,9 @@ struct PACKET_CZ_OPEN_UI {
 struct PACKET_ZC_OPEN_UI {
 	int16 PacketType;
 	int8 UIType;
+#if PACKETVER >= 20171122
 	int32 data;
+#endif
 } __attribute__((packed));
 
 struct PACKET_ZC_UI_ACTION {

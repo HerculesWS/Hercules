@@ -556,13 +556,18 @@ enum CZ_CONFIG {
 * used with packet 0xAE2 to request the client to open a specific ui
 **/
 enum zc_ui_types {
+#if PACKETVER >= 20150128
 	ZC_BANK_UI = 0,
-	ZC_STYLIST_UI,
-	ZC_CAPTCHA_UI,
-	ZC_MACRO_UI,
+	ZC_STYLIST_UI = 1,
+	ZC_CAPTCHA_UI = 2,
+	ZC_MACRO_UI = 3,
+#endif
+	zc_ui_unused = 4,  // for avoid compilation errors
+#if PACKETVER >= 20171122
 	ZC_TIPBOX_UI = 5,
-	ZC_RENEWQUEST_UI,
-	ZC_ATTENDANCE_UI
+	ZC_RENEWQUEST_UI = 6,
+	ZC_ATTENDANCE_UI = 7
+#endif
 };
 
 /**
