@@ -24168,7 +24168,7 @@ BUILDIN(openstylist)
 	if (sd == NULL)
 		return false;
 
-	clif->open_ui(sd, STYLIST_UI);
+	clif->open_ui(sd, CZ_STYLIST_UI);
 	return true;
 }
 
