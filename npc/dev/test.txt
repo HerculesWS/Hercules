@@ -150,6 +150,20 @@ function	script	HerculesSelfTestHelper	{
 	callsub(OnCheck, "Prefix decrement --", .@y);
 	callsub(OnCheck, "Prefix decrement --", .@x);
 
+	// Increment and decrement operators after a condition
+	.@x = 0;
+	if (1) .@x++;
+	callsub(OnCheck, "Suffix increment ++ after (condition)", .@x);
+	.@x = 2;
+	if (1) .@x--;
+	callsub(OnCheck, "Suffix decrement -- after (condition)", .@x);
+	.@x = 0;
+	if (1) ++.@x;
+	callsub(OnCheck, "Prefix increment ++ after (condition)", .@x);
+	.@x = 2;
+	if (1) --.@x;
+	callsub(OnCheck, "Prefix decrement -- after (condition)", .@x);
+
 	// Order of [] and --/++
 	.@a[1] = 0;
 	.@a[1]++; // .@a[1] = .@a[1] + 1;
