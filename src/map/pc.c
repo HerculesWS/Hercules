@@ -7385,7 +7385,8 @@ int pc_statusup2(struct map_session_data* sd, int type, int val)
  * Update skill_lv for player sd
  * Skill point allocation
  *------------------------------------------*/
-int pc_skillup(struct map_session_data *sd,uint16 skill_id) {
+int pc_skillup(struct map_session_data *sd,uint16 skill_id)
+{
 	int index = 0;
 	nullpo_ret(sd);
 
@@ -7423,17 +7424,18 @@ int pc_skillup(struct map_session_data *sd,uint16 skill_id) {
 			clif->updatestatus(sd,SP_CARTINFO);
 		if (!pc_has_permission(sd, PC_PERM_ALL_SKILL)) // may skill everything at any time anyways, and this would cause a huge slowdown
 			clif->skillinfoblock(sd);
-	} else if( battle_config.skillup_limit ){
-		if (sd->sktree.second != 0)
+	} else if (battle_config.skillup_limit) {
+		if (sd->sktree.second != 0) {
 #if PACKETVER >= 20090805
 			clif->msgtable_num(sd, MSG_UPGRADESKILLERROR_MORE_FIRSTJOBSKILL, sd->sktree.second);
 #endif
-		else if (sd->sktree.third != 0)
+		} else if (sd->sktree.third != 0) {
 #if PACKETVER >= 20091013
 			clif->msgtable_num(sd, MSG_UPGRADESKILLERROR_MORE_SECONDJOBSKILL, sd->sktree.third);
 #endif
-		else if (pc->calc_skillpoint(sd) < 9) /* TODO: official response? */
+		} else if (pc->calc_skillpoint(sd) < 9) {  /* TODO: official response? */
 			clif->messagecolor_self(sd->fd, COLOR_RED, "You need the basic skills");
+		}
 	}
 	return 0;
 }
