@@ -2511,6 +2511,20 @@ Example 3:
 
 ---------------------------------------
 
+*setparam(<Account ID>, <parameter number>, <value>)
+
+This function will set a parameter of a character to the
+specified value.
+
+Example:
+
+	// Sets the Status Points of "player" to 0
+	setparam(getcharid(CHAR_ID_ACCOUNT, "player"), StatusPoint, 0);
+
+Refer to readparam() for further information.
+
+---------------------------------------
+
 *getcharid(<type>{, "<character name>"})
 
 This function will return a unique ID number of the invoking character,

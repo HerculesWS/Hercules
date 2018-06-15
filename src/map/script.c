@@ -8623,6 +8623,29 @@ BUILDIN(readparam) {
 	return true;
 }
 
+/*==============================================*
+ * setparam(<Account ID>, <parameter number>, <value>);
+ * Uses pc->setparam() on a specified Account ID. [Wolfie]
+ *==============================================*/
+BUILDIN(setparam)
+{
+	struct map_session_data *sd = map->id2sd(script_getnum(st, 2));
+	struct script_data *data = script_getdata(st, 3);
+	int type, val = script_getnum(st, 4);
+
+	if (reference_toparam(data))
+		type = reference_getparamtype(data);
+	else
+		type = script->conv_num(st, data);
+
+	if (sd) {
+		if (pc->setparam(sd, type, val) == 0)
+			ShowWarning("buildin_setparam: Invalid parameter provided.\n");
+	}
+
+	return true;
+}
+
 /*==========================================
  * Return charid identification
  * return by @num :
@@ -24386,6 +24409,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(checkweight,"vi*"),
 		BUILDIN_DEF(checkweight2,"rr"),
 		BUILDIN_DEF(readparam,"i?"),
+		BUILDIN_DEF(setparam, "iii"),
 		BUILDIN_DEF(getcharid,"i?"),
 		BUILDIN_DEF(getnpcid,"i?"),
 		BUILDIN_DEF(getpartyname,"i"),
