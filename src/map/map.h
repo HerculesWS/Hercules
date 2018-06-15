@@ -48,6 +48,7 @@ enum E_MAPSERVER_ST {
 #define MAX_NPC_PER_MAP 512
 #define AREA_SIZE (battle->bc->area_size)
 #define CHAT_AREA_SIZE (battle->bc->chat_area_size)
+#define DEAD_AREA_SIZE (battle->bc->dead_area_size)
 #define DAMAGELOG_SIZE 30
 #define LOOTITEM_SIZE 10
 #define MAX_MOBSKILL 50

@@ -434,6 +434,7 @@ static bool clif_send(const void *buf, int len, struct block_list *bl, enum send
 	struct battleground_data *bgd = NULL;
 	int x0 = 0, x1 = 0, y0 = 0, y1 = 0, fd;
 	struct s_mapiterator* iter;
+	int area_size;
 
 	if( type != ALL_CLIENT )
 		nullpo_ret(bl);
@@ -472,13 +473,18 @@ static bool clif_send(const void *buf, int len, struct block_list *bl, enum send
 
 		case AREA:
 		case AREA_WOSC:
+		case AREA_DEAD:
 			if (sd && bl->prev == NULL) //Otherwise source misses the packet.[Skotlex]
 				clif->send (buf, len, bl, SELF);
 			/* Fall through */
 		case AREA_WOC:
 		case AREA_WOS:
+			if (type == AREA_DEAD)
+				area_size = DEAD_AREA_SIZE;
+			else
+				area_size = AREA_SIZE;
 			nullpo_retr(true, bl);
-			map->foreachinarea(clif->send_sub, bl->m, bl->x-AREA_SIZE, bl->y-AREA_SIZE, bl->x+AREA_SIZE, bl->y+AREA_SIZE,
+			map->foreachinarea(clif->send_sub, bl->m, bl->x - area_size, bl->y - area_size, bl->x + area_size, bl->y + area_size,
 				BL_PC, buf, len, bl, type);
 			break;
 		case AREA_CHAT_WOC:
@@ -909,7 +915,12 @@ static void clif_clearunit_area(struct block_list *bl, clr_type type)
 	WBUFL(buf,2) = bl->id;
 	WBUFB(buf,6) = type;
 
-	clif->send(buf, packet_len(0x80), bl, type == CLR_DEAD ? AREA : AREA_WOS);
+	/**
+	 * When monster dies, there's a delay before the packet is sent,
+	 * so we send it to a bigger area to avoid clients at the edge
+	 * walking out of the area and missing it [KirieZ]
+	 */
+	clif->send(buf, packet_len(0x80), bl, type == CLR_DEAD ? AREA_DEAD : AREA_WOS);
 
 	if (clif->isdisguised(bl)) {
 		WBUFL(buf,2) = -bl->id;

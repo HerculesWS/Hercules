@@ -89,6 +89,7 @@ typedef enum send_target {
 	AREA_WOC,           // area, without chatrooms
 	AREA_WOSC,          // area, without own chatrooms
 	AREA_CHAT_WOC,      // hearable area, without chatrooms
+	AREA_DEAD,          // area, for clear unit (monster death)
 	CHAT,               // current chatroom
 	CHAT_WOS,           // current chatroom, without self
 	PARTY,
