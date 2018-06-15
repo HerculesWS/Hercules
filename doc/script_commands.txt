@@ -2512,6 +2512,21 @@ Example 3:
 
 ---------------------------------------
 
+*setparam(<parameter number>, <value>{, "<player name>"})
+*setparam(<parameter number>, <value>{, <account id>})
+
+Sets a parameter on the given player. See readparam() for more info about
+parameters. Keep in mind that not all read-able parameters are also set-able.
+
+Parameters that can be modified include:
+
+StatusPoint, BaseLevel, SkillPoint, Zeny, Sex, Weight, MaxWeight, JobLevel,
+BaseExp, JobExp, Hp, MaxHp, Sp, MaxSp, Karma, Manner, Fame, bVit, bDex, bAgi,
+bStr, bInt, bLuk
+
+
+---------------------------------------
+
 *getcharid(<type>{, "<character name>"})
 
 This function will return a unique ID number of the invoking character,
