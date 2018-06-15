@@ -4238,8 +4238,8 @@ they don't.
 
 ---------------------------------------
 
-*checkvending({"<Player Name>"})
-*checkchatting({"<Player Name>"})
+*checkvending({"<Player Name>" | <account id>})
+*checkchatting({"<Player Name>" | <account id>})
 
 Checks if the player is vending or in a chatroom.
 Name is optional, and defaults to the attached player if omitted.
@@ -4263,7 +4263,7 @@ Examples:
 
 ---------------------------------------
 
-*checkidle({"<Player Name>"})
+*checkidle({"<Player Name>" | <account id>})
 
 Returns the time, in seconds, that the specified player has been idle.
 Name is optional, and defaults to the attached player if omitted.

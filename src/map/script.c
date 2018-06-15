@@ -17974,41 +17974,43 @@ BUILDIN(checkvending) // check vending [Nab4]
 {
 	struct map_session_data *sd = NULL;
 
-	if (script_hasdata(st,2))
-		sd = script->nick2sd(st, script_getstr(st,2));
+	if (script_hasdata(st, 2))
+		sd = (script_isstringtype(st, 2)) ? script->nick2sd(st, script_getstr(st, 2)) : script->id2sd(st, script_getnum(st, 2));
 	else
 		sd = script->rid2sd(st);
 
 	if (sd != NULL)
 		script_pushint(st, sd->state.autotrade ? 2 : sd->state.vending);
 	else
-		script_pushint(st,0);
+		script_pushint(st, 0);
 
 	return true;
 }
 
 // check chatting [Marka]
-BUILDIN(checkchatting) {
+BUILDIN(checkchatting)
+{
 	struct map_session_data *sd = NULL;
 
-	if (script_hasdata(st,2))
-		sd = script->nick2sd(st, script_getstr(st,2));
+	if (script_hasdata(st, 2))
+		sd = (script_isstringtype(st, 2)) ? script->nick2sd(st, script_getstr(st, 2)) : script->id2sd(st, script_getnum(st, 2));
 	else
 		sd = script->rid2sd(st);
 
 	if (sd != NULL)
 		script_pushint(st, (sd->chat_id != 0));
 	else
-		script_pushint(st,0);
+		script_pushint(st, 0);
 
 	return true;
 }
 
-BUILDIN(checkidle) {
+BUILDIN(checkidle)
+{
 	struct map_session_data *sd = NULL;
 
 	if (script_hasdata(st, 2))
-		sd = script->nick2sd(st, script_getstr(st, 2));
+		sd = (script_isstringtype(st, 2)) ? script->nick2sd(st, script_getstr(st, 2)) : script->id2sd(st, script_getnum(st, 2));
 	else
 		sd = script->rid2sd(st);
 
