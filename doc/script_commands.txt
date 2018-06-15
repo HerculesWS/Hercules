@@ -2473,6 +2473,7 @@ arrays:
 ---------------------------------------
 
 *readparam(<parameter number>{, "<player name>"})
+*readparam(<parameter number>{, <account id>})
 
 This function will return the basic stats of an invoking character,
 referred to by the parameter number. Instead of a number, you can use a
@@ -6195,7 +6196,7 @@ Examples:
     @ /!\ This command is deprecated @
     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-Prevents the player from moving when the option != 0, and 0 enables the 
+Prevents the player from moving when the option != 0, and 0 enables the
 player to move again. The player has to be the account ID of a character,
 and will run for the attached player if zero is supplied.
 
