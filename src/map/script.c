@@ -8628,6 +8628,43 @@ BUILDIN(readparam)
 	return true;
 }
 
+BUILDIN(setparam)
+{
+	int type;
+	struct map_session_data *sd;
+	struct script_data *data = script_getdata(st, 2);
+	int val = script_getnum(st, 3);
+
+	if (data_isreference(data) && reference_toparam(data)) {
+		type = reference_getparamtype(data);
+	} else {
+		type = script->conv_num(st, data);
+	}
+
+	if (script_hasdata(st, 4)) {
+		if (script_isstringtype(st, 4)) {
+			sd = script->nick2sd(st, script_getstr(st, 4));
+		} else {
+			sd = script->id2sd(st, script_getnum(st, 4));
+		}
+	} else {
+		sd = script->rid2sd(st);
+	}
+
+	if (sd == NULL) {
+		script_pushint(st, 0);
+		return true;
+	}
+
+	if (pc->setparam(sd, type, val) == 0) {
+		script_pushint(st, 0);
+		return false;
+	}
+
+	script_pushint(st, 1);
+	return true;
+}
+
 /*==========================================
  * Return charid identification
  * return by @num :
@@ -24391,6 +24428,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(checkweight,"vi*"),
 		BUILDIN_DEF(checkweight2,"rr"),
 		BUILDIN_DEF(readparam,"i?"),
+		BUILDIN_DEF(setparam,"ii?"),
 		BUILDIN_DEF(getcharid,"i?"),
 		BUILDIN_DEF(getnpcid,"i?"),
 		BUILDIN_DEF(getpartyname,"i"),
