@@ -2472,7 +2472,7 @@ arrays:
 
 ---------------------------------------
 
-*readparam(<parameter number>{, "<player name>"})
+*readparam(<parameter number>{, "<Player Name>" | <account id>})
 
 This function will return the basic stats of an invoking character,
 referred to by the parameter number. Instead of a number, you can use a
@@ -2508,6 +2508,20 @@ Example 3:
 
 	// Display your current weight
 	mes("Your current weight is "+ (Weight/10) + "/" + (MaxWeight/10));
+
+---------------------------------------
+
+*setparam(<parameter number>, <value>{, "<Player Name>" | <account id>})
+
+This function will set a parameter of a character to the
+specified value.
+
+Example:
+
+	// Sets the Status Points of "player" to 0
+	setparam(StatusPoint, 0, "player");
+
+Refer to readparam() for further information.
 
 ---------------------------------------
 
