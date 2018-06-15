@@ -18157,7 +18157,7 @@ BUILDIN(setpcblock)
 	if ((type & PCBLOCK_IMMUNE) != 0)
 		sd->block_action.immune = state;
 
-	if ((type & PCBLOCK_SITSTAND) != 0) 
+	if ((type & PCBLOCK_SITSTAND) != 0)
 		sd->block_action.sitstand = state;
 
 	if ((type & PCBLOCK_COMMANDS) != 0)
@@ -25263,7 +25263,7 @@ void script_hardcoded_constants(void)
 	script->set_constant("MST_AROUND3", MST_AROUND3, false, false);
 	script->set_constant("MST_AROUND4", MST_AROUND4, false, false);
 	script->set_constant("MST_AROUND", MST_AROUND , false, false);
- 
+
 	script->constdb_comment("pc block constants, use with *setpcblock* and *checkpcblock*");
 	script->set_constant("PCBLOCK_NONE",     PCBLOCK_NONE,     false, false);
 	script->set_constant("PCBLOCK_MOVE",     PCBLOCK_MOVE,     false, false);
