@@ -8597,22 +8597,21 @@ BUILDIN(disableitemuse)
  * return the basic stats of sd
  * chk pc->readparam for available type
  *------------------------------------------*/
-BUILDIN(readparam) {
+BUILDIN(readparam)
+{
 	int type;
 	struct map_session_data *sd;
 	struct script_data *data = script_getdata(st, 2);
 
-	if (reference_toparam(data)) {
+	if (reference_toparam(data))
 		type = reference_getparamtype(data);
-	} else {
+	else
 		type = script->conv_num(st, data);
-	}
 
-	if (script_hasdata(st, 3)) {
-		sd = script->nick2sd(st, script_getstr(st, 3));
-	} else {
+	if (script_hasdata(st, 3))
+		sd = (script_isstringtype(st, 3)) ? script->nick2sd(st, script_getstr(st, 3)) : script->id2sd(st, script_getnum(st, 3));
+	else
 		sd = script->rid2sd(st);
-	}
 
 	if (sd == NULL) {
 		script_pushint(st, -1);
@@ -8620,6 +8619,34 @@ BUILDIN(readparam) {
 	}
 
 	script_pushint(st, pc->readparam(sd, type));
+	return true;
+}
+
+/*==============================================*
+ * setparam(<parameter number>, <value>{, "<Player Name>" | <account id> });
+ * Uses pc->setparam() on a specified Account ID. [Wolfie]
+ *==============================================*/
+BUILDIN(setparam)
+{
+	struct script_data *data = script_getdata(st, 2);
+	int type, val = script_getnum(st, 3);
+	struct map_session_data *sd;
+
+	if (reference_toparam(data))
+		type = reference_getparamtype(data);
+	else
+		type = script->conv_num(st, data);
+
+	if (script_hasdata(st, 4))
+		sd = (script_isstringtype(st, 4)) ? script->nick2sd(st, script_getstr(st, 4)) : script->id2sd(st, script_getnum(st, 4));
+	else
+		sd = script->rid2sd(st);
+
+	if (sd != NULL) {
+		if (pc->setparam(sd, type, val) == 0)
+			ShowWarning("buildin_setparam: Invalid parameter provided.\n");
+	}
+
 	return true;
 }
 
@@ -24386,6 +24413,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(checkweight,"vi*"),
 		BUILDIN_DEF(checkweight2,"rr"),
 		BUILDIN_DEF(readparam,"i?"),
+		BUILDIN_DEF(setparam, "iii"),
 		BUILDIN_DEF(getcharid,"i?"),
 		BUILDIN_DEF(getnpcid,"i?"),
 		BUILDIN_DEF(getpartyname,"i"),
