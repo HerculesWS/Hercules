@@ -8597,22 +8597,21 @@ BUILDIN(disableitemuse)
  * return the basic stats of sd
  * chk pc->readparam for available type
  *------------------------------------------*/
-BUILDIN(readparam) {
+BUILDIN(readparam)
+{
 	int type;
 	struct map_session_data *sd;
 	struct script_data *data = script_getdata(st, 2);
 
-	if (reference_toparam(data)) {
+	if (reference_toparam(data))
 		type = reference_getparamtype(data);
-	} else {
+	else
 		type = script->conv_num(st, data);
-	}
 
-	if (script_hasdata(st, 3)) {
-		sd = script->nick2sd(st, script_getstr(st, 3));
-	} else {
+	if (script_hasdata(st, 3))
+		sd = (script_isstringtype(st, 3)) ? script->nick2sd(st, script_getstr(st, 3)) : map->id2sd(script_getnum(st, 3));
+	else
 		sd = script->rid2sd(st);
-	}
 
 	if (sd == NULL) {
 		script_pushint(st, -1);
