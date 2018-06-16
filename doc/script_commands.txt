@@ -3858,8 +3858,6 @@ Valid types are listed in constants.conf:
 	MOB_MODE		21
 	MOB_MVPEXP		22
 
-Check sample in doc/sample/getmonsterinfo.txt
-
 ---------------------------------------
 
 *addmonsterdrop(<mob id or name>, <item id>, <rate>)
