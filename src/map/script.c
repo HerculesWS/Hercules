@@ -22731,7 +22731,7 @@ BUILDIN(queueremove)
 /**
  * Script command queueopt: Modifies the options of a queue.
  *
- * When the option value isn't provided, the option is removed.
+ * When the <event label> isn't provided, the option is removed.
  *
  * Returns 1 (true) on success, 0 (false) on failure.
  *
@@ -22741,10 +22741,10 @@ BUILDIN(queueremove)
  * - QUEUEOPT_MAPCHANGE
  *
  * When the QUEUEOPT_MAPCHANGE event is triggered, it sets a temporary
- * character variable \c @Queue_Destination_Map$ with the destination map name.
+ * character variable @Queue_Destination_Map$ with the destination map name.
  *
  * @code{.herc}
- *    queueopt(.@queue_id, optionType, <optional val>);
+ *    queueopt(.@queue_id, optionType{, <event label>});
  * @endcode
  */
 BUILDIN(queueopt)
