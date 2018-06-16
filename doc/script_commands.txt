@@ -9247,6 +9247,7 @@ Example:
 	}
 
 ---------------------------------------
+
 *instance_set_respawn(<map_name>, <x>, <y>{, <instance_id>})
 
 Updates the 'reload spawn' position of a instance,
@@ -9261,6 +9262,7 @@ it will use the player's warp destination as the initial respawn point,
 it can of course be modified by using this script command at any point.
 
 ---------------------------------------
+
 *instance_mapname("<map name>"{, <instance id>})
 
 Returns the unique name of the instanced map. If no instance ID is specified,
@@ -9270,6 +9272,38 @@ that fails, the command returns an empty string instead.
 
 
 ---------------------------------------
+
+*getinstancelist("<map name>"{, <type>})
+
+This command will find all the instanced ID (or map or instance owner) from
+the specific map into an array of temporary global variables.
+
+$@instancelistid[]    is a global temporary number array which contains all the
+                      instance ID generated from this map.
+                      (only set when type is 0 or not specified)
+
+$@instancelistmap$[]  is a global temporary string array which contains all the
+                      map name emulated from this map.
+                      (only set when type is 1)
+
+$@instancelistiot[]   is a global temporary number array which contains all the
+                      instance owner type (eg: IOT_NONE) generated from this map.
+                      (only set when type is 2)
+
+$@instancelistowner[] is a global temporary number array which contains all the
+                      instance owner ID generated from this map.
+                      (only set when type is 3)
+
+$@instancelistcount   is the number of instance found generated from this map.
+
+Example:
+
+	mes("List of Party playing Instance Endless Tower");
+	getinstancelist("1@tower", 3);
+	for (.@i = 0; .@i < $@instancelistcount; ++.@i)
+		mes(getpartyname($@instancelistowner[.@i]));
+	close();
+
 //=====================================
 7 - End of Instance-Related Commands
 //=====================================

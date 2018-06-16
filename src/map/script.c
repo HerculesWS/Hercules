@@ -23251,6 +23251,44 @@ BUILDIN(instance_set_respawn)
 	return true;
 }
 
+BUILDIN(getinstancelist)
+{
+	const char *str = script_getstr(st, 2);
+	int i = 0, count = 0, type = 0, imap = -1;
+	int16 m;
+
+	if ((m = map->mapname2mapid(str)) < 0) {
+		mapreg->setreg(script->add_str("$@instancelistcount"), 0);
+		return false;
+	}
+
+	if (script_hasdata(st, 3)) {
+		type = script_getnum(st, 3);
+		if (type < 0 || type > 3) {
+			ShowWarning("buildin_getinstancelist: invalid type '%d'.\n", type);
+			mapreg->setreg(script->add_str("$@instancelistcount"), 0);
+			return false;
+		}
+	}
+
+	for (i = 0; i < instance->instances; ++i) {
+		imap = instance->map2imap(m, instance->list[i].id);
+		if (instance->list[i].state != INSTANCE_FREE && imap >= 0) {
+			if (type == 1)
+				mapreg->setregstr(reference_uid(script->add_str("$@instancelistmap$"), count++), mapindex_id2name(map_id2index(imap)));
+			else if (type == 2)
+				mapreg->setreg(reference_uid(script->add_str("$@instancelistiot"), count++), instance->list[i].owner_type);
+			else if (type == 3)
+				mapreg->setreg(reference_uid(script->add_str("$@instancelistowner"), count++), instance->list[i].owner_id);
+			else
+				mapreg->setreg(reference_uid(script->add_str("$@instancelistid"), count++), instance->list[i].id);
+		}
+	}
+	mapreg->setreg(script->add_str("$@instancelistcount"), count);
+
+	return true;
+}
+
 /**
  * @call openshop({NPC Name});
  *
@@ -24784,6 +24822,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(instance_mapname,"s?"),
 		BUILDIN_DEF(instance_set_respawn,"sii?"),
 		BUILDIN_DEF2(has_instance,"has_instance2","s"),
+		BUILDIN_DEF(getinstancelist,"s?"),
 
 		/**
 		 * 3rd-related
