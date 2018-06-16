@@ -17931,18 +17931,22 @@ BUILDIN(delmonsterdrop) {
 BUILDIN(getmonsterinfo)
 {
 	struct mob_db *monster;
-	int mob_id;
+	int mob_id, type;
 
 	mob_id = script_getnum(st,2);
+	type = script_getnum(st,3);
+
 	if (!mob->db_checkid(mob_id)) {
 		ShowError("buildin_getmonsterinfo: Wrong Monster ID: %i\n", mob_id);
-		if ( !script_getnum(st,3) ) //requested a string
+		if (type == 0 || type == 23) //requested a string
 			script_pushconststr(st,"null");
 		else
 			script_pushint(st,-1);
 		return false;
 	}
+
 	monster = mob->db(mob_id);
+
 	switch ( script_getnum(st,3) ) {
 		case 0:  script_pushstrcopy(st,monster->jname); break;
 		case 1:  script_pushint(st,monster->lv); break;
@@ -17967,6 +17971,7 @@ BUILDIN(getmonsterinfo)
 		case 20: script_pushint(st,monster->status.def_ele); break;
 		case 21: script_pushint(st,monster->status.mode); break;
 		case 22: script_pushint(st,monster->mexp); break;
+		case 23: script_pushstrcopy(st,monster->name); break;
 		default: script_pushint(st,-1); //wrong Index
 	}
 	return true;

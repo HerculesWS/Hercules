@@ -3857,6 +3857,7 @@ Valid types are listed in constants.conf:
 	MOB_ELEMENT		20
 	MOB_MODE		21
 	MOB_MVPEXP		22
+	MOB_ENAME		23
 
 ---------------------------------------
 
