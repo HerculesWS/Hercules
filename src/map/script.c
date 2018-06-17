@@ -17931,12 +17931,13 @@ BUILDIN(delmonsterdrop) {
 BUILDIN(getmonsterinfo)
 {
 	struct mob_db *monster;
-	int mob_id;
+	int mob_id, type;
 
 	mob_id = script_getnum(st,2);
+	type = script_getnum(st, 3);
 	if (!mob->db_checkid(mob_id)) {
 		ShowError("buildin_getmonsterinfo: Wrong Monster ID: %i\n", mob_id);
-		if ( !script_getnum(st,3) ) //requested a string
+		if (type == MOB_NAME || type == MOB_ENAME) //requested a string
 			script_pushconststr(st,"null");
 		else
 			script_pushint(st,-1);
@@ -17967,6 +17968,12 @@ BUILDIN(getmonsterinfo)
 	case MOB_ELEMENT:   script_pushint(st, monster->status.def_ele); break;
 	case MOB_MODE:      script_pushint(st, monster->status.mode); break;
 	case MOB_MVPEXP:    script_pushint(st, monster->mexp); break;
+	case MOB_ENAME:     script_pushstrcopy(st, monster->name); break;
+	case MOB_ELEMENTLV: script_pushint(st, monster->status.ele_lv); break;
+	case MOB_MOVESPEED: script_pushint(st, monster->status.speed); break;
+	case MOB_ADELAY:    script_pushint(st, monster->status.adelay); break;
+	case MOB_AMOTION:   script_pushint(st, monster->status.amotion); break;
+	case MOB_DMOTION:   script_pushint(st, monster->status.dmotion); break;
 	default:            script_pushint(st, -1); //wrong Index
 	}
 	return true;
@@ -25309,6 +25316,12 @@ void script_hardcoded_constants(void)
 	script->set_constant("MOB_ELEMENT", MOB_ELEMENT, false, false);
 	script->set_constant("MOB_MODE", MOB_MODE, false, false);
 	script->set_constant("MOB_MVPEXP", MOB_MVPEXP, false, false);
+	script->set_constant("MOB_ENAME", MOB_ENAME, false, false);
+	script->set_constant("MOB_ELEMENTLV", MOB_ELEMENTLV, false, false);
+	script->set_constant("MOB_MOVESPEED", MOB_MOVESPEED, false, false);
+	script->set_constant("MOB_ADELAY", MOB_ADELAY, false, false);
+	script->set_constant("MOB_AMOTION", MOB_AMOTION, false, false);
+	script->set_constant("MOB_DMOTION", MOB_DMOTION, false, false);
 
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL
