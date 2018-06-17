@@ -247,8 +247,8 @@ increments of 45 degrees, where 0 means facing towards the top of the map.
 and to make it look southeast it's facing 5.)
 
 Sprite is the sprite identifier used to display this particular NPC. For a
-full list of sprite numbers see http://kalen.s79.xrea.com/npc/npce.shtml as
-well as db/constants.conf.
+full list of sprite numbers see http://nn.ai4rei.net/dev/npclist/ as
+well as doc/constants.md.
 You may also use a monster's ID constant instead to display a monster sprite
 for this NPC, in npcs that have view ids of mobs it's encouraged to use
 OnTouch events with a 2,2 range and with an 'end' after the header to avoid
@@ -536,7 +536,7 @@ suffix is 32.
 
 Some variables are special, that is, they are already defined for you by
 the scripting engine. You can see the full list somewhere in
-'db/constants.conf', which is a file you should read, since it also
+'doc/constants.md', which is a file you should read, since it also
 allows you to replace lots of numbered arguments for many commands with
 easier to read text. The special variables most commonly used are all
 permanent character-based variables:
@@ -699,7 +699,7 @@ Variable References
 Hard-coded constants
 --------------------
 Most of the constants defined by the scripting engine can be found in
-'db/constants.conf' and have the same value independently of settings
+'doc/constants.md' and have the same value independently of settings
 that are core related, but there are constants that can be used to
 retrieve core information that's set when the server is compiled.
 
@@ -716,8 +716,7 @@ MAX_CHAT_USERS		- Maximum Chat users
 MAX_REFINE			- Maximum Refine level
 
 Send targets and status options are also hard-coded and can be found
-in src/map/script.c::script_hardcoded_constants or in functions that
-currently use them.
+in 'doc/constants.md'.
 
 Operators
 ---------
@@ -2476,7 +2475,7 @@ arrays:
 
 This function will return the basic stats of an invoking character,
 referred to by the parameter number. Instead of a number, you can use a
-parameter name if it is defined in 'db/constants.conf'.
+parameter name if it is defined in 'doc/constants.md'.
 
 Example parameters:
 
@@ -3833,7 +3832,7 @@ mob database and return the info set by TYPE argument.
 It will return -1 if there is no such monster (or the type value is
 invalid), or "null" if you requested the monster's name.
 
-Valid types are listed in constants.conf:
+Valid types are listed in doc/constants.md:
 	MOB_NAME		0
 	MOB_LV			1
 	MOB_MAXHP		2
@@ -3984,7 +3983,7 @@ effect being inflicted, in percent.
 	}
 
 You can see the full list of available effect types you can possibly
-inflict in 'db/constants.conf' under 'Eff_'.
+inflict in 'doc/constants.md' under 'Status effects'.
 
 ---------------------------------------
 //=====================================
@@ -4635,7 +4634,7 @@ This command will change the job class of the invoking character.
 
 This command does work with numbers, but you can also use job names. The
 full list of job names and the numbers they correspond to can be found in
-'db/constants.conf'.
+'doc/constants.md'.
 
 'upper flag' can alternatively be used to specify the type of job one
 changes to. For example, jobchange(Job_Swordman, 1); will change the
@@ -4783,7 +4782,7 @@ Is subject to EXP bonuses and to the `quest_exp_rate` config option.
 	getexp(10000, 5000);
 
 You can also assign directly to the parameters defined in
-'db/constants.conf':
+'doc/constants.md':
 
 	BaseExp += 10000;
 	JobExp += 5000;
@@ -4862,7 +4861,7 @@ installation that you can look at: 'npc/custom/stylist.txt'
 This command will push the currently attached player to given direction by
 given amount of square cells. Direction is the same as used when declaring
 NPCs, and can be specified by using one of the DIR_* constants
-(db/constants.conf).
+(doc/constants.md).
 
 The knock-back is not restricted by items or map flags, only obstacles are
 taken into account. If there is not enough space to perform the push (e.g.
@@ -5815,7 +5814,7 @@ These commands will bestow a status effect on a character.
 
 The <effect type> determines which status is invoked. This can be either a number
 or constant, with the common statuses (mostly negative) found in
-'db/constants.conf' with the 'SC_' prefix. A full list is located in
+'doc/constants.md' under 'Status Changes'. A full list is located in
 'src/map/status.h', though they are not currently documented.
 
 The duration of the status is given in <ticks>, or milleseconds.
@@ -6615,7 +6614,7 @@ Examples:
 *unitemote(<GID>, <Emote>)
 
 Okay, these commands should be fairly self explaining.
-For the emotions, you can look in db/constants.conf for prefixes with e_
+For the emotions, you can look in 'doc/constants.md' under 'Emotes'
 PS: unitwarp() supports a <GID> of zero, which causes the executor of the
 script to be affected. This can be used with OnTouchNPC to warp
 monsters:
@@ -7009,7 +7008,7 @@ This command will broadcast a message to all or most players, similar to
 The region the broadcast is heard in (target), source of the broadcast and
 the color the message will come up as is determined by the flags.
 
-The flag values are coded as constants in db/constants.conf to make them
+The flag values are coded as constants in doc/constants.md to make them
 easier to use.
 
 Target flags:
@@ -7335,7 +7334,7 @@ to the coordinates specified.
 
 This command marks a specified map with a map flag given. Map flags alter
 the behavior of the map, you can see the list of the available ones in
-'db/constants.conf' under 'mf_'.
+'doc/constants.md' under 'Mapflags'.
 
 The map flags alter the behavior of the map regarding teleporting
 (mf_nomemo, mf_noteleport, mf_nowarp), storing location when
@@ -7786,7 +7785,7 @@ A full list of pet IDs can be found inside 'db/pet_db.txt'
 
 This command makes an object display an emotion sprite above their own as
 if they were doing that emotion. For a full list of emotion numbers, see
-'db/constants.conf' under 'e_'. The not so obvious ones are 'e_what' (a
+'doc/constants.md' under 'Emotes'. The not so obvious ones are 'e_what' (a
 question mark) and 'e_gasp' (the exclamation mark).
 
 The optional target parameter specifies who will get the emotion on top of
@@ -8851,14 +8850,14 @@ same time.
 
 This command will make the pet give a bonus to the owner's stat (bonus
 type - bInt, bVit, bDex, bAgi, bLuk, bStr, bSpeedRate - for a full list, see the
-values starting with 'b' in 'db/constants.conf').
+'doc/constants.md' under 'Bonuses / Parameter IDs').
 
 *petrecovery(<status type>, <delay>)
 
 This command will make the pet cure a specified status condition. The
 curing actions will occur once every <delay> seconds. For a full list of
-status conditions that can be cured, see the list of 'SC_' status
-condition constants in 'db/constants.conf'
+status conditions that can be cured, see the list of 'Status Changes' status
+condition constants in 'doc/constants.md'
 
 *petloot(<max items>)
 
@@ -8953,7 +8952,7 @@ Each of these can be 'on' or 'off'. Together they define a cell's behavior.
 This command lets you alter these flags for all map cells in the specified
 (x1,y1)-(x2,y2) rectangle.
 'type' defines which flag to modify. Possible options include cell_walkable,
-cell_shootable, cell_basilica. For a full list, see constants.conf.
+cell_shootable, cell_basilica. For a full list, see 'doc/constants.md'.
 'flag' can be false (clear flat) or true (set flag).
 
 Example:
@@ -8990,7 +8989,7 @@ remove a nonwalkable row of cells after the barricade mobs.
 This command will return true or false, depending on whether the specified cell
 has the 'type' flag set or not. There are various types to check, all
 mimicking the server's cell_chk enumeration. The types can be found in
-db/constants.conf.
+'doc/constants.md' under 'Cell checks'.
 
 The meaning of the individual types can be confusing, so here's an
 overview:
@@ -9890,9 +9889,9 @@ Applicable Data Types (available as constants) -
 	UDT_WALKTOXY:       Make a unit walk to certain co-ordinates. (Val1 = (int) x, Val2 = (int) y)
 	UDT_SPEED:          Unit Speed. (int)
 	UDT_MODE:           Mode (Mobs only) (int)
-	UDT_AI:             Unit AI Type (see constants.conf for Unit AI Types)
-	UDT_SCOPTION:       Status Options. (see constants.conf for Unit Option Types)
-	UDT_SEX:            Gender of the unit. (see constants.conf for Genders)
+	UDT_AI:             Unit AI Type (see doc/constants.md for Unit AI Types)
+	UDT_SCOPTION:       Status Options. (see doc/constants.md for Unit Option Types)
+	UDT_SEX:            Gender of the unit. (see doc/constants.md for Genders)
 	UDT_CLASS:          Class of the unit. (Monster ID) (int)
 	UDT_HAIRSTYLE:      Hair Style ID. (int)
 	UDT_HAIRCOLOR:      Hair Color ID. (int)
@@ -9955,9 +9954,9 @@ Applicable Data types (available as constants) -
 	UDT_MAPIDXY:        Warp a Unit to a map. (Val1 = (string) MapName, Val2 = (int) x, Val3 = (int) y)
 	UDT_SPEED:          Unit Speed. (int)
 	UDT_MODE:           Mode (Mobs only) (int)
-	UDT_AI:             Unit AI Type (see constants.conf for Unit AI Types)
-	UDT_SCOPTION:       Status Options. (see constants.conf for Unit Option Types)
-	UDT_SEX:            Gender of the unit. (see constants.conf for Genders)
+	UDT_AI:             Unit AI Type (see doc/constants.md for Unit AI Types)
+	UDT_SCOPTION:       Status Options. (see doc/constants.md for Unit Option Types)
+	UDT_SEX:            Gender of the unit. (see doc/constants.md for Genders)
 	UDT_CLASS:          Class of the unit. (Monster ID) (int)
 	UDT_HAIRSTYLE:      Hair Style ID. (int)
 	UDT_HAIRCOLOR:      Hair Color ID. (int)
