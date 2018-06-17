@@ -17933,18 +17933,19 @@ BUILDIN(getmonsterinfo)
 	struct mob_db *monster;
 	int mob_id, type;
 
-	mob_id = script_getnum(st,2);
+	mob_id = script_getnum(st, 2);
 	type = script_getnum(st, 3);
+
 	if (!mob->db_checkid(mob_id)) {
-		ShowError("buildin_getmonsterinfo: Wrong Monster ID: %i\n", mob_id);
 		if (type == MOB_NAME || type == MOB_ENAME) //requested a string
-			script_pushconststr(st,"null");
+			script_pushconststr(st, "null");
 		else
-			script_pushint(st,-1);
-		return false;
+			script_pushint(st, -1);
+		return true;
 	}
 	monster = mob->db(mob_id);
-	switch (script_getnum(st,3)) {
+
+	switch (script_getnum(st, 3)) {
 	case MOB_NAME:      script_pushstrcopy(st, monster->jname); break;
 	case MOB_LV:        script_pushint(st, monster->lv); break;
 	case MOB_MAXHP:     script_pushint(st, monster->status.max_hp); break;
@@ -24564,7 +24565,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(playbgmall,"s?????"),
 		BUILDIN_DEF(soundeffect,"si"),
 		BUILDIN_DEF(soundeffectall,"si?????"), // SoundEffectAll [Codemaster]
-		BUILDIN_DEF(strmobinfo,"ii"), // display mob data [Valaris]
+		BUILDIN_DEF_DEPRECATED(strmobinfo,"ii"), // display mob data [Valaris]
 		BUILDIN_DEF(guardian,"siisi??"), // summon guardians
 		BUILDIN_DEF(guardianinfo,"sii"), // display guardian data [Valaris]
 		BUILDIN_DEF(petskillbonus,"iiii"), // [Valaris]

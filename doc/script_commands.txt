@@ -6419,6 +6419,10 @@ other number for this parameter won't be recognized.
 
 *strmobinfo(<type>, <monster id>)
 
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 This function will return information about a monster record in the
 database, as per 'db/(pre-)re/mob_db.txt'. Type is the kind of information
 returned. Valid types are:
@@ -6431,6 +6435,9 @@ returned. Valid types are:
  5 - Maximum SP.
  6 - Experience reward.
  7 - Job experience reward.
+
+This command is deprecated and it should not be used in new scripts, as it is
+likely to be removed at a later time. Please use getmonsterinfo instead.
 
 ---------------------------------------
 
