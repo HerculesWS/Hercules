@@ -85,8 +85,21 @@ void pet_set_intimate(struct pet_data *pd, int value)
 	sd = pd->msd;
 
 	pd->pet.intimate = value;
+
 	if( (intimate >= battle_config.pet_equip_min_friendly && pd->pet.intimate < battle_config.pet_equip_min_friendly) || (intimate < battle_config.pet_equip_min_friendly && pd->pet.intimate >= battle_config.pet_equip_min_friendly) )
 		status_calc_pc(sd,SCO_NONE);
+
+	/* Pet is lost, delete the egg */
+	if (value <= 0) {
+		int i;
+
+		ARR_FIND(0, MAX_INVENTORY, i, sd->status.inventory[i].card[0] == CARD0_PET &&
+			pd->pet.pet_id == MakeDWord(sd->status.inventory[i].card[1], sd->status.inventory[i].card[2]));
+
+		if (i != MAX_INVENTORY) {
+			pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_EGG);
+		}
+	}
 }
 
 int pet_create_egg(struct map_session_data *sd, int item_id)
@@ -316,23 +329,20 @@ int pet_performance(struct map_session_data *sd, struct pet_data *pd)
 
 int pet_return_egg(struct map_session_data *sd, struct pet_data *pd)
 {
-	struct item tmp_item;
-	int flag;
+	int i;
 
 	nullpo_retr(1, sd);
 	nullpo_retr(1, pd);
 	pet->lootitem_drop(pd,sd);
-	memset(&tmp_item,0,sizeof(tmp_item));
-	tmp_item.nameid = pd->petDB->EggID;
-	tmp_item.identify = 1;
-	tmp_item.card[0] = CARD0_PET;
-	tmp_item.card[1] = GetWord(pd->pet.pet_id,0);
-	tmp_item.card[2] = GetWord(pd->pet.pet_id,1);
-	tmp_item.card[3] = pd->pet.rename_flag;
-	if((flag = pc->additem(sd,&tmp_item,1,LOG_TYPE_EGG))) {
-		clif->additem(sd,0,0,flag);
-		map->addflooritem(&sd->bl, &tmp_item, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0, false);
+
+	// Pet Evolution
+	ARR_FIND(0, MAX_INVENTORY, i, sd->status.inventory[i].card[0] == CARD0_PET &&
+			pd->pet.pet_id == MakeDWord(sd->status.inventory[i].card[1], sd->status.inventory[i].card[2]));
+
+	if (i != MAX_INVENTORY) {
+		sd->status.inventory[i].identify = 1;
 	}
+
 	pd->pet.incubate = 1;
 	unit->free(&pd->bl,CLR_OUTSIGHT);
 
@@ -467,19 +477,21 @@ int pet_recv_petdata(int account_id,struct s_pet *p,int flag) {
 	}
 	if(p->incubate == 1) {
 		int i;
-		//Delete egg from inventory. [Skotlex]
-		for (i = 0; i < MAX_INVENTORY; i++) {
-			if(sd->status.inventory[i].card[0] == CARD0_PET &&
-				p->pet_id == MakeDWord(sd->status.inventory[i].card[1], sd->status.inventory[i].card[2]))
-				break;
-		}
-		if(i >= MAX_INVENTORY) {
+		// Get Egg Index
+		ARR_FIND(0, MAX_INVENTORY, i, sd->status.inventory[i].card[0] == CARD0_PET &&
+			p->pet_id == MakeDWord(sd->status.inventory[i].card[1], sd->status.inventory[i].card[2]));
+
+		if(i == MAX_INVENTORY) {
 			ShowError("pet_recv_petdata: Hatching pet (%d:%s) aborted, couldn't find egg in inventory for removal!\n",p->pet_id, p->name);
 			sd->status.pet_id = 0;
 			return 1;
 		}
-		if (!pet->birth_process(sd,p)) //Pet hatched. Delete egg.
-			pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_EGG);
+
+
+		if (!pet->birth_process(sd,p)) {
+			// Pet Evolution, Hide the egg by setting identify to 0 [Dastgir/Hercules]
+			sd->status.inventory[i].identify = 0;
+		}
 	} else {
 		pet->data_init(sd,p);
 		if(sd->pd && sd->bl.prev != NULL) {
@@ -1364,6 +1376,11 @@ int pet_read_db_sub(struct config_setting_t *it, int n, const char *source)
 	if (libconfig->setting_lookup_int(it, "ChangeTargetRate", &i32))
 		pet->db[n].change_target_rate = i32;
 
+	// Pet Evolution
+	if ((t = libconfig->setting_get_member(it, "Evolve")) && config_setting_is_group(t)) {
+		pet->read_db_sub_evolution(t, n);
+	}
+
 	if ((t = libconfig->setting_get_member(it, "AutoFeed")) && (i32 = libconfig->setting_get_bool(t)))
 		pet->db[n].autofeed = i32;
 
@@ -1374,6 +1391,81 @@ int pet_read_db_sub(struct config_setting_t *it, int n, const char *source)
 		pet->db[n].equip_script = *str ? script->parse(str, source, -pet->db[n].class_, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
 
 	return pet->db[n].class_;
+}
+
+/**
+ * Read Pet Evolution Database [Dastgir/Hercules]
+ * @param  t         libconfig setting
+ * @param  n         Pet DB Index
+ */
+void pet_read_db_sub_evolution(struct config_setting_t *t, int n)
+{
+	struct config_setting_t *pett;
+	int i = 0;
+	const char *str = NULL;
+
+	nullpo_retv(t);
+	Assert_retv(n >= 0 && n < MAX_PET_DB);
+
+	VECTOR_INIT(pet->db[n].evolve_data);
+
+	while ((pett = libconfig->setting_get_elem(t, i))) {
+		if (config_setting_is_group(pett)) {
+			struct pet_evolve_data ped;
+			struct item_data *data;
+			struct config_setting_t *item;
+			int j = 0, i32 = 0;
+
+			str = config_setting_name(pett);
+
+			if (!(data = itemdb->name2id(str))) {
+				ShowWarning("pet_read_evolve_db_sub: Invalid Egg '%s' in Pet #%d, skipping.\n", str, pet->db[n].class_);
+				return;
+			} else {
+				ped.petEggId = data->nameid;
+			}
+
+			VECTOR_INIT(ped.items);
+
+			while ((item = libconfig->setting_get_elem(pett, j))) {
+				struct itemlist_entry list = { 0 };
+				int quantity = 0;
+
+				str = config_setting_name(item);
+				data = itemdb->search_name(str);
+
+				if (!data) {
+					ShowWarning("pet_read_evolve_db_sub: required item %s not found in egg %d\n", str, ped.petEggId);
+					j++;
+					continue;
+				}
+
+				list.id = data->nameid;
+
+				if (mob->get_const(item, &i32) && i32 >= 0) {
+					quantity = i32;
+				}
+
+				if (quantity <= 0) {
+					ShowWarning("pet_read_evolve_db_sub: invalid quantity %d for egg %d\n", quantity, ped.petEggId);
+					j++;
+					continue;
+				}
+
+				list.amount = quantity;
+
+				VECTOR_ENSURE(ped.items, 1, 1);
+				VECTOR_PUSH(ped.items, list);
+
+				j++;
+
+			}
+
+			VECTOR_ENSURE(pet->db[n].evolve_data, 1, 1);
+			VECTOR_PUSH(pet->db[n].evolve_data, ped);
+		}
+		i++;
+	}
 }
 
 bool pet_read_db_sub_intimacy(int idx, struct config_setting_t *t)
@@ -1404,6 +1496,7 @@ void pet_read_db_clear(void)
 
 	// Remove any previous scripts in case reloaddb was invoked.
 	for (i = 0; i < MAX_PET_DB; i++) {
+		int j;
 		if (pet->db[i].pet_script) {
 			script->free_code(pet->db[i].pet_script);
 			pet->db[i].pet_script = NULL;
@@ -1412,6 +1505,11 @@ void pet_read_db_clear(void)
 			script->free_code(pet->db[i].equip_script);
 			pet->db[i].equip_script = NULL;
 		}
+
+		for (j = 0; j < VECTOR_LENGTH(pet->db[i].evolve_data); j++) {
+			VECTOR_CLEAR(VECTOR_INDEX(pet->db[i].evolve_data, j).items);
+		}
+		VECTOR_CLEAR(pet->db[i].evolve_data);
 	}
 	memset(pet->db, 0, sizeof(pet->db));
 	return;
@@ -1445,6 +1543,7 @@ int do_final_pet(void)
 	int i;
 	for( i = 0; i < MAX_PET_DB; i++ )
 	{
+		int j;
 		if( pet->db[i].pet_script )
 		{
 			script->free_code(pet->db[i].pet_script);
@@ -1455,9 +1554,16 @@ int do_final_pet(void)
 			script->free_code(pet->db[i].equip_script);
 			pet->db[i].equip_script = NULL;
 		}
+
+		/* Pet Evolution [Dastgir/Hercules] */
+		for (j = 0; j < VECTOR_LENGTH(pet->db[i].evolve_data); j++) {
+			VECTOR_CLEAR(VECTOR_INDEX(pet->db[i].evolve_data, j).items);
+		}
+		VECTOR_CLEAR(pet->db[i].evolve_data);
 	}
 	ers_destroy(pet->item_drop_ers);
 	ers_destroy(pet->item_drop_list_ers);
+
 	return 0;
 }
 void pet_defaults(void) {
@@ -1511,4 +1617,6 @@ void pet_defaults(void) {
 	pet->read_db_sub = pet_read_db_sub;
 	pet->read_db_sub_intimacy = pet_read_db_sub_intimacy;
 	pet->read_db_clear = pet_read_db_clear;
+
+	pet->read_db_sub_evolution = pet_read_db_sub_evolution;
 }

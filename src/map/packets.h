@@ -3029,7 +3029,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 // 2014-01-22aRagexeRE
 #if PACKETVER >= 20140122
 // new packets
-	packet(0x09fb,-1,clif->pDull/*,XXX*/); // CZ_PET_EVOLUTION
+	packet(0x09fb,-1,clif->pPetEvolution); // CZ_PET_EVOLUTION
 	packet(0x09fc,6); // ZC_PET_EVOLUTION_RESULT
 	packet(0x09fd,-1); // ZC_NOTIFY_MOVEENTRY11
 	packet(0x09fe,-1); // ZC_NOTIFY_NEWENTRY11

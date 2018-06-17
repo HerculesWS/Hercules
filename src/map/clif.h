@@ -575,6 +575,17 @@ enum private_airship {
 	P_AIRSHIP_ITEM_INVALID
 };
 
+/** Pet Evolution Results */
+enum pet_evolution_result {
+	PET_EVOL_UNKNOWN = 0x0,
+	PET_EVOL_NO_CALLPET = 0x1,
+	PET_EVOL_NO_PETEGG = 0x2,
+	PET_EVOL_NO_RECIPE = 0x3,
+	PET_EVOL_NO_MATERIAL = 0x4,
+	PET_EVOL_RG_FAMILIAR = 0x5,
+	PET_EVOL_SUCCESS = 0x6,
+};
+
 /**
  * Structures
  **/
@@ -1459,6 +1470,10 @@ struct clif_interface {
 	void (*pReqStyleChange) (int fd, struct map_session_data *sd);
 	void (*cz_req_style_change_sub) (struct map_session_data *sd, int type, int16 idx, bool isitem);
 	void (*style_change_response) (struct map_session_data *sd, int8 flag);
+
+	void (*pPetEvolution) (int fd, struct map_session_data *sd);
+	void (*petEvolutionResult) (int fd, enum pet_evolution_result result);
+
 };
 
 #ifdef HERCULES_CORE
