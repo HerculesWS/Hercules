@@ -17943,31 +17943,31 @@ BUILDIN(getmonsterinfo)
 		return false;
 	}
 	monster = mob->db(mob_id);
-	switch ( script_getnum(st,3) ) {
-		case 0:  script_pushstrcopy(st,monster->jname); break;
-		case 1:  script_pushint(st,monster->lv); break;
-		case 2:  script_pushint(st,monster->status.max_hp); break;
-		case 3:  script_pushint(st,monster->base_exp); break;
-		case 4:  script_pushint(st,monster->job_exp); break;
-		case 5:  script_pushint(st,monster->status.rhw.atk); break;
-		case 6:  script_pushint(st,monster->status.rhw.atk2); break;
-		case 7:  script_pushint(st,monster->status.def); break;
-		case 8:  script_pushint(st,monster->status.mdef); break;
-		case 9:  script_pushint(st,monster->status.str); break;
-		case 10: script_pushint(st,monster->status.agi); break;
-		case 11: script_pushint(st,monster->status.vit); break;
-		case 12: script_pushint(st,monster->status.int_); break;
-		case 13: script_pushint(st,monster->status.dex); break;
-		case 14: script_pushint(st,monster->status.luk); break;
-		case 15: script_pushint(st,monster->status.rhw.range); break;
-		case 16: script_pushint(st,monster->range2); break;
-		case 17: script_pushint(st,monster->range3); break;
-		case 18: script_pushint(st,monster->status.size); break;
-		case 19: script_pushint(st,monster->status.race); break;
-		case 20: script_pushint(st,monster->status.def_ele); break;
-		case 21: script_pushint(st,monster->status.mode); break;
-		case 22: script_pushint(st,monster->mexp); break;
-		default: script_pushint(st,-1); //wrong Index
+	switch (script_getnum(st,3)) {
+	case MOB_NAME:      script_pushstrcopy(st, monster->jname); break;
+	case MOB_LV:        script_pushint(st, monster->lv); break;
+	case MOB_MAXHP:     script_pushint(st, monster->status.max_hp); break;
+	case MOB_BASEEXP:   script_pushint(st, monster->base_exp); break;
+	case MOB_JOBEXP:    script_pushint(st, monster->job_exp); break;
+	case MOB_ATK1:      script_pushint(st, monster->status.rhw.atk); break;
+	case MOB_ATK2:      script_pushint(st, monster->status.rhw.atk2); break;
+	case MOB_DEF:       script_pushint(st, monster->status.def); break;
+	case MOB_MDEF:      script_pushint(st, monster->status.mdef); break;
+	case MOB_STR:       script_pushint(st, monster->status.str); break;
+	case MOB_AGI:       script_pushint(st, monster->status.agi); break;
+	case MOB_VIT:       script_pushint(st, monster->status.vit); break;
+	case MOB_INT:       script_pushint(st, monster->status.int_); break;
+	case MOB_DEX:       script_pushint(st, monster->status.dex); break;
+	case MOB_LUK:       script_pushint(st, monster->status.luk); break;
+	case MOB_RANGE:     script_pushint(st, monster->status.rhw.range); break;
+	case MOB_RANGE2:    script_pushint(st, monster->range2); break;
+	case MOB_RANGE3:    script_pushint(st, monster->range3); break;
+	case MOB_SIZE:      script_pushint(st, monster->status.size); break;
+	case MOB_RACE:      script_pushint(st, monster->status.race); break;
+	case MOB_ELEMENT:   script_pushint(st, monster->status.def_ele); break;
+	case MOB_MODE:      script_pushint(st, monster->status.mode); break;
+	case MOB_MVPEXP:    script_pushint(st, monster->mexp); break;
+	default:            script_pushint(st, -1); //wrong Index
 	}
 	return true;
 }
@@ -25284,6 +25284,31 @@ void script_hardcoded_constants(void)
 	script->set_constant("P_AIRSHIP_INVALID_END_MAP", P_AIRSHIP_INVALID_END_MAP, false, false);
 	script->set_constant("P_AIRSHIP_ITEM_NOT_ENOUGH", P_AIRSHIP_ITEM_NOT_ENOUGH, false, false);
 	script->set_constant("P_AIRSHIP_ITEM_INVALID", P_AIRSHIP_ITEM_INVALID, false, false);
+
+	script->constdb_comment("constants for *getmonsterinfo");
+	script->set_constant("MOB_NAME", MOB_NAME, false, false);
+	script->set_constant("MOB_LV", MOB_LV, false, false);
+	script->set_constant("MOB_MAXHP", MOB_MAXHP, false, false);
+	script->set_constant("MOB_BASEEXP", MOB_BASEEXP, false, false);
+	script->set_constant("MOB_JOBEXP", MOB_JOBEXP, false, false);
+	script->set_constant("MOB_ATK1", MOB_ATK1, false, false);
+	script->set_constant("MOB_ATK2", MOB_ATK2, false, false);
+	script->set_constant("MOB_DEF", MOB_DEF, false, false);
+	script->set_constant("MOB_MDEF", MOB_MDEF, false, false);
+	script->set_constant("MOB_STR", MOB_STR, false, false);
+	script->set_constant("MOB_AGI", MOB_AGI, false, false);
+	script->set_constant("MOB_VIT", MOB_VIT, false, false);
+	script->set_constant("MOB_INT", MOB_INT, false, false);
+	script->set_constant("MOB_DEX", MOB_DEX, false, false);
+	script->set_constant("MOB_LUK", MOB_LUK, false, false);
+	script->set_constant("MOB_RANGE", MOB_RANGE, false, false);
+	script->set_constant("MOB_RANGE2", MOB_RANGE2, false, false);
+	script->set_constant("MOB_RANGE3", MOB_RANGE3, false, false);
+	script->set_constant("MOB_SIZE", MOB_SIZE, false, false);
+	script->set_constant("MOB_RACE", MOB_RACE, false, false);
+	script->set_constant("MOB_ELEMENT", MOB_ELEMENT, false, false);
+	script->set_constant("MOB_MODE", MOB_MODE, false, false);
+	script->set_constant("MOB_MVPEXP", MOB_MVPEXP, false, false);
 
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL
