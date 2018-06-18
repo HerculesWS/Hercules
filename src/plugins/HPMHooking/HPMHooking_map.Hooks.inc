@@ -26623,10 +26623,10 @@ void HP_clif_cz_req_style_change_sub(struct map_session_data *sd, int type, int1
 	}
 	return;
 }
-void HP_clif_style_change_response(struct map_session_data *sd, int8 flag) {
+void HP_clif_style_change_response(struct map_session_data *sd, enum stylist_shop flag) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_style_change_response_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, int8 *flag);
+		void (*preHookFunc) (struct map_session_data **sd, enum stylist_shop *flag);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_style_change_response_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_style_change_response_pre[hIndex].func;
@@ -26641,7 +26641,7 @@ void HP_clif_style_change_response(struct map_session_data *sd, int8 flag) {
 		HPMHooks.source.clif.style_change_response(sd, flag);
 	}
 	if (HPMHooks.count.HP_clif_style_change_response_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, int8 flag);
+		void (*postHookFunc) (struct map_session_data *sd, enum stylist_shop flag);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_style_change_response_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_style_change_response_post[hIndex].func;
 			postHookFunc(sd, flag);

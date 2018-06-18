@@ -2448,8 +2448,8 @@ typedef void (*HPMHOOK_pre_clif_pReqStyleChange) (int *fd, struct map_session_da
 typedef void (*HPMHOOK_post_clif_pReqStyleChange) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_cz_req_style_change_sub) (struct map_session_data **sd, int *type, int16 *idx, bool *isitem);
 typedef void (*HPMHOOK_post_clif_cz_req_style_change_sub) (struct map_session_data *sd, int type, int16 idx, bool isitem);
-typedef void (*HPMHOOK_pre_clif_style_change_response) (struct map_session_data **sd, int8 *flag);
-typedef void (*HPMHOOK_post_clif_style_change_response) (struct map_session_data *sd, int8 flag);
+typedef void (*HPMHOOK_pre_clif_style_change_response) (struct map_session_data **sd, enum stylist_shop *flag);
+typedef void (*HPMHOOK_post_clif_style_change_response) (struct map_session_data *sd, enum stylist_shop flag);
 #endif // MAP_CLIF_H
 #ifdef COMMON_CORE_H /* cmdline */
 typedef void (*HPMHOOK_pre_cmdline_init) (void);
