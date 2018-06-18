@@ -4884,7 +4884,7 @@ void script_cleararray_pc(struct map_session_data* sd, const char* varname, void
 void script_setarray_pc(struct map_session_data* sd, const char* varname, uint32 idx, void* value, int* refcache) {
 	int key;
 
-	if( idx >= SCRIPT_MAX_ARRAYSIZE ) {
+	if (idx > SCRIPT_MAX_ARRAYSIZE) {
 		ShowError("script_setarray_pc: Variable '%s' has invalid index '%u' (char_id=%d).\n", varname, idx, sd->status.char_id);
 		return;
 	}
@@ -7484,7 +7484,7 @@ BUILDIN(getelementofarray)
 	id = reference_getid(data);
 
 	i = script_getnum(st, 3);
-	if (i < 0 || i >= SCRIPT_MAX_ARRAYSIZE) {
+	if (i < 0 || i > SCRIPT_MAX_ARRAYSIZE) {
 		ShowWarning("script:getelementofarray: index out of range (%"PRId64")\n", i);
 		script->reportdata(data);
 		script_pushnil(st);
@@ -16737,7 +16737,7 @@ BUILDIN(explode)
 	temp = aMalloc(len + 1);
 
 	for (i = 0; str[i] != '\0'; i++) {
-		if (str[i] == delimiter && (int64)start + k < (int64)(SCRIPT_MAX_ARRAYSIZE-1)) { // FIXME[Haru]: SCRIPT_MAX_ARRAYSIZE should really be unsigned (and INT32_MAX)
+		if (str[i] == delimiter && start + k < SCRIPT_MAX_ARRAYSIZE) {
 			//break at delimiter but ignore after reaching last array index
 			temp[j] = '\0';
 			script->set_reg(st, sd, reference_uid(id, start + k), name, temp, reference_getref(data));
@@ -17467,7 +17467,7 @@ int buildin_query_sql_sub(struct script_state *st, struct Sql *handle)
 	const char* query;
 	struct script_data* data;
 	const char* name;
-	unsigned int max_rows = SCRIPT_MAX_ARRAYSIZE; // maximum number of rows
+	int max_rows = SCRIPT_MAX_ARRAYSIZE; // maximum number of rows
 	int num_vars;
 	int num_cols;
 
@@ -17532,7 +17532,7 @@ int buildin_query_sql_sub(struct script_state *st, struct Sql *handle)
 		}
 	}
 	if( i == max_rows && max_rows < SQL->NumRows(handle) ) {
-		ShowWarning("script:query_sql: Only %u/%u rows have been stored.\n", max_rows, (unsigned int)SQL->NumRows(handle));
+		ShowWarning("script:query_sql: Only %i/%u rows have been stored.\n", max_rows, (unsigned int)SQL->NumRows(handle));
 		script->reportsrc(st);
 	}
 
