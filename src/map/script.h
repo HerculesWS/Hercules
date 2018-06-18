@@ -50,7 +50,7 @@ struct item_data;
 #define NUM_WHISPER_VAR 10
 
 /// Maximum amount of elements in script arrays
-#define SCRIPT_MAX_ARRAYSIZE (UINT_MAX - 1)
+#define SCRIPT_MAX_ARRAYSIZE (INT_MAX - 1)
 
 #define SCRIPT_BLOCK_SIZE 512
 
