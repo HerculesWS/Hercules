@@ -550,19 +550,36 @@ enum CZ_CONFIG {
 	CZ_CONFIG_PET_AUTOFEEDING        = 2,
 	CZ_CONFIG_HOMUNCULUS_AUTOFEEDING = 3,
 };
+
 /**
 * Client UI types
 * used with packet 0xAE2 to request the client to open a specific ui
 **/
-enum ui_types {
-	BANK_UI = 0,
-	STYLIST_UI,
-	CAPTCHA_UI,
-	MACRO_UI,
-	TIPBOX_UI = 5,
-	RENEWQUEST_UI,
-	ATTENDANCE_UI
+enum zc_ui_types {
+#if PACKETVER >= 20150128
+	ZC_BANK_UI = 0,
+	ZC_STYLIST_UI = 1,
+	ZC_CAPTCHA_UI = 2,
+	ZC_MACRO_UI = 3,
+#endif
+	zc_ui_unused = 4,  // for avoid compilation errors
+#if PACKETVER >= 20171122
+	ZC_TIPBOX_UI = 5,
+	ZC_RENEWQUEST_UI = 6,
+	ZC_ATTENDANCE_UI = 7
+#endif
 };
+
+/**
+* Client to server open ui request types (packet 0x0a68)
+**/
+enum cz_ui_types {
+	CZ_STYLIST_UI = 1,
+	//unknown  = 2,
+	//unknown  = 3,
+	CZ_ATTENDANCE_UI = 5
+};
+
 /**
 * Private Airship Responds
 **/
@@ -1452,7 +1469,7 @@ struct clif_interface {
 	bool (*attendance_timediff) (struct map_session_data *sd);
 	time_t (*attendance_getendtime) (void);
 	void (*pOpenUIRequest) (int fd, struct map_session_data *sd);
-	void (*open_ui) (struct map_session_data *sd, int8 UIType);
+	void (*open_ui) (struct map_session_data *sd, enum cz_ui_types uiType);
 	void (*pAttendanceRewardRequest) (int fd, struct map_session_data *sd);
 	void (*ui_action) (struct map_session_data *sd, int32 UIType, int32 data);
 	void (*pPrivateAirshipRequest) (int fd, struct map_session_data *sd);

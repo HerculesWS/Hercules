@@ -20531,36 +20531,43 @@ void clif_parse_open_ui_request(int fd, struct map_session_data *sd)
 	clif->open_ui(sd, p->UIType);
 }
 
-void clif_open_ui(struct map_session_data *sd, int8 UIType)
+void clif_open_ui(struct map_session_data *sd, enum cz_ui_types uiType)
 {
-#if PACKETVER_RE_NUM >= 20180307 || PACKETVER_MAIN_NUM >= 20180404 || PACKETVER_ZERO_NUM >= 20180411
-	int claimed = 0;
+#if PACKETVER >= 20150128
 	struct PACKET_ZC_OPEN_UI p;
 
 	nullpo_retv(sd);
 
-	p.PacketType = 0xAE2;
-	switch (UIType) {
-	case STYLIST_UI:
-		p.UIType = STYLIST_UI;
+	p.PacketType = openUiType;
+	switch (uiType) {
+	case CZ_STYLIST_UI:
+		p.UIType = ZC_STYLIST_UI;
+#if PACKETVER >= 20171122
 		p.data = 0;
+#endif
 		break;
-	case 5: // client will send 5 for the request but requires to receive ATTENDANCE_UI (7) to open the correct ui.
+	case CZ_ATTENDANCE_UI:
+	{
+#if PACKETVER_RE_NUM >= 20180307 || PACKETVER_MAIN_NUM >= 20180404 || PACKETVER_ZERO_NUM >= 20180411
+		int claimed = 0;
 		if (clif->attendance_timediff(sd) != true)
 			++claimed;
 		else if (sd->status.attendance_count >= VECTOR_LENGTH(clif->attendance_data))
 			sd->status.attendance_count = 0;
-		p.UIType = ATTENDANCE_UI;
+		p.UIType = ZC_ATTENDANCE_UI;
 		p.data = sd->status.attendance_count * 10 + claimed;
+#else
+		ShowWarning("Attendance System available only for PACKETVER_RE_NUM >= 20180307 || PACKETVER_MAIN_NUM >= 20180404 || PACKETVER_ZERO_NUM >= 20180411.\n");
+		return;
+#endif
 		break;
+	}
 	default:
-		ShowWarning("clif_open_ui: Requested UI (%d) is not implemented yet.\n", UIType);
+		ShowWarning("clif_open_ui: Requested UI (%u) is not implemented yet.\n", uiType);
 		return;
 	}
 
 	clif->send(&p, sizeof(p), &sd->bl, SELF);
-#else
-	ShowWarning("Attendance System available only for PACKETVER_RE_NUM >= 20180307 || PACKETVER_MAIN_NUM >= 20180404 || PACKETVER_ZERO_NUM >= 20180411.\n");
 #endif
 }
 

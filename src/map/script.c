@@ -24170,7 +24170,9 @@ BUILDIN(openstylist)
 	if (sd == NULL)
 		return false;
 
-	clif->open_ui(sd, STYLIST_UI);
+#if PACKETVER >= 20150128
+	clif->open_ui(sd, CZ_STYLIST_UI);
+#endif
 	return true;
 }
 
