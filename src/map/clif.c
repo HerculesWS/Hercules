@@ -3089,7 +3089,7 @@ void clif_updatestatus(struct map_session_data *sd,int type)
 			WFIFOL(fd,4)=sd->status.zeny;
 			len = packet_len(0xb1);
 			break;
-// [4144] unconfirment exact version can be from 20170405 to 20170913
+// [4144] exact version unknown, between 20170405 to 20170913?
 #if PACKETVER >= 20170830
 		case SP_BASEEXP:
 			WFIFOW(fd, 0) = 0xacb;
