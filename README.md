@@ -1,27 +1,27 @@
 Hercules
 ========
 
-Build Status:  
+Build Status:
 [![Build Status](https://travis-ci.org/HerculesWS/Hercules.svg?branch=master)](https://travis-ci.org/HerculesWS/Hercules)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/cm9xbwurpbltqjop?svg=true)](https://ci.appveyor.com/project/Haru/hercules)
-[![Coverity Scan Build Status](https://scan.coverity.com/projects/3892/badge.svg)](https://scan.coverity.com/projects/herculesws-hercules)  
+[![Coverity Scan Build Status](https://scan.coverity.com/projects/3892/badge.svg)](https://scan.coverity.com/projects/herculesws-hercules)
 [![GitLab Build Status](https://gitlab.com/HerculesWS/Hercules/badges/master/build.svg)](https://gitlab.com/HerculesWS/Hercules/commits/master)
 [![Coverage Report](https://gitlab.com/HerculesWS/Hercules/badges/master/coverage.svg)](https://gitlab.com/HerculesWS/Hercules/commits/master)
 
-Issues and pull requests:  
+Issues and pull requests:
 [![Open Issues](https://img.shields.io/github/issues-raw/HerculesWS/Hercules.svg?label=Open%20Issues)](https://github.com/HerculesWS/Hercules/issues)
 [![Open Pull Requests](https://img.shields.io/github/issues-pr-raw/HerculesWS/Hercules.svg?label=Open%20Pull%20Requests)](https://github.com/HerculesWS/Hercules/pulls)
 
-Development and Community:  
+Development and Community:
 [![GitHub Repository](https://img.shields.io/badge/github-HerculesWS/Hercules-green.svg?logo=github)](https://github.com/HerculesWS/Hercules)
-[![Community Forum](https://img.shields.io/badge/forum-herc.ws-orange.svg)](http://herc.ws)  
+[![Community Forum](https://img.shields.io/badge/forum-herc.ws-orange.svg)](http://herc.ws)
 [![IRC](https://img.shields.io/badge/IRC-Rizon/Hercules-yellow.svg)](irc://rizon.net/Hercules)
-[![Discord](https://img.shields.io/badge/discord-Hercules%20Emulator-7289da.svg)](https://discord.gg/rqCxS8p)  
+[![Discord](https://img.shields.io/badge/discord-Hercules%20Emulator-7289da.svg)](https://discord.gg/rqCxS8p)
 [![Twitter](https://img.shields.io/badge/twitter-@HerculesWS-blue.svg?logo=twitter)](https://twitter.com/HerculesWS)
 
-Project Info:  
+Project Info:
 [![Release](https://img.shields.io/github/release/HerculesWS/Hercules.svg)](https://github.com/HerculesWS/Hercules/releases)
-![Language](https://img.shields.io/badge/language-C-yellow.svg)  
+![Language](https://img.shields.io/badge/language-C-yellow.svg)
 [![License](https://img.shields.io/badge/license-GPLv3-663399.svg)](https://github.com/HerculesWS/Hercules/blob/master/LICENSE)
 [![GitHub contributors](https://img.shields.io/github/contributors/HerculesWS/Hercules.svg)](https://github.com/HerculesWS/Hercules/graphs/contributors)
 
@@ -182,17 +182,17 @@ Helpful Links
 The following list of links point to various help files within the repository,
 articles or pages on the Wiki or topics within the Hercules forum.
 
-* Hercules Forums:  
+* Hercules Forums:
   http://herc.ws/board/
 
-* Hercules Wiki:  
+* Hercules Wiki:
   http://herc.ws/wiki/Main_Page
 
-* Git Repository URL:  
+* Git Repository URL:
   https://github.com/HerculesWS/Hercules
 
-* Hercules IRC Channel:  
-  Network: `irc.rizon.net`  
+* Hercules IRC Channel:
+  Network: `irc.rizon.net`
   Channel: `#Hercules`
 
 More Documentation
