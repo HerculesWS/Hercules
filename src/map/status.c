@@ -13114,7 +13114,8 @@ void status_read_job_db_sub(int idx, const char *name, struct config_setting_t *
 			pc->dbs->class_exp_table[idx][CLASS_EXP_TABLE_BASE] = &VECTOR_INDEX(pc->class_exp_groups[CLASS_EXP_TABLE_BASE], i);
 		}
 	} else {
-		ShowError("status_read_job_db: BaseExpGroup setting not found for entry '%s'\n", name);
+		ShowError("status_read_job_db: BaseExpGroup setting not found for entry '%s', skipping..\n", name);
+		return;
 	}
 
 	/**
@@ -13129,7 +13130,8 @@ void status_read_job_db_sub(int idx, const char *name, struct config_setting_t *
 			pc->dbs->class_exp_table[idx][CLASS_EXP_TABLE_JOB] = &VECTOR_INDEX(pc->class_exp_groups[CLASS_EXP_TABLE_JOB], i);
 		}
 	} else {
-		ShowError("status_read_job_db: JobExpGroup setting not found for entry '%s'\n", name);
+		ShowError("status_read_job_db: JobExpGroup setting not found for entry '%s', skipping..\n", name);
+		return;
 	}
 
 	if ((temp = libconfig->setting_get_member(jdb, "Inherit"))) {
