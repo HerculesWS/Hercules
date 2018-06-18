@@ -2472,6 +2472,20 @@ arrays:
 
 ---------------------------------------
 
+*array_find(<array name>[<starting index>], <value>)
+
+Search a value within the array without using for-loop. If the value is
+not within the array, it return the array size.
+
+Example:
+	setarray(.@foo, 2, 4, 6, 8, 10); // initialize the array
+	array_find(.@foo, 6); // => 2
+	array_find(.@foo, 2); // => 0
+	array_find(.@foo, 5); // => 5
+	array_find(.@foo[1], 2); // => 5
+
+---------------------------------------
+
 *readparam(<parameter number>{, "<player name>"})
 
 This function will return the basic stats of an invoking character,

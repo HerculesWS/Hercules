@@ -7496,6 +7496,86 @@ BUILDIN(getelementofarray)
 	return true;
 }
 
+BUILDIN(array_find)
+{
+	struct script_data *data = script_getdata(st, 2);
+	struct reg_db *ref = NULL;
+	const char *name;
+	int i = 0, id, start_index, array_size;
+
+	if (!data_isreference(data)) {
+		ShowError("buildin_array_find: not a variable\n");
+		script->reportdata(data);
+		script_pushnil(st);
+		st->state = END;
+		return false;
+	}
+
+	start_index = reference_getindex(data);
+	if (start_index < 0 || start_index > SCRIPT_MAX_ARRAYSIZE) {
+		ShowError("buildin_array_find: starting index out of range (%d)\n", start_index);
+		script->reportdata(data);
+		script_pushnil(st);
+		st->state = END;
+		return false;
+	}
+
+	id = reference_getid(data);
+	name = reference_getname(data);
+	ref = reference_getref(data);
+
+	array_size = script->array_highest_key(st, st->rid ? script->rid2sd(st) : NULL, name, ref);
+	if (array_size >= SCRIPT_MAX_ARRAYSIZE) { // edge case
+		ShowError("buildin_array_find: array size is too large.\n");
+		script->reportdata(data);
+		script_pushnil(st);
+		st->state = END;
+		return false;
+	}
+
+	if (is_string_variable(name)) {
+		const char *temp, *value;
+
+		if (script_isinttype(st, 3)) {
+			ShowError("buildin_array_find: both sides must be same integer or string type.\n");
+			script->reportdata(data);
+			script->reportdata(script_getdata(st, 3));
+			script_pushnil(st);
+			st->state = END;
+			return false;
+		}
+		
+		value = script_getstr(st, 3);
+		for (i = start_index; i < array_size; ++i) {
+			temp = aStrdup(script->get_val2(st, reference_uid(id, i), ref));
+			script_removetop(st, -1, 0);
+			if (!strcmpi(value, temp))
+				break;
+		}
+	} else {
+		int32 temp, value;
+
+		if (script_isstringtype(st, 3)) {
+			ShowError("buildin_array_find: both sides must be same integer or string type.\n");
+			script->reportdata(data);
+			script->reportdata(script_getdata(st, 3));
+			script_pushnil(st);
+			st->state = END;
+			return false;
+		}
+
+		value = script_getnum(st, 3);
+		for (i = start_index; i < array_size; ++i) {
+			temp = (int32)h64BPTRSIZE(script->get_val2(st, reference_uid(id, i), ref));
+			script_removetop(st, -1, 0);
+			if (value == temp)
+				break;
+		}
+	}
+	script_pushint(st, i);
+	return true;
+}
+
 /////////////////////////////////////////////////////////////////////
 /// ...
 ///
@@ -24366,6 +24446,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getarrayindex,"r"),
 		BUILDIN_DEF(deletearray,"r?"),
 		BUILDIN_DEF(getelementofarray,"ri"),
+		BUILDIN_DEF(array_find,"rv"),
 		BUILDIN_DEF(getitem,"vi?"),
 		BUILDIN_DEF(rentitem,"vi"),
 		BUILDIN_DEF(getitem2,"viiiiiiii?"),
