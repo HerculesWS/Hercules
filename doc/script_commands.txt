@@ -2472,6 +2472,22 @@ arrays:
 
 ---------------------------------------
 
+*array_find(<array name>[<starting index>], <value>)
+
+Search a value within the array without using for-loop. If the value is
+found within the array, it return the index of the array. Otherwise it
+return -1 if not found. A starting index can be insert to start search
+from that index onward.
+
+Example:
+	setarray(.@foo, 2, 4, 6, 8, 10); // initialize the array
+	array_find(.@foo, 6); // => 2
+	array_find(.@foo, 2); // => 0
+	array_find(.@foo, 5); // => -1
+	array_find(.@foo[1], 2); // => -1
+
+---------------------------------------
+
 *readparam(<parameter number>{, "<player name>"})
 
 This function will return the basic stats of an invoking character,
