@@ -292,7 +292,7 @@ OnSummon:
 	case 6: .@x = 175; .@y = 137; break;
 	}
 	.@mob = rand(1646,1651);
-	monster "lhz_dun03",.@x,.@y,strmobinfo(1,.@mob),.@mob,1,"summon_boss_lt::OnMyMVPDead";
+	monster "lhz_dun03",.@x,.@y, getmonsterinfo(.@mob, MOB_ENAME),.@mob,1,"summon_boss_lt::OnMyMVPDead";
 
 	// Select Coordinates to summon a random 99 on
 	switch(rand(1,6)) {
@@ -304,7 +304,7 @@ OnSummon:
 	case 6: .@x2 = 139; .@y2 = 259; break;
 	}
 	.@mob2 = rand(1640,1645);
-	monster "lhz_dun03",.@x2,.@y2,strmobinfo(1,.@mob2),.@mob2,1,"summon_boss_lt::OnMVP";
+	monster "lhz_dun03",.@x2,.@y2, getmonsterinfo(.@mob2, MOB_ENAME),.@mob2,1,"summon_boss_lt::OnMVP";
 	end;
 
 OnMyMVPDead:

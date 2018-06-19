@@ -208,12 +208,12 @@ iDisguise:
 		if (compare(","+.Blacklist$+"," , ","+.@monster+",")) goto iDisguise;
 		if (.@monster==.LastMonster) goto iDisguise;
 		set .LastMonster,.@monster;
-		set $MonsterName$,getmonsterinfo(.@monster,0);
+		set $MonsterName$,getmonsterinfo(.@monster, MOB_NAME);
 	}
 	if (.Rule==2) {
 		set .Winner,0;
 		set .@monster, rand(getarraysize(.MVP));
-		set $MonsterName$,getmonsterinfo(.MVP[.@monster],0);
+		set $MonsterName$,getmonsterinfo(.MVP[.@monster], MOB_NAME);
 	}
 	deletepset 1;
 	defpattern 1,"([^:]+):.\\s*"+$MonsterName$+".*", "iCorrect";

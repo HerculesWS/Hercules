@@ -94,7 +94,7 @@ OnInit:
 		case 6:  .@x = 175;  .@y = 137;  break;
 	}
 	.@mob = rand(1646,1651);
-	monster "lhz_dun03",.@x,.@y,strmobinfo(1,.@mob),.@mob,1,strnpcinfo(NPC_NAME_UNIQUE)+"::OnMyMVPDead";
+	monster "lhz_dun03",.@x,.@y, getmonsterinfo(.@mob, MOB_ENAME),.@mob,1,strnpcinfo(NPC_NAME_UNIQUE)+"::OnMyMVPDead";
 
 	// Select Coordinates to summon a random 99 on
 	switch(rand(1,6)) {
@@ -106,7 +106,7 @@ OnInit:
 		case 6:  .@x2 = 139;  .@y2 = 259;  break;
 	}
 	.@mob2 = rand(1640,1645);
-	monster "lhz_dun03",.@x2,.@y2,strmobinfo(1,.@mob2),.@mob2,1,strnpcinfo(NPC_NAME_UNIQUE)+"::OnMy99Dead";
+	monster "lhz_dun03",.@x2,.@y2, getmonsterinfo(.@mob2, MOB_ENAME),.@mob2,1,strnpcinfo(NPC_NAME_UNIQUE)+"::OnMy99Dead";
 	end;
 
 OnMyMVPDead:
@@ -148,7 +148,7 @@ OnInit:
 		case 7:  .@x = 149;  .@y = 151;  break;
 	}
 	.@mob = rand(2235,2241);
-	monster "lhz_dun04",.@x,.@y,strmobinfo(1,.@mob),.@mob,1,strnpcinfo(NPC_NAME_UNIQUE)+"::OnMyMVPDead";
+	monster "lhz_dun04",.@x,.@y, getmonsterinfo(.@mob, MOB_ENAME),.@mob,1,strnpcinfo(NPC_NAME_UNIQUE)+"::OnMyMVPDead";
 
 	// Select Coordinates to summon a random 99 on
 	switch(rand(1,7)) {
@@ -161,7 +161,7 @@ OnInit:
 		case 7:  .@x2 = 149;  .@y2 = 151;  break;
 	}
 	.@mob2 = rand(2228,2234);
-	monster "lhz_dun04",.@x2,.@y2,strmobinfo(1,.@mob2),.@mob2,1,strnpcinfo(NPC_NAME_UNIQUE)+"::OnMy99Dead";
+	monster "lhz_dun04",.@x2,.@y2, getmonsterinfo(.@mob2, MOB_ENAME),.@mob2,1,strnpcinfo(NPC_NAME_UNIQUE)+"::OnMy99Dead";
 	end;
 
 OnMyMVPDead:

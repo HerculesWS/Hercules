@@ -46,7 +46,7 @@ prontera,129,215,5	script	Questboard	4_BOARD3,{
 		mes "--------------------------------";
 		for( set .@j, 0; .@j < getarraysize(getd("."+ currentquest$ + "_huntingmob")); set .@j,.@j+2) {
 			set .@currentmob, getd("."+currentquest$+"_huntingmob["+(.@j)+"]");
-			mes "^FF0000"+strmobinfo(1,getd("."+currentquest$+"_huntingmob["+.@j+"]"))+" - "+getd(currentquest$+"_"+.@currentmob+"_"+(.@j+1)+"_killcount")+"/"+getd("."+currentquest$+"_huntingmob["+(.@j+1)+"]")+" ea.^000000";
+			mes "^FF0000"+ getmonsterinfo(getd("."+currentquest$+"_huntingmob["+.@j+"]"), MOB_ENAME) +" - "+getd(currentquest$+"_"+.@currentmob+"_"+(.@j+1)+"_killcount")+"/"+getd("."+currentquest$+"_huntingmob["+(.@j+1)+"]")+" ea.^000000";
 		}
 		mes "--------------------------------";
 		mes "[Reward]";
@@ -143,7 +143,7 @@ L_questmenu:
 		mes "^0000FF"+getd("." + .@selection + "_huntingname$")+"^000000";
 		mes "--------------------------------";
 		for( set .@j, 0; .@j < getarraysize(getd("."+ .@selection + "_huntingmob")); set .@j,.@j+2) {
-			mes "^FF0000"+strmobinfo(1,getd("."+.@selection+"_huntingmob["+.@j+"]"))+" - "+getd("."+.@selection+"_huntingmob["+(.@j+1)+"]")+" ea.^000000";
+			mes "^FF0000"+ getmonsterinfo(getd("."+.@selection+"_huntingmob["+.@j+"]"), MOB_ENAME) +" - "+getd("."+.@selection+"_huntingmob["+(.@j+1)+"]")+" ea.^000000";
 		}
 		mes "--------------------------------";
 		mes "[Reward]";
@@ -239,7 +239,7 @@ OnNPCKillEvent:
 			set .@currentmob, getd("."+currentquest$+"_huntingmob["+(.@i-1)+"]");
 			if(getd(currentquest$+"_"+.@currentmob+"_"+.@i+"_killcount")>=getd("."+currentquest$+"_huntingmob["+.@i+"]")) end;
 			setd(currentquest$+"_"+.@currentmob+"_"+.@i+"_killcount", getd(currentquest$+"_"+.@currentmob+"_"+.@i+"_killcount")+1);
-			dispbottom getd("."+currentquest$+"_huntingname$")+": ["+strmobinfo(1,.@currentmob)+"] ("+ getd(currentquest$+"_"+.@currentmob+"_"+.@i+"_killcount")+"/"+getd("."+currentquest$+"_huntingmob["+.@i+"]")+")";
+			dispbottom getd("."+currentquest$+"_huntingname$")+": ["+ getmonsterinfo(.@currentmob, MOB_ENAME) +"] ("+ getd(currentquest$+"_"+.@currentmob+"_"+.@i+"_killcount")+"/"+getd("."+currentquest$+"_huntingmob["+.@i+"]")+")";
 			end;
 		}
 		continue;
