@@ -17637,7 +17637,11 @@ void clif_parse_SearchStoreInfo(int fd, struct map_session_data* sd) {
 ///     1 = "next" label to retrieve more results
 void clif_search_store_info_ack(struct map_session_data* sd)
 {
-	const unsigned int blocksize = MESSAGE_SIZE+26;
+#if PACKETVER >= 20150226
+	const unsigned int blocksize = MESSAGE_SIZE + 26 + 5 * MAX_ITEM_OPTIONS;
+#else
+	const unsigned int blocksize = MESSAGE_SIZE + 26;
+#endif
 	int fd;
 	unsigned int i, start, end;
 
@@ -17672,7 +17676,11 @@ void clif_search_store_info_ack(struct map_session_data* sd)
 		it.nameid = ssitem->nameid;
 		it.amount = ssitem->amount;
 
-		clif->addcards(WFIFOP(fd,i*blocksize+25+MESSAGE_SIZE), &it);
+		clif->addcards(WFIFOP(fd, i * blocksize + 25 + MESSAGE_SIZE), &it);
+#if PACKETVER >= 20150226
+		memcpy(&it.option, &ssitem->option, sizeof(it.option));
+		clif->add_item_options(WFIFOP(fd, i * blocksize + 33 + MESSAGE_SIZE), &it);
+#endif
 	}
 
 	WFIFOSET(fd,WFIFOW(fd,2));

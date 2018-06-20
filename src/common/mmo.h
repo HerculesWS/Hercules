@@ -363,6 +363,12 @@ enum attribute_flag {
 	ATTR_BROKEN = 1,
 };
 
+struct item_option {
+	int16 index;
+	int16 value;
+	uint8 param;
+};
+
 struct item {
 	int id;
 	short nameid;
@@ -376,12 +382,7 @@ struct item {
 	char favorite;
 	unsigned char bound;
 	uint64 unique_id;
-
-	struct {
-		int16 index;
-		int16 value;
-		uint8 param;
-	} option[MAX_ITEM_OPTIONS];
+	struct item_option option[MAX_ITEM_OPTIONS];
 };
 
 //Equip position constants

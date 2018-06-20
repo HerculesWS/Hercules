@@ -14352,7 +14352,7 @@ BUILDIN(setequipoption)
 	int i = -1;
 
 	struct map_session_data *sd = script->rid2sd(st);
-	struct item_option *ito = NULL;
+	struct itemdb_option *ito = NULL;
 
 	if (sd == NULL) {
 		script_pushint(st, 0);
