@@ -1252,6 +1252,8 @@ struct {
 	struct HPMHookPoint *HP_pincode_editstate_post;
 	struct HPMHookPoint *HP_pincode_loginstate_pre;
 	struct HPMHookPoint *HP_pincode_loginstate_post;
+	struct HPMHookPoint *HP_pincode_loginstate2_pre;
+	struct HPMHookPoint *HP_pincode_loginstate2_post;
 	struct HPMHookPoint *HP_pincode_setnew_pre;
 	struct HPMHookPoint *HP_pincode_setnew_post;
 	struct HPMHookPoint *HP_pincode_change_pre;
@@ -2789,6 +2791,8 @@ struct {
 	int HP_pincode_editstate_post;
 	int HP_pincode_loginstate_pre;
 	int HP_pincode_loginstate_post;
+	int HP_pincode_loginstate2_pre;
+	int HP_pincode_loginstate2_post;
 	int HP_pincode_setnew_pre;
 	int HP_pincode_setnew_post;
 	int HP_pincode_change_pre;

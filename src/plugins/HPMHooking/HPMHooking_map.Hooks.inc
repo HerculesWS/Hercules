@@ -7574,6 +7574,32 @@ void HP_clif_authok(struct map_session_data *sd) {
 	}
 	return;
 }
+void HP_clif_auth_error(int fd, int errorCode) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_auth_error_pre > 0) {
+		void (*preHookFunc) (int *fd, int *errorCode);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_auth_error_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_auth_error_pre[hIndex].func;
+			preHookFunc(&fd, &errorCode);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.auth_error(fd, errorCode);
+	}
+	if (HPMHooks.count.HP_clif_auth_error_post > 0) {
+		void (*postHookFunc) (int fd, int errorCode);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_auth_error_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_auth_error_post[hIndex].func;
+			postHookFunc(fd, errorCode);
+		}
+	}
+	return;
+}
 void HP_clif_authrefuse(int fd, uint8 error_code) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_authrefuse_pre > 0) {
@@ -9066,6 +9092,32 @@ void HP_clif_changemap(struct map_session_data *sd, short m, int x, int y) {
 	}
 	return;
 }
+void HP_clif_changemap_airship(struct map_session_data *sd, short m, int x, int y) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_changemap_airship_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, short *m, int *x, int *y);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_changemap_airship_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_changemap_airship_pre[hIndex].func;
+			preHookFunc(&sd, &m, &x, &y);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.changemap_airship(sd, m, x, y);
+	}
+	if (HPMHooks.count.HP_clif_changemap_airship_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, short m, int x, int y);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_changemap_airship_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_changemap_airship_post[hIndex].func;
+			postHookFunc(sd, m, x, y);
+		}
+	}
+	return;
+}
 void HP_clif_changemapcell(int fd, int16 m, int x, int y, int type, enum send_target target) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_changemapcell_pre > 0) {
@@ -9269,6 +9321,32 @@ void HP_clif_changemapserver(struct map_session_data *sd, unsigned short map_ind
 		void (*postHookFunc) (struct map_session_data *sd, unsigned short map_index, int x, int y, uint32 ip, uint16 port);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_changemapserver_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_changemapserver_post[hIndex].func;
+			postHookFunc(sd, map_index, x, y, ip, port);
+		}
+	}
+	return;
+}
+void HP_clif_changemapserver_airship(struct map_session_data *sd, unsigned short map_index, int x, int y, uint32 ip, uint16 port) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_changemapserver_airship_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, unsigned short *map_index, int *x, int *y, uint32 *ip, uint16 *port);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_changemapserver_airship_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_changemapserver_airship_pre[hIndex].func;
+			preHookFunc(&sd, &map_index, &x, &y, &ip, &port);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.changemapserver_airship(sd, map_index, x, y, ip, port);
+	}
+	if (HPMHooks.count.HP_clif_changemapserver_airship_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, unsigned short map_index, int x, int y, uint32 ip, uint16 port);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_changemapserver_airship_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_changemapserver_airship_post[hIndex].func;
 			postHookFunc(sd, map_index, x, y, ip, port);
 		}
 	}
@@ -38223,11 +38301,11 @@ struct item_data* HP_itemdb_exists(int nameid) {
 	}
 	return retVal___;
 }
-struct item_option* HP_itemdb_option_exists(int idx) {
+struct itemdb_option* HP_itemdb_option_exists(int idx) {
 	int hIndex = 0;
-	struct item_option* retVal___ = NULL;
+	struct itemdb_option* retVal___ = NULL;
 	if (HPMHooks.count.HP_itemdb_option_exists_pre > 0) {
-		struct item_option* (*preHookFunc) (int *idx);
+		struct itemdb_option* (*preHookFunc) (int *idx);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_option_exists_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_itemdb_option_exists_pre[hIndex].func;
@@ -38242,7 +38320,7 @@ struct item_option* HP_itemdb_option_exists(int idx) {
 		retVal___ = HPMHooks.source.itemdb.option_exists(idx);
 	}
 	if (HPMHooks.count.HP_itemdb_option_exists_post > 0) {
-		struct item_option* (*postHookFunc) (struct item_option* retVal___, int idx);
+		struct itemdb_option* (*postHookFunc) (struct itemdb_option* retVal___, int idx);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_option_exists_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_itemdb_option_exists_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, idx);
@@ -39121,10 +39199,10 @@ int HP_itemdb_validate_entry(struct item_data *entry, int n, const char *source)
 	}
 	return retVal___;
 }
-void HP_itemdb_readdb_options_additional_fields(struct item_option *ito, struct config_setting_t *t, const char *source) {
+void HP_itemdb_readdb_options_additional_fields(struct itemdb_option *ito, struct config_setting_t *t, const char *source) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_itemdb_readdb_options_additional_fields_pre > 0) {
-		void (*preHookFunc) (struct item_option **ito, struct config_setting_t **t, const char **source);
+		void (*preHookFunc) (struct itemdb_option **ito, struct config_setting_t **t, const char **source);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_readdb_options_additional_fields_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_itemdb_readdb_options_additional_fields_pre[hIndex].func;
@@ -39139,7 +39217,7 @@ void HP_itemdb_readdb_options_additional_fields(struct item_option *ito, struct 
 		HPMHooks.source.itemdb.readdb_options_additional_fields(ito, t, source);
 	}
 	if (HPMHooks.count.HP_itemdb_readdb_options_additional_fields_post > 0) {
-		void (*postHookFunc) (struct item_option *ito, struct config_setting_t *t, const char *source);
+		void (*postHookFunc) (struct itemdb_option *ito, struct config_setting_t *t, const char *source);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_readdb_options_additional_fields_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_itemdb_readdb_options_additional_fields_post[hIndex].func;
 			postHookFunc(ito, t, source);
@@ -69855,15 +69933,15 @@ void HP_searchstore_clearremote(struct map_session_data *sd) {
 	}
 	return;
 }
-bool HP_searchstore_result(struct map_session_data *sd, unsigned int store_id, int account_id, const char *store_name, unsigned short nameid, unsigned short amount, unsigned int price, const short *card, unsigned char refine) {
+bool HP_searchstore_result(struct map_session_data *sd, unsigned int store_id, int account_id, const char *store_name, unsigned short nameid, unsigned short amount, unsigned int price, const short *card, unsigned char refine, const struct item_option *option) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if (HPMHooks.count.HP_searchstore_result_pre > 0) {
-		bool (*preHookFunc) (struct map_session_data **sd, unsigned int *store_id, int *account_id, const char **store_name, unsigned short *nameid, unsigned short *amount, unsigned int *price, const short **card, unsigned char *refine);
+		bool (*preHookFunc) (struct map_session_data **sd, unsigned int *store_id, int *account_id, const char **store_name, unsigned short *nameid, unsigned short *amount, unsigned int *price, const short **card, unsigned char *refine, const struct item_option **option);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_searchstore_result_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_searchstore_result_pre[hIndex].func;
-			retVal___ = preHookFunc(&sd, &store_id, &account_id, &store_name, &nameid, &amount, &price, &card, &refine);
+			retVal___ = preHookFunc(&sd, &store_id, &account_id, &store_name, &nameid, &amount, &price, &card, &refine, &option);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -69871,13 +69949,13 @@ bool HP_searchstore_result(struct map_session_data *sd, unsigned int store_id, i
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.searchstore.result(sd, store_id, account_id, store_name, nameid, amount, price, card, refine);
+		retVal___ = HPMHooks.source.searchstore.result(sd, store_id, account_id, store_name, nameid, amount, price, card, refine, option);
 	}
 	if (HPMHooks.count.HP_searchstore_result_post > 0) {
-		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, unsigned int store_id, int account_id, const char *store_name, unsigned short nameid, unsigned short amount, unsigned int price, const short *card, unsigned char refine);
+		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, unsigned int store_id, int account_id, const char *store_name, unsigned short nameid, unsigned short amount, unsigned int price, const short *card, unsigned char refine, const struct item_option *option);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_searchstore_result_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_searchstore_result_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd, store_id, account_id, store_name, nameid, amount, price, card, refine);
+			retVal___ = postHookFunc(retVal___, sd, store_id, account_id, store_name, nameid, amount, price, card, refine, option);
 		}
 	}
 	return retVal___;
