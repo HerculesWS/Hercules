@@ -6812,13 +6812,13 @@ Returns informations on timers that were created by addtimer().
 
 valid <type> for gettimer() are:
 
-(0) TIMER_COUNT
+TIMER_COUNT
 	Will return the total number of timers for the specified or
 	attached player. Can be filtered by <event>.
-(1) TIMER_TICK_NEXT
+TIMER_TICK_NEXT
 	Will return the number of ticks until the next timer runs
 	for the specified or attached player. Can be filtered by <event>.
-(2) TIMER_TICK_LAST
+TIMER_TICK_LAST
 	Will return the number of ticks until the last timer runs
 	for the specified or attached player. Can be filtered by <event>.
 
