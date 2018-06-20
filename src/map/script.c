@@ -24480,7 +24480,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(deltimer,"s?"),
 		BUILDIN_DEF(addtimercount,"si?"),
 		BUILDIN_DEF(gettimer,"c??"),
-		BUILDIN_DEF(getunits,"iri?????"),
+		BUILDIN_DEF(getunits,"cri?????"),
 		BUILDIN_DEF(initnpctimer,"??"),
 		BUILDIN_DEF(stopnpctimer,"??"),
 		BUILDIN_DEF(startnpctimer,"??"),
