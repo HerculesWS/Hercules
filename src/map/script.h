@@ -478,6 +478,7 @@ enum pcblock_action_flag {
 struct Script_Config {
 	bool warn_func_mismatch_argtypes;
 	bool warn_func_mismatch_paramnum;
+	bool require_constants;
 	int check_cmdcount;
 	int check_gotocount;
 	int input_min_value;
