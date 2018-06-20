@@ -3608,8 +3608,8 @@ typedef struct item_data* (*HPMHOOK_pre_itemdb_search) (int *nameid);
 typedef struct item_data* (*HPMHOOK_post_itemdb_search) (struct item_data* retVal___, int nameid);
 typedef struct item_data* (*HPMHOOK_pre_itemdb_exists) (int *nameid);
 typedef struct item_data* (*HPMHOOK_post_itemdb_exists) (struct item_data* retVal___, int nameid);
-typedef struct item_option* (*HPMHOOK_pre_itemdb_option_exists) (int *idx);
-typedef struct item_option* (*HPMHOOK_post_itemdb_option_exists) (struct item_option* retVal___, int idx);
+typedef struct itemdb_option* (*HPMHOOK_pre_itemdb_option_exists) (int *idx);
+typedef struct itemdb_option* (*HPMHOOK_post_itemdb_option_exists) (struct itemdb_option* retVal___, int idx);
 typedef bool (*HPMHOOK_pre_itemdb_in_group) (struct item_group **group, int *nameid);
 typedef bool (*HPMHOOK_post_itemdb_in_group) (bool retVal___, struct item_group *group, int nameid);
 typedef int (*HPMHOOK_pre_itemdb_group_item) (struct item_group **group);
@@ -3674,8 +3674,8 @@ typedef int (*HPMHOOK_pre_itemdb_gendercheck) (struct item_data **id);
 typedef int (*HPMHOOK_post_itemdb_gendercheck) (int retVal___, struct item_data *id);
 typedef int (*HPMHOOK_pre_itemdb_validate_entry) (struct item_data **entry, int *n, const char **source);
 typedef int (*HPMHOOK_post_itemdb_validate_entry) (int retVal___, struct item_data *entry, int n, const char *source);
-typedef void (*HPMHOOK_pre_itemdb_readdb_options_additional_fields) (struct item_option **ito, struct config_setting_t **t, const char **source);
-typedef void (*HPMHOOK_post_itemdb_readdb_options_additional_fields) (struct item_option *ito, struct config_setting_t *t, const char *source);
+typedef void (*HPMHOOK_pre_itemdb_readdb_options_additional_fields) (struct itemdb_option **ito, struct config_setting_t **t, const char **source);
+typedef void (*HPMHOOK_post_itemdb_readdb_options_additional_fields) (struct itemdb_option *ito, struct config_setting_t *t, const char *source);
 typedef void (*HPMHOOK_pre_itemdb_readdb_additional_fields) (int *itemid, struct config_setting_t **it, int *n, const char **source);
 typedef void (*HPMHOOK_post_itemdb_readdb_additional_fields) (int itemid, struct config_setting_t *it, int n, const char *source);
 typedef void (*HPMHOOK_pre_itemdb_readdb_job_sub) (struct item_data **id, struct config_setting_t **t);
@@ -6616,8 +6616,8 @@ typedef bool (*HPMHOOK_pre_searchstore_queryremote) (struct map_session_data **s
 typedef bool (*HPMHOOK_post_searchstore_queryremote) (bool retVal___, struct map_session_data *sd, int account_id);
 typedef void (*HPMHOOK_pre_searchstore_clearremote) (struct map_session_data **sd);
 typedef void (*HPMHOOK_post_searchstore_clearremote) (struct map_session_data *sd);
-typedef bool (*HPMHOOK_pre_searchstore_result) (struct map_session_data **sd, unsigned int *store_id, int *account_id, const char **store_name, unsigned short *nameid, unsigned short *amount, unsigned int *price, const short **card, unsigned char *refine);
-typedef bool (*HPMHOOK_post_searchstore_result) (bool retVal___, struct map_session_data *sd, unsigned int store_id, int account_id, const char *store_name, unsigned short nameid, unsigned short amount, unsigned int price, const short *card, unsigned char refine);
+typedef bool (*HPMHOOK_pre_searchstore_result) (struct map_session_data **sd, unsigned int *store_id, int *account_id, const char **store_name, unsigned short *nameid, unsigned short *amount, unsigned int *price, const short **card, unsigned char *refine, const struct item_option **option);
+typedef bool (*HPMHOOK_post_searchstore_result) (bool retVal___, struct map_session_data *sd, unsigned int store_id, int account_id, const char *store_name, unsigned short nameid, unsigned short amount, unsigned int price, const short *card, unsigned char refine, const struct item_option *option);
 #endif // MAP_SEARCHSTORE_H
 #ifdef COMMON_SHOWMSG_H /* showmsg */
 typedef void (*HPMHOOK_pre_showmsg_init) (void);
