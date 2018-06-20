@@ -759,6 +759,7 @@ struct clif_interface {
 	bool (*spawn) (struct block_list *bl);
 	/* map-related */
 	void (*changemap) (struct map_session_data *sd, short m, int x, int y);
+	void (*changemap_airship) (struct map_session_data *sd, short m, int x, int y);
 	void (*changemapcell) (int fd, int16 m, int x, int y, int type, enum send_target target);
 	void (*map_property) (struct map_session_data* sd, enum map_property property);
 	void (*pvpset) (struct map_session_data *sd, int pvprank, int pvpnum,int type);
