@@ -80,7 +80,7 @@ packet(0x008d,-1);
 packet(0x008e,-1);
 //packet(0x008f,-1);
 packet(0x0090,7,clif->pNpcClicked,2);
-packet(0x0091,22);
+packet(0x0091,22);  // ZC_NPCACK_MAPMOVE
 packet(0x0092,28);
 packet(0x0093,2);
 packet(0x0094,6,clif->pGetCharNameRequest,2);  // CZ_REQNAME
@@ -3397,7 +3397,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 // new packets
 	packet(0x0a49,22);
 	packet(0x0a4a,6);
-	packet(0x0a4b,22);
+	packet(0x0a4b,22);  // ZC_AIRSHIP_MAPMOVE
 	packet(0x0a4c,28);
 #endif
 

@@ -1935,6 +1935,25 @@ void clif_changemap(struct map_session_data *sd, short m, int x, int y) {
 	WFIFOSET(fd,packet_len(0x91));
 }
 
+/// Notifies the client of a position change (on air ship) to coordinates on given map (ZC_AIRSHIP_MAPMOVE).
+/// 0A4B <map name>.16B <x>.W <y>.W
+void clif_changemap_airship(struct map_session_data *sd, short m, int x, int y)
+{
+#if PACKETVER_MAIN_NUM >= 20180620 || PACKETVER_RE_NUM >= 20180321 || PACKETVER_ZERO_NUM >= 20171027
+	// [4144] this packet is not used yet by kro, but it here
+	int fd;
+	nullpo_retv(sd);
+	fd = sd->fd;
+
+	WFIFOHEAD(fd, packet_len(0xa4b));
+	WFIFOW(fd, 0) = 0xa4b;
+	mapindex->getmapname_ext(map->list[m].custom_name ? map->list[map->list[m].instance_src_map].name : map->list[m].name, WFIFOP(fd,2));
+	WFIFOW(fd, 18) = x;
+	WFIFOW(fd, 20) = y;
+	WFIFOSET(fd, packet_len(0xa4b));
+#endif
+}
+
 /// Notifies the client of a position change to coordinates on given map, which is on another map-server (ZC_NPCACK_SERVERMOVE).
 /// 0092 <map name>.16B <x>.W <y>.W <ip>.L <port>.W
 /// 0ac7 <map name>.16B <x>.W <y>.W <ip>.L <port>.W <zero>.128B
@@ -21262,6 +21281,7 @@ void clif_defaults(void) {
 	clif->spawn = clif_spawn;
 	/* map-related */
 	clif->changemap = clif_changemap;
+	clif->changemap_airship = clif_changemap_airship;
 	clif->changemapcell = clif_changemapcell;
 	clif->map_property = clif_map_property;
 	clif->pvpset = clif_pvpset;
