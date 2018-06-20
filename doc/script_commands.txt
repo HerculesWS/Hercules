@@ -2401,11 +2401,11 @@ using only numbers reduces script readability
 This function will return the various parts of the name of the calling NPC.
 Whatever it returns is determined by type.
 
-(0) NPC_NAME	    - The NPC's display name (visible#hidden)
-(1) NPC_NAME_VISIBLE - The visible part of the NPC's display name
-(2) NPC_NAME_HIDDEN  - The hidden part of the NPC's display name
-(3) NPC_NAME_UNIQUE  - The NPC's unique name (::name)
-(4) NPC_MAP		    - The name of the map the NPC is in.
+NPC_NAME           - The NPC's display name (visible#hidden)
+NPC_NAME_VISIBLE   - The visible part of the NPC's display name
+NPC_NAME_HIDDEN    - The hidden part of the NPC's display name
+NPC_NAME_UNIQUE    - The NPC's unique name (::name)
+NPC_MAP            - The name of the map the NPC is in.
 
 If <GID> is passed, it will return the value of the specified NPC instead of
 the attached NPC. If the NPC is not found, it will return <default value>,

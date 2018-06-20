@@ -24413,7 +24413,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getguildmasterid,"i"),
 		BUILDIN_DEF(getguildmember,"i?"),
 		BUILDIN_DEF(strcharinfo,"c??"),
-		BUILDIN_DEF(strnpcinfo,"i??"),
+		BUILDIN_DEF(strnpcinfo,"c??"),
 		BUILDIN_DEF(charid2rid,"i"),
 		BUILDIN_DEF(getequipid,"i"),
 		BUILDIN_DEF(getequipname,"i"),
