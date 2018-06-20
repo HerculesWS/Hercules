@@ -3443,16 +3443,16 @@ Valid types are :
 This function returns specified information about the current system time.
 
 Valid types:
-	1 - GETTIME_SECOND     - Seconds (of a minute)
-	2 - GETTIME_MINUTE     - Minutes (of an hour)
-	3 - GETTIME_HOUR       - Hour (of a day)
-	4 - GETTIME_WEEKDAY    - Week day (0 for Sunday, 6 is Saturday)
-	                       - Additional: SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY
-	5 - GETTIME_DAYOFMONTH - Day of the month.
-	6 - GETTIME_MONTH      - Number of the month.
-	                       - Additional: JANUARY, FEBRUARY, MARCH, APRIL, MAY, JUNE, JULY, AUGUST, SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER
-	7 - GETTIME_YEAR       - Year
-	8 - GETTIME_DAYOFYEAR  - Day of the year.
+	GETTIME_SECOND     - Seconds (of a minute)
+	GETTIME_MINUTE     - Minutes (of an hour)
+	GETTIME_HOUR       - Hour (of a day)
+	GETTIME_WEEKDAY    - Week day (0 for Sunday, 6 is Saturday)
+	                   - Additional: SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY
+	GETTIME_DAYOFMONTH - Day of the month.
+	GETTIME_MONTH      - Number of the month.
+	                   - Additional: JANUARY, FEBRUARY, MARCH, APRIL, MAY, JUNE, JULY, AUGUST, SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER
+	GETTIME_YEAR       - Year
+	GETTIME_DAYOFYEAR  - Day of the year.
 
 It will only return numbers based on types.
 Example :

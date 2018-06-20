@@ -24460,8 +24460,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(checkmount,""),
 		BUILDIN_DEF(checkwug,""),
 		BUILDIN_DEF(savepoint,"sii"),
-		BUILDIN_DEF(gettimetick,"i"),
-		BUILDIN_DEF(gettime,"i"),
+		BUILDIN_DEF(gettimetick,"i"), // FIXME: add constants for this
+		BUILDIN_DEF(gettime,"c"),
 		BUILDIN_DEF(gettimestr,"si"),
 		BUILDIN_DEF(openstorage,""),
 		BUILDIN_DEF(guildopenstorage,""),
