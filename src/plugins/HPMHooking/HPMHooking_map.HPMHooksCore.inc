@@ -584,6 +584,8 @@ struct {
 	struct HPMHookPoint *HP_clif_decrypt_cmd_post;
 	struct HPMHookPoint *HP_clif_authok_pre;
 	struct HPMHookPoint *HP_clif_authok_post;
+	struct HPMHookPoint *HP_clif_auth_error_pre;
+	struct HPMHookPoint *HP_clif_auth_error_post;
 	struct HPMHookPoint *HP_clif_authrefuse_pre;
 	struct HPMHookPoint *HP_clif_authrefuse_post;
 	struct HPMHookPoint *HP_clif_authfail_fd_pre;
@@ -698,6 +700,8 @@ struct {
 	struct HPMHookPoint *HP_clif_spawn_post;
 	struct HPMHookPoint *HP_clif_changemap_pre;
 	struct HPMHookPoint *HP_clif_changemap_post;
+	struct HPMHookPoint *HP_clif_changemap_airship_pre;
+	struct HPMHookPoint *HP_clif_changemap_airship_post;
 	struct HPMHookPoint *HP_clif_changemapcell_pre;
 	struct HPMHookPoint *HP_clif_changemapcell_post;
 	struct HPMHookPoint *HP_clif_map_property_pre;
@@ -714,6 +718,8 @@ struct {
 	struct HPMHookPoint *HP_clif_maptypeproperty2_post;
 	struct HPMHookPoint *HP_clif_changemapserver_pre;
 	struct HPMHookPoint *HP_clif_changemapserver_post;
+	struct HPMHookPoint *HP_clif_changemapserver_airship_pre;
+	struct HPMHookPoint *HP_clif_changemapserver_airship_post;
 	struct HPMHookPoint *HP_clif_npcbuysell_pre;
 	struct HPMHookPoint *HP_clif_npcbuysell_post;
 	struct HPMHookPoint *HP_clif_buylist_pre;
@@ -6965,6 +6971,8 @@ struct {
 	int HP_clif_decrypt_cmd_post;
 	int HP_clif_authok_pre;
 	int HP_clif_authok_post;
+	int HP_clif_auth_error_pre;
+	int HP_clif_auth_error_post;
 	int HP_clif_authrefuse_pre;
 	int HP_clif_authrefuse_post;
 	int HP_clif_authfail_fd_pre;
@@ -7079,6 +7087,8 @@ struct {
 	int HP_clif_spawn_post;
 	int HP_clif_changemap_pre;
 	int HP_clif_changemap_post;
+	int HP_clif_changemap_airship_pre;
+	int HP_clif_changemap_airship_post;
 	int HP_clif_changemapcell_pre;
 	int HP_clif_changemapcell_post;
 	int HP_clif_map_property_pre;
@@ -7095,6 +7105,8 @@ struct {
 	int HP_clif_maptypeproperty2_post;
 	int HP_clif_changemapserver_pre;
 	int HP_clif_changemapserver_post;
+	int HP_clif_changemapserver_airship_pre;
+	int HP_clif_changemapserver_airship_post;
 	int HP_clif_npcbuysell_pre;
 	int HP_clif_npcbuysell_post;
 	int HP_clif_buylist_pre;

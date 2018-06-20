@@ -668,6 +668,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(pincode->makestate, HP_pincode_makestate) },
 	{ HP_POP(pincode->editstate, HP_pincode_editstate) },
 	{ HP_POP(pincode->loginstate, HP_pincode_loginstate) },
+	{ HP_POP(pincode->loginstate2, HP_pincode_loginstate2) },
 	{ HP_POP(pincode->setnew, HP_pincode_setnew) },
 	{ HP_POP(pincode->change, HP_pincode_change) },
 	{ HP_POP(pincode->isBlacklisted, HP_pincode_isBlacklisted) },
