@@ -448,7 +448,7 @@ struct item_package {
 	unsigned short must_qty;
 };
 
-struct item_option {
+struct itemdb_option {
 	int16 index;
 	struct script_code *script;
 };
@@ -590,7 +590,7 @@ struct itemdb_interface {
 	/* */
 	struct item_data *array[MAX_ITEMDB];
 	struct DBMap *other;// int nameid -> struct item_data*
-	struct DBMap *options; // int opt_id -> struct item_option*
+	struct DBMap *options; // int opt_id -> struct itemdb_option*
 	struct item_data dummy; //This is the default dummy item used for non-existant items. [Skotlex]
 	/* */
 	void (*read_groups) (void);
@@ -607,7 +607,7 @@ struct itemdb_interface {
 	struct item_data* (*load)(int nameid);
 	struct item_data* (*search)(int nameid);
 	struct item_data* (*exists) (int nameid);
-	struct item_option* (*option_exists) (int idx);
+	struct itemdb_option* (*option_exists) (int idx);
 	bool (*in_group) (struct item_group *group, int nameid);
 	int (*group_item) (struct item_group *group);
 	int (*chain_item) (unsigned short chain_id, int *rate);
@@ -640,7 +640,7 @@ struct itemdb_interface {
 	void (*read_combos) (void);
 	int (*gendercheck) (struct item_data *id);
 	int (*validate_entry) (struct item_data *entry, int n, const char *source);
-	void (*readdb_options_additional_fields) (struct item_option *ito, struct config_setting_t *t, const char *source);
+	void (*readdb_options_additional_fields) (struct itemdb_option *ito, struct config_setting_t *t, const char *source);
 	void (*readdb_additional_fields) (int itemid, struct config_setting_t *it, int n, const char *source);
 	void (*readdb_job_sub) (struct item_data *id, struct config_setting_t *t);
 	int (*readdb_libconfig_sub) (struct config_setting_t *it, int n, const char *source);
