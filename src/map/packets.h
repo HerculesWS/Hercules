@@ -4144,4 +4144,14 @@ packet(0x96e,-1,clif->ackmergeitems);
 // changed packet sizes
 #endif
 
+#ifndef PACKETVER_ZERO
+// 2018-06-20cRagexe, 2018-06-20eRagexe, 2018-06-20dRagexeRE, 2018-06-20eRagexeRE
+#if PACKETVER >= 20180620
+// new packets
+	packet(0x0b00,8);
+	packet(0x0b01,40,clif->pDull/*,XXX*/);
+// changed packet sizes
+#endif
+#endif  // PACKETVER_ZERO
+
 #endif /* MAP_PACKETS_H */
