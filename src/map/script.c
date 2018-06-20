@@ -4319,6 +4319,9 @@ bool script_check_buildin_argtype(struct script_state* st, int func)
 			name = reference_getname(data);
 		}
 
+		if (type == 'c' && !script->config.require_constants)
+			type = 'i';
+
 		switch (type) {
 			case 'v':
 				if (!data_isstring(data) && !data_isint(data) && !data_isreference(data)) {
@@ -4340,6 +4343,14 @@ bool script_check_buildin_argtype(struct script_state* st, int func)
 				if (!data_isint(data) && !(data_isreference(data) && (reference_toparam(data) || reference_toconstant(data) || !is_string_variable(name)))) {
 					// int ( params and constants are always int )
 					ShowWarning("Unexpected type for argument %d. Expected number.\n", idx-1);
+					script->reportdata(data);
+					invalid++;
+				}
+				break;
+			case 'c':
+				if (!data_isreference(data) || !reference_toconstant(data)) {
+					// constant int
+					ShowWarning("Unexpected type for argument %d. Expected constant.\n", idx-1);
 					script->reportdata(data);
 					invalid++;
 				}
@@ -4804,6 +4815,7 @@ bool script_config_read(const char *filename, bool imported)
 	libconfig->setting_lookup_int(setting, "check_gotocount", &script->config.check_gotocount);
 	libconfig->setting_lookup_int(setting, "input_min_value", &script->config.input_min_value);
 	libconfig->setting_lookup_int(setting, "input_max_value", &script->config.input_max_value);
+	libconfig->setting_lookup_bool_real(setting, "require_constants", &script->config.require_constants);
 
 	if (!HPM->parse_conf(&config, filename, HPCT_SCRIPT, imported))
 		retval = false;
@@ -24196,12 +24208,13 @@ bool script_add_builtin(const struct script_function *buildin, bool override)
 		// 'v' - value (either string or int or reference)
 		// 's' - string
 		// 'i' - int
+		// 'c' - constant int
 		// 'r' - reference (of a variable)
 		// 'l' - label
 		// '?' - one optional parameter
 		// '*' - unknown number of optional parameters
 		char *p = buildin->arg;
-		while( *p == 'v' || *p == 's' || *p == 'i' || *p == 'r' || *p == 'l' ) ++p;
+		while( *p == 'v' || *p == 's' || *p == 'i' || *p == 'c' || *p == 'r' || *p == 'l' ) ++p;
 		while( *p == '?' ) ++p;
 		if( *p == '*' ) ++p;
 		if( *p != 0 ) {
@@ -24399,8 +24412,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getguildmaster,"i"),
 		BUILDIN_DEF(getguildmasterid,"i"),
 		BUILDIN_DEF(getguildmember,"i?"),
-		BUILDIN_DEF(strcharinfo,"i??"),
-		BUILDIN_DEF(strnpcinfo,"i??"),
+		BUILDIN_DEF(strcharinfo,"c??"),
+		BUILDIN_DEF(strnpcinfo,"c??"),
 		BUILDIN_DEF(charid2rid,"i"),
 		BUILDIN_DEF(getequipid,"i"),
 		BUILDIN_DEF(getequipname,"i"),
@@ -24447,8 +24460,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(checkmount,""),
 		BUILDIN_DEF(checkwug,""),
 		BUILDIN_DEF(savepoint,"sii"),
-		BUILDIN_DEF(gettimetick,"i"),
-		BUILDIN_DEF(gettime,"i"),
+		BUILDIN_DEF(gettimetick,"i"), // FIXME: add constants for this
+		BUILDIN_DEF(gettime,"c"),
 		BUILDIN_DEF(gettimestr,"si"),
 		BUILDIN_DEF(openstorage,""),
 		BUILDIN_DEF(guildopenstorage,""),
@@ -24466,8 +24479,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(addtimer,"is?"),
 		BUILDIN_DEF(deltimer,"s?"),
 		BUILDIN_DEF(addtimercount,"si?"),
-		BUILDIN_DEF(gettimer,"i??"),
-		BUILDIN_DEF(getunits,"iri?????"),
+		BUILDIN_DEF(gettimer,"c??"),
+		BUILDIN_DEF(getunits,"cri?????"),
 		BUILDIN_DEF(initnpctimer,"??"),
 		BUILDIN_DEF(stopnpctimer,"??"),
 		BUILDIN_DEF(startnpctimer,"??"),
@@ -25588,6 +25601,7 @@ void script_defaults(void)
 	script->config.ontouch_name = "OnTouch_";  //ontouch_name (runs on first visible char to enter area, picks another char if the first char leaves)
 	script->config.ontouch2_name = "OnTouch";  //ontouch2_name (run whenever a char walks into the OnTouch area)
 	script->config.onuntouch_name = "OnUnTouch";  //onuntouch_name (run whenever a char walks from the OnTouch area)
+	script->config.require_constants = false; // false by default, for backward compatibility
 
 	// for ENABLE_CASE_CHECK
 	script->calc_hash_ci = calc_hash_ci;

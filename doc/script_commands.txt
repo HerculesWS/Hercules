@@ -2377,11 +2377,12 @@ deleted.
 
 This function will return either the name, party name or guild name for
 the invoking character. Whatever it returns is determined by type.
-(0) PC_NAME		- Character's name.
-(1) PC_PARTY	- The name of the party they're in if any.
-(2) PC_GUILD	- The name of the guild they're in if any.
-(3) PC_MAP		- The name of the map the character is in.
-(4) PC_CLAN   - The name of the clan they're in if any.
+
+PC_NAME     - Character's name.
+PC_PARTY    - The name of the party they're in if any.
+PC_GUILD    - The name of the guild they're in if any.
+PC_MAP      - The name of the map the character is in.
+PC_CLAN     - The name of the clan they're in if any.
 
 If <GID> is passed, it will return the value of the specified player instead
 the attached player. If the player is not found, it will return
@@ -2400,11 +2401,11 @@ using only numbers reduces script readability
 This function will return the various parts of the name of the calling NPC.
 Whatever it returns is determined by type.
 
-(0) NPC_NAME	    - The NPC's display name (visible#hidden)
-(1) NPC_NAME_VISIBLE - The visible part of the NPC's display name
-(2) NPC_NAME_HIDDEN  - The hidden part of the NPC's display name
-(3) NPC_NAME_UNIQUE  - The NPC's unique name (::name)
-(4) NPC_MAP		    - The name of the map the NPC is in.
+NPC_NAME           - The NPC's display name (visible#hidden)
+NPC_NAME_VISIBLE   - The visible part of the NPC's display name
+NPC_NAME_HIDDEN    - The hidden part of the NPC's display name
+NPC_NAME_UNIQUE    - The NPC's unique name (::name)
+NPC_MAP            - The name of the map the NPC is in.
 
 If <GID> is passed, it will return the value of the specified NPC instead of
 the attached NPC. If the NPC is not found, it will return <default value>,
@@ -3442,16 +3443,16 @@ Valid types are :
 This function returns specified information about the current system time.
 
 Valid types:
-	1 - GETTIME_SECOND     - Seconds (of a minute)
-	2 - GETTIME_MINUTE     - Minutes (of an hour)
-	3 - GETTIME_HOUR       - Hour (of a day)
-	4 - GETTIME_WEEKDAY    - Week day (0 for Sunday, 6 is Saturday)
-	                       - Additional: SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY
-	5 - GETTIME_DAYOFMONTH - Day of the month.
-	6 - GETTIME_MONTH      - Number of the month.
-	                       - Additional: JANUARY, FEBRUARY, MARCH, APRIL, MAY, JUNE, JULY, AUGUST, SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER
-	7 - GETTIME_YEAR       - Year
-	8 - GETTIME_DAYOFYEAR  - Day of the year.
+	GETTIME_SECOND     - Seconds (of a minute)
+	GETTIME_MINUTE     - Minutes (of an hour)
+	GETTIME_HOUR       - Hour (of a day)
+	GETTIME_WEEKDAY    - Week day (0 for Sunday, 6 is Saturday)
+	                   - Additional: SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY
+	GETTIME_DAYOFMONTH - Day of the month.
+	GETTIME_MONTH      - Number of the month.
+	                   - Additional: JANUARY, FEBRUARY, MARCH, APRIL, MAY, JUNE, JULY, AUGUST, SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER
+	GETTIME_YEAR       - Year
+	GETTIME_DAYOFYEAR  - Day of the year.
 
 It will only return numbers based on types.
 Example :
@@ -6195,7 +6196,7 @@ Examples:
     @ /!\ This command is deprecated @
     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-Prevents the player from moving when the option != 0, and 0 enables the 
+Prevents the player from moving when the option != 0, and 0 enables the
 player to move again. The player has to be the account ID of a character,
 and will run for the attached player if zero is supplied.
 
@@ -6811,13 +6812,13 @@ Returns informations on timers that were created by addtimer().
 
 valid <type> for gettimer() are:
 
-(0) TIMER_COUNT
+TIMER_COUNT
 	Will return the total number of timers for the specified or
 	attached player. Can be filtered by <event>.
-(1) TIMER_TICK_NEXT
+TIMER_TICK_NEXT
 	Will return the number of ticks until the next timer runs
 	for the specified or attached player. Can be filtered by <event>.
-(2) TIMER_TICK_LAST
+TIMER_TICK_LAST
 	Will return the number of ticks until the last timer runs
 	for the specified or attached player. Can be filtered by <event>.
 
