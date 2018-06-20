@@ -2377,11 +2377,12 @@ deleted.
 
 This function will return either the name, party name or guild name for
 the invoking character. Whatever it returns is determined by type.
-(0) PC_NAME		- Character's name.
-(1) PC_PARTY	- The name of the party they're in if any.
-(2) PC_GUILD	- The name of the guild they're in if any.
-(3) PC_MAP		- The name of the map the character is in.
-(4) PC_CLAN   - The name of the clan they're in if any.
+
+PC_NAME     - Character's name.
+PC_PARTY    - The name of the party they're in if any.
+PC_GUILD    - The name of the guild they're in if any.
+PC_MAP      - The name of the map the character is in.
+PC_CLAN     - The name of the clan they're in if any.
 
 If <GID> is passed, it will return the value of the specified player instead
 the attached player. If the player is not found, it will return
@@ -6195,7 +6196,7 @@ Examples:
     @ /!\ This command is deprecated @
     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-Prevents the player from moving when the option != 0, and 0 enables the 
+Prevents the player from moving when the option != 0, and 0 enables the
 player to move again. The player has to be the account ID of a character,
 and will run for the attached player if zero is supplied.
 
