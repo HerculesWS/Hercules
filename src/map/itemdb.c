@@ -324,11 +324,11 @@ struct item_data* itemdb_exists(int nameid)
 /**
  * Searches for the item_option data.
  * @param option_index as the index of the item option (client side).
- * @return pointer to struct item_option data or NULL.
+ * @return pointer to struct itemdb_option data or NULL.
  */
-struct item_option *itemdb_option_exists(int idx)
+struct itemdb_option *itemdb_option_exists(int idx)
 {
-	return (struct item_option *)idb_get(itemdb->options, idx);
+	return (struct itemdb_option *)idb_get(itemdb->options, idx);
 }
 
 /// Returns human readable name for given item type.
@@ -1318,7 +1318,7 @@ void itemdb_read_packages(void) {
  * @param[in]     source Source of the entry (file name), to be displayed in
  *                       case of validation errors.
  */
-void itemdb_readdb_options_additional_fields(struct item_option *ito, struct config_setting_t *t, const char *source)
+void itemdb_readdb_options_additional_fields(struct itemdb_option *ito, struct config_setting_t *t, const char *source)
 {
 	// do nothing. plugins can do their own work
 }
@@ -1352,7 +1352,7 @@ void itemdb_read_options(void)
 	VECTOR_ENSURE(duplicate_id, libconfig->setting_length(ito), 1);
 
 	while ((conf = libconfig->setting_get_elem(ito, index++))) {
-		struct item_option t_opt = { 0 }, *s_opt = NULL;
+		struct itemdb_option t_opt = { 0 }, *s_opt = NULL;
 		const char *str = NULL;
 		int i = 0;
 
@@ -1407,7 +1407,7 @@ void itemdb_read_options(void)
 		itemdb->readdb_options_additional_fields(&t_opt, ito, filepath);
 
 		/* Allocate memory and copy contents */
-		CREATE(s_opt, struct item_option, 1);
+		CREATE(s_opt, struct itemdb_option, 1);
 
 		*s_opt = t_opt;
 
@@ -2458,7 +2458,7 @@ int itemdb_final_sub(union DBKey key, struct DBData *data, va_list ap)
 
 int itemdb_options_final_sub(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct item_option *ito = DB->data2ptr(data);
+	struct itemdb_option *ito = DB->data2ptr(data);
 
 	if (ito->script != NULL)
 		script->free_code(ito->script);
