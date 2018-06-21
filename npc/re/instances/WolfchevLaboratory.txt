@@ -1859,30 +1859,29 @@ lhz_dun04,151,276,3	script	Researcher#memo	4_LGTSCIENCE,{
 				}
 				if (getpartyleader(getcharid(CHAR_ID_PARTY),2) == getcharid(CHAR_ID_CHAR)) {
 					.@instance = instance_create("Worsef", getcharid(CHAR_ID_PARTY));
-					if (.@instance < 0) {
-						mes "[Wolfchev]";
-						mes "Hmm.. Lab entering system is a bit weird. Would wait for me to check the system?";
-					} else {
-						mes "[Wolfchev]";
-						mes "Please hold on..";
-						next;
-						mes "Wolfchev starts to control certain gear.";
-						next;
-						progressbar "FF00FF", 2;
-						if (instance_attachmap("1@lhz", .@instance) != "") {
-							instance_set_timeout 14400, 300, .@instance;
-							instance_init(.@instance);
-							mes "[Wolfchev]";
-							mes "Alright! I have marked lan entering system code as";
-							mes "^0000ff"+ strcharinfo(PC_PARTY) +"^000000 party leader's name ^0000ff"+ strcharinfo(PC_NAME) +"^000000!!.";
-							next;
-							mes "[Wolfchev]";
-							mes "Now, your party is free to pass the entrance.";
-						} else {
+					if (.@instance >= 0) {
+						if (instance_attachmap("1@lhz", .@instance) == "") {
+							mes("[Wolfchev]");
+							mes("Hmm.. Lab entering system is a bit weird. Would wait for me to check the system?");
 							instance_destroy(.@instance);
+							close();
 						}
+						instance_set_timeout 14400, 300, .@instance;
+						instance_init(.@instance);
 					}
-					close;
+					mes("[Wolfchev]");
+					mes("Please hold on..");
+					next();
+					mes("Wolfchev starts to control certain gear.");
+					next();
+					progressbar("FF00FF", 2);
+					mes("[Wolfchev]");
+					mes("Alright! I have marked lan entering system code as");
+					mesf("^0000ff%s^000000 party leader's name ^0000ff%s^000000!!.", strcharinfo(PC_PARTY), strcharinfo(PC_NAME));
+					next();
+					mes("[Wolfchev]");
+					mes("Now, your party is free to pass the entrance.");
+					close();
 				} else {
 					mes "[Wolfchev]";
 					mes "You are not the ^0000ffLeader of the party^000000, are you? Please go get the leader.";

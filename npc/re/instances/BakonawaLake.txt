@@ -82,18 +82,16 @@ ma_scene01,174,179,4	script	Taho	4_M_DEWZATIMAN,{
 		switch (.@i) {
 		case 1:
 			.@instance = instance_create(.@md_name$, .@party_id);
-			if (.@instance < 0) {
-				mes("[Taho]");
-				mes("Oh, the rope got dropped. I have to make a new one.");
-				close();
+			if (.@instance >= 0) {
+				if (instance_attachmap("1@ma_b", .@instance) == "") {
+					mes("[Taho]");
+					mes("Oh, the rope got dropped. I have to make a new one.");
+					instance_destroy(.@instance);
+					close();
+				}
+				instance_set_timeout(7200, 300, .@instance);
+				instance_init(.@instance);
 			}
-			if (instance_attachmap("1@ma_b", .@instance) == "") {
-				mesf("^0000ff%s^000000 - Reservation Failed!", .@md_name$);
-				instance_destroy(.@instance);
-				close();
-			}
-			instance_set_timeout(7200, 300, .@instance);
-			instance_init(.@instance);
 			mes("[Taho]");
 			mes("Now I'm weaving, so you can go down when I'm done.");
 			close();

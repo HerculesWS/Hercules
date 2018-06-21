@@ -110,19 +110,19 @@ glast_01,204,273,6	script	Hugin#ghinstance	4_M_SAGE_C,{
 			if (getcharid(CHAR_ID_CHAR) != getpartyleader(.@party_id, 2))
 				end;
 			.@instance = instance_create(.@md_name$, .@party_id);
-			if (.@instance < 0) {
-				mesf("Party Name: %s", .@p_name$);
-				mesf("Party Leader: %s", strcharinfo(PC_NAME));
-				mesf("^0000ff%s^000000 - Reservation Failed!", .@md_name$);
-				close();
+			if (.@instance >= 0) {
+				for (.@i = 1; .@i <= 2; .@i++) {
+					if (instance_attachmap(.@i + "@gl_k", .@instance) == "") {
+						mesf("Party Name: %s", .@p_name$);
+						mesf("Party Leader: %s", strcharinfo(PC_NAME));
+						mesf("^0000ff%s^000000 - Reservation Failed!", .@md_name$);
+						instance_destroy(.@instance);
+						close();
+					}
+				}
+				instance_set_timeout(3600, 300, .@instance);
+				instance_init(.@instance);
 			}
-			if (instance_attachmap("1@gl_k", .@instance) == "" || instance_attachmap("2@gl_k", .@instance) == "") {
-				mesf("^0000FF%s^000000 - Reservation Failed!", .@md_name$);
-				instance_destroy(.@instance);
-				close();
-			}
-			instance_set_timeout(3600, 300, .@instance);
-			instance_init(.@instance);
 			mes("[Hugin]");
 			mes("The time gap was created. When you're ready, talk to me again.");
 			close();

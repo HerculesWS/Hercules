@@ -67,23 +67,20 @@ gef_fild10,242,202,0	script	Dimensional Gorge Piece	2_MONEMUS,{
 			switch (select(.@str$, "Enter the Dungeon", "Cancel")) {
 			case 1:
 				.@instance = instance_create(.@md_name$, .@party_id);
-				if (.@instance < 0) {
-					mesf("Party Name: %s", .@p_name$);
-					mesf("Party Leader: %s", strcharinfo(PC_NAME));
-					mesf("^0000ff%s ^000000 - Reservation Failed.", .@md_name$);
-					close();
+				if (.@instance >= 0) {
+					for (.@i = 1; .@i <= 2; ++.@i) {
+						if (instance_attachmap(.@i + "@orcs", .@instance) == "") {
+							mesf("Party Name: %s", .@p_name$);
+							mesf("Party Leader: %s", strcharinfo(PC_NAME));
+							mesf("^0000ff%s ^000000 - Reservation Failed.", .@md_name$);
+							instance_destroy(.@instance);
+							close();
+						}
+					}
+					instance_set_timeout(7200, 300, .@instance);
+					instance_init(.@instance);
 				}
 				mesf("^0000ff%s^000000- Attempting to book an entrance", .@md_name$);
-				for (.@i = 1; .@i <= 2; ++.@i) {
-					if (instance_attachmap(.@i + "@orcs", .@instance) == "")
-						break;
-				}
-				if (.@i < 2) {
-					instance_destroy(.@instance);
-					close();
-				}
-				instance_set_timeout(7200, 300, .@instance);
-				instance_init(.@instance);
 				mesf("After making a reservation, you have to select 'Enter the Dungeon' from the menu if you wish to enter the %s.", .@md_name$);
 				close();
 			case 2:

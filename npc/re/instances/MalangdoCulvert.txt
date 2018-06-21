@@ -433,20 +433,19 @@ mal_in01,160,34,4	script	Missing, the Cleaner	4_CAT_SAILOR2,{
 				close();
 			case 2:
 				.@instance = instance_create(.@md_name$, .@party_id);
-				if (.@instance < 0) {
-					mesf("Party name: %s", getpartyname(.@party_id));
-					mesf("Party leader: %s", strcharinfo(PC_NAME));
-					mesf("^0000ff%s^000000 - Reservation Failed!", .@md_name$);
-					close();
+				if (.@instance >= 0) {
+					for (.@i = 1; .@i <= 2; .@i++) {
+						if (instance_attachmap(.@i + "@pump", .@instance) == "") {
+							mesf("Party name: %s", getpartyname(.@party_id));
+							mesf("Party leader: %s", strcharinfo(PC_NAME));
+							mesf("^0000ff%s^000000 - Reservation Failed!", .@md_name$);
+							instance_destroy(.@instance);
+							close();
+						}
+					}
+					instance_set_timeout(3600, 300, .@instance);
+					instance_init(.@instance);
 				}
-				if (instance_attachmap("1@pump", .@instance) == "" || instance_attachmap("2@pump", .@instance) == "") {
-					mesf("^0000ff%s^000000 - Reservation Failed!", .@md_name$);
-					instance_destroy(.@instance);
-					close();
-				}
-				instance_set_timeout(3600, 300, .@instance);
-				instance_init(.@instance);
-
 				mesf("^3333FF%s^000000 - Reserving", .@md_name$);
 				mes("After making the reservation, you");
 				mes("have to select Enter the Culvert.");

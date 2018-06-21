@@ -85,22 +85,19 @@ mal_dun01,151,235,5	script	Starfish	4_ASTER,{
 				erasequest(4197);
 			if (countitem(Octopus_Hunt_Stick)) {
 				.@instance = instance_create(.@md_name$, .@party_id);
-				if (.@instance < 0) {
-					mes("[Starfish]");
-					mesf("Party name is... %s.", getpartyname(.@party_id));
-					mesf("Party leader is... %s.", strcharinfo(PC_NAME));
-					mesf("^0000FF%s^000000, I cannot open now, hehe.", .@md_name$);
-					mes("Now is not the time, please wait.");
-					close();
+				if (.@instance >= 0) {
+					if (instance_attachmap("1@cash", .@instance) == "") {
+						mes("[Starfish]");
+						mesf("Party name is... %s.", getpartyname(.@party_id));
+						mesf("Party leader is... %s.", strcharinfo(PC_NAME));
+						mesf("^0000FF%s^000000, I cannot open now, hehe.", .@md_name$);
+						mes("Now is not the time, please wait.");
+						instance_destroy(.@instance);
+						close();
+					}
+					instance_set_timeout(3600, 300, .@instance);
+					instance_init(.@instance);
 				}
-				if (instance_attachmap("1@cash", .@instance) == "") {
-					mesf("^0000FF%s^000000 - Reservation Failed!", .@md_name$);
-					instance_destroy(.@instance);
-					close();
-				}
-				instance_set_timeout(3600, 300, .@instance);
-				instance_init(.@instance);
-
 				mes("[Starfish]");
 				mesf("I will open the gate for a while to ^0000FF%s^000000.", .@md_name$);
 				mes("Please catch that pervert octopus, and come back with it sticked to the pick, hehe.");
