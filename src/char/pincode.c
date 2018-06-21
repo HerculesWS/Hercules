@@ -185,11 +185,13 @@ void pincode_setnew(int fd, struct char_session_data* sd)
 	if (pincode->check_blacklist && pincode->isBlacklisted(newpin)) {
 		pincode->makestate(fd, sd, PINCODE_MAKE_RESTRICT_PW);
 		return;
+	} else {
+		pincode->update(sd->account_id, newpin);
+		safestrncpy(sd->pincode, newpin, sizeof(sd->pincode));
+		pincode->makestate(fd, sd, PINCODE_MAKE_SUCCESS);
 	}
 
-	pincode->update(sd->account_id, newpin);
-	safestrncpy(sd->pincode, newpin, sizeof(sd->pincode));
-	pincode->makestate(fd, sd, PINCODE_MAKE_SUCCESS);
+	pincode->loginstate(fd, sd, PINCODE_LOGIN_ASK);
 }
 
 /**
