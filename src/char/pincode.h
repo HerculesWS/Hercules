@@ -53,6 +53,11 @@ enum pincode_login_response {
 	PINCODE_LOGIN_WRONG       = 8,
 };
 
+enum pincode_login_response2 {
+	PINCODE_LOGIN_FLAG_LOCKED = 0,
+	PINCODE_LOGIN_FLAG_WRONG  = 2,
+};
+
 /**
  * pincode interface
  **/
@@ -74,6 +79,7 @@ struct pincode_interface {
 	void (*makestate) (int fd, struct char_session_data *sd, enum pincode_make_response state);
 	void (*editstate) (int fd, struct char_session_data *sd, enum pincode_edit_response state);
 	void (*loginstate) (int fd, struct char_session_data *sd, enum pincode_login_response state);
+	void (*loginstate2) (int fd, struct char_session_data *sd, enum pincode_login_response state, enum pincode_login_response2 flag);
 	void (*setnew) (int fd, struct char_session_data* sd);
 	void (*change) (int fd, struct char_session_data* sd);
 	bool (*isBlacklisted) (const char *pin);
