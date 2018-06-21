@@ -1977,6 +1977,28 @@ void clif_changemapserver(struct map_session_data* sd, unsigned short map_index,
 	WFIFOSET(fd, packet_len(cmd));
 }
 
+/// Notifies the client of a position change (with air ship) to coordinates on given map, which is on another map-server (ZC_NPCACK_SERVERMOVE).
+/// 0a4c <map name>.16B <x>.W <y>.W <ip>.L <port>.W
+void clif_changemapserver_airship(struct map_session_data* sd, unsigned short map_index, int x, int y, uint32 ip, uint16 port)
+{
+#if (PACKETVER_MAIN_NUM >= 20180620) || (PACKETVER_RE_NUM >= 20180321) || (PACKETVER_ZERO_NUM >= 20171027)
+	// [4144] this packet is not used yet by kro, but it here
+	int fd;
+	const int cmd = 0xa4c;
+	nullpo_retv(sd);
+	fd = sd->fd;
+
+	WFIFOHEAD(fd, packet_len(cmd));
+	WFIFOW(fd, 0) = cmd;
+	mapindex->getmapname_ext(mapindex_id2name(map_index), WFIFOP(fd, 2));
+	WFIFOW(fd, 18) = x;
+	WFIFOW(fd, 20) = y;
+	WFIFOL(fd, 22) = htonl(ip);
+	WFIFOW(fd, 26) = sockt->ntows(htons(port)); // [!] LE byte order here [!]
+	WFIFOSET(fd, packet_len(cmd));
+#endif
+}
+
 void clif_blown(struct block_list *bl)
 {
 //Aegis packets says fixpos, but it's unsure whether slide works better or not.
@@ -21291,6 +21313,7 @@ void clif_defaults(void) {
 	clif->maptypeproperty2 = clif_maptypeproperty2;
 	/* multi-map-server */
 	clif->changemapserver = clif_changemapserver;
+	clif->changemapserver_airship = clif_changemapserver_airship;
 	/* npc-shop-related */
 	clif->npcbuysell = clif_npcbuysell;
 	clif->buylist = clif_buylist;
