@@ -33,12 +33,12 @@
 #include <stdlib.h>
 
 /* mapindex.c interface source */
-struct mapindex_interface mapindex_s;
+static struct mapindex_interface mapindex_s;
 struct mapindex_interface *mapindex;
 
 /// Retrieves the map name from 'string' (removing .gat extension if present).
 /// Result gets placed either into 'buf' or in a static local buffer.
-const char* mapindex_getmapname(const char* string, char* output)
+static const char *mapindex_getmapname(const char *string, char *output)
 {
 	static char buf[MAP_NAME_LENGTH];
 	char* dest = (output != NULL) ? output : buf;
@@ -62,7 +62,7 @@ const char* mapindex_getmapname(const char* string, char* output)
 
 /// Retrieves the map name from 'string' (adding .gat extension if not already present).
 /// Result gets placed either into 'buf' or in a static local buffer.
-const char* mapindex_getmapname_ext(const char* string, char* output)
+static const char *mapindex_getmapname_ext(const char *string, char *output)
 {
 	static char buf[MAP_NAME_LENGTH_EXT];
 	char* dest = (output != NULL) ? output : buf;
@@ -94,7 +94,7 @@ const char* mapindex_getmapname_ext(const char* string, char* output)
 
 /// Adds a map to the specified index
 /// Returns 1 if successful, 0 otherwise
-int mapindex_addmap(int index, const char* name)
+static int mapindex_addmap(int index, const char *name)
 {
 	char map_name[MAP_NAME_LENGTH];
 
@@ -136,7 +136,7 @@ int mapindex_addmap(int index, const char* name)
 	return index;
 }
 
-unsigned short mapindex_name2id(const char* name)
+static unsigned short mapindex_name2id(const char *name)
 {
 	int i;
 	char map_name[MAP_NAME_LENGTH];
@@ -150,7 +150,7 @@ unsigned short mapindex_name2id(const char* name)
 	return 0;
 }
 
-const char *mapindex_id2name_sub(uint16 id, const char *file, int line, const char *func)
+static const char *mapindex_id2name_sub(uint16 id, const char *file, int line, const char *func)
 {
 	if (id >= MAX_MAPINDEX || !mapindex_exists(id)) {
 		ShowDebug("mapindex_id2name: Requested name for non-existant map index [%d] in cache. %s:%s:%d\n", id,file,func,line);
@@ -159,7 +159,7 @@ const char *mapindex_id2name_sub(uint16 id, const char *file, int line, const ch
 	return mapindex->list[id].name;
 }
 
-int mapindex_init(void)
+static int mapindex_init(void)
 {
 	FILE *fp;
 	char line[1024];
@@ -198,7 +198,7 @@ int mapindex_init(void)
 	return total;
 }
 
-bool mapindex_check_default(void)
+static bool mapindex_check_default(void)
 {
 	if (!strdb_iget(mapindex->db, mapindex->default_map)) {
 		ShowError("mapindex_init: MAP_DEFAULT '%s' not found in cache! update mapindex.h MAP_DEFAULT var!!!\n", mapindex->default_map);
@@ -207,14 +207,14 @@ bool mapindex_check_default(void)
 	return true;
 }
 
-void mapindex_removemap(int index)
+static void mapindex_removemap(int index)
 {
 	Assert_retv(index < MAX_MAPINDEX);
 	strdb_remove(mapindex->db, mapindex->list[index].name);
 	mapindex->list[index].name[0] = '\0';
 }
 
-void mapindex_final(void)
+static void mapindex_final(void)
 {
 	db_destroy(mapindex->db);
 }

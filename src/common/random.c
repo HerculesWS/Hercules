@@ -40,11 +40,11 @@
  * Implementation of the random number generator interface.
  */
 
-struct rnd_interface rnd_s;
+static struct rnd_interface rnd_s;
 struct rnd_interface *rnd;
 
 /// @copydoc rnd_interface::init()
-void rnd_init(void)
+static void rnd_init(void)
 {
 	unsigned long seed = (unsigned long)timer->gettick();
 	seed += (unsigned long)time(NULL);
@@ -66,30 +66,30 @@ void rnd_init(void)
 }
 
 /// @copydoc rnd_interface::final()
-void rnd_final(void)
+static void rnd_final(void)
 {
 }
 
 /// @copydoc rnd_interface::seed()
-void rnd_seed(uint32 seed)
+static void rnd_seed(uint32 seed)
 {
 	init_genrand(seed);
 }
 
 /// @copydoc rnd_interface::random()
-int32 rnd_random(void)
+static int32 rnd_random(void)
 {
 	return (int32)genrand_int31();
 }
 
 /// @copydoc rnd_interface::roll()
-uint32 rnd_roll(uint32 dice_faces)
+static uint32 rnd_roll(uint32 dice_faces)
 {
 	return (uint32)(rnd->uniform()*dice_faces);
 }
 
 /// @copydoc rnd_interface::value()
-int32 rnd_value(int32 min, int32 max)
+static int32 rnd_value(int32 min, int32 max)
 {
 	if (min >= max)
 		return min;
@@ -97,13 +97,13 @@ int32 rnd_value(int32 min, int32 max)
 }
 
 /// @copydoc rnd_interface::uniform()
-double rnd_uniform(void)
+static double rnd_uniform(void)
 {
 	return ((uint32)genrand_int32())*(1.0/4294967296.0);// divided by 2^32
 }
 
 /// @copydoc rnd_interface::uniform53()
-double rnd_uniform53(void)
+static double rnd_uniform53(void)
 {
 	return genrand_res53();
 }

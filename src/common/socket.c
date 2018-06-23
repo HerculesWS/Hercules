@@ -75,19 +75,19 @@
 /**
  * Socket Interface Source
  **/
-struct socket_interface sockt_s;
+static struct socket_interface sockt_s;
 struct socket_interface *sockt;
 
-struct socket_data **session;
+static struct socket_data **session;
 
-const char *SOCKET_CONF_FILENAME = "conf/common/socket.conf";
+static const char *SOCKET_CONF_FILENAME = "conf/common/socket.conf";
 
 #ifdef SEND_SHORTLIST
 // Add a fd to the shortlist so that it'll be recognized as a fd that needs
 // sending done on it.
-void send_shortlist_add_fd(int fd);
+static void send_shortlist_add_fd(int fd);
 // Do pending network sends (and eof handling) from the shortlist.
-void send_shortlist_do_sends(void);
+static void send_shortlist_do_sends(void);
 #endif  // SEND_SHORTLIST
 
 /////////////////////////////////////////////////////////////////////
@@ -123,7 +123,7 @@ static int sock_arr_len = 0;
 ///
 /// @param s Socket
 /// @return Fd or -1
-int sock2fd(SOCKET s)
+static int sock2fd(SOCKET s)
 {
 	int fd;
 
@@ -144,7 +144,7 @@ int sock2fd(SOCKET s)
 ///
 /// @param s Socket
 /// @return New fd or -1
-int sock2newfd(SOCKET s)
+static int sock2newfd(SOCKET s)
 {
 	int fd;
 
@@ -164,7 +164,7 @@ int sock2newfd(SOCKET s)
 	return fd;
 }
 
-int sAccept(int fd, struct sockaddr* addr, int* addrlen)
+static int sAccept(int fd, struct sockaddr *addr, int *addrlen)
 {
 	SOCKET s;
 
@@ -175,14 +175,14 @@ int sAccept(int fd, struct sockaddr* addr, int* addrlen)
 	return sock2newfd(s);
 }
 
-int sClose(int fd)
+static int sClose(int fd)
 {
 	int ret = closesocket(fd2sock(fd));
 	fd2sock(fd) = INVALID_SOCKET;
 	return ret;
 }
 
-int sSocket(int af, int type, int protocol)
+static int sSocket(int af, int type, int protocol)
 {
 	SOCKET s;
 
@@ -193,7 +193,7 @@ int sSocket(int af, int type, int protocol)
 	return sock2newfd(s);
 }
 
-char* sErr(int code)
+static char *sErr(int code)
 {
 	static char sbuf[512];
 	// strerror does not handle socket codes
@@ -259,7 +259,7 @@ char* sErr(int code)
 
 #ifndef SOCKET_EPOLL
 // Select based Event Dispatcher:
-fd_set readfds;
+static fd_set readfds;
 
 #else  // SOCKET_EPOLL
 // Epoll based Event Dispatcher:
@@ -296,19 +296,19 @@ static time_t socket_data_last_tick = 0;
 #define WFIFO_MAX (1*1024*1024)
 
 #ifdef SEND_SHORTLIST
-int send_shortlist_array[FD_SETSIZE];// we only support FD_SETSIZE sockets, limit the array to that
-int send_shortlist_count = 0;// how many fd's are in the shortlist
-uint32 send_shortlist_set[(FD_SETSIZE+31)/32];// to know if specific fd's are already in the shortlist
+static int send_shortlist_array[FD_SETSIZE];// we only support FD_SETSIZE sockets, limit the array to that
+static int send_shortlist_count = 0;// how many fd's are in the shortlist
+static uint32 send_shortlist_set[(FD_SETSIZE+31)/32];// to know if specific fd's are already in the shortlist
 #endif  // SEND_SHORTLIST
 
 static int create_session(int fd, RecvFunc func_recv, SendFunc func_send, ParseFunc func_parse);
 
 #ifndef MINICORE
-	int ip_rules = 1;
+	static int ip_rules = 1;
 	static int connect_check(uint32 ip);
 #endif  // MINICORE
 
-const char* error_msg(void)
+static const char *error_msg(void)
 {
 	static char buf[512];
 	int code = sErrno;
@@ -319,13 +319,24 @@ const char* error_msg(void)
 /*======================================
  * CORE : Default processing functions
  *--------------------------------------*/
-int null_recv(int fd) { return 0; }
-int null_send(int fd) { return 0; }
-int null_parse(int fd) { return 0; }
+static int null_recv(int fd)
+{
+	return 0;
+}
 
-ParseFunc default_func_parse = null_parse;
+static int null_send(int fd)
+{
+	return 0;
+}
 
-void set_defaultparse(ParseFunc defaultparse)
+static int null_parse(int fd)
+{
+	return 0;
+}
+
+static ParseFunc default_func_parse = null_parse;
+
+static void set_defaultparse(ParseFunc defaultparse)
 {
 	default_func_parse = defaultparse;
 }
@@ -333,7 +344,7 @@ void set_defaultparse(ParseFunc defaultparse)
 /*======================================
  * CORE : Socket options
  *--------------------------------------*/
-void set_nonblocking(int fd, unsigned long yes)
+static void set_nonblocking(int fd, unsigned long yes)
 {
 	// FIONBIO Use with a nonzero argp parameter to enable the nonblocking mode of socket s.
 	// The argp parameter is zero if nonblocking is to be disabled.
@@ -347,7 +358,7 @@ void set_nonblocking(int fd, unsigned long yes)
  * @param fd  The socket descriptor
  * @param opt Optional, additional options to set (Can be NULL).
  */
-void setsocketopts(int fd, struct hSockOpt *opt)
+static void setsocketopts(int fd, struct hSockOpt *opt)
 {
 #if defined(WIN32)
 	BOOL yes = TRUE;
@@ -409,7 +420,7 @@ void setsocketopts(int fd, struct hSockOpt *opt)
 /*======================================
  * CORE : Socket Sub Function
  *--------------------------------------*/
-void set_eof(int fd)
+static void set_eof(int fd)
 {
 	if (sockt->session_is_active(fd)) {
 #ifdef SEND_SHORTLIST
@@ -420,7 +431,7 @@ void set_eof(int fd)
 	}
 }
 
-int recv_to_fifo(int fd)
+static int recv_to_fifo(int fd)
 {
 	ssize_t len;
 
@@ -457,7 +468,7 @@ int recv_to_fifo(int fd)
 	return 0;
 }
 
-int send_from_fifo(int fd)
+static int send_from_fifo(int fd)
 {
 	ssize_t len;
 
@@ -504,13 +515,13 @@ int send_from_fifo(int fd)
 }
 
 /// Best effort - there's no warranty that the data will be sent.
-void flush_fifo(int fd)
+static void flush_fifo(int fd)
 {
 	if(sockt->session[fd] != NULL)
 		sockt->session[fd]->func_send(fd);
 }
 
-void flush_fifos(void)
+static void flush_fifos(void)
 {
 	int i;
 	for(i = 1; i < sockt->fd_max; i++)
@@ -520,7 +531,7 @@ void flush_fifos(void)
 /*======================================
  * CORE : Connection functions
  *--------------------------------------*/
-int connect_client(int listen_fd)
+static int connect_client(int listen_fd)
 {
 	int fd;
 	struct sockaddr_in client_address;
@@ -579,7 +590,7 @@ int connect_client(int listen_fd)
 	return fd;
 }
 
-int make_listen_bind(uint32 ip, uint16 port)
+static int make_listen_bind(uint32 ip, uint16 port)
 {
 	struct sockaddr_in server_address = { 0 };
 	int fd;
@@ -648,7 +659,7 @@ int make_listen_bind(uint32 ip, uint16 port)
 	return fd;
 }
 
-int make_connection(uint32 ip, uint16 port, struct hSockOpt *opt)
+static int make_connection(uint32 ip, uint16 port, struct hSockOpt *opt)
 {
 	struct sockaddr_in remote_address = { 0 };
 	int fd;
@@ -749,7 +760,7 @@ static void delete_session(int fd)
 	}
 }
 
-int realloc_fifo(int fd, unsigned int rfifo_size, unsigned int wfifo_size)
+static int realloc_fifo(int fd, unsigned int rfifo_size, unsigned int wfifo_size)
 {
 	if (!sockt->session_is_valid(fd))
 		return 0;
@@ -766,7 +777,7 @@ int realloc_fifo(int fd, unsigned int rfifo_size, unsigned int wfifo_size)
 	return 0;
 }
 
-int realloc_writefifo(int fd, size_t addition)
+static int realloc_writefifo(int fd, size_t addition)
 {
 	size_t newsize;
 
@@ -794,7 +805,7 @@ int realloc_writefifo(int fd, size_t addition)
 }
 
 /// advance the RFIFO cursor (marking 'len' bytes as processed)
-int rfifoskip(int fd, size_t len)
+static int rfifoskip(int fd, size_t len)
 {
 	struct socket_data *s;
 
@@ -816,7 +827,7 @@ int rfifoskip(int fd, size_t len)
 }
 
 /// advance the WFIFO cursor (marking 'len' bytes for sending)
-int wfifoset(int fd, size_t len)
+static int wfifoset(int fd, size_t len)
 {
 	size_t newreserve;
 	struct socket_data* s;
@@ -884,7 +895,7 @@ int wfifoset(int fd, size_t len)
 	return 0;
 }
 
-int do_sockets(int next)
+static int do_sockets(int next)
 {
 #ifndef SOCKET_EPOLL
 	fd_set rfd;
@@ -1088,7 +1099,7 @@ static int access_debug    = 0;
 static int ddos_count      = 10;
 static int ddos_interval   = 3*1000;
 static int ddos_autoreset  = 10*60*1000;
-struct DBMap *connect_history = NULL;
+static struct DBMap *connect_history = NULL;
 
 static int connect_check_(uint32 ip);
 
@@ -1232,7 +1243,7 @@ static int connect_check_clear(int tid, int64 tick, int id, intptr_t data)
 
 /// Parses the ip address and mask and puts it into acc.
 /// Returns 1 is successful, 0 otherwise.
-int access_ipmask(const char *str, struct access_control *acc)
+static int access_ipmask(const char *str, struct access_control *acc)
 {
 	uint32 ip;
 	uint32 mask;
@@ -1288,7 +1299,7 @@ int access_ipmask(const char *str, struct access_control *acc)
  *
  * @retval false in case of failure
  */
-bool access_list_add(struct config_setting_t *setting, const char *list_name, struct access_control_list *access_list)
+static bool access_list_add(struct config_setting_t *setting, const char *list_name, struct access_control_list *access_list)
 {
 	const char *temp = NULL;
 	int i, setting_length;
@@ -1330,7 +1341,7 @@ bool access_list_add(struct config_setting_t *setting, const char *list_name, st
  *
  * @retval false in case of error.
  */
-bool socket_config_read_iprules(const char *filename, struct config_t *config, bool imported)
+static bool socket_config_read_iprules(const char *filename, struct config_t *config, bool imported)
 {
 #ifndef MINICORE
 	struct config_setting_t *setting = NULL;
@@ -1389,7 +1400,7 @@ bool socket_config_read_iprules(const char *filename, struct config_t *config, b
  *
  * @retval false in case of error.
  */
-bool socket_config_read_ddos(const char *filename, struct config_t *config, bool imported)
+static bool socket_config_read_ddos(const char *filename, struct config_t *config, bool imported)
 {
 #ifndef MINICORE
 	struct config_setting_t *setting = NULL;
@@ -1420,7 +1431,7 @@ bool socket_config_read_ddos(const char *filename, struct config_t *config, bool
  *
  * @retval false in case of error.
  */
-bool socket_config_read(const char *filename, bool imported)
+static bool socket_config_read(const char *filename, bool imported)
 {
 	struct config_t config;
 	struct config_setting_t *setting = NULL;
@@ -1484,7 +1495,7 @@ bool socket_config_read(const char *filename, bool imported)
 	return retval;
 }
 
-void socket_final(void)
+static void socket_final(void)
 {
 	int i;
 #ifndef MINICORE
@@ -1523,7 +1534,7 @@ void socket_final(void)
 }
 
 /// Closes a socket.
-void socket_close(int fd)
+static void socket_close(int fd)
 {
 	if( fd <= 0 ||fd >= FD_SETSIZE )
 		return;// invalid
@@ -1547,7 +1558,7 @@ void socket_close(int fd)
 
 /// Retrieve local ips in host byte order.
 /// Uses loopback is no address is found.
-int socket_getips(uint32* ips, int max)
+static int socket_getips(uint32 *ips, int max)
 {
 	int num = 0;
 
@@ -1628,7 +1639,7 @@ int socket_getips(uint32* ips, int max)
 	return num;
 }
 
-void socket_init(void)
+static void socket_init(void)
 {
 	uint64 rlim_cur = FD_SETSIZE;
 
@@ -1730,18 +1741,18 @@ void socket_init(void)
 	ShowInfo("Server supports up to '"CL_WHITE"%"PRIu64""CL_RESET"' concurrent connections.\n", rlim_cur);
 }
 
-bool session_is_valid(int fd)
+static bool session_is_valid(int fd)
 {
 	return ( fd > 0 && fd < FD_SETSIZE && sockt->session[fd] != NULL );
 }
 
-bool session_is_active(int fd)
+static bool session_is_active(int fd)
 {
 	return ( sockt->session_is_valid(fd) && !sockt->session[fd]->flag.eof );
 }
 
 // Resolves hostname into a numeric ip.
-uint32 host2ip(const char *hostname)
+static uint32 host2ip(const char *hostname)
 {
 	struct hostent* h;
 	nullpo_ret(hostname);
@@ -1757,7 +1768,7 @@ uint32 host2ip(const char *hostname)
  *
  * @return A pointer to the output string.
  */
-const char *ip2str(uint32 ip, char *ip_str)
+static const char *ip2str(uint32 ip, char *ip_str)
 {
 	struct in_addr addr;
 	addr.s_addr = htonl(ip);
@@ -1765,20 +1776,20 @@ const char *ip2str(uint32 ip, char *ip_str)
 }
 
 // Converts a dot-formatted ip string into a numeric ip.
-uint32 str2ip(const char* ip_str)
+static uint32 str2ip(const char *ip_str)
 {
 	return ntohl(inet_addr(ip_str));
 }
 
 // Reorders bytes from network to little endian (Windows).
 // Necessary for sending port numbers to the RO client until Gravity notices that they forgot ntohs() calls.
-uint16 ntows(uint16 netshort)
+static uint16 ntows(uint16 netshort)
 {
 	return ((netshort & 0xFF) << 8) | ((netshort & 0xFF00) >> 8);
 }
 
 /* [Ind/Hercules] - socket_datasync */
-void socket_datasync(int fd, bool send)
+static void socket_datasync(int fd, bool send)
 {
 	struct {
 		unsigned int length;/* short is not enough for some */
@@ -1845,7 +1856,7 @@ void socket_datasync(int fd, bool send)
 #ifdef SEND_SHORTLIST
 // Add a fd to the shortlist so that it'll be recognized as a fd that needs
 // sending or eof handling.
-void send_shortlist_add_fd(int fd)
+static void send_shortlist_add_fd(int fd)
 {
 	int i;
 	int bit;
@@ -1872,7 +1883,7 @@ void send_shortlist_add_fd(int fd)
 }
 
 // Do pending network sends and eof handling from the shortlist.
-void send_shortlist_do_sends(void)
+static void send_shortlist_do_sends(void)
 {
 	int i;
 
@@ -1928,7 +1939,7 @@ void send_shortlist_do_sends(void)
  * @retval 0 if it is a WAN IP.
  * @return the appropriate LAN server address to send, if it is a LAN IP.
  */
-uint32 socket_lan_subnet_check(uint32 ip, struct s_subnet *info)
+static uint32 socket_lan_subnet_check(uint32 ip, struct s_subnet *info)
 {
 	int i;
 	ARR_FIND(0, VECTOR_LENGTH(sockt->lan_subnets), i, SUBNET_MATCH(ip, VECTOR_INDEX(sockt->lan_subnets, i).ip, VECTOR_INDEX(sockt->lan_subnets, i).mask));
@@ -1952,7 +1963,7 @@ uint32 socket_lan_subnet_check(uint32 ip, struct s_subnet *info)
  * @retval true if we allow server connections from the given IP.
  * @retval false otherwise.
  */
-bool socket_allowed_ip_check(uint32 ip)
+static bool socket_allowed_ip_check(uint32 ip)
 {
 	int i;
 	ARR_FIND(0, VECTOR_LENGTH(sockt->allowed_ips), i, SUBNET_MATCH(ip, VECTOR_INDEX(sockt->allowed_ips, i).ip, VECTOR_INDEX(sockt->allowed_ips, i).mask));
@@ -1968,7 +1979,7 @@ bool socket_allowed_ip_check(uint32 ip)
  * @retval true if we trust the given IP.
  * @retval false otherwise.
  */
-bool socket_trusted_ip_check(uint32 ip)
+static bool socket_trusted_ip_check(uint32 ip)
 {
 	int i;
 	ARR_FIND(0, VECTOR_LENGTH(sockt->trusted_ips), i, SUBNET_MATCH(ip, VECTOR_INDEX(sockt->trusted_ips, i).ip, VECTOR_INDEX(sockt->trusted_ips, i).mask));
@@ -1988,7 +1999,7 @@ bool socket_trusted_ip_check(uint32 ip)
  * @param[in]     groupname Current group name, for output/logging reasons.
  * @return The amount of entries read, zero in case of errors.
  */
-int socket_net_config_read_sub(struct config_setting_t *t, struct s_subnet_vector *list, const char *filename, const char *groupname)
+static int socket_net_config_read_sub(struct config_setting_t *t, struct s_subnet_vector *list, const char *filename, const char *groupname)
 {
 	int i, len;
 	char ipbuf[64], maskbuf[64];
@@ -2022,7 +2033,7 @@ int socket_net_config_read_sub(struct config_setting_t *t, struct s_subnet_vecto
  *
  * @param filename The filename to read from.
  */
-void socket_net_config_read(const char *filename)
+static void socket_net_config_read(const char *filename)
 {
 	struct config_t network_config;
 	int i;

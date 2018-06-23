@@ -39,7 +39,7 @@
  * Implementation of the mutex interface.
  */
 
-struct mutex_interface mutex_s;
+static struct mutex_interface mutex_s;
 struct mutex_interface *mutex;
 
 struct mutex_data {
@@ -65,7 +65,7 @@ struct cond_data {
 /* Mutex */
 
 /// @copydoc mutex_interface::create()
-struct mutex_data *mutex_create(void)
+static struct mutex_data *mutex_create(void)
 {
 	struct mutex_data *m = aMalloc(sizeof(struct mutex_data));
 	if (m == NULL) {
@@ -83,7 +83,7 @@ struct mutex_data *mutex_create(void)
 }
 
 /// @copydoc mutex_interface::destroy()
-void mutex_destroy(struct mutex_data *m)
+static void mutex_destroy(struct mutex_data *m)
 {
 	nullpo_retv(m);
 #ifdef WIN32
@@ -96,7 +96,7 @@ void mutex_destroy(struct mutex_data *m)
 }
 
 /// @copydoc mutex_interface::lock()
-void mutex_lock(struct mutex_data *m)
+static void mutex_lock(struct mutex_data *m)
 {
 	nullpo_retv(m);
 #ifdef WIN32
@@ -107,7 +107,7 @@ void mutex_lock(struct mutex_data *m)
 }
 
 /// @copydoc mutex_interface::trylock()
-bool mutex_trylock(struct mutex_data *m)
+static bool mutex_trylock(struct mutex_data *m)
 {
 	nullpo_retr(false, m);
 #ifdef WIN32
@@ -121,7 +121,7 @@ bool mutex_trylock(struct mutex_data *m)
 }
 
 /// @copydoc mutex_interface::unlock()
-void mutex_unlock(struct mutex_data *m)
+static void mutex_unlock(struct mutex_data *m)
 {
 	nullpo_retv(m);
 #ifdef WIN32
@@ -134,7 +134,7 @@ void mutex_unlock(struct mutex_data *m)
 /* Conditional variable */
 
 /// @copydoc mutex_interface::cond_create()
-struct cond_data *cond_create(void)
+static struct cond_data *cond_create(void)
 {
 	struct cond_data *c = aMalloc(sizeof(struct cond_data));
 	if (c == NULL) {
@@ -155,7 +155,7 @@ struct cond_data *cond_create(void)
 }
 
 /// @copydoc mutex_interface::cond_destroy()
-void cond_destroy(struct cond_data *c)
+static void cond_destroy(struct cond_data *c)
 {
 	nullpo_retv(c);
 #ifdef WIN32
@@ -170,7 +170,7 @@ void cond_destroy(struct cond_data *c)
 }
 
 /// @copydoc mutex_interface::cond_wait()
-void cond_wait(struct cond_data *c, struct mutex_data *m, sysint timeout_ticks)
+static void cond_wait(struct cond_data *c, struct mutex_data *m, sysint timeout_ticks)
 {
 #ifdef WIN32
 	register DWORD ms;
@@ -224,7 +224,7 @@ void cond_wait(struct cond_data *c, struct mutex_data *m, sysint timeout_ticks)
 }
 
 /// @copydoc mutex_interface::cond_signal()
-void cond_signal(struct cond_data *c)
+static void cond_signal(struct cond_data *c)
 {
 #ifdef WIN32
 #	if 0
@@ -245,7 +245,7 @@ void cond_signal(struct cond_data *c)
 }
 
 /// @copydoc mutex_interface::cond_broadcast()
-void cond_broadcast(struct cond_data *c)
+static void cond_broadcast(struct cond_data *c)
 {
 #ifdef WIN32
 #	if 0

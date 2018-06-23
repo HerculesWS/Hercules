@@ -49,7 +49,7 @@
  * @author Florian Wilkemeyer <fw@f-ws.de>
  */
 
-struct thread_interface thread_s;
+static struct thread_interface thread_s;
 struct thread_interface *thread;
 
 /// The maximum amount of threads.
@@ -70,7 +70,7 @@ struct thread_handle {
 };
 
 #ifdef HAS_TLS
-__thread int g_rathread_ID = -1;
+static __thread int g_rathread_ID = -1;
 #endif
 
 // Subystem Code
@@ -78,7 +78,7 @@ __thread int g_rathread_ID = -1;
 static struct thread_handle l_threads[THREADS_MAX];
 
 /// @copydoc thread_interface::init()
-void thread_init(void)
+static void thread_init(void)
 {
 	register int i;
 	memset(&l_threads, 0x00, THREADS_MAX * sizeof(struct thread_handle));
@@ -97,7 +97,7 @@ void thread_init(void)
 }
 
 /// @copydoc thread_interface::final()
-void thread_final(void)
+static void thread_final(void)
 {
 	register int i;
 
@@ -125,7 +125,7 @@ static void thread_terminated(struct thread_handle *handle)
 }
 
 #ifdef WIN32
-DWORD WINAPI thread_main_redirector(LPVOID p)
+static DWORD WINAPI thread_main_redirector(LPVOID p)
 {
 #else
 static void *thread_main_redirector(void *p)
@@ -170,13 +170,13 @@ static void *thread_main_redirector(void *p)
 // API Level
 
 /// @copydoc thread_interface::create()
-struct thread_handle *thread_create(threadFunc entry_point, void *param)
+static struct thread_handle *thread_create(threadFunc entry_point, void *param)
 {
 	return thread->create_opt(entry_point, param,  (1<<23) /*8MB*/, THREADPRIO_NORMAL);
 }
 
 /// @copydoc thread_interface::create_opt()
-struct thread_handle *thread_create_opt(threadFunc entry_point, void *param, size_t stack_size, enum thread_priority prio)
+static struct thread_handle *thread_create_opt(threadFunc entry_point, void *param, size_t stack_size, enum thread_priority prio)
 {
 #ifndef WIN32
 	pthread_attr_t attr;
@@ -226,7 +226,7 @@ struct thread_handle *thread_create_opt(threadFunc entry_point, void *param, siz
 }
 
 /// @copydoc thread_interface::destroy()
-void thread_destroy(struct thread_handle *handle)
+static void thread_destroy(struct thread_handle *handle)
 {
 #ifdef WIN32
 	if (TerminateThread(handle->hThread, 0) != FALSE) {
@@ -244,7 +244,7 @@ void thread_destroy(struct thread_handle *handle)
 #endif
 }
 
-struct thread_handle *thread_self(void)
+static struct thread_handle *thread_self(void)
 {
 #ifdef HAS_TLS
 	struct thread_handle *handle = &l_threads[g_rathread_ID];
@@ -273,7 +273,7 @@ struct thread_handle *thread_self(void)
 }
 
 /// @copydoc thread_interface::get_tid()
-int thread_get_tid(void)
+static int thread_get_tid(void)
 {
 #if defined(HAS_TLS)
 	return g_rathread_ID;
@@ -285,7 +285,7 @@ int thread_get_tid(void)
 }
 
 /// @copydoc thread_interface::wait()
-bool thread_wait(struct thread_handle *handle, void **out_exit_code)
+static bool thread_wait(struct thread_handle *handle, void **out_exit_code)
 {
 	// Hint:
 	// no thread data cleanup routine call here!
@@ -302,20 +302,21 @@ bool thread_wait(struct thread_handle *handle, void **out_exit_code)
 }
 
 /// @copydoc thread_interface::prio_set()
-void thread_prio_set(struct thread_handle *handle, enum thread_priority prio)
+static void thread_prio_set(struct thread_handle *handle, enum thread_priority prio)
 {
 	handle->prio = THREADPRIO_NORMAL;
 	//@TODO
 }
 
 /// @copydoc thread_interface::prio_get()
-enum thread_priority thread_prio_get(struct thread_handle *handle)
+static enum thread_priority thread_prio_get(struct thread_handle *handle)
 {
 	return handle->prio;
 }
 
 /// @copydoc thread_interface::yield()
-void thread_yield(void) {
+static void thread_yield(void)
+{
 #ifdef WIN32
 	SwitchToThread();
 #else

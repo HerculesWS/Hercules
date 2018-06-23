@@ -45,11 +45,11 @@
 #include <stdlib.h>
 #include <sys/stat.h> // cache purposes [Ind/Hercules]
 
-struct HCache_interface HCache_s;
+static struct HCache_interface HCache_s;
 struct HCache_interface *HCache;
 
 /// Dumps given buffer into file pointed to by a handle.
-void WriteDump(FILE* fp, const void* buffer, size_t length)
+void WriteDump(FILE *fp, const void *buffer, size_t length)
 {
 	size_t i;
 	char hex[48+1], ascii[16+1];
@@ -109,7 +109,7 @@ void ShowDump(const void *buffer, size_t length)
 
 #ifdef WIN32
 
-static char* checkpath(char *path, const char *srcpath)
+static char *checkpath(char *path, const char *srcpath)
 {
 	// just make sure the char*path is not const
 	char *p = path;
@@ -128,7 +128,7 @@ static char* checkpath(char *path, const char *srcpath)
 	return path;
 }
 
-void findfile(const char *p, const char *pat, void (func)(const char*))
+void findfile(const char *p, const char *pat, void (func)(const char *))
 {
 	WIN32_FIND_DATAA FindFileData;
 	HANDLE hFind;
@@ -171,7 +171,7 @@ void findfile(const char *p, const char *pat, void (func)(const char*))
 
 #define MAX_DIR_PATH 2048
 
-static char* checkpath(char *path, const char*srcpath)
+static char *checkpath(char *path, const char *srcpath)
 {
 	// just make sure the char*path is not const
 	char *p=path;
@@ -190,7 +190,7 @@ static char* checkpath(char *path, const char*srcpath)
 	return path;
 }
 
-void findfile(const char *p, const char *pat, void (func)(const char*))
+void findfile(const char *p, const char *pat, void (func)(const char *))
 {
 	DIR* dir;             ///< pointer to the scanned directory.
 	struct dirent* entry; ///< pointer to one directory entry.
@@ -238,7 +238,7 @@ void findfile(const char *p, const char *pat, void (func)(const char*))
 }
 #endif
 
-bool exists(const char* filename)
+bool exists(const char *filename)
 {
 	return !access(filename, F_OK);
 }
@@ -309,14 +309,14 @@ int32 MakeLongLE(int32 val)
 }
 
 // Reads an uint16 in little-endian from the buffer
-uint16 GetUShort(const unsigned char* buf)
+uint16 GetUShort(const unsigned char *buf)
 {
 	return ( ((uint16)(buf[0]))         )
 	     | ( ((uint16)(buf[1])) << 0x08 );
 }
 
 // Reads an uint32 in little-endian from the buffer
-uint32 GetULong(const unsigned char* buf)
+uint32 GetULong(const unsigned char *buf)
 {
 	return ( ((uint32)(buf[0]))         )
 	     | ( ((uint32)(buf[1])) << 0x08 )
@@ -325,13 +325,13 @@ uint32 GetULong(const unsigned char* buf)
 }
 
 // Reads an int32 in little-endian from the buffer
-int32 GetLong(const unsigned char* buf)
+int32 GetLong(const unsigned char *buf)
 {
 	return (int32)GetULong(buf);
 }
 
 // Reads a float (32 bits) from the buffer
-float GetFloat(const unsigned char* buf)
+float GetFloat(const unsigned char *buf)
 {
 	uint32 val = GetULong(buf);
 	return *((float*)(void*)&val);
@@ -426,7 +426,7 @@ int apply_percentrate(int value, int rate, int maxrate)
 //-----------------------------------------------------
 // custom timestamp formatting (from eApp)
 //-----------------------------------------------------
-const char* timestamp2string(char* str, size_t size, time_t timestamp, const char* format)
+const char *timestamp2string(char *str, size_t size, time_t timestamp, const char *format)
 {
 	size_t len;
 	nullpo_retr(NULL, str);
@@ -436,7 +436,7 @@ const char* timestamp2string(char* str, size_t size, time_t timestamp, const cha
 }
 
 /* [Ind/Hercules] Caching */
-bool HCache_check(const char *file)
+static bool HCache_check(const char *file)
 {
 	struct stat bufa, bufb;
 	FILE *first, *second;
@@ -487,7 +487,7 @@ bool HCache_check(const char *file)
 	return true;
 }
 
-FILE *HCache_open(const char *file, const char *opt)
+static FILE *HCache_open(const char *file, const char *opt)
 {
 	FILE *first;
 	char s_path[255];
@@ -520,7 +520,7 @@ FILE *HCache_open(const char *file, const char *opt)
 	return first;
 }
 
-void HCache_init(void)
+static void HCache_init(void)
 {
 	struct stat buf;
 	if (stat(SERVER_NAME, &buf) != 0) {

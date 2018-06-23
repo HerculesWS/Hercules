@@ -31,7 +31,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct malloc_interface iMalloc_s;
+static struct malloc_interface iMalloc_s;
 struct malloc_interface *iMalloc;
 
 ////////////// Memory Libraries //////////////////
@@ -113,7 +113,7 @@ struct malloc_interface *iMalloc;
 #error Unsupported OS
 #endif
 
-void* aMalloc_(size_t size, const char *file, int line, const char *func)
+static void *aMalloc_(size_t size, const char *file, int line, const char *func)
 {
 	void *ret = MALLOC(size, file, line, func);
 	// ShowMessage("%s:%d: in func %s: aMalloc %d\n",file,line,func,size);
@@ -124,7 +124,7 @@ void* aMalloc_(size_t size, const char *file, int line, const char *func)
 
 	return ret;
 }
-void* aCalloc_(size_t num, size_t size, const char *file, int line, const char *func)
+static void *aCalloc_(size_t num, size_t size, const char *file, int line, const char *func)
 {
 	void *ret = CALLOC(num, size, file, line, func);
 	// ShowMessage("%s:%d: in func %s: aCalloc %d %d\n",file,line,func,num,size);
@@ -134,7 +134,7 @@ void* aCalloc_(size_t num, size_t size, const char *file, int line, const char *
 	}
 	return ret;
 }
-void* aRealloc_(void *p, size_t size, const char *file, int line, const char *func)
+static void *aRealloc_(void *p, size_t size, const char *file, int line, const char *func)
 {
 	void *ret = REALLOC(p, size, file, line, func);
 	// ShowMessage("%s:%d: in func %s: aRealloc %p %d\n",file,line,func,p,size);
@@ -145,7 +145,7 @@ void* aRealloc_(void *p, size_t size, const char *file, int line, const char *fu
 	return ret;
 }
 
-void* aReallocz_(void *p, size_t size, const char *file, int line, const char *func)
+static void *aReallocz_(void *p, size_t size, const char *file, int line, const char *func)
 {
 	unsigned char *ret = NULL;
 	// ShowMessage("%s:%d: in func %s: aReallocz %p %ld\n",file,line,func,p,size);
@@ -168,7 +168,7 @@ void* aReallocz_(void *p, size_t size, const char *file, int line, const char *f
 	return ret;
 }
 
-char* aStrdup_(const char *p, const char *file, int line, const char *func)
+static char *aStrdup_(const char *p, const char *file, int line, const char *func)
 {
 	char *ret = STRDUP(p, file, line, func);
 	// ShowMessage("%s:%d: in func %s: aStrdup %p\n",file,line,func,p);
@@ -195,7 +195,7 @@ char* aStrdup_(const char *p, const char *file, int line, const char *func)
  * @param func @see ALC_MARK.
  * @return the copied string.
  */
-char *aStrndup_(const char *p, size_t size, const char *file, int line, const char *func)
+static char *aStrndup_(const char *p, size_t size, const char *file, int line, const char *func)
 {
 	size_t len = strnlen(p, size);
 	char *ret = MALLOC(len + 1, file, line, func);
@@ -208,7 +208,7 @@ char *aStrndup_(const char *p, size_t size, const char *file, int line, const ch
 	return ret;
 }
 
-void aFree_(void *p, const char *file, int line, const char *func)
+static void aFree_(void *p, const char *file, int line, const char *func)
 {
 	// ShowMessage("%s:%d: in func %s: aFree %p\n",file,line,func,p);
 	if (p)
@@ -279,8 +279,8 @@ struct unit_head {
 	long           checksum;
 };
 
-static struct block* hash_unfill[BLOCK_DATA_COUNT1 + BLOCK_DATA_COUNT2 + 1];
-static struct block* block_first, *block_last, block_head;
+static struct block *hash_unfill[BLOCK_DATA_COUNT1 + BLOCK_DATA_COUNT2 + 1];
+static struct block *block_first, *block_last, block_head;
 
 /* Data for areas that do not use the memory be turned */
 struct unit_head_large {
@@ -292,8 +292,8 @@ struct unit_head_large {
 
 static struct unit_head_large *unit_head_large_first = NULL;
 
-static struct block* block_malloc(unsigned short hash);
-static void          block_free(struct block* p);
+static struct block *block_malloc(unsigned short hash);
+static void          block_free(struct block *p);
 static size_t        memmgr_usage_bytes;
 static size_t        memmgr_usage_bytes_t;
 
@@ -301,7 +301,7 @@ static size_t        memmgr_usage_bytes_t;
 #define block2unit(p, n) ((struct unit_head*)(&(p)->data[ p->unit_size * (n) ]))
 #define memmgr_assert(v) do { if(!(v)) { ShowError("Memory manager: assertion '" #v "' failed!\n"); } } while(0)
 
-static unsigned short size2hash( size_t size )
+static unsigned short size2hash(size_t size)
 {
 	if( size <= BLOCK_DATA_SIZE1 ) {
 		return (unsigned short)(size + BLOCK_ALIGNMENT1 - 1) / BLOCK_ALIGNMENT1;
@@ -313,7 +313,7 @@ static unsigned short size2hash( size_t size )
 	}
 }
 
-static size_t hash2size( unsigned short hash )
+static size_t hash2size(unsigned short hash)
 {
 	if( hash <= BLOCK_DATA_COUNT1) {
 		return hash * BLOCK_ALIGNMENT1;
@@ -322,7 +322,8 @@ static size_t hash2size( unsigned short hash )
 	}
 }
 
-void *mmalloc_(size_t size, const char *file, int line, const char *func) {
+static void *mmalloc_(size_t size, const char *file, int line, const char *func)
+{
 	struct block *block;
 	short size_hash = size2hash( size );
 	struct unit_head *head;
@@ -428,14 +429,16 @@ void *mmalloc_(size_t size, const char *file, int line, const char *func) {
 	return (char *)head + sizeof(struct unit_head) - sizeof(long);
 }
 
-void *mcalloc_(size_t num, size_t size, const char *file, int line, const char *func) {
+static void *mcalloc_(size_t num, size_t size, const char *file, int line, const char *func)
+{
 	void *p = iMalloc->malloc(num * size,file,line,func);
 	if (p)
 		memset(p, 0, num * size);
 	return p;
 }
 
-void *mrealloc_(void *memblock, size_t size, const char *file, int line, const char *func) {
+static void *mrealloc_(void *memblock, size_t size, const char *file, int line, const char *func)
+{
 	size_t old_size;
 	if(memblock == NULL) {
 		return iMalloc->malloc(size,file,line,func);
@@ -460,7 +463,8 @@ void *mrealloc_(void *memblock, size_t size, const char *file, int line, const c
 }
 
 /* a mrealloc_ clone with the difference it 'z'eroes the newly created memory */
-void *mreallocz_(void *memblock, size_t size, const char *file, int line, const char *func) {
+static void *mreallocz_(void *memblock, size_t size, const char *file, int line, const char *func)
+{
 	size_t old_size;
 	void *p = NULL;
 
@@ -490,7 +494,8 @@ void *mreallocz_(void *memblock, size_t size, const char *file, int line, const 
 }
 
 
-char *mstrdup_(const char *p, const char *file, int line, const char *func) {
+static char *mstrdup_(const char *p, const char *file, int line, const char *func)
+{
 	if(p == NULL) {
 		return NULL;
 	} else {
@@ -518,7 +523,7 @@ char *mstrdup_(const char *p, const char *file, int line, const char *func) {
  * @return the copied string.
  * @retval NULL if the source string is NULL or in case of error.
  */
-char *mstrndup_(const char *p, size_t size, const char *file, int line, const char *func)
+static char *mstrndup_(const char *p, size_t size, const char *file, int line, const char *func)
 {
 	if (p == NULL) {
 		return NULL;
@@ -532,7 +537,8 @@ char *mstrndup_(const char *p, size_t size, const char *file, int line, const ch
 }
 
 
-void mfree_(void *ptr, const char *file, int line, const char *func) {
+static void mfree_(void *ptr, const char *file, int line, const char *func)
+{
 	struct unit_head *head;
 
 	if (ptr == NULL)
@@ -604,7 +610,7 @@ void mfree_(void *ptr, const char *file, int line, const char *func) {
 }
 
 /* Allocating blocks */
-static struct block* block_malloc(unsigned short hash)
+static struct block *block_malloc(unsigned short hash)
 {
 	struct block *p;
 	if(hash_unfill[0] != NULL) {
@@ -661,7 +667,7 @@ static struct block* block_malloc(unsigned short hash)
 	return p;
 }
 
-static void block_free(struct block* p)
+static void block_free(struct block *p)
 {
 	if( p->unfill_prev ) {
 		if( p->unfill_prev == &block_head) {
@@ -679,7 +685,7 @@ static void block_free(struct block* p)
 	hash_unfill[0] = p;
 }
 
-size_t memmgr_usage (void)
+static size_t memmgr_usage(void)
 {
 	return memmgr_usage_bytes / 1024;
 }
@@ -688,7 +694,8 @@ size_t memmgr_usage (void)
 static char memmer_logfile[128];
 static FILE *log_fp;
 
-static void memmgr_log(char *buf, char *vcsinfo) {
+static void memmgr_log(char *buf, char *vcsinfo)
+{
 	if( !log_fp ) {
 		time_t raw;
 		struct tm* t;
@@ -711,7 +718,7 @@ static void memmgr_log(char *buf, char *vcsinfo) {
 ///
 /// @param ptr Pointer to the memory
 /// @return true if the memory is active
-bool memmgr_verify(void* ptr)
+static bool memmgr_verify(void *ptr)
 {
 	struct block* block = block_first;
 	struct unit_head_large* large = unit_head_large_first;
@@ -752,7 +759,7 @@ bool memmgr_verify(void* ptr)
 	return false;
 }
 
-static void memmgr_final (void)
+static void memmgr_final(void)
 {
 	struct block *block = block_first;
 	struct unit_head_large *large = unit_head_large_first;
@@ -808,7 +815,8 @@ static void memmgr_final (void)
 #endif /* LOG_MEMMGR */
 }
 /* [Ind/Hercules] */
-void memmgr_report (int extra) {
+void memmgr_report(int extra)
+{
 	struct block *block = block_first;
 	struct unit_head_large *large = unit_head_large_first;
 	unsigned int count = 0, size = 0;
@@ -918,7 +926,7 @@ static void memmgr_init_messages(void)
 
 
 /// Tests the memory for errors and memory leaks.
-void malloc_memory_check(void)
+static void malloc_memory_check(void)
 {
 	MEMORY_CHECK();
 }
@@ -926,7 +934,8 @@ void malloc_memory_check(void)
 
 /// Returns true if a pointer is valid.
 /// The check is best-effort, false positives are possible.
-bool malloc_verify_ptr(void* ptr) {
+static bool malloc_verify_ptr(void *ptr)
+{
 #ifdef USE_MEMMGR
 	return memmgr_verify(ptr) && MEMORY_VERIFY(ptr);
 #else
@@ -935,7 +944,8 @@ bool malloc_verify_ptr(void* ptr) {
 }
 
 
-size_t malloc_usage (void) {
+static size_t malloc_usage(void)
+{
 #ifdef USE_MEMMGR
 	return memmgr_usage ();
 #else
@@ -943,7 +953,8 @@ size_t malloc_usage (void) {
 #endif
 }
 
-void malloc_final (void) {
+static void malloc_final(void)
+{
 #ifdef USE_MEMMGR
 	memmgr_final ();
 #endif
@@ -959,14 +970,14 @@ void malloc_final (void) {
  * chance to other modules to initialize, in case they want to silence any
  * status messages, but at the same time require malloc.
  */
-void malloc_init_messages(void)
+static void malloc_init_messages(void)
 {
 #ifdef USE_MEMMGR
 	memmgr_init_messages();
 #endif
 }
 
-void malloc_init(void)
+static void malloc_init(void)
 {
 #ifdef USE_MEMMGR
 	memmgr_usage_bytes_t = 0;
@@ -986,7 +997,8 @@ void malloc_init(void)
 #endif
 }
 
-void malloc_defaults(void) {
+void malloc_defaults(void)
+{
 	iMalloc = &iMalloc_s;
 	iMalloc->init = malloc_init;
 	iMalloc->final = malloc_final;

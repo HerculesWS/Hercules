@@ -48,25 +48,25 @@
 #	include <unistd.h>
 #endif
 
-struct malloc_interface iMalloc_HPM;
-struct malloc_interface *HPMiMalloc;
-struct HPM_interface HPM_s;
+static struct malloc_interface iMalloc_HPM;
+static struct malloc_interface *HPMiMalloc;
+static struct HPM_interface HPM_s;
 struct HPM_interface *HPM;
-struct HPMHooking_core_interface HPMHooking_core_s;
+static struct HPMHooking_core_interface HPMHooking_core_s;
 
 /**
  * (char*) data name -> (unsigned int) HPMDataCheck[] index
  **/
-struct DBMap *datacheck_db;
-int datacheck_version;
-const struct s_HPMDataCheck *datacheck_data;
+static struct DBMap *datacheck_db;
+static int datacheck_version;
+static const struct s_HPMDataCheck *datacheck_data;
 
 /**
  * Executes an event on all loaded plugins.
  *
  * @param type The event type to trigger.
  */
-void hplugin_trigger_event(enum hp_event_types type)
+static void hplugin_trigger_event(enum hp_event_types type)
 {
 	int i;
 	for (i = 0; i < VECTOR_LENGTH(HPM->plugins); i++) {
@@ -82,7 +82,7 @@ void hplugin_trigger_event(enum hp_event_types type)
  * @param value The symbol value.
  * @param name  The symbol name.
  */
-void hplugin_export_symbol(void *value, const char *name)
+static void hplugin_export_symbol(void *value, const char *name)
 {
 	struct hpm_symbol *symbol = NULL;
 	CREATE(symbol ,struct hpm_symbol, 1);
@@ -100,7 +100,7 @@ void hplugin_export_symbol(void *value, const char *name)
  * @return The symbol value.
  * @retval NULL if the symbol wasn't found.
  */
-void *hplugin_import_symbol(char *name, unsigned int pID)
+static void *hplugin_import_symbol(char *name, unsigned int pID)
 {
 	int i;
 	nullpo_retr(NULL, name);
@@ -113,7 +113,8 @@ void *hplugin_import_symbol(char *name, unsigned int pID)
 	return NULL;
 }
 
-bool hplugin_iscompatible(char* version) {
+static bool hplugin_iscompatible(char *version)
+{
 	unsigned int req_major = 0, req_minor = 0;
 
 	if( version == NULL )
@@ -131,7 +132,7 @@ bool hplugin_iscompatible(char* version) {
  * @retval true  if the plugin exists and is currently loaded.
  * @retval false otherwise.
  */
-bool hplugin_exists(const char *filename)
+static bool hplugin_exists(const char *filename)
 {
 	int i;
 	nullpo_retr(false, filename);
@@ -147,7 +148,7 @@ bool hplugin_exists(const char *filename)
  *
  * @return A (retained) pointer to the initialized data.
  */
-struct hplugin *hplugin_create(void)
+static struct hplugin *hplugin_create(void)
 {
 	struct hplugin *plugin = NULL;
 	CREATE(plugin, struct hplugin, 1);
@@ -158,7 +159,7 @@ struct hplugin *hplugin_create(void)
 	return plugin;
 }
 
-bool hplugins_addpacket(unsigned short cmd, unsigned short length, void (*receive) (int fd), unsigned int point, unsigned int pluginID)
+static bool hplugins_addpacket(unsigned short cmd, unsigned short length, void (*receive) (int fd), unsigned int point, unsigned int pluginID)
 {
 	struct HPluginPacket *packet;
 	int i;
@@ -204,7 +205,7 @@ bool hplugins_addpacket(unsigned short cmd, unsigned short length, void (*receiv
  *     initialized through \c HPM->data_store_create() and ownership is passed
  *     to the caller.
  */
-bool hplugin_data_store_validate(enum HPluginDataTypes type, struct hplugin_data_store **storeptr, bool initialize)
+static bool hplugin_data_store_validate(enum HPluginDataTypes type, struct hplugin_data_store **storeptr, bool initialize)
 {
 	struct hplugin_data_store *store;
 	nullpo_retr(false, storeptr);
@@ -248,7 +249,7 @@ bool hplugin_data_store_validate(enum HPluginDataTypes type, struct hplugin_data
  * @param classid[in]      The entry class identifier.
  * @param autofree[in]     Whether the entry should be automatically freed when removed.
  */
-void hplugins_addToHPData(enum HPluginDataTypes type, uint32 pluginID, struct hplugin_data_store **storeptr, void *data, uint32 classid, bool autofree)
+static void hplugins_addToHPData(enum HPluginDataTypes type, uint32 pluginID, struct hplugin_data_store **storeptr, void *data, uint32 classid, bool autofree)
 {
 	struct hplugin_data_store *store;
 	struct hplugin_data_entry *entry;
@@ -293,7 +294,7 @@ void hplugins_addToHPData(enum HPluginDataTypes type, uint32 pluginID, struct hp
  *
  * @return The retrieved entry, or NULL.
  */
-void *hplugins_getFromHPData(enum HPluginDataTypes type, uint32 pluginID, struct hplugin_data_store *store, uint32 classid)
+static void *hplugins_getFromHPData(enum HPluginDataTypes type, uint32 pluginID, struct hplugin_data_store *store, uint32 classid)
 {
 	int i;
 
@@ -320,7 +321,7 @@ void *hplugins_getFromHPData(enum HPluginDataTypes type, uint32 pluginID, struct
  * @param store[in]    The store.
  * @param classid[in]  The entry class identifier.
  */
-void hplugins_removeFromHPData(enum HPluginDataTypes type, uint32 pluginID, struct hplugin_data_store *store, uint32 classid)
+static void hplugins_removeFromHPData(enum HPluginDataTypes type, uint32 pluginID, struct hplugin_data_store *store, uint32 classid)
 {
 	struct hplugin_data_entry *entry;
 	int i;
@@ -344,7 +345,7 @@ void hplugins_removeFromHPData(enum HPluginDataTypes type, uint32 pluginID, stru
 }
 
 /* TODO: add ability for tracking using pID for the upcoming runtime load/unload support. */
-bool HPM_AddHook(enum HPluginHookType type, const char *target, void *hook, unsigned int pID)
+static bool HPM_AddHook(enum HPluginHookType type, const char *target, void *hook, unsigned int pID)
 {
 	if (!HPM->hooking->enabled) {
 		ShowError("HPM:AddHook Fail! '%s' tried to hook to '%s' but HPMHooking is disabled!\n",HPM->pid2name(pID),target);
@@ -360,13 +361,13 @@ bool HPM_AddHook(enum HPluginHookType type, const char *target, void *hook, unsi
 	return false;
 }
 
-void HPM_HookStop(const char *func, unsigned int pID)
+static void HPM_HookStop(const char *func, unsigned int pID)
 {
 	/* track? */
 	HPM->hooking->force_return = true;
 }
 
-bool HPM_HookStopped(void)
+static bool HPM_HookStopped(void)
 {
 	return HPM->hooking->force_return;
 }
@@ -381,7 +382,7 @@ bool HPM_HookStopped(void)
  * @param help      the help string to be displayed by '--help', if any.
  * @return the success status.
  */
-bool hpm_add_arg(unsigned int pluginID, char *name, bool has_param, CmdlineExecFunc func, const char *help)
+static bool hpm_add_arg(unsigned int pluginID, char *name, bool has_param, CmdlineExecFunc func, const char *help)
 {
 	int i;
 
@@ -410,7 +411,7 @@ bool hpm_add_arg(unsigned int pluginID, char *name, bool has_param, CmdlineExecF
  * @retval true if the listener was added successfully.
  * @retval false in case of error.
  */
-bool hplugins_addconf(unsigned int pluginID, enum HPluginConfType type, char *name, void (*parse_func) (const char *key, const char *val), int (*return_func) (const char *key), bool required)
+static bool hplugins_addconf(unsigned int pluginID, enum HPluginConfType type, char *name, void (*parse_func) (const char *key, const char *val), int (*return_func) (const char *key), bool required)
 {
 	struct HPConfListenStorage *conf;
 	int i;
@@ -450,7 +451,7 @@ bool hplugins_addconf(unsigned int pluginID, enum HPluginConfType type, char *na
 	return true;
 }
 
-struct hplugin *hplugin_load(const char* filename)
+static struct hplugin *hplugin_load(const char *filename)
 {
 	struct hplugin *plugin;
 	struct hplugin_info *info;
@@ -598,7 +599,7 @@ struct hplugin *hplugin_load(const char* filename)
  *
  * @param plugin The plugin data.
  */
-void hplugin_unload(struct hplugin* plugin)
+static void hplugin_unload(struct hplugin *plugin)
 {
 	int i;
 	nullpo_retv(plugin);
@@ -628,7 +629,7 @@ CMDLINEARG(loadplugin)
 /**
  * Reads the plugin configuration and loads the plugins as necessary.
  */
-void hplugins_config_read(void)
+static void hplugins_config_read(void)
 {
 	struct config_t plugins_conf;
 	struct config_setting_t *plist = NULL;
@@ -707,7 +708,7 @@ void hplugins_config_read(void)
  *
  * @see CPCMD()
  */
-CPCMD(plugins)
+static CPCMD(plugins)
 {
 	int i;
 
@@ -733,7 +734,7 @@ CPCMD(plugins)
  * @retval 1 OK
  * @retval 2 incomplete packet
  */
-unsigned char hplugins_parse_packets(int fd, int packet_id, enum HPluginPacketHookingPoints point)
+static unsigned char hplugins_parse_packets(int fd, int packet_id, enum HPluginPacketHookingPoints point)
 {
 	struct HPluginPacket *packet = NULL;
 	int i;
@@ -765,7 +766,7 @@ unsigned char hplugins_parse_packets(int fd, int packet_id, enum HPluginPacketHo
  * @retval "core" if the plugin ID belongs to the Hercules core.
  * @retval "UnknownPlugin" if the plugin wasn't found.
  */
-char *hplugins_id2name(unsigned int pid)
+static char *hplugins_id2name(unsigned int pid)
 {
 	int i;
 
@@ -791,7 +792,7 @@ char *hplugins_id2name(unsigned int pid)
  * @param file The string/filename to retain
  * @return A retained copy of the source string.
  */
-const char *HPM_file2ptr(const char *file)
+static const char *HPM_file2ptr(const char *file)
 {
 	int i;
 
@@ -810,27 +811,27 @@ const char *HPM_file2ptr(const char *file)
 	return HPM->filenames.data[i].name;
 }
 
-void* HPM_mmalloc(size_t size, const char *file, int line, const char *func)
+static void *HPM_mmalloc(size_t size, const char *file, int line, const char *func)
 {
 	return iMalloc->malloc(size,HPM_file2ptr(file),line,func);
 }
 
-void* HPM_calloc(size_t num, size_t size, const char *file, int line, const char *func)
+static void *HPM_calloc(size_t num, size_t size, const char *file, int line, const char *func)
 {
 	return iMalloc->calloc(num,size,HPM_file2ptr(file),line,func);
 }
 
-void* HPM_realloc(void *p, size_t size, const char *file, int line, const char *func)
+static void *HPM_realloc(void *p, size_t size, const char *file, int line, const char *func)
 {
 	return iMalloc->realloc(p,size,HPM_file2ptr(file),line,func);
 }
 
-void* HPM_reallocz(void *p, size_t size, const char *file, int line, const char *func)
+static void *HPM_reallocz(void *p, size_t size, const char *file, int line, const char *func)
 {
 	return iMalloc->reallocz(p,size,HPM_file2ptr(file),line,func);
 }
 
-char* HPM_astrdup(const char *p, const char *file, int line, const char *func)
+static char *HPM_astrdup(const char *p, const char *file, int line, const char *func)
 {
 	return iMalloc->astrdup(p,HPM_file2ptr(file),line,func);
 }
@@ -844,7 +845,7 @@ char* HPM_astrdup(const char *p, const char *file, int line, const char *func)
  * @retval true if a registered plugin was found to handle the entry.
  * @retval false if no registered plugins could be found.
  */
-bool hplugins_parse_conf_entry(const char *w1, const char *w2, enum HPluginConfType point)
+static bool hplugins_parse_conf_entry(const char *w1, const char *w2, enum HPluginConfType point)
 {
 	int i;
 	ARR_FIND(0, VECTOR_LENGTH(HPM->config_listeners[point]), i, strcmpi(w1, VECTOR_INDEX(HPM->config_listeners[point], i).key) == 0);
@@ -863,7 +864,7 @@ bool hplugins_parse_conf_entry(const char *w1, const char *w2, enum HPluginConfT
  * @retval true in case of data found
  * @retval false in case of no data found
  */
-bool hplugins_get_battle_conf(const char *w1, int *value)
+static bool hplugins_get_battle_conf(const char *w1, int *value)
 {
 	int i;
 
@@ -887,7 +888,7 @@ bool hplugins_get_battle_conf(const char *w1, int *value)
  * @param imported Whether the current config is imported from another file.
  * @retval false in case of error.
  */
-bool hplugins_parse_conf(const struct config_t *config, const char *filename, enum HPluginConfType point, bool imported)
+static bool hplugins_parse_conf(const struct config_t *config, const char *filename, enum HPluginConfType point, bool imported)
 {
 	const struct config_setting_t *setting = NULL;
 	int i, val, type;
@@ -940,7 +941,7 @@ bool hplugins_parse_conf(const struct config_t *config, const char *filename, en
  * @param imported whether the current config is imported from another file.
  * @retval false in case of error.
  */
-bool hplugins_parse_battle_conf(const struct config_t *config, const char *filename, bool imported)
+static bool hplugins_parse_battle_conf(const struct config_t *config, const char *filename, bool imported)
 {
 	const struct config_setting_t *setting = NULL;
 	int i, val, type;
@@ -985,7 +986,7 @@ bool hplugins_parse_battle_conf(const struct config_t *config, const char *filen
  *
  * @param storeptr[in,out] A pointer to the plugin data store.
  */
-void hplugin_data_store_destroy(struct hplugin_data_store **storeptr)
+static void hplugin_data_store_destroy(struct hplugin_data_store **storeptr)
 {
 	struct hplugin_data_store *store;
 	nullpo_retv(storeptr);
@@ -1014,7 +1015,7 @@ void hplugin_data_store_destroy(struct hplugin_data_store **storeptr)
  * @param storeptr[in,out] A pointer to the data store to initialize.
  * @param type[in]         The store type.
  */
-void hplugin_data_store_create(struct hplugin_data_store **storeptr, enum HPluginDataTypes type)
+static void hplugin_data_store_create(struct hplugin_data_store **storeptr, enum HPluginDataTypes type)
 {
 	struct hplugin_data_store *store;
 	nullpo_retv(storeptr);
@@ -1031,7 +1032,7 @@ void hplugin_data_store_create(struct hplugin_data_store **storeptr, enum HPlugi
 /**
  * Called by HPM->DataCheck on a plugins incoming data, ensures data structs in use are matching!
  **/
-bool HPM_DataCheck(struct s_HPMDataCheck *src, unsigned int size, int version, char *name)
+static bool HPM_DataCheck(struct s_HPMDataCheck *src, unsigned int size, int version, char *name)
 {
 	unsigned int i, j;
 
@@ -1060,7 +1061,7 @@ bool HPM_DataCheck(struct s_HPMDataCheck *src, unsigned int size, int version, c
 	return true;
 }
 
-void HPM_datacheck_init(const struct s_HPMDataCheck *src, unsigned int length, int version)
+static void HPM_datacheck_init(const struct s_HPMDataCheck *src, unsigned int length, int version)
 {
 	unsigned int i;
 
@@ -1077,12 +1078,12 @@ void HPM_datacheck_init(const struct s_HPMDataCheck *src, unsigned int length, i
 	}
 }
 
-void HPM_datacheck_final(void)
+static void HPM_datacheck_final(void)
 {
 	db_destroy(datacheck_db);
 }
 
-void hpm_init(void)
+static void hpm_init(void)
 {
 	int i;
 	datacheck_db = NULL;
@@ -1126,7 +1127,7 @@ void hpm_init(void)
 /**
  * Releases the retained filenames cache.
  */
-void hpm_memdown(void)
+static void hpm_memdown(void)
 {
 	/* this memory is handled outside of the server's memory manager and
 	 * thus cleared after memory manager goes down */
@@ -1141,7 +1142,7 @@ void hpm_memdown(void)
 	}
 }
 
-void hpm_final(void)
+static void hpm_final(void)
 {
 	int i;
 
