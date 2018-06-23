@@ -537,10 +537,18 @@ static int bl_vforeach(int (*func)(struct block_list*, va_list), int blockcount,
 	map->freeblock_lock();
 	for (i = blockcount; i < map->bl_list_count && returnCount < max; i++) {
 		if (map->bl_list[i]->prev) { //func() may delete this bl_list[] slot, checking for prev ensures it wasn't queued for deletion.
+			int returnVal = 0;
 			va_list argscopy;
+
 			va_copy(argscopy, args);
-			returnCount += func(map->bl_list[i], argscopy);
+			returnVal = func(map->bl_list[i], argscopy);
 			va_end(argscopy);
+
+			if (max == INT_MAX && returnVal == -1) {
+				break;
+			}
+
+			returnCount += returnVal;
 		}
 	}
 	map->freeblock_unlock();
