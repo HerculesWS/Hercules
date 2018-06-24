@@ -739,6 +739,7 @@ static void showmsg_clearScreen(void)
 #endif
 }
 
+#if 0 // Unused
 static int ShowMessage_(enum msg_type flag, const char *string, ...) __attribute__((format(printf, 2, 3)));
 static int ShowMessage_(enum msg_type flag, const char *string, ...)
 {
@@ -749,6 +750,7 @@ static int ShowMessage_(enum msg_type flag, const char *string, ...)
 	va_end(ap);
 	return ret;
 }
+#endif // Unused
 
 // direct printf replacement
 static void showmsg_showMessage(const char *string, ...) __attribute__((format(printf, 1, 2)));

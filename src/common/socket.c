@@ -78,8 +78,6 @@
 static struct socket_interface sockt_s;
 struct socket_interface *sockt;
 
-static struct socket_data **session;
-
 static const char *SOCKET_CONF_FILENAME = "conf/common/socket.conf";
 
 #ifdef SEND_SHORTLIST
@@ -1332,6 +1330,7 @@ static bool access_list_add(struct config_setting_t *setting, const char *list_n
 #endif  // MINICORE
 //////////////////////////////
 
+#ifndef MINICORE
 /**
  * Reads 'socket_configuration/ip_rules' and initializes required variables.
  *
@@ -1343,7 +1342,6 @@ static bool access_list_add(struct config_setting_t *setting, const char *list_n
  */
 static bool socket_config_read_iprules(const char *filename, struct config_t *config, bool imported)
 {
-#ifndef MINICORE
 	struct config_setting_t *setting = NULL;
 	const char *temp = NULL;
 
@@ -1386,11 +1384,12 @@ static bool socket_config_read_iprules(const char *filename, struct config_t *co
 	} else {
 		access_list_add(setting, "deny_list", &access_deny);
 	}
-#endif // ! MINICORE
 
 	return true;
 }
+#endif // ! MINICORE
 
+#ifndef MINICORE
 /**
  * Reads 'socket_configuration/ddos' and initializes required variables.
  *
@@ -1402,7 +1401,6 @@ static bool socket_config_read_iprules(const char *filename, struct config_t *co
  */
 static bool socket_config_read_ddos(const char *filename, struct config_t *config, bool imported)
 {
-#ifndef MINICORE
 	struct config_setting_t *setting = NULL;
 
 	nullpo_retr(false, filename);
@@ -1419,9 +1417,9 @@ static bool socket_config_read_ddos(const char *filename, struct config_t *confi
 	libconfig->setting_lookup_int(setting, "count", &ddos_count);
 	libconfig->setting_lookup_int(setting, "autoreset", &ddos_autoreset);
 
-#endif // ! MINICORE
 	return true;
 }
+#endif // ! MINICORE
 
 /**
  * Reads 'socket_configuration' and initializes required variables.

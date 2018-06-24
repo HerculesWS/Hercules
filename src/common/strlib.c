@@ -1137,17 +1137,8 @@ void strlib_defaults(void)
 	strlib->normalize_name_ = strlib_normalize_name;
 	strlib->stristr_ = strlib_stristr;
 
-#if !(defined(WIN32) && defined(_MSC_VER)) && !defined(HAVE_STRNLEN)
 	strlib->strnlen_ = strlib_strnlen;
-#else
-	strlib->strnlen_ = NULL;
-#endif
-
-#ifdef WIN32
 	strlib->strtok_r_ = strlib_strtok_r;
-#else
-	strlib->strtok_r_ = NULL;
-#endif
 
 	strlib->e_mail_check_ = strlib_e_mail_check;
 	strlib->config_switch_ = strlib_config_switch;
