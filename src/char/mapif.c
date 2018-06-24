@@ -27,26 +27,167 @@
 #include "char/int_guild.h"
 #include "char/int_homun.h"
 #include "char/int_rodex.h"
+#include "char/inter.h"
 #include "common/cbasetypes.h"
 #include "common/mmo.h"
+#include "common/nullpo.h"
 #include "common/random.h"
 #include "common/showmsg.h"
 #include "common/socket.h"
+#include "common/sql.h"
 #include "common/strlib.h"
 
 #include <stdlib.h>
 
-void mapif_ban(int id, unsigned int flag, int status);
-void mapif_server_init(int id);
-void mapif_server_destroy(int id);
-void mapif_server_reset(int id);
-void mapif_on_disconnect(int id);
-void mapif_on_parse_accinfo(int account_id, int u_fd, int u_aid, int u_group, int map_fd);
-void mapif_char_ban(int char_id, time_t timestamp);
-int mapif_sendall(const unsigned char *buf, unsigned int len);
-int mapif_sendallwos(int sfd, unsigned char *buf, unsigned int len);
-int mapif_send(int fd, unsigned char *buf, unsigned int len);
-void mapif_send_users_count(int users);
+void mapif_ban(int id, unsigned int flag, int status)
+{
+	// send to all map-servers to disconnect the player
+	unsigned char buf[11];
+	WBUFW(buf,0) = 0x2b14;
+	WBUFL(buf,2) = id;
+	WBUFB(buf,6) = flag; // 0: change of status, 1: ban
+	WBUFL(buf,7) = status; // status or final date of a banishment
+	mapif->sendall(buf, 11);
+}
+
+/// Initializes a server structure.
+void mapif_server_init(int id)
+{
+	//memset(&chr->server[id], 0, sizeof(server[id]));
+	chr->server[id].fd = -1;
+}
+
+/// Destroys a server structure.
+void mapif_server_destroy(int id)
+{
+	if (chr->server[id].fd == -1) {
+		sockt->close(chr->server[id].fd);
+		chr->server[id].fd = -1;
+	}
+}
+
+/// Resets all the data related to a server.
+void mapif_server_reset(int id)
+{
+	int i, j;
+	unsigned char buf[16384];
+	int fd = chr->server[id].fd;
+	//Notify other map servers that this one is gone. [Skotlex]
+	WBUFW(buf, 0) = 0x2b20;
+	WBUFL(buf, 4) = htonl(chr->server[id].ip);
+	WBUFW(buf, 8) = htons(chr->server[id].port);
+	j = 0;
+	for (i = 0; i < VECTOR_LENGTH(chr->server[id].maps); i++) {
+		uint16 m = VECTOR_INDEX(chr->server[id].maps, i);
+		if (m != 0)
+			WBUFW(buf, 10 + (j++) * 4) = m;
+	}
+	if (j > 0) {
+		WBUFW(buf, 2) = j * 4 + 10;
+		mapif->sendallwos(fd, buf, WBUFW(buf, 2));
+	}
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `index`='%d'", ragsrvinfo_db, chr->server[id].fd))
+		Sql_ShowDebug(inter->sql_handle);
+	chr->online_char_db->foreach(chr->online_char_db, chr->db_setoffline, id); //Tag relevant chars as 'in disconnected' server.
+	mapif->server_destroy(id);
+	mapif->server_init(id);
+}
+
+/// Called when the connection to a Map Server is disconnected.
+void mapif_on_disconnect(int id)
+{
+	ShowStatus("Map-server #%d has disconnected.\n", id);
+	mapif->server_reset(id);
+}
+
+void mapif_on_parse_accinfo(int account_id, int u_fd, int u_aid, int u_group, int map_fd)
+{
+	Assert_retv(chr->login_fd > 0);
+	WFIFOHEAD(chr->login_fd, 22);
+	WFIFOW(chr->login_fd, 0) = 0x2740;
+	WFIFOL(chr->login_fd, 2) = account_id;
+	WFIFOL(chr->login_fd, 6) = u_fd;
+	WFIFOL(chr->login_fd, 10) = u_aid;
+	WFIFOL(chr->login_fd, 14) = u_group;
+	WFIFOL(chr->login_fd, 18) = map_fd;
+	WFIFOSET(chr->login_fd, 22);
+}
+
+void mapif_char_ban(int char_id, time_t timestamp)
+{
+	unsigned char buf[11];
+	WBUFW(buf, 0) = 0x2b14;
+	WBUFL(buf, 2) = char_id;
+	WBUFB(buf, 6) = 2;
+	WBUFL(buf, 7) = (unsigned int)timestamp;
+	mapif->sendall(buf, 11);
+}
+
+int mapif_sendall(const unsigned char *buf, unsigned int len)
+{
+	int i, c;
+
+	nullpo_ret(buf);
+	c = 0;
+	for (i = 0; i < ARRAYLENGTH(chr->server); i++) {
+		int fd;
+		if ((fd = chr->server[i].fd) > 0) {
+			WFIFOHEAD(fd, len);
+			memcpy(WFIFOP(fd, 0), buf, len);
+			WFIFOSET(fd, len);
+			c++;
+		}
+	}
+
+	return c;
+}
+
+int mapif_sendallwos(int sfd, unsigned char *buf, unsigned int len)
+{
+	int i, c;
+
+	nullpo_ret(buf);
+	c = 0;
+	for (i = 0; i < ARRAYLENGTH(chr->server); i++) {
+		int fd;
+		if ((fd = chr->server[i].fd) > 0 && fd != sfd) {
+			WFIFOHEAD(fd, len);
+			memcpy(WFIFOP(fd, 0), buf, len);
+			WFIFOSET(fd, len);
+			c++;
+		}
+	}
+
+	return c;
+}
+
+
+int mapif_send(int fd, unsigned char *buf, unsigned int len)
+{
+	nullpo_ret(buf);
+	if (fd >= 0) {
+		int i;
+		ARR_FIND (0, ARRAYLENGTH(chr->server), i, fd == chr->server[i].fd);
+		if (i < ARRAYLENGTH(chr->server)) {
+			WFIFOHEAD(fd, len);
+			memcpy(WFIFOP(fd, 0), buf, len);
+			WFIFOSET(fd, len);
+			return 1;
+		}
+	}
+	return 0;
+}
+
+void mapif_send_users_count(int users)
+{
+	uint8 buf[6];
+	// send number of players to all map-servers
+	WBUFW(buf, 0) = 0x2b00;
+	WBUFL(buf, 2) = users;
+	mapif->sendall(buf, 6);
+}
+
+
 void mapif_auction_message(int char_id, unsigned char result);
 void mapif_auction_sendlist(int fd, int char_id, short count, short pages, unsigned char *buf);
 void mapif_parse_auction_requestlist(int fd);
