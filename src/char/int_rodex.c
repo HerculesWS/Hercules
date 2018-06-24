@@ -444,13 +444,10 @@ void mapif_parse_rodex_checkhasnew(int fd)
 /*==========================================
  * Update/Delete mail
  *------------------------------------------*/
-void mapif_parse_rodex_updatemail(int fd)
+bool inter_rodex_updatemail(int64 mail_id, int8 flag)
 {
-	int64 mail_id = RFIFOL(fd, 2);
-	int8 flag = RFIFOB(fd, 10);
-
-	Assert_retv(mail_id > 0);
-	Assert_retv(flag >= 0 && flag <= 4);
+	Assert_retr(false, mail_id > 0);
+	Assert_retr(false, flag >= 0 && flag <= 4);
 
 	switch (flag) {
 	case 0: // Read
@@ -481,7 +478,21 @@ void mapif_parse_rodex_updatemail(int fd)
 		if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `sender_read` = 1 WHERE `mail_id` = '%"PRId64"'", rodex_db, mail_id))
 			Sql_ShowDebug(inter->sql_handle);
 		break;
+	default:
+		return false;
 	}
+	return true;
+}
+
+/*==========================================
+ * Update/Delete mail
+ *------------------------------------------*/
+void mapif_parse_rodex_updatemail(int fd)
+{
+	int64 mail_id = RFIFOL(fd, 2);
+	int8 flag = RFIFOB(fd, 10);
+
+	inter_rodex->updatemail(mail_id, flag);
 }
 
 /*==========================================
@@ -588,4 +599,5 @@ void inter_rodex_defaults(void)
 	inter_rodex->fromsql = inter_rodex_fromsql;
 	inter_rodex->hasnew = inter_rodex_hasnew;
 	inter_rodex->checkname = inter_rodex_checkname;
+	inter_rodex->updatemail = inter_rodex_updatemail;
 }
