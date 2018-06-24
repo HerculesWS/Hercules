@@ -333,151 +333,6 @@ int inter_party_check_empty(struct party_data *p)
 	return 1;
 }
 
-//-------------------------------------------------------------------
-// Communication to the map server
-
-
-// Create a party whether or not
-int mapif_party_created(int fd, int account_id, int char_id, struct party *p)
-{
-	WFIFOHEAD(fd, 39);
-	WFIFOW(fd,0)=0x3820;
-	WFIFOL(fd,2)=account_id;
-	WFIFOL(fd,6)=char_id;
-	if(p!=NULL){
-		WFIFOB(fd,10)=0;
-		WFIFOL(fd,11)=p->party_id;
-		memcpy(WFIFOP(fd,15),p->name,NAME_LENGTH);
-		ShowInfo("int_party: Party created (%d - %s)\n",p->party_id,p->name);
-	}else{
-		WFIFOB(fd,10)=1;
-		WFIFOL(fd,11)=0;
-		memset(WFIFOP(fd,15),0,NAME_LENGTH);
-	}
-	WFIFOSET(fd,39);
-
-	return 0;
-}
-
-//Party information not found
-void mapif_party_noinfo(int fd, int party_id, int char_id)
-{
-	WFIFOHEAD(fd, 12);
-	WFIFOW(fd,0) = 0x3821;
-	WFIFOW(fd,2) = 12;
-	WFIFOL(fd,4) = char_id;
-	WFIFOL(fd,8) = party_id;
-	WFIFOSET(fd,12);
-	ShowWarning("int_party: info not found (party_id=%d char_id=%d)\n", party_id, char_id);
-}
-
-//Digest party information
-void mapif_party_info(int fd, struct party* p, int char_id)
-{
-	unsigned char buf[8 + sizeof(struct party)];
-	nullpo_retv(p);
-	WBUFW(buf,0) = 0x3821;
-	WBUFW(buf,2) = 8 + sizeof(struct party);
-	WBUFL(buf,4) = char_id;
-	memcpy(WBUFP(buf,8), p, sizeof(struct party));
-
-	if(fd<0)
-		mapif->sendall(buf,WBUFW(buf,2));
-	else
-		mapif->send(fd,buf,WBUFW(buf,2));
-}
-
-//Whether or not additional party members
-int mapif_party_memberadded(int fd, int party_id, int account_id, int char_id, int flag) {
-	WFIFOHEAD(fd, 15);
-	WFIFOW(fd,0) = 0x3822;
-	WFIFOL(fd,2) = party_id;
-	WFIFOL(fd,6) = account_id;
-	WFIFOL(fd,10) = char_id;
-	WFIFOB(fd,14) = flag;
-	WFIFOSET(fd,15);
-
-	return 0;
-}
-
-// Party setting change notification
-int mapif_party_optionchanged(int fd, struct party *p, int account_id, int flag)
-{
-	unsigned char buf[16];
-	nullpo_ret(p);
-	WBUFW(buf,0)=0x3823;
-	WBUFL(buf,2)=p->party_id;
-	WBUFL(buf,6)=account_id;
-	WBUFW(buf,10)=p->exp;
-	WBUFW(buf,12)=p->item;
-	WBUFB(buf,14)=flag;
-	if(flag==0)
-		mapif->sendall(buf,15);
-	else
-		mapif->send(fd,buf,15);
-	return 0;
-}
-
-//Withdrawal notification party
-int mapif_party_withdraw(int party_id,int account_id, int char_id) {
-	unsigned char buf[16];
-
-	WBUFW(buf,0) = 0x3824;
-	WBUFL(buf,2) = party_id;
-	WBUFL(buf,6) = account_id;
-	WBUFL(buf,10) = char_id;
-	mapif->sendall(buf, 14);
-	return 0;
-}
-
-//Party map update notification
-int mapif_party_membermoved(struct party *p, int idx)
-{
-	unsigned char buf[20];
-
-	nullpo_ret(p);
-	Assert_ret(idx >= 0 && idx < MAX_PARTY);
-	WBUFW(buf,0) = 0x3825;
-	WBUFL(buf,2) = p->party_id;
-	WBUFL(buf,6) = p->member[idx].account_id;
-	WBUFL(buf,10) = p->member[idx].char_id;
-	WBUFW(buf,14) = p->member[idx].map;
-	WBUFB(buf,16) = p->member[idx].online;
-	WBUFW(buf,17) = p->member[idx].lv;
-	mapif->sendall(buf, 19);
-	return 0;
-}
-
-//Dissolution party notification
-int mapif_party_broken(int party_id, int flag)
-{
-	unsigned char buf[16];
-	WBUFW(buf,0)=0x3826;
-	WBUFL(buf,2)=party_id;
-	WBUFB(buf,6)=flag;
-	mapif->sendall(buf,7);
-	//printf("int_party: broken %d\n",party_id);
-	return 0;
-}
-
-//Remarks in the party
-int mapif_party_message(int party_id, int account_id, const char *mes, int len, int sfd)
-{
-	unsigned char buf[512];
-	nullpo_ret(mes);
-	WBUFW(buf,0)=0x3827;
-	WBUFW(buf,2)=len+12;
-	WBUFL(buf,4)=party_id;
-	WBUFL(buf,8)=account_id;
-	memcpy(WBUFP(buf,12),mes,len);
-	mapif->sendallwos(sfd, buf,len+12);
-	return 0;
-}
-
-//-------------------------------------------------------------------
-// Communication from the map server
-
-
 // Create Party
 struct party_data *inter_party_create(const char *name, int item, int item2, const struct party_member *leader)
 {
@@ -533,39 +388,6 @@ struct party_data *inter_party_create(const char *name, int item, int item2, con
 	return p;
 }
 
-// Create Party
-int mapif_parse_CreateParty(int fd, const char *name, int item, int item2, const struct party_member *leader)
-{
-	struct party_data *p;
-
-	nullpo_ret(name);
-	nullpo_ret(leader);
-
-	p = inter_party->create(name, item, item2, leader);
-
-	if (p == NULL) {
-		mapif->party_created(fd, leader->account_id, leader->char_id, NULL);
-		return 0;
-	}
-
-	mapif->party_info(fd, &p->party, 0);
-	mapif->party_created(fd, leader->account_id, leader->char_id, &p->party);
-
-	return 0;
-}
-
-// Party information request
-void mapif_parse_PartyInfo(int fd, int party_id, int char_id)
-{
-	struct party_data *p;
-	p = inter_party->fromsql(party_id);
-
-	if (p)
-		mapif->party_info(fd, &p->party, char_id);
-	else
-		mapif->party_noinfo(fd, party_id, char_id);
-}
-
 // Add a player to party request
 bool inter_party_add_member(int party_id, const struct party_member *member)
 {
@@ -602,20 +424,6 @@ bool inter_party_add_member(int party_id, const struct party_member *member)
 	return true;
 }
 
-// Add a player to party request
-int mapif_parse_PartyAddMember(int fd, int party_id, const struct party_member *member)
-{
-	nullpo_ret(member);
-
-	if (!inter_party->add_member(party_id, member)) {
-		mapif->party_memberadded(fd, party_id, member->account_id, member->char_id, 1);
-		return 0;
-	}
-	mapif->party_memberadded(fd, party_id, member->account_id, member->char_id, 0);
-
-	return 0;
-}
-
 //Party setting change request
 bool inter_party_change_option(int party_id, int account_id, int exp, int item, int map_fd)
 {
@@ -635,13 +443,6 @@ bool inter_party_change_option(int party_id, int account_id, int exp, int item, 
 	mapif->party_optionchanged(map_fd, &p->party, account_id, flag);
 	inter_party->tosql(&p->party, PS_BASIC, 0);
 	return true;
-}
-
-//Party setting change request
-int mapif_parse_PartyChangeOption(int fd,int party_id,int account_id,int exp,int item)
-{
-	inter_party->change_option(party_id, account_id, exp, item, fd);
-	return 0;
 }
 
 //Request leave party
@@ -684,13 +485,6 @@ bool inter_party_leave(int party_id, int account_id, int char_id)
 		mapif->party_info(-1, &p->party, 0);
 	}
 	return true;
-}
-
-//Request leave party
-int mapif_parse_PartyLeave(int fd, int party_id, int account_id, int char_id)
-{
-	inter_party->leave(party_id, account_id, char_id);
-	return 0;
 }
 
 // When member goes to other map or levels up.
@@ -751,13 +545,6 @@ bool inter_party_change_map(int party_id, int account_id, int char_id, unsigned 
 	return true;
 }
 
-// When member goes to other map or levels up.
-int mapif_parse_PartyChangeMap(int fd, int party_id, int account_id, int char_id, unsigned short map, int online, unsigned int lv)
-{
-	inter_party->change_map(party_id, account_id, char_id, map, online, lv);
-	return 0;
-}
-
 //Request party dissolution
 bool inter_party_disband(int party_id)
 {
@@ -770,19 +557,6 @@ bool inter_party_disband(int party_id)
 	inter_party->tosql(&p->party,PS_BREAK,0);
 	mapif->party_broken(party_id, 1);
 	return 0;
-}
-
-//Request party dissolution
-int mapif_parse_BreakParty(int fd, int party_id)
-{
-	inter_party->disband(party_id);
-	return 0;
-}
-
-//Party sending the message
-int mapif_parse_PartyMessage(int fd, int party_id, int account_id, const char *mes, int len)
-{
-	return mapif->party_message(party_id,account_id,mes,len, fd);
 }
 
 bool inter_party_change_leader(int party_id, int account_id, int char_id)
@@ -804,13 +578,6 @@ bool inter_party_change_leader(int party_id, int account_id, int char_id)
 		}
 	}
 	return true;
-}
-
-int mapif_parse_PartyLeaderChange(int fd, int party_id, int account_id, int char_id)
-{
-	if (!inter_party->change_leader(party_id, account_id, char_id))
-		return 0;
-	return 1;
 }
 
 // Communication from the map server
