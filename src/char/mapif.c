@@ -26,6 +26,7 @@
 #include "char/int_auction.h"
 #include "char/int_guild.h"
 #include "char/int_homun.h"
+#include "char/int_mail.h"
 #include "char/int_rodex.h"
 #include "char/inter.h"
 #include "common/cbasetypes.h"
@@ -188,17 +189,232 @@ void mapif_send_users_count(int users)
 }
 
 
-void mapif_auction_message(int char_id, unsigned char result);
-void mapif_auction_sendlist(int fd, int char_id, short count, short pages, unsigned char *buf);
-void mapif_parse_auction_requestlist(int fd);
-void mapif_auction_register(int fd, struct auction_data *auction);
-void mapif_parse_auction_register(int fd);
-void mapif_auction_cancel(int fd, int char_id, unsigned char result);
-void mapif_parse_auction_cancel(int fd);
-void mapif_auction_close(int fd, int char_id, unsigned char result);
-void mapif_parse_auction_close(int fd);
-void mapif_auction_bid(int fd, int char_id, int bid, unsigned char result);
-void mapif_parse_auction_bid(int fd);
+void mapif_auction_message(int char_id, unsigned char result)
+{
+	unsigned char buf[74];
+
+	WBUFW(buf, 0) = 0x3854;
+	WBUFL(buf, 2) = char_id;
+	WBUFL(buf, 6) = result;
+	mapif->sendall(buf, 7);
+}
+
+void mapif_auction_sendlist(int fd, int char_id, short count, short pages, unsigned char *buf)
+{
+	int len = (sizeof(struct auction_data) * count) + 12;
+
+	nullpo_retv(buf);
+
+	WFIFOHEAD(fd, len);
+	WFIFOW(fd, 0) = 0x3850;
+	WFIFOW(fd, 2) = len;
+	WFIFOL(fd, 4) = char_id;
+	WFIFOW(fd, 8) = count;
+	WFIFOW(fd, 10) = pages;
+	memcpy(WFIFOP(fd, 12), buf, len - 12);
+	WFIFOSET(fd, len);
+}
+
+void mapif_parse_auction_requestlist(int fd)
+{
+	char searchtext[NAME_LENGTH];
+	int char_id = RFIFOL(fd, 4), len = sizeof(struct auction_data);
+	int price = RFIFOL(fd, 10);
+	short type = RFIFOW(fd, 8), page = max(1, RFIFOW(fd, 14));
+	unsigned char buf[5 * sizeof(struct auction_data)];
+	struct DBIterator *iter = db_iterator(inter_auction->db);
+	struct auction_data *auction;
+	short i = 0, j = 0, pages = 1;
+
+	memcpy(searchtext, RFIFOP(fd, 16), NAME_LENGTH);
+
+	for (auction = dbi_first(iter); dbi_exists(iter); auction = dbi_next(iter)) {
+		if ((type == 0 && auction->type != IT_ARMOR && auction->type != IT_PETARMOR)
+		 || (type == 1 && auction->type != IT_WEAPON)
+		 || (type == 2 && auction->type != IT_CARD)
+		 || (type == 3 && auction->type != IT_ETC)
+		 || (type == 4 && !strstr(auction->item_name, searchtext))
+		 || (type == 5 && auction->price > price)
+		 || (type == 6 && auction->seller_id != char_id)
+		 || (type == 7 && auction->buyer_id != char_id))
+			continue;
+
+		i++;
+		if (i > 5) {
+			// Counting Pages of Total Results (5 Results per Page)
+			pages++;
+			i = 1; // First Result of This Page
+		}
+
+		if (page != pages)
+			continue; // This is not the requested Page
+
+		memcpy(WBUFP(buf, j * len), auction, len);
+		j++; // Found Results
+	}
+	dbi_destroy(iter);
+
+	mapif->auction_sendlist(fd, char_id, j, pages, buf);
+}
+
+void mapif_auction_register(int fd, struct auction_data *auction)
+{
+	int len = sizeof(struct auction_data) + 4;
+
+	nullpo_retv(auction);
+
+	WFIFOHEAD(fd,len);
+	WFIFOW(fd, 0) = 0x3851;
+	WFIFOW(fd, 2) = len;
+	memcpy(WFIFOP(fd, 4), auction, sizeof(struct auction_data));
+	WFIFOSET(fd, len);
+}
+
+void mapif_parse_auction_register(int fd)
+{
+	struct auction_data auction;
+	if( RFIFOW(fd, 2) != sizeof(struct auction_data) + 4 )
+		return;
+
+	memcpy(&auction, RFIFOP(fd, 4), sizeof(struct auction_data));
+	if( inter_auction->count(auction.seller_id, false) < 5 )
+		auction.auction_id = inter_auction->create(&auction);
+
+	mapif->auction_register(fd, &auction);
+}
+
+void mapif_auction_cancel(int fd, int char_id, unsigned char result)
+{
+	WFIFOHEAD(fd, 7);
+	WFIFOW(fd, 0) = 0x3852;
+	WFIFOL(fd, 2) = char_id;
+	WFIFOB(fd, 6) = result;
+	WFIFOSET(fd, 7);
+}
+
+void mapif_parse_auction_cancel(int fd)
+{
+	int char_id = RFIFOL(fd, 2), auction_id = RFIFOL(fd, 6);
+	struct auction_data *auction;
+
+	if ((auction = (struct auction_data *)idb_get(inter_auction->db, auction_id)) == NULL) {
+		mapif->auction_cancel(fd, char_id, 1); // Bid Number is Incorrect
+		return;
+	}
+
+	if (auction->seller_id != char_id) {
+		mapif->auction_cancel(fd, char_id, 2); // You cannot end the auction
+		return;
+	}
+
+	if (auction->buyer_id > 0) {
+		mapif->auction_cancel(fd, char_id, 3); // An auction with at least one bidder cannot be canceled
+		return;
+	}
+
+	inter_mail->sendmail(0, "Auction Manager", auction->seller_id, auction->seller_name, "Auction", "Auction canceled.", 0, &auction->item);
+	inter_auction->delete_(auction);
+
+	mapif->auction_cancel(fd, char_id, 0); // The auction has been canceled
+}
+
+
+void mapif_auction_close(int fd, int char_id, unsigned char result)
+{
+	WFIFOHEAD(fd, 7);
+	WFIFOW(fd, 0) = 0x3853;
+	WFIFOL(fd, 2) = char_id;
+	WFIFOB(fd, 6) = result;
+	WFIFOSET(fd, 7);
+}
+
+void mapif_parse_auction_close(int fd)
+{
+	int char_id = RFIFOL(fd, 2), auction_id = RFIFOL(fd, 6);
+	struct auction_data *auction;
+
+	if ((auction = (struct auction_data *)idb_get(inter_auction->db, auction_id)) == NULL) {
+		mapif->auction_close(fd, char_id, 2); // Bid Number is Incorrect
+		return;
+	}
+
+	if (auction->seller_id != char_id) {
+		mapif->auction_close(fd, char_id, 1); // You cannot end the auction
+		return;
+	}
+
+	if (auction->buyer_id == 0) {
+		mapif->auction_close(fd, char_id, 1); // You cannot end the auction
+		return;
+	}
+
+	// Send Money to Seller
+	inter_mail->sendmail(0, "Auction Manager", auction->seller_id, auction->seller_name, "Auction", "Auction closed.", auction->price, NULL);
+	// Send Item to Buyer
+	inter_mail->sendmail(0, "Auction Manager", auction->buyer_id, auction->buyer_name, "Auction", "Auction winner.", 0, &auction->item);
+	mapif->auction_message(auction->buyer_id, 6); // You have won the auction
+	inter_auction->delete_(auction);
+
+	mapif->auction_close(fd, char_id, 0); // You have ended the auction
+}
+
+void mapif_auction_bid(int fd, int char_id, int bid, unsigned char result)
+{
+	WFIFOHEAD(fd, 11);
+	WFIFOW(fd, 0) = 0x3855;
+	WFIFOL(fd, 2) = char_id;
+	WFIFOL(fd, 6) = bid; // To Return Zeny
+	WFIFOB(fd, 10) = result;
+	WFIFOSET(fd, 11);
+}
+
+void mapif_parse_auction_bid(int fd)
+{
+	int char_id = RFIFOL(fd, 4), bid = RFIFOL(fd, 12);
+	unsigned int auction_id = RFIFOL(fd, 8);
+	struct auction_data *auction;
+
+	if ((auction = (struct auction_data *)idb_get(inter_auction->db, auction_id)) == NULL || auction->price >= bid || auction->seller_id == char_id) {
+		mapif->auction_bid(fd, char_id, bid, 0); // You have failed to bid in the auction
+		return;
+	}
+
+	if (inter_auction->count(char_id, true) > 4 && bid < auction->buynow && auction->buyer_id != char_id) {
+		mapif->auction_bid(fd, char_id, bid, 9); // You cannot place more than 5 bids at a time
+		return;
+	}
+
+	if (auction->buyer_id > 0) {
+		// Send Money back to the previous Buyer
+		if (auction->buyer_id != char_id) {
+			inter_mail->sendmail(0, "Auction Manager", auction->buyer_id, auction->buyer_name, "Auction", "Someone has placed a higher bid.", auction->price, NULL);
+			mapif->auction_message(auction->buyer_id, 7); // You have failed to win the auction
+		} else {
+			inter_mail->sendmail(0, "Auction Manager", auction->buyer_id, auction->buyer_name, "Auction", "You have placed a higher bid.", auction->price, NULL);
+		}
+	}
+
+	auction->buyer_id = char_id;
+	safestrncpy(auction->buyer_name, RFIFOP(fd, 16), NAME_LENGTH);
+	auction->price = bid;
+
+	if (bid >= auction->buynow) {
+		// Automatic won the auction
+		mapif->auction_bid(fd, char_id, bid - auction->buynow, 1); // You have successfully bid in the auction
+
+		inter_mail->sendmail(0, "Auction Manager", auction->buyer_id, auction->buyer_name, "Auction", "You have won the auction.", 0, &auction->item);
+		mapif->auction_message(char_id, 6); // You have won the auction
+		inter_mail->sendmail(0, "Auction Manager", auction->seller_id, auction->seller_name, "Auction", "Payment for your auction!.", auction->buynow, NULL);
+
+		inter_auction->delete_(auction);
+		return;
+	}
+
+	inter_auction->save(auction);
+
+	mapif->auction_bid(fd, char_id, 0, 1); // You have successfully bid in the auction
+}
+
 bool mapif_elemental_create(struct s_elemental *ele);
 bool mapif_elemental_save(const struct s_elemental *ele);
 bool mapif_elemental_load(int ele_id, int char_id, struct s_elemental *ele);
