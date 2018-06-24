@@ -24,6 +24,7 @@
 
 #include "char/char.h"
 #include "char/int_auction.h"
+#include "char/int_clan.h"
 #include "char/int_guild.h"
 #include "char/int_homun.h"
 #include "char/int_mail.h"
@@ -578,9 +579,32 @@ int mapif_parse_Registry(int fd);
 int mapif_parse_RegistryRequest(int fd);
 void mapif_namechange_ack(int fd, int account_id, int char_id, int type, int flag, const char *const name);
 int mapif_parse_NameChangeRequest(int fd);
+
 // Clan System
-int mapif_parse_ClanMemberKick(int fd, int clan_id, int kick_interval);
-int mapif_parse_ClanMemberCount(int fd, int clan_id, int kick_interval);
+int mapif_parse_ClanMemberKick(int fd, int clan_id, int kick_interval)
+{
+	int count = 0;
+
+	if (inter_clan->kick_inactive_members(clan_id, kick_interval) == 1)
+		count = inter_clan->count_members(clan_id, kick_interval);
+
+	WFIFOHEAD(fd, 10);
+	WFIFOW(fd, 0) = 0x3858;
+	WFIFOL(fd, 2) = clan_id;
+	WFIFOL(fd, 6) = count;
+	WFIFOSET(fd, 10);
+	return 0;
+}
+
+int mapif_parse_ClanMemberCount(int fd, int clan_id, int kick_interval)
+{
+	WFIFOHEAD(fd, 10);
+	WFIFOW(fd, 0) = 0x3858;
+	WFIFOL(fd, 2) = clan_id;
+	WFIFOL(fd, 6) = inter_clan->count_members(clan_id, kick_interval);
+	WFIFOSET(fd, 10);
+	return 0;
+}
 
 struct mapif_interface mapif_s;
 struct mapif_interface *mapif;
