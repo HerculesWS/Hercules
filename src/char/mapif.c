@@ -1421,9 +1421,6 @@ int mapif_pet_info(int fd, int account_id, struct s_pet *p);
 int mapif_pet_noinfo(int fd, int account_id);
 int mapif_save_pet_ack(int fd, int account_id, int flag);
 int mapif_delete_pet_ack(int fd, int flag);
-int mapif_create_pet(int fd, int account_id, int char_id, short pet_class, short pet_lv, short pet_egg_id,
-	short pet_equip, short intimate, short hungry, char rename_flag, char incubate, const char *pet_name);
-int mapif_load_pet(int fd, int account_id, int char_id, int pet_id);
 int mapif_save_pet(int fd, int account_id, const struct s_pet *data);
 int mapif_delete_pet(int fd, int pet_id);
 int mapif_parse_CreatePet(int fd);
@@ -1624,8 +1621,6 @@ void mapif_defaults(void) {
 	mapif->pet_noinfo = mapif_pet_noinfo;
 	mapif->save_pet_ack = mapif_save_pet_ack;
 	mapif->delete_pet_ack = mapif_delete_pet_ack;
-	mapif->create_pet = mapif_create_pet;
-	mapif->load_pet = mapif_load_pet;
 	mapif->save_pet = mapif_save_pet;
 	mapif->delete_pet = mapif_delete_pet;
 	mapif->parse_CreatePet = mapif_parse_CreatePet;

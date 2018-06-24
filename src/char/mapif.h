@@ -144,9 +144,6 @@ struct mapif_interface {
 	int (*pet_noinfo) (int fd, int account_id);
 	int (*save_pet_ack) (int fd, int account_id, int flag);
 	int (*delete_pet_ack) (int fd, int flag);
-	int (*create_pet) (int fd, int account_id, int char_id, short pet_class, short pet_lv, short pet_egg_id,
-			short pet_equip, short intimate, short hungry, char rename_flag, char incubate, const char *pet_name);
-	int (*load_pet) (int fd, int account_id, int char_id, int pet_id);
 	int (*save_pet) (int fd, int account_id, const struct s_pet *data);
 	int (*delete_pet) (int fd, int pet_id);
 	int (*parse_CreatePet) (int fd);

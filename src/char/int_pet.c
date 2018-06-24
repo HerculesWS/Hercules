@@ -222,7 +222,7 @@ int mapif_delete_pet_ack(int fd, int flag)
 	return 0;
 }
 
-int mapif_create_pet(int fd, int account_id, int char_id, short pet_class, short pet_lv, short pet_egg_id,
+struct s_pet *inter_pet_create(int account_id, int char_id, short pet_class, short pet_lv, short pet_egg_id,
 	short pet_equip, short intimate, short hungry, char rename_flag, char incubate, const char *pet_name)
 {
 	nullpo_ret(pet_name);
@@ -254,33 +254,29 @@ int mapif_create_pet(int fd, int account_id, int char_id, short pet_class, short
 
 	inter_pet->pt->pet_id = 0; //Signal NEW pet.
 	if ((inter_pet->pt->pet_id = inter_pet->tosql(inter_pet->pt)) != 0)
-		mapif->pet_created(fd, account_id, inter_pet->pt);
+		return inter_pet->pt;
 	else //Failed...
-		mapif->pet_created(fd, account_id, NULL);
-
-	return 0;
+		return NULL;
 }
 
-int mapif_load_pet(int fd, int account_id, int char_id, int pet_id)
+struct s_pet *inter_pet_load(int account_id, int char_id, int pet_id)
 {
 	memset(inter_pet->pt, 0, sizeof(struct s_pet));
 
 	inter_pet->fromsql(pet_id, inter_pet->pt);
 
 	if(inter_pet->pt!=NULL) {
-		if(inter_pet->pt->incubate == 1) {
+		if (inter_pet->pt->incubate == 1) {
 			inter_pet->pt->account_id = inter_pet->pt->char_id = 0;
-			mapif->pet_info(fd, account_id, inter_pet->pt);
+			return inter_pet->pt;
+		} else if (account_id == inter_pet->pt->account_id && char_id == inter_pet->pt->char_id) {
+			return inter_pet->pt;
+		} else {
+			return NULL;
 		}
-		else if(account_id == inter_pet->pt->account_id && char_id == inter_pet->pt->char_id)
-			mapif->pet_info(fd, account_id, inter_pet->pt);
-		else
-			mapif->pet_noinfo(fd, account_id);
 	}
-	else
-		mapif->pet_noinfo(fd, account_id);
 
-	return 0;
+	return NULL;
 }
 
 int mapif_save_pet(int fd, int account_id, const struct s_pet *data)
@@ -310,16 +306,35 @@ int mapif_delete_pet(int fd, int pet_id)
 
 int mapif_parse_CreatePet(int fd)
 {
+	int account_id;
+	struct s_pet *pet;
+
 	RFIFOHEAD(fd);
-	mapif->create_pet(fd, RFIFOL(fd, 2), RFIFOL(fd, 6), RFIFOW(fd, 10), RFIFOW(fd, 12), RFIFOW(fd, 14), RFIFOW(fd, 16), RFIFOW(fd, 18),
-		RFIFOW(fd, 20), RFIFOB(fd, 22), RFIFOB(fd, 23), RFIFOP(fd, 24));
+	account_id = RFIFOL(fd, 2);
+	pet = inter_pet->create(account_id, RFIFOL(fd, 6), RFIFOW(fd, 10), RFIFOW(fd, 12), RFIFOW(fd, 14),
+			RFIFOW(fd, 16), RFIFOW(fd, 18), RFIFOW(fd, 20), RFIFOB(fd, 22), RFIFOB(fd, 23), RFIFOP(fd, 24));
+
+	if (pet != NULL)
+		mapif->pet_created(fd, account_id, pet);
+	else
+		mapif->pet_created(fd, account_id, NULL);
+
 	return 0;
 }
 
 int mapif_parse_LoadPet(int fd)
 {
+	int account_id;
+	struct s_pet *pet;
+
 	RFIFOHEAD(fd);
-	mapif->load_pet(fd, RFIFOL(fd, 2), RFIFOL(fd, 6), RFIFOL(fd, 10));
+	account_id = RFIFOL(fd, 2);
+	pet = inter_pet->load(account_id, RFIFOL(fd, 6), RFIFOL(fd, 10));
+
+	if (pet != NULL)
+		mapif->pet_info(fd, account_id, pet);
+	else
+		mapif->pet_noinfo(fd, account_id);
 	return 0;
 }
 
@@ -363,4 +378,7 @@ void inter_pet_defaults(void)
 	inter_pet->sql_final = inter_pet_sql_final;
 	inter_pet->delete_ = inter_pet_delete;
 	inter_pet->parse_frommap = inter_pet_parse_frommap;
+
+	inter_pet->create = inter_pet_create;
+	inter_pet->load = inter_pet_load;
 }
