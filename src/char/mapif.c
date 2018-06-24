@@ -416,10 +416,6 @@ void mapif_parse_auction_bid(int fd)
 	mapif->auction_bid(fd, char_id, 0, 1); // You have successfully bid in the auction
 }
 
-bool mapif_elemental_create(struct s_elemental *ele);
-bool mapif_elemental_save(const struct s_elemental *ele);
-bool mapif_elemental_load(int ele_id, int char_id, struct s_elemental *ele);
-bool mapif_elemental_delete(int ele_id);
 void mapif_elemental_send(int fd, struct s_elemental *ele, unsigned char flag);
 void mapif_parse_elemental_create(int fd, const struct s_elemental *ele);
 void mapif_parse_elemental_load(int fd, int ele_id, int char_id);
@@ -634,10 +630,6 @@ void mapif_defaults(void) {
 	mapif->parse_auction_close = mapif_parse_auction_close;
 	mapif->auction_bid = mapif_auction_bid;
 	mapif->parse_auction_bid = mapif_parse_auction_bid;
-	mapif->elemental_create = mapif_elemental_create;
-	mapif->elemental_save = mapif_elemental_save;
-	mapif->elemental_load = mapif_elemental_load;
-	mapif->elemental_delete = mapif_elemental_delete;
 	mapif->elemental_send = mapif_elemental_send;
 	mapif->parse_elemental_create = mapif_parse_elemental_create;
 	mapif->parse_elemental_load = mapif_parse_elemental_load;

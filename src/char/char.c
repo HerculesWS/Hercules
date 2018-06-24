@@ -1815,7 +1815,7 @@ int char_delete_char_sql(int char_id)
 
 	/* remove elemental */
 	if (elemental_id)
-		mapif->elemental_delete(elemental_id);
+		inter_elemental->delete(elemental_id);
 
 	/* remove mercenary data */
 	inter_mercenary->owner_delete(char_id);

@@ -51,10 +51,6 @@ struct mapif_interface {
 	void (*parse_auction_close) (int fd);
 	void (*auction_bid) (int fd, int char_id, int bid, unsigned char result);
 	void (*parse_auction_bid) (int fd);
-	bool (*elemental_create) (struct s_elemental *ele);
-	bool (*elemental_save) (const struct s_elemental *ele);
-	bool (*elemental_load) (int ele_id, int char_id, struct s_elemental *ele);
-	bool (*elemental_delete) (int ele_id);
 	void (*elemental_send) (int fd, struct s_elemental *ele, unsigned char flag);
 	void (*parse_elemental_create) (int fd, const struct s_elemental *ele);
 	void (*parse_elemental_load) (int fd, int ele_id, int char_id);
