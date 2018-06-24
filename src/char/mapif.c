@@ -27,6 +27,7 @@
 #include "char/int_clan.h"
 #include "char/int_guild.h"
 #include "char/int_homun.h"
+#include "char/int_elemental.h"
 #include "char/int_mail.h"
 #include "char/int_rodex.h"
 #include "char/inter.h"
@@ -416,13 +417,65 @@ void mapif_parse_auction_bid(int fd)
 	mapif->auction_bid(fd, char_id, 0, 1); // You have successfully bid in the auction
 }
 
-void mapif_elemental_send(int fd, struct s_elemental *ele, unsigned char flag);
-void mapif_parse_elemental_create(int fd, const struct s_elemental *ele);
-void mapif_parse_elemental_load(int fd, int ele_id, int char_id);
-void mapif_elemental_deleted(int fd, unsigned char flag);
-void mapif_parse_elemental_delete(int fd, int ele_id);
-void mapif_elemental_saved(int fd, unsigned char flag);
-void mapif_parse_elemental_save(int fd, const struct s_elemental *ele);
+void mapif_elemental_send(int fd, struct s_elemental *ele, unsigned char flag)
+{
+	int size = sizeof(struct s_elemental) + 5;
+
+	nullpo_retv(ele);
+	WFIFOHEAD(fd, size);
+	WFIFOW(fd, 0) = 0x387c;
+	WFIFOW(fd, 2) = size;
+	WFIFOB(fd, 4) = flag;
+	memcpy(WFIFOP(fd, 5), ele, sizeof(struct s_elemental));
+	WFIFOSET(fd, size);
+}
+
+void mapif_parse_elemental_create(int fd, const struct s_elemental *ele)
+{
+	struct s_elemental ele_;
+	bool result;
+
+	memcpy(&ele_, ele, sizeof(ele_));
+
+	result = inter_elemental->create(&ele_);
+	mapif->elemental_send(fd, &ele_, result);
+}
+
+void mapif_parse_elemental_load(int fd, int ele_id, int char_id)
+{
+	struct s_elemental ele;
+	bool result = inter_elemental->load(ele_id, char_id, &ele);
+	mapif->elemental_send(fd, &ele, result);
+}
+
+void mapif_elemental_deleted(int fd, unsigned char flag)
+{
+	WFIFOHEAD(fd, 3);
+	WFIFOW(fd, 0) = 0x387d;
+	WFIFOB(fd, 2) = flag;
+	WFIFOSET(fd, 3);
+}
+
+void mapif_parse_elemental_delete(int fd, int ele_id)
+{
+	bool result = inter_elemental->delete(ele_id);
+	mapif->elemental_deleted(fd, result);
+}
+
+void mapif_elemental_saved(int fd, unsigned char flag)
+{
+	WFIFOHEAD(fd, 3);
+	WFIFOW(fd, 0) = 0x387e;
+	WFIFOB(fd, 2) = flag;
+	WFIFOSET(fd, 3);
+}
+
+void mapif_parse_elemental_save(int fd, const struct s_elemental *ele)
+{
+	bool result = inter_elemental->save(ele);
+	mapif->elemental_saved(fd, result);
+}
+
 int mapif_guild_created(int fd, int account_id, struct guild *g);
 int mapif_guild_noinfo(int fd, int guild_id);
 int mapif_guild_info(int fd, struct guild *g);
