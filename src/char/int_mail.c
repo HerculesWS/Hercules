@@ -242,32 +242,6 @@ static bool inter_mail_loadmessage(int mail_id, struct mail_message* msg)
 	return true;
 }
 
-void mapif_mail_sendinbox(int fd, int char_id, unsigned char flag, struct mail_data *md)
-{
-	nullpo_retv(md);
-	//FIXME: dumping the whole structure like this is unsafe [ultramage]
-	WFIFOHEAD(fd, sizeof(struct mail_data) + 9);
-	WFIFOW(fd,0) = 0x3848;
-	WFIFOW(fd,2) = sizeof(struct mail_data) + 9;
-	WFIFOL(fd,4) = char_id;
-	WFIFOB(fd,8) = flag;
-	memcpy(WFIFOP(fd,9),md,sizeof(struct mail_data));
-	WFIFOSET(fd,WFIFOW(fd,2));
-}
-
-/*==========================================
- * Client Inbox Request
- *------------------------------------------*/
-void mapif_parse_mail_requestinbox(int fd)
-{
-	int char_id = RFIFOL(fd,2);
-	unsigned char flag = RFIFOB(fd,6);
-	struct mail_data md;
-	memset(&md, 0, sizeof(md));
-	inter_mail->fromsql(char_id, &md);
-	mapif->mail_sendinbox(fd, char_id, flag, &md);
-}
-
 /*==========================================
  * Mark mail as 'Read'
  *------------------------------------------*/
@@ -278,14 +252,6 @@ bool inter_mail_mark_read(int mail_id)
 		return false;
 	}
 	return true;
-}
-/*==========================================
- * Mark mail as 'Read'
- *------------------------------------------*/
-void mapif_parse_mail_read(int fd)
-{
-	int mail_id = RFIFOL(fd,2);
-	inter_mail->mark_read(mail_id);
 }
 
 /*==========================================
@@ -315,18 +281,6 @@ static bool inter_mail_DeleteAttach(int mail_id)
 	return true;
 }
 
-void mapif_mail_sendattach(int fd, int char_id, struct mail_message *msg)
-{
-	nullpo_retv(msg);
-	WFIFOHEAD(fd, sizeof(struct item) + 12);
-	WFIFOW(fd,0) = 0x384a;
-	WFIFOW(fd,2) = sizeof(struct item) + 12;
-	WFIFOL(fd,4) = char_id;
-	WFIFOL(fd,8) = (msg->zeny > 0)?msg->zeny:0;
-	memcpy(WFIFOP(fd,12), &msg->item, sizeof(struct item));
-	WFIFOSET(fd,WFIFOW(fd,2));
-}
-
 bool inter_mail_get_attachment(int char_id, int mail_id, struct mail_message *msg)
 {
 	nullpo_retr(false, msg);
@@ -349,31 +303,6 @@ bool inter_mail_get_attachment(int char_id, int mail_id, struct mail_message *ms
 	return true;
 }
 
-void mapif_parse_mail_getattach(int fd)
-{
-	struct mail_message msg = { 0 };
-	int char_id = RFIFOL(fd, 2);
-	int mail_id = RFIFOL(fd, 6);
-
-	if (!inter_mail->get_attachment(char_id, mail_id, &msg))
-		return;
-
-	mapif->mail_sendattach(fd, char_id, &msg);
-}
-
-/*==========================================
- * Delete Mail
- *------------------------------------------*/
-void mapif_mail_delete(int fd, int char_id, int mail_id, bool failed)
-{
-	WFIFOHEAD(fd,11);
-	WFIFOW(fd,0) = 0x384b;
-	WFIFOL(fd,2) = char_id;
-	WFIFOL(fd,6) = mail_id;
-	WFIFOB(fd,10) = failed;
-	WFIFOSET(fd,11);
-}
-
 bool inter_mail_delete(int char_id, int mail_id)
 {
 	if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `id` = '%d'", mail_db, mail_id)) {
@@ -381,45 +310,6 @@ bool inter_mail_delete(int char_id, int mail_id)
 		return false;
 	}
 	return true;
-}
-
-void mapif_parse_mail_delete(int fd)
-{
-	int char_id = RFIFOL(fd,2);
-	int mail_id = RFIFOL(fd,6);
-	bool failed = !inter_mail->delete(char_id, mail_id);
-	mapif->mail_delete(fd, char_id, mail_id, failed);
-}
-
-/*==========================================
- * Report New Mail to Map Server
- *------------------------------------------*/
-void mapif_mail_new(struct mail_message *msg)
-{
-	unsigned char buf[74];
-
-	if( !msg || !msg->id )
-		return;
-
-	WBUFW(buf,0) = 0x3849;
-	WBUFL(buf,2) = msg->dest_id;
-	WBUFL(buf,6) = msg->id;
-	memcpy(WBUFP(buf,10), msg->send_name, NAME_LENGTH);
-	memcpy(WBUFP(buf,34), msg->title, MAIL_TITLE_LENGTH);
-	mapif->sendall(buf, 74);
-}
-
-/*==========================================
- * Return Mail
- *------------------------------------------*/
-void mapif_mail_return(int fd, int char_id, int mail_id, int new_mail)
-{
-	WFIFOHEAD(fd,11);
-	WFIFOW(fd,0) = 0x384c;
-	WFIFOL(fd,2) = char_id;
-	WFIFOL(fd,6) = mail_id;
-	WFIFOB(fd,10) = (new_mail == 0);
-	WFIFOSET(fd,11);
 }
 
 bool inter_mail_return_message(int char_id, int mail_id, int *new_mail)
@@ -459,33 +349,6 @@ bool inter_mail_return_message(int char_id, int mail_id, int *new_mail)
 
 }
 
-void mapif_parse_mail_return(int fd)
-{
-	int char_id = RFIFOL(fd,2);
-	int mail_id = RFIFOL(fd,6);
-	int new_mail = 0;
-
-	if (!inter_mail->return_message(char_id, mail_id, &new_mail))
-		return;
-
-	mapif->mail_return(fd, char_id, mail_id, new_mail);
-}
-
-/*==========================================
- * Send Mail
- *------------------------------------------*/
-void mapif_mail_send(int fd, struct mail_message* msg)
-{
-	int len = sizeof(struct mail_message) + 4;
-
-	nullpo_retv(msg);
-	WFIFOHEAD(fd,len);
-	WFIFOW(fd,0) = 0x384d;
-	WFIFOW(fd,2) = len;
-	memcpy(WFIFOP(fd,4), msg, sizeof(struct mail_message));
-	WFIFOSET(fd,len);
-}
-
 bool inter_mail_send(int account_id, struct mail_message *msg)
 {
 	char esc_name[NAME_LENGTH*2+1];
@@ -512,23 +375,6 @@ bool inter_mail_send(int account_id, struct mail_message *msg)
 		msg->id = inter_mail->savemessage(msg);
 
 	return true;
-}
-
-void mapif_parse_mail_send(int fd)
-{
-	struct mail_message msg;
-	int account_id = 0;
-
-	if(RFIFOW(fd,2) != 8 + sizeof(struct mail_message))
-		return;
-
-	account_id = RFIFOL(fd,4);
-	memcpy(&msg, RFIFOP(fd,8), sizeof(struct mail_message));
-
-	inter_mail->send(account_id, &msg);
-
-	mapif->mail_send(fd, &msg); // notify sender
-	mapif->mail_new(&msg); // notify recipient
 }
 
 void inter_mail_sendmail(int send_id, const char* send_name, int dest_id, const char* dest_name, const char* title, const char* body, int zeny, struct item *item)
