@@ -32,9 +32,11 @@
 #include "char/int_mercenary.h"
 #include "char/int_party.h"
 #include "char/int_pet.h"
+#include "char/int_quest.h"
 #include "char/int_rodex.h"
 #include "char/inter.h"
 #include "common/cbasetypes.h"
+#include "common/memmgr.h"
 #include "common/mmo.h"
 #include "common/nullpo.h"
 #include "common/random.h"
@@ -1556,10 +1558,79 @@ int mapif_parse_DeletePet(int fd)
 	return 0;
 }
 
-void mapif_quest_save_ack(int fd, int char_id, bool success);
-int mapif_parse_quest_save(int fd);
-void mapif_send_quests(int fd, int char_id, struct quest *tmp_questlog, int num_quests);
-int mapif_parse_quest_load(int fd);
+void mapif_quest_save_ack(int fd, int char_id, bool success)
+{
+	WFIFOHEAD(fd, 7);
+	WFIFOW(fd, 0) = 0x3861;
+	WFIFOL(fd, 2) = char_id;
+	WFIFOB(fd, 6) = success ? 1 : 0;
+	WFIFOSET(fd, 7);
+}
+
+/**
+ * Handles the save request from mapserver for a character's questlog.
+ *
+ * Received quests are saved, and an ack is sent back to the map server.
+ *
+ * @see inter_parse_frommap
+ */
+int mapif_parse_quest_save(int fd)
+{
+	int num = (RFIFOW(fd, 2) - 8) / sizeof(struct quest);
+	int char_id = RFIFOL(fd, 4);
+	const struct quest *qd = NULL;
+	bool success;
+
+	if (num > 0)
+		qd = RFIFOP(fd,8);
+
+	success = inter_quest->save(char_id, qd, num);
+
+	// Send ack
+	mapif->quest_save_ack(fd, char_id, success);
+
+	return 0;
+}
+
+void mapif_send_quests(int fd, int char_id, struct quest *tmp_questlog, int num_quests)
+{
+	WFIFOHEAD(fd,num_quests*sizeof(struct quest) + 8);
+	WFIFOW(fd, 0) = 0x3860;
+	WFIFOW(fd, 2) = num_quests*sizeof(struct quest) + 8;
+	WFIFOL(fd, 4) = char_id;
+
+	if (num_quests > 0) {
+		nullpo_retv(tmp_questlog);
+		memcpy(WFIFOP(fd, 8), tmp_questlog, sizeof(struct quest) * num_quests);
+	}
+
+	WFIFOSET(fd, num_quests * sizeof(struct quest) + 8);
+}
+
+/**
+ * Sends questlog to the map server
+ *
+ * Note: Completed quests (state == Q_COMPLETE) are guaranteed to be sent last
+ * and the map server relies on this behavior (once the first Q_COMPLETE quest,
+ * all of them are considered to be Q_COMPLETE)
+ *
+ * @see inter_parse_frommap
+ */
+int mapif_parse_quest_load(int fd)
+{
+	int char_id = RFIFOL(fd,2);
+	struct quest *tmp_questlog = NULL;
+	int num_quests;
+
+	tmp_questlog = inter_quest->fromsql(char_id, &num_quests);
+	mapif->send_quests(fd, char_id, tmp_questlog, num_quests);
+
+	if (tmp_questlog != NULL)
+		aFree(tmp_questlog);
+
+	return 0;
+}
+
 /* RoDEX */
 int mapif_parse_rodex_requestinbox(int fd);
 void mapif_rodex_sendinbox(int fd, int char_id, int8 opentype, int8 flag, int count, int64 mail_id, struct rodex_maillist *mails);
