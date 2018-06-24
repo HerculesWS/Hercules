@@ -34,12 +34,12 @@
 
 #include <stdlib.h>
 
-struct ipban_interface ipban_s;
+static struct ipban_interface ipban_s;
 struct ipban_interface *ipban;
-struct s_ipban_dbs ipbandbs;
+static struct s_ipban_dbs ipbandbs;
 
 // initialize
-void ipban_init(void)
+static void ipban_init(void)
 {
 	ipban->inited = true;
 
@@ -68,7 +68,7 @@ void ipban_init(void)
 }
 
 // finalize
-void ipban_final(void)
+static void ipban_final(void)
 {
 	if (!login->config->ipban)
 		return;// ipban disabled
@@ -94,7 +94,7 @@ void ipban_final(void)
  * @retval false in case of error.
 
  */
-bool ipban_config_read_inter(const char *filename, bool imported)
+static bool ipban_config_read_inter(const char *filename, bool imported)
 {
 	struct config_t config;
 	struct config_setting_t *setting = NULL;
@@ -138,7 +138,7 @@ bool ipban_config_read_inter(const char *filename, bool imported)
  *
  * @retval false in case of error.
  */
-bool ipban_config_read_connection(const char *filename, struct config_t *config, bool imported)
+static bool ipban_config_read_connection(const char *filename, struct config_t *config, bool imported)
 {
 	struct config_setting_t *setting = NULL;
 
@@ -172,7 +172,7 @@ bool ipban_config_read_connection(const char *filename, struct config_t *config,
  *
  * @retval false in case of error.
  */
-bool ipban_config_read_dynamic(const char *filename, struct config_t *config, bool imported)
+static bool ipban_config_read_dynamic(const char *filename, struct config_t *config, bool imported)
 {
 	struct config_setting_t *setting = NULL;
 
@@ -203,7 +203,7 @@ bool ipban_config_read_dynamic(const char *filename, struct config_t *config, bo
  *
  * @retval false in case of error.
  */
-bool ipban_config_read(const char *filename, struct config_t *config, bool imported)
+static bool ipban_config_read(const char *filename, struct config_t *config, bool imported)
 {
 	struct config_setting_t *setting = NULL;
 	bool retval = true;
@@ -234,7 +234,7 @@ bool ipban_config_read(const char *filename, struct config_t *config, bool impor
 }
 
 // check ip against active bans list
-bool ipban_check(uint32 ip)
+static bool ipban_check(uint32 ip)
 {
 	uint8* p = (uint8*)&ip;
 	char* data = NULL;
@@ -262,7 +262,7 @@ bool ipban_check(uint32 ip)
 }
 
 // log failed attempt
-void ipban_log(uint32 ip)
+static void ipban_log(uint32 ip)
 {
 	unsigned long failures;
 
@@ -284,7 +284,8 @@ void ipban_log(uint32 ip)
 }
 
 // remove expired bans
-int ipban_cleanup(int tid, int64 tick, int id, intptr_t data) {
+static int ipban_cleanup(int tid, int64 tick, int id, intptr_t data)
+{
 	if (!login->config->ipban)
 		return 0;// ipban disabled
 
@@ -294,7 +295,8 @@ int ipban_cleanup(int tid, int64 tick, int id, intptr_t data) {
 	return 0;
 }
 
-void ipban_defaults(void) {
+void ipban_defaults(void)
+{
 	ipban = &ipban_s;
 
 	ipban->dbs = &ipbandbs;

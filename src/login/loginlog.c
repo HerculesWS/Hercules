@@ -34,13 +34,13 @@
 #include <stdlib.h> // exit
 
 
-struct loginlog_interface loginlog_s;
+static struct loginlog_interface loginlog_s;
 struct loginlog_interface *loginlog;
-struct s_loginlog_dbs loginlogdbs;
+static struct s_loginlog_dbs loginlogdbs;
 
 
 // Returns the number of failed login attempts by the ip in the last minutes.
-unsigned long loginlog_failedattempts(uint32 ip, unsigned int minutes)
+static unsigned long loginlog_failedattempts(uint32 ip, unsigned int minutes)
 {
 	unsigned long failures = 0;
 
@@ -66,7 +66,7 @@ unsigned long loginlog_failedattempts(uint32 ip, unsigned int minutes)
  * Records an event in the login log
  *---------------------------------------------*/
 // TODO: add an enum of rcode values
-void loginlog_log(uint32 ip, const char* username, int rcode, const char* message)
+static void loginlog_log(uint32 ip, const char *username, int rcode, const char *message)
 {
 	char esc_username[NAME_LENGTH*2+1];
 	char esc_message[255*2+1];
@@ -88,7 +88,7 @@ void loginlog_log(uint32 ip, const char* username, int rcode, const char* messag
 		Sql_ShowDebug(loginlog->sql_handle);
 }
 
-bool loginlog_init(void)
+static bool loginlog_init(void)
 {
 	loginlog->sql_handle = SQL->Malloc();
 
@@ -107,7 +107,7 @@ bool loginlog_init(void)
 	return true;
 }
 
-bool loginlog_final(void)
+static bool loginlog_final(void)
 {
 	SQL->Free(loginlog->sql_handle);
 	loginlog->sql_handle = NULL;
@@ -124,7 +124,7 @@ bool loginlog_final(void)
  *
  * @retval false in case of error.
  */
-bool loginlog_config_read_names(const char *filename, struct config_t *config, bool imported)
+static bool loginlog_config_read_names(const char *filename, struct config_t *config, bool imported)
 {
 	struct config_setting_t *setting = NULL;
 
@@ -153,7 +153,7 @@ bool loginlog_config_read_names(const char *filename, struct config_t *config, b
  *
  * @retval false in case of error.
  */
-bool loginlog_config_read_log(const char *filename, struct config_t *config, bool imported)
+static bool loginlog_config_read_log(const char *filename, struct config_t *config, bool imported)
 {
 	struct config_setting_t *setting = NULL;
 
@@ -188,7 +188,7 @@ bool loginlog_config_read_log(const char *filename, struct config_t *config, boo
  *
  * @retval false in case of error.
  **/
-bool loginlog_config_read(const char *filename, bool imported)
+static bool loginlog_config_read(const char *filename, bool imported)
 {
 	struct config_t config;
 	const char *import = NULL;
