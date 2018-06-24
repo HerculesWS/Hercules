@@ -504,7 +504,6 @@ int mapif_parse_GuildBasicInfoChange(int fd, int guild_id, int type, const void 
 int mapif_parse_GuildMemberInfoChange(int fd, int guild_id, int account_id, int char_id, int type, const char *data, int len);
 int mapif_parse_GuildPosition(int fd, int guild_id, int idx, const struct guild_position *p);
 int mapif_parse_GuildSkillUp(int fd, int guild_id, uint16 skill_id, int account_id, int max);
-int mapif_parse_GuildDeleteAlliance(struct guild *g, int guild_id, int account_id1, int account_id2, int flag);
 int mapif_parse_GuildAlliance(int fd, int guild_id1, int guild_id2, int account_id1, int account_id2, int flag);
 int mapif_parse_GuildNotice(int fd, int guild_id, const char *mes1, const char *mes2);
 int mapif_parse_GuildEmblem(int fd, int len, int guild_id, int dummy, const char *data);
@@ -718,7 +717,6 @@ void mapif_defaults(void) {
 	mapif->parse_GuildMemberInfoChange = mapif_parse_GuildMemberInfoChange;
 	mapif->parse_GuildPosition = mapif_parse_GuildPosition;
 	mapif->parse_GuildSkillUp = mapif_parse_GuildSkillUp;
-	mapif->parse_GuildDeleteAlliance = mapif_parse_GuildDeleteAlliance;
 	mapif->parse_GuildAlliance = mapif_parse_GuildAlliance;
 	mapif->parse_GuildNotice = mapif_parse_GuildNotice;
 	mapif->parse_GuildEmblem = mapif_parse_GuildEmblem;

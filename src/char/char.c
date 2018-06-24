@@ -1887,9 +1887,9 @@ int char_delete_char_sql(int char_id)
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `guild_id` FROM `%s` WHERE `char_id` = '%d'", guild_db, char_id) )
 		Sql_ShowDebug(inter->sql_handle);
 	else if( SQL->NumRows(inter->sql_handle) > 0 )
-		mapif->parse_BreakGuild(0,guild_id);
+		inter_guild->disband(guild_id);
 	else if( guild_id )
-		inter_guild->leave(guild_id, account_id, char_id);// Leave your guild.
+		inter_guild->leave(guild_id, account_id, char_id, 0, "** Character Deleted **", -1);// Leave your guild.
 	return 0;
 }
 
