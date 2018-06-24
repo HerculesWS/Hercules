@@ -133,7 +133,10 @@ int console_parse_key_pressed(void)
  **/
 CPCMD_C(exit, server)
 {
-	core->runflag = 0;
+	if (core->shutdown_callback != NULL)
+		core->shutdown_callback();
+	else
+		core->runflag = CORE_ST_STOP;
 }
 
 /**
