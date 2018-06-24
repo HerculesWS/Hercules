@@ -185,65 +185,6 @@ bool inter_mercenary_delete(int merc_id)
 	return true;
 }
 
-void mapif_mercenary_send(int fd, struct s_mercenary *merc, unsigned char flag)
-{
-	int size = sizeof(struct s_mercenary) + 5;
-
-	nullpo_retv(merc);
-	WFIFOHEAD(fd,size);
-	WFIFOW(fd,0) = 0x3870;
-	WFIFOW(fd,2) = size;
-	WFIFOB(fd,4) = flag;
-	memcpy(WFIFOP(fd,5),merc,sizeof(struct s_mercenary));
-	WFIFOSET(fd,size);
-}
-
-void mapif_parse_mercenary_create(int fd, const struct s_mercenary *merc)
-{
-	struct s_mercenary merc_;
-	bool result;
-
-	memcpy(&merc_, merc, sizeof(merc_));
-
-	result = inter_mercenary->create(&merc_);
-	mapif->mercenary_send(fd, &merc_, result);
-}
-
-void mapif_parse_mercenary_load(int fd, int merc_id, int char_id)
-{
-	struct s_mercenary merc;
-	bool result = inter_mercenary->load(merc_id, char_id, &merc);
-	mapif->mercenary_send(fd, &merc, result);
-}
-
-void mapif_mercenary_deleted(int fd, unsigned char flag)
-{
-	WFIFOHEAD(fd,3);
-	WFIFOW(fd,0) = 0x3871;
-	WFIFOB(fd,2) = flag;
-	WFIFOSET(fd,3);
-}
-
-void mapif_parse_mercenary_delete(int fd, int merc_id)
-{
-	bool result = inter_mercenary->delete(merc_id);
-	mapif->mercenary_deleted(fd, result);
-}
-
-void mapif_mercenary_saved(int fd, unsigned char flag)
-{
-	WFIFOHEAD(fd,3);
-	WFIFOW(fd,0) = 0x3872;
-	WFIFOB(fd,2) = flag;
-	WFIFOSET(fd,3);
-}
-
-void mapif_parse_mercenary_save(int fd, struct s_mercenary* merc)
-{
-	bool result = inter_mercenary->save(merc);
-	mapif->mercenary_saved(fd, result);
-}
-
 int inter_mercenary_sql_init(void)
 {
 	return 0;
