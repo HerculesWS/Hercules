@@ -113,8 +113,6 @@ struct malloc_interface *iMalloc;
 #error Unsupported OS
 #endif
 
-#endif
-
 void* aMalloc_(size_t size, const char *file, int line, const char *func)
 {
 	void *ret = MALLOC(size, file, line, func);
@@ -151,9 +149,6 @@ void* aReallocz_(void *p, size_t size, const char *file, int line, const char *f
 {
 	unsigned char *ret = NULL;
 	// ShowMessage("%s:%d: in func %s: aReallocz %p %ld\n",file,line,func,p,size);
-#ifdef USE_MEMMGR
-	ret = REALLOC(p, size, file, line, func);
-#else
 	if (p != NULL) {
 		size_t newSize;
 		size_t oldSize = BUFFER_SIZE(p);
@@ -166,7 +161,6 @@ void* aReallocz_(void *p, size_t size, const char *file, int line, const char *f
 		if (ret != NULL)
 			memset(ret, 0, BUFFER_SIZE(ret));
 	}
-#endif
 	if (ret == NULL) {
 		ShowFatalError("%s:%d: in func %s: aRealloc error out of memory!\n",file,line,func);
 		exit(EXIT_FAILURE);
@@ -222,8 +216,7 @@ void aFree_(void *p, const char *file, int line, const char *func)
 	//p = NULL;
 }
 
-
-#ifdef USE_MEMMGR
+#else // USE_MEMMGR
 
 #if defined(DEBUG)
 #define DEBUG_MEMMGR
@@ -232,21 +225,21 @@ void aFree_(void *p, const char *file, int line, const char *func)
 /* USE_MEMMGR */
 
 /*
-* Memory manager
-*     able to handle malloc and free efficiently
-*     Since the complex processing, I might be slightly heavier.
-*
-* (I'm sorry for the poor description ^ ^;) such as data structures
-*      Divided into "blocks" of a plurality of memory, "unit" of a plurality of blocks further
-*      I have to divide. Size of the unit, a plurality of distribution equal to the capacity of one block
-*      That's what you have. For example, if one unit of 32KB, one block 1 Yu 32Byte
-*      Knit, or are able to gather 1024, gathered 512 units 64Byte
-*      I can be or have. (Excluding padding, the unit_head)
-*
-*     Lead-linked list (block_prev, block_next) in each other is the same size block
-*       Linked list (hash_prev, hash_nect) even among such one in the block with the figure
-*       I like to have. Thus, reuse of memory no longer needed can be performed efficiently.
-*/
+ * Memory manager
+ *     able to handle malloc and free efficiently
+ *     Since the complex processing, I might be slightly heavier.
+ *
+ * (I'm sorry for the poor description ^ ^;) such as data structures
+ *      Divided into "blocks" of a plurality of memory, "unit" of a plurality of blocks further
+ *      I have to divide. Size of the unit, a plurality of distribution equal to the capacity of one block
+ *      That's what you have. For example, if one unit of 32KB, one block 1 Yu 32Byte
+ *      Knit, or are able to gather 1024, gathered 512 units 64Byte
+ *      I can be or have. (Excluding padding, the unit_head)
+ *
+ *     Lead-linked list (block_prev, block_next) in each other is the same size block
+ *       Linked list (hash_prev, hash_nect) even among such one in the block with the figure
+ *       I like to have. Thus, reuse of memory no longer needed can be performed efficiently.
+ */
 
 /* Alignment of the block */
 #define BLOCK_ALIGNMENT1 16
@@ -919,9 +912,9 @@ static void memmgr_init_messages(void)
 
 
 /*======================================
-* Initialize
-*--------------------------------------
-*/
+ * Initialize
+ *--------------------------------------
+ */
 
 
 /// Tests the memory for errors and memory leaks.
