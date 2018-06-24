@@ -37,7 +37,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct inter_elemental_interface inter_elemental_s;
+static struct inter_elemental_interface inter_elemental_s;
 struct inter_elemental_interface *inter_elemental;
 
 /**
@@ -50,7 +50,7 @@ struct inter_elemental_interface *inter_elemental;
  * @param[in,out] ele The new elemental's data.
  * @retval false in case of errors.
  */
-bool inter_elemental_create(struct s_elemental *ele)
+static bool inter_elemental_create(struct s_elemental *ele)
 {
 	nullpo_retr(false, ele);
 	Assert_retr(false, ele->elemental_id == 0);
@@ -73,7 +73,7 @@ bool inter_elemental_create(struct s_elemental *ele)
  * @param ele The elemental's data.
  * @retval false in case of errors.
  */
-bool inter_elemental_save(const struct s_elemental *ele)
+static bool inter_elemental_save(const struct s_elemental *ele)
 {
 	nullpo_retr(false, ele);
 	Assert_retr(false, ele->elemental_id > 0);
@@ -90,7 +90,7 @@ bool inter_elemental_save(const struct s_elemental *ele)
 	return true;
 }
 
-bool inter_elemental_load(int ele_id, int char_id, struct s_elemental *ele)
+static bool inter_elemental_load(int ele_id, int char_id, struct s_elemental *ele)
 {
 	char* data;
 
@@ -135,7 +135,7 @@ bool inter_elemental_load(int ele_id, int char_id, struct s_elemental *ele)
 	return true;
 }
 
-bool inter_elemental_delete(int ele_id)
+static bool inter_elemental_delete(int ele_id)
 {
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `ele_id` = '%d'", elemental_db, ele_id) ) {
 		Sql_ShowDebug(inter->sql_handle);
@@ -145,18 +145,21 @@ bool inter_elemental_delete(int ele_id)
 	return true;
 }
 
-void inter_elemental_sql_init(void) {
+static void inter_elemental_sql_init(void)
+{
 	return;
 }
 
-void inter_elemental_sql_final(void) {
+static void inter_elemental_sql_final(void)
+{
 	return;
 }
 
 /*==========================================
  * Inter Packets
  *------------------------------------------*/
-int inter_elemental_parse_frommap(int fd) {
+static int inter_elemental_parse_frommap(int fd)
+{
 	unsigned short cmd = RFIFOW(fd,0);
 
 	switch (cmd) {

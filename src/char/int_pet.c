@@ -37,7 +37,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct inter_pet_interface inter_pet_s;
+static struct inter_pet_interface inter_pet_s;
 struct inter_pet_interface *inter_pet;
 
 /**
@@ -51,7 +51,7 @@ struct inter_pet_interface *inter_pet;
  * @return The ID of the saved pet.
  * @retval 0 in case of errors.
  */
-int inter_pet_tosql(const struct s_pet *p)
+static int inter_pet_tosql(const struct s_pet *p)
 {
 	//`pet` (`pet_id`, `class`,`name`,`account_id`,`char_id`,`level`,`egg_id`,`equip`,`intimate`,`hungry`,`rename_flag`,`incubate`)
 	char esc_name[NAME_LENGTH*2+1];// escaped pet name
@@ -91,7 +91,7 @@ int inter_pet_tosql(const struct s_pet *p)
 	return pet_id;
 }
 
-int inter_pet_fromsql(int pet_id, struct s_pet* p)
+static int inter_pet_fromsql(int pet_id, struct s_pet *p)
 {
 	char* data;
 	size_t len;
@@ -138,17 +138,21 @@ int inter_pet_fromsql(int pet_id, struct s_pet* p)
 }
 //----------------------------------------------
 
-int inter_pet_sql_init(void) {
+static int inter_pet_sql_init(void)
+{
 	//memory alloc
 	inter_pet->pt = (struct s_pet*)aCalloc(sizeof(struct s_pet), 1);
 	return 0;
 }
-void inter_pet_sql_final(void) {
+
+static void inter_pet_sql_final(void)
+{
 	if (inter_pet->pt) aFree(inter_pet->pt);
 	return;
 }
 //----------------------------------
-int inter_pet_delete(int pet_id) {
+static int inter_pet_delete(int pet_id)
+{
 	ShowInfo("delete pet request: %d...\n",pet_id);
 
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `pet_id`='%d'", pet_db, pet_id) )
@@ -156,7 +160,7 @@ int inter_pet_delete(int pet_id) {
 	return 0;
 }
 //------------------------------------------------------
-struct s_pet *inter_pet_create(int account_id, int char_id, short pet_class, short pet_lv, short pet_egg_id,
+static struct s_pet *inter_pet_create(int account_id, int char_id, short pet_class, short pet_lv, short pet_egg_id,
 	short pet_equip, short intimate, short hungry, char rename_flag, char incubate, const char *pet_name)
 {
 	nullpo_ret(pet_name);
@@ -193,7 +197,7 @@ struct s_pet *inter_pet_create(int account_id, int char_id, short pet_class, sho
 		return NULL;
 }
 
-struct s_pet *inter_pet_load(int account_id, int char_id, int pet_id)
+static struct s_pet *inter_pet_load(int account_id, int char_id, int pet_id)
 {
 	memset(inter_pet->pt, 0, sizeof(struct s_pet));
 
@@ -213,7 +217,7 @@ struct s_pet *inter_pet_load(int account_id, int char_id, int pet_id)
 	return NULL;
 }
 
-int inter_pet_parse_frommap(int fd)
+static int inter_pet_parse_frommap(int fd)
 {
 	RFIFOHEAD(fd);
 	switch(RFIFOW(fd, 0)){

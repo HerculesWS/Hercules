@@ -51,12 +51,13 @@
 #define GUILD_ALLIANCE_TYPE_MASK 0x01
 #define GUILD_ALLIANCE_REMOVE 0x08
 
-struct inter_guild_interface inter_guild_s;
+static struct inter_guild_interface inter_guild_s;
 struct inter_guild_interface *inter_guild;
 
 static const char dataToHex[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
-int inter_guild_save_timer(int tid, int64 tick, int id, intptr_t data) {
+static int inter_guild_save_timer(int tid, int64 tick, int id, intptr_t data)
+{
 	static int last_id = 0; //To know in which guild we were.
 	int state = 0; //0: Have not reached last guild. 1: Reached last guild, ready for save. 2: Some guild saved, don't do further saving.
 	struct DBIterator *iter = db_iterator(inter_guild->guild_db);
@@ -101,7 +102,7 @@ int inter_guild_save_timer(int tid, int64 tick, int id, intptr_t data) {
 	return 0;
 }
 
-int inter_guild_removemember_tosql(int account_id, int char_id)
+static int inter_guild_removemember_tosql(int account_id, int char_id)
 {
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE from `%s` where `account_id` = '%d' and `char_id` = '%d'", guild_member_db, account_id, char_id) )
 		Sql_ShowDebug(inter->sql_handle);
@@ -111,7 +112,7 @@ int inter_guild_removemember_tosql(int account_id, int char_id)
 }
 
 // Save guild into sql
-int inter_guild_tosql(struct guild *g,int flag)
+static int inter_guild_tosql(struct guild *g, int flag)
 {
 	// Table guild (GS_BASIC_MASK)
 	// GS_EMBLEM `emblem_len`,`emblem_id`,`emblem_data`
@@ -343,7 +344,7 @@ int inter_guild_tosql(struct guild *g,int flag)
 }
 
 // Read guild from sql
-struct guild * inter_guild_fromsql(int guild_id)
+static struct guild *inter_guild_fromsql(int guild_id)
 {
 	struct guild *g;
 	char* data;
@@ -533,7 +534,7 @@ struct guild * inter_guild_fromsql(int guild_id)
 }
 
 // `guild_castle` (`castle_id`, `guild_id`, `economy`, `defense`, `triggerE`, `triggerD`, `nextTime`, `payTime`, `createTime`, `visibleC`, `visibleG0`, `visibleG1`, `visibleG2`, `visibleG3`, `visibleG4`, `visibleG5`, `visibleG6`, `visibleG7`)
-int inter_guild_castle_tosql(struct guild_castle *gc)
+static int inter_guild_castle_tosql(struct guild_castle *gc)
 {
 	StringBuf buf;
 	int i;
@@ -557,7 +558,7 @@ int inter_guild_castle_tosql(struct guild_castle *gc)
 }
 
 // Read guild_castle from SQL
-struct guild_castle* inter_guild_castle_fromsql(int castle_id)
+static struct guild_castle *inter_guild_castle_fromsql(int castle_id)
 {
 	char *data;
 	int i;
@@ -609,7 +610,8 @@ struct guild_castle* inter_guild_castle_fromsql(int castle_id)
 
 
 // Read exp_guild.txt
-bool inter_guild_exp_parse_row(char* split[], int column, int current) {
+static bool inter_guild_exp_parse_row(char *split[], int column, int current)
+{
 	int64 exp = strtoll(split[0], NULL, 10);
 	nullpo_retr(true, split);
 
@@ -623,7 +625,8 @@ bool inter_guild_exp_parse_row(char* split[], int column, int current) {
 }
 
 
-int inter_guild_CharOnline(int char_id, int guild_id) {
+static int inter_guild_CharOnline(int char_id, int guild_id)
+{
 	struct guild *g;
 	int i;
 
@@ -672,7 +675,7 @@ int inter_guild_CharOnline(int char_id, int guild_id) {
 	return 1;
 }
 
-int inter_guild_CharOffline(int char_id, int guild_id)
+static int inter_guild_CharOffline(int char_id, int guild_id)
 {
 	struct guild *g=NULL;
 	int online_count, i;
@@ -728,7 +731,7 @@ int inter_guild_CharOffline(int char_id, int guild_id)
 }
 
 // Initialize guild sql
-int inter_guild_sql_init(void)
+static int inter_guild_sql_init(void)
 {
 	//Initialize the guild cache
 	inter_guild->guild_db= idb_alloc(DB_OPT_RELEASE_DATA);
@@ -745,7 +748,7 @@ int inter_guild_sql_init(void)
 /**
  * @see DBApply
  */
-int inter_guild_db_final(union DBKey key, struct DBData *data, va_list ap)
+static int inter_guild_db_final(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct guild *g = DB->data2ptr(data);
 	nullpo_ret(g);
@@ -756,7 +759,7 @@ int inter_guild_db_final(union DBKey key, struct DBData *data, va_list ap)
 	return 0;
 }
 
-void inter_guild_sql_final(void)
+static void inter_guild_sql_final(void)
 {
 	inter_guild->guild_db->destroy(inter_guild->guild_db, inter_guild->db_final);
 	db_destroy(inter_guild->castle_db);
@@ -764,7 +767,7 @@ void inter_guild_sql_final(void)
 }
 
 // Get guild_id by its name. Returns 0 if not found, -1 on error.
-int inter_guild_search_guildname(const char *str)
+static int inter_guild_search_guildname(const char *str)
 {
 	int guild_id;
 	char esc_name[NAME_LENGTH*2+1];
@@ -807,7 +810,8 @@ static bool inter_guild_check_empty(struct guild *g)
 	return true;
 }
 
-unsigned int inter_guild_nextexp(int level) {
+static unsigned int inter_guild_nextexp(int level)
+{
 	if (level == 0)
 		return 1;
 	if (level <= 0 || level > MAX_GUILDLEVEL)
@@ -816,7 +820,7 @@ unsigned int inter_guild_nextexp(int level) {
 	return inter_guild->exp[level-1];
 }
 
-int inter_guild_checkskill(struct guild *g, int id)
+static int inter_guild_checkskill(struct guild *g, int id)
 {
 	int idx = id - GD_SKILLBASE;
 
@@ -827,7 +831,7 @@ int inter_guild_checkskill(struct guild *g, int id)
 	return g->skill[idx].lv;
 }
 
-int inter_guild_calcinfo(struct guild *g)
+static int inter_guild_calcinfo(struct guild *g)
 {
 	int i,c;
 	unsigned int nextexp;
@@ -891,7 +895,7 @@ int inter_guild_calcinfo(struct guild *g)
 	return 0;
 }
 
-struct guild *inter_guild_create(const char *name, const struct guild_member *master)
+static struct guild *inter_guild_create(const char *name, const struct guild_member *master)
 {
 	struct guild *g;
 	int i=0;
@@ -965,7 +969,7 @@ struct guild *inter_guild_create(const char *name, const struct guild_member *ma
 }
 
 // Add member to guild
-bool inter_guild_add_member(int guild_id, const struct guild_member *member)
+static bool inter_guild_add_member(int guild_id, const struct guild_member *member)
 {
 	struct guild * g;
 	int i;
@@ -993,7 +997,7 @@ bool inter_guild_add_member(int guild_id, const struct guild_member *member)
 }
 
 // Delete member from guild
-bool inter_guild_leave(int guild_id, int account_id, int char_id, int flag, const char *mes, int map_fd)
+static bool inter_guild_leave(int guild_id, int account_id, int char_id, int flag, const char *mes, int map_fd)
 {
 	int i;
 
@@ -1049,7 +1053,7 @@ bool inter_guild_leave(int guild_id, int account_id, int char_id, int flag, cons
 }
 
 // Change member info
-bool inter_guild_update_member_info_short(int guild_id, int account_id, int char_id, int online, int lv, int16 class)
+static bool inter_guild_update_member_info_short(int guild_id, int account_id, int char_id, int online, int lv, int16 class)
 {
 	// Could speed up by manipulating only guild_member
 	struct guild *g;
@@ -1099,7 +1103,7 @@ bool inter_guild_update_member_info_short(int guild_id, int account_id, int char
 }
 
 // BreakGuild
-bool inter_guild_disband(int guild_id)
+static bool inter_guild_disband(int guild_id)
 {
 	struct guild *g = inter_guild->fromsql(guild_id);
 	if (g == NULL)
@@ -1150,7 +1154,7 @@ bool inter_guild_disband(int guild_id)
  * Changes basic guild information
  * The types are available in mmo.h::guild_basic_info
  **/
-bool inter_guild_update_basic_info(int guild_id, int type, const void *data, int len)
+static bool inter_guild_update_basic_info(int guild_id, int type, const void *data, int len)
 {
 	struct guild *g;
 	struct guild_skill gd_skill;
@@ -1206,7 +1210,7 @@ bool inter_guild_update_basic_info(int guild_id, int type, const void *data, int
 }
 
 // Modification of the guild
-bool inter_guild_update_member_info(int guild_id, int account_id, int char_id, int type, const char *data, int len)
+static bool inter_guild_update_member_info(int guild_id, int account_id, int char_id, int type, const char *data, int len)
 {
 	// Could make some improvement in speed, because only change guild_member
 	int i;
@@ -1314,12 +1318,12 @@ bool inter_guild_update_member_info(int guild_id, int account_id, int char_id, i
 	return true;
 }
 
-int inter_guild_sex_changed(int guild_id, int account_id, int char_id, short gender)
+static int inter_guild_sex_changed(int guild_id, int account_id, int char_id, short gender)
 {
 	return inter_guild->update_member_info(guild_id, account_id, char_id, GMI_GENDER, (const char*)&gender, sizeof(gender));
 }
 
-int inter_guild_charname_changed(int guild_id, int account_id, int char_id, char *name)
+static int inter_guild_charname_changed(int guild_id, int account_id, int char_id, char *name)
 {
 	struct guild *g;
 	int i, flag = 0;
@@ -1357,7 +1361,7 @@ int inter_guild_charname_changed(int guild_id, int account_id, int char_id, char
 }
 
 // Change a position desc
-bool inter_guild_update_position(int guild_id, int idx, const struct guild_position *p)
+static bool inter_guild_update_position(int guild_id, int idx, const struct guild_position *p)
 {
 	// Could make some improvement in speed, because only change guild_position
 	struct guild *g;
@@ -1375,7 +1379,7 @@ bool inter_guild_update_position(int guild_id, int idx, const struct guild_posit
 }
 
 // Guild Skill UP
-bool inter_guild_use_skill_point(int guild_id, uint16 skill_id, int account_id, int max)
+static bool inter_guild_use_skill_point(int guild_id, uint16 skill_id, int account_id, int max)
 {
 	struct guild * g;
 	int idx = skill_id - GD_SKILLBASE;
@@ -1396,7 +1400,7 @@ bool inter_guild_use_skill_point(int guild_id, uint16 skill_id, int account_id, 
 }
 
 //Manual deletion of an alliance when partnering guild does not exists. [Skotlex]
-bool inter_guild_remove_alliance(struct guild *g, int guild_id, int account_id1, int account_id2, int flag)
+static bool inter_guild_remove_alliance(struct guild *g, int guild_id, int account_id1, int account_id2, int flag)
 {
 	int i;
 	char name[NAME_LENGTH];
@@ -1415,7 +1419,7 @@ bool inter_guild_remove_alliance(struct guild *g, int guild_id, int account_id1,
 }
 
 // Alliance modification
-bool inter_guild_change_alliance(int guild_id1, int guild_id2, int account_id1, int account_id2, int flag)
+static bool inter_guild_change_alliance(int guild_id1, int guild_id2, int account_id1, int account_id2, int flag)
 {
 	// Could speed up
 	struct guild *g[2] = { NULL };
@@ -1460,7 +1464,7 @@ bool inter_guild_change_alliance(int guild_id1, int guild_id2, int account_id1, 
 }
 
 // Change guild message
-bool inter_guild_update_notice(int guild_id, const char *mes1, const char *mes2)
+static bool inter_guild_update_notice(int guild_id, const char *mes1, const char *mes2)
 {
 	struct guild *g;
 
@@ -1477,7 +1481,7 @@ bool inter_guild_update_notice(int guild_id, const char *mes1, const char *mes2)
 	return true;
 }
 
-bool inter_guild_update_emblem(int len, int guild_id, const char *data)
+static bool inter_guild_update_emblem(int len, int guild_id, const char *data)
 {
 	struct guild * g;
 
@@ -1497,7 +1501,7 @@ bool inter_guild_update_emblem(int len, int guild_id, const char *data)
 	return true;
 }
 
-bool inter_guild_update_castle_data(int castle_id, int index, int value)
+static bool inter_guild_update_castle_data(int castle_id, int index, int value)
 {
 	struct guild_castle *gc = inter_guild->castle_fromsql(castle_id);
 
@@ -1536,7 +1540,7 @@ bool inter_guild_update_castle_data(int castle_id, int index, int value)
 	return true;
 }
 
-bool inter_guild_change_leader(int guild_id, const char *name, int len)
+static bool inter_guild_change_leader(int guild_id, const char *name, int len)
 {
 	struct guild * g;
 	struct guild_member gm;
@@ -1582,7 +1586,7 @@ bool inter_guild_change_leader(int guild_id, const char *name, int len)
 // Must Return
 //  1 : ok
 //  0 : error
-int inter_guild_parse_frommap(int fd)
+static int inter_guild_parse_frommap(int fd)
 {
 	RFIFOHEAD(fd);
 	switch(RFIFOW(fd,0)) {
@@ -1611,7 +1615,7 @@ int inter_guild_parse_frommap(int fd)
 	return 1;
 }
 
-int inter_guild_broken(int guild_id)
+static int inter_guild_broken(int guild_id)
 {
 	return mapif->guild_broken(guild_id, 0);
 }

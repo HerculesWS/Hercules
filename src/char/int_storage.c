@@ -37,11 +37,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct inter_storage_interface inter_storage_s;
+static struct inter_storage_interface inter_storage_s;
 struct inter_storage_interface *inter_storage;
 
 /// Save storage data to sql
-int inter_storage_tosql(int account_id, const struct storage_data *p)
+static int inter_storage_tosql(int account_id, const struct storage_data *p)
 {
 	int i = 0, j = 0;
 	bool matched_p[MAX_STORAGE] = { false };
@@ -165,7 +165,7 @@ int inter_storage_tosql(int account_id, const struct storage_data *p)
 }
 
 /// Load storage data to mem
-int inter_storage_fromsql(int account_id, struct storage_data *p)
+static int inter_storage_fromsql(int account_id, struct storage_data *p)
 {
 	StringBuf buf;
 	char* data;
@@ -235,7 +235,7 @@ int inter_storage_fromsql(int account_id, struct storage_data *p)
 }
 
 /// Save guild_storage data to sql
-bool inter_storage_guild_storage_tosql(int guild_id, const struct guild_storage *p)
+static bool inter_storage_guild_storage_tosql(int guild_id, const struct guild_storage *p)
 {
 	nullpo_ret(p);
 
@@ -255,7 +255,7 @@ bool inter_storage_guild_storage_tosql(int guild_id, const struct guild_storage 
 }
 
 /// Load guild_storage data to mem
-int inter_storage_guild_storage_fromsql(int guild_id, struct guild_storage* p)
+static int inter_storage_guild_storage_fromsql(int guild_id, struct guild_storage* p)
 {
 	StringBuf buf;
 	char* data;
@@ -315,24 +315,24 @@ int inter_storage_guild_storage_fromsql(int guild_id, struct guild_storage* p)
 
 //---------------------------------------------------------
 // storage data initialize
-int inter_storage_sql_init(void)
+static int inter_storage_sql_init(void)
 {
 	return 1;
 }
 // storage data finalize
-void inter_storage_sql_final(void)
+static void inter_storage_sql_final(void)
 {
 	return;
 }
 
 // q?f[^?
-int inter_storage_delete(int account_id)
+static int inter_storage_delete(int account_id)
 {
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `account_id`='%d'", storage_db, account_id) )
 		Sql_ShowDebug(inter->sql_handle);
 	return 0;
 }
-int inter_storage_guild_storage_delete(int guild_id)
+static int inter_storage_guild_storage_delete(int guild_id)
 {
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `guild_id`='%d'", guild_storage_db, guild_id) )
 		Sql_ShowDebug(inter->sql_handle);
@@ -343,7 +343,7 @@ int inter_storage_guild_storage_delete(int guild_id)
 //Guild bound items pull for offline characters [Akinari]
 //Revised by [Mhalicot]
 //------------------------------------------------
-bool inter_storage_retrieve_bound_items(int char_id, int account_id, int guild_id)
+static bool inter_storage_retrieve_bound_items(int char_id, int account_id, int guild_id)
 {
 #ifdef GP_BOUND_ITEMS
 	StringBuf buf;
@@ -517,7 +517,7 @@ bool inter_storage_retrieve_bound_items(int char_id, int account_id, int guild_i
 	return true;
 }
 
-int inter_storage_parse_frommap(int fd)
+static int inter_storage_parse_frommap(int fd)
 {
 	RFIFOHEAD(fd);
 	switch(RFIFOW(fd,0)){

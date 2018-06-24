@@ -40,7 +40,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct inter_auction_interface inter_auction_s;
+static struct inter_auction_interface inter_auction_s;
 struct inter_auction_interface *inter_auction;
 
 static int inter_auction_count(int char_id, bool buy)
@@ -59,7 +59,7 @@ static int inter_auction_count(int char_id, bool buy)
 	return i;
 }
 
-void inter_auction_save(struct auction_data *auction)
+static void inter_auction_save(struct auction_data *auction)
 {
 	int j;
 	StringBuf buf;
@@ -91,7 +91,7 @@ void inter_auction_save(struct auction_data *auction)
 	StrBuf->Destroy(&buf);
 }
 
-unsigned int inter_auction_create(struct auction_data *auction)
+static unsigned int inter_auction_create(struct auction_data *auction)
 {
 	int j;
 	StringBuf buf;
@@ -148,7 +148,8 @@ unsigned int inter_auction_create(struct auction_data *auction)
 	return auction->auction_id;
 }
 
-static int inter_auction_end_timer(int tid, int64 tick, int id, intptr_t data) {
+static int inter_auction_end_timer(int tid, int64 tick, int id, intptr_t data)
+{
 	struct auction_data *auction;
 	if( (auction = (struct auction_data *)idb_get(inter_auction->db, id)) != NULL )
 	{
@@ -170,7 +171,7 @@ static int inter_auction_end_timer(int tid, int64 tick, int id, intptr_t data) {
 	return 0;
 }
 
-void inter_auction_delete(struct auction_data *auction)
+static void inter_auction_delete(struct auction_data *auction)
 {
 	unsigned int auction_id;
 	nullpo_retv(auction);
@@ -186,7 +187,7 @@ void inter_auction_delete(struct auction_data *auction)
 	idb_remove(inter_auction->db, auction_id);
 }
 
-void inter_auctions_fromsql(void)
+static void inter_auctions_fromsql(void)
 {
 	int i;
 	struct auction_data *auction;
@@ -262,7 +263,7 @@ void inter_auctions_fromsql(void)
 /*==========================================
  * Packets From Map Server
  *------------------------------------------*/
-int inter_auction_parse_frommap(int fd)
+static int inter_auction_parse_frommap(int fd)
 {
 	switch(RFIFOW(fd,0))
 	{
@@ -277,7 +278,7 @@ int inter_auction_parse_frommap(int fd)
 	return 1;
 }
 
-int inter_auction_sql_init(void)
+static int inter_auction_sql_init(void)
 {
 	inter_auction->db = idb_alloc(DB_OPT_RELEASE_DATA);
 	inter_auction->fromsql();
@@ -285,7 +286,7 @@ int inter_auction_sql_init(void)
 	return 0;
 }
 
-void inter_auction_sql_final(void)
+static void inter_auction_sql_final(void)
 {
 	inter_auction->db->destroy(inter_auction->db,NULL);
 

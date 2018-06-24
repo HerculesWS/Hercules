@@ -37,7 +37,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct inter_quest_interface inter_quest_s;
+static struct inter_quest_interface inter_quest_s;
 struct inter_quest_interface *inter_quest;
 
 /**
@@ -48,7 +48,7 @@ struct inter_quest_interface *inter_quest;
  * @return Array of found entries. It has *count entries, and it is care of the
  *         caller to aFree() it afterwards.
  */
-struct quest *inter_quest_fromsql(int char_id, int *count)
+static struct quest *inter_quest_fromsql(int char_id, int *count)
 {
 	struct quest *questlog = NULL;
 	struct quest tmp_quest;
@@ -129,7 +129,7 @@ struct quest *inter_quest_fromsql(int char_id, int *count)
  * @param quest_id Quest ID
  * @return false in case of errors, true otherwise
  */
-bool inter_quest_delete(int char_id, int quest_id)
+static bool inter_quest_delete(int char_id, int quest_id)
 {
 	if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `quest_id` = '%d' AND `char_id` = '%d'", quest_db, quest_id, char_id)) {
 		Sql_ShowDebug(inter->sql_handle);
@@ -146,7 +146,7 @@ bool inter_quest_delete(int char_id, int quest_id)
  * @param qd      Quest data
  * @return false in case of errors, true otherwise
  */
-bool inter_quest_add(int char_id, struct quest qd)
+static bool inter_quest_add(int char_id, struct quest qd)
 {
 	StringBuf buf;
 	int i;
@@ -178,7 +178,7 @@ bool inter_quest_add(int char_id, struct quest qd)
  * @param qd      Quest data
  * @return false in case of errors, true otherwise
  */
-bool inter_quest_update(int char_id, struct quest qd)
+static bool inter_quest_update(int char_id, struct quest qd)
 {
 	StringBuf buf;
 	int i;
@@ -200,7 +200,7 @@ bool inter_quest_update(int char_id, struct quest qd)
 	return true;
 }
 
-bool inter_quest_save(int char_id, const struct quest *new_qd, int new_n)
+static bool inter_quest_save(int char_id, const struct quest *new_qd, int new_n)
 {
 	int i, j, k, old_n;
 	struct quest *old_qd = NULL;
@@ -243,7 +243,7 @@ bool inter_quest_save(int char_id, const struct quest *new_qd, int new_n)
  *
  * @see inter_parse_frommap
  */
-int inter_quest_parse_frommap(int fd)
+static int inter_quest_parse_frommap(int fd)
 {
 	switch(RFIFOW(fd,0)) {
 		case 0x3060: mapif->parse_quest_load(fd); break;

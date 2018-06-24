@@ -49,7 +49,10 @@
 
 #include <stdlib.h>
 
-void mapif_ban(int id, unsigned int flag, int status)
+static struct mapif_interface mapif_s;
+struct mapif_interface *mapif;
+
+static void mapif_ban(int id, unsigned int flag, int status)
 {
 	// send to all map-servers to disconnect the player
 	unsigned char buf[11];
@@ -61,14 +64,14 @@ void mapif_ban(int id, unsigned int flag, int status)
 }
 
 /// Initializes a server structure.
-void mapif_server_init(int id)
+static void mapif_server_init(int id)
 {
 	//memset(&chr->server[id], 0, sizeof(server[id]));
 	chr->server[id].fd = -1;
 }
 
 /// Destroys a server structure.
-void mapif_server_destroy(int id)
+static void mapif_server_destroy(int id)
 {
 	if (chr->server[id].fd == -1) {
 		sockt->close(chr->server[id].fd);
@@ -77,7 +80,7 @@ void mapif_server_destroy(int id)
 }
 
 /// Resets all the data related to a server.
-void mapif_server_reset(int id)
+static void mapif_server_reset(int id)
 {
 	int i, j;
 	unsigned char buf[16384];
@@ -104,13 +107,13 @@ void mapif_server_reset(int id)
 }
 
 /// Called when the connection to a Map Server is disconnected.
-void mapif_on_disconnect(int id)
+static void mapif_on_disconnect(int id)
 {
 	ShowStatus("Map-server #%d has disconnected.\n", id);
 	mapif->server_reset(id);
 }
 
-void mapif_on_parse_accinfo(int account_id, int u_fd, int u_aid, int u_group, int map_fd)
+static void mapif_on_parse_accinfo(int account_id, int u_fd, int u_aid, int u_group, int map_fd)
 {
 	Assert_retv(chr->login_fd > 0);
 	WFIFOHEAD(chr->login_fd, 22);
@@ -123,7 +126,7 @@ void mapif_on_parse_accinfo(int account_id, int u_fd, int u_aid, int u_group, in
 	WFIFOSET(chr->login_fd, 22);
 }
 
-void mapif_char_ban(int char_id, time_t timestamp)
+static void mapif_char_ban(int char_id, time_t timestamp)
 {
 	unsigned char buf[11];
 	WBUFW(buf, 0) = 0x2b14;
@@ -133,7 +136,7 @@ void mapif_char_ban(int char_id, time_t timestamp)
 	mapif->sendall(buf, 11);
 }
 
-int mapif_sendall(const unsigned char *buf, unsigned int len)
+static int mapif_sendall(const unsigned char *buf, unsigned int len)
 {
 	int i, c;
 
@@ -152,7 +155,7 @@ int mapif_sendall(const unsigned char *buf, unsigned int len)
 	return c;
 }
 
-int mapif_sendallwos(int sfd, unsigned char *buf, unsigned int len)
+static int mapif_sendallwos(int sfd, unsigned char *buf, unsigned int len)
 {
 	int i, c;
 
@@ -172,7 +175,7 @@ int mapif_sendallwos(int sfd, unsigned char *buf, unsigned int len)
 }
 
 
-int mapif_send(int fd, unsigned char *buf, unsigned int len)
+static int mapif_send(int fd, unsigned char *buf, unsigned int len)
 {
 	nullpo_ret(buf);
 	if (fd >= 0) {
@@ -188,7 +191,7 @@ int mapif_send(int fd, unsigned char *buf, unsigned int len)
 	return 0;
 }
 
-void mapif_send_users_count(int users)
+static void mapif_send_users_count(int users)
 {
 	uint8 buf[6];
 	// send number of players to all map-servers
@@ -198,7 +201,7 @@ void mapif_send_users_count(int users)
 }
 
 
-void mapif_auction_message(int char_id, unsigned char result)
+static void mapif_auction_message(int char_id, unsigned char result)
 {
 	unsigned char buf[74];
 
@@ -208,7 +211,7 @@ void mapif_auction_message(int char_id, unsigned char result)
 	mapif->sendall(buf, 7);
 }
 
-void mapif_auction_sendlist(int fd, int char_id, short count, short pages, unsigned char *buf)
+static void mapif_auction_sendlist(int fd, int char_id, short count, short pages, unsigned char *buf)
 {
 	int len = (sizeof(struct auction_data) * count) + 12;
 
@@ -224,7 +227,7 @@ void mapif_auction_sendlist(int fd, int char_id, short count, short pages, unsig
 	WFIFOSET(fd, len);
 }
 
-void mapif_parse_auction_requestlist(int fd)
+static void mapif_parse_auction_requestlist(int fd)
 {
 	char searchtext[NAME_LENGTH];
 	int char_id = RFIFOL(fd, 4), len = sizeof(struct auction_data);
@@ -266,7 +269,7 @@ void mapif_parse_auction_requestlist(int fd)
 	mapif->auction_sendlist(fd, char_id, j, pages, buf);
 }
 
-void mapif_auction_register(int fd, struct auction_data *auction)
+static void mapif_auction_register(int fd, struct auction_data *auction)
 {
 	int len = sizeof(struct auction_data) + 4;
 
@@ -279,7 +282,7 @@ void mapif_auction_register(int fd, struct auction_data *auction)
 	WFIFOSET(fd, len);
 }
 
-void mapif_parse_auction_register(int fd)
+static void mapif_parse_auction_register(int fd)
 {
 	struct auction_data auction;
 	if( RFIFOW(fd, 2) != sizeof(struct auction_data) + 4 )
@@ -292,7 +295,7 @@ void mapif_parse_auction_register(int fd)
 	mapif->auction_register(fd, &auction);
 }
 
-void mapif_auction_cancel(int fd, int char_id, unsigned char result)
+static void mapif_auction_cancel(int fd, int char_id, unsigned char result)
 {
 	WFIFOHEAD(fd, 7);
 	WFIFOW(fd, 0) = 0x3852;
@@ -301,7 +304,7 @@ void mapif_auction_cancel(int fd, int char_id, unsigned char result)
 	WFIFOSET(fd, 7);
 }
 
-void mapif_parse_auction_cancel(int fd)
+static void mapif_parse_auction_cancel(int fd)
 {
 	int char_id = RFIFOL(fd, 2), auction_id = RFIFOL(fd, 6);
 	struct auction_data *auction;
@@ -328,7 +331,7 @@ void mapif_parse_auction_cancel(int fd)
 }
 
 
-void mapif_auction_close(int fd, int char_id, unsigned char result)
+static void mapif_auction_close(int fd, int char_id, unsigned char result)
 {
 	WFIFOHEAD(fd, 7);
 	WFIFOW(fd, 0) = 0x3853;
@@ -337,7 +340,7 @@ void mapif_auction_close(int fd, int char_id, unsigned char result)
 	WFIFOSET(fd, 7);
 }
 
-void mapif_parse_auction_close(int fd)
+static void mapif_parse_auction_close(int fd)
 {
 	int char_id = RFIFOL(fd, 2), auction_id = RFIFOL(fd, 6);
 	struct auction_data *auction;
@@ -367,7 +370,7 @@ void mapif_parse_auction_close(int fd)
 	mapif->auction_close(fd, char_id, 0); // You have ended the auction
 }
 
-void mapif_auction_bid(int fd, int char_id, int bid, unsigned char result)
+static void mapif_auction_bid(int fd, int char_id, int bid, unsigned char result)
 {
 	WFIFOHEAD(fd, 11);
 	WFIFOW(fd, 0) = 0x3855;
@@ -377,7 +380,7 @@ void mapif_auction_bid(int fd, int char_id, int bid, unsigned char result)
 	WFIFOSET(fd, 11);
 }
 
-void mapif_parse_auction_bid(int fd)
+static void mapif_parse_auction_bid(int fd)
 {
 	int char_id = RFIFOL(fd, 4), bid = RFIFOL(fd, 12);
 	unsigned int auction_id = RFIFOL(fd, 8);
@@ -424,7 +427,7 @@ void mapif_parse_auction_bid(int fd)
 	mapif->auction_bid(fd, char_id, 0, 1); // You have successfully bid in the auction
 }
 
-void mapif_elemental_send(int fd, struct s_elemental *ele, unsigned char flag)
+static void mapif_elemental_send(int fd, struct s_elemental *ele, unsigned char flag)
 {
 	int size = sizeof(struct s_elemental) + 5;
 
@@ -437,7 +440,7 @@ void mapif_elemental_send(int fd, struct s_elemental *ele, unsigned char flag)
 	WFIFOSET(fd, size);
 }
 
-void mapif_parse_elemental_create(int fd, const struct s_elemental *ele)
+static void mapif_parse_elemental_create(int fd, const struct s_elemental *ele)
 {
 	struct s_elemental ele_;
 	bool result;
@@ -448,14 +451,14 @@ void mapif_parse_elemental_create(int fd, const struct s_elemental *ele)
 	mapif->elemental_send(fd, &ele_, result);
 }
 
-void mapif_parse_elemental_load(int fd, int ele_id, int char_id)
+static void mapif_parse_elemental_load(int fd, int ele_id, int char_id)
 {
 	struct s_elemental ele;
 	bool result = inter_elemental->load(ele_id, char_id, &ele);
 	mapif->elemental_send(fd, &ele, result);
 }
 
-void mapif_elemental_deleted(int fd, unsigned char flag)
+static void mapif_elemental_deleted(int fd, unsigned char flag)
 {
 	WFIFOHEAD(fd, 3);
 	WFIFOW(fd, 0) = 0x387d;
@@ -463,13 +466,13 @@ void mapif_elemental_deleted(int fd, unsigned char flag)
 	WFIFOSET(fd, 3);
 }
 
-void mapif_parse_elemental_delete(int fd, int ele_id)
+static void mapif_parse_elemental_delete(int fd, int ele_id)
 {
 	bool result = inter_elemental->delete(ele_id);
 	mapif->elemental_deleted(fd, result);
 }
 
-void mapif_elemental_saved(int fd, unsigned char flag)
+static void mapif_elemental_saved(int fd, unsigned char flag)
 {
 	WFIFOHEAD(fd, 3);
 	WFIFOW(fd, 0) = 0x387e;
@@ -477,13 +480,13 @@ void mapif_elemental_saved(int fd, unsigned char flag)
 	WFIFOSET(fd, 3);
 }
 
-void mapif_parse_elemental_save(int fd, const struct s_elemental *ele)
+static void mapif_parse_elemental_save(int fd, const struct s_elemental *ele)
 {
 	bool result = inter_elemental->save(ele);
 	mapif->elemental_saved(fd, result);
 }
 
-int mapif_guild_created(int fd, int account_id, struct guild *g)
+static int mapif_guild_created(int fd, int account_id, struct guild *g)
 {
 	WFIFOHEAD(fd, 10);
 	WFIFOW(fd, 0) = 0x3830;
@@ -500,7 +503,7 @@ int mapif_guild_created(int fd, int account_id, struct guild *g)
 }
 
 // Guild not found
-int mapif_guild_noinfo(int fd, int guild_id)
+static int mapif_guild_noinfo(int fd, int guild_id)
 {
 	unsigned char buf[12];
 	WBUFW(buf, 0) = 0x3831;
@@ -515,7 +518,7 @@ int mapif_guild_noinfo(int fd, int guild_id)
 }
 
 // Send guild info
-int mapif_guild_info(int fd, struct guild *g)
+static int mapif_guild_info(int fd, struct guild *g)
 {
 	unsigned char buf[8 + sizeof(struct guild)];
 	nullpo_ret(g);
@@ -530,7 +533,7 @@ int mapif_guild_info(int fd, struct guild *g)
 }
 
 // ACK member add
-int mapif_guild_memberadded(int fd, int guild_id, int account_id, int char_id, int flag)
+static int mapif_guild_memberadded(int fd, int guild_id, int account_id, int char_id, int flag)
 {
 	WFIFOHEAD(fd, 15);
 	WFIFOW(fd, 0) = 0x3832;
@@ -543,7 +546,7 @@ int mapif_guild_memberadded(int fd, int guild_id, int account_id, int char_id, i
 }
 
 // ACK member leave
-int mapif_guild_withdraw(int guild_id, int account_id, int char_id, int flag, const char *name, const char *mes)
+static int mapif_guild_withdraw(int guild_id, int account_id, int char_id, int flag, const char *name, const char *mes)
 {
 	unsigned char buf[55 + NAME_LENGTH];
 
@@ -563,7 +566,7 @@ int mapif_guild_withdraw(int guild_id, int account_id, int char_id, int flag, co
 }
 
 // Send short member's info
-int mapif_guild_memberinfoshort(struct guild *g, int idx)
+static int mapif_guild_memberinfoshort(struct guild *g, int idx)
 {
 	unsigned char buf[23];
 	nullpo_ret(g);
@@ -581,7 +584,7 @@ int mapif_guild_memberinfoshort(struct guild *g, int idx)
 }
 
 // Send guild broken
-int mapif_guild_broken(int guild_id, int flag)
+static int mapif_guild_broken(int guild_id, int flag)
 {
 	unsigned char buf[7];
 	WBUFW(buf, 0) = 0x3836;
@@ -593,7 +596,7 @@ int mapif_guild_broken(int guild_id, int flag)
 }
 
 // Send guild message
-int mapif_guild_message(int guild_id, int account_id, const char *mes, int len, int sfd)
+static int mapif_guild_message(int guild_id, int account_id, const char *mes, int len, int sfd)
 {
 	unsigned char buf[512];
 	nullpo_ret(mes);
@@ -609,7 +612,7 @@ int mapif_guild_message(int guild_id, int account_id, const char *mes, int len, 
 }
 
 // Send basic info
-int mapif_guild_basicinfochanged(int guild_id, int type, const void *data, int len)
+static int mapif_guild_basicinfochanged(int guild_id, int type, const void *data, int len)
 {
 	unsigned char buf[2048];
 	nullpo_ret(data);
@@ -625,7 +628,7 @@ int mapif_guild_basicinfochanged(int guild_id, int type, const void *data, int l
 }
 
 // Send member info
-int mapif_guild_memberinfochanged(int guild_id, int account_id, int char_id, int type, const void *data, int len)
+static int mapif_guild_memberinfochanged(int guild_id, int account_id, int char_id, int type, const void *data, int len)
 {
 	unsigned char buf[2048];
 	nullpo_ret(data);
@@ -643,7 +646,7 @@ int mapif_guild_memberinfochanged(int guild_id, int account_id, int char_id, int
 }
 
 // ACK guild skill up
-int mapif_guild_skillupack(int guild_id, uint16 skill_id, int account_id)
+static int mapif_guild_skillupack(int guild_id, uint16 skill_id, int account_id)
 {
 	unsigned char buf[14];
 	WBUFW(buf, 0) = 0x383c;
@@ -655,7 +658,7 @@ int mapif_guild_skillupack(int guild_id, uint16 skill_id, int account_id)
 }
 
 // ACK guild alliance
-int mapif_guild_alliance(int guild_id1, int guild_id2, int account_id1, int account_id2, int flag, const char *name1, const char *name2)
+static int mapif_guild_alliance(int guild_id1, int guild_id2, int account_id1, int account_id2, int flag, const char *name1, const char *name2)
 {
 	unsigned char buf[19 + 2 * NAME_LENGTH];
 	nullpo_ret(name1);
@@ -673,7 +676,7 @@ int mapif_guild_alliance(int guild_id1, int guild_id2, int account_id1, int acco
 }
 
 // Send a guild position desc
-int mapif_guild_position(struct guild *g, int idx)
+static int mapif_guild_position(struct guild *g, int idx)
 {
 	unsigned char buf[12 + sizeof(struct guild_position)];
 	nullpo_ret(g);
@@ -688,7 +691,7 @@ int mapif_guild_position(struct guild *g, int idx)
 }
 
 // Send the guild notice
-int mapif_guild_notice(struct guild *g)
+static int mapif_guild_notice(struct guild *g)
 {
 	unsigned char buf[256];
 	nullpo_ret(g);
@@ -701,7 +704,7 @@ int mapif_guild_notice(struct guild *g)
 }
 
 // Send emblem data
-int mapif_guild_emblem(struct guild *g)
+static int mapif_guild_emblem(struct guild *g)
 {
 	unsigned char buf[12 + sizeof(g->emblem_data)];
 	nullpo_ret(g);
@@ -714,7 +717,7 @@ int mapif_guild_emblem(struct guild *g)
 	return 0;
 }
 
-int mapif_guild_master_changed(struct guild *g, int aid, int cid)
+static int mapif_guild_master_changed(struct guild *g, int aid, int cid)
 {
 	unsigned char buf[14];
 	nullpo_ret(g);
@@ -726,7 +729,7 @@ int mapif_guild_master_changed(struct guild *g, int aid, int cid)
 	return 0;
 }
 
-int mapif_guild_castle_dataload(int fd, int sz, const int *castle_ids)
+static int mapif_guild_castle_dataload(int fd, int sz, const int *castle_ids)
 {
 	struct guild_castle *gc = NULL;
 	int num = (sz - 4) / sizeof(int);
@@ -746,7 +749,7 @@ int mapif_guild_castle_dataload(int fd, int sz, const int *castle_ids)
 }
 
 // Guild creation request
-int mapif_parse_CreateGuild(int fd, int account_id, const char *name, const struct guild_member *master)
+static int mapif_parse_CreateGuild(int fd, int account_id, const char *name, const struct guild_member *master)
 {
 	struct guild *g;
 	nullpo_ret(name);
@@ -764,7 +767,7 @@ int mapif_parse_CreateGuild(int fd, int account_id, const char *name, const stru
 }
 
 // Return guild info to client
-int mapif_parse_GuildInfo(int fd, int guild_id)
+static int mapif_parse_GuildInfo(int fd, int guild_id)
 {
 	struct guild * g = inter_guild->fromsql(guild_id); //We use this because on start-up the info of castle-owned guilds is required. [Skotlex]
 	if (g != NULL) {
@@ -777,7 +780,7 @@ int mapif_parse_GuildInfo(int fd, int guild_id)
 }
 
 // Add member to guild
-int mapif_parse_GuildAddMember(int fd, int guild_id, const struct guild_member *m)
+static int mapif_parse_GuildAddMember(int fd, int guild_id, const struct guild_member *m)
 {
 	nullpo_ret(m);
 
@@ -790,28 +793,28 @@ int mapif_parse_GuildAddMember(int fd, int guild_id, const struct guild_member *
 }
 
 // Delete member from guild
-int mapif_parse_GuildLeave(int fd, int guild_id, int account_id, int char_id, int flag, const char *mes)
+static int mapif_parse_GuildLeave(int fd, int guild_id, int account_id, int char_id, int flag, const char *mes)
 {
 	inter_guild->leave(guild_id, account_id, char_id, flag, mes, fd);
 	return 0;
 }
 
 // Change member info
-int mapif_parse_GuildChangeMemberInfoShort(int fd, int guild_id, int account_id, int char_id, int online, int lv, int16 class)
+static int mapif_parse_GuildChangeMemberInfoShort(int fd, int guild_id, int account_id, int char_id, int online, int lv, int16 class)
 {
 	inter_guild->update_member_info_short(guild_id, account_id, char_id, online, lv, class);
 	return 0;
 }
 
 // BreakGuild
-int mapif_parse_BreakGuild(int fd, int guild_id)
+static int mapif_parse_BreakGuild(int fd, int guild_id)
 {
 	inter_guild->disband(guild_id);
 	return 0;
 }
 
 // Forward Guild message to others map servers
-int mapif_parse_GuildMessage(int fd, int guild_id, int account_id, const char *mes, int len)
+static int mapif_parse_GuildMessage(int fd, int guild_id, int account_id, const char *mes, int len)
 {
 	return mapif->guild_message(guild_id,account_id,mes,len, fd);
 }
@@ -820,7 +823,7 @@ int mapif_parse_GuildMessage(int fd, int guild_id, int account_id, const char *m
  * Changes basic guild information
  * The types are available in mmo.h::guild_basic_info
  **/
-int mapif_parse_GuildBasicInfoChange(int fd, int guild_id, int type, const void *data, int len)
+static int mapif_parse_GuildBasicInfoChange(int fd, int guild_id, int type, const void *data, int len)
 {
 	inter_guild->update_basic_info(guild_id, type, data, len);
 	// Information is already sent in mapif->guild_info
@@ -829,14 +832,14 @@ int mapif_parse_GuildBasicInfoChange(int fd, int guild_id, int type, const void 
 }
 
 // Modification of the guild
-int mapif_parse_GuildMemberInfoChange(int fd, int guild_id, int account_id, int char_id, int type, const char *data, int len)
+static int mapif_parse_GuildMemberInfoChange(int fd, int guild_id, int account_id, int char_id, int type, const char *data, int len)
 {
 	inter_guild->update_member_info(guild_id, account_id, char_id, type, data, len);
 	return 0;
 }
 
 // Change a position desc
-int mapif_parse_GuildPosition(int fd, int guild_id, int idx, const struct guild_position *p)
+static int mapif_parse_GuildPosition(int fd, int guild_id, int idx, const struct guild_position *p)
 {
 	nullpo_ret(p);
 	inter_guild->update_position(guild_id, idx, p);
@@ -844,50 +847,50 @@ int mapif_parse_GuildPosition(int fd, int guild_id, int idx, const struct guild_
 }
 
 // Guild Skill UP
-int mapif_parse_GuildSkillUp(int fd, int guild_id, uint16 skill_id, int account_id, int max)
+static int mapif_parse_GuildSkillUp(int fd, int guild_id, uint16 skill_id, int account_id, int max)
 {
 	inter_guild->use_skill_point(guild_id, skill_id, account_id, max);
 	return 0;
 }
 
 // Alliance modification
-int mapif_parse_GuildAlliance(int fd, int guild_id1, int guild_id2, int account_id1, int account_id2, int flag)
+static int mapif_parse_GuildAlliance(int fd, int guild_id1, int guild_id2, int account_id1, int account_id2, int flag)
 {
 	inter_guild->change_alliance(guild_id1, guild_id2, account_id1, account_id2, flag);
 	return 0;
 }
 
 // Change guild message
-int mapif_parse_GuildNotice(int fd, int guild_id, const char *mes1, const char *mes2)
+static int mapif_parse_GuildNotice(int fd, int guild_id, const char *mes1, const char *mes2)
 {
 	inter_guild->update_notice(guild_id, mes1, mes2);
 	return 0;
 }
 
-int mapif_parse_GuildEmblem(int fd, int len, int guild_id, int dummy, const char *data)
+static int mapif_parse_GuildEmblem(int fd, int len, int guild_id, int dummy, const char *data)
 {
 	inter_guild->update_emblem(len, guild_id, data);
 	return 0;
 }
 
-int mapif_parse_GuildCastleDataLoad(int fd, int len, const int *castle_ids)
+static int mapif_parse_GuildCastleDataLoad(int fd, int len, const int *castle_ids)
 {
 	return mapif->guild_castle_dataload(fd, len, castle_ids);
 }
 
-int mapif_parse_GuildCastleDataSave(int fd, int castle_id, int index, int value)
+static int mapif_parse_GuildCastleDataSave(int fd, int castle_id, int index, int value)
 {
 	inter_guild->update_castle_data(castle_id, index, value);
 	return 0;
 }
 
-int mapif_parse_GuildMasterChange(int fd, int guild_id, const char* name, int len)
+static int mapif_parse_GuildMasterChange(int fd, int guild_id, const char* name, int len)
 {
 	inter_guild->change_leader(guild_id, name, len);
 	return 0;
 }
 
-void mapif_homunculus_created(int fd, int account_id, const struct s_homunculus *sh, unsigned char flag)
+static void mapif_homunculus_created(int fd, int account_id, const struct s_homunculus *sh, unsigned char flag)
 {
 	nullpo_retv(sh);
 	WFIFOHEAD(fd, sizeof(struct s_homunculus) + 9);
@@ -899,7 +902,7 @@ void mapif_homunculus_created(int fd, int account_id, const struct s_homunculus 
 	WFIFOSET(fd, WFIFOW(fd, 2));
 }
 
-void mapif_homunculus_deleted(int fd, int flag)
+static void mapif_homunculus_deleted(int fd, int flag)
 {
 	WFIFOHEAD(fd, 3);
 	WFIFOW(fd, 0) = 0x3893;
@@ -907,7 +910,7 @@ void mapif_homunculus_deleted(int fd, int flag)
 	WFIFOSET(fd, 3);
 }
 
-void mapif_homunculus_loaded(int fd, int account_id, struct s_homunculus *hd)
+static void mapif_homunculus_loaded(int fd, int account_id, struct s_homunculus *hd)
 {
 	WFIFOHEAD(fd, sizeof(struct s_homunculus) + 9);
 	WFIFOW(fd, 0) = 0x3891;
@@ -923,7 +926,7 @@ void mapif_homunculus_loaded(int fd, int account_id, struct s_homunculus *hd)
 	WFIFOSET(fd, sizeof(struct s_homunculus) + 9);
 }
 
-void mapif_homunculus_saved(int fd, int account_id, bool flag)
+static void mapif_homunculus_saved(int fd, int account_id, bool flag)
 {
 	WFIFOHEAD(fd, 7);
 	WFIFOW(fd, 0) = 0x3892;
@@ -932,7 +935,7 @@ void mapif_homunculus_saved(int fd, int account_id, bool flag)
 	WFIFOSET(fd, 7);
 }
 
-void mapif_homunculus_renamed(int fd, int account_id, int char_id, unsigned char flag, const char *name)
+static void mapif_homunculus_renamed(int fd, int account_id, int char_id, unsigned char flag, const char *name)
 {
 	nullpo_retv(name);
 	WFIFOHEAD(fd, NAME_LENGTH + 12);
@@ -944,7 +947,7 @@ void mapif_homunculus_renamed(int fd, int account_id, int char_id, unsigned char
 	WFIFOSET(fd, NAME_LENGTH + 12);
 }
 
-void mapif_parse_homunculus_create(int fd, int len, int account_id, const struct s_homunculus *phd)
+static void mapif_parse_homunculus_create(int fd, int len, int account_id, const struct s_homunculus *phd)
 {
 	struct s_homunculus shd;
 	bool result;
@@ -955,32 +958,32 @@ void mapif_parse_homunculus_create(int fd, int len, int account_id, const struct
 	mapif->homunculus_created(fd, account_id, &shd, result);
 }
 
-void mapif_parse_homunculus_delete(int fd, int homun_id)
+static void mapif_parse_homunculus_delete(int fd, int homun_id)
 {
 	bool result = inter_homunculus->delete(homun_id);
 	mapif->homunculus_deleted(fd, result);
 }
 
-void mapif_parse_homunculus_load(int fd, int account_id, int homun_id)
+static void mapif_parse_homunculus_load(int fd, int account_id, int homun_id)
 {
 	struct s_homunculus hd;
 	bool result = inter_homunculus->load(homun_id, &hd);
 	mapif->homunculus_loaded(fd, account_id, (result ? &hd : NULL));
 }
 
-void mapif_parse_homunculus_save(int fd, int len, int account_id, const struct s_homunculus *phd)
+static void mapif_parse_homunculus_save(int fd, int len, int account_id, const struct s_homunculus *phd)
 {
 	bool result = inter_homunculus->save(phd);
 	mapif->homunculus_saved(fd, account_id, result);
 }
 
-void mapif_parse_homunculus_rename(int fd, int account_id, int char_id, const char *name)
+static void mapif_parse_homunculus_rename(int fd, int account_id, int char_id, const char *name)
 {
 	bool result = inter_homunculus->rename(name);
 	mapif->homunculus_renamed(fd, account_id, char_id, result, name);
 }
 
-void mapif_mail_sendinbox(int fd, int char_id, unsigned char flag, struct mail_data *md)
+static void mapif_mail_sendinbox(int fd, int char_id, unsigned char flag, struct mail_data *md)
 {
 	nullpo_retv(md);
 	//FIXME: dumping the whole structure like this is unsafe [ultramage]
@@ -996,7 +999,7 @@ void mapif_mail_sendinbox(int fd, int char_id, unsigned char flag, struct mail_d
 /*==========================================
  * Client Inbox Request
  *------------------------------------------*/
-void mapif_parse_mail_requestinbox(int fd)
+static void mapif_parse_mail_requestinbox(int fd)
 {
 	int char_id = RFIFOL(fd, 2);
 	unsigned char flag = RFIFOB(fd, 6);
@@ -1009,13 +1012,13 @@ void mapif_parse_mail_requestinbox(int fd)
 /*==========================================
  * Mark mail as 'Read'
  *------------------------------------------*/
-void mapif_parse_mail_read(int fd)
+static void mapif_parse_mail_read(int fd)
 {
 	int mail_id = RFIFOL(fd, 2);
 	inter_mail->mark_read(mail_id);
 }
 
-void mapif_mail_sendattach(int fd, int char_id, struct mail_message *msg)
+static void mapif_mail_sendattach(int fd, int char_id, struct mail_message *msg)
 {
 	nullpo_retv(msg);
 	WFIFOHEAD(fd, sizeof(struct item) + 12);
@@ -1027,7 +1030,7 @@ void mapif_mail_sendattach(int fd, int char_id, struct mail_message *msg)
 	WFIFOSET(fd,WFIFOW(fd, 2));
 }
 
-void mapif_parse_mail_getattach(int fd)
+static void mapif_parse_mail_getattach(int fd)
 {
 	struct mail_message msg = { 0 };
 	int char_id = RFIFOL(fd, 2);
@@ -1042,7 +1045,7 @@ void mapif_parse_mail_getattach(int fd)
 /*==========================================
  * Delete Mail
  *------------------------------------------*/
-void mapif_mail_delete(int fd, int char_id, int mail_id, bool failed)
+static void mapif_mail_delete(int fd, int char_id, int mail_id, bool failed)
 {
 	WFIFOHEAD(fd, 11);
 	WFIFOW(fd, 0) = 0x384b;
@@ -1052,7 +1055,7 @@ void mapif_mail_delete(int fd, int char_id, int mail_id, bool failed)
 	WFIFOSET(fd, 11);
 }
 
-void mapif_parse_mail_delete(int fd)
+static void mapif_parse_mail_delete(int fd)
 {
 	int char_id = RFIFOL(fd, 2);
 	int mail_id = RFIFOL(fd, 6);
@@ -1063,7 +1066,7 @@ void mapif_parse_mail_delete(int fd)
 /*==========================================
  * Report New Mail to Map Server
  *------------------------------------------*/
-void mapif_mail_new(struct mail_message *msg)
+static void mapif_mail_new(struct mail_message *msg)
 {
 	unsigned char buf[74];
 
@@ -1081,7 +1084,7 @@ void mapif_mail_new(struct mail_message *msg)
 /*==========================================
  * Return Mail
  *------------------------------------------*/
-void mapif_mail_return(int fd, int char_id, int mail_id, int new_mail)
+static void mapif_mail_return(int fd, int char_id, int mail_id, int new_mail)
 {
 	WFIFOHEAD(fd, 11);
 	WFIFOW(fd, 0) = 0x384c;
@@ -1091,7 +1094,7 @@ void mapif_mail_return(int fd, int char_id, int mail_id, int new_mail)
 	WFIFOSET(fd, 11);
 }
 
-void mapif_parse_mail_return(int fd)
+static void mapif_parse_mail_return(int fd)
 {
 	int char_id = RFIFOL(fd, 2);
 	int mail_id = RFIFOL(fd, 6);
@@ -1106,7 +1109,7 @@ void mapif_parse_mail_return(int fd)
 /*==========================================
  * Send Mail
  *------------------------------------------*/
-void mapif_mail_send(int fd, struct mail_message* msg)
+static void mapif_mail_send(int fd, struct mail_message* msg)
 {
 	int len = sizeof(struct mail_message) + 4;
 
@@ -1118,7 +1121,7 @@ void mapif_mail_send(int fd, struct mail_message* msg)
 	WFIFOSET(fd,len);
 }
 
-void mapif_parse_mail_send(int fd)
+static void mapif_parse_mail_send(int fd)
 {
 	struct mail_message msg;
 	int account_id = 0;
@@ -1135,7 +1138,7 @@ void mapif_parse_mail_send(int fd)
 	mapif->mail_new(&msg); // notify recipient
 }
 
-void mapif_mercenary_send(int fd, struct s_mercenary *merc, unsigned char flag)
+static void mapif_mercenary_send(int fd, struct s_mercenary *merc, unsigned char flag)
 {
 	int size = sizeof(struct s_mercenary) + 5;
 
@@ -1148,7 +1151,7 @@ void mapif_mercenary_send(int fd, struct s_mercenary *merc, unsigned char flag)
 	WFIFOSET(fd,size);
 }
 
-void mapif_parse_mercenary_create(int fd, const struct s_mercenary *merc)
+static void mapif_parse_mercenary_create(int fd, const struct s_mercenary *merc)
 {
 	struct s_mercenary merc_;
 	bool result;
@@ -1159,14 +1162,14 @@ void mapif_parse_mercenary_create(int fd, const struct s_mercenary *merc)
 	mapif->mercenary_send(fd, &merc_, result);
 }
 
-void mapif_parse_mercenary_load(int fd, int merc_id, int char_id)
+static void mapif_parse_mercenary_load(int fd, int merc_id, int char_id)
 {
 	struct s_mercenary merc;
 	bool result = inter_mercenary->load(merc_id, char_id, &merc);
 	mapif->mercenary_send(fd, &merc, result);
 }
 
-void mapif_mercenary_deleted(int fd, unsigned char flag)
+static void mapif_mercenary_deleted(int fd, unsigned char flag)
 {
 	WFIFOHEAD(fd, 3);
 	WFIFOW(fd, 0) = 0x3871;
@@ -1174,13 +1177,13 @@ void mapif_mercenary_deleted(int fd, unsigned char flag)
 	WFIFOSET(fd, 3);
 }
 
-void mapif_parse_mercenary_delete(int fd, int merc_id)
+static void mapif_parse_mercenary_delete(int fd, int merc_id)
 {
 	bool result = inter_mercenary->delete(merc_id);
 	mapif->mercenary_deleted(fd, result);
 }
 
-void mapif_mercenary_saved(int fd, unsigned char flag)
+static void mapif_mercenary_saved(int fd, unsigned char flag)
 {
 	WFIFOHEAD(fd, 3);
 	WFIFOW(fd, 0) = 0x3872;
@@ -1188,14 +1191,14 @@ void mapif_mercenary_saved(int fd, unsigned char flag)
 	WFIFOSET(fd, 3);
 }
 
-void mapif_parse_mercenary_save(int fd, const struct s_mercenary *merc)
+static void mapif_parse_mercenary_save(int fd, const struct s_mercenary *merc)
 {
 	bool result = inter_mercenary->save(merc);
 	mapif->mercenary_saved(fd, result);
 }
 
 // Create a party whether or not
-int mapif_party_created(int fd, int account_id, int char_id, struct party *p)
+static int mapif_party_created(int fd, int account_id, int char_id, struct party *p)
 {
 	WFIFOHEAD(fd, 39);
 	WFIFOW(fd, 0) = 0x3820;
@@ -1217,7 +1220,7 @@ int mapif_party_created(int fd, int account_id, int char_id, struct party *p)
 }
 
 //Party information not found
-void mapif_party_noinfo(int fd, int party_id, int char_id)
+static void mapif_party_noinfo(int fd, int party_id, int char_id)
 {
 	WFIFOHEAD(fd, 12);
 	WFIFOW(fd, 0) = 0x3821;
@@ -1229,7 +1232,7 @@ void mapif_party_noinfo(int fd, int party_id, int char_id)
 }
 
 //Digest party information
-void mapif_party_info(int fd, struct party* p, int char_id)
+static void mapif_party_info(int fd, struct party* p, int char_id)
 {
 	unsigned char buf[8 + sizeof(struct party)];
 	nullpo_retv(p);
@@ -1245,7 +1248,7 @@ void mapif_party_info(int fd, struct party* p, int char_id)
 }
 
 //Whether or not additional party members
-int mapif_party_memberadded(int fd, int party_id, int account_id, int char_id, int flag)
+static int mapif_party_memberadded(int fd, int party_id, int account_id, int char_id, int flag)
 {
 	WFIFOHEAD(fd, 15);
 	WFIFOW(fd, 0) = 0x3822;
@@ -1259,7 +1262,7 @@ int mapif_party_memberadded(int fd, int party_id, int account_id, int char_id, i
 }
 
 // Party setting change notification
-int mapif_party_optionchanged(int fd, struct party *p, int account_id, int flag)
+static int mapif_party_optionchanged(int fd, struct party *p, int account_id, int flag)
 {
 	unsigned char buf[16];
 	nullpo_ret(p);
@@ -1277,7 +1280,7 @@ int mapif_party_optionchanged(int fd, struct party *p, int account_id, int flag)
 }
 
 //Withdrawal notification party
-int mapif_party_withdraw(int party_id, int account_id, int char_id)
+static int mapif_party_withdraw(int party_id, int account_id, int char_id)
 {
 	unsigned char buf[16];
 
@@ -1290,7 +1293,7 @@ int mapif_party_withdraw(int party_id, int account_id, int char_id)
 }
 
 //Party map update notification
-int mapif_party_membermoved(struct party *p, int idx)
+static int mapif_party_membermoved(struct party *p, int idx)
 {
 	unsigned char buf[20];
 
@@ -1308,7 +1311,7 @@ int mapif_party_membermoved(struct party *p, int idx)
 }
 
 //Dissolution party notification
-int mapif_party_broken(int party_id, int flag)
+static int mapif_party_broken(int party_id, int flag)
 {
 	unsigned char buf[16];
 	WBUFW(buf, 0) = 0x3826;
@@ -1320,7 +1323,7 @@ int mapif_party_broken(int party_id, int flag)
 }
 
 //Remarks in the party
-int mapif_party_message(int party_id, int account_id, const char *mes, int len, int sfd)
+static int mapif_party_message(int party_id, int account_id, const char *mes, int len, int sfd)
 {
 	unsigned char buf[512];
 	nullpo_ret(mes);
@@ -1334,7 +1337,7 @@ int mapif_party_message(int party_id, int account_id, const char *mes, int len, 
 }
 
 // Create Party
-int mapif_parse_CreateParty(int fd, const char *name, int item, int item2, const struct party_member *leader)
+static int mapif_parse_CreateParty(int fd, const char *name, int item, int item2, const struct party_member *leader)
 {
 	struct party_data *p;
 
@@ -1355,7 +1358,7 @@ int mapif_parse_CreateParty(int fd, const char *name, int item, int item2, const
 }
 
 // Party information request
-void mapif_parse_PartyInfo(int fd, int party_id, int char_id)
+static void mapif_parse_PartyInfo(int fd, int party_id, int char_id)
 {
 	struct party_data *p;
 	p = inter_party->fromsql(party_id);
@@ -1367,7 +1370,7 @@ void mapif_parse_PartyInfo(int fd, int party_id, int char_id)
 }
 
 // Add a player to party request
-int mapif_parse_PartyAddMember(int fd, int party_id, const struct party_member *member)
+static int mapif_parse_PartyAddMember(int fd, int party_id, const struct party_member *member)
 {
 	nullpo_ret(member);
 
@@ -1381,47 +1384,47 @@ int mapif_parse_PartyAddMember(int fd, int party_id, const struct party_member *
 }
 
 //Party setting change request
-int mapif_parse_PartyChangeOption(int fd, int party_id, int account_id, int exp, int item)
+static int mapif_parse_PartyChangeOption(int fd, int party_id, int account_id, int exp, int item)
 {
 	inter_party->change_option(party_id, account_id, exp, item, fd);
 	return 0;
 }
 
 //Request leave party
-int mapif_parse_PartyLeave(int fd, int party_id, int account_id, int char_id)
+static int mapif_parse_PartyLeave(int fd, int party_id, int account_id, int char_id)
 {
 	inter_party->leave(party_id, account_id, char_id);
 	return 0;
 }
 
 // When member goes to other map or levels up.
-int mapif_parse_PartyChangeMap(int fd, int party_id, int account_id, int char_id, unsigned short map, int online, unsigned int lv)
+static int mapif_parse_PartyChangeMap(int fd, int party_id, int account_id, int char_id, unsigned short map, int online, unsigned int lv)
 {
 	inter_party->change_map(party_id, account_id, char_id, map, online, lv);
 	return 0;
 }
 
 //Request party dissolution
-int mapif_parse_BreakParty(int fd, int party_id)
+static int mapif_parse_BreakParty(int fd, int party_id)
 {
 	inter_party->disband(party_id);
 	return 0;
 }
 
 //Party sending the message
-int mapif_parse_PartyMessage(int fd, int party_id, int account_id, const char *mes, int len)
+static int mapif_parse_PartyMessage(int fd, int party_id, int account_id, const char *mes, int len)
 {
 	return mapif->party_message(party_id, account_id, mes, len, fd);
 }
 
-int mapif_parse_PartyLeaderChange(int fd, int party_id, int account_id, int char_id)
+static int mapif_parse_PartyLeaderChange(int fd, int party_id, int account_id, int char_id)
 {
 	if (!inter_party->change_leader(party_id, account_id, char_id))
 		return 0;
 	return 1;
 }
 
-int mapif_pet_created(int fd, int account_id, struct s_pet *p)
+static int mapif_pet_created(int fd, int account_id, struct s_pet *p)
 {
 	WFIFOHEAD(fd, 12);
 	WFIFOW(fd, 0) = 0x3880;
@@ -1439,7 +1442,7 @@ int mapif_pet_created(int fd, int account_id, struct s_pet *p)
 	return 0;
 }
 
-int mapif_pet_info(int fd, int account_id, struct s_pet *p)
+static int mapif_pet_info(int fd, int account_id, struct s_pet *p)
 {
 	nullpo_ret(p);
 	WFIFOHEAD(fd, sizeof(struct s_pet) + 9);
@@ -1453,7 +1456,7 @@ int mapif_pet_info(int fd, int account_id, struct s_pet *p)
 	return 0;
 }
 
-int mapif_pet_noinfo(int fd, int account_id)
+static int mapif_pet_noinfo(int fd, int account_id)
 {
 	WFIFOHEAD(fd, sizeof(struct s_pet) + 9);
 	WFIFOW(fd, 0) = 0x3881;
@@ -1466,7 +1469,7 @@ int mapif_pet_noinfo(int fd, int account_id)
 	return 0;
 }
 
-int mapif_save_pet_ack(int fd, int account_id, int flag)
+static int mapif_save_pet_ack(int fd, int account_id, int flag)
 {
 	WFIFOHEAD(fd, 7);
 	WFIFOW(fd, 0) = 0x3882;
@@ -1477,7 +1480,7 @@ int mapif_save_pet_ack(int fd, int account_id, int flag)
 	return 0;
 }
 
-int mapif_delete_pet_ack(int fd, int flag)
+static int mapif_delete_pet_ack(int fd, int flag)
 {
 	WFIFOHEAD(fd, 3);
 	WFIFOW(fd, 0) = 0x3883;
@@ -1487,7 +1490,7 @@ int mapif_delete_pet_ack(int fd, int flag)
 	return 0;
 }
 
-int mapif_save_pet(int fd, int account_id, const struct s_pet *data)
+static int mapif_save_pet(int fd, int account_id, const struct s_pet *data)
 {
 	//here process pet save request.
 	int len;
@@ -1505,14 +1508,14 @@ int mapif_save_pet(int fd, int account_id, const struct s_pet *data)
 	return 0;
 }
 
-int mapif_delete_pet(int fd, int pet_id)
+static int mapif_delete_pet(int fd, int pet_id)
 {
 	mapif->delete_pet_ack(fd, inter_pet->delete_(pet_id));
 
 	return 0;
 }
 
-int mapif_parse_CreatePet(int fd)
+static int mapif_parse_CreatePet(int fd)
 {
 	int account_id;
 	struct s_pet *pet;
@@ -1530,7 +1533,7 @@ int mapif_parse_CreatePet(int fd)
 	return 0;
 }
 
-int mapif_parse_LoadPet(int fd)
+static int mapif_parse_LoadPet(int fd)
 {
 	int account_id;
 	struct s_pet *pet;
@@ -1546,21 +1549,21 @@ int mapif_parse_LoadPet(int fd)
 	return 0;
 }
 
-int mapif_parse_SavePet(int fd)
+static int mapif_parse_SavePet(int fd)
 {
 	RFIFOHEAD(fd);
 	mapif->save_pet(fd, RFIFOL(fd, 4), RFIFOP(fd, 8));
 	return 0;
 }
 
-int mapif_parse_DeletePet(int fd)
+static int mapif_parse_DeletePet(int fd)
 {
 	RFIFOHEAD(fd);
 	mapif->delete_pet(fd, RFIFOL(fd, 2));
 	return 0;
 }
 
-void mapif_quest_save_ack(int fd, int char_id, bool success)
+static void mapif_quest_save_ack(int fd, int char_id, bool success)
 {
 	WFIFOHEAD(fd, 7);
 	WFIFOW(fd, 0) = 0x3861;
@@ -1576,7 +1579,7 @@ void mapif_quest_save_ack(int fd, int char_id, bool success)
  *
  * @see inter_parse_frommap
  */
-int mapif_parse_quest_save(int fd)
+static int mapif_parse_quest_save(int fd)
 {
 	int num = (RFIFOW(fd, 2) - 8) / sizeof(struct quest);
 	int char_id = RFIFOL(fd, 4);
@@ -1594,7 +1597,7 @@ int mapif_parse_quest_save(int fd)
 	return 0;
 }
 
-void mapif_send_quests(int fd, int char_id, struct quest *tmp_questlog, int num_quests)
+static void mapif_send_quests(int fd, int char_id, struct quest *tmp_questlog, int num_quests)
 {
 	WFIFOHEAD(fd,num_quests*sizeof(struct quest) + 8);
 	WFIFOW(fd, 0) = 0x3860;
@@ -1618,7 +1621,7 @@ void mapif_send_quests(int fd, int char_id, struct quest *tmp_questlog, int num_
  *
  * @see inter_parse_frommap
  */
-int mapif_parse_quest_load(int fd)
+static int mapif_parse_quest_load(int fd)
 {
 	int char_id = RFIFOL(fd,2);
 	struct quest *tmp_questlog = NULL;
@@ -1638,7 +1641,7 @@ int mapif_parse_quest_load(int fd)
 /*==========================================
  * Inbox Request
  *------------------------------------------*/
-void mapif_parse_rodex_requestinbox(int fd)
+static void mapif_parse_rodex_requestinbox(int fd)
 {
 	int count;
 	int char_id = RFIFOL(fd,2);
@@ -1657,7 +1660,7 @@ void mapif_parse_rodex_requestinbox(int fd)
 	VECTOR_CLEAR(mails);
 }
 
-void mapif_rodex_sendinbox(int fd, int char_id, int8 opentype, int8 flag, int count, int64 mail_id, struct rodex_maillist *mails)
+static void mapif_rodex_sendinbox(int fd, int char_id, int8 opentype, int8 flag, int count, int64 mail_id, struct rodex_maillist *mails)
 {
 	int per_packet = (UINT16_MAX - 24) / sizeof(struct rodex_message);
 	int sent = 0;
@@ -1706,7 +1709,7 @@ void mapif_rodex_sendinbox(int fd, int char_id, int8 opentype, int8 flag, int co
 /*==========================================
  * Checks if there are new mails
  *------------------------------------------*/
-void mapif_parse_rodex_checkhasnew(int fd)
+static void mapif_parse_rodex_checkhasnew(int fd)
 {
 	int char_id = RFIFOL(fd, 2);
 	int account_id = RFIFOL(fd, 6);
@@ -1719,7 +1722,7 @@ void mapif_parse_rodex_checkhasnew(int fd)
 	mapif->rodex_sendhasnew(fd, char_id, has_new);
 }
 
-void mapif_rodex_sendhasnew(int fd, int char_id, bool has_new)
+static void mapif_rodex_sendhasnew(int fd, int char_id, bool has_new)
 {
 	Assert_retv(char_id > 0);
 
@@ -1733,7 +1736,7 @@ void mapif_rodex_sendhasnew(int fd, int char_id, bool has_new)
 /*==========================================
  * Update/Delete mail
  *------------------------------------------*/
-void mapif_parse_rodex_updatemail(int fd)
+static void mapif_parse_rodex_updatemail(int fd)
 {
 	int64 mail_id = RFIFOL(fd, 2);
 	int8 flag = RFIFOB(fd, 10);
@@ -1744,7 +1747,7 @@ void mapif_parse_rodex_updatemail(int fd)
 /*==========================================
  * Send Mail
  *------------------------------------------*/
-void mapif_parse_rodex_send(int fd)
+static void mapif_parse_rodex_send(int fd)
 {
 	struct rodex_message msg = { 0 };
 
@@ -1758,7 +1761,7 @@ void mapif_parse_rodex_send(int fd)
 	mapif->rodex_send(fd, msg.sender_id, msg.receiver_id, msg.receiver_accountid, msg.id > 0 ? true : false);
 }
 
-void mapif_rodex_send(int fd, int sender_id, int receiver_id, int receiver_accountid, bool result)
+static void mapif_rodex_send(int fd, int sender_id, int receiver_id, int receiver_accountid, bool result)
 {
 	Assert_retv(sender_id >= 0);
 	Assert_retv(receiver_id + receiver_accountid > 0);
@@ -1775,7 +1778,7 @@ void mapif_rodex_send(int fd, int sender_id, int receiver_id, int receiver_accou
 /*------------------------------------------
  * Check Player
  *------------------------------------------*/
-void mapif_parse_rodex_checkname(int fd)
+static void mapif_parse_rodex_checkname(int fd)
 {
 	int reqchar_id = RFIFOL(fd, 2);
 	char name[NAME_LENGTH];
@@ -1790,7 +1793,7 @@ void mapif_parse_rodex_checkname(int fd)
 		mapif->rodex_checkname(fd, reqchar_id, 0, 0, 0, name);
 }
 
-void mapif_rodex_checkname(int fd, int reqchar_id, int target_char_id, short target_class, int target_level, char *name)
+static void mapif_rodex_checkname(int fd, int reqchar_id, int target_char_id, short target_class, int target_level, char *name)
 {
 	nullpo_retv(name);
 	Assert_retv(reqchar_id > 0);
@@ -1806,7 +1809,7 @@ void mapif_rodex_checkname(int fd, int reqchar_id, int target_char_id, short tar
 	WFIFOSET(fd, 16 + NAME_LENGTH);
 }
 
-int mapif_load_guild_storage(int fd, int account_id, int guild_id, char flag)
+static int mapif_load_guild_storage(int fd, int account_id, int guild_id, char flag)
 {
 	if (SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `guild_id` FROM `%s` WHERE `guild_id`='%d'", guild_db, guild_id)) {
 		Sql_ShowDebug(inter->sql_handle);
@@ -1833,7 +1836,7 @@ int mapif_load_guild_storage(int fd, int account_id, int guild_id, char flag)
 	return 0;
 }
 
-int mapif_save_guild_storage_ack(int fd, int account_id, int guild_id, int fail)
+static int mapif_save_guild_storage_ack(int fd, int account_id, int guild_id, int fail)
 {
 	WFIFOHEAD(fd, 11);
 	WFIFOW(fd, 0) = 0x3819;
@@ -1851,7 +1854,7 @@ int mapif_save_guild_storage_ack(int fd, int account_id, int guild_id, int fail)
  * @param  account_id [in]  account id of the session.
  * @return 1 on success, 0 on failure.
  */
-int mapif_account_storage_load(int fd, int account_id)
+static int mapif_account_storage_load(int fd, int account_id)
 {
 	struct storage_data stor = { 0 };
 	int count = 0, i = 0, len = 0;
@@ -1882,7 +1885,7 @@ int mapif_account_storage_load(int fd, int account_id)
  * @param  fd     [in] file/socket descriptor
  * @return 1 on success, 0 on failure.
  */
-int mapif_parse_AccountStorageLoad(int fd)
+static int mapif_parse_AccountStorageLoad(int fd)
 {
 	int account_id = RFIFOL(fd, 2);
 
@@ -1900,7 +1903,7 @@ int mapif_parse_AccountStorageLoad(int fd)
  * @param  fd     [in] file/socket descriptor.
  * @return 1 on success, 0 on failure.
  */
-int mapif_parse_AccountStorageSave(int fd)
+static int mapif_parse_AccountStorageSave(int fd)
 {
 	int payload_size = RFIFOW(fd, 2) - 8, account_id = RFIFOL(fd, 4);
 	int i = 0, count = 0;
@@ -1942,7 +1945,7 @@ int mapif_parse_AccountStorageSave(int fd)
  * @param  account_id [in]  Account ID of the storage in question.
  * @param  flag       [in]  Save flag, true for success and false for failure.
  */
-void mapif_send_AccountStorageSaveAck(int fd, int account_id, bool flag)
+static void mapif_send_AccountStorageSaveAck(int fd, int account_id, bool flag)
 {
 	WFIFOHEAD(fd, 7);
 	WFIFOW(fd, 0) = 0x3808;
@@ -1951,7 +1954,7 @@ void mapif_send_AccountStorageSaveAck(int fd, int account_id, bool flag)
 	WFIFOSET(fd, 7);
 }
 
-int mapif_parse_LoadGuildStorage(int fd)
+static int mapif_parse_LoadGuildStorage(int fd)
 {
 	RFIFOHEAD(fd);
 
@@ -1960,7 +1963,7 @@ int mapif_parse_LoadGuildStorage(int fd)
 	return 0;
 }
 
-int mapif_parse_SaveGuildStorage(int fd)
+static int mapif_parse_SaveGuildStorage(int fd)
 {
 	int guild_id;
 	int len;
@@ -1980,7 +1983,7 @@ int mapif_parse_SaveGuildStorage(int fd)
 	return 0;
 }
 
-int mapif_itembound_ack(int fd, int aid, int guild_id)
+static int mapif_itembound_ack(int fd, int aid, int guild_id)
 {
 #ifdef GP_BOUND_ITEMS
 	WFIFOHEAD(fd, 8);
@@ -1992,7 +1995,7 @@ int mapif_itembound_ack(int fd, int aid, int guild_id)
 	return 0;
 }
 
-void mapif_parse_ItemBoundRetrieve(int fd)
+static void mapif_parse_ItemBoundRetrieve(int fd)
 {
 #ifdef GP_BOUND_ITEMS
 	int char_id = RFIFOL(fd, 2);
@@ -2012,7 +2015,7 @@ void mapif_parse_ItemBoundRetrieve(int fd)
 	mapif->itembound_ack(fd, RFIFOL(fd, 6), RFIFOW(fd, 10));
 }
 
-void mapif_parse_accinfo(int fd)
+static void mapif_parse_accinfo(int fd)
 {
 	char query[NAME_LENGTH];
 	int u_fd = RFIFOL(fd, 2), aid = RFIFOL(fd, 6), castergroup = RFIFOL(fd, 10);
@@ -2023,7 +2026,7 @@ void mapif_parse_accinfo(int fd)
 }
 
 // broadcast sending
-int mapif_broadcast(const unsigned char *mes, int len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY, int sfd)
+static int mapif_broadcast(const unsigned char *mes, int len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY, int sfd)
 {
 	unsigned char *buf = (unsigned char*)aMalloc((len)*sizeof(unsigned char));
 
@@ -2044,7 +2047,7 @@ int mapif_broadcast(const unsigned char *mes, int len, unsigned int fontColor, s
 }
 
 // Wis sending
-int mapif_wis_message(struct WisData *wd)
+static int mapif_wis_message(struct WisData *wd)
 {
 	unsigned char buf[2048];
 	nullpo_ret(wd);
@@ -2065,7 +2068,7 @@ int mapif_wis_message(struct WisData *wd)
 	return 0;
 }
 
-void mapif_wis_response(int fd, const unsigned char *src, int flag)
+static void mapif_wis_response(int fd, const unsigned char *src, int flag)
 {
 	unsigned char buf[27];
 	nullpo_retv(src);
@@ -2076,7 +2079,7 @@ void mapif_wis_response(int fd, const unsigned char *src, int flag)
 }
 
 // Wis sending result
-int mapif_wis_end(struct WisData *wd, int flag)
+static int mapif_wis_end(struct WisData *wd, int flag)
 {
 	nullpo_ret(wd);
 	mapif->wis_response(wd->fd, wd->src, flag);
@@ -2094,14 +2097,14 @@ static void mapif_account_reg(int fd, unsigned char *src)
 #endif // 0
 
 // Send the requested account_reg
-int mapif_account_reg_reply(int fd,int account_id,int char_id, int type)
+static int mapif_account_reg_reply(int fd,int account_id,int char_id, int type)
 {
 	inter->accreg_fromsql(account_id, char_id, fd, type);
 	return 0;
 }
 
 //Request to kick char from a certain map server. [Skotlex]
-int mapif_disconnectplayer(int fd, int account_id, int char_id, int reason)
+static int mapif_disconnectplayer(int fd, int account_id, int char_id, int reason)
 {
 	if (fd < 0)
 		return -1;
@@ -2115,14 +2118,14 @@ int mapif_disconnectplayer(int fd, int account_id, int char_id, int reason)
 }
 
 // broadcast sending
-int mapif_parse_broadcast(int fd)
+static int mapif_parse_broadcast(int fd)
 {
 	mapif->broadcast(RFIFOP(fd, 16), RFIFOW(fd, 2), RFIFOL(fd, 4), RFIFOW(fd, 8), RFIFOW(fd, 10), RFIFOW(fd, 12), RFIFOW(fd, 14), fd);
 	return 0;
 }
 
 // Wisp/page request to send
-int mapif_parse_WisRequest(int fd)
+static int mapif_parse_WisRequest(int fd)
 {
 	struct WisData* wd;
 	char name[NAME_LENGTH];
@@ -2166,7 +2169,7 @@ int mapif_parse_WisRequest(int fd)
 }
 
 // Wisp/page transmission result
-int mapif_parse_WisReply(int fd)
+static int mapif_parse_WisReply(int fd)
 {
 	int id, flag;
 	struct WisData *wd;
@@ -2186,7 +2189,7 @@ int mapif_parse_WisReply(int fd)
 }
 
 // Received wisp message from map-server for ALL gm (just copy the message and resends it to ALL map-servers)
-int mapif_parse_WisToGM(int fd)
+static int mapif_parse_WisToGM(int fd)
 {
 	unsigned char buf[2048]; // 0x3003/0x3803 <packet_len>.w <wispname>.24B <min_gm_level>.w <message>.?B
 
@@ -2198,7 +2201,7 @@ int mapif_parse_WisToGM(int fd)
 }
 
 // Save account_reg into sql (type=2)
-int mapif_parse_Registry(int fd)
+static int mapif_parse_Registry(int fd)
 {
 	int account_id = RFIFOL(fd, 4), char_id = RFIFOL(fd, 8), count = RFIFOW(fd, 12);
 
@@ -2251,7 +2254,7 @@ int mapif_parse_Registry(int fd)
 }
 
 // Request the value of all registries.
-int mapif_parse_RegistryRequest(int fd)
+static int mapif_parse_RegistryRequest(int fd)
 {
 	//Load Char Registry
 	if (RFIFOB(fd, 12))
@@ -2265,7 +2268,7 @@ int mapif_parse_RegistryRequest(int fd)
 	return 1;
 }
 
-void mapif_namechange_ack(int fd, int account_id, int char_id, int type, int flag, const char *const name)
+static void mapif_namechange_ack(int fd, int account_id, int char_id, int type, int flag, const char *const name)
 {
 	nullpo_retv(name);
 	WFIFOHEAD(fd, NAME_LENGTH+13);
@@ -2278,7 +2281,7 @@ void mapif_namechange_ack(int fd, int account_id, int char_id, int type, int fla
 	WFIFOSET(fd, NAME_LENGTH + 13);
 }
 
-int mapif_parse_NameChangeRequest(int fd)
+static int mapif_parse_NameChangeRequest(int fd)
 {
 	int account_id, char_id, type;
 	const char *name;
@@ -2313,7 +2316,7 @@ int mapif_parse_NameChangeRequest(int fd)
 }
 
 // Clan System
-int mapif_parse_ClanMemberKick(int fd, int clan_id, int kick_interval)
+static int mapif_parse_ClanMemberKick(int fd, int clan_id, int kick_interval)
 {
 	int count = 0;
 
@@ -2328,7 +2331,7 @@ int mapif_parse_ClanMemberKick(int fd, int clan_id, int kick_interval)
 	return 0;
 }
 
-int mapif_parse_ClanMemberCount(int fd, int clan_id, int kick_interval)
+static int mapif_parse_ClanMemberCount(int fd, int clan_id, int kick_interval)
 {
 	WFIFOHEAD(fd, 10);
 	WFIFOW(fd, 0) = 0x3858;
@@ -2338,10 +2341,8 @@ int mapif_parse_ClanMemberCount(int fd, int clan_id, int kick_interval)
 	return 0;
 }
 
-struct mapif_interface mapif_s;
-struct mapif_interface *mapif;
-
-void mapif_defaults(void) {
+void mapif_defaults(void)
+{
 	mapif = &mapif_s;
 
 	mapif->ban = mapif_ban;

@@ -55,20 +55,20 @@
 #define WISDATA_TTL (60*1000) // Wis data Time To Live (60 seconds)
 #define WISDELLIST_MAX 256    // Number of elements in the list Delete data Wis
 
-struct inter_interface inter_s;
+static struct inter_interface inter_s;
 struct inter_interface *inter;
 
-int char_server_port = 3306;
-char char_server_ip[32] = "127.0.0.1";
-char char_server_id[32] = "ragnarok";
-char char_server_pw[100] = "ragnarok";
-char char_server_db[32] = "ragnarok";
-char default_codepage[32] = ""; //Feature by irmin.
+static int char_server_port = 3306;
+static char char_server_ip[32] = "127.0.0.1";
+static char char_server_id[32] = "ragnarok";
+static char char_server_pw[100] = "ragnarok";
+static char char_server_db[32] = "ragnarok";
+static char default_codepage[32] = ""; //Feature by irmin.
 
 int party_share_level = 10;
 
 // recv. packet list
-int inter_recv_packet_length[] = {
+static int inter_recv_packet_length[] = {
 	-1,-1, 7,-1, -1,13,36, (2 + 4 + 4 + 4 + NAME_LENGTH),  0, 0, 0, 0,  0, 0,  0, 0, // 3000-
 	 6,-1, 0, 0,  0, 0, 0, 0, 10,-1, 0, 0,  0, 0,  0, 0,    // 3010- Account Storage [Smokexyz]
 	-1,10,-1,14, 14,19, 6,-1, 14,14, 0, 0,  0, 0,  0, 0,    // 3020- Party
@@ -85,9 +85,10 @@ static struct DBMap *wis_db = NULL; // int wis_id -> struct WisData*
 static int wis_dellist[WISDELLIST_MAX], wis_delnum;
 
 #define MAX_JOB_NAMES 150
-static char* msg_table[MAX_JOB_NAMES]; //  messages 550 ~ 699 are job names
+static char *msg_table[MAX_JOB_NAMES]; //  messages 550 ~ 699 are job names
 
-const char* inter_msg_txt(int msg_number) {
+static const char *inter_msg_txt(int msg_number)
+{
 	msg_number -= 550;
 	if (msg_number >= 0 && msg_number < MAX_JOB_NAMES &&
 	    msg_table[msg_number] != NULL && msg_table[msg_number][0] != '\0')
@@ -106,7 +107,7 @@ const char* inter_msg_txt(int msg_number) {
  * @param[in] allow_override whether to allow duplicate message IDs to override the original value.
  * @return success state.
  */
-bool inter_msg_config_read(const char *cfg_name, bool allow_override)
+static bool inter_msg_config_read(const char *cfg_name, bool allow_override)
 {
 	int msg_number;
 	char line[1024], w1[1024], w2[1024];
@@ -158,14 +159,14 @@ bool inter_msg_config_read(const char *cfg_name, bool allow_override)
 /*==========================================
  * Cleanup Message Data
  *------------------------------------------*/
-void inter_do_final_msg(void)
+static void inter_do_final_msg(void)
 {
 	int i;
 	for (i = 0; i < MAX_JOB_NAMES; i++)
 		aFree(msg_table[i]);
 }
 /* from pc.c due to @accinfo. any ideas to replace this crap are more than welcome. */
-const char* inter_job_name(int class)
+static const char *inter_job_name(int class)
 {
 	switch (class) {
 		case JOB_NOVICE:   // 550
@@ -398,7 +399,7 @@ const char* inter_job_name(int class)
  * Argument-list version of inter_msg_to_fd
  * @see inter_msg_to_fd
  */
-void inter_vmsg_to_fd(int fd, int u_fd, int aid, char* msg, va_list ap)
+static void inter_vmsg_to_fd(int fd, int u_fd, int aid, char *msg, va_list ap)
 {
 	char msg_out[512];
 	va_list apcopy;
@@ -431,8 +432,8 @@ void inter_vmsg_to_fd(int fd, int u_fd, int aid, char* msg, va_list ap)
  * @param msg  Message format string
  * @param ...  Additional parameters for (v)sprinf
  */
-void inter_msg_to_fd(int fd, int u_fd, int aid, char *msg, ...) __attribute__((format(printf, 4, 5)));
-void inter_msg_to_fd(int fd, int u_fd, int aid, char *msg, ...)
+static void inter_msg_to_fd(int fd, int u_fd, int aid, char *msg, ...) __attribute__((format(printf, 4, 5)));
+static void inter_msg_to_fd(int fd, int u_fd, int aid, char *msg, ...)
 {
 	va_list ap;
 	va_start(ap,msg);
@@ -441,7 +442,7 @@ void inter_msg_to_fd(int fd, int u_fd, int aid, char *msg, ...)
 }
 
 /* [Dekamaster/Nightroad] */
-void inter_accinfo(int u_fd, int aid, int castergroup, const char *query, int map_fd)
+static void inter_accinfo(int u_fd, int aid, int castergroup, const char *query, int map_fd)
 {
 	char query_esq[NAME_LENGTH*2+1];
 	int account_id;
@@ -499,7 +500,7 @@ void inter_accinfo(int u_fd, int aid, int castergroup, const char *query, int ma
 	return;
 }
 
-void inter_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int account_id, const char *userid, const char *user_pass,
+static void inter_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int account_id, const char *userid, const char *user_pass,
 		const char *email, const char *last_ip, const char *lastlogin, const char *pin_code, const char *birthdate,
 		int group_id, int logincount, int state)
 {
@@ -572,7 +573,7 @@ void inter_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int account_i
  * @param val either str or int, depending on type
  * @param type false when int, true otherwise
  **/
-void inter_savereg(int account_id, int char_id, const char *key, unsigned int index, intptr_t val, bool is_string)
+static void inter_savereg(int account_id, int char_id, const char *key, unsigned int index, intptr_t val, bool is_string)
 {
 	char val_esq[1000];
 	nullpo_retv(key);
@@ -625,7 +626,7 @@ void inter_savereg(int account_id, int char_id, const char *key, unsigned int in
 }
 
 // Load account_reg from sql (type=2)
-int inter_accreg_fromsql(int account_id,int char_id, int fd, int type)
+static int inter_accreg_fromsql(int account_id, int char_id, int fd, int type)
 {
 	char* data;
 	size_t len;
@@ -802,7 +803,7 @@ int inter_accreg_fromsql(int account_id,int char_id, int fd, int type)
  *
  * @retval false in case of error.
  */
-bool inter_config_read_log(const char *filename, const struct config_t *config, bool imported)
+static bool inter_config_read_log(const char *filename, const struct config_t *config, bool imported)
 {
 	const struct config_setting_t *setting = NULL;
 
@@ -830,7 +831,7 @@ bool inter_config_read_log(const char *filename, const struct config_t *config, 
  *
  * @retval false in case of error.
  */
-bool inter_config_read_connection(const char *filename, const struct config_t *config, bool imported)
+static bool inter_config_read_connection(const char *filename, const struct config_t *config, bool imported)
 {
 	const struct config_setting_t *setting = NULL;
 
@@ -863,7 +864,7 @@ bool inter_config_read_connection(const char *filename, const struct config_t *c
  *
  * @retval false in case of error.
  */
-bool inter_config_read(const char *filename, bool imported)
+static bool inter_config_read(const char *filename, bool imported)
 {
 	struct config_t config;
 	const struct config_setting_t *setting = NULL;
@@ -907,7 +908,7 @@ bool inter_config_read(const char *filename, bool imported)
  * Save interlog into sql (arglist version)
  * @see inter_log
  */
-int inter_vlog(char* fmt, va_list ap)
+static int inter_vlog(char *fmt, va_list ap)
 {
 	char str[255];
 	char esc_str[sizeof(str)*2+1];// escaped str
@@ -930,7 +931,7 @@ int inter_vlog(char* fmt, va_list ap)
  * @param ... Additional (printf-like) arguments
  * @return Always 0 // FIXME
  */
-int inter_log(char* fmt, ...)
+static int inter_log(char *fmt, ...)
 {
 	va_list ap;
 	int ret;
@@ -943,7 +944,7 @@ int inter_log(char* fmt, ...)
 }
 
 // initialize
-int inter_init_sql(const char *file)
+static int inter_init_sql(const char *file)
 {
 	inter->config_read(file, false);
 
@@ -980,7 +981,7 @@ int inter_init_sql(const char *file)
 }
 
 // finalize
-void inter_final(void)
+static void inter_final(void)
 {
 	wis_db->destroy(wis_db, NULL);
 
@@ -1000,7 +1001,7 @@ void inter_final(void)
 	return;
 }
 
-int inter_mapif_init(int fd)
+static int inter_mapif_init(int fd)
 {
 	return 0;
 }
@@ -1011,7 +1012,7 @@ int inter_mapif_init(int fd)
  * Existence check of WISP data
  * @see DBApply
  */
-int inter_check_ttl_wisdata_sub(union DBKey key, struct DBData *data, va_list ap)
+static int inter_check_ttl_wisdata_sub(union DBKey key, struct DBData *data, va_list ap)
 {
 	int64 tick;
 	struct WisData *wd = DB->data2ptr(data);
@@ -1024,7 +1025,7 @@ int inter_check_ttl_wisdata_sub(union DBKey key, struct DBData *data, va_list ap
 	return 0;
 }
 
-int inter_check_ttl_wisdata(void)
+static int inter_check_ttl_wisdata(void)
 {
 	int64 tick = timer->gettick();
 	int i;
@@ -1044,7 +1045,7 @@ int inter_check_ttl_wisdata(void)
 	return 0;
 }
 
-struct WisData *inter_add_wisdata(int fd, const unsigned char *src, const unsigned char *dst, const unsigned char *msg, int msg_len)
+static struct WisData *inter_add_wisdata(int fd, const unsigned char *src, const unsigned char *dst, const unsigned char *msg, int msg_len)
 {
 	static int wisid = 0;
 	struct WisData *wd;
@@ -1066,12 +1067,12 @@ struct WisData *inter_add_wisdata(int fd, const unsigned char *src, const unsign
 	return wd;
 }
 
-struct WisData *inter_get_wisdata(int id)
+static struct WisData *inter_get_wisdata(int id)
 {
 	return idb_get(wis_db, id);
 }
 
-void inter_remove_wisdata(int id)
+static void inter_remove_wisdata(int id)
 {
 	idb_remove(wis_db, id);
 }
@@ -1082,7 +1083,7 @@ void inter_remove_wisdata(int id)
 /// or 0 if no complete packet exists in the queue.
 ///
 /// @param length The minimum allowed length, or -1 for dynamic lookup
-int inter_check_length(int fd, int length)
+static int inter_check_length(int fd, int length)
 {
 	if( length == -1 )
 	{// variable-length packet
@@ -1097,7 +1098,7 @@ int inter_check_length(int fd, int length)
 	return length;
 }
 
-int inter_parse_frommap(int fd)
+static int inter_parse_frommap(int fd)
 {
 	int cmd;
 	int len = 0;

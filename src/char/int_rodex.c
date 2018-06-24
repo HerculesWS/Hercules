@@ -37,7 +37,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct inter_rodex_interface inter_rodex_s;
+static struct inter_rodex_interface inter_rodex_s;
 struct inter_rodex_interface *inter_rodex;
 
 // Loads new mails of this char_id/account_id
@@ -298,7 +298,7 @@ static bool inter_rodex_checkname(const char *name, int *target_char_id, short *
 
 /// Stores a single message in the database.
 /// Returns the message's ID if successful (or 0 if it fails).
-int64 inter_rodex_savemessage(struct rodex_message* msg)
+static int64 inter_rodex_savemessage(struct rodex_message *msg)
 {
 	char sender_name[NAME_LENGTH * 2 + 1];
 	char receiver_name[NAME_LENGTH * 2 + 1];
@@ -349,7 +349,7 @@ int64 inter_rodex_savemessage(struct rodex_message* msg)
 /*==========================================
  * Update/Delete mail
  *------------------------------------------*/
-bool inter_rodex_updatemail(int64 mail_id, int8 flag)
+static bool inter_rodex_updatemail(int64 mail_id, int8 flag)
 {
 	Assert_retr(false, mail_id > 0);
 	Assert_retr(false, flag >= 0 && flag <= 4);
@@ -392,7 +392,7 @@ bool inter_rodex_updatemail(int64 mail_id, int8 flag)
 /*==========================================
  * Packets From Map Server
  *------------------------------------------*/
-int inter_rodex_parse_frommap(int fd)
+static int inter_rodex_parse_frommap(int fd)
 {
 	switch(RFIFOW(fd,0))
 	{
@@ -407,12 +407,12 @@ int inter_rodex_parse_frommap(int fd)
 	return 1;
 }
 
-int inter_rodex_sql_init(void)
+static int inter_rodex_sql_init(void)
 {
 	return 1;
 }
 
-void inter_rodex_sql_final(void)
+static void inter_rodex_sql_final(void)
 {
 	return;
 }
