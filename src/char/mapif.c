@@ -977,7 +977,6 @@ void mapif_mail_sendinbox(int fd, int char_id, unsigned char flag, struct mail_d
 void mapif_parse_mail_requestinbox(int fd);
 void mapif_parse_mail_read(int fd);
 void mapif_mail_sendattach(int fd, int char_id, struct mail_message *msg);
-void mapif_mail_getattach(int fd, int char_id, int mail_id);
 void mapif_parse_mail_getattach(int fd);
 void mapif_mail_delete(int fd, int char_id, int mail_id, bool failed);
 void mapif_parse_mail_delete(int fd);
@@ -1185,7 +1184,6 @@ void mapif_defaults(void) {
 	mapif->parse_mail_requestinbox = mapif_parse_mail_requestinbox;
 	mapif->parse_mail_read = mapif_parse_mail_read;
 	mapif->mail_sendattach = mapif_mail_sendattach;
-	mapif->mail_getattach = mapif_mail_getattach;
 	mapif->parse_mail_getattach = mapif_parse_mail_getattach;
 	mapif->mail_delete = mapif_mail_delete;
 	mapif->parse_mail_delete = mapif_parse_mail_delete;

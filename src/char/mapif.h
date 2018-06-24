@@ -106,7 +106,6 @@ struct mapif_interface {
 	void (*parse_mail_requestinbox) (int fd);
 	void (*parse_mail_read) (int fd);
 	void (*mail_sendattach) (int fd, int char_id, struct mail_message *msg);
-	void (*mail_getattach) (int fd, int char_id, int mail_id);
 	void (*parse_mail_getattach) (int fd);
 	void (*mail_delete) (int fd, int char_id, int mail_id, bool failed);
 	void (*parse_mail_delete) (int fd);
