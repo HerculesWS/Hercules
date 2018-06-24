@@ -1811,7 +1811,7 @@ int char_delete_char_sql(int char_id)
 
 	/* remove homunculus */
 	if( hom_id )
-		mapif->homunculus_delete(hom_id);
+		inter_homunculus->delete(hom_id);
 
 	/* remove elemental */
 	if (elemental_id)

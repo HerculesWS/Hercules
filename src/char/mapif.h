@@ -97,11 +97,6 @@ struct mapif_interface {
 	void (*homunculus_loaded) (int fd, int account_id, struct s_homunculus *hd);
 	void (*homunculus_saved) (int fd, int account_id, bool flag);
 	void (*homunculus_renamed) (int fd, int account_id, int char_id, unsigned char flag, const char *name);
-	bool (*homunculus_create) (struct s_homunculus *hd);
-	bool (*homunculus_save) (const struct s_homunculus *hd);
-	bool (*homunculus_load) (int homun_id, struct s_homunculus* hd);
-	bool (*homunculus_delete) (int homun_id);
-	bool (*homunculus_rename) (const char *name);
 	void (*parse_homunculus_create) (int fd, int len, int account_id, const struct s_homunculus *phd);
 	void (*parse_homunculus_delete) (int fd, int homun_id);
 	void (*parse_homunculus_load) (int fd, int account_id, int homun_id);
