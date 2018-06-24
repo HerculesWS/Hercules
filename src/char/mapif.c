@@ -1556,10 +1556,6 @@ int mapif_parse_DeletePet(int fd)
 	return 0;
 }
 
-struct quest *mapif_quests_fromsql(int char_id, int *count);
-bool mapif_quest_delete(int char_id, int quest_id);
-bool mapif_quest_add(int char_id, struct quest qd);
-bool mapif_quest_update(int char_id, struct quest qd);
 void mapif_quest_save_ack(int fd, int char_id, bool success);
 int mapif_parse_quest_save(int fd);
 void mapif_send_quests(int fd, int char_id, struct quest *tmp_questlog, int num_quests);
@@ -1756,10 +1752,6 @@ void mapif_defaults(void) {
 	mapif->parse_LoadPet = mapif_parse_LoadPet;
 	mapif->parse_SavePet = mapif_parse_SavePet;
 	mapif->parse_DeletePet = mapif_parse_DeletePet;
-	mapif->quests_fromsql = mapif_quests_fromsql;
-	mapif->quest_delete = mapif_quest_delete;
-	mapif->quest_add = mapif_quest_add;
-	mapif->quest_update = mapif_quest_update;
 	mapif->quest_save_ack = mapif_quest_save_ack;
 	mapif->parse_quest_save = mapif_parse_quest_save;
 	mapif->send_quests = mapif_send_quests;

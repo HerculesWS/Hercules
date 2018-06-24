@@ -150,10 +150,6 @@ struct mapif_interface {
 	int (*parse_LoadPet) (int fd);
 	int (*parse_SavePet) (int fd);
 	int (*parse_DeletePet) (int fd);
-	struct quest *(*quests_fromsql) (int char_id, int *count);
-	bool (*quest_delete) (int char_id, int quest_id);
-	bool (*quest_add) (int char_id, struct quest qd);
-	bool (*quest_update) (int char_id, struct quest qd);
 	void (*quest_save_ack) (int fd, int char_id, bool success);
 	int (*parse_quest_save) (int fd);
 	void (*send_quests) (int fd, int char_id, struct quest *tmp_questlog, int num_quests);

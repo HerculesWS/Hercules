@@ -28,6 +28,12 @@
  **/
 struct inter_quest_interface {
 	int (*parse_frommap) (int fd);
+
+	struct quest *(*fromsql) (int char_id, int *count);
+	bool (*delete) (int char_id, int quest_id);
+	bool (*add) (int char_id, struct quest qd);
+	bool (*update) (int char_id, struct quest qd);
+	bool (*save) (int char_id, const struct quest *new_qd, int new_n);
 };
 
 #ifdef HERCULES_CORE
