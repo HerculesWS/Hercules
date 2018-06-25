@@ -15027,8 +15027,9 @@ int skill_check_condition_castend(struct map_session_data* sd, uint16 skill_id, 
 			}
 			break;
 		default:
-			skill->check_condition_castend_unknown(sd, &skill_id, &skill_lv);
-			break;
+			if (!skill->check_condition_castend_unknown(sd, &skill_id, &skill_lv))
+				break;
+			return 0;
 	}
 
 	st = &sd->battle_status;
@@ -15115,8 +15116,9 @@ int skill_check_condition_castend(struct map_session_data* sd, uint16 skill_id, 
 	return 1;
 }
 
-void skill_check_condition_castend_unknown(struct map_session_data* sd, uint16 *skill_id, uint16 *skill_lv)
+bool skill_check_condition_castend_unknown(struct map_session_data* sd, uint16 *skill_id, uint16 *skill_lv)
 {
+	return false;
 }
 
 // type&2: consume items (after skill was used)
