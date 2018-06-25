@@ -23882,7 +23882,7 @@ bool rodex_sendmail_sub(struct script_state* st, struct rodex_message *msg)
 {
 	const char *sender_name, *title, *body;
 
-	if (!strcmp(script->getfuncname(st), "rodex_sendmail_acc2"))
+	if (strcmp(script->getfuncname(st), "rodex_sendmail_acc") == 0 || strcmp(script->getfuncname(st), "rodex_sendmail_acc2") == 0)
 		msg->receiver_accountid = script_getnum(st, 2);
 	else
 		msg->receiver_id = script_getnum(st, 2);
