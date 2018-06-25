@@ -30,6 +30,7 @@
 #include "map/npc.h"
 #include "map/party.h"
 #include "map/pc.h"
+#include "map/quest.h"
 #include "common/HPM.h"
 #include "common/cbasetypes.h"
 #include "common/db.h"
@@ -517,7 +518,7 @@ static void instance_del_map(int16 m)
 		aFree(map->list[m].zone_mf);
 	}
 
-	VECTOR_CLEAR(map->list[m].qi_data);
+	quest->questinfo_vector_clear(m);
 
 	// Remove from instance
 	for( i = 0; i < instance->list[map->list[m].instance_id].num_map; i++ ) {

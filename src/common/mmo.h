@@ -1270,6 +1270,20 @@ enum hz_char_ask_name_answer {
 	CHAR_ASK_NAME_ANS_OFFLINE  = 3, // login-server offline
 };
 
+/**
+ * Quest Info Types
+ */
+enum questinfo_type {
+	QINFO_JOB,
+	QINFO_SEX,
+	QINFO_BASE_LEVEL,
+	QINFO_JOB_LEVEL,
+	QINFO_ITEM,
+	QINFO_HOMUN_LEVEL,
+	QINFO_HOMUN_TYPE,
+	QINFO_QUEST
+};
+
 /* packet size constant for itemlist */
 #if MAX_INVENTORY > MAX_STORAGE && MAX_INVENTORY > MAX_CART
 #define MAX_ITEMLIST MAX_INVENTORY

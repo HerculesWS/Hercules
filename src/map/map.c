@@ -3681,7 +3681,7 @@ static void do_final_maps(void)
 		if( map->list[i].channel )
 			channel->delete(map->list[i].channel);
 
-		VECTOR_CLEAR(map->list[i].qi_data);
+		quest->questinfo_vector_clear(i);
 
 		HPM->data_store_destroy(&map->list[i].hdata);
 	}
@@ -5967,19 +5967,9 @@ static int map_get_new_bonus_id(void)
 
 static void map_add_questinfo(int m, struct questinfo *qi)
 {
-	unsigned short i;
-
 	nullpo_retv(qi);
 	Assert_retv(m >= 0 && m < map->count);
 
-	/* duplicate, override */
-	for (i = 0; i < VECTOR_LENGTH(map->list[m].qi_data); i++) {
-		struct questinfo *qi_data = &VECTOR_INDEX(map->list[m].qi_data, i);
-		if (qi_data->nd == qi->nd) {
-			VECTOR_INDEX(map->list[m].qi_data, i) = *qi;
-			return;
-		}
-	}
 	VECTOR_ENSURE(map->list[m].qi_data, 1, 1);
 	VECTOR_PUSH(map->list[m].qi_data, *qi);
 }

@@ -772,14 +772,31 @@ struct map_drop_list {
 	int drop_per;
 };
 
+struct questinfo_qreq {
+	int id;
+	int state;
+};
 
 struct questinfo {
 	struct npc_data *nd;
 	unsigned short icon;
 	unsigned char color;
-	int quest_id;
 	bool hasJob;
 	unsigned short job;/* perhaps a mapid mask would be most flexible? */
+	bool sex_enabled;
+	int sex;
+	struct {
+		int min;
+		int max;
+	} base_level;
+	struct {
+		int min;
+		int max;
+	} job_level;
+	VECTOR_DECL(struct item) items;
+	struct s_homunculus homunculus;
+	int homunculus_type;
+	VECTOR_DECL(struct questinfo_qreq) quest_requirement;
 };
 
 
