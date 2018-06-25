@@ -1534,12 +1534,56 @@ int char_rename_char_sql(struct char_session_data *sd, int char_id)
 	return 0;
 }
 
-int char_check_char_name(char * name, char * esc_name)
+/**
+ * Checks if the given name exists in the database.
+ *
+ * @param name The name to check.
+ * @param esc_name Escaped version of the name, optional for faster processing.
+ * @retval true if the character name already exists.
+ */
+bool char_name_exists(const char *name, const char *esc_name)
+{
+	char esc_name2[NAME_LENGTH * 2 + 1];
+
+	nullpo_retr(true, name);
+
+	if (esc_name == NULL) {
+		SQL->EscapeStringLen(inter->sql_handle, esc_name2, name, strnlen(name, NAME_LENGTH));
+		esc_name = esc_name2;
+	}
+
+	if (name_ignoring_case) {
+		if (SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT 1 FROM `%s` WHERE BINARY `name` = '%s' LIMIT 1", char_db, esc_name)) {
+			Sql_ShowDebug(inter->sql_handle);
+			return true;
+		}
+	} else {
+		if (SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT 1 FROM `%s` WHERE `name` = '%s' LIMIT 1", char_db, esc_name)) {
+			Sql_ShowDebug(inter->sql_handle);
+			return true;
+		}
+	}
+	if (SQL->NumRows(inter->sql_handle) > 0)
+		return true;
+
+	return false;
+}
+
+/**
+ * Checks if the given name is valid for a new character.
+ *
+ * @param name The name to check.
+ * @param esc_name Escaped version of the name, optional for faster processing.
+ * @retval 0 if the name is valid.
+ * @retval -1 if the name already exists or is reserved
+ * @retval -2 if the name is too short or contains special characters.
+ * @retval -5 if the name contains forbidden characters.
+ */
+int char_check_char_name(const char *name, const char *esc_name)
 {
 	int i;
 
 	nullpo_retr(-2, name);
-	nullpo_retr(-2, esc_name);
 
 	// check length of character name
 	if (name[0] == '\0')
@@ -1550,9 +1594,16 @@ int char_check_char_name(char * name, char * esc_name)
 	 **/
 	if( strlen( name ) < 4 )
 		return -2;
-	// check content of character name
-	if( remove_control_chars(name) )
-		return -2; // control chars in name
+
+	{
+		// check content of character name
+		char *name_copy = aStrdup(name);
+		if (remove_control_chars(name_copy)) {
+			aFree(name_copy);
+			return -2; // control chars in name
+		}
+		aFree(name_copy);
+	}
 
 	// check for reserved names
 	if( strcmpi(name, wisp_server_name) == 0 )
@@ -1571,19 +1622,9 @@ int char_check_char_name(char * name, char * esc_name)
 			if( strchr(char_name_letters, name[i]) != NULL )
 				return -5;
 	}
-	if( name_ignoring_case ) {
-		if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT 1 FROM `%s` WHERE BINARY `name` = '%s' LIMIT 1", char_db, esc_name) ) {
-			Sql_ShowDebug(inter->sql_handle);
-			return -2;
-		}
-	} else {
-		if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT 1 FROM `%s` WHERE `name` = '%s' LIMIT 1", char_db, esc_name) ) {
-			Sql_ShowDebug(inter->sql_handle);
-			return -2;
-		}
-	}
-	if( SQL->NumRows(inter->sql_handle) > 0 )
-		return -1; // name already exists
+
+	if (chr->name_exists(name, esc_name))
+		return -1;
 
 	return 0;
 }
@@ -2550,14 +2591,14 @@ void char_parse_fromlogin_update_ip(int fd)
 
 void char_parse_fromlogin_accinfo2_failed(int fd)
 {
-	mapif->parse_accinfo2(false, RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10), RFIFOL(fd,14),
+	inter->accinfo2(false, RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10), RFIFOL(fd,14),
 	                     NULL, NULL, NULL, NULL, NULL, NULL, NULL, -1, 0, 0);
 	RFIFOSKIP(fd,18);
 }
 
 void char_parse_fromlogin_accinfo2_ok(int fd)
 {
-	mapif->parse_accinfo2(true, RFIFOL(fd,167), RFIFOL(fd,171), RFIFOL(fd,175), RFIFOL(fd,179),
+	inter->accinfo2(true, RFIFOL(fd,167), RFIFOL(fd,171), RFIFOL(fd,175), RFIFOL(fd,179),
 	                      RFIFOP(fd,2), RFIFOP(fd,26), RFIFOP(fd,59), RFIFOP(fd,99), RFIFOP(fd,119),
 	                      RFIFOP(fd,151), RFIFOP(fd,156), RFIFOL(fd,115), RFIFOL(fd,143), RFIFOL(fd,147));
 	RFIFOSKIP(fd,183);
@@ -4727,7 +4768,6 @@ void char_parse_char_rename_char(int fd, struct char_session_data* sd)
 {
 	int i, cid =RFIFOL(fd,2);
 	char name[NAME_LENGTH];
-	char esc_name[NAME_LENGTH*2+1];
 	safestrncpy(name, RFIFOP(fd,6), NAME_LENGTH);
 	RFIFOSKIP(fd,30);
 
@@ -4736,8 +4776,7 @@ void char_parse_char_rename_char(int fd, struct char_session_data* sd)
 		return;
 
 	normalize_name(name,TRIM_CHARS);
-	SQL->EscapeStringLen(inter->sql_handle, esc_name, name, strnlen(name, NAME_LENGTH));
-	if( !chr->check_char_name(name,esc_name) ) {
+	if (chr->check_char_name(name, NULL) == 0) {
 		i = 1;
 		safestrncpy(sd->new_name, name, NAME_LENGTH);
 	} else {
@@ -4752,7 +4791,6 @@ void char_parse_char_rename_char2(int fd, struct char_session_data* sd)
 {
 	int i, aid = RFIFOL(fd,2), cid =RFIFOL(fd,6);
 	char name[NAME_LENGTH];
-	char esc_name[NAME_LENGTH*2+1];
 	safestrncpy(name, RFIFOP(fd,10), NAME_LENGTH);
 	RFIFOSKIP(fd,34);
 
@@ -4763,14 +4801,12 @@ void char_parse_char_rename_char2(int fd, struct char_session_data* sd)
 		return;
 
 	normalize_name(name,TRIM_CHARS);
-	SQL->EscapeStringLen(inter->sql_handle, esc_name, name, strnlen(name, NAME_LENGTH));
-	if( !chr->check_char_name(name,esc_name) )
-	{
+	if (chr->check_char_name(name, NULL) == 0) {
 		i = 1;
 		safestrncpy(sd->new_name, name, NAME_LENGTH);
-	}
-	else
+	} else {
 		i = 0;
+	}
 
 	chr->allow_rename(fd, i);
 }
@@ -6316,6 +6352,7 @@ void char_defaults(void)
 	chr->mmo_char_sql_init = char_mmo_char_sql_init;
 	chr->char_slotchange = char_char_slotchange;
 	chr->rename_char_sql = char_rename_char_sql;
+	chr->name_exists = char_name_exists;
 	chr->check_char_name = char_check_char_name;
 	chr->make_new_char_sql = char_make_new_char_sql;
 	chr->divorce_char_sql = char_divorce_char_sql;

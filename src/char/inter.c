@@ -81,11 +81,6 @@ int inter_recv_packet_length[] = {
 	-1,10,-1, 6,  0, 20,10,11, -1,6 + NAME_LENGTH, 0, 0,  0, 0,  0, 0,    // 3090-  Homunculus packets [albator], RoDEX packets
 };
 
-struct WisData {
-	int id, fd, count, len;
-	int64 tick;
-	unsigned char src[24], dst[24], msg[512];
-};
 static struct DBMap *wis_db = NULL; // int wis_id -> struct WisData*
 static int wis_dellist[WISDELLIST_MAX], wis_delnum;
 
@@ -446,14 +441,11 @@ void inter_msg_to_fd(int fd, int u_fd, int aid, char *msg, ...)
 }
 
 /* [Dekamaster/Nightroad] */
-void mapif_parse_accinfo(int fd)
+void inter_accinfo(int u_fd, int aid, int castergroup, const char *query, int map_fd)
 {
-	int u_fd = RFIFOL(fd,2), aid = RFIFOL(fd,6), castergroup = RFIFOL(fd,10);
-	char query[NAME_LENGTH], query_esq[NAME_LENGTH*2+1];
+	char query_esq[NAME_LENGTH*2+1];
 	int account_id;
 	char *data;
-
-	safestrncpy(query, RFIFOP(fd,14), NAME_LENGTH);
 
 	SQL->EscapeString(inter->sql_handle, query_esq, query);
 
@@ -464,10 +456,10 @@ void mapif_parse_accinfo(int fd)
 		if ( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `account_id`,`name`,`class`,`base_level`,`job_level`,`online` FROM `%s` WHERE `name` LIKE '%s' LIMIT 10", char_db, query_esq)
 				|| SQL->NumRows(inter->sql_handle) == 0 ) {
 			if( SQL->NumRows(inter->sql_handle) == 0 ) {
-				inter->msg_to_fd(fd, u_fd, aid, "No matches were found for your criteria, '%s'",query);
+				inter->msg_to_fd(map_fd, u_fd, aid, "No matches were found for your criteria, '%s'",query);
 			} else {
 				Sql_ShowDebug(inter->sql_handle);
-				inter->msg_to_fd(fd, u_fd, aid, "An error occurred, bother your admin about it.");
+				inter->msg_to_fd(map_fd, u_fd, aid, "An error occurred, bother your admin about it.");
 			}
 			SQL->FreeResult(inter->sql_handle);
 			return;
@@ -477,7 +469,7 @@ void mapif_parse_accinfo(int fd)
 				SQL->GetData(inter->sql_handle, 0, &data, NULL); account_id = atoi(data);
 				SQL->FreeResult(inter->sql_handle);
 			} else {// more than one, listing... [Dekamaster/Nightroad]
-				inter->msg_to_fd(fd, u_fd, aid, "Your query returned the following %d results, please be more specific...",(int)SQL->NumRows(inter->sql_handle));
+				inter->msg_to_fd(map_fd, u_fd, aid, "Your query returned the following %d results, please be more specific...",(int)SQL->NumRows(inter->sql_handle));
 				while ( SQL_SUCCESS == SQL->NextRow(inter->sql_handle) ) {
 					int class;
 					int base_level, job_level, online;
@@ -490,7 +482,7 @@ void mapif_parse_accinfo(int fd)
 					SQL->GetData(inter->sql_handle, 4, &data, NULL); job_level = atoi(data);
 					SQL->GetData(inter->sql_handle, 5, &data, NULL); online = atoi(data);
 
-					inter->msg_to_fd(fd, u_fd, aid, "[AID: %d] %s | %s | Level: %d/%d | %s", account_id, name, inter->job_name(class), base_level, job_level, online?"Online":"Offline");
+					inter->msg_to_fd(map_fd, u_fd, aid, "[AID: %d] %s | %s | Level: %d/%d | %s", account_id, name, inter->job_name(class), base_level, job_level, online?"Online":"Offline");
 				}
 				SQL->FreeResult(inter->sql_handle);
 				return;
@@ -501,12 +493,23 @@ void mapif_parse_accinfo(int fd)
 	/* it will only get here if we have a single match */
 	/* and we will send packet with account id to login server asking for account info */
 	if( account_id ) {
-		mapif->on_parse_accinfo(account_id, u_fd, aid, castergroup, fd);
+		mapif->on_parse_accinfo(account_id, u_fd, aid, castergroup, map_fd);
 	}
 
 	return;
 }
-void mapif_parse_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int account_id, const char *userid, const char *user_pass,
+
+void mapif_parse_accinfo(int fd)
+{
+	char query[NAME_LENGTH];
+	int u_fd = RFIFOL(fd,2), aid = RFIFOL(fd,6), castergroup = RFIFOL(fd,10);
+
+	safestrncpy(query, RFIFOP(fd,14), NAME_LENGTH);
+
+	inter->accinfo(u_fd, aid, castergroup, query, fd);
+}
+
+void inter_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int account_id, const char *userid, const char *user_pass,
 		const char *email, const char *last_ip, const char *lastlogin, const char *pin_code, const char *birthdate,
 		int group_id, int logincount, int state)
 {
@@ -1147,6 +1150,38 @@ int inter_check_ttl_wisdata(void)
 	return 0;
 }
 
+struct WisData *inter_add_wisdata(int fd, const unsigned char *src, const unsigned char *dst, const unsigned char *msg, int msg_len)
+{
+	static int wisid = 0;
+	struct WisData *wd;
+
+	CREATE(wd, struct WisData, 1);
+
+	// Whether the failure of previous wisp/page transmission (timeout)
+	inter->check_ttl_wisdata();
+
+	wd->id = ++wisid;
+	wd->fd = fd;
+	wd->len = msg_len;
+	memcpy(wd->src, src, NAME_LENGTH);
+	memcpy(wd->dst, dst, NAME_LENGTH);
+	memcpy(wd->msg, msg, wd->len);
+	wd->tick = timer->gettick();
+	idb_put(wis_db, wd->id, wd);
+
+	return wd;
+}
+
+struct WisData *inter_get_wisdata(int id)
+{
+	return idb_get(wis_db, id);
+}
+
+void inter_remove_wisdata(int id)
+{
+	idb_remove(wis_db, id);
+}
+
 //--------------------------------------------------------
 
 // broadcast sending
@@ -1162,7 +1197,6 @@ int mapif_parse_WisRequest(int fd)
 {
 	struct WisData* wd;
 	char name[NAME_LENGTH];
-	char esc_name[NAME_LENGTH*2+1];// escaped name
 	char* data;
 	size_t len;
 
@@ -1179,17 +1213,12 @@ int mapif_parse_WisRequest(int fd)
 
 	safestrncpy(name, RFIFOP(fd,28), NAME_LENGTH); //Received name may be too large and not contain \0! [Skotlex]
 
-	SQL->EscapeStringLen(inter->sql_handle, esc_name, name, strnlen(name, NAME_LENGTH));
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `name` FROM `%s` WHERE `name`='%s'", char_db, esc_name) )
-		Sql_ShowDebug(inter->sql_handle);
-
 	// search if character exists before to ask all map-servers
-	if( SQL_SUCCESS != SQL->NextRow(inter->sql_handle) )
-	{
+	if (!chr->name_exists(name, NULL)) {
 		mapif->wis_response(fd, RFIFOP(fd, 4), 1);
-	}
-	else
-	{// Character exists. So, ask all map-servers
+	} else {
+		// Character exists. So, ask all map-servers
+
 		// to be sure of the correct name, rewrite it
 		SQL->GetData(inter->sql_handle, 0, &data, &len);
 		memset(name, 0, NAME_LENGTH);
@@ -1197,23 +1226,8 @@ int mapif_parse_WisRequest(int fd)
 		// if source is destination, don't ask other servers.
 		if (strncmp(RFIFOP(fd,4), name, NAME_LENGTH) == 0) {
 			mapif->wis_response(fd, RFIFOP(fd, 4), 1);
-		}
-		else
-		{
-			static int wisid = 0;
-			CREATE(wd, struct WisData, 1);
-
-			// Whether the failure of previous wisp/page transmission (timeout)
-			inter->check_ttl_wisdata();
-
-			wd->id = ++wisid;
-			wd->fd = fd;
-			wd->len= RFIFOW(fd,2)-52;
-			memcpy(wd->src, RFIFOP(fd, 4), NAME_LENGTH);
-			memcpy(wd->dst, RFIFOP(fd,28), NAME_LENGTH);
-			memcpy(wd->msg, RFIFOP(fd,52), wd->len);
-			wd->tick = timer->gettick();
-			idb_put(wis_db, wd->id, wd);
+		} else {
+			wd = inter->add_wisdata(fd, RFIFOP(fd, 4), RFIFOP(fd, 28), RFIFOP(fd, 52), RFIFOW(fd, 2) - 52);
 			mapif->wis_message(wd);
 		}
 	}
@@ -1231,13 +1245,13 @@ int mapif_parse_WisReply(int fd)
 
 	id = RFIFOL(fd,2);
 	flag = RFIFOB(fd,6);
-	wd = (struct WisData*)idb_get(wis_db, id);
+	wd = inter->get_wisdata(id);
 	if (wd == NULL)
 		return 0; // This wisp was probably suppress before, because it was timeout of because of target was found on another map-server
 
 	if ((--wd->count) <= 0 || flag != 1) {
 		mapif->wis_end(wd, flag); // flag: 0: success to send whisper, 1: target character is not logged in?, 2: ignored by target
-		idb_remove(wis_db, id);
+		inter->remove_wisdata(id);
 	}
 
 	return 0;
@@ -1461,4 +1475,9 @@ void inter_defaults(void)
 	inter->final = inter_final;
 	inter->config_read_log = inter_config_read_log;
 	inter->config_read_connection = inter_config_read_connection;
+	inter->accinfo = inter_accinfo;
+	inter->accinfo2 = inter_accinfo2;
+	inter->add_wisdata = inter_add_wisdata;
+	inter->get_wisdata = inter_get_wisdata;
+	inter->remove_wisdata = inter_remove_wisdata;
 }

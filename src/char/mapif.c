@@ -2013,8 +2013,6 @@ void mapif_parse_ItemBoundRetrieve(int fd)
 }
 
 void mapif_parse_accinfo(int fd);
-void mapif_parse_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int account_id, const char *userid, const char *user_pass,
-    const char *email, const char *last_ip, const char *lastlogin, const char *pin_code, const char *birthdate, int group_id, int logincount, int state);
 int mapif_broadcast(const unsigned char *mes, int len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY, int sfd);
 int mapif_wis_message(struct WisData *wd);
 void mapif_wis_response(int fd, const unsigned char *src, int flag);
@@ -2208,7 +2206,6 @@ void mapif_defaults(void) {
 	mapif->itembound_ack = mapif_itembound_ack;
 	mapif->parse_ItemBoundRetrieve = mapif_parse_ItemBoundRetrieve;
 	mapif->parse_accinfo = mapif_parse_accinfo;
-	mapif->parse_accinfo2 = mapif_parse_accinfo2;
 	mapif->broadcast = mapif_broadcast;
 	mapif->wis_message = mapif_wis_message;
 	mapif->wis_response = mapif_wis_response;
