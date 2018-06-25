@@ -2012,21 +2012,305 @@ void mapif_parse_ItemBoundRetrieve(int fd)
 	mapif->itembound_ack(fd, RFIFOL(fd, 6), RFIFOW(fd, 10));
 }
 
-void mapif_parse_accinfo(int fd);
-int mapif_broadcast(const unsigned char *mes, int len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY, int sfd);
-int mapif_wis_message(struct WisData *wd);
-void mapif_wis_response(int fd, const unsigned char *src, int flag);
-int mapif_wis_end(struct WisData *wd, int flag);
-int mapif_account_reg_reply(int fd,int account_id,int char_id, int type);
-int mapif_disconnectplayer(int fd, int account_id, int char_id, int reason);
-int mapif_parse_broadcast(int fd);
-int mapif_parse_WisRequest(int fd);
-int mapif_parse_WisReply(int fd);
-int mapif_parse_WisToGM(int fd);
-int mapif_parse_Registry(int fd);
-int mapif_parse_RegistryRequest(int fd);
-void mapif_namechange_ack(int fd, int account_id, int char_id, int type, int flag, const char *const name);
-int mapif_parse_NameChangeRequest(int fd);
+void mapif_parse_accinfo(int fd)
+{
+	char query[NAME_LENGTH];
+	int u_fd = RFIFOL(fd, 2), aid = RFIFOL(fd, 6), castergroup = RFIFOL(fd, 10);
+
+	safestrncpy(query, RFIFOP(fd, 14), NAME_LENGTH);
+
+	inter->accinfo(u_fd, aid, castergroup, query, fd);
+}
+
+// broadcast sending
+int mapif_broadcast(const unsigned char *mes, int len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY, int sfd)
+{
+	unsigned char *buf = (unsigned char*)aMalloc((len)*sizeof(unsigned char));
+
+	nullpo_ret(mes);
+	Assert_ret(len >= 16);
+	WBUFW(buf, 0) = 0x3800;
+	WBUFW(buf, 2) = len;
+	WBUFL(buf, 4) = fontColor;
+	WBUFW(buf, 8) = fontType;
+	WBUFW(buf, 10) = fontSize;
+	WBUFW(buf, 12) = fontAlign;
+	WBUFW(buf, 14) = fontY;
+	memcpy(WBUFP(buf, 16), mes, len - 16);
+	mapif->sendallwos(sfd, buf, len);
+
+	aFree(buf);
+	return 0;
+}
+
+// Wis sending
+int mapif_wis_message(struct WisData *wd)
+{
+	unsigned char buf[2048];
+	nullpo_ret(wd);
+	//if (wd->len > 2047-56) wd->len = 2047-56; //Force it to fit to avoid crashes. [Skotlex]
+	if (wd->len < 0)
+		wd->len = 0;
+	if (wd->len >= (int)sizeof(wd->msg) - 1)
+		wd->len = (int)sizeof(wd->msg) - 1;
+
+	WBUFW(buf, 0) = 0x3801;
+	WBUFW(buf, 2) = 56 + wd->len;
+	WBUFL(buf, 4) = wd->id;
+	memcpy(WBUFP(buf, 8), wd->src, NAME_LENGTH);
+	memcpy(WBUFP(buf, 32), wd->dst, NAME_LENGTH);
+	memcpy(WBUFP(buf, 56), wd->msg, wd->len);
+	wd->count = mapif->sendall(buf, WBUFW(buf, 2));
+
+	return 0;
+}
+
+void mapif_wis_response(int fd, const unsigned char *src, int flag)
+{
+	unsigned char buf[27];
+	nullpo_retv(src);
+	WBUFW(buf, 0) = 0x3802;
+	memcpy(WBUFP(buf, 2), src, 24);
+	WBUFB(buf, 26) = flag;
+	mapif->send(fd, buf, 27);
+}
+
+// Wis sending result
+int mapif_wis_end(struct WisData *wd, int flag)
+{
+	nullpo_ret(wd);
+	mapif->wis_response(wd->fd, wd->src, flag);
+	return 0;
+}
+
+#if 0
+// Account registry transfer to map-server
+static void mapif_account_reg(int fd, unsigned char *src)
+{
+	nullpo_retv(src);
+	WBUFW(src, 0) = 0x3804; //NOTE: writing to RFIFO
+	mapif->sendallwos(fd, src, WBUFW(src, 2));
+}
+#endif // 0
+
+// Send the requested account_reg
+int mapif_account_reg_reply(int fd,int account_id,int char_id, int type)
+{
+	inter->accreg_fromsql(account_id, char_id, fd, type);
+	return 0;
+}
+
+//Request to kick char from a certain map server. [Skotlex]
+int mapif_disconnectplayer(int fd, int account_id, int char_id, int reason)
+{
+	if (fd < 0)
+		return -1;
+
+	WFIFOHEAD(fd, 7);
+	WFIFOW(fd, 0) = 0x2b1f;
+	WFIFOL(fd, 2) = account_id;
+	WFIFOB(fd, 6) = reason;
+	WFIFOSET(fd, 7);
+	return 0;
+}
+
+// broadcast sending
+int mapif_parse_broadcast(int fd)
+{
+	mapif->broadcast(RFIFOP(fd, 16), RFIFOW(fd, 2), RFIFOL(fd, 4), RFIFOW(fd, 8), RFIFOW(fd, 10), RFIFOW(fd, 12), RFIFOW(fd, 14), fd);
+	return 0;
+}
+
+// Wisp/page request to send
+int mapif_parse_WisRequest(int fd)
+{
+	struct WisData* wd;
+	char name[NAME_LENGTH];
+	char *data;
+	size_t len;
+
+	if (fd <= 0) // check if we have a valid fd
+		return 0;
+
+	if (RFIFOW(fd, 2) - 52 >= sizeof(wd->msg)) {
+		ShowWarning("inter: Wis message size too long.\n");
+		return 0;
+	} else if (RFIFOW(fd, 2) - 52 <= 0) { // normally, impossible, but who knows...
+		ShowError("inter: Wis message doesn't exist.\n");
+		return 0;
+	}
+
+	safestrncpy(name, RFIFOP(fd, 28), NAME_LENGTH); //Received name may be too large and not contain \0! [Skotlex]
+
+	// search if character exists before to ask all map-servers
+	if (!chr->name_exists(name, NULL)) {
+		mapif->wis_response(fd, RFIFOP(fd, 4), 1);
+	} else {
+		// Character exists. So, ask all map-servers
+
+		// to be sure of the correct name, rewrite it
+		SQL->GetData(inter->sql_handle, 0, &data, &len);
+		memset(name, 0, NAME_LENGTH);
+		memcpy(name, data, min(len, NAME_LENGTH));
+		// if source is destination, don't ask other servers.
+		if (strncmp(RFIFOP(fd, 4), name, NAME_LENGTH) == 0) {
+			mapif->wis_response(fd, RFIFOP(fd, 4), 1);
+		} else {
+			wd = inter->add_wisdata(fd, RFIFOP(fd, 4), RFIFOP(fd, 28), RFIFOP(fd, 52), RFIFOW(fd, 2) - 52);
+			mapif->wis_message(wd);
+		}
+	}
+
+	SQL->FreeResult(inter->sql_handle);
+	return 0;
+}
+
+// Wisp/page transmission result
+int mapif_parse_WisReply(int fd)
+{
+	int id, flag;
+	struct WisData *wd;
+
+	id = RFIFOL(fd,2);
+	flag = RFIFOB(fd,6);
+	wd = inter->get_wisdata(id);
+	if (wd == NULL)
+		return 0; // This wisp was probably suppress before, because it was timeout of because of target was found on another map-server
+
+	if ((--wd->count) <= 0 || flag != 1) {
+		mapif->wis_end(wd, flag); // flag: 0: success to send whisper, 1: target character is not logged in?, 2: ignored by target
+		inter->remove_wisdata(id);
+	}
+
+	return 0;
+}
+
+// Received wisp message from map-server for ALL gm (just copy the message and resends it to ALL map-servers)
+int mapif_parse_WisToGM(int fd)
+{
+	unsigned char buf[2048]; // 0x3003/0x3803 <packet_len>.w <wispname>.24B <min_gm_level>.w <message>.?B
+
+	memcpy(WBUFP(buf,0), RFIFOP(fd,0), RFIFOW(fd,2)); // Message contains the NUL terminator (see intif_wis_message_to_gm())
+	WBUFW(buf, 0) = 0x3803;
+	mapif->sendall(buf, RFIFOW(fd,2));
+
+	return 0;
+}
+
+// Save account_reg into sql (type=2)
+int mapif_parse_Registry(int fd)
+{
+	int account_id = RFIFOL(fd, 4), char_id = RFIFOL(fd, 8), count = RFIFOW(fd, 12);
+
+	if (count != 0) {
+		int cursor = 14, i;
+		char key[SCRIPT_VARNAME_LENGTH+1], sval[254];
+		bool isLoginActive = sockt->session_is_active(chr->login_fd);
+
+		if (isLoginActive)
+			chr->global_accreg_to_login_start(account_id, char_id);
+
+		for (i = 0; i < count; i++) {
+			unsigned int index;
+			int len = RFIFOB(fd, cursor);
+			safestrncpy(key, RFIFOP(fd, cursor + 1), min((int)sizeof(key), len));
+			cursor += len + 1;
+
+			index = RFIFOL(fd, cursor);
+			cursor += 4;
+
+			switch (RFIFOB(fd, cursor++)) {
+			/* int */
+			case 0:
+				inter->savereg(account_id, char_id, key, index, RFIFOL(fd, cursor), false);
+				cursor += 4;
+				break;
+			case 1:
+				inter->savereg(account_id, char_id, key, index, 0, false);
+				break;
+			/* str */
+			case 2:
+				len = RFIFOB(fd, cursor);
+				safestrncpy(sval, RFIFOP(fd, cursor + 1), min((int)sizeof(sval), len));
+				cursor += len + 1;
+				inter->savereg(account_id, char_id, key, index, (intptr_t)sval, true);
+				break;
+			case 3:
+				inter->savereg(account_id, char_id, key, index, 0, true);
+				break;
+			default:
+				ShowError("mapif->parse_Registry: unknown type %d\n", RFIFOB(fd, cursor - 1));
+				return 1;
+			}
+		}
+
+		if (isLoginActive)
+			chr->global_accreg_to_login_send();
+	}
+	return 0;
+}
+
+// Request the value of all registries.
+int mapif_parse_RegistryRequest(int fd)
+{
+	//Load Char Registry
+	if (RFIFOB(fd, 12))
+		mapif->account_reg_reply(fd, RFIFOL(fd, 2), RFIFOL(fd, 6), 3); // 3: char reg
+	//Load Account Registry
+	if (RFIFOB(fd, 11) != 0)
+		mapif->account_reg_reply(fd, RFIFOL(fd, 2), RFIFOL(fd, 6), 2); // 2: account reg
+	//Ask Login Server for Account2 values.
+	if (RFIFOB(fd, 10) != 0)
+		chr->request_accreg2(RFIFOL(fd, 2), RFIFOL(fd, 6));
+	return 1;
+}
+
+void mapif_namechange_ack(int fd, int account_id, int char_id, int type, int flag, const char *const name)
+{
+	nullpo_retv(name);
+	WFIFOHEAD(fd, NAME_LENGTH+13);
+	WFIFOW(fd, 0) = 0x3806;
+	WFIFOL(fd, 2) = account_id;
+	WFIFOL(fd, 6) = char_id;
+	WFIFOB(fd, 10) = type;
+	WFIFOB(fd, 11) = flag;
+	memcpy(WFIFOP(fd, 12), name, NAME_LENGTH);
+	WFIFOSET(fd, NAME_LENGTH + 13);
+}
+
+int mapif_parse_NameChangeRequest(int fd)
+{
+	int account_id, char_id, type;
+	const char *name;
+	int i;
+
+	account_id = RFIFOL(fd, 2);
+	char_id = RFIFOL(fd, 6);
+	type = RFIFOB(fd, 10);
+	name = RFIFOP(fd, 11);
+
+	// Check Authorized letters/symbols in the name
+	if (char_name_option == 1) { // only letters/symbols in char_name_letters are authorized
+		for (i = 0; i < NAME_LENGTH && name[i]; i++)
+		if (strchr(char_name_letters, name[i]) == NULL) {
+			mapif->namechange_ack(fd, account_id, char_id, type, 0, name);
+			return 0;
+		}
+	} else if (char_name_option == 2) { // letters/symbols in char_name_letters are forbidden
+		for (i = 0; i < NAME_LENGTH && name[i]; i++)
+		if (strchr(char_name_letters, name[i]) != NULL) {
+			mapif->namechange_ack(fd, account_id, char_id, type, 0, name);
+			return 0;
+		}
+	}
+	//TODO: type holds the type of object to rename.
+	//If it were a player, it needs to have the guild information and db information
+	//updated here, because changing it on the map won't make it be saved [Skotlex]
+
+	//name allowed.
+	mapif->namechange_ack(fd, account_id, char_id, type, 1, name);
+	return 0;
+}
 
 // Clan System
 int mapif_parse_ClanMemberKick(int fd, int clan_id, int kick_interval)
