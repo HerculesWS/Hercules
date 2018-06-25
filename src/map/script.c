@@ -20985,8 +20985,8 @@ static BUILDIN(setquest)
 	quest->add(sd, quest_id, time_limit);
 
 	// If questinfo is set, remove quest bubble once quest is set.
-	for (i = 0; i < map->list[sd->bl.m].qi_count; i++) {
-		struct questinfo *qi = &map->list[sd->bl.m].qi_data[i];
+	for (i = 0; i < VECTOR_LENGTH(map->list[sd->bl.m].qi_data); i++) {
+		struct questinfo *qi = &VECTOR_INDEX(map->list[sd->bl.m].qi_data, i);
 		if (qi->quest_id == quest_id) {
 #if PACKETVER >= 20120410
 			clif->quest_show_event(sd, &qi->nd->bl, 9999, 0);

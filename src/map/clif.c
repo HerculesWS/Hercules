@@ -10066,8 +10066,8 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 #if PACKETVER >= 20090218
 	{
 		int i;
-		for(i = 0; i < map->list[sd->bl.m].qi_count; i++) {
-			struct questinfo *qi = &map->list[sd->bl.m].qi_data[i];
+		for (i = 0; i < VECTOR_LENGTH(map->list[sd->bl.m].qi_data); i++)  {
+			struct questinfo *qi = &VECTOR_INDEX(map->list[sd->bl.m].qi_data, i);
 			if( quest->check(sd, qi->quest_id, HAVEQUEST) == -1 ) {// Check if quest is not started
 				if( qi->hasJob ) { // Check if quest is job-specific, check is user is said job class.
 					if (sd->status.class == qi->job)
