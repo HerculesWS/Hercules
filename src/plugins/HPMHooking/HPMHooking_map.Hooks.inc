@@ -76386,31 +76386,32 @@ int HP_skill_check_condition_castbegin_unknown(struct status_change *sc, uint16 
 	}
 	return retVal___;
 }
-void HP_skill_check_condition_castend_unknown(struct map_session_data *sd, uint16 *skill_id, uint16 *skill_lv) {
+bool HP_skill_check_condition_castend_unknown(struct map_session_data *sd, uint16 *skill_id, uint16 *skill_lv) {
 	int hIndex = 0;
+	bool retVal___ = false;
 	if (HPMHooks.count.HP_skill_check_condition_castend_unknown_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, uint16 **skill_id, uint16 **skill_lv);
+		bool (*preHookFunc) (struct map_session_data **sd, uint16 **skill_id, uint16 **skill_lv);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_check_condition_castend_unknown_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_skill_check_condition_castend_unknown_pre[hIndex].func;
-			preHookFunc(&sd, &skill_id, &skill_lv);
+			retVal___ = preHookFunc(&sd, &skill_id, &skill_lv);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
-			return;
+			return retVal___;
 		}
 	}
 	{
-		HPMHooks.source.skill.check_condition_castend_unknown(sd, skill_id, skill_lv);
+		retVal___ = HPMHooks.source.skill.check_condition_castend_unknown(sd, skill_id, skill_lv);
 	}
 	if (HPMHooks.count.HP_skill_check_condition_castend_unknown_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, uint16 *skill_id, uint16 *skill_lv);
+		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, uint16 *skill_id, uint16 *skill_lv);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_check_condition_castend_unknown_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_skill_check_condition_castend_unknown_post[hIndex].func;
-			postHookFunc(sd, skill_id, skill_lv);
+			retVal___ = postHookFunc(retVal___, sd, skill_id, skill_lv);
 		}
 	}
-	return;
+	return retVal___;
 }
 bool HP_skill_get_requirement_off_unknown(struct status_change *sc, uint16 *skill_id) {
 	int hIndex = 0;
