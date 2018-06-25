@@ -1813,7 +1813,6 @@ int mapif_parse_AccountStorageLoad(int fd);
 int mapif_parse_AccountStorageSave(int fd);
 void mapif_send_AccountStorageSaveAck(int fd, int account_id, bool save);
 int mapif_itembound_ack(int fd, int aid, int guild_id);
-int mapif_parse_ItemBoundRetrieve_sub(int fd);
 void mapif_parse_ItemBoundRetrieve(int fd);
 void mapif_parse_accinfo(int fd);
 void mapif_parse_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int account_id, const char *userid, const char *user_pass,
@@ -2009,7 +2008,6 @@ void mapif_defaults(void) {
 	mapif->sAccountStorageSaveAck = mapif_send_AccountStorageSaveAck;
 	mapif->account_storage_load = mapif_account_storage_load;
 	mapif->itembound_ack = mapif_itembound_ack;
-	mapif->parse_ItemBoundRetrieve_sub = mapif_parse_ItemBoundRetrieve_sub;
 	mapif->parse_ItemBoundRetrieve = mapif_parse_ItemBoundRetrieve;
 	mapif->parse_accinfo = mapif_parse_accinfo;
 	mapif->parse_accinfo2 = mapif_parse_accinfo2;

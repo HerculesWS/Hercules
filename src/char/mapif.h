@@ -172,7 +172,6 @@ struct mapif_interface {
 	int (*pAccountStorageSave) (int fd);
 	void (*sAccountStorageSaveAck) (int fd, int account_id, bool save);
 	int (*itembound_ack) (int fd, int aid, int guild_id);
-	int (*parse_ItemBoundRetrieve_sub) (int fd);
 	void (*parse_ItemBoundRetrieve) (int fd);
 	void (*parse_accinfo) (int fd);
 	void (*parse_accinfo2) (bool success, int map_fd, int u_fd, int u_aid, int account_id, const char *userid, const char *user_pass,

@@ -235,12 +235,23 @@ int inter_storage_fromsql(int account_id, struct storage_data *p)
 }
 
 /// Save guild_storage data to sql
-int inter_storage_guild_storage_tosql(int guild_id, const struct guild_storage *p)
+bool inter_storage_guild_storage_tosql(int guild_id, const struct guild_storage *p)
 {
 	nullpo_ret(p);
+
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `guild_id` FROM `%s` WHERE `guild_id`='%d'", guild_db, guild_id)) {
+		Sql_ShowDebug(inter->sql_handle);
+		return false;
+	} else if (SQL->NumRows(inter->sql_handle) < 1) {
+		// guild doesn't exist
+		SQL->FreeResult(inter->sql_handle);
+		return false;
+	}
+	SQL->FreeResult(inter->sql_handle);
+
 	chr->memitemdata_to_sql(p->items, guild_id, TABLE_GUILD_STORAGE);
 	ShowInfo ("guild storage save to DB - guild: %d\n", guild_id);
-	return 0;
+	return true;
 }
 
 /// Load guild_storage data to mem
@@ -501,17 +512,9 @@ int mapif_parse_SaveGuildStorage(int fd)
 
 	if (sizeof(struct guild_storage) != len - 12) {
 		ShowError("inter storage: data size mismatch: %d != %"PRIuS"\n", len - 12, sizeof(struct guild_storage));
-	} else {
-		if (SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `guild_id` FROM `%s` WHERE `guild_id`='%d'", guild_db, guild_id)) {
-			Sql_ShowDebug(inter->sql_handle);
-		} else if(SQL->NumRows(inter->sql_handle) > 0) {
-			// guild exists
-			SQL->FreeResult(inter->sql_handle);
-			inter_storage->guild_storage_tosql(guild_id, RFIFOP(fd,12));
-			mapif->save_guild_storage_ack(fd, RFIFOL(fd,4), guild_id, 0);
-			return 0;
-		}
-		SQL->FreeResult(inter->sql_handle);
+	} else if (inter_storage->guild_storage_tosql(guild_id, RFIFOP(fd,12))) {
+		mapif->save_guild_storage_ack(fd, RFIFOL(fd,4), guild_id, 0);
+		return 0;
 	}
 	mapif->save_guild_storage_ack(fd, RFIFOL(fd,4), guild_id, 1);
 
@@ -534,7 +537,7 @@ int mapif_itembound_ack(int fd, int aid, int guild_id)
 //Guild bound items pull for offline characters [Akinari]
 //Revised by [Mhalicot]
 //------------------------------------------------
-int mapif_parse_ItemBoundRetrieve_sub(int fd)
+bool inter_storage_retrieve_bound_items(int char_id, int account_id, int guild_id)
 {
 #ifdef GP_BOUND_ITEMS
 	StringBuf buf;
@@ -543,9 +546,6 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 	int j, i=0, s=0, bound_qt=0;
 	struct item items[MAX_INVENTORY];
 	unsigned int bound_item[MAX_INVENTORY] = {0};
-	int char_id = RFIFOL(fd,2);
-	int aid = RFIFOL(fd,6);
-	int guild_id = RFIFOW(fd,10);
 
 	StrBuf->Init(&buf);
 	StrBuf->AppendStr(&buf, "SELECT `id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `bound`, `unique_id`");
@@ -562,7 +562,7 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 		Sql_ShowDebug(inter->sql_handle);
 		SQL->StmtFree(stmt);
 		StrBuf->Destroy(&buf);
-		return 1;
+		return false;
 	}
 
 	memset(&item, 0, sizeof(item));
@@ -594,7 +594,7 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 	if (i == 0) { //No items found - No need to continue
 		StrBuf->Destroy(&buf);
 		SQL->StmtFree(stmt);
-		return 0;
+		return true;
 	}
 
 	//First we delete the character's items
@@ -627,7 +627,7 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 		Sql_ShowDebug(inter->sql_handle);
 		SQL->StmtFree(stmt);
 		StrBuf->Destroy(&buf);
-		return 1;
+		return false;
 	}
 
 	// Removes any view id that was set by an item that was removed
@@ -661,7 +661,7 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 			Sql_ShowDebug(inter->sql_handle);
 			SQL->StmtFree(stmt);
 			StrBuf->Destroy(&buf);
-			return 1;
+			return false;
 		}
 #undef CHECK_REMOVE
 	}
@@ -702,24 +702,31 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 		Sql_ShowDebug(inter->sql_handle);
 		SQL->StmtFree(stmt);
 		StrBuf->Destroy(&buf);
-		return 1;
+		return false;
 	}
 
 	StrBuf->Destroy(&buf);
 	SQL->StmtFree(stmt);
-
-	//Finally reload storage and tell map we're done
-	mapif->load_guild_storage(fd,aid,guild_id,0);
-
-	// If character is logged in char, disconnect
-	chr->disconnect_player(aid);
 #endif
-	return 0;
+	return true;
 }
 
 void mapif_parse_ItemBoundRetrieve(int fd)
 {
-	mapif->parse_ItemBoundRetrieve_sub(fd);
+#ifdef GP_BOUND_ITEMS
+	int char_id = RFIFOL(fd, 2);
+	int account_id = RFIFOL(fd, 6);
+	int guild_id = RFIFOW(fd, 10);
+
+	inter_storage->retrieve_bound_items(char_id, account_id, guild_id);
+
+	//Finally reload storage and tell map we're done
+	mapif->load_guild_storage(fd, account_id, guild_id, 0);
+
+	// If character is logged in char, disconnect
+	chr->disconnect_player(account_id);
+#endif // GP_BOUND_ITEMS
+
 	/* tell map server the operation is over and it can unlock the storage */
 	mapif->itembound_ack(fd,RFIFOL(fd,6),RFIFOW(fd,10));
 }
@@ -754,4 +761,5 @@ void inter_storage_defaults(void)
 	inter_storage->delete_ = inter_storage_delete;
 	inter_storage->guild_storage_delete = inter_storage_guild_storage_delete;
 	inter_storage->parse_frommap = inter_storage_parse_frommap;
+	inter_storage->retrieve_bound_items = inter_storage_retrieve_bound_items;
 }
