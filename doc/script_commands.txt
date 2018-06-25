@@ -2756,7 +2756,9 @@ save points. Available information types are:
 
 ---------------------------------------
 
-*getcharip({"<character name>"|<account id>|<char id>})
+*getcharip({"<character name>"})
+*getcharip({<account id>})
+*getcharip({<character id>})
 
 This function will return the IP address of the invoking character, or, if
 a player is specified, of that character. A blank string is returned if no
@@ -3413,7 +3415,8 @@ behave specially when talked to by GMs.
 
 ---------------------------------------
 
-*setgroupid(<new group id>{, "<character name>"|<account id>})
+*setgroupid(<new group id>{, "<character name>"})
+*setgroupid(<new group id>{, <account id>})
 
 This function will temporary adjust the id of player group the account to which the
 player specified if the new group id is available.
@@ -4372,7 +4375,7 @@ offline in the mean time, attachrid() returns false, otherwise true.
 
 ---------------------------------------
 
-*rid2name(<rid>)
+*rid2name(<account id>)
 
 Converts rid to name. Note: The player/monster/NPC must be online/enabled.
 Good for PCKillEvent where you can convert 'killedrid' to the name of the
@@ -4616,13 +4619,12 @@ effects.
 
 ---------------------------------------
 
-*recovery()
-*recovery(<account id>)
+*recovery({<account id>})
 *recovery("<map name>"{, <x1>, <y1>, <x2>, <y2>})
 
-In its first form, this command will revive and restore full HP and SP to all
-characters currently connected to the server. In its second form, it will only
-affect the target player. In its third form it will affect a whole map or area.
+This command will revive and restore full HP and SP to all characters currently
+connected to the server. If an account id is supplied, it will instead only
+affect this character. If a map is supplied it will affect a whole map or area.
 
 ---------------------------------------
 
@@ -5138,8 +5140,10 @@ Example:
 	close();
 ---------------------------------------
 
-*getnameditem(<item id>, <character name|character ID>)
-*getnameditem("<item name>", <character name|character ID>)
+*getnameditem(<item id>, "<character name>")
+*getnameditem(<item id>, <character ID>)
+*getnameditem("<item name>", "<character name>")
+*getnameditem("<item name>", <character ID>)
 
 Create an item signed with the given character's name.
 
@@ -5303,7 +5307,7 @@ Check getitem2() to understand the arguments of the function.
 
 ---------------------------------------
 
-*groupranditem(<item_id/constant>)
+*groupranditem(<item id>)
 
 Returns the item_id of a random item picked from the item container specified. There
 are different item containers and they are specified in 'db/(pre-)re/item_group.conf'.
@@ -5313,7 +5317,7 @@ Example:
 
 ---------------------------------------
 
-*getrandgroupitem(<item_id/constant>, <quantity>)
+*getrandgroupitem(<item id>, <quantity>)
 
 Similar to the above example, this command allows players to obtain the specified
 quantity of a random item from the container. The different containers
@@ -6195,7 +6199,7 @@ Examples:
     @ /!\ This command is deprecated @
     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-Prevents the player from moving when the option != 0, and 0 enables the 
+Prevents the player from moving when the option != 0, and 0 enables the
 player to move again. The player has to be the account ID of a character,
 and will run for the attached player if zero is supplied.
 
@@ -6823,12 +6827,12 @@ valid <type> for gettimer() are:
 
 ---------------------------------------
 
-*initnpctimer({ "<NPC name>" {, <Attach Flag>} } |
-              { "<NPC name>" | <Attach Flag> })
-*stopnpctimer({ "<NPC name>" {, <Detach Flag>}  } |
-              { "<NPC name>" | <Detach Flag> })
-*startnpctimer({ "<NPC name>" {, <Attach Flag>} } |
-               { "<NPC name>" | <Attach Flag> })
+*initnpctimer({"<NPC name>"{, <Attach Flag>}})
+*initnpctimer({<Attach Flag>})
+*stopnpctimer({"<NPC name>"{, <Detach Flag>}})
+*stopnpctimer({<Detach Flag>}})
+*startnpctimer({"<NPC name>"{, <Attach Flag>}})
+*startnpctimer({<Attach Flag>})
 *setnpctimer(<tick>{, "<NPC name>"})
 *getnpctimer(<type of information>{, "<NPC name>"})
 *attachnpctimer({"<character name>"})
@@ -9369,19 +9373,19 @@ Add quest of the <ID2> to the the quest log, and the state is "active".
 
 ---------------------------------------
 
-*questprogress(<ID>{, PLAYTIME|HUNTING})
+*questprogress(<ID>{, <type>})
 
 If no additional argument supplied, return the state of the quest:
 	0 = Quest not started (not in quest log)
 	1 = Quest has been given
 	2 = Quest completed
 
-If parameter PLAYTIME is supplied:
+If <type> PLAYTIME is supplied:
 	0 = Quest not started (not in quest log)
 	1 = The time limit has not yet been reached
 	2 = The time limit has been reached
 
-If parameter HUNTING is supplied:
+If <type> HUNTING is supplied:
 	0 = Quest not started (not in quest log)
 	1 = Player hasn't killed all of the target monsters
 	2 = Player has killed all of the target monsters
@@ -10023,7 +10027,7 @@ returns 1 on success, 0 on failure.
 //=====================================
 ---------------------------------------
 
-*join_clan(<ClanID>{,<RID>})
+*join_clan(<ClanID>{, <account id>})
 
 Joins a player into the given clan.
 If no RID is given, will run with the current attached player.
@@ -10032,7 +10036,7 @@ returns true on success, false on failure.
 
 ---------------------------------------
 
-*clan_leave({<RID>})
+*clan_leave({<account id>})
 
 Removes a player from its clan.
 If no RID is given, will run with the current attached player.
