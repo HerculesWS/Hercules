@@ -37,6 +37,7 @@
 #include "map/party.h"
 #include "map/pc.h"
 #include "map/pet.h"
+#include "map/quest.h"
 #include "map/script.h"
 #include "map/skill.h"
 #include "map/status.h"
@@ -406,6 +407,7 @@ static bool homunculus_levelup(struct homun_data *hd)
 			growth_int/10.0, growth_dex/10.0, growth_luk/10.0);
 		clif_disp_onlyself(hd->master, output);
 	}
+	quest->questinfo_refresh(hd->master);
 	return true;
 }
 
@@ -419,6 +421,7 @@ static int homunculus_change_class(struct homun_data *hd, short class_)
 	hd->homunculus.class_ = class_;
 	status->set_viewdata(&hd->bl, class_);
 	homun->calc_skilltree(hd, 1);
+	quest->questinfo_refresh(hd->master);
 	return 1;
 }
 
@@ -471,7 +474,7 @@ static bool homunculus_evolve(struct homun_data *hd)
 
 	if (!(battle_config.hom_setting&0x2))
 		skill->unit_move(&sd->hd->bl,timer->gettick(),1); // apply land skills immediately
-
+	quest->questinfo_refresh(sd);
 	return true;
 }
 

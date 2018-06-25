@@ -4783,6 +4783,7 @@ static int pc_additem(struct map_session_data *sd, struct item *item_data, int a
 			pc->inventory_rental_add(sd, seconds);
 		}
 	}
+	quest->questinfo_refresh(sd);
 
 	return 0;
 }
@@ -4820,6 +4821,7 @@ static int pc_delitem(struct map_session_data *sd, int n, int amount, int type, 
 		clif->delitem(sd,n,amount,reason);
 	if(!(type&2))
 		clif->updatestatus(sd,SP_WEIGHT);
+	quest->questinfo_refresh(sd);
 
 	return 0;
 }
@@ -6881,6 +6883,7 @@ static int pc_checkbaselevelup(struct map_session_data *sd)
 		party->send_levelup(sd);
 
 	pc->baselevelchanged(sd);
+	quest->questinfo_refresh(sd);
 	return 1;
 }
 
@@ -6943,6 +6946,7 @@ static int pc_checkjoblevelup(struct map_session_data *sd)
 		clif->status_change(&sd->bl,SI_DEVIL1, 1, 0, 0, 0, 1); //Permanent blind effect from SG_DEVIL.
 
 	npc->script_event(sd, NPCE_JOBLVUP);
+	quest->questinfo_refresh(sd);
 	return 1;
 }
 
@@ -9036,6 +9040,7 @@ static int pc_jobchange(struct map_session_data *sd, int class, int upper)
 			break;
 		}
 	}
+	quest->questinfo_refresh(sd);
 
 	return 0;
 }
