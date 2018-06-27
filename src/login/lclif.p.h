@@ -64,6 +64,7 @@ enum login_packet_id {
 	PACKET_ID_SC_NOTIFY_BAN           = 0x0081,
 	PACKET_ID_AC_ACK_HASH             = 0x01dc,
 	PACKET_ID_AC_REFUSE_LOGIN_R2      = 0x083e,
+	PACKET_ID_AC_REFUSE_LOGIN_R3      = 0x0b02,
 };
 
 /* Packets Structs */
