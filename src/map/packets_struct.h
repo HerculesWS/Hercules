@@ -1015,8 +1015,14 @@ struct packet_roulette_info_ack {
 	struct {
 		uint16 Row;
 		uint16 Position;
+#if PACKETVER >= 20180523  // unknown real version
+		uint32 ItemId;
+		uint16 Count;
+		uint16 unused;
+#else
 		uint16 ItemId;
 		uint16 Count;
+#endif
 	} ItemInfo[42];
 } __attribute__((packed));
 
