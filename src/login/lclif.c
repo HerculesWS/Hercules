@@ -311,7 +311,10 @@ bool lclif_send_server_list(struct login_session_data *sd)
 /// @copydoc lclif_interface::auth_failed()
 void lclif_send_auth_failed(int fd, time_t ban, uint32 error)
 {
-#if PACKETVER >= 20120000 /* not sure when this started */
+#if PACKETVER_ZERO_NUM >= 20180627
+	struct packet_AC_REFUSE_LOGIN_R2 *packet = NULL;
+	int packet_id = PACKET_ID_AC_REFUSE_LOGIN_R3;
+#elif PACKETVER >= 20101123
 	struct packet_AC_REFUSE_LOGIN_R2 *packet = NULL;
 	int packet_id = PACKET_ID_AC_REFUSE_LOGIN_R2;
 #else

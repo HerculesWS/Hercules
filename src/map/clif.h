@@ -698,6 +698,7 @@ struct clif_interface {
 	unsigned short (*decrypt_cmd) ( int cmd, struct map_session_data *sd );
 	/* auth */
 	void (*authok) (struct map_session_data *sd);
+	void (*auth_error) (int fd, int errorCode);
 	void (*authrefuse) (int fd, uint8 error_code);
 	void (*authfail_fd) (int fd, int type);
 	void (*charselectok) (int id, uint8 ok);

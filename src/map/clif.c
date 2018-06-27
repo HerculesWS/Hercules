@@ -713,6 +713,7 @@ void clif_authok(struct map_session_data *sd)
 	clif->send(&p,sizeof(p),&sd->bl,SELF);
 }
 
+/// [4144] Packet not using error_code anymore. Works for fixed error only (MsgString: 9 - Rejected from Server)
 /// Notifies the client, that it's connection attempt was refused (ZC_REFUSE_ENTER).
 /// 0074 <error code>.B
 /// error code:
@@ -9524,6 +9525,22 @@ void clif_channel_msg2(struct channel_data *chan, char *msg)
 	dbi_destroy(iter);
 }
 
+// TODO: [4144] same packet with login server. need somehow use one function for both servers
+// 3 - Rejected by server
+void clif_auth_error(int fd, int errorCode)
+{
+	struct packet_ZC_REFUSE_LOGIN p;
+	const int len = sizeof(p);
+
+	p.PacketType = authError;
+	p.error_code = errorCode;
+	p.block_date[0] = '\0';
+
+	WFIFOHEAD(fd, len);
+	memcpy(WFIFOP(fd, 0), &p, len);
+	WFIFOSET(fd, len);
+}
+
 // ------------
 // clif_parse_*
 // ------------
@@ -9562,10 +9579,7 @@ void clif_parse_WantToConnection(int fd, struct map_session_data* sd) {
 	bl = map->id2bl(account_id);
 	if(bl && bl->type != BL_PC) {
 		ShowError("clif_parse_WantToConnection: a non-player object already has id %d, please increase the starting account number\n", account_id);
-		WFIFOHEAD(fd,packet_len(0x6a));
-		WFIFOW(fd,0) = 0x6a;
-		WFIFOB(fd,2) = 3; // Rejected by server
-		WFIFOSET(fd,packet_len(0x6a));
+		clif->auth_error(fd, 3);  // Rejected by server
 		sockt->eof(fd);
 
 		return;
@@ -21365,6 +21379,7 @@ void clif_defaults(void) {
 	clif->packet = clif_packet;
 	/* auth */
 	clif->authok = clif_authok;
+	clif->auth_error = clif_auth_error;
 	clif->authrefuse = clif_authrefuse;
 	clif->authfail_fd = clif_authfail_fd;
 	clif->charselectok = clif_charselectok;
