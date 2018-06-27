@@ -4436,7 +4436,7 @@ void char_parse_char_connect(int fd, struct char_session_data* sd, uint32 ipl)
 	}
 }
 
-void char_send_map_info(int fd, int i, uint32 subnet_map_ip, struct mmo_charstatus *cd)
+void char_send_map_info(int fd, int i, uint32 subnet_map_ip, struct mmo_charstatus *cd, char *dnsHost)
 {
 #if PACKETVER < 20170329
 	const int cmd = 0x71;
@@ -4452,6 +4452,15 @@ void char_send_map_info(int fd, int i, uint32 subnet_map_ip, struct mmo_charstat
 	mapindex->getmapname_ext(mapindex_id2name(cd->last_point.map), WFIFOP(fd, 6));
 	WFIFOL(fd, 22) = htonl((subnet_map_ip) ? subnet_map_ip : chr->server[i].ip);
 	WFIFOW(fd, 26) = sockt->ntows(htons(chr->server[i].port)); // [!] LE byte order here [!]
+#if PACKETVER < 20170329
+	memset(WFIFOP(fd, 28), 0, 128);
+#else
+	if (dnsHost != NULL) {
+		safestrncpy(WFIFOP(fd, 28), dnsHost, 128);
+	} else {
+		memset(WFIFOP(fd, 28), 0, 128);
+	}
+#endif
 	WFIFOSET(fd, len);
 }
 
@@ -4612,7 +4621,7 @@ void char_parse_char_select(int fd, struct char_session_data* sd, uint32 ipl)
 
 	subnet_map_ip = chr->lan_subnet_check(ipl);
 	//Send player to map
-	chr->send_map_info(fd, i, subnet_map_ip, cd);
+	chr->send_map_info(fd, i, subnet_map_ip, cd, NULL);
 
 	// create temporary auth entry
 	CREATE(node, struct char_auth_node, 1);
