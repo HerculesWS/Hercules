@@ -19284,6 +19284,9 @@ void clif_parse_RouletteInfo(int fd, struct map_session_data* sd)
 			p.ItemInfo[count].Position = j;
 			p.ItemInfo[count].ItemId = clif->rd.nameid[i][j];
 			p.ItemInfo[count].Count = clif->rd.qty[i][j];
+#if PACKETVER >= 20180523  // unknown real version
+			p.ItemInfo[count].unused = 0;
+#endif
 			count++;
 		}
 	}
