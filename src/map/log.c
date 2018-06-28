@@ -39,11 +39,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct log_interface log_s;
+static struct log_interface log_s;
 struct log_interface *logs;
 
 /// obtain log type character for item/zeny logs
-char log_picktype2char(e_log_pick_type type) {
+static char log_picktype2char(e_log_pick_type type)
+{
 	switch( type ) {
 		case LOG_TYPE_TRADE:            return 'T';  // (T)rade
 		case LOG_TYPE_VENDING:          return 'V';  // (V)ending
@@ -82,7 +83,7 @@ char log_picktype2char(e_log_pick_type type) {
 }
 
 /// obtain log type character for chat logs
-char log_chattype2char(e_log_chat_type type)
+static char log_chattype2char(e_log_chat_type type)
 {
 	switch (type) {
 	case LOG_CHAT_GLOBAL:
@@ -105,7 +106,8 @@ char log_chattype2char(e_log_chat_type type)
 }
 
 /// check if this item should be logged according the settings
-bool should_log_item(int nameid, int amount, int refine, struct item_data *id) {
+static bool should_log_item(int nameid, int amount, int refine, struct item_data *id)
+{
 	int filter = logs->config.filter;
 
 	if( id == NULL )
@@ -128,7 +130,7 @@ bool should_log_item(int nameid, int amount, int refine, struct item_data *id) {
 
 	return false;
 }
-void log_branch_sub_sql(struct map_session_data* sd)
+static void log_branch_sub_sql(struct map_session_data *sd)
 {
 	struct SqlStmt *stmt;
 
@@ -144,7 +146,8 @@ void log_branch_sub_sql(struct map_session_data* sd)
 	}
 	SQL->StmtFree(stmt);
 }
-void log_branch_sub_txt(struct map_session_data* sd) {
+static void log_branch_sub_txt(struct map_session_data *sd)
+{
 	char timestring[255];
 	time_t curtime;
 	FILE* logfp;
@@ -159,7 +162,8 @@ void log_branch_sub_txt(struct map_session_data* sd) {
 }
 
 /// logs items, that summon monsters
-void log_branch(struct map_session_data* sd) {
+static void log_branch(struct map_session_data *sd)
+{
 	nullpo_retv(sd);
 
 	if( !logs->config.branch )
@@ -167,7 +171,8 @@ void log_branch(struct map_session_data* sd) {
 
 	logs->branch_sub(sd);
 }
-void log_pick_sub_sql(int id, int16 m, e_log_pick_type type, int amount, struct item* itm, struct item_data *data) {
+static void log_pick_sub_sql(int id, int16 m, e_log_pick_type type, int amount, struct item *itm, struct item_data *data)
+{
 	nullpo_retv(itm);
 	if (SQL_ERROR == SQL->Query(logs->mysql_handle,
 	    LOG_QUERY " INTO `%s` (`time`, `char_id`, `type`, `nameid`, `amount`, `refine`, `card0`, `card1`, `card2`, `card3`, "
@@ -182,7 +187,8 @@ void log_pick_sub_sql(int id, int16 m, e_log_pick_type type, int amount, struct 
 		return;
 	}
 }
-void log_pick_sub_txt(int id, int16 m, e_log_pick_type type, int amount, struct item* itm, struct item_data *data) {
+static void log_pick_sub_txt(int id, int16 m, e_log_pick_type type, int amount, struct item *itm, struct item_data *data)
+{
 	char timestring[255];
 	time_t curtime;
 	FILE* logfp;
@@ -198,7 +204,8 @@ void log_pick_sub_txt(int id, int16 m, e_log_pick_type type, int amount, struct 
 	fclose(logfp);
 }
 /// logs item transactions (generic)
-void log_pick(int id, int16 m, e_log_pick_type type, int amount, struct item* itm, struct item_data *data) {
+static void log_pick(int id, int16 m, e_log_pick_type type, int amount, struct item *itm, struct item_data *data)
+{
 	nullpo_retv(itm);
 	if( ( logs->config.enable_logs&type ) == 0 ) {// disabled
 		return;
@@ -211,19 +218,22 @@ void log_pick(int id, int16 m, e_log_pick_type type, int amount, struct item* it
 }
 
 /// logs item transactions (players)
-void log_pick_pc(struct map_session_data* sd, e_log_pick_type type, int amount, struct item* itm, struct item_data *data) {
+static void log_pick_pc(struct map_session_data *sd, e_log_pick_type type, int amount, struct item *itm, struct item_data *data)
+{
 	nullpo_retv(sd);
 	nullpo_retv(itm);
 	log_pick(sd->status.char_id, sd->bl.m, type, amount, itm, data ? data : itemdb->exists(itm->nameid));
 }
 
 /// logs item transactions (monsters)
-void log_pick_mob(struct mob_data* md, e_log_pick_type type, int amount, struct item* itm, struct item_data *data) {
+static void log_pick_mob(struct mob_data *md, e_log_pick_type type, int amount, struct item *itm, struct item_data *data)
+{
 	nullpo_retv(md);
 	nullpo_retv(itm);
 	log_pick(md->class_, md->bl.m, type, amount, itm, data ? data : itemdb->exists(itm->nameid));
 }
-void log_zeny_sub_sql(struct map_session_data* sd, e_log_pick_type type, struct map_session_data* src_sd, int amount) {
+static void log_zeny_sub_sql(struct map_session_data *sd, e_log_pick_type type, struct map_session_data *src_sd, int amount)
+{
 	nullpo_retv(sd);
 	nullpo_retv(src_sd);
 	if( SQL_ERROR == SQL->Query(logs->mysql_handle, LOG_QUERY " INTO `%s` (`time`, `char_id`, `src_id`, `type`, `amount`, `map`) VALUES (NOW(), '%d', '%d', '%c', '%d', '%s')",
@@ -233,7 +243,8 @@ void log_zeny_sub_sql(struct map_session_data* sd, e_log_pick_type type, struct 
 		return;
 	}
 }
-void log_zeny_sub_txt(struct map_session_data* sd, e_log_pick_type type, struct map_session_data* src_sd, int amount) {
+static void log_zeny_sub_txt(struct map_session_data *sd, e_log_pick_type type, struct map_session_data *src_sd, int amount)
+{
 	char timestring[255];
 	time_t curtime;
 	FILE* logfp;
@@ -248,7 +259,7 @@ void log_zeny_sub_txt(struct map_session_data* sd, e_log_pick_type type, struct 
 	fclose(logfp);
 }
 /// logs zeny transactions
-void log_zeny(struct map_session_data* sd, e_log_pick_type type, struct map_session_data* src_sd, int amount)
+static void log_zeny(struct map_session_data *sd, e_log_pick_type type, struct map_session_data *src_sd, int amount)
 {
 	nullpo_retv(sd);
 
@@ -257,7 +268,8 @@ void log_zeny(struct map_session_data* sd, e_log_pick_type type, struct map_sess
 
 	logs->zeny_sub(sd,type,src_sd,amount);
 }
-void log_mvpdrop_sub_sql(struct map_session_data* sd, int monster_id, int* log_mvp) {
+static void log_mvpdrop_sub_sql(struct map_session_data *sd, int monster_id, int *log_mvp)
+{
 	nullpo_retv(sd);
 	nullpo_retv(log_mvp);
 	if( SQL_ERROR == SQL->Query(logs->mysql_handle, LOG_QUERY " INTO `%s` (`mvp_date`, `kill_char_id`, `monster_id`, `prize`, `mvpexp`, `map`) VALUES (NOW(), '%d', '%d', '%d', '%d', '%s') ",
@@ -267,7 +279,8 @@ void log_mvpdrop_sub_sql(struct map_session_data* sd, int monster_id, int* log_m
 		return;
 	}
 }
-void log_mvpdrop_sub_txt(struct map_session_data* sd, int monster_id, int* log_mvp) {
+static void log_mvpdrop_sub_txt(struct map_session_data *sd, int monster_id, int *log_mvp)
+{
 	char timestring[255];
 	time_t curtime;
 	FILE* logfp;
@@ -282,7 +295,7 @@ void log_mvpdrop_sub_txt(struct map_session_data* sd, int monster_id, int* log_m
 	fclose(logfp);
 }
 /// logs MVP monster rewards
-void log_mvpdrop(struct map_session_data* sd, int monster_id, int* log_mvp)
+static void log_mvpdrop(struct map_session_data *sd, int monster_id, int *log_mvp)
 {
 	nullpo_retv(sd);
 
@@ -292,7 +305,7 @@ void log_mvpdrop(struct map_session_data* sd, int monster_id, int* log_mvp)
 	logs->mvpdrop_sub(sd,monster_id,log_mvp);
 }
 
-void log_atcommand_sub_sql(struct map_session_data* sd, const char* message)
+static void log_atcommand_sub_sql(struct map_session_data *sd, const char *message)
 {
 	struct SqlStmt *stmt;
 
@@ -310,7 +323,8 @@ void log_atcommand_sub_sql(struct map_session_data* sd, const char* message)
 	}
 	SQL->StmtFree(stmt);
 }
-void log_atcommand_sub_txt(struct map_session_data* sd, const char* message) {
+static void log_atcommand_sub_txt(struct map_session_data *sd, const char *message)
+{
 	char timestring[255];
 	time_t curtime;
 	FILE* logfp;
@@ -325,7 +339,7 @@ void log_atcommand_sub_txt(struct map_session_data* sd, const char* message) {
 	fclose(logfp);
 }
 /// logs used atcommands
-void log_atcommand(struct map_session_data* sd, const char* message)
+static void log_atcommand(struct map_session_data *sd, const char *message)
 {
 	nullpo_retv(sd);
 
@@ -336,7 +350,7 @@ void log_atcommand(struct map_session_data* sd, const char* message)
 	logs->atcommand_sub(sd,message);
 }
 
-void log_npc_sub_sql(struct map_session_data *sd, const char *message)
+static void log_npc_sub_sql(struct map_session_data *sd, const char *message)
 {
 	struct SqlStmt *stmt;
 
@@ -354,7 +368,8 @@ void log_npc_sub_sql(struct map_session_data *sd, const char *message)
 	}
 	SQL->StmtFree(stmt);
 }
-void log_npc_sub_txt(struct map_session_data *sd, const char *message) {
+static void log_npc_sub_txt(struct map_session_data *sd, const char *message)
+{
 	char timestring[255];
 	time_t curtime;
 	FILE* logfp;
@@ -369,7 +384,7 @@ void log_npc_sub_txt(struct map_session_data *sd, const char *message) {
 	fclose(logfp);
 }
 /// logs messages passed to script command 'logmes'
-void log_npc(struct map_session_data* sd, const char* message)
+static void log_npc(struct map_session_data *sd, const char *message)
 {
 	nullpo_retv(sd);
 
@@ -392,7 +407,7 @@ void log_npc(struct map_session_data* sd, const char* message)
  * @param dst_charname Destination character name. Must not be NULL.
  * @param message      Message to log.
  */
-void log_chat_sub_sql(e_log_chat_type type, int type_id, int src_charid, int src_accid, const char *mapname, int x, int y, const char *dst_charname, const char *message)
+static void log_chat_sub_sql(e_log_chat_type type, int type_id, int src_charid, int src_accid, const char *mapname, int x, int y, const char *dst_charname, const char *message)
 {
 	struct SqlStmt* stmt;
 
@@ -424,7 +439,7 @@ void log_chat_sub_sql(e_log_chat_type type, int type_id, int src_charid, int src
  * @param dst_charname Destination character name. Must not be NULL.
  * @param message      Message to log.
  */
-void log_chat_sub_txt(e_log_chat_type type, int type_id, int src_charid, int src_accid, const char *mapname, int x, int y, const char *dst_charname, const char *message)
+static void log_chat_sub_txt(e_log_chat_type type, int type_id, int src_charid, int src_accid, const char *mapname, int x, int y, const char *dst_charname, const char *message)
 {
 	char timestring[255];
 	time_t curtime;
@@ -454,7 +469,7 @@ void log_chat_sub_txt(e_log_chat_type type, int type_id, int src_charid, int src
  * @param dst_charname Destination character name. May be NULL when unused.
  * @param message      Message to log.
  */
-void log_chat(e_log_chat_type type, int type_id, int src_charid, int src_accid, const char *mapname, int x, int y, const char *dst_charname, const char *message)
+static void log_chat(e_log_chat_type type, int type_id, int src_charid, int src_accid, const char *mapname, int x, int y, const char *dst_charname, const char *message)
 {
 	if ((logs->config.chat&type) == 0) {
 		// disabled
@@ -472,7 +487,8 @@ void log_chat(e_log_chat_type type, int type_id, int src_charid, int src_accid, 
 	logs->chat_sub(type,type_id,src_charid,src_accid,mapname,x,y,dst_charname,message);
 }
 
-void log_sql_init(void) {
+static void log_sql_init(void)
+{
 	// log db connection
 	logs->mysql_handle = SQL->Malloc();
 
@@ -485,7 +501,8 @@ void log_sql_init(void) {
 		if ( SQL_ERROR == SQL->SetEncoding(logs->mysql_handle, map->default_codepage) )
 			Sql_ShowDebug(logs->mysql_handle);
 }
-void log_sql_final(void) {
+static void log_sql_final(void)
+{
 	ShowStatus("Close Log DB Connection....\n");
 	SQL->Free(logs->mysql_handle);
 	logs->mysql_handle = NULL;
@@ -738,7 +755,8 @@ bool log_config_read(const char *filename, bool imported)
 	return retval;
 }
 
-void log_config_complete(void) {
+void log_config_complete(void)
+{
 	if( logs->config.sql_logs ) {
 		logs->pick_sub = log_pick_sub_sql;
 		logs->zeny_sub = log_zeny_sub_sql;
@@ -753,7 +771,8 @@ void log_config_complete(void) {
 /**
  * Initializes the log interface to the default values.
  */
-void log_defaults(void) {
+void log_defaults(void)
+{
 	logs = &log_s;
 
 	sprintf(logs->db_ip,"127.0.0.1");

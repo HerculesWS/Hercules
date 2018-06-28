@@ -40,7 +40,7 @@
 #include <stdio.h>
 #include <string.h>
 
-struct vending_interface vending_s;
+static struct vending_interface vending_s;
 struct vending_interface *vending;
 
 /// Returns an unique vending shop id.
@@ -52,7 +52,7 @@ static inline unsigned int getid(void)
 /*==========================================
  * Close shop
  *------------------------------------------*/
-void vending_closevending(struct map_session_data* sd)
+static void vending_closevending(struct map_session_data *sd)
 {
 	nullpo_retv(sd);
 
@@ -66,7 +66,7 @@ void vending_closevending(struct map_session_data* sd)
 /*==========================================
  * Request a shop's item list
  *------------------------------------------*/
-void vending_vendinglistreq(struct map_session_data* sd, unsigned int id)
+static void vending_vendinglistreq(struct map_session_data *sd, unsigned int id)
 {
 	struct map_session_data* vsd;
 	nullpo_retv(sd);
@@ -89,7 +89,7 @@ void vending_vendinglistreq(struct map_session_data* sd, unsigned int id)
 /*==========================================
  * Purchase item(s) from a shop
  *------------------------------------------*/
-void vending_purchasereq(struct map_session_data* sd, int aid, unsigned int uid, const uint8* data, int count)
+static void vending_purchasereq(struct map_session_data *sd, int aid, unsigned int uid, const uint8 *data, int count)
 {
 	int i, j, cursor, w, new_ = 0, blank, vend_list[MAX_VENDING];
 	int64 z;
@@ -245,7 +245,7 @@ void vending_purchasereq(struct map_session_data* sd, int aid, unsigned int uid,
  * Open shop
  * data := {<index>.w <amount>.w <value>.l}[count]
  *------------------------------------------*/
-void vending_openvending(struct map_session_data* sd, const char* message, const uint8* data, int count)
+static void vending_openvending(struct map_session_data *sd, const char *message, const uint8 *data, int count)
 {
 	int i, j;
 	int vending_skill_lvl;
@@ -315,7 +315,7 @@ void vending_openvending(struct map_session_data* sd, const char* message, const
 
 
 /// Checks if an item is being sold in given player's vending.
-bool vending_search(struct map_session_data* sd, unsigned short nameid)
+static bool vending_search(struct map_session_data *sd, unsigned short nameid)
 {
 	int i;
 
@@ -335,7 +335,7 @@ bool vending_search(struct map_session_data* sd, unsigned short nameid)
 
 /// Searches for all items in a vending, that match given ids, price and possible cards.
 /// @return Whether or not the search should be continued.
-bool vending_searchall(struct map_session_data* sd, const struct s_search_store_search* s)
+static bool vending_searchall(struct map_session_data *sd, const struct s_search_store_search *s)
 {
 	int i, c, slot;
 	unsigned int idx, cidx;
@@ -389,12 +389,12 @@ bool vending_searchall(struct map_session_data* sd, const struct s_search_store_
 	return true;
 }
 
-void final(void)
+static void final(void)
 {
 	db_destroy(vending->db);
 }
 
-void init(bool minimal)
+static void init(bool minimal)
 {
 	vending->db = idb_alloc(DB_OPT_BASE);
 	vending->next_id = 0;

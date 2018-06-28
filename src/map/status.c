@@ -61,17 +61,17 @@
 #include <string.h>
 #include <time.h>
 
-struct status_interface status_s;
-struct s_status_dbs statusdbs;
+static struct status_interface status_s;
+static struct s_status_dbs statusdbs;
 
 struct status_interface *status;
 
 /**
-* Returns the status change associated with a skill.
-* @param skill The skill to look up
-* @return The status registered for this skill
-**/
-sc_type status_skill2sc(int skill_id)
+ * Returns the status change associated with a skill.
+ * @param skill The skill to look up
+ * @return The status registered for this skill
+ */
+static sc_type status_skill2sc(int skill_id)
 {
 	int idx;
 	if( (idx = skill->get_index(skill_id)) == 0 ) {
@@ -82,12 +82,12 @@ sc_type status_skill2sc(int skill_id)
 }
 
 /**
-* Returns the FIRST skill (in order of definition in initChangeTables) to use a given status change.
-* Utilized for various duration lookups. Use with caution!
-* @param sc The status to look up
-* @return A skill associated with the status
-**/
-int status_sc2skill(sc_type sc)
+ * Returns the FIRST skill (in order of definition in initChangeTables) to use a given status change.
+ * Utilized for various duration lookups. Use with caution!
+ * @param sc The status to look up
+ * @return A skill associated with the status
+ */
+static int status_sc2skill(sc_type sc)
 {
 	if( sc < 0 || sc >= SC_MAX ) {
 		ShowError("status_sc2skill: Unsupported status change id %d\n", sc);
@@ -98,11 +98,11 @@ int status_sc2skill(sc_type sc)
 }
 
 /**
-* Returns the status calculation flag associated with a given status change.
-* @param sc The status to look up
-* @return The scb_flag registered for this status (see enum scb_flag)
-**/
-unsigned int status_sc2scb_flag(sc_type sc)
+ * Returns the status calculation flag associated with a given status change.
+ * @param sc The status to look up
+ * @return The scb_flag registered for this status (see enum scb_flag)
+ */
+static unsigned int status_sc2scb_flag(sc_type sc)
 {
 	if( sc < 0 || sc >= SC_MAX ) {
 		ShowError("status_sc2scb_flag: Unsupported status change id %d\n", sc);
@@ -113,11 +113,11 @@ unsigned int status_sc2scb_flag(sc_type sc)
 }
 
 /**
-* Returns the bl types which require a status change packet to be sent for a given client status identifier.
-* @param type The client-side status identifier to look up (see enum si_type)
-* @return The bl types relevant to the type (see enum bl_type)
-**/
-int status_type2relevant_bl_types(int type)
+ * Returns the bl types which require a status change packet to be sent for a given client status identifier.
+ * @param type The client-side status identifier to look up (see enum si_type)
+ * @return The bl types relevant to the type (see enum bl_type)
+ */
+static int status_type2relevant_bl_types(int type)
 {
 	if( type < 0 || type >= SI_MAX ) {
 		ShowError("status_type2relevant_bl_types: Unsupported type %d\n", type);
@@ -127,7 +127,7 @@ int status_type2relevant_bl_types(int type)
 	return status->dbs->RelevantBLTypes[type];
 }
 
-void status_set_sc(uint16 skill_id, sc_type sc, int icon, unsigned int flag)
+static void status_set_sc(uint16 skill_id, sc_type sc, int icon, unsigned int flag)
 {
 	uint16 idx;
 	if( (idx = skill->get_index(skill_id)) == 0 ) {
@@ -149,7 +149,7 @@ void status_set_sc(uint16 skill_id, sc_type sc, int icon, unsigned int flag)
 		status->dbs->Skill2SCTable[idx] = sc;
 }
 
-void initChangeTables(void)
+static void initChangeTables(void)
 {
 #define add_sc(skill,sc) status->set_sc((skill),(sc),SI_BLANK,SCB_NONE)
 // indicates that the status displays a visual effect for the affected unit, and should be sent to the client for all supported units
@@ -1211,7 +1211,7 @@ void initChangeTables(void)
 #undef set_sc_with_vfx
 }
 
-void initDummyData(void)
+static void initDummyData(void)
 {
 	memset(&status->dummy, 0, sizeof(status->dummy));
 	status->dummy.hp =
@@ -1233,7 +1233,7 @@ void initDummyData(void)
 }
 
 //For copying a status_data structure from b to a, without overwriting current Hp and Sp
-void status_copy(struct status_data *a, const struct status_data *b)
+static void status_copy(struct status_data *a, const struct status_data *b)
 {
 	nullpo_retv(a);
 	nullpo_retv(b);
@@ -1243,7 +1243,7 @@ void status_copy(struct status_data *a, const struct status_data *b)
 //Sets HP to given value. Flag is the flag passed to status->heal in case
 //final value is higher than current (use 2 to make a healing effect display
 //on players) It will always succeed (overrides Berserk block), but it can't kill.
-int status_set_hp(struct block_list *bl, unsigned int hp, int flag)
+static int status_set_hp(struct block_list *bl, unsigned int hp, int flag)
 {
 	struct status_data *st;
 	if (hp < 1) return 0;
@@ -1261,7 +1261,7 @@ int status_set_hp(struct block_list *bl, unsigned int hp, int flag)
 //Sets SP to given value. Flag is the flag passed to status->heal in case
 //final value is higher than current (use 2 to make a healing effect display
 //on players)
-int status_set_sp(struct block_list *bl, unsigned int sp, int flag)
+static int status_set_sp(struct block_list *bl, unsigned int sp, int flag)
 {
 	struct status_data *st;
 
@@ -1276,7 +1276,7 @@ int status_set_sp(struct block_list *bl, unsigned int sp, int flag)
 	return status_zap(bl, 0, st->sp - sp);
 }
 
-int status_charge(struct block_list* bl, int64 hp, int64 sp)
+static int status_charge(struct block_list *bl, int64 hp, int64 sp)
 {
 	nullpo_retr((int)(hp + sp), bl);
 	if(!(bl->type&BL_CONSUME))
@@ -1289,7 +1289,7 @@ int status_charge(struct block_list* bl, int64 hp, int64 sp)
 //If flag&2, fail if target does not has enough to subtract.
 //If flag&4, if killed, mob must not give exp/loot.
 //flag will be set to &8 when damaging sp of a dead character
-int status_damage(struct block_list *src,struct block_list *target,int64 in_hp, int64 in_sp, int walkdelay, int flag)
+static int status_damage(struct block_list *src, struct block_list *target, int64 in_hp, int64 in_sp, int walkdelay, int flag)
 {
 	struct status_data *st;
 	struct status_change *sc;
@@ -1529,7 +1529,7 @@ int status_damage(struct block_list *src,struct block_list *target,int64 in_hp, 
 
 //Heals a character. If flag&1, this is forced healing (otherwise stuff like Berserk can block it)
 //If flag&2, when the player is healed, show the HP/SP heal effect.
-int status_heal(struct block_list *bl, int64 in_hp, int64 in_sp, int flag)
+static int status_heal(struct block_list *bl, int64 in_hp, int64 in_sp, int flag)
 {
 	struct status_data *st;
 	struct status_change *sc;
@@ -1609,7 +1609,7 @@ int status_heal(struct block_list *bl, int64 in_hp, int64 in_sp, int flag)
 //If rates are < 0, percent is of max HP/SP
 //If !flag, this is heal, otherwise it is damage.
 //Furthermore, if flag==2, then the target must not die from the subtraction.
-int status_percent_change(struct block_list *src, struct block_list *target, signed char hp_rate, signed char sp_rate, int flag)
+static int status_percent_change(struct block_list *src, struct block_list *target, signed char hp_rate, signed char sp_rate, int flag)
 {
 	struct status_data *st;
 	unsigned int hp = 0, sp = 0;
@@ -1662,7 +1662,7 @@ int status_percent_change(struct block_list *src, struct block_list *target, sig
 	return status->heal(target, hp, sp, 0);
 }
 
-int status_revive(struct block_list *bl, unsigned char per_hp, unsigned char per_sp)
+static int status_revive(struct block_list *bl, unsigned char per_hp, unsigned char per_sp)
 {
 	struct status_data *st;
 	unsigned int hp, sp;
@@ -1701,7 +1701,7 @@ int status_revive(struct block_list *bl, unsigned char per_hp, unsigned char per
 	return 1;
 }
 
-int status_fixed_revive(struct block_list *bl, unsigned int per_hp, unsigned int per_sp)
+static int status_fixed_revive(struct block_list *bl, unsigned int per_hp, unsigned int per_sp)
 {
 	struct status_data *st;
 	unsigned int hp, sp;
@@ -1739,17 +1739,17 @@ int status_fixed_revive(struct block_list *bl, unsigned int per_hp, unsigned int
 }
 
 /*==========================================
-* Checks whether the src can use the skill on the target,
-* taking into account status/option of both source/target. [Skotlex]
-* flag:
-*   0 - Trying to use skill on target.
-*   1 - Cast bar is done.
-*   2 - Skill already pulled off, check is due to ground-based skills or splash-damage ones.
-* src MAY be null to indicate we shouldn't check it, this is a ground-based skill attack.
-* target MAY Be null, in which case the checks are only to see
-* whether the source can cast or not the skill on the ground.
-*------------------------------------------*/
-int status_check_skilluse(struct block_list *src, struct block_list *target, uint16 skill_id, int flag)
+ * Checks whether the src can use the skill on the target,
+ * taking into account status/option of both source/target. [Skotlex]
+ * flag:
+ *   0 - Trying to use skill on target.
+ *   1 - Cast bar is done.
+ *   2 - Skill already pulled off, check is due to ground-based skills or splash-damage ones.
+ * src MAY be null to indicate we shouldn't check it, this is a ground-based skill attack.
+ * target MAY Be null, in which case the checks are only to see
+ * whether the source can cast or not the skill on the ground.
+ *------------------------------------------*/
+static int status_check_skilluse(struct block_list *src, struct block_list *target, uint16 skill_id, int flag)
 {
 	struct status_data *st;
 	struct status_change *sc=NULL, *tsc;
@@ -2049,7 +2049,7 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 
 //Skotlex: Calculates the initial status for the given mob
 //first will only be false when the mob leveled up or got a GuardUp level.
-int status_calc_mob_(struct mob_data *md, enum e_status_calc_opt opt)
+static int status_calc_mob_(struct mob_data *md, enum e_status_calc_opt opt)
 {
 	struct status_data *mstatus;
 	struct block_list *mbl = NULL;
@@ -2220,7 +2220,7 @@ int status_calc_mob_(struct mob_data *md, enum e_status_calc_opt opt)
 }
 
 //Skotlex: Calculates the stats of the given pet.
-int status_calc_pet_(struct pet_data *pd, enum e_status_calc_opt opt)
+static int status_calc_pet_(struct pet_data *pd, enum e_status_calc_opt opt)
 {
 	nullpo_ret(pd);
 
@@ -2282,7 +2282,7 @@ int status_calc_pet_(struct pet_data *pd, enum e_status_calc_opt opt)
 	return 1;
 }
 
-unsigned int status_get_base_maxsp(const struct map_session_data *sd, const struct status_data *st)
+static unsigned int status_get_base_maxsp(const struct map_session_data *sd, const struct status_data *st)
 {
 	uint64 val;
 
@@ -2303,7 +2303,7 @@ unsigned int status_get_base_maxsp(const struct map_session_data *sd, const stru
 	return (unsigned int)cap_value(val, 0, UINT_MAX);
 }
 
-unsigned int status_get_base_maxhp(const struct map_session_data *sd, const struct status_data *st)
+static unsigned int status_get_base_maxhp(const struct map_session_data *sd, const struct status_data *st)
 {
 	uint64 val;
 
@@ -2330,13 +2330,13 @@ unsigned int status_get_base_maxhp(const struct map_session_data *sd, const stru
 	return (unsigned int)cap_value(val,0,UINT_MAX);
 }
 
-void status_calc_pc_additional(struct map_session_data* sd, enum e_status_calc_opt opt)
+static void status_calc_pc_additional(struct map_session_data *sd, enum e_status_calc_opt opt)
 {
 	/* Just used for Plugin to give bonuses. */
 	return;
 }
 
-void status_calc_pc_recover_hp(struct map_session_data* sd, struct status_data *bstatus)
+static void status_calc_pc_recover_hp(struct map_session_data *sd, struct status_data *bstatus)
 {
 	nullpo_retv(sd);
 	nullpo_retv(bstatus);
@@ -2350,7 +2350,7 @@ void status_calc_pc_recover_hp(struct map_session_data* sd, struct status_data *
 
 //Calculates player data from scratch without counting SC adjustments.
 //Should be invoked whenever players raise stats, learn passive skills or change equipment.
-int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
+static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt opt)
 {
 	static int calculating = 0; //Check for recursive call preemption. [Skotlex]
 	struct status_data *bstatus; // pointer to the player's base status
@@ -3286,7 +3286,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 	return 0;
 }
 
-int status_calc_mercenary_(struct mercenary_data *md, enum e_status_calc_opt opt)
+static int status_calc_mercenary_(struct mercenary_data *md, enum e_status_calc_opt opt)
 {
 	struct status_data *mstatus;
 	struct s_mercenary *merc;
@@ -3309,7 +3309,7 @@ int status_calc_mercenary_(struct mercenary_data *md, enum e_status_calc_opt opt
 	return 0;
 }
 
-int status_calc_elemental_(struct elemental_data *ed, enum e_status_calc_opt opt)
+static int status_calc_elemental_(struct elemental_data *ed, enum e_status_calc_opt opt)
 {
 	struct status_data *estatus;
 	struct s_elemental *ele;
@@ -3353,7 +3353,7 @@ int status_calc_elemental_(struct elemental_data *ed, enum e_status_calc_opt opt
 	return 0;
 }
 
-int status_calc_npc_(struct npc_data *nd, enum e_status_calc_opt opt)
+static int status_calc_npc_(struct npc_data *nd, enum e_status_calc_opt opt)
 {
 	struct status_data *nstatus;
 
@@ -3390,7 +3390,7 @@ int status_calc_npc_(struct npc_data *nd, enum e_status_calc_opt opt)
 	return 0;
 }
 
-int status_calc_homunculus_(struct homun_data *hd, enum e_status_calc_opt opt)
+static int status_calc_homunculus_(struct homun_data *hd, enum e_status_calc_opt opt)
 {
 	struct status_data *hstatus;
 	struct s_homunculus *hom;
@@ -3480,7 +3480,7 @@ int status_calc_homunculus_(struct homun_data *hd, enum e_status_calc_opt opt)
 }
 
 //Calculates base regen values.
-void status_calc_regen(struct block_list *bl, struct status_data *st, struct regen_data *regen)
+static void status_calc_regen(struct block_list *bl, struct status_data *st, struct regen_data *regen)
 {
 	struct map_session_data *sd;
 	int val, skill_lv, reg_flag;
@@ -3581,7 +3581,7 @@ void status_calc_regen(struct block_list *bl, struct status_data *st, struct reg
 }
 
 //Calculates SC related regen rates.
-void status_calc_regen_rate(struct block_list *bl, struct regen_data *regen, struct status_change *sc)
+static void status_calc_regen_rate(struct block_list *bl, struct regen_data *regen, struct status_change *sc)
 {
 	nullpo_retv(bl);
 	if (!(bl->type&BL_REGEN) || !regen)
@@ -3705,7 +3705,7 @@ void status_calc_regen_rate(struct block_list *bl, struct regen_data *regen, str
 
 /// Recalculates parts of an object's battle status according to the specified flags.
 /// @param flag bitfield of values from enum scb_flag
-void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag)
+static void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag)
 {
 	const struct status_data *bst = status->get_base_status(bl);
 	struct status_data *st = status->get_status_data(bl);
@@ -4104,7 +4104,7 @@ void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag)
 /// Also sends updates to the client wherever applicable.
 /// @param flag bitfield of values from enum scb_flag
 /// @param first if true, will cause status_calc_* functions to run their base status initialization code
-void status_calc_bl_(struct block_list *bl, enum scb_flag flag, enum e_status_calc_opt opt)
+static void status_calc_bl_(struct block_list *bl, enum scb_flag flag, enum e_status_calc_opt opt)
 {
 	struct status_data bst; // previous battle status
 	struct status_data *st; // pointer to current battle status
@@ -4289,7 +4289,7 @@ void status_calc_bl_(struct block_list *bl, enum scb_flag flag, enum e_status_ca
 }
 
 //Checks whether the source can see and chase target.
-int status_check_visibility(struct block_list *src, struct block_list *target)
+static int status_check_visibility(struct block_list *src, struct block_list *target)
 {
 	int view_range;
 	struct status_change *tsc = NULL;
@@ -4341,7 +4341,7 @@ int status_check_visibility(struct block_list *src, struct block_list *target)
 }
 
 // Basic ASPD value
-int status_base_amotion_pc(struct map_session_data *sd, struct status_data *st)
+static int status_base_amotion_pc(struct map_session_data *sd, struct status_data *st)
 {
 	int amotion;
 #ifdef RENEWAL_ASPD /* [malufett/Hercules] */
@@ -4396,7 +4396,7 @@ int status_base_amotion_pc(struct map_session_data *sd, struct status_data *st)
 	return amotion;
 }
 
-unsigned short status_base_atk(const struct block_list *bl, const struct status_data *st)
+static unsigned short status_base_atk(const struct block_list *bl, const struct status_data *st)
 {
 	int flag = 0, str, dex, dstr;
 
@@ -4456,19 +4456,19 @@ unsigned short status_base_atk(const struct block_list *bl, const struct status_
 	return cap_value(str, 0, USHRT_MAX);
 }
 
-unsigned short status_base_matk_min(const struct status_data *st)
+static unsigned short status_base_matk_min(const struct status_data *st)
 {
 	nullpo_ret(st);
 	return st->int_ + (st->int_ / 7) * (st->int_ / 7);
 }
 
-unsigned short status_base_matk_max(const struct status_data *st)
+static unsigned short status_base_matk_max(const struct status_data *st)
 {
 	nullpo_ret(st);
 	return st->int_ + (st->int_ / 5)*(st->int_ / 5);
 }
 
-unsigned short status_base_matk(struct block_list *bl, const struct status_data *st, int level)
+static unsigned short status_base_matk(struct block_list *bl, const struct status_data *st, int level)
 {
 #ifdef RENEWAL
 	nullpo_ret(bl);
@@ -4490,7 +4490,7 @@ unsigned short status_base_matk(struct block_list *bl, const struct status_data 
 }
 
 //Fills in the misc data that can be calculated from the other status info (except for level)
-void status_calc_misc(struct block_list *bl, struct status_data *st, int level)
+static void status_calc_misc(struct block_list *bl, struct status_data *st, int level)
 {
 	nullpo_retv(bl);
 	nullpo_retv(st);
@@ -4572,9 +4572,9 @@ void status_calc_misc(struct block_list *bl, struct status_data *st, int level)
 }
 
 /*==========================================
-* Apply shared stat mods from status changes [DracoRPG]
-*------------------------------------------*/
-unsigned short status_calc_str(struct block_list *bl, struct status_change *sc, int str)
+ * Apply shared stat mods from status changes [DracoRPG]
+ *------------------------------------------*/
+static unsigned short status_calc_str(struct block_list *bl, struct status_change *sc, int str)
 {
 	if(!sc || !sc->count)
 		return cap_value(str,0,USHRT_MAX);
@@ -4637,7 +4637,7 @@ unsigned short status_calc_str(struct block_list *bl, struct status_change *sc, 
 	return (unsigned short)cap_value(str,0,USHRT_MAX);
 }
 
-unsigned short status_calc_agi(struct block_list *bl, struct status_change *sc, int agi)
+static unsigned short status_calc_agi(struct block_list *bl, struct status_change *sc, int agi)
 {
 	if(!sc || !sc->count)
 		return cap_value(agi,0,USHRT_MAX);
@@ -4700,7 +4700,7 @@ unsigned short status_calc_agi(struct block_list *bl, struct status_change *sc, 
 	return (unsigned short)cap_value(agi,0,USHRT_MAX);
 }
 
-unsigned short status_calc_vit(struct block_list *bl, struct status_change *sc, int vit)
+static unsigned short status_calc_vit(struct block_list *bl, struct status_change *sc, int vit)
 {
 	if(!sc || !sc->count)
 		return cap_value(vit,0,USHRT_MAX);
@@ -4751,7 +4751,7 @@ unsigned short status_calc_vit(struct block_list *bl, struct status_change *sc, 
 	return (unsigned short)cap_value(vit,0,USHRT_MAX);
 }
 
-unsigned short status_calc_int(struct block_list *bl, struct status_change *sc, int int_)
+static unsigned short status_calc_int(struct block_list *bl, struct status_change *sc, int int_)
 {
 	nullpo_ret(bl);
 	if(!sc || !sc->count)
@@ -4818,7 +4818,7 @@ unsigned short status_calc_int(struct block_list *bl, struct status_change *sc, 
 	return (unsigned short)cap_value(int_,0,USHRT_MAX);
 }
 
-unsigned short status_calc_dex(struct block_list *bl, struct status_change *sc, int dex)
+static unsigned short status_calc_dex(struct block_list *bl, struct status_change *sc, int dex)
 {
 	nullpo_ret(bl);
 	if(!sc || !sc->count)
@@ -4881,7 +4881,7 @@ unsigned short status_calc_dex(struct block_list *bl, struct status_change *sc, 
 	return (unsigned short)cap_value(dex,0,USHRT_MAX);
 }
 
-unsigned short status_calc_luk(struct block_list *bl, struct status_change *sc, int luk)
+static unsigned short status_calc_luk(struct block_list *bl, struct status_change *sc, int luk)
 {
 	nullpo_ret(bl);
 
@@ -4936,7 +4936,7 @@ unsigned short status_calc_luk(struct block_list *bl, struct status_change *sc, 
 	return (unsigned short)cap_value(luk, 0, USHRT_MAX);
 }
 
-unsigned short status_calc_batk(struct block_list *bl, struct status_change *sc, int batk, bool viewable)
+static unsigned short status_calc_batk(struct block_list *bl, struct status_change *sc, int batk, bool viewable)
 {
 	nullpo_ret(bl);
 	if(!sc || !sc->count)
@@ -5032,7 +5032,7 @@ unsigned short status_calc_batk(struct block_list *bl, struct status_change *sc,
 	return (unsigned short)cap_value(batk,0,USHRT_MAX);
 }
 
-unsigned short status_calc_watk(struct block_list *bl, struct status_change *sc, int watk, bool viewable)
+static unsigned short status_calc_watk(struct block_list *bl, struct status_change *sc, int watk, bool viewable)
 {
 	nullpo_ret(bl);
 	if(!sc || !sc->count)
@@ -5125,7 +5125,7 @@ unsigned short status_calc_watk(struct block_list *bl, struct status_change *sc,
 	return (unsigned short)cap_value(watk,0,USHRT_MAX);
 }
 
-unsigned short status_calc_ematk(struct block_list *bl, struct status_change *sc, int matk)
+static unsigned short status_calc_ematk(struct block_list *bl, struct status_change *sc, int matk)
 {
 #ifdef RENEWAL
 	if (!sc || !sc->count)
@@ -5156,7 +5156,7 @@ unsigned short status_calc_ematk(struct block_list *bl, struct status_change *sc
 #endif
 }
 
-unsigned short status_calc_matk(struct block_list *bl, struct status_change *sc, int matk, bool viewable)
+static unsigned short status_calc_matk(struct block_list *bl, struct status_change *sc, int matk, bool viewable)
 {
 	if (!sc || !sc->count)
 		return cap_value(matk,0,USHRT_MAX);
@@ -5226,7 +5226,7 @@ unsigned short status_calc_matk(struct block_list *bl, struct status_change *sc,
 	return (unsigned short)cap_value(matk, 0, USHRT_MAX);
 }
 
-signed short status_calc_critical(struct block_list *bl, struct status_change *sc, int critical, bool viewable)
+static signed short status_calc_critical(struct block_list *bl, struct status_change *sc, int critical, bool viewable)
 {
 	if (!sc || !sc->count)
 		return cap_value(critical, 10, SHRT_MAX);
@@ -5267,7 +5267,7 @@ signed short status_calc_critical(struct block_list *bl, struct status_change *s
 	return (short)cap_value(critical, 10, SHRT_MAX);
 }
 
-signed short status_calc_hit(struct block_list *bl, struct status_change *sc, int hit, bool viewable)
+static signed short status_calc_hit(struct block_list *bl, struct status_change *sc, int hit, bool viewable)
 {
 
 	if (!sc || !sc->count)
@@ -5322,7 +5322,7 @@ signed short status_calc_hit(struct block_list *bl, struct status_change *sc, in
 	return (short)cap_value(hit, 1, SHRT_MAX);
 }
 
-signed short status_calc_flee(struct block_list *bl, struct status_change *sc, int flee, bool viewable)
+static signed short status_calc_flee(struct block_list *bl, struct status_change *sc, int flee, bool viewable)
 {
 	nullpo_retr(1, bl);
 
@@ -5419,7 +5419,7 @@ signed short status_calc_flee(struct block_list *bl, struct status_change *sc, i
 	return (short)cap_value(flee, 1, SHRT_MAX);
 }
 
-signed short status_calc_flee2(struct block_list *bl, struct status_change *sc, int flee2, bool viewable)
+static signed short status_calc_flee2(struct block_list *bl, struct status_change *sc, int flee2, bool viewable)
 {
 	if(!sc || !sc->count)
 		return cap_value(flee2,10,SHRT_MAX);
@@ -5441,7 +5441,7 @@ signed short status_calc_flee2(struct block_list *bl, struct status_change *sc, 
 	return (short)cap_value(flee2,10,SHRT_MAX);
 }
 
-defType status_calc_def(struct block_list *bl, struct status_change *sc, int def, bool viewable)
+static defType status_calc_def(struct block_list *bl, struct status_change *sc, int def, bool viewable)
 {
 	nullpo_retr(DEFTYPE_MIN, bl);
 
@@ -5546,7 +5546,7 @@ defType status_calc_def(struct block_list *bl, struct status_change *sc, int def
 	return (defType)cap_value(def,DEFTYPE_MIN,DEFTYPE_MAX);
 }
 
-signed short status_calc_def2(struct block_list *bl, struct status_change *sc, int def2, bool viewable)
+static signed short status_calc_def2(struct block_list *bl, struct status_change *sc, int def2, bool viewable)
 {
 	nullpo_retr(1, bl);
 	if(!sc || !sc->count)
@@ -5623,7 +5623,7 @@ signed short status_calc_def2(struct block_list *bl, struct status_change *sc, i
 #endif
 }
 
-defType status_calc_mdef(struct block_list *bl, struct status_change *sc, int mdef, bool viewable)
+static defType status_calc_mdef(struct block_list *bl, struct status_change *sc, int mdef, bool viewable)
 {
 
 	if(!sc || !sc->count)
@@ -5680,7 +5680,7 @@ defType status_calc_mdef(struct block_list *bl, struct status_change *sc, int md
 	return (defType)cap_value(mdef,DEFTYPE_MIN,DEFTYPE_MAX);
 }
 
-signed short status_calc_mdef2(struct block_list *bl, struct status_change *sc, int mdef2, bool viewable)
+static signed short status_calc_mdef2(struct block_list *bl, struct status_change *sc, int mdef2, bool viewable)
 {
 	if(!sc || !sc->count)
 #ifdef RENEWAL
@@ -5719,7 +5719,7 @@ signed short status_calc_mdef2(struct block_list *bl, struct status_change *sc, 
 #endif
 }
 
-unsigned short status_calc_speed(struct block_list *bl, struct status_change *sc, int speed)
+static unsigned short status_calc_speed(struct block_list *bl, struct status_change *sc, int speed)
 {
 	struct map_session_data *sd = BL_CAST(BL_PC, bl);
 	int speed_rate = -1;
@@ -5922,7 +5922,7 @@ unsigned short status_calc_speed(struct block_list *bl, struct status_change *sc
 
 // flag&1 - fixed value [malufett]
 // flag&2 - percentage value
-short status_calc_aspd(struct block_list *bl, struct status_change *sc, short flag)
+static short status_calc_aspd(struct block_list *bl, struct status_change *sc, short flag)
 {
 #ifdef RENEWAL_ASPD
 	int pots = 0, bonus = 0;
@@ -6054,7 +6054,7 @@ short status_calc_aspd(struct block_list *bl, struct status_change *sc, short fl
 #endif
 }
 
-short status_calc_fix_aspd(struct block_list *bl, struct status_change *sc, int aspd)
+static short status_calc_fix_aspd(struct block_list *bl, struct status_change *sc, int aspd)
 {
 	nullpo_ret(bl);
 	if (!sc || !sc->count)
@@ -6074,7 +6074,7 @@ short status_calc_fix_aspd(struct block_list *bl, struct status_change *sc, int 
 
 /// Calculates an object's ASPD modifier (alters the base amotion value).
 /// Note that the scale of aspd_rate is 1000 = 100%.
-short status_calc_aspd_rate(struct block_list *bl, struct status_change *sc, int aspd_rate)
+static short status_calc_aspd_rate(struct block_list *bl, struct status_change *sc, int aspd_rate)
 {
 	int i;
 
@@ -6217,7 +6217,7 @@ short status_calc_aspd_rate(struct block_list *bl, struct status_change *sc, int
 	return (short)cap_value(aspd_rate,0,SHRT_MAX);
 }
 
-unsigned short status_calc_dmotion(struct block_list *bl, struct status_change *sc, int dmotion)
+static unsigned short status_calc_dmotion(struct block_list *bl, struct status_change *sc, int dmotion)
 {
 	nullpo_ret(bl);
 	// It has been confirmed on official servers that MvP mobs have no dmotion even without endure
@@ -6235,7 +6235,7 @@ unsigned short status_calc_dmotion(struct block_list *bl, struct status_change *
 	return (unsigned short)cap_value(dmotion,0,USHRT_MAX);
 }
 
-unsigned int status_calc_maxhp(struct block_list *bl, struct status_change *sc, uint64 maxhp)
+static unsigned int status_calc_maxhp(struct block_list *bl, struct status_change *sc, uint64 maxhp)
 {
 
 	if (!sc || !sc->count)
@@ -6315,7 +6315,7 @@ unsigned int status_calc_maxhp(struct block_list *bl, struct status_change *sc, 
 	return (unsigned int)cap_value(maxhp, 1, UINT_MAX);
 }
 
-unsigned int status_calc_maxsp(struct block_list *bl, struct status_change *sc, unsigned int maxsp)
+static unsigned int status_calc_maxsp(struct block_list *bl, struct status_change *sc, unsigned int maxsp)
 {
 	if (!sc || !sc->count)
 		return cap_value(maxsp, 1, UINT_MAX);
@@ -6354,7 +6354,7 @@ unsigned int status_calc_maxsp(struct block_list *bl, struct status_change *sc, 
 	return cap_value(maxsp, 1, UINT_MAX);
 }
 
-unsigned char status_calc_element(struct block_list *bl, struct status_change *sc, int element)
+static unsigned char status_calc_element(struct block_list *bl, struct status_change *sc, int element)
 {
 	if(!sc || !sc->count)
 		return element;
@@ -6375,7 +6375,7 @@ unsigned char status_calc_element(struct block_list *bl, struct status_change *s
 	return (unsigned char)cap_value(element,0,UCHAR_MAX);
 }
 
-unsigned char status_calc_element_lv(struct block_list *bl, struct status_change *sc, int lv)
+static unsigned char status_calc_element_lv(struct block_list *bl, struct status_change *sc, int lv)
 {
 	if(!sc || !sc->count)
 		return lv;
@@ -6398,7 +6398,7 @@ unsigned char status_calc_element_lv(struct block_list *bl, struct status_change
 	return (unsigned char)cap_value(lv,1,4);
 }
 
-unsigned char status_calc_attack_element(struct block_list *bl, struct status_change *sc, int element)
+static unsigned char status_calc_attack_element(struct block_list *bl, struct status_change *sc, int element)
 {
 	if(!sc || !sc->count)
 		return element;
@@ -6439,7 +6439,7 @@ unsigned char status_calc_attack_element(struct block_list *bl, struct status_ch
  * @param mode The starting mode.
  * @return The calculated mode.
  */
-uint32 status_calc_mode(const struct block_list *bl, const struct status_change *sc, uint32 mode)
+static uint32 status_calc_mode(const struct block_list *bl, const struct status_change *sc, uint32 mode)
 {
 	if (sc == NULL || sc->count == 0)
 		return mode & MD_MASK;
@@ -6460,7 +6460,7 @@ uint32 status_calc_mode(const struct block_list *bl, const struct status_change 
  * @param bl The requested bl.
  * @return The bl's name or NULL if not available.
  */
-const char *status_get_name(const struct block_list *bl)
+static const char *status_get_name(const struct block_list *bl)
 {
 	nullpo_ret(bl);
 	switch (bl->type) {
@@ -6480,12 +6480,12 @@ const char *status_get_name(const struct block_list *bl)
 }
 
 /*==========================================
-* Get the class of the current bl
-* return
-*   0 = fail
-*   class_id = success
-*------------------------------------------*/
-int status_get_class(const struct block_list *bl)
+ * Get the class of the current bl
+ * return
+ *   0 = fail
+ *   class_id = success
+ *------------------------------------------*/
+static int status_get_class(const struct block_list *bl)
 {
 	nullpo_ret(bl);
 	switch (bl->type) {
@@ -6500,12 +6500,12 @@ int status_get_class(const struct block_list *bl)
 	return 0;
 }
 /*==========================================
-* Get the base level of the current bl
-* return
-*   1 = fail
-*   level = success
-*------------------------------------------*/
-int status_get_lv(const struct block_list *bl)
+ * Get the base level of the current bl
+ * return
+ *   1 = fail
+ *   level = success
+ *------------------------------------------*/
+static int status_get_lv(const struct block_list *bl)
 {
 	nullpo_ret(bl);
 	switch (bl->type) {
@@ -6520,7 +6520,7 @@ int status_get_lv(const struct block_list *bl)
 	return 1;
 }
 
-struct regen_data *status_get_regen_data(struct block_list *bl)
+static struct regen_data *status_get_regen_data(struct block_list *bl)
 {
 	nullpo_retr(NULL, bl);
 	switch (bl->type) {
@@ -6533,7 +6533,7 @@ struct regen_data *status_get_regen_data(struct block_list *bl)
 	}
 }
 
-struct status_data *status_get_status_data(struct block_list *bl)
+static struct status_data *status_get_status_data(struct block_list *bl)
 {
 	nullpo_retr(&status->dummy, bl);
 
@@ -6554,7 +6554,7 @@ struct status_data *status_get_status_data(struct block_list *bl)
 	}
 }
 
-struct status_data *status_get_base_status(struct block_list *bl)
+static struct status_data *status_get_base_status(struct block_list *bl)
 {
 	nullpo_retr(NULL, bl);
 	switch (bl->type) {
@@ -6578,7 +6578,7 @@ struct status_data *status_get_base_status(struct block_list *bl)
 	}
 }
 
-defType status_get_def(struct block_list *bl)
+static defType status_get_def(struct block_list *bl)
 {
 	struct unit_data *ud;
 	struct status_data *st = status->get_status_data(bl);
@@ -6590,7 +6590,7 @@ defType status_get_def(struct block_list *bl)
 	return cap_value(def, DEFTYPE_MIN, DEFTYPE_MAX);
 }
 
-unsigned short status_get_speed(struct block_list *bl)
+static unsigned short status_get_speed(struct block_list *bl)
 {
 	nullpo_ret(bl);
 	if (bl->type == BL_NPC) //Only BL with speed data but no status_data [Skotlex]
@@ -6598,7 +6598,7 @@ unsigned short status_get_speed(struct block_list *bl)
 	return status->get_status_data(bl)->speed;
 }
 
-int status_get_party_id(const struct block_list *bl)
+static int status_get_party_id(const struct block_list *bl)
 {
 	nullpo_ret(bl);
 	switch (bl->type) {
@@ -6654,7 +6654,7 @@ int status_get_party_id(const struct block_list *bl)
 	return 0;
 }
 
-int status_get_guild_id(const struct block_list *bl)
+static int status_get_guild_id(const struct block_list *bl)
 {
 	nullpo_ret(bl);
 	switch (bl->type) {
@@ -6720,7 +6720,7 @@ int status_get_guild_id(const struct block_list *bl)
 	return 0;
 }
 
-int status_get_emblem_id(const struct block_list *bl)
+static int status_get_emblem_id(const struct block_list *bl)
 {
 	nullpo_ret(bl);
 	switch (bl->type) {
@@ -6782,7 +6782,7 @@ int status_get_emblem_id(const struct block_list *bl)
 	return 0;
 }
 
-int status_get_mexp(const struct block_list *bl)
+static int status_get_mexp(const struct block_list *bl)
 {
 	nullpo_ret(bl);
 	if (bl->type == BL_MOB)
@@ -6792,7 +6792,7 @@ int status_get_mexp(const struct block_list *bl)
 	return 0;
 }
 
-int status_get_race2(const struct block_list *bl)
+static int status_get_race2(const struct block_list *bl)
 {
 	nullpo_ret(bl);
 	if (bl->type == BL_MOB)
@@ -6802,13 +6802,13 @@ int status_get_race2(const struct block_list *bl)
 	return 0;
 }
 
-int status_isdead(struct block_list *bl)
+static int status_isdead(struct block_list *bl)
 {
 	nullpo_ret(bl);
 	return status->get_status_data(bl)->hp == 0;
 }
 
-int status_isimmune(struct block_list *bl)
+static int status_isimmune(struct block_list *bl)
 {
 	struct status_change *sc = NULL;
 	nullpo_ret(bl);
@@ -6825,7 +6825,7 @@ int status_isimmune(struct block_list *bl)
 	return 0;
 }
 
-struct view_data *status_get_viewdata(struct block_list *bl)
+static struct view_data *status_get_viewdata(struct block_list *bl)
 {
 	nullpo_retr(NULL, bl);
 	switch (bl->type) {
@@ -6840,7 +6840,7 @@ struct view_data *status_get_viewdata(struct block_list *bl)
 	return NULL;
 }
 
-void status_set_viewdata(struct block_list *bl, int class_)
+static void status_set_viewdata(struct block_list *bl, int class_)
 {
 	struct view_data* vd;
 	nullpo_retv(bl);
@@ -6991,7 +6991,7 @@ void status_set_viewdata(struct block_list *bl, int class_)
 }
 
 /// Returns the status_change data of bl or NULL if it doesn't exist.
-struct status_change *status_get_sc(struct block_list *bl)
+static struct status_change *status_get_sc(struct block_list *bl)
 {
 	if (bl != NULL) {
 		switch (bl->type) {
@@ -7006,7 +7006,7 @@ struct status_change *status_get_sc(struct block_list *bl)
 	return NULL;
 }
 
-void status_change_init(struct block_list *bl)
+static void status_change_init(struct block_list *bl)
 {
 	struct status_change *sc = status->get_sc(bl);
 	nullpo_retv(sc);
@@ -7019,7 +7019,7 @@ void status_change_init(struct block_list *bl)
  * @see status_change_start for the expected parameters.
  * @return the adjusted duration based on flag values.
  */
-int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_type type, int rate, int tick, int flag)
+static int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_type type, int rate, int tick, int flag)
 {
 	//Percentual resistance: 10000 = 100% Resist
 	//Example: 50% -> sc_def=5000 -> 25%; 5000ms -> tick_def=5000 -> 2500ms
@@ -7380,7 +7380,7 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 }
 
 /* [Ind/Hercules] fast-checkin sc-display array */
-void status_display_add(struct map_session_data *sd, enum sc_type type, int dval1, int dval2, int dval3)
+static void status_display_add(struct map_session_data *sd, enum sc_type type, int dval1, int dval2, int dval3)
 {
 	struct sc_display_entry *entry;
 	int i;
@@ -7409,7 +7409,7 @@ void status_display_add(struct map_session_data *sd, enum sc_type type, int dval
 	sd->sc_display[ sd->sc_display_count - 1 ] = entry;
 }
 
-void status_display_remove(struct map_session_data *sd, enum sc_type type)
+static void status_display_remove(struct map_session_data *sd, enum sc_type type)
 {
 	int i;
 
@@ -7461,7 +7461,7 @@ void status_display_remove(struct map_session_data *sd, enum sc_type type)
  * @retval 0 if no status change happened.
  * @retval 1 if the status change was successfully applied.
  */
-int status_change_start(struct block_list *src, struct block_list *bl, enum sc_type type, int rate, int val1, int val2, int val3, int val4, int tick, int flag)
+static int status_change_start(struct block_list *src, struct block_list *bl, enum sc_type type, int rate, int val1, int val2, int val3, int val4, int tick, int flag)
 {
 	struct map_session_data *sd = NULL;
 	struct status_change* sc;
@@ -9728,7 +9728,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 	return 1;
 }
 
-bool status_change_start_unknown_sc(struct block_list *src, struct block_list *bl, enum sc_type type, int calc_flag, int rate, int val1, int val2, int val3, int val4, int tick, int flag)
+static bool status_change_start_unknown_sc(struct block_list *src, struct block_list *bl, enum sc_type type, int calc_flag, int rate, int val1, int val2, int val3, int val4, int tick, int flag)
 {
 	Assert_retr(false, type >= SC_NONE && type < SC_MAX);
 	if (calc_flag == SCB_NONE && status->dbs->SkillChangeTable[type] == 0 && status->dbs->IconChangeTable[type] == 0) {
@@ -9739,7 +9739,7 @@ bool status_change_start_unknown_sc(struct block_list *src, struct block_list *b
 	return false;
 }
 
-void status_change_start_display(struct map_session_data *sd, enum sc_type type, int val1, int val2, int val3, int val4)
+static void status_change_start_display(struct map_session_data *sd, enum sc_type type, int val1, int val2, int val3, int val4)
 {
 	Assert_retv(type >= SC_NONE && type < SC_MAX);
 
@@ -9769,7 +9769,7 @@ void status_change_start_display(struct map_session_data *sd, enum sc_type type,
  *
  * @retval val_flag.
  */
-int status_get_val_flag(enum sc_type type)
+static int status_get_val_flag(enum sc_type type)
 {
 	int val_flag = 0;
 	switch (type) {
@@ -9921,7 +9921,7 @@ int status_get_val_flag(enum sc_type type)
  *
  * @retval option flag.
  */
-int status_change_start_set_option(struct block_list *bl, struct status_change* sc, enum sc_type type, int val1, int val2, int val3, int val4)
+static int status_change_start_set_option(struct block_list *bl, struct status_change *sc, enum sc_type type, int val1, int val2, int val3, int val4)
 {
 	int opt_flag = 1;
 
@@ -10111,7 +10111,7 @@ int status_change_start_set_option(struct block_list *bl, struct status_change* 
  * @param bl   Status change target bl.
  * @param type Status change type.
  */
-void status_change_start_stop_action(struct block_list *bl, enum sc_type type)
+static void status_change_start_stop_action(struct block_list *bl, enum sc_type type)
 {
 	nullpo_retv(bl);
 	switch (type) {
@@ -10198,7 +10198,7 @@ void status_change_start_stop_action(struct block_list *bl, enum sc_type type)
  * @retval false if no status change happened, or the other sc can be started regardless.
  * @retval true  if the status change was successfully applied and the other sc shouldn't be started.
  */
-bool status_end_sc_before_start(struct block_list *bl, struct status_data *st, struct status_change* sc, enum sc_type type, int undead_flag, int val1, int val2, int val3, int val4)
+static bool status_end_sc_before_start(struct block_list *bl, struct status_data *st, struct status_change *sc, enum sc_type type, int undead_flag, int val1, int val2, int val3, int val4)
 {
 	nullpo_retr(true, bl);
 	nullpo_retr(true, st);
@@ -10479,7 +10479,7 @@ bool status_end_sc_before_start(struct block_list *bl, struct status_data *st, s
  * @retval true if boss resist.
  * @retval false if boss not resist.
  */
-bool status_is_boss_resist_sc(enum sc_type type)
+static bool status_is_boss_resist_sc(enum sc_type type)
 {
 	if (type >= SC_COMMON_MIN && type <= SC_COMMON_MAX)
 		return true;
@@ -10544,7 +10544,7 @@ bool status_is_boss_resist_sc(enum sc_type type)
  * @retval true if immune resist.
  * @retval false if not immune resist.
  */
-bool status_is_immune_to_status(struct status_change* sc, enum sc_type type)
+static bool status_is_immune_to_status(struct status_change *sc, enum sc_type type)
 {
 	nullpo_retr(true, sc);
 	if (sc->data[SC_REFRESH]) {
@@ -10618,15 +10618,15 @@ bool status_is_immune_to_status(struct status_change* sc, enum sc_type type)
 }
 
 /*==========================================
-* Ending all status except those listed.
-* @TODO maybe usefull for dispel instead reseting a liste there.
-* type:
-* 0 - PC killed -> Place here statuses that do not dispel on death.
-* 1 - If for some reason status_change_end decides to still keep the status when quitting.
-* 2 - Do clif
-* 3 - Do not remove some permanent/time-independent effects
-*------------------------------------------*/
-int status_change_clear(struct block_list* bl, int type)
+ * Ending all status except those listed.
+ * @TODO maybe usefull for dispel instead reseting a liste there.
+ * type:
+ * 0 - PC killed -> Place here statuses that do not dispel on death.
+ * 1 - If for some reason status_change_end decides to still keep the status when quitting.
+ * 2 - Do clif
+ * 3 - Do not remove some permanent/time-independent effects
+ *------------------------------------------*/
+static int status_change_clear(struct block_list *bl, int type)
 {
 	struct status_change* sc;
 	int i;
@@ -10683,9 +10683,9 @@ int status_change_clear(struct block_list* bl, int type)
 }
 
 /*==========================================
-* Special condition we want to effectuate, check before ending a status.
-*------------------------------------------*/
-int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const char* file, int line)
+ * Special condition we want to effectuate, check before ending a status.
+ *------------------------------------------*/
+static int status_change_end_(struct block_list *bl, enum sc_type type, int tid, const char *file, int line)
 {
 	struct map_session_data *sd;
 	struct status_change *sc;
@@ -11428,7 +11428,8 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 	return 1;
 }
 
-int kaahi_heal_timer(int tid, int64 tick, int id, intptr_t data) {
+static int kaahi_heal_timer(int tid, int64 tick, int id, intptr_t data)
+{
 	struct block_list *bl;
 	struct status_change *sc;
 	struct status_change_entry *sce;
@@ -11460,10 +11461,10 @@ int kaahi_heal_timer(int tid, int64 tick, int id, intptr_t data) {
 }
 
 /*==========================================
-* For recusive status, like for each 5s we drop sp etc.
-* Reseting the end timer.
-*------------------------------------------*/
-int status_change_timer(int tid, int64 tick, int id, intptr_t data)
+ * For recusive status, like for each 5s we drop sp etc.
+ * Reseting the end timer.
+ *------------------------------------------*/
+static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 {
 	enum sc_type type = (sc_type)data;
 	struct block_list *bl;
@@ -12339,9 +12340,9 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 }
 
 /*==========================================
-* Foreach iteration of repetitive status
-*------------------------------------------*/
-int status_change_timer_sub(struct block_list* bl, va_list ap)
+ * Foreach iteration of repetitive status
+ *------------------------------------------*/
+static int status_change_timer_sub(struct block_list *bl, va_list ap)
 {
 	struct status_change* tsc;
 
@@ -12417,10 +12418,17 @@ int status_change_timer_sub(struct block_list* bl, va_list ap)
 	return 0;
 }
 
-int status_get_total_def(struct block_list *src) { return status->get_status_data(src)->def2 + (short)status->get_def(src); }
-int status_get_total_mdef(struct block_list *src) { return status->get_status_data(src)->mdef2 + (short)status_get_mdef(src); }
+static int status_get_total_def(struct block_list *src)
+{
+	return status->get_status_data(src)->def2 + (short)status->get_def(src);
+}
 
-int status_get_weapon_atk(struct block_list *bl, struct weapon_atk *watk, int flag)
+static int status_get_total_mdef(struct block_list *src)
+{
+	return status->get_status_data(src)->mdef2 + (short)status_get_mdef(src);
+}
+
+static int status_get_weapon_atk(struct block_list *bl, struct weapon_atk *watk, int flag)
 {
 #ifdef RENEWAL
 	int min = 0, max = 0;
@@ -12483,13 +12491,13 @@ int status_get_weapon_atk(struct block_list *bl, struct weapon_atk *watk, int fl
 }
 
 /**
-* Get bl's matk_max and matk_min values depending on flag
-* @param flag
-*   0 - Get MATK
-*   1 - Get MATK w/o SC bonuses
-*   3 - Get MATK w/o EATK & SC bonuses
-**/
-void status_get_matk_sub(struct block_list *bl, int flag, unsigned short *matk_max, unsigned short *matk_min)
+ * Get bl's matk_max and matk_min values depending on flag
+ * @param flag
+ *   0 - Get MATK
+ *   1 - Get MATK w/o SC bonuses
+ *   3 - Get MATK w/o EATK & SC bonuses
+ */
+static void status_get_matk_sub(struct block_list *bl, int flag, unsigned short *matk_max, unsigned short *matk_min)
 {
 	struct status_data *st;
 	struct status_change *sc;
@@ -12601,9 +12609,9 @@ void status_get_matk_sub(struct block_list *bl, int flag, unsigned short *matk_m
 #undef status_get_homluk
 
 /**
-* Gets a random matk value depending on min matk and max matk
-**/
-unsigned short status_get_rand_matk(unsigned short matk_max, unsigned short matk_min)
+ * Gets a random matk value depending on min matk and max matk
+ */
+static unsigned short status_get_rand_matk(unsigned short matk_max, unsigned short matk_min)
 {
 	if ( matk_max > matk_min )
 		return matk_min + rnd() % (matk_max - matk_min);
@@ -12612,17 +12620,17 @@ unsigned short status_get_rand_matk(unsigned short matk_max, unsigned short matk
 }
 
 /**
-* Get bl's matk value depending on flag
-* @param flag [malufett]
-*   1 - Get MATK w/o SC bonuses
-*   2 - Get modified MATK
-*   3 - Get MATK w/o eATK & SC bonuses
-* @retval 1 failure
-* @retval MATK success
-*
-* Shouldn't change _any_ value! [Panikon]
-**/
-int status_get_matk(struct block_list *bl, int flag)
+ * Get bl's matk value depending on flag
+ * @param flag [malufett]
+ *   1 - Get MATK w/o SC bonuses
+ *   2 - Get modified MATK
+ *   3 - Get MATK w/o eATK & SC bonuses
+ * @retval 1 failure
+ * @retval MATK success
+ *
+ * Shouldn't change _any_ value! [Panikon]
+ */
+static int status_get_matk(struct block_list *bl, int flag)
 {
 	struct status_data *st;
 	unsigned short matk_max, matk_min;
@@ -12649,9 +12657,9 @@ int status_get_matk(struct block_list *bl, int flag)
 }
 
 /**
-* Updates bl's MATK values
-**/
-void status_update_matk(struct block_list *bl)
+ * Updates bl's MATK values
+ */
+static void status_update_matk(struct block_list *bl)
 {
 	struct status_data *st;
 	struct status_change *sc;
@@ -12676,11 +12684,11 @@ void status_update_matk(struct block_list *bl)
 }
 
 /*==========================================
-* Clears buffs/debuffs of a character.
-* type&1 -> buffs, type&2 -> debuffs
-* type&4 -> especific debuffs(implemented with refresh)
-*------------------------------------------*/
-int status_change_clear_buffs (struct block_list* bl, int type)
+ * Clears buffs/debuffs of a character.
+ * type&1 -> buffs, type&2 -> debuffs
+ * type&4 -> especific debuffs(implemented with refresh)
+ *------------------------------------------*/
+static int status_change_clear_buffs(struct block_list *bl, int type)
 {
 	int i;
 	struct status_change *sc= status->get_sc(bl);
@@ -12742,7 +12750,7 @@ int status_change_clear_buffs (struct block_list* bl, int type)
 	return 0;
 }
 
-int status_change_spread(struct block_list *src, struct block_list *bl)
+static int status_change_spread(struct block_list *src, struct block_list *bl)
 {
 	int i, flag = 0;
 	struct status_change *sc = status->get_sc(src);
@@ -12833,7 +12841,7 @@ int status_change_spread(struct block_list *src, struct block_list *bl)
 }
 
 //Natural regen related stuff.
-int status_natural_heal(struct block_list* bl, va_list args)
+static int status_natural_heal(struct block_list *bl, va_list args)
 {
 	struct regen_data *regen;
 	struct status_data *st;
@@ -13021,7 +13029,7 @@ int status_natural_heal(struct block_list* bl, va_list args)
 }
 
 //Natural heal main timer.
-int status_natural_heal_timer(int tid, int64 tick, int id, intptr_t data)
+static int status_natural_heal_timer(int tid, int64 tick, int id, intptr_t data)
 {
 	// This difference is always positive and lower than UINT_MAX (~24 days)
 	status->natural_heal_diff_tick = (unsigned int)cap_value(DIFF_TICK(tick,status->natural_heal_prev_tick), 0, UINT_MAX);
@@ -13031,12 +13039,12 @@ int status_natural_heal_timer(int tid, int64 tick, int id, intptr_t data)
 }
 
 /**
-* Get the chance to upgrade a piece of equipment.
-* @param wlv The weapon type of the item to refine (see see enum refine_type)
-* @param refine The target refine level
-* @return The chance to refine the item, in percent (0~100)
-**/
-int status_get_refine_chance(enum refine_type wlv, int refine, enum refine_chance_type type)
+ * Get the chance to upgrade a piece of equipment.
+ * @param wlv The weapon type of the item to refine (see see enum refine_type)
+ * @param refine The target refine level
+ * @return The chance to refine the item, in percent (0~100)
+ */
+static int status_get_refine_chance(enum refine_type wlv, int refine, enum refine_chance_type type)
 {
 	Assert_ret((int)wlv >= REFINE_TYPE_ARMOR && wlv < REFINE_TYPE_MAX);
 
@@ -13049,7 +13057,7 @@ int status_get_refine_chance(enum refine_type wlv, int refine, enum refine_chanc
 	return status->dbs->refine_info[wlv].chance[type][refine];
 }
 
-int status_get_sc_type(sc_type type)
+static int status_get_sc_type(sc_type type)
 {
 
 	if( type <= SC_NONE || type >= SC_MAX )
@@ -13058,7 +13066,7 @@ int status_get_sc_type(sc_type type)
 	return status->dbs->sc_conf[type];
 }
 
-void status_read_job_db_sub(int idx, const char *name, struct config_setting_t *jdb)
+static void status_read_job_db_sub(int idx, const char *name, struct config_setting_t *jdb)
 {
 	struct config_setting_t *temp = NULL;
 	int i32 = 0;
@@ -13288,14 +13296,15 @@ void status_read_job_db_sub(int idx, const char *name, struct config_setting_t *
 	}
 }
 
+/* [malufett/Hercules] */
 /*------------------------------------------
-* DB reading.
-* job_db.conf    - weight, hp, sp, aspd
-* job_db2.txt    - job level stat bonuses
-* size_fix.txt   - size adjustment table for weapons
-* refine_db.txt  - refining data table
-*------------------------------------------*/
-void status_read_job_db(void) /* [malufett/Hercules] */
+ * DB reading.
+ * job_db.conf    - weight, hp, sp, aspd
+ * job_db2.txt    - job level stat bonuses
+ * size_fix.txt   - size adjustment table for weapons
+ * refine_db.txt  - refining data table
+ *------------------------------------------*/
+static void status_read_job_db(void)
 {
 	int i = 0;
 	struct config_t job_db_conf;
@@ -13326,7 +13335,7 @@ void status_read_job_db(void) /* [malufett/Hercules] */
 	libconfig->destroy(&job_db_conf);
 }
 
-bool status_readdb_job2(char* fields[], int columns, int current)
+static bool status_readdb_job2(char *fields[], int columns, int current)
 {
 	int idx, class, i;
 
@@ -13346,7 +13355,7 @@ bool status_readdb_job2(char* fields[], int columns, int current)
 	return true;
 }
 
-bool status_readdb_sizefix(char* fields[], int columns, int current)
+static bool status_readdb_sizefix(char *fields[], int columns, int current)
 {
 	unsigned int i;
 
@@ -13370,7 +13379,7 @@ bool status_readdb_sizefix(char* fields[], int columns, int current)
  *               validation errors.
  * @return # of the validated entry, or 0 in case of failure.
  */
-int status_readdb_refine_libconfig_sub(struct config_setting_t *r, const char *name, const char *source)
+static int status_readdb_refine_libconfig_sub(struct config_setting_t *r, const char *name, const char *source)
 {
 	struct config_setting_t *rate = NULL;
 	int type = REFINE_TYPE_ARMOR, bonus_per_level = 0, rnd_bonus_v = 0, rnd_bonus_lv = 0;
@@ -13491,7 +13500,7 @@ int status_readdb_refine_libconfig_sub(struct config_setting_t *r, const char *n
  * @param *filename File name, relative to the database path.
  * @return The number of found entries.
  */
-int status_readdb_refine_libconfig(const char *filename)
+static int status_readdb_refine_libconfig(const char *filename)
 {
 	bool duplicate[REFINE_TYPE_MAX];
 	struct config_t refine_db_conf;
@@ -13523,7 +13532,7 @@ int status_readdb_refine_libconfig(const char *filename)
 	return count;
 }
 
-bool status_readdb_scconfig(char* fields[], int columns, int current)
+static bool status_readdb_scconfig(char *fields[], int columns, int current)
 {
 	int val = 0;
 	char* type = fields[0];
@@ -13549,7 +13558,7 @@ bool status_readdb_scconfig(char* fields[], int columns, int current)
  * size_fixe.txt
  * refine_db.txt
  **/
-int status_readdb(void)
+static int status_readdb(void)
 {
 	int i, j;
 
@@ -13590,9 +13599,9 @@ int status_readdb(void)
 }
 
 /*==========================================
-* Status db init and destroy.
-*------------------------------------------*/
-int do_init_status(bool minimal)
+ * Status db init and destroy.
+ *------------------------------------------*/
+static int do_init_status(bool minimal)
 {
 	if (minimal)
 		return 0;
@@ -13609,16 +13618,16 @@ int do_init_status(bool minimal)
 	return 0;
 }
 
-void do_final_status(void)
+static void do_final_status(void)
 {
 	ers_destroy(status->data_ers);
 }
 
 /*=====================================
-* Default Functions : status.h
-* Generated by HerculesInterfaceMaker
-* created by Susu
-*-------------------------------------*/
+ * Default Functions : status.h
+ * Generated by HerculesInterfaceMaker
+ * created by Susu
+ *-------------------------------------*/
 void status_defaults(void)
 {
 	status = &status_s;

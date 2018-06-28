@@ -38,7 +38,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct mapreg_interface mapreg_s;
+static struct mapreg_interface mapreg_s;
 struct mapreg_interface *mapreg;
 
 #define MAPREG_AUTOSAVE_INTERVAL (300*1000)
@@ -49,7 +49,8 @@ struct mapreg_interface *mapreg;
  * @param uid variable's unique identifier.
  * @return variable's integer value
  */
-int mapreg_readreg(int64 uid) {
+static int mapreg_readreg(int64 uid)
+{
 	struct mapreg_save *m = i64db_get(mapreg->regs.vars, uid);
 	return m?m->u.i:0;
 }
@@ -60,7 +61,8 @@ int mapreg_readreg(int64 uid) {
  * @param uid variable's unique identifier
  * @return variable's string value
  */
-char* mapreg_readregstr(int64 uid) {
+static char *mapreg_readregstr(int64 uid)
+{
 	struct mapreg_save *m = i64db_get(mapreg->regs.vars, uid);
 	return m?m->u.str:NULL;
 }
@@ -72,7 +74,8 @@ char* mapreg_readregstr(int64 uid) {
  * @param val new value
  * @retval true value was successfully set
  */
-bool mapreg_setreg(int64 uid, int val) {
+static bool mapreg_setreg(int64 uid, int val)
+{
 	struct mapreg_save *m;
 	int num = script_getvarid(uid);
 	unsigned int i = script_getvaridx(uid);
@@ -129,7 +132,8 @@ bool mapreg_setreg(int64 uid, int val) {
  * @param str new value
  * @retval true value was successfully set
  */
-bool mapreg_setregstr(int64 uid, const char* str) {
+static bool mapreg_setregstr(int64 uid, const char *str)
+{
 	struct mapreg_save *m;
 	int num = script_getvarid(uid);
 	unsigned int i   = script_getvaridx(uid);
@@ -188,7 +192,8 @@ bool mapreg_setregstr(int64 uid, const char* str) {
 /**
  * Loads permanent variables from database.
  */
-void script_load_mapreg(void) {
+static void script_load_mapreg(void)
+{
 	/*
 	        0        1       2
 	   +-------------------------+
@@ -241,7 +246,7 @@ void script_load_mapreg(void) {
 /**
  * Saves permanent variables to database.
  */
-void script_save_mapreg(void)
+static void script_save_mapreg(void)
 {
 	if (mapreg->dirty) {
 		struct DBIterator *iter = db_iterator(mapreg->regs.vars);
@@ -274,7 +279,8 @@ void script_save_mapreg(void)
  *
  * @see timer->do_timer
  */
-int script_autosave_mapreg(int tid, int64 tick, int id, intptr_t data) {
+static int script_autosave_mapreg(int tid, int64 tick, int id, intptr_t data)
+{
 	mapreg->save();
 	return 0;
 }
@@ -284,7 +290,7 @@ int script_autosave_mapreg(int tid, int64 tick, int id, intptr_t data) {
  *
  * @see DBApply
  */
-int mapreg_destroyreg(union DBKey key, struct DBData *data, va_list ap)
+static int mapreg_destroyreg(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct mapreg_save *m = NULL;
 
@@ -308,7 +314,8 @@ int mapreg_destroyreg(union DBKey key, struct DBData *data, va_list ap)
  * This has the effect of clearing the temporary variables, and
  * reloading the permanent ones.
  */
-void mapreg_reload(void) {
+static void mapreg_reload(void)
+{
 	mapreg->save();
 
 	mapreg->regs.vars->clear(mapreg->regs.vars, mapreg->destroyreg);
@@ -324,7 +331,8 @@ void mapreg_reload(void) {
 /**
  * Finalizer.
  */
-void mapreg_final(void) {
+static void mapreg_final(void)
+{
 	mapreg->save();
 
 	mapreg->regs.vars->destroy(mapreg->regs.vars, mapreg->destroyreg);
@@ -338,7 +346,8 @@ void mapreg_final(void) {
 /**
  * Initializer.
  */
-void mapreg_init(void) {
+static void mapreg_init(void)
+{
 	mapreg->regs.vars = i64db_alloc(DB_OPT_BASE);
 	mapreg->ers = ers_new(sizeof(struct mapreg_save), "mapreg_sql.c::mapreg_ers", ERS_OPT_CLEAN);
 
@@ -357,7 +366,7 @@ void mapreg_init(void) {
  *
  * @retval false in case of error.
  */
-bool mapreg_config_read(const char *filename, const struct config_setting_t *config, bool imported)
+static bool mapreg_config_read(const char *filename, const struct config_setting_t *config, bool imported)
 {
 	nullpo_retr(false, filename);
 	nullpo_retr(false, config);
@@ -371,7 +380,8 @@ bool mapreg_config_read(const char *filename, const struct config_setting_t *con
 /**
  * Interface defaults initializer.
  */
-void mapreg_defaults(void) {
+void mapreg_defaults(void)
+{
 	mapreg = &mapreg_s;
 
 	/* */

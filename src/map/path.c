@@ -44,7 +44,7 @@
 #define DIR_SOUTH 4
 #define DIR_EAST 8
 
-struct path_interface path_s;
+static struct path_interface path_s;
 struct path_interface *path;
 
 /// @name Structures and defines for A* pathfinding
@@ -85,7 +85,7 @@ static const unsigned char walk_choices [3][3] =
  * Find the closest reachable cell, 'count' cells away from (x0,y0) in direction (dx,dy).
  * Income after the coordinates of the blow
  *------------------------------------------*/
-int path_blownpos(struct block_list *bl, int16 m,int16 x0,int16 y0,int16 dx,int16 dy,int count)
+static int path_blownpos(struct block_list *bl, int16 m, int16 x0, int16 y0, int16 dx, int16 dy, int count)
 {
 	struct map_data *md;
 
@@ -119,7 +119,7 @@ int path_blownpos(struct block_list *bl, int16 m,int16 x0,int16 y0,int16 dx,int1
 /*==========================================
  * is ranged attack from (x0,y0) to (x1,y1) possible?
  *------------------------------------------*/
-bool path_search_long(struct shootpath_data *spd,struct block_list *bl,int16 m,int16 x0,int16 y0,int16 x1,int16 y1,cell_chk cell)
+static bool path_search_long(struct shootpath_data *spd, struct block_list *bl, int16 m, int16 x0, int16 y0, int16 x1, int16 y1, cell_chk cell)
 {
 	int dx, dy;
 	int wx = 0, wy = 0;
@@ -253,7 +253,7 @@ static int add_path(struct node_heap *heap, struct path_node *tp, int16 x, int16
  * flag: &1 = easy path search only
  * cell: type of obstruction to check for
  *------------------------------------------*/
-bool path_search(struct walkpath_data *wpd, struct block_list *bl, int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int flag, cell_chk cell)
+static bool path_search(struct walkpath_data *wpd, struct block_list *bl, int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int flag, cell_chk cell)
 {
 	register int i, x, y, dx, dy;
 	struct map_data *md;
@@ -429,7 +429,7 @@ bool path_search(struct walkpath_data *wpd, struct block_list *bl, int16 m, int1
 }
 
 //Distance functions, taken from http://www.flipcode.com/articles/article_fastdistance.shtml
-bool check_distance(int dx, int dy, int distance)
+static bool check_distance(int dx, int dy, int distance)
 {
 #ifdef CIRCULAR_AREA
 	//In this case, we just do a square comparison. Add 1 tile grace for diagonal range checks.
@@ -441,7 +441,7 @@ bool check_distance(int dx, int dy, int distance)
 #endif
 }
 
-unsigned int distance(int dx, int dy)
+static unsigned int distance(int dx, int dy)
 {
 #ifdef CIRCULAR_AREA
 	unsigned int min, max;
@@ -478,7 +478,7 @@ unsigned int distance(int dx, int dy)
  * @param distance: Distance to check against
  * @return Within distance(1); Not within distance(0);
  */
-bool check_distance_client(int dx, int dy, int distance)
+static bool check_distance_client(int dx, int dy, int distance)
 {
 	if(distance < 0) distance = 0;
 
@@ -492,7 +492,7 @@ bool check_distance_client(int dx, int dy, int distance)
  * @param dy: Vertical distance
  * @return Circular distance
  */
-int distance_client(int dx, int dy)
+static int distance_client(int dx, int dy)
 {
 	double temp_dist = sqrt((double)(dx*dx + dy*dy));
 
@@ -505,7 +505,8 @@ int distance_client(int dx, int dy)
 	return ((int)temp_dist);
 }
 
-void path_defaults(void) {
+void path_defaults(void)
+{
 	path = &path_s;
 
 	path->blownpos = path_blownpos;

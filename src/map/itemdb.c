@@ -41,7 +41,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct itemdb_interface itemdb_s;
+static struct itemdb_interface itemdb_s;
 struct itemdb_interface *itemdb;
 
 /**
@@ -49,7 +49,7 @@ struct itemdb_interface *itemdb;
  * name = item alias, so we should find items aliases first. if not found then look for "jname" (full name)
  * @see DBApply
  */
-int itemdb_searchname_sub(union DBKey key, struct DBData *data, va_list ap)
+static int itemdb_searchname_sub(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct item_data *item = DB->data2ptr(data), **dst, **dst2;
 	char *str;
@@ -78,7 +78,8 @@ int itemdb_searchname_sub(union DBKey key, struct DBData *data, va_list ap)
 /*==========================================
  * Return item data from item name. (lookup)
  *------------------------------------------*/
-struct item_data* itemdb_searchname(const char *str) {
+static struct item_data *itemdb_searchname(const char *str)
+{
 	struct item_data* item;
 	struct item_data* item2=NULL;
 	int i;
@@ -105,14 +106,15 @@ struct item_data* itemdb_searchname(const char *str) {
 	return item?item:item2;
 }
 /* name to item data */
-struct item_data* itemdb_name2id(const char *str) {
+static struct item_data *itemdb_name2id(const char *str)
+{
 	return strdb_get(itemdb->names,str);
 }
 
 /**
  * @see DBMatcher
  */
-int itemdb_searchname_array_sub(union DBKey key, struct DBData data, va_list ap)
+static int itemdb_searchname_array_sub(union DBKey key, struct DBData data, va_list ap)
 {
 	struct item_data *item = DB->data2ptr(&data);
 	char *str;
@@ -135,7 +137,8 @@ int itemdb_searchname_array_sub(union DBKey key, struct DBData data, va_list ap)
  * 0 - approximate match
  * 1 - exact match
  *------------------------------------------*/
-int itemdb_searchname_array(struct item_data** data, int size, const char *str, int flag) {
+static int itemdb_searchname_array(struct item_data **data, int size, const char *str, int flag)
+{
 	struct item_data* item;
 	int i;
 	int count=0;
@@ -181,7 +184,8 @@ int itemdb_searchname_array(struct item_data** data, int size, const char *str, 
 	return count;
 }
 /* [Ind/Hercules] */
-int itemdb_chain_item(unsigned short chain_id, int *rate) {
+static int itemdb_chain_item(unsigned short chain_id, int *rate)
+{
 	struct item_chain_entry *entry;
 
 	if( chain_id >= itemdb->chain_count ) {
@@ -199,7 +203,8 @@ int itemdb_chain_item(unsigned short chain_id, int *rate) {
 	return entry->id;
 }
 /* [Ind/Hercules] */
-void itemdb_package_item(struct map_session_data *sd, struct item_package *package) {
+static void itemdb_package_item(struct map_session_data *sd, struct item_package *package)
+{
 	int i = 0, get_count, j, flag;
 
 	nullpo_retv(sd);
@@ -287,7 +292,8 @@ void itemdb_package_item(struct map_session_data *sd, struct item_package *packa
 /*==========================================
  * Return a random item id from group. (takes into account % chance giving/tot group)
  *------------------------------------------*/
-int itemdb_searchrandomid(struct item_group *group) {
+static int itemdb_searchrandomid(struct item_group *group)
+{
 
 	nullpo_retr(UNKNOWN_ITEM_ID, group);
 	if (group->qty)
@@ -296,7 +302,8 @@ int itemdb_searchrandomid(struct item_group *group) {
 	ShowError("itemdb_searchrandomid: No item entries for group id %d\n", group->id);
 	return UNKNOWN_ITEM_ID;
 }
-bool itemdb_in_group(struct item_group *group, int nameid) {
+static bool itemdb_in_group(struct item_group *group, int nameid)
+{
 	int i;
 
 	nullpo_retr(false, group);
@@ -309,7 +316,7 @@ bool itemdb_in_group(struct item_group *group, int nameid) {
 
 /// Searches for the item_data.
 /// Returns the item_data or NULL if it does not exist.
-struct item_data* itemdb_exists(int nameid)
+static struct item_data *itemdb_exists(int nameid)
 {
 	struct item_data* item;
 
@@ -326,14 +333,14 @@ struct item_data* itemdb_exists(int nameid)
  * @param option_index as the index of the item option (client side).
  * @return pointer to struct itemdb_option data or NULL.
  */
-struct itemdb_option *itemdb_option_exists(int idx)
+static struct itemdb_option *itemdb_option_exists(int idx)
 {
 	return (struct itemdb_option *)idb_get(itemdb->options, idx);
 }
 
 /// Returns human readable name for given item type.
 /// @param type Type id to retrieve name for ( IT_* ).
-const char* itemdb_typename(int type)
+static const char *itemdb_typename(int type)
 {
 	switch(type)
 	{
@@ -362,7 +369,7 @@ const char* itemdb_typename(int type)
  *
  * @author Dastgir
  */
-void itemdb_jobid2mapid(uint64 *bclass, int job_class, bool enable)
+static void itemdb_jobid2mapid(uint64 *bclass, int job_class, bool enable)
 {
 	uint64 mask[3] = { 0 };
 	int i;
@@ -489,7 +496,7 @@ void itemdb_jobid2mapid(uint64 *bclass, int job_class, bool enable)
  * @param bclass  Pointer to the variable containing the new format.
  * @param jobmask Variable containing JobMask.
  */
-void itemdb_jobmask2mapid(uint64 *bclass, uint64 jobmask)
+static void itemdb_jobmask2mapid(uint64 *bclass, uint64 jobmask)
 {
 	nullpo_retv(bclass);
 	bclass[0] = bclass[1] = bclass[2] = 0;
@@ -572,7 +579,7 @@ void itemdb_jobmask2mapid(uint64 *bclass, uint64 jobmask)
 		bclass[0] |= 1ULL<<MAPID_SUMMONER;
 }
 
-void create_dummy_data(void)
+static void create_dummy_data(void)
 {
 	memset(&itemdb->dummy, 0, sizeof(struct item_data));
 	itemdb->dummy.nameid=500;
@@ -584,7 +591,7 @@ void create_dummy_data(void)
 	itemdb->dummy.view_id=UNKNOWN_ITEM_ID;
 }
 
-struct item_data* create_item_data(int nameid)
+static struct item_data *create_item_data(int nameid)
 {
 	struct item_data *id;
 	CREATE(id, struct item_data, 1);
@@ -597,7 +604,8 @@ struct item_data* create_item_data(int nameid)
 /*==========================================
  * Loads (and creates if not found) an item from the db.
  *------------------------------------------*/
-struct item_data* itemdb_load(int nameid) {
+static struct item_data *itemdb_load(int nameid)
+{
 	struct item_data *id;
 
 	if( nameid >= 0 && nameid < ARRAYLENGTH(itemdb->array) )
@@ -620,7 +628,7 @@ struct item_data* itemdb_load(int nameid) {
 /*==========================================
  * Loads an item from the db. If not found, it will return the dummy item.
  *------------------------------------------*/
-struct item_data* itemdb_search(int nameid)
+static struct item_data *itemdb_search(int nameid)
 {
 	struct item_data* id;
 	if( nameid >= 0 && nameid < ARRAYLENGTH(itemdb->array) )
@@ -640,7 +648,7 @@ struct item_data* itemdb_search(int nameid)
 /*==========================================
  * Returns if given item is a player-equippable piece.
  *------------------------------------------*/
-int itemdb_isequip(int nameid)
+static int itemdb_isequip(int nameid)
 {
 	int type=itemdb_type(nameid);
 	switch (type) {
@@ -656,7 +664,8 @@ int itemdb_isequip(int nameid)
 /*==========================================
  * Alternate version of itemdb_isequip
  *------------------------------------------*/
-int itemdb_isequip2(struct item_data *data) {
+static int itemdb_isequip2(struct item_data *data)
+{
 	nullpo_ret(data);
 	switch(data->type) {
 		case IT_WEAPON:
@@ -671,7 +680,7 @@ int itemdb_isequip2(struct item_data *data) {
 /*==========================================
  * Returns if given item's type is stackable.
  *------------------------------------------*/
-int itemdb_isstackable(int nameid)
+static int itemdb_isstackable(int nameid)
 {
 	int type=itemdb_type(nameid);
 	switch(type) {
@@ -688,7 +697,7 @@ int itemdb_isstackable(int nameid)
 /*==========================================
  * Alternate version of itemdb_isstackable
  *------------------------------------------*/
-int itemdb_isstackable2(struct item_data *data)
+static int itemdb_isstackable2(struct item_data *data)
 {
 	nullpo_ret(data);
 	switch(data->type) {
@@ -705,43 +714,52 @@ int itemdb_isstackable2(struct item_data *data)
 /*==========================================
  * Trade Restriction functions [Skotlex]
  *------------------------------------------*/
-int itemdb_isdropable_sub(struct item_data *item, int gmlv, int unused) {
+static int itemdb_isdropable_sub(struct item_data *item, int gmlv, int unused)
+{
 	return (item && (!(item->flag.trade_restriction&ITR_NODROP) || gmlv >= item->gm_lv_trade_override));
 }
 
-int itemdb_cantrade_sub(struct item_data* item, int gmlv, int gmlv2) {
+static int itemdb_cantrade_sub(struct item_data *item, int gmlv, int gmlv2)
+{
 	return (item && (!(item->flag.trade_restriction&ITR_NOTRADE) || gmlv >= item->gm_lv_trade_override || gmlv2 >= item->gm_lv_trade_override));
 }
 
-int itemdb_canpartnertrade_sub(struct item_data* item, int gmlv, int gmlv2) {
+static int itemdb_canpartnertrade_sub(struct item_data *item, int gmlv, int gmlv2)
+{
 	return (item && (item->flag.trade_restriction&ITR_PARTNEROVERRIDE || gmlv >= item->gm_lv_trade_override || gmlv2 >= item->gm_lv_trade_override));
 }
 
-int itemdb_cansell_sub(struct item_data* item, int gmlv, int unused) {
+static int itemdb_cansell_sub(struct item_data *item, int gmlv, int unused)
+{
 	return (item && (!(item->flag.trade_restriction&ITR_NOSELLTONPC) || gmlv >= item->gm_lv_trade_override));
 }
 
-int itemdb_cancartstore_sub(struct item_data* item, int gmlv, int unused) {
+static int itemdb_cancartstore_sub(struct item_data *item, int gmlv, int unused)
+{
 	return (item && (!(item->flag.trade_restriction&ITR_NOCART) || gmlv >= item->gm_lv_trade_override));
 }
 
-int itemdb_canstore_sub(struct item_data* item, int gmlv, int unused) {
+static int itemdb_canstore_sub(struct item_data *item, int gmlv, int unused)
+{
 	return (item && (!(item->flag.trade_restriction&ITR_NOSTORAGE) || gmlv >= item->gm_lv_trade_override));
 }
 
-int itemdb_canguildstore_sub(struct item_data* item, int gmlv, int unused) {
+static int itemdb_canguildstore_sub(struct item_data *item, int gmlv, int unused)
+{
 	return (item && (!(item->flag.trade_restriction&ITR_NOGSTORAGE) || gmlv >= item->gm_lv_trade_override));
 }
 
-int itemdb_canmail_sub(struct item_data* item, int gmlv, int unused) {
+static int itemdb_canmail_sub(struct item_data *item, int gmlv, int unused)
+{
 	return (item && (!(item->flag.trade_restriction&ITR_NOMAIL) || gmlv >= item->gm_lv_trade_override));
 }
 
-int itemdb_canauction_sub(struct item_data* item, int gmlv, int unused) {
+static int itemdb_canauction_sub(struct item_data *item, int gmlv, int unused)
+{
 	return (item && (!(item->flag.trade_restriction&ITR_NOAUCTION) || gmlv >= item->gm_lv_trade_override));
 }
 
-int itemdb_isrestricted(struct item* item, int gmlv, int gmlv2, int (*func)(struct item_data*, int, int))
+static int itemdb_isrestricted(struct item *item, int gmlv, int gmlv2, int (*func)(struct item_data*, int, int))
 {
 	struct item_data* item_data;
 	int i;
@@ -765,7 +783,8 @@ int itemdb_isrestricted(struct item* item, int gmlv, int gmlv2, int (*func)(stru
 /*==========================================
  * Specifies if item-type should drop unidentified.
  *------------------------------------------*/
-int itemdb_isidentified(int nameid) {
+static int itemdb_isidentified(int nameid)
+{
 	int type=itemdb_type(nameid);
 	switch (type) {
 		case IT_WEAPON:
@@ -777,7 +796,8 @@ int itemdb_isidentified(int nameid) {
 	}
 }
 /* same as itemdb_isidentified but without a lookup */
-int itemdb_isidentified2(struct item_data *data) {
+static int itemdb_isidentified2(struct item_data *data)
+{
 	nullpo_ret(data);
 	switch (data->type) {
 		case IT_WEAPON:
@@ -789,7 +809,8 @@ int itemdb_isidentified2(struct item_data *data) {
 	}
 }
 
-void itemdb_read_groups(void) {
+static void itemdb_read_groups(void)
+{
 	struct config_t item_group_conf;
 	struct config_setting_t *itg = NULL, *it = NULL;
 #ifdef RENEWAL
@@ -877,7 +898,8 @@ void itemdb_read_groups(void) {
 }
 
 /* [Ind/Hercules] - HCache for Packages */
-void itemdb_write_cached_packages(const char *config_filename) {
+static void itemdb_write_cached_packages(const char *config_filename)
+{
 	FILE *file;
 	unsigned short pcount = itemdb->package_count;
 	unsigned short i;
@@ -948,7 +970,8 @@ void itemdb_write_cached_packages(const char *config_filename) {
 
 	return;
 }
-bool itemdb_read_cached_packages(const char *config_filename) {
+static bool itemdb_read_cached_packages(const char *config_filename)
+{
 	FILE *file;
 	unsigned short pcount = 0;
 	unsigned short i;
@@ -1079,7 +1102,8 @@ bool itemdb_read_cached_packages(const char *config_filename) {
 
 	return true;
 }
-void itemdb_read_packages(void) {
+static void itemdb_read_packages(void)
+{
 	struct config_t item_packages_conf;
 	struct config_setting_t *itg = NULL, *it = NULL, *t = NULL;
 #ifdef RENEWAL
@@ -1318,7 +1342,7 @@ void itemdb_read_packages(void) {
  * @param[in]     source Source of the entry (file name), to be displayed in
  *                       case of validation errors.
  */
-void itemdb_readdb_options_additional_fields(struct itemdb_option *ito, struct config_setting_t *t, const char *source)
+static void itemdb_readdb_options_additional_fields(struct itemdb_option *ito, struct config_setting_t *t, const char *source)
 {
 	// do nothing. plugins can do their own work
 }
@@ -1326,7 +1350,7 @@ void itemdb_readdb_options_additional_fields(struct itemdb_option *ito, struct c
 /**
  * Reads the Item Options configuration file.
  */
-void itemdb_read_options(void)
+static void itemdb_read_options(void)
 {
 	struct config_t item_options_db;
 	struct config_setting_t *ito = NULL, *conf = NULL;
@@ -1428,7 +1452,8 @@ void itemdb_read_options(void)
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
 }
 
-void itemdb_read_chains(void) {
+static void itemdb_read_chains(void)
+{
 	struct config_t item_chain_conf;
 	struct config_setting_t *itc = NULL;
 #ifdef RENEWAL
@@ -1498,7 +1523,8 @@ void itemdb_read_chains(void) {
 /**
  * @return: amount of retrieved entries.
  **/
-int itemdb_combo_split_atoi (char *str, int *val) {
+static int itemdb_combo_split_atoi(char *str, int *val)
+{
 	int i;
 
 	nullpo_ret(val);
@@ -1520,7 +1546,7 @@ int itemdb_combo_split_atoi (char *str, int *val) {
 /**
  * <combo{:combo{:combo:{..}}}>,<{ script }>
  **/
-void itemdb_read_combos(void)
+static void itemdb_read_combos(void)
 {
 	uint32 lines = 0, count = 0;
 	char line[1024];
@@ -1631,7 +1657,7 @@ void itemdb_read_combos(void)
 /*======================================
  * Applies gender restrictions according to settings. [Skotlex]
  *======================================*/
-int itemdb_gendercheck(struct item_data *id)
+static int itemdb_gendercheck(struct item_data *id)
 {
 	nullpo_ret(id);
 	if (id->nameid == WEDDING_RING_M) //Grom Ring
@@ -1663,7 +1689,8 @@ int itemdb_gendercheck(struct item_data *id)
  * (i.e.  item_db2 inheritance), as it will make sure not to free any scripts
  * still in use by the new entry.
  */
-int itemdb_validate_entry(struct item_data *entry, int n, const char *source) {
+static int itemdb_validate_entry(struct item_data *entry, int n, const char *source)
+{
 	struct item_data *item;
 
 	nullpo_ret(entry);
@@ -1838,7 +1865,7 @@ int itemdb_validate_entry(struct item_data *entry, int n, const char *source) {
 	return item->nameid;
 }
 
-void itemdb_readdb_additional_fields(int itemid, struct config_setting_t *it, int n, const char *source)
+static void itemdb_readdb_additional_fields(int itemid, struct config_setting_t *it, int n, const char *source)
 {
 	// do nothing. plugins can do own work
 }
@@ -1850,7 +1877,7 @@ void itemdb_readdb_additional_fields(int itemid, struct config_setting_t *it, in
  * @param t  Libconfig setting entry. It is expected to be valid and it won't
  *           be freed (it is care of the caller to do so if necessary).
  */
-void itemdb_readdb_job_sub(struct item_data *id, struct config_setting_t *t)
+static void itemdb_readdb_job_sub(struct item_data *id, struct config_setting_t *t)
 {
 	int idx = 0;
 	struct config_setting_t *it = NULL;
@@ -1889,7 +1916,8 @@ void itemdb_readdb_job_sub(struct item_data *id, struct config_setting_t *t)
  *               validation errors.
  * @return Nameid of the validated entry, or 0 in case of failure.
  */
-int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const char *source) {
+static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const char *source)
+{
 	struct item_data id = { 0 };
 	struct config_setting_t *t = NULL;
 	const char *str = NULL;
@@ -2228,7 +2256,7 @@ int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const char *
 	return itemdb->validate_entry(&id, n, source);
 }
 
-bool itemdb_lookup_const(const struct config_setting_t *it, const char *name, int *value)
+static bool itemdb_lookup_const(const struct config_setting_t *it, const char *name, int *value)
 {
 	const char *str = NULL;
 
@@ -2247,7 +2275,7 @@ bool itemdb_lookup_const(const struct config_setting_t *it, const char *name, in
 	return false;
 }
 
-bool itemdb_lookup_const_mask(const struct config_setting_t *it, const char *name, int *value)
+static bool itemdb_lookup_const_mask(const struct config_setting_t *it, const char *name, int *value)
 {
 	const struct config_setting_t *t = NULL;
 
@@ -2310,7 +2338,8 @@ bool itemdb_lookup_const_mask(const struct config_setting_t *it, const char *nam
  * @param filename File name, relative to the database path.
  * @return The number of found entries.
  */
-int itemdb_readdb_libconfig(const char *filename) {
+static int itemdb_readdb_libconfig(const char *filename)
+{
 	bool duplicate[MAX_ITEMDB];
 	struct config_t item_db_conf;
 	struct config_setting_t *itdb, *it;
@@ -2352,10 +2381,11 @@ int itemdb_readdb_libconfig(const char *filename) {
 }
 
 /*==========================================
-* Unique item ID function
-* Only one operation by once
-*------------------------------------------*/
-uint64 itemdb_unique_id(struct map_session_data *sd) {
+ * Unique item ID function
+ * Only one operation by once
+ *------------------------------------------*/
+static uint64 itemdb_unique_id(struct map_session_data *sd)
+{
 
 	nullpo_ret(sd);
 	return ((uint64)sd->status.char_id << 32) | sd->status.uniqueitem_counter++;
@@ -2364,7 +2394,8 @@ uint64 itemdb_unique_id(struct map_session_data *sd) {
 /**
  * Reads all item-related databases.
  */
-void itemdb_read(bool minimal) {
+static void itemdb_read(bool minimal)
+{
 	int i;
 	struct DBData prev;
 
@@ -2400,7 +2431,8 @@ void itemdb_read(bool minimal) {
 /**
  * retrieves item_combo data by combo id
  **/
-struct item_combo * itemdb_id2combo( unsigned short id ) {
+static struct item_combo *itemdb_id2combo(unsigned short id)
+{
 	if( id > itemdb->combo_count )
 		return NULL;
 	return itemdb->combos[id];
@@ -2409,7 +2441,7 @@ struct item_combo * itemdb_id2combo( unsigned short id ) {
 /**
  * check is item have usable type
  **/
-bool itemdb_is_item_usable(struct item_data *item)
+static bool itemdb_is_item_usable(struct item_data *item)
 {
 	nullpo_retr(false, item);
 	return item->type == IT_HEALING || item->type == IT_USABLE || item->type == IT_CASH;
@@ -2420,7 +2452,7 @@ bool itemdb_is_item_usable(struct item_data *item)
  *------------------------------------------*/
 
 /// Destroys the item_data.
-void destroy_item_data(struct item_data* self, int free_self)
+static void destroy_item_data(struct item_data *self, int free_self)
 {
 	if( self == NULL )
 		return;
@@ -2446,7 +2478,7 @@ void destroy_item_data(struct item_data* self, int free_self)
 /**
  * @see DBApply
  */
-int itemdb_final_sub(union DBKey key, struct DBData *data, va_list ap)
+static int itemdb_final_sub(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct item_data *id = DB->data2ptr(data);
 
@@ -2456,7 +2488,7 @@ int itemdb_final_sub(union DBKey key, struct DBData *data, va_list ap)
 	return 0;
 }
 
-int itemdb_options_final_sub(union DBKey key, struct DBData *data, va_list ap)
+static int itemdb_options_final_sub(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct itemdb_option *ito = DB->data2ptr(data);
 
@@ -2466,7 +2498,8 @@ int itemdb_options_final_sub(union DBKey key, struct DBData *data, va_list ap)
 	return 0;
 }
 
-void itemdb_clear(bool total) {
+static void itemdb_clear(bool total)
+{
 	int i;
 	// clear the previous itemdb data
 	for( i = 0; i < ARRAYLENGTH(itemdb->array); ++i ) {
@@ -2536,7 +2569,8 @@ void itemdb_clear(bool total) {
 	db_clear(itemdb->names);
 }
 
-void itemdb_reload(void) {
+static void itemdb_reload(void)
+{
 	struct s_mapiterator* iter;
 	struct map_session_data* sd;
 
@@ -2598,7 +2632,7 @@ void itemdb_reload(void) {
 	}
 	mapit->free(iter);
 }
-void itemdb_name_constants(void)
+static void itemdb_name_constants(void)
 {
 	struct DBIterator *iter = db_iterator(itemdb->names);
 	struct item_data *data;
@@ -2614,7 +2648,8 @@ void itemdb_name_constants(void)
 
 	dbi_destroy(iter);
 }
-void do_final_itemdb(void) {
+static void do_final_itemdb(void)
+{
 	itemdb->clear(true);
 
 	itemdb->other->destroy(itemdb->other, itemdb->final_sub);
@@ -2625,7 +2660,8 @@ void do_final_itemdb(void) {
 	clif->stylist_vector_clear();
 }
 
-void do_init_itemdb(bool minimal) {
+static void do_init_itemdb(bool minimal)
+{
 	memset(itemdb->array, 0, sizeof(itemdb->array));
 	itemdb->other = idb_alloc(DB_OPT_BASE);
 	itemdb->options = idb_alloc(DB_OPT_RELEASE_DATA);
@@ -2645,7 +2681,8 @@ void do_init_itemdb(bool minimal) {
 	VECTOR_INIT(clif->attendance_data);
 	clif->pAttendanceDB();
 }
-void itemdb_defaults(void) {
+void itemdb_defaults(void)
+{
 	itemdb = &itemdb_s;
 
 	itemdb->init = do_init_itemdb;
