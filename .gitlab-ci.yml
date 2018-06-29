@@ -64,7 +64,7 @@ re:clang-3.9:
 pre_re:clang-4.0:
   <<: *branch_exceptions
   <<: *prerequisites
-  stage: primary
+  stage: secondary
   image: debian:unstable
   services:
     - mariadb:10
@@ -79,7 +79,7 @@ pre_re:clang-4.0:
 re:clang-4.0:
   <<: *branch_exceptions
   <<: *prerequisites
-  stage: primary
+  stage: secondary
   image: debian:unstable
   services:
     - mariadb:10
@@ -89,6 +89,96 @@ re:clang-4.0:
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=clang-4.0 --enable-debug --enable-Werror --enable-buildbot
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
+
+pre_re:clang-5.0:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  stage: secondary
+  image: debian:unstable
+  services:
+    - mariadb:10
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: clang-5.0 mariadb-client libmariadbclient-dev-compat
+    SQLHOST: mariadb
+  script:
+    - ./tools/ci/travis.sh build CC=clang-5.0 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
+
+re:clang-5.0:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  stage: secondary
+  image: debian:unstable
+  services:
+    - mariadb:10
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: clang-5.0 mariadb-client libmariadbclient-dev-compat
+    SQLHOST: mariadb
+  script:
+    - ./tools/ci/travis.sh build CC=clang-5.0 --enable-debug --enable-Werror --enable-buildbot
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
+
+pre_re:clang-6.0:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  stage: primary
+  image: debian:unstable
+  services:
+    - mariadb:10
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: clang-6.0 mariadb-client libmariadbclient-dev-compat
+    SQLHOST: mariadb
+  script:
+    - ./tools/ci/travis.sh build CC=clang-6.0 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
+
+re:clang-6.0:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  stage: primary
+  image: debian:unstable
+  services:
+    - mariadb:10
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: clang-6.0 mariadb-client libmariadbclient-dev-compat
+    SQLHOST: mariadb
+  script:
+    - ./tools/ci/travis.sh build CC=clang-6.0 --enable-debug --enable-Werror --enable-buildbot
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
+
+pre_re:clang-7:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  stage: secondary
+  image: debian:unstable
+  services:
+    - mariadb:10
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: clang-7 mariadb-client libmariadbclient-dev-compat
+    SQLHOST: mariadb
+  script:
+    - ./tools/ci/travis.sh build CC=clang-7 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
+
+re:clang-7:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  stage: secondary
+  image: debian:unstable
+  services:
+    - mariadb:10
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: clang-7 mariadb-client libmariadbclient-dev-compat
+    SQLHOST: mariadb
+  script:
+    - ./tools/ci/travis.sh build CC=clang-7 --enable-debug --enable-Werror --enable-buildbot
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
 
 pre_re:gcc-4.6:
