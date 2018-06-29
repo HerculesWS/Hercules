@@ -761,6 +761,36 @@ re:ubuntu-xenial:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
 
+pre_re:ubuntu-bionic:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  stage: platforms
+  image: ubuntu:18.04
+  services:
+    - mysql:5.7
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc mysql-client libmysqlclient-dev
+    SQLHOST: mysql
+  script:
+    - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
+
+re:ubuntu-bionic:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  stage: platforms
+  image: ubuntu:18.04
+  services:
+    - mysql:5.7
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc mysql-client libmysqlclient-dev
+    SQLHOST: mysql
+  script:
+    - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
+
 # SQL servers
 
 pre_re:mysql-5.5:
