@@ -1266,8 +1266,8 @@ typedef void (*HPMHOOK_pre_clif_feel_hate_reset) (struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_feel_hate_reset) (struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_partytickack) (struct map_session_data **sd, bool *flag);
 typedef void (*HPMHOOK_post_clif_partytickack) (struct map_session_data *sd, bool flag);
-typedef void (*HPMHOOK_pre_clif_zc_config) (struct map_session_data **sd, int *type, int *flag);
-typedef void (*HPMHOOK_post_clif_zc_config) (struct map_session_data *sd, int type, int flag);
+typedef void (*HPMHOOK_pre_clif_zc_config) (struct map_session_data **sd, enum CZ_CONFIG *type, int *flag);
+typedef void (*HPMHOOK_post_clif_zc_config) (struct map_session_data *sd, enum CZ_CONFIG type, int flag);
 typedef void (*HPMHOOK_pre_clif_viewequip_ack) (struct map_session_data **sd, struct map_session_data **tsd);
 typedef void (*HPMHOOK_post_clif_viewequip_ack) (struct map_session_data *sd, struct map_session_data *tsd);
 typedef void (*HPMHOOK_pre_clif_equpcheckbox) (struct map_session_data **sd);
@@ -2450,6 +2450,10 @@ typedef void (*HPMHOOK_pre_clif_cz_req_style_change_sub) (struct map_session_dat
 typedef void (*HPMHOOK_post_clif_cz_req_style_change_sub) (struct map_session_data *sd, int type, int16 idx, bool isitem);
 typedef void (*HPMHOOK_pre_clif_style_change_response) (struct map_session_data **sd, enum stylist_shop *flag);
 typedef void (*HPMHOOK_post_clif_style_change_response) (struct map_session_data *sd, enum stylist_shop flag);
+typedef void (*HPMHOOK_pre_clif_pPetEvolution) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pPetEvolution) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_petEvolutionResult) (int *fd, enum pet_evolution_result *result);
+typedef void (*HPMHOOK_post_clif_petEvolutionResult) (int fd, enum pet_evolution_result result);
 #endif // MAP_CLIF_H
 #ifdef COMMON_CORE_H /* cmdline */
 typedef void (*HPMHOOK_pre_cmdline_init) (void);
@@ -6110,6 +6114,8 @@ typedef bool (*HPMHOOK_pre_pet_read_db_sub_intimacy) (int *idx, struct config_se
 typedef bool (*HPMHOOK_post_pet_read_db_sub_intimacy) (bool retVal___, int idx, struct config_setting_t *t);
 typedef void (*HPMHOOK_pre_pet_read_db_clear) (void);
 typedef void (*HPMHOOK_post_pet_read_db_clear) (void);
+typedef void (*HPMHOOK_pre_pet_read_db_sub_evolution) (struct config_setting_t **t, int *n);
+typedef void (*HPMHOOK_post_pet_read_db_sub_evolution) (struct config_setting_t *t, int n);
 #endif // MAP_PET_H
 #ifdef CHAR_PINCODE_H /* pincode */
 typedef void (*HPMHOOK_pre_pincode_handle) (int *fd, struct char_session_data **sd);

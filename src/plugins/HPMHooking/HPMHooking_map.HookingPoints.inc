@@ -1046,6 +1046,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->pReqStyleChange, HP_clif_pReqStyleChange) },
 	{ HP_POP(clif->cz_req_style_change_sub, HP_clif_cz_req_style_change_sub) },
 	{ HP_POP(clif->style_change_response, HP_clif_style_change_response) },
+	{ HP_POP(clif->pPetEvolution, HP_clif_pPetEvolution) },
+	{ HP_POP(clif->petEvolutionResult, HP_clif_petEvolutionResult) },
 /* cmdline_interface */
 	{ HP_POP(cmdline->init, HP_cmdline_init) },
 	{ HP_POP(cmdline->final, HP_cmdline_final) },
@@ -2439,6 +2441,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(pet->read_db_sub, HP_pet_read_db_sub) },
 	{ HP_POP(pet->read_db_sub_intimacy, HP_pet_read_db_sub_intimacy) },
 	{ HP_POP(pet->read_db_clear, HP_pet_read_db_clear) },
+	{ HP_POP(pet->read_db_sub_evolution, HP_pet_read_db_sub_evolution) },
 /* quest_interface */
 	{ HP_POP(quest->init, HP_quest_init) },
 	{ HP_POP(quest->final, HP_quest_final) },

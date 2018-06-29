@@ -2046,6 +2046,10 @@ struct {
 	struct HPMHookPoint *HP_clif_cz_req_style_change_sub_post;
 	struct HPMHookPoint *HP_clif_style_change_response_pre;
 	struct HPMHookPoint *HP_clif_style_change_response_post;
+	struct HPMHookPoint *HP_clif_pPetEvolution_pre;
+	struct HPMHookPoint *HP_clif_pPetEvolution_post;
+	struct HPMHookPoint *HP_clif_petEvolutionResult_pre;
+	struct HPMHookPoint *HP_clif_petEvolutionResult_post;
 	struct HPMHookPoint *HP_cmdline_init_pre;
 	struct HPMHookPoint *HP_cmdline_init_post;
 	struct HPMHookPoint *HP_cmdline_final_pre;
@@ -4762,6 +4766,8 @@ struct {
 	struct HPMHookPoint *HP_pet_read_db_sub_intimacy_post;
 	struct HPMHookPoint *HP_pet_read_db_clear_pre;
 	struct HPMHookPoint *HP_pet_read_db_clear_post;
+	struct HPMHookPoint *HP_pet_read_db_sub_evolution_pre;
+	struct HPMHookPoint *HP_pet_read_db_sub_evolution_post;
 	struct HPMHookPoint *HP_quest_init_pre;
 	struct HPMHookPoint *HP_quest_init_post;
 	struct HPMHookPoint *HP_quest_final_pre;
@@ -8421,6 +8427,10 @@ struct {
 	int HP_clif_cz_req_style_change_sub_post;
 	int HP_clif_style_change_response_pre;
 	int HP_clif_style_change_response_post;
+	int HP_clif_pPetEvolution_pre;
+	int HP_clif_pPetEvolution_post;
+	int HP_clif_petEvolutionResult_pre;
+	int HP_clif_petEvolutionResult_post;
 	int HP_cmdline_init_pre;
 	int HP_cmdline_init_post;
 	int HP_cmdline_final_pre;
@@ -11137,6 +11147,8 @@ struct {
 	int HP_pet_read_db_sub_intimacy_post;
 	int HP_pet_read_db_clear_pre;
 	int HP_pet_read_db_clear_post;
+	int HP_pet_read_db_sub_evolution_pre;
+	int HP_pet_read_db_sub_evolution_post;
 	int HP_quest_init_pre;
 	int HP_quest_init_post;
 	int HP_quest_final_pre;

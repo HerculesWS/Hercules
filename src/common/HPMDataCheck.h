@@ -588,6 +588,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "PACKET_CZ_ADD_ITEM_TO_MAIL", sizeof(struct PACKET_CZ_ADD_ITEM_TO_MAIL), SERVER_TYPE_MAP },
 		{ "PACKET_CZ_CHECKNAME", sizeof(struct PACKET_CZ_CHECKNAME), SERVER_TYPE_MAP },
 		{ "PACKET_CZ_OPEN_UI", sizeof(struct PACKET_CZ_OPEN_UI), SERVER_TYPE_MAP },
+		{ "PACKET_CZ_PET_EVOLUTION", sizeof(struct PACKET_CZ_PET_EVOLUTION), SERVER_TYPE_MAP },
 		{ "PACKET_CZ_PRIVATE_AIRSHIP_REQUEST", sizeof(struct PACKET_CZ_PRIVATE_AIRSHIP_REQUEST), SERVER_TYPE_MAP },
 		{ "PACKET_CZ_REQ_DELETE_MAIL", sizeof(struct PACKET_CZ_REQ_DELETE_MAIL), SERVER_TYPE_MAP },
 		{ "PACKET_CZ_REQ_ITEM_FROM_MAIL", sizeof(struct PACKET_CZ_REQ_ITEM_FROM_MAIL), SERVER_TYPE_MAP },
@@ -696,6 +697,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "packet_viewequip_ack", sizeof(struct packet_viewequip_ack), SERVER_TYPE_MAP },
 		{ "packet_whisper_message", sizeof(struct packet_whisper_message), SERVER_TYPE_MAP },
 		{ "packet_wis_end", sizeof(struct packet_wis_end), SERVER_TYPE_MAP },
+		{ "pet_evolution_items", sizeof(struct pet_evolution_items), SERVER_TYPE_MAP },
 	#else
 		#define MAP_PACKETS_STRUCT_H
 	#endif // MAP_PACKETS_STRUCT_H
@@ -746,6 +748,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#ifdef MAP_PET_H
 		{ "pet_bonus", sizeof(struct pet_bonus), SERVER_TYPE_MAP },
 		{ "pet_data", sizeof(struct pet_data), SERVER_TYPE_MAP },
+		{ "pet_evolve_data", sizeof(struct pet_evolve_data), SERVER_TYPE_MAP },
 		{ "pet_interface", sizeof(struct pet_interface), SERVER_TYPE_MAP },
 		{ "pet_loot", sizeof(struct pet_loot), SERVER_TYPE_MAP },
 		{ "pet_recovery", sizeof(struct pet_recovery), SERVER_TYPE_MAP },
