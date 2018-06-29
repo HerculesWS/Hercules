@@ -80,8 +80,8 @@ packet(0x008d,-1);
 packet(0x008e,-1);
 //packet(0x008f,-1);
 packet(0x0090,7,clif->pNpcClicked,2);
-packet(0x0091,22);
-packet(0x0092,28);
+packet(0x0091,22);  // ZC_NPCACK_MAPMOVE
+packet(0x0092,28);  // ZC_NPCACK_SERVERMOVE
 packet(0x0093,2);
 packet(0x0094,6,clif->pGetCharNameRequest,2);  // CZ_REQNAME
 packet(0x0095,30);
@@ -3397,8 +3397,8 @@ packet(0x96e,-1,clif->ackmergeitems);
 // new packets
 	packet(0x0a49,22);
 	packet(0x0a4a,6);
-	packet(0x0a4b,22);
-	packet(0x0a4c,28);
+	packet(0x0a4b,22);  // ZC_AIRSHIP_MAPMOVE
+	packet(0x0a4c,28);  // ZC_AIRSHIP_SERVERMOVE
 #endif
 
 // 2016-01-27aRagexeRE
@@ -3730,7 +3730,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0ac4,-1);
 	packet(0x0ac5,156,clif->pDull/*,XXX*/);
 	packet(0x0ac6,156);
-	packet(0x0ac7,156);
+	packet(0x0ac7,156);  // ZC_NPCACK_SERVERMOVE
 // changed packet sizes
 	packet(0x0abe,-1);
 	packet(0x0abf,-1);
@@ -4143,5 +4143,15 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0aff,-1,clif->pDull/*,XXX*/);
 // changed packet sizes
 #endif
+
+#ifndef PACKETVER_ZERO
+// 2018-06-20cRagexe, 2018-06-20eRagexe, 2018-06-20dRagexeRE, 2018-06-20eRagexeRE
+#if PACKETVER >= 20180620
+// new packets
+	packet(0x0b00,8);
+	packet(0x0b01,40,clif->pDull/*,XXX*/);
+// changed packet sizes
+#endif
+#endif  // PACKETVER_ZERO
 
 #endif /* MAP_PACKETS_H */

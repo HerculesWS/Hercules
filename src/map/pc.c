@@ -10334,7 +10334,7 @@ int pc_unequipitem(struct map_session_data *sd,int n,int flag)
 		}
 		/* Item Options checking */
 		for (i = 0; i < MAX_ITEM_OPTIONS; i++) {
-			struct item_option *ito = NULL;
+			struct itemdb_option *ito = NULL;
 			int16 item_option = sd->status.inventory[n].option[i].index;
 
 			if (item_option <= 0)

@@ -713,6 +713,7 @@ void clif_authok(struct map_session_data *sd)
 	clif->send(&p,sizeof(p),&sd->bl,SELF);
 }
 
+/// [4144] Packet not using error_code anymore. Works for fixed error only (MsgString: 9 - Rejected from Server)
 /// Notifies the client, that it's connection attempt was refused (ZC_REFUSE_ENTER).
 /// 0074 <error code>.B
 /// error code:
@@ -1935,6 +1936,25 @@ void clif_changemap(struct map_session_data *sd, short m, int x, int y) {
 	WFIFOSET(fd,packet_len(0x91));
 }
 
+/// Notifies the client of a position change (on air ship) to coordinates on given map (ZC_AIRSHIP_MAPMOVE).
+/// 0A4B <map name>.16B <x>.W <y>.W
+void clif_changemap_airship(struct map_session_data *sd, short m, int x, int y)
+{
+#if PACKETVER_MAIN_NUM >= 20180620 || PACKETVER_RE_NUM >= 20180321 || PACKETVER_ZERO_NUM >= 20171027
+	// [4144] this packet is not used yet by kro, but it here
+	int fd;
+	nullpo_retv(sd);
+	fd = sd->fd;
+
+	WFIFOHEAD(fd, packet_len(0xa4b));
+	WFIFOW(fd, 0) = 0xa4b;
+	mapindex->getmapname_ext(map->list[m].custom_name ? map->list[map->list[m].instance_src_map].name : map->list[m].name, WFIFOP(fd,2));
+	WFIFOW(fd, 18) = x;
+	WFIFOW(fd, 20) = y;
+	WFIFOSET(fd, packet_len(0xa4b));
+#endif
+}
+
 /// Notifies the client of a position change to coordinates on given map, which is on another map-server (ZC_NPCACK_SERVERMOVE).
 /// 0092 <map name>.16B <x>.W <y>.W <ip>.L <port>.W
 /// 0ac7 <map name>.16B <x>.W <y>.W <ip>.L <port>.W <zero>.128B
@@ -1956,6 +1976,28 @@ void clif_changemapserver(struct map_session_data* sd, unsigned short map_index,
 	WFIFOL(fd, 22) = htonl(ip);
 	WFIFOW(fd, 26) = sockt->ntows(htons(port)); // [!] LE byte order here [!]
 	WFIFOSET(fd, packet_len(cmd));
+}
+
+/// Notifies the client of a position change (with air ship) to coordinates on given map, which is on another map-server (ZC_NPCACK_SERVERMOVE).
+/// 0a4c <map name>.16B <x>.W <y>.W <ip>.L <port>.W
+void clif_changemapserver_airship(struct map_session_data* sd, unsigned short map_index, int x, int y, uint32 ip, uint16 port)
+{
+#if (PACKETVER_MAIN_NUM >= 20180620) || (PACKETVER_RE_NUM >= 20180321) || (PACKETVER_ZERO_NUM >= 20171027)
+	// [4144] this packet is not used yet by kro, but it here
+	int fd;
+	const int cmd = 0xa4c;
+	nullpo_retv(sd);
+	fd = sd->fd;
+
+	WFIFOHEAD(fd, packet_len(cmd));
+	WFIFOW(fd, 0) = cmd;
+	mapindex->getmapname_ext(mapindex_id2name(map_index), WFIFOP(fd, 2));
+	WFIFOW(fd, 18) = x;
+	WFIFOW(fd, 20) = y;
+	WFIFOL(fd, 22) = htonl(ip);
+	WFIFOW(fd, 26) = sockt->ntows(htons(port)); // [!] LE byte order here [!]
+	WFIFOSET(fd, packet_len(cmd));
+#endif
 }
 
 void clif_blown(struct block_list *bl)
@@ -9483,6 +9525,22 @@ void clif_channel_msg2(struct channel_data *chan, char *msg)
 	dbi_destroy(iter);
 }
 
+// TODO: [4144] same packet with login server. need somehow use one function for both servers
+// 3 - Rejected by server
+void clif_auth_error(int fd, int errorCode)
+{
+	struct packet_ZC_REFUSE_LOGIN p;
+	const int len = sizeof(p);
+
+	p.PacketType = authError;
+	p.error_code = errorCode;
+	p.block_date[0] = '\0';
+
+	WFIFOHEAD(fd, len);
+	memcpy(WFIFOP(fd, 0), &p, len);
+	WFIFOSET(fd, len);
+}
+
 // ------------
 // clif_parse_*
 // ------------
@@ -9521,10 +9579,7 @@ void clif_parse_WantToConnection(int fd, struct map_session_data* sd) {
 	bl = map->id2bl(account_id);
 	if(bl && bl->type != BL_PC) {
 		ShowError("clif_parse_WantToConnection: a non-player object already has id %d, please increase the starting account number\n", account_id);
-		WFIFOHEAD(fd,packet_len(0x6a));
-		WFIFOW(fd,0) = 0x6a;
-		WFIFOB(fd,2) = 3; // Rejected by server
-		WFIFOSET(fd,packet_len(0x6a));
+		clif->auth_error(fd, 3);  // Rejected by server
 		sockt->eof(fd);
 
 		return;
@@ -17760,7 +17815,11 @@ void clif_parse_SearchStoreInfo(int fd, struct map_session_data* sd) {
 ///     1 = "next" label to retrieve more results
 void clif_search_store_info_ack(struct map_session_data* sd)
 {
-	const unsigned int blocksize = MESSAGE_SIZE+26;
+#if PACKETVER >= 20150226
+	const unsigned int blocksize = MESSAGE_SIZE + 26 + 5 * MAX_ITEM_OPTIONS;
+#else
+	const unsigned int blocksize = MESSAGE_SIZE + 26;
+#endif
 	int fd;
 	unsigned int i, start, end;
 
@@ -17795,7 +17854,11 @@ void clif_search_store_info_ack(struct map_session_data* sd)
 		it.nameid = ssitem->nameid;
 		it.amount = ssitem->amount;
 
-		clif->addcards(WFIFOP(fd,i*blocksize+25+MESSAGE_SIZE), &it);
+		clif->addcards(WFIFOP(fd, i * blocksize + 25 + MESSAGE_SIZE), &it);
+#if PACKETVER >= 20150226
+		memcpy(&it.option, &ssitem->option, sizeof(it.option));
+		clif->add_item_options(WFIFOP(fd, i * blocksize + 33 + MESSAGE_SIZE), &it);
+#endif
 	}
 
 	WFIFOSET(fd,WFIFOW(fd,2));
@@ -19221,6 +19284,9 @@ void clif_parse_RouletteInfo(int fd, struct map_session_data* sd)
 			p.ItemInfo[count].Position = j;
 			p.ItemInfo[count].ItemId = clif->rd.nameid[i][j];
 			p.ItemInfo[count].Count = clif->rd.qty[i][j];
+#if PACKETVER >= 20180523  // unknown real version
+			p.ItemInfo[count].unused = 0;
+#endif
 			count++;
 		}
 	}
@@ -21316,6 +21382,7 @@ void clif_defaults(void) {
 	clif->packet = clif_packet;
 	/* auth */
 	clif->authok = clif_authok;
+	clif->auth_error = clif_auth_error;
 	clif->authrefuse = clif_authrefuse;
 	clif->authfail_fd = clif_authfail_fd;
 	clif->charselectok = clif_charselectok;
@@ -21377,6 +21444,7 @@ void clif_defaults(void) {
 	clif->spawn = clif_spawn;
 	/* map-related */
 	clif->changemap = clif_changemap;
+	clif->changemap_airship = clif_changemap_airship;
 	clif->changemapcell = clif_changemapcell;
 	clif->map_property = clif_map_property;
 	clif->pvpset = clif_pvpset;
@@ -21386,6 +21454,7 @@ void clif_defaults(void) {
 	clif->maptypeproperty2 = clif_maptypeproperty2;
 	/* multi-map-server */
 	clif->changemapserver = clif_changemapserver;
+	clif->changemapserver_airship = clif_changemapserver_airship;
 	/* npc-shop-related */
 	clif->npcbuysell = clif_npcbuysell;
 	clif->buylist = clif_buylist;

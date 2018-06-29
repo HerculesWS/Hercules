@@ -698,6 +698,7 @@ struct clif_interface {
 	unsigned short (*decrypt_cmd) ( int cmd, struct map_session_data *sd );
 	/* auth */
 	void (*authok) (struct map_session_data *sd);
+	void (*auth_error) (int fd, int errorCode);
 	void (*authrefuse) (int fd, uint8 error_code);
 	void (*authfail_fd) (int fd, int type);
 	void (*charselectok) (int id, uint8 ok);
@@ -759,6 +760,7 @@ struct clif_interface {
 	bool (*spawn) (struct block_list *bl);
 	/* map-related */
 	void (*changemap) (struct map_session_data *sd, short m, int x, int y);
+	void (*changemap_airship) (struct map_session_data *sd, short m, int x, int y);
 	void (*changemapcell) (int fd, int16 m, int x, int y, int type, enum send_target target);
 	void (*map_property) (struct map_session_data* sd, enum map_property property);
 	void (*pvpset) (struct map_session_data *sd, int pvprank, int pvpnum,int type);
@@ -768,6 +770,7 @@ struct clif_interface {
 	void (*maptypeproperty2) (struct block_list *bl,enum send_target t);
 	/* multi-map-server */
 	void (*changemapserver) (struct map_session_data* sd, unsigned short map_index, int x, int y, uint32 ip, uint16 port);
+	void (*changemapserver_airship) (struct map_session_data* sd, unsigned short map_index, int x, int y, uint32 ip, uint16 port);
 	/* npc-shop-related */
 	void (*npcbuysell) (struct map_session_data* sd, int id);
 	void (*buylist) (struct map_session_data *sd, struct npc_data *nd);

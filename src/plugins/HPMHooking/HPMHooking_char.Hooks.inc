@@ -3182,14 +3182,14 @@ void HP_chr_parse_char_connect(int fd, struct char_session_data *sd, uint32 ipl)
 	}
 	return;
 }
-void HP_chr_send_map_info(int fd, int i, uint32 subnet_map_ip, struct mmo_charstatus *cd) {
+void HP_chr_send_map_info(int fd, int i, uint32 subnet_map_ip, struct mmo_charstatus *cd, char *dnsHost) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_chr_send_map_info_pre > 0) {
-		void (*preHookFunc) (int *fd, int *i, uint32 *subnet_map_ip, struct mmo_charstatus **cd);
+		void (*preHookFunc) (int *fd, int *i, uint32 *subnet_map_ip, struct mmo_charstatus **cd, char **dnsHost);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_send_map_info_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_chr_send_map_info_pre[hIndex].func;
-			preHookFunc(&fd, &i, &subnet_map_ip, &cd);
+			preHookFunc(&fd, &i, &subnet_map_ip, &cd, &dnsHost);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -3197,13 +3197,13 @@ void HP_chr_send_map_info(int fd, int i, uint32 subnet_map_ip, struct mmo_charst
 		}
 	}
 	{
-		HPMHooks.source.chr.send_map_info(fd, i, subnet_map_ip, cd);
+		HPMHooks.source.chr.send_map_info(fd, i, subnet_map_ip, cd, dnsHost);
 	}
 	if (HPMHooks.count.HP_chr_send_map_info_post > 0) {
-		void (*postHookFunc) (int fd, int i, uint32 subnet_map_ip, struct mmo_charstatus *cd);
+		void (*postHookFunc) (int fd, int i, uint32 subnet_map_ip, struct mmo_charstatus *cd, char *dnsHost);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_send_map_info_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_chr_send_map_info_post[hIndex].func;
-			postHookFunc(fd, i, subnet_map_ip, cd);
+			postHookFunc(fd, i, subnet_map_ip, cd, dnsHost);
 		}
 	}
 	return;
@@ -16401,6 +16401,32 @@ void HP_pincode_loginstate(int fd, struct char_session_data *sd, enum pincode_lo
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pincode_loginstate_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_pincode_loginstate_post[hIndex].func;
 			postHookFunc(fd, sd, state);
+		}
+	}
+	return;
+}
+void HP_pincode_loginstate2(int fd, struct char_session_data *sd, enum pincode_login_response state, enum pincode_login_response2 flag) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_pincode_loginstate2_pre > 0) {
+		void (*preHookFunc) (int *fd, struct char_session_data **sd, enum pincode_login_response *state, enum pincode_login_response2 *flag);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pincode_loginstate2_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_pincode_loginstate2_pre[hIndex].func;
+			preHookFunc(&fd, &sd, &state, &flag);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.pincode.loginstate2(fd, sd, state, flag);
+	}
+	if (HPMHooks.count.HP_pincode_loginstate2_post > 0) {
+		void (*postHookFunc) (int fd, struct char_session_data *sd, enum pincode_login_response state, enum pincode_login_response2 flag);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pincode_loginstate2_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_pincode_loginstate2_post[hIndex].func;
+			postHookFunc(fd, sd, state, flag);
 		}
 	}
 	return;

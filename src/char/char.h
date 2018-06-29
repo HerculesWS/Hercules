@@ -240,7 +240,7 @@ struct char_interface {
 	void (*delete2_cancel) (int fd, struct char_session_data* sd);
 	void (*send_account_id) (int fd, int account_id);
 	void (*parse_char_connect) (int fd, struct char_session_data* sd, uint32 ipl);
-	void (*send_map_info) (int fd, int i, uint32 subnet_map_ip, struct mmo_charstatus *cd);
+	void (*send_map_info) (int fd, int i, uint32 subnet_map_ip, struct mmo_charstatus *cd, char *dnsHost);
 	void (*send_wait_char_server) (int fd);
 	int (*search_default_maps_mapserver) (struct mmo_charstatus *cd);
 	void (*parse_char_select) (int fd, struct char_session_data* sd, uint32 ipl);

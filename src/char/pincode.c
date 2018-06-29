@@ -95,7 +95,11 @@ void pincode_check(int fd, struct char_session_data* sd)
 			character->pincode_enable = pincode->charselect * 2;
 		pincode->loginstate(fd, sd, PINCODE_LOGIN_OK);
 	} else {
+#if PACKETVER_MAIN_NUM >= 20180124 || PACKETVER_RE_NUM >= 20180124 || PACKETVER_ZERO_NUM >= 20180131
+		pincode->loginstate2(fd, sd, PINCODE_LOGIN_WRONG, PINCODE_LOGIN_FLAG_WRONG);
+#else
 		pincode->loginstate(fd, sd, PINCODE_LOGIN_WRONG);
+#endif
 	}
 }
 
@@ -248,6 +252,32 @@ void pincode_loginstate(int fd, struct char_session_data* sd, enum pincode_login
 	WFIFOL(fd, 6) = sd->account_id;
 	WFIFOW(fd, 10) = state;
 	WFIFOSET(fd, 12);
+}
+
+// 0 = pin is correct
+// 1 = ask for pin - client sends 0x8b8
+// 2 = create new pin - client sends 0x8ba
+// 3 = pin must be changed - client 0x8be
+// 4 = create new pin ?? - client sends 0x8ba
+// 5 = client shows msgstr(1896)
+// 6 = client shows msgstr(1897) Unable to use your KSSN number
+// 7 = char select window shows a button - client sends 0x8c5
+// 8 = pincode was incorrect
+// [4144] pincode_loginstate2 can replace pincode_loginstate,
+// but kro using pincode_loginstate2 only for send wrong pin error or locked after 3 pins wrong
+void pincode_loginstate2(int fd, struct char_session_data* sd, enum pincode_login_response state, enum pincode_login_response2 flag)
+{
+#if PACKETVER_MAIN_NUM >= 20180124 || PACKETVER_RE_NUM >= 20180124 || PACKETVER_ZERO_NUM >= 20180131
+	nullpo_retv(sd);
+
+	WFIFOHEAD(fd, 13);
+	WFIFOW(fd, 0) = 0xae9;
+	WFIFOL(fd, 2) = sd->pincode_seed = rnd() % 0xFFFF;
+	WFIFOL(fd, 6) = sd->account_id;
+	WFIFOW(fd, 10) = state;
+	WFIFOW(fd, 12) = flag;
+	WFIFOSET(fd, 13);
+#endif
 }
 
 void pincode_notifyLoginPinUpdate(int account_id, char* pin)
@@ -431,6 +461,7 @@ void pincode_defaults(void)
 	pincode->makestate = pincode_makestate;
 	pincode->editstate = pincode_editstate;
 	pincode->loginstate = pincode_loginstate;
+	pincode->loginstate2 = pincode_loginstate2;
 	pincode->setnew = pincode_setnew;
 	pincode->change = pincode_change;
 	pincode->isBlacklisted = pincode_isBlacklisted;
