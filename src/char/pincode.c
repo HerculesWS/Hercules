@@ -161,12 +161,12 @@ void pincode_change(int fd, struct char_session_data* sd)
 
 	if (pincode->check_blacklist && pincode->isBlacklisted(newpin)) {
 		pincode->editstate(fd, sd, PINCODE_EDIT_RESTRICT_PW);
-	} else {
-		pincode->update(sd->account_id, newpin);
-		safestrncpy(sd->pincode, newpin, sizeof(sd->pincode));
-		pincode->editstate(fd, sd, PINCODE_EDIT_SUCCESS);
+		return;
 	}
 
+	pincode->update(sd->account_id, newpin);
+	safestrncpy(sd->pincode, newpin, sizeof(sd->pincode));
+	pincode->editstate(fd, sd, PINCODE_EDIT_SUCCESS);
 	pincode->loginstate(fd, sd, PINCODE_LOGIN_ASK);
 }
 
@@ -190,6 +190,7 @@ void pincode_setnew(int fd, struct char_session_data* sd)
 	pincode->update(sd->account_id, newpin);
 	safestrncpy(sd->pincode, newpin, sizeof(sd->pincode));
 	pincode->makestate(fd, sd, PINCODE_MAKE_SUCCESS);
+	pincode->loginstate(fd, sd, PINCODE_LOGIN_ASK);
 }
 
 /**
