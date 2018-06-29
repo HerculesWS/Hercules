@@ -563,6 +563,7 @@ struct Battle_Config {
 	int feature_rodex_use_accountmail;
 
 	int feature_enable_homun_autofeed;
+	int feature_enable_pet_autofeed;
 
 	int storage_use_item;
 
