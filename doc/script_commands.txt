@@ -2473,6 +2473,7 @@ arrays:
 ---------------------------------------
 
 *readparam(<parameter number>{, "<player name>"})
+*readparam(<parameter number>{, <account id>})
 
 This function will return the basic stats of an invoking character,
 referred to by the parameter number. Instead of a number, you can use a
@@ -2508,6 +2509,21 @@ Example 3:
 
 	// Display your current weight
 	mes("Your current weight is "+ (Weight/10) + "/" + (MaxWeight/10));
+
+---------------------------------------
+
+*setparam(<parameter number>, <value>{, "<player name>"})
+*setparam(<parameter number>, <value>{, <account id>})
+
+Sets a parameter on the given player. See readparam() for more info about
+parameters. Keep in mind that not all read-able parameters are also set-able.
+
+Parameters that can be modified include:
+
+StatusPoint, BaseLevel, SkillPoint, Zeny, Sex, Weight, MaxWeight, JobLevel,
+BaseExp, JobExp, Hp, MaxHp, Sp, MaxSp, Karma, Manner, Fame, bVit, bDex, bAgi,
+bStr, bInt, bLuk
+
 
 ---------------------------------------
 
