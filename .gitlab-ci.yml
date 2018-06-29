@@ -887,7 +887,7 @@ pre_re:mariadb-10.0:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: platforms
-  image: debian:stretch
+  image: debian:jessie
   services:
     - mariadb:10.0
   variables:
@@ -902,12 +902,42 @@ re:mariadb-10.0:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: platforms
-  image: debian:stretch
+  image: debian:jessie
   services:
     - mariadb:10.0
   variables:
     <<: *base_vars
     INSTALL_PACKAGES: gcc mariadb-client-10.0 libmysqlclient-dev
+    SQLHOST: mariadb
+  script:
+    - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
+
+pre_re:mariadb-10.1:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  stage: platforms
+  image: debian:stable
+  services:
+    - mariadb:10.1
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc mariadb-client-10.1 libmariadbclient-dev-compat
+    SQLHOST: mariadb
+  script:
+    - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
+
+re:mariadb-10.1:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  stage: platforms
+  image: debian:stable
+  services:
+    - mariadb:10.1
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc mariadb-client-10.1 libmariadbclient-dev-compat
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
@@ -922,7 +952,7 @@ pre_re:mariadb-latest:
     - mariadb:latest
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mariadb-client-10.1 libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc mariadb-client libmariadbclient-dev-compat
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
@@ -937,7 +967,7 @@ re:mariadb-latest:
     - mariadb:latest
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mariadb-client-10.1 libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc mariadb-client libmariadbclient-dev-compat
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
