@@ -1044,6 +1044,8 @@ struct {
 	struct HPMHookPoint *HP_clif_messagecolor_post;
 	struct HPMHookPoint *HP_clif_disp_overhead_pre;
 	struct HPMHookPoint *HP_clif_disp_overhead_post;
+	struct HPMHookPoint *HP_clif_notify_playerchat_pre;
+	struct HPMHookPoint *HP_clif_notify_playerchat_post;
 	struct HPMHookPoint *HP_clif_msgtable_pre;
 	struct HPMHookPoint *HP_clif_msgtable_post;
 	struct HPMHookPoint *HP_clif_msgtable_num_pre;
@@ -7431,6 +7433,8 @@ struct {
 	int HP_clif_messagecolor_post;
 	int HP_clif_disp_overhead_pre;
 	int HP_clif_disp_overhead_post;
+	int HP_clif_notify_playerchat_pre;
+	int HP_clif_notify_playerchat_post;
 	int HP_clif_msgtable_pre;
 	int HP_clif_msgtable_post;
 	int HP_clif_msgtable_num_pre;

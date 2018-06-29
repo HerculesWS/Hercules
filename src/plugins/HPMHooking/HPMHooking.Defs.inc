@@ -1446,8 +1446,10 @@ typedef void (*HPMHOOK_pre_clif_messagecolor_self) (int *fd, uint32 *color, cons
 typedef void (*HPMHOOK_post_clif_messagecolor_self) (int fd, uint32 color, const char *msg);
 typedef void (*HPMHOOK_pre_clif_messagecolor) (struct block_list **bl, uint32 *color, const char **msg);
 typedef void (*HPMHOOK_post_clif_messagecolor) (struct block_list *bl, uint32 color, const char *msg);
-typedef void (*HPMHOOK_pre_clif_disp_overhead) (struct block_list **bl, const char **mes);
-typedef void (*HPMHOOK_post_clif_disp_overhead) (struct block_list *bl, const char *mes);
+typedef void (*HPMHOOK_pre_clif_disp_overhead) (struct block_list **bl, const char **mes, enum send_target *target, struct block_list **target_bl);
+typedef void (*HPMHOOK_post_clif_disp_overhead) (struct block_list *bl, const char *mes, enum send_target target, struct block_list *target_bl);
+typedef void (*HPMHOOK_pre_clif_notify_playerchat) (struct block_list **bl, const char **mes);
+typedef void (*HPMHOOK_post_clif_notify_playerchat) (struct block_list *bl, const char *mes);
 typedef void (*HPMHOOK_pre_clif_msgtable) (struct map_session_data **sd, enum clif_messages *msg_id);
 typedef void (*HPMHOOK_post_clif_msgtable) (struct map_session_data *sd, enum clif_messages msg_id);
 typedef void (*HPMHOOK_pre_clif_msgtable_num) (struct map_session_data **sd, enum clif_messages *msg_id, int *value);
