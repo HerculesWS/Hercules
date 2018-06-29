@@ -244,7 +244,7 @@ re:gcc-4.7:
 pre_re:gcc-4.8:
   <<: *branch_exceptions
   <<: *prerequisites
-  stage: primary
+  stage: secondary
   image: debian:jessie
   services:
     - mysql:5.5
@@ -259,7 +259,7 @@ pre_re:gcc-4.8:
 re:gcc-4.8:
   <<: *branch_exceptions
   <<: *prerequisites
-  stage: primary
+  stage: secondary
   image: debian:jessie
   services:
     - mysql:5.5
@@ -359,6 +359,66 @@ re:gcc-6:
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
+
+pre_re:gcc-7:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  stage: secondary
+  image: debian:unstable
+  services:
+    - mariadb:10
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc-7 mariadb-client libmariadbclient-dev-compat
+    SQLHOST: mariadb
+  script:
+    - ./tools/ci/travis.sh build CC=gcc-7 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
+
+re:gcc-7:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  stage: secondary
+  image: debian:unstable
+  services:
+    - mariadb:10
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc-7 mariadb-client libmariadbclient-dev-compat
+    SQLHOST: mariadb
+  script:
+    - ./tools/ci/travis.sh build CC=gcc-7 --enable-debug --enable-Werror --enable-buildbot
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
+
+pre_re:gcc-8:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  stage: secondary
+  image: debian:unstable
+  services:
+    - mariadb:10
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc-8 mariadb-client libmariadbclient-dev-compat
+    SQLHOST: mariadb
+  script:
+    - ./tools/ci/travis.sh build CC=gcc-8 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
+
+re:gcc-8:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  stage: secondary
+  image: debian:unstable
+  services:
+    - mariadb:10
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc-8 mariadb-client libmariadbclient-dev-compat
+    SQLHOST: mariadb
+  script:
+    - ./tools/ci/travis.sh build CC=gcc-8 --enable-debug --enable-Werror --enable-buildbot
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
 
 pre_re:gcc-6_i386:
