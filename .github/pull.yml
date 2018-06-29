@@ -1,0 +1,10 @@
+version: "1"
+rules:
+  - base: stable
+    upstream: HerculesWS:stable
+    autoMerge: true
+    autoMergeHardReset: true
+  - base: master
+    upstream: HerculesWS:master
+    autoMerge: true
+    autoMergeHardReset: true
