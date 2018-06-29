@@ -251,6 +251,7 @@ static void clif_setport(uint16 port)
 	clif->map_port = port;
 }
 
+#if 0 // Unused function
 /*==========================================
  * Returns map server IP
  *------------------------------------------*/
@@ -258,7 +259,9 @@ static uint32 clif_getip(void)
 {
 	return clif->map_ip;
 }
+#endif // 0
 
+#if 0 // Unused function
 /*==========================================
  * Returns map port which is set by clif_setport()
  *------------------------------------------*/
@@ -266,6 +269,8 @@ static uint16 clif_getport(void)
 {
 	return clif->map_port;
 }
+#endif // 0
+
 /*==========================================
  * Updates server ip resolution and returns it
  *------------------------------------------*/
@@ -12405,6 +12410,7 @@ static void clif_parse_CloseKafra(int fd, struct map_session_data *sd)
 		gstorage->close(sd);
 }
 
+#if 0 // Unused function
 /// Displays kafra storage password dialog (ZC_REQ_STORE_PASSWORD).
 /// 023a <info>.W
 /// info:
@@ -12424,6 +12430,7 @@ static void clif_storagepassword(struct map_session_data *sd, short info)
 	WFIFOW(fd,2) = info;
 	WFIFOSET(fd,packet_len(0x23a));
 }
+#endif // 0
 
 static void clif_parse_StoragePassword(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 /// Answer to the kafra storage password dialog (CZ_ACK_STORE_PASSWORD).
@@ -12437,6 +12444,7 @@ static void clif_parse_StoragePassword(int fd, struct map_session_data *sd)
 	//TODO
 }
 
+#if 0 // Unused function
 /// Result of kafra storage password validation (ZC_RESULT_STORE_PASSWORD).
 /// 023c <result>.W <error count>.W
 /// result:
@@ -12459,6 +12467,7 @@ static void clif_storagepassword_result(struct map_session_data *sd, short resul
 	WFIFOW(fd,4) = error_count;
 	WFIFOSET(fd,packet_len(0x23c));
 }
+#endif // 0
 
 static void clif_parse_CreateParty(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 /// Party creation request

@@ -109,6 +109,7 @@ struct chrif_interface *chrif;
 //This define should spare writing the check in every function. [Skotlex]
 #define chrif_check(a) do { if(!chrif->isconnected()) return a; } while(0)
 
+#if 0 // Unused
 /// Resets all the data.
 static void chrif_reset(void) __attribute__ ((noreturn));
 static void chrif_reset(void)
@@ -116,6 +117,7 @@ static void chrif_reset(void)
 	// TODO kick everyone out and reset everything [FlavioJS]
 	exit(EXIT_FAILURE);
 }
+#endif // 0
 
 /// Checks the conditions for the server to stop.
 /// Releases the cookie when all characters are saved.

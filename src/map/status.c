@@ -4459,7 +4459,12 @@ static unsigned short status_base_atk(const struct block_list *bl, const struct 
 static unsigned short status_base_matk_min(const struct status_data *st)
 {
 	nullpo_ret(st);
+#ifdef RENEWAL
+	Assert_ret(0);
+	return 0;
+#else // not RENEWAL
 	return st->int_ + (st->int_ / 7) * (st->int_ / 7);
+#endif // RENEWAL
 }
 
 static unsigned short status_base_matk_max(const struct status_data *st)
@@ -4485,6 +4490,7 @@ static unsigned short status_base_matk(struct block_list *bl, const struct statu
 			return st->int_ + (st->int_ / 2) + (st->dex / 5) + (st->luk / 3) + (level / 4);
 	}
 #else
+	Assert_ret(0);
 	return 0;
 #endif
 }
@@ -13786,8 +13792,6 @@ void status_defaults(void)
 	status->read_job_db_sub = status_read_job_db_sub;
 	status->set_sc = status_set_sc;
 	status->copy = status_copy;
-#ifndef RENEWAL
 	status->base_matk_min = status_base_matk_min;
-#endif  // RENEWAL
 	status->base_matk_max = status_base_matk_max;
 }
