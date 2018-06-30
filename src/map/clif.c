@@ -56,13 +56,14 @@
 #include "map/trade.h"
 #include "map/unit.h"
 #include "map/vending.h"
+#include "map/achievement.h"
 #include "common/HPM.h"
 #include "common/cbasetypes.h"
 #include "common/conf.h"
 #include "common/ers.h"
 #include "common/grfio.h"
 #include "common/memmgr.h"
-#include "common/mmo.h" // NEW_CARTS
+#include "common/mmo.h" // NEW_CARTS, char_achievements
 #include "common/nullpo.h"
 #include "common/random.h"
 #include "common/showmsg.h"
@@ -14786,6 +14787,7 @@ static void clif_parse_FriendsListReply(int fd, struct map_session_data *sd)
 		f_sd->status.friends[i].char_id = sd->status.char_id;
 		memcpy(f_sd->status.friends[i].name, sd->status.name, NAME_LENGTH);
 		clif->friendslist_reqack(f_sd, sd, 0);
+		achievement->validate_friend_add(f_sd); // Achievements [Smokexyz/Hercules]
 
 		if (battle_config.friend_auto_add) {
 			// Also add f_sd to sd's friendlist.
@@ -14804,6 +14806,7 @@ static void clif_parse_FriendsListReply(int fd, struct map_session_data *sd)
 			sd->status.friends[i].char_id = f_sd->status.char_id;
 			memcpy(sd->status.friends[i].name, f_sd->status.name, NAME_LENGTH);
 			clif->friendslist_reqack(sd, f_sd, 0);
+			achievement->validate_friend_add(sd); // Achievements [Smokexyz/Hercules]
 		}
 	}
 }
@@ -20223,6 +20226,201 @@ static unsigned short clif_parse_cmd_optional(int fd, struct map_session_data *s
 	return cmd;
 }
 
+/**
+ * Send all of a session's achievement information to client.
+ * Called only once on login/char-loading. (PACKET_ZC_ALL_ACH_LIST)
+ * @packet [out] 0x0A23 <ID>.W <Length>.W <ach_count>.L <total_points>.L <rank>.W <current_rank_points>.L <next_rank_points>.L <struct ach_list_info *[]>.P
+ * @param fd   socket descriptor
+ * @param sd   pointer to map_session_data
+ */
+static void clif_achievement_send_list(int fd, struct map_session_data *sd)
+{
+#if PACKETVER >= 20141016
+	int i = 0, count = 0, curr_exp_tmp = 0;
+	struct packet_achievement_list p = { 0 };
+
+	nullpo_retv(sd);
+
+	/* Browse through the session's achievement list and gather their values. */
+	for (i = 0; i < VECTOR_LENGTH(sd->achievement); i++) {
+		int j = 0;
+		struct achievement *a = &VECTOR_INDEX(sd->achievement, i);
+		const struct achievement_data *ad = NULL;
+
+		/* Sanity check for nonull pointers. */
+		if (a == NULL || (ad = achievement->get(a->id)) == NULL)
+			continue;
+
+		p.ach[count].ach_id = a->id;
+
+		for (j = 0; j < VECTOR_LENGTH(ad->objective); j++)
+			p.ach[count].objective[j] = a->objective[j];
+
+		if (a->completed_at) {
+			p.ach[count].completed = 1;
+			p.ach[count].completed_at = (uint32) a->completed_at;
+			p.ach[count].reward = a->rewarded_at ? 1 : 0;
+			p.total_points += ad->points;
+		}
+
+		count++;
+	}
+
+	p.packet_id = achievementListType;
+	p.packet_len = sizeof(struct ach_list_info) * count + 22;
+	p.total_achievements = count;
+	/* Determine Achievement Rank and current exp */
+	curr_exp_tmp = p.total_points;
+	for (i = 0; curr_exp_tmp && i < MAX_ACHIEVEMENT_RANKS && i < VECTOR_LENGTH(achievement->rank_exp); i++) {
+		if (curr_exp_tmp >= VECTOR_INDEX(achievement->rank_exp, i)) {
+			curr_exp_tmp -= VECTOR_INDEX(achievement->rank_exp, i);
+			p.rank++;
+
+			// Validate achievement rank type achievements.
+			achievement->validate_achievement_rank(sd, p.rank);
+		}
+	}
+	/* Determine Achievement Rank Exp */
+	p.current_rank_points = curr_exp_tmp;
+	p.next_rank_points = VECTOR_INDEX(achievement->rank_exp, p.rank);
+	/* Send payload */
+	clif->send(&p, p.packet_len, &sd->bl, SELF);
+#endif // PACKETVER >= 20141016
+}
+
+/**
+ * Sends achievement information for a single achievement.
+ * Called on objective progress updates/completion. (PACKET_ZC_ACH_UPDATE)
+ * @packet [out] 0x0A24 <ID>.W <total_points>.L <rank>.W <current_rank_points>.L <next_rank_points>.L <struct ach_list_info *>.P
+ * @param fd    socket descriptor
+ * @param sd    pointer to struct map_session_data
+ * @param ad    const pointer to struct achievement_data from the achievement db.
+ */
+static void clif_achievement_send_update(int fd, struct map_session_data *sd, const struct achievement_data *ad)
+{
+#if PACKETVER >= 20141016
+	struct packet_achievement_update p = { 0 };
+	struct achievement *a = NULL;
+	int i = 0, points = 0, rank = 0, curr_rank_points = 0;
+
+	nullpo_retv(sd);
+	nullpo_retv(ad);
+
+	/* Get Session Achievement Data */
+	if ((a = achievement->ensure(sd, ad)) == NULL)
+		return;
+
+	/* Get total points, current rank and current rank points from the session. */
+	achievement->calculate_totals(sd, &points, NULL, &rank, &curr_rank_points);
+
+	p.packet_id = achievementUpdateType;
+
+	/* Determine Total Achievement Points */
+	p.total_points = points;
+
+	/* Determine Achievement Rank */
+	p.rank = rank;
+
+	/* Determine Achievement Rank Exp */
+	p.current_rank_points = curr_rank_points;
+	p.next_rank_points = VECTOR_INDEX(achievement->rank_exp, p.rank);
+
+	p.ach.ach_id = ad->id;
+	p.ach.completed = (uint8) achievement->check_complete(sd, ad);
+
+	for (i = 0; i < VECTOR_LENGTH(ad->objective); i++)
+		p.ach.objective[i] = a->objective[i];
+
+	p.ach.completed_at = (uint32) a->completed_at;
+
+	p.ach.reward = a->rewarded_at ? 1 : 0;
+
+	clif->send(&p, packet_len(achievementUpdateType), &sd->bl, SELF);
+
+	/* Validate rank-related achievements */
+	achievement->validate_achievement_rank(sd, rank);
+
+#endif // PACKETVER >= 20141016
+}
+
+/**
+ * Parses achievement reward packet from session.
+ * @packet [in] 0x0A25 <ach_id>.L
+ * @param fd   socket descriptor.
+ * @param sd   ptr to session data.
+ */
+static void clif_parse_achievement_get_reward(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
+static void clif_parse_achievement_get_reward(int fd, struct map_session_data *sd)
+{
+#if PACKETVER >= 20141016
+	int ach_id = RFIFOL(fd, 2);
+	const struct achievement_data *ad = NULL;
+	struct achievement *ach = NULL;
+
+	if (ach_id <= 0 || (ad = achievement->get(ach_id)) == NULL)
+		return;
+
+	if ((ach = achievement->ensure(sd, ad)) == NULL)
+		return;
+
+	if (achievement->check_complete(sd, ad) && ach->completed_at && ach->rewarded_at == 0) {
+		int i = 0;
+		/* Buff */
+		if (ad->rewards.bonus != NULL)
+			script->run(ad->rewards.bonus, 0, sd->bl.id, 0);
+
+		/* Give Items */
+		for (i = 0; i < VECTOR_LENGTH(ad->rewards.item); i++) {
+			struct item it = { 0 };
+			int total = 0;
+
+			it.nameid = VECTOR_INDEX(ad->rewards.item, i).id;
+			total = VECTOR_INDEX(ad->rewards.item, i).amount;
+
+			it.identify = 1;
+
+			//Check if it's stackable.
+			if (!itemdb->isstackable(it.nameid)) {
+				int j = 0;
+				for (j = 0; j < total; ++j)
+					pc->additem(sd, &it, (it.amount = 1), LOG_TYPE_SCRIPT);
+			} else {
+				pc->additem(sd, &it, (it.amount = total), LOG_TYPE_SCRIPT);
+			}
+		}
+
+		/* @TODO TitleId */
+
+		ach->rewarded_at = time(NULL);
+
+		clif->achievement_send_update(fd, sd, ad); // send update.
+
+		clif->achievement_reward_ack(fd, sd, ad);
+	}
+#endif // PACKETVER >= 20141016
+}
+
+/**
+ * Sends achievement reward collection acknowledgement to the client.
+ * @packet [out] 0x0A26 <packet_id>.W <received
+ */
+static void clif_achievement_reward_ack(int fd, struct map_session_data *sd, const struct achievement_data *ad)
+{
+#if PACKETVER >= 20141016
+	struct packet_achievement_reward_ack p = { 0 };
+
+	nullpo_retv(sd);
+	nullpo_retv(ad);
+
+	p.packet_id = achievementRewardAckType;
+	p.received = 1;
+	p.ach_id = ad->id;
+
+	clif->send(&p, packet_len(achievementRewardAckType), &sd->bl, SELF);
+#endif // PACKETVER >= 20141016
+}
+// End of Achievement System
+
 /*==========================================
  * RoDEX
  *------------------------------------------*/
@@ -22159,6 +22357,11 @@ void clif_defaults(void)
 	clif->isdisguised = clif_isdisguised;
 	clif->navigate_to = clif_navigate_to;
 	clif->bl_type = clif_bl_type;
+	/* Achievement System */
+	clif->achievement_send_list = clif_achievement_send_list;
+	clif->achievement_send_update = clif_achievement_send_update;
+	clif->pAchievementGetReward = clif_parse_achievement_get_reward;
+	clif->achievement_reward_ack = clif_achievement_reward_ack;
 
 	/*------------------------
 	 *- Parse Incoming Packet
@@ -22406,6 +22609,7 @@ void clif_defaults(void)
 	clif->pHotkeyRowShift = clif_parse_HotkeyRowShift;
 	clif->dressroom_open = clif_dressroom_open;
 	clif->pOneClick_ItemIdentify = clif_parse_OneClick_ItemIdentify;
+	/* Achievements [Smokexyz/Hercules] */
 	clif->get_bl_name = clif_get_bl_name;
 	/* RODEX */
 	clif->pRodexOpenWriteMail = clif_parse_rodex_open_write_mail;

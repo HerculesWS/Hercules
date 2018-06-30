@@ -40,6 +40,7 @@
 #include "map/skill.h"
 #include "map/status.h"
 #include "map/unit.h"
+#include "map/achievement.h"
 #include "common/HPM.h"
 #include "common/cbasetypes.h"
 #include "common/db.h"
@@ -2272,6 +2273,9 @@ static int npc_selllist(struct map_session_data *sd, struct itemlist *item_list)
 		}
 
 		pc->delitem(sd, idx, entry->amount, 0, DELITEM_SOLD, LOG_TYPE_NPC);
+
+		// Achievements [Smokexyz/Hercules]
+		achievement->validate_item_sell(sd, sd->status.inventory[idx].nameid, entry->amount);
 	}
 
 	if (z + sd->status.zeny > MAX_ZENY && nd->master_nd == NULL)

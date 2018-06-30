@@ -218,6 +218,16 @@
 #define MAX_QUEST_OBJECTIVES 3           // Max quest objectives for a quest
 #endif
 
+// Achievements [Smokexyz/Hercules]
+#ifndef MAX_ACHIEVEMENT_DB
+#define MAX_ACHIEVEMENT_DB 360          // Maximum number of achievements
+#define MAX_ACHIEVEMENT_OBJECTIVES 10   // Maximum number of achievement objectives
+STATIC_ASSERT(MAX_ACHIEVEMENT_OBJECTIVES <= 10, "This value is limited by the client and database layout and should only be increased if you know the consequences.");
+#define MAX_ACHIEVEMENT_RANKS 20 // Achievement Ranks
+STATIC_ASSERT(MAX_ACHIEVEMENT_RANKS <= 255, "This value is limited by the client and database layout and should only be increased if you know the consequences.");
+#define MAX_ACHIEVEMENT_ITEM_REWARDS 10 // Achievement Rewards
+#endif
+
 // for produce
 #define MIN_ATTRIBUTE 0
 #define MAX_ATTRIBUTE 4
@@ -615,6 +625,14 @@ struct hotkey {
 	UNAVAILABLE_STRUCT;
 #endif
 };
+
+struct achievement { // Achievements [Smokexyz/Hercules]
+	int id;
+	int objective[MAX_ACHIEVEMENT_OBJECTIVES];
+	time_t completed_at, rewarded_at;
+};
+
+VECTOR_STRUCT_DECL(char_achievements, struct achievement);
 
 struct mmo_charstatus {
 	int char_id;

@@ -336,6 +336,8 @@ static bool chrif_save(struct map_session_data *sd, int flag)
 		elemental->save(sd->ed);
 	if( sd->save_quest )
 		intif->quest_save(sd);
+	if (VECTOR_LENGTH(sd->achievement) > 0)
+		intif->achievements_save(sd);
 
 	if (sd->storage.received == true && sd->storage.save == true)
 		intif->send_account_storage(sd);
