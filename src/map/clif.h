@@ -54,6 +54,7 @@ struct skill_cd;
 struct skill_unit;
 struct unit_data;
 struct view_data;
+struct achievement_data; // map/achievement.h
 
 enum clif_messages;
 enum rodex_add_item;
@@ -1197,6 +1198,11 @@ struct clif_interface {
 	bool (*isdisguised) (struct block_list* bl);
 	void (*navigate_to) (struct map_session_data *sd, const char* mapname, uint16 x, uint16 y, uint8 flag, bool hideWindow, uint16 mob_id);
 	unsigned char (*bl_type) (struct block_list *bl);
+	/* Achievement System */
+	void (*achievement_send_list) (int fd, struct map_session_data *sd);
+	void (*achievement_send_update) (int fd, struct map_session_data *sd, const struct achievement_data *ad);
+	void (*pAchievementGetReward) (int fd, struct map_session_data *sd);
+	void (*achievement_reward_ack) (int fd, struct map_session_data *sd, const struct achievement_data *ad);
 	/*------------------------
 	 *- Parse Incoming Packet
 	 *------------------------*/

@@ -37,7 +37,7 @@
 #include "common/db.h"
 #include "common/ers.h" // struct eri
 #include "common/hercules.h"
-#include "common/mmo.h" // JOB_*, MAX_FAME_LIST, struct fame_list, struct mmo_charstatus, NEW_CARTS
+#include "common/mmo.h" // JOB_*, MAX_FAME_LIST, struct fame_list, struct mmo_charstatus, NEW_CARTS, struct s_achievement
 
 /**
  * Defines
@@ -631,6 +631,10 @@ END_ZEROED_BLOCK;
 		unsigned sitstand : 1;
 		unsigned commands : 1;
 	} block_action;
+
+	/* Achievement System */
+	struct char_achievements achievement;
+	bool achievements_received;
 };
 
 #define EQP_WEAPON EQP_HAND_R

@@ -44,6 +44,7 @@
 #include "map/script.h"
 #include "map/skill.h"
 #include "map/status.h"
+#include "map/achievement.h"
 #include "common/HPM.h"
 #include "common/cbasetypes.h"
 #include "common/conf.h"
@@ -2188,6 +2189,10 @@ static void mob_damage(struct mob_data *md, struct block_list *src, int damage)
 		if (src)
 			mob->log_damage(md, src, damage);
 		md->dmgtick = timer->gettick();
+
+		// Achievements [Smokexyz/Hercules]
+		if (src != NULL && src->type == BL_PC)
+			achievement->validate_mob_damage(BL_UCAST(BL_PC, src), damage, false);
 	}
 
 	if (battle_config.show_mob_info&3)
@@ -2420,6 +2425,8 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 			}
 			if(zeny) // zeny from mobs [Valaris]
 				pc->getzeny(tmpsd[i], zeny, LOG_TYPE_PICKDROP_MONSTER, NULL);
+
+			achievement->validate_mob_kill(tmpsd[i], md->db->mob_id); // Achievements [Smokexyz/Hercules]
 		}
 	}
 
