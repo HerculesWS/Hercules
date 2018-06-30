@@ -57,6 +57,7 @@
 #include "map/status.h"
 #include "map/storage.h"
 #include "map/unit.h"
+#include "map/achievement.h"
 #include "common/cbasetypes.h"
 #include "common/conf.h"
 #include "common/db.h"
@@ -9510,6 +9511,11 @@ BUILDIN(successrefitem)
 		clif->additem(sd,i,1,0);
 		pc->equipitem(sd,i,ep);
 		clif->misceffect(&sd->bl,3);
+
+		achievement->validate_refine(sd, i, true); // Achievements [Smokexyz/Hercules]
+
+		/* The following check is exclusive to characters (possibly only whitesmiths)
+		 * that create equipments and refine them to level 10. */
 		if(sd->status.inventory[i].refine == 10 &&
 		   sd->status.inventory[i].card[0] == CARD0_FORGE &&
 		   sd->status.char_id == (int)MakeDWord(sd->status.inventory[i].card[2],sd->status.inventory[i].card[3])
@@ -9547,6 +9553,9 @@ BUILDIN(failedrefitem)
 	if (num > 0 && num <= ARRAYLENGTH(script->equip))
 		i=pc->checkequip(sd,script->equip[num-1]);
 	if(i >= 0) {
+		// Call before changing refine to 0.
+		achievement->validate_refine(sd, i, false);
+
 		sd->status.inventory[i].refine = 0;
 		pc->unequipitem(sd, i, PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE); //recalculate bonus
 		clif->refine(sd->fd,1,i,sd->status.inventory[i].refine); //notify client of failure
@@ -9594,6 +9603,9 @@ BUILDIN(downrefitem)
 
 		clif->additem(sd,i,1,0);
 		pc->equipitem(sd,i,ep);
+
+		achievement->validate_refine(sd, i, false); // Achievements [Smokexyz/Hercules]
+
 		clif->misceffect(&sd->bl,2);
 	}
 
@@ -20949,6 +20961,78 @@ BUILDIN(showevent)
 }
 
 /*==========================================
+ * Achievement System [Smokexyz/Hercules]
+ *-----------------------------------------*/
+/**
+ * Validates an objective index for the given achievement.
+ * Can be used for any achievement type.
+ * @command achievement_progress(<ach_id>,<obj_idx>,<progress>,<incremental?>{,<char_id>});
+ * @param aid         - achievement ID
+ * @param obj_idx     - achievement objective index.
+ * @param progress    - objective progress towards goal.
+ * @Param incremental - (boolean) true to add the progress towards the goal,
+ *                      false to use the progress only as a comparand.
+ * @param account_id  - (optional) character ID to perform on.
+ * @return true on success, false on failure.
+ * @push 1 on success, 0 on failure.
+ */
+BUILDIN(achievement_progress)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+	int aid = script_getnum(st, 2);
+	int obj_idx = script_getnum(st, 3);
+	int progress = script_getnum(st, 4);
+	int incremental = script_getnum(st, 5);
+	int account_id = script_hasdata(st, 6) ? script_getnum(st, 6) : 0;
+	const struct achievement_data *ad = NULL;
+
+	if ((ad = achievement->get(aid)) == NULL) {
+		ShowError("buildin_achievement_progress: Invalid achievement ID %d received.\n", aid);
+		script_pushint(st, 0);
+		return false;
+	}
+
+	if (obj_idx <= 0 || obj_idx > VECTOR_LENGTH(ad->objective)) {
+		ShowError("buildin_achievement_progress: Invalid objective index %d received. (min: %d, max: %d)\n", obj_idx, 0, VECTOR_LENGTH(ad->objective));
+		script_pushint(st, 0);
+		return false;
+	}
+
+	obj_idx--; // convert to array index.
+
+	if (progress <= 0 || progress > VECTOR_INDEX(ad->objective, obj_idx).goal) {
+		ShowError("buildin_achievement_progress: Progress exceeds goal limit for achievement id %d.\n", aid);
+		script_pushint(st, 0);
+		return false;
+	}
+
+	if (incremental < 0 || incremental > 1) {
+		ShowError("buildin_achievement_progress: Argument 4 expects boolean (0/1). provided value: %d\n", incremental);
+		script_pushint(st, 0);
+		return false;
+	}
+
+	if (script_hasdata(st, 6)) {
+		if (account_id <= 0) {
+			ShowError("buildin_achievement_progress: Invalid Account id %d provided.\n", account_id);
+			script_pushint(st, 0);
+			return false;
+		} else if ((sd = map->id2sd(account_id)) == NULL) {
+			ShowError("buildin_achievement_progress: Account with id %d was not found.\n", account_id);
+			script_pushint(st, 0);
+			return false;
+		}
+	}
+
+	if (achievement->validate(sd, aid, obj_idx, progress, incremental ? true : false))
+		script_pushint(st, progress);
+	else
+		script_pushint(st, 0);
+
+	return true;
+}
+
+/*==========================================
  * BattleGround System
  *------------------------------------------*/
 BUILDIN(waitingroom2bg) {
@@ -24819,6 +24903,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(agitstart2,""),
 		BUILDIN_DEF(agitend2,""),
 		BUILDIN_DEF(agitcheck2,""),
+		// Achievements [Smokexyz/Hercules]
+		BUILDIN_DEF(achievement_progress, "iiii?"),
 		// BattleGround
 		BUILDIN_DEF(waitingroom2bg,"siiss?"),
 		BUILDIN_DEF(waitingroom2bg_single,"isiis"),
