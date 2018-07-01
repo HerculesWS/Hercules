@@ -10,6 +10,59 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+## [v2018.07.01] `Jul 1 2018`
+### Added
+- Added/updated packets and message tables for clients from 2018-05-30 to 2018-06-12. (#2064)
+- Added/updated a pair of enums (`cz_ui_types`, `zc_ui_types`) for the values used by packets 0xa68 and 0x0ae2, fixed compatibility with older clients. (part of #2064)
+- Added the possibility for a plugin to abort the skill currently being cast by returning true from `skill_check_condition_castend_unknown()`. (#2076)
+- Implemented Pet Evolution. This adds a new `Evolve` field to the Pet DB, and a generator script is provided, to automatically create entries from the pet evolution lua. (#2063)
+- Implemented Pet Autofeeding. This adds a new `AutoFeed` field to the Pet DB, and can be completely disabled through the `enabe_pet_autofeed` flag in `feature.conf`. (#2063)
+- Added the script command `setparam()`, the setter counterpart of `readparam()`, accepting an optional account id argument. (#2081)
+- Updated maps database/mapcache with new maps (part of #2098)
+- Added/updated packets and message tables for clients from 2018-06-20 to 2018-06-27. (#2095)
+- Added new map/mapserver-change packets for the airship system. (part of #2095)
+- Added new (unused) 'dns host' field in `char_send_map_info()`, compatible with clients newer than 2017-03-29. (part of #2095)
+- Added an option to hide names in the script commands `unittalk()` and `npctalk()` (#1831, formerly #1571, issue #1523)
+
+### Changed
+- Updated README with more info about the development dependencies. (b57232ac29)
+- Updated `instance_create()` when trying to create an already existing instance, to match the official behavior. (#1924, issue #1651)
+- Removed the `RTLD_DEEPBIND` flag from the plugin-loading functions, for compatibility with asan in gcc-8. (#2079)
+- Standardized the function call syntax in the script command documentation. (#2084)
+- Changed the way pet eggs are handles in the inventory (they don't get deleted when hatched), for compatibility with the pet evolution system. (part of #2063)
+- Extended the script command `readparam()` with the ability to receive an account id as optional argument, as an alternative to the character name. (#part of 2081)
+- Updated the Private Airship map list to match the main kRO servers, and enabled the functionality on the main packetvers. (#2098)
+- Updated pin code status packets for the 2018 clients. (part of #2095)
+- Updated the authentication error packets in the map server to use the most recent version for the current packetver. (part of #2095)
+- Updated the roulette packets for the 2018 clients. (part of #2095)
+- Updated GitLab-CI builds to include more recent compilers and platforms: clang-5.0, clang-6.0, clang-7, gcc-7, gcc-8 ubuntu 18.04, MariaDB 10.1 are now tested. (part of #2111)
+- Updated GitLab-CI builds to include builds with a recent Zero packetver, to ensure that recent code is compiled/tested. (part of #2111)
+- Split the function `clif_disp_overhead` into two and converted its packet handling into the struct format. (part of #1831)
+- Cleaned up the mapif-related code, splitting `mapif` packet processing from `inter` logic and moving the `mapif` functions to `mapif.c`. (#2108)
+- Changed all the functions (where possible) to have static linking, in order to prevent incorrect symbols to be used by plugins, as a safer alternative to `RTLD_DEEPBIND`. Plugin authors are still advised to avoid naming their local symbols with the same name as non-static symbols exported by the code. (#2112)
+- Prevented compilation of the non-memmgr memory management function wrappers when the memory manager is enabled. (part of #2112)
+
+### Fixed
+- Fixed a crash when entries from the `job_db` are removed. (#2071, issue #2070)
+- Fixed `getunits()` to always return a value, even in case of error. (d2c0e453fc)
+- Fixed an incorrect response message in the stylist shop. (#2066, issue #2065)
+- Fixed an issue in the `clif_parse_OpenVending()` processing when the item list is empty. (#2072)
+- Fixed various typos in code documentation/comments. (#2069)
+- Fixed a field size in the character creation packet. (part of #2064)
+- Added some missing fields in the `AC_ACCEPT_LOGIN` packet structure. (part of #2064)
+- Fixed compilation with packetvers older than 20090805. (part of #2064)
+- Fixed the `rodex_sendmail_acc()` command to correctly use the `account_id` field as stated in the documentation. (#2075, issue #2024)
+- Fixed the shutdown callback calls, that weren't getting called any longer since core.c was interfaced. (#2106)
+- Fixed a parsing error when the pre-increment/pre-decrement operator is used in a conditional's body without braces. (#2077, issues #705, #912, #1553, #1710)
+- Fixed `SC_NOEQUIPWEAPON`/`RG_STRIPWEAPON` (Renewal only) and `SC_INCATKRATE`/`NPC_POWERUP` whose ATK increment/reduction were ineffective on monsters. (#2097)
+- Fixed an error when a player's PIN code is set for the first time. (#2100, issue #2046)
+- Fixed the searchstore packet for compatibility with item options. (part of #2095)
+- Fixed GitLab-CI build failures caused by MySQL client versions incompatible with the updated docker images. (#2111)
+- Fixed the novending map/cell flag that would cause players to get stuck. (#2091, issue #662)
+- Fixed the documentation for the `queueopt()` script command. (#2086)
+- Fixed documentation comments related to the `exp_group_db` (#2114, #2115)
+- Fixed an issue in the travis builds when the console error output is too long. (part of #2112)
+
 ## [v2018.06.03] `Jun 3 2018`
 ### Added
 - Added/updated packets support for clients from 2018-05-09 to 2018-05-23. (#2043)
@@ -25,7 +78,7 @@ If you are reading this in a text editor, simply ignore this section
 ### Fixed
 - Fixed an issue in the mob skill db parser that limited the mob skills to a maximum of 5 (#2042, issue #2044)
 - Fixed some incorrect msgstringtable IDs. (part of #2038)
-- Fixed inheritance in the mob DB, no longer iverwriting the Range field with a default value. (#2055)
+- Fixed inheritance in the mob DB, no longer overwriting the Range field with a default value. (#2055)
 - Fixed the skill element getter for levels above `MAX_SKILL_LEVEL`. (#2059)
 - Fixed interaction between the `pvp_nocalcrank` mapflag and the script/atcommands to toggle PvP. (#2057, issue #2056)
 
@@ -272,6 +325,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2018.07.01]: https://github.com/HerculesWS/Hercules/compare/v2018.06.03...v2018.07.01
 [v2018.06.03]: https://github.com/HerculesWS/Hercules/compare/v2018.05.06...v2018.06.03
 [v2018.05.06]: https://github.com/HerculesWS/Hercules/compare/v2018.04.08...v2018.05.06
 [v2018.04.08]: https://github.com/HerculesWS/Hercules/compare/v2018.03.11...v2018.04.08
