@@ -14137,6 +14137,19 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 
 	// perform skill-specific checks (and actions)
 	switch( skill_id ) {
+		case MC_VENDING:
+		case ALL_BUYING_STORE:
+			if (map->list[sd->bl.m].flag.novending) {
+				clif->message(sd->fd, msg_sd(sd, 276)); // "You can't open a shop on this map"
+				clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0);
+				return 0;
+			}
+			if (map->getcell(sd->bl.m, &sd->bl, sd->bl.x, sd->bl.y, CELL_CHKNOVENDING)) {
+				clif->message(sd->fd, msg_sd(sd, 204)); // "You can't open a shop on this cell."
+				clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0);
+				return 0;
+			}
+			break;
 		case SO_SPELLFIST:
 			if(sd->skill_id_old != MG_FIREBOLT && sd->skill_id_old != MG_COLDBOLT && sd->skill_id_old != MG_LIGHTNINGBOLT){
 				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
