@@ -44,7 +44,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct channel_interface channel_s;
+static struct channel_interface channel_s;
 struct channel_interface *channel;
 
 static struct Channel_Config channel_config;
@@ -56,7 +56,7 @@ static struct Channel_Config channel_config;
  * @param sd   The issuer character, for character-specific channels (i.e. map, ally)
  * @return a pointer to the channel, or NULL.
  */
-struct channel_data *channel_search(const char *name, struct map_session_data *sd)
+static struct channel_data *channel_search(const char *name, struct map_session_data *sd)
 {
 	const char *realname = name;
 	if (!realname || !*realname)
@@ -95,7 +95,7 @@ struct channel_data *channel_search(const char *name, struct map_session_data *s
  * @param color The channel chat color.
  * @return A pointer to the created channel.
  */
-struct channel_data *channel_create(enum channel_types type, const char *name, unsigned char color)
+static struct channel_data *channel_create(enum channel_types type, const char *name, unsigned char color)
 {
 	struct channel_data *chan;
 
@@ -123,7 +123,7 @@ struct channel_data *channel_create(enum channel_types type, const char *name, u
  *
  * @param chan The channel to delete
  */
-void channel_delete(struct channel_data *chan)
+static void channel_delete(struct channel_data *chan)
 {
 	nullpo_retv(chan);
 
@@ -156,7 +156,7 @@ void channel_delete(struct channel_data *chan)
  * @param chan The channel to edit.
  * @param pass The password to set. Pass NULL to remove existing passwords.
  */
-void channel_set_password(struct channel_data *chan, const char *password)
+static void channel_set_password(struct channel_data *chan, const char *password)
 {
 	nullpo_retv(chan);
 	if (password)
@@ -176,7 +176,7 @@ void channel_set_password(struct channel_data *chan, const char *password)
  * @retval HCS_STATUS_NOPERM if the source character doesn't have enough permissions.
  * @retval HCS_STATUS_FAIL in case of generic failure.
  */
-enum channel_operation_status channel_ban(struct channel_data *chan, const struct map_session_data *ssd, struct map_session_data *tsd)
+static enum channel_operation_status channel_ban(struct channel_data *chan, const struct map_session_data *ssd, struct map_session_data *tsd)
 {
 	struct channel_ban_entry *entry = NULL;
 
@@ -215,7 +215,7 @@ enum channel_operation_status channel_ban(struct channel_data *chan, const struc
  * @retval HCS_STATUS_NOPERM if the source character doesn't have enough permissions.
  * @retval HCS_STATUS_FAIL in case of generic failure.
  */
-enum channel_operation_status channel_unban(struct channel_data *chan, const struct map_session_data *ssd, struct map_session_data *tsd)
+static enum channel_operation_status channel_unban(struct channel_data *chan, const struct map_session_data *ssd, struct map_session_data *tsd)
 {
 	nullpo_retr(HCS_STATUS_FAIL, chan);
 
@@ -251,7 +251,7 @@ enum channel_operation_status channel_unban(struct channel_data *chan, const str
  * @param chan The channel.
  * @param options The new options set to apply.
  */
-void channel_set_options(struct channel_data *chan, unsigned int options)
+static void channel_set_options(struct channel_data *chan, unsigned int options)
 {
 	nullpo_retv(chan);
 
@@ -267,7 +267,7 @@ void channel_set_options(struct channel_data *chan, unsigned int options)
  *
  * If no source character is specified, it'll send an anonymous message.
  */
-void channel_send(struct channel_data *chan, struct map_session_data *sd, const char *msg)
+static void channel_send(struct channel_data *chan, struct map_session_data *sd, const char *msg)
 {
 	char message[150];
 	nullpo_retv(chan);
@@ -309,7 +309,7 @@ void channel_send(struct channel_data *chan, struct map_session_data *sd, const 
  * @param sd      The character
  * @param stealth If true, hide join announcements.
  */
-void channel_join_sub(struct channel_data *chan, struct map_session_data *sd, bool stealth)
+static void channel_join_sub(struct channel_data *chan, struct map_session_data *sd, bool stealth)
 {
 	nullpo_retv(chan);
 	nullpo_retv(sd);
@@ -349,7 +349,7 @@ void channel_join_sub(struct channel_data *chan, struct map_session_data *sd, bo
  * @retval HCS_STATUS_BANNED  if the character is in the channel's ban list
  * @retval HCS_STATUS_FAIL    in case of generic error
  */
-enum channel_operation_status channel_join(struct channel_data *chan, struct map_session_data *sd, const char *password, bool silent)
+static enum channel_operation_status channel_join(struct channel_data *chan, struct map_session_data *sd, const char *password, bool silent)
 {
 	bool stealth = false;
 
@@ -407,7 +407,7 @@ enum channel_operation_status channel_join(struct channel_data *chan, struct map
  * @param chan The channel to leave
  * @param sd   The character
  */
-void channel_leave_sub(struct channel_data *chan, struct map_session_data *sd)
+static void channel_leave_sub(struct channel_data *chan, struct map_session_data *sd)
 {
 	unsigned char i;
 
@@ -441,7 +441,7 @@ void channel_leave_sub(struct channel_data *chan, struct map_session_data *sd)
  * @param chan The channel to leave
  * @param sd   The character
  */
-void channel_leave(struct channel_data *chan, struct map_session_data *sd)
+static void channel_leave(struct channel_data *chan, struct map_session_data *sd)
 {
 	nullpo_retv(chan);
 	nullpo_retv(sd);
@@ -470,7 +470,7 @@ void channel_leave(struct channel_data *chan, struct map_session_data *sd)
  *
  * @param sd The target character
  */
-void channel_quit(struct map_session_data *sd)
+static void channel_quit(struct map_session_data *sd)
 {
 	nullpo_retv(sd);
 	while (sd->channel_count > 0) {
@@ -491,7 +491,7 @@ void channel_quit(struct map_session_data *sd)
  *
  * @param sd The target character (sd must be non null)
  */
-void channel_map_join(struct map_session_data *sd)
+static void channel_map_join(struct map_session_data *sd)
 {
 	nullpo_retv(sd);
 	if (sd->state.autotrade || sd->state.standalone)
@@ -507,7 +507,7 @@ void channel_map_join(struct map_session_data *sd)
 	channel->join(map->list[sd->bl.m].channel, sd, "", false);
 }
 
-void channel_irc_join(struct map_session_data *sd)
+static void channel_irc_join(struct map_session_data *sd)
 {
 	struct channel_data *chan = ircbot->channel;
 
@@ -529,7 +529,7 @@ void channel_irc_join(struct map_session_data *sd)
  * @param g_source Source guild
  * @param g_ally   Allied guild
  */
-void channel_guild_join_alliance(const struct guild *g_source, const struct guild *g_ally)
+static void channel_guild_join_alliance(const struct guild *g_source, const struct guild *g_ally)
 {
 	struct channel_data *chan;
 
@@ -557,7 +557,7 @@ void channel_guild_join_alliance(const struct guild *g_source, const struct guil
  * @param g_source Source guild
  * @param g_ally   Former allied guild
  */
-void channel_guild_leave_alliance(const struct guild *g_source, const struct guild *g_ally)
+static void channel_guild_leave_alliance(const struct guild *g_source, const struct guild *g_ally)
 {
 	struct channel_data *chan;
 
@@ -581,7 +581,7 @@ void channel_guild_leave_alliance(const struct guild *g_source, const struct gui
  *
  * @param sd The character (must be non null)
  */
-void channel_quit_guild(struct map_session_data *sd)
+static void channel_quit_guild(struct map_session_data *sd)
 {
 	unsigned char i;
 
@@ -596,7 +596,7 @@ void channel_quit_guild(struct map_session_data *sd)
 	}
 }
 
-void read_channels_config(void)
+static void read_channels_config(void)
 {
 	struct config_t channels_conf;
 	struct config_setting_t *chsys = NULL;
@@ -826,7 +826,7 @@ void read_channels_config(void)
 /*==========================================
  *
  *------------------------------------------*/
-int do_init_channel(bool minimal)
+static int do_init_channel(bool minimal)
 {
 	if (minimal)
 		return 0;
@@ -838,7 +838,7 @@ int do_init_channel(bool minimal)
 	return 0;
 }
 
-void do_final_channel(void)
+static void do_final_channel(void)
 {
 	struct DBIterator *iter = db_iterator(channel->db);
 	struct channel_data *chan;

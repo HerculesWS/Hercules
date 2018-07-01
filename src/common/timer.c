@@ -40,7 +40,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct timer_interface timer_s;
+static struct timer_interface timer_s;
 struct timer_interface *timer;
 
 // If the server can't handle processing thousands of monsters
@@ -54,7 +54,7 @@ static int timer_data_max = 0;
 static int timer_data_num = 1;
 
 // free timers (array)
-static int* free_timer_list = NULL;
+static int *free_timer_list = NULL;
 static int free_timer_list_max = 0;
 static int free_timer_list_pos = 0;
 
@@ -72,20 +72,21 @@ static BHEAP_VAR(int, timer_heap);
 
 
 // server startup time
-time_t start_time;
+static time_t start_time;
 
 
 /*----------------------------
  * Timer debugging
  *----------------------------*/
-struct timer_func_list {
+static struct timer_func_list {
 	struct timer_func_list* next;
 	TimerFunc func;
 	char* name;
 } *tfl_root = NULL;
 
 /// Sets the name of a timer function.
-int timer_add_func_list(TimerFunc func, char* name) {
+static int timer_add_func_list(TimerFunc func, char *name)
+{
 	struct timer_func_list* tfl;
 
 	nullpo_ret(func);
@@ -108,7 +109,7 @@ int timer_add_func_list(TimerFunc func, char* name) {
 }
 
 /// Returns the name of the timer function.
-char* search_timer_func_list(TimerFunc func)
+static char *search_timer_func_list(TimerFunc func)
 {
 	struct timer_func_list* tfl;
 
@@ -124,9 +125,11 @@ char* search_timer_func_list(TimerFunc func)
  *----------------------------*/
 
 #if defined(ENABLE_RDTSC)
-static uint64 RDTSC_BEGINTICK = 0,   RDTSC_CLOCK = 0;
+static uint64 RDTSC_BEGINTICK = 0;
+static uint64 RDTSC_CLOCK = 0;
 
-static __inline uint64 rdtsc_(void) {
+static __inline uint64 rdtsc_(void)
+{
 	register union {
 		uint64 qw;
 		uint32 dw[2];
@@ -137,7 +140,8 @@ static __inline uint64 rdtsc_(void) {
 	return t.qw;
 }
 
-static void rdtsc_calibrate(void){
+static void rdtsc_calibrate(void)
+{
 	uint64 t1, t2;
 	int32 i;
 
@@ -164,7 +168,8 @@ static void rdtsc_calibrate(void){
  * platform-abstracted tick retrieval
  * @return server's current tick
  */
-static int64 sys_tick(void) {
+static int64 sys_tick(void)
+{
 #if defined(WIN32)
 	// Windows: GetTickCount/GetTickCount64: Return the number of
 	//   milliseconds that have elapsed since the system was started.
@@ -226,25 +231,28 @@ static int64 sys_tick(void) {
 static int64 gettick_cache;
 static int gettick_count = 1;
 
-int64 timer_gettick_nocache(void) {
+static int64 timer_gettick_nocache(void)
+{
 	gettick_count = TICK_CACHE;
 	gettick_cache = sys_tick();
 	return gettick_cache;
 }
 
-int64 timer_gettick(void) {
+static int64 timer_gettick(void)
+{
 	return ( --gettick_count == 0 ) ? gettick_nocache() : gettick_cache;
 }
 //////////////////////////////
 #else
 //////////////////////////////
 // tick doesn't get cached
-int64 timer_gettick_nocache(void)
+static int64 timer_gettick_nocache(void)
 {
 	return sys_tick();
 }
 
-int64 timer_gettick(void) {
+static int64 timer_gettick(void)
+{
 	return sys_tick();
 }
 //////////////////////////////////////////////////////////////////////////
@@ -256,7 +264,8 @@ int64 timer_gettick(void) {
  *--------------------------------------*/
 
 /// Adds a timer to the timer_heap
-static void push_timer_heap(int tid) {
+static void push_timer_heap(int tid)
+{
 	BHEAP_ENSURE(timer_heap, 1, 256);
 	BHEAP_PUSH(timer_heap, tid, DIFFTICK_MINTOPCMP, swap);
 }
@@ -266,7 +275,8 @@ static void push_timer_heap(int tid) {
  *--------------------------*/
 
 /// Returns a free timer id.
-static int acquire_timer(void) {
+static int acquire_timer(void)
+{
 	int tid;
 
 	// select a free timer
@@ -299,7 +309,8 @@ static int acquire_timer(void) {
 
 /// Starts a new timer that is deleted once it expires (single-use).
 /// Returns the timer's id.
-int timer_add(int64 tick, TimerFunc func, int id, intptr_t data) {
+static int timer_add(int64 tick, TimerFunc func, int id, intptr_t data)
+{
 	int tid;
 
 	nullpo_retr(INVALID_TIMER, func);
@@ -328,7 +339,7 @@ int timer_add(int64 tick, TimerFunc func, int id, intptr_t data) {
 
 /// Starts a new timer that automatically restarts itself (infinite loop until manually removed).
 /// Returns the timer's id, or INVALID_TIMER if it fails.
-int timer_add_interval(int64 tick, TimerFunc func, int id, intptr_t data, int interval)
+static int timer_add_interval(int64 tick, TimerFunc func, int id, intptr_t data, int interval)
 {
 	int tid;
 
@@ -364,7 +375,8 @@ int timer_add_interval(int64 tick, TimerFunc func, int id, intptr_t data, int in
 }
 
 /// Retrieves internal timer data
-const struct TimerData* timer_get(int tid) {
+static const struct TimerData *timer_get(int tid)
+{
 	Assert_retr(NULL, tid > 0);
 	return ( tid >= 0 && tid < timer_data_num ) ? &timer_data[tid] : NULL;
 }
@@ -372,7 +384,7 @@ const struct TimerData* timer_get(int tid) {
 /// Marks a timer specified by 'id' for immediate deletion once it expires.
 /// Param 'func' is used for debug/verification purposes.
 /// Returns 0 on success, < 0 on failure.
-int timer_do_delete(int tid, TimerFunc func)
+static int timer_do_delete(int tid, TimerFunc func)
 {
 	nullpo_ret(func);
 
@@ -402,7 +414,8 @@ int timer_do_delete(int tid, TimerFunc func)
 
 /// Adjusts a timer's expiration time.
 /// Returns the new tick value, or -1 if it fails.
-int64 timer_addtick(int tid, int64 tick) {
+static int64 timer_addtick(int tid, int64 tick)
+{
 	if (tid < 1 || tid >= timer_data_num) {
 		ShowError("timer_addtick error : no such timer [%d]\n", tid);
 		Assert_retr(-1, 0);
@@ -419,7 +432,7 @@ int64 timer_addtick(int tid, int64 tick) {
  * @return The new tick value.
  * @retval -1 in case of failure.
  */
-int64 timer_settick(int tid, int64 tick)
+static int64 timer_settick(int tid, int64 tick)
 {
 	int i;
 
@@ -461,7 +474,7 @@ int64 timer_settick(int tid, int64 tick)
  * @param tick The current tick.
  * @return The value of the smallest non-expired timer (or 1 second if there aren't any).
  */
-int do_timer(int64 tick)
+static int do_timer(int64 tick)
 {
 	int64 diff = TIMER_MAX_INTERVAL; // return value
 
@@ -515,11 +528,12 @@ int do_timer(int64 tick)
 	return (int)cap_value(diff, TIMER_MIN_INTERVAL, TIMER_MAX_INTERVAL);
 }
 
-unsigned long timer_get_uptime(void) {
+static unsigned long timer_get_uptime(void)
+{
 	return (unsigned long)difftime(time(NULL), start_time);
 }
 
-void timer_init(void)
+static void timer_init(void)
 {
 #if defined(ENABLE_RDTSC)
 	rdtsc_calibrate();
@@ -528,7 +542,8 @@ void timer_init(void)
 	time(&start_time);
 }
 
-void timer_final(void) {
+static void timer_final(void)
+{
 	struct timer_func_list *tfl;
 	struct timer_func_list *next;
 
@@ -542,12 +557,14 @@ void timer_final(void) {
 	BHEAP_CLEAR(timer_heap);
 	if (free_timer_list) aFree(free_timer_list);
 }
+
 /*=====================================
-* Default Functions : timer.h
-* Generated by HerculesInterfaceMaker
-* created by Susu
-*-------------------------------------*/
-void timer_defaults(void) {
+ * Default Functions : timer.h
+ * Generated by HerculesInterfaceMaker
+ * created by Susu
+ *-------------------------------------*/
+void timer_defaults(void)
+{
 	timer = &timer_s;
 
 	/* funcs */

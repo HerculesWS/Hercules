@@ -49,10 +49,10 @@ function run_server {
 	echo "Running: $1 --run-once $2"
 	$1 --run-once $2 2>runlog.txt
 	export errcode=$?
-	export teststr=$(cat runlog.txt)
+	export teststr=$(head -c 10000 runlog.txt)
 	if [[ -n "${teststr}" ]]; then
 		echo "Errors found in running server $1."
-		cat runlog.txt
+		head -c 10000 runlog.txt
 		aborterror "Errors found in running server $1."
 	else
 		echo "No errors found for server $1."
@@ -67,10 +67,10 @@ function run_test {
 	echo "Running: test_$1"
 	./test_$1 2>runlog.txt
 	export errcode=$?
-	export teststr=$(cat runlog.txt)
+	export teststr=$(head -c 10000 runlog.txt)
 	if [[ -n "${teststr}" ]]; then
 		echo "Errors found in running test $1."
-		cat runlog.txt
+		head -c 10000 runlog.txt
 		aborterror "Errors found in running test $1."
 	else
 		echo "No errors found for test $1."

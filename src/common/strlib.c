@@ -32,16 +32,17 @@
 
 #define J_MAX_MALLOC_SIZE 65535
 
-struct strlib_interface strlib_s;
-struct stringbuf_interface stringbuf_s;
-struct sv_interface sv_s;
+static struct strlib_interface strlib_s;
+static struct stringbuf_interface stringbuf_s;
+static struct sv_interface sv_s;
 
 struct strlib_interface *strlib;
 struct stringbuf_interface *StrBuf;
 struct sv_interface *sv;
 
 // escapes a string in-place (' -> \' , \ -> \\ , % -> _)
-char* jstrescape (char* pt) {
+static char *jstrescape(char *pt)
+{
 	//copy from here
 	char *ptr;
 	int i = 0, j = 0;
@@ -73,7 +74,7 @@ char* jstrescape (char* pt) {
 }
 
 // escapes a string into a provided buffer
-char* jstrescapecpy (char* pt, const char* spt)
+static char *jstrescapecpy(char *pt, const char *spt)
 {
 	//copy from here
 	//WARNING: Target string pt should be able to hold strlen(spt)*2, as each time
@@ -108,7 +109,7 @@ char* jstrescapecpy (char* pt, const char* spt)
 }
 
 // escapes exactly 'size' bytes of a string into a provided buffer
-int jmemescapecpy (char* pt, const char* spt, int size)
+static int jmemescapecpy(char *pt, const char *spt, int size)
 {
 	//copy from here
 	int i =0, j=0;
@@ -135,7 +136,7 @@ int jmemescapecpy (char* pt, const char* spt, int size)
 }
 
 // Function to suppress control characters in a string.
-int strlib_remove_control_chars(char *str)
+static int strlib_remove_control_chars(char *str)
 {
 	int i;
 	int change = 0;
@@ -152,7 +153,7 @@ int strlib_remove_control_chars(char *str)
 
 // Removes characters identified by ISSPACE from the start and end of the string
 // NOTE: make sure the string is not const!!
-char *strlib_trim(char *str)
+static char *strlib_trim(char *str)
 {
 	size_t start;
 	size_t end;
@@ -180,7 +181,7 @@ char *strlib_trim(char *str)
 // Converts one or more consecutive occurrences of the delimiters into a single space
 // and removes such occurrences from the beginning and end of string
 // NOTE: make sure the string is not const!!
-char *strlib_normalize_name(char *str, const char *delims)
+static char *strlib_normalize_name(char *str, const char *delims)
 {
 	char* in = str;
 	char* out = str;
@@ -218,7 +219,7 @@ char *strlib_normalize_name(char *str, const char *delims)
 //stristr: Case insensitive version of strstr, code taken from
 //http://www.daniweb.com/code/snippet313.html, Dave Sinkula
 //
-const char *strlib_stristr(const char *haystack, const char *needle)
+static const char *strlib_stristr(const char *haystack, const char *needle)
 {
 	if ( !*needle )
 	{
@@ -246,7 +247,7 @@ const char *strlib_stristr(const char *haystack, const char *needle)
 	return 0;
 }
 
-char* strlib_strtok_r(char *s1, const char *s2, char **lasts)
+static char* strlib_strtok_r(char *s1, const char *s2, char **lasts)
 {
 #ifdef __WIN32
 	char *ret;
@@ -269,7 +270,7 @@ char* strlib_strtok_r(char *s1, const char *s2, char **lasts)
 #endif
 }
 
-size_t strlib_strnlen(const char *string, size_t maxlen)
+static size_t strlib_strnlen(const char *string, size_t maxlen)
 {
 // TODO: Verify whether this implementation is still necessary for NetBSD 5.x
 // and possibly some Solaris versions.
@@ -287,7 +288,7 @@ size_t strlib_strnlen(const char *string, size_t maxlen)
 //----------------------------------------------------
 // E-mail check: return 0 (not correct) or 1 (valid).
 //----------------------------------------------------
-int strlib_e_mail_check(char *email)
+static int strlib_e_mail_check(char *email)
 {
 	char ch;
 	char* last_arobas;
@@ -324,7 +325,8 @@ int strlib_e_mail_check(char *email)
 // Return numerical value of a switch configuration
 // on/off, yes/no, true/false, number
 //--------------------------------------------------
-int strlib_config_switch(const char *str) {
+static int strlib_config_switch(const char *str)
+{
 	size_t len = strlen(str);
 	if ((len == 2 && strcmpi(str, "on") == 0)
 	 || (len == 3 && strcmpi(str, "yes") == 0)
@@ -345,7 +347,7 @@ int strlib_config_switch(const char *str) {
 
 /// strncpy that always null-terminates the string
 /// @remark this function will read at most `n` - 1 bytes from `src` (from 0 to `n` - 2)
-char *strlib_safestrncpy(char *dst, const char *src, size_t n)
+static char *strlib_safestrncpy(char *dst, const char *src, size_t n)
 {
 	if( n > 0 )
 	{
@@ -366,7 +368,7 @@ char *strlib_safestrncpy(char *dst, const char *src, size_t n)
 }
 
 /// doesn't crash on null pointer
-size_t strlib_safestrnlen(const char *string, size_t maxlen)
+static size_t strlib_safestrnlen(const char *string, size_t maxlen)
 {
 	return ( string != NULL ) ? strnlen(string, maxlen) : 0;
 }
@@ -380,8 +382,8 @@ size_t strlib_safestrnlen(const char *string, size_t maxlen)
 /// @param fmt Format string
 /// @param ... Format arguments
 /// @return The size of the string or -1 if the buffer is too small
-int strlib_safesnprintf(char *buf, size_t sz, const char *fmt, ...) __attribute__((format(printf, 3, 4)));
-int strlib_safesnprintf(char *buf, size_t sz, const char *fmt, ...)
+static int strlib_safesnprintf(char *buf, size_t sz, const char *fmt, ...) __attribute__((format(printf, 3, 4)));
+static int strlib_safesnprintf(char *buf, size_t sz, const char *fmt, ...)
 {
 	va_list ap;
 	int ret;
@@ -398,7 +400,7 @@ int strlib_safesnprintf(char *buf, size_t sz, const char *fmt, ...)
 
 /// Returns the line of the target position in the string.
 /// Lines start at 1.
-int strlib_strline(const char *str, size_t pos)
+static int strlib_strline(const char *str, size_t pos)
 {
 	const char* target;
 	int line;
@@ -424,7 +426,7 @@ int strlib_strline(const char *str, size_t pos)
 /// @param output Output string
 /// @param input Binary input buffer
 /// @param count Number of bytes to convert
-bool strlib_bin2hex(char *output, const unsigned char *input, size_t count)
+static bool strlib_bin2hex(char *output, const unsigned char *input, size_t count)
 {
 	char toHex[] = "0123456789abcdef";
 	size_t i;
@@ -444,7 +446,7 @@ bool strlib_bin2hex(char *output, const unsigned char *input, size_t count)
 ///
 /// @param svstate Parse state
 /// @return 1 if a field was parsed, 0 if already done, -1 on error.
-int sv_parse_next(struct s_svstate* svstate)
+static int sv_parse_next(struct s_svstate *svstate)
 {
 	enum {
 		START_OF_FIELD,
@@ -615,7 +617,8 @@ int sv_parse_next(struct s_svstate* svstate)
 /// @param npos Size of the pos array
 /// @param opt Options that determine the parsing behavior
 /// @return Number of fields found in the string or -1 if an error occurred
-int sv_parse(const char* str, int len, int startoff, char delim, int* out_pos, int npos, enum e_svopt opt) {
+static int sv_parse(const char *str, int len, int startoff, char delim, int *out_pos, int npos, enum e_svopt opt)
+{
 	struct s_svstate svstate;
 	int count;
 
@@ -665,7 +668,8 @@ int sv_parse(const char* str, int len, int startoff, char delim, int* out_pos, i
 /// @param nfields Size of the field array
 /// @param opt Options that determine the parsing behavior
 /// @return Number of fields found in the string or -1 if an error occurred
-int sv_split(char* str, int len, int startoff, char delim, char** out_fields, int nfields, enum e_svopt opt) {
+static int sv_split(char *str, int len, int startoff, char delim, char **out_fields, int nfields, enum e_svopt opt)
+{
 	int pos[1024];
 	int i;
 	int done;
@@ -731,7 +735,8 @@ int sv_split(char* str, int len, int startoff, char delim, char** out_fields, in
 /// @param len Length of the source string
 /// @param escapes Extra characters to be escaped
 /// @return Length of the escaped string
-size_t sv_escape_c(char* out_dest, const char* src, size_t len, const char* escapes) {
+static size_t sv_escape_c(char *out_dest, const char *src, size_t len, const char *escapes)
+{
 	size_t i;
 	size_t j;
 
@@ -799,7 +804,8 @@ size_t sv_escape_c(char* out_dest, const char* src, size_t len, const char* esca
 /// @param src Source string
 /// @param len Length of the source string
 /// @return Length of the escaped string
-size_t sv_unescape_c(char* out_dest, const char* src, size_t len) {
+static size_t sv_unescape_c(char *out_dest, const char *src, size_t len)
+{
 	static unsigned char low2hex[256] = {
 		0,  0,  0,  0,  0,  0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0,// 0x0?
 		0,  0,  0,  0,  0,  0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0,// 0x1?
@@ -880,7 +886,8 @@ size_t sv_unescape_c(char* out_dest, const char* src, size_t len) {
 }
 
 /// Skips a C escape sequence (starting with '\\').
-const char* skip_escaped_c(const char* p) {
+static const char *skip_escaped_c(const char *p)
+{
 	if( p && *p == '\\' ) {
 		++p;
 		switch( *p ) {
@@ -918,7 +925,8 @@ const char* skip_escaped_c(const char* p) {
 /// @param maxcols Maximum number of columns of a valid row
 /// @param parseproc User-supplied row processing function
 /// @return true on success, false if file could not be opened
-bool sv_readdb(const char* directory, const char* filename, char delim, int mincols, int maxcols, int maxrows, bool (*parseproc)(char* fields[], int columns, int current)) {
+static bool sv_readdb(const char *directory, const char *filename, char delim, int mincols, int maxcols, int maxrows, bool (*parseproc)(char *fields[], int columns, int current))
+{
 	FILE* fp;
 	int lines = 0;
 	int entries = 0;
@@ -990,7 +998,8 @@ bool sv_readdb(const char* directory, const char* filename, char delim, int minc
 // @author MouseJstr (original)
 
 /// Allocates a StringBuf
-StringBuf* StringBuf_Malloc(void)  {
+static StringBuf *StringBuf_Malloc(void)
+{
 	StringBuf* self;
 	CREATE(self, StringBuf, 1);
 	StrBuf->Init(self);
@@ -998,14 +1007,16 @@ StringBuf* StringBuf_Malloc(void)  {
 }
 
 /// Initializes a previously allocated StringBuf
-void StringBuf_Init(StringBuf* self) {
+static void StringBuf_Init(StringBuf *self)
+{
 	self->max_ = 1024;
 	self->ptr_ = self->buf_ = (char*)aMalloc(self->max_ + 1);
 }
 
 /// Appends the result of printf to the StringBuf
-int StringBuf_Printf(StringBuf *self, const char *fmt, ...) __attribute__((format(printf, 2, 3)));
-int StringBuf_Printf(StringBuf *self, const char *fmt, ...) {
+static int StringBuf_Printf(StringBuf *self, const char *fmt, ...) __attribute__((format(printf, 2, 3)));
+static int StringBuf_Printf(StringBuf *self, const char *fmt, ...)
+{
 	int len;
 	va_list ap;
 
@@ -1017,7 +1028,8 @@ int StringBuf_Printf(StringBuf *self, const char *fmt, ...) {
 }
 
 /// Appends the result of vprintf to the StringBuf
-int StringBuf_Vprintf(StringBuf* self, const char* fmt, va_list ap) {
+static int StringBuf_Vprintf(StringBuf *self, const char *fmt, va_list ap)
+{
 	for(;;) {
 		va_list apcopy;
 		int n, off;
@@ -1040,7 +1052,8 @@ int StringBuf_Vprintf(StringBuf* self, const char* fmt, va_list ap) {
 }
 
 /// Appends the contents of another StringBuf to the StringBuf
-int StringBuf_Append(StringBuf* self, const StringBuf* sbuf) {
+static int StringBuf_Append(StringBuf *self, const StringBuf *sbuf)
+{
 	size_t available = self->max_ - (self->ptr_ - self->buf_);
 	size_t needed = sbuf->ptr_ - sbuf->buf_;
 
@@ -1057,7 +1070,8 @@ int StringBuf_Append(StringBuf* self, const StringBuf* sbuf) {
 }
 
 // Appends str to the StringBuf
-int StringBuf_AppendStr(StringBuf* self, const char* str)  {
+static int StringBuf_AppendStr(StringBuf *self, const char *str)
+{
 	size_t available = self->max_ - (self->ptr_ - self->buf_);
 	size_t needed = strlen(str);
 
@@ -1075,34 +1089,41 @@ int StringBuf_AppendStr(StringBuf* self, const char* str)  {
 }
 
 // Returns the length of the data in the Stringbuf
-int StringBuf_Length(StringBuf* self)  {
+static int StringBuf_Length(StringBuf *self)
+{
 	return (int)(self->ptr_ - self->buf_);
 }
 
 /// Returns the data in the StringBuf
-char* StringBuf_Value(StringBuf* self)  {
+static char *StringBuf_Value(StringBuf *self)
+{
 	*self->ptr_ = '\0';
 	return self->buf_;
 }
 
 /// Clears the contents of the StringBuf
-void StringBuf_Clear(StringBuf* self)  {
+static void StringBuf_Clear(StringBuf *self)
+{
 	self->ptr_ = self->buf_;
 }
 
 /// Destroys the StringBuf
-void StringBuf_Destroy(StringBuf* self) {
+static void StringBuf_Destroy(StringBuf *self)
+{
 	aFree(self->buf_);
 	self->ptr_ = self->buf_ = 0;
 	self->max_ = 0;
 }
 
 // Frees a StringBuf returned by StringBuf_Malloc
-void StringBuf_Free(StringBuf* self)  {
+static void StringBuf_Free(StringBuf *self)
+{
 	StrBuf->Destroy(self);
 	aFree(self);
 }
-void strlib_defaults(void) {
+
+void strlib_defaults(void)
+{
 	/* connect */
 	strlib = &strlib_s;
 	StrBuf = &stringbuf_s;
@@ -1116,17 +1137,8 @@ void strlib_defaults(void) {
 	strlib->normalize_name_ = strlib_normalize_name;
 	strlib->stristr_ = strlib_stristr;
 
-#if !(defined(WIN32) && defined(_MSC_VER)) && !defined(HAVE_STRNLEN)
 	strlib->strnlen_ = strlib_strnlen;
-#else
-	strlib->strnlen_ = NULL;
-#endif
-
-#ifdef WIN32
 	strlib->strtok_r_ = strlib_strtok_r;
-#else
-	strlib->strtok_r_ = NULL;
-#endif
 
 	strlib->e_mail_check_ = strlib_e_mail_check;
 	strlib->config_switch_ = strlib_config_switch;

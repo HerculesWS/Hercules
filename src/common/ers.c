@@ -309,7 +309,7 @@ static void ers_obj_destroy(ERS *self)
 	aFree(instance);
 }
 
-void ers_cache_size(ERS *self, unsigned int new_size)
+static void ers_cache_size(ERS *self, unsigned int new_size)
 {
 	struct ers_instance_t *instance = (struct ers_instance_t *)self;
 

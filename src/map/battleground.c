@@ -47,16 +47,18 @@
 #include <stdio.h>
 #include <string.h>
 
-struct battleground_interface bg_s;
+static struct battleground_interface bg_s;
 struct battleground_interface *bg;
 
 /// Search a BG Team using bg_id
-struct battleground_data* bg_team_search(int bg_id) {
+static struct battleground_data* bg_team_search(int bg_id)
+{
 	if( !bg_id ) return NULL;
 	return (struct battleground_data *)idb_get(bg->team_db, bg_id);
 }
 
-struct map_session_data* bg_getavailablesd(struct battleground_data *bgd) {
+static struct map_session_data* bg_getavailablesd(struct battleground_data *bgd)
+{
 	int i;
 	nullpo_retr(NULL, bgd);
 	ARR_FIND(0, MAX_BG_MEMBERS, i, bgd->members[i].sd != NULL);
@@ -64,7 +66,8 @@ struct map_session_data* bg_getavailablesd(struct battleground_data *bgd) {
 }
 
 /// Deletes BG Team from db
-bool bg_team_delete(int bg_id) {
+static bool bg_team_delete(int bg_id)
+{
 	int i;
 	struct battleground_data *bgd = bg->team_search(bg_id);
 
@@ -82,7 +85,8 @@ bool bg_team_delete(int bg_id) {
 }
 
 /// Warps a Team
-bool bg_team_warp(int bg_id, unsigned short map_index, short x, short y) {
+static bool bg_team_warp(int bg_id, unsigned short map_index, short x, short y)
+{
 	int i;
 	struct battleground_data *bgd = bg->team_search(bg_id);
 	if( bgd == NULL ) return false;
@@ -91,13 +95,15 @@ bool bg_team_warp(int bg_id, unsigned short map_index, short x, short y) {
 	return true;
 }
 
-void bg_send_dot_remove(struct map_session_data *sd) {
+static void bg_send_dot_remove(struct map_session_data *sd)
+{
 	if( sd && sd->bg_id )
 		clif->bg_xy_remove(sd);
 }
 
 /// Player joins team
-bool bg_team_join(int bg_id, struct map_session_data *sd) {
+static bool bg_team_join(int bg_id, struct map_session_data *sd)
+{
 	int i;
 	struct battleground_data *bgd = bg->team_search(bg_id);
 
@@ -135,7 +141,8 @@ bool bg_team_join(int bg_id, struct map_session_data *sd) {
 }
 
 /// Single Player leaves team
-int bg_team_leave(struct map_session_data *sd, enum bg_team_leave_type flag) {
+static int bg_team_leave(struct map_session_data *sd, enum bg_team_leave_type flag)
+{
 	int i, bg_id;
 	struct battleground_data *bgd;
 
@@ -185,7 +192,8 @@ int bg_team_leave(struct map_session_data *sd, enum bg_team_leave_type flag) {
 }
 
 /// Respawn after killed
-bool bg_member_respawn(struct map_session_data *sd) {
+static bool bg_member_respawn(struct map_session_data *sd)
+{
 	struct battleground_data *bgd;
 	if( sd == NULL || !pc_isdead(sd) || !sd->bg_id || (bgd = bg->team_search(sd->bg_id)) == NULL )
 		return false;
@@ -197,7 +205,8 @@ bool bg_member_respawn(struct map_session_data *sd) {
 	return true; // Warped
 }
 
-int bg_create(unsigned short map_index, short rx, short ry, const char *ev, const char *dev) {
+static int bg_create(unsigned short map_index, short rx, short ry, const char *ev, const char *dev)
+{
 	struct battleground_data *bgd;
 	bg->team_counter++;
 
@@ -216,7 +225,8 @@ int bg_create(unsigned short map_index, short rx, short ry, const char *ev, cons
 	return bgd->bg_id;
 }
 
-int bg_team_get_id(struct block_list *bl) {
+static int bg_team_get_id(struct block_list *bl)
+{
 	nullpo_ret(bl);
 	switch( bl->type ) {
 		case BL_PC:
@@ -265,7 +275,7 @@ int bg_team_get_id(struct block_list *bl) {
 	return 0;
 }
 
-bool bg_send_message(struct map_session_data *sd, const char *mes)
+static bool bg_send_message(struct map_session_data *sd, const char *mes)
 {
 	struct battleground_data *bgd;
 
@@ -280,7 +290,7 @@ bool bg_send_message(struct map_session_data *sd, const char *mes)
 /**
  * @see DBApply
  */
-int bg_send_xy_timer_sub(union DBKey key, struct DBData *data, va_list ap)
+static int bg_send_xy_timer_sub(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct battleground_data *bgd = DB->data2ptr(data);
 	struct map_session_data *sd;
@@ -298,12 +308,14 @@ int bg_send_xy_timer_sub(union DBKey key, struct DBData *data, va_list ap)
 	return 0;
 }
 
-int bg_send_xy_timer(int tid, int64 tick, int id, intptr_t data) {
+static int bg_send_xy_timer(int tid, int64 tick, int id, intptr_t data)
+{
 	bg->team_db->foreach(bg->team_db, bg->send_xy_timer_sub, tick);
 	return 0;
 }
 
-enum bg_queue_types bg_str2teamtype (const char *str) {
+static enum bg_queue_types bg_str2teamtype(const char *str)
+{
 	char temp[200], *parse;
 	enum bg_queue_types type = BGQT_INVALID;
 
@@ -331,7 +343,8 @@ enum bg_queue_types bg_str2teamtype (const char *str) {
 	return type;
 }
 
-void bg_config_read(void) {
+static void bg_config_read(void)
+{
 	struct config_t bg_conf;
 	struct config_setting_t *data = NULL;
 	const char *config_filename = "conf/battlegrounds.conf"; // FIXME hardcoded name
@@ -497,7 +510,8 @@ void bg_config_read(void) {
 	}
 	libconfig->destroy(&bg_conf);
 }
-struct bg_arena *bg_name2arena(const char *name)
+
+static struct bg_arena *bg_name2arena(const char *name)
 {
 	int i;
 	nullpo_retr(NULL, name);
@@ -517,7 +531,7 @@ struct bg_arena *bg_name2arena(const char *name)
  * @return the position (starting at 1).
  * @retval 0 if the queue doesn't exist or the given account ID isn't present in it.
  */
-int bg_id2pos(int queue_id, int account_id)
+static int bg_id2pos(int queue_id, int account_id)
 {
 	struct script_queue *queue = script->queue(queue_id);
 	if (queue) {
@@ -530,7 +544,7 @@ int bg_id2pos(int queue_id, int account_id)
 	return 0;
 }
 
-void bg_queue_ready_ack(struct bg_arena *arena, struct map_session_data *sd, bool response)
+static void bg_queue_ready_ack(struct bg_arena *arena, struct map_session_data *sd, bool response)
 {
 	nullpo_retv(arena);
 	nullpo_retv(sd);
@@ -561,7 +575,8 @@ void bg_queue_ready_ack(struct bg_arena *arena, struct map_session_data *sd, boo
 	}
 }
 
-void bg_queue_player_cleanup(struct map_session_data *sd) {
+static void bg_queue_player_cleanup(struct map_session_data *sd)
+{
 	nullpo_retv(sd);
 	if ( sd->bg_queue.client_has_bg_data ) {
 		if( sd->bg_queue.arena )
@@ -576,7 +591,9 @@ void bg_queue_player_cleanup(struct map_session_data *sd) {
 	sd->bg_queue.client_has_bg_data = 0;
 	sd->bg_queue.type = 0;
 }
-void bg_match_over(struct bg_arena *arena, bool canceled) {
+
+static void bg_match_over(struct bg_arena *arena, bool canceled)
+{
 	struct script_queue *queue = script->queue(arena->queue_id);
 	int i;
 
@@ -606,7 +623,9 @@ void bg_match_over(struct bg_arena *arena, bool canceled) {
 	/* reset queue */
 	script->queue_clear(arena->queue_id);
 }
-void bg_begin(struct bg_arena *arena) {
+
+static void bg_begin(struct bg_arena *arena)
+{
 	struct script_queue *queue = script->queue(arena->queue_id);
 	int i, count = 0;
 
@@ -663,13 +682,16 @@ void bg_begin(struct bg_arena *arena) {
 		npc->event_do(arena->npc_event);
 	}
 }
-int bg_begin_timer(int tid, int64 tick, int id, intptr_t data) {
+
+static int bg_begin_timer(int tid, int64 tick, int id, intptr_t data)
+{
 	bg->begin(bg->arena[id]);
 	bg->arena[id]->begin_timer = INVALID_TIMER;
 	return 0;
 }
 
-int bg_afk_timer(int tid, int64 tick, int id, intptr_t data) {
+static int bg_afk_timer(int tid, int64 tick, int id, intptr_t data)
+{
 	struct s_mapiterator* iter;
 	struct map_session_data* sd;
 	int count = 0;
@@ -691,7 +713,8 @@ int bg_afk_timer(int tid, int64 tick, int id, intptr_t data) {
 	return 0;
 }
 
-void bg_queue_pregame(struct bg_arena *arena) {
+static void bg_queue_pregame(struct bg_arena *arena)
+{
 	struct script_queue *queue;
 	int i;
 	nullpo_retv(arena);
@@ -706,13 +729,16 @@ void bg_queue_pregame(struct bg_arena *arena) {
 	}
 	arena->begin_timer = timer->add( timer->gettick() + (arena->pregame_duration*1000), bg->begin_timer, arena->id, 0 );
 }
-int bg_fillup_timer(int tid, int64 tick, int id, intptr_t data) {
+
+static int bg_fillup_timer(int tid, int64 tick, int id, intptr_t data)
+{
 	bg->queue_pregame(bg->arena[id]);
 	bg->arena[id]->fillup_timer = INVALID_TIMER;
 	return 0;
 }
 
-void bg_queue_check(struct bg_arena *arena) {
+static void bg_queue_check(struct bg_arena *arena)
+{
 	int count;
 	struct script_queue *queue;
 	nullpo_retv(arena);
@@ -729,7 +755,9 @@ void bg_queue_check(struct bg_arena *arena) {
 		arena->fillup_timer = timer->add( timer->gettick() + (arena->fillup_duration*1000), bg->fillup_timer, arena->id, 0 );
 	}
 }
-void bg_queue_add(struct map_session_data *sd, struct bg_arena *arena, enum bg_queue_types type) {
+
+static void bg_queue_add(struct map_session_data *sd, struct bg_arena *arena, enum bg_queue_types type)
+{
 	enum BATTLEGROUNDS_QUEUE_ACK result = bg->can_queue(sd,arena,type);
 	struct script_queue *queue = NULL;
 	int i, count = 0;
@@ -810,7 +838,9 @@ void bg_queue_add(struct map_session_data *sd, struct bg_arena *arena, enum bg_q
 	clif->bgqueue_ack(sd,BGQA_SUCCESS,arena->id);
 	bg->queue_check(arena);
 }
-enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, struct bg_arena *arena, enum bg_queue_types type) {
+
+static enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, struct bg_arena *arena, enum bg_queue_types type)
+{
 	int tick;
 	unsigned int tsec;
 
@@ -914,7 +944,9 @@ enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, struct bg_
 	}
 	return BGQA_SUCCESS;
 }
-void do_init_battleground(bool minimal) {
+
+static void do_init_battleground(bool minimal)
+{
 	if (minimal)
 		return;
 
@@ -927,7 +959,7 @@ void do_init_battleground(bool minimal) {
 /**
  * @see DBApply
  */
-int bg_team_db_final(union DBKey key, struct DBData *data, va_list ap)
+static int bg_team_db_final(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct battleground_data* bgd = DB->data2ptr(data);
 
@@ -936,7 +968,7 @@ int bg_team_db_final(union DBKey key, struct DBData *data, va_list ap)
 	return 0;
 }
 
-void do_final_battleground(void)
+static void do_final_battleground(void)
 {
 	bg->team_db->destroy(bg->team_db,bg->team_db_final);
 
@@ -949,7 +981,9 @@ void do_final_battleground(void)
 		aFree(bg->arena);
 	}
 }
-void battleground_defaults(void) {
+
+void battleground_defaults(void)
+{
 	bg = &bg_s;
 
 	bg->queue_on = false;

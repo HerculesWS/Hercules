@@ -52,7 +52,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct clan_interface clan_s;
+static struct clan_interface clan_s;
 struct clan_interface *clan;
 
 /**
@@ -61,7 +61,7 @@ struct clan_interface *clan;
  * @param clan_id Clan ID
  * @return struct clan*
  */
-struct clan *clan_search(int clan_id)
+static struct clan *clan_search(int clan_id)
 {
 	if (clan_id <= 0) {
 		return NULL;
@@ -75,7 +75,7 @@ struct clan *clan_search(int clan_id)
  * @param name Clan Name
  * @return struct clan*
  */
-struct clan *clan_searchname(const char *name)
+static struct clan *clan_searchname(const char *name)
 {
 	struct clan *c;
 	struct DBIterator *iter;
@@ -98,7 +98,7 @@ struct clan *clan_searchname(const char *name)
  * @param  (struct clan *) c clan structure
  * @return (struct map_session_data *)
  */
-struct map_session_data *clan_getonlinesd(struct clan *c)
+static struct map_session_data *clan_getonlinesd(struct clan *c)
 {
 	int i;
 	nullpo_retr(NULL, c);
@@ -114,7 +114,7 @@ struct map_session_data *clan_getonlinesd(struct clan *c)
  * @param char_id Player's Char ID
  * @return int
  */
-int clan_getindex(const struct clan *c, int char_id)
+static int clan_getindex(const struct clan *c, int char_id)
 {
 	int i;
 	nullpo_retr(INDEX_NOT_FOUND, c);
@@ -130,7 +130,7 @@ int clan_getindex(const struct clan *c, int char_id)
 /**
  * Starts clan buff
  */
-void clan_buff_start(struct map_session_data *sd, struct clan *c)
+static void clan_buff_start(struct map_session_data *sd, struct clan *c)
 {
 	nullpo_retv(sd);
 	nullpo_retv(c);
@@ -146,7 +146,7 @@ void clan_buff_start(struct map_session_data *sd, struct clan *c)
 /**
  * Ends clan buff
  */
-void clan_buff_end(struct map_session_data *sd, struct clan *c)
+static void clan_buff_end(struct map_session_data *sd, struct clan *c)
 {
 	nullpo_retv(sd);
 	nullpo_retv(c);
@@ -165,7 +165,7 @@ void clan_buff_end(struct map_session_data *sd, struct clan *c)
  * @param clan_id Clan which will add this player
  * @return bool
  */
-bool clan_join(struct map_session_data *sd, int clan_id)
+static bool clan_join(struct map_session_data *sd, int clan_id)
 {
 	struct clan *c;
 	struct clan_member m;
@@ -230,7 +230,7 @@ bool clan_join(struct map_session_data *sd, int clan_id)
  *
  * @param sd Player Data
  */
-void clan_member_online(struct map_session_data *sd, bool first)
+static void clan_member_online(struct map_session_data *sd, bool first)
 {
 	struct clan *c;
 	int i, inactivity;
@@ -329,7 +329,7 @@ void clan_member_online(struct map_session_data *sd, bool first)
 /**
  * Re-join a player on its clan
  */
-int clan_rejoin(struct map_session_data *sd, va_list ap)
+static int clan_rejoin(struct map_session_data *sd, va_list ap)
 {
 	nullpo_ret(sd);
 
@@ -344,7 +344,7 @@ int clan_rejoin(struct map_session_data *sd, va_list ap)
 /**
  * Removes Player from clan
  */
-bool clan_leave(struct map_session_data *sd, bool first)
+static bool clan_leave(struct map_session_data *sd, bool first)
 {
 	int i;
 	struct clan *c;
@@ -388,7 +388,7 @@ bool clan_leave(struct map_session_data *sd, bool first)
  *
  * @param (struct map_session_data *) sd Player Data
  */
-void clan_member_offline(struct map_session_data *sd)
+static void clan_member_offline(struct map_session_data *sd)
 {
 	struct clan *c;
 	int i;
@@ -415,7 +415,7 @@ void clan_member_offline(struct map_session_data *sd)
 /**
  * Sends a message to the whole clan
  */
-bool clan_send_message(struct map_session_data *sd, const char *mes)
+static bool clan_send_message(struct map_session_data *sd, const char *mes)
 {
 	int len;
 	nullpo_retr(false, sd);
@@ -437,7 +437,7 @@ bool clan_send_message(struct map_session_data *sd, const char *mes)
 /**
  * Clan receive a message, will be displayed to whole clan
  */
-void clan_recv_message(struct clan *c, const char *mes, int len)
+static void clan_recv_message(struct clan *c, const char *mes, int len)
 {
 	clif->clan_message(c, mes, len);
 }
@@ -445,7 +445,7 @@ void clan_recv_message(struct clan *c, const char *mes, int len)
 /**
  * Set constants for each clan
  */
-void clan_set_constants(void)
+static void clan_set_constants(void)
 {
 	struct DBIterator *iter = db_iterator(clan->db);
 	struct clan *c;
@@ -460,7 +460,7 @@ void clan_set_constants(void)
 /**
  * Returns the clan_id of bl
  */
-int clan_get_id(const struct block_list *bl)
+static int clan_get_id(const struct block_list *bl)
 {
 	nullpo_ret(bl);
 
@@ -515,7 +515,7 @@ int clan_get_id(const struct block_list *bl)
 /**
  * Checks every clan player and remove those who are inactive
  */
-int clan_inactivity_kick(int tid, int64 tick, int id, intptr_t data)
+static int clan_inactivity_kick(int tid, int64 tick, int id, intptr_t data)
 {
 	struct clan *c = NULL;
 	int i;
@@ -553,7 +553,7 @@ int clan_inactivity_kick(int tid, int64 tick, int id, intptr_t data)
 /**
  * Timeout for the request of offline kick
  */
-int clan_request_kickoffline(int tid, int64 tick, int id, intptr_t data)
+static int clan_request_kickoffline(int tid, int64 tick, int id, intptr_t data)
 {
 	struct clan *c = NULL;
 
@@ -577,7 +577,7 @@ int clan_request_kickoffline(int tid, int64 tick, int id, intptr_t data)
 /**
  * Timeout of the request for counting members
  */
-int clan_request_membercount(int tid, int64 tick, int id, intptr_t data)
+static int clan_request_membercount(int tid, int64 tick, int id, intptr_t data)
 {
 	struct clan *c = NULL;
 
@@ -606,12 +606,12 @@ int clan_request_membercount(int tid, int64 tick, int id, intptr_t data)
  * @param[in] n Ordinal number of the entry, to be displayed in case of validation errors.
  * @param[in] source Source of the entry (file name), to be displayed in case of validation errors.
  */
-void clan_read_db_additional_fields(struct clan *entry, struct config_setting_t *t, int n, const char *source)
+static void clan_read_db_additional_fields(struct clan *entry, struct config_setting_t *t, int n, const char *source)
 {
 	// do nothing. plugins can do own work
 }
 
-void clan_read_buffs(struct clan *c, struct config_setting_t *buff, const char *source)
+static void clan_read_buffs(struct clan *c, struct config_setting_t *buff, const char *source)
 {
 	struct clan_buff *b;
 	const char *str = NULL;
@@ -647,7 +647,7 @@ void clan_read_buffs(struct clan *c, struct config_setting_t *buff, const char *
  *                 validation errors.
  * @return int.
  */
-int clan_read_db_sub(struct config_setting_t *settings, const char *source, bool reload)
+static int clan_read_db_sub(struct config_setting_t *settings, const char *source, bool reload)
 {
 	int total, s, valid = 0;
 
@@ -895,7 +895,7 @@ int clan_read_db_sub(struct config_setting_t *settings, const char *source, bool
  * @param settings The Settings Group from config file.
  * @param source File name.
  */
-void clan_read_db(struct config_setting_t *settings, const char *source, bool reload)
+static void clan_read_db(struct config_setting_t *settings, const char *source, bool reload)
 {
 	struct config_setting_t *clans;
 
@@ -918,7 +918,7 @@ void clan_read_db(struct config_setting_t *settings, const char *source, bool re
  *
  * @param bool clear Whether to clear clan->db before reading clans
  */
-bool clan_config_read(bool reload)
+static bool clan_config_read(bool reload)
 {
 	struct config_t clan_conf;
 	struct config_setting_t *settings = NULL;
@@ -979,7 +979,7 @@ bool clan_config_read(bool reload)
  * @param source   Source of the entry (file name), to be displayed in
  *                       case of validation errors.
  */
-void clan_config_read_additional_settings(struct config_setting_t *settings, const char *source)
+static void clan_config_read_additional_settings(struct config_setting_t *settings, const char *source)
 {
 	// do nothing. plugins can do own work
 }
@@ -987,7 +987,7 @@ void clan_config_read_additional_settings(struct config_setting_t *settings, con
 /**
  * Reloads Clan DB
  */
-void clan_reload(void)
+static void clan_reload(void)
 {
 	clan->config_read(true);
 }
@@ -995,7 +995,7 @@ void clan_reload(void)
 /**
  *
  */
-void do_init_clan(bool minimal)
+static void do_init_clan(bool minimal)
 {
 	clan->db = idb_alloc(DB_OPT_RELEASE_DATA);
 
@@ -1009,7 +1009,7 @@ void do_init_clan(bool minimal)
 /**
  *
  */
-void do_final_clan(void)
+static void do_final_clan(void)
 {
 	struct DBIterator *iter = db_iterator(clan->db);
 	struct clan *c;

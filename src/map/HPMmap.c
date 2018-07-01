@@ -104,8 +104,8 @@ struct HPM_atcommand_list {
 	AtCommandFunc func;
 };
 
-struct HPM_atcommand_list *atcommand_list = NULL;
-unsigned int atcommand_list_items = 0;
+static struct HPM_atcommand_list *atcommand_list = NULL;
+static unsigned int atcommand_list_items = 0;
 
 /**
  * HPM plugin data store validator sub-handler (map-server)
@@ -135,14 +135,16 @@ bool HPM_map_data_store_validate(enum HPluginDataTypes type, struct hplugin_data
 	return false;
 }
 
-void HPM_map_plugin_load_sub(struct hplugin *plugin) {
+void HPM_map_plugin_load_sub(struct hplugin *plugin)
+{
 	plugin->hpi->sql_handle = map->mysql_handle;
 	plugin->hpi->addCommand = atcommand->create;
 	plugin->hpi->addScript  = script->addScript;
 	plugin->hpi->addPCGPermission = HPM_map_add_group_permission;
 }
 
-bool HPM_map_add_atcommand(char *name, AtCommandFunc func) {
+bool HPM_map_add_atcommand(char *name, AtCommandFunc func)
+{
 	unsigned int i = 0;
 
 	for(i = 0; i < atcommand_list_items; i++) {
@@ -162,7 +164,8 @@ bool HPM_map_add_atcommand(char *name, AtCommandFunc func) {
 	return true;
 }
 
-void HPM_map_atcommands(void) {
+void HPM_map_atcommands(void)
+{
 	unsigned int i;
 
 	for(i = 0; i < atcommand_list_items; i++) {
@@ -173,7 +176,8 @@ void HPM_map_atcommands(void) {
 /**
  * Adds a new group permission to the HPM-provided list
  **/
-void HPM_map_add_group_permission(unsigned int pluginID, char *name, unsigned int *mask) {
+void HPM_map_add_group_permission(unsigned int pluginID, char *name, unsigned int *mask)
+{
 	unsigned char index = pcg->HPMpermissions_count;
 
 	RECREATE(pcg->HPMpermissions, struct pc_groups_new_permission, ++pcg->HPMpermissions_count);
@@ -183,14 +187,16 @@ void HPM_map_add_group_permission(unsigned int pluginID, char *name, unsigned in
 	pcg->HPMpermissions[index].mask = mask;
 }
 
-void HPM_map_do_init(void) {
+void HPM_map_do_init(void)
+{
 	HPM->load_sub = HPM_map_plugin_load_sub;
 	HPM->data_store_validate_sub = HPM_map_data_store_validate;
 	HPM->datacheck_init(HPMDataCheck, HPMDataCheckLen, HPMDataCheckVer);
 	HPM_shared_symbols(SERVER_TYPE_MAP);
 }
 
-void HPM_map_do_final(void) {
+void HPM_map_do_final(void)
+{
 	if (atcommand_list)
 		aFree(atcommand_list);
 	/**

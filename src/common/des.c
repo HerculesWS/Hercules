@@ -29,7 +29,7 @@
  * Implementation of the des interface.
  */
 
-struct des_interface des_s;
+static struct des_interface des_s;
 struct des_interface *des;
 
 /// Bitmask for accessing individual bits of a byte.
@@ -228,7 +228,7 @@ static void des_RoundFunction(struct des_bit64 *src)
 }
 
 /// @copydoc des_interface::decrypt_block()
-void des_decrypt_block(struct des_bit64 *block)
+static void des_decrypt_block(struct des_bit64 *block)
 {
 	des_IP(block);
 	des_RoundFunction(block);
@@ -236,7 +236,7 @@ void des_decrypt_block(struct des_bit64 *block)
 }
 
 /// @copydoc des_interface::decrypt()
-void des_decrypt(unsigned char *data, size_t size)
+static void des_decrypt(unsigned char *data, size_t size)
 {
 	struct des_bit64 *p = (struct des_bit64 *)data;
 	size_t i;

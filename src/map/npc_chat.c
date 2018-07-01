@@ -40,8 +40,8 @@
 /**
  * interface sources
  **/
-struct npc_chat_interface npc_chat_s;
-struct pcre_interface libpcre_s;
+static struct npc_chat_interface npc_chat_s;
+static struct pcre_interface libpcre_s;
 
 struct npc_chat_interface *npc_chat;
 struct pcre_interface *libpcre;
@@ -98,7 +98,7 @@ struct pcre_interface *libpcre;
  *
  * This does NOT do the list management
  */
-void finalize_pcrematch_entry(struct pcrematch_entry* e)
+static void finalize_pcrematch_entry(struct pcrematch_entry *e)
 {
 	nullpo_retv(e);
 	libpcre->free(e->pcre_);
@@ -110,7 +110,8 @@ void finalize_pcrematch_entry(struct pcrematch_entry* e)
 /**
  * Lookup (and possibly create) a new set of patterns by the set id
  */
-struct pcrematch_set* lookup_pcreset(struct npc_data* nd, int setid) {
+static struct pcrematch_set *lookup_pcreset(struct npc_data *nd, int setid)
+{
 	struct pcrematch_set *pcreset;
 	struct npc_parse *npcParse;
 
@@ -152,7 +153,7 @@ struct pcrematch_set* lookup_pcreset(struct npc_data* nd, int setid) {
  *
  * if the setid does not exist, this will silently return
  */
-void activate_pcreset(struct npc_data* nd, int setid)
+static void activate_pcreset(struct npc_data *nd, int setid)
 {
 	struct pcrematch_set *pcreset;
 	struct npc_parse *npcParse;
@@ -187,7 +188,7 @@ void activate_pcreset(struct npc_data* nd, int setid)
  *
  * if the setid does not exist, this will silently return
  */
-void deactivate_pcreset(struct npc_data* nd, int setid)
+static void deactivate_pcreset(struct npc_data *nd, int setid)
 {
 	struct pcrematch_set *pcreset;
 	struct npc_parse *npcParse;
@@ -225,7 +226,7 @@ void deactivate_pcreset(struct npc_data* nd, int setid)
 /**
  * delete a set of patterns.
  */
-void delete_pcreset(struct npc_data* nd, int setid)
+static void delete_pcreset(struct npc_data *nd, int setid)
 {
 	int active = 1;
 	struct pcrematch_set *pcreset;
@@ -277,7 +278,7 @@ void delete_pcreset(struct npc_data* nd, int setid)
 /**
  * create a new pattern entry
  */
-struct pcrematch_entry* create_pcrematch_entry(struct pcrematch_set* set)
+static struct pcrematch_entry *create_pcrematch_entry(struct pcrematch_set *set)
 {
 	struct pcrematch_entry *e;
 	struct pcrematch_entry *last;
@@ -310,7 +311,7 @@ struct pcrematch_entry* create_pcrematch_entry(struct pcrematch_set* set)
 /**
  * define/compile a new pattern
  */
-void npc_chat_def_pattern(struct npc_data* nd, int setid, const char* pattern, const char* label)
+static void npc_chat_def_pattern(struct npc_data *nd, int setid, const char *pattern, const char *label)
 {
 	const char *err;
 	int erroff;
@@ -330,7 +331,7 @@ void npc_chat_def_pattern(struct npc_data* nd, int setid, const char* pattern, c
  *
  * this could be more efficient but.. how often do you do this?
  */
-void npc_chat_finalize(struct npc_data* nd)
+static void npc_chat_finalize(struct npc_data *nd)
 {
 	struct npc_parse *npcParse;
 
@@ -352,7 +353,7 @@ void npc_chat_finalize(struct npc_data* nd)
 /**
  * Handler called whenever a global message is spoken in a NPC's area
  */
-int npc_chat_sub(struct block_list* bl, va_list ap)
+static int npc_chat_sub(struct block_list *bl, va_list ap)
 {
 	struct npc_data *nd = NULL;
 	struct npc_parse *npcParse = NULL;
@@ -463,7 +464,8 @@ BUILDIN(deletepset)
 	return true;
 }
 
-void npc_chat_defaults(void) {
+void npc_chat_defaults(void)
+{
 	npc_chat = &npc_chat_s;
 
 	npc_chat->sub = npc_chat_sub;

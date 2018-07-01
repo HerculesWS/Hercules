@@ -37,14 +37,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct inter_homunculus_interface inter_homunculus_s;
+static struct inter_homunculus_interface inter_homunculus_s;
 struct inter_homunculus_interface *inter_homunculus;
 
-int inter_homunculus_sql_init(void)
+static int inter_homunculus_sql_init(void)
 {
 	return 0;
 }
-void inter_homunculus_sql_final(void)
+static void inter_homunculus_sql_final(void)
 {
 	return;
 }
@@ -59,7 +59,7 @@ void inter_homunculus_sql_final(void)
  * @param[in,out] hd The new homunculus' data.
  * @retval false in case of errors.
  */
-bool inter_homunculus_create(struct s_homunculus *hd)
+static bool inter_homunculus_create(struct s_homunculus *hd)
 {
 	char esc_name[NAME_LENGTH*2+1];
 
@@ -86,7 +86,7 @@ bool inter_homunculus_create(struct s_homunculus *hd)
  * @param hd The homunculus' data.
  * @retval false in case of errors.
  */
-bool inter_homunculus_save(const struct s_homunculus *hd)
+static bool inter_homunculus_save(const struct s_homunculus *hd)
 {
 	bool flag = true;
 	char esc_name[NAME_LENGTH*2+1];
@@ -128,7 +128,7 @@ bool inter_homunculus_save(const struct s_homunculus *hd)
 }
 
 // Load an homunculus
-bool inter_homunculus_load(int homun_id, struct s_homunculus* hd)
+static bool inter_homunculus_load(int homun_id, struct s_homunculus *hd)
 {
 	char* data;
 	size_t len;
@@ -209,7 +209,7 @@ bool inter_homunculus_load(int homun_id, struct s_homunculus* hd)
 	return true;
 }
 
-bool inter_homunculus_delete(int homun_id)
+static bool inter_homunculus_delete(int homun_id)
 {
 	if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `homun_id` = '%d'", homunculus_db, homun_id)
 	 || SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `homun_id` = '%d'", skill_homunculus_db, homun_id)
@@ -220,7 +220,7 @@ bool inter_homunculus_delete(int homun_id)
 	return true;
 }
 
-bool inter_homunculus_rename(const char *name)
+static bool inter_homunculus_rename(const char *name)
 {
 	int i;
 
@@ -245,7 +245,7 @@ bool inter_homunculus_rename(const char *name)
 /*==========================================
  * Inter Packets
  *------------------------------------------*/
-int inter_homunculus_parse_frommap(int fd)
+static int inter_homunculus_parse_frommap(int fd)
 {
 	unsigned short cmd = RFIFOW(fd,0);
 

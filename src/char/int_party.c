@@ -39,11 +39,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct inter_party_interface inter_party_s;
+static struct inter_party_interface inter_party_s;
 struct inter_party_interface *inter_party;
 
 //Updates party's level range and unsets even share if broken.
-static int inter_party_check_lv(struct party_data *p) {
+static int inter_party_check_lv(struct party_data *p)
+{
 	int i;
 	unsigned int lv;
 	nullpo_ret(p);
@@ -121,7 +122,7 @@ static void inter_party_calc_state(struct party_data *p)
 }
 
 // Save party to mysql
-int inter_party_tosql(struct party *p, int flag, int index)
+static int inter_party_tosql(struct party *p, int flag, int index)
 {
 	// 'party' ('party_id','name','exp','item','leader_id','leader_char')
 	char esc_name[NAME_LENGTH*2+1];// escaped party name
@@ -196,7 +197,7 @@ int inter_party_tosql(struct party *p, int flag, int index)
 }
 
 // Read party from mysql
-struct party_data *inter_party_fromsql(int party_id)
+static struct party_data *inter_party_fromsql(int party_id)
 {
 	int leader_id = 0;
 	int leader_char = 0;
@@ -268,7 +269,7 @@ struct party_data *inter_party_fromsql(int party_id)
 	return p;
 }
 
-int inter_party_sql_init(void)
+static int inter_party_sql_init(void)
 {
 	//memory alloc
 	inter_party->db = idb_alloc(DB_OPT_RELEASE_DATA);
@@ -287,7 +288,7 @@ int inter_party_sql_init(void)
 	return 0;
 }
 
-void inter_party_sql_final(void)
+static void inter_party_sql_final(void)
 {
 	inter_party->db->destroy(inter_party->db, NULL);
 	aFree(inter_party->pt);
@@ -295,7 +296,7 @@ void inter_party_sql_final(void)
 }
 
 // Search for the party according to its name
-struct party_data* inter_party_search_partyname(const char *const str)
+static struct party_data *inter_party_search_partyname(const char *const str)
 {
 	char esc_name[NAME_LENGTH*2+1];
 	char* data;
@@ -314,14 +315,14 @@ struct party_data* inter_party_search_partyname(const char *const str)
 }
 
 // Returns whether this party can keep having exp share or not.
-int inter_party_check_exp_share(struct party_data *const p)
+static int inter_party_check_exp_share(struct party_data *const p)
 {
 	nullpo_ret(p);
 	return (p->party.count < 2 || p->max_lv - p->min_lv <= party_share_level);
 }
 
 // Is there any member in the party?
-int inter_party_check_empty(struct party_data *p)
+static int inter_party_check_empty(struct party_data *p)
 {
 	int i;
 	if (p==NULL||p->party.party_id==0) return 1;
@@ -334,7 +335,7 @@ int inter_party_check_empty(struct party_data *p)
 }
 
 // Create Party
-struct party_data *inter_party_create(const char *name, int item, int item2, const struct party_member *leader)
+static struct party_data *inter_party_create(const char *name, int item, int item2, const struct party_member *leader)
 {
 	struct party_data *p;
 	int i;
@@ -389,7 +390,7 @@ struct party_data *inter_party_create(const char *name, int item, int item2, con
 }
 
 // Add a player to party request
-bool inter_party_add_member(int party_id, const struct party_member *member)
+static bool inter_party_add_member(int party_id, const struct party_member *member)
 {
 	struct party_data *p;
 	int i;
@@ -425,7 +426,7 @@ bool inter_party_add_member(int party_id, const struct party_member *member)
 }
 
 //Party setting change request
-bool inter_party_change_option(int party_id, int account_id, int exp, int item, int map_fd)
+static bool inter_party_change_option(int party_id, int account_id, int exp, int item, int map_fd)
 {
 	struct party_data *p;
 	int flag = 0;
@@ -446,7 +447,7 @@ bool inter_party_change_option(int party_id, int account_id, int exp, int item, 
 }
 
 //Request leave party
-bool inter_party_leave(int party_id, int account_id, int char_id)
+static bool inter_party_leave(int party_id, int account_id, int char_id)
 {
 	struct party_data *p;
 	int i,j;
@@ -488,7 +489,7 @@ bool inter_party_leave(int party_id, int account_id, int char_id)
 }
 
 // When member goes to other map or levels up.
-bool inter_party_change_map(int party_id, int account_id, int char_id, unsigned short map, int online, unsigned int lv)
+static bool inter_party_change_map(int party_id, int account_id, int char_id, unsigned short map, int online, unsigned int lv)
 {
 	struct party_data *p;
 	int i;
@@ -546,7 +547,7 @@ bool inter_party_change_map(int party_id, int account_id, int char_id, unsigned 
 }
 
 //Request party dissolution
-bool inter_party_disband(int party_id)
+static bool inter_party_disband(int party_id)
 {
 	struct party_data *p;
 
@@ -559,7 +560,7 @@ bool inter_party_disband(int party_id)
 	return 0;
 }
 
-bool inter_party_change_leader(int party_id, int account_id, int char_id)
+static bool inter_party_change_leader(int party_id, int account_id, int char_id)
 {
 	struct party_data *p;
 	int i;
@@ -587,7 +588,7 @@ bool inter_party_change_leader(int party_id, int account_id, int char_id)
 // Return :
 //  0 : error
 //  1 : ok
-int inter_party_parse_frommap(int fd)
+static int inter_party_parse_frommap(int fd)
 {
 	RFIFOHEAD(fd);
 	switch(RFIFOW(fd,0)) {
@@ -606,7 +607,7 @@ int inter_party_parse_frommap(int fd)
 	return 1;
 }
 
-int inter_party_CharOnline(int char_id, int party_id)
+static int inter_party_CharOnline(int char_id, int party_id)
 {
 	struct party_data* p;
 	int i;
@@ -653,7 +654,8 @@ int inter_party_CharOnline(int char_id, int party_id)
 	return 1;
 }
 
-int inter_party_CharOffline(int char_id, int party_id) {
+static int inter_party_CharOffline(int char_id, int party_id)
+{
 	struct party_data *p=NULL;
 	int i;
 

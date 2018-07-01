@@ -39,12 +39,12 @@
 #include <stdio.h>
 #include <string.h>
 
-struct chat_interface chat_s;
+static struct chat_interface chat_s;
 struct chat_interface *chat;
 
 /// Initializes a chatroom object (common functionality for both pc and npc chatrooms).
 /// Returns a chatroom object on success, or NULL on failure.
-struct chat_data* chat_createchat(struct block_list* bl, const char* title, const char* pass, int limit, bool pub, int trigger, const char* ev, int zeny, int min_level, int max_level)
+static struct chat_data *chat_createchat(struct block_list *bl, const char *title, const char *pass, int limit, bool pub, int trigger, const char *ev, int zeny, int min_level, int max_level)
 {
 	struct chat_data* cd;
 	nullpo_retr(NULL, bl);
@@ -91,7 +91,8 @@ struct chat_data* chat_createchat(struct block_list* bl, const char* title, cons
 /*==========================================
  * player chatroom creation
  *------------------------------------------*/
-bool chat_createpcchat(struct map_session_data* sd, const char* title, const char* pass, int limit, bool pub) {
+static bool chat_createpcchat(struct map_session_data *sd, const char *title, const char *pass, int limit, bool pub)
+{
 	struct chat_data* cd;
 	nullpo_ret(sd);
 	nullpo_ret(title);
@@ -135,7 +136,8 @@ bool chat_createpcchat(struct map_session_data* sd, const char* title, const cha
 /*==========================================
  * join an existing chatroom
  *------------------------------------------*/
-bool chat_joinchat(struct map_session_data* sd, int chatid, const char* pass) {
+static bool chat_joinchat(struct map_session_data *sd, int chatid, const char *pass)
+{
 	struct chat_data* cd;
 
 	nullpo_ret(sd);
@@ -190,7 +192,6 @@ bool chat_joinchat(struct map_session_data* sd, int chatid, const char* pass) {
 	return true;
 }
 
-
 /*==========================================
  * Leave a chatroom
  * Return
@@ -199,7 +200,8 @@ bool chat_joinchat(struct map_session_data* sd, int chatid, const char* pass) {
  *  2: Chat room deleted (chat room empty)
  *  3: Owner changed (Owner left and a new one as assigned)
  *------------------------------------------*/
-int chat_leavechat(struct map_session_data* sd, bool kicked) {
+static int chat_leavechat(struct map_session_data *sd, bool kicked)
+{
 	struct chat_data* cd;
 	int i;
 	int leavechar;
@@ -273,7 +275,8 @@ int chat_leavechat(struct map_session_data* sd, bool kicked) {
  *  0: User not found/Missing data
  *  1: Success
  *------------------------------------------*/
-bool chat_changechatowner(struct map_session_data* sd, const char* nextownername) {
+static bool chat_changechatowner(struct map_session_data *sd, const char *nextownername)
+{
 	struct chat_data* cd;
 	struct map_session_data* tmpsd;
 	int i;
@@ -319,7 +322,8 @@ bool chat_changechatowner(struct map_session_data* sd, const char* nextownername
  *  0: Missing data
  *  1: Success
  *------------------------------------------*/
-bool chat_changechatstatus(struct map_session_data* sd, const char* title, const char* pass, int limit, bool pub) {
+static bool chat_changechatstatus(struct map_session_data *sd, const char *title, const char *pass, int limit, bool pub)
+{
 	struct chat_data* cd;
 
 	nullpo_ret(sd);
@@ -347,7 +351,8 @@ bool chat_changechatstatus(struct map_session_data* sd, const char* title, const
  *  0: User cannot be kicked (is gm)/Missing data
  *  1: Success
  *------------------------------------------*/
-bool chat_kickchat(struct map_session_data* sd, const char* kickusername) {
+static bool chat_kickchat(struct map_session_data *sd, const char *kickusername)
+{
 	struct chat_data* cd;
 	int i;
 
@@ -375,7 +380,7 @@ bool chat_kickchat(struct map_session_data* sd, const char* kickusername) {
 /*==========================================
  * Creates a chat room for the npc
  *------------------------------------------*/
-bool chat_createnpcchat(struct npc_data* nd, const char* title, int limit, bool pub, int trigger, const char* ev, int zeny, int min_level, int max_level)
+static bool chat_createnpcchat(struct npc_data *nd, const char *title, int limit, bool pub, int trigger, const char *ev, int zeny, int min_level, int max_level)
 {
 	struct chat_data* cd;
 	nullpo_ret(nd);
@@ -407,7 +412,8 @@ bool chat_createnpcchat(struct npc_data* nd, const char* title, int limit, bool 
  *  0: Missing data
  *  1: Success
  *------------------------------------------*/
-bool chat_deletenpcchat(struct npc_data* nd) {
+static bool chat_deletenpcchat(struct npc_data *nd)
+{
 	struct chat_data *cd;
 	nullpo_ret(nd);
 
@@ -431,7 +437,7 @@ bool chat_deletenpcchat(struct npc_data* nd) {
  *  0: Couldn't trigger / Missing data
  *  1: Success
  *------------------------------------------*/
-bool chat_triggerevent(struct chat_data *cd)
+static bool chat_triggerevent(struct chat_data *cd)
 {
 	nullpo_ret(cd);
 
@@ -445,7 +451,7 @@ bool chat_triggerevent(struct chat_data *cd)
 
 /// Enables the event of the chat room.
 /// At most, 127 users are needed to trigger the event.
-bool chat_enableevent(struct chat_data* cd)
+static bool chat_enableevent(struct chat_data *cd)
 {
 	nullpo_ret(cd);
 
@@ -455,7 +461,7 @@ bool chat_enableevent(struct chat_data* cd)
 }
 
 /// Disables the event of the chat room
-bool chat_disableevent(struct chat_data* cd)
+static bool chat_disableevent(struct chat_data *cd)
 {
 	nullpo_ret(cd);
 
@@ -464,7 +470,7 @@ bool chat_disableevent(struct chat_data* cd)
 }
 
 /// Kicks all the users from the chat room.
-bool chat_npckickall(struct chat_data* cd)
+static bool chat_npckickall(struct chat_data *cd)
 {
 	nullpo_ret(cd);
 
@@ -479,7 +485,8 @@ bool chat_npckickall(struct chat_data* cd)
 * Generated by HerculesInterfaceMaker
 * created by Susu
 *-------------------------------------*/
-void chat_defaults(void) {
+void chat_defaults(void)
+{
 	chat = &chat_s;
 
 	/* funcs */

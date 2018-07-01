@@ -100,7 +100,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct db_interface DB_s;
+static struct db_interface DB_s;
 struct db_interface *DB;
 
 /*****************************************************************************
@@ -358,8 +358,8 @@ static struct db_stats {
 #endif /* !defined(DB_ENABLE_STATS) */
 
 /* [Ind/Hercules] */
-struct eri *db_iterator_ers;
-struct eri *db_alloc_ers;
+static struct eri *db_iterator_ers;
+static struct eri *db_alloc_ers;
 
 /*****************************************************************************\
  *  (2) Section of private functions used by the database system.            *
@@ -1250,7 +1250,7 @@ static void db_release_both(union DBKey key, struct DBData data, enum DBReleaseO
  * @protected
  * @see struct DBIterator#first()
  */
-struct DBData *dbit_obj_first(struct DBIterator *self, union DBKey *out_key)
+static struct DBData *dbit_obj_first(struct DBIterator *self, union DBKey *out_key)
 {
 	struct DBIterator_impl *it = (struct DBIterator_impl *)self;
 
@@ -1272,7 +1272,7 @@ struct DBData *dbit_obj_first(struct DBIterator *self, union DBKey *out_key)
  * @protected
  * @see struct DBIterator#last()
  */
-struct DBData *dbit_obj_last(struct DBIterator *self, union DBKey *out_key)
+static struct DBData *dbit_obj_last(struct DBIterator *self, union DBKey *out_key)
 {
 	struct DBIterator_impl *it = (struct DBIterator_impl *)self;
 
@@ -1294,7 +1294,7 @@ struct DBData *dbit_obj_last(struct DBIterator *self, union DBKey *out_key)
  * @protected
  * @see struct DBIterator#next()
  */
-struct DBData *dbit_obj_next(struct DBIterator *self, union DBKey *out_key)
+static struct DBData *dbit_obj_next(struct DBIterator *self, union DBKey *out_key)
 {
 	struct DBIterator_impl *it = (struct DBIterator_impl *)self;
 	struct DBNode *node;
@@ -1370,7 +1370,7 @@ struct DBData *dbit_obj_next(struct DBIterator *self, union DBKey *out_key)
  * @protected
  * @see struct DBIterator#prev()
  */
-struct DBData *dbit_obj_prev(struct DBIterator *self, union DBKey *out_key)
+static struct DBData *dbit_obj_prev(struct DBIterator *self, union DBKey *out_key)
 {
 	struct DBIterator_impl *it = (struct DBIterator_impl *)self;
 	struct DBNode *node;
@@ -1445,7 +1445,7 @@ struct DBData *dbit_obj_prev(struct DBIterator *self, union DBKey *out_key)
  * @protected
  * @see struct DBIterator#exists()
  */
-bool dbit_obj_exists(struct DBIterator *self)
+static bool dbit_obj_exists(struct DBIterator *self)
 {
 	struct DBIterator_impl *it = (struct DBIterator_impl *)self;
 
@@ -1467,7 +1467,7 @@ bool dbit_obj_exists(struct DBIterator *self)
  * @see struct DBMap#remove()
  * @see struct DBIterator#remove()
  */
-int dbit_obj_remove(struct DBIterator *self, struct DBData *out_data)
+static int dbit_obj_remove(struct DBIterator *self, struct DBData *out_data)
 {
 	struct DBIterator_impl *it = (struct DBIterator_impl *)self;
 	struct DBNode *node;
@@ -1494,7 +1494,7 @@ int dbit_obj_remove(struct DBIterator *self, struct DBData *out_data)
  * @param self Iterator
  * @protected
  */
-void dbit_obj_destroy(struct DBIterator *self)
+static void dbit_obj_destroy(struct DBIterator *self)
 {
 	struct DBIterator_impl *it = (struct DBIterator_impl *)self;
 
@@ -2407,7 +2407,7 @@ static enum DBOptions db_obj_options(struct DBMap *self)
  * @see #db_default_release()
  * @see #db_alloc()
  */
-enum DBOptions db_fix_options(enum DBType type, enum DBOptions options)
+static enum DBOptions db_fix_options(enum DBType type, enum DBOptions options)
 {
 	DB_COUNTSTAT(db_fix_options);
 	switch (type) {
@@ -2438,7 +2438,7 @@ enum DBOptions db_fix_options(enum DBType type, enum DBOptions options)
  * @see #db_int64_cmp()
  * @see #db_uint64_cmp()
  */
-DBComparator db_default_cmp(enum DBType type)
+static DBComparator db_default_cmp(enum DBType type)
 {
 	DB_COUNTSTAT(db_default_cmp);
 	switch (type) {
@@ -2466,7 +2466,7 @@ DBComparator db_default_cmp(enum DBType type)
  * @see #db_int64_hash()
  * @see #db_uint64_hash()
  */
-DBHasher db_default_hash(enum DBType type)
+static DBHasher db_default_hash(enum DBType type)
 {
 	DB_COUNTSTAT(db_default_hash);
 	switch (type) {
@@ -2499,7 +2499,7 @@ DBHasher db_default_hash(enum DBType type)
  * @see #db_release_both()
  * @see #db_custom_release()
  */
-DBReleaser db_default_release(enum DBType type, enum DBOptions options)
+static DBReleaser db_default_release(enum DBType type, enum DBOptions options)
 {
 	DB_COUNTSTAT(db_default_release);
 	options = DB->fix_options(type, options);
@@ -2524,7 +2524,7 @@ DBReleaser db_default_release(enum DBType type, enum DBOptions options)
  * @see #db_release_both()
  * @see #db_default_release()
  */
-DBReleaser db_custom_release(enum DBReleaseOption which)
+static DBReleaser db_custom_release(enum DBReleaseOption which)
 {
 	DB_COUNTSTAT(db_custom_release);
 	switch (which) {
@@ -2555,7 +2555,7 @@ DBReleaser db_custom_release(enum DBReleaseOption which)
  * @see struct DBMap_impl
  * @see #db_fix_options()
  */
-struct DBMap *db_alloc(const char *file, const char *func, int line, enum DBType type, enum DBOptions options, unsigned short maxlen)
+static struct DBMap *db_alloc(const char *file, const char *func, int line, enum DBType type, enum DBOptions options, unsigned short maxlen)
 {
 	struct DBMap_impl *db;
 	unsigned int i;
@@ -2629,7 +2629,7 @@ struct DBMap *db_alloc(const char *file, const char *func, int line, enum DBType
  * @return The key as a DBKey union
  * @public
  */
-union DBKey db_i2key(int key)
+static union DBKey db_i2key(int key)
 {
 	union DBKey ret;
 
@@ -2644,7 +2644,7 @@ union DBKey db_i2key(int key)
  * @return The key as a DBKey union
  * @public
  */
-union DBKey db_ui2key(unsigned int key)
+static union DBKey db_ui2key(unsigned int key)
 {
 	union DBKey ret;
 
@@ -2659,7 +2659,7 @@ union DBKey db_ui2key(unsigned int key)
  * @return The key as a DBKey union
  * @public
  */
-union DBKey db_str2key(const char *key)
+static union DBKey db_str2key(const char *key)
 {
 	union DBKey ret;
 
@@ -2674,7 +2674,7 @@ union DBKey db_str2key(const char *key)
  * @return The key as a DBKey union
  * @public
  */
-union DBKey db_i642key(int64 key)
+static union DBKey db_i642key(int64 key)
 {
 	union DBKey ret;
 
@@ -2689,7 +2689,7 @@ union DBKey db_i642key(int64 key)
  * @return The key as a DBKey union
  * @public
  */
-union DBKey db_ui642key(uint64 key)
+static union DBKey db_ui642key(uint64 key)
 {
 	union DBKey ret;
 
@@ -2704,7 +2704,7 @@ union DBKey db_ui642key(uint64 key)
  * @return The data as a DBData struct
  * @public
  */
-struct DBData db_i2data(int data)
+static struct DBData db_i2data(int data)
 {
 	struct DBData ret;
 
@@ -2720,7 +2720,7 @@ struct DBData db_i2data(int data)
  * @return The data as a DBData struct
  * @public
  */
-struct DBData db_ui2data(unsigned int data)
+static struct DBData db_ui2data(unsigned int data)
 {
 	struct DBData ret;
 
@@ -2736,7 +2736,7 @@ struct DBData db_ui2data(unsigned int data)
  * @return The data as a DBData struct
  * @public
  */
-struct DBData db_ptr2data(void *data)
+static struct DBData db_ptr2data(void *data)
 {
 	struct DBData ret;
 
@@ -2753,7 +2753,7 @@ struct DBData db_ptr2data(void *data)
  * @return Integer value of the data.
  * @public
  */
-int db_data2i(struct DBData *data)
+static int db_data2i(struct DBData *data)
 {
 	DB_COUNTSTAT(db_data2i);
 	if (data && DB_DATA_INT == data->type)
@@ -2768,7 +2768,7 @@ int db_data2i(struct DBData *data)
  * @return Unsigned int value of the data.
  * @public
  */
-unsigned int db_data2ui(struct DBData *data)
+static unsigned int db_data2ui(struct DBData *data)
 {
 	DB_COUNTSTAT(db_data2ui);
 	if (data && DB_DATA_UINT == data->type)
@@ -2783,7 +2783,7 @@ unsigned int db_data2ui(struct DBData *data)
  * @return Void* value of the data.
  * @public
  */
-void *db_data2ptr(struct DBData *data)
+static void *db_data2ptr(struct DBData *data)
 {
 	DB_COUNTSTAT(db_data2ptr);
 	if (data && DB_DATA_PTR == data->type)
@@ -2796,7 +2796,7 @@ void *db_data2ptr(struct DBData *data)
  * @public
  * @see #db_final(void)
  */
-void db_init(void)
+static void db_init(void)
 {
 	db_iterator_ers = ers_new(sizeof(struct DBIterator_impl),"db.c::db_iterator_ers",ERS_OPT_CLEAN|ERS_OPT_FLEX_CHUNK);
 	db_alloc_ers = ers_new(sizeof(struct DBMap_impl),"db.c::db_alloc_ers",ERS_OPT_CLEAN|ERS_OPT_FLEX_CHUNK);
@@ -2810,7 +2810,7 @@ void db_init(void)
  * @public
  * @see #db_init(void)
  */
-void db_final(void)
+static void db_final(void)
 {
 #ifdef DB_ENABLE_STATS
 	DB_COUNTSTAT(db_final);

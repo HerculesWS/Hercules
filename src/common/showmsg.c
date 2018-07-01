@@ -45,7 +45,7 @@
 #define DEBUGLOGPATH "log"PATHSEP_STR"login-server.log"
 #endif
 
-struct showmsg_interface showmsg_s;
+static struct showmsg_interface showmsg_s;
 struct showmsg_interface *showmsg;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -186,7 +186,7 @@ Escape sequences for Select Character Set
 #define is_console(handle) (FILE_TYPE_CHAR==GetFileType(handle))
 
 ///////////////////////////////////////////////////////////////////////////////
-int VFPRINTF(HANDLE handle, const char *fmt, va_list argptr)
+static int VFPRINTF(HANDLE handle, const char *fmt, va_list argptr)
 {
 	/////////////////////////////////////////////////////////////////
 	/* XXX Two streams are being used. Disabled to avoid inconsistency [flaviojs]
@@ -467,8 +467,9 @@ int VFPRINTF(HANDLE handle, const char *fmt, va_list argptr)
 	return 0;
 }
 
-int FPRINTF(HANDLE handle, const char *fmt, ...) __attribute__((format(printf, 2, 3)));
-int FPRINTF(HANDLE handle, const char *fmt, ...) {
+static int FPRINTF(HANDLE handle, const char *fmt, ...) __attribute__((format(printf, 2, 3)));
+static int FPRINTF(HANDLE handle, const char *fmt, ...)
+{
 	int ret;
 	va_list argptr;
 	va_start(argptr, fmt);
@@ -488,7 +489,7 @@ int FPRINTF(HANDLE handle, const char *fmt, ...) {
 #define is_console(file) (0!=isatty(fileno(file)))
 
 //vprintf_without_ansiformats
-int VFPRINTF(FILE *file, const char *fmt, va_list argptr)
+static int VFPRINTF(FILE *file, const char *fmt, va_list argptr)
 {
 	char *p, *q;
 	NEWBUF(tempbuf); // temporary buffer
@@ -584,8 +585,9 @@ int VFPRINTF(FILE *file, const char *fmt, va_list argptr)
 	FREEBUF(tempbuf);
 	return 0;
 }
-int FPRINTF(FILE *file, const char *fmt, ...) __attribute__((format(printf, 2, 3)));
-int FPRINTF(FILE *file, const char *fmt, ...) {
+static int FPRINTF(FILE *file, const char *fmt, ...) __attribute__((format(printf, 2, 3)));
+static int FPRINTF(FILE *file, const char *fmt, ...)
+{
 	int ret;
 	va_list argptr;
 	va_start(argptr, fmt);
@@ -601,7 +603,7 @@ int FPRINTF(FILE *file, const char *fmt, ...) {
 
 #endif// not _WIN32
 
-int vShowMessage_(enum msg_type flag, const char *string, va_list ap)
+static int vShowMessage_(enum msg_type flag, const char *string, va_list ap)
 {
 	va_list apcopy;
 	char prefix[100];
@@ -720,7 +722,7 @@ int vShowMessage_(enum msg_type flag, const char *string, va_list ap)
 	return 0;
 }
 
-int showmsg_vShowMessage(const char *string, va_list ap)
+static int showmsg_vShowMessage(const char *string, va_list ap)
 {
 	int ret;
 	va_list apcopy;
@@ -730,14 +732,17 @@ int showmsg_vShowMessage(const char *string, va_list ap)
 	return ret;
 }
 
-void showmsg_clearScreen(void)
+static void showmsg_clearScreen(void)
 {
 #ifndef _WIN32
 	ShowMessage(CL_CLS); // to prevent empty string passed messages
 #endif
 }
-int ShowMessage_(enum msg_type flag, const char *string, ...) __attribute__((format(printf, 2, 3)));
-int ShowMessage_(enum msg_type flag, const char *string, ...) {
+
+#if 0 // Unused
+static int ShowMessage_(enum msg_type flag, const char *string, ...) __attribute__((format(printf, 2, 3)));
+static int ShowMessage_(enum msg_type flag, const char *string, ...)
+{
 	int ret;
 	va_list ap;
 	va_start(ap, string);
@@ -745,58 +750,59 @@ int ShowMessage_(enum msg_type flag, const char *string, ...) {
 	va_end(ap);
 	return ret;
 }
+#endif // Unused
 
 // direct printf replacement
-void showmsg_showMessage(const char *string, ...) __attribute__((format(printf, 1, 2)));
-void showmsg_showMessage(const char *string, ...)
+static void showmsg_showMessage(const char *string, ...) __attribute__((format(printf, 1, 2)));
+static void showmsg_showMessage(const char *string, ...)
 {
 	va_list ap;
 	va_start(ap, string);
 	vShowMessage_(MSG_NONE, string, ap);
 	va_end(ap);
 }
-void showmsg_showStatus(const char *string, ...) __attribute__((format(printf, 1, 2)));
-void showmsg_showStatus(const char *string, ...)
+static void showmsg_showStatus(const char *string, ...) __attribute__((format(printf, 1, 2)));
+static void showmsg_showStatus(const char *string, ...)
 {
 	va_list ap;
 	va_start(ap, string);
 	vShowMessage_(MSG_STATUS, string, ap);
 	va_end(ap);
 }
-void showmsg_showSQL(const char *string, ...) __attribute__((format(printf, 1, 2)));
-void showmsg_showSQL(const char *string, ...)
+static void showmsg_showSQL(const char *string, ...) __attribute__((format(printf, 1, 2)));
+static void showmsg_showSQL(const char *string, ...)
 {
 	va_list ap;
 	va_start(ap, string);
 	vShowMessage_(MSG_SQL, string, ap);
 	va_end(ap);
 }
-void showmsg_showInfo(const char *string, ...) __attribute__((format(printf, 1, 2)));
-void showmsg_showInfo(const char *string, ...)
+static void showmsg_showInfo(const char *string, ...) __attribute__((format(printf, 1, 2)));
+static void showmsg_showInfo(const char *string, ...)
 {
 	va_list ap;
 	va_start(ap, string);
 	vShowMessage_(MSG_INFORMATION, string, ap);
 	va_end(ap);
 }
-void showmsg_showNotice(const char *string, ...) __attribute__((format(printf, 1, 2)));
-void showmsg_showNotice(const char *string, ...)
+static void showmsg_showNotice(const char *string, ...) __attribute__((format(printf, 1, 2)));
+static void showmsg_showNotice(const char *string, ...)
 {
 	va_list ap;
 	va_start(ap, string);
 	vShowMessage_(MSG_NOTICE, string, ap);
 	va_end(ap);
 }
-void showmsg_showWarning(const char *string, ...) __attribute__((format(printf, 1, 2)));
-void showmsg_showWarning(const char *string, ...)
+static void showmsg_showWarning(const char *string, ...) __attribute__((format(printf, 1, 2)));
+static void showmsg_showWarning(const char *string, ...)
 {
 	va_list ap;
 	va_start(ap, string);
 	vShowMessage_(MSG_WARNING, string, ap);
 	va_end(ap);
 }
-void showmsg_showConfigWarning(struct config_setting_t *config, const char *string, ...) __attribute__((format(printf, 2, 3)));
-void showmsg_showConfigWarning(struct config_setting_t *config, const char *string, ...)
+static void showmsg_showConfigWarning(struct config_setting_t *config, const char *string, ...) __attribute__((format(printf, 2, 3)));
+static void showmsg_showConfigWarning(struct config_setting_t *config, const char *string, ...)
 {
 	StringBuf buf;
 	va_list ap;
@@ -812,24 +818,24 @@ void showmsg_showConfigWarning(struct config_setting_t *config, const char *stri
 	va_end(ap);
 	StrBuf->Destroy(&buf);
 }
-void showmsg_showDebug(const char *string, ...) __attribute__((format(printf, 1, 2)));
-void showmsg_showDebug(const char *string, ...)
+static void showmsg_showDebug(const char *string, ...) __attribute__((format(printf, 1, 2)));
+static void showmsg_showDebug(const char *string, ...)
 {
 	va_list ap;
 	va_start(ap, string);
 	vShowMessage_(MSG_DEBUG, string, ap);
 	va_end(ap);
 }
-void showmsg_showError(const char *string, ...) __attribute__((format(printf, 1, 2)));
-void showmsg_showError(const char *string, ...)
+static void showmsg_showError(const char *string, ...) __attribute__((format(printf, 1, 2)));
+static void showmsg_showError(const char *string, ...)
 {
 	va_list ap;
 	va_start(ap, string);
 	vShowMessage_(MSG_ERROR, string, ap);
 	va_end(ap);
 }
-void showmsg_showFatalError(const char *string, ...) __attribute__((format(printf, 1, 2)));
-void showmsg_showFatalError(const char *string, ...)
+static void showmsg_showFatalError(const char *string, ...) __attribute__((format(printf, 1, 2)));
+static void showmsg_showFatalError(const char *string, ...)
 {
 	va_list ap;
 	va_start(ap, string);
@@ -837,11 +843,11 @@ void showmsg_showFatalError(const char *string, ...)
 	va_end(ap);
 }
 
-void showmsg_init(void)
+static void showmsg_init(void)
 {
 }
 
-void showmsg_final(void)
+static void showmsg_final(void)
 {
 }
 

@@ -52,8 +52,8 @@
 #include <string.h>
 #include <time.h>
 
-struct quest_interface quest_s;
-struct quest_db *db_data[MAX_QUEST_DB]; ///< Quest database
+static struct quest_interface quest_s;
+static struct quest_db *db_data[MAX_QUEST_DB]; ///< Quest database
 
 struct quest_interface *quest;
 
@@ -63,7 +63,8 @@ struct quest_interface *quest;
  * @param quest_id ID to lookup
  * @return Quest entry (equals to &quest->dummy if the ID is invalid)
  */
-struct quest_db *quest_db(int quest_id) {
+static struct quest_db *quest_db(int quest_id)
+{
 	if (quest_id < 0 || quest_id >= MAX_QUEST_DB || quest->db_data[quest_id] == NULL)
 		return &quest->dummy;
 	return quest->db_data[quest_id];
@@ -75,7 +76,7 @@ struct quest_db *quest_db(int quest_id) {
  * @param sd Player's data
  * @return 0 in case of success, nonzero otherwise (i.e. the player has no quests)
  */
-int quest_pc_login(struct map_session_data *sd)
+static int quest_pc_login(struct map_session_data *sd)
 {
 #if PACKETVER < 20141022
 	int i;
@@ -108,7 +109,7 @@ int quest_pc_login(struct map_session_data *sd)
  * @param time_limit Custom time, in UNIX epoch, for this quest
  * @return 0 in case of success, nonzero otherwise
  */
-int quest_add(struct map_session_data *sd, int quest_id, unsigned int time_limit)
+static int quest_add(struct map_session_data *sd, int quest_id, unsigned int time_limit)
 {
 	int n;
 	struct quest_db *qi = quest->db(quest_id);
@@ -168,7 +169,7 @@ int quest_add(struct map_session_data *sd, int quest_id, unsigned int time_limit
  * @param qid2 New quest to add
  * @return 0 in case of success, nonzero otherwise
  */
-int quest_change(struct map_session_data *sd, int qid1, int qid2)
+static int quest_change(struct map_session_data *sd, int qid1, int qid2)
 {
 	int i;
 	struct quest_db *qi = quest->db(qid2);
@@ -224,7 +225,7 @@ int quest_change(struct map_session_data *sd, int qid1, int qid2)
  * @param quest_id ID of the quest to remove
  * @return 0 in case of success, nonzero otherwise
  */
-int quest_delete(struct map_session_data *sd, int quest_id)
+static int quest_delete(struct map_session_data *sd, int quest_id)
 {
 	int i;
 
@@ -268,7 +269,7 @@ int quest_delete(struct map_session_data *sd, int quest_id)
  *           int Party ID
  *           int Mob ID
  */
-int quest_update_objective_sub(struct block_list *bl, va_list ap)
+static int quest_update_objective_sub(struct block_list *bl, va_list ap)
 {
 	struct map_session_data *sd = NULL;
 	int party_id = va_arg(ap, int);
@@ -295,7 +296,7 @@ int quest_update_objective_sub(struct block_list *bl, va_list ap)
  * @param sd     Character's data
  * @param mob_id Monster ID
  */
-void quest_update_objective(struct map_session_data *sd, int mob_id)
+static void quest_update_objective(struct map_session_data *sd, int mob_id)
 {
 	int i,j;
 
@@ -351,7 +352,7 @@ void quest_update_objective(struct map_session_data *sd, int mob_id)
  * @param qs       New quest state
  * @return 0 in case of success, nonzero otherwise
  */
-int quest_update_status(struct map_session_data *sd, int quest_id, enum quest_state qs)
+static int quest_update_status(struct map_session_data *sd, int quest_id, enum quest_state qs)
 {
 	int i;
 
@@ -402,7 +403,7 @@ int quest_update_status(struct map_session_data *sd, int quest_id, enum quest_st
  *                    1 if the quest's timeout has expired
  *                    0 otherwise
  */
-int quest_check(struct map_session_data *sd, int quest_id, enum quest_check_type type)
+static int quest_check(struct map_session_data *sd, int quest_id, enum quest_check_type type)
 {
 	int i;
 
@@ -444,7 +445,7 @@ int quest_check(struct map_session_data *sd, int quest_id, enum quest_check_type
  * @return The parsed quest entry.
  * @retval NULL in case of errors.
  */
-struct quest_db *quest_read_db_sub(struct config_setting_t *cs, int n, const char *source)
+static struct quest_db *quest_read_db_sub(struct config_setting_t *cs, int n, const char *source)
 {
 	struct quest_db *entry = NULL;
 	struct config_setting_t *t = NULL;
@@ -544,7 +545,7 @@ struct quest_db *quest_read_db_sub(struct config_setting_t *cs, int n, const cha
  *
  * @return Number of loaded quests, or -1 if the file couldn't be read.
  */
-int quest_read_db(void)
+static int quest_read_db(void)
 {
 	char filepath[256];
 	struct config_t quest_db_conf;
@@ -591,7 +592,8 @@ int quest_read_db(void)
  * @see map->foreachpc
  * @param ap Ignored
  */
-int quest_reload_check_sub(struct map_session_data *sd, va_list ap) {
+static int quest_reload_check_sub(struct map_session_data *sd, va_list ap)
+{
 	int i, j;
 
 	nullpo_ret(sd);
@@ -620,7 +622,8 @@ int quest_reload_check_sub(struct map_session_data *sd, va_list ap) {
 /**
  * Clears the quest database for shutdown or reload.
  */
-void quest_clear_db(void) {
+static void quest_clear_db(void)
+{
 	int i;
 
 	for (i = 0; i < MAX_QUEST_DB; i++) {
@@ -640,7 +643,8 @@ void quest_clear_db(void) {
  *
  * @param minimal Run in minimal mode (skips most of the loading)
  */
-void do_init_quest(bool minimal) {
+static void do_init_quest(bool minimal)
+{
 	if (minimal)
 		return;
 
@@ -650,14 +654,16 @@ void do_init_quest(bool minimal) {
 /**
  * Finalizes the quest interface before shutdown.
  */
-void do_final_quest(void) {
+static void do_final_quest(void)
+{
 	quest->clear();
 }
 
 /**
  * Reloads the quest database.
  */
-void do_reload_quest(void) {
+static void do_reload_quest(void)
+{
 	quest->clear();
 
 	quest->read_db();
@@ -669,7 +675,8 @@ void do_reload_quest(void) {
 /**
  * Initializes default values for the quest interface.
  */
-void quest_defaults(void) {
+void quest_defaults(void)
+{
 	quest = &quest_s;
 	quest->db_data = db_data;
 

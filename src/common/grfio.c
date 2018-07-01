@@ -68,19 +68,19 @@ enum grf_filelist_type {
 //#define GRFIO_LOCAL
 
 // stores info about every loaded file
-struct grf_filelist *filelist = NULL;
-int filelist_entrys   = 0;
-int filelist_maxentry = 0;
+static struct grf_filelist *filelist = NULL;
+static int filelist_entrys   = 0;
+static int filelist_maxentry = 0;
 
 // stores grf file names
-char** gentry_table = NULL;
-int gentry_entrys   = 0;
-int gentry_maxentry = 0;
+static char** gentry_table = NULL;
+static int gentry_entrys   = 0;
+static int gentry_maxentry = 0;
 
 // the path to the data directory
-char data_dir[1024] = "";
+static char data_dir[1024] = "";
 
-struct grfio_interface grfio_s;
+static struct grfio_interface grfio_s;
 struct grfio_interface *grfio;
 
 // little endian char array to uint conversion
@@ -273,19 +273,19 @@ static void grf_decode(unsigned char *buf, size_t len, char entry_type, int entr
 /* Zlib Subroutines */
 
 /// @copydoc grfio_interface::crc32()
-unsigned long grfio_crc32(const unsigned char *buf, unsigned int len)
+static unsigned long grfio_crc32(const unsigned char *buf, unsigned int len)
 {
 	return crc32(crc32(0L, Z_NULL, 0), buf, len);
 }
 
 /// @copydoc grfio_interface::decode_zip
-int grfio_decode_zip(void *dest, unsigned long *dest_len, const void *source, unsigned long source_len)
+static int grfio_decode_zip(void *dest, unsigned long *dest_len, const void *source, unsigned long source_len)
 {
 	return uncompress(dest, dest_len, source, source_len);
 }
 
 /// @copydoc grfio_interface::encode_zip
-int grfio_encode_zip(void *dest, unsigned long *dest_len, const void *source, unsigned long source_len)
+static int grfio_encode_zip(void *dest, unsigned long *dest_len, const void *source, unsigned long source_len)
 {
 	if (*dest_len == 0) /* [Ind/Hercules] */
 		*dest_len = compressBound(source_len);
@@ -299,7 +299,7 @@ int grfio_encode_zip(void *dest, unsigned long *dest_len, const void *source, un
 /* File List Subroutines */
 
 /// File list hash table
-int filelist_hash[256];
+static int filelist_hash[256];
 
 /**
  * Initializes the table that holds the first elements of all hash chains
@@ -351,7 +351,7 @@ static struct grf_filelist *grfio_filelist_find(const char *fname)
 }
 
 /// @copydoc grfio_interface::find_file()
-const char *grfio_find_file(const char *fname)
+static const char *grfio_find_file(const char *fname)
 {
 	struct grf_filelist *flist = grfio_filelist_find(fname);
 	if (flist == NULL)
@@ -458,7 +458,7 @@ static void grfio_localpath_create(char *buffer, size_t size, const char *filena
 }
 
 /// @copydoc grfio_interface::reads()
-void *grfio_reads(const char *fname, int *size)
+static void *grfio_reads(const char *fname, int *size)
 {
 	struct grf_filelist *entry = grfio_filelist_find(fname);
 	if (entry == NULL || entry->gentry <= 0) {
@@ -885,7 +885,7 @@ static int grfio_add(const char *fname)
 }
 
 /// @copydoc grfio_interface::final()
-void grfio_final(void)
+static void grfio_final(void)
 {
 	if (filelist != NULL) {
 		int i;
@@ -911,7 +911,7 @@ void grfio_final(void)
 }
 
 /// @copydoc grfio_interface::init()
-void grfio_init(const char *fname)
+static void grfio_init(const char *fname)
 {
 	FILE *data_conf;
 	int grf_num = 0;

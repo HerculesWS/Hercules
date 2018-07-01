@@ -37,10 +37,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct inter_mail_interface inter_mail_s;
+static struct inter_mail_interface inter_mail_s;
 struct inter_mail_interface *inter_mail;
 
-static int inter_mail_fromsql(int char_id, struct mail_data* md)
+static int inter_mail_fromsql(int char_id, struct mail_data *md)
 {
 	int i, j;
 	struct mail_message *msg;
@@ -134,7 +134,7 @@ static int inter_mail_fromsql(int char_id, struct mail_data* md)
 
 /// Stores a single message in the database.
 /// Returns the message's ID if successful (or 0 if it fails).
-int inter_mail_savemessage(struct mail_message* msg)
+static int inter_mail_savemessage(struct mail_message *msg)
 {
 	StringBuf buf;
 	struct SqlStmt *stmt;
@@ -179,7 +179,7 @@ int inter_mail_savemessage(struct mail_message* msg)
 
 /// Retrieves a single message from the database.
 /// Returns true if the operation succeeds (or false if it fails).
-static bool inter_mail_loadmessage(int mail_id, struct mail_message* msg)
+static bool inter_mail_loadmessage(int mail_id, struct mail_message *msg)
 {
 	int j;
 	StringBuf buf;
@@ -245,7 +245,7 @@ static bool inter_mail_loadmessage(int mail_id, struct mail_message* msg)
 /*==========================================
  * Mark mail as 'Read'
  *------------------------------------------*/
-bool inter_mail_mark_read(int mail_id)
+static bool inter_mail_mark_read(int mail_id)
 {
 	if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `status` = '%d' WHERE `id` = '%d'", mail_db, MAIL_READ, mail_id)) {
 		Sql_ShowDebug(inter->sql_handle);
@@ -281,7 +281,7 @@ static bool inter_mail_DeleteAttach(int mail_id)
 	return true;
 }
 
-bool inter_mail_get_attachment(int char_id, int mail_id, struct mail_message *msg)
+static bool inter_mail_get_attachment(int char_id, int mail_id, struct mail_message *msg)
 {
 	nullpo_retr(false, msg);
 
@@ -303,7 +303,7 @@ bool inter_mail_get_attachment(int char_id, int mail_id, struct mail_message *ms
 	return true;
 }
 
-bool inter_mail_delete(int char_id, int mail_id)
+static bool inter_mail_delete(int char_id, int mail_id)
 {
 	if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `id` = '%d'", mail_db, mail_id)) {
 		Sql_ShowDebug(inter->sql_handle);
@@ -312,7 +312,7 @@ bool inter_mail_delete(int char_id, int mail_id)
 	return true;
 }
 
-bool inter_mail_return_message(int char_id, int mail_id, int *new_mail)
+static bool inter_mail_return_message(int char_id, int mail_id, int *new_mail)
 {
 	struct mail_message msg;
 	nullpo_retr(false, new_mail);
@@ -349,7 +349,7 @@ bool inter_mail_return_message(int char_id, int mail_id, int *new_mail)
 
 }
 
-bool inter_mail_send(int account_id, struct mail_message *msg)
+static bool inter_mail_send(int account_id, struct mail_message *msg)
 {
 	char esc_name[NAME_LENGTH*2+1];
 
@@ -377,7 +377,7 @@ bool inter_mail_send(int account_id, struct mail_message *msg)
 	return true;
 }
 
-void inter_mail_sendmail(int send_id, const char* send_name, int dest_id, const char* dest_name, const char* title, const char* body, int zeny, struct item *item)
+static void inter_mail_sendmail(int send_id, const char* send_name, int dest_id, const char *dest_name, const char *title, const char *body, int zeny, struct item *item)
 {
 	struct mail_message msg;
 	nullpo_retv(send_name);
@@ -405,7 +405,7 @@ void inter_mail_sendmail(int send_id, const char* send_name, int dest_id, const 
 /*==========================================
  * Packets From Map Server
  *------------------------------------------*/
-int inter_mail_parse_frommap(int fd)
+static int inter_mail_parse_frommap(int fd)
 {
 	switch(RFIFOW(fd,0))
 	{
@@ -421,12 +421,12 @@ int inter_mail_parse_frommap(int fd)
 	return 1;
 }
 
-int inter_mail_sql_init(void)
+static int inter_mail_sql_init(void)
 {
 	return 1;
 }
 
-void inter_mail_sql_final(void)
+static void inter_mail_sql_final(void)
 {
 	return;
 }

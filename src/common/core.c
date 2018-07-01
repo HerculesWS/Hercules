@@ -80,7 +80,7 @@
 // And don't complain to us if the XYZ plugin you installed wiped your hard disk, or worse.
 // Note: This feature is deprecated, and should not be used.
 
-struct core_interface core_s;
+static struct core_interface core_s;
 struct core_interface *core = &core_s;
 
 #ifndef MINICORE // minimalist Core
@@ -97,7 +97,7 @@ struct core_interface *core = &core_s;
 #ifndef POSIX
 #define compat_signal(signo, func) signal((signo), (func))
 #else
-sigfunc *compat_signal(int signo, sigfunc *func)
+static sigfunc *compat_signal(int signo, sigfunc *func)
 {
 	struct sigaction sact, oact;
 
@@ -180,7 +180,7 @@ static void sig_proc(int sn)
 	}
 }
 
-void signals_init (void)
+static void signals_init(void)
 {
 	compat_signal(SIGTERM, sig_proc);
 	compat_signal(SIGINT, sig_proc);
@@ -203,7 +203,7 @@ void signals_init (void)
  *
  * @retval false if the check didn't pass and the program should be terminated.
  */
-bool usercheck(void)
+static bool usercheck(void)
 {
 #ifndef _WIN32
 	if (sysinfo->is_superuser()) {
@@ -247,7 +247,7 @@ bool usercheck(void)
 	return true;
 }
 
-void core_defaults(void)
+static void core_defaults(void)
 {
 	nullpo_defaults();
 #ifndef MINICORE
@@ -278,7 +278,7 @@ void core_defaults(void)
 /**
  * Returns the source (core or plugin name) for the given command-line argument
  */
-const char *cmdline_arg_source(struct CmdlineArgData *arg)
+static const char *cmdline_arg_source(struct CmdlineArgData *arg)
 {
 #ifdef MINICORE
 	return "core";
@@ -299,7 +299,7 @@ const char *cmdline_arg_source(struct CmdlineArgData *arg)
  * @param options   options associated to the command-line argument. @see enum cmdline_options.
  * @return the success status.
  */
-bool cmdline_arg_add(unsigned int pluginID, const char *name, char shortname, CmdlineExecFunc func, const char *help, unsigned int options)
+static bool cmdline_arg_add(unsigned int pluginID, const char *name, char shortname, CmdlineExecFunc func, const char *help, unsigned int options)
 {
 	struct CmdlineArgData *data = NULL;
 
@@ -363,7 +363,7 @@ static CMDLINEARG(version)
  * @param argc        the program's argc.
  * @return true if a value for the current argument is available on the command line.
  */
-bool cmdline_arg_next_value(const char *name, int current_arg, int argc)
+static bool cmdline_arg_next_value(const char *name, int current_arg, int argc)
 {
 	if (current_arg >= argc-1) {
 		ShowError("Missing value for option '%s'.\n", name);
@@ -391,7 +391,7 @@ bool cmdline_arg_next_value(const char *name, int current_arg, int argc)
  *   line arguments or handler's failure cause the program to abort.
  * @return the amount of command line handlers successfully executed.
  */
-int cmdline_exec(int argc, char **argv, unsigned int options)
+static int cmdline_exec(int argc, char **argv, unsigned int options)
 {
 	int count = 0, i;
 
@@ -444,7 +444,7 @@ int cmdline_exec(int argc, char **argv, unsigned int options)
 /**
  * Defines the global command-line arguments.
  */
-void cmdline_init(void)
+static void cmdline_init(void)
 {
 #ifdef MINICORE
 	// Minicore has no HPM. This value isn't used, but the arg_add function requires it, so we're (re)defining it here
@@ -458,7 +458,7 @@ void cmdline_init(void)
 	cmdline_args_init_local();
 }
 
-void cmdline_final(void)
+static void cmdline_final(void)
 {
 	while (VECTOR_LENGTH(cmdline->args_data) > 0) {
 		struct CmdlineArgData *data = &VECTOR_POP(cmdline->args_data);
@@ -468,7 +468,7 @@ void cmdline_final(void)
 	VECTOR_CLEAR(cmdline->args_data);
 }
 
-struct cmdline_interface cmdline_s;
+static struct cmdline_interface cmdline_s;
 struct cmdline_interface *cmdline;
 
 void cmdline_defaults(void)
@@ -488,7 +488,7 @@ void cmdline_defaults(void)
 /*======================================
  * CORE : MAINROUTINE
  *--------------------------------------*/
-int main (int argc, char **argv)
+int main(int argc, char **argv)
 {
 	int retval = EXIT_SUCCESS;
 	{// initialize program arguments

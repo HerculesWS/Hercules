@@ -37,10 +37,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct pincode_interface pincode_s;
+static struct pincode_interface pincode_s;
 struct pincode_interface *pincode;
 
-void pincode_handle (int fd, struct char_session_data* sd)
+static void pincode_handle(int fd, struct char_session_data *sd)
 {
 	struct online_char_data* character;
 
@@ -72,7 +72,7 @@ void pincode_handle (int fd, struct char_session_data* sd)
 		character->pincode_enable = -1;
 }
 
-void pincode_check(int fd, struct char_session_data* sd)
+static void pincode_check(int fd, struct char_session_data *sd)
 {
 	char pin[5] = "\0\0\0\0";
 
@@ -104,12 +104,12 @@ void pincode_check(int fd, struct char_session_data* sd)
 }
 
 /**
-* Check if this pincode is blacklisted or not
-*
-* @param (const char *) pin The pin to be verified
-* @return bool
-*/
-bool pincode_isBlacklisted(const char *pin)
+ * Check if this pincode is blacklisted or not
+ *
+ * @param (const char *) pin The pin to be verified
+ * @return bool
+ */
+static bool pincode_isBlacklisted(const char *pin)
 {
 	int i;
 
@@ -124,7 +124,7 @@ bool pincode_isBlacklisted(const char *pin)
 	return false;
 }
 
-int pincode_compare(int fd, struct char_session_data* sd, char* pin)
+static int pincode_compare(int fd, struct char_session_data *sd, char *pin)
 {
 	nullpo_ret(sd);
 	nullpo_ret(pin);
@@ -142,7 +142,7 @@ int pincode_compare(int fd, struct char_session_data* sd, char* pin)
 	}
 }
 
-void pincode_change(int fd, struct char_session_data* sd)
+static void pincode_change(int fd, struct char_session_data *sd)
 {
 	char oldpin[5] = "\0\0\0\0", newpin[5] = "\0\0\0\0";
 
@@ -174,7 +174,7 @@ void pincode_change(int fd, struct char_session_data* sd)
 	pincode->loginstate(fd, sd, PINCODE_LOGIN_ASK);
 }
 
-void pincode_setnew(int fd, struct char_session_data* sd)
+static void pincode_setnew(int fd, struct char_session_data *sd)
 {
 	char newpin[5] = "\0\0\0\0";
 
@@ -198,13 +198,13 @@ void pincode_setnew(int fd, struct char_session_data* sd)
 }
 
 /**
-* Send state of making new pincode
-*
-* @param[in] fd
-* @param[in, out] sd Session Data
-* @param[in] state Pincode Edit State
-*/
-void pincode_makestate(int fd, struct char_session_data *sd, enum pincode_make_response state)
+ * Send state of making new pincode
+ *
+ * @param[in] fd
+ * @param[in, out] sd Session Data
+ * @param[in] state Pincode Edit State
+ */
+static void pincode_makestate(int fd, struct char_session_data *sd, enum pincode_make_response state)
 {
 	nullpo_retv(sd);
 
@@ -216,13 +216,13 @@ void pincode_makestate(int fd, struct char_session_data *sd, enum pincode_make_r
 }
 
 /**
-* Send state of editing pincode
-*
-* @param[in] fd
-* @param[in, out] sd Session Data
-* @param[in] state Pincode Edit State
-*/
-void pincode_editstate(int fd, struct char_session_data *sd, enum pincode_edit_response state)
+ * Send state of editing pincode
+ *
+ * @param[in] fd
+ * @param[in, out] sd Session Data
+ * @param[in] state Pincode Edit State
+ */
+static void pincode_editstate(int fd, struct char_session_data *sd, enum pincode_edit_response state)
 {
 	nullpo_retv(sd);
 
@@ -242,7 +242,7 @@ void pincode_editstate(int fd, struct char_session_data *sd, enum pincode_edit_r
 // 6 = client shows msgstr(1897) Unable to use your KSSN number
 // 7 = char select window shows a button - client sends 0x8c5
 // 8 = pincode was incorrect
-void pincode_loginstate(int fd, struct char_session_data* sd, enum pincode_login_response state)
+static void pincode_loginstate(int fd, struct char_session_data *sd, enum pincode_login_response state)
 {
 	nullpo_retv(sd);
 
@@ -265,7 +265,7 @@ void pincode_loginstate(int fd, struct char_session_data* sd, enum pincode_login
 // 8 = pincode was incorrect
 // [4144] pincode_loginstate2 can replace pincode_loginstate,
 // but kro using pincode_loginstate2 only for send wrong pin error or locked after 3 pins wrong
-void pincode_loginstate2(int fd, struct char_session_data* sd, enum pincode_login_response state, enum pincode_login_response2 flag)
+static void pincode_loginstate2(int fd, struct char_session_data *sd, enum pincode_login_response state, enum pincode_login_response2 flag)
 {
 #if PACKETVER_MAIN_NUM >= 20180124 || PACKETVER_RE_NUM >= 20180124 || PACKETVER_ZERO_NUM >= 20180131
 	nullpo_retv(sd);
@@ -280,7 +280,7 @@ void pincode_loginstate2(int fd, struct char_session_data* sd, enum pincode_logi
 #endif
 }
 
-void pincode_notifyLoginPinUpdate(int account_id, char* pin)
+static void pincode_notifyLoginPinUpdate(int account_id, char *pin)
 {
 	nullpo_retv(pin);
 
@@ -292,7 +292,7 @@ void pincode_notifyLoginPinUpdate(int account_id, char* pin)
 	WFIFOSET(chr->login_fd, 11);
 }
 
-void pincode_notifyLoginPinError(int account_id)
+static void pincode_notifyLoginPinError(int account_id)
 {
 	WFIFOHEAD(chr->login_fd, 6);
 	WFIFOW(chr->login_fd, 0) = 0x2739;
@@ -300,7 +300,7 @@ void pincode_notifyLoginPinError(int account_id)
 	WFIFOSET(chr->login_fd, 6);
 }
 
-void pincode_decrypt(unsigned int userSeed, char* pin)
+static void pincode_decrypt(unsigned int userSeed, char *pin)
 {
 	int i;
 	char tab[10] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
@@ -337,7 +337,7 @@ void pincode_decrypt(unsigned int userSeed, char* pin)
  *
  * @retval false in case of error.
  */
-bool pincode_config_read(const char *filename, const struct config_t *config, bool imported)
+static bool pincode_config_read(const char *filename, const struct config_t *config, bool imported)
 {
 	const struct config_setting_t *setting = NULL;
 	const struct config_setting_t *temp = NULL;
@@ -426,12 +426,12 @@ bool pincode_config_read(const char *filename, const struct config_t *config, bo
 	return true;
 }
 
-void do_pincode_init(void)
+static void do_pincode_init(void)
 {
 	VECTOR_INIT(pincode->blacklist);
 }
 
-void do_pincode_final(void)
+static void do_pincode_final(void)
 {
 	while (VECTOR_LENGTH(pincode->blacklist) > 0) {
 		aFree(VECTOR_POP(pincode->blacklist));

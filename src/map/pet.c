@@ -54,12 +54,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct pet_interface pet_s;
+static struct pet_interface pet_s;
 struct pet_interface *pet;
 
 #define MIN_PETTHINKTIME 100
 
-int pet_hungry_val(struct pet_data *pd)
+static int pet_hungry_val(struct pet_data *pd)
 {
 	nullpo_ret(pd);
 
@@ -75,7 +75,7 @@ int pet_hungry_val(struct pet_data *pd)
 		return 0;
 }
 
-void pet_set_intimate(struct pet_data *pd, int value)
+static void pet_set_intimate(struct pet_data *pd, int value)
 {
 	int intimate;
 	struct map_session_data *sd;
@@ -102,7 +102,7 @@ void pet_set_intimate(struct pet_data *pd, int value)
 	}
 }
 
-int pet_create_egg(struct map_session_data *sd, int item_id)
+static int pet_create_egg(struct map_session_data *sd, int item_id)
 {
 	int pet_id = pet->search_petDB_index(item_id, PET_EGG);
 	nullpo_ret(sd);
@@ -118,7 +118,7 @@ int pet_create_egg(struct map_session_data *sd, int item_id)
 	return 1;
 }
 
-int pet_unlocktarget(struct pet_data *pd)
+static int pet_unlocktarget(struct pet_data *pd)
 {
 	nullpo_ret(pd);
 
@@ -131,7 +131,8 @@ int pet_unlocktarget(struct pet_data *pd)
 /*==========================================
  * Pet Attack Skill [Skotlex]
  *------------------------------------------*/
-int pet_attackskill(struct pet_data *pd, int target_id) {
+static int pet_attackskill(struct pet_data *pd, int target_id)
+{
 	nullpo_ret(pd);
 	if (!battle_config.pet_status_support || !pd->a_skill ||
 		(battle_config.pet_equip_required && !pd->pet.equip))
@@ -160,7 +161,8 @@ int pet_attackskill(struct pet_data *pd, int target_id) {
 	return 0;
 }
 
-int pet_target_check(struct map_session_data *sd,struct block_list *bl,int type) {
+static int pet_target_check(struct map_session_data *sd, struct block_list *bl, int type)
+{
 	struct pet_data *pd;
 	int rate;
 
@@ -204,7 +206,7 @@ int pet_target_check(struct map_session_data *sd,struct block_list *bl,int type)
 /*==========================================
  * Pet SC Check [Skotlex]
  *------------------------------------------*/
-int pet_sc_check(struct map_session_data *sd, int type)
+static int pet_sc_check(struct map_session_data *sd, int type)
 {
 	struct pet_data *pd;
 
@@ -223,7 +225,8 @@ int pet_sc_check(struct map_session_data *sd, int type)
 	return 0;
 }
 
-int pet_hungry(int tid, int64 tick, int id, intptr_t data) {
+static int pet_hungry(int tid, int64 tick, int id, intptr_t data)
+{
 	struct map_session_data *sd;
 	struct pet_data *pd;
 	int interval;
@@ -279,7 +282,7 @@ int pet_hungry(int tid, int64 tick, int id, intptr_t data) {
 	return 0;
 }
 
-int search_petDB_index(int key,int type)
+static int search_petDB_index(int key, int type)
 {
 	int i;
 
@@ -300,7 +303,7 @@ int search_petDB_index(int key,int type)
 	return -1;
 }
 
-int pet_hungry_timer_delete(struct pet_data *pd)
+static int pet_hungry_timer_delete(struct pet_data *pd)
 {
 	nullpo_ret(pd);
 	if(pd->pet_hungry_timer != INVALID_TIMER) {
@@ -311,7 +314,7 @@ int pet_hungry_timer_delete(struct pet_data *pd)
 	return 1;
 }
 
-int pet_performance(struct map_session_data *sd, struct pet_data *pd)
+static int pet_performance(struct map_session_data *sd, struct pet_data *pd)
 {
 	int val;
 
@@ -329,7 +332,7 @@ int pet_performance(struct map_session_data *sd, struct pet_data *pd)
 	return 1;
 }
 
-int pet_return_egg(struct map_session_data *sd, struct pet_data *pd)
+static int pet_return_egg(struct map_session_data *sd, struct pet_data *pd)
 {
 	int i;
 
@@ -355,7 +358,7 @@ int pet_return_egg(struct map_session_data *sd, struct pet_data *pd)
 	return 1;
 }
 
-int pet_data_init(struct map_session_data *sd, struct s_pet *petinfo)
+static int pet_data_init(struct map_session_data *sd, struct s_pet *petinfo)
 {
 	struct pet_data *pd;
 	int i=0,interval=0;
@@ -430,7 +433,7 @@ int pet_data_init(struct map_session_data *sd, struct s_pet *petinfo)
 	return 0;
 }
 
-int pet_birth_process(struct map_session_data *sd, struct s_pet *petinfo)
+static int pet_birth_process(struct map_session_data *sd, struct s_pet *petinfo)
 {
 	nullpo_retr(1, sd);
 	nullpo_retr(1, petinfo);
@@ -467,7 +470,8 @@ int pet_birth_process(struct map_session_data *sd, struct s_pet *petinfo)
 	return 0;
 }
 
-int pet_recv_petdata(int account_id,struct s_pet *p,int flag) {
+static int pet_recv_petdata(int account_id, struct s_pet *p, int flag)
+{
 	struct map_session_data *sd;
 
 	nullpo_retr(1, p);
@@ -512,7 +516,7 @@ int pet_recv_petdata(int account_id,struct s_pet *p,int flag) {
 	return 0;
 }
 
-int pet_select_egg(struct map_session_data *sd,short egg_index)
+static int pet_select_egg(struct map_session_data *sd, short egg_index)
 {
 	nullpo_ret(sd);
 
@@ -527,7 +531,7 @@ int pet_select_egg(struct map_session_data *sd,short egg_index)
 	return 0;
 }
 
-int pet_catch_process1(struct map_session_data *sd,int target_class)
+static int pet_catch_process1(struct map_session_data *sd, int target_class)
 {
 	nullpo_ret(sd);
 
@@ -537,7 +541,8 @@ int pet_catch_process1(struct map_session_data *sd,int target_class)
 	return 0;
 }
 
-int pet_catch_process2(struct map_session_data* sd, int target_id) {
+static int pet_catch_process2(struct map_session_data *sd, int target_id)
+{
 	struct mob_data *md = NULL;
 	struct block_list *bl = NULL;
 	int i = 0, pet_catch_rate = 0;
@@ -599,7 +604,8 @@ int pet_catch_process2(struct map_session_data* sd, int target_id) {
  * pet_id - Should contain pet id otherwise means failure
  * returns true on success
  **/
-bool pet_get_egg(int account_id, short pet_class, int pet_id ) {
+static bool pet_get_egg(int account_id, short pet_class, int pet_id)
+{
 	struct map_session_data *sd;
 	struct item tmp_item;
 	int i = 0, ret = 0;
@@ -639,7 +645,7 @@ bool pet_get_egg(int account_id, short pet_class, int pet_id ) {
 	return true;
 }
 
-int pet_menu(struct map_session_data *sd,int menunum)
+static int pet_menu(struct map_session_data *sd, int menunum)
 {
 	struct item_data *egg_id;
 	nullpo_ret(sd);
@@ -678,7 +684,7 @@ int pet_menu(struct map_session_data *sd,int menunum)
 	return 0;
 }
 
-int pet_change_name(struct map_session_data *sd, const char *name)
+static int pet_change_name(struct map_session_data *sd, const char *name)
 {
 	int i;
 	struct pet_data *pd;
@@ -697,7 +703,7 @@ int pet_change_name(struct map_session_data *sd, const char *name)
 	return intif_rename_pet(sd, name);
 }
 
-int pet_change_name_ack(struct map_session_data *sd, const char *name, int flag)
+static int pet_change_name_ack(struct map_session_data *sd, const char *name, int flag)
 {
 	struct pet_data *pd;
 	char *newname = NULL;
@@ -724,7 +730,8 @@ int pet_change_name_ack(struct map_session_data *sd, const char *name, int flag)
 	return 1;
 }
 
-int pet_equipitem(struct map_session_data *sd,int index) {
+static int pet_equipitem(struct map_session_data *sd, int index)
+{
 	struct pet_data *pd;
 	int nameid;
 
@@ -756,7 +763,8 @@ int pet_equipitem(struct map_session_data *sd,int index) {
 	return 0;
 }
 
-int pet_unequipitem(struct map_session_data *sd, struct pet_data *pd) {
+static int pet_unequipitem(struct map_session_data *sd, struct pet_data *pd)
+{
 	struct item tmp_item;
 	int nameid,flag;
 
@@ -797,7 +805,8 @@ int pet_unequipitem(struct map_session_data *sd, struct pet_data *pd) {
 	return 0;
 }
 
-int pet_food(struct map_session_data *sd, struct pet_data *pd) {
+static int pet_food(struct map_session_data *sd, struct pet_data *pd)
+{
 	int i, food_id;
 
 	nullpo_retr(1, pd);
@@ -843,7 +852,7 @@ int pet_food(struct map_session_data *sd, struct pet_data *pd) {
 	return 0;
 }
 
-int pet_randomwalk(struct pet_data *pd, int64 tick)
+static int pet_randomwalk(struct pet_data *pd, int64 tick)
 {
 	nullpo_ret(pd);
 	Assert_ret(pd->msd == 0 || pd->msd->pd == pd);
@@ -884,7 +893,8 @@ int pet_randomwalk(struct pet_data *pd, int64 tick)
 	return 0;
 }
 
-int pet_ai_sub_hard(struct pet_data *pd, struct map_session_data *sd, int64 tick) {
+static int pet_ai_sub_hard(struct pet_data *pd, struct map_session_data *sd, int64 tick)
+{
 	struct block_list *target = NULL;
 	nullpo_ret(pd);
 
@@ -997,7 +1007,8 @@ int pet_ai_sub_hard(struct pet_data *pd, struct map_session_data *sd, int64 tick
 	return 0;
 }
 
-int pet_ai_sub_foreachclient(struct map_session_data *sd,va_list ap) {
+static int pet_ai_sub_foreachclient(struct map_session_data *sd, va_list ap)
+{
 	int64 tick = va_arg(ap,int64);
 	nullpo_ret(sd);
 	if(sd->status.pet_id && sd->pd)
@@ -1006,13 +1017,14 @@ int pet_ai_sub_foreachclient(struct map_session_data *sd,va_list ap) {
 	return 0;
 }
 
-int pet_ai_hard(int tid, int64 tick, int id, intptr_t data) {
+static int pet_ai_hard(int tid, int64 tick, int id, intptr_t data)
+{
 	map->foreachpc(pet->ai_sub_foreachclient,tick);
 
 	return 0;
 }
 
-int pet_ai_sub_hard_lootsearch(struct block_list *bl, va_list ap)
+static int pet_ai_sub_hard_lootsearch(struct block_list *bl, va_list ap)
 {
 	struct pet_data *pd = va_arg(ap,struct pet_data *);
 	struct block_list **target = va_arg(ap,struct block_list**);
@@ -1040,7 +1052,8 @@ int pet_ai_sub_hard_lootsearch(struct block_list *bl, va_list ap)
 	return 0;
 }
 
-int pet_delay_item_drop(int tid, int64 tick, int id, intptr_t data) {
+static int pet_delay_item_drop(int tid, int64 tick, int id, intptr_t data)
+{
 	struct item_drop_list *list;
 	struct item_drop *ditem;
 	list=(struct item_drop_list *)data;
@@ -1058,7 +1071,7 @@ int pet_delay_item_drop(int tid, int64 tick, int id, intptr_t data) {
 	return 0;
 }
 
-int pet_lootitem_drop(struct pet_data *pd,struct map_session_data *sd)
+static int pet_lootitem_drop(struct pet_data *pd, struct map_session_data *sd)
 {
 	int i,flag=0;
 	struct item_drop_list *dlist;
@@ -1107,7 +1120,8 @@ int pet_lootitem_drop(struct pet_data *pd,struct map_session_data *sd)
 /*==========================================
  * pet bonus giving skills [Valaris] / Rewritten by [Skotlex]
  *------------------------------------------*/
-int pet_skill_bonus_timer(int tid, int64 tick, int id, intptr_t data) {
+static int pet_skill_bonus_timer(int tid, int64 tick, int id, intptr_t data)
+{
 	struct map_session_data *sd=map->id2sd(id);
 	struct pet_data *pd;
 	int bonus;
@@ -1148,7 +1162,8 @@ int pet_skill_bonus_timer(int tid, int64 tick, int id, intptr_t data) {
 /*==========================================
  * pet recovery skills [Valaris] / Rewritten by [Skotlex]
  *------------------------------------------*/
-int pet_recovery_timer(int tid, int64 tick, int id, intptr_t data) {
+static int pet_recovery_timer(int tid, int64 tick, int id, intptr_t data)
+{
 	struct map_session_data *sd=map->id2sd(id);
 	struct pet_data *pd;
 
@@ -1179,7 +1194,8 @@ int pet_recovery_timer(int tid, int64 tick, int id, intptr_t data) {
 /*==========================================
  * pet support skills [Skotlex]
  *------------------------------------------*/
-int pet_skill_support_timer(int tid, int64 tick, int id, intptr_t data) {
+static int pet_skill_support_timer(int tid, int64 tick, int id, intptr_t data)
+{
 	struct map_session_data *sd=map->id2sd(id);
 	struct pet_data *pd;
 	struct status_data *st;
@@ -1222,7 +1238,7 @@ int pet_skill_support_timer(int tid, int64 tick, int id, intptr_t data) {
 	return 0;
 }
 
-void pet_read_db(void)
+static void pet_read_db(void)
 {
 	const char *filename[] = {
 		DBPATH"pet_db.conf",
@@ -1237,7 +1253,7 @@ void pet_read_db(void)
 	}
 }
 
-int pet_read_db_libconfig(const char *filename, bool ignore_missing)
+static int pet_read_db_libconfig(const char *filename, bool ignore_missing)
 {
 	struct config_t pet_db_conf;
 	struct config_setting_t *pdb;
@@ -1285,7 +1301,7 @@ int pet_read_db_libconfig(const char *filename, bool ignore_missing)
 	return count;
 }
 
-int pet_read_db_sub(struct config_setting_t *it, int n, const char *source)
+static int pet_read_db_sub(struct config_setting_t *it, int n, const char *source)
 {
 	struct config_setting_t *t = NULL;
 	struct item_data *data = NULL;
@@ -1403,7 +1419,7 @@ int pet_read_db_sub(struct config_setting_t *it, int n, const char *source)
  * @param  t         libconfig setting
  * @param  n         Pet DB Index
  */
-void pet_read_db_sub_evolution(struct config_setting_t *t, int n)
+static void pet_read_db_sub_evolution(struct config_setting_t *t, int n)
 {
 	struct config_setting_t *pett;
 	int i = 0;
@@ -1473,7 +1489,7 @@ void pet_read_db_sub_evolution(struct config_setting_t *t, int n)
 	}
 }
 
-bool pet_read_db_sub_intimacy(int idx, struct config_setting_t *t)
+static bool pet_read_db_sub_intimacy(int idx, struct config_setting_t *t)
 {
 	int i32 = 0;
 
@@ -1495,7 +1511,7 @@ bool pet_read_db_sub_intimacy(int idx, struct config_setting_t *t)
 	return true;
 }
 
-void pet_read_db_clear(void)
+static void pet_read_db_clear(void)
 {
 	int i;
 
@@ -1523,7 +1539,8 @@ void pet_read_db_clear(void)
 /*==========================================
  * Initialization process relationship skills
  *------------------------------------------*/
-int do_init_pet(bool minimal) {
+static int do_init_pet(bool minimal)
+{
 	if (minimal)
 		return 0;
 
@@ -1543,7 +1560,7 @@ int do_init_pet(bool minimal) {
 	return 0;
 }
 
-int do_final_pet(void)
+static int do_final_pet(void)
 {
 	int i;
 	for( i = 0; i < MAX_PET_DB; i++ )
@@ -1571,7 +1588,8 @@ int do_final_pet(void)
 
 	return 0;
 }
-void pet_defaults(void) {
+void pet_defaults(void)
+{
 	pet = &pet_s;
 
 	memset(pet->db,0,sizeof(pet->db));

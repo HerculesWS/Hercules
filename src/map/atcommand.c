@@ -74,14 +74,15 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct atcommand_interface atcommand_s;
+static struct atcommand_interface atcommand_s;
 struct atcommand_interface *atcommand;
 
 static char atcmd_output[CHAT_SIZE_MAX];
 static char atcmd_player_name[NAME_LENGTH];
 
 // @commands (script-based)
-struct atcmd_binding_data* get_atcommandbind_byname(const char* name) {
+static struct atcmd_binding_data *get_atcommandbind_byname(const char *name)
+{
 	int i = 0;
 
 	nullpo_retr(NULL, name);
@@ -93,14 +94,16 @@ struct atcmd_binding_data* get_atcommandbind_byname(const char* name) {
 	return ( i < atcommand->binding_count ) ? atcommand->binding[i] : NULL;
 }
 
-const char* atcommand_msgsd(struct map_session_data *sd, int msg_number) {
+static const char *atcommand_msgsd(struct map_session_data *sd, int msg_number)
+{
 	Assert_retr("??", msg_number >= 0 && msg_number < MAX_MSG && atcommand->msg_table[0][msg_number] != NULL);
 	if (!sd || sd->lang_id >= atcommand->max_message_table || !atcommand->msg_table[sd->lang_id][msg_number])
 		return atcommand->msg_table[0][msg_number];
 	return atcommand->msg_table[sd->lang_id][msg_number];
 }
 
-const char* atcommand_msgfd(int fd, int msg_number) {
+static const char *atcommand_msgfd(int fd, int msg_number)
+{
 	struct map_session_data *sd = sockt->session_is_valid(fd) ? sockt->session[fd]->session_data : NULL;
 	Assert_retr("??", msg_number >= 0 && msg_number < MAX_MSG && atcommand->msg_table[0][msg_number] != NULL);
 	if (!sd || sd->lang_id >= atcommand->max_message_table || !atcommand->msg_table[sd->lang_id][msg_number])
@@ -111,7 +114,8 @@ const char* atcommand_msgfd(int fd, int msg_number) {
 //-----------------------------------------------------------
 // Return the message string of the specified number by [Yor]
 //-----------------------------------------------------------
-const char* atcommand_msg(int msg_number) {
+static const char *atcommand_msg(int msg_number)
+{
 	Assert_retr("??", msg_number >= 0 && msg_number < MAX_MSG);
 	if (atcommand->msg_table[map->default_lang_id][msg_number] != NULL && atcommand->msg_table[map->default_lang_id][msg_number][0] != '\0')
 		return atcommand->msg_table[map->default_lang_id][msg_number];
@@ -129,7 +133,8 @@ const char* atcommand_msg(int msg_number) {
  * @param[in] allow_override whether to allow duplicate message IDs to override the original value.
  * @return success state.
  */
-bool msg_config_read(const char *cfg_name, bool allow_override) {
+static bool msg_config_read(const char *cfg_name, bool allow_override)
+{
 	int msg_number;
 	char line[1024], w1[1024], w2[1024];
 	FILE *fp;
@@ -176,7 +181,8 @@ bool msg_config_read(const char *cfg_name, bool allow_override) {
 /*==========================================
  * Cleanup Message Data
  *------------------------------------------*/
-void do_final_msg(void) {
+static void do_final_msg(void)
+{
 	int i, j;
 
 	for(i = 0; i < atcommand->max_message_table; i++) {
@@ -194,7 +200,8 @@ void do_final_msg(void) {
 /**
  * retrieves the help string associated with a given command.
  */
-static inline const char* atcommand_help_string(AtCommandInfo *info) {
+static inline const char *atcommand_help_string(AtCommandInfo *info)
+{
 	return info->help;
 }
 
@@ -431,7 +438,8 @@ ACMD(send)
 /*==========================================
  * @rura, @warp, @mapmove
  *------------------------------------------*/
-ACMD(mapmove) {
+ACMD(mapmove)
+{
 	char map_name[MAP_NAME_LENGTH_EXT];
 	unsigned short map_index;
 	short x = 0, y = 0;
@@ -486,7 +494,8 @@ ACMD(mapmove) {
 /*==========================================
  * Displays where a character is. Corrected version by Silent. [Skotlex]
  *------------------------------------------*/
-ACMD(where) {
+ACMD(where)
+{
 	struct map_session_data* pl_sd;
 
 	memset(atcmd_player_name, '\0', sizeof atcmd_player_name);
@@ -514,7 +523,8 @@ ACMD(where) {
 /*==========================================
  *
  *------------------------------------------*/
-ACMD(jumpto) {
+ACMD(jumpto)
+{
 	struct map_session_data *pl_sd = NULL;
 
 	if (!*message) {
@@ -597,7 +607,8 @@ ACMD(jump)
  * Display list of online characters with
  * various info.
  *------------------------------------------*/
-ACMD(who) {
+ACMD(who)
+{
 	const struct map_session_data *pl_sd = NULL;
 	struct s_mapiterator *iter = NULL;
 	char player_name[NAME_LENGTH] = "";
@@ -794,7 +805,8 @@ ACMD(save)
 /*==========================================
  *
  *------------------------------------------*/
-ACMD(load) {
+ACMD(load)
+{
 	int16 m;
 
 	m = map->mapindex2mapid(sd->status.save_point.map);
@@ -932,7 +944,8 @@ ACMD(option)
 /*==========================================
  *
  *------------------------------------------*/
-ACMD(hide) {
+ACMD(hide)
+{
 	if (pc_isinvisible(sd)) {
 		sd->sc.option &= ~OPTION_INVISIBLE;
 		if (sd->disguise != -1 )
@@ -1473,7 +1486,8 @@ ACMD(joblevelup)
 /*==========================================
  * @help
  *------------------------------------------*/
-ACMD(help) {
+ACMD(help)
+{
 	const char *command_name = NULL;
 	char *default_command = "help";
 	AtCommandInfo *tinfo = NULL;
@@ -1541,7 +1555,7 @@ ACMD(help) {
  * Arglist parameters:
  * - (int) id: If 0, stop any attacks. Otherwise, the target block list id to stop attacking.
  */
-int atcommand_stopattack(struct block_list *bl,va_list ap)
+static int atcommand_stopattack(struct block_list *bl, va_list ap)
 {
 	struct unit_data *ud = NULL;
 	int id = 0;
@@ -1560,7 +1574,7 @@ int atcommand_stopattack(struct block_list *bl,va_list ap)
 /*==========================================
  *
  *------------------------------------------*/
-int atcommand_pvpoff_sub(struct block_list *bl,va_list ap)
+static int atcommand_pvpoff_sub(struct block_list *bl, va_list ap)
 {
 	struct map_session_data *sd = NULL;
 	nullpo_ret(bl);
@@ -1598,7 +1612,7 @@ ACMD(pvpoff)
 /*==========================================
  *
  *------------------------------------------*/
-int atcommand_pvpon_sub(struct block_list *bl,va_list ap)
+static int atcommand_pvpon_sub(struct block_list *bl, va_list ap)
 {
 	struct map_session_data *sd = NULL;
 	nullpo_ret(bl);
@@ -1641,7 +1655,8 @@ ACMD(pvpon)
 /*==========================================
  *
  *------------------------------------------*/
-ACMD(gvgoff) {
+ACMD(gvgoff)
+{
 
 	if (!map->list[sd->bl.m].flag.gvg) {
 		clif->message(fd, msg_fd(fd,162)); // GvG is already Off.
@@ -1870,7 +1885,8 @@ ACMD(hair_color)
 /*==========================================
  * @go [city_number or city_name] - Updated by Harbin
  *------------------------------------------*/
-ACMD(go) {
+ACMD(go)
+{
 	int town = INT_MAX; // Initialized to INT_MAX instead of -1 to avoid conflicts with those who map [-3:-1] to @memo locations.
 	char map_name[MAP_NAME_LENGTH];
 
@@ -2100,7 +2116,7 @@ ACMD(monster)
 /*==========================================
  *
  *------------------------------------------*/
-int atkillmonster_sub(struct block_list *bl, va_list ap)
+static int atkillmonster_sub(struct block_list *bl, va_list ap)
 {
 	struct mob_data *md = NULL;
 	int flag = va_arg(ap, int);
@@ -2118,7 +2134,8 @@ int atkillmonster_sub(struct block_list *bl, va_list ap)
 	return 1;
 }
 
-ACMD(killmonster) {
+ACMD(killmonster)
+{
 	int map_id, drop_flag;
 	char map_name[MAP_NAME_LENGTH_EXT];
 
@@ -2315,7 +2332,8 @@ ACMD(memo)
 /*==========================================
  *
  *------------------------------------------*/
-ACMD(gat) {
+ACMD(gat)
+{
 	int y;
 
 	memset(atcmd_output, '\0', sizeof(atcmd_output));
@@ -2461,7 +2479,8 @@ ACMD(zeny)
 /*==========================================
  *
  *------------------------------------------*/
-ACMD(param) {
+ACMD(param)
+{
 	int i, value = 0, new_value, max;
 	const char* param[] = { "str", "agi", "vit", "int", "dex", "luk" };
 	short* stats[6];
@@ -2521,7 +2540,8 @@ ACMD(param) {
 /*==========================================
  * Stat all by fritz (rewritten by [Yor])
  *------------------------------------------*/
-ACMD(stat_all) {
+ACMD(stat_all)
+{
 	int index, count, value, max, new_value;
 	short* stats[6];
 	//we don't use direct initialization because it isn't part of the c standard.
@@ -2577,7 +2597,8 @@ ACMD(stat_all) {
 /*==========================================
  *
  *------------------------------------------*/
-ACMD(guildlevelup) {
+ACMD(guildlevelup)
+{
 	int level = 0;
 	int16 added_level;
 	struct guild *guild_info;
@@ -2766,7 +2787,8 @@ ACMD(petrename)
 /*==========================================
  *
  *------------------------------------------*/
-ACMD(recall) {
+ACMD(recall)
+{
 	struct map_session_data *pl_sd = NULL;
 
 	if (!*message) {
@@ -3038,7 +3060,7 @@ ACMD(doommap)
 /*==========================================
  *
  *------------------------------------------*/
-void atcommand_raise_sub(struct map_session_data* sd)
+static void atcommand_raise_sub(struct map_session_data *sd)
 {
 	nullpo_retv(sd);
 	status->revive(&sd->bl, 100, 100);
@@ -3336,7 +3358,8 @@ ACMD(breakguild)
 /*==========================================
  *
  *------------------------------------------*/
-ACMD(agitstart) {
+ACMD(agitstart)
+{
 	if (map->agit_flag == 1) {
 		clif->message(fd, msg_fd(fd,73)); // War of Emperium is currently in progress.
 		return false;
@@ -3352,7 +3375,8 @@ ACMD(agitstart) {
 /*==========================================
  *
  *------------------------------------------*/
-ACMD(agitstart2) {
+ACMD(agitstart2)
+{
 	if (map->agit2_flag == 1) {
 		clif->message(fd, msg_fd(fd,404)); // "War of Emperium SE is currently in progress."
 		return false;
@@ -3368,7 +3392,8 @@ ACMD(agitstart2) {
 /*==========================================
  *
  *------------------------------------------*/
-ACMD(agitend) {
+ACMD(agitend)
+{
 	if (map->agit_flag == 0) {
 		clif->message(fd, msg_fd(fd,75)); // War of Emperium is currently not in progress.
 		return false;
@@ -3384,7 +3409,8 @@ ACMD(agitend) {
 /*==========================================
  *
  *------------------------------------------*/
-ACMD(agitend2) {
+ACMD(agitend2)
+{
 	if (map->agit2_flag == 0) {
 		clif->message(fd, msg_fd(fd,406)); // "War of Emperium SE is currently not in progress."
 		return false;
@@ -3400,7 +3426,8 @@ ACMD(agitend2) {
 /*==========================================
  * @mapexit - shuts down the map server
  *------------------------------------------*/
-ACMD(mapexit) {
+ACMD(mapexit)
+{
 	map->do_shutdown();
 	return true;
 }
@@ -3610,7 +3637,8 @@ ACMD(reloaditemdb)
 /*==========================================
  *
  *------------------------------------------*/
-ACMD(reloadmobdb) {
+ACMD(reloadmobdb)
+{
 	mob->reload();
 	pet->read_db();
 	homun->reload();
@@ -3639,7 +3667,8 @@ ACMD(reloadskilldb)
 /*==========================================
  * @reloadatcommand - reloads conf/atcommand.conf conf/groups.conf
  *------------------------------------------*/
-ACMD(reloadatcommand) {
+ACMD(reloadatcommand)
+{
 	struct config_t run_test;
 
 	if (!libconfig->load_file(&run_test, "conf/groups.conf")) {
@@ -3713,7 +3742,8 @@ ACMD(reloadbattleconf)
 /*==========================================
  * @reloadstatusdb - reloads job_db1.txt job_db2.txt job_db2-2.txt refine_db.txt size_fix.txt
  *------------------------------------------*/
-ACMD(reloadstatusdb) {
+ACMD(reloadstatusdb)
+{
 	status->readdb();
 	clif->message(fd, msg_fd(fd,256));
 	return true;
@@ -3731,7 +3761,8 @@ ACMD(reloadpcdb)
 /*==========================================
  * @reloadscript - reloads all scripts (npcs, warps, mob spawns, ...)
  *------------------------------------------*/
-ACMD(reloadscript) {
+ACMD(reloadscript)
+{
 	struct s_mapiterator* iter;
 	struct map_session_data* pl_sd;
 
@@ -4104,7 +4135,8 @@ ACMD(mount_peco)
 /*==========================================
  *Spy Commands by Syrus22
  *------------------------------------------*/
-ACMD(guildspy) {
+ACMD(guildspy)
+{
 	char guild_name[NAME_LENGTH];
 	struct guild *g;
 
@@ -4143,7 +4175,8 @@ ACMD(guildspy) {
 /*==========================================
  *
  *------------------------------------------*/
-ACMD(partyspy) {
+ACMD(partyspy)
+{
 	char party_name[NAME_LENGTH];
 	struct party_data *p;
 
@@ -4212,7 +4245,8 @@ ACMD(repairall)
 /*==========================================
  * @nuke [Valaris]
  *------------------------------------------*/
-ACMD(nuke) {
+ACMD(nuke)
+{
 	struct map_session_data *pl_sd;
 
 	memset(atcmd_player_name, '\0', sizeof(atcmd_player_name));
@@ -4241,7 +4275,8 @@ ACMD(nuke) {
 /*==========================================
  * @tonpc
  *------------------------------------------*/
-ACMD(tonpc) {
+ACMD(tonpc)
+{
 	char npcname[NAME_LENGTH+1];
 	struct npc_data *nd;
 
@@ -4367,7 +4402,8 @@ ACMD(unloadnpc)
 /*==========================================
  * time in txt for time command (by [Yor])
  *------------------------------------------*/
-char* txt_time(int fd, unsigned int duration) {
+static char *txt_time(int fd, unsigned int duration)
+{
 	int days, hours, minutes, seconds;
 	static char temp1[CHAT_SIZE_MAX];
 	int tlen = 0;
@@ -4405,7 +4441,8 @@ char* txt_time(int fd, unsigned int duration) {
  * @time/@date/@serverdate/@servertime: Display the date/time of the server (by [Yor]
  * Calculation management of GM modification (@day/@night GM commands) is done
  *------------------------------------------*/
-ACMD(servertime) {
+ACMD(servertime)
+{
 	time_t time_server;  // variable for number of seconds (used with time() function)
 	struct tm *datetime; // variable for time in structure ->tm_mday, ->tm_sec, ...
 	char temp[CHAT_SIZE_MAX];
@@ -4460,7 +4497,7 @@ ACMD(servertime) {
 //Added by Coltaro
 //We're using this function here instead of using time_t so that it only counts player's jail time when he/she's online (and since the idea is to reduce the amount of minutes one by one in status->change_timer...).
 //Well, using time_t could still work but for some reason that looks like more coding x_x
-void get_jail_time(int jailtime, int* year, int* month, int* day, int* hour, int* minute)
+static void get_jail_time(int jailtime, int *year, int *month, int *day, int *hour, int *minute)
 {
 	const int factor_year = 518400; //12*30*24*60 = 518400
 	const int factor_month = 43200; //30*24*60 = 43200
@@ -4494,7 +4531,8 @@ void get_jail_time(int jailtime, int* year, int* month, int* day, int* hour, int
  * @jail <char_name> by [Yor]
  * Special warp! No check with nowarp and nowarpto flag
  *------------------------------------------*/
-ACMD(jail) {
+ACMD(jail)
+{
 	struct map_session_data *pl_sd;
 	int x, y;
 	unsigned short m_index;
@@ -4547,7 +4585,8 @@ ACMD(jail) {
  * @unjail/@discharge <char_name> by [Yor]
  * Special warp! No check with nowarp and nowarpto flag
  *------------------------------------------*/
-ACMD(unjail) {
+ACMD(unjail)
+{
 	struct map_session_data *pl_sd;
 
 	memset(atcmd_player_name, '\0', sizeof(atcmd_player_name));
@@ -4581,7 +4620,8 @@ ACMD(unjail) {
 	return true;
 }
 
-ACMD(jailfor) {
+ACMD(jailfor)
+{
 	struct map_session_data *pl_sd = NULL;
 	int year, month, day, hour, minute;
 	char * modif_p;
@@ -4865,7 +4905,8 @@ ACMD(undisguise)
 /*==========================================
  * UndisguiseAll
  *------------------------------------------*/
-ACMD(undisguiseall) {
+ACMD(undisguiseall)
+{
 	struct map_session_data *pl_sd;
 	struct s_mapiterator* iter;
 
@@ -5043,7 +5084,8 @@ ACMD(killer)
  * @killable by MouseJstr
  * enable other people killing you
  *------------------------------------------*/
-ACMD(killable) {
+ACMD(killable)
+{
 	sd->state.killable = !sd->state.killable;
 
 	if (sd->state.killable) {
@@ -5059,7 +5101,8 @@ ACMD(killable) {
  * @skillon by MouseJstr
  * turn skills on for the map
  *------------------------------------------*/
-ACMD(skillon) {
+ACMD(skillon)
+{
 	map->list[sd->bl.m].flag.noskill = 0;
 	clif->message(fd, msg_fd(fd,244));
 	return true;
@@ -5069,7 +5112,8 @@ ACMD(skillon) {
  * @skilloff by MouseJstr
  * Turn skills off on the map
  *------------------------------------------*/
-ACMD(skilloff) {
+ACMD(skilloff)
+{
 	map->list[sd->bl.m].flag.noskill = 1;
 	clif->message(fd, msg_fd(fd,243));
 	return true;
@@ -5079,7 +5123,8 @@ ACMD(skilloff) {
  * @npcmove by MouseJstr
  * move a npc
  *------------------------------------------*/
-ACMD(npcmove) {
+ACMD(npcmove)
+{
 	int x = 0, y = 0, m;
 	struct npc_data *nd = 0;
 
@@ -5149,7 +5194,8 @@ ACMD(addwarp)
  * @follow by [MouseJstr]
  * Follow a player .. staying no more then 5 spaces away
  *------------------------------------------*/
-ACMD(follow) {
+ACMD(follow)
+{
 	struct map_session_data *pl_sd = NULL;
 
 	if (!*message) {
@@ -5374,7 +5420,8 @@ ACMD(skillid)
  * @useskill by [MouseJstr]
  * A way of using skills without having to find them in the skills menu
  *------------------------------------------*/
-ACMD(useskill) {
+ACMD(useskill)
+{
 	struct map_session_data *pl_sd = NULL;
 	struct block_list *bl;
 	uint16 skill_id;
@@ -5420,7 +5467,8 @@ ACMD(useskill) {
  *  Debug command to locate new skill IDs. It sends the
  *  three possible skill-effect packets to the area.
  *------------------------------------------*/
-ACMD(displayskill) {
+ACMD(displayskill)
+{
 	struct status_data *st;
 	int64 tick;
 	uint16 skill_id;
@@ -5491,7 +5539,8 @@ ACMD(skilltree)
 }
 
 // Hand a ring with partners name on it to this char
-void atcommand_getring(struct map_session_data* sd) {
+static void atcommand_getring(struct map_session_data *sd)
+{
 	int flag, item_id;
 	struct item item_tmp;
 	nullpo_retv(sd);
@@ -5514,7 +5563,8 @@ void atcommand_getring(struct map_session_data* sd) {
  * @marry by [MouseJstr], fixed by Lupus
  * Marry two players
  *------------------------------------------*/
-ACMD(marry) {
+ACMD(marry)
+{
 	struct map_session_data *pl_sd = NULL;
 	char player_name[NAME_LENGTH] = "";
 
@@ -5633,7 +5683,8 @@ ACMD(autotrade)
  * @changegm by durf (changed by Lupus)
  * Changes Master of your Guild to a specified guild member
  *------------------------------------------*/
-ACMD(changegm) {
+ACMD(changegm)
+{
 	struct guild *g;
 	struct map_session_data *pl_sd;
 
@@ -5665,7 +5716,8 @@ ACMD(changegm) {
  * @changeleader by Skotlex
  * Changes the leader of a party.
  *------------------------------------------*/
-ACMD(changeleader) {
+ACMD(changeleader)
+{
 
 	if (!message[0]) {
 		clif->message(fd, msg_fd(fd,1185)); // Usage: @changeleader <party_member_name>
@@ -5854,7 +5906,8 @@ ACMD(autolootitem)
  * Credits:
  *    chriser,Aleos
  *------------------------------------------*/
-ACMD(autoloottype) {
+ACMD(autoloottype)
+{
 	uint8 action = 3; // 1=add, 2=remove, 3=help+list (default), 4=reset
 	enum item_types type = -1;
 	int ITEM_NONE = 0;
@@ -5967,8 +6020,8 @@ ACMD(snow)
 /*==========================================
  * Cherry tree snowstorm is made to fall. (Sakura)
  *------------------------------------------*/
-ACMD(sakura) {
-
+ACMD(sakura)
+{
 	if (map->list[sd->bl.m].flag.sakura) {
 		map->list[sd->bl.m].flag.sakura=0;
 		clif->weather(sd->bl.m);
@@ -5984,8 +6037,8 @@ ACMD(sakura) {
 /*==========================================
  * Clouds appear.
  *------------------------------------------*/
-ACMD(clouds) {
-
+ACMD(clouds)
+{
 	if (map->list[sd->bl.m].flag.clouds) {
 		map->list[sd->bl.m].flag.clouds=0;
 		clif->weather(sd->bl.m);
@@ -6002,8 +6055,8 @@ ACMD(clouds) {
 /*==========================================
  * Different type of clouds using effect 516
  *------------------------------------------*/
-ACMD(clouds2) {
-
+ACMD(clouds2)
+{
 	if (map->list[sd->bl.m].flag.clouds2) {
 		map->list[sd->bl.m].flag.clouds2=0;
 		clif->weather(sd->bl.m);
@@ -6020,8 +6073,8 @@ ACMD(clouds2) {
 /*==========================================
  * Fog hangs over.
  *------------------------------------------*/
-ACMD(fog) {
-
+ACMD(fog)
+{
 	if (map->list[sd->bl.m].flag.fog) {
 		map->list[sd->bl.m].flag.fog=0;
 		clif->weather(sd->bl.m);
@@ -6037,8 +6090,8 @@ ACMD(fog) {
 /*==========================================
  * Fallen leaves fall.
  *------------------------------------------*/
-ACMD(leaves) {
-
+ACMD(leaves)
+{
 	if (map->list[sd->bl.m].flag.leaves) {
 		map->list[sd->bl.m].flag.leaves=0;
 		clif->weather(sd->bl.m);
@@ -6055,8 +6108,8 @@ ACMD(leaves) {
 /*==========================================
  * Fireworks appear.
  *------------------------------------------*/
-ACMD(fireworks) {
-
+ACMD(fireworks)
+{
 	if (map->list[sd->bl.m].flag.fireworks) {
 		map->list[sd->bl.m].flag.fireworks=0;
 		clif->weather(sd->bl.m);
@@ -6164,20 +6217,23 @@ ACMD(mobsearch)
  * @cleanmap - cleans items on the ground
  * @cleanarea - cleans items on the ground within an specified area
  *------------------------------------------*/
-int atcommand_cleanfloor_sub(struct block_list *bl, va_list ap) {
+static int atcommand_cleanfloor_sub(struct block_list *bl, va_list ap)
+{
 	nullpo_ret(bl);
 	map->clearflooritem(bl);
 
 	return 0;
 }
 
-ACMD(cleanmap) {
+ACMD(cleanmap)
+{
 	map->foreachinmap(atcommand->cleanfloor_sub, sd->bl.m, BL_ITEM);
 	clif->message(fd, msg_fd(fd,1221)); // All dropped items have been cleaned up.
 	return true;
 }
 
-ACMD(cleanarea) {
+ACMD(cleanarea)
+{
 	int x0 = 0, y0 = 0, x1 = 0, y1 = 0, n = 0;
 
 	if (!*message || (n=sscanf(message, "%d %d %d %d", &x0, &y0, &x1, &y1)) < 1) {
@@ -6341,7 +6397,8 @@ ACMD(users)
 /*==========================================
  *
  *------------------------------------------*/
-ACMD(reset) {
+ACMD(reset)
+{
 	pc->resetstate(sd);
 	pc->resetskill(sd, PCRESETSKILL_RESYNC);
 	safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,208), sd->status.name); // '%s' skill and stats points reseted!
@@ -6424,7 +6481,8 @@ ACMD(adjgroup)
  * @trade by [MouseJstr]
  * Open a trade window with a remote player
  *------------------------------------------*/
-ACMD(trade) {
+ACMD(trade)
+{
 	struct map_session_data *pl_sd = NULL;
 
 	if (!*message) {
@@ -6467,7 +6525,8 @@ ACMD(setbattleflag)
 /*==========================================
  * @unmute [Valaris]
  *------------------------------------------*/
-ACMD(unmute) {
+ACMD(unmute)
+{
 	struct map_session_data *pl_sd = NULL;
 
 	if (!*message) {
@@ -6518,7 +6577,8 @@ ACMD(uptime)
  * @changesex <sex>
  * => Changes one's sex. Argument sex can be 0 or 1, m or f, male or female.
  *------------------------------------------*/
-ACMD(changesex) {
+ACMD(changesex)
+{
 	int i;
 
 	pc->resetskill(sd, PCRESETSKILL_CHSEX);
@@ -6532,7 +6592,8 @@ ACMD(changesex) {
 /*================================================
  * @mute - Mutes a player for a set amount of time
  *------------------------------------------------*/
-ACMD(mute) {
+ACMD(mute)
+{
 	struct map_session_data *pl_sd = NULL;
 	int manner;
 
@@ -6610,7 +6671,8 @@ ACMD(identify)
 	return true;
 }
 
-ACMD(misceffect) {
+ACMD(misceffect)
+{
 	int effect = 0;
 
 	if (!*message)
@@ -6851,7 +6913,8 @@ ACMD(showmobs)
 /*==========================================
  * homunculus level up [orn]
  *------------------------------------------*/
-ACMD(homlevel) {
+ACMD(homlevel)
+{
 	struct homun_data *hd;
 	int level = 0;
 	enum homun_type htype;
@@ -6922,7 +6985,8 @@ ACMD(homevolution)
 	return true;
 }
 
-ACMD(hommutate) {
+ACMD(hommutate)
+{
 	int homun_id;
 	enum homun_type m_class, m_id;
 
@@ -6951,7 +7015,8 @@ ACMD(hommutate) {
 /*==========================================
  * call choosen homunculus [orn]
  *------------------------------------------*/
-ACMD(makehomun) {
+ACMD(makehomun)
+{
 	int homunid;
 
 	if (!*message) {
@@ -7071,7 +7136,8 @@ ACMD(homtalk)
 /*==========================================
  * Show homunculus stats
  *------------------------------------------*/
-ACMD(hominfo) {
+ACMD(hominfo)
+{
 	struct homun_data *hd;
 	struct status_data *st;
 
@@ -7331,7 +7397,8 @@ ACMD(whereis)
 	return true;
 }
 
-ACMD(version) {
+ACMD(version)
+{
 	safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1296), sysinfo->is64bit() ? 64 : 32, sysinfo->platform()); // Hercules %d-bit for %s
 	clif->message(fd, atcmd_output);
 	safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1295), sysinfo->vcstype(), sysinfo->vcsrevision_src(), sysinfo->vcsrevision_scripts()); // %s revision '%s' (src) / '%s' (scripts)
@@ -7343,8 +7410,9 @@ ACMD(version) {
 /*==========================================
  * @mutearea by MouseJstr
  *------------------------------------------*/
-int atcommand_mutearea_sub(struct block_list *bl, va_list ap)
-{ // As it is being used [ACMD(mutearea)] there's no need to be a bool, but if there's need to reuse it, it's better to be this way
+static int atcommand_mutearea_sub(struct block_list *bl, va_list ap)
+{
+	// As it is being used [ACMD(mutearea)] there's no need to be a bool, but if there's need to reuse it, it's better to be this way
 
 	int time, id;
 	struct map_session_data *pl_sd = BL_CAST(BL_PC, bl);
@@ -7364,7 +7432,8 @@ int atcommand_mutearea_sub(struct block_list *bl, va_list ap)
 	return 1;
 }
 
-ACMD(mutearea) {
+ACMD(mutearea)
+{
 	int time;
 
 	if (!*message) {
@@ -7579,7 +7648,8 @@ ACMD(fakename)
 /*==========================================
  * Ragnarok Resources
  *------------------------------------------*/
-ACMD(mapflag) {
+ACMD(mapflag)
+{
 #define CHECKFLAG( cmd ) do { if (map->list[ sd->bl.m ].flag.cmd ) clif->message(sd->fd,#cmd);} while(0)
 #define SETFLAG( cmd ) do { \
 	if (strcmp( flag_name , #cmd ) == 0) { \
@@ -7767,7 +7837,8 @@ ACMD(invite)
 	return true;
 }
 
-ACMD(duel) {
+ACMD(duel)
+{
 	unsigned int maxpl = 0;
 
 	if (sd->duel_group > 0) {
@@ -7820,7 +7891,8 @@ ACMD(duel) {
 	return true;
 }
 
-ACMD(leave) {
+ACMD(leave)
+{
 	if (sd->duel_group <= 0) {
 		// "Duel: @leave without @duel."
 		clif->message(fd, msg_fd(fd,358));
@@ -7831,7 +7903,8 @@ ACMD(leave) {
 	return true;
 }
 
-ACMD(accept) {
+ACMD(accept)
+{
 	if (!duel->checktime(sd)) {
 		char output[CHAT_SIZE_MAX];
 		// "Duel: You can take part in duel only one time per %d minutes."
@@ -7859,7 +7932,8 @@ ACMD(accept) {
 	return true;
 }
 
-ACMD(reject) {
+ACMD(reject)
+{
 	if (sd->duel_invite <= 0) {
 		// "Duel: @reject without invitation."
 		clif->message(fd, msg_fd(fd,362));
@@ -7929,7 +8003,8 @@ ACMD(cash)
 }
 
 // @clone/@slaveclone/@evilclone <playername> [Valaris]
-ACMD(clone) {
+ACMD(clone)
+{
 	int x=0,y=0,flag=0,master=0,i=0;
 	struct map_session_data *pl_sd=NULL;
 
@@ -8047,7 +8122,8 @@ ACMD(auction)
 /*==========================================
  * Kill Steal Protection
  *------------------------------------------*/
-ACMD(ksprotection) {
+ACMD(ksprotection)
+{
 	if( sd->state.noks ) {
 		sd->state.noks = KSPROTECT_NONE;
 		clif->message(fd, msg_fd(fd,1325)); // [ K.S Protection Inactive ]
@@ -8307,7 +8383,8 @@ ACMD(stats)
 	return true;
 }
 
-ACMD(delitem) {
+ACMD(delitem)
+{
 	char item_name[100];
 	int nameid, amount = 0, total, idx;
 	struct item_data* id;
@@ -8368,7 +8445,8 @@ ACMD(delitem) {
 /*==========================================
  * Custom Fonts
  *------------------------------------------*/
-ACMD(font) {
+ACMD(font)
+{
 	int font_id;
 
 	font_id = atoi(message);
@@ -8403,7 +8481,7 @@ ACMD(font) {
 /*==========================================
  * type: 1 = commands (@), 2 = charcommands (#)
  *------------------------------------------*/
-void atcommand_commands_sub(struct map_session_data* sd, const int fd, AtCommandType type)
+static void atcommand_commands_sub(struct map_session_data *sd, const int fd, AtCommandType type)
 {
 	char line_buff[CHATBOX_SIZE];
 	char* cur = line_buff;
@@ -8528,7 +8606,8 @@ ACMD(cashmount)
 	return true;
 }
 
-ACMD(accinfo) {
+ACMD(accinfo)
+{
 	char query[NAME_LENGTH];
 
 	if (!*message || strlen(message) > NAME_LENGTH ) {
@@ -8657,12 +8736,16 @@ ACMD(set)
 	aFree(data);
 	return true;
 }
-ACMD(reloadquestdb) {
+
+ACMD(reloadquestdb)
+{
 	quest->reload();
 	clif->message(fd, msg_fd(fd,1377)); // Quest database has been reloaded.
 	return true;
 }
-ACMD(addperm) {
+
+ACMD(addperm)
+{
 	int perm_size = pcg->permission_count;
 	bool add = (strcmpi(info->command, "addperm") == 0) ? true : false;
 	int i;
@@ -8718,6 +8801,7 @@ ACMD(addperm) {
 
 	return true;
 }
+
 ACMD(unloadnpcfile)
 {
 	if (!*message) {
@@ -8733,7 +8817,9 @@ ACMD(unloadnpcfile)
 	}
 	return true;
 }
-ACMD(cart) {
+
+ACMD(cart)
+{
 #define MC_CART_MDFY(x,idx) do { \
 	sd->status.skill[idx].id = (x)?MC_PUSHCART:0; \
 	sd->status.skill[idx].lv = (x)?1:0; \
@@ -8775,6 +8861,7 @@ ACMD(cart) {
 	return true;
 #undef MC_CART_MDFY
 }
+
 /* [Ind/Hercules] */
 ACMD(join)
 {
@@ -8818,8 +8905,10 @@ ACMD(join)
 
 	return true;
 }
+
 /* [Ind/Hercules] */
-void atcommand_channel_help(int fd, const char *command, bool can_create) {
+static void atcommand_channel_help(int fd, const char *command, bool can_create)
+{
 	nullpo_retv(command);
 	safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1404),command); // %s failed.
 	clif->message(fd, atcmd_output);
@@ -8869,8 +8958,10 @@ void atcommand_channel_help(int fd, const char *command, bool can_create) {
 		clif->message(fd, msg_fd(fd,1463));// - adds or removes <option name> with <option value> to <channel name> channel
 	}
 }
+
 /* [Ind/Hercules] */
-ACMD(channel) {
+ACMD(channel)
+{
 	struct channel_data *chan;
 	char subcmd[HCS_NAME_LENGTH], sub1[HCS_NAME_LENGTH], sub2[HCS_NAME_LENGTH], sub3[HCS_NAME_LENGTH];
 	unsigned char k = 0;
@@ -9289,8 +9380,10 @@ ACMD(channel) {
 	}
 	return true;
 }
+
 /* debug only, delete after */
-ACMD(fontcolor) {
+ACMD(fontcolor)
+{
 	unsigned char k;
 
 	if (!*message) {
@@ -9322,7 +9415,9 @@ ACMD(fontcolor) {
 
 	return true;
 }
-ACMD(searchstore){
+
+ACMD(searchstore)
+{
 	int val = atoi(message);
 
 	switch (val) {
@@ -9426,10 +9521,12 @@ ACMD(skdebug)
 	clif->message(fd,atcmd_output);
 	return true;
 }
+
 /**
  * cooldown-debug
  **/
-ACMD(cddebug) {
+ACMD(cddebug)
+{
 	int i;
 	struct skill_cd* cd = NULL;
 
@@ -9474,7 +9571,8 @@ ACMD(cddebug) {
 /**
  *
  **/
-ACMD(lang) {
+ACMD(lang)
+{
 	uint8 i;
 
 	if (!*message) {
@@ -9644,7 +9742,8 @@ ACMD(reloadclans)
  **/
 #define ACMD_DEF(x) { #x, atcommand_ ## x, NULL, NULL, NULL, true }
 #define ACMD_DEF2(x2, x) { x2, atcommand_ ## x, NULL, NULL, NULL, true }
-void atcommand_basecommands(void) {
+static void atcommand_basecommands(void)
+{
 	/**
 	 * Command reference list, place the base of your commands here
 	 **/
@@ -9935,7 +10034,8 @@ void atcommand_basecommands(void) {
 #undef ACMD_DEF
 #undef ACMD_DEF2
 
-bool atcommand_add(char *name, AtCommandFunc func, bool replace) {
+static bool atcommand_add(char *name, AtCommandFunc func, bool replace)
+{
 	AtCommandInfo* cmd;
 
 	nullpo_retr(false, name);
@@ -9958,18 +10058,21 @@ bool atcommand_add(char *name, AtCommandFunc func, bool replace) {
 /*==========================================
  * Command lookup functions
  *------------------------------------------*/
-AtCommandInfo* atcommand_exists(const char* name) {
+static AtCommandInfo *atcommand_exists(const char *name)
+{
 	return strdb_get(atcommand->db, name);
 }
 
-AtCommandInfo* get_atcommandinfo_byname(const char *name) {
+static AtCommandInfo *get_atcommandinfo_byname(const char *name)
+{
 	AtCommandInfo *cmd;
 	if ((cmd = strdb_get(atcommand->db, name)))
 		return cmd;
 	return NULL;
 }
 
-const char* atcommand_checkalias(const char *aliasname) {
+static const char *atcommand_checkalias(const char *aliasname)
+{
 	AliasInfo *alias_info = NULL;
 	if ((alias_info = (AliasInfo*)strdb_get(atcommand->alias_db, aliasname)) != NULL)
 		return alias_info->command->command;
@@ -9977,7 +10080,8 @@ const char* atcommand_checkalias(const char *aliasname) {
 }
 
 /// AtCommand suggestion
-void atcommand_get_suggestions(struct map_session_data* sd, const char *name, bool is_atcmd_cmd) {
+static void atcommand_get_suggestions(struct map_session_data *sd, const char *name, bool is_atcmd_cmd)
+{
 	struct DBIterator *atcommand_iter, *alias_iter;
 	AtCommandInfo* command_info = NULL;
 	AliasInfo* alias_info = NULL;
@@ -10058,7 +10162,7 @@ void atcommand_get_suggestions(struct map_session_data* sd, const char *name, bo
  * @retval true if the message was recognized as atcommand.
  * @retval false if the message should be considered a non-command message.
  */
-bool atcommand_exec(const int fd, struct map_session_data *sd, const char *message, bool player_invoked)
+static bool atcommand_exec(const int fd, struct map_session_data *sd, const char *message, bool player_invoked)
 {
 	char params[100], command[100];
 	char output[CHAT_SIZE_MAX];
@@ -10230,7 +10334,8 @@ bool atcommand_exec(const int fd, struct map_session_data *sd, const char *messa
 /*==========================================
  *
  *------------------------------------------*/
-void atcommand_config_read(const char* config_filename) {
+static void atcommand_config_read(const char *config_filename)
+{
 	struct config_t atcommand_config;
 	struct config_setting_t *aliases = NULL, *help = NULL, *nolog = NULL;
 	const char *symbol = NULL;
@@ -10369,7 +10474,7 @@ static inline int atcommand_command_type2idx(AtCommandType type)
  * Loads permissions for groups to use commands.
  *
  */
-void atcommand_db_load_groups(GroupSettings **groups, struct config_setting_t **commands_, size_t sz)
+static void atcommand_db_load_groups(GroupSettings **groups, struct config_setting_t **commands_, size_t sz)
 {
 	struct DBIterator *iter = db_iterator(atcommand->db);
 	AtCommandInfo *atcmd;
@@ -10429,7 +10534,8 @@ void atcommand_db_load_groups(GroupSettings **groups, struct config_setting_t **
 	return;
 }
 
-bool atcommand_can_use(struct map_session_data *sd, const char *command) {
+static bool atcommand_can_use(struct map_session_data *sd, const char *command)
+{
 	AtCommandInfo *acmd_d;
 	struct atcmd_binding_data *bcmd_d;
 
@@ -10446,7 +10552,8 @@ bool atcommand_can_use(struct map_session_data *sd, const char *command) {
 	return false;
 }
 
-bool atcommand_can_use2(struct map_session_data *sd, const char *command, AtCommandType type) {
+static bool atcommand_can_use2(struct map_session_data *sd, const char *command, AtCommandType type)
+{
 	AtCommandInfo *acmd_d;
 	struct atcmd_binding_data *bcmd_d;
 
@@ -10462,7 +10569,9 @@ bool atcommand_can_use2(struct map_session_data *sd, const char *command, AtComm
 
 	return false;
 }
-bool atcommand_hp_add(char *name, AtCommandFunc func) {
+
+static bool atcommand_hp_add(char *name, AtCommandFunc func)
+{
 	/* if commands are added after group permissions are thrown in, they end up with no permissions */
 	/* so we restrict commands to be linked in during boot */
 	if( core->runflag == MAPSERVER_ST_RUNNING ) {
@@ -10476,7 +10585,7 @@ bool atcommand_hp_add(char *name, AtCommandFunc func) {
 /**
  * @see DBApply
  */
-int atcommand_db_clear_sub(union DBKey key, struct DBData *data, va_list args)
+static int atcommand_db_clear_sub(union DBKey key, struct DBData *data, va_list args)
 {
 	AtCommandInfo *cmd = DB->data2ptr(data);
 	aFree(cmd->at_groups);
@@ -10486,7 +10595,8 @@ int atcommand_db_clear_sub(union DBKey key, struct DBData *data, va_list args)
 	return 0;
 }
 
-void atcommand_db_clear(void) {
+static void atcommand_db_clear(void)
+{
 	if( atcommand->db != NULL ) {
 		atcommand->db->destroy(atcommand->db, atcommand->cmd_db_clear_sub);
 		atcommand->db = NULL;
@@ -10497,7 +10607,8 @@ void atcommand_db_clear(void) {
 	}
 }
 
-void atcommand_doload(void) {
+static void atcommand_doload(void)
+{
 	if( core->runflag >= MAPSERVER_ST_RUNNING )
 		atcommand->cmd_db_clear();
 	if( atcommand->db == NULL )
@@ -10508,12 +10619,14 @@ void atcommand_doload(void) {
 	atcommand->config_read(map->ATCOMMAND_CONF_FILENAME);
 }
 
-void atcommand_expand_message_table(void) {
+static void atcommand_expand_message_table(void)
+{
 	RECREATE(atcommand->msg_table, char **, ++atcommand->max_message_table);
 	CREATE(atcommand->msg_table[atcommand->max_message_table - 1], char *, MAX_MSG);
 }
 
-void do_init_atcommand(bool minimal) {
+static void do_init_atcommand(bool minimal)
+{
 	if (minimal)
 		return;
 
@@ -10524,11 +10637,13 @@ void do_init_atcommand(bool minimal) {
 	atcommand->doload();
 }
 
-void do_final_atcommand(void) {
+static void do_final_atcommand(void)
+{
 	atcommand->cmd_db_clear();
 }
 
-void atcommand_defaults(void) {
+void atcommand_defaults(void)
+{
 	atcommand = &atcommand_s;
 
 	atcommand->db = NULL;

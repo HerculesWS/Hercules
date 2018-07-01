@@ -87,8 +87,8 @@
 #include <unistd.h>
 #endif
 
-struct map_interface map_s;
-struct mapit_interface mapit_s;
+static struct map_interface map_s;
+static struct mapit_interface mapit_s;
 
 struct map_interface *map;
 struct mapit_interface *mapit;
@@ -96,18 +96,21 @@ struct mapit_interface *mapit;
 /*==========================================
  * server player count (of all mapservers)
  *------------------------------------------*/
-void map_setusers(int users) {
+static void map_setusers(int users)
+{
 	map->users = users;
 }
 
-int map_getusers(void) {
+static int map_getusers(void)
+{
 	return map->users;
 }
 
 /**
  * Expands map->bl_list on demand
  **/
-static inline void map_bl_list_expand(void) {
+static inline void map_bl_list_expand(void)
+{
 	map->bl_list_size += 250;
 	RECREATE(map->bl_list, struct block_list *, map->bl_list_size);
 }
@@ -115,7 +118,8 @@ static inline void map_bl_list_expand(void) {
 /**
  * Expands map->block_free on demand
  **/
-static inline void map_block_free_expand(void) {
+static inline void map_block_free_expand(void)
+{
 	map->block_free_list_size += 100;
 	RECREATE(map->block_free, struct block_list *, map->block_free_list_size);
 }
@@ -123,14 +127,16 @@ static inline void map_block_free_expand(void) {
 /*==========================================
  * server player count (this mapserver only)
  *------------------------------------------*/
-int map_usercount(void) {
+static int map_usercount(void)
+{
 	return db_size(map->pc_db);
 }
 
 /*==========================================
  * Attempt to free a map blocklist
  *------------------------------------------*/
-int map_freeblock (struct block_list *bl) {
+static int map_freeblock(struct block_list *bl)
+{
 	nullpo_retr(map->block_free_lock, bl);
 
 	if (map->block_free_lock == 0) {
@@ -151,14 +157,16 @@ int map_freeblock (struct block_list *bl) {
 /*==========================================
  * Lock blocklist, (prevent map->freeblock usage)
  *------------------------------------------*/
-int map_freeblock_lock (void) {
+static int map_freeblock_lock(void)
+{
 	return ++map->block_free_lock;
 }
 
 /*==========================================
  * Remove the lock on map_bl
  *------------------------------------------*/
-int map_freeblock_unlock (void) {
+static int map_freeblock_unlock(void)
+{
 	if ((--map->block_free_lock) == 0) {
 		int i;
 		for (i = 0; i < map->block_free_count; i++) {
@@ -179,7 +187,8 @@ int map_freeblock_unlock (void) {
 
 // Timer function to check if there some remaining lock and remove them if so.
 // Called each 1s
-int map_freeblock_timer(int tid, int64 tick, int id, intptr_t data) {
+static int map_freeblock_timer(int tid, int64 tick, int id, intptr_t data)
+{
 	if (map->block_free_lock > 0) {
 		ShowError("map_freeblock_timer: block_free_lock(%d) is invalid.\n", map->block_free_lock);
 		map->block_free_lock = 1;
@@ -193,7 +202,8 @@ int map_freeblock_timer(int tid, int64 tick, int id, intptr_t data) {
  * Updates the counter (cell.cell_bl) of how many objects are on a tile.
  * @param add Whether the counter should be increased or decreased
  **/
-void map_update_cell_bl( struct block_list *bl, bool increase ) {
+static void map_update_cell_bl(struct block_list *bl, bool increase)
+{
 #ifdef CELL_NOSTACK
 	int pos;
 
@@ -222,7 +232,7 @@ void map_update_cell_bl( struct block_list *bl, bool increase ) {
  * Adds a block to the map.
  * Returns 0 on success, 1 on failure (illegal coordinates).
  *------------------------------------------*/
-int map_addblock(struct block_list* bl)
+static int map_addblock(struct block_list *bl)
 {
 	int16 m, x, y;
 	int pos;
@@ -270,7 +280,7 @@ int map_addblock(struct block_list* bl)
 /*==========================================
  * Removes a block from the map.
  *------------------------------------------*/
-int map_delblock(struct block_list* bl)
+static int map_delblock(struct block_list *bl)
 {
 	int pos;
 	nullpo_ret(bl);
@@ -313,7 +323,8 @@ int map_delblock(struct block_list* bl)
  * Pass flag as 1 to prevent doing skill->unit_move checks
  * (which are executed by default on BL_CHAR types)
  *------------------------------------------*/
-int map_moveblock(struct block_list *bl, int x1, int y1, int64 tick) {
+static int map_moveblock(struct block_list *bl, int x1, int y1, int64 tick)
+{
 	struct status_change *sc = NULL;
 	int x0, y0;
 	int moveblock;
@@ -431,7 +442,8 @@ int map_moveblock(struct block_list *bl, int x1, int y1, int64 tick) {
  *   0x2 - don't count invinsible units
  * TODO: merge with bl_getall_area
  *------------------------------------------*/
-int map_count_oncell(int16 m, int16 x, int16 y, int type, int flag) {
+static int map_count_oncell(int16 m, int16 x, int16 y, int type, int flag)
+{
 	int bx,by;
 	struct block_list *bl;
 	int count = 0;
@@ -489,7 +501,8 @@ int map_count_oncell(int16 m, int16 x, int16 y, int type, int flag) {
  * Looks for a skill unit on a given cell
  * flag&1: runs battle_check_target check based on unit->group->target_flag
  */
-struct skill_unit* map_find_skill_unit_oncell(struct block_list* target,int16 x,int16 y,uint16 skill_id,struct skill_unit* out_unit, int flag) {
+static struct skill_unit *map_find_skill_unit_oncell(struct block_list *target, int16 x, int16 y, uint16 skill_id, struct skill_unit *out_unit, int flag)
+{
 	int16 m,bx,by;
 	struct block_list *bl;
 	struct skill_unit *su;
@@ -530,7 +543,8 @@ struct skill_unit* map_find_skill_unit_oncell(struct block_list* target,int16 x,
  * @param args Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int bl_vforeach(int (*func)(struct block_list*, va_list), int blockcount, int max, va_list args) {
+static int bl_vforeach(int (*func)(struct block_list*, va_list), int blockcount, int max, va_list args)
+{
 	int i;
 	int returnCount = 0;
 
@@ -559,7 +573,8 @@ static int bl_vforeach(int (*func)(struct block_list*, va_list), int blockcount,
  * @param args Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_vforeachinmap(int (*func)(struct block_list*, va_list), int16 m, int type, va_list args) {
+static int map_vforeachinmap(int (*func)(struct block_list*, va_list), int16 m, int type, va_list args)
+{
 	int i;
 	int returnCount = 0;
 	int bsize;
@@ -607,7 +622,8 @@ static int map_vforeachinmap(int (*func)(struct block_list*, va_list), int16 m, 
  * @param ... Extra arguments for func
  * @return Sum of the values returned by func
  */
-int map_foreachinmap(int (*func)(struct block_list*, va_list), int16 m, int type, ...) {
+static int map_foreachinmap(int (*func)(struct block_list*, va_list), int16 m, int type, ...)
+{
 	int returnCount;
 	va_list ap;
 
@@ -629,7 +645,8 @@ int map_foreachinmap(int (*func)(struct block_list*, va_list), int16 m, int type
  * @param ap Extra arguments for func
  * @return Sum of the values returned by func
  */
-int map_vforeachininstance(int (*func)(struct block_list*, va_list), int16 instance_id, int type, va_list ap) {
+static int map_vforeachininstance(int (*func)(struct block_list*, va_list), int16 instance_id, int type, va_list ap)
+{
 	int i;
 	int returnCount = 0;
 
@@ -655,7 +672,8 @@ int map_vforeachininstance(int (*func)(struct block_list*, va_list), int16 insta
  * @param ... Extra arguments for func
  * @return Sum of the values returned by func
  */
-int map_foreachininstance(int (*func)(struct block_list*, va_list), int16 instance_id, int type, ...) {
+static int map_foreachininstance(int (*func)(struct block_list*, va_list), int16 instance_id, int type, ...)
+{
 	int returnCount;
 	va_list ap;
 
@@ -675,7 +693,8 @@ int map_foreachininstance(int (*func)(struct block_list*, va_list), int16 instan
  * @param ... Extra arguments for func
  * @return Number of found objects
  */
-static int bl_getall_area(int type, int m, int x0, int y0, int x1, int y1, int (*func)(struct block_list*, va_list), ...) {
+static int bl_getall_area(int type, int m, int x0, int y0, int x1, int y1, int (*func)(struct block_list*, va_list), ...)
+{
 	va_list args;
 	int bx, by;
 	struct block_list *bl;
@@ -813,7 +832,8 @@ static int bl_vgetall_inrange(struct block_list *bl, va_list args)
  * @param ap Extra arguments for func
  * @return Sum of the values returned by func
  */
-int map_vforeachinrange(int (*func)(struct block_list*, va_list), struct block_list* center, int16 range, int type, va_list ap) {
+static int map_vforeachinrange(int (*func)(struct block_list*, va_list), struct block_list *center, int16 range, int type, va_list ap)
+{
 	int returnCount = 0;
 	int blockcount = map->bl_list_count;
 	va_list apcopy;
@@ -841,7 +861,8 @@ int map_vforeachinrange(int (*func)(struct block_list*, va_list), struct block_l
  * @param ... Extra arguments for func
  * @return Sum of the values returned by func
  */
-int map_foreachinrange(int (*func)(struct block_list*, va_list), struct block_list* center, int16 range, int type, ...) {
+static int map_foreachinrange(int (*func)(struct block_list*, va_list), struct block_list *center, int16 range, int type, ...)
+{
 	int returnCount;
 	va_list ap;
 
@@ -865,7 +886,8 @@ int map_foreachinrange(int (*func)(struct block_list*, va_list), struct block_li
  * @param ap Extra arguments for func
  * @return Sum of the values returned by func
  */
-int map_vforcountinrange(int (*func)(struct block_list*, va_list), struct block_list* center, int16 range, int count, int type, va_list ap) {
+static int map_vforcountinrange(int (*func)(struct block_list*, va_list), struct block_list *center, int16 range, int count, int type, va_list ap)
+{
 	int returnCount = 0;
 	int blockcount = map->bl_list_count;
 	va_list apcopy;
@@ -895,7 +917,8 @@ int map_vforcountinrange(int (*func)(struct block_list*, va_list), struct block_
  * @param ... Extra arguments for func
  * @return Sum of the values returned by func
  */
-int map_forcountinrange(int (*func)(struct block_list*, va_list), struct block_list* center, int16 range, int count, int type, ...) {
+static int map_forcountinrange(int (*func)(struct block_list*, va_list), struct block_list *center, int16 range, int count, int type, ...)
+{
 	int returnCount;
 	va_list ap;
 
@@ -941,7 +964,8 @@ static int bl_vgetall_inshootrange(struct block_list *bl, va_list args)
  * @param ap Extra arguments for func
  * @return Sum of the values returned by func
  */
-int map_vforeachinshootrange(int (*func)(struct block_list*, va_list), struct block_list* center, int16 range, int type, va_list ap) {
+static int map_vforeachinshootrange(int (*func)(struct block_list*, va_list), struct block_list *center, int16 range, int type, va_list ap)
+{
 	int returnCount = 0;
 	int blockcount = map->bl_list_count;
 	va_list apcopy;
@@ -969,7 +993,8 @@ int map_vforeachinshootrange(int (*func)(struct block_list*, va_list), struct bl
  * @param ... Extra arguments for func
  * @return Sum of the values returned by func
  */
-int map_foreachinshootrange(int (*func)(struct block_list*, va_list), struct block_list* center, int16 range, int type, ...) {
+static int map_foreachinshootrange(int (*func)(struct block_list*, va_list), struct block_list *center, int16 range, int type, ...)
+{
 	int returnCount;
 	va_list ap;
 
@@ -994,7 +1019,8 @@ int map_foreachinshootrange(int (*func)(struct block_list*, va_list), struct blo
  * @param ap Extra arguments for func
  * @return Sum of the values returned by func
  */
-int map_vforeachinarea(int (*func)(struct block_list*, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int type, va_list ap) {
+static int map_vforeachinarea(int (*func)(struct block_list*, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int type, va_list ap)
+{
 	int returnCount = 0;
 	int blockcount = map->bl_list_count;
 	va_list apcopy;
@@ -1023,7 +1049,8 @@ int map_vforeachinarea(int (*func)(struct block_list*, va_list), int16 m, int16 
  * @param ... Extra arguments for func
  * @return Sum of the values returned by func
  */
-int map_foreachinarea(int (*func)(struct block_list*, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int type, ...) {
+static int map_foreachinarea(int (*func)(struct block_list*, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int type, ...)
+{
 	int returnCount;
 	va_list ap;
 
@@ -1050,7 +1077,8 @@ int map_foreachinarea(int (*func)(struct block_list*, va_list), int16 m, int16 x
  * @param ap Extra arguments for func
  * @return Sum of the values returned by func
  */
-int map_vforcountinarea(int (*func)(struct block_list*,va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int count, int type, va_list ap) {
+static int map_vforcountinarea(int (*func)(struct block_list*, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int count, int type, va_list ap)
+{
 	int returnCount = 0;
 	int blockcount = map->bl_list_count;
 	va_list apcopy;
@@ -1081,7 +1109,8 @@ int map_vforcountinarea(int (*func)(struct block_list*,va_list), int16 m, int16 
  * @param ... Extra arguments for func
  * @return Sum of the values returned by func
  */
-int map_forcountinarea(int (*func)(struct block_list*,va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int count, int type, ...) {
+static int map_forcountinarea(int (*func)(struct block_list*, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int count, int type, ...)
+{
 	int returnCount;
 	va_list ap;
 
@@ -1138,7 +1167,8 @@ static int bl_vgetall_inmovearea(struct block_list *bl, va_list args)
  * @param ap Extra arguments for func
  * @return Sum of the values returned by func
  */
-int map_vforeachinmovearea(int (*func)(struct block_list*, va_list), struct block_list* center, int16 range, int16 dx, int16 dy, int type, va_list ap) {
+static int map_vforeachinmovearea(int (*func)(struct block_list*, va_list), struct block_list *center, int16 range, int16 dx, int16 dy, int type, va_list ap)
+{
 	int returnCount = 0;
 	int blockcount = map->bl_list_count;
 	int m, x0, x1, y0, y1;
@@ -1196,7 +1226,8 @@ int map_vforeachinmovearea(int (*func)(struct block_list*, va_list), struct bloc
  * @param ... Extra arguments for func
  * @return Sum of the values returned by func
  */
-int map_foreachinmovearea(int (*func)(struct block_list*, va_list), struct block_list* center, int16 range, int16 dx, int16 dy, int type, ...) {
+static int map_foreachinmovearea(int (*func)(struct block_list*, va_list), struct block_list *center, int16 range, int16 dx, int16 dy, int type, ...)
+{
 	int returnCount;
 	va_list ap;
 
@@ -1219,7 +1250,8 @@ int map_foreachinmovearea(int (*func)(struct block_list*, va_list), struct block
  * @param ap Extra arguments for func
  * @return Sum of the values returned by func
  */
-int map_vforeachincell(int (*func)(struct block_list*, va_list), int16 m, int16 x, int16 y, int type, va_list ap) {
+static int map_vforeachincell(int (*func)(struct block_list*, va_list), int16 m, int16 x, int16 y, int type, va_list ap)
+{
 	int returnCount = 0;
 	int blockcount = map->bl_list_count;
 	va_list apcopy;
@@ -1245,7 +1277,8 @@ int map_vforeachincell(int (*func)(struct block_list*, va_list), int16 m, int16 
  * @param ... Extra arguments for func
  * @return Sum of the values returned by func
  */
-int map_foreachincell(int (*func)(struct block_list*, va_list), int16 m, int16 x, int16 y, int type, ...) {
+static int map_foreachincell(int (*func)(struct block_list*, va_list), int16 m, int16 x, int16 y, int type, ...)
+{
 	int returnCount;
 	va_list ap;
 
@@ -1324,7 +1357,8 @@ static int bl_vgetall_inpath(struct block_list *bl, va_list args)
  * @param ap Extra arguments for func
  * @return Sum of the values returned by func
  */
-int map_vforeachinpath(int (*func)(struct block_list*, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int16 range, int length, int type, va_list ap) {
+static int map_vforeachinpath(int (*func)(struct block_list*, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int16 range, int length, int type, va_list ap)
+{
 	// [Skotlex]
 	// check for all targets in the square that
 	// contains the initial and final positions (area range increased to match the
@@ -1401,7 +1435,8 @@ int map_vforeachinpath(int (*func)(struct block_list*, va_list), int16 m, int16 
  * @param ... Extra arguments for func
  * @return Sum of the values returned by func
  */
-int map_foreachinpath(int (*func)(struct block_list*, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int16 range, int length, int type, ...) {
+static int map_foreachinpath(int (*func)(struct block_list*, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int16 range, int length, int type, ...)
+{
 	int returnCount;
 	va_list ap;
 
@@ -1417,7 +1452,7 @@ int map_foreachinpath(int (*func)(struct block_list*, va_list), int16 m, int16 x
 /// Generates a new flooritem object id from the interval [MIN_FLOORITEM, MAX_FLOORITEM).
 /// Used for floor items, skill units and chatroom objects.
 /// @return The new object id
-int map_get_new_object_id(void)
+static int map_get_new_object_id(void)
 {
 	static int last_object_id = MIN_FLOORITEM - 1;
 	int i;
@@ -1449,7 +1484,7 @@ int map_get_new_object_id(void)
  * Timered function to clear the floor (remove remaining item)
  * Called each flooritem_lifetime ms
  *------------------------------------------*/
-int map_clearflooritem_timer(int tid, int64 tick, int id, intptr_t data)
+static int map_clearflooritem_timer(int tid, int64 tick, int id, intptr_t data)
 {
 	struct block_list *bl = idb_get(map->id_db, id);
 	struct flooritem_data *fitem = BL_CAST(BL_ITEM, bl);
@@ -1472,7 +1507,7 @@ int map_clearflooritem_timer(int tid, int64 tick, int id, intptr_t data)
 /*
  * clears a single bl item out of the bazooonga.
  */
-void map_clearflooritem(struct block_list *bl)
+static void map_clearflooritem(struct block_list *bl)
 {
 	struct flooritem_data *fitem = BL_CAST(BL_ITEM, bl);
 
@@ -1492,7 +1527,8 @@ void map_clearflooritem(struct block_list *bl)
  * to place an BL_ITEM object. Scan area is 9x9, returns 1 on success.
  * x and y are modified with the target cell when successful.
  *------------------------------------------*/
-int map_searchrandfreecell(int16 m, const struct block_list *bl, int16 *x, int16 *y, int stack) {
+static int map_searchrandfreecell(int16 m, const struct block_list *bl, int16 *x, int16 *y, int stack)
+{
 	int free_cell,i,j;
 	int free_cells[9][2];
 
@@ -1522,7 +1558,8 @@ int map_searchrandfreecell(int16 m, const struct block_list *bl, int16 *x, int16
 	return 1;
 }
 
-int map_count_sub(struct block_list *bl,va_list ap) {
+static int map_count_sub(struct block_list *bl, va_list ap)
+{
 	return 1;
 }
 
@@ -1538,7 +1575,7 @@ int map_count_sub(struct block_list *bl,va_list ap) {
  * &2 = the target should be able to walk to the target tile.
  * &4 = there shouldn't be any players around the target tile (use the no_spawn_on_player setting)
  *------------------------------------------*/
-int map_search_freecell(struct block_list *src, int16 m, int16 *x,int16 *y, int16 rx, int16 ry, int flag)
+static int map_search_freecell(struct block_list *src, int16 m, int16 *x, int16 *y, int16 rx, int16 ry, int flag)
 {
 	int tries, spawn=0;
 	int bx, by;
@@ -1612,7 +1649,7 @@ int map_search_freecell(struct block_list *src, int16 m, int16 *x,int16 *y, int1
  * flag:
  *   0x1 - only count standing units
  *------------------------------------------*/
-bool map_closest_freecell(int16 m, const struct block_list *bl, int16 *x, int16 *y, int type, int flag)
+static bool map_closest_freecell(int16 m, const struct block_list *bl, int16 *x, int16 *y, int type, int flag)
 {
 	uint8 dir = 6;
 	int16 tx;
@@ -1698,7 +1735,7 @@ bool map_closest_freecell(int16 m, const struct block_list *bl, int16 *x, int16 
  * @flag: &1 MVP item. &2 do stacking check.
  * @showdropeffect: show effect when the item is dropped.
  *------------------------------------------*/
-int map_addflooritem(const struct block_list *bl, struct item *item_data, int amount, int16 m, int16 x, int16 y, int first_charid, int second_charid, int third_charid, int flags, bool showdropeffect)
+static int map_addflooritem(const struct block_list *bl, struct item *item_data, int amount, int16 m, int16 x, int16 y, int first_charid, int second_charid, int third_charid, int flags, bool showdropeffect)
 {
 	int r;
 	struct flooritem_data *fitem=NULL;
@@ -1746,7 +1783,7 @@ int map_addflooritem(const struct block_list *bl, struct item *item_data, int am
 /**
  * @see DBCreateData
  */
-struct DBData create_charid2nick(union DBKey key, va_list args)
+static struct DBData create_charid2nick(union DBKey key, va_list args)
 {
 	struct charid2nick *p;
 	CREATE(p, struct charid2nick, 1);
@@ -1755,7 +1792,7 @@ struct DBData create_charid2nick(union DBKey key, va_list args)
 
 /// Adds(or replaces) the nick of charid to nick_db and fullfils pending requests.
 /// Does nothing if the character is online.
-void map_addnickdb(int charid, const char* nick)
+static void map_addnickdb(int charid, const char *nick)
 {
 	struct charid2nick* p;
 	struct charid_request* req;
@@ -1779,7 +1816,7 @@ void map_addnickdb(int charid, const char* nick)
 
 /// Removes the nick of charid from nick_db.
 /// Sends name to all pending requests on charid.
-void map_delnickdb(int charid, const char* name)
+static void map_delnickdb(int charid, const char *name)
 {
 	struct charid2nick* p;
 	struct charid_request* req;
@@ -1803,7 +1840,7 @@ void map_delnickdb(int charid, const char* name)
 /// Notifies sd of the nick of charid.
 /// Uses the name in the character if online.
 /// Uses the name in nick_db if offline.
-void map_reqnickdb(struct map_session_data * sd, int charid)
+static void map_reqnickdb(struct map_session_data  *sd, int charid)
 {
 	struct charid2nick* p;
 	struct charid_request* req;
@@ -1832,7 +1869,7 @@ void map_reqnickdb(struct map_session_data * sd, int charid)
 /*==========================================
  * add bl to id_db
  *------------------------------------------*/
-void map_addiddb(struct block_list *bl)
+static void map_addiddb(struct block_list *bl)
 {
 	nullpo_retv(bl);
 
@@ -1857,7 +1894,7 @@ void map_addiddb(struct block_list *bl)
 /*==========================================
  * remove bl from id_db
  *------------------------------------------*/
-void map_deliddb(struct block_list *bl)
+static void map_deliddb(struct block_list *bl)
 {
 	nullpo_retv(bl);
 
@@ -1879,7 +1916,8 @@ void map_deliddb(struct block_list *bl)
 /*==========================================
  * Standard call when a player connection is closed.
  *------------------------------------------*/
-int map_quit(struct map_session_data *sd) {
+static int map_quit(struct map_session_data *sd)
+{
 	int i;
 
 	nullpo_ret(sd);
@@ -2009,7 +2047,7 @@ int map_quit(struct map_session_data *sd) {
  * @return The searched map_session_data, if it exists.
  * @retval NULL if the ID is invalid or doesn't belong to a player unit.
  */
-struct map_session_data *map_id2sd(int id)
+static struct map_session_data *map_id2sd(int id)
 {
 	struct block_list *bl = NULL;
 	if (id <= 0)
@@ -2029,7 +2067,7 @@ struct map_session_data *map_id2sd(int id)
  * @return The searched npc_data, if it exists.
  * @retval NULL if the ID is invalid or doesn't belong to a NPC.
  */
-struct npc_data *map_id2nd(int id)
+static struct npc_data *map_id2nd(int id)
 {
 	// just a id2bl lookup because there's no npc_db
 	struct block_list* bl = map->id2bl(id);
@@ -2046,7 +2084,7 @@ struct npc_data *map_id2nd(int id)
  * @return The searched mob_data, if it exists.
  * @retval NULL if the ID is invalid or doesn't belong to a mob unit.
  */
-struct mob_data *map_id2md(int id)
+static struct mob_data *map_id2md(int id)
 {
 	struct block_list *bl = NULL;
 	if (id <= 0)
@@ -2066,7 +2104,7 @@ struct mob_data *map_id2md(int id)
  * @return The searched flooritem_data, if it exists.
  * @retval NULL if the ID is invalid or doesn't belong to a floor item.
  */
-struct flooritem_data *map_id2fi(int id)
+static struct flooritem_data *map_id2fi(int id)
 {
 	struct block_list* bl = map->id2bl(id);
 
@@ -2080,7 +2118,7 @@ struct flooritem_data *map_id2fi(int id)
  * @return The searched chat_data, if it exists.
  * @retval NULL if the ID is invalid or doesn't belong to a chat.
  */
-struct chat_data *map_id2cd(int id)
+static struct chat_data *map_id2cd(int id)
 {
 	struct block_list* bl = map->id2bl(id);
 
@@ -2094,7 +2132,7 @@ struct chat_data *map_id2cd(int id)
  * @return The searched skill_unit data, if it exists.
  * @retval NULL if the ID is invalid or doesn't belong to a skill unit.
  */
-struct skill_unit *map_id2su(int id)
+static struct skill_unit *map_id2su(int id)
 {
 	struct block_list* bl = map->id2bl(id);
 
@@ -2108,7 +2146,7 @@ struct skill_unit *map_id2su(int id)
  * @return The searched pet_data, if it exists.
  * @retval NULL if the ID is invalid or doesn't belong to a pet.
  */
-struct pet_data *map_id2pd(int id)
+static struct pet_data *map_id2pd(int id)
 {
 	struct block_list* bl = map->id2bl(id);
 
@@ -2122,7 +2160,7 @@ struct pet_data *map_id2pd(int id)
  * @return The searched homun_data, if it exists.
  * @retval NULL if the ID is invalid or doesn't belong to a homunculus.
  */
-struct homun_data *map_id2hd(int id)
+static struct homun_data *map_id2hd(int id)
 {
 	struct block_list* bl = map->id2bl(id);
 
@@ -2136,7 +2174,7 @@ struct homun_data *map_id2hd(int id)
  * @return The searched mercenary_data, if it exists.
  * @retval NULL if the ID is invalid or doesn't belong to a mercenary.
  */
-struct mercenary_data *map_id2mc(int id)
+static struct mercenary_data *map_id2mc(int id)
 {
 	struct block_list* bl = map->id2bl(id);
 
@@ -2150,7 +2188,7 @@ struct mercenary_data *map_id2mc(int id)
  * @return The searched elemental_data, if it exists.
  * @retval NULL if the ID is invalid or doesn't belong to an elemental.
  */
-struct elemental_data *map_id2ed(int id)
+static struct elemental_data *map_id2ed(int id)
 {
 	struct block_list* bl = map->id2bl(id);
 
@@ -2166,7 +2204,7 @@ struct elemental_data *map_id2ed(int id)
  * @return The searched block_list, if it exists.
  * @retval NULL if the ID is invalid.
  */
-struct block_list *map_id2bl(int id)
+static struct block_list *map_id2bl(int id)
 {
 	return idb_get(map->id_db, id);
 }
@@ -2178,13 +2216,14 @@ struct block_list *map_id2bl(int id)
  * @retval true if the ID exists and is valid.
  * @retval false otherwise.
  */
-bool map_blid_exists(int id)
+static bool map_blid_exists(int id)
 {
 	return (idb_exists(map->id_db,id));
 }
 
 /// Returns the nick of the target charid or NULL if unknown (requests the nick to the char server).
-const char *map_charid2nick(int charid) {
+static const char *map_charid2nick(int charid)
+{
 	struct charid2nick *p;
 	struct map_session_data* sd;
 
@@ -2201,7 +2240,7 @@ const char *map_charid2nick(int charid) {
 }
 
 /// Returns the struct map_session_data of the charid or NULL if the char is not online.
-struct map_session_data* map_charid2sd(int charid)
+static struct map_session_data *map_charid2sd(int charid)
 {
 	struct block_list *bl = idb_get(map->charid_db, charid);
 	if (bl)
@@ -2214,7 +2253,7 @@ struct map_session_data* map_charid2sd(int charid)
  * (without sensitive case if necessary)
  * return map_session_data pointer or NULL
  *------------------------------------------*/
-struct map_session_data * map_nick2sd(const char *nick)
+static struct map_session_data *map_nick2sd(const char *nick)
 {
 	struct map_session_data* sd;
 	struct map_session_data* found_sd;
@@ -2262,7 +2301,7 @@ struct map_session_data * map_nick2sd(const char *nick)
 /*==========================================
  * Convext Mirror
  *------------------------------------------*/
-struct mob_data *map_getmob_boss(int16 m)
+static struct mob_data *map_getmob_boss(int16 m)
 {
 	struct DBIterator *iter;
 	struct mob_data *md = NULL;
@@ -2280,7 +2319,7 @@ struct mob_data *map_getmob_boss(int16 m)
 	return (found)? md : NULL;
 }
 
-struct mob_data *map_id2boss(int id)
+static struct mob_data *map_id2boss(int id)
 {
 	struct block_list *bl = NULL;
 	if (id <= 0)
@@ -2298,7 +2337,7 @@ struct mob_data *map_id2boss(int id)
  *
  * @return The equivalent race bitmask.
  */
-uint32 map_race_id2mask(int race)
+static uint32 map_race_id2mask(int race)
 {
 	if (race >= RC_FORMLESS && race < RC_MAX)
 		return 1 << race;
@@ -2326,7 +2365,7 @@ uint32 map_race_id2mask(int race)
 
 /// Applies func to all the players in the db.
 /// Stops iterating if func returns -1.
-void map_vforeachpc(int (*func)(struct map_session_data* sd, va_list args), va_list args)
+static void map_vforeachpc(int (*func)(struct map_session_data *sd, va_list args), va_list args)
 {
 	struct DBIterator *iter = db_iterator(map->pc_db);
 	struct map_session_data *sd = NULL;
@@ -2348,7 +2387,8 @@ void map_vforeachpc(int (*func)(struct map_session_data* sd, va_list args), va_l
 /// Applies func to all the players in the db.
 /// Stops iterating if func returns -1.
 /// @see map_vforeachpc
-void map_foreachpc(int (*func)(struct map_session_data* sd, va_list args), ...) {
+static void map_foreachpc(int (*func)(struct map_session_data *sd, va_list args), ...)
+{
 	va_list args;
 
 	va_start(args, func);
@@ -2358,7 +2398,7 @@ void map_foreachpc(int (*func)(struct map_session_data* sd, va_list args), ...) 
 
 /// Applies func to all the mobs in the db.
 /// Stops iterating if func returns -1.
-void map_vforeachmob(int (*func)(struct mob_data* md, va_list args), va_list args)
+static void map_vforeachmob(int (*func)(struct mob_data *md, va_list args), va_list args)
 {
 	struct DBIterator *iter = db_iterator(map->mobid_db);
 	struct mob_data *md = NULL;
@@ -2379,7 +2419,8 @@ void map_vforeachmob(int (*func)(struct mob_data* md, va_list args), va_list arg
 /// Applies func to all the mobs in the db.
 /// Stops iterating if func returns -1.
 /// @see map_vforeachmob
-void map_foreachmob(int (*func)(struct mob_data* md, va_list args), ...) {
+static void map_foreachmob(int (*func)(struct mob_data *md, va_list args), ...)
+{
 	va_list args;
 
 	va_start(args, func);
@@ -2389,7 +2430,7 @@ void map_foreachmob(int (*func)(struct mob_data* md, va_list args), ...) {
 
 /// Applies func to all the npcs in the db.
 /// Stops iterating if func returns -1.
-void map_vforeachnpc(int (*func)(struct npc_data* nd, va_list args), va_list args)
+static void map_vforeachnpc(int (*func)(struct npc_data *nd, va_list args), va_list args)
 {
 	struct DBIterator *iter = db_iterator(map->id_db);
 	struct block_list *bl = NULL;
@@ -2413,7 +2454,8 @@ void map_vforeachnpc(int (*func)(struct npc_data* nd, va_list args), va_list arg
 /// Applies func to all the npcs in the db.
 /// Stops iterating if func returns -1.
 /// @see map_vforeachnpc
-void map_foreachnpc(int (*func)(struct npc_data* nd, va_list args), ...) {
+static void map_foreachnpc(int (*func)(struct npc_data *nd, va_list args), ...)
+{
 	va_list args;
 
 	va_start(args, func);
@@ -2423,7 +2465,7 @@ void map_foreachnpc(int (*func)(struct npc_data* nd, va_list args), ...) {
 
 /// Applies func to everything in the db.
 /// Stops iterating gif func returns -1.
-void map_vforeachregen(int (*func)(struct block_list* bl, va_list args), va_list args)
+static void map_vforeachregen(int (*func)(struct block_list *bl, va_list args), va_list args)
 {
 	struct DBIterator *iter = db_iterator(map->regen_db);
 	struct block_list *bl = NULL;
@@ -2444,7 +2486,8 @@ void map_vforeachregen(int (*func)(struct block_list* bl, va_list args), va_list
 /// Applies func to everything in the db.
 /// Stops iterating gif func returns -1.
 /// @see map_vforeachregen
-void map_foreachregen(int (*func)(struct block_list* bl, va_list args), ...) {
+static void map_foreachregen(int (*func)(struct block_list *bl, va_list args), ...)
+{
 	va_list args;
 
 	va_start(args, func);
@@ -2454,7 +2497,7 @@ void map_foreachregen(int (*func)(struct block_list* bl, va_list args), ...) {
 
 /// Applies func to everything in the db.
 /// Stops iterating if func returns -1.
-void map_vforeachiddb(int (*func)(struct block_list* bl, va_list args), va_list args)
+static void map_vforeachiddb(int (*func)(struct block_list *bl, va_list args), va_list args)
 {
 	struct DBIterator *iter = db_iterator(map->id_db);
 	struct block_list *bl = NULL;
@@ -2475,7 +2518,8 @@ void map_vforeachiddb(int (*func)(struct block_list* bl, va_list args), va_list 
 /// Applies func to everything in the db.
 /// Stops iterating if func returns -1.
 /// @see map_vforeachiddb
-void map_foreachiddb(int (*func)(struct block_list* bl, va_list args), ...) {
+static void map_foreachiddb(int (*func)(struct block_list *bl, va_list args), ...)
+{
 	va_list args;
 
 	va_start(args, func);
@@ -2507,7 +2551,8 @@ struct s_mapiterator {
 /// @param flags Flags of the iterator
 /// @param type Target types
 /// @return Iterator
-struct s_mapiterator* mapit_alloc(enum e_mapitflags flags, enum bl_type types) {
+static struct s_mapiterator *mapit_alloc(enum e_mapitflags flags, enum bl_type types)
+{
 	struct s_mapiterator* iter;
 
 	iter = ers_alloc(map->iterator_ers, struct s_mapiterator);
@@ -2522,7 +2567,8 @@ struct s_mapiterator* mapit_alloc(enum e_mapitflags flags, enum bl_type types) {
 /// Frees the iterator.
 ///
 /// @param iter Iterator
-void mapit_free(struct s_mapiterator* iter) {
+static void mapit_free(struct s_mapiterator *iter)
+{
 	nullpo_retv(iter);
 
 	dbi_destroy(iter->dbi);
@@ -2534,7 +2580,8 @@ void mapit_free(struct s_mapiterator* iter) {
 ///
 /// @param iter Iterator
 /// @return first block_list or NULL
-struct block_list* mapit_first(struct s_mapiterator* iter) {
+static struct block_list *mapit_first(struct s_mapiterator *iter)
+{
 	struct block_list* bl;
 
 	nullpo_retr(NULL,iter);
@@ -2551,7 +2598,8 @@ struct block_list* mapit_first(struct s_mapiterator* iter) {
 ///
 /// @param iter Iterator
 /// @return last block_list or NULL
-struct block_list* mapit_last(struct s_mapiterator* iter) {
+static struct block_list *mapit_last(struct s_mapiterator *iter)
+{
 	struct block_list* bl;
 
 	nullpo_retr(NULL,iter);
@@ -2568,7 +2616,8 @@ struct block_list* mapit_last(struct s_mapiterator* iter) {
 ///
 /// @param iter Iterator
 /// @return next block_list or NULL
-struct block_list* mapit_next(struct s_mapiterator* iter) {
+static struct block_list *mapit_next(struct s_mapiterator *iter)
+{
 	struct block_list* bl;
 
 	nullpo_retr(NULL,iter);
@@ -2589,7 +2638,8 @@ struct block_list* mapit_next(struct s_mapiterator* iter) {
 ///
 /// @param iter Iterator
 /// @return previous block_list or NULL
-struct block_list* mapit_prev(struct s_mapiterator* iter) {
+static struct block_list *mapit_prev(struct s_mapiterator *iter)
+{
 	struct block_list* bl;
 
 	nullpo_retr(NULL,iter);
@@ -2609,7 +2659,8 @@ struct block_list* mapit_prev(struct s_mapiterator* iter) {
 ///
 /// @param iter Iterator
 /// @return true if it exists
-bool mapit_exists(struct s_mapiterator* iter) {
+static bool mapit_exists(struct s_mapiterator *iter)
+{
 	nullpo_retr(false,iter);
 
 	return dbi_exists(iter->dbi);
@@ -2618,7 +2669,8 @@ bool mapit_exists(struct s_mapiterator* iter) {
 /*==========================================
  * Add npc-bl to id_db, basically register npc to map
  *------------------------------------------*/
-bool map_addnpc(int16 m,struct npc_data *nd) {
+static bool map_addnpc(int16 m, struct npc_data *nd)
+{
 	nullpo_ret(nd);
 
 	if( m < 0 || m >= map->count )
@@ -2640,7 +2692,8 @@ bool map_addnpc(int16 m,struct npc_data *nd) {
  *-----------------------------------------*/
 // Stores the spawn data entry in the mob list.
 // Returns the index of successful, or -1 if the list was full.
-int map_addmobtolist(unsigned short m, struct spawn_data *spawn) {
+static int map_addmobtolist(unsigned short m, struct spawn_data *spawn)
+{
 	int i;
 	nullpo_retr(-1, spawn);
 	ARR_FIND( 0, MAX_MOB_LIST_PER_MAP, i, map->list[m].moblist[i] == NULL );
@@ -2651,7 +2704,8 @@ int map_addmobtolist(unsigned short m, struct spawn_data *spawn) {
 	return -1;
 }
 
-void map_spawnmobs(int16 m) {
+static void map_spawnmobs(int16 m)
+{
 	int i, k=0;
 	if (map->list[m].mob_delete_timer != INVALID_TIMER) {
 		//Mobs have not been removed yet [Skotlex]
@@ -2670,7 +2724,7 @@ void map_spawnmobs(int16 m) {
 	}
 }
 
-int map_removemobs_sub(struct block_list *bl, va_list ap)
+static int map_removemobs_sub(struct block_list *bl, va_list ap)
 {
 	struct mob_data *md = NULL;
 	nullpo_ret(bl);
@@ -2699,7 +2753,8 @@ int map_removemobs_sub(struct block_list *bl, va_list ap)
 	return 1;
 }
 
-int map_removemobs_timer(int tid, int64 tick, int id, intptr_t data) {
+static int map_removemobs_timer(int tid, int64 tick, int id, intptr_t data)
+{
 	int count;
 	const int16 m = id;
 
@@ -2723,7 +2778,8 @@ int map_removemobs_timer(int tid, int64 tick, int id, intptr_t data) {
 	return 1;
 }
 
-void map_removemobs(int16 m) {
+static void map_removemobs(int16 m)
+{
 	Assert_retv(m >= 0 && m < map->count);
 	if (map->list[m].mob_delete_timer != INVALID_TIMER) // should never happen
 		return; //Mobs are already scheduled for removal
@@ -2734,7 +2790,8 @@ void map_removemobs(int16 m) {
 /*==========================================
  * Hookup, get map_id from map_name
  *------------------------------------------*/
-int16 map_mapname2mapid(const char* name) {
+static int16 map_mapname2mapid(const char *name)
+{
 	unsigned short map_index;
 	map_index = mapindex->name2id(name);
 	if (!map_index)
@@ -2745,7 +2802,8 @@ int16 map_mapname2mapid(const char* name) {
 /*==========================================
  * Returns the map of the given mapindex. [Skotlex]
  *------------------------------------------*/
-int16 map_mapindex2mapid(unsigned short map_index) {
+static int16 map_mapindex2mapid(unsigned short map_index)
+{
 
 	if (!map_index || map_index >= MAX_MAPINDEX)
 		return -1;
@@ -2756,7 +2814,8 @@ int16 map_mapindex2mapid(unsigned short map_index) {
 /*==========================================
  * Switching Ip, port ? (like changing map_server) get ip/port from map_name
  *------------------------------------------*/
-int map_mapname2ipport(unsigned short name, uint32* ip, uint16* port) {
+static int map_mapname2ipport(unsigned short name, uint32 *ip, uint16 *port)
+{
 	struct map_data_other_server *mdos;
 
 	nullpo_retr(-1, ip);
@@ -2770,9 +2829,9 @@ int map_mapname2ipport(unsigned short name, uint32* ip, uint16* port) {
 }
 
 /*==========================================
-* Checks if both dirs point in the same direction.
-*------------------------------------------*/
-int map_check_dir(int s_dir,int t_dir)
+ * Checks if both dirs point in the same direction.
+ *------------------------------------------*/
+static int map_check_dir(int s_dir, int t_dir)
 {
 	if(s_dir == t_dir)
 		return 0;
@@ -2792,7 +2851,7 @@ int map_check_dir(int s_dir,int t_dir)
 /*==========================================
  * Returns the direction of the given cell, relative to 'src'
  *------------------------------------------*/
-uint8 map_calc_dir(struct block_list* src, int16 x, int16 y)
+static uint8 map_calc_dir(struct block_list *src, int16 x, int16 y)
 {
 	uint8 dir = 0;
 	int dx, dy;
@@ -2834,7 +2893,7 @@ uint8 map_calc_dir(struct block_list* src, int16 x, int16 y)
  * Randomizes target cell x,y to a random walkable cell that
  * has the same distance from object as given coordinates do. [Skotlex]
  *------------------------------------------*/
-int map_random_dir(struct block_list *bl, int16 *x, int16 *y)
+static int map_random_dir(struct block_list *bl, int16 *x, int16 *y)
 {
 	short xi;
 	short yi;
@@ -2870,7 +2929,8 @@ int map_random_dir(struct block_list *bl, int16 *x, int16 *y)
 }
 
 // gat system
-struct mapcell map_gat2cell(int gat) {
+static struct mapcell map_gat2cell(int gat)
+{
 	struct mapcell cell;
 
 	memset(&cell,0,sizeof(struct mapcell));
@@ -2891,7 +2951,8 @@ struct mapcell map_gat2cell(int gat) {
 	return cell;
 }
 
-int map_cell2gat(struct mapcell cell) {
+static int map_cell2gat(struct mapcell cell)
+{
 	if( cell.walkable == 1 && cell.shootable == 1 && cell.water == 0 ) return 0;
 	if( cell.walkable == 0 && cell.shootable == 0 && cell.water == 0 ) return 1;
 	if( cell.walkable == 1 && cell.shootable == 1 && cell.water == 1 ) return 3;
@@ -2906,7 +2967,7 @@ int map_cell2gat(struct mapcell cell) {
  *
  * @param[in, out] m The target map.
  */
-void map_cellfromcache(struct map_data *m)
+static void map_cellfromcache(struct map_data *m)
 {
 	nullpo_retv(m);
 
@@ -2939,11 +3000,13 @@ void map_cellfromcache(struct map_data *m)
 /*==========================================
  * Confirm if celltype in (m,x,y) match the one given in cellchk
  *------------------------------------------*/
-int map_getcell(int16 m, const struct block_list *bl, int16 x, int16 y, cell_chk cellchk) {
+static int map_getcell(int16 m, const struct block_list *bl, int16 x, int16 y, cell_chk cellchk)
+{
 	return (m < 0 || m >= map->count) ? 0 : map->list[m].getcellp(&map->list[m], bl, x, y, cellchk);
 }
 
-int map_getcellp(struct map_data* m, const struct block_list *bl, int16 x, int16 y, cell_chk cellchk) {
+static int map_getcellp(struct map_data *m, const struct block_list *bl, int16 x, int16 y, cell_chk cellchk)
+{
 	struct mapcell cell;
 
 	nullpo_ret(m);
@@ -3011,7 +3074,8 @@ int map_getcellp(struct map_data* m, const struct block_list *bl, int16 x, int16
 }
 
 /* [Ind/Hercules] */
-int map_sub_getcellp(struct map_data* m, const struct block_list *bl, int16 x, int16 y, cell_chk cellchk) {
+static int map_sub_getcellp(struct map_data *m, const struct block_list *bl, int16 x, int16 y, cell_chk cellchk)
+{
 	nullpo_ret(m);
 	map->cellfromcache(m);
 	m->getcellp = map->getcellp;
@@ -3024,7 +3088,8 @@ int map_sub_getcellp(struct map_data* m, const struct block_list *bl, int16 x, i
  * 'cell' - which flag to modify
  * 'flag' - true = on, false = off
  *------------------------------------------*/
-void map_setcell(int16 m, int16 x, int16 y, cell_t cell, bool flag) {
+static void map_setcell(int16 m, int16 x, int16 y, cell_t cell, bool flag)
+{
 	int j;
 
 	if( m < 0 || m >= map->count || x < 0 || x >= map->list[m].xs || y < 0 || y >= map->list[m].ys )
@@ -3050,7 +3115,8 @@ void map_setcell(int16 m, int16 x, int16 y, cell_t cell, bool flag) {
 		break;
 	}
 }
-void map_sub_setcell(int16 m, int16 x, int16 y, cell_t cell, bool flag) {
+static void map_sub_setcell(int16 m, int16 x, int16 y, cell_t cell, bool flag)
+{
 	if( m < 0 || m >= map->count || x < 0 || x >= map->list[m].xs || y < 0 || y >= map->list[m].ys )
 		return;
 
@@ -3059,7 +3125,8 @@ void map_sub_setcell(int16 m, int16 x, int16 y, cell_t cell, bool flag) {
 	map->list[m].getcellp = map->getcellp;
 	map->list[m].setcell(m,x,y,cell,flag);
 }
-void map_setgatcell(int16 m, int16 x, int16 y, int gat) {
+static void map_setgatcell(int16 m, int16 x, int16 y, int gat)
+{
 	int j;
 	struct mapcell cell;
 
@@ -3075,9 +3142,9 @@ void map_setgatcell(int16 m, int16 x, int16 y, int gat) {
 }
 
 /*==========================================
-* Invisible Walls
-*------------------------------------------*/
-void map_iwall_nextxy(int16 x, int16 y, int8 dir, int pos, int16 *x1, int16 *y1)
+ * Invisible Walls
+ *------------------------------------------*/
+static void map_iwall_nextxy(int16 x, int16 y, int8 dir, int pos, int16 *x1, int16 *y1)
 {
 	nullpo_retv(x1);
 	nullpo_retv(y1);
@@ -3097,7 +3164,7 @@ void map_iwall_nextxy(int16 x, int16 y, int8 dir, int pos, int16 *x1, int16 *y1)
 		*y1 = y + pos;
 }
 
-bool map_iwall_set(int16 m, int16 x, int16 y, int size, int8 dir, bool shootable, const char* wall_name)
+static bool map_iwall_set(int16 m, int16 x, int16 y, int size, int8 dir, bool shootable, const char *wall_name)
 {
 	struct iwall_data *iwall;
 	int i;
@@ -3141,7 +3208,7 @@ bool map_iwall_set(int16 m, int16 x, int16 y, int size, int8 dir, bool shootable
 	return true;
 }
 
-void map_iwall_get(struct map_session_data *sd)
+static void map_iwall_get(struct map_session_data *sd)
 {
 	struct iwall_data *iwall;
 	struct DBIterator *iter;
@@ -3166,7 +3233,7 @@ void map_iwall_get(struct map_session_data *sd)
 	dbi_destroy(iter);
 }
 
-bool map_iwall_remove(const char *wall_name)
+static bool map_iwall_remove(const char *wall_name)
 {
 	struct iwall_data *iwall;
 	int16 i, x1, y1;
@@ -3191,7 +3258,7 @@ bool map_iwall_remove(const char *wall_name)
 /**
  * @see DBCreateData
  */
-struct DBData create_map_data_other_server(union DBKey key, va_list args)
+static struct DBData create_map_data_other_server(union DBKey key, va_list args)
 {
 	struct map_data_other_server *mdos;
 	unsigned short map_index = (unsigned short)key.ui;
@@ -3204,7 +3271,7 @@ struct DBData create_map_data_other_server(union DBKey key, va_list args)
 /*==========================================
  * Add mapindex to db of another map server
  *------------------------------------------*/
-int map_setipport(unsigned short map_index, uint32 ip, uint16 port)
+static int map_setipport(unsigned short map_index, uint32 ip, uint16 port)
 {
 	struct map_data_other_server *mdos;
 
@@ -3226,7 +3293,7 @@ int map_setipport(unsigned short map_index, uint32 ip, uint16 port)
  * Delete all the other maps server management
  * @see DBApply
  */
-int map_eraseallipport_sub(union DBKey key, struct DBData *data, va_list va)
+static int map_eraseallipport_sub(union DBKey key, struct DBData *data, va_list va)
 {
 	struct map_data_other_server *mdos = DB->data2ptr(data);
 	nullpo_ret(mdos);
@@ -3237,7 +3304,8 @@ int map_eraseallipport_sub(union DBKey key, struct DBData *data, va_list va)
 	return 0;
 }
 
-int map_eraseallipport(void) {
+static int map_eraseallipport(void)
+{
 	map->map_db->foreach(map->map_db,map->eraseallipport_sub);
 	return 1;
 }
@@ -3245,7 +3313,8 @@ int map_eraseallipport(void) {
 /*==========================================
  * Delete mapindex from db of another map server
  *------------------------------------------*/
-int map_eraseipport(unsigned short map_index, uint32 ip, uint16 port) {
+static int map_eraseipport(unsigned short map_index, uint32 ip, uint16 port)
+{
 	struct map_data_other_server *mdos;
 
 	mdos = (struct map_data_other_server*)uidb_get(map->map_db,(unsigned int)map_index);
@@ -3267,7 +3336,7 @@ int map_eraseipport(unsigned short map_index, uint32 ip, uint16 port) {
  * @return The loading success state.
  * @retval false in case of errors.
  */
-bool map_readfromcache(struct map_data *m)
+static bool map_readfromcache(struct map_data *m)
 {
 	unsigned int file_size;
 	char file_path[256];
@@ -3319,7 +3388,7 @@ bool map_readfromcache(struct map_data *m)
  * @return The loading success state.
  * @retval false in case of errors.
  */
-bool map_readfromcache_v1(FILE *fp, struct map_data *m, unsigned int file_size)
+static bool map_readfromcache_v1(FILE *fp, struct map_data *m, unsigned int file_size)
 {
 	struct map_cache_header mheader = { 0 };
 	uint8 md5buf[16] = { 0 };
@@ -3389,7 +3458,7 @@ bool map_readfromcache_v1(FILE *fp, struct map_data *m, unsigned int file_size)
  * @param mapname The new map's name.
  * @return success state.
  */
-int map_addmap(const char *mapname)
+static int map_addmap(const char *mapname)
 {
 	map->list[map->count].instance_id = -1;
 	mapindex->getmapname(mapname, map->list[map->count++].name);
@@ -3401,7 +3470,7 @@ int map_addmap(const char *mapname)
  *
  * @param id The map ID.
  */
-void map_delmapid(int id)
+static void map_delmapid(int id)
 {
 	Assert_retv(id >= 0 && id < map->count);
 	ShowNotice("Removing map [ %s ] from maplist"CL_CLL"\n",map->list[id].name);
@@ -3415,7 +3484,7 @@ void map_delmapid(int id)
  * @param mapname The name of the map to remove.
  * @return the number of removed maps.
  */
-int map_delmap(const char *mapname)
+static int map_delmap(const char *mapname)
 {
 	int i;
 	char map_name[MAP_NAME_LENGTH];
@@ -3439,7 +3508,8 @@ int map_delmap(const char *mapname)
 /**
  *
  **/
-void map_zone_clear_single(struct map_zone_data *zone) {
+static void map_zone_clear_single(struct map_zone_data *zone)
+{
 	int i;
 
 	nullpo_retv(zone);
@@ -3481,7 +3551,7 @@ void map_zone_clear_single(struct map_zone_data *zone) {
 /**
  *
  **/
-void map_zone_db_clear(void)
+static void map_zone_db_clear(void)
 {
 	struct DBIterator *iter = db_iterator(map->zone_db);
 	struct map_zone_data *zone = NULL;
@@ -3499,7 +3569,8 @@ void map_zone_db_clear(void)
 	/* clear the main zone stuff */
 	map->zone_clear_single(&map->zone_all);
 }
-void map_clean(int i) {
+static void map_clean(int i)
+{
 	int v;
 	Assert_retv(i >= 0 && i < map->count);
 	if(map->list[i].cell && map->list[i].cell != (struct mapcell *)0xdeadbeaf) aFree(map->list[i].cell);
@@ -3550,7 +3621,8 @@ void map_clean(int i) {
 	if( map->list[i].channel )
 		channel->delete(map->list[i].channel);
 }
-void do_final_maps(void) {
+static void do_final_maps(void)
+{
 	int i, v = 0;
 
 	for( i = 0; i < map->count; i++ ) {
@@ -3619,7 +3691,8 @@ void do_final_maps(void) {
 
 }
 /// Initializes map flags and adjusts them depending on configuration.
-void map_flags_init(void) {
+static void map_flags_init(void)
+{
 	int i, v = 0;
 
 	for( i = 0; i < map->count; i++ ) {
@@ -3695,7 +3768,7 @@ void map_flags_init(void) {
  * Assumed path for file is data/mapname.rsw
  * Credits to LittleWolf
  */
-int map_waterheight(char* mapname)
+static int map_waterheight(char *mapname)
 {
 	char fn[256];
 	char *rsw = NULL;
@@ -3723,7 +3796,7 @@ int map_waterheight(char* mapname)
 /*==================================
  * .GAT format
  *----------------------------------*/
-int map_readgat (struct map_data* m)
+static int map_readgat(struct map_data *m)
 {
 	char filename[256];
 	uint8* gat;
@@ -3767,12 +3840,14 @@ int map_readgat (struct map_data* m)
 /*======================================
  * Add/Remove map to the map_db
  *--------------------------------------*/
-void map_addmap2db(struct map_data *m) {
+static void map_addmap2db(struct map_data *m)
+{
 	nullpo_retv(m);
 	map->index2mapid[m->index] = m->m;
 }
 
-void map_removemapdb(struct map_data *m) {
+static void map_removemapdb(struct map_data *m)
+{
 	nullpo_retv(m);
 	map->index2mapid[m->index] = -1;
 }
@@ -3780,7 +3855,8 @@ void map_removemapdb(struct map_data *m) {
 /*======================================
  * Initiate maps loading stage
  *--------------------------------------*/
-int map_readallmaps (void) {
+static int map_readallmaps(void)
+{
 	int i;
 	int maps_removed = 0;
 
@@ -3862,7 +3938,7 @@ int map_readallmaps (void) {
  *
  * @retval false in case of error.
  */
-bool map_config_read_console(const char *filename, struct config_t *config, bool imported)
+static bool map_config_read_console(const char *filename, struct config_t *config, bool imported)
 {
 	struct config_setting_t *setting = NULL;
 
@@ -3896,7 +3972,7 @@ bool map_config_read_console(const char *filename, struct config_t *config, bool
  *
  * @retval false in case of error.
  */
-bool map_config_read_connection(const char *filename, struct config_t *config, bool imported)
+static bool map_config_read_connection(const char *filename, struct config_t *config, bool imported)
 {
 	struct config_setting_t *setting = NULL;
 
@@ -3929,7 +4005,7 @@ bool map_config_read_connection(const char *filename, struct config_t *config, b
  *
  * @retval false in case of error.
  */
-bool map_config_read_inter(const char *filename, struct config_t *config, bool imported)
+static bool map_config_read_inter(const char *filename, struct config_t *config, bool imported)
 {
 	struct config_setting_t *setting = NULL;
 	const char *str = NULL;
@@ -3979,7 +4055,7 @@ bool map_config_read_inter(const char *filename, struct config_t *config, bool i
  *
  * @retval false in case of error.
  */
-bool map_config_read_database(const char *filename, struct config_t *config, bool imported)
+static bool map_config_read_database(const char *filename, struct config_t *config, bool imported)
 {
 	struct config_setting_t *setting = NULL;
 
@@ -4019,7 +4095,7 @@ bool map_config_read_database(const char *filename, struct config_t *config, boo
  *
  * @retval false in case of error.
  */
-bool map_config_read_map_list(const char *filename, struct config_t *config, bool imported)
+static bool map_config_read_map_list(const char *filename, struct config_t *config, bool imported)
 {
 	struct config_setting_t *setting = NULL;
 	int i, count = 0;
@@ -4094,7 +4170,7 @@ bool map_config_read_map_list(const char *filename, struct config_t *config, boo
  *
  * @retval false in case of error.
  */
-bool map_config_read(const char *filename, bool imported)
+static bool map_config_read(const char *filename, bool imported)
 {
 	struct config_t config;
 	struct config_setting_t *setting = NULL;
@@ -4154,7 +4230,7 @@ bool map_config_read(const char *filename, bool imported)
  *
  * @retval false in case of error.
  */
-bool map_read_npclist(const char *filename, bool imported)
+static bool map_read_npclist(const char *filename, bool imported)
 {
 	struct config_t config;
 	struct config_setting_t *setting = NULL;
@@ -4241,7 +4317,8 @@ bool map_read_npclist(const char *filename, bool imported)
  *
  * @param clear whether to clear the script list before reloading.
  */
-void map_reloadnpc(bool clear) {
+static void map_reloadnpc(bool clear)
+{
 	int i;
 	if (clear)
 		npc->clearsrcfile();
@@ -4266,7 +4343,7 @@ void map_reloadnpc(bool clear) {
  *
  * @retval false in case of error.
  */
-bool inter_config_read(const char *filename, bool imported)
+static bool inter_config_read(const char *filename, bool imported)
 {
 	struct config_t config;
 	const struct config_setting_t *setting = NULL;
@@ -4317,7 +4394,7 @@ bool inter_config_read(const char *filename, bool imported)
  *
  * @retval false in case of error.
  */
-bool inter_config_read_connection(const char *filename, const struct config_t *config, bool imported)
+static bool inter_config_read_connection(const char *filename, const struct config_t *config, bool imported)
 {
 	const struct config_setting_t *setting = NULL;
 
@@ -4349,7 +4426,7 @@ bool inter_config_read_connection(const char *filename, const struct config_t *c
  *
  * @retval false in case of error.
  */
-bool inter_config_read_database_names(const char *filename, const struct config_t *config, bool imported)
+static bool inter_config_read_database_names(const char *filename, const struct config_t *config, bool imported)
 {
 	const struct config_setting_t *setting = NULL;
 	bool retval = true;
@@ -4383,7 +4460,7 @@ bool inter_config_read_database_names(const char *filename, const struct config_
 /*=======================================
  *  MySQL Init
  *---------------------------------------*/
-int map_sql_init(void)
+static int map_sql_init(void)
 {
 	// main db connection
 	map->mysql_handle = SQL->Malloc();
@@ -4400,7 +4477,7 @@ int map_sql_init(void)
 	return 0;
 }
 
-int map_sql_close(void)
+static int map_sql_close(void)
 {
 	ShowStatus("Close Map DB Connection....\n");
 	SQL->Free(map->mysql_handle);
@@ -4418,7 +4495,8 @@ int map_sql_close(void)
  *
  * @return the newly created zone from merging main and other
  **/
-struct map_zone_data *map_merge_zone(struct map_zone_data *main, struct map_zone_data *other) {
+static struct map_zone_data *map_merge_zone(struct map_zone_data *main, struct map_zone_data *other)
+{
 	char newzone[MAP_ZONE_NAME_LENGTH];
 	struct map_zone_data *zone = NULL;
 	int cursor, i, j;
@@ -4515,7 +4593,7 @@ struct map_zone_data *map_merge_zone(struct map_zone_data *main, struct map_zone
 	return zone;
 }
 
-void map_zone_change2(int m, struct map_zone_data *zone)
+static void map_zone_change2(int m, struct map_zone_data *zone)
 {
 	const char *empty = "";
 
@@ -4538,7 +4616,8 @@ void map_zone_change2(int m, struct map_zone_data *zone)
 	map->zone_apply(m,zone,empty,empty,empty);
 }
 /* when changing from a mapflag to another during runtime */
-void map_zone_change(int m, struct map_zone_data *zone, const char* start, const char* buffer, const char* filepath) {
+static void map_zone_change(int m, struct map_zone_data *zone, const char *start, const char *buffer, const char *filepath)
+{
 	Assert_retv(m >= 0 && m < map->count);
 	map->list[m].prev_zone = map->list[m].zone;
 
@@ -4547,7 +4626,7 @@ void map_zone_change(int m, struct map_zone_data *zone, const char* start, const
 	map->zone_apply(m,zone,start,buffer,filepath);
 }
 /* removes previous mapflags from this map */
-void map_zone_remove(int m)
+static void map_zone_remove(int m)
 {
 	char flag[MAP_ZONE_MAPFLAG_LENGTH], params[MAP_ZONE_MAPFLAG_LENGTH];
 	unsigned short k;
@@ -4574,7 +4653,8 @@ void map_zone_remove(int m)
 	map->list[m].zone_mf = NULL;
 	map->list[m].zone_mf_count = 0;
 }
-static inline void map_zone_mf_cache_add(int m, char *rflag) {
+static inline void map_zone_mf_cache_add(int m, char *rflag)
+{
 	Assert_retv(m >= 0 && m < map->count);
 	RECREATE(map->list[m].zone_mf, char *, ++map->list[m].zone_mf_count);
 	CREATE(map->list[m].zone_mf[map->list[m].zone_mf_count - 1], char, MAP_ZONE_MAPFLAG_LENGTH);
@@ -4582,7 +4662,8 @@ static inline void map_zone_mf_cache_add(int m, char *rflag) {
 }
 /* TODO: introduce enumerations to each mapflag so instead of reading the string a number of times we read it only once and use its value wherever we need */
 /* cache previous values to revert */
-bool map_zone_mf_cache(int m, char *flag, char *params) {
+static bool map_zone_mf_cache(int m, char *flag, char *params)
+{
 	char rflag[MAP_ZONE_MAPFLAG_LENGTH];
 	int state = 1;
 
@@ -5292,7 +5373,7 @@ bool map_zone_mf_cache(int m, char *flag, char *params) {
 
 	return false;
 }
-void map_zone_apply(int m, struct map_zone_data *zone, const char* start, const char* buffer, const char* filepath)
+static void map_zone_apply(int m, struct map_zone_data *zone, const char *start, const char *buffer, const char *filepath)
 {
 	int i;
 	const char *empty = "";
@@ -5320,7 +5401,7 @@ void map_zone_apply(int m, struct map_zone_data *zone, const char* start, const 
 	}
 }
 /* used on npc load and reload to apply all "Normal" and "PK Mode" zones */
-void map_zone_init(void)
+static void map_zone_init(void)
 {
 	char flag[MAP_ZONE_MAPFLAG_LENGTH], params[MAP_ZONE_MAPFLAG_LENGTH];
 	struct map_zone_data *zone;
@@ -5374,7 +5455,8 @@ void map_zone_init(void)
 	}
 
 }
-unsigned short map_zone_str2itemid(const char *name) {
+static unsigned short map_zone_str2itemid(const char *name)
+{
 	struct item_data *data;
 
 	if( !name )
@@ -5390,7 +5472,8 @@ unsigned short map_zone_str2itemid(const char *name) {
 	}
 	return data->nameid;
 }
-unsigned short map_zone_str2skillid(const char *name) {
+static unsigned short map_zone_str2skillid(const char *name)
+{
 	unsigned short nameid = 0;
 
 	if( !name )
@@ -5406,7 +5489,8 @@ unsigned short map_zone_str2skillid(const char *name) {
 	}
 	return nameid;
 }
-enum bl_type map_zone_bl_type(const char *entry, enum map_zone_skill_subtype *subtype) {
+static enum bl_type map_zone_bl_type(const char *entry, enum map_zone_skill_subtype *subtype)
+{
 	char temp[200], *parse;
 	enum bl_type bl = BL_NUL;
 
@@ -5452,7 +5536,8 @@ enum bl_type map_zone_bl_type(const char *entry, enum map_zone_skill_subtype *su
 	return bl;
 }
 /* [Ind/Hercules] */
-void read_map_zone_db(void) {
+static void read_map_zone_db(void)
+{
 	struct config_t map_zone_db;
 	struct config_setting_t *zones = NULL;
 	/* TODO: #ifndef required for re/pre-re */
@@ -5880,11 +5965,13 @@ void read_map_zone_db(void) {
 	libconfig->destroy(&map_zone_db);
 }
 
-int map_get_new_bonus_id (void) {
+static int map_get_new_bonus_id(void)
+{
 	return map->bonus_id++;
 }
 
-void map_add_questinfo(int m, struct questinfo *qi) {
+static void map_add_questinfo(int m, struct questinfo *qi)
+{
 	unsigned short i;
 
 	nullpo_retv(qi);
@@ -5901,7 +5988,8 @@ void map_add_questinfo(int m, struct questinfo *qi) {
 	memcpy(&map->list[m].qi_data[i], qi, sizeof(struct questinfo));
 }
 
-bool map_remove_questinfo(int m, struct npc_data *nd) {
+static bool map_remove_questinfo(int m, struct npc_data *nd)
+{
 	unsigned short i;
 
 	Assert_retr(false, m >= 0 && m < map->count);
@@ -5921,7 +6009,7 @@ bool map_remove_questinfo(int m, struct npc_data *nd) {
 /**
  * @see DBApply
  */
-int map_db_final(union DBKey key, struct DBData *data, va_list ap)
+static int map_db_final(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct map_data_other_server *mdos = DB->data2ptr(data);
 
@@ -5934,7 +6022,7 @@ int map_db_final(union DBKey key, struct DBData *data, va_list ap)
 /**
  * @see DBApply
  */
-int nick_db_final(union DBKey key, struct DBData *data, va_list args)
+static int nick_db_final(union DBKey key, struct DBData *data, va_list args)
 {
 	struct charid2nick* p = DB->data2ptr(data);
 	struct charid_request* req;
@@ -5951,7 +6039,8 @@ int nick_db_final(union DBKey key, struct DBData *data, va_list args)
 	return 0;
 }
 
-int cleanup_sub(struct block_list *bl, va_list ap) {
+static int cleanup_sub(struct block_list *bl, va_list ap)
+{
 	nullpo_ret(bl);
 
 	switch(bl->type) {
@@ -5981,7 +6070,7 @@ int cleanup_sub(struct block_list *bl, va_list ap) {
 /**
  * @see DBApply
  */
-int cleanup_db_sub(union DBKey key, struct DBData *data, va_list va)
+static int cleanup_db_sub(union DBKey key, struct DBData *data, va_list va)
 {
 	return map->cleanup_sub(DB->data2ptr(data), va);
 }
@@ -5989,7 +6078,8 @@ int cleanup_db_sub(union DBKey key, struct DBData *data, va_list va)
 /*==========================================
  * map destructor
  *------------------------------------------*/
-int do_final(void) {
+int do_final(void)
+{
 	int i;
 	struct map_session_data* sd;
 	struct s_mapiterator* iter;
@@ -6108,7 +6198,8 @@ int do_final(void) {
 	return map->retval;
 }
 
-int map_abort_sub(struct map_session_data* sd, va_list ap) {
+static int map_abort_sub(struct map_session_data *sd, va_list ap)
+{
 	chrif->save(sd,1);
 	return 1;
 }
@@ -6137,12 +6228,13 @@ void do_abort(void)
 	chrif->flush();
 }
 
-void set_server_type(void) {
+void set_server_type(void)
+{
 	SERVER_TYPE = SERVER_TYPE_MAP;
 }
 
 /// Called when a terminate signal is received.
-void do_shutdown(void)
+static void do_shutdown(void)
 {
 	if( core->runflag != MAPSERVER_ST_SHUTDOWN )
 	{
@@ -6160,7 +6252,8 @@ void do_shutdown(void)
 	}
 }
 
-CPCMD(gm_position) {
+static CPCMD(gm_position)
+{
 	int x = 0, y = 0, m = 0;
 	char map_name[25];
 
@@ -6184,7 +6277,8 @@ CPCMD(gm_position) {
 	map->cpsd->bl.y = y;
 	map->cpsd->bl.m = m;
 }
-CPCMD(gm_use) {
+static CPCMD(gm_use)
+{
 
 	if( line == NULL ) {
 		ShowError("gm:use invalid syntax. use '"CL_WHITE"gm:use @command <optional params>"CL_RESET"'\n");
@@ -6201,7 +6295,8 @@ CPCMD(gm_use) {
 	map->cpsd_active = false;
 }
 /* Hercules Console Parser */
-void map_cp_defaults(void) {
+static void map_cp_defaults(void)
+{
 #ifdef CONSOLE_INPUT
 	/* default HCP data */
 	map->cpsd = pc->get_dummy_sd();
@@ -6215,7 +6310,8 @@ void map_cp_defaults(void) {
 #endif
 }
 
-void map_load_defaults(void) {
+static void map_load_defaults(void)
+{
 	mapindex_defaults();
 	map_defaults();
 	/* */
@@ -6624,11 +6720,12 @@ int do_init(int argc, char *argv[])
 }
 
 /*=====================================
-* Default Functions : map.h
-* Generated by HerculesInterfaceMaker
-* created by Susu
-*-------------------------------------*/
-void map_defaults(void) {
+ * Default Functions : map.h
+ * Generated by HerculesInterfaceMaker
+ * created by Susu
+ *-------------------------------------*/
+void map_defaults(void)
+{
 	map = &map_s;
 
 	/* */

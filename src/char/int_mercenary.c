@@ -38,10 +38,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct inter_mercenary_interface inter_mercenary_s;
+static struct inter_mercenary_interface inter_mercenary_s;
 struct inter_mercenary_interface *inter_mercenary;
 
-bool inter_mercenary_owner_fromsql(int char_id, struct mmo_charstatus *status)
+static bool inter_mercenary_owner_fromsql(int char_id, struct mmo_charstatus *status)
 {
 	char* data;
 
@@ -70,7 +70,7 @@ bool inter_mercenary_owner_fromsql(int char_id, struct mmo_charstatus *status)
 	return true;
 }
 
-bool inter_mercenary_owner_tosql(int char_id, struct mmo_charstatus *status)
+static bool inter_mercenary_owner_tosql(int char_id, struct mmo_charstatus *status)
 {
 	nullpo_ret(status);
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`char_id`, `merc_id`, `arch_calls`, `arch_faith`, `spear_calls`, `spear_faith`, `sword_calls`, `sword_faith`) VALUES ('%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d')",
@@ -83,7 +83,7 @@ bool inter_mercenary_owner_tosql(int char_id, struct mmo_charstatus *status)
 	return true;
 }
 
-bool inter_mercenary_owner_delete(int char_id)
+static bool inter_mercenary_owner_delete(int char_id)
 {
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `char_id` = '%d'", mercenary_owner_db, char_id) )
 		Sql_ShowDebug(inter->sql_handle);
@@ -104,7 +104,7 @@ bool inter_mercenary_owner_delete(int char_id)
  * @param[in,out] merc The new mercenary's data.
  * @retval false in case of errors.
  */
-bool inter_mercenary_create(struct s_mercenary *merc)
+static bool inter_mercenary_create(struct s_mercenary *merc)
 {
 	nullpo_retr(false, merc);
 	Assert_retr(false, merc->mercenary_id == 0);
@@ -126,7 +126,7 @@ bool inter_mercenary_create(struct s_mercenary *merc)
  * @param merc The mercenary's data.
  * @retval false in case of errors.
  */
-bool inter_mercenary_save(const struct s_mercenary *merc)
+static bool inter_mercenary_save(const struct s_mercenary *merc)
 {
 	nullpo_retr(false, merc);
 	Assert_retr(false, merc->mercenary_id > 0);
@@ -141,7 +141,7 @@ bool inter_mercenary_save(const struct s_mercenary *merc)
 	return true;
 }
 
-bool inter_mercenary_load(int merc_id, int char_id, struct s_mercenary *merc)
+static bool inter_mercenary_load(int merc_id, int char_id, struct s_mercenary *merc)
 {
 	char* data;
 
@@ -174,7 +174,7 @@ bool inter_mercenary_load(int merc_id, int char_id, struct s_mercenary *merc)
 	return true;
 }
 
-bool inter_mercenary_delete(int merc_id)
+static bool inter_mercenary_delete(int merc_id)
 {
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `mer_id` = '%d'", mercenary_db, merc_id) )
 	{
@@ -185,11 +185,12 @@ bool inter_mercenary_delete(int merc_id)
 	return true;
 }
 
-int inter_mercenary_sql_init(void)
+static int inter_mercenary_sql_init(void)
 {
 	return 0;
 }
-void inter_mercenary_sql_final(void)
+
+static void inter_mercenary_sql_final(void)
 {
 	return;
 }
@@ -197,7 +198,7 @@ void inter_mercenary_sql_final(void)
 /*==========================================
  * Inter Packets
  *------------------------------------------*/
-int inter_mercenary_parse_frommap(int fd)
+static int inter_mercenary_parse_frommap(int fd)
 {
 	unsigned short cmd = RFIFOW(fd,0);
 

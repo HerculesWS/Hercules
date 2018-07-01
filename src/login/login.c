@@ -50,17 +50,17 @@
  * Implementation of the login interface.
  */
 
-struct login_interface login_s;
+static struct login_interface login_s;
 struct login_interface *login;
-struct s_login_dbs logindbs;
-struct lchrif_interface lchrif_s;
+static struct s_login_dbs logindbs;
+static struct lchrif_interface lchrif_s;
 struct lchrif_interface *lchrif;
-struct Login_Config login_config_;
+static struct Login_Config login_config_;
 
-struct Account_engine account_engine;
+static struct Account_engine account_engine;
 
 // account database
-AccountDB* accounts = NULL;
+static AccountDB *accounts = NULL;
 
 //-----------------------------------------------------
 // Auth database
@@ -80,7 +80,7 @@ static struct DBData login_create_online_user(union DBKey key, va_list args)
 	return DB->ptr2data(p);
 }
 
-struct online_login_data* login_add_online_user(int char_server, int account_id)
+static struct online_login_data* login_add_online_user(int char_server, int account_id)
 {
 	struct online_login_data* p;
 	p = idb_ensure(login->online_db, account_id, login->create_online_user);
@@ -93,7 +93,7 @@ struct online_login_data* login_add_online_user(int char_server, int account_id)
 	return p;
 }
 
-void login_remove_online_user(int account_id)
+static void login_remove_online_user(int account_id)
 {
 	struct online_login_data* p;
 	p = (struct online_login_data*)idb_get(login->online_db, account_id);
@@ -105,7 +105,8 @@ void login_remove_online_user(int account_id)
 	idb_remove(login->online_db, account_id);
 }
 
-static int login_waiting_disconnect_timer(int tid, int64 tick, int id, intptr_t data) {
+static int login_waiting_disconnect_timer(int tid, int64 tick, int id, intptr_t data)
+{
 	struct online_login_data* p = (struct online_login_data*)idb_get(login->online_db, id);
 	if( p != NULL && p->waiting_disconnect == tid && p->account_id == id )
 	{
@@ -150,7 +151,8 @@ static int login_online_data_cleanup_sub(union DBKey key, struct DBData *data, v
 	return 0;
 }
 
-static int login_online_data_cleanup(int tid, int64 tick, int id, intptr_t data) {
+static int login_online_data_cleanup(int tid, int64 tick, int id, intptr_t data)
+{
 	login->online_db->foreach(login->online_db, login->online_data_cleanup_sub);
 	return 0;
 }
@@ -159,7 +161,7 @@ static int login_online_data_cleanup(int tid, int64 tick, int id, intptr_t data)
 //--------------------------------------------------------------------
 // Packet send to all char-servers, except one (wos: without our self)
 //--------------------------------------------------------------------
-int charif_sendallwos(int sfd, uint8* buf, size_t len)
+static int charif_sendallwos(int sfd, uint8 *buf, size_t len)
 {
 	int i, c;
 
@@ -180,7 +182,7 @@ int charif_sendallwos(int sfd, uint8* buf, size_t len)
 
 
 /// Initializes a server structure.
-void lchrif_server_init(int id)
+static void lchrif_server_init(int id)
 {
 	Assert_retv(id >= 0 && id < MAX_SERVERS);
 	memset(&login->dbs->server[id], 0, sizeof(login->dbs->server[id]));
@@ -189,7 +191,7 @@ void lchrif_server_init(int id)
 
 
 /// Destroys a server structure.
-void lchrif_server_destroy(int id)
+static void lchrif_server_destroy(int id)
 {
 	Assert_retv(id >= 0 && id < MAX_SERVERS);
 	if (login->dbs->server[id].fd != -1)
@@ -201,7 +203,7 @@ void lchrif_server_destroy(int id)
 
 
 /// Resets all the data related to a server.
-void lchrif_server_reset(int id)
+static void lchrif_server_reset(int id)
 {
 	login->online_db->foreach(login->online_db, login->online_db_setoffline, id); //Set all chars from this char server to offline.
 	lchrif->server_destroy(id);
@@ -210,7 +212,7 @@ void lchrif_server_reset(int id)
 
 
 /// Called when the connection to Char Server is disconnected.
-void lchrif_on_disconnect(int id)
+static void lchrif_on_disconnect(int id)
 {
 	Assert_retv(id >= 0 && id < MAX_SERVERS);
 	ShowStatus("Char-server '%s' has disconnected.\n", login->dbs->server[id].name);
@@ -221,7 +223,8 @@ void lchrif_on_disconnect(int id)
 //-----------------------------------------------------
 // periodic ip address synchronization
 //-----------------------------------------------------
-static int login_sync_ip_addresses(int tid, int64 tick, int id, intptr_t data) {
+static int login_sync_ip_addresses(int tid, int64 tick, int id, intptr_t data)
+{
 	uint8 buf[2];
 	ShowInfo("IP Sync in progress...\n");
 	WBUFW(buf,0) = 0x2735;
@@ -233,7 +236,7 @@ static int login_sync_ip_addresses(int tid, int64 tick, int id, intptr_t data) {
 //-----------------------------------------------------
 // encrypted/unencrypted password check (from eApp)
 //-----------------------------------------------------
-bool login_check_encrypted(const char* str1, const char* str2, const char* passwd)
+static bool login_check_encrypted(const char *str1, const char *str2, const char *passwd)
 {
 	char tmpstr[64+1], md5str[32+1];
 
@@ -246,7 +249,7 @@ bool login_check_encrypted(const char* str1, const char* str2, const char* passw
 	return (0==strcmp(passwd, md5str));
 }
 
-bool login_check_password(const char* md5key, int passwdenc, const char* passwd, const char* refpass)
+static bool login_check_password(const char *md5key, int passwdenc, const char *passwd, const char *refpass)
 {
 	nullpo_ret(passwd);
 	nullpo_ret(refpass);
@@ -269,12 +272,12 @@ bool login_check_password(const char* md5key, int passwdenc, const char* passwd,
  * @retval 0 if it is a WAN IP.
  * @return the appropriate LAN server address to send, if it is a LAN IP.
  */
-uint32 login_lan_subnet_check(uint32 ip)
+static uint32 login_lan_subnet_check(uint32 ip)
 {
 	return sockt->lan_subnet_check(ip, NULL);
 }
 
-void login_fromchar_auth_ack(int fd, int account_id, uint32 login_id1, uint32 login_id2, uint8 sex, int request_id, struct login_auth_node* node)
+static void login_fromchar_auth_ack(int fd, int account_id, uint32 login_id1, uint32 login_id2, uint8 sex, int request_id, struct login_auth_node *node)
 {
 	WFIFOHEAD(fd,33);
 	WFIFOW(fd,0) = 0x2713;
@@ -303,7 +306,7 @@ void login_fromchar_auth_ack(int fd, int account_id, uint32 login_id1, uint32 lo
 	WFIFOSET(fd,33);
 }
 
-void login_fromchar_parse_auth(int fd, int id, const char *const ip)
+static void login_fromchar_parse_auth(int fd, int id, const char *const ip)
 {
 	struct login_auth_node* node;
 
@@ -339,7 +342,7 @@ void login_fromchar_parse_auth(int fd, int id, const char *const ip)
 	}
 }
 
-void login_fromchar_parse_update_users(int fd, int id)
+static void login_fromchar_parse_update_users(int fd, int id)
 {
 	int users = RFIFOL(fd,2);
 	RFIFOSKIP(fd,6);
@@ -353,7 +356,7 @@ void login_fromchar_parse_update_users(int fd, int id)
 	}
 }
 
-void login_fromchar_parse_request_change_email(int fd, int id, const char *const ip)
+static void login_fromchar_parse_request_change_email(int fd, int id, const char *const ip)
 {
 	struct mmo_account acc;
 	char email[40];
@@ -375,7 +378,7 @@ void login_fromchar_parse_request_change_email(int fd, int id, const char *const
 	}
 }
 
-void login_fromchar_account(int fd, int account_id, struct mmo_account *acc)
+static void login_fromchar_account(int fd, int account_id, struct mmo_account *acc)
 {
 	WFIFOHEAD(fd,72);
 	WFIFOW(fd,0) = 0x2717;
@@ -419,7 +422,7 @@ void login_fromchar_account(int fd, int account_id, struct mmo_account *acc)
 	WFIFOSET(fd,72);
 }
 
-void login_fromchar_parse_account_data(int fd, int id, const char *const ip)
+static void login_fromchar_parse_account_data(int fd, int id, const char *const ip)
 {
 	struct mmo_account acc;
 
@@ -436,20 +439,20 @@ void login_fromchar_parse_account_data(int fd, int id, const char *const ip)
 	}
 }
 
-void login_fromchar_pong(int fd)
+static void login_fromchar_pong(int fd)
 {
 	WFIFOHEAD(fd,2);
 	WFIFOW(fd,0) = 0x2718;
 	WFIFOSET(fd,2);
 }
 
-void login_fromchar_parse_ping(int fd)
+static void login_fromchar_parse_ping(int fd)
 {
 	RFIFOSKIP(fd,2);
 	login->fromchar_pong(fd);
 }
 
-void login_fromchar_parse_change_email(int fd, int id, const char *const ip)
+static void login_fromchar_parse_change_email(int fd, int id, const char *const ip)
 {
 	struct mmo_account acc;
 	char actual_email[40];
@@ -482,7 +485,7 @@ void login_fromchar_parse_change_email(int fd, int id, const char *const ip)
 	}
 }
 
-void login_fromchar_account_update_other(int account_id, unsigned int state)
+static void login_fromchar_account_update_other(int account_id, unsigned int state)
 {
 	uint8 buf[11];
 	WBUFW(buf,0) = 0x2731;
@@ -492,7 +495,7 @@ void login_fromchar_account_update_other(int account_id, unsigned int state)
 	charif_sendallwos(-1, buf, 11);
 }
 
-void login_fromchar_parse_account_update(int fd, int id, const char *const ip)
+static void login_fromchar_parse_account_update(int fd, int id, const char *const ip)
 {
 	struct mmo_account acc;
 
@@ -519,7 +522,7 @@ void login_fromchar_parse_account_update(int fd, int id, const char *const ip)
 	}
 }
 
-void login_fromchar_ban(int account_id, time_t timestamp)
+static void login_fromchar_ban(int account_id, time_t timestamp)
 {
 	uint8 buf[11];
 	WBUFW(buf,0) = 0x2731;
@@ -529,7 +532,7 @@ void login_fromchar_ban(int account_id, time_t timestamp)
 	charif_sendallwos(-1, buf, 11);
 }
 
-void login_fromchar_parse_ban(int fd, int id, const char *const ip)
+static void login_fromchar_parse_ban(int fd, int id, const char *const ip)
 {
 	struct mmo_account acc;
 
@@ -579,7 +582,7 @@ void login_fromchar_parse_ban(int fd, int id, const char *const ip)
 	}
 }
 
-void login_fromchar_change_sex_other(int account_id, char sex)
+static void login_fromchar_change_sex_other(int account_id, char sex)
 {
 	unsigned char buf[7];
 	WBUFW(buf,0) = 0x2723;
@@ -588,7 +591,7 @@ void login_fromchar_change_sex_other(int account_id, char sex)
 	charif_sendallwos(-1, buf, 7);
 }
 
-void login_fromchar_parse_change_sex(int fd, int id, const char *const ip)
+static void login_fromchar_parse_change_sex(int fd, int id, const char *const ip)
 {
 	struct mmo_account acc;
 
@@ -615,7 +618,7 @@ void login_fromchar_parse_change_sex(int fd, int id, const char *const ip)
 	}
 }
 
-void login_fromchar_parse_account_reg2(int fd, int id, const char *const ip)
+static void login_fromchar_parse_account_reg2(int fd, int id, const char *const ip)
 {
 	struct mmo_account acc;
 
@@ -629,7 +632,7 @@ void login_fromchar_parse_account_reg2(int fd, int id, const char *const ip)
 	RFIFOSKIP(fd,RFIFOW(fd,2));
 }
 
-void login_fromchar_parse_unban(int fd, int id, const char *const ip)
+static void login_fromchar_parse_unban(int fd, int id, const char *const ip)
 {
 	struct mmo_account acc;
 
@@ -649,19 +652,19 @@ void login_fromchar_parse_unban(int fd, int id, const char *const ip)
 	}
 }
 
-void login_fromchar_parse_account_online(int fd, int id)
+static void login_fromchar_parse_account_online(int fd, int id)
 {
 	login->add_online_user(id, RFIFOL(fd,2));
 	RFIFOSKIP(fd,6);
 }
 
-void login_fromchar_parse_account_offline(int fd)
+static void login_fromchar_parse_account_offline(int fd)
 {
 	login->remove_online_user(RFIFOL(fd,2));
 	RFIFOSKIP(fd,6);
 }
 
-void login_fromchar_parse_online_accounts(int fd, int id)
+static void login_fromchar_parse_online_accounts(int fd, int id)
 {
 	uint32 i, users;
 	login->online_db->foreach(login->online_db, login->online_db_setoffline, id); //Set all chars from this char-server offline first
@@ -678,7 +681,7 @@ void login_fromchar_parse_online_accounts(int fd, int id)
 	}
 }
 
-void login_fromchar_parse_request_account_reg2(int fd)
+static void login_fromchar_parse_request_account_reg2(int fd)
 {
 	int account_id = RFIFOL(fd,2);
 	int char_id = RFIFOL(fd,6);
@@ -687,21 +690,21 @@ void login_fromchar_parse_request_account_reg2(int fd)
 	account->mmo_send_accreg2(accounts,fd,account_id,char_id);
 }
 
-void login_fromchar_parse_update_wan_ip(int fd, int id)
+static void login_fromchar_parse_update_wan_ip(int fd, int id)
 {
 	login->dbs->server[id].ip = ntohl(RFIFOL(fd,2));
 	ShowInfo("Updated IP of Server #%d to %u.%u.%u.%u.\n",id, CONVIP(login->dbs->server[id].ip));
 	RFIFOSKIP(fd,6);
 }
 
-void login_fromchar_parse_all_offline(int fd, int id)
+static void login_fromchar_parse_all_offline(int fd, int id)
 {
 	ShowInfo("Setting accounts from char-server %d offline.\n", id);
 	login->online_db->foreach(login->online_db, login->online_db_setoffline, id);
 	RFIFOSKIP(fd,2);
 }
 
-void login_fromchar_parse_change_pincode(int fd)
+static void login_fromchar_parse_change_pincode(int fd)
 {
 	struct mmo_account acc;
 
@@ -713,7 +716,7 @@ void login_fromchar_parse_change_pincode(int fd)
 	RFIFOSKIP(fd,11);
 }
 
-bool login_fromchar_parse_wrong_pincode(int fd)
+static bool login_fromchar_parse_wrong_pincode(int fd)
 {
 	struct mmo_account acc;
 
@@ -733,7 +736,7 @@ bool login_fromchar_parse_wrong_pincode(int fd)
 	return false;
 }
 
-void login_fromchar_accinfo(int fd, int account_id, int u_fd, int u_aid, int u_group, int map_fd, struct mmo_account *acc)
+static void login_fromchar_accinfo(int fd, int account_id, int u_fd, int u_aid, int u_group, int map_fd, struct mmo_account *acc)
 {
 	if (acc)
 	{
@@ -773,7 +776,7 @@ void login_fromchar_accinfo(int fd, int account_id, int u_fd, int u_aid, int u_g
 	}
 }
 
-void login_fromchar_parse_accinfo(int fd)
+static void login_fromchar_parse_accinfo(int fd)
 {
 	struct mmo_account acc;
 	int account_id = RFIFOL(fd, 2), u_fd = RFIFOL(fd, 6), u_aid = RFIFOL(fd, 10), u_group = RFIFOL(fd, 14), map_fd = RFIFOL(fd, 18);
@@ -788,7 +791,7 @@ void login_fromchar_parse_accinfo(int fd)
 //--------------------------------
 // Packet parsing for char-servers
 //--------------------------------
-int login_parse_fromchar(int fd)
+static int login_parse_fromchar(int fd)
 {
 	int id;
 	uint32 ipl;
@@ -992,7 +995,8 @@ int login_parse_fromchar(int fd)
 //-------------------------------------
 // Make new account
 //-------------------------------------
-int login_mmo_auth_new(const char* userid, const char* pass, const char sex, const char* last_ip) {
+static int login_mmo_auth_new(const char *userid, const char *pass, const char sex, const char *last_ip)
+{
 	static int num_regs = 0; // registration counter
 	static int64 new_reg_tick = 0;
 	int64 tick = timer->gettick();
@@ -1054,7 +1058,8 @@ int login_mmo_auth_new(const char* userid, const char* pass, const char sex, con
 // Check/authentication of a connection
 //-----------------------------------------------------
 // TODO: Map result values to an enum (or at least document them)
-int login_mmo_auth(struct login_session_data* sd, bool isServer) {
+static int login_mmo_auth(struct login_session_data *sd, bool isServer)
+{
 	struct mmo_account acc;
 	size_t len;
 
@@ -1191,7 +1196,7 @@ int login_mmo_auth(struct login_session_data* sd, bool isServer) {
 	return -1; // account OK
 }
 
-void login_kick(struct login_session_data* sd)
+static void login_kick(struct login_session_data *sd)
 {
 	uint8 buf[6];
 	nullpo_retv(sd);
@@ -1200,7 +1205,7 @@ void login_kick(struct login_session_data* sd)
 	charif_sendallwos(-1, buf, 6);
 }
 
-void login_auth_ok(struct login_session_data* sd)
+static void login_auth_ok(struct login_session_data *sd)
 {
 	int fd = 0;
 	uint32 ip;
@@ -1285,7 +1290,7 @@ void login_auth_ok(struct login_session_data* sd)
 	}
 }
 
-void login_auth_failed(struct login_session_data *sd, int result)
+static void login_auth_failed(struct login_session_data *sd, int result)
 {
 	int fd;
 	uint32 ip;
@@ -1336,8 +1341,8 @@ void login_auth_failed(struct login_session_data *sd, int result)
 	lclif->auth_failed(fd, ban_time, result);
 }
 
-bool login_client_login(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
-bool login_client_login(int fd, struct login_session_data *sd)
+static bool login_client_login(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
+static bool login_client_login(int fd, struct login_session_data *sd)
 {
 	int result;
 	char ip[16];
@@ -1360,8 +1365,8 @@ bool login_client_login(int fd, struct login_session_data *sd)
 	return false;
 }
 
-bool login_client_login_otp(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
-bool login_client_login_otp(int fd, struct login_session_data *sd)
+static bool login_client_login_otp(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
+static bool login_client_login_otp(int fd, struct login_session_data *sd)
 {
 	// send ok response with fake token
 #ifdef PACKETVER_ZERO
@@ -1395,8 +1400,8 @@ bool login_client_login_otp(int fd, struct login_session_data *sd)
 #endif  // PACKETVER_ZERO
 }
 
-void login_char_server_connection_status(int fd, struct login_session_data* sd, uint8 status) __attribute__((nonnull (2)));
-void login_char_server_connection_status(int fd, struct login_session_data* sd, uint8 status)
+static void login_char_server_connection_status(int fd, struct login_session_data* sd, uint8 status) __attribute__((nonnull (2)));
+static void login_char_server_connection_status(int fd, struct login_session_data* sd, uint8 status)
 {
 	WFIFOHEAD(fd,3);
 	WFIFOW(fd,0) = 0x2711;
@@ -1405,8 +1410,8 @@ void login_char_server_connection_status(int fd, struct login_session_data* sd, 
 }
 
 // CA_CHARSERVERCONNECT
-void login_parse_request_connection(int fd, struct login_session_data* sd, const char *const ip, uint32 ipl) __attribute__((nonnull (2, 3)));
-void login_parse_request_connection(int fd, struct login_session_data* sd, const char *const ip, uint32 ipl)
+static void login_parse_request_connection(int fd, struct login_session_data* sd, const char *const ip, uint32 ipl) __attribute__((nonnull (2, 3)));
+static void login_parse_request_connection(int fd, struct login_session_data* sd, const char *const ip, uint32 ipl)
 {
 	char server_name[20];
 	char message[256];
@@ -1464,7 +1469,7 @@ void login_parse_request_connection(int fd, struct login_session_data* sd, const
 	}
 }
 
-void login_config_set_defaults(void)
+static void login_config_set_defaults(void)
 {
 	login->config->login_ip = INADDR_ANY;
 	login->config->login_port = 6900;
@@ -1503,7 +1508,7 @@ void login_config_set_defaults(void)
  *
  * @retval false in case of error.
  */
-bool login_config_read_inter(const char *filename, struct config_t *config, bool imported)
+static bool login_config_read_inter(const char *filename, struct config_t *config, bool imported)
 {
 	struct config_setting_t *setting = NULL;
 	const char *str = NULL;
@@ -1543,7 +1548,7 @@ bool login_config_read_inter(const char *filename, struct config_t *config, bool
  *
  * @retval false in case of error.
  */
-bool login_config_read_console(const char *filename, struct config_t *config, bool imported)
+static bool login_config_read_console(const char *filename, struct config_t *config, bool imported)
 {
 	struct config_setting_t *setting = NULL;
 
@@ -1576,7 +1581,7 @@ bool login_config_read_console(const char *filename, struct config_t *config, bo
  *
  * @retval false in case of error.
  */
-bool login_config_read_log(const char *filename, struct config_t *config, bool imported)
+static bool login_config_read_log(const char *filename, struct config_t *config, bool imported)
 {
 	struct config_setting_t *setting = NULL;
 
@@ -1604,7 +1609,7 @@ bool login_config_read_log(const char *filename, struct config_t *config, bool i
  *
  * @retval false in case of error.
  */
-bool login_config_read_account(const char *filename, struct config_t *config, bool imported)
+static bool login_config_read_account(const char *filename, struct config_t *config, bool imported)
 {
 	struct config_setting_t *setting = NULL;
 	AccountDB *db = login->dbs->account_engine->db;
@@ -1639,7 +1644,7 @@ bool login_config_read_account(const char *filename, struct config_t *config, bo
 /**
  * Frees login->config->client_hash_nodes
  **/
-void login_clear_client_hash_nodes(void)
+static void login_clear_client_hash_nodes(void)
 {
 	struct client_hash_node *node = login->config->client_hash_nodes;
 
@@ -1657,7 +1662,7 @@ void login_clear_client_hash_nodes(void)
  *
  * @param setting The setting to read from.
  */
-void login_config_set_md5hash(struct config_setting_t *setting)
+static void login_config_set_md5hash(struct config_setting_t *setting)
 {
 	int i;
 	int count = libconfig->setting_length(setting);
@@ -1720,7 +1725,7 @@ void login_config_set_md5hash(struct config_setting_t *setting)
  *
  * @retval false in case of error.
  */
-bool login_config_read_permission_hash(const char *filename, struct config_t *config, bool imported)
+static bool login_config_read_permission_hash(const char *filename, struct config_t *config, bool imported)
 {
 	struct config_setting_t *setting = NULL;
 
@@ -1745,7 +1750,7 @@ bool login_config_read_permission_hash(const char *filename, struct config_t *co
 /**
  * Clears login->config->dnsbl_servers, freeing any allocated memory.
  */
-void login_clear_dnsbl_servers(void)
+static void login_clear_dnsbl_servers(void)
 {
 	while (VECTOR_LENGTH(login->config->dnsbl_servers) > 0) {
 		aFree(&VECTOR_POP(login->config->dnsbl_servers));
@@ -1758,7 +1763,7 @@ void login_clear_dnsbl_servers(void)
  *
  * @param setting The configuration setting to read from.
  */
-void login_config_set_dnsbl_servers(struct config_setting_t *setting)
+static void login_config_set_dnsbl_servers(struct config_setting_t *setting)
 {
 	int i;
 	int count = libconfig->setting_length(setting);
@@ -1790,7 +1795,7 @@ void login_config_set_dnsbl_servers(struct config_setting_t *setting)
  *
  * @retval false in case of error.
  */
-bool login_config_read_permission_blacklist(const char *filename, struct config_t *config, bool imported)
+static bool login_config_read_permission_blacklist(const char *filename, struct config_t *config, bool imported)
 {
 	struct config_setting_t *setting = NULL;
 
@@ -1821,7 +1826,7 @@ bool login_config_read_permission_blacklist(const char *filename, struct config_
  *
  * @retval false in case of error.
  */
-bool login_config_read_permission(const char *filename, struct config_t *config, bool imported)
+static bool login_config_read_permission(const char *filename, struct config_t *config, bool imported)
 {
 	struct config_setting_t *setting = NULL;
 	bool retval = true;
@@ -1858,7 +1863,7 @@ bool login_config_read_permission(const char *filename, struct config_t *config,
  *
  * @retval false in case of error.
  */
-bool login_config_read_users(const char *filename, struct config_t *config, bool imported)
+static bool login_config_read_users(const char *filename, struct config_t *config, bool imported)
 {
 	struct config_setting_t *setting = NULL;
 	bool retval = true;
@@ -1889,7 +1894,7 @@ bool login_config_read_users(const char *filename, struct config_t *config, bool
  *
  * @retval false in case of error.
  **/
-bool login_config_read(const char *filename, bool imported)
+static bool login_config_read(const char *filename, bool imported)
 {
 	struct config_t config;
 	const char *import = NULL;
@@ -1942,7 +1947,7 @@ bool login_config_read(const char *filename, bool imported)
  *
  * @retval users count or color id.
  **/
-uint16 login_convert_users_to_colors(uint16 users)
+static uint16 login_convert_users_to_colors(uint16 users)
 {
 #if PACKETVER >= 20170726
 	if (!login->config->send_user_count_description)
@@ -2020,13 +2025,14 @@ void do_abort(void)
 {
 }
 
-void set_server_type(void) {
+void set_server_type(void)
+{
 	SERVER_TYPE = SERVER_TYPE_LOGIN;
 }
 
 
 /// Called when a terminate signal is received.
-void do_shutdown_login(void)
+static void do_shutdown_login(void)
 {
 	if( core->runflag != LOGINSERVER_ST_SHUTDOWN )
 	{
@@ -2091,7 +2097,7 @@ void cmdline_args_init_local(void)
 //------------------------------
 // Login server initialization
 //------------------------------
-int do_init(int argc, char** argv)
+int do_init(int argc, char **argv)
 {
 	int i;
 

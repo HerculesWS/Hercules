@@ -40,12 +40,12 @@
 // Maximun number of messages that can be sent in one day
 #define DAILY_MAX_MAILS 100
 
-struct rodex_interface rodex_s;
+static struct rodex_interface rodex_s;
 struct rodex_interface *rodex;
 
 /// Checks if RoDEX System is enabled in the server
 /// Returns true if it's enabled, false otherwise
-bool rodex_isenabled(void)
+static bool rodex_isenabled(void)
 {
 	if (battle_config.feature_rodex == 1)
 		return true;
@@ -55,7 +55,7 @@ bool rodex_isenabled(void)
 
 /// Checks and refreshes the user daily number of Stamps
 /// @param sd : The player who's being checked
-void rodex_refresh_stamps(struct map_session_data *sd)
+static void rodex_refresh_stamps(struct map_session_data *sd)
 {
 	int today = date_get_date();
 	nullpo_retv(sd);
@@ -76,7 +76,7 @@ void rodex_refresh_stamps(struct map_session_data *sd)
 /// @param sd : The player who's writting
 /// @param idx : the inventory idx of the item
 /// @param amount : Amount of the item to be attached
-void rodex_add_item(struct map_session_data *sd, int16 idx, int16 amount)
+static void rodex_add_item(struct map_session_data *sd, int16 idx, int16 amount)
 {
 	int i;
 	bool is_stack = false;
@@ -153,7 +153,7 @@ void rodex_add_item(struct map_session_data *sd, int16 idx, int16 amount)
 /// @param sd : The player who's writting the message
 /// @param idx : The index of the item
 /// @param amount : How much to remove
-void rodex_remove_item(struct map_session_data *sd, int16 idx, int16 amount)
+static void rodex_remove_item(struct map_session_data *sd, int16 idx, int16 amount)
 {
 	int i;
 	struct item *it;
@@ -204,7 +204,7 @@ void rodex_remove_item(struct map_session_data *sd, int16 idx, int16 amount)
 /// @param base_level : Reference to return the character base level, if he exists
 /// @param char_id : Reference to return the character id, if he exists
 /// @param class : Reference to return the character class id, if he exists
-void rodex_check_player(struct map_session_data *sd, const char *name, int *base_level, int *char_id, short *class)
+static void rodex_check_player(struct map_session_data *sd, const char *name, int *base_level, int *char_id, short *class)
 {
 	intif->rodex_checkname(sd, name);
 }
@@ -221,7 +221,7 @@ void rodex_check_player(struct map_session_data *sd, const char *name, int *base
 ///         RODEX_SEND_MAIL_COUNT_ERROR = 2,
 ///         RODEX_SEND_MAIL_ITEM_ERROR = 3,
 ///         RODEX_SEND_MAIL_RECEIVER_ERROR = 4
-int rodex_send_mail(struct map_session_data *sd, const char *receiver_name, const char *body, const char *title, int64 zeny)
+static int rodex_send_mail(struct map_session_data *sd, const char *receiver_name, const char *body, const char *title, int64 zeny)
 {
 	int i;
 	int64 total_zeny;
@@ -342,7 +342,7 @@ int rodex_send_mail(struct map_session_data *sd, const char *receiver_name, cons
 /// @param ssd : Sender's sd
 /// @param rsd : Receiver's sd
 /// @param result : Message sent (true) or failed (false)
-void rodex_send_mail_result(struct map_session_data *ssd, struct map_session_data *rsd, bool result)
+static void rodex_send_mail_result(struct map_session_data *ssd, struct map_session_data *rsd, bool result)
 {
 	if (ssd != NULL) {
 		rodex->clean(ssd, 1);
@@ -365,7 +365,7 @@ void rodex_send_mail_result(struct map_session_data *ssd, struct map_session_dat
 /// @param sd : Character
 /// @param mail_id : Mail ID that's being retrieved
 /// Returns the message
-struct rodex_message *rodex_get_mail(struct map_session_data *sd, int64 mail_id)
+static struct rodex_message *rodex_get_mail(struct map_session_data *sd, int64 mail_id)
 {
 	int i;
 	struct rodex_message *msg;
@@ -393,7 +393,7 @@ struct rodex_message *rodex_get_mail(struct map_session_data *sd, int64 mail_id)
 /// Request to read a mail by its ID
 /// @param sd : Who's reading
 /// @param mail_id : Mail ID to be read
-void rodex_read_mail(struct map_session_data *sd, int64 mail_id)
+static void rodex_read_mail(struct map_session_data *sd, int64 mail_id)
 {
 	struct rodex_message *msg;
 
@@ -420,7 +420,7 @@ void rodex_read_mail(struct map_session_data *sd, int64 mail_id)
 /// Deletes a mail
 /// @param sd : Who's deleting
 /// @param mail_id : Mail ID to be deleted
-void rodex_delete_mail(struct map_session_data *sd, int64 mail_id)
+static void rodex_delete_mail(struct map_session_data *sd, int64 mail_id)
 {
 	struct rodex_message *msg;
 
@@ -438,7 +438,7 @@ void rodex_delete_mail(struct map_session_data *sd, int64 mail_id)
 /// Gets attached zeny
 /// @param sd : Who's getting
 /// @param mail_id : Mail ID that we're getting zeny from
-void rodex_get_zeny(struct map_session_data *sd, int8 opentype, int64 mail_id)
+static void rodex_get_zeny(struct map_session_data *sd, int8 opentype, int64 mail_id)
 {
 	struct rodex_message *msg;
 
@@ -471,7 +471,7 @@ void rodex_get_zeny(struct map_session_data *sd, int8 opentype, int64 mail_id)
 /// Gets attached item
 /// @param sd : Who's getting
 /// @param mail_id : Mail ID that we're getting items from
-void rodex_get_items(struct map_session_data *sd, int8 opentype, int64 mail_id)
+static void rodex_get_items(struct map_session_data *sd, int8 opentype, int64 mail_id)
 {
 	struct rodex_message *msg;
 	int weight = 0;
@@ -558,7 +558,7 @@ void rodex_get_items(struct map_session_data *sd, int8 opentype, int64 mail_id)
 /// @param flag :
 ///     0 - clear everything
 ///     1 - clear tmp only
-void rodex_clean(struct map_session_data *sd, int8 flag)
+static void rodex_clean(struct map_session_data *sd, int8 flag)
 {
 	nullpo_retv(sd);
 
@@ -571,7 +571,7 @@ void rodex_clean(struct map_session_data *sd, int8 flag)
 /// User request to open rodex, load mails from char-server
 /// @param sd : Who's requesting
 /// @param open_type : Box Type (see RODEX_OPENTYPE)
-void rodex_open(struct map_session_data *sd, int8 open_type, int64 first_mail_id)
+static void rodex_open(struct map_session_data *sd, int8 open_type, int64 first_mail_id)
 {
 #if PACKETVER >= 20170419
 	const int type = 1;
@@ -589,7 +589,7 @@ void rodex_open(struct map_session_data *sd, int8 open_type, int64 first_mail_id
 /// @param sd : Who's requesting
 /// @param open_type : Box Type (see RODEX_OPENTYPE)
 /// @param last_mail_id : The last mail from the current page
-void rodex_next_page(struct map_session_data *sd, int8 open_type, int64 last_mail_id)
+static void rodex_next_page(struct map_session_data *sd, int8 open_type, int64 last_mail_id)
 {
 	int64 msg_count, page_start = 0;
 	nullpo_retv(sd);
@@ -619,7 +619,7 @@ void rodex_next_page(struct map_session_data *sd, int8 open_type, int64 last_mai
 /// @param sd : Who's requesting
 /// @param open_type : Box Type (See RODEX_OPENTYPE)
 /// @param first_mail_id : The first mail id known by client, currently unused
-void rodex_refresh(struct map_session_data *sd, int8 open_type, int64 first_mail_id)
+static void rodex_refresh(struct map_session_data *sd, int8 open_type, int64 first_mail_id)
 {
 	nullpo_retv(sd);
 	if (open_type == RODEX_OPENTYPE_ACCOUNT && battle_config.feature_rodex_use_accountmail == false)
@@ -635,13 +635,13 @@ void rodex_refresh(struct map_session_data *sd, int8 open_type, int64 first_mail
 	}
 }
 
-void do_init_rodex(bool minimal)
+static void do_init_rodex(bool minimal)
 {
 	if (minimal)
 		return;
 }
 
-void do_final_rodex(void)
+static void do_final_rodex(void)
 {
 
 }
