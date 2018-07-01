@@ -9789,11 +9789,11 @@ true otherwise.
 
 ---------------------------------------
 
-*queueopt(<queue_id>, <optionType>, {Optional <option val>})
+*queueopt(<queue_id>, <optionType>{, <event label})
 
-Modifies <queue_id>'s <optionType>. When <option val> is not present
-<optionType> is removed from <queue_id>. When present it modifies
-<queue_id>'s <optionType> with the new <option val> value.
+Modifies <queue_id>'s <optionType>. When <event label> is not present
+<optionType> is removed from <queue_id>. When present it will execute the
+<event label> when the <queue_id>'s <optionType> condition is met.
 
 Returns true on success, false on failure.
 
