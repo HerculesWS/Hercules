@@ -11416,7 +11416,7 @@ bool pc_read_exp_db_sub_class(struct config_setting_t *t, bool base)
 }
 
 /**
- * Description: Helper function to read a root configuration in the exp_db.conf file.
+ * Description: Helper function to read a root configuration in the exp_group_db.conf file.
  * @param[in]  t       pointer to the root config setting
  * @param[in]  base    boolean switch determining whether to read either base or job exp.
  * @return total number of valid entries read from the setting.
@@ -11479,10 +11479,10 @@ bool pc_read_exp_db(void)
 }
 
 /*==========================================
- * pc DB reading.
- * exp.txt        - required experience values
- * skill_tree.txt - skill tree for every class
- * attr_fix.txt   - elemental adjustment table
+ * PC DB reading.
+ * exp_group_db.conf - required experience values
+ * skill_tree.txt    - skill tree for every class
+ * attr_fix.txt      - elemental adjustment table
  *------------------------------------------*/
 int pc_readdb(void) {
 	int i,j,k;
