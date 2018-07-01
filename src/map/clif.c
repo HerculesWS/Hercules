@@ -8968,7 +8968,7 @@ void clif_slide(struct block_list *bl, int x, int y)
 void clif_disp_overhead(struct block_list *bl, const char *mes, enum send_target target, struct block_list *target_bl)
 {
 	char buf[CHAT_SIZE_MAX + (int)sizeof(struct PACKET_ZC_NOTIFY_CHAT)];
-	uint32 max_len = CHAT_SIZE_MAX - (int)sizeof(struct PACKET_ZC_NOTIFY_CHAT);
+	int max_len = CHAT_SIZE_MAX - (int)sizeof(struct PACKET_ZC_NOTIFY_CHAT);
 	struct PACKET_ZC_NOTIFY_CHAT *p = (struct PACKET_ZC_NOTIFY_CHAT *)&buf;
 	int mes_len;
 
@@ -9000,7 +9000,7 @@ void clif_disp_overhead(struct block_list *bl, const char *mes, enum send_target
 void clif_notify_playerchat(struct block_list *bl, const char *mes)
 {
 	char buf[CHAT_SIZE_MAX + (int)sizeof(struct PACKET_ZC_NOTIFY_PLAYERCHAT)];
-	uint32 max_len = CHAT_SIZE_MAX - (int)sizeof(struct PACKET_ZC_NOTIFY_PLAYERCHAT);
+	int max_len = CHAT_SIZE_MAX - (int)sizeof(struct PACKET_ZC_NOTIFY_PLAYERCHAT);
 	struct PACKET_ZC_NOTIFY_PLAYERCHAT *p = (struct PACKET_ZC_NOTIFY_PLAYERCHAT *)&buf;
 	int mes_len;
 
