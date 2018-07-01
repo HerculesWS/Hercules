@@ -951,21 +951,27 @@ int guild_member_withdraw(int guild_id, int account_id, int char_id, int flag, c
 void guild_retrieveitembound(int char_id,int aid,int guild_id) {
 #ifdef GP_BOUND_ITEMS
 	struct map_session_data *sd = map->charid2sd(char_id);
-	if (sd != NULL) { //Character is online
-		pc->bound_clear(sd,IBT_GUILD);
-	} else { //Character is offline, ask char server to do the job
-		struct guild_storage *gstor = idb_get(gstorage->db,guild_id);
-		if(gstor && gstor->storage_status == 1) { //Someone is in guild storage, close them
-			struct s_mapiterator* iter = mapit_getallusers();
-			for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
-				if(sd->status.guild_id == guild_id && sd->state.storage_flag == STORAGE_FLAG_GUILD) {
-					gstorage->close(sd);
-					break;
-				}
+	struct guild_storage *gstor = idb_get(gstorage->db,guild_id);
+	struct guild *g = guild->search(guild_id);
+
+	// Close the Storage
+	if (gstor != NULL && g != NULL && gstor->storage_status == 1) {
+		int i;
+		struct map_session_data *tsd;
+		for (i = 0; i < MAX_GUILD; i++) {
+			if ((tsd = g->member[i].sd) != NULL && tsd->status.guild_id == guild_id && tsd->state.storage_flag == STORAGE_FLAG_GUILD) {
+				gstorage->close(tsd);
+				break;
 			}
-			mapit->free(iter);
 		}
-		intif->itembound_req(char_id,aid,guild_id);
+	} else if (gstor == NULL) {
+		gstorage->ensure(guild_id);
+	}
+
+	if (sd != NULL) { //Character is online
+		pc->bound_clear(sd, IBT_GUILD);
+	} else { //Character is offline, ask char server to do the job
+		intif->itembound_req(char_id, aid, guild_id);
 	}
 #endif
 }
