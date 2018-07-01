@@ -388,27 +388,49 @@ int npc_chat_sub(struct block_list* bl, va_list ap)
 
 			// perform pattern match
 			int r = libpcre->exec(e->pcre_, e->pcre_extra_, msg, len, 0, 0, offsets, ARRAYLENGTH(offsets));
-			if (r > 0)
-			{
+			if (r > 0) {
 				// save out the matched strings
-				for (i = 0; i < r; i++)
-				{
-					char var[15], val[255];
-					snprintf(var, sizeof(var), "$@p%i$", i);
-					libpcre->copy_substring(msg, offsets, r, i, val, sizeof(val));
-					script->set_var(sd, var, val);
-				}
+				if (script->config.use_deprecated_variables) {
+					for (i = 0; i < r; i++) {
+						char var[15], val[255];
+						snprintf(var, sizeof(var), "$@p%i$", i);
+						libpcre->copy_substring(msg, offsets, r, i, val, sizeof(val));
+						script->set_var(sd, var, val);
+					}
 
-				// find the target label.. this sucks..
-				lst = nd->u.scr.label_list;
-				ARR_FIND(0, nd->u.scr.label_list_num, i, strncmp(lst[i].name, e->label, sizeof(lst[i].name)) == 0);
-				if (i == nd->u.scr.label_list_num) {
-					ShowWarning("npc_chat_sub: Unable to find label: %s\n", e->label);
-					return 0;
-				}
+					// find the target label.. this sucks..
+					lst = nd->u.scr.label_list;
+					ARR_FIND(0, nd->u.scr.label_list_num, i, strncmp(lst[i].name, e->label, sizeof(lst[i].name)) == 0);
+					if (i == nd->u.scr.label_list_num) {
+						ShowWarning("npc_chat_sub: Unable to find label: %s\n", e->label);
+						return 0;
+					}
 
-				// run the npc script
-				script->run_npc(nd->u.scr.script,lst[i].pos,sd->bl.id,nd->bl.id);
+					// run the npc script
+					script->run_npc(nd->u.scr.script, lst[i].pos, sd->bl.id, nd->bl.id);
+
+				} else {
+					const char *var_name = ".@regexmatch$";
+					int var_key = script->add_str(var_name);
+					ARGREC_ALLOC(r);
+
+					for (i = 0; i < r; i++) {
+						char val[255];
+						libpcre->copy_substring(msg, offsets, r, i, val, sizeof(val));
+						ARGREC_SET(var_name, var_key, i, val);
+					}
+
+					// find the target label.. this sucks..
+					lst = nd->u.scr.label_list;
+					ARR_FIND(0, nd->u.scr.label_list_num, i, strncmp(lst[i].name, e->label, sizeof(lst[i].name)) == 0);
+					if (i == nd->u.scr.label_list_num) {
+						ShowWarning("npc_chat_sub: Unable to find label: %s\n", e->label);
+						return 0;
+					}
+
+					// run the npc script
+					script->run_npc_inject(nd->u.scr.script, lst[i].pos, sd->bl.id, nd->bl.id, &ARGREC);
+				}
 				return 0;
 			}
 		}

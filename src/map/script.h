@@ -478,6 +478,7 @@ enum pcblock_action_flag {
 struct Script_Config {
 	bool warn_func_mismatch_argtypes;
 	bool warn_func_mismatch_paramnum;
+	bool use_deprecated_variables;
 	int check_cmdcount;
 	int check_gotocount;
 	int input_min_value;
@@ -526,6 +527,35 @@ struct script_data {
 	} u;                ///< Data (field depends on `type`)
 	struct reg_db *ref; ///< Reference to the scope's variables
 };
+
+struct argrec_t {
+	const char *name; // variable name
+	int64 uid; // id + index
+
+	union argrec_t_val {
+		int num;
+		const char *str;
+	} v;
+};
+
+VECTOR_STRUCT_DECL(argrec_vector, struct argrec_t);
+
+#define ARGREC argrec
+#define ARGREC_ALLOC(size) VECTOR_STRUCT_VAR(argrec_vector, ARGREC); \
+	VECTOR_RESIZE(ARGREC, size)
+
+#define ARGREC_SET(var_name, var_key, var_index, var_value) \
+	{ \
+		struct argrec_t argrec_st; \
+		argrec_st.name = var_name; \
+		argrec_st.uid = reference_uid(var_key, var_index); \
+		if (is_string_variable(var_name)) { \
+			argrec_st.v.str = (const char *)(intptr_t)var_value; \
+		} else { \
+			argrec_st.v.num = (int)(intptr_t)var_value; \
+		} \
+		VECTOR_PUSH(ARGREC, argrec_st); \
+	}
 
 /**
  * A script string buffer, used to hold strings used by the script engine.
@@ -814,6 +844,7 @@ struct script_interface {
 	void (*label_add)(int key, int pos);
 	void (*run) (struct script_code *rootscript, int pos, int rid, int oid);
 	void (*run_npc) (struct script_code *rootscript, int pos, int rid, int oid);
+	void (*run_npc_inject) (struct script_code *rootscript, int pos, int rid, int oid, struct argrec_vector *argrec);
 	void (*run_pet) (struct script_code *rootscript, int pos, int rid, int oid);
 	void (*run_main) (struct script_state *st);
 	int (*run_timer) (int tid, int64 tick, int id, intptr_t data);

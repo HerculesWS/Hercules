@@ -4080,10 +4080,18 @@ void op_2str(struct script_state* st, int op, const char* s1, const char* s2)
 				int i;
 				for (i = 0; i < offsetcount; i++) {
 					libpcre->get_substring(s1, offsets, offsetcount, i, &pcre_match);
-					mapreg->setregstr(reference_uid(script->add_str("$@regexmatch$"), i), pcre_match);
+					if (script->config.use_deprecated_variables) {
+						/** deprecated, kept for backward-compatibility */
+						mapreg->setregstr(reference_uid(script->add_str("$@regexmatch$"), i), pcre_match);
+					} else {
+						script->setd_sub(st, NULL, ".@regexmatch$", i, pcre_match, NULL);
+					}
 					libpcre->free_substring(pcre_match);
 				}
-				mapreg->setreg(script->add_str("$@regexmatchcount"), i);
+				if (script->config.use_deprecated_variables) {
+					/** deprecated, kept for backward-compatibility */
+					mapreg->setreg(script->add_str("$@regexmatchcount"), i);
+				}
 				a = offsetcount;
 			} else { // C_RE_NE
 				a = (offsetcount == 0);
@@ -4479,6 +4487,30 @@ void run_script(struct script_code *rootscript, int pos, int rid, int oid) {
 	script->run_main(st);
 }
 
+void run_script_and_inject(struct script_code *rootscript, int pos, int rid, int oid, struct argrec_vector *argrec) {
+	struct script_state *st;
+	uint32 i = 0;
+	struct map_session_data *sd = map->id2sd(rid);
+
+	if (rootscript == NULL || pos < 0) {
+		return;
+	}
+
+	st = script->alloc_state(rootscript, pos, rid, oid);
+
+	for (; i < VECTOR_LENGTH(*argrec); i++) {
+		struct argrec_t rec = VECTOR_INDEX(*argrec, i);
+		if (is_string_variable(rec.name)) {
+			script->set_reg(st, sd, rec.uid, rec.name, rec.v.str, NULL);
+		} else {
+			script->set_reg(st, sd, rec.uid, rec.name, (const void *)h64BPTRSIZE(rec.v.num), NULL);
+		}
+	}
+
+	VECTOR_CLEAR(*argrec);
+	script->run_main(st);
+}
+
 void script_stop_instances(struct script_code *code)
 {
 	struct DBIterator *iter;
@@ -4800,6 +4832,7 @@ bool script_config_read(const char *filename, bool imported)
 
 	libconfig->setting_lookup_bool_real(setting, "warn_func_mismatch_paramnum", &script->config.warn_func_mismatch_paramnum);
 	libconfig->setting_lookup_bool_real(setting, "warn_func_mismatch_argtypes", &script->config.warn_func_mismatch_argtypes);
+	libconfig->setting_lookup_bool_real(setting, "use_deprecated_variables", &script->config.use_deprecated_variables);
 	libconfig->setting_lookup_int(setting, "check_cmdcount", &script->config.check_cmdcount);
 	libconfig->setting_lookup_int(setting, "check_gotocount", &script->config.check_gotocount);
 	libconfig->setting_lookup_int(setting, "input_min_value", &script->config.input_min_value);
@@ -8779,34 +8812,93 @@ BUILDIN(getpartyname)
  *------------------------------------------*/
 BUILDIN(getpartymember)
 {
+	int32 var_id = 0;
+	uint32 var_start = 0;
+	struct reg_db *var_ref = NULL;
+	const char *var_name = NULL;
+	struct map_session_data *sd = NULL;
+
 	struct party_data *p;
-	int j=0,type=0;
+	int j = 0;
+	int type = 0;
 
-	p=party->search(script_getnum(st,2));
+	p = party->search(script_getnum(st, 2));
 
-	if (script_hasdata(st,3))
-		type=script_getnum(st,3);
+	if (script_hasdata(st, 3)) {
+		type=script_getnum(st, 3);
+	}
 
-	if ( p != NULL) {
+	if (script_hasdata(st, 4)) {
+		struct script_data *data = script_getdata(st, 4);
+
+		if (!data_isreference(data) || reference_toconstant(data)) {
+			ShowError("script:getpartymember: third argument must be a variable\n");
+			script->reportdata(data);
+			st->state = END;
+			return false;
+		}
+
+		var_id = reference_getid(data);
+		var_start = reference_getindex(data);
+		var_name = reference_getname(data);
+		var_ref = reference_getref(data);
+
+		if (not_server_variable(*var_name) && !var_ref) {
+			sd = script->rid2sd(st);
+			if (sd == NULL) {
+				return true; // player variable but no player attached
+			}
+		}
+	}
+
+	if (p != NULL) {
 		int i;
 		for (i = 0; i < MAX_PARTY; i++) {
-			if(p->party.member[i].account_id) {
+			if (p->party.member[i].account_id) {
 				switch (type) {
 					case 2:
-						mapreg->setreg(reference_uid(script->add_str("$@partymemberaid"), j),p->party.member[i].account_id);
+						if (script_hasdata(st, 4)) {
+							script->set_reg(st, sd, reference_uid(var_id, var_start + j), var_name,
+								(const void *)h64BPTRSIZE(p->party.member[i].account_id), var_ref);
+						} else {
+							/** deprecated, kept for backward-compatibility */
+							mapreg->setreg(reference_uid(script->add_str("$@partymemberaid"), j),
+								p->party.member[i].account_id);
+						}
 						break;
 					case 1:
-						mapreg->setreg(reference_uid(script->add_str("$@partymembercid"), j),p->party.member[i].char_id);
+						if (script_hasdata(st, 4)) {
+							script->set_reg(st, sd, reference_uid(var_id, var_start + j), var_name,
+								(const void *)h64BPTRSIZE(p->party.member[i].char_id), var_ref);
+						} else {
+							/** deprecated, kept for backward-compatibility */
+							mapreg->setreg(reference_uid(script->add_str("$@partymembercid"), j),
+								p->party.member[i].account_id);
+						}
 						break;
 					default:
-						mapreg->setregstr(reference_uid(script->add_str("$@partymembername$"), j),p->party.member[i].name);
+						if (script_hasdata(st, 4)) {
+							script->set_reg(st, sd, reference_uid(var_id, var_start + j), var_name,
+								p->party.member[i].name, var_ref);
+						} else {
+							/** deprecated, kept for backward-compatibility */
+							mapreg->setregstr(reference_uid(script->add_str("$@partymemberaid"), j),
+								p->party.member[i].name);
+						}
 				}
 				j++;
 			}
 		}
 	}
-	mapreg->setreg(script->add_str("$@partymembercount"),j);
 
+	if (!script_hasdata(st, 4)) {
+		/** deprecated, kept for backward-compatibility */
+		mapreg->setreg(script->add_str("$@partymembercount"), j);
+
+		ShowWarning("script:getpartymember: variable name not specified; using deprecated hard-coded variables instead.\n");
+	}
+
+	script_pushint(st, j);
 	return true;
 }
 
@@ -8920,35 +9012,97 @@ BUILDIN(getguildmasterid)
  *------------------------------------------*/
 BUILDIN(getguildmember)
 {
+	int32 var_id = 0;
+	uint32 var_start = 0;
+	struct reg_db *var_ref = NULL;
+	const char *var_name = NULL;
+	struct map_session_data *sd = NULL;
+
 	struct guild *g = NULL;
 	int j = 0;
+	int i = 0;
+	int type = 0;
 
-	g = guild->search(script_getnum(st,2));
+	if ((g = guild->search(script_getnum(st,2))) == NULL) {
+		script_pushint(st, -1); // guild not found
+		return true;
+	}
 
-	if (g) {
-		int i, type = 0;
 
-		if (script_hasdata(st,3))
-			type = script_getnum(st,3);
+	if (script_hasdata(st,3)) {
+		type = script_getnum(st,3);
+	}
 
-		for ( i = 0; i < MAX_GUILD; i++ ) {
-			if ( g->member[i].account_id ) {
-				switch (type) {
-				case 2:
-					mapreg->setreg(reference_uid(script->add_str("$@guildmemberaid"), j),g->member[i].account_id);
-					break;
-				case 1:
-					mapreg->setreg(reference_uid(script->add_str("$@guildmembercid"), j), g->member[i].char_id);
-					break;
-				default:
-					mapreg->setregstr(reference_uid(script->add_str("$@guildmembername$"), j), g->member[i].name);
-					break;
-				}
-				j++;
+	if (script_hasdata(st, 4)) {
+		struct script_data *data = script_getdata(st, 4);
+
+		if (!data_isreference(data) || reference_toconstant(data)) {
+			ShowError("script:getguildmember: third argument must be a variable\n");
+			script->reportdata(data);
+			st->state = END;
+			return false;
+		}
+
+		var_id = reference_getid(data);
+		var_start = reference_getindex(data);
+		var_name = reference_getname(data);
+		var_ref = reference_getref(data);
+
+		if (not_server_variable(*var_name) && !var_ref) {
+			sd = script->rid2sd(st);
+			if (sd == NULL) {
+				script_pushint(st, 0);
+				return true; // player variable but no player attached
 			}
 		}
 	}
-	mapreg->setreg(script->add_str("$@guildmembercount"), j);
+
+	for (; i < MAX_GUILD; i++) {
+		if (g->member[i].account_id) {
+			switch (type) {
+			case 2:
+				if (script_hasdata(st, 4)) {
+					script->set_reg(st, sd, reference_uid(var_id, var_start + j), var_name,
+						(const void *)h64BPTRSIZE(g->member[i].account_id), var_ref);
+				} else {
+					/** deprecated, kept for backward-compatibility */
+					mapreg->setreg(reference_uid(script->add_str("$@guildmemberaid"), j),
+						g->member[i].account_id);
+				}
+				break;
+			case 1:
+				if (script_hasdata(st, 4)) {
+					script->set_reg(st, sd, reference_uid(var_id, var_start + j), var_name,
+						(const void *)h64BPTRSIZE(g->member[i].char_id), var_ref);
+				} else {
+					/** deprecated, kept for backward-compatibility */
+					mapreg->setreg(reference_uid(script->add_str("$@guildmembercid"), j),
+						g->member[i].char_id);
+				}
+				break;
+			default:
+				if (script_hasdata(st, 4)) {
+					script->set_reg(st, sd, reference_uid(var_id, var_start + j), var_name,
+						g->member[i].name, var_ref);
+				} else {
+					/** deprecated, kept for backward-compatibility */
+					mapreg->setregstr(reference_uid(script->add_str("$@guildmembername$"), j),
+						g->member[i].name);
+				}
+				break;
+			}
+			j++;
+		}
+	}
+
+	if (!script_hasdata(st, 4)) {
+		/** deprecated, kept for backward-compatibility */
+		mapreg->setreg(script->add_str("$@guildmembercount"), j);
+
+		ShowWarning("script:getguildmember: variable name not specified; using deprecated hard-coded variables instead.\n");
+	}
+
+	script_pushint(st, j);
 	return true;
 }
 
@@ -10800,34 +10954,84 @@ BUILDIN(monster)
  *------------------------------------------*/
 BUILDIN(getmobdrops)
 {
-	int class_ = script_getnum(st,2);
-	int i, j = 0;
+	int32 var_item_id = 0, var_rate_id = 0;
+	uint32 var_item_start = 0, var_rate_start = 0;
+	struct reg_db *var_item_ref = NULL, *var_rate_ref = NULL;
+	const char *var_item_name = NULL, *var_rate_name = NULL;
+	struct map_session_data *sd = NULL;
+
+	int class_ = script_getnum(st, 2);
+	int i = 0, j = 0;
 	struct mob_db *monster;
 
-	if( !mob->db_checkid(class_) )
+	if (!mob->db_checkid(class_) || (monster = mob->db(class_)) == NULL)
 	{
-		script_pushint(st, 0);
+		script_pushint(st, -1);
 		return true;
 	}
 
-	monster = mob->db(class_);
+	if (script_hasdata(st, 4)) {
+		struct script_data *data_item = script_getdata(st, 3);
+		struct script_data *data_rate = script_getdata(st, 4);
 
-	for( i = 0; i < MAX_MOB_DROP; i++ )
+		if (!data_isreference(data_item) || reference_toconstant(data_item) ||
+			!data_isreference(data_rate) || reference_toconstant(data_rate)) {
+			ShowError("script:getmobdrops: third and fourth arguments must be variables\n");
+			script->reportdata(data_item);
+			script->reportdata(data_rate);
+			st->state = END;
+			return false;
+		}
+
+		var_item_id = reference_getid(data_item);
+		var_item_start = reference_getindex(data_item);
+		var_item_name = reference_getname(data_item);
+		var_item_ref = reference_getref(data_item);
+
+		var_rate_id = reference_getid(data_rate);
+		var_rate_start = reference_getindex(data_rate);
+		var_rate_name = reference_getname(data_rate);
+		var_rate_ref = reference_getref(data_rate);
+
+		if ((not_server_variable(*var_item_name) && !var_item_ref) ||
+			(not_server_variable(*var_rate_name) && !var_rate_ref)) {
+			if ((sd = script->rid2sd(st)) == NULL) {
+				script_pushint(st, 0);
+				return true; // player variable but no player attached
+			}
+		}
+	}
+
+	for (; i < MAX_MOB_DROP; i++)
 	{
-		if( monster->dropitem[i].nameid < 1 )
+		if (monster->dropitem[i].nameid < 1 ||
+			itemdb->exists(monster->dropitem[i].nameid) == NULL) {
 			continue;
-		if( itemdb->exists(monster->dropitem[i].nameid) == NULL )
-			continue;
+		}
 
-		mapreg->setreg(reference_uid(script->add_str("$@MobDrop_item"), j), monster->dropitem[i].nameid);
-		mapreg->setreg(reference_uid(script->add_str("$@MobDrop_rate"), j), monster->dropitem[i].p);
-
+		if (script_hasdata(st, 4)) {
+			script->set_reg(st, sd, reference_uid(var_item_id, var_item_start + j), var_item_name,
+				(const void *)h64BPTRSIZE(monster->dropitem[i].nameid), var_item_ref);
+			script->set_reg(st, sd, reference_uid(var_rate_id, var_rate_start + j), var_rate_name,
+				(const void *)h64BPTRSIZE(monster->dropitem[i].p), var_rate_ref);
+		} else {
+			/** deprecated, kept for backward-compatibility */
+			mapreg->setreg(reference_uid(script->add_str("$@MobDrop_item"), j),
+				monster->dropitem[i].nameid);
+			mapreg->setreg(reference_uid(script->add_str("$@MobDrop_rate"), j),
+				monster->dropitem[i].p);
+		}
 		j++;
 	}
 
-	mapreg->setreg(script->add_str("$@MobDrop_count"), j);
-	script_pushint(st, 1);
+	if (!script_hasdata(st, 4)) {
+		/** deprecated, kept for backward-compatibility */
+		mapreg->setreg(script->add_str("$@MobDrop_count"), j);
 
+		ShowWarning("script:getmobdrops: variable names not specified; using deprecated hard-coded variables instead.\n");
+	}
+
+	script_pushint(st, j);
 	return true;
 }
 /*==========================================
@@ -12719,28 +12923,71 @@ BUILDIN(disablewaitingroomevent) {
 /// getwaitingroomstate(<type>) -> <info>
 BUILDIN(getwaitingroomstate)
 {
+	int32 var_id = 0;
+	uint32 var_start = 0;
+	struct reg_db *var_ref = NULL;
+	const char *var_name = NULL;
+	struct map_session_data *sd = NULL;
+
 	const struct npc_data *nd;
 	const struct chat_data *cd;
-	int type;
-	int i;
+	int type = script_getnum(st, 2);
+	int i = 0;
 
-	type = script_getnum(st,2);
-	if( script_hasdata(st,3) )
+	if (script_hasdata(st, 3)) {
 		nd = npc->name2id(script_getstr(st, 3));
-	else
+	} else {
 		nd = map->id2nd(st->oid);
+	}
 
-	if (nd == NULL || (cd=map->id2cd(nd->chat_id)) == NULL) {
+	if (nd == NULL || (cd = map->id2cd(nd->chat_id)) == NULL) {
 		script_pushint(st, -1);
 		return true;
 	}
 
+	if (script_hasdata(st, 4)) {
+		struct script_data *data = script_getdata(st, 4);
+
+		if (!data_isreference(data) || reference_toconstant(data)) {
+			ShowError("script:getwaitingroomstate: third argument must be a variable\n");
+			script->reportdata(data);
+			st->state = END;
+			return false;
+		}
+
+		var_id = reference_getid(data);
+		var_start = reference_getindex(data);
+		var_name = reference_getname(data);
+		var_ref = reference_getref(data);
+
+		if (not_server_variable(*var_name) && !var_ref) {
+			sd = script->rid2sd(st);
+			if (sd == NULL) {
+				script_pushint(st, 0);
+				return true; // player variable but no player attached
+			}
+		}
+	}
+
 	switch(type) {
 		case 0:
-			for (i = 0; i < cd->users; i++) {
-				struct map_session_data *sd = cd->usersd[i];
-				nullpo_retr(false, sd);
-				mapreg->setreg(reference_uid(script->add_str("$@chatmembers"), i), sd->bl.id);
+			for (; i < cd->users; i++) {
+				struct map_session_data *p_sd = cd->usersd[i];
+
+				if (p_sd == NULL) {
+					continue;
+				}
+
+				if (script_hasdata(st, 4)) {
+					script->set_reg(st, sd, reference_uid(var_id, var_start + i), var_name,
+						(const void *)h64BPTRSIZE(p_sd->bl.id), var_ref);
+				} else {
+					/** deprecated, kept for backward-compatibility */
+					mapreg->setreg(reference_uid(script->add_str("$@chatmembers"), i),
+						p_sd->bl.id);
+
+					ShowWarning("script:getwaitingroomstate: variable name not specified; using deprecated hard-coded variables instead.\n");
+				}
 			}
 			script_pushint(st, cd->users);
 			break;
@@ -12775,51 +13022,100 @@ BUILDIN(getwaitingroomstate)
 /// warpwaitingpc "<map name>",<x>,<y>;
 BUILDIN(warpwaitingpc)
 {
+	int32 var_id = 0;
+	uint32 var_start = 0;
+	struct reg_db *var_ref = NULL;
+	const char *var_name = NULL;
+	struct map_session_data *sd = NULL;
+
 	int x, y, i, n;
 	const char* map_name;
 	struct npc_data* nd;
 	struct chat_data* cd;
 
-	nd = map->id2nd(st->oid);
-	if (nd == NULL || (cd=map->id2cd(nd->chat_id)) == NULL)
+	if ((nd = map->id2nd(st->oid)) == NULL ||
+		(cd = map->id2cd(nd->chat_id)) == NULL) {
+		script_pushint(st, -1);
 		return true;
+	}
 
-	map_name = script_getstr(st,2);
-	x = script_getnum(st,3);
-	y = script_getnum(st,4);
-	n = cd->trigger&0x7f;
+	map_name = script_getstr(st, 2);
+	x = script_getnum(st, 3);
+	y = script_getnum(st, 4);
+	n = cd->trigger & 0x7f;
 
-	if( script_hasdata(st,5) )
-		n = script_getnum(st,5);
+	if (script_hasdata(st, 5)) {
+		int max = script_getnum(st, 5);
+		n = max > 0 ? max : n;
+	}
+
+	if (script_hasdata(st, 6)) {
+		struct script_data *data = script_getdata(st, 6);
+
+		if (!data_isreference(data) || reference_toconstant(data)) {
+			ShowError("script:warpwaitingpc: third argument must be a variable\n");
+			script->reportdata(data);
+			st->state = END;
+			return false;
+		}
+
+		var_id = reference_getid(data);
+		var_start = reference_getindex(data);
+		var_name = reference_getname(data);
+		var_ref = reference_getref(data);
+
+		if (not_server_variable(*var_name) && !var_ref) {
+			sd = script->rid2sd(st);
+			if (sd == NULL) {
+				script_pushint(st, 0);
+				return true; // player variable but no player attached
+			}
+		}
+	}
 
 	for (i = 0; i < n && cd->users > 0; i++) {
-		struct map_session_data *sd = cd->usersd[0];
+		struct map_session_data *p_sd = cd->usersd[0];
 
-		nullpo_retr(false, sd);
-		if (strcmp(map_name,"SavePoint") == 0 && map->list[sd->bl.m].flag.noteleport) {
-			// can't teleport on this map
-			break;
+		if (p_sd == NULL ||
+			(strcmp(map_name, "SavePoint") == 0 && map->list[p_sd->bl.m].flag.noteleport)) {
+			continue;
 		}
 
 		if (cd->zeny) {
-			// fee set
-			if( (uint32)sd->status.zeny < cd->zeny ) {
+			if ((uint32)p_sd->status.zeny < cd->zeny) {
 				// no zeny to cover set fee
-				break;
+				continue;
 			}
-			pc->payzeny(sd, cd->zeny, LOG_TYPE_NPC, NULL);
+
+			pc->payzeny(p_sd, cd->zeny, LOG_TYPE_NPC, NULL);
 		}
 
-		mapreg->setreg(reference_uid(script->add_str("$@warpwaitingpc"), i), sd->bl.id);
+		if (script_hasdata(st, 6)) {
+			script->set_reg(st, sd, reference_uid(var_id, var_start + i), var_name,
+				(const void *)h64BPTRSIZE(p_sd->bl.id), var_ref);
+		} else {
+			/** deprecated, kept for backward-compatibility */
+			mapreg->setreg(reference_uid(script->add_str("$@warpwaitingpc"), i),
+				p_sd->bl.id);
+		}
 
-		if( strcmp(map_name,"Random") == 0 )
-			pc->randomwarp(sd,CLR_TELEPORT);
-		else if( strcmp(map_name,"SavePoint") == 0 )
-			pc->setpos(sd, sd->status.save_point.map, sd->status.save_point.x, sd->status.save_point.y, CLR_TELEPORT);
-		else
-			pc->setpos(sd, script->mapindexname2id(st,map_name), x, y, CLR_OUTSIGHT);
+		if (strcmp(map_name,"Random") == 0) {
+			pc->randomwarp(p_sd, CLR_TELEPORT);
+		} else if (strcmp(map_name,"SavePoint") == 0) {
+			pc->setpos(p_sd, p_sd->status.save_point.map, p_sd->status.save_point.x, p_sd->status.save_point.y, CLR_TELEPORT);
+		} else {
+			pc->setpos(p_sd, script->mapindexname2id(st,map_name), x, y, CLR_OUTSIGHT);
+		}
 	}
-	mapreg->setreg(script->add_str("$@warpwaitingpcnum"), i);
+
+	if (!script_hasdata(st, 6)) {
+		/** deprecated, kept for backward-compatibility */
+		mapreg->setreg(script->add_str("$@warpwaitingpcnum"), i);
+
+		ShowWarning("script:warpwaitingpc: variable name not specified; using deprecated hard-coded variables instead.\n");
+	}
+
+	script_pushint(st, i);
 	return true;
 }
 
@@ -20984,40 +21280,68 @@ BUILDIN(showevent)
  * BattleGround System
  *------------------------------------------*/
 BUILDIN(waitingroom2bg) {
+	int32 var_id = 0;
+	uint32 var_start = 0;
+	struct reg_db *var_ref = NULL;
+	const char *var_name = NULL;
+	struct map_session_data *sd = NULL;
+
 	struct npc_data *nd;
 	struct chat_data *cd;
 	const char *map_name, *ev = "", *dev = "";
 	int x, y, i, map_index = 0, bg_id, n;
 
-	if( script_hasdata(st,7) )
-		nd = npc->name2id(script_getstr(st,7));
-	else
+	if (script_hasdata(st, 7)) {
+		nd = npc->name2id(script_getstr(st, 7));
+	} else {
 		nd = map->id2nd(st->oid);
+	}
+
+	if (script_hasdata(st, 8)) {
+		struct script_data *data = script_getdata(st, 8);
+
+		if (!data_isreference(data) || reference_toconstant(data)) {
+			ShowError("script:getguildmember: seventh argument must be a variable\n");
+			script->reportdata(data);
+			st->state = END;
+			return false;
+		}
+
+		var_id = reference_getid(data);
+		var_start = reference_getindex(data);
+		var_name = reference_getname(data);
+		var_ref = reference_getref(data);
+
+		if (not_server_variable(*var_name) && !var_ref) {
+			sd = script->rid2sd(st);
+			if (sd == NULL) {
+				script_pushint(st, 0);
+				return true; // player variable but no player attached
+			}
+		}
+	}
 
 	if (nd == NULL || (cd = map->id2cd(nd->chat_id)) == NULL) {
-		script_pushint(st,0);
+		script_pushint(st, -1); // NPC or waiting room not found
 		return true;
 	}
 
 	map_name = script_getstr(st,2);
-	if( strcmp(map_name,"-") != 0 )
-	{
-		map_index = script->mapindexname2id(st,map_name);
-		if( map_index == 0 )
-		{ // Invalid Map
-			script_pushint(st,0);
+	if (strcmp(map_name, "-") != 0) {
+		map_index = script->mapindexname2id(st, map_name);
+		if (map_index == 0) {
+			script_pushint(st, -1); // Invalid map
 			return true;
 		}
 	}
 
-	x = script_getnum(st,3);
-	y = script_getnum(st,4);
-	ev = script_getstr(st,5); // Logout Event
-	dev = script_getstr(st,6); // Die Event
+	x = script_getnum(st, 3);
+	y = script_getnum(st, 4);
+	ev = script_getstr(st, 5); // Logout event
+	dev = script_getstr(st, 6); // Die event
 
 	if ((bg_id = bg->create(map_index, x, y, ev, dev)) == 0) {
-		// Creation failed
-		script_pushint(st,0);
+		script_pushint(st, -1); // BG creation failed
 		return true;
 	}
 
@@ -21025,15 +21349,29 @@ BUILDIN(waitingroom2bg) {
 	n = cd->users; // This is always < MAX_CHAT_USERS
 
 	for (i = 0; i < n && i < MAX_BG_MEMBERS; i++) {
-		struct map_session_data *sd = cd->usersd[i];
-		if (sd != NULL && bg->team_join(bg_id, sd))
-			mapreg->setreg(reference_uid(script->add_str("$@arenamembers"), i), sd->bl.id);
-		else
-			mapreg->setreg(reference_uid(script->add_str("$@arenamembers"), i), 0);
+		struct map_session_data *p_sd = cd->usersd[i];
+
+		if (p_sd == NULL || !bg->team_join(bg_id, p_sd)) {
+			continue;
+		}
+
+		if (script_hasdata(st, 8)) {
+			script->set_reg(st, sd, reference_uid(var_id, var_start + i), var_name,
+				(const void *)h64BPTRSIZE(p_sd->bl.id), var_ref);
+		} else {
+			/** deprecated, kept for backward-compatibility */
+			mapreg->setreg(reference_uid(script->add_str("$@arenamembers"), i),
+				p_sd->bl.id);
+		}
 	}
 
-	mapreg->setreg(script->add_str("$@arenamembersnum"), i);
-	script_pushint(st,bg_id);
+	if (!script_hasdata(st, 8)) {
+		mapreg->setreg(script->add_str("$@arenamembersnum"), i);
+
+		ShowWarning("script:waitingroom2bg: variable name not specified; using deprecated hard-coded variables instead.\n");
+	}
+
+	script_pushint(st, bg_id);
 	return true;
 }
 
@@ -24490,12 +24828,12 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getcharid,"i?"),
 		BUILDIN_DEF(getnpcid,"i?"),
 		BUILDIN_DEF(getpartyname,"i"),
-		BUILDIN_DEF(getpartymember,"i?"),
+		BUILDIN_DEF(getpartymember,"i??"),
 		BUILDIN_DEF(getpartyleader,"i?"),
 		BUILDIN_DEF(getguildname,"i"),
 		BUILDIN_DEF(getguildmaster,"i"),
 		BUILDIN_DEF(getguildmasterid,"i"),
-		BUILDIN_DEF(getguildmember,"i?"),
+		BUILDIN_DEF(getguildmember,"i??"),
 		BUILDIN_DEF(strcharinfo,"i??"),
 		BUILDIN_DEF(strnpcinfo,"i??"),
 		BUILDIN_DEF(charid2rid,"i"),
@@ -24553,7 +24891,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(produce,"i"),
 		BUILDIN_DEF(cooking,"i"),
 		BUILDIN_DEF(monster,"siisii???"),
-		BUILDIN_DEF(getmobdrops,"i"),
+		BUILDIN_DEF(getmobdrops,"i??"),
 		BUILDIN_DEF(areamonster,"siiiisii???"),
 		BUILDIN_DEF(killmonster,"ss?"),
 		BUILDIN_DEF(killmonsterall,"s?"),
@@ -24606,8 +24944,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF2(waitingroomkickall,"kickwaitingroomall","?"),
 		BUILDIN_DEF(enablewaitingroomevent,"?"),
 		BUILDIN_DEF(disablewaitingroomevent,"?"),
-		BUILDIN_DEF(getwaitingroomstate,"i?"),
-		BUILDIN_DEF(warpwaitingpc,"sii?"),
+		BUILDIN_DEF(getwaitingroomstate,"i??"),
+		BUILDIN_DEF(warpwaitingpc,"sii??"),
 		BUILDIN_DEF(attachrid,"i"),
 		BUILDIN_DEF(detachrid,""),
 		BUILDIN_DEF(isloggedin,"i?"),
@@ -24852,7 +25190,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(agitend2,""),
 		BUILDIN_DEF(agitcheck2,""),
 		// BattleGround
-		BUILDIN_DEF(waitingroom2bg,"siiss?"),
+		BUILDIN_DEF(waitingroom2bg,"siiss??"),
 		BUILDIN_DEF(waitingroom2bg_single,"isiis"),
 		BUILDIN_DEF(bg_team_setxy,"iii"),
 		BUILDIN_DEF(bg_warp,"isii"),
@@ -25550,6 +25888,7 @@ void script_defaults(void)
 	script->label_add = script_label_add;
 	script->run = run_script;
 	script->run_npc = run_script;
+	script->run_npc_inject = run_script_and_inject;
 	script->run_pet = run_script;
 	script->run_main = run_script_main;
 	script->run_timer = run_script_timer;
@@ -25670,6 +26009,7 @@ void script_defaults(void)
 	/* script_config base */
 	script->config.warn_func_mismatch_argtypes = true;
 	script->config.warn_func_mismatch_paramnum = true;
+	script->config.use_deprecated_variables = true; // backward-compatibility for old installations
 	script->config.check_cmdcount = 65535;
 	script->config.check_gotocount = 2048;
 	script->config.input_min_value = 0;
