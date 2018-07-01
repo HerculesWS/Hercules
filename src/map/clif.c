@@ -8977,7 +8977,7 @@ void clif_disp_overhead(struct block_list *bl, const char *mes, enum send_target
 
 	mes_len = (int)strlen(mes) + 1; //Account for \0
 	if (mes_len > max_len) {
-		ShowError("clif_disp_overhead: Truncated message '%s' (len=%d, max=%u).\n", mes, mes_len, max_len);
+		ShowError("clif_disp_overhead: Truncated message '%s' (len=%d, max=%d).\n", mes, mes_len, max_len);
 		mes_len = max_len; //Trunk it to avoid problems.
 	}
 
@@ -9009,7 +9009,7 @@ void clif_notify_playerchat(struct block_list *bl, const char *mes)
 
 	mes_len = (int)strlen(mes) + 1; // Account for \0
 	if (mes_len > max_len) {
-		ShowError("clif_notify_playerchat: Truncated message '%s' (len=%d, max=%u).\n", mes, mes_len, max_len);
+		ShowError("clif_notify_playerchat: Truncated message '%s' (len=%d, max=%d).\n", mes, mes_len, max_len);
 		mes_len = max_len; // Truncate to avoid problems.
 	}
 
