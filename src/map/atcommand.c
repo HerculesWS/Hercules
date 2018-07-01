@@ -3719,7 +3719,7 @@ ACMD(reloadstatusdb) {
 	return true;
 }
 /*==========================================
- * @reloadpcdb - reloads exp.txt skill_tree.txt attr_fix.txt statpoint.txt
+ * @reloadpcdb - reloads exp_group_db.conf skill_tree.txt attr_fix.txt statpoint.txt
  *------------------------------------------*/
 ACMD(reloadpcdb)
 {
