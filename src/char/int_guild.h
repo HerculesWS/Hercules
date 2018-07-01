@@ -68,8 +68,22 @@ struct inter_guild_interface {
 	int (*sex_changed) (int guild_id, int account_id, int char_id, short gender);
 	int (*charname_changed) (int guild_id, int account_id, int char_id, char *name);
 	int (*parse_frommap) (int fd);
-	int (*leave) (int guild_id, int account_id, int char_id);
 	int (*broken) (int guild_id);
+	struct guild *(*create) (const char *name, const struct guild_member *master);
+	bool (*add_member) (int guild_id, const struct guild_member *member);
+	bool (*leave) (int guild_id, int account_id, int char_id, int flag, const char *mes, int map_fd);
+	bool (*update_member_info_short) (int guild_id, int account_id, int char_id, int online, int lv, int16 class);
+	bool (*update_member_info) (int guild_id, int account_id, int char_id, int type, const char *data, int len);
+	bool (*disband) (int guild_id);
+	bool (*update_basic_info) (int guild_id, int type, const void *data, int len);
+	bool (*update_position) (int guild_id, int idx, const struct guild_position *p);
+	bool (*use_skill_point) (int guild_id, uint16 skill_id, int account_id, int max);
+	bool (*remove_alliance) (struct guild *g, int guild_id, int account_id1, int account_id2, int flag);
+	bool (*change_alliance) (int guild_id1, int guild_id2, int account_id1, int account_id2, int flag);
+	bool (*update_notice) (int guild_id, const char *mes1, const char *mes2);
+	bool (*update_emblem) (int len, int guild_id, const char *data);
+	bool (*update_castle_data) (int castle_id, int index, int value);
+	bool (*change_leader) (int guild_id, const char *name, int len);
 };
 
 #ifdef HERCULES_CORE

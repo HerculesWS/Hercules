@@ -242,40 +242,16 @@ static bool inter_mail_loadmessage(int mail_id, struct mail_message* msg)
 	return true;
 }
 
-void mapif_mail_sendinbox(int fd, int char_id, unsigned char flag, struct mail_data *md)
-{
-	nullpo_retv(md);
-	//FIXME: dumping the whole structure like this is unsafe [ultramage]
-	WFIFOHEAD(fd, sizeof(struct mail_data) + 9);
-	WFIFOW(fd,0) = 0x3848;
-	WFIFOW(fd,2) = sizeof(struct mail_data) + 9;
-	WFIFOL(fd,4) = char_id;
-	WFIFOB(fd,8) = flag;
-	memcpy(WFIFOP(fd,9),md,sizeof(struct mail_data));
-	WFIFOSET(fd,WFIFOW(fd,2));
-}
-
-/*==========================================
- * Client Inbox Request
- *------------------------------------------*/
-void mapif_parse_mail_requestinbox(int fd)
-{
-	int char_id = RFIFOL(fd,2);
-	unsigned char flag = RFIFOB(fd,6);
-	struct mail_data md;
-	memset(&md, 0, sizeof(md));
-	inter_mail->fromsql(char_id, &md);
-	mapif->mail_sendinbox(fd, char_id, flag, &md);
-}
-
 /*==========================================
  * Mark mail as 'Read'
  *------------------------------------------*/
-void mapif_parse_mail_read(int fd)
+bool inter_mail_mark_read(int mail_id)
 {
-	int mail_id = RFIFOL(fd,2);
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `status` = '%d' WHERE `id` = '%d'", mail_db, MAIL_READ, mail_id) )
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `status` = '%d' WHERE `id` = '%d'", mail_db, MAIL_READ, mail_id)) {
 		Sql_ShowDebug(inter->sql_handle);
+		return false;
+	}
+	return true;
 }
 
 /*==========================================
@@ -305,191 +281,100 @@ static bool inter_mail_DeleteAttach(int mail_id)
 	return true;
 }
 
-void mapif_mail_sendattach(int fd, int char_id, struct mail_message *msg)
+bool inter_mail_get_attachment(int char_id, int mail_id, struct mail_message *msg)
 {
-	nullpo_retv(msg);
-	WFIFOHEAD(fd, sizeof(struct item) + 12);
-	WFIFOW(fd,0) = 0x384a;
-	WFIFOW(fd,2) = sizeof(struct item) + 12;
-	WFIFOL(fd,4) = char_id;
-	WFIFOL(fd,8) = (msg->zeny > 0)?msg->zeny:0;
-	memcpy(WFIFOP(fd,12), &msg->item, sizeof(struct item));
-	WFIFOSET(fd,WFIFOW(fd,2));
+	nullpo_retr(false, msg);
+
+	if (!inter_mail->loadmessage(mail_id, msg))
+		return false;
+
+	if (msg->dest_id != char_id)
+		return false;
+
+	if (msg->status != MAIL_READ)
+		return false;
+
+	if ((msg->item.nameid < 1 || msg->item.amount < 1) && msg->zeny < 1)
+		return false; // No Attachment
+
+	if (!inter_mail->DeleteAttach(mail_id))
+		return false;
+
+	return true;
 }
 
-void mapif_mail_getattach(int fd, int char_id, int mail_id)
+bool inter_mail_delete(int char_id, int mail_id)
 {
-	struct mail_message msg;
-	memset(&msg, 0, sizeof(msg));
-
-	if( !inter_mail->loadmessage(mail_id, &msg) )
-		return;
-
-	if( msg.dest_id != char_id )
-		return;
-
-	if( msg.status != MAIL_READ )
-		return;
-
-	if( (msg.item.nameid < 1 || msg.item.amount < 1) && msg.zeny < 1 )
-		return; // No Attachment
-
-	if( !inter_mail->DeleteAttach(mail_id) )
-		return;
-
-	mapif->mail_sendattach(fd, char_id, &msg);
-}
-
-void mapif_parse_mail_getattach(int fd)
-{
-	mapif->mail_getattach(fd, RFIFOL(fd,2), RFIFOL(fd,6));
-}
-
-/*==========================================
- * Delete Mail
- *------------------------------------------*/
-void mapif_mail_delete(int fd, int char_id, int mail_id, bool failed)
-{
-	WFIFOHEAD(fd,11);
-	WFIFOW(fd,0) = 0x384b;
-	WFIFOL(fd,2) = char_id;
-	WFIFOL(fd,6) = mail_id;
-	WFIFOB(fd,10) = failed;
-	WFIFOSET(fd,11);
-}
-
-void mapif_parse_mail_delete(int fd)
-{
-	int char_id = RFIFOL(fd,2);
-	int mail_id = RFIFOL(fd,6);
-	bool failed = false;
-	if ( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `id` = '%d'", mail_db, mail_id) )
-	{
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `id` = '%d'", mail_db, mail_id)) {
 		Sql_ShowDebug(inter->sql_handle);
-		failed = true;
+		return false;
 	}
-	mapif->mail_delete(fd, char_id, mail_id, failed);
+	return true;
 }
 
-/*==========================================
- * Report New Mail to Map Server
- *------------------------------------------*/
-void mapif_mail_new(struct mail_message *msg)
-{
-	unsigned char buf[74];
-
-	if( !msg || !msg->id )
-		return;
-
-	WBUFW(buf,0) = 0x3849;
-	WBUFL(buf,2) = msg->dest_id;
-	WBUFL(buf,6) = msg->id;
-	memcpy(WBUFP(buf,10), msg->send_name, NAME_LENGTH);
-	memcpy(WBUFP(buf,34), msg->title, MAIL_TITLE_LENGTH);
-	mapif->sendall(buf, 74);
-}
-
-/*==========================================
- * Return Mail
- *------------------------------------------*/
-void mapif_mail_return(int fd, int char_id, int mail_id, int new_mail)
-{
-	WFIFOHEAD(fd,11);
-	WFIFOW(fd,0) = 0x384c;
-	WFIFOL(fd,2) = char_id;
-	WFIFOL(fd,6) = mail_id;
-	WFIFOB(fd,10) = (new_mail == 0);
-	WFIFOSET(fd,11);
-}
-
-void mapif_parse_mail_return(int fd)
-{
-	int char_id = RFIFOL(fd,2);
-	int mail_id = RFIFOL(fd,6);
-	struct mail_message msg;
-	int new_mail = 0;
-
-	if( inter_mail->loadmessage(mail_id, &msg) )
-	{
-		if( msg.dest_id != char_id)
-			return;
-		else if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `id` = '%d'", mail_db, mail_id) )
-			Sql_ShowDebug(inter->sql_handle);
-		else
-		{
-			char temp_[MAIL_TITLE_LENGTH];
-
-			// swap sender and receiver
-			swap(msg.send_id, msg.dest_id);
-			safestrncpy(temp_, msg.send_name, NAME_LENGTH);
-			safestrncpy(msg.send_name, msg.dest_name, NAME_LENGTH);
-			safestrncpy(msg.dest_name, temp_, NAME_LENGTH);
-
-			// set reply message title
-			safesnprintf(temp_, MAIL_TITLE_LENGTH, "RE:%s", msg.title);
-			safestrncpy(msg.title, temp_, MAIL_TITLE_LENGTH);
-
-			msg.status = MAIL_NEW;
-			msg.timestamp = time(NULL);
-
-			new_mail = inter_mail->savemessage(&msg);
-			mapif->mail_new(&msg);
-		}
-	}
-
-	mapif->mail_return(fd, char_id, mail_id, new_mail);
-}
-
-/*==========================================
- * Send Mail
- *------------------------------------------*/
-void mapif_mail_send(int fd, struct mail_message* msg)
-{
-	int len = sizeof(struct mail_message) + 4;
-
-	nullpo_retv(msg);
-	WFIFOHEAD(fd,len);
-	WFIFOW(fd,0) = 0x384d;
-	WFIFOW(fd,2) = len;
-	memcpy(WFIFOP(fd,4), msg, sizeof(struct mail_message));
-	WFIFOSET(fd,len);
-}
-
-void mapif_parse_mail_send(int fd)
+bool inter_mail_return_message(int char_id, int mail_id, int *new_mail)
 {
 	struct mail_message msg;
+	nullpo_retr(false, new_mail);
+
+	if (!inter_mail->loadmessage(mail_id, &msg))
+		return false;
+
+	if (msg.dest_id != char_id)
+		return false;
+
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `id` = '%d'", mail_db, mail_id)) {
+		Sql_ShowDebug(inter->sql_handle);
+	} else {
+		char temp_[MAIL_TITLE_LENGTH];
+
+		// swap sender and receiver
+		swap(msg.send_id, msg.dest_id);
+		safestrncpy(temp_, msg.send_name, NAME_LENGTH);
+		safestrncpy(msg.send_name, msg.dest_name, NAME_LENGTH);
+		safestrncpy(msg.dest_name, temp_, NAME_LENGTH);
+
+		// set reply message title
+		safesnprintf(temp_, MAIL_TITLE_LENGTH, "RE:%s", msg.title);
+		safestrncpy(msg.title, temp_, MAIL_TITLE_LENGTH);
+
+		msg.status = MAIL_NEW;
+		msg.timestamp = time(NULL);
+
+		*new_mail = inter_mail->savemessage(&msg);
+		mapif->mail_new(&msg);
+	}
+
+	return true;
+
+}
+
+bool inter_mail_send(int account_id, struct mail_message *msg)
+{
 	char esc_name[NAME_LENGTH*2+1];
-	int account_id = 0;
 
-	if(RFIFOW(fd,2) != 8 + sizeof(struct mail_message))
-		return;
-
-	account_id = RFIFOL(fd,4);
-	memcpy(&msg, RFIFOP(fd,8), sizeof(struct mail_message));
+	nullpo_retr(false, msg);
 
 	// Try to find the Dest Char by Name
-	SQL->EscapeStringLen(inter->sql_handle, esc_name, msg.dest_name, strnlen(msg.dest_name, NAME_LENGTH));
-	if ( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `account_id`, `char_id` FROM `%s` WHERE `name` = '%s'", char_db, esc_name) )
+	SQL->EscapeStringLen(inter->sql_handle, esc_name, msg->dest_name, strnlen(msg->dest_name, NAME_LENGTH));
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `account_id`, `char_id` FROM `%s` WHERE `name` = '%s'", char_db, esc_name)) {
 		Sql_ShowDebug(inter->sql_handle);
-	else
-	if ( SQL_SUCCESS == SQL->NextRow(inter->sql_handle) )
-	{
+	} else if (SQL_SUCCESS == SQL->NextRow(inter->sql_handle)) {
 		char *data;
 		SQL->GetData(inter->sql_handle, 0, &data, NULL);
-		if (atoi(data) != account_id)
-		{ // Cannot send mail to char in the same account
+		if (atoi(data) != account_id) {
+			// Cannot send mail to char in the same account
 			SQL->GetData(inter->sql_handle, 1, &data, NULL);
-			msg.dest_id = atoi(data);
+			msg->dest_id = atoi(data);
 		}
 	}
 	SQL->FreeResult(inter->sql_handle);
-	msg.status = MAIL_NEW;
+	msg->status = MAIL_NEW;
 
-	if( msg.dest_id > 0 )
-		msg.id = inter_mail->savemessage(&msg);
+	if (msg->dest_id > 0)
+		msg->id = inter_mail->savemessage(msg);
 
-	mapif->mail_send(fd, &msg); // notify sender
-	mapif->mail_new(&msg); // notify recipient
+	return true;
 }
 
 void inter_mail_sendmail(int send_id, const char* send_name, int dest_id, const char* dest_name, const char* title, const char* body, int zeny, struct item *item)
@@ -558,4 +443,9 @@ void inter_mail_defaults(void)
 	inter_mail->sql_final = inter_mail_sql_final;
 	inter_mail->fromsql = inter_mail_fromsql;
 	inter_mail->loadmessage = inter_mail_loadmessage;
+	inter_mail->mark_read = inter_mail_mark_read;
+	inter_mail->get_attachment = inter_mail_get_attachment;
+	inter_mail->delete = inter_mail_delete;
+	inter_mail->return_message = inter_mail_return_message;
+	inter_mail->send = inter_mail_send;
 }

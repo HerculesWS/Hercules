@@ -1534,12 +1534,56 @@ int char_rename_char_sql(struct char_session_data *sd, int char_id)
 	return 0;
 }
 
-int char_check_char_name(char * name, char * esc_name)
+/**
+ * Checks if the given name exists in the database.
+ *
+ * @param name The name to check.
+ * @param esc_name Escaped version of the name, optional for faster processing.
+ * @retval true if the character name already exists.
+ */
+bool char_name_exists(const char *name, const char *esc_name)
+{
+	char esc_name2[NAME_LENGTH * 2 + 1];
+
+	nullpo_retr(true, name);
+
+	if (esc_name == NULL) {
+		SQL->EscapeStringLen(inter->sql_handle, esc_name2, name, strnlen(name, NAME_LENGTH));
+		esc_name = esc_name2;
+	}
+
+	if (name_ignoring_case) {
+		if (SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT 1 FROM `%s` WHERE BINARY `name` = '%s' LIMIT 1", char_db, esc_name)) {
+			Sql_ShowDebug(inter->sql_handle);
+			return true;
+		}
+	} else {
+		if (SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT 1 FROM `%s` WHERE `name` = '%s' LIMIT 1", char_db, esc_name)) {
+			Sql_ShowDebug(inter->sql_handle);
+			return true;
+		}
+	}
+	if (SQL->NumRows(inter->sql_handle) > 0)
+		return true;
+
+	return false;
+}
+
+/**
+ * Checks if the given name is valid for a new character.
+ *
+ * @param name The name to check.
+ * @param esc_name Escaped version of the name, optional for faster processing.
+ * @retval 0 if the name is valid.
+ * @retval -1 if the name already exists or is reserved
+ * @retval -2 if the name is too short or contains special characters.
+ * @retval -5 if the name contains forbidden characters.
+ */
+int char_check_char_name(const char *name, const char *esc_name)
 {
 	int i;
 
 	nullpo_retr(-2, name);
-	nullpo_retr(-2, esc_name);
 
 	// check length of character name
 	if (name[0] == '\0')
@@ -1550,9 +1594,16 @@ int char_check_char_name(char * name, char * esc_name)
 	 **/
 	if( strlen( name ) < 4 )
 		return -2;
-	// check content of character name
-	if( remove_control_chars(name) )
-		return -2; // control chars in name
+
+	{
+		// check content of character name
+		char *name_copy = aStrdup(name);
+		if (remove_control_chars(name_copy)) {
+			aFree(name_copy);
+			return -2; // control chars in name
+		}
+		aFree(name_copy);
+	}
 
 	// check for reserved names
 	if( strcmpi(name, wisp_server_name) == 0 )
@@ -1571,19 +1622,9 @@ int char_check_char_name(char * name, char * esc_name)
 			if( strchr(char_name_letters, name[i]) != NULL )
 				return -5;
 	}
-	if( name_ignoring_case ) {
-		if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT 1 FROM `%s` WHERE BINARY `name` = '%s' LIMIT 1", char_db, esc_name) ) {
-			Sql_ShowDebug(inter->sql_handle);
-			return -2;
-		}
-	} else {
-		if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT 1 FROM `%s` WHERE `name` = '%s' LIMIT 1", char_db, esc_name) ) {
-			Sql_ShowDebug(inter->sql_handle);
-			return -2;
-		}
-	}
-	if( SQL->NumRows(inter->sql_handle) > 0 )
-		return -1; // name already exists
+
+	if (chr->name_exists(name, esc_name))
+		return -1;
 
 	return 0;
 }
@@ -1811,11 +1852,11 @@ int char_delete_char_sql(int char_id)
 
 	/* remove homunculus */
 	if( hom_id )
-		mapif->homunculus_delete(hom_id);
+		inter_homunculus->delete(hom_id);
 
 	/* remove elemental */
 	if (elemental_id)
-		mapif->elemental_delete(elemental_id);
+		inter_elemental->delete(elemental_id);
 
 	/* remove mercenary data */
 	inter_mercenary->owner_delete(char_id);
@@ -1887,9 +1928,9 @@ int char_delete_char_sql(int char_id)
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `guild_id` FROM `%s` WHERE `char_id` = '%d'", guild_db, char_id) )
 		Sql_ShowDebug(inter->sql_handle);
 	else if( SQL->NumRows(inter->sql_handle) > 0 )
-		mapif->parse_BreakGuild(0,guild_id);
+		inter_guild->disband(guild_id);
 	else if( guild_id )
-		inter_guild->leave(guild_id, account_id, char_id);// Leave your guild.
+		inter_guild->leave(guild_id, account_id, char_id, 0, "** Character Deleted **", -1);// Leave your guild.
 	return 0;
 }
 
@@ -2479,17 +2520,6 @@ void char_parse_fromlogin_account_reg2(int fd)
 	RFIFOSKIP(fd, RFIFOW(fd,2));
 }
 
-void mapif_ban(int id, unsigned int flag, int status)
-{
-	// send to all map-servers to disconnect the player
-	unsigned char buf[11];
-	WBUFW(buf,0) = 0x2b14;
-	WBUFL(buf,2) = id;
-	WBUFB(buf,6) = flag; // 0: change of status, 1: ban
-	WBUFL(buf,7) = status; // status or final date of a banishment
-	mapif->sendall(buf, 11);
-}
-
 void char_parse_fromlogin_ban(int fd)
 {
 	mapif->ban(RFIFOL(fd,2), RFIFOB(fd,6), RFIFOL(fd,7));
@@ -2561,14 +2591,14 @@ void char_parse_fromlogin_update_ip(int fd)
 
 void char_parse_fromlogin_accinfo2_failed(int fd)
 {
-	mapif->parse_accinfo2(false, RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10), RFIFOL(fd,14),
+	inter->accinfo2(false, RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10), RFIFOL(fd,14),
 	                     NULL, NULL, NULL, NULL, NULL, NULL, NULL, -1, 0, 0);
 	RFIFOSKIP(fd,18);
 }
 
 void char_parse_fromlogin_accinfo2_ok(int fd)
 {
-	mapif->parse_accinfo2(true, RFIFOL(fd,167), RFIFOL(fd,171), RFIFOL(fd,175), RFIFOL(fd,179),
+	inter->accinfo2(true, RFIFOL(fd,167), RFIFOL(fd,171), RFIFOL(fd,175), RFIFOL(fd,179),
 	                      RFIFOP(fd,2), RFIFOP(fd,26), RFIFOP(fd,59), RFIFOP(fd,99), RFIFOP(fd,119),
 	                      RFIFOP(fd,151), RFIFOP(fd,156), RFIFOL(fd,115), RFIFOL(fd,143), RFIFOL(fd,147));
 	RFIFOSKIP(fd,183);
@@ -2910,70 +2940,6 @@ int char_loadName(int char_id, char* name)
 		safestrncpy(name, unknown_char_name, NAME_LENGTH);
 	}
 	return 0;
-}
-
-/// Initializes a server structure.
-void mapif_server_init(int id)
-{
-	//memset(&chr->server[id], 0, sizeof(server[id]));
-	chr->server[id].fd = -1;
-}
-
-/// Destroys a server structure.
-void mapif_server_destroy(int id)
-{
-	if( chr->server[id].fd == -1 )
-	{
-		sockt->close(chr->server[id].fd);
-		chr->server[id].fd = -1;
-	}
-}
-
-
-/// Resets all the data related to a server.
-void mapif_server_reset(int id)
-{
-	int i,j;
-	unsigned char buf[16384];
-	int fd = chr->server[id].fd;
-	//Notify other map servers that this one is gone. [Skotlex]
-	WBUFW(buf,0) = 0x2b20;
-	WBUFL(buf,4) = htonl(chr->server[id].ip);
-	WBUFW(buf,8) = htons(chr->server[id].port);
-	j = 0;
-	for (i = 0; i < VECTOR_LENGTH(chr->server[id].maps); i++) {
-		uint16 m = VECTOR_INDEX(chr->server[id].maps, i);
-		if (m != 0)
-			WBUFW(buf,10+(j++)*4) = m;
-	}
-	if (j > 0) {
-		WBUFW(buf,2) = j * 4 + 10;
-		mapif->sendallwos(fd, buf, WBUFW(buf,2));
-	}
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `index`='%d'", ragsrvinfo_db, chr->server[id].fd) )
-		Sql_ShowDebug(inter->sql_handle);
-	chr->online_char_db->foreach(chr->online_char_db,chr->db_setoffline,id); //Tag relevant chars as 'in disconnected' server.
-	mapif->server_destroy(id);
-	mapif->server_init(id);
-}
-
-/// Called when the connection to a Map Server is disconnected.
-void mapif_on_disconnect(int id)
-{
-	ShowStatus("Map-server #%d has disconnected.\n", id);
-	mapif->server_reset(id);
-}
-
-void mapif_on_parse_accinfo(int account_id, int u_fd, int u_aid, int u_group, int map_fd) {
-	Assert_retv(chr->login_fd > 0);
-	WFIFOHEAD(chr->login_fd,22);
-	WFIFOW(chr->login_fd,0) = 0x2740;
-	WFIFOL(chr->login_fd,2) = account_id;
-	WFIFOL(chr->login_fd,6) = u_fd;
-	WFIFOL(chr->login_fd,10) = u_aid;
-	WFIFOL(chr->login_fd,14) = u_group;
-	WFIFOL(chr->login_fd,18) = map_fd;
-	WFIFOSET(chr->login_fd,22);
 }
 
 void char_parse_frommap_datasync(int fd)
@@ -3355,16 +3321,6 @@ void char_parse_frommap_change_email(int fd)
 		WFIFOSET(chr->login_fd,86);
 	}
 	RFIFOSKIP(fd, 86);
-}
-
-void mapif_char_ban(int char_id, time_t timestamp)
-{
-	unsigned char buf[11];
-	WBUFW(buf,0) = 0x2b14;
-	WBUFL(buf,2) = char_id;
-	WBUFB(buf,6) = 2;
-	WBUFL(buf,7) = (unsigned int)timestamp;
-	mapif->sendall(buf, 11);
 }
 
 void char_ban(int account_id, int char_id, time_t *unban_time, short year, short month, short day, short hour, short minute, short second)
@@ -4812,7 +4768,6 @@ void char_parse_char_rename_char(int fd, struct char_session_data* sd)
 {
 	int i, cid =RFIFOL(fd,2);
 	char name[NAME_LENGTH];
-	char esc_name[NAME_LENGTH*2+1];
 	safestrncpy(name, RFIFOP(fd,6), NAME_LENGTH);
 	RFIFOSKIP(fd,30);
 
@@ -4821,8 +4776,7 @@ void char_parse_char_rename_char(int fd, struct char_session_data* sd)
 		return;
 
 	normalize_name(name,TRIM_CHARS);
-	SQL->EscapeStringLen(inter->sql_handle, esc_name, name, strnlen(name, NAME_LENGTH));
-	if( !chr->check_char_name(name,esc_name) ) {
+	if (chr->check_char_name(name, NULL) == 0) {
 		i = 1;
 		safestrncpy(sd->new_name, name, NAME_LENGTH);
 	} else {
@@ -4837,7 +4791,6 @@ void char_parse_char_rename_char2(int fd, struct char_session_data* sd)
 {
 	int i, aid = RFIFOL(fd,2), cid =RFIFOL(fd,6);
 	char name[NAME_LENGTH];
-	char esc_name[NAME_LENGTH*2+1];
 	safestrncpy(name, RFIFOP(fd,10), NAME_LENGTH);
 	RFIFOSKIP(fd,34);
 
@@ -4848,14 +4801,12 @@ void char_parse_char_rename_char2(int fd, struct char_session_data* sd)
 		return;
 
 	normalize_name(name,TRIM_CHARS);
-	SQL->EscapeStringLen(inter->sql_handle, esc_name, name, strnlen(name, NAME_LENGTH));
-	if( !chr->check_char_name(name,esc_name) )
-	{
+	if (chr->check_char_name(name, NULL) == 0) {
 		i = 1;
 		safestrncpy(sd->new_name, name, NAME_LENGTH);
-	}
-	else
+	} else {
 		i = 0;
+	}
 
 	chr->allow_rename(fd, i);
 }
@@ -5252,70 +5203,6 @@ int char_parse_char(int fd)
 
 	RFIFOFLUSH(fd);
 	return 0;
-}
-
-int mapif_sendall(const unsigned char *buf, unsigned int len)
-{
-	int i, c;
-
-	nullpo_ret(buf);
-	c = 0;
-	for(i = 0; i < ARRAYLENGTH(chr->server); i++) {
-		int fd;
-		if ((fd = chr->server[i].fd) > 0) {
-			WFIFOHEAD(fd,len);
-			memcpy(WFIFOP(fd,0), buf, len);
-			WFIFOSET(fd,len);
-			c++;
-		}
-	}
-
-	return c;
-}
-
-int mapif_sendallwos(int sfd, unsigned char *buf, unsigned int len)
-{
-	int i, c;
-
-	nullpo_ret(buf);
-	c = 0;
-	for(i = 0; i < ARRAYLENGTH(chr->server); i++) {
-		int fd;
-		if ((fd = chr->server[i].fd) > 0 && fd != sfd) {
-			WFIFOHEAD(fd,len);
-			memcpy(WFIFOP(fd,0), buf, len);
-			WFIFOSET(fd,len);
-			c++;
-		}
-	}
-
-	return c;
-}
-
-int mapif_send(int fd, unsigned char *buf, unsigned int len)
-{
-	nullpo_ret(buf);
-	if (fd >= 0) {
-		int i;
-		ARR_FIND( 0, ARRAYLENGTH(chr->server), i, fd == chr->server[i].fd );
-		if( i < ARRAYLENGTH(chr->server) )
-		{
-			WFIFOHEAD(fd,len);
-			memcpy(WFIFOP(fd,0), buf, len);
-			WFIFOSET(fd,len);
-			return 1;
-		}
-	}
-	return 0;
-}
-
-void mapif_send_users_count(int users)
-{
-	uint8 buf[6];
-	// send number of players to all map-servers
-	WBUFW(buf,0) = 0x2b00;
-	WBUFL(buf,2) = users;
-	mapif->sendall(buf,6);
 }
 
 int char_broadcast_user_count(int tid, int64 tick, int id, intptr_t data) {
@@ -6465,6 +6352,7 @@ void char_defaults(void)
 	chr->mmo_char_sql_init = char_mmo_char_sql_init;
 	chr->char_slotchange = char_char_slotchange;
 	chr->rename_char_sql = char_rename_char_sql;
+	chr->name_exists = char_name_exists;
 	chr->check_char_name = char_check_char_name;
 	chr->make_new_char_sql = char_make_new_char_sql;
 	chr->divorce_char_sql = char_divorce_char_sql;

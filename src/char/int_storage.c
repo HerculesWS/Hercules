@@ -235,12 +235,23 @@ int inter_storage_fromsql(int account_id, struct storage_data *p)
 }
 
 /// Save guild_storage data to sql
-int inter_storage_guild_storage_tosql(int guild_id, const struct guild_storage *p)
+bool inter_storage_guild_storage_tosql(int guild_id, const struct guild_storage *p)
 {
 	nullpo_ret(p);
+
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `guild_id` FROM `%s` WHERE `guild_id`='%d'", guild_db, guild_id)) {
+		Sql_ShowDebug(inter->sql_handle);
+		return false;
+	} else if (SQL->NumRows(inter->sql_handle) < 1) {
+		// guild doesn't exist
+		SQL->FreeResult(inter->sql_handle);
+		return false;
+	}
+	SQL->FreeResult(inter->sql_handle);
+
 	chr->memitemdata_to_sql(p->items, guild_id, TABLE_GUILD_STORAGE);
 	ShowInfo ("guild storage save to DB - guild: %d\n", guild_id);
-	return 0;
+	return true;
 }
 
 /// Load guild_storage data to mem
@@ -328,213 +339,11 @@ int inter_storage_guild_storage_delete(int guild_id)
 	return 0;
 }
 
-//---------------------------------------------------------
-// packet from map server
-
-int mapif_load_guild_storage(int fd, int account_id, int guild_id, char flag)
-{
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `guild_id` FROM `%s` WHERE `guild_id`='%d'", guild_db, guild_id) )
-		Sql_ShowDebug(inter->sql_handle);
-	else if( SQL->NumRows(inter->sql_handle) > 0 )
-	{// guild exists
-		WFIFOHEAD(fd, sizeof(struct guild_storage)+13);
-		WFIFOW(fd,0) = 0x3818;
-		WFIFOW(fd,2) = sizeof(struct guild_storage)+13;
-		WFIFOL(fd,4) = account_id;
-		WFIFOL(fd,8) = guild_id;
-		WFIFOB(fd,12) = flag; //1 open storage, 0 don't open
-		inter_storage->guild_storage_fromsql(guild_id, WFIFOP(fd,13));
-		WFIFOSET(fd, WFIFOW(fd,2));
-		return 0;
-	}
-	// guild does not exist
-	SQL->FreeResult(inter->sql_handle);
-	WFIFOHEAD(fd, 12);
-	WFIFOW(fd,0) = 0x3818;
-	WFIFOW(fd,2) = 12;
-	WFIFOL(fd,4) = account_id;
-	WFIFOL(fd,8) = 0;
-	WFIFOSET(fd, 12);
-	return 0;
-}
-int mapif_save_guild_storage_ack(int fd, int account_id, int guild_id, int fail)
-{
-	WFIFOHEAD(fd,11);
-	WFIFOW(fd,0)=0x3819;
-	WFIFOL(fd,2)=account_id;
-	WFIFOL(fd,6)=guild_id;
-	WFIFOB(fd,10)=fail;
-	WFIFOSET(fd,11);
-	return 0;
-}
-
-//=========================================================
-// Account Storage
-//---------------------------------------------------------
-/**
- * Parses account storage load request from map server.
- * @packet 0x3010 [in] <account_id>.L
- * @param  fd     [in] file/socket descriptor
- * @return 1 on success, 0 on failure.
- */
-int mapif_parse_AccountStorageLoad(int fd)
-{
-	int account_id = RFIFOL(fd, 2);
-
-	Assert_ret(fd > 0);
-	Assert_ret(account_id > 0);
-
-	mapif->account_storage_load(fd, account_id);
-
-	return 1;
-}
-
-/**
- * Loads the account storage and send to the map server.
- * @packet 0x3805     [out] <account_id>.L <struct item[]>.P
- * @param  fd         [in]  file/socket descriptor.
- * @param  account_id [in]  account id of the session.
- * @return 1 on success, 0 on failure.
- */
-int mapif_account_storage_load(int fd, int account_id)
-{
-	struct storage_data stor = { 0 };
-	int count = 0, i = 0, len = 0;
-
-	Assert_ret(account_id > 0);
-
-	VECTOR_INIT(stor.item);
-	count = inter_storage->fromsql(account_id, &stor);
-
-	len = 8 + count * sizeof(struct item);
-
-	WFIFOHEAD(fd, len);
-	WFIFOW(fd, 0) = 0x3805;
-	WFIFOW(fd, 2) = (uint16) len;
-	WFIFOL(fd, 4) = account_id;
-	for (i = 0; i < count; i++)
-		memcpy(WFIFOP(fd, 8 + i * sizeof(struct item)), &VECTOR_INDEX(stor.item, i), sizeof(struct item));
-	WFIFOSET(fd, len);
-
-	VECTOR_CLEAR(stor.item);
-
-	return 1;
-}
-
-/**
- * Parses an account storage save request from the map server.
- * @packet 0x3011 [in] <packet_len>.W <account_id>.L <struct item[]>.P
- * @param  fd     [in] file/socket descriptor.
- * @return 1 on success, 0 on failure.
- */
-int mapif_parse_AccountStorageSave(int fd)
-{
-	int payload_size = RFIFOW(fd, 2) - 8, account_id = RFIFOL(fd, 4);
-	int i = 0, count = 0;
-	struct storage_data p_stor = { 0 };
-
-	Assert_ret(fd > 0);
-	Assert_ret(account_id > 0);
-
-	count = payload_size/sizeof(struct item);
-
-	VECTOR_INIT(p_stor.item);
-
-	if (count > 0) {
-		VECTOR_ENSURE(p_stor.item, count, 1);
-
-		for (i = 0; i < count; i++) {
-			const struct item *it = RFIFOP(fd, 8 + i * sizeof(struct item));
-
-			VECTOR_PUSH(p_stor.item, *it);
-		}
-
-		p_stor.aggregate = count;
-	}
-
-	inter_storage->tosql(account_id, &p_stor);
-
-	VECTOR_CLEAR(p_stor.item);
-
-	mapif->sAccountStorageSaveAck(fd, account_id, true);
-
-	return 1;
-}
-
-/**
- * Sends an acknowledgement for the save
- * status of the account storage.
- * @packet 0x3808     [out] <account_id>.L <save_flag>.B
- * @param  fd         [in]  File/Socket Descriptor.
- * @param  account_id [in]  Account ID of the storage in question.
- * @param  flag       [in]  Save flag, true for success and false for failure.
- */
-void mapif_send_AccountStorageSaveAck(int fd, int account_id, bool flag)
-{
-	WFIFOHEAD(fd, 7);
-	WFIFOW(fd, 0) = 0x3808;
-	WFIFOL(fd, 2) = account_id;
-	WFIFOB(fd, 6) = flag ? 1 : 0;
-	WFIFOSET(fd, 7);
-}
-
-//=========================================================
-// Guild Storage
-//---------------------------------------------------------
-int mapif_parse_LoadGuildStorage(int fd)
-{
-	RFIFOHEAD(fd);
-
-	mapif->load_guild_storage(fd,RFIFOL(fd,2),RFIFOL(fd,6),1);
-
-	return 0;
-}
-
-int mapif_parse_SaveGuildStorage(int fd)
-{
-	int guild_id;
-	int len;
-
-	RFIFOHEAD(fd);
-	guild_id = RFIFOL(fd,8);
-	len = RFIFOW(fd,2);
-
-	if (sizeof(struct guild_storage) != len - 12) {
-		ShowError("inter storage: data size mismatch: %d != %"PRIuS"\n", len - 12, sizeof(struct guild_storage));
-	} else {
-		if (SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `guild_id` FROM `%s` WHERE `guild_id`='%d'", guild_db, guild_id)) {
-			Sql_ShowDebug(inter->sql_handle);
-		} else if(SQL->NumRows(inter->sql_handle) > 0) {
-			// guild exists
-			SQL->FreeResult(inter->sql_handle);
-			inter_storage->guild_storage_tosql(guild_id, RFIFOP(fd,12));
-			mapif->save_guild_storage_ack(fd, RFIFOL(fd,4), guild_id, 0);
-			return 0;
-		}
-		SQL->FreeResult(inter->sql_handle);
-	}
-	mapif->save_guild_storage_ack(fd, RFIFOL(fd,4), guild_id, 1);
-
-	return 0;
-}
-
-int mapif_itembound_ack(int fd, int aid, int guild_id)
-{
-#ifdef GP_BOUND_ITEMS
-	WFIFOHEAD(fd,8);
-	WFIFOW(fd,0) = 0x3856;
-	WFIFOL(fd,2) = aid;/* the value is not being used, drop? */
-	WFIFOW(fd,6) = guild_id;
-	WFIFOSET(fd,8);
-#endif
-	return 0;
-}
-
 //------------------------------------------------
 //Guild bound items pull for offline characters [Akinari]
 //Revised by [Mhalicot]
 //------------------------------------------------
-int mapif_parse_ItemBoundRetrieve_sub(int fd)
+bool inter_storage_retrieve_bound_items(int char_id, int account_id, int guild_id)
 {
 #ifdef GP_BOUND_ITEMS
 	StringBuf buf;
@@ -543,9 +352,6 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 	int j, i=0, s=0, bound_qt=0;
 	struct item items[MAX_INVENTORY];
 	unsigned int bound_item[MAX_INVENTORY] = {0};
-	int char_id = RFIFOL(fd,2);
-	int aid = RFIFOL(fd,6);
-	int guild_id = RFIFOW(fd,10);
 
 	StrBuf->Init(&buf);
 	StrBuf->AppendStr(&buf, "SELECT `id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `bound`, `unique_id`");
@@ -562,7 +368,7 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 		Sql_ShowDebug(inter->sql_handle);
 		SQL->StmtFree(stmt);
 		StrBuf->Destroy(&buf);
-		return 1;
+		return false;
 	}
 
 	memset(&item, 0, sizeof(item));
@@ -594,7 +400,7 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 	if (i == 0) { //No items found - No need to continue
 		StrBuf->Destroy(&buf);
 		SQL->StmtFree(stmt);
-		return 0;
+		return true;
 	}
 
 	//First we delete the character's items
@@ -627,7 +433,7 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 		Sql_ShowDebug(inter->sql_handle);
 		SQL->StmtFree(stmt);
 		StrBuf->Destroy(&buf);
-		return 1;
+		return false;
 	}
 
 	// Removes any view id that was set by an item that was removed
@@ -661,7 +467,7 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 			Sql_ShowDebug(inter->sql_handle);
 			SQL->StmtFree(stmt);
 			StrBuf->Destroy(&buf);
-			return 1;
+			return false;
 		}
 #undef CHECK_REMOVE
 	}
@@ -702,26 +508,13 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 		Sql_ShowDebug(inter->sql_handle);
 		SQL->StmtFree(stmt);
 		StrBuf->Destroy(&buf);
-		return 1;
+		return false;
 	}
 
 	StrBuf->Destroy(&buf);
 	SQL->StmtFree(stmt);
-
-	//Finally reload storage and tell map we're done
-	mapif->load_guild_storage(fd,aid,guild_id,0);
-
-	// If character is logged in char, disconnect
-	chr->disconnect_player(aid);
 #endif
-	return 0;
-}
-
-void mapif_parse_ItemBoundRetrieve(int fd)
-{
-	mapif->parse_ItemBoundRetrieve_sub(fd);
-	/* tell map server the operation is over and it can unlock the storage */
-	mapif->itembound_ack(fd,RFIFOL(fd,6),RFIFOW(fd,10));
+	return true;
 }
 
 int inter_storage_parse_frommap(int fd)
@@ -754,4 +547,5 @@ void inter_storage_defaults(void)
 	inter_storage->delete_ = inter_storage_delete;
 	inter_storage->guild_storage_delete = inter_storage_guild_storage_delete;
 	inter_storage->parse_frommap = inter_storage_parse_frommap;
+	inter_storage->retrieve_bound_items = inter_storage_retrieve_bound_items;
 }

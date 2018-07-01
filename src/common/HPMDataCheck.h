@@ -52,6 +52,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		#define CHAR_GEOIP_H
 	#endif // CHAR_GEOIP_H
 	#ifdef CHAR_INTER_H
+		{ "WisData", sizeof(struct WisData), SERVER_TYPE_CHAR },
 		{ "inter_interface", sizeof(struct inter_interface), SERVER_TYPE_CHAR },
 	#else
 		#define CHAR_INTER_H

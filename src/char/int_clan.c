@@ -123,32 +123,6 @@ int inter_clan_count_members(int clan_id, int kick_interval)
 	return count;
 }
 
-int mapif_parse_ClanMemberCount(int fd, int clan_id, int kick_interval)
-{
-
-	WFIFOHEAD(fd, 10);
-	WFIFOW(fd, 0) = 0x3858;
-	WFIFOL(fd, 2) = clan_id;
-	WFIFOL(fd, 6) = inter_clan->count_members(clan_id, kick_interval);
-	WFIFOSET(fd, 10);
-	return 0;
-}
-
-int mapif_parse_ClanMemberKick(int fd, int clan_id, int kick_interval)
-{
-	int count = 0;
-
-	if (inter_clan->kick_inactive_members(clan_id, kick_interval) == 1)
-		count = inter_clan->count_members(clan_id, kick_interval);
-
-	WFIFOHEAD(fd, 10);
-	WFIFOW(fd, 0) = 0x3858;
-	WFIFOL(fd, 2) = clan_id;
-	WFIFOL(fd, 6) = count;
-	WFIFOSET(fd, 10);
-	return 0;
-}
-
 // Communication from the map server
 // - Can analyzed only one by one packet
 // Data packet length that you set to inter.c
