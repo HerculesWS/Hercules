@@ -58,6 +58,7 @@
 #include "common/cbasetypes.h"
 #include "common/conf.h"
 #include "common/core.h"
+#include "common/db.h"
 #include "common/memmgr.h"
 #include "common/mmo.h" // MAX_CARTS
 #include "common/nullpo.h"
@@ -88,38 +89,76 @@ struct atcmd_binding_data* get_atcommandbind_byname(const char* name) {
 	if( *name == atcommand->at_symbol || *name == atcommand->char_symbol )
 		name++; // for backwards compatibility
 
-	ARR_FIND( 0, atcommand->binding_count, i, strcmpi(atcommand->binding[i]->command, name) == 0 );
+	ARR_FIND(0, VECTOR_LENGTH(atcommand->bindings), i, strcmpi(VECTOR_INDEX(atcommand->bindings, i)->command, name) == 0);
 
-	return ( i < atcommand->binding_count ) ? atcommand->binding[i] : NULL;
+	if (i == VECTOR_LENGTH(atcommand->bindings))
+		return NULL;
+
+	return VECTOR_INDEX(atcommand->bindings, i);
 }
 
-const char* atcommand_msgsd(struct map_session_data *sd, int msg_number) {
-	Assert_retr("??", msg_number >= 0 && msg_number < MAX_MSG && atcommand->msg_table[0][msg_number] != NULL);
-	if (!sd || sd->lang_id >= atcommand->max_message_table || !atcommand->msg_table[sd->lang_id][msg_number])
-		return atcommand->msg_table[0][msg_number];
-	return atcommand->msg_table[sd->lang_id][msg_number];
-}
-
-const char* atcommand_msgfd(int fd, int msg_number) {
-	struct map_session_data *sd = sockt->session_is_valid(fd) ? sockt->session[fd]->session_data : NULL;
-	Assert_retr("??", msg_number >= 0 && msg_number < MAX_MSG && atcommand->msg_table[0][msg_number] != NULL);
-	if (!sd || sd->lang_id >= atcommand->max_message_table || !atcommand->msg_table[sd->lang_id][msg_number])
-		return atcommand->msg_table[0][msg_number];
-	return atcommand->msg_table[sd->lang_id][msg_number];
-}
-
-//-----------------------------------------------------------
-// Return the message string of the specified number by [Yor]
-//-----------------------------------------------------------
-const char* atcommand_msg(int msg_number) {
+/**
+ * Returns the message with the given ID for a language table.
+ *
+ * If the language doesn't exist or doesn't contain the specified ID, the
+ * server's default language and the base language are used, in this order.
+ *
+ * @param lang_id    The language table ID.
+ * @param msg_number The message ID.
+ * @return The requested message.
+ */
+const char *atcommand_msglang(int lang_id, int msg_number)
+{
+	struct lang_table *lang = NULL;
 	Assert_retr("??", msg_number >= 0 && msg_number < MAX_MSG);
-	if (atcommand->msg_table[map->default_lang_id][msg_number] != NULL && atcommand->msg_table[map->default_lang_id][msg_number][0] != '\0')
-		return atcommand->msg_table[map->default_lang_id][msg_number];
+	if (lang_id < 0 || lang_id > VECTOR_LENGTH(atcommand->languages))
+		return atcommand->msg(msg_number);
+	lang = &VECTOR_INDEX(atcommand->languages, lang_id);
+	if (lang->messages[msg_number] == NULL)
+		return atcommand->msg(msg_number);
+	return lang->messages[msg_number];
+}
 
-	if(atcommand->msg_table[0][msg_number] != NULL && atcommand->msg_table[0][msg_number][0] != '\0')
-		return atcommand->msg_table[0][msg_number];
+/**
+ * Returns the message with the given ID for a character.
+ *
+ * @param sd         The character.
+ * @param msg_number The message ID.
+ * @return The requested message.
+ */
+const char *atcommand_msgsd(struct map_session_data *sd, int msg_number)
+{
+	nullpo_retr("??", sd);
+	return atcommand->msglang(sd->lang_id, msg_number);
+}
 
-	return "??";
+/**
+ * Returns the message with the given ID for a connection.
+ *
+ * @param fd         The connection descriptor.
+ * @param msg_number The message ID.
+ * @return The requested message.
+ */
+const char *atcommand_msgfd(int fd, int msg_number)
+{
+	return atcommand->msgsd(sockt->session_is_valid(fd) ? sockt->session[fd]->session_data : NULL, msg_number);
+}
+
+/**
+ * Returns the message with the given ID.
+ * @author Yor
+ *
+ * @param msg_number The message ID.
+ * @return The requested message.
+ */
+const char *atcommand_msg(int msg_number)
+{
+	struct lang_table *lang = &VECTOR_INDEX(atcommand->languages, map->default_lang_id);
+	Assert_retr("??", msg_number >= 0 && msg_number < MAX_MSG);
+	if (lang->messages[msg_number] == NULL)
+		lang = &VECTOR_FIRST(atcommand->languages);
+	Assert_retr("??", lang->messages[msg_number] != NULL);
+	return lang->messages[msg_number];
 }
 
 /**
@@ -133,6 +172,7 @@ bool msg_config_read(const char *cfg_name, bool allow_override) {
 	int msg_number;
 	char line[1024], w1[1024], w2[1024];
 	FILE *fp;
+	struct lang_table *lang = NULL;
 
 	nullpo_retr(false, cfg_name);
 	if ((fp = fopen(cfg_name, "r")) == NULL) {
@@ -140,10 +180,12 @@ bool msg_config_read(const char *cfg_name, bool allow_override) {
 		return false;
 	}
 
-	if( !atcommand->max_message_table )
-		atcommand->expand_message_table();
+	if (VECTOR_LENGTH(atcommand->languages) == 0) {
+		VECTOR_PUSHZEROED(atcommand->languages);
+	}
+	lang = &VECTOR_FIRST(atcommand->languages);
 
-	while(fgets(line, sizeof(line), fp)) {
+	while (fgets(line, sizeof(line), fp)) {
 		if (line[0] == '/' && line[1] == '/')
 			continue;
 		if (sscanf(line, "%1023[^:]: %1023[^\r\n]", w1, w2) != 2)
@@ -151,44 +193,53 @@ bool msg_config_read(const char *cfg_name, bool allow_override) {
 
 		if (strcmpi(w1, "import") == 0) {
 			atcommand->msg_read(w2, true);
-		} else {
-			msg_number = atoi(w1);
-			if (msg_number >= 0 && msg_number < MAX_MSG) {
-				if (atcommand->msg_table[0][msg_number] != NULL) {
-					if (!allow_override) {
-						ShowError("Duplicate message: ID '%d' was already used for '%s'. Message '%s' will be ignored.\n",
-						          msg_number, w2, atcommand->msg_table[0][msg_number]);
-						continue;
-					}
-					aFree(atcommand->msg_table[0][msg_number]);
-				}
-				/* this could easily become consecutive memory like get_str() and save the malloc overhead for over 1k calls [Ind] */
-				atcommand->msg_table[0][msg_number] = (char *)aMalloc((strlen(w2) + 1)*sizeof (char));
-				strcpy(atcommand->msg_table[0][msg_number],w2);
-			}
+			continue;
 		}
+
+		msg_number = atoi(w1);
+		if (msg_number < 0 || msg_number > MAX_MSG) {
+			ShowError("Invalid message ID '%d'. Valid ID range is [0:%d]. Message '%s' will be ignored.\n", msg_number, MAX_MSG, w2);
+			continue;
+		}
+		if (lang->messages[msg_number] != NULL) {
+			if (!allow_override) {
+				ShowError("Duplicate message: ID '%d' was already used for '%s'. Message '%s' will be ignored.\n",
+					  msg_number, w2, lang->messages[msg_number]);
+				continue;
+			}
+			aFree(lang->messages[msg_number]);
+		}
+		/* this could easily become consecutive memory like get_str() and save the malloc overhead for over 1k calls [Ind] */
+		lang->messages[msg_number] = aStrdup(w2);
 	}
 	fclose(fp);
 
 	return true;
 }
 
-/*==========================================
+/**
  * Cleanup Message Data
- *------------------------------------------*/
-void do_final_msg(void) {
-	int i, j;
+ */
+void do_final_msg(void)
+{
+	int i;
 
-	for(i = 0; i < atcommand->max_message_table; i++) {
-		for (j = 0; j < MAX_MSG; j++) {
-			if( atcommand->msg_table[i][j] )
-				aFree(atcommand->msg_table[i][j]);
+	while (VECTOR_LENGTH(atcommand->languages) > 0) {
+		struct lang_table *lang = &VECTOR_POP(atcommand->languages);
+		for (i = 0; i < MAX_MSG; i++) {
+			if (lang->messages[i])
+				aFree(lang->messages[i]);
 		}
-		aFree(atcommand->msg_table[i]);
 	}
+	VECTOR_CLEAR(atcommand->languages);
+}
 
-	if( atcommand->msg_table )
-		aFree(atcommand->msg_table);
+/**
+ * Initialize Message Data
+ */
+void do_init_msg(void)
+{
+	VECTOR_INIT(atcommand->languages);
 }
 
 /**
@@ -8451,15 +8502,16 @@ void atcommand_commands_sub(struct map_session_data* sd, const int fd, AtCommand
 	dbi_destroy(iter);
 	clif->message(fd,line_buff);
 
-	if (atcommand->binding_count > 0) {
+	if (VECTOR_LENGTH(atcommand->bindings) > 0) {
 		int i, count_bind = 0;
 		int gm_lvl = pc_get_group_level(sd);
 
-		for (i = 0; i < atcommand->binding_count; i++) {
-			if (gm_lvl >= ((type == COMMAND_ATCOMMAND) ? atcommand->binding[i]->group_lv : atcommand->binding[i]->group_lv_char)
-				|| (type == COMMAND_ATCOMMAND && atcommand->binding[i]->at_groups[pcg->get_idx(sd->group)] > 0)
-				|| (type == COMMAND_CHARCOMMAND && atcommand->binding[i]->char_groups[pcg->get_idx(sd->group)] > 0)) {
-				size_t slen = strlen(atcommand->binding[i]->command);
+		for (i = 0; i < VECTOR_LENGTH(atcommand->bindings); i++) {
+			const struct atcmd_binding_data *entry = VECTOR_INDEX(atcommand->bindings, i);
+			if (gm_lvl >= ((type == COMMAND_ATCOMMAND) ? entry->group_lv : entry->group_lv_char)
+				|| (type == COMMAND_ATCOMMAND && entry->at_groups[pcg->get_idx(sd->group)] > 0)
+				|| (type == COMMAND_CHARCOMMAND && entry->char_groups[pcg->get_idx(sd->group)] > 0)) {
+				size_t slen = strlen(entry->command);
 				if (count_bind == 0) {
 					cur = line_buff;
 					memset(line_buff, ' ', CHATBOX_SIZE);
@@ -8473,7 +8525,7 @@ void atcommand_commands_sub(struct map_session_data* sd, const int fd, AtCommand
 					memset(line_buff, ' ', CHATBOX_SIZE);
 					line_buff[CHATBOX_SIZE - 1] = 0;
 				}
-				memcpy(cur, atcommand->binding[i]->command, slen);
+				memcpy(cur, entry->command, slen);
 				cur += slen + (10 - slen % 10);
 				count_bind++;
 			}
@@ -8870,10 +8922,11 @@ void atcommand_channel_help(int fd, const char *command, bool can_create) {
 	}
 }
 /* [Ind/Hercules] */
-ACMD(channel) {
+ACMD(channel)
+{
 	struct channel_data *chan;
 	char subcmd[HCS_NAME_LENGTH], sub1[HCS_NAME_LENGTH], sub2[HCS_NAME_LENGTH], sub3[HCS_NAME_LENGTH];
-	unsigned char k = 0;
+	int k = 0;
 	sub1[0] = sub2[0] = sub3[0] = '\0';
 
 	if (!*message || sscanf(message, "%19s %19s %19s %19s", subcmd, sub1, sub2, sub3) < 1) {
@@ -8910,10 +8963,10 @@ ACMD(channel) {
 	} else if (strcmpi(subcmd,"list") == 0) {
 		// sub1 = list type; sub2 = unused; sub3 = unused
 		if (sub1[0] != '\0' && strcmpi(sub1,"colors") == 0) {
-			for (k = 0; k < channel->config->colors_count; k++) {
-				safesnprintf(atcmd_output, sizeof(atcmd_output), "[ %s list colors ] : %s", command, channel->config->colors_name[k]);
+			for (k = 0; k < VECTOR_LENGTH(channel->config->colors); k++) {
+				safesnprintf(atcmd_output, sizeof(atcmd_output), "[ %s list colors ] : %s", command, VECTOR_INDEX(channel->config->colors, k).name);
 
-				clif->messagecolor_self(fd, channel->config->colors[k], atcmd_output);
+				clif->messagecolor_self(fd, VECTOR_INDEX(channel->config->colors, k).value, atcmd_output);
 			}
 		} else {
 			struct DBIterator *iter = db_iterator(channel->db);
@@ -8956,17 +9009,14 @@ ACMD(channel) {
 			return false;
 		}
 
-		for (k = 0; k < channel->config->colors_count; k++) {
-			if (strcmpi(sub2, channel->config->colors_name[k]) == 0)
-				break;
-		}
-		if (k == channel->config->colors_count) {
+		ARR_FIND(0, VECTOR_LENGTH(channel->config->colors), k, strcmpi(sub2, VECTOR_INDEX(channel->config->colors, k).name) == 0);
+		if (k == VECTOR_LENGTH(channel->config->colors)) {
 			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1411), sub2);// Unknown color '%s'
 			clif->message(fd, atcmd_output);
 			return false;
 		}
 		chan->color = k;
-		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1413), sub1, channel->config->colors_name[k]);// '%s' channel color updated to '%s'
+		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1413), sub1, VECTOR_INDEX(channel->config->colors, k).name);// '%s' channel color updated to '%s'
 		clif->message(fd, atcmd_output);
 	} else if (strcmpi(subcmd,"leave") == 0) {
 		// sub1 = channel name; sub2 = unused; sub3 = unused
@@ -9290,13 +9340,14 @@ ACMD(channel) {
 	return true;
 }
 /* debug only, delete after */
-ACMD(fontcolor) {
+ACMD(fontcolor)
+{
 	unsigned char k;
 
 	if (!*message) {
-		for (k = 0; k < channel->config->colors_count; k++) {
-			safesnprintf(atcmd_output, sizeof(atcmd_output), "[ %s ] : %s", command, channel->config->colors_name[k]);
-			clif->messagecolor_self(fd, channel->config->colors[k], atcmd_output);
+		for (k = 0; k < VECTOR_LENGTH(channel->config->colors); k++) {
+			safesnprintf(atcmd_output, sizeof(atcmd_output), "[ %s ] : %s", command, VECTOR_INDEX(channel->config->colors, k).name);
+			clif->messagecolor_self(fd, VECTOR_INDEX(channel->config->colors, k).value, atcmd_output);
 		}
 		return false;
 	}
@@ -9306,19 +9357,16 @@ ACMD(fontcolor) {
 		return true;
 	}
 
-	for( k = 0; k < channel->config->colors_count; k++ ) {
-		if (strcmpi(message, channel->config->colors_name[k]) == 0)
-			break;
-	}
-	if( k == channel->config->colors_count ) {
+	ARR_FIND(0, VECTOR_LENGTH(channel->config->colors), k, strcmpi(message, VECTOR_INDEX(channel->config->colors, k).name) == 0);
+	if (k == VECTOR_LENGTH(channel->config->colors)) {
 		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1411), message);// Unknown color '%s'
 		clif->message(fd, atcmd_output);
 		return false;
 	}
 
 	sd->fontcolor = k + 1;
-	safesnprintf(atcmd_output, sizeof(atcmd_output), "Color changed to '%s'", channel->config->colors_name[k]);
-	clif->messagecolor_self(fd, channel->config->colors[k], atcmd_output);
+	safesnprintf(atcmd_output, sizeof(atcmd_output), "Color changed to '%s'", VECTOR_INDEX(channel->config->colors, k).name);
+	clif->messagecolor_self(fd, VECTOR_INDEX(channel->config->colors, k).value, atcmd_output);
 
 	return true;
 }
@@ -10154,7 +10202,7 @@ bool atcommand_exec(const int fd, struct map_session_data *sd, const char *messa
 		params[0] = '\0';
 
 	// @commands (script based)
-	if (player_invoked && atcommand->binding_count > 0) {
+	if (player_invoked) {
 		// Get atcommand binding
 		struct atcmd_binding_data *binding = atcommand->get_bind_byname(command);
 
@@ -10508,23 +10556,24 @@ void atcommand_doload(void) {
 	atcommand->config_read(map->ATCOMMAND_CONF_FILENAME);
 }
 
-void atcommand_expand_message_table(void) {
-	RECREATE(atcommand->msg_table, char **, ++atcommand->max_message_table);
-	CREATE(atcommand->msg_table[atcommand->max_message_table - 1], char *, MAX_MSG);
-}
-
 void do_init_atcommand(bool minimal) {
 	if (minimal)
 		return;
 
 	atcommand->at_symbol = '@';
 	atcommand->char_symbol = '#';
-	atcommand->binding_count = 0;
+	VECTOR_INIT(atcommand->bindings);
 
 	atcommand->doload();
 }
 
-void do_final_atcommand(void) {
+void do_final_atcommand(void)
+{
+	while (VECTOR_LENGTH(atcommand->bindings) > 0) {
+		aFree(VECTOR_POP(atcommand->bindings));
+	}
+	VECTOR_CLEAR(atcommand->bindings);
+
 	atcommand->cmd_db_clear();
 }
 
@@ -10545,6 +10594,7 @@ void atcommand_defaults(void) {
 	atcommand->exists = atcommand_exists;
 	atcommand->msg_read = msg_config_read;
 	atcommand->final_msg = do_final_msg;
+	atcommand->init_msg = do_init_msg;
 	atcommand->get_bind_byname = get_atcommandbind_byname;
 	atcommand->get_info_byname = get_atcommandinfo_byname;
 	atcommand->check_alias = atcommand_checkalias;
@@ -10567,7 +10617,7 @@ void atcommand_defaults(void) {
 	atcommand->base_commands = atcommand_basecommands;
 	atcommand->add = atcommand_add;
 	atcommand->msg = atcommand_msg;
-	atcommand->expand_message_table = atcommand_expand_message_table;
 	atcommand->msgfd = atcommand_msgfd;
 	atcommand->msgsd = atcommand_msgsd;
+	atcommand->msglang = atcommand_msglang;
 }

@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2016  Hercules Dev Team
+ * Copyright (C) 2016-2018  Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -162,14 +162,14 @@ void script_add_translatable_string_posthook(const struct script_string_buf *str
 
 		line_length = (int)(line_end - line_start);
 		if (line_length > 0) {
-			VECTOR_ENSURE(lang_export_line_buf, line_length + 1, 512);
+			VECTOR_ENSURE_STEP(lang_export_line_buf, line_length + 1, 512);
 			VECTOR_PUSHARRAY(lang_export_line_buf, line_start, line_length);
 			VECTOR_PUSH(lang_export_line_buf, '\0');
 
 			normalize_name(VECTOR_DATA(lang_export_line_buf), "\r\n\t "); // [!] Note: VECTOR_LENGTH() will lie.
 		}
 
-		VECTOR_ENSURE(lang_export_escaped_buf, 4*VECTOR_LENGTH(*string)+1, 1);
+		VECTOR_ENSURE(lang_export_escaped_buf, 4*VECTOR_LENGTH(*string)+1);
 		VECTOR_LENGTH(lang_export_escaped_buf) = (int)sv->escape_c(VECTOR_DATA(lang_export_escaped_buf),
 				VECTOR_DATA(*string),
 				VECTOR_LENGTH(*string)-1, /* exclude null terminator */
@@ -217,6 +217,7 @@ void script_parser_clean_leftovers_posthook(void)
 bool msg_config_read_posthook(bool retVal, const char *cfg_name, bool allow_override)
 {
 	static int called = 1;
+	struct lang_table *lang = &VECTOR_FIRST(atcommand->languages);
 
 	if (!generating_translations || lang_export_fp == NULL)
 		return retVal;
@@ -227,12 +228,12 @@ bool msg_config_read_posthook(bool retVal, const char *cfg_name, bool allow_over
 	if (++called == 1) { // Original
 		int i;
 		for (i = 0; i < MAX_MSG; i++) {
-			if (atcommand->msg_table[0][i] == NULL)
+			if (lang->messages[i] == NULL)
 				continue;
 			fprintf(lang_export_fp, "msgctxt \"messages.conf\"\n"
 					"msgid \"%s\"\n"
 					"msgstr \"\"\n",
-					atcommand->msg_table[0][i]
+					lang->messages[i]
 			       );
 			lang_export_stringcount++;
 		}

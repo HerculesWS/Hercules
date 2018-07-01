@@ -58,6 +58,7 @@
 #include "common/cbasetypes.h"
 #include "common/conf.h"
 #include "common/core.h" // get_svn_revision()
+#include "common/db.h"
 #include "common/HPM.h"
 #include "common/memmgr.h"
 #include "common/mmo.h" // NAME_LENGTH, MAX_CARTS, NEW_CARTS
@@ -1259,6 +1260,8 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 	sd->npc_idle_tick = tick;
 	sd->npc_idle_type = NPCT_INPUT;
 #endif
+
+	VECTOR_INIT(sd->combos);
 
 	sd->canuseitem_tick = tick;
 	sd->canusecashfood_tick = tick;
@@ -9795,14 +9798,12 @@ int pc_checkcombo(struct map_session_data *sd, struct item_data *data ) {
 	for( i = 0; i < data->combos_count; i++ ) {
 
 		/* ensure this isn't a duplicate combo */
-		if( sd->combos != NULL ) {
+		if (VECTOR_LENGTH(sd->combos) > 0) {
 			int x;
 
-			ARR_FIND( 0, sd->combo_count, x, sd->combos[x].id == data->combos[i]->id );
-
-			/* found a match, skip this combo */
-			if( x < sd->combo_count )
-				continue;
+			ARR_FIND(0, VECTOR_LENGTH(sd->combos), x, VECTOR_INDEX(sd->combos, x).id == data->combos[i]->id);
+			if (x < VECTOR_LENGTH(sd->combos))
+				continue; // found a match, skip this combo
 		}
 
 		for( j = 0; j < data->combos[i]->count; j++ ) {
@@ -9852,8 +9853,8 @@ int pc_checkcombo(struct map_session_data *sd, struct item_data *data ) {
 
 		/* we got here, means all items in the combo are matching */
 
-		RECREATE(sd->combos, struct pc_combos, ++sd->combo_count);
-		combo = &sd->combos[sd->combo_count - 1];
+		VECTOR_PUSHZEROED(sd->combos);
+		combo = &VECTOR_LAST(sd->combos);
 		combo->bonus = data->combos[i]->script;
 		combo->id = data->combos[i]->id;
 
@@ -9864,53 +9865,34 @@ int pc_checkcombo(struct map_session_data *sd, struct item_data *data ) {
 }
 
 /* called when a item with combo is removed */
-int pc_removecombo(struct map_session_data *sd, struct item_data *data ) {
+int pc_removecombo(struct map_session_data *sd, struct item_data *data)
+{
 	int i, retval = 0;
 
 	nullpo_ret(sd);
 	nullpo_ret(data);
-	if( !sd->combos )
+	if (VECTOR_LENGTH(sd->combos) == 0)
 		return 0;/* nothing to do here, player has no combos */
 
-	for( i = 0; i < data->combos_count; i++ ) {
+	for (i = 0; i < data->combos_count; i++) {
 		/* check if this combo exists in this user */
-		int x = 0, cursor = 0, j;
+		int x;
 
-		ARR_FIND( 0, sd->combo_count, x, sd->combos[x].id == data->combos[i]->id );
-		/* no match, skip this combo */
-		if( x == sd->combo_count )
-			continue;
+		ARR_FIND(0, VECTOR_LENGTH(sd->combos), x, VECTOR_INDEX(sd->combos, x).id == data->combos[i]->id);
+		if (x == VECTOR_LENGTH(sd->combos))
+			continue; // no match, skip this combo
 
-		sd->combos[x].bonus = NULL;
-		sd->combos[x].id = 0;
+		VECTOR_ERASE(sd->combos, x);
 
 		retval++;
-
-		for( j = 0, cursor = 0; j < sd->combo_count; j++ ) {
-			if( sd->combos[j].bonus == NULL )
-				continue;
-
-			if( cursor != j ) {
-				sd->combos[cursor].bonus = sd->combos[j].bonus;
-				sd->combos[cursor].id    = sd->combos[j].id;
-			}
-
-			cursor++;
-		}
-
-		/* it's empty, we can clear all the memory */
-		if( (sd->combo_count = cursor) == 0 ) {
-			aFree(sd->combos);
-			sd->combos = NULL;
-			break;
-		}
 	}
 
 	/* check if combo requirements still fit -- don't touch retval! */
-	pc->checkcombo( sd, data );
+	pc->checkcombo(sd, data);
 
 	return retval;
 }
+
 int pc_load_combo(struct map_session_data *sd) {
 	int i, ret = 0;
 	nullpo_ret(sd);
@@ -11208,7 +11190,6 @@ void pc_read_skill_tree(void)
 						dst->joblv = src->joblv;
 						VECTOR_INIT(dst->need);
 						if (VECTOR_LENGTH(src->need) > 0) {
-							VECTOR_ENSURE(dst->need, VECTOR_LENGTH(src->need), 1);
 							VECTOR_PUSHARRAY(dst->need, VECTOR_DATA(src->need), VECTOR_LENGTH(src->need));
 						}
 					} else {
@@ -11222,7 +11203,6 @@ void pc_read_skill_tree(void)
 							struct skill_tree_requirement *sreq = &VECTOR_INDEX(src->need, l);
 							ARR_FIND(0, VECTOR_LENGTH(dst->need), m, VECTOR_INDEX(dst->need, m).id == sreq->id);
 							if (m == VECTOR_LENGTH(dst->need)) {
-								VECTOR_ENSURE(dst->need, 1, 1);
 								VECTOR_PUSHCOPY(dst->need, sreq);
 							} else {
 								struct skill_tree_requirement *dreq = &VECTOR_INDEX(dst->need, m);
@@ -11299,7 +11279,6 @@ void pc_read_skill_tree(void)
 						}
 						ARR_FIND(0, VECTOR_LENGTH(tree_entry->need), l, VECTOR_INDEX(tree_entry->need, l).id == rsk_id);
 						if (l == VECTOR_LENGTH(tree_entry->need)) {
-							VECTOR_ENSURE(tree_entry->need, 1, 1);
 							VECTOR_PUSHZEROED(tree_entry->need);
 							req = &VECTOR_LAST(tree_entry->need);
 							req->id  = rsk_id;

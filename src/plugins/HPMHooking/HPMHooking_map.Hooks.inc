@@ -373,6 +373,32 @@ void HP_atcommand_final_msg(void) {
 	}
 	return;
 }
+void HP_atcommand_init_msg(void) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_atcommand_init_msg_pre > 0) {
+		void (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_init_msg_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_atcommand_init_msg_pre[hIndex].func;
+			preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.atcommand.init_msg();
+	}
+	if (HPMHooks.count.HP_atcommand_init_msg_post > 0) {
+		void (*postHookFunc) (void);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_init_msg_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_atcommand_init_msg_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
+}
 struct atcmd_binding_data* HP_atcommand_get_bind_byname(const char *name) {
 	int hIndex = 0;
 	struct atcmd_binding_data* retVal___ = NULL;
@@ -999,32 +1025,6 @@ const char* HP_atcommand_msg(int msg_number) {
 	}
 	return retVal___;
 }
-void HP_atcommand_expand_message_table(void) {
-	int hIndex = 0;
-	if (HPMHooks.count.HP_atcommand_expand_message_table_pre > 0) {
-		void (*preHookFunc) (void);
-		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_expand_message_table_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_atcommand_expand_message_table_pre[hIndex].func;
-			preHookFunc();
-		}
-		if (*HPMforce_return) {
-			*HPMforce_return = false;
-			return;
-		}
-	}
-	{
-		HPMHooks.source.atcommand.expand_message_table();
-	}
-	if (HPMHooks.count.HP_atcommand_expand_message_table_post > 0) {
-		void (*postHookFunc) (void);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_expand_message_table_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_atcommand_expand_message_table_post[hIndex].func;
-			postHookFunc();
-		}
-	}
-	return;
-}
 const char* HP_atcommand_msgfd(int fd, int msg_number) {
 	int hIndex = 0;
 	const char* retVal___ = NULL;
@@ -1075,6 +1075,33 @@ const char* HP_atcommand_msgsd(struct map_session_data *sd, int msg_number) {
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_msgsd_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_atcommand_msgsd_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd, msg_number);
+		}
+	}
+	return retVal___;
+}
+const char* HP_atcommand_msglang(int lang_id, int msg_number) {
+	int hIndex = 0;
+	const char* retVal___ = NULL;
+	if (HPMHooks.count.HP_atcommand_msglang_pre > 0) {
+		const char* (*preHookFunc) (int *lang_id, int *msg_number);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_msglang_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_atcommand_msglang_pre[hIndex].func;
+			retVal___ = preHookFunc(&lang_id, &msg_number);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.atcommand.msglang(lang_id, msg_number);
+	}
+	if (HPMHooks.count.HP_atcommand_msglang_post > 0) {
+		const char* (*postHookFunc) (const char* retVal___, int lang_id, int msg_number);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_msglang_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_atcommand_msglang_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, lang_id, msg_number);
 		}
 	}
 	return retVal___;
@@ -3792,15 +3819,15 @@ struct channel_data* HP_channel_search(const char *name, struct map_session_data
 	}
 	return retVal___;
 }
-struct channel_data* HP_channel_create(enum channel_types type, const char *name, unsigned char color) {
+struct channel_data* HP_channel_create(enum channel_types type, const char *name, int color_id) {
 	int hIndex = 0;
 	struct channel_data* retVal___ = NULL;
 	if (HPMHooks.count.HP_channel_create_pre > 0) {
-		struct channel_data* (*preHookFunc) (enum channel_types *type, const char **name, unsigned char *color);
+		struct channel_data* (*preHookFunc) (enum channel_types *type, const char **name, int *color_id);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_channel_create_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_channel_create_pre[hIndex].func;
-			retVal___ = preHookFunc(&type, &name, &color);
+			retVal___ = preHookFunc(&type, &name, &color_id);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -3808,13 +3835,13 @@ struct channel_data* HP_channel_create(enum channel_types type, const char *name
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.channel.create(type, name, color);
+		retVal___ = HPMHooks.source.channel.create(type, name, color_id);
 	}
 	if (HPMHooks.count.HP_channel_create_post > 0) {
-		struct channel_data* (*postHookFunc) (struct channel_data* retVal___, enum channel_types type, const char *name, unsigned char color);
+		struct channel_data* (*postHookFunc) (struct channel_data* retVal___, enum channel_types type, const char *name, int color_id);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_channel_create_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_channel_create_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, type, name, color);
+			retVal___ = postHookFunc(retVal___, type, name, color_id);
 		}
 	}
 	return retVal___;
@@ -18365,10 +18392,10 @@ void HP_clif_elemental_updatestatus(struct map_session_data *sd, int type) {
 	}
 	return;
 }
-void HP_clif_bgqueue_ack(struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_ACK response, unsigned char arena_id) {
+void HP_clif_bgqueue_ack(struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_ACK response, int arena_id) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_bgqueue_ack_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, enum BATTLEGROUNDS_QUEUE_ACK *response, unsigned char *arena_id);
+		void (*preHookFunc) (struct map_session_data **sd, enum BATTLEGROUNDS_QUEUE_ACK *response, int *arena_id);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_bgqueue_ack_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_bgqueue_ack_pre[hIndex].func;
@@ -18383,7 +18410,7 @@ void HP_clif_bgqueue_ack(struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_A
 		HPMHooks.source.clif.bgqueue_ack(sd, response, arena_id);
 	}
 	if (HPMHooks.count.HP_clif_bgqueue_ack_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_ACK response, unsigned char arena_id);
+		void (*postHookFunc) (struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_ACK response, int arena_id);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_bgqueue_ack_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_bgqueue_ack_post[hIndex].func;
 			postHookFunc(sd, response, arena_id);
@@ -18417,10 +18444,10 @@ void HP_clif_bgqueue_notice_delete(struct map_session_data *sd, enum BATTLEGROUN
 	}
 	return;
 }
-void HP_clif_bgqueue_update_info(struct map_session_data *sd, unsigned char arena_id, int position) {
+void HP_clif_bgqueue_update_info(struct map_session_data *sd, int arena_id, int position) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_bgqueue_update_info_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, unsigned char *arena_id, int *position);
+		void (*preHookFunc) (struct map_session_data **sd, int *arena_id, int *position);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_bgqueue_update_info_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_bgqueue_update_info_pre[hIndex].func;
@@ -18435,7 +18462,7 @@ void HP_clif_bgqueue_update_info(struct map_session_data *sd, unsigned char aren
 		HPMHooks.source.clif.bgqueue_update_info(sd, arena_id, position);
 	}
 	if (HPMHooks.count.HP_clif_bgqueue_update_info_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, unsigned char arena_id, int position);
+		void (*postHookFunc) (struct map_session_data *sd, int arena_id, int position);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_bgqueue_update_info_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_bgqueue_update_info_post[hIndex].func;
 			postHookFunc(sd, arena_id, position);
@@ -18495,10 +18522,10 @@ void HP_clif_bgqueue_pcleft(struct map_session_data *sd) {
 	}
 	return;
 }
-void HP_clif_bgqueue_battlebegins(struct map_session_data *sd, unsigned char arena_id, enum send_target target) {
+void HP_clif_bgqueue_battlebegins(struct map_session_data *sd, int arena_id, enum send_target target) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_bgqueue_battlebegins_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, unsigned char *arena_id, enum send_target *target);
+		void (*preHookFunc) (struct map_session_data **sd, int *arena_id, enum send_target *target);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_bgqueue_battlebegins_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_bgqueue_battlebegins_pre[hIndex].func;
@@ -18513,7 +18540,7 @@ void HP_clif_bgqueue_battlebegins(struct map_session_data *sd, unsigned char are
 		HPMHooks.source.clif.bgqueue_battlebegins(sd, arena_id, target);
 	}
 	if (HPMHooks.count.HP_clif_bgqueue_battlebegins_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, unsigned char arena_id, enum send_target target);
+		void (*postHookFunc) (struct map_session_data *sd, int arena_id, enum send_target target);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_bgqueue_battlebegins_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_bgqueue_battlebegins_post[hIndex].func;
 			postHookFunc(sd, arena_id, target);

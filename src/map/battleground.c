@@ -36,6 +36,7 @@
 #include "map/pet.h"
 #include "common/cbasetypes.h"
 #include "common/conf.h"
+#include "common/db.h"
 #include "common/HPM.h"
 #include "common/memmgr.h"
 #include "common/nullpo.h"
@@ -358,11 +359,11 @@ void bg_config_read(void) {
 		if( offline == 0 )
 			bg->queue_on = true;
 
-		if( (arenas = libconfig->setting_get_member(settings, "arenas")) != NULL ) {
+		if ((arenas = libconfig->setting_get_member(settings, "arenas")) != NULL) {
 			int i;
 			int arena_count = libconfig->setting_length(arenas);
-			CREATE( bg->arena, struct bg_arena *, arena_count );
-			for(i = 0; i < arena_count; i++) {
+			VECTOR_ENSURE(bg->arenas, arena_count);
+			for (i = 0; i < arena_count; i++) {
 				struct config_setting_t *arena = libconfig->setting_get_elem(arenas, i);
 				struct config_setting_t *reward;
 				const char *aName, *aEvent, *aDelayVar, *aTeamTypes;
@@ -372,8 +373,7 @@ void bg_config_read(void) {
 				int maxDuration;
 				int fillup_duration = 0, pregame_duration = 0;
 				enum bg_queue_types allowedTypes;
-
-				bg->arena[i] = NULL;
+				struct bg_arena *entry = NULL;
 
 				if( !libconfig->setting_lookup_string(arena, "name", &aName) ) {
 					ShowError("bg_config_read: failed to find 'name' for arena #%d\n",i);
@@ -468,31 +468,31 @@ void bg_config_read(void) {
 
 				allowedTypes = bg->str2teamtype(aTeamTypes);
 
-				CREATE( bg->arena[i], struct bg_arena, 1 );
+				CREATE(entry, struct bg_arena, 1);
 
-				bg->arena[i]->id = i;
-				safestrncpy(bg->arena[i]->name, aName, NAME_LENGTH);
-				safestrncpy(bg->arena[i]->npc_event, aEvent, EVENT_NAME_LENGTH);
-				bg->arena[i]->min_level = minLevel;
-				bg->arena[i]->max_level = maxLevel;
-				bg->arena[i]->prize_win = prizeWin;
-				bg->arena[i]->prize_loss = prizeLoss;
-				bg->arena[i]->prize_draw = prizeDraw;
-				bg->arena[i]->min_players = minPlayers;
-				bg->arena[i]->max_players = maxPlayers;
-				bg->arena[i]->min_team_players = minTeamPlayers;
-				safestrncpy(bg->arena[i]->delay_var, aDelayVar, NAME_LENGTH);
-				bg->arena[i]->maxDuration = maxDuration;
-				bg->arena[i]->queue_id = script->queue_create();
-				bg->arena[i]->begin_timer = INVALID_TIMER;
-				bg->arena[i]->fillup_timer = INVALID_TIMER;
-				bg->arena[i]->pregame_duration = pregame_duration;
-				bg->arena[i]->fillup_duration = fillup_duration;
-				bg->arena[i]->ongoing = false;
-				bg->arena[i]->allowed_types = allowedTypes;
+				entry->id = i;
+				safestrncpy(entry->name, aName, NAME_LENGTH);
+				safestrncpy(entry->npc_event, aEvent, EVENT_NAME_LENGTH);
+				entry->min_level = minLevel;
+				entry->max_level = maxLevel;
+				entry->prize_win = prizeWin;
+				entry->prize_loss = prizeLoss;
+				entry->prize_draw = prizeDraw;
+				entry->min_players = minPlayers;
+				entry->max_players = maxPlayers;
+				entry->min_team_players = minTeamPlayers;
+				safestrncpy(entry->delay_var, aDelayVar, NAME_LENGTH);
+				entry->maxDuration = maxDuration;
+				entry->queue_id = script->queue_create();
+				entry->begin_timer = INVALID_TIMER;
+				entry->fillup_timer = INVALID_TIMER;
+				entry->pregame_duration = pregame_duration;
+				entry->fillup_duration = fillup_duration;
+				entry->ongoing = false;
+				entry->allowed_types = allowedTypes;
 
+				VECTOR_PUSH(bg->arenas, entry);
 			}
-			bg->arenas = arena_count;
 		}
 	}
 	libconfig->destroy(&bg_conf);
@@ -501,10 +501,10 @@ struct bg_arena *bg_name2arena(const char *name)
 {
 	int i;
 	nullpo_retr(NULL, name);
-	for(i = 0; i < bg->arenas; i++) {
-		if( strcmpi(bg->arena[i]->name,name) == 0 )
-			return bg->arena[i];
-	}
+	ARR_FIND(0, VECTOR_LENGTH(bg->arenas), i, strcmpi(VECTOR_INDEX(bg->arenas, i)->name, name) == 0);
+	if (i != VECTOR_LENGTH(bg->arenas))
+		return VECTOR_INDEX(bg->arenas, i);
+
 	return NULL;
 }
 
@@ -567,7 +567,7 @@ void bg_queue_player_cleanup(struct map_session_data *sd) {
 		if( sd->bg_queue.arena )
 			clif->bgqueue_notice_delete(sd,BGQND_CLOSEWINDOW,sd->bg_queue.arena->name);
 		else
-			clif->bgqueue_notice_delete(sd,BGQND_FAIL_NOT_QUEUING,bg->arena[0]->name);
+			clif->bgqueue_notice_delete(sd,BGQND_FAIL_NOT_QUEUING, VECTOR_FIRST(bg->arenas)->name);
 	}
 	if( sd->bg_queue.arena )
 		script->queue_remove(sd->bg_queue.arena->queue_id,sd->status.account_id);
@@ -663,9 +663,10 @@ void bg_begin(struct bg_arena *arena) {
 		npc->event_do(arena->npc_event);
 	}
 }
-int bg_begin_timer(int tid, int64 tick, int id, intptr_t data) {
-	bg->begin(bg->arena[id]);
-	bg->arena[id]->begin_timer = INVALID_TIMER;
+int bg_begin_timer(int tid, int64 tick, int id, intptr_t data)
+{
+	bg->begin(VECTOR_INDEX(bg->arenas, id));
+	VECTOR_INDEX(bg->arenas, id)->begin_timer = INVALID_TIMER;
 	return 0;
 }
 
@@ -706,9 +707,10 @@ void bg_queue_pregame(struct bg_arena *arena) {
 	}
 	arena->begin_timer = timer->add( timer->gettick() + (arena->pregame_duration*1000), bg->begin_timer, arena->id, 0 );
 }
-int bg_fillup_timer(int tid, int64 tick, int id, intptr_t data) {
-	bg->queue_pregame(bg->arena[id]);
-	bg->arena[id]->fillup_timer = INVALID_TIMER;
+int bg_fillup_timer(int tid, int64 tick, int id, intptr_t data)
+{
+	bg->queue_pregame(VECTOR_INDEX(bg->arenas, id));
+	VECTOR_INDEX(bg->arenas, id)->fillup_timer = INVALID_TIMER;
 	return 0;
 }
 
@@ -940,14 +942,10 @@ void do_final_battleground(void)
 {
 	bg->team_db->destroy(bg->team_db,bg->team_db_final);
 
-	if (bg->arena) {
-		int i;
-		for (i = 0; i < bg->arenas; i++) {
-			if (bg->arena[i])
-				aFree(bg->arena[i]);
-		}
-		aFree(bg->arena);
+	while (VECTOR_LENGTH(bg->arenas) > 0) {
+		aFree(VECTOR_POP(bg->arenas));
 	}
+	VECTOR_CLEAR(bg->arenas);
 }
 void battleground_defaults(void) {
 	bg = &bg_s;
@@ -956,8 +954,7 @@ void battleground_defaults(void) {
 
 	bg->mafksec = 0;
 	bg->afk_timer_id = INVALID_TIMER;
-	bg->arena = NULL;
-	bg->arenas = 0;
+	VECTOR_INIT(bg->arenas);
 	/* */
 	bg->team_db = NULL;
 	bg->team_counter = 0;

@@ -1148,12 +1148,12 @@ struct clif_interface {
 	void (*elemental_info) (struct map_session_data *sd);
 	void (*elemental_updatestatus) (struct map_session_data *sd, int type);
 	/* bgqueue */
-	void (*bgqueue_ack) (struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_ACK response, unsigned char arena_id);
+	void (*bgqueue_ack) (struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_ACK response, int arena_id);
 	void (*bgqueue_notice_delete) (struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_NOTICE_DELETED response, const char *name);
-	void (*bgqueue_update_info) (struct map_session_data *sd, unsigned char arena_id, int position);
+	void (*bgqueue_update_info) (struct map_session_data *sd, int arena_id, int position);
 	void (*bgqueue_joined) (struct map_session_data *sd, int pos);
 	void (*bgqueue_pcleft) (struct map_session_data *sd);
-	void (*bgqueue_battlebegins) (struct map_session_data *sd, unsigned char arena_id, enum send_target target);
+	void (*bgqueue_battlebegins) (struct map_session_data *sd, int arena_id, enum send_target target);
 	/* misc-handling */
 	void (*adopt_reply) (struct map_session_data *sd, int type);
 	void (*adopt_request) (struct map_session_data *sd, struct map_session_data *src, int p_id);

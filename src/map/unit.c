@@ -2743,11 +2743,7 @@ int unit_free(struct block_list *bl, clr_type clrtype)
 				sd->st = NULL;
 				sd->npc_id = 0;
 			}
-			if( sd->combos ) {
-				aFree(sd->combos);
-				sd->combos = NULL;
-			}
-			sd->combo_count = 0;
+			VECTOR_CLEAR(sd->combos);
 			/* [Ind/Hercules] */
 			if( sd->sc_display_count ) {
 				int i;

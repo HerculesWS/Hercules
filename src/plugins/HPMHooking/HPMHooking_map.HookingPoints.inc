@@ -41,6 +41,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(atcommand->exists, HP_atcommand_exists) },
 	{ HP_POP(atcommand->msg_read, HP_atcommand_msg_read) },
 	{ HP_POP(atcommand->final_msg, HP_atcommand_final_msg) },
+	{ HP_POP(atcommand->init_msg, HP_atcommand_init_msg) },
 	{ HP_POP(atcommand->get_bind_byname, HP_atcommand_get_bind_byname) },
 	{ HP_POP(atcommand->get_info_byname, HP_atcommand_get_info_byname) },
 	{ HP_POP(atcommand->check_alias, HP_atcommand_check_alias) },
@@ -63,9 +64,9 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(atcommand->base_commands, HP_atcommand_base_commands) },
 	{ HP_POP(atcommand->add, HP_atcommand_add) },
 	{ HP_POP(atcommand->msg, HP_atcommand_msg) },
-	{ HP_POP(atcommand->expand_message_table, HP_atcommand_expand_message_table) },
 	{ HP_POP(atcommand->msgfd, HP_atcommand_msgfd) },
 	{ HP_POP(atcommand->msgsd, HP_atcommand_msgsd) },
+	{ HP_POP(atcommand->msglang, HP_atcommand_msglang) },
 /* battle_interface */
 	{ HP_POP(battle->init, HP_battle_init) },
 	{ HP_POP(battle->final, HP_battle_final) },

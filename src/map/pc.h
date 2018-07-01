@@ -544,8 +544,7 @@ END_ZEROED_BLOCK;
 	enum npc_timeout_type npc_idle_type;
 #endif
 
-	struct pc_combos *combos;
-	unsigned char combo_count;
+	VECTOR_DECL(struct pc_combos) combos;
 
 	/**
 	 * Guarantees your friend request is legit (for bugreport:4629)

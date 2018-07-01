@@ -2,7 +2,7 @@
 * This file is part of Hercules.
 * http://herc.ws - http://github.com/HerculesWS/Hercules
 *
-* Copyright (C) 2013-2015  Hercules Dev Team
+* Copyright (C) 2013-2018  Hercules Dev Team
 *
 * Hercules is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -246,7 +246,6 @@ bool mapcache_read_maplist(const char *filepath)
 			continue;
 
 		if (sscanf(line, "%11s", map_name) == 1) {
-			VECTOR_ENSURE(maplist, 1, 1);
 			VECTOR_PUSH(maplist, aStrdup(map_name));
 		}
 	}

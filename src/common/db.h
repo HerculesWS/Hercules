@@ -1216,13 +1216,24 @@ HPShared struct db_interface *DB;
 /**
  * Ensures that the array has the target number of empty positions.
  *
+ * Increases the capacity.
+ *
+ * @param _vec  Vector.
+ * @param _n    Desired empty positions.
+ */
+#define VECTOR_ENSURE(_vec, _n) \
+	VECTOR_ENSURE_STEP(_vec, _n, 1)
+
+/**
+ * Ensures that the array has the target number of empty positions.
+ *
  * Increases the capacity in multiples of _step.
  *
  * @param _vec  Vector.
  * @param _n    Desired empty positions.
  * @param _step Increase.
  */
-#define VECTOR_ENSURE(_vec, _n, _step) \
+#define VECTOR_ENSURE_STEP(_vec, _n, _step) \
 	do { \
 		int _newcapacity_ = VECTOR_CAPACITY(_vec); \
 		while ((_n) + VECTOR_LENGTH(_vec) > _newcapacity_) \
@@ -1241,6 +1252,7 @@ HPShared struct db_interface *DB;
  */
 #define VECTOR_INSERTZEROED(_vec, _idx) \
 	do { \
+		VECTOR_ENSURE(_vec, 1); \
 		if ((_idx) < VECTOR_LENGTH(_vec)) /* move data */ \
 			memmove(&VECTOR_INDEX(_vec, (_idx)+1), &VECTOR_INDEX(_vec, _idx), (VECTOR_LENGTH(_vec)-(_idx))*sizeof(VECTOR_FIRST(_vec))); \
 		memset(&VECTOR_INDEX(_vec, _idx), 0, sizeof(VECTOR_INDEX(_vec, _idx))); /* set zeroed value */ \
@@ -1258,6 +1270,7 @@ HPShared struct db_interface *DB;
  */
 #define VECTOR_INSERT(_vec, _idx, _val) \
 	do { \
+		VECTOR_ENSURE(_vec, 1); \
 		if ((_idx) < VECTOR_LENGTH(_vec)) /* move data */ \
 			memmove(&VECTOR_INDEX(_vec, (_idx)+1), &VECTOR_INDEX(_vec, _idx), (VECTOR_LENGTH(_vec)-(_idx))*sizeof(VECTOR_FIRST(_vec))); \
 		VECTOR_INDEX(_vec, _idx) = (_val); /* set value */ \
@@ -1288,6 +1301,7 @@ HPShared struct db_interface *DB;
  */
 #define VECTOR_INSERTARRAY(_vec, _idx, _pval, _n) \
 	do { \
+		VECTOR_ENSURE(_vec, _n); \
 		if ((_idx) < VECTOR_LENGTH(_vec)) /* move data */ \
 			memmove(&VECTOR_INDEX(_vec, (_idx)+(_n)), &VECTOR_INDEX(_vec, _idx), (VECTOR_LENGTH(_vec)-(_idx))*sizeof(VECTOR_FIRST(_vec))); \
 		memcpy(&VECTOR_INDEX(_vec, _idx), (_pval), (_n)*sizeof(VECTOR_FIRST(_vec))); /* set values */ \
@@ -1303,6 +1317,7 @@ HPShared struct db_interface *DB;
  */
 #define VECTOR_PUSHZEROED(_vec) \
 	do { \
+		VECTOR_ENSURE(_vec, 1); \
 		memset(&VECTOR_INDEX(_vec, VECTOR_LENGTH(_vec)), 0, sizeof(VECTOR_INDEX(_vec, VECTOR_LENGTH(_vec)))); /* set zeroed value */ \
 		++VECTOR_LENGTH(_vec); /* increase length */ \
 	} while(false)
@@ -1317,6 +1332,7 @@ HPShared struct db_interface *DB;
  */
 #define VECTOR_PUSH(_vec, _val) \
 	do { \
+		VECTOR_ENSURE(_vec, 1); \
 		VECTOR_INDEX(_vec, VECTOR_LENGTH(_vec)) = (_val); /* set value */ \
 		++VECTOR_LENGTH(_vec); /* increase length */ \
 	}while(false)
@@ -1343,6 +1359,7 @@ HPShared struct db_interface *DB;
  */
 #define VECTOR_PUSHARRAY(_vec, _pval, _n) \
 	do { \
+		VECTOR_ENSURE(_vec, _n); \
 		memcpy(&VECTOR_INDEX(_vec, VECTOR_LENGTH(_vec)), (_pval), (_n)*sizeof(VECTOR_FIRST(_vec))); /* set values */ \
 		VECTOR_LENGTH(_vec) += (_n); /* increase length */ \
 	} while(false)
@@ -1511,7 +1528,7 @@ HPShared struct db_interface *DB;
  * @param _step Increase.
  */
 #define BHEAP_ENSURE(_heap, _n, _step) \
-	VECTOR_ENSURE(_heap, _n, _step)
+	VECTOR_ENSURE_STEP(_heap, _n, _step)
 
 /**
  * Returns the top value of the heap.

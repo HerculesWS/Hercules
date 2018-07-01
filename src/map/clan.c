@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2017  Hercules Dev Team
+ * Copyright (C) 2017-2018  Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -201,8 +201,6 @@ bool clan_join(struct map_session_data *sd, int clan_id)
 		return false;
 	}
 
-	VECTOR_ENSURE(c->members, 1, 1);
-
 	m.sd = sd;
 	m.char_id = sd->status.char_id;
 	m.online = 1;
@@ -279,8 +277,6 @@ void clan_member_online(struct map_session_data *sd, bool first)
 			clif->clan_leave(sd);
 			return;
 		}
-
-		VECTOR_ENSURE(c->members, 1, 1);
 
 		m.sd = sd;
 		m.char_id = sd->status.char_id;
@@ -783,7 +779,6 @@ int clan_read_db_sub(struct config_setting_t *settings, const char *source, bool
 					a = clan->max_relations;
 				}
 
-				VECTOR_ENSURE(c->allies, a, 1);
 				for (i = 0; i < a; i++) {
 					struct clan_relationship r;
 					if ((allyConst = libconfig->setting_get_string_elem(allies, i)) != NULL) {
@@ -816,7 +811,6 @@ int clan_read_db_sub(struct config_setting_t *settings, const char *source, bool
 					a = clan->max_relations;
 				}
 
-				VECTOR_ENSURE(c->antagonists, a, 1);
 				for (i = 0; i < a; i++) {
 					struct clan_relationship r;
 					if ((antagonistConst = libconfig->setting_get_string_elem(antagonists, i)) != NULL) {

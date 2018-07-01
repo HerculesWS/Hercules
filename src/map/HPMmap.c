@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2015  Hercules Dev Team
+ * Copyright (C) 2013-2018  Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -104,8 +104,7 @@ struct HPM_atcommand_list {
 	AtCommandFunc func;
 };
 
-struct HPM_atcommand_list *atcommand_list = NULL;
-unsigned int atcommand_list_items = 0;
+VECTOR_DECL(struct HPM_atcommand_list) atcommand_list;
 
 /**
  * HPM plugin data store validator sub-handler (map-server)
@@ -142,31 +141,41 @@ void HPM_map_plugin_load_sub(struct hplugin *plugin) {
 	plugin->hpi->addPCGPermission = HPM_map_add_group_permission;
 }
 
-bool HPM_map_add_atcommand(char *name, AtCommandFunc func) {
-	unsigned int i = 0;
+/**
+ * Adds an atcommand from a plugin (without any validation).
+ *
+ * @see atcommand_hp_add
+ */
+bool HPM_map_add_atcommand(char *name, AtCommandFunc func)
+{
+	int i = 0;
+	struct HPM_atcommand_list *entry = NULL;
 
-	for(i = 0; i < atcommand_list_items; i++) {
-		if( !strcmpi(atcommand_list[i].name,name) ) {
+	for (i = 0; i < VECTOR_LENGTH(atcommand_list); i++) {
+		if (strcmpi(VECTOR_INDEX(atcommand_list, i).name, name) == 0) {
 			ShowDebug("HPM_map_add_atcommand: duplicate command '%s', skipping...\n", name);
 			return false;
 		}
 	}
 
-	i = atcommand_list_items;
+	VECTOR_PUSHZEROED(atcommand_list);
+	entry = &VECTOR_LAST(atcommand_list);
 
-	RECREATE(atcommand_list, struct HPM_atcommand_list , ++atcommand_list_items);
-
-	safestrncpy(atcommand_list[i].name, name, sizeof(atcommand_list[i].name));
-	atcommand_list[i].func = func;
+	safestrncpy(entry->name, name, sizeof(entry->name));
+	entry->func = func;
 
 	return true;
 }
 
-void HPM_map_atcommands(void) {
-	unsigned int i;
+/**
+ * Loads all the plugin-provided atcommands into the loaded command list.
+ */
+void HPM_map_atcommands(void)
+{
+	int i;
 
-	for(i = 0; i < atcommand_list_items; i++) {
-		atcommand->add(atcommand_list[i].name,atcommand_list[i].func,true);
+	for (i = 0; i < VECTOR_LENGTH(atcommand_list); i++) {
+		atcommand->add(VECTOR_INDEX(atcommand_list, i).name, VECTOR_INDEX(atcommand_list, i).func, true);
 	}
 }
 
@@ -183,16 +192,18 @@ void HPM_map_add_group_permission(unsigned int pluginID, char *name, unsigned in
 	pcg->HPMpermissions[index].mask = mask;
 }
 
-void HPM_map_do_init(void) {
+void HPM_map_do_init(void)
+{
+	VECTOR_INIT(atcommand_list);
 	HPM->load_sub = HPM_map_plugin_load_sub;
 	HPM->data_store_validate_sub = HPM_map_data_store_validate;
 	HPM->datacheck_init(HPMDataCheck, HPMDataCheckLen, HPMDataCheckVer);
 	HPM_shared_symbols(SERVER_TYPE_MAP);
 }
 
-void HPM_map_do_final(void) {
-	if (atcommand_list)
-		aFree(atcommand_list);
+void HPM_map_do_final(void)
+{
+	VECTOR_CLEAR(atcommand_list);
 	/**
 	 * why is pcg->HPM being cleared here? because PCG's do_final is not final,
 	 * is used on reload, and would thus cause plugin-provided permissions to go away

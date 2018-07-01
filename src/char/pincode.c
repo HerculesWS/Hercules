@@ -390,7 +390,7 @@ bool pincode_config_read(const char *filename, const struct config_t *config, bo
 			VECTOR_DECL(char *) duplicate;
 			int i, j, size = libconfig->setting_length(temp);
 			VECTOR_INIT(duplicate);
-			VECTOR_ENSURE(duplicate, size, 1);
+			VECTOR_ENSURE(duplicate, size);
 			for (i = 0; i < size; i++) {
 				const char *pin = libconfig->setting_get_string_elem(temp, i);
 
@@ -409,7 +409,6 @@ bool pincode_config_read(const char *filename, const struct config_t *config, bo
 					continue;
 				}
 
-				VECTOR_ENSURE(pincode->blacklist, 1, 1);
 				VECTOR_PUSH(pincode->blacklist, aStrdup(pin));
 				VECTOR_PUSH(duplicate, aStrdup(pin));
 			}

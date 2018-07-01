@@ -375,6 +375,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "AtCommandInfo", sizeof(struct AtCommandInfo), SERVER_TYPE_MAP },
 		{ "atcmd_binding_data", sizeof(struct atcmd_binding_data), SERVER_TYPE_MAP },
 		{ "atcommand_interface", sizeof(struct atcommand_interface), SERVER_TYPE_MAP },
+		{ "lang_table", sizeof(struct lang_table), SERVER_TYPE_MAP },
 	#else
 		#define MAP_ATCOMMAND_H
 	#endif // MAP_ATCOMMAND_H
@@ -404,6 +405,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#ifdef MAP_CHANNEL_H
 		{ "Channel_Config", sizeof(struct Channel_Config), SERVER_TYPE_MAP },
 		{ "channel_ban_entry", sizeof(struct channel_ban_entry), SERVER_TYPE_MAP },
+		{ "channel_color", sizeof(struct channel_color), SERVER_TYPE_MAP },
 		{ "channel_data", sizeof(struct channel_data), SERVER_TYPE_MAP },
 		{ "channel_interface", sizeof(struct channel_interface), SERVER_TYPE_MAP },
 	#else

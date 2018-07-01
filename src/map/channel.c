@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2015  Hercules Dev Team
+ * Copyright (C) 2013-2018  Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -90,12 +90,12 @@ struct channel_data *channel_search(const char *name, struct map_session_data *s
  *
  * If the channel type isn't HCS_TYPE_MAP or HCS_TYPE_ALLY, the channel is added to the channel->db.
  *
- * @param type The channel type.
- * @param name The channel name.
- * @param color The channel chat color.
+ * @param type     The channel type.
+ * @param name     The channel name.
+ * @param color_id The channel chat color.
  * @return A pointer to the created channel.
  */
-struct channel_data *channel_create(enum channel_types type, const char *name, unsigned char color)
+struct channel_data *channel_create(enum channel_types type, const char *name, int color_id)
 {
 	struct channel_data *chan;
 
@@ -105,7 +105,7 @@ struct channel_data *channel_create(enum channel_types type, const char *name, u
 	CREATE(chan, struct channel_data, 1);
 	chan->users = idb_alloc(DB_OPT_BASE);
 	safestrncpy(chan->name, name, HCS_NAME_LENGTH);
-	chan->color = color;
+	chan->color = color_id;
 
 	chan->options = HCS_OPT_BASE;
 	chan->banned = NULL;
@@ -733,28 +733,23 @@ void read_channels_config(void)
 
 		if( (colors = libconfig->setting_get_member(settings, "colors")) != NULL ) {
 			int color_count = libconfig->setting_length(colors);
-			CREATE(channel->config->colors, unsigned int, color_count);
-			CREATE(channel->config->colors_name, char *, color_count);
-			for(i = 0; i < color_count; i++) {
+			VECTOR_CLEAR(channel->config->colors);
+			VECTOR_ENSURE(channel->config->colors, color_count);
+			for (i = 0; i < color_count; i++) {
 				struct config_setting_t *color = libconfig->setting_get_elem(colors, i);
+				struct channel_color *entry = NULL;
 
-				CREATE(channel->config->colors_name[i], char, HCS_NAME_LENGTH);
+				VECTOR_PUSHZEROED(channel->config->colors);
+				entry = &VECTOR_LAST(channel->config->colors);
 
-				safestrncpy(channel->config->colors_name[i], config_setting_name(color), HCS_NAME_LENGTH);
-
-				channel->config->colors[i] = (unsigned int)strtoul(libconfig->setting_get_string_elem(colors,i),NULL,0);
+				safestrncpy(entry->name, config_setting_name(color), HCS_NAME_LENGTH);
+				entry->value = (uint32)strtoul(libconfig->setting_get_string_elem(colors,i), NULL, 0);
 			}
-			channel->config->colors_count = color_count;
 		}
 
 		libconfig->setting_lookup_string(settings, "map_local_channel_color", &local_color);
-
-		for (k = 0; k < channel->config->colors_count; k++) {
-			if (strcmpi(channel->config->colors_name[k], local_color) == 0)
-				break;
-		}
-
-		if (k < channel->config->colors_count) {
+		ARR_FIND(0, VECTOR_LENGTH(channel->config->colors), k, strcmpi(VECTOR_INDEX(channel->config->colors, k).name, local_color) == 0);
+		if (k != VECTOR_LENGTH(channel->config->colors)) {
 			channel->config->local_color = k;
 		} else {
 			ShowError("channels.conf: unknown color '%s' for 'map_local_channel_color', disabling '#%s'...\n",local_color,local_name);
@@ -762,13 +757,8 @@ void read_channels_config(void)
 		}
 
 		libconfig->setting_lookup_string(settings, "ally_channel_color", &ally_color);
-
-		for (k = 0; k < channel->config->colors_count; k++) {
-			if (strcmpi(channel->config->colors_name[k], ally_color) == 0)
-				break;
-		}
-
-		if( k < channel->config->colors_count ) {
+		ARR_FIND(0, VECTOR_LENGTH(channel->config->colors), k, strcmpi(VECTOR_INDEX(channel->config->colors, k).name, ally_color) == 0);
+		if (k != VECTOR_LENGTH(channel->config->colors)) {
 			channel->config->ally_color = k;
 		} else {
 			ShowError("channels.conf: unknown color '%s' for 'ally_channel_color', disabling '#%s'...\n",ally_color,ally_name);
@@ -776,13 +766,8 @@ void read_channels_config(void)
 		}
 
 		libconfig->setting_lookup_string(settings, "irc_channel_color", &irc_color);
-
-		for (k = 0; k < channel->config->colors_count; k++) {
-			if (strcmpi(channel->config->colors_name[k], irc_color) == 0)
-				break;
-		}
-
-		if (k < channel->config->colors_count) {
+		ARR_FIND(0, VECTOR_LENGTH(channel->config->colors), k, strcmpi(VECTOR_INDEX(channel->config->colors, k).name, irc_color) == 0);
+		if (k != VECTOR_LENGTH(channel->config->colors)) {
 			channel->config->irc_color = k;
 		} else {
 			ShowError("channels.conf: unknown color '%s' for 'irc_channel_color', disabling '#%s'...\n",irc_color,irc_name);
@@ -801,8 +786,8 @@ void read_channels_config(void)
 				const char *name = config_setting_name(chan);
 				const char *color = libconfig->setting_get_string_elem(channels,i);
 
-				ARR_FIND(0, channel->config->colors_count, k, strcmpi(channel->config->colors_name[k],color) == 0);
-				if (k == channel->config->colors_count) {
+				ARR_FIND(0, VECTOR_LENGTH(channel->config->colors), k, strcmpi(VECTOR_INDEX(channel->config->colors, k).name, color) == 0);
+				if (k == VECTOR_LENGTH(channel->config->colors)) {
 					ShowError("channels.conf: unknown color '%s' for channel '%s', skipping channel...\n",color,name);
 					continue;
 				}
@@ -831,6 +816,7 @@ int do_init_channel(bool minimal)
 	if (minimal)
 		return 0;
 
+	VECTOR_INIT(channel->config->colors);
 	channel->db = stridb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, HCS_NAME_LENGTH);
 	channel->config->ally = channel->config->local = channel->config->irc = channel->config->ally_autojoin = channel->config->local_autojoin = channel->config->irc_autojoin = false;
 	channel->config_read();
@@ -842,7 +828,6 @@ void do_final_channel(void)
 {
 	struct DBIterator *iter = db_iterator(channel->db);
 	struct channel_data *chan;
-	unsigned char i;
 
 	for( chan = dbi_first(iter); dbi_exists(iter); chan = dbi_next(iter) ) {
 		channel->delete(chan);
@@ -850,14 +835,7 @@ void do_final_channel(void)
 
 	dbi_destroy(iter);
 
-	for(i = 0; i < channel->config->colors_count; i++) {
-		aFree(channel->config->colors_name[i]);
-	}
-
-	if (channel->config->colors_count) {
-		aFree(channel->config->colors_name);
-		aFree(channel->config->colors);
-	}
+	VECTOR_CLEAR(channel->config->colors);
 
 	db_destroy(channel->db);
 }

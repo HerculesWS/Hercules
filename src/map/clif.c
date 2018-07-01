@@ -59,6 +59,7 @@
 #include "common/HPM.h"
 #include "common/cbasetypes.h"
 #include "common/conf.h"
+#include "common/db.h"
 #include "common/ers.h"
 #include "common/grfio.h"
 #include "common/memmgr.h"
@@ -9498,7 +9499,7 @@ void clif_channel_msg(struct channel_data *chan, struct map_session_data *sd, ch
 	iter = db_iterator(chan->users);
 	msg_len = (int)strlen(msg) + 1;
 	Assert_retv(msg_len <= INT16_MAX - 12);
-	color = channel->config->colors[chan->color];
+	color = VECTOR_INDEX(channel->config->colors, chan->color).value;
 
 	WFIFOHEAD(sd->fd,msg_len + 12);
 	WFIFOW(sd->fd,0) = 0x2C1;
@@ -9533,7 +9534,7 @@ void clif_channel_msg2(struct channel_data *chan, char *msg)
 	iter = db_iterator(chan->users);
 	msg_len = (int)strlen(msg) + 1;
 	Assert_retv(msg_len <= INT16_MAX - 12);
-	color = channel->config->colors[chan->color];
+	color = VECTOR_INDEX(channel->config->colors, chan->color).value;
 
 	WBUFW(buf,0) = 0x2C1;
 	WBUFW(buf,2) = msg_len + 12;
@@ -10333,7 +10334,7 @@ void clif_parse_GlobalMessage(int fd, struct map_session_data *sd)
 				timer->settick(sd->fontcolor_tid, td->tick+5000);
 		}
 
-		color = channel->config->colors[sd->fontcolor - 1];
+		color = VECTOR_INDEX(channel->config->colors, sd->fontcolor - 1).value;
 		WFIFOHEAD(fd, outlen + 12);
 		WFIFOW(fd,0) = 0x2C1;
 		WFIFOW(fd,2) = outlen + 12;
@@ -11081,7 +11082,7 @@ void clif_parse_NpcBuyListSend(int fd, struct map_session_data* sd)
 		int i;
 
 		VECTOR_INIT(item_list);
-		VECTOR_ENSURE(item_list, n, 1);
+		VECTOR_ENSURE(item_list, n);
 		for (i = 0; i < n; i++) {
 			struct itemlist_entry entry = { 0 };
 
@@ -11133,7 +11134,7 @@ void clif_parse_NpcSellListSend(int fd,struct map_session_data *sd)
 		int i;
 
 		VECTOR_INIT(item_list);
-		VECTOR_ENSURE(item_list, n, 1);
+		VECTOR_ENSURE(item_list, n);
 
 		for (i = 0; i < n; i++) {
 			struct itemlist_entry entry = { 0 };
@@ -16184,7 +16185,7 @@ void clif_parse_cashshop_buy(int fd, struct map_session_data *sd)
 		}
 
 		VECTOR_INIT(item_list);
-		VECTOR_ENSURE(item_list, count, 1);
+		VECTOR_ENSURE(item_list, count);
 		for (i = 0; i < count; i++) {
 			struct itemlist_entry entry = { 0 };
 
@@ -17343,7 +17344,7 @@ void clif_parse_ItemListWindowSelected(int fd, struct map_session_data *sd)
 	}
 
 	VECTOR_INIT(item_list);
-	VECTOR_ENSURE(item_list, n, 1);
+	VECTOR_ENSURE(item_list, n);
 	for (i = 0; i < n; i++) {
 		struct itemlist_entry entry = { 0 };
 		entry.id = (int)RFIFOW(fd, 12 + 4 * i) - 2; // Inventory index
@@ -18683,7 +18684,8 @@ void clif_status_change_end(struct block_list *bl, int tid, enum send_target tar
 	clif->send(&p,sizeof(p), bl, target);
 }
 
-void clif_bgqueue_ack(struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_ACK response, unsigned char arena_id) {
+void clif_bgqueue_ack(struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_ACK response, int arena_id)
+{
 	switch (response) {
 		case BGQA_FAIL_COOLDOWN:
 		case BGQA_FAIL_DESERTER:
@@ -18695,7 +18697,7 @@ void clif_bgqueue_ack(struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_ACK 
 			nullpo_retv(sd);
 			p.PacketType = bgqueue_ackType;
 			p.type = response;
-			safestrncpy(p.bg_name, bg->arena[arena_id]->name, sizeof(p.bg_name));
+			safestrncpy(p.bg_name, VECTOR_INDEX(bg->arenas, arena_id)->name, sizeof(p.bg_name));
 
 			clif->send(&p,sizeof(p), &sd->bl, SELF);
 		}
@@ -18740,13 +18742,14 @@ void clif_parse_bgqueue_register(int fd, struct map_session_data *sd)
 	bg->queue_add(sd, arena, (enum bg_queue_types)p->type);
 }
 
-void clif_bgqueue_update_info(struct map_session_data *sd, unsigned char arena_id, int position) {
+void clif_bgqueue_update_info(struct map_session_data *sd, int arena_id, int position)
+{
 	struct packet_bgqueue_update_info p;
 
 	nullpo_retv(sd);
-	Assert_retv(arena_id < bg->arenas);
+	Assert_retv(arena_id < VECTOR_LENGTH(bg->arenas));
 	p.PacketType = bgqueue_updateinfoType;
-	safestrncpy(p.bg_name, bg->arena[arena_id]->name, sizeof(p.bg_name));
+	safestrncpy(p.bg_name, VECTOR_INDEX(bg->arenas, arena_id)->name, sizeof(p.bg_name));
 	p.position = position;
 
 	sd->bg_queue.client_has_bg_data = true; // Client creates bg data when this packet arrives
@@ -18809,14 +18812,15 @@ void clif_bgqueue_pcleft(struct map_session_data *sd) {
 }
 
 // Sends BG ready req to all with same bg arena/type as sd
-void clif_bgqueue_battlebegins(struct map_session_data *sd, unsigned char arena_id, enum send_target target) {
+void clif_bgqueue_battlebegins(struct map_session_data *sd, int arena_id, enum send_target target)
+{
 	struct packet_bgqueue_battlebegins p;
 
 	nullpo_retv(sd);
-	Assert_retv(arena_id < bg->arenas);
+	Assert_retv(arena_id < VECTOR_LENGTH(bg->arenas));
 	p.PacketType = bgqueue_battlebeginsType;
-	safestrncpy(p.bg_name, bg->arena[arena_id]->name, sizeof(p.bg_name));
-	safestrncpy(p.game_name, bg->arena[arena_id]->name, sizeof(p.game_name));
+	safestrncpy(p.bg_name, VECTOR_INDEX(bg->arenas, arena_id)->name, sizeof(p.bg_name));
+	safestrncpy(p.game_name, VECTOR_INDEX(bg->arenas, arena_id)->name, sizeof(p.game_name));
 
 	clif->send(&p,sizeof(p), &sd->bl, target);
 }
@@ -19232,7 +19236,7 @@ void clif_parse_NPCMarketPurchase(int fd, struct map_session_data *sd)
 	Assert_retv(count >= 0 && count <= MAX_INVENTORY);
 
 	VECTOR_INIT(item_list);
-	VECTOR_ENSURE(item_list, count, 1);
+	VECTOR_ENSURE(item_list, count);
 
 	for (i = 0; i < count; i++) {
 		struct itemlist_entry entry = { 0 };
@@ -20690,7 +20694,6 @@ bool clif_attendancedb_libconfig_sub(struct config_setting_t *it, int n, const c
 	}
 	entry.qty = i32;
 
-	VECTOR_ENSURE(clif->attendance_data, 1, 1);
 	VECTOR_PUSH(clif->attendance_data, entry);
 	return true;
 }

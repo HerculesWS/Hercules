@@ -98,10 +98,9 @@ struct battleground_interface {
 	/* */
 	int mafksec, afk_timer_id;
 	char gdelay_var[BG_DELAY_VAR_LENGTH];
-	/* */
-	struct bg_arena **arena;
-	unsigned char arenas;
-	/* */
+
+	VECTOR_DECL(struct bg_arena *) arenas;
+
 	struct DBMap *team_db; // int bg_id -> struct battleground_data*
 	unsigned int team_counter; // Next bg_id
 	/* */

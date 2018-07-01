@@ -194,7 +194,7 @@ int inter_storage_fromsql(int account_id, struct storage_data *p)
 
 	if ((num_rows = (int)SQL->NumRows(inter->sql_handle)) != 0) {
 
-		VECTOR_ENSURE(p->item, num_rows > MAX_STORAGE ? MAX_STORAGE : num_rows, 1);
+		VECTOR_ENSURE(p->item, num_rows > MAX_STORAGE ? MAX_STORAGE : num_rows);
 
 		for (i = 0; i < MAX_STORAGE && SQL_SUCCESS == SQL->NextRow(inter->sql_handle); ++i) {
 			struct item item = { 0 };
@@ -441,7 +441,7 @@ int mapif_parse_AccountStorageSave(int fd)
 	VECTOR_INIT(p_stor.item);
 
 	if (count > 0) {
-		VECTOR_ENSURE(p_stor.item, count, 1);
+		VECTOR_ENSURE(p_stor.item, count);
 
 		for (i = 0; i < count; i++) {
 			const struct item *it = RFIFOP(fd, 8 + i * sizeof(struct item));

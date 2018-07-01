@@ -3051,7 +3051,7 @@ void char_parse_frommap_map_names(int fd, int id)
 	int i;
 
 	VECTOR_CLEAR(chr->server[id].maps);
-	VECTOR_ENSURE(chr->server[id].maps, (RFIFOW(fd, 2) - 4) / 4, 1);
+	VECTOR_ENSURE(chr->server[id].maps, (RFIFOW(fd, 2) - 4) / 4);
 	for (i = 4; i < RFIFOW(fd,2); i += 4) {
 		VECTOR_PUSH(chr->server[id].maps, RFIFOW(fd,i));
 	}
@@ -5954,7 +5954,7 @@ void char_config_set_start_item(const struct config_setting_t *setting)
 	if (!count)
 		return;
 
-	VECTOR_ENSURE(start_items, count, 1);
+	VECTOR_ENSURE(start_items, count);
 
 	for (i = 0; i < count; i++) {
 		const struct config_setting_t *t = libconfig->setting_get_elem(setting, i);

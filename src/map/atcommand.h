@@ -87,24 +87,24 @@ struct atcmd_binding_data {
 };
 
 /**
+ * Language messages table
+ */
+struct lang_table {
+	char *messages[MAX_MSG]; ///< Messages table.
+};
+
+/**
  * Interface
  **/
 struct atcommand_interface {
 	unsigned char at_symbol;
 	unsigned char char_symbol;
-	/* atcommand binding */
-	struct atcmd_binding_data** binding;
-	int binding_count;
+	VECTOR_DECL(struct atcmd_binding_data *) bindings; ///< Atcommand bindings
 	/* other vars */
 	struct DBMap *db; //name -> AtCommandInfo
 	struct DBMap *alias_db; //alias -> AtCommandInfo
-	/**
-	 * msg_table[lang_id][msg_id]
-	 * Server messages (0-499 reserved for GM commands, 500-999 reserved for others)
-	 **/
-	char*** msg_table;
-	uint8 max_message_table;
-	/* */
+	VECTOR_DECL(struct lang_table) languages; ///< Server messages
+
 	void (*init) (bool minimal);
 	void (*final) (void);
 	/* */
@@ -116,6 +116,7 @@ struct atcommand_interface {
 	AtCommandInfo* (*exists) (const char* name);
 	bool (*msg_read) (const char *cfg_name, bool allow_override);
 	void (*final_msg) (void);
+	void (*init_msg) (void);
 	/* atcommand binding */
 	struct atcmd_binding_data* (*get_bind_byname) (const char* name);
 	/* */
@@ -141,10 +142,10 @@ struct atcommand_interface {
 	void (*doload) (void);
 	void (*base_commands) (void);
 	bool (*add) (char *name, AtCommandFunc func, bool replace);
-	const char* (*msg) (int msg_number);
-	void (*expand_message_table) (void);
-	const char* (*msgfd) (int fd, int msg_number);
-	const char* (*msgsd) (struct map_session_data *sd, int msg_number);
+	const char *(*msg) (int msg_number);
+	const char *(*msgfd) (int fd, int msg_number);
+	const char *(*msgsd) (struct map_session_data *sd, int msg_number);
+	const char *(*msglang) (int lang_id, int msg_number);
 };
 
 #ifdef HERCULES_CORE

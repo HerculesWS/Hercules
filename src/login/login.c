@@ -1769,7 +1769,7 @@ void login_config_set_dnsbl_servers(struct config_setting_t *setting)
 	if (count <= 0 || !login->config->use_dnsbl)
 		return;
 
-	VECTOR_ENSURE(login->config->dnsbl_servers, count, 1);
+	VECTOR_ENSURE(login->config->dnsbl_servers, count);
 
 	for (i = 0; i < count; i++) {
 		const char *string = libconfig->setting_get_string_elem(setting, i);

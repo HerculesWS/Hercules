@@ -304,7 +304,6 @@ bool cmdline_arg_add(unsigned int pluginID, const char *name, char shortname, Cm
 	struct CmdlineArgData *data = NULL;
 
 	nullpo_retr(false, name);
-	VECTOR_ENSURE(cmdline->args_data, 1, 1);
 	VECTOR_PUSHZEROED(cmdline->args_data);
 	data = &VECTOR_LAST(cmdline->args_data);
 	data->pluginID = pluginID;

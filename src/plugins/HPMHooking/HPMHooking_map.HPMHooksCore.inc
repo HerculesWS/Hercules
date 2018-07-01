@@ -52,6 +52,8 @@ struct {
 	struct HPMHookPoint *HP_atcommand_msg_read_post;
 	struct HPMHookPoint *HP_atcommand_final_msg_pre;
 	struct HPMHookPoint *HP_atcommand_final_msg_post;
+	struct HPMHookPoint *HP_atcommand_init_msg_pre;
+	struct HPMHookPoint *HP_atcommand_init_msg_post;
 	struct HPMHookPoint *HP_atcommand_get_bind_byname_pre;
 	struct HPMHookPoint *HP_atcommand_get_bind_byname_post;
 	struct HPMHookPoint *HP_atcommand_get_info_byname_pre;
@@ -96,12 +98,12 @@ struct {
 	struct HPMHookPoint *HP_atcommand_add_post;
 	struct HPMHookPoint *HP_atcommand_msg_pre;
 	struct HPMHookPoint *HP_atcommand_msg_post;
-	struct HPMHookPoint *HP_atcommand_expand_message_table_pre;
-	struct HPMHookPoint *HP_atcommand_expand_message_table_post;
 	struct HPMHookPoint *HP_atcommand_msgfd_pre;
 	struct HPMHookPoint *HP_atcommand_msgfd_post;
 	struct HPMHookPoint *HP_atcommand_msgsd_pre;
 	struct HPMHookPoint *HP_atcommand_msgsd_post;
+	struct HPMHookPoint *HP_atcommand_msglang_pre;
+	struct HPMHookPoint *HP_atcommand_msglang_post;
 	struct HPMHookPoint *HP_battle_init_pre;
 	struct HPMHookPoint *HP_battle_init_post;
 	struct HPMHookPoint *HP_battle_final_pre;
@@ -6441,6 +6443,8 @@ struct {
 	int HP_atcommand_msg_read_post;
 	int HP_atcommand_final_msg_pre;
 	int HP_atcommand_final_msg_post;
+	int HP_atcommand_init_msg_pre;
+	int HP_atcommand_init_msg_post;
 	int HP_atcommand_get_bind_byname_pre;
 	int HP_atcommand_get_bind_byname_post;
 	int HP_atcommand_get_info_byname_pre;
@@ -6485,12 +6489,12 @@ struct {
 	int HP_atcommand_add_post;
 	int HP_atcommand_msg_pre;
 	int HP_atcommand_msg_post;
-	int HP_atcommand_expand_message_table_pre;
-	int HP_atcommand_expand_message_table_post;
 	int HP_atcommand_msgfd_pre;
 	int HP_atcommand_msgfd_post;
 	int HP_atcommand_msgsd_pre;
 	int HP_atcommand_msgsd_post;
+	int HP_atcommand_msglang_pre;
+	int HP_atcommand_msglang_post;
 	int HP_battle_init_pre;
 	int HP_battle_init_post;
 	int HP_battle_final_pre;

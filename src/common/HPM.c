@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2016  Hercules Dev Team
+ * Copyright (C) 2013-2018  Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -88,7 +88,6 @@ void hplugin_export_symbol(void *value, const char *name)
 	CREATE(symbol ,struct hpm_symbol, 1);
 	symbol->name = name;
 	symbol->ptr = value;
-	VECTOR_ENSURE(HPM->symbols, 1, 1);
 	VECTOR_PUSH(HPM->symbols, symbol);
 }
 
@@ -153,7 +152,6 @@ struct hplugin *hplugin_create(void)
 	CREATE(plugin, struct hplugin, 1);
 	plugin->idx = (int)VECTOR_LENGTH(HPM->plugins);
 	plugin->filename = NULL;
-	VECTOR_ENSURE(HPM->plugins, 1, 1);
 	VECTOR_PUSH(HPM->plugins, plugin);
 	return plugin;
 }
@@ -176,7 +174,6 @@ bool hplugins_addpacket(unsigned short cmd, unsigned short length, void (*receiv
 		}
 	}
 
-	VECTOR_ENSURE(HPM->packets[point], 1, 1);
 	VECTOR_PUSHZEROED(HPM->packets[point]);
 	packet = &VECTOR_LAST(HPM->packets[point]);
 
@@ -279,7 +276,6 @@ void hplugins_addToHPData(enum HPluginDataTypes type, uint32 pluginID, struct hp
 	entry->flag.free = autofree ? 1 : 0;
 	entry->data = data;
 
-	VECTOR_ENSURE(store->entries, 1, 1);
 	VECTOR_PUSH(store->entries, entry);
 }
 
@@ -437,7 +433,6 @@ bool hplugins_addconf(unsigned int pluginID, enum HPluginConfType type, char *na
 		return false;
 	}
 
-	VECTOR_ENSURE(HPM->config_listeners[type], 1, 1);
 	VECTOR_PUSHZEROED(HPM->config_listeners[type]);
 	conf = &VECTOR_LAST(HPM->config_listeners[type]);
 
@@ -620,7 +615,6 @@ void hplugin_unload(struct hplugin* plugin)
  */
 CMDLINEARG(loadplugin)
 {
-	VECTOR_ENSURE(HPM->cmdline_load_plugins, 1, 1);
 	VECTOR_PUSH(HPM->cmdline_load_plugins, aStrdup(params));
 	return true;
 }
