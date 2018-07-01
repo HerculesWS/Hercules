@@ -6631,17 +6631,48 @@ Examples:
 *unitwarp(<GID>, <Mapname>, <x>, <y>)
 *unitattack(<GID>, <Target ID>)
 *unitstop(<GID>)
-*unittalk(<GID>, <Text>)
+*unittalk(<GID>, <Text>{, show_name{, <send_target>{, <target_id>}}})
 *unitemote(<GID>, <Emote>)
 
 Okay, these commands should be fairly self explaining.
 For the emotions, you can look in db/constants.conf for prefixes with e_
 PS: unitwarp() supports a <GID> of zero, which causes the executor of the
+PS: unittalk() can receive 3 extra parameters:
+	show_name:
+		true: Shows Unit name like "UnitName : Message" (default)
+		false: Hides Unit name
+	send_target:
+		AREA_CHAT_WOC: sends the message to everyone in view range including the attached unit (default)
+		SELF: sends the message to the given unit gid only
+	target_id:
+		if send_target is set to SELF, the message will be shown by the given gid,
+		target_id allows changing the unit that will see the message.
 script to be affected. This can be used with OnTouchNPC to warp
 monsters:
 
 OnTouchNPC:
 	unitwarp(0, "this", -1, -1);
+
+	// hide the npc name from the text
+	unittalk(getnpcid(0), "foobar", false);
+
+	// display by npc to everyone
+	unittalk(getnpcid(0), "foobar", true);
+
+	// display by npc to npc
+	unittalk(getnpcid(0), "foobar", true, SELF);
+
+	// display the text by the npc to the attached player only
+	unittalk(getnpcid(0), "foobar", true, SELF, playerattached());
+
+	// display by player to everyone
+	unittalk(playerattached(), "foobar", true);
+
+	// display by player to himself only
+	unittalk(playerattached(), "foobar", true, SELF);
+
+	// display the text by the 1st player to the attached player only
+	unittalk(getcharid(CHAR_ID_ACCOUNT, "Name"), "foobar", true, SELF, playerattached());
 
 ---------------------------------------
 
@@ -6750,12 +6781,16 @@ A debug message also shows on the console when no events are triggered.
 
 ---------------------------------------
 
-*npctalk("<message>"{, "<npc name>"})
+*npctalk("<message>"{, "<npc name>"{, <show_name>}})
+
+show_npcname values:
+	true: shows npc name (default)
+	false: hide npc name
 
 This command will display a message to the surrounding area as if the NPC
 object running it was a player talking - that is, above their head and in
-the chat window. The display name of the NPC will get appended in front of
-the message to complete the effect.
+the chat window. If show_npcname is true the name of the NPC will get appended in front of
+the message, otherwise the npc name will not be shown.
 
 	// This will make everyone in the area see the NPC greet the character
 	// who just invoked it.

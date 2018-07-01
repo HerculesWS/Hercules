@@ -7168,7 +7168,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				//NOTE: mobs don't have the sprite animation that is used when performing this skill (will cause glitches)
 				char temp[70];
 				snprintf(temp, sizeof(temp), "%s : %s !!", md->name, skill->get_desc(skill_id));
-				clif->disp_overhead(&md->bl,temp);
+				clif->disp_overhead(&md->bl, temp, AREA_CHAT_WOC, NULL);
 			}
 			break;
 

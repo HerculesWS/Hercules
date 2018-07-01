@@ -15567,12 +15567,13 @@ BUILDIN(message)
 
 /*==========================================
  * npctalk (sends message to surrounding area)
- * usage: npctalk "<message>"{,"<npc name>"};
+ * usage: npctalk("<message>"{, "<npc name>"{, <show_name>}});
  *------------------------------------------*/
 BUILDIN(npctalk)
 {
 	struct npc_data* nd;
 	const char *str = script_getstr(st,2);
+	bool show_name = true;
 
 	if (script_hasdata(st, 3)) {
 		nd = npc->name2id(script_getstr(st, 3));
@@ -15580,12 +15581,20 @@ BUILDIN(npctalk)
 		nd = map->id2nd(st->oid);
 	}
 
+	if (script_hasdata(st, 4)) {
+		show_name = (script_getnum(st, 4) != 0) ? true : false;
+	}
+
 	if (nd != NULL) {
 		char name[NAME_LENGTH], message[256];
 		safestrncpy(name, nd->name, sizeof(name));
 		strtok(name, "#"); // discard extra name identifier if present
-		safesnprintf(message, sizeof(message), "%s : %s", name, str);
-		clif->disp_overhead(&nd->bl, message);
+		if (show_name) {
+			safesnprintf(message, sizeof(message), "%s : %s", name, str);
+		} else {
+			safesnprintf(message, sizeof(message), "%s", str);
+		}
+		clif->disp_overhead(&nd->bl, message, AREA_CHAT_WOC, NULL);
 	}
 
 	return true;
@@ -20108,14 +20117,28 @@ BUILDIN(unitstop) {
 
 /// Makes the unit say the message
 ///
-/// unittalk <unit_id>,"<message>";
+/// unittalk(<unit_id>,"<message>"{, show_name{, <send_target>{, <target_id>}}});
 BUILDIN(unittalk) {
 	int unit_id;
 	const char* message;
-	struct block_list* bl;
+	struct block_list *bl, *target_bl = NULL;
+	bool show_name = true;
+	enum send_target target = AREA_CHAT_WOC;
 
 	unit_id = script_getnum(st,2);
 	message = script_getstr(st, 3);
+
+	if (script_hasdata(st, 4)) {
+		show_name = (script_getnum(st, 4) != 0) ? true : false;
+	}
+
+	if (script_hasdata(st, 5)) {
+		target = script_getnum(st, 5);
+	}
+
+	if (script_hasdata(st, 6)) {
+		target_bl = map->id2bl(script_getnum(st, 6));
+	}
 
 	bl = map->id2bl(unit_id);
 	if( bl != NULL ) {
@@ -20125,8 +20148,17 @@ BUILDIN(unittalk) {
 		safestrncpy(blname, clif->get_bl_name(bl), sizeof(blname));
 		if(bl->type == BL_NPC)
 			strtok(blname, "#");
-		StrBuf->Printf(&sbuf, "%s : %s", blname, message);
-		clif->disp_overhead(bl, StrBuf->Value(&sbuf));
+		if (show_name) {
+			StrBuf->Printf(&sbuf, "%s : %s", blname, message);
+		} else {
+			StrBuf->Printf(&sbuf, "%s", message);
+		}
+
+		if (bl->type == BL_PC && target == SELF && (target_bl == NULL || bl == target_bl)) {
+			clif->notify_playerchat(bl, StrBuf->Value(&sbuf));
+		} else {
+			clif->disp_overhead(bl, StrBuf->Value(&sbuf), target, target_bl);
+		}
 		StrBuf->Destroy(&sbuf);
 	}
 
@@ -24642,7 +24674,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF2(atcommand,"charcommand","s"), // [MouseJstr]
 		BUILDIN_DEF(movenpc,"sii?"), // [MouseJstr]
 		BUILDIN_DEF(message,"vs"), // [MouseJstr]
-		BUILDIN_DEF(npctalk,"s?"), // [Valaris]
+		BUILDIN_DEF(npctalk,"s??"), // [Valaris][Murilo BiO]
 		BUILDIN_DEF(mobcount,"ss"),
 		BUILDIN_DEF(getlook,"i"),
 		BUILDIN_DEF(getsavepoint,"i"),
@@ -24771,7 +24803,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(unitwarp,"isii"),
 		BUILDIN_DEF(unitattack,"iv?"),
 		BUILDIN_DEF(unitstop,"i"),
-		BUILDIN_DEF(unittalk,"is"),
+		BUILDIN_DEF(unittalk,"is???"),
 		BUILDIN_DEF(unitemote,"ii"),
 		BUILDIN_DEF(unitskilluseid,"ivi?"), // originally by Qamera [Celest]
 		BUILDIN_DEF(unitskillusepos,"iviii"), // [Celest]
