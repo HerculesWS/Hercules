@@ -4419,9 +4419,7 @@ static void char_send_map_info(int fd, int i, uint32 subnet_map_ip, struct mmo_c
 	mapindex->getmapname_ext(mapindex_id2name(cd->last_point.map), WFIFOP(fd, 6));
 	WFIFOL(fd, 22) = htonl((subnet_map_ip) ? subnet_map_ip : chr->server[i].ip);
 	WFIFOW(fd, 26) = sockt->ntows(htons(chr->server[i].port)); // [!] LE byte order here [!]
-#if PACKETVER < 20170329
-	memset(WFIFOP(fd, 28), 0, 128);
-#else
+#if PACKETVER >= 20170329
 	if (dnsHost != NULL) {
 		safestrncpy(WFIFOP(fd, 28), dnsHost, 128);
 	} else {
