@@ -373,7 +373,7 @@ enum packet_headers {
 #elif PACKETVER >= 20150128
 	openUiType = 0xA38,
 #endif
-#if PACKETVER_ZERO_NUM >= 20180627
+#if PACKETVER >= 20180627
 	authError = 0xb02,
 #elif PACKETVER >= 20101123
 	authError = 0x83e,
