@@ -1810,6 +1810,22 @@ struct PACKET_ZC_NOTIFY_PLAYERCHAT {
 	char Message[];
 } __attribute__((packed));
 
+struct PACKET_ZC_ITEM_ENTRY {
+	int16 packetType;
+	uint32 AID;
+#if PACKETVER_RE_NUM >= 20180704
+	uint32 itemId;
+#else
+	uint16 itemId;
+#endif
+	uint8 identify;
+	uint16 x;
+	uint16 y;
+	uint16 amount;
+	uint8 subX;
+	uint8 subY;
+} __attribute__((packed));
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

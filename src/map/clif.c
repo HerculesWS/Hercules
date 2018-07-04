@@ -4755,26 +4755,29 @@ static void clif_changemapcell(int fd, int16 m, int x, int y, int type, enum sen
 /// 009d <id>.L <name id>.W <identified>.B <x>.W <y>.W <amount>.W <subX>.B <subY>.B
 static void clif_getareachar_item(struct map_session_data *sd, struct flooritem_data *fitem)
 {
-	int view,fd;
+	int view, fd;
+	struct PACKET_ZC_ITEM_ENTRY p;
 
 	nullpo_retv(sd);
 	nullpo_retv(fitem);
-	fd=sd->fd;
+	fd = sd->fd;
 
-	WFIFOHEAD(fd,packet_len(0x9d));
-	WFIFOW(fd,0)=0x9d;
-	WFIFOL(fd,2)=fitem->bl.id;
-	if((view = itemdb_viewid(fitem->item_data.nameid)) > 0)
-		WFIFOW(fd,6)=view;
+	WFIFOHEAD(fd, sizeof(p));
+	p.packetType = 0x9d;
+	p.AID = fitem->bl.id;
+	if ((view = itemdb_viewid(fitem->item_data.nameid)) > 0)
+		p.itemId = view;
 	else
-		WFIFOW(fd,6)=fitem->item_data.nameid;
-	WFIFOB(fd,8)=fitem->item_data.identify;
-	WFIFOW(fd,9)=fitem->bl.x;
-	WFIFOW(fd,11)=fitem->bl.y;
-	WFIFOW(fd,13)=fitem->item_data.amount;
-	WFIFOB(fd,15)=fitem->subx;
-	WFIFOB(fd,16)=fitem->suby;
-	WFIFOSET(fd,packet_len(0x9d));
+		p.itemId = fitem->item_data.nameid;
+	p.identify = fitem->item_data.identify;
+	p.x = fitem->bl.x;
+	p.y = fitem->bl.y;
+	p.amount = fitem->item_data.amount;
+	p.subX = fitem->subx;
+	p.subY = fitem->suby;
+
+	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
+	WFIFOSET(fd, sizeof(p));
 }
 
 static void clif_graffiti_entry(struct block_list *bl, struct skill_unit *su, enum send_target target)
