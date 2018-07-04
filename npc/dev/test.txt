@@ -116,6 +116,13 @@ function	script	F_TestVarOfAnotherNPC	{
 	end;
 }
 
+-	script	TestVarOfDuplicate_o	FAKE_NPC,{
+	end; // empty npc: we set its vars later when the test runs
+}
+
+-	duplicate(TestVarOfDuplicate_o)	TestVarOfDuplicate_d1	FAKE_NPC
+-	duplicate(TestVarOfDuplicate_o)	TestVarOfDuplicate_d2	FAKE_NPC
+
 function	script	HerculesSelfTestHelper	{
 	if (.once > 0)
 		return .errors;
@@ -662,6 +669,22 @@ function	script	HerculesSelfTestHelper	{
 	set getvariableofnpc(.x, "TestVarOfAnotherNPC"), 1;
 	callsub(OnCheck, "Setting NPC variables of another NPC", getvariableofnpc(.x, "TestVarOfAnotherNPC"), 1);
 	callsub(OnCheck, "Setting NPC variables of another NPC (local variable overwrite check)", .x, 2);
+
+	// duplicate(npc) variables
+	set(getvariableofnpc(.foobar, "TestVarOfDuplicate_o"), 0xDEAD);
+	if (TRUE_NPC_DUPLICATE) {
+		callsub(OnCheck, "Checking that parent NPC vars aren't shared with children (first)", getvariableofnpc(.foobar, "TestVarOfDuplicate_d1"), 0);
+		callsub(OnCheck, "Checking that parent NPC vars aren't shared with children (second)", getvariableofnpc(.foobar, "TestVarOfDuplicate_d2"), 0);
+		set(getvariableofnpc(.foobar, "TestVarOfDuplicate_d1"), 0xBEEF);
+		callsub(OnCheck, "Checking that children NPCs can set vars", getvariableofnpc(.foobar, "TestVarOfDuplicate_d1"), 0xBEEF);
+		callsub(OnCheck, "Checking that children NPC vars aren't shared with neighbors", getvariableofnpc(.foobar, "TestVarOfDuplicate_d2"), 0);
+		callsub(OnCheck, "Checking that children NPC vars aren't shared with parents", getvariableofnpc(.foobar, "TestVarOfDuplicate_o"), 0xDEAD);
+	} else {
+		callsub(OnCheck, "Checking that parent NPC vars are shared with children", getvariableofnpc(.foobar, "TestVarOfDuplicate_d1"), 0xDEAD);
+		set(getvariableofnpc(.foobar, "TestVarOfDuplicate_d1"), 0xBEEF);
+		callsub(OnCheck, "Checking that children NPC vars are shared with neighbors", getvariableofnpc(.foobar, "TestVarOfDuplicate_d2"), 0xBEEF);
+		callsub(OnCheck, "Checking that children NPC vars are shared with parents", getvariableofnpc(.foobar, "TestVarOfDuplicate_o"), 0xBEEF);
+	}
 
 	// Callsub (advanced)
 	callsub(OnCheck, "Callsub return value", callsub(OnTestReturnValue, 1));

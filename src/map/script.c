@@ -25926,6 +25926,8 @@ static void script_hardcoded_constants(void)
 	script->set_constant("ITR_NOAUCTION", ITR_NOAUCTION, false, false);
 	script->set_constant("ITR_ALL", ITR_ALL, false, false);
 
+	script->constdb_comment("script engine self-test");
+	script->set_constant("TRUE_NPC_DUPLICATE", script->config.true_npc_duplicate, false, false);
 
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL
