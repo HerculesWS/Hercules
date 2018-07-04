@@ -390,7 +390,11 @@ enum packet_headers {
  * structs for data
  */
 struct EQUIPSLOTINFO {
+#if PACKETVER_RE_NUM >= 20180704
+	uint32 card[4];
+#else
 	uint16 card[4];
+#endif
 } __attribute__((packed));
 
 struct NORMALITEM_INFO {
