@@ -787,6 +787,9 @@ struct packet_idle_unit {
 #else
 	int32 weapon;
 #endif
+#if PACKETVER_RE_NUM >= 20180704
+	int32 shield;
+#endif
 	int16 accessory;
 #if PACKETVER < 7
 	int16 shield;
