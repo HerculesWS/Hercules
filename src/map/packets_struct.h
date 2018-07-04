@@ -532,7 +532,11 @@ struct packet_additem {
 struct packet_dropflooritem {
 	int16 PacketType;
 	uint32 ITAID;
+#if PACKETVER_RE_NUM >= 20180704
+	uint32 ITID;
+#else
 	uint16 ITID;
+#endif
 #if PACKETVER >= 20130000 /* not sure date */
 	uint16 type;
 #endif
