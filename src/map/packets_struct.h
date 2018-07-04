@@ -506,7 +506,11 @@ struct packet_additem {
 	int16 PacketType;
 	uint16 Index;
 	uint16 count;
+#if PACKETVER_RE_NUM >= 20180704
+	uint32 nameid;
+#else
 	uint16 nameid;
+#endif
 	uint8 IsIdentified;
 	uint8 IsDamaged;
 	uint8 refiningLevel;
