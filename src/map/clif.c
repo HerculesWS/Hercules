@@ -2453,106 +2453,55 @@ static void clif_cutin(struct map_session_data *sd, const char *image, int type)
 /*==========================================
  * Fills in card data from the given item and into the buffer. [Skotlex]
  *------------------------------------------*/
-static void clif_addcards(unsigned char *buf, struct item *item)
+static void clif_addcards(struct EQUIPSLOTINFO *buf, struct item *item)
 {
-	int i=0,j;
+	int i = 0, j;
 	nullpo_retv(buf);
-	if( item == NULL ) { //Blank data
-		WBUFW(buf,0) = 0;
-		WBUFW(buf,2) = 0;
-		WBUFW(buf,4) = 0;
-		WBUFW(buf,6) = 0;
+	if (item == NULL) {  //Blank data
+		buf->card[0] = 0;
+		buf->card[1] = 0;
+		buf->card[2] = 0;
+		buf->card[3] = 0;
 		return;
 	}
-	if( item->card[0] == CARD0_PET ) { //pet eggs
-		WBUFW(buf,0) = 0;
-		WBUFW(buf,2) = 0;
-		WBUFW(buf,4) = 0;
-		WBUFW(buf,6) = item->card[3]; //Pet renamed flag.
+	if (item->card[0] == CARD0_PET) { //pet eggs
+		buf->card[0] = 0;
+		buf->card[1] = 0;
+		buf->card[2] = 0;
+		buf->card[3] = item->card[3]; //Pet renamed flag.
 		return;
 	}
-	if( item->card[0] == CARD0_FORGE || item->card[0] == CARD0_CREATE ) { //Forged/created items
-		WBUFW(buf,0) = item->card[0];
-		WBUFW(buf,2) = item->card[1];
-		WBUFW(buf,4) = item->card[2];
-		WBUFW(buf,6) = item->card[3];
-		return;
-	}
-	//Client only receives four cards.. so randomly send them a set of cards. [Skotlex]
-	if( MAX_SLOTS > 4 && (j = itemdb_slot(item->nameid)) > 4 )
-		i = rnd()%(j-3); //eg: 6 slots, possible i values: 0->3, 1->4, 2->5 => i = rnd()%3;
-
-	//Normal items.
-	if( item->card[i] > 0 && (j=itemdb_viewid(item->card[i])) > 0 )
-		WBUFW(buf,0) = j;
-	else
-		WBUFW(buf,0) = item->card[i];
-
-	if( item->card[++i] > 0 && (j=itemdb_viewid(item->card[i])) > 0 )
-		WBUFW(buf,2) = j;
-	else
-		WBUFW(buf,2) = item->card[i];
-
-	if( item->card[++i] > 0 && (j=itemdb_viewid(item->card[i])) > 0 )
-		WBUFW(buf,4) = j;
-	else
-		WBUFW(buf,4) = item->card[i];
-
-	if( item->card[++i] > 0 && (j=itemdb_viewid(item->card[i])) > 0 )
-		WBUFW(buf,6) = j;
-	else
-		WBUFW(buf,6) = item->card[i];
-}
-
-static void clif_addcards2(unsigned short *cards, struct item *item)
-{
-	int i=0,j;
-	nullpo_retv(cards);
-	if( item == NULL ) { //Blank data
-		cards[0] = 0;
-		cards[1] = 0;
-		cards[2] = 0;
-		cards[3] = 0;
-		return;
-	}
-	if( item->card[0] == CARD0_PET ) { //pet eggs
-		cards[0] = 0;
-		cards[1] = 0;
-		cards[2] = 0;
-		cards[3] = item->card[3]; //Pet renamed flag.
-		return;
-	}
-	if( item->card[0] == CARD0_FORGE || item->card[0] == CARD0_CREATE ) { //Forged/created items
-		cards[0] = item->card[0];
-		cards[1] = item->card[1];
-		cards[2] = item->card[2];
-		cards[3] = item->card[3];
+	if (item->card[0] == CARD0_FORGE || item->card[0] == CARD0_CREATE) { //Forged/created items
+		buf->card[0] = item->card[0];
+		buf->card[1] = item->card[1];
+		buf->card[2] = item->card[2];
+		buf->card[3] = item->card[3];
 		return;
 	}
 	//Client only receives four cards.. so randomly send them a set of cards. [Skotlex]
-	if( MAX_SLOTS > 4 && (j = itemdb_slot(item->nameid)) > 4 )
-		i = rnd()%(j-3); //eg: 6 slots, possible i values: 0->3, 1->4, 2->5 => i = rnd()%3;
+	if (MAX_SLOTS > 4 && (j = itemdb_slot(item->nameid)) > 4)
+		i = rnd() % (j - 3); //eg: 6 slots, possible i values: 0->3, 1->4, 2->5 => i = rnd()%3;
 
 	//Normal items.
-	if( item->card[i] > 0 && (j=itemdb_viewid(item->card[i])) > 0 )
-		cards[0] = j;
+	if (item->card[i] > 0 && (j = itemdb_viewid(item->card[i])) > 0)
+		buf->card[0] = j;
 	else
-		cards[0] = item->card[i];
+		buf->card[0] = item->card[i];
 
-	if( item->card[++i] > 0 && (j=itemdb_viewid(item->card[i])) > 0 )
-		cards[1] = j;
+	if (item->card[++i] > 0 && (j = itemdb_viewid(item->card[i])) > 0)
+		buf->card[1] = j;
 	else
-		cards[1] = item->card[i];
+		buf->card[1] = item->card[i];
 
-	if( item->card[++i] > 0 && (j=itemdb_viewid(item->card[i])) > 0 )
-		cards[2] = j;
+	if (item->card[++i] > 0 && (j = itemdb_viewid(item->card[i])) > 0)
+		buf->card[2] = j;
 	else
-		cards[2] = item->card[i];
+		buf->card[2] = item->card[i];
 
-	if( item->card[++i] > 0 && (j=itemdb_viewid(item->card[i])) > 0 )
-		cards[3] = j;
+	if (item->card[++i] > 0 && (j = itemdb_viewid(item->card[i])) > 0)
+		buf->card[3] = j;
 	else
-		cards[3] = item->card[i];
+		buf->card[3] = item->card[i];
 }
 
 /**
@@ -2623,7 +2572,7 @@ static void clif_additem(struct map_session_data *sd, int n, int amount, int fai
 		p.IsIdentified = sd->status.inventory[n].identify ? 1 : 0;
 		p.IsDamaged = (sd->status.inventory[n].attribute & ATTR_BROKEN) != 0 ? 1 : 0;
 		p.refiningLevel =sd->status.inventory[n].refine;
-		clif->addcards2(&p.slot.card[0], &sd->status.inventory[n]);
+		clif->addcards(&p.slot, &sd->status.inventory[n]);
 		p.location = pc->equippoint(sd,n);
 		p.type = itemtype(sd->inventory_data[n]->type);
 #if PACKETVER >= 20061218
@@ -2739,7 +2688,7 @@ static void clif_item_equip(short idx, struct EQUIPITEM_INFO *p, struct item *it
 #endif
 	p->RefiningLevel = it->refine;
 
-	clif->addcards2(&p->slot.card[0], it);
+	clif->addcards(&p->slot, it);
 
 #if PACKETVER >= 20071002
 	p->HireExpireDate = it->expire_time;
@@ -2788,7 +2737,7 @@ static void clif_item_normal(short idx, struct NORMALITEM_INFO *p, struct item *
 	p->WearState = id->equip;
 
 #if PACKETVER >= 5
-	clif->addcards2(&p->slot.card[0], i);
+	clif->addcards(&p->slot, i);
 #endif
 
 #if PACKETVER >= 20080102
@@ -4251,7 +4200,7 @@ static void clif_tradeadditem(struct map_session_data *sd, struct map_session_da
 		WBUFB(buf,8) = sd->status.inventory[index].identify; //identify flag
 		WBUFB(buf,9) = sd->status.inventory[index].attribute; // attribute
 		WBUFB(buf,10)= sd->status.inventory[index].refine; //refine
-		clif->addcards(WBUFP(buf, 11), &sd->status.inventory[index]);
+		clif->addcards((struct EQUIPSLOTINFO*)WBUFP(buf, 11), &sd->status.inventory[index]);
 #if PACKETVER >= 20150226
 		clif->add_item_options(WBUFP(buf, 19), &sd->status.inventory[index]);
 #endif
@@ -4382,7 +4331,7 @@ static void clif_storageitemadded(struct map_session_data *sd, struct item *i, i
 	WFIFOB(fd,10+offset) = i->identify; //identify flag
 	WFIFOB(fd,11+offset) = i->attribute; // attribute
 	WFIFOB(fd,12+offset) = i->refine; //refine
-	clif->addcards(WFIFOP(fd,13+offset), i);
+	clif->addcards((struct EQUIPSLOTINFO*)WFIFOP(fd, 13 + offset), i);
 #if PACKETVER >= 20150226
 	clif->add_item_options(WFIFOP(fd, 21 + offset), i);
 #endif
@@ -6365,7 +6314,7 @@ static void clif_item_repair_list(struct map_session_data *sd, struct map_sessio
 			WFIFOW(fd,c*13+4) = i;
 			WFIFOW(fd,c*13+6) = nameid;
 			WFIFOB(fd,c*13+8) = dstsd->status.inventory[i].refine;
-			clif->addcards(WFIFOP(fd,c*13+9), &dstsd->status.inventory[i]);
+			clif->addcards((struct EQUIPSLOTINFO*)WFIFOP(fd, c * 13 + 9), &dstsd->status.inventory[i]);
 			c++;
 		}
 	}
@@ -6442,7 +6391,7 @@ static void clif_item_refine_list(struct map_session_data *sd)
 			WFIFOW(fd,c*13+ 4)=i+2;
 			WFIFOW(fd,c*13+ 6)=sd->status.inventory[i].nameid;
 			WFIFOB(fd,c*13+ 8)=sd->status.inventory[i].refine;
-			clif->addcards(WFIFOP(fd,c*13+9), &sd->status.inventory[i]);
+			clif->addcards((struct EQUIPSLOTINFO*)WFIFOP(fd, c * 13 + 9), &sd->status.inventory[i]);
 			c++;
 		}
 	}
@@ -6506,7 +6455,7 @@ static void clif_cart_additem(struct map_session_data *sd, int n, int amount, in
 	WBUFB(buf,10+offset)=sd->status.cart[n].identify;
 	WBUFB(buf,11+offset)=sd->status.cart[n].attribute;
 	WBUFB(buf,12+offset)=sd->status.cart[n].refine;
-	clif->addcards(WBUFP(buf,13+offset), &sd->status.cart[n]);
+	clif->addcards((struct EQUIPSLOTINFO*)WBUFP(buf, 13 + offset), &sd->status.cart[n]);
 #if PACKETVER >= 20150226
 	clif->add_item_options(WBUFP(buf, 21 + offset), &sd->status.cart[n]);
 #endif
@@ -6638,7 +6587,7 @@ static void clif_vendinglist(struct map_session_data *sd, unsigned int id, struc
 		WFIFOB(fd,offset+11+i*item_length) = vsd->status.cart[index].identify;
 		WFIFOB(fd,offset+12+i*item_length) = vsd->status.cart[index].attribute;
 		WFIFOB(fd,offset+13+i*item_length) = vsd->status.cart[index].refine;
-		clif->addcards(WFIFOP(fd,offset+14+i*item_length), &vsd->status.cart[index]);
+		clif->addcards((struct EQUIPSLOTINFO*)WFIFOP(fd, offset + 14 + i * item_length), &vsd->status.cart[index]);
 #if PACKETVER >= 20150226
 		clif->add_item_options(WFIFOP(fd, offset + 22 + i * item_length), &vsd->status.cart[index]);
 #endif
@@ -6710,7 +6659,7 @@ static void clif_openvending(struct map_session_data *sd, int id, struct s_vendi
 		WFIFOB(fd,19+i*item_length) = sd->status.cart[index].identify;
 		WFIFOB(fd,20+i*item_length) = sd->status.cart[index].attribute;
 		WFIFOB(fd,21+i*item_length) = sd->status.cart[index].refine;
-		clif->addcards(WFIFOP(fd,22+i*item_length), &sd->status.cart[index]);
+		clif->addcards((struct EQUIPSLOTINFO*)WFIFOP(fd, 22 + i * item_length), &sd->status.cart[index]);
 #if PACKETVER >= 20150226
 		clif->add_item_options(WFIFOP(fd, 30 + i * item_length), &sd->status.cart[index]);
 #endif
@@ -17422,7 +17371,7 @@ static void clif_party_show_picker(struct map_session_data *sd, struct item *ite
 	WBUFB(buf,8) = item_data->identify;
 	WBUFB(buf,9) = item_data->attribute;
 	WBUFB(buf,10) = item_data->refine;
-	clif->addcards(WBUFP(buf,11), item_data);
+	clif->addcards((struct EQUIPSLOTINFO*)WBUFP(buf, 11), item_data);
 	WBUFW(buf,19) = id->equip; // equip location
 	WBUFB(buf,21) = itemtype(id->type); // item type
 	clif->send(buf, packet_len(0x2b8), &sd->bl, PARTY_SAMEMAP_WOS);
@@ -18073,7 +18022,7 @@ static void clif_search_store_info_ack(struct map_session_data *sd)
 		it.nameid = ssitem->nameid;
 		it.amount = ssitem->amount;
 
-		clif->addcards(WFIFOP(fd, i * blocksize + 25 + MESSAGE_SIZE), &it);
+		clif->addcards((struct EQUIPSLOTINFO*)WFIFOP(fd, i * blocksize + 25 + MESSAGE_SIZE), &it);
 #if PACKETVER >= 20150226
 		memcpy(&it.option, &ssitem->option, sizeof(it.option));
 		clif->add_item_options(WFIFOP(fd, i * blocksize + 33 + MESSAGE_SIZE), &it);
@@ -21677,7 +21626,6 @@ void clif_defaults(void)
 	clif->unequipitemack = clif_unequipitemack;
 	clif->useitemack = clif_useitemack;
 	clif->addcards = clif_addcards;
-	clif->addcards2 = clif_addcards2;
 	clif->item_sub = clif_item_sub;  // look like unused
 	clif->getareachar_item = clif_getareachar_item;
 	clif->cart_additem_ack = clif_cart_additem_ack;
