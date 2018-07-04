@@ -483,6 +483,7 @@ enum pcblock_action_flag {
 struct Script_Config {
 	bool warn_func_mismatch_argtypes;
 	bool warn_func_mismatch_paramnum;
+	bool true_npc_duplicate;
 	int check_cmdcount;
 	int check_gotocount;
 	int input_min_value;
@@ -546,6 +547,7 @@ VECTOR_STRUCT_DECL(script_buf, unsigned char);
 // it must be saved when script state is RERUNLINE. [Eoe / jA 1094]
 struct script_code {
 	struct script_buf script_buf;
+	struct script_buf *script_pointer;
 	struct reg_db local; ///< Local (npc) vars
 	unsigned short instances;
 };
