@@ -7153,22 +7153,28 @@ static void clif_movetoattack(struct map_session_data *sd, struct block_list *bl
 ///     1 = failure
 ///     2 = success (alchemist)
 ///     3 = failure (alchemist)
+///     4 = success (???)
+///     5 = failure (???)
+///     6 = failure (???)
+///     7 = failure (???)
 static void clif_produceeffect(struct map_session_data *sd, int flag, int nameid)
 {
-	int view,fd;
+	int view, fd;
+	struct PACKET_ZC_ACK_REQMAKINGITEM p;
 
 	nullpo_retv(sd);
 
 	fd = sd->fd;
 	clif->solved_charname(fd, sd->status.char_id, sd->status.name);
-	WFIFOHEAD(fd,packet_len(0x18f));
-	WFIFOW(fd, 0)=0x18f;
-	WFIFOW(fd, 2)=flag;
-	if((view = itemdb_viewid(nameid)) > 0)
-		WFIFOW(fd, 4)=view;
+	WFIFOHEAD(fd, sizeof(p));
+	p.packetType = 0x18f;
+	p.result = flag;
+	if ((view = itemdb_viewid(nameid)) > 0)
+		p.itemId = view;
 	else
-		WFIFOW(fd, 4)=nameid;
-	WFIFOSET(fd,packet_len(0x18f));
+		p.itemId = nameid;
+	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
+	WFIFOSET(fd, sizeof(p));
 }
 
 /// Initiates the pet taming process (ZC_START_CAPTURE).
