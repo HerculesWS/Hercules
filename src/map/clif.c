@@ -12184,27 +12184,33 @@ static void clif_parse_SelectArrow(int fd, struct map_session_data *sd) __attrib
 /// 01ae <name id>.W
 static void clif_parse_SelectArrow(int fd, struct map_session_data *sd)
 {
+	int itemId;
 	if (pc_istrading(sd)) {
-	//Make it fail to avoid shop exploits where you sell something different than you see.
+		//Make it fail to avoid shop exploits where you sell something different than you see.
 		clif->skill_fail(sd, sd->ud.skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 		clif_menuskill_clear(sd);
 		return;
 	}
-	switch( sd->menuskill_id ) {
+#if PACKETVER_RE_NUM >= 20180704
+	itemId = RFIFOL(fd, 2);
+#else
+	itemId = RFIFOW(fd, 2);
+#endif
+	switch (sd->menuskill_id) {
 		case AC_MAKINGARROW:
-			skill->arrow_create(sd,RFIFOW(fd,2));
+			skill->arrow_create(sd, itemId);
 			break;
 		case SA_CREATECON:
-			skill->produce_mix(sd,SA_CREATECON,RFIFOW(fd,2),0,0,0, 1);
+			skill->produce_mix(sd, SA_CREATECON, itemId, 0, 0, 0, 1);
 			break;
 		case WL_READING_SB:
-			skill->spellbook(sd,RFIFOW(fd,2));
+			skill->spellbook(sd, itemId);
 			break;
 		case GC_POISONINGWEAPON:
-			skill->poisoningweapon(sd,RFIFOW(fd,2));
+			skill->poisoningweapon(sd, itemId);
 			break;
 		case NC_MAGICDECOY:
-			skill->magicdecoy(sd,RFIFOW(fd,2));
+			skill->magicdecoy(sd, itemId);
 			break;
 	}
 
