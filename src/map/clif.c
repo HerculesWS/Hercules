@@ -1799,19 +1799,25 @@ static void clif_homskillup(struct map_session_data *sd, uint16 skill_id)
 	WFIFOSET(fd,packet_len(0x239));
 }
 
+/// Result of request to feed a homun/merc (ZC_FEED_MER).
+/// 022f <result>.B <name id>.W
+/// result:
+///     0 = failure
+///     1 = success
 static void clif_hom_food(struct map_session_data *sd, int foodid, int fail)
 {
 	int fd;
+	struct PACKET_ZC_FEED_MER p;
+
 	nullpo_retv(sd);
 
 	fd = sd->fd;
-	WFIFOHEAD(fd,packet_len(0x22f));
-	WFIFOW(fd,0)=0x22f;
-	WFIFOB(fd,2)=fail;
-	WFIFOW(fd,3)=foodid;
-	WFIFOSET(fd,packet_len(0x22f));
-
-	return;
+	WFIFOHEAD(fd, sizeof(p));
+	p.packetType = 0x22f;
+	p.result = fail;
+	p.itemId = foodid;
+	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
+	WFIFOSET(fd, sizeof(p));
 }
 
 /// Notifies the client, that it is walking (ZC_NOTIFY_PLAYERMOVE).
