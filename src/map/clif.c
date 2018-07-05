@@ -4311,31 +4311,32 @@ static void clif_updatestorageamount(struct map_session_data *sd, int amount, in
 /// 01c4 <index>.W <amount>.L <nameid>.W <type>.B <identified>.B <damaged>.B <refine>.B <card1>.W <card2>.W <card3>.W <card4>.W (ZC_ADD_ITEM_TO_STORE2)
 static void clif_storageitemadded(struct map_session_data *sd, struct item *i, int index, int amount)
 {
-	int view,fd;
-	int offset = 0;
+	int view, fd;
+	struct PACKET_ZC_ADD_ITEM_TO_STORE p;
 
 	nullpo_retv(sd);
 	nullpo_retv(i);
-	fd=sd->fd;
+
+	fd = sd->fd;
 	view = itemdb_viewid(i->nameid);
 
-	WFIFOHEAD(fd,packet_len(storageaddType));
-	WFIFOW(fd, 0) = storageaddType; // Storage item added
-	WFIFOW(fd, 2) = index+1; // index
-	WFIFOL(fd, 4) = amount; // amount
-	WFIFOW(fd, 8) = ( view > 0 ) ? view : i->nameid; // id
+	WFIFOHEAD(fd, sizeof(p));
+	p.packetType = storageaddType; // Storage item added
+	p.index = index + 1; // index
+	p.amount = amount; // amount
+	p.itemId = (view > 0) ? view : i->nameid; // id
 #if PACKETVER >= 5
-	WFIFOB(fd,10) = itemtype(itemdb_type(i->nameid)); //type
-	offset += 1;
+	p.itemType = itemtype(itemdb_type(i->nameid)); //type
 #endif
-	WFIFOB(fd,10+offset) = i->identify; //identify flag
-	WFIFOB(fd,11+offset) = i->attribute; // attribute
-	WFIFOB(fd,12+offset) = i->refine; //refine
-	clif->addcards((struct EQUIPSLOTINFO*)WFIFOP(fd, 13 + offset), i);
+	p.identified = i->identify; //identify flag
+	p.damaged = i->attribute; // attribute
+	p.refine = i->refine; //refine
+	clif->addcards(&p.slot, i);
 #if PACKETVER >= 20150226
-	clif->add_item_options(WFIFOP(fd, 21 + offset), i);
+	clif->add_item_options(&p.option_data[0], i);
 #endif
-	WFIFOSET(fd,packet_len(storageaddType));
+	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
+	WFIFOSET(fd, sizeof(p));
 }
 
 /// Notifies the client of an item being deleted from the storage (ZC_DELETE_ITEM_FROM_STORE).
