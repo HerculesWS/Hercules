@@ -626,8 +626,6 @@ struct {
 	struct HPMHookPoint *HP_clif_useitemack_post;
 	struct HPMHookPoint *HP_clif_addcards_pre;
 	struct HPMHookPoint *HP_clif_addcards_post;
-	struct HPMHookPoint *HP_clif_addcards2_pre;
-	struct HPMHookPoint *HP_clif_addcards2_post;
 	struct HPMHookPoint *HP_clif_item_sub_pre;
 	struct HPMHookPoint *HP_clif_item_sub_post;
 	struct HPMHookPoint *HP_clif_getareachar_item_pre;
@@ -636,6 +634,8 @@ struct {
 	struct HPMHookPoint *HP_clif_cart_additem_ack_post;
 	struct HPMHookPoint *HP_clif_cashshop_load_pre;
 	struct HPMHookPoint *HP_clif_cashshop_load_post;
+	struct HPMHookPoint *HP_clif_cashShopSchedule_pre;
+	struct HPMHookPoint *HP_clif_cashShopSchedule_post;
 	struct HPMHookPoint *HP_clif_package_announce_pre;
 	struct HPMHookPoint *HP_clif_package_announce_post;
 	struct HPMHookPoint *HP_clif_item_drop_announce_pre;
@@ -1100,6 +1100,8 @@ struct {
 	struct HPMHookPoint *HP_clif_buyvending_post;
 	struct HPMHookPoint *HP_clif_openvending_pre;
 	struct HPMHookPoint *HP_clif_openvending_post;
+	struct HPMHookPoint *HP_clif_openvendingAck_pre;
+	struct HPMHookPoint *HP_clif_openvendingAck_post;
 	struct HPMHookPoint *HP_clif_vendingreport_pre;
 	struct HPMHookPoint *HP_clif_vendingreport_post;
 	struct HPMHookPoint *HP_clif_storagelist_pre;
@@ -7015,8 +7017,6 @@ struct {
 	int HP_clif_useitemack_post;
 	int HP_clif_addcards_pre;
 	int HP_clif_addcards_post;
-	int HP_clif_addcards2_pre;
-	int HP_clif_addcards2_post;
 	int HP_clif_item_sub_pre;
 	int HP_clif_item_sub_post;
 	int HP_clif_getareachar_item_pre;
@@ -7025,6 +7025,8 @@ struct {
 	int HP_clif_cart_additem_ack_post;
 	int HP_clif_cashshop_load_pre;
 	int HP_clif_cashshop_load_post;
+	int HP_clif_cashShopSchedule_pre;
+	int HP_clif_cashShopSchedule_post;
 	int HP_clif_package_announce_pre;
 	int HP_clif_package_announce_post;
 	int HP_clif_item_drop_announce_pre;
@@ -7489,6 +7491,8 @@ struct {
 	int HP_clif_buyvending_post;
 	int HP_clif_openvending_pre;
 	int HP_clif_openvending_post;
+	int HP_clif_openvendingAck_pre;
+	int HP_clif_openvendingAck_post;
 	int HP_clif_vendingreport_pre;
 	int HP_clif_vendingreport_post;
 	int HP_clif_storagelist_pre;
