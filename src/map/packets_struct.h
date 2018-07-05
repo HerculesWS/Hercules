@@ -1869,6 +1869,20 @@ struct PACKET_ZC_MVP_GETTING_ITEM {
 #endif
 } __attribute__((packed));
 
+struct PACKET_ZC_ACK_TOUSESKILL {
+	int16 packetType;
+	uint16 skillId;
+#if PACKETVER_RE_NUM >= 20180704
+	int32 btype;
+	uint32 itemId;
+#else
+	int16 btype;
+	uint16 itemId;
+#endif
+	uint8 flag;
+	uint8 cause;
+} __attribute__((packed));
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

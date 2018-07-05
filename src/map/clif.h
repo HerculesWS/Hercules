@@ -807,7 +807,7 @@ struct clif_interface {
 	int (*insight) (struct block_list *bl,va_list ap);
 	int (*outsight) (struct block_list *bl,va_list ap);
 	void (*skillcastcancel) (struct block_list* bl);
-	void (*skill_fail) (struct map_session_data *sd, uint16 skill_id, enum useskill_fail_cause cause, int btype, int item_id);
+	void (*skill_fail) (struct map_session_data *sd, uint16 skill_id, enum useskill_fail_cause cause, int btype, int32 item_id);
 	void (*skill_cooldown) (struct map_session_data *sd, uint16 skill_id, unsigned int duration);
 	void (*skill_memomessage) (struct map_session_data* sd, int type);
 	void (*skill_mapinfomessage) (struct map_session_data *sd, int type);
