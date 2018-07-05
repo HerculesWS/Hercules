@@ -3808,40 +3808,33 @@ static void clif_changeoption2(struct block_list *bl)
 /// 01c8 <index>.W <name id>.W <id>.L <amount>.W <result>.B (ZC_USE_ITEM_ACK2)
 static void clif_useitemack(struct map_session_data *sd, int index, int amount, bool ok)
 {
+	struct PACKET_ZC_USE_ITEM_ACK p;
+	int fd;
+
 	nullpo_retv(sd);
 
-	if(!ok) {
-		int fd=sd->fd;
-		WFIFOHEAD(fd,packet_len(0xa8));
-		WFIFOW(fd,0)=0xa8;
-		WFIFOW(fd,2)=index+2;
-		WFIFOW(fd,4)=amount;
-		WFIFOB(fd,6)=ok;
-		WFIFOSET(fd,packet_len(0xa8));
-	}
-	else {
-#if PACKETVER < 3
-		int fd=sd->fd;
-		WFIFOHEAD(fd,packet_len(0xa8));
-		WFIFOW(fd,0)=0xa8;
-		WFIFOW(fd,2)=index+2;
-		WFIFOW(fd,4)=amount;
-		WFIFOB(fd,6)=ok;
-		WFIFOSET(fd,packet_len(0xa8));
-#else
-		unsigned char buf[32];
+	if (index < 0 || index >= MAX_INVENTORY)
+		return;
 
-		WBUFW(buf,0)=0x1c8;
-		WBUFW(buf,2)=index+2;
-		if(sd->inventory_data[index] && sd->inventory_data[index]->view_id > 0)
-			WBUFW(buf,4)=sd->inventory_data[index]->view_id;
-		else
-			WBUFW(buf,4)=sd->status.inventory[index].nameid;
-		WBUFL(buf,6)=sd->bl.id;
-		WBUFW(buf,10)=amount;
-		WBUFB(buf,12)=ok;
-		clif->send(buf,packet_len(0x1c8),&sd->bl,AREA);
+	fd = sd->fd;
+	p.packetType = useItemAckType;
+	p.index = index + 2;
+#if PACKETVER > 3
+	if (sd->inventory_data[index] && sd->inventory_data[index]->view_id > 0)
+		p.itemId = sd->inventory_data[index]->view_id;
+	else
+		p.itemId = sd->status.inventory[index].nameid;
+	p.AID = sd->bl.id;
 #endif
+	p.amount = amount;
+	p.result = ok;
+
+	if (!ok) {
+		WFIFOHEAD(fd, sizeof(p));
+		memcpy(WFIFOP(fd, 0), &p, sizeof(p));
+		WFIFOSET(fd, sizeof(p));
+	} else {
+		clif->send(&p, sizeof(p), &sd->bl, AREA);
 	}
 }
 
