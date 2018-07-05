@@ -11948,7 +11948,9 @@ static void clif_parse_ProduceMix(int fd, struct map_session_data *sd) __attribu
 /// 018e <name id>.W { <material id>.W }*3
 static void clif_parse_ProduceMix(int fd, struct map_session_data *sd)
 {
-	switch( sd->menuskill_id ) {
+	const struct PACKET_CZ_REQMAKINGITEM *p = RFIFOP(fd, 0);
+
+	switch (sd->menuskill_id) {
 		case -1:
 		case AM_PHARMACY:
 		case RK_RUNEMASTERY:
@@ -11963,8 +11965,9 @@ static void clif_parse_ProduceMix(int fd, struct map_session_data *sd)
 		clif_menuskill_clear(sd);
 		return;
 	}
-	if( skill->can_produce_mix(sd,RFIFOW(fd,2),sd->menuskill_val, 1) )
-		skill->produce_mix(sd,0,RFIFOW(fd,2),RFIFOW(fd,4),RFIFOW(fd,6),RFIFOW(fd,8), 1);
+
+	if (skill->can_produce_mix(sd, p->itemId, sd->menuskill_val, 1))
+		skill->produce_mix(sd, 0, p->itemId, p->material[0], p->material[1], p->material[2], 1);
 	clif_menuskill_clear(sd);
 }
 
