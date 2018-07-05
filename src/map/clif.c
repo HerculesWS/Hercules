@@ -6434,37 +6434,35 @@ static void clif_item_skill(struct map_session_data *sd, uint16 skill_id, uint16
 /// 01c5 <index>.W <amount>.L <name id>.W <type>.B <identified>.B <damaged>.B <refine>.B <card1>.W <card2>.W <card3>.W <card4>.W (ZC_ADD_ITEM_TO_CART2)
 static void clif_cart_additem(struct map_session_data *sd, int n, int amount, int fail)
 {
-	int view,fd;
-	unsigned char *buf;
-	int offset = 0;
+	int view, fd;
+	struct PACKET_ZC_ADD_ITEM_TO_CART p;
 
 	nullpo_retv(sd);
 
-	fd=sd->fd;
-	if(n<0 || n>=MAX_CART || sd->status.cart[n].nameid<=0)
+	fd = sd->fd;
+	if (n < 0 || n >= MAX_CART || sd->status.cart[n].nameid <= 0)
 		return;
 
-	WFIFOHEAD(fd,packet_len(cartaddType));
-	buf=WFIFOP(fd,0);
-	WBUFW(buf,0)=cartaddType;
-	WBUFW(buf,2)=n+2;
-	WBUFL(buf,4)=amount;
-	if((view = itemdb_viewid(sd->status.cart[n].nameid)) > 0)
-		WBUFW(buf,8)=view;
+	WFIFOHEAD(fd, sizeof(p));
+	p.packetType = cartaddType;
+	p.index = n + 2;
+	p.amount = amount;
+	if ((view = itemdb_viewid(sd->status.cart[n].nameid)) > 0)
+		p.itemId = view;
 	else
-		WBUFW(buf,8)=sd->status.cart[n].nameid;
+		p.itemId = sd->status.cart[n].nameid;
 #if PACKETVER >= 5
-	WBUFB(buf,10)=itemdb_type(sd->status.cart[n].nameid);
-	offset = 1;
+	p.itemType = itemdb_type(sd->status.cart[n].nameid);
 #endif
-	WBUFB(buf,10+offset)=sd->status.cart[n].identify;
-	WBUFB(buf,11+offset)=sd->status.cart[n].attribute;
-	WBUFB(buf,12+offset)=sd->status.cart[n].refine;
-	clif->addcards((struct EQUIPSLOTINFO*)WBUFP(buf, 13 + offset), &sd->status.cart[n]);
+	p.identified = sd->status.cart[n].identify;
+	p.damaged  = sd->status.cart[n].attribute;
+	p.refine = sd->status.cart[n].refine;
+	clif->addcards(&p.slot, &sd->status.cart[n]);
 #if PACKETVER >= 20150226
-	clif->add_item_options(WBUFP(buf, 21 + offset), &sd->status.cart[n]);
+	clif->add_item_options(&p.option_data[0], &sd->status.cart[n]);
 #endif
-	WFIFOSET(fd,packet_len(cartaddType));
+	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
+	WFIFOSET(fd, sizeof(p));
 }
 
 /// Deletes an item from character's cart (ZC_DELETE_ITEM_FROM_CART).
