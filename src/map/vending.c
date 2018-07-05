@@ -257,14 +257,14 @@ static void vending_openvending(struct map_session_data *sd, const char *message
 	vending_skill_lvl = pc->checkskill(sd, MC_VENDING);
 	// skill level and cart check
 	if( !vending_skill_lvl || !pc_iscarton(sd) ) {
-		clif->skill_fail(sd, MC_VENDING, USESKILL_FAIL_LEVEL, 0);
+		clif->skill_fail(sd, MC_VENDING, USESKILL_FAIL_LEVEL, 0, 0);
 		return;
 	}
 
 	// check number of items in shop
 	if( count < 1 || count > MAX_VENDING || count > 2 + vending_skill_lvl ) {
 		// invalid item count
-		clif->skill_fail(sd, MC_VENDING, USESKILL_FAIL_LEVEL, 0);
+		clif->skill_fail(sd, MC_VENDING, USESKILL_FAIL_LEVEL, 0, 0);
 		return;
 	}
 
@@ -298,7 +298,7 @@ static void vending_openvending(struct map_session_data *sd, const char *message
 		clif->message (sd->fd, msg_sd(sd,266)); //"Some of your items cannot be vended and were removed from the shop."
 
 	if( i == 0 ) { // no valid item found
-		clif->skill_fail(sd, MC_VENDING, USESKILL_FAIL_LEVEL, 0); // custom reply packet
+		clif->skill_fail(sd, MC_VENDING, USESKILL_FAIL_LEVEL, 0, 0); // custom reply packet
 		return;
 	}
 	sd->state.prevend = sd->state.workinprogress = 0;

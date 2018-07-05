@@ -1214,7 +1214,7 @@ static int guild_change_emblem(struct map_session_data *sd, int len, const char 
 
 	if (battle_config.require_glory_guild &&
 		!((g = sd->guild) && guild->checkskill(g, GD_GLORYGUILD)>0)) {
-		clif->skill_fail(sd,GD_GLORYGUILD,USESKILL_FAIL_LEVEL,0);
+		clif->skill_fail(sd, GD_GLORYGUILD, USESKILL_FAIL_LEVEL, 0, 0);
 		return 0;
 	}
 

@@ -6108,7 +6108,7 @@ static bool battle_check_arrows(struct map_session_data *sd)
 	int index = sd->equip_index[EQI_AMMO];
 	if (index < 0) {
 		if (sd->weapontype1 > W_KATAR && sd->weapontype1 < W_HUUMA)
-			clif->skill_fail(sd, 0, USESKILL_FAIL_NEED_MORE_BULLET, 0);
+			clif->skill_fail(sd, 0, USESKILL_FAIL_NEED_MORE_BULLET, 0, 0);
 		else
 			clif->arrow_fail(sd, 0);
 		return false;
@@ -6127,13 +6127,13 @@ static bool battle_check_arrows(struct map_session_data *sd)
 			case W_GATLING:
 			case W_SHOTGUN:
 				if (sd->inventory_data[index]->subtype != A_BULLET) {
-					clif->skill_fail(sd, 0, USESKILL_FAIL_NEED_MORE_BULLET, 0);
+					clif->skill_fail(sd, 0, USESKILL_FAIL_NEED_MORE_BULLET, 0, 0);
 					return false;
 				}
 				break;
 			case W_GRENADE:
 				if (sd->inventory_data[index]->subtype != A_GRENADE) {
-					clif->skill_fail(sd, 0, USESKILL_FAIL_NEED_MORE_BULLET, 0);
+					clif->skill_fail(sd, 0, USESKILL_FAIL_NEED_MORE_BULLET, 0, 0);
 					return false;
 				}
 				break;
@@ -6401,7 +6401,7 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 					}
 
 					if( type != CAST_GROUND ) {
-						clif->skill_fail(sd,r_skill,USESKILL_FAIL_LEVEL,0);
+						clif->skill_fail(sd, r_skill, USESKILL_FAIL_LEVEL, 0, 0);
 						map->freeblock_unlock();
 						return wd.dmg_lv;
 					}

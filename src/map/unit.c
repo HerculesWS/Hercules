@@ -1303,7 +1303,7 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 					return 0;
 				p_sd = map->charid2sd(sd->status.partner_id);
 				if (p_sd == NULL) {
-					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+					clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 					return 0;
 				}
 				target = &p_sd->bl;
@@ -1312,11 +1312,11 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 			case GC_WEAPONCRUSH:
 				if( sc && sc->data[SC_COMBOATTACK] && sc->data[SC_COMBOATTACK]->val1 == GC_WEAPONBLOCKING ) {
 					if( (target=map->id2bl(sc->data[SC_COMBOATTACK]->val2)) == NULL ) {
-						clif->skill_fail(sd,skill_id,USESKILL_FAIL_GC_WEAPONBLOCKING,0);
+						clif->skill_fail(sd, skill_id, USESKILL_FAIL_GC_WEAPONBLOCKING, 0, 0);
 						return 0;
 					}
 				} else {
-					clif->skill_fail(sd,skill_id,USESKILL_FAIL_GC_WEAPONBLOCKING,0);
+					clif->skill_fail(sd, skill_id, USESKILL_FAIL_GC_WEAPONBLOCKING, 0, 0);
 					return 0;
 				}
 				break;
@@ -1375,7 +1375,7 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 	if (sd) {
 
 		if ((skill->get_inf2(skill_id)&INF2_ENSEMBLE_SKILL) && skill->check_pc_partner(sd, skill_id, &skill_lv, 1, 0) < 1) {
-			clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0);
+			clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 			return 0;
 		}
 
@@ -1389,14 +1389,14 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 			case BD_ENCORE:
 				//Prevent using the dance skill if you no longer have the skill in your tree.
 				if (!sd->skill_id_dance || pc->checkskill(sd, sd->skill_id_dance) <= 0){
-					clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0);
+					clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 					return 0;
 				}
 				sd->skill_id_old = skill_id;
 				break;
 			case WL_WHITEIMPRISON:
 				if (battle->check_target(src, target, BCT_SELF | BCT_ENEMY) < 0) {
-					clif->skill_fail(sd, skill_id, USESKILL_FAIL_TOTARGET, 0);
+					clif->skill_fail(sd, skill_id, USESKILL_FAIL_TOTARGET, 0, 0);
 					return 0;
 				}
 				break;
@@ -1504,7 +1504,7 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 			if (i == count) {
 				ARR_FIND(0, count, i, sd->devotion[i] == 0);
 				if(i == count) {
-					clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0);
+					clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 					return 0; // Can't cast on other characters when limit is reached
 				}
 			}
@@ -1512,7 +1512,7 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 	break;
 	case AB_CLEARANCE:
 		if (target->type != BL_MOB && battle->check_target(src, target, BCT_PARTY) <= 0 && sd) {
-			clif->skill_fail(sd, skill_id, USESKILL_FAIL_TOTARGET, 0);
+			clif->skill_fail(sd, skill_id, USESKILL_FAIL_TOTARGET, 0, 0);
 			return 0;
 		}
 	break;
@@ -1725,7 +1725,7 @@ static int unit_skilluse_pos2(struct block_list *src, short skill_x, short skill
 
 	if (map->getcell(src->m, src, skill_x, skill_y, CELL_CHKWALL)) {
 		// can't cast ground targeted spells on wall cells
-		if (sd) clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+		if (sd) clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 		return 0;
 	}
 
@@ -2170,7 +2170,7 @@ static int unit_attack_timer_sub(struct block_list *src, int tid, int64 tick)
 	if (!battle_config.sdelay_attack_enable && DIFF_TICK(ud->canact_tick, tick) > 0 && !(sd && (pc->checkskill(sd, SA_FREECAST) > 0 || (skill->get_inf2(ud->skill_id) & (INF2_FREE_CAST_REDUCED | INF2_FREE_CAST_NORMAL)) != 0)))
 	{ // attacking when under cast delay has restrictions:
 		if( tid == INVALID_TIMER ) { //requested attack.
-			if(sd) clif->skill_fail(sd,1,USESKILL_FAIL_SKILLINTERVAL,0);
+			if(sd) clif->skill_fail(sd, 1, USESKILL_FAIL_SKILLINTERVAL, 0, 0);
 			return 0;
 		}
 		//Otherwise, we are in a combo-attack, delay this until your canact time is over. [Skotlex]
