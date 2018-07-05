@@ -385,6 +385,11 @@ enum packet_headers {
 #else
 	useItemAckType = 0xa8,
 #endif
+#if PACKETVER >= 4
+	sendLookType = 0x1d7,
+#else
+	sendLookType = 0xc3,
+#endif
 };
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
@@ -1960,6 +1965,21 @@ struct PACKET_ZC_USE_ITEM_ACK {
 #endif
 	int16 amount;
 	uint8 result;
+} __attribute__((packed));
+
+struct PACKET_ZC_SPRITE_CHANGE {
+	int16 packetType;
+	uint32 AID;
+	uint8 type;
+#if PACKETVER_RE_NUM >= 20180704
+	uint32 val;
+	uint32 val2;
+#elif PACKETVER >= 4
+	uint16 val;
+	uint16 val2;
+#else
+	uint8 val;
+#endif
 } __attribute__((packed));
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute

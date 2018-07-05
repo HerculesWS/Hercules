@@ -3476,21 +3476,15 @@ static void clif_changetraplook(struct block_list *bl, int val)
 /// 01d7 <id>.L <type>.B <value>.L (ZC_SPRITE_CHANGE2)
 static void clif_sendlook(struct block_list *bl, int id, int type, int val, int val2, enum send_target target)
 {
-	unsigned char buf[32];
-#if PACKETVER < 4
-	WBUFW(buf,0)=0xc3;
-	WBUFL(buf,2)=id;
-	WBUFB(buf,6)=type;
-	WBUFB(buf,7)=val;
-	clif->send(buf,packet_len(0xc3),bl,target);
-#else
-	WBUFW(buf,0)=0x1d7;
-	WBUFL(buf,2)=id;
-	WBUFB(buf,6)=type;
-	WBUFW(buf,7)=val;
-	WBUFW(buf,9)=val2;
-	clif->send(buf,packet_len(0x1d7),bl,target);
+	struct PACKET_ZC_SPRITE_CHANGE p;
+	p.packetType = sendLookType;
+	p.AID = id;
+	p.type = type;
+	p.val = val;
+#if PACKETVER >= 4
+	p.val2 = val2;
 #endif
+	clif->send(&p, sizeof(p), bl, target);
 }
 
 //For the stupid cloth-dye bug. Resends the given view data to the area specified by bl.
