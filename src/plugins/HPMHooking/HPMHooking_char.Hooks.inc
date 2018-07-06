@@ -6750,15 +6750,15 @@ struct guild* HP_inter_guild_create(const char *name, const struct guild_member 
 	}
 	return retVal___;
 }
-bool HP_inter_guild_add_member(int guild_id, const struct guild_member *member) {
+bool HP_inter_guild_add_member(int guild_id, const struct guild_member *member, int map_fd) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if (HPMHooks.count.HP_inter_guild_add_member_pre > 0) {
-		bool (*preHookFunc) (int *guild_id, const struct guild_member **member);
+		bool (*preHookFunc) (int *guild_id, const struct guild_member **member, int *map_fd);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_guild_add_member_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_inter_guild_add_member_pre[hIndex].func;
-			retVal___ = preHookFunc(&guild_id, &member);
+			retVal___ = preHookFunc(&guild_id, &member, &map_fd);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -6766,13 +6766,13 @@ bool HP_inter_guild_add_member(int guild_id, const struct guild_member *member) 
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.inter_guild.add_member(guild_id, member);
+		retVal___ = HPMHooks.source.inter_guild.add_member(guild_id, member, map_fd);
 	}
 	if (HPMHooks.count.HP_inter_guild_add_member_post > 0) {
-		bool (*postHookFunc) (bool retVal___, int guild_id, const struct guild_member *member);
+		bool (*postHookFunc) (bool retVal___, int guild_id, const struct guild_member *member, int map_fd);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_guild_add_member_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_inter_guild_add_member_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, guild_id, member);
+			retVal___ = postHookFunc(retVal___, guild_id, member, map_fd);
 		}
 	}
 	return retVal___;
