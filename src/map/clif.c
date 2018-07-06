@@ -17837,28 +17837,23 @@ static void clif_buyingstore_trade_failed_buyer(struct map_session_data *sd, sho
 static void clif_buyingstore_update_item(struct map_session_data *sd, unsigned short nameid, unsigned short amount, uint32 char_id, int zeny)
 {
 	int fd;
-#if PACKETVER < 20141016  // TODO : not sure for client date [Napster]
-	const int cmd = 0x81b;
-#else
-	const int cmd = 0x9e6;
-#endif
-	const int len = packet_len(cmd);
+	struct PACKET_ZC_UPDATE_ITEM_FROM_BUYING_STORE p;
 
 	nullpo_retv(sd);
+
 	fd = sd->fd;
-	WFIFOHEAD(fd, len);
-	WFIFOW(fd, 0) = cmd;
-	WFIFOW(fd, 2) = nameid;
-	WFIFOW(fd, 4) = amount;  // amount of nameid received
-#if PACKETVER < 20141016
-	WFIFOL(fd, 6) = sd->buyingstore.zenylimit;
-#else
-	WFIFOL(fd, 6) = zeny;  // zeny
-	WFIFOL(fd, 10) = sd->buyingstore.zenylimit;
-	WFIFOL(fd, 14) = char_id;  // GID
-	WFIFOL(fd, 18) = (int)time(NULL);  // date
+	WFIFOHEAD(fd, sizeof(p));
+	p.packetType = buyingStoreUpdateItemType;
+	p.itemId = nameid;
+	p.amount = amount;
+	p.zenyLimit = sd->buyingstore.zenylimit;
+#if PACKETVER >= 20141016
+	p.zeny = zeny;
+	p.charId = char_id;  // GID
+	p.updateTime = (int)time(NULL);
 #endif
-	WFIFOSET(fd, len);
+	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
+	WFIFOSET(fd, sizeof(p));
 }
 
 /// Deletes item from inventory, that was sold to a buying store (ZC_ITEM_DELETE_BUYING_STORE).

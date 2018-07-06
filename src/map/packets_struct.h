@@ -390,6 +390,11 @@ enum packet_headers {
 #else
 	sendLookType = 0xc3,
 #endif
+#if PACKETVER >= 20141016
+	buyingStoreUpdateItemType = 0x9e6,
+#else
+	buyingStoreUpdateItemType = 0x81b,
+#endif
 };
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
@@ -2045,6 +2050,24 @@ struct PACKET_ZC_ITEM_PICKUP_PARTY {
 	struct EQUIPSLOTINFO slot;
 	uint16 location;
 	uint8 itemType;
+} __attribute__((packed));
+
+struct PACKET_ZC_UPDATE_ITEM_FROM_BUYING_STORE {
+	int16 packetType;
+#if PACKETVER_RE_NUM >= 20180704
+	uint32 itemId;
+#else
+	uint16 itemId;
+#endif
+	uint16 amount;
+#if PACKETVER >= 20141016
+	uint32 zeny;
+	uint32 zenyLimit;
+	uint32 charId;
+	uint32 updateTime;
+#else
+	uint32 zenyLimit;
+#endif
 } __attribute__((packed));
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
