@@ -17020,11 +17020,13 @@ static void clif_rental_time(int fd, int nameid, int seconds)
 /// 0299 <index>.W <name id>.W
 static void clif_rental_expired(int fd, int index, int nameid)
 { // '<ItemName>' item has been deleted from the Inventory
-	WFIFOHEAD(fd,packet_len(0x299));
-	WFIFOW(fd,0) = 0x299;
-	WFIFOW(fd,2) = index+2;
-	WFIFOW(fd,4) = nameid;
-	WFIFOSET(fd,packet_len(0x299));
+	struct PACKET_ZC_CASH_ITEM_DELETE p;
+	WFIFOHEAD(fd, sizeof(p));
+	p.packetType = 0x299;
+	p.index = index + 2;
+	p.itemId = nameid;
+	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
+	WFIFOSET(fd, sizeof(p));
 }
 
 /// Book Reading (ZC_READ_BOOK).

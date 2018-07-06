@@ -2021,6 +2021,16 @@ struct PACKET_ZC_CASH_TIME_COUNTER {
 	uint32 seconds;
 } __attribute__((packed));
 
+struct PACKET_ZC_CASH_ITEM_DELETE {
+	int16 packetType;
+	uint16 index;
+#if PACKETVER_RE_NUM >= 20180704
+	uint32 itemId;
+#else
+	uint16 itemId;
+#endif
+} __attribute__((packed));
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
