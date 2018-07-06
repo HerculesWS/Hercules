@@ -735,6 +735,9 @@ struct packet_unit_walking {
 #else
 	int32 weapon;
 #endif
+#if PACKETVER_RE_NUM >= 20180704
+	int32 shield;
+#endif
 	int16 accessory;
 	uint32 moveStartTime;
 #if PACKETVER < 7

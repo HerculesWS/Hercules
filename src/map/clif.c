@@ -1369,7 +1369,7 @@ static void clif_set_unit_walking(struct block_list *bl, struct map_session_data
 	p.weapon = vd->weapon;
 	p.accessory = vd->head_bottom;
 	p.moveStartTime = (unsigned int)timer->gettick();
-#if PACKETVER < 7
+#if PACKETVER < 7 || PACKETVER_RE_NUM >= 20180704
 	p.shield = vd->shield;
 #endif
 	p.accessory2 = vd->head_top;
