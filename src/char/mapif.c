@@ -784,11 +784,7 @@ static int mapif_parse_GuildAddMember(int fd, int guild_id, const struct guild_m
 {
 	nullpo_ret(m);
 
-	if (!inter_guild->add_member(guild_id, m)) {
-		mapif->guild_memberadded(fd, guild_id, m->account_id, m->char_id, 1); // 1: Failed to add
-	} else {
-		mapif->guild_memberadded(fd, guild_id, m->account_id, m->char_id, 0); // 0: success
-	}
+	inter_guild->add_member(guild_id, m, fd);
 	return 0;
 }
 
