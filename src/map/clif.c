@@ -1260,7 +1260,7 @@ static void clif_spawn_unit(struct block_list *bl, enum send_target target)
 	p.head = vd->hair_style;
 	p.weapon = vd->weapon;
 	p.accessory = vd->head_bottom;
-#if PACKETVER < 7
+#if PACKETVER < 7 || PACKETVER_RE_NUM >= 20180704
 	p.shield = vd->shield;
 #endif
 	p.accessory2 = vd->head_top;
