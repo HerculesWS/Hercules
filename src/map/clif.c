@@ -4142,63 +4142,37 @@ static void clif_tradestart(struct map_session_data *sd, uint8 type)
 static void clif_tradeadditem(struct map_session_data *sd, struct map_session_data *tsd, int index, int amount)
 {
 	int fd;
-	unsigned char *buf;
+	struct PACKET_ZC_ADD_EXCHANGE_ITEM p;
+
 	nullpo_retv(sd);
 	nullpo_retv(tsd);
 
 	fd = tsd->fd;
-	buf = WFIFOP(fd,0);
-	WFIFOHEAD(fd,packet_len(tradeaddType));
-	WBUFW(buf,0) = tradeaddType;
-	if( index == 0 )
-	{
-#if PACKETVER < 20100223
-		WBUFL(buf,2) = amount; //amount
-		WBUFW(buf,6) = 0; // type id
-#else
-		WBUFW(buf,2) = 0;      // type id
-		WBUFB(buf,4) = 0;      // item type
-		WBUFL(buf,5) = amount; // amount
-		buf = WBUFP(buf,1); //Advance 1B
-#endif
-		WBUFB(buf,8) = 0; //identify flag
-		WBUFB(buf,9) = 0; // attribute
-		WBUFB(buf,10)= 0; //refine
-		WBUFW(buf,11)= 0; //card (4w)
-		WBUFW(buf,13)= 0; //card (4w)
-		WBUFW(buf,15)= 0; //card (4w)
-		WBUFW(buf,17)= 0; //card (4w)
-#if PACKETVER >= 20150226
-		clif->add_item_options(WBUFP(buf, 19), &sd->status.inventory[index]);
-#endif
-	}
-	else
+	WFIFOHEAD(fd, sizeof(p));
+	memset(&p, 0, sizeof(p));
+	p.packetType = tradeaddType;
+	p.amount = amount;
+	if (index != 0)
 	{
 		index -= 2; //index fix
-#if PACKETVER < 20100223
-		WBUFL(buf,2) = amount; //amount
+		Assert_retv(index >= 0 && index < MAX_INVENTORY);
 		if(sd->inventory_data[index] && sd->inventory_data[index]->view_id > 0)
-			WBUFW(buf,6) = sd->inventory_data[index]->view_id;
+			p.itemId = sd->inventory_data[index]->view_id;
 		else
-			WBUFW(buf,6) = sd->status.inventory[index].nameid; // type id
-#else
-		if(sd->inventory_data[index] && sd->inventory_data[index]->view_id > 0)
-			WBUFW(buf,2) = sd->inventory_data[index]->view_id;
-		else
-			WBUFW(buf,2) = sd->status.inventory[index].nameid;       // type id
-		WBUFB(buf,4) = sd->inventory_data[index]->type;          // item type
-		WBUFL(buf,5) = amount; // amount
-		buf = WBUFP(buf,1); //Advance 1B
+			p.itemId = sd->status.inventory[index].nameid;
+#if PACKETVER >= 20100223
+		p.itemType = sd->inventory_data[index]->type;
 #endif
-		WBUFB(buf,8) = sd->status.inventory[index].identify; //identify flag
-		WBUFB(buf,9) = sd->status.inventory[index].attribute; // attribute
-		WBUFB(buf,10)= sd->status.inventory[index].refine; //refine
-		clif->addcards((struct EQUIPSLOTINFO*)WBUFP(buf, 11), &sd->status.inventory[index]);
+		p.identified = sd->status.inventory[index].identify;
+		p.damaged = sd->status.inventory[index].attribute;
+		p.refine = sd->status.inventory[index].refine;
+		clif->addcards(&p.slot, &sd->status.inventory[index]);
 #if PACKETVER >= 20150226
-		clif->add_item_options(WBUFP(buf, 19), &sd->status.inventory[index]);
+		clif->add_item_options(&p.option_data[0], &sd->status.inventory[index]);
 #endif
 	}
-	WFIFOSET(fd,packet_len(tradeaddType));
+	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
+	WFIFOSET(fd, sizeof(p));
 }
 
 /// Notifies the client about the result of request to add an item to the current trade (ZC_ACK_ADD_EXCHANGE_ITEM).

@@ -1988,6 +1988,29 @@ struct PACKET_ZC_SPRITE_CHANGE {
 #endif
 } __attribute__((packed));
 
+struct PACKET_ZC_ADD_EXCHANGE_ITEM {
+	int16 packetType;
+#if PACKETVER_RE_NUM >= 20180704
+	uint32 itemId;
+	uint8 itemType;
+	int32 amount;
+#elif PACKETVER >= 20100223
+	uint16 itemId;
+	uint8 itemType;
+	int32 amount;
+#else
+	int32 amount;
+	uint16 itemId;
+#endif
+	uint8 identified;
+	uint8 damaged;
+	uint8 refine;
+	struct EQUIPSLOTINFO slot;
+#if PACKETVER >= 20150226
+	struct ItemOptions option_data[MAX_ITEM_OPTIONS];
+#endif
+} __attribute__((packed));
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
