@@ -56,6 +56,7 @@ struct unit_data;
 struct view_data;
 
 enum clif_messages;
+enum rodex_add_item;
 
 /**
  * Defines
@@ -1444,7 +1445,7 @@ struct clif_interface {
 	void (*pRodexOpenWriteMail) (int fd, struct map_session_data *sd);
 	void (*rodex_open_write_mail) (int fd, const char *receiver_name, int8 result);
 	void (*pRodexAddItem) (int fd, struct map_session_data *sd);
-	void (*rodex_add_item_result) (struct map_session_data *sd, int16 idx, int16 amount, int8 result);
+	void (*rodex_add_item_result) (struct map_session_data *sd, int16 idx, int16 amount, enum rodex_add_item result);
 	void (*pRodexRemoveItem) (int fd, struct map_session_data *sd);
 	void (*rodex_remove_item_result) (struct map_session_data *sd, int16 idx, int16 amount);
 	void (*pRodexSendMail) (int fd, struct map_session_data *sd);

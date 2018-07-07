@@ -1393,7 +1393,11 @@ struct PACKET_ZC_ADD_ITEM_TO_MAIL {
 	int8 result;
 	int16 index;
 	int16 count;
-	uint16 ITID;
+#if PACKETVER_RE_NUM >= 20180704
+	uint32 itemId;
+#else
+	uint16 itemId;
+#endif
 	int8 type;
 	int8 IsIdentified;
 	int8 IsDamaged;
@@ -1401,7 +1405,8 @@ struct PACKET_ZC_ADD_ITEM_TO_MAIL {
 	struct EQUIPSLOTINFO slot;
 	struct ItemOptions optionData[MAX_ITEM_OPTIONS];
 	int16 weight;
-	int8 unknow[5];
+	uint8 favorite;
+	uint32 location;
 } __attribute__((packed));
 
 struct mail_item {

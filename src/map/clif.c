@@ -20194,7 +20194,7 @@ static void clif_parse_rodex_add_item(int fd, struct map_session_data *sd)
 	rodex->add_item(sd, idx, (int16)rPacket->count);
 }
 
-static void clif_rodex_add_item_result(struct map_session_data *sd, int16 idx, int16 amount, int8 result)
+static void clif_rodex_add_item_result(struct map_session_data *sd, int16 idx, int16 amount, enum rodex_add_item result)
 {
 #if PACKETVER >= 20141119
 	struct PACKET_ZC_ADD_ITEM_TO_MAIL *packet;
@@ -20202,7 +20202,7 @@ static void clif_rodex_add_item_result(struct map_session_data *sd, int16 idx, i
 
 	nullpo_retv(sd);
 	if (idx < 0 || idx >= MAX_INVENTORY)
-		result = RODEX_ADD_ITEM_FATAL_ERROR;
+		return;
 
 	fd = sd->fd;
 
@@ -20219,7 +20219,7 @@ static void clif_rodex_add_item_result(struct map_session_data *sd, int16 idx, i
 
 	packet->index = idx + 2;
 	packet->count = amount;
-	packet->ITID = sd->status.inventory[idx].nameid;
+	packet->itemId = sd->status.inventory[idx].nameid;
 	packet->type = itemtype(sd->inventory_data[idx]->type);
 	packet->IsIdentified = sd->status.inventory[idx].identify ? 1 : 0;
 	packet->IsDamaged = (sd->status.inventory[idx].attribute & ATTR_BROKEN) != 0 ? 1 : 0;
@@ -20232,6 +20232,8 @@ static void clif_rodex_add_item_result(struct map_session_data *sd, int16 idx, i
 		packet->optionData[j].value = sd->status.inventory[idx].option[j].value;
 	}
 	packet->weight = sd->rodex.tmp.weight / 10;
+	packet->favorite = sd->status.inventory[idx].favorite;
+	packet->location = pc->equippoint(sd, idx);
 	WFIFOSET(fd, sizeof(*packet));
 #endif
 }
