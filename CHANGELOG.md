@@ -10,6 +10,10 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+## [v2018.07.01+1] `Jul 1 2018` `PATCH 1`
+### Fixed
+- Fixed a regression that made it impossible to invite guild members. (#2124, issue #2122)
+
 ## [v2018.07.01] `Jul 1 2018`
 ### Added
 - Added/updated packets and message tables for clients from 2018-05-30 to 2018-06-12. (#2064)
@@ -325,6 +329,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2018.07.01+1]: https://github.com/HerculesWS/Hercules/compare/v2018.07.01...v2018.07.01+1
 [v2018.07.01]: https://github.com/HerculesWS/Hercules/compare/v2018.06.03...v2018.07.01
 [v2018.06.03]: https://github.com/HerculesWS/Hercules/compare/v2018.05.06...v2018.06.03
 [v2018.05.06]: https://github.com/HerculesWS/Hercules/compare/v2018.04.08...v2018.05.06
