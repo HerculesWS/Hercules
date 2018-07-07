@@ -981,11 +981,19 @@ struct packet_package_item_announce {
 	int16 PacketType;
 	int16 PacketLength;
 	uint8 type;
+#if PACKETVER_RE_NUM >= 20180704
+	uint32 ItemID;
+#else
 	uint16 ItemID;
+#endif
 	int8 len;
 	char Name[NAME_LENGTH];
-	int8 unknown;
+	int8 unknown;  // probably unused
+#if PACKETVER_RE_NUM >= 20180704
+	uint32 BoxItemID;
+#else
 	uint16 BoxItemID;
+#endif
 } __attribute__((packed));
 
 /* made possible thanks to Yommy!! */
@@ -993,7 +1001,11 @@ struct packet_item_drop_announce {
 	int16 PacketType;
 	int16 PacketLength;
 	uint8 type;
+#if PACKETVER_RE_NUM >= 20180704
+	uint32 ItemID;
+#else
 	uint16 ItemID;
+#endif
 	int8 len;
 	char Name[NAME_LENGTH];
 	char monsterNameLen;

@@ -18985,7 +18985,7 @@ static void clif_package_item_announce(struct map_session_data *sd, unsigned sho
 
 	nullpo_retv(sd);
 	p.PacketType = package_item_announceType;
-	p.PacketLength = 11+NAME_LENGTH;
+	p.PacketLength = 11 + NAME_LENGTH;
 	p.type = 0x0;
 	p.ItemID = nameid;
 	p.len = NAME_LENGTH;
@@ -19004,14 +19004,19 @@ static void clif_item_drop_announce(struct map_session_data *sd, unsigned short 
 	nullpo_retv(sd);
 	p.PacketType = item_drop_announceType;
 	p.PacketLength = sizeof(p);
-	p.type = 0x1;
 	p.ItemID = nameid;
+	p.monsterNameLen = NAME_LENGTH;
 	p.len = NAME_LENGTH;
 	safestrncpy(p.Name, sd->status.name, sizeof(p.Name));
-	p.monsterNameLen = NAME_LENGTH;
-	safestrncpy(p.monsterName, monsterName, sizeof(p.monsterName));
-
-	clif->send(&p,sizeof(p), &sd->bl, ALL_CLIENT);
+	if (monsterName == NULL) {
+		// message: MSG_BROADCASTING_SPECIAL_ITEM_OBTAIN2
+		p.type = 0x2;
+	} else {
+		// message: MSG_BROADCASTING_SPECIAL_ITEM_OBTAIN
+		p.type = 0x1;
+		safestrncpy(p.monsterName, monsterName, sizeof(p.monsterName));
+	}
+	clif->send(&p, sizeof(p), &sd->bl, ALL_CLIENT);
 }
 
 /* [Ind/Hercules] special thanks to Yommy~! */
