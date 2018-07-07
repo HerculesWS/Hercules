@@ -395,6 +395,12 @@ enum packet_headers {
 #else
 	buyingStoreUpdateItemType = 0x81b,
 #endif
+// probably can works also for < 20141223, but in 3CeaM packet size defined only for 20150513
+#if PACKETVER >= 20150513
+	hominfoType = 0x9f7,
+#else
+	hominfoType = 0x22e,
+#endif
 };
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
@@ -2078,6 +2084,37 @@ struct PACKET_ZC_ACK_WEAPONREFINE {
 #else
 	uint16 itemId;
 #endif
+} __attribute__((packed));
+
+struct PACKET_ZC_PROPERTY_HOMUN {
+	int16 packetType;
+	char name[NAME_LENGTH];
+	// Bit field, bit 0 : rename_flag (1 = already renamed), bit 1 : homunc vaporized (1 = true), bit 2 : homunc dead (1 = true)
+	uint8 flags;
+	uint16 level;
+	uint16 hunger;
+	uint16 intimacy;
+#if PACKETVER_RE_NUM >= 20180704
+	uint32 itemId;
+#else
+	uint16 itemId;
+#endif
+	uint16 atk2;
+	uint16 matk;
+	uint16 hit;
+	uint16 crit;
+	uint16 def;
+	uint16 mdef;
+	uint16 flee;
+	uint16 amotion;
+	uint32 hp;
+	uint32 maxHp;
+	uint16 sp;
+	uint16 maxSp;
+	uint32 exp;
+	uint32 expNext;
+	uint16 skillPoints;
+	uint16 range;
 } __attribute__((packed));
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute

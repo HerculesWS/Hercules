@@ -1615,17 +1615,8 @@ static bool clif_spawn(struct block_list *bl)
 static void clif_hominfo(struct map_session_data *sd, struct homun_data *hd, int flag)
 {
 	struct status_data *hstatus;
-	unsigned char buf[128];
 	enum homun_type htype;
-	int offset = 0;
-
-// probably can works also for < 20141223, but in 3CeaM packet size defined only for 20150513
-#if PACKETVER < 20150513
-	int cmd = 0x22e;
-#else
-	int cmd = 0x9f7;
-#endif
-	int len = packet_len(cmd);
+	struct PACKET_ZC_PROPERTY_HOMUN p;
 
 	nullpo_retv(sd);
 	nullpo_retv(hd);
@@ -1633,75 +1624,73 @@ static void clif_hominfo(struct map_session_data *sd, struct homun_data *hd, int
 	hstatus  = &hd->battle_status;
 	htype = homun->class2type(hd->homunculus.class_);
 
-	memset(buf, 0, len);
-	WBUFW(buf, 0) = cmd;
-	memcpy(WBUFP(buf, 2), hd->homunculus.name, NAME_LENGTH);
+	memset(&p, 0, sizeof(p));
+	p.packetType = hominfoType;
+	memcpy(p.name, hd->homunculus.name, NAME_LENGTH);
 	// Bit field, bit 0 : rename_flag (1 = already renamed), bit 1 : homunc vaporized (1 = true), bit 2 : homunc dead (1 = true)
-	WBUFB(buf, 26) = (!battle_config.hom_rename && hd->homunculus.rename_flag ? 0x1 : 0x0) | (hd->homunculus.vaporize == HOM_ST_REST ? 0x2 : 0) | (hd->homunculus.hp > 0 ? 0x4 : 0);
-	WBUFW(buf, 27) = hd->homunculus.level;
-	WBUFW(buf, 29) = hd->homunculus.hunger;
-	WBUFW(buf, 31) = (unsigned short) (hd->homunculus.intimacy / 100) ;
-	WBUFW(buf, 33) = 0; // equip id
+	p.flags = (!battle_config.hom_rename && hd->homunculus.rename_flag ? 0x1 : 0x0) | (hd->homunculus.vaporize == HOM_ST_REST ? 0x2 : 0) | (hd->homunculus.hp > 0 ? 0x4 : 0);
+	p.level = hd->homunculus.level;
+	p.hunger = hd->homunculus.hunger;
+	p.intimacy = hd->homunculus.intimacy / 100;
+	p.itemId = 0; // equip id
 #ifdef RENEWAL
-	WBUFW(buf, 35) = cap_value(hstatus->rhw.atk2, 0, INT16_MAX);
+	p.atk2 = cap_value(hstatus->rhw.atk2, 0, INT16_MAX);
 #else
-	WBUFW(buf,35) = cap_value(hstatus->rhw.atk2 + hstatus->batk, 0, INT16_MAX);
+	p.atk2 = cap_value(hstatus->rhw.atk2 + hstatus->batk, 0, INT16_MAX);
 #endif
-	WBUFW(buf,37) = cap_value(hstatus->matk_max, 0, INT16_MAX);
-	WBUFW(buf,39) = hstatus->hit;
+	p.matk = cap_value(hstatus->matk_max, 0, INT16_MAX);
+	p.hit = hstatus->hit;
 	if (battle_config.hom_setting&0x10)
-		WBUFW(buf, 41) = hstatus->luk / 3 + 1; //crit is a +1 decimal value! Just display purpose.[Vicious]
+		p.crit = hstatus->luk / 3 + 1; //crit is a +1 decimal value! Just display purpose.[Vicious]
 	else
-		WBUFW(buf, 41) = hstatus->cri / 10;
+		p.crit = hstatus->cri / 10;
 #ifdef RENEWAL
-	WBUFW(buf, 43) = hstatus->def + hstatus->def2;
-	WBUFW(buf, 45) = hstatus->mdef + hstatus->mdef2;
+	p.def = hstatus->def + hstatus->def2;
+	p.mdef = hstatus->mdef + hstatus->mdef2;
 #else
-	WBUFW(buf, 43) =hstatus->def + hstatus->vit ;
-	WBUFW(buf, 45) = hstatus->mdef;
+	p.def = hstatus->def + hstatus->vit ;
+	p.mdef = hstatus->mdef;
 #endif
-	WBUFW(buf, 47) = hstatus->flee;
-	WBUFW(buf, 49) = (flag) ? 0 : hstatus->amotion;
+	p.flee = hstatus->flee;
+	p.amotion = (flag) ? 0 : hstatus->amotion;
 
 // probably can works also for < 20141223, but in 3CeaM packet size defined only for 20150513
 #if PACKETVER < 20150513
 	if (hstatus->max_hp > INT16_MAX) {
-		WBUFW(buf, 51) = hstatus->hp / (hstatus->max_hp / 100);
-		WBUFW(buf, 53) = 100;
+		p.hp = hstatus->hp / (hstatus->max_hp / 100);
+		p.maxHp = 100;
 	} else {
-		WBUFW(buf, 51) = hstatus->hp;
-		WBUFW(buf, 53) = hstatus->max_hp;
+		p.hp = hstatus->hp;
+		p.maxHp = hstatus->max_hp;
 	}
 #else
-	WBUFL(buf, 51) = hstatus->hp;
-	WBUFL(buf, 55) = hstatus->max_hp;
-	offset = 4;
+	p.hp = hstatus->hp;
+	p.maxHp = hstatus->max_hp;
 #endif
 
 	if (hstatus->max_sp > INT16_MAX) {
-		WBUFW(buf, 55 + offset) = hstatus->sp / (hstatus->max_sp / 100);
-		WBUFW(buf, 57 + offset) = 100;
+		p.sp = hstatus->sp / (hstatus->max_sp / 100);
+		p.maxSp = 100;
 	} else {
-		WBUFW(buf, 55 + offset) = hstatus->sp;
-		WBUFW(buf, 57 + offset) = hstatus->max_sp;
+		p.sp = hstatus->sp;
+		p.maxSp = hstatus->max_sp;
 	}
-	WBUFL(buf, 59 + offset) = hd->homunculus.exp;
-	WBUFL(buf, 63 + offset) = hd->exp_next;
+	p.exp = hd->homunculus.exp;
+	p.expNext = hd->exp_next;
 	switch (htype) {
 		case HT_REG:
 		case HT_EVO:
 			if (hd->homunculus.level >= battle_config.hom_max_level)
-				WBUFL(buf, 63 + offset) = 0;
+				p.expNext = 0;
 			break;
 		case HT_S:
 			if (hd->homunculus.level >= battle_config.hom_S_max_level)
-				WBUFL(buf, 63 + offset) = 0;
+				p.expNext = 0;
 			break;
 	}
-	WBUFW(buf, 67 + offset) = hd->homunculus.skillpts;
-	WBUFW(buf, 69 + offset) = status_get_range(&hd->bl);
-
-	clif->send(buf, len, &sd->bl, SELF);
+	p.skillPoints = hd->homunculus.skillpts;
+	p.range = status_get_range(&hd->bl);
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
 }
 
 /// Notification about a change in homunuculus' state (ZC_CHANGESTATE_MER).
