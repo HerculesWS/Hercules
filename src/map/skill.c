@@ -16097,7 +16097,7 @@ static void skill_repairweapon(struct map_session_data *sd, int idx)
 	if ( !( target_sd = map->id2sd(sd->menuskill_val) ) ) //Failed....
 		return;
 
-	if( idx == 0xFFFF ) // No item selected ('Cancel' clicked)
+	if (idx == 0xFFFF || idx == -1) // No item selected ('Cancel' clicked)
 		return;
 	if( idx < 0 || idx >= MAX_INVENTORY )
 		return; //Invalid index??

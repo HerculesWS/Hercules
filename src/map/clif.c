@@ -11971,6 +11971,8 @@ static void clif_parse_RepairItem(int fd, struct map_session_data *sd) __attribu
 /// 01fd <index>.W <name id>.W <refine>.B <card1>.W <card2>.W <card3>.W <card4>.W
 static void clif_parse_RepairItem(int fd, struct map_session_data *sd)
 {
+	const struct PACKET_CZ_REQ_ITEMREPAIR *p = RFIFOP(fd, 0);
+
 	if (sd->menuskill_id != BS_REPAIRWEAPON)
 		return;
 	if (pc_istrading(sd)) {
@@ -11979,7 +11981,7 @@ static void clif_parse_RepairItem(int fd, struct map_session_data *sd)
 		clif_menuskill_clear(sd);
 		return;
 	}
-	skill->repairweapon(sd,RFIFOW(fd,2));
+	skill->repairweapon(sd, p->index);
 	clif_menuskill_clear(sd);
 }
 
