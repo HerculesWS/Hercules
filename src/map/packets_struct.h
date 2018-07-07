@@ -420,7 +420,11 @@ struct EQUIPSLOTINFO {
 
 struct NORMALITEM_INFO {
 	int16 index;
+#if PACKETVER_RE_NUM >= 20180704
+	uint32 ITID;
+#else
 	uint16 ITID;
+#endif
 	uint8 type;
 #if PACKETVER < 20120925
 	uint8 IsIdentified;
