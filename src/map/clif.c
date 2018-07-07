@@ -6083,11 +6083,13 @@ static void clif_refine(int fd, int fail, int index, int val)
 ///     3 = "you lack the item %s to upgrade the weapon" MsgStringTable[914] in rgb(255,200,200)
 static void clif_upgrademessage(int fd, int result, int item_id)
 {
-	WFIFOHEAD(fd,packet_len(0x223));
-	WFIFOW(fd,0)=0x223;
-	WFIFOL(fd,2)=result;
-	WFIFOW(fd,6)=item_id;
-	WFIFOSET(fd,packet_len(0x223));
+	struct PACKET_ZC_ACK_WEAPONREFINE p;
+	WFIFOHEAD(fd, sizeof(p));
+	p.packetType = 0x223;
+	p.result = result;
+	p.itemId = item_id;
+	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
+	WFIFOSET(fd, sizeof(p));
 }
 
 /// Whisper is transmitted to the destination player (ZC_WHISPER).
