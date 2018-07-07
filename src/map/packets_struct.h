@@ -1858,7 +1858,11 @@ struct pet_evolution_items {
 struct PACKET_CZ_PET_EVOLUTION {
 	int16 PacketType;
 	uint16 PacketLength;
-	int16 EvolvedPetEggID;
+#if PACKETVER_RE_NUM >= 20180704
+	uint32 EvolvedPetEggID;
+#else
+	uint16 EvolvedPetEggID;
+#endif
 	// struct pet_evolution_items items[];
 } __attribute__((packed));
 
