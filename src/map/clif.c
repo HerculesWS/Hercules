@@ -11949,10 +11949,11 @@ static void clif_parse_Cooking(int fd, struct map_session_data *sd) __attribute_
 ///     6 = GN_S_PHARMACY
 static void clif_parse_Cooking(int fd, struct map_session_data *sd)
 {
-	int type = RFIFOW(fd,2);
-	int nameid = RFIFOW(fd,4);
-	int amount = sd->menuskill_val2?sd->menuskill_val2:1;
-	if( type == 6 && sd->menuskill_id != GN_MIX_COOKING && sd->menuskill_id != GN_S_PHARMACY )
+	const struct PACKET_CZ_REQ_MAKINGITEM *p = RFIFOP(fd, 0);
+	int type = p->type;
+	int nameid = p->itemId;
+	int amount = sd->menuskill_val2 ? sd->menuskill_val2 : 1;
+	if (type == 6 && sd->menuskill_id != GN_MIX_COOKING && sd->menuskill_id != GN_S_PHARMACY)
 		return;
 
 	if (pc_istrading(sd)) {
@@ -11961,8 +11962,8 @@ static void clif_parse_Cooking(int fd, struct map_session_data *sd)
 		clif_menuskill_clear(sd);
 		return;
 	}
-	if( skill->can_produce_mix(sd,nameid,sd->menuskill_val, amount) )
-		skill->produce_mix(sd,(type>1?sd->menuskill_id:0),nameid,0,0,0,amount);
+	if (skill->can_produce_mix(sd, nameid, sd->menuskill_val, amount))
+		skill->produce_mix(sd, (type > 1 ? sd->menuskill_id : 0), nameid, 0, 0, 0, amount);
 	clif_menuskill_clear(sd);
 }
 
