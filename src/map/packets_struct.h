@@ -1044,7 +1044,11 @@ struct packet_roulette_open_ack {
 	int32 Serial;
 	int8 Step;
 	int8 Idx;
-	int16 AdditionItemID;
+#if PACKETVER_RE_NUM >= 20180704
+	uint32 AdditionItemID;
+#else
+	uint16 AdditionItemID;
+#endif
 	int32 GoldPoint;
 	int32 SilverPoint;
 	int32 BronzePoint;
