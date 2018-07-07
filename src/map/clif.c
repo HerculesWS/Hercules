@@ -17880,14 +17880,16 @@ static void clif_buyingstore_trade_failed_seller(struct map_session_data *sd, sh
 {
 #if PACKETVER >= 20100420
 	int fd;
+	struct PACKET_ZC_FAILED_TRADE_BUYING_STORE_TO_SELLER p;
 
 	nullpo_retv(sd);
 	fd = sd->fd;
-	WFIFOHEAD(fd,packet_len(0x824));
-	WFIFOW(fd,0) = 0x824;
-	WFIFOW(fd,2) = result;
-	WFIFOW(fd,4) = nameid;
-	WFIFOSET(fd,packet_len(0x824));
+	WFIFOHEAD(fd, sizeof(p));
+	p.packetType = 0x824;
+	p.result = result;
+	p.itemId = nameid;
+	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
+	WFIFOSET(fd, sizeof(p));
 #endif
 }
 
