@@ -1082,7 +1082,11 @@ struct packet_roulette_generate_ack {
 	uint8 Result;
 	uint16 Step;
 	uint16 Idx;
+#if PACKETVER_RE_NUM >= 20180704
+	uint32 AdditionItemID;
+#else
 	uint16 AdditionItemID;
+#endif
 	int32 RemainGold;
 	int32 RemainSilver;
 	int32 RemainBronze;
