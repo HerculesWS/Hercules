@@ -1811,7 +1811,11 @@ struct PACKET_ZC_UI_ACTION {
 struct PACKET_CZ_PRIVATE_AIRSHIP_REQUEST {
 	int16 PacketType;
 	char mapName[MAP_NAME_LENGTH_EXT];
+#if PACKETVER_RE_NUM >= 20180704
+	uint32 ItemID;
+#else
 	uint16 ItemID;
+#endif
 } __attribute__((packed));
 
 struct PACKET_ZC_PRIVATE_AIRSHIP_RESPONSE {
