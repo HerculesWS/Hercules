@@ -7384,7 +7384,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 
 		// Weapon Refining [Celest]
 		case WS_WEAPONREFINE:
-			if(sd){
+			if (sd) {
 				sd->state.prerefining = 1;
 				clif->item_refine_list(sd);
 			}
@@ -16233,6 +16233,7 @@ static void skill_weaponrefine(struct map_session_data *sd, int idx)
 				item->refine = 0;
 				if(item->equip)
 					pc->unequipitem(sd, idx, PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE);
+				clif->upgrademessage(sd->fd, 1, item->nameid);
 				clif->refine(sd->fd,1,idx,item->refine);
 				pc->delitem(sd, idx, 1, 0, DELITEM_NORMAL, LOG_TYPE_REFINE);
 				clif->misceffect(&sd->bl,2);

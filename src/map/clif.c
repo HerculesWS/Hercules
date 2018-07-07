@@ -6419,36 +6419,45 @@ static void clif_item_damaged(struct map_session_data *sd, unsigned short positi
 /// 0221 <packet len>.W { <index>.W <name id>.W <refine>.B <card1>.W <card2>.W <card3>.W <card4>.W }*
 static void clif_item_refine_list(struct map_session_data *sd)
 {
-	int i,c;
-	int fd;
+	int i, c = 0, fd, len;
+	int16 items[MAX_INVENTORY] = { 0 };
 	uint16 skill_lv;
 
 	nullpo_retv(sd);
 
-	skill_lv = pc->checkskill(sd,WS_WEAPONREFINE);
+	skill_lv = pc->checkskill(sd, WS_WEAPONREFINE);
 
-	fd=sd->fd;
+	fd = sd->fd;
 
-	WFIFOHEAD(fd, MAX_INVENTORY * 13 + 4);
-	WFIFOW(fd,0)=0x221;
-	for (i = c = 0; i < MAX_INVENTORY; i++) {
-		if(sd->status.inventory[i].nameid > 0 && sd->status.inventory[i].identify
-			&& itemdb_wlv(sd->status.inventory[i].nameid) >= 1
-			&& !sd->inventory_data[i]->flag.no_refine
-			&& !(sd->status.inventory[i].equip&EQP_ARMS)){
-			WFIFOW(fd,c*13+ 4)=i+2;
-			WFIFOW(fd,c*13+ 6)=sd->status.inventory[i].nameid;
-			WFIFOB(fd,c*13+ 8)=sd->status.inventory[i].refine;
-			clif->addcards(WFIFOP(fd,c*13+9), &sd->status.inventory[i]);
+	for (i = 0; i < MAX_INVENTORY; i++) {
+		if (sd->status.inventory[i].nameid > 0 && sd->status.inventory[i].identify && itemdb_wlv(sd->status.inventory[i].nameid) >= 1 && !sd->inventory_data[i]->flag.no_refine && !(sd->status.inventory[i].equip&EQP_ARMS)) {
+			items[c] = i + 2;
+			WFIFOW(fd, c * 13 + 6) = sd->status.inventory[i].nameid;
+			WFIFOB(fd, c * 13 + 8) = sd->status.inventory[i].refine;
+			clif->addcards(WFIFOP(fd, c * 13 + 9), &sd->status.inventory[i]);
 			c++;
 		}
 	}
-	WFIFOW(fd,2)=c*13+4;
-	WFIFOSET(fd,WFIFOW(fd,2));
-	if (c > 0) {
-		sd->menuskill_id = WS_WEAPONREFINE;
-		sd->menuskill_val = skill_lv;
+
+	if (c == 0) {
+		sd->state.prerefining = 0;
+		clif->skill_fail(sd, sd->ud.skill_id, USESKILL_FAIL_LEVEL, 0);
+		return;
 	}
+
+	len = c * 13 + 4;
+
+	WFIFOHEAD(fd, len);
+	WFIFOW(fd, 0) = 0x221;
+	WFIFOW(fd, 2) = len;
+	for (i = 0; i < c; i++) {
+		WFIFOW(fd, i * 13 + 4) = items[i];
+	}
+	WFIFOSET(fd, len);
+
+	sd->menuskill_id = WS_WEAPONREFINE;
+	sd->menuskill_val = skill_lv;
+	clif->skill_nodamage(&sd->bl, &sd->bl, WS_WEAPONREFINE, skill_lv, 1);
 }
 
 /// Notification of an auto-casted skill (ZC_AUTORUN_SKILL).
