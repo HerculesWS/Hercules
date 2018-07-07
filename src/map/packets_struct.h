@@ -1100,7 +1100,11 @@ struct packet_roulette_itemrecv_req {
 struct packet_roulette_itemrecv_ack {
 	int16 PacketType;
 	uint8 Result;
+#if PACKETVER_RE_NUM >= 20180704
+	uint32 AdditionItemID;
+#else
 	uint16 AdditionItemID;
+#endif
 } __attribute__((packed));
 
 struct packet_itemlist_normal {
