@@ -18082,15 +18082,8 @@ static void clif_parse_SearchStoreInfoListItemClick(int fd, struct map_session_d
 /// 083c <account id>.L <store id>.L <nameid>.W
 static void clif_parse_SearchStoreInfoListItemClick(int fd, struct map_session_data *sd)
 {
-	unsigned short nameid;
-	int account_id, store_id;
-	struct s_packet_db* info = &packet_db[RFIFOW(fd,0)];
-
-	account_id = RFIFOL(fd,info->pos[0]);
-	store_id   = RFIFOL(fd,info->pos[1]);
-	nameid     = RFIFOW(fd,info->pos[2]);
-
-	searchstore->click(sd, account_id, store_id, nameid);
+	const struct PACKET_CZ_SSILIST_ITEM_CLICK *p = RFIFOP(fd, 0);
+	searchstore->click(sd, p->AID, p->storeId, p->itemId);
 }
 
 /// Notification of the store position on current map (ZC_SSILIST_ITEM_CLICK_ACK).
