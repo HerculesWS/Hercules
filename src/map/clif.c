@@ -18566,25 +18566,35 @@ static void clif_parse_CashShopClose(int fd, struct map_session_data *sd)
 static void clif_parse_CashShopSchedule(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 static void clif_parse_CashShopSchedule(int fd, struct map_session_data *sd)
 {
-#if PACKETVER >= 20110614
-	int i, j = 0;
+	clif->cashShopSchedule(fd, sd);
+}
 
-	for( i = 0; i < CASHSHOP_TAB_MAX; i++ ) {
-		if( clif->cs.item_count[i] == 0 )
+void clif_cashShopSchedule(int fd, struct map_session_data *sd)
+{
+#if PACKETVER >= 20110614
+	int i = 0;
+
+	nullpo_retv(sd);
+	for (i = 0; i < CASHSHOP_TAB_MAX; i++) {
+		const int len = sizeof(struct PACKET_ZC_ACK_SCHEDULER_CASHITEM) + (clif->cs.item_count[i] * sizeof(struct PACKET_ZC_ACK_SCHEDULER_CASHITEM_sub));
+		int j = 0;
+		struct PACKET_ZC_ACK_SCHEDULER_CASHITEM *p;
+		if (clif->cs.item_count[i] == 0)
 			continue; // Skip empty tabs, the client only expects filled ones
 
-		WFIFOHEAD(fd, 8 + ( clif->cs.item_count[i] * 6 ) );
-		WFIFOW(fd, 0) = 0x8ca;
-		WFIFOW(fd, 2) = 8 + ( clif->cs.item_count[i] * 6 );
-		WFIFOW(fd, 4) = clif->cs.item_count[i];
-		WFIFOW(fd, 6) = i;
+		WFIFOHEAD(fd, len);
+		p = WFIFOP(fd, 0);
+		p->packetType = 0x8ca;
+		p->packetLength = len;
+		p->count = clif->cs.item_count[i];
+		p->tabNum = i;
 
-		for( j = 0; j < clif->cs.item_count[i]; j++ ) {
-			WFIFOW(fd, 8 + ( 6 * j ) ) = clif->cs.data[i][j]->id;
-			WFIFOL(fd, 10 + ( 6 * j ) ) = clif->cs.data[i][j]->price;
+		for (j = 0; j < clif->cs.item_count[i]; j++) {
+			p->items[j].itemId = clif->cs.data[i][j]->id;
+			p->items[j].price = clif->cs.data[i][j]->price;
 		}
 
-		WFIFOSET(fd, 8 + ( clif->cs.item_count[i] * 6 ));
+		WFIFOSET(fd, len);
 	}
 #endif
 }
@@ -21615,6 +21625,7 @@ void clif_defaults(void)
 	clif->getareachar_item = clif_getareachar_item;
 	clif->cart_additem_ack = clif_cart_additem_ack;
 	clif->cashshop_load = clif_cashshop_db;
+	clif->cashShopSchedule = clif_cashShopSchedule;
 	clif->package_announce = clif_package_item_announce;
 	clif->item_drop_announce = clif_item_drop_announce;
 	/* unit-related */

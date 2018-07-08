@@ -726,6 +726,7 @@ struct clif_interface {
 	void (*getareachar_item) (struct map_session_data* sd,struct flooritem_data* fitem);
 	void (*cart_additem_ack) (struct map_session_data *sd, int flag);
 	void (*cashshop_load) (void);
+	void (*cashShopSchedule) (int fd, struct map_session_data *sd);
 	void (*package_announce) (struct map_session_data *sd, unsigned short nameid, unsigned short containerid);
 	void (*item_drop_announce) (struct map_session_data *sd, unsigned short nameid, char *monsterName);
 	/* unit-related */
