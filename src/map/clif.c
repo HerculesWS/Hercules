@@ -2093,12 +2093,13 @@ static void clif_buylist(struct map_session_data *sd, struct npc_data *nd)
 {
 	struct npc_item_list *shop = NULL;
 	unsigned short shop_size = 0;
-	int fd,i,c;
+	int fd, i, c, len;
+	struct PACKET_ZC_PC_PURCHASE_ITEMLIST *p;
 
 	nullpo_retv(sd);
 	nullpo_retv(nd);
 
-	if( nd->subtype == SCRIPT ) {
+	if (nd->subtype == SCRIPT) {
 		shop = nd->u.scr.shop->item;
 		shop_size = nd->u.scr.shop->items;
 	} else {
@@ -2108,26 +2109,29 @@ static void clif_buylist(struct map_session_data *sd, struct npc_data *nd)
 
 	fd = sd->fd;
 
-	WFIFOHEAD(fd, 4 + shop_size * 11);
-	WFIFOW(fd,0) = 0xc6;
+	len = sizeof(struct PACKET_ZC_PC_PURCHASE_ITEMLIST) + shop_size * sizeof(struct PACKET_ZC_PC_PURCHASE_ITEMLIST_sub);
+	WFIFOHEAD(fd, len);
+	p = WFIFOP(fd, 0);
+	p->packetType = 0xc6;
 
 	c = 0;
-	for( i = 0; i < shop_size; i++ ) {
-		if( shop[i].nameid ) {
+	for (i = 0; i < shop_size; i++) {
+		if (shop[i].nameid) {
 			struct item_data* id = itemdb->exists(shop[i].nameid);
 			int val = shop[i].value;
-			if( id == NULL )
+			if (id == NULL)
 				continue;
-			WFIFOL(fd, 4+c*11) = val;
-			WFIFOL(fd, 8+c*11) = pc->modifybuyvalue(sd,val);
-			WFIFOB(fd,12+c*11) = itemtype(id->type);
-			WFIFOW(fd,13+c*11) = ( id->view_id > 0 ) ? id->view_id : id->nameid;
+			p->items[c].price = val;
+			p->items[c].discountPrice = pc->modifybuyvalue(sd, val);
+			p->items[c].itemType = itemtype(id->type);
+			p->items[c].itemId = (id->view_id > 0) ? id->view_id : id->nameid;
 			c++;
 		}
 	}
 
-	WFIFOW(fd,2) = 4 + c*11;
-	WFIFOSET(fd,WFIFOW(fd,2));
+	len = sizeof(struct PACKET_ZC_PC_PURCHASE_ITEMLIST) + c * sizeof(struct PACKET_ZC_PC_PURCHASE_ITEMLIST_sub);
+	p->packetLength = len;
+	WFIFOSET(fd, len);
 }
 
 /// Presents list of items, that can be sold to an NPC shop (ZC_PC_SELL_ITEMLIST).
