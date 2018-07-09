@@ -6590,42 +6590,40 @@ static void clif_buyvending(struct map_session_data *sd, int index, int amount, 
 /// 0136 <packet len>.W <owner id>.L { <price>.L <index>.W <amount>.W <type>.B <name id>.W <identified>.B <damaged>.B <refine>.B <card1>.W <card2>.W <card3>.W <card4>.W }*
 static void clif_openvending(struct map_session_data *sd, int id, struct s_vending *vending_items)
 {
-	int i,fd;
+	int i, fd;
 	int count;
 
-#if PACKETVER >= 20150226
-	const int item_length = 47;
-#else
-	const int item_length = 22;
-#endif
+	struct PACKET_ZC_PC_PURCHASE_MYITEMLIST *p;
+	int len;
 
 	nullpo_retv(sd);
 	nullpo_retv(vending_items);
 
 	fd = sd->fd;
 	count = sd->vend_num;
-
-	WFIFOHEAD(fd, 8+count*item_length);
-	WFIFOW(fd,0) = 0x136;
-	WFIFOW(fd,2) = 8+count*item_length;
-	WFIFOL(fd,4) = id;
-	for( i = 0; i < count; i++ ) {
+	len = sizeof(struct PACKET_ZC_PC_PURCHASE_MYITEMLIST) + count * sizeof(struct PACKET_ZC_PC_PURCHASE_MYITEMLIST_sub);
+	WFIFOHEAD(fd, len);
+	p = WFIFOP(fd, 0);
+	p->packetType = 0x136;
+	p->packetLength = len;
+	p->AID = id;
+	for (i = 0; i < count; i++) {
 		int index = vending_items[i].index;
 		struct item_data* data = itemdb->search(sd->status.cart[index].nameid);
-		WFIFOL(fd, 8+i*item_length) = vending_items[i].value;
-		WFIFOW(fd,12+i*item_length) = vending_items[i].index + 2;
-		WFIFOW(fd,14+i*item_length) = vending_items[i].amount;
-		WFIFOB(fd,16+i*item_length) = itemtype(data->type);
-		WFIFOW(fd,17+i*item_length) = ( data->view_id > 0 ) ? data->view_id : sd->status.cart[index].nameid;
-		WFIFOB(fd,19+i*item_length) = sd->status.cart[index].identify;
-		WFIFOB(fd,20+i*item_length) = sd->status.cart[index].attribute;
-		WFIFOB(fd,21+i*item_length) = sd->status.cart[index].refine;
-		clif->addcards((struct EQUIPSLOTINFO*)WFIFOP(fd, 22 + i * item_length), &sd->status.cart[index]);
+		p->items[i].price = vending_items[i].value;
+		p->items[i].index = vending_items[i].index + 2;
+		p->items[i].amount = vending_items[i].amount;
+		p->items[i].itemType = itemtype(data->type);
+		p->items[i].itemId = (data->view_id > 0) ? data->view_id : sd->status.cart[index].nameid;
+		p->items[i].identified = sd->status.cart[index].identify;
+		p->items[i].damaged = sd->status.cart[index].attribute;
+		p->items[i].refine = sd->status.cart[index].refine;
+		clif->addcards(&p->items[i].slot, &sd->status.cart[index]);
 #if PACKETVER >= 20150226
-		clif->add_item_options(WFIFOP(fd, 30 + i * item_length), &sd->status.cart[index]);
+		clif->add_item_options(&p->items[i].option_data[0], &sd->status.cart[index]);
 #endif
 	}
-	WFIFOSET(fd,WFIFOW(fd,2));
+	WFIFOSET(fd, len);
 
 #if PACKETVER >= 20140625
 	/** should go elsewhere perhaps? it has to be bundled with this however. **/

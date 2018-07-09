@@ -2222,6 +2222,32 @@ struct PACKET_ZC_ACK_SCHEDULER_CASHITEM {
 	struct PACKET_ZC_ACK_SCHEDULER_CASHITEM_sub items[];
 } __attribute__((packed));
 
+struct PACKET_ZC_PC_PURCHASE_MYITEMLIST_sub {
+	uint32 price;
+	int16 index;
+	int16 amount;
+	uint8 itemType;
+#if PACKETVER_RE_NUM >= 20180704
+	uint32 itemId;
+#else
+	uint16 itemId;
+#endif
+	uint8 identified;
+	uint8 damaged;
+	uint8 refine;
+	struct EQUIPSLOTINFO slot;
+#if PACKETVER >= 20150226
+	struct ItemOptions option_data[MAX_ITEM_OPTIONS];
+#endif
+} __attribute__((packed));
+
+struct PACKET_ZC_PC_PURCHASE_MYITEMLIST {
+	int16 packetType;
+	int16 packetLength;
+	uint32 AID;
+	struct PACKET_ZC_PC_PURCHASE_MYITEMLIST_sub items[];
+} __attribute__((packed));
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
