@@ -6625,11 +6625,19 @@ static void clif_openvending(struct map_session_data *sd, int id, struct s_vendi
 	}
 	WFIFOSET(fd, len);
 
+	clif->openvendingAck(fd, 0);
+}
+
+// 0 - open vending success
+// 1 - message MSG_MERCHANTSHOP_MAKING_FAIL
+// 2 - silent ignore
+// 3 - message MSG_ID_C9D (You can not open a stall at the current location)
+static void clif_openvendingAck(int fd, int result)
+{
 #if PACKETVER >= 20140625
-	/** should go elsewhere perhaps? it has to be bundled with this however. **/
 	WFIFOHEAD(fd, packet_len(0xa28));
-	WFIFOW(fd, 0) = 0xa28;
-	WFIFOB(fd, 2) = 0;/** 1 is failure. our current responses to failure are working so not yet implemented **/
+	WFIFOW(fd, 0) = 0xa28;  // ZC_ACK_OPENSTORE2
+	WFIFOB(fd, 2) = result;
 	WFIFOSET(fd, packet_len(0xa28));
 #endif
 }
@@ -21870,6 +21878,7 @@ void clif_defaults(void)
 	clif->vendinglist = clif_vendinglist;
 	clif->buyvending = clif_buyvending;
 	clif->openvending = clif_openvending;
+	clif->openvendingAck = clif_openvendingAck;
 	clif->vendingreport = clif_vendingreport;
 	/* storage handling */
 	clif->storagelist = clif_storagelist;
