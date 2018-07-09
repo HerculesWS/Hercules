@@ -81,7 +81,7 @@ static bool buyingstore_setup(struct map_session_data *sd, unsigned char slots)
 	return true;
 }
 
-static void buyingstore_create(struct map_session_data *sd, int zenylimit, unsigned char result, const char *storename, const uint8 *itemlist, unsigned int count)
+static void buyingstore_create(struct map_session_data *sd, int zenylimit, unsigned char result, const char *storename, const struct PACKET_CZ_REQ_OPEN_BUYING_STORE_sub *itemlist, unsigned int count)
 {
 	unsigned int i, weight, listidx;
 
@@ -132,9 +132,9 @@ static void buyingstore_create(struct map_session_data *sd, int zenylimit, unsig
 		int price, idx;
 		struct item_data* id;
 
-		nameid = RBUFW(itemlist,i*8+0);
-		amount = RBUFW(itemlist,i*8+2);
-		price  = RBUFL(itemlist,i*8+4);
+		nameid = itemlist[i].itemId;
+		amount = itemlist[i].amount;
+		price  = itemlist[i].price;
 
 		if( ( id = itemdb->exists(nameid) ) == NULL || amount == 0 )
 		{// invalid input

@@ -2280,6 +2280,25 @@ struct PACKET_CZ_PC_PURCHASE_ITEMLIST {
 	struct PACKET_CZ_PC_PURCHASE_ITEMLIST_sub items[];
 } __attribute__((packed));
 
+struct PACKET_CZ_REQ_OPEN_BUYING_STORE_sub {
+#if PACKETVER_RE_NUM >= 20180704
+	uint32 itemId;
+#else
+	uint16 itemId;
+#endif
+	uint16 amount;
+	uint32 price;
+} __attribute__((packed));
+
+struct PACKET_CZ_REQ_OPEN_BUYING_STORE {
+	int16 packetType;
+	int16 packetLength;
+	uint32 zenyLimit;
+	uint8 result;
+	char storeName[MESSAGE_SIZE];
+	struct PACKET_CZ_REQ_OPEN_BUYING_STORE_sub items[];
+} __attribute__((packed));
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

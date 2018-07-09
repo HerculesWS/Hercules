@@ -17590,40 +17590,40 @@ static void clif_parse_ReqOpenBuyingStore(int fd, struct map_session_data *sd) _
 ///     1 = open
 static void clif_parse_ReqOpenBuyingStore(int fd, struct map_session_data *sd)
 {
-	const unsigned int blocksize = 8;
-	const uint8 *itemlist;
+	const unsigned int blocksize = sizeof(struct PACKET_CZ_REQ_OPEN_BUYING_STORE_sub);
+	const struct PACKET_CZ_REQ_OPEN_BUYING_STORE_sub *itemlist;
 	char storename[MESSAGE_SIZE];
 	unsigned char result;
 	int zenylimit;
 	int count, packet_len;
-	struct s_packet_db* info = &packet_db[RFIFOW(fd,0)];
+	const struct PACKET_CZ_REQ_OPEN_BUYING_STORE *p = RFIFOP(fd, 0);
 
-	packet_len = RFIFOW(fd,info->pos[0]);
+	packet_len = p->packetLength;
 
 	// TODO: Make this check global for all variable length packets.
-	if( packet_len < 89 )
+	if (packet_len < sizeof(struct PACKET_CZ_REQ_OPEN_BUYING_STORE))
 	{// minimum packet length
-		ShowError("clif_parse_ReqOpenBuyingStore: Malformed packet (expected length=%u, length=%d, account_id=%d).\n", 89U, packet_len, sd->bl.id);
+		ShowError("clif_parse_ReqOpenBuyingStore: Malformed packet (expected length=%u, length=%d, account_id=%d).\n", (uint32)sizeof(struct PACKET_CZ_REQ_OPEN_BUYING_STORE), packet_len, sd->bl.id);
 		return;
 	}
 
-	zenylimit = RFIFOL(fd,info->pos[1]);
-	result    = RFIFOL(fd,info->pos[2]);
-	safestrncpy(storename, RFIFOP(fd,info->pos[3]), sizeof(storename));
-	itemlist  = RFIFOP(fd,info->pos[4]);
+	zenylimit = p->zenyLimit;
+	result    = p->result;
+	safestrncpy(storename, p->storeName, sizeof(storename));
+	itemlist  = &p->items[0];
 
 	// so that buyingstore_create knows, how many elements it has access to
-	packet_len-= info->pos[4];
+	packet_len -= sizeof(struct PACKET_CZ_REQ_OPEN_BUYING_STORE);
 
 	if (packet_len < 0)
 		return;
 
-	if( packet_len%blocksize )
+	if (packet_len % blocksize)
 	{
 		ShowError("clif_parse_ReqOpenBuyingStore: Unexpected item list size %d (account_id=%d, block size=%u)\n", packet_len, sd->bl.id, blocksize);
 		return;
 	}
-	count = packet_len/blocksize;
+	count = packet_len / blocksize;
 
 	buyingstore->create(sd, zenylimit, result, storename, itemlist, count);
 }
