@@ -17633,7 +17633,8 @@ static void clif_parse_ReqOpenBuyingStore(int fd, struct map_session_data *sd)
 /// result:
 ///     1 = "Failed to open buying store." (0x6cd, MSI_BUYINGSTORE_OPEN_FAILED)
 ///     2 = "Total amount of then possessed items exceeds the weight limit by <weight/10-maxweight*90%>. Please re-enter." (0x6ce, MSI_BUYINGSTORE_OVERWEIGHT)
-///     8 = "No sale (purchase) information available." (0x705)
+///     9 = "No sale (purchase) information available." (0x705)
+///    10 = "Cant open store at this location." (0xC9D)
 ///     ? = nothing
 static void clif_buyingstore_open_failed(struct map_session_data *sd, unsigned short result, unsigned int weight)
 {
