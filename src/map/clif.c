@@ -11120,12 +11120,13 @@ static void clif_parse_NpcBuyListSend(int fd, struct map_session_data *sd) __att
 /// 00c8 <packet len>.W { <amount>.W <name id>.W }*
 static void clif_parse_NpcBuyListSend(int fd, struct map_session_data *sd)
 {
-	int n = ((int)RFIFOW(fd,2)-4) / 4;
+	int n = ((int)RFIFOW(fd, 2) - sizeof(struct PACKET_CZ_PC_PURCHASE_ITEMLIST)) / sizeof(struct PACKET_CZ_PC_PURCHASE_ITEMLIST_sub);
 	int result;
+	const struct PACKET_CZ_PC_PURCHASE_ITEMLIST *p = RFIFOP(fd, 0);
 
 	Assert_retv(n >= 0);
 
-	if( sd->state.trading || !sd->npc_shopid || pc_has_permission(sd,PC_PERM_DISABLE_STORE) ) {
+	if (sd->state.trading || !sd->npc_shopid || pc_has_permission(sd, PC_PERM_DISABLE_STORE)) {
 		result = 1;
 	} else {
 		struct itemlist item_list = { 0 };
@@ -11136,8 +11137,8 @@ static void clif_parse_NpcBuyListSend(int fd, struct map_session_data *sd)
 		for (i = 0; i < n; i++) {
 			struct itemlist_entry entry = { 0 };
 
-			entry.amount = RFIFOW(fd, 4 + 4 * i);
-			entry.id =     RFIFOW(fd, 4 + 4 * i + 2);
+			entry.amount = p->items[i].amount;
+			entry.id =     p->items[i].itemId;
 
 			VECTOR_PUSH(item_list, entry);
 		}
