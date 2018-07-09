@@ -4101,13 +4101,13 @@ static void clif_traderequest(struct map_session_data *sd, const char *name)
 static void clif_tradestart(struct map_session_data *sd, uint8 type)
 {
 	int fd;
-#if PACKETVER >= 6
+#if PACKETVER >= 20090406
 	struct map_session_data *tsd = NULL;
 #endif // PACKETVER >= 6
 	nullpo_retv(sd);
 
 	fd = sd->fd;
-#if PACKETVER >= 6
+#if PACKETVER >= 20090406
 	tsd = map->id2sd(sd->trade_partner);
 	if (tsd) {
 		WFIFOHEAD(fd,packet_len(0x1f5));
@@ -4118,11 +4118,12 @@ static void clif_tradestart(struct map_session_data *sd, uint8 type)
 		WFIFOSET(fd,packet_len(0x1f5));
 		return;
 	}
-#endif // PACKETVER >= 6
+#else
 	WFIFOHEAD(fd,packet_len(0xe7));
 	WFIFOW(fd,0) = 0xe7;
 	WFIFOB(fd,2) = type;
 	WFIFOSET(fd,packet_len(0xe7));
+#endif // PACKETVER >= 6
 }
 
 /// Notifies the client about an item from other player in current trade.
