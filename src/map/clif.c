@@ -4171,6 +4171,8 @@ static void clif_tradeadditem(struct map_session_data *sd, struct map_session_da
 ///     0 = success
 ///     1 = overweight
 ///     2 = trade canceled
+///     3 = amount is exceeded. message 0x792
+///     4 = other amount is exceeded. message 0x793
 static void clif_tradeitemok(struct map_session_data *sd, int index, int fail)
 {
 	int fd;
