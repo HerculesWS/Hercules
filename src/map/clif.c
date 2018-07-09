@@ -6855,15 +6855,17 @@ static void clif_party_invite(struct map_session_data *sd, struct map_session_da
 /// Party invite result.
 /// 00fd <nick>.24S <result>.B (ZC_ACK_REQ_JOIN_GROUP)
 /// 02c5 <nick>.24S <result>.L (ZC_PARTY_JOIN_REQ_ACK)
-/// result=0 : char is already in a party -> MsgStringTable[80]
-/// result=1 : party invite was rejected -> MsgStringTable[81]
-/// result=2 : party invite was accepted -> MsgStringTable[82]
-/// result=3 : party is full -> MsgStringTable[83]
-/// result=4 : char of the same account already joined the party -> MsgStringTable[608]
-/// result=5 : char blocked party invite -> MsgStringTable[1324] (since 20070904)
-/// result=7 : char is not online or doesn't exist -> MsgStringTable[71] (since 20070904)
-/// result=8 : (%s) TODO instance related? -> MsgStringTable[1388] (since 20080527)
-/// return=9 : TODO map prohibits party joining? -> MsgStringTable[1871] (since 20110205)
+/// result=0  : char is already in a party -> MsgStringTable[80]
+/// result=1  : party invite was rejected -> MsgStringTable[81]
+/// result=2  : party invite was accepted -> MsgStringTable[82]
+/// result=3  : party is full -> MsgStringTable[83]
+/// result=4  : char of the same account already joined the party -> MsgStringTable[608]
+/// result=5  : char blocked party invite -> MsgStringTable[1324] (since 20070904)
+/// result=7  : char is not online or doesn't exist -> MsgStringTable[71] (since 20070904)
+/// result=8  : (%s) are currently in restricted map to join a party. -> MsgStringTable[1388] (since 20080527)
+/// result=9  : Cannot join a party in this map. -> MsgStringTable[1871] (since 20110215)
+/// result=10 : You cannot invite or withdraw while in memorial dungeon -> message: MSG_ID_BD3 (since 20161130)
+/// result=11 : The character is a level that can not join the party -> message: MSG_ID_C9A (since 20170412)
 static void clif_party_inviteack(struct map_session_data *sd, const char *nick, int result)
 {
 	int fd;
