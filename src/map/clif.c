@@ -3596,12 +3596,16 @@ static void clif_arrow_create_list(struct map_session_data *sd)
 {
 	int i, c;
 	int fd;
+	int len;
+	struct PACKET_ZC_MAKINGARROW_LIST *p;
 
 	nullpo_retv(sd);
 
 	fd = sd->fd;
-	WFIFOHEAD(fd, MAX_SKILL_ARROW_DB*2+4);
-	WFIFOW(fd,0) = 0x1ad;
+	len = MAX_SKILL_ARROW_DB * sizeof(struct PACKET_ZC_MAKINGARROW_LIST_sub) + sizeof(struct PACKET_ZC_MAKINGARROW_LIST);
+	WFIFOHEAD(fd, len);
+	p = WFIFOP(fd, 0);
+	p->packetType = 0x1ad;
 
 	for (i = 0, c = 0; i < MAX_SKILL_ARROW_DB; i++) {
 		int j;
@@ -3610,14 +3614,15 @@ static void clif_arrow_create_list(struct map_session_data *sd)
 		 && !sd->status.inventory[j].equip && sd->status.inventory[j].identify
 		) {
 			if ((j = itemdb_viewid(skill->dbs->arrow_db[i].nameid)) > 0)
-				WFIFOW(fd,c*2+4) = j;
+				p->items[c].itemId = j;
 			else
-				WFIFOW(fd,c*2+4) = skill->dbs->arrow_db[i].nameid;
+				p->items[c].itemId = skill->dbs->arrow_db[i].nameid;
 			c++;
 		}
 	}
-	WFIFOW(fd,2) = c*2+4;
-	WFIFOSET(fd, WFIFOW(fd,2));
+	len = c * sizeof(struct PACKET_ZC_MAKINGARROW_LIST_sub) + sizeof(struct PACKET_ZC_MAKINGARROW_LIST);
+	p->packetLength = len;
+	WFIFOSET(fd, len);
 	if (c > 0) {
 		sd->menuskill_id = AC_MAKINGARROW;
 		sd->menuskill_val = c;
