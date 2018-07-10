@@ -2318,6 +2318,40 @@ struct PACKET_ZC_MYITEMLIST_BUYING_STORE {
 	struct PACKET_ZC_MYITEMLIST_BUYING_STORE_sub items[];
 } __attribute__((packed));
 
+struct PACKET_ZC_PC_PURCHASE_ITEMLIST_FROMMC_sub {
+	uint32 price;
+	uint16 amount;
+	int16 index;
+	uint8 itemType;
+#if PACKETVER_RE_NUM >= 20180704
+	uint32 itemId;
+#else
+	uint16 itemId;
+#endif
+	uint8 identified;
+	uint8 damaged;
+	uint8 refine;
+	struct EQUIPSLOTINFO slot;
+#if PACKETVER >= 20150226
+	struct ItemOptions option_data[MAX_ITEM_OPTIONS];
+#endif
+// [4144] date 20160921 not confirmed. Can be bigger or smaller
+#if PACKETVER >= 20160921
+	uint32 location;
+	uint16 viewSprite;
+#endif
+} __attribute__((packed));
+
+struct PACKET_ZC_PC_PURCHASE_ITEMLIST_FROMMC {
+	int16 packetType;
+	int16 packetLength;
+	uint32 AID;
+#if PACKETVER >= 20100105
+	uint32 venderId;
+#endif
+	struct PACKET_ZC_PC_PURCHASE_ITEMLIST_FROMMC_sub items[];
+} __attribute__((packed));
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

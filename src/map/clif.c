@@ -6509,25 +6509,11 @@ static void clif_closevendingboard(struct block_list *bl, int fd)
 /// R 0800 <packet len>.W <owner id>.L <unique id>.L { <price>.L <amount>.W <index>.W <type>.B <name id>.W <identified>.B <damaged>.B <refine>.B <card1>.W <card2>.W <card3>.W <card4>.W }* (ZC_PC_PURCHASE_ITEMLIST_FROMMC2)
 static void clif_vendinglist(struct map_session_data *sd, unsigned int id, struct s_vending *vending_items)
 {
-	int i,fd;
+	int i, fd;
 	int count;
 	struct map_session_data* vsd;
-#if PACKETVER < 20100105
-	const int cmd = 0x133;
-	const int offset = 8;
-#else
-	const int cmd = 0x800;
-	const int offset = 12;
-#endif
-
-#if PACKETVER < 20150226
-	const int item_length = 22;
-// [4144] date 20160921 not confirmend. Can be bigger or smaller
-#elif PACKETVER < 20160921
-	const int item_length = 47;
-#else
-	const int item_length = 53;
-#endif
+	int len;
+	struct PACKET_ZC_PC_PURCHASE_ITEMLIST_FROMMC *p;
 
 	nullpo_retv(sd);
 	nullpo_retv(vending_items);
@@ -6535,37 +6521,39 @@ static void clif_vendinglist(struct map_session_data *sd, unsigned int id, struc
 
 	fd = sd->fd;
 	count = vsd->vend_num;
+	len = sizeof(struct PACKET_ZC_PC_PURCHASE_ITEMLIST_FROMMC) + count * sizeof(struct PACKET_ZC_PC_PURCHASE_ITEMLIST_FROMMC_sub);
 
-	WFIFOHEAD(fd, offset+count*item_length);
-	WFIFOW(fd,0) = cmd;
-	WFIFOW(fd,2) = offset+count*item_length;
-	WFIFOL(fd,4) = id;
+	WFIFOHEAD(fd, len);
+	p = WFIFOP(fd, 0);
+	p->packetType = vendinglistType;
+	p->packetLength = len;
+	p->AID = id;
 #if PACKETVER >= 20100105
-	WFIFOL(fd,8) = vsd->vender_id;
+	p->venderId = vsd->vender_id;
 #endif
 
-	for( i = 0; i < count; i++ ) {
+	for (i = 0; i < count; i++) {
 		int index = vending_items[i].index;
 		struct item_data* data = itemdb->search(vsd->status.cart[index].nameid);
-		WFIFOL(fd,offset+ 0+i*item_length) = vending_items[i].value;
-		WFIFOW(fd,offset+ 4+i*item_length) = vending_items[i].amount;
-		WFIFOW(fd,offset+ 6+i*item_length) = vending_items[i].index + 2;
-		WFIFOB(fd,offset+ 8+i*item_length) = itemtype(data->type);
-		WFIFOW(fd,offset+ 9+i*item_length) = ( data->view_id > 0 ) ? data->view_id : vsd->status.cart[index].nameid;
-		WFIFOB(fd,offset+11+i*item_length) = vsd->status.cart[index].identify;
-		WFIFOB(fd,offset+12+i*item_length) = vsd->status.cart[index].attribute;
-		WFIFOB(fd,offset+13+i*item_length) = vsd->status.cart[index].refine;
-		clif->addcards((struct EQUIPSLOTINFO*)WFIFOP(fd, offset + 14 + i * item_length), &vsd->status.cart[index]);
+		p->items[i].price = vending_items[i].value;
+		p->items[i].amount = vending_items[i].amount;
+		p->items[i].index = vending_items[i].index + 2;
+		p->items[i].itemType = itemtype(data->type);
+		p->items[i].itemId = (data->view_id > 0) ? data->view_id : vsd->status.cart[index].nameid;
+		p->items[i].identified = vsd->status.cart[index].identify;
+		p->items[i].damaged = vsd->status.cart[index].attribute;
+		p->items[i].refine = vsd->status.cart[index].refine;
+		clif->addcards(&p->items[i].slot, &vsd->status.cart[index]);
 #if PACKETVER >= 20150226
-		clif->add_item_options(WFIFOP(fd, offset + 22 + i * item_length), &vsd->status.cart[index]);
+		clif->add_item_options(&p->items[i].option_data[0], &vsd->status.cart[index]);
 #endif
-// [4144] date 20160921 not confirmend. Can be bigger or smaller
+// [4144] date 20160921 not confirmed. Can be bigger or smaller
 #if PACKETVER >= 20160921
-		WFIFOL(fd, offset + 47 + i * item_length) = pc->item_equippoint(sd, data);
-		WFIFOW(fd, offset + 51 + i * item_length) = data->view_sprite;
+		p->items[i].location = pc->item_equippoint(sd, data);
+		p->items[i].viewSprite = data->view_sprite;
 #endif
 	}
-	WFIFOSET(fd,WFIFOW(fd,2));
+	WFIFOSET(fd, len);
 }
 
 /// Shop purchase failure (ZC_PC_PURCHASE_RESULT_FROMMC).
