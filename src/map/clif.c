@@ -20615,9 +20615,10 @@ static void clif_rodex_read_mail(struct map_session_data *sd, int8 opentype, str
 	size += body_len;
 	for (i = 0; i < RODEX_MAX_ITEM; ++i) {
 		struct item *it = &msg->items[i].item;
+		struct item_data* data = itemdb->search(it->nameid);
 		int j, k;
 
-		if (it->nameid == 0) {
+		if (it->nameid == 0 || data == NULL) {
 			continue;
 		}
 
@@ -20629,6 +20630,9 @@ static void clif_rodex_read_mail(struct map_session_data *sd, int8 opentype, str
 		item->IsIdentified = it->identify ? 1 : 0;
 		item->IsDamaged = (it->attribute & ATTR_BROKEN) != 0 ? 1 : 0;
 		item->refiningLevel = it->refine;
+		item->location = pc->item_equippoint(sd, data);
+		item->viewSprite = data->view_sprite;
+		item->bindOnEquip = it->bound ? 2 : data->flag.bindonequip ? 1 : 0;
 		for (k = 0; k < MAX_SLOTS; ++k) {
 			item->slot.card[k] = it->card[k];
 		}

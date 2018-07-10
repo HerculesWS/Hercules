@@ -1443,14 +1443,19 @@ struct PACKET_ZC_ADD_ITEM_TO_MAIL {
 
 struct mail_item {
 	int16 count;
+#if PACKETVER_RE_NUM >= 20180704
+	uint32 ITID;
+#else
 	uint16 ITID;
+#endif
 	int8 IsIdentified;
 	int8 IsDamaged;
 	int8 refiningLevel;
 	struct EQUIPSLOTINFO slot;
-	int8 unknow1[4];
-	int8 type;
-	int8 unknown[4];
+	uint32 location;
+	uint8 type;
+	uint16 viewSprite;
+	uint16 bindOnEquip;
 	struct ItemOptions optionData[MAX_ITEM_OPTIONS];
 } __attribute__((packed));
 
