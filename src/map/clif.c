@@ -16288,33 +16288,33 @@ static void clif_parse_cashshop_buy(int fd, struct map_session_data *sd) __attri
 static void clif_parse_cashshop_buy(int fd, struct map_session_data *sd)
 {
 	int fail = 0;
+	const struct PACKET_CZ_PC_BUY_CASH_POINT_ITEM *p = RFIFOP(fd, 0);
 
-	if( sd->state.trading || !sd->npc_shopid || pc_has_permission(sd,PC_PERM_DISABLE_STORE) )
+	if (sd->state.trading || !sd->npc_shopid || pc_has_permission(sd,PC_PERM_DISABLE_STORE)) {
 		fail = 1;
-	else {
-#if PACKETVER < 20101116
-		short nameid = RFIFOW(fd,2);
-		short amount = RFIFOW(fd,4);
-		int points = RFIFOL(fd,6);
-
-		fail = npc->cashshop_buy(sd, nameid, amount, points);
+	} else {
+#if PACKETVER < 20070711
+		fail = npc->cashshop_buy(sd, p->itemId, p->amount, 0);
+#elif PACKETVER < 20101116
+		fail = npc->cashshop_buy(sd, p->itemId, p->amount, p->kafraPoints);
 #else
-		int len = RFIFOW(fd,2);
+		int len = p->packetLength;
+		int needLen;
 		int points;
 		int count;
 		struct itemlist item_list = { 0 };
 		int i;
 
-		if (len < 10) {
+		if (len < sizeof(struct PACKET_CZ_PC_BUY_CASH_POINT_ITEM)) {
 			ShowWarning("Player %d sent incorrect cash shop buy packet (len %d)!\n", sd->status.char_id, len);
 			return;
 		}
 
-		points = RFIFOL(fd, 4);
-		count = RFIFOW(fd, 8);
-
-		if (len != 10 + count * 4) {
-			ShowWarning("Player %d sent incorrect cash shop buy packet (len %d:%d)!\n", sd->status.char_id, len, 10 + count * 4);
+		points = p->kafraPoints;
+		count = p->count;
+		needLen = sizeof(struct PACKET_CZ_PC_BUY_CASH_POINT_ITEM) + count * sizeof(struct PACKET_CZ_PC_BUY_CASH_POINT_ITEM_sub);
+		if (len != needLen) {
+			ShowWarning("Player %d sent incorrect cash shop buy packet (len %d:%d)!\n", sd->status.char_id, len, needLen);
 			return;
 		}
 
@@ -16323,8 +16323,8 @@ static void clif_parse_cashshop_buy(int fd, struct map_session_data *sd)
 		for (i = 0; i < count; i++) {
 			struct itemlist_entry entry = { 0 };
 
-			entry.amount = RFIFOW(fd, 10 + 4 * i);
-			entry.id =     RFIFOW(fd, 10 + 4 * i + 2); // Nameid
+			entry.amount = p->items[i].amount;
+			entry.id =     p->items[i].itemId;
 
 			VECTOR_PUSH(item_list, entry);
 		}
