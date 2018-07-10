@@ -31,6 +31,7 @@ struct map_session_data;
  **/
 struct s_search_store_search;
 struct PACKET_CZ_REQ_OPEN_BUYING_STORE_sub;
+struct PACKET_CZ_REQ_TRADE_BUYING_STORE_sub;
 
 /**
  * Defines
@@ -83,7 +84,7 @@ struct buyingstore_interface {
 	void (*create) (struct map_session_data* sd, int zenylimit, unsigned char result, const char* storename, const struct PACKET_CZ_REQ_OPEN_BUYING_STORE_sub* itemlist, unsigned int count);
 	void (*close) (struct map_session_data* sd);
 	void (*open) (struct map_session_data* sd, int account_id);
-	void (*trade) (struct map_session_data* sd, int account_id, unsigned int buyer_id, const uint8* itemlist, unsigned int count);
+	void (*trade) (struct map_session_data* sd, int account_id, unsigned int buyer_id, const struct PACKET_CZ_REQ_TRADE_BUYING_STORE_sub* itemlist, unsigned int count);
 	bool (*search) (struct map_session_data* sd, unsigned short nameid);
 	bool (*searchall) (struct map_session_data* sd, const struct s_search_store_search* s);
 	unsigned int (*getuid) (void);

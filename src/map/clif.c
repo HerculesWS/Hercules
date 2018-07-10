@@ -17785,36 +17785,35 @@ static void clif_parse_ReqTradeBuyingStore(int fd, struct map_session_data *sd) 
 /// 0819 <packet len>.W <account id>.L <store id>.L { <index>.W <name id>.W <amount>.W }*
 static void clif_parse_ReqTradeBuyingStore(int fd, struct map_session_data *sd)
 {
-	const unsigned int blocksize = 6;
-	const uint8 *itemlist;
+	const unsigned int blocksize = sizeof(struct PACKET_CZ_REQ_TRADE_BUYING_STORE_sub);
+	const struct PACKET_CZ_REQ_TRADE_BUYING_STORE_sub *itemlist;
 	int account_id;
 	unsigned int buyer_id;
 	int count, packet_len;
-	struct s_packet_db* info = &packet_db[RFIFOW(fd,0)];
+	const struct PACKET_CZ_REQ_TRADE_BUYING_STORE *p = RFIFOP(fd, 0);
+	packet_len = p->packetLength;
 
-	packet_len = RFIFOW(fd,info->pos[0]);
-
-	if( packet_len < 12 )
+	if (packet_len < sizeof(struct PACKET_CZ_REQ_TRADE_BUYING_STORE))
 	{// minimum packet length
-		ShowError("clif_parse_ReqTradeBuyingStore: Malformed packet (expected length=%u, length=%d, account_id=%d).\n", 12U, packet_len, sd->bl.id);
+		ShowError("clif_parse_ReqTradeBuyingStore: Malformed packet (expected length=%u, length=%d, account_id=%d).\n", (uint32)sizeof(struct PACKET_CZ_REQ_TRADE_BUYING_STORE), packet_len, sd->bl.id);
 		return;
 	}
 
-	account_id = RFIFOL(fd,info->pos[1]);
-	buyer_id   = RFIFOL(fd,info->pos[2]);
-	itemlist   = RFIFOP(fd,info->pos[3]);
+	account_id = p->AID;
+	buyer_id   = p->storeId;
+	itemlist   = &p->items[0];
 
 	// so that buyingstore_trade knows, how many elements it has access to
-	packet_len-= info->pos[3];
+	packet_len -= sizeof(struct PACKET_CZ_REQ_TRADE_BUYING_STORE);
 	if (packet_len < 0)
 		return;
 
-	if( packet_len%blocksize )
+	if (packet_len % blocksize)
 	{
 		ShowError("clif_parse_ReqTradeBuyingStore: Unexpected item list size %d (account_id=%d, buyer_id=%d, block size=%u)\n", packet_len, sd->bl.id, account_id, blocksize);
 		return;
 	}
-	count = packet_len/blocksize;
+	count = packet_len / blocksize;
 
 	buyingstore->trade(sd, account_id, buyer_id, itemlist, count);
 }
