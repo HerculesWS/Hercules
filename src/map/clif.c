@@ -20683,7 +20683,7 @@ static void clif_parse_rodex_request_zeny(int fd, struct map_session_data *sd)
 	rodex->get_zeny(sd, rPacket->opentype, rPacket->MailID);
 }
 
-static void clif_rodex_request_zeny(struct map_session_data *sd, int8 opentype, int64 mail_id, int8 result)
+static void clif_rodex_request_zeny(struct map_session_data *sd, int8 opentype, int64 mail_id, enum rodex_get_zeny result)
 {
 #if PACKETVER >= 20140409
 	struct PACKET_ZC_ACK_ZENY_FROM_MAIL *sPacket;
@@ -20711,7 +20711,7 @@ static void clif_parse_rodex_request_items(int fd, struct map_session_data *sd)
 	rodex->get_items(sd, rPacket->opentype, rPacket->MailID);
 }
 
-static void clif_rodex_request_items(struct map_session_data *sd, int8 opentype, int64 mail_id, int8 result)
+static void clif_rodex_request_items(struct map_session_data *sd, int8 opentype, int64 mail_id, enum rodex_get_items result)
 {
 #if PACKETVER >= 20140409
 	struct PACKET_ZC_ACK_ITEM_FROM_MAIL *sPacket;

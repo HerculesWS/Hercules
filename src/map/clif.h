@@ -57,6 +57,8 @@ struct view_data;
 
 enum clif_messages;
 enum rodex_add_item;
+enum rodex_get_zeny;
+enum rodex_get_items;
 
 /**
  * Defines
@@ -1467,9 +1469,9 @@ struct clif_interface {
 	void (*rodex_delete_mail) (struct map_session_data *sd, int8 opentype, int64 mail_id);
 	void (*pRodexRefreshMaillist) (int fd, struct map_session_data *sd);
 	void (*pRodexRequestZeny) (int fd, struct map_session_data *sd);
-	void (*rodex_request_zeny) (struct map_session_data *sd, int8 opentype, int64 mail_id, int8 result);
+	void (*rodex_request_zeny) (struct map_session_data *sd, int8 opentype, int64 mail_id, enum rodex_get_zeny result);
 	void (*pRodexRequestItems) (int fd, struct map_session_data *sd);
-	void (*rodex_request_items) (struct map_session_data *sd, int8 opentype, int64 mail_id, int8 result);
+	void (*rodex_request_items) (struct map_session_data *sd, int8 opentype, int64 mail_id, enum rodex_get_items result);
 	void (*rodex_icon) (int fd, bool show);
 	void (*skill_scale) (struct block_list *bl, int src_id, int x, int y, uint16 skill_id, uint16 skill_lv, int casttime);
 	/* Clan System */
