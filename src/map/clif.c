@@ -6171,7 +6171,7 @@ static void clif_solved_charname(int fd, int charid, const char *name)
 }
 
 /// Presents a list of items that can be carded/composed (ZC_ITEMCOMPOSITION_LIST).
-/// 017b <packet len>.W { <name id>.W }*
+/// 017b <packet len>.W { <index>.W }*
 static void clif_use_card(struct map_session_data *sd, int idx)
 {
 	int i, c;
