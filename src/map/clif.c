@@ -6280,32 +6280,38 @@ static void clif_item_repair_list(struct map_session_data *sd, struct map_sessio
 {
 	int i,c;
 	int fd;
+	int len;
+	struct PACKET_ZC_REPAIRITEMLIST *p;
 
 	nullpo_retv(sd);
 	nullpo_retv(dstsd);
 
-	fd=sd->fd;
+	fd = sd->fd;
 
-	WFIFOHEAD(fd, MAX_INVENTORY * 13 + 4);
-	WFIFOW(fd,0)=0x1fc;
+	len = MAX_INVENTORY * sizeof(struct PACKET_ZC_REPAIRITEMLIST_sub) + sizeof(struct PACKET_ZC_REPAIRITEMLIST);
+	WFIFOHEAD(fd, len);
+	p = WFIFOP(fd, 0);
+	p->packetType = 0x1fc;
 	for (i = c = 0; i < MAX_INVENTORY; i++) {
 		int nameid = dstsd->status.inventory[i].nameid;
 		if (nameid > 0 && (dstsd->status.inventory[i].attribute & ATTR_BROKEN) != 0) { // && skill_can_repair(sd,nameid)) {
-			WFIFOW(fd,c*13+4) = i;
-			WFIFOW(fd,c*13+6) = nameid;
-			WFIFOB(fd,c*13+8) = dstsd->status.inventory[i].refine;
-			clif->addcards((struct EQUIPSLOTINFO*)WFIFOP(fd, c * 13 + 9), &dstsd->status.inventory[i]);
+			p->items[c].index = i;
+			p->items[c].itemId = nameid;
+			p->items[c].refine = dstsd->status.inventory[i].refine;
+			clif->addcards(&p->items[c].slot, &dstsd->status.inventory[i]);
 			c++;
 		}
 	}
-	if(c > 0) {
-		WFIFOW(fd,2)=c*13+4;
-		WFIFOSET(fd,WFIFOW(fd,2));
+	if (c > 0) {
+		len = c * sizeof(struct PACKET_ZC_REPAIRITEMLIST_sub) + sizeof(struct PACKET_ZC_REPAIRITEMLIST);
+		p->packetLength = len;
+		WFIFOSET(fd, len);
 		sd->menuskill_id = BS_REPAIRWEAPON;
 		sd->menuskill_val = dstsd->bl.id;
 		sd->menuskill_val2 = lv;
-	}else
+	} else {
 		clif->skill_fail(sd, sd->ud.skill_id, USESKILL_FAIL_LEVEL, 0, 0);
+	}
 }
 
 /// Notifies the client about the result of a item repair request (ZC_ACK_ITEMREPAIR).
