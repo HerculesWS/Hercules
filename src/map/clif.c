@@ -17657,24 +17657,28 @@ static void clif_buyingstore_myitemlist(struct map_session_data *sd)
 {
 	int fd;
 	unsigned int i;
+	struct PACKET_ZC_MYITEMLIST_BUYING_STORE *p;
+	int len;
 
 	nullpo_retv(sd);
 	fd = sd->fd;
-	WFIFOHEAD(fd,12+sd->buyingstore.slots*9);
-	WFIFOW(fd,0) = 0x813;
-	WFIFOW(fd,2) = 12+sd->buyingstore.slots*9;
-	WFIFOL(fd,4) = sd->bl.id;
-	WFIFOL(fd,8) = sd->buyingstore.zenylimit;
+	len = sizeof(struct PACKET_ZC_MYITEMLIST_BUYING_STORE) + sd->buyingstore.slots * sizeof(struct PACKET_ZC_MYITEMLIST_BUYING_STORE_sub);
+	WFIFOHEAD(fd, len);
+	p = WFIFOP(fd, 0);
+	p->packetType = 0x813;
+	p->packetLength = len;
+	p->AID = sd->bl.id;
+	p->zenyLimit = sd->buyingstore.zenylimit;
 
-	for( i = 0; i < sd->buyingstore.slots; i++ )
+	for (i = 0; i < sd->buyingstore.slots; i++)
 	{
-		WFIFOL(fd,12+i*9) = sd->buyingstore.items[i].price;
-		WFIFOW(fd,16+i*9) = sd->buyingstore.items[i].amount;
-		WFIFOB(fd,18+i*9) = itemtype(itemdb_type(sd->buyingstore.items[i].nameid));
-		WFIFOW(fd,19+i*9) = sd->buyingstore.items[i].nameid;
+		p->items[i].price = sd->buyingstore.items[i].price;
+		p->items[i].amount = sd->buyingstore.items[i].amount;
+		p->items[i].itemType = itemtype(itemdb_type(sd->buyingstore.items[i].nameid));
+		p->items[i].itemId = sd->buyingstore.items[i].nameid;
 	}
 
-	WFIFOSET(fd,WFIFOW(fd,2));
+	WFIFOSET(fd, len);
 }
 
 /// Notifies clients in area of a buying store (ZC_BUYING_STORE_ENTRY).
