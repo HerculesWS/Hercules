@@ -16197,13 +16197,10 @@ static void clif_cashshop_show(struct map_session_data *sd, struct npc_data *nd)
 {
 	struct npc_item_list *shop = NULL;
 	unsigned short shop_size = 0;
-	int fd,i, c = 0;
+	int fd, i, c = 0;
 	int currency[2] = { 0,0 };
-#if PACKETVER < 20070711
-	const int offset = 8;
-#else
-	const int offset = 12;
-#endif
+	int len;
+	struct PACKET_ZC_PC_CASH_POINT_ITEMLIST *p;
 
 	nullpo_retv(sd);
 	nullpo_retv(nd);
@@ -16226,26 +16223,28 @@ static void clif_cashshop_show(struct map_session_data *sd, struct npc_data *nd)
 
 	fd = sd->fd;
 	sd->npc_shopid = nd->bl.id;
-	WFIFOHEAD(fd,offset+shop_size*11);
-	WFIFOW(fd,0) = 0x287;
-	/* 0x2 = length, set after parsing */
-	WFIFOL(fd,4) = currency[0]; // Cash Points
+	len = sizeof(struct PACKET_ZC_PC_CASH_POINT_ITEMLIST) + shop_size * sizeof(struct PACKET_ZC_PC_CASH_POINT_ITEMLIST_sub);
+	WFIFOHEAD(fd, len);
+	p = WFIFOP(fd, 0);
+	p->packetType = 0x287;
+	p->cashPoints = currency[0];
 #if PACKETVER >= 20070711
-	WFIFOL(fd,8) = currency[1]; // Kafra Points
+	p->kafraPoints = currency[1];
 #endif
 
-	for( i = 0; i < shop_size; i++ ) {
-		if( shop[i].nameid ) {
+	for (i = 0; i < shop_size; i++) {
+		if (shop[i].nameid) {
 			struct item_data* id = itemdb->search(shop[i].nameid);
-			WFIFOL(fd,offset+0+i*11) = shop[i].value;
-			WFIFOL(fd,offset+4+i*11) = shop[i].value; // Discount Price
-			WFIFOB(fd,offset+8+i*11) = itemtype(id->type);
-			WFIFOW(fd,offset+9+i*11) = ( id->view_id > 0 ) ? id->view_id : id->nameid;
+			p->items[c].price = shop[i].value;
+			p->items[c].discountPrice = shop[i].value;
+			p->items[c].itemType = itemtype(id->type);
+			p->items[c].itemId = (id->view_id > 0) ? id->view_id : id->nameid;
 			c++;
 		}
 	}
-	WFIFOW(fd,2) = offset+c*11;
-	WFIFOSET(fd,WFIFOW(fd,2));
+	len = sizeof(struct PACKET_ZC_PC_CASH_POINT_ITEMLIST) + c * sizeof(struct PACKET_ZC_PC_CASH_POINT_ITEMLIST_sub);
+	p->packetLength = len;
+	WFIFOSET(fd, len);
 }
 
 /// Cashshop Buy Ack (ZC_PC_CASH_POINT_UPDATE).
