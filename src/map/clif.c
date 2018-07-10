@@ -17754,26 +17754,30 @@ static void clif_buyingstore_itemlist(struct map_session_data *sd, struct map_se
 {
 	int fd;
 	unsigned int i;
+	struct PACKET_ZC_ACK_ITEMLIST_BUYING_STORE *p;
+	int len;
 
 	nullpo_retv(sd);
 	nullpo_retv(pl_sd);
 	fd = sd->fd;
-	WFIFOHEAD(fd,16+pl_sd->buyingstore.slots*9);
-	WFIFOW(fd,0) = 0x818;
-	WFIFOW(fd,2) = 16+pl_sd->buyingstore.slots*9;
-	WFIFOL(fd,4) = pl_sd->bl.id;
-	WFIFOL(fd,8) = pl_sd->buyer_id;
-	WFIFOL(fd,12) = pl_sd->buyingstore.zenylimit;
+	len = sizeof(struct PACKET_ZC_ACK_ITEMLIST_BUYING_STORE) + pl_sd->buyingstore.slots * sizeof(struct PACKET_ZC_ACK_ITEMLIST_BUYING_STORE_sub);
+	WFIFOHEAD(fd, len);
+	p = WFIFOP(fd, 0);
+	p->packetType = 0x818;
+	p->packetLength = len;
+	p->AID = pl_sd->bl.id;
+	p->storeId = pl_sd->buyer_id;
+	p->zenyLimit = pl_sd->buyingstore.zenylimit;
 
-	for( i = 0; i < pl_sd->buyingstore.slots; i++ )
+	for (i = 0; i < pl_sd->buyingstore.slots; i++)
 	{
-		WFIFOL(fd,16+i*9) = pl_sd->buyingstore.items[i].price;
-		WFIFOW(fd,20+i*9) = pl_sd->buyingstore.items[i].amount;  // TODO: Figure out, if no longer needed items (amount == 0) are listed on official.
-		WFIFOB(fd,22+i*9) = itemtype(itemdb_type(pl_sd->buyingstore.items[i].nameid));
-		WFIFOW(fd,23+i*9) = pl_sd->buyingstore.items[i].nameid;
+		p->items[i].price = pl_sd->buyingstore.items[i].price;
+		p->items[i].amount = pl_sd->buyingstore.items[i].amount;  // TODO: Figure out, if no longer needed items (amount == 0) are listed on official.
+		p->items[i].itemType = itemtype(itemdb_type(pl_sd->buyingstore.items[i].nameid));
+		p->items[i].itemId = pl_sd->buyingstore.items[i].nameid;
 	}
 
-	WFIFOSET(fd,WFIFOW(fd,2));
+	WFIFOSET(fd, len);
 }
 
 static void clif_parse_ReqTradeBuyingStore(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
