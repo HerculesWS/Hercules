@@ -6221,7 +6221,7 @@ static void clif_insert_card(struct map_session_data *sd, int idx_equip, int idx
 }
 
 /// Presents a list of items that can be identified (ZC_ITEMIDENTIFY_LIST).
-/// 0177 <packet len>.W { <name id>.W }*
+/// 0177 <packet len>.W { <index>.W }*
 static void clif_item_identify_list(struct map_session_data *sd)
 {
 	int i,c;
