@@ -2459,6 +2459,25 @@ struct PACKET_ZC_NOTIFY_WEAPONITEMLIST {
 	struct PACKET_ZC_NOTIFY_WEAPONITEMLIST_sub items[];
 } __attribute__((packed));
 
+struct PACKET_ZC_MAKINGITEM_LIST_sub {
+#if PACKETVER_RE_NUM >= 20180704
+	uint32 itemId;
+#else
+	uint16 itemId;
+#endif
+} __attribute__((packed));
+
+struct PACKET_ZC_MAKINGITEM_LIST {
+	int16 packetType;
+	int16 packetLength;
+#if PACKETVER_RE_NUM >= 20180704
+	uint32 makeItem;
+#else
+	uint16 makeItem;
+#endif
+	struct PACKET_ZC_MAKINGITEM_LIST_sub items[];
+} __attribute__((packed));
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

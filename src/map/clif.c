@@ -5652,50 +5652,53 @@ static void clif_cooking_list(struct map_session_data *sd, int trigger, uint16 s
 	int fd;
 	int i, c;
 	int view;
+	int len;
+	struct PACKET_ZC_MAKINGITEM_LIST *p;
 
 	nullpo_retv(sd);
 	fd = sd->fd;
 
-	WFIFOHEAD(fd, 6 + 2 * MAX_SKILL_PRODUCE_DB);
-	WFIFOW(fd,0) = 0x25a;
-	WFIFOW(fd,4) = list_type; // list type
+	len = sizeof(struct PACKET_ZC_MAKINGITEM_LIST) + MAX_SKILL_PRODUCE_DB * sizeof(struct PACKET_ZC_MAKINGITEM_LIST_sub);
+	WFIFOHEAD(fd, len);
+	p = WFIFOP(fd, 0);
+	p->packetType = 0x25a;
+	p->makeItem = list_type; // list type
 
 	c = 0;
-	for( i = 0; i < MAX_SKILL_PRODUCE_DB; i++ ) {
-		if( !skill->can_produce_mix(sd,skill->dbs->produce_db[i].nameid,trigger, qty) )
+	for (i = 0; i < MAX_SKILL_PRODUCE_DB; i++) {
+		if (!skill->can_produce_mix(sd,skill->dbs->produce_db[i].nameid,trigger, qty))
 			continue;
 
-		if( (view = itemdb_viewid(skill->dbs->produce_db[i].nameid)) > 0 )
-			WFIFOW(fd, 6 + 2 * c) = view;
+		if ((view = itemdb_viewid(skill->dbs->produce_db[i].nameid)) > 0)
+			p->items[c].itemId = view;
 		else
-			WFIFOW(fd, 6 + 2 * c) = skill->dbs->produce_db[i].nameid;
+			p->items[c].itemId = skill->dbs->produce_db[i].nameid;
 
 		c++;
 	}
 
-	if( skill_id == AM_PHARMACY ) {
+	len = sizeof(struct PACKET_ZC_MAKINGITEM_LIST) + c * sizeof(struct PACKET_ZC_MAKINGITEM_LIST_sub);
+	p->packetLength = len;
+	if (skill_id == AM_PHARMACY) {
 		// Only send it while Cooking else check for c.
-		WFIFOW(fd,2) = 6 + 2 * c;
-		WFIFOSET(fd,WFIFOW(fd,2));
+		WFIFOSET(fd, len);
 	}
 
-	if( c > 0 ) {
+	if (c > 0) {
 		sd->menuskill_id = skill_id;
 		sd->menuskill_val = trigger;
-		if( skill_id != AM_PHARMACY ) {
+		if (skill_id != AM_PHARMACY) {
 			sd->menuskill_val2 = qty; // amount.
-			WFIFOW(fd,2) = 6 + 2 * c;
-			WFIFOSET(fd,WFIFOW(fd,2));
+			WFIFOSET(fd, len);
 		}
 	} else {
 		clif_menuskill_clear(sd);
-		if( skill_id != AM_PHARMACY ) { // AM_PHARMACY is used to Cooking.
+		if (skill_id != AM_PHARMACY) { // AM_PHARMACY is used to Cooking.
 			// It fails.
 #if PACKETVER >= 20091013
 			clif->msgtable_skill(sd, skill_id, MSG_SKILL_MATERIAL_FAIL);
 #else
-			WFIFOW(fd,2) = 6 + 2 * c;
-			WFIFOSET(fd,WFIFOW(fd,2));
+			WFIFOSET(fd, len);
 #endif
 		}
 	}
