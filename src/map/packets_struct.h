@@ -1297,7 +1297,11 @@ struct packet_npc_market_result_ack {
 	int16 PacketLength;
 	uint8 result;
 	struct {
+#if PACKETVER_RE_NUM >= 20180704
+		uint32 ITID;
+#else
 		uint16 ITID;
+#endif
 		uint16 qty;
 		uint32 price;
 	} list[MAX_INVENTORY];/* assuming MAX_INVENTORY is max since you can't hold more than MAX_INVENTORY items thus cant buy that many at once. */
