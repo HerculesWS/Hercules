@@ -60,8 +60,8 @@ enum e_searchstore_failure {
 /// information about the search being performed
 struct s_search_store_search {
 	struct map_session_data* search_sd;  // sd of the searching player
-	const unsigned short* itemlist;
-	const unsigned short* cardlist;
+	const uint32* itemlist;
+	const uint32* cardlist;
 	unsigned int item_count;
 	unsigned int card_count;
 	unsigned int min_price;
@@ -101,7 +101,7 @@ typedef bool (*searchstore_searchall_t)(struct map_session_data* sd, const struc
  **/
 struct searchstore_interface {
 	bool (*open) (struct map_session_data* sd, unsigned int uses, unsigned short effect);
-	void (*query) (struct map_session_data* sd, unsigned char type, unsigned int min_price, unsigned int max_price, const unsigned short* itemlist, unsigned int item_count, const unsigned short* cardlist, unsigned int card_count);
+	void (*query) (struct map_session_data* sd, unsigned char type, unsigned int min_price, unsigned int max_price, const uint32* itemlist, unsigned int item_count, const uint32* cardlist, unsigned int card_count);
 	bool (*querynext) (struct map_session_data* sd);
 	void (*next) (struct map_session_data* sd);
 	void (*clear) (struct map_session_data* sd);

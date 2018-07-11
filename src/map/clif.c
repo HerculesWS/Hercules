@@ -17945,51 +17945,64 @@ static void clif_parse_SearchStoreInfo(int fd, struct map_session_data *sd) __at
 ///         cannot be searched.
 static void clif_parse_SearchStoreInfo(int fd, struct map_session_data *sd)
 {
-	const unsigned int blocksize = 2;
-	const uint8* itemlist;
-	const uint8* cardlist;
+	const unsigned int blocksize = sizeof(struct PACKET_CZ_SEARCH_STORE_INFO_item);
+	const struct PACKET_CZ_SEARCH_STORE_INFO_item* itemlist;
+	const struct PACKET_CZ_SEARCH_STORE_INFO_item* cardlist;
 	unsigned char type;
 	unsigned int min_price, max_price;
 	int packet_len, count, item_count, card_count;
-	struct s_packet_db* info = &packet_db[RFIFOW(fd,0)];
+	int i;
+	const struct PACKET_CZ_SEARCH_STORE_INFO *p = RFIFOP(fd, 0);
+	uint32 *items_list;
+	uint32 *cards_list;
 
-	packet_len = RFIFOW(fd,info->pos[0]);
+	packet_len = p->packetLength;
 
-	if( packet_len < 15 )
+	if (packet_len < sizeof(struct PACKET_CZ_SEARCH_STORE_INFO))
 	{// minimum packet length
-		ShowError("clif_parse_SearchStoreInfo: Malformed packet (expected length=%u, length=%d, account_id=%d).\n", 15U, packet_len, sd->bl.id);
+		ShowError("clif_parse_SearchStoreInfo: Malformed packet (expected length=%u, length=%d, account_id=%d).\n", (uint32)sizeof(struct PACKET_CZ_SEARCH_STORE_INFO), packet_len, sd->bl.id);
 		return;
 	}
 
-	type       = RFIFOB(fd,info->pos[1]);
-	max_price  = RFIFOL(fd,info->pos[2]);
-	min_price  = RFIFOL(fd,info->pos[3]);
-	item_count = RFIFOB(fd,info->pos[4]);
-	card_count = RFIFOB(fd,info->pos[5]);
-	itemlist   = RFIFOP(fd,info->pos[6]);
+	type       = p->searchType;
+	max_price  = p->maxPrice;
+	min_price  = p->minPrice;
+	item_count = p->itemsCount;
+	card_count = p->cardsCount;
+	itemlist   = &p->items[0];
 
 	// check, if there is enough data for the claimed count of items
-	packet_len-= info->pos[6];
+	packet_len -= sizeof(struct PACKET_CZ_SEARCH_STORE_INFO);
 
 	if (packet_len < 0)
 		return;
 
-	if( packet_len%blocksize )
+	if (packet_len % blocksize)
 	{
 		ShowError("clif_parse_SearchStoreInfo: Unexpected item list size %d (account_id=%d, block size=%u)\n", packet_len, sd->bl.id, blocksize);
 		return;
 	}
-	count = packet_len/blocksize;
+	count = packet_len / blocksize;
 
-	if( count < item_count+card_count )
+	if (count < item_count + card_count)
 	{
-		ShowError("clif_parse_SearchStoreInfo: Malformed packet (expected count=%d, count=%d, account_id=%d).\n", item_count+card_count, count, sd->bl.id);
+		ShowError("clif_parse_SearchStoreInfo: Malformed packet (expected count=%d, count=%d, account_id=%d).\n", item_count + card_count, count, sd->bl.id);
 		return;
 	}
 
-	cardlist   = RFIFOP(fd, info->pos[6] + blocksize * item_count);
+	cardlist = RFIFOP(fd, sizeof(struct PACKET_CZ_SEARCH_STORE_INFO) + blocksize * item_count);
 
-	searchstore->query(sd, type, min_price, max_price, (const unsigned short*)itemlist, item_count, (const unsigned short*)cardlist, card_count);
+	items_list = aMalloc(sizeof(uint32) * item_count);
+	cards_list = aMalloc(sizeof(uint32) * card_count);
+	for (i = 0; i < item_count; i ++) {
+		items_list[i] = itemlist[i].itemId;
+	}
+	for (i = 0; i < card_count; i ++) {
+		cards_list[i] = cardlist[i].itemId;
+	}
+	searchstore->query(sd, type, min_price, max_price, items_list, item_count, cards_list, card_count);
+	aFree(items_list);
+	aFree(cards_list);
 }
 
 /// Results for a store search request (ZC_SEARCH_STORE_INFO_ACK).
