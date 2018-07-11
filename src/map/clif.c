@@ -21542,6 +21542,8 @@ static void packetdb_loaddb(void)
 #include "packets.h" /* load structure data */
 #ifdef PACKETVER_ZERO
 #include "packets_shuffle_zero.h"
+#elif defined(PACKETVER_RE)
+#include "packets_shuffle_re.h"
 #else  // PACKETVER_ZERO
 #include "packets_shuffle_main.h"
 #endif  // PACKETVER_ZERO
