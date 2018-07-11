@@ -189,8 +189,8 @@ bonus bNoMiscDamage,n;				Adds n% reduction to received misc damage
 
 Heal
 ----
-bonus bHealPower,n;					Increase heal amount of all heal skills by n%
-bonus bHealPower2,n;					Increase heal amount if you are healed by any skills by n%
+bonus bHealPower,n;					Increase heal amount of all heal skills used by player on self by n%
+bonus bHealPower2,n;					Increase heal amount if you are healed by any skills of others by n%
 
 bonus2 bSkillHeal,sk,n;				Increase heal amount of skill sk by n%
 bonus2 bSkillHeal2,sk,n;				Increase heal amount if you are healed by skill sk by n%
