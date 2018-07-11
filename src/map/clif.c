@@ -18761,7 +18761,8 @@ static void clif_parse_CashShopReqTab(int fd, struct map_session_data *sd) __att
 /* [Ind/Hercules] */
 static void clif_parse_CashShopReqTab(int fd, struct map_session_data *sd)
 {
-#if PACKETVER >= 20110222
+// [4144] packet exists only in 2011 and was dropped after
+#if PACKETVER >= 20110222 && PACKETVER < 20120000
 	short tab = RFIFOW(fd, 2);
 	int j;
 
