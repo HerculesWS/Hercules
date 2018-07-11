@@ -1308,7 +1308,11 @@ struct packet_npc_market_open {
 	int16 PacketLength;
 	/* inner struct figured by Ind after some annoying hour of debugging (data Thanks to Yommy) */
 	struct {
+#if PACKETVER_RE_NUM >= 20180704
+		uint32 nameid;
+#else
 		uint16 nameid;
+#endif
 		uint8 type;
 		uint32 price;
 		uint32 qty;
