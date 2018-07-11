@@ -18000,6 +18000,7 @@ static void clif_parse_SearchStoreInfo(int fd, struct map_session_data *sd)
 	for (i = 0; i < card_count; i ++) {
 		cards_list[i] = cardlist[i].itemId;
 	}
+	// TODO: add search by item options.
 	searchstore->query(sd, type, min_price, max_price, items_list, item_count, cards_list, card_count);
 	aFree(items_list);
 	aFree(cards_list);
@@ -18015,38 +18016,38 @@ static void clif_parse_SearchStoreInfo(int fd, struct map_session_data *sd)
 ///     1 = "next" label to retrieve more results
 static void clif_search_store_info_ack(struct map_session_data *sd)
 {
-#if PACKETVER >= 20150226
-	const unsigned int blocksize = MESSAGE_SIZE + 26 + 5 * MAX_ITEM_OPTIONS;
-#else
-	const unsigned int blocksize = MESSAGE_SIZE + 26;
-#endif
+	const unsigned int blocksize = sizeof(struct PACKET_ZC_SEARCH_STORE_INFO_ACK_sub);
 	int fd;
 	unsigned int i, start, end;
+	struct PACKET_ZC_SEARCH_STORE_INFO_ACK *p;
+	int len;
 
 	nullpo_retv(sd);
 	fd = sd->fd;
-	start = sd->searchstore.pages*SEARCHSTORE_RESULTS_PER_PAGE;
-	end   = min(sd->searchstore.count, start+SEARCHSTORE_RESULTS_PER_PAGE);
+	start = sd->searchstore.pages * SEARCHSTORE_RESULTS_PER_PAGE;
+	end   = min(sd->searchstore.count, start + SEARCHSTORE_RESULTS_PER_PAGE);
 
-	WFIFOHEAD(fd,7+(end-start)*blocksize);
-	WFIFOW(fd,0) = 0x836;
-	WFIFOW(fd,2) = 7+(end-start)*blocksize;
-	WFIFOB(fd,4) = !sd->searchstore.pages;
-	WFIFOB(fd,5) = searchstore->querynext(sd);
-	WFIFOB(fd,6) = (unsigned char)min(sd->searchstore.uses, UINT8_MAX);
+	len = sizeof(struct PACKET_ZC_SEARCH_STORE_INFO_ACK) + (end - start) * blocksize;
+	WFIFOHEAD(fd, len);
+	p = WFIFOP(fd, 0);
+	p->packetType = 0x836;
+	p->packetLength = len;
+	p->firstPage = !sd->searchstore.pages;
+	p->nextPage = searchstore->querynext(sd);
+	p->usesCount = (unsigned char)min(sd->searchstore.uses, UINT8_MAX);
 
-	for( i = start; i < end; i++ ) {
+	for (i = start; i < end; i++) {
 		struct s_search_store_info_item* ssitem = &sd->searchstore.items[i];
 		struct item it;
 
-		WFIFOL(fd,i*blocksize+ 7) = ssitem->store_id;
-		WFIFOL(fd,i*blocksize+11) = ssitem->account_id;
-		memcpy(WFIFOP(fd,i*blocksize+15), ssitem->store_name, MESSAGE_SIZE);
-		WFIFOW(fd,i*blocksize+15+MESSAGE_SIZE) = ssitem->nameid;
-		WFIFOB(fd,i*blocksize+17+MESSAGE_SIZE) = itemtype(itemdb_type(ssitem->nameid));
-		WFIFOL(fd,i*blocksize+18+MESSAGE_SIZE) = ssitem->price;
-		WFIFOW(fd,i*blocksize+22+MESSAGE_SIZE) = ssitem->amount;
-		WFIFOB(fd,i*blocksize+24+MESSAGE_SIZE) = ssitem->refine;
+		p->items[i].storeId = ssitem->store_id;
+		p->items[i].AID = ssitem->account_id;
+		memcpy(&p->items[i].shopName, ssitem->store_name, MESSAGE_SIZE);
+		p->items[i].itemId = ssitem->nameid;
+		p->items[i].itemType = itemtype(itemdb_type(ssitem->nameid));
+		p->items[i].price = ssitem->price;
+		p->items[i].amount = ssitem->amount;
+		p->items[i].refine = ssitem->refine;
 
 		// make-up an item for clif_addcards
 		memset(&it, 0, sizeof(it));
@@ -18054,14 +18055,14 @@ static void clif_search_store_info_ack(struct map_session_data *sd)
 		it.nameid = ssitem->nameid;
 		it.amount = ssitem->amount;
 
-		clif->addcards((struct EQUIPSLOTINFO*)WFIFOP(fd, i * blocksize + 25 + MESSAGE_SIZE), &it);
+		clif->addcards(&p->items[i].slot, &it);
 #if PACKETVER >= 20150226
 		memcpy(&it.option, &ssitem->option, sizeof(it.option));
-		clif->add_item_options(WFIFOP(fd, i * blocksize + 33 + MESSAGE_SIZE), &it);
+		clif->add_item_options(&p->items[i].option_data[0], &it);
 #endif
 	}
 
-	WFIFOSET(fd,WFIFOW(fd,2));
+	WFIFOSET(fd, len);
 }
 
 /// Notification of failure when searching for stores (ZC_SEARCH_STORE_INFO_FAILED).
