@@ -922,7 +922,7 @@ struct packet_maptypeproperty2 {
 		uint32 nocostume         : 1;  /// Does not show costume sprite.
 		uint32 usecart           : 1;  /// Allow opening cart inventory
 		uint32 summonstarmiracle : 1;  // TODO: What does this do? Related to Taekwon Masters, but I have no idea.
-		uint32 SpareBits         : 15; /// Currently ignored, reserved for future updates
+		uint32 SpareBits         : 21; /// Currently ignored, reserved for future updates
 	} flag;
 } __attribute__((packed));
 
