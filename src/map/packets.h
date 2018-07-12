@@ -4152,6 +4152,100 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0b01,40,clif->pDull/*,XXX*/);
 // changed packet sizes
 #endif
+
+// 2018-07-04aRagexe, 2018-07-04aRagexeRE
+#if PACKETVER >= 20180704
+// new packets
+	packet(0x0b02,26); // AC_REFUSE_LOGIN4
+// changed packet sizes
+	packet(0x0b01,56,clif->pDull/*,XXX*/);
+#endif
 #endif  // PACKETVER_ZERO
+
+// 2018-06-27aRagexe_zero
+#if PACKETVER_ZERO_NUM >= 20180627
+// new packets
+	packet(0x0b00,8);
+	packet(0x0b01,56,clif->pDull/*,XXX*/);
+	packet(0x0b02,26); // AC_REFUSE_LOGIN4
+// changed packet sizes
+#endif
+
+// 2018-07-04aRagexeRE
+#if PACKETVER_RE_NUM >= 20180704
+// new packets
+// changed packet sizes
+	packet(0x009d,19); // ZC_ITEM_ENTRY
+	packet(0x009e,19); // ZC_ITEM_FALL_ENTRY
+	packet(0x00a0,33); // ZC_ITEM_PICKUP_ACK
+	packet(0x00e9,29,clif->pDull/*,XXX*/); // ZC_ADD_EXCHANGE_ITEM
+	packet(0x00f4,31,clif->pDull/*,XXX*/); // ZC_ADD_ITEM_TO_STORE
+	packet(0x010a,6); // ZC_MVP_GETTING_ITEM
+	packet(0x0110,14); // ZC_ACK_TOUSESKILL
+	packet(0x0124,31); // ZC_ADD_ITEM_TO_CART
+	packet(0x018e,18,clif->pProduceMix); // CZ_REQMAKINGITEM
+	packet(0x018f,8); // ZC_ACK_REQMAKINGITEM
+	packet(0x01a3,7); // ZC_FEED_PET
+	packet(0x01ae,6,clif->pSelectArrow,2); // CZ_REQ_MAKINGARROW
+	packet(0x01c4,32); // ZC_ADD_ITEM_TO_STORE2
+	packet(0x01c5,32); // ZC_ADD_ITEM_TO_CART2
+	packet(0x01c8,15); // ZC_USE_ITEM_ACK2
+	packet(0x01d7,15); // ZC_SPRITE_CHANGE2
+	packet(0x01d8,58); // ZC_NOTIFY_STANDENTRY2
+	packet(0x01d9,57); // ZC_NOTIFY_NEWENTRY2
+	packet(0x01da,64); // ZC_NOTIFY_MOVEENTRY2
+	packet(0x01fd,25,clif->pRepairItem); // CZ_REQ_ITEMREPAIR
+	packet(0x0223,10); // ZC_ACK_WEAPONREFINE
+	packet(0x022a,62); // ZC_NOTIFY_STANDENTRY3
+	packet(0x022b,61); // ZC_NOTIFY_NEWENTRY3
+	packet(0x022c,69); // ZC_NOTIFY_MOVEENTRY3
+	packet(0x022e,73); // ZC_PROPERTY_HOMUN
+	packet(0x022f,7); // ZC_FEED_MER
+	packet(0x025b,8,clif->pCooking); // CZ_REQ_MAKINGITEM
+	packet(0x0298,10); // ZC_CASH_TIME_COUNTER
+	packet(0x0299,8); // ZC_CASH_ITEM_DELETE
+	packet(0x029a,37); // ZC_ITEM_PICKUP_ACK2
+	packet(0x02b8,32); // ZC_ITEM_PICKUP_PARTY
+	packet(0x02d4,39); // ZC_ITEM_PICKUP_ACK3
+	packet(0x02ec,71); // ZC_NOTIFY_MOVEENTRY4
+	packet(0x02ed,63); // ZC_NOTIFY_NEWENTRY4
+	packet(0x02ee,64); // ZC_NOTIFY_STANDENTRY4
+	packet(0x0445,12,clif->pDull/*,XXX*/); // CZ_SIMPLE_BUY_CASH_POINT_ITEM
+	packet(0x080f,30); // ZC_ADD_EXCHANGE_ITEM2
+	packet(0x081b,12); // ZC_UPDATE_ITEM_FROM_BUYING_STORE
+	packet(0x0824,8); // ZC_FAILED_TRADE_BUYING_STORE_TO_SELLER
+	packet(0x084b,21); // ZC_ITEM_FALL_ENTRY4
+	packet(0x0990,41); // ZC_ITEM_PICKUP_ACK_V5
+	packet(0x09ad,12); // ZC_ACK_CASH_BARGAIN_SALE_ITEM_INFO
+	packet(0x09ae,19,clif->pDull/*,XXX*/); // CZ_REQ_APPLY_BARGAIN_SALE_ITEM
+	packet(0x09b0,10,clif->pDull/*,XXX*/); // CZ_REQ_REMOVE_BARGAIN_SALE_ITEM
+	packet(0x09b2,10); // ZC_NOTIFY_BARGAIN_SALE_SELLING
+	packet(0x09b3,6); // ZC_NOTIFY_BARGAIN_SALE_CLOSE
+	packet(0x09c3,10,clif->pDull/*,XXX*/); // CZ_REQ_COUNT_BARGAIN_SALE_ITEM
+	packet(0x09c4,10); // ZC_ACK_COUNT_BARGAIN_SALE_ITEM
+	packet(0x09e6,24); // ZC_UPDATE_ITEM_FROM_BUYING_STORE2
+	packet(0x09f7,77); // ZC_PROPERTY_HOMUN_2
+	packet(0x0a05,63); // ZC_ACK_ADD_ITEM_RODEX
+	packet(0x0a09,55); // ZC_ADD_EXCHANGE_ITEM3
+	packet(0x0a0a,57); // ZC_ADD_ITEM_TO_STORE3
+	packet(0x0a0b,57); // ZC_ADD_ITEM_TO_CART3
+	packet(0x0a0c,66); // ZC_ITEM_PICKUP_ACK_V6
+	packet(0x0a1a,25); // ZC_ACK_OPEN_ROULETTE
+	packet(0x0a20,23); // ZC_ACK_GENERATE_ROULETTE
+	packet(0x0a22,7); // ZC_RECV_ROULETTE_ITEM
+	packet(0x0a37,69); // ZC_ITEM_PICKUP_ACK_V7
+	packet(0x0a3d,20,clif->pDull/*,XXX*/);
+	packet(0x0a3f,11,clif->pDull/*,XXX*/);
+	packet(0x0a49,22,clif->pPrivateAirshipRequest); // CZ_PRIVATE_AIRSHIP_REQUEST
+	packet(0x0a4e,6);
+	packet(0x0a89,61); // ZC_NOTIFY_OFFLINE_STORE
+	packet(0x0a96,61); // ZC_ADD_EXCHANGE_ITEM4
+	packet(0x0aa3,9,clif->pDull/*,XXX*/);
+	packet(0x0ab4,6,clif->pDull/*,XXX*/);
+	packet(0x0ab6,8,clif->pDull/*,XXX*/);
+	packet(0x0ab9,47);
+	packet(0x0ada,32);
+	packet(0x0add,24); // ZC_ITEM_FALL_ENTRY
+#endif
 
 #endif /* MAP_PACKETS_H */
