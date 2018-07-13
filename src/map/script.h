@@ -872,7 +872,7 @@ struct script_interface {
 	void (*add_translatable_string) (const struct script_string_buf *string, const char *start_point);
 	const char *(*parse_expr) (const char *p);
 	const char *(*parse_line) (const char *p);
-	void (*read_constdb) (void);
+	void (*read_constdb) (bool reload);
 	void (*constdb_comment) (const char *comment);
 	void (*load_parameters) (void);
 	const char* (*print_line) (StringBuf *buf, const char *p, const char *mark, int line);
