@@ -20966,18 +20966,8 @@ static time_t clif_attendance_getendtime(void)
 static void clif_parse_open_ui_request(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
 static void clif_parse_open_ui_request(int fd, struct map_session_data *sd)
 {
-
 	const struct PACKET_CZ_OPEN_UI *p = RP2PTR(fd);
 
-	if (clif->attendance_getendtime() < time(NULL)) {
-#if PACKETVER >= 20180207
-		clif->msgtable_color(sd, MSG_ATTENDANCE_UNAVAILABLE, COLOR_RED);
-#endif
-		return;
-	}
-
-	if (battle_config.feature_enable_attendance_system != 1)
-		return;
 
 	clif->open_ui(sd, p->UIType);
 }
@@ -20986,6 +20976,9 @@ static void clif_open_ui(struct map_session_data *sd, enum cz_ui_types uiType)
 {
 #if PACKETVER >= 20150128
 	struct PACKET_ZC_OPEN_UI p;
+#if PACKETVER_RE_NUM >= 20180307 || PACKETVER_MAIN_NUM >= 20180404 || PACKETVER_ZERO_NUM >= 20180411
+	int claimed = 0;
+#endif
 
 	nullpo_retv(sd);
 
@@ -20999,8 +20992,15 @@ static void clif_open_ui(struct map_session_data *sd, enum cz_ui_types uiType)
 		break;
 	case CZ_ATTENDANCE_UI:
 	{
+		if (clif->attendance_getendtime() < time(NULL)) {
+#if PACKETVER >= 20180207
+			clif->msgtable_color(sd, MSG_ATTENDANCE_UNAVAILABLE, COLOR_RED);
+#endif
+			return;
+		}
+		if (battle_config.feature_enable_attendance_system != 1)
+			return;
 #if PACKETVER_RE_NUM >= 20180307 || PACKETVER_MAIN_NUM >= 20180404 || PACKETVER_ZERO_NUM >= 20180411
-		int claimed = 0;
 		if (clif->attendance_timediff(sd) != true)
 			++claimed;
 		else if (sd->status.attendance_count >= VECTOR_LENGTH(clif->attendance_data))
