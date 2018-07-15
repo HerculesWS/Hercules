@@ -1942,7 +1942,9 @@ struct PACKET_ZC_ADD_ITEM_TO_STORE {
 	uint8 damaged;
 	uint8 refine;
 	struct EQUIPSLOTINFO slot;
+#if PACKETVER >= 20150226
 	struct ItemOptions option_data[MAX_ITEM_OPTIONS];
+#endif
 } __attribute__((packed));
 
 struct PACKET_ZC_MVP_GETTING_ITEM {
@@ -1984,7 +1986,9 @@ struct PACKET_ZC_ADD_ITEM_TO_CART {
 	uint8 damaged;
 	uint8 refine;
 	struct EQUIPSLOTINFO slot;
+#if PACKETVER >= 20150226
 	struct ItemOptions option_data[MAX_ITEM_OPTIONS];
+#endif
 } __attribute__((packed));
 
 struct PACKET_CZ_REQMAKINGITEM {
