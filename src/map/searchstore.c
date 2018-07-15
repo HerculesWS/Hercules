@@ -96,7 +96,11 @@ static bool searchstore_open(struct map_session_data *sd, unsigned int uses, uns
 	return true;
 }
 
-static void searchstore_query(struct map_session_data *sd, unsigned char type, unsigned int min_price, unsigned int max_price, const unsigned short *itemlist, unsigned int item_count, const unsigned short *cardlist, unsigned int card_count)
+static void searchstore_query(struct map_session_data *sd,
+				unsigned char type,
+				unsigned int min_price, unsigned int max_price,
+				const uint32 *itemlist, unsigned int item_count,
+				const uint32 *cardlist, unsigned int card_count)
 {
 	unsigned int i;
 	struct map_session_data* pl_sd;
@@ -137,14 +141,14 @@ static void searchstore_query(struct map_session_data *sd, unsigned char type, u
 	// validate lists
 	for( i = 0; i < item_count; i++ ) {
 		if( !itemdb->exists(itemlist[i]) ) {
-			ShowWarning("searchstore_query: Client resolved item %hu is not known.\n", itemlist[i]);
+			ShowWarning("searchstore_query: Client resolved item %u is not known.\n", itemlist[i]);
 			clif->search_store_info_failed(sd, SSI_FAILED_NOTHING_SEARCH_ITEM);
 			return;
 		}
 	}
 	for( i = 0; i < card_count; i++ ) {
 		if( !itemdb->exists(cardlist[i]) ) {
-			ShowWarning("searchstore_query: Client resolved card %hu is not known.\n", cardlist[i]);
+			ShowWarning("searchstore_query: Client resolved card %u is not known.\n", cardlist[i]);
 			clif->search_store_info_failed(sd, SSI_FAILED_NOTHING_SEARCH_ITEM);
 			return;
 		}

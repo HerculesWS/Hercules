@@ -81,7 +81,7 @@ static bool buyingstore_setup(struct map_session_data *sd, unsigned char slots)
 	return true;
 }
 
-static void buyingstore_create(struct map_session_data *sd, int zenylimit, unsigned char result, const char *storename, const uint8 *itemlist, unsigned int count)
+static void buyingstore_create(struct map_session_data *sd, int zenylimit, unsigned char result, const char *storename, const struct PACKET_CZ_REQ_OPEN_BUYING_STORE_sub *itemlist, unsigned int count)
 {
 	unsigned int i, weight, listidx;
 
@@ -132,9 +132,9 @@ static void buyingstore_create(struct map_session_data *sd, int zenylimit, unsig
 		int price, idx;
 		struct item_data* id;
 
-		nameid = RBUFW(itemlist,i*8+0);
-		amount = RBUFW(itemlist,i*8+2);
-		price  = RBUFL(itemlist,i*8+4);
+		nameid = itemlist[i].itemId;
+		amount = itemlist[i].amount;
+		price  = itemlist[i].price;
 
 		if( ( id = itemdb->exists(nameid) ) == NULL || amount == 0 )
 		{// invalid input
@@ -241,7 +241,7 @@ static void buyingstore_open(struct map_session_data *sd, int account_id)
 	clif->buyingstore_itemlist(sd, pl_sd);
 }
 
-static void buyingstore_trade(struct map_session_data *sd, int account_id, unsigned int buyer_id, const uint8 *itemlist, unsigned int count)
+static void buyingstore_trade(struct map_session_data* sd, int account_id, unsigned int buyer_id, const struct PACKET_CZ_REQ_TRADE_BUYING_STORE_sub* itemlist, unsigned int count)
 {
 	int zeny = 0;
 	unsigned int i, weight, listidx, k;
@@ -292,9 +292,9 @@ static void buyingstore_trade(struct map_session_data *sd, int account_id, unsig
 		unsigned short nameid, amount;
 		int index;
 
-		index  = RBUFW(itemlist,i*6+0)-2;
-		nameid = RBUFW(itemlist,i*6+2);
-		amount = RBUFW(itemlist,i*6+4);
+		index  = itemlist[i].index - 2;
+		nameid = itemlist[i].itemId;
+		amount = itemlist[i].amount;
 
 		if( i )
 		{// duplicate check. as the client does this too, only malicious intent should be caught here

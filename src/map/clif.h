@@ -56,6 +56,9 @@ struct unit_data;
 struct view_data;
 
 enum clif_messages;
+enum rodex_add_item;
+enum rodex_get_zeny;
+enum rodex_get_items;
 
 /**
  * Defines
@@ -364,7 +367,8 @@ typedef enum useskill_fail_cause { // clif_skill_fail
 	USESKILL_FAIL_STYLE_CHANGE_GRAPPLER = 82,
 	USESKILL_FAIL_THERE_ARE_NPC_AROUND = 83,
 	USESKILL_FAIL_NEED_MORE_BULLET = 84,
-}useskill_fail_cause;
+	// max known value 96
+} useskill_fail_cause;
 
 /**
  * Used to answer CZ_PC_BUY_CASH_POINT_ITEM (clif_parse_cashshop_buy)
@@ -719,12 +723,12 @@ struct clif_interface {
 	void (*equipitemack) (struct map_session_data *sd,int n,int pos,enum e_EQUIP_ITEM_ACK result);
 	void (*unequipitemack) (struct map_session_data *sd,int n,int pos,enum e_UNEQUIP_ITEM_ACK result);
 	void (*useitemack) (struct map_session_data *sd,int index,int amount,bool ok);
-	void (*addcards) (unsigned char* buf, struct item* item);
-	void (*addcards2) (unsigned short *cards, struct item* item);
+	void (*addcards) (struct EQUIPSLOTINFO *buf, struct item* item);
 	void (*item_sub) (unsigned char *buf, int n, struct item *i, struct item_data *id, int equip);
 	void (*getareachar_item) (struct map_session_data* sd,struct flooritem_data* fitem);
 	void (*cart_additem_ack) (struct map_session_data *sd, int flag);
 	void (*cashshop_load) (void);
+	void (*cashShopSchedule) (int fd, struct map_session_data *sd);
 	void (*package_announce) (struct map_session_data *sd, unsigned short nameid, unsigned short containerid);
 	void (*item_drop_announce) (struct map_session_data *sd, unsigned short nameid, char *monsterName);
 	/* unit-related */
@@ -807,7 +811,7 @@ struct clif_interface {
 	int (*insight) (struct block_list *bl,va_list ap);
 	int (*outsight) (struct block_list *bl,va_list ap);
 	void (*skillcastcancel) (struct block_list* bl);
-	void (*skill_fail) (struct map_session_data *sd,uint16 skill_id,enum useskill_fail_cause cause,int btype);
+	void (*skill_fail) (struct map_session_data *sd, uint16 skill_id, enum useskill_fail_cause cause, int btype, int32 item_id);
 	void (*skill_cooldown) (struct map_session_data *sd, uint16 skill_id, unsigned int duration);
 	void (*skill_memomessage) (struct map_session_data* sd, int type);
 	void (*skill_mapinfomessage) (struct map_session_data *sd, int type);
@@ -972,6 +976,7 @@ struct clif_interface {
 	void (*vendinglist) (struct map_session_data* sd, unsigned int id, struct s_vending* vending_list);
 	void (*buyvending) (struct map_session_data* sd, int index, int amount, int fail);
 	void (*openvending) (struct map_session_data* sd, int id, struct s_vending* vending_list);
+	void (*openvendingAck) (int fd, int result);
 	void (*vendingreport) (struct map_session_data* sd, int index, int amount, uint32 char_id, int zeny);
 	/* storage handling */
 	void (*storagelist) (struct map_session_data* sd, struct item* items, int items_length);
@@ -1444,7 +1449,7 @@ struct clif_interface {
 	void (*pRodexOpenWriteMail) (int fd, struct map_session_data *sd);
 	void (*rodex_open_write_mail) (int fd, const char *receiver_name, int8 result);
 	void (*pRodexAddItem) (int fd, struct map_session_data *sd);
-	void (*rodex_add_item_result) (struct map_session_data *sd, int16 idx, int16 amount, int8 result);
+	void (*rodex_add_item_result) (struct map_session_data *sd, int16 idx, int16 amount, enum rodex_add_item result);
 	void (*pRodexRemoveItem) (int fd, struct map_session_data *sd);
 	void (*rodex_remove_item_result) (struct map_session_data *sd, int16 idx, int16 amount);
 	void (*pRodexSendMail) (int fd, struct map_session_data *sd);
@@ -1464,9 +1469,9 @@ struct clif_interface {
 	void (*rodex_delete_mail) (struct map_session_data *sd, int8 opentype, int64 mail_id);
 	void (*pRodexRefreshMaillist) (int fd, struct map_session_data *sd);
 	void (*pRodexRequestZeny) (int fd, struct map_session_data *sd);
-	void (*rodex_request_zeny) (struct map_session_data *sd, int8 opentype, int64 mail_id, int8 result);
+	void (*rodex_request_zeny) (struct map_session_data *sd, int8 opentype, int64 mail_id, enum rodex_get_zeny result);
 	void (*pRodexRequestItems) (int fd, struct map_session_data *sd);
-	void (*rodex_request_items) (struct map_session_data *sd, int8 opentype, int64 mail_id, int8 result);
+	void (*rodex_request_items) (struct map_session_data *sd, int8 opentype, int64 mail_id, enum rodex_get_items result);
 	void (*rodex_icon) (int fd, bool show);
 	void (*skill_scale) (struct block_list *bl, int src_id, int x, int y, uint16 skill_id, uint16 skill_lv, int casttime);
 	/* Clan System */
