@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -11,21 +11,22 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{D356871D-58E1-450B-967A-E5E9646175AF}</ProjectGuid>
-    <RootNamespace>login-server</RootNamespace>
+    <ProjectGuid>{D356871D-58E1-450B-967A-E4E9646175AF}</ProjectGuid>
+    <RootNamespace>char-server</RootNamespace>
     <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -47,8 +48,8 @@
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectName)\$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">login-server</TargetName>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">login-server</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">char-server</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">char-server</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -69,14 +70,13 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <CompileAs>CompileAsC</CompileAs>
-      <DisableSpecificWarnings>4100;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <AdditionalDependencies>libcmtd.lib;oldnames.lib;ws2_32.lib;libmysql.lib;zdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>..\3rdparty\mysql\lib;..\3rdparty\zlib\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)$(ProjectName).pdb</ProgramDatabaseFile>
@@ -105,21 +105,16 @@
       </AdditionalOptions>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <PrecompiledHeaderFile>
-      </PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>
-      </PrecompiledHeaderOutputFile>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <CompileAs>CompileAsC</CompileAs>
-      <DisableSpecificWarnings>4100;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <AdditionalDependencies>libcmt.lib;oldnames.lib;ws2_32.lib;libmysql.lib;zdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>..\3rdparty\mysql\lib;..\3rdparty\zlib\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)$(ProjectName).pdb</ProgramDatabaseFile>
@@ -142,49 +137,62 @@
     <ClInclude Include="..\3rdparty\libconfig\scanner.h" />
     <ClInclude Include="..\3rdparty\libconfig\strbuf.h" />
     <ClInclude Include="..\3rdparty\libconfig\wincompat.h" />
+    <ClInclude Include="..\3rdparty\mt19937ar\mt19937ar.h" />
+    <ClInclude Include="..\src\char\int_rodex.h" />
     <ClInclude Include="..\src\common\atomic.h" />
+    <ClInclude Include="..\src\common\cbasetypes.h" />
     <ClInclude Include="..\src\common\conf.h" />
+    <ClInclude Include="..\src\common\core.h" />
+    <ClInclude Include="..\src\common\console.h" />
+    <ClInclude Include="..\src\common\db.h" />
     <ClInclude Include="..\src\common\des.h" />
+    <ClInclude Include="..\src\common\ers.h" />
+    <ClInclude Include="..\src\common\grfio.h" />
     <ClInclude Include="..\src\common\hercules.h" />
+    <ClInclude Include="..\src\common\HPM.h" />
     <ClInclude Include="..\src\common\HPMDataCheck.h" />
+    <ClInclude Include="..\src\common\HPMi.h" />
     <ClInclude Include="..\src\common\HPMSymbols.inc.h" />
+    <ClInclude Include="..\src\common\memmgr.h" />
+    <ClInclude Include="..\src\common\mapindex.h" />
+    <ClInclude Include="..\src\common\md5calc.h" />
+    <ClInclude Include="..\src\common\mmo.h" />
     <ClInclude Include="..\src\common\mutex.h" />
+    <ClInclude Include="..\src\common\nullpo.h" />
+    <ClInclude Include="..\src\common\random.h" />
+    <ClInclude Include="..\src\common\showmsg.h" />
+    <ClInclude Include="..\src\common\socket.h" />
     <ClInclude Include="..\src\common\spinlock.h" />
+    <ClInclude Include="..\src\common\sql.h" />
+    <ClInclude Include="..\src\common\strlib.h" />
+    <ClInclude Include="..\src\common\sysinfo.h" />
     <ClInclude Include="..\src\common\thread.h" />
+    <ClInclude Include="..\src\common\timer.h" />
+    <ClInclude Include="..\src\common\utils.h" />
     <ClInclude Include="..\src\common\winapi.h" />
+    <ClInclude Include="..\src\char\HPMchar.h" />
+    <ClInclude Include="..\src\char\char.h" />
+    <ClInclude Include="..\src\char\geoip.h" />
+    <ClInclude Include="..\src\char\int_auction.h" />
+    <ClInclude Include="..\src\char\int_clan.h" />
+    <ClInclude Include="..\src\char\int_elemental.h" />
+    <ClInclude Include="..\src\char\int_guild.h" />
+    <ClInclude Include="..\src\char\int_homun.h" />
+    <ClInclude Include="..\src\char\int_mail.h" />
+    <ClInclude Include="..\src\char\int_mercenary.h" />
+    <ClInclude Include="..\src\char\int_party.h" />
+    <ClInclude Include="..\src\char\int_pet.h" />
+    <ClInclude Include="..\src\char\int_quest.h" />
+    <ClInclude Include="..\src\char\int_storage.h" />
+    <ClInclude Include="..\src\char\inter.h" />
+    <ClInclude Include="..\src\char\loginif.h" />
+    <ClInclude Include="..\src\char\mapif.h" />
+    <ClInclude Include="..\src\char\pincode.h" />
     <ClInclude Include="..\src\config\classes\general.h" />
     <ClInclude Include="..\src\config\const.h" />
     <ClInclude Include="..\src\config\core.h" />
     <ClInclude Include="..\src\config\renewal.h" />
     <ClInclude Include="..\src\config\secure.h" />
-    <ClInclude Include="..\src\login\account.h" />
-    <ClInclude Include="..\src\login\HPMlogin.h" />
-    <ClInclude Include="..\src\login\ipban.h" />
-    <ClInclude Include="..\src\login\lclif.h" />
-    <ClInclude Include="..\src\login\lclif.p.h" />
-    <ClInclude Include="..\src\login\login.h" />
-    <ClInclude Include="..\src\login\loginlog.h" />
-    <ClInclude Include="..\src\common\cbasetypes.h" />
-    <ClInclude Include="..\src\common\core.h" />
-    <ClInclude Include="..\src\common\console.h" />
-    <ClInclude Include="..\src\common\db.h" />
-    <ClInclude Include="..\src\common\ers.h" />
-    <ClInclude Include="..\src\common\grfio.h" />
-    <ClInclude Include="..\src\common\HPM.h" />
-    <ClInclude Include="..\src\common\HPMi.h" />
-    <ClInclude Include="..\src\common\memmgr.h" />
-    <ClInclude Include="..\src\common\md5calc.h" />
-    <ClInclude Include="..\src\common\mmo.h" />
-    <ClInclude Include="..\src\common\nullpo.h" />
-    <ClInclude Include="..\src\common\random.h" />
-    <ClInclude Include="..\src\common\showmsg.h" />
-    <ClInclude Include="..\src\common\socket.h" />
-    <ClInclude Include="..\src\common\sql.h" />
-    <ClInclude Include="..\src\common\strlib.h" />
-    <ClInclude Include="..\src\common\sysinfo.h" />
-    <ClInclude Include="..\src\common\timer.h" />
-    <ClInclude Include="..\src\common\utils.h" />
-    <ClInclude Include="..\3rdparty\mt19937ar\mt19937ar.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\3rdparty\libconfig\grammar.c" />
@@ -192,24 +200,20 @@
     <ClCompile Include="..\3rdparty\libconfig\scanctx.c" />
     <ClCompile Include="..\3rdparty\libconfig\scanner.c" />
     <ClCompile Include="..\3rdparty\libconfig\strbuf.c" />
-    <ClCompile Include="..\src\common\des.c" />
-    <ClCompile Include="..\src\common\mutex.c" />
-    <ClCompile Include="..\src\common\thread.c" />
-    <ClCompile Include="..\src\login\account.c" />
-    <ClCompile Include="..\src\login\HPMlogin.c" />
-    <ClCompile Include="..\src\login\ipban.c" />
-    <ClCompile Include="..\src\login\lclif.c" />
-    <ClCompile Include="..\src\login\login.c" />
-    <ClCompile Include="..\src\login\loginlog.c" />
+    <ClCompile Include="..\3rdparty\mt19937ar\mt19937ar.c" />
+    <ClCompile Include="..\src\char\int_rodex.c" />
     <ClCompile Include="..\src\common\conf.c" />
     <ClCompile Include="..\src\common\core.c" />
     <ClCompile Include="..\src\common\console.c" />
     <ClCompile Include="..\src\common\db.c" />
+    <ClCompile Include="..\src\common\des.c" />
     <ClCompile Include="..\src\common\ers.c" />
     <ClCompile Include="..\src\common\grfio.c" />
     <ClCompile Include="..\src\common\HPM.c" />
     <ClCompile Include="..\src\common\memmgr.c" />
+    <ClCompile Include="..\src\common\mapindex.c" />
     <ClCompile Include="..\src\common\md5calc.c" />
+    <ClCompile Include="..\src\common\mutex.c" />
     <ClCompile Include="..\src\common\nullpo.c" />
     <ClCompile Include="..\src\common\random.c" />
     <ClCompile Include="..\src\common\showmsg.c" />
@@ -217,9 +221,27 @@
     <ClCompile Include="..\src\common\sql.c" />
     <ClCompile Include="..\src\common\strlib.c" />
     <ClCompile Include="..\src\common\sysinfo.c" />
+    <ClCompile Include="..\src\common\thread.c" />
     <ClCompile Include="..\src\common\timer.c" />
     <ClCompile Include="..\src\common\utils.c" />
-    <ClCompile Include="..\3rdparty\mt19937ar\mt19937ar.c" />
+    <ClCompile Include="..\src\char\HPMchar.c" />
+    <ClCompile Include="..\src\char\char.c" />
+    <ClCompile Include="..\src\char\geoip.c" />
+    <ClCompile Include="..\src\char\int_auction.c" />
+    <ClCompile Include="..\src\char\int_clan.c" />
+    <ClCompile Include="..\src\char\int_elemental.c" />
+    <ClCompile Include="..\src\char\int_guild.c" />
+    <ClCompile Include="..\src\char\int_homun.c" />
+    <ClCompile Include="..\src\char\int_mail.c" />
+    <ClCompile Include="..\src\char\int_mercenary.c" />
+    <ClCompile Include="..\src\char\int_party.c" />
+    <ClCompile Include="..\src\char\int_pet.c" />
+    <ClCompile Include="..\src\char\int_quest.c" />
+    <ClCompile Include="..\src\char\int_storage.c" />
+    <ClCompile Include="..\src\char\inter.c" />
+    <ClCompile Include="..\src\char\loginif.c" />
+    <ClCompile Include="..\src\char\mapif.c" />
+    <ClCompile Include="..\src\char\pincode.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

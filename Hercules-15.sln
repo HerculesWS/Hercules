@@ -1,20 +1,21 @@
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "char-server", "vcproj-11\char-server.vcxproj", "{D356871D-58E1-450B-967A-E4E9646175AF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "char-server", "vcproj-15\char-server.vcxproj", "{D356871D-58E1-450B-967A-E4E9646175AF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "login-server", "vcproj-11\login-server.vcxproj", "{D356871D-58E1-450B-967A-E5E9646175AF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "login-server", "vcproj-15\login-server.vcxproj", "{D356871D-58E1-450B-967A-E5E9646175AF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "map-server", "vcproj-11\map-server.vcxproj", "{D356871D-58E1-450B-967A-E6E9646175AF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "map-server", "vcproj-15\map-server.vcxproj", "{D356871D-58E1-450B-967A-E6E9646175AF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "plugin-sample", "vcproj-11\plugin-sample.vcxproj", "{E64C56D3-CDFB-483B-900B-A62D216B6D2F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "plugin-sample", "vcproj-15\plugin-sample.vcxproj", "{E64C56D3-CDFB-483B-900B-A62D216B6D2F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "plugin-HPMHooking_map", "vcproj-11\plugin-HPMHooking_map.vcxproj", "{745D4A8C-6A68-4721-A43A-D81BF59860A1}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "plugin-HPMHooking_map", "vcproj-15\plugin-HPMHooking_map.vcxproj", "{745D4A8C-6A68-4721-A43A-D81BF59860A1}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "plugin-HPMHooking_char", "vcproj-11\plugin-HPMHooking_char.vcxproj", "{ACEB1E80-4EA2-4193-AA7C-624B6C5664BA}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "plugin-HPMHooking_char", "vcproj-15\plugin-HPMHooking_char.vcxproj", "{D495824D-24D3-4623-A28C-4CA506084A09}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "plugin-HPMHooking_login", "vcproj-11\plugin-HPMHooking_login.vcxproj", "{93DB46CC-FC44-4E43-820A-63DC7318F413}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "plugin-HPMHooking_login", "vcproj-15\plugin-HPMHooking_login.vcxproj", "{544AD8E8-0309-49DE-9F8D-F9FEA24D92F1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,16 +43,19 @@ Global
 		{745D4A8C-6A68-4721-A43A-D81BF59860A1}.Debug|Win32.Build.0 = Debug|Win32
 		{745D4A8C-6A68-4721-A43A-D81BF59860A1}.Release|Win32.ActiveCfg = Release|Win32
 		{745D4A8C-6A68-4721-A43A-D81BF59860A1}.Release|Win32.Build.0 = Release|Win32
-		{ACEB1E80-4EA2-4193-AA7C-624B6C5664BA}.Debug|Win32.ActiveCfg = Debug|Win32
-		{ACEB1E80-4EA2-4193-AA7C-624B6C5664BA}.Debug|Win32.Build.0 = Debug|Win32
-		{ACEB1E80-4EA2-4193-AA7C-624B6C5664BA}.Release|Win32.ActiveCfg = Release|Win32
-		{ACEB1E80-4EA2-4193-AA7C-624B6C5664BA}.Release|Win32.Build.0 = Release|Win32
-		{93DB46CC-FC44-4E43-820A-63DC7318F413}.Debug|Win32.ActiveCfg = Debug|Win32
-		{93DB46CC-FC44-4E43-820A-63DC7318F413}.Debug|Win32.Build.0 = Debug|Win32
-		{93DB46CC-FC44-4E43-820A-63DC7318F413}.Release|Win32.ActiveCfg = Release|Win32
-		{93DB46CC-FC44-4E43-820A-63DC7318F413}.Release|Win32.Build.0 = Release|Win32
+		{D495824D-24D3-4623-A28C-4CA506084A09}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D495824D-24D3-4623-A28C-4CA506084A09}.Debug|Win32.Build.0 = Debug|Win32
+		{D495824D-24D3-4623-A28C-4CA506084A09}.Release|Win32.ActiveCfg = Release|Win32
+		{D495824D-24D3-4623-A28C-4CA506084A09}.Release|Win32.Build.0 = Release|Win32
+		{544AD8E8-0309-49DE-9F8D-F9FEA24D92F1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{544AD8E8-0309-49DE-9F8D-F9FEA24D92F1}.Debug|Win32.Build.0 = Debug|Win32
+		{544AD8E8-0309-49DE-9F8D-F9FEA24D92F1}.Release|Win32.ActiveCfg = Release|Win32
+		{544AD8E8-0309-49DE-9F8D-F9FEA24D92F1}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5DB2664E-B4D7-4FC3-B0E2-F5E7608B9393}
 	EndGlobalSection
 EndGlobal
