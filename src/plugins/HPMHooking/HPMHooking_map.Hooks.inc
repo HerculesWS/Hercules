@@ -10225,10 +10225,10 @@ void HP_clif_skillcastcancel(struct block_list *bl) {
 	}
 	return;
 }
-void HP_clif_skill_fail(struct map_session_data *sd, uint16 skill_id, enum useskill_fail_cause cause, int btype, uint32 item_id) {
+void HP_clif_skill_fail(struct map_session_data *sd, uint16 skill_id, enum useskill_fail_cause cause, int btype, int32 item_id) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_skill_fail_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, uint16 *skill_id, enum useskill_fail_cause *cause, int *btype, uint32 *item_id);
+		void (*preHookFunc) (struct map_session_data **sd, uint16 *skill_id, enum useskill_fail_cause *cause, int *btype, int32 *item_id);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_skill_fail_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_skill_fail_pre[hIndex].func;
@@ -10243,7 +10243,7 @@ void HP_clif_skill_fail(struct map_session_data *sd, uint16 skill_id, enum usesk
 		HPMHooks.source.clif.skill_fail(sd, skill_id, cause, btype, item_id);
 	}
 	if (HPMHooks.count.HP_clif_skill_fail_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, uint16 skill_id, enum useskill_fail_cause cause, int btype, uint32 item_id);
+		void (*postHookFunc) (struct map_session_data *sd, uint16 skill_id, enum useskill_fail_cause cause, int btype, int32 item_id);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_skill_fail_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_skill_fail_post[hIndex].func;
 			postHookFunc(sd, skill_id, cause, btype, item_id);
