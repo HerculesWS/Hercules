@@ -33,10 +33,18 @@ struct hplugin_data_store;
 /**
  * Defines
  **/
-#define MAX_ITEMDB 0x8000 // 32k array entries in array (the rest goes to the db)
+#ifndef MAX_ITEMDB
+#define MAX_ITEMDB 0xFFFF
+#endif
+#ifndef MAX_ITEMDELAYS
 #define MAX_ITEMDELAYS 10 // The maximum number of item delays
+#endif
+#ifndef MAX_SEARCH
 #define MAX_SEARCH 5 //Designed for search functions, species max number of matches to display.
+#endif
+#ifndef MAX_ITEMS_PER_COMBO
 #define MAX_ITEMS_PER_COMBO 6 /* maximum amount of items a combo may require */
+#endif
 
 #define CARD0_FORGE 0x00FF
 #define CARD0_CREATE 0x00FE
@@ -45,8 +53,10 @@ struct hplugin_data_store;
 //Marks if the card0 given is "special" (non-item id used to mark pets/created items. [Skotlex]
 #define itemdb_isspecial(i) ((i) == CARD0_FORGE || (i) == CARD0_CREATE || (i) == CARD0_PET)
 
+#ifndef UNKNOWN_ITEM_ID
 //Use apple for unknown items.
 #define UNKNOWN_ITEM_ID 512
+#endif
 
 enum item_itemid {
 	ITEMID_RED_POTION            = 501,
