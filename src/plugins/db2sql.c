@@ -242,7 +242,7 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source)
 		StrBuf->Init(&buf);
 
 		// id
-		StrBuf->Printf(&buf, "'%u',", it->nameid);
+		StrBuf->Printf(&buf, "'%u',", (uint32)it->nameid);
 
 		// name_english
 		SQL->EscapeString(NULL, e_name, it->name);

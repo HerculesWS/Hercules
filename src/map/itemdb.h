@@ -393,14 +393,14 @@ VECTOR_STRUCT_DECL(itemlist, struct itemlist_entry);
 
 struct item_combo {
 	struct script_code *script;
-	unsigned short nameid[MAX_ITEMS_PER_COMBO];/* nameid array */
+	int nameid[MAX_ITEMS_PER_COMBO];/* nameid array */
 	unsigned char count;
-	unsigned short id;/* id of this combo */
+	int id; /* id of this combo */
 };
 
 struct item_group {
 	unsigned short id;
-	unsigned short *nameid;
+	int *nameid;
 	unsigned short qty;
 };
 
@@ -427,7 +427,7 @@ struct item_package_rand_entry {
 };
 
 struct item_package_must_entry {
-	unsigned short id;
+	int id;
 	unsigned short qty;
 	unsigned short hours;
 	unsigned int announce : 1;
@@ -441,7 +441,7 @@ struct item_package_rand_group {
 };
 
 struct item_package {
-	unsigned short id;
+	int id;
 	struct item_package_rand_group *random_groups;
 	struct item_package_must_entry *must_items;
 	unsigned short random_qty;
@@ -454,7 +454,7 @@ struct itemdb_option {
 };
 
 struct item_data {
-	uint16 nameid;
+	int nameid;
 	char name[ITEM_NAME_LENGTH],jname[ITEM_NAME_LENGTH];
 
 	int value_buy;
@@ -651,7 +651,7 @@ struct itemdb_interface {
 	int (*final_sub) (union DBKey key, struct DBData *data, va_list ap);
 	int (*options_final_sub) (union DBKey key, struct DBData *data, va_list ap);
 	void (*clear) (bool total);
-	struct item_combo * (*id2combo) (unsigned short id);
+	struct item_combo * (*id2combo) (int id);
 	bool (*is_item_usable) (struct item_data *item);
 	bool (*lookup_const) (const struct config_setting_t *it, const char *name, int *value);
 	bool (*lookup_const_mask) (const struct config_setting_t *it, const char *name, int *value);

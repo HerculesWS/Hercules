@@ -618,7 +618,7 @@ struct s_packet_db {
 };
 
 struct hCSData {
-	unsigned short id;
+	int id;
 	unsigned int price;
 };
 
@@ -629,7 +629,7 @@ struct cdelayed_damage {
 
 struct merge_item {
 	int16 position;
-	int16 nameid;
+	int nameid;
 };
 
 /* attendance data */
@@ -642,8 +642,8 @@ struct attendance_entry {
 struct stylist_data_entry {
 	int16 id;
 	int32 zeny;
-	int16 itemid;
-	int16 boxid;
+	int itemid;
+	int boxid;
 };
 VECTOR_DECL(struct stylist_data_entry) stylist_data[MAX_STYLIST_TYPE];
 
@@ -729,8 +729,8 @@ struct clif_interface {
 	void (*cart_additem_ack) (struct map_session_data *sd, int flag);
 	void (*cashshop_load) (void);
 	void (*cashShopSchedule) (int fd, struct map_session_data *sd);
-	void (*package_announce) (struct map_session_data *sd, unsigned short nameid, unsigned short containerid);
-	void (*item_drop_announce) (struct map_session_data *sd, unsigned short nameid, char *monsterName);
+	void (*package_announce) (struct map_session_data *sd, int nameid, int containerid);
+	void (*item_drop_announce) (struct map_session_data *sd, int nameid, char *monsterName);
 	/* unit-related */
 	void (*clearunit_single) (int id, clr_type type, int fd);
 	void (*clearunit_area) (struct block_list* bl, clr_type type);
@@ -843,7 +843,7 @@ struct clif_interface {
 	void (*hpmeter_single) (int fd, int id, unsigned int hp, unsigned int maxhp);
 	int (*hpmeter_sub) (struct block_list *bl, va_list ap);
 	void (*upgrademessage) (int fd, int result, int item_id);
-	void (*get_weapon_view) (struct map_session_data* sd, unsigned short *rhand, unsigned short *lhand);
+	void (*get_weapon_view) (struct map_session_data* sd, int *rhand, int *lhand);
 	void (*gospel_info) (struct map_session_data *sd, int type);
 	void (*feel_req) (int fd, struct map_session_data *sd, uint16 skill_lv);
 	void (*starskill) (struct map_session_data* sd, const char* mapname, int monster_id, unsigned char star, unsigned char result);
@@ -1141,9 +1141,9 @@ struct clif_interface {
 	void (*buyingstore_disappear_entry_single) (struct map_session_data* sd, struct map_session_data* pl_sd);
 	void (*buyingstore_itemlist) (struct map_session_data* sd, struct map_session_data* pl_sd);
 	void (*buyingstore_trade_failed_buyer) (struct map_session_data* sd, short result);
-	void (*buyingstore_update_item) (struct map_session_data* sd, unsigned short nameid, unsigned short amount, uint32 char_id, int zeny);
+	void (*buyingstore_update_item) (struct map_session_data* sd, int nameid, unsigned short amount, uint32 char_id, int zeny);
 	void (*buyingstore_delete_item) (struct map_session_data* sd, short index, unsigned short amount, int price);
-	void (*buyingstore_trade_failed_seller) (struct map_session_data* sd, short result, unsigned short nameid);
+	void (*buyingstore_trade_failed_seller) (struct map_session_data* sd, short result, int nameid);
 	/* search store-related */
 	void (*search_store_info_ack) (struct map_session_data* sd);
 	void (*search_store_info_failed) (struct map_session_data* sd, unsigned char reason);
@@ -1186,7 +1186,7 @@ struct clif_interface {
 	void (*npc_market_purchase_ack) (struct map_session_data *sd, const struct itemlist *item_list, unsigned char response);
 	/* */
 	bool (*parse_roulette_db) (void);
-	void (*roulette_generate_ack) (struct map_session_data *sd, unsigned char result, short stage, short prizeIdx, short bonusItemID);
+	void (*roulette_generate_ack) (struct map_session_data *sd, unsigned char result, short stage, short prizeIdx, int bonusItemID);
 	/* Merge Items */
 	void (*openmergeitem) (int fd, struct map_session_data *sd);
 	void (*cancelmergeitem) (int fd, struct map_session_data *sd);
@@ -1500,7 +1500,7 @@ struct clif_interface {
 	bool (*stylist_read_db_libconfig) (void);
 	bool (*stylist_read_db_libconfig_sub) (struct config_setting_t *it, int idx, const char *source);
 	bool (*style_change_validate_requirements) (struct map_session_data *sd, int type, int16 idx);
-	void (*stylist_send_rodexitem) (struct map_session_data *sd, int16 itemid);
+	void (*stylist_send_rodexitem) (struct map_session_data *sd, int itemid);
 	void (*pReqStyleChange) (int fd, struct map_session_data *sd);
 	void (*cz_req_style_change_sub) (struct map_session_data *sd, int type, int16 idx, bool isitem);
 	void (*style_change_response) (struct map_session_data *sd, enum stylist_shop flag);

@@ -939,7 +939,7 @@ static void clif_clearunit_delayed(struct block_list *bl, clr_type type, int64 t
 }
 
 /// Gets weapon view info from sd's inventory_data and points (*rhand,*lhand)
-static void clif_get_weapon_view(struct map_session_data *sd, unsigned short *rhand, unsigned short *lhand)
+static void clif_get_weapon_view(struct map_session_data *sd, int *rhand, int *lhand)
 {
 	nullpo_retv(sd);
 	nullpo_retv(rhand);
@@ -14022,7 +14022,7 @@ static void clif_parse_pet_evolution(int fd, struct map_session_data *sd)
 				intif->create_pet(
 						 sd->status.account_id, sd->status.char_id,
 						 (short)pet->db[pet_id].class_, (short)mob->db(pet->db[pet_id].class_)->lv,
-						 (short)pet->db[pet_id].EggID, 0, (short)pet->db[pet_id].intimate,
+						 pet->db[pet_id].EggID, 0, (short)pet->db[pet_id].intimate,
 						 100, 0, 1, pet->db[pet_id].jname);
 				clif->petEvolutionResult(fd, PET_EVOL_SUCCESS);
 			} else {
@@ -17862,7 +17862,7 @@ static void clif_buyingstore_trade_failed_buyer(struct map_session_data *sd, sho
 
 /// Updates the zeny limit and an item in the buying store item list (ZC_UPDATE_ITEM_FROM_BUYING_STORE).
 /// 081b <name id>.W <amount>.W <limit zeny>.L
-static void clif_buyingstore_update_item(struct map_session_data *sd, unsigned short nameid, unsigned short amount, uint32 char_id, int zeny)
+static void clif_buyingstore_update_item(struct map_session_data *sd, int nameid, unsigned short amount, uint32 char_id, int zeny)
 {
 	int fd;
 	struct PACKET_ZC_UPDATE_ITEM_FROM_BUYING_STORE p;
@@ -17913,7 +17913,7 @@ static void clif_buyingstore_delete_item(struct map_session_data *sd, short inde
 ///     6 = "The trade failed, because the entered amount of item %s is higher, than the buyer is willing to buy." (0x6d3, MSI_BUYINGSTORE_TRADE_OVERCOUNT)
 ///     7 = "The trade failed, because the buyer is lacking required balance." (0x6d1, MSI_BUYINGSTORE_TRADE_LACKBUYERZENY)
 ///     ? = nothing
-static void clif_buyingstore_trade_failed_seller(struct map_session_data *sd, short result, unsigned short nameid)
+static void clif_buyingstore_trade_failed_seller(struct map_session_data *sd, short result, int nameid)
 {
 #if PACKETVER >= 20100420
 	int fd;
@@ -19038,7 +19038,7 @@ static void clif_scriptclear(struct map_session_data *sd, int npcid)
 }
 
 /* Made Possible Thanks to Yommy! */
-static void clif_package_item_announce(struct map_session_data *sd, unsigned short nameid, unsigned short containerid)
+static void clif_package_item_announce(struct map_session_data *sd, int nameid, int containerid)
 {
 	struct packet_package_item_announce p;
 
@@ -19056,7 +19056,7 @@ static void clif_package_item_announce(struct map_session_data *sd, unsigned sho
 }
 
 /* Made Possible Thanks to Yommy! */
-static void clif_item_drop_announce(struct map_session_data *sd, unsigned short nameid, char *monsterName)
+static void clif_item_drop_announce(struct map_session_data *sd, int nameid, char *monsterName)
 {
 	struct packet_item_drop_announce p;
 
@@ -19757,7 +19757,7 @@ static bool clif_parse_roulette_db(void)
 /**
  *
  **/
-static void clif_roulette_generate_ack(struct map_session_data *sd, unsigned char result, short stage, short prizeIdx, short bonusItemID)
+static void clif_roulette_generate_ack(struct map_session_data *sd, unsigned char result, short stage, short prizeIdx, int bonusItemID)
 {
 #if PACKETVER >= 20140612
 	struct packet_roulette_generate_ack p;
@@ -19843,7 +19843,8 @@ static void clif_ackmergeitems(int fd, struct map_session_data *sd)
 {
 #if PACKETVER > 20120228
 	int i = 0, n = 0, length = 0, count = 0;
-	int16 nameid = 0, indexes[MAX_INVENTORY] = {0}, amounts[MAX_INVENTORY] = {0};
+	int nameid = 0;
+	int16 indexes[MAX_INVENTORY] = {0}, amounts[MAX_INVENTORY] = {0};
 	struct item item_data;
 
 	nullpo_retv(sd);
@@ -21246,7 +21247,7 @@ static bool clif_style_change_validate_requirements(struct map_session_data *sd,
 	}
 	return false;
 }
-static void clif_stylist_send_rodexitem(struct map_session_data *sd, int16 itemid)
+static void clif_stylist_send_rodexitem(struct map_session_data *sd, int itemid)
 {
 	struct rodex_message msg = { 0 };
 

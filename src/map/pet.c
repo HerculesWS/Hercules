@@ -112,7 +112,7 @@ static int pet_create_egg(struct map_session_data *sd, int item_id)
 	intif->create_pet(sd->status.account_id, sd->status.char_id,
 		(short)pet->db[pet_id].class_,
 		(short)mob->db(pet->db[pet_id].class_)->lv,
-		(short)pet->db[pet_id].EggID, 0,
+		pet->db[pet_id].EggID, 0,
 		(short)pet->db[pet_id].intimate,
 		100, 0, 1, pet->db[pet_id].jname);
 	return 1;
@@ -516,7 +516,7 @@ static int pet_recv_petdata(int account_id, struct s_pet *p, int flag)
 	return 0;
 }
 
-static int pet_select_egg(struct map_session_data *sd, short egg_index)
+static int pet_select_egg(struct map_session_data *sd, int egg_index)
 {
 	nullpo_ret(sd);
 
@@ -555,7 +555,8 @@ static int pet_catch_process2(struct map_session_data *sd, int target_id)
 		// Invalid inputs/state, abort capture.
 		clif->pet_roulette(sd,0);
 		sd->catch_target_class = -1;
-		sd->itemid = sd->itemindex = -1;
+		sd->itemid = -1;
+		sd->itemindex = -1;
 		return 1;
 	}
 
@@ -1334,7 +1335,7 @@ static int pet_read_db_sub(struct config_setting_t *it, int n, const char *sourc
 		if (!(data = itemdb->name2id(str))) {
 			ShowWarning("pet_read_db_sub: Invalid item '%s' in pet %d of \"%s\", defaulting to 0.\n", str, pet->db[n].class_, source);
 		} else {
-			pet->db[n].itemID = (uint16)data->nameid;
+			pet->db[n].itemID = data->nameid;
 		}
 	}
 
@@ -1342,7 +1343,7 @@ static int pet_read_db_sub(struct config_setting_t *it, int n, const char *sourc
 		if (!(data = itemdb->name2id(str))) {
 			ShowWarning("pet_read_db_sub: Invalid item '%s' in pet %d of \"%s\", defaulting to 0.\n", str, pet->db[n].class_, source);
 		} else {
-			pet->db[n].EggID = (uint16)data->nameid;
+			pet->db[n].EggID = data->nameid;
 		}
 	}
 
@@ -1350,7 +1351,7 @@ static int pet_read_db_sub(struct config_setting_t *it, int n, const char *sourc
 		if (!(data = itemdb->name2id(str))) {
 			ShowWarning("pet_read_db_sub: Invalid item '%s' in pet %d of \"%s\", defaulting to 0.\n", str, pet->db[n].class_, source);
 		} else {
-			pet->db[n].AcceID = (uint16)data->nameid;
+			pet->db[n].AcceID = data->nameid;
 		}
 	}
 
@@ -1358,7 +1359,7 @@ static int pet_read_db_sub(struct config_setting_t *it, int n, const char *sourc
 		if (!(data = itemdb->name2id(str))) {
 			ShowWarning("pet_read_db_sub: Invalid item '%s' in pet %d of \"%s\", defaulting to 0.\n", str, pet->db[n].class_, source);
 		} else {
-			pet->db[n].FoodID = (uint16)data->nameid;
+			pet->db[n].FoodID = data->nameid;
 		}
 	}
 

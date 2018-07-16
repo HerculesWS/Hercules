@@ -69,26 +69,26 @@ static int CheckForCharServer(void)
 }
 
 // pet
-static int intif_create_pet(int account_id, int char_id, short pet_class, short pet_lv, short pet_egg_id,
-	short pet_equip, short intimate, short hungry, char rename_flag, char incubate, char *pet_name)
+static int intif_create_pet(int account_id, int char_id, short pet_class, short pet_lv, int pet_egg_id,
+	int pet_equip, short intimate, short hungry, char rename_flag, char incubate, char *pet_name)
 {
 	if (intif->CheckForCharServer())
 		return 0;
 	nullpo_ret(pet_name);
-	WFIFOHEAD(inter_fd, 24 + NAME_LENGTH);
-	WFIFOW(inter_fd,0) = 0x3080;
-	WFIFOL(inter_fd,2) = account_id;
-	WFIFOL(inter_fd,6) = char_id;
-	WFIFOW(inter_fd,10) = pet_class;
-	WFIFOW(inter_fd,12) = pet_lv;
-	WFIFOW(inter_fd,14) = pet_egg_id;
-	WFIFOW(inter_fd,16) = pet_equip;
-	WFIFOW(inter_fd,18) = intimate;
-	WFIFOW(inter_fd,20) = hungry;
-	WFIFOB(inter_fd,22) = rename_flag;
-	WFIFOB(inter_fd,23) = incubate;
-	memcpy(WFIFOP(inter_fd,24),pet_name,NAME_LENGTH);
-	WFIFOSET(inter_fd,24+NAME_LENGTH);
+	WFIFOHEAD(inter_fd, 28 + NAME_LENGTH);
+	WFIFOW(inter_fd, 0) = 0x3080;
+	WFIFOL(inter_fd, 2) = account_id;
+	WFIFOL(inter_fd, 6) = char_id;
+	WFIFOW(inter_fd, 10) = pet_class;
+	WFIFOW(inter_fd, 12) = pet_lv;
+	WFIFOL(inter_fd, 14) = pet_egg_id;
+	WFIFOL(inter_fd, 18) = pet_equip;
+	WFIFOW(inter_fd, 22) = intimate;
+	WFIFOW(inter_fd, 24) = hungry;
+	WFIFOB(inter_fd, 26) = rename_flag;
+	WFIFOB(inter_fd, 27) = incubate;
+	memcpy(WFIFOP(inter_fd, 28), pet_name, NAME_LENGTH);
+	WFIFOSET(inter_fd, 28 + NAME_LENGTH);
 
 	return 0;
 }

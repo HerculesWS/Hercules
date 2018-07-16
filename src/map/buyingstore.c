@@ -128,7 +128,8 @@ static void buyingstore_create(struct map_session_data *sd, int zenylimit, unsig
 	// check item list
 	for (i = 0; i < count; i++) {
 		// itemlist: <name id>.W <amount>.W <price>.L
-		unsigned short nameid, amount;
+		int nameid;
+		unsigned short amount;
 		int price, idx;
 		struct item_data* id;
 
@@ -162,7 +163,8 @@ static void buyingstore_create(struct map_session_data *sd, int zenylimit, unsig
 			ARR_FIND( 0, i, listidx, sd->buyingstore.items[listidx].nameid == nameid );
 			if( listidx != i )
 			{// duplicate
-				ShowWarning("buyingstore_create: Found duplicate item on buying list (nameid=%hu, amount=%hu, account_id=%d, char_id=%d).\n", nameid, amount, sd->status.account_id, sd->status.char_id);
+				ShowWarning("buyingstore_create: Found duplicate item on buying list (nameid=%d, amount=%hu, account_id=%d, char_id=%d).\n",
+					nameid, amount, sd->status.account_id, sd->status.char_id);
 				break;
 			}
 		}
@@ -289,20 +291,21 @@ static void buyingstore_trade(struct map_session_data* sd, int account_id, unsig
 	// check item list
 	for( i = 0; i < count; i++ )
 	{// itemlist: <index>.W <name id>.W <amount>.W
-		unsigned short nameid, amount;
+		int nameid;
+		unsigned short amount;
 		int index;
 
 		index  = itemlist[i].index - 2;
 		nameid = itemlist[i].itemId;
 		amount = itemlist[i].amount;
 
-		if( i )
+		if (i)
 		{// duplicate check. as the client does this too, only malicious intent should be caught here
-			ARR_FIND( 0, i, k, RBUFW(itemlist,k*6+0)-2 == index );
-			if( k != i )
+			ARR_FIND(0, i, k, itemlist[k].index - 2 == index);
+			if (k != i)
 			{// duplicate
-				ShowWarning("buyingstore_trade: Found duplicate item on selling list (prevnameid=%hu, prevamount=%hu, nameid=%hu, amount=%hu, account_id=%d, char_id=%d).\n",
-					RBUFW(itemlist,k*6+2), RBUFW(itemlist,k*6+4), nameid, amount, sd->status.account_id, sd->status.char_id);
+				ShowWarning("buyingstore_trade: Found duplicate item on selling list (prevnameid=%d, prevamount=%d, nameid=%d, amount=%hu, account_id=%d, char_id=%d).\n",
+					(int)itemlist[k].itemId, (int)itemlist[k].amount, nameid, amount, sd->status.account_id, sd->status.char_id);
 				clif->buyingstore_trade_failed_seller(sd, BUYINGSTORE_TRADE_SELLER_FAILED, nameid);
 				return;
 			}
@@ -361,14 +364,15 @@ static void buyingstore_trade(struct map_session_data* sd, int account_id, unsig
 	// process item list
 	for( i = 0; i < count; i++ )
 	{// itemlist: <index>.W <name id>.W <amount>.W
-		unsigned short nameid, amount;
+		int nameid;
+		unsigned short amount;
 		int index;
 
-		index  = RBUFW(itemlist,i*6+0)-2;
-		nameid = RBUFW(itemlist,i*6+2);
-		amount = RBUFW(itemlist,i*6+4);
+		index  = itemlist[i].index - 2;
+		nameid = itemlist[i].itemId;
+		amount = itemlist[i].amount;
 
-		ARR_FIND( 0, pl_sd->buyingstore.slots, listidx, pl_sd->buyingstore.items[listidx].nameid == nameid );
+		ARR_FIND(0, pl_sd->buyingstore.slots, listidx, pl_sd->buyingstore.items[listidx].nameid == nameid );
 		zeny = amount*pl_sd->buyingstore.items[listidx].price;
 
 		// move item
@@ -416,7 +420,7 @@ static void buyingstore_trade(struct map_session_data* sd, int account_id, unsig
 }
 
 /// Checks if an item is being bought in given player's buying store.
-static bool buyingstore_search(struct map_session_data *sd, unsigned short nameid)
+static bool buyingstore_search(struct map_session_data *sd, int nameid)
 {
 	unsigned int i;
 

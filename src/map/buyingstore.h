@@ -63,7 +63,7 @@ enum e_buyingstore_failure {
 struct s_buyingstore_item {
 	int price;
 	unsigned short amount;
-	unsigned short nameid;
+	int nameid;
 };
 
 struct s_buyingstore {
@@ -85,7 +85,7 @@ struct buyingstore_interface {
 	void (*close) (struct map_session_data* sd);
 	void (*open) (struct map_session_data* sd, int account_id);
 	void (*trade) (struct map_session_data* sd, int account_id, unsigned int buyer_id, const struct PACKET_CZ_REQ_TRADE_BUYING_STORE_sub* itemlist, unsigned int count);
-	bool (*search) (struct map_session_data* sd, unsigned short nameid);
+	bool (*search) (struct map_session_data* sd, int nameid);
 	bool (*searchall) (struct map_session_data* sd, const struct s_search_store_search* s);
 	unsigned int (*getuid) (void);
 };

@@ -5455,7 +5455,7 @@ static void map_zone_init(void)
 	}
 
 }
-static unsigned short map_zone_str2itemid(const char *name)
+static int map_zone_str2itemid(const char *name)
 {
 	struct item_data *data;
 

@@ -714,7 +714,7 @@ enum map_zone_skill_subtype {
 };
 
 struct map_zone_disabled_skill_entry {
-	unsigned short nameid;
+	int nameid;
 	enum bl_type type;
 	enum map_zone_skill_subtype subtype;
 };
@@ -724,7 +724,7 @@ struct map_zone_disabled_command_entry {
 };
 
 struct map_zone_skill_damage_cap_entry {
-	unsigned short nameid;
+	int nameid;
 	unsigned int cap;
 	enum bl_type type;
 	enum map_zone_skill_subtype subtype;
@@ -1342,7 +1342,7 @@ END_ZEROED_BLOCK;
 	int (*sql_init) (void);
 	int (*sql_close) (void);
 	bool (*zone_mf_cache) (int m, char *flag, char *params);
-	unsigned short (*zone_str2itemid) (const char *name);
+	int (*zone_str2itemid) (const char *name);
 	unsigned short (*zone_str2skillid) (const char *name);
 	enum bl_type (*zone_bl_type) (const char *entry, enum map_zone_skill_subtype *subtype);
 	void (*read_zone_db) (void);

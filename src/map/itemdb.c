@@ -863,7 +863,7 @@ static void itemdb_read_groups(void)
 		itemdb->groups[count].id = data->nameid;
 		itemdb->groups[count].qty = gsize[ count ];
 
-		CREATE(itemdb->groups[count].nameid, unsigned short, gsize[ count ] + 1);
+		CREATE(itemdb->groups[count].nameid, int, gsize[count] + 1);
 		c = 0;
 		while( (it = libconfig->setting_get_elem(itg,c++)) ) {
 			int repeat = 1;
@@ -913,7 +913,8 @@ static void itemdb_write_cached_packages(const char *config_filename)
 	hwrite(&pcount,sizeof(pcount),1,file);
 
 	for(i = 0; i < pcount; i++) {
-		unsigned short id = itemdb->packages[i].id, random_qty = itemdb->packages[i].random_qty, must_qty = itemdb->packages[i].must_qty;
+		int id = itemdb->packages[i].id;
+		unsigned short random_qty = itemdb->packages[i].random_qty, must_qty = itemdb->packages[i].must_qty;
 		unsigned short c;
 		//into a package, first 2 bytes = id.
 		hwrite(&id,sizeof(id),1,file);
@@ -970,6 +971,7 @@ static void itemdb_write_cached_packages(const char *config_filename)
 
 	return;
 }
+
 static bool itemdb_read_cached_packages(const char *config_filename)
 {
 	FILE *file;
@@ -988,12 +990,13 @@ static bool itemdb_read_cached_packages(const char *config_filename)
 	itemdb->package_count = pcount;
 
 	for( i = 0; i < pcount; i++ ) {
-		unsigned short id = 0, random_qty = 0, must_qty = 0;
+		int id = 0;
+		unsigned short random_qty = 0, must_qty = 0;
 		struct item_data *pdata;
 		struct item_package *package = &itemdb->packages[i];
 		unsigned short c;
 
-		//into a package, first 2 bytes = id.
+		//into a package, first 4 bytes = id.
 		hread(&id,sizeof(id),1,file);
 		//next 2 bytes = must count
 		hread(&must_qty,sizeof(must_qty),1,file);
@@ -1016,10 +1019,11 @@ static bool itemdb_read_cached_packages(const char *config_filename)
 			//now we loop into must
 			for(c = 0; c < package->must_qty; c++) {
 				struct item_package_must_entry *entry = &itemdb->packages[i].must_items[c];
-				unsigned short mid = 0, qty = 0, hours = 0;
+				int mid = 0;
+				unsigned short qty = 0, hours = 0;
 				unsigned char announce = 0, named = 0, force_serial = 0;
 				struct item_data *data;
-				//first 2 byte = item id
+				//first 4 byte = item id
 				hread(&mid,sizeof(mid),1,file);
 				//next 2 byte = qty
 				hread(&qty,sizeof(qty),1,file);
@@ -1059,7 +1063,8 @@ static bool itemdb_read_cached_packages(const char *config_filename)
 				//now we loop into the group's list
 				for(h = 0; h < group_qty; h++) {
 					struct item_package_rand_entry *entry = &itemdb->packages[i].random_groups[c].random_list[h];
-					unsigned short mid = 0, qty = 0, hours = 0, rate = 0;
+					int mid = 0;
+					unsigned short qty = 0, hours = 0, rate = 0;
 					unsigned char announce = 0, named = 0, force_serial = 0;
 					struct item_data *data;
 
@@ -1982,7 +1987,7 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 		ShowWarning("itemdb_readdb_libconfig_sub: Invalid or missing id in \"%s\", entry #%d, skipping.\n", source, n);
 		return 0;
 	}
-	id.nameid = (uint16)i32;
+	id.nameid = i32;
 
 	if( (t = libconfig->setting_get_member(it, "Inherit")) && (inherit = libconfig->setting_get_bool(t)) ) {
 		if( !itemdb->exists(id.nameid) ) {
@@ -2431,7 +2436,7 @@ static void itemdb_read(bool minimal)
 /**
  * retrieves item_combo data by combo id
  **/
-static struct item_combo *itemdb_id2combo(unsigned short id)
+static struct item_combo *itemdb_id2combo(int id)
 {
 	if( id > itemdb->combo_count )
 		return NULL;

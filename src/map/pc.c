@@ -565,7 +565,7 @@ static int pc_inventory_rental_clear(struct map_session_data *sd)
 /* assumes i is valid (from default areas where it is called, it is) */
 static void pc_rental_expire(struct map_session_data *sd, int i)
 {
-	short nameid;
+	int nameid;
 
 	nullpo_retv(sd);
 	Assert_retv(i >= 0 && i < MAX_INVENTORY);
@@ -2082,7 +2082,7 @@ static int pc_disguise(struct map_session_data *sd, int class)
 	return 1;
 }
 
-static int pc_bonus_autospell(struct s_autospell *spell, int max, short id, short lv, short rate, short flag, short card_id)
+static int pc_bonus_autospell(struct s_autospell *spell, int max, short id, short lv, short rate, short flag, int card_id)
 {
 	int i;
 
@@ -2120,7 +2120,7 @@ static int pc_bonus_autospell(struct s_autospell *spell, int max, short id, shor
 	return 1;
 }
 
-static int pc_bonus_autospell_onskill(struct s_autospell *spell, int max, short src_skill, short id, short lv, short rate, short card_id)
+static int pc_bonus_autospell_onskill(struct s_autospell *spell, int max, short src_skill, short id, short lv, short rate, int card_id)
 {
 	int i;
 
