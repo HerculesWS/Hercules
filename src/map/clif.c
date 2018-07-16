@@ -20643,12 +20643,14 @@ static void clif_rodex_read_mail(struct map_session_data *sd, int8 opentype, str
 	size += body_len;
 	for (i = 0; i < RODEX_MAX_ITEM; ++i) {
 		struct item *it = &msg->items[i].item;
-		struct item_data* data = itemdb->search(it->nameid);
+		struct item_data *data;
 		int j, k;
 
-		if (it->nameid == 0 || data == NULL) {
+		if (it->nameid == 0)
 			continue;
-		}
+		data = itemdb->search(it->nameid);
+		if (data == NULL)
+			continue;
 
 		item = WFIFOP(fd, size);
 		memset(item, 0x0, sizeof(*item));
