@@ -767,7 +767,7 @@ static int char_getitemdata_from_sql(struct item *items, int max, int guid, enum
 	}
 
 	if (SQL_ERROR == SQL->StmtBindColumn(stmt, 0, SQLDT_INT,    &item.id,          sizeof item.id,          NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 1, SQLDT_SHORT,  &item.nameid,      sizeof item.nameid,      NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 1, SQLDT_INT,    &item.nameid,      sizeof item.nameid,      NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 2, SQLDT_SHORT,  &item.amount,      sizeof item.amount,      NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 3, SQLDT_UINT,   &item.equip,       sizeof item.equip,       NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 4, SQLDT_CHAR,   &item.identify,    sizeof item.identify,    NULL, NULL)
@@ -781,7 +781,7 @@ static int char_getitemdata_from_sql(struct item *items, int max, int guid, enum
 	}
 
 	for (i = 0; i < MAX_SLOTS; i++) {
-		if (SQL_ERROR == SQL->StmtBindColumn(stmt, 10 + i, SQLDT_SHORT, &item.card[i], sizeof item.card[i], NULL, NULL))
+		if (SQL_ERROR == SQL->StmtBindColumn(stmt, 10 + i, SQLDT_INT, &item.card[i], sizeof item.card[i], NULL, NULL))
 			SqlStmt_ShowDebug(stmt);
 	}
 
@@ -872,7 +872,7 @@ static int char_memitemdata_to_sql(const struct item *p_items, int guid, enum in
 					 && p_items[j].nameid != 0
 					 && cp_it->nameid == p_items[j].nameid
 					 && cp_it->unique_id == p_items[j].unique_id
-					 && memcmp(p_items[j].card, cp_it->card, sizeof(short) * MAX_SLOTS) == 0
+					 && memcmp(p_items[j].card, cp_it->card, sizeof(int) * MAX_SLOTS) == 0
 					 && memcmp(p_items[j].option, cp_it->option, 5 * MAX_ITEM_OPTIONS) == 0);
 
 			if (j < item_count) { // Item found.
@@ -1099,16 +1099,16 @@ static int char_mmo_chars_fromsql(struct char_session_data *sd, uint8 *buf)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 24, SQLDT_SHORT,  &p.hair,             sizeof p.hair,             NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 25, SQLDT_SHORT,  &p.hair_color,       sizeof p.hair_color,       NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 26, SQLDT_SHORT,  &p.clothes_color,    sizeof p.clothes_color,    NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 27, SQLDT_SHORT,  &p.body,             sizeof p.body,             NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 28, SQLDT_SHORT,  &p.look.weapon,      sizeof p.look.weapon,      NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 29, SQLDT_SHORT,  &p.look.shield,      sizeof p.look.shield,      NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 30, SQLDT_SHORT,  &p.look.head_top,    sizeof p.look.head_top,    NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 31, SQLDT_SHORT,  &p.look.head_mid,    sizeof p.look.head_mid,    NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 32, SQLDT_SHORT,  &p.look.head_bottom, sizeof p.look.head_bottom, NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 27, SQLDT_INT,    &p.body,             sizeof p.body,             NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 28, SQLDT_INT,    &p.look.weapon,      sizeof p.look.weapon,      NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 29, SQLDT_INT,    &p.look.shield,      sizeof p.look.shield,      NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 30, SQLDT_INT,    &p.look.head_top,    sizeof p.look.head_top,    NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 31, SQLDT_INT,    &p.look.head_mid,    sizeof p.look.head_mid,    NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 32, SQLDT_INT,    &p.look.head_bottom, sizeof p.look.head_bottom, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 33, SQLDT_STRING, &last_map,           sizeof last_map,           NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 34, SQLDT_USHORT, &p.rename,           sizeof p.rename,           NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 35, SQLDT_TIME,   &p.delete_date,      sizeof p.delete_date,      NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 36, SQLDT_SHORT,  &p.look.robe,        sizeof p.look.robe,        NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 36, SQLDT_INT,    &p.look.robe,        sizeof p.look.robe,        NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 37, SQLDT_USHORT, &p.slotchange,       sizeof p.slotchange,       NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 38, SQLDT_TIME,   &unban_time,         sizeof unban_time,         NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 39, SQLDT_ENUM,   &sex,                sizeof sex,                NULL, NULL)
@@ -1213,12 +1213,12 @@ static int char_mmo_char_fromsql(int char_id, struct mmo_charstatus *p, bool loa
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 30, SQLDT_SHORT,  &p->hair,               sizeof p->hair,               NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 31, SQLDT_SHORT,  &p->hair_color,         sizeof p->hair_color,         NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 32, SQLDT_SHORT,  &p->clothes_color,      sizeof p->clothes_color,      NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 33, SQLDT_SHORT,  &p->body,               sizeof p->body,               NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 34, SQLDT_SHORT,  &p->look.weapon,        sizeof p->look.weapon,        NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 35, SQLDT_SHORT,  &p->look.shield,        sizeof p->look.shield,        NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 36, SQLDT_SHORT,  &p->look.head_top,      sizeof p->look.head_top,      NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 37, SQLDT_SHORT,  &p->look.head_mid,      sizeof p->look.head_mid,      NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 38, SQLDT_SHORT,  &p->look.head_bottom,   sizeof p->look.head_bottom,   NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 33, SQLDT_INT,    &p->body,               sizeof p->body,               NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 34, SQLDT_INT,    &p->look.weapon,        sizeof p->look.weapon,        NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 35, SQLDT_INT,    &p->look.shield,        sizeof p->look.shield,        NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 36, SQLDT_INT,    &p->look.head_top,      sizeof p->look.head_top,      NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 37, SQLDT_INT,    &p->look.head_mid,      sizeof p->look.head_mid,      NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 38, SQLDT_INT,    &p->look.head_bottom,   sizeof p->look.head_bottom,   NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 39, SQLDT_STRING, &last_map,              sizeof last_map,              NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 40, SQLDT_INT16,  &p->last_point.x,       sizeof p->last_point.x,       NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 41, SQLDT_INT16,  &p->last_point.y,       sizeof p->last_point.y,       NULL, NULL)
@@ -1232,7 +1232,7 @@ static int char_mmo_char_fromsql(int char_id, struct mmo_charstatus *p, bool loa
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 49, SQLDT_INT,    &p->fame,               sizeof p->fame,               NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 50, SQLDT_USHORT, &p->rename,             sizeof p->rename,             NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 51, SQLDT_TIME,   &p->delete_date,        sizeof p->delete_date,        NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 52, SQLDT_SHORT,  &p->look.robe,          sizeof p->look.robe,          NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 52, SQLDT_INT,    &p->look.robe,          sizeof p->look.robe,          NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 53, SQLDT_USHORT, &p->slotchange,         sizeof p->slotchange,         NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 54, SQLDT_UINT,   &opt,                   sizeof opt,                   NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 55, SQLDT_UCHAR,  &p->font,               sizeof p->font,               NULL, NULL)

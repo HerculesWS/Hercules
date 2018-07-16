@@ -164,7 +164,7 @@ static int inter_rodex_fromsql(int char_id, int account_id, int8 opentype, int64
 
 			if (msg.type & MAIL_TYPE_ITEM) {
 				if (SQL_ERROR == SQL->StmtExecute(stmt_items)
-				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 0,  SQLDT_SHORT,  &it.nameid,          sizeof it.nameid,      NULL, NULL)
+				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 0,  SQLDT_INT,    &it.nameid,          sizeof it.nameid,      NULL, NULL)
 				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 1,  SQLDT_SHORT,  &it.amount,          sizeof it.amount,      NULL, NULL)
 				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 2,  SQLDT_UINT,   &it.equip,           sizeof it.equip,       NULL, NULL)
 				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 3,  SQLDT_CHAR,   &it.identify,        sizeof it.identify,    NULL, NULL)
@@ -177,7 +177,7 @@ static int inter_rodex_fromsql(int char_id, int account_id, int8 opentype, int64
 					SqlStmt_ShowDebug(stmt_items);
 				}
 				for (i = 0; i < MAX_SLOTS; i++) {
-					if (SQL_ERROR == SQL->StmtBindColumn(stmt_items, 9 + i, SQLDT_SHORT, &it.card[i], sizeof it.card[i], NULL, NULL))
+					if (SQL_ERROR == SQL->StmtBindColumn(stmt_items, 9 + i, SQLDT_INT, &it.card[i], sizeof it.card[i], NULL, NULL))
 						SqlStmt_ShowDebug(stmt_items);
 				}
 				for (i = 0; i < MAX_ITEM_OPTIONS; i++) {
