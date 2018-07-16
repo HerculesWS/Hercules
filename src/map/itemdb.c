@@ -1700,9 +1700,9 @@ static int itemdb_validate_entry(struct item_data *entry, int n, const char *sou
 
 	nullpo_ret(entry);
 	nullpo_ret(source);
-	if( entry->nameid <= 0 || entry->nameid >= MAX_ITEMDB ) {
-		ShowWarning("itemdb_validate_entry: Invalid item ID %d in entry %d of '%s', allowed values 0 < ID < %d (MAX_ITEMDB), skipping.\n",
-				entry->nameid, n, source, MAX_ITEMDB);
+	if (entry->nameid <= 0 || entry->nameid > MAX_ITEM_ID) {
+		ShowWarning("itemdb_validate_entry: Invalid item ID %d in entry %d of '%s', allowed values 0 < ID < %d (MAX_ITEM_ID), skipping.\n",
+				entry->nameid, n, source, MAX_ITEM_ID);
 		if (entry->script) {
 			script->free_code(entry->script);
 			entry->script = NULL;
@@ -2346,6 +2346,7 @@ static bool itemdb_lookup_const_mask(const struct config_setting_t *it, const ch
 static int itemdb_readdb_libconfig(const char *filename)
 {
 	bool duplicate[MAX_ITEMDB];
+	struct DBMap *duplicate_db;
 	struct config_t item_db_conf;
 	struct config_setting_t *itdb, *it;
 	char filepath[256];
@@ -2362,26 +2363,38 @@ static int itemdb_readdb_libconfig(const char *filename)
 		return 0;
 	}
 
+	// TODO add duplicates check for itemdb->other
 	memset(&duplicate,0,sizeof(duplicate));
+	duplicate_db = idb_alloc(DB_OPT_BASE);
 
 	while( (it = libconfig->setting_get_elem(itdb,i++)) ) {
 		int nameid = itemdb->readdb_libconfig_sub(it, i-1, filename);
 
-		if (nameid <= 0 || nameid >= MAX_ITEMDB)
+		if (nameid <= 0 || nameid > MAX_ITEM_ID)
 			continue;
 
 		itemdb->readdb_additional_fields(nameid, it, i - 1, filename);
 		count++;
 
-		if( duplicate[nameid] ) {
-			ShowWarning("itemdb_readdb:%s: duplicate entry of ID #%d (%s/%s)\n",
-					filename, nameid, itemdb_name(nameid), itemdb_jname(nameid));
-		} else
-			duplicate[nameid] = true;
+		if (nameid < MAX_ITEMDB) {
+			if (duplicate[nameid]) {
+				ShowWarning("itemdb_readdb:%s: duplicate entry of ID #%d (%s/%s)\n",
+						filename, nameid, itemdb_name(nameid), itemdb_jname(nameid));
+			} else {
+				duplicate[nameid] = true;
+			}
+		} else {
+			if (idb_exists(duplicate_db, nameid)) {
+				ShowWarning("itemdb_readdb:%s: duplicate entry of ID #%d (%s/%s)\n",
+						filename, nameid, itemdb_name(nameid), itemdb_jname(nameid));
+			} else {
+				idb_iput(duplicate_db, nameid, true);
+			}
+		}
 	}
+	db_destroy(duplicate_db);
 	libconfig->destroy(&item_db_conf);
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filename);
-
 	return count;
 }
 
@@ -2411,6 +2424,7 @@ static void itemdb_read(bool minimal)
 	for (i = 0; i < ARRAYLENGTH(filename); i++)
 		itemdb->readdb_libconfig(filename[i]);
 
+	// TODO check duplicate names also in itemdb->other
 	for( i = 0; i < ARRAYLENGTH(itemdb->array); ++i ) {
 		if( itemdb->array[i] ) {
 			if( itemdb->names->put(itemdb->names,DB->str2key(itemdb->array[i]->name),DB->ptr2data(itemdb->array[i]),&prev) ) {
