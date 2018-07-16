@@ -449,7 +449,7 @@ void itemdb2sql_tableheader(void)
 			"\n"
 			"DROP TABLE IF EXISTS `%s`;\n"
 			"CREATE TABLE `%s` (\n"
-			"  `id` smallint(5) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `id` int(11) UNSIGNED NOT NULL DEFAULT '0',\n"
 			"  `name_english` varchar(50) NOT NULL DEFAULT '',\n"
 			"  `name_japanese` varchar(50) NOT NULL DEFAULT '',\n"
 			"  `type` tinyint(2) UNSIGNED NOT NULL DEFAULT '0',\n"
