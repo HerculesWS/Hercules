@@ -371,13 +371,13 @@ struct item_option {
 
 struct item {
 	int id;
-	short nameid;
+	int nameid;
 	short amount;
 	unsigned int equip; // Location(s) where item is equipped (using enum equip_pos for bitmasking).
 	char identify;
 	char refine;
 	char attribute;
-	short card[MAX_SLOTS];
+	int card[MAX_SLOTS];
 	unsigned int expire_time;
 	char favorite;
 	unsigned char bound;
@@ -538,8 +538,8 @@ struct s_pet {
 	int pet_id;
 	short class_;
 	short level;
-	short egg_id;//pet egg id
-	short equip;//pet equip name_id
+	int egg_id;//pet egg id
+	int equip;//pet equip name_id
 	short intimate;//pet friendly
 	short hungry;//pet hungry
 	char name[NAME_LENGTH];
@@ -634,7 +634,8 @@ struct mmo_charstatus {
 	unsigned int option;
 	short manner; // Defines how many minutes a char will be muted, each negative point is equivalent to a minute.
 	unsigned char karma;
-	short hair,hair_color,clothes_color,body;
+	short hair, hair_color, clothes_color;
+	int body;
 	int party_id,guild_id,clan_id,pet_id,hom_id,mer_id,ele_id;
 	int fame;
 
@@ -644,12 +645,12 @@ struct mmo_charstatus {
 	int sword_faith, sword_calls;
 
 	struct {
-		short weapon;      ///< Weapon view sprite id.
-		short shield;      ///< Shield view sprite id.
-		short head_top;    ///< Top headgear view sprite id.
-		short head_mid;    ///< Middle headgear view sprite id.
-		short head_bottom; ///< Bottom headgear view sprite id.
-		short robe;        ///< Robe view sprite id.
+		int weapon;      ///< Weapon view sprite id.
+		int shield;      ///< Shield view sprite id.
+		int head_top;    ///< Top headgear view sprite id.
+		int head_mid;    ///< Middle headgear view sprite id.
+		int head_bottom; ///< Bottom headgear view sprite id.
+		int robe;        ///< Robe view sprite id.
 	} look;
 
 	char name[NAME_LENGTH];
