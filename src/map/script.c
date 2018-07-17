@@ -9247,6 +9247,8 @@ static BUILDIN(getbrokenid)
 
 	num=script_getnum(st,2);
 	for(i=0; i<MAX_INVENTORY; i++) {
+		if (sd->status.inventory[i].card[0] == CARD0_PET)
+			continue;
 		if ((sd->status.inventory[i].attribute & ATTR_BROKEN) != 0) {
 			brokencounter++;
 			if(num==brokencounter) {
@@ -9272,6 +9274,8 @@ static BUILDIN(getbrokencount)
 		return true;
 
 	for (i = 0; i < MAX_INVENTORY; i++) {
+		if (sd->status.inventory[i].card[0] == CARD0_PET)
+			continue;
 		if ((sd->status.inventory[i].attribute & ATTR_BROKEN) != 0)
 			counter++;
 	}
@@ -9294,6 +9298,8 @@ static BUILDIN(repair)
 
 	num=script_getnum(st,2);
 	for(i=0; i<MAX_INVENTORY; i++) {
+		if (sd->status.inventory[i].card[0] == CARD0_PET)
+			continue;
 		if ((sd->status.inventory[i].attribute & ATTR_BROKEN) != 0) {
 			repaircounter++;
 			if(num==repaircounter) {
@@ -9322,6 +9328,8 @@ static BUILDIN(repairall)
 
 	for(i = 0; i < MAX_INVENTORY; i++)
 	{
+		if (sd->status.inventory[i].card[0] == CARD0_PET)
+			continue;
 		if (sd->status.inventory[i].nameid && (sd->status.inventory[i].attribute & ATTR_BROKEN) != 0)
 		{
 			sd->status.inventory[i].attribute |= ATTR_BROKEN;

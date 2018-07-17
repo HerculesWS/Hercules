@@ -16106,6 +16106,9 @@ static void skill_repairweapon(struct map_session_data *sd, int idx)
 	if( item->nameid <= 0 || (item->attribute & ATTR_BROKEN) == 0 )
 		return; //Again invalid item....
 
+	if (item->card[0] == CARD0_PET)
+		return;
+
 	if( sd != target_sd && !battle->check_range(&sd->bl,&target_sd->bl, skill->get_range2(&sd->bl, sd->menuskill_id,sd->menuskill_val2) ) ){
 		clif->item_repaireffect(sd,idx,1);
 		return;
