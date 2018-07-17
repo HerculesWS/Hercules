@@ -7233,6 +7233,7 @@ static void clif_sendegg(struct map_session_data *sd)
 ///     3 = accessory
 ///     4 = performance (data = 1~3: normal, 4: special)
 ///     5 = hairstyle
+///     6 = close egg selection ui and update egg in inventory (PACKETVER >= 20170704)
 ///
 /// If sd is null, the update is sent to nearby objects, otherwise it is sent only to that player.
 static void clif_send_petdata(struct map_session_data *sd, struct pet_data *pd, int type, int param)

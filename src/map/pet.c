@@ -348,7 +348,10 @@ static int pet_return_egg(struct map_session_data *sd, struct pet_data *pd)
 		sd->status.inventory[i].attribute ^= ATTR_BROKEN;
 		sd->status.inventory[i].bound = IBT_NONE;
 	}
-
+#if PACKETVER >= 20170704
+	clif->inventorylist(sd);
+	clif->send_petdata(sd, pd, 6, 0);
+#endif
 	pd->pet.incubate = 1;
 	unit->free(&pd->bl,CLR_OUTSIGHT);
 
@@ -462,6 +465,9 @@ static int pet_birth_process(struct map_session_data *sd, struct s_pet *petinfo)
 		clif->spawn(&sd->pd->bl);
 		clif->send_petdata(sd,sd->pd, 0,0);
 		clif->send_petdata(sd,sd->pd, 5,battle_config.pet_hair_style);
+#if PACKETVER >= 20170704
+		clif->send_petdata(sd, sd->pd, 6, 1);
+#endif
 		clif->send_petdata(NULL, sd->pd, 3, sd->pd->vd.head_bottom);
 		clif->send_petstatus(sd);
 	}
