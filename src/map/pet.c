@@ -345,7 +345,7 @@ static int pet_return_egg(struct map_session_data *sd, struct pet_data *pd)
 			pd->pet.pet_id == MakeDWord(sd->status.inventory[i].card[1], sd->status.inventory[i].card[2]));
 
 	if (i != MAX_INVENTORY) {
-		sd->status.inventory[i].identify = 1;
+		sd->status.inventory[i].attribute &= ~ATTR_BROKEN;
 		sd->status.inventory[i].bound = IBT_NONE;
 	}
 
@@ -496,8 +496,8 @@ static int pet_recv_petdata(int account_id, struct s_pet *p, int flag)
 
 
 		if (!pet->birth_process(sd,p)) {
-			// Pet Evolution, Hide the egg by setting identify to 0 [Dastgir/Hercules]
-			sd->status.inventory[i].identify = 0;
+			// Pet Evolution, Hide the egg by setting broken attribute (0x2)  [Asheraf]
+			sd->status.inventory[i].attribute |= ATTR_BROKEN;
 			// bind the egg to the character to avoid moving it via forged packets [Asheraf]
 			sd->status.inventory[i].bound = IBT_CHARACTER;
 		}
