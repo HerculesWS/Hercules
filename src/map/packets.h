@@ -4248,4 +4248,11 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0add,24); // ZC_ITEM_FALL_ENTRY
 #endif
 
+// 2018-07-25_2aRagexe_zero
+#if PACKETVER_ZERO_NUM >= 20180725
+// new packets
+	packet(0x0b03,-1,clif->pDull/*,XXX*/);
+// changed packet sizes
+#endif
+
 #endif /* MAP_PACKETS_H */
