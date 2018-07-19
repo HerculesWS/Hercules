@@ -4121,7 +4121,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 // 2018-05-16cRagexe, 2018-05-16cRagexeRE
 #if PACKETVER >= 20180516
 // new packets
-	packet(0x0afc,16,clif->pDull/*,XXX*/);
+	packet(0x0afc,16,clif->pReqStyleChange);
 // changed packet sizes
 #endif
 #endif  // PACKETVER_ZERO
@@ -4130,7 +4130,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 // 2018-05-23aRagexe_zero
 #if PACKETVER >= 20180523
 // new packets
-	packet(0x0afc,16,clif->pDull/*,XXX*/);
+	packet(0x0afc,16,clif->pReqStyleChange);
 // changed packet sizes
 #endif
 #endif  // PACKETVER_ZERO

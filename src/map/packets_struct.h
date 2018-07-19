@@ -1864,6 +1864,9 @@ struct PACKET_CZ_REQ_STYLE_CHANGE {
 	int16 TopAccessory;
 	int16 MidAccessory;
 	int16 BottomAccessory;
+#if PACKETVER_RE_NUM >= 20180718
+	int16 BodyStyle;
+#endif
 } __attribute__((packed));
 
 struct PACKET_ZC_STYLE_CHANGE_RES {

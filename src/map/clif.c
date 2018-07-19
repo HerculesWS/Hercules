@@ -21189,7 +21189,7 @@ static bool clif_stylist_read_db_libconfig_sub(struct config_setting_t *it, int 
 		ShowWarning("clif_stylist_read_db_libconfig_sub: Invalid or missing Type (%d) in \"%s\", entry #%d, skipping.\n", type, source, idx);
 		return false;
 	}
-	if (!itemdb->lookup_const(it, "Id", &i32) || i32 <= 0) {
+	if (!itemdb->lookup_const(it, "Id", &i32) || i32 < 0) {
 		ShowWarning("clif_stylist_read_db_libconfig_sub: Invalid or missing Id (%d) in \"%s\", entry #%d, skipping.\n", i32, source, idx);
 		return false;
 	}
@@ -21226,7 +21226,7 @@ static bool clif_style_change_validate_requirements(struct map_session_data *sd,
 
 	entry = &VECTOR_INDEX(stylist_data[type], idx);
 
-	if (entry->id != 0) {
+	if (entry->id >= 0) {
 		if (entry->zeny != 0) {
 			if (sd->status.zeny < entry->zeny)
 				return false;
@@ -21284,7 +21284,13 @@ static void clif_parse_cz_req_style_change(int fd, struct map_session_data *sd)
 		clif->cz_req_style_change_sub(sd, LOOK_HEAD_MID, p->MidAccessory, true);
 	if (p->BottomAccessory > 0)
 		clif->cz_req_style_change_sub(sd, LOOK_HEAD_BOTTOM, p->BottomAccessory, true);
-
+#if PACKETVER_RE_NUM >= 20180718
+	if (p->BodyStyle > 0) {
+		if (pc->has_second_costume(sd)) {
+			clif->cz_req_style_change_sub(sd, LOOK_BODY2, p->BodyStyle, false);
+		}
+	}
+#endif
 	clif->style_change_response(sd, STYLIST_SHOP_SUCCESS);
 	return;
 }
