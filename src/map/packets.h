@@ -219,7 +219,7 @@ packet(0x0118,2,clif->pStopAttack,0);
 packet(0x0119,13);
 packet(0x011a,15);
 packet(0x011b,20,clif->pUseSkillMap,2,4);
-packet(0x011c,68);
+packet(0x011c,68);  // ZC_WARPLIST
 packet(0x011d,2,clif->pRequestMemo,0);
 packet(0x011e,3);
 packet(0x011f,16);
@@ -3732,7 +3732,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0ac6,156);
 	packet(0x0ac7,156);  // ZC_NPCACK_SERVERMOVE
 // changed packet sizes
-	packet(0x0abe,-1);
+	packet(0x0abe,-1); // ZC_WARPLIST
 	packet(0x0abf,-1);
 #endif
 

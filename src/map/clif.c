@@ -5498,28 +5498,46 @@ static void clif_skill_poseffect(struct block_list *src, uint16 skill_id, int va
 static void clif_skill_warppoint(struct map_session_data *sd, uint16 skill_id, uint16 skill_lv, unsigned short map1, unsigned short map2, unsigned short map3, unsigned short map4)
 {
 	int fd;
+	int len;
+	int mapsCount = 0;
+	struct PACKET_ZC_WARPLIST *p;
 
 	nullpo_retv(sd);
 	fd = sd->fd;
+#if PACKETVER_MAIN_NUM >= 20170502 || PACKETVER_RE_NUM >= 20170419 || defined(PACKETVER_ZERO)
+	len = sizeof(struct PACKET_ZC_WARPLIST) + sizeof(struct PACKET_ZC_WARPLIST_sub) * mapsCount;
+#else
+	len = sizeof(struct PACKET_ZC_WARPLIST);
+#endif
 
-	WFIFOHEAD(fd,packet_len(0x11c));
-	WFIFOW(fd,0) = 0x11c;
-	WFIFOW(fd,2) = skill_id;
-	memset(WFIFOP(fd,4), 0x00, 4*MAP_NAME_LENGTH_EXT);
-	if (map1 == (unsigned short)-1) strcpy(WFIFOP(fd,4), "Random");
-	else // normal map name
-	if (map1 > 0) mapindex->getmapname_ext(mapindex_id2name(map1), WFIFOP(fd,4));
-	if (map2 > 0) mapindex->getmapname_ext(mapindex_id2name(map2), WFIFOP(fd,20));
-	if (map3 > 0) mapindex->getmapname_ext(mapindex_id2name(map3), WFIFOP(fd,36));
-	if (map4 > 0) mapindex->getmapname_ext(mapindex_id2name(map4), WFIFOP(fd,52));
-	WFIFOSET(fd,packet_len(0x11c));
+	WFIFOHEAD(fd, len);
+	p = WFIFOP(fd, 0);
+	memset(p, 0, len);
+	p->packetType = skilWarpPointType;
+	p->skillId = skill_id;
+	if (map1 == (unsigned short)-1) {
+		strcpy(p->maps[mapsCount++].map, "Random");
+	} else { // normal map name
+		if (map1 > 0) mapindex->getmapname_ext(mapindex_id2name(map1), p->maps[mapsCount++].map);
+	}
+	if (map2 > 0) mapindex->getmapname_ext(mapindex_id2name(map2), p->maps[mapsCount++].map);
+	if (map3 > 0) mapindex->getmapname_ext(mapindex_id2name(map3), p->maps[mapsCount++].map);
+	if (map4 > 0) mapindex->getmapname_ext(mapindex_id2name(map4), p->maps[mapsCount++].map);
+
+#if PACKETVER_MAIN_NUM >= 20170502 || PACKETVER_RE_NUM >= 20170419 || defined(PACKETVER_ZERO)
+	len = sizeof(struct PACKET_ZC_WARPLIST) + sizeof(struct PACKET_ZC_WARPLIST_sub) * mapsCount;
+	p->packetLength = len;
+#endif
+
+	WFIFOSET(fd, len);
 
 	sd->menuskill_id = skill_id;
-	if (skill_id == AL_WARP){
-		sd->menuskill_val = (sd->ud.skillx<<16)|sd->ud.skilly; //Store warp position here.
+	if (skill_id == AL_WARP) {
+		sd->menuskill_val = (sd->ud.skillx << 16) | sd->ud.skilly; //Store warp position here.
 		sd->state.workinprogress = 3;
-	}else
+	} else {
 		sd->menuskill_val = skill_lv;
+	}
 }
 
 /// Memo message (ZC_ACK_REMEMBER_WARPPOINT).

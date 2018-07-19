@@ -412,6 +412,11 @@ enum packet_headers {
 #else
 	reqNameAllType = 0x195,
 #endif
+#if PACKETVER_MAIN_NUM >= 20170502 || PACKETVER_RE_NUM >= 20170419 || defined(PACKETVER_ZERO)
+	skilWarpPointType = 0xabe,
+#else
+	skilWarpPointType = 0x11c,
+#endif
 };
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
@@ -2658,6 +2663,22 @@ struct packet_reqnameall_ack {
 struct PACKET_ZC_OVERWEIGHT_PERCENT {
 	int16 packetType;
 	uint32 percent;
+} __attribute__((packed));
+
+struct PACKET_ZC_WARPLIST_sub {
+	char map[MAP_NAME_LENGTH_EXT];
+} __attribute__((packed));
+
+struct PACKET_ZC_WARPLIST {
+	int16 packetType;
+#if PACKETVER_MAIN_NUM >= 20170502 || PACKETVER_RE_NUM >= 20170419 || defined(PACKETVER_ZERO)
+	int16 packetLength;
+	uint16 skillId;
+	struct PACKET_ZC_WARPLIST_sub maps[];
+#else
+	uint16 skillId;
+	struct PACKET_ZC_WARPLIST_sub maps[4];
+#endif
 } __attribute__((packed));
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
