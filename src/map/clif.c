@@ -21575,6 +21575,17 @@ static void clif_overweight_percent(struct map_session_data *sd)
 #endif
 }
 
+static void clif_parse_changeDress(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
+/// 0ae8 <packet len>.W
+static void clif_parse_changeDress(int fd, struct map_session_data *sd)
+{
+	const char commandname[] = "changedress";
+	char command[sizeof commandname + 3] = ""; // '@' command + ' ' + NUL
+
+	sprintf(command, "%c%s ", atcommand->at_symbol, commandname);
+	atcommand->exec(fd, sd, command, true);
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -22613,6 +22624,7 @@ void clif_defaults(void)
 	clif->pMoveItem = clif_parse_MoveItem;
 	clif->p_cz_blocking_play_cancel = clif_parse_cz_blocking_play_cancel;
 	clif->overweight_percent = clif_overweight_percent;
+	clif->pChangeDress = clif_parse_changeDress;
 	/* dull */
 	clif->pDull = clif_parse_dull;
 	/* BGQueue */

@@ -9472,6 +9472,8 @@ ACMD(costume)
 	};
 	unsigned short k = 0, len = ARRAYLENGTH(names);
 
+	bool isChangeDress = (strcmpi(info->command, "changedress") == 0 || strcmpi(info->command, "nocosplay") == 0);
+
 	if (!*message) {
 		for (k = 0; k < len; k++) {
 			if (sd->sc.data[name2id[k]]) {
@@ -9482,6 +9484,8 @@ ACMD(costume)
 			}
 		}
 
+		if (isChangeDress)
+			return true;
 		clif->message(sd->fd, msg_fd(fd, 1472)); // - Available Costumes
 
 		for (k = 0; k < len; k++) {
@@ -9490,6 +9494,9 @@ ACMD(costume)
 		}
 		return false;
 	}
+
+	if (isChangeDress)
+		return true;
 
 	for (k = 0; k < len; k++) {
 		if (sd->sc.data[name2id[k]]) {
@@ -10014,6 +10021,8 @@ static void atcommand_basecommands(void)
 		ACMD_DEF(fontcolor),
 		ACMD_DEF(searchstore),
 		ACMD_DEF(costume),
+		ACMD_DEF2("changedress", costume),
+		ACMD_DEF2("nocosplay", costume),
 		ACMD_DEF(skdebug),
 		ACMD_DEF(cddebug),
 		ACMD_DEF(lang),

@@ -3936,7 +3936,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 // new packets
 	packet(0x0ae6,30);
 	packet(0x0ae7,30);
-	packet(0x0ae8,2);
+	packet(0x0ae8,2,clif->pChangeDress);
 // changed packet sizes
 #endif
 #endif  // PACKETVER_ZERO
@@ -3953,7 +3953,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 // 2017-12-20aRagexe
 #if PACKETVER >= 20171220
 // new packets
-	packet(0x0ae8,2);
+	packet(0x0ae8,2,clif->pChangeDress);
 	packet(0x0ae9,64);
 	packet(0x0aea,11);
 // changed packet sizes
