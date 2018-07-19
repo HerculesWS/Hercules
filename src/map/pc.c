@@ -1379,6 +1379,7 @@ static bool pc_authok(struct map_session_data *sd, int login_id2, time_t expirat
 		pc->setpos(sd,sd->status.last_point.map,0,0,CLR_OUTSIGHT);
 	}
 
+	clif->overweight_percent(sd);
 	clif->authok(sd);
 
 	//Prevent S. Novices from getting the no-death bonus just yet. [Skotlex]

@@ -1492,6 +1492,7 @@ struct clif_interface {
 	/* Hat Effect */
 	void (*hat_effect) (struct block_list *bl, struct block_list *tbl, enum send_target target);
 	void (*hat_effect_single) (struct block_list *bl, uint16 effectId, bool enable);
+	void (*overweight_percent) (struct map_session_data *sd);
 
 	bool (*pAttendanceDB) (void);
 	bool (*attendancedb_libconfig_sub) (struct config_setting_t *it, int n, const char *source);

@@ -21562,6 +21562,19 @@ static void clif_style_change_response(struct map_session_data *sd, enum stylist
 #endif
 }
 
+static void clif_overweight_percent(struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20171108 || PACKETVER_RE_NUM >= 20171025 || PACKETVER_ZERO_NUM >= 20171019
+	struct PACKET_ZC_OVERWEIGHT_PERCENT p;
+
+	nullpo_retv(sd);
+
+	p.packetType = 0xade;
+	p.percent = battle_config.natural_heal_weight_rate;
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
+#endif
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -22599,6 +22612,7 @@ void clif_defaults(void)
 	clif->pSkillSelectMenu = clif_parse_SkillSelectMenu;
 	clif->pMoveItem = clif_parse_MoveItem;
 	clif->p_cz_blocking_play_cancel = clif_parse_cz_blocking_play_cancel;
+	clif->overweight_percent = clif_overweight_percent;
 	/* dull */
 	clif->pDull = clif_parse_dull;
 	/* BGQueue */
