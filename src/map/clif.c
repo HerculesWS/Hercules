@@ -18509,7 +18509,7 @@ static void clif_cashshop_db(void)
 						continue;
 					}
 
-					if( name[0] == 'I' && name[1] == 'D' && strlen(name) <= 7 ) {
+					if (name[0] == 'I' && name[1] == 'D' && strlen(name) <= 12) {
 						if( !( data = itemdb->exists(atoi(name+2))) ) {
 							ShowWarning("cashshop_db: unknown item id '%s' in category '%s'\n", name+2, entry_name);
 							continue;
@@ -19700,7 +19700,7 @@ static bool clif_parse_roulette_db(void)
 						continue;
 					}
 
-					if( name[0] == 'I' && name[1] == 'D' && strlen(name) <= 7 ) {
+					if (name[0] == 'I' && name[1] == 'D' && strlen(name) <= 12) {
 						if( !( data = itemdb->exists(atoi(name+2))) ) {
 							ShowWarning("roulette_db: unknown item id '%s' in category '%s'\n", name+2, entry_name);
 							continue;
