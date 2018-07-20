@@ -346,8 +346,7 @@ enum packet_headers {
 #if PACKETVER >= 20171207
 	partymemberinfo = 0x0ae4,
 	partyinfo = 0x0ae5,
-#elif PACKETVER >= 20170502
-// [4144] probably 0xa43 packet can works on older clients because in client was added in 2015-10-07
+#elif PACKETVER_MAIN_NUM >= 20170524 || PACKETVER_RE_NUM >= 20170502 || defined(PACKETVER_ZERO)
 	partymemberinfo = 0x0a43,
 	partyinfo = 0x0a44,
 #else
@@ -1680,8 +1679,7 @@ struct PACKET_ZC_ADD_MEMBER_TO_GROUP {
 	uint32 GID;
 #endif
 	uint32 leader;
-// [4144] probably 0xa43 packet can works on older clients because in client was added in 2015-10-07
-#if PACKETVER >= 20170502
+#if PACKETVER_MAIN_NUM >= 20170524 || PACKETVER_RE_NUM >= 20170502 || defined(PACKETVER_ZERO)
 	int16 class;
 	int16 baseLevel;
 #endif
@@ -1704,7 +1702,7 @@ struct PACKET_ZC_GROUP_LIST_SUB {
 	char mapName[MAP_NAME_LENGTH_EXT];
 	uint8 leader;
 	uint8 offline;
-#if PACKETVER >= 20170502
+#if PACKETVER_MAIN_NUM >= 20170524 || PACKETVER_RE_NUM >= 20170502 || defined(PACKETVER_ZERO)
 	int16 class;
 	int16 baseLevel;
 #endif

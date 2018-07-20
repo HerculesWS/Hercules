@@ -6771,7 +6771,7 @@ static void clif_party_member_info(struct party_data *p, struct map_session_data
 	packet.GID = sd->status.char_id;
 #endif
 	packet.leader = (p->party.member[i].leader) ? 0 : 1;
-#if PACKETVER >= 20170502
+#if PACKETVER_MAIN_NUM >= 20170524 || PACKETVER_RE_NUM >= 20170502 || defined(PACKETVER_ZERO)
 	packet.class = sd->status.class;
 	packet.baseLevel = sd->status.base_level;
 #endif
@@ -6822,7 +6822,7 @@ static void clif_party_info(struct party_data *p, struct map_session_data *sd)
 		mapindex->getmapname_ext(mapindex_id2name(m->map), packet->members[c].mapName);
 		packet->members[c].leader = (m->leader) ? 0 : 1;
 		packet->members[c].offline = (m->online) ? 0 : 1;
-#if PACKETVER >= 20170502
+#if PACKETVER_MAIN_NUM >= 20170524 || PACKETVER_RE_NUM >= 20170502 || defined(PACKETVER_ZERO)
 		packet->members[c].class = m->class;
 		packet->members[c].baseLevel = m->lv;
 #endif
@@ -6841,8 +6841,7 @@ static void clif_party_info(struct party_data *p, struct map_session_data *sd)
 /// 0abd <account id>.L <job>.W <level>.W
 static void clif_party_job_and_level(struct map_session_data *sd)
 {
-// [4144] packet 0xabd added in client in 2017-02-15 because this probably it can works for clients older than 20170502
-#if PACKETVER >= 20170502
+#if PACKETVER_MAIN_NUM >= 20170502 || PACKETVER_RE_NUM >= 20170419 || defined(PACKETVER_ZERO)
 	unsigned char buf[10];
 
 	nullpo_retv(sd);
