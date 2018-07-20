@@ -1582,8 +1582,9 @@ struct PACKET_CZ_REQ_NEXT_MAIL_LIST {
 struct PACKET_CZ_REQ_OPEN_MAIL {
 	int16 PacketType;
 #if PACKETVER >= 20170419
-	int64 Upper_MailID;
-	int8 unknown[16];
+	int64 char_Upper_MailID;
+	int64 return_Upper_MailID;
+	int64 account_Upper_MailID;
 #else
 	int8 opentype;
 	int64 Upper_MailID;

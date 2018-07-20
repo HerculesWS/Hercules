@@ -21034,7 +21034,7 @@ static void clif_parse_rodex_open_mailbox(int fd, struct map_session_data *sd)
 {
 	const struct PACKET_CZ_REQ_OPEN_MAIL *packet = RFIFOP(fd, 0);
 #if PACKETVER >= 20170419
-	rodex->open(sd, RODEX_OPENTYPE_UNSET, packet->Upper_MailID);
+	rodex->open(sd, RODEX_OPENTYPE_UNSET, packet->char_Upper_MailID);
 #else
 	rodex->open(sd, packet->opentype, packet->Upper_MailID);
 #endif
