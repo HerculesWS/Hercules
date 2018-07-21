@@ -775,7 +775,7 @@ struct clif_interface {
 	void (*map_type) (struct map_session_data* sd, enum map_type type);
 	void (*maptypeproperty2) (struct block_list *bl,enum send_target t);
 	/* multi-map-server */
-	void (*changemapserver) (struct map_session_data* sd, unsigned short map_index, int x, int y, uint32 ip, uint16 port);
+	void (*changemapserver) (struct map_session_data* sd, unsigned short map_index, int x, int y, uint32 ip, uint16 port, char *dnsHost);
 	void (*changemapserver_airship) (struct map_session_data* sd, unsigned short map_index, int x, int y, uint32 ip, uint16 port);
 	/* npc-shop-related */
 	void (*npcbuysell) (struct map_session_data* sd, int id);

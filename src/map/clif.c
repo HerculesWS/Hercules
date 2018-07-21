@@ -2010,8 +2010,8 @@ static void clif_changemap_airship(struct map_session_data *sd, short m, int x, 
 
 /// Notifies the client of a position change to coordinates on given map, which is on another map-server (ZC_NPCACK_SERVERMOVE).
 /// 0092 <map name>.16B <x>.W <y>.W <ip>.L <port>.W
-/// 0ac7 <map name>.16B <x>.W <y>.W <ip>.L <port>.W <zero>.128B
-static void clif_changemapserver(struct map_session_data *sd, unsigned short map_index, int x, int y, uint32 ip, uint16 port)
+/// 0ac7 <map name>.16B <x>.W <y>.W <ip>.L <port>.W <dns host>.128B
+static void clif_changemapserver(struct map_session_data *sd, unsigned short map_index, int x, int y, uint32 ip, uint16 port, char *dnsHost)
 {
 	int fd;
 #if PACKETVER >= 20170315
@@ -2029,6 +2029,15 @@ static void clif_changemapserver(struct map_session_data *sd, unsigned short map
 	WFIFOW(fd, 20) = y;
 	WFIFOL(fd, 22) = htonl(ip);
 	WFIFOW(fd, 26) = sockt->ntows(htons(port)); // [!] LE byte order here [!]
+
+#if PACKETVER >= 20170315
+	if (dnsHost != NULL) {
+		safestrncpy(WFIFOP(fd, 28), dnsHost, 128);
+	} else {
+		memset(WFIFOP(fd, 28), 0, 128);
+	}
+#endif
+
 	WFIFOSET(fd, packet_len(cmd));
 }
 

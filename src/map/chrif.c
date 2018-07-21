@@ -459,7 +459,7 @@ static bool chrif_changemapserverack(int account_id, int login_id1, int login_id
 		ShowError("chrif_changemapserverack: map server change failed.\n");
 		clif->authfail_fd(node->fd, 0); // Disconnected from server
 	} else
-		clif->changemapserver(node->sd, map_index, x, y, ntohl(ip), ntohs(port));
+		clif->changemapserver(node->sd, map_index, x, y, ntohl(ip), ntohs(port), NULL);
 
 	//Player has been saved already, remove him from memory. [Skotlex]
 	chrif->auth_delete(account_id, char_id, ST_MAPCHANGE);
