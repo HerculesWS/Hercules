@@ -160,8 +160,8 @@ static int inter_pet_delete(int pet_id)
 	return 0;
 }
 //------------------------------------------------------
-static struct s_pet *inter_pet_create(int account_id, int char_id, short pet_class, short pet_lv, short pet_egg_id,
-	short pet_equip, short intimate, short hungry, char rename_flag, char incubate, const char *pet_name)
+static struct s_pet *inter_pet_create(int account_id, int char_id, short pet_class, short pet_lv, int pet_egg_id,
+	int pet_equip, short intimate, short hungry, char rename_flag, char incubate, const char *pet_name)
 {
 	nullpo_ret(pet_name);
 	memset(inter_pet->pt, 0, sizeof(struct s_pet));

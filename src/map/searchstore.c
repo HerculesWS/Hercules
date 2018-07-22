@@ -263,7 +263,7 @@ static void searchstore_close(struct map_session_data *sd)
 	}
 }
 
-static void searchstore_click(struct map_session_data *sd, int account_id, int store_id, unsigned short nameid)
+static void searchstore_click(struct map_session_data *sd, int account_id, int store_id, int nameid)
 {
 	unsigned int i;
 	struct map_session_data* pl_sd;
@@ -278,7 +278,7 @@ static void searchstore_click(struct map_session_data *sd, int account_id, int s
 
 	ARR_FIND( 0, sd->searchstore.count, i,  sd->searchstore.items[i].store_id == store_id && sd->searchstore.items[i].account_id == account_id && sd->searchstore.items[i].nameid == nameid );
 	if( i == sd->searchstore.count ) {// no such result, crafted
-		ShowWarning("searchstore_click: Received request with item %hu of account %d, which is not part of current result set (account_id=%d, char_id=%d).\n", nameid, account_id, sd->bl.id, sd->status.char_id);
+		ShowWarning("searchstore_click: Received request with item %d of account %d, which is not part of current result set (account_id=%d, char_id=%d).\n", nameid, account_id, sd->bl.id, sd->status.char_id);
 		clif->search_store_info_failed(sd, SSI_FAILED_SSILIST_CLICK_TO_OPEN_STORE);
 		return;
 	}
@@ -345,7 +345,7 @@ static void searchstore_clearremote(struct map_session_data *sd)
 }
 
 /// receives results from a store-specific callback
-static bool searchstore_result(struct map_session_data *sd, unsigned int store_id, int account_id, const char *store_name, unsigned short nameid, unsigned short amount, unsigned int price, const short *card, unsigned char refine, const struct item_option *option)
+static bool searchstore_result(struct map_session_data *sd, unsigned int store_id, int account_id, const char *store_name, int nameid, unsigned short amount, unsigned int price, const int *card, unsigned char refine, const struct item_option *option)
 {
 	struct s_search_store_info_item* ssitem;
 

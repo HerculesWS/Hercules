@@ -71,7 +71,7 @@ static int inter_storage_tosql(int account_id, const struct storage_data *p)
 					 && (p_it = &VECTOR_INDEX(p->item, j)) != NULL
 					 && cp_it->nameid == p_it->nameid
 					 && cp_it->unique_id == p_it->unique_id
-					 && memcmp(p_it->card, cp_it->card, sizeof(short) * MAX_SLOTS) == 0
+					 && memcmp(p_it->card, cp_it->card, sizeof(int) * MAX_SLOTS) == 0
 					 && memcmp(p_it->option, cp_it->option, 5 * MAX_ITEM_OPTIONS) == 0);
 
 			if (j < VECTOR_LENGTH(p->item)) {
@@ -373,7 +373,7 @@ static bool inter_storage_retrieve_bound_items(int char_id, int account_id, int 
 
 	memset(&item, 0, sizeof(item));
 	SQL->StmtBindColumn(stmt, 0, SQLDT_INT,       &item.id,          sizeof item.id,          NULL, NULL);
-	SQL->StmtBindColumn(stmt, 1, SQLDT_SHORT,     &item.nameid,      sizeof item.nameid,      NULL, NULL);
+	SQL->StmtBindColumn(stmt, 1, SQLDT_INT,       &item.nameid,      sizeof item.nameid,      NULL, NULL);
 	SQL->StmtBindColumn(stmt, 2, SQLDT_SHORT,     &item.amount,      sizeof item.amount,      NULL, NULL);
 	SQL->StmtBindColumn(stmt, 3, SQLDT_UINT,      &item.equip,       sizeof item.equip,       NULL, NULL);
 	SQL->StmtBindColumn(stmt, 4, SQLDT_CHAR,      &item.identify,    sizeof item.identify,    NULL, NULL);
@@ -384,7 +384,7 @@ static bool inter_storage_retrieve_bound_items(int char_id, int account_id, int 
 	SQL->StmtBindColumn(stmt, 9, SQLDT_UINT64,    &item.unique_id,   sizeof item.unique_id,   NULL, NULL);
 	/* Card Slots */
 	for (j = 0; j < MAX_SLOTS; ++j)
-		SQL->StmtBindColumn(stmt, 10 + j, SQLDT_SHORT, &item.card[j], sizeof item.card[j], NULL, NULL);
+		SQL->StmtBindColumn(stmt, 10 + j, SQLDT_INT, &item.card[j], sizeof item.card[j], NULL, NULL);
 	/* Item Options */
 	for (j = 0; j < MAX_ITEM_OPTIONS; ++j) {
 		SQL->StmtBindColumn(stmt, 10 + MAX_SLOTS + j * 2, SQLDT_INT16, &item.option[j].index, sizeof item.option[j].index, NULL, NULL);

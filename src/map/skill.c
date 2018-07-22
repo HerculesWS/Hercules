@@ -10246,7 +10246,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 
 		case GN_SLINGITEM:
 			if( sd ) {
-				short ammo_id;
+				int ammo_id;
 				int equip_idx = sd->equip_index[EQI_AMMO];
 				if( equip_idx <= 0 )
 					break; // No ammo.
@@ -19917,7 +19917,7 @@ static bool skill_parse_row_abradb(char *split[], int columns, int current)
 static bool skill_parse_row_changematerialdb(char *split[], int columns, int current)
 {
 // ProductID,BaseRate,MakeAmount1,MakeAmountRate1...,MakeAmount5,MakeAmountRate5
-	uint16 skill_id;
+	int skill_id;
 	short j;
 	int x,y;
 

@@ -708,7 +708,7 @@ struct script_interface {
 	int string_list_size;
 	int string_list_pos;
 	/*  */
-	unsigned short current_item_id;
+	int current_item_id;
 	/* */
 	struct script_label_entry *labels;
 	int label_count;

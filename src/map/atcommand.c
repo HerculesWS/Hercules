@@ -2665,7 +2665,7 @@ ACMD(makeegg)
 		intif->create_pet(
 						 sd->status.account_id, sd->status.char_id,
 						 (short)pet->db[pet_id].class_, (short)mob->db(pet->db[pet_id].class_)->lv,
-						 (short)pet->db[pet_id].EggID, 0, (short)pet->db[pet_id].intimate,
+						 pet->db[pet_id].EggID, 0, (short)pet->db[pet_id].intimate,
 						 100, 0, 1, pet->db[pet_id].jname);
 	} else {
 		clif->message(fd, msg_fd(fd,180)); // The monster/egg name/id doesn't exist.

@@ -1419,7 +1419,7 @@ static void chrif_skillid2idx(int fd)
 	WFIFOW(fd,0) = 0x2b0b;
 	for (i = 0; i < MAX_SKILL_DB; i++) {
 		if (skill->dbs->db[i].nameid != 0) {
-			WFIFOW(fd, 4 + (count*4)) = skill->dbs->db[i].nameid;
+			WFIFOW(fd, 4 + (count*4)) = skill->dbs->db[i].nameid; // really skill id
 			WFIFOW(fd, 6 + (count*4)) = i;
 			count++;
 		}

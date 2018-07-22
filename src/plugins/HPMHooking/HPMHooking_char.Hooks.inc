@@ -9271,11 +9271,11 @@ int HP_inter_pet_parse_frommap(int fd) {
 	}
 	return retVal___;
 }
-struct s_pet* HP_inter_pet_create(int account_id, int char_id, short pet_class, short pet_lv, short pet_egg_id, short pet_equip, short intimate, short hungry, char rename_flag, char incubate, const char *pet_name) {
+struct s_pet* HP_inter_pet_create(int account_id, int char_id, short pet_class, short pet_lv, int pet_egg_id, int pet_equip, short intimate, short hungry, char rename_flag, char incubate, const char *pet_name) {
 	int hIndex = 0;
 	struct s_pet* retVal___ = NULL;
 	if (HPMHooks.count.HP_inter_pet_create_pre > 0) {
-		struct s_pet* (*preHookFunc) (int *account_id, int *char_id, short *pet_class, short *pet_lv, short *pet_egg_id, short *pet_equip, short *intimate, short *hungry, char *rename_flag, char *incubate, const char **pet_name);
+		struct s_pet* (*preHookFunc) (int *account_id, int *char_id, short *pet_class, short *pet_lv, int *pet_egg_id, int *pet_equip, short *intimate, short *hungry, char *rename_flag, char *incubate, const char **pet_name);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_pet_create_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_inter_pet_create_pre[hIndex].func;
@@ -9290,7 +9290,7 @@ struct s_pet* HP_inter_pet_create(int account_id, int char_id, short pet_class, 
 		retVal___ = HPMHooks.source.inter_pet.create(account_id, char_id, pet_class, pet_lv, pet_egg_id, pet_equip, intimate, hungry, rename_flag, incubate, pet_name);
 	}
 	if (HPMHooks.count.HP_inter_pet_create_post > 0) {
-		struct s_pet* (*postHookFunc) (struct s_pet* retVal___, int account_id, int char_id, short pet_class, short pet_lv, short pet_egg_id, short pet_equip, short intimate, short hungry, char rename_flag, char incubate, const char *pet_name);
+		struct s_pet* (*postHookFunc) (struct s_pet* retVal___, int account_id, int char_id, short pet_class, short pet_lv, int pet_egg_id, int pet_equip, short intimate, short hungry, char rename_flag, char incubate, const char *pet_name);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_pet_create_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_inter_pet_create_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, account_id, char_id, pet_class, pet_lv, pet_egg_id, pet_equip, intimate, hungry, rename_flag, incubate, pet_name);

@@ -3798,6 +3798,12 @@ struct {
 	struct HPMHookPoint *HP_mob_load_post;
 	struct HPMHookPoint *HP_mob_clear_spawninfo_pre;
 	struct HPMHookPoint *HP_mob_clear_spawninfo_post;
+	struct HPMHookPoint *HP_mob_get_item_drop_ratio_pre;
+	struct HPMHookPoint *HP_mob_get_item_drop_ratio_post;
+	struct HPMHookPoint *HP_mob_set_item_drop_ratio_pre;
+	struct HPMHookPoint *HP_mob_set_item_drop_ratio_post;
+	struct HPMHookPoint *HP_mob_final_ratio_sub_pre;
+	struct HPMHookPoint *HP_mob_final_ratio_sub_post;
 	struct HPMHookPoint *HP_mob_destroy_mob_db_pre;
 	struct HPMHookPoint *HP_mob_destroy_mob_db_post;
 	struct HPMHookPoint *HP_mob_skill_db_libconfig_pre;
@@ -10189,6 +10195,12 @@ struct {
 	int HP_mob_load_post;
 	int HP_mob_clear_spawninfo_pre;
 	int HP_mob_clear_spawninfo_post;
+	int HP_mob_get_item_drop_ratio_pre;
+	int HP_mob_get_item_drop_ratio_post;
+	int HP_mob_set_item_drop_ratio_pre;
+	int HP_mob_set_item_drop_ratio_post;
+	int HP_mob_final_ratio_sub_pre;
+	int HP_mob_final_ratio_sub_post;
 	int HP_mob_destroy_mob_db_pre;
 	int HP_mob_destroy_mob_db_post;
 	int HP_mob_skill_db_libconfig_pre;

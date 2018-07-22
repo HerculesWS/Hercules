@@ -7701,10 +7701,10 @@ static BUILDIN(countitem2)
 	iden = script_getnum(st,3);
 	ref  = script_getnum(st,4);
 	attr = script_getnum(st,5);
-	c1 = (short)script_getnum(st,6);
-	c2 = (short)script_getnum(st,7);
-	c3 = (short)script_getnum(st,8);
-	c4 = (short)script_getnum(st,9);
+	c1 = script_getnum(st,6);
+	c2 = script_getnum(st,7);
+	c3 = script_getnum(st,8);
+	c4 = script_getnum(st,9);
 
 	for(i = 0; i < MAX_INVENTORY; i++)
 		if (sd->status.inventory[i].nameid > 0 && sd->inventory_data[i] != NULL &&
@@ -8037,10 +8037,10 @@ static BUILDIN(getitem2)
 	iden=script_getnum(st,4);
 	ref=script_getnum(st,5);
 	attr=script_getnum(st,6);
-	c1=(short)script_getnum(st,7);
-	c2=(short)script_getnum(st,8);
-	c3=(short)script_getnum(st,9);
-	c4=(short)script_getnum(st,10);
+	c1 = script_getnum(st,7);
+	c2 = script_getnum(st,8);
+	c3 = script_getnum(st,9);
+	c4 = script_getnum(st,10);
 
 	if (bound && (itemdb_type(nameid) == IT_PETEGG || itemdb_type(nameid) == IT_PETARMOR)) {
 		ShowError("script_getitembound2: can't bind a pet egg/armor! Type=%d\n",bound);
@@ -8079,10 +8079,10 @@ static BUILDIN(getitem2)
 		item_tmp.refine=ref;
 		item_tmp.attribute=attr;
 		item_tmp.bound=(unsigned char)bound;
-		item_tmp.card[0]=(short)c1;
-		item_tmp.card[1]=(short)c2;
-		item_tmp.card[2]=(short)c3;
-		item_tmp.card[3]=(short)c4;
+		item_tmp.card[0] = c1;
+		item_tmp.card[1] = c2;
+		item_tmp.card[2] = c3;
+		item_tmp.card[3] = c4;
 
 		//Check if it's stackable.
 		if (!itemdb->isstackable(nameid))
@@ -8371,10 +8371,10 @@ static BUILDIN(makeitem2)
 	item_tmp.identify = script_getnum(st, 4);
 	item_tmp.refine = cap_value(script_getnum(st, 5), 0, MAX_REFINE);
 	item_tmp.attribute = script_getnum(st, 6);
-	item_tmp.card[0] = (short)script_getnum(st, 7);
-	item_tmp.card[1] = (short)script_getnum(st, 8);
-	item_tmp.card[2] = (short)script_getnum(st, 9);
-	item_tmp.card[3] = (short)script_getnum(st, 10);
+	item_tmp.card[0] = script_getnum(st, 7);
+	item_tmp.card[1] = script_getnum(st, 8);
+	item_tmp.card[2] = script_getnum(st, 9);
+	item_tmp.card[3] = script_getnum(st, 10);
 
 	map->addflooritem(NULL, &item_tmp, amount, m, x, y, 0, 0, 0, 0, false);
 
@@ -8619,10 +8619,10 @@ static BUILDIN(delitem2)
 	it.identify=script_getnum(st,4);
 	it.refine=script_getnum(st,5);
 	it.attribute=script_getnum(st,6);
-	it.card[0]=(short)script_getnum(st,7);
-	it.card[1]=(short)script_getnum(st,8);
-	it.card[2]=(short)script_getnum(st,9);
-	it.card[3]=(short)script_getnum(st,10);
+	it.card[0] = script_getnum(st, 7);
+	it.card[1] = script_getnum(st, 8);
+	it.card[2] = script_getnum(st, 9);
+	it.card[3] = script_getnum(st, 10);
 
 	if( it.amount <= 0 )
 		return true;// nothing to do
@@ -10728,7 +10728,7 @@ static BUILDIN(makepet)
 		sd->catch_target_class = pet->db[pet_id].class_;
 		intif->create_pet(sd->status.account_id, sd->status.char_id,
 		                  (short)pet->db[pet_id].class_, (short)mob->db(pet->db[pet_id].class_)->lv,
-		                  (short)pet->db[pet_id].EggID, 0, (short)pet->db[pet_id].intimate,
+		                  pet->db[pet_id].EggID, 0, (short)pet->db[pet_id].intimate,
 		                  100, 0, 1, pet->db[pet_id].jname);
 	}
 
@@ -16457,7 +16457,7 @@ static BUILDIN(equip)
 	nameid=script_getnum(st,2);
 	if((item_data = itemdb->exists(nameid)) == NULL)
 	{
-		ShowError("wrong item ID : equipitem(%i)\n",nameid);
+		ShowError("wrong item ID : equipitem(%d)\n",nameid);
 		return false;
 	}
 	ARR_FIND( 0, MAX_INVENTORY, i, sd->status.inventory[i].nameid == nameid && sd->status.inventory[i].equip == 0 );
@@ -16513,12 +16513,12 @@ static BUILDIN(equip2)
 		return false;
 	}
 
-	ref    = script_getnum(st,3);
-	attr   = script_getnum(st,4);
-	c0     = (short)script_getnum(st,5);
-	c1     = (short)script_getnum(st,6);
-	c2     = (short)script_getnum(st,7);
-	c3     = (short)script_getnum(st,8);
+	ref  = script_getnum(st, 3);
+	attr = script_getnum(st, 4);
+	c0   = script_getnum(st, 5);
+	c1   = script_getnum(st, 6);
+	c2   = script_getnum(st, 7);
+	c3   = script_getnum(st, 8);
 
 	ARR_FIND( 0, MAX_INVENTORY, i,( sd->status.inventory[i].equip == 0 &&
 									sd->status.inventory[i].nameid == nameid &&

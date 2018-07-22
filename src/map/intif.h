@@ -58,8 +58,8 @@ struct intif_interface {
 	int packet_len_table[INTIF_PACKET_LEN_TABLE_SIZE];
 	/* funcs */
 	int (*parse) (int fd);
-	int (*create_pet)(int account_id, int char_id, short pet_type, short pet_lv, short pet_egg_id,
-	                  short pet_equip, short intimate, short hungry, char rename_flag, char incubate, char *pet_name);
+	int (*create_pet)(int account_id, int char_id, short pet_type, short pet_lv, int pet_egg_id,
+	                  int pet_equip, short intimate, short hungry, char rename_flag, char incubate, char *pet_name);
 	int (*broadcast) (const char *mes, int len, int type);
 	int (*broadcast2) (const char *mes, int len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY);
 	int (*main_message) (struct map_session_data* sd, const char* message);

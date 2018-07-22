@@ -1726,7 +1726,7 @@ struct skill_condition {
 
 // Database skills
 struct s_skill_db {
-	unsigned short nameid;
+	int nameid;
 	char name[MAX_SKILL_NAME_LENGTH];
 	char desc[40];
 	int range[MAX_SKILL_LEVEL],hit,inf,element[MAX_SKILL_LEVEL],nk,splash[MAX_SKILL_LEVEL],max;

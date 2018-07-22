@@ -600,12 +600,12 @@ struct packet_idle_unit2 {
 	int16 healthState;
 	int16 effectState;
 	int16 job;
-	int16 head;
-	int16 weapon;
-	int16 accessory;
-	int16 shield;
-	int16 accessory2;
-	int16 accessory3;
+	uint16 head;
+	uint16 weapon;
+	uint16 accessory;
+	uint16 shield;
+	uint16 accessory2;
+	uint16 accessory3;
 	int16 headpalette;
 	int16 bodypalette;
 	int16 headDir;
@@ -636,13 +636,13 @@ struct packet_spawn_unit2 {
 	int16 bodyState;
 	int16 healthState;
 	int16 effectState;
-	int16 head;
-	int16 weapon;
-	int16 accessory;
+	uint16 head;
+	uint16 weapon;
+	uint16 accessory;
 	int16 job;
-	int16 shield;
-	int16 accessory2;
-	int16 accessory3;
+	uint16 shield;
+	uint16 accessory2;
+	uint16 accessory3;
 	int16 headpalette;
 	int16 bodypalette;
 	int16 headDir;
@@ -675,26 +675,26 @@ struct packet_spawn_unit {
 	int32 effectState;
 #endif
 	int16 job;
-	int16 head;
+	uint16 head;
 #if PACKETVER < 7
-	int16 weapon;
+	uint16 weapon;
 #else
-	int32 weapon;
+	uint32 weapon;
 #endif
 #if PACKETVER_RE_NUM >= 20180704
-	int32 shield;
+	uint32 shield;
 #endif
-	int16 accessory;
+	uint16 accessory;
 #if PACKETVER < 7
-	int16 shield;
+	uint16 shield;
 #endif
-	int16 accessory2;
-	int16 accessory3;
+	uint16 accessory2;
+	uint16 accessory3;
 	int16 headpalette;
 	int16 bodypalette;
 	int16 headDir;
 #if PACKETVER >= 20101124
-	int16 robe;
+	uint16 robe;
 #endif
 	uint32 GUID;
 	int16 GEmblemVer;
@@ -748,27 +748,27 @@ struct packet_unit_walking {
 	int32 effectState;
 #endif
 	int16 job;
-	int16 head;
+	uint16 head;
 #if PACKETVER < 7
-	int16 weapon;
+	uint16 weapon;
 #else
-	int32 weapon;
+	uint32 weapon;
 #endif
 #if PACKETVER_RE_NUM >= 20180704
-	int32 shield;
+	uint32 shield;
 #endif
-	int16 accessory;
+	uint16 accessory;
 	uint32 moveStartTime;
 #if PACKETVER < 7
-	int16 shield;
+	uint16 shield;
 #endif
-	int16 accessory2;
-	int16 accessory3;
+	uint16 accessory2;
+	uint16 accessory3;
 	int16 headpalette;
 	int16 bodypalette;
 	int16 headDir;
 #if PACKETVER >= 20101124
-	int16 robe;
+	uint16 robe;
 #endif
 	uint32 GUID;
 	int16 GEmblemVer;
@@ -793,7 +793,7 @@ struct packet_unit_walking {
 	uint8 isBoss;
 #endif
 #if PACKETVER >= 20150513
-	int16 body;
+	uint16 body;
 #endif
 /* Might be earlier, this is when the named item bug began */
 #if PACKETVER >= 20131223
@@ -820,26 +820,26 @@ struct packet_idle_unit {
 	int32 effectState;
 #endif
 	int16 job;
-	int16 head;
+	uint16 head;
 #if PACKETVER < 7
-	int16 weapon;
+	uint16 weapon;
 #else
-	int32 weapon;
+	uint32 weapon;
 #endif
 #if PACKETVER_RE_NUM >= 20180704
-	int32 shield;
+	uint32 shield;
 #endif
-	int16 accessory;
+	uint16 accessory;
 #if PACKETVER < 7
-	int16 shield;
+	uint16 shield;
 #endif
-	int16 accessory2;
-	int16 accessory3;
+	uint16 accessory2;
+	uint16 accessory3;
 	int16 headpalette;
 	int16 bodypalette;
 	int16 headDir;
 #if PACKETVER >= 20101124
-	int16 robe;
+	uint16 robe;
 #endif
 	uint32 GUID;
 	int16 GEmblemVer;
@@ -865,7 +865,7 @@ struct packet_idle_unit {
 	uint8 isBoss;
 #endif
 #if PACKETVER >= 20150513
-	int16 body;
+	uint16 body;
 #endif
 /* Might be earlier, this is when the named item bug began */
 #if PACKETVER >= 20131223

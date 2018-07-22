@@ -81,16 +81,16 @@ struct unit_data {
 
 struct view_data {
 	int16 class;
-	uint16 weapon,
+	int weapon,
 		shield, //Or left-hand weapon.
 		robe,
 		head_top,
 		head_mid,
 		head_bottom,
 		hair_style,
-		hair_color,
-		cloth_color,
 		body_style;
+	uint16 hair_color,
+		cloth_color;
 	char sex;
 	unsigned dead_sit : 2;
 };
