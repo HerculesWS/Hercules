@@ -29,7 +29,7 @@
 
 DROP TABLE IF EXISTS `item_db2`;
 CREATE TABLE `item_db2` (
-  `id` smallint(5) UNSIGNED NOT NULL DEFAULT '0',
+  `id` int(11) UNSIGNED NOT NULL DEFAULT '0',
   `name_english` varchar(50) NOT NULL DEFAULT '',
   `name_japanese` varchar(50) NOT NULL DEFAULT '',
   `type` tinyint(2) UNSIGNED NOT NULL DEFAULT '0',
