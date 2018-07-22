@@ -21611,6 +21611,20 @@ static void clif_parse_changeDress(int fd, struct map_session_data *sd)
 	atcommand->exec(fd, sd, command, true);
 }
 
+static void clif_party_dead_notification(struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20170524 || PACKETVER_RE_NUM >= 20170502 || defined(PACKETVER_ZERO)
+	struct PACKET_ZC_GROUP_ISALIVE p;
+
+	nullpo_retv(sd);
+
+	p.packetType = 0xab2;
+	p.AID = sd->bl.id;
+	p.isDead = pc_isdead(sd);
+	clif->send(&p, sizeof(p), &sd->bl, PARTY_WOS);
+#endif
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -22734,6 +22748,7 @@ void clif_defaults(void)
 	// -- Hat Effect
 	clif->hat_effect = clif_hat_effect;
 	clif->hat_effect_single = clif_hat_effect_single;
+	clif->party_dead_notification = clif_party_dead_notification;
 
 	clif->pAttendanceDB = clif_parse_attendance_db;
 	clif->attendancedb_libconfig_sub = clif_attendancedb_libconfig_sub;

@@ -8099,6 +8099,9 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 	}
 
 	pc_setdead(sd);
+
+	clif->party_dead_notification(sd);
+
 	//Reset menu skills/item skills
 	if (sd->skillitem)
 		sd->skillitem = sd->skillitemlv = 0;
@@ -10995,7 +10998,12 @@ static void pc_setstand(struct map_session_data *sd)
 	clif->sc_end(&sd->bl,sd->bl.id,SELF,SI_SIT);
 	//Reset sitting tick.
 	sd->ssregen.tick.hp = sd->ssregen.tick.sp = 0;
-	sd->state.dead_sit = sd->vd.dead_sit = 0;
+	if (pc_isdead(sd)) {
+		sd->state.dead_sit = sd->vd.dead_sit = 0;
+		clif->party_dead_notification(sd);
+	} else {
+		sd->state.dead_sit = sd->vd.dead_sit = 0;
+	}
 }
 
 /**

@@ -1517,6 +1517,7 @@ struct clif_interface {
 	void (*style_change_response) (struct map_session_data *sd, enum stylist_shop flag);
 	void (*pPetEvolution) (int fd, struct map_session_data *sd);
 	void (*petEvolutionResult) (int fd, enum pet_evolution_result result);
+	void (*party_dead_notification) (struct map_session_data *sd);
 };
 
 #ifdef HERCULES_CORE
