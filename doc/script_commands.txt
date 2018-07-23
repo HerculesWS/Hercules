@@ -1904,57 +1904,61 @@ will result in error and termination of the script.
 ---------------------------------------
 
 *function <function name>;
-*<function name>{(<argument>, ...<argument>)};
 *function <function name> {
 <code>
 }
 
-This works like callfunc(), and is used for cleaner and faster scripting.
-The function must be defined and used within a script, and works like a
-label with arguments.
-Note that the name may only contain alphanumeric characters and underscore.
+In its first form, this syntax declares a local function so it can later be
+defined. In its second form, the syntax both declares and defines a local
+function. Local functions must be defined before being used. Note that the name
+may only contain alphanumeric characters and underscore. Once defined, they can
+be called from the current script as if they were regular built-in commands, and
+can also be called from other scripts if they are exported. Local functions may
+be exported by simply adding a colon (:) to their name when defining them.
 
 Usage:
 
     1. Declare the function.
 	function <function name>;
     2. Call the function anywhere within the script.
-       It can also return a value when used with parentheses.
-	<function name>;
-    3. Define the function within the script.
+	<function name>();
+    3. Define the function by adding its script.
 	<function name> {<code>}
+
+    Step 1 is optional if the function is defined prior to being called.
 
 Example:
 
-prontera,154,189,4	script	Item Seller	767,{
 	/* Function declaration */
-	function SF_Selling;
+	function MyFunction;
 
-	if (Zeny > 50) {
-		mes("Welcome!");
-		/* Function call */
-		SF_Selling();
-	} else {
-		mes("You need 50z, sorry!");
-	}
-	close();
+	/* Function call */
+	MyFunction();
 
 	/* Function definition */
-	function SF_Selling {
-		mes("Would you like to buy a phracon for 50z?");
-		next();
-		if (select("Yes", "No, thanks") == 1) {
-			Zeny -= 50;
-			getitem(Phracon, 1);
-			mes("Thank you!");
-		}
+	function MyFunction {
+		// (do something)
 		return;
 	}
-}
+
+
+Example with exporting:
+
+	/* Function declaration + definition */
+	function :MyExportedFunction {
+		/* notice the colon in :MyExportedFunction */
+		return;
+	}
+
+	/* Local call */
+	MyExportedFunction();
+
+	/* Call from another script */
+	"npc name"::MyExportedFunction();
+
 
 Example with parameters and return value:
 
-prontera,150,150,0	script	TestNPC	123,{
 	/* Function declaration */
 	function MyAdd;
 
@@ -1963,15 +1967,28 @@ prontera,150,150,0	script	TestNPC	123,{
 	input(.@a);
 	input(.@b);
 	/* Function call */
-	mes(.@a+" + "+.@b+" = "+MyAdd(.@a, .@b));
+	mesf("%i + %i = %i", .@a, .@b, MyAdd(.@a, .@b));
 	close();
 
 	/* Function definition */
 	function MyAdd {
-		return(getarg(0)+getarg(1));
+		return (getarg(0) + getarg(1));
 	}
-}
 
+
+---------------------------------------
+
+*<function name>({<arg>...})
+*"<npc name>"::<function name>({<arg>...})
+
+In its first form, calls a previously defined local function. In its second
+form, calls a previously defined exported local function of another NPC.
+See function() above for more details.
+
+Example:
+
+	MyFunction(arg1, arg2, arg3);
+	"MyNPC"::MyFunction(arg1, arg2, arg3);
 
 ---------------------------------------
 
