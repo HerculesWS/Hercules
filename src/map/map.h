@@ -387,6 +387,11 @@ enum bl_type {
 
 enum npc_subtype { WARP, SHOP, SCRIPT, CASHSHOP, TOMB };
 
+enum script_label_flags {
+	LABEL_IS_EXTERN   = 0x1,
+	LABEL_IS_USERFUNC = 0x2,
+};
+
 /**
  * Race type IDs.
  *
