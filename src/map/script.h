@@ -726,7 +726,9 @@ struct str_data_struct {
 };
 
 struct script_label_entry {
-	int key,pos;
+	int key;
+	int pos;
+	enum script_label_flags flags;
 };
 
 struct script_syntax_data {
@@ -917,7 +919,7 @@ struct script_interface {
 	void (*set_constant) (const char *name, int value, bool is_parameter, bool is_deprecated);
 	void (*set_constant2) (const char *name, int value, bool is_parameter, bool is_deprecated);
 	bool (*get_constant) (const char* name, int* value);
-	void (*label_add)(int key, int pos);
+	void (*label_add)(int key, int pos, enum script_label_flags flags);
 	void (*run) (struct script_code *rootscript, int pos, int rid, int oid);
 	void (*run_npc) (struct script_code *rootscript, int pos, int rid, int oid);
 	void (*run_pet) (struct script_code *rootscript, int pos, int rid, int oid);
@@ -948,10 +950,11 @@ struct script_interface {
 	int (*queue_create) (void);
 	bool (*queue_clear) (int idx);
 	/* */
-	const char * (*parse_curly_close) (const char *p);
-	const char * (*parse_syntax_close) (const char *p);
-	const char * (*parse_syntax_close_sub) (const char *p, int *flag);
-	const char * (*parse_syntax) (const char *p);
+	const char *(*parse_curly_close) (const char *p);
+	const char *(*parse_syntax_close) (const char *p);
+	const char *(*parse_syntax_close_sub) (const char *p, int *flag);
+	const char *(*parse_syntax) (const char *p);
+	const char *(*parse_syntax_function) (const char *p, bool is_public);
 	c_op (*get_com) (const struct script_buf *scriptbuf, int *pos);
 	int (*get_num) (const struct script_buf *scriptbuf, int *pos);
 	const char* (*op2name) (int op);

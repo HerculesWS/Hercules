@@ -59,6 +59,7 @@ struct npc_timerevent_list {
 struct npc_label_list {
 	char name[NAME_LENGTH];
 	int pos;
+	enum script_label_flags flags;
 };
 
 struct npc_barter_currency {
