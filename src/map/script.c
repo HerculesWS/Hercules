@@ -834,57 +834,97 @@ static const char *parse_callfunc(const char *p, int require_paren, int is_custo
 
 	nullpo_retr(NULL, p);
 	// is need add check for arg null pointer below?
-	func = script->add_word(p);
-	if (script->str_data[func].type == C_FUNC) {
-		script->syntax.nested_call++;
-		if (script->syntax.last_func != -1) {
-			if (script->str_data[func].val == script->buildin_lang_macro_offset) {
-				script->syntax.lang_macro_active = true;
-				macro = true;
-			} else if (script->str_data[func].val == script->buildin_lang_macro_fmtstring_offset) {
-				script->syntax.lang_macro_fmtstring_active = true;
-				macro = true;
+
+	if (*p == '"') {
+		size_t nlen = 0;
+		while (p[nlen] != ':') ++nlen;
+		func = script->add_str("foreigncall");
+
+		if (p[nlen] == ':' && p[nlen + 1] == ':') {
+			char *npc_name = (char *)aMalloc(nlen);
+			size_t flen = script->skip_word(p + nlen + 2) - (p + nlen);
+			char *func_name = (char *)aMalloc(flen);
+
+			safestrncpy(npc_name, p + 1, nlen - 1);
+			safestrncpy(func_name, p + nlen + 2, flen - 1);
+
+			{
+				script->syntax.nested_call++;
+				script->syntax.last_func = script->str_data[func].val;
+				script->addl(func);
+				script->addc(C_ARG);
+				arg = "*";
+
+				p2 = npc_name;
+				script->addc(C_STR);
+				while (*p2) script->addb(*p2++);
+				script->addb(0);
+
+				p2 = func_name;
+				script->addc(C_STR);
+				while (*p2) script->addb(*p2++);
+				script->addb(0);
 			}
-		}
 
-		if( !macro ) {
-			// buildin function
-			script->syntax.last_func = script->str_data[func].val;
-			script->addl(func);
-			script->addc(C_ARG);
+			p += nlen + flen + 2; // skip to just before the ()
+			aFree(npc_name);
+			aFree(func_name);
+		} else {
+			disp_error_message("script:parse_callfunc: invalid foreign call syntax!", p + nlen);
 		}
-
-		arg = script->buildin[script->str_data[func].val];
-		if (script->str_data[func].deprecated)
-			DeprecationWarning(p);
-		if( !arg ) arg = &null_arg; // Use a dummy, null string
-	} else if( script->str_data[func].type == C_USERFUNC || script->str_data[func].type == C_USERFUNC_POS ) {
-		// script defined function
-		script->addl(script->buildin_callsub_ref);
-		script->addc(C_ARG);
-		script->addl(func);
-		arg = script->buildin[script->str_data[script->buildin_callsub_ref].val];
-		if( *arg == 0 )
-			disp_error_message("parse_callfunc: callsub has no arguments, please review its definition",p);
-		if( *arg != '*' )
-			++arg; // count func as argument
 	} else {
-#ifdef SCRIPT_CALLFUNC_CHECK
-		const char* name = script->get_str(func);
-		if( !is_custom && strdb_get(script->userfunc_db, name) == NULL ) {
-#endif
-			disp_error_message("parse_line: expect command, missing function name or calling undeclared function",p);
-#ifdef SCRIPT_CALLFUNC_CHECK
-		} else {;
-			script->addl(script->buildin_callfunc_ref);
+		func = script->add_word(p);
+		if (script->str_data[func].type == C_FUNC) {
+			script->syntax.nested_call++;
+			if (script->syntax.last_func != -1) {
+				if (script->str_data[func].val == script->buildin_lang_macro_offset) {
+					script->syntax.lang_macro_active = true;
+					macro = true;
+				} else if (script->str_data[func].val == script->buildin_lang_macro_fmtstring_offset) {
+					script->syntax.lang_macro_fmtstring_active = true;
+					macro = true;
+				}
+			}
+
+			if( !macro ) {
+				// buildin function
+				script->syntax.last_func = script->str_data[func].val;
+				script->addl(func);
+				script->addc(C_ARG);
+			}
+
+			arg = script->buildin[script->str_data[func].val];
+			if (script->str_data[func].deprecated)
+				DeprecationWarning(p);
+			if( !arg ) arg = &null_arg; // Use a dummy, null string
+		} else if( script->str_data[func].type == C_USERFUNC || script->str_data[func].type == C_USERFUNC_POS ) {
+			// script defined function
+			script->addl(script->buildin_callsub_ref);
 			script->addc(C_ARG);
-			script->addc(C_STR);
-			while( *name ) script->addb(*name ++);
-			script->addb(0);
-			arg = script->buildin[script->str_data[script->buildin_callfunc_ref].val];
-			if( *arg != '*' ) ++ arg;
-		}
+			script->addl(func);
+			arg = script->buildin[script->str_data[script->buildin_callsub_ref].val];
+			if( *arg == 0 )
+				disp_error_message("parse_callfunc: callsub has no arguments, please review its definition",p);
+			if( *arg != '*' )
+				++arg; // count func as argument
+		} else {
+#ifdef SCRIPT_CALLFUNC_CHECK
+			const char* name = script->get_str(func);
+			if( !is_custom && strdb_get(script->userfunc_db, name) == NULL ) {
 #endif
+				disp_error_message("parse_line: expect command, missing function name or calling undeclared function",p);
+#ifdef SCRIPT_CALLFUNC_CHECK
+			} else {;
+				script->addl(script->buildin_callfunc_ref);
+				script->addc(C_ARG);
+				script->addc(C_STR);
+				while( *name ) script->addb(*name ++);
+				script->addb(0);
+				arg = script->buildin[script->str_data[script->buildin_callfunc_ref].val];
+				if( *arg != '*' ) ++ arg;
+			}
+#endif
+		}
 	}
 
 	p = script->skip_word(p);
@@ -1903,8 +1943,15 @@ static const char *parse_syntax(const char *p)
 		} else if( p2 - p == 8 && strncmp(p, "function", 8) == 0 ) {
 			// internal script function
 			const char *func_name;
+			bool is_extern = false;
 
 			func_name = script->skip_space(p2);
+
+			if (*func_name == ':') {
+				func_name++;
+				is_extern = true; // allow calling from outside its scope
+			}
+
 			p = script->skip_word(func_name);
 			if( p == func_name )
 				disp_error_message("parse_syntax:function: function name is missing or invalid", p);
@@ -1950,7 +1997,7 @@ static const char *parse_syntax(const char *p)
 					script->str_data[l].type = C_USERFUNC;
 					script->set_label(l, VECTOR_LENGTH(script->buf), p);
 					if( script->parse_options&SCRIPT_USE_LABEL_DB )
-						script->label_add(l, VECTOR_LENGTH(script->buf));
+						script->label_add(l, VECTOR_LENGTH(script->buf), 0x2 | (is_extern ? 0x1 : 0));
 				}
 				else
 					disp_error_message("parse_syntax:function: function name is invalid", func_name);
@@ -2656,11 +2703,14 @@ static struct script_code *parse_script(const char *src, const char *file, int l
 			disp_error_message("unexpected end of script",p);
 		// Special handling only label
 		tmpp=script->skip_space(script->skip_word(p));
-		if(*tmpp==':' && !(strncmp(p,"default:",8) == 0 && p + 7 == tmpp)) {
+		if(*tmpp==':' && !(strncmp(p,"default:",8) == 0 && p + 7 == tmpp) &&
+			!(strncmp(p, "function", 8) == 0 && script->skip_space(p + 8) == tmpp)) {
 			i=script->add_word(p);
 			script->set_label(i, VECTOR_LENGTH(script->buf), p);
-			if( script->parse_options&SCRIPT_USE_LABEL_DB )
-				script->label_add(i, VECTOR_LENGTH(script->buf));
+			if (script->parse_options & SCRIPT_USE_LABEL_DB) {
+				bool is_extern = ((p[0] == 'O' || p[0] == 'o') && (p[1] == 'N' || p[1] == 'n'));
+				script->label_add(i, VECTOR_LENGTH(script->buf), is_extern ? 0x1 : 0x0);
+			}
 			p=tmpp+1;
 			p=script->skip_space(p);
 			continue;
@@ -6408,6 +6458,81 @@ static BUILDIN(callfunc)
 
 	return true;
 }
+
+static BUILDIN(foreigncall) {
+	struct npc_data *nd = npc->name2id(script_getstr(st, 2));
+	const char *function_name = script_getstr(st, 3);
+	struct script_retinfo *ri = NULL;
+	struct reg_db *ref = NULL;
+	int pos = -1;
+	int i = 0;
+
+	if (nd == NULL) {
+		ShowError("script:foreigncall: NPC not found.\n");
+		st->state = END;
+		return false;
+	}
+
+	for (i = 0; i < nd->u.scr.label_list_num; ++i) {
+		if (strcmp(nd->u.scr.label_list[i].name, function_name) == 0) {
+			if (nd->u.scr.label_list[i].flags & 0x1 && nd->u.scr.label_list[i].flags & 0x2) {
+				pos = nd->u.scr.label_list[i].pos;
+			} else if (nd->u.scr.label_list[i].flags & 0x2) {
+				ShowError("script:foreigncall: function '%s' is not marked as exported in NPC '%s'.\n", function_name, nd->name);
+				st->state = END;
+				return false;
+			}
+			break;
+		}
+	}
+
+	if (pos < 0) {
+		ShowError("script:foreigncall: function '%s' not found on NPC '%s'!\n", function_name, nd->name);
+		st->state = END;
+		return false;
+	}
+
+	ref = (struct reg_db *)aCalloc(sizeof(struct reg_db), 2);
+	ref[0].vars = st->stack->scope.vars;
+	ref[0].arrays = st->stack->scope.arrays;
+	ref[1].vars = st->script->local.vars;
+	ref[1].arrays = st->script->local.arrays;
+
+	for (i = st->start + 4; i < st->end; i++) {
+		struct script_data *data = script->push_copy(st->stack, i);
+
+		if (data_isreference(data) && data->ref == NULL) {
+			const char *name = reference_getname(data);
+
+			if (name[0] == '.') {
+				data->ref = (name[1] == '@' ? &ref[0] : &ref[1]);
+			}
+		}
+	}
+
+	CREATE(ri, struct script_retinfo, 1);
+	ri->script       = st->script;              // script code
+	ri->scope.vars   = st->stack->scope.vars;   // scope variables
+	ri->scope.arrays = st->stack->scope.arrays; // scope arrays
+	ri->pos          = st->pos;                 // script location
+	ri->nargs        = i - st->start - 4;       // argument count
+	ri->defsp        = st->stack->defsp;        // default stack pointer
+	script->push_retinfo(st->stack, ri, ref);
+
+	st->pos = pos;
+	st->script = nd->u.scr.script;
+	st->stack->defsp = st->stack->sp;
+	st->state = GOTO;
+	st->stack->scope.vars = i64db_alloc(DB_OPT_RELEASE_DATA);
+	st->stack->scope.arrays = idb_alloc(DB_OPT_BASE);
+
+	if (!st->script->local.vars) {
+		st->script->local.vars = i64db_alloc(DB_OPT_RELEASE_DATA);
+	}
+
+	return true;
+}
+
 /*==========================================
  * subroutine call
  *------------------------------------------*/
@@ -25169,6 +25294,8 @@ static void script_parse_builtin(void)
 
 		// -- HatEffect
 		BUILDIN_DEF(hateffect, "ii"),
+
+		BUILDIN_DEF(foreigncall, "ss*"),
 	};
 	int i, len = ARRAYLENGTH(BUILDIN);
 	RECREATE(script->buildin, char *, script->buildin_count + len); // Pre-alloc to speed up
@@ -25180,7 +25307,7 @@ static void script_parse_builtin(void)
 #undef BUILDIN_DEF
 #undef BUILDIN_DEF2
 
-static void script_label_add(int key, int pos)
+static void script_label_add(int key, int pos, uint8 flags)
 {
 	int idx = script->label_count;
 
@@ -25191,6 +25318,7 @@ static void script_label_add(int key, int pos)
 
 	script->labels[idx].key = key;
 	script->labels[idx].pos = pos;
+	script->labels[idx].flags = flags;
 	script->label_count++;
 }
 

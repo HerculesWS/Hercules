@@ -55,6 +55,7 @@ struct npc_timerevent_list {
 struct npc_label_list {
 	char name[NAME_LENGTH];
 	int pos;
+	uint8 flags; // is_extern, is_userfunc
 };
 struct npc_item_list {
 	int nameid;

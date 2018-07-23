@@ -387,7 +387,7 @@ static int npc_event_export(struct npc_data *nd, int i)
 	Assert_ret(i >= 0 && i < nd->u.scr.label_list_num);
 	lname = nd->u.scr.label_list[i].name;
 	pos = nd->u.scr.label_list[i].pos;
-	if ((lname[0] == 'O' || lname[0] == 'o') && (lname[1] == 'N' || lname[1] == 'n')) {
+	if ((nd->u.scr.label_list[i].flags & 0x1) && !(nd->u.scr.label_list[i].flags & 0x2)) {
 		struct event_data *ev;
 		struct linkdb_node **label_linkdb = NULL;
 		char buf[EVENT_NAME_LENGTH];
@@ -2989,6 +2989,7 @@ static void npc_convertlabel_db(struct npc_label_list *label_list, const char *f
 	for( i = 0; i < script->label_count; i++ ) {
 		const char* lname = script->get_str(script->labels[i].key);
 		int lpos = script->labels[i].pos;
+		uint8 flags = script->labels[i].flags;
 		struct npc_label_list* label;
 		const char *p;
 		size_t len;
@@ -3010,6 +3011,7 @@ static void npc_convertlabel_db(struct npc_label_list *label_list, const char *f
 
 		safestrncpy(label->name, lname, sizeof(label->name));
 		label->pos = lpos;
+		label->flags = flags;
 	}
 }
 

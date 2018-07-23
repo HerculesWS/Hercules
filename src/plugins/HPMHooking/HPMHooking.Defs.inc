@@ -6390,8 +6390,8 @@ typedef void (*HPMHOOK_pre_script_set_constant2) (const char **name, int *value,
 typedef void (*HPMHOOK_post_script_set_constant2) (const char *name, int value, bool is_parameter, bool is_deprecated);
 typedef bool (*HPMHOOK_pre_script_get_constant) (const char **name, int **value);
 typedef bool (*HPMHOOK_post_script_get_constant) (bool retVal___, const char *name, int *value);
-typedef void (*HPMHOOK_pre_script_label_add) (int *key, int *pos);
-typedef void (*HPMHOOK_post_script_label_add) (int key, int pos);
+typedef void (*HPMHOOK_pre_script_label_add) (int *key, int *pos, uint8 *flags);
+typedef void (*HPMHOOK_post_script_label_add) (int key, int pos, uint8 flags);
 typedef void (*HPMHOOK_pre_script_run) (struct script_code **rootscript, int *pos, int *rid, int *oid);
 typedef void (*HPMHOOK_post_script_run) (struct script_code *rootscript, int pos, int rid, int oid);
 typedef void (*HPMHOOK_pre_script_run_npc) (struct script_code **rootscript, int *pos, int *rid, int *oid);
