@@ -620,7 +620,9 @@ struct str_data_struct {
 };
 
 struct script_label_entry {
-	int key,pos;
+	int key;
+	int pos;
+	enum script_label_flags flags;
 };
 
 struct script_syntax_data {
@@ -811,7 +813,7 @@ struct script_interface {
 	void (*set_constant) (const char *name, int value, bool is_parameter, bool is_deprecated);
 	void (*set_constant2) (const char *name, int value, bool is_parameter, bool is_deprecated);
 	bool (*get_constant) (const char* name, int* value);
-	void (*label_add)(int key, int pos);
+	void (*label_add)(int key, int pos, enum script_label_flags flags);
 	void (*run) (struct script_code *rootscript, int pos, int rid, int oid);
 	void (*run_npc) (struct script_code *rootscript, int pos, int rid, int oid);
 	void (*run_pet) (struct script_code *rootscript, int pos, int rid, int oid);
