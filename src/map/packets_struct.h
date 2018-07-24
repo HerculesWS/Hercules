@@ -405,6 +405,7 @@ enum packet_headers {
 	hominfoType = 0x9f7,
 #else
 	hominfoType = 0x22e,
+#endif
 	reqName = 0x95,
 #if PACKETVER >= 20150503 // Confirm this?
 	reqNameAllType = 0xA30,
