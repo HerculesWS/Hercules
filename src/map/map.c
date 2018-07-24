@@ -3681,8 +3681,7 @@ static void do_final_maps(void)
 		if( map->list[i].channel )
 			channel->delete(map->list[i].channel);
 
-		if( map->list[i].qi_data )
-			aFree(map->list[i].qi_data);
+		quest->questinfo_vector_clear(i);
 
 		HPM->data_store_destroy(&map->list[i].hdata);
 	}
@@ -3752,11 +3751,7 @@ static void map_flags_init(void)
 		map->list[i].short_damage_rate  = 100;
 		map->list[i].long_damage_rate   = 100;
 
-		if( map->list[i].qi_data )
-			aFree(map->list[i].qi_data);
-
-		map->list[i].qi_data = NULL;
-		map->list[i].qi_count = 0;
+		VECTOR_INIT(map->list[i].qi_data);
 	}
 }
 
@@ -5972,34 +5967,24 @@ static int map_get_new_bonus_id(void)
 
 static void map_add_questinfo(int m, struct questinfo *qi)
 {
-	unsigned short i;
-
 	nullpo_retv(qi);
 	Assert_retv(m >= 0 && m < map->count);
-	/* duplicate, override */
-	for(i = 0; i < map->list[m].qi_count; i++) {
-		if( map->list[m].qi_data[i].nd == qi->nd )
-			break;
-	}
 
-	if( i == map->list[m].qi_count )
-		RECREATE(map->list[m].qi_data, struct questinfo, ++map->list[m].qi_count);
-
-	memcpy(&map->list[m].qi_data[i], qi, sizeof(struct questinfo));
+	VECTOR_ENSURE(map->list[m].qi_data, 1, 1);
+	VECTOR_PUSH(map->list[m].qi_data, *qi);
 }
 
 static bool map_remove_questinfo(int m, struct npc_data *nd)
 {
 	unsigned short i;
 
+	nullpo_retr(false, nd);
 	Assert_retr(false, m >= 0 && m < map->count);
-	for(i = 0; i < map->list[m].qi_count; i++) {
-		struct questinfo *qi = &map->list[m].qi_data[i];
-		if( qi->nd == nd ) {
-			memset(&map->list[m].qi_data[i], 0, sizeof(struct questinfo));
-			if( i != --map->list[m].qi_count ) {
-				memmove(&map->list[m].qi_data[i],&map->list[m].qi_data[i+1],sizeof(struct questinfo)*(map->list[m].qi_count-i));
-			}
+
+	for (i = 0; i < VECTOR_LENGTH(map->list[m].qi_data); i++) {
+		struct questinfo *qi_data = &VECTOR_INDEX(map->list[m].qi_data, i);
+		if (qi_data->nd == nd) {
+			VECTOR_ERASE(map->list[m].qi_data, i);
 			return true;
 		}
 	}

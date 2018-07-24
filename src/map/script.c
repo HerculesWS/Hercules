@@ -20913,63 +20913,177 @@ static BUILDIN(readbook)
 static BUILDIN(questinfo)
 {
 	struct npc_data *nd = map->id2nd(st->oid);
-	int quest_id, icon;
-	struct questinfo qi;
+	struct questinfo qi = { 0 };
+	int icon = script_getnum(st, 2);
 
-	if( nd == NULL || nd->bl.m == -1 )
+	if (nd == NULL)
 		return true;
 
-	quest_id = script_getnum(st, 2);
-	icon = script_getnum(st, 3);
+	if (nd->bl.m == -1) {
+		ShowWarning("buildin_questinfo: questinfo cannot be set for an npc with no valid map.\n");
+		return false;
+	}
 
-#if PACKETVER >= 20170315
-	if (icon < 0 || (icon > 10 && icon != 9999))
-		icon = 9999;
-#elif PACKETVER >= 20120410
-	if (icon < 0 || (icon > 8 && icon != 9999) || icon == 7)
-		icon = 9999; // Default to nothing if icon id is invalid.
-#else
-	if (icon < 0 || icon > 7)
-		icon = 0;
-	else
-		icon = icon + 1;
-#endif
-
-	qi.quest_id = quest_id;
-	qi.icon = (unsigned char)icon;
 	qi.nd = nd;
-
-	if (script_hasdata(st, 4)) {
-		int color = script_getnum(st, 4);
+	qi.icon = quest->questinfo_validate_icon(icon);
+	if (script_hasdata(st, 3)) {
+		int color = script_getnum(st, 3);
 		if (color < 0 || color > 3) {
-			ShowWarning("buildin_questinfo: invalid color '%d', changing to 0\n",color);
+			ShowWarning("buildin_questinfo: invalid color '%d', defaulting to 0.\n", color);
 			script->reportfunc(st);
 			color = 0;
 		}
 		qi.color = (unsigned char)color;
 	}
 
-	qi.hasJob = false;
+	map->add_questinfo(nd->bl.m, &qi);
+	return true;
+}
 
-	if (script_hasdata(st, 5)) {
-		int job = script_getnum(st, 5);
+static BUILDIN(setquestinfo)
+{
+	struct npc_data *nd = map->id2nd(st->oid);
+	struct questinfo *qi = NULL;
+	uint32 type = script_getnum(st, 2);
 
-		if (!pc->db_checkid(job)) {
-			ShowError("buildin_questinfo: Nonexistant Job Class.\n");
-		} else {
-			qi.hasJob = true;
-			qi.job = (unsigned short)job;
-		}
+	if (nd == NULL)
+		return true;
+
+	if (nd->bl.m == -1) {
+		ShowWarning("buildin_setquestinfo: questinfo cannot be set for an npc with no valid map.\n");
+		return false;
 	}
 
-	map->add_questinfo(nd->bl.m,&qi);
+	qi = &VECTOR_LAST(map->list[nd->bl.m].qi_data);
+	if (qi == NULL) {
+		ShowWarning("buildin_setquestinfo: no valide questinfo data has been found for this npc.\n");
+		return false;
+	}
+	if (qi->nd != nd) {
+		ShowWarning("buildin_setquestinfo: invalid usage, setquestinfo must be used only after questinfo.\n");
+		return false;
+	}
+	switch (type) {
+	case QINFO_JOB:
+	{
+		int jobid = script_getnum(st, 3);
+		if (!pc->db_checkid(jobid)) {
+			ShowWarning("buildin_setquestinfo: invalid job id given (%d).\n", jobid);
+			return false;
+		}
+		qi->hasJob = true;
+		qi->job = jobid;
+		break;
+	}
+	case QINFO_SEX:
+	{
+		int sex = script_getnum(st, 3);
+		if (sex != SEX_MALE && sex != SEX_FEMALE) {
+			ShowWarning("buildin_setquestinfo: unsupported sex has been given (%d).\n", sex);
+			return false;
+		}
+		qi->sex_enabled = true;
+		qi->sex = sex;
+		break;
+	}
+	case QINFO_BASE_LEVEL:
+	{
+		int min = script_getnum(st, 3);
+		int max = script_getnum(st, 4);
+		if (min > max) {
+			ShowWarning("buildin_setquestinfo: minimal level (%d) is bigger than the maximal level (%d).\n", min, max);
+			return false;
+		}
+		qi->base_level.min = min;
+		qi->base_level.max = max;
+		break;
+	}
+	case QINFO_JOB_LEVEL:
+	{
+		int min = script_getnum(st, 3);
+		int max = script_getnum(st, 4);
+		if (min > max) {
+			ShowWarning("buildin_setquestinfo: minimal level (%d) is bigger than the maximal level (%d).\n", min, max);
+			return false;
+		}
+		qi->job_level.min = min;
+		qi->job_level.max = max;
+		break;
+	}
+	case QINFO_ITEM:
+	{
+		struct item item = { 0 };
 
+		item.nameid = script_getnum(st, 3);
+		item.amount = script_getnum(st, 4);
+
+		if (itemdb->exists(item.nameid) == NULL) {
+			ShowWarning("buildin_setquestinfo: non existing item (%d) have been given.\n", item.nameid);
+			return false;
+		}
+		if (item.amount <= 0 || item.amount > MAX_AMOUNT) {
+			ShowWarning("buildin_setquestinfo: given amount (%d) must be bigger than 0 and smaller than %d.\n", item.amount, MAX_AMOUNT + 1);
+			return false;
+		}
+		if (VECTOR_LENGTH(qi->items) == 0)
+			VECTOR_INIT(qi->items);
+		VECTOR_ENSURE(qi->items, 1, 1);
+		VECTOR_PUSH(qi->items, item);
+		break;
+	}
+	case QINFO_HOMUN_LEVEL:
+	{
+		int min = script_getnum(st, 3);
+		if (min > battle_config.hom_max_level && min > battle_config.hom_S_max_level) {
+			ShowWarning("buildin_setquestinfo: minimum homunculus level given (%d) is bigger than the max possible level.\n", min);
+			return false;
+		}
+		qi->homunculus.level = min;
+		break;
+	}
+	case QINFO_HOMUN_TYPE:
+	{
+		int hom_type = script_getnum(st, 3);
+		if (hom_type < HT_REG || hom_type > HT_S) {
+			ShowWarning("buildin_setquestinfo: invalid homunculus type (%d).\n", hom_type);
+			return false;
+		}
+		qi->homunculus_type = hom_type;
+		break;
+	}
+	case QINFO_QUEST:
+	{
+		struct questinfo_qreq quest_req = { 0 };
+		struct quest_db *quest_data = NULL;
+
+		quest_req.id = script_getnum(st, 3);
+		quest_req.state = script_getnum(st, 4);
+
+		quest_data = quest->db(quest_req.id);
+		if (quest_data == &quest->dummy) {
+			ShowWarning("buildin_setquestinfo: invalid quest given (%d).\n", quest_req.id);
+			return false;
+		}
+		if (quest_req.state < Q_INACTIVE || quest_req.state > Q_COMPLETE) {
+			ShowWarning("buildin_setquestinfo: invalid quest state given (%d).\n", quest_req.state);
+			return false;
+		}
+
+		if (VECTOR_LENGTH(qi->quest_requirement) == 0)
+			VECTOR_INIT(qi->quest_requirement);
+		VECTOR_ENSURE(qi->quest_requirement, 1, 1);
+		VECTOR_PUSH(qi->quest_requirement, quest_req);
+		break;
+	}
+	default:
+		ShowWarning("buildin_setquestinfo: invalid type given (%u).\n", type);
+		return false;
+	}
 	return true;
 }
 
 static BUILDIN(setquest)
 {
-	unsigned short i;
 	int quest_id;
 	unsigned int time_limit;
 	struct map_session_data *sd = script->rid2sd(st);
@@ -20981,19 +21095,6 @@ static BUILDIN(setquest)
 	time_limit = script_hasdata(st, 3) ? script_getnum(st, 3) : 0;
 
 	quest->add(sd, quest_id, time_limit);
-
-	// If questinfo is set, remove quest bubble once quest is set.
-	for (i = 0; i < map->list[sd->bl.m].qi_count; i++) {
-		struct questinfo *qi = &map->list[sd->bl.m].qi_data[i];
-		if (qi->quest_id == quest_id) {
-#if PACKETVER >= 20120410
-			clif->quest_show_event(sd, &qi->nd->bl, 9999, 0);
-#else
-			clif->quest_show_event(sd, &qi->nd->bl, 0, 0);
-#endif
-		}
-	}
-
 	return true;
 }
 
@@ -25095,7 +25196,8 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(checkbound, "i???????"),
 
 		//Quest Log System [Inkfish]
-		BUILDIN_DEF(questinfo, "ii??"),
+		BUILDIN_DEF(questinfo, "i?"),
+		BUILDIN_DEF(setquestinfo, "i??"),
 		BUILDIN_DEF(setquest, "i?"),
 		BUILDIN_DEF(erasequest, "i?"),
 		BUILDIN_DEF(completequest, "i?"),
@@ -25555,6 +25657,16 @@ static void script_hardcoded_constants(void)
 	script->set_constant("P_AIRSHIP_INVALID_END_MAP", P_AIRSHIP_INVALID_END_MAP, false, false);
 	script->set_constant("P_AIRSHIP_ITEM_NOT_ENOUGH", P_AIRSHIP_ITEM_NOT_ENOUGH, false, false);
 	script->set_constant("P_AIRSHIP_ITEM_INVALID", P_AIRSHIP_ITEM_INVALID, false, false);
+
+	script->constdb_comment("questinfo types");
+	script->set_constant("QINFO_JOB", QINFO_JOB, false, false);
+	script->set_constant("QINFO_SEX", QINFO_SEX, false, false);
+	script->set_constant("QINFO_BASE_LEVEL", QINFO_BASE_LEVEL, false, false);
+	script->set_constant("QINFO_JOB_LEVEL", QINFO_JOB_LEVEL, false, false);
+	script->set_constant("QINFO_ITEM", QINFO_ITEM, false, false);
+	script->set_constant("QINFO_HOMUN_LEVEL", QINFO_HOMUN_LEVEL, false, false);
+	script->set_constant("QINFO_HOMUN_TYPE", QINFO_HOMUN_TYPE, false, false);
+	script->set_constant("QINFO_QUEST", QINFO_QUEST, false, false);
 
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL

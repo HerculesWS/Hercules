@@ -9337,12 +9337,10 @@ that fails, the command returns an empty string instead.
 //=====================================
 ---------------------------------------
 
-*questinfo(<Quest ID>, <Icon> {, <Map Mark Color>{, <Job Class>}})
+*questinfo(<Icon> {, <Map Mark Color>})
 
-This is esentially a combination of questprogress() and showevent(). Use this only
-in an OnInit label. For the Quest ID, specify the quest ID that you want
-checked if it has been started yet.
-
+This is esentially a showevent() that supports different conditions that can be set using setquestinfo().
+Use this only in an OnInit label.
 For Icon, use one of the following:
 
 No Icon		: QTYPE_NONE
@@ -9373,8 +9371,6 @@ the available color values are:
 When a user shows up on a map, each NPC is checked for questinfo that has been set.
 If questinfo is present, it will check if the quest has been started, if it has not, the bubble will appear.
 
-Optionally, you can also specify a Job Class if the quest bubble should only appear for a certain class.
-
 Example
 	izlude,100,100,4	script	Test	844,{
 		mes("[Test]");
@@ -9382,9 +9378,26 @@ Example
 		close();
 
 	OnInit:
-		questinfo(1001, QTYPE_QUEST, 0, Job_Novice);
+		questinfo(QTYPE_QUEST);
 		end;
 	}
+
+---------------------------------------
+
+*setquestinfo(<Type> {, <Values...>})
+
+Use this command ONLY after a questinfo()
+it allows you to set multiple required conditions for the quest bubble to show up.
+
+supported types: values
+	QINFO_JOB: job_id
+	QINFO_SEX: sex
+	QINFO_BASE_LEVEL: min, max
+	QINFO_JOB_LEVEL: min, max
+	QINFO_ITEM: item_id, amount // append to the items list on each use
+	QINFO_HOMUN_LEVEL: min
+	QINFO_HOMUN_TYPE: homunculus_type (0 - regular, 1 - evolved, 2 - S)
+	QINFO_QUEST: quest_id, state // append to the quests list on each use
 
 ---------------------------------------
 
