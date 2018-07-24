@@ -472,6 +472,42 @@ enum pcblock_action_flag {
 };
 
 /**
+ * Monster info
+ **/
+enum monsterinfo {
+	MOB_NAME = 0,
+	MOB_LV,
+	MOB_MAXHP,
+	MOB_BASEEXP,
+	MOB_JOBEXP,
+	MOB_ATK1,
+	MOB_ATK2,
+	MOB_DEF,
+	MOB_MDEF,
+	MOB_STR,
+	MOB_AGI,
+	MOB_VIT,
+	MOB_INT,
+	MOB_DEX,
+	MOB_LUK,
+	MOB_RANGE,
+	MOB_RANGE2,
+	MOB_RANGE3,
+	MOB_SIZE,
+	MOB_RACE,
+	MOB_ELEMENT,
+	MOB_MODE,
+	MOB_MVPEXP,
+	MOB_ENAME,
+	MOB_ELEMENTLV,
+	MOB_MOVESPEED,
+	MOB_ADELAY,
+	MOB_AMOTION,
+	MOB_DMOTION,
+	MOB_MAX,
+};
+
+/**
  * Structures
  **/
 
