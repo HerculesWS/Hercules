@@ -86,7 +86,7 @@ void constdb2doc_constdb(void)
 
 	/* Run */
 	fprintf(out_fp, "## Constants (db/constants.conf)\n\n");
-	script->read_constdb();
+	script->read_constdb(false);
 	fprintf(out_fp, "\n");
 
 	fprintf(out_fp, "## Hardcoded Constants (source)\n\n");
