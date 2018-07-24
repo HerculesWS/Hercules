@@ -2258,7 +2258,7 @@ static void script_set_constant(const char *name, int value, bool is_parameter, 
 {
 	int n = script->add_str(name);
 
-	if( script->str_data[n].type == C_NOP ) {// new
+	if (script->str_data[n].type == C_NOP) {
 		script->str_data[n].type = is_parameter ? C_PARAM : C_INT;
 		script->str_data[n].val  = value;
 		script->str_data[n].deprecated = is_deprecated ? 1 : 0;
@@ -2302,7 +2302,7 @@ static void script_set_constant2(const char *name, int value, bool is_parameter,
 /**
  * Loads the constants database from constants.conf
  */
-static void read_constdb(void)
+static void read_constdb(bool reload)
 {
 	struct config_t constants_conf;
 	char filepath[256];
@@ -2321,7 +2321,6 @@ static void read_constdb(void)
 	}
 
 	while ((t = libconfig->setting_get_elem(cdb, i++))) {
-		bool is_parameter = false;
 		bool is_deprecated = false;
 		int value = 0;
 		const char *name = config_setting_name(t);
@@ -2352,10 +2351,6 @@ static void read_constdb(void)
 				continue;
 			}
 			value = i32;
-			if (libconfig->setting_lookup_bool(t, "Parameter", &i32)) {
-				if (i32 != 0)
-					is_parameter = true;
-			}
 			if (libconfig->setting_lookup_bool(t, "Deprecated", &i32)) {
 				if (i32 != 0)
 					is_deprecated = true;
@@ -2363,9 +2358,13 @@ static void read_constdb(void)
 		} else {
 			value = libconfig->setting_get_int(t);
 		}
-		if (is_parameter)
-			ShowWarning("read_constdb: Defining parameters in the constants configuration is deprecated and will no longer be possible in a future version. Parameters should be defined in source. (parameter = '%s')\n", name);
-		script->set_constant(name, value, is_parameter, is_deprecated);
+
+		if (reload) {
+			int n = script->add_str(name);
+			script->str_data[n].type = C_NOP; // ensures it will be overwritten
+		}
+
+		script->set_constant(name, value, false, is_deprecated);
 	}
 	script->constdb_comment(NULL);
 	libconfig->destroy(&constants_conf);
@@ -5593,7 +5592,7 @@ static void do_init_script(bool minimal)
 	VECTOR_INIT(script->hqi);
 
 	script->parse_builtin();
-	script->read_constdb();
+	script->read_constdb(false);
 	script->load_parameters();
 	script->hardcoded_constants();
 
@@ -5645,12 +5644,11 @@ static int script_reload(void)
 		script->parse_cleanup_timer_id = INVALID_TIMER;
 	}
 
-	mapreg->reload();
-
+	script->read_constdb(true);
 	itemdb->name_constants();
-
 	clan->set_constants();
 
+	mapreg->reload();
 	sysinfo->vcsrevision_reload();
 
 	return 0;

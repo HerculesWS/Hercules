@@ -67392,14 +67392,14 @@ const char* HP_script_parse_line(const char *p) {
 	}
 	return retVal___;
 }
-void HP_script_read_constdb(void) {
+void HP_script_read_constdb(bool reload) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_script_read_constdb_pre > 0) {
-		void (*preHookFunc) (void);
+		void (*preHookFunc) (bool *reload);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_read_constdb_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_script_read_constdb_pre[hIndex].func;
-			preHookFunc();
+			preHookFunc(&reload);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -67407,13 +67407,13 @@ void HP_script_read_constdb(void) {
 		}
 	}
 	{
-		HPMHooks.source.script.read_constdb();
+		HPMHooks.source.script.read_constdb(reload);
 	}
 	if (HPMHooks.count.HP_script_read_constdb_post > 0) {
-		void (*postHookFunc) (void);
+		void (*postHookFunc) (bool reload);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_read_constdb_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_script_read_constdb_post[hIndex].func;
-			postHookFunc();
+			postHookFunc(reload);
 		}
 	}
 	return;
