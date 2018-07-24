@@ -64148,6 +64148,328 @@ struct quest_db* HP_quest_read_db_sub(struct config_setting_t *cs, int n, const 
 	}
 	return retVal___;
 }
+int HP_quest_questinfo_validate_icon(int icon) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_quest_questinfo_validate_icon_pre > 0) {
+		int (*preHookFunc) (int *icon);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_questinfo_validate_icon_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_quest_questinfo_validate_icon_pre[hIndex].func;
+			retVal___ = preHookFunc(&icon);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.quest.questinfo_validate_icon(icon);
+	}
+	if (HPMHooks.count.HP_quest_questinfo_validate_icon_post > 0) {
+		int (*postHookFunc) (int retVal___, int icon);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_questinfo_validate_icon_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_quest_questinfo_validate_icon_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, icon);
+		}
+	}
+	return retVal___;
+}
+void HP_quest_questinfo_refresh(struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_quest_questinfo_refresh_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_questinfo_refresh_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_quest_questinfo_refresh_pre[hIndex].func;
+			preHookFunc(&sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.quest.questinfo_refresh(sd);
+	}
+	if (HPMHooks.count.HP_quest_questinfo_refresh_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_questinfo_refresh_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_quest_questinfo_refresh_post[hIndex].func;
+			postHookFunc(sd);
+		}
+	}
+	return;
+}
+bool HP_quest_questinfo_validate(struct map_session_data *sd, struct questinfo *qi) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_quest_questinfo_validate_pre > 0) {
+		bool (*preHookFunc) (struct map_session_data **sd, struct questinfo **qi);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_questinfo_validate_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_quest_questinfo_validate_pre[hIndex].func;
+			retVal___ = preHookFunc(&sd, &qi);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.quest.questinfo_validate(sd, qi);
+	}
+	if (HPMHooks.count.HP_quest_questinfo_validate_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, struct questinfo *qi);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_questinfo_validate_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_quest_questinfo_validate_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd, qi);
+		}
+	}
+	return retVal___;
+}
+bool HP_quest_questinfo_validate_job(struct map_session_data *sd, struct questinfo *qi) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_quest_questinfo_validate_job_pre > 0) {
+		bool (*preHookFunc) (struct map_session_data **sd, struct questinfo **qi);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_questinfo_validate_job_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_quest_questinfo_validate_job_pre[hIndex].func;
+			retVal___ = preHookFunc(&sd, &qi);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.quest.questinfo_validate_job(sd, qi);
+	}
+	if (HPMHooks.count.HP_quest_questinfo_validate_job_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, struct questinfo *qi);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_questinfo_validate_job_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_quest_questinfo_validate_job_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd, qi);
+		}
+	}
+	return retVal___;
+}
+bool HP_quest_questinfo_validate_sex(struct map_session_data *sd, struct questinfo *qi) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_quest_questinfo_validate_sex_pre > 0) {
+		bool (*preHookFunc) (struct map_session_data **sd, struct questinfo **qi);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_questinfo_validate_sex_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_quest_questinfo_validate_sex_pre[hIndex].func;
+			retVal___ = preHookFunc(&sd, &qi);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.quest.questinfo_validate_sex(sd, qi);
+	}
+	if (HPMHooks.count.HP_quest_questinfo_validate_sex_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, struct questinfo *qi);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_questinfo_validate_sex_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_quest_questinfo_validate_sex_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd, qi);
+		}
+	}
+	return retVal___;
+}
+bool HP_quest_questinfo_validate_baselevel(struct map_session_data *sd, struct questinfo *qi) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_quest_questinfo_validate_baselevel_pre > 0) {
+		bool (*preHookFunc) (struct map_session_data **sd, struct questinfo **qi);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_questinfo_validate_baselevel_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_quest_questinfo_validate_baselevel_pre[hIndex].func;
+			retVal___ = preHookFunc(&sd, &qi);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.quest.questinfo_validate_baselevel(sd, qi);
+	}
+	if (HPMHooks.count.HP_quest_questinfo_validate_baselevel_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, struct questinfo *qi);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_questinfo_validate_baselevel_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_quest_questinfo_validate_baselevel_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd, qi);
+		}
+	}
+	return retVal___;
+}
+bool HP_quest_questinfo_validate_joblevel(struct map_session_data *sd, struct questinfo *qi) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_quest_questinfo_validate_joblevel_pre > 0) {
+		bool (*preHookFunc) (struct map_session_data **sd, struct questinfo **qi);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_questinfo_validate_joblevel_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_quest_questinfo_validate_joblevel_pre[hIndex].func;
+			retVal___ = preHookFunc(&sd, &qi);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.quest.questinfo_validate_joblevel(sd, qi);
+	}
+	if (HPMHooks.count.HP_quest_questinfo_validate_joblevel_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, struct questinfo *qi);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_questinfo_validate_joblevel_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_quest_questinfo_validate_joblevel_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd, qi);
+		}
+	}
+	return retVal___;
+}
+bool HP_quest_questinfo_validate_items(struct map_session_data *sd, struct questinfo *qi) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_quest_questinfo_validate_items_pre > 0) {
+		bool (*preHookFunc) (struct map_session_data **sd, struct questinfo **qi);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_questinfo_validate_items_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_quest_questinfo_validate_items_pre[hIndex].func;
+			retVal___ = preHookFunc(&sd, &qi);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.quest.questinfo_validate_items(sd, qi);
+	}
+	if (HPMHooks.count.HP_quest_questinfo_validate_items_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, struct questinfo *qi);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_questinfo_validate_items_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_quest_questinfo_validate_items_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd, qi);
+		}
+	}
+	return retVal___;
+}
+bool HP_quest_questinfo_validate_homunculus_level(struct map_session_data *sd, struct questinfo *qi) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_quest_questinfo_validate_homunculus_level_pre > 0) {
+		bool (*preHookFunc) (struct map_session_data **sd, struct questinfo **qi);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_questinfo_validate_homunculus_level_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_quest_questinfo_validate_homunculus_level_pre[hIndex].func;
+			retVal___ = preHookFunc(&sd, &qi);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.quest.questinfo_validate_homunculus_level(sd, qi);
+	}
+	if (HPMHooks.count.HP_quest_questinfo_validate_homunculus_level_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, struct questinfo *qi);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_questinfo_validate_homunculus_level_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_quest_questinfo_validate_homunculus_level_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd, qi);
+		}
+	}
+	return retVal___;
+}
+bool HP_quest_questinfo_validate_homunculus_type(struct map_session_data *sd, struct questinfo *qi) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_quest_questinfo_validate_homunculus_type_pre > 0) {
+		bool (*preHookFunc) (struct map_session_data **sd, struct questinfo **qi);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_questinfo_validate_homunculus_type_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_quest_questinfo_validate_homunculus_type_pre[hIndex].func;
+			retVal___ = preHookFunc(&sd, &qi);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.quest.questinfo_validate_homunculus_type(sd, qi);
+	}
+	if (HPMHooks.count.HP_quest_questinfo_validate_homunculus_type_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, struct questinfo *qi);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_questinfo_validate_homunculus_type_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_quest_questinfo_validate_homunculus_type_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd, qi);
+		}
+	}
+	return retVal___;
+}
+bool HP_quest_questinfo_validate_quests(struct map_session_data *sd, struct questinfo *qi) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_quest_questinfo_validate_quests_pre > 0) {
+		bool (*preHookFunc) (struct map_session_data **sd, struct questinfo **qi);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_questinfo_validate_quests_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_quest_questinfo_validate_quests_pre[hIndex].func;
+			retVal___ = preHookFunc(&sd, &qi);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.quest.questinfo_validate_quests(sd, qi);
+	}
+	if (HPMHooks.count.HP_quest_questinfo_validate_quests_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, struct questinfo *qi);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_questinfo_validate_quests_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_quest_questinfo_validate_quests_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd, qi);
+		}
+	}
+	return retVal___;
+}
+void HP_quest_questinfo_vector_clear(int m) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_quest_questinfo_vector_clear_pre > 0) {
+		void (*preHookFunc) (int *m);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_questinfo_vector_clear_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_quest_questinfo_vector_clear_pre[hIndex].func;
+			preHookFunc(&m);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.quest.questinfo_vector_clear(m);
+	}
+	if (HPMHooks.count.HP_quest_questinfo_vector_clear_post > 0) {
+		void (*postHookFunc) (int m);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_questinfo_vector_clear_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_quest_questinfo_vector_clear_post[hIndex].func;
+			postHookFunc(m);
+		}
+	}
+	return;
+}
 /* rnd_interface */
 void HP_rnd_init(void) {
 	int hIndex = 0;
