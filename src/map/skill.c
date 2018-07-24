@@ -19427,7 +19427,7 @@ static void skill_init_unit_layout(void)
 				}
 				break;
 			default:
-				skill->init_unit_layout_unknown(i);
+				skill->init_unit_layout_unknown(i, pos);
 				break;
 		}
 		if (!skill->dbs->unit_layout[pos].count)
@@ -19528,7 +19528,7 @@ static void skill_init_unit_layout(void)
 
 }
 
-static void skill_init_unit_layout_unknown(int skill_idx)
+static void skill_init_unit_layout_unknown(int skill_idx, int pos)
 {
 	Assert_retv(skill_idx >= 0 && skill_idx < MAX_SKILL_DB);
 	ShowError("unknown unit layout at skill %d\n", skill->dbs->db[skill_idx].nameid);
