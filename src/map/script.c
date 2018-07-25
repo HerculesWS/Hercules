@@ -12349,9 +12349,18 @@ static BUILDIN(getstatus)
  *------------------------------------------*/
 static BUILDIN(debugmes)
 {
-	const char *str;
-	str=script_getstr(st,2);
-	ShowDebug("script debug : %d %d : %s\n",st->rid,st->oid,str);
+	struct StringBuf buf;
+	StrBuf->Init(&buf);
+
+	if (!script->sprintf_helper(st, 2, &buf)) {
+		StrBuf->Destroy(&buf);
+		script_pushint(st, 0);
+		return false;
+	}
+
+	ShowDebug("script debug : %d %d : %s\n", st->rid, st->oid, StrBuf->Value(&buf));
+	StrBuf->Destroy(&buf);
+	script_pushint(st, 1);
 	return true;
 }
 
@@ -24872,7 +24881,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(sc_end,"i?"),
 		BUILDIN_DEF(getstatus, "i?"),
 		BUILDIN_DEF(getscrate,"ii?"),
-		BUILDIN_DEF(debugmes,"v"),
+		BUILDIN_DEF(debugmes,"v*"),
 		BUILDIN_DEF2(catchpet,"pet","i"),
 		BUILDIN_DEF2(birthpet,"bpet",""),
 		BUILDIN_DEF(resetlvl,"i"),
