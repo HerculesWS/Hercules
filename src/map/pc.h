@@ -1179,6 +1179,7 @@ END_ZEROED_BLOCK; /* End */
 	void (*check_supernovice_call) (struct map_session_data *sd, const char *message);
 	bool (*check_basicskill) (struct map_session_data *sd, int level);
 	bool (*isDeathPenaltyJob) (uint16 job);
+	bool (*has_second_costume) (struct map_session_data *sd);
 };
 
 #ifdef HERCULES_CORE

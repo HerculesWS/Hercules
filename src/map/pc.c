@@ -12277,6 +12277,15 @@ static void pc_init_exp_groups(void)
 	}
 }
 
+static bool pc_has_second_costume(struct map_session_data *sd)
+{
+	nullpo_retr(false, sd);
+
+	if ((sd->job & JOBL_THIRD) != 0)
+		return true;
+	return false;
+}
+
 static void do_final_pc(void)
 {
 
@@ -12678,4 +12687,5 @@ void pc_defaults(void)
 	pc->check_basicskill = pc_check_basicskill;
 
 	pc->isDeathPenaltyJob = pc_isDeathPenaltyJob;
+	pc->has_second_costume = pc_has_second_costume;
 }
