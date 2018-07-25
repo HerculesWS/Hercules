@@ -12324,6 +12324,7 @@
 - `Sacred_Rosary`: 6913
 - `Black_Soul`: 6914
 - `Captured_Soul`: 6915
+- `Costume_Change_Ticket`: 6959
 - `Mould_Powder`: 7001
 - `Ogre_Tooth`: 7002
 - `Anolian_Skin`: 7003
