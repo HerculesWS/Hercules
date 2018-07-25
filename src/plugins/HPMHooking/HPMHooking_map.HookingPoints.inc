@@ -2397,6 +2397,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(pc->check_supernovice_call, HP_pc_check_supernovice_call) },
 	{ HP_POP(pc->check_basicskill, HP_pc_check_basicskill) },
 	{ HP_POP(pc->isDeathPenaltyJob, HP_pc_isDeathPenaltyJob) },
+	{ HP_POP(pc->has_second_costume, HP_pc_has_second_costume) },
 /* pcre_interface */
 	{ HP_POP(libpcre->compile, HP_libpcre_compile) },
 	{ HP_POP(libpcre->study, HP_libpcre_study) },

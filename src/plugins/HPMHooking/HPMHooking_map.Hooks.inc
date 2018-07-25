@@ -62356,6 +62356,33 @@ bool HP_pc_isDeathPenaltyJob(uint16 job) {
 	}
 	return retVal___;
 }
+bool HP_pc_has_second_costume(struct map_session_data *sd) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_pc_has_second_costume_pre > 0) {
+		bool (*preHookFunc) (struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_has_second_costume_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_pc_has_second_costume_pre[hIndex].func;
+			retVal___ = preHookFunc(&sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.pc.has_second_costume(sd);
+	}
+	if (HPMHooks.count.HP_pc_has_second_costume_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_has_second_costume_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_pc_has_second_costume_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd);
+		}
+	}
+	return retVal___;
+}
 /* pcre_interface */
 pcre* HP_libpcre_compile(const char *pattern, int options, const char **errptr, int *erroffset, const unsigned char *tableptr) {
 	int hIndex = 0;

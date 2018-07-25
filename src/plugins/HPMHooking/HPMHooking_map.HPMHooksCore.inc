@@ -4682,6 +4682,8 @@ struct {
 	struct HPMHookPoint *HP_pc_check_basicskill_post;
 	struct HPMHookPoint *HP_pc_isDeathPenaltyJob_pre;
 	struct HPMHookPoint *HP_pc_isDeathPenaltyJob_post;
+	struct HPMHookPoint *HP_pc_has_second_costume_pre;
+	struct HPMHookPoint *HP_pc_has_second_costume_post;
 	struct HPMHookPoint *HP_libpcre_compile_pre;
 	struct HPMHookPoint *HP_libpcre_compile_post;
 	struct HPMHookPoint *HP_libpcre_study_pre;
@@ -11103,6 +11105,8 @@ struct {
 	int HP_pc_check_basicskill_post;
 	int HP_pc_isDeathPenaltyJob_pre;
 	int HP_pc_isDeathPenaltyJob_post;
+	int HP_pc_has_second_costume_pre;
+	int HP_pc_has_second_costume_post;
 	int HP_libpcre_compile_pre;
 	int HP_libpcre_compile_post;
 	int HP_libpcre_study_pre;
