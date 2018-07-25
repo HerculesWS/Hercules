@@ -1302,7 +1302,11 @@ struct packet_npc_market_purchase {
 	int16 PacketType;
 	int16 PacketLength;
 	struct {
+#if PACKETVER_RE_NUM >= 20180704
+		uint32 ITID;
+#else
 		uint16 ITID;
+#endif
 		int32 qty;
 	} list[]; // Note: We assume this should be <= MAX_INVENTORY (since you can't hold more than MAX_INVENTORY items thus cant buy that many at once).
 } __attribute__((packed));
