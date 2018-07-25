@@ -75086,14 +75086,14 @@ void HP_skill_init_unit_layout(void) {
 	}
 	return;
 }
-void HP_skill_init_unit_layout_unknown(int skill_idx) {
+void HP_skill_init_unit_layout_unknown(int skill_idx, int pos) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_skill_init_unit_layout_unknown_pre > 0) {
-		void (*preHookFunc) (int *skill_idx);
+		void (*preHookFunc) (int *skill_idx, int *pos);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_init_unit_layout_unknown_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_skill_init_unit_layout_unknown_pre[hIndex].func;
-			preHookFunc(&skill_idx);
+			preHookFunc(&skill_idx, &pos);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -75101,13 +75101,13 @@ void HP_skill_init_unit_layout_unknown(int skill_idx) {
 		}
 	}
 	{
-		HPMHooks.source.skill.init_unit_layout_unknown(skill_idx);
+		HPMHooks.source.skill.init_unit_layout_unknown(skill_idx, pos);
 	}
 	if (HPMHooks.count.HP_skill_init_unit_layout_unknown_post > 0) {
-		void (*postHookFunc) (int skill_idx);
+		void (*postHookFunc) (int skill_idx, int pos);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_init_unit_layout_unknown_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_skill_init_unit_layout_unknown_post[hIndex].func;
-			postHookFunc(skill_idx);
+			postHookFunc(skill_idx, pos);
 		}
 	}
 	return;

@@ -2093,7 +2093,7 @@ struct skill_interface {
 	int (*unit_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*unit_timer_sub) (union DBKey key, struct DBData *data, va_list ap);
 	void (*init_unit_layout) (void);
-	void (*init_unit_layout_unknown) (int skill_idx);
+	void (*init_unit_layout_unknown) (int skill_idx, int pos);
 	void (*validate_hittype) (struct config_setting_t *conf, struct s_skill_db *sk);
 	void (*validate_skilltype) (struct config_setting_t *conf, struct s_skill_db *sk);
 	void (*validate_attacktype) (struct config_setting_t *conf, struct s_skill_db *sk);

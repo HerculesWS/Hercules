@@ -7066,8 +7066,8 @@ typedef int (*HPMHOOK_pre_skill_unit_timer_sub) (union DBKey *key, struct DBData
 typedef int (*HPMHOOK_post_skill_unit_timer_sub) (int retVal___, union DBKey key, struct DBData *data, va_list ap);
 typedef void (*HPMHOOK_pre_skill_init_unit_layout) (void);
 typedef void (*HPMHOOK_post_skill_init_unit_layout) (void);
-typedef void (*HPMHOOK_pre_skill_init_unit_layout_unknown) (int *skill_idx);
-typedef void (*HPMHOOK_post_skill_init_unit_layout_unknown) (int skill_idx);
+typedef void (*HPMHOOK_pre_skill_init_unit_layout_unknown) (int *skill_idx, int *pos);
+typedef void (*HPMHOOK_post_skill_init_unit_layout_unknown) (int skill_idx, int pos);
 typedef void (*HPMHOOK_pre_skill_validate_hittype) (struct config_setting_t **conf, struct s_skill_db **sk);
 typedef void (*HPMHOOK_post_skill_validate_hittype) (struct config_setting_t *conf, struct s_skill_db *sk);
 typedef void (*HPMHOOK_pre_skill_validate_skilltype) (struct config_setting_t **conf, struct s_skill_db **sk);
