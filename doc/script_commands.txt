@@ -7663,15 +7663,19 @@ solution rather than sending the map and the monster_id.
 //=====================================
 ---------------------------------------
 
-*debugmes("<message>")
+*debugmes("<format string>"{, <param>{, ...}})
 
-This command will send the message to the server console (map-server
-window). It will not be displayed anywhere else.
-//
+This command will print a message in the server console (map-server window),
+after applying the same format-string replacements as sprintf(). It will not be
+displayed anywhere else. Returns true on success.
+
+Example:
+
 	// Displays "NAME has clicked me!" in the map-server window.
-	debugmes(strcharinfo(PC_NAME)+" has clicked me!");
+	debugmes("%s has clicked me!", strcharinfo(PC_NAME));
 
-	debugmes("\033[38D\033[K ==Message== \n"); // enable colour code.
+	debugmes("\033[0;32mHello World"); // supports ANSI escape sequences
+
 ---------------------------------------
 
 *logmes("<message>"{, <log type>})
