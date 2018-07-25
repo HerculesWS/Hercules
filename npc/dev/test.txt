@@ -116,6 +116,31 @@ function	script	F_TestVarOfAnotherNPC	{
 	end;
 }
 
+-	script	export test	FAKE_NPC,{
+
+	function OnInit {
+		// functions labels should not be able to be called as events
+		// if a regression occurs, this function could end up being called when
+		// Hercules processes OnInit event calls (issue #2137)
+
+		$@something_bad_happened[0] = true;
+		end;
+	}
+
+	function :Exported {
+		// this is for testing exported local functions and ownership of the
+		// script
+
+		return getnpcid(0);
+	}
+
+	function :RefTest {
+		// this is to check if references are passed around properly
+
+		return set(getarg(0), 1337);
+	}
+}
+
 function	script	HerculesSelfTestHelper	{
 	if (.once > 0)
 		return .errors;
@@ -768,6 +793,11 @@ function	script	HerculesSelfTestHelper	{
 	callsub(OnCheck, "Getdatatype (getarg default value)", callsub(OnTestGetdatatypeDefault), DATATYPE_INT);
 	callsub(OnCheck, "Getdatatype (getarg integer value)", callsub(OnTestGetdatatype, 5), DATATYPE_INT);
 	callsub(OnCheck, "Getdatatype (getarg string)",        callsub(OnTestGetdatatype, "foo"), DATATYPE_STR | DATATYPE_CONST);
+
+	"export test"::RefTest(.@refTest = 69);
+	callsub(OnCheck, "function as event (regression)",   $@something_bad_happened[0], false);
+	callsub(OnCheck, "exported function ownership",      "export test"::Exported(), getnpcid(0));
+	callsub(OnCheck, "exported function reference test", .@refTest, 1337);
 
 	if (.errors) {
 		debugmes "Script engine self-test   [ \033[0;31mFAILED\033[0m ]";
