@@ -4929,7 +4929,7 @@ static void script_setarray_pc(struct map_session_data *sd, const char *varname,
 {
 	int key;
 
-	if( idx >= SCRIPT_MAX_ARRAYSIZE ) {
+	if (idx > SCRIPT_MAX_ARRAYSIZE) {
 		ShowError("script_setarray_pc: Variable '%s' has invalid index '%u' (char_id=%d).\n", varname, idx, sd->status.char_id);
 		return;
 	}
@@ -7540,7 +7540,7 @@ static BUILDIN(getelementofarray)
 	id = reference_getid(data);
 
 	i = script_getnum(st, 3);
-	if (i < 0 || i >= SCRIPT_MAX_ARRAYSIZE) {
+	if (i < 0 || i > SCRIPT_MAX_ARRAYSIZE) {
 		ShowWarning("script:getelementofarray: index out of range (%"PRId64")\n", i);
 		script->reportdata(data);
 		script_pushnil(st);
