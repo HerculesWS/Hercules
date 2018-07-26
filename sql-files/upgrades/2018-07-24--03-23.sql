@@ -18,5 +18,5 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-UPDATE `inventory` SET `identify` = 1, `attribute` = 1 WHERE `card0` = -256 and `identify` = 0
+UPDATE `inventory` SET `identify` = 1, `attribute` = 1 WHERE `card0` = -256 and `identify` = 0;
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1532403228);
