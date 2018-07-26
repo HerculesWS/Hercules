@@ -1977,18 +1977,35 @@ prontera,150,150,0	script	TestNPC	123,{
 
 *is_function("<function name>")
 
-This command checks whether a function exists.
-It returns 1 if function is found, or 0 if it isn't.
+This command checks whether or not a function exists and returns its type.
+Returns false if it cannot be found.
+
+return values:
+
+	FUNCTION_IS_COMMAND - built-in script command (eg: mes, select, ...)
+	FUNCTION_IS_GLOBAL  - user-defined global function (callable with callfunc)
+	FUNCTION_IS_LOCAL   - user-defined local function
+	FUNCTION_IS_LABEL   - user-defined label function (callable with callsub)
 
 Example:
 
-	function	script	try	{
+	function	script	func1	{
 		dothat();
 	}
 
 	-	script	test	FAKE_NPC,{
-		.@try = is_function("try"); // 1
-		.@not = is_function("notafunction"); // 0
+		function func2 {
+			do_something();
+		}
+
+	func3:
+		end;
+
+		is_function("func1"); // FUNCTION_IS_GLOBAL
+		is_function("func2"); // FUNCTION_IS_LOCAL
+		is_function("func3"); // FUNCTION_IS_LABEL
+		is_function("select"); // FUNCTION_IS_COMMAND
+		is_function("invalid"); // false
 	}
 
 ---------------------------------------
