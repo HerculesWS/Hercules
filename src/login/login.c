@@ -1438,13 +1438,16 @@ static void login_parse_request_connection(int fd, struct login_session_data* sd
 	loginlog->log(sockt->session[fd]->client_addr, sd->userid, 100, message);
 
 	result = login->mmo_auth(sd, true);
-	if (core->runflag == LOGINSERVER_ST_RUNNING &&
+
+	if (!sockt->allowed_ip_check(ipl)) {
+		ShowNotice("Connection of the char-server '%s' REFUSED (IP not allowed).\n", server_name);
+		login->char_server_connection_status(fd, sd, 2);
+	} else if (core->runflag == LOGINSERVER_ST_RUNNING &&
 		result == -1 &&
 		sd->sex == 'S' &&
 		sd->account_id >= 0 &&
 		sd->account_id < ARRAYLENGTH(login->dbs->server) &&
-		!sockt->session_is_valid(login->dbs->server[sd->account_id].fd) &&
-		sockt->allowed_ip_check(ipl))
+		!sockt->session_is_valid(login->dbs->server[sd->account_id].fd))
 	{
 		ShowStatus("Connection of the char-server '%s' accepted.\n", server_name);
 		safestrncpy(login->dbs->server[sd->account_id].name, server_name, sizeof(login->dbs->server[sd->account_id].name));
@@ -1461,11 +1464,9 @@ static void login_parse_request_connection(int fd, struct login_session_data* sd
 
 		// send connection success
 		login->char_server_connection_status(fd, sd, 0);
-	}
-	else
-	{
+	} else {
 		ShowNotice("Connection of the char-server '%s' REFUSED.\n", server_name);
-		login->char_server_connection_status(fd, sd, 3);
+		login->char_server_connection_status(fd, sd, 1);
 	}
 }
 
