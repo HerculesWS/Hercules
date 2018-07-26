@@ -401,7 +401,7 @@ static bool homunculus_levelup(struct homun_data *hd)
 	if ( battle_config.homunculus_show_growth ) {
 		char output[256] ;
 		sprintf(output,
-			"Growth: hp:%d sp:%d str(%.2f) agi(%.2f) vit(%.2f) int(%.2f) dex(%.2f) luk(%.2f) ",
+			msg_sd(hd->master, 892), // Growth: hp:%d sp:%d str(%.2f) agi(%.2f) vit(%.2f) int(%.2f) dex(%.2f) luk(%.2f) 
 			growth_max_hp, growth_max_sp,
 			growth_str/10.0, growth_agi/10.0, growth_vit/10.0,
 			growth_int/10.0, growth_dex/10.0, growth_luk/10.0);

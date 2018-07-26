@@ -324,7 +324,7 @@ static void channel_join_sub(struct channel_data *chan, struct map_session_data 
 
 	if (!stealth && (chan->options&HCS_OPT_ANNOUNCE_JOIN)) {
 		char message[60];
-		sprintf(message, "#%s '%s' joined",chan->name,sd->status.name);
+		sprintf(message, msg_txt(897), chan->name, sd->status.name); // #%s '%s' joined
 		clif->channel_msg(chan,sd,message);
 	}
 
@@ -442,7 +442,7 @@ static void channel_leave(struct channel_data *chan, struct map_session_data *sd
 		channel->delete(chan);
 	} else if (!channel->config->closing && (chan->options & HCS_OPT_ANNOUNCE_JOIN)) {
 		char message[60];
-		sprintf(message, "#%s '%s' left",chan->name,sd->status.name);
+		sprintf(message, msg_txt(898), chan->name, sd->status.name); // #%s '%s' left
 		clif->channel_msg(chan,sd,message);
 	}
 

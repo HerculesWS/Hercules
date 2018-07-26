@@ -479,7 +479,7 @@ static bool mob_ksprotected(struct block_list *src, struct block_list *target)
 		// Message to KS
 		if( DIFF_TICK(sd->ks_floodprotect_tick, tick) <= 0 )
 		{
-			sprintf(output, "[KS Warning!! - Owner : %s]", pl_sd->status.name);
+			sprintf(output, msg_sd(sd, 890), pl_sd->status.name); // [KS Warning!! - Owner : %s]
 			clif_disp_onlyself(sd, output);
 
 			sd->ks_floodprotect_tick = tick + 2000;
@@ -488,7 +488,7 @@ static bool mob_ksprotected(struct block_list *src, struct block_list *target)
 		// Message to Owner
 		if( DIFF_TICK(pl_sd->ks_floodprotect_tick, tick) <= 0 )
 		{
-			sprintf(output, "[Watch out! %s is trying to KS you!]", sd->status.name);
+			sprintf(output, msg_sd(pl_sd, 891), sd->status.name); // [Watch out! %s is trying to KS you!]
 			clif_disp_onlyself(pl_sd, output);
 
 			pl_sd->ks_floodprotect_tick = tick + 2000;

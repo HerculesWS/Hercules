@@ -7205,7 +7205,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				// custom hack to make the mob display the skill, because these skills don't show the skill use text themselves
 				//NOTE: mobs don't have the sprite animation that is used when performing this skill (will cause glitches)
 				char temp[70];
-				snprintf(temp, sizeof(temp), "%s : %s !!", md->name, skill->get_desc(skill_id));
+				snprintf(temp, sizeof(temp), msg_txt(882), md->name, skill->get_desc(skill_id)); // %s : %s !!
 				clif->disp_overhead(&md->bl, temp, AREA_CHAT_WOC, NULL);
 			}
 			break;
@@ -14669,7 +14669,7 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 				if (map->foreachinrange(mob->count_sub, &sd->bl, skill->get_splash(skill_id, skill_lv), BL_MOB,
 				                        MOBID_EMPELIUM, MOBID_S_EMPEL_1, MOBID_S_EMPEL_2)) {
 					char output[128];
-					sprintf(output, "You're too close to a stone or emperium to do this skill"); /* TODO official response? or message.conf it */
+					sprintf(output, "%s", msg_txt(883)); /* TODO official response */ // You are too close to a stone or emperium to do this skill
 					clif->messagecolor_self(sd->fd, COLOR_RED, output);
 					return 0;
 				}
@@ -15116,7 +15116,7 @@ static int skill_check_condition_castend(struct map_session_data *sd, uint16 ski
 			return 0;
 		} else if( sd->status.inventory[i].amount < require.ammo_qty ) {
 			char e_msg[100];
-			sprintf(e_msg,"Skill Failed. [%s] requires %dx %s.",
+			sprintf(e_msg, msg_txt(884), // Skill Failed. [%s] requires %dx %s.
 						skill->get_desc(skill_id),
 						require.ammo_qty,
 						itemdb_jname(sd->status.inventory[i].nameid));
