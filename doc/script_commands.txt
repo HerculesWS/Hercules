@@ -9086,6 +9086,13 @@ Directions are the same as NPC sprite facing directions: (DIR_ constants).
 
 ---------------------------------------
 
+*checkwall("<name>")
+
+This will check if the wall set by setwall exists.
+Returns 1 if wall exists, else 0
+
+---------------------------------------
+
 *readbook(<book id>, <page>)
 
 This will open a book item at the specified page.
