@@ -21220,6 +21220,9 @@ static bool clif_stylist_read_db_libconfig_sub(struct config_setting_t *it, int 
 	if (itemdb->lookup_const(it, "BoxItemID", &i32))
 		entry.boxid = i32;
 
+	if (libconfig->setting_lookup_bool(it, "AllowDoram", &i32))
+		entry.allow_doram = (i32 == 0) ? false : true;
+
 	VECTOR_ENSURE(stylist_data[type], 1, 1);
 	VECTOR_PUSH(stylist_data[type], entry);
 	return true;
@@ -21235,6 +21238,9 @@ static bool clif_style_change_validate_requirements(struct map_session_data *sd,
 	Assert_retr(false, idx >= 0 && idx < VECTOR_LENGTH(stylist_data[type]));
 
 	entry = &VECTOR_INDEX(stylist_data[type], idx);
+
+	if (sd->status.class == JOB_SUMMONER && (entry->allow_doram == false))
+		return false;
 
 	if (entry->id >= 0) {
 		if (entry->zeny != 0) {
