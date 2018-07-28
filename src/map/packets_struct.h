@@ -346,8 +346,7 @@ enum packet_headers {
 #if PACKETVER >= 20171207
 	partymemberinfo = 0x0ae4,
 	partyinfo = 0x0ae5,
-#elif PACKETVER >= 20170502
-// [4144] probably 0xa43 packet can works on older clients because in client was added in 2015-10-07
+#elif PACKETVER_MAIN_NUM >= 20170524 || PACKETVER_RE_NUM >= 20170502 || defined(PACKETVER_ZERO)
 	partymemberinfo = 0x0a43,
 	partyinfo = 0x0a44,
 #else
@@ -411,6 +410,11 @@ enum packet_headers {
 	reqNameAllType = 0xA30,
 #else
 	reqNameAllType = 0x195,
+#endif
+#if PACKETVER_MAIN_NUM >= 20170502 || PACKETVER_RE_NUM >= 20170419 || defined(PACKETVER_ZERO)
+	skilWarpPointType = 0xabe,
+#else
+	skilWarpPointType = 0x11c,
 #endif
 };
 
@@ -1298,7 +1302,11 @@ struct packet_npc_market_purchase {
 	int16 PacketType;
 	int16 PacketLength;
 	struct {
+#if PACKETVER_RE_NUM >= 20180704
+		uint32 ITID;
+#else
 		uint16 ITID;
+#endif
 		int32 qty;
 	} list[]; // Note: We assume this should be <= MAX_INVENTORY (since you can't hold more than MAX_INVENTORY items thus cant buy that many at once).
 } __attribute__((packed));
@@ -1577,8 +1585,9 @@ struct PACKET_CZ_REQ_NEXT_MAIL_LIST {
 struct PACKET_CZ_REQ_OPEN_MAIL {
 	int16 PacketType;
 #if PACKETVER >= 20170419
-	int64 Upper_MailID;
-	int8 unknown[16];
+	int64 char_Upper_MailID;
+	int64 return_Upper_MailID;
+	int64 account_Upper_MailID;
 #else
 	int8 opentype;
 	int64 Upper_MailID;
@@ -1674,8 +1683,7 @@ struct PACKET_ZC_ADD_MEMBER_TO_GROUP {
 	uint32 GID;
 #endif
 	uint32 leader;
-// [4144] probably 0xa43 packet can works on older clients because in client was added in 2015-10-07
-#if PACKETVER >= 20170502
+#if PACKETVER_MAIN_NUM >= 20170524 || PACKETVER_RE_NUM >= 20170502 || defined(PACKETVER_ZERO)
 	int16 class;
 	int16 baseLevel;
 #endif
@@ -1698,7 +1706,7 @@ struct PACKET_ZC_GROUP_LIST_SUB {
 	char mapName[MAP_NAME_LENGTH_EXT];
 	uint8 leader;
 	uint8 offline;
-#if PACKETVER >= 20170502
+#if PACKETVER_MAIN_NUM >= 20170524 || PACKETVER_RE_NUM >= 20170502 || defined(PACKETVER_ZERO)
 	int16 class;
 	int16 baseLevel;
 #endif
@@ -2653,6 +2661,33 @@ struct packet_reqnameall_ack {
 #if PACKETVER >= 20150503 // Confirm this?
 	int32 title_id; // Achievement Title
 #endif
+} __attribute__((packed));
+
+struct PACKET_ZC_OVERWEIGHT_PERCENT {
+	int16 packetType;
+	uint32 percent;
+} __attribute__((packed));
+
+struct PACKET_ZC_WARPLIST_sub {
+	char map[MAP_NAME_LENGTH_EXT];
+} __attribute__((packed));
+
+struct PACKET_ZC_WARPLIST {
+	int16 packetType;
+#if PACKETVER_MAIN_NUM >= 20170502 || PACKETVER_RE_NUM >= 20170419 || defined(PACKETVER_ZERO)
+	int16 packetLength;
+	uint16 skillId;
+	struct PACKET_ZC_WARPLIST_sub maps[];
+#else
+	uint16 skillId;
+	struct PACKET_ZC_WARPLIST_sub maps[4];
+#endif
+} __attribute__((packed));
+
+struct PACKET_ZC_GROUP_ISALIVE {
+	int16 packetType;
+	uint32 AID;
+	uint8 isDead;
 } __attribute__((packed));
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute

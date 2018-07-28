@@ -1091,6 +1091,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->pClanMessage, HP_clif_pClanMessage) },
 	{ HP_POP(clif->hat_effect, HP_clif_hat_effect) },
 	{ HP_POP(clif->hat_effect_single, HP_clif_hat_effect_single) },
+	{ HP_POP(clif->overweight_percent, HP_clif_overweight_percent) },
+	{ HP_POP(clif->pChangeDress, HP_clif_pChangeDress) },
 	{ HP_POP(clif->pAttendanceDB, HP_clif_pAttendanceDB) },
 	{ HP_POP(clif->attendancedb_libconfig_sub, HP_clif_attendancedb_libconfig_sub) },
 	{ HP_POP(clif->attendance_timediff, HP_clif_attendance_timediff) },
@@ -1112,6 +1114,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->style_change_response, HP_clif_style_change_response) },
 	{ HP_POP(clif->pPetEvolution, HP_clif_pPetEvolution) },
 	{ HP_POP(clif->petEvolutionResult, HP_clif_petEvolutionResult) },
+	{ HP_POP(clif->party_dead_notification, HP_clif_party_dead_notification) },
 /* cmdline_interface */
 	{ HP_POP(cmdline->init, HP_cmdline_init) },
 	{ HP_POP(cmdline->final, HP_cmdline_final) },

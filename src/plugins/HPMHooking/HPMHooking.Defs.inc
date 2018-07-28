@@ -1228,8 +1228,8 @@ typedef void (*HPMHOOK_pre_clif_map_type) (struct map_session_data **sd, enum ma
 typedef void (*HPMHOOK_post_clif_map_type) (struct map_session_data *sd, enum map_type type);
 typedef void (*HPMHOOK_pre_clif_maptypeproperty2) (struct block_list **bl, enum send_target *t);
 typedef void (*HPMHOOK_post_clif_maptypeproperty2) (struct block_list *bl, enum send_target t);
-typedef void (*HPMHOOK_pre_clif_changemapserver) (struct map_session_data **sd, unsigned short *map_index, int *x, int *y, uint32 *ip, uint16 *port);
-typedef void (*HPMHOOK_post_clif_changemapserver) (struct map_session_data *sd, unsigned short map_index, int x, int y, uint32 ip, uint16 port);
+typedef void (*HPMHOOK_pre_clif_changemapserver) (struct map_session_data **sd, unsigned short *map_index, int *x, int *y, uint32 *ip, uint16 *port, char **dnsHost);
+typedef void (*HPMHOOK_post_clif_changemapserver) (struct map_session_data *sd, unsigned short map_index, int x, int y, uint32 ip, uint16 port, char *dnsHost);
 typedef void (*HPMHOOK_pre_clif_changemapserver_airship) (struct map_session_data **sd, unsigned short *map_index, int *x, int *y, uint32 *ip, uint16 *port);
 typedef void (*HPMHOOK_post_clif_changemapserver_airship) (struct map_session_data *sd, unsigned short map_index, int x, int y, uint32 ip, uint16 port);
 typedef void (*HPMHOOK_pre_clif_npcbuysell) (struct map_session_data **sd, int *id);
@@ -2542,6 +2542,10 @@ typedef void (*HPMHOOK_pre_clif_hat_effect) (struct block_list **bl, struct bloc
 typedef void (*HPMHOOK_post_clif_hat_effect) (struct block_list *bl, struct block_list *tbl, enum send_target target);
 typedef void (*HPMHOOK_pre_clif_hat_effect_single) (struct block_list **bl, uint16 *effectId, bool *enable);
 typedef void (*HPMHOOK_post_clif_hat_effect_single) (struct block_list *bl, uint16 effectId, bool enable);
+typedef void (*HPMHOOK_pre_clif_overweight_percent) (struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_overweight_percent) (struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_pChangeDress) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pChangeDress) (int fd, struct map_session_data *sd);
 typedef bool (*HPMHOOK_pre_clif_pAttendanceDB) (void);
 typedef bool (*HPMHOOK_post_clif_pAttendanceDB) (bool retVal___);
 typedef bool (*HPMHOOK_pre_clif_attendancedb_libconfig_sub) (struct config_setting_t **it, int *n, const char **source);
@@ -2584,6 +2588,8 @@ typedef void (*HPMHOOK_pre_clif_pPetEvolution) (int *fd, struct map_session_data
 typedef void (*HPMHOOK_post_clif_pPetEvolution) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_petEvolutionResult) (int *fd, enum pet_evolution_result *result);
 typedef void (*HPMHOOK_post_clif_petEvolutionResult) (int fd, enum pet_evolution_result result);
+typedef void (*HPMHOOK_pre_clif_party_dead_notification) (struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_party_dead_notification) (struct map_session_data *sd);
 #endif // MAP_CLIF_H
 #ifdef COMMON_CORE_H /* cmdline */
 typedef void (*HPMHOOK_pre_cmdline_init) (void);

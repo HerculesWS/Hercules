@@ -2010,8 +2010,8 @@ static void clif_changemap_airship(struct map_session_data *sd, short m, int x, 
 
 /// Notifies the client of a position change to coordinates on given map, which is on another map-server (ZC_NPCACK_SERVERMOVE).
 /// 0092 <map name>.16B <x>.W <y>.W <ip>.L <port>.W
-/// 0ac7 <map name>.16B <x>.W <y>.W <ip>.L <port>.W <zero>.128B
-static void clif_changemapserver(struct map_session_data *sd, unsigned short map_index, int x, int y, uint32 ip, uint16 port)
+/// 0ac7 <map name>.16B <x>.W <y>.W <ip>.L <port>.W <dns host>.128B
+static void clif_changemapserver(struct map_session_data *sd, unsigned short map_index, int x, int y, uint32 ip, uint16 port, char *dnsHost)
 {
 	int fd;
 #if PACKETVER >= 20170315
@@ -2029,6 +2029,15 @@ static void clif_changemapserver(struct map_session_data *sd, unsigned short map
 	WFIFOW(fd, 20) = y;
 	WFIFOL(fd, 22) = htonl(ip);
 	WFIFOW(fd, 26) = sockt->ntows(htons(port)); // [!] LE byte order here [!]
+
+#if PACKETVER >= 20170315
+	if (dnsHost != NULL) {
+		safestrncpy(WFIFOP(fd, 28), dnsHost, 128);
+	} else {
+		memset(WFIFOP(fd, 28), 0, 128);
+	}
+#endif
+
 	WFIFOSET(fd, packet_len(cmd));
 }
 
@@ -3148,12 +3157,13 @@ static void clif_updatestatus(struct map_session_data *sd, int type)
 			WFIFOL(fd,4)=pc_leftside_matk(sd);
 			break;
 		case SP_ZENY:
+// [4144] possible send 64 bit value from PACKETVER_MAIN_NUM >= 20170906 || PACKETVER_RE_NUM >= 20170830 || defined(PACKETVER_ZERO_NUM)
+// but kro sending 0xb1 packet only.
 			WFIFOW(fd,0)=0xb1;
 			WFIFOL(fd,4)=sd->status.zeny;
 			len = packet_len(0xb1);
 			break;
-// [4144] exact version unknown, between 20170405 to 20170913?
-#if PACKETVER >= 20170830
+#if PACKETVER_MAIN_NUM >= 20170906 || PACKETVER_RE_NUM >= 20170830 || defined(PACKETVER_ZERO_NUM)
 		case SP_BASEEXP:
 			WFIFOW(fd, 0) = 0xacb;
 			WFIFOQ(fd, 4) = sd->status.base_exp;
@@ -5497,28 +5507,46 @@ static void clif_skill_poseffect(struct block_list *src, uint16 skill_id, int va
 static void clif_skill_warppoint(struct map_session_data *sd, uint16 skill_id, uint16 skill_lv, unsigned short map1, unsigned short map2, unsigned short map3, unsigned short map4)
 {
 	int fd;
+	int len;
+	int mapsCount = 0;
+	struct PACKET_ZC_WARPLIST *p;
 
 	nullpo_retv(sd);
 	fd = sd->fd;
+#if PACKETVER_MAIN_NUM >= 20170502 || PACKETVER_RE_NUM >= 20170419 || defined(PACKETVER_ZERO)
+	len = sizeof(struct PACKET_ZC_WARPLIST) + sizeof(struct PACKET_ZC_WARPLIST_sub) * mapsCount;
+#else
+	len = sizeof(struct PACKET_ZC_WARPLIST);
+#endif
 
-	WFIFOHEAD(fd,packet_len(0x11c));
-	WFIFOW(fd,0) = 0x11c;
-	WFIFOW(fd,2) = skill_id;
-	memset(WFIFOP(fd,4), 0x00, 4*MAP_NAME_LENGTH_EXT);
-	if (map1 == (unsigned short)-1) strcpy(WFIFOP(fd,4), "Random");
-	else // normal map name
-	if (map1 > 0) mapindex->getmapname_ext(mapindex_id2name(map1), WFIFOP(fd,4));
-	if (map2 > 0) mapindex->getmapname_ext(mapindex_id2name(map2), WFIFOP(fd,20));
-	if (map3 > 0) mapindex->getmapname_ext(mapindex_id2name(map3), WFIFOP(fd,36));
-	if (map4 > 0) mapindex->getmapname_ext(mapindex_id2name(map4), WFIFOP(fd,52));
-	WFIFOSET(fd,packet_len(0x11c));
+	WFIFOHEAD(fd, len);
+	p = WFIFOP(fd, 0);
+	memset(p, 0, len);
+	p->packetType = skilWarpPointType;
+	p->skillId = skill_id;
+	if (map1 == (unsigned short)-1) {
+		strcpy(p->maps[mapsCount++].map, "Random");
+	} else { // normal map name
+		if (map1 > 0) mapindex->getmapname_ext(mapindex_id2name(map1), p->maps[mapsCount++].map);
+	}
+	if (map2 > 0) mapindex->getmapname_ext(mapindex_id2name(map2), p->maps[mapsCount++].map);
+	if (map3 > 0) mapindex->getmapname_ext(mapindex_id2name(map3), p->maps[mapsCount++].map);
+	if (map4 > 0) mapindex->getmapname_ext(mapindex_id2name(map4), p->maps[mapsCount++].map);
+
+#if PACKETVER_MAIN_NUM >= 20170502 || PACKETVER_RE_NUM >= 20170419 || defined(PACKETVER_ZERO)
+	len = sizeof(struct PACKET_ZC_WARPLIST) + sizeof(struct PACKET_ZC_WARPLIST_sub) * mapsCount;
+	p->packetLength = len;
+#endif
+
+	WFIFOSET(fd, len);
 
 	sd->menuskill_id = skill_id;
-	if (skill_id == AL_WARP){
-		sd->menuskill_val = (sd->ud.skillx<<16)|sd->ud.skilly; //Store warp position here.
+	if (skill_id == AL_WARP) {
+		sd->menuskill_val = (sd->ud.skillx << 16) | sd->ud.skilly; //Store warp position here.
 		sd->state.workinprogress = 3;
-	}else
+	} else {
 		sd->menuskill_val = skill_lv;
+	}
 }
 
 /// Memo message (ZC_ACK_REMEMBER_WARPPOINT).
@@ -6752,7 +6780,7 @@ static void clif_party_member_info(struct party_data *p, struct map_session_data
 	packet.GID = sd->status.char_id;
 #endif
 	packet.leader = (p->party.member[i].leader) ? 0 : 1;
-#if PACKETVER >= 20170502
+#if PACKETVER_MAIN_NUM >= 20170524 || PACKETVER_RE_NUM >= 20170502 || defined(PACKETVER_ZERO)
 	packet.class = sd->status.class;
 	packet.baseLevel = sd->status.base_level;
 #endif
@@ -6803,7 +6831,7 @@ static void clif_party_info(struct party_data *p, struct map_session_data *sd)
 		mapindex->getmapname_ext(mapindex_id2name(m->map), packet->members[c].mapName);
 		packet->members[c].leader = (m->leader) ? 0 : 1;
 		packet->members[c].offline = (m->online) ? 0 : 1;
-#if PACKETVER >= 20170502
+#if PACKETVER_MAIN_NUM >= 20170524 || PACKETVER_RE_NUM >= 20170502 || defined(PACKETVER_ZERO)
 		packet->members[c].class = m->class;
 		packet->members[c].baseLevel = m->lv;
 #endif
@@ -6822,8 +6850,7 @@ static void clif_party_info(struct party_data *p, struct map_session_data *sd)
 /// 0abd <account id>.L <job>.W <level>.W
 static void clif_party_job_and_level(struct map_session_data *sd)
 {
-// [4144] packet 0xabd added in client in 2017-02-15 because this probably it can works for clients older than 20170502
-#if PACKETVER >= 20170502
+#if PACKETVER_MAIN_NUM >= 20170502 || PACKETVER_RE_NUM >= 20170419 || defined(PACKETVER_ZERO)
 	unsigned char buf[10];
 
 	nullpo_retv(sd);
@@ -17422,8 +17449,7 @@ static void clif_displayexp(struct map_session_data *sd, uint64 exp, char type, 
 {
 	int fd;
 
-// [4144] unconfirment exact version can be from 20170405 to 20170913
-#if PACKETVER >= 20170830
+#if PACKETVER_MAIN_NUM >= 20170906 || PACKETVER_RE_NUM >= 20170830 || defined(PACKETVER_ZERO_NUM)
 	const int cmd = 0xacc;
 #else
 	const int cmd = 0x7f6;
@@ -17435,8 +17461,7 @@ static void clif_displayexp(struct map_session_data *sd, uint64 exp, char type, 
 	WFIFOHEAD(fd, packet_len(cmd));
 	WFIFOW(fd, 0) = cmd;
 	WFIFOL(fd, 2) = sd->bl.id;
-// [4144] unconfirment exact version can be from 20170405 to 20170913
-#if PACKETVER >= 20170830
+#if PACKETVER_MAIN_NUM >= 20170906 || PACKETVER_RE_NUM >= 20170830 || defined(PACKETVER_ZERO_NUM)
 	WFIFOQ(fd, 6) = exp;
 	WFIFOW(fd, 14) = type;
 	WFIFOW(fd, 16) = is_quest ? 1 : 0; // Normal exp is shown in yellow, quest exp is shown in purple.
@@ -21017,7 +21042,7 @@ static void clif_parse_rodex_open_mailbox(int fd, struct map_session_data *sd)
 {
 	const struct PACKET_CZ_REQ_OPEN_MAIL *packet = RFIFOP(fd, 0);
 #if PACKETVER >= 20170419
-	rodex->open(sd, RODEX_OPENTYPE_UNSET, packet->Upper_MailID);
+	rodex->open(sd, RODEX_OPENTYPE_UNSET, packet->char_Upper_MailID);
 #else
 	rodex->open(sd, packet->opentype, packet->Upper_MailID);
 #endif
@@ -21559,6 +21584,44 @@ static void clif_style_change_response(struct map_session_data *sd, enum stylist
 	clif->send(&p, sizeof(p), &sd->bl, SELF);
 #else
 	ShowWarning("clif_style_change_response: unsupported client version is being used.");
+#endif
+}
+
+static void clif_overweight_percent(struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20171108 || PACKETVER_RE_NUM >= 20171025 || PACKETVER_ZERO_NUM >= 20171019
+	struct PACKET_ZC_OVERWEIGHT_PERCENT p;
+
+	nullpo_retv(sd);
+
+	p.packetType = 0xade;
+	p.percent = battle_config.natural_heal_weight_rate;
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
+#endif
+}
+
+static void clif_parse_changeDress(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
+/// 0ae8 <packet len>.W
+static void clif_parse_changeDress(int fd, struct map_session_data *sd)
+{
+	const char commandname[] = "changedress";
+	char command[sizeof commandname + 3] = ""; // '@' command + ' ' + NUL
+
+	sprintf(command, "%c%s ", atcommand->at_symbol, commandname);
+	atcommand->exec(fd, sd, command, true);
+}
+
+static void clif_party_dead_notification(struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20170524 || PACKETVER_RE_NUM >= 20170502 || defined(PACKETVER_ZERO)
+	struct PACKET_ZC_GROUP_ISALIVE p;
+
+	nullpo_retv(sd);
+
+	p.packetType = 0xab2;
+	p.AID = sd->bl.id;
+	p.isDead = pc_isdead(sd);
+	clif->send(&p, sizeof(p), &sd->bl, PARTY_WOS);
 #endif
 }
 
@@ -22599,6 +22662,8 @@ void clif_defaults(void)
 	clif->pSkillSelectMenu = clif_parse_SkillSelectMenu;
 	clif->pMoveItem = clif_parse_MoveItem;
 	clif->p_cz_blocking_play_cancel = clif_parse_cz_blocking_play_cancel;
+	clif->overweight_percent = clif_overweight_percent;
+	clif->pChangeDress = clif_parse_changeDress;
 	/* dull */
 	clif->pDull = clif_parse_dull;
 	/* BGQueue */
@@ -22683,6 +22748,7 @@ void clif_defaults(void)
 	// -- Hat Effect
 	clif->hat_effect = clif_hat_effect;
 	clif->hat_effect_single = clif_hat_effect_single;
+	clif->party_dead_notification = clif_party_dead_notification;
 
 	clif->pAttendanceDB = clif_parse_attendance_db;
 	clif->attendancedb_libconfig_sub = clif_attendancedb_libconfig_sub;

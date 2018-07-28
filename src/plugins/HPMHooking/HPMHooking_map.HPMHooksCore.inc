@@ -2134,6 +2134,10 @@ struct {
 	struct HPMHookPoint *HP_clif_hat_effect_post;
 	struct HPMHookPoint *HP_clif_hat_effect_single_pre;
 	struct HPMHookPoint *HP_clif_hat_effect_single_post;
+	struct HPMHookPoint *HP_clif_overweight_percent_pre;
+	struct HPMHookPoint *HP_clif_overweight_percent_post;
+	struct HPMHookPoint *HP_clif_pChangeDress_pre;
+	struct HPMHookPoint *HP_clif_pChangeDress_post;
 	struct HPMHookPoint *HP_clif_pAttendanceDB_pre;
 	struct HPMHookPoint *HP_clif_pAttendanceDB_post;
 	struct HPMHookPoint *HP_clif_attendancedb_libconfig_sub_pre;
@@ -2176,6 +2180,8 @@ struct {
 	struct HPMHookPoint *HP_clif_pPetEvolution_post;
 	struct HPMHookPoint *HP_clif_petEvolutionResult_pre;
 	struct HPMHookPoint *HP_clif_petEvolutionResult_post;
+	struct HPMHookPoint *HP_clif_party_dead_notification_pre;
+	struct HPMHookPoint *HP_clif_party_dead_notification_post;
 	struct HPMHookPoint *HP_cmdline_init_pre;
 	struct HPMHookPoint *HP_cmdline_init_post;
 	struct HPMHookPoint *HP_cmdline_final_pre;
@@ -8679,6 +8685,10 @@ struct {
 	int HP_clif_hat_effect_post;
 	int HP_clif_hat_effect_single_pre;
 	int HP_clif_hat_effect_single_post;
+	int HP_clif_overweight_percent_pre;
+	int HP_clif_overweight_percent_post;
+	int HP_clif_pChangeDress_pre;
+	int HP_clif_pChangeDress_post;
 	int HP_clif_pAttendanceDB_pre;
 	int HP_clif_pAttendanceDB_post;
 	int HP_clif_attendancedb_libconfig_sub_pre;
@@ -8721,6 +8731,8 @@ struct {
 	int HP_clif_pPetEvolution_post;
 	int HP_clif_petEvolutionResult_pre;
 	int HP_clif_petEvolutionResult_post;
+	int HP_clif_party_dead_notification_pre;
+	int HP_clif_party_dead_notification_post;
 	int HP_cmdline_init_pre;
 	int HP_cmdline_init_post;
 	int HP_cmdline_final_pre;

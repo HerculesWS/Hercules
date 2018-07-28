@@ -592,9 +592,9 @@ enum cz_ui_types {
 enum private_airship {
 	P_AIRSHIP_NONE,
 	P_AIRSHIP_RETRY,
-	P_AIRSHIP_INVALID_START_MAP,
-	P_AIRSHIP_INVALID_END_MAP,
 	P_AIRSHIP_ITEM_NOT_ENOUGH,
+	P_AIRSHIP_INVALID_END_MAP,
+	P_AIRSHIP_INVALID_START_MAP,
 	P_AIRSHIP_ITEM_INVALID
 };
 
@@ -775,7 +775,7 @@ struct clif_interface {
 	void (*map_type) (struct map_session_data* sd, enum map_type type);
 	void (*maptypeproperty2) (struct block_list *bl,enum send_target t);
 	/* multi-map-server */
-	void (*changemapserver) (struct map_session_data* sd, unsigned short map_index, int x, int y, uint32 ip, uint16 port);
+	void (*changemapserver) (struct map_session_data* sd, unsigned short map_index, int x, int y, uint32 ip, uint16 port, char *dnsHost);
 	void (*changemapserver_airship) (struct map_session_data* sd, unsigned short map_index, int x, int y, uint32 ip, uint16 port);
 	/* npc-shop-related */
 	void (*npcbuysell) (struct map_session_data* sd, int id);
@@ -1492,6 +1492,8 @@ struct clif_interface {
 	/* Hat Effect */
 	void (*hat_effect) (struct block_list *bl, struct block_list *tbl, enum send_target target);
 	void (*hat_effect_single) (struct block_list *bl, uint16 effectId, bool enable);
+	void (*overweight_percent) (struct map_session_data *sd);
+	void (*pChangeDress) (int fd, struct map_session_data *sd);
 
 	bool (*pAttendanceDB) (void);
 	bool (*attendancedb_libconfig_sub) (struct config_setting_t *it, int n, const char *source);
@@ -1515,6 +1517,7 @@ struct clif_interface {
 	void (*style_change_response) (struct map_session_data *sd, enum stylist_shop flag);
 	void (*pPetEvolution) (int fd, struct map_session_data *sd);
 	void (*petEvolutionResult) (int fd, enum pet_evolution_result result);
+	void (*party_dead_notification) (struct map_session_data *sd);
 };
 
 #ifdef HERCULES_CORE
