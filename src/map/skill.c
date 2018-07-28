@@ -4649,6 +4649,11 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 				// recursive invocation of skill->castend_damage_id() with flag|1
 				map->foreachinrange(skill->area_sub, bl, skill->get_splash(skill_id, skill_lv), skill->splash_target(src), src, skill_id, skill_lv, tick, flag|BCT_ENEMY|SD_SPLASH|1, skill->castend_damage_id);
 
+				if (skill_id == AS_SPLASHER) {
+					// Prevent double item consumption when the target explodes (item requirements have already been processed in skill_castend_nodamage_id)
+					flag |= 1;
+				}
+
 				if (sd && skill_id == SU_LUNATICCARROTBEAT) {
 					short item_idx = pc->search_inventory(sd, ITEMID_CARROT);
 
