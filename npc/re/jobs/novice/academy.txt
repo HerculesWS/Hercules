@@ -44,7 +44,6 @@
 iz_int,18,26,0	script	startpoint	HIDDEN_WARP_NPC,1,1,{
 OnTouch:
 	if (!izintspawn) {
-		specialeffect(EF_ANGEL3, AREA, playerattached()); // On official it is some kind of Poring Angel, but I can't find it
 		navigateto("int_land", NAV_NONE, 1); // individual map name not required
 		izintspawn = 1;
 	}
