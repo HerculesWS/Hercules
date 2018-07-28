@@ -646,6 +646,7 @@ struct stylist_data_entry {
 	int32 zeny;
 	int itemid;
 	int boxid;
+	bool allow_doram;
 };
 VECTOR_DECL(struct stylist_data_entry) stylist_data[MAX_STYLIST_TYPE];
 
