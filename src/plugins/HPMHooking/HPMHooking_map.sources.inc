@@ -26,6 +26,7 @@
 /* GENERATED FILE DO NOT EDIT */
 
 HPMHooks.source.HCache = *HCache;
+HPMHooks.source.achievement = *achievement;
 HPMHooks.source.atcommand = *atcommand;
 HPMHooks.source.battle = *battle;
 HPMHooks.source.bg = *bg;

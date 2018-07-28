@@ -57,6 +57,11 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define CHAR_INTER_H
 	#endif // CHAR_INTER_H
+	#ifdef CHAR_INT_ACHIEVEMENT_H
+		{ "inter_achievement_interface", sizeof(struct inter_achievement_interface), SERVER_TYPE_CHAR },
+	#else
+		#define CHAR_INT_ACHIEVEMENT_H
+	#endif // CHAR_INT_ACHIEVEMENT_H
 	#ifdef CHAR_INT_AUCTION_H
 		{ "inter_auction_interface", sizeof(struct inter_auction_interface), SERVER_TYPE_CHAR },
 	#else
@@ -199,7 +204,9 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		#define COMMON_MEMMGR_H
 	#endif // COMMON_MEMMGR_H
 	#ifdef COMMON_MMO_H
+		{ "achievement", sizeof(struct achievement), SERVER_TYPE_ALL },
 		{ "auction_data", sizeof(struct auction_data), SERVER_TYPE_ALL },
+		{ "char_achievements", sizeof(struct char_achievements), SERVER_TYPE_ALL },
 		{ "clan", sizeof(struct clan), SERVER_TYPE_ALL },
 		{ "clan_buff", sizeof(struct clan_buff), SERVER_TYPE_ALL },
 		{ "clan_member", sizeof(struct clan_member), SERVER_TYPE_ALL },
@@ -371,6 +378,15 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define LOGIN_LOGIN_H
 	#endif // LOGIN_LOGIN_H
+	#ifdef MAP_ACHIEVEMENT_H
+		{ "achievement_data", sizeof(struct achievement_data), SERVER_TYPE_MAP },
+		{ "achievement_interface", sizeof(struct achievement_interface), SERVER_TYPE_MAP },
+		{ "achievement_objective", sizeof(struct achievement_objective), SERVER_TYPE_MAP },
+		{ "achievement_reward_item", sizeof(struct achievement_reward_item), SERVER_TYPE_MAP },
+		{ "achievement_rewards", sizeof(struct achievement_rewards), SERVER_TYPE_MAP },
+	#else
+		#define MAP_ACHIEVEMENT_H
+	#endif // MAP_ACHIEVEMENT_H
 	#ifdef MAP_ATCOMMAND_H
 		{ "AliasInfo", sizeof(struct AliasInfo), SERVER_TYPE_MAP },
 		{ "AtCommandInfo", sizeof(struct AtCommandInfo), SERVER_TYPE_MAP },
@@ -690,9 +706,13 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "PACKET_ZC_USE_ITEM_ACK", sizeof(struct PACKET_ZC_USE_ITEM_ACK), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_WRITE_MAIL_RESULT", sizeof(struct PACKET_ZC_WRITE_MAIL_RESULT), SERVER_TYPE_MAP },
 		{ "ZC_PROGRESS_ACTOR", sizeof(struct ZC_PROGRESS_ACTOR), SERVER_TYPE_MAP },
+		{ "ach_list_info", sizeof(struct ach_list_info), SERVER_TYPE_MAP },
 		{ "mail_item", sizeof(struct mail_item), SERVER_TYPE_MAP },
 		{ "maillistinfo", sizeof(struct maillistinfo), SERVER_TYPE_MAP },
 		{ "packet_ZC_REFUSE_LOGIN", sizeof(struct packet_ZC_REFUSE_LOGIN), SERVER_TYPE_MAP },
+		{ "packet_achievement_list", sizeof(struct packet_achievement_list), SERVER_TYPE_MAP },
+		{ "packet_achievement_reward_ack", sizeof(struct packet_achievement_reward_ack), SERVER_TYPE_MAP },
+		{ "packet_achievement_update", sizeof(struct packet_achievement_update), SERVER_TYPE_MAP },
 		{ "packet_additem", sizeof(struct packet_additem), SERVER_TYPE_MAP },
 		{ "packet_authok", sizeof(struct packet_authok), SERVER_TYPE_MAP },
 		{ "packet_banking_check", sizeof(struct packet_banking_check), SERVER_TYPE_MAP },
@@ -740,6 +760,8 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "packet_quest_list_info", sizeof(struct packet_quest_list_info), SERVER_TYPE_MAP },
 		{ "packet_quest_update_header", sizeof(struct packet_quest_update_header), SERVER_TYPE_MAP },
 		{ "packet_quest_update_hunt", sizeof(struct packet_quest_update_hunt), SERVER_TYPE_MAP },
+		{ "packet_reqname_ack", sizeof(struct packet_reqname_ack), SERVER_TYPE_MAP },
+		{ "packet_reqnameall_ack", sizeof(struct packet_reqnameall_ack), SERVER_TYPE_MAP },
 		{ "packet_roulette_close_ack", sizeof(struct packet_roulette_close_ack), SERVER_TYPE_MAP },
 		{ "packet_roulette_generate_ack", sizeof(struct packet_roulette_generate_ack), SERVER_TYPE_MAP },
 		{ "packet_roulette_info_ack", sizeof(struct packet_roulette_info_ack), SERVER_TYPE_MAP },

@@ -106,6 +106,1385 @@ FILE* HP_HCache_open(const char *file, const char *opt) {
 	}
 	return retVal___;
 }
+/* achievement_interface */
+void HP_achievement_init(bool minimal) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_init_pre > 0) {
+		void (*preHookFunc) (bool *minimal);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_init_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_init_pre[hIndex].func;
+			preHookFunc(&minimal);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.achievement.init(minimal);
+	}
+	if (HPMHooks.count.HP_achievement_init_post > 0) {
+		void (*postHookFunc) (bool minimal);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_init_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_init_post[hIndex].func;
+			postHookFunc(minimal);
+		}
+	}
+	return;
+}
+void HP_achievement_final(void) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_final_pre > 0) {
+		void (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_final_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_final_pre[hIndex].func;
+			preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.achievement.final();
+	}
+	if (HPMHooks.count.HP_achievement_final_post > 0) {
+		void (*postHookFunc) (void);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_final_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_final_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
+}
+int HP_achievement_db_finalize(union DBKey key, struct DBData *data, va_list args) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_achievement_db_finalize_pre > 0) {
+		int (*preHookFunc) (union DBKey *key, struct DBData **data, va_list args);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_db_finalize_pre; hIndex++) {
+			va_list args___copy; va_copy(args___copy, args);
+			preHookFunc = HPMHooks.list.HP_achievement_db_finalize_pre[hIndex].func;
+			retVal___ = preHookFunc(&key, &data, args___copy);
+			va_end(args___copy);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		va_list args___copy; va_copy(args___copy, args);
+		retVal___ = HPMHooks.source.achievement.db_finalize(key, data, args___copy);
+		va_end(args___copy);
+	}
+	if (HPMHooks.count.HP_achievement_db_finalize_post > 0) {
+		int (*postHookFunc) (int retVal___, union DBKey key, struct DBData *data, va_list args);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_db_finalize_post; hIndex++) {
+			va_list args___copy; va_copy(args___copy, args);
+			postHookFunc = HPMHooks.list.HP_achievement_db_finalize_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, key, data, args___copy);
+			va_end(args___copy);
+		}
+	}
+	return retVal___;
+}
+void HP_achievement_readdb(void) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_readdb_pre > 0) {
+		void (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_readdb_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_readdb_pre[hIndex].func;
+			preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.achievement.readdb();
+	}
+	if (HPMHooks.count.HP_achievement_readdb_post > 0) {
+		void (*postHookFunc) (void);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_readdb_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_readdb_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
+}
+bool HP_achievement_readdb_objectives_sub(const struct config_setting_t *conf, int index, struct achievement_data *entry) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_achievement_readdb_objectives_sub_pre > 0) {
+		bool (*preHookFunc) (const struct config_setting_t **conf, int *index, struct achievement_data **entry);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_readdb_objectives_sub_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_readdb_objectives_sub_pre[hIndex].func;
+			retVal___ = preHookFunc(&conf, &index, &entry);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.achievement.readdb_objectives_sub(conf, index, entry);
+	}
+	if (HPMHooks.count.HP_achievement_readdb_objectives_sub_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const struct config_setting_t *conf, int index, struct achievement_data *entry);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_readdb_objectives_sub_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_readdb_objectives_sub_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, conf, index, entry);
+		}
+	}
+	return retVal___;
+}
+bool HP_achievement_readdb_objectives(const struct config_setting_t *conf, struct achievement_data *entry) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_achievement_readdb_objectives_pre > 0) {
+		bool (*preHookFunc) (const struct config_setting_t **conf, struct achievement_data **entry);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_readdb_objectives_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_readdb_objectives_pre[hIndex].func;
+			retVal___ = preHookFunc(&conf, &entry);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.achievement.readdb_objectives(conf, entry);
+	}
+	if (HPMHooks.count.HP_achievement_readdb_objectives_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const struct config_setting_t *conf, struct achievement_data *entry);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_readdb_objectives_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_readdb_objectives_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, conf, entry);
+		}
+	}
+	return retVal___;
+}
+bool HP_achievement_readdb_validate_criteria_mobid(const struct config_setting_t *t, struct achievement_objective *obj, enum achievement_types type, int entry_id, int obj_idx) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_achievement_readdb_validate_criteria_mobid_pre > 0) {
+		bool (*preHookFunc) (const struct config_setting_t **t, struct achievement_objective **obj, enum achievement_types *type, int *entry_id, int *obj_idx);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_readdb_validate_criteria_mobid_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_readdb_validate_criteria_mobid_pre[hIndex].func;
+			retVal___ = preHookFunc(&t, &obj, &type, &entry_id, &obj_idx);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.achievement.readdb_validate_criteria_mobid(t, obj, type, entry_id, obj_idx);
+	}
+	if (HPMHooks.count.HP_achievement_readdb_validate_criteria_mobid_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const struct config_setting_t *t, struct achievement_objective *obj, enum achievement_types type, int entry_id, int obj_idx);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_readdb_validate_criteria_mobid_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_readdb_validate_criteria_mobid_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, t, obj, type, entry_id, obj_idx);
+		}
+	}
+	return retVal___;
+}
+bool HP_achievement_readdb_validate_criteria_jobid(const struct config_setting_t *t, struct achievement_objective *obj, enum achievement_types type, int entry_id, int obj_idx) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_achievement_readdb_validate_criteria_jobid_pre > 0) {
+		bool (*preHookFunc) (const struct config_setting_t **t, struct achievement_objective **obj, enum achievement_types *type, int *entry_id, int *obj_idx);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_readdb_validate_criteria_jobid_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_readdb_validate_criteria_jobid_pre[hIndex].func;
+			retVal___ = preHookFunc(&t, &obj, &type, &entry_id, &obj_idx);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.achievement.readdb_validate_criteria_jobid(t, obj, type, entry_id, obj_idx);
+	}
+	if (HPMHooks.count.HP_achievement_readdb_validate_criteria_jobid_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const struct config_setting_t *t, struct achievement_objective *obj, enum achievement_types type, int entry_id, int obj_idx);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_readdb_validate_criteria_jobid_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_readdb_validate_criteria_jobid_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, t, obj, type, entry_id, obj_idx);
+		}
+	}
+	return retVal___;
+}
+bool HP_achievement_readdb_validate_criteria_itemid(const struct config_setting_t *t, struct achievement_objective *obj, enum achievement_types type, int entry_id, int obj_idx) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_achievement_readdb_validate_criteria_itemid_pre > 0) {
+		bool (*preHookFunc) (const struct config_setting_t **t, struct achievement_objective **obj, enum achievement_types *type, int *entry_id, int *obj_idx);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_readdb_validate_criteria_itemid_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_readdb_validate_criteria_itemid_pre[hIndex].func;
+			retVal___ = preHookFunc(&t, &obj, &type, &entry_id, &obj_idx);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.achievement.readdb_validate_criteria_itemid(t, obj, type, entry_id, obj_idx);
+	}
+	if (HPMHooks.count.HP_achievement_readdb_validate_criteria_itemid_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const struct config_setting_t *t, struct achievement_objective *obj, enum achievement_types type, int entry_id, int obj_idx);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_readdb_validate_criteria_itemid_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_readdb_validate_criteria_itemid_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, t, obj, type, entry_id, obj_idx);
+		}
+	}
+	return retVal___;
+}
+bool HP_achievement_readdb_validate_criteria_statustype(const struct config_setting_t *t, struct achievement_objective *obj, enum achievement_types type, int entry_id, int obj_idx) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_achievement_readdb_validate_criteria_statustype_pre > 0) {
+		bool (*preHookFunc) (const struct config_setting_t **t, struct achievement_objective **obj, enum achievement_types *type, int *entry_id, int *obj_idx);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_readdb_validate_criteria_statustype_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_readdb_validate_criteria_statustype_pre[hIndex].func;
+			retVal___ = preHookFunc(&t, &obj, &type, &entry_id, &obj_idx);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.achievement.readdb_validate_criteria_statustype(t, obj, type, entry_id, obj_idx);
+	}
+	if (HPMHooks.count.HP_achievement_readdb_validate_criteria_statustype_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const struct config_setting_t *t, struct achievement_objective *obj, enum achievement_types type, int entry_id, int obj_idx);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_readdb_validate_criteria_statustype_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_readdb_validate_criteria_statustype_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, t, obj, type, entry_id, obj_idx);
+		}
+	}
+	return retVal___;
+}
+bool HP_achievement_readdb_validate_criteria_itemtype(const struct config_setting_t *t, struct achievement_objective *obj, enum achievement_types type, int entry_id, int obj_idx) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_achievement_readdb_validate_criteria_itemtype_pre > 0) {
+		bool (*preHookFunc) (const struct config_setting_t **t, struct achievement_objective **obj, enum achievement_types *type, int *entry_id, int *obj_idx);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_readdb_validate_criteria_itemtype_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_readdb_validate_criteria_itemtype_pre[hIndex].func;
+			retVal___ = preHookFunc(&t, &obj, &type, &entry_id, &obj_idx);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.achievement.readdb_validate_criteria_itemtype(t, obj, type, entry_id, obj_idx);
+	}
+	if (HPMHooks.count.HP_achievement_readdb_validate_criteria_itemtype_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const struct config_setting_t *t, struct achievement_objective *obj, enum achievement_types type, int entry_id, int obj_idx);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_readdb_validate_criteria_itemtype_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_readdb_validate_criteria_itemtype_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, t, obj, type, entry_id, obj_idx);
+		}
+	}
+	return retVal___;
+}
+bool HP_achievement_readdb_validate_criteria_weaponlv(const struct config_setting_t *t, struct achievement_objective *obj, enum achievement_types type, int entry_id, int obj_idx) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_achievement_readdb_validate_criteria_weaponlv_pre > 0) {
+		bool (*preHookFunc) (const struct config_setting_t **t, struct achievement_objective **obj, enum achievement_types *type, int *entry_id, int *obj_idx);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_readdb_validate_criteria_weaponlv_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_readdb_validate_criteria_weaponlv_pre[hIndex].func;
+			retVal___ = preHookFunc(&t, &obj, &type, &entry_id, &obj_idx);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.achievement.readdb_validate_criteria_weaponlv(t, obj, type, entry_id, obj_idx);
+	}
+	if (HPMHooks.count.HP_achievement_readdb_validate_criteria_weaponlv_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const struct config_setting_t *t, struct achievement_objective *obj, enum achievement_types type, int entry_id, int obj_idx);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_readdb_validate_criteria_weaponlv_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_readdb_validate_criteria_weaponlv_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, t, obj, type, entry_id, obj_idx);
+		}
+	}
+	return retVal___;
+}
+bool HP_achievement_readdb_validate_criteria_achievement(const struct config_setting_t *t, struct achievement_objective *obj, enum achievement_types type, int entry_id, int obj_idx) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_achievement_readdb_validate_criteria_achievement_pre > 0) {
+		bool (*preHookFunc) (const struct config_setting_t **t, struct achievement_objective **obj, enum achievement_types *type, int *entry_id, int *obj_idx);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_readdb_validate_criteria_achievement_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_readdb_validate_criteria_achievement_pre[hIndex].func;
+			retVal___ = preHookFunc(&t, &obj, &type, &entry_id, &obj_idx);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.achievement.readdb_validate_criteria_achievement(t, obj, type, entry_id, obj_idx);
+	}
+	if (HPMHooks.count.HP_achievement_readdb_validate_criteria_achievement_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const struct config_setting_t *t, struct achievement_objective *obj, enum achievement_types type, int entry_id, int obj_idx);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_readdb_validate_criteria_achievement_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_readdb_validate_criteria_achievement_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, t, obj, type, entry_id, obj_idx);
+		}
+	}
+	return retVal___;
+}
+bool HP_achievement_readdb_rewards(const struct config_setting_t *conf, struct achievement_data *entry, const char *source) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_achievement_readdb_rewards_pre > 0) {
+		bool (*preHookFunc) (const struct config_setting_t **conf, struct achievement_data **entry, const char **source);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_readdb_rewards_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_readdb_rewards_pre[hIndex].func;
+			retVal___ = preHookFunc(&conf, &entry, &source);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.achievement.readdb_rewards(conf, entry, source);
+	}
+	if (HPMHooks.count.HP_achievement_readdb_rewards_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const struct config_setting_t *conf, struct achievement_data *entry, const char *source);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_readdb_rewards_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_readdb_rewards_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, conf, entry, source);
+		}
+	}
+	return retVal___;
+}
+void HP_achievement_readdb_validate_reward_items(const struct config_setting_t *t, struct achievement_data *entry) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_readdb_validate_reward_items_pre > 0) {
+		void (*preHookFunc) (const struct config_setting_t **t, struct achievement_data **entry);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_readdb_validate_reward_items_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_readdb_validate_reward_items_pre[hIndex].func;
+			preHookFunc(&t, &entry);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.achievement.readdb_validate_reward_items(t, entry);
+	}
+	if (HPMHooks.count.HP_achievement_readdb_validate_reward_items_post > 0) {
+		void (*postHookFunc) (const struct config_setting_t *t, struct achievement_data *entry);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_readdb_validate_reward_items_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_readdb_validate_reward_items_post[hIndex].func;
+			postHookFunc(t, entry);
+		}
+	}
+	return;
+}
+bool HP_achievement_readdb_validate_reward_item_sub(const struct config_setting_t *t, int element, struct achievement_data *entry) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_achievement_readdb_validate_reward_item_sub_pre > 0) {
+		bool (*preHookFunc) (const struct config_setting_t **t, int *element, struct achievement_data **entry);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_readdb_validate_reward_item_sub_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_readdb_validate_reward_item_sub_pre[hIndex].func;
+			retVal___ = preHookFunc(&t, &element, &entry);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.achievement.readdb_validate_reward_item_sub(t, element, entry);
+	}
+	if (HPMHooks.count.HP_achievement_readdb_validate_reward_item_sub_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const struct config_setting_t *t, int element, struct achievement_data *entry);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_readdb_validate_reward_item_sub_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_readdb_validate_reward_item_sub_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, t, element, entry);
+		}
+	}
+	return retVal___;
+}
+void HP_achievement_readdb_validate_reward_bonus(const struct config_setting_t *t, struct achievement_data *entry, const char *source) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_readdb_validate_reward_bonus_pre > 0) {
+		void (*preHookFunc) (const struct config_setting_t **t, struct achievement_data **entry, const char **source);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_readdb_validate_reward_bonus_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_readdb_validate_reward_bonus_pre[hIndex].func;
+			preHookFunc(&t, &entry, &source);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.achievement.readdb_validate_reward_bonus(t, entry, source);
+	}
+	if (HPMHooks.count.HP_achievement_readdb_validate_reward_bonus_post > 0) {
+		void (*postHookFunc) (const struct config_setting_t *t, struct achievement_data *entry, const char *source);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_readdb_validate_reward_bonus_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_readdb_validate_reward_bonus_post[hIndex].func;
+			postHookFunc(t, entry, source);
+		}
+	}
+	return;
+}
+void HP_achievement_readdb_validate_reward_titleid(const struct config_setting_t *t, struct achievement_data *entry) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_readdb_validate_reward_titleid_pre > 0) {
+		void (*preHookFunc) (const struct config_setting_t **t, struct achievement_data **entry);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_readdb_validate_reward_titleid_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_readdb_validate_reward_titleid_pre[hIndex].func;
+			preHookFunc(&t, &entry);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.achievement.readdb_validate_reward_titleid(t, entry);
+	}
+	if (HPMHooks.count.HP_achievement_readdb_validate_reward_titleid_post > 0) {
+		void (*postHookFunc) (const struct config_setting_t *t, struct achievement_data *entry);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_readdb_validate_reward_titleid_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_readdb_validate_reward_titleid_post[hIndex].func;
+			postHookFunc(t, entry);
+		}
+	}
+	return;
+}
+void HP_achievement_readdb_additional_fields(const struct config_setting_t *conf, struct achievement_data *entry, const char *source) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_readdb_additional_fields_pre > 0) {
+		void (*preHookFunc) (const struct config_setting_t **conf, struct achievement_data **entry, const char **source);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_readdb_additional_fields_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_readdb_additional_fields_pre[hIndex].func;
+			preHookFunc(&conf, &entry, &source);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.achievement.readdb_additional_fields(conf, entry, source);
+	}
+	if (HPMHooks.count.HP_achievement_readdb_additional_fields_post > 0) {
+		void (*postHookFunc) (const struct config_setting_t *conf, struct achievement_data *entry, const char *source);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_readdb_additional_fields_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_readdb_additional_fields_post[hIndex].func;
+			postHookFunc(conf, entry, source);
+		}
+	}
+	return;
+}
+void HP_achievement_readdb_ranks(void) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_readdb_ranks_pre > 0) {
+		void (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_readdb_ranks_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_readdb_ranks_pre[hIndex].func;
+			preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.achievement.readdb_ranks();
+	}
+	if (HPMHooks.count.HP_achievement_readdb_ranks_post > 0) {
+		void (*postHookFunc) (void);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_readdb_ranks_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_readdb_ranks_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
+}
+const struct achievement_data* HP_achievement_get(int aid) {
+	int hIndex = 0;
+	const struct achievement_data* retVal___ = NULL;
+	if (HPMHooks.count.HP_achievement_get_pre > 0) {
+		const struct achievement_data* (*preHookFunc) (int *aid);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_get_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_get_pre[hIndex].func;
+			retVal___ = preHookFunc(&aid);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.achievement.get(aid);
+	}
+	if (HPMHooks.count.HP_achievement_get_post > 0) {
+		const struct achievement_data* (*postHookFunc) (const struct achievement_data* retVal___, int aid);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_get_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_get_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, aid);
+		}
+	}
+	return retVal___;
+}
+struct achievement* HP_achievement_ensure(struct map_session_data *sd, const struct achievement_data *ad) {
+	int hIndex = 0;
+	struct achievement* retVal___ = NULL;
+	if (HPMHooks.count.HP_achievement_ensure_pre > 0) {
+		struct achievement* (*preHookFunc) (struct map_session_data **sd, const struct achievement_data **ad);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_ensure_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_ensure_pre[hIndex].func;
+			retVal___ = preHookFunc(&sd, &ad);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.achievement.ensure(sd, ad);
+	}
+	if (HPMHooks.count.HP_achievement_ensure_post > 0) {
+		struct achievement* (*postHookFunc) (struct achievement* retVal___, struct map_session_data *sd, const struct achievement_data *ad);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_ensure_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_ensure_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd, ad);
+		}
+	}
+	return retVal___;
+}
+void HP_achievement_calculate_totals(const struct map_session_data *sd, int *points, int *completed, int *rank, int *curr_rank_points) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_calculate_totals_pre > 0) {
+		void (*preHookFunc) (const struct map_session_data **sd, int **points, int **completed, int **rank, int **curr_rank_points);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_calculate_totals_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_calculate_totals_pre[hIndex].func;
+			preHookFunc(&sd, &points, &completed, &rank, &curr_rank_points);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.achievement.calculate_totals(sd, points, completed, rank, curr_rank_points);
+	}
+	if (HPMHooks.count.HP_achievement_calculate_totals_post > 0) {
+		void (*postHookFunc) (const struct map_session_data *sd, int *points, int *completed, int *rank, int *curr_rank_points);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_calculate_totals_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_calculate_totals_post[hIndex].func;
+			postHookFunc(sd, points, completed, rank, curr_rank_points);
+		}
+	}
+	return;
+}
+bool HP_achievement_check_complete(struct map_session_data *sd, const struct achievement_data *ad) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_achievement_check_complete_pre > 0) {
+		bool (*preHookFunc) (struct map_session_data **sd, const struct achievement_data **ad);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_check_complete_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_check_complete_pre[hIndex].func;
+			retVal___ = preHookFunc(&sd, &ad);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.achievement.check_complete(sd, ad);
+	}
+	if (HPMHooks.count.HP_achievement_check_complete_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, const struct achievement_data *ad);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_check_complete_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_check_complete_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd, ad);
+		}
+	}
+	return retVal___;
+}
+void HP_achievement_progress_add(struct map_session_data *sd, const struct achievement_data *ad, unsigned int obj_idx, int progress) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_progress_add_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, const struct achievement_data **ad, unsigned int *obj_idx, int *progress);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_progress_add_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_progress_add_pre[hIndex].func;
+			preHookFunc(&sd, &ad, &obj_idx, &progress);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.achievement.progress_add(sd, ad, obj_idx, progress);
+	}
+	if (HPMHooks.count.HP_achievement_progress_add_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, const struct achievement_data *ad, unsigned int obj_idx, int progress);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_progress_add_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_progress_add_post[hIndex].func;
+			postHookFunc(sd, ad, obj_idx, progress);
+		}
+	}
+	return;
+}
+void HP_achievement_progress_set(struct map_session_data *sd, const struct achievement_data *ad, unsigned int obj_idx, int progress) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_progress_set_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, const struct achievement_data **ad, unsigned int *obj_idx, int *progress);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_progress_set_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_progress_set_pre[hIndex].func;
+			preHookFunc(&sd, &ad, &obj_idx, &progress);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.achievement.progress_set(sd, ad, obj_idx, progress);
+	}
+	if (HPMHooks.count.HP_achievement_progress_set_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, const struct achievement_data *ad, unsigned int obj_idx, int progress);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_progress_set_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_progress_set_post[hIndex].func;
+			postHookFunc(sd, ad, obj_idx, progress);
+		}
+	}
+	return;
+}
+bool HP_achievement_check_criteria(const struct achievement_objective *objective, const struct achievement_objective *criteria) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_achievement_check_criteria_pre > 0) {
+		bool (*preHookFunc) (const struct achievement_objective **objective, const struct achievement_objective **criteria);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_check_criteria_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_check_criteria_pre[hIndex].func;
+			retVal___ = preHookFunc(&objective, &criteria);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.achievement.check_criteria(objective, criteria);
+	}
+	if (HPMHooks.count.HP_achievement_check_criteria_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const struct achievement_objective *objective, const struct achievement_objective *criteria);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_check_criteria_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_check_criteria_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, objective, criteria);
+		}
+	}
+	return retVal___;
+}
+bool HP_achievement_validate(struct map_session_data *sd, int aid, unsigned int obj_idx, int progress, bool additive) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_achievement_validate_pre > 0) {
+		bool (*preHookFunc) (struct map_session_data **sd, int *aid, unsigned int *obj_idx, int *progress, bool *additive);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_validate_pre[hIndex].func;
+			retVal___ = preHookFunc(&sd, &aid, &obj_idx, &progress, &additive);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.achievement.validate(sd, aid, obj_idx, progress, additive);
+	}
+	if (HPMHooks.count.HP_achievement_validate_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, int aid, unsigned int obj_idx, int progress, bool additive);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_validate_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd, aid, obj_idx, progress, additive);
+		}
+	}
+	return retVal___;
+}
+int HP_achievement_validate_type(struct map_session_data *sd, enum achievement_types type, const struct achievement_objective *criteria, bool additive) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_achievement_validate_type_pre > 0) {
+		int (*preHookFunc) (struct map_session_data **sd, enum achievement_types *type, const struct achievement_objective **criteria, bool *additive);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_type_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_validate_type_pre[hIndex].func;
+			retVal___ = preHookFunc(&sd, &type, &criteria, &additive);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.achievement.validate_type(sd, type, criteria, additive);
+	}
+	if (HPMHooks.count.HP_achievement_validate_type_post > 0) {
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, enum achievement_types type, const struct achievement_objective *criteria, bool additive);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_type_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_validate_type_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd, type, criteria, additive);
+		}
+	}
+	return retVal___;
+}
+void HP_achievement_validate_mob_kill(struct map_session_data *sd, int mob_id) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_validate_mob_kill_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, int *mob_id);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_mob_kill_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_validate_mob_kill_pre[hIndex].func;
+			preHookFunc(&sd, &mob_id);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.achievement.validate_mob_kill(sd, mob_id);
+	}
+	if (HPMHooks.count.HP_achievement_validate_mob_kill_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, int mob_id);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_mob_kill_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_validate_mob_kill_post[hIndex].func;
+			postHookFunc(sd, mob_id);
+		}
+	}
+	return;
+}
+void HP_achievement_validate_mob_damage(struct map_session_data *sd, unsigned int damage, bool received) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_validate_mob_damage_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, unsigned int *damage, bool *received);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_mob_damage_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_validate_mob_damage_pre[hIndex].func;
+			preHookFunc(&sd, &damage, &received);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.achievement.validate_mob_damage(sd, damage, received);
+	}
+	if (HPMHooks.count.HP_achievement_validate_mob_damage_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, unsigned int damage, bool received);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_mob_damage_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_validate_mob_damage_post[hIndex].func;
+			postHookFunc(sd, damage, received);
+		}
+	}
+	return;
+}
+void HP_achievement_validate_pc_kill(struct map_session_data *sd, struct map_session_data *dstsd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_validate_pc_kill_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, struct map_session_data **dstsd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_pc_kill_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_validate_pc_kill_pre[hIndex].func;
+			preHookFunc(&sd, &dstsd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.achievement.validate_pc_kill(sd, dstsd);
+	}
+	if (HPMHooks.count.HP_achievement_validate_pc_kill_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, struct map_session_data *dstsd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_pc_kill_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_validate_pc_kill_post[hIndex].func;
+			postHookFunc(sd, dstsd);
+		}
+	}
+	return;
+}
+void HP_achievement_validate_pc_damage(struct map_session_data *sd, struct map_session_data *dstsd, unsigned int damage) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_validate_pc_damage_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, struct map_session_data **dstsd, unsigned int *damage);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_pc_damage_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_validate_pc_damage_pre[hIndex].func;
+			preHookFunc(&sd, &dstsd, &damage);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.achievement.validate_pc_damage(sd, dstsd, damage);
+	}
+	if (HPMHooks.count.HP_achievement_validate_pc_damage_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, struct map_session_data *dstsd, unsigned int damage);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_pc_damage_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_validate_pc_damage_post[hIndex].func;
+			postHookFunc(sd, dstsd, damage);
+		}
+	}
+	return;
+}
+void HP_achievement_validate_jobchange(struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_validate_jobchange_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_jobchange_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_validate_jobchange_pre[hIndex].func;
+			preHookFunc(&sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.achievement.validate_jobchange(sd);
+	}
+	if (HPMHooks.count.HP_achievement_validate_jobchange_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_jobchange_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_validate_jobchange_post[hIndex].func;
+			postHookFunc(sd);
+		}
+	}
+	return;
+}
+void HP_achievement_validate_stats(struct map_session_data *sd, enum status_point_types stat_type, int progress) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_validate_stats_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, enum status_point_types *stat_type, int *progress);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_stats_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_validate_stats_pre[hIndex].func;
+			preHookFunc(&sd, &stat_type, &progress);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.achievement.validate_stats(sd, stat_type, progress);
+	}
+	if (HPMHooks.count.HP_achievement_validate_stats_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, enum status_point_types stat_type, int progress);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_stats_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_validate_stats_post[hIndex].func;
+			postHookFunc(sd, stat_type, progress);
+		}
+	}
+	return;
+}
+void HP_achievement_validate_chatroom_create(struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_validate_chatroom_create_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_chatroom_create_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_validate_chatroom_create_pre[hIndex].func;
+			preHookFunc(&sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.achievement.validate_chatroom_create(sd);
+	}
+	if (HPMHooks.count.HP_achievement_validate_chatroom_create_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_chatroom_create_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_validate_chatroom_create_post[hIndex].func;
+			postHookFunc(sd);
+		}
+	}
+	return;
+}
+void HP_achievement_validate_chatroom_members(struct map_session_data *sd, int progress) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_validate_chatroom_members_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, int *progress);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_chatroom_members_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_validate_chatroom_members_pre[hIndex].func;
+			preHookFunc(&sd, &progress);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.achievement.validate_chatroom_members(sd, progress);
+	}
+	if (HPMHooks.count.HP_achievement_validate_chatroom_members_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, int progress);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_chatroom_members_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_validate_chatroom_members_post[hIndex].func;
+			postHookFunc(sd, progress);
+		}
+	}
+	return;
+}
+void HP_achievement_validate_friend_add(struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_validate_friend_add_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_friend_add_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_validate_friend_add_pre[hIndex].func;
+			preHookFunc(&sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.achievement.validate_friend_add(sd);
+	}
+	if (HPMHooks.count.HP_achievement_validate_friend_add_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_friend_add_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_validate_friend_add_post[hIndex].func;
+			postHookFunc(sd);
+		}
+	}
+	return;
+}
+void HP_achievement_validate_party_create(struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_validate_party_create_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_party_create_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_validate_party_create_pre[hIndex].func;
+			preHookFunc(&sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.achievement.validate_party_create(sd);
+	}
+	if (HPMHooks.count.HP_achievement_validate_party_create_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_party_create_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_validate_party_create_post[hIndex].func;
+			postHookFunc(sd);
+		}
+	}
+	return;
+}
+void HP_achievement_validate_marry(struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_validate_marry_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_marry_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_validate_marry_pre[hIndex].func;
+			preHookFunc(&sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.achievement.validate_marry(sd);
+	}
+	if (HPMHooks.count.HP_achievement_validate_marry_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_marry_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_validate_marry_post[hIndex].func;
+			postHookFunc(sd);
+		}
+	}
+	return;
+}
+void HP_achievement_validate_adopt(struct map_session_data *sd, bool parent) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_validate_adopt_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, bool *parent);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_adopt_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_validate_adopt_pre[hIndex].func;
+			preHookFunc(&sd, &parent);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.achievement.validate_adopt(sd, parent);
+	}
+	if (HPMHooks.count.HP_achievement_validate_adopt_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, bool parent);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_adopt_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_validate_adopt_post[hIndex].func;
+			postHookFunc(sd, parent);
+		}
+	}
+	return;
+}
+void HP_achievement_validate_zeny(struct map_session_data *sd, int amount) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_validate_zeny_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, int *amount);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_zeny_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_validate_zeny_pre[hIndex].func;
+			preHookFunc(&sd, &amount);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.achievement.validate_zeny(sd, amount);
+	}
+	if (HPMHooks.count.HP_achievement_validate_zeny_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, int amount);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_zeny_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_validate_zeny_post[hIndex].func;
+			postHookFunc(sd, amount);
+		}
+	}
+	return;
+}
+void HP_achievement_validate_refine(struct map_session_data *sd, unsigned int idx, bool success) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_validate_refine_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, unsigned int *idx, bool *success);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_refine_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_validate_refine_pre[hIndex].func;
+			preHookFunc(&sd, &idx, &success);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.achievement.validate_refine(sd, idx, success);
+	}
+	if (HPMHooks.count.HP_achievement_validate_refine_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, unsigned int idx, bool success);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_refine_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_validate_refine_post[hIndex].func;
+			postHookFunc(sd, idx, success);
+		}
+	}
+	return;
+}
+void HP_achievement_validate_item_get(struct map_session_data *sd, int nameid, int amount) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_validate_item_get_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, int *nameid, int *amount);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_item_get_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_validate_item_get_pre[hIndex].func;
+			preHookFunc(&sd, &nameid, &amount);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.achievement.validate_item_get(sd, nameid, amount);
+	}
+	if (HPMHooks.count.HP_achievement_validate_item_get_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, int nameid, int amount);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_item_get_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_validate_item_get_post[hIndex].func;
+			postHookFunc(sd, nameid, amount);
+		}
+	}
+	return;
+}
+void HP_achievement_validate_item_sell(struct map_session_data *sd, int nameid, int amount) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_validate_item_sell_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, int *nameid, int *amount);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_item_sell_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_validate_item_sell_pre[hIndex].func;
+			preHookFunc(&sd, &nameid, &amount);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.achievement.validate_item_sell(sd, nameid, amount);
+	}
+	if (HPMHooks.count.HP_achievement_validate_item_sell_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, int nameid, int amount);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_item_sell_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_validate_item_sell_post[hIndex].func;
+			postHookFunc(sd, nameid, amount);
+		}
+	}
+	return;
+}
+void HP_achievement_validate_achieve(struct map_session_data *sd, int achid) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_validate_achieve_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, int *achid);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_achieve_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_validate_achieve_pre[hIndex].func;
+			preHookFunc(&sd, &achid);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.achievement.validate_achieve(sd, achid);
+	}
+	if (HPMHooks.count.HP_achievement_validate_achieve_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, int achid);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_achieve_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_validate_achieve_post[hIndex].func;
+			postHookFunc(sd, achid);
+		}
+	}
+	return;
+}
+void HP_achievement_validate_taming(struct map_session_data *sd, int class) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_validate_taming_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, int *class);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_taming_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_validate_taming_pre[hIndex].func;
+			preHookFunc(&sd, &class);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.achievement.validate_taming(sd, class);
+	}
+	if (HPMHooks.count.HP_achievement_validate_taming_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, int class);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_taming_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_validate_taming_post[hIndex].func;
+			postHookFunc(sd, class);
+		}
+	}
+	return;
+}
+void HP_achievement_validate_achievement_rank(struct map_session_data *sd, int rank) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_validate_achievement_rank_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, int *rank);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_achievement_rank_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_validate_achievement_rank_pre[hIndex].func;
+			preHookFunc(&sd, &rank);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.achievement.validate_achievement_rank(sd, rank);
+	}
+	if (HPMHooks.count.HP_achievement_validate_achievement_rank_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, int rank);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_achievement_rank_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_validate_achievement_rank_post[hIndex].func;
+			postHookFunc(sd, rank);
+		}
+	}
+	return;
+}
+bool HP_achievement_type_requires_criteria(enum achievement_types type) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_achievement_type_requires_criteria_pre > 0) {
+		bool (*preHookFunc) (enum achievement_types *type);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_type_requires_criteria_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_type_requires_criteria_pre[hIndex].func;
+			retVal___ = preHookFunc(&type);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.achievement.type_requires_criteria(type);
+	}
+	if (HPMHooks.count.HP_achievement_type_requires_criteria_post > 0) {
+		bool (*postHookFunc) (bool retVal___, enum achievement_types type);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_type_requires_criteria_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_type_requires_criteria_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, type);
+		}
+	}
+	return retVal___;
+}
+void HP_achievement_init_titles(struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_init_titles_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_init_titles_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_init_titles_pre[hIndex].func;
+			preHookFunc(&sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.achievement.init_titles(sd);
+	}
+	if (HPMHooks.count.HP_achievement_init_titles_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_init_titles_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_init_titles_post[hIndex].func;
+			postHookFunc(sd);
+		}
+	}
+	return;
+}
+bool HP_achievement_check_title(struct map_session_data *sd, int title_id) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_achievement_check_title_pre > 0) {
+		bool (*preHookFunc) (struct map_session_data **sd, int *title_id);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_check_title_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_check_title_pre[hIndex].func;
+			retVal___ = preHookFunc(&sd, &title_id);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.achievement.check_title(sd, title_id);
+	}
+	if (HPMHooks.count.HP_achievement_check_title_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, int title_id);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_check_title_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_check_title_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd, title_id);
+		}
+	}
+	return retVal___;
+}
+void HP_achievement_get_rewards(struct map_session_data *sd, const struct achievement_data *ad) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_get_rewards_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, const struct achievement_data **ad);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_get_rewards_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_get_rewards_pre[hIndex].func;
+			preHookFunc(&sd, &ad);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.achievement.get_rewards(sd, ad);
+	}
+	if (HPMHooks.count.HP_achievement_get_rewards_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, const struct achievement_data *ad);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_get_rewards_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_get_rewards_post[hIndex].func;
+			postHookFunc(sd, ad);
+		}
+	}
+	return;
+}
 /* atcommand_interface */
 void HP_atcommand_init(bool minimal) {
 	int hIndex = 0;
@@ -19256,6 +20635,162 @@ unsigned char HP_clif_bl_type(struct block_list *bl) {
 	}
 	return retVal___;
 }
+void HP_clif_achievement_send_list(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_achievement_send_list_pre > 0) {
+		void (*preHookFunc) (int *fd, struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_achievement_send_list_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_achievement_send_list_pre[hIndex].func;
+			preHookFunc(&fd, &sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.achievement_send_list(fd, sd);
+	}
+	if (HPMHooks.count.HP_clif_achievement_send_list_post > 0) {
+		void (*postHookFunc) (int fd, struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_achievement_send_list_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_achievement_send_list_post[hIndex].func;
+			postHookFunc(fd, sd);
+		}
+	}
+	return;
+}
+void HP_clif_achievement_send_update(int fd, struct map_session_data *sd, const struct achievement_data *ad) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_achievement_send_update_pre > 0) {
+		void (*preHookFunc) (int *fd, struct map_session_data **sd, const struct achievement_data **ad);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_achievement_send_update_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_achievement_send_update_pre[hIndex].func;
+			preHookFunc(&fd, &sd, &ad);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.achievement_send_update(fd, sd, ad);
+	}
+	if (HPMHooks.count.HP_clif_achievement_send_update_post > 0) {
+		void (*postHookFunc) (int fd, struct map_session_data *sd, const struct achievement_data *ad);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_achievement_send_update_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_achievement_send_update_post[hIndex].func;
+			postHookFunc(fd, sd, ad);
+		}
+	}
+	return;
+}
+void HP_clif_pAchievementGetReward(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_pAchievementGetReward_pre > 0) {
+		void (*preHookFunc) (int *fd, struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pAchievementGetReward_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_pAchievementGetReward_pre[hIndex].func;
+			preHookFunc(&fd, &sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.pAchievementGetReward(fd, sd);
+	}
+	if (HPMHooks.count.HP_clif_pAchievementGetReward_post > 0) {
+		void (*postHookFunc) (int fd, struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pAchievementGetReward_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_pAchievementGetReward_post[hIndex].func;
+			postHookFunc(fd, sd);
+		}
+	}
+	return;
+}
+void HP_clif_achievement_reward_ack(int fd, struct map_session_data *sd, const struct achievement_data *ad) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_achievement_reward_ack_pre > 0) {
+		void (*preHookFunc) (int *fd, struct map_session_data **sd, const struct achievement_data **ad);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_achievement_reward_ack_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_achievement_reward_ack_pre[hIndex].func;
+			preHookFunc(&fd, &sd, &ad);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.achievement_reward_ack(fd, sd, ad);
+	}
+	if (HPMHooks.count.HP_clif_achievement_reward_ack_post > 0) {
+		void (*postHookFunc) (int fd, struct map_session_data *sd, const struct achievement_data *ad);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_achievement_reward_ack_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_achievement_reward_ack_post[hIndex].func;
+			postHookFunc(fd, sd, ad);
+		}
+	}
+	return;
+}
+void HP_clif_change_title_ack(int fd, struct map_session_data *sd, int title_id) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_change_title_ack_pre > 0) {
+		void (*preHookFunc) (int *fd, struct map_session_data **sd, int *title_id);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_change_title_ack_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_change_title_ack_pre[hIndex].func;
+			preHookFunc(&fd, &sd, &title_id);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.change_title_ack(fd, sd, title_id);
+	}
+	if (HPMHooks.count.HP_clif_change_title_ack_post > 0) {
+		void (*postHookFunc) (int fd, struct map_session_data *sd, int title_id);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_change_title_ack_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_change_title_ack_post[hIndex].func;
+			postHookFunc(fd, sd, title_id);
+		}
+	}
+	return;
+}
+void HP_clif_pChangeTitle(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_pChangeTitle_pre > 0) {
+		void (*preHookFunc) (int *fd, struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pChangeTitle_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_pChangeTitle_pre[hIndex].func;
+			preHookFunc(&fd, &sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.pChangeTitle(fd, sd);
+	}
+	if (HPMHooks.count.HP_clif_pChangeTitle_post > 0) {
+		void (*postHookFunc) (int fd, struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pChangeTitle_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_pChangeTitle_post[hIndex].func;
+			postHookFunc(fd, sd);
+		}
+	}
+	return;
+}
 void HP_clif_pWantToConnection(int fd, struct map_session_data *sd) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_pWantToConnection_pre > 0) {
@@ -35627,6 +37162,58 @@ int HP_intif_CheckForCharServer(void) {
 	}
 	return retVal___;
 }
+void HP_intif_achievements_request(struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_intif_achievements_request_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_achievements_request_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_intif_achievements_request_pre[hIndex].func;
+			preHookFunc(&sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.intif.achievements_request(sd);
+	}
+	if (HPMHooks.count.HP_intif_achievements_request_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_achievements_request_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_intif_achievements_request_post[hIndex].func;
+			postHookFunc(sd);
+		}
+	}
+	return;
+}
+void HP_intif_achievements_save(struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_intif_achievements_save_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_achievements_save_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_intif_achievements_save_pre[hIndex].func;
+			preHookFunc(&sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.intif.achievements_save(sd);
+	}
+	if (HPMHooks.count.HP_intif_achievements_save_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_achievements_save_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_intif_achievements_save_post[hIndex].func;
+			postHookFunc(sd);
+		}
+	}
+	return;
+}
 void HP_intif_pWisMessage(int fd) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_intif_pWisMessage_pre > 0) {
@@ -37423,6 +39010,32 @@ void HP_intif_pRecvClanMemberAction(int fd) {
 		void (*postHookFunc) (int fd);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_pRecvClanMemberAction_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_intif_pRecvClanMemberAction_post[hIndex].func;
+			postHookFunc(fd);
+		}
+	}
+	return;
+}
+void HP_intif_pAchievementsLoad(int fd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_intif_pAchievementsLoad_pre > 0) {
+		void (*preHookFunc) (int *fd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_pAchievementsLoad_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_intif_pAchievementsLoad_pre[hIndex].func;
+			preHookFunc(&fd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.intif.pAchievementsLoad(fd);
+	}
+	if (HPMHooks.count.HP_intif_pAchievementsLoad_post > 0) {
+		void (*postHookFunc) (int fd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_pAchievementsLoad_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_intif_pAchievementsLoad_post[hIndex].func;
 			postHookFunc(fd);
 		}
 	}

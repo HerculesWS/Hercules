@@ -32,6 +32,9 @@ struct HCache_interface *HCache;
 #ifdef LOGIN_ACCOUNT_H /* account */
 struct account_interface *account;
 #endif // LOGIN_ACCOUNT_H
+#ifdef MAP_ACHIEVEMENT_H /* achievement */
+struct achievement_interface *achievement;
+#endif // MAP_ACHIEVEMENT_H
 #ifdef MAP_ATCOMMAND_H /* atcommand */
 struct atcommand_interface *atcommand;
 #endif // MAP_ATCOMMAND_H
@@ -101,6 +104,9 @@ struct homunculus_interface *homun;
 #ifdef MAP_INSTANCE_H /* instance */
 struct instance_interface *instance;
 #endif // MAP_INSTANCE_H
+#ifdef CHAR_INT_ACHIEVEMENT_H /* inter_achievement */
+struct inter_achievement_interface *inter_achievement;
+#endif // CHAR_INT_ACHIEVEMENT_H
 #ifdef CHAR_INT_AUCTION_H /* inter_auction */
 struct inter_auction_interface *inter_auction;
 #endif // CHAR_INT_AUCTION_H
@@ -305,6 +311,10 @@ HPExport const char *HPM_shared_symbols(int server_type)
 	if ((server_type&(SERVER_TYPE_LOGIN)) != 0 && !HPM_SYMBOL("account", account))
 		return "account";
 #endif // LOGIN_ACCOUNT_H
+#ifdef MAP_ACHIEVEMENT_H /* achievement */
+	if ((server_type&(SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("achievement", achievement))
+		return "achievement";
+#endif // MAP_ACHIEVEMENT_H
 #ifdef MAP_ATCOMMAND_H /* atcommand */
 	if ((server_type&(SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("atcommand", atcommand))
 		return "atcommand";
@@ -397,6 +407,10 @@ HPExport const char *HPM_shared_symbols(int server_type)
 	if ((server_type&(SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("instance", instance))
 		return "instance";
 #endif // MAP_INSTANCE_H
+#ifdef CHAR_INT_ACHIEVEMENT_H /* inter_achievement */
+	if ((server_type&(SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("inter_achievement", inter_achievement))
+		return "inter_achievement";
+#endif // CHAR_INT_ACHIEVEMENT_H
 #ifdef CHAR_INT_AUCTION_H /* inter_auction */
 	if ((server_type&(SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("inter_auction", inter_auction))
 		return "inter_auction";
