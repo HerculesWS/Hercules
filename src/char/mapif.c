@@ -24,6 +24,7 @@
 #include "mapif.h"
 
 #include "char/char.h"
+#include "char/int_achievement.h"
 #include "char/int_auction.h"
 #include "char/int_clan.h"
 #include "char/int_guild.h"
@@ -2346,6 +2347,120 @@ static int mapif_parse_ClanMemberCount(int fd, int clan_id, int kick_interval)
 	return 0;
 }
 
+// Achievement System
+/**
+ * Parse achievement load request from the map server
+ * @param[in] fd  socket descriptor.
+ */
+static void mapif_parse_load_achievements(int fd)
+{
+	int char_id = 0;
+
+	/* Read received information from map-server. */
+	RFIFOHEAD(fd);
+	char_id = RFIFOL(fd, 2);
+
+	/* Load and send achievements to map */
+	mapif->achievement_load(fd, char_id);
+}
+
+/**
+ * Loads achievements and sends to the map server.
+ * @param[in] fd       socket descriptor
+ * @param[in] char_id  character Id.
+ */
+static void mapif_achievement_load(int fd, int char_id)
+{
+	struct char_achievements *cp = NULL;
+
+	/* Ensure data exists */
+	cp = idb_ensure(inter_achievement->char_achievements, char_id, inter_achievement->ensure_char_achievements);
+
+	/* Load storage for char-server. */
+	inter_achievement->fromsql(char_id, cp);
+
+	/* Send Achievements to map server. */
+	mapif->sAchievementsToMap(fd, char_id, cp);
+}
+
+/**
+ * Sends achievement data of a character to the map server.
+ * @packet[out] 0x3810  <packet_id>.W <payload_size>.W <char_id>.L <char_achievements[]>.P
+ * @param[in]  fd      socket descriptor.
+ * @param[in]  char_id Character ID.
+ * @param[in]  cp      Pointer to character's achievement data vector.
+ */
+static void mapif_send_achievements_to_map(int fd, int char_id, const struct char_achievements *cp)
+{
+	int i = 0;
+	int data_size = 0;
+
+	nullpo_retv(cp);
+
+	data_size = sizeof(struct achievement) * VECTOR_LENGTH(*cp);
+
+STATIC_ASSERT((sizeof(struct achievement) * MAX_ACHIEVEMENT_DB + 8 <= UINT16_MAX),
+	"The achievements data can potentially be larger than the maximum packet size. This may cause errors at run-time.");
+
+	/* Send to the map server. */
+	WFIFOHEAD(fd, (8 + data_size));
+	WFIFOW(fd, 0) = 0x3810;
+	WFIFOW(fd, 2) = (8 + data_size);
+	WFIFOL(fd, 4) = char_id;
+	for (i = 0; i < VECTOR_LENGTH(*cp); i++)
+		memcpy(WFIFOP(fd, 8 + i * sizeof(struct achievement)), &VECTOR_INDEX(*cp, i), sizeof(struct achievement));
+	WFIFOSET(fd, 8 + data_size);
+}
+
+/**
+ * Handles achievement request and saves data from map server.
+ * @packet[in] 0x3013 <packet_size>.W <char_id>.L <char_achievement>.P
+ * @param[in]  fd     session socket descriptor.
+ */
+static void mapif_parse_save_achievements(int fd)
+{
+	int size = 0, char_id = 0, payload_count = 0, i = 0;
+	struct char_achievements p = { 0 };
+
+	RFIFOHEAD(fd);
+	size = RFIFOW(fd, 2);
+	char_id = RFIFOL(fd, 4);
+
+	payload_count = (size - 8) / sizeof(struct achievement);
+
+	VECTOR_INIT(p);
+	VECTOR_ENSURE(p, payload_count, 1);
+
+	for (i = 0; i < payload_count; i++) {
+		struct achievement ach = { 0 };
+		memcpy(&ach, RFIFOP(fd, 8 + i * sizeof(struct achievement)), sizeof(struct achievement));
+		VECTOR_PUSH(p, ach);
+	}
+
+	mapif->achievement_save(char_id, &p);
+
+	VECTOR_CLEAR(p);
+}
+
+/**
+ * Handles inter-server achievement db ensuring
+ * and saves current achievements to sql.
+ * @param[in]  char_id      character identifier.
+ * @param[out] p            pointer to character achievements vector.
+ */
+static void mapif_achievement_save(int char_id, struct char_achievements *p)
+{
+	struct char_achievements *cp = NULL;
+
+	nullpo_retv(p);
+	
+	/* Get loaded achievements. */
+	cp = idb_ensure(inter_achievement->char_achievements, char_id, inter_achievement->ensure_char_achievements);
+
+	if (VECTOR_LENGTH(*p)) /* Save current achievements. */
+		inter_achievement->tosql(char_id, cp, p);
+}
+
 void mapif_defaults(void)
 {
 	mapif = &mapif_s;
@@ -2361,6 +2476,11 @@ void mapif_defaults(void)
 	mapif->sendallwos = mapif_sendallwos;
 	mapif->send = mapif_send;
 	mapif->send_users_count = mapif_send_users_count;
+	mapif->pLoadAchievements = mapif_parse_load_achievements;
+	mapif->sAchievementsToMap = mapif_send_achievements_to_map;
+	mapif->pSaveAchievements = mapif_parse_save_achievements;
+	mapif->achievement_load = mapif_achievement_load;
+	mapif->achievement_save = mapif_achievement_save;
 	mapif->auction_message = mapif_auction_message;
 	mapif->auction_sendlist = mapif_auction_sendlist;
 	mapif->parse_auction_requestlist = mapif_parse_auction_requestlist;

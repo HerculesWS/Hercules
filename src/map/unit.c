@@ -2765,8 +2765,10 @@ static int unit_free(struct block_list *bl, clr_type clrtype)
 				sd->instance = NULL;
 			}
 			VECTOR_CLEAR(sd->script_queues);
+			VECTOR_CLEAR(sd->achievement); // Achievement [Smokexyz/Hercules]
 			VECTOR_CLEAR(sd->storage.item);
 			VECTOR_CLEAR(sd->hatEffectId);
+			VECTOR_CLEAR(sd->title_ids); // Title [Dastgir/Hercules]
 			sd->storage.received = false;
 			if( sd->quest_log != NULL ) {
 				aFree(sd->quest_log);

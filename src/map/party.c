@@ -36,6 +36,7 @@
 #include "map/pc.h"
 #include "map/skill.h"
 #include "map/status.h"
+#include "map/achievement.h"
 #include "common/HPM.h"
 #include "common/cbasetypes.h"
 #include "common/memmgr.h"
@@ -189,6 +190,9 @@ static int party_create(struct map_session_data *sd, const char *name, int item,
 	party->fill_member(&leader, sd, 1);
 
 	intif->create_party(&leader,name,item,item2);
+
+	achievement->validate_party_create(sd); //Achievements (Smokexyz)
+
 	return 0;
 }
 

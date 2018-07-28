@@ -56,13 +56,14 @@
 #include "map/trade.h"
 #include "map/unit.h"
 #include "map/vending.h"
+#include "map/achievement.h"
 #include "common/HPM.h"
 #include "common/cbasetypes.h"
 #include "common/conf.h"
 #include "common/ers.h"
 #include "common/grfio.h"
 #include "common/memmgr.h"
-#include "common/mmo.h" // NEW_CARTS
+#include "common/mmo.h" // NEW_CARTS, char_achievements
 #include "common/nullpo.h"
 #include "common/random.h"
 #include "common/showmsg.h"
@@ -8816,17 +8817,18 @@ static void clif_refresh(struct map_session_data *sd)
 /// Updates the object's (bl) name on client.
 /// 0095 <id>.L <char name>.24B (ZC_ACK_REQNAME)
 /// 0195 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B (ZC_ACK_REQNAMEALL)
+/// 0A30 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B <title id>.L (ZC_ACK_REQNAMEALL2)
 static void clif_charnameack(int fd, struct block_list *bl)
 {
-	unsigned char buf[103];
-	int cmd = 0x95;
+	struct packet_reqnameall_ack packet = { 0 };
+	int len = sizeof(struct packet_reqnameall_ack);
 
 	nullpo_retv(bl);
 
-	WBUFW(buf,0) = cmd;
-	WBUFL(buf,2) = bl->id;
+	packet.packet_id = reqName;
+	packet.gid = bl->id;
 
-	switch( bl->type ) {
+	switch(bl->type) {
 		case BL_PC:
 		{
 			const struct map_session_data *ssd = BL_UCCAST(BL_PC, bl);
@@ -8834,17 +8836,28 @@ static void clif_charnameack(int fd, struct block_list *bl)
 			const struct guild *g = NULL;
 			int ps = -1;
 
+			if (ssd->fakename[0] != '\0' || ssd->status.guild_id > 0 || ssd->status.party_id > 0 || ssd->status.title_id > 0) {
+				packet.packet_id = reqNameAllType;
+			}
+
 			//Requesting your own "shadow" name. [Skotlex]
-			if (ssd->fd == fd && ssd->disguise != -1)
-				WBUFL(buf,2) = -bl->id;
+			if (ssd->fd == fd && ssd->disguise != -1) {
+				packet.gid = -bl->id;
+			}
 
 			if (ssd->fakename[0] != '\0') {
-				WBUFW(buf, 0) = cmd = 0x195;
-				memcpy(WBUFP(buf,6), ssd->fakename, NAME_LENGTH);
-				WBUFB(buf,30) = WBUFB(buf,54) = WBUFB(buf,78) = 0;
+				memcpy(packet.name, ssd->fakename, NAME_LENGTH);
 				break;
 			}
-			memcpy(WBUFP(buf,6), ssd->status.name, NAME_LENGTH);
+
+#if PACKETVER >= 20150503
+			// Title System [Dastgir/Hercules]
+			if (ssd->status.title_id > 0) {
+				packet.title_id = ssd->status.title_id;
+			}
+#endif
+
+			memcpy(packet.name, ssd->status.name, NAME_LENGTH);
 
 			if (ssd->status.party_id != 0) {
 				p = party->search(ssd->status.party_id);
@@ -8866,47 +8879,41 @@ static void clif_charnameack(int fd, struct block_list *bl)
 			if (p == NULL && g == NULL)
 				break;
 
-			WBUFW(buf, 0) = cmd = 0x195;
-			if (p != NULL)
-				memcpy(WBUFP(buf,30), p->party.name, NAME_LENGTH);
-			else
-				WBUFB(buf,30) = 0;
+			if (p != NULL) {
+				memcpy(packet.party_name, p->party.name, NAME_LENGTH);
+			}
 
 			if (g != NULL && ps >= 0 && ps < MAX_GUILDPOSITION) {
-				memcpy(WBUFP(buf,54), g->name,NAME_LENGTH);
-				memcpy(WBUFP(buf,78), g->position[ps].name, NAME_LENGTH);
-			} else { //Assume no guild.
-				WBUFB(buf,54) = 0;
-				WBUFB(buf,78) = 0;
+				memcpy(packet.guild_name, g->name,NAME_LENGTH);
+				memcpy(packet.position_name, g->position[ps].name, NAME_LENGTH);
 			}
 		}
 			break;
 		//[blackhole89]
 		case BL_HOM:
-			memcpy(WBUFP(buf,6), BL_UCCAST(BL_HOM, bl)->homunculus.name, NAME_LENGTH);
+			memcpy(packet.name, BL_UCCAST(BL_HOM, bl)->homunculus.name, NAME_LENGTH);
 			break;
 		case BL_MER:
-			memcpy(WBUFP(buf,6), BL_UCCAST(BL_MER, bl)->db->name, NAME_LENGTH);
+			memcpy(packet.name, BL_UCCAST(BL_MER, bl)->db->name, NAME_LENGTH);
 			break;
 		case BL_PET:
-			memcpy(WBUFP(buf,6), BL_UCCAST(BL_PET, bl)->pet.name, NAME_LENGTH);
+			memcpy(packet.name, BL_UCCAST(BL_PET, bl)->pet.name, NAME_LENGTH);
 			break;
 		case BL_NPC:
-			memcpy(WBUFP(buf,6), BL_UCCAST(BL_NPC, bl)->name, NAME_LENGTH);
+			memcpy(packet.name, BL_UCCAST(BL_NPC, bl)->name, NAME_LENGTH);
 			break;
 		case BL_MOB:
 		{
 			const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
 
-			memcpy(WBUFP(buf,6), md->name, NAME_LENGTH);
+			memcpy(packet.name, md->name, NAME_LENGTH);
 			if (md->guardian_data && md->guardian_data->g) {
-				WBUFW(buf, 0) = cmd = 0x195;
-				WBUFB(buf,30) = 0;
-				memcpy(WBUFP(buf,54), md->guardian_data->g->name, NAME_LENGTH);
-				memcpy(WBUFP(buf,78), md->guardian_data->castle->castle_name, NAME_LENGTH);
+				packet.packet_id = reqNameAllType;
+				memcpy(packet.guild_name, md->guardian_data->g->name, NAME_LENGTH);
+				memcpy(packet.position_name, md->guardian_data->castle->castle_name, NAME_LENGTH);
 			} else if (battle_config.show_mob_info) {
 				char mobhp[50], *str_p = mobhp;
-				WBUFW(buf, 0) = cmd = 0x195;
+				packet.packet_id = reqNameAllType;
 				if (battle_config.show_mob_info&4)
 					str_p += sprintf(str_p, "Lv. %d | ", md->level);
 				if (battle_config.show_mob_info&1)
@@ -8917,34 +8924,39 @@ static void clif_charnameack(int fd, struct block_list *bl)
 				//can parse it. [Skotlex]
 				if (str_p != mobhp) {
 					*(str_p-3) = '\0'; //Remove trailing space + pipe.
-					memcpy(WBUFP(buf,30), mobhp, NAME_LENGTH);
-					WBUFB(buf,54) = 0;
-					WBUFB(buf,78) = 0;
+					memcpy(packet.party_name, mobhp, NAME_LENGTH);
 				}
 			}
 		}
 			break;
 		case BL_CHAT:
 #if 0 //FIXME: Clients DO request this... what should be done about it? The chat's title may not fit... [Skotlex]
-			memcpy(WBUFP(buf,6), BL_UCCAST(BL_CHAT, bl)->title, NAME_LENGTH);
+			memcpy(packet.name, BL_UCCAST(BL_CHAT, bl)->title, NAME_LENGTH);
 			break;
 #endif
 			return;
 		case BL_ELEM:
-			memcpy(WBUFP(buf,6), BL_UCCAST(BL_ELEM, bl)->db->name, NAME_LENGTH);
+			memcpy(packet.name, BL_UCCAST(BL_ELEM, bl)->db->name, NAME_LENGTH);
 			break;
 		default:
 			ShowError("clif_charnameack: bad type %u(%d)\n", bl->type, bl->id);
 			return;
 	}
 
+	if (packet.packet_id == reqName) {
+		len = sizeof(struct packet_reqname_ack);
+	}
+	// if no recipient specified just update nearby clients
 	// if no recipient specified just update nearby clients
 	if (fd == 0) {
-		clif->send(buf, packet_len(cmd), bl, AREA);
+		clif->send(&packet, len, bl, AREA);
 	} else {
-		WFIFOHEAD(fd, packet_len(cmd));
-		memcpy(WFIFOP(fd, 0), buf, packet_len(cmd));
-		WFIFOSET(fd, packet_len(cmd));
+		struct map_session_data *sd = sockt->session_is_valid(fd) ? sockt->session[fd]->session_data : NULL;
+		if (sd != NULL) {
+			clif->send(&packet, len, &sd->bl, SELF);
+		} else {
+			clif->send(&packet, len, bl, SELF);
+		}
 	}
 }
 
@@ -8952,54 +8964,52 @@ static void clif_charnameack(int fd, struct block_list *bl)
 //Needed because when you send a 0x95 packet, the client will not remove the cached party/guild info that is not sent.
 static void clif_charnameupdate(struct map_session_data *ssd)
 {
-	unsigned char buf[103];
-	int cmd = 0x195, ps = -1;
+	int ps = -1;
 	struct party_data *p = NULL;
 	struct guild *g = NULL;
+	struct packet_reqnameall_ack packet = { 0 };
 
 	nullpo_retv(ssd);
 
-	if( ssd->fakename[0] )
+	if (ssd->fakename[0])
 		return; //No need to update as the party/guild was not displayed anyway.
 
-	WBUFW(buf,0) = cmd;
-	WBUFL(buf,2) = ssd->bl.id;
+	packet.packet_id = reqNameAllType;
+	packet.gid = ssd->bl.id;
 
-	memcpy(WBUFP(buf,6), ssd->status.name, NAME_LENGTH);
+	memcpy(packet.name, ssd->status.name, NAME_LENGTH);
 
 	if (!battle_config.display_party_name) {
 		if (ssd->status.party_id > 0 && ssd->status.guild_id > 0 && (g = ssd->guild) != NULL)
 			p = party->search(ssd->status.party_id);
-	}else{
+	} else {
 		if (ssd->status.party_id > 0)
 			p = party->search(ssd->status.party_id);
 	}
 
-	if( ssd->status.guild_id > 0 && (g = ssd->guild) != NULL )
-	{
+	if (ssd->status.guild_id > 0 && (g = ssd->guild) != NULL) {
 		int i;
 		ARR_FIND(0, g->max_member, i, g->member[i].account_id == ssd->status.account_id && g->member[i].char_id == ssd->status.char_id);
 		if( i < g->max_member ) ps = g->member[i].position;
 	}
 
-	if( p )
-		memcpy(WBUFP(buf,30), p->party.name, NAME_LENGTH);
-	else
-		WBUFB(buf,30) = 0;
+	if (p != NULL)
+		memcpy(packet.party_name, p->party.name, NAME_LENGTH);
 
-	if( g && ps >= 0 && ps < MAX_GUILDPOSITION )
-	{
-		memcpy(WBUFP(buf,54), g->name,NAME_LENGTH);
-		memcpy(WBUFP(buf,78), g->position[ps].name, NAME_LENGTH);
+	if (g != NULL && ps >= 0 && ps < MAX_GUILDPOSITION) {
+		memcpy(packet.guild_name, g->name,NAME_LENGTH);
+		memcpy(packet.position_name, g->position[ps].name, NAME_LENGTH);
 	}
-	else
-	{
-		WBUFB(buf,54) = 0;
-		WBUFB(buf,78) = 0;
+
+#if PACKETVER >= 20150503
+	// Achievement System [Dastgir/Hercules]
+	if (ssd->status.title_id > 0) {
+		packet.title_id = ssd->status.title_id;
 	}
+#endif
 
 	// Update nearby clients
-	clif->send(buf, packet_len(cmd), &ssd->bl, AREA);
+	clif->send(&packet, sizeof(packet), &ssd->bl, AREA);
 }
 
 /// Taekwon Jump (TK_HIGHJUMP) effect (ZC_HIGHJUMP).
@@ -14787,6 +14797,7 @@ static void clif_parse_FriendsListReply(int fd, struct map_session_data *sd)
 		f_sd->status.friends[i].char_id = sd->status.char_id;
 		memcpy(f_sd->status.friends[i].name, sd->status.name, NAME_LENGTH);
 		clif->friendslist_reqack(f_sd, sd, 0);
+		achievement->validate_friend_add(f_sd); // Achievements [Smokexyz/Hercules]
 
 		if (battle_config.friend_auto_add) {
 			// Also add f_sd to sd's friendlist.
@@ -14805,6 +14816,7 @@ static void clif_parse_FriendsListReply(int fd, struct map_session_data *sd)
 			sd->status.friends[i].char_id = f_sd->status.char_id;
 			memcpy(sd->status.friends[i].name, f_sd->status.name, NAME_LENGTH);
 			clif->friendslist_reqack(sd, f_sd, 0);
+			achievement->validate_friend_add(sd); // Achievements [Smokexyz/Hercules]
 		}
 	}
 }
@@ -20224,6 +20236,216 @@ static unsigned short clif_parse_cmd_optional(int fd, struct map_session_data *s
 	return cmd;
 }
 
+/**
+ * Send all of a session's achievement information to client.
+ * Called only once on login/char-loading. (PACKET_ZC_ALL_ACH_LIST)
+ * @packet [out] 0x0A23 <ID>.W <Length>.W <ach_count>.L <total_points>.L <rank>.W <current_rank_points>.L <next_rank_points>.L <struct ach_list_info *[]>.P
+ * @param fd   socket descriptor
+ * @param sd   pointer to map_session_data
+ */
+static void clif_achievement_send_list(int fd, struct map_session_data *sd)
+{
+#if PACKETVER >= 20141016
+	int i = 0, count = 0, curr_exp_tmp = 0;
+	struct packet_achievement_list p = { 0 };
+
+	nullpo_retv(sd);
+
+	/* Browse through the session's achievement list and gather their values. */
+	for (i = 0; i < VECTOR_LENGTH(sd->achievement); i++) {
+		int j = 0;
+		struct achievement *a = &VECTOR_INDEX(sd->achievement, i);
+		const struct achievement_data *ad = NULL;
+
+		/* Sanity check for nonull pointers. */
+		if (a == NULL || (ad = achievement->get(a->id)) == NULL)
+			continue;
+
+		p.ach[count].ach_id = a->id;
+
+		for (j = 0; j < VECTOR_LENGTH(ad->objective); j++)
+			p.ach[count].objective[j] = a->objective[j];
+
+		if (a->completed_at) {
+			p.ach[count].completed = 1;
+			p.ach[count].completed_at = (uint32) a->completed_at;
+			p.ach[count].reward = a->rewarded_at ? 1 : 0;
+			p.total_points += ad->points;
+		}
+
+		count++;
+	}
+
+	p.packet_id = achievementListType;
+	p.packet_len = sizeof(struct ach_list_info) * count + 22;
+	p.total_achievements = count;
+	/* Determine Achievement Rank and current exp */
+	curr_exp_tmp = p.total_points;
+	for (i = 0; curr_exp_tmp && i < MAX_ACHIEVEMENT_RANKS && i < VECTOR_LENGTH(achievement->rank_exp); i++) {
+		if (curr_exp_tmp >= VECTOR_INDEX(achievement->rank_exp, i)) {
+			curr_exp_tmp -= VECTOR_INDEX(achievement->rank_exp, i);
+			p.rank++;
+
+			// Validate achievement rank type achievements.
+			achievement->validate_achievement_rank(sd, p.rank);
+		}
+	}
+	/* Determine Achievement Rank Exp */
+	p.current_rank_points = curr_exp_tmp;
+	p.next_rank_points = VECTOR_INDEX(achievement->rank_exp, p.rank);
+	/* Send payload */
+	clif->send(&p, p.packet_len, &sd->bl, SELF);
+#endif // PACKETVER >= 20141016
+}
+
+/**
+ * Sends achievement information for a single achievement.
+ * Called on objective progress updates/completion. (PACKET_ZC_ACH_UPDATE)
+ * @packet [out] 0x0A24 <ID>.W <total_points>.L <rank>.W <current_rank_points>.L <next_rank_points>.L <struct ach_list_info *>.P
+ * @param fd    socket descriptor
+ * @param sd    pointer to struct map_session_data
+ * @param ad    const pointer to struct achievement_data from the achievement db.
+ */
+static void clif_achievement_send_update(int fd, struct map_session_data *sd, const struct achievement_data *ad)
+{
+#if PACKETVER >= 20141016
+	struct packet_achievement_update p = { 0 };
+	struct achievement *a = NULL;
+	int i = 0, points = 0, rank = 0, curr_rank_points = 0;
+
+	nullpo_retv(sd);
+	nullpo_retv(ad);
+
+	/* Get Session Achievement Data */
+	if ((a = achievement->ensure(sd, ad)) == NULL)
+		return;
+
+	/* Get total points, current rank and current rank points from the session. */
+	achievement->calculate_totals(sd, &points, NULL, &rank, &curr_rank_points);
+
+	p.packet_id = achievementUpdateType;
+
+	/* Determine Total Achievement Points */
+	p.total_points = points;
+
+	/* Determine Achievement Rank */
+	p.rank = rank;
+
+	/* Determine Achievement Rank Exp */
+	p.current_rank_points = curr_rank_points;
+	p.next_rank_points = VECTOR_INDEX(achievement->rank_exp, p.rank);
+
+	p.ach.ach_id = ad->id;
+	p.ach.completed = (uint8) achievement->check_complete(sd, ad);
+
+	for (i = 0; i < VECTOR_LENGTH(ad->objective); i++)
+		p.ach.objective[i] = a->objective[i];
+
+	p.ach.completed_at = (uint32) a->completed_at;
+
+	p.ach.reward = a->rewarded_at ? 1 : 0;
+
+	clif->send(&p, packet_len(achievementUpdateType), &sd->bl, SELF);
+
+	/* Validate rank-related achievements */
+	achievement->validate_achievement_rank(sd, rank);
+
+#endif // PACKETVER >= 20141016
+}
+
+/**
+ * Parses achievement reward packet from session.
+ * @packet [in] 0x0A25 <ach_id>.L
+ * @param fd   socket descriptor.
+ * @param sd   ptr to session data.
+ */
+static void clif_parse_achievement_get_reward(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
+static void clif_parse_achievement_get_reward(int fd, struct map_session_data *sd)
+{
+#if PACKETVER >= 20141016
+	int ach_id = RFIFOL(fd, 2);
+	const struct achievement_data *ad = NULL;
+	struct achievement *ach = NULL;
+
+	if (ach_id <= 0 || (ad = achievement->get(ach_id)) == NULL)
+		return;
+
+	if ((ach = achievement->ensure(sd, ad)) == NULL)
+		return;
+
+	if (achievement->check_complete(sd, ad) && ach->completed_at && ach->rewarded_at == 0) {
+		achievement->get_rewards(sd, ad);
+	}
+#endif // PACKETVER >= 20141016
+}
+
+/**
+ * Sends achievement reward collection acknowledgement to the client.
+ * @packet [out] 0x0A26 <packet_id>.W <received
+ */
+static void clif_achievement_reward_ack(int fd, struct map_session_data *sd, const struct achievement_data *ad)
+{
+#if PACKETVER >= 20141016
+	struct packet_achievement_reward_ack p = { 0 };
+
+	nullpo_retv(sd);
+	nullpo_retv(ad);
+
+	p.packet_id = achievementRewardAckType;
+	p.received = 1;
+	p.ach_id = ad->id;
+
+	clif->send(&p, packet_len(achievementRewardAckType), &sd->bl, SELF);
+#endif // PACKETVER >= 20141016
+}
+
+/**
+ * Sends achievement reward collection acknowledgement to the client.
+ * @packet[in] 0x0A2E <packet_id>.W <title_id>.L
+ */
+static void clif_parse_change_title(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
+static void clif_parse_change_title(int fd, struct map_session_data *sd)
+{
+	int title_id = RFIFOL(fd, 2);
+
+	if (title_id == sd->status.title_id) { // Same Title
+		return;
+	} else if (title_id < 0) {
+		title_id = 0;
+	}
+
+	clif->change_title_ack(fd, sd, title_id);
+}
+
+/**
+ * [clif_change_title_ack description]
+ * @packet [out] 0x0A2F <packet_id>.W <Result>.B <title_id>.L
+ */
+static void clif_change_title_ack(int fd, struct map_session_data *sd, int title_id)
+{
+#if PACKETVER >= 20141016
+	unsigned char failed = 0;
+
+	if (!achievement->check_title(sd, title_id)) {
+		clif->message(fd, "Title is not yet earned.");
+		failed = 1;
+	}
+
+	sd->status.title_id = title_id;
+
+	WFIFOHEAD(fd, packet_len(0xa2f));
+	WFIFOW(fd, 0) = 0xa2f;
+	WFIFOB(fd, 2) = failed;
+	WFIFOL(fd, 3) = sd->status.title_id;
+	WFIFOSET(fd, packet_len(0xa2f));
+
+	// Update names
+	clif->charnameack(fd, &sd->bl);
+	clif->charnameack(0, &sd->bl);
+#endif
+}
+// End of Achievement System
+
 /*==========================================
  * RoDEX
  *------------------------------------------*/
@@ -22166,6 +22388,14 @@ void clif_defaults(void)
 	clif->isdisguised = clif_isdisguised;
 	clif->navigate_to = clif_navigate_to;
 	clif->bl_type = clif_bl_type;
+	/* Achievement System */
+	clif->achievement_send_list = clif_achievement_send_list;
+	clif->achievement_send_update = clif_achievement_send_update;
+	clif->pAchievementGetReward = clif_parse_achievement_get_reward;
+	clif->achievement_reward_ack = clif_achievement_reward_ack;
+	/* Title */
+	clif->change_title_ack = clif_change_title_ack;
+	clif->pChangeTitle = clif_parse_change_title;
 
 	/*------------------------
 	 *- Parse Incoming Packet
@@ -22413,6 +22643,7 @@ void clif_defaults(void)
 	clif->pHotkeyRowShift = clif_parse_HotkeyRowShift;
 	clif->dressroom_open = clif_dressroom_open;
 	clif->pOneClick_ItemIdentify = clif_parse_OneClick_ItemIdentify;
+	/* Achievements [Smokexyz/Hercules] */
 	clif->get_bl_name = clif_get_bl_name;
 	/* RODEX */
 	clif->pRodexOpenWriteMail = clif_parse_rodex_open_write_mail;

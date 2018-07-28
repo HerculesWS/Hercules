@@ -171,6 +171,8 @@
 		A5F7946C191CA34E002293AB /* sysinfo.c in Sources */ = {isa = PBXBuildFile; fileRef = A5F79469191CA34E002293AB /* sysinfo.c */; };
 		A5F7946D191CA34E002293AB /* sysinfo.c in Sources */ = {isa = PBXBuildFile; fileRef = A5F79469191CA34E002293AB /* sysinfo.c */; };
 		A5F7946E191CA34E002293AB /* sysinfo.c in Sources */ = {isa = PBXBuildFile; fileRef = A5F79469191CA34E002293AB /* sysinfo.c */; };
+		D0647BA51E793E7300D0843D /* int_achievement.c in Sources */ = {isa = PBXBuildFile; fileRef = D0647BA31E793E7300D0843D /* int_achievement.c */; };
+		D0647BA81E793E8200D0843D /* achievement.c in Sources */ = {isa = PBXBuildFile; fileRef = D0647BA61E793E8200D0843D /* achievement.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -444,6 +446,10 @@
 		A5F7946A191CA34E002293AB /* sysinfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sysinfo.h; path = src/common/sysinfo.h; sourceTree = "<group>"; };
 		A5F7946B191CA34E002293AB /* sysinfo.inc */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = sysinfo.inc; path = src/common/sysinfo.inc; sourceTree = "<group>"; };
 		A5F79476191CA3F4002293AB /* sysinfogen.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = sysinfogen.sh; sourceTree = "<group>"; };
+		D0647BA31E793E7300D0843D /* int_achievement.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = int_achievement.c; path = src/char/int_achievement.c; sourceTree = SOURCE_ROOT; };
+		D0647BA41E793E7300D0843D /* int_achievement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = int_achievement.h; path = src/char/int_achievement.h; sourceTree = SOURCE_ROOT; };
+		D0647BA61E793E8200D0843D /* achievement.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = achievement.c; path = src/map/achievement.c; sourceTree = SOURCE_ROOT; };
+		D0647BA71E793E8200D0843D /* achievement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = achievement.h; path = src/map/achievement.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -561,6 +567,8 @@
 				A5467AD81A16FD08008AFAA6 /* geoip.h */,
 				A5B894AB1A03CDFA005AD22E /* HPMchar.c */,
 				A5B894AC1A03CDFA005AD22E /* HPMchar.h */,
+				D0647BA31E793E7300D0843D /* int_achievement.c */,
+				D0647BA41E793E7300D0843D /* int_achievement.h */,
 				A56CC745185657D9009EB79C /* int_auction.c */,
 				A56CC746185657D9009EB79C /* int_auction.h */,
 				A530267D202D792F0060E394 /* int_clan.c */,
@@ -600,6 +608,8 @@
 		A56CC67D18564357009EB79C /* map-server */ = {
 			isa = PBXGroup;
 			children = (
+				D0647BA61E793E8200D0843D /* achievement.c */,
+				D0647BA71E793E8200D0843D /* achievement.h */,
 				A56CC76A18565812009EB79C /* atcommand.c */,
 				A56CC76B18565812009EB79C /* atcommand.h */,
 				A56CC76C18565812009EB79C /* battle.c */,
@@ -1191,6 +1201,7 @@
 				A56CC6E5185643BB009EB79C /* memmgr.c in Sources */,
 				A56CC6E2185643BB009EB79C /* HPM.c in Sources */,
 				A56CC765185657D9009EB79C /* int_pet.c in Sources */,
+				D0647BA51E793E7300D0843D /* int_achievement.c in Sources */,
 				A56CC769185657D9009EB79C /* pincode.c in Sources */,
 				A56CC6F1185643BB009EB79C /* mutex.c in Sources */,
 				A56CC762185657D9009EB79C /* int_mail.c in Sources */,
@@ -1288,6 +1299,7 @@
 				A56CC6D1185643BB009EB79C /* core.c in Sources */,
 				A56CC7D118565812009EB79C /* npc.c in Sources */,
 				A56CC6D4185643BB009EB79C /* db.c in Sources */,
+				D0647BA81E793E8200D0843D /* achievement.c in Sources */,
 				A56CC704185643BB009EB79C /* showmsg.c in Sources */,
 				A56CC6E0185643BB009EB79C /* grfio.c in Sources */,
 				A56CC70D185643BB009EB79C /* strlib.c in Sources */,

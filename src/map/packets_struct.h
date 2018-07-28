@@ -302,6 +302,11 @@ enum packet_headers {
 	rouletteinfoackType = 0xa1c,
 	roulettgenerateackType = 0xa20,
 	roulettercvitemackType = 0xa22,
+#if PACKETVER >= 20141016
+	achievementListType = 0xa23,
+	achievementUpdateType = 0xa24,
+	achievementRewardAckType = 0xa26,
+#endif // PACKETVER >= 20141016
 #if PACKETVER >= 20150513  // [4144] 0x09f8 handling in client from 2014-10-29aRagexe and 2014-03-26cRagexeRE
 	questListType = 0x9f8, ///< ZC_ALL_QUEST_LIST3
 #elif PACKETVER >= 20141022
@@ -400,6 +405,12 @@ enum packet_headers {
 	hominfoType = 0x9f7,
 #else
 	hominfoType = 0x22e,
+#endif
+	reqName = 0x95,
+#if PACKETVER >= 20150503 // Confirm this?
+	reqNameAllType = 0xA30,
+#else
+	reqNameAllType = 0x195,
 #endif
 };
 
@@ -2587,6 +2598,61 @@ struct PACKET_ZC_SEARCH_STORE_INFO_ACK {
 	uint8 nextPage;
 	uint8 usesCount;
 	struct PACKET_ZC_SEARCH_STORE_INFO_ACK_sub items[];
+} __attribute__((packed));
+
+/* Achievement System */
+struct ach_list_info {
+	uint32 ach_id;
+	uint8 completed;
+	uint32 objective[MAX_ACHIEVEMENT_OBJECTIVES];
+	uint32 completed_at;
+	uint8 reward;
+} __attribute__((packed));
+
+struct packet_achievement_list {
+	uint16 packet_id;
+	uint16 packet_len;
+	uint32 total_achievements;
+	uint32 total_points;
+	uint16 rank;
+	uint32 current_rank_points;
+	uint32 next_rank_points;
+	struct ach_list_info ach[MAX_ACHIEVEMENT_DB];
+} __attribute__((packed));
+
+struct packet_achievement_update {
+	uint16 packet_id;
+	uint32 total_points;
+	uint16 rank;
+	uint32 current_rank_points;
+	uint32 next_rank_points;
+	struct ach_list_info ach;
+} __attribute__((packed));
+
+struct packet_achievement_reward_ack {
+	uint16 packet_id;
+	uint8 received;
+	uint32 ach_id;
+} __attribute__((packed));
+
+// Name Packet ZC_ACK_REQNAME
+struct packet_reqname_ack {
+	uint16 packet_id;
+	int32 gid;
+	char name[NAME_LENGTH];
+} __attribute__((packed));
+
+// ZC_ACK_REQNAMEALL / ZC_ACK_REQNAMEALL2
+struct packet_reqnameall_ack {
+	uint16 packet_id;
+	int32 gid;
+	char name[NAME_LENGTH];
+	char party_name[NAME_LENGTH];
+	char guild_name[NAME_LENGTH];
+	char position_name[NAME_LENGTH];
+#if PACKETVER >= 20150503 // Confirm this?
+	int32 title_id; // Achievement Title
+#endif
 } __attribute__((packed));
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute

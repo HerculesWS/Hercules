@@ -340,6 +340,7 @@ extern char acc_reg_num_db[32];
 extern char acc_reg_str_db[32];
 extern char char_reg_str_db[32];
 extern char char_reg_num_db[32];
+extern char char_achievement_db[256];
 
 extern int guild_exp_rate;
 
