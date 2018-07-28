@@ -1413,16 +1413,6 @@ static bool pc_authok(struct map_session_data *sd, int login_id2, time_t expirat
 		clif->changemap(sd,sd->bl.m,sd->bl.x,sd->bl.y);
 	}
 
-	/**
-	 * Check if player have any cool downs on
-	 **/
-	skill->cooldown_load(sd);
-
-	/**
-	 * Check if player have any item cooldowns on
-	 **/
-	pc->itemcd_do(sd,true);
-
 #ifdef GP_BOUND_ITEMS
 	if( sd->status.party_id == 0 )
 		pc->bound_clear(sd,IBT_PARTY);
@@ -1560,6 +1550,10 @@ static int pc_reg_received(struct map_session_data *sd)
 	map->delnickdb(sd->status.char_id, sd->status.name);
 	if (!chrif->auth_finished(sd))
 		ShowError("pc_reg_received: Failed to properly remove player %d:%d from logging db!\n", sd->status.account_id, sd->status.char_id);
+
+	// Restore any cooldowns
+	skill->cooldown_load(sd);
+	pc->itemcd_do(sd, true);
 
 	pc->load_combo(sd);
 
