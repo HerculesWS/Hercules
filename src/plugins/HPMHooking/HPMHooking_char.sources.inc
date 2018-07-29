@@ -33,6 +33,7 @@ HPMHooks.source.core = *core;
 HPMHooks.source.DB = *DB;
 HPMHooks.source.des = *des;
 HPMHooks.source.geoip = *geoip;
+HPMHooks.source.inter_achievement = *inter_achievement;
 HPMHooks.source.inter_auction = *inter_auction;
 HPMHooks.source.inter_clan = *inter_clan;
 HPMHooks.source.inter_elemental = *inter_elemental;

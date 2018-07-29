@@ -39,10 +39,10 @@ struct pet_evolve_data {
 struct s_pet_db {
 	short class_;
 	char name[NAME_LENGTH],jname[NAME_LENGTH];
-	short itemID;
-	short EggID;
-	short AcceID;
-	short FoodID;
+	int itemID;
+	int EggID;
+	int AcceID;
+	int FoodID;
 	int fullness;
 	int hungry_delay;
 	int r_hungry;
@@ -157,7 +157,7 @@ struct pet_interface {
 	int (*data_init) (struct map_session_data *sd, struct s_pet *petinfo);
 	int (*birth_process) (struct map_session_data *sd, struct s_pet *petinfo);
 	int (*recv_petdata) (int account_id, struct s_pet *p, int flag);
-	int (*select_egg) (struct map_session_data *sd, short egg_index);
+	int (*select_egg) (struct map_session_data *sd, int egg_index);
 	int (*catch_process1) (struct map_session_data *sd, int target_class);
 	int (*catch_process2) (struct map_session_data *sd, int target_id);
 	bool (*get_egg) (int account_id, short pet_class, int pet_id );

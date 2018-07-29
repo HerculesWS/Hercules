@@ -863,7 +863,7 @@ static void itemdb_read_groups(void)
 		itemdb->groups[count].id = data->nameid;
 		itemdb->groups[count].qty = gsize[ count ];
 
-		CREATE(itemdb->groups[count].nameid, unsigned short, gsize[ count ] + 1);
+		CREATE(itemdb->groups[count].nameid, int, gsize[count] + 1);
 		c = 0;
 		while( (it = libconfig->setting_get_elem(itg,c++)) ) {
 			int repeat = 1;
@@ -873,7 +873,7 @@ static void itemdb_read_groups(void)
 			} else
 				itname = libconfig->setting_get_string_elem(itg,c - 1);
 
-			if( itname[0] == 'I' && itname[1] == 'D' && strlen(itname) < 8 ) {
+			if (itname[0] == 'I' && itname[1] == 'D' && strlen(itname) <= 12) {
 				if( !( data = itemdb->exists(atoi(itname+2)) ) )
 					ShowWarning("itemdb_read_groups: unknown item ID '%d' in group '%s'!\n",atoi(itname+2),config_setting_name(itg));
 			} else if( !( data = itemdb->name2id(itname) ) )
@@ -913,7 +913,8 @@ static void itemdb_write_cached_packages(const char *config_filename)
 	hwrite(&pcount,sizeof(pcount),1,file);
 
 	for(i = 0; i < pcount; i++) {
-		unsigned short id = itemdb->packages[i].id, random_qty = itemdb->packages[i].random_qty, must_qty = itemdb->packages[i].must_qty;
+		int id = itemdb->packages[i].id;
+		unsigned short random_qty = itemdb->packages[i].random_qty, must_qty = itemdb->packages[i].must_qty;
 		unsigned short c;
 		//into a package, first 2 bytes = id.
 		hwrite(&id,sizeof(id),1,file);
@@ -970,6 +971,7 @@ static void itemdb_write_cached_packages(const char *config_filename)
 
 	return;
 }
+
 static bool itemdb_read_cached_packages(const char *config_filename)
 {
 	FILE *file;
@@ -988,12 +990,13 @@ static bool itemdb_read_cached_packages(const char *config_filename)
 	itemdb->package_count = pcount;
 
 	for( i = 0; i < pcount; i++ ) {
-		unsigned short id = 0, random_qty = 0, must_qty = 0;
+		int id = 0;
+		unsigned short random_qty = 0, must_qty = 0;
 		struct item_data *pdata;
 		struct item_package *package = &itemdb->packages[i];
 		unsigned short c;
 
-		//into a package, first 2 bytes = id.
+		//into a package, first 4 bytes = id.
 		hread(&id,sizeof(id),1,file);
 		//next 2 bytes = must count
 		hread(&must_qty,sizeof(must_qty),1,file);
@@ -1016,10 +1019,11 @@ static bool itemdb_read_cached_packages(const char *config_filename)
 			//now we loop into must
 			for(c = 0; c < package->must_qty; c++) {
 				struct item_package_must_entry *entry = &itemdb->packages[i].must_items[c];
-				unsigned short mid = 0, qty = 0, hours = 0;
+				int mid = 0;
+				unsigned short qty = 0, hours = 0;
 				unsigned char announce = 0, named = 0, force_serial = 0;
 				struct item_data *data;
-				//first 2 byte = item id
+				//first 4 byte = item id
 				hread(&mid,sizeof(mid),1,file);
 				//next 2 byte = qty
 				hread(&qty,sizeof(qty),1,file);
@@ -1059,7 +1063,8 @@ static bool itemdb_read_cached_packages(const char *config_filename)
 				//now we loop into the group's list
 				for(h = 0; h < group_qty; h++) {
 					struct item_package_rand_entry *entry = &itemdb->packages[i].random_groups[c].random_list[h];
-					unsigned short mid = 0, qty = 0, hours = 0, rate = 0;
+					int mid = 0;
+					unsigned short qty = 0, hours = 0, rate = 0;
 					unsigned char announce = 0, named = 0, force_serial = 0;
 					struct item_data *data;
 
@@ -1235,7 +1240,7 @@ static void itemdb_read_packages(void)
 
 			itname = config_setting_name(it);
 
-			if( itname[0] == 'I' && itname[1] == 'D' && strlen(itname) < 8 ) {
+			if (itname[0] == 'I' && itname[1] == 'D' && strlen(itname) <= 12) {
 				if( !( data = itemdb->exists(atoi(itname+2)) ) )
 					ShowWarning("itemdb_read_packages: unknown item ID '%d' in package '%s'!\n",atoi(itname+2),config_setting_name(itg));
 			} else if( !( data = itemdb->name2id(itname) ) )
@@ -1486,7 +1491,7 @@ static void itemdb_read_chains(void)
 
 		while( (entry = libconfig->setting_get_elem(itc,c++)) ) {
 			const char *itname = config_setting_name(entry);
-			if( itname[0] == 'I' && itname[1] == 'D' && strlen(itname) < 8 ) {
+			if (itname[0] == 'I' && itname[1] == 'D' && strlen(itname) <= 12) {
 				if( !( data = itemdb->exists(atoi(itname+2)) ) )
 					ShowWarning("itemdb_read_chains: unknown item ID '%d' in chain '%s'!\n",atoi(itname+2),name);
 			} else if( !( data = itemdb->name2id(itname) ) )
@@ -1695,9 +1700,9 @@ static int itemdb_validate_entry(struct item_data *entry, int n, const char *sou
 
 	nullpo_ret(entry);
 	nullpo_ret(source);
-	if( entry->nameid <= 0 || entry->nameid >= MAX_ITEMDB ) {
-		ShowWarning("itemdb_validate_entry: Invalid item ID %d in entry %d of '%s', allowed values 0 < ID < %d (MAX_ITEMDB), skipping.\n",
-				entry->nameid, n, source, MAX_ITEMDB);
+	if (entry->nameid <= 0 || entry->nameid > MAX_ITEM_ID) {
+		ShowWarning("itemdb_validate_entry: Invalid item ID %d in entry %d of '%s', allowed values 0 < ID < %d (MAX_ITEM_ID), skipping.\n",
+				entry->nameid, n, source, MAX_ITEM_ID);
 		if (entry->script) {
 			script->free_code(entry->script);
 			entry->script = NULL;
@@ -1982,7 +1987,7 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 		ShowWarning("itemdb_readdb_libconfig_sub: Invalid or missing id in \"%s\", entry #%d, skipping.\n", source, n);
 		return 0;
 	}
-	id.nameid = (uint16)i32;
+	id.nameid = i32;
 
 	if( (t = libconfig->setting_get_member(it, "Inherit")) && (inherit = libconfig->setting_get_bool(t)) ) {
 		if( !itemdb->exists(id.nameid) ) {
@@ -2341,6 +2346,7 @@ static bool itemdb_lookup_const_mask(const struct config_setting_t *it, const ch
 static int itemdb_readdb_libconfig(const char *filename)
 {
 	bool duplicate[MAX_ITEMDB];
+	struct DBMap *duplicate_db;
 	struct config_t item_db_conf;
 	struct config_setting_t *itdb, *it;
 	char filepath[256];
@@ -2357,26 +2363,38 @@ static int itemdb_readdb_libconfig(const char *filename)
 		return 0;
 	}
 
+	// TODO add duplicates check for itemdb->other
 	memset(&duplicate,0,sizeof(duplicate));
+	duplicate_db = idb_alloc(DB_OPT_BASE);
 
 	while( (it = libconfig->setting_get_elem(itdb,i++)) ) {
 		int nameid = itemdb->readdb_libconfig_sub(it, i-1, filename);
 
-		if (nameid <= 0 || nameid >= MAX_ITEMDB)
+		if (nameid <= 0 || nameid > MAX_ITEM_ID)
 			continue;
 
 		itemdb->readdb_additional_fields(nameid, it, i - 1, filename);
 		count++;
 
-		if( duplicate[nameid] ) {
-			ShowWarning("itemdb_readdb:%s: duplicate entry of ID #%d (%s/%s)\n",
-					filename, nameid, itemdb_name(nameid), itemdb_jname(nameid));
-		} else
-			duplicate[nameid] = true;
+		if (nameid < MAX_ITEMDB) {
+			if (duplicate[nameid]) {
+				ShowWarning("itemdb_readdb:%s: duplicate entry of ID #%d (%s/%s)\n",
+						filename, nameid, itemdb_name(nameid), itemdb_jname(nameid));
+			} else {
+				duplicate[nameid] = true;
+			}
+		} else {
+			if (idb_exists(duplicate_db, nameid)) {
+				ShowWarning("itemdb_readdb:%s: duplicate entry of ID #%d (%s/%s)\n",
+						filename, nameid, itemdb_name(nameid), itemdb_jname(nameid));
+			} else {
+				idb_iput(duplicate_db, nameid, true);
+			}
+		}
 	}
+	db_destroy(duplicate_db);
 	libconfig->destroy(&item_db_conf);
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filename);
-
 	return count;
 }
 
@@ -2406,6 +2424,7 @@ static void itemdb_read(bool minimal)
 	for (i = 0; i < ARRAYLENGTH(filename); i++)
 		itemdb->readdb_libconfig(filename[i]);
 
+	// TODO check duplicate names also in itemdb->other
 	for( i = 0; i < ARRAYLENGTH(itemdb->array); ++i ) {
 		if( itemdb->array[i] ) {
 			if( itemdb->names->put(itemdb->names,DB->str2key(itemdb->array[i]->name),DB->ptr2data(itemdb->array[i]),&prev) ) {
@@ -2431,7 +2450,7 @@ static void itemdb_read(bool minimal)
 /**
  * retrieves item_combo data by combo id
  **/
-static struct item_combo *itemdb_id2combo(unsigned short id)
+static struct item_combo *itemdb_id2combo(int id)
 {
 	if( id > itemdb->combo_count )
 		return NULL;

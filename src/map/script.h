@@ -50,7 +50,7 @@ struct item_data;
 #define NUM_WHISPER_VAR 10
 
 /// Maximum amount of elements in script arrays
-#define SCRIPT_MAX_ARRAYSIZE (UINT_MAX - 1)
+#define SCRIPT_MAX_ARRAYSIZE (INT_MAX - 1)
 
 #define SCRIPT_BLOCK_SIZE 512
 
@@ -708,7 +708,7 @@ struct script_interface {
 	int string_list_size;
 	int string_list_pos;
 	/*  */
-	unsigned short current_item_id;
+	int current_item_id;
 	/* */
 	struct script_label_entry *labels;
 	int label_count;
@@ -872,7 +872,7 @@ struct script_interface {
 	void (*add_translatable_string) (const struct script_string_buf *string, const char *start_point);
 	const char *(*parse_expr) (const char *p);
 	const char *(*parse_line) (const char *p);
-	void (*read_constdb) (void);
+	void (*read_constdb) (bool reload);
 	void (*constdb_comment) (const char *comment);
 	void (*load_parameters) (void);
 	const char* (*print_line) (StringBuf *buf, const char *p, const char *mark, int line);

@@ -48,6 +48,7 @@ enum E_MAPSERVER_ST {
 #define MAX_NPC_PER_MAP 512
 #define AREA_SIZE (battle->bc->area_size)
 #define CHAT_AREA_SIZE (battle->bc->chat_area_size)
+#define DEAD_AREA_SIZE (battle->bc->dead_area_size)
 #define DAMAGELOG_SIZE 30
 #define LOOTITEM_SIZE 10
 #define MAX_MOBSKILL 50
@@ -64,6 +65,16 @@ enum E_MAPSERVER_ST {
 #define BLOCK_SIZE 8
 #define block_free_max 1048576
 #define BL_LIST_MAX 1048576
+
+// The following system marks a different job ID system used by the map server,
+// which makes a lot more sense than the normal one. [Skotlex]
+// These marks the "level" of the job.
+#define JOBL_2_1   0x0100
+#define JOBL_2_2   0x0200
+#define JOBL_2     0x0300 // JOBL_2_1 | JOBL_2_2
+#define JOBL_UPPER 0x1000
+#define JOBL_BABY  0x2000
+#define JOBL_THIRD 0x4000
 
 // For filtering and quick checking.
 #define MAPID_BASEMASK 0x00ff
@@ -536,6 +547,7 @@ struct flooritem_data {
 };
 
 enum status_point_types { //we better clean up this enum and change it name [Hemagx]
+	SP_NONE = -1,
 	SP_SPEED,SP_BASEEXP,SP_JOBEXP,SP_KARMA,SP_MANNER,SP_HP,SP_MAXHP,SP_SP, // 0-7
 	SP_MAXSP,SP_STATUSPOINT,SP_0a,SP_BASELEVEL,SP_SKILLPOINT,SP_STR,SP_AGI,SP_VIT, // 8-15
 	SP_INT,SP_DEX,SP_LUK,SP_CLASS,SP_ZENY,SP_SEX,SP_NEXTBASEEXP,SP_NEXTJOBEXP, // 16-23
@@ -714,7 +726,7 @@ enum map_zone_skill_subtype {
 };
 
 struct map_zone_disabled_skill_entry {
-	unsigned short nameid;
+	int nameid;
 	enum bl_type type;
 	enum map_zone_skill_subtype subtype;
 };
@@ -724,7 +736,7 @@ struct map_zone_disabled_command_entry {
 };
 
 struct map_zone_skill_damage_cap_entry {
-	unsigned short nameid;
+	int nameid;
 	unsigned int cap;
 	enum bl_type type;
 	enum map_zone_skill_subtype subtype;
@@ -772,14 +784,31 @@ struct map_drop_list {
 	int drop_per;
 };
 
+struct questinfo_qreq {
+	int id;
+	int state;
+};
 
 struct questinfo {
 	struct npc_data *nd;
 	unsigned short icon;
 	unsigned char color;
-	int quest_id;
 	bool hasJob;
 	unsigned short job;/* perhaps a mapid mask would be most flexible? */
+	bool sex_enabled;
+	int sex;
+	struct {
+		int min;
+		int max;
+	} base_level;
+	struct {
+		int min;
+		int max;
+	} job_level;
+	VECTOR_DECL(struct item) items;
+	struct s_homunculus homunculus;
+	int homunculus_type;
+	VECTOR_DECL(struct questinfo_qreq) quest_requirement;
 };
 
 
@@ -921,8 +950,7 @@ struct map_data {
 	} cell_buf;
 
 	/* ShowEvent Data Cache */
-	struct questinfo *qi_data;
-	unsigned short qi_count;
+	VECTOR_DECL(struct questinfo) qi_data;
 
 	/* speeds up clif_updatestatus processing by causing hpmeter to run only when someone with the permission can view it */
 	unsigned short hpmeter_visible;
@@ -1342,7 +1370,7 @@ END_ZEROED_BLOCK;
 	int (*sql_init) (void);
 	int (*sql_close) (void);
 	bool (*zone_mf_cache) (int m, char *flag, char *params);
-	unsigned short (*zone_str2itemid) (const char *name);
+	int (*zone_str2itemid) (const char *name);
 	unsigned short (*zone_str2skillid) (const char *name);
 	enum bl_type (*zone_bl_type) (const char *entry, enum map_zone_skill_subtype *subtype);
 	void (*read_zone_db) (void);

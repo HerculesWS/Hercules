@@ -55,6 +55,7 @@
 #include "map/skill.h"
 #include "map/status.h" // struct status_data
 #include "map/storage.h"
+#include "map/achievement.h"
 #include "common/cbasetypes.h"
 #include "common/conf.h"
 #include "common/core.h" // get_svn_revision()
@@ -565,7 +566,7 @@ static int pc_inventory_rental_clear(struct map_session_data *sd)
 /* assumes i is valid (from default areas where it is called, it is) */
 static void pc_rental_expire(struct map_session_data *sd, int i)
 {
-	short nameid;
+	int nameid;
 
 	nullpo_retv(sd);
 	Assert_retv(i >= 0 && i < MAX_INVENTORY);
@@ -1053,6 +1054,11 @@ static bool pc_adoption(struct map_session_data *p1_sd, struct map_session_data 
 		pc->skill(p1_sd, WE_CALLBABY, 1, SKILL_GRANT_PERMANENT);
 		pc->skill(p2_sd, WE_CALLBABY, 1, SKILL_GRANT_PERMANENT);
 
+		// Achievements [Smokexyz/Hercules]
+		achievement->validate_adopt(p1_sd, true); // Parent 1
+		achievement->validate_adopt(p2_sd, true); // Parent 2
+		achievement->validate_adopt(b_sd, false); // Baby
+
 		return true;
 	}
 
@@ -1325,6 +1331,7 @@ static bool pc_authok(struct map_session_data *sd, int login_id2, time_t expirat
 	sd->bg_queue.type = 0;
 
 	VECTOR_INIT(sd->script_queues);
+	VECTOR_INIT(sd->achievement); // Achievements [Smokexyz/Hercules]
 	VECTOR_INIT(sd->storage.item); // initialize storage item vector.
 	VECTOR_INIT(sd->hatEffectId);
 
@@ -1372,6 +1379,7 @@ static bool pc_authok(struct map_session_data *sd, int login_id2, time_t expirat
 		pc->setpos(sd,sd->status.last_point.map,0,0,CLR_OUTSIGHT);
 	}
 
+	clif->overweight_percent(sd);
 	clif->authok(sd);
 
 	//Prevent S. Novices from getting the no-death bonus just yet. [Skotlex]
@@ -1384,6 +1392,7 @@ static bool pc_authok(struct map_session_data *sd, int login_id2, time_t expirat
 	         " Group '"CL_WHITE"%d"CL_RESET"').\n",
 	         sd->status.name, sd->status.account_id, sd->status.char_id,
 	         CONVIP(ip), sd->group_id);
+
 	// Send friends list
 	clif->friendslist_send(sd);
 
@@ -1404,16 +1413,6 @@ static bool pc_authok(struct map_session_data *sd, int login_id2, time_t expirat
 		 **/
 		clif->changemap(sd,sd->bl.m,sd->bl.x,sd->bl.y);
 	}
-
-	/**
-	 * Check if player have any cool downs on
-	 **/
-	skill->cooldown_load(sd);
-
-	/**
-	 * Check if player have any item cooldowns on
-	 **/
-	pc->itemcd_do(sd,true);
 
 #ifdef GP_BOUND_ITEMS
 	if( sd->status.party_id == 0 )
@@ -1474,7 +1473,6 @@ static int pc_reg_received(struct map_session_data *sd)
 
 	nullpo_ret(sd);
 	sd->vars_ok = true;
-
 	sd->change_level_2nd = pc_readglobalreg(sd,script->add_str("jobchange_level"));
 	sd->change_level_3rd = pc_readglobalreg(sd,script->add_str("jobchange_level_3rd"));
 	sd->die_counter = pc_readglobalreg(sd,script->add_str("PC_DIE_COUNTER"));
@@ -1554,6 +1552,10 @@ static int pc_reg_received(struct map_session_data *sd)
 	if (!chrif->auth_finished(sd))
 		ShowError("pc_reg_received: Failed to properly remove player %d:%d from logging db!\n", sd->status.account_id, sd->status.char_id);
 
+	// Restore any cooldowns
+	skill->cooldown_load(sd);
+	pc->itemcd_do(sd, true);
+
 	pc->load_combo(sd);
 
 	status_calc_pc(sd,SCO_FIRST|SCO_FORCE);
@@ -1592,6 +1594,9 @@ static int pc_reg_received(struct map_session_data *sd)
 
 	if( npc->motd ) /* [Ind/Hercules] */
 		script->run(npc->motd->u.scr.script, 0, sd->bl.id, npc->fake_nd->bl.id);
+
+	// Achievements [Smokexyz/Hercules]
+	intif->achievements_request(sd);
 
 	return 1;
 }
@@ -2082,7 +2087,7 @@ static int pc_disguise(struct map_session_data *sd, int class)
 	return 1;
 }
 
-static int pc_bonus_autospell(struct s_autospell *spell, int max, short id, short lv, short rate, short flag, short card_id)
+static int pc_bonus_autospell(struct s_autospell *spell, int max, short id, short lv, short rate, short flag, int card_id)
 {
 	int i;
 
@@ -2120,7 +2125,7 @@ static int pc_bonus_autospell(struct s_autospell *spell, int max, short id, shor
 	return 1;
 }
 
-static int pc_bonus_autospell_onskill(struct s_autospell *spell, int max, short src_skill, short id, short lv, short rate, short card_id)
+static int pc_bonus_autospell_onskill(struct s_autospell *spell, int max, short src_skill, short id, short lv, short rate, int card_id)
 {
 	int i;
 
@@ -4500,6 +4505,8 @@ static int pc_payzeny(struct map_session_data *sd, int zeny, enum e_log_pick_typ
 	sd->status.zeny -= zeny;
 	clif->updatestatus(sd,SP_ZENY);
 
+	achievement->validate_zeny(sd, -zeny); // Achievements [Smokexyz/Hercules]
+
 	if(!tsd) tsd = sd;
 	logs->zeny(sd, type, tsd, -zeny);
 	if( zeny > 0 && sd->state.showzeny ) {
@@ -4636,6 +4643,8 @@ static int pc_getzeny(struct map_session_data *sd, int zeny, enum e_log_pick_typ
 	sd->status.zeny += zeny;
 	clif->updatestatus(sd,SP_ZENY);
 
+	achievement->validate_zeny(sd, zeny); // Achievements [Smokexyz/Hercules]
+
 	if(!tsd) tsd = sd;
 	logs->zeny(sd, type, tsd, zeny);
 	if( zeny > 0 && sd->state.showzeny ) {
@@ -4760,12 +4769,15 @@ static int pc_additem(struct map_session_data *sd, struct item *item_data, int a
 		sd->status.inventory[i].amount = amount;
 		sd->inventory_data[i] = data;
 		clif->additem(sd,i,amount,0);
+
 	}
 
 	if( ( !itemdb->isstackable2(data) || data->flag.force_serial || data->type == IT_CASH) && !item_data->unique_id )
 			sd->status.inventory[i].unique_id = itemdb->unique_id(sd);
 
 	logs->pick_pc(sd, log_type, amount, &sd->status.inventory[i],sd->inventory_data[i]);
+
+	achievement->validate_item_get(sd, sd->status.inventory[i].nameid, sd->status.inventory[i].amount); // Achievements [Smokexyz/Hercules]
 
 	sd->weight += w;
 	clif->updatestatus(sd,SP_WEIGHT);
@@ -4783,6 +4795,7 @@ static int pc_additem(struct map_session_data *sd, struct item *item_data, int a
 			pc->inventory_rental_add(sd, seconds);
 		}
 	}
+	quest->questinfo_refresh(sd);
 
 	return 0;
 }
@@ -4820,6 +4833,7 @@ static int pc_delitem(struct map_session_data *sd, int n, int amount, int type, 
 		clif->delitem(sd,n,amount,reason);
 	if(!(type&2))
 		clif->updatestatus(sd,SP_WEIGHT);
+	quest->questinfo_refresh(sd);
 
 	return 0;
 }
@@ -6877,10 +6891,15 @@ static int pc_checkbaselevelup(struct map_session_data *sd)
 	clif->misceffect(&sd->bl,0);
 	npc->script_event(sd, NPCE_BASELVUP); //LORDALFA - LVLUPEVENT
 
-	if(sd->status.party_id)
+	if (sd->status.party_id)
 		party->send_levelup(sd);
 
 	pc->baselevelchanged(sd);
+
+	quest->questinfo_refresh(sd);
+
+	achievement->validate_stats(sd, SP_BASELEVEL, sd->status.base_level);
+
 	return 1;
 }
 
@@ -6943,6 +6962,11 @@ static int pc_checkjoblevelup(struct map_session_data *sd)
 		clif->status_change(&sd->bl,SI_DEVIL1, 1, 0, 0, 0, 1); //Permanent blind effect from SG_DEVIL.
 
 	npc->script_event(sd, NPCE_JOBLVUP);
+
+	quest->questinfo_refresh(sd);
+
+	achievement->validate_stats(sd, SP_BASELEVEL, sd->status.job_level);
+
 	return 1;
 }
 
@@ -7238,6 +7262,8 @@ static int pc_setstat(struct map_session_data *sd, int type, int val)
 		default:
 			return -1;
 	}
+
+ 	achievement->validate_stats(sd, type, val); // Achievements [Smokexyz/Hercules]
 
 	return val;
 }
@@ -7970,6 +7996,14 @@ static void pc_damage(struct map_session_data *sd, struct block_list *src, unsig
 
 	if (battle_config.prevent_logout_trigger & PLT_DAMAGE)
 		sd->canlog_tick = timer->gettick();
+
+	// Achievements [Smokexyz/Hercules]
+	if (src != NULL) {
+		if (src->type == BL_PC)
+			achievement->validate_pc_damage(BL_UCAST(BL_PC, src), sd, hp);
+		else if (src->type == BL_MOB)
+			achievement->validate_mob_damage(sd, hp, true);
+	}
 }
 
 /*==========================================
@@ -8065,6 +8099,9 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 	}
 
 	pc_setdead(sd);
+
+	clif->party_dead_notification(sd);
+
 	//Reset menu skills/item skills
 	if (sd->skillitem)
 		sd->skillitem = sd->skillitemlv = 0;
@@ -8119,6 +8156,8 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 		struct map_session_data *ssd = BL_UCAST(BL_PC, src);
 		pc->setparam(ssd, SP_KILLEDRID, sd->bl.id);
 		npc->script_event(ssd, NPCE_KILLPC);
+
+		achievement->validate_pc_kill(ssd, sd); // Achievements [Smokexyz/Hercules]
 
 		if (battle_config.pk_mode&2) {
 			ssd->status.manner -= 5;
@@ -9036,6 +9075,9 @@ static int pc_jobchange(struct map_session_data *sd, int class, int upper)
 			break;
 		}
 	}
+	quest->questinfo_refresh(sd);
+
+	achievement->validate_jobchange(sd); // Achievements [Smokexyz/Hercules]
 
 	return 0;
 }
@@ -10677,6 +10719,11 @@ static int pc_marriage(struct map_session_data *sd, struct map_session_data *dst
 		return -1;
 	sd->status.partner_id = dstsd->status.char_id;
 	dstsd->status.partner_id = sd->status.char_id;
+
+	// Achievements [Smokexyz/Hercules]
+	achievement->validate_marry(sd);
+	achievement->validate_marry(dstsd);
+
 	return 0;
 }
 
@@ -10951,7 +10998,12 @@ static void pc_setstand(struct map_session_data *sd)
 	clif->sc_end(&sd->bl,sd->bl.id,SELF,SI_SIT);
 	//Reset sitting tick.
 	sd->ssregen.tick.hp = sd->ssregen.tick.sp = 0;
-	sd->state.dead_sit = sd->vd.dead_sit = 0;
+	if (pc_isdead(sd)) {
+		sd->state.dead_sit = sd->vd.dead_sit = 0;
+		clif->party_dead_notification(sd);
+	} else {
+		sd->state.dead_sit = sd->vd.dead_sit = 0;
+	}
 }
 
 /**
@@ -12272,6 +12324,15 @@ static void pc_init_exp_groups(void)
 	}
 }
 
+static bool pc_has_second_costume(struct map_session_data *sd)
+{
+	nullpo_retr(false, sd);
+
+	if ((sd->job & JOBL_THIRD) != 0)
+		return true;
+	return false;
+}
+
 static void do_final_pc(void)
 {
 
@@ -12673,4 +12734,5 @@ void pc_defaults(void)
 	pc->check_basicskill = pc_check_basicskill;
 
 	pc->isDeathPenaltyJob = pc_isDeathPenaltyJob;
+	pc->has_second_costume = pc_has_second_costume;
 }

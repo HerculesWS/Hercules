@@ -60,8 +60,8 @@ enum e_searchstore_failure {
 /// information about the search being performed
 struct s_search_store_search {
 	struct map_session_data* search_sd;  // sd of the searching player
-	const unsigned short* itemlist;
-	const unsigned short* cardlist;
+	const uint32* itemlist;
+	const uint32* cardlist;
 	unsigned int item_count;
 	unsigned int card_count;
 	unsigned int min_price;
@@ -72,10 +72,10 @@ struct s_search_store_info_item {
 	unsigned int store_id;
 	int account_id;
 	char store_name[MESSAGE_SIZE];
-	unsigned short nameid;
+	int nameid;
 	unsigned short amount;
 	unsigned int price;
-	short card[MAX_SLOTS];
+	int card[MAX_SLOTS];
 	unsigned char refine;
 	struct item_option option[MAX_ITEM_OPTIONS];
 };
@@ -93,7 +93,7 @@ struct s_search_store_info {
 };
 
 /// type for shop search function
-typedef bool (*searchstore_search_t)(struct map_session_data* sd, unsigned short nameid);
+typedef bool (*searchstore_search_t)(struct map_session_data* sd, int nameid);
 typedef bool (*searchstore_searchall_t)(struct map_session_data* sd, const struct s_search_store_search* s);
 
 /**
@@ -101,15 +101,15 @@ typedef bool (*searchstore_searchall_t)(struct map_session_data* sd, const struc
  **/
 struct searchstore_interface {
 	bool (*open) (struct map_session_data* sd, unsigned int uses, unsigned short effect);
-	void (*query) (struct map_session_data* sd, unsigned char type, unsigned int min_price, unsigned int max_price, const unsigned short* itemlist, unsigned int item_count, const unsigned short* cardlist, unsigned int card_count);
+	void (*query) (struct map_session_data* sd, unsigned char type, unsigned int min_price, unsigned int max_price, const uint32* itemlist, unsigned int item_count, const uint32* cardlist, unsigned int card_count);
 	bool (*querynext) (struct map_session_data* sd);
 	void (*next) (struct map_session_data* sd);
 	void (*clear) (struct map_session_data* sd);
 	void (*close) (struct map_session_data* sd);
-	void (*click) (struct map_session_data* sd, int account_id, int store_id, unsigned short nameid);
+	void (*click) (struct map_session_data* sd, int account_id, int store_id, int nameid);
 	bool (*queryremote) (struct map_session_data* sd, int account_id);
 	void (*clearremote) (struct map_session_data* sd);
-	bool (*result) (struct map_session_data* sd, unsigned int store_id, int account_id, const char* store_name, unsigned short nameid, unsigned short amount, unsigned int price, const short* card, unsigned char refine, const struct item_option *option);
+	bool (*result) (struct map_session_data* sd, unsigned int store_id, int account_id, const char* store_name, int nameid, unsigned short amount, unsigned int price, const int* card, unsigned char refine, const struct item_option *option);
 };
 
 #ifdef HERCULES_CORE

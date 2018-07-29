@@ -23,6 +23,7 @@
 #include "config/core.h" // DBPATH
 #include "pet.h"
 
+#include "map/achievement.h"
 #include "map/atcommand.h" // msg_txt()
 #include "map/battle.h"
 #include "map/chrif.h"
@@ -112,7 +113,7 @@ static int pet_create_egg(struct map_session_data *sd, int item_id)
 	intif->create_pet(sd->status.account_id, sd->status.char_id,
 		(short)pet->db[pet_id].class_,
 		(short)mob->db(pet->db[pet_id].class_)->lv,
-		(short)pet->db[pet_id].EggID, 0,
+		pet->db[pet_id].EggID, 0,
 		(short)pet->db[pet_id].intimate,
 		100, 0, 1, pet->db[pet_id].jname);
 	return 1;
@@ -345,10 +346,13 @@ static int pet_return_egg(struct map_session_data *sd, struct pet_data *pd)
 			pd->pet.pet_id == MakeDWord(sd->status.inventory[i].card[1], sd->status.inventory[i].card[2]));
 
 	if (i != MAX_INVENTORY) {
-		sd->status.inventory[i].identify = 1;
+		sd->status.inventory[i].attribute &= ~ATTR_BROKEN;
 		sd->status.inventory[i].bound = IBT_NONE;
 	}
-
+#if PACKETVER >= 20180704
+	clif->inventorylist(sd);
+	clif->send_petdata(sd, pd, 6, 0);
+#endif
 	pd->pet.incubate = 1;
 	unit->free(&pd->bl,CLR_OUTSIGHT);
 
@@ -462,6 +466,9 @@ static int pet_birth_process(struct map_session_data *sd, struct s_pet *petinfo)
 		clif->spawn(&sd->pd->bl);
 		clif->send_petdata(sd,sd->pd, 0,0);
 		clif->send_petdata(sd,sd->pd, 5,battle_config.pet_hair_style);
+#if PACKETVER >= 20180704
+		clif->send_petdata(sd, sd->pd, 6, 1);
+#endif
 		clif->send_petdata(NULL, sd->pd, 3, sd->pd->vd.head_bottom);
 		clif->send_petstatus(sd);
 	}
@@ -496,8 +503,8 @@ static int pet_recv_petdata(int account_id, struct s_pet *p, int flag)
 
 
 		if (!pet->birth_process(sd,p)) {
-			// Pet Evolution, Hide the egg by setting identify to 0 [Dastgir/Hercules]
-			sd->status.inventory[i].identify = 0;
+			// Pet Evolution, Hide the egg by setting broken attribute (0x2)  [Asheraf]
+			sd->status.inventory[i].attribute |= ATTR_BROKEN;
 			// bind the egg to the character to avoid moving it via forged packets [Asheraf]
 			sd->status.inventory[i].bound = IBT_CHARACTER;
 		}
@@ -516,7 +523,7 @@ static int pet_recv_petdata(int account_id, struct s_pet *p, int flag)
 	return 0;
 }
 
-static int pet_select_egg(struct map_session_data *sd, short egg_index)
+static int pet_select_egg(struct map_session_data *sd, int egg_index)
 {
 	nullpo_ret(sd);
 
@@ -555,7 +562,8 @@ static int pet_catch_process2(struct map_session_data *sd, int target_id)
 		// Invalid inputs/state, abort capture.
 		clif->pet_roulette(sd,0);
 		sd->catch_target_class = -1;
-		sd->itemid = sd->itemindex = -1;
+		sd->itemid = -1;
+		sd->itemindex = -1;
 		return 1;
 	}
 
@@ -575,8 +583,8 @@ static int pet_catch_process2(struct map_session_data *sd, int target_id)
 	pet_catch_rate = (pet->db[i].capture + (sd->status.base_level - md->level)*30 + sd->battle_status.luk*20)*(200 - get_percentage(md->status.hp, md->status.max_hp))/100;
 
 	if(pet_catch_rate < 1) pet_catch_rate = 1;
-	if(battle_config.pet_catch_rate != 100)
-		pet_catch_rate = (pet_catch_rate*battle_config.pet_catch_rate)/100;
+	if(battle->bc->pet_catch_rate != 100)
+		pet_catch_rate = (pet_catch_rate*battle->bc->pet_catch_rate)/100;
 
 	if(rnd()%10000 < pet_catch_rate)
 	{
@@ -585,6 +593,8 @@ static int pet_catch_process2(struct map_session_data *sd, int target_id)
 		clif->pet_roulette(sd,1);
 		intif->create_pet(sd->status.account_id,sd->status.char_id,pet->db[i].class_,mob->db(pet->db[i].class_)->lv,
 			pet->db[i].EggID,0,pet->db[i].intimate,100,0,1,pet->db[i].jname);
+
+		achievement->validate_taming(sd, pet->db[i].class_);
 	}
 	else
 	{
@@ -1334,7 +1344,7 @@ static int pet_read_db_sub(struct config_setting_t *it, int n, const char *sourc
 		if (!(data = itemdb->name2id(str))) {
 			ShowWarning("pet_read_db_sub: Invalid item '%s' in pet %d of \"%s\", defaulting to 0.\n", str, pet->db[n].class_, source);
 		} else {
-			pet->db[n].itemID = (uint16)data->nameid;
+			pet->db[n].itemID = data->nameid;
 		}
 	}
 
@@ -1342,7 +1352,7 @@ static int pet_read_db_sub(struct config_setting_t *it, int n, const char *sourc
 		if (!(data = itemdb->name2id(str))) {
 			ShowWarning("pet_read_db_sub: Invalid item '%s' in pet %d of \"%s\", defaulting to 0.\n", str, pet->db[n].class_, source);
 		} else {
-			pet->db[n].EggID = (uint16)data->nameid;
+			pet->db[n].EggID = data->nameid;
 		}
 	}
 
@@ -1350,7 +1360,7 @@ static int pet_read_db_sub(struct config_setting_t *it, int n, const char *sourc
 		if (!(data = itemdb->name2id(str))) {
 			ShowWarning("pet_read_db_sub: Invalid item '%s' in pet %d of \"%s\", defaulting to 0.\n", str, pet->db[n].class_, source);
 		} else {
-			pet->db[n].AcceID = (uint16)data->nameid;
+			pet->db[n].AcceID = data->nameid;
 		}
 	}
 
@@ -1358,7 +1368,7 @@ static int pet_read_db_sub(struct config_setting_t *it, int n, const char *sourc
 		if (!(data = itemdb->name2id(str))) {
 			ShowWarning("pet_read_db_sub: Invalid item '%s' in pet %d of \"%s\", defaulting to 0.\n", str, pet->db[n].class_, source);
 		} else {
-			pet->db[n].FoodID = (uint16)data->nameid;
+			pet->db[n].FoodID = data->nameid;
 		}
 	}
 

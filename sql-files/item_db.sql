@@ -29,7 +29,7 @@
 
 DROP TABLE IF EXISTS `item_db`;
 CREATE TABLE `item_db` (
-  `id` smallint(5) UNSIGNED NOT NULL DEFAULT '0',
+  `id` int(11) UNSIGNED NOT NULL DEFAULT '0',
   `name_english` varchar(50) NOT NULL DEFAULT '',
   `name_japanese` varchar(50) NOT NULL DEFAULT '',
   `type` tinyint(2) UNSIGNED NOT NULL DEFAULT '0',
@@ -1971,7 +1971,7 @@ REPLACE INTO `item_db` VALUES ('4322','High_Orc_Card','High Orc Card','6','0','2
 REPLACE INTO `item_db` VALUES ('4323','Garm_Baby_Card','Hatii Babe Card','6','0','20','10','10','0','0','0','0','0','18446744073709551615','63','2','2','0','0',NULL,'0','1','0','0','0','0','0','0',NULL,'0',NULL,'0',NULL,'0','bonus3 bAutoSpell,MG_FROSTDIVER,3,50;','','');
 REPLACE INTO `item_db` VALUES ('4324','Garm_Card','Hatii Card','6','0','20','10','10','0','0','0','0','0','18446744073709551615','63','2','16','0','0',NULL,'0','1','0','0','0','0','0','0',NULL,'0',NULL,'0',NULL,'0','bonus2 bAddEffWhenHit,Eff_Freeze,5000;','','');
 REPLACE INTO `item_db` VALUES ('4325','Harpy_Card','Harpy Card','6','0','20','10','10','0','0','0','0','0','18446744073709551615','63','2','4','0','0',NULL,'0','1','0','0','0','0','0','0',NULL,'0',NULL,'0',NULL,'0','bonus2 bSubEle,Ele_Neutral,15; bonus2 bSkillAtk,MG_NAPALMBEAT,5;','','');
-REPLACE INTO `item_db` VALUES ('4326','See_Otter_Card','Sea-Otter Card','6','0','20','10','10','0','0','0','0','0','18446744073709551615','63','2','136','0','0',NULL,'0','1','0','0','0','0','0','0',NULL,'0',NULL,'0',NULL,'0','bonus2 bAddItemHealRate,Sushi,50; bonus2 bAddItemHealRate,Fish_Slice,50; bonus3 bAddMonsterDropItem,551,RC_Fish,300; bonus3 bAddMonsterDropItem,544,RC_Fish,300;','','');
+REPLACE INTO `item_db` VALUES ('4326','See_Otter_Card','Sea-Otter Card','6','0','20','10','10','0','0','0','0','0','18446744073709551615','63','2','136','0','0',NULL,'0','1','0','0','0','0','0','0',NULL,'0',NULL,'0',NULL,'0','bonus2(bAddItemHealRate, Shusi, 50); bonus2(bAddItemHealRate, Fish_Slice, 50); bonus3(bAddMonsterDropItem, Shusi, RC_Fish, 300); bonus3(bAddMonsterDropItem, Fish_Slice, RC_Fish, 300);','','');
 REPLACE INTO `item_db` VALUES ('4327','Blood_Butterfly_Card','Bloody Butterfly Card','6','0','20','10','10','0','0','0','0','0','18446744073709551615','63','2','136','0','0',NULL,'0','1','0','0','0','0','0','0',NULL,'0',NULL,'0',NULL,'0','bonus bCastrate,30; bonus bNoCastCancel,0; bonus2 bSkillAtk,MG_FIREWALL,5;','','');
 REPLACE INTO `item_db` VALUES ('4328','Hyegun_Card','Yao Jun Card','6','0','20','10','10','0','0','0','0','0','18446744073709551615','63','2','4','0','0',NULL,'0','1','0','0','0','0','0','0',NULL,'0',NULL,'0',NULL,'0','bonus bFlee,15; bonus bCritical,1;','','');
 REPLACE INTO `item_db` VALUES ('4329','Phendark_Card','Phendark Card','6','0','20','10','10','0','0','0','0','0','18446744073709551615','63','2','2','0','0',NULL,'0','1','0','0','0','0','0','0',NULL,'0',NULL,'0',NULL,'0','bonus2 bSPGainRace,RC_DemiPlayer,5;','','heal 0,-5;');
@@ -6198,6 +6198,8 @@ REPLACE INTO `item_db` VALUES ('16257','Buddah_Scroll','Buddah Scroll','2','0','
 REPLACE INTO `item_db` VALUES ('16304','Evil_Incarnation_Disable','Evil Incarnation','2','0','20','10','10','0','0','0','0','0','18446744073709551615','63','2','0','0','0',NULL,'0','1','0','0','0','0','0','475',NULL,'0',NULL,'0',NULL,'0','packageitem();','','');
 REPLACE INTO `item_db` VALUES ('16371','Tw_Aug_Scroll','Tw Aug Scroll','2','0','20','10','10','0','0','0','0','0','18446744073709551615','63','2','0','0','0',NULL,'0','1','0','0','0','0','0','73',NULL,'0',NULL,'0',NULL,'0','packageitem();','','');
 REPLACE INTO `item_db` VALUES ('16461','Red_Wing_Hat_Box','Red Wing Hat Box','18','0','20','10','10','0','0','0','0','0','18446744073709551615','63','2','0','0','0',NULL,'0','1','0','0','0','0','0','73',NULL,'0',NULL,'0',NULL,'0','getitem 5690,1;','','');
+REPLACE INTO `item_db` VALUES ('16483','Abrasive_Box_10','Abrasive Box (10)','2','0','20','10','10','0','0','0','0','0','18446744073709551615','63','2','0','0','0',NULL,'0','1','0','0','0','0','0','0',NULL,'0',NULL,'0',NULL,'0','getitem(E_Abrasive, 10);','','');
+REPLACE INTO `item_db` VALUES ('16504','Bubble_Gum_Box_10','Bubble Gum Box(10)','18','0','10','5','10','0','0','0','0','0','18446744073709551615','63','2','0','0','0',NULL,'0','1','0','0','0','0','0','0',NULL,'0',NULL,'0',NULL,'0','getitem(Bubble_Gum, 10);','','');
 REPLACE INTO `item_db` VALUES ('16555','Pr_Reset_Stone_Box','Pr Reset Stone Box','2','0','20','10','10','0','0','0','0','0','18446744073709551615','63','2','0','0','0',NULL,'0','1','0','0','0','0','0','73',NULL,'0',NULL,'0',NULL,'0','packageitem();','','');
 REPLACE INTO `item_db` VALUES ('16776','Universal_Catalog_Gold_Box10_','Universal Catalog Gold 10 Box','2','0','0','0','10','0','0','0','0','0','18446744073709551615','63','2','0','0','0',NULL,'0','1','0','0','0','0','0','0',NULL,'0',NULL,'0',NULL,'0','getitem 12581,10;','','');
 REPLACE INTO `item_db` VALUES ('16777','Universal_Catalog_Gold_Box50','Universal Catalog Gold 50 Box','2','0','0','0','10','0','0','0','0','0','18446744073709551615','63','2','0','0','0',NULL,'0','1','0','0','0','0','0','0',NULL,'0',NULL,'0',NULL,'0','getitem 12581,50;','','');
@@ -6237,4 +6239,6 @@ REPLACE INTO `item_db` VALUES ('19506','T_Valkyrie_Feather_Band','T Valkyrie Fea
 REPLACE INTO `item_db` VALUES ('19507','Fine_Sun','Clear Sun','5','0','0','0','0','0','0','0','0','0','18446744073709551615','63','2','1024','0','1',NULL,'0','0','654','0','0','0','0','0',NULL,'0',NULL,'0',NULL,'0','','','');
 REPLACE INTO `item_db` VALUES ('22540','Runstone_Lux','Lux Anima Rune','11','0','2','1','100','0','0','0','0','0','128','8','2','0','0','0',NULL,'0','1','0','0','0','0','60000','475',NULL,'0',NULL,'20','1','0','itemskill RK_LUXANIMA,1;','','');
 REPLACE INTO `item_db` VALUES ('22777','Buff_Gift_Set','Buff Gift Set','2','0','20','10','100','0','0','0','0','0','18446744073709551615','63','2','0','0','0',NULL,'0','1','0','0','0','0','0','499',NULL,'0',NULL,'0',NULL,'0','getitem 14534,5; getitem 12215,5; getitem 12216,5;','','');
+REPLACE INTO `item_db` VALUES ('22808','Special_Gift_Box','Special Gift Box','2','0','10','5','100','0','0','0','0','0','18446744073709551615','63','2','0','0','0',NULL,'0','1','0','0','0','0','0','0',NULL,'0',NULL,'0',NULL,'0','','','');
 REPLACE INTO `item_db` VALUES ('22837','Integer_Time','Integer Time','2','0','0','0','0','0','0','0','0','0','18446744073709551615','63','2','0','0','50',NULL,'0','1','0','0','0','0','0','507',NULL,'0',NULL,'0',NULL,'0','TmpRouletteBronze += 1;','','');
+REPLACE INTO `item_db` VALUES ('22876','Old_Money_Pocket','Old Money Pocket','2','0','0','0','0','0','0','0','0','0','18446744073709551615','63','2','0','0','0',NULL,'0','1','0','0','0','0','0','0',NULL,'0',NULL,'0',NULL,'0','Zeny += rand(500, 550);','','');

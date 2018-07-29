@@ -36,6 +36,7 @@
 #include "char/int_quest.h"
 #include "char/int_rodex.h"
 #include "char/int_storage.h"
+#include "char/int_achievement.h"
 #include "char/mapif.h"
 #include "common/cbasetypes.h"
 #include "common/conf.h"
@@ -70,14 +71,14 @@ int party_share_level = 10;
 // recv. packet list
 static int inter_recv_packet_length[] = {
 	-1,-1, 7,-1, -1,13,36, (2 + 4 + 4 + 4 + NAME_LENGTH),  0, 0, 0, 0,  0, 0,  0, 0, // 3000-
-	 6,-1, 0, 0,  0, 0, 0, 0, 10,-1, 0, 0,  0, 0,  0, 0,    // 3010- Account Storage [Smokexyz]
+	 6,-1, 6,-1,  0, 0, 0, 0, 10,-1, 0, 0,  0, 0,  0, 0,    // 3010- Account Storage, Achievements [Smokexyz]
 	-1,10,-1,14, 14,19, 6,-1, 14,14, 0, 0,  0, 0,  0, 0,    // 3020- Party
 	-1, 6,-1,-1, 55,19, 6,-1, 14,-1,-1,-1, 18,19,186,-1,    // 3030-
 	-1, 9, 0, 0, 10,10, 0, 0,  7, 6,10,10, 10,-1,  0, 0,    // 3040- Clan System(3044-3045)
 	-1,-1,10,10,  0,-1,12, 0,  0, 0, 0, 0,  0, 0,  0, 0,    // 3050-  Auction System [Zephyrus], Item Bound [Mhalicot]
 	 6,-1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0,    // 3060-  Quest system [Kevin] [Inkfish]
 	-1,10, 6,-1,  0, 0, 0, 0,  0, 0, 0, 0, -1,10,  6,-1,    // 3070-  Mercenary packets [Zephyrus], Elemental packets [pakpil]
-	48,14,-1, 6,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0,    // 3080-
+	52,14,-1, 6,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0,    // 3080-
 	-1,10,-1, 6,  0, 20,10,11, -1,6 + NAME_LENGTH, 0, 0,  0, 0,  0, 0,    // 3090-  Homunculus packets [albator], RoDEX packets
 };
 
@@ -974,6 +975,7 @@ static int inter_init_sql(const char *file)
 	inter_mail->sql_init();
 	inter_auction->sql_init();
 	inter_rodex->sql_init();
+	inter_achievement->sql_init();
 
 	geoip->init();
 	inter->msg_config_read("conf/messages.conf", false);
@@ -995,6 +997,7 @@ static void inter_final(void)
 	inter_mail->sql_final();
 	inter_auction->sql_final();
 	inter_rodex->sql_final();
+	inter_achievement->sql_final();
 
 	geoip->final(true);
 	inter->do_final_msg();
@@ -1133,6 +1136,7 @@ static int inter_parse_frommap(int fd)
 		  || inter_quest->parse_frommap(fd)
 		  || inter_rodex->parse_frommap(fd)
 		  || inter_clan->parse_frommap(fd)
+		  || inter_achievement->parse_frommap(fd)
 		   )
 			break;
 		else

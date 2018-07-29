@@ -336,6 +336,8 @@ static bool chrif_save(struct map_session_data *sd, int flag)
 		elemental->save(sd->ed);
 	if( sd->save_quest )
 		intif->quest_save(sd);
+	if (VECTOR_LENGTH(sd->achievement) > 0)
+		intif->achievements_save(sd);
 
 	if (sd->storage.received == true && sd->storage.save == true)
 		intif->send_account_storage(sd);
@@ -457,7 +459,7 @@ static bool chrif_changemapserverack(int account_id, int login_id1, int login_id
 		ShowError("chrif_changemapserverack: map server change failed.\n");
 		clif->authfail_fd(node->fd, 0); // Disconnected from server
 	} else
-		clif->changemapserver(node->sd, map_index, x, y, ntohl(ip), ntohs(port));
+		clif->changemapserver(node->sd, map_index, x, y, ntohl(ip), ntohs(port), NULL);
 
 	//Player has been saved already, remove him from memory. [Skotlex]
 	chrif->auth_delete(account_id, char_id, ST_MAPCHANGE);
@@ -1419,7 +1421,7 @@ static void chrif_skillid2idx(int fd)
 	WFIFOW(fd,0) = 0x2b0b;
 	for (i = 0; i < MAX_SKILL_DB; i++) {
 		if (skill->dbs->db[i].nameid != 0) {
-			WFIFOW(fd, 4 + (count*4)) = skill->dbs->db[i].nameid;
+			WFIFOW(fd, 4 + (count*4)) = skill->dbs->db[i].nameid; // really skill id
 			WFIFOW(fd, 6 + (count*4)) = i;
 			count++;
 		}

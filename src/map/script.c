@@ -57,6 +57,7 @@
 #include "map/status.h"
 #include "map/storage.h"
 #include "map/unit.h"
+#include "map/achievement.h"
 #include "common/cbasetypes.h"
 #include "common/conf.h"
 #include "common/db.h"
@@ -2258,7 +2259,7 @@ static void script_set_constant(const char *name, int value, bool is_parameter, 
 {
 	int n = script->add_str(name);
 
-	if( script->str_data[n].type == C_NOP ) {// new
+	if (script->str_data[n].type == C_NOP) {
 		script->str_data[n].type = is_parameter ? C_PARAM : C_INT;
 		script->str_data[n].val  = value;
 		script->str_data[n].deprecated = is_deprecated ? 1 : 0;
@@ -2302,7 +2303,7 @@ static void script_set_constant2(const char *name, int value, bool is_parameter,
 /**
  * Loads the constants database from constants.conf
  */
-static void read_constdb(void)
+static void read_constdb(bool reload)
 {
 	struct config_t constants_conf;
 	char filepath[256];
@@ -2321,7 +2322,6 @@ static void read_constdb(void)
 	}
 
 	while ((t = libconfig->setting_get_elem(cdb, i++))) {
-		bool is_parameter = false;
 		bool is_deprecated = false;
 		int value = 0;
 		const char *name = config_setting_name(t);
@@ -2352,10 +2352,6 @@ static void read_constdb(void)
 				continue;
 			}
 			value = i32;
-			if (libconfig->setting_lookup_bool(t, "Parameter", &i32)) {
-				if (i32 != 0)
-					is_parameter = true;
-			}
 			if (libconfig->setting_lookup_bool(t, "Deprecated", &i32)) {
 				if (i32 != 0)
 					is_deprecated = true;
@@ -2363,9 +2359,13 @@ static void read_constdb(void)
 		} else {
 			value = libconfig->setting_get_int(t);
 		}
-		if (is_parameter)
-			ShowWarning("read_constdb: Defining parameters in the constants configuration is deprecated and will no longer be possible in a future version. Parameters should be defined in source. (parameter = '%s')\n", name);
-		script->set_constant(name, value, is_parameter, is_deprecated);
+
+		if (reload) {
+			int n = script->add_str(name);
+			script->str_data[n].type = C_NOP; // ensures it will be overwritten
+		}
+
+		script->set_constant(name, value, false, is_deprecated);
 	}
 	script->constdb_comment(NULL);
 	libconfig->destroy(&constants_conf);
@@ -4930,7 +4930,7 @@ static void script_setarray_pc(struct map_session_data *sd, const char *varname,
 {
 	int key;
 
-	if( idx >= SCRIPT_MAX_ARRAYSIZE ) {
+	if (idx > SCRIPT_MAX_ARRAYSIZE) {
 		ShowError("script_setarray_pc: Variable '%s' has invalid index '%u' (char_id=%d).\n", varname, idx, sd->status.char_id);
 		return;
 	}
@@ -5593,7 +5593,7 @@ static void do_init_script(bool minimal)
 	VECTOR_INIT(script->hqi);
 
 	script->parse_builtin();
-	script->read_constdb();
+	script->read_constdb(false);
 	script->load_parameters();
 	script->hardcoded_constants();
 
@@ -5645,12 +5645,11 @@ static int script_reload(void)
 		script->parse_cleanup_timer_id = INVALID_TIMER;
 	}
 
-	mapreg->reload();
-
+	script->read_constdb(true);
 	itemdb->name_constants();
-
 	clan->set_constants();
 
+	mapreg->reload();
 	sysinfo->vcsrevision_reload();
 
 	return 0;
@@ -7542,7 +7541,7 @@ static BUILDIN(getelementofarray)
 	id = reference_getid(data);
 
 	i = script_getnum(st, 3);
-	if (i < 0 || i >= SCRIPT_MAX_ARRAYSIZE) {
+	if (i < 0 || i > SCRIPT_MAX_ARRAYSIZE) {
 		ShowWarning("script:getelementofarray: index out of range (%"PRId64")\n", i);
 		script->reportdata(data);
 		script_pushnil(st);
@@ -7701,10 +7700,10 @@ static BUILDIN(countitem2)
 	iden = script_getnum(st,3);
 	ref  = script_getnum(st,4);
 	attr = script_getnum(st,5);
-	c1 = (short)script_getnum(st,6);
-	c2 = (short)script_getnum(st,7);
-	c3 = (short)script_getnum(st,8);
-	c4 = (short)script_getnum(st,9);
+	c1 = script_getnum(st,6);
+	c2 = script_getnum(st,7);
+	c3 = script_getnum(st,8);
+	c4 = script_getnum(st,9);
 
 	for(i = 0; i < MAX_INVENTORY; i++)
 		if (sd->status.inventory[i].nameid > 0 && sd->inventory_data[i] != NULL &&
@@ -8037,10 +8036,10 @@ static BUILDIN(getitem2)
 	iden=script_getnum(st,4);
 	ref=script_getnum(st,5);
 	attr=script_getnum(st,6);
-	c1=(short)script_getnum(st,7);
-	c2=(short)script_getnum(st,8);
-	c3=(short)script_getnum(st,9);
-	c4=(short)script_getnum(st,10);
+	c1 = script_getnum(st,7);
+	c2 = script_getnum(st,8);
+	c3 = script_getnum(st,9);
+	c4 = script_getnum(st,10);
 
 	if (bound && (itemdb_type(nameid) == IT_PETEGG || itemdb_type(nameid) == IT_PETARMOR)) {
 		ShowError("script_getitembound2: can't bind a pet egg/armor! Type=%d\n",bound);
@@ -8079,10 +8078,10 @@ static BUILDIN(getitem2)
 		item_tmp.refine=ref;
 		item_tmp.attribute=attr;
 		item_tmp.bound=(unsigned char)bound;
-		item_tmp.card[0]=(short)c1;
-		item_tmp.card[1]=(short)c2;
-		item_tmp.card[2]=(short)c3;
-		item_tmp.card[3]=(short)c4;
+		item_tmp.card[0] = c1;
+		item_tmp.card[1] = c2;
+		item_tmp.card[2] = c3;
+		item_tmp.card[3] = c4;
 
 		//Check if it's stackable.
 		if (!itemdb->isstackable(nameid))
@@ -8371,10 +8370,10 @@ static BUILDIN(makeitem2)
 	item_tmp.identify = script_getnum(st, 4);
 	item_tmp.refine = cap_value(script_getnum(st, 5), 0, MAX_REFINE);
 	item_tmp.attribute = script_getnum(st, 6);
-	item_tmp.card[0] = (short)script_getnum(st, 7);
-	item_tmp.card[1] = (short)script_getnum(st, 8);
-	item_tmp.card[2] = (short)script_getnum(st, 9);
-	item_tmp.card[3] = (short)script_getnum(st, 10);
+	item_tmp.card[0] = script_getnum(st, 7);
+	item_tmp.card[1] = script_getnum(st, 8);
+	item_tmp.card[2] = script_getnum(st, 9);
+	item_tmp.card[3] = script_getnum(st, 10);
 
 	map->addflooritem(NULL, &item_tmp, amount, m, x, y, 0, 0, 0, 0, false);
 
@@ -8619,10 +8618,10 @@ static BUILDIN(delitem2)
 	it.identify=script_getnum(st,4);
 	it.refine=script_getnum(st,5);
 	it.attribute=script_getnum(st,6);
-	it.card[0]=(short)script_getnum(st,7);
-	it.card[1]=(short)script_getnum(st,8);
-	it.card[2]=(short)script_getnum(st,9);
-	it.card[3]=(short)script_getnum(st,10);
+	it.card[0] = script_getnum(st, 7);
+	it.card[1] = script_getnum(st, 8);
+	it.card[2] = script_getnum(st, 9);
+	it.card[3] = script_getnum(st, 10);
 
 	if( it.amount <= 0 )
 		return true;// nothing to do
@@ -9247,6 +9246,8 @@ static BUILDIN(getbrokenid)
 
 	num=script_getnum(st,2);
 	for(i=0; i<MAX_INVENTORY; i++) {
+		if (sd->status.inventory[i].card[0] == CARD0_PET)
+			continue;
 		if ((sd->status.inventory[i].attribute & ATTR_BROKEN) != 0) {
 			brokencounter++;
 			if(num==brokencounter) {
@@ -9272,6 +9273,8 @@ static BUILDIN(getbrokencount)
 		return true;
 
 	for (i = 0; i < MAX_INVENTORY; i++) {
+		if (sd->status.inventory[i].card[0] == CARD0_PET)
+			continue;
 		if ((sd->status.inventory[i].attribute & ATTR_BROKEN) != 0)
 			counter++;
 	}
@@ -9294,6 +9297,8 @@ static BUILDIN(repair)
 
 	num=script_getnum(st,2);
 	for(i=0; i<MAX_INVENTORY; i++) {
+		if (sd->status.inventory[i].card[0] == CARD0_PET)
+			continue;
 		if ((sd->status.inventory[i].attribute & ATTR_BROKEN) != 0) {
 			repaircounter++;
 			if(num==repaircounter) {
@@ -9322,6 +9327,8 @@ static BUILDIN(repairall)
 
 	for(i = 0; i < MAX_INVENTORY; i++)
 	{
+		if (sd->status.inventory[i].card[0] == CARD0_PET)
+			continue;
 		if (sd->status.inventory[i].nameid && (sd->status.inventory[i].attribute & ATTR_BROKEN) != 0)
 		{
 			sd->status.inventory[i].attribute |= ATTR_BROKEN;
@@ -9576,6 +9583,11 @@ static BUILDIN(successrefitem)
 		clif->additem(sd,i,1,0);
 		pc->equipitem(sd,i,ep);
 		clif->misceffect(&sd->bl,3);
+
+		achievement->validate_refine(sd, i, true); // Achievements [Smokexyz/Hercules]
+
+		/* The following check is exclusive to characters (possibly only whitesmiths)
+		 * that create equipments and refine them to level 10. */
 		if(sd->status.inventory[i].refine == 10 &&
 		   sd->status.inventory[i].card[0] == CARD0_FORGE &&
 		   sd->status.char_id == (int)MakeDWord(sd->status.inventory[i].card[2],sd->status.inventory[i].card[3])
@@ -9613,6 +9625,9 @@ static BUILDIN(failedrefitem)
 	if (num > 0 && num <= ARRAYLENGTH(script->equip))
 		i=pc->checkequip(sd,script->equip[num-1]);
 	if(i >= 0) {
+		// Call before changing refine to 0.
+		achievement->validate_refine(sd, i, false);
+
 		sd->status.inventory[i].refine = 0;
 		pc->unequipitem(sd, i, PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE); //recalculate bonus
 		clif->refine(sd->fd,1,i,sd->status.inventory[i].refine); //notify client of failure
@@ -9660,6 +9675,9 @@ static BUILDIN(downrefitem)
 
 		clif->additem(sd,i,1,0);
 		pc->equipitem(sd,i,ep);
+
+		achievement->validate_refine(sd, i, false); // Achievements [Smokexyz/Hercules]
+
 		clif->misceffect(&sd->bl,2);
 	}
 
@@ -10728,7 +10746,7 @@ static BUILDIN(makepet)
 		sd->catch_target_class = pet->db[pet_id].class_;
 		intif->create_pet(sd->status.account_id, sd->status.char_id,
 		                  (short)pet->db[pet_id].class_, (short)mob->db(pet->db[pet_id].class_)->lv,
-		                  (short)pet->db[pet_id].EggID, 0, (short)pet->db[pet_id].intimate,
+		                  pet->db[pet_id].EggID, 0, (short)pet->db[pet_id].intimate,
 		                  100, 0, 1, pet->db[pet_id].jname);
 	}
 
@@ -16457,7 +16475,7 @@ static BUILDIN(equip)
 	nameid=script_getnum(st,2);
 	if((item_data = itemdb->exists(nameid)) == NULL)
 	{
-		ShowError("wrong item ID : equipitem(%i)\n",nameid);
+		ShowError("wrong item ID : equipitem(%d)\n",nameid);
 		return false;
 	}
 	ARR_FIND( 0, MAX_INVENTORY, i, sd->status.inventory[i].nameid == nameid && sd->status.inventory[i].equip == 0 );
@@ -16513,12 +16531,12 @@ static BUILDIN(equip2)
 		return false;
 	}
 
-	ref    = script_getnum(st,3);
-	attr   = script_getnum(st,4);
-	c0     = (short)script_getnum(st,5);
-	c1     = (short)script_getnum(st,6);
-	c2     = (short)script_getnum(st,7);
-	c3     = (short)script_getnum(st,8);
+	ref  = script_getnum(st, 3);
+	attr = script_getnum(st, 4);
+	c0   = script_getnum(st, 5);
+	c1   = script_getnum(st, 6);
+	c2   = script_getnum(st, 7);
+	c3   = script_getnum(st, 8);
 
 	ARR_FIND( 0, MAX_INVENTORY, i,( sd->status.inventory[i].equip == 0 &&
 									sd->status.inventory[i].nameid == nameid &&
@@ -20915,63 +20933,177 @@ static BUILDIN(readbook)
 static BUILDIN(questinfo)
 {
 	struct npc_data *nd = map->id2nd(st->oid);
-	int quest_id, icon;
-	struct questinfo qi;
+	struct questinfo qi = { 0 };
+	int icon = script_getnum(st, 2);
 
-	if( nd == NULL || nd->bl.m == -1 )
+	if (nd == NULL)
 		return true;
 
-	quest_id = script_getnum(st, 2);
-	icon = script_getnum(st, 3);
+	if (nd->bl.m == -1) {
+		ShowWarning("buildin_questinfo: questinfo cannot be set for an npc with no valid map.\n");
+		return false;
+	}
 
-#if PACKETVER >= 20170315
-	if (icon < 0 || (icon > 10 && icon != 9999))
-		icon = 9999;
-#elif PACKETVER >= 20120410
-	if (icon < 0 || (icon > 8 && icon != 9999) || icon == 7)
-		icon = 9999; // Default to nothing if icon id is invalid.
-#else
-	if (icon < 0 || icon > 7)
-		icon = 0;
-	else
-		icon = icon + 1;
-#endif
-
-	qi.quest_id = quest_id;
-	qi.icon = (unsigned char)icon;
 	qi.nd = nd;
-
-	if (script_hasdata(st, 4)) {
-		int color = script_getnum(st, 4);
+	qi.icon = quest->questinfo_validate_icon(icon);
+	if (script_hasdata(st, 3)) {
+		int color = script_getnum(st, 3);
 		if (color < 0 || color > 3) {
-			ShowWarning("buildin_questinfo: invalid color '%d', changing to 0\n",color);
+			ShowWarning("buildin_questinfo: invalid color '%d', defaulting to 0.\n", color);
 			script->reportfunc(st);
 			color = 0;
 		}
 		qi.color = (unsigned char)color;
 	}
 
-	qi.hasJob = false;
+	map->add_questinfo(nd->bl.m, &qi);
+	return true;
+}
 
-	if (script_hasdata(st, 5)) {
-		int job = script_getnum(st, 5);
+static BUILDIN(setquestinfo)
+{
+	struct npc_data *nd = map->id2nd(st->oid);
+	struct questinfo *qi = NULL;
+	uint32 type = script_getnum(st, 2);
 
-		if (!pc->db_checkid(job)) {
-			ShowError("buildin_questinfo: Nonexistant Job Class.\n");
-		} else {
-			qi.hasJob = true;
-			qi.job = (unsigned short)job;
-		}
+	if (nd == NULL)
+		return true;
+
+	if (nd->bl.m == -1) {
+		ShowWarning("buildin_setquestinfo: questinfo cannot be set for an npc with no valid map.\n");
+		return false;
 	}
 
-	map->add_questinfo(nd->bl.m,&qi);
+	qi = &VECTOR_LAST(map->list[nd->bl.m].qi_data);
+	if (qi == NULL) {
+		ShowWarning("buildin_setquestinfo: no valide questinfo data has been found for this npc.\n");
+		return false;
+	}
+	if (qi->nd != nd) {
+		ShowWarning("buildin_setquestinfo: invalid usage, setquestinfo must be used only after questinfo.\n");
+		return false;
+	}
+	switch (type) {
+	case QINFO_JOB:
+	{
+		int jobid = script_getnum(st, 3);
+		if (!pc->db_checkid(jobid)) {
+			ShowWarning("buildin_setquestinfo: invalid job id given (%d).\n", jobid);
+			return false;
+		}
+		qi->hasJob = true;
+		qi->job = jobid;
+		break;
+	}
+	case QINFO_SEX:
+	{
+		int sex = script_getnum(st, 3);
+		if (sex != SEX_MALE && sex != SEX_FEMALE) {
+			ShowWarning("buildin_setquestinfo: unsupported sex has been given (%d).\n", sex);
+			return false;
+		}
+		qi->sex_enabled = true;
+		qi->sex = sex;
+		break;
+	}
+	case QINFO_BASE_LEVEL:
+	{
+		int min = script_getnum(st, 3);
+		int max = script_getnum(st, 4);
+		if (min > max) {
+			ShowWarning("buildin_setquestinfo: minimal level (%d) is bigger than the maximal level (%d).\n", min, max);
+			return false;
+		}
+		qi->base_level.min = min;
+		qi->base_level.max = max;
+		break;
+	}
+	case QINFO_JOB_LEVEL:
+	{
+		int min = script_getnum(st, 3);
+		int max = script_getnum(st, 4);
+		if (min > max) {
+			ShowWarning("buildin_setquestinfo: minimal level (%d) is bigger than the maximal level (%d).\n", min, max);
+			return false;
+		}
+		qi->job_level.min = min;
+		qi->job_level.max = max;
+		break;
+	}
+	case QINFO_ITEM:
+	{
+		struct item item = { 0 };
 
+		item.nameid = script_getnum(st, 3);
+		item.amount = script_getnum(st, 4);
+
+		if (itemdb->exists(item.nameid) == NULL) {
+			ShowWarning("buildin_setquestinfo: non existing item (%d) have been given.\n", item.nameid);
+			return false;
+		}
+		if (item.amount <= 0 || item.amount > MAX_AMOUNT) {
+			ShowWarning("buildin_setquestinfo: given amount (%d) must be bigger than 0 and smaller than %d.\n", item.amount, MAX_AMOUNT + 1);
+			return false;
+		}
+		if (VECTOR_LENGTH(qi->items) == 0)
+			VECTOR_INIT(qi->items);
+		VECTOR_ENSURE(qi->items, 1, 1);
+		VECTOR_PUSH(qi->items, item);
+		break;
+	}
+	case QINFO_HOMUN_LEVEL:
+	{
+		int min = script_getnum(st, 3);
+		if (min > battle_config.hom_max_level && min > battle_config.hom_S_max_level) {
+			ShowWarning("buildin_setquestinfo: minimum homunculus level given (%d) is bigger than the max possible level.\n", min);
+			return false;
+		}
+		qi->homunculus.level = min;
+		break;
+	}
+	case QINFO_HOMUN_TYPE:
+	{
+		int hom_type = script_getnum(st, 3);
+		if (hom_type < HT_REG || hom_type > HT_S) {
+			ShowWarning("buildin_setquestinfo: invalid homunculus type (%d).\n", hom_type);
+			return false;
+		}
+		qi->homunculus_type = hom_type;
+		break;
+	}
+	case QINFO_QUEST:
+	{
+		struct questinfo_qreq quest_req = { 0 };
+		struct quest_db *quest_data = NULL;
+
+		quest_req.id = script_getnum(st, 3);
+		quest_req.state = script_getnum(st, 4);
+
+		quest_data = quest->db(quest_req.id);
+		if (quest_data == &quest->dummy) {
+			ShowWarning("buildin_setquestinfo: invalid quest given (%d).\n", quest_req.id);
+			return false;
+		}
+		if (quest_req.state < Q_INACTIVE || quest_req.state > Q_COMPLETE) {
+			ShowWarning("buildin_setquestinfo: invalid quest state given (%d).\n", quest_req.state);
+			return false;
+		}
+
+		if (VECTOR_LENGTH(qi->quest_requirement) == 0)
+			VECTOR_INIT(qi->quest_requirement);
+		VECTOR_ENSURE(qi->quest_requirement, 1, 1);
+		VECTOR_PUSH(qi->quest_requirement, quest_req);
+		break;
+	}
+	default:
+		ShowWarning("buildin_setquestinfo: invalid type given (%u).\n", type);
+		return false;
+	}
 	return true;
 }
 
 static BUILDIN(setquest)
 {
-	unsigned short i;
 	int quest_id;
 	unsigned int time_limit;
 	struct map_session_data *sd = script->rid2sd(st);
@@ -20983,19 +21115,6 @@ static BUILDIN(setquest)
 	time_limit = script_hasdata(st, 3) ? script_getnum(st, 3) : 0;
 
 	quest->add(sd, quest_id, time_limit);
-
-	// If questinfo is set, remove quest bubble once quest is set.
-	for (i = 0; i < map->list[sd->bl.m].qi_count; i++) {
-		struct questinfo *qi = &map->list[sd->bl.m].qi_data[i];
-		if (qi->quest_id == quest_id) {
-#if PACKETVER >= 20120410
-			clif->quest_show_event(sd, &qi->nd->bl, 9999, 0);
-#else
-			clif->quest_show_event(sd, &qi->nd->bl, 0, 0);
-#endif
-		}
-	}
-
 	return true;
 }
 
@@ -21143,6 +21262,78 @@ static BUILDIN(showevent)
 #endif
 
 	clif->quest_show_event(sd, &nd->bl, icon, color);
+	return true;
+}
+
+/*==========================================
+ * Achievement System [Smokexyz/Hercules]
+ *-----------------------------------------*/
+/**
+ * Validates an objective index for the given achievement.
+ * Can be used for any achievement type.
+ * @command achievement_progress(<ach_id>,<obj_idx>,<progress>,<incremental?>{,<char_id>});
+ * @param aid         - achievement ID
+ * @param obj_idx     - achievement objective index.
+ * @param progress    - objective progress towards goal.
+ * @Param incremental - (boolean) true to add the progress towards the goal,
+ *                      false to use the progress only as a comparand.
+ * @param account_id  - (optional) character ID to perform on.
+ * @return true on success, false on failure.
+ * @push 1 on success, 0 on failure.
+ */
+static BUILDIN(achievement_progress)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+	int aid = script_getnum(st, 2);
+	int obj_idx = script_getnum(st, 3);
+	int progress = script_getnum(st, 4);
+	int incremental = script_getnum(st, 5);
+	int account_id = script_hasdata(st, 6) ? script_getnum(st, 6) : 0;
+	const struct achievement_data *ad = NULL;
+
+	if ((ad = achievement->get(aid)) == NULL) {
+		ShowError("buildin_achievement_progress: Invalid achievement ID %d received.\n", aid);
+		script_pushint(st, 0);
+		return false;
+	}
+
+	if (obj_idx <= 0 || obj_idx > VECTOR_LENGTH(ad->objective)) {
+		ShowError("buildin_achievement_progress: Invalid objective index %d received. (min: %d, max: %d)\n", obj_idx, 0, VECTOR_LENGTH(ad->objective));
+		script_pushint(st, 0);
+		return false;
+	}
+
+	obj_idx--; // convert to array index.
+
+	if (progress <= 0 || progress > VECTOR_INDEX(ad->objective, obj_idx).goal) {
+		ShowError("buildin_achievement_progress: Progress exceeds goal limit for achievement id %d.\n", aid);
+		script_pushint(st, 0);
+		return false;
+	}
+
+	if (incremental < 0 || incremental > 1) {
+		ShowError("buildin_achievement_progress: Argument 4 expects boolean (0/1). provided value: %d\n", incremental);
+		script_pushint(st, 0);
+		return false;
+	}
+
+	if (script_hasdata(st, 6)) {
+		if (account_id <= 0) {
+			ShowError("buildin_achievement_progress: Invalid Account id %d provided.\n", account_id);
+			script_pushint(st, 0);
+			return false;
+		} else if ((sd = map->id2sd(account_id)) == NULL) {
+			ShowError("buildin_achievement_progress: Account with id %d was not found.\n", account_id);
+			script_pushint(st, 0);
+			return false;
+		}
+	}
+
+	if (achievement->validate(sd, aid, obj_idx, progress, incremental ? true : false))
+		script_pushint(st, progress);
+	else
+		script_pushint(st, 0);
+
 	return true;
 }
 
@@ -25025,6 +25216,8 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(agitstart2,""),
 		BUILDIN_DEF(agitend2,""),
 		BUILDIN_DEF(agitcheck2,""),
+		// Achievements [Smokexyz/Hercules]
+		BUILDIN_DEF(achievement_progress, "iiii?"),
 		// BattleGround
 		BUILDIN_DEF(waitingroom2bg,"siiss?"),
 		BUILDIN_DEF(waitingroom2bg_single,"isiis"),
@@ -25097,7 +25290,8 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(checkbound, "i???????"),
 
 		//Quest Log System [Inkfish]
-		BUILDIN_DEF(questinfo, "ii??"),
+		BUILDIN_DEF(questinfo, "i?"),
+		BUILDIN_DEF(setquestinfo, "i??"),
 		BUILDIN_DEF(setquest, "i?"),
 		BUILDIN_DEF(erasequest, "i?"),
 		BUILDIN_DEF(completequest, "i?"),
@@ -25557,6 +25751,16 @@ static void script_hardcoded_constants(void)
 	script->set_constant("P_AIRSHIP_INVALID_END_MAP", P_AIRSHIP_INVALID_END_MAP, false, false);
 	script->set_constant("P_AIRSHIP_ITEM_NOT_ENOUGH", P_AIRSHIP_ITEM_NOT_ENOUGH, false, false);
 	script->set_constant("P_AIRSHIP_ITEM_INVALID", P_AIRSHIP_ITEM_INVALID, false, false);
+
+	script->constdb_comment("questinfo types");
+	script->set_constant("QINFO_JOB", QINFO_JOB, false, false);
+	script->set_constant("QINFO_SEX", QINFO_SEX, false, false);
+	script->set_constant("QINFO_BASE_LEVEL", QINFO_BASE_LEVEL, false, false);
+	script->set_constant("QINFO_JOB_LEVEL", QINFO_JOB_LEVEL, false, false);
+	script->set_constant("QINFO_ITEM", QINFO_ITEM, false, false);
+	script->set_constant("QINFO_HOMUN_LEVEL", QINFO_HOMUN_LEVEL, false, false);
+	script->set_constant("QINFO_HOMUN_TYPE", QINFO_HOMUN_TYPE, false, false);
+	script->set_constant("QINFO_QUEST", QINFO_QUEST, false, false);
 
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL

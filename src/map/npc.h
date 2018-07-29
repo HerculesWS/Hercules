@@ -57,14 +57,14 @@ struct npc_label_list {
 	int pos;
 };
 struct npc_item_list {
-	unsigned short nameid;
+	int nameid;
 	unsigned int value;
 	unsigned int qty;
 };
 struct npc_shop_data {
 	unsigned char type;/* what am i */
 	struct npc_item_list *item;/* list */
-	unsigned short items;/* total */
+	unsigned int items;/* total */
 };
 struct npc_parse;
 struct npc_data {

@@ -33,10 +33,29 @@ struct hplugin_data_store;
 /**
  * Defines
  **/
-#define MAX_ITEMDB 0x8000 // 32k array entries in array (the rest goes to the db)
+#ifndef MAX_ITEMDB
+#define MAX_ITEMDB 0xFFFF
+#endif
+
+#ifndef MAX_ITEM_ID
+#if PACKETVER_RE_NUM >= 20180704
+#define MAX_ITEM_ID 0x20000
+#else
+#define MAX_ITEM_ID 0xFFFF
+#endif
+#endif
+
+#ifndef MAX_ITEMDELAYS
 #define MAX_ITEMDELAYS 10 // The maximum number of item delays
+#endif
+
+#ifndef MAX_SEARCH
 #define MAX_SEARCH 5 //Designed for search functions, species max number of matches to display.
+#endif
+
+#ifndef MAX_ITEMS_PER_COMBO
 #define MAX_ITEMS_PER_COMBO 6 /* maximum amount of items a combo may require */
+#endif
 
 #define CARD0_FORGE 0x00FF
 #define CARD0_CREATE 0x00FE
@@ -45,8 +64,17 @@ struct hplugin_data_store;
 //Marks if the card0 given is "special" (non-item id used to mark pets/created items. [Skotlex]
 #define itemdb_isspecial(i) ((i) == CARD0_FORGE || (i) == CARD0_CREATE || (i) == CARD0_PET)
 
+#ifndef UNKNOWN_ITEM_ID
 //Use apple for unknown items.
 #define UNKNOWN_ITEM_ID 512
+#endif
+
+#if MAX_ITEM_ID < MAX_ITEMDB
+#error "MAX_ITEM_ID must be bigger or same with MAX_ITEMDB"
+#endif
+#if MAX_ITEM_ID > 0xFFFF && PACKETVER_RE_NUM < 20180704
+#error "For clients before 20180704 RE, MAX_ITEM_ID must be smaller than 0x10000"
+#endif
 
 enum item_itemid {
 	ITEMID_RED_POTION            = 501,
@@ -393,19 +421,19 @@ VECTOR_STRUCT_DECL(itemlist, struct itemlist_entry);
 
 struct item_combo {
 	struct script_code *script;
-	unsigned short nameid[MAX_ITEMS_PER_COMBO];/* nameid array */
+	int nameid[MAX_ITEMS_PER_COMBO];/* nameid array */
 	unsigned char count;
-	unsigned short id;/* id of this combo */
+	int id; /* id of this combo */
 };
 
 struct item_group {
-	unsigned short id;
-	unsigned short *nameid;
+	int id;
+	int *nameid;
 	unsigned short qty;
 };
 
 struct item_chain_entry {
-	unsigned short id;
+	int id;
 	unsigned short rate;
 	struct item_chain_entry *next;
 };
@@ -416,7 +444,7 @@ struct item_chain {
 };
 
 struct item_package_rand_entry {
-	unsigned short id;
+	int id;
 	unsigned short qty;
 	unsigned short rate;
 	unsigned short hours;
@@ -427,7 +455,7 @@ struct item_package_rand_entry {
 };
 
 struct item_package_must_entry {
-	unsigned short id;
+	int id;
 	unsigned short qty;
 	unsigned short hours;
 	unsigned int announce : 1;
@@ -441,7 +469,7 @@ struct item_package_rand_group {
 };
 
 struct item_package {
-	unsigned short id;
+	int id;
 	struct item_package_rand_group *random_groups;
 	struct item_package_must_entry *must_items;
 	unsigned short random_qty;
@@ -454,7 +482,7 @@ struct itemdb_option {
 };
 
 struct item_data {
-	uint16 nameid;
+	int nameid;
 	char name[ITEM_NAME_LENGTH],jname[ITEM_NAME_LENGTH];
 
 	int value_buy;
@@ -651,7 +679,7 @@ struct itemdb_interface {
 	int (*final_sub) (union DBKey key, struct DBData *data, va_list ap);
 	int (*options_final_sub) (union DBKey key, struct DBData *data, va_list ap);
 	void (*clear) (bool total);
-	struct item_combo * (*id2combo) (unsigned short id);
+	struct item_combo * (*id2combo) (int id);
 	bool (*is_item_usable) (struct item_data *item);
 	bool (*lookup_const) (const struct config_setting_t *it, const char *name, int *value);
 	bool (*lookup_const_mask) (const struct config_setting_t *it, const char *name, int *value);

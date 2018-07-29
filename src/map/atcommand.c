@@ -55,6 +55,7 @@
 #include "map/storage.h"
 #include "map/trade.h"
 #include "map/unit.h"
+#include "map/achievement.h"
 #include "common/cbasetypes.h"
 #include "common/conf.h"
 #include "common/core.h"
@@ -1421,6 +1422,10 @@ ACMD(baselevelup)
 	clif->updatestatus(sd, SP_BASEEXP);
 	clif->updatestatus(sd, SP_NEXTBASEEXP);
 	pc->baselevelchanged(sd);
+
+	// achievements
+	achievement->validate_stats(sd, SP_BASELEVEL, sd->status.base_level);
+
 	if(sd->status.party_id)
 		party->send_levelup(sd);
 
@@ -2526,6 +2531,7 @@ ACMD(param)
 		clif->updatestatus(sd, SP_USTR + i);
 		status_calc_pc(sd, SCO_FORCE);
 		clif->message(fd, msg_fd(fd,42)); // Stat changed.
+		achievement->validate_stats(sd, SP_STR + i, new_value); // Achievements [Smokexyz/Hercules]
 	} else {
 		if (value < 0)
 			clif->message(fd, msg_fd(fd,41)); // Unable to decrease the number/value.
@@ -2665,7 +2671,7 @@ ACMD(makeegg)
 		intif->create_pet(
 						 sd->status.account_id, sd->status.char_id,
 						 (short)pet->db[pet_id].class_, (short)mob->db(pet->db[pet_id].class_)->lv,
-						 (short)pet->db[pet_id].EggID, 0, (short)pet->db[pet_id].intimate,
+						 pet->db[pet_id].EggID, 0, (short)pet->db[pet_id].intimate,
 						 100, 0, 1, pet->db[pet_id].jname);
 	} else {
 		clif->message(fd, msg_fd(fd,180)); // The monster/egg name/id doesn't exist.
@@ -4222,6 +4228,8 @@ ACMD(repairall)
 
 	count = 0;
 	for (i = 0; i < MAX_INVENTORY; i++) {
+		if (sd->status.inventory[i].card[0] == CARD0_PET)
+			continue;
 		if (sd->status.inventory[i].nameid && (sd->status.inventory[i].attribute & ATTR_BROKEN) != 0) {
 			sd->status.inventory[i].attribute |= ATTR_BROKEN;
 			sd->status.inventory[i].attribute ^= ATTR_BROKEN;
@@ -9464,6 +9472,8 @@ ACMD(costume)
 	};
 	unsigned short k = 0, len = ARRAYLENGTH(names);
 
+	bool isChangeDress = (strcmpi(info->command, "changedress") == 0 || strcmpi(info->command, "nocosplay") == 0);
+
 	if (!*message) {
 		for (k = 0; k < len; k++) {
 			if (sd->sc.data[name2id[k]]) {
@@ -9474,6 +9484,8 @@ ACMD(costume)
 			}
 		}
 
+		if (isChangeDress)
+			return true;
 		clif->message(sd->fd, msg_fd(fd, 1472)); // - Available Costumes
 
 		for (k = 0; k < len; k++) {
@@ -9482,6 +9494,9 @@ ACMD(costume)
 		}
 		return false;
 	}
+
+	if (isChangeDress)
+		return true;
 
 	for (k = 0; k < len; k++) {
 		if (sd->sc.data[name2id[k]]) {
@@ -10006,6 +10021,8 @@ static void atcommand_basecommands(void)
 		ACMD_DEF(fontcolor),
 		ACMD_DEF(searchstore),
 		ACMD_DEF(costume),
+		ACMD_DEF2("changedress", costume),
+		ACMD_DEF2("nocosplay", costume),
 		ACMD_DEF(skdebug),
 		ACMD_DEF(cddebug),
 		ACMD_DEF(lang),

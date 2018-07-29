@@ -6108,7 +6108,7 @@ static bool battle_check_arrows(struct map_session_data *sd)
 	int index = sd->equip_index[EQI_AMMO];
 	if (index < 0) {
 		if (sd->weapontype1 > W_KATAR && sd->weapontype1 < W_HUUMA)
-			clif->skill_fail(sd, 0, USESKILL_FAIL_NEED_MORE_BULLET, 0);
+			clif->skill_fail(sd, 0, USESKILL_FAIL_NEED_MORE_BULLET, 0, 0);
 		else
 			clif->arrow_fail(sd, 0);
 		return false;
@@ -6127,13 +6127,13 @@ static bool battle_check_arrows(struct map_session_data *sd)
 			case W_GATLING:
 			case W_SHOTGUN:
 				if (sd->inventory_data[index]->subtype != A_BULLET) {
-					clif->skill_fail(sd, 0, USESKILL_FAIL_NEED_MORE_BULLET, 0);
+					clif->skill_fail(sd, 0, USESKILL_FAIL_NEED_MORE_BULLET, 0, 0);
 					return false;
 				}
 				break;
 			case W_GRENADE:
 				if (sd->inventory_data[index]->subtype != A_GRENADE) {
-					clif->skill_fail(sd, 0, USESKILL_FAIL_NEED_MORE_BULLET, 0);
+					clif->skill_fail(sd, 0, USESKILL_FAIL_NEED_MORE_BULLET, 0, 0);
 					return false;
 				}
 				break;
@@ -6401,7 +6401,7 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 					}
 
 					if( type != CAST_GROUND ) {
-						clif->skill_fail(sd,r_skill,USESKILL_FAIL_LEVEL,0);
+						clif->skill_fail(sd, r_skill, USESKILL_FAIL_LEVEL, 0, 0);
 						map->freeblock_unlock();
 						return wd.dmg_lv;
 					}
@@ -7205,6 +7205,7 @@ static const struct battle_data {
 	{ "vcast_stat_scale",                   &battle_config.vcast_stat_scale,                530,    1,      INT_MAX,        },
 	{ "area_size",                          &battle_config.area_size,                       14,     0,      INT_MAX,        },
 	{ "chat_area_size",                     &battle_config.chat_area_size,                  9,      0,      INT_MAX,        },
+	{ "dead_area_size",                     &battle_config.dead_area_size,                  32,     0,      INT_MAX,        },
 	{ "zeny_from_mobs",                     &battle_config.zeny_from_mobs,                  0,      0,      1,              },
 	{ "mobs_level_up",                      &battle_config.mobs_level_up,                   0,      0,      1,              },
 	{ "mobs_level_up_exp_rate",             &battle_config.mobs_level_up_exp_rate,          1,      1,      INT_MAX,        },

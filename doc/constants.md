@@ -3854,6 +3854,55 @@
 - `HAT_EF_FSTONE`: 55
 - `HAT_EF_MAGICCIRCLE`: 56
 
+### Achievement Types
+
+- `ACH_QUEST`: 0
+- `ACH_KILL_PC_TOTAL`: 1
+- `ACH_KILL_PC_JOB`: 2
+- `ACH_KILL_PC_JOBTYPE`: 3
+- `ACH_KILL_MOB_CLASS`: 4
+- `ACH_DAMAGE_PC_MAX`: 5
+- `ACH_DAMAGE_PC_TOTAL`: 6
+- `ACH_DAMAGE_PC_REC_MAX`: 7
+- `ACH_DAMAGE_PC_REC_TOTAL`: 8
+- `ACH_DAMAGE_MOB_MAX`: 9
+- `ACH_DAMAGE_MOB_TOTAL`: 10
+- `ACH_DAMAGE_MOB_REC_MAX`: 11
+- `ACH_DAMAGE_MOB_REC_TOTAL`: 12
+- `ACH_JOB_CHANGE`: 13
+- `ACH_STATUS`: 14
+- `ACH_STATUS_BY_JOB`: 15
+- `ACH_STATUS_BY_JOBTYPE`: 16
+- `ACH_CHATROOM_CREATE_DEAD`: 17
+- `ACH_CHATROOM_CREATE`: 18
+- `ACH_CHATROOM_MEMBERS`: 19
+- `ACH_FRIEND_ADD`: 20
+- `ACH_PARTY_CREATE`: 21
+- `ACH_PARTY_JOIN`: 22
+- `ACH_MARRY`: 23
+- `ACH_ADOPT_BABY`: 24
+- `ACH_ADOPT_PARENT`: 25
+- `ACH_ZENY_HOLD`: 26
+- `ACH_ZENY_GET_ONCE`: 27
+- `ACH_ZENY_GET_TOTAL`: 28
+- `ACH_ZENY_SPEND_ONCE`: 29
+- `ACH_ZENY_SPEND_TOTAL`: 30
+- `ACH_EQUIP_REFINE_SUCCESS`: 31
+- `ACH_EQUIP_REFINE_FAILURE`: 32
+- `ACH_EQUIP_REFINE_SUCCESS_TOTAL`: 33
+- `ACH_EQUIP_REFINE_FAILURE_TOTAL`: 34
+- `ACH_EQUIP_REFINE_SUCCESS_WLV`: 35
+- `ACH_EQUIP_REFINE_FAILURE_WLV`: 36
+- `ACH_EQUIP_REFINE_SUCCESS_ID`: 37
+- `ACH_EQUIP_REFINE_FAILURE_ID`: 38
+- `ACH_ITEM_GET_COUNT`: 39
+- `ACH_ITEM_GET_COUNT_ITEMTYPE`: 40
+- `ACH_ITEM_GET_WORTH`: 41
+- `ACH_ITEM_SELL_WORTH`: 42
+- `ACH_PET_CREATE`: 43
+- `ACH_ACHIEVE`: 44
+- `ACH_ACHIEVEMENT_RANK`: 45
+
 
 ## Hardcoded Constants (source)
 
@@ -3919,31 +3968,31 @@
 - `AREA_WOC`: 4
 - `AREA_WOSC`: 5
 - `AREA_CHAT_WOC`: 6
-- `CHAT`: 7
-- `CHAT_WOS`: 8
-- `PARTY`: 9
-- `PARTY_WOS`: 10
-- `PARTY_SAMEMAP`: 11
-- `PARTY_SAMEMAP_WOS`: 12
-- `PARTY_AREA`: 13
-- `PARTY_AREA_WOS`: 14
-- `GUILD`: 15
-- `GUILD_WOS`: 16
-- `GUILD_SAMEMAP`: 17
-- `GUILD_SAMEMAP_WOS`: 18
-- `GUILD_AREA`: 19
-- `GUILD_AREA_WOS`: 20
-- `GUILD_NOBG`: 21
-- `DUEL`: 22
-- `DUEL_WOS`: 23
-- `SELF`: 24
-- `BG`: 25
-- `BG_WOS`: 26
-- `BG_SAMEMAP`: 27
-- `BG_SAMEMAP_WOS`: 28
-- `BG_AREA`: 29
-- `BG_AREA_WOS`: 30
-- `BG_QUEUE`: 31
+- `CHAT`: 8
+- `CHAT_WOS`: 9
+- `PARTY`: 10
+- `PARTY_WOS`: 11
+- `PARTY_SAMEMAP`: 12
+- `PARTY_SAMEMAP_WOS`: 13
+- `PARTY_AREA`: 14
+- `PARTY_AREA_WOS`: 15
+- `GUILD`: 16
+- `GUILD_WOS`: 17
+- `GUILD_SAMEMAP`: 18
+- `GUILD_SAMEMAP_WOS`: 19
+- `GUILD_AREA`: 20
+- `GUILD_AREA_WOS`: 21
+- `GUILD_NOBG`: 22
+- `DUEL`: 23
+- `DUEL_WOS`: 24
+- `SELF`: 25
+- `BG`: 26
+- `BG_WOS`: 27
+- `BG_SAMEMAP`: 28
+- `BG_SAMEMAP_WOS`: 29
+- `BG_AREA`: 30
+- `BG_AREA_WOS`: 31
+- `BG_QUEUE`: 32
 
 ### LOOK_ constants, use in setlook/changelook script commands
 
@@ -4237,10 +4286,21 @@
 
 - `P_AIRSHIP_NONE`: 0
 - `P_AIRSHIP_RETRY`: 1
-- `P_AIRSHIP_INVALID_START_MAP`: 2
+- `P_AIRSHIP_INVALID_START_MAP`: 4
 - `P_AIRSHIP_INVALID_END_MAP`: 3
-- `P_AIRSHIP_ITEM_NOT_ENOUGH`: 4
+- `P_AIRSHIP_ITEM_NOT_ENOUGH`: 2
 - `P_AIRSHIP_ITEM_INVALID`: 5
+
+### questinfo types
+
+- `QINFO_JOB`: 0
+- `QINFO_SEX`: 1
+- `QINFO_BASE_LEVEL`: 2
+- `QINFO_JOB_LEVEL`: 3
+- `QINFO_ITEM`: 4
+- `QINFO_HOMUN_LEVEL`: 5
+- `QINFO_HOMUN_TYPE`: 6
+- `QINFO_QUEST`: 7
 
 ### Renewal
 
@@ -7412,6 +7472,10 @@
 - `NG_BAPHOMET`: 2483
 - `G_NG_BAPHOMET_`: 2484
 - `NG_CHIMERA`: 2485
+- `FACEWORM_QUEEN`: 2529
+- `FACEWORM_QUEEN_G`: 2533
+- `FACEWORM_QUEEN_B`: 2534
+- `FACEWORM_QUEEN_Y`: 2535
 - `IRENE_ELDER`: 2542
 - `PAYONSOLDIER`: 2543
 - `PAYONSOLDIER2`: 2544
@@ -7779,7 +7843,11 @@
 - `FATAL_DAYS`: 2958
 - `TORTUROUS_REDEEMER`: 2959
 - `E_TORTUROUS_REDEEMER`: 2961
+- `XM_CELINE_KIMI`: 2996
+- `GRIM_REAPER_ANKOU`: 3029
 - `TIMEHOLDER`: 3074
+- `E1_FELOCK`: 3181
+- `MM_SARAH`: 3190
 - `ORGANIC_JAKK`: 3202
 - `INORGANIC_JAKK`: 3203
 - `DARK_SOUL`: 3381
@@ -12292,6 +12360,7 @@
 - `High_Purity_Energy_Xtal`: 6625
 - `Blacksmith_Blessing`: 6635
 - `Poring_Badge`: 6646
+- `Broken_Horn`: 6649
 - `Needle_And_Thread`: 6654
 - `Firm_Pumpkin`: 6655
 - `Goast_Free_Charm`: 6656
@@ -12313,6 +12382,7 @@
 - `Sacred_Rosary`: 6913
 - `Black_Soul`: 6914
 - `Captured_Soul`: 6915
+- `Costume_Change_Ticket`: 6959
 - `Mould_Powder`: 7001
 - `Ogre_Tooth`: 7002
 - `Anolian_Skin`: 7003
@@ -12951,6 +13021,7 @@
 - `Father_Giftbox`: 7637
 - `Tw_Green_Box`: 7638
 - `Tw_Red_Box`: 7639
+- `Bloody_Coin`: 7642
 - `RO_Luk_Bookmark`: 7646
 - `Taiwan_Luk_Coin`: 7647
 - `Snake_Bookmark`: 7648
@@ -14325,6 +14396,7 @@
 - `Peony_Mommy`: 12813
 - `Slapping_Herb`: 12814
 - `Yggdrasil_Dust`: 12815
+- `Old_Card_Album_`: 12817
 - `High_Weapon_Box_`: 12818
 - `Zherlthsh_Tck_Box_`: 12819
 - `Mao_Guai_Scroll`: 12820
@@ -14540,6 +14612,7 @@
 - `Octo_kitchen_Knife`: 13081
 - `TE_Woe_Knife`: 13083
 - `Goldsmithing_Dagger`: 13086
+- `FaceWormQueen_Leg`: 13090
 - `RWC_Memory_Knife`: 13092
 - `Thanos_Dagger`: 13093
 - `Dagger_Of_Evil_Slayer`: 13094
@@ -15792,6 +15865,7 @@
 - `Gray_Robe`: 15091
 - `Airship_Armor`: 15116
 - `Felock_Armor`: 15117
+- `Robe_Of_Sarah`: 15121
 - `Whikebain_Suit`: 15123
 - `Female_Poring_Balloon`: 15126
 - `Female_Poring_Egg`: 15128
@@ -15936,7 +16010,9 @@
 - `Red_Wing_Hat_Box`: 16461
 - `FRed_Wing_Hat_Box`: 16462
 - `My_Scroll2`: 16466
+- `Abrasive_Box_10`: 16483
 - `E_Insurance_Package`: 16503
+- `Bubble_Gum_Box_10`: 16504
 - `Xmas_Bless`: 16542
 - `Snowman_Hat_Box`: 16543
 - `FSnowman_Hat_Box`: 16544
@@ -17524,6 +17600,8 @@
 - `Para_Team_Mark_`: 22508
 - `Candy_Holder`: 22514
 - `Key_Of_Twisted_Time`: 22515
+- `Closedmind_Box`: 22534
+- `PrizeOfHero`: 22537
 - `Runstone_Lux`: 22540
 - `HALLOWEEN_G_BOX`: 22669
 - `DARK_INVITATION`: 22670
@@ -17546,8 +17624,10 @@
 - `Bullet_Case_Stone`: 22748
 - `Sanctified_Bullet_Case`: 22749
 - `Buff_Gift_Set`: 22777
+- `Special_Gift_Box`: 22808
 - `Integer_Time`: 22837
 - `Something_Candy_Holder`: 22838
+- `Old_Money_Pocket`: 22876
 - `T1_Shadow_Armor`: 24000
 - `T1_Shadow_Weapon`: 24001
 - `T1_Shadow_Shield`: 24002
@@ -17795,6 +17875,8 @@
 - `S_Reload_Shield`: 24244
 - `S_Reload_Armor`: 24245
 - `Paradise_Foxtail_Staff_III`: 26101
+- `Faceworm_Queen_Card`: 27164
+- `Captain_Felock_Card`: 27182
 - `Thanos_Katar`: 28000
 - `Katar_Of_Evil_Slayer`: 28001
 - `Half_BF_Katar2`: 28002

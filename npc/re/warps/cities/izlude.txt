@@ -82,7 +82,9 @@ OnTouch:
 	end;
 
 OnInit:
-	questinfo(21001, QTYPE_QUEST, 1, Job_Novice);
+	questinfo(QTYPE_QUEST, 1);
+	setquestinfo(QINFO_JOB, Job_Novice);
+	setquestinfo(QINFO_QUEST, 21001, 1);
 	end;
 }
 

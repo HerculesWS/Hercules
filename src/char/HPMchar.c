@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2014-2015  Hercules Dev Team
+ * Copyright (C) 2014-2018  Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@
 #include "char/char.h"
 #include "char/geoip.h"
 #include "char/inter.h"
+#include "char/int_achievement.h"
 #include "char/int_auction.h"
 #include "char/int_clan.h"
 #include "char/int_elemental.h"
@@ -42,6 +43,7 @@
 #include "char/loginif.h"
 #include "char/mapif.h"
 #include "char/pincode.h"
+
 #include "common/HPMi.h"
 #include "common/conf.h"
 #include "common/console.h"

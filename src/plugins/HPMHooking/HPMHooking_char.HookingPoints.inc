@@ -245,6 +245,14 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(geoip->getcountry, HP_geoip_getcountry) },
 	{ HP_POP(geoip->final, HP_geoip_final) },
 	{ HP_POP(geoip->init, HP_geoip_init) },
+/* inter_achievement_interface */
+	{ HP_POP(inter_achievement->sql_init, HP_inter_achievement_sql_init) },
+	{ HP_POP(inter_achievement->sql_final, HP_inter_achievement_sql_final) },
+	{ HP_POP(inter_achievement->tosql, HP_inter_achievement_tosql) },
+	{ HP_POP(inter_achievement->fromsql, HP_inter_achievement_fromsql) },
+	{ HP_POP(inter_achievement->ensure_char_achievements, HP_inter_achievement_ensure_char_achievements) },
+	{ HP_POP(inter_achievement->char_achievements_clear, HP_inter_achievement_char_achievements_clear) },
+	{ HP_POP(inter_achievement->parse_frommap, HP_inter_achievement_parse_frommap) },
 /* inter_auction_interface */
 	{ HP_POP(inter_auction->count, HP_inter_auction_count) },
 	{ HP_POP(inter_auction->save, HP_inter_auction_save) },
@@ -513,6 +521,11 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(mapif->sendallwos, HP_mapif_sendallwos) },
 	{ HP_POP(mapif->send, HP_mapif_send) },
 	{ HP_POP(mapif->send_users_count, HP_mapif_send_users_count) },
+	{ HP_POP(mapif->pLoadAchievements, HP_mapif_pLoadAchievements) },
+	{ HP_POP(mapif->sAchievementsToMap, HP_mapif_sAchievementsToMap) },
+	{ HP_POP(mapif->pSaveAchievements, HP_mapif_pSaveAchievements) },
+	{ HP_POP(mapif->achievement_load, HP_mapif_achievement_load) },
+	{ HP_POP(mapif->achievement_save, HP_mapif_achievement_save) },
 	{ HP_POP(mapif->auction_message, HP_mapif_auction_message) },
 	{ HP_POP(mapif->auction_sendlist, HP_mapif_auction_sendlist) },
 	{ HP_POP(mapif->parse_auction_requestlist, HP_mapif_parse_auction_requestlist) },
@@ -865,4 +878,4 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(timer->final, HP_timer_final) },
 };
 
-int HookingPointsLenMax = 42;
+int HookingPointsLenMax = 43;

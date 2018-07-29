@@ -37,7 +37,7 @@
 #include "common/db.h"
 #include "common/ers.h" // struct eri
 #include "common/hercules.h"
-#include "common/mmo.h" // JOB_*, MAX_FAME_LIST, struct fame_list, struct mmo_charstatus, NEW_CARTS
+#include "common/mmo.h" // JOB_*, MAX_FAME_LIST, struct fame_list, struct mmo_charstatus, NEW_CARTS, struct s_achievement
 
 /**
  * Defines
@@ -132,7 +132,8 @@ BEGIN_ZEROED_BLOCK; // all the variables within this block get zero'ed in each c
 END_ZEROED_BLOCK;
 };
 struct s_autospell {
-	short id, lv, rate, card_id, flag;
+	short id, lv, rate, flag;
+	int card_id;
 	bool lock;  // bAutoSpellOnSkill: blocks autospell from triggering again, while being executed
 };
 /// AddEff bonus data
@@ -150,7 +151,8 @@ struct s_addeffectonskill {
 	unsigned char target;
 };
 struct s_add_drop {
-	short id, group;
+	int id;
+	short group;
 	int race, rate;
 };
 struct s_autobonus {
@@ -168,7 +170,7 @@ enum npc_timeout_type {
 
 struct pc_combos {
 	struct script_code *bonus;/* the script of the combo */
-	unsigned short id;/* this combo id */
+	int id; /* this combo id */
 };
 
 struct map_session_data {
@@ -218,7 +220,7 @@ struct map_session_data {
 		unsigned int callshop : 1; // flag to indicate that a script used callshop; on a shop
 		short pmap; // Previous map on Map Change
 		unsigned short autoloot;
-		unsigned short autolootid[AUTOLOOTITEM_SIZE]; // [Zephyrus]
+		int autolootid[AUTOLOOTITEM_SIZE]; // [Zephyrus]
 		unsigned short autoloottype;
 		unsigned int autolooting : 1; //performance-saver, autolooting state for @alootid
 		unsigned short autobonus; //flag to indicate if an autobonus is activated. [Inkfish]
@@ -303,7 +305,7 @@ struct map_session_data {
 	int64 cansendmail_tick;     /// Mail System Flood Protection
 	int64 ks_floodprotect_tick; /// [Kill Steal Protection]
 	struct {
-		short nameid;
+		int nameid;
 		int64 tick;
 	} item_delay[MAX_ITEMDELAYS]; // [Paradox924X]
 	bool has_shield;   ///< Whether the character is wearing a shield.
@@ -496,7 +498,7 @@ END_ZEROED_BLOCK;
 
 	// Mail System [Zephyrus]
 	struct {
-		short nameid;
+		int nameid;
 		int index, amount, zeny;
 		struct mail_data inbox;
 		bool changed; // if true, should sync with charserver on next mailbox request
@@ -629,6 +631,12 @@ END_ZEROED_BLOCK;
 		unsigned sitstand : 1;
 		unsigned commands : 1;
 	} block_action;
+
+	/* Achievement System */
+	struct char_achievements achievement;
+	bool achievements_received;
+	// Title
+	VECTOR_DECL(int) title_ids;
 };
 
 #define EQP_WEAPON EQP_HAND_R
@@ -795,7 +803,7 @@ enum { ADDITEM_EXIST , ADDITEM_NEW , ADDITEM_OVERAMOUNT };
  **/
 struct item_cd {
 	int64 tick[MAX_ITEMDELAYS];//tick
-	short nameid[MAX_ITEMDELAYS];//skill id
+	int nameid[MAX_ITEMDELAYS];//skill id
 };
 
 enum e_pc_autotrade_update_action {
@@ -1113,8 +1121,8 @@ END_ZEROED_BLOCK; /* End */
 	int (*check_banding) ( struct block_list *bl, va_list ap );
 	int (*inventory_rental_end) (int tid, int64 tick, int id, intptr_t data);
 	void (*check_skilltree) (struct map_session_data *sd, int skill_id);
-	int (*bonus_autospell) (struct s_autospell *spell, int max, short id, short lv, short rate, short flag, short card_id);
-	int (*bonus_autospell_onskill) (struct s_autospell *spell, int max, short src_skill, short id, short lv, short rate, short card_id);
+	int (*bonus_autospell) (struct s_autospell *spell, int max, short id, short lv, short rate, short flag, int card_id);
+	int (*bonus_autospell_onskill) (struct s_autospell *spell, int max, short src_skill, short id, short lv, short rate, int card_id);
 	int (*bonus_addeff) (struct s_addeffect* effect, int max, enum sc_type id, int16 rate, int16 arrow_rate, uint8 flag, uint16 duration);
 	int (*bonus_addeff_onskill) (struct s_addeffectonskill* effect, int max, enum sc_type id, short rate, short skill_id, unsigned char target);
 	int (*bonus_item_drop) (struct s_add_drop *drop, const short max, short id, short group, int race, int rate);
@@ -1177,6 +1185,7 @@ END_ZEROED_BLOCK; /* End */
 	void (*check_supernovice_call) (struct map_session_data *sd, const char *message);
 	bool (*check_basicskill) (struct map_session_data *sd, int level);
 	bool (*isDeathPenaltyJob) (uint16 job);
+	bool (*has_second_costume) (struct map_session_data *sd);
 };
 
 #ifdef HERCULES_CORE

@@ -218,6 +218,16 @@
 #define MAX_QUEST_OBJECTIVES 3           // Max quest objectives for a quest
 #endif
 
+// Achievements [Smokexyz/Hercules]
+#ifndef MAX_ACHIEVEMENT_DB
+#define MAX_ACHIEVEMENT_DB 360          // Maximum number of achievements
+#define MAX_ACHIEVEMENT_OBJECTIVES 10   // Maximum number of achievement objectives
+STATIC_ASSERT(MAX_ACHIEVEMENT_OBJECTIVES <= 10, "This value is limited by the client and database layout and should only be increased if you know the consequences.");
+#define MAX_ACHIEVEMENT_RANKS 20 // Achievement Ranks
+STATIC_ASSERT(MAX_ACHIEVEMENT_RANKS <= 255, "This value is limited by the client and database layout and should only be increased if you know the consequences.");
+#define MAX_ACHIEVEMENT_ITEM_REWARDS 10 // Achievement Rewards
+#endif
+
 // for produce
 #define MIN_ATTRIBUTE 0
 #define MAX_ATTRIBUTE 4
@@ -371,13 +381,13 @@ struct item_option {
 
 struct item {
 	int id;
-	short nameid;
+	int nameid;
 	short amount;
 	unsigned int equip; // Location(s) where item is equipped (using enum equip_pos for bitmasking).
 	char identify;
 	char refine;
 	char attribute;
-	short card[MAX_SLOTS];
+	int card[MAX_SLOTS];
 	unsigned int expire_time;
 	char favorite;
 	unsigned char bound;
@@ -538,8 +548,8 @@ struct s_pet {
 	int pet_id;
 	short class_;
 	short level;
-	short egg_id;//pet egg id
-	short equip;//pet equip name_id
+	int egg_id;//pet egg id
+	int equip;//pet equip name_id
 	short intimate;//pet friendly
 	short hungry;//pet hungry
 	char name[NAME_LENGTH];
@@ -616,6 +626,14 @@ struct hotkey {
 #endif
 };
 
+struct achievement { // Achievements [Smokexyz/Hercules]
+	int id;
+	int objective[MAX_ACHIEVEMENT_OBJECTIVES];
+	time_t completed_at, rewarded_at;
+};
+
+VECTOR_STRUCT_DECL(char_achievements, struct achievement);
+
 struct mmo_charstatus {
 	int char_id;
 	int account_id;
@@ -634,7 +652,8 @@ struct mmo_charstatus {
 	unsigned int option;
 	short manner; // Defines how many minutes a char will be muted, each negative point is equivalent to a minute.
 	unsigned char karma;
-	short hair,hair_color,clothes_color,body;
+	short hair, hair_color, clothes_color;
+	int body;
 	int party_id,guild_id,clan_id,pet_id,hom_id,mer_id,ele_id;
 	int fame;
 
@@ -644,12 +663,12 @@ struct mmo_charstatus {
 	int sword_faith, sword_calls;
 
 	struct {
-		short weapon;      ///< Weapon view sprite id.
-		short shield;      ///< Shield view sprite id.
-		short head_top;    ///< Top headgear view sprite id.
-		short head_mid;    ///< Middle headgear view sprite id.
-		short head_bottom; ///< Bottom headgear view sprite id.
-		short robe;        ///< Robe view sprite id.
+		int weapon;      ///< Weapon view sprite id.
+		int shield;      ///< Shield view sprite id.
+		int head_top;    ///< Top headgear view sprite id.
+		int head_mid;    ///< Middle headgear view sprite id.
+		int head_bottom; ///< Bottom headgear view sprite id.
+		int robe;        ///< Robe view sprite id.
 	} look;
 
 	char name[NAME_LENGTH];
@@ -686,6 +705,8 @@ struct mmo_charstatus {
 	short attendance_count;
 
 	unsigned char hotkey_rowshift;
+
+	int32 title_id; // Achievement Title[Dastgir/Hercules]
 };
 
 typedef enum mail_status {
@@ -1268,6 +1289,20 @@ enum hz_char_ask_name_answer {
 	CHAR_ASK_NAME_ANS_NOTFOUND = 1, // player not found
 	CHAR_ASK_NAME_ANS_GMLOW    = 2, // gm level too low
 	CHAR_ASK_NAME_ANS_OFFLINE  = 3, // login-server offline
+};
+
+/**
+ * Quest Info Types
+ */
+enum questinfo_type {
+	QINFO_JOB,
+	QINFO_SEX,
+	QINFO_BASE_LEVEL,
+	QINFO_JOB_LEVEL,
+	QINFO_ITEM,
+	QINFO_HOMUN_LEVEL,
+	QINFO_HOMUN_TYPE,
+	QINFO_QUEST
 };
 
 /* packet size constant for itemlist */

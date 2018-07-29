@@ -44,6 +44,7 @@
 #include "map/script.h"
 #include "map/skill.h"
 #include "map/status.h"
+#include "map/achievement.h"
 #include "common/HPM.h"
 #include "common/cbasetypes.h"
 #include "common/conf.h"
@@ -88,6 +89,7 @@ struct item_drop_ratio {
 	int mob_id[MAX_ITEMRATIO_MOBS];
 };
 static struct item_drop_ratio *item_drop_ratio_db[MAX_ITEMDB];
+static struct DBMap *item_drop_ratio_other_db = NULL;
 
 static struct eri *item_drop_ers; //For loot drops delay structures.
 static struct eri *item_drop_list_ers;
@@ -2187,6 +2189,10 @@ static void mob_damage(struct mob_data *md, struct block_list *src, int damage)
 		if (src)
 			mob->log_damage(md, src, damage);
 		md->dmgtick = timer->gettick();
+
+		// Achievements [Smokexyz/Hercules]
+		if (src != NULL && src->type == BL_PC)
+			achievement->validate_mob_damage(BL_UCAST(BL_PC, src), damage, false);
 	}
 
 	if (battle_config.show_mob_info&3)
@@ -2419,6 +2425,8 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 			}
 			if(zeny) // zeny from mobs [Valaris]
 				pc->getzeny(tmpsd[i], zeny, LOG_TYPE_PICKDROP_MONSTER, NULL);
+
+			achievement->validate_mob_kill(tmpsd[i], md->db->mob_id); // Achievements [Smokexyz/Hercules]
 		}
 	}
 
@@ -3791,6 +3799,28 @@ static unsigned int mob_drop_adjust(int baserate, int rate_adjust, unsigned shor
 	return (unsigned int)cap_value(rate,rate_min,rate_max);
 }
 
+static struct item_drop_ratio *mob_get_item_drop_ratio(int nameid)
+{
+	Assert_retr(NULL, nameid > 0);
+	if (nameid < ARRAYLENGTH(item_drop_ratio_db)) {
+		return item_drop_ratio_db[nameid];
+	} else {
+		return (struct item_drop_ratio *)idb_get(item_drop_ratio_other_db, nameid);
+	}
+}
+
+static void mob_set_item_drop_ratio(int nameid, struct item_drop_ratio *ratio)
+{
+	Assert_retv(nameid > 0);
+	if (nameid < ARRAYLENGTH(item_drop_ratio_db)) {
+		Assert_retv(item_drop_ratio_db[nameid] == NULL);
+		item_drop_ratio_db[nameid] = ratio;
+	} else {
+		Assert_retv(idb_get(item_drop_ratio_other_db, nameid) == NULL);
+		idb_put(item_drop_ratio_other_db, nameid, ratio);
+	}
+}
+
 /**
  * Check if global item drop rate is overridden for given item
  * in db/mob_item_ratio.txt
@@ -3800,16 +3830,19 @@ static unsigned int mob_drop_adjust(int baserate, int rate_adjust, unsigned shor
  */
 static void item_dropratio_adjust(int nameid, int mob_id, int *rate_adjust)
 {
+	struct item_drop_ratio *dropRatio;
 	nullpo_retv(rate_adjust);
-	if( item_drop_ratio_db[nameid] ) {
-		if( item_drop_ratio_db[nameid]->mob_id[0] ) { // only for listed mobs
+
+	dropRatio = mob->get_item_drop_ratio(nameid);
+	if (dropRatio) {
+		if (dropRatio->mob_id[0] ) { // only for listed mobs
 			int i;
-			ARR_FIND(0, MAX_ITEMRATIO_MOBS, i, item_drop_ratio_db[nameid]->mob_id[i] == mob_id);
-			if(i < MAX_ITEMRATIO_MOBS) // found
-				*rate_adjust = item_drop_ratio_db[nameid]->drop_ratio;
+			ARR_FIND(0, MAX_ITEMRATIO_MOBS, i, dropRatio->mob_id[i] == mob_id);
+			if (i < MAX_ITEMRATIO_MOBS) // found
+				*rate_adjust = dropRatio->drop_ratio;
 		}
 		else // for all mobs
-			*rate_adjust = item_drop_ratio_db[nameid]->drop_ratio;
+			*rate_adjust = dropRatio->drop_ratio;
 	}
 }
 
@@ -5142,6 +5175,7 @@ static bool mob_readdb_race2(char *fields[], int columns, int current)
 static bool mob_readdb_itemratio(char *str[], int columns, int current)
 {
 	int nameid, ratio, i;
+	struct item_drop_ratio *dropRatio;
 
 	nullpo_retr(false, str);
 	nameid = atoi(str[0]);
@@ -5154,12 +5188,15 @@ static bool mob_readdb_itemratio(char *str[], int columns, int current)
 
 	ratio = atoi(str[1]);
 
-	if(item_drop_ratio_db[nameid] == NULL)
-		item_drop_ratio_db[nameid] = (struct item_drop_ratio*)aCalloc(1, sizeof(struct item_drop_ratio));
+	dropRatio = mob->get_item_drop_ratio(nameid);
+	if (dropRatio == NULL) {
+		dropRatio = (struct item_drop_ratio*)aCalloc(1, sizeof(struct item_drop_ratio));
+		mob->set_item_drop_ratio(nameid, dropRatio);
+	}
 
-	item_drop_ratio_db[nameid]->drop_ratio = ratio;
-	for(i = 0; i < columns-2; i++)
-		item_drop_ratio_db[nameid]->mob_id[i] = atoi(str[i+2]);
+	dropRatio->drop_ratio = ratio;
+	for (i = 0; i < columns - 2; i++)
+		dropRatio->mob_id[i] = atoi(str[i + 2]);
 
 	return true;
 }
@@ -5183,6 +5220,19 @@ static void mob_load(bool minimal)
 	sv->readdb(map->db_path, DBPATH"mob_race2_db.txt", ',', 2, 20, -1, mob->readdb_race2);
 }
 
+/**
+ * @see DBApply
+ */
+static int mob_final_ratio_sub(union DBKey key, struct DBData *data, va_list ap)
+{
+	struct item_drop_ratio *ratio = DB->data2ptr(data);
+
+	if (ratio)
+		aFree(ratio);
+
+	return 0;
+}
+
 static void mob_reload(void)
 {
 	int i;
@@ -5201,6 +5251,7 @@ static void mob_reload(void)
 			item_drop_ratio_db[i] = NULL;
 		}
 	}
+	mob->item_drop_ratio_other_db->clear(mob->item_drop_ratio_other_db, mob->final_ratio_sub);
 
 	mob->load(false);
 }
@@ -5291,6 +5342,8 @@ static int do_final_mob(void)
 			item_drop_ratio_db[i] = NULL;
 		}
 	}
+	mob->item_drop_ratio_other_db->clear(mob->item_drop_ratio_other_db, mob->final_ratio_sub);
+	db_destroy(mob->item_drop_ratio_other_db);
 	ers_destroy(item_drop_ers);
 	ers_destroy(item_drop_list_ers);
 	return 0;
@@ -5333,6 +5386,10 @@ void mob_defaults(void)
 	memcpy(mob->manuk, mob_manuk, sizeof(mob->manuk));
 	memcpy(mob->splendide, mob_splendide, sizeof(mob->splendide));
 	memcpy(mob->mora, mob_mora, sizeof(mob->mora));
+
+	item_drop_ratio_other_db = idb_alloc(DB_OPT_BASE);
+	mob->item_drop_ratio_db = item_drop_ratio_db;
+	mob->item_drop_ratio_other_db = item_drop_ratio_other_db;
 
 	/* */
 	mob->reload = mob_reload;
@@ -5438,6 +5495,9 @@ void mob_defaults(void)
 	mob->readdb_race2 = mob_readdb_race2;
 	mob->readdb_itemratio = mob_readdb_itemratio;
 	mob->load = mob_load;
+	mob->get_item_drop_ratio = mob_get_item_drop_ratio;
+	mob->set_item_drop_ratio = mob_set_item_drop_ratio;
+	mob->final_ratio_sub = mob_final_ratio_sub;
 	mob->clear_spawninfo = mob_clear_spawninfo;
 	mob->destroy_mob_db = mob_destroy_mob_db;
 	mob->skill_db_libconfig = mob_skill_db_libconfig;

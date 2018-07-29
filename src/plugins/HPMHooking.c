@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2016  Hercules Dev Team
+ * Copyright (C) 2013-2018  Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,6 +48,7 @@ PRAGMA_GCC5(GCC diagnostic ignored "-Wdiscarded-qualifiers")
 #define HPM_SOURCES_INCLUDE "HPMHooking/HPMHooking_char.sources.inc"
 #include "char/char.h"
 #include "char/geoip.h"
+#include "char/int_achievement.h"
 #include "char/int_auction.h"
 #include "char/int_clan.h"
 #include "char/int_elemental.h"
@@ -71,6 +72,7 @@ PRAGMA_GCC5(GCC diagnostic ignored "-Wdiscarded-qualifiers")
 #define HPM_HOOKS_INCLUDE "HPMHooking/HPMHooking_map.Hooks.inc"
 #define HPM_POINTS_INCLUDE "HPMHooking/HPMHooking_map.HookingPoints.inc"
 #define HPM_SOURCES_INCLUDE "HPMHooking/HPMHooking_map.sources.inc"
+#include "map/achievement.h"
 #include "map/atcommand.h"
 #include "map/battle.h"
 #include "map/battleground.h"
