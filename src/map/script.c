@@ -13220,6 +13220,7 @@ static BUILDIN(setmapflag)
 			case MF_PVP_NOGUILD:        map->list[m].flag.pvp_noguild = 1; break;
 			case MF_GVG: {
 				struct block_list bl;
+				memset(&bl, 0, sizeof(bl));
 				map->list[m].flag.gvg = 1;
 				clif->map_property_mapall(m, MAPPROPERTY_AGITZONE);
 				bl.type = BL_NUL;
@@ -13306,6 +13307,7 @@ static BUILDIN(removemapflag)
 			case MF_NOZENYPENALTY:      map->list[m].flag.nozenypenalty = 0; break;
 			case MF_PVP: {
 				struct block_list bl;
+				memset(&bl, 0, sizeof(bl));
 				bl.type = BL_NUL;
 				bl.m = m;
 				map->list[m].flag.pvp = 0;
@@ -13317,6 +13319,7 @@ static BUILDIN(removemapflag)
 			case MF_PVP_NOGUILD:        map->list[m].flag.pvp_noguild = 0; break;
 			case MF_GVG: {
 				struct block_list bl;
+				memset(&bl, 0, sizeof(bl));
 				bl.type = BL_NUL;
 				bl.m = m;
 				map->list[m].flag.gvg = 0;
@@ -13384,6 +13387,7 @@ static BUILDIN(pvpon)
 	struct s_mapiterator* iter;
 	struct block_list bl;
 
+	memset(&bl, 0, sizeof(bl));
 	str = script_getstr(st,2);
 	m = map->mapname2mapid(str);
 	if( m < 0 || map->list[m].flag.pvp )
@@ -13444,6 +13448,7 @@ static BUILDIN(pvpoff)
 	const char *str;
 	struct block_list bl;
 
+	memset(&bl, 0, sizeof(bl));
 	str=script_getstr(st,2);
 	m = map->mapname2mapid(str);
 	if(m < 0 || !map->list[m].flag.pvp)
@@ -13473,6 +13478,7 @@ static BUILDIN(gvgon)
 	if(m >= 0 && !map->list[m].flag.gvg) {
 		struct block_list bl;
 
+		memset(&bl, 0, sizeof(bl));
 		if( !strdb_exists(map->zone_db,MAP_ZONE_GVG_NAME) ) {
 			ShowError("buildin_gvgon: zone_db missing '%s'\n",MAP_ZONE_GVG_NAME);
 			return true;
@@ -13497,6 +13503,7 @@ static BUILDIN(gvgoff)
 	m = map->mapname2mapid(str);
 	if(m >= 0 && map->list[m].flag.gvg) {
 		struct block_list bl;
+		memset(&bl, 0, sizeof(bl));
 		map->zone_change2(m, map->list[m].prev_zone);
 		map->list[m].flag.gvg = 0;
 		clif->map_property_mapall(m, MAPPROPERTY_NOTHING);
