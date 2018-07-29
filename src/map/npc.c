@@ -2272,10 +2272,11 @@ static int npc_selllist(struct map_session_data *sd, struct itemlist *item_list)
 			}
 		}
 
-		pc->delitem(sd, idx, entry->amount, 0, DELITEM_SOLD, LOG_TYPE_NPC);
-
 		// Achievements [Smokexyz/Hercules]
 		achievement->validate_item_sell(sd, sd->status.inventory[idx].nameid, entry->amount);
+
+		pc->delitem(sd, idx, entry->amount, 0, DELITEM_SOLD, LOG_TYPE_NPC);
+
 	}
 
 	if (z + sd->status.zeny > MAX_ZENY && nd->master_nd == NULL)
