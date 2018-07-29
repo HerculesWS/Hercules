@@ -17784,14 +17784,26 @@ static BUILDIN(getd)
 	char varname[100];
 	const char *buffer;
 	int elem;
+	int id;
 
 	buffer = script_getstr(st, 2);
 
 	if (sscanf(buffer, "%99[^[][%d]", varname, &elem) < 2)
 		elem = 0;
 
+	id = script->search_str(varname);
+
+	if (id < 0) {
+		id = script->add_str(varname);
+		script->str_data[id].type = C_NAME;
+	} else if (script->str_data[id].type != C_NAME) {
+		ShowError("script:getd: `%s` is already used by something that is not a variable.\n", varname);
+		st->state = END;
+		return false;
+	}
+
 	// Push the 'pointer' so it's more flexible [Lance]
-	script->push_val(st->stack, C_NAME, reference_uid(script->add_str(varname), elem),NULL);
+	script->push_val(st->stack, C_NAME, reference_uid(id, elem),NULL);
 
 	return true;
 }
