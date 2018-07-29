@@ -1378,11 +1378,10 @@ static bool achievement_readdb_validate_criteria_itemtype(const struct config_se
 		}
 	} else if ((tt = libconfig->setting_get_member(t, "ItemType")) && config_setting_is_array(tt)) {
 		int j = 0;
-		uint32 it_type = 0;
 
 		while (j < libconfig->setting_length(tt)) {
 			if ((val = libconfig->setting_get_int_elem(tt, j))) {
-				if (val < IT_HEALING || val >= IT_MAX) {
+				if (val < IT_HEALING || val > IT_MAX) {
 					ShowError("achievement_readdb_validate_criteria_itemtype: Invalid ItemType %d provided (Achievement: %d, Objective: %d). Skipping...\n", val, entry_id, obj_idx);
 					continue;
 				}
@@ -1405,8 +1404,6 @@ static bool achievement_readdb_validate_criteria_itemtype(const struct config_se
 			}
 			j++;
 		}
-
-		obj->item_type = it_type;
 	} else if (achievement_criteria_itemtype(type)) {
 		ShowError("achievement_readdb_validate_criteria_itemtype: Criteria requires a ItemType field (Achievement: %d, Objective: %d). Skipping...\n", entry_id, obj_idx);
 		return false;
@@ -1780,7 +1777,7 @@ static void achievement_readb(void)
 		if (libconfig->setting_lookup_int(conf, "Id", &t_ad.id) == 0) {
 			ShowError("achievement_readdb: Id field for entry %d is not provided! Skipping...\n", entry);
 			continue;
-		} else if (t_ad.id <= 0 || t_ad.id > INT32_MAX) {
+		} else if (t_ad.id <= 0) {
 			ShowError("achievement_readdb: Invalid Id %d for entry %d. Skipping...\n", t_ad.id, entry);
 			continue;
 		}
