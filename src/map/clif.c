@@ -6099,6 +6099,7 @@ static void clif_map_property_mapall(int mapid, enum map_property property)
 	struct block_list bl;
 	unsigned char buf[16];
 
+	memset(&bl, 0, sizeof(bl));
 	bl.id = 0;
 	bl.type = BL_NUL;
 	bl.m = mapid;
@@ -17243,7 +17244,7 @@ static void clif_bg_updatescore(int16 m)
 	struct block_list bl;
 	unsigned char buf[6];
 
-	bl.id = 0;
+	memset(&bl, 0, sizeof(bl));
 	bl.type = BL_NUL;
 	bl.m = m;
 
