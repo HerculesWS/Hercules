@@ -17800,7 +17800,7 @@ static BUILDIN(getd)
 
 	id = script->search_str(varname);
 
-	if (id < 0 || script->str_data[id].type == C_NOP) {
+	if (id < 0) {
 		id = script->add_str(varname);
 		script->str_data[id].type = C_NAME;
 	} else if (script->str_data[id].type != C_NAME) {
