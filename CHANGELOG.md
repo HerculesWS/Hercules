@@ -10,6 +10,42 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+## [v2018.07.29] `Jul 29 2018`
+### Added
+- Added support for the Achievements system and the Titles system. (#2067, #2157, #2161)
+- Added a stylist db option to restrict some hairstyles for the Doram race. (#2155)
+- Added/updated packets, encryption keys, and message tables for clients up to 2018-07-18. (#2139, #2126, #2132)
+- Added support for the overweight percentage packet for clients older than 2017-10-25. (#2139)
+- Added support for the chat commands `/changedress` and `/nocosplay`. (#2139)
+- Added support for the party member death notification packet for clients older than 2017-05-02. (#2139)
+- Added support for body style to the stylist. (#2138)
+- Added a `dead_area_size` battle config option to configure the area to which player death packets are sent. (#2088)
+- Added project files for Microsoft Visual Studio 2017 (#2131)
+
+### Changed
+- Updated the warp list packet for clients older than 2017-04-19. (#2139)
+- Simplified the `questinfo()` script command and added `setquestinfo()`. This may break some scripts, but is easily fixable with a regular expression search/replace. (#2107)
+- The constants database will now also be reloaded when calling `@reloadscript`. (#2130)
+- The maximum item ID for the item database is now `65535` for clients older than 2018-07-04, and `131072` for newer clients. It may be increased up to a maximum of `2147483648` in the future, as needed. (#2134)
+- Added the missing `pos` parameter to `skill_init_unit_layout_unknown()`. (#2143)
+
+### Deprecated
+- Microsoft Visual Studio 2012 is no longer officially supported. (#2131)
+
+### Removed
+- Removed the `EF_ANGEL3` effect from the novice academy, as it is now triggered by the Achievements system. (#2156)
+
+### Fixed
+- Fixed a bug which made the `Venom Splasher` skill consume gemstones twice. (#2148)
+- Fixed a bug that could make skill cooldowns never expire, rendering the skill unusable. (#2147)
+- Fixed the maximum array size being higher than the maximum integer (uint32 vs int32), which could cause integer overflows in scripts. (#2093)
+- Fixed a wrongly named constant, which made `Sea-Otter Card` not increase the `Sushi` heal rate. (#2117)
+- Fixed misc bugs related to pet evolution. (#2136, #2153)
+- Fixed a bug that sent an attendance system message without the attendence ui being opened. (#2129)
+- Corrected several outdated documentation references to db/constants.conf, to point to doc/constants.md. (#2090)
+- Fixed an issue in the script command `getd()` that wouldn't properly initialize the type of newly created variables through `set(getd(...), ...)` (#2158)
+- Fixed a missing memory initialization in several dummy `struct block_list` entries created as local variables. (#2159)
+
 ## [v2018.07.01+1] `Jul 1 2018` `PATCH 1`
 ### Fixed
 - Fixed a regression that made it impossible to invite guild members. (#2124, issue #2122)
@@ -329,6 +365,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2018.07.29]: https://github.com/HerculesWS/Hercules/compare/v2018.07.01+1...v2018.07.29
 [v2018.07.01+1]: https://github.com/HerculesWS/Hercules/compare/v2018.07.01...v2018.07.01+1
 [v2018.07.01]: https://github.com/HerculesWS/Hercules/compare/v2018.06.03...v2018.07.01
 [v2018.06.03]: https://github.com/HerculesWS/Hercules/compare/v2018.05.06...v2018.06.03
