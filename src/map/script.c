@@ -613,6 +613,18 @@ static int script_add_str(const char *p)
 	return script->str_num++;
 }
 
+static int script_add_variable(const char *varname)
+{
+	int key = script->search_str(varname);
+
+	if (key < 0) {
+		key = script->add_str(varname);
+		script->str_data[key].type = C_NAME;
+	}
+
+	return key;
+}
+
 /**
  * Appends 1 byte to the script buffer.
  *
@@ -3460,6 +3472,19 @@ static int set_reg(struct script_state *st, struct map_session_data *sd, int64 n
 	nullpo_ret(name);
 	prefix = name[0];
 
+	if (script->str_data[script_getvarid(num)].type != C_NAME) {
+		ShowError("script:set_reg: not a variable! '%s'\n", name);
+
+		// to avoid this don't do script->add_str(") without setting its type.
+		// either use script->add_variable() or manually set the type
+
+		if (st) {
+			script->reportsrc(st);
+			st->state = END;
+		}
+		return 0;
+	}
+
 	if (strlen(name) > SCRIPT_VARNAME_LENGTH) {
 		ShowError("script:set_reg: variable name too long. '%s'\n", name);
 		if (st) {
@@ -3579,12 +3604,26 @@ static int set_reg(struct script_state *st, struct map_session_data *sd, int64 n
 
 static int set_var(struct map_session_data *sd, char *name, void *val)
 {
-	return script->set_reg(NULL, sd, reference_uid(script->add_str(name),0), name, val, NULL);
+	int key = script->add_variable(name);
+
+	if (script->str_data[key].type != C_NAME) {
+		ShowError("script:setd_sub: `%s` is already used by something that is not a variable.\n", name);
+		return -1;
+	}
+
+	return script->set_reg(NULL, sd, reference_uid(key, 0), name, val, NULL);
 }
 
 static void setd_sub(struct script_state *st, struct map_session_data *sd, const char *varname, int elem, const void *value, struct reg_db *ref)
 {
-	script->set_reg(st, sd, reference_uid(script->add_str(varname),elem), varname, value, ref);
+	int key = script->add_variable(varname);
+
+	if (script->str_data[key].type != C_NAME) {
+		ShowError("script:setd_sub: `%s` is already used by something that is not a variable.\n", varname);
+		return;
+	}
+
+	script->set_reg(st, sd, reference_uid(key, elem), varname, value, ref);
 }
 
 /// Converts the data to a string
@@ -4119,10 +4158,10 @@ static void op_2str(struct script_state *st, int op, const char *s1, const char 
 				int i;
 				for (i = 0; i < offsetcount; i++) {
 					libpcre->get_substring(s1, offsets, offsetcount, i, &pcre_match);
-					mapreg->setregstr(reference_uid(script->add_str("$@regexmatch$"), i), pcre_match);
+					mapreg->setregstr(reference_uid(script->add_variable("$@regexmatch$"), i), pcre_match);
 					libpcre->free_substring(pcre_match);
 				}
-				mapreg->setreg(script->add_str("$@regexmatchcount"), i);
+				mapreg->setreg(script->add_variable("$@regexmatchcount"), i);
 				a = offsetcount;
 			} else { // C_RE_NE
 				a = (offsetcount == 0);
@@ -4905,7 +4944,12 @@ static void script_cleararray_pc(struct map_session_data *sd, const char *varnam
 	unsigned int i, *list = NULL, size = 0;
 	int key;
 
-	key = script->add_str(varname);
+	key = script->add_variable(varname);
+
+	if (script->str_data[key].type != C_NAME) {
+		ShowError("script:cleararray_pc: `%s` is already used by something that is not a variable.\n", varname);
+		return;
+	}
 
 	if( !(src = script->array_src(NULL,sd,varname,NULL) ) )
 		return;
@@ -4935,7 +4979,12 @@ static void script_setarray_pc(struct map_session_data *sd, const char *varname,
 		return;
 	}
 
-	key = ( refcache && refcache[0] ) ? refcache[0] : script->add_str(varname);
+	key = ( refcache && refcache[0] ) ? refcache[0] : script->add_variable(varname);
+
+	if (script->str_data[key].type != C_NAME) {
+		ShowError("script:setarray_pc: `%s` is already used by something that is not a variable.\n", varname);
+		return;
+	}
 
 	script->set_reg(NULL,sd,reference_uid(key, idx),varname,value,NULL);
 
@@ -6162,7 +6211,7 @@ static BUILDIN(menu)
 			st->state = END;
 			return false;
 		}
-		pc->setreg(sd, script->add_str("@menu"), menu);
+		pc->setreg(sd, script->add_variable("@menu"), menu);
 		st->pos = script_getnum(st, i + 1);
 		st->state = GOTO;
 	}
@@ -6235,7 +6284,7 @@ static BUILDIN(select)
 			if( sd->npc_menu <= 0 )
 				break;// entry found
 		}
-		pc->setreg(sd, script->add_str("@menu"), menu);
+		pc->setreg(sd, script->add_variable("@menu"), menu);
 		script_pushint(st, menu);
 		st->state = RUN;
 	}
@@ -6302,7 +6351,7 @@ static BUILDIN(prompt)
 	else if( sd->npc_menu == 0xff )
 	{// Cancel was pressed
 		sd->state.menu_or_input = 0;
-		pc->setreg(sd, script->add_str("@menu"), 0xff);
+		pc->setreg(sd, script->add_variable("@menu"), 0xff);
 		script_pushint(st, 0xff);
 		st->state = RUN;
 	}
@@ -6318,7 +6367,7 @@ static BUILDIN(prompt)
 			if( sd->npc_menu <= 0 )
 				break;// entry found
 		}
-		pc->setreg(sd, script->add_str("@menu"), menu);
+		pc->setreg(sd, script->add_variable("@menu"), menu);
 		script_pushint(st, menu);
 		st->state = RUN;
 	}
@@ -8857,19 +8906,19 @@ static BUILDIN(getpartymember)
 			if(p->party.member[i].account_id) {
 				switch (type) {
 					case 2:
-						mapreg->setreg(reference_uid(script->add_str("$@partymemberaid"), j),p->party.member[i].account_id);
+						mapreg->setreg(reference_uid(script->add_variable("$@partymemberaid"), j),p->party.member[i].account_id);
 						break;
 					case 1:
-						mapreg->setreg(reference_uid(script->add_str("$@partymembercid"), j),p->party.member[i].char_id);
+						mapreg->setreg(reference_uid(script->add_variable("$@partymembercid"), j),p->party.member[i].char_id);
 						break;
 					default:
-						mapreg->setregstr(reference_uid(script->add_str("$@partymembername$"), j),p->party.member[i].name);
+						mapreg->setregstr(reference_uid(script->add_variable("$@partymembername$"), j),p->party.member[i].name);
 				}
 				j++;
 			}
 		}
 	}
-	mapreg->setreg(script->add_str("$@partymembercount"),j);
+	mapreg->setreg(script->add_variable("$@partymembercount"),j);
 
 	return true;
 }
@@ -8999,20 +9048,20 @@ static BUILDIN(getguildmember)
 			if ( g->member[i].account_id ) {
 				switch (type) {
 				case 2:
-					mapreg->setreg(reference_uid(script->add_str("$@guildmemberaid"), j),g->member[i].account_id);
+					mapreg->setreg(reference_uid(script->add_variable("$@guildmemberaid"), j),g->member[i].account_id);
 					break;
 				case 1:
-					mapreg->setreg(reference_uid(script->add_str("$@guildmembercid"), j), g->member[i].char_id);
+					mapreg->setreg(reference_uid(script->add_variable("$@guildmembercid"), j), g->member[i].char_id);
 					break;
 				default:
-					mapreg->setregstr(reference_uid(script->add_str("$@guildmembername$"), j), g->member[i].name);
+					mapreg->setregstr(reference_uid(script->add_variable("$@guildmembername$"), j), g->member[i].name);
 					break;
 				}
 				j++;
 			}
 		}
 	}
-	mapreg->setreg(script->add_str("$@guildmembercount"), j);
+	mapreg->setreg(script->add_variable("$@guildmembercount"), j);
 	return true;
 }
 
@@ -10917,13 +10966,13 @@ static BUILDIN(getmobdrops)
 		if( itemdb->exists(monster->dropitem[i].nameid) == NULL )
 			continue;
 
-		mapreg->setreg(reference_uid(script->add_str("$@MobDrop_item"), j), monster->dropitem[i].nameid);
-		mapreg->setreg(reference_uid(script->add_str("$@MobDrop_rate"), j), monster->dropitem[i].p);
+		mapreg->setreg(reference_uid(script->add_variable("$@MobDrop_item"), j), monster->dropitem[i].nameid);
+		mapreg->setreg(reference_uid(script->add_variable("$@MobDrop_rate"), j), monster->dropitem[i].p);
 
 		j++;
 	}
 
-	mapreg->setreg(script->add_str("$@MobDrop_count"), j);
+	mapreg->setreg(script->add_variable("$@MobDrop_count"), j);
 	script_pushint(st, 1);
 
 	return true;
@@ -12854,7 +12903,7 @@ static BUILDIN(getwaitingroomstate)
 			for (i = 0; i < cd->users; i++) {
 				struct map_session_data *sd = cd->usersd[i];
 				nullpo_retr(false, sd);
-				mapreg->setreg(reference_uid(script->add_str("$@chatmembers"), i), sd->bl.id);
+				mapreg->setreg(reference_uid(script->add_variable("$@chatmembers"), i), sd->bl.id);
 			}
 			script_pushint(st, cd->users);
 			break;
@@ -12924,7 +12973,7 @@ static BUILDIN(warpwaitingpc)
 			pc->payzeny(sd, cd->zeny, LOG_TYPE_NPC, NULL);
 		}
 
-		mapreg->setreg(reference_uid(script->add_str("$@warpwaitingpc"), i), sd->bl.id);
+		mapreg->setreg(reference_uid(script->add_variable("$@warpwaitingpc"), i), sd->bl.id);
 
 		if( strcmp(map_name,"Random") == 0 )
 			pc->randomwarp(sd,CLR_TELEPORT);
@@ -12933,7 +12982,7 @@ static BUILDIN(warpwaitingpc)
 		else
 			pc->setpos(sd, script->mapindexname2id(st,map_name), x, y, CLR_OUTSIGHT);
 	}
-	mapreg->setreg(script->add_str("$@warpwaitingpcnum"), i);
+	mapreg->setreg(script->add_variable("$@warpwaitingpcnum"), i);
 	return true;
 }
 
@@ -14809,34 +14858,34 @@ static BUILDIN(getinventorylist)
 
 	for(i=0;i<MAX_INVENTORY;i++) {
 		if(sd->status.inventory[i].nameid > 0 && sd->status.inventory[i].amount > 0) {
-			pc->setreg(sd,reference_uid(script->add_str("@inventorylist_id"), j),sd->status.inventory[i].nameid);
-			pc->setreg(sd,reference_uid(script->add_str("@inventorylist_amount"), j),sd->status.inventory[i].amount);
+			pc->setreg(sd,reference_uid(script->add_variable("@inventorylist_id"), j),sd->status.inventory[i].nameid);
+			pc->setreg(sd,reference_uid(script->add_variable("@inventorylist_amount"), j),sd->status.inventory[i].amount);
 			if(sd->status.inventory[i].equip) {
-				pc->setreg(sd,reference_uid(script->add_str("@inventorylist_equip"), j),pc->equippoint(sd,i));
+				pc->setreg(sd,reference_uid(script->add_variable("@inventorylist_equip"), j),pc->equippoint(sd,i));
 			} else {
-				pc->setreg(sd,reference_uid(script->add_str("@inventorylist_equip"), j),0);
+				pc->setreg(sd,reference_uid(script->add_variable("@inventorylist_equip"), j),0);
 			}
-			pc->setreg(sd,reference_uid(script->add_str("@inventorylist_refine"), j),sd->status.inventory[i].refine);
-			pc->setreg(sd,reference_uid(script->add_str("@inventorylist_identify"), j),sd->status.inventory[i].identify);
-			pc->setreg(sd,reference_uid(script->add_str("@inventorylist_attribute"), j),sd->status.inventory[i].attribute);
+			pc->setreg(sd,reference_uid(script->add_variable("@inventorylist_refine"), j),sd->status.inventory[i].refine);
+			pc->setreg(sd,reference_uid(script->add_variable("@inventorylist_identify"), j),sd->status.inventory[i].identify);
+			pc->setreg(sd,reference_uid(script->add_variable("@inventorylist_attribute"), j),sd->status.inventory[i].attribute);
 			for (k = 0; k < MAX_SLOTS; k++) {
 				sprintf(card_var, "@inventorylist_card%d",k+1);
-				pc->setreg(sd,reference_uid(script->add_str(card_var), j),sd->status.inventory[i].card[k]);
+				pc->setreg(sd,reference_uid(script->add_variable(card_var), j),sd->status.inventory[i].card[k]);
 			}
 			for (k = 0; k < MAX_ITEM_OPTIONS; k++) {
 				sprintf(card_var, "@inventorylist_opt_id%d", k + 1);
-				pc->setreg(sd, reference_uid(script->add_str(card_var), j), sd->status.inventory[i].option[k].index);
+				pc->setreg(sd, reference_uid(script->add_variable(card_var), j), sd->status.inventory[i].option[k].index);
 				sprintf(card_var, "@inventorylist_opt_val%d", k + 1);
-				pc->setreg(sd, reference_uid(script->add_str(card_var), j), sd->status.inventory[i].option[k].value);
+				pc->setreg(sd, reference_uid(script->add_variable(card_var), j), sd->status.inventory[i].option[k].value);
 				sprintf(card_var, "@inventorylist_opt_param%d", k + 1);
-				pc->setreg(sd, reference_uid(script->add_str(card_var), j), sd->status.inventory[i].option[k].param);
+				pc->setreg(sd, reference_uid(script->add_variable(card_var), j), sd->status.inventory[i].option[k].param);
 			}
-			pc->setreg(sd,reference_uid(script->add_str("@inventorylist_expire"), j),sd->status.inventory[i].expire_time);
-			pc->setreg(sd,reference_uid(script->add_str("@inventorylist_bound"), j),sd->status.inventory[i].bound);
+			pc->setreg(sd,reference_uid(script->add_variable("@inventorylist_expire"), j),sd->status.inventory[i].expire_time);
+			pc->setreg(sd,reference_uid(script->add_variable("@inventorylist_bound"), j),sd->status.inventory[i].bound);
 			j++;
 		}
 	}
-	pc->setreg(sd,script->add_str("@inventorylist_count"),j);
+	pc->setreg(sd,script->add_variable("@inventorylist_count"),j);
 	return true;
 }
 
@@ -14850,30 +14899,30 @@ static BUILDIN(getcartinventorylist)
 
 	for(i=0;i<MAX_CART;i++) {
 		if(sd->status.cart[i].nameid > 0 && sd->status.cart[i].amount > 0) {
-			pc->setreg(sd,reference_uid(script->add_str("@cartinventorylist_id"), j),sd->status.cart[i].nameid);
-			pc->setreg(sd,reference_uid(script->add_str("@cartinventorylist_amount"), j),sd->status.cart[i].amount);
-			pc->setreg(sd,reference_uid(script->add_str("@cartinventorylist_equip"), j),sd->status.cart[i].equip);
-			pc->setreg(sd,reference_uid(script->add_str("@cartinventorylist_refine"), j),sd->status.cart[i].refine);
-			pc->setreg(sd,reference_uid(script->add_str("@cartinventorylist_identify"), j),sd->status.cart[i].identify);
-			pc->setreg(sd,reference_uid(script->add_str("@cartinventorylist_attribute"), j),sd->status.cart[i].attribute);
+			pc->setreg(sd,reference_uid(script->add_variable("@cartinventorylist_id"), j),sd->status.cart[i].nameid);
+			pc->setreg(sd,reference_uid(script->add_variable("@cartinventorylist_amount"), j),sd->status.cart[i].amount);
+			pc->setreg(sd,reference_uid(script->add_variable("@cartinventorylist_equip"), j),sd->status.cart[i].equip);
+			pc->setreg(sd,reference_uid(script->add_variable("@cartinventorylist_refine"), j),sd->status.cart[i].refine);
+			pc->setreg(sd,reference_uid(script->add_variable("@cartinventorylist_identify"), j),sd->status.cart[i].identify);
+			pc->setreg(sd,reference_uid(script->add_variable("@cartinventorylist_attribute"), j),sd->status.cart[i].attribute);
 			for (k = 0; k < MAX_SLOTS; k++) {
 				sprintf(card_var, "@cartinventorylist_card%d",k+1);
-				pc->setreg(sd,reference_uid(script->add_str(card_var), j),sd->status.cart[i].card[k]);
+				pc->setreg(sd,reference_uid(script->add_variable(card_var), j),sd->status.cart[i].card[k]);
 			}
 			for (k = 0; k < MAX_ITEM_OPTIONS; k++) {
 				sprintf(card_var, "@cartinventorylist_opt_id%d", k + 1);
-				pc->setreg(sd, reference_uid(script->add_str(card_var), j), sd->status.cart[i].option[k].index);
+				pc->setreg(sd, reference_uid(script->add_variable(card_var), j), sd->status.cart[i].option[k].index);
 				sprintf(card_var, "@cartinventorylist_opt_val%d", k + 1);
-				pc->setreg(sd, reference_uid(script->add_str(card_var), j), sd->status.cart[i].option[k].value);
+				pc->setreg(sd, reference_uid(script->add_variable(card_var), j), sd->status.cart[i].option[k].value);
 				sprintf(card_var, "@cartinventorylist_opt_param%d", k + 1);
-				pc->setreg(sd, reference_uid(script->add_str(card_var), j), sd->status.cart[i].option[k].param);
+				pc->setreg(sd, reference_uid(script->add_variable(card_var), j), sd->status.cart[i].option[k].param);
 			}
-			pc->setreg(sd,reference_uid(script->add_str("@cartinventorylist_expire"), j),sd->status.cart[i].expire_time);
-			pc->setreg(sd,reference_uid(script->add_str("@cartinventorylist_bound"), j),sd->status.cart[i].bound);
+			pc->setreg(sd,reference_uid(script->add_variable("@cartinventorylist_expire"), j),sd->status.cart[i].expire_time);
+			pc->setreg(sd,reference_uid(script->add_variable("@cartinventorylist_bound"), j),sd->status.cart[i].bound);
 			j++;
 		}
 	}
-	pc->setreg(sd,script->add_str("@cartinventorylist_count"),j);
+	pc->setreg(sd,script->add_variable("@cartinventorylist_count"),j);
 	return true;
 }
 
@@ -14885,13 +14934,13 @@ static BUILDIN(getskilllist)
 		return true;
 	for (i = 0; i < MAX_SKILL_DB; i++) {
 		if(sd->status.skill[i].id > 0 && sd->status.skill[i].lv > 0) {
-			pc->setreg(sd,reference_uid(script->add_str("@skilllist_id"), j),sd->status.skill[i].id);
-			pc->setreg(sd,reference_uid(script->add_str("@skilllist_lv"), j),sd->status.skill[i].lv);
-			pc->setreg(sd,reference_uid(script->add_str("@skilllist_flag"), j),sd->status.skill[i].flag);
+			pc->setreg(sd,reference_uid(script->add_variable("@skilllist_id"), j),sd->status.skill[i].id);
+			pc->setreg(sd,reference_uid(script->add_variable("@skilllist_lv"), j),sd->status.skill[i].lv);
+			pc->setreg(sd,reference_uid(script->add_variable("@skilllist_flag"), j),sd->status.skill[i].flag);
 			j++;
 		}
 	}
-	pc->setreg(sd,script->add_str("@skilllist_count"),j);
+	pc->setreg(sd,script->add_variable("@skilllist_count"),j);
 	return true;
 }
 
@@ -17798,12 +17847,9 @@ static BUILDIN(getd)
 	if (sscanf(buffer, "%99[^[][%d]", varname, &elem) < 2)
 		elem = 0;
 
-	id = script->search_str(varname);
+	id = script->add_variable(varname);
 
-	if (id < 0) {
-		id = script->add_str(varname);
-		script->str_data[id].type = C_NAME;
-	} else if (script->str_data[id].type != C_NAME) {
+	if (script->str_data[id].type != C_NAME) {
 		ShowError("script:getd: `%s` is already used by something that is not a variable.\n", varname);
 		st->state = END;
 		return false;
@@ -21404,12 +21450,12 @@ static BUILDIN(waitingroom2bg)
 	for (i = 0; i < n && i < MAX_BG_MEMBERS; i++) {
 		struct map_session_data *sd = cd->usersd[i];
 		if (sd != NULL && bg->team_join(bg_id, sd))
-			mapreg->setreg(reference_uid(script->add_str("$@arenamembers"), i), sd->bl.id);
+			mapreg->setreg(reference_uid(script->add_variable("$@arenamembers"), i), sd->bl.id);
 		else
-			mapreg->setreg(reference_uid(script->add_str("$@arenamembers"), i), 0);
+			mapreg->setreg(reference_uid(script->add_variable("$@arenamembers"), i), 0);
 	}
 
-	mapreg->setreg(script->add_str("$@arenamembersnum"), i);
+	mapreg->setreg(script->add_variable("$@arenamembersnum"), i);
 	script_pushint(st,bg_id);
 	return true;
 }
@@ -23587,7 +23633,7 @@ static BUILDIN(countbound)
 			(!type && sd->status.inventory[i].bound > 0) ||
 			(type && sd->status.inventory[i].bound == type)
 		)) {
-			pc->setreg(sd,reference_uid(script->add_str("@bound_items"), k),sd->status.inventory[i].nameid);
+			pc->setreg(sd,reference_uid(script->add_variable("@bound_items"), k),sd->status.inventory[i].nameid);
 			k++;
 			j += sd->status.inventory[i].amount;
 		}
@@ -25962,6 +26008,7 @@ void script_defaults(void)
 	script->setarray_pc = script_setarray_pc;
 	script->config_read = script_config_read;
 	script->add_str = script_add_str;
+	script->add_variable = script_add_variable;
 	script->get_str = script_get_str;
 	script->search_str = script_search_str;
 	script->setd_sub = setd_sub;

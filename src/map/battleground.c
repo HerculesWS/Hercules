@@ -615,7 +615,7 @@ static void bg_match_over(struct bg_arena *arena, bool canceled)
 		if (canceled)
 			clif->messagecolor_self(sd->fd, COLOR_RED, "BG Match Canceled: not enough players");
 		else
-			pc_setglobalreg(sd, script->add_str(arena->delay_var), (unsigned int)time(NULL));
+			pc_setglobalreg(sd, script->add_variable(arena->delay_var), (unsigned int)time(NULL));
 	}
 
 	arena->begin_timer = INVALID_TIMER;
@@ -654,8 +654,8 @@ static void bg_begin(struct bg_arena *arena)
 			bg->afk_timer_id = timer->add(timer->gettick()+10000,bg->afk_timer,0,0);
 
 		/* TODO: make this a arena-independent var? or just .@? */
-		mapreg->setreg(script->add_str("$@bg_queue_id"),arena->queue_id);
-		mapreg->setregstr(script->add_str("$@bg_delay_var$"),bg->gdelay_var);
+		mapreg->setreg(script->add_variable("$@bg_queue_id"),arena->queue_id);
+		mapreg->setregstr(script->add_variable("$@bg_delay_var$"),bg->gdelay_var);
 
 		count = 0;
 		for (i = 0; i < VECTOR_LENGTH(queue->entries); i++) {
@@ -664,20 +664,20 @@ static void bg_begin(struct bg_arena *arena)
 			if (sd == NULL || sd->bg_queue.ready != 1)
 				continue;
 
-			mapreg->setreg(reference_uid(script->add_str("$@bg_member"), count), sd->status.account_id);
-			mapreg->setreg(reference_uid(script->add_str("$@bg_member_group"), count),
+			mapreg->setreg(reference_uid(script->add_variable("$@bg_member"), count), sd->status.account_id);
+			mapreg->setreg(reference_uid(script->add_variable("$@bg_member_group"), count),
 			               sd->bg_queue.type == BGQT_GUILD ? sd->status.guild_id :
 			               sd->bg_queue.type == BGQT_PARTY ? sd->status.party_id :
 			               0
 			               );
-			mapreg->setreg(reference_uid(script->add_str("$@bg_member_type"), count),
+			mapreg->setreg(reference_uid(script->add_variable("$@bg_member_type"), count),
 			               sd->bg_queue.type == BGQT_GUILD ? 1 :
 			               sd->bg_queue.type == BGQT_PARTY ? 2 :
 			               0
 			               );
 			count++;
 		}
-		mapreg->setreg(script->add_str("$@bg_member_size"),count);
+		mapreg->setreg(script->add_variable("$@bg_member_size"),count);
 
 		npc->event_do(arena->npc_event);
 	}
@@ -857,7 +857,7 @@ static enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, str
 
 	tsec = (unsigned int)time(NULL);
 
-	if ( ( tick = pc_readglobalreg(sd, script->add_str(bg->gdelay_var)) ) && tsec < tick ) {
+	if ( ( tick = pc_readglobalreg(sd, script->add_variable(bg->gdelay_var)) ) && tsec < tick ) {
 		char response[100];
 		if( (tick-tsec) > 60 )
 			sprintf(response, "You are a deserter! Wait %u minute(s) before you can apply again", (tick - tsec) / 60);
@@ -867,7 +867,7 @@ static enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, str
 		return BGQA_FAIL_DESERTER;
 	}
 
-	if ( ( tick = pc_readglobalreg(sd, script->add_str(arena->delay_var)) ) && tsec < tick ) {
+	if ( ( tick = pc_readglobalreg(sd, script->add_variable(arena->delay_var)) ) && tsec < tick ) {
 		char response[100];
 		if( (tick-tsec) > 60 )
 			sprintf(response, "You can't reapply to this arena so fast. Apply to the different arena or wait %u minute(s)", (tick - tsec) / 60);

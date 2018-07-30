@@ -829,6 +829,7 @@ struct script_interface {
 	void (*setarray_pc) (struct map_session_data* sd, const char* varname, uint32 idx, void* value, int* refcache);
 	bool (*config_read) (const char *filename, bool imported);
 	int (*add_str) (const char* p);
+	int (*add_variable) (const char *varname);
 	const char* (*get_str) (int id);
 	int (*search_str) (const char* p);
 	void (*setd_sub) (struct script_state *st, struct map_session_data *sd, const char *varname, int elem, const void *value, struct reg_db *ref);

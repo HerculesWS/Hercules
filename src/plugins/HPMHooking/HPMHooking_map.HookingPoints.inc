@@ -2628,6 +2628,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(script->setarray_pc, HP_script_setarray_pc) },
 	{ HP_POP(script->config_read, HP_script_config_read) },
 	{ HP_POP(script->add_str, HP_script_add_str) },
+	{ HP_POP(script->add_variable, HP_script_add_variable) },
 	{ HP_POP(script->get_str, HP_script_get_str) },
 	{ HP_POP(script->search_str, HP_script_search_str) },
 	{ HP_POP(script->setd_sub, HP_script_setd_sub) },

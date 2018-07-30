@@ -15195,7 +15195,7 @@ static void clif_parse_FeelSaveOk(int fd, struct map_session_data *sd)
 
 	sd->feel_map[i].index = map_id2index(sd->bl.m);
 	sd->feel_map[i].m = sd->bl.m;
-	pc_setglobalreg(sd,script->add_str(pc->sg_info[i].feel_var),sd->feel_map[i].index);
+	pc_setglobalreg(sd,script->add_variable(pc->sg_info[i].feel_var),sd->feel_map[i].index);
 
 #if 0 // Are these really needed? Shouldn't they show up automatically from the feel save packet?
 	clif_misceffect2(&sd->bl, 0x1b0);
@@ -16758,7 +16758,7 @@ static void clif_quest_update_objective(struct map_session_data *sd, struct ques
 
 	qi = quest->db(qd->quest_id);
 	Assert_retv(qi->objectives_count < MAX_QUEST_OBJECTIVES);
-	
+
 	len = sizeof(struct packet_quest_update_header)
 	            + MAX_QUEST_OBJECTIVES * sizeof(struct packet_quest_update_hunt); // >= than the actual length
 
@@ -16771,7 +16771,7 @@ static void clif_quest_update_objective(struct map_session_data *sd, struct ques
 
 	for (i = 0; i < qi->objectives_count; i++) {
 		real_len += sizeof(packet->objectives[i]);
-		
+
 		packet->objectives[i].questID = qd->quest_id;
 #if PACKETVER >= 20150513
 		packet->objectives[i].huntIdent = (qd->quest_id * 1000) + i;
@@ -16801,7 +16801,7 @@ static void clif_quest_notify_objective(struct map_session_data *sd, struct ques
 
 	qi = quest->db(qd->quest_id);
 	Assert_retv(qi->objectives_count < MAX_QUEST_OBJECTIVES);
-	
+
 	len = sizeof(struct packet_quest_hunt_info)
 	            + MAX_QUEST_OBJECTIVES * sizeof(struct packet_quest_hunt_info_sub); // >= than the actual length
 
@@ -16813,7 +16813,7 @@ static void clif_quest_notify_objective(struct map_session_data *sd, struct ques
 
 	for (i = 0; i < qi->objectives_count; i++) {
 		real_len += sizeof(packet->info[i]);
-		
+
 		packet->info[i].questID = qd->quest_id;
 		packet->info[i].mob_id = qi->objectives[i].mob;
 		packet->info[i].maxCount = qi->objectives[i].count;
@@ -18742,12 +18742,12 @@ static void clif_parse_CashShopBuy(int fd, struct map_session_data *sd)
 				struct item item_tmp;
 				int k, get_count;
 				int ret = 0;
-				
+
 				get_count = qty;
 
 				if (!itemdb->isstackable2(data))
 					get_count = 1;
-				
+
 				ret = pc->paycash(sd, clif->cs.data[tab][j]->price * qty, kafra_pay);// [Ryuuzaki] //changed Kafrapoints calculation. [Normynator]
 				if (ret < 0) {
 					ShowError("clif_parse_CashShopBuy: The return from pc->paycash was negative which is not allowed.\n");
@@ -19548,9 +19548,9 @@ static void clif_parse_RouletteOpen(int fd, struct map_session_data *sd)
 	p.Step = sd->roulette.stage - 1;
 	p.Idx = (char)sd->roulette.prizeIdx;
 	p.AdditionItemID = -1; /** TODO **/
-	p.BronzePoint = pc_readglobalreg(sd, script->add_str("TmpRouletteBronze"));
-	p.GoldPoint = pc_readglobalreg(sd, script->add_str("TmpRouletteGold"));
-	p.SilverPoint = pc_readglobalreg(sd, script->add_str("TmpRouletteSilver"));
+	p.BronzePoint = pc_readglobalreg(sd, script->add_variable("TmpRouletteBronze"));
+	p.GoldPoint = pc_readglobalreg(sd, script->add_variable("TmpRouletteGold"));
+	p.SilverPoint = pc_readglobalreg(sd, script->add_variable("TmpRouletteSilver"));
 
 	clif->send(&p,sizeof(p), &sd->bl, SELF);
 #endif
@@ -19617,21 +19617,21 @@ static void clif_parse_RouletteGenerate(int fd, struct map_session_data *sd)
 		stage = sd->roulette.stage = 0;
 
 	if( stage == 0 ) {
-		if( pc_readglobalreg(sd, script->add_str("TmpRouletteBronze")) <= 0 &&
-		    pc_readglobalreg(sd, script->add_str("TmpRouletteSilver")) < 10 &&
-		    pc_readglobalreg(sd, script->add_str("TmpRouletteGold")) < 10 )
+		if( pc_readglobalreg(sd, script->add_variable("TmpRouletteBronze")) <= 0 &&
+		    pc_readglobalreg(sd, script->add_variable("TmpRouletteSilver")) < 10 &&
+		    pc_readglobalreg(sd, script->add_variable("TmpRouletteGold")) < 10 )
 			result = GENERATE_ROULETTE_NO_ENOUGH_POINT;
 	}
 
 	if( result == GENERATE_ROULETTE_SUCCESS ) {
 		if( stage == 0 ) {
-			if( pc_readglobalreg(sd, script->add_str("TmpRouletteBronze")) > 0 ) {
-				pc_setglobalreg(sd, script->add_str("TmpRouletteBronze"), pc_readglobalreg(sd, script->add_str("TmpRouletteBronze")) - 1);
-			} else if( pc_readglobalreg(sd, script->add_str("TmpRouletteSilver")) > 9 ) {
-				pc_setglobalreg(sd, script->add_str("TmpRouletteSilver"), pc_readglobalreg(sd, script->add_str("TmpRouletteSilver")) - 10);
+			if( pc_readglobalreg(sd, script->add_variable("TmpRouletteBronze")) > 0 ) {
+				pc_setglobalreg(sd, script->add_variable("TmpRouletteBronze"), pc_readglobalreg(sd, script->add_variable("TmpRouletteBronze")) - 1);
+			} else if( pc_readglobalreg(sd, script->add_variable("TmpRouletteSilver")) > 9 ) {
+				pc_setglobalreg(sd, script->add_variable("TmpRouletteSilver"), pc_readglobalreg(sd, script->add_variable("TmpRouletteSilver")) - 10);
 				stage = sd->roulette.stage = 2;
-			} else if( pc_readglobalreg(sd, script->add_str("TmpRouletteGold")) > 9 ) {
-				pc_setglobalreg(sd, script->add_str("TmpRouletteGold"), pc_readglobalreg(sd, script->add_str("TmpRouletteGold")) - 10);
+			} else if( pc_readglobalreg(sd, script->add_variable("TmpRouletteGold")) > 9 ) {
+				pc_setglobalreg(sd, script->add_variable("TmpRouletteGold"), pc_readglobalreg(sd, script->add_variable("TmpRouletteGold")) - 10);
 				stage = sd->roulette.stage = 4;
 			}
 		}
@@ -19813,9 +19813,9 @@ static void clif_roulette_generate_ack(struct map_session_data *sd, unsigned cha
 	p.Step = stage;
 	p.Idx = prizeIdx;
 	p.AdditionItemID = bonusItemID;
-	p.RemainBronze = pc_readglobalreg(sd, script->add_str("TmpRouletteBronze"));
-	p.RemainGold = pc_readglobalreg(sd, script->add_str("TmpRouletteGold"));
-	p.RemainSilver = pc_readglobalreg(sd, script->add_str("TmpRouletteSilver"));
+	p.RemainBronze = pc_readglobalreg(sd, script->add_variable("TmpRouletteBronze"));
+	p.RemainGold = pc_readglobalreg(sd, script->add_variable("TmpRouletteGold"));
+	p.RemainSilver = pc_readglobalreg(sd, script->add_variable("TmpRouletteSilver"));
 
 	clif->send(&p,sizeof(p), &sd->bl, SELF);
 #endif
@@ -20738,7 +20738,7 @@ static void clif_rodex_send_mails_all(int fd, struct map_session_data *sd, int64
 	nullpo_retv(sd);
 
 	mailsSize = VECTOR_LENGTH(sd->rodex.messages);
-	
+
 	if (mail_id > 0)
 		ARR_FIND(0, VECTOR_LENGTH(sd->rodex.messages), j, (VECTOR_INDEX(sd->rodex.messages, j)).id == mail_id);
 
@@ -21360,8 +21360,8 @@ static void clif_parse_private_airship_request(int fd, struct map_session_data *
 
 	safestrncpy(evname, "private_airship::OnAirShipRequest", EVENT_NAME_LENGTH);
 	if ((ev = strdb_get(npc->ev_db, evname))) {
-		pc->setregstr(sd, script->add_str("@mapname$"), p->mapName);
-		pc->setreg(sd, script->add_str("@itemid"), p->ItemID);
+		pc->setregstr(sd, script->add_variable("@mapname$"), p->mapName);
+		pc->setreg(sd, script->add_variable("@itemid"), p->ItemID);
 		script->run_npc(ev->nd->u.scr.script, ev->pos, sd->bl.id, ev->nd->bl.id);
 	} else {
 		ShowError("clif_parse_private_airship_request: event '%s' not found, operation failed.\n", evname);

@@ -5130,6 +5130,8 @@ struct {
 	struct HPMHookPoint *HP_script_config_read_post;
 	struct HPMHookPoint *HP_script_add_str_pre;
 	struct HPMHookPoint *HP_script_add_str_post;
+	struct HPMHookPoint *HP_script_add_variable_pre;
+	struct HPMHookPoint *HP_script_add_variable_post;
 	struct HPMHookPoint *HP_script_get_str_pre;
 	struct HPMHookPoint *HP_script_get_str_post;
 	struct HPMHookPoint *HP_script_search_str_pre;
@@ -11681,6 +11683,8 @@ struct {
 	int HP_script_config_read_post;
 	int HP_script_add_str_pre;
 	int HP_script_add_str_post;
+	int HP_script_add_variable_pre;
+	int HP_script_add_variable_post;
 	int HP_script_get_str_pre;
 	int HP_script_get_str_post;
 	int HP_script_search_str_pre;
