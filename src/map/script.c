@@ -1378,6 +1378,11 @@ static const char *parse_simpleexpr_name(const char *p)
 			disp_error_message("parse_simpleexpr: unmatched ']'", p);
 		++p;
 		script->addc(C_FUNC);
+	} else if (script->str_data[l].type == C_INT) {
+		script->addc(C_NAME);
+		script->addb(l);
+		script->addb(l >> 8);
+		script->addb(l >> 16);
 	} else {
 		script->addl(l);
 	}
@@ -2898,8 +2903,7 @@ static struct script_data *get_val(struct script_state *st, struct script_data *
 		return data;
 	}
 
-	//##TODO use reference_tovariable(data) when it's confirmed that it works [FlavioJS]
-	if (!reference_toconstant(data) && not_server_variable(prefix) && reference_getref(data) == NULL) {
+	if (((reference_tovariable(data) && not_server_variable(prefix)) || reference_toparam(data)) && reference_getref(data) == NULL) {
 		sd = script->rid2sd(st);
 		if (sd == NULL) {// needs player attached
 			if (postfix == '$') {// string variable
@@ -3044,6 +3048,10 @@ static const void *get_val2(struct script_state *st, int64 uid, struct reg_db *r
 	script->get_val(st, data);
 	if (data->type == C_INT) // u.num is int32 because it comes from script->get_val
 		return (const void *)h64BPTRSIZE((int32)data->u.num);
+	else if (data_isreference(data) && reference_toconstant(data))
+		return (const void *)h64BPTRSIZE((int32)reference_getconstant(data));
+	else if (data_isreference(data) && reference_toparam(data))
+		return (const void *)h64BPTRSIZE((int32)reference_getparamtype(data));
 	else
 		return (const void *)h64BPTRSIZE(data->u.str);
 }

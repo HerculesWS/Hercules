@@ -143,7 +143,6 @@ struct item_data;
 /// Returns if this a reference to a param
 #define reference_toparam(data) ( script->str_data[reference_getid(data)].type == C_PARAM )
 /// Returns if this a reference to a variable
-//##TODO confirm it's C_NAME [FlavioJS]
 #define reference_tovariable(data) ( script->str_data[reference_getid(data)].type == C_NAME )
 /// Returns the unique id of the reference (id and index)
 #define reference_getuid(data) ( (data)->u.num )
