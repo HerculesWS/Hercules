@@ -10,6 +10,10 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+## [v2018.07.29+1] `Jul 29 2018` `PATCH 1`
+### Fixed
+- Added a temporary patch for getd when variable types are C_NOP. (#2163)
+
 ## [v2018.07.29] `Jul 29 2018`
 ### Added
 - Added support for the Achievements system and the Titles system. (#2067, #2157, #2161)
@@ -365,6 +369,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2018.07.29+1]: https://github.com/HerculesWS/Hercules/compare/v2018.07.29...v2018.07.29+1
 [v2018.07.29]: https://github.com/HerculesWS/Hercules/compare/v2018.07.01+1...v2018.07.29
 [v2018.07.01+1]: https://github.com/HerculesWS/Hercules/compare/v2018.07.01...v2018.07.01+1
 [v2018.07.01]: https://github.com/HerculesWS/Hercules/compare/v2018.06.03...v2018.07.01
