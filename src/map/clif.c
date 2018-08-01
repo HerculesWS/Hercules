@@ -3157,13 +3157,13 @@ static void clif_updatestatus(struct map_session_data *sd, int type)
 			WFIFOL(fd,4)=pc_leftside_matk(sd);
 			break;
 		case SP_ZENY:
-// [4144] possible send 64 bit value from PACKETVER_MAIN_NUM >= 20170906 || PACKETVER_RE_NUM >= 20170830 || defined(PACKETVER_ZERO_NUM)
+// [4144] possible send 64 bit value from PACKETVER_MAIN_NUM >= 20170906 || PACKETVER_RE_NUM >= 20170830 || defined(PACKETVER_ZERO)
 // but kro sending 0xb1 packet only.
 			WFIFOW(fd,0)=0xb1;
 			WFIFOL(fd,4)=sd->status.zeny;
 			len = packet_len(0xb1);
 			break;
-#if PACKETVER_MAIN_NUM >= 20170906 || PACKETVER_RE_NUM >= 20170830 || defined(PACKETVER_ZERO_NUM)
+#if PACKETVER_MAIN_NUM >= 20170906 || PACKETVER_RE_NUM >= 20170830 || defined(PACKETVER_ZERO)
 		case SP_BASEEXP:
 			WFIFOW(fd, 0) = 0xacb;
 			WFIFOQ(fd, 4) = sd->status.base_exp;
@@ -17450,7 +17450,7 @@ static void clif_displayexp(struct map_session_data *sd, uint64 exp, char type, 
 {
 	int fd;
 
-#if PACKETVER_MAIN_NUM >= 20170906 || PACKETVER_RE_NUM >= 20170830 || defined(PACKETVER_ZERO_NUM)
+#if PACKETVER_MAIN_NUM >= 20170906 || PACKETVER_RE_NUM >= 20170830 || defined(PACKETVER_ZERO)
 	const int cmd = 0xacc;
 #else
 	const int cmd = 0x7f6;
@@ -17462,7 +17462,7 @@ static void clif_displayexp(struct map_session_data *sd, uint64 exp, char type, 
 	WFIFOHEAD(fd, packet_len(cmd));
 	WFIFOW(fd, 0) = cmd;
 	WFIFOL(fd, 2) = sd->bl.id;
-#if PACKETVER_MAIN_NUM >= 20170906 || PACKETVER_RE_NUM >= 20170830 || defined(PACKETVER_ZERO_NUM)
+#if PACKETVER_MAIN_NUM >= 20170906 || PACKETVER_RE_NUM >= 20170830 || defined(PACKETVER_ZERO)
 	WFIFOQ(fd, 6) = exp;
 	WFIFOW(fd, 14) = type;
 	WFIFOW(fd, 16) = is_quest ? 1 : 0; // Normal exp is shown in yellow, quest exp is shown in purple.
