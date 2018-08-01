@@ -131,6 +131,8 @@ static int skill_get_index(int skill_id)
 			skill_id = 1020 + skill_id - 2001;
 		else if( skill_id < 2549 ) // 2058 - 2200 are empty - 1020+57
 			skill_id = (1077) + skill_id - 2201;
+		else if (skill_id > 2576 && skill_id < 2613)
+			skill_id = (1502) + skill_id - 2576;// 1503 - 1538 used
 		else if ( skill_id < 3036 ) // 2549 - 3000 are empty - 1020+57+348
 			skill_id = (1425) + skill_id - 3001;
 		else if ( skill_id < 5044 ) // 3036 - 5000 are empty - 1020+57+348+35

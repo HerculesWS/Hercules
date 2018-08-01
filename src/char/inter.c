@@ -391,6 +391,18 @@ static const char *inter_job_name(int class)
 		case JOB_SUMMONER:
 			return inter->msg_txt(669);
 
+		case JOB_STAR_EMPEROR:
+		case JOB_SOUL_REAPER:
+		case JOB_BABY_STAR_EMPEROR:
+		case JOB_BABY_SOUL_REAPER:
+			return inter->msg_txt(670 - JOB_STAR_EMPEROR + class);
+
+		case JOB_STAR_EMPEROR2:
+			return inter->msg_txt(670);
+
+		case JOB_BABY_STAR_EMPEROR2:
+			return inter->msg_txt(672);
+
 		default:
 			return inter->msg_txt(620); // "Unknown Job"
 	}

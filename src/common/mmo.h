@@ -163,7 +163,7 @@
 #define MAX_FAME 1000000000
 #define MAX_CART 100
 #ifndef MAX_SKILL_DB
-#define MAX_SKILL_DB 1510 ///< Maximum number of skills in the skill DB (compacted array size)
+#define MAX_SKILL_DB 1539 ///< Maximum number of skills in the skill DB (compacted array size)
 #endif
 #ifndef MAX_SKILL_ID
 #define MAX_SKILL_ID 10015   // [Ind/Hercules] max used skill ID
@@ -1182,6 +1182,13 @@ enum e_class {
 	JOB_REBELLION = 4215,
 
 	JOB_SUMMONER = 4218,
+
+	JOB_STAR_EMPEROR = 4239,
+	JOB_SOUL_REAPER,
+	JOB_BABY_STAR_EMPEROR,
+	JOB_BABY_SOUL_REAPER,
+	JOB_STAR_EMPEROR2,
+	JOB_BABY_STAR_EMPEROR2,
 
 #ifndef JOB_MAX
 	JOB_MAX,

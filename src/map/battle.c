@@ -5313,9 +5313,9 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				case RL_B_FLICKER_ATK:
 					rskill = RL_FLICKER;
 					break;
-				case RL_GLITTERING_GREED_ATK:
-					rskill = RL_GLITTERING_GREED;
-					break;
+				// case RL_GLITTERING_GREED_ATK:
+				//	rskill = RL_GLITTERING_GREED;
+				//	break;
 				default:
 					rskill = skill_id;
 			}

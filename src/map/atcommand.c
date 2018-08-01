@@ -1030,7 +1030,7 @@ ACMD(jobchange)
 	 || job == JOB_WEDDING || job == JOB_XMAS || job == JOB_SUMMER
 	 || job == JOB_LORD_KNIGHT2 || job == JOB_PALADIN2
 	 || job == JOB_BABY_KNIGHT2 || job == JOB_BABY_CRUSADER2
-	 || job == JOB_STAR_GLADIATOR2
+	 || job == JOB_STAR_GLADIATOR2 || job == JOB_STAR_EMPEROR2 || job == JOB_BABY_STAR_EMPEROR2
 	 || (job >= JOB_RUNE_KNIGHT2 && job <= JOB_MECHANIC_T2)
 	 || (job >= JOB_BABY_RUNE2 && job <= JOB_BABY_MECHANIC2)
 	) {
