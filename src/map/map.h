@@ -1216,6 +1216,7 @@ END_ZEROED_BLOCK;
 	void (*zone_apply) (int m, struct map_zone_data *zone, const char* start, const char* buffer, const char* filepath);
 	void (*zone_change) (int m, struct map_zone_data *zone, const char* start, const char* buffer, const char* filepath);
 	void (*zone_change2) (int m, struct map_zone_data *zone);
+	void (*zone_reload) (void);
 
 	int (*getcell) (int16 m, const struct block_list *bl, int16 x, int16 y, cell_chk cellchk);
 	void (*setgatcell) (int16 m, int16 x, int16 y, int gat);
