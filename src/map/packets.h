@@ -4255,4 +4255,35 @@ packet(0x96e,-1,clif->ackmergeitems);
 // changed packet sizes
 #endif
 
+#ifndef PACKETVER_ZERO
+// 2018-08-01cRagexe, 2018-08-01cRagexeRE
+#if PACKETVER >= 20180801
+// new packets
+	packet(0x0b03,-1);
+	packet(0x0b04,80,clif->pDull/*,XXX*/);
+// changed packet sizes
+#endif
+#endif  // PACKETVER_ZERO
+
+// 2018-08-08_2aRagexe_zero
+#if PACKETVER_ZERO_NUM >= 20180808
+// new packets
+	packet(0x0b04,80,clif->pDull/*,XXX*/);
+// changed packet sizes
+#endif
+
+// 2018-08-22aRagexe_zero
+#if PACKETVER_ZERO_NUM >= 20180822
+// new packets
+	packet(0x0b05,59);
+	packet(0x0b06,53,clif->pDull/*,XXX*/);
+	packet(0x0b07,-1);
+	packet(0x0b08,26,clif->pDull/*,XXX*/);
+	packet(0x0b09,-1,clif->pDull/*,XXX*/);
+	packet(0x0b0a,-1,clif->pDull/*,XXX*/);
+	packet(0x0b0b,3,clif->pDull/*,XXX*/);
+	packet(0x0b0c,155,clif->pDull/*,XXX*/);
+// changed packet sizes
+#endif
+
 #endif /* MAP_PACKETS_H */
