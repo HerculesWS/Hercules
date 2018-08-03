@@ -499,6 +499,8 @@ static struct mob_data *mob_once_spawn_sub(struct block_list *bl, int16 m, int16
 {
 	struct spawn_data data;
 
+	Assert_retr(NULL, m >= 0 && m < map->count);
+
 	memset(&data, 0, sizeof(struct spawn_data));
 	data.m = m;
 	data.num = 1;
@@ -707,8 +709,7 @@ static int mob_spawn_guardian(const char *mapname, short x, short y, const char 
 
 	m=map->mapname2mapid(mapname);
 
-	if(m<0)
-	{
+	if (m < 0 || m >= map->count) {
 		ShowWarning("mob_spawn_guardian: Map [%s] not found.\n", mapname);
 		return 0;
 	}

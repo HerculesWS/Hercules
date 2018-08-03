@@ -3543,6 +3543,8 @@ static int battle_range_type(struct block_list *src, struct block_list *target, 
 
 static int battle_adjust_skill_damage(int m, unsigned short skill_id)
 {
+	Assert_ret(m >= 0 && m < map->count);
+
 	if( map->list[m].skill_count ) {
 		int i;
 		ARR_FIND(0, map->list[m].skill_count, i, map->list[m].skills[i]->skill_id == skill_id );

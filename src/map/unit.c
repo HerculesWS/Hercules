@@ -932,7 +932,7 @@ static int unit_warp(struct block_list *bl, short m, short x, short y, clr_type 
 		//animation, it messes up with unit_remove_map! [Skotlex]
 		return 1;
 
-	if( m<0 ) m=bl->m;
+	if( m < 0 || m >= map->count ) m=bl->m;
 
 	switch (bl->type) {
 		case BL_MOB:

@@ -4523,7 +4523,7 @@ static int pc_payzeny(struct map_session_data *sd, int zeny, enum e_log_pick_typ
  *
  * @param price     Price of the item.
  * @param points    Provided kafra points.
- * 	
+ *
  * @return points	Leftover kafra points.
  */
 //Changed Kafrapoints calculation. [Normynator]
@@ -4563,7 +4563,7 @@ static int pc_paycash(struct map_session_data *sd, int price, int points)
 		sprintf(output, msg_sd(sd,504), points, cash, sd->kafraPoints, sd->cashPoints);
 		clif_disp_onlyself(sd, output);
 	}
-	
+
 	return points;
 }
 
@@ -5842,6 +5842,7 @@ static int pc_setpos(struct map_session_data *sd, unsigned short map_index, int 
 		}
 	}
 
+	// FIXME: this block is dead code
 	if( m < 0 ) {
 		uint32 ip;
 		uint16 port;
@@ -7220,7 +7221,7 @@ static uint64 pc_thisjobexp(const struct map_session_data *sd)
 	const struct class_exp_group *exp_group = NULL;
 
 	nullpo_ret(sd);
-	
+
 	if (sd->status.job_level > pc->maxjoblv(sd) || sd->status.job_level <= 1)
 		return 0;
 

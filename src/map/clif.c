@@ -1979,6 +1979,7 @@ static void clif_changemap(struct map_session_data *sd, short m, int x, int y)
 {
 	int fd;
 	nullpo_retv(sd);
+	Assert_retv(m >= 0 && m < map->count);
 	fd = sd->fd;
 
 	WFIFOHEAD(fd,packet_len(0x91));
@@ -1997,6 +1998,7 @@ static void clif_changemap_airship(struct map_session_data *sd, short m, int x, 
 	// [4144] this packet is not used yet by kro, but it here
 	int fd;
 	nullpo_retv(sd);
+	Assert_retv(m >= 0 && m < map->count);
 	fd = sd->fd;
 
 	WFIFOHEAD(fd, packet_len(0xa4b));
@@ -4670,6 +4672,8 @@ static void clif_standing(struct block_list *bl)
 static void clif_changemapcell(int fd, int16 m, int x, int y, int type, enum send_target target)
 {
 	unsigned char buf[32];
+
+	Assert_retv(m >= 0 && m < map->count);
 
 	WBUFW(buf,0) = 0x192;
 	WBUFW(buf,2) = x;
@@ -16758,7 +16762,7 @@ static void clif_quest_update_objective(struct map_session_data *sd, struct ques
 
 	qi = quest->db(qd->quest_id);
 	Assert_retv(qi->objectives_count < MAX_QUEST_OBJECTIVES);
-	
+
 	len = sizeof(struct packet_quest_update_header)
 	            + MAX_QUEST_OBJECTIVES * sizeof(struct packet_quest_update_hunt); // >= than the actual length
 
@@ -16771,7 +16775,7 @@ static void clif_quest_update_objective(struct map_session_data *sd, struct ques
 
 	for (i = 0; i < qi->objectives_count; i++) {
 		real_len += sizeof(packet->objectives[i]);
-		
+
 		packet->objectives[i].questID = qd->quest_id;
 #if PACKETVER >= 20150513
 		packet->objectives[i].huntIdent = (qd->quest_id * 1000) + i;
@@ -16801,7 +16805,7 @@ static void clif_quest_notify_objective(struct map_session_data *sd, struct ques
 
 	qi = quest->db(qd->quest_id);
 	Assert_retv(qi->objectives_count < MAX_QUEST_OBJECTIVES);
-	
+
 	len = sizeof(struct packet_quest_hunt_info)
 	            + MAX_QUEST_OBJECTIVES * sizeof(struct packet_quest_hunt_info_sub); // >= than the actual length
 
@@ -16813,7 +16817,7 @@ static void clif_quest_notify_objective(struct map_session_data *sd, struct ques
 
 	for (i = 0; i < qi->objectives_count; i++) {
 		real_len += sizeof(packet->info[i]);
-		
+
 		packet->info[i].questID = qd->quest_id;
 		packet->info[i].mob_id = qi->objectives[i].mob;
 		packet->info[i].maxCount = qi->objectives[i].count;
@@ -17243,6 +17247,8 @@ static void clif_bg_updatescore(int16 m)
 {
 	struct block_list bl;
 	unsigned char buf[6];
+
+	Assert_retv(m >= 0 && m < map->count);
 
 	memset(&bl, 0, sizeof(bl));
 	bl.type = BL_NUL;
@@ -18742,12 +18748,12 @@ static void clif_parse_CashShopBuy(int fd, struct map_session_data *sd)
 				struct item item_tmp;
 				int k, get_count;
 				int ret = 0;
-				
+
 				get_count = qty;
 
 				if (!itemdb->isstackable2(data))
 					get_count = 1;
-				
+
 				ret = pc->paycash(sd, clif->cs.data[tab][j]->price * qty, kafra_pay);// [Ryuuzaki] //changed Kafrapoints calculation. [Normynator]
 				if (ret < 0) {
 					ShowError("clif_parse_CashShopBuy: The return from pc->paycash was negative which is not allowed.\n");
@@ -20738,7 +20744,7 @@ static void clif_rodex_send_mails_all(int fd, struct map_session_data *sd, int64
 	nullpo_retv(sd);
 
 	mailsSize = VECTOR_LENGTH(sd->rodex.messages);
-	
+
 	if (mail_id > 0)
 		ARR_FIND(0, VECTOR_LENGTH(sd->rodex.messages), j, (VECTOR_INDEX(sd->rodex.messages, j)).id == mail_id);
 
