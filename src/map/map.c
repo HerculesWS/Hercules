@@ -449,6 +449,8 @@ static int map_count_oncell(int16 m, int16 x, int16 y, int type, int flag)
 	struct block_list *bl;
 	int count = 0;
 
+	Assert_ret(m < 0 || m >= map->count);
+
 	if (x < 0 || y < 0 || (x >= map->list[m].xs) || (y >= map->list[m].ys))
 		return 0;
 
@@ -583,8 +585,7 @@ static int map_vforeachinmap(int (*func)(struct block_list*, va_list), int16 m, 
 	struct block_list *bl;
 	int blockcount = map->bl_list_count;
 
-	if (m < 0)
-		return 0;
+	Assert_ret(m < 0 || m >= map->count);
 
 	bsize = map->list[m].bxs * map->list[m].bys;
 	for (i = 0; i < bsize; i++) {
@@ -701,8 +702,7 @@ static int bl_getall_area(int type, int m, int x0, int y0, int x1, int y1, int (
 	struct block_list *bl;
 	int found = 0;
 
-	if (m < 0)
-		return 0;
+	Assert_ret(m < 0 || m >= map->count);
 
 	if (x1 < x0) swap(x0, x1);
 	if (y1 < y0) swap(y0, y1);
@@ -1536,6 +1536,8 @@ static int map_searchrandfreecell(int16 m, const struct block_list *bl, int16 *x
 	nullpo_ret(x);
 	nullpo_ret(y);
 
+	Assert_ret(m < 0 || m >= map->count);
+
 	for(free_cell=0,i=-1;i<=1;i++){
 		if(i+*y<0 || i+*y>=map->list[m].ys)
 			continue;
@@ -1585,6 +1587,8 @@ static int map_search_freecell(struct block_list *src, int16 m, int16 *x, int16 
 
 	nullpo_ret(x);
 	nullpo_ret(y);
+
+	Assert_ret(m < 0 || m >= map->count);
 
 	if( !src && (!(flag&1) || flag&2) )
 	{
@@ -2697,6 +2701,9 @@ static int map_addmobtolist(unsigned short m, struct spawn_data *spawn)
 {
 	int i;
 	nullpo_retr(-1, spawn);
+
+	Assert_retr(-1, m < 0 || m >= map->count);
+
 	ARR_FIND( 0, MAX_MOB_LIST_PER_MAP, i, map->list[m].moblist[i] == NULL );
 	if( i < MAX_MOB_LIST_PER_MAP ) {
 		map->list[m].moblist[i] = spawn;
@@ -3170,6 +3177,8 @@ static bool map_iwall_set(int16 m, int16 x, int16 y, int size, int8 dir, bool sh
 	struct iwall_data *iwall;
 	int i;
 	int16 x1 = 0, y1 = 0;
+
+	Assert_retr(false, m < 0 || m >= map->count);
 
 	if( size < 1 || !wall_name )
 		return false;
