@@ -33,13 +33,23 @@ OnCountFunds:
 	setcurrency(countitem(Red_Potion),countitem(Orange_Potion));
 	end;
 
-/* receives @price (total cost) and @points (the secondary input field for cash windows) */
+/**
+ * receives @price (total cost) and @points (the secondary input field for cash windows)
+ * receives 2 array @bought_nameid and @bought_quantity which gives nameid and quantity purchased.
+ */
+/*  */
 OnPayFunds:
 	dispbottom "Hi: price="+@price+" and points="+@points;
-	if( countitem(Orange_Potion) < @points || countitem(Red_Potion) < @price-@points )
+	if (countitem(Orange_Potion) < @points || countitem(Red_Potion) < @price - @points)
 		end;
-	delitem Orange_Potion,@points;
-	delitem Red_Potion,@price-@points;
+	delitem Orange_Potion, @points;
+	delitem Red_Potion, @price - @points;
+
+	.@size = getarraysize(@bought_nameid);
+	for (.@i = 0; .@i < .@size; ++.@i) {
+		dispbottom(sprintf("You purchased %dx %s", @bought_quantity[.@i], getitemname(@bought_quantity[.@i])));
+	}
+
 	purchaseok();
 	end;
 }

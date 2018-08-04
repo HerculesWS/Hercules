@@ -1118,8 +1118,9 @@ OnPayFunds:
 This special label is triggered when a purchase is made on a trader NPC object
 that is NST_CUSTOM. Receives @price, total cost and @points, secondary input
 field for cash windows. It is used to remove items that are set as currency.
-Should be used along with OnCountFunds, see /doc/sample/npc_trader_sample.txt
-for more information.
+Receives two array, @bought_nameid and @bought_quantity which contains ItemID
+and quantity that is purchased. Should be used along with OnCountFunds,
+see /doc/sample/npc_trader_sample.txt for more information.
 
 On<label name>:
 
