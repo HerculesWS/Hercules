@@ -21548,13 +21548,32 @@ static void clif_parse_cz_req_style_change(int fd, struct map_session_data *sd)
 		clif->cz_req_style_change_sub(sd, LOOK_HEAD_MID, p->MidAccessory, true);
 	if (p->BottomAccessory > 0)
 		clif->cz_req_style_change_sub(sd, LOOK_HEAD_BOTTOM, p->BottomAccessory, true);
-#if PACKETVER_RE_NUM >= 20180718
+	clif->style_change_response(sd, STYLIST_SHOP_SUCCESS);
+	return;
+}
+
+static void clif_parse_cz_req_style_change2(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
+static void clif_parse_cz_req_style_change2(int fd, struct map_session_data *sd)
+{
+	const struct PACKET_CZ_REQ_STYLE_CHANGE2 *p = RP2PTR(fd);
+
+	if (p->HeadStyle > 0)
+		clif->cz_req_style_change_sub(sd, LOOK_HAIR, p->HeadStyle, false);
+	if (p->HeadPalette > 0)
+		clif->cz_req_style_change_sub(sd, LOOK_HAIR_COLOR, p->HeadPalette, false);
+	if (p->BodyPalette > 0)
+		clif->cz_req_style_change_sub(sd, LOOK_CLOTHES_COLOR, p->BodyPalette, false);
+	if (p->TopAccessory > 0)
+		clif->cz_req_style_change_sub(sd, LOOK_HEAD_TOP, p->TopAccessory, true);
+	if (p->MidAccessory > 0)
+		clif->cz_req_style_change_sub(sd, LOOK_HEAD_MID, p->MidAccessory, true);
+	if (p->BottomAccessory > 0)
+		clif->cz_req_style_change_sub(sd, LOOK_HEAD_BOTTOM, p->BottomAccessory, true);
 	if (p->BodyStyle > 0) {
 		if (pc->has_second_costume(sd)) {
 			clif->cz_req_style_change_sub(sd, LOOK_BODY2, p->BodyStyle, false);
 		}
 	}
-#endif
 	clif->style_change_response(sd, STYLIST_SHOP_SUCCESS);
 	return;
 }
@@ -22775,6 +22794,7 @@ void clif_defaults(void)
 	clif->style_change_validate_requirements = clif_style_change_validate_requirements;
 	clif->stylist_send_rodexitem = clif_stylist_send_rodexitem;
 	clif->pReqStyleChange = clif_parse_cz_req_style_change;
+	clif->pReqStyleChange2 = clif_parse_cz_req_style_change2;
 	clif->cz_req_style_change_sub = clif_cz_req_style_change_sub;
 	clif->style_change_response = clif_style_change_response;
 
