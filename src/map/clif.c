@@ -8875,7 +8875,8 @@ static void clif_charnameack(int fd, struct block_list *bl)
 
 			if (ssd->fakename[0] != '\0') {
 				memcpy(packet.name, ssd->fakename, NAME_LENGTH);
-				break;
+				if (ssd->fakename_option == 0)
+					break;
 			}
 
 #if PACKETVER >= 20150503
@@ -8907,11 +8908,11 @@ static void clif_charnameack(int fd, struct block_list *bl)
 			if (p == NULL && g == NULL)
 				break;
 
-			if (p != NULL) {
+			if (p != NULL && ssd->fakename_option != 1) {
 				memcpy(packet.party_name, p->party.name, NAME_LENGTH);
 			}
 
-			if (g != NULL && ps >= 0 && ps < MAX_GUILDPOSITION) {
+			if (g != NULL && ps >= 0 && ps < MAX_GUILDPOSITION && ssd->fakename_option != 2) {
 				memcpy(packet.guild_name, g->name,NAME_LENGTH);
 				memcpy(packet.position_name, g->position[ps].name, NAME_LENGTH);
 			}

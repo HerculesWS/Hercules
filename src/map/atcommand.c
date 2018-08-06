@@ -7622,33 +7622,47 @@ ACMD(monsterignore)
  *------------------------------------------*/
 ACMD(fakename)
 {
-	if (!*message)
-	{
-		if (sd->fakename[0])
-		{
+	int option = 0; // Hide both guild/party name
+	char fakename[NAME_LENGTH];
+
+	if (!*message) {
+		if (sd->fakename[0]) {
 			sd->fakename[0] = '\0';
+			sd->fakename_option = 0;
 			clif->charnameack(0, &sd->bl);
-			if( sd->disguise )
+			if (sd->disguise)
 				clif->charnameack(sd->fd, &sd->bl);
-			clif->message(sd->fd, msg_fd(fd,1307)); // Returned to real name.
+			clif->message(sd->fd, msg_fd(fd, 1307)); // Returned to real name.
 			return true;
 		}
 
-		clif->message(sd->fd, msg_fd(fd,1308)); // You must enter a name.
+		clif->message(sd->fd, msg_fd(fd, 1308)); // Please enter an option number and name (usage: @fakename <0-3> <name>)
 		return false;
 	}
 
-	if (strlen(message) < 2)
-	{
-		clif->message(sd->fd, msg_fd(fd,1309)); // Fake name must be at least two characters.
+	memset(fakename, '\0', sizeof(fakename));
+
+	if (sscanf(message, "%d %23[^\n]", &option, fakename) < 2) {
+		clif->message(sd->fd, msg_fd(fd, 1308)); // Please enter an option number and name (usage: @fakename <0-3> <name>)
 		return false;
 	}
 
-	safestrncpy(sd->fakename, message, sizeof(sd->fakename));
+	if (option < 0 || option > 3) {
+		clif->message(sd->fd, msg_fd(fd, 1308)); // Please enter an option number and name (usage: @fakename <0-3> <name>)
+		return false;
+	}
+
+	if (strlen(fakename) < 2) {
+		clif->message(sd->fd, msg_fd(fd, 1309)); // Fake name must be at least two characters.
+		return false;
+	}
+
+	sd->fakename_option = option;
+	safestrncpy(sd->fakename, fakename, sizeof(sd->fakename));
 	clif->charnameack(0, &sd->bl);
 	if (sd->disguise) // Another packet should be sent so the client updates the name for sd
 		clif->charnameack(sd->fd, &sd->bl);
-	clif->message(sd->fd, msg_fd(fd,1310)); // Fake name enabled.
+	clif->message(sd->fd, msg_fd(fd, 1310)); // Fake name enabled.
 
 	return true;
 }
