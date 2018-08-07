@@ -570,6 +570,8 @@ struct Battle_Config {
 
 	int feature_enable_attendance_system;
 	int feature_attendance_endtime;
+
+	int feature_enable_achievement;
 };
 
 /* criteria for battle_config.idletime_critera */
