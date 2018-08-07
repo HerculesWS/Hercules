@@ -578,6 +578,8 @@ struct Battle_Config {
 	int display_fake_hp_when_dead;
 
 	int magicrod_type;
+
+	int feature_enable_achievement;
 };
 
 /* criteria for battle_config.idletime_critera */

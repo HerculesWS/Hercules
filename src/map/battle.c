@@ -7414,6 +7414,7 @@ static const struct battle_data {
 	{ "min_item_sell_price",                &battle_config.min_item_sell_price,             0,      0,      INT_MAX,        },
 	{ "display_fake_hp_when_dead",          &battle_config.display_fake_hp_when_dead,       1,      0,      1,              },
 	{ "magicrod_type",                      &battle_config.magicrod_type,                   0,      0,      1,              },
+	{ "features/enable_achievement_system", &battle_config.feature_enable_achievement,      1,      0,      1,              },
 };
 
 static bool battle_set_value_sub(int index, int value)
