@@ -121,7 +121,7 @@ CREATE TABLE IF NOT EXISTS `autotrade_merchants` (
 -- Table structure for table `char_achievements`
 --
 
-CREATE TABLE `char_achievements` (
+CREATE TABLE IF NOT EXISTS `char_achievements` (
 	`char_id` INT(11) UNSIGNED NOT NULL,
 	`ach_id` INT(11) UNSIGNED NOT NULL,
 	`completed_at` INT(10) UNSIGNED NOT NULL DEFAULT '0',
@@ -627,7 +627,7 @@ CREATE TABLE IF NOT EXISTS `ipbanlist` (
 
 CREATE TABLE IF NOT EXISTS `login` (
   `account_id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `userid` VARCHAR(23) NOT NULL DEFAULT '' UNIQUE,
+  `userid` VARCHAR(23) NOT NULL DEFAULT '',
   `user_pass` VARCHAR(32) NOT NULL DEFAULT '',
   `sex` ENUM('M','F','S') NOT NULL DEFAULT 'M',
   `email` VARCHAR(39) NOT NULL DEFAULT '',
@@ -643,7 +643,7 @@ CREATE TABLE IF NOT EXISTS `login` (
   `pincode` VARCHAR(4) NOT NULL DEFAULT '',
   `pincode_change` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY (`account_id`),
-  KEY `name` (`userid`)
+  UNIQUE KEY `name` (`userid`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2000000;
 
 -- added standard accounts for servers, VERY INSECURE!!!
