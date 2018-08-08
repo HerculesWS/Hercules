@@ -14480,6 +14480,9 @@ static BUILDIN(getiteminfo)
 	case ITEMINFO_VIEWSPRITE:
 		script_pushint(st, it->view_sprite);
 		break;
+	case ITEMINFO_TRADE:
+		script_pushint(st, it->flag.trade_restriction);
+		break;
 	default:
 		ShowError("buildin_getiteminfo: Invalid item type %d.\n", n);
 		script_pushint(st,-1);
@@ -14745,6 +14748,9 @@ static BUILDIN(setiteminfo)
 		break;
 	case ITEMINFO_VIEWSPRITE:
 		it->view_sprite = value;
+		break;
+	case ITEMINFO_TRADE:
+		it->flag.trade_restriction = value;
 		break;
 	default:
 		ShowError("buildin_setiteminfo: invalid type %d.\n", n);
@@ -25847,6 +25853,7 @@ static void script_hardcoded_constants(void)
 	script->set_constant("ITEMINFO_VIEWID", ITEMINFO_VIEWID, false, false);
 	script->set_constant("ITEMINFO_MATK", ITEMINFO_MATK, false, false);
 	script->set_constant("ITEMINFO_VIEWSPRITE", ITEMINFO_VIEWSPRITE, false, false);
+	script->set_constant("ITEMINFO_TRADE", ITEMINFO_TRADE, false, false);
 
 	script->constdb_comment("monster skill states");
 	script->set_constant("MSS_ANY", MSS_ANY, false, false);
@@ -25936,6 +25943,20 @@ static void script_hardcoded_constants(void)
 	script->set_constant("FUNCTION_IS_GLOBAL", FUNCTION_IS_GLOBAL, false, false);
 	script->set_constant("FUNCTION_IS_LOCAL", FUNCTION_IS_LOCAL, false, false);
 	script->set_constant("FUNCTION_IS_LABEL", FUNCTION_IS_LABEL, false, false);
+
+	script->constdb_comment("item trade restrictions");
+	script->set_constant("ITR_NONE", ITR_NONE, false, false);
+	script->set_constant("ITR_NODROP", ITR_NODROP, false, false);
+	script->set_constant("ITR_NOTRADE", ITR_NOTRADE, false, false);
+	script->set_constant("ITR_PARTNEROVERRIDE", ITR_PARTNEROVERRIDE, false, false);
+	script->set_constant("ITR_NOSELLTONPC", ITR_NOSELLTONPC, false, false);
+	script->set_constant("ITR_NOCART", ITR_NOCART, false, false);
+	script->set_constant("ITR_NOSTORAGE", ITR_NOSTORAGE, false, false);
+	script->set_constant("ITR_NOGSTORAGE", ITR_NOGSTORAGE, false, false);
+	script->set_constant("ITR_NOMAIL", ITR_NOMAIL, false, false);
+	script->set_constant("ITR_NOAUCTION", ITR_NOAUCTION, false, false);
+	script->set_constant("ITR_ALL", ITR_ALL, false, false);
+
 
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL

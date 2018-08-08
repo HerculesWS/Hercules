@@ -9,12 +9,12 @@
 //============================================================
 
 prontera,156,179,6	script	test_getiteminfo	4_F_KAFRA1,{
-	mes "Please enter an item ID.";
-	input .@value;
+	mes("Please enter an item ID.");
+	input(.@value);
 
 	// This line uses an INTERNAL function of your client to show item name by its ID!
 	// ^nItemID^XXXX -> Item Name
-	mes "Item ID: "+.@value+" ^nItemID^"+.@value;
+	mesf("Item ID: %d ^nItemID^%d", .@value, .@value);
 
 	mes("Current item info:");
 	mesf("Buy Price: %d", getiteminfo(.@value, ITEMINFO_BUYPRICE));
@@ -34,5 +34,8 @@ prontera,156,179,6	script	test_getiteminfo	4_F_KAFRA1,{
 	mesf("View ID: %d", getiteminfo(.@value, ITEMINFO_VIEWID));
 	mesf("MATK: %d", getiteminfo(.@value, ITEMINFO_MATK));
 	mesf("View Sprite: %d", getiteminfo(.@value, ITEMINFO_VIEWSPRITE));
+
+	.@trade$ = callfunc("F_GetTradeRestriction", .@value);
+	mesf("Trade Restriction: %s", .@trade$);
 	close;
 }
