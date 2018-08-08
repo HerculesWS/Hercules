@@ -34,5 +34,37 @@ prontera,156,179,6	script	test_getiteminfo	4_F_KAFRA1,{
 	mesf("View ID: %d", getiteminfo(.@value, ITEMINFO_VIEWID));
 	mesf("MATK: %d", getiteminfo(.@value, ITEMINFO_MATK));
 	mesf("View Sprite: %d", getiteminfo(.@value, ITEMINFO_VIEWSPRITE));
+	.@trade = getiteminfo(.@value, ITEMINFO_TRADE);
+	.@trade$ = "";
+	if (.@trade == 0) {
+		.@trade$ += "None";
+	} else {
+		.@trade$ = "";
+		if (.@trade&ITR_NODROP) {
+			.@trade$ += "NoDrop|";
+		}
+		if (.@trade&ITR_NOTRADE) {
+			.@trade$ += "NoTrade|";
+		}
+		if (.@trade&ITR_PARTNEROVERRIDE) {
+			.@trade$ += "PartnerOverride|";
+		}
+		if (.@trade&ITR_NOSELLTONPC) {
+			.@trade$ += "NoSellToNpc|";
+		}
+		if (.@trade&ITR_NOSTORAGE) {
+			.@trade$ += "NoStorage|";
+		}
+		if (.@trade&ITR_NOGSTORAGE) {
+			.@trade$ += "NoGuildStorage|";
+		}
+		if (.@trade&ITR_NOMAIL) {
+			.@trade$ += "NoMail|";
+		}
+		if (.@trade&ITR_NOAUCTION) {
+			.@trade$ += "NoAuction|";
+		}
+	}
+	mesf("Trade Restriction: %s", .@trade$);
 	close;
 }

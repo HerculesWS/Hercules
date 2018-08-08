@@ -3222,6 +3222,7 @@ Valid types are:
 	ITEMINFO_VIEWID     - View ID ("Sprite" field in the Item DB)
 	ITEMINFO_MATK       - MATK (only relevant if RENEWAL is set)
 	ITEMINFO_VIEWSPRITE - View Sprite ("ViewSprite" field in the Item DB)
+	ITEMINFO_TRADE      - Trade Restriction (see "doc/constant.md": item trade restriction)
 
 Check sample in doc/sample/getiteminfo.txt
 
