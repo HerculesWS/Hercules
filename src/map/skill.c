@@ -7719,33 +7719,39 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				skill->produce_mix(sd, skill_id, ITEMID_FIRE_BOTTLE, 0, 0, 0, 50);
 			}
 			break;
+
 		case SA_DISPELL:
 		{
 			int splash;
-			if (flag&1 || (splash = skill->get_splash(skill_id, skill_lv)) < 1) {
-				int i;
-				if( sd && dstsd && !map_flag_vs(sd->bl.m)
-					&& (sd->status.party_id == 0 || sd->status.party_id != dstsd->status.party_id) ) {
-					// Outside PvP it should only affect party members and no skill fail message.
+			if (flag & 1 || (splash = skill->get_splash(skill_id, skill_lv)) < 1) {
+
+				if (sd != NULL && dstsd != NULL && !map_flag_vs(sd->bl.m) &&
+					(sd->status.party_id == 0 || sd->status.party_id != dstsd->status.party_id) &&
+					(sd->duel_group == 0 || sd->duel_group != dstsd->duel_group)) {
+					// Outside PvP and Duels it should only affect party members and no skill fail message.
 					break;
 				}
-				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
-				if ((dstsd != NULL && (dstsd->job & MAPID_UPPERMASK) == MAPID_SOUL_LINKER)
-					|| (tsc && tsc->data[SC_SOULLINK] && tsc->data[SC_SOULLINK]->val2 == SL_ROGUE) //Rogue's spirit defends against dispel.
-					|| (dstsd && pc_ismadogear(dstsd))
-					|| rnd()%100 >= 50+10*skill_lv )
-				{
-					if (sd)
+
+				clif->skill_nodamage(src, bl, skill_id, skill_lv, 1);
+
+				if ((dstsd != NULL && (dstsd->job & MAPID_UPPERMASK) == MAPID_SOUL_LINKER) ||
+					(tsc != NULL && tsc->data[SC_SOULLINK] && tsc->data[SC_SOULLINK]->val2 == SL_ROGUE) || //Rogue's spirit defends against dispel.
+					(dstsd != NULL && pc_ismadogear(dstsd)) ||
+					rnd() % 100 >= 50 + 10 * skill_lv) {
+					if (sd != NULL)
 						clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 					break;
 				}
-				if(status->isimmune(bl) || !tsc || !tsc->count)
+
+				if (status->isimmune(bl) || tsc == NULL || !tsc->count)
 					break;
-				for(i = 0; i < SC_MAX; i++) {
-					if ( !tsc->data[i] )
-							continue;
-					if( SC_COMMON_MAX < i ) {
-						if ( status->get_sc_type(i)&SC_NO_DISPELL )
+
+				int i;
+				for (i = 0; i < SC_MAX; i++) {
+					if (tsc->data[i] == NULL)
+						continue;
+					if (SC_COMMON_MAX < i) {
+						if (status->get_sc_type(i) & SC_NO_DISPELL)
 							continue;
 					}
 					switch (i) {
@@ -7760,16 +7766,16 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 						case SC_DONTFORGETME:
 						case SC_FORTUNE:
 						case SC_SERVICEFORYOU:
-							if( tsc->data[i]->val4 ) //val4 = out-of-song-area
+							if (tsc->data[i]->val4) //val4 = out-of-song-area
 								continue;
 							break;
 						case SC_ASSUMPTIO:
-							if( bl->type == BL_MOB )
+							if (bl->type == BL_MOB)
 								continue;
 							break;
 						case SC_BERSERK:
 						case SC_SATURDAY_NIGHT_FEVER:
-							tsc->data[i]->val2=0;  //Mark a dispelled berserk to avoid setting hp to 100 by setting hp penalty to 0.
+							tsc->data[i]->val2 = 0;  //Mark a dispelled berserk to avoid setting hp to 100 by setting hp penalty to 0.
 							break;
 					}
 					status_change_end(bl, (sc_type)i, INVALID_TIMER);
@@ -7778,7 +7784,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			} else {
 				//Affect all targets on splash area.
 				map->foreachinrange(skill->area_sub, bl, splash, BL_CHAR,
-				                    src, skill_id, skill_lv, tick, flag|1,
+				                    src, skill_id, skill_lv, tick, flag | 1,
 				                    skill->castend_damage_id);
 			}
 		}
