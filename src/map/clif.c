@@ -9327,6 +9327,9 @@ static void clif_viewequip_ack(struct map_session_data *sd, struct map_session_d
 #endif
 	viewequip_list.headpalette = tsd->vd.hair_color;
 	viewequip_list.bodypalette = tsd->vd.cloth_color;
+#if PACKETVER_MAIN_NUM >= 20180801 || PACKETVER_RE_NUM >= 20180801 || PACKETVER_ZERO_NUM >= 20180808
+	viewequip_list.body2       = tsd->vd.body_style;
+#endif
 	viewequip_list.sex         = tsd->vd.sex;
 
 	clif->send(&viewequip_list, viewequip_list.PacketLength, &sd->bl, SELF);

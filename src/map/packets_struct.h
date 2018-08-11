@@ -279,10 +279,15 @@ enum packet_headers {
 #else
 	unequipitemackType = 0xac,
 #endif
-#if PACKETVER >= 20150226
+#if PACKETVER_MAIN_NUM >= 20180801 || PACKETVER_RE_NUM >= 20180801 || PACKETVER_ZERO_NUM >= 20180808
+	viewequipackType = 0xb03,
+#elif PACKETVER >= 20150226
 	viewequipackType = 0xa2d,
 #elif PACKETVER >= 20120925
 	viewequipackType = 0x997,
+// [4144] not supported due other packets/structs not updated
+//#elif (PACKETVER_MAIN_NUM >= 20111207) || (PACKETVER_RE_NUM >= 20111122)
+//	viewequipackType = 0x906,
 #elif PACKETVER >= 20101124
 	viewequipackType = 0x859,
 #else
@@ -1221,6 +1226,9 @@ struct packet_viewequip_ack {
 #endif
 	int16 headpalette;
 	int16 bodypalette;
+#if PACKETVER_MAIN_NUM >= 20180801 || PACKETVER_RE_NUM >= 20180801 || PACKETVER_ZERO_NUM >= 20180808
+	int16 body2;
+#endif
 	uint8 sex;
 	struct EQUIPITEM_INFO list[MAX_INVENTORY];
 } __attribute__((packed));
