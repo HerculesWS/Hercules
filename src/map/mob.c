@@ -2718,16 +2718,16 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 				mercenary->kills(sd->md);
 		}
 
-		if( md->npc_event[0] && !md->state.npc_killmonster ) {
-			if( sd && battle_config.mob_npc_event_type ) {
+		if (md->npc_event[0] && md->state.npc_killmonster == 0) {
+			if (sd != NULL && (battle_config.mob_npc_event_type == 1 || (battle_config.mob_npc_event_type == 2 && md->class_ == MOBID_EMPELIUM))) {
 				pc->setparam(sd, SP_KILLERRID, sd->bl.id);
-				npc->event(sd,md->npc_event,0);
-			} else if( mvp_sd ) {
-				pc->setparam(mvp_sd, SP_KILLERRID, sd?sd->bl.id:0);
-				npc->event(mvp_sd,md->npc_event,0);
+				npc->event(sd, md->npc_event, 0);
+			} else if (mvp_sd != NULL) {
+				pc->setparam(mvp_sd, SP_KILLERRID, sd != NULL ? sd->bl.id : 0);
+				npc->event(mvp_sd, md->npc_event, 0);
 			} else
 				npc->event_do(md->npc_event);
-		} else if( mvp_sd && !md->state.npc_killmonster ) {
+		} else if (mvp_sd != NULL && md->state.npc_killmonster == 0) {
 			pc->setparam(mvp_sd, SP_KILLEDRID, md->class_);
 			npc->script_event(mvp_sd, NPCE_KILLNPC); // PCKillNPC [Lance]
 		}
