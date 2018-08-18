@@ -1129,7 +1129,7 @@ static int guild_memberposition_changed(struct guild *g, int idx, int pos)
 
 	// Update char position in client [LuzZza]
 	if(g->member[idx].sd != NULL)
-		clif->charnameupdate(g->member[idx].sd);
+		clif->guild_position_selected(g->member[idx].sd);
 	return 0;
 }
 
@@ -1165,7 +1165,7 @@ static int guild_position_changed(int guild_id, int idx, const struct guild_posi
 	// Update char name in client [LuzZza]
 	for(i=0;i<g->max_member;i++)
 		if(g->member[i].position == idx && g->member[i].sd != NULL)
-			clif->charnameupdate(g->member[i].sd);
+			clif->guild_position_selected(g->member[i].sd);
 	return 0;
 }
 

@@ -1041,6 +1041,9 @@ struct clif_interface {
 	void (*guild_positionnamelist) (struct map_session_data *sd);
 	void (*guild_positioninfolist) (struct map_session_data *sd);
 	void (*guild_expulsionlist) (struct map_session_data* sd);
+	void (*guild_set_position) (struct map_session_data *sd);
+	void (*guild_position_selected) (struct map_session_data *sd);
+
 	bool (*validate_emblem) (const uint8* emblem, unsigned long emblem_len);
 	/* battleground-specific */
 	void (*bg_hp) (struct map_session_data *sd);

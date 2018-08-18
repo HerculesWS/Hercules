@@ -8310,6 +8310,49 @@ static void clif_guild_broken(struct map_session_data *sd, int flag)
 	WFIFOSET(fd,packet_len(0x15e));
 }
 
+static void clif_guild_position_selected(struct map_session_data *sd)
+{
+#if PACKETVER >= 20180801
+	clif->guild_set_position(sd);
+#else
+	clif->charnameupdate(sd);
+#endif
+}
+
+static void clif_guild_set_position(struct map_session_data *sd)
+{
+	nullpo_retv(sd);
+
+	int len = sizeof(struct PACKET_ZC_GUILD_POSITION);
+	const char *name = NULL;
+	if (sd->status.guild_id > 0) {
+		struct guild *g = sd->guild;
+
+		nullpo_retv(g);
+
+		int i = 0;
+		int ps = -1;
+		ARR_FIND(0, g->max_member, i, g->member[i].account_id == sd->status.account_id && g->member[i].char_id == sd->status.char_id);
+		if (i < g->max_member)
+			ps = g->member[i].position;
+
+		if (ps >= 0 && ps < MAX_GUILDPOSITION) {
+			len += 24;
+			name = g->position[ps].name;
+		}
+	}
+
+	unsigned char buf[sizeof(struct PACKET_ZC_GUILD_POSITION) + NAME_LENGTH];
+	struct PACKET_ZC_GUILD_POSITION *p = WBUFP(buf, 0);
+	p->packetType = 0xafd;
+	p->packetLength = len;
+	p->AID = sd->bl.id;
+	if (name != NULL)
+		memcpy(&p->position, name, 24);
+
+	clif->send(buf, len, &sd->bl, AREA);
+}
+
 /// Displays emotion on an object (ZC_EMOTION).
 /// 00c0 <id>.L <type>.B
 /// type:
@@ -22319,6 +22362,8 @@ void clif_defaults(void)
 	clif->guild_positionnamelist = clif_guild_positionnamelist;
 	clif->guild_positioninfolist = clif_guild_positioninfolist;
 	clif->guild_expulsionlist = clif_guild_expulsionlist;
+	clif->guild_set_position = clif_guild_set_position;
+	clif->guild_position_selected = clif_guild_position_selected;
 	clif->validate_emblem = clif_validate_emblem;
 	/* battleground-specific */
 	clif->bg_hp = clif_bg_hp;
