@@ -6180,6 +6180,7 @@ static void clif_wis_message(int fd, const char *nick, const char *mes, int mes_
 ///     1 = target character is not logged in
 ///     2 = ignored by target
 ///     3 = everyone ignored by target
+///     other = target character is not logged in
 static void clif_wis_end(int fd, int flag)
 {
 	struct map_session_data *sd = sockt->session_is_valid(fd) ? sockt->session[fd]->session_data : NULL;
@@ -6191,7 +6192,7 @@ static void clif_wis_end(int fd, int flag)
 	p.PacketType = wisendType;
 	p.result = (char)flag;
 #if PACKETVER >= 20131223
-	p.unknown = 0;
+	p.AID = sd->bl.id;
 #endif
 
 	clif->send(&p, sizeof(p), &sd->bl, SELF);

@@ -1358,7 +1358,7 @@ struct packet_wis_end {
 	int16 PacketType;
 	int8 result;
 #if PACKETVER >= 20131223
-	uint32 unknown;/* maybe AID, not sure what for (works sending as 0) */
+	uint32 AID;
 #endif
 } __attribute__((packed));
 
