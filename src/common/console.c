@@ -25,6 +25,7 @@
 
 #include "common/cbasetypes.h"
 #include "common/core.h"
+#include "common/mmo.h"
 #include "common/nullpo.h"
 #include "common/showmsg.h"
 #include "common/sysinfo.h"
@@ -93,6 +94,7 @@ static void display_title(void)
 	ShowInfo("Compiled with %s\n", sysinfo->compiler());
 	ShowInfo("Compile Flags: %s\n", sysinfo->cflags());
 	ShowInfo("Timer Function Type: %s\n", sysinfo->time());
+	ShowInfo("Packet version: %d " PACKETTYPE "\n", PACKETVER);
 }
 
 /**
