@@ -7156,6 +7156,8 @@ typedef int (*HPMHOOK_pre_skill_cell_overlap) (struct block_list **bl, va_list a
 typedef int (*HPMHOOK_post_skill_cell_overlap) (int retVal___, struct block_list *bl, va_list ap);
 typedef int (*HPMHOOK_pre_skill_timerskill) (int *tid, int64 *tick, int *id, intptr_t *data);
 typedef int (*HPMHOOK_post_skill_timerskill) (int retVal___, int tid, int64 tick, int id, intptr_t data);
+typedef void (*HPMHOOK_pre_skill_trap_do_splash) (struct block_list **bl, uint16 *skill_id, uint16 *skill_lv, int *bl_flag, int64 *tick);
+typedef void (*HPMHOOK_post_skill_trap_do_splash) (struct block_list *bl, uint16 skill_id, uint16 skill_lv, int bl_flag, int64 tick);
 typedef int (*HPMHOOK_pre_skill_trap_splash) (struct block_list **bl, va_list ap);
 typedef int (*HPMHOOK_post_skill_trap_splash) (int retVal___, struct block_list *bl, va_list ap);
 typedef int (*HPMHOOK_pre_skill_check_condition_mercenary) (struct block_list **bl, int *skill_id, int *lv, int *type);

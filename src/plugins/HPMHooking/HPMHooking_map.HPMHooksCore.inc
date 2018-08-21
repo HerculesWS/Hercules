@@ -5672,6 +5672,8 @@ struct {
 	struct HPMHookPoint *HP_skill_cell_overlap_post;
 	struct HPMHookPoint *HP_skill_timerskill_pre;
 	struct HPMHookPoint *HP_skill_timerskill_post;
+	struct HPMHookPoint *HP_skill_trap_do_splash_pre;
+	struct HPMHookPoint *HP_skill_trap_do_splash_post;
 	struct HPMHookPoint *HP_skill_trap_splash_pre;
 	struct HPMHookPoint *HP_skill_trap_splash_post;
 	struct HPMHookPoint *HP_skill_check_condition_mercenary_pre;
@@ -12225,6 +12227,8 @@ struct {
 	int HP_skill_cell_overlap_post;
 	int HP_skill_timerskill_pre;
 	int HP_skill_timerskill_post;
+	int HP_skill_trap_do_splash_pre;
+	int HP_skill_trap_do_splash_post;
 	int HP_skill_trap_splash_pre;
 	int HP_skill_trap_splash_post;
 	int HP_skill_check_condition_mercenary_pre;

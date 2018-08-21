@@ -2902,6 +2902,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(skill->onskillusage, HP_skill_onskillusage) },
 	{ HP_POP(skill->cell_overlap, HP_skill_cell_overlap) },
 	{ HP_POP(skill->timerskill, HP_skill_timerskill) },
+	{ HP_POP(skill->trap_do_splash, HP_skill_trap_do_splash) },
 	{ HP_POP(skill->trap_splash, HP_skill_trap_splash) },
 	{ HP_POP(skill->check_condition_mercenary, HP_skill_check_condition_mercenary) },
 	{ HP_POP(skill->locate_element_field, HP_skill_locate_element_field) },
