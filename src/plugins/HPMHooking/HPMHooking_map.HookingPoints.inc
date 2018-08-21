@@ -133,6 +133,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(battle->delay_damage, HP_battle_delay_damage) },
 	{ HP_POP(battle->drain, HP_battle_drain) },
 	{ HP_POP(battle->reflect_damage, HP_battle_reflect_damage) },
+	{ HP_POP(battle->reflect_trap, HP_battle_reflect_trap) },
 	{ HP_POP(battle->attr_ratio, HP_battle_attr_ratio) },
 	{ HP_POP(battle->attr_fix, HP_battle_attr_fix) },
 	{ HP_POP(battle->calc_cardfix, HP_battle_calc_cardfix) },

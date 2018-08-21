@@ -232,6 +232,8 @@ struct {
 	struct HPMHookPoint *HP_battle_drain_post;
 	struct HPMHookPoint *HP_battle_reflect_damage_pre;
 	struct HPMHookPoint *HP_battle_reflect_damage_post;
+	struct HPMHookPoint *HP_battle_reflect_trap_pre;
+	struct HPMHookPoint *HP_battle_reflect_trap_post;
 	struct HPMHookPoint *HP_battle_attr_ratio_pre;
 	struct HPMHookPoint *HP_battle_attr_ratio_post;
 	struct HPMHookPoint *HP_battle_attr_fix_pre;
@@ -6783,6 +6785,8 @@ struct {
 	int HP_battle_drain_post;
 	int HP_battle_reflect_damage_pre;
 	int HP_battle_reflect_damage_post;
+	int HP_battle_reflect_trap_pre;
+	int HP_battle_reflect_trap_post;
 	int HP_battle_attr_ratio_pre;
 	int HP_battle_attr_ratio_post;
 	int HP_battle_attr_fix_pre;

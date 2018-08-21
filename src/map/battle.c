@@ -4339,6 +4339,8 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 			}
 		break;
 	}
+	
+	battle->reflect_trap(target, src, &md, skill_id);
 
 	return md;
 }
@@ -6008,6 +6010,37 @@ static void battle_reflect_damage(struct block_list *target, struct block_list *
 #undef NORMALIZE_RDAMAGE
 }
 
+/**
+ * Reflects damage from certain traps, if battle_config.trap_reflect is true.
+ * @param target : Player who triggered the trap
+ * @param src : Player who set the trap
+ * @param md : Trap damage structure
+ * @param skill_id : Trap skill ID
+ */
+static void battle_reflect_trap(struct block_list *target, struct block_list *src, struct Damage *md, uint16 skill_id)
+{
+	if (battle_config.trap_reflect == true) {
+		if (src != target) { // Don't reflect your own damage
+			switch (skill_id) {
+			case HT_CLAYMORETRAP:
+			case HT_LANDMINE:
+			case HT_FREEZINGTRAP:
+			case HT_BLASTMINE:
+			// Needs official info
+			//case RA_CLUSTERBOMB:
+			//case RA_FIRINGTRAP:
+			//case RA_ICEBOUNDTRAP:
+			//case GN_THORNS_TRAP:
+			//case KO_MAKIBISHI:
+			case MA_LANDMINE:
+			case MA_FREEZINGTRAP:
+				battle->reflect_damage(target, src, md, skill_id);
+				break;
+			}
+		}
+	}
+}
+
 static void battle_drain(struct map_session_data *sd, struct block_list *tbl, int64 rdamage, int64 ldamage, int race, int boss)
 {
 	struct weapon_data *wd;
@@ -7325,6 +7358,7 @@ static const struct battle_data {
 	 * Hercules
 	 **/
 	{ "skill_trap_type",                    &battle_config.skill_trap_type,                 0,      0,      1,              },
+	{ "trap_reflect",                       &battle_config.trap_reflect,                    1,      0,      1,              },
 	{ "item_restricted_consumption_type",   &battle_config.item_restricted_consumption_type,1,      0,      1,              },
 	{ "unequip_restricted_equipment",       &battle_config.unequip_restricted_equipment,    0,      0,      3,              },
 	{ "max_walk_path",                      &battle_config.max_walk_path,                   17,     1,      MAX_WALKPATH,   },
@@ -7614,6 +7648,7 @@ void battle_defaults(void)
 	battle->delay_damage = battle_delay_damage;
 	battle->drain = battle_drain;
 	battle->reflect_damage = battle_reflect_damage;
+	battle->reflect_trap = battle_reflect_trap;
 	battle->attr_ratio = battle_attr_ratio;
 	battle->attr_fix = battle_attr_fix;
 	battle->calc_cardfix = battle_calc_cardfix;
