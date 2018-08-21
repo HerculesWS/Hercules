@@ -81,7 +81,14 @@
 	#undef ENABLE_PACKETVER_ZERO
 #endif // DISABLE_PACKETVER_ZERO
 
-#if !defined(PACKETVER_RE) && !defined(PACKETVER_ZERO)
+//Uncomment the following line if your client is sakexe
+//#define ENABLE_PACKETVER_SAK
+#ifdef ENABLE_PACKETVER_SAK
+	#define PACKETVER_SAK
+	#undef ENABLE_PACKETVER_SAK
+#endif // DISABLE_PACKETVER_SAK
+
+#if !defined(PACKETVER_RE) && !defined(PACKETVER_ZERO) && !defined(PACKETVER_SAK)
 	#define PACKETVER_MAIN_NUM PACKETVER
 #else
 	#define PACKETVER_MAIN_NUM 0
@@ -95,6 +102,11 @@
 	#define PACKETVER_ZERO_NUM PACKETVER
 #else
 	#define PACKETVER_ZERO_NUM 0
+#endif
+#ifdef PACKETVER_SAK
+	#define PACKETVER_SAK_NUM PACKETVER
+#else
+	#define PACKETVER_SAK_NUM 0
 #endif
 
 // Client support for experimental RagexeRE UI present in 2012-04-10 and 2012-04-18

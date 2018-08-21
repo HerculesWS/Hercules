@@ -25,6 +25,8 @@
 #include "map/messages_zero.h"
 #elif defined(PACKETVER_RE)
 #include "map/messages_re.h"
+#elif defined(PACKETVER_SAK)
+#include "map/messages_sak.h"
 #else
 #include "map/messages_main.h"
 #endif
