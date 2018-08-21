@@ -16770,6 +16770,7 @@ static int skill_trap_splash(struct block_list *bl, va_list ap)
 	struct skill_unit *src_su = NULL;
 	struct skill_unit_group *sg;
 	struct block_list *ss;
+	int enemy_count = 0;
 
 	nullpo_ret(bl);
 	nullpo_ret(src);
@@ -16864,7 +16865,11 @@ static int skill_trap_splash(struct block_list *bl, va_list ap)
 			}
 			/* Fall through */
 		default:
-			skill->attack(skill->get_type(sg->skill_id),ss,src,bl,sg->skill_id,sg->skill_lv,tick,0);
+			// if trap damage should be split among targets, count them
+			if (skill->get_nk(sg->skill_id)&NK_SPLASHSPLIT)
+				enemy_count = map->foreachinrange(skill->area_sub, src, skill->get_splash(sg->skill_id, sg->skill_lv), BL_CHAR, src, sg->skill_id, sg->skill_lv, tick, BCT_ENEMY, skill->area_sub_count);
+
+			skill->attack(skill->get_type(sg->skill_id), ss, src, bl, sg->skill_id, sg->skill_lv, tick, enemy_count);
 			break;
 	}
 	return 1;
