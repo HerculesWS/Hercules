@@ -20318,7 +20318,7 @@ static unsigned short clif_parse_cmd_optional(int fd, struct map_session_data *s
  */
 static void clif_achievement_send_list(int fd, struct map_session_data *sd)
 {
-#if PACKETVER >= 20141016
+#if PACKETVER_MAIN_NUM >= 20150225 || PACKETVER_RE_NUM >= 20141126 || defined(PACKETVER_ZERO)
 	int i = 0, count = 0, curr_exp_tmp = 0;
 	struct packet_achievement_list p = { 0 };
 
@@ -20381,7 +20381,7 @@ static void clif_achievement_send_list(int fd, struct map_session_data *sd)
  */
 static void clif_achievement_send_update(int fd, struct map_session_data *sd, const struct achievement_data *ad)
 {
-#if PACKETVER >= 20141016
+#if PACKETVER_MAIN_NUM >= 20150225 || PACKETVER_RE_NUM >= 20141126 || defined(PACKETVER_ZERO)
 	struct packet_achievement_update p = { 0 };
 	struct achievement *a = NULL;
 	int i = 0, points = 0, rank = 0, curr_rank_points = 0;
@@ -20435,7 +20435,6 @@ static void clif_achievement_send_update(int fd, struct map_session_data *sd, co
 static void clif_parse_achievement_get_reward(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
 static void clif_parse_achievement_get_reward(int fd, struct map_session_data *sd)
 {
-#if PACKETVER >= 20141016
 	int ach_id = RFIFOL(fd, 2);
 	const struct achievement_data *ad = NULL;
 	struct achievement *ach = NULL;
@@ -20449,7 +20448,6 @@ static void clif_parse_achievement_get_reward(int fd, struct map_session_data *s
 	if (achievement->check_complete(sd, ad) && ach->completed_at && ach->rewarded_at == 0) {
 		achievement->get_rewards(sd, ad);
 	}
-#endif // PACKETVER >= 20141016
 }
 
 /**
@@ -20458,7 +20456,7 @@ static void clif_parse_achievement_get_reward(int fd, struct map_session_data *s
  */
 static void clif_achievement_reward_ack(int fd, struct map_session_data *sd, const struct achievement_data *ad)
 {
-#if PACKETVER >= 20141016
+#if PACKETVER_MAIN_NUM >= 20150225 || PACKETVER_RE_NUM >= 20141126 || defined(PACKETVER_ZERO)
 	struct packet_achievement_reward_ack p = { 0 };
 
 	nullpo_retv(sd);
