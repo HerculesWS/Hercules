@@ -12536,6 +12536,12 @@ static void clif_parse_PartyInvite(int fd, struct map_session_data *sd)
 		return;
 	}
 
+	// If inviter is disguised, crashes target's client
+	if (sd->disguise != -1) {
+		clif->messagecolor_self(sd->fd, COLOR_RED, msg_sd(sd, 289)); // You cannot invite players while disguised.
+		return;
+	}
+
 	t_sd = map->id2sd(RFIFOL(fd,2));
 
 	if(t_sd && t_sd->state.noask) {// @noask [LuzZza]
@@ -12557,6 +12563,12 @@ static void clif_parse_PartyInvite2(int fd, struct map_session_data *sd)
 	if(map->list[sd->bl.m].flag.partylock) {
 		// Party locked.
 		clif->message(fd, msg_fd(fd,227)); // Party modification is disabled in this map.
+		return;
+	}
+
+	// If inviter is disguised, crashes target's client
+	if (sd->disguise != -1) {
+		clif->messagecolor_self(sd->fd, COLOR_RED, msg_sd(sd, 289)); // You cannot invite players while disguised.
 		return;
 	}
 
