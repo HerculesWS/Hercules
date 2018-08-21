@@ -4339,6 +4339,27 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 			}
 		break;
 	}
+	
+	if (battle_config.trap_reflect == true) {
+		if (sd != tsd) { // Don't reflect your own damage
+			switch (skill_id) {
+			case HT_CLAYMORETRAP:
+			case HT_LANDMINE:
+			case HT_FREEZINGTRAP:
+			case HT_BLASTMINE:
+			// Needs official info
+			//case RA_CLUSTERBOMB:
+			//case RA_FIRINGTRAP:
+			//case RA_ICEBOUNDTRAP:
+			//case GN_THORNS_TRAP:
+			//case KO_MAKIBISHI:
+			case MA_LANDMINE:
+			case MA_FREEZINGTRAP:
+				battle->reflect_damage(target, src, &md, skill_id);
+				break;
+			}
+		}
+	}
 
 	return md;
 }
@@ -7325,6 +7346,7 @@ static const struct battle_data {
 	 * Hercules
 	 **/
 	{ "skill_trap_type",                    &battle_config.skill_trap_type,                 0,      0,      1,              },
+	{ "trap_reflect",                       &battle_config.trap_reflect,                    1,      0,      1,              },
 	{ "item_restricted_consumption_type",   &battle_config.item_restricted_consumption_type,1,      0,      1,              },
 	{ "unequip_restricted_equipment",       &battle_config.unequip_restricted_equipment,    0,      0,      3,              },
 	{ "max_walk_path",                      &battle_config.max_walk_path,                   17,     1,      MAX_WALKPATH,   },

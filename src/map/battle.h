@@ -506,6 +506,7 @@ struct Battle_Config {
 
 	/** Hercules **/
 	int skill_trap_type;
+	int trap_reflect;
 	int item_restricted_consumption_type;
 	int unequip_restricted_equipment;
 	int max_walk_path;
