@@ -716,6 +716,7 @@ struct clif_interface {
 	void (*dropitem) (struct map_session_data *sd,int n,int amount);
 	void (*delitem) (struct map_session_data *sd,int n,int amount, short reason);
 	void (*takeitem) (struct block_list* src, struct block_list* dst);
+	void (*item_movefailed) (struct map_session_data *sd, int n);
 	void (*item_equip) (short idx, struct EQUIPITEM_INFO *p, struct item *i, struct item_data *id, int eqp_pos);
 	void (*item_normal) (short idx, struct NORMALITEM_INFO *p, struct item *i, struct item_data *id);
 	void (*arrowequip) (struct map_session_data *sd,int val);

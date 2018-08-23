@@ -297,7 +297,7 @@ static int storage_add_from_inventory(struct map_session_data *sd, int index, in
 	if (storage->additem(sd, &sd->status.inventory[index], amount) == 0)
 		pc->delitem(sd, index, amount, 0, DELITEM_TOSTORAGE, LOG_TYPE_STORAGE);
 	else
-		clif->dropitem(sd, index, 0);
+		clif->item_movefailed(sd, index);
 
 	return 1;
 }
@@ -398,7 +398,9 @@ static int storage_storagegettocart(struct map_session_data *sd, int index, int 
 	if ((flag = pc->cart_additem(sd, it, amount, LOG_TYPE_STORAGE)) == 0)
 		storage->delitem(sd, index, amount);
 	else {
+		// probably this line is useless? it remove inventory lock but not storage [4144]
 		clif->dropitem(sd, index,0);
+
 		clif->cart_additem_ack(sd, flag == 1?0x0:0x1);
 	}
 
@@ -638,7 +640,7 @@ static int storage_guild_storageadd(struct map_session_data *sd, int index, int 
 	if( gstorage->additem(sd,stor,&sd->status.inventory[index],amount) == 0 )
 		pc->delitem(sd, index, amount, 0, DELITEM_TOSTORAGE, LOG_TYPE_GSTORAGE);
 	else
-		clif->dropitem(sd, index, 0);
+		clif->item_movefailed(sd, index);
 
 	return 1;
 }

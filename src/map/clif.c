@@ -2633,6 +2633,22 @@ static void clif_dropitem(struct map_session_data *sd, int n, int amount)
 	WFIFOSET(fd,packet_len(0xaf));
 }
 
+static void clif_item_movefailed(struct map_session_data *sd, int n)
+{
+#if PACKETVER_MAIN_NUM >= 20161214 || PACKETVER_RE_NUM >= 20161130 || defined(PACKETVER_ZERO)
+	int fd = sd->fd;
+	const int len = sizeof(struct PACKET_ZC_INVENTORY_MOVE_FAILED);
+	WFIFOHEAD(fd, len);
+	struct PACKET_ZC_INVENTORY_MOVE_FAILED *p = WFIFOP(fd, 0);
+	p->packetType = 0xaa7;
+	p->index = n;
+	p->unknown = 1;
+	WFIFOSET(fd, len);
+#else
+	clif->dropitem(sd, n, 0);
+#endif
+}
+
 /// Notifies the client, that an inventory item was deleted (ZC_DELETE_ITEM_FROM_BODY).
 /// 07fa <delete type>.W <index>.W <amount>.W
 /// delete type: @see enum delitem_reason
@@ -11067,7 +11083,7 @@ static void clif_parse_DropItem(int fd, struct map_session_data *sd)
 	}
 
 	//Because the client does not like being ignored.
-	clif->dropitem(sd, item_index, 0);
+	clif->item_movefailed(sd, item_index);
 }
 
 static void clif_parse_UseItem(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
@@ -11562,7 +11578,7 @@ static void clif_parse_PutItemToCart(int fd, struct map_session_data *sd)
 	if (!pc_iscarton(sd))
 		return;
 	if ( (flag = pc->putitemtocart(sd,RFIFOW(fd,2)-2,RFIFOL(fd,4))) ) {
-		clif->dropitem(sd, RFIFOW(fd,2)-2,0);
+		clif->item_movefailed(sd, RFIFOW(fd,2)-2);
 		clif->cart_additem_ack(sd,flag == 1?0x0:0x1);
 	}
 }
@@ -22067,6 +22083,7 @@ void clif_defaults(void)
 	clif->dropitem = clif_dropitem;
 	clif->delitem = clif_delitem;
 	clif->takeitem = clif_takeitem;
+	clif->item_movefailed = clif_item_movefailed;
 	clif->item_equip = clif_item_equip;
 	clif->item_normal = clif_item_normal;
 	clif->arrowequip = clif_arrowequip;
