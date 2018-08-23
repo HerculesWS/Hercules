@@ -7629,12 +7629,13 @@ static void clif_guild_created(struct map_session_data *sd, int flag)
 /// mode: @see enum guild_permission
 static void clif_guild_belonginfo(struct map_session_data *sd, struct guild *g)
 {
-	int ps,fd;
 	nullpo_retv(sd);
 	nullpo_retv(g);
 
-	fd=sd->fd;
-	ps=guild->getposition(g,sd);
+	int fd = sd->fd;
+	int ps = guild->getposition(g, sd);
+	Assert_retv(ps != -1);
+
 	WFIFOHEAD(fd,packet_len(0x16c));
 	WFIFOW(fd,0)=0x16c;
 	WFIFOL(fd,2)=g->guild_id;
