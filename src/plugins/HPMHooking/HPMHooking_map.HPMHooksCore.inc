@@ -708,6 +708,8 @@ struct {
 	struct HPMHookPoint *HP_clif_delitem_post;
 	struct HPMHookPoint *HP_clif_takeitem_pre;
 	struct HPMHookPoint *HP_clif_takeitem_post;
+	struct HPMHookPoint *HP_clif_item_movefailed_pre;
+	struct HPMHookPoint *HP_clif_item_movefailed_post;
 	struct HPMHookPoint *HP_clif_item_equip_pre;
 	struct HPMHookPoint *HP_clif_item_equip_post;
 	struct HPMHookPoint *HP_clif_item_normal_pre;
@@ -1158,6 +1160,8 @@ struct {
 	struct HPMHookPoint *HP_clif_msgtable_skill_post;
 	struct HPMHookPoint *HP_clif_msgtable_str_pre;
 	struct HPMHookPoint *HP_clif_msgtable_str_post;
+	struct HPMHookPoint *HP_clif_msgtable_str_color_pre;
+	struct HPMHookPoint *HP_clif_msgtable_str_color_post;
 	struct HPMHookPoint *HP_clif_msgtable_color_pre;
 	struct HPMHookPoint *HP_clif_msgtable_color_post;
 	struct HPMHookPoint *HP_clif_message_pre;
@@ -1320,6 +1324,10 @@ struct {
 	struct HPMHookPoint *HP_clif_guild_positioninfolist_post;
 	struct HPMHookPoint *HP_clif_guild_expulsionlist_pre;
 	struct HPMHookPoint *HP_clif_guild_expulsionlist_post;
+	struct HPMHookPoint *HP_clif_guild_set_position_pre;
+	struct HPMHookPoint *HP_clif_guild_set_position_post;
+	struct HPMHookPoint *HP_clif_guild_position_selected_pre;
+	struct HPMHookPoint *HP_clif_guild_position_selected_post;
 	struct HPMHookPoint *HP_clif_validate_emblem_pre;
 	struct HPMHookPoint *HP_clif_validate_emblem_post;
 	struct HPMHookPoint *HP_clif_bg_hp_pre;
@@ -2172,6 +2180,8 @@ struct {
 	struct HPMHookPoint *HP_clif_stylist_send_rodexitem_post;
 	struct HPMHookPoint *HP_clif_pReqStyleChange_pre;
 	struct HPMHookPoint *HP_clif_pReqStyleChange_post;
+	struct HPMHookPoint *HP_clif_pReqStyleChange2_pre;
+	struct HPMHookPoint *HP_clif_pReqStyleChange2_post;
 	struct HPMHookPoint *HP_clif_cz_req_style_change_sub_pre;
 	struct HPMHookPoint *HP_clif_cz_req_style_change_sub_post;
 	struct HPMHookPoint *HP_clif_style_change_response_pre;
@@ -7259,6 +7269,8 @@ struct {
 	int HP_clif_delitem_post;
 	int HP_clif_takeitem_pre;
 	int HP_clif_takeitem_post;
+	int HP_clif_item_movefailed_pre;
+	int HP_clif_item_movefailed_post;
 	int HP_clif_item_equip_pre;
 	int HP_clif_item_equip_post;
 	int HP_clif_item_normal_pre;
@@ -7709,6 +7721,8 @@ struct {
 	int HP_clif_msgtable_skill_post;
 	int HP_clif_msgtable_str_pre;
 	int HP_clif_msgtable_str_post;
+	int HP_clif_msgtable_str_color_pre;
+	int HP_clif_msgtable_str_color_post;
 	int HP_clif_msgtable_color_pre;
 	int HP_clif_msgtable_color_post;
 	int HP_clif_message_pre;
@@ -7871,6 +7885,10 @@ struct {
 	int HP_clif_guild_positioninfolist_post;
 	int HP_clif_guild_expulsionlist_pre;
 	int HP_clif_guild_expulsionlist_post;
+	int HP_clif_guild_set_position_pre;
+	int HP_clif_guild_set_position_post;
+	int HP_clif_guild_position_selected_pre;
+	int HP_clif_guild_position_selected_post;
 	int HP_clif_validate_emblem_pre;
 	int HP_clif_validate_emblem_post;
 	int HP_clif_bg_hp_pre;
@@ -8723,6 +8741,8 @@ struct {
 	int HP_clif_stylist_send_rodexitem_post;
 	int HP_clif_pReqStyleChange_pre;
 	int HP_clif_pReqStyleChange_post;
+	int HP_clif_pReqStyleChange2_pre;
+	int HP_clif_pReqStyleChange2_post;
 	int HP_clif_cz_req_style_change_sub_pre;
 	int HP_clif_cz_req_style_change_sub_post;
 	int HP_clif_style_change_response_pre;
