@@ -10136,3 +10136,18 @@ the available flags are:
 Opens the styling shop on client
 
 ---------------------------------------
+
+*msgtable(<message_id>{, <color>})
+
+Show in client message by <message_id> from msg string table
+with optional <color>.
+
+---------------------------------------
+
+*msgtable2(<message_id>, <param>{, <color>})
+
+Show in client message by <message_id> from msg string table.
+<param> is parameter for this message. Can be string or int.
+Optional <color> can be used for set color for whole message.
+
+---------------------------------------

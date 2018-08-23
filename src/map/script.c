@@ -24655,6 +24655,44 @@ static BUILDIN(openstylist)
 	return true;
 }
 
+static BUILDIN(msgtable)
+{
+	struct map_session_data *sd = script_rid2sd(st);
+	if (sd == NULL)
+		return false;
+
+	const enum clif_messages msgId = script_getnum(st, 2);
+	if (script_hasdata(st, 3)) {
+		clif->msgtable_color(sd, msgId, script_getnum(st, 3));
+	} else {
+		clif->msgtable(sd, msgId);
+	}
+
+	return true;
+}
+
+static BUILDIN(msgtable2)
+{
+	struct map_session_data *sd = script_rid2sd(st);
+	if (sd == NULL)
+		return false;
+
+	const enum clif_messages msgId = script_getnum(st, 2);
+	if (script_isstringtype(st, 3)) {
+		const char *value = script_getstr(st, 3);
+		if (script_hasdata(st, 4)) {
+			clif->msgtable_str_color(sd, msgId, value, script_getnum(st, 4));
+		} else {
+			clif->msgtable_str(sd, msgId, value);
+		}
+	} else {
+		const int value = script_getnum(st, 3);
+		clif->msgtable_num(sd, msgId, value);
+	}
+
+	return true;
+}
+
 /**
  * Adds a built-in script function.
  *
@@ -25231,6 +25269,8 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(buyingstore,"i"),
 		BUILDIN_DEF(searchstores,"ii"),
 		BUILDIN_DEF(showdigit,"i?"),
+		BUILDIN_DEF(msgtable, "i?"),
+		BUILDIN_DEF(msgtable2, "iv?"),
 		// WoE SE
 		BUILDIN_DEF(agitstart2,""),
 		BUILDIN_DEF(agitend2,""),
