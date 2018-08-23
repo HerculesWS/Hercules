@@ -8126,26 +8126,25 @@ static void clif_guild_leave(struct map_session_data *sd, const char *name, cons
 /// Notifies clients of a guild of an expelled member.
 /// 015c <char name>.24B <reason>.40B <account name>.24B (ZC_ACK_BAN_GUILD)
 /// 0839 <char name>.24B <reason>.40B (ZC_ACK_BAN_GUILD_SSO)
-static void clif_guild_expulsion(struct map_session_data *sd, const char *name, const char *mes, int account_id)
+static void clif_guild_expulsion(struct map_session_data *sd, const char *name, int char_id, const char *mes, int account_id)
 {
-	unsigned char buf[128];
-#if PACKETVER < 20100803
-	const unsigned short cmd = 0x15c;
-#else
-	const unsigned short cmd = 0x839;
-#endif
-
 	nullpo_retv(sd);
 	nullpo_retv(name);
 	nullpo_retv(mes);
 
-	WBUFW(buf,0) = cmd;
-	safestrncpy(WBUFP(buf,2), name, NAME_LENGTH);
-	safestrncpy(WBUFP(buf,26), mes, 40);
-#if PACKETVER < 20100803
-	memset(WBUFP(buf,66), 0, NAME_LENGTH); // account name (not used for security reasons)
+	struct PACKET_ZC_ACK_BAN_GUILD p;
+	p.packetType = guildExpulsion;
+#if PACKETVER_MAIN_NUM >= 20161019 || PACKETVER_RE_NUM >= 20160921 || defined(PACKETVER_ZERO)
+	p.GID = char_id;
+#else
+	safestrncpy(&p.name[0], name, NAME_LENGTH);
 #endif
-	clif->send(buf, packet_len(cmd), &sd->bl, GUILD_NOBG);
+	safestrncpy(&p.reason[0], mes, 40);
+
+#if PACKETVER < 20100803
+	memset(&p.account_name, 0, NAME_LENGTH); // account name (not used for security reasons)
+#endif
+	clif->send(&p, sizeof(p), &sd->bl, GUILD_NOBG);
 }
 
 /// Guild expulsion list (ZC_BAN_LIST).

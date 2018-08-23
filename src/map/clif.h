@@ -1025,7 +1025,7 @@ struct clif_interface {
 	void (*guild_invite) (struct map_session_data *sd,struct guild *g);
 	void (*guild_inviteack) (struct map_session_data *sd,int flag);
 	void (*guild_leave) (struct map_session_data *sd,const char *name,const char *mes);
-	void (*guild_expulsion) (struct map_session_data* sd, const char* name, const char* mes, int account_id);
+	void (*guild_expulsion) (struct map_session_data* sd, const char* name, int char_id, const char* mes, int account_id);
 	void (*guild_positionchanged) (struct guild *g,int idx);
 	void (*guild_memberpositionchanged) (struct guild *g,int idx);
 	void (*guild_emblem) (struct map_session_data *sd,struct guild *g);
