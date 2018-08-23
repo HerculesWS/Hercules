@@ -9480,6 +9480,36 @@ static void clif_msgtable_str(struct map_session_data *sd, enum clif_messages ms
 }
 
 /**
+ * Displays a format string from msgstringtable.txt with a %s value and color (ZC_FORMATSTRING_MSG).
+ *
+ * @param sd     The target character.
+ * @param msg_id msgstringtable message index, 0-based (@see enum clif_messages)
+ * @param value  The value to fill %s.
+ * @param color  The color to use
+ */
+static void clif_msgtable_str_color(struct map_session_data *sd, enum clif_messages msg_id, const char *value, uint32 color)
+{
+#if PACKETVER >= 20160330
+	nullpo_retv(sd);
+	nullpo_retv(value);
+
+	int message_len = (int)strlen(value) + 1;
+	const int len = sizeof(struct PACKET_ZC_FORMATSTRING_MSG_COLOR) + message_len + 1;
+	struct PACKET_ZC_FORMATSTRING_MSG_COLOR *p = (struct PACKET_ZC_FORMATSTRING_MSG_COLOR *)aMalloc(len);
+
+	p->PacketType = 0xa6f;
+	p->PacketLength = len;
+	p->messageId = msg_id;
+	p->color = color;
+	safestrncpy(p->messageString, value, message_len);
+	p->messageString[message_len] = 0;
+
+	clif->send(p, p->PacketLength, &sd->bl, SELF);
+	aFree(p);
+#endif
+}
+
+/**
  * Displays a format string from msgstringtable.txt with a color (ZC_MSG_COLOR).
  *
  * @param sd     The target character.
@@ -22273,6 +22303,7 @@ void clif_defaults(void)
 	clif->msgtable = clif_msgtable;
 	clif->msgtable_num = clif_msgtable_num;
 	clif->msgtable_str = clif_msgtable_str;
+	clif->msgtable_str_color = clif_msgtable_str_color;
 	clif->msgtable_color = clif_msgtable_color;
 	clif->message = clif_displaymessage;
 	clif->messageln = clif_displaymessage2;

@@ -952,6 +952,7 @@ struct clif_interface {
 	void (*msgtable_num) (struct map_session_data *sd, enum clif_messages msg_id, int value);
 	void (*msgtable_skill) (struct map_session_data *sd, uint16 skill_id, enum clif_messages msg_id);
 	void (*msgtable_str) (struct map_session_data *sd, enum clif_messages, const char *value);
+	void (*msgtable_str_color) (struct map_session_data *sd, enum clif_messages, const char *value, uint32 color);
 	void (*msgtable_color) (struct map_session_data *sd, enum clif_messages, uint32 color);
 	void (*message) (const int fd, const char* mes);
 	void (*messageln) (const int fd, const char* mes);

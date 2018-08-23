@@ -1843,6 +1843,14 @@ struct PACKET_ZC_FORMATSTRING_MSG {
 	char MessageString[];
 } __attribute__((packed));
 
+struct PACKET_ZC_FORMATSTRING_MSG_COLOR {
+	uint16 PacketType;
+	uint16 PacketLength;
+	uint16 messageId;
+	uint32 color;
+	char messageString[];
+} __attribute__((packed));
+
 struct PACKET_ZC_MSG_COLOR {
 	uint16 PacketType;
 	uint16 MessageId;
