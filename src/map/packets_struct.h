@@ -428,6 +428,11 @@ enum packet_headers {
 #else
 	guildExpulsion = 0x15c,
 #endif
+#if PACKETVER_MAIN_NUM >= 20161019 || PACKETVER_RE_NUM >= 20160921 || defined(PACKETVER_ZERO)
+	guildLeave = 0xa83,
+#else
+	guildLeave = 0x15a,
+#endif
 };
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
@@ -2759,6 +2764,24 @@ struct PACKET_ZC_ACK_BAN_GUILD3 {
 	int16 packetType;
 	char reason[40];
 	uint32 GID;
+} __attribute__((packed));
+
+#if PACKETVER_MAIN_NUM >= 20161019 || PACKETVER_RE_NUM >= 20160921 || defined(PACKETVER_ZERO)
+#define PACKET_ZC_ACK_LEAVE_GUILD PACKET_ZC_ACK_LEAVE_GUILD2
+#else
+#define PACKET_ZC_ACK_LEAVE_GUILD PACKET_ZC_ACK_LEAVE_GUILD1
+#endif
+
+struct PACKET_ZC_ACK_LEAVE_GUILD1 {
+	int16 packetType;
+	char name[NAME_LENGTH];
+	char reason[40];
+} __attribute__((packed));
+
+struct PACKET_ZC_ACK_LEAVE_GUILD2 {
+	int16 packetType;
+	uint32 GID;
+	char reason[40];
 } __attribute__((packed));
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute

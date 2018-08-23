@@ -8111,16 +8111,21 @@ static void clif_guild_inviteack(struct map_session_data *sd, int flag)
 
 /// Notifies clients of a guild of a leaving member (ZC_ACK_LEAVE_GUILD).
 /// 015a <char name>.24B <reason>.40B
-static void clif_guild_leave(struct map_session_data *sd, const char *name, const char *mes)
+static void clif_guild_leave(struct map_session_data *sd, const char *name, int char_id, const char *mes)
 {
-	unsigned char buf[128];
-
 	nullpo_retv(sd);
+	nullpo_retv(name);
+	nullpo_retv(mes);
 
-	WBUFW(buf, 0)=0x15a;
-	memcpy(WBUFP(buf, 2),name,NAME_LENGTH);
-	memcpy(WBUFP(buf,26),mes,40);
-	clif->send(buf,packet_len(0x15a),&sd->bl,GUILD_NOBG);
+	struct PACKET_ZC_ACK_LEAVE_GUILD p;
+	p.packetType = guildLeave;
+#if PACKETVER_MAIN_NUM >= 20161019 || PACKETVER_RE_NUM >= 20160921 || defined(PACKETVER_ZERO)
+	p.GID = char_id;
+#else
+	safestrncpy(&p.name[0], name, NAME_LENGTH);
+#endif
+	safestrncpy(&p.reason[0], mes, 40);
+	clif->send(&p, sizeof(p), &sd->bl, GUILD_NOBG);
 }
 
 /// Notifies clients of a guild of an expelled member.

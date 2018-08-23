@@ -925,7 +925,7 @@ static int guild_member_withdraw(int guild_id, int account_id, int char_id, int 
 #endif
 
 	if(!flag)
-		clif->guild_leave(online_member_sd, name, mes);
+		clif->guild_leave(online_member_sd, name, char_id, mes);
 	else
 		clif->guild_expulsion(online_member_sd, name, char_id, mes, account_id);
 
