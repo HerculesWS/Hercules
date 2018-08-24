@@ -3344,7 +3344,7 @@
 	packet(0x0969,2,clif->pSearchStoreInfoNextPage,0);  // CZ_SEARCH_STORE_INFO_NEXT_PAGE
 #endif
 
-// 2014-06-11eRagexe, 2015-02-25hRagexe, 2018-03-15aRagexe, 2018-03-21aRagexe, 2018-03-28bRagexe, 2018-04-04bRagexe, 2018-04-18aRagexe, 2018-04-25cRagexe, 2018-05-02bRagexe, 2018-05-09aRagexe, 2018-05-16cRagexe, 2018-05-23aRagexe, 2018-05-30aRagexe, 2018-06-05bRagexe, 2018-06-20cRagexe, 2018-06-20eRagexe, 2018-06-21aRagexe, 2018-07-04aRagexe, 2018-07-18bRagexe, 2018-07-18cRagexe
+// 2014-06-11eRagexe, 2015-02-25hRagexe, 2018-03-15aRagexe, 2018-03-21aRagexe, 2018-03-28bRagexe, 2018-04-04bRagexe, 2018-04-18aRagexe, 2018-04-25cRagexe, 2018-05-02bRagexe, 2018-05-09aRagexe, 2018-05-16cRagexe, 2018-05-23aRagexe, 2018-05-30aRagexe, 2018-06-05bRagexe, 2018-06-20cRagexe, 2018-06-20eRagexe, 2018-06-21aRagexe, 2018-07-04aRagexe, 2018-07-18bRagexe, 2018-07-18cRagexe, 2018-08-01cRagexe, 2018-08-08bRagexe, 2018-08-22cRagexe
 #if PACKETVER == 20140611 || \
     PACKETVER == 20150225 || \
     PACKETVER == 20180315 || \
@@ -3362,7 +3362,10 @@
     PACKETVER == 20180620 || \
     PACKETVER == 20180621 || \
     PACKETVER == 20180704 || \
-    PACKETVER >= 20180718
+    PACKETVER == 20180718 || \
+    PACKETVER == 20180801 || \
+    PACKETVER == 20180808 || \
+    PACKETVER >= 20180822
 	packet(0x0202,26,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS
 	packet(0x022d,5,clif->pHomMenu,2,4);  // CZ_COMMAND_MER
 	packet(0x023b,36,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD

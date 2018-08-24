@@ -279,10 +279,15 @@ enum packet_headers {
 #else
 	unequipitemackType = 0xac,
 #endif
-#if PACKETVER >= 20150226
+#if PACKETVER_MAIN_NUM >= 20180801 || PACKETVER_RE_NUM >= 20180801 || PACKETVER_ZERO_NUM >= 20180808
+	viewequipackType = 0xb03,
+#elif PACKETVER >= 20150226
 	viewequipackType = 0xa2d,
 #elif PACKETVER >= 20120925
 	viewequipackType = 0x997,
+// [4144] not supported due other packets/structs not updated
+//#elif (PACKETVER_MAIN_NUM >= 20111207) || (PACKETVER_RE_NUM >= 20111122)
+//	viewequipackType = 0x906,
 #elif PACKETVER >= 20101124
 	viewequipackType = 0x859,
 #else
@@ -415,6 +420,18 @@ enum packet_headers {
 	skilWarpPointType = 0xabe,
 #else
 	skilWarpPointType = 0x11c,
+#endif
+#if PACKETVER_MAIN_NUM >= 20161019 || PACKETVER_RE_NUM >= 20160921 || defined(PACKETVER_ZERO)
+	guildExpulsion = 0xa82,
+#elif PACKETVER >= 20100803
+	guildExpulsion = 0x839,
+#else
+	guildExpulsion = 0x15c,
+#endif
+#if PACKETVER_MAIN_NUM >= 20161019 || PACKETVER_RE_NUM >= 20160921 || defined(PACKETVER_ZERO)
+	guildLeave = 0xa83,
+#else
+	guildLeave = 0x15a,
 #endif
 };
 
@@ -1221,6 +1238,9 @@ struct packet_viewequip_ack {
 #endif
 	int16 headpalette;
 	int16 bodypalette;
+#if PACKETVER_MAIN_NUM >= 20180801 || PACKETVER_RE_NUM >= 20180801 || PACKETVER_ZERO_NUM >= 20180808
+	int16 body2;
+#endif
 	uint8 sex;
 	struct EQUIPITEM_INFO list[MAX_INVENTORY];
 } __attribute__((packed));
@@ -1350,7 +1370,7 @@ struct packet_wis_end {
 	int16 PacketType;
 	int8 result;
 #if PACKETVER >= 20131223
-	uint32 unknown;/* maybe AID, not sure what for (works sending as 0) */
+	uint32 AID;
 #endif
 } __attribute__((packed));
 
@@ -1835,6 +1855,14 @@ struct PACKET_ZC_FORMATSTRING_MSG {
 	char MessageString[];
 } __attribute__((packed));
 
+struct PACKET_ZC_FORMATSTRING_MSG_COLOR {
+	uint16 PacketType;
+	uint16 PacketLength;
+	uint16 messageId;
+	uint32 color;
+	char messageString[];
+} __attribute__((packed));
+
 struct PACKET_ZC_MSG_COLOR {
 	uint16 PacketType;
 	uint16 MessageId;
@@ -1883,9 +1911,17 @@ struct PACKET_CZ_REQ_STYLE_CHANGE {
 	int16 TopAccessory;
 	int16 MidAccessory;
 	int16 BottomAccessory;
-#if PACKETVER_RE_NUM >= 20180718
+} __attribute__((packed));
+
+struct PACKET_CZ_REQ_STYLE_CHANGE2 {
+	int16 PacketType;
+	int16 HeadPalette;
+	int16 HeadStyle;
+	int16 BodyPalette;
+	int16 TopAccessory;
+	int16 MidAccessory;
+	int16 BottomAccessory;
 	int16 BodyStyle;
-#endif
 } __attribute__((packed));
 
 struct PACKET_ZC_STYLE_CHANGE_RES {
@@ -2688,6 +2724,64 @@ struct PACKET_ZC_GROUP_ISALIVE {
 	int16 packetType;
 	uint32 AID;
 	uint8 isDead;
+} __attribute__((packed));
+
+struct PACKET_ZC_GUILD_POSITION {
+	int16 packetType;
+	int16 packetLength;
+	uint32 AID;
+	char position[];
+} __attribute__((packed));
+
+struct PACKET_ZC_INVENTORY_MOVE_FAILED {
+	int16 packetType;
+	int16 index;
+	int16 unknown;
+} __attribute__((packed));
+
+#if PACKETVER_MAIN_NUM >= 20161019 || PACKETVER_RE_NUM >= 20160921 || defined(PACKETVER_ZERO)
+#define PACKET_ZC_ACK_BAN_GUILD PACKET_ZC_ACK_BAN_GUILD3
+#elif PACKETVER >= 20100803
+#define PACKET_ZC_ACK_BAN_GUILD PACKET_ZC_ACK_BAN_GUILD2
+#else
+#define PACKET_ZC_ACK_BAN_GUILD PACKET_ZC_ACK_BAN_GUILD1
+#endif
+
+struct PACKET_ZC_ACK_BAN_GUILD1 {
+	int16 packetType;
+	char name[NAME_LENGTH];
+	char reason[40];
+	char account_name[NAME_LENGTH];
+} __attribute__((packed));
+
+struct PACKET_ZC_ACK_BAN_GUILD2 {
+	int16 packetType;
+	char name[NAME_LENGTH];
+	char reason[40];
+} __attribute__((packed));
+
+struct PACKET_ZC_ACK_BAN_GUILD3 {
+	int16 packetType;
+	char reason[40];
+	uint32 GID;
+} __attribute__((packed));
+
+#if PACKETVER_MAIN_NUM >= 20161019 || PACKETVER_RE_NUM >= 20160921 || defined(PACKETVER_ZERO)
+#define PACKET_ZC_ACK_LEAVE_GUILD PACKET_ZC_ACK_LEAVE_GUILD2
+#else
+#define PACKET_ZC_ACK_LEAVE_GUILD PACKET_ZC_ACK_LEAVE_GUILD1
+#endif
+
+struct PACKET_ZC_ACK_LEAVE_GUILD1 {
+	int16 packetType;
+	char name[NAME_LENGTH];
+	char reason[40];
+} __attribute__((packed));
+
+struct PACKET_ZC_ACK_LEAVE_GUILD2 {
+	int16 packetType;
+	uint32 GID;
+	char reason[40];
 } __attribute__((packed));
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute

@@ -716,6 +716,7 @@ struct clif_interface {
 	void (*dropitem) (struct map_session_data *sd,int n,int amount);
 	void (*delitem) (struct map_session_data *sd,int n,int amount, short reason);
 	void (*takeitem) (struct block_list* src, struct block_list* dst);
+	void (*item_movefailed) (struct map_session_data *sd, int n);
 	void (*item_equip) (short idx, struct EQUIPITEM_INFO *p, struct item *i, struct item_data *id, int eqp_pos);
 	void (*item_normal) (short idx, struct NORMALITEM_INFO *p, struct item *i, struct item_data *id);
 	void (*arrowequip) (struct map_session_data *sd,int val);
@@ -952,6 +953,7 @@ struct clif_interface {
 	void (*msgtable_num) (struct map_session_data *sd, enum clif_messages msg_id, int value);
 	void (*msgtable_skill) (struct map_session_data *sd, uint16 skill_id, enum clif_messages msg_id);
 	void (*msgtable_str) (struct map_session_data *sd, enum clif_messages, const char *value);
+	void (*msgtable_str_color) (struct map_session_data *sd, enum clif_messages, const char *value, uint32 color);
 	void (*msgtable_color) (struct map_session_data *sd, enum clif_messages, uint32 color);
 	void (*message) (const int fd, const char* mes);
 	void (*messageln) (const int fd, const char* mes);
@@ -1022,8 +1024,8 @@ struct clif_interface {
 	void (*guild_memberlogin_notice) (struct guild *g,int idx,int flag);
 	void (*guild_invite) (struct map_session_data *sd,struct guild *g);
 	void (*guild_inviteack) (struct map_session_data *sd,int flag);
-	void (*guild_leave) (struct map_session_data *sd,const char *name,const char *mes);
-	void (*guild_expulsion) (struct map_session_data* sd, const char* name, const char* mes, int account_id);
+	void (*guild_leave) (struct map_session_data *sd, const char *name, int char_id, const char *mes);
+	void (*guild_expulsion) (struct map_session_data* sd, const char* name, int char_id, const char* mes, int account_id);
 	void (*guild_positionchanged) (struct guild *g,int idx);
 	void (*guild_memberpositionchanged) (struct guild *g,int idx);
 	void (*guild_emblem) (struct map_session_data *sd,struct guild *g);
@@ -1041,6 +1043,9 @@ struct clif_interface {
 	void (*guild_positionnamelist) (struct map_session_data *sd);
 	void (*guild_positioninfolist) (struct map_session_data *sd);
 	void (*guild_expulsionlist) (struct map_session_data* sd);
+	void (*guild_set_position) (struct map_session_data *sd);
+	void (*guild_position_selected) (struct map_session_data *sd);
+
 	bool (*validate_emblem) (const uint8* emblem, unsigned long emblem_len);
 	/* battleground-specific */
 	void (*bg_hp) (struct map_session_data *sd);
@@ -1514,6 +1519,7 @@ struct clif_interface {
 	bool (*style_change_validate_requirements) (struct map_session_data *sd, int type, int16 idx);
 	void (*stylist_send_rodexitem) (struct map_session_data *sd, int itemid);
 	void (*pReqStyleChange) (int fd, struct map_session_data *sd);
+	void (*pReqStyleChange2) (int fd, struct map_session_data *sd);
 	void (*cz_req_style_change_sub) (struct map_session_data *sd, int type, int16 idx, bool isitem);
 	void (*style_change_response) (struct map_session_data *sd, enum stylist_shop flag);
 	void (*pPetEvolution) (int fd, struct map_session_data *sd);

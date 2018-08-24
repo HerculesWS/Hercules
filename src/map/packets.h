@@ -1759,7 +1759,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 #if PACKETVER >= 20100413
 	//packet(0x081A,10);
 	packet(0x0820,11);
-	//packet(0x0821,2);
+	packet(0x0821,2);
 	//packet(0x0822,9);
 	//packet(0x0823,-1);
 #endif
@@ -3994,9 +3994,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0af2,40,clif->pDull/*,XXX*/);
 	packet(0x0af3,-1,clif->pDull/*,XXX*/);
 // changed packet sizes
-#ifndef PACKETVER_RE
-	packet(0x0821,102,clif->pDull/*,XXX*/); // AC_OTP_USER
-#endif
 #endif
 
 #ifdef PACKETVER_ZERO
@@ -4010,11 +4007,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0ae6,10,clif->pDull/*,XXX*/);
 #endif
 #endif  // PACKETVER_ZERO
-
-#if PACKETVER >= 20180131
-// changed packet sizes
-	packet(0x0821,102); // AC_OTP_USER
-#endif
 
 #ifdef PACKETVER_ZERO
 // 2018-02-07bRagexe_zero
@@ -4091,14 +4083,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 #endif
 #endif  // PACKETVER_ZERO
 
-#ifdef PACKETVER_RE
-// 2018-04-04cRagexeRE
-#if PACKETVER >= 20180404
-// changed packet sizes
-	packet(0x0821,102,clif->pDull/*,XXX*/); // AC_OTP_USER
-#endif
-#endif
-
 #ifndef PACKETVER_ZERO
 // 2018-04-18aRagexe, 2018-04-18bRagexeRE
 #if PACKETVER >= 20180418
@@ -4121,7 +4105,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 // 2018-05-16cRagexe, 2018-05-16cRagexeRE
 #if PACKETVER >= 20180516
 // new packets
-	packet(0x0afc,16,clif->pReqStyleChange);
+	packet(0x0afc,16,clif->pReqStyleChange2);
 // changed packet sizes
 #endif
 #endif  // PACKETVER_ZERO
@@ -4130,7 +4114,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 // 2018-05-23aRagexe_zero
 #if PACKETVER >= 20180523
 // new packets
-	packet(0x0afc,16,clif->pReqStyleChange);
+	packet(0x0afc,16,clif->pReqStyleChange2);
 // changed packet sizes
 #endif
 #endif  // PACKETVER_ZERO
@@ -4138,7 +4122,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 // 2018-06-05bRagexe, 2018-06-05bRagexeRE, 2018-06-05bRagexe_zero
 #if PACKETVER >= 20180605
 // new packets
-	packet(0x0afd,155);
+	packet(0x0afd,-1);
 	packet(0x0afe,-1,clif->pDull/*,XXX*/);
 	packet(0x0aff,-1,clif->pDull/*,XXX*/);
 // changed packet sizes
@@ -4252,6 +4236,37 @@ packet(0x96e,-1,clif->ackmergeitems);
 #if PACKETVER_ZERO_NUM >= 20180725
 // new packets
 	packet(0x0b03,-1,clif->pDull/*,XXX*/);
+// changed packet sizes
+#endif
+
+#ifndef PACKETVER_ZERO
+// 2018-08-01cRagexe, 2018-08-01cRagexeRE
+#if PACKETVER >= 20180801
+// new packets
+	packet(0x0b03,-1);
+	packet(0x0b04,80,clif->pDull/*,XXX*/);
+// changed packet sizes
+#endif
+#endif  // PACKETVER_ZERO
+
+// 2018-08-08_2aRagexe_zero
+#if PACKETVER_ZERO_NUM >= 20180808
+// new packets
+	packet(0x0b04,80,clif->pDull/*,XXX*/);
+// changed packet sizes
+#endif
+
+// 2018-08-22aRagexe_zero
+#if PACKETVER_ZERO_NUM >= 20180822
+// new packets
+	packet(0x0b05,59);
+	packet(0x0b06,53,clif->pDull/*,XXX*/);
+	packet(0x0b07,-1);
+	packet(0x0b08,26,clif->pDull/*,XXX*/);
+	packet(0x0b09,-1,clif->pDull/*,XXX*/);
+	packet(0x0b0a,-1,clif->pDull/*,XXX*/);
+	packet(0x0b0b,3,clif->pDull/*,XXX*/);
+	packet(0x0b0c,155,clif->pDull/*,XXX*/);
 // changed packet sizes
 #endif
 

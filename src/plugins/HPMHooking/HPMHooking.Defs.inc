@@ -1116,6 +1116,8 @@ typedef void (*HPMHOOK_pre_clif_delitem) (struct map_session_data **sd, int *n, 
 typedef void (*HPMHOOK_post_clif_delitem) (struct map_session_data *sd, int n, int amount, short reason);
 typedef void (*HPMHOOK_pre_clif_takeitem) (struct block_list **src, struct block_list **dst);
 typedef void (*HPMHOOK_post_clif_takeitem) (struct block_list *src, struct block_list *dst);
+typedef void (*HPMHOOK_pre_clif_item_movefailed) (struct map_session_data **sd, int *n);
+typedef void (*HPMHOOK_post_clif_item_movefailed) (struct map_session_data *sd, int n);
 typedef void (*HPMHOOK_pre_clif_item_equip) (short *idx, struct EQUIPITEM_INFO **p, struct item **i, struct item_data **id, int *eqp_pos);
 typedef void (*HPMHOOK_post_clif_item_equip) (short idx, struct EQUIPITEM_INFO *p, struct item *i, struct item_data *id, int eqp_pos);
 typedef void (*HPMHOOK_pre_clif_item_normal) (short *idx, struct NORMALITEM_INFO **p, struct item **i, struct item_data **id);
@@ -1566,6 +1568,8 @@ typedef void (*HPMHOOK_pre_clif_msgtable_skill) (struct map_session_data **sd, u
 typedef void (*HPMHOOK_post_clif_msgtable_skill) (struct map_session_data *sd, uint16 skill_id, enum clif_messages msg_id);
 typedef void (*HPMHOOK_pre_clif_msgtable_str) (struct map_session_data **sd, enum clif_messages *p1, const char **value);
 typedef void (*HPMHOOK_post_clif_msgtable_str) (struct map_session_data *sd, enum clif_messages p1, const char *value);
+typedef void (*HPMHOOK_pre_clif_msgtable_str_color) (struct map_session_data **sd, enum clif_messages *p1, const char **value, uint32 *color);
+typedef void (*HPMHOOK_post_clif_msgtable_str_color) (struct map_session_data *sd, enum clif_messages p1, const char *value, uint32 color);
 typedef void (*HPMHOOK_pre_clif_msgtable_color) (struct map_session_data **sd, enum clif_messages *p1, uint32 *color);
 typedef void (*HPMHOOK_post_clif_msgtable_color) (struct map_session_data *sd, enum clif_messages p1, uint32 color);
 typedef void (*HPMHOOK_pre_clif_message) (const int *fd, const char **mes);
@@ -1690,10 +1694,10 @@ typedef void (*HPMHOOK_pre_clif_guild_invite) (struct map_session_data **sd, str
 typedef void (*HPMHOOK_post_clif_guild_invite) (struct map_session_data *sd, struct guild *g);
 typedef void (*HPMHOOK_pre_clif_guild_inviteack) (struct map_session_data **sd, int *flag);
 typedef void (*HPMHOOK_post_clif_guild_inviteack) (struct map_session_data *sd, int flag);
-typedef void (*HPMHOOK_pre_clif_guild_leave) (struct map_session_data **sd, const char **name, const char **mes);
-typedef void (*HPMHOOK_post_clif_guild_leave) (struct map_session_data *sd, const char *name, const char *mes);
-typedef void (*HPMHOOK_pre_clif_guild_expulsion) (struct map_session_data **sd, const char **name, const char **mes, int *account_id);
-typedef void (*HPMHOOK_post_clif_guild_expulsion) (struct map_session_data *sd, const char *name, const char *mes, int account_id);
+typedef void (*HPMHOOK_pre_clif_guild_leave) (struct map_session_data **sd, const char **name, int *char_id, const char **mes);
+typedef void (*HPMHOOK_post_clif_guild_leave) (struct map_session_data *sd, const char *name, int char_id, const char *mes);
+typedef void (*HPMHOOK_pre_clif_guild_expulsion) (struct map_session_data **sd, const char **name, int *char_id, const char **mes, int *account_id);
+typedef void (*HPMHOOK_post_clif_guild_expulsion) (struct map_session_data *sd, const char *name, int char_id, const char *mes, int account_id);
 typedef void (*HPMHOOK_pre_clif_guild_positionchanged) (struct guild **g, int *idx);
 typedef void (*HPMHOOK_post_clif_guild_positionchanged) (struct guild *g, int idx);
 typedef void (*HPMHOOK_pre_clif_guild_memberpositionchanged) (struct guild **g, int *idx);
@@ -1728,6 +1732,10 @@ typedef void (*HPMHOOK_pre_clif_guild_positioninfolist) (struct map_session_data
 typedef void (*HPMHOOK_post_clif_guild_positioninfolist) (struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_guild_expulsionlist) (struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_guild_expulsionlist) (struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_guild_set_position) (struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_guild_set_position) (struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_guild_position_selected) (struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_guild_position_selected) (struct map_session_data *sd);
 typedef bool (*HPMHOOK_pre_clif_validate_emblem) (const uint8 **emblem, unsigned long *emblem_len);
 typedef bool (*HPMHOOK_post_clif_validate_emblem) (bool retVal___, const uint8 *emblem, unsigned long emblem_len);
 typedef void (*HPMHOOK_pre_clif_bg_hp) (struct map_session_data **sd);
@@ -2580,6 +2588,8 @@ typedef void (*HPMHOOK_pre_clif_stylist_send_rodexitem) (struct map_session_data
 typedef void (*HPMHOOK_post_clif_stylist_send_rodexitem) (struct map_session_data *sd, int itemid);
 typedef void (*HPMHOOK_pre_clif_pReqStyleChange) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pReqStyleChange) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_pReqStyleChange2) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pReqStyleChange2) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_cz_req_style_change_sub) (struct map_session_data **sd, int *type, int16 *idx, bool *isitem);
 typedef void (*HPMHOOK_post_clif_cz_req_style_change_sub) (struct map_session_data *sd, int type, int16 idx, bool isitem);
 typedef void (*HPMHOOK_pre_clif_style_change_response) (struct map_session_data **sd, enum stylist_shop *flag);

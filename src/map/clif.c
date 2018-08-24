@@ -2633,6 +2633,22 @@ static void clif_dropitem(struct map_session_data *sd, int n, int amount)
 	WFIFOSET(fd,packet_len(0xaf));
 }
 
+static void clif_item_movefailed(struct map_session_data *sd, int n)
+{
+#if PACKETVER_MAIN_NUM >= 20161214 || PACKETVER_RE_NUM >= 20161130 || defined(PACKETVER_ZERO)
+	int fd = sd->fd;
+	const int len = sizeof(struct PACKET_ZC_INVENTORY_MOVE_FAILED);
+	WFIFOHEAD(fd, len);
+	struct PACKET_ZC_INVENTORY_MOVE_FAILED *p = WFIFOP(fd, 0);
+	p->packetType = 0xaa7;
+	p->index = n;
+	p->unknown = 1;
+	WFIFOSET(fd, len);
+#else
+	clif->dropitem(sd, n, 0);
+#endif
+}
+
 /// Notifies the client, that an inventory item was deleted (ZC_DELETE_ITEM_FROM_BODY).
 /// 07fa <delete type>.W <index>.W <amount>.W
 /// delete type: @see enum delitem_reason
@@ -6180,6 +6196,7 @@ static void clif_wis_message(int fd, const char *nick, const char *mes, int mes_
 ///     1 = target character is not logged in
 ///     2 = ignored by target
 ///     3 = everyone ignored by target
+///     other = target character is not logged in
 static void clif_wis_end(int fd, int flag)
 {
 	struct map_session_data *sd = sockt->session_is_valid(fd) ? sockt->session[fd]->session_data : NULL;
@@ -6191,7 +6208,7 @@ static void clif_wis_end(int fd, int flag)
 	p.PacketType = wisendType;
 	p.result = (char)flag;
 #if PACKETVER >= 20131223
-	p.unknown = 0;
+	p.AID = sd->bl.id;
 #endif
 
 	clif->send(&p, sizeof(p), &sd->bl, SELF);
@@ -7612,12 +7629,13 @@ static void clif_guild_created(struct map_session_data *sd, int flag)
 /// mode: @see enum guild_permission
 static void clif_guild_belonginfo(struct map_session_data *sd, struct guild *g)
 {
-	int ps,fd;
 	nullpo_retv(sd);
 	nullpo_retv(g);
 
-	fd=sd->fd;
-	ps=guild->getposition(g,sd);
+	int fd = sd->fd;
+	int ps = guild->getposition(g, sd);
+	Assert_retv(ps != -1);
+
 	WFIFOHEAD(fd,packet_len(0x16c));
 	WFIFOW(fd,0)=0x16c;
 	WFIFOL(fd,2)=g->guild_id;
@@ -8094,41 +8112,45 @@ static void clif_guild_inviteack(struct map_session_data *sd, int flag)
 
 /// Notifies clients of a guild of a leaving member (ZC_ACK_LEAVE_GUILD).
 /// 015a <char name>.24B <reason>.40B
-static void clif_guild_leave(struct map_session_data *sd, const char *name, const char *mes)
+static void clif_guild_leave(struct map_session_data *sd, const char *name, int char_id, const char *mes)
 {
-	unsigned char buf[128];
-
 	nullpo_retv(sd);
+	nullpo_retv(name);
+	nullpo_retv(mes);
 
-	WBUFW(buf, 0)=0x15a;
-	memcpy(WBUFP(buf, 2),name,NAME_LENGTH);
-	memcpy(WBUFP(buf,26),mes,40);
-	clif->send(buf,packet_len(0x15a),&sd->bl,GUILD_NOBG);
+	struct PACKET_ZC_ACK_LEAVE_GUILD p;
+	p.packetType = guildLeave;
+#if PACKETVER_MAIN_NUM >= 20161019 || PACKETVER_RE_NUM >= 20160921 || defined(PACKETVER_ZERO)
+	p.GID = char_id;
+#else
+	safestrncpy(&p.name[0], name, NAME_LENGTH);
+#endif
+	safestrncpy(&p.reason[0], mes, 40);
+	clif->send(&p, sizeof(p), &sd->bl, GUILD_NOBG);
 }
 
 /// Notifies clients of a guild of an expelled member.
 /// 015c <char name>.24B <reason>.40B <account name>.24B (ZC_ACK_BAN_GUILD)
 /// 0839 <char name>.24B <reason>.40B (ZC_ACK_BAN_GUILD_SSO)
-static void clif_guild_expulsion(struct map_session_data *sd, const char *name, const char *mes, int account_id)
+static void clif_guild_expulsion(struct map_session_data *sd, const char *name, int char_id, const char *mes, int account_id)
 {
-	unsigned char buf[128];
-#if PACKETVER < 20100803
-	const unsigned short cmd = 0x15c;
-#else
-	const unsigned short cmd = 0x839;
-#endif
-
 	nullpo_retv(sd);
 	nullpo_retv(name);
 	nullpo_retv(mes);
 
-	WBUFW(buf,0) = cmd;
-	safestrncpy(WBUFP(buf,2), name, NAME_LENGTH);
-	safestrncpy(WBUFP(buf,26), mes, 40);
-#if PACKETVER < 20100803
-	memset(WBUFP(buf,66), 0, NAME_LENGTH); // account name (not used for security reasons)
+	struct PACKET_ZC_ACK_BAN_GUILD p;
+	p.packetType = guildExpulsion;
+#if PACKETVER_MAIN_NUM >= 20161019 || PACKETVER_RE_NUM >= 20160921 || defined(PACKETVER_ZERO)
+	p.GID = char_id;
+#else
+	safestrncpy(&p.name[0], name, NAME_LENGTH);
 #endif
-	clif->send(buf, packet_len(cmd), &sd->bl, GUILD_NOBG);
+	safestrncpy(&p.reason[0], mes, 40);
+
+#if PACKETVER < 20100803
+	memset(&p.account_name, 0, NAME_LENGTH); // account name (not used for security reasons)
+#endif
+	clif->send(&p, sizeof(p), &sd->bl, GUILD_NOBG);
 }
 
 /// Guild expulsion list (ZC_BAN_LIST).
@@ -8308,6 +8330,49 @@ static void clif_guild_broken(struct map_session_data *sd, int flag)
 	WFIFOW(fd,0)=0x15e;
 	WFIFOL(fd,2)=flag;
 	WFIFOSET(fd,packet_len(0x15e));
+}
+
+static void clif_guild_position_selected(struct map_session_data *sd)
+{
+#if PACKETVER >= 20180801
+	clif->guild_set_position(sd);
+#else
+	clif->charnameupdate(sd);
+#endif
+}
+
+static void clif_guild_set_position(struct map_session_data *sd)
+{
+	nullpo_retv(sd);
+
+	int len = sizeof(struct PACKET_ZC_GUILD_POSITION);
+	const char *name = NULL;
+	if (sd->status.guild_id > 0) {
+		struct guild *g = sd->guild;
+
+		nullpo_retv(g);
+
+		int i = 0;
+		int ps = -1;
+		ARR_FIND(0, g->max_member, i, g->member[i].account_id == sd->status.account_id && g->member[i].char_id == sd->status.char_id);
+		if (i < g->max_member)
+			ps = g->member[i].position;
+
+		if (ps >= 0 && ps < MAX_GUILDPOSITION) {
+			len += 24;
+			name = g->position[ps].name;
+		}
+	}
+
+	unsigned char buf[sizeof(struct PACKET_ZC_GUILD_POSITION) + NAME_LENGTH];
+	struct PACKET_ZC_GUILD_POSITION *p = WBUFP(buf, 0);
+	p->packetType = 0xafd;
+	p->packetLength = len;
+	p->AID = sd->bl.id;
+	if (name != NULL)
+		memcpy(&p->position, name, 24);
+
+	clif->send(buf, len, &sd->bl, AREA);
 }
 
 /// Displays emotion on an object (ZC_EMOTION).
@@ -9327,6 +9392,9 @@ static void clif_viewequip_ack(struct map_session_data *sd, struct map_session_d
 #endif
 	viewequip_list.headpalette = tsd->vd.hair_color;
 	viewequip_list.bodypalette = tsd->vd.cloth_color;
+#if PACKETVER_MAIN_NUM >= 20180801 || PACKETVER_RE_NUM >= 20180801 || PACKETVER_ZERO_NUM >= 20180808
+	viewequip_list.body2       = tsd->vd.body_style;
+#endif
 	viewequip_list.sex         = tsd->vd.sex;
 
 	clif->send(&viewequip_list, viewequip_list.PacketLength, &sd->bl, SELF);
@@ -9430,6 +9498,36 @@ static void clif_msgtable_str(struct map_session_data *sd, enum clif_messages ms
 
 	clif->send(p, p->PacketLength, &sd->bl, SELF);
 	aFree(p);
+}
+
+/**
+ * Displays a format string from msgstringtable.txt with a %s value and color (ZC_FORMATSTRING_MSG).
+ *
+ * @param sd     The target character.
+ * @param msg_id msgstringtable message index, 0-based (@see enum clif_messages)
+ * @param value  The value to fill %s.
+ * @param color  The color to use
+ */
+static void clif_msgtable_str_color(struct map_session_data *sd, enum clif_messages msg_id, const char *value, uint32 color)
+{
+#if PACKETVER >= 20160330
+	nullpo_retv(sd);
+	nullpo_retv(value);
+
+	int message_len = (int)strlen(value) + 1;
+	const int len = sizeof(struct PACKET_ZC_FORMATSTRING_MSG_COLOR) + message_len + 1;
+	struct PACKET_ZC_FORMATSTRING_MSG_COLOR *p = (struct PACKET_ZC_FORMATSTRING_MSG_COLOR *)aMalloc(len);
+
+	p->PacketType = 0xa6f;
+	p->PacketLength = len;
+	p->messageId = msg_id;
+	p->color = color;
+	safestrncpy(p->messageString, value, message_len);
+	p->messageString[message_len] = 0;
+
+	clif->send(p, p->PacketLength, &sd->bl, SELF);
+	aFree(p);
+#endif
 }
 
 /**
@@ -10990,7 +11088,7 @@ static void clif_parse_DropItem(int fd, struct map_session_data *sd)
 	}
 
 	//Because the client does not like being ignored.
-	clif->dropitem(sd, item_index, 0);
+	clif->item_movefailed(sd, item_index);
 }
 
 static void clif_parse_UseItem(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
@@ -11485,7 +11583,7 @@ static void clif_parse_PutItemToCart(int fd, struct map_session_data *sd)
 	if (!pc_iscarton(sd))
 		return;
 	if ( (flag = pc->putitemtocart(sd,RFIFOW(fd,2)-2,RFIFOL(fd,4))) ) {
-		clif->dropitem(sd, RFIFOW(fd,2)-2,0);
+		clif->item_movefailed(sd, RFIFOW(fd,2)-2);
 		clif->cart_additem_ack(sd,flag == 1?0x0:0x1);
 	}
 }
@@ -20271,7 +20369,7 @@ static unsigned short clif_parse_cmd_optional(int fd, struct map_session_data *s
  */
 static void clif_achievement_send_list(int fd, struct map_session_data *sd)
 {
-#if PACKETVER >= 20141016
+#if PACKETVER_MAIN_NUM >= 20150225 || PACKETVER_RE_NUM >= 20141126 || defined(PACKETVER_ZERO)
 	int i = 0, count = 0, curr_exp_tmp = 0;
 	struct packet_achievement_list p = { 0 };
 
@@ -20334,7 +20432,7 @@ static void clif_achievement_send_list(int fd, struct map_session_data *sd)
  */
 static void clif_achievement_send_update(int fd, struct map_session_data *sd, const struct achievement_data *ad)
 {
-#if PACKETVER >= 20141016
+#if PACKETVER_MAIN_NUM >= 20150225 || PACKETVER_RE_NUM >= 20141126 || defined(PACKETVER_ZERO)
 	struct packet_achievement_update p = { 0 };
 	struct achievement *a = NULL;
 	int i = 0, points = 0, rank = 0, curr_rank_points = 0;
@@ -20388,7 +20486,6 @@ static void clif_achievement_send_update(int fd, struct map_session_data *sd, co
 static void clif_parse_achievement_get_reward(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
 static void clif_parse_achievement_get_reward(int fd, struct map_session_data *sd)
 {
-#if PACKETVER >= 20141016
 	int ach_id = RFIFOL(fd, 2);
 	const struct achievement_data *ad = NULL;
 	struct achievement *ach = NULL;
@@ -20402,7 +20499,6 @@ static void clif_parse_achievement_get_reward(int fd, struct map_session_data *s
 	if (achievement->check_complete(sd, ad) && ach->completed_at && ach->rewarded_at == 0) {
 		achievement->get_rewards(sd, ad);
 	}
-#endif // PACKETVER >= 20141016
 }
 
 /**
@@ -20411,7 +20507,7 @@ static void clif_parse_achievement_get_reward(int fd, struct map_session_data *s
  */
 static void clif_achievement_reward_ack(int fd, struct map_session_data *sd, const struct achievement_data *ad)
 {
-#if PACKETVER >= 20141016
+#if PACKETVER_MAIN_NUM >= 20150225 || PACKETVER_RE_NUM >= 20141126 || defined(PACKETVER_ZERO)
 	struct packet_achievement_reward_ack p = { 0 };
 
 	nullpo_retv(sd);
@@ -21548,13 +21644,32 @@ static void clif_parse_cz_req_style_change(int fd, struct map_session_data *sd)
 		clif->cz_req_style_change_sub(sd, LOOK_HEAD_MID, p->MidAccessory, true);
 	if (p->BottomAccessory > 0)
 		clif->cz_req_style_change_sub(sd, LOOK_HEAD_BOTTOM, p->BottomAccessory, true);
-#if PACKETVER_RE_NUM >= 20180718
+	clif->style_change_response(sd, STYLIST_SHOP_SUCCESS);
+	return;
+}
+
+static void clif_parse_cz_req_style_change2(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
+static void clif_parse_cz_req_style_change2(int fd, struct map_session_data *sd)
+{
+	const struct PACKET_CZ_REQ_STYLE_CHANGE2 *p = RP2PTR(fd);
+
+	if (p->HeadStyle > 0)
+		clif->cz_req_style_change_sub(sd, LOOK_HAIR, p->HeadStyle, false);
+	if (p->HeadPalette > 0)
+		clif->cz_req_style_change_sub(sd, LOOK_HAIR_COLOR, p->HeadPalette, false);
+	if (p->BodyPalette > 0)
+		clif->cz_req_style_change_sub(sd, LOOK_CLOTHES_COLOR, p->BodyPalette, false);
+	if (p->TopAccessory > 0)
+		clif->cz_req_style_change_sub(sd, LOOK_HEAD_TOP, p->TopAccessory, true);
+	if (p->MidAccessory > 0)
+		clif->cz_req_style_change_sub(sd, LOOK_HEAD_MID, p->MidAccessory, true);
+	if (p->BottomAccessory > 0)
+		clif->cz_req_style_change_sub(sd, LOOK_HEAD_BOTTOM, p->BottomAccessory, true);
 	if (p->BodyStyle > 0) {
 		if (pc->has_second_costume(sd)) {
 			clif->cz_req_style_change_sub(sd, LOOK_BODY2, p->BodyStyle, false);
 		}
 	}
-#endif
 	clif->style_change_response(sd, STYLIST_SHOP_SUCCESS);
 	return;
 }
@@ -21973,6 +22088,7 @@ void clif_defaults(void)
 	clif->dropitem = clif_dropitem;
 	clif->delitem = clif_delitem;
 	clif->takeitem = clif_takeitem;
+	clif->item_movefailed = clif_item_movefailed;
 	clif->item_equip = clif_item_equip;
 	clif->item_normal = clif_item_normal;
 	clif->arrowequip = clif_arrowequip;
@@ -22209,6 +22325,7 @@ void clif_defaults(void)
 	clif->msgtable = clif_msgtable;
 	clif->msgtable_num = clif_msgtable_num;
 	clif->msgtable_str = clif_msgtable_str;
+	clif->msgtable_str_color = clif_msgtable_str_color;
 	clif->msgtable_color = clif_msgtable_color;
 	clif->message = clif_displaymessage;
 	clif->messageln = clif_displaymessage2;
@@ -22297,6 +22414,8 @@ void clif_defaults(void)
 	clif->guild_positionnamelist = clif_guild_positionnamelist;
 	clif->guild_positioninfolist = clif_guild_positioninfolist;
 	clif->guild_expulsionlist = clif_guild_expulsionlist;
+	clif->guild_set_position = clif_guild_set_position;
+	clif->guild_position_selected = clif_guild_position_selected;
 	clif->validate_emblem = clif_validate_emblem;
 	/* battleground-specific */
 	clif->bg_hp = clif_bg_hp;
@@ -22775,6 +22894,7 @@ void clif_defaults(void)
 	clif->style_change_validate_requirements = clif_style_change_validate_requirements;
 	clif->stylist_send_rodexitem = clif_stylist_send_rodexitem;
 	clif->pReqStyleChange = clif_parse_cz_req_style_change;
+	clif->pReqStyleChange2 = clif_parse_cz_req_style_change2;
 	clif->cz_req_style_change_sub = clif_cz_req_style_change_sub;
 	clif->style_change_response = clif_style_change_response;
 
