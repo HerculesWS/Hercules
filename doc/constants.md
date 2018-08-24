@@ -4302,6 +4302,13 @@
 - `QINFO_HOMUN_TYPE`: 6
 - `QINFO_QUEST`: 7
 
+### function types
+
+- `FUNCTION_IS_COMMAND`: 1
+- `FUNCTION_IS_GLOBAL`: 2
+- `FUNCTION_IS_LOCAL`: 3
+- `FUNCTION_IS_LABEL`: 4
+
 ### Renewal
 
 - `RENEWAL`: 1
