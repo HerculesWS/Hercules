@@ -2745,7 +2745,11 @@ static int skill_magic_reflect(struct block_list *src, struct block_list *bl, in
 static int skill_attack(int attack_type, struct block_list *src, struct block_list *dsrc, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag)
 {
 	struct Damage dmg;
+#if MAGIC_REFLECTION_TYPE
 	struct status_data *sstatus, *tstatus;
+#else
+	struct status_data *tstatus;
+#endif
 	struct status_change *sc;
 	struct map_session_data *sd, *tsd;
 	int type;
@@ -2780,7 +2784,9 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 			)
 		return 0;
 
+#if MAGIC_REFLECTION_TYPE
 	sstatus = status->get_status_data(src);
+#endif
 	tstatus = status->get_status_data(bl);
 	sc = status->get_sc(bl);
 	if (sc && !sc->count) sc = NULL; //Don't need it.
