@@ -733,7 +733,7 @@ static void achievement_validate_zeny(struct map_session_data *sd, int amount)
 		achievement->validate_type(sd, ACH_ZENY_GET_ONCE, &criteria, false);
 		achievement->validate_type(sd, ACH_ZENY_GET_TOTAL, &criteria, true);
 	}  else {
-		criteria.goal = amount;
+		criteria.goal = -amount;
 		achievement->validate_type(sd, ACH_ZENY_SPEND_ONCE, &criteria, false);
 		achievement->validate_type(sd, ACH_ZENY_SPEND_TOTAL, &criteria, true);
 	}
