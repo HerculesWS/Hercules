@@ -163,6 +163,46 @@ AC_ARG_ENABLE(
 	[enable_packetver_zero="no"]
 )
 
+#
+# packetver-Sak
+#
+AC_ARG_ENABLE(
+	[packetver-sak],
+	AC_HELP_STRING(
+		[--enable-packetver-sak],
+		[Sets or unsets the PACKETVER_SAK define - see src/common/mmo.h (currently disabled by default)]
+	),
+	[
+		enable_packetver_sak="$enableval"
+		case $enableval in
+			"no");;
+			"yes");;
+			*) AC_MSG_ERROR([[invalid argument --enable-packetver-sak=$enableval... stopping]]);;
+		esac
+	],
+	[enable_packetver_sak="no"]
+)
+
+#
+# packetver-Ad
+#
+AC_ARG_ENABLE(
+	[packetver-ad],
+	AC_HELP_STRING(
+		[--enable-packetver-ad],
+		[Sets or unsets the PACKETVER_AD define - see src/common/mmo.h (currently disabled by default)]
+	),
+	[
+		enable_packetver_ad="$enableval"
+		case $enableval in
+			"no");;
+			"yes");;
+			*) AC_MSG_ERROR([[invalid argument --enable-packetver-ad=$enableval... stopping]]);;
+		esac
+	],
+	[enable_packetver_ad="no"]
+)
+
 
 #
 # Epoll
@@ -1251,6 +1291,30 @@ esac
 case $enable_packetver_zero in
 	"yes")
 		CPPFLAGS="$CPPFLAGS -DENABLE_PACKETVER_ZERO"
+		;;
+	"no")
+		# default value
+		;;
+esac
+
+#
+# Packetver-Sak
+#
+case $enable_packetver_sak in
+	"yes")
+		CPPFLAGS="$CPPFLAGS -DENABLE_PACKETVER_SAK"
+		;;
+	"no")
+		# default value
+		;;
+esac
+
+#
+# Packetver-ad
+#
+case $enable_packetver_ad in
+	"yes")
+		CPPFLAGS="$CPPFLAGS -DENABLE_PACKETVER_AD"
 		;;
 	"no")
 		# default value
