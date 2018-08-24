@@ -22471,18 +22471,52 @@ static BUILDIN(getcharip)
 	return true;
 }
 
+enum function_type {
+	FUNCTION_IS_NONE = 0,
+	FUNCTION_IS_COMMAND,
+	FUNCTION_IS_GLOBAL,
+	FUNCTION_IS_LOCAL,
+	FUNCTION_IS_LABEL,
+};
+
 /**
- * is_function(<function name>) -> 1 if function exists, 0 otherwise
+ * is_function(<function name>)
  **/
 static BUILDIN(is_function)
 {
-	const char* str = script_getstr(st,2);
+	const char *str = script_getstr(st, 2);
+	enum function_type type = FUNCTION_IS_NONE;
 
-	if( strdb_exists(script->userfunc_db, str) )
-		script_pushint(st,1);
-	else
-		script_pushint(st,0);
+	// TODO: add support for exported functions (#2142)
 
+	if (strdb_exists(script->userfunc_db, str)) {
+		type = FUNCTION_IS_GLOBAL;
+	} else {
+		int n = script->search_str(str);
+
+		if (n >= 0) {
+			switch (script->str_data[n].type) {
+			case C_FUNC:
+				type = FUNCTION_IS_COMMAND;
+				break;
+			case C_USERFUNC:
+			case C_USERFUNC_POS:
+				type = FUNCTION_IS_LOCAL;
+				break;
+			case C_POS:
+				type = FUNCTION_IS_LABEL;
+				break;
+			case C_NAME:
+				if (script->str_data[n].label >= 0) {
+					// WTF... ?
+					// for some reason local functions can have type C_NAME
+					type = FUNCTION_IS_LOCAL;
+				}
+			}
+		}
+	}
+
+	script_pushint(st, type);
 	return true;
 }
 
@@ -25780,6 +25814,12 @@ static void script_hardcoded_constants(void)
 	script->set_constant("QINFO_HOMUN_LEVEL", QINFO_HOMUN_LEVEL, false, false);
 	script->set_constant("QINFO_HOMUN_TYPE", QINFO_HOMUN_TYPE, false, false);
 	script->set_constant("QINFO_QUEST", QINFO_QUEST, false, false);
+
+	script->constdb_comment("function types");
+	script->set_constant("FUNCTION_IS_COMMAND", FUNCTION_IS_COMMAND, false, false);
+	script->set_constant("FUNCTION_IS_GLOBAL", FUNCTION_IS_GLOBAL, false, false);
+	script->set_constant("FUNCTION_IS_LOCAL", FUNCTION_IS_LOCAL, false, false);
+	script->set_constant("FUNCTION_IS_LABEL", FUNCTION_IS_LABEL, false, false);
 
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL
