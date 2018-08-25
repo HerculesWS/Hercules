@@ -638,7 +638,37 @@ AC_LANG([C])
 #   -Werror-implicit-function-declaration -Wtrampolines
 #   -Wjump-misses-init
 
-CFLAGS="$CFLAGS -pipe -ffast-math -Wall -Wextra -Wno-sign-compare -std=c99"
+AC_MSG_CHECKING([whether $CC supports -std=c11])
+OLD_CFLAGS="$CFLAGS"
+CFLAGS="$CFLAGS -std=c11"
+AC_COMPILE_IFELSE(
+	[AC_LANG_SOURCE([int foo;])],
+	[
+		AC_MSG_RESULT([yes])
+	],
+	[
+		AC_MSG_RESULT([no])
+
+		AC_MSG_CHECKING([whether $CC supports -std=c1x])
+		CFLAGS="$OLD_CFLAGS -std=c1x"
+		AC_COMPILE_IFELSE(
+			[AC_LANG_SOURCE([int foo;])],
+			[
+				AC_MSG_RESULT([yes])
+			],
+			[
+				AC_MSG_RESULT([no, falling back to -std=c99])
+				CFLAGS="$OLD_CFLAGS -std=c99"
+			]
+		)
+	],
+	[
+		AC_MSG_RESULT([guessing no])
+		CFLAGS="$OLD_CFLAGS -std=c99"
+	]
+)
+
+CFLAGS="$CFLAGS -pipe -ffast-math -Wall -Wextra -Wno-sign-compare"
 CPPFLAGS="$CPPFLAGS -I../common"
 LDFLAGS="$LDFLAGS"
 
