@@ -901,13 +901,12 @@ pre_re:centos-previous:
     - echo "Building $CI_BUILD_NAME"
     - uname -a
     - yum -y update
-    - yum install -y make mysql-devel pcre-devel git zlib-devel mysql
-    - yum install -y centos-release-scl
-    - yum install -y yum install devtoolset-3-toolchain
+    - yum install -y make mysql-devel pcre-devel git zlib-devel mysql centos-release-scl
+    - yum install -y devtoolset-6-toolchain
     - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok $SQLHOST
     - ./tools/ci/travis.sh getplugins || true
   script:
-    - scl enable devtoolset-3 './tools/ci/travis.sh build CFLAGS="-Wno-cast-qual" --enable-debug --enable-Werror --enable-buildbot --disable-renewal'
+    - 'source /opt/rh/devtoolset-6/enable && ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal'
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
 
 re:centos-previous:
@@ -923,13 +922,12 @@ re:centos-previous:
     - echo "Building $CI_BUILD_NAME"
     - uname -a
     - yum -y update
-    - yum install -y make mysql-devel pcre-devel git zlib-devel mysql
-    - yum install -y centos-release-scl
-    - yum install -y yum install devtoolset-3-toolchain
+    - yum install -y make mysql-devel pcre-devel git zlib-devel mysql centos-release-scl
+    - yum install -y devtoolset-6-toolchain
     - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok $SQLHOST
     - ./tools/ci/travis.sh getplugins || true
   script:
-    - scl enable devtoolset-3  './tools/ci/travis.sh build CFLAGS="-Wno-cast-qual" --enable-debug --enable-Werror --enable-buildbot'
+    - 'source /opt/rh/devtoolset-6/enable && ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot'
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
 
 pre_re:centos-current:
