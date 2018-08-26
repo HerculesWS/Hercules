@@ -6620,6 +6620,8 @@ typedef bool (*HPMHOOK_pre_script_config_read) (const char **filename, bool *imp
 typedef bool (*HPMHOOK_post_script_config_read) (bool retVal___, const char *filename, bool imported);
 typedef int (*HPMHOOK_pre_script_add_str) (const char **p);
 typedef int (*HPMHOOK_post_script_add_str) (int retVal___, const char *p);
+typedef int (*HPMHOOK_pre_script_add_variable) (const char **varname);
+typedef int (*HPMHOOK_post_script_add_variable) (int retVal___, const char *varname);
 typedef const char* (*HPMHOOK_pre_script_get_str) (int *id);
 typedef const char* (*HPMHOOK_post_script_get_str) (const char* retVal___, int id);
 typedef int (*HPMHOOK_pre_script_search_str) (const char **p);

@@ -762,7 +762,7 @@ function	script	HerculesSelfTestHelper	{
 	callsub(OnCheck, "Getdatatype (numeric variable)",     getdatatype(.@x), DATATYPE_INT | DATATYPE_VAR);
 	callsub(OnCheck, "Getdatatype (string variable)",      getdatatype(.@x$), DATATYPE_STR | DATATYPE_VAR);
 	callsub(OnCheck, "Getdatatype (label)",                getdatatype(OnTestGetdatatype), DATATYPE_LABEL);
-	//callsub(OnCheck, "Getdatatype (constant)",             getdatatype(DATATYPE_CONST), DATATYPE_CONST); // FIXME
+	callsub(OnCheck, "Getdatatype (constant)",             getdatatype(DATATYPE_CONST), DATATYPE_INT | DATATYPE_CONST);
 	callsub(OnCheck, "Getdatatype (returned integer)",     getdatatype(callsub(OnTestReturnValue, 5)), DATATYPE_INT);
 	callsub(OnCheck, "Getdatatype (returned string)",      getdatatype(callsub(OnTestReturnValue, "foo")), DATATYPE_STR | DATATYPE_CONST);
 	callsub(OnCheck, "Getdatatype (getarg default value)", callsub(OnTestGetdatatypeDefault), DATATYPE_INT);

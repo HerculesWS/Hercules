@@ -2702,11 +2702,11 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 				if (++sd->mission_count >= 100 && (temp = mob->get_random_id(0, 0xE, sd->status.base_level)) != 0) {
 					pc->addfame(sd, RANKTYPE_TAEKWON, 1);
 					sd->mission_mobid = temp;
-					pc_setglobalreg(sd,script->add_str("TK_MISSION_ID"), temp);
+					pc_setglobalreg(sd,script->add_variable("TK_MISSION_ID"), temp);
 					sd->mission_count = 0;
 					clif->mission_info(sd, temp, 0);
 				}
-				pc_setglobalreg(sd,script->add_str("TK_MISSION_COUNT"), sd->mission_count);
+				pc_setglobalreg(sd,script->add_variable("TK_MISSION_COUNT"), sd->mission_count);
 			}
 
 			if( sd->status.party_id )

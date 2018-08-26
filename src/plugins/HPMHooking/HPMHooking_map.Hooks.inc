@@ -68495,6 +68495,33 @@ int HP_script_add_str(const char *p) {
 	}
 	return retVal___;
 }
+int HP_script_add_variable(const char *varname) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_script_add_variable_pre > 0) {
+		int (*preHookFunc) (const char **varname);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_add_variable_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_script_add_variable_pre[hIndex].func;
+			retVal___ = preHookFunc(&varname);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.script.add_variable(varname);
+	}
+	if (HPMHooks.count.HP_script_add_variable_post > 0) {
+		int (*postHookFunc) (int retVal___, const char *varname);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_add_variable_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_script_add_variable_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, varname);
+		}
+	}
+	return retVal___;
+}
 const char* HP_script_get_str(int id) {
 	int hIndex = 0;
 	const char* retVal___ = NULL;

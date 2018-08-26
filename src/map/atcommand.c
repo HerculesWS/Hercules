@@ -8738,19 +8738,19 @@ ACMD(set)
 		const char *str = NULL;
 		switch (reg[0]) {
 			case '@':
-				str = pc->readregstr(sd, script->add_str(reg));
+				str = pc->readregstr(sd, script->add_variable(reg));
 				break;
 			case '$':
-				str = mapreg->readregstr(script->add_str(reg));
+				str = mapreg->readregstr(script->add_variable(reg));
 				break;
 			case '#':
 				if (reg[1] == '#')
-					str = pc_readaccountreg2str(sd, script->add_str(reg));// global
+					str = pc_readaccountreg2str(sd, script->add_variable(reg));// global
 				else
-					str = pc_readaccountregstr(sd, script->add_str(reg));// local
+					str = pc_readaccountregstr(sd, script->add_variable(reg));// local
 				break;
 			default:
-				str = pc_readglobalreg_str(sd, script->add_str(reg));
+				str = pc_readglobalreg_str(sd, script->add_variable(reg));
 				break;
 		}
 		if (str == NULL || str[0] == '\0') {
@@ -8766,19 +8766,19 @@ ACMD(set)
 		data->type = C_INT;
 		switch( reg[0] ) {
 			case '@':
-				data->u.num = pc->readreg(sd, script->add_str(reg));
+				data->u.num = pc->readreg(sd, script->add_variable(reg));
 				break;
 			case '$':
-				data->u.num = mapreg->readreg(script->add_str(reg));
+				data->u.num = mapreg->readreg(script->add_variable(reg));
 				break;
 			case '#':
 				if( reg[1] == '#' )
-					data->u.num = pc_readaccountreg2(sd, script->add_str(reg));// global
+					data->u.num = pc_readaccountreg2(sd, script->add_variable(reg));// global
 				else
-					data->u.num = pc_readaccountreg(sd, script->add_str(reg));// local
+					data->u.num = pc_readaccountreg(sd, script->add_variable(reg));// local
 				break;
 			default:
-				data->u.num = pc_readglobalreg(sd, script->add_str(reg));
+				data->u.num = pc_readglobalreg(sd, script->add_variable(reg));
 				break;
 		}
 	}

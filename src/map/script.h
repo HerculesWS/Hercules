@@ -143,7 +143,6 @@ struct item_data;
 /// Returns if this a reference to a param
 #define reference_toparam(data) ( script->str_data[reference_getid(data)].type == C_PARAM )
 /// Returns if this a reference to a variable
-//##TODO confirm it's C_NAME [FlavioJS]
 #define reference_tovariable(data) ( script->str_data[reference_getid(data)].type == C_NAME )
 /// Returns the unique id of the reference (id and index)
 #define reference_getuid(data) ( (data)->u.num )
@@ -829,6 +828,7 @@ struct script_interface {
 	void (*setarray_pc) (struct map_session_data* sd, const char* varname, uint32 idx, void* value, int* refcache);
 	bool (*config_read) (const char *filename, bool imported);
 	int (*add_str) (const char* p);
+	int (*add_variable) (const char *varname);
 	const char* (*get_str) (int id);
 	int (*search_str) (const char* p);
 	void (*setd_sub) (struct script_state *st, struct map_session_data *sd, const char *varname, int elem, const void *value, struct reg_db *ref);

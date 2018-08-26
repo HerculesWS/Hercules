@@ -221,7 +221,7 @@ static void script_load_mapreg(void)
 	SQL->StmtBindColumn(stmt, 2, SQLDT_STRING, &value,   sizeof value,   NULL,    NULL);
 
 	while ( SQL_SUCCESS == SQL->StmtNextRow(stmt) ) {
-		int s = script->add_str(varname);
+		int s = script->add_variable(varname);
 		int i = index;
 
 

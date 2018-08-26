@@ -1459,7 +1459,7 @@ static int pc_set_hate_mob(struct map_session_data *sd, int pos, struct block_li
 			return 0; //Wrong size
 	}
 	sd->hate_mob[pos] = class_;
-	pc_setglobalreg(sd,script->add_str(pc->sg_info[pos].hate_var),class_+1);
+	pc_setglobalreg(sd,script->add_variable(pc->sg_info[pos].hate_var),class_+1);
 	clif->hate_info(sd, pos, class_, 1);
 	return 1;
 }
@@ -1473,27 +1473,28 @@ static int pc_reg_received(struct map_session_data *sd)
 
 	nullpo_ret(sd);
 	sd->vars_ok = true;
-	sd->change_level_2nd = pc_readglobalreg(sd,script->add_str("jobchange_level"));
-	sd->change_level_3rd = pc_readglobalreg(sd,script->add_str("jobchange_level_3rd"));
-	sd->die_counter = pc_readglobalreg(sd,script->add_str("PC_DIE_COUNTER"));
+
+	sd->change_level_2nd = pc_readglobalreg(sd,script->add_variable("jobchange_level"));
+	sd->change_level_3rd = pc_readglobalreg(sd,script->add_variable("jobchange_level_3rd"));
+	sd->die_counter = pc_readglobalreg(sd,script->add_variable("PC_DIE_COUNTER"));
 
 	// Cash shop
-	sd->cashPoints = pc_readaccountreg(sd,script->add_str("#CASHPOINTS"));
-	sd->kafraPoints = pc_readaccountreg(sd,script->add_str("#KAFRAPOINTS"));
+	sd->cashPoints = pc_readaccountreg(sd,script->add_variable("#CASHPOINTS"));
+	sd->kafraPoints = pc_readaccountreg(sd,script->add_variable("#KAFRAPOINTS"));
 
 	// Cooking Exp
-	sd->cook_mastery = pc_readglobalreg(sd,script->add_str("COOK_MASTERY"));
+	sd->cook_mastery = pc_readglobalreg(sd,script->add_variable("COOK_MASTERY"));
 
 	if ((sd->job & MAPID_BASEMASK) == MAPID_TAEKWON) {
 		// Better check for class rather than skill to prevent "skill resets" from unsetting this
-		sd->mission_mobid = pc_readglobalreg(sd,script->add_str("TK_MISSION_ID"));
-		sd->mission_count = pc_readglobalreg(sd,script->add_str("TK_MISSION_COUNT"));
+		sd->mission_mobid = pc_readglobalreg(sd,script->add_variable("TK_MISSION_ID"));
+		sd->mission_count = pc_readglobalreg(sd,script->add_variable("TK_MISSION_COUNT"));
 	}
 
 	//SG map and mob read [Komurka]
 	for (i = 0; i < MAX_PC_FEELHATE; i++) {
 		//for now - someone need to make reading from txt/sql
-		int j = pc_readglobalreg(sd,script->add_str(pc->sg_info[i].feel_var));
+		int j = pc_readglobalreg(sd,script->add_variable(pc->sg_info[i].feel_var));
 		if (j != 0) {
 			sd->feel_map[i].index = j;
 			sd->feel_map[i].m = map->mapindex2mapid(j);
@@ -1501,24 +1502,24 @@ static int pc_reg_received(struct map_session_data *sd)
 			sd->feel_map[i].index = 0;
 			sd->feel_map[i].m = -1;
 		}
-		sd->hate_mob[i] = pc_readglobalreg(sd,script->add_str(pc->sg_info[i].hate_var))-1;
+		sd->hate_mob[i] = pc_readglobalreg(sd,script->add_variable(pc->sg_info[i].hate_var))-1;
 	}
 
 	if ((i = pc->checkskill(sd,RG_PLAGIARISM)) > 0) {
-		sd->cloneskill_id = pc_readglobalreg(sd,script->add_str("CLONE_SKILL"));
+		sd->cloneskill_id = pc_readglobalreg(sd,script->add_variable("CLONE_SKILL"));
 		if (sd->cloneskill_id > 0 && (idx = skill->get_index(sd->cloneskill_id)) > 0) {
 			sd->status.skill[idx].id = sd->cloneskill_id;
-			sd->status.skill[idx].lv = pc_readglobalreg(sd,script->add_str("CLONE_SKILL_LV"));
+			sd->status.skill[idx].lv = pc_readglobalreg(sd,script->add_variable("CLONE_SKILL_LV"));
 			if (sd->status.skill[idx].lv > i)
 				sd->status.skill[idx].lv = i;
 			sd->status.skill[idx].flag = SKILL_FLAG_PLAGIARIZED;
 		}
 	}
 	if ((i = pc->checkskill(sd,SC_REPRODUCE)) > 0) {
-		sd->reproduceskill_id = pc_readglobalreg(sd,script->add_str("REPRODUCE_SKILL"));
+		sd->reproduceskill_id = pc_readglobalreg(sd,script->add_variable("REPRODUCE_SKILL"));
 		if( sd->reproduceskill_id > 0 && (idx = skill->get_index(sd->reproduceskill_id)) > 0) {
 			sd->status.skill[idx].id = sd->reproduceskill_id;
-			sd->status.skill[idx].lv = pc_readglobalreg(sd,script->add_str("REPRODUCE_SKILL_LV"));
+			sd->status.skill[idx].lv = pc_readglobalreg(sd,script->add_variable("REPRODUCE_SKILL_LV"));
 			if( i < sd->status.skill[idx].lv)
 				sd->status.skill[idx].lv = i;
 			sd->status.skill[idx].flag = SKILL_FLAG_PLAGIARIZED;
@@ -1964,7 +1965,7 @@ static int pc_calc_skilltree_normalize_job(struct map_session_data *sd)
 
 			}
 
-			pc_setglobalreg(sd, script->add_str("jobchange_level"), sd->change_level_2nd);
+			pc_setglobalreg(sd, script->add_variable("jobchange_level"), sd->change_level_2nd);
 		}
 
 		if (skill_point < novice_skills + (sd->change_level_2nd - 1)) {
@@ -1977,7 +1978,7 @@ static int pc_calc_skilltree_normalize_job(struct map_session_data *sd)
 						- (sd->status.job_level - 1)
 						- (sd->change_level_2nd - 1)
 						- novice_skills;
-					pc_setglobalreg(sd, script->add_str("jobchange_level_3rd"), sd->change_level_3rd);
+					pc_setglobalreg(sd, script->add_variable("jobchange_level_3rd"), sd->change_level_3rd);
 			}
 
 			if (skill_point < novice_skills + (sd->change_level_2nd - 1) + (sd->change_level_3rd - 1)) {
@@ -4523,7 +4524,7 @@ static int pc_payzeny(struct map_session_data *sd, int zeny, enum e_log_pick_typ
  *
  * @param price     Price of the item.
  * @param points    Provided kafra points.
- * 	
+ *
  * @return points	Leftover kafra points.
  */
 //Changed Kafrapoints calculation. [Normynator]
@@ -4555,15 +4556,15 @@ static int pc_paycash(struct map_session_data *sd, int price, int points)
 		return -1;
 	}
 
-	pc_setaccountreg(sd, script->add_str("#CASHPOINTS"), sd->cashPoints - cash);
-	pc_setaccountreg(sd, script->add_str("#KAFRAPOINTS"), sd->kafraPoints - mempoints);
+	pc_setaccountreg(sd, script->add_variable("#CASHPOINTS"), sd->cashPoints - cash);
+	pc_setaccountreg(sd, script->add_variable("#KAFRAPOINTS"), sd->kafraPoints - mempoints);
 
 	if (battle_config.cashshop_show_points) {
 		char output[128];
 		sprintf(output, msg_sd(sd,504), points, cash, sd->kafraPoints, sd->cashPoints);
 		clif_disp_onlyself(sd, output);
 	}
-	
+
 	return points;
 }
 
@@ -4582,7 +4583,7 @@ static int pc_getcash(struct map_session_data *sd, int cash, int points)
 			cash = MAX_ZENY-sd->cashPoints;
 		}
 
-		pc_setaccountreg(sd, script->add_str("#CASHPOINTS"), sd->cashPoints+cash);
+		pc_setaccountreg(sd, script->add_variable("#CASHPOINTS"), sd->cashPoints+cash);
 
 		if( battle_config.cashshop_show_points )
 		{
@@ -4605,7 +4606,7 @@ static int pc_getcash(struct map_session_data *sd, int cash, int points)
 			points = MAX_ZENY-sd->kafraPoints;
 		}
 
-		pc_setaccountreg(sd, script->add_str("#KAFRAPOINTS"), sd->kafraPoints+points);
+		pc_setaccountreg(sd, script->add_variable("#KAFRAPOINTS"), sd->kafraPoints+points);
 
 		if( battle_config.cashshop_show_points )
 		{
@@ -5789,7 +5790,7 @@ static int pc_setpos(struct map_session_data *sd, unsigned short map_index, int 
 		for (i = 0; i < VECTOR_LENGTH(sd->script_queues); i++) {
 			struct script_queue *queue = script->queue(VECTOR_INDEX(sd->script_queues, i));
 			if (queue && queue->event_mapchange[0] != '\0') {
-				pc->setregstr(sd, script->add_str("@Queue_Destination_Map$"), map->list[m].name);
+				pc->setregstr(sd, script->add_variable("@Queue_Destination_Map$"), map->list[m].name);
 				npc->event(sd, queue->event_mapchange, 0);
 			}
 		}
@@ -7220,7 +7221,7 @@ static uint64 pc_thisjobexp(const struct map_session_data *sd)
 	const struct class_exp_group *exp_group = NULL;
 
 	nullpo_ret(sd);
-	
+
 	if (sd->status.job_level > pc->maxjoblv(sd) || sd->status.job_level <= 1)
 		return 0;
 
@@ -7696,7 +7697,7 @@ static int pc_resetstate(struct map_session_data *sd)
 	if( sd->mission_mobid ) { //bugreport:2200
 		sd->mission_mobid = 0;
 		sd->mission_count = 0;
-		pc_setglobalreg(sd,script->add_str("TK_MISSION_ID"), 0);
+		pc_setglobalreg(sd,script->add_variable("TK_MISSION_ID"), 0);
 	}
 
 	status_calc_pc(sd,SCO_NONE);
@@ -7856,7 +7857,7 @@ static int pc_resetfeel(struct map_session_data *sd)
 	{
 		sd->feel_map[i].m = -1;
 		sd->feel_map[i].index = 0;
-		pc_setglobalreg(sd,script->add_str(pc->sg_info[i].feel_var),0);
+		pc_setglobalreg(sd,script->add_variable(pc->sg_info[i].feel_var),0);
 	}
 
 	return 0;
@@ -7869,7 +7870,7 @@ static int pc_resethate(struct map_session_data *sd)
 
 	for (i = 0; i < MAX_PC_FEELHATE; i++) {
 		sd->hate_mob[i] = -1;
-		pc_setglobalreg(sd,script->add_str(pc->sg_info[i].hate_var),0);
+		pc_setglobalreg(sd,script->add_variable(pc->sg_info[i].hate_var),0);
 	}
 	return 0;
 }
@@ -8059,7 +8060,7 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 	if (sd->npc_id && sd->st && sd->st->state != RUN)
 		npc->event_dequeue(sd);
 
-	pc_setglobalreg(sd,script->add_str("PC_DIE_COUNTER"),sd->die_counter+1);
+	pc_setglobalreg(sd,script->add_variable("PC_DIE_COUNTER"),sd->die_counter+1);
 	pc->setparam(sd, SP_KILLERRID, src?src->id:0);
 
 	if( sd->bg_id ) {/* TODO: purge when bgqueue is deemed ok */
@@ -8920,11 +8921,11 @@ static int pc_jobchange(struct map_session_data *sd, int class, int upper)
 	if ((job & JOBL_2) != 0 && (sd->job & JOBL_2) == 0 && (job & MAPID_UPPERMASK) != MAPID_SUPER_NOVICE) {
 		// changing from 1st to 2nd job
 		sd->change_level_2nd = sd->status.job_level;
-		pc_setglobalreg(sd, script->add_str("jobchange_level"), sd->change_level_2nd);
+		pc_setglobalreg(sd, script->add_variable("jobchange_level"), sd->change_level_2nd);
 	} else if((job & JOBL_THIRD) != 0 && (sd->job & JOBL_THIRD) == 0) {
 		// changing from 2nd to 3rd job
 		sd->change_level_3rd = sd->status.job_level;
-		pc_setglobalreg(sd, script->add_str("jobchange_level_3rd"), sd->change_level_3rd);
+		pc_setglobalreg(sd, script->add_variable("jobchange_level_3rd"), sd->change_level_3rd);
 	}
 
 	if(sd->cloneskill_id) {
@@ -8936,8 +8937,8 @@ static int pc_jobchange(struct map_session_data *sd, int class, int upper)
 			clif->deleteskill(sd,sd->cloneskill_id);
 		}
 		sd->cloneskill_id = 0;
-		pc_setglobalreg(sd, script->add_str("CLONE_SKILL"), 0);
-		pc_setglobalreg(sd, script->add_str("CLONE_SKILL_LV"), 0);
+		pc_setglobalreg(sd, script->add_variable("CLONE_SKILL"), 0);
+		pc_setglobalreg(sd, script->add_variable("CLONE_SKILL_LV"), 0);
 	}
 
 	if(sd->reproduceskill_id) {
@@ -8949,8 +8950,8 @@ static int pc_jobchange(struct map_session_data *sd, int class, int upper)
 			clif->deleteskill(sd,sd->reproduceskill_id);
 		}
 		sd->reproduceskill_id = 0;
-		pc_setglobalreg(sd, script->add_str("REPRODUCE_SKILL"),0);
-		pc_setglobalreg(sd, script->add_str("REPRODUCE_SKILL_LV"),0);
+		pc_setglobalreg(sd, script->add_variable("REPRODUCE_SKILL"),0);
+		pc_setglobalreg(sd, script->add_variable("REPRODUCE_SKILL_LV"),0);
 	}
 
 	if ((job & MAPID_UPPERMASK) != (sd->job & MAPID_UPPERMASK)) { //Things to remove when changing class tree.

@@ -290,7 +290,7 @@ static void channel_send(struct channel_data *chan, struct map_session_data *sd,
 
 		for (i = 0; i < MAX_EVENTQUEUE; i++) {
 			if (chan->handlers[i][0] != '\0') {
-				pc->setregstr(sd, script->add_str("@channelmes$"), msg);
+				pc->setregstr(sd, script->add_variable("@channelmes$"), msg);
 				npc->event(sd, chan->handlers[i], 0);
 			}
 		}

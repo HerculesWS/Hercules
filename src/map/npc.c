@@ -1762,8 +1762,8 @@ static bool npc_trader_pay(struct npc_data *nd, struct map_session_data *sd, int
 
 	snprintf(evname, EVENT_NAME_LENGTH, "%s::OnPayFunds",nd->exname);
 	if ( (ev = strdb_get(npc->ev_db, evname)) ) {
-		pc->setreg(sd,script->add_str("@price"),price);
-		pc->setreg(sd,script->add_str("@points"),points);
+		pc->setreg(sd,script->add_variable("@price"),price);
+		pc->setreg(sd,script->add_variable("@points"),points);
 		script->run_npc(ev->nd->u.scr.script, ev->pos, sd->bl.id, ev->nd->bl.id);
 	} else
 		ShowError("npc_trader_pay: '%s' event '%s' not found, operation failed\n",nd->exname,evname);
