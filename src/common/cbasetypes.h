@@ -460,12 +460,6 @@ typedef char bool;
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
 // C11 version
 #define STATIC_ASSERT(ex, msg) _Static_assert(ex, msg)
-#elif __has_feature(c_static_assert)
-// Clang support (as per http://clang.llvm.org/docs/LanguageExtensions.html)
-#define STATIC_ASSERT(ex, msg) _Static_assert(ex, msg)
-#elif defined(__GNUC__) && GCC_VERSION >= 40700
-// GCC >= 4.7 is known to support it
-#define STATIC_ASSERT(ex, msg) _Static_assert(ex, msg)
 #elif defined(_MSC_VER)
 // MSVC doesn't support it, but it accepts the C++ style version
 #define STATIC_ASSERT(ex, msg) static_assert(ex, msg)

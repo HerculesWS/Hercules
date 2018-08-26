@@ -10891,7 +10891,7 @@ static void clif_parse_WisMessage(int fd, struct map_session_data *sd)
 	//   Lordalfa - Paperboy - To whisper NPC commands       //
 	//-------------------------------------------------------//
 	if (target[0] && (strncasecmp(target,"NPC:",4) == 0) && (strlen(target) > 4)) {
-		const char *str = target+4; //Skip the NPC: string part.
+		char *str = target + 4; // Skip the NPC: string part.
 		struct npc_data *nd;
 		if ((nd = npc->name2id(str))) {
 			char split_data[NUM_WHISPER_VAR][CHAT_SIZE_MAX];

@@ -2868,7 +2868,7 @@ static const char *npc_parse_shop(const char *w1, const char *w2, const char *w3
 	struct npc_item_list *items = NULL;
 	size_t items_count = 40; // Starting items size
 
-	char *p;
+	const char *p;
 	int x, y, dir, m, i, class_;
 	struct npc_data *nd;
 	enum npc_subtype type;
