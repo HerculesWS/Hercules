@@ -1887,6 +1887,63 @@ ACMD(hair_color)
 	return true;
 }
 
+ACMD(setzone)
+{
+	char zone_name[MAP_ZONE_MAPFLAG_LENGTH];
+	memset(zone_name, '\0', sizeof(zone_name));
+
+	char fmt_str[8] = "";
+	safesnprintf(fmt_str, 8, "%%%ds", MAP_ZONE_MAPFLAG_LENGTH - 1);
+
+	if (*message == '\0' || sscanf(message, fmt_str, zone_name) < 1) {
+		clif->message(fd, msg_fd(fd, 924)); // usage info
+		return false;
+	}
+
+	struct map_zone_data *zone = strdb_get(map->zone_db, zone_name);
+	const char *prev_zone_name = map->list[sd->bl.m].zone->name;
+
+	// handle special zones:
+	if (zone == NULL && strcmp(zone_name, MAP_ZONE_NORMAL_NAME) == 0) {
+		zone = &map->zone_all;
+	} else if (zone == NULL && strcmp(zone_name, MAP_ZONE_PK_NAME) == 0) {
+		zone = &map->zone_pk;
+	}
+
+	if (zone != NULL) {
+		if (map->list[sd->bl.m].zone != zone) {
+			if (strcmp(prev_zone_name, MAP_ZONE_PVP_NAME) == 0) {
+				atcommand_pvpoff(fd, sd, command, message, info);
+			} else if (strcmp(prev_zone_name, MAP_ZONE_GVG_NAME) == 0) {
+				atcommand_gvgoff(fd, sd, command, message, info);
+			} else if (strcmp(prev_zone_name, MAP_ZONE_CVC_NAME) == 0) {
+				atcommand_cvcoff(fd, sd, command, message, info);
+			}
+		} else {
+			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 925), zone_name);
+			clif->message(fd, atcmd_output); // nothing to do
+			return false;
+		}
+
+		if (strcmp(zone_name, MAP_ZONE_PVP_NAME) == 0) {
+			atcommand_pvpon(fd, sd, command, message, info);
+		} else if (strcmp(zone_name, MAP_ZONE_GVG_NAME) == 0) {
+			atcommand_gvgon(fd, sd, command, message, info);
+		} else if (strcmp(zone_name, MAP_ZONE_CVC_NAME) == 0) {
+			atcommand_cvcon(fd, sd, command, message, info);
+		} else {
+			map->zone_change2(sd->bl.m, zone);
+		}
+	} else {
+		clif->message(fd, msg_fd(fd, 926)); // zone not found
+		return false;
+	}
+
+	safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 927), prev_zone_name, zone_name);
+	clif->message(fd, atcmd_output); // changed successfully
+	return true;
+}
+
 /*==========================================
  * @go [city_number or city_name] - Updated by Harbin
  *------------------------------------------*/
@@ -7688,7 +7745,7 @@ ACMD(mapflag)
 		CHECKFLAG(nojobexp);          CHECKFLAG(nomobloot);          CHECKFLAG(nomvploot);    CHECKFLAG(nightenabled);
 		CHECKFLAG(nodrop);            CHECKFLAG(novending);          CHECKFLAG(loadevent);
 		CHECKFLAG(nochat);            CHECKFLAG(partylock);          CHECKFLAG(guildlock);    CHECKFLAG(src4instance);
-		CHECKFLAG(notomb);            CHECKFLAG(nocashshop);         CHECKFLAG(noviewid);
+		CHECKFLAG(notomb);            CHECKFLAG(nocashshop);         CHECKFLAG(noviewid);     CHECKFLAG(town);
 		clif->message(sd->fd," ");
 		clif->message(sd->fd,msg_fd(fd,1312)); // Usage: "@mapflag monster_noteleport 1" (0=Off | 1=On)
 		clif->message(sd->fd,msg_fd(fd,1313)); // Type "@mapflag available" to list the available mapflags.
@@ -7730,6 +7787,7 @@ ACMD(mapflag)
 	SETFLAG(nomvploot);         SETFLAG(nightenabled);       SETFLAG(nodrop);       SETFLAG(novending);
 	SETFLAG(loadevent);         SETFLAG(nochat);             SETFLAG(partylock);    SETFLAG(guildlock);
 	SETFLAG(src4instance);      SETFLAG(notomb);             SETFLAG(nocashshop);   SETFLAG(noviewid);
+	SETFLAG(town);
 
 
 	clif->message(sd->fd, msg_fd(fd, 1314)); // Invalid flag name or flag.
@@ -10033,6 +10091,7 @@ static void atcommand_basecommands(void)
 		ACMD_DEF(joinclan),
 		ACMD_DEF(leaveclan),
 		ACMD_DEF(reloadclans),
+		ACMD_DEF(setzone),
 	};
 	int i;
 

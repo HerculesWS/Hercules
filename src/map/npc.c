@@ -4980,6 +4980,7 @@ static int npc_reload(void)
 
 	instance->reload();
 
+	map->zone_reload();
 	map->zone_init();
 
 	npc->motd = npc->name2id("HerculesMOTD"); /* [Ind/Hercules] */

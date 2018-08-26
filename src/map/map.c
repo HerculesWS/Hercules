@@ -3690,6 +3690,33 @@ static void do_final_maps(void)
 	map->zone_db_clear();
 
 }
+
+static void map_zonedb_reload(void)
+{
+	// first, reset maps to their initial zones:
+	for (int i = 0; i < map->count; i++) {
+		map->zone_remove(i);
+
+		if (battle_config.pk_mode) {
+			map->list[i].flag.pvp = 1;
+			map->list[i].zone = &map->zone_pk;
+		} else {
+			map->list[i].flag.pvp = 0;
+			map->list[i].zone = &map->zone_all;
+		}
+
+		map->list[i].prev_zone = map->list[i].zone;
+	}
+
+	// now it's safe to remove the zones:
+	map->zone_db_clear();
+
+	// then reload everything from scratch:
+	map->zone_db = strdb_alloc(DB_OPT_DUP_KEY | DB_OPT_RELEASE_DATA, MAP_ZONE_NAME_LENGTH);
+	map->read_zone_db();
+}
+
+
 /// Initializes map flags and adjusts them depending on configuration.
 static void map_flags_init(void)
 {
@@ -6804,6 +6831,7 @@ void map_defaults(void)
 	map->zone_apply = map_zone_apply;
 	map->zone_change = map_zone_change;
 	map->zone_change2 = map_zone_change2;
+	map->zone_reload = map_zonedb_reload;
 
 	map->getcell = map_getcell;
 	map->setgatcell = map_setgatcell;
