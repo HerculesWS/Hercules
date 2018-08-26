@@ -3510,8 +3510,8 @@ typedef int (*HPMHOOK_pre_intif_request_registry) (struct map_session_data **sd,
 typedef int (*HPMHOOK_post_intif_request_registry) (int retVal___, struct map_session_data *sd, int flag);
 typedef void (*HPMHOOK_pre_intif_request_account_storage) (const struct map_session_data **sd);
 typedef void (*HPMHOOK_post_intif_request_account_storage) (const struct map_session_data *sd);
-typedef void (*HPMHOOK_pre_intif_send_account_storage) (const struct map_session_data **sd);
-typedef void (*HPMHOOK_post_intif_send_account_storage) (const struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_intif_send_account_storage) (struct map_session_data **sd);
+typedef void (*HPMHOOK_post_intif_send_account_storage) (struct map_session_data *sd);
 typedef int (*HPMHOOK_pre_intif_request_guild_storage) (int *account_id, int *guild_id);
 typedef int (*HPMHOOK_post_intif_request_guild_storage) (int retVal___, int account_id, int guild_id);
 typedef int (*HPMHOOK_pre_intif_send_guild_storage) (int *account_id, struct guild_storage **gstor);

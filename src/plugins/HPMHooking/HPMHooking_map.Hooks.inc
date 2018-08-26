@@ -35538,10 +35538,10 @@ void HP_intif_request_account_storage(const struct map_session_data *sd) {
 	}
 	return;
 }
-void HP_intif_send_account_storage(const struct map_session_data *sd) {
+void HP_intif_send_account_storage(struct map_session_data *sd) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_intif_send_account_storage_pre > 0) {
-		void (*preHookFunc) (const struct map_session_data **sd);
+		void (*preHookFunc) (struct map_session_data **sd);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_send_account_storage_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_intif_send_account_storage_pre[hIndex].func;
@@ -35556,7 +35556,7 @@ void HP_intif_send_account_storage(const struct map_session_data *sd) {
 		HPMHooks.source.intif.send_account_storage(sd);
 	}
 	if (HPMHooks.count.HP_intif_send_account_storage_post > 0) {
-		void (*postHookFunc) (const struct map_session_data *sd);
+		void (*postHookFunc) (struct map_session_data *sd);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_send_account_storage_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_intif_send_account_storage_post[hIndex].func;
 			postHookFunc(sd);
