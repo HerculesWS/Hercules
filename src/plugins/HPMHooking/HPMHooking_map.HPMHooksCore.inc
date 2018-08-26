@@ -3360,6 +3360,8 @@ struct {
 	struct HPMHookPoint *HP_map_zone_change_post;
 	struct HPMHookPoint *HP_map_zone_change2_pre;
 	struct HPMHookPoint *HP_map_zone_change2_post;
+	struct HPMHookPoint *HP_map_zone_reload_pre;
+	struct HPMHookPoint *HP_map_zone_reload_post;
 	struct HPMHookPoint *HP_map_getcell_pre;
 	struct HPMHookPoint *HP_map_getcell_post;
 	struct HPMHookPoint *HP_map_setgatcell_pre;
@@ -9921,6 +9923,8 @@ struct {
 	int HP_map_zone_change_post;
 	int HP_map_zone_change2_pre;
 	int HP_map_zone_change2_post;
+	int HP_map_zone_reload_pre;
+	int HP_map_zone_reload_post;
 	int HP_map_getcell_pre;
 	int HP_map_getcell_post;
 	int HP_map_setgatcell_pre;

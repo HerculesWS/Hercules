@@ -44259,6 +44259,32 @@ void HP_map_zone_change2(int m, struct map_zone_data *zone) {
 	}
 	return;
 }
+void HP_map_zone_reload(void) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_map_zone_reload_pre > 0) {
+		void (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_zone_reload_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_map_zone_reload_pre[hIndex].func;
+			preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.map.zone_reload();
+	}
+	if (HPMHooks.count.HP_map_zone_reload_post > 0) {
+		void (*postHookFunc) (void);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_zone_reload_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_map_zone_reload_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
+}
 int HP_map_getcell(int16 m, const struct block_list *bl, int16 x, int16 y, cell_chk cellchk) {
 	int hIndex = 0;
 	int retVal___ = 0;

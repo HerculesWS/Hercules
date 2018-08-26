@@ -1723,6 +1723,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(map->zone_apply, HP_map_zone_apply) },
 	{ HP_POP(map->zone_change, HP_map_zone_change) },
 	{ HP_POP(map->zone_change2, HP_map_zone_change2) },
+	{ HP_POP(map->zone_reload, HP_map_zone_reload) },
 	{ HP_POP(map->getcell, HP_map_getcell) },
 	{ HP_POP(map->setgatcell, HP_map_setgatcell) },
 	{ HP_POP(map->cellfromcache, HP_map_cellfromcache) },

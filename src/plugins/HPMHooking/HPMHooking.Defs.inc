@@ -4430,6 +4430,8 @@ typedef void (*HPMHOOK_pre_map_zone_change) (int *m, struct map_zone_data **zone
 typedef void (*HPMHOOK_post_map_zone_change) (int m, struct map_zone_data *zone, const char *start, const char *buffer, const char *filepath);
 typedef void (*HPMHOOK_pre_map_zone_change2) (int *m, struct map_zone_data **zone);
 typedef void (*HPMHOOK_post_map_zone_change2) (int m, struct map_zone_data *zone);
+typedef void (*HPMHOOK_pre_map_zone_reload) (void);
+typedef void (*HPMHOOK_post_map_zone_reload) (void);
 typedef int (*HPMHOOK_pre_map_getcell) (int16 *m, const struct block_list **bl, int16 *x, int16 *y, cell_chk *cellchk);
 typedef int (*HPMHOOK_post_map_getcell) (int retVal___, int16 m, const struct block_list *bl, int16 x, int16 y, cell_chk cellchk);
 typedef void (*HPMHOOK_pre_map_setgatcell) (int16 *m, int16 *x, int16 *y, int *gat);
