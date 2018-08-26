@@ -5965,10 +5965,14 @@ static bool script_sprintf_helper(struct script_state *st, int start, struct Str
 static BUILDIN(mes)
 {
 	struct map_session_data *sd = script->rid2sd(st);
+
 	if (sd == NULL)
 		return true;
 
-	clif->scriptmes(sd, st->oid, script_getstr(st, 2));
+	if (script_hasdata(st, 2))
+		clif->scriptmes(sd, st->oid, script_getstr(st, 2));
+	else
+		clif->scriptmes(sd, st->oid, "");
 
 	return true;
 }
@@ -24951,8 +24955,8 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(__setr,"rv?"),
 
 		// NPC interaction
-		BUILDIN_DEF(mes,"s"),
-		BUILDIN_DEF(mesf,"s*"),
+		BUILDIN_DEF(mes, "?"),
+		BUILDIN_DEF(mesf, "s*"),
 		BUILDIN_DEF(next,""),
 		BUILDIN_DEF(close,""),
 		BUILDIN_DEF(close2,""),
