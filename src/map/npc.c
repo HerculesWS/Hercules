@@ -1502,7 +1502,7 @@ static int npc_cashshop_buylist(struct map_session_data *sd, int points, struct 
 
 	// Payment Process ----------------------------------------------------
 	if( nd->subtype == SCRIPT && nd->u.scr.shop->type == NST_CUSTOM ) {
-		if( !npc->trader_pay(nd,sd,vt,points) )
+		if ( !npc->trader_pay(nd, sd, vt, points, item_list) )
 			return ERROR_TYPE_MONEY;
 	} else {
 		if( sd->kafraPoints < points || sd->cashPoints < (vt - points) )
@@ -1748,10 +1748,11 @@ static void npc_trader_count_funds(struct npc_data *nd, struct map_session_data 
  * @param sd player
  * @param price total cost
  * @param points the amount input in the shop by the user to use from the secondary currency (if any is being employed)
+ * @param item_list VECTOR containing bought ItemID and quantity
  *
  * @return bool whether it was successful (if the script does not respond it will fail)
  **/
-static bool npc_trader_pay(struct npc_data *nd, struct map_session_data *sd, int price, int points)
+static bool npc_trader_pay(struct npc_data *nd, struct map_session_data *sd, int price, int points, struct itemlist *item_list)
 {
 	char evname[EVENT_NAME_LENGTH];
 	struct event_data *ev = NULL;
@@ -1761,7 +1762,22 @@ static bool npc_trader_pay(struct npc_data *nd, struct map_session_data *sd, int
 	npc->trader_ok = false;/* clear */
 
 	snprintf(evname, EVENT_NAME_LENGTH, "%s::OnPayFunds",nd->exname);
-	if ( (ev = strdb_get(npc->ev_db, evname)) ) {
+	if ((ev = strdb_get(npc->ev_db, evname))) {
+		int i, key_nameid = 0, key_amount = 0;
+
+		// Clear the Array
+		script->cleararray_pc(sd, "@bought_nameid", (void*)0);
+		script->cleararray_pc(sd, "@bought_quantity", (void*)0);
+	
+		// save list of bought items
+		for (i = 0; i < VECTOR_LENGTH(*item_list); i++) {
+			struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
+			intptr_t nameid = entry->id;
+			intptr_t amount = entry->amount;
+			script->setarray_pc(sd, "@bought_nameid", i, (void *)nameid, &key_nameid);
+			script->setarray_pc(sd, "@bought_quantity", i, (void *)amount, &key_amount);
+		}
+
 		pc->setreg(sd,script->add_str("@price"),price);
 		pc->setreg(sd,script->add_str("@points"),points);
 		script->run_npc(ev->nd->u.scr.script, ev->pos, sd->bl.id, ev->nd->bl.id);
@@ -1851,8 +1867,21 @@ static int npc_cashshop_buy(struct map_session_data *sd, int nameid, int amount,
 		points = price;
 
 	if( nd->subtype == SCRIPT && nd->u.scr.shop->type == NST_CUSTOM ) {
-		if( !npc->trader_pay(nd,sd,price,points) )
+		struct itemlist item_list;
+		struct itemlist_entry entry = { 0 };
+		VECTOR_INIT(item_list);
+		VECTOR_ENSURE(item_list, 1, 1);
+	
+		entry.amount = amount;
+		entry.id = nameid;
+
+		VECTOR_PUSH(item_list, entry);
+
+		if (!npc->trader_pay(nd, sd, price, points, &item_list)) {
+			VECTOR_CLEAR(item_list);
 			return ERROR_TYPE_MONEY;
+		}
+		VECTOR_CLEAR(item_list);
 	} else {
 		if( (sd->kafraPoints < points) || (sd->cashPoints < price - points) )
 			return ERROR_TYPE_MONEY;
