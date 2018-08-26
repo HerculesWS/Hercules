@@ -513,7 +513,7 @@ static void intif_parse_account_storage(int fd)
  * @packet 0x3011 [out] <packet_len>.W <account_id>.L <struct item[]>.P
  * @param  sd     [in]  pointer to session data.
  */
-static void intif_send_account_storage(const struct map_session_data *sd)
+static void intif_send_account_storage(struct map_session_data *sd)
 {
 	int len = 0, i = 0, c = 0;
 
@@ -541,6 +541,8 @@ static void intif_send_account_storage(const struct map_session_data *sd)
 	}
 
 	WFIFOSET(inter_fd, len);
+
+	sd->storage.save = false; // Save request has been sent
 }
 
 /**
@@ -562,10 +564,9 @@ static void intif_parse_account_storage_save_ack(int fd)
 
 	if (saved == 0) {
 		ShowError("intif_parse_account_storage_save_ack: Storage has not been saved! (AID: %d)\n", account_id);
+		sd->storage.save = true; // Flag it as unsaved, to re-attempt later
 		return;
 	}
-
-	sd->storage.save = false; // Storage has been saved.
 }
 
 //=================================================================
