@@ -1088,7 +1088,7 @@ static void achievement_readdb_ranks(void)
 	}
 
 	while (entry < libconfig->setting_length(ardb) && entry < MAX_ACHIEVEMENT_RANKS) {
-		char rank[8];
+		char rank[16];
 
 		if (!(conf = libconfig->setting_get_elem(ardb, entry))) {
 			ShowError("achievement_readdb_ranks: Could not read value for entry %d, skipping...\n", entry+1);

@@ -4955,7 +4955,6 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 	int skill_id = 0;
 	int skill_idx = 0;
 	bool clearskills = false;
-	char valname[5];
 	const char *name = config_setting_name(it);
 	struct mob_skill *ms, gms;
 
@@ -5055,6 +5054,7 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 		ms->cond2 = i32;
 
 	for (i = 0; i < 5; i++) {
+		char valname[16];
 		sprintf(valname, "val%1d", i);
 		if (libconfig->setting_lookup_int(it, valname, &i32))
 			ms->val[i] = i32;
