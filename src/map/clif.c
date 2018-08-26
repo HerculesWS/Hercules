@@ -19667,7 +19667,7 @@ static void clif_parse_RouletteInfo(int fd, struct map_session_data *sd)
 	}
 
 	p.PacketType = rouletteinfoackType;
-	p.PacketLength = 8 + (42 * 8);
+	p.PacketLength = sizeof(p);
 	p.RouletteSerial = 1;
 
 	for(i = 0; i < MAX_ROULETTE_LEVEL; i++) {

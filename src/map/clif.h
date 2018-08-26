@@ -439,11 +439,13 @@ enum e_BANKING_DEPOSIT_ACK {
 	BDA_ERROR    = 0x1,
 	BDA_NO_MONEY = 0x2,
 	BDA_OVERFLOW = 0x3,
+	BDA_PROHIBIT = 0x4,
 };
 enum e_BANKING_WITHDRAW_ACK {
 	BWA_SUCCESS       = 0x0,
 	BWA_NO_MONEY      = 0x1,
 	BWA_UNKNOWN_ERROR = 0x2,
+	BWA_PROHIBIT      = 0x3,
 };
 
 /* because the client devs were replaced by monkeys. */
