@@ -19718,6 +19718,11 @@ static BUILDIN(getunitdata)
 
 	type = script_getnum(st, 3);
 
+	if (type == UDT_TYPE) {
+		script_pushint(st, bl->type);
+		return true;
+	}
+
 	/* Type check */
 	if (type < UDT_TYPE || type >= UDT_MAX) {
 		ShowError("buildin_getunitdata: Invalid unit data type %d provided.\n", type);
@@ -19756,7 +19761,6 @@ static BUILDIN(getunitdata)
 
 		switch (type)
 		{
-		case UDT_TYPE:        script_pushint(st, BL_MOB); break;
 		case UDT_SIZE:        script_pushint(st, md->status.size); break;
 		case UDT_LEVEL:       script_pushint(st, md->level); break;
 		case UDT_HP:          script_pushint(st, md->status.hp); break;
@@ -19822,7 +19826,6 @@ static BUILDIN(getunitdata)
 
 		switch (type)
 		{
-		case UDT_TYPE:        script_pushint(st, BL_HOM); break;
 		case UDT_SIZE:        script_pushint(st, hd->base_status.size); break;
 		case UDT_LEVEL:       script_pushint(st, hd->homunculus.level); break;
 		case UDT_HP:          script_pushint(st, hd->base_status.hp); break;
@@ -19879,7 +19882,6 @@ static BUILDIN(getunitdata)
 
 		switch (type)
 		{
-		case UDT_TYPE:        script_pushint(st, BL_PET); break;
 		case UDT_SIZE:        script_pushint(st, pd->status.size); break;
 		case UDT_LEVEL:       script_pushint(st, pd->pet.level); break;
 		case UDT_HP:          script_pushint(st, pd->status.hp); break;
@@ -19936,7 +19938,6 @@ static BUILDIN(getunitdata)
 
 		switch (type)
 		{
-		case UDT_TYPE:        script_pushint(st, BL_MER); break;
 		case UDT_SIZE:        script_pushint(st, mc->base_status.size); break;
 		case UDT_HP:          script_pushint(st, mc->base_status.hp); break;
 		case UDT_MAXHP:       script_pushint(st, mc->base_status.max_hp); break;
@@ -19992,7 +19993,6 @@ static BUILDIN(getunitdata)
 
 		switch (type)
 		{
-		case UDT_TYPE:        script_pushint(st, BL_ELEM); break;
 		case UDT_SIZE:        script_pushint(st, ed->base_status.size); break;
 		case UDT_HP:          script_pushint(st, ed->base_status.hp); break;
 		case UDT_MAXHP:       script_pushint(st, ed->base_status.max_hp); break;
@@ -20046,7 +20046,6 @@ static BUILDIN(getunitdata)
 
 		switch (type)
 		{
-		case UDT_TYPE:        script_pushint(st, BL_NPC); break;
 		case UDT_SIZE:        script_pushint(st, nd->status.size); break;
 		case UDT_HP:          script_pushint(st, nd->status.hp); break;
 		case UDT_MAXHP:       script_pushint(st, nd->status.max_hp); break;
@@ -25204,7 +25203,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(getnpcdir,"?"), // [4144]
 		BUILDIN_DEF(setnpcdir,"*"), // [4144]
 		BUILDIN_DEF(getnpcclass,"?"), // [4144]
-		BUILDIN_DEF(getmapxy,"rrri?"), //by Lorky [Lupus]
+		BUILDIN_DEF_DEPRECATED(getmapxy,"rrri?"), //by Lorky [Lupus]
 		BUILDIN_DEF(checkoption1,"i?"),
 		BUILDIN_DEF(checkoption2,"i?"),
 		BUILDIN_DEF(guildgetexp,"i"),
@@ -25311,7 +25310,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(checkpcblock, ""),
 		// <--- [zBuffer] List of player cont commands
 		// [zBuffer] List of mob control commands --->
-		BUILDIN_DEF(getunittype,"i"),
+		BUILDIN_DEF_DEPRECATED(getunittype,"i"),
 		/* Unit Data */
 		BUILDIN_DEF(setunitdata,"iiv??"),
 		BUILDIN_DEF(getunitdata,"ii?"),

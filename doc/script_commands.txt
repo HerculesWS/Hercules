@@ -3319,6 +3319,14 @@ enable (true) or disable (false) the effect on the player.
 
 *getmapxy("<variable for map name>", <variable for x>, <variable for y>, <type>{, "<search parameter>"})
 
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+This command is deprecated and it should not be used in new scripts, as it is
+likely to be removed at a later time. Please use getunitdata instead,
+ie: getunitdata(<unit id>, UDT_MAPIDXY, .@location);
+
 This function will locate a character object, NPC object or pet's
 coordinates and place their coordinates into the variables specified when
 calling it. It will return 0 if the search was successful, and -1 if the
@@ -6610,6 +6618,10 @@ and will return the following values:
 
 *getunittype(<GID>)
 
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 Returns the type of object from the given Game ID. Returns -1 if the given GID
 does not exist. The return values are :-
 
@@ -6620,6 +6632,10 @@ does not exist. The return values are :-
 	UNITTYPE_HOM    4
 	UNITTYPE_MER    5
 	UNITTYPE_ELEM   6
+
+This command is deprecated and it should not be used in new scripts, as it is
+likely to be removed at a later time. Please use getunitdata instead,
+ie: getunitdata(<unit id>, UDT_TYPE)
 
 ---------------------------------------
 
@@ -10032,6 +10048,7 @@ an array variable may be passed to store the data in.
 
 Applicable Data types (available as constants) -
 	Data Types          Description (return type)
+	UDT_TYPE:           Unit type (see BL_ constants in getunits())
 	UDT_SIZE:           Unit Size (int)
 	UDT_LEVEL:          Level (int)
 	UDT_HP:             Current HP (int)
@@ -10040,7 +10057,7 @@ Applicable Data types (available as constants) -
 	UDT_MAXSP:          MAX SP (int)
 	UDT_MASTERAID:      Master Account ID (for Summons) (int)
 	UDT_MASTERCID:      Master Char ID (for Summons) (int)
-	UDT_MAPIDXY:        Warp a Unit to a map. (Val1 = (string) MapName, Val2 = (int) x, Val3 = (int) y)
+	UDT_MAPIDXY:        Unit location. (Val1 = (int) map id, Val2 = (int) x, Val3 = (int) y)
 	UDT_SPEED:          Unit Speed. (int)
 	UDT_MODE:           Mode (Mobs only) (int)
 	UDT_AI:             Unit AI Type (see doc/constants.md for Unit AI Types)
