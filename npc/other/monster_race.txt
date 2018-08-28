@@ -241,7 +241,7 @@ OnInit:
 OnEnable:
 	emotion e_gasp;
 	enablenpc strnpcinfo(NPC_NAME);
-	getmapxy(.@m$, .@x, .@y, UNITTYPE_NPC);
+	getunitlocation(getnpcid(0), .@m$, .@x, .@y);
 	setarray .@mob[1], R_PORING,R_LUNATIC,R_SAVAGE_BABE,R_DESERT_WOLF_B,R_DEVIRUCHI,R_BAPHOMET_;
 	monster "p_track01",58,.@y,"The "+ F_Ord() +" Racer", .@mob[F_Num()],1,strnpcinfo(NPC_NAME)+"::OnMyMobDead";
 	end;
@@ -1750,7 +1750,7 @@ p_track02,76,38,1	script	Exit Guide#double	4_M_NFMAN,{
 OnEnable:
 	enablenpc strnpcinfo(NPC_NAME);
 	setarray .@mob[1], R_PORING,R_LUNATIC,R_SAVAGE_BABE,R_DESERT_WOLF_B,R_DEVIRUCHI,R_BAPHOMET_;
-	getmapxy(.@m$, .@x, .@y, UNITTYPE_NPC);
+	getunitlocation(getnpcid(0), .@m$, .@x, .@y);
 	.@num = MN();
 	monster "p_track02",58,.@y,"Monster "+.@num,.@mob[.@num],1,strnpcinfo(NPC_NAME)+"::OnMyMobDead";
 	end;

@@ -4196,7 +4196,7 @@ malangdo,133,134,0	script	Strange Pile of Sand#7	4_SOIL,{
 				setquest .@quest;
 				if (!rand(3)) {
 					emotion e_omg;
-					getmapxy(.@map$, .@x, .@y, UNITTYPE_NPC);
+					getunitlocation(getnpcid(0), .@map$, .@x, .@y);
 					monster .@map$,.@x,.@y,"Quick Dark Shadow",2209,1;
 				} else
 					getitem Cat_Hard_Biscuit,1;

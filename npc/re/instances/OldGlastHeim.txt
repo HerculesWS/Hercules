@@ -1015,7 +1015,7 @@ OnTouch:
 		.@mobs = 6;
 	else
 		.@mobs = 7;
-	getmapxy(.@map$, .@x, .@y, UNITTYPE_NPC);
+	getunitlocation(getnpcid(0), .@map$, .@x, .@y);
 	specialeffect(EF_VENOMDUST);
 	monster(.@map$, .@x, .@y, _("Maggot"), MG_ARCLOUSE, .@mobs, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 	disablenpc(instance_npcname(strnpcinfo(NPC_NAME)));
@@ -2039,7 +2039,7 @@ OnTimer80000:
 		mes("Now, let me remove your memory. If you see me again, that will be brand new.");
 		specialeffect(EF_FREEZE, AREA, playerattached());
 		close2();
-		getmapxy(.@map$, .@x, .@y, UNITTYPE_PC);
+		getunitlocation(playerattached(), .@map$, .@x, .@y);
 		warp(.@map$, .@x, .@y);
 		end;
 	} else {

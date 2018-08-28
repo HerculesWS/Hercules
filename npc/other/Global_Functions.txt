@@ -407,7 +407,7 @@ function	script	Time2Str	{
 //== Function F_ShuffleNumbers =============================
 // Generate a set of numbers in random order that the numbers are not repeated
 //    callfunc "F_ShuffleNumbers",<start num>,<last num>,<output array>{,<count>};
-// Examples: 
+// Examples:
 //    callfunc("F_ShuffleNumbers", 0, 5, .@output)      // possible output 4,1,3,2,0,5
 //    callfunc("F_ShuffleNumbers", -5, 1, .@output)     // possible output -3,-5,-4,-2,-1,1,0
 //    callfunc("F_ShuffleNumbers", 0, 100, .@output, 5) // possible output 9,55,27,84,33
@@ -437,4 +437,14 @@ function	script	F_ShuffleNumbers	{
 //    mes callfunc("F_MesColor", C_BLUE) +"This message is now in BLUE";
 function	script	F_MesColor	{
 	return sprintf("^%06X", min(getarg(0), 0xFFFFFF));
+}
+
+// getunitlocation(<unit id>, <map variable>, <x variable>, <y variable>)
+//     syntax sugar for getunitdata
+function	script	getunitlocation	{
+	getunitdata(getarg(0), UDT_MAPIDXY, .@__loc[0]);
+	set(getarg(1), getmapinfo(MAPINFO_NAME, .@__loc[0]));
+	swap(.@__loc[1], getarg(2));
+	swap(.@__loc[2], getarg(3));
+	return true;
 }

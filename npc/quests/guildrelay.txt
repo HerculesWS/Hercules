@@ -1240,7 +1240,7 @@
 
 -	script	RelayDummy2::GuildRelay2	4_M_SAGE_A,{
 	.@name$ = strnpcinfo(NPC_NAME_VISIBLE);
-	getmapxy(.@m$, .@x, .@x, UNITTYPE_NPC);
+	getunitlocation(getnpcid(0), .@m$, .@x, .@x);
 	.@GID = getcastledata(.@m$,1);
 	if (checkweight(Knife,1) == 0) {
 		mes "^3355FFWait a minute! You're";
@@ -1749,7 +1749,7 @@
 
 -	script	RelayDummy3::GuildRelay3	4_M_SAGE_A,{
 	.@name$ = strnpcinfo(NPC_NAME_VISIBLE);
-	getmapxy(.@m$, .@x, .@x, UNITTYPE_NPC);
+	getunitlocation(getnpcid(0), .@m$, .@x, .@x);
 	.@GID = getcastledata(.@m$,1);
 	if (checkweight(Knife,1) == 0) {
 		mes "^3355FFWait a minute! You're";
@@ -2433,7 +2433,7 @@
 
 -	script	GuildDummy4::GuildRelay4	4_M_SAGE_A,{
 	.@name$ = strnpcinfo(NPC_NAME_VISIBLE);
-	getmapxy(.@m$, .@x, .@x, UNITTYPE_NPC);
+	getunitlocation(getnpcid(0), .@m$, .@x, .@x);
 	.@GID = getcastledata(.@m$,1);
 	if (checkweight(Knife,1) == 0) {
 		mes "^3355FFWait a minute! You're";

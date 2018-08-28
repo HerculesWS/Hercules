@@ -58,7 +58,7 @@ function	script	F_CashStore	{
 function	script	F_CashPartyCall	{
 	warp "Random", 0, 0;
 	if (getpartyleader(getcharid(CHAR_ID_PARTY), 2) == getcharid(CHAR_ID_CHAR)) {
-		getmapxy(.@map$, .@x, .@y, UNITTYPE_PC);
+		getunitlocation(playerattached(), .@map$, .@x, .@y);
 		do {
 			.@x2 = .@x + rand(-2, 2);
 			.@y2 = .@y + rand(-2, 2);

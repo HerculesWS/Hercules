@@ -41,7 +41,7 @@ function	script	F_GM_NPC	{
 	// To set a minimum GM level to access the NPCs, edit the line below.
 	if (getgmlevel() < 99) {/* TODO: perhaps better to just add a group permission? [Ind] */
 		// Log the event.
-		getmapxy(.@map$, .@x, .@y, UNITTYPE_NPC);
+		getunitlocation(getnpcid(0), .@map$, .@x, .@y);
 		logmes strcharinfo(PC_NAME)+" attempted to access GM NPC "+strnpcinfo(NPC_NAME)+" ("+.@map$+","+.@x+","+.@y+").";
 		end;
 	}

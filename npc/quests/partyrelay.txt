@@ -2492,7 +2492,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	4_M_KID1,{
 		close;
 	}
 	.@relaytime = gettime(GETTIME_HOUR);
-	getmapxy(.@m$, .@x, .@y, UNITTYPE_NPC, strnpcinfo(NPC_NAME_UNIQUE));
+	getunitlocation(getnpcid(0), .@map$, .@x, .@y);
 	.@juwi = getareausers(.@m$,.@x-8,.@y-8,.@x+8,.@y+8);
 	if (party_relay == 32) {
 		mes "[Lospii]";

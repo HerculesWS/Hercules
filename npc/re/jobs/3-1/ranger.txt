@@ -1589,7 +1589,7 @@ OnInit:
 OnEnable:
 	enablenpc strnpcinfo(NPC_NAME);
 	initnpctimer;
-	getmapxy(.@map$, .@x, .@y, UNITTYPE_NPC);
+	getunitlocation(getnpcid(0), .@map$, .@x, .@y);
 	monster "job3_rang02",.@x,.@y,"Egg Bomb",1047,1,strnpcinfo(NPC_NAME)+"::OnMyMobDead";
 	switch(atoi(strnpcinfo(NPC_NAME_HIDDEN))%3) {
 		case 0: .@str$ = "Hey, I am going to explode. What are you going to do?"; break;

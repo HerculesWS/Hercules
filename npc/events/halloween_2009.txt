@@ -261,7 +261,7 @@ prontera,220,72,5	duplicate(09Treats)	Trick or Treater#iRO8	4_M_KID1,2,2
 				mes "[Halloween Wizard]";
 				mes "Which town do you want to play a trick on?";
 				next;
-				getmapxy(.@mapname$, .@mapx, .@mapy, UNITTYPE_PC, strcharinfo(PC_NAME));
+				getunitlocation(playerattached(), .@map$, .@x, .@y);
 				if (.@mapname$ == "prontera") {
 					switch(select("Geffen", "Payon", "Alberta", "Aldebaran")) {
 						case 1:
