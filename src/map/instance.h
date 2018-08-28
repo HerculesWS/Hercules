@@ -96,6 +96,7 @@ struct instance_interface {
 	void (*set_timeout) (int instance_id, unsigned int progress_timeout, unsigned int idle_timeout);
 	bool (*valid) (int instance_id);
 	int (*destroy_timer) (int tid, int64 tick, int id, intptr_t data);
+	void (*force_destroy) (struct map_session_data *sd);
 };
 
 #ifdef HERCULES_CORE

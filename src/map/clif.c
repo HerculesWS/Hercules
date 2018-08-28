@@ -21747,6 +21747,17 @@ static void clif_party_dead_notification(struct map_session_data *sd)
 #endif
 }
 
+static void clif_parse_memorial_dungeon_command(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
+static void clif_parse_memorial_dungeon_command(int fd, struct map_session_data *sd)
+{
+	const struct PACKET_CZ_MEMORIALDUNGEON_COMMAND *p = RP2PTR(fd);
+
+	switch (p->command) {
+	case COMMAND_MEMORIALDUNGEON_DESTROY_FORCE:
+		instance->force_destroy(sd);
+	}
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -22902,4 +22913,5 @@ void clif_defaults(void)
 	clif->pPetEvolution = clif_parse_pet_evolution;
 	clif->petEvolutionResult = clif_pet_evolution_result;
 
+	clif->pMemorialDungeonCommand = clif_parse_memorial_dungeon_command;
 }
