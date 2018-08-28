@@ -660,6 +660,10 @@ enum stylist_shop {
 	STYLIST_SHOP_FAILURE
 };
 
+enum memorial_dungeon_command {
+	COMMAND_MEMORIALDUNGEON_DESTROY_FORCE = 0x3,
+};
+
 /**
  * Clif.c Interface
  **/
@@ -1527,6 +1531,7 @@ struct clif_interface {
 	void (*pPetEvolution) (int fd, struct map_session_data *sd);
 	void (*petEvolutionResult) (int fd, enum pet_evolution_result result);
 	void (*party_dead_notification) (struct map_session_data *sd);
+	void (*pMemorialDungeonCommand) (int fd, struct map_session_data *sd);
 };
 
 #ifdef HERCULES_CORE

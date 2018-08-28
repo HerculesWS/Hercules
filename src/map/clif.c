@@ -21747,6 +21747,67 @@ static void clif_party_dead_notification(struct map_session_data *sd)
 #endif
 }
 
+static void clif_parse_memorial_dungeon_command(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
+static void clif_parse_memorial_dungeon_command(int fd, struct map_session_data *sd)
+{
+	const struct PACKET_CZ_MEMORIALDUNGEON_COMMAND *p = RP2PTR(fd);
+
+	switch (p->command) {
+	case COMMAND_MEMORIALDUNGEON_DESTROY_FORCE:
+		for (int i = 0; i < instance->instances; ++i) {
+			switch (instance->list[i].owner_type) {
+			case IOT_CHAR:
+			{
+				if (instance->list[i].owner_id == sd->status.char_id) {
+					break;
+				}
+				continue;
+			}
+			case IOT_PARTY:
+			{
+				int party_id = sd->status.party_id;
+				if (instance->list[i].owner_id == party_id) {
+					int j = 0;
+					struct party_data *pt = party->search(party_id);
+					nullpo_retv(pt);
+
+					ARR_FIND(0, MAX_PARTY, j, pt->party.member[j].leader);
+					if (j == MAX_PARTY) {
+						ShowWarning("clif_parse_memorial_dungeon_command: trying to destroy a party instance, while the party has no leader.");
+						return;
+					}
+					if (pt->party.member[j].char_id != sd->status.char_id) {
+						ShowWarning("clif_parse_memorial_dungeon_command: trying to destroy a party instance, from a non party-leader player.");
+						return;
+					}
+					break;
+				}
+				continue;
+			}
+			case IOT_GUILD:
+			{
+				int guild_id = sd->status.guild_id;
+				if (instance->list[i].owner_id == guild_id) {
+					struct guild *g = guild->search(guild_id);
+					nullpo_retv(g);
+
+					if (g->member[0].char_id != sd->status.char_id) {
+						ShowWarning("clif_parse_memorial_dungeon_command: trying to destroy a guild instance, from a non guild-master player.");
+						return;
+					}
+					break;
+				}
+				FALLTHROUGH
+			}
+			default:
+				continue;
+			}
+			instance->destroy(instance->list[i].id);
+			return;
+		}
+	}
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -22902,4 +22963,5 @@ void clif_defaults(void)
 	clif->pPetEvolution = clif_parse_pet_evolution;
 	clif->petEvolutionResult = clif_pet_evolution_result;
 
+	clif->pMemorialDungeonCommand = clif_parse_memorial_dungeon_command;
 }
