@@ -218,25 +218,29 @@ enum packet_headers {
 #else
 	inventorylistequipType = 0xa4,
 #endif
-#if PACKETVER >= 20120925
-	storagelistnormalType = 0x995,
-#elif PACKETVER >= 20080102
-	storagelistnormalType = 0x2ea,
-#elif PACKETVER >= 20071002
-	storagelistnormalType = 0x295,
-#else
-	storagelistnormalType = 0xa5,
-#endif
-#if PACKETVER >= 20150226
-	storagelistequipType = 0xa10,
+#if PACKETVER_RE_NUM >= 20180829
+	storageListNormalType = 0xb09,
 #elif PACKETVER >= 20120925
-	storagelistequipType = 0x996,
+	storageListNormalType = 0x995,
 #elif PACKETVER >= 20080102
-	storagelistequipType = 0x2d1,
+	storageListNormalType = 0x2ea,
 #elif PACKETVER >= 20071002
-	storagelistequipType = 0x296,
+	storageListNormalType = 0x295,
 #else
-	storagelistequipType = 0xa6,
+	storageListNormalType = 0xa5,
+#endif
+#if PACKETVER_RE_NUM >= 20180829
+	storageListEquipType = 0xb0a,
+#elif PACKETVER >= 20150226
+	storageListEquipType = 0xa10,
+#elif PACKETVER >= 20120925
+	storageListEquipType = 0x996,
+#elif PACKETVER >= 20080102
+	storageListEquipType = 0x2d1,
+#elif PACKETVER >= 20071002
+	storageListEquipType = 0x296,
+#else
+	storageListEquipType = 0xa6,
 #endif
 #if PACKETVER >= 20120925
 	cartlistnormalType = 0x993,
@@ -1171,19 +1175,29 @@ struct packet_itemlist_equip {
 	struct EQUIPITEM_INFO list[MAX_ITEMLIST];
 } __attribute__((packed));
 
-struct packet_storelist_normal {
+struct ZC_STORE_ITEMLIST_NORMAL {
 	int16 PacketType;
 	int16 PacketLength;
-#if PACKETVER >= 20120925
+#if PACKETVER >= 20120925 && PACKETVER_RE_NUM < 20180829
 	char name[NAME_LENGTH];
 #endif
 	struct NORMALITEM_INFO list[MAX_ITEMLIST];
 } __attribute__((packed));
 
-struct packet_storelist_equip {
+struct ZC_STORE_START {
+	int16 packetType;
+	char name[NAME_LENGTH];
+} __attribute__((packed));
+
+struct ZC_STORE_END {
+	int16 packetType;
+	char flag;
+} __attribute__((packed));
+
+struct ZC_STORE_ITEMLIST_EQUIP {
 	int16 PacketType;
 	int16 PacketLength;
-#if PACKETVER >= 20120925
+#if PACKETVER >= 20120925 && PACKETVER_RE_NUM < 20180829
 	char name[NAME_LENGTH];
 #endif
 	struct EQUIPITEM_INFO list[MAX_ITEMLIST];

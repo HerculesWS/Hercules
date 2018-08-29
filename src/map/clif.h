@@ -986,7 +986,11 @@ struct clif_interface {
 	void (*openvendingAck) (int fd, int result);
 	void (*vendingreport) (struct map_session_data* sd, int index, int amount, uint32 char_id, int zeny);
 	/* storage handling */
-	void (*storagelist) (struct map_session_data* sd, struct item* items, int items_length);
+	void (*storageList) (struct map_session_data* sd, struct item* items, int items_length);
+	void (*guildStorageList) (struct map_session_data* sd, struct item* items, int items_length);
+	void (*storageItems) (struct map_session_data* sd, struct item* items, int items_length);
+	void (*storageStart) (struct map_session_data* sd, const char* name);
+	void (*storageEnd) (struct map_session_data* sd);
 	void (*updatestorageamount) (struct map_session_data* sd, int amount, int max_amount);
 	void (*storageitemadded) (struct map_session_data* sd, struct item* i, int index, int amount);
 	void (*storageitemremoved) (struct map_session_data* sd, int index, int amount);

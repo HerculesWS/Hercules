@@ -86,8 +86,8 @@ static struct s_packet_db packet_db[MAX_PACKET_DB + 1];
 /* re-usable */
 static struct packet_itemlist_normal itemlist_normal;
 static struct packet_itemlist_equip itemlist_equip;
-static struct packet_storelist_normal storelist_normal;
-static struct packet_storelist_equip storelist_equip;
+static struct ZC_STORE_ITEMLIST_NORMAL storelist_normal;
+static struct ZC_STORE_ITEMLIST_EQUIP storelist_equip;
 static struct packet_viewequip_ack viewequip_list;
 #if PACKETVER >= 20131223
 static struct packet_npc_market_result_ack npcmarket_result;
@@ -2863,13 +2863,56 @@ static void clif_equiplist(struct map_session_data *sd)
 #endif
 }
 
-static void clif_storagelist(struct map_session_data *sd, struct item *items, int items_length)
+static void clif_storageList(struct map_session_data *sd, struct item *items, int items_length)
 {
+	nullpo_retv(sd);
+
+	clif->storageStart(sd, "Storage");
+	if (sd->storage.aggregate > 0)
+		clif->storageItems(sd, items, items_length);
+	clif->storageEnd(sd);
+}
+
+static void clif_guildStorageList(struct map_session_data *sd, struct item *items, int items_length)
+{
+	clif->storageStart(sd, "Guild storage");
+	clif->storageItems(sd, items, items_length);
+	clif->storageEnd(sd);
+}
+
+static void clif_storageStart(struct map_session_data *sd, const char *name)
+{
+#if PACKETVER_RE_NUM >= 20180829
+	nullpo_retv(sd);
+	nullpo_retv(name);
+
+	struct ZC_STORE_START p;
+	p.packetType = 0xb08;
+	safestrncpy(p.name, name, NAME_LENGTH);
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
+#endif
+}
+
+static void clif_storageEnd(struct map_session_data *sd)
+{
+#if PACKETVER_RE_NUM >= 20180829
+	nullpo_retv(sd);
+
+	struct ZC_STORE_END p;
+	p.packetType = 0xb0b;
+	p.flag = 0;
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
+#endif
+}
+
+static void clif_storageItems(struct map_session_data *sd, struct item *items, int items_length)
+{
+	nullpo_retv(sd);
+	nullpo_retv(items);
+
 	int i = 0;
 	struct item_data *id;
 
-	nullpo_retv(sd);
-	nullpo_retv(items);
 	do {
 		int normal = 0, equip = 0, k = 0;
 
@@ -2887,10 +2930,10 @@ static void clif_storagelist(struct map_session_data *sd, struct item *items, in
 		}
 
 		if( normal ) {
-			storelist_normal.PacketType   = storagelistnormalType;
+			storelist_normal.PacketType   = storageListNormalType;
 			storelist_normal.PacketLength =  ( sizeof( storelist_normal ) - sizeof( storelist_normal.list ) ) + (sizeof(struct NORMALITEM_INFO) * normal);
 
-#if PACKETVER >= 20120925
+#if PACKETVER >= 20120925 && PACKETVER_RE_NUM < 20180829
 			safestrncpy(storelist_normal.name, "Storage", NAME_LENGTH);
 #endif
 
@@ -2898,10 +2941,10 @@ static void clif_storagelist(struct map_session_data *sd, struct item *items, in
 		}
 
 		if( equip ) {
-			storelist_equip.PacketType   = storagelistequipType;
+			storelist_equip.PacketType   = storageListEquipType;
 			storelist_equip.PacketLength = ( sizeof( storelist_equip ) - sizeof( storelist_equip.list ) ) + (sizeof(struct EQUIPITEM_INFO) * equip);
 
-#if PACKETVER >= 20120925
+#if PACKETVER >= 20120925 && PACKETVER_RE_NUM < 20180829
 			safestrncpy(storelist_equip.name, "Storage", NAME_LENGTH);
 #endif
 
@@ -8825,8 +8868,8 @@ static void clif_refresh_storagewindow(struct map_session_data *sd)
 	if (sd->state.storage_flag == STORAGE_FLAG_NORMAL) {
 		if (sd->storage.aggregate > 0) {
 			storage->sortitem(VECTOR_DATA(sd->storage.item), VECTOR_LENGTH(sd->storage.item));
-			clif->storagelist(sd, VECTOR_DATA(sd->storage.item), VECTOR_LENGTH(sd->storage.item));
 		}
+		clif->storageList(sd, VECTOR_DATA(sd->storage.item), VECTOR_LENGTH(sd->storage.item));
 		clif->updatestorageamount(sd, sd->storage.aggregate, MAX_STORAGE);
 	}
 	// Notify the client that the gstorage is open otherwise it will
@@ -8838,7 +8881,7 @@ static void clif_refresh_storagewindow(struct map_session_data *sd)
 			intif->request_guild_storage(sd->status.account_id,sd->status.guild_id);
 		} else {
 			storage->sortitem(gstor->items, ARRAYLENGTH(gstor->items));
-			clif->storagelist(sd, gstor->items, ARRAYLENGTH(gstor->items));
+			clif->guildStorageList(sd, gstor->items, ARRAYLENGTH(gstor->items));
 			clif->updatestorageamount(sd, gstor->storage_amount, MAX_GUILD_STORAGE);
 		}
 	}
@@ -22355,7 +22398,11 @@ void clif_defaults(void)
 	clif->openvendingAck = clif_openvendingAck;
 	clif->vendingreport = clif_vendingreport;
 	/* storage handling */
-	clif->storagelist = clif_storagelist;
+	clif->storageList = clif_storageList;
+	clif->guildStorageList = clif_guildStorageList;
+	clif->storageItems = clif_storageItems;
+	clif->storageStart = clif_storageStart;
+	clif->storageEnd = clif_storageEnd;
 	clif->updatestorageamount = clif_updatestorageamount;
 	clif->storageitemadded = clif_storageitemadded;
 	clif->storageitemremoved = clif_storageitemremoved;
