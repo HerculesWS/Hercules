@@ -9,6 +9,11 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+## [v2018.08.26+1] `August 29 2018`
+
+### Fixed
+- Fixed a bug which prevented the script engine from updating params. (#2200, e554c1c9c)
+
 ## [v2018.08.26] `August 26 2018`
 
 ### Added
@@ -400,6 +405,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2018.08.26+1]: https://github.com/HerculesWS/Hercules/compare/v2018.08.26...v2018.08.26+1
 [v2018.08.26]: https://github.com/HerculesWS/Hercules/compare/v2018.07.29+2...v2018.08.26
 [v2018.07.29+2]: https://github.com/HerculesWS/Hercules/compare/v2018.07.29+1...v2018.07.29+2
 [v2018.07.29+1]: https://github.com/HerculesWS/Hercules/compare/v2018.07.29...v2018.07.29+1
