@@ -3480,7 +3480,7 @@ static int set_reg(struct script_state *st, struct map_session_data *sd, int64 n
 	nullpo_ret(name);
 	prefix = name[0];
 
-	if (script->str_data[script_getvarid(num)].type != C_NAME) {
+	if (script->str_data[script_getvarid(num)].type != C_NAME && script->str_data[script_getvarid(num)].type != C_PARAM) {
 		ShowError("script:set_reg: not a variable! '%s'\n", name);
 
 		// to avoid this don't do script->add_str(") without setting its type.
