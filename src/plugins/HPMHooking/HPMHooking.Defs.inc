@@ -6352,8 +6352,8 @@ typedef int (*HPMHOOK_pre_pet_skill_support_timer) (int *tid, int64 *tick, int *
 typedef int (*HPMHOOK_post_pet_skill_support_timer) (int retVal___, int tid, int64 tick, int id, intptr_t data);
 typedef void (*HPMHOOK_pre_pet_read_db) (void);
 typedef void (*HPMHOOK_post_pet_read_db) (void);
-typedef int (*HPMHOOK_pre_pet_read_db_libconfig) (const char **filename, bool *ignore_missing);
-typedef int (*HPMHOOK_post_pet_read_db_libconfig) (int retVal___, const char *filename, bool ignore_missing);
+typedef int (*HPMHOOK_pre_pet_read_db_libconfig) (const char **filename, bool *ignore_missing, int *count);
+typedef int (*HPMHOOK_post_pet_read_db_libconfig) (int retVal___, const char *filename, bool ignore_missing, int count);
 typedef int (*HPMHOOK_pre_pet_read_db_sub) (struct config_setting_t **it, int *n, const char **source);
 typedef int (*HPMHOOK_post_pet_read_db_sub) (int retVal___, struct config_setting_t *it, int n, const char *source);
 typedef bool (*HPMHOOK_pre_pet_read_db_sub_intimacy) (int *idx, struct config_setting_t **t);

@@ -65482,15 +65482,15 @@ void HP_pet_read_db(void) {
 	}
 	return;
 }
-int HP_pet_read_db_libconfig(const char *filename, bool ignore_missing) {
+int HP_pet_read_db_libconfig(const char *filename, bool ignore_missing, int count) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_pet_read_db_libconfig_pre > 0) {
-		int (*preHookFunc) (const char **filename, bool *ignore_missing);
+		int (*preHookFunc) (const char **filename, bool *ignore_missing, int *count);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pet_read_db_libconfig_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_pet_read_db_libconfig_pre[hIndex].func;
-			retVal___ = preHookFunc(&filename, &ignore_missing);
+			retVal___ = preHookFunc(&filename, &ignore_missing, &count);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -65498,13 +65498,13 @@ int HP_pet_read_db_libconfig(const char *filename, bool ignore_missing) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.pet.read_db_libconfig(filename, ignore_missing);
+		retVal___ = HPMHooks.source.pet.read_db_libconfig(filename, ignore_missing, count);
 	}
 	if (HPMHooks.count.HP_pet_read_db_libconfig_post > 0) {
-		int (*postHookFunc) (int retVal___, const char *filename, bool ignore_missing);
+		int (*postHookFunc) (int retVal___, const char *filename, bool ignore_missing, int count);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pet_read_db_libconfig_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_pet_read_db_libconfig_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, filename, ignore_missing);
+			retVal___ = postHookFunc(retVal___, filename, ignore_missing, count);
 		}
 	}
 	return retVal___;
