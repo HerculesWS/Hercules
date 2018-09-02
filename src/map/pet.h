@@ -185,7 +185,7 @@ struct pet_interface {
 	int (*skill_support_timer) (int tid, int64 tick, int id, intptr_t data);
 
 	void (*read_db) (void);
-	int (*read_db_libconfig) (const char *filename, bool ignore_missing);
+	int (*read_db_libconfig) (const char *filename, bool ignore_missing, int count);
 	int (*read_db_sub) (struct config_setting_t *it, int n, const char *source);
 	bool (*read_db_sub_intimacy) (int idx, struct config_setting_t *t);
 	void (*read_db_clear) (void);
