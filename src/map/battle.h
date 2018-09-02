@@ -570,6 +570,8 @@ struct Battle_Config {
 
 	int feature_enable_attendance_system;
 	int feature_attendance_endtime;
+
+	int min_item_buy_price, min_item_sell_price;
 };
 
 /* criteria for battle_config.idletime_critera */

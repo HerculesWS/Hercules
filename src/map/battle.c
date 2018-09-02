@@ -7371,6 +7371,8 @@ static const struct battle_data {
 	{ "storage_use_item",                   &battle_config.storage_use_item,                0,      0,      1,              },
 	{ "features/enable_attendance_system",  &battle_config.feature_enable_attendance_system,1,      0,      1,              },
 	{ "features/feature_attendance_endtime",&battle_config.feature_attendance_endtime,      1,      0,      99999999,       },
+	{ "min_item_buy_price",                 &battle_config.min_item_buy_price,              1,      0,      INT_MAX,        },
+	{ "min_item_sell_price",                &battle_config.min_item_sell_price,             1,      0,      INT_MAX,        },
 };
 
 static bool battle_set_value_sub(int index, int value)
