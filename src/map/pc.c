@@ -4402,8 +4402,6 @@ static int pc_insert_card(struct map_session_data *sd, int idx_card, int idx_equ
 static int pc_modifybuyvalue(struct map_session_data *sd, int orig_value)
 {
 	int skill_lv, rate1 = 0, rate2 = 0;
-	if (orig_value <= 0)
-		return 0;
 	if ((skill_lv=pc->checkskill(sd,MC_DISCOUNT)) > 0)   // merchant discount
 		rate1 = 5+skill_lv*2-((skill_lv==10)? 1:0);
 	if ((skill_lv=pc->checkskill(sd,RG_COMPULSION)) > 0) // rogue discount
@@ -4412,8 +4410,9 @@ static int pc_modifybuyvalue(struct map_session_data *sd, int orig_value)
 		rate1 = rate2;
 	if (rate1 != 0)
 		orig_value = apply_percentrate(orig_value, 100-rate1, 100);
-	if (orig_value < 1)
-		orig_value = 1;
+
+	if (orig_value < battle_config.min_item_buy_price)
+		orig_value = battle_config.min_item_buy_price;
 	return orig_value;
 }
 
@@ -4423,14 +4422,13 @@ static int pc_modifybuyvalue(struct map_session_data *sd, int orig_value)
 static int pc_modifysellvalue(struct map_session_data *sd, int orig_value)
 {
 	int skill_lv, rate = 0;
-	if (orig_value <= 0)
-		return 0;
 	if ((skill_lv=pc->checkskill(sd,MC_OVERCHARGE)) > 0) //OverCharge
 		rate = 5+skill_lv*2-((skill_lv==10)? 1:0);
 	if (rate != 0)
 		orig_value = apply_percentrate(orig_value, 100+rate, 100);
-	if (orig_value < 1)
-		orig_value = 1;
+
+	if (orig_value < battle_config.min_item_sell_price)
+		orig_value = battle_config.min_item_sell_price;
 	return orig_value;
 }
 
