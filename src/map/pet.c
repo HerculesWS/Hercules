@@ -1254,23 +1254,23 @@ static void pet_read_db(void)
 		DBPATH"pet_db.conf",
 		"pet_db2.conf"
 	};
-	int i;
+	int i, count = 0;
 
 	pet->read_db_clear();
 
 	for (i = 0; i < ARRAYLENGTH(filename); ++i) {
-		pet->read_db_libconfig(filename[i], i > 0 ? true : false);
+		count = pet->read_db_libconfig(filename[i], i > 0 ? true : false, count);
 	}
 }
 
-static int pet_read_db_libconfig(const char *filename, bool ignore_missing)
+static int pet_read_db_libconfig(const char *filename, bool ignore_missing, int count)
 {
 	struct config_t pet_db_conf;
 	struct config_setting_t *pdb;
 	struct config_setting_t *t;
 	char filepath[256];
 	bool duplicate[MAX_MOB_DB] = { 0 };
-	int i = 0, count = 0;
+	int i = 0;
 
 	nullpo_ret(filename);
 
@@ -1292,7 +1292,7 @@ static int pet_read_db_libconfig(const char *filename, bool ignore_missing)
 	}
 
 	while ((t = libconfig->setting_get_elem(pdb, i++))) {
-		int pet_id = pet->read_db_sub(t, i - 1, filename);
+		int pet_id = pet->read_db_sub(t, count, filename);
 
 		if (pet_id <= 0 || pet_id >= MAX_MOB_DB)
 			continue;
