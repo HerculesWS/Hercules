@@ -443,7 +443,9 @@ static struct guild *inter_guild_fromsql(int guild_id)
 		if( m->position >= MAX_GUILDPOSITION ) // Fix reduction of MAX_GUILDPOSITION [PoW]
 			m->position = MAX_GUILDPOSITION - 1;
 		SQL->GetData(inter->sql_handle, 11, &data, &len); memcpy(m->name, data, min(len, NAME_LENGTH));
-		SQL->GetData(inter->sql_handle, 12, &data, NULL); m->last_login = atoi(data);
+		SQL->GetData(inter->sql_handle, 12, &data, NULL);
+		if (data != NULL)
+			m->last_login = atoi(data);
 		m->modified = GS_MEMBER_UNMODIFIED;
 	}
 
