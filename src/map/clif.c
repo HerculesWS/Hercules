@@ -2641,7 +2641,7 @@ static void clif_item_movefailed(struct map_session_data *sd, int n)
 	WFIFOHEAD(fd, len);
 	struct PACKET_ZC_INVENTORY_MOVE_FAILED *p = WFIFOP(fd, 0);
 	p->packetType = 0xaa7;
-	p->index = n;
+	p->index = n + 2;
 	p->unknown = 1;
 	WFIFOSET(fd, len);
 #else
@@ -11131,7 +11131,7 @@ static void clif_parse_DropItem(int fd, struct map_session_data *sd)
 	}
 
 	//Because the client does not like being ignored.
-	clif->item_movefailed(sd, item_index);
+	clif->dropitem(sd, item_index, 0);
 }
 
 static void clif_parse_UseItem(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
