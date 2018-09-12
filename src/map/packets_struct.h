@@ -198,7 +198,9 @@ enum packet_headers {
 #else
 	dropflooritemType = 0x9e,
 #endif
-#if PACKETVER >= 20120925
+#if PACKETVER_RE_NUM >= 20180912
+	inventorylistnormalType = 0xb09,
+#elif PACKETVER >= 20120925
 	inventorylistnormalType = 0x991,
 #elif PACKETVER >= 20080102
 	inventorylistnormalType = 0x2e8,
@@ -207,7 +209,9 @@ enum packet_headers {
 #else
 	inventorylistnormalType = 0xa3,
 #endif
-#if PACKETVER >= 20150226
+#if PACKETVER_RE_NUM >= 20180912
+	inventorylistequipType = 0xb0a,
+#elif PACKETVER >= 20150226
 	inventorylistequipType = 0xa0d,
 #elif PACKETVER >= 20120925
 	inventorylistequipType = 0x992,
@@ -1166,12 +1170,18 @@ struct packet_roulette_itemrecv_ack {
 struct packet_itemlist_normal {
 	int16 PacketType;
 	int16 PacketLength;
+#if PACKETVER_RE_NUM >= 20180912
+	uint8 invType;
+#endif
 	struct NORMALITEM_INFO list[MAX_ITEMLIST];
 } __attribute__((packed));
 
 struct packet_itemlist_equip {
 	int16 PacketType;
 	int16 PacketLength;
+#if PACKETVER_RE_NUM >= 20180912
+	uint8 invType;
+#endif
 	struct EQUIPITEM_INFO list[MAX_ITEMLIST];
 } __attribute__((packed));
 

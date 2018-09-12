@@ -837,8 +837,10 @@ struct clif_interface {
 	void (*combo_delay) (struct block_list *bl,int wait);
 	void (*status_change) (struct block_list *bl,int type,int flag,int tick,int val1, int val2, int val3);
 	void (*insert_card) (struct map_session_data *sd,int idx_equip,int idx_card,int flag);
-	void (*inventorylist) (struct map_session_data *sd);
-	void (*equiplist) (struct map_session_data *sd);
+	void (*inventoryList) (struct map_session_data *sd);
+	void (*inventoryItems) (struct map_session_data *sd, enum inventory_type type);
+	void (*equipList) (struct map_session_data *sd);
+	void (*equipItems) (struct map_session_data *sd, enum inventory_type type);
 	void (*cartlist) (struct map_session_data *sd);
 	void (*favorite_item) (struct map_session_data* sd, unsigned short index);
 	void (*clearcart) (int fd);

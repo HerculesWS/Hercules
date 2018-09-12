@@ -2787,7 +2787,18 @@ static void clif_item_normal(short idx, struct NORMALITEM_INFO *p, struct item *
 #endif
 }
 
-static void clif_inventorylist(struct map_session_data *sd)
+static void clif_inventoryList(struct map_session_data *sd)
+{
+#if PACKETVER_RE_NUM >= 20180912
+	clif->inventoryStart(sd, INVTYPE_INVENTORY, "");
+#endif
+	clif->inventoryItems(sd, INVTYPE_INVENTORY);
+#if PACKETVER_RE_NUM >= 20180912
+	clif->inventoryEnd(sd, INVTYPE_INVENTORY);
+#endif
+}
+
+static void clif_inventoryItems(struct map_session_data *sd, enum inventory_type type)
 {
 	int i, normal = 0, equip = 0;
 
@@ -2802,9 +2813,12 @@ static void clif_inventorylist(struct map_session_data *sd)
 			clif->item_normal(i+2,&itemlist_normal.list[normal++],&sd->status.inventory[i],sd->inventory_data[i]);
 	}
 
-	if( normal ) {
-		itemlist_normal.PacketType   = inventorylistnormalType;
-		itemlist_normal.PacketLength = 4 + (sizeof(struct NORMALITEM_INFO) * normal);
+	if (normal) {
+		itemlist_normal.PacketType = inventorylistnormalType;
+		itemlist_normal.PacketLength = (sizeof(itemlist_normal) - sizeof(itemlist_normal.list)) + (sizeof(struct NORMALITEM_INFO) * normal);
+#if PACKETVER_RE_NUM >= 20180912
+		itemlist_normal.invType = type;
+#endif
 
 		clif->send(&itemlist_normal, itemlist_normal.PacketLength, &sd->bl, SELF);
 	}
@@ -2814,7 +2828,10 @@ static void clif_inventorylist(struct map_session_data *sd)
 
 	if( equip ) {
 		itemlist_equip.PacketType  = inventorylistequipType;
-		itemlist_equip.PacketLength = 4 + (sizeof(struct EQUIPITEM_INFO) * equip);
+		itemlist_equip.PacketLength = (sizeof(itemlist_equip) - sizeof(itemlist_equip.list)) + (sizeof(struct EQUIPITEM_INFO) * equip);
+#if PACKETVER_RE_NUM >= 20180912
+		itemlist_equip.invType = type;
+#endif
 
 		clif->send(&itemlist_equip, itemlist_equip.PacketLength, &sd->bl, SELF);
 	}
@@ -2830,8 +2847,20 @@ static void clif_inventorylist(struct map_session_data *sd)
 #endif
 }
 
+static void clif_equipList(struct map_session_data *sd)
+{
+#if PACKETVER_RE_NUM >= 20180912
+	clif->inventoryStart(sd, INVTYPE_INVENTORY, "");
+	clif->inventoryItems(sd, INVTYPE_INVENTORY);
+	clif->inventoryEnd(sd, INVTYPE_INVENTORY);
+#else
+	// [4144] for old packet version it send only equipment. this is bug?
+	clif->equipItems(sd, INVTYPE_INVENTORY);
+#endif
+}
+
 //Required when items break/get-repaired. Only sends equippable item list.
-static void clif_equiplist(struct map_session_data *sd)
+static void clif_equipItems(struct map_session_data *sd, enum inventory_type type)
 {
 	int i, equip = 0;
 
@@ -2844,9 +2873,12 @@ static void clif_equiplist(struct map_session_data *sd)
 			clif->item_equip(i+2,&itemlist_equip.list[equip++],&sd->status.inventory[i],sd->inventory_data[i],pc->equippoint(sd,i));
 	}
 
-	if( equip ) {
-		itemlist_equip.PacketType  = inventorylistequipType;
-		itemlist_equip.PacketLength = 4 + (sizeof(struct EQUIPITEM_INFO) * equip);
+	if (equip) {
+		itemlist_equip.PacketType = inventorylistequipType;
+		itemlist_equip.PacketLength = (sizeof(itemlist_equip) - sizeof(itemlist_equip.list)) + (sizeof(struct EQUIPITEM_INFO) * equip);
+#if PACKETVER_RE_NUM >= 20180912
+		itemlist_equip.invType = type;
+#endif
 
 		clif->send(&itemlist_equip, itemlist_equip.PacketLength, &sd->bl, SELF);
 	}
@@ -8905,7 +8937,7 @@ static void clif_refresh(struct map_session_data *sd)
 	nullpo_retv(sd);
 
 	clif->changemap(sd,sd->bl.m,sd->bl.x,sd->bl.y);
-	clif->inventorylist(sd);
+	clif->inventoryList(sd);
 	if(pc_iscarton(sd)) {
 		clif->cartlist(sd);
 		clif->updatestatus(sd,SP_CARTINFO);
@@ -9939,7 +9971,7 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 
 	// Send character inventory to the client.
 	// call this before pc->checkitem() so that the client isn't called to delete a non-existent item.
-	clif->inventorylist(sd);
+	clif->inventoryList(sd);
 
 	// Send the cart inventory, counts & weight to the client.
 	if(pc_iscarton(sd)) {
@@ -22252,8 +22284,10 @@ void clif_defaults(void)
 	clif->combo_delay = clif_combo_delay;
 	clif->status_change = clif_status_change;
 	clif->insert_card = clif_insert_card;
-	clif->inventorylist = clif_inventorylist;
-	clif->equiplist = clif_equiplist;
+	clif->inventoryList = clif_inventoryList;
+	clif->inventoryItems = clif_inventoryItems;
+	clif->equipList = clif_equipList;
+	clif->equipItems = clif_equipItems;
 	clif->cartlist = clif_cartlist;
 	clif->favorite_item = clif_favorite_item;
 	clif->clearcart = clif_clearcart;
