@@ -4276,10 +4276,10 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0b05,59);
 	packet(0x0b06,53,clif->pDull/*,XXX*/);
 	packet(0x0b07,-1);
-	packet(0x0b08,26); // ZC_STORE_START
+	packet(0x0b08,26); // ZC_INVENTORY_START
 	packet(0x0b09,-1); // ZC_STORE_ITEMLIST_NORMAL_V6
 	packet(0x0b0a,-1); // ZC_STORE_ITEMLIST_EQUIP_V6
-	packet(0x0b0b,3); // ZC_STORE_END
+	packet(0x0b0b,3); // ZC_INVENTORY_END
 	packet(0x0b0c,155,clif->pDull/*,XXX*/);
 // changed packet sizes
 #endif
@@ -4290,10 +4290,10 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0b05,63);
 	packet(0x0b06,53,clif->pDull/*,XXX*/);
 	packet(0x0b07,-1);
-	packet(0x0b08,26); // ZC_STORE_START
+	packet(0x0b08,26); // ZC_INVENTORY_START
 	packet(0x0b09,-1); // ZC_STORE_ITEMLIST_NORMAL_V6
 	packet(0x0b0a,-1); // ZC_STORE_ITEMLIST_EQUIP_V6
-	packet(0x0b0b,3); // ZC_STORE_END
+	packet(0x0b0b,3); // ZC_INVENTORY_END
 	packet(0x0b0c,155,clif->pDull/*,XXX*/);
 // changed packet sizes
 #endif
@@ -4303,8 +4303,8 @@ packet(0x96e,-1,clif->ackmergeitems);
 // new packets
 	packet(0x0b0d,6,clif->pDull/*,XXX*/);
 // changed packet sizes
-	packet(0x0b08,27); // ZC_STORE_START
-	packet(0x0b0b,4); // ZC_STORE_END
+	packet(0x0b08,27); // ZC_INVENTORY_START
+	packet(0x0b0b,4); // ZC_INVENTORY_END
 #endif
 
 #ifndef PACKETVER_ZERO
@@ -4315,8 +4315,8 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0b0e,-1,clif->pDull/*,XXX*/);
 	packet(0x0b0f,-1,clif->pDull/*,XXX*/);
 // changed packet sizes
-	packet(0x0b08,27,clif->pDull/*,XXX*/); // ZC_STORE_START
-	packet(0x0b0b,4,clif->pDull/*,XXX*/); // ZC_STORE_END
+	packet(0x0b08,27,clif->pDull/*,XXX*/); // ZC_INVENTORY_START
+	packet(0x0b0b,4,clif->pDull/*,XXX*/); // ZC_INVENTORY_END
 #endif
 #endif
 

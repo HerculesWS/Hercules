@@ -612,6 +612,16 @@ enum pet_evolution_result {
 };
 
 /**
+ * Inventory type for clients 2018-09-12 RE +
+ **/
+enum inventory_type {
+	INVTYPE_INVENTORY = 0,
+	INVTYPE_CART = 1,
+	INVTYPE_STORAGE = 2,
+	INVTYPE_GUILD_STORAGE = 3,
+};
+
+/**
  * Structures
  **/
 typedef void (*pFunc)(int, struct map_session_data *); //cant help but put it first
@@ -988,9 +998,9 @@ struct clif_interface {
 	/* storage handling */
 	void (*storageList) (struct map_session_data* sd, struct item* items, int items_length);
 	void (*guildStorageList) (struct map_session_data* sd, struct item* items, int items_length);
-	void (*storageItems) (struct map_session_data* sd, struct item* items, int items_length);
-	void (*storageStart) (struct map_session_data* sd, const char* name);
-	void (*storageEnd) (struct map_session_data* sd);
+	void (*storageItems) (struct map_session_data* sd, enum inventory_type type, struct item* items, int items_length);
+	void (*inventoryStart) (struct map_session_data* sd, enum inventory_type type, const char* name);
+	void (*inventoryEnd) (struct map_session_data* sd, enum inventory_type type);
 	void (*updatestorageamount) (struct map_session_data* sd, int amount, int max_amount);
 	void (*storageitemadded) (struct map_session_data* sd, struct item* i, int index, int amount);
 	void (*storageitemremoved) (struct map_session_data* sd, int index, int amount);

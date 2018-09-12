@@ -2867,45 +2867,51 @@ static void clif_storageList(struct map_session_data *sd, struct item *items, in
 {
 	nullpo_retv(sd);
 
-	clif->storageStart(sd, "Storage");
+	clif->inventoryStart(sd, INVTYPE_STORAGE, "Storage");
 	if (sd->storage.aggregate > 0)
-		clif->storageItems(sd, items, items_length);
-	clif->storageEnd(sd);
+		clif->storageItems(sd, INVTYPE_STORAGE, items, items_length);
+	clif->inventoryEnd(sd, INVTYPE_STORAGE);
 }
 
 static void clif_guildStorageList(struct map_session_data *sd, struct item *items, int items_length)
 {
-	clif->storageStart(sd, "Guild storage");
-	clif->storageItems(sd, items, items_length);
-	clif->storageEnd(sd);
+	clif->inventoryStart(sd, INVTYPE_GUILD_STORAGE, "Guild storage");
+	clif->storageItems(sd, INVTYPE_GUILD_STORAGE, items, items_length);
+	clif->inventoryEnd(sd, INVTYPE_GUILD_STORAGE);
 }
 
-static void clif_storageStart(struct map_session_data *sd, const char *name)
+static void clif_inventoryStart(struct map_session_data *sd, enum inventory_type type, const char *name)
 {
 #if PACKETVER_RE_NUM >= 20180829
 	nullpo_retv(sd);
 	nullpo_retv(name);
 
-	struct ZC_STORE_START p;
+	struct ZC_INVENTORY_START p;
 	p.packetType = 0xb08;
+#if PACKETVER_RE_NUM >= 20180912
+	p.invType = type;
+#endif
 	safestrncpy(p.name, name, NAME_LENGTH);
 	clif->send(&p, sizeof(p), &sd->bl, SELF);
 #endif
 }
 
-static void clif_storageEnd(struct map_session_data *sd)
+static void clif_inventoryEnd(struct map_session_data *sd, enum inventory_type type)
 {
 #if PACKETVER_RE_NUM >= 20180829
 	nullpo_retv(sd);
 
-	struct ZC_STORE_END p;
+	struct ZC_INVENTORY_END p;
 	p.packetType = 0xb0b;
+#if PACKETVER_RE_NUM >= 20180912
+	p.invType = type;
+#endif
 	p.flag = 0;
 	clif->send(&p, sizeof(p), &sd->bl, SELF);
 #endif
 }
 
-static void clif_storageItems(struct map_session_data *sd, struct item *items, int items_length)
+static void clif_storageItems(struct map_session_data *sd, enum inventory_type type, struct item *items, int items_length)
 {
 	nullpo_retv(sd);
 	nullpo_retv(items);
@@ -2933,6 +2939,9 @@ static void clif_storageItems(struct map_session_data *sd, struct item *items, i
 			storelist_normal.PacketType   = storageListNormalType;
 			storelist_normal.PacketLength =  ( sizeof( storelist_normal ) - sizeof( storelist_normal.list ) ) + (sizeof(struct NORMALITEM_INFO) * normal);
 
+#if PACKETVER_RE_NUM >= 20180912
+			storelist_normal.invType = type;
+#endif
 #if PACKETVER >= 20120925 && PACKETVER_RE_NUM < 20180829
 			safestrncpy(storelist_normal.name, "Storage", NAME_LENGTH);
 #endif
@@ -2944,6 +2953,9 @@ static void clif_storageItems(struct map_session_data *sd, struct item *items, i
 			storelist_equip.PacketType   = storageListEquipType;
 			storelist_equip.PacketLength = ( sizeof( storelist_equip ) - sizeof( storelist_equip.list ) ) + (sizeof(struct EQUIPITEM_INFO) * equip);
 
+#if PACKETVER_RE_NUM >= 20180912
+			storelist_equip.invType = type;
+#endif
 #if PACKETVER >= 20120925 && PACKETVER_RE_NUM < 20180829
 			safestrncpy(storelist_equip.name, "Storage", NAME_LENGTH);
 #endif
@@ -22401,8 +22413,8 @@ void clif_defaults(void)
 	clif->storageList = clif_storageList;
 	clif->guildStorageList = clif_guildStorageList;
 	clif->storageItems = clif_storageItems;
-	clif->storageStart = clif_storageStart;
-	clif->storageEnd = clif_storageEnd;
+	clif->inventoryStart = clif_inventoryStart;
+	clif->inventoryEnd = clif_inventoryEnd;
 	clif->updatestorageamount = clif_updatestorageamount;
 	clif->storageitemadded = clif_storageitemadded;
 	clif->storageitemremoved = clif_storageitemremoved;

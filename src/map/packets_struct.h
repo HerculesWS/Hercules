@@ -1178,25 +1178,37 @@ struct packet_itemlist_equip {
 struct ZC_STORE_ITEMLIST_NORMAL {
 	int16 PacketType;
 	int16 PacketLength;
+#if PACKETVER_RE_NUM >= 20180912
+	uint8 invType;
+#endif
 #if PACKETVER >= 20120925 && PACKETVER_RE_NUM < 20180829
 	char name[NAME_LENGTH];
 #endif
 	struct NORMALITEM_INFO list[MAX_ITEMLIST];
 } __attribute__((packed));
 
-struct ZC_STORE_START {
+struct ZC_INVENTORY_START {
 	int16 packetType;
+#if PACKETVER_RE_NUM >= 20180912
+	uint8 invType;
+#endif
 	char name[NAME_LENGTH];
 } __attribute__((packed));
 
-struct ZC_STORE_END {
+struct ZC_INVENTORY_END {
 	int16 packetType;
+#if PACKETVER_RE_NUM >= 20180912
+	uint8 invType;
+#endif
 	char flag;
 } __attribute__((packed));
 
 struct ZC_STORE_ITEMLIST_EQUIP {
 	int16 PacketType;
 	int16 PacketLength;
+#if PACKETVER_RE_NUM >= 20180912
+	uint8 invType;
+#endif
 #if PACKETVER >= 20120925 && PACKETVER_RE_NUM < 20180829
 	char name[NAME_LENGTH];
 #endif
