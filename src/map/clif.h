@@ -841,7 +841,8 @@ struct clif_interface {
 	void (*inventoryItems) (struct map_session_data *sd, enum inventory_type type);
 	void (*equipList) (struct map_session_data *sd);
 	void (*equipItems) (struct map_session_data *sd, enum inventory_type type);
-	void (*cartlist) (struct map_session_data *sd);
+	void (*cartList) (struct map_session_data *sd);
+	void (*cartItems) (struct map_session_data *sd, enum inventory_type type);
 	void (*favorite_item) (struct map_session_data* sd, unsigned short index);
 	void (*clearcart) (int fd);
 	void (*item_identify_list) (struct map_session_data *sd);

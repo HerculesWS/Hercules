@@ -2999,7 +2999,18 @@ static void clif_storageItems(struct map_session_data *sd, enum inventory_type t
 
 }
 
-static void clif_cartlist(struct map_session_data *sd)
+static void clif_cartList(struct map_session_data *sd)
+{
+#if PACKETVER_RE_NUM >= 20180912
+	clif->inventoryStart(sd, INVTYPE_CART, "");
+#endif
+	clif->cartItems(sd, INVTYPE_CART);
+#if PACKETVER_RE_NUM >= 20180912
+	clif->inventoryEnd(sd, INVTYPE_CART);
+#endif
+}
+
+static void clif_cartItems(struct map_session_data *sd, enum inventory_type type)
 {
 	int i, normal = 0, equip = 0;
 	struct item_data *id;
@@ -3017,16 +3028,22 @@ static void clif_cartlist(struct map_session_data *sd)
 			clif->item_normal(i+2,&itemlist_normal.list[normal++],&sd->status.cart[i],id);
 	}
 
-	if( normal ) {
-		itemlist_normal.PacketType   = cartlistnormalType;
-		itemlist_normal.PacketLength = 4 + (sizeof(struct NORMALITEM_INFO) * normal);
+	if (normal) {
+		itemlist_normal.PacketType = cartlistnormalType;
+		itemlist_normal.PacketLength = (sizeof(itemlist_normal) - sizeof(itemlist_normal.list)) + (sizeof(struct NORMALITEM_INFO) * normal);
+#if PACKETVER_RE_NUM >= 20180912
+		itemlist_normal.invType = type;
+#endif
 
 		clif->send(&itemlist_normal, itemlist_normal.PacketLength, &sd->bl, SELF);
 	}
 
-	if( equip ) {
-		itemlist_equip.PacketType  = cartlistequipType;
-		itemlist_equip.PacketLength = 4 + (sizeof(struct EQUIPITEM_INFO) * equip);
+	if (equip) {
+		itemlist_equip.PacketType = cartlistequipType;
+		itemlist_equip.PacketLength = (sizeof(itemlist_equip) - sizeof(itemlist_equip.list)) + (sizeof(struct EQUIPITEM_INFO) * equip);
+#if PACKETVER_RE_NUM >= 20180912
+		itemlist_equip.invType = type;
+#endif
 
 		clif->send(&itemlist_equip, itemlist_equip.PacketLength, &sd->bl, SELF);
 	}
@@ -8939,7 +8956,7 @@ static void clif_refresh(struct map_session_data *sd)
 	clif->changemap(sd,sd->bl.m,sd->bl.x,sd->bl.y);
 	clif->inventoryList(sd);
 	if(pc_iscarton(sd)) {
-		clif->cartlist(sd);
+		clif->cartList(sd);
 		clif->updatestatus(sd,SP_CARTINFO);
 	}
 	clif->updatestatus(sd,SP_WEIGHT);
@@ -9975,7 +9992,7 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 
 	// Send the cart inventory, counts & weight to the client.
 	if(pc_iscarton(sd)) {
-		clif->cartlist(sd);
+		clif->cartList(sd);
 		clif->updatestatus(sd, SP_CARTINFO);
 	}
 
@@ -22288,7 +22305,8 @@ void clif_defaults(void)
 	clif->inventoryItems = clif_inventoryItems;
 	clif->equipList = clif_equipList;
 	clif->equipItems = clif_equipItems;
-	clif->cartlist = clif_cartlist;
+	clif->cartList = clif_cartList;
+	clif->cartItems = clif_cartItems;
 	clif->favorite_item = clif_favorite_item;
 	clif->clearcart = clif_clearcart;
 	clif->item_identify_list = clif_item_identify_list;

@@ -246,7 +246,9 @@ enum packet_headers {
 #else
 	storageListEquipType = 0xa6,
 #endif
-#if PACKETVER >= 20120925
+#if PACKETVER_RE_NUM >= 20180829
+	cartlistnormalType = 0xb09,
+#elif PACKETVER >= 20120925
 	cartlistnormalType = 0x993,
 #elif PACKETVER >= 20080102
 	cartlistnormalType = 0x2e9,
@@ -255,7 +257,9 @@ enum packet_headers {
 #else
 	cartlistnormalType = 0x123,
 #endif
-#if PACKETVER >= 20150226
+#if PACKETVER_RE_NUM >= 20180829
+	cartlistequipType = 0xb0a,
+#elif PACKETVER >= 20150226
 	cartlistequipType = 0xa0f,
 #elif PACKETVER >= 20120925
 	cartlistequipType = 0x994,
