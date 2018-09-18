@@ -887,7 +887,14 @@ static bool quest_questinfo_validate_quests(struct map_session_data *sd, struct 
 	
 	for (i = 0; i < VECTOR_LENGTH(qi->quest_requirement); i++) {
 		struct questinfo_qreq *quest_requirement = &VECTOR_INDEX(qi->quest_requirement, i);
-		if (quest->check(sd, quest_requirement->id, HAVEQUEST) != quest_requirement->state)
+		int quest_progress = quest->check(sd, quest_requirement->id, HAVEQUEST);
+		if (quest_progress == -1)
+			quest_progress = 0;
+		else if (quest_progress == 0 || quest_progress == 1)
+			quest_progress = 1;
+		else
+			quest_progress = 2;
+		if (quest_progress != quest_requirement->state)
 			return false;
 	}
 
