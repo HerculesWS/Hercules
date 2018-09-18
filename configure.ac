@@ -107,6 +107,389 @@ AC_ARG_ENABLE(
 	[enable_manager="builtin"]
 )
 
+#
+# sc_saving
+#
+AC_ARG_ENABLE(
+	[sc_saving],
+	AC_HELP_STRING(
+		[--enable-sc-saving]
+		[Sets or unsets the ENABLE_SC_SAVING define - see src/common/mmo.h]
+	),
+	[
+		enable_sc_saving="$enableval"
+		case $enableval in
+			"no");;
+			"yes");;
+			*) AC_MSG_ERROR([[invalid argument --enable-sc-saving=$enableval... stopping]]);;
+		esac
+	],
+	[enable_sc_saving="yes"]
+)
+
+#
+# max_inventory
+#
+AC_ARG_ENABLE(
+	[max_inventory],
+	AC_HELP_STRING(
+		[--enable-max-inventory=ARG],
+		[Sets the MAX_INVENTORY define. (see src/common/mmo.h)]
+	),
+	[enable_max_inventory="$enableval"],
+	[enable_max_inventory=""]
+)
+
+#
+# max_chars
+#
+AC_ARG_ENABLE(
+	[max_chars],
+	AC_HELP_STRING(
+		[--enable-max-chars=ARG],
+		[Sets the MAX_CHARS define. (see src/common/mmo.h)]
+	),
+	[enable_max_chars="$enableval"],
+	[enable_max_chars=""]
+)
+
+#
+# max_slots
+#
+AC_ARG_ENABLE(
+	[max_slots],
+	AC_HELP_STRING(
+		[--enable-max-slots=ARG],
+		[Sets the MAX_SLOTS define. (see src/common/mmo.h)]
+	),
+	[enable_max_slots="$enableval"],
+	[enable_max_slots=""]
+)
+
+#
+# max_amount
+#
+AC_ARG_ENABLE(
+	[max_amount],
+	AC_HELP_STRING(
+		[--enable-max-amount=ARG],
+		[Sets the MAX_AMOUNT define. (see src/common/mmo.h)]
+	),
+	[enable_max_amount="$enableval"],
+	[enable_max_amount=""]
+)
+
+#
+# max_zeny
+#
+AC_ARG_ENABLE(
+	[max_zeny],
+	AC_HELP_STRING(
+		[--enable-max-zeny=ARG],
+		[Sets the MAX_ZENY define. (see src/common/mmo.h)]
+	),
+	[enable_max_zeny="$enableval"],
+	[enable_max_zeny=""]
+)
+
+#
+# max_bank_zeny
+#
+AC_ARG_ENABLE(
+	[max_bank_zeny],
+	AC_HELP_STRING(
+		[--enable-max-bank-zeny=ARG],
+		[Sets the MAX_BANK_ZENY define. (see src/common/mmo.h)]
+	),
+	[enable_max_bank_zeny="$enableval"],
+	[enable_max_bank_zeny=""]
+)
+
+#
+# max_level
+#
+AC_ARG_ENABLE(
+	[max_level],
+	AC_HELP_STRING(
+		[--enable-max-level=ARG],
+		[Sets the MAX_LEVEL define. (see src/common/mmo.h)]
+	),
+	[enable_max_level="$enableval"],
+	[enable_max_level=""]
+)
+
+#
+# max_fame
+#
+AC_ARG_ENABLE(
+	[max_fame],
+	AC_HELP_STRING(
+		[--enable-max-fame=ARG],
+		[Sets the MAX_FAME define. (see src/common/mmo.h)]
+	),
+	[enable_max_fame="$enableval"],
+	[enable_max_fame=""]
+)
+
+#
+# max_cart
+#
+AC_ARG_ENABLE(
+	[max_cart],
+	AC_HELP_STRING(
+		[--enable-max-cart=ARG],
+		[Sets the MAX_CART define. (see src/common/mmo.h)]
+	),
+	[enable_max_cart="$enableval"],
+	[enable_max_cart=""]
+)
+
+#
+# max_skill_db
+#
+AC_ARG_ENABLE(
+	[max_skill_db],
+	AC_HELP_STRING(
+		[--enable-max-skill-db=ARG],
+		[Sets the MAX_SKILL_DB define. (see src/common/mmo.h)]
+	),
+	[enable_max_skill_db="$enableval"],
+	[enable_max_skill_db=""]
+)
+
+#
+# max_skill_id
+#
+AC_ARG_ENABLE(
+	[max_skill_id],
+	AC_HELP_STRING(
+		[--enable-max-skill-id=ARG],
+		[Sets the MAX_SKILL_ID define. (see src/common/mmo.h)]
+	),
+	[enable_max_skill_id="$enableval"],
+	[enable_max_skill_id=""]
+)
+
+#
+# max_skill_tree
+#
+AC_ARG_ENABLE(
+	[max_skill_tree],
+	AC_HELP_STRING(
+		[--enable-max-skill-tree=ARG],
+		[Sets the MAX_SKILL_TREE define. (see src/common/mmo.h)]
+	),
+	[enable_max_skill_tree="$enableval"],
+	[enable_max_skill_tree=""]
+)
+
+#
+# min_walk_speed
+#
+AC_ARG_ENABLE(
+	[min_walk_speed],
+	AC_HELP_STRING(
+		[--enable-min-walk-speed=ARG],
+		[Sets the MIN_WALK_SPEED define. (see src/common/mmo.h)]
+	),
+	[enable_min_walk_speed="$enableval"],
+	[enable_min_walk_speed=""]
+)
+
+#
+# max_walk_speed
+#
+AC_ARG_ENABLE(
+	[max_walk_speed],
+	AC_HELP_STRING(
+		[--enable-maxwalk-speed=ARG],
+		[Sets the MAX_WALK_SPEED define. (see src/common/mmo.h)]
+	),
+	[enable_max_walk_speed="$enableval"],
+	[enable_max_walk_speed=""]
+)
+
+#
+# default_walk_speed
+#
+AC_ARG_ENABLE(
+	[default_walk_speed],
+	AC_HELP_STRING(
+		[--enable-default-walk-speed=ARG],
+		[Sets the DEFAULT_WALK_SPEED define. (see src/common/mmo.h)]
+	),
+	[enable_default_walk_speed="$enableval"],
+	[enable_default_walk_speed=""]
+)
+
+#
+# max_storage
+#
+AC_ARG_ENABLE(
+	[max_storage],
+	AC_HELP_STRING(
+		[--enable-max-storage=ARG],
+		[Sets the MAX_STORAGE define. (see src/common/mmo.h)]
+	),
+	[enable_max_storage="$enableval"],
+	[enable_max_storage=""]
+)
+
+#
+# max_guild_storage
+#
+AC_ARG_ENABLE(
+	[max_guild_storage],
+	AC_HELP_STRING(
+		[--enable-max-storage=ARG],
+		[Sets the MAX_GUILD_STORAGE define. (see src/common/mmo.h)]
+	),
+	[enable_max_guild_storage="$enableval"],
+	[enable_max_guild_storage=""]
+)
+
+#
+# max_party
+#
+AC_ARG_ENABLE(
+	[max_party],
+	AC_HELP_STRING(
+		[--enable-max-party=ARG],
+		[Sets the MAX_PARTY define. (see src/common/mmo.h)]
+	),
+	[enable_max_party="$enableval"],
+	[enable_max_party=""]
+)
+
+#
+# base_guild_size
+#
+AC_ARG_ENABLE(
+	[base_guild_size],
+	AC_HELP_STRING(
+		[--enable-base-guild-size=ARG],
+		[Sets the BASE_GUILD_SIZE define. (see src/common/mmo.h)]
+	),
+	[enable_base_guild_size="$enableval"],
+	[enable_base_guild_size=""]
+)
+
+#
+# max_guild
+#
+AC_ARG_ENABLE(
+	[max_guild],
+	AC_HELP_STRING(
+		[--enable-max-guild=ARG],
+		[Sets the MAX_GUILD define. (see src/common/mmo.h)]
+	),
+	[enable_max_guild="$enableval"],
+	[enable_max_guild=""]
+)
+
+#
+# max_guildposition
+#
+AC_ARG_ENABLE(
+	[max_guildposition],
+	AC_HELP_STRING(
+		[--enable-max-guildposition=ARG],
+		[Sets the MAX_GUILDPOSITION define. (see src/common/mmo.h)]
+	),
+	[enable_max_guildposition="$enableval"],
+	[enable_max_guildposition=""]
+)
+
+#
+# max_guildexpulsion
+#
+AC_ARG_ENABLE(
+	[max_guildexpulsion],
+	AC_HELP_STRING(
+		[--enable-max-guildexpulsion=ARG],
+		[Sets the MAX_GUILDEXPULSION define. (see src/common/mmo.h)]
+	),
+	[enable_max_guildexpulsion="$enableval"],
+	[enable_max_guildexpulsion=""]
+)
+
+#
+# max_guildalliance
+#
+AC_ARG_ENABLE(
+	[max_guildalliance],
+	AC_HELP_STRING(
+		[--enable-max-guildalliance=ARG],
+		[Sets the MAX_GUILDALLIANCE define. (see src/common/mmo.h)]
+	),
+	[enable_max_guildalliance="$enableval"],
+	[enable_max_guildalliance=""]
+)
+
+#
+# max_guildlevel
+#
+AC_ARG_ENABLE(
+	[max_guildlevel],
+	AC_HELP_STRING(
+		[--enable-max-guildlevel=ARG],
+		[Sets the MAX_GUILDLEVEL define. (see src/common/mmo.h)]
+	),
+	[enable_max_guildlevel="$enableval"],
+	[enable_max_guildlevel=""]
+)
+
+#
+# max_guildskill
+#
+AC_ARG_ENABLE(
+	[max_guildskill],
+	AC_HELP_STRING(
+		[--enable-max-guildskill=ARG],
+		[Sets the MAX_GUILDSKILL define. (see src/common/mmo.h)]
+	),
+	[enable_max_guildskill="$enableval"],
+	[enable_max_guildskill=""]
+)
+
+#
+# max_guardians
+#
+AC_ARG_ENABLE(
+	[max_guardians],
+	AC_HELP_STRING(
+		[--enable-max-guardians=ARG],
+		[Sets the MAX_GUARDIANS define. (see src/common/mmo.h)]
+	),
+	[enable_max_guardians="$enableval"],
+	[enable_max_guardians=""]
+)
+
+#
+# max_quest_objectives
+#
+AC_ARG_ENABLE(
+	[max_quest_objectives],
+	AC_HELP_STRING(
+		[--enable-max-quest-objectives=ARG],
+		[Sets the MAX_QUEST_OBJECTIVES define. (see src/common/mmo.h)]
+	),
+	[enable_max_quest_objectives="$enableval"],
+	[enable_max_quest_objectives=""]
+)
+
+#
+# max_item_options
+#
+AC_ARG_ENABLE(
+	[max_item_options],
+	AC_HELP_STRING(
+		[--enable-max-item-options=ARG],
+		[Sets the MAX_ITEM_OPTIONS define. (see src/common/mmo.h)]
+	),
+	[enable_max_item_options="$enableval"],
+	[enable_max_item_options=""]
+)
 
 #
 # packetver
