@@ -107,6 +107,337 @@ AC_ARG_ENABLE(
 	[enable_manager="builtin"]
 )
 
+#
+# sc_saving
+#
+AC_ARG_ENABLE(
+	[sc_saving],
+	AC_HELP_STRING(
+		[--enable-sc-saving]
+		[Sets or unsets the ENABLE_SC_SAVING define - see src/common/mmo.h]
+	),
+	[
+		enable_sc_saving="$enableval"
+		case $enableval in
+			"no");;
+			"yes");;
+			*) AC_MSG_ERROR([[invalid argument --enable-sc-saving=$enableval... stopping]]);;
+		esac
+	],
+	[enable_sc_saving="yes"]
+)
+
+#
+# max_inventory
+#
+AC_ARG_ENABLE(
+	[max_inventory],
+	AC_HELP_STRING(
+		[--enable-max-inventory=ARG],
+		[Sets the MAX_INVENTORY define. (see src/common/mmo.h)]
+	),
+	[enable_max_inventory="$enableval"],
+	[enable_max_inventory=""]
+)
+
+#
+# max_chars
+#
+AC_ARG_ENABLE(
+	[max_chars],
+	AC_HELP_STRING(
+		[--enable-max-chars=ARG],
+		[Sets the MAX_CHARS define. (see src/common/mmo.h)]
+	),
+	[enable_max_chars="$enableval"],
+	[enable_max_chars=""]
+)
+
+#
+# max_zeny
+#
+AC_ARG_ENABLE(
+	[max_zeny],
+	AC_HELP_STRING(
+		[--enable-max-zeny=ARG],
+		[Sets the MAX_ZENY define. (see src/common/mmo.h)]
+	),
+	[enable_max_zeny="$enableval"],
+	[enable_max_zeny=""]
+)
+
+#
+# max_bank_zeny
+#
+AC_ARG_ENABLE(
+	[max_bank_zeny],
+	AC_HELP_STRING(
+		[--enable-max-bank-zeny=ARG],
+		[Sets the MAX_BANK_ZENY define. (see src/common/mmo.h)]
+	),
+	[enable_max_bank_zeny="$enableval"],
+	[enable_max_bank_zeny=""]
+)
+
+#
+# max_level
+#
+AC_ARG_ENABLE(
+	[max_level],
+	AC_HELP_STRING(
+		[--enable-max-level=ARG],
+		[Sets the MAX_LEVEL define. (see src/common/mmo.h)]
+	),
+	[enable_max_level="$enableval"],
+	[enable_max_level=""]
+)
+
+#
+# max_fame
+#
+AC_ARG_ENABLE(
+	[max_fame],
+	AC_HELP_STRING(
+		[--enable-max-fame=ARG],
+		[Sets the MAX_FAME define. (see src/common/mmo.h)]
+	),
+	[enable_max_fame="$enableval"],
+	[enable_max_fame=""]
+)
+
+#
+# max_cart
+#
+AC_ARG_ENABLE(
+	[max_cart],
+	AC_HELP_STRING(
+		[--enable-max-cart=ARG],
+		[Sets the MAX_CART define. (see src/common/mmo.h)]
+	),
+	[enable_max_cart="$enableval"],
+	[enable_max_cart=""]
+)
+
+#
+# max_skill_db
+#
+AC_ARG_ENABLE(
+	[max_skill_db],
+	AC_HELP_STRING(
+		[--enable-max-skill-db=ARG],
+		[Sets the MAX_SKILL_DB define. (see src/common/mmo.h)]
+	),
+	[enable_max_skill_db="$enableval"],
+	[enable_max_skill_db=""]
+)
+
+#
+# max_skill_id
+#
+AC_ARG_ENABLE(
+	[max_skill_id],
+	AC_HELP_STRING(
+		[--enable-max-skill-id=ARG],
+		[Sets the MAX_SKILL_ID define. (see src/common/mmo.h)]
+	),
+	[enable_max_skill_id="$enableval"],
+	[enable_max_skill_id=""]
+)
+
+#
+# max_skill_tree
+#
+AC_ARG_ENABLE(
+	[max_skill_tree],
+	AC_HELP_STRING(
+		[--enable-max-skill-tree=ARG],
+		[Sets the MAX_SKILL_TREE define. (see src/common/mmo.h)]
+	),
+	[enable_max_skill_tree="$enableval"],
+	[enable_max_skill_tree=""]
+)
+
+#
+# min_walk_speed
+#
+AC_ARG_ENABLE(
+	[min_walk_speed],
+	AC_HELP_STRING(
+		[--enable-min-walk-speed=ARG],
+		[Sets the MIN_WALK_SPEED define. (see src/common/mmo.h)]
+	),
+	[enable_min_walk_speed="$enableval"],
+	[enable_min_walk_speed=""]
+)
+
+#
+# max_walk_speed
+#
+AC_ARG_ENABLE(
+	[max_walk_speed],
+	AC_HELP_STRING(
+		[--enable-maxwalk-speed=ARG],
+		[Sets the MAX_WALK_SPEED define. (see src/common/mmo.h)]
+	),
+	[enable_max_walk_speed="$enableval"],
+	[enable_max_walk_speed=""]
+)
+
+#
+# default_walk_speed
+#
+AC_ARG_ENABLE(
+	[default_walk_speed],
+	AC_HELP_STRING(
+		[--enable-default-walk-speed=ARG],
+		[Sets the DEFAULT_WALK_SPEED define. (see src/common/mmo.h)]
+	),
+	[enable_default_walk_speed="$enableval"],
+	[enable_default_walk_speed=""]
+)
+
+#
+# max_storage
+#
+AC_ARG_ENABLE(
+	[max_storage],
+	AC_HELP_STRING(
+		[--enable-max-storage=ARG],
+		[Sets the MAX_STORAGE define. (see src/common/mmo.h)]
+	),
+	[enable_max_storage="$enableval"],
+	[enable_max_storage=""]
+)
+
+#
+# max_guild_storage
+#
+AC_ARG_ENABLE(
+	[max_guild_storage],
+	AC_HELP_STRING(
+		[--enable-max-storage=ARG],
+		[Sets the MAX_GUILD_STORAGE define. (see src/common/mmo.h)]
+	),
+	[enable_max_guild_storage="$enableval"],
+	[enable_max_guild_storage=""]
+)
+
+#
+# max_party
+#
+AC_ARG_ENABLE(
+	[max_party],
+	AC_HELP_STRING(
+		[--enable-max-party=ARG],
+		[Sets the MAX_PARTY define. (see src/common/mmo.h)]
+	),
+	[enable_max_party="$enableval"],
+	[enable_max_party=""]
+)
+
+#
+# base_guild_size
+#
+AC_ARG_ENABLE(
+	[base_guild_size],
+	AC_HELP_STRING(
+		[--enable-base-guild-size=ARG],
+		[Sets the BASE_GUILD_SIZE define. (see src/common/mmo.h)]
+	),
+	[enable_base_guild_size="$enableval"],
+	[enable_base_guild_size=""]
+)
+
+#
+# max_guild
+#
+AC_ARG_ENABLE(
+	[max_guild],
+	AC_HELP_STRING(
+		[--enable-max-guild=ARG],
+		[Sets the MAX_GUILD define. (see src/common/mmo.h)]
+	),
+	[enable_max_guild="$enableval"],
+	[enable_max_guild=""]
+)
+
+#
+# max_guildposition
+#
+AC_ARG_ENABLE(
+	[max_guildposition],
+	AC_HELP_STRING(
+		[--enable-max-guildposition=ARG],
+		[Sets the MAX_GUILDPOSITION define. (see src/common/mmo.h)]
+	),
+	[enable_max_guildposition="$enableval"],
+	[enable_max_guildposition=""]
+)
+
+#
+# max_guildexpulsion
+#
+AC_ARG_ENABLE(
+	[max_guildexpulsion],
+	AC_HELP_STRING(
+		[--enable-max-guildexpulsion=ARG],
+		[Sets the MAX_GUILDEXPULSION define. (see src/common/mmo.h)]
+	),
+	[enable_max_guildexpulsion="$enableval"],
+	[enable_max_guildexpulsion=""]
+)
+
+#
+# max_guildalliance
+#
+AC_ARG_ENABLE(
+	[max_guildalliance],
+	AC_HELP_STRING(
+		[--enable-max-guildalliance=ARG],
+		[Sets the MAX_GUILDALLIANCE define. (see src/common/mmo.h)]
+	),
+	[enable_max_guildalliance="$enableval"],
+	[enable_max_guildalliance=""]
+)
+
+#
+# max_guildlevel
+#
+AC_ARG_ENABLE(
+	[max_guildlevel],
+	AC_HELP_STRING(
+		[--enable-max-guildlevel=ARG],
+		[Sets the MAX_GUILDLEVEL define. (see src/common/mmo.h)]
+	),
+	[enable_max_guildlevel="$enableval"],
+	[enable_max_guildlevel=""]
+)
+
+#
+# max_guildskill
+#
+AC_ARG_ENABLE(
+	[max_guildskill],
+	AC_HELP_STRING(
+		[--enable-max-guildskill=ARG],
+		[Sets the MAX_GUILDSKILL define. (see src/common/mmo.h)]
+	),
+	[enable_max_guildskill="$enableval"],
+	[enable_max_guildskill=""]
+)
+
+#
+# max_guardians
+#
+AC_ARG_ENABLE(
+	[max_guardians],
+	AC_HELP_STRING(
+		[--enable-max-guardians=ARG],
+		[Sets the MAX_GUARDIANS define. (see src/common/mmo.h)]
+	),
+	[enable_max_guardians="$enableval"],
+	[enable_max_guardians=""]
+)
 
 #
 # packetver
@@ -1295,6 +1626,213 @@ case $enable_manager in
 		;;
 esac
 
+#
+# ENABLE_SC_SAVING
+#
+case $enable_sc_saving in
+	"yes")
+		CPPFLAGS="$CPPFLAGS -DENABLE_SC_SAVING"
+		;;
+	"no")
+		# default value
+		;;
+esac
+
+#
+# MAX_INVENTORY
+#
+if test -n "$enable_max_inventory" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_INVENTORY=$enable_max_inventory"
+fi
+
+#
+# MAX_CHARS
+#
+if test -n "$enable_max_chars" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_CHARS=$enable_max_chars"
+fi
+
+#
+# MAX_SLOTS
+#
+if test -n "$enable_max_slots" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_SLOTS=$enable_max_slots"
+fi
+
+#
+# MAX_AMOUNT
+#
+if test -n "$enable_max_amount" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_AMOUNT=$enable_max_amount"
+fi
+
+#
+# MAX_ZENY
+#
+if test -n "$enable_max_zeny" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_ZENY=$enable_max_zeny"
+fi
+
+#
+# MAX_BANK_ZENY
+#
+if test -n "$enable_max_bank_zeny" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_BANK_ZENY=$enable_max_bank_zeny"
+fi
+
+#
+# MAX_LEVEL
+#
+if test -n "$enable_max_level" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_LEVEL=$enable_max_level"
+fi
+
+#
+# MAX_FAME
+#
+if test -n "$enable_max_fame" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_FAME=$enable_max_fame"
+fi
+
+#
+# MAX_CART
+#
+if test -n "$enable_max_cart" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_CART=$enable_max_cart"
+fi
+
+#
+# MAX_SKILL_DB
+#
+if test -n "$enable_max_skill_db" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_SKILL_DB=$enable_max_skill_db"
+fi
+
+#
+# MAX_SKILL_ID
+#
+if test -n "$enable_max_skill_id" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_SKILL_ID=$enable_max_skill_id"
+fi
+
+#
+# MAX_SKILL_TREE
+#
+if test -n "$enable_max_skill_tree" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_SKILL_TREE=$enable_max_skill_tree"
+fi
+
+#
+# MIN_WALK_SPEED
+#
+if test -n "$enable_min_walk_speed" ; then
+	CPPFLAGS="$CPPFLAGS -DMIN_WALK_SPEED=$enable_min_walk_speed"
+fi
+
+#
+# MAX_WALK_SPEED
+#
+if test -n "$enable_max_walk_speed" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_WALK_SPEED=$enable_max_walk_speed"
+fi
+
+#
+# DEFAULT_WALK_SPEED
+#
+if test -n "$enable_default_walk_speed" ; then
+	CPPFLAGS="$CPPFLAGS -DDEFAULT_WALK_SPEED=$enable_default_walk_speed"
+fi
+
+#
+# MAX_STORAGE
+#
+if test -n "$enable_max_storage" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_STORAGE=$enable_max_storage"
+fi
+
+#
+# MAX_GUILD_STORAGE
+#
+if test -n "$enable_max_guild_storage" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_GUILD_STORAGE=$enable_max_guild_storage"
+fi
+
+#
+# MAX_PARTY
+#
+if test -n "$enable_max_party" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_PARTY=$enable_max_party"
+fi
+
+#
+# BASE_GUILD_SIZE
+#
+if test -n "$enable_base_guild_size" ; then
+	CPPFLAGS="$CPPFLAGS -DBASE_GUILD_SIZE=$enable_base_guild_size"
+fi
+
+#
+# MAX_GUILD
+#
+if test -n "$enable_max_guild" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_GUILD=$enable_max_guild"
+fi
+
+#
+# MAX_GUILDPOSITION
+#
+if test -n "$enable_max_guildposition" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_GUILDPOSITION=$enable_max_guildposition"
+fi
+
+#
+# MAX_GUILDEXPULSION
+#
+if test -n "$enable_max_guildexpulsion" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_GUILDEXPULSION=$enable_max_guildexpulsion"
+fi
+
+#
+# MAX_GUILDALLIANCE
+#
+if test -n "$enable_max_guildalliance" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_GUILDALLIANCE=$enable_max_guildalliance"
+fi
+
+#
+# MAX_GUILDLEVEL
+#
+if test -n "$enable_max_guildlevel" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_GUILDLEVEL=$enable_max_guildlevel"
+fi
+
+#
+# MAX_GUILDSKILL
+#
+if test -n "$enable_max_guildskill" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_GUILDSKILL=$enable_max_guildskill"
+fi
+
+#
+# MAX_GUARDIANS
+#
+if test -n "$enable_max_guardians" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_GUARDIANS=$enable_max_guardians"
+fi
+
+#
+# MAX_QUEST_OBJECTIVES
+#
+if test -n "$enable_max_quest_objectives" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_QUEST_OBJECTIVES=$enable_max_quest_objectives"
+fi
+
+#
+# MAX_ITEM_OPTIONS
+#
+if test -n "$enable_max_item_options" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_ITEM_OPTIONS=$enable_max_item_options"
+fi
 
 #
 # Packetver
