@@ -714,34 +714,34 @@ with_mysql
 with_MYSQL_CFLAGS
 with_MYSQL_LIBS
 enable_sc_saving
-max_inventory
-max_chars
-max_slots
-max_amount
-max_zeny
-max_bank_zeny
-max_level
-max_fame
-max_cart
-max_skill_db
-max_skill_id
-max_skill_tree
-default_walk_speed
-min_walk_speed
-max_walk_speed
-max_storage
-max_guild_storage
-max_party
-base_guild_size
-max_guild
-max_guildposition
-max_guildexpulsion
-max_guildalliance
-max_guildskill
-max_guildlevel
-max_guardians
-max_quest_objectives
-max_item_options
+enable_max_inventory
+enable_max_chars
+enable_max_slots
+enable_max_amount
+enable_max_zeny
+enable_max_bank_zeny
+enable_max_level
+enable_max_fame
+enable_max_cart
+enable_max_skill_db
+enable_max_skill_id
+enable_max_skill_tree
+enable_default_walk_speed
+enable_min_walk_speed
+enable_max_walk_speed
+enable_max_storage
+enable_max_guild_storage
+enable_max_party
+enable_base_guild_size
+enable_max_guild
+enable_max_guildposition
+enable_max_guildexpulsion
+enable_max_guildalliance
+enable_max_guildskill
+enable_max_guildlevel
+enable_max_guardians
+enable_max_quest_objectives
+enable_max_item_options
 '
       ac_precious_vars='build_alias
 host_alias
@@ -3568,227 +3568,227 @@ else
 fi
 
 # Check whether --max-inventory=<> was givin
-if test "${max_inventory+set}" = set; then :
-	enableval=$max_inventory
-	max_inventory="$enableval"
+if test "${enable_max_inventory+set}" = set; then :
+	enableval=$enable_max_inventory
+	enable_max_inventory="$enableval"
 else
-	max_inventory=""
+	enable_max_inventory=""
 fi
 
 # Check whether --max-chars=<> was givin
-if test "${max_chars+set}" = set; then :
-	enableval=$max_chars
-	max_chars="$enableval"
+if test "${enable_max_chars+set}" = set; then :
+	enableval=$enable_max_chars
+	enable_max_chars="$enableval"
 else
-	max_chars=""
+	enable_max_chars=""
 fi
 
 # Check whether --max-slots=<> was givin
-if test "${max_slots+set}" = set; then :
-	enableval=$max_slots
-	max_slots="$enableval"
+if test "${enable_max_slots+set}" = set; then :
+	enableval=$enable_max_slots
+	enable_max_slots="$enableval"
 else
-	max_slots=""
+	enable_max_slots=""
 fi
 
 # Check whether --max-amount=<> was givin
-if test "${max_amount+set}" = set; then :
-	enableval=$max_amount
-	max_amount="$enableval"
+if test "${enable_max_amount+set}" = set; then :
+	enableval=$enable_max_amount
+	enable_max_amount="$enableval"
 else
-	max_amount=""
+	enable_max_amount=""
 fi
 
 # Check whether --max-zeny=<> was givin
-if test "${max_zeny+set}" = set; then :
-	enableval=$max_zeny
-	max_zeny="$enableval"
+if test "${enable_max_zeny+set}" = set; then :
+	enableval=$enable_max_zeny
+	enable_max_zeny="$enableval"
 else
-	max_zeny=""
+	enable_max_zeny=""
 fi
 
 # Check whether --max-bank-zeny=<> was givin
-if test "${max_bank_zeny+set}" = set; then :
-	enableval=$max_bank_zeny
-	max_bank_zeny="$enableval"
+if test "${enable_max_bank_zeny+set}" = set; then :
+	enableval=$enable_max_bank_zeny
+	enable_max_bank_zeny="$enableval"
 else
-	max_bank_zeny=""
+	enable_max_bank_zeny=""
 fi
 
 # Check whether --max-level=<> was givin
-if test "${max_level+set}" = set; then :
-	enableval=$max_level
-	max_level="$enableval"
+if test "${enable_max_level+set}" = set; then :
+	enableval=$enable_max_level
+	enable_max_level="$enableval"
 else
-	max_level=""
+	enable_max_level=""
 fi
 
 # Check whether --max-fame=<> was givin
-if test "${max_fame+set}" = set; then :
-	enableval=$max_fame
-	max_fame="$enableval"
+if test "${enable_max_fame+set}" = set; then :
+	enableval=$enable_max_fame
+	enable_max_fame="$enableval"
 else
-	max_fame=""
+	enable_max_fame=""
 fi
 
 # Check whether --max-cart=<> was givin
-if test "${max_cart+set}" = set; then :
-	enableval=$max_cart
-	max_cart="$enableval"
+if test "${enable_max_cart+set}" = set; then :
+	enableval=$enable_max_cart
+	enable_max_cart="$enableval"
 else
-	max_cart=""
+	enable_max_cart=""
 fi
 
 # Check whether --max-skill-db=<> was givin
-if test "${max_skill_db+set}" = set; then :
-	enableval=$max_skill_db
-	max_skill_db="$enableval"
+if test "${enable_max_skill_db+set}" = set; then :
+	enableval=$enable_max_skill_db
+	enable_max_skill_db="$enableval"
 else
-	max_skill_db=""
+	enable_max_skill_db=""
 fi
 
 # Check whether --max-skill-id=<> was givin
-if test "${max_skill_id+set}" = set; then :
-	enableval=$max_skill_id
-	max_skill_id="$enableval"
+if test "${enable_max_skill_id+set}" = set; then :
+	enableval=$enable_max_skill_id
+	enable_max_skill_id="$enableval"
 else
-	max_skill_id=""
+	enable_max_skill_id=""
 fi
 
 # Check whether --max-skill-tree=<> was givin
-if test "${max_skill_tree+set}" = set; then :
-	enableval=$max_skill_tree
-	max_skill_tree="$enableval"
+if test "${enable_max_skill_tree+set}" = set; then :
+	enableval=$enable_max_skill_tree
+	enable_max_skill_tree="$enableval"
 else
-	max_skill_tree=""
+	enable_max_skill_tree=""
 fi
 
 # Check whether --default-walk-speed=<> was givin
-if test "${default_walk_speed+set}" = set; then :
-	enableval=$default_walk_speed
-	default_walk_speed="$enableval"
+if test "${enable_default_walk_speed+set}" = set; then :
+	enableval=$enable_default_walk_speed
+	enable_default_walk_speed="$enableval"
 else
-	default_walk_speed=""
+	enable_default_walk_speed=""
 fi
 
 # Check whether --min-walk-speed=<> was givin
-if test "${min_walk_speed+set}" = set; then :
-	enableval=$min_walk_speed
-	min_walk_speed="$enableval"
+if test "${enable_min_walk_speed+set}" = set; then :
+	enableval=$enable_min_walk_speed
+	enable_min_walk_speed="$enableval"
 else
-	min_walk_speed=""
+	enable_min_walk_speed=""
 fi
 
 # Check whether --max-walk-speed=<> was givin
-if test "${max_walk_speed+set}" = set; then :
-	enableval=$max_walk_speed
-	max_walk_speed="$enableval"
+if test "${enable_max_walk_speed+set}" = set; then :
+	enableval=$enable_max_walk_speed
+	enable_max_walk_speed="$enableval"
 else
-	max_walk_speed=""
+	enable_max_walk_speed=""
 fi
 
 # Check whether --max-storage=<> was givin
-if test "${max_storage+set}" = set; then :
-	enableval=$max_storage
-	max_storage="$enableval"
+if test "${enable_max_storage+set}" = set; then :
+	enableval=$enable_max_storage
+	enable_max_storage="$enableval"
 else
-	max_storage=""
+	enable_max_storage=""
 fi
 
 # Check whether --max-guild-storage=<> was givin
-if test "${max_guild_storage+set}" = set; then :
-	enableval=$max_guild_storage
-	max_guild_storage="$enableval"
+if test "${enable_max_guild_storage+set}" = set; then :
+	enableval=$enable_max_guild_storage
+	enable_max_guild_storage="$enableval"
 else
-	max_guild_storage=""
+	enable_max_guild_storage=""
 fi
 
 # Check whether --max-party=<> was givin
-if test "${max_party+set}" = set; then :
-	enableval=$max_party
-	max_party="$enableval"
+if test "${enable_max_party+set}" = set; then :
+	enableval=$enable_max_party
+	enable_max_party="$enableval"
 else
-	max_party=""
+	enable_max_party=""
 fi
 
 # Check whether --base-guild-size=<> was givin
-if test "${base_guild_size+set}" = set; then :
-	enableval=$base_guild_size
-	base_guild_size="$enableval"
+if test "${enable_base_guild_size+set}" = set; then :
+	enableval=$enable_base_guild_size
+	enable_base_guild_size="$enableval"
 else
-	base_guild_size=""
+	enable_base_guild_size=""
 fi
 
 # Check whether --base-guild-size=<> was givin
-if test "${max_guild+set}" = set; then :
-	enableval=$max_guild
-	max_guild="$enableval"
+if test "${enable_max_guild+set}" = set; then :
+	enableval=$enable_max_guild
+	enable_max_guild="$enableval"
 else
-	max_guild=""
+	enable_max_guild=""
 fi
 
 # Check whether --max-guildposition=<> was givin
-if test "${max_guildposition+set}" = set; then :
-	enableval=$max_guildposition
-	max_guildposition="$enableval"
+if test "${enable_max_guildposition+set}" = set; then :
+	enableval=$enable_max_guildposition
+	enable_max_guildposition="$enableval"
 else
-	max_guildposition=""
+	enable_max_guildposition=""
 fi
 
 # Check whether --max-guildexpulsion=<> was givin
-if test "${max_guildexpulsion+set}" = set; then :
-	enableval=$max_guildexpulsion
-	max_guildexpulsion="$enableval"
+if test "${enable_max_guildexpulsion+set}" = set; then :
+	enableval=$enable_max_guildexpulsion
+	enable_max_guildexpulsion="$enableval"
 else
-	max_guildexpulsion=""
+	enable_max_guildexpulsion=""
 fi
 
 # Check whether --max-guildalliance=<> was givin
-if test "${max_guildalliance+set}" = set; then :
-	enableval=$max_guildalliance
-	max_guildalliance="$enableval"
+if test "${enable_max_guildalliance+set}" = set; then :
+	enableval=$enable_max_guildalliance
+	enable_max_guildalliance="$enableval"
 else
-	max_guildalliance=""
+	enable_max_guildalliance=""
 fi
 
 # Check whether --max-guildskill=<> was givin
-if test "${max_guildskill+set}" = set; then :
-	enableval=$max_guildskill
-	max_guildskill="$enableval"
+if test "${enable_max_guildskill+set}" = set; then :
+	enableval=$enable_max_guildskill
+	enable_max_guildskill="$enableval"
 else
-	max_guildskill=""
+	enable_max_guildskill=""
 fi
 
 # Check whether --max-guildlevel=<> was givin
-if test "${max_guildlevel+set}" = set; then :
-	enableval=$max_guildlevel
-	max_guildlevel="$enableval"
+if test "${enable_max_guildlevel+set}" = set; then :
+	enableval=$enable_max_guildlevel
+	enable_max_guildlevel="$enableval"
 else
-	max_guildlevel=""
+	enable_max_guildlevel=""
 fi
 
 # Check whether --max-guardians=<> was givin
-if test "${max_guardians+set}" = set; then :
-	enableval=$max_guardians
-	max_guardians="$enableval"
+if test "${enable_max_guardians+set}" = set; then :
+	enableval=$enable_max_guardians
+	enable_max_guardians="$enableval"
 else
-	max_guardians=""
+	enable_max_guardians=""
 fi
 
 # Check whether --max-quest-objectives=<> was givin
-if test "${max_quest_objectives+set}" = set; then :
-	enableval=$max_quest_objectives
-	max_quest_objectives="$enableval"
+if test "${enable_max_quest_objectives+set}" = set; then :
+	enableval=$enable_max_quest_objectives
+	enable_max_quest_objectives="$enableval"
 else
-	max_quest_objectives=""
+	enable_max_quest_objectives=""
 fi
 
 # Check whether --max-item-options=<> was givin
-if test "${max_item_options+set}" = set; then :
-	enableval=$max_item_options
-	max_item_options="$enableval"
+if test "${enable_max_item_options+set}" = set; then :
+	enableval=$enable_max_item_options
+	enable_max_item_options="$enableval"
 else
-	max_item_options=""
+	enable_max_item_options=""
 fi
 
 #
@@ -8588,143 +8588,143 @@ if test -n "$enable_sc_saving" ; then
 fi
 
 # MAX_INVENTORY=<max_inventory>
-if test -n "$max_inventory" ; then
-	CPPFLAGS="$CPPFLAGS -DMAX_INVENTORY=$max_inventory"
+if test -n "$enable_max_inventory" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_INVENTORY=$enable_max_inventory"
 fi
 
 # MAX_CHARS=<max_chars>
-if test -n "$max_chars" ; then
-	CPPFLAGS="$CPPFLAGS -DMAX_CHARS=$max_chars"
+if test -n "$enable_max_chars" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_CHARS=$enable_max_chars"
 fi
 
 # MAX_SLOTS=<max_slots>
-if test -n "$max_slots" ; then
-	CPPFLAGS="$CPPFLAGS -DMAX_SLOTS=$max_slots"
+if test -n "$enable_max_slots" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_SLOTS=$enable_max_slots"
 fi
 
 # MAX_AMOUNT=<max_amount>
-if test -n "$max_amount" ; then
-	CPPFLAGS="$CPPFLAGS -DMAX_AMOUNT=$max_amount"
+if test -n "$enable_max_amount" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_AMOUNT=$enable_max_amount"
 fi
 
 # MAX_ZENY=<max_zeny>
-if test -n "$max_zeny" ; then
-	CPPFLAGS="$CPPFLAGS -DMAX_ZENY=$max_zeny"
+if test -n "$enable_max_zeny" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_ZENY=$enable_max_zeny"
 fi
 
 # MAX_BANK_ZENY=<max_bank_zeny>
-if test -n "$max_bank_zeny" ; then
-	CPPFLAGS="$CPPFLAGS -DMAX_BANK_ZENY=$max_bank_zeny"
+if test -n "$enable_max_bank_zeny" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_BANK_ZENY=$enable_max_bank_zeny"
 fi
 
 # MAX_LEVEL=<max_level>
-if test -n "$max_level" ; then
-	CPPFLAGS="$CPPFLAGS -DMAX_LEVEL=$max_level"
+if test -n "$enable_max_level" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_LEVEL=$enable_max_level"
 fi
 
 # MAX_FAME=<max_fame>
-if test -n "$max_fame" ; then
-	CPPFLAGS="$CPPFLAGS -DMAX_FAME=$max_fame"
+if test -n "$enable_max_fame" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_FAME=$enable_max_fame"
 fi
 
 # MAX_CART=<max_cart>
-if test -n "$max_cart" ; then
-	CPPFLAGS="$CPPFLAGS -DMAX_CART=$max_cart"
+if test -n "$enable_max_cart" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_CART=$enable_max_cart"
 fi
 
 # MAX_SKILL_DB=<MAX_SKILL_DB>
-if test -n "$max_skill_db" ; then
-	CPPFLAGS="$CPPFLAGS -DMAX_SKILL_DB=$max_skill_db"
+if test -n "$enable_max_skill_db" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_SKILL_DB=$enable_max_skill_db"
 fi
 
 # MAX_SKILL_ID=<MAX_SKILL_ID>
-if test -n "$max_skill_id" ; then
-	CPPFLAGS="$CPPFLAGS -DMAX_SKILL_ID=$max_skill_id"
+if test -n "$enable_max_skill_id" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_SKILL_ID=$enable_max_skill_id"
 fi
 
 # MAX_SKILL_TREE=<MAX_SKILL_TREE>
-if test -n "$max_skill_tree" ; then
-	CPPFLAGS="$CPPFLAGS -DMAX_SKILL_TREE=$max_skill_tree"
+if test -n "$enable_max_skill_tree" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_SKILL_TREE=$enable_max_skill_tree"
 fi
 
 # DEFAULT_WALK_SPEED=<DEFAULT_WALK_SPEED>
-if test -n "$default_walk_speed" ; then
-	CPPFLAGS="$CPPFLAGS -DDEFAULT_WALK_SPEED=$default_walk_speed"
+if test -n "$enable_default_walk_speed" ; then
+	CPPFLAGS="$CPPFLAGS -DDEFAULT_WALK_SPEED=$enable_default_walk_speed"
 fi
 
 # MIN_WALK_SPEED=<MIN_WALK_SPEED>
-if test -n "$min_walk_speed" ; then
-	CPPFLAGS="$CPPFLAGS -DMIN_WALK_SPEED=$min_walk_speed"
+if test -n "$enable_min_walk_speed" ; then
+	CPPFLAGS="$CPPFLAGS -DMIN_WALK_SPEED=$enable_min_walk_speed"
 fi
 
 # MAX_WALK_SPEED=<MAX_WALK_SPEED>
-if test -n "$max_walk_speed" ; then
-	CPPFLAGS="$CPPFLAGS -DMAX_WALK_SPEED=$max_walk_speed"
+if test -n "$enable_max_walk_speed" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_WALK_SPEED=$enable_max_walk_speed"
 fi
 
 # MAX_STORAGE=<MAX_STORAGE>
-if test -n "$max_storage" ; then
-	CPPFLAGS="$CPPFLAGS -DMAX_STORAGE=$max_storage"
+if test -n "$enable_max_storage" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_STORAGE=$enable_max_storage"
 fi
 
 # MAX_GUILD_STORAGE=<MAX_GUILD_STORAGE>
-if test -n "$max_guild_storage" ; then
-	CPPFLAGS="$CPPFLAGS -DMAX_GUILD_STORAGE=$max_guild_storage"
+if test -n "$enable_max_guild_storage" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_GUILD_STORAGE=$enable_max_guild_storage"
 fi
 
 # MAX_PARTY=<MAX_PARTY>
-if test -n "$max_party" ; then
-	CPPFLAGS="$CPPFLAGS -DMAX_PARTY=$max_party"
+if test -n "$enable_max_party" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_PARTY=$enable_max_party"
 fi
 
 # BASE_GUILD_SIZE=<BASE_GUILD_SIZE>
-if test -n "$base_guild_size" ; then
-	CPPFLAGS="$CPPFLAGS -DBASE_GUILD_SIZE=$base_guild_size"
+if test -n "$enable_base_guild_size" ; then
+	CPPFLAGS="$CPPFLAGS -DBASE_GUILD_SIZE=$enable_base_guild_size"
 fi
 
 # MAX_GUILD=<MAX_GUILD>
-if test -n "$max_guild" ; then
-	CPPFLAGS="$CPPFLAGS -DMAX_GUILD=$max_guild"
+if test -n "$enable_max_guild" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_GUILD=$enable_max_guild"
 fi
 
 # MAX_GUILDPOSITION=<MAX_GUILDPOSITION>
-if test -n "$max_guildposition" ; then
-	CPPFLAGS="$CPPFLAGS -DMAX_GUILDPOSITION=$max_guildposition"
+if test -n "$enable_max_guildposition" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_GUILDPOSITION=$enable_max_guildposition"
 fi
 
 # MAX_GUILDEXPULSION=<MAX_GUILDEXPULSION>
-if test -n "$max_guildexpulsion" ; then
-	CPPFLAGS="$CPPFLAGS -DMAX_GUILDEXPULSION=$max_guildexpulsion"
+if test -n "$enable_max_guildexpulsion" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_GUILDEXPULSION=$enable_max_guildexpulsion"
 fi
 
 # MAX_GUILDALLIANCE=<MAX_GUILDALLIANCE>
-if test -n "$max_guildalliance" ; then
-	CPPFLAGS="$CPPFLAGS -DMAX_GUILDALLIANCE=$max_guildalliance"
+if test -n "$enable_max_guildalliance" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_GUILDALLIANCE=$enable_max_guildalliance"
 fi
 
 # MAX_GUILDSKILL=<MAX_GUILDSKILL>
-if test -n "$max_guildskill" ; then
-	CPPFLAGS="$CPPFLAGS -DMAX_GUILDSKILL=$max_guildskill"
+if test -n "$enable_max_guildskill" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_GUILDSKILL=$enable_max_guildskill"
 fi
 
 # MAX_GUILDLEVEL=<MAX_GUILDLEVEL>
-if test -n "$max_guildlevel" ; then
-	CPPFLAGS="$CPPFLAGS -DMAX_GUILDLEVEL=$max_guildlevel"
+if test -n "$enable_max_guildlevel" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_GUILDLEVEL=$enable_max_guildlevel"
 fi
 
 # MAX_GUARDIANS=<MAX_GUARDIANS>
-if test -n "$max_guardians" ; then
-	CPPFLAGS="$CPPFLAGS -DMAX_GUARDIANS=$max_guardians"
+if test -n "$enable_max_guardians" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_GUARDIANS=$enable_max_guardians"
 fi
 
 # MAX_QUEST_OBJECTIVES=<MAX_QUEST_OBJECTIVES>
-if test -n "$max_quest_objectives" ; then
-	CPPFLAGS="$CPPFLAGS -DMAX_QUEST_OBJECTIVES=$max_quest_objectives"
+if test -n "$enable_max_quest_objectives" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_QUEST_OBJECTIVES=$enable_max_quest_objectives"
 fi
 
 # MAX_ITEM_OPTIONS=<MAX_ITEM_OPTIONS>
-if test -n "$max_item_options" ; then
-	CPPFLAGS="$CPPFLAGS -DMAX_ITEM_OPTIONS=$max_item_options"
+if test -n "$enable_max_item_options" ; then
+	CPPFLAGS="$CPPFLAGS -DMAX_ITEM_OPTIONS=$enable_max_item_options"
 fi
 
 #
