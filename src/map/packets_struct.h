@@ -198,7 +198,7 @@ enum packet_headers {
 #else
 	dropflooritemType = 0x9e,
 #endif
-#if PACKETVER_RE_NUM >= 20180912
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
 	inventorylistnormalType = 0xb09,
 #elif PACKETVER >= 20120925
 	inventorylistnormalType = 0x991,
@@ -209,7 +209,7 @@ enum packet_headers {
 #else
 	inventorylistnormalType = 0xa3,
 #endif
-#if PACKETVER_RE_NUM >= 20180912
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
 	inventorylistequipType = 0xb0a,
 #elif PACKETVER >= 20150226
 	inventorylistequipType = 0xa0d,
@@ -222,7 +222,7 @@ enum packet_headers {
 #else
 	inventorylistequipType = 0xa4,
 #endif
-#if PACKETVER_RE_NUM >= 20180829
+#if PACKETVER_RE_NUM >= 20180829 || PACKETVER_ZERO_NUM >= 20180919
 	storageListNormalType = 0xb09,
 #elif PACKETVER >= 20120925
 	storageListNormalType = 0x995,
@@ -233,7 +233,7 @@ enum packet_headers {
 #else
 	storageListNormalType = 0xa5,
 #endif
-#if PACKETVER_RE_NUM >= 20180829
+#if PACKETVER_RE_NUM >= 20180829 || PACKETVER_ZERO_NUM >= 20180919
 	storageListEquipType = 0xb0a,
 #elif PACKETVER >= 20150226
 	storageListEquipType = 0xa10,
@@ -246,7 +246,7 @@ enum packet_headers {
 #else
 	storageListEquipType = 0xa6,
 #endif
-#if PACKETVER_RE_NUM >= 20180829
+#if PACKETVER_RE_NUM >= 20180829 || PACKETVER_ZERO_NUM >= 20180919
 	cartlistnormalType = 0xb09,
 #elif PACKETVER >= 20120925
 	cartlistnormalType = 0x993,
@@ -257,7 +257,7 @@ enum packet_headers {
 #else
 	cartlistnormalType = 0x123,
 #endif
-#if PACKETVER_RE_NUM >= 20180829
+#if PACKETVER_RE_NUM >= 20180829 || PACKETVER_ZERO_NUM >= 20180919
 	cartlistequipType = 0xb0a,
 #elif PACKETVER >= 20150226
 	cartlistequipType = 0xa0f,
@@ -1174,7 +1174,7 @@ struct packet_roulette_itemrecv_ack {
 struct packet_itemlist_normal {
 	int16 PacketType;
 	int16 PacketLength;
-#if PACKETVER_RE_NUM >= 20180912
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
 	uint8 invType;
 #endif
 	struct NORMALITEM_INFO list[MAX_ITEMLIST];
@@ -1183,7 +1183,7 @@ struct packet_itemlist_normal {
 struct packet_itemlist_equip {
 	int16 PacketType;
 	int16 PacketLength;
-#if PACKETVER_RE_NUM >= 20180912
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
 	uint8 invType;
 #endif
 	struct EQUIPITEM_INFO list[MAX_ITEMLIST];
@@ -1192,10 +1192,10 @@ struct packet_itemlist_equip {
 struct ZC_STORE_ITEMLIST_NORMAL {
 	int16 PacketType;
 	int16 PacketLength;
-#if PACKETVER_RE_NUM >= 20180912
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
 	uint8 invType;
 #endif
-#if PACKETVER >= 20120925 && PACKETVER_RE_NUM < 20180829
+#if PACKETVER >= 20120925 && PACKETVER_RE_NUM < 20180829 && PACKETVER_ZERO_NUM < 20180919
 	char name[NAME_LENGTH];
 #endif
 	struct NORMALITEM_INFO list[MAX_ITEMLIST];
@@ -1203,15 +1203,22 @@ struct ZC_STORE_ITEMLIST_NORMAL {
 
 struct ZC_INVENTORY_START {
 	int16 packetType;
-#if PACKETVER_RE_NUM >= 20180912
+#if PACKETVER_RE_NUM >= 20180919 || PACKETVER_ZERO_NUM >= 20180919
+	int16 packetLength;
+#endif
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
 	uint8 invType;
 #endif
+#if PACKETVER_RE_NUM >= 20180919 || PACKETVER_ZERO_NUM >= 20180919
+	char name[];
+#else
 	char name[NAME_LENGTH];
+#endif
 } __attribute__((packed));
 
 struct ZC_INVENTORY_END {
 	int16 packetType;
-#if PACKETVER_RE_NUM >= 20180912
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
 	uint8 invType;
 #endif
 	char flag;
@@ -1220,10 +1227,10 @@ struct ZC_INVENTORY_END {
 struct ZC_STORE_ITEMLIST_EQUIP {
 	int16 PacketType;
 	int16 PacketLength;
-#if PACKETVER_RE_NUM >= 20180912
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
 	uint8 invType;
 #endif
-#if PACKETVER >= 20120925 && PACKETVER_RE_NUM < 20180829
+#if PACKETVER >= 20120925 && PACKETVER_RE_NUM < 20180829 && PACKETVER_ZERO_NUM < 20180919
 	char name[NAME_LENGTH];
 #endif
 	struct EQUIPITEM_INFO list[MAX_ITEMLIST];
