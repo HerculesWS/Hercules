@@ -121,7 +121,7 @@ CREATE TABLE IF NOT EXISTS `autotrade_merchants` (
 -- Table structure for table `char_achievements`
 --
 
-CREATE TABLE `char_achievements` (
+CREATE TABLE IF NOT EXISTS `char_achievements` (
 	`char_id` INT(11) UNSIGNED NOT NULL,
 	`ach_id` INT(11) UNSIGNED NOT NULL,
 	`completed_at` INT(10) UNSIGNED NOT NULL DEFAULT '0',
