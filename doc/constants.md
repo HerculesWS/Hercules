@@ -362,6 +362,8 @@
 - `mf_noviewid`: 56
 - `mf_pairship_startable`: 57
 - `mf_pairship_endable`: 58
+- `mf_nostorage`: 59
+- `mf_nogstorage`: 60
 
 ### Cell Properties
 

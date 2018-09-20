@@ -871,6 +871,11 @@ ACMD(storage)
 	if (sd->npc_id || sd->state.vending || sd->state.buyingstore || sd->state.trading || sd->state.storage_flag)
 		return false;
 
+	if (!pc_has_permission(sd, PC_PERM_BYPASS_NOSTORAGE) && (map->list[sd->bl.m].flag.nostorage & 1)) { // mapflag nostorage already defined? can't open :c
+		clif->message(fd, msg_fd(fd, 1161)); // You currently cannot open your storage.
+		return false;
+	}
+
 	if (storage->open(sd) == 1) { //Already open.
 		clif->message(fd, msg_fd(fd,250)); // You have already opened your storage. Close it first.
 		return false;
@@ -901,6 +906,11 @@ ACMD(guildstorage)
 
 	if (sd->state.storage_flag == STORAGE_FLAG_GUILD) {
 		clif->message(fd, msg_fd(fd,251)); // You have already opened your guild storage. Close it first.
+		return false;
+	}
+
+	if (!pc_has_permission(sd, PC_PERM_BYPASS_NOSTORAGE) && (map->list[sd->bl.m].flag.nogstorage & 1)) { // mapflag nogstorage already defined? can't open :c
+		clif->message(fd, msg_fd(fd, 1161)); // You currently cannot open your storage. (there is no other messages...)
 		return false;
 	}
 
@@ -7739,6 +7749,7 @@ ACMD(mapflag)
 		CHECKFLAG(nodrop);            CHECKFLAG(novending);          CHECKFLAG(loadevent);
 		CHECKFLAG(nochat);            CHECKFLAG(partylock);          CHECKFLAG(guildlock);    CHECKFLAG(src4instance);
 		CHECKFLAG(notomb);            CHECKFLAG(nocashshop);         CHECKFLAG(noviewid);     CHECKFLAG(town);
+		CHECKFLAG(nostorage);		  CHECKFLAG(nogstorage);
 		clif->message(sd->fd," ");
 		clif->message(sd->fd,msg_fd(fd,1312)); // Usage: "@mapflag monster_noteleport 1" (0=Off | 1=On)
 		clif->message(sd->fd,msg_fd(fd,1313)); // Type "@mapflag available" to list the available mapflags.
@@ -7780,7 +7791,7 @@ ACMD(mapflag)
 	SETFLAG(nomvploot);         SETFLAG(nightenabled);       SETFLAG(nodrop);       SETFLAG(novending);
 	SETFLAG(loadevent);         SETFLAG(nochat);             SETFLAG(partylock);    SETFLAG(guildlock);
 	SETFLAG(src4instance);      SETFLAG(notomb);             SETFLAG(nocashshop);   SETFLAG(noviewid);
-	SETFLAG(town);
+	SETFLAG(town);				SETFLAG(nostorage);			 SETFLAG(nogstorage);
 
 
 	clif->message(sd->fd, msg_fd(fd, 1314)); // Invalid flag name or flag.
@@ -7793,7 +7804,7 @@ ACMD(mapflag)
 	clif->message(sd->fd, "nozenypenalty, notrade, noskill, nowarp, nowarpto, noicewall, snow, clouds, clouds2,");
 	clif->message(sd->fd, "fog, fireworks, sakura, leaves, nobaseexp, nojobexp, nomobloot,");
 	clif->message(sd->fd, "nomvploot, nightenabled, nodrop, novending, loadevent, nochat, partylock,");
-	clif->message(sd->fd, "guildlock, src4instance, notomb, nocashshop, noviewid");
+	clif->message(sd->fd, "guildlock, src4instance, notomb, nocashshop, noviewid, nostorage, nogstorage");
 #undef CHECKFLAG
 #undef SETFLAG
 
