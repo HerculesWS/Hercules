@@ -5425,6 +5425,32 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 			else if( map->list[m].flag.nocashshop )
 				map_zone_mf_cache_add(m,"nocashshop");
 		}
+	} else if (strcmpi(flag, "nostorage") == 0) {
+		if (!state) {
+			if (map->list[m].flag.nostorage != 0) {
+				sprintf(rflag,"nostorage\t%u",map->list[m].flag.nostorage);
+				map_zone_mf_cache_add(m,rflag);
+			}
+		}
+		if (sscanf(params, "%d", &state) == 1) {
+			if (state != map->list[m].flag.nostorage) {
+				sprintf(rflag,"nostorage\t%d",state);
+				map_zone_mf_cache_add(m,rflag);
+			}
+		}
+	} else if (strcmpi(flag, "nogstorage") == 0) {
+		if (!state) {
+			if (map->list[m].flag.nogstorage != 0) {
+				sprintf(rflag,"nogstorage\t%u",map->list[m].flag.nogstorage);
+				map_zone_mf_cache_add(m,rflag);
+			}
+		}
+		if (sscanf(params, "%d", &state) == 1) {
+			if (state != map->list[m].flag.nogstorage) {
+				sprintf(rflag,"nogstorage\t%d",state);
+				map_zone_mf_cache_add(m,rflag);
+			}
+		}
 	}
 
 	return false;

@@ -48,4 +48,5 @@ disable_pickup             | Ability to disable the player from picking up any i
 disable_exp                | Ability to disable the player from gaining any experience point.
 disable_store              | Ability to disable the player from using/openning npc and player stores.
 disable_skill_usage        | Ability to disable the player from using any skill.
+bypass_nostorage           | Ability to bypass the nostorage and nogstorage mapflag.
 
