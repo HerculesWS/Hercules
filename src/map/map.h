@@ -900,6 +900,8 @@ struct map_data {
 		unsigned pairship_startable : 1;
 		unsigned pairship_endable : 1;
 		uint32 noviewid; ///< noviewid (bitmask - @see enum equip_pos)
+		int32 nostorage;
+		int32 nogstorage;
 	} flag;
 	struct point save;
 	struct npc_data *npc[MAX_NPC_PER_MAP];
