@@ -4555,6 +4555,10 @@ static const char *npc_parse_mapflag(const char *w1, const char *w2, const char 
 		map->list[m].flag.pairship_startable = (state) ? 1 : 0;
 	}  else if (!strcmpi(w3, "pairship_endable")) {
 		map->list[m].flag.pairship_endable = (state) ? 1 : 0;
+	}  else if (!strcmpi(w3, "nostorage")) {
+		map->list[m].flag.nostorage = (state) ? cap_value(atoi(w4), 1, 3) : 0;
+	}  else if (!strcmpi(w3, "nogstorage")) {
+		map->list[m].flag.nogstorage = (state) ? cap_value(atoi(w4), 1, 3) : 0;
 	} else {
 		npc->parse_unknown_mapflag(mapname, w3, w4, start, buffer, filepath, retval);
 	}
