@@ -54,8 +54,6 @@ Platforms](https://github.com/HerculesWS/Hercules/wiki/Supported-Platforms) wiki
 
 #### Windows
   - Git client
-  - MySQL-compatible server ([MySQL Community Edition](https://www.mysql.com/products/community/) or
-    [MariaDB](https://mariadb.org/))
   - Microsoft Visual Studio ([Version 2012 through 2015](https://www.visualstudio.com/))
 
 #### Unix/Linux/BSD (names of packages may require specific version numbers on certain distributions)
@@ -96,16 +94,26 @@ guides relevant to your Operation System, please refer to the Wiki (links at
 the end of this file).
 
 #### Windows
+##### Easy installation
   1. Install the prerequisites.
   2. Clone the Hercules repository (see [GitHub](https://github.com/HerculesWS/Hercules)) using a git client, into a new
      folder.
-  3. Connect to the MySQL server as root:
+    - If you do not want to use the command line, you can also clone with [GitHub Desktop](https://desktop.github.com/).
+  3. Run `mariadb.bat` to automatically install and configure MariaDB.
+  4. Start Visual Studio and load the provided solution:
+    - Compile and run the three projects, login-server, char-server, map-server.
+##### Manual installation
+  1. Install the prerequisites.
+  2. Install a MySQL-compatible server, such as [MariaDB](https://mariadb.org/) (recommended) or [MySQL Community Edition](https://www.mysql.com/products/community/)
+  3. Clone the Hercules repository (see [GitHub](https://github.com/HerculesWS/Hercules)) using a git client, into a new
+     folder.
+  4. Connect to the MySQL server as root:
     - Create a database (hercules): `CREATE DATABASE hercules;`
     - Create a user (hercules): `CREATE USER 'hercules'@'localhost' IDENTIFIED BY 'password';`.
     - Give permissions (GRANT SELECT,INSERT,UPDATE,DELETE) to the user: `GRANT SELECT,INSERT,UPDATE,DELETE ON hercules.* TO 'hercules'@'localhost';`
-  4. Connect to the MySQL server as the new user:
+  5. Connect to the MySQL server as the new user:
     - Import the .sql files in /sql-files/ into the new database.
-  5. Start Visual Studio and load the provided solution:
+  6. Start Visual Studio and load the provided solution:
     - Compile and run the three projects, login-server, char-server, map-server.
 
 #### Unix
