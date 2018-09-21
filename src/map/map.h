@@ -789,6 +789,12 @@ struct questinfo_qreq {
 	int state;
 };
 
+struct questinfo_itemreq {
+	int nameid;
+	int min;
+	int max;
+};
+
 struct questinfo {
 	struct npc_data *nd;
 	unsigned short icon;
@@ -805,7 +811,7 @@ struct questinfo {
 		int min;
 		int max;
 	} job_level;
-	VECTOR_DECL(struct item) items;
+	VECTOR_DECL(struct questinfo_itemreq) items;
 	struct s_homunculus homunculus;
 	int homunculus_type;
 	VECTOR_DECL(struct questinfo_qreq) quest_requirement;

@@ -21114,17 +21114,26 @@ static BUILDIN(setquestinfo)
 	}
 	case QINFO_ITEM:
 	{
-		struct item item = { 0 };
+		struct questinfo_itemreq item = { 0 };
 
 		item.nameid = script_getnum(st, 3);
-		item.amount = script_getnum(st, 4);
+		item.min = script_hasdata(st, 4) ? script_getnum(st, 4) : 0;
+		item.max = script_hasdata(st, 5) ? script_getnum(st, 5) : 0;
 
 		if (itemdb->exists(item.nameid) == NULL) {
 			ShowWarning("buildin_setquestinfo: non existing item (%d) have been given.\n", item.nameid);
 			return false;
 		}
-		if (item.amount <= 0 || item.amount > MAX_AMOUNT) {
-			ShowWarning("buildin_setquestinfo: given amount (%d) must be bigger than 0 and smaller than %d.\n", item.amount, MAX_AMOUNT + 1);
+		if (item.min > item.max) {
+			ShowWarning("buildin_setquestinfo: minimal amount (%d) is bigger than the maximal amount (%d).\n", item.min, item.max);
+			return false;
+		}
+		if (item.min < 0 || item.min > MAX_AMOUNT) {
+			ShowWarning("buildin_setquestinfo: given amount (%d) must be bigger than or equal to 0 and smaller than %d.\n", item.min, MAX_AMOUNT + 1);
+			return false;
+		}
+		if (item.max < 0 || item.max > MAX_AMOUNT) {
+			ShowWarning("buildin_setquestinfo: given amount (%d) must be bigger than or equal to 0 and smaller than %d.\n", item.max, MAX_AMOUNT + 1);
 			return false;
 		}
 		if (VECTOR_LENGTH(qi->items) == 0)
@@ -25447,7 +25456,7 @@ static void script_parse_builtin(void)
 
 		//Quest Log System [Inkfish]
 		BUILDIN_DEF(questinfo, "i?"),
-		BUILDIN_DEF(setquestinfo, "i??"),
+		BUILDIN_DEF(setquestinfo, "i???"),
 		BUILDIN_DEF(setquest, "i?"),
 		BUILDIN_DEF(erasequest, "i?"),
 		BUILDIN_DEF(completequest, "i?"),

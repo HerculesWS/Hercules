@@ -805,18 +805,17 @@ static bool quest_questinfo_validate_joblevel(struct map_session_data *sd, struc
  */
 static bool quest_questinfo_validate_items(struct map_session_data *sd, struct questinfo *qi)
 {
-	int i, idx;
-
 	nullpo_retr(false, sd);
 	nullpo_retr(false, qi);
-	
 
-	for (i = 0; i < VECTOR_LENGTH(qi->items); i++) {
-		struct item *item = &VECTOR_INDEX(qi->items, i);
-		idx = pc->search_inventory(sd, item->nameid);
-		if (idx == INDEX_NOT_FOUND)
-			return false;
-		if (sd->status.inventory[idx].amount < item->amount)
+	for (int i = 0; i < VECTOR_LENGTH(qi->items); i++) {
+		struct questinfo_itemreq *item = &VECTOR_INDEX(qi->items, i);
+		int count = 0;
+		for (int j = 0; j < MAX_INVENTORY; j++) {
+			if (sd->status.inventory[j].nameid == item->nameid)
+				count += sd->status.inventory[j].amount;
+		}
+		if (count < item->min || count > item->max)
 			return false;
 	}
 
