@@ -2206,6 +2206,8 @@ struct {
 	struct HPMHookPoint *HP_clif_petEvolutionResult_post;
 	struct HPMHookPoint *HP_clif_party_dead_notification_pre;
 	struct HPMHookPoint *HP_clif_party_dead_notification_post;
+	struct HPMHookPoint *HP_clif_pMemorialDungeonCommand_pre;
+	struct HPMHookPoint *HP_clif_pMemorialDungeonCommand_post;
 	struct HPMHookPoint *HP_cmdline_init_pre;
 	struct HPMHookPoint *HP_cmdline_init_post;
 	struct HPMHookPoint *HP_cmdline_final_pre;
@@ -2700,6 +2702,8 @@ struct {
 	struct HPMHookPoint *HP_instance_valid_post;
 	struct HPMHookPoint *HP_instance_destroy_timer_pre;
 	struct HPMHookPoint *HP_instance_destroy_timer_post;
+	struct HPMHookPoint *HP_instance_force_destroy_pre;
+	struct HPMHookPoint *HP_instance_force_destroy_post;
 	struct HPMHookPoint *HP_intif_parse_pre;
 	struct HPMHookPoint *HP_intif_parse_post;
 	struct HPMHookPoint *HP_intif_create_pet_pre;
@@ -8785,6 +8789,8 @@ struct {
 	int HP_clif_petEvolutionResult_post;
 	int HP_clif_party_dead_notification_pre;
 	int HP_clif_party_dead_notification_post;
+	int HP_clif_pMemorialDungeonCommand_pre;
+	int HP_clif_pMemorialDungeonCommand_post;
 	int HP_cmdline_init_pre;
 	int HP_cmdline_init_post;
 	int HP_cmdline_final_pre;
@@ -9279,6 +9285,8 @@ struct {
 	int HP_instance_valid_post;
 	int HP_instance_destroy_timer_pre;
 	int HP_instance_destroy_timer_post;
+	int HP_instance_force_destroy_pre;
+	int HP_instance_force_destroy_post;
 	int HP_intif_parse_pre;
 	int HP_intif_parse_post;
 	int HP_intif_create_pet_pre;

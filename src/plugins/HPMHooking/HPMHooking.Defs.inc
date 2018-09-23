@@ -2614,6 +2614,8 @@ typedef void (*HPMHOOK_pre_clif_petEvolutionResult) (int *fd, enum pet_evolution
 typedef void (*HPMHOOK_post_clif_petEvolutionResult) (int fd, enum pet_evolution_result result);
 typedef void (*HPMHOOK_pre_clif_party_dead_notification) (struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_party_dead_notification) (struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_pMemorialDungeonCommand) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pMemorialDungeonCommand) (int fd, struct map_session_data *sd);
 #endif // MAP_CLIF_H
 #ifdef COMMON_CORE_H /* cmdline */
 typedef void (*HPMHOOK_pre_cmdline_init) (void);
@@ -3140,6 +3142,8 @@ typedef bool (*HPMHOOK_pre_instance_valid) (int *instance_id);
 typedef bool (*HPMHOOK_post_instance_valid) (bool retVal___, int instance_id);
 typedef int (*HPMHOOK_pre_instance_destroy_timer) (int *tid, int64 *tick, int *id, intptr_t *data);
 typedef int (*HPMHOOK_post_instance_destroy_timer) (int retVal___, int tid, int64 tick, int id, intptr_t data);
+typedef void (*HPMHOOK_pre_instance_force_destroy) (struct map_session_data **sd);
+typedef void (*HPMHOOK_post_instance_force_destroy) (struct map_session_data *sd);
 #endif // MAP_INSTANCE_H
 #ifdef CHAR_INT_ACHIEVEMENT_H /* inter_achievement */
 typedef int (*HPMHOOK_pre_inter_achievement_sql_init) (void);

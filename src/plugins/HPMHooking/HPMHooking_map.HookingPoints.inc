@@ -1127,6 +1127,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->pPetEvolution, HP_clif_pPetEvolution) },
 	{ HP_POP(clif->petEvolutionResult, HP_clif_petEvolutionResult) },
 	{ HP_POP(clif->party_dead_notification, HP_clif_party_dead_notification) },
+	{ HP_POP(clif->pMemorialDungeonCommand, HP_clif_pMemorialDungeonCommand) },
 /* cmdline_interface */
 	{ HP_POP(cmdline->init, HP_cmdline_init) },
 	{ HP_POP(cmdline->final, HP_cmdline_final) },
@@ -1386,6 +1387,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(instance->set_timeout, HP_instance_set_timeout) },
 	{ HP_POP(instance->valid, HP_instance_valid) },
 	{ HP_POP(instance->destroy_timer, HP_instance_destroy_timer) },
+	{ HP_POP(instance->force_destroy, HP_instance_force_destroy) },
 /* intif_interface */
 	{ HP_POP(intif->parse, HP_intif_parse) },
 	{ HP_POP(intif->create_pet, HP_intif_create_pet) },

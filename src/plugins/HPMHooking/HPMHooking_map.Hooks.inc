@@ -28756,6 +28756,32 @@ void HP_clif_party_dead_notification(struct map_session_data *sd) {
 	}
 	return;
 }
+void HP_clif_pMemorialDungeonCommand(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_pMemorialDungeonCommand_pre > 0) {
+		void (*preHookFunc) (int *fd, struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pMemorialDungeonCommand_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_pMemorialDungeonCommand_pre[hIndex].func;
+			preHookFunc(&fd, &sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.pMemorialDungeonCommand(fd, sd);
+	}
+	if (HPMHooks.count.HP_clif_pMemorialDungeonCommand_post > 0) {
+		void (*postHookFunc) (int fd, struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pMemorialDungeonCommand_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_pMemorialDungeonCommand_post[hIndex].func;
+			postHookFunc(fd, sd);
+		}
+	}
+	return;
+}
 /* cmdline_interface */
 void HP_cmdline_init(void) {
 	int hIndex = 0;
@@ -35449,6 +35475,32 @@ int HP_instance_destroy_timer(int tid, int64 tick, int id, intptr_t data) {
 		}
 	}
 	return retVal___;
+}
+void HP_instance_force_destroy(struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_instance_force_destroy_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_instance_force_destroy_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_instance_force_destroy_pre[hIndex].func;
+			preHookFunc(&sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.instance.force_destroy(sd);
+	}
+	if (HPMHooks.count.HP_instance_force_destroy_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_instance_force_destroy_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_instance_force_destroy_post[hIndex].func;
+			postHookFunc(sd);
+		}
+	}
+	return;
 }
 /* intif_interface */
 int HP_intif_parse(int fd) {
