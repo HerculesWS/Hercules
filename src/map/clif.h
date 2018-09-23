@@ -684,6 +684,7 @@ struct clif_interface {
 	uint16 map_port;
 	char map_ip_str[128];
 	int map_fd;
+	int cmd;
 	/* for clif_clearunit_delayed */
 	struct eri *delay_clearunit_ers;
 	/* Cash Shop [Ind/Hercules] */

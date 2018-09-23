@@ -18837,8 +18837,20 @@ static void clif_monster_hp_bar(struct mob_data *md, struct map_session_data *sd
 }
 
 /* [Ind/Hercules] placeholder for unsupported incoming packets (avoids server disconnecting client) */
-static void __attribute__ ((unused)) clif_parse_dull(int fd, struct map_session_data *sd)
+static void clif_parse_dull(int fd, struct map_session_data *sd)
 {
+	const int cmd = clif->cmd;
+	Assert_retv(cmd <= MAX_PACKET_DB && cmd >= MIN_PACKET_DB);
+
+	int packet_len = packet_db[cmd].len;
+	if (packet_len == -1) { // variable-length packet
+		packet_len = RFIFOW(fd, 2);
+	}
+	if (sd) {
+		ShowWarning("Unhandled packet 0x%04d (length %d), %s session #%d, %d/%d (AID/CID)\n", cmd, packet_len, sd->state.active ? "authed" : "unauthed", fd, sd->status.account_id, sd->status.char_id);
+	} else {
+		ShowWarning("Unhandled packet 0x%04d (length %d), session #%d\n", cmd, packet_len, fd);
+	}
 	return;
 }
 
@@ -21919,6 +21931,7 @@ static int clif_parse(int fd)
 			parse_cmd_func = clif->parse_cmd;
 
 		cmd = parse_cmd_func(fd,sd);
+		clif->cmd = cmd;
 
 		if (VECTOR_LENGTH(HPM->packets[hpClif_Parse]) > 0) {
 			int result = HPM->parse_packets(fd,cmd,hpClif_Parse);
@@ -21982,8 +21995,8 @@ static int clif_parse(int fd)
 				else
 					packet_db[cmd].func(fd, sd);
 		}
-#ifdef DUMP_UNKNOWN_PACKET
 		else {
+#ifdef DUMP_UNKNOWN_PACKET
 			const char* packet_txt = "save/packet.txt";
 			FILE* fp;
 
@@ -22009,8 +22022,10 @@ static int clif_parse(int fd)
 
 				ShowDump(RFIFOP(fd,0), packet_len);
 			}
-		}
+#else
+			clif->pDull(fd, sd);
 #endif
+		}
 
 		RFIFOSKIP(fd, packet_len);
 
@@ -22182,6 +22197,7 @@ void clif_defaults(void)
 	clif->map_port = 5121;
 	clif->ally_only = false;
 	clif->delayed_damage_ers = NULL;
+	clif->cmd = -1;
 	/* core */
 	clif->init = do_init_clif;
 	clif->final = do_final_clif;
