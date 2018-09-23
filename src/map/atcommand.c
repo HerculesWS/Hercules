@@ -4297,7 +4297,7 @@ ACMD(repairall)
 
 	if (count > 0) {
 		clif->misceffect(&sd->bl, 3);
-		clif->equiplist(sd);
+		clif->equipList(sd);
 		clif->message(fd, msg_fd(fd,107)); // All items have been repaired.
 	} else {
 		clif->message(fd, msg_fd(fd,108)); // No item need to be repaired.

@@ -9361,7 +9361,7 @@ static BUILDIN(repair)
 			if(num==repaircounter) {
 				sd->status.inventory[i].attribute |= ATTR_BROKEN;
 				sd->status.inventory[i].attribute ^= ATTR_BROKEN;
-				clif->equiplist(sd);
+				clif->equipList(sd);
 				clif->produce_effect(sd, 0, sd->status.inventory[i].nameid);
 				clif->misceffect(&sd->bl, 3);
 				break;
@@ -9398,7 +9398,7 @@ static BUILDIN(repairall)
 	if(repaircounter)
 	{
 		clif->misceffect(&sd->bl, 3);
-		clif->equiplist(sd);
+		clif->equipList(sd);
 	}
 
 	return true;

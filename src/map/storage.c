@@ -122,8 +122,8 @@ static int storage_storageopen(struct map_session_data *sd)
 
 	if (sd->storage.aggregate > 0) {
 		storage->sortitem(VECTOR_DATA(sd->storage.item), VECTOR_LENGTH(sd->storage.item));
-		clif->storagelist(sd, VECTOR_DATA(sd->storage.item), VECTOR_LENGTH(sd->storage.item));
 	}
+	clif->storageList(sd, VECTOR_DATA(sd->storage.item), VECTOR_LENGTH(sd->storage.item));
 
 	clif->updatestorageamount(sd, sd->storage.aggregate, MAX_STORAGE);
 	return 0;
@@ -512,7 +512,7 @@ static int storage_guild_storageopen(struct map_session_data *sd)
 	gstor->storage_status = 1;
 	sd->state.storage_flag = STORAGE_FLAG_GUILD;
 	storage->sortitem(gstor->items, ARRAYLENGTH(gstor->items));
-	clif->storagelist(sd, gstor->items, ARRAYLENGTH(gstor->items));
+	clif->guildStorageList(sd, gstor->items, ARRAYLENGTH(gstor->items));
 	clif->updatestorageamount(sd, gstor->storage_amount, MAX_GUILD_STORAGE);
 	return 0;
 }

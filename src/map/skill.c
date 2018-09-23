@@ -2588,7 +2588,7 @@ static int skill_break_equip(struct block_list *bl, unsigned short where, int ra
 				pc->unequipitem(sd, j, PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE);
 			}
 		}
-		clif->equiplist(sd);
+		clif->equipList(sd);
 	}
 
 	return where; //Return list of pieces broken.
@@ -16139,7 +16139,7 @@ static void skill_repairweapon(struct map_session_data *sd, int idx)
 	item->attribute |= ATTR_BROKEN;
 	item->attribute ^= ATTR_BROKEN; /* clear broken state */
 
-	clif->equiplist(target_sd);
+	clif->equipList(target_sd);
 
 	pc->delitem(sd, pc->search_inventory(sd, material), 1, 0, DELITEM_NORMAL, LOG_TYPE_CONSUME); // FIXME: is this the correct reason flag?
 
@@ -16222,7 +16222,7 @@ static void skill_weaponrefine(struct map_session_data *sd, int idx)
 				}
 				clif->delitem(sd, idx, 1, DELITEM_NORMAL);
 				clif->upgrademessage(sd->fd, 0,item->nameid);
-				clif->inventorylist(sd);
+				clif->inventoryList(sd);
 				clif->refine(sd->fd,0,idx,item->refine);
 				if (ep)
 					pc->equipitem(sd,idx,ep);

@@ -350,7 +350,7 @@ static int pet_return_egg(struct map_session_data *sd, struct pet_data *pd)
 		sd->status.inventory[i].bound = IBT_NONE;
 	}
 #if PACKETVER >= 20180704
-	clif->inventorylist(sd);
+	clif->inventoryList(sd);
 	clif->send_petdata(sd, pd, 6, 0);
 #endif
 	pd->pet.incubate = 1;
