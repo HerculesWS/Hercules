@@ -1142,7 +1142,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x02cc,4);
 	packet(0x02cd,26);
 	packet(0x02ce,10);
-	packet(0x02cf,6);
+	packet(0x02cf,6,clif->pMemorialDungeonCommand);
 	packet(0x02d0,-1);
 	packet(0x02d1,-1);
 	packet(0x02d2,-1);

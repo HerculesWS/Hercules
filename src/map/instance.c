@@ -727,6 +727,66 @@ static void instance_check_kick(struct map_session_data *sd)
 	}
 }
 
+/**
+ * Look up existing memorial dungeon of the player and destroy it
+ *
+ * @param sd session data.
+ *
+ */
+static void instance_force_destroy(struct map_session_data *sd)
+{
+	nullpo_retv(sd);
+
+	for (int i = 0; i < instance->instances; ++i) {
+		switch (instance->list[i].owner_type) {
+		case IOT_CHAR:
+		{
+			if (instance->list[i].owner_id != sd->status.char_id)
+				continue;
+			break;
+		}
+		case IOT_PARTY:
+		{
+			int party_id = sd->status.party_id;
+			if (instance->list[i].owner_id != party_id)
+				continue;
+			int j = 0;
+			struct party_data *pt = party->search(party_id);
+			nullpo_retv(pt);
+
+			ARR_FIND(0, MAX_PARTY, j, pt->party.member[j].leader);
+			if (j == MAX_PARTY) {
+				ShowWarning("clif_parse_memorial_dungeon_command: trying to destroy a party instance, while the party has no leader.");
+				return;
+			}
+			if (pt->party.member[j].char_id != sd->status.char_id) {
+				ShowWarning("clif_parse_memorial_dungeon_command: trying to destroy a party instance, from a non party-leader player.");
+				return;
+			}
+			break;
+		}
+		case IOT_GUILD:
+		{
+			int guild_id = sd->status.guild_id;
+			if (instance->list[i].owner_id != guild_id)
+				continue;
+			struct guild *g = guild->search(guild_id);
+			nullpo_retv(g);
+
+			if (g->member[0].char_id != sd->status.char_id) {
+				ShowWarning("clif_parse_memorial_dungeon_command: trying to destroy a guild instance, from a non guild-master player.");
+				return;
+			}
+			break;
+		}
+		default:
+			continue;
+		}
+		instance->destroy(instance->list[i].id);
+		return;
+	}
+}
+
 static void do_reload_instance(void)
 {
 	struct s_mapiterator *iter;
@@ -810,4 +870,5 @@ void instance_defaults(void)
 	instance->set_timeout = instance_set_timeout;
 	instance->valid = instance_is_valid;
 	instance->destroy_timer = instance_destroy_timer;
+	instance->force_destroy = instance_force_destroy;
 }
