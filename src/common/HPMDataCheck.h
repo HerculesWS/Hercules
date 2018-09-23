@@ -557,6 +557,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "mapflag_skill_adjust", sizeof(struct mapflag_skill_adjust), SERVER_TYPE_MAP },
 		{ "mapit_interface", sizeof(struct mapit_interface), SERVER_TYPE_MAP },
 		{ "questinfo", sizeof(struct questinfo), SERVER_TYPE_MAP },
+		{ "questinfo_itemreq", sizeof(struct questinfo_itemreq), SERVER_TYPE_MAP },
 		{ "questinfo_qreq", sizeof(struct questinfo_qreq), SERVER_TYPE_MAP },
 		{ "spawn_data", sizeof(struct spawn_data), SERVER_TYPE_MAP },
 	#else
