@@ -17556,6 +17556,7 @@ static int clif_instance(int instance_id, int type, int flag)
 		case 2:
 			// S 0x2cc <Standby Position>.W
 			// To announce Instancing queue creation if no maps available
+			// flag is priority, negative value mean cancel reservation
 			WBUFW(buf,0) = 0x02CC;
 			WBUFW(buf,2) = flag;
 			clif->send(buf,packet_len(0x02CC),&sd->bl,target);
