@@ -9,6 +9,32 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+## [v2018.09.23] `September 23 2018`
+
+### Added
+
+- Added LGTM.com code quality badges to the README. (#2202)
+- Added maps and constants related to episode 17.1 to the map database and constants list. (#2203)
+- Added/updated packets, encryption keys and message tables for clients up to 2018-09-19 (#2199)
+- Added `-Wvla` to the compiler flags, to prevent accidental usage of variable length arrays. (#2199)
+- Implemented `PACKET_CZ_MEMORIALDUNGEON_COMMAND`. (#2195)
+- Extended `setquestinfo()` with support for item amount ranges. (#2218)
+- Implemented the Mob Skill DB generator into the `db2sql` plugin. (#2149)
+
+### Changed
+
+- Changed the Travis build to use the maximum available PACKETVER, so that the recent code is tested. (#2199)
+- Added a shortand to call `mes()` without arguments to mean `mes("")`. (#2193)
+
+### Fixed
+
+- Added a missing `IF NOT EXISTS` clause in the `char_achievements` table creation query. (e71e41b36b)
+- Fixed an issue in packet `ZC_INVENTIRY_MOVE_FAILED` (#2199, issue #2213)
+- Fixed a validation error in `setquestinfo()`. (#2218)
+- Fixed an error in the achievement system, when killing a cloned mob. (#2204, issue #2201)
+- Fixed a trucation issue in the card columns of the database. (#2205, issue #2187)
+- Fixed a crash when a character is removed from the `char` table but not from the `guild_member`. (#2209, issue #2173)
+
 ## [v2018.08.26+1] `August 29 2018`
 
 ### Fixed
@@ -405,6 +431,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2018.09.23]: https://github.com/HerculesWS/Hercules/compare/v2018.08.26+1...v2018.09.23
 [v2018.08.26+1]: https://github.com/HerculesWS/Hercules/compare/v2018.08.26...v2018.08.26+1
 [v2018.08.26]: https://github.com/HerculesWS/Hercules/compare/v2018.07.29+2...v2018.08.26
 [v2018.07.29+2]: https://github.com/HerculesWS/Hercules/compare/v2018.07.29+1...v2018.07.29+2
