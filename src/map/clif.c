@@ -8207,6 +8207,7 @@ static void clif_guild_invite(struct map_session_data *sd, struct guild *g)
 ///     1 = Offer rejected.
 ///     2 = Offer accepted.
 ///     3 = Guild full.
+///     4 = Offline or not exists
 static void clif_guild_inviteack(struct map_session_data *sd, int flag)
 {
 	int fd;
