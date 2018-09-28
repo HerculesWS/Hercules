@@ -1016,45 +1016,56 @@ static bool achievement_check_title(struct map_session_data *sd, int title_id) {
 	return false;
 }
 
+static void achievement_get_rewards_buffs(struct map_session_data *sd, const struct achievement_data *ad)
+{
+	nullpo_retv(sd);
+	nullpo_retv(ad);
+
+	if (ad->rewards.bonus != NULL)
+		script->run(ad->rewards.bonus, 0, sd->bl.id, 0);
+}
+
+// TODO: kro send items by rodex
+static void achievement_get_rewards_items(struct map_session_data *sd, const struct achievement_data *ad)
+{
+	nullpo_retv(sd);
+	nullpo_retv(ad);
+
+	struct item it = { 0 };
+	it.identify = 1;
+
+	for (int i = 0; i < VECTOR_LENGTH(ad->rewards.item); i++) {
+		it.nameid = VECTOR_INDEX(ad->rewards.item, i).id;
+		int total = VECTOR_INDEX(ad->rewards.item, i).amount;
+
+		//Check if it's stackable.
+		if (!itemdb->isstackable(it.nameid)) {
+			it.amount = 1;
+			for (int j = 0; j < total; ++j)
+				pc->additem(sd, &it, 1, LOG_TYPE_SCRIPT);
+		} else {
+			it.amount = total;
+			pc->additem(sd, &it, total, LOG_TYPE_SCRIPT);
+		}
+	}
+}
+
 /**
  * Achievement rewards are given to player
  * @param  sd        session data
  * @param  ad        achievement data
  */
-static void achievement_get_rewards(struct map_session_data *sd, const struct achievement_data *ad)
+static bool achievement_get_rewards(struct map_session_data *sd, const struct achievement_data *ad)
 {
-	int i = 0;
-	struct achievement *ach = NULL;
+	nullpo_retr(false, sd);
+	nullpo_retr(false, ad);
 
-	nullpo_retv(sd);
-	nullpo_retv(ad);
-
-	if ((ach = achievement->ensure(sd, ad)) == NULL)
-		return;
+	struct achievement *ach = achievement->ensure(sd, ad);
+	if (ach == NULL)
+		return false;
 
 	/* Buff */
-	if (ad->rewards.bonus != NULL)
-		script->run(ad->rewards.bonus, 0, sd->bl.id, 0);
-
-	/* Give Items */
-	for (i = 0; i < VECTOR_LENGTH(ad->rewards.item); i++) {
-		struct item it = { 0 };
-		int total = 0;
-
-		it.nameid = VECTOR_INDEX(ad->rewards.item, i).id;
-		total = VECTOR_INDEX(ad->rewards.item, i).amount;
-
-		it.identify = 1;
-
-		//Check if it's stackable.
-		if (!itemdb->isstackable(it.nameid)) {
-			int j = 0;
-			for (j = 0; j < total; ++j)
-				pc->additem(sd, &it, (it.amount = 1), LOG_TYPE_SCRIPT);
-		} else {
-			pc->additem(sd, &it, (it.amount = total), LOG_TYPE_SCRIPT);
-		}
-	}
+	achievement->get_rewards_buffs(sd, ad);
 
 	ach->rewarded_at = time(NULL);
 
@@ -1066,6 +1077,11 @@ static void achievement_get_rewards(struct map_session_data *sd, const struct ac
 		clif->achievement_send_update(sd->fd, sd, ad); // send update.
 		clif->achievement_reward_ack(sd->fd, sd, ad);
 	}
+
+	/* Give Items */
+	achievement->get_rewards_items(sd, ad);
+
+	return true;
 }
 
 /**
@@ -1978,4 +1994,6 @@ void achievement_defaults(void)
 	achievement->init_titles = achievement_init_titles;
 	achievement->check_title = achievement_check_title;
 	achievement->get_rewards = achievement_get_rewards;
+	achievement->get_rewards_buffs = achievement_get_rewards_buffs;
+	achievement->get_rewards_items = achievement_get_rewards_items;
 }
