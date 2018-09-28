@@ -2722,7 +2722,7 @@ struct packet_achievement_update {
 
 struct packet_achievement_reward_ack {
 	uint16 packet_id;
-	uint8 received;
+	uint8 failed;
 	uint32 ach_id;
 } __attribute__((packed));
 

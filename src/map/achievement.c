@@ -1021,7 +1021,8 @@ static bool achievement_check_title(struct map_session_data *sd, int title_id) {
  * @param  sd        session data
  * @param  ad        achievement data
  */
-static void achievement_get_rewards(struct map_session_data *sd, const struct achievement_data *ad) {
+static void achievement_get_rewards(struct map_session_data *sd, const struct achievement_data *ad)
+{
 	int i = 0;
 	struct achievement *ach = NULL;
 
@@ -1062,8 +1063,8 @@ static void achievement_get_rewards(struct map_session_data *sd, const struct ac
 		VECTOR_PUSH(sd->title_ids, ad->rewards.title_id);
 		clif->achievement_send_list(sd->fd, sd);
 	} else {
-		clif->achievement_reward_ack(sd->fd, sd, ad);
 		clif->achievement_send_update(sd->fd, sd, ad); // send update.
+		clif->achievement_reward_ack(sd->fd, sd, ad);
 	}
 }
 

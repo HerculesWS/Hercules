@@ -20638,7 +20638,7 @@ static void clif_achievement_reward_ack(int fd, struct map_session_data *sd, con
 	nullpo_retv(ad);
 
 	p.packet_id = achievementRewardAckType;
-	p.received = 1;
+	p.failed = 0;
 	p.ach_id = ad->id;
 
 	clif->send(&p, packet_len(achievementRewardAckType), &sd->bl, SELF);
