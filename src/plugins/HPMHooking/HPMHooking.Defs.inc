@@ -176,8 +176,12 @@ typedef void (*HPMHOOK_pre_achievement_init_titles) (struct map_session_data **s
 typedef void (*HPMHOOK_post_achievement_init_titles) (struct map_session_data *sd);
 typedef bool (*HPMHOOK_pre_achievement_check_title) (struct map_session_data **sd, int *title_id);
 typedef bool (*HPMHOOK_post_achievement_check_title) (bool retVal___, struct map_session_data *sd, int title_id);
-typedef void (*HPMHOOK_pre_achievement_get_rewards) (struct map_session_data **sd, const struct achievement_data **ad);
-typedef void (*HPMHOOK_post_achievement_get_rewards) (struct map_session_data *sd, const struct achievement_data *ad);
+typedef bool (*HPMHOOK_pre_achievement_get_rewards) (struct map_session_data **sd, const struct achievement_data **ad);
+typedef bool (*HPMHOOK_post_achievement_get_rewards) (bool retVal___, struct map_session_data *sd, const struct achievement_data *ad);
+typedef void (*HPMHOOK_pre_achievement_get_rewards_buffs) (struct map_session_data **sd, const struct achievement_data **ad);
+typedef void (*HPMHOOK_post_achievement_get_rewards_buffs) (struct map_session_data *sd, const struct achievement_data *ad);
+typedef void (*HPMHOOK_pre_achievement_get_rewards_items) (struct map_session_data **sd, const struct achievement_data **ad);
+typedef void (*HPMHOOK_post_achievement_get_rewards_items) (struct map_session_data *sd, const struct achievement_data *ad);
 #endif // MAP_ACHIEVEMENT_H
 #ifdef MAP_ATCOMMAND_H /* atcommand */
 typedef void (*HPMHOOK_pre_atcommand_init) (bool *minimal);
@@ -5872,8 +5876,8 @@ typedef int (*HPMHOOK_pre_pc_search_inventory) (struct map_session_data **sd, in
 typedef int (*HPMHOOK_post_pc_search_inventory) (int retVal___, struct map_session_data *sd, int item_id);
 typedef int (*HPMHOOK_pre_pc_payzeny) (struct map_session_data **sd, int *zeny, enum e_log_pick_type *type, struct map_session_data **tsd);
 typedef int (*HPMHOOK_post_pc_payzeny) (int retVal___, struct map_session_data *sd, int zeny, enum e_log_pick_type type, struct map_session_data *tsd);
-typedef int (*HPMHOOK_pre_pc_additem) (struct map_session_data **sd, struct item **item_data, int *amount, e_log_pick_type *log_type);
-typedef int (*HPMHOOK_post_pc_additem) (int retVal___, struct map_session_data *sd, struct item *item_data, int amount, e_log_pick_type log_type);
+typedef int (*HPMHOOK_pre_pc_additem) (struct map_session_data **sd, const struct item **item_data, int *amount, e_log_pick_type *log_type);
+typedef int (*HPMHOOK_post_pc_additem) (int retVal___, struct map_session_data *sd, const struct item *item_data, int amount, e_log_pick_type log_type);
 typedef int (*HPMHOOK_pre_pc_getzeny) (struct map_session_data **sd, int *zeny, enum e_log_pick_type *type, struct map_session_data **tsd);
 typedef int (*HPMHOOK_post_pc_getzeny) (int retVal___, struct map_session_data *sd, int zeny, enum e_log_pick_type type, struct map_session_data *tsd);
 typedef int (*HPMHOOK_pre_pc_delitem) (struct map_session_data **sd, int *n, int *amount, int *type, short *reason, e_log_pick_type *log_type);

@@ -1459,13 +1459,40 @@ bool HP_achievement_check_title(struct map_session_data *sd, int title_id) {
 	}
 	return retVal___;
 }
-void HP_achievement_get_rewards(struct map_session_data *sd, const struct achievement_data *ad) {
+bool HP_achievement_get_rewards(struct map_session_data *sd, const struct achievement_data *ad) {
 	int hIndex = 0;
+	bool retVal___ = false;
 	if (HPMHooks.count.HP_achievement_get_rewards_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, const struct achievement_data **ad);
+		bool (*preHookFunc) (struct map_session_data **sd, const struct achievement_data **ad);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_get_rewards_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_achievement_get_rewards_pre[hIndex].func;
+			retVal___ = preHookFunc(&sd, &ad);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.achievement.get_rewards(sd, ad);
+	}
+	if (HPMHooks.count.HP_achievement_get_rewards_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, const struct achievement_data *ad);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_get_rewards_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_get_rewards_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd, ad);
+		}
+	}
+	return retVal___;
+}
+void HP_achievement_get_rewards_buffs(struct map_session_data *sd, const struct achievement_data *ad) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_get_rewards_buffs_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, const struct achievement_data **ad);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_get_rewards_buffs_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_get_rewards_buffs_pre[hIndex].func;
 			preHookFunc(&sd, &ad);
 		}
 		if (*HPMforce_return) {
@@ -1474,12 +1501,38 @@ void HP_achievement_get_rewards(struct map_session_data *sd, const struct achiev
 		}
 	}
 	{
-		HPMHooks.source.achievement.get_rewards(sd, ad);
+		HPMHooks.source.achievement.get_rewards_buffs(sd, ad);
 	}
-	if (HPMHooks.count.HP_achievement_get_rewards_post > 0) {
+	if (HPMHooks.count.HP_achievement_get_rewards_buffs_post > 0) {
 		void (*postHookFunc) (struct map_session_data *sd, const struct achievement_data *ad);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_get_rewards_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_achievement_get_rewards_post[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_get_rewards_buffs_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_get_rewards_buffs_post[hIndex].func;
+			postHookFunc(sd, ad);
+		}
+	}
+	return;
+}
+void HP_achievement_get_rewards_items(struct map_session_data *sd, const struct achievement_data *ad) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_get_rewards_items_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, const struct achievement_data **ad);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_get_rewards_items_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_get_rewards_items_pre[hIndex].func;
+			preHookFunc(&sd, &ad);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.achievement.get_rewards_items(sd, ad);
+	}
+	if (HPMHooks.count.HP_achievement_get_rewards_items_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, const struct achievement_data *ad);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_get_rewards_items_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_get_rewards_items_post[hIndex].func;
 			postHookFunc(sd, ad);
 		}
 	}
@@ -59054,11 +59107,11 @@ int HP_pc_payzeny(struct map_session_data *sd, int zeny, enum e_log_pick_type ty
 	}
 	return retVal___;
 }
-int HP_pc_additem(struct map_session_data *sd, struct item *item_data, int amount, e_log_pick_type log_type) {
+int HP_pc_additem(struct map_session_data *sd, const struct item *item_data, int amount, e_log_pick_type log_type) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_pc_additem_pre > 0) {
-		int (*preHookFunc) (struct map_session_data **sd, struct item **item_data, int *amount, e_log_pick_type *log_type);
+		int (*preHookFunc) (struct map_session_data **sd, const struct item **item_data, int *amount, e_log_pick_type *log_type);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_additem_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_pc_additem_pre[hIndex].func;
@@ -59073,7 +59126,7 @@ int HP_pc_additem(struct map_session_data *sd, struct item *item_data, int amoun
 		retVal___ = HPMHooks.source.pc.additem(sd, item_data, amount, log_type);
 	}
 	if (HPMHooks.count.HP_pc_additem_post > 0) {
-		int (*postHookFunc) (int retVal___, struct map_session_data *sd, struct item *item_data, int amount, e_log_pick_type log_type);
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, const struct item *item_data, int amount, e_log_pick_type log_type);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_additem_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_pc_additem_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd, item_data, amount, log_type);
