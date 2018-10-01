@@ -721,7 +721,6 @@ static int guild_reply_invite(struct map_session_data *sd, int guild_id, int fla
 	}
 	else
 	{// accepted
-		struct guild_member m;
 		struct guild* g;
 		int i;
 
@@ -741,8 +740,8 @@ static int guild_reply_invite(struct map_session_data *sd, int guild_id, int fla
 			return 0;
 		}
 
-		guild->makemember(&m,sd);
-		intif->guild_addmember(guild_id, &m);
+		guild->makemember(&g->member[i], sd);
+		intif->guild_addmember(guild_id, &g->member[i]);
 		//TODO: send a minimap update to this player
 	}
 
