@@ -7417,6 +7417,7 @@ static const struct battle_data {
 	{ "features/enable_achievement_system", &battle_config.feature_enable_achievement,      1,      0,      1,              },
 	{ "ping_timer_inverval",                &battle_config.ping_timer_interval,             30,     0,      99999999,       },
 	{ "ping_time",                          &battle_config.ping_time,                       20,     0,      99999999,       },
+	{ "option_drop_max_loop",               &battle_config.option_drop_max_loop,            10,     1,      100000,         },
 };
 
 static bool battle_set_value_sub(int index, int value)

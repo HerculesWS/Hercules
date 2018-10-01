@@ -1900,15 +1900,53 @@ static int mob_ai_hard(int tid, int64 tick, int id, intptr_t data)
 	return 0;
 }
 
+/**
+ * Adds random options of a given options drop group into item.
+ * 
+ * @param item : item receiving random options
+ * @param options : Random Option Drop Group to be used
+ */
+static void mob_setdropitem_options(struct item *item, struct optdrop_group *options)
+{
+	nullpo_retv(item);
+	nullpo_retv(options);
+	
+	for (int i = 0; i < options->optslot_count; i++) {
+		if (rnd() % 10000 >= options->optslot_rate[i])
+			continue;
+
+		// count avoids a too long loop that would cause lag.
+		// if after option_drop_max_loop full iterations (running through all possibilities)
+		// it still fails to pick one, it'll stop at one random index in the next iteration
+		int count = battle_config.option_drop_max_loop * options->optslot[i].option_count + (rnd() % options->optslot[i].option_count);
+		int idx = 0;
+		while (count > 0 && rnd() % 10000 >= options->optslot[i].options[idx].rate) {
+			idx = (idx + 1) % options->optslot[i].option_count;
+			--count;
+		}
+
+		item->option[i].index = options->optslot[i].options[idx].id;
+
+		int min = options->optslot[i].options[idx].min;
+		int max = options->optslot[i].options[idx].max;
+		item->option[i].value = min + (rnd() % (max - min + 1));
+	}
+}
+
 /*==========================================
  * Initializes the delay drop structure for mob-dropped items.
  *------------------------------------------*/
-static struct item_drop *mob_setdropitem(int nameid, int qty, struct item_data *data)
+static struct item_drop *mob_setdropitem(int nameid, struct optdrop_group *options, int qty, struct item_data *data)
 {
 	struct item_drop *drop = ers_alloc(item_drop_ers, struct item_drop);
 	drop->item_data.nameid = nameid;
 	drop->item_data.amount = qty;
 	drop->item_data.identify = data ? itemdb->isidentified2(data) : itemdb->isidentified(nameid);
+	
+	// Set item options [KirieZ]
+	if (options != NULL)
+		mob->setdropitem_options(&drop->item_data, options);
+
 	drop->showdropeffect = true;
 	drop->next = NULL;
 	return drop;
@@ -2521,7 +2559,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 				continue;
 			}
 
-			ditem = mob->setdropitem(md->db->dropitem[i].nameid, 1, it);
+			ditem = mob->setdropitem(md->db->dropitem[i].nameid, md->db->dropitem[i].options, 1, it);
 
 			// Official Drop Announce [Jedzkie]
 			if (mvp_sd != NULL) {
@@ -2538,7 +2576,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 		// Ore Discovery [Celest]
 		if (sd == mvp_sd && pc->checkskill(sd,BS_FINDINGORE) > 0) {
 			if( (temp = itemdb->chain_item(itemdb->chain_cache[ECC_ORE],&i)) ) {
-				ditem = mob->setdropitem(temp, 1, NULL);
+				ditem = mob->setdropitem(temp, NULL, 1, NULL);
 				mob->item_drop(md, dlist, ditem, 0, i, homkillonly);
 			}
 		}
@@ -2570,7 +2608,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 						continue;
 					itemid = (!sd->add_drop[i].is_group) ? sd->add_drop[i].id : itemdb->chain_item(sd->add_drop[i].id, &drop_rate);
 					if( itemid )
-						mob->item_drop(md, dlist, mob->setdropitem(itemid,1,NULL), 0, drop_rate, homkillonly);
+						mob->item_drop(md, dlist, mob->setdropitem(itemid, NULL, 1, NULL), 0, drop_rate, homkillonly);
 				}
 			}
 
@@ -2632,6 +2670,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 			struct {
 				int nameid;
 				int p;
+				struct optdrop_group *options;
 			} mdrop[MAX_MVP_DROP] = { { 0 } };
 
 			for (i = 0; i < MAX_MVP_DROP; i++) {
@@ -2644,6 +2683,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 
 				mdrop[rpos].nameid = md->db->mvpitem[i].nameid;
 				mdrop[rpos].p = md->db->mvpitem[i].p;
+				mdrop[rpos].options = md->db->mvpitem[i].options;
 			}
 
 			for (i = 0; i < MAX_MVP_DROP; i++) {
@@ -2663,6 +2703,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 
 					item.nameid = mdrop[i].nameid;
 					item.identify = itemdb->isidentified2(data);
+					mob->setdropitem_options(&item, mdrop[i].options);
 					clif->mvp_item(mvp_sd, item.nameid);
 					log_mvp[0] = item.nameid;
 
@@ -3861,6 +3902,212 @@ static inline int mob_parse_dbrow_cap_value(int class_, int min, int max, int va
 }
 
 /**
+ * Reads one possible option for a option slot in a option drop group
+ * @param option : Libconfig entry
+ * @param entry : memory db entry for current slot
+ * @param idx : index of entry where this option should be inserted at
+ * @param calc_rate : if rates should be recalculated after reading all entries
+ * @param slot : option group slot being read (for messages)
+ * @param group : option group being read (for messages)
+ * @return true if it successfully read the entry, false otherwise
+ */
+static bool mob_read_optdrops_option(struct config_setting_t *option, struct optdrop_group_optslot *entry, int *idx, bool *calc_rate, int slot, const char *group)
+{
+	nullpo_retr(false, option);
+	nullpo_retr(false, entry);
+	nullpo_retr(false, idx);
+	nullpo_retr(false, calc_rate);
+	nullpo_retr(false, group);
+
+	const char *name = config_setting_name(option);
+	int opt_id;
+
+	if (strncmp(name, "Rate", 4) == 0)
+		return true;
+
+	if (script->get_constant(name, &opt_id) == false) {
+		ShowWarning("mob_read_optdrops_option: Invalid option \"%s\" for option slot %d of %s group, skipping.\n", name, slot, group);
+		return false;
+	}
+	
+	int min = 0, max = 0, opt_rate = 0;
+	if (config_setting_is_number(option)) {
+		// OptionName: value
+		min = libconfig->setting_get_int(option);
+	} else if (config_setting_is_array(option)) {
+		// OptionName: [min, max]
+		// OptionName: [min, max, rate]
+		int slen = libconfig->setting_length(option);
+		
+		if (slen >= 2) {
+			// [min, max,...]
+			min = libconfig->setting_get_int_elem(option, 0);
+			max = libconfig->setting_get_int_elem(option, 1);
+		}
+		
+		if (slen == 3) {
+			// [min, max, rate]
+			opt_rate = libconfig->setting_get_int_elem(option, 2);
+		}
+	} else {
+		ShowWarning("mob_read_optdrops_option: Invalid value \"%s\" for option slot %d of %s group, skipping.\n", name, slot, group);
+		return false;
+	}
+
+	if (max < min)
+		max = min;
+	
+	entry->options[*idx].id = opt_id;
+	entry->options[*idx].min = min;
+	entry->options[*idx].max = max;
+	entry->options[*idx].rate = opt_rate;
+
+	if (entry->options[*idx].rate == 0)
+		*calc_rate = true;
+
+	(*idx)++;
+
+	return true;
+}
+
+/**
+ * Reads the settings for one random option slot of a random option drop group.
+ * @param optslot : The slot entry from config file
+ * @param n : slot index
+ * @param group_id : Group index
+ * @param group : group name (used in messages)
+ * @return true if it succesfully read, false otherwise
+ */
+static bool mob_read_optdrops_optslot(struct config_setting_t *optslot, int n, int group_id, const char *group)
+{
+	nullpo_retr(false, optslot);
+	nullpo_retr(false, group);
+	Assert_retr(false, group_id >= 0 && group_id < mob->opt_drop_groups_count);
+	Assert_retr(false, n >= 0 && n < MAX_ITEM_OPTIONS);
+	
+	// Structure:
+	//	{
+	//		Rate: chance of option 1 (int)
+	//		OptionName1: value
+	//		OptionName2: [min, max]
+	//		OptionName3: [min, max, rate]
+	//      ....
+	//	}
+
+	int drop_rate; // The rate for this option to be dropped (Rate field)
+	if (libconfig->setting_lookup_int(optslot, "Rate", &drop_rate) == CONFIG_FALSE) {
+		ShowWarning("mob_read_optdrops_optslot: Missing option %d rate in group %s, skipping.\n", n, group);
+		return false;
+	}
+
+	int count = libconfig->setting_length(optslot);
+	if (count <= 1) { // 1 = Rate
+		ShowWarning("mob_read_optdrops_optslot: Option %d of %s group doesn't contain any possible options, skipping.\n", n, group);
+		return false;
+	}
+
+	struct optdrop_group_optslot *entry = &(mob->opt_drop_groups[group_id].optslot[n]);
+	entry->options = aCalloc(sizeof(struct optdrop_group_option), count);
+	
+	int idx = 0;
+	int i = 0;
+	struct config_setting_t *opt = NULL;
+	bool calc_rate = false;
+	while (i < count && (opt = libconfig->setting_get_elem(optslot, i)) != NULL) {
+		++i;
+		mob->read_optdrops_option(opt, entry, &idx, &calc_rate, n, group);
+	}
+	entry->option_count = idx;
+	mob->opt_drop_groups[group_id].optslot_count++;
+	mob->opt_drop_groups[group_id].optslot_rate[n] = drop_rate;
+	
+	// If there're empty rates, calculate them
+	if (calc_rate == true) {
+		for (int j = 0; j < idx; ++j) {
+			if (entry->options[j].rate == 0)
+				entry->options[j].rate = 10000 / idx;
+		}
+	}
+
+	return true;
+}
+
+/**
+ * Reads one random option drop group.
+ * @param group : Drop Group entry from config file
+ * @param n : group index
+ * @return true if it successfuly read, false otherwise
+ */
+static bool mob_read_optdrops_group(struct config_setting_t *group, int n)
+{
+	/* Structure:
+	<Group Name>: (
+		{ <Option 1 drop data> },
+		{ <Option 2 drop data> },
+		... // Up to MAX_ITEM_OPTIONS
+	)
+	*/
+	nullpo_retr(false, group);
+
+	const char *group_name = config_setting_name(group);
+
+	if (group_name == NULL || *group_name == '\0') {
+		ShowWarning("mob_read_optdrops_group: Invalid name for random option drop group, skipping group %d...\n", n);
+		return false;
+	}
+
+	script->set_constant2(group_name, n, false, false);
+
+	int i = 0;
+	struct config_setting_t *drop_data = NULL;
+	while (i < MAX_ITEM_OPTIONS && (drop_data = libconfig->setting_get_elem(group, i)) != NULL) {
+		mob->read_optdrops_optslot(drop_data, i, n, group_name);
+		i++;
+	}
+
+	return true;
+}
+
+/**
+ * Reads random option drop groups database.
+ */
+static bool mob_read_optdrops_db(void)
+{
+	const char *filename = "option_drop_groups.conf"; // FIXME hardcoded name
+
+	char filepath[256];
+	safesnprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, filename);
+
+	struct config_t option_groups;
+	if (libconfig->load_file(&option_groups, filepath) == CONFIG_FALSE) {
+		ShowError("Failed to load option drop groups\n");
+		return false;
+	}
+
+	struct config_setting_t *its = libconfig->lookup(&option_groups, "option_drop_group_db");
+	struct config_setting_t *groups = NULL;
+
+	int i = 0;
+	if (its != NULL && (groups = libconfig->setting_get_elem(its, 0)) != NULL) {
+		int count = libconfig->setting_length(groups);
+		mob->opt_drop_groups = aCalloc(sizeof(struct optdrop_group), count);
+		mob->opt_drop_groups_count = count; // maximum size (used by assertions)
+
+		struct config_setting_t *group = NULL;
+		while ((group = libconfig->setting_get_elem(groups, i)) != NULL) {
+			mob->read_optdrops_group(group, i);
+			i++;
+		}
+		mob->opt_drop_groups_count = i; // number of entries used (should be the same amount)
+	}
+
+	libconfig->destroy(&option_groups);
+
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", i, filepath);
+	return true;
+}
+
+/**
  * Processes the stats for a mob database entry.
  *
  * @param[in,out] entry The destination mob_db entry, already initialized
@@ -3941,6 +4188,51 @@ static uint32 mob_read_db_mode_sub(struct mob_db *entry, struct config_setting_t
 }
 
 /**
+ * Process an entry of mob/mvp drops that contains a random option drop group.
+ * 
+ * @param entry : mob db entry being read (used in error messages)
+ * @param item_name : AegisName of the item in this entry (used in error messages)
+ * @param drop : drop data entry
+ * @param drop_rate : used to return the entry drop_rate
+ * @returns a reference to the opt_drop_group to be used when creating this item drop
+ */
+static struct optdrop_group *mob_read_db_drops_option(struct mob_db *entry, const char *item_name, struct config_setting_t *drop, int *drop_rate)
+{
+	nullpo_retr(NULL, entry);
+	nullpo_retr(NULL, item_name);
+	nullpo_retr(NULL, drop);
+	nullpo_retr(NULL, drop_rate);
+
+	// (Drop Rate, "Option Group")
+	if (!config_setting_is_list(drop) || config_setting_length(drop) != 2) {
+		ShowError("mob_read_db_optdrops: Invalid format for option drop group on item \"%s\" in monster %d, skipping.\n", item_name, entry->mob_id);
+		return NULL;
+	}
+
+	int i32;
+	if (mob->get_const(libconfig->setting_get_elem(drop, 0), &i32) && i32 >= 0)
+		*drop_rate = i32;
+		
+	const char *group_name = libconfig->setting_get_string_elem(drop, 1);
+	if (group_name == NULL || *group_name == '\0') {
+		ShowError("mob_read_db_optdrops: Missing option drop group name on item \"%s\" in monster %d, skipping.\n", item_name, entry->mob_id);
+		return NULL;
+	}
+
+	int opt_id;
+	if (script->get_constant(group_name, &opt_id) == false) {
+		ShowError("mob_read_db_optdrops: Invalid option drop group \"%s\" on item \"%s\" in monster %d, does this group really exists? Skipping...\n", group_name, item_name, entry->mob_id);
+		return NULL;
+	}
+	if (opt_id < 0 || opt_id >= mob->opt_drop_groups_count) {
+		ShowError("mob_read_db_optdrops: Invalid option drop group \"%s\" index \"%d\" on item \"%s\" in monster %d, does this group really exists? Skipping...\n", group_name, opt_id, item_name, entry->mob_id);
+		return NULL;
+	}
+
+	return &mob->opt_drop_groups[opt_id];
+}
+
+/**
  * Processes the MVP drops for a mob_db entry.
  *
  * @param[in,out] entry The destination mob_db entry, already initialized
@@ -3965,9 +4257,18 @@ static void mob_read_db_mvpdrops_sub(struct mob_db *entry, struct config_setting
 			i++;
 			continue;
 		}
-		if (mob->get_const(drop, &i32) && i32 >= 0) {
-			value = i32;
+		
+		struct optdrop_group *drop_option = NULL;
+		if (config_setting_is_number(drop)) {
+			// Setting is a number, item doesn't contain options
+			if (mob->get_const(drop, &i32) && i32 >= 0) {
+				value = i32;
+			}
+		} else {
+			// (Drop Rate, "Opt Drop Group")
+			drop_option = mob->read_db_drops_option(entry, name, drop, &value);
 		}
+
 		if (value <= 0) {
 			ShowWarning("mob_read_db: wrong drop chance %d for mvp drop item %s in monster %d\n", value, name, entry->mob_id);
 			i++;
@@ -3981,6 +4282,7 @@ static void mob_read_db_mvpdrops_sub(struct mob_db *entry, struct config_setting
 		}
 		mob->item_dropratio_adjust(entry->mvpitem[idx].nameid, entry->mob_id, &rate_adjust);
 		entry->mvpitem[idx].p = mob->drop_adjust(value, rate_adjust, battle_config.item_drop_mvp_min, battle_config.item_drop_mvp_max);
+		entry->mvpitem[idx].options = drop_option;
 
 		//calculate and store Max available drop chance of the MVP item
 		if (entry->mvpitem[idx].p) {
@@ -4024,9 +4326,18 @@ static void mob_read_db_drops_sub(struct mob_db *entry, struct config_setting_t 
 			i++;
 			continue;
 		}
-		if (mob->get_const(drop, &i32) && i32 >= 0) {
-			value = i32;
+
+		struct optdrop_group *drop_option = NULL;
+		if (config_setting_is_number(drop)) {
+			// Setting is a number, item doesn't contain options
+			if (mob->get_const(drop, &i32) && i32 >= 0) {
+				value = i32;
+			}
+		} else {
+			// (Drop Rate, "Opt Drop Group")
+			drop_option = mob->read_db_drops_option(entry, name, drop, &value);
 		}
+		
 		if (value <= 0) {
 			ShowWarning("mob_read_db: wrong drop chance %d for drop item %s in monster %d\n", value, name, entry->mob_id);
 			i++;
@@ -4034,6 +4345,7 @@ static void mob_read_db_drops_sub(struct mob_db *entry, struct config_setting_t 
 		}
 
 		entry->dropitem[idx].nameid = id->nameid;
+		entry->dropitem[idx].options = drop_option;
 		if (!entry->dropitem[idx].nameid) {
 			entry->dropitem[idx].p = 0; //No drop.
 			i++;
@@ -4301,6 +4613,8 @@ static int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *sou
 	 * }
 	 * Drops: {
 	 *     AegisName: chance
+	 *     // or
+	 *     AegisName: (chance, "Option Drop Group")
 	 *     ...
 	 * }
 	 */
@@ -5213,6 +5527,7 @@ static void mob_load(bool minimal)
 		return;
 	}
 	sv->readdb(map->db_path, "mob_item_ratio.txt", ',', 2, 2+MAX_ITEMRATIO_MOBS, -1, mob->readdb_itemratio); // must be read before mobdb
+	mob->read_optdrops_db();
 	mob->readchatdb();
 	mob->readdb();
 	mob->readskilldb();
@@ -5253,6 +5568,8 @@ static void mob_reload(void)
 		}
 	}
 	mob->item_drop_ratio_other_db->clear(mob->item_drop_ratio_other_db, mob->final_ratio_sub);
+
+	mob->destroy_drop_groups();
 
 	mob->load(false);
 }
@@ -5309,6 +5626,22 @@ static void mob_destroy_mob_db(int index)
 	mob->db_data[index] = NULL;
 }
 
+/**
+ * Unloads option drop group database
+ */
+static void mob_destroy_drop_groups(void)
+{
+	for (int i = 0; i < mob->opt_drop_groups_count; i++) {
+		struct optdrop_group *group = &mob->opt_drop_groups[i];
+		
+		for (int j = 0; j < group->optslot_count; j++) {
+			aFree(group->optslot[j].options);
+		}
+	}
+
+	aFree(mob->opt_drop_groups);
+}
+
 /*==========================================
  * Clean memory usage.
  *------------------------------------------*/
@@ -5327,6 +5660,7 @@ static int do_final_mob(void)
 			mob->destroy_mob_db(i);
 		}
 	}
+	mob->destroy_drop_groups();
 	for (i = 0; i <= MAX_MOB_CHAT; i++)
 	{
 		if (mob->chat_db[i] != NULL)
@@ -5443,6 +5777,7 @@ void mob_defaults(void)
 	mob->ai_sub_lazy = mob_ai_sub_lazy;
 	mob->ai_lazy = mob_ai_lazy;
 	mob->ai_hard = mob_ai_hard;
+	mob->setdropitem_options = mob_setdropitem_options;
 	mob->setdropitem = mob_setdropitem;
 	mob->setlootitem = mob_setlootitem;
 	mob->delay_item_drop = mob_delay_item_drop;
@@ -5476,6 +5811,10 @@ void mob_defaults(void)
 	mob->clone_delete = mob_clone_delete;
 	mob->drop_adjust = mob_drop_adjust;
 	mob->item_dropratio_adjust = item_dropratio_adjust;
+	mob->read_optdrops_option = mob_read_optdrops_option;
+	mob->read_optdrops_optslot = mob_read_optdrops_optslot;
+	mob->read_optdrops_group = mob_read_optdrops_group;
+	mob->read_optdrops_db = mob_read_optdrops_db;
 	mob->lookup_const = mob_lookup_const;
 	mob->get_const = mob_get_const;
 	mob->db_validate_entry = mob_db_validate_entry;
@@ -5486,6 +5825,7 @@ void mob_defaults(void)
 	mob->read_db_drops_sub = mob_read_db_drops_sub;
 	mob->read_db_mvpdrops_sub = mob_read_db_mvpdrops_sub;
 	mob->read_db_mode_sub = mob_read_db_mode_sub;
+	mob->read_db_drops_option = mob_read_db_drops_option;
 	mob->read_db_stats_sub = mob_read_db_stats_sub;
 	mob->name_constants = mob_name_constants;
 	mob->readdb_mobavail = mob_readdb_mobavail;
@@ -5501,6 +5841,7 @@ void mob_defaults(void)
 	mob->final_ratio_sub = mob_final_ratio_sub;
 	mob->clear_spawninfo = mob_clear_spawninfo;
 	mob->destroy_mob_db = mob_destroy_mob_db;
+	mob->destroy_drop_groups = mob_destroy_drop_groups;
 	mob->skill_db_libconfig = mob_skill_db_libconfig;
 	mob->skill_db_libconfig_sub = mob_skill_db_libconfig_sub;
 	mob->skill_db_libconfig_sub_skill = mob_skill_db_libconfig_sub_skill;

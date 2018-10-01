@@ -152,6 +152,36 @@ struct spawn_info {
 	unsigned short qty;
 };
 
+/**
+ * Information of one possible option that will fill
+ * an option slot (see optdrop_group_optslot)
+ */
+struct optdrop_group_option {
+	int id; //< Option ID
+	int min; //< Minimun value when this option drops
+	int max; //< Maximun value when this option drops
+	int rate; //< Chance of dropping this option
+};
+
+/**
+ * Information of possible options that will fill
+ * one option slot
+ */
+struct optdrop_group_optslot {
+	int option_count; //< Number of options in *options
+	struct optdrop_group_option *options; //< Array of possible options
+};
+
+/**
+ * A group of options to be random picked when
+ * dropping an item
+ */
+struct optdrop_group {
+	int optslot_count; //< How many option slots are configured by this group
+	int optslot_rate[MAX_ITEM_OPTIONS]; //< The rate to fill each of the configured slots
+	struct optdrop_group_optslot optslot[MAX_ITEM_OPTIONS]; //< Details of the options that will go in each slot
+};
+
 struct mob_db {
 	int mob_id;
 	char sprite[NAME_LENGTH],name[NAME_LENGTH],jname[NAME_LENGTH];
@@ -160,8 +190,8 @@ struct mob_db {
 	short range2,range3;
 	short race2; // celest
 	unsigned short lv;
-	struct { int nameid,p; } dropitem[MAX_MOB_DROP];
-	struct { int nameid,p; } mvpitem[MAX_MVP_DROP];
+	struct { int nameid, p; struct optdrop_group *options; } dropitem[MAX_MOB_DROP];
+	struct { int nameid,p; struct optdrop_group *options; } mvpitem[MAX_MVP_DROP];
 	struct status_data status;
 	struct view_data vd;
 	unsigned int option;
@@ -436,6 +466,9 @@ struct mob_interface {
 	struct mob_db *dummy; //Dummy mob to be returned when a non-existant one is requested.
 	// Dynamic mob chat database
 	struct mob_chat *chat_db[MAX_MOB_CHAT + 1];
+	// Random Option Drop groups
+	struct optdrop_group *opt_drop_groups;
+	int opt_drop_groups_count;
 	// Defines the Manuk/Splendide/Mora mob groups for the status reductions [Epoque & Frost]
 	int manuk[8];
 	int splendide[5];
@@ -494,7 +527,8 @@ struct mob_interface {
 	int (*ai_sub_lazy) (struct mob_data *md, va_list args);
 	int (*ai_lazy) (int tid, int64 tick, int id, intptr_t data);
 	int (*ai_hard) (int tid, int64 tick, int id, intptr_t data);
-	struct item_drop* (*setdropitem) (int nameid, int qty, struct item_data *data);
+	void (*setdropitem_options) (struct item *item, struct optdrop_group *options);
+	struct item_drop* (*setdropitem) (int nameid, struct optdrop_group *options, int qty, struct item_data *data);
 	struct item_drop* (*setlootitem) (struct item *item);
 	int (*delay_item_drop) (int tid, int64 tick, int id, intptr_t data);
 	void (*item_drop) (struct mob_data *md, struct item_drop_list *dlist, struct item_drop *ditem, int loot, int drop_rate, unsigned short flag);
@@ -527,6 +561,10 @@ struct mob_interface {
 	int (*clone_delete) (struct mob_data *md);
 	unsigned int (*drop_adjust) (int baserate, int rate_adjust, unsigned short rate_min, unsigned short rate_max);
 	void (*item_dropratio_adjust) (int nameid, int mob_id, int *rate_adjust);
+	bool (*read_optdrops_option) (struct config_setting_t *option, struct optdrop_group_optslot *entry, int *idx, bool *calc_rate, int slot, const char *group);
+	bool (*read_optdrops_optslot) (struct config_setting_t *optslot, int n, int group_id, const char *group);
+	bool (*read_optdrops_group) (struct config_setting_t *group, int n);
+	bool (*read_optdrops_db) (void);
 	void (*readdb) (void);
 	bool (*lookup_const) (const struct config_setting_t *it, const char *name, int *value);
 	bool (*get_const) (const struct config_setting_t *it, int *value);
@@ -537,6 +575,7 @@ struct mob_interface {
 	void (*read_db_drops_sub) (struct mob_db *entry, struct config_setting_t *t);
 	void (*read_db_mvpdrops_sub) (struct mob_db *entry, struct config_setting_t *t);
 	uint32 (*read_db_mode_sub) (struct mob_db *entry, struct config_setting_t *t);
+	struct optdrop_group *(*read_db_drops_option) (struct mob_db *entry, const char *item_name, struct config_setting_t *drop, int *drop_rate);
 	void (*read_db_stats_sub) (struct mob_db *entry, struct config_setting_t *t);
 	void (*name_constants) (void);
 	bool (*readdb_mobavail) (char *str[], int columns, int current);
@@ -552,6 +591,7 @@ struct mob_interface {
 	void (*set_item_drop_ratio) (int nameid, struct item_drop_ratio *ratio);
 	int (*final_ratio_sub) (union DBKey key, struct DBData *data, va_list ap);
 	void (*destroy_mob_db) (int index);
+	void (*destroy_drop_groups) (void);
 	bool (*skill_db_libconfig) (const char *filename, bool ignore_missing);
 	bool (*skill_db_libconfig_sub) (struct config_setting_t *it, int n);
 	bool (*skill_db_libconfig_sub_skill) (struct config_setting_t *it, int n, int mob_id);
