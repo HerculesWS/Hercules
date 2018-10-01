@@ -63,10 +63,14 @@ mob_db: (
 	MvpExp: mvp experience                (int, defaults to 0)
 	MvpDrops: {
 		AegisName: chance             (string: int)
+        // or
+		AegisName: (chance, "Option Drop Group")
 		// ...
 	}
 	Drops: {
-		AegisName: chance         (string: int)
+		AegisName: chance             (string: int)
+		// or
+		AegisName: (chance, "Option Drop Group")
 		// ...
 	}
 },
@@ -199,21 +203,55 @@ MvpExp: Base Experience given by the monster to the player who inflict more atta
 
 
 MvpDrops: Sets monster mvp drops list. Requires to have MvpExp to trigger.
-          Accepted values are AegisName as defined on item_db.conf and a chance.
+          There are two ways to define a drop:
+          1) The first one is used for simple drops and uses the item AegisName 
+          as defined on item_db.conf and a chance.
+          Format:
+               AegisName: chance
           Chance is an integer from 1 to 10000 (10000 = 100%).
-          Required format:
-          MvpDrops: {
-          	AegisName: chance
-          	// ...
-          }
-          When not specified, becomes false.
+
+          2) The second way to define a drop allows setting a random option drop
+	      group to be used by this drop.
+          Format:
+               AegisName: (chance, "Option Drop Group")
+
+          The item drop chance refers to the chance of dropping this item, same as chance in the first option.
+          the "Option Drop Group" parameter refers to an entry on option_drop_group database file. The specified
+	      entry will be used when this item is dropped in order to add random options to the dropped equipment.
+
+	      A monster drop list may use both format for different items.
+	      Required Format:
+	      Drops: {
+		      AegisName: chance
+		      // or
+		      AegisName: (chance, "Option Drop Group")
+	      }
+
+	      When not specified, becomes false (no drops).
 
 Drops: Sets monster drops list.
-       Accepted values are AegisName as defined on item_db.conf and a chance.
+       There are two ways to define a drop:
+       1) The first one is used for simple drops and uses the item AegisName 
+       as defined on item_db.conf and a chance.
+       Format:
+            AegisName: chance
        Chance is an integer from 1 to 10000 (10000 = 100%).
-       Required format:
-       Drops: {
-       	AegisName: chance
-       	// ...
-       }
-       When not specified, becomes false.
+
+       2) The second way to define a drop allows setting a random option drop
+	   group to be used by this drop.
+       Format:
+            AegisName: (chance, "Option Drop Group")
+
+       The item drop chance refers to the chance of dropping this item, same as chance in the first option.
+       the "Option Drop Group" parameter refers to an entry on option_drop_group database file. The specified
+	   entry will be used when this item is dropped in order to add random options to the dropped equipment.
+
+	   A monster drop list may use both format for different items.
+	   Required Format:
+	   Drops: {
+		   AegisName: chance
+		   // or
+		   AegisName: (chance, "Option Drop Group")
+	   }
+
+	   When not specified, becomes false (no drops).
