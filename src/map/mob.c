@@ -1903,12 +1903,41 @@ static int mob_ai_hard(int tid, int64 tick, int id, intptr_t data)
 /*==========================================
  * Initializes the delay drop structure for mob-dropped items.
  *------------------------------------------*/
-static struct item_drop *mob_setdropitem(int nameid, int qty, struct item_data *data)
+static struct item_drop *mob_setdropitem(int nameid, struct mob_drop_option *options, int qty, struct item_data *data)
 {
 	struct item_drop *drop = ers_alloc(item_drop_ers, struct item_drop);
 	drop->item_data.nameid = nameid;
 	drop->item_data.amount = qty;
 	drop->item_data.identify = data ? itemdb->isidentified2(data) : itemdb->isidentified(nameid);
+	
+	// Set item options [KirieZ]
+	if (options != NULL) {
+		int i;
+		
+		for (i = 0; i < options->options_count; i++) {
+			int idx = 0;
+			int min, max;
+			int count;
+
+			if (rnd() % 10000 >= options->options_rate[i])
+				continue;
+
+			// count avoids a too long loop that would cause lag. if after 10 full iterations it still fails
+			// it'll stop in one random index in the next one.
+			count = 10 * options->options[i].option_count + (rnd() % options->options[i].option_count);
+			while (count > 0 && rnd() % 10000 >= options->options[i].option_rate[idx]) {
+				idx = (idx + 1) % options->options[i].option_count;
+				--count;
+			}
+
+			drop->item_data.option[i].index = options->options[i].option_id[idx];
+
+			min = options->options[i].option_min[idx];
+			max = options->options[i].option_max[idx];
+			drop->item_data.option[i].value = min + (rnd() % (max - min + 1));
+		}
+	}
+
 	drop->showdropeffect = true;
 	drop->next = NULL;
 	return drop;
@@ -2521,7 +2550,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 				continue;
 			}
 
-			ditem = mob->setdropitem(md->db->dropitem[i].nameid, 1, it);
+			ditem = mob->setdropitem(md->db->dropitem[i].nameid, md->db->dropitem[i].options, 1, it);
 
 			// Official Drop Announce [Jedzkie]
 			if (mvp_sd != NULL) {
@@ -2538,7 +2567,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 		// Ore Discovery [Celest]
 		if (sd == mvp_sd && pc->checkskill(sd,BS_FINDINGORE) > 0) {
 			if( (temp = itemdb->chain_item(itemdb->chain_cache[ECC_ORE],&i)) ) {
-				ditem = mob->setdropitem(temp, 1, NULL);
+				ditem = mob->setdropitem(temp, NULL, 1, NULL);
 				mob->item_drop(md, dlist, ditem, 0, i, homkillonly);
 			}
 		}
@@ -2570,7 +2599,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 						continue;
 					itemid = (sd->add_drop[i].id > 0) ? sd->add_drop[i].id : itemdb->chain_item(sd->add_drop[i].group,&drop_rate);
 					if( itemid )
-						mob->item_drop(md, dlist, mob->setdropitem(itemid,1,NULL), 0, drop_rate, homkillonly);
+						mob->item_drop(md, dlist, mob->setdropitem(itemid, NULL, 1, NULL), 0, drop_rate, homkillonly);
 				}
 			}
 
@@ -3998,6 +4027,164 @@ static void mob_read_db_mvpdrops_sub(struct mob_db *entry, struct config_setting
 }
 
 /**
+ * Processes one option slot entry from a mob_db item entry.
+ * 
+ * @param[in]     entry     The mob being read (used for messages)
+ * @param[in]     name      The item name being read (for messages)
+ * @param[in]     optidx    The index of this option (for messages)
+ * @param[in]     optslot   The group that describes the possible options for this slot
+ * @param[in,out] data      The structure where this entry will be saved
+ * 
+ * @return the rate for this option slot to be used (Rate field)
+ */
+static int mob_read_db_drop_options_data(struct mob_db *entry, const char *name, int optidx, struct config_setting_t * optslot, struct mob_drop_option_data *data)
+{
+	//	{
+	//		Rate: chance of option 1 (int)
+	//		OptionName1: value
+	//		OptionName2: [min, max]
+	//		OptionName3: [min, max, rate]
+	//		up to MAX_MOB_DROP_OPTIONS
+	//	}
+	int idx, i;
+	int drop_rate; // The rate for this option to be used (Rate field)
+	bool calc_rate = false; // indicates if we'll have to calculate option rates in the end
+	struct config_setting_t *t = NULL;
+
+	if (!libconfig->setting_lookup_int(optslot, "Rate", &drop_rate)) {
+		ShowWarning("mob_read_db_drop_options_data: Missing item \"%s\" option %d rate in monster %d, skipping.\n", name, optidx + 1, entry->mob_id);
+		return 0;
+	}
+
+	idx = 0;
+	i = 0;
+	while (idx < MAX_MOB_DROP_OPTIONS && (t = libconfig->setting_get_elem(optslot, i))) {
+		const char *opt_name = config_setting_name(t);
+		int opt_id;
+		int min = 0, max = 0, opt_rate = 0;
+
+		i++; // this increment must be done before the continue on strncmp
+
+		if (strncmp(opt_name, "Rate", 4) == 0)
+			continue;
+
+		if (script->get_constant(opt_name, &opt_id) == false) {
+			ShowError("mob_read_db_drop_options_data: Invalid option \"%s\" for option %d on item \"%s\" in monster %d, skipping.\n", opt_name, optidx + 1, name, entry->mob_id);
+			continue;
+		}
+
+		if (config_setting_is_number(t) == true) {
+			// OptionName: value
+			min = libconfig->setting_get_int(t);
+		} else if (config_setting_is_array(t) == true) {
+			// OptionName: [min, max]
+			// OptionName: [min, max, rate]
+			int slen = libconfig->setting_length(t);
+			
+			if (slen >= 2) {
+				// [min, max,...]
+				min = libconfig->setting_get_int_elem(t, 0);
+				max = libconfig->setting_get_int_elem(t, 1);
+			}
+			
+			if (slen == 3) {
+				// [min, max, rate]
+				opt_rate = libconfig->setting_get_int_elem(t, 2);
+			}
+		} else {
+			ShowError("mob_read_db_drop_options_data: Invalid value for option \"%s\" in option %d of item \"%s\" in monster %d, skipping.\n", opt_name, optidx + 1, name, entry->mob_id);
+			continue;
+		}
+
+		if (max < min)
+			max = min;
+
+		data->option_id[idx] = opt_id;
+		data->option_max[idx] = max;
+		data->option_min[idx] = min;
+		data->option_rate[idx] = opt_rate;
+
+		if (opt_rate == 0)
+			calc_rate = true;
+
+		idx++;
+	}
+	data->option_count = idx;
+
+	// If there're empty rates, calculate them
+	if (calc_rate == true) {
+		int j = 0;
+
+		for (j = 0; j < idx; ++j) {
+			if (data->option_rate[j] == 0)
+				data->option_rate[j] = 10000 / idx;
+		}
+	}
+
+	return drop_rate;
+}
+
+/**
+ * Processes a drop with option entry for a mob_db drop entry.
+ * 
+ * @param[in]     entry The mob being read (used for messages)
+ * @param[in]     name  The item name
+ * @param[in]     drop  The drop entry to be processed
+ * @param[in,out] value The drop rate variable
+ * 
+ * @return mob_drop_option of this entry or NULL if it has failed.
+ */
+static struct mob_drop_option * mob_read_db_drop_options(struct mob_db *entry, const char *name, struct config_setting_t * drop, int * value)
+{
+	struct mob_drop_option *drop_option;
+	struct config_setting_t *t = NULL;
+	int i, j;
+	// Structure
+	// Rate: int
+	// Options: (
+	//	{
+	//		Rate: chance of option 1 (int)
+	//		OptionName1: value
+	//		OptionName2: [min, max]
+	//		OptionName3: [min, max, rate]
+	//		up to MAX_MOB_DROP_OPTIONS
+	//	}
+	//	up to MAX_ITEM_OPTION
+	//)
+
+	if (!libconfig->setting_lookup_int(drop, "Rate", value)) {
+		ShowWarning("mob_read_db_drop_options: Missing item \"%s\" drop rate in monster %d, skipping.\n", name, entry->mob_id);
+		*value = 0;
+		return NULL;
+	}
+
+	drop_option = (struct mob_drop_option *) malloc(sizeof(struct mob_drop_option));
+	memset(drop_option, 0, sizeof(struct mob_drop_option));
+
+	if ((t = libconfig->setting_get_member(drop, "Options")) && config_setting_is_list(t)) {
+		for (i = 0, j = 0; i < config_setting_length(t) && i < MAX_ITEM_OPTIONS; i++) {
+			// Foreach item in "Options"
+			struct config_setting_t *t2 = NULL;
+
+			if ((t2 = libconfig->setting_get_elem(t, i)) && config_setting_is_group(t2)) {
+				drop_option->options_rate[j] = mob_read_db_drop_options_data(entry, name, i, t2, &(drop_option->options[j]));
+				j++;
+			} else {
+				ShowWarning("mob_read_db_drop_options: Drop options must be a group, in monster id %d, skipping option.\n", entry->mob_id);
+			}
+
+		}
+
+		drop_option->options_count = j;
+	} else {
+		free(drop_option);
+		return NULL;
+	}
+
+	return drop_option;
+}
+
+/**
  * Processes the drops for a mob_db entry.
  *
  * @param[in,out] entry The destination mob_db entry, already initialized
@@ -4007,6 +4194,7 @@ static void mob_read_db_mvpdrops_sub(struct mob_db *entry, struct config_setting
 static void mob_read_db_drops_sub(struct mob_db *entry, struct config_setting_t *t)
 {
 	struct config_setting_t *drop;
+	struct mob_drop_option *drop_option = NULL;
 	int i = 0;
 	int idx = 0;
 	int i32;
@@ -4024,9 +4212,18 @@ static void mob_read_db_drops_sub(struct mob_db *entry, struct config_setting_t 
 			i++;
 			continue;
 		}
-		if (mob->get_const(drop, &i32) && i32 >= 0) {
-			value = i32;
+
+		if (config_setting_is_number(drop)) {
+			// Setting is a number, item doesn't contain options
+			drop_option = NULL;
+			if (mob->get_const(drop, &i32) && i32 >= 0) {
+				value = i32;
+			}
+		} else {
+			// Has option list
+			drop_option = mob->read_db_drop_options(entry, name, drop, &value);
 		}
+		
 		if (value <= 0) {
 			ShowWarning("mob_read_db: wrong drop chance %d for drop item %s in monster %d\n", value, name, entry->mob_id);
 			i++;
@@ -4034,6 +4231,7 @@ static void mob_read_db_drops_sub(struct mob_db *entry, struct config_setting_t 
 		}
 
 		entry->dropitem[idx].nameid = id->nameid;
+		entry->dropitem[idx].options = drop_option;
 		if (!entry->dropitem[idx].nameid) {
 			entry->dropitem[idx].p = 0; //No drop.
 			i++;
@@ -5254,6 +5452,20 @@ static void mob_reload(void)
 	}
 	mob->item_drop_ratio_other_db->clear(mob->item_drop_ratio_other_db, mob->final_ratio_sub);
 
+	// Clear drops that has option info. [KirieZ]
+	for (i = 0; i < MAX_MOB_DB; i++) {
+		int j;
+
+		if (mob->db_data[i] != NULL) {
+			for (j = 0; j < MAX_MOB_DROP; j++) {
+				if (mob->db_data[i]->dropitem[j].options != NULL) {
+					free(mob->db_data[i]->dropitem[j].options);
+					mob->db_data[i]->dropitem[j].options = NULL;
+				}
+			}
+		}
+	}
+
 	mob->load(false);
 }
 
@@ -5302,8 +5514,19 @@ static int do_init_mob(bool minimal)
 static void mob_destroy_mob_db(int index)
 {
 	struct mob_db *data;
+	int i;
+
 	Assert_retv(index >= 0 && index <= MAX_MOB_DB);
 	data = mob->db_data[index];
+
+	// Clear drops that has option info. [KirieZ]
+	for (i = 0; i < MAX_MOB_DROP; i++) {
+		if (data->dropitem[i].options != NULL) {
+			free(data->dropitem[i].options);
+			data->dropitem[i].options = NULL;
+		}
+	}
+
 	HPM->data_store_destroy(&data->hdata);
 	aFree(data);
 	mob->db_data[index] = NULL;
@@ -5483,6 +5706,8 @@ void mob_defaults(void)
 	mob->read_libconfig = mob_read_libconfig;
 	mob->read_db_additional_fields = mob_read_db_additional_fields;
 	mob->read_db_sub = mob_read_db_sub;
+	mob->read_db_drop_options = mob_read_db_drop_options;
+	mob->read_db_drop_options_data = mob_read_db_drop_options_data;
 	mob->read_db_drops_sub = mob_read_db_drops_sub;
 	mob->read_db_mvpdrops_sub = mob_read_db_mvpdrops_sub;
 	mob->read_db_mode_sub = mob_read_db_mode_sub;

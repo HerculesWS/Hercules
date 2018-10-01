@@ -65,10 +65,30 @@ mob_db: (
 		AegisName: chance             (string: int)
 		// ...
 	}
-	Drops: {
-		AegisName: chance         (string: int)
-		// ...
-	}
+      Drops: {
+      	AegisName: chance
+      	// or
+      	AegisName: {
+      		Rate: drop chance     (int)
+      		Options: (            options per slot
+      			{
+      				Rate: chance of option 1  (int)
+      				
+      				// Option possibilites for this slot
+      				// min/max value : int, defaults to 0
+      				// rate : int, 100 = 1% if not set, will be 100%/number of possibiltiies
+      			      OptionName1: value
+      			      // or
+      				OptionName1: [min value, max value]
+      				// or
+      				OptionName1: [min value, max value, rate]
+      				// ...  (up to MAX_MOB_DROP_OPTIONS)
+      			},
+      			// ... (up to MAX_ITEM_OPTIOMN)
+      		)
+      	}
+      	// ...
+      }
 },
 ...
 )
@@ -209,11 +229,94 @@ MvpDrops: Sets monster mvp drops list. Requires to have MvpExp to trigger.
           When not specified, becomes false.
 
 Drops: Sets monster drops list.
-       Accepted values are AegisName as defined on item_db.conf and a chance.
+       There're two types of ways to define a drop:
+       1) The first one is used for simple drops and uses the item AegisName 
+       as defined on item_db.conf and a chance.
+       Format:
+            AegisName: chance
        Chance is an integer from 1 to 10000 (10000 = 100%).
+
+       2) The second way to define a drop allows setting Random Options 
+       on the dropped item.
+       Format:
+            AegisName: {
+       		Rate: item drop chance
+       		Options: ( // options per "option slot"
+       			{
+       				Rate: chance of option 1
+       				
+       				// Option 1 possibilites
+       				OptionName1: value
+       				// or
+       				OptionName1: [min value, max value]
+       				// or
+       				OptionName1: [min value, max value, rate]
+       				// ...  (up to MAX_MOB_DROP_OPTIONS)
+       			},
+       			// ... (up to MAX_ITEM_OPTIOMN)
+       		)
+       	}
+
+       The item drop chance is the same as the chance in the first option.
+       Each "Random Option Slot" can has a chance of being used, and when dropping
+       the item, if this slot is used, then it'll pick one of the options in the group.
+       OptionNameN refers to the Name field in item_options.conf
+       value refers to the "intensity" if this option is chosen
+       if using the alternatives with min and max value, a value between min and max (included)
+            will be chosen when dropping this option.
+       if rate is set, this option will higher chances of being chosen over others in the same
+            group.
+
        Required format:
        Drops: {
        	AegisName: chance
+       	// or
+       	AegisName: {
+       		Rate: drop chance     (int)
+       		Options: (            options per slot
+       			{
+       				Rate: chance of option 1  (int)
+       				
+       				// Option possibilites for this slot
+       				// min/max value : int, defaults to 0
+       				// rate : int, 100 = 1% if not set, will be 100%/number of possibiltiies
+       				OptionName1: value
+       				// or
+       				OptionName1: [min value, max value]
+       				// or
+       				OptionName1: [min value, max value, rate]
+       				// ...  (up to MAX_MOB_DROP_OPTIONS)
+       			},
+       			// ... (up to MAX_ITEM_OPTIOMN)
+       		)
+       	}
        	// ...
        }
        When not specified, becomes false.
+
+      Example of a drop with options:
+            Knife_: {
+			Rate: 5000 // Knife_ is dropped with 50% of chance.
+			Options: ( // It may contain up to 2 options slot in use
+				{
+                              // Slot 1
+                              Rate: 10000 // It has 100% of chance of using it
+
+                              // This slot may have one of the following options:
+					WEAPON_ATTR_WIND: 5,                // WEAPON_ATTR_WIND Lv5 (33.33%)
+					WEAPON_ATTR_GROUND: [2, 4]          // WEAPON_ATTR_GROUND Lv 2~4 (33.33%)
+					WEAPON_ATTR_POISON: [1, 4, 8000]    // WEAPON_ATTR_POISON Lv 1~4 (80%)
+
+                              // Note: 100%/3 = 33.33%
+				},
+				{
+                              // Slot 2
+					Rate: 5000 // It has 50% of chance of using it
+
+                              // If used, this slot may have one of the following options:
+					WEAPON_ATTR_WATER: 4     // WEAPON_ATTR_WATER Lv4 (100%)
+
+                              // Note: 100%/1 = 100%
+				}
+			)
+		}

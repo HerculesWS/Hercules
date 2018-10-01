@@ -42,6 +42,9 @@ struct hplugin_data_store;
 #define MAX_MVP_DROP 3
 #define MAX_STEAL_DROP 7
 
+// The number of options that one option drop can have
+#define MAX_MOB_DROP_OPTIONS 6
+
 //Min time between AI executions
 #define MIN_MOBTHINKTIME 100
 //Min time before mobs do a check to call nearby friends for help (or for slaves to support their master)
@@ -152,6 +155,20 @@ struct spawn_info {
 	unsigned short qty;
 };
 
+struct mob_drop_option_data {
+	uint8 option_count;
+	int option_id[MAX_MOB_DROP_OPTIONS];
+	int option_min[MAX_MOB_DROP_OPTIONS];
+	int option_max[MAX_MOB_DROP_OPTIONS];
+	int option_rate[MAX_MOB_DROP_OPTIONS];
+};
+
+struct mob_drop_option {
+	uint8 options_count;
+	int options_rate[MAX_ITEM_OPTIONS];
+	struct mob_drop_option_data options[MAX_ITEM_OPTIONS];
+};
+
 struct mob_db {
 	int mob_id;
 	char sprite[NAME_LENGTH],name[NAME_LENGTH],jname[NAME_LENGTH];
@@ -160,8 +177,8 @@ struct mob_db {
 	short range2,range3;
 	short race2; // celest
 	unsigned short lv;
-	struct { int nameid,p; } dropitem[MAX_MOB_DROP];
-	struct { int nameid,p; } mvpitem[MAX_MVP_DROP];
+	struct { int nameid, p; struct mob_drop_option *options; } dropitem[MAX_MOB_DROP];
+	struct { int nameid,p; struct mob_drop_option *options; } mvpitem[MAX_MVP_DROP];
 	struct status_data status;
 	struct view_data vd;
 	unsigned int option;
@@ -494,7 +511,7 @@ struct mob_interface {
 	int (*ai_sub_lazy) (struct mob_data *md, va_list args);
 	int (*ai_lazy) (int tid, int64 tick, int id, intptr_t data);
 	int (*ai_hard) (int tid, int64 tick, int id, intptr_t data);
-	struct item_drop* (*setdropitem) (int nameid, int qty, struct item_data *data);
+	struct item_drop* (*setdropitem) (int nameid, struct mob_drop_option *options, int qty, struct item_data *data);
 	struct item_drop* (*setlootitem) (struct item *item);
 	int (*delay_item_drop) (int tid, int64 tick, int id, intptr_t data);
 	void (*item_drop) (struct mob_data *md, struct item_drop_list *dlist, struct item_drop *ditem, int loot, int drop_rate, unsigned short flag);
@@ -534,6 +551,8 @@ struct mob_interface {
 	int (*read_libconfig) (const char *filename, bool ignore_missing);
 	void (*read_db_additional_fields) (struct mob_db *entry, struct config_setting_t *it, int n, const char *source);
 	int (*read_db_sub) (struct config_setting_t *mobt, int id, const char *source);
+	struct mob_drop_option * (*read_db_drop_options) (struct mob_db *entry, const char *name, struct config_setting_t * drop, int * value);
+	int (*read_db_drop_options_data) (struct mob_db *entry, const char *name, int optidx, struct config_setting_t * optslot, struct mob_drop_option_data *data);
 	void (*read_db_drops_sub) (struct mob_db *entry, struct config_setting_t *t);
 	void (*read_db_mvpdrops_sub) (struct mob_db *entry, struct config_setting_t *t);
 	uint32 (*read_db_mode_sub) (struct mob_db *entry, struct config_setting_t *t);
