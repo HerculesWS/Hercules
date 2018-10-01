@@ -27,8 +27,8 @@
 
 #include <stdarg.h>
 
-#define PARTY_BOOKING_JOBS 6
-#define PARTY_BOOKING_RESULTS 10
+#define MAX_PARTY_BOOKING_JOBS 6
+#define MAX_PARTY_BOOKING_RESULTS 10
 
 struct block_list;
 struct hplugin_data_store;
@@ -63,7 +63,7 @@ struct party_booking_detail {
 	char notice[PB_NOTICE_LENGTH];
 #else // not PARTY_RECRUIT
 	short mapid;
-	short job[PARTY_BOOKING_JOBS];
+	short job[MAX_PARTY_BOOKING_JOBS];
 #endif // PARTY_RECRUIT
 };
 

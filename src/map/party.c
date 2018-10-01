@@ -1313,7 +1313,7 @@ static void party_booking_register(struct map_session_data *sd, short level, sho
 	pb_ad->p_detail.level = level;
 	pb_ad->p_detail.mapid = mapid;
 
-	for(i=0;i<PARTY_BOOKING_JOBS;i++)
+	for(i=0;i<MAX_PARTY_BOOKING_JOBS;i++)
 		if(job[i] != 0xFF)
 			pb_ad->p_detail.job[i] = job[i];
 		else pb_ad->p_detail.job[i] = -1;
@@ -1363,7 +1363,7 @@ static void party_booking_update(struct map_session_data *sd, short *job)
 
 	pb_ad->expiretime = (int)time(NULL);// Update time.
 
-	for(i=0;i<PARTY_BOOKING_JOBS;i++)
+	for(i=0;i<MAX_PARTY_BOOKING_JOBS;i++)
 		if(job[i] != 0xFF)
 			pb_ad->p_detail.job[i] = job[i];
 		else pb_ad->p_detail.job[i] = -1;
@@ -1379,7 +1379,7 @@ static void party_recruit_search(struct map_session_data *sd, short level, short
 #ifdef PARTY_RECRUIT
 	struct party_booking_ad_info *pb_ad;
 	int count = 0;
-	struct party_booking_ad_info* result_list[PARTY_BOOKING_RESULTS];
+	struct party_booking_ad_info* result_list[MAX_PARTY_BOOKING_RESULTS];
 	bool more_result = false;
 	struct DBIterator *iter = db_iterator(party->booking_db);
 
@@ -1390,7 +1390,7 @@ static void party_recruit_search(struct map_session_data *sd, short level, short
 	{
 		if ((level && (pb_ad->p_detail.level < level-15 || pb_ad->p_detail.level > level)))
 			continue;
-		if (count >= PARTY_BOOKING_RESULTS){
+		if (count >= MAX_PARTY_BOOKING_RESULTS){
 			more_result = true;
 			break;
 		}
@@ -1412,7 +1412,7 @@ static void party_booking_search(struct map_session_data *sd, short level, short
 	struct party_booking_ad_info *pb_ad;
 	int i;
 	int count = 0;
-	struct party_booking_ad_info* result_list[PARTY_BOOKING_RESULTS];
+	struct party_booking_ad_info* result_list[MAX_PARTY_BOOKING_RESULTS];
 	bool more_result = false;
 	struct DBIterator *iter = db_iterator(party->booking_db);
 
@@ -1423,14 +1423,14 @@ static void party_booking_search(struct map_session_data *sd, short level, short
 	for( pb_ad = dbi_first(iter); dbi_exists(iter); pb_ad = dbi_next(iter) ) {
 		if (pb_ad->index < lastindex || (level && (pb_ad->p_detail.level < level-15 || pb_ad->p_detail.level > level)))
 			continue;
-		if (count >= PARTY_BOOKING_RESULTS){
+		if (count >= MAX_PARTY_BOOKING_RESULTS){
 			more_result = true;
 			break;
 		}
 		if (mapid == 0 && job == -1)
 			result_list[count] = pb_ad;
 		else if (mapid == 0) {
-			for(i=0; i<PARTY_BOOKING_JOBS; i++)
+			for(i=0; i<MAX_PARTY_BOOKING_JOBS; i++)
 				if (pb_ad->p_detail.job[i] == job && job != -1)
 					result_list[count] = pb_ad;
 		} else if (job == -1){
