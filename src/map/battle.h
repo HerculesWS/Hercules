@@ -149,7 +149,7 @@ struct Battle_Config {
 	int pc_damage_delay_rate;
 	int defnotenemy;
 	int vs_traps_bctall;
-	int traps_setting;
+	int trap_visibility;
 	int summon_flora; //[Skotlex]
 	int clear_unit_ondeath; //[Skotlex]
 	int clear_unit_onwarp; //[Skotlex]
