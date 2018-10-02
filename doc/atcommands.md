@@ -64,8 +64,8 @@ Server Uptime: 3 days, 8 hours, 6 minutes, 4 seconds.
 
 ---------------------------------------
 
-```@refresh
-@refreshall```
+`@refresh
+@refreshall`
 
 Synchronizes the player's position on the client with the one stored on the server.
 Additionally, @refreshall will refresh all online players.
@@ -113,38 +113,38 @@ Sets client font (0 is the default).
 
 ---------------------------------------
 
-```@agitstart
-@agitend```
+`@agitstart
+@agitend`
 
 Starts or ends War of Emperium [FE] by invoking scripts with the
 OnAgitStart/OnAgitEnd labels.
 
 ---------------------------------------
 
-```@agitstart2
-@agitend2```
+`@agitstart2
+@agitend2`
 
 Starts or ends War of Emperium [SE] by invoking scripts with the
 OnAgitStart2/OnAgitEnd2 labels.
 
 ---------------------------------------
 
-```@pvpon
-@pvpoff```
+`@pvpon
+@pvpoff`
 
 Enables or disables PvP (Player vs. Player) mode on a map.
 
 ---------------------------------------
 
-```@gvgon
-@gvgoff```
+`@gvgon
+@gvgoff`
 
 Enables or disables GvG (Guild vs. Guild) mode on a map.
 
 ---------------------------------------
 
-```@skillon
-@skilloff```
+`@skillon
+@skilloff`
 
 Enables or disables skill usage on a map.
 
@@ -156,8 +156,8 @@ Toggles Kill Steal Protection on a map.
 
 ---------------------------------------
 
-```@day
-@night```
+`@day
+@night`
 
 Sets the server to day or night mode.
 
@@ -169,7 +169,7 @@ Plays the specified sound.
 
 ---------------------------------------
 
-```
+`
 @snow
 @clouds
 @clouds2
@@ -177,7 +177,7 @@ Plays the specified sound.
 @fireworks
 @sakura
 @leaves
-```
+`
 
 Toggles weather effects on your map.
 
@@ -338,8 +338,8 @@ If a percentage is given, only items dropped at that rate and below will be auto
 
 ---------------------------------------
 
-```@alootid <+/- item name/ID>
-@alootid reset```
+`@alootid <+/- item name/ID>
+@alootid reset`
 
 Starts or stops autolooting a specified item.
 Typing "reset" will clear the autoloot item list.
@@ -347,8 +347,8 @@ By default, 10 items can be autolooted at one time.
 
 ---------------------------------------
 
-```@autoloottype <+/-><type name>
-@autoloottype reset```
+`@autoloottype <+/-><type name>
+@autoloottype reset`
 
 Starts or stops autolooting a specified item type.
 Type List: healing, usable, etc, weapon, armor, card, petegg, petarmor, ammo.
@@ -400,8 +400,8 @@ Lists requirements to obtain the specified skill on the target character.
 
 ---------------------------------------
 
-```@questskill {<skill ID>}
-@lostskill {<skill ID>}```
+`@questskill {<skill ID>}
+@lostskill {<skill ID>}`
 
 Permanently adds or removes the specified quest skill.
 If no skill ID is specified, a list of available skills will be returned.
@@ -473,9 +473,9 @@ Displays inventory contents of the attached player.
 
 ---------------------------------------
 
-```@who
+`@who
 @who2
-@who3```
+@who3`
 
 Returns a list of online characters.
 @who will also return character positions.
@@ -484,9 +484,9 @@ Returns a list of online characters.
 
 ---------------------------------------
 
-```@whomap
+`@whomap
 @whomap2
-@whomap3```
+@whomap3`
 
 Returns a list of online characters in a specific map.
 @whomap will also return character positions.
@@ -602,9 +602,9 @@ all items are sold, or the mapserver closes.
 
 ---------------------------------------
 
-```@monster <monster name/ID> {<amount>}
+`@monster <monster name/ID> {<amount>}
 @monstersmall <monster name/ID> {<amount>}
-@monsterbig <monster name/ID> {<amount>}```
+@monsterbig <monster name/ID> {<amount>}`
 
 Spawns the specified monster.
 If an amount is given, that number will be spawned.
@@ -619,9 +619,9 @@ If a duration is specified, they will stay with you until the duration has ended
 
 ---------------------------------------
 
-```@clone <player name/ID>
+`@clone <player name/ID>
 @slaveclone <player name/ID>
-@evilclone <player name/ID>```
+@evilclone <player name/ID>`
 
 Spawns a clone of the specified player.
 @clone will spawn a supportive clone.
@@ -630,9 +630,9 @@ Spawns a clone of the specified player.
 
 ---------------------------------------
 
-```@item <item name/ID> {<amount>}
+`@item <item name/ID> {<amount>}
 /item <item name/ID>
-@delitem <item name/ID> <amount>```
+@delitem <item name/ID> <amount>`
 
 Creates or removes the specified item.
 If an amount is given for @item, that number will be created.
@@ -714,8 +714,8 @@ Deletes all inventory items (not equipped items).
 
 ---------------------------------------
 
-```@clearstorage
-@cleargstorage```
+`@clearstorage
+@cleargstorage`
 
 Deletes all items in storage (or guild storage).
 
@@ -727,8 +727,8 @@ Deletes all items in cart, but does not remove the cart.
 
 ---------------------------------------
 
-```@cleanarea
-@cleanmap```
+`@cleanarea
+@cleanmap`
 
 Deletes floor items in sight range or across the entire map.
 
@@ -768,26 +768,26 @@ Locations and coordinates are stored in '/src/map/atcommand.c'.
 
 ---------------------------------------
 
-```@warp <map> {<x> <y>}
+`@warp <map> {<x> <y>}
 /mm <map> {<x> <y>}
-/mapmove <map> {<x> <y>}```
+/mapmove <map> {<x> <y>}`
 
 Warps to the specified map.
 If no coordinates are entered, a random location will be chosen.
 
 ---------------------------------------
 
-```@jumpto <player name/ID>
-@follow <player name>```
+`@jumpto <player name/ID>
+@follow <player name>`
 
 Warps to the specified player.
 Additionally, @follow will track the player's movements until turned off.
 
 ---------------------------------------
 
-```@recall <player name>
+`@recall <player name>
 /recall <player name>
-@recallall```
+@recallall`
 
 Warps a character to your position.
 Additionally, @recallall will recall the entire server.
@@ -812,19 +812,19 @@ Allows other players to attack you outside of PvP.
 
 ---------------------------------------
 
-```@blvl <+/- amount>
-@jlvl <+/- amount>```
+`@blvl <+/- amount>
+@jlvl <+/- amount>`
 
 Changes base or job level by the specified amount.
 
 ---------------------------------------
 
-```@str <+/- amount>
+`@str <+/- amount>
 @agi <+/- amount>
 @vit <+/- amount>
 @int <+/- amount>
 @dex <+/- amount>
-@luk <+/- amount>```
+@luk <+/- amount>`
 
 Changes the specified stat of your character.
 
@@ -842,16 +842,16 @@ Gives your character all skills in their current skill tree.
 
 ---------------------------------------
 
-```@stpoint <+/- amount>
-@skpoint <+/- amount>```
+`@stpoint <+/- amount>
+@skpoint <+/- amount>`
 
 Changes unused status or skill points by the specified amount.
 
 ---------------------------------------
 
-```@streset
+`@streset
 @skreset
-@reset```
+@reset`
 
 Resets stats (@streset), skills (@skreset), or both (@reset).
 
@@ -884,8 +884,8 @@ Summons the specified amount of spirit spheres around you.
 
 ---------------------------------------
 
-```@mount
-@mount2```
+`@mount
+@mount2`
 
 Toggles mounting/unmounting a peco (@mount) or cash mount (@mount2).
 
@@ -909,10 +909,10 @@ Changes Kafra Points by the specified amount.
 
 ---------------------------------------
 
-```@model <hair style> <hair color> <cloth color>
+`@model <hair style> <hair color> <cloth color>
 @hairstyle <default: 0-27>
 @haircolor <default: 0-8>
-@dye <default: 0-4>```
+@dye <default: 0-4>`
 
 Changes appearance based on the given parameters.
 The min/max values are set in 'conf/map/battle/client.conf'.
@@ -940,19 +940,19 @@ If no string is given, the character's real name will be re-applied.
 
 ---------------------------------------
 
-```@size <0-2>
-@sizeall <0-2>```
+`@size <0-2>
+@sizeall <0-2>`
 
 Changes your size (0 = Normal, 1 = Small, 2 = Large).
 Additionally, @sizeall will change the size of all online players.
 
 ---------------------------------------
 
-```@duel {<player name>}
+`@duel {<player name>}
 @invite <player name>
 @accept
 @reject
-@leave```
+@leave`
 
 Duel-organizing commands.
 Some options can be found in 'conf/map/battle/misc.conf'.
@@ -965,9 +965,9 @@ Fully heals HP and SP.
 
 ---------------------------------------
 
-```@alive
+`@alive
 @raisemap
-@raise```
+@raise`
 
 Resurrection commands.
 @alive will revive the attached player.
@@ -976,10 +976,10 @@ Resurrection commands.
 
 ---------------------------------------
 
-```@disguise <monster/npc name/ID>
+`@disguise <monster/npc name/ID>
 @undisguise
 @disguiseall <monster/npc name/ID>
-@undisguiseall```
+@undisguiseall`
 
 Disguises or undisguises player as a monster/NPC sprite.
 Additionally, @disguiseall/@undisguiseall will disguise all online players.
@@ -992,8 +992,8 @@ Makes you immune to attacks (monsters/players/skills cannot target/hit you).
 
 ---------------------------------------
 
-```@hide
-/hide```
+`@hide
+/hide`
 
 Toggles GM Hide (total invisibility to characters and monsters).
 
@@ -1030,8 +1030,8 @@ Changes the gender attached to the player's account.
 
 ---------------------------------------
 
-```@marry <player 1> <player 2>
-@divorce <player>```
+`@marry <player 1> <player 2>
+@divorce <player>`
 
 Marries or divorces two players.
 
@@ -1049,12 +1049,12 @@ Displays the motd file to all players.
 
 ---------------------------------------
 
-```@broadcast <message>
+`@broadcast <message>
 /b <message>
 /nb <message>
 @localbroadcast <message>
 /lb <message>
-/nlb <message>```
+/nlb <message>`
 
 Announces a message in yellow text.
 Except for /nb and /nlb, the message will be prefixed with the name of the attached character.
@@ -1063,10 +1063,10 @@ Except for /nb and /nlb, the message will be prefixed with the name of the attac
 
 ---------------------------------------
 
-```@kami <message>
+`@kami <message>
 @kamib <message>
 @kamic <color> <message>
-@lkami <message>```
+@lkami <message>`
 
 Announces a message without a name prefix.
 @kami will broadcast in yellow text.
@@ -1079,18 +1079,18 @@ Example:
 
 ---------------------------------------
 
-```@killmonster
-@killmonster2```
+`@killmonster
+@killmonster2`
 
 Kills all monsters on the map.
 Additionally, @killmonster2 will prevent the monsters from dropping items (except looted items).
 
 ---------------------------------------
 
-```@kill
+`@kill
 @nuke <player name>
 @doommap
-@doom```
+@doom`
 
 Kill commands.
 @kill will kill the attached player.
@@ -1100,33 +1100,33 @@ Kill commands.
 
 ---------------------------------------
 
-```@mute <time> <player name>
+`@mute <time> <player name>
 @mutearea <time>
-@unmute <player name>```
+@unmute <player name>`
 
 Mutes or unmutes a player (prevents talking, usage of skills, and commands).
 @mutearea will mute every player on screen for the specified time.
 
 ---------------------------------------
 
-```@jail <player name>
+`@jail <player name>
 @jailfor <time> <player name>
-@unjail <player name>```
+@unjail <player name>`
 
 Sends the specified character to jail.
 If a time is not specified (jailfor), the player will be jailed indefinitely.
 
 ---------------------------------------
 
-```@kick <player name/ID>
-@kickall```
+`@kick <player name/ID>
+@kickall`
 
 Disconnects a user or all users from the server.
 
 ---------------------------------------
 
-```@ban <+/- time> <player name>
-@unban <player name>```
+`@ban <+/- time> <player name>
+@unban <player name>`
 
 Bans or unbans a player for a limited time.
 Time elements: y/a, m, d/j, h, mn, s
@@ -1137,8 +1137,8 @@ Example:
 
 ---------------------------------------
 
-```@block <player name>
-@unblock <player name>```
+`@block <player name>
+@unblock <player name>`
 
 Blocks or unblocks a player from logging in indefinitely.
 
@@ -1151,13 +1151,13 @@ This will also send a packet to clients causing them to close.
 
 ---------------------------------------
 
-```
+`
 @reloaditemdb
 @reloadmobdb
 @reloadskilldb
 @reloadquestdb
 @reloadscript
-```
+`
 
 Reloads the specified database.
 -itemdb: Item Database
@@ -1168,13 +1168,13 @@ Reloads the specified database.
 
 ---------------------------------------
 
-```
+`
 @reloadatcommand
 @reloadbattleconf
 @reloadstatusdb
 @reloadpcdb
 @reloadmotd
-```
+`
 
 Reloads the specified configuration file.
 -atcommand: Atcommand Settings
@@ -1206,8 +1206,8 @@ The groups are specified in 'conf/groups.conf'.
 
 ---------------------------------------
 
-```@addperm {<permission name>}
-@rmvperm {<permission name>}```
+`@addperm {<permission name>}
+@rmvperm {<permission name>}`
 
 Changes the permissions of a character (lasts until relog).
 If no permission is given, a list of available permissions will be returned.
@@ -1220,8 +1220,8 @@ Moves an NPC to a specified coordinate on its map.
 
 ---------------------------------------
 
-```@hidenpc <npc name>
-@shownpc <npc name>```
+`@hidenpc <npc name>
+@shownpc <npc name>`
 
 Toggles the visibility of an NPC's sprite.
 
@@ -1327,8 +1327,8 @@ Changes guild level by the specified amount.
 
 ---------------------------------------
 
-```@disguiseguild <monster/npc name/ID> <guild name/ID>
-@undisguiseguild```
+`@disguiseguild <monster/npc name/ID> <guild name/ID>
+@undisguiseguild`
 
 Disguises or undisguises all online characters of a guild.
 
@@ -1406,8 +1406,8 @@ Creates the specified homunculus.
 
 ---------------------------------------
 
-```@homevolution
-@hommutate {<Homunculus ID>}```
+`@homevolution
+@hommutate {<Homunculus ID>}`
 
 Evolves or mutates your homunculus, if possible.
 If no Homunculus ID is specified for @hommutate, a random ID is chosen.
@@ -1415,8 +1415,8 @@ If it doesn't work, the /swt emotion is shown.
 
 ---------------------------------------
 
-```@hominfo
-@homstats```
+`@hominfo
+@homstats`
 
 Displays homunculus stats in different formats.
 
