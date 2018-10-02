@@ -198,7 +198,9 @@ enum packet_headers {
 #else
 	dropflooritemType = 0x9e,
 #endif
-#if PACKETVER >= 20120925
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
+	inventorylistnormalType = 0xb09,
+#elif PACKETVER >= 20120925
 	inventorylistnormalType = 0x991,
 #elif PACKETVER >= 20080102
 	inventorylistnormalType = 0x2e8,
@@ -207,7 +209,9 @@ enum packet_headers {
 #else
 	inventorylistnormalType = 0xa3,
 #endif
-#if PACKETVER >= 20150226
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
+	inventorylistequipType = 0xb0a,
+#elif PACKETVER >= 20150226
 	inventorylistequipType = 0xa0d,
 #elif PACKETVER >= 20120925
 	inventorylistequipType = 0x992,
@@ -218,27 +222,33 @@ enum packet_headers {
 #else
 	inventorylistequipType = 0xa4,
 #endif
-#if PACKETVER >= 20120925
-	storagelistnormalType = 0x995,
-#elif PACKETVER >= 20080102
-	storagelistnormalType = 0x2ea,
-#elif PACKETVER >= 20071002
-	storagelistnormalType = 0x295,
-#else
-	storagelistnormalType = 0xa5,
-#endif
-#if PACKETVER >= 20150226
-	storagelistequipType = 0xa10,
+#if PACKETVER_RE_NUM >= 20180829 || PACKETVER_ZERO_NUM >= 20180919
+	storageListNormalType = 0xb09,
 #elif PACKETVER >= 20120925
-	storagelistequipType = 0x996,
+	storageListNormalType = 0x995,
 #elif PACKETVER >= 20080102
-	storagelistequipType = 0x2d1,
+	storageListNormalType = 0x2ea,
 #elif PACKETVER >= 20071002
-	storagelistequipType = 0x296,
+	storageListNormalType = 0x295,
 #else
-	storagelistequipType = 0xa6,
+	storageListNormalType = 0xa5,
 #endif
-#if PACKETVER >= 20120925
+#if PACKETVER_RE_NUM >= 20180829 || PACKETVER_ZERO_NUM >= 20180919
+	storageListEquipType = 0xb0a,
+#elif PACKETVER >= 20150226
+	storageListEquipType = 0xa10,
+#elif PACKETVER >= 20120925
+	storageListEquipType = 0x996,
+#elif PACKETVER >= 20080102
+	storageListEquipType = 0x2d1,
+#elif PACKETVER >= 20071002
+	storageListEquipType = 0x296,
+#else
+	storageListEquipType = 0xa6,
+#endif
+#if PACKETVER_RE_NUM >= 20180829 || PACKETVER_ZERO_NUM >= 20180919
+	cartlistnormalType = 0xb09,
+#elif PACKETVER >= 20120925
 	cartlistnormalType = 0x993,
 #elif PACKETVER >= 20080102
 	cartlistnormalType = 0x2e9,
@@ -247,7 +257,9 @@ enum packet_headers {
 #else
 	cartlistnormalType = 0x123,
 #endif
-#if PACKETVER >= 20150226
+#if PACKETVER_RE_NUM >= 20180829 || PACKETVER_ZERO_NUM >= 20180919
+	cartlistequipType = 0xb0a,
+#elif PACKETVER >= 20150226
 	cartlistequipType = 0xa0f,
 #elif PACKETVER >= 20120925
 	cartlistequipType = 0x994,
@@ -1162,28 +1174,63 @@ struct packet_roulette_itemrecv_ack {
 struct packet_itemlist_normal {
 	int16 PacketType;
 	int16 PacketLength;
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
+	uint8 invType;
+#endif
 	struct NORMALITEM_INFO list[MAX_ITEMLIST];
 } __attribute__((packed));
 
 struct packet_itemlist_equip {
 	int16 PacketType;
 	int16 PacketLength;
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
+	uint8 invType;
+#endif
 	struct EQUIPITEM_INFO list[MAX_ITEMLIST];
 } __attribute__((packed));
 
-struct packet_storelist_normal {
+struct ZC_STORE_ITEMLIST_NORMAL {
 	int16 PacketType;
 	int16 PacketLength;
-#if PACKETVER >= 20120925
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
+	uint8 invType;
+#endif
+#if PACKETVER >= 20120925 && PACKETVER_RE_NUM < 20180829 && PACKETVER_ZERO_NUM < 20180919
 	char name[NAME_LENGTH];
 #endif
 	struct NORMALITEM_INFO list[MAX_ITEMLIST];
 } __attribute__((packed));
 
-struct packet_storelist_equip {
+struct ZC_INVENTORY_START {
+	int16 packetType;
+#if PACKETVER_RE_NUM >= 20180919 || PACKETVER_ZERO_NUM >= 20180919
+	int16 packetLength;
+#endif
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
+	uint8 invType;
+#endif
+#if PACKETVER_RE_NUM >= 20180919 || PACKETVER_ZERO_NUM >= 20180919
+	char name[];
+#else
+	char name[NAME_LENGTH];
+#endif
+} __attribute__((packed));
+
+struct ZC_INVENTORY_END {
+	int16 packetType;
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
+	uint8 invType;
+#endif
+	char flag;
+} __attribute__((packed));
+
+struct ZC_STORE_ITEMLIST_EQUIP {
 	int16 PacketType;
 	int16 PacketLength;
-#if PACKETVER >= 20120925
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
+	uint8 invType;
+#endif
+#if PACKETVER >= 20120925 && PACKETVER_RE_NUM < 20180829 && PACKETVER_ZERO_NUM < 20180919
 	char name[NAME_LENGTH];
 #endif
 	struct EQUIPITEM_INFO list[MAX_ITEMLIST];
@@ -2782,6 +2829,11 @@ struct PACKET_ZC_ACK_LEAVE_GUILD2 {
 	int16 packetType;
 	uint32 GID;
 	char reason[40];
+} __attribute__((packed));
+
+struct PACKET_CZ_MEMORIALDUNGEON_COMMAND {
+	int16 packetType;
+	int32 command;
 } __attribute__((packed));
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute

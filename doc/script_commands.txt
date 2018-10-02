@@ -9414,7 +9414,7 @@ supported types: values
 	QINFO_SEX: sex
 	QINFO_BASE_LEVEL: min, max
 	QINFO_JOB_LEVEL: min, max
-	QINFO_ITEM: item_id, amount // append to the items list on each use
+	QINFO_ITEM: item_id, min amount, max amount // append to the items list on each use
 	QINFO_HOMUN_LEVEL: min
 	QINFO_HOMUN_TYPE: homunculus_type (0 - regular, 1 - evolved, 2 - S)
 	QINFO_QUEST: quest_id, state // append to the quests list on each use

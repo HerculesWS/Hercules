@@ -5965,10 +5965,14 @@ static bool script_sprintf_helper(struct script_state *st, int start, struct Str
 static BUILDIN(mes)
 {
 	struct map_session_data *sd = script->rid2sd(st);
+
 	if (sd == NULL)
 		return true;
 
-	clif->scriptmes(sd, st->oid, script_getstr(st, 2));
+	if (script_hasdata(st, 2))
+		clif->scriptmes(sd, st->oid, script_getstr(st, 2));
+	else
+		clif->scriptmes(sd, st->oid, "");
 
 	return true;
 }
@@ -9361,7 +9365,7 @@ static BUILDIN(repair)
 			if(num==repaircounter) {
 				sd->status.inventory[i].attribute |= ATTR_BROKEN;
 				sd->status.inventory[i].attribute ^= ATTR_BROKEN;
-				clif->equiplist(sd);
+				clif->equipList(sd);
 				clif->produce_effect(sd, 0, sd->status.inventory[i].nameid);
 				clif->misceffect(&sd->bl, 3);
 				break;
@@ -9398,7 +9402,7 @@ static BUILDIN(repairall)
 	if(repaircounter)
 	{
 		clif->misceffect(&sd->bl, 3);
-		clif->equiplist(sd);
+		clif->equipList(sd);
 	}
 
 	return true;
@@ -21114,17 +21118,26 @@ static BUILDIN(setquestinfo)
 	}
 	case QINFO_ITEM:
 	{
-		struct item item = { 0 };
+		struct questinfo_itemreq item = { 0 };
 
 		item.nameid = script_getnum(st, 3);
-		item.amount = script_getnum(st, 4);
+		item.min = script_hasdata(st, 4) ? script_getnum(st, 4) : 0;
+		item.max = script_hasdata(st, 5) ? script_getnum(st, 5) : 0;
 
 		if (itemdb->exists(item.nameid) == NULL) {
 			ShowWarning("buildin_setquestinfo: non existing item (%d) have been given.\n", item.nameid);
 			return false;
 		}
-		if (item.amount <= 0 || item.amount > MAX_AMOUNT) {
-			ShowWarning("buildin_setquestinfo: given amount (%d) must be bigger than 0 and smaller than %d.\n", item.amount, MAX_AMOUNT + 1);
+		if (item.min > item.max) {
+			ShowWarning("buildin_setquestinfo: minimal amount (%d) is bigger than the maximal amount (%d).\n", item.min, item.max);
+			return false;
+		}
+		if (item.min < 0 || item.min > MAX_AMOUNT) {
+			ShowWarning("buildin_setquestinfo: given amount (%d) must be bigger than or equal to 0 and smaller than %d.\n", item.min, MAX_AMOUNT + 1);
+			return false;
+		}
+		if (item.max < 0 || item.max > MAX_AMOUNT) {
+			ShowWarning("buildin_setquestinfo: given amount (%d) must be bigger than or equal to 0 and smaller than %d.\n", item.max, MAX_AMOUNT + 1);
 			return false;
 		}
 		if (VECTOR_LENGTH(qi->items) == 0)
@@ -24951,8 +24964,8 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(__setr,"rv?"),
 
 		// NPC interaction
-		BUILDIN_DEF(mes,"s"),
-		BUILDIN_DEF(mesf,"s*"),
+		BUILDIN_DEF(mes, "?"),
+		BUILDIN_DEF(mesf, "s*"),
 		BUILDIN_DEF(next,""),
 		BUILDIN_DEF(close,""),
 		BUILDIN_DEF(close2,""),
@@ -25447,7 +25460,7 @@ static void script_parse_builtin(void)
 
 		//Quest Log System [Inkfish]
 		BUILDIN_DEF(questinfo, "i?"),
-		BUILDIN_DEF(setquestinfo, "i??"),
+		BUILDIN_DEF(setquestinfo, "i???"),
 		BUILDIN_DEF(setquest, "i?"),
 		BUILDIN_DEF(erasequest, "i?"),
 		BUILDIN_DEF(completequest, "i?"),

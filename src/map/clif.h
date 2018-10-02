@@ -612,6 +612,16 @@ enum pet_evolution_result {
 };
 
 /**
+ * Inventory type for clients 2018-09-12 RE +
+ **/
+enum inventory_type {
+	INVTYPE_INVENTORY = 0,
+	INVTYPE_CART = 1,
+	INVTYPE_STORAGE = 2,
+	INVTYPE_GUILD_STORAGE = 3,
+};
+
+/**
  * Structures
  **/
 typedef void (*pFunc)(int, struct map_session_data *); //cant help but put it first
@@ -658,6 +668,10 @@ VECTOR_DECL(struct stylist_data_entry) stylist_data[MAX_STYLIST_TYPE];
 enum stylist_shop {
 	STYLIST_SHOP_SUCCESS,
 	STYLIST_SHOP_FAILURE
+};
+
+enum memorial_dungeon_command {
+	COMMAND_MEMORIALDUNGEON_DESTROY_FORCE = 0x3,
 };
 
 /**
@@ -827,9 +841,12 @@ struct clif_interface {
 	void (*combo_delay) (struct block_list *bl,int wait);
 	void (*status_change) (struct block_list *bl,int type,int flag,int tick,int val1, int val2, int val3);
 	void (*insert_card) (struct map_session_data *sd,int idx_equip,int idx_card,int flag);
-	void (*inventorylist) (struct map_session_data *sd);
-	void (*equiplist) (struct map_session_data *sd);
-	void (*cartlist) (struct map_session_data *sd);
+	void (*inventoryList) (struct map_session_data *sd);
+	void (*inventoryItems) (struct map_session_data *sd, enum inventory_type type);
+	void (*equipList) (struct map_session_data *sd);
+	void (*equipItems) (struct map_session_data *sd, enum inventory_type type);
+	void (*cartList) (struct map_session_data *sd);
+	void (*cartItems) (struct map_session_data *sd, enum inventory_type type);
 	void (*favorite_item) (struct map_session_data* sd, unsigned short index);
 	void (*clearcart) (int fd);
 	void (*item_identify_list) (struct map_session_data *sd);
@@ -986,7 +1003,11 @@ struct clif_interface {
 	void (*openvendingAck) (int fd, int result);
 	void (*vendingreport) (struct map_session_data* sd, int index, int amount, uint32 char_id, int zeny);
 	/* storage handling */
-	void (*storagelist) (struct map_session_data* sd, struct item* items, int items_length);
+	void (*storageList) (struct map_session_data* sd, struct item* items, int items_length);
+	void (*guildStorageList) (struct map_session_data* sd, struct item* items, int items_length);
+	void (*storageItems) (struct map_session_data* sd, enum inventory_type type, struct item* items, int items_length);
+	void (*inventoryStart) (struct map_session_data* sd, enum inventory_type type, const char* name);
+	void (*inventoryEnd) (struct map_session_data* sd, enum inventory_type type);
 	void (*updatestorageamount) (struct map_session_data* sd, int amount, int max_amount);
 	void (*storageitemadded) (struct map_session_data* sd, struct item* i, int index, int amount);
 	void (*storageitemremoved) (struct map_session_data* sd, int index, int amount);
@@ -1527,6 +1548,7 @@ struct clif_interface {
 	void (*pPetEvolution) (int fd, struct map_session_data *sd);
 	void (*petEvolutionResult) (int fd, enum pet_evolution_result result);
 	void (*party_dead_notification) (struct map_session_data *sd);
+	void (*pMemorialDungeonCommand) (int fd, struct map_session_data *sd);
 };
 
 #ifdef HERCULES_CORE

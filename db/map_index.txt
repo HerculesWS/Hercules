@@ -1026,7 +1026,20 @@ com_d02_i
 1@soul
 star_frst
 star_in
-
+1@cor
+1@os_a
+1@os_b
+1@rgsr
+rgsr_in
+pub_cat
+sp_cor
+sp_os
+sp_rudus
+sp_rudus2
+sp_rudus3
+mag_dun03
+gl_cas01_
+1@gl_prq
 
 // Only add maps under this line if they are not standard maps!
 //======================================================================================

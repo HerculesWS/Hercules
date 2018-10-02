@@ -1320,12 +1320,18 @@ typedef void (*HPMHOOK_pre_clif_status_change) (struct block_list **bl, int *typ
 typedef void (*HPMHOOK_post_clif_status_change) (struct block_list *bl, int type, int flag, int tick, int val1, int val2, int val3);
 typedef void (*HPMHOOK_pre_clif_insert_card) (struct map_session_data **sd, int *idx_equip, int *idx_card, int *flag);
 typedef void (*HPMHOOK_post_clif_insert_card) (struct map_session_data *sd, int idx_equip, int idx_card, int flag);
-typedef void (*HPMHOOK_pre_clif_inventorylist) (struct map_session_data **sd);
-typedef void (*HPMHOOK_post_clif_inventorylist) (struct map_session_data *sd);
-typedef void (*HPMHOOK_pre_clif_equiplist) (struct map_session_data **sd);
-typedef void (*HPMHOOK_post_clif_equiplist) (struct map_session_data *sd);
-typedef void (*HPMHOOK_pre_clif_cartlist) (struct map_session_data **sd);
-typedef void (*HPMHOOK_post_clif_cartlist) (struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_inventoryList) (struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_inventoryList) (struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_inventoryItems) (struct map_session_data **sd, enum inventory_type *type);
+typedef void (*HPMHOOK_post_clif_inventoryItems) (struct map_session_data *sd, enum inventory_type type);
+typedef void (*HPMHOOK_pre_clif_equipList) (struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_equipList) (struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_equipItems) (struct map_session_data **sd, enum inventory_type *type);
+typedef void (*HPMHOOK_post_clif_equipItems) (struct map_session_data *sd, enum inventory_type type);
+typedef void (*HPMHOOK_pre_clif_cartList) (struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_cartList) (struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_cartItems) (struct map_session_data **sd, enum inventory_type *type);
+typedef void (*HPMHOOK_post_clif_cartItems) (struct map_session_data *sd, enum inventory_type type);
 typedef void (*HPMHOOK_pre_clif_favorite_item) (struct map_session_data **sd, unsigned short *index);
 typedef void (*HPMHOOK_post_clif_favorite_item) (struct map_session_data *sd, unsigned short index);
 typedef void (*HPMHOOK_pre_clif_clearcart) (int *fd);
@@ -1620,8 +1626,16 @@ typedef void (*HPMHOOK_pre_clif_openvendingAck) (int *fd, int *result);
 typedef void (*HPMHOOK_post_clif_openvendingAck) (int fd, int result);
 typedef void (*HPMHOOK_pre_clif_vendingreport) (struct map_session_data **sd, int *index, int *amount, uint32 *char_id, int *zeny);
 typedef void (*HPMHOOK_post_clif_vendingreport) (struct map_session_data *sd, int index, int amount, uint32 char_id, int zeny);
-typedef void (*HPMHOOK_pre_clif_storagelist) (struct map_session_data **sd, struct item **items, int *items_length);
-typedef void (*HPMHOOK_post_clif_storagelist) (struct map_session_data *sd, struct item *items, int items_length);
+typedef void (*HPMHOOK_pre_clif_storageList) (struct map_session_data **sd, struct item **items, int *items_length);
+typedef void (*HPMHOOK_post_clif_storageList) (struct map_session_data *sd, struct item *items, int items_length);
+typedef void (*HPMHOOK_pre_clif_guildStorageList) (struct map_session_data **sd, struct item **items, int *items_length);
+typedef void (*HPMHOOK_post_clif_guildStorageList) (struct map_session_data *sd, struct item *items, int items_length);
+typedef void (*HPMHOOK_pre_clif_storageItems) (struct map_session_data **sd, enum inventory_type *type, struct item **items, int *items_length);
+typedef void (*HPMHOOK_post_clif_storageItems) (struct map_session_data *sd, enum inventory_type type, struct item *items, int items_length);
+typedef void (*HPMHOOK_pre_clif_inventoryStart) (struct map_session_data **sd, enum inventory_type *type, const char **name);
+typedef void (*HPMHOOK_post_clif_inventoryStart) (struct map_session_data *sd, enum inventory_type type, const char *name);
+typedef void (*HPMHOOK_pre_clif_inventoryEnd) (struct map_session_data **sd, enum inventory_type *type);
+typedef void (*HPMHOOK_post_clif_inventoryEnd) (struct map_session_data *sd, enum inventory_type type);
 typedef void (*HPMHOOK_pre_clif_updatestorageamount) (struct map_session_data **sd, int *amount, int *max_amount);
 typedef void (*HPMHOOK_post_clif_updatestorageamount) (struct map_session_data *sd, int amount, int max_amount);
 typedef void (*HPMHOOK_pre_clif_storageitemadded) (struct map_session_data **sd, struct item **i, int *index, int *amount);
@@ -2600,6 +2614,8 @@ typedef void (*HPMHOOK_pre_clif_petEvolutionResult) (int *fd, enum pet_evolution
 typedef void (*HPMHOOK_post_clif_petEvolutionResult) (int fd, enum pet_evolution_result result);
 typedef void (*HPMHOOK_pre_clif_party_dead_notification) (struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_party_dead_notification) (struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_pMemorialDungeonCommand) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pMemorialDungeonCommand) (int fd, struct map_session_data *sd);
 #endif // MAP_CLIF_H
 #ifdef COMMON_CORE_H /* cmdline */
 typedef void (*HPMHOOK_pre_cmdline_init) (void);
@@ -3126,6 +3142,8 @@ typedef bool (*HPMHOOK_pre_instance_valid) (int *instance_id);
 typedef bool (*HPMHOOK_post_instance_valid) (bool retVal___, int instance_id);
 typedef int (*HPMHOOK_pre_instance_destroy_timer) (int *tid, int64 *tick, int *id, intptr_t *data);
 typedef int (*HPMHOOK_post_instance_destroy_timer) (int retVal___, int tid, int64 tick, int id, intptr_t data);
+typedef void (*HPMHOOK_pre_instance_force_destroy) (struct map_session_data **sd);
+typedef void (*HPMHOOK_post_instance_force_destroy) (struct map_session_data *sd);
 #endif // MAP_INSTANCE_H
 #ifdef CHAR_INT_ACHIEVEMENT_H /* inter_achievement */
 typedef int (*HPMHOOK_pre_inter_achievement_sql_init) (void);

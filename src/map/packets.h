@@ -1142,7 +1142,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x02cc,4);
 	packet(0x02cd,26);
 	packet(0x02ce,10);
-	packet(0x02cf,6);
+	packet(0x02cf,6,clif->pMemorialDungeonCommand);
 	packet(0x02d0,-1);
 	packet(0x02d1,-1);
 	packet(0x02d2,-1);
@@ -4268,6 +4268,73 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0b0b,3,clif->pDull/*,XXX*/);
 	packet(0x0b0c,155,clif->pDull/*,XXX*/);
 // changed packet sizes
+#endif
+
+// 2018-08-29aRagexe
+#if PACKETVER_MAIN_NUM >= 20180829
+// new packets
+	packet(0x0b05,59);
+	packet(0x0b06,53,clif->pDull/*,XXX*/);
+	packet(0x0b07,-1);
+	packet(0x0b08,26); // ZC_INVENTORY_START
+	packet(0x0b09,-1); // ZC_STORE_ITEMLIST_NORMAL_V6
+	packet(0x0b0a,-1); // ZC_STORE_ITEMLIST_EQUIP_V6
+	packet(0x0b0b,3); // ZC_INVENTORY_END
+	packet(0x0b0c,155,clif->pDull/*,XXX*/);
+// changed packet sizes
+#endif
+
+// 2018-08-29aRagexeRE
+#if PACKETVER_RE_NUM >= 20180829
+// new packets
+	packet(0x0b05,63);
+	packet(0x0b06,53,clif->pDull/*,XXX*/);
+	packet(0x0b07,-1);
+	packet(0x0b08,26); // ZC_INVENTORY_START
+	packet(0x0b09,-1); // ZC_STORE_ITEMLIST_NORMAL_V6
+	packet(0x0b0a,-1); // ZC_STORE_ITEMLIST_EQUIP_V6
+	packet(0x0b0b,3); // ZC_INVENTORY_END
+	packet(0x0b0c,155,clif->pDull/*,XXX*/);
+// changed packet sizes
+#endif
+
+// 2018-09-05aRagexe_zero
+#if PACKETVER_ZERO_NUM >= 20180905
+// new packets
+	packet(0x0b0d,6,clif->pDull/*,XXX*/);
+// changed packet sizes
+	packet(0x0b08,27); // ZC_INVENTORY_START
+	packet(0x0b0b,4); // ZC_INVENTORY_END
+#endif
+
+#ifndef PACKETVER_ZERO
+// 2018-09-12dRagexe, 2018-09-12dRagexeRE
+#if PACKETVER >= 20180912
+// new packets
+	packet(0x0b0d,10,clif->pDull/*,XXX*/);
+	packet(0x0b0e,-1,clif->pDull/*,XXX*/);
+	packet(0x0b0f,-1,clif->pDull/*,XXX*/);
+// changed packet sizes
+	packet(0x0b08,27,clif->pDull/*,XXX*/); // ZC_INVENTORY_START
+	packet(0x0b0b,4,clif->pDull/*,XXX*/); // ZC_INVENTORY_END
+#endif
+#endif
+
+// 2018-09-19aRagexeRE
+#if PACKETVER_RE_NUM >= 20180919
+// new packets
+// changed packet sizes
+	packet(0x0b08,-1); // ZC_INVENTORY_START
+#endif
+
+// 2018-09-19aRagexe_zero
+#if PACKETVER_ZERO_NUM >= 20180919
+// new packets
+	packet(0x0b0e,-1,clif->pDull/*,XXX*/);
+	packet(0x0b0f,-1,clif->pDull/*,XXX*/);
+// changed packet sizes
+	packet(0x0b08,-1); // ZC_INVENTORY_START
+	packet(0x0b0d,10,clif->pDull/*,XXX*/);
 #endif
 
 #endif /* MAP_PACKETS_H */
