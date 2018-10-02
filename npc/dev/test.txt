@@ -651,6 +651,12 @@ function	script	HerculesSelfTestHelper	{
 	setd(".@x", getd(".@y"));
 	callsub(OnCheck, "setd getd", .@x, .@y);
 
+	// getd types
+	callsub(OnCheck, "Getdatatype (getd: param)",          getdatatype(getd("Hp")), DATATYPE_INT | DATATYPE_PARAM);
+	callsub(OnCheck, "Getdatatype (getd: const)",          getdatatype(getd("DATATYPE_CONST")), DATATYPE_INT | DATATYPE_CONST);
+	callsub(OnCheck, "Getdatatype (getd: numeric var)",    getdatatype(getd(".@foo")), DATATYPE_INT | DATATYPE_VAR);
+	callsub(OnCheck, "Getdatatype (getd: string var)",     getdatatype(getd(".@foo$")), DATATYPE_STR | DATATYPE_VAR);
+
 	// getvariableofnpc
 	.x = 2;
 	set getvariableofnpc(.x, "TestVarOfAnotherNPC"), 1;
