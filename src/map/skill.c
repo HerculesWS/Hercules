@@ -5873,16 +5873,26 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 		if (target && target->m == src->m) {
 			//Move character to target anyway.
 			int dir, x, y;
+			int dist = 3; // number of cells that asura caster will walk
+
 			dir = map->calc_dir(src,target->x,target->y);
-			if( dir > 0 && dir < 4) x = -2;
-			else if( dir > 4 ) x = 2;
-			else x = 0;
-			if( dir > 2 && dir < 6 ) y = -2;
-			else if( dir == 7 || dir < 2 ) y = 2;
-			else y = 0;
-			if (unit->movepos(src, src->x+x, src->y+y, 1, 1)) {
+			if (dir > 0 && dir < 4)
+				x = -dist;
+			else if (dir > 4)
+				x = dist;
+			else
+				x = 0;
+			
+			if (dir > 2 && dir < 6)
+				y = -dist;
+			else if (dir == 7 || dir < 2)
+				y = dist;
+			else
+				y = 0;
+
+			if (unit->movepos(src, src->x + x, src->y + y, 1, 1) == 1) {
 				//Display movement + animation.
-				clif->slide(src,src->x,src->y);
+				clif->slide(src, src->x, src->y);
 				clif->spiritball(src);
 			}
 			// "Skill Failed" message was already shown when checking that target is invalid
