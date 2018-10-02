@@ -10172,3 +10172,17 @@ Show in client message by <message_id> from msg string table.
 Optional <color> can be used for set color for whole message.
 
 ---------------------------------------
+
+*achievement_progress(<ach_id>, <obj_idx>, <progress>, <incremental>{, <account_id>});
+
+Make the player progress in the specified achievement.
+aid         - achievement ID
+obj_idx     - achievement objective index.
+progress    - objective progress towards goal.
+incremental - (boolean) true to add the progress towards the goal,
+              false to use the progress only as a comparand.
+account_id  - (optional) AID to perform on (default to attached player).
+
+returns progress on success and 0 on failure
+
+---------------------------------------
