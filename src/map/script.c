@@ -3316,121 +3316,30 @@ static void set_reg_npcscope_str(struct script_state *st, struct reg_db *n, int6
 
 static void set_reg_pc_ref_str(struct script_state *st, struct reg_db *n, int64 num, const char *name, const char *str)
 {
-	struct script_reg_str *p = NULL;
-	unsigned int index = script_getvaridx(num);
+	struct DBIterator *iter = db_iterator(map->pc_db);
+	struct map_session_data *sd = NULL;
 
-	nullpo_retv(n);
-
-	if ((p = i64db_get(n->vars, num)) != NULL) {
-		if (str[0]) {
-			if (p->value) {
-				aFree(p->value);
-			} else if (index) {
-				script->array_update(n, num, false);
-			}
-			p->value = aStrdup(str);
-		} else {
-			p->value = NULL;
-			if (index) {
-				script->array_update(n, num, true);
-			}
-		}
-
-		if (!pc->reg_load) {
-			p->flag.update = 1;
-		}
-	} else if (str[0]) {
-		struct DBData prev;
-		if (index) {
-			script->array_update(n, num, false);
-		}
-
-		p = ers_alloc(pc->str_reg_ers, struct script_reg_str);
-		p->value = aStrdup(str);
-
-		if (!pc->reg_load) {
-			p->flag.update = 1;
-		}
-		p->flag.type = 1;
-
-		if(n->vars->put(n->vars, DB->i642key(num), DB->ptr2data(p), &prev)) {
-			p = DB->data2ptr(&prev);
-			if (p->value) {
-				aFree(p->value);
-			}
-			ers_free(pc->str_reg_ers, p);
+	for (sd = dbi_first(iter); dbi_exists(iter); sd = dbi_next(iter)) {
+		if (sd != NULL && n == &sd->regs) {
+			pc->setregistry_str(sd, num, str);
+			break;
 		}
 	}
-
-	if (!pc->reg_load && p != NULL) {
-		struct DBIterator *iter = db_iterator(map->pc_db);
-		struct map_session_data *sd = NULL;
-
-		for (sd = dbi_first(iter); dbi_exists(iter); sd = dbi_next(iter)) {
-			if (sd != NULL && n == &sd->regs) {
-				sd->vars_dirty = true; // tell char server to update our vars!
-				break;
-			}
-		}
-		dbi_destroy(iter);
-	}
+	dbi_destroy(iter);
 }
 
 static void set_reg_pc_ref_num(struct script_state *st, struct reg_db *n, int64 num, const char *name, int val)
 {
-	struct script_reg_num *p = NULL;
-	unsigned int index = script_getvaridx(num);
+	struct DBIterator *iter = db_iterator(map->pc_db);
+	struct map_session_data *sd = NULL;
 
-	nullpo_retv(n);
-
-	if ((p = i64db_get(n->vars, num)) != NULL) {
-		if (val) {
-			if (!p->value && index) {
-				script->array_update(n, num, false);
-			}
-			p->value = val;
-		} else {
-			p->value = 0;
-			if (index) {
-				script->array_update(n, num, true);
-			}
-		}
-
-		if (!pc->reg_load) {
-			p->flag.update = 1;
-		}
-	} else if (val) {
-		struct DBData prev;
-		if (index) {
-			script->array_update(n, num, false);
-		}
-
-		p = ers_alloc(pc->num_reg_ers, struct script_reg_num);
-		p->value = val;
-
-		if (!pc->reg_load) {
-			p->flag.update = 1;
-		}
-		p->flag.type = 0;
-
-		if(n->vars->put(n->vars, DB->i642key(num), DB->ptr2data(p), &prev)) {
-			p = DB->data2ptr(&prev);
-			ers_free(pc->num_reg_ers, p);
+	for (sd = dbi_first(iter); dbi_exists(iter); sd = dbi_next(iter)) {
+		if (sd != NULL && n == &sd->regs) {
+			pc->setregistry(sd, num, val);
+			break;
 		}
 	}
-
-	if (!pc->reg_load && p != NULL) {
-		struct DBIterator *iter = db_iterator(map->pc_db);
-		struct map_session_data *sd = NULL;
-
-		for (sd = dbi_first(iter); dbi_exists(iter); sd = dbi_next(iter)) {
-			if (sd != NULL && n == &sd->regs) {
-				sd->vars_dirty = true; // tell char server to update our vars!
-				break;
-			}
-		}
-		dbi_destroy(iter);
-	}
+	dbi_destroy(iter);
 }
 
 static void set_reg_npcscope_num(struct script_state *st, struct reg_db *n, int64 num, const char *name, int val)
