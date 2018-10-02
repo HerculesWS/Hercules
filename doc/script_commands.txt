@@ -6034,6 +6034,22 @@ Amount can be negative. See statusup().
 
 ---------------------------------------
 
+*needed_status_point(<type>, <val>, {<char_id>});
+
+Returns the number of stat points needed to change the specified stat <type> by <val>.
+If <val> is negative, returns the number of stat points that would be needed to
+raise the specified stat from (current value - <val>) to current value.
+
+List of <type>:
+bStr -  Strength
+bVit -  Vitality
+bInt -  Intelligence
+bAgi -  Agility
+bDex -  Dexterity
+bLuk -  Luck
+
+---------------------------------------
+
 *bonus(<bonus type>, <val1>)
 *bonus2(<bonus type>, <val1>, <val2>)
 *bonus3(<bonus type>, <val1>, <val2>, <val3>)
