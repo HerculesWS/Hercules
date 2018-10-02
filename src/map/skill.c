@@ -5882,7 +5882,8 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 				clif->slide(src,src->x,src->y);
 				clif->spiritball(src);
 			}
-			clif->skill_fail(sd, ud->skill_id, USESKILL_FAIL_LEVEL, 0, 0);
+			// "Skill Failed" message was already shown when checking that target is invalid
+			//clif->skill_fail(sd, ud->skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 		}
 	}
 
