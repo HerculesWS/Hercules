@@ -15428,6 +15428,50 @@ static BUILDIN(specialeffect2)
 	return true;
 }
 
+static BUILDIN(removespecialeffect)
+{
+	struct block_list *bl = NULL;
+	int type = script_getnum(st, 2);
+	enum send_target target = AREA;
+
+	if (script_hasdata(st, 3)) {
+		target = script_getnum(st, 3);
+	}
+
+	if (script_hasdata(st, 4)) {
+		if (script_isstringtype(st, 4)) {
+			struct npc_data *nd = npc->name2id(script_getstr(st, 4));
+			if (nd != NULL) {
+				bl = &nd->bl;
+			}
+		} else {
+			bl = map->id2bl(script_getnum(st, 4));
+		}
+	} else {
+		bl = map->id2bl(st->oid);
+	}
+
+	if (bl == NULL) {
+		return true;
+	}
+
+	if (target == SELF) {
+		struct map_session_data *sd;
+		if (script_hasdata(st, 5)) {
+			sd = map->id2sd(script_getnum(st, 5));
+		} else {
+			sd = script->rid2sd(st);
+		}
+		if (sd != NULL) {
+			clif->removeSpecialEffect_single(bl, type, &sd->bl);
+		}
+	} else {
+		clif->removeSpecialEffect(bl, type, target);
+	}
+
+	return true;
+}
+
 /*==========================================
  * Nude [Valaris]
  *------------------------------------------*/
@@ -25199,6 +25243,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(skilleffect,"vi"), // skill effect [Celest]
 		BUILDIN_DEF(npcskilleffect,"viii"), // npc skill effect [Valaris]
 		BUILDIN_DEF(specialeffect,"i???"), // npc skill effect [Valaris]
+		BUILDIN_DEF(removespecialeffect,"i???"),
 		BUILDIN_DEF_DEPRECATED(specialeffect2,"i??"), // skill effect on players[Valaris]
 		BUILDIN_DEF(nude,""), // nude command [Valaris]
 		BUILDIN_DEF(mapwarp,"ssii??"), // Added by RoVeRT

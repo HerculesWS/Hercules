@@ -5992,6 +5992,17 @@ Example usage:
 
 ---------------------------------------
 
+*removespecialeffect(<effect number>{, <send_target>{, <unit id>{, <account id>}}})
+*removespecialeffect(<effect number>{, <send_target>{, "<NPC Name>"{, <account id>}}})
+
+Works for:
+	main client from version 2018-10-02
+	re   client from version 2018-10-02
+This command will remove special effect. All parameters same with specialeffect.
+Examples and detailed explanation about parameters see in specialeffect.
+
+---------------------------------------
+
 *specialeffect2(<effect number>{, <send_target>{, "<Player Name>"}})
 
     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
