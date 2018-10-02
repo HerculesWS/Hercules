@@ -4651,23 +4651,15 @@ static void map_zone_change(int m, struct map_zone_data *zone, const char *start
 /* removes previous mapflags from this map */
 static void map_zone_remove(int m)
 {
-	char flag[MAP_ZONE_MAPFLAG_LENGTH], params[MAP_ZONE_MAPFLAG_LENGTH];
-	unsigned short k;
-	const char *empty = "";
 	Assert_retv(m >= 0 && m < map->count);
-	for(k = 0; k < map->list[m].zone_mf_count; k++) {
-		size_t len = strlen(map->list[m].zone_mf[k]),j;
-		params[0] = '\0';
-		memcpy(flag, map->list[m].zone_mf[k], MAP_ZONE_MAPFLAG_LENGTH);
-		for(j = 0; j < len; j++) {
-			if( flag[j] == '\t' ) {
-				memcpy(params, &flag[j+1], len - j);
-				flag[j] = '\0';
-				break;
-			}
-		}
 
-		npc->parse_mapflag(map->list[m].name,empty,flag,params,empty,empty,empty, NULL);
+	for (unsigned short k = 0; k < map->list[m].zone_mf_count; k++) {
+		char flag[MAP_ZONE_MAPFLAG_LENGTH];
+
+		memcpy(flag, map->list[m].zone_mf[k], MAP_ZONE_MAPFLAG_LENGTH);
+		strtok(flag, "\t");
+
+		npc->parse_mapflag(map->list[m].name, "", flag, "off", "", "", "", NULL);
 		aFree(map->list[m].zone_mf[k]);
 		map->list[m].zone_mf[k] = NULL;
 	}
