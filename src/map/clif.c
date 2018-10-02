@@ -7721,6 +7721,7 @@ static void clif_mvp_noitem(struct map_session_data *sd)
 ///     1 = "You are already in a Guild."
 ///     2 = "That Guild Name already exists."
 ///     3 = "You need the necessary item to create a Guild."
+///     4 = "Can't create a Guild in this area."
 static void clif_guild_created(struct map_session_data *sd, int flag)
 {
 	int fd;
