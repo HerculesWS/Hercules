@@ -8865,6 +8865,45 @@ static void clif_specialeffect_value(struct block_list *bl, int effect_id, int n
 		clif->send(buf, packet_len(0x284), bl, SELF);
 	}
 }
+
+/// Remove special effects (ZC_REMOVE_EFFECT).
+/// 0b0d <id>.L <effect id>.L
+/// effect id:
+///     @see doc/effect_list.txt
+static void clif_removeSpecialEffect(struct block_list *bl, int effectId, enum send_target target)
+{
+#if PACKETVER_MAIN_NUM >= 20181002 || PACKETVER_RE_NUM >= 20181002
+	nullpo_retv(bl);
+
+	struct PACKET_ZC_REMOVE_EFFECT p;
+	p.packetType = 0xb0d;
+	p.aid = bl->id;
+	p.effectId = effectId;
+
+	clif->send(&p, sizeof(p), bl, target);
+
+	if (clif->isdisguised(bl)) {
+		p.aid = -bl->id;
+		clif->send(&p, sizeof(p), bl, SELF);
+	}
+#endif
+}
+
+static void clif_removeSpecialEffect_single(struct block_list *bl, int effectId, struct block_list *targetBl)
+{
+#if PACKETVER_MAIN_NUM >= 20181002 || PACKETVER_RE_NUM >= 20181002
+	nullpo_retv(bl);
+	nullpo_retv(targetBl);
+
+	struct PACKET_ZC_REMOVE_EFFECT p;
+	p.packetType = 0xb0d;
+	p.aid = bl->id;
+	p.effectId = effectId;
+
+	clif->send(&p, sizeof(p), targetBl, SELF);
+#endif
+}
+
 /**
  * Modification of clif_messagecolor to send colored messages to players to chat log only (doesn't display overhead).
  *
@@ -22435,6 +22474,8 @@ void clif_defaults(void)
 	clif->specialeffect = clif_specialeffect;
 	clif->specialeffect_single = clif_specialeffect_single;
 	clif->specialeffect_value = clif_specialeffect_value;
+	clif->removeSpecialEffect = clif_removeSpecialEffect;
+	clif->removeSpecialEffect_single = clif_removeSpecialEffect_single;
 	clif->millenniumshield = clif_millenniumshield;
 	clif->spiritcharm = clif_charm;
 	clif->charm_single = clif_charm_single;
