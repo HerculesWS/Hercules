@@ -2426,7 +2426,8 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 			if(zeny) // zeny from mobs [Valaris]
 				pc->getzeny(tmpsd[i], zeny, LOG_TYPE_PICKDROP_MONSTER, NULL);
 
-			achievement->validate_mob_kill(tmpsd[i], md->db->mob_id); // Achievements [Smokexyz/Hercules]
+			if (!md->special_state.clone && !mob->is_clone(md->class_))
+				achievement->validate_mob_kill(tmpsd[i], md->db->mob_id); // Achievements [Smokexyz/Hercules]
 		}
 	}
 

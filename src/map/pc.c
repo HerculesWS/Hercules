@@ -2075,7 +2075,7 @@ static int pc_disguise(struct map_session_data *sd, int class)
 		clif->spawn(&sd->bl);
 		if (class == sd->status.class && pc_iscarton(sd)) {
 			//It seems the cart info is lost on undisguise.
-			clif->cartlist(sd);
+			clif->cartList(sd);
 			clif->updatestatus(sd,SP_CARTINFO);
 		}
 		if (sd->chat_id != 0) {
@@ -9198,7 +9198,7 @@ static int pc_setoption(struct map_session_data *sd, int type)
 
 #ifndef NEW_CARTS
 	if( type&OPTION_CART && !( p_type&OPTION_CART ) ) { //Cart On
-		clif->cartlist(sd);
+		clif->cartList(sd);
 		clif->updatestatus(sd, SP_CARTINFO);
 		if(pc->checkskill(sd, MC_PUSHCART) < 10)
 			status_calc_pc(sd,SCO_NONE); //Apply speed penalty.
@@ -9305,7 +9305,7 @@ static int pc_setcart(struct map_session_data *sd, int type)
 			break;
 		default:/* everything else is an allowed ID so we can move on */
 			if( !sd->sc.data[SC_PUSH_CART] ) /* first time, so fill cart data */
-				clif->cartlist(sd);
+				clif->cartList(sd);
 			clif->updatestatus(sd, SP_CARTINFO);
 			sc_start(NULL,&sd->bl, SC_PUSH_CART, 100, type, 0);
 			clif->sc_load(&sd->bl, sd->bl.id, AREA, SI_ON_PUSH_CART, type, 0, 0);

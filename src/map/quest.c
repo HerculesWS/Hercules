@@ -805,18 +805,17 @@ static bool quest_questinfo_validate_joblevel(struct map_session_data *sd, struc
  */
 static bool quest_questinfo_validate_items(struct map_session_data *sd, struct questinfo *qi)
 {
-	int i, idx;
-
 	nullpo_retr(false, sd);
 	nullpo_retr(false, qi);
-	
 
-	for (i = 0; i < VECTOR_LENGTH(qi->items); i++) {
-		struct item *item = &VECTOR_INDEX(qi->items, i);
-		idx = pc->search_inventory(sd, item->nameid);
-		if (idx == INDEX_NOT_FOUND)
-			return false;
-		if (sd->status.inventory[idx].amount < item->amount)
+	for (int i = 0; i < VECTOR_LENGTH(qi->items); i++) {
+		struct questinfo_itemreq *item = &VECTOR_INDEX(qi->items, i);
+		int count = 0;
+		for (int j = 0; j < MAX_INVENTORY; j++) {
+			if (sd->status.inventory[j].nameid == item->nameid)
+				count += sd->status.inventory[j].amount;
+		}
+		if (count < item->min || count > item->max)
 			return false;
 	}
 
@@ -887,7 +886,14 @@ static bool quest_questinfo_validate_quests(struct map_session_data *sd, struct 
 	
 	for (i = 0; i < VECTOR_LENGTH(qi->quest_requirement); i++) {
 		struct questinfo_qreq *quest_requirement = &VECTOR_INDEX(qi->quest_requirement, i);
-		if (quest->check(sd, quest_requirement->id, HAVEQUEST) != quest_requirement->state)
+		int quest_progress = quest->check(sd, quest_requirement->id, HAVEQUEST);
+		if (quest_progress == -1)
+			quest_progress = 0;
+		else if (quest_progress == 0 || quest_progress == 1)
+			quest_progress = 1;
+		else
+			quest_progress = 2;
+		if (quest_progress != quest_requirement->state)
 			return false;
 	}
 

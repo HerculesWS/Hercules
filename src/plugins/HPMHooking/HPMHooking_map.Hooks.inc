@@ -11890,13 +11890,13 @@ void HP_clif_insert_card(struct map_session_data *sd, int idx_equip, int idx_car
 	}
 	return;
 }
-void HP_clif_inventorylist(struct map_session_data *sd) {
+void HP_clif_inventoryList(struct map_session_data *sd) {
 	int hIndex = 0;
-	if (HPMHooks.count.HP_clif_inventorylist_pre > 0) {
+	if (HPMHooks.count.HP_clif_inventoryList_pre > 0) {
 		void (*preHookFunc) (struct map_session_data **sd);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_inventorylist_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_clif_inventorylist_pre[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_inventoryList_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_inventoryList_pre[hIndex].func;
 			preHookFunc(&sd);
 		}
 		if (*HPMforce_return) {
@@ -11905,24 +11905,50 @@ void HP_clif_inventorylist(struct map_session_data *sd) {
 		}
 	}
 	{
-		HPMHooks.source.clif.inventorylist(sd);
+		HPMHooks.source.clif.inventoryList(sd);
 	}
-	if (HPMHooks.count.HP_clif_inventorylist_post > 0) {
+	if (HPMHooks.count.HP_clif_inventoryList_post > 0) {
 		void (*postHookFunc) (struct map_session_data *sd);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_inventorylist_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_clif_inventorylist_post[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_inventoryList_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_inventoryList_post[hIndex].func;
 			postHookFunc(sd);
 		}
 	}
 	return;
 }
-void HP_clif_equiplist(struct map_session_data *sd) {
+void HP_clif_inventoryItems(struct map_session_data *sd, enum inventory_type type) {
 	int hIndex = 0;
-	if (HPMHooks.count.HP_clif_equiplist_pre > 0) {
+	if (HPMHooks.count.HP_clif_inventoryItems_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, enum inventory_type *type);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_inventoryItems_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_inventoryItems_pre[hIndex].func;
+			preHookFunc(&sd, &type);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.inventoryItems(sd, type);
+	}
+	if (HPMHooks.count.HP_clif_inventoryItems_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, enum inventory_type type);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_inventoryItems_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_inventoryItems_post[hIndex].func;
+			postHookFunc(sd, type);
+		}
+	}
+	return;
+}
+void HP_clif_equipList(struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_equipList_pre > 0) {
 		void (*preHookFunc) (struct map_session_data **sd);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_equiplist_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_clif_equiplist_pre[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_equipList_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_equipList_pre[hIndex].func;
 			preHookFunc(&sd);
 		}
 		if (*HPMforce_return) {
@@ -11931,24 +11957,50 @@ void HP_clif_equiplist(struct map_session_data *sd) {
 		}
 	}
 	{
-		HPMHooks.source.clif.equiplist(sd);
+		HPMHooks.source.clif.equipList(sd);
 	}
-	if (HPMHooks.count.HP_clif_equiplist_post > 0) {
+	if (HPMHooks.count.HP_clif_equipList_post > 0) {
 		void (*postHookFunc) (struct map_session_data *sd);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_equiplist_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_clif_equiplist_post[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_equipList_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_equipList_post[hIndex].func;
 			postHookFunc(sd);
 		}
 	}
 	return;
 }
-void HP_clif_cartlist(struct map_session_data *sd) {
+void HP_clif_equipItems(struct map_session_data *sd, enum inventory_type type) {
 	int hIndex = 0;
-	if (HPMHooks.count.HP_clif_cartlist_pre > 0) {
+	if (HPMHooks.count.HP_clif_equipItems_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, enum inventory_type *type);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_equipItems_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_equipItems_pre[hIndex].func;
+			preHookFunc(&sd, &type);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.equipItems(sd, type);
+	}
+	if (HPMHooks.count.HP_clif_equipItems_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, enum inventory_type type);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_equipItems_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_equipItems_post[hIndex].func;
+			postHookFunc(sd, type);
+		}
+	}
+	return;
+}
+void HP_clif_cartList(struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_cartList_pre > 0) {
 		void (*preHookFunc) (struct map_session_data **sd);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_cartlist_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_clif_cartlist_pre[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_cartList_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_cartList_pre[hIndex].func;
 			preHookFunc(&sd);
 		}
 		if (*HPMforce_return) {
@@ -11957,13 +12009,39 @@ void HP_clif_cartlist(struct map_session_data *sd) {
 		}
 	}
 	{
-		HPMHooks.source.clif.cartlist(sd);
+		HPMHooks.source.clif.cartList(sd);
 	}
-	if (HPMHooks.count.HP_clif_cartlist_post > 0) {
+	if (HPMHooks.count.HP_clif_cartList_post > 0) {
 		void (*postHookFunc) (struct map_session_data *sd);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_cartlist_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_clif_cartlist_post[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_cartList_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_cartList_post[hIndex].func;
 			postHookFunc(sd);
+		}
+	}
+	return;
+}
+void HP_clif_cartItems(struct map_session_data *sd, enum inventory_type type) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_cartItems_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, enum inventory_type *type);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_cartItems_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_cartItems_pre[hIndex].func;
+			preHookFunc(&sd, &type);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.cartItems(sd, type);
+	}
+	if (HPMHooks.count.HP_clif_cartItems_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, enum inventory_type type);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_cartItems_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_cartItems_post[hIndex].func;
+			postHookFunc(sd, type);
 		}
 	}
 	return;
@@ -15809,13 +15887,13 @@ void HP_clif_vendingreport(struct map_session_data *sd, int index, int amount, u
 	}
 	return;
 }
-void HP_clif_storagelist(struct map_session_data *sd, struct item *items, int items_length) {
+void HP_clif_storageList(struct map_session_data *sd, struct item *items, int items_length) {
 	int hIndex = 0;
-	if (HPMHooks.count.HP_clif_storagelist_pre > 0) {
+	if (HPMHooks.count.HP_clif_storageList_pre > 0) {
 		void (*preHookFunc) (struct map_session_data **sd, struct item **items, int *items_length);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_storagelist_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_clif_storagelist_pre[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_storageList_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_storageList_pre[hIndex].func;
 			preHookFunc(&sd, &items, &items_length);
 		}
 		if (*HPMforce_return) {
@@ -15824,13 +15902,117 @@ void HP_clif_storagelist(struct map_session_data *sd, struct item *items, int it
 		}
 	}
 	{
-		HPMHooks.source.clif.storagelist(sd, items, items_length);
+		HPMHooks.source.clif.storageList(sd, items, items_length);
 	}
-	if (HPMHooks.count.HP_clif_storagelist_post > 0) {
+	if (HPMHooks.count.HP_clif_storageList_post > 0) {
 		void (*postHookFunc) (struct map_session_data *sd, struct item *items, int items_length);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_storagelist_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_clif_storagelist_post[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_storageList_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_storageList_post[hIndex].func;
 			postHookFunc(sd, items, items_length);
+		}
+	}
+	return;
+}
+void HP_clif_guildStorageList(struct map_session_data *sd, struct item *items, int items_length) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_guildStorageList_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, struct item **items, int *items_length);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_guildStorageList_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_guildStorageList_pre[hIndex].func;
+			preHookFunc(&sd, &items, &items_length);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.guildStorageList(sd, items, items_length);
+	}
+	if (HPMHooks.count.HP_clif_guildStorageList_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, struct item *items, int items_length);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_guildStorageList_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_guildStorageList_post[hIndex].func;
+			postHookFunc(sd, items, items_length);
+		}
+	}
+	return;
+}
+void HP_clif_storageItems(struct map_session_data *sd, enum inventory_type type, struct item *items, int items_length) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_storageItems_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, enum inventory_type *type, struct item **items, int *items_length);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_storageItems_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_storageItems_pre[hIndex].func;
+			preHookFunc(&sd, &type, &items, &items_length);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.storageItems(sd, type, items, items_length);
+	}
+	if (HPMHooks.count.HP_clif_storageItems_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, enum inventory_type type, struct item *items, int items_length);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_storageItems_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_storageItems_post[hIndex].func;
+			postHookFunc(sd, type, items, items_length);
+		}
+	}
+	return;
+}
+void HP_clif_inventoryStart(struct map_session_data *sd, enum inventory_type type, const char *name) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_inventoryStart_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, enum inventory_type *type, const char **name);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_inventoryStart_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_inventoryStart_pre[hIndex].func;
+			preHookFunc(&sd, &type, &name);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.inventoryStart(sd, type, name);
+	}
+	if (HPMHooks.count.HP_clif_inventoryStart_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, enum inventory_type type, const char *name);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_inventoryStart_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_inventoryStart_post[hIndex].func;
+			postHookFunc(sd, type, name);
+		}
+	}
+	return;
+}
+void HP_clif_inventoryEnd(struct map_session_data *sd, enum inventory_type type) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_inventoryEnd_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, enum inventory_type *type);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_inventoryEnd_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_inventoryEnd_pre[hIndex].func;
+			preHookFunc(&sd, &type);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.inventoryEnd(sd, type);
+	}
+	if (HPMHooks.count.HP_clif_inventoryEnd_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, enum inventory_type type);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_inventoryEnd_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_inventoryEnd_post[hIndex].func;
+			postHookFunc(sd, type);
 		}
 	}
 	return;
@@ -28574,6 +28756,32 @@ void HP_clif_party_dead_notification(struct map_session_data *sd) {
 	}
 	return;
 }
+void HP_clif_pMemorialDungeonCommand(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_pMemorialDungeonCommand_pre > 0) {
+		void (*preHookFunc) (int *fd, struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pMemorialDungeonCommand_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_pMemorialDungeonCommand_pre[hIndex].func;
+			preHookFunc(&fd, &sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.pMemorialDungeonCommand(fd, sd);
+	}
+	if (HPMHooks.count.HP_clif_pMemorialDungeonCommand_post > 0) {
+		void (*postHookFunc) (int fd, struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pMemorialDungeonCommand_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_pMemorialDungeonCommand_post[hIndex].func;
+			postHookFunc(fd, sd);
+		}
+	}
+	return;
+}
 /* cmdline_interface */
 void HP_cmdline_init(void) {
 	int hIndex = 0;
@@ -35267,6 +35475,32 @@ int HP_instance_destroy_timer(int tid, int64 tick, int id, intptr_t data) {
 		}
 	}
 	return retVal___;
+}
+void HP_instance_force_destroy(struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_instance_force_destroy_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_instance_force_destroy_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_instance_force_destroy_pre[hIndex].func;
+			preHookFunc(&sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.instance.force_destroy(sd);
+	}
+	if (HPMHooks.count.HP_instance_force_destroy_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_instance_force_destroy_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_instance_force_destroy_post[hIndex].func;
+			postHookFunc(sd);
+		}
+	}
+	return;
 }
 /* intif_interface */
 int HP_intif_parse(int fd) {
