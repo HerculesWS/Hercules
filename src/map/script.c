@@ -3361,6 +3361,19 @@ static void set_reg_pc_ref_str(struct script_state *st, struct reg_db *n, int64 
 			ers_free(pc->str_reg_ers, p);
 		}
 	}
+
+	if (!pc->reg_load && p != NULL) {
+		struct DBIterator *iter = db_iterator(map->pc_db);
+		struct map_session_data *sd = NULL;
+
+		for (sd = dbi_first(iter); dbi_exists(iter); sd = dbi_next(iter)) {
+			if (sd != NULL && n == &sd->regs) {
+				sd->vars_dirty = true; // tell char server to update our vars!
+				break;
+			}
+		}
+		dbi_destroy(iter);
+	}
 }
 
 static void set_reg_pc_ref_num(struct script_state *st, struct reg_db *n, int64 num, const char *name, int val)
@@ -3398,12 +3411,25 @@ static void set_reg_pc_ref_num(struct script_state *st, struct reg_db *n, int64 
 		if (!pc->reg_load) {
 			p->flag.update = 1;
 		}
-		p->flag.type = 1;
+		p->flag.type = 0;
 
 		if(n->vars->put(n->vars, DB->i642key(num), DB->ptr2data(p), &prev)) {
 			p = DB->data2ptr(&prev);
 			ers_free(pc->num_reg_ers, p);
 		}
+	}
+
+	if (!pc->reg_load && p != NULL) {
+		struct DBIterator *iter = db_iterator(map->pc_db);
+		struct map_session_data *sd = NULL;
+
+		for (sd = dbi_first(iter); dbi_exists(iter); sd = dbi_next(iter)) {
+			if (sd != NULL && n == &sd->regs) {
+				sd->vars_dirty = true; // tell char server to update our vars!
+				break;
+			}
+		}
+		dbi_destroy(iter);
 	}
 }
 
@@ -20698,7 +20724,7 @@ static BUILDIN(getvariableofpc)
 	}
 
 	if (!sd->regs.vars)
-		sd->regs.vars = i64db_alloc(DB_OPT_RELEASE_DATA);
+		sd->regs.vars = i64db_alloc(DB_OPT_BASE);
 
 	script->push_val(st->stack, C_NAME, reference_getuid(data), &sd->regs);
 	return true;
