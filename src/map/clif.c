@@ -2789,11 +2789,11 @@ static void clif_item_normal(short idx, struct NORMALITEM_INFO *p, struct item *
 
 static void clif_inventoryList(struct map_session_data *sd)
 {
-#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 	clif->inventoryStart(sd, INVTYPE_INVENTORY, "");
 #endif
 	clif->inventoryItems(sd, INVTYPE_INVENTORY);
-#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 	clif->inventoryEnd(sd, INVTYPE_INVENTORY);
 #endif
 }
@@ -2816,7 +2816,7 @@ static void clif_inventoryItems(struct map_session_data *sd, enum inventory_type
 	if (normal) {
 		itemlist_normal.PacketType = inventorylistnormalType;
 		itemlist_normal.PacketLength = (sizeof(itemlist_normal) - sizeof(itemlist_normal.list)) + (sizeof(struct NORMALITEM_INFO) * normal);
-#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 		itemlist_normal.invType = type;
 #endif
 
@@ -2829,7 +2829,7 @@ static void clif_inventoryItems(struct map_session_data *sd, enum inventory_type
 	if( equip ) {
 		itemlist_equip.PacketType  = inventorylistequipType;
 		itemlist_equip.PacketLength = (sizeof(itemlist_equip) - sizeof(itemlist_equip.list)) + (sizeof(struct EQUIPITEM_INFO) * equip);
-#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 		itemlist_equip.invType = type;
 #endif
 
@@ -2849,7 +2849,7 @@ static void clif_inventoryItems(struct map_session_data *sd, enum inventory_type
 
 static void clif_equipList(struct map_session_data *sd)
 {
-#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 	clif->inventoryStart(sd, INVTYPE_INVENTORY, "");
 	clif->inventoryItems(sd, INVTYPE_INVENTORY);
 	clif->inventoryEnd(sd, INVTYPE_INVENTORY);
@@ -2876,7 +2876,7 @@ static void clif_equipItems(struct map_session_data *sd, enum inventory_type typ
 	if (equip) {
 		itemlist_equip.PacketType = inventorylistequipType;
 		itemlist_equip.PacketLength = (sizeof(itemlist_equip) - sizeof(itemlist_equip.list)) + (sizeof(struct EQUIPITEM_INFO) * equip);
-#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 		itemlist_equip.invType = type;
 #endif
 
@@ -2914,7 +2914,7 @@ static void clif_guildStorageList(struct map_session_data *sd, struct item *item
 
 static void clif_inventoryStart(struct map_session_data *sd, enum inventory_type type, const char *name)
 {
-#if PACKETVER_RE_NUM >= 20180829 || PACKETVER_ZERO_NUM >= 20180919
+#if PACKETVER_RE_NUM >= 20180829 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 	nullpo_retv(sd);
 	nullpo_retv(name);
 
@@ -2922,10 +2922,10 @@ static void clif_inventoryStart(struct map_session_data *sd, enum inventory_type
 	memset(buf, 0, sizeof(buf));
 	struct ZC_INVENTORY_START *p = (struct ZC_INVENTORY_START *)buf;
 	p->packetType = 0xb08;
-#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 	p->invType = type;
 #endif
-#if PACKETVER_RE_NUM >= 20180919 || PACKETVER_ZERO_NUM >= 20180919
+#if PACKETVER_RE_NUM >= 20180919 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 	int strLen = (int)safestrnlen(name, 24);
 	if (strLen > 24)
 		strLen = 24;
@@ -2942,12 +2942,12 @@ static void clif_inventoryStart(struct map_session_data *sd, enum inventory_type
 
 static void clif_inventoryEnd(struct map_session_data *sd, enum inventory_type type)
 {
-#if PACKETVER_RE_NUM >= 20180829 || PACKETVER_ZERO_NUM >= 20180919
+#if PACKETVER_RE_NUM >= 20180829 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 	nullpo_retv(sd);
 
 	struct ZC_INVENTORY_END p;
 	p.packetType = 0xb0b;
-#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 	p.invType = type;
 #endif
 	p.flag = 0;
@@ -2983,10 +2983,10 @@ static void clif_storageItems(struct map_session_data *sd, enum inventory_type t
 			storelist_normal.PacketType   = storageListNormalType;
 			storelist_normal.PacketLength =  ( sizeof( storelist_normal ) - sizeof( storelist_normal.list ) ) + (sizeof(struct NORMALITEM_INFO) * normal);
 
-#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 			storelist_normal.invType = type;
 #endif
-#if PACKETVER >= 20120925 && PACKETVER_RE_NUM < 20180829 && PACKETVER_ZERO_NUM < 20180919
+#if PACKETVER >= 20120925 && PACKETVER_RE_NUM < 20180829 && PACKETVER_ZERO_NUM < 20180919 && PACKETVER_MAIN_NUM < 20181002
 			safestrncpy(storelist_normal.name, "Storage", NAME_LENGTH);
 #endif
 
@@ -2997,10 +2997,10 @@ static void clif_storageItems(struct map_session_data *sd, enum inventory_type t
 			storelist_equip.PacketType   = storageListEquipType;
 			storelist_equip.PacketLength = ( sizeof( storelist_equip ) - sizeof( storelist_equip.list ) ) + (sizeof(struct EQUIPITEM_INFO) * equip);
 
-#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 			storelist_equip.invType = type;
 #endif
-#if PACKETVER >= 20120925 && PACKETVER_RE_NUM < 20180829 && PACKETVER_ZERO_NUM < 20180919
+#if PACKETVER >= 20120925 && PACKETVER_RE_NUM < 20180829 && PACKETVER_ZERO_NUM < 20180919 && PACKETVER_MAIN_NUM < 20181002
 			safestrncpy(storelist_equip.name, "Storage", NAME_LENGTH);
 #endif
 
@@ -3013,11 +3013,11 @@ static void clif_storageItems(struct map_session_data *sd, enum inventory_type t
 
 static void clif_cartList(struct map_session_data *sd)
 {
-#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 	clif->inventoryStart(sd, INVTYPE_CART, "");
 #endif
 	clif->cartItems(sd, INVTYPE_CART);
-#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 	clif->inventoryEnd(sd, INVTYPE_CART);
 #endif
 }
@@ -3043,7 +3043,7 @@ static void clif_cartItems(struct map_session_data *sd, enum inventory_type type
 	if (normal) {
 		itemlist_normal.PacketType = cartlistnormalType;
 		itemlist_normal.PacketLength = (sizeof(itemlist_normal) - sizeof(itemlist_normal.list)) + (sizeof(struct NORMALITEM_INFO) * normal);
-#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 		itemlist_normal.invType = type;
 #endif
 
@@ -3053,7 +3053,7 @@ static void clif_cartItems(struct map_session_data *sd, enum inventory_type type
 	if (equip) {
 		itemlist_equip.PacketType = cartlistequipType;
 		itemlist_equip.PacketLength = (sizeof(itemlist_equip) - sizeof(itemlist_equip.list)) + (sizeof(struct EQUIPITEM_INFO) * equip);
-#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 		itemlist_equip.invType = type;
 #endif
 
