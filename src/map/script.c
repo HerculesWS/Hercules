@@ -17870,7 +17870,9 @@ static BUILDIN(getd)
 
 	id = script->add_variable(varname);
 
-	if (script->str_data[id].type != C_NAME) {
+	if (script->str_data[id].type != C_NAME && // variable
+		script->str_data[id].type != C_PARAM && // param
+		script->str_data[id].type != C_INT) { // constant
 		ShowError("script:getd: `%s` is already used by something that is not a variable.\n", varname);
 		st->state = END;
 		return false;
