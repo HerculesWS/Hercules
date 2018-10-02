@@ -1220,6 +1220,7 @@ END_ZEROED_BLOCK;
 	/* funcs */
 	void (*zone_init) (void);
 	void (*zone_remove) (int m);
+	void (*zone_remove_all) (int m);
 	void (*zone_apply) (int m, struct map_zone_data *zone, const char* start, const char* buffer, const char* filepath);
 	void (*zone_change) (int m, struct map_zone_data *zone, const char* start, const char* buffer, const char* filepath);
 	void (*zone_change2) (int m, struct map_zone_data *zone);
