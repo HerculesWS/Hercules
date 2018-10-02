@@ -5613,6 +5613,8 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 
 	// Use a do so that you can break out of it when the skill fails.
 	do {
+		bool is_asura = (ud->skill_id == MO_EXTREMITYFIST);
+
 		if(!target || target->prev==NULL) break;
 
 		if(src->m != target->m || status->isdead(src)) break;
@@ -5845,7 +5847,8 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 			ud->skill_lv = ud->skilltarget = 0;
 		}
 
-		if (src->id != target->id)
+		// Asura Strike caster doesn't look to their target in the end
+		if (src->id != target->id && !is_asura)
 			unit->setdir(src, map->calc_dir(src, target->x, target->y));
 
 		map->freeblock_unlock();
