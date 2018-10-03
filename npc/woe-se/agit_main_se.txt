@@ -1844,7 +1844,7 @@ function	script	ReturnFlag	{
 //== Guild Dungeon Warps ===================================
 -	script	Sunflower#template	FAKE_NPC,{
 	if (getcharid(CHAR_ID_GUILD) == getcastledata(strnpcinfo(NPC_MAP),1)) {
-		mes("- It's an amazingly huge sunflower); as big as a human! ... You feel something mysterious emanating from the flower. -";
+		mes("- It's an amazingly huge sunflower); as big as a human! ... You feel something mysterious emanating from the flower. -");
 		next;
 		switch(select("Hold the stem.", "Do nothing.")) {
 		case 1:
