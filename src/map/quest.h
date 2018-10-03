@@ -92,6 +92,7 @@ struct quest_interface {
 	bool (*questinfo_validate_homunculus_level) (struct map_session_data *sd, struct questinfo *qi);
 	bool (*questinfo_validate_homunculus_type) (struct map_session_data *sd, struct questinfo *qi);
 	bool (*questinfo_validate_quests) (struct map_session_data *sd, struct questinfo *qi);
+	bool (*questinfo_validate_mercenary_class) (struct map_session_data *sd, struct questinfo *qi);
 	void (*questinfo_vector_clear) (int m);
 };
 

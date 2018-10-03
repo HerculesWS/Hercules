@@ -1331,7 +1331,8 @@ enum questinfo_type {
 	QINFO_ITEM,
 	QINFO_HOMUN_LEVEL,
 	QINFO_HOMUN_TYPE,
-	QINFO_QUEST
+	QINFO_QUEST,
+	QINFO_MERCENARY_CLASS
 };
 
 /* packet size constant for itemlist */

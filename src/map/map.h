@@ -815,6 +815,7 @@ struct questinfo {
 	struct s_homunculus homunculus;
 	int homunculus_type;
 	VECTOR_DECL(struct questinfo_qreq) quest_requirement;
+	int mercenary_class;
 };
 
 
