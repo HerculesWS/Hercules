@@ -24847,6 +24847,32 @@ static BUILDIN(msgtable2)
 	return true;
 }
 
+// show/hide camera info
+static BUILDIN(camerainfo)
+{
+	struct map_session_data *sd = script_rid2sd(st);
+	if (sd == NULL)
+		return false;
+
+	clif->camera_showWindow(sd);
+	return true;
+}
+
+// allow change some camera parameters
+static BUILDIN(changecamera)
+{
+	struct map_session_data *sd = script_rid2sd(st);
+	if (sd == NULL)
+		return false;
+
+	enum send_target target = SELF;
+	if (script_hasdata(st, 5)) {
+		target = script_getnum(st, 5);
+	}
+	clif->camera_change(sd, (float)script_getnum(st, 2), (float)script_getnum(st, 3), (float)script_getnum(st, 4), target);
+	return true;
+}
+
 /**
  * Adds a built-in script function.
  *
@@ -25577,6 +25603,10 @@ static void script_parse_builtin(void)
 
 		// -- HatEffect
 		BUILDIN_DEF(hateffect, "ii"),
+
+		// camera
+		BUILDIN_DEF(camerainfo, ""),
+		BUILDIN_DEF(changecamera, "iii?"),
 	};
 	int i, len = ARRAYLENGTH(BUILDIN);
 	RECREATE(script->buildin, char *, script->buildin_count + len); // Pre-alloc to speed up

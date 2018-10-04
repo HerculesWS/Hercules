@@ -1553,7 +1553,7 @@ struct clif_interface {
 	void (*party_dead_notification) (struct map_session_data *sd);
 	void (*pMemorialDungeonCommand) (int fd, struct map_session_data *sd);
 	void (*camera_showWindow) (struct map_session_data *sd);
-	void (*camera_change) (struct map_session_data *sd, float range, float rotation, float latitude);
+	void (*camera_change) (struct map_session_data *sd, float range, float rotation, float latitude, enum send_target target);
 };
 
 #ifdef HERCULES_CORE

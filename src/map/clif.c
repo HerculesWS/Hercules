@@ -21935,7 +21935,7 @@ static void clif_camera_showWindow(struct map_session_data *sd)
 #endif
 }
 
-static void clif_camera_change(struct map_session_data *sd, float range, float rotation, float latitude)
+static void clif_camera_change(struct map_session_data *sd, float range, float rotation, float latitude, enum send_target target)
 {
 #if PACKETVER >= 20160525
 	struct PACKET_ZC_CAMERA_INFO p;
@@ -21944,7 +21944,7 @@ static void clif_camera_change(struct map_session_data *sd, float range, float r
 	p.range = range;
 	p.rotation = rotation;
 	p.latitude = latitude;
-	clif->send(&p, sizeof(p), &sd->bl, SELF);
+	clif->send(&p, sizeof(p), &sd->bl, target);
 #endif
 }
 

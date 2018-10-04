@@ -10183,3 +10183,19 @@ Show in client message by <message_id> from msg string table.
 Optional <color> can be used for set color for whole message.
 
 ---------------------------------------
+
+*camerainfo()
+
+Show or hide camera info window.
+Works for 20160525 clients or newer.
+
+---------------------------------------
+
+*changecamera(<range>, <rotation>, <latitude>{, <target>})
+
+Change camera range, rotation, latitude.
+The optional target parameter specifies who will get changed
+camera.
+Works for 20160525 clients or newer.
+
+---------------------------------------
