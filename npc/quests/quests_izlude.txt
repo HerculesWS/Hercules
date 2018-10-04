@@ -39,79 +39,79 @@
 //== Edgar's Offer :: iz_npc ===============================
 -	script	::Edgar_izlude	FAKE_NPC,{
 	if (MISC_QUEST & 16) {
-		mes "[Edgar]";
-		mes "So are you heading to Alberta again? Let me give you the same discount and only charge 250 Zeny, just like the last time.";
-		mes "How's that sound?";
+		mes("[Edgar]");
+		mes("So are you heading to Alberta again? Let me give you the same discount and only charge 250 Zeny, just like the last time.");
+		mes("How's that sound?");
 		next;
 		if (select("Alrighty~!", "Why are you being so nice to me?!") == 1) {
 			if (Zeny < 250) {
-				mes "[Edgar]";
-				mes "Um...";
-				mes "This isn't";
-				mes "enough money.";
-				mes "Why don't you go";
-				mes "get some more cash?";
+				mes("[Edgar]");
+				mes("Um...");
+				mes("This isn't");
+				mes("enough money.");
+				mes("Why don't you go");
+				mes("get some more cash?");
 				close ;
 			}
 			Zeny -= 250;
 			warp "alberta",195,164;
 			end;
 		}
-		mes "[Edgar]";
-		mes "It's just the way I am. That, and your devilish smile reminds me of my beloved blond haired son who left home years ago to become a Sailor on his own ship. Bless his soul, wherever he is.";
+		mes("[Edgar]");
+		mes("It's just the way I am. That, and your devilish smile reminds me of my beloved blond haired son who left home years ago to become a Sailor on his own ship. Bless his soul, wherever he is.");
 		close;
 	}
-	mes "[Edgar]";
-	mes "My town, Izlude, is connected to Alberta by the harbor in the West. There is so much traffic between us, I almost become an Albertian.  Hehehe~";
+	mes("[Edgar]");
+	mes("My town, Izlude, is connected to Alberta by the harbor in the West. There is so much traffic between us, I almost become an Albertian.  Hehehe~");
 	next;
-	mes "[Edgar]";
-	mes "There's this guy I know pretty well, Phelix, who lives in Alberta. That guy is really stingy... He charges for everything!";
+	mes("[Edgar]");
+	mes("There's this guy I know pretty well, Phelix, who lives in Alberta. That guy is really stingy... He charges for everything!");
 	next;
-	mes "[Edgar]";
-	mes "But he's really a nice guy and likes helping other people. He has a good heart and will give you his support if you meet his price.";
+	mes("[Edgar]");
+	mes("But he's really a nice guy and likes helping other people. He has a good heart and will give you his support if you meet his price.");
 	next;
-	mes "[Edgar]";
-	mes "Lately, people in Alberta say that he is really trying to help folks and that his demand for Jellopies is just a coverup.  Well, you should take a look at what he has to offer.";
+	mes("[Edgar]");
+	mes("Lately, people in Alberta say that he is really trying to help folks and that his demand for Jellopies is just a coverup.  Well, you should take a look at what he has to offer.");
 	next;
 	if (select("Can you tell me how to get to Alberta?", "End Conversation") == 1) {
-		mes "[Edgar]";
-		mes "Huh? Well, you can use your feet and just walk.  But if you have money, I'd like to suggest that you take a ship.";
+		mes("[Edgar]");
+		mes("Huh? Well, you can use your feet and just walk.  But if you have money, I'd like to suggest that you take a ship.");
 		next;
 		if (select("Okay, gotcha.", "But I'm sick of walking and I'm broke!") == 1) {
-			mes "[Edgar]";
-			mes "Alrighty, take care~";
+			mes("[Edgar]");
+			mes("Alrighty, take care~");
 			close;
 		}
-		mes "[Edgar]";
-		mes "Okay...";
-		mes "You don't want to walk AND you've got no cash, but you still want to go there? Oh geez...";
+		mes("[Edgar]");
+		mes("Okay...");
+		mes("You don't want to walk AND you've got no cash, but you still want to go there? Oh geez...");
 		next;
-		mes "[Edgar]";
-		mes "Fine fine. Me, being the captain of a ship, can afford to bring you there at a lower price. How does 250 Zeny sound?";
+		mes("[Edgar]");
+		mes("Fine fine. Me, being the captain of a ship, can afford to bring you there at a lower price. How does 250 Zeny sound?");
 		next;
 		if (select("Alrighty~!", "Bah, what a rip off!!") == 1) {
 			MISC_QUEST |= 16;
 			if (Zeny < 250) {
-				mes "[Edgar]";
-				mes "Um...";
-				mes "This isn't";
-				mes "enough money.";
-				mes "Go and get";
-				mes "some more.";
+				mes("[Edgar]");
+				mes("Um...");
+				mes("This isn't");
+				mes("enough money.");
+				mes("Go and get");
+				mes("some more.");
 				close;
 			}
 			Zeny -= 250;
 			warp "alberta",195,164;
 			end;
 		}
-		mes "[Edgar]";
-		mes "Boy oh boy,";
-		mes "if you think";
-		mes "that's a rip off...";
+		mes("[Edgar]");
+		mes("Boy oh boy,");
+		mes("if you think");
+		mes("that's a rip off...");
 		close;
 	}
-	mes "[Edgar]";
-	mes "Yeah, alright.";
-	mes "See you later~";
+	mes("[Edgar]");
+	mes("Yeah, alright.");
+	mes("See you later~");
 	close;
 }
