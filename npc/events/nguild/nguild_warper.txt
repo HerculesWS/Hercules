@@ -41,9 +41,9 @@
 //=========================================================================
 
 prontera,146,163,6	script	Novice Castles	4_F_NOVICE,{
-	mes "[Cita]";
+	mes("[Cita]");
 	if (!getcharid(CHAR_ID_GUILD)) {
-		mes "^FF0000You have to enter a guild to be able to hit Emperium!^000000";
+		mes("^FF0000You have to enter a guild to be able to hit Emperium!^000000");
 	} else if (getgdskilllv(getcharid(CHAR_ID_GUILD),10013) ||
 	         (getgdskilllv(getcharid(CHAR_ID_GUILD),10000) +
 	          getgdskilllv(getcharid(CHAR_ID_GUILD),10001) +
@@ -61,16 +61,16 @@ prontera,146,163,6	script	Novice Castles	4_F_NOVICE,{
 	          getgdskilllv(getcharid(CHAR_ID_GUILD),10013) +
 	          getgdskilllv(getcharid(CHAR_ID_GUILD),10014) > 9)
 	          ) {
-		mes "I see... your guild has Emergency Call mastered.";
-		mes "You cannot enter the Novice Castle area.";
+		mes("I see... your guild has Emergency Call mastered.");
+		mes("You cannot enter the Novice Castle area.");
 		emotion e_hmm;
 		emotion e_wah,1;
 	} else {
-		mes "I'm a new usher of Novice Castles.";
+		mes("I'm a new usher of Novice Castles.");
 		next;
-		mes "[Cita]";
+		mes("[Cita]");
 		if ((eaclass()&(EAJL_2|EAJL_UPPER)) || BaseLevel>=60) {
-			mes "I'm sorry, you can't enter the sacred Novice Castles place.";
+			mes("I'm sorry, you can't enter the sacred Novice Castles place.");
 			emotion e_sry;
 		} else if (select("Warp me to Novice Castles","Cancel") == 1) {
 			// remove several unallowed buffs
@@ -95,14 +95,14 @@ prontera,146,163,6	script	Novice Castles	4_F_NOVICE,{
 }
 
 n_castle,102,107,5	script	Cita	4_F_NOVICE,{
-	mes "[Cita]";
-	mes "Hello, "+ strcharinfo(PC_NAME) +". Can I help you?";
+	mes("[Cita]");
+	mes("Hello, "+ strcharinfo(PC_NAME) +". Can I help you?");
 	next;
 	if (select("Warp me to Prontera!","Cancel") == 1) {
 		warp "prontera",155,177+rand(5);
 	} else {
-		mes "[Cita]";
-		mes "Ok.";
+		mes("[Cita]");
+		mes("Ok.");
 	}
 	close;
 }

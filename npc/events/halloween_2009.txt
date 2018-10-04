@@ -43,71 +43,71 @@
 //== Headgear Quest - Pumpkin Hat ==========================
 prontera,152,192,5	script	Pumpkin Hat Researcher	4_M_05,{
 	if(BaseLevel < 45) {
-		mes "[Pumpkin Hat Researcher]";
-		mes "Shoo, I don't need a child. Shoo! I don't talk to novices.";
+		mes("[Pumpkin Hat Researcher]");
+		mes("Shoo, I don't need a child. Shoo! I don't talk to novices.");
 		next;
-		mes "[Pumpkin Hat Researcher]";
-		mes "Go reach a level that can fight with stronger monsters and come back.";
+		mes("[Pumpkin Hat Researcher]");
+		mes("Go reach a level that can fight with stronger monsters and come back.");
 		close;
 	}
-	mes "[Pumpkin Hat Researcher]";
-	mes "Say do you like Pumpkin Pies?";
+	mes("[Pumpkin Hat Researcher]");
+	mes("Say do you like Pumpkin Pies?");
 	next;
-	mes "[Pumpkin Hat Researcher]";
-	mes "I'm a Pumpkin Hat researcher, Why don't you listen to my story?";
+	mes("[Pumpkin Hat Researcher]");
+	mes("I'm a Pumpkin Hat researcher, Why don't you listen to my story?");
 	next;
 	while(1) {
 		switch(select("Listen to the story.", "Ask about Pumpkin Hat.", "Get a Pumpkin Hat.", "Stop the conversation.")) {
 			case 1:
-				mes "[Pumpkin Hat Researcher]";
-				mes "I've been studying about an upgraded Pumpkin Hat.";
-				mes "I have discovered that it is a very simple process.";
+				mes("[Pumpkin Hat Researcher]");
+				mes("I've been studying about an upgraded Pumpkin Hat.");
+				mes("I have discovered that it is a very simple process.");
 				next;
-				mes "[Pumpkin Hat Researcher]";
-				mes "The process is quite simple.";
-				mes "If you bring me ^4a4aff20 Jack o' Pumpkin^000000 I can show you.";
-				mes "Isn't that a tempting proposal?";
+				mes("[Pumpkin Hat Researcher]");
+				mes("The process is quite simple.");
+				mes("If you bring me ^4a4aff20 Jack o' Pumpkin^000000 I can show you.");
+				mes("Isn't that a tempting proposal?");
 				next;
 				break;
 			case 2:
-				mes "[Pumpkin Hat Researcher]";
-				mes "This upgraded pumpkin hat is powerful stuff!";
+				mes("[Pumpkin Hat Researcher]");
+				mes("This upgraded pumpkin hat is powerful stuff!");
 				next;
-				mes "[Pumpkin Hat Researcher]";
-				mes "It can make a Pumpkin Pie that restores a large percentage of HP & SP using condensed energy to the person who wears it.";
+				mes("[Pumpkin Hat Researcher]");
+				mes("It can make a Pumpkin Pie that restores a large percentage of HP & SP using condensed energy to the person who wears it.");
 				next;
-				mes "[Pumpkin Hat Researcher]";
-				mes "All you need is ^4a4aff20 Jack o' Pumpkin^000000s.";
+				mes("[Pumpkin Hat Researcher]");
+				mes("All you need is ^4a4aff20 Jack o' Pumpkin^000000s.");
 				next;
 				break;
 			case 3:
-				mes "[Pumpkin Hat Researcher]";
-				mes "Do you want to get Pumpkin Pies? Okay, let me count the Jack o' Pumpkins you've brought.";
+				mes("[Pumpkin Hat Researcher]");
+				mes("Do you want to get Pumpkin Pies? Okay, let me count the Jack o' Pumpkins you've brought.");
 				next;
 				if(countitem(Pumpkin_Head) < 20) {
-					mes "[Pumpkin Hat Researcher]";
-					mes "I need ^4a4aff20 Jack o' Pumpkin^000000.";
-					mes "I'm not an alchemist or a wizard to create something from nothing.";
+					mes("[Pumpkin Hat Researcher]");
+					mes("I need ^4a4aff20 Jack o' Pumpkin^000000.");
+					mes("I'm not an alchemist or a wizard to create something from nothing.");
 					next;
-					mes "[Pumpkin Hat Researcher]";
-					mes "Okay, go hunting monsters and come back.";
-					mes "I'm going to stay here for a while so take your time.";
+					mes("[Pumpkin Hat Researcher]");
+					mes("Okay, go hunting monsters and come back.");
+					mes("I'm going to stay here for a while so take your time.");
 					next;
 					break;
 				}else{
-					mes "[Pumpkin Hat Researcher]";
-					mes "I hope this will be useful to you. Don't forget to wear it while fighting to get your Pumpkin Pies.";
+					mes("[Pumpkin Hat Researcher]");
+					mes("I hope this will be useful to you. Don't forget to wear it while fighting to get your Pumpkin Pies.");
 					delitem Pumpkin_Head,20;	// Jack o' Pumpkin
 					getitem Weird_Pumpkin_Hat,1;		// Weird Pumpkin Hat
 					next;
-					mes "[Pumpkin Hat Researcher]";
-					mes "I guess that I should get back to my research.";
+					mes("[Pumpkin Hat Researcher]");
+					mes("I guess that I should get back to my research.");
 					close;
 				}
 			case 4:
-				mes "[Pumpkin Hat Researcher]";
-				mes "Bye, until we'll see each other again.";
-				mes "I wish you well...";
+				mes("[Pumpkin Hat Researcher]");
+				mes("Bye, until we'll see each other again.");
+				mes("I wish you well...");
 				close;
 		}
 	}
@@ -118,26 +118,26 @@ prontera,152,192,5	script	Pumpkin Hat Researcher	4_M_05,{
 OnTouch:
 	hideoffnpc strnpcinfo(NPC_NAME_UNIQUE);
 	initnpctimer;
-	mes "[Trick or Treater]";
-	mes "Hooray! hooray! Hooray!";
-	mes "Trick or Treat?";
+	mes("[Trick or Treater]");
+	mes("Hooray! hooray! Hooray!");
+	mes("Trick or Treat?");
 	next;
 	if(select("Trick.", "Treat.") == 1) {
-		mes "[Trick or Treater]";
-		mes "!!!!";
-		mes "Fine. I have no choice but to trick you back!";
+		mes("[Trick or Treater]");
+		mes("!!!!");
+		mes("Fine. I have no choice but to trick you back!");
 		sc_start SC_STUN,5000,0;
 		close;
 	}
-	mes "[Trick or Treater]";
-	mes "Oh yay! What kind of treat do you have?";
+	mes("[Trick or Treater]");
+	mes("Oh yay! What kind of treat do you have?");
 	next;
 	switch(select("Candy", "Candy Cane", "Well-baked Cookie", "Nothing")) {
 		case 1:
 			if(countitem(Candy) > 0) {
-				mes "[Trick or Treater]";
-				mes "Yay thank you!";
-				mes "Here, take this for being so nice!";
+				mes("[Trick or Treater]");
+				mes("Yay thank you!");
+				mes("Here, take this for being so nice!");
 				sc_start SC_FOOD_STR, 1800000, 5;
 				sc_start SC_FOOD_INT, 1800000, 5;
 				sc_start SC_FOOD_VIT, 1800000, 5;
@@ -148,17 +148,17 @@ OnTouch:
 				delitem Candy,1;	// Candy
 				close;
 			}else{
-				mes "[Trick or Treater]";
-				mes "At least a Candy, a Candy Cane or a Well-baked Cookie is all I ask for a treat.";
-				mes "Fine. I have no choice but to trick you!";
+				mes("[Trick or Treater]");
+				mes("At least a Candy, a Candy Cane or a Well-baked Cookie is all I ask for a treat.");
+				mes("Fine. I have no choice but to trick you!");
 				sc_start SC_STUN,5000,0;
 				close;
 			}
 		case 2:
 			if(countitem(Candy_Striper) > 0) {
-				mes "[Trick or Treater]";
-				mes "Yay thank you!";
-				mes "Here, take this for being so nice!";
+				mes("[Trick or Treater]");
+				mes("Yay thank you!");
+				mes("Here, take this for being so nice!");
 				sc_start SC_FOOD_STR, 1800000, 5;
 				sc_start SC_FOOD_INT, 1800000, 5;
 				sc_start SC_FOOD_VIT, 1800000, 5;
@@ -169,17 +169,17 @@ OnTouch:
 				delitem Candy_Striper,1;	// Candy Cane
 				close;
 			}else{
-				mes "[Trick or Treater]";
-				mes "At least a Candy, a Candy Cane or a Well-baked Cookie is all I ask for a treat.";
-				mes "Fine. I have no choice but to trick you!";
+				mes("[Trick or Treater]");
+				mes("At least a Candy, a Candy Cane or a Well-baked Cookie is all I ask for a treat.");
+				mes("Fine. I have no choice but to trick you!");
 				sc_start SC_STUN,5000,0;
 				close;
 			}
 		case 3:
 			if(countitem(Well_Baked_Cookie) > 0) {
-				mes "[Trick or Treater]";
-				mes "Yay thank you!";
-				mes "Here, take this for being so nice!";
+				mes("[Trick or Treater]");
+				mes("Yay thank you!");
+				mes("Here, take this for being so nice!");
 				sc_start SC_FOOD_STR, 1800000, 5;
 				sc_start SC_FOOD_INT, 1800000, 5;
 				sc_start SC_FOOD_VIT, 1800000, 5;
@@ -190,16 +190,16 @@ OnTouch:
 				delitem Well_Baked_Cookie,1;	// Well-baked Cookie
 				close;
 			}else{
-				mes "[Trick or Treater]";
-				mes "At least a Candy, a Candy Cane or a Well-baked Cookie is all I ask for a treat.";
-				mes "Fine. I have no choice but to trick you!";
+				mes("[Trick or Treater]");
+				mes("At least a Candy, a Candy Cane or a Well-baked Cookie is all I ask for a treat.");
+				mes("Fine. I have no choice but to trick you!");
 				sc_start SC_STUN,5000,0;
 				close;
 			}
 		case 4:
-			mes "[Trick or Treater]";
-			mes "At least a Candy, a Candy Cane or a Well-baked Cookie is all I ask for a treat.";
-			mes "Fine. I have no choice but to trick you!";
+			mes("[Trick or Treater]");
+			mes("At least a Candy, a Candy Cane or a Well-baked Cookie is all I ask for a treat.");
+			mes("Fine. I have no choice but to trick you!");
 			sc_start SC_STUN,5000,0;
 			close;
 	}
@@ -240,26 +240,26 @@ prontera,220,72,5	duplicate(09Treats)	Trick or Treater#iRO8	4_M_KID1,2,2
 
 //== Monster Summoning - Halloween Wizard ==================
 -	script	Halloween Wizard#iRO09::09HallowWiz	4_DARKLORD,{
-	mes "[Halloween Wizard]";
-	mes "...";
-	mes "Do you want to play a trick on someone?";
+	mes("[Halloween Wizard]");
+	mes("...");
+	mes("Do you want to play a trick on someone?");
 	next;
 	while(1) {
 		switch(select("What trick?", "Sure", "No.")) {
 			case 1:
-				mes "[Halloween Wizard]";
-				mes "I can summon monsters in other parts of the world with just a few materials.";
+				mes("[Halloween Wizard]");
+				mes("I can summon monsters in other parts of the world with just a few materials.");
 				next;
-				mes "[Halloween Wizard]";
-				mes "Sounds interesting huh?";
+				mes("[Halloween Wizard]");
+				mes("Sounds interesting huh?");
 				next;
-				mes "[Halloween Wizard]";
-				mes "If you bring me Fabric, Jack o' Pumpkins, Worn Fabric, or Crushed Pumpkins I can summon the monsters.";
+				mes("[Halloween Wizard]");
+				mes("If you bring me Fabric, Jack o' Pumpkins, Worn Fabric, or Crushed Pumpkins I can summon the monsters.");
 				next;
 				break;
 			case 2:
-				mes "[Halloween Wizard]";
-				mes "Which town do you want to play a trick on?";
+				mes("[Halloween Wizard]");
+				mes("Which town do you want to play a trick on?");
 				next;
 				getmapxy(.@mapname$, .@mapx, .@mapy, UNITTYPE_PC, strcharinfo(PC_NAME));
 				if (.@mapname$ == "prontera") {
@@ -343,25 +343,25 @@ prontera,220,72,5	duplicate(09Treats)	Trick or Treater#iRO8	4_M_KID1,2,2
 					}
 				}
 				setarray .@HallowTowns$[1],"prontera","payon","geffen","alberta","aldebaran";
-				mes "[Halloween Wizard]";
-				mes "Ok then let's go to the next step.";
+				mes("[Halloween Wizard]");
+				mes("Ok then let's go to the next step.");
 				next;
-				mes "[Halloween Wizard]";
-				mes "How many Fabrics or Jack o' Pumpkins do you want to use? Don't go over 100 because that is the max amount that I can use.";
+				mes("[Halloween Wizard]");
+				mes("How many Fabrics or Jack o' Pumpkins do you want to use? Don't go over 100 because that is the max amount that I can use.");
 				next;
 				input .@input;
 				if (.@input == 0) {
-					mes "[Halloween Wizard]";
-					mes "You have no definite idea.";
-					mes "It's not a big deal.";
-					mes "Let me know.";
+					mes("[Halloween Wizard]");
+					mes("You have no definite idea.");
+					mes("It's not a big deal.");
+					mes("Let me know.");
 					next;
 					break;
 				}
 				else if (.@input > 100) {
-					mes "[Halloween Wizard]";
-					mes "I told you that it must be between 1 to 100!";
-					mes "You didn't pay attention!";
+					mes("[Halloween Wizard]");
+					mes("I told you that it must be between 1 to 100!");
+					mes("You didn't pay attention!");
 					next;
 					break;
 				}
@@ -376,9 +376,9 @@ prontera,220,72,5	duplicate(09Treats)	Trick or Treater#iRO8	4_M_KID1,2,2
 					.@total = .@fabric + .@jack + .@worn + .@crushed;
 
 					if(.@total < .@input) {
-						mes "[Halloween Wizard]";
-						mes "Recount the number of items you have and tell me the total.";
-						mes "Huhuhuhuhuhu...";
+						mes("[Halloween Wizard]");
+						mes("Recount the number of items you have and tell me the total.");
+						mes("Huhuhuhuhuhu...");
 						next;
 						break;
 					}
@@ -432,22 +432,22 @@ prontera,220,72,5	duplicate(09Treats)	Trick or Treater#iRO8	4_M_KID1,2,2
 						}
 					}
 					if (.@input > 0) {
-						mes "Theres a problem.";
+						mes("Theres a problem.");
 						close;
 					}
 					monster ""+.@HallowTowns$[.@HallowTown]+"",0,0,"Halloween Whisper",3014,.@whispers;
 					monster ""+.@HallowTowns$[.@HallowTown]+"",0,0,"Halloween Dark Lord",3015,.@darklords;
-					mes "[Halloween Wizard]";
-					mes "Here's what you wanted.";
-					mes "Imagine what the people must be thinking in the other villages?";
-					mes "Muahahaha";
+					mes("[Halloween Wizard]");
+					mes("Here's what you wanted.");
+					mes("Imagine what the people must be thinking in the other villages?");
+					mes("Muahahaha");
 					close;
 				}
 			case 3:
-				mes "[Halloween Wizard]";
-				mes "If you change your mind, come back here...";
-				mes "I'll stay here for a while...";
-				mes "Kkkk...";
+				mes("[Halloween Wizard]");
+				mes("If you change your mind, come back here...");
+				mes("I'll stay here for a while...");
+				mes("Kkkk...");
 				close;
 		}
 	}

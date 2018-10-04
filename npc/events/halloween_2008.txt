@@ -38,24 +38,24 @@
 
 payon,162,176,4	script	Halloween Magician#iRO08	4_M_BIBI,{
 	if (Hallow08 < 1) {
-		mes "[Halloween Magician]";
-		mes "Kkkkkkkkk!";
-		mes "I have a special event this Halloween that tests your luck and agility.";
-		mes "Are you interested?";
+		mes("[Halloween Magician]");
+		mes("Kkkkkkkkk!");
+		mes("I have a special event this Halloween that tests your luck and agility.");
+		mes("Are you interested?");
 		next;
-		mes "[Halloween Magician]";
-		mes "Come on! Don't be a wuss!";
-		mes "If you collect enough tickets you can get good prizes!";
-		mes "So what do you say?";
+		mes("[Halloween Magician]");
+		mes("Come on! Don't be a wuss!");
+		mes("If you collect enough tickets you can get good prizes!");
+		mes("So what do you say?");
 		next;
 		callsub(S_MainMenu);
 		end;
 	}
 	if (Hallow08Kill == 1) {
-		mes "[Halloween Magician]";
-		mes "You a 'fraidy cat or something?!";
-		mes "You know you want to try again...";
-		mes "Do you know the rules?";
+		mes("[Halloween Magician]");
+		mes("You a 'fraidy cat or something?!");
+		mes("You know you want to try again...");
+		mes("Do you know the rules?");
 		next;
 		Hallow08Kill = 0;
 		if(select("Yes, I know.", "No, I don't know.") == 2) {
@@ -66,23 +66,23 @@ payon,162,176,4	script	Halloween Magician#iRO08	4_M_BIBI,{
 		callsub(S_Participate);
 	}
 	if (Hallow08Kill == 2) {
-		mes "[Halloween Magician]";
-		mes "Oh, well done! You are alright!";
-		mes "Isn't it fun with zombies??";
-		mes "You know, zombies were people too!";
-		mes "Ha!";
-		mes "Kkkkkkk.";
+		mes("[Halloween Magician]");
+		mes("Oh, well done! You are alright!");
+		mes("Isn't it fun with zombies??");
+		mes("You know, zombies were people too!");
+		mes("Ha!");
+		mes("Kkkkkkk.");
 		next;
 		getitem Halloween_Ticket, 1;
 		Hallow08Kill = 0;
-		mes "[Halloween Magician]";
-		mes "As I promised";
-		mes "You can get Halloween tickets for cool items.";
+		mes("[Halloween Magician]");
+		mes("As I promised");
+		mes("You can get Halloween tickets for cool items.");
 		close;
 	}
 	if (Hallow08 > 0) {
-		mes "[Halloween Magician]";
-		mes "Well, do you want to hear the rules again or, just get back to it...";
+		mes("[Halloween Magician]");
+		mes("Well, do you want to hear the rules again or, just get back to it...");
 		next;
 		while (true) {
 			switch (select("Get me back there now!","Please, tell me the rules","I want to exchange tickets for prizes.","I'll come back next time.")) {
@@ -123,31 +123,31 @@ S_MainMenu:
 	}
 
 S_Participate:
-	mes "[Halloween Magician]";
-	mes "Ok, you are ready.";
-	mes "Let me check your weight.";
+	mes("[Halloween Magician]");
+	mes("Ok, you are ready.");
+	mes("Let me check your weight.");
 	next;
 	if (Weight > 0) {
-		mes "[Halloween Magician]";
-		mes "Gosh!";
-		mes "There's always a black sheep anywhere.";
+		mes("[Halloween Magician]");
+		mes("Gosh!");
+		mes("There's always a black sheep anywhere.");
 		next;
-		mes "[Halloween Magician]";
-		mes "You think I wouldn't notice that your weight is above '0'?";
-		mes "You're overweight...";
+		mes("[Halloween Magician]");
+		mes("You think I wouldn't notice that your weight is above '0'?");
+		mes("You're overweight...");
 		close;
 	}
-	mes "[Halloween Magician]";
-	mes "You seem good to go, and your weight is just right.";
+	mes("[Halloween Magician]");
+	mes("You seem good to go, and your weight is just right.");
 	next;
-	mes "[Halloween Magician]";
-	mes "I was quite swamped with my work, so I'm exhausted.";
+	mes("[Halloween Magician]");
+	mes("I was quite swamped with my work, so I'm exhausted.");
 	next;
-	mes "[Halloween Magician]";
-	mes "I sometimes forget to send you there...";
+	mes("[Halloween Magician]");
+	mes("I sometimes forget to send you there...");
 	next;
-	mes "[Halloween Magician]";
-	mes "I hope you come back well.";
+	mes("[Halloween Magician]");
+	mes("I hope you come back well.");
 	close2;
 	if (Hallow08 < 1) {
 		Hallow08 = 1;
@@ -161,60 +161,60 @@ S_Participate:
 	end;
 
 S_Rules:
-	mes "[Halloween Magician]";
-	mes "This village is like a virtual Payon.";
-	mes "There are zombies and ghouls roaming around and three southern exits, but only one works.";
-	mes "That's up to you to find out.";
+	mes("[Halloween Magician]");
+	mes("This village is like a virtual Payon.");
+	mes("There are zombies and ghouls roaming around and three southern exits, but only one works.");
+	mes("That's up to you to find out.");
 	next;
-	mes "[Halloween Magician]";
-	mes "You can't use any skills to kill the ghouls or zombies.";
-	mes "And one more thing...";
-	mes "you shouldn't forget...";
+	mes("[Halloween Magician]");
+	mes("You can't use any skills to kill the ghouls or zombies.");
+	mes("And one more thing...");
+	mes("you shouldn't forget...");
 	next;
-	mes "[Halloween Magician]";
-	mes "All participants should be wearing nothing.";
-	mes "Put all belongings in your storage and come back here when your weight is '0'.";
+	mes("[Halloween Magician]");
+	mes("All participants should be wearing nothing.");
+	mes("Put all belongings in your storage and come back here when your weight is '0'.");
 	next;
-	mes "[Halloween Magician]";
-	mes "Oh and one more thing!";
-	mes "You can't be riding a PecoPeco or have a Cart.";
-	mes "If you are, then I will remove them before you enter.";
-	mes "Got it?";
+	mes("[Halloween Magician]");
+	mes("Oh and one more thing!");
+	mes("You can't be riding a PecoPeco or have a Cart.");
+	mes("If you are, then I will remove them before you enter.");
+	mes("Got it?");
 	next;
-	mes "[Halloween Magician]";
-	mes "Remember, there are three exits but only one works randomly, the zombies and ghouls roaming around there can't be killed and you can't be wearing anything.";
+	mes("[Halloween Magician]");
+	mes("Remember, there are three exits but only one works randomly, the zombies and ghouls roaming around there can't be killed and you can't be wearing anything.");
 	next;
 	if (Hallow08 > 0) {
-		mes "[Halloween Magician]";
-		mes "Hey...";
-		mes "Come back once you're ready.";
+		mes("[Halloween Magician]");
+		mes("Hey...");
+		mes("Come back once you're ready.");
 		close;
 	}
 	return;
 
 S_NextTime:
-	mes "[Halloween Magician]";
-	mes "Ok, see you then.";
-	mes "Kkkkkkkk.";
+	mes("[Halloween Magician]");
+	mes("Ok, see you then.");
+	mes("Kkkkkkkk.");
 	close;
 
 S_TicketExchange:
-	mes "[Halloween Magician]";
-	mes "You want to exchange tickets for prizes?";
-	mes "Good job! Kkkkkk!";
+	mes("[Halloween Magician]");
+	mes("You want to exchange tickets for prizes?");
+	mes("Good job! Kkkkkk!");
 	next;
-	mes "[Halloween Magician]";
-	mes "Lemme tell you what items you can exchange for.";
+	mes("[Halloween Magician]");
+	mes("Lemme tell you what items you can exchange for.");
 	next;
-	mes "[Halloween Magician]";
-	mes "5 tickets for Pumpkin Pie.";
-	mes "20 tickets for Pumpkin-Head.";
-	mes "50 tickets for Old Blue Box.";
-	mes "70 tickets for Old Purple Box.";
-	mes "200 tickets for Old Card Album.";
+	mes("[Halloween Magician]");
+	mes("5 tickets for Pumpkin Pie.");
+	mes("20 tickets for Pumpkin-Head.");
+	mes("50 tickets for Old Blue Box.");
+	mes("70 tickets for Old Purple Box.");
+	mes("200 tickets for Old Card Album.");
 	next;
-	mes "[Halloween Magician]";
-	mes "What would you like to exchange for?";
+	mes("[Halloween Magician]");
+	mes("What would you like to exchange for?");
 	next;
 	.@item_id = null;
 	.@amount = 0;
@@ -241,18 +241,18 @@ S_TicketExchange:
 		break;
 	}
 	if (countitem(Halloween_Ticket) < .@amount) {
-		mes "[Halloween Magician]";
-		mes "You don't have enough tickets!";
-		mes "Can't you even count?";
-		mes "Please come here with the right number of tickets.";
+		mes("[Halloween Magician]");
+		mes("You don't have enough tickets!");
+		mes("Can't you even count?");
+		mes("Please come here with the right number of tickets.");
 		close;
 	}
 	delitem Halloween_Ticket, .@amount;
 	getitem .@item_id, 1;
-	mes "[Halloween Magician]";
-	mes "Here it is.";
-	mes "Do you need...";
-	mes "anything else?";
+	mes("[Halloween Magician]");
+	mes("Here it is.");
+	mes("Do you need...");
+	mes("anything else?");
 	next;
 	return;
 }

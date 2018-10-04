@@ -39,23 +39,23 @@ function	script	F_Flags	{
 	.@GID = getcastledata(getarg(1),1);
 	if (getarg(5) == 0) return;
 	if (.@GID == 0) {
-		mes " [ Edict of the Divine Rune Midgard Kingdom ]";
-		mes " ";
-		mes "1. Follow the ordinance of The Divine Rune Midgard Kingdom, ";
-		mes "We declare that";
-		mes "there is no formal master of this castle.";
-		mes " ";
-		mes "2. To the one who can ";
-		mes "overcome all trials";
-		mes "and destroy the Emperium,";
-		mes "the king will endow the one with";
-		mes "ownership of this castle.";
+		mes(" [ Edict of the Divine Rune Midgard Kingdom ]");
+		mes(" ");
+		mes("1. Follow the ordinance of The Divine Rune Midgard Kingdom, ");
+		mes("We declare that");
+		mes("there is no formal master of this castle.");
+		mes(" ");
+		mes("2. To the one who can ");
+		mes("overcome all trials");
+		mes("and destroy the Emperium,");
+		mes("the king will endow the one with");
+		mes("ownership of this castle.");
 		return;
 	}
 	else {
 		if (getcharid(CHAR_ID_GUILD) == .@GID && getarg(4) == 1) {
-			mes "Brave ones...";
-			mes "Do you wish to return to your honorable place?";
+			mes("Brave ones...");
+			mes("Do you wish to return to your honorable place?");
 			next;
 			if (select("Return to the guild castle.", "Quit.") == 1) {
 				if (getcharid(CHAR_ID_GUILD) == getcastledata(getarg(1),1))
@@ -63,17 +63,17 @@ function	script	F_Flags	{
 			}
 			return;
 		}
-		mes "[ Edict of the Divine Rune Midgard Kingdom ]";
-		mes " ";
-		mes "1. Following the ordinance of the";
-		mes "Divine Rune Midgard Kingdom,";
-		mes "we approve that this place is in";
-		mes "the private possession of ^ff0000" + getguildname(.@GID) + "^000000 Guild.";
-		mes " ";
-		mes "2. The guild Master of ^ff0000"+ getguildname(.@GID) + "^000000 Guild is";
-		mes "^FF0000" + getguildmaster(.@GID) + "^000000";
-		mes "If there is anyone who objects to this,";
-		mes " prove your strength and honor with a steel blade in your hand.";
+		mes("[ Edict of the Divine Rune Midgard Kingdom ]");
+		mes(" ");
+		mes("1. Following the ordinance of the");
+		mes("Divine Rune Midgard Kingdom,");
+		mes("we approve that this place is in");
+		mes("the private possession of ^ff0000" + getguildname(.@GID) + "^000000 Guild.");
+		mes(" ");
+		mes("2. The guild Master of ^ff0000"+ getguildname(.@GID) + "^000000 Guild is");
+		mes("^FF0000" + getguildmaster(.@GID) + "^000000");
+		mes("If there is anyone who objects to this,");
+		mes(" prove your strength and honor with a steel blade in your hand.");
 		return;
 	}
 }
