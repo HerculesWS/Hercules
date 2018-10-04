@@ -85,28 +85,28 @@ force_1-2,33,178,0	warp	force_10_09	1,1,force_1-2,59,178
 sec_in02,79,180,3	script	#arenacontrol	4_DOG01,{
 	.@i = callfunc("F_GM_NPC",1357,0);
 	if (.@i == -1) {
-		mes "Error!";
+		mes("Error!");
 		close;
 	} else if (.@i == 0) {
-		mes "Closing control panel.";
+		mes("Closing control panel.");
 		close;
 	} else {
-		mes "Opening Control Panel";
-		mes "' A - R - E - N - A '";
+		mes("Opening Control Panel");
+		mes("' A - R - E - N - A '");
 		next;
-		mes "Please select a";
-		mes "state for the arena.";
+		mes("Please select a");
+		mes("state for the arena.");
 		next;
 		switch(select("Open.:Closed.")) {
 		case 1:
-			mes "Currently";
-			mes "opening arena.";
+			mes("Currently");
+			mes("opening arena.");
 			specialeffect EF_ENHANCE;
 			enablenpc "welcome_arena";
 			close;
 		case 2:
-			mes "Currently";
-			mes "closing arena.";
+			mes("Currently");
+			mes("closing arena.");
 			specialeffect EF_EXIT;
 			disablenpc "welcome_arena";
 			close;
