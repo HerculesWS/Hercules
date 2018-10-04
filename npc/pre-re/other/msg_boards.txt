@@ -35,13 +35,13 @@
 
 //== Izlude ================================================
 izlude,54,139,1	script	Sign#Iz1	HIDDEN_NPC,{
-	mes "^993300- The Sign Reads -^000000";
-	mes "Welcome to the Swordsman Academy.";
+	mes("^993300- The Sign Reads -^000000");
+	mes("Welcome to the Swordsman Academy.");
 	close;
 }
 
 izlude,144,148,1	script	Sign#Iz2	HIDDEN_NPC,{
-	mes "^993300- The Sign Reads -^000000";
-	mes "Welcome.";
+	mes("^993300- The Sign Reads -^000000");
+	mes("Welcome.");
 	close;
 }

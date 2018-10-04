@@ -49,192 +49,192 @@
 izlude_in,74,172,4	script	Swordman#swd_1	2_M_SWORDMASTER,{
 	if (Upper == 1) {
 		if (Class == Job_Novice_High && (ADVJOB == Job_Lord_Knight || ADVJOB == Job_Paladin)) {
-			mes "[Swordman]";
-			mes "It...";
-			mes "Can't be...";
-			mes "You've been reborn, haven't you?";
+			mes("[Swordman]");
+			mes("It...");
+			mes("Can't be...");
+			mes("You've been reborn, haven't you?");
 			next;
-			mes "[Swordman]";
-			mes "I see you're retreading the path of the Swordman! Once you've gotten used to brandishing a sword, you can never go back!!";
+			mes("[Swordman]");
+			mes("I see you're retreading the path of the Swordman! Once you've gotten used to brandishing a sword, you can never go back!!");
 			next;
 			if (getskilllv("NV_BASIC") < 9) {
-				mes "[Swordman]";
-				mes "Hmm? Ah, you must first master the Basic Skills before you are ready to become a Swordman.";
+				mes("[Swordman]");
+				mes("Hmm? Ah, you must first master the Basic Skills before you are ready to become a Swordman.");
 				next;
-				mes "[Swordman]";
-				mes "Come back to me when you have finished learning the Basic Novice Skills.";
+				mes("[Swordman]");
+				mes("Come back to me when you have finished learning the Basic Novice Skills.");
 				close;
 			}
-			mes "[Swordman]";
-			mes "Excellent! Let me promote you to a Swordman right away!";
+			mes("[Swordman]");
+			mes("Excellent! Let me promote you to a Swordman right away!");
 			next;
 			skill 143,0,0;
 			jobchange Job_Swordman_High;
 			skill 144,1,0;
 			skill 145,1,0;
 			skill 146,1,0;
-			mes "[Swordman]";
-			mes "Hmm... You look like a well-experienced Swordman. Still, I'm sure that you must train to improve your skills and gain strength!";
+			mes("[Swordman]");
+			mes("Hmm... You look like a well-experienced Swordman. Still, I'm sure that you must train to improve your skills and gain strength!");
 			close;
 		}
 		else {
-			mes "[Swordman]";
-			mes "Hm...?";
-			mes "You're a reborn";
-			mes "warrior, aren't you?";
+			mes("[Swordman]");
+			mes("Hm...?");
+			mes("You're a reborn");
+			mes("warrior, aren't you?");
 			next;
-			mes "[Swordman]";
-			mes "Hmmm...";
-			mes "It seems that being";
-			mes "a Swordman is not part";
-			mes "of your destiny. I'm sorry,";
-			mes "but it seems there is nothing";
-			mes "I can do for you.";
+			mes("[Swordman]");
+			mes("Hmmm...");
+			mes("It seems that being");
+			mes("a Swordman is not part");
+			mes("of your destiny. I'm sorry,");
+			mes("but it seems there is nothing");
+			mes("I can do for you.");
 			close;
 		}
 	}
-	mes "[Swordman]";
-	mes "Welcome to the";
-	mes "Swordman Association!";
+	mes("[Swordman]");
+	mes("Welcome to the");
+	mes("Swordman Association!");
 	next;
-	mes "[Swordman]";
-	mes "So...";
-	mes "What business";
-	mes "brings you to us?";
+	mes("[Swordman]");
+	mes("So...");
+	mes("What business");
+	mes("brings you to us?");
 	next;
 	switch(select("Job Change", "About Swordman.", "About the Job requirements.", "Cancel.")) {
 	case 1:
 		if (BaseJob == Job_Swordman) {
-			mes "[Swordman]";
-			mes "Job change? Muhahaha! But you're already a Swordman! Be proud and be strong!";
+			mes("[Swordman]");
+			mes("Job change? Muhahaha! But you're already a Swordman! Be proud and be strong!");
 			close;
 		}
 		else if (BaseJob != Job_Novice) {
-			mes "[Swordman]";
-			mes "Haha! Oh boy. I'm flattered, but you already have another job! Still, I can't blame you...";
+			mes("[Swordman]");
+			mes("Haha! Oh boy. I'm flattered, but you already have another job! Still, I can't blame you...");
 			close;
 		}
 		if (job_sword_q == 0) {
-			mes "[Swordman]";
-			mes "So you wish to become a proud Swordman? By all means, please sign up!";
+			mes("[Swordman]");
+			mes("So you wish to become a proud Swordman? By all means, please sign up!");
 			next;
 			if (select("Sign up.", "Cancel.") == 1) {
 				savepoint "izlude_in",65,165;
 				job_sword_q = 1;
 				setquest 1014;
-				mes "[Swordman]";
-				mes "Ah, yes. Your application will be reviewed as soon as possible.";
+				mes("[Swordman]");
+				mes("Ah, yes. Your application will be reviewed as soon as possible.");
 				next;
-				mes "[Swordman]";
-				mes "If you have already met the requirements, you can take an interview right now. Would you like to?";
+				mes("[Swordman]");
+				mes("If you have already met the requirements, you can take an interview right now. Would you like to?");
 				next;
 				if (select("Yes.", "No.") == 1) {
-					mes "[Swordman]";
-					mes "Good, good.";
-					mes "Now, let's see...";
+					mes("[Swordman]");
+					mes("Good, good.");
+					mes("Now, let's see...");
 					next;
 				}
 				else {
-					mes "[Swordman]";
-					mes "Alright then. Feel free to come back whenever you are ready. All you ahve to do now is meet our requirements. Good luck to you.";
+					mes("[Swordman]");
+					mes("Alright then. Feel free to come back whenever you are ready. All you ahve to do now is meet our requirements. Good luck to you.");
 					close;
 				}
 			}
 			else {
-				mes "[Swordman]";
-				mes "Hm? Alright, come back whenever you change your mind. The world can always use another Swordman!";
+				mes("[Swordman]");
+				mes("Hm? Alright, come back whenever you change your mind. The world can always use another Swordman!");
 				close;
 			}
 		}
-		mes "[Swordman]";
+		mes("[Swordman]");
 		if (getskilllv("NV_BASIC") < 9) {
-			mes "Hm, you still haven't learned all of the Basic Skills. You need to do that before you can become a Swordman.";
+			mes("Hm, you still haven't learned all of the Basic Skills. You need to do that before you can become a Swordman.");
 			next;
-			mes "[Swordman]";
-			mes "Check the requirements for job change again, and come back when you are ready.";
+			mes("[Swordman]");
+			mes("Check the requirements for job change again, and come back when you are ready.");
 			close;
 		}
 		else if (job_sword_q <= 3) {
-			mes "Hm, you've learned all of the Basic Skills but didn't take the test yet. You must first pass the exam before you can change your job to Swordman.";
+			mes("Hm, you've learned all of the Basic Skills but didn't take the test yet. You must first pass the exam before you can change your job to Swordman.");
 			next;
-			mes "[Swordman]";
-			mes "Enter the room to my right so that you can take the test. You'll need to speak to my right so you can enter the examination area.";
+			mes("[Swordman]");
+			mes("Enter the room to my right so that you can take the test. You'll need to speak to my right so you can enter the examination area.");
 			close;
 		}
 		else if (job_sword_q == 4) {
-			mes "Hahaha! Congratulations! Now you are fully qualified to be a real Swordman! I will transform you right away!";
+			mes("Hahaha! Congratulations! Now you are fully qualified to be a real Swordman! I will transform you right away!");
 			next;
 			callfunc "Job_Change",Job_Swordman;
 			job_sword_q = 0;
 			completequest 1014;
-			mes "[Swordman]";
-			mes "Once again, congratulations. I expect that you will be a good representative of the Swordman Association.";
+			mes("[Swordman]");
+			mes("Once again, congratulations. I expect that you will be a good representative of the Swordman Association.");
 			close;
 		}
 	case 2:
-		mes "[Swordman]";
-		mes "So you wish to know more about the mighty Swordman job? Well, then...";
+		mes("[Swordman]");
+		mes("So you wish to know more about the mighty Swordman job? Well, then...");
 		next;
-		mes "[Swordman]";
-		mes "Amongst the First Class jobs, the Swordman is the best melee fighter for three reasons.";
-		mes "There are 3 reasons why Swordy is the best to approch a fight!";
+		mes("[Swordman]");
+		mes("Amongst the First Class jobs, the Swordman is the best melee fighter for three reasons.");
+		mes("There are 3 reasons why Swordy is the best to approch a fight!");
 		next;
-		mes "[Swordman]";
-		mes "First, Swordman has the benefit of additional HP. Second, Swordman generally have access to a wider selection fo weapons than the other First Class jobs.";
+		mes("[Swordman]");
+		mes("First, Swordman has the benefit of additional HP. Second, Swordman generally have access to a wider selection fo weapons than the other First Class jobs.");
 		next;
-		mes "[Swordman]";
-		mes "And third, most of the Swordman skills are crushing physical attacks! In my opinion, being a Swordman is the best job ever!";
+		mes("[Swordman]");
+		mes("And third, most of the Swordman skills are crushing physical attacks! In my opinion, being a Swordman is the best job ever!");
 		close;
 	case 3:
-		mes "[Swordman]";
-		mes "Hmmm...";
+		mes("[Swordman]");
+		mes("Hmmm...");
 		if (BaseJob != Job_Novice) {
 			if (BaseJob == Job_Swordman)
-				mes "But there's no need to tell you the requirements. You've met them and already became a Swordman! Well, anyway...";
+				mes("But there's no need to tell you the requirements. You've met them and already became a Swordman! Well, anyway...");
 			else
-				mes "It's too late for you to become a Swordman. You already have another job. Still, there's no harm in telling you...";
+				mes("It's too late for you to become a Swordman. You already have another job. Still, there's no harm in telling you...");
 		}
 		next;
-		mes "[Swordman]";
-		mes "First, you must learn all 9 of the Basic Skills. If you can't complete this requirement, you won't be able to change to any job.";
+		mes("[Swordman]");
+		mes("First, you must learn all 9 of the Basic Skills. If you can't complete this requirement, you won't be able to change to any job.");
 		next;
-		mes "[Swordman]";
-		mes "Second, you must pass the Swordman Test. Inquire the Test Manager located in the waiting room of the Swordman Test.";
+		mes("[Swordman]");
+		mes("Second, you must pass the Swordman Test. Inquire the Test Manager located in the waiting room of the Swordman Test.");
 		next;
-		mes "[Swordman]";
-		mes "If you can complete these 2 requirements, you can change to a Swordman anytime you want.";
+		mes("[Swordman]");
+		mes("If you can complete these 2 requirements, you can change to a Swordman anytime you want.");
 		close;
 	case 4:
-		mes "[Swordman]";
-		mes "Ha ha ha!";
-		mes "Ah, youth!";
+		mes("[Swordman]");
+		mes("Ha ha ha!");
+		mes("Ah, youth!");
 		close;
 	}
 }
 
 izlude_in,62,170,6	script	Swordman#swd_2	4_M_03,{
-	mes "[Swordman]";
+	mes("[Swordman]");
 	if (BaseJob == Job_Swordman) {
-		mes "Sorry guy, but I can only allow Novices to enter the Test Hall.";
+		mes("Sorry guy, but I can only allow Novices to enter the Test Hall.");
 		close;
 	}
 	else if (BaseJob != Job_Novice) {
-		mes "Who the hell are you?! Nobody, other than Novices, is permitted to come in here!";
+		mes("Who the hell are you?! Nobody, other than Novices, is permitted to come in here!");
 		close;
 	}
 	else if (getskilllv("NV_BASIC") < 9) {
-		mes "Stop! I can't let you in until you learn all of the Basic Skills. The Test Hall isn't for goofing off!";
+		mes("Stop! I can't let you in until you learn all of the Basic Skills. The Test Hall isn't for goofing off!");
 		close;
 	}
 	else if (job_sword_q == 4) {
-		mes "Hey. You need to talk to the Swordman in the center of the room, not me.";
+		mes("Hey. You need to talk to the Swordman in the center of the room, not me.");
 		close;
 	}
 	else if (job_sword_q == 0) {
-		mes "Stop! If you want to take the Swordman Test, you'll need to fill out an application first.";
+		mes("Stop! If you want to take the Swordman Test, you'll need to fill out an application first.");
 		next;
-		mes "[Swordman]";
-		mes "The Swordman in the center of the room can help you with that, got it?";
+		mes("[Swordman]");
+		mes("The Swordman in the center of the room can help you with that, got it?");
 		close;
 	}
 	else {
@@ -245,60 +245,60 @@ izlude_in,62,170,6	script	Swordman#swd_2	4_M_03,{
 }
 
 izlude_in,30,175,4	script	Swordman#swd_3	4_F_03,{
-	mes "[Swordman]";
-	mes "I will tell you about the Test! Listen carefully, I won't repeat myself.";
+	mes("[Swordman]");
+	mes("I will tell you about the Test! Listen carefully, I won't repeat myself.");
 	next;
-	mes "[Swordman]";
-	mes "The purpose of this test is to confirm whether or not you are qualified to be a Swordman. As you know, a Swordman needs physical strength and spirit!";
+	mes("[Swordman]");
+	mes("The purpose of this test is to confirm whether or not you are qualified to be a Swordman. As you know, a Swordman needs physical strength and spirit!");
 	next;
-	mes "[Swordman]";
-	mes "Without those, you won't be able to become a Swordman. Now, the conditions for completing this test are very simple.";
+	mes("[Swordman]");
+	mes("Without those, you won't be able to become a Swordman. Now, the conditions for completing this test are very simple.");
 	next;
-	mes "[Swordman]";
-	mes "You will travel through three courses and must reach the final checkpoint within ^FF000010 minutes^000000.";
+	mes("[Swordman]");
+	mes("You will travel through three courses and must reach the final checkpoint within ^FF000010 minutes^000000.");
 	next;
-	mes "[Swordman]";
-	mes "If you choose to 'Surrender,' or if you run out of time, you will not pass the test.";
+	mes("[Swordman]");
+	mes("If you choose to 'Surrender,' or if you run out of time, you will not pass the test.");
 	next;
-	mes "[Swordman]";
-	mes "If you find that you are not strong enough to pass the test, head to the entrance of the course and talk to the checkpoint manager.";
+	mes("[Swordman]");
+	mes("If you find that you are not strong enough to pass the test, head to the entrance of the course and talk to the checkpoint manager.");
 	next;
-	mes "[Swordman]";
-	mes "As you travel through the three courses, you may fall to a random, underground area. The course is designed so that you can still find your way back.";
+	mes("[Swordman]");
+	mes("As you travel through the three courses, you may fall to a random, underground area. The course is designed so that you can still find your way back.");
 	next;
-	mes "[Swordman]";
-	mes "However, be careful, as this will waste your time! Godspeed to you.";
+	mes("[Swordman]");
+	mes("However, be careful, as this will waste your time! Godspeed to you.");
 	close;
 }
 
 izlude_in,30,163,0	script	Test Hall Staff#swd_1	8W_SOLDIER,{
-	mes "[Test Hall Staff]";
+	mes("[Test Hall Staff]");
 	if (BaseJob == Job_Swordman) {
-		mes "Hm? How did you get inside? You're not supposed to be in here, so please leave now.";
+		mes("Hm? How did you get inside? You're not supposed to be in here, so please leave now.");
 		close2;
 		warp "izlude_in",66,170;
 		end;
 	}
 	else if (BaseJob != Job_Novice) {
-		mes "Who are you?! This place is for the Swordman Test! You're not allowed to be in here! Leave now!";
+		mes("Who are you?! This place is for the Swordman Test! You're not allowed to be in here! Leave now!");
 		close2;
 		warp "izlude_in",66,170;
 		end;
 	}
 	if (job_sword_q == 1) {
-		mes "So are you the one who wants to be a Swordman? Alright! You look reliable!";
+		mes("So are you the one who wants to be a Swordman? Alright! You look reliable!");
 		next;
-		mes "[Test Hall Staff]";
-		mes "Try to relax and do your best. This course isn't so difficult.";
+		mes("[Test Hall Staff]");
+		mes("Try to relax and do your best. This course isn't so difficult.");
 		job_sword_q = 2;
 	}
 	else if (job_sword_q == 2) {
-		mes "Retesting? Try not to worry about it. It's good that you don't back down from a challenge! Here, take these and cheer up!";
+		mes("Retesting? Try not to worry about it. It's good that you don't back down from a challenge! Here, take these and cheer up!");
 		getitem Apple,5;
 		job_sword_q = 3;
 	}
 	else if (job_sword_q == 3)
-		mes "Don't ever give up! Now retesting!";
+		mes("Don't ever give up! Now retesting!");
 	close2;
 	warp "job_sword1",10,245;
 	end;
@@ -321,9 +321,9 @@ job_sword1,230,204,2	script	Test Hall Staff#2swd_3	8W_SOLDIER,{
 job_sword1,223,167,2	script	Mae#swd_1_success	4_F_03,{
 	mapannounce "job_sword1","Applicant " + strcharinfo(PC_NAME) + ". You successfully passed the test.",bc_map;
 	job_sword_q = 4;
-	mes "[Mae]";
-	mes "I sencerely congratulate you for passing the test!";
-	mes "I already sent your test result to the Job Department.Please inquire at the Officer in Centre.Thank you.";
+	mes("[Mae]");
+	mes("I sencerely congratulate you for passing the test!");
+	mes("I already sent your test result to the Job Department.Please inquire at the Officer in Centre.Thank you.");
 	close2;
 	warp "izlude_in",66,173;
 	end;
@@ -332,29 +332,29 @@ job_sword1,223,167,2	script	Mae#swd_1_success	4_F_03,{
 //== Examination Course Functions ==========================
 function	script	F_JobSwdMedic	{
 	percentheal 100,0;
-	mes "[Medic]";
-	mes "This is the "+getarg(0)+" check point!Cheer up!";
+	mes("[Medic]");
+	mes("This is the "+getarg(0)+" check point!Cheer up!");
 	close;
 }
 
 function	script	F_JobSwdStaff	{
-	mes "[Test Hall Staff]";
-	mes "Do you surrender?";
+	mes("[Test Hall Staff]");
+	mes("Do you surrender?");
 	next;
 	if (select("Yes.", "No.") == 1) {
 		mapannounce "job_sword1","Applicant " + strcharinfo(PC_NAME) + " quit the test.",bc_map;
 		warp "izlude_in",65,165;
 		end;
 	}
-	mes "[Test Hall Staff]";
-	mes "Bravo! Go for it again!";
+	mes("[Test Hall Staff]");
+	mes("Bravo! Go for it again!");
 	close;
 }
 
 function	script	F_JobSwdTestStaff	{
 OnTouch:
-	mes "[Test Hall Staff]";
-	mes "Applicant " + strcharinfo(PC_NAME) + ". Do you surrender??";
+	mes("[Test Hall Staff]");
+	mes("Applicant " + strcharinfo(PC_NAME) + ". Do you surrender??");
 	next;
 	if (select("Yes.", "No.") == 1) {
 		mapannounce "job_sword1","Applicant " + strcharinfo(PC_NAME) + " quit the test..",bc_map;

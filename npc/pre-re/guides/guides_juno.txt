@@ -39,97 +39,97 @@
 //=========================================================================
 
 yuno,153,47,4	script	Juno Guide#yuno	8_F_GIRL,{
-	mes "[Ms. Yoon]";
-	mes "A place that takes the vision of the future, and gives it form in the present. Welcome to";
-	mes "the city of Juno!";
+	mes("[Ms. Yoon]");
+	mes("A place that takes the vision of the future, and gives it form in the present. Welcome to");
+	mes("the city of Juno!");
 	next;
 	switch(select("Armory", "Tool Shop", "Sage Castle (Sage Job Change Place)", "Street of Book Stores", "Juphero Plaza", "Library of the Republic", "Schweicherbil Magic Academy", "Monster Museum", "Forge", "Airport", "End Conversation")) {
 	case 1:
 		viewpoint 1,120,138,0,0xFF3355;
-		mes "[Ms. Yoon]";
-		mes "Please look";
-		mes "at the mini map.";
-		mes "^FF3355+^000000 -> Armory";
-		mes "Thank you,";
-		mes "have a good day.";
+		mes("[Ms. Yoon]");
+		mes("Please look");
+		mes("at the mini map.");
+		mes("^FF3355+^000000 -> Armory");
+		mes("Thank you,");
+		mes("have a good day.");
 		close;
 	case 2:
 		viewpoint 1,193,142,1,0x3355FF;
-		mes "[Ms. Yoon]";
-		mes "Please look";
-		mes "at the mini map.";
-		mes "^3355FF+^000000 -> Tool Shop";
-		mes "Thank you,";
-		mes "have a good day.";
+		mes("[Ms. Yoon]");
+		mes("Please look");
+		mes("at the mini map.");
+		mes("^3355FF+^000000 -> Tool Shop");
+		mes("Thank you,");
+		mes("have a good day.");
 		close;
 	case 3:
 		viewpoint 1,90,318,2,0x33FF55;
-		mes "[Ms. Yoon]";
-		mes "Please look";
-		mes "at the mini map.";
-		mes "^33FF55+^000000 -> Sage Castle";
-		mes "( Sage Job Change Place )";
-		mes "Thank you, have a good day.";
+		mes("[Ms. Yoon]");
+		mes("Please look");
+		mes("at the mini map.");
+		mes("^33FF55+^000000 -> Sage Castle");
+		mes("( Sage Job Change Place )");
+		mes("Thank you, have a good day.");
 		close;
 	case 4:
 		viewpoint 1,257,102,3,0xFF3355;
-		mes "[Ms. Yoon]";
-		mes "Please look";
-		mes "at the mini map.";
-		mes "^FF3355+^000000 -> Street of Book Stores";
-		mes "Thank you, have a good day.";
+		mes("[Ms. Yoon]");
+		mes("Please look");
+		mes("at the mini map.");
+		mes("^FF3355+^000000 -> Street of Book Stores");
+		mes("Thank you, have a good day.");
 		close;
 	case 5:
 		viewpoint 1,157,170,4,0x3355FF;
-		mes "[Ms. Yoon]";
-		mes "Please look";
-		mes "at the mini map.";
-		mes "^3355FF+^000000 -> Juphero Plaza";
-		mes "Thank you,";
-		mes "have a good day.";
+		mes("[Ms. Yoon]");
+		mes("Please look");
+		mes("at the mini map.");
+		mes("^3355FF+^000000 -> Juphero Plaza");
+		mes("Thank you,");
+		mes("have a good day.");
 		close;
 	case 6:
 		viewpoint 1,336,204,5,0x33FF55;
-		mes "[Ms. Yoon]";
-		mes "Please look";
-		mes "at the mini map.";
-		mes "^33FF55+^000000 -> Library of the Republic";
-		mes "Thank you, have a good day.";
+		mes("[Ms. Yoon]");
+		mes("Please look");
+		mes("at the mini map.");
+		mes("^33FF55+^000000 -> Library of the Republic");
+		mes("Thank you, have a good day.");
 		close;
 	case 7:
 		viewpoint 1,323,281,6,0xFF3355;
-		mes "[Ms. Yoon]";
-		mes "Please look at the mini map.";
-		mes "^FF3355+^000000 -> Schweicherbil Magic Academy";
-		mes "Thank you, have a good day.";
+		mes("[Ms. Yoon]");
+		mes("Please look at the mini map.");
+		mes("^FF3355+^000000 -> Schweicherbil Magic Academy");
+		mes("Thank you, have a good day.");
 		close;
 	case 8:
 		viewpoint 1,278,288,7,0x3355FF;
-		mes "[Ms. Yoon]";
-		mes "Please look at the mini map.";
-		mes "^3355FF+^000000 -> Monster Museum";
-		mes "Thank you, have a good day.";
+		mes("[Ms. Yoon]");
+		mes("Please look at the mini map.");
+		mes("^3355FF+^000000 -> Monster Museum");
+		mes("Thank you, have a good day.");
 		close;
 	case 9:
 		viewpoint 1,120,138,8,0xFF3355;
-		mes "[Ms. Yoon]";
-		mes "Please look at the mini map.";
-		mes "^FF3355+^000000 -> Forge";
-		mes "The forge is located underneath Armory.";
-		mes "Thank you, have a good day.";
+		mes("[Ms. Yoon]");
+		mes("Please look at the mini map.");
+		mes("^FF3355+^000000 -> Forge");
+		mes("The forge is located underneath Armory.");
+		mes("Thank you, have a good day.");
 		close;
 	case 10:
 		viewpoint 1,53,214,9,0xFF3355;
-		mes "[Ms. Yoon]";
-		mes "Please look at the mini map.";
-		mes "^FF3355+^000000 -> Airport";
-		mes "Thank you, have a good day.";
+		mes("[Ms. Yoon]");
+		mes("Please look at the mini map.");
+		mes("^FF3355+^000000 -> Airport");
+		mes("Thank you, have a good day.");
 		close;
 	case 11:
-		mes "[Ms. Yoon]";
-		mes "A great city of wise men.";
-		mes "A city of Knowledge!";
-		mes "Welcome to Juno.";
+		mes("[Ms. Yoon]");
+		mes("A great city of wise men.");
+		mes("A city of Knowledge!");
+		mes("Welcome to Juno.");
 		close;
 	}
 }

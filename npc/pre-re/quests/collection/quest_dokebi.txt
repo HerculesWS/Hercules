@@ -35,39 +35,39 @@
 pay_fild10,108,357,5	script	Li#Dokebi_Hunt	4_F_01,{
 	if (questprogress(60128)) {
 		if (questprogress(60128,HUNTING) != 2) {
-			mes "[Li]";
-			mes "Have you finished hunting the 50 Dokebis?";
+			mes("[Li]");
+			mes("Have you finished hunting the 50 Dokebis?");
 			next;
 			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
-				mes "[Li]";
-				mes "Hmm, I don't think you've hunted 50 yet...";
+				mes("[Li]");
+				mes("Hmm, I don't think you've hunted 50 yet...");
 				close;
 			case 2:
-				mes "[Li]";
-				mes "Remember, I need help hunting Dokebis so go and hunt 50 of them.";
+				mes("[Li]");
+				mes("Remember, I need help hunting Dokebis so go and hunt 50 of them.");
 				close;
 			case 3:
-				mes "[Li]";
-				mes "Are you sure that you want to stop hunting?";
-				mes "Any progress that you've made will be erased";
+				mes("[Li]");
+				mes("Are you sure that you want to stop hunting?");
+				mes("Any progress that you've made will be erased");
 				next;
 				switch(select("Yes", "No")) {
 				case 1:
-					mes "[Li]";
-					mes "Ok then, well come back here if you change your mind.";
+					mes("[Li]");
+					mes("Ok then, well come back here if you change your mind.");
 					erasequest 60128;
 					close;
 				case 2:
-					mes "[Li]";
-					mes "Please kill 50 Dokebis.";
+					mes("[Li]");
+					mes("Please kill 50 Dokebis.");
 					close;
 				}
 			}
 		}
 		else {
-			mes "[Li]";
-			mes "Amazing, you did that with speed.";
+			mes("[Li]");
+			mes("Amazing, you did that with speed.");
 			getexp 42000,36000;
 			erasequest 60128;
 			close;
@@ -75,39 +75,39 @@ pay_fild10,108,357,5	script	Li#Dokebi_Hunt	4_F_01,{
 	}
 	if (questprogress(60129)) {
 		if (questprogress(60129,HUNTING) != 2) {
-			mes "[Li]";
-			mes "Have you finished hunting the 50 Dokebis?";
+			mes("[Li]");
+			mes("Have you finished hunting the 50 Dokebis?");
 			next;
 			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
-				mes "[Li]";
-				mes "Hmm, I don't think you've hunted 100 yet...";
+				mes("[Li]");
+				mes("Hmm, I don't think you've hunted 100 yet...");
 				close;
 			case 2:
-				mes "[Li]";
-				mes "Remember, I need help hunting Dokebis so go and hunt 100 of them.";
+				mes("[Li]");
+				mes("Remember, I need help hunting Dokebis so go and hunt 100 of them.");
 				close;
 			case 3:
-				mes "[Li]";
-				mes "Are you sure that you want to stop hunting?";
-				mes "Any progress that you've made will be erased";
+				mes("[Li]");
+				mes("Are you sure that you want to stop hunting?");
+				mes("Any progress that you've made will be erased");
 				next;
 				switch(select("Yes", "No")) {
 				case 1:
-					mes "[Li]";
-					mes "Ok then, well come back here if you change your mind.";
+					mes("[Li]");
+					mes("Ok then, well come back here if you change your mind.");
 					erasequest 60129;
 					close;
 				case 2:
-					mes "[Li]";
-					mes "Please kill 100 Dokebis.";
+					mes("[Li]");
+					mes("Please kill 100 Dokebis.");
 					close;
 				}
 			}
 		}
 		else {
-			mes "[Li]";
-			mes "Amazing, you did that with speed.";
+			mes("[Li]");
+			mes("Amazing, you did that with speed.");
 			getexp 42000,36000;
 			getexp 42000,36000;
 			erasequest 60129;
@@ -116,39 +116,39 @@ pay_fild10,108,357,5	script	Li#Dokebi_Hunt	4_F_01,{
 	}
 	if (questprogress(60130)) {
 		if (questprogress(60130,HUNTING) != 2) {
-			mes "[Li]";
-			mes "Have you finished hunting the 150 Dokebis?";
+			mes("[Li]");
+			mes("Have you finished hunting the 150 Dokebis?");
 			next;
 			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
-				mes "[Li]";
-				mes "Hmm, I don't think you've hunted 150 yet...";
+				mes("[Li]");
+				mes("Hmm, I don't think you've hunted 150 yet...");
 				close;
 			case 2:
-				mes "[Li]";
-				mes "Remember, I need help hunting Dokebis so go and hunt 150 of them.";
+				mes("[Li]");
+				mes("Remember, I need help hunting Dokebis so go and hunt 150 of them.");
 				close;
 			case 3:
-				mes "[Li]";
-				mes "Are you sure that you want to stop hunting?";
-				mes "Any progress that you've made will be erased";
+				mes("[Li]");
+				mes("Are you sure that you want to stop hunting?");
+				mes("Any progress that you've made will be erased");
 				next;
 				switch(select("Yes", "No")) {
 				case 1:
-					mes "[Li]";
-					mes "Ok then, well come back here if you change your mind.";
+					mes("[Li]");
+					mes("Ok then, well come back here if you change your mind.");
 					erasequest 60130;
 					close;
 				case 2:
-					mes "[Li]";
-					mes "Please kill 150 Dokebis.";
+					mes("[Li]");
+					mes("Please kill 150 Dokebis.");
 					close;
 				}
 			}
 		}
 		else {
-			mes "[Li]";
-			mes "Amazing, you did that with speed.";
+			mes("[Li]");
+			mes("Amazing, you did that with speed.");
 			getexp 42000,36000;
 			getexp 42000,36000;
 			getexp 42000,36000;
@@ -160,91 +160,91 @@ pay_fild10,108,357,5	script	Li#Dokebi_Hunt	4_F_01,{
 	if (BaseLevel > 34) {
 		//for maximum level
 		if (BaseLevel < 71) {
-			mes "[Li]";
-			mes "Hello. DO you think you could help me?";
+			mes("[Li]");
+			mes("Hello. DO you think you could help me?");
 			next;
 			switch(select("Sure", "No")) {
 			case 1:
-				mes "[Li]";
-				mes "There are so many Dokebis here...I just don't feel safe.";
+				mes("[Li]");
+				mes("There are so many Dokebis here...I just don't feel safe.");
 				next;
 				switch(select("Gather Items", "Hunt Dokebis", "Cancel")) {
 				case 1:
 					// Item turn in
-					mes "[Li]";
-					mes "My fortune teller business needs a good supply of ^FF0000Dokebi Horns^000000 to give my customers good luck.";
+					mes("[Li]");
+					mes("My fortune teller business needs a good supply of ^FF0000Dokebi Horns^000000 to give my customers good luck.");
 					next;
 					switch(select("I have some Dokebi Horns", "What did you need?")) {
 					case 1:
 						if (countitem(Dokkaebi_Horn) > 49) {
-							mes "[Li]";
-							mes "Oh, great!";
-							mes "Thank you for the horns.";
+							mes("[Li]");
+							mes("Oh, great!");
+							mes("Thank you for the horns.");
 							delitem Dokkaebi_Horn,50;
 							getexp 42000,36000;
 							close;
 						}
 						else {
-							mes "[Li]";
-							mes "It doesn't look like you have enough.";
+							mes("[Li]");
+							mes("It doesn't look like you have enough.");
 							next;
-							mes "[Li]";
-							mes "I need ^FF000050 Dokebi Horns^000000 for my fortune telling.";
+							mes("[Li]");
+							mes("I need ^FF000050 Dokebi Horns^000000 for my fortune telling.");
 							close;
 						}
 					case 2:
-						mes "[Li]";
-						mes "If you bring me";
-						mes "^FF000050 Dokebi Horns^000000, I can give you some good luck.";
+						mes("[Li]");
+						mes("If you bring me");
+						mes("^FF000050 Dokebi Horns^000000, I can give you some good luck.");
 						close;
 					}
 				case 2:
 					// Kill Count Quest
-					mes "[Li]";
-					mes "Ah, ok I think you can help me out by hunting some Dokebis.";
-					mes "How many would you like to hunt?";
+					mes("[Li]");
+					mes("Ah, ok I think you can help me out by hunting some Dokebis.");
+					mes("How many would you like to hunt?");
 					next;
 					switch(select("50 Dokebis", "100 Dokebis", "150 Dokebis")) {
 					case 1:
-						mes "[Li]";
-						mes "Come back when you've finished your task and I will give you a small reward.";
+						mes("[Li]");
+						mes("Come back when you've finished your task and I will give you a small reward.");
 						setquest 60128;
 						close;
 					case 2:
-						mes "[Li]";
-						mes "Come back when you've finished your task and I will give you a small reward.";
+						mes("[Li]");
+						mes("Come back when you've finished your task and I will give you a small reward.");
 						setquest 60129;
 						close;
 					case 3:
-						mes "[Li]";
-						mes "Come back when you've finished your task and I will give you a small reward.";
+						mes("[Li]");
+						mes("Come back when you've finished your task and I will give you a small reward.");
 						setquest 60130;
 						close;
 					}
 				case 3:
-					mes "[Li]";
-					mes "If you change your mind, please come back.";
+					mes("[Li]");
+					mes("If you change your mind, please come back.");
 					close;
 				}
 			case 2:
-				mes "[Li]";
-				mes "If you change your mind, please come back.";
+				mes("[Li]");
+				mes("If you change your mind, please come back.");
 				close;
 			}
 		}
 		else {
-			mes "[Li]";
-			mes "Hello";
-			mes "I read fortunes in Payon.";
+			mes("[Li]");
+			mes("Hello");
+			mes("I read fortunes in Payon.");
 			close;
 		}
 	}
 	else {
-		mes "[Li]";
-		mes "This place is dangerous!";
+		mes("[Li]");
+		mes("This place is dangerous!");
 		next;
-		mes "[Li]";
-		mes "You should leave quickly!";
+		mes("[Li]");
+		mes("You should leave quickly!");
 		close;
 	}
 }
