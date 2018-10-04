@@ -35,153 +35,153 @@
 
 prontera,114,81,5	script	RWC2011 Agent#2	4_M_ATEIL,{
 	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 500) {
-		mes "[New Agent]";
-		mes "You have too many items. Please make room in your inventory and come back.";
+		mes("[New Agent]");
+		mes("You have too many items. Please make room in your inventory and come back.");
 		close;
 	}
 	if (oversea_event == 0) {
-		mes "[New Agent]";
-		mes "Wow~ Finally!! It's the season we've all been waiting for!";
+		mes("[New Agent]");
+		mes("Wow~ Finally!! It's the season we've all been waiting for!");
 		emotion e_lv2;
 		next;
-		mes "[New Agent]";
-		mes "It's RWC time!";
+		mes("[New Agent]");
+		mes("It's RWC time!");
 		next;
 		.@loop = 1;
 		while(.@loop) {
 			switch(select("What is RWC?", "Are you a New Agent?", "I don't care.")) {
 			case 1:
-				mes "[New Agent]";
+				mes("[New Agent]");
 				if (BaseLevel < 70)
-					mes "You must be a new adventurer. I will kindly explain it to you.";
+					mes("You must be a new adventurer. I will kindly explain it to you.");
 				else
-					mes "It seems you've traveled quite enough but you're not good with hearing the news around the world.";
+					mes("It seems you've traveled quite enough but you're not good with hearing the news around the world.");
 				next;
-				mes "[New Agent]";
-				mes "There are few adventurers in Rune-Midgard whose lives are dedicated to battle, who never skip their training, live in seclusion, and are experts in their art.";
+				mes("[New Agent]");
+				mes("There are few adventurers in Rune-Midgard whose lives are dedicated to battle, who never skip their training, live in seclusion, and are experts in their art.");
 				next;
-				mes "[New Agent]";
-				mes "The RWC is the festival where those adventurers can compete with each other and find out who is the best!";
+				mes("[New Agent]");
+				mes("The RWC is the festival where those adventurers can compete with each other and find out who is the best!");
 				next;
-				mes "[New Agent]";
-				mes "But this cannot be achieved all alone. Your friends will have a huge role in the competition.";
+				mes("[New Agent]");
+				mes("But this cannot be achieved all alone. Your friends will have a huge role in the competition.");
 				next;
-				mes "[New Agent]";
-				mes "If you're interested in this festival, start looking for friends you can trust!";
+				mes("[New Agent]");
+				mes("If you're interested in this festival, start looking for friends you can trust!");
 				next;
 				break;
 			case 2:
-				mes "[New Agent]";
-				mes "Many events are organized for RWC promotion every year.";
+				mes("[New Agent]");
+				mes("Many events are organized for RWC promotion every year.");
 				next;
-				mes "[New Agent]";
-				mes "And this year, a special mission has been entrusted to a new agent... myself!";
+				mes("[New Agent]");
+				mes("And this year, a special mission has been entrusted to a new agent... myself!");
 				next;
-				mes "[New Agent]";
-				mes "I am supposed to attach blue cards with the letters RWC2011 all over the world to promote the event. But... but...";
+				mes("[New Agent]");
+				mes("I am supposed to attach blue cards with the letters RWC2011 all over the world to promote the event. But... but...");
 				next;
-				mes "- He thought of something and then looked at your eyes. -";
+				mes("- He thought of something and then looked at your eyes. -");
 				next;
-				mes "[New Agent]";
-				mes "Would you like to listen to my story?";
+				mes("[New Agent]");
+				mes("Would you like to listen to my story?");
 				next;
 				if(select("Sure, let me hear it.", "No, thank you.") == 2) {
-					mes "[New Agent]";
-					mes "Arrgg!! Are you ignoring me because I'm new? Usually people listen...";
+					mes("[New Agent]");
+					mes("Arrgg!! Are you ignoring me because I'm new? Usually people listen...");
 					next;
-					mes "- New Agent is looking at you with pitiable eyes. -";
+					mes("- New Agent is looking at you with pitiable eyes. -");
 					next;
-					mes "- His brimming small eyes seem to tell you something. ^FF0000Please talk to me again...^000000 -";
+					mes("- His brimming small eyes seem to tell you something. ^FF0000Please talk to me again...^000000 -");
 					close;
 				}
 				.@loop = 0;
 				break;
 			case 3:
-				mes "[New Agent]";
-				mes "This is my first mission but people's reaction is not good.";
+				mes("[New Agent]");
+				mes("This is my first mission but people's reaction is not good.");
 				next;
-				mes "- New Agent is looking at you with pitiable eyes. -";
+				mes("- New Agent is looking at you with pitiable eyes. -");
 				next;
-				mes "- His twinkling small eyes seem to tell you something. ^FF0000Please talk to me again...^000000 -";
+				mes("- His twinkling small eyes seem to tell you something. ^FF0000Please talk to me again...^000000 -");
 				close;
 			}
 		}
-		mes "[New Agent]";
-		mes "I used to be a very normal boy in Morocc.";
-		mes "I am not an adventurer and I don't even know how to buy/sell things. Sometimes I'm just very happy to see adventurers. You know... I am just an ordinary boy.";
+		mes("[New Agent]");
+		mes("I used to be a very normal boy in Morocc.");
+		mes("I am not an adventurer and I don't even know how to buy/sell things. Sometimes I'm just very happy to see adventurers. You know... I am just an ordinary boy.");
 		next;
-		mes "[New Agent]";
-		mes "People used to tell me that since I was very shy.";
-		mes "I would spend my life in a suburb.";
+		mes("[New Agent]");
+		mes("People used to tell me that since I was very shy.");
+		mes("I would spend my life in a suburb.");
 		next;
-		mes "[New Agent]";
-		mes "But eventually, my patience and restrained personality motivated me to become an agent for RWC2011!";
-		mes "I was so happy that I couldn't sleep! I would finally have a chance to meet lots of adventurers and get to know them.";
+		mes("[New Agent]");
+		mes("But eventually, my patience and restrained personality motivated me to become an agent for RWC2011!");
+		mes("I was so happy that I couldn't sleep! I would finally have a chance to meet lots of adventurers and get to know them.");
 		next;
-		mes "[New Agent]";
-		mes "This mission was so important to me,";
-		mes "I was afraid of being attacked by monsters when attaching the blue cards for RWC2011 in the streets.";
+		mes("[New Agent]");
+		mes("This mission was so important to me,");
+		mes("I was afraid of being attacked by monsters when attaching the blue cards for RWC2011 in the streets.");
 		next;
-		mes "[New Agent]";
-		mes "......";
+		mes("[New Agent]");
+		mes("......");
 		next;
-		mes "[New Agent]";
-		mes "And you know what?";
-		mes "^FF0000It really happened!^000000";
+		mes("[New Agent]");
+		mes("And you know what?");
+		mes("^FF0000It really happened!^000000");
 		next;
 		select("Are you serious!?");
-		mes "[New Agent]";
-		mes "I had turned off the light and was trying to get some sleep, then I saw this bright light through the window.";
-		mes "Suddenly, the window was broken and it appeared!";
+		mes("[New Agent]");
+		mes("I had turned off the light and was trying to get some sleep, then I saw this bright light through the window.");
+		mes("Suddenly, the window was broken and it appeared!");
 		next;
 		select("It?");
-		mes "[New Agent]";
-		mes "It was a shining poring! And it ate all blue cards I had prepared in less than a second!";
+		mes("[New Agent]");
+		mes("It was a shining poring! And it ate all blue cards I had prepared in less than a second!");
 		next;
-		mes "[New Agent]";
-		mes "I was so shocked, I tried to calm down and think... I had neither heard about nor seen any shining poring!";
+		mes("[New Agent]");
+		mes("I was so shocked, I tried to calm down and think... I had neither heard about nor seen any shining poring!");
 		next;
-		mes "[New Agent]";
-		mes "^FF0000Yes! It must be a dream!^000000 That's the conclusion I came up with and went back to sleep.";
+		mes("[New Agent]");
+		mes("^FF0000Yes! It must be a dream!^000000 That's the conclusion I came up with and went back to sleep.");
 		next;
-		mes "[New Agent]";
-		mes "But it wasn't a dream. When I woke up, I realized all the blue cards were gone...";
+		mes("[New Agent]");
+		mes("But it wasn't a dream. When I woke up, I realized all the blue cards were gone...");
 		next;
-		mes "[New Agent]";
-		mes "If I ruin this promotion, I might lose the job and have to go back to where I used to live alone...";
+		mes("[New Agent]");
+		mes("If I ruin this promotion, I might lose the job and have to go back to where I used to live alone...");
 		next;
-		mes "[New Agent]";
-		mes "If you see the Golden Poring, could you please find the precious blue cards for me?";
+		mes("[New Agent]");
+		mes("If you see the Golden Poring, could you please find the precious blue cards for me?");
 		next;
 		emotion e_sob;
-		mes "- He looks at you with imploring eyes. -";
+		mes("- He looks at you with imploring eyes. -");
 		next;
 		if(select("Ok, I will help you!", "How much money can you offer me?") == 2) {
-			mes "[New Agent]";
-			mes "Have you decided to help me? Well, I will prepare some gifts. I'm sure you'll like them.";
+			mes("[New Agent]");
+			mes("Have you decided to help me? Well, I will prepare some gifts. I'm sure you'll like them.");
 			next;
 		}
-		mes "[New Agent]";
-		mes "What you are looking for are large cards with the letters ^FF0000RWC2011^000000. Some of them might already be digested though.";
+		mes("[New Agent]");
+		mes("What you are looking for are large cards with the letters ^FF0000RWC2011^000000. Some of them might already be digested though.");
 		next;
-		mes "[New Agent]";
-		mes "Try to gather remaining cards until you make the word, 'RWC2011'.";
+		mes("[New Agent]");
+		mes("Try to gather remaining cards until you make the word, 'RWC2011'.");
 		next;
-		mes "[New Agent]";
-		mes "Please help me out!! My life is in your hands!";
+		mes("[New Agent]");
+		mes("Please help me out!! My life is in your hands!");
 		oversea_event = 1;
 		setquest 13000;
 		close;
 	} else if (oversea_event == 1) {
 		if (countitem(BlueCard_2) && countitem(BlueCard_0) && countitem(BlueCard_1) > 1 && countitem(BlueCard_R) && countitem(BlueCard_W) && countitem(Blue_Card_C)) {
-			mes "[RWC2011 Agent]";
-			mes "Have you gathered all the cards?";
+			mes("[RWC2011 Agent]");
+			mes("Have you gathered all the cards?");
 			next;
-			mes "[RWC2011 Agent]";
-			mes "Wow~ You bring light in my life again!";
+			mes("[RWC2011 Agent]");
+			mes("Wow~ You bring light in my life again!");
 			next;
-			mes "[RWC2011 Agent]";
-			mes "Here are the gifts I promised... Let's see...";
+			mes("[RWC2011 Agent]");
+			mes("Here are the gifts I promised... Let's see...");
 			next;
 			delitem BlueCard_2,1;
 			delitem BlueCard_0,1;
@@ -208,63 +208,63 @@ prontera,114,81,5	script	RWC2011 Agent#2	4_M_ATEIL,{
 				getitem RWC_Cele_Fire,5;
 				getitem RWC_Cele_Fire2,5;
 			}
-			mes "[RWC2011 Agent]";
-			mes "It's not much but please keep it! Haha, we still have lots of cards to be found. I hope you can help me tomorrow as well.";
+			mes("[RWC2011 Agent]");
+			mes("It's not much but please keep it! Haha, we still have lots of cards to be found. I hope you can help me tomorrow as well.");
 			next;
-			mes "[RWC2011 Agent]";
-			mes "Thank you!! I can continue working now. Nothing is impossible when we have great adventurers like you in this world!";
+			mes("[RWC2011 Agent]");
+			mes("Thank you!! I can continue working now. Nothing is impossible when we have great adventurers like you in this world!");
 			next;
-			mes "[RWC2011 Agent]";
-			mes "ADIOS!";
+			mes("[RWC2011 Agent]");
+			mes("ADIOS!");
 			next;
-			mes "- Agent muttered something to himself. -";
+			mes("- Agent muttered something to himself. -");
 			close;
 		} else {
-			mes "[RWC2011 Agent]";
-			mes "Mmmm~ not yet? We're short-handed... Please help me.";
+			mes("[RWC2011 Agent]");
+			mes("Mmmm~ not yet? We're short-handed... Please help me.");
 			next;
-			mes "[RWC2011 Agent]";
-			mes "I'm just saying that out of concern for you. You need TWO ^FF0000Blue 1 Card^000000. It's \"2011\"... Got it?";
+			mes("[RWC2011 Agent]");
+			mes("I'm just saying that out of concern for you. You need TWO ^FF0000Blue 1 Card^000000. It's \"2011\"... Got it?");
 			close;
 		}
 	} else if (oversea_event == 2) {
 		.@playtime = questprogress(13001,PLAYTIME);
 		if (.@playtime == 1) {
-			mes "[RWC2011 Agent]";
-			mes "First, I will start attaching cards you found... I'll take the rest of cards tomorrow.";
-			mes "Please come back tomorrow.";
+			mes("[RWC2011 Agent]");
+			mes("First, I will start attaching cards you found... I'll take the rest of cards tomorrow.");
+			mes("Please come back tomorrow.");
 			close;
 		} else if (.@playtime == 2)
 			erasequest 13001;
-		mes "[RWC2011 Agent]";
-		mes "Thanks for the last time.";
-		mes "I must keep on promoting the event so I want to ask you again~!";
+		mes("[RWC2011 Agent]");
+		mes("Thanks for the last time.");
+		mes("I must keep on promoting the event so I want to ask you again~!");
 		oversea_event = 3;
 		close;
 	} else if (oversea_event == 3) {
-		mes "[RWC2011 Agent]";
-		mes "You've come again~";
-		mes "Thanks for the last time! We still have lots of cards to find. Could you help me out?";
+		mes("[RWC2011 Agent]");
+		mes("You've come again~");
+		mes("Thanks for the last time! We still have lots of cards to find. Could you help me out?");
 		next;
 		switch(select("Ok!", "I'm busy now.")) {
 		case 1:
-			mes "[RWC2011 Agent]";
-			mes "It's the same mission as before.";
-			mes "Try to gather blue cards and make the word, ^FF0000R W C 2 0 1 1 ^000000.";
-			mes "Good Luck!";
+			mes("[RWC2011 Agent]");
+			mes("It's the same mission as before.");
+			mes("Try to gather blue cards and make the word, ^FF0000R W C 2 0 1 1 ^000000.");
+			mes("Good Luck!");
 			oversea_event = 1;
 			setquest 13000;
 			close;
 		case 2:
-			mes "[RWC2011 Agent]";
-			mes "...I see...";
-			mes "I still have lots of cards to find so if you have time, please come back and help again.";
+			mes("[RWC2011 Agent]");
+			mes("...I see...");
+			mes("I still have lots of cards to find so if you have time, please come back and help again.");
 			close;
 		}
 	} else {
-		mes "[RWC2011 Agent]";
-		mes "... huh...?";
-		mes "I am... a new agent.";
+		mes("[RWC2011 Agent]");
+		mes("... huh...?");
+		mes("I am... a new agent.");
 		close;
 	}
 }

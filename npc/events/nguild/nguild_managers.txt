@@ -42,107 +42,107 @@
 function	script	F_GldManager	{
 
 	@GID = getcastledata(getarg(1),1);
-	mes "[ "+getarg(0)+" ]";
+	mes("[ "+getarg(0)+" ]");
 	if (@GID == 0){
-		mes "I am waiting for my master.  Brave adventurer, follow your destiny!";
+		mes("I am waiting for my master.  Brave adventurer, follow your destiny!");
 		return;
 	}
 	if (getcharid(CHAR_ID_GUILD) != @GID){
-		mes "I am here to follow ^5533FF" + getguildmaster(@GID) + "^000000's command! Hey! Your not even a part of the guild!!";
-		mes "Where are the guardians? Destroy these intruders!";
+		mes("I am here to follow ^5533FF" + getguildmaster(@GID) + "^000000's command! Hey! Your not even a part of the guild!!");
+		mes("Where are the guardians? Destroy these intruders!");
 		return;
 	}
 	if (strcharinfo(PC_NAME) != getguildmaster(@GID)){
-		mes "You're not ^5533FF" + getguildmaster(@GID) + "^000000! I am here to follow ^5533FF" + getguildmaster(@GID) + "^000000's command only";
+		mes("You're not ^5533FF" + getguildmaster(@GID) + "^000000! I am here to follow ^5533FF" + getguildmaster(@GID) + "^000000's command only");
 		return 0;
 	}
 
-	mes "Welcome Master ^5533FF" + getguildmaster(@GID) + "^000000 ! I will assist you in any way I can!";
+	mes("Welcome Master ^5533FF" + getguildmaster(@GID) + "^000000 ! I will assist you in any way I can!");
 	next;
 
 	switch (select("Kafra Staff Employment / Dismissal","Enter Treasure Room","Cancel")) {
 	case 1: // Employment / Dismissal
-		mes "[ "+getarg(0)+" ]";
+		mes("[ "+getarg(0)+" ]");
 		if (getcastledata(getarg(1),9) == 1) {
-			mes "Would you like to dismiss the current Kafra?";
+			mes("Would you like to dismiss the current Kafra?");
 			next;
 			if (select("Dismissal","Cancel") != 1) {
-				mes "[ "+getarg(0)+" ]";
-				mes "Master, I think you should keep the current Kafra Staff because she is already trying her best to serve us";
+				mes("[ "+getarg(0)+" ]");
+				mes("Master, I think you should keep the current Kafra Staff because she is already trying her best to serve us");
 				return;
 			}
 			cutin "kafra_01",2;
-			mes "[ Kafra Staff ]";
-			mes "Have I done anything wrong? If I did, will you please forgive me?";
+			mes("[ Kafra Staff ]");
+			mes("Have I done anything wrong? If I did, will you please forgive me?");
 			next;
 			if (select("Dismiss","Cancel") != 1) {
-				mes "[ Kafra Staff ]";
-				mes "Thank you master, I'll do my best! ^^.";
+				mes("[ Kafra Staff ]");
+				mes("Thank you master, I'll do my best! ^^.");
 				cutin "kafra_01",255;
 				return;
 			}
-			mes "[ Kafra Staff ]";
-			mes "It's unfortunate that I won't be able to serve your guild anymore....";
+			mes("[ Kafra Staff ]");
+			mes("It's unfortunate that I won't be able to serve your guild anymore....");
 			next;
 			disablenpc "Kafra Staff#"+getarg(4);
 			setcastledata getarg(1),9,0;
 			cutin "kafra_01",255;
-			mes "[ "+getarg(0)+" ]";
-			mes "The Kafra has been dismissed.  But... we should really get a Kafra as soon as possible!";
+			mes("[ "+getarg(0)+" ]");
+			mes("The Kafra has been dismissed.  But... we should really get a Kafra as soon as possible!");
 			return;
 		}
 		if (getgdskilllv(@GID,10001) == 0){
-			mes "Master, you don't have a contract with the Kafra Staff Company.";
-			mes "In order to hire a Kafra, you must first learn the Guild skill ^5533FFContract With Kafra^000000.";
+			mes("Master, you don't have a contract with the Kafra Staff Company.");
+			mes("In order to hire a Kafra, you must first learn the Guild skill ^5533FFContract With Kafra^000000.");
 			return;
 		}
 
 		L_Hire:
-			mes "Would you like to employ the services of a Kafra? You will need ^5533FF10,000 Zeny^000000 to do so... ";
+			mes("Would you like to employ the services of a Kafra? You will need ^5533FF10,000 Zeny^000000 to do so... ");
 			next;
 			if (select("Employ Kafra.","Cancel") != 1) {
-				mes "[ "+getarg(0)+" ]";
-				mes "As you wish Master.  But I suggest we get a Kafra as soon as possible!";
+				mes("[ "+getarg(0)+" ]");
+				mes("As you wish Master.  But I suggest we get a Kafra as soon as possible!");
 				return;
 			}
-			mes "[ "+getarg(0)+" ]";
+			mes("[ "+getarg(0)+" ]");
 			if (Zeny < 10000) {
-				mes "Master, you do not have enough money to employ a Kafra. Employment has been cancelled.";
+				mes("Master, you do not have enough money to employ a Kafra. Employment has been cancelled.");
 				return;
 			}
 			Zeny -= 10000;
 			enablenpc "Kafra Staff#"+getarg(4);
 			setcastledata getarg(1),9,1;
-			mes "You have created a contract with the Kafra Staff Company.";
+			mes("You have created a contract with the Kafra Staff Company.");
 			next;
 			cutin "kafra_01",2;
-			mes "[ Kafra Staff ]";
-			mes "How do you do? I'm here to provide you with helpful service! I'll do the best I can to serve you.";
+			mes("[ Kafra Staff ]");
+			mes("How do you do? I'm here to provide you with helpful service! I'll do the best I can to serve you.");
 			next;
 			cutin "kafra_01",255;
-			mes "[ "+getarg(0)+" ]";
-			//mes "Your employment contract lasts ^5533FF1 month^000000.  After this term is over you will have to create a new contract.";
-			mes "I think the Kafra Staff will benefit our guild members.";
+			mes("[ "+getarg(0)+" ]");
+			//mes("Your employment contract lasts ^5533FF1 month^000000.  After this term is over you will have to create a new contract.");
+			mes("I think the Kafra Staff will benefit our guild members.");
 			return;
 	case 2: // Enter Treasure Room
-		mes "[ "+getarg(0)+" ]";
-		mes "Would you to go to our Treasure Room? Only you, the Guild Master, are allowed to enter this room.";
+		mes("[ "+getarg(0)+" ]");
+		mes("Would you to go to our Treasure Room? Only you, the Guild Master, are allowed to enter this room.");
 		next;
 		if (select("Enter Treasure room.","Cancel") == 1) {
-			mes "[ "+getarg(0)+" ]";
-			mes "Please follow me through the secret passage way.";
-			mes "You must pull down on the secret switch in order to get out.";
+			mes("[ "+getarg(0)+" ]");
+			mes("Please follow me through the secret passage way.");
+			mes("You must pull down on the secret switch in order to get out.");
 			next;
 			warp getarg(1),getarg(2),getarg(3);
 			return;
 		}
-		mes "[ "+getarg(0)+" ]";
-		mes "The goods are produced everyday.";
-		mes "You should get them whenever you can because they might dissapear if you take them at the wrong time.";
+		mes("[ "+getarg(0)+" ]");
+		mes("The goods are produced everyday.");
+		mes("You should get them whenever you can because they might dissapear if you take them at the wrong time.");
 		return;
 	default: // Cancel
-		mes "[ "+getarg(0)+" ]";
-		mes "As you wish, master.";
+		mes("[ "+getarg(0)+" ]");
+		mes("As you wish, master.");
 		return;
 	}
 }

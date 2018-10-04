@@ -35,21 +35,21 @@
 
 payon,93,81,4	script	Exorcist Master Fahae	4_M_BUDDHIST,{
 
-	mes "[Exorcist Master Fahae]";
-	mes "Greetings young warrior, I'm the Exorcist Master Fahae.";
-	mes "I have been tracking the elusive Bacsojin for some time.";
+	mes("[Exorcist Master Fahae]");
+	mes("Greetings young warrior, I'm the Exorcist Master Fahae.");
+	mes("I have been tracking the elusive Bacsojin for some time.");
 	next;
-	mes "[Exorcist Master Fahae]";
-	mes "I feel it is time I let another warrior try to complete";
-	mes "my quest. I have some items to assist you in my quest.";
+	mes("[Exorcist Master Fahae]");
+	mes("I feel it is time I let another warrior try to complete");
+	mes("my quest. I have some items to assist you in my quest.");
 	next;
 	if (select("I wish to buy","No thanks") != 1) {
-		mes "[Exorcist Master Fahae]";
-		mes "The path of fully venquishing evil is far, help me in the way of God.";
+		mes("[Exorcist Master Fahae]");
+		mes("The path of fully venquishing evil is far, help me in the way of God.");
 		close;
 	}
-	mes "[Exorcist Master Fahae]";
-	mes "I have 2 items which might become useful to you.";
+	mes("[Exorcist Master Fahae]");
+	mes("I have 2 items which might become useful to you.");
 	next;
 	switch (select("Realgar Wine","Exorcize Herb")) {
 	case 1:
@@ -61,29 +61,29 @@ payon,93,81,4	script	Exorcist Master Fahae	4_M_BUDDHIST,{
 		.@price = 10000;
 		break;
 	}
-	mes "[Exorcist Master Fahae]";
-	mes "How many do you require?";
-	mes "You may only buy 5 at one time.";
-	mes "Each costs "+ .@price +"z.";
-	mes "(Type in 0 to cancel)";
+	mes("[Exorcist Master Fahae]");
+	mes("How many do you require?");
+	mes("You may only buy 5 at one time.");
+	mes("Each costs "+ .@price +"z.");
+	mes("(Type in 0 to cancel)");
 	next;
 	input @input;
 	if (@input == 0)
 		close;
 	if (@input > 5) {
-		mes "[Exorcist Master Fahae]";
-		mes "You must not be stingy, it is the path of God to be honest.";
+		mes("[Exorcist Master Fahae]");
+		mes("You must not be stingy, it is the path of God to be honest.");
 		close;
 	}
 	if (Zeny < @input * .@price) {
-		mes "[Exorcist Master Fahae]";
-		mes "Money doesn't bring joy to everyone, but we need it to support the temple and myself. Please, try to kill some monsters and take their drops.";
+		mes("[Exorcist Master Fahae]");
+		mes("Money doesn't bring joy to everyone, but we need it to support the temple and myself. Please, try to kill some monsters and take their drops.");
 		close;
 	}
 	Zeny -= @input * .@price;
 	getitem .@itemid, @input;
-	mes "[Exorcist Master Fahae]";
-	mes "Here you go, I hope you may succeed in my quest.";
+	mes("[Exorcist Master Fahae]");
+	mes("Here you go, I hope you may succeed in my quest.");
 	close;
 }
 

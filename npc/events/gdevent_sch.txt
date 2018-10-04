@@ -80,8 +80,8 @@ OnMyMobDead:
 
 schg_dun01,194,148,5	script	Dwarf#sch_gd	4_M_DWARF,{
 	if (getcharid(CHAR_ID_GUILD) == 0) {
-		mes "[Dwarf]";
-		mes "Hey did you see an ugly Goblin come by? He stole something from me!";
+		mes("[Dwarf]");
+		mes("Hey did you see an ugly Goblin come by? He stole something from me!");
 		close;
 	}
 	.@chk_urquest = questprogress(2143,PLAYTIME);
@@ -90,88 +90,88 @@ schg_dun01,194,148,5	script	Dwarf#sch_gd	4_M_DWARF,{
 		if ($@gdevents_s$ == "") {
 			$@gdeventv_s1 = 1;
 			$@gdevents_s$ = .@chk_yourgdname$;
-			mes "[Dwarf]";
-			mes "Help me!";
-			mes "Please, help me!";
+			mes("[Dwarf]");
+			mes("Help me!");
+			mes("Please, help me!");
 			next;
 			switch(select("What happened?", "Nevermind.")) {
 			case 1:
-				mes "[Dwarf]";
-				mes "I am Morestone and I collect rare gems.";
+				mes("[Dwarf]");
+				mes("I am Morestone and I collect rare gems.");
 				next;
-				mes "[Morestone]";
-				mes "In my travels, I was told that there were alot of gems in Valfreyja and Nidhoggur, so I came down here.";
-				mes "But here, the soil is very hard to dig into. Fortunately, my ^3131FFPickaxe^000000 never lets me down!";
+				mes("[Morestone]");
+				mes("In my travels, I was told that there were alot of gems in Valfreyja and Nidhoggur, so I came down here.");
+				mes("But here, the soil is very hard to dig into. Fortunately, my ^3131FFPickaxe^000000 never lets me down!");
 				next;
 				select("Pickaxe!");
-				mes "[Morestone]";
-				mes "Yes, my beloved pickaxe!";
-				mes "I always carry it with me, you know?";
+				mes("[Morestone]");
+				mes("Yes, my beloved pickaxe!");
+				mes("I always carry it with me, you know?");
 				next;
-				mes "[Morestone]";
-				mes "We started working here together.";
-				mes "After a few days, we finally found something!";
+				mes("[Morestone]");
+				mes("We started working here together.");
+				mes("After a few days, we finally found something!");
 				next;
 				select("Something strange??");
-				mes "[Morestone]";
-				mes "No, but it was worth quite alot.";
-				mes "But we did not have much time to celebrate. Suddenly, a monster appeared that stole my pickaxe.";
-				mes "His name was^3131FFKublin^000000!";
+				mes("[Morestone]");
+				mes("No, but it was worth quite alot.");
+				mes("But we did not have much time to celebrate. Suddenly, a monster appeared that stole my pickaxe.");
+				mes("His name was^3131FFKublin^000000!");
 				next;
-				mes "[Morestone]";
-				mes "He stole my Pickaxe!";
-				mes "I can't live without it...";
+				mes("[Morestone]");
+				mes("He stole my Pickaxe!");
+				mes("I can't live without it...");
 				next;
 				if (countitem(Pickaxe) > 0) {
-					mes "[" + strcharinfo(PC_NAME) + "]";
-					mes "Is this the pickaxe that you've been looking for?";
+					mes("[" + strcharinfo(PC_NAME) + "]");
+					mes("Is this the pickaxe that you've been looking for?");
 					next;
-					mes "[Morestone]";
-					mes "You found my Pickaxe?";
-					mes "Show me, please!";
+					mes("[Morestone]");
+					mes("You found my Pickaxe?");
+					mes("Show me, please!");
 					next;
-					mes "[Morestone]";
-					mes "Oh, my! You've returned it to me!";
-					mes "My precious pickaxe, I thought I lost you forever.";
+					mes("[Morestone]");
+					mes("Oh, my! You've returned it to me!");
+					mes("My precious pickaxe, I thought I lost you forever.");
 					next;
-					mes "[Morestone]";
-					mes "You are great! What guild are you from?";
-					mes "Could it be Gravity or Mercury?";
+					mes("[Morestone]");
+					mes("You are great! What guild are you from?");
+					mes("Could it be Gravity or Mercury?");
 					next;
-					mes "[" + strcharinfo(PC_NAME) + "]";
-					mes "I am a member of the ^3131FF"+.@chk_yourgdname$+"^.";
+					mes("[" + strcharinfo(PC_NAME) + "]");
+					mes("I am a member of the ^3131FF"+.@chk_yourgdname$+"^.");
 					next;
-					mes "[Morestone]";
-					mes "Oh... That guild will receive my greatest respect.";
+					mes("[Morestone]");
+					mes("Oh... That guild will receive my greatest respect.");
 					next;
-					mes "[Morestone]";
-					mes "Oh! My friend, I am very grateful for your help.";
-					mes "As a reward, I will tell you about a mysterious area I have discovered recently.";
+					mes("[Morestone]");
+					mes("Oh! My friend, I am very grateful for your help.");
+					mes("As a reward, I will tell you about a mysterious area I have discovered recently.");
 					next;
 					select("A mysterious area?");
-					mes "[Morestone]";
-					mes "That's right. I found it when I was digging around here.";
-					mes "It looks like it was made for some special purpose, but since there are no gems around there, I have no interest in it.";
+					mes("[Morestone]");
+					mes("That's right. I found it when I was digging around here.");
+					mes("It looks like it was made for some special purpose, but since there are no gems around there, I have no interest in it.");
 					next;
-					mes "[Morestone]";
-					mes "Instead of going there alone, I think it would be more fun to go with your friends...";
+					mes("[Morestone]");
+					mes("Instead of going there alone, I think it would be more fun to go with your friends...");
 					next;
-					mes "[Morestone]";
-					mes "If you want, I can take ^3131FFyou and your guild members^000000 to explore that area.";
-					mes "Do you want to go there now?";
+					mes("[Morestone]");
+					mes("If you want, I can take ^3131FFyou and your guild members^000000 to explore that area.");
+					mes("Do you want to go there now?");
 					next;
 					switch(select("Wait! I'm not ready yet.", "Let's go!")) {
 					case 1:
 						$@gdeventv_s1 = 0;
 						$@gdevents_s$ = "";
-						mes "[Morestone]";
-						mes "Take your time, and find a place to gather your friends.";
+						mes("[Morestone]");
+						mes("Take your time, and find a place to gather your friends.");
 						close;
 					case 2:
-						mes "[Morestone]";
-						mes "Alright! Let's go.";
-						mes "If your friends visit me again later, I will guide them to that area again.";
-						mes "Don't forget, dwarves are grateful beings! Hahaha!";
+						mes("[Morestone]");
+						mes("Alright! Let's go.");
+						mes("If your friends visit me again later, I will guide them to that area again.");
+						mes("Don't forget, dwarves are grateful beings! Hahaha!");
 						delitem Pickaxe,1;
 						$@gdeventv_s1 = 1;
 						$@gdevents_s$ = .@chk_yourgdname$;
@@ -184,126 +184,126 @@ schg_dun01,194,148,5	script	Dwarf#sch_gd	4_M_DWARF,{
 				else {
 					$@gdeventv_s1 = 0;
 					$@gdevents_s$ = "";
-					mes "[Morestone]";
-					mes "I will tell you how to find him.";
-					mes "Kublin wears a ridiculous golden hat, It should be easy to recognise him by that.";
+					mes("[Morestone]");
+					mes("I will tell you how to find him.");
+					mes("Kublin wears a ridiculous golden hat, It should be easy to recognise him by that.");
 					close;
 				}
 			case 2:
 				$@gdeventv_s1 = 0;
 				$@gdevents_s$ = "";
 				emotion e_sob;
-				mes "[Dwarf]";
-				mes "Ahhh...";
+				mes("[Dwarf]");
+				mes("Ahhh...");
 				close;
 			}
 		}
 		else if ($@gdevents_s$ == .@chk_yourgdname$) {
 			if (questprogress(2144) == 1) {
-				mes "[Morestone]";
-				mes "I, Morestone, have made an alliance with the "+$@gdevents_s$+" guild.";
-				mes "Oh, you are a member.";
-				mes "Would you like to go to the mysterious area?";
+				mes("[Morestone]");
+				mes("I, Morestone, have made an alliance with the "+$@gdevents_s$+" guild.");
+				mes("Oh, you are a member.");
+				mes("Would you like to go to the mysterious area?");
 				next;
 				switch(select("Let's go.", "No, thanks.")) {
 				case 1:
-					mes "[Morestone]";
-					mes "I hope you enjoy yourself, my friend.";
+					mes("[Morestone]");
+					mes("I hope you enjoy yourself, my friend.");
 					close2;
 					warp "schg_que01",103,133;
 					end;
 				case 2:
-					mes "[Morestone]";
-					mes "If you need my assistance, just ask.";
-					mes "Ah! Dont forget, I hate monsters! So I don't want to see them. It will be better if you ask for another favour.";
+					mes("[Morestone]");
+					mes("If you need my assistance, just ask.");
+					mes("Ah! Dont forget, I hate monsters! So I don't want to see them. It will be better if you ask for another favour.");
 					close;
 				}
 			}
 			else {
 				$@gdeventv_s1 = 1;
 				$@gdevents_s$ = .@chk_yourgdname$;
-				mes "[Dwarf]";
-				mes "Help me!";
-				mes "Please, help me!";
+				mes("[Dwarf]");
+				mes("Help me!");
+				mes("Please, help me!");
 				next;
 				switch(select("What happened?", "Nevermind.")) {
 				case 1:
-					mes "[Dwarf]";
-					mes "I am Morestone and I collect rare gems.";
+					mes("[Dwarf]");
+					mes("I am Morestone and I collect rare gems.");
 					next;
-					mes "[Morestone]";
-					mes "In my travels, I was told that there were alot of gems in Valfreyja and Nidhoggur, so I came down here.";
-					mes "But here, the soil is very hard to dig into. Fortunately, my ^3131FFPickaxe^000000 never lets me down!";
+					mes("[Morestone]");
+					mes("In my travels, I was told that there were alot of gems in Valfreyja and Nidhoggur, so I came down here.");
+					mes("But here, the soil is very hard to dig into. Fortunately, my ^3131FFPickaxe^000000 never lets me down!");
 					next;
 					select("Pickaxe!");
-					mes "[Morestone]";
-					mes "Yes, my beloved pickaxe!";
-					mes "I always carry it with me, you know?";
+					mes("[Morestone]");
+					mes("Yes, my beloved pickaxe!");
+					mes("I always carry it with me, you know?");
 					next;
-					mes "[Morestone]";
-					mes "We started working here together.";
-					mes "After a few days, we finally found something!";
+					mes("[Morestone]");
+					mes("We started working here together.");
+					mes("After a few days, we finally found something!");
 					next;
 					select("Something strange??");
-					mes "[Morestone]";
-					mes "No, but it was worth quite alot.";
-					mes "But we did not have much time to celebrate. Suddenly, a monster appeared that stole my pickaxe.";
-					mes "His name was^3131FFKublin^000000!";
+					mes("[Morestone]");
+					mes("No, but it was worth quite alot.");
+					mes("But we did not have much time to celebrate. Suddenly, a monster appeared that stole my pickaxe.");
+					mes("His name was^3131FFKublin^000000!");
 					next;
-					mes "[Morestone]";
-					mes "He stole my Pickaxe!";
-					mes "I can't live without it...";
+					mes("[Morestone]");
+					mes("He stole my Pickaxe!");
+					mes("I can't live without it...");
 					next;
 					if (countitem(Pickaxe) > 0) {
-						mes "[" + strcharinfo(PC_NAME) + "]";
-						mes "Is this the pickaxe that you've been looking for?";
+						mes("[" + strcharinfo(PC_NAME) + "]");
+						mes("Is this the pickaxe that you've been looking for?");
 						next;
-						mes "[Morestone]";
-						mes "You found my Pickaxe?";
-						mes "Show me, please!";
+						mes("[Morestone]");
+						mes("You found my Pickaxe?");
+						mes("Show me, please!");
 						next;
-						mes "[Morestone]";
-						mes "Oh, my! You've returned it to me!";
-						mes "My precious pickaxe, I thought I lost you forever.";
+						mes("[Morestone]");
+						mes("Oh, my! You've returned it to me!");
+						mes("My precious pickaxe, I thought I lost you forever.");
 						next;
-						mes "[Morestone]";
-						mes "You are great! What guild are you from?";
-						mes "Could it be Gravity or Mercury?";
+						mes("[Morestone]");
+						mes("You are great! What guild are you from?");
+						mes("Could it be Gravity or Mercury?");
 						next;
-						mes "[" + strcharinfo(PC_NAME) + "]";
-						mes "I am a member of the ^3131FF"+.@chk_yourgdname$+"^.";
+						mes("[" + strcharinfo(PC_NAME) + "]");
+						mes("I am a member of the ^3131FF"+.@chk_yourgdname$+"^.");
 						next;
-						mes "[Morestone]";
-						mes "Oh... That guild will receive my greatest respect.";
+						mes("[Morestone]");
+						mes("Oh... That guild will receive my greatest respect.");
 						next;
-						mes "[Morestone]";
-						mes "Oh! My friend, I am very grateful for your help.";
-						mes "As a reward, I will tell you about a mysterious area I have discovered recently.";
+						mes("[Morestone]");
+						mes("Oh! My friend, I am very grateful for your help.");
+						mes("As a reward, I will tell you about a mysterious area I have discovered recently.");
 						next;
 						select("A mysterious area?");
-						mes "[Morestone]";
-						mes "That's right. I found it when I was digging around here.";
-						mes "It looks like it was made for some special purpose, but since there are no gems around there, I have no interest in it.";
+						mes("[Morestone]");
+						mes("That's right. I found it when I was digging around here.");
+						mes("It looks like it was made for some special purpose, but since there are no gems around there, I have no interest in it.");
 						next;
-						mes "[Morestone]";
-						mes "Instead of going there alone, I think it would be more fun to go with your friends...";
+						mes("[Morestone]");
+						mes("Instead of going there alone, I think it would be more fun to go with your friends...");
 						next;
-						mes "[Morestone]";
-						mes "If you want, I can take ^3131FFyou and your guild members^000000 to explore that area.";
-						mes "Do you want to go there now?";
+						mes("[Morestone]");
+						mes("If you want, I can take ^3131FFyou and your guild members^000000 to explore that area.");
+						mes("Do you want to go there now?");
 						next;
 						switch(select("Wait! I'm not ready yet.", "Let's go!")) {
 						case 1:
 							$@gdeventv_s1 = 0;
 							$@gdevents_s$ = "";
-							mes "[Morestone]";
-							mes "Take your time, and find a place to gather your friends.";
+							mes("[Morestone]");
+							mes("Take your time, and find a place to gather your friends.");
 							close;
 						case 2:
-							mes "[Morestone]";
-							mes "Alright! Let's go.";
-							mes "If your friends visit me again later, I will guide them to that area again.";
-							mes "Don't forget, dwarves are grateful beings! Hahaha!";
+							mes("[Morestone]");
+							mes("Alright! Let's go.");
+							mes("If your friends visit me again later, I will guide them to that area again.");
+							mes("Don't forget, dwarves are grateful beings! Hahaha!");
 							delitem Pickaxe,1;
 							$@gdeventv_s1 = 1;
 							$@gdevents_s$ = .@chk_yourgdname$;
@@ -316,136 +316,136 @@ schg_dun01,194,148,5	script	Dwarf#sch_gd	4_M_DWARF,{
 					else {
 						$@gdeventv_s1 = 0;
 						$@gdevents_s$ = "";
-						mes "[Morestone]";
-						mes "I will tell you how to find him.";
-						mes "Kublin wears a ridiculous golden hat, It should be easy to recognise him by that.";
+						mes("[Morestone]");
+						mes("I will tell you how to find him.");
+						mes("Kublin wears a ridiculous golden hat, It should be easy to recognise him by that.");
 						close;
 					}
 				case 2:
 					$@gdeventv_s1 = 0;
 					$@gdevents_s$ = "";
 					emotion e_sob;
-					mes "[Dwarf]";
-					mes "Ah....";
+					mes("[Dwarf]");
+					mes("Ah....");
 					close;
 				}
 			}
 		}
 		else {
-			mes "[Morestone]";
-			mes "I, Morestone, have made an alliance with the "+$@gdevents_s$+" guild.";
-			mes "Hm, you're not a member.";
-			mes "Could you please give them my greetings?";
+			mes("[Morestone]");
+			mes("I, Morestone, have made an alliance with the "+$@gdevents_s$+" guild.");
+			mes("Hm, you're not a member.");
+			mes("Could you please give them my greetings?");
 			close;
 		}
 	}
 	else {
 		if ($@gdevents_s$ == .@chk_yourgdname$) {
 			if (questprogress(2144) == 1) {
-				mes "[Morestone]";
-				mes "I, Morestone, have made an alliance with the "+$@gdevents_s$+" guild.";
-				mes "Oh, you are a member.";
-				mes "Would you like to go to the mysterious area?";
+				mes("[Morestone]");
+				mes("I, Morestone, have made an alliance with the "+$@gdevents_s$+" guild.");
+				mes("Oh, you are a member.");
+				mes("Would you like to go to the mysterious area?");
 				next;
 				switch(select("Let's go.", "No, thanks.")) {
 				case 1:
-					mes "[Morestone]";
-					mes "I hope you enjoy yourself, my friend.";
+					mes("[Morestone]");
+					mes("I hope you enjoy yourself, my friend.");
 					close2;
 					warp "schg_que01",103,133;
 					end;
 				case 2:
-					mes "[Morestone]";
-					mes "If you need my assistance, just ask.";
-					mes "Ah! Dont forget, I hate monsters! So I don't want to see them. It will be better if you ask for another favour.";
+					mes("[Morestone]");
+					mes("If you need my assistance, just ask.");
+					mes("Ah! Dont forget, I hate monsters! So I don't want to see them. It will be better if you ask for another favour.");
 					close;
 				}
 			}
 			else {
 				$@gdeventv_s1 = 1;
 				$@gdevents_s$ = .@chk_yourgdname$;
-				mes "[Dwarf]";
-				mes "Help me!";
-				mes "Please, help me!";
+				mes("[Dwarf]");
+				mes("Help me!");
+				mes("Please, help me!");
 				next;
 				switch(select("What happened?", "Nevermind.")) {
 				case 1:
-					mes "[Dwarf]";
-					mes "I am Morestone and I collect rare gems.";
+					mes("[Dwarf]");
+					mes("I am Morestone and I collect rare gems.");
 					next;
-					mes "[Morestone]";
-					mes "In my travels, I was told that there were alot of gems in Valfreyja and Nidhoggur, so I came down here.";
-					mes "But here, the soil is very hard to dig into. Fortunately, my ^3131FFPickaxe^000000 never lets me down!";
+					mes("[Morestone]");
+					mes("In my travels, I was told that there were alot of gems in Valfreyja and Nidhoggur, so I came down here.");
+					mes("But here, the soil is very hard to dig into. Fortunately, my ^3131FFPickaxe^000000 never lets me down!");
 					next;
 					select("Pickaxe!");
-					mes "[Morestone]";
-					mes "Yes, my beloved pickaxe!";
-					mes "I always carry it with me, you know?";
+					mes("[Morestone]");
+					mes("Yes, my beloved pickaxe!");
+					mes("I always carry it with me, you know?");
 					next;
-					mes "[Morestone]";
-					mes "We started working here together.";
-					mes "After a few days, we finally found something!";
+					mes("[Morestone]");
+					mes("We started working here together.");
+					mes("After a few days, we finally found something!");
 					next;
 					select("Something strange??");
-					mes "[Morestone]";
-					mes "No, but it was worth quite alot.";
-					mes "But we did not have much time to celebrate. Suddenly, a monster appeared that stole my pickaxe.";
-					mes "His name was^3131FFKublin^000000!";
+					mes("[Morestone]");
+					mes("No, but it was worth quite alot.");
+					mes("But we did not have much time to celebrate. Suddenly, a monster appeared that stole my pickaxe.");
+					mes("His name was^3131FFKublin^000000!");
 					next;
-					mes "[Morestone]";
-					mes "He stole my Pickaxe!";
-					mes "I can't live without it...";
+					mes("[Morestone]");
+					mes("He stole my Pickaxe!");
+					mes("I can't live without it...");
 					next;
 					if (countitem(Pickaxe) > 0) {
-						mes "[" + strcharinfo(PC_NAME) + "]";
-						mes "Is this the pickaxe that you've been looking for?";
+						mes("[" + strcharinfo(PC_NAME) + "]");
+						mes("Is this the pickaxe that you've been looking for?");
 						next;
-						mes "[Morestone]";
-						mes "You found my Pickaxe?";
-						mes "Show me, please!";
+						mes("[Morestone]");
+						mes("You found my Pickaxe?");
+						mes("Show me, please!");
 						next;
-						mes "[Morestone]";
-						mes "Oh, my! You've returned it to me!";
-						mes "My precious pickaxe, I thought I lost you forever.";
+						mes("[Morestone]");
+						mes("Oh, my! You've returned it to me!");
+						mes("My precious pickaxe, I thought I lost you forever.");
 						next;
-						mes "[Morestone]";
-						mes "You are great! What guild are you from?";
-						mes "Could it be Gravity or Mercury?";
+						mes("[Morestone]");
+						mes("You are great! What guild are you from?");
+						mes("Could it be Gravity or Mercury?");
 						next;
-						mes "[" + strcharinfo(PC_NAME) + "]";
-						mes "I am a member of the ^3131FF"+.@chk_yourgdname$+"^.";
+						mes("[" + strcharinfo(PC_NAME) + "]");
+						mes("I am a member of the ^3131FF"+.@chk_yourgdname$+"^.");
 						next;
-						mes "[Morestone]";
-						mes "Oh... That guild will receive my greatest respect.";
+						mes("[Morestone]");
+						mes("Oh... That guild will receive my greatest respect.");
 						next;
-						mes "[Morestone]";
-						mes "Oh! My friend, I am very grateful for your help.";
-						mes "As a reward, I will tell you about a mysterious area I have discovered recently.";
+						mes("[Morestone]");
+						mes("Oh! My friend, I am very grateful for your help.");
+						mes("As a reward, I will tell you about a mysterious area I have discovered recently.");
 						next;
 						select("A mysterious area?");
-						mes "[Morestone]";
-						mes "That's right. I found it when I was digging around here.";
-						mes "It looks like it was made for some special purpose, but since there are no gems around there, I have no interest in it.";
+						mes("[Morestone]");
+						mes("That's right. I found it when I was digging around here.");
+						mes("It looks like it was made for some special purpose, but since there are no gems around there, I have no interest in it.");
 						next;
-						mes "[Morestone]";
-						mes "Instead of going there alone, I think it would be more fun to go with your friends...";
+						mes("[Morestone]");
+						mes("Instead of going there alone, I think it would be more fun to go with your friends...");
 						next;
-						mes "[Morestone]";
-						mes "If you want, I can take ^3131FFyou and your guild members^000000 to explore that area.";
-						mes "Do you want to go there now?";
+						mes("[Morestone]");
+						mes("If you want, I can take ^3131FFyou and your guild members^000000 to explore that area.");
+						mes("Do you want to go there now?");
 						next;
 						switch(select("Wait! I'm not ready yet.", "Let's go!")) {
 						case 1:
 							$@gdeventv_s1 = 0;
 							$@gdevents_s$ = "";
-							mes "[Morestone]";
-							mes "Take your time, and find a place to gather you friends.";
+							mes("[Morestone]");
+							mes("Take your time, and find a place to gather you friends.");
 							close;
 						case 2:
-							mes "[Morestone]";
-							mes "Alright! Let's go.";
-							mes "If your friends visit me again later, I will guide them to that area again.";
-							mes "Don't forget, dwarves are grateful beings! Hahaha!";
+							mes("[Morestone]");
+							mes("Alright! Let's go.");
+							mes("If your friends visit me again later, I will guide them to that area again.");
+							mes("Don't forget, dwarves are grateful beings! Hahaha!");
 							delitem Pickaxe,1;
 							$@gdeventv_s1 = 1;
 							$@gdevents_s$ = .@chk_yourgdname$;
@@ -458,26 +458,26 @@ schg_dun01,194,148,5	script	Dwarf#sch_gd	4_M_DWARF,{
 					else {
 						$@gdeventv_s1 = 0;
 						$@gdevents_s$ = "";
-						mes "[Morestone]";
-						mes "I will tell you how to find him.";
-						mes "Kublin wears a ridiculous golden hat, It should be easy to recognise him by that.";
+						mes("[Morestone]");
+						mes("I will tell you how to find him.");
+						mes("Kublin wears a ridiculous golden hat, It should be easy to recognise him by that.");
 						close;
 					}
 				case 2:
 					$@gdeventv_s1 = 0;
 					$@gdevents_s$ = "";
 					emotion e_sob;
-					mes "[Dwarf]";
-					mes "Ah....";
+					mes("[Dwarf]");
+					mes("Ah....");
 					close;
 				}
 			}
 		}
 		else {
-			mes "[Morestone]";
-			mes "I, Morestone, have made an alliance with the "+$@gdevents_s$+" guild.";
-			mes "Hm, you're not a member.";
-			mes "Could you please give them my greetings?";
+			mes("[Morestone]");
+			mes("I, Morestone, have made an alliance with the "+$@gdevents_s$+" guild.");
+			mes("Hm, you're not a member.");
+			mes("Could you please give them my greetings?");
 			close;
 		}
 	}
@@ -513,11 +513,11 @@ schg_que01,100,81,3	script	Pierrot Pier#sch_gd	4_M_PIERROT,{
 		setnpcdisplay "Pierrot Pier#sch_gd", 4_CAT;
 	}
 	if (checkweight(Knife,1) == 0) {
-		mes "- Wait!! -";
-		mes "- You're carrying too many items, -";
-		mes "- you can't receive the materials. -";
-		mes "- Please use the Kafra Services, -";
-		mes "- and come back later. -";
+		mes("- Wait!! -");
+		mes("- You're carrying too many items, -");
+		mes("- you can't receive the materials. -");
+		mes("- Please use the Kafra Services, -");
+		mes("- and come back later. -");
 		close;
 	}
 	if (strcharinfo(PC_NAME) == getguildmaster(getcharid(CHAR_ID_GUILD))) {
@@ -525,119 +525,119 @@ schg_que01,100,81,3	script	Pierrot Pier#sch_gd	4_M_PIERROT,{
 			.@que_2143 = questprogress(2143,PLAYTIME);
 			if (!.@que_2143) {
 				setnpcdisplay "Pierrot Pier#sch_gd", 4_M_PIERROT;
-				mes "A lonely clown is juggling.";
+				mes("A lonely clown is juggling.");
 				next;
-				mes "When looked at closely, the clown is just a puppet that looks like a human.";
+				mes("When looked at closely, the clown is just a puppet that looks like a human.");
 				next;
-				mes "The clown stops, then starts moving in accordance to your movements, noises start to emit from it's mouth.";
+				mes("The clown stops, then starts moving in accordance to your movements, noises start to emit from it's mouth.");
 				next;
-				mes "[Pierrot Pier]";
-				mes "Beep beep beep.";
-				mes "Hello, my friends!";
+				mes("[Pierrot Pier]");
+				mes("Beep beep beep.");
+				mes("Hello, my friends!");
 				mapannounce "schg_que01", "Pierrot Pier: Beep beep beep! Hello, my friends!",bc_map,"0x99CC00";
 				next;
-				mes "[Pierrot Pier]";
-				mes "I am the loyal servant of Gergath, and I have finally received my orders.";
-				mes "I am happy to hear all the laughter, but without my master's permission, I can't do anything.";
+				mes("[Pierrot Pier]");
+				mes("I am the loyal servant of Gergath, and I have finally received my orders.");
+				mes("I am happy to hear all the laughter, but without my master's permission, I can't do anything.");
 				mapannounce "schg_que01", "Pierrot Pier: I am happy to hear all the laughter, but without my master's permission, I can't do anything.",bc_map,"0x99CC00";
 				next;
-				mes "[Pierrot Pier]";
-				mes "Did you get permission from Gergath?";
+				mes("[Pierrot Pier]");
+				mes("Did you get permission from Gergath?");
 				mapannounce "schg_que01", "Pierrot Pier: Did you get permission from Gergath?",bc_map,"0x99CC00";
 				next;
 				switch(select("I need to check that.", "No.")) {
 				case 1:
-					mes "[Pierrot Pier]";
-					mes "Please give me the palm of your hand.";
+					mes("[Pierrot Pier]");
+					mes("Please give me the palm of your hand.");
 					mapannounce "schg_que01", "Pierrot Pier: Please give me the palm of your hand.",bc_map,"0x99CC00";
 					next;
-					mes "[Pierrot Pier]";
-					mes "Let me see...";
+					mes("[Pierrot Pier]");
+					mes("Let me see...");
 					mapannounce "schg_que01", "Pierrot Pier: Let me see...",bc_map,"0x99CC00";
 					next;
 					emotion e_dots;
-					mes "[Pierrot Pier]";
-					mes "Hm...";
+					mes("[Pierrot Pier]");
+					mes("Hm...");
 					mapannounce "schg_que01", "Pierrot Pier: Hm...",bc_map,"0x99CC00";
 					next;
 					emotion e_dots;
-					mes "[Pierrot Pier]";
-					mes "Okay, I see...";
+					mes("[Pierrot Pier]");
+					mes("Okay, I see...");
 					mapannounce "schg_que01", "Pierrot Pier: Okay, I see...",bc_map,"0x99CC00";
 					next;
 					emotion e_dots;
-					mes "[Pierrot Pier]";
-					mes "Indeed...";
+					mes("[Pierrot Pier]");
+					mes("Indeed...");
 					mapannounce "schg_que01", "Pierrot Pier: Indeed...",bc_map,"0x99CC00";
 					next;
 					emotion e_bzz;
-					mes "[Pierrot Pier]";
-					mes "Verification completed!";
+					mes("[Pierrot Pier]");
+					mes("Verification completed!");
 					mapannounce "schg_que01", "Pierrot Pier: Verification completed!",bc_map,"0x99CC00";
 					next;
 					break;
 				case 2:
-					mes "[Pierrot Pier]";
-					mes "Hm? that's right.";
-					mes "When is that person coming? I am very bored~!";
+					mes("[Pierrot Pier]");
+					mes("Hm? that's right.");
+					mes("When is that person coming? I am very bored~!");
 					close;
 				}
-				mes "[Pierrot Pier]";
-				mes "^3131FF<You're someone who can only think about nonsense everyday, you have no focus at all.>^000000";
+				mes("[Pierrot Pier]");
+				mes("^3131FF<You're someone who can only think about nonsense everyday, you have no focus at all.>^000000");
 				mapannounce "schg_que01", "Pierrot Pier: <You're someone who can only think about nonsense everyday, you have no focus at all.>",bc_map,"0x99CC00";
 				next;
 				emotion e_ho;
-				mes "[Pierrot Pier]";
-				mes "Hm? You don't think so?";
+				mes("[Pierrot Pier]");
+				mes("Hm? You don't think so?");
 				mapannounce "schg_que01", "Pierrot Pier: Hm? You don't think so?",bc_map,"0x99CC00";
 				next;
 				emotion e_heh;
-				mes "[Pierrot Pier]";
-				mes "Haha, I'm just kidding. Beep beep.";
-				mes "Ah, you are the one my master speaks of.";
+				mes("[Pierrot Pier]");
+				mes("Haha, I'm just kidding. Beep beep.");
+				mes("Ah, you are the one my master speaks of.");
 				mapannounce "schg_que01", "Pierrot Pier: Haha, I'm just kidding. Beep beep. You are the one my master speaks of.",bc_map,"0x99CC00";
 				next;
-				mes "[Pierrot Pier]";
-				mes "Come, the Gergath has left a message for you.";
-				mes "It's a bit old, but it should still be legible.";
+				mes("[Pierrot Pier]");
+				mes("Come, the Gergath has left a message for you.");
+				mes("It's a bit old, but it should still be legible.");
 				next;
-				mes "[Pierrot Pier]";
-				mes "Alright, let's begin!";
+				mes("[Pierrot Pier]");
+				mes("Alright, let's begin!");
 				setquest 2143;
 				donpcevent "Gergath#sch_gd::OnEnable";
 				close;
 			}
 			else if (.@que_2143 == 1) {
-				mes "[Pierrot Pier]";
-				mes "Let's talk after I finished reading my master's message. Beep beep.";
+				mes("[Pierrot Pier]");
+				mes("Let's talk after I finished reading my master's message. Beep beep.");
 				close;
 			}
 			else {
-				mes "[Pierrot Pier]";
-				mes "My master Gergath sincerely wishes you joy for you and your family everyday.";
+				mes("[Pierrot Pier]");
+				mes("My master Gergath sincerely wishes you joy for you and your family everyday.");
 				next;
-				mes "[Pierrot Pier]";
-				mes "Alright, would you like to play the game Gergath has prepared for you?";
+				mes("[Pierrot Pier]");
+				mes("Alright, would you like to play the game Gergath has prepared for you?");
 				next;
 				switch(select("Game instructions.", "Skip instructions.", "Refuse game.")) {
 				case 1:
-					mes "[Pierrot Pier]";
-					mes "The game prepared by my master is very unique, yet simple and fun!";
+					mes("[Pierrot Pier]");
+					mes("The game prepared by my master is very unique, yet simple and fun!");
 					mapannounce "schg_que01", "Pierrot Pier: The game prepared by my lord is very unique, yet simple and fun!",bc_map,"0x99CC00";
 					next;
-					mes "[Pierrot Pier]";
-					mes "It's called \"Find the Treasure Map\"!!";
+					mes("[Pierrot Pier]");
+					mes("It's called \"Find the Treasure Map\"!!");
 					mapannounce "schg_que01", "Pierrot Pier: It's called \"Find the Treasure Map\"!!",bc_map,"0x99CC00";
 					next;
-					mes "[Pierrot Pier]";
-					mes "Do you see this large and green field? Beep, beep?";
-					mes "I will show you the most incredible magic here.";
-					mes "I will turn this place very white. Veeery white!";
+					mes("[Pierrot Pier]");
+					mes("Do you see this large and green field? Beep, beep?");
+					mes("I will show you the most incredible magic here.");
+					mes("I will turn this place very white. Veeery white!");
 					mapannounce "schg_que01", "Pierrot Pier: I will turn this place very white. Veeery white!",bc_map,"0x99CC00";
 					next;
-					mes "[Pierrot Pier]";
-					mes "The game instruction is just to find the treasure map within the time limit.";
-					mes "Sounds easy, right?";
+					mes("[Pierrot Pier]");
+					mes("The game instruction is just to find the treasure map within the time limit.");
+					mes("Sounds easy, right?");
 					mapannounce "schg_que01", "Pierrot Pier: The game instruction is just to find the treasure map within the time limit. ounds easy, right?",bc_map,"0x99CC00";
 					next;
 					break;
@@ -645,37 +645,37 @@ schg_que01,100,81,3	script	Pierrot Pier#sch_gd	4_M_PIERROT,{
 					break;
 				case 3:
 					emotion e_sob;
-					mes "[Pierrot Pier]";
-					mes "Oh, you don't want to play?";
+					mes("[Pierrot Pier]");
+					mes("Oh, you don't want to play?");
 					close;
 				}
-				mes "[Pierrot Pier]";
-				mes "Okay, I'm ready to begin.";
-				mes "Shall we start? Beep, beep?";
+				mes("[Pierrot Pier]");
+				mes("Okay, I'm ready to begin.");
+				mes("Shall we start? Beep, beep?");
 				next;
 				switch(select("No.", "Start.")) {
 				case 1:
-					mes "[Pierrot Pier]";
-					mes "Let me know when you are ready.";
+					mes("[Pierrot Pier]");
+					mes("Let me know when you are ready.");
 					close;
 				case 2:
-					mes "[Pierrot Pier]";
-					mes "Alright! Let us begin!";
+					mes("[Pierrot Pier]");
+					mes("Alright! Let us begin!");
 					next;
-					mes "[Pierrot Pier]";
-					mes "Ladies, and gentlemen.";
+					mes("[Pierrot Pier]");
+					mes("Ladies, and gentlemen.");
 					mapannounce "schg_que01", "Pierrot Pier: Ladies, and gentlemen.",bc_map,"0x99CC00";
 					next;
-					mes "[Pierrot Pier]";
-					mes "Who will find the treasure map in this white world?";
+					mes("[Pierrot Pier]");
+					mes("Who will find the treasure map in this white world?");
 					mapannounce "schg_que01", "Pierrot Pier: Who will find the treasure map in this white world?",bc_map,"0x99CC00";
 					next;
-					mes "[Pierrot Pier]";
-					mes "Amongst all of you, who shall be the lucky one?";
+					mes("[Pierrot Pier]");
+					mes("Amongst all of you, who shall be the lucky one?");
 					mapannounce "schg_que01", "Pierrot Pier: Amongst all of you, who shall be the lucky one?",bc_map,"0x99CC00";
 					next;
-					mes "[Pierrot Pier]";
-					mes "Let the game.. Begin!";
+					mes("[Pierrot Pier]");
+					mes("Let the game.. Begin!");
 					mapannounce "schg_que01", "Pierrot Pier: Let the game.. Begin!",bc_map,"0x99CC00";
 					$@gdeventv_s2 = 1;
 					donpcevent "Controller#gdevent_s::OnGame_start";
@@ -685,99 +685,99 @@ schg_que01,100,81,3	script	Pierrot Pier#sch_gd	4_M_PIERROT,{
 			}
 		}
 		else if ($@gdeventv_s2 == 1) {
-			mes "[Pierrot Pier]";
-			mes "Did you find the treasure map?";
-			mes "Show me what you have in your hands! Beep, beep!";
+			mes("[Pierrot Pier]");
+			mes("Did you find the treasure map?");
+			mes("Show me what you have in your hands! Beep, beep!");
 			next;
-			mes "[Pierrot Pier]";
-			mes "Let me see...";
+			mes("[Pierrot Pier]");
+			mes("Let me see...");
 			next;
 			if (countitem(Glitering_PaperB) > 0) {
 				donpcevent "Controller#gdevent_s::OnStop";
 				$@gdeventv_s2 = 3;
 				donpcevent "eff_mvp#sch_gd::OnMVP";
-				mes "[Pierrot Pier]";
-				mes "Wow~~!!";
-				mes "Success~!!";
-				mes "What a success~!!";
+				mes("[Pierrot Pier]");
+				mes("Wow~~!!");
+				mes("Success~!!");
+				mes("What a success~!!");
 				mapannounce "schg_que01", "Pierrot Pier: Wow~~!! Success~!! What a success~!!",bc_map,"0x99CC00";
 				delitem Glitering_PaperB,1;
 				close;
 			}
 			else {
 				if (countitem(Glitering_PaperA) > 0) {
-					mes "[Pierrot Pier]";
-					mes "Ahh, what a shame, it seems like you haven't found the treasure map yet.";
-					mes "Quickly! Your time is running out! Hurry up!";
+					mes("[Pierrot Pier]");
+					mes("Ahh, what a shame, it seems like you haven't found the treasure map yet.");
+					mes("Quickly! Your time is running out! Hurry up!");
 					close;
 				}
 				else {
-					mes "[Pierrot Pier]";
-					mes "I don't see anything. Have you even started yet? Beep?";
-					mes "Hehe, while you're talking to me, the time is slowly ticking away~";
+					mes("[Pierrot Pier]");
+					mes("I don't see anything. Have you even started yet? Beep?");
+					mes("Hehe, while you're talking to me, the time is slowly ticking away~");
 					close;
 				}
 			}
 		}
 		else if ($@gdeventv_s2 == 2) {
-			mes "[Pierrot Pier]";
-			mes "Wah, why is it like this~!!";
-			mes "Not enough? But this makes the game fun, no? Hahaha!";
+			mes("[Pierrot Pier]");
+			mes("Wah, why is it like this~!!");
+			mes("Not enough? But this makes the game fun, no? Hahaha!");
 			next;
-			mes "[Pierrot Pier]";
-			mes "What did you think?";
+			mes("[Pierrot Pier]");
+			mes("What did you think?");
 			next;
 			switch(select("It was pretty hard.", "I should've been successful...")) {
 			case 1:
-				mes "[Pierrot Pier]";
-				mes "It's like trying to find a needle in a haystack!";
-				mes "It's hard, but if you find it, it's worth ten times the effort. Beep, beep.";
+				mes("[Pierrot Pier]");
+				mes("It's like trying to find a needle in a haystack!");
+				mes("It's hard, but if you find it, it's worth ten times the effort. Beep, beep.");
 				next;
 				break;
 			case 2:
-				mes "[Pierrot Pier]";
-				mes "Aaah~! Time is gold.";
-				mes "Precious time goes by so fast.";
+				mes("[Pierrot Pier]");
+				mes("Aaah~! Time is gold.");
+				mes("Precious time goes by so fast.");
 				next;
 				break;
 			}
-			mes "[Pierrot Pier]";
-			mes "I, Pierrot Piere, am not a heartless clown! Beep beep.";
+			mes("[Pierrot Pier]");
+			mes("I, Pierrot Piere, am not a heartless clown! Beep beep.");
 			mapannounce "schg_que01", "Pierrot Pier: I, Pierrot Piere, am not a heartless clown! Beep beep.",bc_map,"0x99CC00";
 			next;
-			mes "[Pierrot Pier]";
-			mes "Your success is my happiness!";
-			mes "I'll give you one more chance. How's that? Beep?";
+			mes("[Pierrot Pier]");
+			mes("Your success is my happiness!");
+			mes("I'll give you one more chance. How's that? Beep?");
 			mapannounce "schg_que01", "Pierrot Pier: I'll give you one more chance. How's that? Beep?",bc_map,"0x99CC00";
 			next;
-			mes "[Pierrot Pier]";
-			mes "Okay, I'm ready to begin.";
-			mes "Shall we start? Beep, beep?";
+			mes("[Pierrot Pier]");
+			mes("Okay, I'm ready to begin.");
+			mes("Shall we start? Beep, beep?");
 			mapannounce "schg_que01", "Pierrot Pier: Okay, I'm ready to begin. Shall we start? Beep, beep?",bc_map,"0x99CC00";
 			next;
 			switch(select("No.", "Start.")) {
 			case 1:
-				mes "[Pierrot Pier]";
-				mes "Let me know when you are ready.";
+				mes("[Pierrot Pier]");
+				mes("Let me know when you are ready.");
 				close;
 			case 2:
-				mes "[Pierrot Pier]";
-				mes "Alright! Let us begin!";
+				mes("[Pierrot Pier]");
+				mes("Alright! Let us begin!");
 				next;
-				mes "[Pierrot Pier]";
-				mes "Ladies, and gentlemen.";
+				mes("[Pierrot Pier]");
+				mes("Ladies, and gentlemen.");
 				mapannounce "schg_que01", "Pierrot Pier: Ladies, and gentlemen.",bc_map,"0x99CC00";
 				next;
-				mes "[Pierrot Pier]";
-				mes "Who will find the treasure map in this white world?";
+				mes("[Pierrot Pier]");
+				mes("Who will find the treasure map in this white world?");
 				mapannounce "schg_que01", "Pierrot Pier: Who will find the treasure map in this white world?",bc_map,"0x99CC00";
 				next;
-				mes "[Pierrot Pier]";
-				mes "Amongst all of you, who shall be the lucky one?";
+				mes("[Pierrot Pier]");
+				mes("Amongst all of you, who shall be the lucky one?");
 				mapannounce "schg_que01", "Pierrot Pier: Amongst all of you, who shall be the lucky one?",bc_map,"0x99CC00";
 				next;
-				mes "[Pierrot Pier]";
-				mes "Let the game.. Begin!";
+				mes("[Pierrot Pier]");
+				mes("Let the game.. Begin!");
 				mapannounce "schg_que01", "Pierrot Pier: Let the game.. Begin!",bc_map,"0x99CC00";
 				$@gdeventv_s2 = 10;
 				donpcevent "Controller#gdevent_s::OnGame_start";
@@ -788,17 +788,17 @@ schg_que01,100,81,3	script	Pierrot Pier#sch_gd	4_M_PIERROT,{
 			if (questprogress(2143) == 2) {
 				erasequest 2143;
 			}
-			mes "[Pierrot Pier]";
-			mes "How did you do it?";
+			mes("[Pierrot Pier]");
+			mes("How did you do it?");
 			mapannounce "schg_que01", "Pierrot Pier: How did you do it?",bc_map,"0x99CC00";
 			next;
-			mes "[Pierrot Pier]";
-			mes "You managed to find a needle in a haystack!";
-			mes "Amazing!";
+			mes("[Pierrot Pier]");
+			mes("You managed to find a needle in a haystack!");
+			mes("Amazing!");
 			mapannounce "schg_que01", "Pierrot Pier: You managed to find a needle in a haystack! Amazing!!",bc_map,"0x99CC00";
 			next;
-			mes "[Pierrot Pier]";
-			mes "You've completeled an unbelievable task, I will give you the wonderful gift master has prepared!! Ha!";
+			mes("[Pierrot Pier]");
+			mes("You've completeled an unbelievable task, I will give you the wonderful gift master has prepared!! Ha!");
 			mapannounce "schg_que01", "Pierrot Pier: You've completeled an unbelievable task, I will give you the wonderful gift my master has prepared!! Ha!",bc_map,"0x99CC00";
 			mapannounce "schg_que01", "Pierrot Pier: Here, take Pierre's Treasure Boxes.",bc_map,"0x99CC00";
 			donpcevent "eff_mvp#sch_gd::OnMVP";
@@ -807,54 +807,54 @@ schg_que01,100,81,3	script	Pierrot Pier#sch_gd	4_M_PIERROT,{
 			close;
 		}
 		else if ($@gdeventv_s2 == 4) {
-			mes "[Pierrot Pier]";
-			mes "Incredible! Unbelievable! Beep beep!";
+			mes("[Pierrot Pier]");
+			mes("Incredible! Unbelievable! Beep beep!");
 			close;
 		}
 		else if ($@gdeventv_s2 == 5) {
 			mapannounce "schg_que01", "Pierrot Pier: Seeing your smiles, makes Pierrot feel very happy~ See you next time!",bc_map,"0x99CC00";
-			mes "[Pierrot Pier]";
-			mes "Did you have fun?";
+			mes("[Pierrot Pier]");
+			mes("Did you have fun?");
 			next;
-			mes "[Pierrot Pier]";
-			mes "Seeing your smiles, makes Pierrot feel very happy~";
+			mes("[Pierrot Pier]");
+			mes("Seeing your smiles, makes Pierrot feel very happy~");
 			next;
-			mes "[Pierrot Pier]";
-			mes "I hope to see you again very soon, I must go back to being a doll now.";
-			mes "See you next time!";
+			mes("[Pierrot Pier]");
+			mes("I hope to see you again very soon, I must go back to being a doll now.");
+			mes("See you next time!");
 			erasequest 2144;
 			close;
 		}
 		else {
-			mes "[Pierrot Pier]";
-			mes "Did you find the treasure map?";
-			mes "Show me what you have in your hands! Beep, beep!";
+			mes("[Pierrot Pier]");
+			mes("Did you find the treasure map?");
+			mes("Show me what you have in your hands! Beep, beep!");
 			next;
-			mes "[Pierrot Pier]";
-			mes "Let me see.";
+			mes("[Pierrot Pier]");
+			mes("Let me see.");
 			next;
 			if (countitem(Glitering_PaperB) > 0) {
 				donpcevent "Controller#gdevent_s::OnStop";
 				$@gdeventv_s2 = 3;
 				donpcevent "eff_mvp#sch_gd::OnMVP";
-				mes "[Pierrot Pier]";
-				mes "Wow~~!!";
-				mes "Success~!!";
-				mes "What a success~!!";
+				mes("[Pierrot Pier]");
+				mes("Wow~~!!");
+				mes("Success~!!");
+				mes("What a success~!!");
 				delitem Glitering_PaperB,1;
 				close;
 			}
 			else {
 				if (countitem(Glitering_PaperA) > 0) {
-					mes "[Pierrot Pier]";
-					mes "Ahh, what a shame, it seems like you haven't found the treasure map yet.";
-					mes "Quickly! Your time is running out! Hurry up!";
+					mes("[Pierrot Pier]");
+					mes("Ahh, what a shame, it seems like you haven't found the treasure map yet.");
+					mes("Quickly! Your time is running out! Hurry up!");
 					close;
 				}
 				else {
-					mes "[Pierrot Pier]";
-					mes "I don't see anything. Have you even started yet? Beep?";
-					mes "Hehe, while you're talking to me, the time is slowly ticking away~";
+					mes("[Pierrot Pier]");
+					mes("I don't see anything. Have you even started yet? Beep?");
+					mes("Hehe, while you're talking to me, the time is slowly ticking away~");
 					close;
 				}
 			}
@@ -863,172 +863,172 @@ schg_que01,100,81,3	script	Pierrot Pier#sch_gd	4_M_PIERROT,{
 	else {
 		if ($@gdeventv_s2 == 0) {
 			setnpcdisplay "Pierrot Pier#sch_gd", 4_M_PIERROT;
-			mes "A lonely clown is juggling.";
+			mes("A lonely clown is juggling.");
 			next;
-			mes "When looked at closely, the clown is just a puppet that looks like a human.";
+			mes("When looked at closely, the clown is just a puppet that looks like a human.");
 			next;
-			mes "The clown stops, then starts moving in accordance to your movements, noises start to emit from it's mouth.";
+			mes("The clown stops, then starts moving in accordance to your movements, noises start to emit from it's mouth.");
 			next;
-			mes "[Pierrot Pier]";
-			mes "Beep beep beep.";
-			mes "Hello, my friends!";
+			mes("[Pierrot Pier]");
+			mes("Beep beep beep.");
+			mes("Hello, my friends!");
 			mapannounce "schg_que01", "Pierrot Pier: Beep beep beep! Hello, my friends!",bc_map,"0x99CC00";
 			next;
-			mes "[Pierrot Pier]";
-			mes "I am the loyal servant of Gergath, and I have finally received my orders.";
-			mes "I am happy to hear all the laughter, but without my master's permission, I can't do anything.";
+			mes("[Pierrot Pier]");
+			mes("I am the loyal servant of Gergath, and I have finally received my orders.");
+			mes("I am happy to hear all the laughter, but without my master's permission, I can't do anything.");
 			mapannounce "schg_que01", "Pierrot Pier: I am happy to hear all the laughter, but without my master's permission, I can't do anything.",bc_map,"0x99CC00";
 			next;
-			mes "[Pierrot Pier]";
-			mes "Did you get permission from the Gergath?";
+			mes("[Pierrot Pier]");
+			mes("Did you get permission from the Gergath?");
 			mapannounce "schg_que01", "Pierrot Pier: Did you get permission from Gergath?",bc_map,"0x99CC00";
 			next;
 			switch(select("I need to check that.", "No.")) {
 			case 1:
-				mes "[Pierrot Pier]";
-				mes "Please give me the palm of your hand.";
+				mes("[Pierrot Pier]");
+				mes("Please give me the palm of your hand.");
 				mapannounce "schg_que01", "Pierrot Pier: Please give me the palm of your hand.",bc_map,"0x99CC00";
 				next;
-				mes "[Pierrot Pier]";
-				mes "Let me see...";
+				mes("[Pierrot Pier]");
+				mes("Let me see...");
 				mapannounce "schg_que01", "Pierrot Pier: Let me see...",bc_map,"0x99CC00";
 				next;
 				emotion e_dots;
-				mes "[Pierrot Pier]";
-				mes "Hm...";
+				mes("[Pierrot Pier]");
+				mes("Hm...");
 				mapannounce "schg_que01", "Pierrot Pier: Hm...",bc_map,"0x99CC00";
 				next;
 				emotion e_dots;
-				mes "[Pierrot Pier]";
-				mes "Okay, I see...";
+				mes("[Pierrot Pier]");
+				mes("Okay, I see...");
 				mapannounce "schg_que01", "Pierrot Pier: Okay, I see...",bc_map,"0x99CC00";
 				next;
 				emotion e_dots;
-				mes "[Pierrot Pier]";
-				mes "Indeed...";
+				mes("[Pierrot Pier]");
+				mes("Indeed...");
 				mapannounce "schg_que01", "Pierrot Pier: Indeed...",bc_map,"0x99CC00";
 				next;
 				emotion e_bzz;
-				mes "[Pierrot Pier]";
-				mes "Verification completed!";
+				mes("[Pierrot Pier]");
+				mes("Verification completed!");
 				mapannounce "schg_que01", "Pierrot Pier: Verification completed!",bc_map,"0x99CC00";
 				next;
 				break;
 			case 2:
-				mes "[Pierrot Pier]";
-				mes "Hm? that's right.";
-				mes "When is that person coming? I am very bored~!";
+				mes("[Pierrot Pier]");
+				mes("Hm? that's right.");
+				mes("When is that person coming? I am very bored~!");
 				close;
 			}
 			emotion e_heh;
-			mes "[Pierrot Pier]";
-			mes "^3131FF<Although you're a weirdo, you seem to be very dedicated>^000000. Beep beep.";
+			mes("[Pierrot Pier]");
+			mes("^3131FF<Although you're a weirdo, you seem to be very dedicated>^000000. Beep beep.");
 			next;
 			emotion e_swt2;
-			mes "[Pierrot Pier]";
-			mes "Hm? You don't think so?";
+			mes("[Pierrot Pier]");
+			mes("Hm? You don't think so?");
 			next;
-			mes "[Pierrot Pier]";
-			mes "The one my lord appointed is ^3131FF< someone who leads many people >^000000. Beep.";
+			mes("[Pierrot Pier]");
+			mes("The one my lord appointed is ^3131FF< someone who leads many people >^000000. Beep.");
 			next;
-			mes "[Pierrot Pier]";
-			mes "Pierrot wants to be someone like that, too. Beep.";
+			mes("[Pierrot Pier]");
+			mes("Pierrot wants to be someone like that, too. Beep.");
 			close;
 		}
 		else if ($@gdeventv_s2 == 1) {
-			mes "[Pierrot Pier]";
-			mes "Did you find the treasure map?";
-			mes "Show me what you have in your hands! Beep, beep!";
+			mes("[Pierrot Pier]");
+			mes("Did you find the treasure map?");
+			mes("Show me what you have in your hands! Beep, beep!");
 			next;
-			mes "[Pierrot Pier]";
-			mes "Let me see...";
+			mes("[Pierrot Pier]");
+			mes("Let me see...");
 			next;
 			if (countitem(Glitering_PaperB) > 0) {
 				donpcevent "Controller#gdevent_s::OnStop";
 				$@gdeventv_s2 = 3;
 				donpcevent "eff_mvp#sch_gd::OnMVP";
-				mes "[Pierrot Pier]";
-				mes "Wow~~!!";
-				mes "Success~!!";
-				mes "What a success~!!";
+				mes("[Pierrot Pier]");
+				mes("Wow~~!!");
+				mes("Success~!!");
+				mes("What a success~!!");
 				mapannounce "schg_que01", "Pierrot Pier: Wow~~!! Success~!! What a success~!!",bc_map,"0x99CC00";
 				delitem Glitering_PaperB,1;
 				close;
 			}
 			else {
 				if (countitem(Glitering_PaperA) > 0) {
-					mes "[Pierrot Pier]";
-					mes "Ahh, what a shame, it seems like you haven't found the treasure map yet.";
-					mes "Quickly! Your time is running out! Hurry up!";
+					mes("[Pierrot Pier]");
+					mes("Ahh, what a shame, it seems like you haven't found the treasure map yet.");
+					mes("Quickly! Your time is running out! Hurry up!");
 					close;
 				}
 				else {
-					mes "[Pierrot Pier]";
-					mes "I don't see anything. Have you even started yet? Beep?";
-					mes "Hehe, while you're talking to me, the time is slowly ticking away~";
+					mes("[Pierrot Pier]");
+					mes("I don't see anything. Have you even started yet? Beep?");
+					mes("Hehe, while you're talking to me, the time is slowly ticking away~");
 					close;
 				}
 			}
 		}
 		else if ($@gdeventv_s2 == 2) {
-			mes "[Pierrot Pier]";
-			mes "Wah, why is it like this~!!";
-			mes "Not enough? But this makes the game fun, no? Hahaha!";
+			mes("[Pierrot Pier]");
+			mes("Wah, why is it like this~!!");
+			mes("Not enough? But this makes the game fun, no? Hahaha!");
 			close;
 		}
 		else if ($@gdeventv_s2 == 3) {
-			mes "[Pierrot Pier]";
-			mes "Congratulations, you have succeeded!";
-			mes "I will talk to your leader about other details.";
+			mes("[Pierrot Pier]");
+			mes("Congratulations, you have succeeded!");
+			mes("I will talk to your leader about other details.");
 			close;
 		}
 		else if ($@gdeventv_s2 == 4) {
-			mes "[Pierrot Pier]";
-			mes "Incredible! Unbelievable! Beep beep!";
+			mes("[Pierrot Pier]");
+			mes("Incredible! Unbelievable! Beep beep!");
 			close;
 		}
 		else if ($@gdeventv_s2 == 5) {
-			mes "[Pierrot Pier]";
-			mes "Did you have fun?";
+			mes("[Pierrot Pier]");
+			mes("Did you have fun?");
 			next;
-			mes "[Pierrot Pier]";
-			mes "Seeing your smiles, makes Pierrot feel very happy~";
+			mes("[Pierrot Pier]");
+			mes("Seeing your smiles, makes Pierrot feel very happy~");
 			next;
-			mes "[Pierrot Pier]";
-			mes "I hope to see you again very soon, I must go back to being a doll now.";
-			mes "See you next time!";
+			mes("[Pierrot Pier]");
+			mes("I hope to see you again very soon, I must go back to being a doll now.");
+			mes("See you next time!");
 			close;
 		}
 		else {
-			mes "[Pierrot Pier]";
-			mes "Did you find the treasure?";
-			mes "Show me that thing you are holding, now!";
+			mes("[Pierrot Pier]");
+			mes("Did you find the treasure?");
+			mes("Show me that thing you are holding, now!");
 			next;
-			mes "[Pierrot Pier]";
-			mes "Let me see...";
+			mes("[Pierrot Pier]");
+			mes("Let me see...");
 			next;
 			if (countitem(Glitering_PaperB) > 0) {
 				donpcevent "Controller#gdevent_s::OnStop";
 				$@gdeventv_s2 = 3;
 				donpcevent "eff_mvp#sch_gd::OnMVP";
-				mes "[Pierrot Pier]";
-				mes "Wow~~!!";
-				mes "Success~!!";
-				mes "What a success~!!";
+				mes("[Pierrot Pier]");
+				mes("Wow~~!!");
+				mes("Success~!!");
+				mes("What a success~!!");
 				delitem Glitering_PaperB,1;
 				close;
 			}
 			else {
 				if (countitem(Glitering_PaperA) > 0) {
-					mes "[Pierrot Pier]";
-					mes "Ahh, what a shame, it seems like you haven't found the treasure map yet.";
-					mes "Quickly! Your time is running out! Hurry up!";
+					mes("[Pierrot Pier]");
+					mes("Ahh, what a shame, it seems like you haven't found the treasure map yet.");
+					mes("Quickly! Your time is running out! Hurry up!");
 					close;
 				}
 				else {
-					mes "[Pierrot Pier]";
-					mes "I don't see anything. Have you even started yet? Beep?";
-					mes "Hehe, while you're talking to me, the time is slowly ticking away~";
+					mes("[Pierrot Pier]");
+					mes("I don't see anything. Have you even started yet? Beep?");
+					mes("Hehe, while you're talking to me, the time is slowly ticking away~");
 					close;
 				}
 			}
@@ -1523,14 +1523,14 @@ schg_que01,104,105,3	duplicate(GD_Ev_Flower2)	#sch_flower_55	4_BLUE_FLOWER
 
 schg_dun01,5,5,1	script	Event controller#sch_gd	4_DOG01,{
 	if (callfunc("F_GM_NPC",1854,0) < 1) {
-		mes "Incorrect password.";
+		mes("Incorrect password.");
 		close;
 	} else {
-		mes "How can I help you?";
+		mes("How can I help you?");
 		next;
 		switch(select("Reset.", "No, thanks.")) {
 		case 1:
-			mes "Completed.";
+			mes("Completed.");
 			donpcevent "Monster Controler1#sch::OnControler1#sch_gd";
 			donpcevent "Monster Controler1#sch::OnControler1#sch_gd";
 			disablenpc "Dwarf#sch_gd";
@@ -1539,7 +1539,7 @@ schg_dun01,5,5,1	script	Event controller#sch_gd	4_DOG01,{
 			$@gdevents_s$ = "";
 			close;
 		case 2:
-			mes "Good bye~";
+			mes("Good bye~");
 			close;
 		}
 	}

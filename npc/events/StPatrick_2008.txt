@@ -49,109 +49,109 @@
 
 prt_fild05,170,286,4	script	Anxious Leprechaun#8pday	4_M_PATRICK,{
 	if (StPatrick2008 < 1) {
-		mes "[O'Riley the Leprechaun]";
-		mes "Hmm...";
-		mes "Tis a fine day it be.";
-		mes "If you have a moment to spare.";
-		mes "Come here to me now, come here and I'll tell ya something.";
+		mes("[O'Riley the Leprechaun]");
+		mes("Hmm...");
+		mes("Tis a fine day it be.");
+		mes("If you have a moment to spare.");
+		mes("Come here to me now, come here and I'll tell ya something.");
 		next;
 		select("Go ahead.");
-		mes "[O'Riley the Leprechaun]";
-		mes "These past years I've come to see the world and each time the snakes have stolen me treasure.";
+		mes("[O'Riley the Leprechaun]");
+		mes("These past years I've come to see the world and each time the snakes have stolen me treasure.");
 		next;
 		select("Oh?");
-		mes "[O'Riley the Leprechaun]";
-		mes "Ye fine folks of this land have been so gracious to recover me treasure again and again.";
+		mes("[O'Riley the Leprechaun]");
+		mes("Ye fine folks of this land have been so gracious to recover me treasure again and again.");
 		next;
-		mes "[O'Riley the Leprechaun]";
-		mes "I've learned me lesson and will never forget how those vile snakes have wronged me.";
+		mes("[O'Riley the Leprechaun]");
+		mes("I've learned me lesson and will never forget how those vile snakes have wronged me.");
 		next;
 		select("What did you do?");
-		mes "[O'Riley the Leprechaun]";
-		mes "I made a safe place to hide me treasure.";
-		mes "Hidden in a secret place the treasure would be safe until I returned to the world the following year.";
+		mes("[O'Riley the Leprechaun]");
+		mes("I made a safe place to hide me treasure.");
+		mes("Hidden in a secret place the treasure would be safe until I returned to the world the following year.");
 		next;
-		mes "[O'Riley the Leprechaun]";
-		mes "This year, I have made me journey to see the outside world once again.";
-		mes "I traveled to me cache of gold I found it to be safe and undisturbed.";
+		mes("[O'Riley the Leprechaun]");
+		mes("This year, I have made me journey to see the outside world once again.");
+		mes("I traveled to me cache of gold I found it to be safe and undisturbed.");
 		next;
-		mes "[O'Riley the Leprechaun]";
-		mes "I thought to meself, I am very clever to hide the treasure from the snakes.";
-		mes "Oh, but I was a fool still.";
+		mes("[O'Riley the Leprechaun]");
+		mes("I thought to meself, I am very clever to hide the treasure from the snakes.");
+		mes("Oh, but I was a fool still.");
 		next;
 		select("What happened?");
-		mes "[O'Riley the Leprechaun]";
-		mes "My hiding place was too clever.";
-		mes "I pulled and I heaved and pushed, but the hiding place would not budge.";
-		mes "So once again, I am without treasure this year.";
+		mes("[O'Riley the Leprechaun]");
+		mes("My hiding place was too clever.");
+		mes("I pulled and I heaved and pushed, but the hiding place would not budge.");
+		mes("So once again, I am without treasure this year.");
 		next;
-		mes "[O'Riley the Leprechaun]";
-		mes "I have not even begun brewing me famous green ale on account of this mess.";
-		mes "I will ask ye, will ya help get me treasure back?";
+		mes("[O'Riley the Leprechaun]");
+		mes("I have not even begun brewing me famous green ale on account of this mess.");
+		mes("I will ask ye, will ya help get me treasure back?");
 		next;
 		if (select("Sure, I can help you.", "I'm too busy.") == 2) {
-			mes "[O'Riley the Leprechaun]";
-			mes "Aye, I understand.";
-			mes "Thank you for listening to me tale.";
+			mes("[O'Riley the Leprechaun]");
+			mes("Aye, I understand.");
+			mes("Thank you for listening to me tale.");
 			close;
 		}
-		mes "[O'Riley the Leprechaun]";
-		mes "To find my treasure it be true.";
-		mes "To my treasure I give my secret to you.";
+		mes("[O'Riley the Leprechaun]");
+		mes("To find my treasure it be true.");
+		mes("To my treasure I give my secret to you.");
 		next;
-		mes "[O'Riley the Leprechaun]";
-		mes "So, listen well and make no omissions.";
-		mes "Make the journey to the city of magicians.";
-		mes "Over the bridge and across the water";
-		mes "Climb the mountain until north ye can travel no farther.";
+		mes("[O'Riley the Leprechaun]");
+		mes("So, listen well and make no omissions.");
+		mes("Make the journey to the city of magicians.");
+		mes("Over the bridge and across the water");
+		mes("Climb the mountain until north ye can travel no farther.");
 		next;
-		mes "[O'Riley the Leprechaun]";
-		mes "Passed the stone steps set into the air.";
-		mes "Hidden in the mountain side, me treasure is there.";
+		mes("[O'Riley the Leprechaun]");
+		mes("Passed the stone steps set into the air.");
+		mes("Hidden in the mountain side, me treasure is there.");
 		next;
-		mes "[O'Riley the Leprechaun]";
-		mes "Ye must find a way to break it open.";
-		mes "Ye will need a mighty explosion to free the cache to be sure.";
+		mes("[O'Riley the Leprechaun]");
+		mes("Ye must find a way to break it open.");
+		mes("Ye will need a mighty explosion to free the cache to be sure.");
 		next;
-		mes "[O'Riley the Leprechaun]";
-		mes "Ye might try some Firecrackers.";
-		mes "Course, Ye would need a great number of them, Ye would need at least ^FF0000200 Firecreackers^000000";
+		mes("[O'Riley the Leprechaun]");
+		mes("Ye might try some Firecrackers.");
+		mes("Course, Ye would need a great number of them, Ye would need at least ^FF0000200 Firecreackers^000000");
 		StPatrick2008 = 1;
 		close;
 	}
 	else if (StPatrick2008 == 1) {
-		mes "[O'Riley the Leprechaun]";
-		mes "Tis a fine day it be.";
-		mes "Have you found me treasure yet, have you?";
-		mes "Me hiding spot is a might hard to crack.";
+		mes("[O'Riley the Leprechaun]");
+		mes("Tis a fine day it be.");
+		mes("Have you found me treasure yet, have you?");
+		mes("Me hiding spot is a might hard to crack.");
 		next;
-		mes "[O'Riley the Leprechaun]";
-		mes "Ye might try some Firecrackers.";
-		mes "Course, Ye would need a great number of them, Ye would need at least ^FF0000200 Firecreackers^000000";
+		mes("[O'Riley the Leprechaun]");
+		mes("Ye might try some Firecrackers.");
+		mes("Course, Ye would need a great number of them, Ye would need at least ^FF0000200 Firecreackers^000000");
 		next;
-		mes "[O'Riley the Leprechaun]";
-		mes "I be understanding if you can't get to it to be sure to be sure.";
+		mes("[O'Riley the Leprechaun]");
+		mes("I be understanding if you can't get to it to be sure to be sure.");
 		close;
 	}
 	else if (StPatrick2008 == 2) {
-		mes "[O'Riley the Leprechaun]";
-		mes "Oh, welcome back!";
-		mes "Thank you for returning me treasure!";
-		mes "Me gratitude knows no bounds!";
+		mes("[O'Riley the Leprechaun]");
+		mes("Oh, welcome back!");
+		mes("Thank you for returning me treasure!");
+		mes("Me gratitude knows no bounds!");
 		next;
-		mes "[O'Riley the Leprechaun]";
-		mes "I am so happy,";
-		mes "I'll be starting up me brew right away";
+		mes("[O'Riley the Leprechaun]");
+		mes("I am so happy,");
+		mes("I'll be starting up me brew right away");
 		next;
-		mes "[O'Riley the Leprechaun]";
-		mes "It seems that the snakes have returned this year and are here to steal my treasure again.";
+		mes("[O'Riley the Leprechaun]");
+		mes("It seems that the snakes have returned this year and are here to steal my treasure again.");
 		next;
-		mes "[O'Riley the Leprechaun]";
-		mes "The snakes carry the coins of my kinsmen and must be punished.";
-		mes "But ye have had a long journey, for which I am very grateful.";
+		mes("[O'Riley the Leprechaun]");
+		mes("The snakes carry the coins of my kinsmen and must be punished.");
+		mes("But ye have had a long journey, for which I am very grateful.");
 		next;
-		mes "[O'Riley the Leprechaun]";
-		mes "When ye have had a moment to rest ye legs, come talk to me again and we may speak again";
+		mes("[O'Riley the Leprechaun]");
+		mes("When ye have had a moment to rest ye legs, come talk to me again and we may speak again");
 		close2;
 		StPatrick2008 = 3;
     		getexp 200000,70000;
@@ -159,57 +159,57 @@ prt_fild05,170,286,4	script	Anxious Leprechaun#8pday	4_M_PATRICK,{
 		end;
 	}
 	else if (StPatrick2008 == 3) {
-		mes "[O'Riley the Leprechaun]";
-		mes "Ah, well rested I hope?";
+		mes("[O'Riley the Leprechaun]");
+		mes("Ah, well rested I hope?");
 		next;
-		mes "[O'Riley the Leprechaun]";
-		mes "Thank you for coming by again.";
-		mes "The snakes carry the coins of my kindsmen and must be punished.";
+		mes("[O'Riley the Leprechaun]");
+		mes("Thank you for coming by again.");
+		mes("The snakes carry the coins of my kindsmen and must be punished.");
 		next;
-		mes "[O'Riley the Leprechaun]";
-		mes "I would be so generous to give you some of my famous brew if you would bring me the ill-gotten gains carried by those vile snakes";
+		mes("[O'Riley the Leprechaun]");
+		mes("I would be so generous to give you some of my famous brew if you would bring me the ill-gotten gains carried by those vile snakes");
 		next;
-		mes "And if you find one of the treasures of my kin please bring me those coins so that the snakes don't get them.";
+		mes("And if you find one of the treasures of my kin please bring me those coins so that the snakes don't get them.");
 		StPatrick2008 = 4;
 		close;
 	}
 	else if (StPatrick2008 == 4) {
-		mes "[O'Riley the Leprechaun]";
-		mes "The snakes carry too many of me kinsmen's coin I be passing out pints of me brew as reward for their return.";
+		mes("[O'Riley the Leprechaun]");
+		mes("The snakes carry too many of me kinsmen's coin I be passing out pints of me brew as reward for their return.");
 		next;
-		mes "[O'Riley the Leprechaun]";
-		mes "I'll reward ye with one jug of ale for ^0000FF1 Golden Coins^000000, ^0000FF5 Silver Coins^000000, or ^0000FF10 Bronze Coins^000000.";
-		mes "It be a fair bounty for the ill-gotten coins.";
-		mes "So, what kind of coin have ye brought?";
+		mes("[O'Riley the Leprechaun]");
+		mes("I'll reward ye with one jug of ale for ^0000FF1 Golden Coins^000000, ^0000FF5 Silver Coins^000000, or ^0000FF10 Bronze Coins^000000.");
+		mes("It be a fair bounty for the ill-gotten coins.");
+		mes("So, what kind of coin have ye brought?");
 		next;
 		switch(select("Bronze Coins", "Silver Coins", "Gold Coins", "Quit.")) {
 		case 1:
-			mes "[O'Riley the Leprechaun]";
-			mes "Thank you. Here's your ale~";
+			mes("[O'Riley the Leprechaun]");
+			mes("Thank you. Here's your ale~");
 			if (countitem(Copper_Coin_) >= 10) {
 				getitem 12135,1;
 				delitem 7915,10;
 			}
 			close;
 		case 2:
-			mes "[O'Riley the Leprechaun]";
-			mes "Thank you. Here's your ale~";
+			mes("[O'Riley the Leprechaun]");
+			mes("Thank you. Here's your ale~");
 			if (countitem(Silver_Coin_) >= 5) {
 				getitem 12135,1;
 				delitem 7916,5;
 			}
 			close;
 		case 3:
-			mes "[O'Riley the Leprechaun]";
-			mes "Thank you. Here's your ale~";
+			mes("[O'Riley the Leprechaun]");
+			mes("Thank you. Here's your ale~");
 			if (countitem(Gold_Coin_US) >= 1) {
 				getitem 12135,1;
 				delitem 7720,1;
 			}
 			close;
 		case 4:
-			mes "[O'Riley the Leprechaun]";
-			mes "I'll reward ye with one jug of ale for ^0000FF1 Golden Coins^000000, ^0000FF5 Silver Coins^000000, or ^0000FF10 Bronze Coins^000000.";
+			mes("[O'Riley the Leprechaun]");
+			mes("I'll reward ye with one jug of ale for ^0000FF1 Golden Coins^000000, ^0000FF5 Silver Coins^000000, or ^0000FF10 Bronze Coins^000000.");
 			close;
 		}
 	}
@@ -220,31 +220,31 @@ mjolnir_01,272,363,4	script	Rocks#08StPattysDay	FAKE_NPC,1,1,{
 
 OnTouch:
 	if (StPatrick2008 < 1) {
-		mes "- You've found a pile of rocks covered with soil. -";
+		mes("- You've found a pile of rocks covered with soil. -");
 		close;
 	}
 	if (StPatrick2008 == 1) {
-		mes "- You've found a pile of rocks covered with soil. -";
+		mes("- You've found a pile of rocks covered with soil. -");
 		next;
 		if (countitem(Fire_Cracker) < 200) {
-			mes "The rocks won't budge.";
-			mes "Maybe O'Riley knows a way to move the rocks.";
+			mes("The rocks won't budge.");
+			mes("Maybe O'Riley knows a way to move the rocks.");
 			close;
 		}
 		else {
 			if (select("Use Firecrackers.", "Ignore") == 2) {
 				close;
 			}
-			mes "You buried 200 Firecrackers under the pile of rocks.";
-			mes "You light the fuse.";
+			mes("You buried 200 Firecrackers under the pile of rocks.");
+			mes("You light the fuse.");
 			next;
-			mes "*BOOM!*";
+			mes("*BOOM!*");
 			specialeffect(EF_LORD, AREA, playerattached());
 			next;
-			mes "After A cloud of dust and smoke has dissipated,";
-			mes "You've found a box between the rocks and soil.";
-			mes "This box must contain O'Riley's valuables.";
-			mes "Let's bring the box to O'Riley.";
+			mes("After A cloud of dust and smoke has dissipated,");
+			mes("You've found a box between the rocks and soil.");
+			mes("This box must contain O'Riley's valuables.");
+			mes("Let's bring the box to O'Riley.");
 			close2;
 			StPatrick2008 = 2;
 			delitem 12018,200;

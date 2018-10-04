@@ -40,10 +40,10 @@ prontera,162,69,5	script	Gloomy Jack#06_hw	JAKK,2,2,{
 	end;
 
 OnTouch:
-	mes "[Cool Devi]";
-	mes "If you have something to say to him,";
-	mes "just talk to me.";
-	mes "You won't even understand what stupid pumkin headed Jack is saying.";
+	mes("[Cool Devi]");
+	mes("If you have something to say to him,");
+	mes("just talk to me.");
+	mes("You won't even understand what stupid pumkin headed Jack is saying.");
 	close;
 
 OnEffect:
@@ -57,195 +57,195 @@ OnEffect2:
 
 prontera,164,69,3	script	Cool Devi#06_hw	4_DEVIRUCHI,{
 	if (MaxWeight - Weight < 2000 || checkweight(Knife,1) == 0) {
-		mes "^3355FFWait a second!";
-		mes "Right now, you're carrying";
-		mes "too many things with you.";
-		mes "Please come back after";
-		mes "using the Kafra Service";
-		mes "to store some of your items.^000000";
+		mes("^3355FFWait a second!");
+		mes("Right now, you're carrying");
+		mes("too many things with you.");
+		mes("Please come back after");
+		mes("using the Kafra Service");
+		mes("to store some of your items.^000000");
 		close;
 	}
 	if (countitem(Pumpkin_Mojo) > 0) {
-		mes "[Gloomy Jack]";
-		mes "Oh wait, is that a Pumpkin Mojo you are carrying?";
-		mes " ";
-		mes "[Cool Devi]";
-		mes "Says he.";
+		mes("[Gloomy Jack]");
+		mes("Oh wait, is that a Pumpkin Mojo you are carrying?");
+		mes(" ");
+		mes("[Cool Devi]");
+		mes("Says he.");
 		next;
-		mes "[Gloomy Jack]";
-		mes "Give it to me. I'll pay you back.";
-		mes " ";
-		mes "[Cool Devi]";
-		mes "Says he...";
-		mes "I just can guess what he will say next. So what do you say?";
+		mes("[Gloomy Jack]");
+		mes("Give it to me. I'll pay you back.");
+		mes(" ");
+		mes("[Cool Devi]");
+		mes("Says he...");
+		mes("I just can guess what he will say next. So what do you say?");
 		next;
 		if (select("What will he say?", "I also know about it.") == 1) {
-			mes "[" + strcharinfo(PC_NAME) + "]";
-			mes "What will he say?";
+			mes("[" + strcharinfo(PC_NAME) + "]");
+			mes("What will he say?");
 			next;
-			mes "[Cool Devi]";
-			mes "Jack is not like others. He is halloween Jack.";
-			mes "but one day, he lost his Pumpkin Mojo and turned into depressed Jack..";
-			mes "Pumpkin Mojo was his all.";
+			mes("[Cool Devi]");
+			mes("Jack is not like others. He is halloween Jack.");
+			mes("but one day, he lost his Pumpkin Mojo and turned into depressed Jack..");
+			mes("Pumpkin Mojo was his all.");
 			next;
-			mes "[Cool Devi]";
-			mes "Well, actually that's the main reason Jack came to town.";
-			mes "To find his Pumpkin Mojo. Most suspicious suspect is ^4d4dffDelightful Lude^000000, the one known as Halloween monster";
+			mes("[Cool Devi]");
+			mes("Well, actually that's the main reason Jack came to town.");
+			mes("To find his Pumpkin Mojo. Most suspicious suspect is ^4d4dffDelightful Lude^000000, the one known as Halloween monster");
 			next;
-			mes "[Cool Devi]";
-			mes "Why don't you give him back the 'Pumpkin Mojo'.";
-			mes "Don't worry he will compensate you.";
+			mes("[Cool Devi]");
+			mes("Why don't you give him back the 'Pumpkin Mojo'.");
+			mes("Don't worry he will compensate you.");
 			next;
-			mes "[" + strcharinfo(PC_NAME) + "]";
-			mes "Compensate?With what?";
+			mes("[" + strcharinfo(PC_NAME) + "]");
+			mes("Compensate?With what?");
 			next;
-			mes "[Cool Devi]";
-			mes "If you bring ^4d4dff 1 Pumpkin Mojo^000000 and a pumpkin head that we gave out to you last year,";
-			mes "he will make it to ^00ff00the most fantastic pumpkin hat^000000.";
-			mes "Or if you don't have pumpkin head, you can just bring a ^3d3dff Pumpkin Mojo, a pumpkin, and a cap ^000000.";
+			mes("[Cool Devi]");
+			mes("If you bring ^4d4dff 1 Pumpkin Mojo^000000 and a pumpkin head that we gave out to you last year,");
+			mes("he will make it to ^00ff00the most fantastic pumpkin hat^000000.");
+			mes("Or if you don't have pumpkin head, you can just bring a ^3d3dff Pumpkin Mojo, a pumpkin, and a cap ^000000.");
 			next;
-			mes "[Cool Devi]";
-			mes "Well, that Pumpkin Mojo is useless if you just carry it. ";
-			mes "Give it to Jack. Don't you feel pity for him?.";
+			mes("[Cool Devi]");
+			mes("Well, that Pumpkin Mojo is useless if you just carry it. ");
+			mes("Give it to Jack. Don't you feel pity for him?.");
 			close;
 		}
-		mes "[Cool Devi]";
-		mes "Oh~Great.";
-		mes "Then, let me see what you got.";
+		mes("[Cool Devi]");
+		mes("Oh~Great.");
+		mes("Then, let me see what you got.");
 		next;
 		if ((countitem(Pumpkin_Mojo) > 0) && (countitem(Pumpkin_Hat) > 0)) {
-			mes "[Gloomy Jack]";
-			mes "Oh, you brought the pumpkin head!";
-			mes "I'll make you to nicer one.";
-			mes " ";
-			mes "[Cool Devi]";
-			mes "says he.";
+			mes("[Gloomy Jack]");
+			mes("Oh, you brought the pumpkin head!");
+			mes("I'll make you to nicer one.");
+			mes(" ");
+			mes("[Cool Devi]");
+			mes("says he.");
 			next;
 			if (select( "No, I'll come back later.", "Oh, good. Make it now!") == 1) {
-				mes "[Gloomy Jack]";
-				mes "Huh?";
-				mes " ";
-				mes "[Cool Devi]";
-				mes "What? Look at Jack. He has got so dissapointed.";
-				mes "Promise me to give the Pumpkin Mojo back to Jack later someday, will you?";
+				mes("[Gloomy Jack]");
+				mes("Huh?");
+				mes(" ");
+				mes("[Cool Devi]");
+				mes("What? Look at Jack. He has got so dissapointed.");
+				mes("Promise me to give the Pumpkin Mojo back to Jack later someday, will you?");
 				close;
 			}
-			mes "[Gloomy Jack]";
-			mes "Thanks for giving my thing back, I'll make your hat prettier.";
-			mes " ";
-			mes "[Cool Devi]";
-			mes "says he.";
+			mes("[Gloomy Jack]");
+			mes("Thanks for giving my thing back, I'll make your hat prettier.");
+			mes(" ");
+			mes("[Cool Devi]");
+			mes("says he.");
 			next;
 			donpcevent "Gloomy Jack#06_hw::OnEffect";
-			mes "[Excited Jack]";
-			mes "Lalala~ lalala~";
-			mes " ";
-			mes "(He starts singing. On a sudden, Jack's aura appeared.)";
+			mes("[Excited Jack]");
+			mes("Lalala~ lalala~");
+			mes(" ");
+			mes("(He starts singing. On a sudden, Jack's aura appeared.)");
 			delitem Pumpkin_Mojo,1;
 			delitem Pumpkin_Hat,1;
 			getitem Pumpkin_Hat_,1;
 			next;
 			donpcevent "Gloomy Jack#06_hw::OnEffect2";
-			mes "[Gloomy Jack]";
-			mes "My aura is not like it used to be. Maybe I need more Pumpkin Mojo.";
-			mes " ";
-			mes "[Cool Devi]";
-			mes "says he...";
+			mes("[Gloomy Jack]");
+			mes("My aura is not like it used to be. Maybe I need more Pumpkin Mojo.");
+			mes(" ");
+			mes("[Cool Devi]");
+			mes("says he...");
 			next;
-			mes "[Cool Devi]";
-			mes "Oh~poor Jack.";
-			mes "Well, someday he'll get back all his Pumpkin Mojo back.";
+			mes("[Cool Devi]");
+			mes("Oh~poor Jack.");
+			mes("Well, someday he'll get back all his Pumpkin Mojo back.");
 			close;
 		}
 		else if ((countitem(Pumpkin_Mojo) > 0) && (countitem(Pumpkin) > 0) && (countitem(Cap) > 0)) {
-			mes "[Gloomy Jack]";
-			mes "Wow!";
-			mes "I'll turn your hat to very cool one.";
-			mes " ";
-			mes "[Cool Devi]";
-			mes "says he...";
+			mes("[Gloomy Jack]");
+			mes("Wow!");
+			mes("I'll turn your hat to very cool one.");
+			mes(" ");
+			mes("[Cool Devi]");
+			mes("says he...");
 			next;
 			if (select( "No, I'll come back later.", "Oh,good. Make it now!") == 1) {
-				mes "[Gloomy Jack]";
-				mes "Huh?";
-				mes " ";
-				mes "[Cool Devi]";
-				mes "What? Look at Jack. He has got so dissapointed.";
-				mes "Promise me to give the Pumpkin Mojo back to Jack later someday,will you?";
+				mes("[Gloomy Jack]");
+				mes("Huh?");
+				mes(" ");
+				mes("[Cool Devi]");
+				mes("What? Look at Jack. He has got so dissapointed.");
+				mes("Promise me to give the Pumpkin Mojo back to Jack later someday,will you?");
 				close;
 			}
-			mes "[Gloomy Jack]";
-			mes "Thanks for giving my thing back, I'll make your hat prettier.";
-			mes " ";
-			mes "[Cool Devi]";
-			mes "says he.";
+			mes("[Gloomy Jack]");
+			mes("Thanks for giving my thing back, I'll make your hat prettier.");
+			mes(" ");
+			mes("[Cool Devi]");
+			mes("says he.");
 			next;
 			donpcevent "Gloomy Jack#06_hw::OnEffect";
-			mes "[Excited Jack]";
-			mes "Lalala~ lalala~";
-			mes " ";
-			mes "(He starts singing. On a sudden, Jack's aura appeared.)";
+			mes("[Excited Jack]");
+			mes("Lalala~ lalala~");
+			mes(" ");
+			mes("(He starts singing. On a sudden, Jack's aura appeared.)");
 			delitem Pumpkin_Mojo, 1;
 			delitem Pumpkin, 1;
 			delitem Cap, 1;
 			getitem Pumpkin_Hat_, 1;
 			next;
 			donpcevent "Gloomy Jack#06_hw::OnEffect2";
-			mes "[Gloomy Jack]";
-			mes "My aura is not like it used to be. Maybe I need more Pumpkin Mojo.";
-			mes " ";
-			mes "[Cool Devi]";
-			mes "says he...";
+			mes("[Gloomy Jack]");
+			mes("My aura is not like it used to be. Maybe I need more Pumpkin Mojo.");
+			mes(" ");
+			mes("[Cool Devi]");
+			mes("says he...");
 			next;
-			mes "[Cool Devi]";
-			mes "Oh~poor Jack.";
-			mes "Well, someday he'll get back all his Pumpkin Mojo back.";
+			mes("[Cool Devi]");
+			mes("Oh~poor Jack.");
+			mes("Well, someday he'll get back all his Pumpkin Mojo back.");
 			close;
 		}
 		else {
-			mes "[Cool Devi]";
-			mes "Hey,there. You don't seem to have all materials for the fantastic hat. ";
+			mes("[Cool Devi]");
+			mes("Hey,there. You don't seem to have all materials for the fantastic hat. ");
 			close;
 		}
 	}
 	else {
-		mes "[Gloomy Jack]";
-		mes "Hey,there. Why don't you come here and listen to my story.";
-		mes " ";
-		mes "[Cool Devi]";
-		mes "Says he.";
+		mes("[Gloomy Jack]");
+		mes("Hey,there. Why don't you come here and listen to my story.");
+		mes(" ");
+		mes("[Cool Devi]");
+		mes("Says he.");
 		next;
-		mes "[Gloomy Jack]";
-		mes "I used to be very famous. But now.....";
-		mes " ";
-		mes "[Cool Devi]";
-		mes "Says he...";
-		mes "Well, I'll just tell you without translating.";
+		mes("[Gloomy Jack]");
+		mes("I used to be very famous. But now.....");
+		mes(" ");
+		mes("[Cool Devi]");
+		mes("Says he...");
+		mes("Well, I'll just tell you without translating.");
 		next;
-		mes "[Cool Devi]";
-		mes "Jack is not like others. He is halloween Jack.";
-		mes "but one day, he lost his Pumpkin Mojo and turned into depressed Jack..";
-		mes "Pumpkin Mojo was his all.";
+		mes("[Cool Devi]");
+		mes("Jack is not like others. He is halloween Jack.");
+		mes("but one day, he lost his Pumpkin Mojo and turned into depressed Jack..");
+		mes("Pumpkin Mojo was his all.");
 		next;
-		mes "[Cool Devi]";
-		mes "Well, actually that's the main reason Jack came to town.";
-		mes "To find his Pumpkin Mojo. Most suspicious suspect is ^4d4dffDelightful Lude^000000, the one known as Halloween monster.";
+		mes("[Cool Devi]");
+		mes("Well, actually that's the main reason Jack came to town.");
+		mes("To find his Pumpkin Mojo. Most suspicious suspect is ^4d4dffDelightful Lude^000000, the one known as Halloween monster.");
 		next;
-		mes "[Cool Devi]";
-		mes "Why don't you give him back the 'Pumpkin Mojo'.";
-		mes "Don't worry he will compensate you.";
+		mes("[Cool Devi]");
+		mes("Why don't you give him back the 'Pumpkin Mojo'.");
+		mes("Don't worry he will compensate you.");
 		next;
-		mes "[" + strcharinfo(PC_NAME) + "]";
-		mes "Compensate? With what?";
+		mes("[" + strcharinfo(PC_NAME) + "]");
+		mes("Compensate? With what?");
 		next;
-		mes "[Cool Devi]";
-		mes "If you bring ^4d4dff 1 Pumpkin Mojo^000000 and a pumpkin head that we gave out to you last year,";
-		mes "he will make it to ^00ff00the most fantastic pumpkin hat^000000.";
-		mes "Or if you don't have pumpkin head, you can just bring a ^3d3dff Pumpkin Mojo, a pumpkin, and a cap ^000000.";
+		mes("[Cool Devi]");
+		mes("If you bring ^4d4dff 1 Pumpkin Mojo^000000 and a pumpkin head that we gave out to you last year,");
+		mes("he will make it to ^00ff00the most fantastic pumpkin hat^000000.");
+		mes("Or if you don't have pumpkin head, you can just bring a ^3d3dff Pumpkin Mojo, a pumpkin, and a cap ^000000.");
 		next;
-		mes "[Cool Devi]";
-		mes "Well, that Pumpkin Mojo is useless if you just carry it. ";
-		mes "Give it to Jack. Don't you feel pity for him?.";
+		mes("[Cool Devi]");
+		mes("Well, that Pumpkin Mojo is useless if you just carry it. ");
+		mes("Give it to Jack. Don't you feel pity for him?.");
 		close;
 	}
 }
@@ -253,95 +253,95 @@ prontera,164,69,3	script	Cool Devi#06_hw	4_DEVIRUCHI,{
 
 geffen,145,132,3	script	Hoirin#06_hw	4_F_NOVICE,{
 	if (MaxWeight - Weight < 2000 || checkweight(Knife,1) == 0) {
-		mes "^3355FFWait a second!";
-		mes "Right now, you're carrying";
-		mes "too many things with you.";
-		mes "Please come back after";
-		mes "using the Kafra Service";
-		mes "to store some of your items.^000000";
+		mes("^3355FFWait a second!");
+		mes("Right now, you're carrying");
+		mes("too many things with you.");
+		mes("Please come back after");
+		mes("using the Kafra Service");
+		mes("to store some of your items.^000000");
 		close;
 	}
 	if (halloween < 100) {
-		mes "[Hoirin]";
-		mes "Pumpkin is the gift that God had sent us.";
-		mes "It provides good nutrition and helps you to stay healthy!";
-		mes "Bravo~bravo~!";
+		mes("[Hoirin]");
+		mes("Pumpkin is the gift that God had sent us.");
+		mes("It provides good nutrition and helps you to stay healthy!");
+		mes("Bravo~bravo~!");
 		next;
-		mes "[Hoirin]";
-		mes "I, Hoirin have always thought about a ";
-		mes "way to eat pumpkin more deliciously.";
-		mes "But all of a sudden, I realized.";
+		mes("[Hoirin]");
+		mes("I, Hoirin have always thought about a ");
+		mes("way to eat pumpkin more deliciously.");
+		mes("But all of a sudden, I realized.");
 		next;
-		mes "[Hoirin]";
-		mes "If I have that! I can make best the Pumpkin pie!!!!!";
+		mes("[Hoirin]");
+		mes("If I have that! I can make best the Pumpkin pie!!!!!");
 		next;
 		if (select( "What's that?", "Ignore.") == 1) {
-			mes "[Hoirin]";
-			mes "What's the first image you see when you think of pumpkin?";
-			mes "I see Jack! I think Jack is the most evolved form of pumpkin!";
-			mes "I wonder what does Jack have something special? Can you imagine?";
+			mes("[Hoirin]");
+			mes("What's the first image you see when you think of pumpkin?");
+			mes("I see Jack! I think Jack is the most evolved form of pumpkin!");
+			mes("I wonder what does Jack have something special? Can you imagine?");
 			next;
-			mes "[Hoirin]";
-			mes "I always prefer unique pumpkin dish! Recently, I found out that there are many kinds of Jack in the world ";
-			mes "and the extreme class Jack has blue aura around his body!";
+			mes("[Hoirin]");
+			mes("I always prefer unique pumpkin dish! Recently, I found out that there are many kinds of Jack in the world ");
+			mes("and the extreme class Jack has blue aura around his body!");
 			next;
-			mes "[Hoirin]";
-			mes "Guess what?! it was Halloween Jack!";
-			mes "Halloween Jack has somthing that is concentrated with pumpkin.";
-			mes "It is called ^4d4dffPumpkin Mojo^000000. Only if i have it, i can finish making my special pie.";
+			mes("[Hoirin]");
+			mes("Guess what?! it was Halloween Jack!");
+			mes("Halloween Jack has somthing that is concentrated with pumpkin.");
+			mes("It is called ^4d4dffPumpkin Mojo^000000. Only if i have it, i can finish making my special pie.");
 			next;
-			mes "[Hoirin]";
-			mes "Bring me the ingredients!";
-			mes "I'll make you a very special pie right away!";
-			mes "You'll get addicted to it.";
-			mes "Don't be surprised after trying it.";
+			mes("[Hoirin]");
+			mes("Bring me the ingredients!");
+			mes("I'll make you a very special pie right away!");
+			mes("You'll get addicted to it.");
+			mes("Don't be surprised after trying it.");
 			next;
-			mes "[" + strcharinfo(PC_NAME) + "]";
-			mes "......................";
-			mes "You seem to be such a passionate person.";
-			mes "So, what's the ingredient anyway.?";
+			mes("[" + strcharinfo(PC_NAME) + "]");
+			mes("......................");
+			mes("You seem to be such a passionate person.");
+			mes("So, what's the ingredient anyway.?");
 			next;
-			mes "[Hoirin]";
-			mes "Good question!";
-			mes "To make my special Pumpkin pie, I need";
-			mes "^4d4dff 1 Pumpkin Mojo";
-			mes "2 Pumpkin";
-			mes "2 Egg^000000";
-			mes "";
+			mes("[Hoirin]");
+			mes("Good question!");
+			mes("To make my special Pumpkin pie, I need");
+			mes("^4d4dff 1 Pumpkin Mojo");
+			mes("2 Pumpkin");
+			mes("2 Egg^000000");
+			mes("");
 			next;
-			mes "[Hoirin]";
-			mes "Just Bring Pumpkin Mojo, Pumpkin, and a Egg.";
-			mes "Leave the rest for me..You'll get to try the best pumkin pie!";
+			mes("[Hoirin]");
+			mes("Just Bring Pumpkin Mojo, Pumpkin, and a Egg.");
+			mes("Leave the rest for me..You'll get to try the best pumkin pie!");
 			halloween = 100;
 			close;
 		}
-		mes "[Hoirin]";
-		mes "Hm..You'll regret it!";
-		mes "Hoirin's pumpkin pie is just so delicious.";
+		mes("[Hoirin]");
+		mes("Hm..You'll regret it!");
+		mes("Hoirin's pumpkin pie is just so delicious.");
 		close;
 	}
 	else {
-		mes "[Hoirin]";
-		mes "So, did you bring all materials?";
-		mes "Were there anything hard to find?";
+		mes("[Hoirin]");
+		mes("So, did you bring all materials?");
+		mes("Were there anything hard to find?");
 		next;
 		switch(select( "I brought all ingredients.", "How can I get eggs?", "No,I'm just passing by.")) {
 		case 1:
 			if ((countitem(Pumpkin_Mojo) > 0) && (countitem(Pumpkin) > 1) && (countitem(Egg) > 1)) {
-				mes "[Hoirin]";
-				mes "You are right!";
-				mes "You brought all things right. Give it to me!!";
+				mes("[Hoirin]");
+				mes("You are right!");
+				mes("You brought all things right. Give it to me!!");
 				specialeffect(EF_HIT1, AREA, playerattached());
 				next;
 				specialeffect EF_PIERCESELF;
-				mes "[Hoirin]";
-				mes "Abracadabra~~";
-				mes "Abracadabra~~!";
+				mes("[Hoirin]");
+				mes("Abracadabra~~");
+				mes("Abracadabra~~!");
 				next;
-				mes "[Hoirin]";
-				mes "Ta-da(h)!";
-				mes "Here it is~ help yourself.";
-				mes "It'll be good for your health. I added extra nutrient in it.";
+				mes("[Hoirin]");
+				mes("Ta-da(h)!");
+				mes("Here it is~ help yourself.");
+				mes("It'll be good for your health. I added extra nutrient in it.");
 				delitem Pumpkin_Mojo,1;
 				delitem Pumpkin,2;
 				delitem Egg,2;
@@ -349,48 +349,48 @@ geffen,145,132,3	script	Hoirin#06_hw	4_F_NOVICE,{
 				close;
 			}
 			else {
-				mes "[Hoirin]";
-				mes "No!! This is not enough. I need";
-				mes "^4d4dff 1 Pumpkin Mojo";
-				mes "2 Pumpkin";
-				mes "2 Egg^000000";
-				mes " at least.";
+				mes("[Hoirin]");
+				mes("No!! This is not enough. I need");
+				mes("^4d4dff 1 Pumpkin Mojo");
+				mes("2 Pumpkin");
+				mes("2 Egg^000000");
+				mes(" at least.");
 				close;
 			}
 		case 2:
 			if (halloween == 100) {
-				mes "[Hoirin]";
-				mes "Egg?";
-				mes "Well, actually I know someone who can help you.";
-				mes "There's a man who raise many chickens.";
+				mes("[Hoirin]");
+				mes("Egg?");
+				mes("Well, actually I know someone who can help you.");
+				mes("There's a man who raise many chickens.");
 				next;
-				mes "[Hoirin]";
-				mes "I can send you to where he is if you want.";
-				mes "^4d4dffBut only for once^000000.";
+				mes("[Hoirin]");
+				mes("I can send you to where he is if you want.");
+				mes("^4d4dffBut only for once^000000.");
 				next;
 				if (select("Send me.", "It's ok.") == 1) {
-					mes "[Hoirin]";
-					mes "Ok, go get the eggs.";
+					mes("[Hoirin]");
+					mes("Ok, go get the eggs.");
 					halloween = 101;
 					close2;
 					warp "nif_fild01", 162, 113;
 					end;
 				}
-				mes "[Hoirin]";
-				mes "Do you think you can go without my help?!";
-				mes "Ok! go ahead.";
-				mes "Do you know where it is?";
+				mes("[Hoirin]");
+				mes("Do you think you can go without my help?!");
+				mes("Ok! go ahead.");
+				mes("Do you know where it is?");
 				close;
 			}
 			else {
-				mes "[Hoirin]";
-				mes "if you go to ^4d4dfffarm of Skelington Town at Neiflheim^000000, you'll meet Chicken Masta. He raises chickens.";
+				mes("[Hoirin]");
+				mes("if you go to ^4d4dfffarm of Skelington Town at Neiflheim^000000, you'll meet Chicken Masta. He raises chickens.");
 				close;
 			}
 		case 3:
-			mes "[Hoirin]";
-			mes "Next time, don't forget to bring ";
-			mes "all the ingredients for pumpkin pie!";
+			mes("[Hoirin]");
+			mes("Next time, don't forget to bring ");
+			mes("all the ingredients for pumpkin pie!");
 			close;
 		}
 	}
@@ -400,55 +400,55 @@ nif_in,18,34,5	script	Loli Ruri#06_hw	LOLI_RURI,2,2,{
 	end;
 
 OnTouch:
-	mes "[Deviruchi]";
-	mes "Hey there, if you have something to say to Loli Ruri, talk to me.";
-	mes "She's not used to human language.";
+	mes("[Deviruchi]");
+	mes("Hey there, if you have something to say to Loli Ruri, talk to me.");
+	mes("She's not used to human language.");
 	close;
 }
 
 nif_in,19,32,3	script	Deviruchi#06_hw	4_DEVIRUCHI,{
 	if (MaxWeight - Weight < 2000 || checkweight(Knife,1) == 0) {
-		mes "^3355FFWait a second!";
-		mes "Right now, you're carrying";
-		mes "too many things with you.";
-		mes "Please come back after";
-		mes "using the Kafra Service";
-		mes "to store some of your items.^000000";
+		mes("^3355FFWait a second!");
+		mes("Right now, you're carrying");
+		mes("too many things with you.");
+		mes("Please come back after");
+		mes("using the Kafra Service");
+		mes("to store some of your items.^000000");
 		close;
 	}
-	mes "[Loli Ruri]";
-	mes "Devi~Where's the pumpkin pie?";
-	mes "Humans make them, don't they?";
-	mes "Do you have it then?";
-	mes " ";
-	mes "[Deviruchi]";
-	mes "Says she.";
+	mes("[Loli Ruri]");
+	mes("Devi~Where's the pumpkin pie?");
+	mes("Humans make them, don't they?");
+	mes("Do you have it then?");
+	mes(" ");
+	mes("[Deviruchi]");
+	mes("Says she.");
 	next;
-	mes "[Deviruchi]";
-	mes "If you have a pumpinkin pie, can I have one?";
-	mes "Cause we are the victim if Loli Ruri gets mad.";
+	mes("[Deviruchi]");
+	mes("If you have a pumpinkin pie, can I have one?");
+	mes("Cause we are the victim if Loli Ruri gets mad.");
 	next;
-	mes "[Deviruchi]";
-	mes "Well I'm not saying that I want it for free.";
-	mes "Don't worry, I won't let you down.";
+	mes("[Deviruchi]");
+	mes("Well I'm not saying that I want it for free.");
+	mes("Don't worry, I won't let you down.");
 	next;
 	switch(select( "Give him the pumpkin pie.", "Do not give him the pumpkin pie.", "Huh? What pumkin pie?")) {
 	case 1:
 		if (countitem(Pumpkin_Pie) > 0) {
-			mes "[Loli Ruri]";
-			mes "Thanks for the pumkin pie!";
-			mes "Here, take this.";
-			mes " ";
-			mes "[Deviruchi]";
-			mes "Says she.";
+			mes("[Loli Ruri]");
+			mes("Thanks for the pumkin pie!");
+			mes("Here, take this.");
+			mes(" ");
+			mes("[Deviruchi]");
+			mes("Says she.");
 			next;
-			mes "[Deviruchi]";
-			mes "As I promised, I'll give you something worth the pie.";
-			mes "Hang on....";
+			mes("[Deviruchi]");
+			mes("As I promised, I'll give you something worth the pie.");
+			mes("Hang on....");
 			next;
-			mes "[Deviruchi]";
-			mes "Hmm...This would be good.";
-			mes "Here take this, and thanks again~";
+			mes("[Deviruchi]");
+			mes("Hmm...This would be good.");
+			mes("Here take this, and thanks again~");
 			delitem Pumpkin_Pie, 1;
 			@hw_temp = rand(1,3);
 			if (@hw_temp == 2) getitem Cookie_Bag,1;
@@ -456,42 +456,42 @@ nif_in,19,32,3	script	Deviruchi#06_hw	4_DEVIRUCHI,{
 			close;
 		}
 		else {
-			mes "[Loli Ruri]";
-			mes "Are you kidding me?";
-			mes "Where's the pumpkin pie! Don't try to lie to me!";
-			mes " ";
-			mes "[Deviruchi]";
-			mes "Say she..Seems like she's very angry...You are in trouble.";
+			mes("[Loli Ruri]");
+			mes("Are you kidding me?");
+			mes("Where's the pumpkin pie! Don't try to lie to me!");
+			mes(" ");
+			mes("[Deviruchi]");
+			mes("Say she..Seems like she's very angry...You are in trouble.");
 			next;
-			mes "[Loli Ruri]";
-			mes "Devi!!!!!You are the one who told me that I can get the pumpkin pie if I stand here and wait.";
-			mes "Watch your back!";
-			mes " ";
-			mes "[Deviruchi]";
-			mes "Says she..Huh?!!Me?!!";
+			mes("[Loli Ruri]");
+			mes("Devi!!!!!You are the one who told me that I can get the pumpkin pie if I stand here and wait.");
+			mes("Watch your back!");
+			mes(" ");
+			mes("[Deviruchi]");
+			mes("Says she..Huh?!!Me?!!");
 			next;
-			mes "[" + strcharinfo(PC_NAME) + "]";
-			mes "Poor Devi~";
-			mes "You shouldn't have lied~";
-			mes "Wish you a luck.";
+			mes("[" + strcharinfo(PC_NAME) + "]");
+			mes("Poor Devi~");
+			mes("You shouldn't have lied~");
+			mes("Wish you a luck.");
 			close;
 		}
 	case 2:
-		mes "[Loli Ruri]";
-		mes "I want to eat pumpkin pie. Can I have one?Please~~~~";
-		mes " ";
-		mes "[Deviruchi]";
-		mes "Says he.....Give me if you have one.";
+		mes("[Loli Ruri]");
+		mes("I want to eat pumpkin pie. Can I have one?Please~~~~");
+		mes(" ");
+		mes("[Deviruchi]");
+		mes("Says he.....Give me if you have one.");
 		close;
 	case 3:
-		mes "[Deviruchi]";
-		mes "There's a man who makes a very special pumpkin pie.";
-		mes "No one can forget what it taste like.";
+		mes("[Deviruchi]");
+		mes("There's a man who makes a very special pumpkin pie.");
+		mes("No one can forget what it taste like.");
 		next;
-		mes "[Deviruchi]";
-		mes "Lori Ruri is waiting here for someone who will get the pie for him.";
-		mes "Can you get her one?";
-		mes "I'll treat you back.";
+		mes("[Deviruchi]");
+		mes("Lori Ruri is waiting here for someone who will get the pie for him.");
+		mes("Can you get her one?");
+		mes("I'll treat you back.");
 		close;
 	}
 }
@@ -499,131 +499,131 @@ nif_in,19,32,3	script	Deviruchi#06_hw	4_DEVIRUCHI,{
 //== Creation of Pumpkin Pie (Event 2) =====================
 nif_fild01,165,115,3	script	Chicken Masta#06_hw	4_M_NFDEADMAN2,{
 	if (MaxWeight - Weight < 2000 || checkweight(Knife,1) == 0) {
-		mes "^3355FFWait a second!";
-		mes "Right now, you're carrying";
-		mes "too many things with you.";
-		mes "Please come back after";
-		mes "using the Kafra Service";
-		mes "to store some of your items.^000000";
+		mes("^3355FFWait a second!");
+		mes("Right now, you're carrying");
+		mes("too many things with you.");
+		mes("Please come back after");
+		mes("using the Kafra Service");
+		mes("to store some of your items.^000000");
 		close;
 	}
 	if (halloween == 101) {
-		mes "[Chicken Masta]";
-		mes "Where did the chicken have gone?!";
-		mes "Oh, hey stranger. How can I help you?";
+		mes("[Chicken Masta]");
+		mes("Where did the chicken have gone?!");
+		mes("Oh, hey stranger. How can I help you?");
 		next;
-		mes "[Chicken Masta]";
-		mes "This town is too dangerous for you to hang around.";
-		mes "You'd better go back to where you came from....";
+		mes("[Chicken Masta]");
+		mes("This town is too dangerous for you to hang around.");
+		mes("You'd better go back to where you came from....");
 		next;
-		mes "[Chicken Masta]";
-		mes "...Are you looking for eggs?";
-		mes "Recently, people are asking me for eggs to make some kind of pie....are you one of them?";
+		mes("[Chicken Masta]");
+		mes("...Are you looking for eggs?");
+		mes("Recently, people are asking me for eggs to make some kind of pie....are you one of them?");
 		next;
 		if (select( "Actually, yes. I came here to get some eggs.", "Nope.") == 1) {
-			mes "[Chicken Masta]";
-			mes "Ok. But some of my chickens ran away,";
-			mes "so I have no eggs much left.";
-			mes "1000 zeny for 2 eggs! how's that?";
+			mes("[Chicken Masta]");
+			mes("Ok. But some of my chickens ran away,");
+			mes("so I have no eggs much left.");
+			mes("1000 zeny for 2 eggs! how's that?");
 			next;
 			switch(select( "Ok,I'll take it.", "I'll just buy one.", "Whew~it's too expensive.")) {
 			case 1:
 				if (Zeny > 1999) {
-					mes "[Chicken Masta]";
-					mes "Thanks.";
-					mes "Here are the eggs.";
+					mes("[Chicken Masta]");
+					mes("Thanks.");
+					mes("Here are the eggs.");
 					Zeny -= 2000;
 					halloween = 102;
 					getitem Egg,2;
 					close;
 				}
 				else {
-					mes "[Chicken Masta]";
-					mes "Hey this is not enough~";
-					mes "1000zeny per each, so if you buy two,that means 2000zeny.";
+					mes("[Chicken Masta]");
+					mes("Hey this is not enough~");
+					mes("1000zeny per each, so if you buy two,that means 2000zeny.");
 					close;
 				}
 			case 2:
 				if (Zeny > 999) {
-					mes "[Chicken Masta]";
-					mes "Thanks.";
-					mes "Here are the eggs.";
+					mes("[Chicken Masta]");
+					mes("Thanks.");
+					mes("Here are the eggs.");
 					Zeny -= 1000;
 					halloween = 102;
 					getitem Egg,1;
 					close;
 				}
 				else {
-					mes "[Chicken Masta]";
-					mes "You don't seem to have enough money...";
-					mes "It's 1000 zeny per each.";
+					mes("[Chicken Masta]");
+					mes("You don't seem to have enough money...");
+					mes("It's 1000 zeny per each.");
 					close;
 				}
 			case 3:
-				mes "[Chicken Masta]";
-				mes "Well...I know it's liitle bit expensive but as I told you, my chickens ran away.";
-				mes "You have to understand.";
+				mes("[Chicken Masta]");
+				mes("Well...I know it's liitle bit expensive but as I told you, my chickens ran away.");
+				mes("You have to understand.");
 				close;
 			}
 		}
-		mes "[Chicken Masta]";
-		mes "Let me tell you just one thing!";
-		mes "If you don't want to die,";
-		mes "you'd better run away. It's too dangerous in here.";
+		mes("[Chicken Masta]");
+		mes("Let me tell you just one thing!");
+		mes("If you don't want to die,");
+		mes("you'd better run away. It's too dangerous in here.");
 		close;
 	}
 	else if (halloween == 102) {
-		mes "[Chicken Masta]";
-		mes "Do you need eggs?...";
-		mes "Then, help me first.";
-		mes "8 of my chickens ran away.";
-		mes "I just don't know where they are.";
+		mes("[Chicken Masta]");
+		mes("Do you need eggs?...");
+		mes("Then, help me first.");
+		mes("8 of my chickens ran away.");
+		mes("I just don't know where they are.");
 		next;
-		mes "[Chicken Masta]";
-		mes "I don't expect all chickens to come back home.";
-		mes "Only if you find me one of them, I'll sell three eggs for you.";
+		mes("[Chicken Masta]");
+		mes("I don't expect all chickens to come back home.");
+		mes("Only if you find me one of them, I'll sell three eggs for you.");
 		next;
-		mes "[Chicken Masta]";
-		mes "Isn't it a great deal?";
-		mes "Chickens must be around here somewhere.";
+		mes("[Chicken Masta]");
+		mes("Isn't it a great deal?");
+		mes("Chickens must be around here somewhere.");
 		next;
-		mes "[Chicken Masta]";
-		mes "You don't have to bring back chickens to me if you find one,";
-		mes "Just insert the word ^4d4dff'Return'^000000.";
-		mes ".........";
+		mes("[Chicken Masta]");
+		mes("You don't have to bring back chickens to me if you find one,");
+		mes("Just insert the word ^4d4dff'Return'^000000.");
+		mes(".........");
 		next;
-		mes "[Chicken Masta]";
-		mes "It's a spell to make chickens to go back home.";
-		mes ".........";
-		mes "Don't forget the word 'Return'!";
+		mes("[Chicken Masta]");
+		mes("It's a spell to make chickens to go back home.");
+		mes(".........");
+		mes("Don't forget the word 'Return'!");
 		next;
-		mes "[Chicken Masta]";
-		mes "I hope you can find my chickens.";
+		mes("[Chicken Masta]");
+		mes("I hope you can find my chickens.");
 		close;
 	}
 	else if (halloween == 103) {
-		mes "[Chicken Masta]";
-		mes "Oh, you came back. I've been waiting for you.";
-		mes "And thanks for the chickens you sent me.";
-		mes "They are saftly kept in the henhouse, in case of running away again.";
+		mes("[Chicken Masta]");
+		mes("Oh, you came back. I've been waiting for you.");
+		mes("And thanks for the chickens you sent me.");
+		mes("They are saftly kept in the henhouse, in case of running away again.");
 		next;
-		mes "[Chicken Masta]";
-		mes "I didn't forget what we have promised.";
-		mes "Tell me how many eggs you want.";
-		mes "It's 1000zeny per each.";
-		mes "And maximum 3 is all you can get.";
+		mes("[Chicken Masta]");
+		mes("I didn't forget what we have promised.");
+		mes("Tell me how many eggs you want.");
+		mes("It's 1000zeny per each.");
+		mes("And maximum 3 is all you can get.");
 		next;
 		while(1) {
 			input .@input;
 			if (.@input == 0) {
-				mes "[Chicken Masta]";
-				mes "You don't have to buy it, if you don't need it.";
+				mes("[Chicken Masta]");
+				mes("You don't have to buy it, if you don't need it.");
 				close;
 			}
 			else if (@input > 3) {
-				mes "[Chicken Masta]";
-				mes "What did I tell you.";
-				mes "I'm going to sell only three eggs.";
+				mes("[Chicken Masta]");
+				mes("What did I tell you.");
+				mes("I'm going to sell only three eggs.");
 				next;
 			}
 			else
@@ -631,46 +631,46 @@ nif_fild01,165,115,3	script	Chicken Masta#06_hw	4_M_NFDEADMAN2,{
 		}
 		.@hw_egg = .@input * 1000;
 		if (Zeny < @hw_egg) {
-			mes "[Chicken Masta]";
-			mes "You don't seem to have enough zeny.";
+			mes("[Chicken Masta]");
+			mes("You don't seem to have enough zeny.");
 			close;
 		}
-		mes "[Chicken Masta]";
-		mes "Here you are.";
-		mes "But no more.";
-		mes "If you want more eggs, find me more chickens.";
+		mes("[Chicken Masta]");
+		mes("Here you are.");
+		mes("But no more.");
+		mes("If you want more eggs, find me more chickens.");
 		Zeny -= @hw_egg;
 		getitem Egg, @input;
 		halloween = 102;
 		close;
 	}
 	else {
-		mes "[Chicken Masta]";
-		mes "Where did the chicken have gone?!";
-		mes "Oh, hey stranger. How can I help you?";
+		mes("[Chicken Masta]");
+		mes("Where did the chicken have gone?!");
+		mes("Oh, hey stranger. How can I help you?");
 		next;
-		mes "[Chicken Masta]";
-		mes "This town is too dangerous for you to hang around.";
-		mes "You'd better go back to where you came from....";
+		mes("[Chicken Masta]");
+		mes("This town is too dangerous for you to hang around.");
+		mes("You'd better go back to where you came from....");
 		close;
 	}
 }
 
 nif_fild01,167,113,3	script	Masta's chicken#06_hw01	4_NFCOCK,{
-	mes "Drowsing chicken.";
+	mes("Drowsing chicken.");
 	close;
 }
 
 -	script	HwChicken::HwChicken	FAKE_NPC,{
 	if ((halloween == 102) || (halloween == 103)) {
-		mes "Oh, this must be Chicken Masta's chicken.";
-		mes "I should insert the magic word.";
+		mes("Oh, this must be Chicken Masta's chicken.");
+		mes("I should insert the magic word.");
 		next;
 		input .@inputstr$;
 		if( .@inputstr$ == "Return" ) {
 			emotion e_omg;
 			specialeffect EF_TELEPORTATION;
-			mes "The magic spell has been casted.";
+			mes("The magic spell has been casted.");
 			halloween = 103;
 			disablenpc "Masta's chicken#"+strnpcinfo(NPC_NAME_VISIBLE);
 			close2;
@@ -679,13 +679,13 @@ nif_fild01,167,113,3	script	Masta's chicken#06_hw01	4_NFCOCK,{
 			end;
 		}
 		else {
-			mes "[" + strcharinfo(PC_NAME) + "]";
-			mes "Hm...I must have misspelled.";
+			mes("[" + strcharinfo(PC_NAME) + "]");
+			mes("Hm...I must have misspelled.");
 			close;
 		}
 	}
 	else {
-		mes "Drowsing chicken.";
+		mes("Drowsing chicken.");
 		close;
 	}
 }
@@ -693,14 +693,14 @@ nif_fild01,167,113,3	script	Masta's chicken#06_hw01	4_NFCOCK,{
 -	script	HwChicken2::HwChicken2	FAKE_NPC,{
 	@egg_temp = rand(1,4);
 	if( @egg_temp == 3) {
-		mes "As soon as you got close to the chicken and touched it, it disappeared completely.";
-		mes "You got an 'egg' in the place where the chicken disappeared.";
+		mes("As soon as you got close to the chicken and touched it, it disappeared completely.");
+		mes("You got an 'egg' in the place where the chicken disappeared.");
 		disablenpc "Chicken#"+strnpcinfo(NPC_NAME_VISIBLE);
 		getitem Egg,1;
 		close;
 	}
 	else {
-		mes "As soon as you got close to the chicken and touched it, it disappeared completely.";
+		mes("As soon as you got close to the chicken and touched it, it disappeared completely.");
 		disablenpc "Chicken#"+strnpcinfo(NPC_NAME_VISIBLE);
 		close;
 	}
@@ -709,14 +709,14 @@ nif_fild01,167,113,3	script	Masta's chicken#06_hw01	4_NFCOCK,{
 -	script	HwChicken3::HwChicken3	FAKE_NPC,{
 	@egg_temp = rand(1,4);
 	if( @egg_temp == 3) {
-		mes "As soon as you got close to the chicken and touched it, it disappeared completely.";
-		mes "You got an 'egg' in the place where the chicken disappeared.";
+		mes("As soon as you got close to the chicken and touched it, it disappeared completely.");
+		mes("You got an 'egg' in the place where the chicken disappeared.");
 		disablenpc "Chicken#"+strnpcinfo(NPC_NAME_VISIBLE);
 		getitem Egg,1;
 		close;
 	}
 	else {
-		mes "As soon as you got close to the chicken and touched it, it disappeared completely.";
+		mes("As soon as you got close to the chicken and touched it, it disappeared completely.");
 		disablenpc "Chicken#"+strnpcinfo(NPC_NAME_VISIBLE);
 		close;
 	}
@@ -1044,46 +1044,46 @@ pay_fild08,155,356,3	duplicate(HwChicken2)	Chicken#06_hw_pf26	4_NFCOCK
 pay_fild08,155,358,3	duplicate(HwChicken3)	Chicken#06_hw_pf27	4_NFCOCK
 
 prontera,155,285,3	script	Familiar#06_hw01::HWFamiDup	4_NFBAT,{
-	mes "[Familiar]";
-	mes "Hello.";
-	mes "I'm Loli Ruri's faithful and cute Familiar.";
-	mes "Do you have an invitation from Loli Ruri?";
-	mes "That's a kind of^4d4dffa special ticket to Nifflheim^000000..";
+	mes("[Familiar]");
+	mes("Hello.");
+	mes("I'm Loli Ruri's faithful and cute Familiar.");
+	mes("Do you have an invitation from Loli Ruri?");
+	mes("That's a kind of^4d4dffa special ticket to Nifflheim^000000..");
 	next;
 	if (select( "Yes, I do.", "No, I don't.") == 1) {
-		mes "[Familiar]";
-		mes "Do you want to go to Nifflheim?";
-		mes "It's available during Halloween.";
+		mes("[Familiar]");
+		mes("Do you want to go to Nifflheim?");
+		mes("It's available during Halloween.");
 		next;
 		if (select( "Yes, I do", "No, I don't.") == 1) {
 			if (countitem(Niflheim_Ticket) > 0) {
-				mes "[Familiar]";
-				mes "I checked your ticket.";
-				mes "You can go there now";
+				mes("[Familiar]");
+				mes("I checked your ticket.");
+				mes("You can go there now");
 				delitem Niflheim_Ticket,1; //Nifl_Express_Ticket
 				close2;
 				warp "nif_in", 18, 20;
 				end;
 			}
 			else {
-				mes "[Familiar]";
-				mes "You're a liar.";
-				mes "You don't have the ticket!";
-				mes "I'll suck up all your blood, you liar!";
+				mes("[Familiar]");
+				mes("You're a liar.");
+				mes("You don't have the ticket!");
+				mes("I'll suck up all your blood, you liar!");
 				percentheal -20,0;
 				emotion e_omg,1;
 				close;
 			}
 		}
-		mes "[Familiar]";
-		mes "Ok.";
-		mes "Actually, it's useless to have a special ticket to Nifflheim.";
+		mes("[Familiar]");
+		mes("Ok.");
+		mes("Actually, it's useless to have a special ticket to Nifflheim.");
 		close;
 	}
-	mes "[Familiar]";
-	mes "Ok.";
-	mes "If you want to ask something, give a piece of pumpkin pie to Loli Ruri.";
-	mes "He likes it.";
+	mes("[Familiar]");
+	mes("Ok.");
+	mes("If you want to ask something, give a piece of pumpkin pie to Loli Ruri.");
+	mes("He likes it.");
 	close;
 }
 payon,156,231,3	duplicate(HWFamiDup)	Familiar#06_hw02	4_NFBAT
