@@ -108,45 +108,45 @@ ra_in01,376,69,4	script	Inn Keeper#Annie	4_M_RACHMAN1,{
 
 //== Lighthalzen ===========================================
 lhz_in02,230,284,4	script	Hotel Employee#01	4_M_04,{
-	mes "[Hotel Employee]";
-	mes "Welcome to";
-	mes "the Royal Dragon,";
-	mes "where you can find the";
-	mes "finest accommodations";
-	mes "and the best service.";
+	mes("[Hotel Employee]");
+	mes("Welcome to");
+	mes("the Royal Dragon,");
+	mes("where you can find the");
+	mes("finest accommodations");
+	mes("and the best service.");
 	next;
 	switch(select("Save Point", "Rest - 5,000 zeny", "Cancel")) {
 	case 1:
 		savepoint "lhz_in02",209,275;
-		mes "[Hotel Employee]";
-		mes "Thank you, your";
-		mes "Respawn Point has";
-		mes "been saved here in";
-		mes "the Royal Dragon.";
+		mes("[Hotel Employee]");
+		mes("Thank you, your");
+		mes("Respawn Point has");
+		mes("been saved here in");
+		mes("the Royal Dragon.");
 		close;
 	case 2:
 		if(Zeny < 5000) {
-			mes "[Hotel Employee]";
-			mes "I'm sorry, but";
-			mes "you need 5,000 zeny";
-			mes "in order to check in.";
+			mes("[Hotel Employee]");
+			mes("I'm sorry, but");
+			mes("you need 5,000 zeny");
+			mes("in order to check in.");
 			close;
 		}
 		Zeny -= 5000;
-		mes "[Hotel Employee]";
-		mes "Thank you~";
-		mes "I hope you enjoy";
-		mes "your stay in the";
-		mes "Royal Dragon.";
+		mes("[Hotel Employee]");
+		mes("Thank you~");
+		mes("I hope you enjoy");
+		mes("your stay in the");
+		mes("Royal Dragon.");
 		close2;
 		warp "lhz_in02",219,150;
 		percentheal 100,100;
 		npcskill "AL_BLESSING",10,99,99;
 		end;
 	case 3:
-		mes "[Hotel Employee]";
-		mes "Thank you and";
-		mes "have a nice day.";
+		mes("[Hotel Employee]");
+		mes("Thank you and");
+		mes("have a nice day.");
 		close;
 	}
 }
@@ -160,38 +160,38 @@ hu_in01,246,107,3	script	Inn Maid#Receptionist	1_M_INNKEEPER,{
 
 //== Veins =================================================
 ve_in,157,219,5	script	Inn Master#Receptionist	4_M_SEAMAN,{
-	mes "[Inn Master]";
-	mes "Good day~";
-	mes "Welcome to the";
-	mes "most comfortable";
-	mes "inn here in Veins~";
+	mes("[Inn Master]");
+	mes("Good day~");
+	mes("Welcome to the");
+	mes("most comfortable");
+	mes("inn here in Veins~");
 	next;
 	switch(select("Save", "Take a Rest -> 5000 zeny", "Quit")) {
 	case 1:
-		mes "[Inn Master]";
-		mes "Your Respawn Point";
-		mes "has been saved in Veins.";
-		mes "Enjoy your stay in town~";
+		mes("[Inn Master]");
+		mes("Your Respawn Point");
+		mes("has been saved in Veins.");
+		mes("Enjoy your stay in town~");
 		savepoint "ve_in",157,209;
 		close;
 	case 2:
-		mes "[Inn Master]";
+		mes("[Inn Master]");
 		if(Zeny < 5000){
-			mes "I'm sorry, but I don't";
-			mes "think you have enough";
-			mes "money to check in. The";
-			mes "service charge is 5,000 zeny.";
+			mes("I'm sorry, but I don't");
+			mes("think you have enough");
+			mes("money to check in. The");
+			mes("service charge is 5,000 zeny.");
 			close;
 		}
-		mes "Enjoy your stay~";
+		mes("Enjoy your stay~");
 		close2;
 		Zeny -= 5000;
 		percentheal 100,100;
 		warp "ve_in",184,228;
 		end;
 	case 3:
-		mes "[Inn Master]";
-		mes "Please come again.";
+		mes("[Inn Master]");
+		mes("Please come again.");
 		close;
 	}
 }
@@ -204,29 +204,29 @@ ve_in,157,219,5	script	Inn Master#Receptionist	4_M_SEAMAN,{
 // 3 - x coordinate to save at
 // 4 - y coordinate to save at
 function	script	F_InnMaid	{
-	mes getarg(0);
-	mes "Welcome to";
-	mes getarg(1) + ".";
-	mes "How may I help you?";
+	mes(getarg(0));
+	mes("Welcome to");
+	mes(getarg(1) + ".");
+	mes("How may I help you?");
 	next;
 	switch(select("Save", "Take a Rest -> 5000 zeny", "Cancel")) {
 	case 1:
-		mes getarg(0);
-		mes "Your respawn point";
-		mes "has been saved.";
-		mes "Thank you,";
-		mes "please come again.";
+		mes(getarg(0));
+		mes("Your respawn point");
+		mes("has been saved.");
+		mes("Thank you,");
+		mes("please come again.");
 		savepoint getarg(2),getarg(3),getarg(4);
 		close;
 	case 2:
-		mes getarg(0);
+		mes(getarg(0));
 		if(Zeny < 5000){
-			mes "I'm sorry, but the service charge is 5,000 zeny. Please make sure that you have enough money to check in next time, okay?";
+			mes("I'm sorry, but the service charge is 5,000 zeny. Please make sure that you have enough money to check in next time, okay?");
 			close;
 		}
-		mes "Thank you.";
-		mes "I hope you";
-		mes "enjoy your rest~";
+		mes("Thank you.");
+		mes("I hope you");
+		mes("enjoy your rest~");
 		close2;
 		Zeny -= 5000;
 		percentheal 100,100;

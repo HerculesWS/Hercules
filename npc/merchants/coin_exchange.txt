@@ -38,15 +38,15 @@
 //== Manuk & Splendide =====================================
 -	script	::merchant_13_2	FAKE_NPC,{
 	.@n$ = "["+strnpcinfo(NPC_NAME_VISIBLE)+"]";
-	mes .@n$;
+	mes(.@n$);
 	if (isequipped(2782) && ep13_2_rhea == 100) {
 		if (!checkweight(Knife,1)) {
-			mes "It looks like you're carrying too many things.";
-			mes "Why not put some of your items in storage and come back?";
+			mes("It looks like you're carrying too many things.");
+			mes("Why not put some of your items in storage and come back?");
 			close;
 		}
-		mes "Hello.";
-		mes "What are you looking for?";
+		mes("Hello.");
+		mes("What are you looking for?");
 		next;
 		if (strnpcinfo(NPC_NAME_VISIBLE) == "Merchant of Manuk") {
 			setarray .@items[2],12342,12343,12348;
@@ -60,46 +60,46 @@
 			.@coin = 6081; //Splendide_Coin
 			.@i = select("View item description", "Buy Pinguicula's Fruit Jam", "Buy Luciola's Honey Jam", "Buy Cornus' Tears", "Do nothing");
 		}
-		mes .@n$;
+		mes(.@n$);
 		if (.@i == 1) {
-			mes "Here are the item descriptions.";
+			mes("Here are the item descriptions.");
 			close2;
 			readbook .@Book,1;
 			end;
 		}
 		else if (.@i < 5) {
-			mes "I can sell you 3 "+getitemname(.@items[.@i])+" for ^3131FF1 coin^000000.";
+			mes("I can sell you 3 "+getitemname(.@items[.@i])+" for ^3131FF1 coin^000000.");
 			next;
 			switch(select("Purchase", "Do not purchase")) {
 			case 1:
 				if (countitem(.@coin)) {
-					mes .@n$;
-					mes "Thank you for coming.";
+					mes(.@n$);
+					mes("Thank you for coming.");
 					delitem .@coin,1;
 					getitem .@items[.@i],3;
 					close;
 				}
 				else {
-					mes .@n$;
-					mes "You don't have enough coins.";
+					mes(.@n$);
+					mes("You don't have enough coins.");
 					close;
 				}
 			case 2:
-				mes .@n$;
+				mes(.@n$);
 				break;
 			}
 		}
-		mes "Come again if you change your mind.";
+		mes("Come again if you change your mind.");
 		close;
 	}
 	else {
 		if (strnpcinfo(NPC_NAME_VISIBLE) == "Merchant of Manuk") {
-			mes "Rtt od d";
-			mes "Qwo hd is d irr";
+			mes("Rtt od d");
+			mes("Qwo hd is d irr");
 		}
 		else {
-			mes "BurWehAla";
-			mes "tasnarAndu Ie Ru";
+			mes("BurWehAla");
+			mes("tasnarAndu Ie Ru");
 		}
 		close;
 	}

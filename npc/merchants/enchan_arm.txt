@@ -36,21 +36,21 @@
 
 prontera,165,60,2	script	Apprentice Craftsman	1_F_MERCHANT_01,{
 	disable_items;
-	mes "[Apprentice Craftsman]";
+	mes("[Apprentice Craftsman]");
 	if (Zeny >= 400000) {
-		mes "I've been studying ways to enhance an armor to maximize its capability.";
+		mes("I've been studying ways to enhance an armor to maximize its capability.");
 		next;
-		mes "[Apprentice Craftsman]";
-		mes "Enchanting is an awesome skill that infuses a mysterious status powers into the armor's hidden socket.";
+		mes("[Apprentice Craftsman]");
+		mes("Enchanting is an awesome skill that infuses a mysterious status powers into the armor's hidden socket.");
 		next;
-		mes "[Apprentice Craftsman]";
-		mes "However, you have to keep in mind that if there are two armors of the same kind in your possession, the Enchantment will be applied in the order they are placed in your inventory.";
+		mes("[Apprentice Craftsman]");
+		mes("However, you have to keep in mind that if there are two armors of the same kind in your possession, the Enchantment will be applied in the order they are placed in your inventory.");
 		next;
-		mes "[Apprentice Craftsman]";
-		mes "In that case, the Enchantment may be applied to an item which you didn't mean to Enchant. So just bring ^5555ffONE Armor^000000 you want enchanted to be safe...";
+		mes("[Apprentice Craftsman]");
+		mes("In that case, the Enchantment may be applied to an item which you didn't mean to Enchant. So just bring ^5555ffONE Armor^000000 you want enchanted to be safe...");
 		next;
-		mes "[Apprentice Craftsman]";
-		mes "I'm not responsible for what would happen if you have more than one of the same kind in your inventory.";
+		mes("[Apprentice Craftsman]");
+		mes("I'm not responsible for what would happen if you have more than one of the same kind in your inventory.");
 		next;
 		switch(select("Non Slotted Armor.", "Slotted Armor.", "High Grade Armor.", "Maybe next time.")) {
 		case 1:
@@ -67,8 +67,8 @@ prontera,165,60,2	script	Apprentice Craftsman	1_F_MERCHANT_01,{
 			.@j = 60;
 			break;
 		case 4:
-			mes "[Apprentice Craftsman]";
-			mes "Please come back when you have any interest in enchanting your armor.";
+			mes("[Apprentice Craftsman]");
+			mes("Please come back when you have any interest in enchanting your armor.");
 			close;
 		}
 		.@menu$ = "";
@@ -77,38 +77,38 @@ prontera,165,60,2	script	Apprentice Craftsman	1_F_MERCHANT_01,{
 		callsub S_EnchantArmor, .@items[select(.@menu$)-1], .@j;
 		end;
 	}
-	mes "I am in charge of Enchanting Armors. Simply put, I've been studying ways to power-up armor.";
+	mes("I am in charge of Enchanting Armors. Simply put, I've been studying ways to power-up armor.");
 	next;
-	mes "[Apprentice Craftsman]";
-	mes "If by any chance, you would want to enchant your armor, bring me 400,000 zeny and the armor you want to enchant and you are all set to go.";
+	mes("[Apprentice Craftsman]");
+	mes("If by any chance, you would want to enchant your armor, bring me 400,000 zeny and the armor you want to enchant and you are all set to go.");
 	close;
 
 S_EnchantArmor:
 	.@itemid = getarg(0);
 	.@failrate = getarg(1);
-	mes "[Apprentice Craftsman]";
+	mes("[Apprentice Craftsman]");
 	if (countitem(.@itemid) == 1) {
-		mes "Socket enchant will cost you 400,000 zeny. And there will be a random option enchanted. Of course, there is a chance of breaking your armor.";
+		mes("Socket enchant will cost you 400,000 zeny. And there will be a random option enchanted. Of course, there is a chance of breaking your armor.");
 		next;
-		mes "[Apprentice Craftsman]";
-		mes "First and most importantly.";
-		mes "^ff5555Existing Refine Level of the Armor";
-		mes "and Cards will be GONE.^000000";
-		mes "Do you still want to try an Enchant?";
+		mes("[Apprentice Craftsman]");
+		mes("First and most importantly.");
+		mes("^ff5555Existing Refine Level of the Armor");
+		mes("and Cards will be GONE.^000000");
+		mes("Do you still want to try an Enchant?");
 		next;
 		if(select("Hmm... Let me think it over.", "Go ahead.") == 1) {
-			mes "[Apprentice Craftsman]";
-			mes "Well, I can't blame you. Safety first, eh?";
-			mes "Now you have a nice day.";
+			mes("[Apprentice Craftsman]");
+			mes("Well, I can't blame you. Safety first, eh?");
+			mes("Now you have a nice day.");
 			close;
 		}
-		mes "[Apprentice Craftsman]";
-		mes "Quite of an adventurer huh? Well, shall we?";
+		mes("[Apprentice Craftsman]");
+		mes("Quite of an adventurer huh? Well, shall we?");
 		close2;
 		specialeffect(EF_MAPPILLAR, AREA, playerattached());
 		if (Zeny < 400000) {
-			mes "[Apprentice Craftsman]";
-			mes "Sorry, but you don't have enough zeny.";
+			mes("[Apprentice Craftsman]");
+			mes("Sorry, but you don't have enough zeny.");
 			close;
 		}
 		progressbar "ffff00",7;
@@ -153,16 +153,16 @@ S_EnchantArmor:
 			case 36: .@addpart = 4750;break;
 			default:
 				specialeffect(EF_PHARMACY_FAIL, AREA, playerattached());
-				mes "[Apprentice Craftsman]";
-				mes "Well that's too bad.";
-				mes "The requested equipment has failed to enchant.";
+				mes("[Apprentice Craftsman]");
+				mes("Well that's too bad.");
+				mes("The requested equipment has failed to enchant.");
 				close;
 		}
 		getitem2 .@itemid, 1, 1, 0, 0, 0, 0, 0, .@addpart;
 	}
 	else {
-		mes "Hmm? There's nothing to be enchanted!";
-		mes "Please come back with just ONE equipment to be enchanted.";
+		mes("Hmm? There's nothing to be enchanted!");
+		mes("Please come back with just ONE equipment to be enchanted.");
 		close;
 	}
 }
