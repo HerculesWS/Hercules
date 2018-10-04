@@ -4971,6 +4971,7 @@ static int npc_reload(void)
 	npc->npc_mob = npc->npc_cache_mob = npc->npc_delay_mob = 0;
 
 	// reset mapflags
+	map->zone_reload();
 	map->flags_init();
 
 	// Reprocess npc files and reload constants
@@ -4980,7 +4981,6 @@ static int npc_reload(void)
 
 	instance->reload();
 
-	map->zone_reload();
 	map->zone_init();
 
 	npc->motd = npc->name2id("HerculesMOTD"); /* [Ind/Hercules] */
