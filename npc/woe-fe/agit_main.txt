@@ -343,44 +343,44 @@ OnRecvCastle:
 
 	cutin "kafra_01",2;
 	if (getcharid(CHAR_ID_GUILD) == .@GID) {
-		mes "[Kafra Employee]";
-		mes "Welcome. ^ff0000" + getguildname(.@GID) + "^000000 Member.";
-		mes "The Kafra Corporation will stay with you wherever you go.";
+		mes("[Kafra Employee]");
+		mes("Welcome. ^ff0000" + getguildname(.@GID) + "^000000 Member.");
+		mes("The Kafra Corporation will stay with you wherever you go.");
 		next;
 		switch (select("Use Storage", "Use Teleport Service", "Rent a Pushcart", "Cancel")) {
 		case 1:
 			if (getskilllv("NV_BASIC") < 6) {
-				mes "[Kafra Employee]";
-				mes "I'm sorry, but you";
-				mes "need the Novice's";
-				mes "Basic Skill Level 6 to";
-				mes "use the Storage Service.";
+				mes("[Kafra Employee]");
+				mes("I'm sorry, but you");
+				mes("need the Novice's");
+				mes("Basic Skill Level 6 to");
+				mes("use the Storage Service.");
 				close2;
 				cutin "",255;
 				end;
 			}
-			mes "[Kafra Employee]";
-			mes "Here, let me open";
-			mes "your Storage for you.";
-			mes "Thank you for using";
-			mes "the Kafra Service.";
+			mes("[Kafra Employee]");
+			mes("Here, let me open");
+			mes("your Storage for you.");
+			mes("Thank you for using");
+			mes("the Kafra Service.");
 			close2;
 			cutin "",255;
 			openstorage;
 			end;
 		case 2:
-			mes "[Kafra Employee]";
-			mes "Please choose";
-			mes "your destination.";
+			mes("[Kafra Employee]");
+			mes("Please choose");
+			mes("your destination.");
 			next;
 			switch (select(.@destination$+" -> 200z", "Cancel")) {
 			case 1:
 				if (Zeny < 200) {
-					mes "[Kafra Employee]";
-					mes "I'm sorry, but you don't have";
-					mes "enough zeny for the Teleport";
-					mes "Service. The fee to teleport";
-					mes "to "+.@destination$+" is 200 zeny.";
+					mes("[Kafra Employee]");
+					mes("I'm sorry, but you don't have");
+					mes("enough zeny for the Teleport");
+					mes("Service. The fee to teleport");
+					mes("to "+.@destination$+" is 200 zeny.");
 					close2;
 					cutin "",255;
 					end;
@@ -397,41 +397,41 @@ OnRecvCastle:
 			}
 		case 3:
 			if (BaseClass != Job_Merchant) {
-				mes "[Kafra Employee]";
-				mes "I'm sorry, but the";
-				mes "Pushcart rental service";
-				mes "is only available to Merchants,";
-				mes "Blacksmiths, Master Smiths,";
-				mes "Alchemists, Biochemists,";
-				mes "Mechanics and Geneticists.";
+				mes("[Kafra Employee]");
+				mes("I'm sorry, but the");
+				mes("Pushcart rental service");
+				mes("is only available to Merchants,");
+				mes("Blacksmiths, Master Smiths,");
+				mes("Alchemists, Biochemists,");
+				mes("Mechanics and Geneticists.");
 				close2;
 				cutin "",255;
 				end;
 			}
 			if (checkcart()) {
-				mes "[Kafra Employee]";
-				mes "You already have";
-				mes "a Pushcart equipped.";
-				mes "Unfortunately, we can't";
-				mes "rent more than one to";
-				mes "each customer at a time.";
+				mes("[Kafra Employee]");
+				mes("You already have");
+				mes("a Pushcart equipped.");
+				mes("Unfortunately, we can't");
+				mes("rent more than one to");
+				mes("each customer at a time.");
 				close2;
 				cutin "",255;
 				end;
 			}
-			mes "[Kafra Employee]";
-			mes "The Pushcart rental";
-			mes "fee is 800 zeny. Would";
-			mes "you like to rent a Pushcart?";
+			mes("[Kafra Employee]");
+			mes("The Pushcart rental");
+			mes("fee is 800 zeny. Would");
+			mes("you like to rent a Pushcart?");
 			next;
 			switch (select("Rent a Pushcart.", "Cancel")) {
 			case 1:
 				if (Zeny < 800) {
-					mes "[Kafra Employee]";
-					mes "I'm sorry, but you";
-					mes "don't have enough";
-					mes "zeny to pay the Pushcart";
-					mes "rental fee of 800 zeny.";
+					mes("[Kafra Employee]");
+					mes("I'm sorry, but you");
+					mes("don't have enough");
+					mes("zeny to pay the Pushcart");
+					mes("rental fee of 800 zeny.");
 					close2;
 					cutin "",255;
 					end;
@@ -448,16 +448,16 @@ OnRecvCastle:
 				end;
 			}
 		case 4:
-			mes "[Kafra Employee]";
-			mes "We, here at Kafra Corporation,";
-			mes "are always endeavoring to provide you with the best services. We hope that we meet your adventuring needs and standards of excellence.";
+			mes("[Kafra Employee]");
+			mes("We, here at Kafra Corporation,");
+			mes("are always endeavoring to provide you with the best services. We hope that we meet your adventuring needs and standards of excellence.");
 			close2;
 			cutin "",255;
 			end;
 		}
 	}
-	mes "[Kafra Employee]";
-	mes "I am instructed to only offer my services to the ^ff0000"+getguildname(.@GID)+"^000000 Guild. Please try another Kafra Employee around here. Sorry for the inconvenience.";
+	mes("[Kafra Employee]");
+	mes("I am instructed to only offer my services to the ^ff0000"+getguildname(.@GID)+"^000000 Guild. Please try another Kafra Employee around here. Sorry for the inconvenience.");
 	close2;
 	cutin "",255;
 	end;
@@ -604,35 +604,35 @@ OnRecvCastle:
 	}
 
 	if (.@GID == 0) {
-		mes "["+strnpcinfo(NPC_NAME_VISIBLE)+"]";
-		mes "I have been waiting for a master to fulfill my destiny.";
-		mes "Brave soul... fate will guide you towards your future...";
+		mes("["+strnpcinfo(NPC_NAME_VISIBLE)+"]");
+		mes("I have been waiting for a master to fulfill my destiny.");
+		mes("Brave soul... fate will guide you towards your future...");
 		close;
 	}
 	if (getguildmaster(.@GID) != strcharinfo(PC_NAME)) {
-		mes "["+strnpcinfo(NPC_NAME_VISIBLE)+"]";
-		mes "No matter how much you pester me, I'll still follow my master ^ff0000"+getguildmaster(.@GID)+"^000000. Where are the Guardians?! Send these ruffians away right now!";
+		mes("["+strnpcinfo(NPC_NAME_VISIBLE)+"]");
+		mes("No matter how much you pester me, I'll still follow my master ^ff0000"+getguildmaster(.@GID)+"^000000. Where are the Guardians?! Send these ruffians away right now!");
 		close;
 	}
-	mes "["+strnpcinfo(NPC_NAME_VISIBLE)+"]";
-	mes "Welcome. My honorable master, ^ff0000"+strcharinfo(PC_NAME)+"^000000...";
-	mes "Your humble servant, "+strnpcinfo(NPC_NAME_VISIBLE)+", is here to serve you.";
+	mes("["+strnpcinfo(NPC_NAME_VISIBLE)+"]");
+	mes("Welcome. My honorable master, ^ff0000"+strcharinfo(PC_NAME)+"^000000...");
+	mes("Your humble servant, "+strnpcinfo(NPC_NAME_VISIBLE)+", is here to serve you.");
 	next;
 	switch (select("Castle briefing", "Invest in commercial growth", "Invest in Castle Defenses", "Summon Guardian", "Hire / Fire a Kafra Employee", "Go into Master's room")) {
 	case 1:
-		mes "["+strnpcinfo(NPC_NAME_VISIBLE)+"]";
-		mes "I will report the Castle briefing, Master.";
-		mes " ";
-		mes "^0000ffNow, the commercial growth level is "+getcastledata(strnpcinfo(NPC_NAME_HIDDEN),2)+".";
+		mes("["+strnpcinfo(NPC_NAME_VISIBLE)+"]");
+		mes("I will report the Castle briefing, Master.");
+		mes(" ");
+		mes("^0000ffNow, the commercial growth level is "+getcastledata(strnpcinfo(NPC_NAME_HIDDEN),2)+".");
 		if (getcastledata(strnpcinfo(NPC_NAME_HIDDEN),4)) {
-			mes " You invested "+getcastledata(strnpcinfo(NPC_NAME_HIDDEN),4)+" times in past 1 day.";
+			mes(" You invested "+getcastledata(strnpcinfo(NPC_NAME_HIDDEN),4)+" times in past 1 day.");
 		}
-		mes " Now, the Castle Defense level is "+getcastledata(strnpcinfo(NPC_NAME_HIDDEN),3)+".^000000";
+		mes(" Now, the Castle Defense level is "+getcastledata(strnpcinfo(NPC_NAME_HIDDEN),3)+".^000000");
 		if (getcastledata(strnpcinfo(NPC_NAME_HIDDEN),5)) {
-			mes " ^0000ff- You invested "+getcastledata(strnpcinfo(NPC_NAME_HIDDEN),5)+" times in past 1 day.^000000";
+			mes(" ^0000ff- You invested "+getcastledata(strnpcinfo(NPC_NAME_HIDDEN),5)+" times in past 1 day.^000000");
 		}
-		mes " ";
-		mes "That's all I have to report, Master.";
+		mes(" ");
+		mes("That's all I have to report, Master.");
 		close;
 	case 2:
 		.@Economy = getcastledata(strnpcinfo(NPC_NAME_HIDDEN),2);
@@ -660,44 +660,44 @@ OnRecvCastle:
 		if (getcastledata(strnpcinfo(NPC_NAME_HIDDEN),4)) {
 			.@eco_invest *= 4;
 		}
-		mes "["+strnpcinfo(NPC_NAME_VISIBLE)+"]";
-		mes "If you invest in commercial growth, the quantity of goods made by the guild will increase. Therfore, if you consider our future, investments will be a necessity.";
-		mes " ";
-		mes "Initially, you are able to invest just once but if you pay more money, you will be able to invest twice.";
+		mes("["+strnpcinfo(NPC_NAME_VISIBLE)+"]");
+		mes("If you invest in commercial growth, the quantity of goods made by the guild will increase. Therfore, if you consider our future, investments will be a necessity.");
+		mes(" ");
+		mes("Initially, you are able to invest just once but if you pay more money, you will be able to invest twice.");
 		if (.@Economy >= 100) {
-			mes " ";
-			mes "^ff0000The commercial growth level of our Castle is at it's highest, 100%. No more investments are needed. Just as I have expected from a great economist like you, Master.^000000";
+			mes(" ");
+			mes("^ff0000The commercial growth level of our Castle is at it's highest, 100%. No more investments are needed. Just as I have expected from a great economist like you, Master.^000000");
 			close;
 		}
 		if (getcastledata(strnpcinfo(NPC_NAME_HIDDEN),4) >= 2) {
-			mes " ";
-			mes "^ff0000You have already invested twice today. You cannot invest any more.^000000 I expect riches of the guild to grow at a high rate.";
+			mes(" ");
+			mes("^ff0000You have already invested twice today. You cannot invest any more.^000000 I expect riches of the guild to grow at a high rate.");
 			close;
 		}
 		if (getcastledata(strnpcinfo(NPC_NAME_HIDDEN),4) == 0) {
-			mes " ";
-			mes "The current investment amount required is ^ff0000"+.@eco_invest+"^000000 zeny. Will you invest?";
+			mes(" ");
+			mes("The current investment amount required is ^ff0000"+.@eco_invest+"^000000 zeny. Will you invest?");
 		}
 		else {
-			mes " ";
-			mes "You've invested once today... if you wish to invest once more, ^ff0000"+.@eco_invest+"^000000 more zeny will be needed.";
+			mes(" ");
+			mes("You've invested once today... if you wish to invest once more, ^ff0000"+.@eco_invest+"^000000 more zeny will be needed.");
 		}
 		next;
 		switch (select("Invest in commercial growth", "Cancel")) {
 		case 1:
 			if (Zeny < .@eco_invest) {
-				mes "["+strnpcinfo(NPC_NAME_VISIBLE)+"]";
-				mes "I'm sorry but there is not enough zeny to invest. You will have to try again when you have the funds, Master.";
+				mes("["+strnpcinfo(NPC_NAME_VISIBLE)+"]");
+				mes("I'm sorry but there is not enough zeny to invest. You will have to try again when you have the funds, Master.");
 				close;
 			}
 			Zeny -= .@eco_invest;
 			setcastledata strnpcinfo(NPC_NAME_HIDDEN),4,getcastledata(strnpcinfo(NPC_NAME_HIDDEN),4)+1;
-			mes "[ "+strnpcinfo(NPC_NAME_VISIBLE)+"]";
-			mes "We finished the investment safely. I expect that our growth level will be increased by tomorrow.";
+			mes("[ "+strnpcinfo(NPC_NAME_VISIBLE)+"]");
+			mes("We finished the investment safely. I expect that our growth level will be increased by tomorrow.");
 			close;
 		case 2:
-			mes "["+strnpcinfo(NPC_NAME_VISIBLE)+"]";
-			mes "I'll do as you bid, my master... There is no hurry. We will do our best.";
+			mes("["+strnpcinfo(NPC_NAME_VISIBLE)+"]");
+			mes("I'll do as you bid, my master... There is no hurry. We will do our best.");
 			close;
 		}
 	case 3:
@@ -726,50 +726,50 @@ OnRecvCastle:
 		if (getcastledata(strnpcinfo(NPC_NAME_HIDDEN),5)) {
 			.@def_invest *= 4;
 		}
-		mes "["+strnpcinfo(NPC_NAME_VISIBLE)+"]";
-		mes "If you raise Castle Defenses, the durability of Guardians and the Emperium will increase. Therefore, if you consider our coming battles, some investment in this area will be required.";
-		mes " ";
-		mes "Originally you can invest just once but if you pay more money, you can invest twice.";
+		mes("["+strnpcinfo(NPC_NAME_VISIBLE)+"]");
+		mes("If you raise Castle Defenses, the durability of Guardians and the Emperium will increase. Therefore, if you consider our coming battles, some investment in this area will be required.");
+		mes(" ");
+		mes("Originally you can invest just once but if you pay more money, you can invest twice.");
 		if (.@defence >= 100) {
-			mes " ";
-			mes "^ff0000But the Castle Defense level of our Castle is at it's highest, 100%. No more investments are needed. Just as I have expected from a great strategist like you, Master.^000000";
+			mes(" ");
+			mes("^ff0000But the Castle Defense level of our Castle is at it's highest, 100%. No more investments are needed. Just as I have expected from a great strategist like you, Master.^000000");
 			close;
 		}
 		if (getcastledata(strnpcinfo(NPC_NAME_HIDDEN),5) >= 2) {
-			mes " ";
-			mes "^ff0000You have already invested twice today. You cannot invest any more.^000000 I expect the Defenses of the guild to grow at a high rate.";
+			mes(" ");
+			mes("^ff0000You have already invested twice today. You cannot invest any more.^000000 I expect the Defenses of the guild to grow at a high rate.");
 			close;
 		}
 		if (getcastledata(strnpcinfo(NPC_NAME_HIDDEN),5) == 0) {
-			mes " ";
-			mes "The current investment amount required is ^ff0000"+.@def_invest+"^000000 zeny. Will you invest?";
+			mes(" ");
+			mes("The current investment amount required is ^ff0000"+.@def_invest+"^000000 zeny. Will you invest?");
 		}
 		else {
-			mes " ";
-			mes "You've invested once today... if you wish to invest once more, ^ff0000"+.@def_invest+"^000000 more zeny will be needed.";
+			mes(" ");
+			mes("You've invested once today... if you wish to invest once more, ^ff0000"+.@def_invest+"^000000 more zeny will be needed.");
 		}
 		next;
 		switch (select("Invest in Castle Defenses.", "Cancel")) {
 		case 1:
 			if (Zeny < .@def_invest) {
-				mes "["+strnpcinfo(NPC_NAME_VISIBLE)+"]";
-				mes "I'm sorry but there is not enough zeny to invest. You will have to try again when you have the funds, Master.";
+				mes("["+strnpcinfo(NPC_NAME_VISIBLE)+"]");
+				mes("I'm sorry but there is not enough zeny to invest. You will have to try again when you have the funds, Master.");
 				close;
 			}
 			Zeny -= .@def_invest;
 			setcastledata strnpcinfo(NPC_NAME_HIDDEN),5,getcastledata(strnpcinfo(NPC_NAME_HIDDEN),5)+1;
-			mes "[ "+strnpcinfo(NPC_NAME_VISIBLE)+"]";
-			mes "We finished the investment safely. I expect that our Castle Defense level will be increased by tomorrow.";
+			mes("[ "+strnpcinfo(NPC_NAME_VISIBLE)+"]");
+			mes("We finished the investment safely. I expect that our Castle Defense level will be increased by tomorrow.");
 			close;
 		case 2:
-			mes "["+strnpcinfo(NPC_NAME_VISIBLE)+"]";
-			mes "I'll do as you bid, my master... There is no hurry. We will do our best.";
+			mes("["+strnpcinfo(NPC_NAME_VISIBLE)+"]");
+			mes("I'll do as you bid, my master... There is no hurry. We will do our best.");
 			close;
 		}
 	case 4:
-		mes "["+strnpcinfo(NPC_NAME_VISIBLE)+"]";
-		mes "Will you summon a Guardian? It'll be a protector to defend us loyally.";
-		mes "Please select a guardian to defend us.";
+		mes("["+strnpcinfo(NPC_NAME_VISIBLE)+"]");
+		mes("Will you summon a Guardian? It'll be a protector to defend us loyally.");
+		mes("Please select a guardian to defend us.");
 		next;
 		for (.@i = 0; .@i <= 7; ++.@i) {
 			if (.@guardiantype[.@i] == 1) { .@type$ = "Guardian Soldier"; }
@@ -784,24 +784,24 @@ OnRecvCastle:
 		}
 		.@menu$ = .@gname$[0]+":"+.@gname$[1]+":"+.@gname$[2]+":"+.@gname$[3]+":"+.@gname$[4]+":"+.@gname$[5]+":"+.@gname$[6]+":"+.@gname$[7];
 		.@GDnum = select(.@menu$)+9;
-		mes "["+strnpcinfo(NPC_NAME_VISIBLE)+"]";
-		mes "Will you summon the chosen guardian? 10,000 zeny are required to summon a Guardian.";
+		mes("["+strnpcinfo(NPC_NAME_VISIBLE)+"]");
+		mes("Will you summon the chosen guardian? 10,000 zeny are required to summon a Guardian.");
 		next;
 		switch (select("Summon", "Cancel")) {
 		case 1:
 			if (getgdskilllv(.@GID,10002) == 0) {
-				mes "["+strnpcinfo(NPC_NAME_VISIBLE)+"]";
-				mes "Master, we have not the resources to Summon the Guardian. If you want to accumulate them, you have to learn the Guild skill. We failed to summon the Guardian.";
+				mes("["+strnpcinfo(NPC_NAME_VISIBLE)+"]");
+				mes("Master, we have not the resources to Summon the Guardian. If you want to accumulate them, you have to learn the Guild skill. We failed to summon the Guardian.");
 				close;
 			}
 			if (getcastledata(strnpcinfo(NPC_NAME_HIDDEN),.@GDnum) == 1) {
-				mes "["+strnpcinfo(NPC_NAME_VISIBLE)+"]";
-				mes "Master, you already have summoned that Guardian. We cannot summon another.";
+				mes("["+strnpcinfo(NPC_NAME_VISIBLE)+"]");
+				mes("Master, you already have summoned that Guardian. We cannot summon another.");
 				close;
 			}
 			if (Zeny < 10000) {
-				mes "["+strnpcinfo(NPC_NAME_VISIBLE)+"]";
-				mes "Well... I'm sorry but we don't have funds to summon the Guardian. We failed to summon the Guardian.";
+				mes("["+strnpcinfo(NPC_NAME_VISIBLE)+"]");
+				mes("Well... I'm sorry but we don't have funds to summon the Guardian. We failed to summon the Guardian.");
 				close;
 			}
 			Zeny -= 10000;
@@ -811,104 +811,104 @@ OnRecvCastle:
 			else if (.@guardiantype[.@UseGID] == 2) { .@type = 1285; }
 			else { .@type = 1286; }
 			guardian strnpcinfo(NPC_NAME_HIDDEN),.@guardianposx[.@UseGID],.@guardianposy[.@UseGID],strmobinfo(2,.@type),.@type,"Guardian#"+strnpcinfo(NPC_NAME_HIDDEN)+"::OnGuardianDied",.@UseGID;
-			mes "["+strnpcinfo(NPC_NAME_VISIBLE)+"]";
-			mes "We completed the summoning of the Guardian. Our defenses are now increased with it in place.";
+			mes("["+strnpcinfo(NPC_NAME_VISIBLE)+"]");
+			mes("We completed the summoning of the Guardian. Our defenses are now increased with it in place.");
 			close;
 		case 2:
-			mes "["+strnpcinfo(NPC_NAME_VISIBLE)+"]";
-			mes "I did as you ordered. But please remember if you the have money to spare, it'll be better to set it up.";
+			mes("["+strnpcinfo(NPC_NAME_VISIBLE)+"]");
+			mes("I did as you ordered. But please remember if you the have money to spare, it'll be better to set it up.");
 			close;
 		}
 	case 5:
 		if (getcastledata(strnpcinfo(NPC_NAME_HIDDEN),9) == 1) {
-			mes "["+strnpcinfo(NPC_NAME_VISIBLE)+"]";
-			mes "We are currently hiring a Kafra Employee... Do you want to fire the Kafra Employee?";
+			mes("["+strnpcinfo(NPC_NAME_VISIBLE)+"]");
+			mes("We are currently hiring a Kafra Employee... Do you want to fire the Kafra Employee?");
 			next;
 			switch (select("Fire", "Cancel")) {
 			case 1:
 				cutin "kafra_01",2;
-				mes "[ Hired Kafra Employee ]";
-				mes "I worked so hard... How can you do that, Master?... Please... Please reconsider... Check it again, Master... Please...";
+				mes("[ Hired Kafra Employee ]");
+				mes("I worked so hard... How can you do that, Master?... Please... Please reconsider... Check it again, Master... Please...");
 				next;
 				switch (select("Fire", "Cancel")) {
 				case 1:
-					mes "[ Hired Kafra Employee ]";
-					mes "Oh, my goodness! This is nonsense!";
+					mes("[ Hired Kafra Employee ]");
+					mes("Oh, my goodness! This is nonsense!");
 					next;
 					cutin "",255;
 					break;
 				case 2:
-					mes "[ Hired Kafra Employee ]";
-					mes "I'll work hard for you... Thank you!";
+					mes("[ Hired Kafra Employee ]");
+					mes("I'll work hard for you... Thank you!");
 					close;
 				}
 				break;
 			case 2:
-				mes "["+strnpcinfo(NPC_NAME_VISIBLE)+"]";
-				mes "She worked hard in my opinion. It was a good decision to keep her.";
+				mes("["+strnpcinfo(NPC_NAME_VISIBLE)+"]");
+				mes("She worked hard in my opinion. It was a good decision to keep her.");
 				close;
 			}
 			disablenpc "Kafra Staff#"+strnpcinfo(NPC_NAME_HIDDEN);
 			setcastledata strnpcinfo(NPC_NAME_HIDDEN),9,0;
-			mes "["+strnpcinfo(NPC_NAME_VISIBLE)+"]";
-			mes "....";
-			mes "I have discharged the Kafra Employee... But... are you unsatisfied with something?";
+			mes("["+strnpcinfo(NPC_NAME_VISIBLE)+"]");
+			mes("....");
+			mes("I have discharged the Kafra Employee... But... are you unsatisfied with something?");
 			close;
 		}
-		mes "["+strnpcinfo(NPC_NAME_VISIBLE)+"]";
-		mes "Will you contact the kafra Main Office and Hire a Employee for our Castle?";
-		mes "^ff0000 10,000 zeny is required for their services. ";
+		mes("["+strnpcinfo(NPC_NAME_VISIBLE)+"]");
+		mes("Will you contact the kafra Main Office and Hire a Employee for our Castle?");
+		mes("^ff0000 10,000 zeny is required for their services. ");
 		next;
 		switch (select("Hire.", "Cancel")) {
 		case 1:
 			if (getgdskilllv(.@GID,10001) == 0) {
-				mes "["+strnpcinfo(NPC_NAME_VISIBLE)+"]";
-				mes "Master, we can't hire a Kafra Employee because we don't have a contract with the Kafra Main Office. If you want to obtain a contract with the Kafra Main Office, you will need to learn the Guild skill first.";
+				mes("["+strnpcinfo(NPC_NAME_VISIBLE)+"]");
+				mes("Master, we can't hire a Kafra Employee because we don't have a contract with the Kafra Main Office. If you want to obtain a contract with the Kafra Main Office, you will need to learn the Guild skill first.");
 				close;
 			}
 			if (Zeny < 10000) {
-				mes "["+strnpcinfo(NPC_NAME_VISIBLE)+"]";
-				mes "Well... I'm sorry but we don't have enough funds to hire a Kafra Employee.";
+				mes("["+strnpcinfo(NPC_NAME_VISIBLE)+"]");
+				mes("Well... I'm sorry but we don't have enough funds to hire a Kafra Employee.");
 				close;
 			}
 			Zeny -= 10000;
 			enablenpc "Kafra Staff#"+strnpcinfo(NPC_NAME_HIDDEN);
 			setcastledata strnpcinfo(NPC_NAME_HIDDEN),9,1;
-			mes "["+strnpcinfo(NPC_NAME_VISIBLE)+"]";
-			mes "We obtained a contract with the kafra Main Office, and hired a Kafra Employee.";
+			mes("["+strnpcinfo(NPC_NAME_VISIBLE)+"]");
+			mes("We obtained a contract with the kafra Main Office, and hired a Kafra Employee.");
 			next;
 			cutin "kafra_01",2;
-			mes "[ Hired Kafra Employee ]";
-			mes "How do you do? I was dispatched from the Main Office.";
-			mes "I'll do my best to not tarnish the reputation of the Guild.";
+			mes("[ Hired Kafra Employee ]");
+			mes("How do you do? I was dispatched from the Main Office.");
+			mes("I'll do my best to not tarnish the reputation of the Guild.");
 			next;
 			cutin "",255;
-			mes "["+strnpcinfo(NPC_NAME_VISIBLE)+"]";
-			mes "The Contract terms of the hired Kafra Employee are for 1 month and after this term, you will need to to pay an additional fee.";
-			mes "It will be useful for our members.";
+			mes("["+strnpcinfo(NPC_NAME_VISIBLE)+"]");
+			mes("The Contract terms of the hired Kafra Employee are for 1 month and after this term, you will need to to pay an additional fee.");
+			mes("It will be useful for our members.");
 			close;
 		case 2:
-			mes "["+strnpcinfo(NPC_NAME_VISIBLE)+"]";
-			mes "I did as you ordered, but some of our members will be unhappy. It will be better to hire a Kafra Employee quickly.";
+			mes("["+strnpcinfo(NPC_NAME_VISIBLE)+"]");
+			mes("I did as you ordered, but some of our members will be unhappy. It will be better to hire a Kafra Employee quickly.");
 			close;
 		}
 	case 6:
-		mes "["+strnpcinfo(NPC_NAME_VISIBLE)+"]";
-		mes "Do you want to visit the room where our valuables are stored?";
-		mes "That room is restricted to you... you are the only one with access to it.";
+		mes("["+strnpcinfo(NPC_NAME_VISIBLE)+"]");
+		mes("Do you want to visit the room where our valuables are stored?");
+		mes("That room is restricted to you... you are the only one with access to it.");
 		next;
 		switch (select("Go into Master's room.", "Cancel")) {
 		case 1:
-			mes "["+strnpcinfo(NPC_NAME_VISIBLE)+"]";
-			mes "I'll show you the secret path. Follow me...please.";
-			mes "When you want to return here, please press the secret switch.";
+			mes("["+strnpcinfo(NPC_NAME_VISIBLE)+"]");
+			mes("I'll show you the secret path. Follow me...please.");
+			mes("When you want to return here, please press the secret switch.");
 			close2;
 			warp strnpcinfo(NPC_NAME_HIDDEN),.@masterroom[0],.@masterroom[1];
 			end;
 		case 2:
-			mes "["+strnpcinfo(NPC_NAME_VISIBLE)+"]";
-			mes "Goods are produced once a day... if you don't remove them in time, they will not be produced anymore.";
-			mes "Therefore, it will be better if you check up on them from time to time.";
+			mes("["+strnpcinfo(NPC_NAME_VISIBLE)+"]");
+			mes("Goods are produced once a day... if you don't remove them in time, they will not be produced anymore.");
+			mes("Therefore, it will be better if you check up on them from time to time.");
 			close;
 		}
 	}
@@ -920,8 +920,8 @@ OnRecvCastle:
 	.@GID = getcastledata(strnpcinfo(NPC_NAME_HIDDEN),1);
 
 	if (.@GID == 0) {
-		mes "[Ringing Voice]";
-		mes "'Those who overcome an ordeal shows a great deal of bravery... and will find their way to another ordeal.'";
+		mes("[Ringing Voice]");
+		mes("'Those who overcome an ordeal shows a great deal of bravery... and will find their way to another ordeal.'");
 		close;
 	}
 
@@ -962,11 +962,11 @@ OnRecvCastle:
 		end;
 	}
 
-	mes "[Ringing Voice]";
-	mes "'Only the truly brave can take the test.'";
+	mes("[Ringing Voice]");
+	mes("'Only the truly brave can take the test.'");
 	next;
-	mes " ";
-	mes "There's a small lever. Will you pull it?";
+	mes(" ");
+	mes("There's a small lever. Will you pull it?");
 	next;
 	if(select("Pull.", "Don't pull.") == 1) {
 		if (getcharid(CHAR_ID_GUILD) == .@GID) {
@@ -974,8 +974,8 @@ OnRecvCastle:
 			warp .@destination$,.@coordinates[0],.@coordinates[1];
 			end;
 		}
-		mes " ";
-		mes "Nothing happened.";
+		mes(" ");
+		mes("Nothing happened.");
 		close;
 	}
 	close;
