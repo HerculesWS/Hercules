@@ -7525,6 +7525,10 @@ static bool battle_config_read(const char *filename, bool imported)
 	if (!imported)
 		battle->config_set_defaults();
 
+	if (libconfig->lookup(&config, "battle_configuration/traps_setting") != NULL) {
+		ShowError("The `traps_setting` battle conf option has been replaced by `trap_visibility`. Please see conf/map/battle/skill.conf.\n");
+	}
+
 	for (i = 0; i < ARRAYLENGTH(battle_data); i++) {
 		int type, val;
 		char config_name[256];
