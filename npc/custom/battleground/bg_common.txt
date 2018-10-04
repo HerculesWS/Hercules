@@ -6,21 +6,21 @@
 // *********************************************************************
 
 -	script	Maroll Battle Recruiter::BatRecruit	4_F_JOB_KNIGHT,{
-	mes "[Maroll Battle Recruiter]";
-	mes "Good day, adventurer.";
-	mes "I'm a knight from a far country called Maroll Kingdom.";
+	mes("[Maroll Battle Recruiter]");
+	mes("Good day, adventurer.");
+	mes("I'm a knight from a far country called Maroll Kingdom.");
 	next;
-	mes "[Maroll Battle Recruiter]";
-	mes "The two princes of the kingdom are now battling for the throne of Maroll, and are in need of experienced soldiers like you. How would you like to lend your power to one of the princes in the Maroll Kingdom?";
+	mes("[Maroll Battle Recruiter]");
+	mes("The two princes of the kingdom are now battling for the throne of Maroll, and are in need of experienced soldiers like you. How would you like to lend your power to one of the princes in the Maroll Kingdom?");
 	next;
 	if( select("Join", "Don't Join") == 2 )
 	{
-		mes "[Maroll Battle Recruiter]";
-		mes "I'll always be stationed here for more soldiers. Feel free to come back whenever you're interested.";
+		mes("[Maroll Battle Recruiter]");
+		mes("I'll always be stationed here for more soldiers. Feel free to come back whenever you're interested.");
 		close;
 	}
-	mes "[Maroll Battle Recruiter]";
-	mes "May the war god bless you.";
+	mes("[Maroll Battle Recruiter]");
+	mes("May the war god bless you.");
 	close2;
 	warp "bat_room",155,150;
 	end;
@@ -37,21 +37,21 @@ lighthalzen,153,86,5	duplicate(BatRecruit)	Maroll Battle Recruiter::BatRecruit6	
 // *********************************************************************
 
 bat_room,148,150,4	script	Teleporter#bat	4_F_TELEPORTER,{
-	mes "[Teleporter]";
-	mes "Do you wish to leave the battlefield? Use my service to return to town.";
+	mes("[Teleporter]");
+	mes("Do you wish to leave the battlefield? Use my service to return to town.");
 	next;
 	if( select("Leave", "Don't Leave") == 2 )
 	{
-		mes "[Teleporter]";
-		mes "I'll be here whenever you're in need of my service.";
+		mes("[Teleporter]");
+		mes("I'll be here whenever you're in need of my service.");
 		close;
 	}
 
 	set .@spoint$, getsavepoint(0);
 	set .@x, getsavepoint(1);
 	set .@y, getsavepoint(2);
-	mes "[Teleporter]";
-	mes "You will be sent back to " + .@spoint$ + ".";
+	mes("[Teleporter]");
+	mes("You will be sent back to " + .@spoint$ + ".");
 	close2;
 	warp .@spoint$, .@x, .@y;
 	end;
@@ -68,36 +68,36 @@ bat_room,148,147,4	script	Kafra Staff::kaf_bat	4_F_KAFRA9,{
 // *********************************************************************
 bat_room,160,159,3	script	General Guillaume	4_M_KY_KIYOM,{
 	cutin "bat_kiyom2",2;
-	mes "[General Guillaume]";
-	mes "Hot-blooded adventurer, we need your ability to win this battle.";
+	mes("[General Guillaume]");
+	mes("Hot-blooded adventurer, we need your ability to win this battle.");
 	next;
 	cutin "bat_kiyom1",2;
-	mes "[General Guillaume]";
-	mes "Our great king, Marcel Marollo VII, is very sick lately. His Majesty has declared that he chosen either me or Prince Croix as the next king amongst his 9 sons.";
+	mes("[General Guillaume]");
+	mes("Our great king, Marcel Marollo VII, is very sick lately. His Majesty has declared that he chosen either me or Prince Croix as the next king amongst his 9 sons.");
 	next;
-	mes "[General Guillaume]";
-	mes "Two kings can't share a nation!";
-	mes "Only the one victorious from His Majesty's appointed battle will be enthroned.";
+	mes("[General Guillaume]");
+	mes("Two kings can't share a nation!");
+	mes("Only the one victorious from His Majesty's appointed battle will be enthroned.");
 	next;
-	mes "[General Guillaume]";
-	mes "This is however, not just a battle between us. This battle will determine the future of this country. I pledge on my honor to prove that I'm the one who can protect this Maroll from outside threats.";
+	mes("[General Guillaume]");
+	mes("This is however, not just a battle between us. This battle will determine the future of this country. I pledge on my honor to prove that I'm the one who can protect this Maroll from outside threats.");
 	next;
 	if( select("Yes, I want to join you.", "End Conversation") == 2 )
 	{
-		mes "[General Guillaume]";
-		mes "I'll be the one who will capture the flag!";
+		mes("[General Guillaume]");
+		mes("I'll be the one who will capture the flag!");
 		close2;
 		cutin "",255;
 		end;
 	}
 	cutin "bat_kiyom2",2;
-	mes "[General Guillaume]";
-	mes "Welcome to my army, comrade.";
-	mes "Your eyes tell me that you're a soldier that I can trust.";
+	mes("[General Guillaume]");
+	mes("Welcome to my army, comrade.");
+	mes("Your eyes tell me that you're a soldier that I can trust.");
 	set Bat_Team,1;
 	next;
-	mes "[General Guillaume]";
-	mes "Now, go upstairs and apply for battle with your comrades. I'm sure they'll welcome you whole-heartedly!";
+	mes("[General Guillaume]");
+	mes("Now, go upstairs and apply for battle with your comrades. I'm sure they'll welcome you whole-heartedly!");
 	close2;
 	cutin "",255;
 	end;
@@ -107,26 +107,26 @@ bat_room,160,159,3	script	General Guillaume	4_M_KY_KIYOM,{
 // *********************************************************************
 bat_room,160,140,3	script	Prince Croix	4_M_CRU_CRUA,{
 	cutin "bat_crua1",2;
-	mes "[Prince Croix]";
-	mes "Wise adventurer, why don't you lend us your power for victory?";
+	mes("[Prince Croix]");
+	mes("Wise adventurer, why don't you lend us your power for victory?");
 	next;
 	cutin "bat_crua2",2;
-	mes "[Prince Croix]";
-	mes "I do not wish to shed blood, but I have no choice but to fight for the possibility of peace and for the sake of my people.";
+	mes("[Prince Croix]");
+	mes("I do not wish to shed blood, but I have no choice but to fight for the possibility of peace and for the sake of my people.");
 	next;
-	mes "[Prince Croix]";
-	mes "General Guillaume may have an advantage in this battle as he is the great general of Maroll, but that doesn't automatically mean he'll win. I want to win this battle so that I can grant a better future for my people.";
+	mes("[Prince Croix]");
+	mes("General Guillaume may have an advantage in this battle as he is the great general of Maroll, but that doesn't automatically mean he'll win. I want to win this battle so that I can grant a better future for my people.");
 	next;
 	if( select("Yes, I want to join you!", "End Conversation") == 2 )
 	{
-		mes "[Prince Croix]";
-		mes "For Maroll!";
+		mes("[Prince Croix]");
+		mes("For Maroll!");
 		close2;
 		cutin "",255;
 		end;
 	}
-	mes "[Prince Croix]";
-	mes "Thank you so much. I feel like I can win with the help of adventurers like you. Now, please go downstairs and join your comrades in sharpening their skills to fight the enemy!";
+	mes("[Prince Croix]");
+	mes("Thank you so much. I feel like I can win with the help of adventurers like you. Now, please go downstairs and join your comrades in sharpening their skills to fight the enemy!");
 	set Bat_Team,2;
 	close2;
 	cutin "",255;
@@ -172,68 +172,68 @@ function	script	Time2Str	{
 // Guillaume Knight - Tierra Valley
 // *********************************************************************
 bat_room,159,178,5	script	Guillaume Knight#1	4_M_KY_SOLD,{
-	mes "[Guillaume Knight]";
-	mes "Tierra Gorge is a very steep canyon with two forts residing in the north and south ends of the map.";
+	mes("[Guillaume Knight]");
+	mes("Tierra Gorge is a very steep canyon with two forts residing in the north and south ends of the map.");
 	next;
-	mes "[Guillaume Knight]";
-	mes "There is a ration depot for the Guillaume and Croix armies at the 11 and 8 o'clock directions.";
+	mes("[Guillaume Knight]");
+	mes("There is a ration depot for the Guillaume and Croix armies at the 11 and 8 o'clock directions.");
 	next;
-	mes "[Guillaume Knight]";
-	mes "The battle starts at your army's ship, and the goal is to advance and destroy your enemy's rations depot faster than they can destroy yours.";
-	mes "";
-	mes "The army that captures the neutral flag in the center of the battlefield will be rewarded with extra regeneration points, meaning their soldiers will resurrect more than the other side, giving them an advantage.";
+	mes("[Guillaume Knight]");
+	mes("The battle starts at your army's ship, and the goal is to advance and destroy your enemy's rations depot faster than they can destroy yours.");
+	mes("");
+	mes("The army that captures the neutral flag in the center of the battlefield will be rewarded with extra regeneration points, meaning their soldiers will resurrect more than the other side, giving them an advantage.");
 	next;
-	mes "[Guillaume Knight]";
-	mes "Are you ready for battle? Then apply with the recruiter next to me!";
+	mes("[Guillaume Knight]");
+	mes("Are you ready for battle? Then apply with the recruiter next to me!");
 	close;
 }
 
 // Tierra Officer - Guillaume
 // *********************************************************************
 bat_room,156,178,5	script	Tierra Valley Officer#1	4_M_KY_KNT,{
-	mes "[Tierra Officer]";
+	mes("[Tierra Officer]");
 	if( Bat_Team == 2 )
 	{
-		mes "Get out of here you stinky Croix!";
+		mes("Get out of here you stinky Croix!");
 		close;
 	}
 
 	if( Bat_Team == 0 )
 	{
-		mes "Please sign up for an army with Prince Croix or General Guillaume!";
+		mes("Please sign up for an army with Prince Croix or General Guillaume!");
 		close;
 	}
 
-	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
+	mes("Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Guillaume Army to those stinky Croixs!");
 	next;
 	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
-	mes "[Tierra Officer]";
+	mes("[Tierra Officer]");
 	if( BG_Delay_Tick >= gettimetick(2) )
 	{
-		mes "You are a Deserter!!";
-		mes "Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.";
+		mes("You are a Deserter!!");
+		mes("Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.");
 		close;
 	}
 
 	if (questprogress(2069,PLAYTIME) == 2)
 		erasequest 2069;
 	if (questprogress(2069,PLAYTIME)) {
-		mes "You have received an indicator showing that you've participated in the Battle at Tierra Gorge. I can't let you participate in any other battles until the indicator goes off.";
+		mes("You have received an indicator showing that you've participated in the Battle at Tierra Gorge. I can't let you participate in any other battles until the indicator goes off.");
 		next;
-		mes "[Tierra Officer]";
-		mes "Stand-by for Tierra Gorge Battle until the time limit passes.";
+		mes("[Tierra Officer]");
+		mes("Stand-by for Tierra Gorge Battle until the time limit passes.");
 		close;
 	}
 
 	if( BaseLevel < 80 )
 	{
-		mes "I'm very please you want to join our army, but I'm sorry: I can't send a rookie like you to die on the cruel battlefield";
+		mes("I'm very please you want to join our army, but I'm sorry: I can't send a rookie like you to die on the cruel battlefield");
 		close;
 	}
 
-	mes "Good luck!";
+	mes("Good luck!");
 	close2;
 	warp "bat_room",85,224;
 	end;
@@ -242,68 +242,68 @@ bat_room,156,178,5	script	Tierra Valley Officer#1	4_M_KY_KNT,{
 // Croix Knight - Tierra Valley
 // *********************************************************************
 bat_room,159,121,1	script	Croix Knight#1	4_M_CRU_SOLD,{
-	mes "[Croix Knight]";
-	mes "Tierra Gorge is a very steep canyon with two forts residing in the north and south ends of the map.";
+	mes("[Croix Knight]");
+	mes("Tierra Gorge is a very steep canyon with two forts residing in the north and south ends of the map.");
 	next;
-	mes "[Croix Knight]";
-	mes "There is a ration depot for the Guillaume and Croix armies at the 11 and 8 o'clock directions.";
+	mes("[Croix Knight]");
+	mes("There is a ration depot for the Guillaume and Croix armies at the 11 and 8 o'clock directions.");
 	next;
-	mes "[Croix Knight]";
-	mes "The battle starts at your army's ship, and the goal is to advance and destroy your enemy's rations depot faster than they can destroy yours.";
-	mes "";
-	mes "The army that captures the neutral flag in the center of the battlefield will be rewarded with extra regeneration points, meaning their soldiers will resurrect more than the other side, giving them an advantage.";
+	mes("[Croix Knight]");
+	mes("The battle starts at your army's ship, and the goal is to advance and destroy your enemy's rations depot faster than they can destroy yours.");
+	mes("");
+	mes("The army that captures the neutral flag in the center of the battlefield will be rewarded with extra regeneration points, meaning their soldiers will resurrect more than the other side, giving them an advantage.");
 	next;
-	mes "[Croix Knight]";
-	mes "Are you ready for battle? Then apply with the recruiter next to me!";
+	mes("[Croix Knight]");
+	mes("Are you ready for battle? Then apply with the recruiter next to me!");
 	close;
 }
 
 // Tierra Officer - Croix
 // *********************************************************************
 bat_room,156,121,1	script	Tierra Valley Officer#2	4_M_CRU_KNT,{
-	mes "[Tierra Officer]";
+	mes("[Tierra Officer]");
 	if( Bat_Team == 1 )
 	{
-		mes "Get out of here you stupid Guillaume!";
+		mes("Get out of here you stupid Guillaume!");
 		close;
 	}
 
 	if( Bat_Team == 0 )
 	{
-		mes "Please sign up for an army with Prince Croix or General Guillaume!";
+		mes("Please sign up for an army with Prince Croix or General Guillaume!");
 		close;
 	}
 
-	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
+	mes("Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Croix Army to those stinky Guillaumes!");
 	next;
 	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
-	mes "[Tierra Officer]";
+	mes("[Tierra Officer]");
 	if( BG_Delay_Tick >= gettimetick(2) )
 	{
-		mes "You are a Deserter!!";
-		mes "Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.";
+		mes("You are a Deserter!!");
+		mes("Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.");
 		close;
 	}
 
 	if (questprogress(2069,PLAYTIME) == 2)
 		erasequest 2069;
 	if (questprogress(2069,PLAYTIME)) {
-		mes "You have received an indicator showing that you've participated in the Battle at Tierra Gorge. I can't let you participate in any other battles until the indicator goes off.";
+		mes("You have received an indicator showing that you've participated in the Battle at Tierra Gorge. I can't let you participate in any other battles until the indicator goes off.");
 		next;
-		mes "[Tierra Officer]";
-		mes "Stand-by for Tierra Gorge Battle until the time limit passes.";
+		mes("[Tierra Officer]");
+		mes("Stand-by for Tierra Gorge Battle until the time limit passes.");
 		close;
 	}
 
 	if( BaseLevel < 80 )
 	{
-		mes "I'm very please you want to join our army, but I'm sorry: I can't send a rookie like you to die on the cruel battlefield";
+		mes("I'm very please you want to join our army, but I'm sorry: I can't send a rookie like you to die on the cruel battlefield");
 		close;
 	}
 
-	mes "Good luck!";
+	mes("Good luck!");
 	close2;
 	warp "bat_room",85,208;
 	end;
@@ -312,68 +312,68 @@ bat_room,156,121,1	script	Tierra Valley Officer#2	4_M_CRU_KNT,{
 // Guillaume Knight - Tierra
 // *********************************************************************
 bat_room,167,178,5	script	Guillaume Knight#2	4_M_KY_SOLD,{
-	mes "[Guillaume Knight]";
-	mes "Tierra Gorge is a very steep canyon with two forts residing in the north and south ends of the map.";
+	mes("[Guillaume Knight]");
+	mes("Tierra Gorge is a very steep canyon with two forts residing in the north and south ends of the map.");
 	next;
-	mes "[Guillaume Knight]";
-	mes "There is a ration depot for the Guillaume and Croix armies at the 11 and 8 o'clock directions.";
+	mes("[Guillaume Knight]");
+	mes("There is a ration depot for the Guillaume and Croix armies at the 11 and 8 o'clock directions.");
 	next;
-	mes "[Guillaume Knight]";
-	mes "The battle starts at your army's ship, and the goal is to advance and destroy your enemy's rations depot faster than they can destroy yours.";
-	mes "";
-	mes "The army that captures the neutral flag in the center of the battlefield will be rewarded with extra regeneration points, meaning their soldiers will resurrect more than the other side, giving them an advantage.";
+	mes("[Guillaume Knight]");
+	mes("The battle starts at your army's ship, and the goal is to advance and destroy your enemy's rations depot faster than they can destroy yours.");
+	mes("");
+	mes("The army that captures the neutral flag in the center of the battlefield will be rewarded with extra regeneration points, meaning their soldiers will resurrect more than the other side, giving them an advantage.");
 	next;
-	mes "[Guillaume Knight]";
-	mes "Are you ready for battle? Then apply with the recruiter next to me!";
+	mes("[Guillaume Knight]");
+	mes("Are you ready for battle? Then apply with the recruiter next to me!");
 	close;
 }
 
 // Tierra Officer - Guillaume
 // *********************************************************************
 bat_room,164,178,5	script	Tierra Valley Officer#3	4_M_KY_KNT,{
-	mes "[Tierra Officer]";
+	mes("[Tierra Officer]");
 	if( Bat_Team == 2 )
 	{
-		mes "Get out of here you stinky Croix!";
+		mes("Get out of here you stinky Croix!");
 		close;
 	}
 
 	if( Bat_Team == 0 )
 	{
-		mes "Please sign up for an army with Prince Croix or General Guillaume!";
+		mes("Please sign up for an army with Prince Croix or General Guillaume!");
 		close;
 	}
 
-	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
+	mes("Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Guillaume Army to those stinky Croixs!");
 	next;
 	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
-	mes "[Tierra Officer]";
+	mes("[Tierra Officer]");
 	if( BG_Delay_Tick >= gettimetick(2) )
 	{
-		mes "You are a Deserter!!";
-		mes "Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.";
+		mes("You are a Deserter!!");
+		mes("Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.");
 		close;
 	}
 
 	if (questprogress(2069,PLAYTIME) == 2)
 		erasequest 2069;
 	if (questprogress(2069,PLAYTIME)) {
-		mes "You have received an indicator showing that you've participated in the Battle at Tierra Gorge. I can't let you participate in any other battles until the indicator goes off.";
+		mes("You have received an indicator showing that you've participated in the Battle at Tierra Gorge. I can't let you participate in any other battles until the indicator goes off.");
 		next;
-		mes "[Tierra Officer]";
-		mes "Stand-by for Tierra Gorge Battle until the time limit passes.";
+		mes("[Tierra Officer]");
+		mes("Stand-by for Tierra Gorge Battle until the time limit passes.");
 		close;
 	}
 
 	if( BaseLevel < 80 )
 	{
-		mes "I'm very please you want to join our army, but I'm sorry: I can't send a rookie like you to die on the cruel battlefield";
+		mes("I'm very please you want to join our army, but I'm sorry: I can't send a rookie like you to die on the cruel battlefield");
 		close;
 	}
 
-	mes "Good luck!";
+	mes("Good luck!");
 	close2;
 	warp "bat_room",57,94;
 	end;
@@ -382,68 +382,68 @@ bat_room,164,178,5	script	Tierra Valley Officer#3	4_M_KY_KNT,{
 // Croix Knight - Tierra
 // *********************************************************************
 bat_room,167,121,1	script	Croix Knight#2	4_M_CRU_SOLD,{
-	mes "[Croix Knight]";
-	mes "Tierra Gorge is a very steep canyon with two forts residing in the north and south ends of the map.";
+	mes("[Croix Knight]");
+	mes("Tierra Gorge is a very steep canyon with two forts residing in the north and south ends of the map.");
 	next;
-	mes "[Croix Knight]";
-	mes "There is a ration depot for the Guillaume and Croix armies at the 11 and 8 o'clock directions.";
+	mes("[Croix Knight]");
+	mes("There is a ration depot for the Guillaume and Croix armies at the 11 and 8 o'clock directions.");
 	next;
-	mes "[Croix Knight]";
-	mes "The battle starts at your army's ship, and the goal is to advance and destroy your enemy's rations depot faster than they can destroy yours.";
-	mes "";
-	mes "The army that captures the neutral flag in the center of the battlefield will be rewarded with extra regeneration points, meaning their soldiers will resurrect more than the other side, giving them an advantage.";
+	mes("[Croix Knight]");
+	mes("The battle starts at your army's ship, and the goal is to advance and destroy your enemy's rations depot faster than they can destroy yours.");
+	mes("");
+	mes("The army that captures the neutral flag in the center of the battlefield will be rewarded with extra regeneration points, meaning their soldiers will resurrect more than the other side, giving them an advantage.");
 	next;
-	mes "[Croix Knight]";
-	mes "Are you ready for battle? Then apply with the recruiter next to me!";
+	mes("[Croix Knight]");
+	mes("Are you ready for battle? Then apply with the recruiter next to me!");
 	close;
 }
 
 // Tierra Officer - Croix
 // *********************************************************************
 bat_room,164,121,1	script	Tierra Valley Officer#4	4_M_CRU_KNT,{
-	mes "[Tierra Officer]";
+	mes("[Tierra Officer]");
 	if( Bat_Team == 1 )
 	{
-		mes "Get out of here you stupid Guillaume!";
+		mes("Get out of here you stupid Guillaume!");
 		close;
 	}
 
 	if( Bat_Team == 0 )
 	{
-		mes "Please sign up for an army with Prince Croix or General Guillaume!";
+		mes("Please sign up for an army with Prince Croix or General Guillaume!");
 		close;
 	}
 
-	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
+	mes("Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Croix Army to those stinky Guillaumes!");
 	next;
 	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
-	mes "[Tierra Officer]";
+	mes("[Tierra Officer]");
 	if( BG_Delay_Tick >= gettimetick(2) )
 	{
-		mes "You are a Deserter!!";
-		mes "Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.";
+		mes("You are a Deserter!!");
+		mes("Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.");
 		close;
 	}
 
 	if (questprogress(2069,PLAYTIME) == 2)
 		erasequest 2069;
 	if (questprogress(2069,PLAYTIME)) {
-		mes "You have received an indicator showing that you've participated in the Battle at Tierra Gorge. I can't let you participate in any other battles until the indicator goes off.";
+		mes("You have received an indicator showing that you've participated in the Battle at Tierra Gorge. I can't let you participate in any other battles until the indicator goes off.");
 		next;
-		mes "[Tierra Officer]";
-		mes "Stand-by for Tierra Gorge Battle until the time limit passes.";
+		mes("[Tierra Officer]");
+		mes("Stand-by for Tierra Gorge Battle until the time limit passes.");
 		close;
 	}
 
 	if( BaseLevel < 80 )
 	{
-		mes "I'm very please you want to join our army, but I'm sorry: I can't send a rookie like you to die on the cruel battlefield";
+		mes("I'm very please you want to join our army, but I'm sorry: I can't send a rookie like you to die on the cruel battlefield");
 		close;
 	}
 
-	mes "Good luck!";
+	mes("Good luck!");
 	close2;
 	warp "bat_room",57,77;
 	end;
@@ -452,69 +452,69 @@ bat_room,164,121,1	script	Tierra Valley Officer#4	4_M_CRU_KNT,{
 // Guillaune Knight - Flavius
 // *********************************************************************
 bat_room,175,178,5	script	Guillaume Knight#3	4_M_KY_SOLD,{
-	mes "[Guillaume Knight]";
-	mes "The objective of the Flavius Battle is to score 2 points before your enemy by destroying their crystal.";
+	mes("[Guillaume Knight]");
+	mes("The objective of the Flavius Battle is to score 2 points before your enemy by destroying their crystal.");
 	next;
-	mes "[Guillaume Knight]";
-	mes "The crystals for both armies are protected by special barricades that cannot be destroyed by direct attacks.";
+	mes("[Guillaume Knight]");
+	mes("The crystals for both armies are protected by special barricades that cannot be destroyed by direct attacks.");
 	next;
-	mes "[Guillaume Knight]";
-	mes "But they can be removed by destroying the Guardians that protect the enemy army base.";
+	mes("[Guillaume Knight]");
+	mes("But they can be removed by destroying the Guardians that protect the enemy army base.");
 	next;
-	mes "[Guillaume Knight]";
-	mes "The crystals are immune to every type of skill; your physical attacks are the only choice for destroying your enemy's crystal.";
+	mes("[Guillaume Knight]");
+	mes("The crystals are immune to every type of skill); your physical attacks are the only choice for destroying your enemy's crystal.";
 	next;
-	mes "[Guillaume Knight]";
-	mes "Are you ready for battle? Then apply with the recruiter next to me!";
+	mes("[Guillaume Knight]");
+	mes("Are you ready for battle? Then apply with the recruiter next to me!");
 	close;
 }
 
 // Flavius Officer - Guillaume
 // *********************************************************************
 bat_room,172,178,5	script	Flavius Officer#1	4_M_KY_KNT,{
-	mes "[Flavius Officer]";
+	mes("[Flavius Officer]");
 	if( Bat_Team == 2 )
 	{
-		mes "Get out of here you stupid Croix!";
+		mes("Get out of here you stupid Croix!");
 		close;
 	}
 
 	if( Bat_Team == 0 )
 	{
-		mes "Please sign up for an army with Prince Croix or General Guillaume!";
+		mes("Please sign up for an army with Prince Croix or General Guillaume!");
 		close;
 	}
 
-	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
+	mes("Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Guillaume Army to those stinky Croixs!");
 	next;
 	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
-	mes "[Flavius Officer]";
+	mes("[Flavius Officer]");
 	if( BG_Delay_Tick >= gettimetick(2) )
 	{
-		mes "You are a Deserter!!";
-		mes "Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.";
+		mes("You are a Deserter!!");
+		mes("Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.");
 		close;
 	}
 
 	if (questprogress(2070,PLAYTIME) == 2)
 		erasequest 2070;
 	if (questprogress(2070,PLAYTIME)) {
-		mes "You have received an indicator showing that you've participated in the Battle at Flavius. I can't let you participate in any other battles until the indicator goes off.";
+		mes("You have received an indicator showing that you've participated in the Battle at Flavius. I can't let you participate in any other battles until the indicator goes off.");
 		next;
-		mes "[Flavius Officer]";
-		mes "Stand-by for Flavius Battle until the time limit passes.";
+		mes("[Flavius Officer]");
+		mes("Stand-by for Flavius Battle until the time limit passes.");
 		close;
 	}
 
 	if( BaseLevel < 80 )
 	{
-		mes "I'm very please you want to join our army, but I'm sorry: I can't send a rookie like you to die on the cruel battlefield";
+		mes("I'm very please you want to join our army, but I'm sorry: I can't send a rookie like you to die on the cruel battlefield");
 		close;
 	}
 
-	mes "Good luck!";
+	mes("Good luck!");
 	close2;
 	warp "bat_room",85,94;
 	end;
@@ -523,69 +523,69 @@ bat_room,172,178,5	script	Flavius Officer#1	4_M_KY_KNT,{
 // Croix Knight - Flavius
 // *********************************************************************
 bat_room,175,121,1	script	Croix Knight#3	4_M_CRU_SOLD,{
-	mes "[Croix Knight]";
-	mes "The objective of the Flavius Battle is to score 2 points before your enemy by destroying their crystal.";
+	mes("[Croix Knight]");
+	mes("The objective of the Flavius Battle is to score 2 points before your enemy by destroying their crystal.");
 	next;
-	mes "[Croix Knight]";
-	mes "The crystals for both armies are protected by special barricades that cannot be destroyed by direct attacks.";
+	mes("[Croix Knight]");
+	mes("The crystals for both armies are protected by special barricades that cannot be destroyed by direct attacks.");
 	next;
-	mes "[Croix Knight]";
-	mes "But they can be removed by destroying the Guardians that protect the enemy army base.";
+	mes("[Croix Knight]");
+	mes("But they can be removed by destroying the Guardians that protect the enemy army base.");
 	next;
-	mes "[Croix Knight]";
-	mes "The crystals are immune to every type of skill; your physical attacks are the only choice for destroying your enemy's crystal.";
+	mes("[Croix Knight]");
+	mes("The crystals are immune to every type of skill); your physical attacks are the only choice for destroying your enemy's crystal.";
 	next;
-	mes "[Croix Knight]";
-	mes "Are you ready for battle? Then apply with the recruiter next to me!";
+	mes("[Croix Knight]");
+	mes("Are you ready for battle? Then apply with the recruiter next to me!");
 	close;
 }
 
 // Flavius Officerer - Croix
 // *********************************************************************
 bat_room,172,121,1	script	Flavius Officer#2	4_M_CRU_KNT,{
-	mes "[Flavius Officer]";
+	mes("[Flavius Officer]");
 	if( Bat_Team == 1 )
 	{
-		mes "Get out of here you stupid Guillaume!";
+		mes("Get out of here you stupid Guillaume!");
 		close;
 	}
 
 	if( Bat_Team == 0 )
 	{
-		mes "Please sign up for an army with Prince Croix or General Guillaume!";
+		mes("Please sign up for an army with Prince Croix or General Guillaume!");
 		close;
 	}
 
-	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
+	mes("Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Croix Army to those stinky Guillaumes!");
 	next;
 	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
-	mes "[Flavius Officer]";
+	mes("[Flavius Officer]");
 	if( BG_Delay_Tick >= gettimetick(2) )
 	{
-		mes "You are a Deserter!!";
-		mes "Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.";
+		mes("You are a Deserter!!");
+		mes("Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.");
 		close;
 	}
 
 	if (questprogress(2070,PLAYTIME) == 2)
 		erasequest 2070;
 	if (questprogress(2070,PLAYTIME)) {
-		mes "You have received an indicator showing that you've participated in the Battle at Flavius. I can't let you participate in any other battles until the indicator goes off.";
+		mes("You have received an indicator showing that you've participated in the Battle at Flavius. I can't let you participate in any other battles until the indicator goes off.");
 		next;
-		mes "[Flavius Officer]";
-		mes "Stand-by for Flavius Battle until the time limit passes.";
+		mes("[Flavius Officer]");
+		mes("Stand-by for Flavius Battle until the time limit passes.");
 		close;
 	}
 
 	if( BaseLevel < 80 )
 	{
-		mes "I'm very please you want to join our army, but I'm sorry: I can't send a rookie like you to die on the cruel battlefield";
+		mes("I'm very please you want to join our army, but I'm sorry: I can't send a rookie like you to die on the cruel battlefield");
 		close;
 	}
 
-	mes "Good luck!";
+	mes("Good luck!");
 	close2;
 	warp "bat_room",85,77;
 	end;
@@ -594,69 +594,69 @@ bat_room,172,121,1	script	Flavius Officer#2	4_M_CRU_KNT,{
 // Guillaune Knight - Flavius
 // *********************************************************************
 bat_room,151,178,5	script	Guillaume Knight#4	4_M_KY_SOLD,{
-	mes "[Guillaume Knight]";
-	mes "The objective of the Flavius Battle is to score 2 points before your enemy by destroying their crystal.";
+	mes("[Guillaume Knight]");
+	mes("The objective of the Flavius Battle is to score 2 points before your enemy by destroying their crystal.");
 	next;
-	mes "[Guillaume Knight]";
-	mes "The crystals for both armies are protected by special barricades that cannot be destroyed by direct attacks.";
+	mes("[Guillaume Knight]");
+	mes("The crystals for both armies are protected by special barricades that cannot be destroyed by direct attacks.");
 	next;
-	mes "[Guillaume Knight]";
-	mes "But they can be removed by destroying the Guardians that protect the enemy army base.";
+	mes("[Guillaume Knight]");
+	mes("But they can be removed by destroying the Guardians that protect the enemy army base.");
 	next;
-	mes "[Guillaume Knight]";
-	mes "The crystals are immune to every type of skill; your physical attacks are the only choice for destroying your enemy's crystal.";
+	mes("[Guillaume Knight]");
+	mes("The crystals are immune to every type of skill); your physical attacks are the only choice for destroying your enemy's crystal.";
 	next;
-	mes "[Guillaume Knight]";
-	mes "Are you ready for battle? Then apply with the recruiter next to me!";
+	mes("[Guillaume Knight]");
+	mes("Are you ready for battle? Then apply with the recruiter next to me!");
 	close;
 }
 
 // Flavius Officerer - Guillaume
 // *********************************************************************
 bat_room,148,178,5	script	Flavius Officer#3	4_M_KY_KNT,{
-	mes "[Flavius Officer]";
+	mes("[Flavius Officer]");
 	if( Bat_Team == 2 )
 	{
-		mes "Get out of here you stupid Croix!";
+		mes("Get out of here you stupid Croix!");
 		close;
 	}
 
 	if( Bat_Team == 0 )
 	{
-		mes "Please sign up for an army with Prince Croix or General Guillaume!";
+		mes("Please sign up for an army with Prince Croix or General Guillaume!");
 		close;
 	}
 
-	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
+	mes("Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Guillaume Army to those stinky Croixs!");
 	next;
 	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
-	mes "[Flavius Officer]";
+	mes("[Flavius Officer]");
 	if( BG_Delay_Tick >= gettimetick(2) )
 	{
-		mes "You are a Deserter!!";
-		mes "Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.";
+		mes("You are a Deserter!!");
+		mes("Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.");
 		close;
 	}
 
 	if (questprogress(2070,PLAYTIME) == 2)
 		erasequest 2070;
 	if (questprogress(2070,PLAYTIME)) {
-		mes "You have received an indicator showing that you've participated in the Battle at Flavius. I can't let you participate in any other battles until the indicator goes off.";
+		mes("You have received an indicator showing that you've participated in the Battle at Flavius. I can't let you participate in any other battles until the indicator goes off.");
 		next;
-		mes "[Flavius Officer]";
-		mes "Stand-by for Flavius Battle until the time limit passes.";
+		mes("[Flavius Officer]");
+		mes("Stand-by for Flavius Battle until the time limit passes.");
 		close;
 	}
 
 	if( BaseLevel < 80 )
 	{
-		mes "I'm very please you want to join our army, but I'm sorry: I can't send a rookie like you to die on the cruel battlefield";
+		mes("I'm very please you want to join our army, but I'm sorry: I can't send a rookie like you to die on the cruel battlefield");
 		close;
 	}
 
-	mes "Good luck!";
+	mes("Good luck!");
 	close2;
 	warp "bat_room",253,94;
 	end;
@@ -665,69 +665,69 @@ bat_room,148,178,5	script	Flavius Officer#3	4_M_KY_KNT,{
 // Croix Knight - Flavius
 // *********************************************************************
 bat_room,151,121,1	script	Croix Knight#4	4_M_CRU_SOLD,{
-	mes "[Croix Knight]";
-	mes "The objective of the Flavius Battle is to score 2 points before your enemy by destroying their crystal.";
+	mes("[Croix Knight]");
+	mes("The objective of the Flavius Battle is to score 2 points before your enemy by destroying their crystal.");
 	next;
-	mes "[Croix Knight]";
-	mes "The crystals for both armies are protected by special barricades that cannot be destroyed by direct attacks.";
+	mes("[Croix Knight]");
+	mes("The crystals for both armies are protected by special barricades that cannot be destroyed by direct attacks.");
 	next;
-	mes "[Croix Knight]";
-	mes "But they can be removed by destroying the Guardians that protect the enemy army base.";
+	mes("[Croix Knight]");
+	mes("But they can be removed by destroying the Guardians that protect the enemy army base.");
 	next;
-	mes "[Croix Knight]";
-	mes "The crystals are immune to every type of skill; your physical attacks are the only choice for destroying your enemy's crystal.";
+	mes("[Croix Knight]");
+	mes("The crystals are immune to every type of skill); your physical attacks are the only choice for destroying your enemy's crystal.";
 	next;
-	mes "[Croix Knight]";
-	mes "Are you ready for battle? Then apply with the recruiter next to me!";
+	mes("[Croix Knight]");
+	mes("Are you ready for battle? Then apply with the recruiter next to me!");
 	close;
 }
 
 // Flavius Officerer - Croix
 // *********************************************************************
 bat_room,148,121,1	script	Flavius Officer#4	4_M_CRU_KNT,{
-	mes "[Flavius Officer]";
+	mes("[Flavius Officer]");
 	if( Bat_Team == 1 )
 	{
-		mes "Get out of here you stupid Guillaume!";
+		mes("Get out of here you stupid Guillaume!");
 		close;
 	}
 
 	if( Bat_Team == 0 )
 	{
-		mes "Please sign up for an army with Prince Croix or General Guillaume!";
+		mes("Please sign up for an army with Prince Croix or General Guillaume!");
 		close;
 	}
 
-	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
+	mes("Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Croix Army to those stinky Guillaumes!");
 	next;
 	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
-	mes "[Flavius Officer]";
+	mes("[Flavius Officer]");
 	if( BG_Delay_Tick >= gettimetick(2) )
 	{
-		mes "You are a Deserter!!";
-		mes "Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.";
+		mes("You are a Deserter!!");
+		mes("Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.");
 		close;
 	}
 
 	if (questprogress(2070,PLAYTIME) == 2)
 		erasequest 2070;
 	if (questprogress(2070,PLAYTIME)) {
-		mes "You have received an indicator showing that you've participated in the Battle at Flavius. I can't let you participate in any other battles until the indicator goes off.";
+		mes("You have received an indicator showing that you've participated in the Battle at Flavius. I can't let you participate in any other battles until the indicator goes off.");
 		next;
-		mes "[Flavius Officer]";
-		mes "Stand-by for Flavius Battle until the time limit passes.";
+		mes("[Flavius Officer]");
+		mes("Stand-by for Flavius Battle until the time limit passes.");
 		close;
 	}
 
 	if( BaseLevel < 80 )
 	{
-		mes "I'm very please you want to join our army, but I'm sorry: I can't send a rookie like you to die on the cruel battlefield";
+		mes("I'm very please you want to join our army, but I'm sorry: I can't send a rookie like you to die on the cruel battlefield");
 		close;
 	}
 
-	mes "Good luck!";
+	mes("Good luck!");
 	close2;
 	warp "bat_room",253,77;
 	end;
@@ -736,66 +736,66 @@ bat_room,148,121,1	script	Flavius Officer#4	4_M_CRU_KNT,{
 // Guillaume Knight - KvM
 // *********************************************************************
 bat_room,143,178,5	script	Guillaume Knight#5	4_M_KY_SOLD,{
-	mes "[Guillaume Knight]";
-	mes "To win the Battle of Kriger Von Midgard you and your team must kill all the other opponents before all of you die.";
+	mes("[Guillaume Knight]");
+	mes("To win the Battle of Kriger Von Midgard you and your team must kill all the other opponents before all of you die.");
 	next;
-	mes "[Guillaume Knight]";
-	mes "The first team to lose all their soldiers loses.";
+	mes("[Guillaume Knight]");
+	mes("The first team to lose all their soldiers loses.");
 	next;
-	mes "[Guillaume Knight]";
-	mes "Since you cannot come back to battle after you die, taking care on the battlefield is essential.";
+	mes("[Guillaume Knight]");
+	mes("Since you cannot come back to battle after you die, taking care on the battlefield is essential.");
 	next;
-	mes "[Guillaume Knight]";
-	mes "Are you ready for battle? Then apply with the recruiter next to me!";
+	mes("[Guillaume Knight]");
+	mes("Are you ready for battle? Then apply with the recruiter next to me!");
 	close;
 }
 
 // KvM Officerer - Guillaume
 // *********************************************************************
 bat_room,140,178,5	script	KVM [80-99] Officer#1	4_M_KY_KNT,{
-	mes "[KVM Officer]";
+	mes("[KVM Officer]");
 	if( Bat_Team == 2 )
 	{
-		mes "Get out of here you stinky Croix!";
+		mes("Get out of here you stinky Croix!");
 		close;
 	}
 
 	if( Bat_Team == 0 )
 	{
-		mes "Please sign up for an army with Prince Croix or General Guillaume!";
+		mes("Please sign up for an army with Prince Croix or General Guillaume!");
 		close;
 	}
 
-	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
+	mes("Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Guillaume Army to those stinky Croixs!");
 	next;
 	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
-	mes "[KVM Officer]";
+	mes("[KVM Officer]");
 	if( BG_Delay_Tick >= gettimetick(2) )
 	{
-		mes "You are a Deserter!!";
-		mes "Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.";
+		mes("You are a Deserter!!");
+		mes("Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.");
 		close;
 	}
 
 	if (questprogress(6025,PLAYTIME) == 2)
 		erasequest 6025;
 	if (questprogress(6025,PLAYTIME)) {
-		mes "You have received an indicator showing that you've participated in the Battle at KvM. I can't let you participate in any other battles until the indicator goes off.";
+		mes("You have received an indicator showing that you've participated in the Battle at KvM. I can't let you participate in any other battles until the indicator goes off.");
 		next;
-		mes "[KVM Officer]";
-		mes "Stand-by for KvM Battle until the time limit passes.";
+		mes("[KVM Officer]");
+		mes("Stand-by for KvM Battle until the time limit passes.");
 		close;
 	}
 
 	if( BaseLevel < 80 )
 	{
-		mes "I'm very please you want to join our army, but I'm sorry: This arena is for players with baselevel from 80 to 99.";
+		mes("I'm very please you want to join our army, but I'm sorry: This arena is for players with baselevel from 80 to 99.");
 		close;
 	}
 
-	mes "Good luck!";
+	mes("Good luck!");
 	close2;
 	warp "bat_room",253,224;
 	end;
@@ -804,66 +804,66 @@ bat_room,140,178,5	script	KVM [80-99] Officer#1	4_M_KY_KNT,{
 // Croix Knight - KvM
 // *********************************************************************
 bat_room,143,121,1	script	Croix Knight#5	4_M_CRU_SOLD,{
-	mes "[Croix Knight]";
-	mes "To win the Battle of Kriger Von Midgard you and your team must kill all the other opponents before all of you die.";
+	mes("[Croix Knight]");
+	mes("To win the Battle of Kriger Von Midgard you and your team must kill all the other opponents before all of you die.");
 	next;
-	mes "[Croix Knight]";
-	mes "The first team to lose all their soldiers loses.";
+	mes("[Croix Knight]");
+	mes("The first team to lose all their soldiers loses.");
 	next;
-	mes "[Croix Knight]";
-	mes "Since you cannot come back to battle after you die, taking care on the battlefield is essential.";
+	mes("[Croix Knight]");
+	mes("Since you cannot come back to battle after you die, taking care on the battlefield is essential.");
 	next;
-	mes "[Croix Knight]";
-	mes "Are you ready for battle? Then apply with the recruiter next to me!";
+	mes("[Croix Knight]");
+	mes("Are you ready for battle? Then apply with the recruiter next to me!");
 	close;
 }
 
 // KvM Officer - Croix
 // *********************************************************************
 bat_room,140,121,1	script	KVM [80-99] Officer#2	4_M_CRU_KNT,{
-	mes "[KVM Officer]";
+	mes("[KVM Officer]");
 	if( Bat_Team == 1 )
 	{
-		mes "Get out of here you stupid Guillaume!";
+		mes("Get out of here you stupid Guillaume!");
 		close;
 	}
 
 	if( Bat_Team == 0 )
 	{
-		mes "Please sign up for an army with Prince Croix or General Guillaume!";
+		mes("Please sign up for an army with Prince Croix or General Guillaume!");
 		close;
 	}
 
-	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
+	mes("Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Croix Army to those stinky Guillaumes!");
 	next;
 	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
-	mes "[KVM Officer]";
+	mes("[KVM Officer]");
 	if( BG_Delay_Tick >= gettimetick(2) )
 	{
-		mes "You are a Deserter!!";
-		mes "Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.";
+		mes("You are a Deserter!!");
+		mes("Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.");
 		close;
 	}
 
 	if (questprogress(6025,PLAYTIME) == 2)
 		erasequest 6025;
 	if (questprogress(6025,PLAYTIME)) {
-		mes "You have received an indicator showing that you've participated in the Battle at KvM. I can't let you participate in any other battles until the indicator goes off.";
+		mes("You have received an indicator showing that you've participated in the Battle at KvM. I can't let you participate in any other battles until the indicator goes off.");
 		next;
-		mes "[KVM Officer]";
-		mes "Stand-by for KvM Battle until the time limit passes.";
+		mes("[KVM Officer]");
+		mes("Stand-by for KvM Battle until the time limit passes.");
 		close;
 	}
 
 	if( BaseLevel < 80 )
 	{
-		mes "I'm very please you want to join our army, but I'm sorry: This arena is for players with baselevel from 80 to 99.";
+		mes("I'm very please you want to join our army, but I'm sorry: This arena is for players with baselevel from 80 to 99.");
 		close;
 	}
 
-	mes "Good luck!";
+	mes("Good luck!");
 	close2;
 	warp "bat_room",253,208;
 	end;
@@ -872,66 +872,66 @@ bat_room,140,121,1	script	KVM [80-99] Officer#2	4_M_CRU_KNT,{
 // Guillaume Knight - KvM
 // *********************************************************************
 bat_room,135,178,5	script	Guillaume Knight#6	4_M_KY_SOLD,{
-	mes "[Guillaume Knight]";
-	mes "To win the Battle of Kriger Von Midgard you and your team must kill all the other opponents before all of you die.";
+	mes("[Guillaume Knight]");
+	mes("To win the Battle of Kriger Von Midgard you and your team must kill all the other opponents before all of you die.");
 	next;
-	mes "[Guillaume Knight]";
-	mes "The first team to lose all their soldiers loses.";
+	mes("[Guillaume Knight]");
+	mes("The first team to lose all their soldiers loses.");
 	next;
-	mes "[Guillaume Knight]";
-	mes "Since you cannot come back to battle after you die, taking care on the battlefield is essential.";
+	mes("[Guillaume Knight]");
+	mes("Since you cannot come back to battle after you die, taking care on the battlefield is essential.");
 	next;
-	mes "[Guillaume Knight]";
-	mes "Are you ready for battle? Then apply with the recruiter next to me!";
+	mes("[Guillaume Knight]");
+	mes("Are you ready for battle? Then apply with the recruiter next to me!");
 	close;
 }
 
 // KvM Officerer - Guillaume
 // *********************************************************************
 bat_room,132,178,5	script	KVM [60-79] Officer#1	4_M_KY_KNT,{
-	mes "[KVM Officer]";
+	mes("[KVM Officer]");
 	if( Bat_Team == 2 )
 	{
-		mes "Get out of here you stinky Croix!";
+		mes("Get out of here you stinky Croix!");
 		close;
 	}
 
 	if( Bat_Team == 0 )
 	{
-		mes "Please sign up for an army with Prince Croix or General Guillaume!";
+		mes("Please sign up for an army with Prince Croix or General Guillaume!");
 		close;
 	}
 
-	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
+	mes("Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Guillaume Army to those stinky Croixs!");
 	next;
 	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
-	mes "[KVM Officer]";
+	mes("[KVM Officer]");
 	if( BG_Delay_Tick >= gettimetick(2) )
 	{
-		mes "You are a Deserter!!";
-		mes "Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.";
+		mes("You are a Deserter!!");
+		mes("Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.");
 		close;
 	}
 
 	if (questprogress(6025,PLAYTIME) == 2)
 		erasequest 6025;
 	if (questprogress(6025,PLAYTIME)) {
-		mes "You have received an indicator showing that you've participated in the Battle at KvM. I can't let you participate in any other battles until the indicator goes off.";
+		mes("You have received an indicator showing that you've participated in the Battle at KvM. I can't let you participate in any other battles until the indicator goes off.");
 		next;
-		mes "[KVM Officer]";
-		mes "Stand-by for KvM Battle until the time limit passes.";
+		mes("[KVM Officer]");
+		mes("Stand-by for KvM Battle until the time limit passes.");
 		close;
 	}
 
 	if( BaseLevel < 60 || BaseLevel > 79 )
 	{
-		mes "I'm very please you want to join our army, but I'm sorry: This arena is for players with baselevel from 60 to 79.";
+		mes("I'm very please you want to join our army, but I'm sorry: This arena is for players with baselevel from 60 to 79.");
 		close;
 	}
 
-	mes "Good luck!";
+	mes("Good luck!");
 	close2;
 	warp "bat_room",225,224;
 	end;
@@ -940,66 +940,66 @@ bat_room,132,178,5	script	KVM [60-79] Officer#1	4_M_KY_KNT,{
 // Croix Knight - KvM
 // *********************************************************************
 bat_room,135,121,1	script	Croix Knight#6	4_M_CRU_SOLD,{
-	mes "[Croix Knight]";
-	mes "To win the Battle of Kriger Von Midgard you and your team must kill all the other opponents before all of you die.";
+	mes("[Croix Knight]");
+	mes("To win the Battle of Kriger Von Midgard you and your team must kill all the other opponents before all of you die.");
 	next;
-	mes "[Croix Knight]";
-	mes "The first team to lose all their soldiers loses.";
+	mes("[Croix Knight]");
+	mes("The first team to lose all their soldiers loses.");
 	next;
-	mes "[Croix Knight]";
-	mes "Since you cannot come back to battle after you die, taking care on the battlefield is essential.";
+	mes("[Croix Knight]");
+	mes("Since you cannot come back to battle after you die, taking care on the battlefield is essential.");
 	next;
-	mes "[Croix Knight]";
-	mes "Are you ready for battle? Then apply with the recruiter next to me!";
+	mes("[Croix Knight]");
+	mes("Are you ready for battle? Then apply with the recruiter next to me!");
 	close;
 }
 
 // KvM Officer - Croix
 // *********************************************************************
 bat_room,132,121,1	script	KVM [60-79] Officer#2	4_M_CRU_KNT,{
-	mes "[KVM Officer]";
+	mes("[KVM Officer]");
 	if( Bat_Team == 1 )
 	{
-		mes "Get out of here you stupid Guillaume!";
+		mes("Get out of here you stupid Guillaume!");
 		close;
 	}
 
 	if( Bat_Team == 0 )
 	{
-		mes "Please sign up for an army with Prince Croix or General Guillaume!";
+		mes("Please sign up for an army with Prince Croix or General Guillaume!");
 		close;
 	}
 
-	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
+	mes("Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Croix Army to those stinky Guillaumes!");
 	next;
 	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
-	mes "[KVM Officer]";
+	mes("[KVM Officer]");
 	if( BG_Delay_Tick >= gettimetick(2) )
 	{
-		mes "You are a Deserter!!";
-		mes "Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.";
+		mes("You are a Deserter!!");
+		mes("Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.");
 		close;
 	}
 
 	if (questprogress(6025,PLAYTIME) == 2)
 		erasequest 6025;
 	if (questprogress(6025,PLAYTIME)) {
-		mes "You have received an indicator showing that you've participated in the Battle at KvM. I can't let you participate in any other battles until the indicator goes off.";
+		mes("You have received an indicator showing that you've participated in the Battle at KvM. I can't let you participate in any other battles until the indicator goes off.");
 		next;
-		mes "[KVM Officer]";
-		mes "Stand-by for KvM Battle until the time limit passes.";
+		mes("[KVM Officer]");
+		mes("Stand-by for KvM Battle until the time limit passes.");
 		close;
 	}
 
 	if( BaseLevel < 60 || BaseLevel > 79 )
 	{
-		mes "I'm very please you want to join our army, but I'm sorry: This arena is for players with baselevel from 60 to 79.";
+		mes("I'm very please you want to join our army, but I'm sorry: This arena is for players with baselevel from 60 to 79.");
 		close;
 	}
 
-	mes "Good luck!";
+	mes("Good luck!");
 	close2;
 	warp "bat_room",225,208;
 	end;
@@ -1008,66 +1008,66 @@ bat_room,132,121,1	script	KVM [60-79] Officer#2	4_M_CRU_KNT,{
 // Guillaume Knight - KvM
 // *********************************************************************
 bat_room,127,178,5	script	Guillaume Knight#7	4_M_KY_SOLD,{
-	mes "[Guillaume Knight]";
-	mes "To win the Battle of Kriger Von Midgard you and your team must kill all the other opponents before all of you die.";
+	mes("[Guillaume Knight]");
+	mes("To win the Battle of Kriger Von Midgard you and your team must kill all the other opponents before all of you die.");
 	next;
-	mes "[Guillaume Knight]";
-	mes "The first team to lose all their soldiers loses.";
+	mes("[Guillaume Knight]");
+	mes("The first team to lose all their soldiers loses.");
 	next;
-	mes "[Guillaume Knight]";
-	mes "Since you cannot come back to battle after you die, taking care on the battlefield is essential.";
+	mes("[Guillaume Knight]");
+	mes("Since you cannot come back to battle after you die, taking care on the battlefield is essential.");
 	next;
-	mes "[Guillaume Knight]";
-	mes "Are you ready for battle? Then apply with the recruiter next to me!";
+	mes("[Guillaume Knight]");
+	mes("Are you ready for battle? Then apply with the recruiter next to me!");
 	close;
 }
 
 // KvM Officerer - Guillaume
 // *********************************************************************
 bat_room,124,178,5	script	KVM [1-59] Officer#1	4_M_KY_KNT,{
-	mes "[KVM Officer]";
+	mes("[KVM Officer]");
 	if( Bat_Team == 2 )
 	{
-		mes "Get out of here you stinky Croix!";
+		mes("Get out of here you stinky Croix!");
 		close;
 	}
 
 	if( Bat_Team == 0 )
 	{
-		mes "Please sign up for an army with Prince Croix or General Guillaume!";
+		mes("Please sign up for an army with Prince Croix or General Guillaume!");
 		close;
 	}
 
-	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
+	mes("Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Guillaume Army to those stinky Croixs!");
 	next;
 	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
-	mes "[KVM Officer]";
+	mes("[KVM Officer]");
 	if( BG_Delay_Tick >= gettimetick(2) )
 	{
-		mes "You are a Deserter!!";
-		mes "Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.";
+		mes("You are a Deserter!!");
+		mes("Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.");
 		close;
 	}
 
 	if (questprogress(6025,PLAYTIME) == 2)
 		erasequest 6025;
 	if (questprogress(6025,PLAYTIME)) {
-		mes "You have received an indicator showing that you've participated in the Battle at KvM. I can't let you participate in any other battles until the indicator goes off.";
+		mes("You have received an indicator showing that you've participated in the Battle at KvM. I can't let you participate in any other battles until the indicator goes off.");
 		next;
-		mes "[KVM Officer]";
-		mes "Stand-by for KvM Battle until the time limit passes.";
+		mes("[KVM Officer]");
+		mes("Stand-by for KvM Battle until the time limit passes.");
 		close;
 	}
 
 	if( BaseLevel > 59 )
 	{
-		mes "I'm very please you want to join our army, but I'm sorry: This arena is for players with baselevel from 1 to 59.";
+		mes("I'm very please you want to join our army, but I'm sorry: This arena is for players with baselevel from 1 to 59.");
 		close;
 	}
 
-	mes "Good luck!";
+	mes("Good luck!");
 	close2;
 	warp "bat_room",197,224;
 	end;
@@ -1076,66 +1076,66 @@ bat_room,124,178,5	script	KVM [1-59] Officer#1	4_M_KY_KNT,{
 // Croix Knight - KvM
 // *********************************************************************
 bat_room,127,121,1	script	Croix Knight#7	4_M_CRU_SOLD,{
-	mes "[Croix Knight]";
-	mes "To win the Battle of Kriger Von Midgard you and your team must kill all the other opponents before all of you die.";
+	mes("[Croix Knight]");
+	mes("To win the Battle of Kriger Von Midgard you and your team must kill all the other opponents before all of you die.");
 	next;
-	mes "[Croix Knight]";
-	mes "The first team to lose all their soldiers loses.";
+	mes("[Croix Knight]");
+	mes("The first team to lose all their soldiers loses.");
 	next;
-	mes "[Croix Knight]";
-	mes "Since you cannot come back to battle after you die, taking care on the battlefield is essential.";
+	mes("[Croix Knight]");
+	mes("Since you cannot come back to battle after you die, taking care on the battlefield is essential.");
 	next;
-	mes "[Croix Knight]";
-	mes "Are you ready for battle? Then apply with the recruiter next to me!";
+	mes("[Croix Knight]");
+	mes("Are you ready for battle? Then apply with the recruiter next to me!");
 	close;
 }
 
 // KvM Officer - Croix
 // *********************************************************************
 bat_room,124,121,1	script	KVM [1-59] Officer#2	4_M_CRU_KNT,{
-	mes "[KVM Officer]";
+	mes("[KVM Officer]");
 	if( Bat_Team == 1 )
 	{
-		mes "Get out of here you stupid Guillaume!";
+		mes("Get out of here you stupid Guillaume!");
 		close;
 	}
 
 	if( Bat_Team == 0 )
 	{
-		mes "Please sign up for an army with Prince Croix or General Guillaume!";
+		mes("Please sign up for an army with Prince Croix or General Guillaume!");
 		close;
 	}
 
-	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
+	mes("Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Croix Army to those stinky Guillaumes!");
 	next;
 	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
-	mes "[KVM Officer]";
+	mes("[KVM Officer]");
 	if( BG_Delay_Tick >= gettimetick(2) )
 	{
-		mes "You are a Deserter!!";
-		mes "Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.";
+		mes("You are a Deserter!!");
+		mes("Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.");
 		close;
 	}
 
 	if (questprogress(6025,PLAYTIME) == 2)
 		erasequest 6025;
 	if (questprogress(6025,PLAYTIME)) {
-		mes "You have received an indicator showing that you've participated in the Battle at KvM. I can't let you participate in any other battles until the indicator goes off.";
+		mes("You have received an indicator showing that you've participated in the Battle at KvM. I can't let you participate in any other battles until the indicator goes off.");
 		next;
-		mes "[KVM Officer]";
-		mes "Stand-by for KvM Battle until the time limit passes.";
+		mes("[KVM Officer]");
+		mes("Stand-by for KvM Battle until the time limit passes.");
 		close;
 	}
 
 	if( BaseLevel > 59 )
 	{
-		mes "I'm very please you want to join our army, but I'm sorry: This arena is for players with baselevel from 1 to 59.";
+		mes("I'm very please you want to join our army, but I'm sorry: This arena is for players with baselevel from 1 to 59.");
 		close;
 	}
 
-	mes "Good luck!";
+	mes("Good luck!");
 	close2;
 	warp "bat_room",197,208;
 	end;
@@ -1227,27 +1227,27 @@ bat_room,138,144,5	script	Repairman#bg	4W_M_03,{
 // *********************************************************************
 
 bat_room,160,150,3	script	Erundek	4_M_MANAGER,{
-	mes "[Erundek]";
-	mes "Welcome, mighty warrior.";
-	mes "What can I do for you today ?";
+	mes("[Erundek]");
+	mes("Welcome, mighty warrior.");
+	mes("What can I do for you today ?");
 	next;
 	switch( select("Check the Catalog","Exchange Bravery Badges","Exchange Valor Badges","Exchange Heroism Badges","Hmm, nothing I guess.") )
 	{
 		case 1:
-			mes "[Erundek]";
-			mes "We have many items, so please take a look and purchase deliberately.";
+			mes("[Erundek]");
+			mes("We have many items, so please take a look and purchase deliberately.");
 			close2;
 			readbook 11010,1;
 			end;
 		case 5:
-			mes "[Erundek]";
-			mes "As you wish.";
-			mes "See you later.";
+			mes("[Erundek]");
+			mes("As you wish.");
+			mes("See you later.");
 			close;
 		case 2: // Bravery Badges
-			mes "[Erundek]";
-			mes "So you want to exchange ^0000FFBravery Badges^000000 from the Battle of Tierra Valley.";
-			mes "What kind of item do you want to exchange?";
+			mes("[Erundek]");
+			mes("So you want to exchange ^0000FFBravery Badges^000000 from the Battle of Tierra Valley.");
+			mes("What kind of item do you want to exchange?");
 			next;
 			deletearray .@Item_DB[0],127;
 			set .@Badge, 7828;
@@ -1263,9 +1263,9 @@ bat_room,160,150,3	script	Erundek	4_M_MANAGER,{
 
 			break;
 		case 3: // Valor Badges
-			mes "[Erundek]";
-			mes "So you want to exchange ^FF0000Valor Badges^000000 from the Battle of Flavius.";
-			mes "What kind of item do you want to exchange?";
+			mes("[Erundek]");
+			mes("So you want to exchange ^FF0000Valor Badges^000000 from the Battle of Flavius.");
+			mes("What kind of item do you want to exchange?");
 			next;
 			deletearray .@Item_DB[0],127;
 			set .@Badge, 7829;
@@ -1281,15 +1281,15 @@ bat_room,160,150,3	script	Erundek	4_M_MANAGER,{
 
 			break;
 		case 4: // Heroism Badge
-			mes "[Erundek]";
-			mes "So you want to exchange ^FFA500Heroism Badges^000000 from the Battle of Kriger Von Midgard.";
-			mes "This shop is not available at the moment.";
+			mes("[Erundek]");
+			mes("So you want to exchange ^FFA500Heroism Badges^000000 from the Battle of Kriger Von Midgard.");
+			mes("This shop is not available at the moment.");
 			close;
 	}
 
-	mes "[Erundek]";
-	mes "What item do you want to exchange?";
-	mes "If you are not sure, check the catalog.";
+	mes("[Erundek]");
+	mes("What item do you want to exchange?");
+	mes("If you are not sure, check the catalog.");
 	next;
 
 	set .@menu$, "";
@@ -1299,30 +1299,30 @@ bat_room,160,150,3	script	Erundek	4_M_MANAGER,{
 
 	set .@Item_ID, .@Item_DB[select(.@menu$) - 1];
 
-	mes "[Erundek]";
-	mes "Would you like to exchange ^FF0000" + .@Value + " " + getitemname(.@Badge) + "^000000 for a ^0000FF" + getitemname(.@Item_ID) + "^000000?";
+	mes("[Erundek]");
+	mes("Would you like to exchange ^FF0000" + .@Value + " " + getitemname(.@Badge) + "^000000 for a ^0000FF" + getitemname(.@Item_ID) + "^000000?");
 	next;
-	mes "Remember, Battleground Reward Items are ^FF0000Character Bound^000000.";
-	mes "Are you sure you want this item?";
+	mes("Remember, Battleground Reward Items are ^FF0000Character Bound^000000.");
+	mes("Are you sure you want this item?");
 	next;
 
 	if( select("Yes", "No") == 2 )
 	{
-		mes "[Erundek]";
-		mes "Do you need more time to check the items?";
+		mes("[Erundek]");
+		mes("Do you need more time to check the items?");
 		close;
 	}
 
 	if( countitem(.@Badge) < .@Value )
 	{
-		mes "[Erundek]";
-		mes "I'm sorry, but you don't have enough badges to exchange.";
+		mes("[Erundek]");
+		mes("I'm sorry, but you don't have enough badges to exchange.");
 		close;
 	}
 
 	delitem .@Badge,.@Value;
 	getitem .@Item_ID,1;
-	mes "[Erundek]";
-	mes "Thank you for exchanging.";
+	mes("[Erundek]");
+	mes("Thank you for exchanging.");
 	close;
 }

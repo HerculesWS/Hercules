@@ -13,20 +13,20 @@
 //============================================================
 
 prontera,142,228,6	script	Find the Mushroom	BLACK_MUSHROOM,{
-	mes "[ Find The Mushroom ]";
+	mes("[ Find The Mushroom ]");
 	if (!.status)
-		mes "There is no event at the moment!";
+		mes("There is no event at the moment!");
 	else {
-		mes "There are "+.Spawn+" Mushrooms left in "+.Map$+"!";
-		mes "Find and kill the mushrooms to gain "+getitemname(.Prize)+"!";
+		mes("There are "+.Spawn+" Mushrooms left in "+.Map$+"!");
+		mes("Find and kill the mushrooms to gain "+getitemname(.Prize)+"!");
 	}
 	if (.status || getgmlevel() < .GM) close;
-	mes "Start the event?";
+	mes("Start the event?");
 	next;
 	if(select("- No", "- Yes") == 1) close;
 	donpcevent strnpcinfo(NPC_NAME)+"::OnMinute10";
-	mes "[ Find The Mushroom ]";
-	mes "Event started!";
+	mes("[ Find The Mushroom ]");
+	mes("Event started!");
 	close;
 
 OnInit:

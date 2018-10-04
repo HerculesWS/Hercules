@@ -14,28 +14,28 @@
 //============================================================
 
 cmd_in02,182,126,2	script	Crazy Boris	4_M_03,{
-	mes "Hey you! Up for Rock Scissors Roulette?";
+	mes("Hey you! Up for Rock Scissors Roulette?");
 	next;
 	switch (select("Let me play.","Explain the rules.","Leave")) {
 		case 1:
 			break;
 		case 2:
-			mes "Ok here are the rules:";
-			mes "I have with me a ^FF00006^000000 chamber pistol with ^FF00001^000000 round. First we play ^FF0000Scissors ^00FF00Paper ^0000FFRock^000000. The loser pulls the trigger. The winner is whoever comes out best.";
-			mes "Beat me to win a prize.";
+			mes("Ok here are the rules:");
+			mes("I have with me a ^FF00006^000000 chamber pistol with ^FF00001^000000 round. First we play ^FF0000Scissors ^00FF00Paper ^0000FFRock^000000. The loser pulls the trigger. The winner is whoever comes out best.");
+			mes("Beat me to win a prize.");
 			next;
 			if (select("Let me play.","No thanks.") == 1) {
-				mes "Ok here we go...";
+				mes("Ok here we go...");
 				break;
 			}
 			// else fall through
 		case 3:
-			mes "Pansy.";
+			mes("Pansy.");
 			close;
 	}
 	.@counter = 1;
 	while(true) {
-		mes "Rock... Paper...";
+		mes("Rock... Paper...");
 
 		.@choice = select("^0000FFROCK!","^0000FFSCISSORS!","^0000FFPAPER!");
 		if (.@lastchoice == .@choice) {
@@ -59,7 +59,7 @@ cmd_in02,182,126,2	script	Crazy Boris	4_M_03,{
 
 		if (.@opponent == .@choice) {
 			// SAME
-			mes "Draw! Again!";
+			mes("Draw! Again!");
 			continue;
 		}
 
@@ -69,43 +69,43 @@ cmd_in02,182,126,2	script	Crazy Boris	4_M_03,{
 		 ) {
 			// LOSE
 			emotion e_heh;
-			mes "Boorah! You Lose!";
+			mes("Boorah! You Lose!");
 			next;
 			.@win = false;
 		} else {
 			//WIN
-			mes "Damnit, You Win!";
+			mes("Damnit, You Win!");
 			emotion e_swt2;
 			next;
 			.@win = true;
 		}
 
-		mes .@counter +" of 6";
+		mes(.@counter +" of 6");
 		if (.@counter == 6)
-			mes "Say your prayers";
+			mes("Say your prayers");
 		.@pull = rand(1, 7 - .@counter);
 		++.@counter;
 		next;
 		if (.@pull > 1) {
 			emotion e_pif;
-			mes "*^0000FFClick^000000* whew...";
+			mes("*^0000FFClick^000000* whew...");
 			continue;
 		}
 		if (!.@win) {
 			specialeffect EF_SUI_EXPLOSION;
-			mes "*^0000FFClick^000000* *^FF0000BANG^000000*";
-			mes "You're dead!";
+			mes("*^0000FFClick^000000* *^FF0000BANG^000000*");
+			mes("You're dead!");
 			emotion e_gg;
 			Sp = 0;
 			unitkill getcharid(CHAR_ID_ACCOUNT);
 			close;
 		}
 		specialeffect EF_SUI_EXPLOSION;
-		mes "*^0000FFClick^000000* *^FF0000BANG^000000*";
-		mes "OWWW @#$%^!! THAT HURT LIKE HELL!!";
+		mes("*^0000FFClick^000000* *^FF0000BANG^000000*");
+		mes("OWWW @#$%^!! THAT HURT LIKE HELL!!");
 		emotion e_omg;
 		next;
-		mes "Congratulations! You have won...";
+		mes("Congratulations! You have won...");
 		switch (rand(1,10)) {
 			case 1: setarray .@reward[0], 10,984; break;
 			case 3: setarray .@reward[0],100,601; break;	// 100x Fly Wings
@@ -119,7 +119,7 @@ cmd_in02,182,126,2	script	Crazy Boris	4_M_03,{
 			case 9:
 			         setarray .@reward[0], 10,985;
 		}
-		mes .@reward[0] +"x "+ getitemname(.@reward[1]) +"!";
+		mes(.@reward[0] +"x "+ getitemname(.@reward[1]) +"!");
 		getitem .@reward[1], .@reward[0];
 		close;
 	}

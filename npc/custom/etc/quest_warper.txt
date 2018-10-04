@@ -67,10 +67,10 @@
 //========================Function & Script========================
 
 function	script	Q_Warpra	{
-	mes "[Warpra]";
-	mes "Hello,";
-	mes "I can warp you to any town or dungeon, but you need to unlock them first by visiting us.";
-	mes "What do you need?";
+	mes("[Warpra]");
+	mes("Hello,");
+	mes("I can warp you to any town or dungeon, but you need to unlock them first by visiting us.");
+	mes("What do you need?");
 
 	if(getarg(0) == 0) callfunc "QWS_MMarray",0;
 	if(getarg(0) == 1) callfunc "QWS_MMarray",1;
@@ -101,19 +101,19 @@ function	script	Q_Warpra	{
 
 GM_Menu:
 	next;
-	mes "Town warping = "+(($QW_TW_OFF)?"^FF0000 Off":"^00FF00 On")+"^000000";
-	mes "Dungeon warping = "+(($QW_DW_OFF)?"^FF0000 Off":"^00FF00 On")+"^000000";
-	mes "Dungeon Depth limit is "+(($QW_DL)?"^00FF00 On":"^FF0000 Off")+"^000000";
-	mes "If on Dungeon Depth limit is set to ^0000FF"+$QW_DDL+"^000000";
-	mes "Show Map Users = "+(($QW_MapUserShow)?"^00FF00 On":"^FF0000 Off")+"^000000";
+	mes("Town warping = "+(($QW_TW_OFF)?"^FF0000 Off":"^00FF00 On")+"^000000");
+	mes("Dungeon warping = "+(($QW_DW_OFF)?"^FF0000 Off":"^00FF00 On")+"^000000");
+	mes("Dungeon Depth limit is "+(($QW_DL)?"^00FF00 On":"^FF0000 Off")+"^000000");
+	mes("If on Dungeon Depth limit is set to ^0000FF"+$QW_DDL+"^000000");
+	mes("Show Map Users = "+(($QW_MapUserShow)?"^00FF00 On":"^FF0000 Off")+"^000000");
 
-	if ($QW_HF) mes "Healing full = ^00FF00 On ^000000";
-	if ($QW_HP) mes "Healing partly = ^00FF00 On ^000000";
-	if (!$QW_HF && !$QW_HP) mes "Healing = ^FF0000 Off ^000000";
+	if ($QW_HF) mes("Healing full = ^00FF00 On ^000000");
+	if ($QW_HP) mes("Healing partly = ^00FF00 On ^000000");
+	if (!$QW_HF && !$QW_HP) mes("Healing = ^FF0000 Off ^000000");
 
-	mes "Storage = "+(($QW_Stor)?"^00FF00 On":"^FF0000 Off")+"^000000";
-	mes "Guild Storage = "+(($QW_GStor)?"^00FF00 On":"^FF0000 Off")+"^000000";
-	mes "Kafra points collect = "+(($QW_KPoint)?"^00FF00 On":"^FF0000 Off")+"^000000";
+	mes("Storage = "+(($QW_Stor)?"^00FF00 On":"^FF0000 Off")+"^000000");
+	mes("Guild Storage = "+(($QW_GStor)?"^00FF00 On":"^FF0000 Off")+"^000000");
+	mes("Kafra points collect = "+(($QW_KPoint)?"^00FF00 On":"^FF0000 Off")+"^000000");
 
 	switch(select("Town Warping","Dungeon Warping","Dungeon Level Limit","Show Map Users","Healing full","Healing partly","Storage","Guild Storage","Kafra points collect","Set Prices","Special Warp","Exit")) {
 	case 1: set $QW_TW_OFF,($QW_TW_OFF)?0:1; goto GM_Menu;
@@ -149,96 +149,96 @@ GM_Menu:
 Setprice:
 	if ($QW_DW_FEE != 0) set $QW_DW_FEE,0;
 	next;
-	mes "Scroll through the list to see all the options.";
+	mes("Scroll through the list to see all the options.");
 
-	mes "Basic - Warps are = "+(($QW_BW_PRICE)?"^00FF00"+$QW_BW_PRICE:"^FF0000Free")+"^000000";
-	mes "Advanced - Warps are = "+(($QW_AW_PRICE)?"^00FF00"+$QW_AW_PRICE:"^FF0000Free")+"^000000";
-	mes "Overseas - Warps are = "+(($QW_OW_PRICE)?"^00FF00"+$QW_OW_PRICE:"^FF0000Free")+"^000000";
+	mes("Basic - Warps are = "+(($QW_BW_PRICE)?"^00FF00"+$QW_BW_PRICE:"^FF0000Free")+"^000000");
+	mes("Advanced - Warps are = "+(($QW_AW_PRICE)?"^00FF00"+$QW_AW_PRICE:"^FF0000Free")+"^000000");
+	mes("Overseas - Warps are = "+(($QW_OW_PRICE)?"^00FF00"+$QW_OW_PRICE:"^FF0000Free")+"^000000");
 
-	mes "Basic Dungeon level warp fee = "+(($QW_BW_FEE)?"^00FF00"+$QW_BW_FEE:"^FF0000NO")+"^000000 zeny per level";
-	mes "Advanced Dungeon level warp fee = "+(($QW_AW_FEE)?"^00FF00"+$QW_AW_FEE:"^FF0000NO")+"^000000 zeny per level";
-	mes "Overseas Dungeon level warp fee = "+(($QW_OW_FEE)?"^00FF00"+$QW_OW_FEE:"^FF0000NO")+"^000000 zeny per level";
+	mes("Basic Dungeon level warp fee = "+(($QW_BW_FEE)?"^00FF00"+$QW_BW_FEE:"^FF0000NO")+"^000000 zeny per level");
+	mes("Advanced Dungeon level warp fee = "+(($QW_AW_FEE)?"^00FF00"+$QW_AW_FEE:"^FF0000NO")+"^000000 zeny per level");
+	mes("Overseas Dungeon level warp fee = "+(($QW_OW_FEE)?"^00FF00"+$QW_OW_FEE:"^FF0000NO")+"^000000 zeny per level");
 
-	mes "Full Healing = "+(($QW_HF_PRICE)?"^00FF00"+$QW_HF_PRICE:"^FF0000Free")+"^000000";
-	mes "^FF0000HP ^000000Part Healing = "+(($QW_HP_H_PRICE)?"^00FF00"+$QW_HP_H_PRICE+"^000000 a point":"^FF0000Free^000000");
-	mes "^FF0000SP ^000000Part Healing = "+(($QW_HP_S_PRICE)?"^00FF00"+$QW_HP_S_PRICE+"^000000 a point":"^FF0000Free^000000");
+	mes("Full Healing = "+(($QW_HF_PRICE)?"^00FF00"+$QW_HF_PRICE:"^FF0000Free")+"^000000");
+	mes("^FF0000HP ^000000Part Healing = "+(($QW_HP_H_PRICE)?"^00FF00"+$QW_HP_H_PRICE+"^000000 a point":"^FF0000Free^000000"));
+	mes("^FF0000SP ^000000Part Healing = "+(($QW_HP_S_PRICE)?"^00FF00"+$QW_HP_S_PRICE+"^000000 a point":"^FF0000Free^000000"));
 
-	if ($QW_S_PRICE && $QW_S_PRICE != 60) mes "Storage = ^00FF00 "+$QW_S_PRICE+" ^000000";
-	if (!$QW_S_PRICE) mes "Storage = ^FF0000 Free ^000000";
-	if ($QW_S_PRICE == 60) mes "Storage = ^0000FF Kafra Mode ^000000";
-	mes "Guild Storage = "+(($QW_GS_PRICE)?"^00FF00"+$QW_GS_PRICE:"^FF0000Free")+"^000000";
+	if ($QW_S_PRICE && $QW_S_PRICE != 60) mes("Storage = ^00FF00 "+$QW_S_PRICE+" ^000000");
+	if (!$QW_S_PRICE) mes("Storage = ^FF0000 Free ^000000");
+	if ($QW_S_PRICE == 60) mes("Storage = ^0000FF Kafra Mode ^000000");
+	mes("Guild Storage = "+(($QW_GS_PRICE)?"^00FF00"+$QW_GS_PRICE:"^FF0000Free")+"^000000");
 
 	switch(select("Basic - Warps","Advanced - Warps","Overseas - Warps","Basic Dungeon warp fee","Advanced Dungeon warp fee","Overseas Dungeon warp fee","Full Healing","Part Healing","Storage","Guild Storage","Back","Exit")) {
 	case 1:
 		next;
-		mes "Basic - Warps are = "+(($QW_BW_PRICE)?"^00FF00"+$QW_BW_PRICE:"^FF0000Free")+"^000000";
-		mes "Basic - Warps are starter towns and related dungeons.";
+		mes("Basic - Warps are = "+(($QW_BW_PRICE)?"^00FF00"+$QW_BW_PRICE:"^FF0000Free")+"^000000");
+		mes("Basic - Warps are starter towns and related dungeons.");
 		input $QW_BW_PRICE;
 		goto Setprice;
 	case 2:
 		next;
-		mes "Advanced - Warps are = "+(($QW_AW_PRICE)?"^00FF00"+$QW_AW_PRICE:"^FF0000Free")+"^000000";
-		mes "Advanced - Warps are towns and dungeons on the same island but not close to any starter town.";
+		mes("Advanced - Warps are = "+(($QW_AW_PRICE)?"^00FF00"+$QW_AW_PRICE:"^FF0000Free")+"^000000");
+		mes("Advanced - Warps are towns and dungeons on the same island but not close to any starter town.");
 		input $QW_AW_PRICE;
 		goto Setprice;
 	case 3:
 		next;
-		mes "Overseas - Warps are = "+(($QW_OW_PRICE)?"^00FF00"+$QW_OW_PRICE:"^FF0000Free")+"^000000";
-		mes "Overseas - Warps are towns and dungeons overseas reachable by boat from Alberta.";
+		mes("Overseas - Warps are = "+(($QW_OW_PRICE)?"^00FF00"+$QW_OW_PRICE:"^FF0000Free")+"^000000");
+		mes("Overseas - Warps are towns and dungeons overseas reachable by boat from Alberta.");
 		input $QW_OW_PRICE;
 		goto Setprice;
 	case 4:
 		next;
-		mes "Basic Dungeon level warp fee = "+(($QW_BW_FEE)?"^00FF00"+$QW_BW_FEE:"^FF0000NO")+"^000000 zeny per level";
-		mes "Basic - Warps are starter town related dungeons.";
-		mes "Dungeon warp fees are calculated by maps away from entrance of the dungeon times Dungeon warp fee.";
-		mes "These costs are on top of the regular Warp costs.";
+		mes("Basic Dungeon level warp fee = "+(($QW_BW_FEE)?"^00FF00"+$QW_BW_FEE:"^FF0000NO")+"^000000 zeny per level");
+		mes("Basic - Warps are starter town related dungeons.");
+		mes("Dungeon warp fees are calculated by maps away from entrance of the dungeon times Dungeon warp fee.");
+		mes("These costs are on top of the regular Warp costs.");
 		input $QW_BW_FEE;
 		goto Setprice;
 	case 5:
 		next;
-		mes "Advanced Dungeon level warp fee = "+(($QW_AW_FEE)?"^00FF00"+$QW_AW_FEE:"^FF0000NO")+"^000000 zeny per level";
-		mes "Advanced - Warps are dungeons not close to any starter town.";
-		mes "Dungeon warp fees are calculated by maps away from entrance of the dungeon times Dungeon warp fee.";
-		mes "These costs are on top of the regular Warp costs.";
+		mes("Advanced Dungeon level warp fee = "+(($QW_AW_FEE)?"^00FF00"+$QW_AW_FEE:"^FF0000NO")+"^000000 zeny per level");
+		mes("Advanced - Warps are dungeons not close to any starter town.");
+		mes("Dungeon warp fees are calculated by maps away from entrance of the dungeon times Dungeon warp fee.");
+		mes("These costs are on top of the regular Warp costs.");
 		input $QW_AW_FEE;
 		goto Setprice;
 	case 6:
 		next;
-		mes "Overseas Dungeon level warp fee = "+(($QW_OW_FEE)?"^00FF00"+$QW_OW_FEE:"^FF0000NO")+"^000000 zeny per level";
-		mes "Overseas - Warps are dungeons related to towns overseas reachable by boat from Alberta.";
-		mes "Dungeon warp fees are calculated by maps away from entrance of the dungeon times Dungeon warp fee.";
-		mes "These costs are on top of the regular Warp costs.";
+		mes("Overseas Dungeon level warp fee = "+(($QW_OW_FEE)?"^00FF00"+$QW_OW_FEE:"^FF0000NO")+"^000000 zeny per level");
+		mes("Overseas - Warps are dungeons related to towns overseas reachable by boat from Alberta.");
+		mes("Dungeon warp fees are calculated by maps away from entrance of the dungeon times Dungeon warp fee.");
+		mes("These costs are on top of the regular Warp costs.");
 		input $QW_OW_FEE;
 		goto Setprice;
 	case 7:
 		next;
-		mes "Full Healing = "+(($QW_HF_PRICE)?"^00FF00"+$QW_HF_PRICE:"^FF0000Free")+"^000000";
-		mes "Instant full healing 1 price.";
+		mes("Full Healing = "+(($QW_HF_PRICE)?"^00FF00"+$QW_HF_PRICE:"^FF0000Free")+"^000000");
+		mes("Instant full healing 1 price.");
 		input $QW_HF_PRICE;
 		goto Setprice;
 	case 8:
 		next;
-		mes "^FF0000HP ^000000Part Healing = "+(($QW_HP_H_PRICE)?"^00FF00"+$QW_HP_H_PRICE+"^000000 a point":"^FF0000Free^000000");
-		mes "^FF0000SP ^000000Part Healing = "+(($QW_HP_S_PRICE)?"^00FF00"+$QW_HP_S_PRICE+"^000000 a point":"^FF0000Free^000000");
-		mes "Healing price per 1 HP.";
-		mes "Healing price per 1 SP.";
-		mes "2 inputs, first HP then SP.";
+		mes("^FF0000HP ^000000Part Healing = "+(($QW_HP_H_PRICE)?"^00FF00"+$QW_HP_H_PRICE+"^000000 a point":"^FF0000Free^000000"));
+		mes("^FF0000SP ^000000Part Healing = "+(($QW_HP_S_PRICE)?"^00FF00"+$QW_HP_S_PRICE+"^000000 a point":"^FF0000Free^000000"));
+		mes("Healing price per 1 HP.");
+		mes("Healing price per 1 SP.");
+		mes("2 inputs, first HP then SP.");
 		input $QW_HP_H_PRICE;
 		input $QW_HP_S_PRICE;
 		goto Setprice;
 	case 9:
 		next;
-		if ($QW_S_PRICE && $QW_S_PRICE != 60) mes "Storage = ^00FF00 "+$QW_S_PRICE+" ^000000";
-		if (!$QW_S_PRICE) mes "Storage = ^FF0000 Free ^000000";
-		if ($QW_S_PRICE == 60) mes "Storage = ^0000FF Kafra Mode ^000000";
-		mes "Storage cost, if set to 60 Kafra pricing will be handled.";
+		if ($QW_S_PRICE && $QW_S_PRICE != 60) mes("Storage = ^00FF00 "+$QW_S_PRICE+" ^000000");
+		if (!$QW_S_PRICE) mes("Storage = ^FF0000 Free ^000000");
+		if ($QW_S_PRICE == 60) mes("Storage = ^0000FF Kafra Mode ^000000");
+		mes("Storage cost, if set to 60 Kafra pricing will be handled.");
 		input $QW_S_PRICE;
 		goto Setprice;
 	case 10:
 		next;
-		mes "Guild Storage = "+(($QW_GS_PRICE)?"^00FF00"+$QW_GS_PRICE:"^FF0000Free")+"^000000";
-		mes "Guild Storage, free on Guild Kafras.";
+		mes("Guild Storage = "+(($QW_GS_PRICE)?"^00FF00"+$QW_GS_PRICE:"^FF0000Free")+"^000000");
+		mes("Guild Storage, free on Guild Kafras.");
 		input $QW_GS_PRICE;
 		goto Setprice;
 	case 11:
@@ -253,30 +253,30 @@ Setprice:
 SpecialWarpMenu:
 	if ($QW_SP_Warpname$ == "") set $QW_SP_Warpname$,"Special Warp";
 	next;
-	mes "Scroll down to see all the information";
-	mes "The Special warp menu option will show in the main menu when all towns & dungeons are unlocked";
-	mes "And when the map for special warping has been set";
-	mes "menu option name set to ^0000FF"+$QW_SP_Warpname$+"^000000";
-	if ($QW_SP_WarpMap$ == "") mes "map is currently ^FF0000not^000000 set, and Special warp menu is off";
-	if ($QW_SP_WarpMap$ != "") mes "map is currently set to ^0000FF"+$QW_SP_WarpMap$+"^000000 and Special Warp menu is on";
-	mes "coords are set to ^0000FF"+$QW_SP_WarpX+","+$QW_SP_WarpY+"^000000";
+	mes("Scroll down to see all the information");
+	mes("The Special warp menu option will show in the main menu when all towns & dungeons are unlocked");
+	mes("And when the map for special warping has been set");
+	mes("menu option name set to ^0000FF"+$QW_SP_Warpname$+"^000000");
+	if ($QW_SP_WarpMap$ == "") mes("map is currently ^FF0000not^000000 set, and Special warp menu is off");
+	if ($QW_SP_WarpMap$ != "") mes("map is currently set to ^0000FF"+$QW_SP_WarpMap$+"^000000 and Special Warp menu is on");
+	mes("coords are set to ^0000FF"+$QW_SP_WarpX+","+$QW_SP_WarpY+"^000000");
 	switch(select("Set Special Warp name to show in menu", "Set WarpMap","Set Coords","Go Back to GM_Menu","Exit")){
 	case 1:
 		next;
-		mes "Set the name to show in the menu as option.";
+		mes("Set the name to show in the menu as option.");
 		input $QW_SP_Warpname$;
 		goto SpecialWarpMenu;
 	case 2:
 		next;
-		mes "Set the map in the ^0000FFmapname^000000 format.";
-		mes "When this warpmap is set the option for players will show once they meet the requirments.";
-		mes "To disable Special Warp Menu option, clear this!";
+		mes("Set the map in the ^0000FFmapname^000000 format.");
+		mes("When this warpmap is set the option for players will show once they meet the requirments.");
+		mes("To disable Special Warp Menu option, clear this!");
 		input $QW_SP_WarpMap$;
 		goto SpecialWarpMenu;
 	case 3:
 		next;
-		mes "First input = Xcoord";
-		mes "Second input = Ycoord";
+		mes("First input = Xcoord");
+		mes("Second input = Ycoord");
 		input $QW_SP_WarpX;
 		input $QW_SP_WarpY;
 		goto SpecialWarpMenu;
@@ -291,16 +291,16 @@ SpecialWarpMenu:
 
 DungeonLevelLimit:
 	next;
-	mes "Dungeon Depth limit is "+(($QW_DL)?"^00FF00On":"^FF0000Off")+"^000000";
-	mes "If^00FF00 On ^000000Dungeon Depth limit is set to ^0000FF"+$QW_DDL+"^000000";
+	mes("Dungeon Depth limit is "+(($QW_DL)?"^00FF00On":"^FF0000Off")+"^000000");
+	mes("If^00FF00 On ^000000Dungeon Depth limit is set to ^0000FF"+$QW_DDL+"^000000");
 
 	switch(select("Toggle Dungeon Depth Limit","Set Dungeon Depth Limit","Go Back to GM_Menu","Exit")){
 	case 1: set $QW_DL,($QW_DL)?0:1; goto DungeonLevelLimit;
 	case 2:
 		next;
-		mes "Set limit of Dungeon Depth 0 = entrance";
-		mes "Depth 1 is a map connected to 0 and so on";
-		mes "Shortest Route to map counts as depth";
+		mes("Set limit of Dungeon Depth 0 = entrance");
+		mes("Depth 1 is a map connected to 0 and so on");
+		mes("Shortest Route to map counts as depth");
 		input $QW_DDL;
 		goto DungeonLevelLimit;
 	case 3: goto GM_Menu;
@@ -346,8 +346,8 @@ L_dungeon:
 	callfunc "QWS_DLarray";
 
 	next;
-	mes "[Warpra]";
-	mes "Please select where you want to go:";
+	mes("[Warpra]");
+	mes("Please select where you want to go:");
 	freeloop(1);
 	set .@menu$,"";
 	for(set .@i,0; .@i<18; set .@i,.@i+1)	// Expected maximum is 18
@@ -376,8 +376,8 @@ L_heal_Full:
 	Zeny -= @healfee;
 	if ($QW_KPoint == 1) set RESRVPTS, RESRVPTS + (@healfee/500);
 	next;
-	mes "[Warpra]";
-	mes "Close this window and I will heal you.";
+	mes("[Warpra]");
+	mes("Close this window and I will heal you.");
 	close2;
 	percentheal 100,100;
 	end;
@@ -395,11 +395,11 @@ PHeal:
 	set @Sp, MaxSp-Sp;
 	set @HpPrice, @Hp*$QW_HP_H_PRICE;
 	set @SpPrice, @Sp*$QW_HP_S_PRICE;
-	mes "[Warpra]";
-	if(getarg(0) == 1) mes ""+@HpPrice+" Zeny for "+@Hp+" health points";
-	if(getarg(1) == 1) mes ""+@SpPrice+" Zeny for "+@Sp+" skill points";
+	mes("[Warpra]");
+	if(getarg(0) == 1) mes(""+@HpPrice+" Zeny for "+@Hp+" health points");
+	if(getarg(1) == 1) mes(""+@SpPrice+" Zeny for "+@Sp+" skill points");
 	set @total, @HpPrice+@SpPrice;
-	mes "for a total of "+@total+" zeny";
+	mes("for a total of "+@total+" zeny");
 	if (select("Heal me","Let me see the choices again")==2) goto L_heal_Part;
 
 	if(getarg(0) == 1)set @HpPrice, (MaxHp-Hp)*$QW_HP_H_PRICE;
@@ -416,19 +416,19 @@ PHeal:
 	end;
 
 Zeny_Short_Both:
-	mes "[Warpra]";
-	mes "Choose another option, you can afford both.";
-	mes "I can heal as much as you can afford, too.";
+	mes("[Warpra]");
+	mes("Choose another option, you can afford both.");
+	mes("I can heal as much as you can afford, too.");
 	if (select("OK","Exit") == 2) goto L_End;
 	goto PHeal;
 
 Zeny_short_HP:
-	mes "[Warpra]";
-	mes "Do you want me to partly heal your HP?";
+	mes("[Warpra]");
+	mes("Do you want me to partly heal your HP?");
 	if (select("Yes","No") == 2) goto L_End;
 	set @Hp, Zeny/$QW_HP_H_PRICE;
 	set @HpPrice, @Hp*$QW_HP_H_PRICE;
-	if (@Hp == 1) mes "You're not worth the effort.";
+	if (@Hp == 1) mes("You're not worth the effort.");
 	if (@Hp == 1) goto L_End;
 	Zeny -= @HpPrice;
 	heal @Hp,0;
@@ -436,12 +436,12 @@ Zeny_short_HP:
 	end;
 
 Zeny_short_SP:
-	mes "[Warpra]";
-	mes "Do you want me to partly heal your SP?";
+	mes("[Warpra]");
+	mes("Do you want me to partly heal your SP?");
 	if (select("Yes","No") == 2) goto L_End;
 	set @Sp, Zeny/$QW_HP_S_PRICE;
 	set @SpPrice, @Sp*$QW_HP_S_PRICE;
-	if (@Sp == 1) mes "You're not worth the effort.";
+	if (@Sp == 1) mes("You're not worth the effort.");
 	if (@Sp == 1) goto L_End;
 	Zeny -= @SpPrice;
 	heal 0,@Sp;
@@ -460,9 +460,9 @@ L_Storage:
 	Zeny -= @fee;
 	if ($QW_KPoint == 1) set RESRVPTS, RESRVPTS + (@fee/5);
 
-	mes "[Warpra]";
+	mes("[Warpra]");
 	if(#kafra_code) {
-		mes "Enter your storage password:";
+		mes("Enter your storage password:");
 		set @code_,0;
 		input @code_;
 		if(@code_ != #kafra_code) {
@@ -472,21 +472,21 @@ L_Storage:
 		set @kafcode_try,0;
 		set @code_,0;
 	}
-	mes "Close this window and I will open your storage.";
+	mes("Close this window and I will open your storage.");
 	close2;
 	openstorage;
 	end;
 
 L_StorageJBlow:
-	mes "[Warpra]";
-	mes "I am sorry but you have to be at least Novice level 6 if you want to use the storage.";
+	mes("[Warpra]");
+	mes("I am sorry but you have to be at least Novice level 6 if you want to use the storage.");
 	return;
 
 L_GStorage:
 	if (!@GID) {
 		next;
-		mes "[Warpra]";
-		mes "You are not a part of a guild I can't help you.";
+		mes("[Warpra]");
+		mes("You are not a part of a guild I can't help you.");
 		close;
 		end;
 	}
@@ -494,8 +494,8 @@ L_GStorage:
 	Zeny -= $QW_GS_PRICE;
 	if ($QW_KPoint == 1) set RESRVPTS, RESRVPTS + ($QW_GS_PRICE/5);
 	next;
-	mes "[Warpra]";
-	mes "Close this window and I will open the ^5533FF" + getguildname(@GID) + "^000000 storage.";
+	mes("[Warpra]");
+	mes("Close this window and I will open the ^5533FF" + getguildname(@GID) + "^000000 storage.");
 	close2;
 	guildopenstorage;
 	end;
@@ -507,11 +507,11 @@ L_End:
 //============================Few=Warp=============================
 L_FewWarps:
 	next;
-	mes "[Warpra]";
-	mes "You need to unlock locations before they come available to you.";
-	mes "To unlock a location talk to my colleagues all over the world.";
-	mes "Each account has its own stamp card.";
-	mes "Want me to check what stamps you have collected so far?";
+	mes("[Warpra]");
+	mes("You need to unlock locations before they come available to you.");
+	mes("To unlock a location talk to my colleagues all over the world.");
+	mes("Each account has its own stamp card.");
+	mes("Want me to check what stamps you have collected so far?");
 	if (select("Yes","No")==1) callsub stampcard;
 	close;
 	end;
@@ -519,8 +519,8 @@ L_FewWarps:
 //============================No=Unlock============================
 L_NoUnlock:
 	next;
-	mes "[Warpra]";
-	mes "I don't unlock this location, my assistant deeper in the dungeon will unlock this place.";
+	mes("[Warpra]");
+	mes("I don't unlock this location, my assistant deeper in the dungeon will unlock this place.");
 	close;
 	end;
 
@@ -528,11 +528,11 @@ L_NoUnlock:
 L_Short_on_zeny:
 	next;
 	switch(getarg(0)) {
-	case 0: mes "You don't seem to have "+@pTprice[@Tmenuref[@TWMenu-1]]+" zeny to pay for the warp to "+@pTmenuitems$[@Tmenuref[@TWMenu-1]]+"."; break;
-	case 1: mes "You don't seem to have "+@warpprice+" zeny to pay for the warp to "+@DLevelName$[@DWLmenuref[@DWLMenu-1]]+" at "+@pDmenuitems$[@Dmenuref[@DWMenu-1]]+"."; break;
-	case 2: mes "You don't seem to have "+@fee+" zeny to pay the storage fee."; break;
-	case 3: mes "You don't seem to have "+$QW_GS_PRICE+" zeny to pay the guild storage fee."; break;
-	case 4: mes "You don't seem to have "+@healfee+" zeny to pay for your healing."; break;
+	case 0: mes("You don't seem to have "+@pTprice[@Tmenuref[@TWMenu-1]]+" zeny to pay for the warp to "+@pTmenuitems$[@Tmenuref[@TWMenu-1]]+"."); break;
+	case 1: mes("You don't seem to have "+@warpprice+" zeny to pay for the warp to "+@DLevelName$[@DWLmenuref[@DWLMenu-1]]+" at "+@pDmenuitems$[@Dmenuref[@DWMenu-1]]+"."); break;
+	case 2: mes("You don't seem to have "+@fee+" zeny to pay the storage fee."); break;
+	case 3: mes("You don't seem to have "+$QW_GS_PRICE+" zeny to pay the guild storage fee."); break;
+	case 4: mes("You don't seem to have "+@healfee+" zeny to pay for your healing."); break;
 	}
 	close;
 	end;
@@ -541,17 +541,17 @@ L_Short_on_zeny:
 stampcard:
 // Counting of the ammount of places you have unlocked
 	next;
-	mes "Let me check what Towns you have.";
+	mes("Let me check what Towns you have.");
 	callfunc "QWS_TownStamps";
-	mes "You collected^00FF00 "+@Tstamp+" of "+@MaxTstamp+" ^000000Towns.";
-	if (@Tstamp == 15) mes "They say there is an island you can only get to when married...";
+	mes("You collected^00FF00 "+@Tstamp+" of "+@MaxTstamp+" ^000000Towns.");
+	if (@Tstamp == 15) mes("They say there is an island you can only get to when married...");
 	if (@Tstamp == 15) emotion 18;
 	next;
-	mes "Let me check what dungeons you have.";
+	mes("Let me check what dungeons you have.");
 	callfunc "QWS_DungeonStamps";
-	mes "You collected^00FF00 "+@Dstamp+" of "+@MaxDstamp+" ^000000Dungeons.";
-	mes "To unlock a dungeon, search for my colleagues.";
-	mes "You can usually find them near the middle or end of the dungeon.";
+	mes("You collected^00FF00 "+@Dstamp+" of "+@MaxDstamp+" ^000000Dungeons.");
+	mes("To unlock a dungeon, search for my colleagues.");
+	mes("You can usually find them near the middle or end of the dungeon.");
 	return;
 }
 
@@ -1525,13 +1525,13 @@ function	script	QWS_Dungeon_Warpra	{
 	function QWS_D_setbin;
 
 	if ((QWS_D_getbin(getarg(0)) == 0) && (getarg(1) != "")) {
-		mes "[Warpra]";
-		mes getarg(1)+" unlocked!";
+		mes("[Warpra]");
+		mes(getarg(1)+" unlocked!");
 		QWS_D_setbin(getarg(0));
 		return;
 	} else if (QWS_D_getbin(getarg(0)) == 1) {
-		mes "[Warpra]";
-		mes "Sorry, I can only unlock this location.";
+		mes("[Warpra]");
+		mes("Sorry, I can only unlock this location.");
 	} else
 		debugmes "QWS_Dungeon_Warpra error, improper syntax?";
 	return;
@@ -1570,8 +1570,8 @@ function	script	QWS_Town_Warpra	{
 	function QWS_T_setbin;
 
 	if ((QWS_T_getbin(getarg(0)) == 0) && (getarg(1) != "")) {
-		mes "[Warpra]";
-		mes getarg(1)+" unlocked!";
+		mes("[Warpra]");
+		mes(getarg(1)+" unlocked!");
 		QWS_T_setbin(getarg(0));
 		return;
 	} else if (QWS_T_getbin(getarg(0)) == 1) {

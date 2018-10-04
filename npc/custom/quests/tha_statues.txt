@@ -14,12 +14,12 @@
 //Statue (NPC)(U: UP, D: DOWN, R: RIGHT, L: LEFT) :
 // Explain Npc
 tha_t08,69,106,4	script	Statue	HIDDEN_NPC,{
-	mes "You can read on the back of the statue:";
-	mes "'By the spirit of olds, the walls are closed";
-	mes "Upper floors or foreign taboo";
-	mes "By the order of the Statues you will find the way";
-	mes "Which perhaps a day will bring you to me.";
-	mes ".....Thanatos '";
+	mes("You can read on the back of the statue:");
+	mes("'By the spirit of olds, the walls are closed");
+	mes("Upper floors or foreign taboo");
+	mes("By the order of the Statues you will find the way");
+	mes("Which perhaps a day will bring you to me.");
+	mes(".....Thanatos '");
 	close;
 }
 
@@ -30,27 +30,27 @@ tha_t08,69,106,4	script	Statue	HIDDEN_NPC,{
 
 tha_t09,17,158,4	script	Thalos	HIDDEN_NPC,{
 	if(TSQ_CHK == 1) goto done;
-	mes "[Thalos]";
-	mes "You must find the 2nd Statue now.";
+	mes("[Thalos]");
+	mes("You must find the 2nd Statue now.");
 	set TSQ_CHK,1;
 	close;
 done:
-	mes "[Thalos]";
-	mes "Go search the 2nd Statue!";
+	mes("[Thalos]");
+	mes("Go search the 2nd Statue!");
 	close;
 }
 
 tha_t09,84,99,4	script	Mediane	HIDDEN_NPC,{
 	if(TSQ_CHK != 1) goto nook;
-	mes "[Mediane]";
-	mes "Okay, i am warping you to the next floor now.";
+	mes("[Mediane]");
+	mes("Okay, i am warping you to the next floor now.");
 	next;
 	set TSQ_CHK,0;
 	warp "tha_t10",	165,	138;
 	close;
 nook:
-	mes "[Mediane]";
-	mes "You must talk with the Spirit in the 1st Statue.";
+	mes("[Mediane]");
+	mes("You must talk with the Spirit in the 1st Statue.");
 	close;
 }
 
@@ -62,26 +62,26 @@ nook:
 
 tha_t10,130,159,4	script	Melkor	HIDDEN_NPC,{
 	if(TSQ_CHK == 1) goto done;
-	mes "[Melkor]";
-	mes "You must find the other Spirits now.";
-	mes "We are 3.";
+	mes("[Melkor]");
+	mes("You must find the other Spirits now.");
+	mes("We are 3.");
 	set TSQ_CHK,1;
 	close;
 done:
-	mes "[Melkor]";
-	mes "Go Search, They are in this floor.";
+	mes("[Melkor]");
+	mes("Go Search, They are in this floor.");
 	close;
 }
 
 tha_t10,160,98,4	script	Zebrus	HIDDEN_NPC,{
 	if(TSQ_CHK != 1) goto nook;
-	mes "[Zebrus]";
-	mes "Keep on this way, There is one Spirit left";
+	mes("[Zebrus]");
+	mes("Keep on this way, There is one Spirit left");
 	set TSQ_CHK,2;
 	close;
 nook:
-	mes "[Zebrus]";
-	mes "You seems to be lost, Go back and talk to Melkor.";
+	mes("[Zebrus]");
+	mes("You seems to be lost, Go back and talk to Melkor.");
 	next;
 	set TSQ_CHK,0;
 	close;
@@ -89,15 +89,15 @@ nook:
 
 tha_t10,99,97,4	script	Veriaelle	HIDDEN_NPC,{
 	if(TSQ_CHK != 2) goto nook;
-	mes "[Veriaelle]";
-	mes "Okay, i am warping you to the next floor.";
+	mes("[Veriaelle]");
+	mes("Okay, i am warping you to the next floor.");
 	next;
 	set TSQ_CHK,0;
 	warp "tha_t11",	86,	38;
 	close;
 nook:
-	mes "[Veriaelle]";
-	mes "You seems to be lost, Go back and talk to Melkor.";
+	mes("[Veriaelle]");
+	mes("You seems to be lost, Go back and talk to Melkor.");
 	next;
 	set TSQ_CHK,0;
 	close;
@@ -112,27 +112,27 @@ nook:
 
 tha_t11,16,85,4	script	Throtre	HIDDEN_NPC,{
 	if(TSQ_CHK == 1) goto done;
-	mes "[Throtre]";
-	mes "You got my authorization for the next floor";
-	mes "However, you must show how strong you are to the other Spirits";
+	mes("[Throtre]");
+	mes("You got my authorization for the next floor");
+	mes("However, you must show how strong you are to the other Spirits");
 	set TSQ_CHK,1;
 	close;
 done:
-	mes "[Throtre]";
-	mes "Go search, They Can't leave this floor.";
+	mes("[Throtre]");
+	mes("Go search, They Can't leave this floor.");
 	close;
 }
 
 tha_t11,85,16,4	script	Klermaz	HIDDEN_NPC,{
 	if(TSQ_CHK != 1) goto nook;
-	mes "[Klermaz]";
-	mes "Hmm it seems that Throtre allowed you to pass.";
-	mes "Well then you have my blessing, 2 Spirits remaining.";
+	mes("[Klermaz]");
+	mes("Hmm it seems that Throtre allowed you to pass.");
+	mes("Well then you have my blessing, 2 Spirits remaining.");
 	set TSQ_CHK,2;
 	close;
 nook:
-	mes "[Klermaz]";
-	mes "You seems to be lost, Go back and talk to Throtre.";
+	mes("[Klermaz]");
+	mes("You seems to be lost, Go back and talk to Throtre.");
 	next;
 	set TSQ_CHK,0;
 	close;
@@ -140,13 +140,13 @@ nook:
 
 tha_t11,16,16,4	script	Mihane	HIDDEN_NPC,{
 	if(TSQ_CHK != 2) goto nook;
-	mes "[Mihane]";
-	mes "Keep on this way, Only 1 Left.";
+	mes("[Mihane]");
+	mes("Keep on this way, Only 1 Left.");
 	set TSQ_CHK,3;
 	close;
 nook:
-	mes "[Mihane]";
-	mes "Sorry, You must start over from the begining.";
+	mes("[Mihane]");
+	mes("Sorry, You must start over from the begining.");
 	next;
 	set TSQ_CHK,0;
 	close;
@@ -154,16 +154,16 @@ nook:
 
 tha_t11,85,85,4	script	Seranes	HIDDEN_NPC,{
 	if(TSQ_CHK != 3 ) goto nook;
-	mes "[Seranes]";
-	mes "Perfect, it seems that the other spirits grants you the access.";
-	mes "I am warping you to the next floor.";
+	mes("[Seranes]");
+	mes("Perfect, it seems that the other spirits grants you the access.");
+	mes("I am warping you to the next floor.");
 	next;
 	set TSQ_CHK,0;
 	warp "tha_t12",	129,	58;
 	close;
 nook:
-	mes "[Seranes]";
-	mes "You did not follow the good order, starts again from the begining.";
+	mes("[Seranes]");
+	mes("You did not follow the good order, starts again from the begining.");
 	next;
 	set TSQ_CHK,0;
 	close;
@@ -179,25 +179,25 @@ nook:
 
 tha_t12,103,18,4	script	Nox	HIDDEN_NPC,{
 	if(TSQ_CHK == 1 ) goto done;
-	mes "[Nox]";
-	mes "Fine, 4 Spirits left.";
+	mes("[Nox]");
+	mes("Fine, 4 Spirits left.");
 	set TSQ_CHK,1;
 	close;
 done:
-	mes "[Nox]";
-	mes "Go search, They can't leave this floor.";
+	mes("[Nox]");
+	mes("Go search, They can't leave this floor.");
 	close;
 }
 
 tha_t12,162,58,4	script	Vox	HIDDEN_NPC,{
 	if(TSQ_CHK != 1 ) goto nook;
-	mes "[Vox]";
-	mes "Keep on this way, 3 Spirits remaining !";
+	mes("[Vox]");
+	mes("Keep on this way, 3 Spirits remaining !");
 	set TSQ_CHK,2;
 	close;
 nook:
-	mes "[Vox]";
-	mes "Sorry, Go back and talk to Nox.";
+	mes("[Vox]");
+	mes("Sorry, Go back and talk to Nox.");
 	next;
 	set TSQ_CHK,0;
 	close;
@@ -205,13 +205,13 @@ nook:
 
 tha_t12,96,57,4	script	Hox	HIDDEN_NPC,{
 	if(TSQ_CHK != 2 ) goto nook;
-	mes "[Hox]";
-	mes "You are on the good way, 2 Spirits remaining !";
+	mes("[Hox]");
+	mes("You are on the good way, 2 Spirits remaining !");
 	set TSQ_CHK,3;
 	close;
 nook:
-	mes "[Hox]";
-	mes "Sorry, Go back and talk to Vox.";
+	mes("[Hox]");
+	mes("Sorry, Go back and talk to Vox.");
 	next;
 	set TSQ_CHK,0;
 	close;
@@ -219,13 +219,13 @@ nook:
 
 tha_t12,153,17,4	script	Dox	HIDDEN_NPC,{
 	if(TSQ_CHK != 3 ) goto nook;
-	mes "[Dox]";
-	mes "Perfect, 1 Spirit left.";
+	mes("[Dox]");
+	mes("Perfect, 1 Spirit left.");
 	set TSQ_CHK,4;
 	close;
 nook:
-	mes "[Dox]";
-	mes "Sorry, Go back and talk to Hox.";
+	mes("[Dox]");
+	mes("Sorry, Go back and talk to Hox.");
 	next;
 	set TSQ_CHK,0;
 	close;
@@ -233,33 +233,33 @@ nook:
 
 tha_t12,128,88,4	script	Sox	HIDDEN_NPC,{
 	if(TSQ_CHK != 4 ) goto nook;
-	mes "[Sox]";
-	mes "You have just passed the test successfully.";
+	mes("[Sox]");
+	mes("You have just passed the test successfully.");
 	next;
-	mes "[Sox]";
-	mes "You have to give me Red Magic Stone, Yellow Magic Stone, Blue Magic Stone & Green Magic Stone.";
+	mes("[Sox]");
+	mes("You have to give me Red Magic Stone, Yellow Magic Stone, Blue Magic Stone & Green Magic Stone.");
 	next;
 	if(countitem(Magic_Gem_Red) < 1 || countitem(Magic_Gem_Yellow) < 1 || countitem(Magic_Gem_Blue) < 1 || countitem(Magic_Gem_Green) < 1) goto nostone;
 	delitem 7426,1;
 	delitem 7427,1;
 	delitem 7428,1;
 	delitem 7429,1;
-	mes "[Sox]";
-	mes "I will now warp you to steps of Fate.";
-	mes "Good-bye.";
+	mes("[Sox]");
+	mes("I will now warp you to steps of Fate.");
+	mes("Good-bye.");
 	next;
 	set TSQ_CHK,0;
 	warp "thana_step", 186, 223;
 	close;
 
 nostone:
-	mes "[Sox]";
-	mes "Oh well, seems you don't have enough stones.";
+	mes("[Sox]");
+	mes("Oh well, seems you don't have enough stones.");
 	close;
 
 nook:
-	mes "[Sox]";
-	mes "Sorry, Go back and talk to Dox.";
+	mes("[Sox]");
+	mes("Sorry, Go back and talk to Dox.");
 	next;
 	set TSQ_CHK,0;
 	close;

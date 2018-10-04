@@ -20,12 +20,12 @@
 
 //Warps you into race way
 morocc,166,105,6	script	Race Girl#01	4_F_KAFRA2,{
-	mes "[Race Girl]";
-	mes "Would you like to visit ^0000FFMorroc Raceway^000000?";
+	mes("[Race Girl]");
+	mes("Would you like to visit ^0000FFMorroc Raceway^000000?");
 	next;
 	if (select("Yes", "No") != 1) {
-		mes "[Race Girl]";
-		mes "Alright, talk to me again when you want to go.";
+		mes("[Race Girl]");
+		mes("Alright, talk to me again when you want to go.");
 		close;
 	}
 	warp "pvp_y_1-5",165,256;
@@ -34,26 +34,26 @@ morocc,166,105,6	script	Race Girl#01	4_F_KAFRA2,{
 
 //Warps you out of raceway
 pvp_y_1-5,169,265,5	script	Race Girl#02	4_F_KAFRA2,{
-	mes "[Race Girl]";
-	mes "Welcome to Morroc Raceway!";
+	mes("[Race Girl]");
+	mes("Welcome to Morroc Raceway!");
 	next;
 	switch (select("Information", "Leave", "Cancel")) {
 	case 1:
-		mes "[Race Girl]";
-		mes "Someone must click on the Starter NPC to start the race.";
+		mes("[Race Girl]");
+		mes("Someone must click on the Starter NPC to start the race.");
 		next;
-		mes "[Race Girl]";
-		mes "Once the race is started, run around Morroc anti-clockwise.";
+		mes("[Race Girl]");
+		mes("Once the race is started, run around Morroc anti-clockwise.");
 		next;
-		mes "[Race Girl]";
-		mes "You must reach all the checkpoints - No cheating!";
+		mes("[Race Girl]");
+		mes("You must reach all the checkpoints - No cheating!");
 		close;
 	case 2:
 		warp "morocc",165,101;
 		end;
 	case 3:
-		mes "[Race Girl]";
-		mes "Come again soon!";
+		mes("[Race Girl]");
+		mes("Come again soon!");
 		close;
 	}
 }
@@ -64,12 +64,12 @@ pvp_y_1-5,145,269,5	script	Starter	4_M_JOB_KNIGHT1,{
 	if ($@counting != 0) goto L_Started;
 	if ($@racecount == 1) goto L_Started;
 L_Menu:
-	mes "[Race Starter]";
-	mes "Please stay on the Eastern side of me.";
+	mes("[Race Starter]");
+	mes("Please stay on the Eastern side of me.");
 	if (select("Start Race", "Cancel") != 1)
 		close;
 	set $@counting,1;
-	mes "Counting down...";
+	mes("Counting down...");
 	addtimer 1000, "Starter::OnCount1000";
 	addtimer 2000, "Starter::OnCount2000";
 	addtimer 3000, "Starter::OnCount3000";
@@ -100,8 +100,8 @@ OnCount4000:
 L_Started:
 	if ((getmapusers("pvp_y_1-5") < 3) && ($@position > 0)) goto L_Menu;
 	if ($@position > 2) goto L_Menu;
-	mes "[Starter]";
-	mes "Race in progress";
+	mes("[Starter]");
+	mes("Race in progress");
 	close;
 
 OnInit:
@@ -118,14 +118,14 @@ OnTouch:
 	if (@raceid != $@raceid) goto L_Started;
 	if (@race == 6) goto L_Finished;
 	if ($@race == 1) goto L_Started;
-	mes "The race has not started, please move back.";
+	mes("The race has not started, please move back.");
 	close;
 L_Started:
 	set @race,1;
 	set @raceid,$@raceid;
 	end;
 L_Finished:
-	mes "You have already completed the race.";
+	mes("You have already completed the race.");
 	close;
 }
 
@@ -138,7 +138,7 @@ OnTouch:
 	announce "[" + strcharinfo(PC_NAME) +"] has reached Checkpoint [1]",1;
 	end;
 L_Miss:
-	mes "You have missed a Checkpoint. Please go back.";
+	mes("You have missed a Checkpoint. Please go back.");
 	close;
 }
 
@@ -151,7 +151,7 @@ OnTouch:
 	announce "[" + strcharinfo(PC_NAME) +"] has reached Checkpoint [2]",1;
 	end;
 L_Miss:
-	mes "You have missed a Checkpoint. Please go back.";
+	mes("You have missed a Checkpoint. Please go back.");
 	close;
 }
 
@@ -164,7 +164,7 @@ OnTouch:
 	announce "[" + strcharinfo(PC_NAME) +"] has reached Checkpoint [3]",1;
 	end;
 L_Miss:
-	mes "You have missed a Checkpoint. Please go back.";
+	mes("You have missed a Checkpoint. Please go back.");
 	close;
 }
 
@@ -177,7 +177,7 @@ OnTouch:
 	announce "[" + strcharinfo(PC_NAME) +"] has reached Checkpoint [4]",1;
 	end;
 L_Miss:
-	mes "You have missed a Checkpoint. Please go back.";
+	mes("You have missed a Checkpoint. Please go back.");
 	close;
 }
 
@@ -192,10 +192,10 @@ OnTouch:
 	announce "[" + strcharinfo(PC_NAME) +"] has reached The Finish line! [Position: " + $@position + "]",1;
 	end;
 L_Miss:
-	mes "You have missed a Checkpoint. Please go back.";
+	mes("You have missed a Checkpoint. Please go back.");
 	close;
 L_WrongRace:
-	mes "You are not in this race.";
+	mes("You are not in this race.");
 	close;
 }
 

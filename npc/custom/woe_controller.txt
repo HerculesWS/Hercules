@@ -204,7 +204,7 @@ OnPCLoadMapEvent:
 
 OnMenu:
 while(1) {
-	mes "[WOE Information]";
+	mes("[WOE Information]");
 	if (agitcheck() || agitcheck2()) {
 		if (.Active[0]) {
 			for(set .@i,0; .@i<.Size; set .@i,.@i+4)
@@ -212,12 +212,12 @@ while(1) {
 					set .@i, $WOE_CONTROL[.@i+2];
 					break;
 				}
-			mes "The War of Emperium is ^0055FFactive^000000 until ^FF0000"+Add_Zero(.@i)+"^000000 in the following regions:";
-			mes " ";
+			mes("The War of Emperium is ^0055FFactive^000000 until ^FF0000"+Add_Zero(.@i)+"^000000 in the following regions:");
+			mes(" ");
 			for(set .@i,0; .@i<6; set .@i,.@i+1)
-				if (.Active[1]&(1<<(.@i+1))) mes " > ^777777"+.Regions$[.@i]+"^000000";
+				if (.Active[1]&(1<<(.@i+1))) mes(" > ^777777"+.Regions$[.@i]+"^000000");
 		} else
-			mes "The War of Emperium is ^0055FFactive^000000.";
+			mes("The War of Emperium is ^0055FFactive^000000.");
 	} else {
 		for(set .@i,0; .@i<.Size; set .@i,.@i+4)
 			if ((gettime(GETTIME_WEEKDAY) == $WOE_CONTROL[.@i] && gettime(GETTIME_HOUR) <= $WOE_CONTROL[.@i+1]) || gettime(GETTIME_WEEKDAY) < $WOE_CONTROL[.@i]) {
@@ -226,11 +226,11 @@ while(1) {
 			}
 		if (!getarraysize(.@time))
 			setarray .@time[0],$WOE_CONTROL[0],$WOE_CONTROL[1];
-		mes "The War of Emperium is ^777777inactive^000000.";
+		mes("The War of Emperium is ^777777inactive^000000.");
 		if (.Size) {
-			mes " ";
-			mes "The next session will begin";
-			mes "on ^0055FF"+.Days$[.@time[0]]+"^000000 at "+Add_Zero(.@time[1])+"^000000.";
+			mes(" ");
+			mes("The next session will begin");
+			mes("on ^0055FF"+.Days$[.@time[0]]+"^000000 at "+Add_Zero(.@time[1])+"^000000.");
 		}
 	}
 	next;
@@ -254,59 +254,59 @@ while(1) {
 		warp .Map$[.@i],.MapX[(.@i*5)+.@j],.MapY[(.@i*5)+.@j];
 		close;
 	case 2:
-		mes "[Schedule]";
+		mes("[Schedule]");
 		if (.Size) {
 			freeloop(1);
 			for(set .@i,0; .@i<.Size; set .@i,.@i+4) {
-				mes "> ^FF0000"+.Days$[$WOE_CONTROL[.@i]]+" ("+Add_Zero($WOE_CONTROL[.@i+1])+"-"+Add_Zero($WOE_CONTROL[.@i+2])+")^000000";
+				mes("> ^FF0000"+.Days$[$WOE_CONTROL[.@i]]+" ("+Add_Zero($WOE_CONTROL[.@i+1])+"-"+Add_Zero($WOE_CONTROL[.@i+2])+")^000000");
 				for(set .@j,0; .@j<30; set .@j,.@j+1)
-					if ($WOE_CONTROL[.@i+3]&(1<<.@j)) mes "  ~ "+getcastlename(.Castles$[.@j])+" ^777777("+.Castles$[.@j]+")^000000";
-				if (.@i+4 < .Size) mes " ";
+					if ($WOE_CONTROL[.@i+3]&(1<<.@j)) mes("  ~ "+getcastlename(.Castles$[.@j])+" ^777777("+.Castles$[.@j]+")^000000");
+				if (.@i+4 < .Size) mes(" ");
 			}
 			freeloop(0);
 		} else
-			mes "No times are configured.";
+			mes("No times are configured.");
 		next;
 		break;
 	case 3:
-		mes "[Castle Ownership]";
+		mes("[Castle Ownership]");
 		for(set .@i,0; .@i<6; set .@i,.@i+1) {
 			set .@k, .@i*5;
-			mes "> ^FF0000"+.Regions$[.@i]+"^000000";
+			mes("> ^FF0000"+.Regions$[.@i]+"^000000");
 			for(set .@j,.@k; .@j<(.@k+5); set .@j,.@j+1) {
 				set .@t, getcastledata(.Castles$[.@j],1);
-				mes "  ~ "+getcastlename(.Castles$[.@j])+": "+((.@t)?"^0055FF"+getguildname(.@t):"^777777unoccupied")+"^000000";
+				mes("  ~ "+getcastlename(.Castles$[.@j])+": "+((.@t)?"^0055FF"+getguildname(.@t):"^777777unoccupied")+"^000000");
 			}
-			if (.@i < 5) mes " ";
+			if (.@i < 5) mes(" ");
 		}
 		next;
 		break;
 	case 4:
 	while(1) {
-		mes "[Session Manager]";
-		mes "There are ^0055FF"+(.Size/4)+" session(s)^000000 configured.";
-		mes "What would you like to do?";
+		mes("[Session Manager]");
+		mes("There are ^0055FF"+(.Size/4)+" session(s)^000000 configured.");
+		mes("What would you like to do?");
 		next;
 		switch(select(" ~ Add a session...", " ~ Delete a session...", " ~ Reload settings...", ((agitcheck() || agitcheck2())?" ~ End WOE session...": ""), " ~ ^777777Go back^000000")) {
 		case 1:
-			mes "[New Session]";
+			mes("[New Session]");
 			if (.Size > 127) {
-				mes "You have already reached the maximum of 32 sessions.";
+				mes("You have already reached the maximum of 32 sessions.");
 				next;
 				break;
 			}
-			mes "Select a day.";
+			mes("Select a day.");
 			next;
 			set .@day, select(" ~ "+implode(.Days$,": ~ "))-1;
-			mes "[New Session]";
-			mes "Select a start time for ^0055FF"+.Days$[.@day]+"^000000.";
+			mes("[New Session]");
+			mes("Select a start time for ^0055FF"+.Days$[.@day]+"^000000.");
 			next;
 			set .@menu$,"";
 			for(set .@i,0; .@i<23; set .@i,.@i+1)
 				set .@menu$, .@menu$+" ~ "+Add_Zero(.@i,1)+":";
 			set .@start, select(.@menu$)-1;
-			mes "[New Session]";
-			mes "Select an end time for ^0055FF"+.Days$[.@day]+"^000000.";
+			mes("[New Session]");
+			mes("Select an end time for ^0055FF"+.Days$[.@day]+"^000000.");
 			next;
 			set .@menu$,"";
 			for(set .@i,.@start+1; .@i<24; set.@i,.@i+1)
@@ -317,8 +317,8 @@ while(1) {
 				   ((.@start >= $WOE_CONTROL[.@i+1] && .@start < $WOE_CONTROL[.@i+2]) ||
 				    (.@end > $WOE_CONTROL[.@i+1] && .@end <= $WOE_CONTROL[.@i+2]) ||
 				    (.@start <= $WOE_CONTROL[.@i+1] && .@end >= $WOE_CONTROL[.@i+2]))) {
-					mes "[New Session]";
-					mes "The chosen times overlap with an existing session.";
+					mes("[New Session]");
+					mes("The chosen times overlap with an existing session.");
 					next;
 					set .@d,1;
 					break;
@@ -326,13 +326,13 @@ while(1) {
 			if (.@d) { set .@d,0; break; }
 			set .@castle,0;
 			while(1) {
-				mes "[New Session]";
-				mes "^0055FF"+.Days$[.@day]+" ("+Add_Zero(.@start)+"-"+Add_Zero(.@end)+")^000000";
-				mes " > Castles:";
+				mes("[New Session]");
+				mes("^0055FF"+.Days$[.@day]+" ("+Add_Zero(.@start)+"-"+Add_Zero(.@end)+")^000000");
+				mes(" > Castles:");
 				if (!.@castle)
-					mes "   ~ ^777777(none selected)^000000";
+					mes("   ~ ^777777(none selected)^000000");
 				else for(set .@i,0; .@i<30; set .@i,.@i+1)
-					if (.@castle&(1<<.@i)) mes "   ~ "+getcastlename(.Castles$[.@i])+" ("+.Castles$[.@i]+")";
+					if (.@castle&(1<<.@i)) mes("   ~ "+getcastlename(.Castles$[.@i])+" ("+.Castles$[.@i]+")");
 				next;
 				set .@menu$,((.@castle)?" ~ ^FF0000Finished...^000000":"")+":";
 				for(set .@i,0; .@i<30; set .@i,.@i+1)
@@ -341,8 +341,8 @@ while(1) {
 				if (.@i)
 					set .@castle, .@castle^(1<<(.@i-1));
 				else {
-					mes "[New Session]";
-					mes "Are you sure?";
+					mes("[New Session]");
+					mes("Are you sure?");
 					next;
 					switch(select(" ~ ^0055FFAdd session...^000000", " ~ Continue selecting castles...", " ~ ^777777Cancel^000000")) {
 					case 1:
@@ -356,8 +356,8 @@ while(1) {
 						setarray $WOE_CONTROL[.@i], .@day, .@start, .@end, .@castle;
 						set .Size, getarraysize($WOE_CONTROL);
 					case 3:
-						mes "[New Session]";
-						mes ((.@d)?"Session added.":"Cancelled.");
+						mes("[New Session]");
+						mes(((.@d)?"Session added.":"Cancelled."));
 						next;
 						set .@d,1;
 					case 2:
@@ -368,13 +368,13 @@ while(1) {
 			}
 			break;
 		case 2:
-			mes "[Remove Session]";
+			mes("[Remove Session]");
 			if (!.Size) {
-				mes "There are no sessions configured.";
+				mes("There are no sessions configured.");
 				next;
 				break;
 			}
-			mes "Select a session to remove.";
+			mes("Select a session to remove.");
 			next;
 			set .@menu$,"";
 			for(set .@i,0; .@i<.Size; set .@i,.@i+4)
@@ -382,58 +382,58 @@ while(1) {
 			set .@menu$, .@menu$+" ~ ^777777Cancel^000000";
 			set .@i, select(.@menu$)-1;
 			if (.@i == (.Size/4)) break;
-			mes "[Remove Session]";
-			mes "Delete ^0055FF"+.Days$[$WOE_CONTROL[.@i*4]]+"'s^000000 session?";
-			mes "This action cannot be undone.";
+			mes("[Remove Session]");
+			mes("Delete ^0055FF"+.Days$[$WOE_CONTROL[.@i*4]]+"'s^000000 session?");
+			mes("This action cannot be undone.");
 			next;
 			set .@j, select(" ~ ^FF0000Delete session...^000000", " ~ ^777777Cancel^000000");
-			mes "[Remove Session]";
+			mes("[Remove Session]");
 			if (.@j == 2)
-				mes "Cancelled.";
+				mes("Cancelled.");
 			else {
 				deletearray $WOE_CONTROL[.@i*4],4;
 				set .Size, getarraysize($WOE_CONTROL);
-				mes "Session deleted.";
+				mes("Session deleted.");
 			}
 			next;
 			break;
 		case 3:
-			mes "[Reload Settings]";
-			mes "This will trigger all events related to new session configurations, if any.";
+			mes("[Reload Settings]");
+			mes("This will trigger all events related to new session configurations, if any.");
 			if (agitcheck() || agitcheck2()) {
-				mes " ";
-				mes "Be aware that this will disrupt the current WOE session.";
+				mes(" ");
+				mes("Be aware that this will disrupt the current WOE session.");
 			}
 			next;
 			set .@i, select(" ~ ^0055FFReload settings...^000000", " ~ ^777777Cancel^000000");
-			mes "[Reload Settings]";
-			if (.@i == 2) mes "Cancelled.";
+			mes("[Reload Settings]");
+			if (.@i == 2) mes("Cancelled.");
 			else {
 				set .Init,1;
 				donpcevent "WOE_CONTROL::OnMinute00";
-				mes "Variables have been re-initialized.";
+				mes("Variables have been re-initialized.");
 			}
 			next;
 			break;
 		case 4:
-			mes "[Force Agit End]";
+			mes("[Force Agit End]");
 			if (!agitcheck() && !agitcheck2())  {
-				mes "WOE has already ended.";
+				mes("WOE has already ended.");
 				next;
 				break;
 			}
-			mes "This command will safely execute all AgitEnd events.";
-			mes " ";
-			mes "Kill the current WOE session?";
+			mes("This command will safely execute all AgitEnd events.");
+			mes(" ");
+			mes("Kill the current WOE session?");
 			next;
 			set .@i, select(" ~ ^FF0000End session...^000000", ((.Options&1)?" ~ ^FF0000End session without rewards...^000000": ""), " ~ ^777777Cancel^000000");
-			mes "[Force Agit End]";
+			mes("[Force Agit End]");
 			if (.@i == 3)
-				mes "Cancelled.";
+				mes("Cancelled.");
 			else {
 				set .ForceEnd, .@i;
 				donpcevent "WOE_CONTROL::OnWOEEnd";
-				mes "WOE session terminated.";
+				mes("WOE session terminated.");
 			}
 			next;
 			break;

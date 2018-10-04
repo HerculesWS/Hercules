@@ -19,18 +19,18 @@
 prontera,153,193,6	script	Job Master	2_F_MAGICMASTER,{
 	function Job_Menu; function A_An;
 
-	mes "[Job Master]";
+	mes("[Job Master]");
 	if (Class > Job_Soul_Linker) {
-		mes "No more jobs are available.";
+		mes("No more jobs are available.");
 		close;
 	}
 	if (checkfalcon() || checkcart() || checkmount() || hascashmount()) {
-		mes "Please remove your "+((checkfalcon())?"falcon":"")+((checkcart())?"cart":"")+((checkmount() || hascashmount())?"mount":"")
-		    +" before proceeding.";
+		mes("Please remove your "+((checkfalcon())?"falcon":"")+((checkcart())?"cart":"")+((checkmount() || hascashmount())?"mount":"")
+		    +" before proceeding.");
 		close;
 	}
 	if (.skill_point_check && SkillPoint > 0) {
-		mes "Please use all your skill points before proceeding.";
+		mes("Please use all your skill points before proceeding.");
 		close;
 	}
 
@@ -40,32 +40,32 @@ prontera,153,193,6	script	Job Master	2_F_MAGICMASTER,{
 		if (BaseLevel < .rebirth_blevel || JobLevel < .rebirth_jlevel) {
 			.@blvl = .rebirth_blevel - BaseLevel;
 			.@jlvl = .rebirth_jlevel - JobLevel;
-			mes "You need "
+			mes("You need "
 			    + (BaseLevel < .rebirth_blevel ? ((.rebirth_blevel - BaseLevel) +" more base levels "+ (JobLevel < .rebirth_jlevel ? "and " : "")) : "")
 			    + (JobLevel < .rebirth_jlevel ? (.rebirth_jlevel - JobLevel) +" more job levels " : "")
-			    + "to continue.";
+			    + "to continue.");
 			close;
 		}
 		if (Class > Job_Crusader2) {
-			mes "Switch to third class?";
+			mes("Switch to third class?");
 			next;
 			Job_Menu(roclass(.@eac|EAJL_THIRD));
 			close;
 		}
 		while (true) {
-			mes "Select an option.";
+			mes("Select an option.");
 			next;
 			.@choice = select(" ~ ^0055FFRebirth^000000", (.third_classes ? " ~ ^FF0000Third Class^000000":""), " ~ ^777777Cancel^000000");
 			if (.@choice == 3)
 				close;
-			mes "[Job Master]";
-			mes "Are you sure?";
+			mes("[Job Master]");
+			mes("Are you sure?");
 			next;
 			if (.@choice == 1)
 				Job_Menu(Job_Novice_High);
 			else
 				Job_Menu(roclass(.@eac|EAJL_THIRD));
-			mes "[Job Master]";
+			mes("[Job Master]");
 		}
 	}
 	.@job1 = roclass(.@eac|EAJL_2_1);
@@ -79,27 +79,27 @@ prontera,153,193,6	script	Job Master	2_F_MAGICMASTER,{
 	}
 	if (.@newclass && .third_classes) {
 		if (BaseLevel < .rebirth_blevel || JobLevel < .@required_jlevel) {
-			mes "You need "
+			mes("You need "
 			    + (BaseLevel < .rebirth_blevel ? ((.rebirth_blevel - BaseLevel) +" more base levels "+ (JobLevel < .@required_jlevel ? "and " : "")) : "")
 			    + (JobLevel < .@required_jlevel ? (.@required_jlevel - JobLevel) +" more job levels " : "")
-			    + "to continue.";
+			    + "to continue.");
 			close;
 		}
-		mes "Switch to "+jobname(.@newclass)+"?";
+		mes("Switch to "+jobname(.@newclass)+"?");
 		next;
 		Job_Menu(.@newclass);
 		close;
 	}
 	if (.@eac&EAJL_2)
 		if (.@eac&(EAJL_UPPER|EAJL_BABY) || roclass(.@eac|EAJL_UPPER) == -1) {
-			mes "No more jobs are available.";
+			mes("No more jobs are available.");
 			close;
 		}
 	if ((.@eac&EAJ_BASEMASK) == EAJ_NOVICE) {
 		if (JobLevel < .jobchange_first) {
-			mes "A job level of "+.jobchange_first+" is required to change into the 1st Class.";
+			mes("A job level of "+.jobchange_first+" is required to change into the 1st Class.");
 		} else if (Class == Job_Novice_High && .linear_jobchange && lastJob) {
-			mes "Switch classes now?";
+			mes("Switch classes now?");
 			next;
 			Job_Menu(roclass((eaclass(lastJob)&EAJ_BASEMASK)|EAJL_UPPER));
 		} else if (Class == Job_Novice) {
@@ -111,16 +111,16 @@ prontera,153,193,6	script	Job Master	2_F_MAGICMASTER,{
 			Job_Menu(Job_Baby_Swordman, Job_Baby_Mage, Job_Baby_Archer, Job_Baby_Acolyte, Job_Baby_Merchant, Job_Baby_Thief,
 			         Job_Super_Baby);
 		} else {
-			mes "An error has occurred.";
+			mes("An error has occurred.");
 		}
 		close;
 	}
 	if (roclass(.@eac|EAJL_2_1) == -1 || roclass(.@eac|EAJL_2_2) == -1) {
-		mes "No more jobs are available.";
+		mes("No more jobs are available.");
 	} else if (!(.@eac&EAJL_2) && JobLevel < .jobchange_second) {
-		mes "A job level of "+.jobchange_second+" is required to change into the 2nd Class.";
+		mes("A job level of "+.jobchange_second+" is required to change into the 2nd Class.");
 	} else if (.linear_jobchange && lastJob && (.@eac&EAJL_UPPER)) {
-		mes "Switch classes now?";
+		mes("Switch classes now?");
 		next;
 		Job_Menu(lastJob+Job_Novice_High);
 	} else {
@@ -131,7 +131,7 @@ prontera,153,193,6	script	Job Master	2_F_MAGICMASTER,{
 function Job_Menu {
 	while (true) {
 		if (getargcount() > 1) {
-			mes "Select a job.";
+			mes("Select a job.");
 			.@menu$ = "";
 			for (.@i = 0; .@i < getargcount(); ++.@i)
 				.@menu$ += " ~ "+jobname(getarg(.@i))+":";
@@ -140,19 +140,19 @@ function Job_Menu {
 			.@newjob = getarg(select(.@menu$)-1, 0);
 			if (!.@newjob) close;
 			if ((.@newjob == Job_SuperNovice || .@newjob == Job_Super_Baby) && BaseLevel < .supernovice_level) {
-				mes "[Job Master]";
-				mes "A base level of "+.supernovice_level+" is required to turn into a "+jobname(.@newjob)+".";
+				mes("[Job Master]");
+				mes("A base level of "+.supernovice_level+" is required to turn into a "+jobname(.@newjob)+".");
 				close;
 			}
-			mes "[Job Master]";
-			mes "Are you sure?";
+			mes("[Job Master]");
+			mes("Are you sure?");
 			next;
 		} else {
 			.@newjob = getarg(0);
 		}
 		if (select(" ~ Change into ^0055FF"+ jobname(.@newjob) +"^000000 class", " ~ ^777777"+(getargcount() > 1 ? "Go back": "Cancel")+"^000000") == 1) {
-			mes "[Job Master]";
-			mes "You are now "+A_An(jobname(.@newjob))+"!";
+			mes("[Job Master]");
+			mes("You are now "+A_An(jobname(.@newjob))+"!");
 			if (.@newjob == Job_Novice_High && .linear_jobchange)
 				lastJob = Class; // Note: This is incompatible with the Valkyrie rebirth script.
 			jobchange .@newjob;
@@ -170,7 +170,7 @@ function Job_Menu {
 		}
 		if (getargcount() == 1)
 			return;
-		mes "[Job Master]";
+		mes("[Job Master]");
 	}
 	end;
 }

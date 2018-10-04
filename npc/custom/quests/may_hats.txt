@@ -13,26 +13,26 @@
 //============================================================
 
 gonryun,187,140,4	script	Yakima	4_F_EINWOMAN,{
-	mes "[Yakima]";
-	mes callfunc("F_Hi");
-	mes "I can make some items for you.";
-	mes "They are quite rare novadays...";
+	mes("[Yakima]");
+	mes(callfunc("F_Hi"));
+	mes("I can make some items for you.");
+	mes("They are quite rare novadays...");
 	specialeffect EF_HITBODY;
 	next;
 	switch (select("Bird Nest", "Lion Mask", "Skeleton Manteau", "Fashion Hip Sack", "Sales Banner", "Leave")) {
 	case 1:
-		mes "[Yakima]";
-		mes "Oh.. it's an excellent item for any beast hunter.";
+		mes("[Yakima]");
+		mes("Oh.. it's an excellent item for any beast hunter.");
 		emotion e_rock;
 		next;
-		mes "[Yakima]";
-		mes "For the hat I'll need:";
-		mes "1 Sombrero,";
-		mes "920 Feathers of Birds and";
-		mes "310 Bills of Birds.";
+		mes("[Yakima]");
+		mes("For the hat I'll need:");
+		mes("1 Sombrero,");
+		mes("920 Feathers of Birds and");
+		mes("310 Bills of Birds.");
 		next;
-		mes "[Yakima]";
-		mes "Do you have all the items?";
+		mes("[Yakima]");
+		mes("Do you have all the items?");
 		next;
 		if (select("Yeah.", "Nay." != 1))
 			break;
@@ -41,24 +41,24 @@ gonryun,187,140,4	script	Yakima	4_F_EINWOMAN,{
 		delitem Feather_Of_Birds,920;//Items: Feather_of_Birds,
 		delitem Bill_Of_Birds,310;//Items: Bill_of_Birds,
 		getitem Bird_Nest,1;//Items: Bird_Nest,
-		mes "[Yakima]";
-		mes "Thank you very very much!";
-		mes callfunc("F_Bye");
+		mes("[Yakima]");
+		mes("Thank you very very much!");
+		mes(callfunc("F_Bye"));
 		close;
 	case 2:
-		mes "[Yakima]";
-		mes "Bingo! Many people are afraid of lions... to the muteness...";
+		mes("[Yakima]");
+		mes("Bingo! Many people are afraid of lions... to the muteness...");
 		emotion e_slur;
 		next;
-		mes "[Yakima]";
-		mes "For the hat I'll need:";
-		mes "1 Tiger Mask,";
-		mes "10 Tiger's Footskins,";
-		mes "30 Tiger Skins and";
-		mes "300 Tiger Panties.";
+		mes("[Yakima]");
+		mes("For the hat I'll need:");
+		mes("1 Tiger Mask,");
+		mes("10 Tiger's Footskins,");
+		mes("30 Tiger Skins and");
+		mes("300 Tiger Panties.");
 		next;
-		mes "[Yakima]";
-		mes "Do you have all the items?";
+		mes("[Yakima]");
+		mes("Do you have all the items?");
 		next;
 		if (select("Yeah.", "Nay." != 1))
 			break;
@@ -68,25 +68,25 @@ gonryun,187,140,4	script	Yakima	4_F_EINWOMAN,{
 		delitem Tigers_Skin,30;//Items: Tiger_Skin,
 		delitem Tiger_Skin_Panties,300;//Items: Tiger_Panty,
 		getitem Lion_Mask,1;//Items: Lion_Mask,
-		mes "[Yakima]";
-		mes "Thank you very very much!";
-		mes callfunc("F_Bye");
+		mes("[Yakima]");
+		mes("Thank you very very much!");
+		mes(callfunc("F_Bye"));
 		close;
 	case 3:
-		mes "[Yakima]";
-		mes "I wish I sold this filthy manteau faster...";
-		mes "Guess it isn't so plain as it looks... Hmm.";
+		mes("[Yakima]");
+		mes("I wish I sold this filthy manteau faster...");
+		mes("Guess it isn't so plain as it looks... Hmm.");
 		emotion e_wah;
 		next;
-		mes "[Yakima]";
-		mes "I'm giving it almost for free:";
-		mes "10 Old Manteaus,";
-		mes "3 Skull Rings,";
-		mes "2 Manteau[1] and";
-		mes "1 Ragamuffin Manteau.";
+		mes("[Yakima]");
+		mes("I'm giving it almost for free:");
+		mes("10 Old Manteaus,");
+		mes("3 Skull Rings,");
+		mes("2 Manteau[1] and");
+		mes("1 Ragamuffin Manteau.");
 		next;
-		mes "[Yakima]";
-		mes "Do you have all the items?";
+		mes("[Yakima]");
+		mes("Do you have all the items?");
 		next;
 		if (select("Yeah.", "Nay." != 1))
 			break;
@@ -96,25 +96,25 @@ gonryun,187,140,4	script	Yakima	4_F_EINWOMAN,{
 		delitem Skul_Ring,3;//Items: Skull_Ring,
 		delitem Old_Manteau,10;//Items: Old_Manteau,
 		getitem Skeletons_Cape,1;//Items: Skeleton_Manteau,
-		mes "[Yakima]";
-		mes "Thank you very very much!";
-		mes callfunc("F_Bye");
+		mes("[Yakima]");
+		mes("Thank you very very much!");
+		mes(callfunc("F_Bye"));
 		close;
 	case 4:
-		mes "[Yakima]";
-		mes "It's a fresh style! Ancessory and a bag all in one! You'd get +2 STR... It's different from that sabby nest!";
-		mes "It fits to Merchant classonly.";
+		mes("[Yakima]");
+		mes("It's a fresh style! Ancessory and a bag all in one! You'd get +2 STR... It's different from that sabby nest!");
+		mes("It fits to Merchant classonly.");
 		emotion e_heh;
 		next;
-		mes "[Yakima]";
-		mes "Now my stock is full of those bags... So I'll make it from 3 flower things and a rough piece of clothes:";
-		mes "3 Romantic Flowers,";
-		mes "3 Fancy Flowers,";
-		mes "2 Flower Rings and";
-		mes "3 Pirate Bandanas.";
+		mes("[Yakima]");
+		mes("Now my stock is full of those bags... So I'll make it from 3 flower things and a rough piece of clothes:");
+		mes("3 Romantic Flowers,");
+		mes("3 Fancy Flowers,");
+		mes("2 Flower Rings and");
+		mes("3 Pirate Bandanas.");
 		next;
-		mes "[Yakima]";
-		mes "Do you have all the items?";
+		mes("[Yakima]");
+		mes("Do you have all the items?");
 		next;
 		if (select("Yeah.", "Nay." != 1))
 			break;
@@ -124,27 +124,27 @@ gonryun,187,140,4	script	Yakima	4_F_EINWOMAN,{
 		delitem Flower_Ring,2;//Items: Flower_Ring,
 		delitem Pirate_Bandana,3;//Items: Pirate_Bandana
 		getitem Fashionable_Sack,1;//Items: Fashion_Hip_Sack,
-		mes "[Yakima]";
-		mes "Thank you very very much!";
-		mes callfunc("F_Bye");
+		mes("[Yakima]");
+		mes("Thank you very very much!");
+		mes(callfunc("F_Bye"));
 		close;
 	case 5:
-		mes "[Yakima]";
-		mes "Well, well, well... this sign fits any class from a certain level!";
-		mes "Your foes'd be dazzled!";
+		mes("[Yakima]");
+		mes("Well, well, well... this sign fits any class from a certain level!");
+		mes("Your foes'd be dazzled!");
 		emotion e_no1;
 		next;
-		mes "[Yakima]";
-		mes "Well... we construct it from some common items:";
-		mes "1 Scarlet Dyestuffs,";
-		mes "1 Orange Dyestuffs,";
-		mes "2 Stop Posts,";
-		mes "3 Clown Noses,";
-		mes "180 Fig Leaves and";
-		mes "20 Solid Peaches.";
+		mes("[Yakima]");
+		mes("Well... we construct it from some common items:");
+		mes("1 Scarlet Dyestuffs,");
+		mes("1 Orange Dyestuffs,");
+		mes("2 Stop Posts,");
+		mes("3 Clown Noses,");
+		mes("180 Fig Leaves and");
+		mes("20 Solid Peaches.");
 		next;
-		mes "[Yakima]";
-		mes "Do you have all the items?";
+		mes("[Yakima]");
+		mes("Do you have all the items?");
 		next;
 		if (select("Yeah.", "Nay." != 1))
 			break;
@@ -156,20 +156,20 @@ gonryun,187,140,4	script	Yakima	4_F_EINWOMAN,{
 		delitem Leaf_Clothes,180;//Items: Fig_Leaf,
 		delitem Hard_Peach,20;//Items: Solid_Peach,
 		getitem Sales_Signboard,1;//Items: Sales_Banner,
-		mes "[Yakima]";
-		mes "Thank you very very much!";
-		mes callfunc("F_Bye");
+		mes("[Yakima]");
+		mes("Thank you very very much!");
+		mes(callfunc("F_Bye"));
 		close;
 	case 6:
 		break;
 	}
-	mes "[Yakima]";
-	mes callfunc("F_Bye");
+	mes("[Yakima]");
+	mes(callfunc("F_Bye"));
 	close;
 
 l_noitem:
-	mes "[Yakima]";
-	mes "You are lack of items. Please, get all the items.";
+	mes("[Yakima]");
+	mes("You are lack of items. Please, get all the items.");
 	emotion e_sry;
 	close;
 
