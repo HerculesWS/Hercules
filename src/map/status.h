@@ -1900,7 +1900,7 @@ enum e_joint_break
 /**
  * Mob mode definitions. [Skotlex]
  *
- * @see doc/mob_db_mode_list.txt for a description of each mode.
+ * @see doc/mob_db_mode_list.md for a description of each mode.
  */
 enum e_mode
 {
