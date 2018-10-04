@@ -21922,6 +21922,32 @@ static void clif_parse_memorial_dungeon_command(int fd, struct map_session_data 
 	}
 }
 
+static void clif_camera_showWindow(struct map_session_data *sd)
+{
+#if PACKETVER >= 20160525
+	struct PACKET_ZC_CAMERA_INFO p;
+	p.packetType = 0xa78;
+	p.action = 1;
+	p.range = 0;
+	p.rotation = 0;
+	p.latitude = 0;
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
+#endif
+}
+
+static void clif_camera_change(struct map_session_data *sd, float range, float rotation, float latitude)
+{
+#if PACKETVER >= 20160525
+	struct PACKET_ZC_CAMERA_INFO p;
+	p.packetType = 0xa78;
+	p.action = 0;
+	p.range = range;
+	p.rotation = rotation;
+	p.latitude = latitude;
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
+#endif
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -23085,6 +23111,9 @@ void clif_defaults(void)
 	clif->pReqStyleChange2 = clif_parse_cz_req_style_change2;
 	clif->cz_req_style_change_sub = clif_cz_req_style_change_sub;
 	clif->style_change_response = clif_style_change_response;
+
+	clif->camera_showWindow = clif_camera_showWindow;
+	clif->camera_change = clif_camera_change;
 
 	// -- Pet Evolution
 	clif->pPetEvolution = clif_parse_pet_evolution;

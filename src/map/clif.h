@@ -1552,6 +1552,8 @@ struct clif_interface {
 	void (*petEvolutionResult) (int fd, enum pet_evolution_result result);
 	void (*party_dead_notification) (struct map_session_data *sd);
 	void (*pMemorialDungeonCommand) (int fd, struct map_session_data *sd);
+	void (*camera_showWindow) (struct map_session_data *sd);
+	void (*camera_change) (struct map_session_data *sd, float range, float rotation, float latitude);
 };
 
 #ifdef HERCULES_CORE
