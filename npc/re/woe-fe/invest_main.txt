@@ -125,15 +125,15 @@ function	script	F_Invest_Status	{
 
 //callfunc "F_Invest_Abyss","<variable>","<NPC name>"{,"<addon message>"};
 function	script	F_Invest_Abyss	{
-	mes "There are 2 ways to invest, by Zeny or the Investment Certificate given out by the Cat Paw Merchant Guild.";
-	mes "Which way would you like to make your investment?";
+	mes("There are 2 ways to invest, by Zeny or the Investment Certificate given out by the Cat Paw Merchant Guild.");
+	mes("Which way would you like to make your investment?");
 	next;
 	switch(select("Invest with Zeny.", "Invest with Investment Certificates.", "Cancel")) {
 	case 1:
-		mes getarg(1);
-		mes "So you've decided to invest in Zeny.";
-		mes "Minimum investment unit is ^4d4dff10,000 Zeny^000000.";
-		mes "You can invest a maximum of 50 units which is ^4d4dff500,000 Zeny^000000.";
+		mes(getarg(1));
+		mes("So you've decided to invest in Zeny.");
+		mes("Minimum investment unit is ^4d4dff10,000 Zeny^000000.");
+		mes("You can invest a maximum of 50 units which is ^4d4dff500,000 Zeny^000000.");
 		next;
 		switch(select("1 unit 10,000 Zeny", "10 units 100,000 Zeny", "50 units 500,000 Zeny", "Another amount", "Cancel")) {
 		case 1:
@@ -146,45 +146,45 @@ function	script	F_Invest_Abyss	{
 			.@units = 50;
 			break;
 		case 4:
-			mes getarg(1);
-			mes "Please enter the amount you want to invest.";
-			mes "Please choose between 1 to 200.";
-			mes "Please enter 0 to cancel.";
+			mes(getarg(1));
+			mes("Please enter the amount you want to invest.");
+			mes("Please choose between 1 to 200.");
+			mes("Please enter 0 to cancel.");
 			next;
 			input .@units;
 			if (.@units < 0 || .@units > 200) {
-				mes getarg(1);
-				mes "You've exceeded the amount per investment.";
-				mes "Please try again.";
+				mes(getarg(1));
+				mes("You've exceeded the amount per investment.");
+				mes("Please try again.");
 				close;
 			} else if (.@units == 0) {
-				mes getarg(1);
-				mes "Canceled.";
+				mes(getarg(1));
+				mes("Canceled.");
 				close;
 			} else
 				break;
 		case 5:
-			mes getarg(1);
-			mes "Canceled.";
+			mes(getarg(1));
+			mes("Canceled.");
 			close;
 		}
 		.@zeny = .@units * 10000;
 		if (Zeny < .@zeny) {
-			mes getarg(1);
-			mes "You do not have enough money.";
+			mes(getarg(1));
+			mes("You do not have enough money.");
 			close;
 		}
-		mes getarg(1);
-		mes "You've invested "+.@units+" unit"+((.@units == 1)?"":"s")+" "+((.@units < 100)?.@units:insertchar(""+.@units,",",1))+"0,000 Zeny"+getarg(2,"")+".";
-		mes "Not much but this is a small gift. You can exchange it with items in Malangdo.";
+		mes(getarg(1));
+		mes("You've invested "+.@units+" unit"+((.@units == 1)?"":"s")+" "+((.@units < 100)?.@units:insertchar(""+.@units,",",1))+"0,000 Zeny"+getarg(2,"")+".");
+		mes("Not much but this is a small gift. You can exchange it with items in Malangdo.");
 		Zeny -= .@zeny;
 		setd getarg(0), getd(getarg(0)) + .@units;
 		getitem Thanks_Invest_Ticket,.@units;
 		close;
 	case 2:
-		mes getarg(1);
-		mes "Wow, you've brought Investment Certificates.";
-		mes "How many certificates will you submit?";
+		mes(getarg(1));
+		mes("Wow, you've brought Investment Certificates.");
+		mes("How many certificates will you submit?");
 		next;
 		switch(select("1 Investment Certificate", "5 Investment Certificates", "Another amount", "Cancel")) {
 		case 1:
@@ -194,44 +194,44 @@ function	script	F_Invest_Abyss	{
 			.@tickets = 5;
 			break;
 		case 3:
-			mes getarg(1);
-			mes "Please enter the number of Investment Certificates you want to submit.";
-			mes "Please choose between 1 to 20.";
-			mes "Please enter 0 to cancel.";
+			mes(getarg(1));
+			mes("Please enter the number of Investment Certificates you want to submit.");
+			mes("Please choose between 1 to 20.");
+			mes("Please enter 0 to cancel.");
 			next;
 			input .@tickets;
 			if (.@tickets < 0 || .@tickets > 20) {
-				mes getarg(1);
-				mes "You've exceeded the amount per investment.";
-				mes "Please try again.";
+				mes(getarg(1));
+				mes("You've exceeded the amount per investment.");
+				mes("Please try again.");
 				close;
 			} else if (.@tickets == 0) {
-				mes getarg(1);
-				mes "Canceled.";
+				mes(getarg(1));
+				mes("Canceled.");
 				close;
 			} else
 				break;
 		case 4:
-			mes getarg(1);
-			mes "Canceled.";
+			mes(getarg(1));
+			mes("Canceled.");
 			close;
 		}
 		if (countitem(Cats_Invest_Certif) < .@tickets) {
-			mes getarg(1);
-			mes "Looks like you have fewer Investment Certificates than you want to submit.";
+			mes(getarg(1));
+			mes("Looks like you have fewer Investment Certificates than you want to submit.");
 			close;
 		}
 		.@units = .@tickets * 10;
-		mes getarg(1);
-		mes .@tickets+" Investment Certificate"+((.@tickets == 1)?" is":"s are")+" the same as an investment of "+.@units+" units ("+((.@units < 100)?.@units:insertchar(""+.@units,",",1))+"0,000z)"+getarg(2,"")+".";
-		mes "Not much but this is a small gift. You can exchange it with items in Malangdo.";
+		mes(getarg(1));
+		mes(.@tickets+" Investment Certificate"+((.@tickets == 1)?" is":"s are")+" the same as an investment of "+.@units+" units ("+((.@units < 100)?.@units:insertchar(""+.@units,",",1))+"0,000z)"+getarg(2,"")+".");
+		mes("Not much but this is a small gift. You can exchange it with items in Malangdo.");
 		delitem Cats_Invest_Certif,.@tickets;
 		setd getarg(0), getd(getarg(0)) + .@units;
 		getitem Thanks_Invest_Ticket,.@units;
 		close;
 	case 3:
-		mes getarg(1);
-		mes "Canceled.";
+		mes(getarg(1));
+		mes("Canceled.");
 		close;
 	}
 }
@@ -401,22 +401,22 @@ OnReset:
 
 prt_gld,2,2,0	script	Investment_total#fund00	CLEAR_NPC,{
 	callfunc "F_GM_NPC";
-	mes "Is this not working properly?";
+	mes("Is this not working properly?");
 	next;
 	if (callfunc("F_GM_NPC",1854,0) == 1) {
-		mes "If you think the investment timer is dead, please adjust the timer.";
+		mes("If you think the investment timer is dead, please adjust the timer.");
 		next;
 		switch(select("Turn on the timer", "Cancel")) {
 		case 1:
 			donpcevent "Investment_total#fund00::OnTimerReset";
-			mes "You've turned on the timer.";
+			mes("You've turned on the timer.");
 			close;
 		case 2:
-			mes "Canceled.";
+			mes("Canceled.");
 			close;
 		}
 	} else {
-		mes "I don't need to adjust anything now.";
+		mes("I don't need to adjust anything now.");
 		close;
 	}
 
@@ -476,9 +476,9 @@ OnTimer3600000:
 }
 
 prt_gld,164,98,3	script	Revoting Manager#Invest1	4_M_BOSSCAT,{
-	mes "[Revoting Manager]";
-	mes "We are not accepting additional votes.";
-	mes "Please wait for our results announcement.";
+	mes("[Revoting Manager]");
+	mes("We are not accepting additional votes.");
+	mes("Please wait for our results announcement.");
 	close;
 OnInit:
 	.@invest_status = callfunc("F_Invest_Status");
@@ -568,31 +568,31 @@ OnTimer60000:
 prt_gld,164,98,3	script	Revoting Manager#Invest2	4_M_BOSSCAT,{
 	.@invest = $2011_agit_invest;
 	if (.@invest < 11) {
-		mes "[Revoting Manager]";
-		mes "No! This is not the time to take a revote.";
+		mes("[Revoting Manager]");
+		mes("No! This is not the time to take a revote.");
 		close2;
 		disablenpc "Revoting Manager#Invest2";
 		end;
 	}
 	.@playtime = questprogress(7349,PLAYTIME);
 	if (.@playtime == 1) {
-		mes "[Revoting Manager]";
-		mes "You've already participated in the vote.";
-		mes "Please relax and wait for the results.";
+		mes("[Revoting Manager]");
+		mes("You've already participated in the vote.");
+		mes("Please relax and wait for the results.");
 		close;
 	} else if (.@playtime == 2)
 		erasequest 7349;
-	mes "[Revoting Manager]";
-	mes "Would you like to participate in the vote for choosing where to connect the 'Abyss Gate'?";
+	mes("[Revoting Manager]");
+	mes("Would you like to participate in the vote for choosing where to connect the 'Abyss Gate'?");
 	next;
 	if(select("Participate in the vote.", "Skip for now.") == 2) {
-		mes "[Revoting Manager]";
-		mes "You've canceled the vote.";
+		mes("[Revoting Manager]");
+		mes("You've canceled the vote.");
 		close;
 	}
-	mes "[Revoting Manager]";
-	mes "You can vote once and won't need to invest for your choice.";
-	mes "Plesae choose one WOE area.";
+	mes("[Revoting Manager]");
+	mes("You can vote once and won't need to invest for your choice.");
+	mes("Plesae choose one WOE area.");
 	next;
 
 	// Create menu.
@@ -609,9 +609,9 @@ prt_gld,164,98,3	script	Revoting Manager#Invest2	4_M_BOSSCAT,{
 	}
 	.@vote = select(implode(.@menu$,":"))-1;
 
-	mes "[Revoting Manager]";
-	mes "You've voted for "+.@menu$[.@vote]+".";
-	mes "Thanks for voting.";
+	mes("[Revoting Manager]");
+	mes("You've voted for "+.@menu$[.@vote]+".");
+	mes("Thanks for voting.");
 	setquest 7349;
 	setd "$fund_"+.@candidates$[.@vote]+"_extra", getd("$fund_"+.@candidates$[.@vote]+"_extra") + 1;
 	close;
@@ -680,7 +680,7 @@ OnTimer20000:
 
 /*
 prtg_cas01,2,2,0	script	Abrai	1_M_JOBTESTER,{
-	mes "I should quit my steward job.";
+	mes("I should quit my steward job.");
 	close;
 OnAgitInvest:
 	switch(callfunc("F_Invest_Status")) {
@@ -730,176 +730,176 @@ OnAgitInvest:
 	}
 	.@n$ = "["+.@name$+"]";
 
-	mes .@n$;
-	mes "I'm "+.@name$+", the "+.@intro$+" of the Cat Paw Merchant Guild.";
-	mes "I consult about investments for the Abyss Gate development.";
-	mes "How may I help you?";
+	mes(.@n$);
+	mes("I'm "+.@name$+", the "+.@intro$+" of the Cat Paw Merchant Guild.");
+	mes("I consult about investments for the Abyss Gate development.");
+	mes("How may I help you?");
 	next;
 	switch(select("What is the Abyss Gate?", "Investing in the gate development?", "I want to invest in this area.", "Cancel")) {
 	case 1:
-		mes .@n$;
-		mes "It is only called the Abyss Gate for convenience but it's simply a ^4d4dffgap to another dimension^000000.";
+		mes(.@n$);
+		mes("It is only called the Abyss Gate for convenience but it's simply a ^4d4dffgap to another dimension^000000.");
 		next;
-		mes .@n$;
-		mes "More of these gaps are found here and there after Morroc created the Crack of Dimension.";
-		mes "I personally think that the Abyss Gate found recently is part of the past or even from the future.";
+		mes(.@n$);
+		mes("More of these gaps are found here and there after Morroc created the Crack of Dimension.");
+		mes("I personally think that the Abyss Gate found recently is part of the past or even from the future.");
 		next;
-		mes .@n$;
-		mes "It is said that the Abyss Gate forcefully connects to another dimension beyond our world.";
-		mes "Probably because there are those that follow the Emperium's power.";
+		mes(.@n$);
+		mes("It is said that the Abyss Gate forcefully connects to another dimension beyond our world.");
+		mes("Probably because there are those that follow the Emperium's power.");
 		next;
-		mes .@n$;
-		mes "There are a total of 4 Abyss Gates found so far. They all connect to the Agit region overflowing with the Emperium's force.";
+		mes(.@n$);
+		mes("There are a total of 4 Abyss Gates found so far. They all connect to the Agit region overflowing with the Emperium's force.");
 		next;
-		mes .@n$;
-		mes "We named each by dimension beyond the gap.";
-		mes "^4d4dffWay of the Warrior, Hill of the Dead, Winds of the Ancient, and the Hero's Tears.^000000";
-		mes "And all these four gaps are called the ^4d4dffAbyss Gate^000000.";
+		mes(.@n$);
+		mes("We named each by dimension beyond the gap.");
+		mes("^4d4dffWay of the Warrior, Hill of the Dead, Winds of the Ancient, and the Hero's Tears.^000000");
+		mes("And all these four gaps are called the ^4d4dffAbyss Gate^000000.");
 		next;
-		mes .@n$;
-		mes "The gap may lead to the past, future or even an unknown world.";
-		mes "The power the Abyss Gate holds is both fearful but sweet";
+		mes(.@n$);
+		mes("The gap may lead to the past, future or even an unknown world.");
+		mes("The power the Abyss Gate holds is both fearful but sweet");
 		next;
-		mes .@n$;
-		mes "Are you also interested in exploring the Abyss Gate?";
-		mes "Ha ha. You'll need to go through several steps before exploring.";
+		mes(.@n$);
+		mes("Are you also interested in exploring the Abyss Gate?");
+		mes("Ha ha. You'll need to go through several steps before exploring.");
 		next;
-		mes .@n$;
-		mes "If you are interested,";
-		mes "will you take the time to sit down and talk about investing in maintaining the Abyss Gate?";
+		mes(.@n$);
+		mes("If you are interested,");
+		mes("will you take the time to sit down and talk about investing in maintaining the Abyss Gate?");
 		close;
 	case 2:
-		mes .@n$;
-		mes "Are you curious about investing in the Gate development?";
-		mes "What do you want to know about?";
+		mes(.@n$);
+		mes("Are you curious about investing in the Gate development?");
+		mes("What do you want to know about?");
 		next;
 		switch(select("About the Gate?", "About investments?", "How to invest?", "Benefits from investing?")) {
 		case 1:
-			mes .@n$;
-			mes "The Gate is what it is named after, a door.";
-			mes "A dimensional passageway that connects here to there.";
+			mes(.@n$);
+			mes("The Gate is what it is named after, a door.");
+			mes("A dimensional passageway that connects here to there.");
 			next;
-			mes .@n$;
-			mes "The Abyss Gate was created as a very unstable path from beyond the dimensional gap,";
-			mes "therefore traveling through the Gate will need an artificial dimension connection.";
+			mes(.@n$);
+			mes("The Abyss Gate was created as a very unstable path from beyond the dimensional gap,");
+			mes("therefore traveling through the Gate will need an artificial dimension connection.");
 			next;
-			mes .@n$;
-			mes "Humans are far from having the advanced technology that's needed";
-			mes "but our Cat Paw Merchant Guild holds the high technology to use the Crack of Dimension.";
+			mes(.@n$);
+			mes("Humans are far from having the advanced technology that's needed");
+			mes("but our Cat Paw Merchant Guild holds the high technology to use the Crack of Dimension.");
 			next;
-			mes .@n$;
-			mes "So we made a proposal.";
-			mes "With the promise of support the Cat Paw Merchant Guild and paying for the immense expense for maintaining the connection with the Gate,";
-			mes "we will make the connection to the Crack of Dimension.";
+			mes(.@n$);
+			mes("So we made a proposal.");
+			mes("With the promise of support the Cat Paw Merchant Guild and paying for the immense expense for maintaining the connection with the Gate,");
+			mes("we will make the connection to the Crack of Dimension.");
 			next;
-			mes .@n$;
-			mes "Of course working on the Crack of Dimension is no easy job and it does come with risks.";
-			mes "There are cases where people go missing from traveling between.";
+			mes(.@n$);
+			mes("Of course working on the Crack of Dimension is no easy job and it does come with risks.");
+			mes("There are cases where people go missing from traveling between.");
 			next;
-			mes .@n$;
-			mes "The best maintaining duration is about 4 days";
-			mes "You invest in us and we create the door that connects to the dimensional gap.";
+			mes(.@n$);
+			mes("The best maintaining duration is about 4 days");
+			mes("You invest in us and we create the door that connects to the dimensional gap.");
 			next;
-			mes .@n$;
-			mes "Doesn't this sound like the perfect win-win proposal?";
+			mes(.@n$);
+			mes("Doesn't this sound like the perfect win-win proposal?");
 			close;
 		case 2:
-			mes .@n$;
-			mes "Forcing through the unstable dimensional gap and creating a passageway is very dangerous.";
-			mes "Not to mention the huge resources needed.";
+			mes(.@n$);
+			mes("Forcing through the unstable dimensional gap and creating a passageway is very dangerous.");
+			mes("Not to mention the huge resources needed.");
 			next;
-			mes .@n$;
-			mes "If you take care of the charges and also the danger pay by investing in the Cat Paw Merchant Guild,";
-			mes "we'll create and maintain the gate regardless of the risks.";
+			mes(.@n$);
+			mes("If you take care of the charges and also the danger pay by investing in the Cat Paw Merchant Guild,");
+			mes("we'll create and maintain the gate regardless of the risks.");
 			next;
-			mes .@n$;
-			mes "But then of course the money involved for the gate costs will be extreme.";
-			mes "It will be easy if you can find investors to share the amount.";
+			mes(.@n$);
+			mes("But then of course the money involved for the gate costs will be extreme.");
+			mes("It will be easy if you can find investors to share the amount.");
 			next;
-			mes .@n$;
-			mes "There is a basic charge to start connecting the gate.";
-			mes "Results depend on the how much investment money is collected.";
+			mes(.@n$);
+			mes("There is a basic charge to start connecting the gate.");
+			mes("Results depend on the how much investment money is collected.");
 			next;
-			mes .@n$;
-			mes "The Abyss Gate exists in each Agit region.";
-			mes "Can you imagine how much money and sacrifice our guild will have to go through to develop in all areas?";
+			mes(.@n$);
+			mes("The Abyss Gate exists in each Agit region.");
+			mes("Can you imagine how much money and sacrifice our guild will have to go through to develop in all areas?");
 			next;
-			mes .@n$;
-			mes "This explains the regional competition in investments.";
-			mes "If not enough gate maintenance costs are collected then it is obvious the region with the most investments will receive the benefits";
+			mes(.@n$);
+			mes("This explains the regional competition in investments.");
+			mes("If not enough gate maintenance costs are collected then it is obvious the region with the most investments will receive the benefits");
 			next;
-			mes .@n$;
-			mes "If ^4d4dffthe Abyss Gate is successfully connected then the dungeon of the hideout area";
-			mes "will be open to others instead of being guild exclusive^000000 which will be very attractive for investment.";
+			mes(.@n$);
+			mes("If ^4d4dffthe Abyss Gate is successfully connected then the dungeon of the hideout area");
+			mes("will be open to others instead of being guild exclusive^000000 which will be very attractive for investment.");
 			next;
-			mes .@n$;
-			mes "But then again, this is only for when the gate is connected.";
+			mes(.@n$);
+			mes("But then again, this is only for when the gate is connected.");
 			close;
 		case 3:
-			mes .@n$;
-			mes "It's simple.";
-			mes "Visit the branch manager of the ^4d4dffregion you want to invest in during the investment duration^000000 and make your investment.";
+			mes(.@n$);
+			mes("It's simple.");
+			mes("Visit the branch manager of the ^4d4dffregion you want to invest in during the investment duration^000000 and make your investment.");
 			next;
-			mes .@n$;
-			mes "We usually receive ^4d4dffthe common currency here, Zeny^000000.";
-			mes "But since we're talking about supporting our Cat Paw Merchant Guild, you can also invest with items in demand in Malangdo.";
+			mes(.@n$);
+			mes("We usually receive ^4d4dffthe common currency here, Zeny^000000.");
+			mes("But since we're talking about supporting our Cat Paw Merchant Guild, you can also invest with items in demand in Malangdo.");
 			next;
-			mes .@n$;
-			mes "Provide the items in need to Namis in Malangdo who is in charge of general affairs in our guild.";
-			mes "Bring back your Investment Certificate to add it to the investment tribute.";
+			mes(.@n$);
+			mes("Provide the items in need to Namis in Malangdo who is in charge of general affairs in our guild.");
+			mes("Bring back your Investment Certificate to add it to the investment tribute.");
 			next;
-			mes .@n$;
-			mes "You must visit and invest at the region you want in order for your investment to be counted as a tribute.";
+			mes(.@n$);
+			mes("You must visit and invest at the region you want in order for your investment to be counted as a tribute.");
 			close;
 		case 4:
-			mes .@n$;
-			mes "The Abyss Gate is basically contracting and connecting with the castle that owns the Agit;";
-			mes "therefore, we will provide all we have once the costs for connecting and maintaining the gate are sufficient.";
+			mes(.@n$);
+			mes("The Abyss Gate is basically contracting and connecting with the castle that owns the Agit);";
+			mes("therefore, we will provide all we have once the costs for connecting and maintaining the gate are sufficient.");
 			next;
-			mes .@n$;
-			mes "In terms of the minimum and maximum costs for the whole work,";
-			mes "if the collected investment ^4d4dffexceeds the minimum costs^000000, we can connect you to the ^4d4dffdeepest layer of an unknown guild dungeon^000000.";
+			mes(.@n$);
+			mes("In terms of the minimum and maximum costs for the whole work,");
+			mes("if the collected investment ^4d4dffexceeds the minimum costs^000000, we can connect you to the ^4d4dffdeepest layer of an unknown guild dungeon^000000.");
 			next;
-			mes .@n$;
-			mes "If investments exceed the maximum costs, that region will be connected to the";
-			mes "^4d4dffAbyss Gate^000000 regardless of the investment rank which includes the deepest layer of the guild dungeon.";
+			mes(.@n$);
+			mes("If investments exceed the maximum costs, that region will be connected to the");
+			mes("^4d4dffAbyss Gate^000000 regardless of the investment rank which includes the deepest layer of the guild dungeon.");
 			next;
-			mes .@n$;
-			mes "^ff0000If there is no Agit region that reached the maximum investment, then the region with the";
-			mes "highest investment participation will get the Abyss Gate connected with the investment collected from all regions.^000000";
+			mes(.@n$);
+			mes("^ff0000If there is no Agit region that reached the maximum investment, then the region with the");
+			mes("highest investment participation will get the Abyss Gate connected with the investment collected from all regions.^000000");
 			next;
-			mes .@n$;
-			mes "Once the Abyss Gate is connected, the deepest layer (2F) of the guild dungeon";
-			mes "will be open to all adventurers that participated in the regional investment.";
+			mes(.@n$);
+			mes("Once the Abyss Gate is connected, the deepest layer (2F) of the guild dungeon");
+			mes("will be open to all adventurers that participated in the regional investment.");
 			next;
-			mes .@n$;
-			mes "Visits to the dungeon will be counted for the next investment for the Agit region";
-			mes "so being in good terms with the guild that claims the Agit castle will be a bonus.";
+			mes(.@n$);
+			mes("Visits to the dungeon will be counted for the next investment for the Agit region");
+			mes("so being in good terms with the guild that claims the Agit castle will be a bonus.");
 			next;
-			mes .@n$;
-			mes "By the way, it isn't easy to maintain the connection with the Abyss Gate and investments and reconnection is needed weekly";
-			mes "so please continue your support and investment if you want the power of the unknown.";
+			mes(.@n$);
+			mes("By the way, it isn't easy to maintain the connection with the Abyss Gate and investments and reconnection is needed weekly");
+			mes("so please continue your support and investment if you want the power of the unknown.");
 			close;
 		}
 	case 3:
 		if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 2000) {
-			mes "- Currently you're carrying -";
-			mes "- too many items with you. -";
-			mes "- Please try again after you -";
-			mes "- lose some weight. -";
+			mes("- Currently you're carrying -");
+			mes("- too many items with you. -");
+			mes("- Please try again after you -");
+			mes("- lose some weight. -");
 			close;
 		}
 		if (countitem(Thanks_Invest_Ticket) >= 4800) {
-			mes .@n$;
-			mes "You have too many Thank You Tickets to receive any more.";
-			mes "Cannot give you any more tickets. Please use your ticket and come back.";
-			mes "The ticket can be exchanged with various items in Malangdo.";
+			mes(.@n$);
+			mes("You have too many Thank You Tickets to receive any more.");
+			mes("Cannot give you any more tickets. Please use your ticket and come back.");
+			mes("The ticket can be exchanged with various items in Malangdo.");
 			close;
 		}
 		if (callfunc("F_Invest_Status") != 1) {
-			mes .@n$;
-			mes "We do not receive investments now.";
-			mes "Please come back during the investment duration.";
+			mes(.@n$);
+			mes("We do not receive investments now.");
+			mes("Please come back during the investment duration.");
 			close;
 		}
 		.@guild = getcharid(CHAR_ID_GUILD);
@@ -913,36 +913,36 @@ OnAgitInvest:
 			} else
 				.@menu$ = .@menu$+"^aaaaaaNot the guild that claimed "+.@castle_name$[.@i]+"^000000:";
 		}
-		mes .@n$;
-		mes "Would you like to invest in the ^4d4dff"+.@realm$+"^000000 region?";
-		mes "If there is a castle occupied already, you will invest in the castle and the guild that is occupying it.";
+		mes(.@n$);
+		mes("Would you like to invest in the ^4d4dff"+.@realm$+"^000000 region?");
+		mes("If there is a castle occupied already, you will invest in the castle and the guild that is occupying it.");
 		next;
 		if (.@castles_owned) {
 			.@i = select(.@menu$+"Cancel");
 			if (.@i == 6) {
-				mes .@n$;
-				mes "Canceled.";
+				mes(.@n$);
+				mes("Canceled.");
 				close;
 			}
 			if (.@guild != .@owner_id[.@i]) {
-				mes .@n$;
-				mes "The guild that is occupying "+.@castle_name$[.@i]+" is "+.@owner_name$[.@i]+".";
-				mes "Doesn't look like your guild.";
+				mes(.@n$);
+				mes("The guild that is occupying "+.@castle_name$[.@i]+" is "+.@owner_name$[.@i]+".");
+				mes("Doesn't look like your guild.");
 				close;
 			}
-			mes .@n$;
-			mes "Invest under "+.@castle_name$[.@i]+"'s"+.@owner_name$[.@i]+" guild name.";
+			mes(.@n$);
+			mes("Invest under "+.@castle_name$[.@i]+"'s"+.@owner_name$[.@i]+" guild name.");
 			callfunc "F_Invest_Abyss","$fund_"+.@npc$+"0"+.@i,.@n$;
 			end;
 		} else {
-			mes .@n$;
+			mes(.@n$);
 			callfunc "F_Invest_Abyss","$fund_"+.@npc$+"_extra",.@n$," for "+.@realm$;
 			end;
 		}
 	case 4:
-		mes .@n$;
-		mes "Is that so?";
-		mes "Please come back whenever you are interested in investing in the Abyss Gate development.";
+		mes(.@n$);
+		mes("Is that so?");
+		mes("Please come back whenever you are interested in investing in the Abyss Gate development.");
 		close;
 	}
 }
@@ -973,35 +973,35 @@ OnAgitInvest:
 	.@n$ = "["+.@name$+"]";
 
 	if (callfunc("F_Invest_Status") != 3) {
-		mes .@n$;
-		mes "There are currently no connected dungeon gates.";
+		mes(.@n$);
+		mes("There are currently no connected dungeon gates.");
 		close;
 	}
 	.@status = getd("$"+.@npc$+"_invest_result");
 	if (.@status == 3) {
-		mes .@n$;
-		mes "We've successfully connected the Abyss Gate ["+.@gate$+"] with the help from your investment.";
-		mes "The Agit dungeon will be open to everyone with a small entrance fee in "+.@realm$+".";
+		mes(.@n$);
+		mes("We've successfully connected the Abyss Gate ["+.@gate$+"] with the help from your investment.");
+		mes("The Agit dungeon will be open to everyone with a small entrance fee in "+.@realm$+".");
 		next;
-		mes .@n$;
-		mes "Please visit as often as possible since the entrance fee is saved as an investment for the region.";
-		mes "Do you want to enter the Agit dungeon?";
+		mes(.@n$);
+		mes("Please visit as often as possible since the entrance fee is saved as an investment for the region.");
+		mes("Do you want to enter the Agit dungeon?");
 		next;
 		.@i = select(.@realm$+" Dungeon 1F - 10000z", ""+.@realm$+" Dungeon 2F - 10000z", "Cancel");
 		if (.@i == 3) {
-			mes .@n$;
-			mes "Canceled.";
+			mes(.@n$);
+			mes("Canceled.");
 			close;
 		}
 		if (Zeny < 10000) {
-			mes .@n$;
-			mes "I'm collecting a small entrance fee.";
-			mes "Your contribution will be saved for the next investment.";
-			mes "Entrance fee is 10000z.";
+			mes(.@n$);
+			mes("I'm collecting a small entrance fee.");
+			mes("Your contribution will be saved for the next investment.");
+			mes("Entrance fee is 10000z.");
 			close;
 		}
-		mes .@n$;
-		mes "I'm sending you to the "+.@realm$+" Agit Dungeon "+.@i+"F.";
+		mes(.@n$);
+		mes("I'm sending you to the "+.@realm$+" Agit Dungeon "+.@i+"F.");
 		Zeny -= 10000;
 		setd "$fund_"+.@npc$+"_extra", getd("$fund_"+.@npc$+"_extra") + 1;
 		close2;
@@ -1015,14 +1015,14 @@ OnAgitInvest:
 			warp "gld_dun03"+((.@i == 2)?"_2":""),164,268;
 		end;
 	} else if (.@status == 2) {
-		mes .@n$;
-		mes "The "+.@realm$+" Agit Dungeon 2F is now available but since it is not connected with the Abyss Gate,";
-		mes "the Agit dungeon is only accessible to the Agit guild.";
+		mes(.@n$);
+		mes("The "+.@realm$+" Agit Dungeon 2F is now available but since it is not connected with the Abyss Gate,");
+		mes("the Agit dungeon is only accessible to the Agit guild.");
 		close;
 	} else {
-		mes .@n$;
-		mes .@realm$+" was not chosen to be connected with a gate this time.";
-		mes "Please wait for the next investment duration.";
+		mes(.@n$);
+		mes(.@realm$+" was not chosen to be connected with a gate this time.");
+		mes("Please wait for the next investment duration.");
 		close;
 	}
 	end;
@@ -1046,7 +1046,7 @@ OnAgitInvest:
 		}
 		.@notice = $agit_result_notice;
 		if (.@notice < 1 || .@notice > 12) {
-			mes "There are currently no investment sums available.";
+			mes("There are currently no investment sums available.");
 			close;
 		} else if (.@notice == 1)
 			.@str$ = "1st";
@@ -1056,41 +1056,41 @@ OnAgitInvest:
 			.@str$ = "3rd";
 		else
 			.@str$ = .@notice+"th";
-		mes .@str$+" total (unit in 10,000z)";
+		mes(.@str$+" total (unit in 10,000z)");
 		for(.@i = 1; .@i<=5; ++.@i) {
 			.@map$ = .@npc$+"g_cas0"+.@i;
 			.@fund[.@i] = getd("$@vfund_"+.@npc$+"0"+.@i);
-			mes getcastlename(.@map$)+" "+getguildname(getcastledata(.@map$,1))+" Guild: "+.@fund[.@i];
+			mes(getcastlename(.@map$)+" "+getguildname(getcastledata(.@map$,1))+" Guild: "+.@fund[.@i]);
 		}
 		.@fund[0] = getd("$@vfund_"+.@npc$+"_extra");
-		mes .@realm$+" normal: "+.@fund[0];
-		mes .@realm$+" Investment Grand Total: "+(.@fund[0]+.@fund[1]+.@fund[2]+.@fund[3]+.@fund[4]+.@fund[5]);
+		mes(.@realm$+" normal: "+.@fund[0]);
+		mes(.@realm$+" Investment Grand Total: "+(.@fund[0]+.@fund[1]+.@fund[2]+.@fund[3]+.@fund[4]+.@fund[5]));
 		close;
 	} else if (.@invest_status == 2) {
-		mes "!- Notice -!";
-		mes "No sums are available because the total investment amount is currently being calculated.";
-		mes "Please wait for the announcement of the results.";
+		mes("!- Notice -!");
+		mes("No sums are available because the total investment amount is currently being calculated.");
+		mes("Please wait for the announcement of the results.");
 		close;
 	} else if (.@invest_status == 3) {
 		setarray .@invest_result[0], $prt_invest_result,$pay_invest_result,$gef_invest_result,$alde_invest_result;
 		setarray .@invest_region$[0],  "Valkyrie Realm",  "Greenwood Lake",       "Britoniah",            "Luina";
-		mes "!- Investment Results of All Agit Regions -!";
+		mes("!- Investment Results of All Agit Regions -!");
 		for(.@i = 0; .@i<4; ++.@i) {
 			if (.@invest_result[.@i] == 1)
-				mes "^aaaaaa["+.@invest_region$[.@i]+"] below minimum^000000";
+				mes("^aaaaaa["+.@invest_region$[.@i]+"] below minimum^000000");
 			else if (.@invest_result[.@i] == 2) {
-				mes "["+.@invest_region$[.@i]+"] minimum achieved";
-				mes "-> Guild Dungeon Deepest Layer (2F) available";
+				mes("["+.@invest_region$[.@i]+"] minimum achieved");
+				mes("-> Guild Dungeon Deepest Layer (2F) available");
 			} else if (.@invest_result[.@i] == 3) {
-				mes "^4d4dff["+.@invest_region$[.@i]+"] maximum achieved^000000";
-				mes "-> Abyss Gate available";
+				mes("^4d4dff["+.@invest_region$[.@i]+"] maximum achieved^000000");
+				mes("-> Abyss Gate available");
 			} else
-				mes "No data for ["+.@invest_region$[.@i]+"].";
+				mes("No data for ["+.@invest_region$[.@i]+"].");
 		}
 		close;
 	} else {
-		mes "!- Notice -!";
-		mes "No investment information will be announced now.";
+		mes("!- Notice -!");
+		mes("No investment information will be announced now.");
 		close;
 	}
 }
@@ -1115,51 +1115,51 @@ OnAgitInvest:
 
 	.@GID = getcastledata(strnpcinfo(NPC_MAP),1);
 	if (getcharid(CHAR_ID_GUILD) != .@GID) {
-		mes "[Gate Manager]";
-		mes "You don't seem to be the member of guild owning this castle.";
-		mes "If you need any help, please visit any of our guild members at "+.@realm$+" Square.";
+		mes("[Gate Manager]");
+		mes("You don't seem to be the member of guild owning this castle.");
+		mes("If you need any help, please visit any of our guild members at "+.@realm$+" Square.");
 		close;
 	}
-	mes "[Gate Manager]";
-	mes "Hello, I am the Gate Manager from Cat Paw Merchant Guild warp department.";
-	mes "How may I help you today?";
+	mes("[Gate Manager]");
+	mes("Hello, I am the Gate Manager from Cat Paw Merchant Guild warp department.");
+	mes("How may I help you today?");
 	next;
 	switch(select("Invest for gate connection", "Deepest Layer Dungeon Access", "Abyss Gate Access", "Cancel")) {
 	case 1:
 		if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 2000) {
-			mes "[Gate Manager]";
-			mes "You have too many items to receive the Thank You Ticket as a small gift for your investment.";
-			mes "Please come back after making room in your inventory.";
+			mes("[Gate Manager]");
+			mes("You have too many items to receive the Thank You Ticket as a small gift for your investment.");
+			mes("Please come back after making room in your inventory.");
 			close;
 		}
 		if (countitem(Thanks_Invest_Ticket) >= 4800) {
-			mes "[Gate Manager]";
-			mes "You have too many Thank You Tickets to receive any more.";
-			mes "Cannot give you any more tickets. Please use your ticket and come back.";
-			mes "The ticket can be exchanged with various items in Malangdo.";
+			mes("[Gate Manager]");
+			mes("You have too many Thank You Tickets to receive any more.");
+			mes("Cannot give you any more tickets. Please use your ticket and come back.");
+			mes("The ticket can be exchanged with various items in Malangdo.");
 			close;
 		}
 		if (callfunc("F_Invest_Status") != 1) {
-			mes "[Gate Manager]";
-			mes "We do not receive investments now.";
-			mes "Please come back during the investment duration.";
+			mes("[Gate Manager]");
+			mes("We do not receive investments now.");
+			mes("Please come back during the investment duration.");
 			close;
 		}
 		if (getcharid(CHAR_ID_GUILD) != .@GID) {
-			mes "[Gate Manager]";
-			mes "You don't seem to be the member of the guild owning this castle.";
-			mes "Please use the normal investment from "+.@realm$+" Square.";
+			mes("[Gate Manager]");
+			mes("You don't seem to be the member of the guild owning this castle.");
+			mes("Please use the normal investment from "+.@realm$+" Square.");
 			close;
 		}
-		mes "[Gate Manager]";
-		mes "Proceed investing under your guild name.";
+		mes("[Gate Manager]");
+		mes("Proceed investing under your guild name.");
 		callfunc "F_Invest_Abyss","$fund_"+.@npc$+"0"+.@id,"[Gate Manager]";
 		end;
 	case 2:
 		callsub L_Enter,1,.@realm$,.@npc$;
-		mes "[Gate Manager]";
-		mes "You are interested in exploring the "+.@realm$+" Guild Dungeon Deepest Layer (2F).";
-		mes "Let me guide you. Good luck.";
+		mes("[Gate Manager]");
+		mes("You are interested in exploring the "+.@realm$+" Guild Dungeon Deepest Layer (2F).");
+		mes("Let me guide you. Good luck.");
 		close2;
 		if (compare(strnpcinfo(NPC_NAME_HIDDEN),"alde")) {
 			switch(.@id) {
@@ -1197,8 +1197,8 @@ OnAgitInvest:
 		end;
 	case 3:
 		callsub L_Enter,2,.@realm$,.@npc$;
-		mes "[Gate Manager]";
-		mes "Let me guide you to the Abyss Gap connected with "+.@realm$+", the Abyss Gate 'Way of the Warrior'.";
+		mes("[Gate Manager]");
+		mes("Let me guide you to the Abyss Gap connected with "+.@realm$+", the Abyss Gate 'Way of the Warrior'.");
 		close2;
 		if (compare(strnpcinfo(NPC_NAME_HIDDEN),"alde")) {
 			switch(.@id) {
@@ -1235,8 +1235,8 @@ OnAgitInvest:
 		}
 		end;
 	case 4:
-		mes "[Gate Manager]";
-		mes "Canceled.";
+		mes("[Gate Manager]");
+		mes("Canceled.");
 		close;
 	}
 	end;
@@ -1248,49 +1248,49 @@ L_Enter:
 		if ((getarg(0) == 1 && .@status == 2) || .@status == 3)
 			return;
 		else {
-			mes "[Gate Manager]";
-			mes getarg(1)+" was not chosen to be connected with a gate this time.";
-			mes "Please wait for the next investment duration.";
+			mes("[Gate Manager]");
+			mes(getarg(1)+" was not chosen to be connected with a gate this time.");
+			mes("Please wait for the next investment duration.");
 			close;
 		}
 	} else if (.@invest_status < 3) {
-		mes "[Gate Manager]";
-		mes "There are currently no connected dungeon gates.";
-		mes "A gate will be connected as soon as the investment results are available.";
-		mes "Please wait.";
+		mes("[Gate Manager]");
+		mes("There are currently no connected dungeon gates.");
+		mes("A gate will be connected as soon as the investment results are available.");
+		mes("Please wait.");
 		close;
 	} else {
-		mes "[Gate Manager]";
-		mes "The gate will disappear soon.";
-		mes "The dungeon is no longer accessible.";
-		mes "Please try again next time.";
+		mes("[Gate Manager]");
+		mes("The gate will disappear soon.");
+		mes("The dungeon is no longer accessible.");
+		mes("Please try again next time.");
 		close;
 	}
 }
 
 //== Item Investments ======================================
 malangdo,218,126,4	script	Cat Paw Merchants Notice	4_BOARD3,{
-	mes "<< Cat Paw Merchants Notice >>";
-	mes "'^C379CEInvest Unused Items for Prizes!^000000'";
+	mes("<< Cat Paw Merchants Notice >>");
+	mes("'^C379CEInvest Unused Items for Prizes!^000000'");
 	next;
 	switch(select("Read Notice", "Check Event 1", "Check Event 2")) {
 	case 1:
-		mes "- Notice -";
-		mes "Hello all Cat Paw Merchants customers! With your love, we Cat Paw Merchants are growing every day. All executives and staff members promise to do our best to further our frontier and development.";
+		mes("- Notice -");
+		mes("Hello all Cat Paw Merchants customers! With your love, we Cat Paw Merchants are growing every day. All executives and staff members promise to do our best to further our frontier and development.");
 		next;
-		mes "- Event Notice! -";
-		mes " An Event called '^C379CEInvest Unused Items for Prizes!^000000' is under way, where you could exchange unused items in your storage for Investment Certificate of the Cat Paw Merchants.";
+		mes("- Event Notice! -");
+		mes(" An Event called '^C379CEInvest Unused Items for Prizes!^000000' is under way, where you could exchange unused items in your storage for Investment Certificate of the Cat Paw Merchants.");
 		next;
-		mes "Exchangeable items will be announced on a separate sheet. Thank you for your time.";
-		mes "- From all the employees of Cat Paw Merchants -";
+		mes("Exchangeable items will be announced on a separate sheet. Thank you for your time.");
+		mes("- From all the employees of Cat Paw Merchants -");
 		next;
-		mes "There is a small warning at the bottom.";
-		mes " ";
-		mes "^FF0000This event could be changed or repealed due to the Merchants' situation.^000000";
+		mes("There is a small warning at the bottom.");
+		mes(" ");
+		mes("^FF0000This event could be changed or repealed due to the Merchants' situation.^000000");
 		close;
 	case 2:
-		mes "'^C379CEInvest Unused Items for Prizes!^000000'";
-		mes "There are details of Event 1.";
+		mes("'^C379CEInvest Unused Items for Prizes!^000000'");
+		mes("There are details of Event 1.");
 		next;
 		setarray .@event1$[0],
 			"Wings of the Insect Queen","Crown of the Fly King","I hear Dragon Scales are tough 01","The Meaning of the Mother's Nightmare",
@@ -1325,73 +1325,73 @@ malangdo,218,126,4	script	Cat Paw Merchants Notice	4_BOARD3,{
 				case 20: .@str$ = "2 Wills of Red Darkness"; break;
 				case 21: .@str$ = "2 Foolishness of the Blind"; break;
 			}
-			mes "["+.@event1$[.@i-1]+"]";
-			mes .@str$+" for one Cat Paw Merchants Investment Certificate.";
+			mes("["+.@event1$[.@i-1]+"]");
+			mes(.@str$+" for one Cat Paw Merchants Investment Certificate.");
 			next;
 		}
 	case 3:
-		mes "Look out for the next '^C379CEInvest Unused Items for Prizes!^000000' Event 2!! Coming up real soon!";
+		mes("Look out for the next '^C379CEInvest Unused Items for Prizes!^000000' Event 2!! Coming up real soon!");
 		close;
 	}
 }
 
 malangdo,218,123,1	script	Namis#invest	4_CAT_SAILOR2,4,4,{
 	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 1000) {
-		mes "- Currently you're carrying -";
-		mes "- too many items with you. -";
-		mes "- Please try again after you -";
-		mes "- lose some weight. -";
+		mes("- Currently you're carrying -");
+		mes("- too many items with you. -");
+		mes("- Please try again after you -");
+		mes("- lose some weight. -");
 		close;
 	}
 	emotion e_omg;
 	emotion e_an;
 	emotion e_ag;
-	mes "[Namis]";
-	mes "Purr-Purr-Purrr-Purrrr-Pur~ Meow!!";
-	mes "Wh-- What? How rude. You scared me.";
+	mes("[Namis]");
+	mes("Purr-Purr-Purrr-Purrrr-Pur~ Meow!!");
+	mes("Wh-- What? How rude. You scared me.");
 	next;
 	switch(select("What do you need? I'll invest!", "What's the purpose of this event?", "Were you asleep?")) {
 	case 1:
 		break;
 	case 2:
-		mes "[Namis]";
-		mes "So, another pushover in contract with the Cat Paw Merchants?";
+		mes("[Namis]");
+		mes("So, another pushover in contract with the Cat Paw Merchants?");
 		next;
 		select("Huh? What! You calling me a pushover?");
-		mes "[Namis]";
-		mes "I'll say this just once, so you listen good!";
-		mes "We, the Cat Paw Merchants have planned an event for loyal workers like yourself.";
+		mes("[Namis]");
+		mes("I'll say this just once, so you listen good!");
+		mes("We, the Cat Paw Merchants have planned an event for loyal workers like yourself.");
 		next;
-		mes "[Namis]";
-		mes "Run along to your storage and bring back rotting antiques to us and we'll exchange them for the oh-so valuable 'Cat Paw Merchants Investment Certificate'.";
+		mes("[Namis]");
+		mes("Run along to your storage and bring back rotting antiques to us and we'll exchange them for the oh-so valuable 'Cat Paw Merchants Investment Certificate'.");
 		next;
-		mes "[Namis]";
-		mes "It will be wise for you to do so because the Cat Paw Merchants are doing this at a loss!";
+		mes("[Namis]");
+		mes("It will be wise for you to do so because the Cat Paw Merchants are doing this at a loss!");
 		next;
-		mes "[Namis]";
-		mes "Details are on the notice.";
+		mes("[Namis]");
+		mes("Details are on the notice.");
 		close;
 	case 3:
-		mes "[Namis]";
-		mes "Hick- Slurp-";
-		mes "Remember, human! There's no other cat who works as hard as I do.";
+		mes("[Namis]");
+		mes("Hick- Slurp-");
+		mes("Remember, human! There's no other cat who works as hard as I do.");
 		close;
 	}
-	mes "[Namis]";
-	mes "You must be here to participate in the '^C379CEInvest Unused Items for Prizes!^000000' event of the Cat Paw Merchants.";
+	mes("[Namis]");
+	mes("You must be here to participate in the '^C379CEInvest Unused Items for Prizes!^000000' event of the Cat Paw Merchants.");
 	next;
-	mes "[Namis]";
-	mes "So, which event do you wish to participate in?";
+	mes("[Namis]");
+	mes("So, which event do you wish to participate in?");
 	next;
 	switch(select("Not interested", "Event 1 Items", "Event 2 Items")) {
 	case 1:
-		mes "[Namis]";
-		mes "Don't you mess with a busy cat!";
+		mes("[Namis]");
+		mes("Don't you mess with a busy cat!");
 		close;
 	case 2:
-		mes "[Namis]";
-		mes "So you're in for Event 1.";
-		mes "Choose from the shown list.";
+		mes("[Namis]");
+		mes("So you're in for Event 1.");
+		mes("Choose from the shown list.");
 		next;
 		setarray .@event1$[0],
 			"Wings of the Insect Queen","Crown of the Fly King","I hear Dragon Scales are tough 01","The Meaning of the Mother's Nightmare",
@@ -1445,9 +1445,9 @@ malangdo,218,123,1	script	Namis#invest	4_CAT_SAILOR2,4,4,{
 			callsub(L_Check, "2 Foolishness of the Blind", Foolishness_Of_Blind, 2, "This blind man is foolish in not knowing that gathering 300 cats cures blindness...", .@event1$[.@i]);
 		}
 	case 3:
-		mes "[Namis]";
-		mes "Participate in Event 2?";
-		mes "It is not yet in motion. Wait for it!";
+		mes("[Namis]");
+		mes("Participate in Event 2?");
+		mes("It is not yet in motion. Wait for it!");
 		close;
 	}
 	end;
@@ -1460,31 +1460,31 @@ L_Check:
 			.@items = 2; //complete
 	}
 	if (countitem(getarg(1)) < getarg(2) || .@items == 1) {
-		mes "[Namis]";
-		mes "You don't have the items?";
-		mes getarg(0)+" exchange for one Cat Paw Merchants Investment Certificate.";
+		mes("[Namis]");
+		mes("You don't have the items?");
+		mes(getarg(0)+" exchange for one Cat Paw Merchants Investment Certificate.");
 		next;
-		mes "[Namis]";
-		mes "Don't bother me and look up the details on the board over there!";
+		mes("[Namis]");
+		mes("Don't bother me and look up the details on the board over there!");
 		close;
 	}
-	mes "[Namis]";
-	mes "'^8E5601"+getarg(4)+" Event^000000'";
-	mes "Seems to be the right items.";
-	mes getarg(3);
-	mes "Oh! Almost forgot. Will you invest?";
+	mes("[Namis]");
+	mes("'^8E5601"+getarg(4)+" Event^000000'");
+	mes("Seems to be the right items.");
+	mes(getarg(3));
+	mes("Oh! Almost forgot. Will you invest?");
 	next;
 	if(select("Invest", "Don't Invest") == 2) {
-		mes "[Namis]";
-		mes "Don't you mess with a busy cat!";
+		mes("[Namis]");
+		mes("Don't you mess with a busy cat!");
 		close;
 	}
 	delitem getarg(1),getarg(2);
 	if (.@items == 2)
 		delitem getarg(5),getarg(6);
 	getitem Cats_Invest_Certif,1;
-	mes "[Namis]";
-	mes "Here's your Certificate. Always be grateful to the Merchants for these events!";
+	mes("[Namis]");
+	mes("Here's your Certificate. Always be grateful to the Merchants for these events!");
 	close;
 OnTouch:
 	if (rand(2))
@@ -1497,24 +1497,24 @@ OnTouch:
 //== Investment Rewards ====================================
 malangdo,215,119,4	script	Thanks Ticket Machine	2_VENDING_MACHINE1,{
 	if (MaxWeight - Weight < 4500 || checkweight(Knife,1) == 0) {
-		mes "- Currently you're carrying -";
-		mes "- too many items with you. -";
-		mes "- Please try again after you -";
-		mes "- lose some weight. -";
+		mes("- Currently you're carrying -");
+		mes("- too many items with you. -");
+		mes("- Please try again after you -");
+		mes("- lose some weight. -");
 		close;
 	}
-	mes "[Vending Machine Notice]";
-	mes "^6815EA1. Don't kick the machine please. @_@";
-	mes "2. You can only insert Invest Thanks Ticket.";
-	mes "3. About the Jelly Box, if you open it, it gives you a random item.";
-	mes "4. Hope you enjoy~^000000";
-	mes "- Mr. Cat, the Machine Owner -";
+	mes("[Vending Machine Notice]");
+	mes("^6815EA1. Don't kick the machine please. @_@");
+	mes("2. You can only insert Invest Thanks Ticket.");
+	mes("3. About the Jelly Box, if you open it, it gives you a random item.");
+	mes("4. Hope you enjoy~^000000");
+	mes("- Mr. Cat, the Machine Owner -");
 	next;
 	switch(select("Finish", "Purchase", "Red Paw Jelly Bag (5 Tickets)", "Black Paw Jelly Bag (50 Tickets)")) {
 	case 1:
 		close;
 	case 2:
-		mes "The Vending Machine is selling items in the following list.";
+		mes("The Vending Machine is selling items in the following list.");
 		next;
 		switch(select("Finish", "1 Siege Arrow Quiver A (2 Tickets)", "1 Siege Arrow Quiver S (2 Tickets)", "30 White Potion (12 Tickets)", "30 White Slim Potion (14 Tickets)", "10 Dark Water (20 Tickets)", "20 Siege_Violet_Potion (30 Tickets)", "10 Coldproof Potion (30 Tickets)", "10 Thunderproof Potion (30 Tickets)", "10 Earthproof Potion (30 Tickets)", "10 Fireproof Potion (30 Tickets)", "10 Elemental Converter[Fire] (30 Tickets)")) {
 		case 1:
@@ -1550,10 +1550,10 @@ malangdo,215,119,4	script	Thanks Ticket Machine	2_VENDING_MACHINE1,{
 		}
 		end;
 	case 3:
-		mes "Red Paw Jelly Bag Button chosen. Need to insert 5 ^FF0000Invest Thanks Ticket^000000 and a random item will appear.";
+		mes("Red Paw Jelly Bag Button chosen. Need to insert 5 ^FF0000Invest Thanks Ticket^000000 and a random item will appear.");
 		next;
 		if (countitem(Thanks_Invest_Ticket) < 5) {
-			mes "You don't have enough ^FF0000Invest Thanks Ticket^000000 to proceed.";
+			mes("You don't have enough ^FF0000Invest Thanks Ticket^000000 to proceed.");
 			close;
 		}
 		delitem(Thanks_Invest_Ticket, 5);
@@ -1678,10 +1678,10 @@ malangdo,215,119,4	script	Thanks Ticket Machine	2_VENDING_MACHINE1,{
 			callsub(L_Bag, Speed_Up_Potion, 10);
 		end;
 	case 4:
-		mes "Black Paw Jelly Bag Button chosen. Need to insert 50 ^FF0000Invest Thanks Ticket^000000 and a random item will appear.";
+		mes("Black Paw Jelly Bag Button chosen. Need to insert 50 ^FF0000Invest Thanks Ticket^000000 and a random item will appear.");
 		next;
 		if (countitem(Thanks_Invest_Ticket) < 50) {
-			mes "You don't have enough ^FF0000Invest Thanks Ticket^000000 to proceed.";
+			mes("You don't have enough ^FF0000Invest Thanks Ticket^000000 to proceed.");
 			close;
 		}
 		delitem(Thanks_Invest_Ticket, 50);
@@ -1827,21 +1827,21 @@ malangdo,215,119,4	script	Thanks Ticket Machine	2_VENDING_MACHINE1,{
 //callsub L_Purchase,<ticket cost>,<reward ID>,<reward amount>{,<reward name>};
 L_Purchase:
 	if (countitem(Thanks_Invest_Ticket) < getarg(0)) {
-		mes "You don't have enough ^FF0000Invest Thanks Ticket^000000 to proceed.";
+		mes("You don't have enough ^FF0000Invest Thanks Ticket^000000 to proceed.");
 		close;
 	}
 	delitem Thanks_Invest_Ticket,getarg(0);
 	getitem getarg(1),getarg(2);
-	mes "- Done! -";
+	mes("- Done! -");
 	next;
-	mes "The item ^0000FF"+((getargcount() > 3)?getarg(3,""):getitemname(getarg(1)))+"^000000 has been obtained.";
+	mes("The item ^0000FF"+((getargcount() > 3)?getarg(3,""):getitemname(getarg(1)))+"^000000 has been obtained.");
 	close;
 
 //callsub L_Bag,<reward ID>,<reward amount>{,<reward name>};
 L_Bag:
 	getitem getarg(0),getarg(1);
-	mes "- Done! -";
+	mes("- Done! -");
 	next;
-	mes "The item ^0000FF"+((getargcount() > 2)?getarg(2,""):getitemname(getarg(0)))+"^000000 has been obtained.";
+	mes("The item ^0000FF"+((getargcount() > 2)?getarg(2,""):getitemname(getarg(0)))+"^000000 has been obtained.");
 	close;
 }

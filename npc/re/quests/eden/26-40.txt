@@ -36,22 +36,22 @@
 
 moc_para01,38,38,3	script	Mission [26 - 40]	4_BOARD3,{
 	if (countitem(Para_Team_Mark) < 1 && countitem(Para_Team_Mark_) < 1) {
-		mes "You are not a qualified member. You can not use the bulletin board.";
+		mes("You are not a qualified member. You can not use the bulletin board.");
 		close;
 	}
-	mes "[26 ~ 40 Lv. Mission Board]";
-	mes "- Many missions are -";
-	mes "- on the bulletin board. -";
+	mes("[26 ~ 40 Lv. Mission Board]");
+	mes("- Many missions are -");
+	mes("- on the bulletin board. -");
 	next;
 	if ((BaseLevel < 26) || (BaseLevel > 40)) {
-		mes "Your level is not qualified. You can not use the bulletin board.";
+		mes("Your level is not qualified. You can not use the bulletin board.");
 		close;
 	}
 	switch(select("Hunting Mission", "Delivery Mission", "Gathering Mission", "Escort Mission")) {
 	case 1:
-		mes "[Hunting Mission Board]";
-		mes "- Hunting Mission details -";
-		mes "- are on the board. -";
+		mes("[Hunting Mission Board]");
+		mes("- Hunting Mission details -");
+		mes("- are on the board. -");
 		next;
 		switch(select("Hunting Poison Spore", "Hunting Smokie", "Hunting Elder Willow(Above Lv.30)", "Hunting Coco(Above Lv.35)", "Hunting Thara Frog(Above Lv.38)")) {
 			case 1: callsub L_Quest,8266,0,"Hunting Poison Spore","Sponiac","Geffen","Hunt 10 Poison Spores";
@@ -61,9 +61,9 @@ moc_para01,38,38,3	script	Mission [26 - 40]	4_BOARD3,{
 			case 5: callsub L_Quest,8270,38,"Hunting Thara Frog","Sponiac","Geffen","Hunt 10 Thara Frogs";
 		}
 	case 2:
-		mes "[Delivery Mission Board]";
-		mes "- Delivery Mission details -";
-		mes "- are on the board. -";
+		mes("[Delivery Mission Board]");
+		mes("- Delivery Mission details -");
+		mes("- are on the board. -");
 		next;
 		switch(select("Deliver an Insecticide", "Deliver Honey", "Deliver Blanket(Above Lv.35)")) {
 			case 1: callsub L_Quest,8271,0,"Deliver an Insecticide","Dieshin Man","Morroc Ruins","Get an 'Insecticide' from Dieshin Man and deliver it south east of Payon";
@@ -71,9 +71,9 @@ moc_para01,38,38,3	script	Mission [26 - 40]	4_BOARD3,{
 			case 3: callsub L_Quest,8273,35,"Deliver Blanket","Dieshin Man","Morroc Ruins","Get Blankets from Dieshin Man and deliver to the field south of Lutie";
 		}
 	case 3:
-		mes "[Gathering Mission Board]";
-		mes "- Gathering Mission details -";
-		mes "- are on the board. -";
+		mes("[Gathering Mission Board]");
+		mes("- Gathering Mission details -");
+		mes("- are on the board. -");
 		next;
 		switch(select("Gather Bones", "Gather Animal Skins", "Gather Peelings(Above Lv.30)", "Gather Tails(Above Lv.32)", "Gather Cookies(Above Lv.35)", "Gather Mustaches(Above Lv.35)")) {
 			case 1: callsub L_Quest,8274,0,"Gather Bones","Dashia","Payon","Gather '10 Skel-Bones' and give them to Dashia";
@@ -84,67 +84,67 @@ moc_para01,38,38,3	script	Mission [26 - 40]	4_BOARD3,{
 			case 6: callsub L_Quest,8279,35,"Gather Mustaches","Dashia","Payon","Gather '5 Mole Whiskers' and '3 Mole Claws' and give them to Dashia";
 		}
 	case 4:
-		mes "[Escort Mission Board]";
-		mes "There are currently no Escort Missions registered on the board.";
+		mes("[Escort Mission Board]");
+		mes("There are currently no Escort Missions registered on the board.");
 		close;
 	}
 	end;
 L_Quest:
 	//QuestID,ReqLvl,Quest,Client,Loc,Desc
 	if (BaseLevel < getarg(1,26)) {
-		mes "Your level doesn't meet the requirements. You can't take the '"+getarg(2)+"' mission.";
+		mes("Your level doesn't meet the requirements. You can't take the '"+getarg(2)+"' mission.");
 		close;
 	}
-	mes "["+getarg(2)+" !!]";
-	mes "Client : "+getarg(3);
-	mes "Client Location : "+getarg(4);
-	mes "Requested Mission : "+getarg(5);
-	mes " ";
-	mes "Will you accept this mission?";
+	mes("["+getarg(2)+" !!]");
+	mes("Client : "+getarg(3));
+	mes("Client Location : "+getarg(4));
+	mes("Requested Mission : "+getarg(5));
+	mes(" ");
+	mes("Will you accept this mission?");
 	next;
 	if(select("No, I won't accept it.", "Yes, I will accept it.") == 1) {
-		mes "You have declined the "+getarg(2)+" mission.";
+		mes("You have declined the "+getarg(2)+" mission.");
 		close;
 	}
-	if (questprogress(getarg(0))) mes "You are already doing this mission.";
+	if (questprogress(getarg(0))) mes("You are already doing this mission.");
 	else {
 		setquest getarg(0);
-		mes "You have accepted the "+getarg(2)+" mission.";
+		mes("You have accepted the "+getarg(2)+" mission.");
 	}
-	mes "You can get a reward from the client after you finish the mission.";
+	mes("You can get a reward from the client after you finish the mission.");
 	next;
-	mes "For more details, please press 'Alt + U', to get more information from the Quest Window.";
+	mes("For more details, please press 'Alt + U', to get more information from the Quest Window.");
 	close;
 }
 
 geffen,103,42,5	script	Sponiac	4W_M_03,{
 	if (checkweight(Knife,1) == 0 || (MaxWeight - Weight) < 3500) {
-		mes "[Sponiac]";
-		mes "Why are you carrying so many items?";
-		mes "Are you in a training course or something?";
+		mes("[Sponiac]");
+		mes("Why are you carrying so many items?");
+		mes("Are you in a training course or something?");
 		close;
 	}
-	mes "[Sponiac]";
-	mes "Lu~lu~lu~lu~";
-	mes "Lu~ Huh?";
+	mes("[Sponiac]");
+	mes("Lu~lu~lu~lu~");
+	mes("Lu~ Huh?");
 	next;
-	mes "[Sponiac]";
-	mes "Wow, you must be a beginner, right?";
-	mes "What an innocent face! Ha~ hahaha.";
+	mes("[Sponiac]");
+	mes("Wow, you must be a beginner, right?");
+	mes("What an innocent face! Ha~ hahaha.");
 	emotion e_gg;
 	next;
-	mes "[Sponiac]";
-	mes "Why don't you do some hunting outside instead of walking around and wasting your time?";
+	mes("[Sponiac]");
+	mes("Why don't you do some hunting outside instead of walking around and wasting your time?");
 	next;
 	if(select("I am about to leave now.", "I've got a Hunting Mission.") == 1) {
-		mes "[Sponiac]";
-		mes "Oh, well. Then, go figure.";
-		mes "Bye~ bye.";
+		mes("[Sponiac]");
+		mes("Oh, well. Then, go figure.");
+		mes("Bye~ bye.");
 		close;
 	}
-	mes "[Sponiac]";
-	mes "Oh, you are from the Eden Group?";
-	mes "What mission do you have?";
+	mes("[Sponiac]");
+	mes("Oh, you are from the Eden Group?");
+	mes("What mission do you have?");
 	next;
 	switch(select("Hunting Poison Spore", "Hunting Smokie", "Hunting Elder Willow", "Hunting Coco", "Hunting Thara Frog")) {
 		case 1: callsub L_Quest,8266,"Hunting Poison Spore",1000,0,100,"You can find Poison Spores on the Geffen Dungeon 1F or northeast of Prontera. There are other spots but I'll leave it up to you to find out.";
@@ -158,71 +158,71 @@ L_Quest:
 	//QuestID,Quest,BExp,JExp,PotionAmt,Desc
 	if (questprogress(getarg(0)) == 1) {
 		if (questprogress(getarg(0),HUNTING) == 2) {
-			mes "[Sponiac]";
-			mes getarg(1)+"!";
-			mes "Wow, I didn't expect you would do that mission. I was just about to give up. But you did good job. I appreciate it!";
+			mes("[Sponiac]");
+			mes(getarg(1)+"!");
+			mes("Wow, I didn't expect you would do that mission. I was just about to give up. But you did good job. I appreciate it!");
 			next;
-			mes "[Sponiac]";
-			mes "Well, I requested the mission and you did an excellent job.";
-			mes "I will give you a reward as I promised.";
+			mes("[Sponiac]");
+			mes("Well, I requested the mission and you did an excellent job.");
+			mes("I will give you a reward as I promised.");
 			next;
-			mes "[Sponiac]";
-			mes "Here it is. Thank you very much. God bless you!";
+			mes("[Sponiac]");
+			mes("Here it is. Thank you very much. God bless you!");
 			getitem Novice_Potion,getarg(4);
 			getexp getarg(2),getarg(3);
 			erasequest getarg(0);
 			close;
 		}
-		mes "[Sponiac]";
-		mes "Oh, you are right.";
+		mes("[Sponiac]");
+		mes("Oh, you are right.");
 		next;
-		mes "[Sponiac]";
-		mes "But, you haven't done the mission yet. Why did you come to me now? You haven't completed the mission!";
-		mes "I will give you a reward if you complete the mission. Ok? Are we good?";
+		mes("[Sponiac]");
+		mes("But, you haven't done the mission yet. Why did you come to me now? You haven't completed the mission!");
+		mes("I will give you a reward if you complete the mission. Ok? Are we good?");
 		next;
-		mes "[Sponiac]";
-		mes getarg(5);
-		mes "You can check the world map by pressing 'ctrl + ~' key.";
+		mes("[Sponiac]");
+		mes(getarg(5));
+		mes("You can check the world map by pressing 'ctrl + ~' key.");
 		next;
-		mes "[Sponiac]";
-		mes "Anyway, I will be here waiting for you. Please come back when you finish the mission!";
+		mes("[Sponiac]");
+		mes("Anyway, I will be here waiting for you. Please come back when you finish the mission!");
 		close;
 	}
-	mes "[Sponiac]";
-	mes "Huh? Are you sure? Something is wrong...";
+	mes("[Sponiac]");
+	mes("Huh? Are you sure? Something is wrong...");
 	next;
-	mes "[Sponiac]";
-	mes "It is weird.";
-	mes "Please check your Quest Window by pressing 'alt + u'.";
+	mes("[Sponiac]");
+	mes("It is weird.");
+	mes("Please check your Quest Window by pressing 'alt + u'.");
 	close;
 }
 
 moc_ruins,173,55,3	script	Dieshin Man	4_M_ORIENT02,{
 	if (checkweight(Knife,1) == 0 || (MaxWeight - Weight) < 3500) {
-		mes "[Dieshin Man]";
-		mes "Why are you carrying so many items?";
-		mes "Are you in a training course or something?";
+		mes("[Dieshin Man]");
+		mes("Why are you carrying so many items?");
+		mes("Are you in a training course or something?");
 		close;
 	}
-	mes "[Dieshin Man]";
-	mes "Hu hu~~ we are delivery men~";
-	mes "We are faster than any flight~!";
+	mes("[Dieshin Man]");
+	mes("Hu hu~~ we are delivery men~");
+	mes("We are faster than any flight~!");
 	next;
-	mes "[Dieshin Man]";
-	mes "Welcome~ welcome!";
-	mes "We are the fastest delivery company, Dieshin Corperation.";
+	mes("[Dieshin Man]");
+	mes("Welcome~ welcome!");
+	mes("We are the fastest delivery company, Dieshin Corperation.");
 	next;
-	mes "[Dieshin Man]";
-	mes "How can I help you?";
+	mes("[Dieshin Man]");
+	mes("How can I help you?");
 	next;
 	if(select("I don't need help.", "I've got a Delivery Mission.") == 1) {
-		mes "[Dieshin Man]";
-		mes "Oh, well. Then, go figure. Bye~!";
+		mes("[Dieshin Man]");
+		mes("Oh, well. Then, go figure. Bye~!");
 		close;
 	}
-	mes "[Dieshin Man]";
-	mes "Oh, you are from the Eden Group?";
-	mes "What mission do you have?";
+	mes("[Dieshin Man]");
+	mes("Oh, you are from the Eden Group?");
+	mes("What mission do you have?");
 	next;
 	switch(select("Deliver an Insecticide.", "Deliver Honey.", "Deliver Blankets.")) {
 		case 1: callsub L_Quest,8271;
@@ -232,277 +232,277 @@ moc_ruins,173,55,3	script	Dieshin Man	4_M_ORIENT02,{
 	end;
 L_Quest:
 	if (questprogress(getarg(0)) != 1) {
-		mes "[Dieshin Man]";
-		mes "Huh? Are you sure? Something is wrong...";
+		mes("[Dieshin Man]");
+		mes("Huh? Are you sure? Something is wrong...");
 		next;
-		mes "[Dieshin Man]";
-		mes "It is weird.";
-		mes "Please check your Quest Window by pressing 'alt + u'.";
+		mes("[Dieshin Man]");
+		mes("It is weird.");
+		mes("Please check your Quest Window by pressing 'alt + u'.");
 		close;
 	}
 	if (countitem(Disin_Delivery_Box) > 0) {
-		mes "[Dieshin Man]";
-		mes "Wait, but you already have a delivery box.";
+		mes("[Dieshin Man]");
+		mes("Wait, but you already have a delivery box.");
 		next;
-		mes "[Dieshin Man]";
-		mes "We can't allow you to deliver two boxes at once. So, please finish your delivery first.";
+		mes("[Dieshin Man]");
+		mes("We can't allow you to deliver two boxes at once. So, please finish your delivery first.");
 		next;
-		mes "[Dieshin Man]";
-		mes "If you forgot where to deliver, then please check Quest Window by pressing 'alt + u'.";
+		mes("[Dieshin Man]");
+		mes("If you forgot where to deliver, then please check Quest Window by pressing 'alt + u'.");
 		close;
 	}
 	switch(getarg(0)) {
 	case 8271:
-		mes "[Dieshin Man]";
-		mes "Ah ha! I got it!";
-		mes "The insecticide? It must be the Zoologist on the southeast of Payon who ordered the Insecticide.";
+		mes("[Dieshin Man]");
+		mes("Ah ha! I got it!");
+		mes("The insecticide? It must be the Zoologist on the southeast of Payon who ordered the Insecticide.");
 		break;
 	case 8272:
-		mes "[Dieshin Man]";
-		mes "Ah ha! I got it!";
-		mes "Honey? It must be the Entomologist at the west of St. Capitolina Abbey, wich is northeast of Prontera who ordered the Honey.";
+		mes("[Dieshin Man]");
+		mes("Ah ha! I got it!");
+		mes("Honey? It must be the Entomologist at the west of St. Capitolina Abbey, wich is northeast of Prontera who ordered the Honey.");
 		break;
 	case 8273:
-		mes "[Dieshin Man]";
-		mes "Oh, Right!";
-		mes "The blankets! It must be the biologist in the south of Lutie field who ordered the blankets.";
+		mes("[Dieshin Man]");
+		mes("Oh, Right!");
+		mes("The blankets! It must be the biologist in the south of Lutie field who ordered the blankets.");
 		next;
-		mes "[Dieshin Man]";
-		mes "You can can go to Lutie by asking Mr. Claus in the northeastern part of Al De Baran.";
+		mes("[Dieshin Man]");
+		mes("You can can go to Lutie by asking Mr. Claus in the northeastern part of Al De Baran.");
 		break;
 	}
 	next;
-	mes "[Dieshin Man]";
-	mes "Dieshin's cooperation motive is to give the fastest and credited delivery. So please deliver it now without any delay.";
+	mes("[Dieshin Man]");
+	mes("Dieshin's cooperation motive is to give the fastest and credited delivery. So please deliver it now without any delay.");
 	next;
-	mes "[Dieshin Man]";
-	mes "If you forgot where to make the delivery, then please check the Quest Window by pressing 'alt + u'.";
+	mes("[Dieshin Man]");
+	mes("If you forgot where to make the delivery, then please check the Quest Window by pressing 'alt + u'.");
 	getitem Disin_Delivery_Box,1;
 	close;
 }
 
 pay_fild07,83,89,7	script	Zoologist	4_M_ORIENT02,{
 	if (checkweight(Knife,1) == 0 || (MaxWeight - Weight) < 3500) {
-		mes "[Zoologist]";
-		mes "Why are you carrying so many items?";
-		mes "Are you in a training course or something?";
+		mes("[Zoologist]");
+		mes("Why are you carrying so many items?");
+		mes("Are you in a training course or something?");
 		close;
 	}
-	mes "[Zoologist]";
-	mes "Have you heard of a monster named Bigfoot?";
-	mes "It looks like a bear with red fur and has a 'X' shape scar on his shoulder.";
+	mes("[Zoologist]");
+	mes("Have you heard of a monster named Bigfoot?");
+	mes("It looks like a bear with red fur and has a 'X' shape scar on his shoulder.");
 	next;
-	mes "[Zoologist]";
-	mes "According to the recent research, flies and Bigfoot monsters have a symbiotic relationship.";
+	mes("[Zoologist]");
+	mes("According to the recent research, flies and Bigfoot monsters have a symbiotic relationship.");
 	next;
-	mes "[Zoologist]";
-	mes "I am currently studying about it and try to prove the theory. So I plan to kill the flies around Bigfoot and observe his reaction.";
+	mes("[Zoologist]");
+	mes("I am currently studying about it and try to prove the theory. So I plan to kill the flies around Bigfoot and observe his reaction.");
 	next;
 	if(select("...I am not interested.", "Here is the Insecticide.") == 1) {
-		mes "[Zoologist]";
-		mes "Oh, I need an Insecticide to continue the study.";
+		mes("[Zoologist]");
+		mes("Oh, I need an Insecticide to continue the study.");
 		close;
 	}
 	if (questprogress(8271) != 1) {
-		mes "[Zoologist]";
-		mes "Huh?";
-		mes "You are not Dieshin's delivery man?";
+		mes("[Zoologist]");
+		mes("Huh?");
+		mes("You are not Dieshin's delivery man?");
 		next;
-		mes "[Zoologist]";
-		mes "I am waiting for a special delivery.";
+		mes("[Zoologist]");
+		mes("I am waiting for a special delivery.");
 		close;
 	}
 	if (countitem(Disin_Delivery_Box) > 0) {
-		mes "[Zoologist]";
-		mes "Oh ho! Yes! That one!";
+		mes("[Zoologist]");
+		mes("Oh ho! Yes! That one!");
 		next;
-		mes "[Zoologist]";
-		mes "That is the Insecticide that I ordered! You were sent by Dieshin right?";
+		mes("[Zoologist]");
+		mes("That is the Insecticide that I ordered! You were sent by Dieshin right?");
 		next;
-		mes "[Zoologist]";
-		mes "I have been waiting for this!";
-		mes "Give it to me!";
+		mes("[Zoologist]");
+		mes("I have been waiting for this!");
+		mes("Give it to me!");
 		next;
-		mes "[Zoologist]";
-		mes "It arrived much faster than I thought. I want to test it right away!";
+		mes("[Zoologist]");
+		mes("It arrived much faster than I thought. I want to test it right away!");
 		next;
-		mes "[Zoologist]";
-		mes "Well done. Good Job! Thank you so much! Here is a little gift for you.";
+		mes("[Zoologist]");
+		mes("Well done. Good Job! Thank you so much! Here is a little gift for you.");
 		delitem Disin_Delivery_Box,1;
 		erasequest 8271;
 		getitem Novice_Potion,100;
 		getexp 1000,0;
 		close;
 	}
-	mes "[Zoologist]";
-	mes "I appreciate your kindness.";
-	mes "But, what did you bring?";
+	mes("[Zoologist]");
+	mes("I appreciate your kindness.");
+	mes("But, what did you bring?");
 	next;
-	mes "[Zoologist]";
-	mes "Hmm, I thought that Dieshin was fast and accurate, but you brought me an empty box. How disappointing.";
+	mes("[Zoologist]");
+	mes("Hmm, I thought that Dieshin was fast and accurate, but you brought me an empty box. How disappointing.");
 	next;
-	mes "[Zoologist]";
-	mes "Please bring my order. Dieshin will give you my product.";
+	mes("[Zoologist]");
+	mes("Please bring my order. Dieshin will give you my product.");
 	close;
 }
 
 prt_fild03,30,254,3	script	Entomologist	4_M_01,{
 	if (checkweight(Knife,1) == 0 || (MaxWeight - Weight) < 3500) {
-		mes "[Entomologist]";
-		mes "Why are you carrying so many items?";
-		mes "Are you in a training course or something?";
+		mes("[Entomologist]");
+		mes("Why are you carrying so many items?");
+		mes("Are you in a training course or something?");
 		close;
 	}
-	mes "[Entomologist]";
-	mes "Have you heard about the Horn monster?";
-	mes "It's shaped like an insect with black sleek skin and it has a giant horn it's head.";
+	mes("[Entomologist]");
+	mes("Have you heard about the Horn monster?");
+	mes("It's shaped like an insect with black sleek skin and it has a giant horn it's head.");
 	next;
-	mes "[Entomologist]";
-	mes "Recent research came out and showed that this monster can be tamed and trained by Honey.";
+	mes("[Entomologist]");
+	mes("Recent research came out and showed that this monster can be tamed and trained by Honey.");
 	next;
-	mes "[Entomologist]";
-	mes "I am currently studying about it and trying to prove the theory. So I plan to set a Honey trap on the places he usually passes and observe his reaction.";
+	mes("[Entomologist]");
+	mes("I am currently studying about it and trying to prove the theory. So I plan to set a Honey trap on the places he usually passes and observe his reaction.");
 	next;
 	if(select("...I am not interested.", "Here is the Honey.") == 1) {
-		mes "[Entomologist]";
-		mes "Oh, I need Honey to continue the study.";
+		mes("[Entomologist]");
+		mes("Oh, I need Honey to continue the study.");
 		close;
 	}
 	if (questprogress(8272) != 1) {
-		mes "[Entomologist]";
-		mes "Huh?";
-		mes "You are not Dieshin's delivery man?";
+		mes("[Entomologist]");
+		mes("Huh?");
+		mes("You are not Dieshin's delivery man?");
 		next;
-		mes "[Entomologist]";
-		mes "I am waiting for a special delivery.";
+		mes("[Entomologist]");
+		mes("I am waiting for a special delivery.");
 		close;
 	}
 	if (countitem(Disin_Delivery_Box) > 0) {
-		mes "[Entomologist]";
-		mes "Oh ho! Yes! That one!";
+		mes("[Entomologist]");
+		mes("Oh ho! Yes! That one!");
 		next;
-		mes "[Entomologist]";
-		mes "That is the Honey that I ordered! You were sent by Dieshin right?";
+		mes("[Entomologist]");
+		mes("That is the Honey that I ordered! You were sent by Dieshin right?");
 		next;
-		mes "[Entomologist]";
-		mes "I have been waiting for this!";
-		mes "Give it to me!";
+		mes("[Entomologist]");
+		mes("I have been waiting for this!");
+		mes("Give it to me!");
 		next;
-		mes "[Entomologist]";
-		mes "It arrived much faster than I thought. I want to test it right away!";
+		mes("[Entomologist]");
+		mes("It arrived much faster than I thought. I want to test it right away!");
 		next;
-		mes "[Entomologist]";
-		mes "Well done. Good Job! Thank you so much! Here is a little gift for you.";
+		mes("[Entomologist]");
+		mes("Well done. Good Job! Thank you so much! Here is a little gift for you.");
 		delitem Disin_Delivery_Box,1;
 		erasequest 8272;
 		getitem Novice_Potion,100;
 		getexp 1000,0;
 		close;
 	}
-	mes "[Entomologist]";
-	mes "I appreciate your kindness.";
-	mes "But, what did you bring?";
+	mes("[Entomologist]");
+	mes("I appreciate your kindness.");
+	mes("But, what did you bring?");
 	next;
-	mes "[Entomologist]";
-	mes "Hmm, I thought that Dieshin was fast and accurate, but you brought me an empty box. How disappointing.";
+	mes("[Entomologist]");
+	mes("Hmm, I thought that Dieshin was fast and accurate, but you brought me an empty box. How disappointing.");
 	next;
-	mes "[Entomologist]";
-	mes "Please bring my order. Dieshin will give you my product.";
+	mes("[Entomologist]");
+	mes("Please bring my order. Dieshin will give you my product.");
 	close;
 }
 
 xmas_fild01,92,57,3	script	Biologist	4W_M_01,{
 	if (checkweight(Knife,1) == 0 || (MaxWeight - Weight) < 3500) {
-		mes "[Biologist]";
-		mes "Why are you carrying so many items?";
-		mes "Are you in a training course or something?";
+		mes("[Biologist]");
+		mes("Why are you carrying so many items?");
+		mes("Are you in a training course or something?");
 		close;
 	}
-	mes "[Biologist]";
-	mes "Have you heard about the Marin monster?";
-	mes "It does look like the usual poring, but it has unique characteristic.";
+	mes("[Biologist]");
+	mes("Have you heard about the Marin monster?");
+	mes("It does look like the usual poring, but it has unique characteristic.");
 	next;
-	mes "[Biologist]";
-	mes "Porings steal items if they see them on the ground. However, Marin has no interest in dropped items. So I was wondering, how come Marin doesn't pay attention to gathering items even though they are the same kind of monster as Porings.";
+	mes("[Biologist]");
+	mes("Porings steal items if they see them on the ground. However, Marin has no interest in dropped items. So I was wondering, how come Marin doesn't pay attention to gathering items even though they are the same kind of monster as Porings.");
 	next;
-	mes "[Biologist]";
-	mes "But, this place is freaking cold.";
+	mes("[Biologist]");
+	mes("But, this place is freaking cold.");
 	next;
 	if(select("...I am not interested.", "Here are the blankets.") == 1) {
-		mes "[Biologist]";
-		mes "Huh, whatever. But be careful! It's very slippery here.";
+		mes("[Biologist]");
+		mes("Huh, whatever. But be careful! It's very slippery here.");
 		close;
 	}
 	if (questprogress(8273) != 1) {
-		mes "[Biologist]";
-		mes "Huh?";
-		mes "You are not Dieshin's delivery man?";
+		mes("[Biologist]");
+		mes("Huh?");
+		mes("You are not Dieshin's delivery man?");
 		next;
-		mes "[Biologist]";
-		mes "I am waiting for a special delivery.";
+		mes("[Biologist]");
+		mes("I am waiting for a special delivery.");
 		close;
 	}
 	if (countitem(Disin_Delivery_Box) > 0) {
-		mes "[Biologist]";
-		mes "Oh ho! Yes! That one!";
+		mes("[Biologist]");
+		mes("Oh ho! Yes! That one!");
 		next;
-		mes "[Biologist]";
-		mes "Those are the Blankets that I ordered! You were sent by Dieshin right?";
+		mes("[Biologist]");
+		mes("Those are the Blankets that I ordered! You were sent by Dieshin right?");
 		next;
-		mes "[Biologist]";
-		mes "I have been waiting for this!";
-		mes "Give it to me!";
+		mes("[Biologist]");
+		mes("I have been waiting for this!");
+		mes("Give it to me!");
 		next;
-		mes "[Biologist]";
-		mes "It arrived much faster than I thought. I want to test them right away!";
+		mes("[Biologist]");
+		mes("It arrived much faster than I thought. I want to test them right away!");
 		next;
-		mes "[Biologist]";
-		mes "Well done. Good Job! Thank you so much! Here is a little gift for you.";
+		mes("[Biologist]");
+		mes("Well done. Good Job! Thank you so much! Here is a little gift for you.");
 		delitem Disin_Delivery_Box,1;
 		erasequest 8273;
 		getitem Novice_Potion,100;
 		getexp 1000,0;
 		close;
 	}
-	mes "[Biologist]";
-	mes "I appreciate your kindness.";
-	mes "But, what did you bring?";
+	mes("[Biologist]");
+	mes("I appreciate your kindness.");
+	mes("But, what did you bring?");
 	next;
-	mes "[Biologist]";
-	mes "Hmm, I thought that Dieshin was fast and accurate, but you brought me an empty box. How disappointing.";
+	mes("[Biologist]");
+	mes("Hmm, I thought that Dieshin was fast and accurate, but you brought me an empty box. How disappointing.");
 	next;
-	mes "[Biologist]";
-	mes "Please bring my order. Dieshin will give you my product.";
+	mes("[Biologist]");
+	mes("Please bring my order. Dieshin will give you my product.");
 	close;
 }
 
 payon,179,66,3	script	Dashia	4_M_RACHMAN1,{
 	if (checkweight(Knife,1) == 0 || (MaxWeight - Weight) < 3500) {
-		mes "[Dashia]";
-		mes "Why are you carrying so many items?";
-		mes "Are you in a training course or something?";
+		mes("[Dashia]");
+		mes("Why are you carrying so many items?");
+		mes("Are you in a training course or something?");
 		close;
 	}
-	mes "[Dashia]";
-	mes "Here is some hair~ a broken clock~!";
+	mes("[Dashia]");
+	mes("Here is some hair~ a broken clock~!");
 	next;
-	mes "[Dashia]";
-	mes "Broken clock..? Hu hu..";
+	mes("[Dashia]");
+	mes("Broken clock..? Hu hu..");
 	next;
-	mes "[Dashia]";
-	mes "Hey~! Dude! You look like a very rich adventurer.";
+	mes("[Dashia]");
+	mes("Hey~! Dude! You look like a very rich adventurer.");
 	next;
 	if(select("I am a poor adventurer.", "I have a gathering mission.") == 1) {
-		mes "[Dashia]";
-		mes "Really? Hmm, oh right. You don't look sophisticated.";
+		mes("[Dashia]");
+		mes("Really? Hmm, oh right. You don't look sophisticated.");
 		next;
-		mes "[Dashia]";
-		mes "You are a poor adventurer~! Good luck!";
+		mes("[Dashia]");
+		mes("You are a poor adventurer~! Good luck!");
 		close;
 	}
-	mes "[Dashia]";
-	mes "Oh, you are from the Eden Group?";
-	mes "What mission do you have?";
+	mes("[Dashia]");
+	mes("Oh, you are from the Eden Group?");
+	mes("What mission do you have?");
 	next;
 	switch(select("Gather Bones", "Gather Animal Skin", "Gather Peelings", "Gather Tails", "Gather Cookies", "Gather Mustaches")) {
 	case 1:
@@ -515,18 +515,18 @@ payon,179,66,3	script	Dashia	4_M_RACHMAN1,{
 			erasequest 8274;
 			close;
 		}
-		mes "[Dashia]";
-		mes "I can see that you have a gathering mission.";
-		mes "But, where are the Skel-Bones?";
+		mes("[Dashia]");
+		mes("I can see that you have a gathering mission.");
+		mes("But, where are the Skel-Bones?");
 		next;
-		mes "[Dashia]";
-		mes "You haven't done the mission yet. Why did you come back here?";
+		mes("[Dashia]");
+		mes("You haven't done the mission yet. Why did you come back here?");
 		next;
-		mes "[Dashia]";
-		mes "You don't have enough 'Skel-Bones'... You can find it when you hunt Skeletons.";
+		mes("[Dashia]");
+		mes("You don't have enough 'Skel-Bones'... You can find it when you hunt Skeletons.");
 		next;
-		mes "[Dashia]";
-		mes "To find Skeletons, you better check Payon Dungeon 1F, which is located in Archer Village, north of Payon.";
+		mes("[Dashia]");
+		mes("To find Skeletons, you better check Payon Dungeon 1F, which is located in Archer Village, north of Payon.");
 		break;
 	case 2:
 		callsub L_Quest,8275;
@@ -539,19 +539,19 @@ payon,179,66,3	script	Dashia	4_M_RACHMAN1,{
 			erasequest 8275;
 			close;
 		}
-		mes "[Dashia]";
-		mes "I can see that you have a gathering mission.";
-		mes "But, where is the Bear's Footskins and Animal Skins?";
+		mes("[Dashia]");
+		mes("I can see that you have a gathering mission.");
+		mes("But, where is the Bear's Footskins and Animal Skins?");
 		next;
-		mes "[Dashia]";
-		mes "You haven't done the mission yet. Why did you come back here?";
+		mes("[Dashia]");
+		mes("You haven't done the mission yet. Why did you come back here?");
 		next;
-		mes "[Dashia]";
-		mes "You have to bring 10 Bear's Footskins' and '5 Animal Skins!";
-		mes "You can find Bear's Footskin from Bigfoot and Animal Skin from Animals.";
+		mes("[Dashia]");
+		mes("You have to bring 10 Bear's Footskins' and '5 Animal Skins!");
+		mes("You can find Bear's Footskin from Bigfoot and Animal Skin from Animals.");
 		next;
-		mes "[Dashia]";
-		mes "Bigfoot is around the north of Geffen field or the southeast of Payon field.";
+		mes("[Dashia]");
+		mes("Bigfoot is around the north of Geffen field or the southeast of Payon field.");
 		break;
 	case 3:
 		callsub L_Quest,8276;
@@ -564,21 +564,21 @@ payon,179,66,3	script	Dashia	4_M_RACHMAN1,{
 			erasequest 8276;
 			close;
 		}
-		mes "[Dashia]";
-		mes "I can see that you have a gathering mission.";
-		mes "But, where are the Worm Peelings and Garlets?";
+		mes("[Dashia]");
+		mes("I can see that you have a gathering mission.");
+		mes("But, where are the Worm Peelings and Garlets?");
 		next;
-		mes "[Dashia]";
-		mes "You have to bring '20 Worm Peelings' and '20 Garlets' to complete the mission.";
+		mes("[Dashia]");
+		mes("You have to bring '20 Worm Peelings' and '20 Garlets' to complete the mission.");
 		next;
-		mes "[Dashia]";
-		mes "You can get those items from 'Piere', 'Andre', 'Deniro', 'Vitata', 'Thief Bug', 'Female Thief Bug' and 'Male Thief Bug'.";
+		mes("[Dashia]");
+		mes("You can get those items from 'Piere', 'Andre', 'Deniro', 'Vitata', 'Thief Bug', 'Female Thief Bug' and 'Male Thief Bug'.");
 		next;
-		mes "[Dashia]";
-		mes "'Piere', 'Andre', 'Deniro' and 'Vitata' are in Ant Hell which is located near the Saint Darmain Fortress soutwest of Morroc.";
+		mes("[Dashia]");
+		mes("'Piere', 'Andre', 'Deniro' and 'Vitata' are in Ant Hell which is located near the Saint Darmain Fortress soutwest of Morroc.");
 		next;
-		mes "[Dashia]";
-		mes "'Thief Bug', 'Female Thief Bug' and 'Male Thief Bug' are int he Prontere Culvert. To get there, you need to be a volunteer of the Prontera Culvert's punitive force.";
+		mes("[Dashia]");
+		mes("'Thief Bug', 'Female Thief Bug' and 'Male Thief Bug' are int he Prontere Culvert. To get there, you need to be a volunteer of the Prontera Culvert's punitive force.");
 		break;
 	case 4:
 		callsub L_Quest,8277;
@@ -592,22 +592,22 @@ payon,179,66,3	script	Dashia	4_M_RACHMAN1,{
 			erasequest 8277;
 			close;
 		}
-		mes "[Dashia]";
-		mes "I can see that you have a gathering mission.";
-		mes "But, where are the Yoyo Tails, Acorns and Raccoon Leafs?";
+		mes("[Dashia]");
+		mes("I can see that you have a gathering mission.");
+		mes("But, where are the Yoyo Tails, Acorns and Raccoon Leafs?");
 		next;
-		mes "[Dashia]";
-		mes "You haven't done the mission yet. Why did you come back here?";
-		mes "You have to bring '10 Yoyo Tails,' '10 Acorns' and '10 Raccoon Leafs' to complete the mission.";
+		mes("[Dashia]");
+		mes("You haven't done the mission yet. Why did you come back here?");
+		mes("You have to bring '10 Yoyo Tails,' '10 Acorns' and '10 Raccoon Leafs' to complete the mission.");
 		next;
-		mes "[Dashia]";
-		mes "You can get Yoyo Tails from 'Yoyo's', Acorn from 'Coco's' and Raccoon Leaf from 'Smokies'.";
+		mes("[Dashia]");
+		mes("You can get Yoyo Tails from 'Yoyo's', Acorn from 'Coco's' and Raccoon Leaf from 'Smokies'.");
 		next;
-		mes "[Dashia]";
-		mes "You can find them easily around fields, but the field east of Ayothya is the best spot for hunting all 3 monsters.";
+		mes("[Dashia]");
+		mes("You can find them easily around fields, but the field east of Ayothya is the best spot for hunting all 3 monsters.");
 		next;
-		mes "[Dashia]";
-		mes "To get to Ayothaya, you better go to 'Aibakthing' in Alberta and pay his fare.";
+		mes("[Dashia]");
+		mes("To get to Ayothaya, you better go to 'Aibakthing' in Alberta and pay his fare.");
 		break;
 	case 5:
 		callsub L_Quest,8278;
@@ -620,20 +620,20 @@ payon,179,66,3	script	Dashia	4_M_RACHMAN1,{
 			erasequest 8278;
 			close;
 		}
-		mes "[Dashia]";
-		mes "I can see that you have a gathering mission.";
-		mes "But, where are the Well-baked Cookies and the Piece of Cake?";
+		mes("[Dashia]");
+		mes("I can see that you have a gathering mission.");
+		mes("But, where are the Well-baked Cookies and the Piece of Cake?");
 		next;
-		mes "[Dashia]";
-		mes "You haven't done the mission yet. Why did you come back here?";
-		mes "You have to bring '5 Well-baked Cookies' and '1 Piece of Cake' to complete the mission.";
+		mes("[Dashia]");
+		mes("You haven't done the mission yet. Why did you come back here?");
+		mes("You have to bring '5 Well-baked Cookies' and '1 Piece of Cake' to complete the mission.");
 		next;
-		mes "[Dashia]";
-		mes "You can get Well-baked Cookie from 'Cookies' who wears red or green shirts.";
-		mes "For getting Piece of Cake, you should look for 'Mystcases'.";
+		mes("[Dashia]");
+		mes("You can get Well-baked Cookie from 'Cookies' who wears red or green shirts.");
+		mes("For getting Piece of Cake, you should look for 'Mystcases'.");
 		next;
-		mes "[Dashia]";
-		mes "Both monsters canbe found in the Toy Factory Warehouse or Toy Monitoring Room. To get there, ask Mr. Claus in the northeastern part of Al De Baran.";
+		mes("[Dashia]");
+		mes("Both monsters canbe found in the Toy Factory Warehouse or Toy Monitoring Room. To get there, ask Mr. Claus in the northeastern part of Al De Baran.");
 		break;
 	case 6:
 		callsub L_Quest,8279;
@@ -646,47 +646,47 @@ payon,179,66,3	script	Dashia	4_M_RACHMAN1,{
 			erasequest 8279;
 			close;
 		}
-		mes "[Dashia]";
-		mes "I can see that you have a gathering mission.";
-		mes "But, where are the Mole Whiskerss and Mole Claws??";
+		mes("[Dashia]");
+		mes("I can see that you have a gathering mission.");
+		mes("But, where are the Mole Whiskerss and Mole Claws??");
 		next;
-		mes "[Dashia]";
-		mes "You haven't done the mission yet. Why did you come back here?";
-		mes "You have to bring '5 Mole Whiskers' and '3 Mole Claws' to complete the mission.";
+		mes("[Dashia]");
+		mes("You haven't done the mission yet. Why did you come back here?");
+		mes("You have to bring '5 Mole Whiskers' and '3 Mole Claws' to complete the mission.");
 		next;
-		mes "[Dashia]";
-		mes "You can get those items from 'Martins'.";
-		mes "Martins can be found in the Mjolnir Dead Pit, but the second floor is dangerous, so be careful!";
+		mes("[Dashia]");
+		mes("You can get those items from 'Martins'.");
+		mes("Martins can be found in the Mjolnir Dead Pit, but the second floor is dangerous, so be careful!");
 		next;
-		mes "[Dashia]";
-		mes "To get there, ask a Kafra Employee in Geffen, they can warp you there.";
+		mes("[Dashia]");
+		mes("To get there, ask a Kafra Employee in Geffen, they can warp you there.");
 		break;
 	}
 	next;
-	mes "[Dashia]";
-	mes "Anyway, I will be here waiting for you. Please come back when you finish the mission!";
+	mes("[Dashia]");
+	mes("Anyway, I will be here waiting for you. Please come back when you finish the mission!");
 	close;
 L_Quest:
 	if (questprogress(getarg(0)) != 1) {
-		mes "[Dashia]";
-		mes "Huh? Are you sure? Something is wrong...";
+		mes("[Dashia]");
+		mes("Huh? Are you sure? Something is wrong...");
 		next;
-		mes "[Dashia]";
-		mes "It is weird.";
-		mes "Please check your Quest Window by pressing 'alt + u'.";
+		mes("[Dashia]");
+		mes("It is weird.");
+		mes("Please check your Quest Window by pressing 'alt + u'.");
 		close;
 	}
 	return;
 L_Reward:
-	mes "[Dashia]";
-	mes "Wow~ you did an excellent job!";
+	mes("[Dashia]");
+	mes("Wow~ you did an excellent job!");
 	next;
-	mes "[Dashia]";
-	mes "Thank you very much. God bless you!";
+	mes("[Dashia]");
+	mes("Thank you very much. God bless you!");
 	emotion e_heh;
 	next;
-	mes "[Dashia]";
-	mes "Ha~! Ha~!";
-	mes "I will give you a reward as promised.";
+	mes("[Dashia]");
+	mes("Ha~! Ha~!");
+	mes("I will give you a reward as promised.");
 	return;
 }

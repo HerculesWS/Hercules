@@ -35,21 +35,21 @@
 
 lighthalzen,207,310,5	script	Lighthalzen Guide#lhz01::GuideLighthazlen	4_M_EIN_SOLDIER,{
 	cutin "ein_soldier",2;
-	mes "[Lighthalzen Guide]";
-	mes "Welcome to ^8B4513Lighthalzen^000000,";
-	mes "the Corporation City-State.";
-	mes "If you need any guidance";
-	mes "around the city, feel free";
-	mes "to ask me and I'll do my";
-	mes "very best to help you.";
+	mes("[Lighthalzen Guide]");
+	mes("Welcome to ^8B4513Lighthalzen^000000,");
+	mes("the Corporation City-State.");
+	mes("If you need any guidance");
+	mes("around the city, feel free");
+	mes("to ask me and I'll do my");
+	mes("very best to help you.");
 	next;
-	mes "[Lighthalzen Guide]";
-	mes "Please be aware that I'm";
-	mes "in charge of providing info";
-	mes "regarding the West District";
-	mes "of ^8B4513Lighthalzen^000000. Now, please";
-	mes "select the location that you'd";
-	mes "like to learn more about.";
+	mes("[Lighthalzen Guide]");
+	mes("Please be aware that I'm");
+	mes("in charge of providing info");
+	mes("regarding the West District");
+	mes("of ^8B4513Lighthalzen^000000. Now, please");
+	mes("select the location that you'd");
+	mes("like to learn more about.");
 	F_Navi("[Lighthalzen Guide]");
 	next;
 	while (1) {
@@ -119,21 +119,21 @@ lighthalzen,207,310,5	script	Lighthalzen Guide#lhz01::GuideLighthazlen	4_M_EIN_S
 			while (.@loop) {
 				switch(select("[ Armsmith ]", "[ Seiayablem ]", "[ Pet Groomer ]", "[ Kafra Employees ]", "[ Cool Event Corp. Staff ]", "Previous Menu")) {
 				case 1:
-					mes "[Lighthalzen Guide]";
-					mes "You may go to Fulerr,";
-					mes "the ^0A9696Armsmith^000000";
-					mes "on the 1st floor of the Weapon Shop.";
+					mes("[Lighthalzen Guide]");
+					mes("You may go to Fulerr,");
+					mes("the ^0A9696Armsmith^000000");
+					mes("on the 1st floor of the Weapon Shop.");
 					viewpoint 1,194,35,10,0x0A9696;
 					next;
 					callsub L_Mark, "^0A9696Armsmith^000000";
 					next;
 					break;
 				case 2:
-					mes "[Lighthalzen Guide]";
-					mes "^4B0082Seiyablem^000000 adds";
-					mes "sockets on your items";
-					mes "on the 1st floor";
-					mes "of the Weapon Shop.";
+					mes("[Lighthalzen Guide]");
+					mes("^4B0082Seiyablem^000000 adds");
+					mes("sockets on your items");
+					mes("on the 1st floor");
+					mes("of the Weapon Shop.");
 					viewpoint 1,194,35,11,0x4B0082;
 					next;
 					callsub L_Mark, "^4B0082Seiyablem^000000",1;
@@ -162,9 +162,9 @@ lighthalzen,207,310,5	script	Lighthalzen Guide#lhz01::GuideLighthazlen	4_M_EIN_S
 			}
 			break;
 		case 3:
-			mes "[Lighthalzen Guide]";
-			mes "Sure, I'll remove all marks from your mini-map.";
-			mes "Is there anything else I can do for you?";
+			mes("[Lighthalzen Guide]");
+			mes("Sure, I'll remove all marks from your mini-map.");
+			mes("Is there anything else I can do for you?");
 			viewpoint 2,160,217,0,0xFFFFFF;
 			viewpoint 2,203,257,1,0xFFFFFF;
 			viewpoint 2,262,75,2,0xFFFFFF;
@@ -184,8 +184,8 @@ lighthalzen,207,310,5	script	Lighthalzen Guide#lhz01::GuideLighthazlen	4_M_EIN_S
 			next;
 			break;
 		case 4:
-			mes "[Lighthalzen Guide]";
-			mes "Enjoy your adventures!";
+			mes("[Lighthalzen Guide]");
+			mes("Enjoy your adventures!");
 			close2;
 			cutin "ein_soldier",255;
 			end;
@@ -193,11 +193,11 @@ lighthalzen,207,310,5	script	Lighthalzen Guide#lhz01::GuideLighthazlen	4_M_EIN_S
 	}
 	end;
 L_Mark:
-	mes "[Lighthalzen Guide]";
-	mes "I will mark the location";
-	mes "of "+((getarg(1,0))?"":"the ")+getarg(0);
-	mes "on your mini-map.";
-	mes "Would you like to check any other locations?";
+	mes("[Lighthalzen Guide]");
+	mes("I will mark the location");
+	mes("of "+((getarg(1,0))?"":"the ")+getarg(0));
+	mes("on your mini-map.");
+	mes("Would you like to check any other locations?");
 	return;
 }
 lighthalzen,220,310,3	duplicate(GuideLighthazlen)	Lighthalzen Guide#lhz02	4_M_EIN_SOLDIER

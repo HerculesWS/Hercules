@@ -31,9 +31,9 @@
 //================= File Encoding =========================================
 //= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
 //= -If the encoding is correct, the next three lines have the same length-
-//= ============ ¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä ============
+//= ============ ï¿½Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡ï¿½ ============
 //= ============ ============================================= ============
-//= ============ ¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á ============
+//= ============ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ============
 //================= Description ===========================================
 //= Repetable Quests for Players between Baselevel 91 - 99.
 //================= Current Version =======================================
@@ -42,49 +42,49 @@
 
 moc_para01,48,177,3	script	91-99 Mission Board	4_BOARD3,{
 	if (countitem(Para_Team_Mark) < 1 && countitem(Para_Team_Mark_) < 1) {
-		mes "Wait a minute!";
-		mes "-You need to have an-";
-		mes "-^4d4dff'Eden Group Mark'^000000-";
-		mes "-to receive these missions.-";
+		mes("Wait a minute!");
+		mes("-You need to have an-");
+		mes("-^4d4dff'Eden Group Mark'^000000-");
+		mes("-to receive these missions.-");
 		next;
 		switch(select("Just walk away.", "^0000FFEden Group^000000 missions?", "How can I be a member of the ^0000FFEden Group^000000?")) {
 		case 1:
 			close;
 		case 2:
-			mes "::The Eden Group Missions";
-			mes "::are basically missions";
-			mes "::requested by";
-			mes "::people from all around the kingdom.";
-			mes "::We just categorize them.";
+			mes("::The Eden Group Missions");
+			mes("::are basically missions");
+			mes("::requested by");
+			mes("::people from all around the kingdom.");
+			mes("::We just categorize them.");
 			next;
-			mes "::In the Eden Group,";
-			mes "::we sorted out the missions";
-			mes "::according to the level of difficulty.";
-			mes "::According to this level,";
-			mes "::you can find";
-			mes "::missions that";
-			mes "::suit you.";
+			mes("::In the Eden Group,");
+			mes("::we sorted out the missions");
+			mes("::according to the level of difficulty.");
+			mes("::According to this level,");
+			mes("::you can find");
+			mes("::missions that");
+			mes("::suit you.");
 			next;
-			mes "::When you are done,";
-			mes "::you can come back";
-			mes "::to the mission board.";
+			mes("::When you are done,");
+			mes("::you can come back");
+			mes("::to the mission board.");
 			next;
-			mes "::Then you will be";
-			mes "::rewarded!!";
-			mes "::Simple, isn't it!!";
-			mes "::No commission required!!";
+			mes("::Then you will be");
+			mes("::rewarded!!");
+			mes("::Simple, isn't it!!");
+			mes("::No commission required!!");
 			close;
 		case 3:
-			mes "::You can become a member";
-			mes "::of the Eden Group";
-			mes "::to ^0000FFLaime Evenor^000000,";
-			mes "::who is waiting on the 1st floor.";
+			mes("::You can become a member");
+			mes("::of the Eden Group");
+			mes("::to ^0000FFLaime Evenor^000000,");
+			mes("::who is waiting on the 1st floor.");
 			next;
-			mes "::If you become a member,";
-			mes "::you will get an";
-			mes "::\"^006400Eden Group Mark^000000\".";
-			mes "::Then you will be able";
-			mes "::to see the mission board.";
+			mes("::If you become a member,");
+			mes("::you will get an");
+			mes("::\"^006400Eden Group Mark^000000\".");
+			mes("::Then you will be able");
+			mes("::to see the mission board.");
 			close;
 		}
 	}
@@ -103,25 +103,25 @@ moc_para01,48,177,3	script	91-99 Mission Board	4_BOARD3,{
 			96000,102000,110000,
 			102000,108000,
 			110000,138000,118000,96000,134000;
-		mes "You must be within level 91-99 to accept these missions.";
+		mes("You must be within level 91-99 to accept these missions.");
 		for(.@quest = 4181; .@quest<=4196; ++.@quest) {
 			.@hunting = questprogress(.@quest,HUNTING);
 			if (.@hunting == 1) {
 				next;
-				mes ":: You cannot proceed in";
-				mes ":: ^0000FF"+.@names$[.@quest-4181]+" Hunting^000000.";
-				mes ":: The registration to the mission";
-				mes ":: is cancelled.";
+				mes(":: You cannot proceed in");
+				mes(":: ^0000FF"+.@names$[.@quest-4181]+" Hunting^000000.");
+				mes(":: The registration to the mission");
+				mes(":: is cancelled.");
 				erasequest .@quest;
 				close;
 			} else if (.@hunting == 2) {
 				next;
-				mes ":: You added information";
-				mes ":: about the mission";
-				mes ":: ^0000FF"+.@names$[.@quest-4181]+" Hunting^000000";
-				mes ":: on the mission board.";
-				mes ":: You've got a";
-				mes ":: salutary experience.";
+				mes(":: You added information");
+				mes(":: about the mission");
+				mes(":: ^0000FF"+.@names$[.@quest-4181]+" Hunting^000000");
+				mes(":: on the mission board.");
+				mes(":: You've got a");
+				mes(":: salutary experience.");
 				erasequest .@quest;
 				getexp .@exp[.@quest-4181],0;
 				close;
@@ -129,55 +129,55 @@ moc_para01,48,177,3	script	91-99 Mission Board	4_BOARD3,{
 		}
 		close;
 	}
-	mes "[91-99 Mission Board]";
-	mes "There are several requests on this board.";
+	mes("[91-99 Mission Board]");
+	mes("There are several requests on this board.");
 	next;
 	switch(select("^8B4513Turtle Island^000000", "^8B4513Glast Heim^000000", "^8B4513Rachel / Veins^000000", "^8B4513Expansion Cities^000000", "^8B4513Other regions^000000")) {
 	case 1:
-		mes "^8B4513Turtle Island^000000.";
-		mes "Which monster will you hunt or have you finished hunting?";
+		mes("^8B4513Turtle Island^000000.");
+		mes("Which monster will you hunt or have you finished hunting?");
 		next;
 		switch(select("^0000FFSolider^000000", "^0000FFFreezer^000000", "^0000FFHeater^000000")) {
-			case 1: callsub L_Quest,4181,"Solider",90000,"¼Ö¸®´õÄ«µå","There is a monster that only can be found on ^8B4513Turtle Island^000000.";
-			case 2: callsub L_Quest,4182,"Freezer",94000,"ÇÁ¸®ÀúÄ«µå","There is a monster that only can be found on ^8B4513Turtle Island^000000.";
-			case 3: callsub L_Quest,4183,"Heater",114000,"È÷ÅÍÄ«µå","There is a monster that only can be found on ^8B4513Turtle Island^000000.";
+			case 1: callsub L_Quest,4181,"Solider",90000,"ï¿½Ö¸ï¿½ï¿½ï¿½Ä«ï¿½ï¿½","There is a monster that only can be found on ^8B4513Turtle Island^000000.";
+			case 2: callsub L_Quest,4182,"Freezer",94000,"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä«ï¿½ï¿½","There is a monster that only can be found on ^8B4513Turtle Island^000000.";
+			case 3: callsub L_Quest,4183,"Heater",114000,"ï¿½ï¿½ï¿½ï¿½Ä«ï¿½ï¿½","There is a monster that only can be found on ^8B4513Turtle Island^000000.";
 		}
 	case 2:
-		mes "^8B4513Glast Heim^000000.";
-		mes "Which monster will you hunt or have you finished hunting?";
+		mes("^8B4513Glast Heim^000000.");
+		mes("Which monster will you hunt or have you finished hunting?");
 		next;
 		switch(select("^0000FFInjustice^000000", "^0000FFRybio^000000", "^0000FFDark Priest^000000")) {
-			case 1: callsub L_Quest,4184,"Injustice",96000,"ÀÎÀú½ºÆ¼½ºÄ«µå","There is a monster only found in ^8B4513Glast Heim prison^000000.";
-			case 2: callsub L_Quest,4185,"Rybio",96000,"¸®ºñ¿ÀÄ«µå","There is a monster only found in ^8B4513Glast Heim prison^000000.";
-			case 3: callsub L_Quest,4186,"Dark Priest",146000,"´ÙÅ©ÇÁ¸®½ºÆ®Ä«µå","There is a monster only found in ^8B4513Glast Heim prison^000000.";
+			case 1: callsub L_Quest,4184,"Injustice",96000,"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¼ï¿½ï¿½Ä«ï¿½ï¿½","There is a monster only found in ^8B4513Glast Heim prison^000000.";
+			case 2: callsub L_Quest,4185,"Rybio",96000,"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä«ï¿½ï¿½","There is a monster only found in ^8B4513Glast Heim prison^000000.";
+			case 3: callsub L_Quest,4186,"Dark Priest",146000,"ï¿½ï¿½Å©ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®Ä«ï¿½ï¿½","There is a monster only found in ^8B4513Glast Heim prison^000000.";
 		}
 	case 3:
-		mes "^8B4513Rachel / Veins^000000.";
-		mes "Which monster will you hunt or have you finished hunting?";
+		mes("^8B4513Rachel / Veins^000000.");
+		mes("Which monster will you hunt or have you finished hunting?");
 		next;
 		switch(select("^0000FFStapo^000000", "^0000FFRoween^000000", "^0000FFSiroma^000000")) {
-			case 1: callsub L_Quest,4187,"Stapo",96000,"½ºÅÂÆ÷Ä«µå","There is a monster only found in ^8B4513Veins^000000.";
-			case 2: callsub L_Quest,4188,"Roween",102000,"·Î¿ìÀ©Ä«µå","There is a monster only found in ^8B4513Rachel^000000.";
-			case 3: callsub L_Quest,4189,"Siroma",110000,"½Ã·Î¸¶Ä«µå","There is a monster only found in ^8B4513Ice Dungeon^000000.";
+			case 1: callsub L_Quest,4187,"Stapo",96000,"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä«ï¿½ï¿½","There is a monster only found in ^8B4513Veins^000000.";
+			case 2: callsub L_Quest,4188,"Roween",102000,"ï¿½Î¿ï¿½ï¿½ï¿½Ä«ï¿½ï¿½","There is a monster only found in ^8B4513Rachel^000000.";
+			case 3: callsub L_Quest,4189,"Siroma",110000,"ï¿½Ã·Î¸ï¿½Ä«ï¿½ï¿½","There is a monster only found in ^8B4513Ice Dungeon^000000.";
 		}
 	case 4:
-		mes "^8B4513Expansion Cities^000000.";
-		mes "Which monster will you hunt or have you finished hunting?";
+		mes("^8B4513Expansion Cities^000000.");
+		mes("Which monster will you hunt or have you finished hunting?");
 		next;
 		switch(select("^0000FFShinobi^000000", "^0000FFEvil Nymph^000000")) {
-			case 1: callsub L_Quest,4190,"Shinobi",102000,"½Ã³ëºñÄ«µå","There is a monster only found in ^8B4513Amatsu Dungeon^000000.";
-			case 2: callsub L_Quest,4191,"Evil Nymph",108000,"¿ä¼±³àÄ«µå","There is a monster only found in ^8B4513Kunlun Dungeon^000000.";
+			case 1: callsub L_Quest,4190,"Shinobi",102000,"ï¿½Ã³ï¿½ï¿½ï¿½Ä«ï¿½ï¿½","There is a monster only found in ^8B4513Amatsu Dungeon^000000.";
+			case 2: callsub L_Quest,4191,"Evil Nymph",108000,"ï¿½ä¼±ï¿½ï¿½Ä«ï¿½ï¿½","There is a monster only found in ^8B4513Kunlun Dungeon^000000.";
 		}
 	case 5:
-		mes "Other Regions.";
-		mes "Which monster will you hunt or have you finished hunting?";
+		mes("Other Regions.");
+		mes("Which monster will you hunt or have you finished hunting?");
 		next;
 		switch(select("^0000FFDeviruchi^000000", "^0000FFMineral^000000", "^0000FFKaho^000000", "^0000FFNeraid^000000", "^0000FFDisguise^000000")) {
-			case 1: callsub L_Quest,4192,"Deviruchi",110000,"µ¥ºñ·çÄ¡Ä«µå","There is a monster only found in ^8B4513Geffen Dungeon^000000.";
-			case 2: callsub L_Quest,4193,"Mineral",138000,"¹Ì³×¶ö","There is a monster only found in ^8B4513Einbech Dungeon^000000.";
-			case 3: callsub L_Quest,4194,"Kaho",118000,"Ä«È£Ä«µå","There is a monster found in ^8B4513Nogg Road Magma 1^000000.";
-			case 4: callsub L_Quest,4195,"Neraid",96000,"³×·¹ÀÌµåÄ«µå","There is a monster only found in ^8B4513Comodo Dungeon^000000.";
-			case 5: callsub L_Quest,4196,"Disguise",134000,"µð½º°¡ÀÌÁîÄ«µå","There is a monster only found in ^8B4513Nifflheim^000000.";
+			case 1: callsub L_Quest,4192,"Deviruchi",110000,"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¡Ä«ï¿½ï¿½","There is a monster only found in ^8B4513Geffen Dungeon^000000.";
+			case 2: callsub L_Quest,4193,"Mineral",138000,"ï¿½Ì³×¶ï¿½","There is a monster only found in ^8B4513Einbech Dungeon^000000.";
+			case 3: callsub L_Quest,4194,"Kaho",118000,"Ä«È£Ä«ï¿½ï¿½","There is a monster found in ^8B4513Nogg Road Magma 1^000000.";
+			case 4: callsub L_Quest,4195,"Neraid",96000,"ï¿½×·ï¿½ï¿½Ìµï¿½Ä«ï¿½ï¿½","There is a monster only found in ^8B4513Comodo Dungeon^000000.";
+			case 5: callsub L_Quest,4196,"Disguise",134000,"ï¿½ð½º°ï¿½ï¿½ï¿½ï¿½ï¿½Ä«ï¿½ï¿½","There is a monster only found in ^8B4513Nifflheim^000000.";
 		}
 	}
 	end;
@@ -188,19 +188,19 @@ L_Quest:
 	.@quest2 = .@quest1+31;
 	.@playtime = questprogress(.@quest2,PLAYTIME);
 	if (.@playtime == 1) {
-		mes "[91-99 Mission Board]";
-		mes "You need to wait 3 hours before you can take this mission again.";
+		mes("[91-99 Mission Board]");
+		mes("You need to wait 3 hours before you can take this mission again.");
 		close;
 	}
 	.@hunting = questprogress(.@quest1,HUNTING);
 	if (.@hunting == 1) {
-		mes "[91-99 Mission Board]";
-		mes "Have you finished hunting all 30 "+getarg(1)+getarg(5,"")+" yet?";
+		mes("[91-99 Mission Board]");
+		mes("Have you finished hunting all 30 "+getarg(1)+getarg(5,"")+" yet?");
 		close;
 	} else if (.@hunting == 2) {
-		mes "[91-99 Mission Board]";
-		mes "You have completed the hunting.";
-		mes "Please accept this reward as a compensation.";
+		mes("[91-99 Mission Board]");
+		mes("You have completed the hunting.");
+		mes("Please accept this reward as a compensation.");
 		erasequest .@quest1;
 		if (.@playtime) erasequest .@quest2;
 		setquest .@quest2;
@@ -217,21 +217,21 @@ L_Quest:
 	}/* else if (.@hunting == 3) {
 //		recall_completequest .@quest1
 		erasequest .@quest1;
-		mes "[91-99 Mission Board]";
-		mes "You have re-accepted the "+getarg(1)+" Hunting mission.";
+		mes("[91-99 Mission Board]");
+		mes("You have re-accepted the "+getarg(1)+" Hunting mission.");
 		close;
 	}*/ else {
-		mes "[91-99 Mission Board]";
-		mes getarg(4);
+		mes("[91-99 Mission Board]");
+		mes(getarg(4));
 		next;
 		if (getarg(3) != "") cutin getarg(3),3;
-		mes "[91-99 Mission Board]";
-		mes "Hunt 30 "+getarg(1)+" monsters there and post your success on this board.";
+		mes("[91-99 Mission Board]");
+		mes("Hunt 30 "+getarg(1)+" monsters there and post your success on this board.");
 		next;
 		if (getarg(3) != "") cutin getarg(3),255;
 		if(select("I'll hunt them.", "No thanks.") == 1) {
-			mes "[91-99 Mission Board]";
-			mes "When you have completed the mission, post it on this board and collect your reward.";
+			mes("[91-99 Mission Board]");
+			mes("When you have completed the mission, post it on this board and collect your reward.");
 			if (.@playtime) erasequest .@quest2;
 			setquest .@quest1;
 		}

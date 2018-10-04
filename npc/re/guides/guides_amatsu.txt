@@ -34,18 +34,18 @@
 //=========================================================================
 
 amatsu,202,91,3	script	Amatsu Guide#amatsu	4_F_JPN,{
-	mes "[Amachang]";
-	mes "Welcome to ^8B4513Amatsu^000000,";
-	mes "the town of kind towners";
-	mes "and beautiful cherry blossoms.";
+	mes("[Amachang]");
+	mes("Welcome to ^8B4513Amatsu^000000,");
+	mes("the town of kind towners");
+	mes("and beautiful cherry blossoms.");
 	next;
-	mes "[Amachang]";
-	mes "I'm Amachang,";
-	mes "the 13th Miss Amatsu.";
-	mes "I will guide you about town";
-	mes "as Miss Amatsu.";
-	mes "Please tell me";
-	mes "if you want to know something.";
+	mes("[Amachang]");
+	mes("I'm Amachang,");
+	mes("the 13th Miss Amatsu.");
+	mes("I will guide you about town");
+	mes("as Miss Amatsu.");
+	mes("Please tell me");
+	mes("if you want to know something.");
 	F_Navi("[Amachang]");
 	while (1) {
 		next;
@@ -83,9 +83,9 @@ amatsu,202,91,3	script	Amatsu Guide#amatsu	4_F_JPN,{
 			viewpoint 1,195,79,7,0x00BFFF;
 			break;
 		case 9:
-			mes "[Amachang]";
-			mes "I'll remove all marks from your mini-map.";
-			mes "Is there anything else I can do for you?";
+			mes("[Amachang]");
+			mes("I'll remove all marks from your mini-map.");
+			mes("Is there anything else I can do for you?");
 			viewpoint 2,1,1,0,0xFFFFFF;
 			viewpoint 2,1,1,1,0xFFFFFF;
 			viewpoint 2,1,1,2,0xFFFFFF;
@@ -96,16 +96,16 @@ amatsu,202,91,3	script	Amatsu Guide#amatsu	4_F_JPN,{
 			viewpoint 2,1,1,7,0xFFFFFF;
 			break;
 		case 10:
-			mes "[Amachang]";
-			mes "Enjoy your trip~!!";
+			mes("[Amachang]");
+			mes("Enjoy your trip~!!");
 			close;
 		}
 	}
 	end;
 L_Mark:
-	mes "[Amachang]";
-	mes "The "+getarg(0)+" is";
-	mes "marked on your mini-map.";
-	mes "Is there anything else I can do for you?";
+	mes("[Amachang]");
+	mes("The "+getarg(0)+" is");
+	mes("marked on your mini-map.");
+	mes("Is there anything else I can do for you?");
 	return;
 }

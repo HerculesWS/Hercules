@@ -89,8 +89,8 @@ izlude_c,165,156,2	duplicate(Soldier_izlude)	Soldier#izlude_c	8W_SOLDIER
 izlude_d,165,156,2	duplicate(Soldier_izlude)	Soldier#izlude_d	8W_SOLDIER
 
 -	script	::Guard_izlude	FAKE_NPC,{
-	mes "[Izlude Guard]";
-	mes "Welcome to Izlude.";
+	mes("[Izlude Guard]");
+	mes("Welcome to Izlude.");
 	close;
 }
 prt_fild08,350,219,4	duplicate(Guard_izlude)	Guard#izlude	8W_SOLDIER
@@ -101,11 +101,11 @@ prt_fild08d,350,219,4	duplicate(Guard_izlude)	Guard#izlude_d	8W_SOLDIER
 
 //== Channel Warper ========================================
 function	script	F_IzludeChannel	{
-	mes "[Channel Warp Official]";
-	mes "Izlude is a verly lively place is it not?";
-	mes "I am here to help make Izlude feel more smooth!";
-	mes "I can send you to another copy of Izlude.";
-	mes "Do you want to go to another copy?";
+	mes("[Channel Warp Official]");
+	mes("Izlude is a verly lively place is it not?");
+	mes("I am here to help make Izlude feel more smooth!");
+	mes("I can send you to another copy of Izlude.");
+	mes("Do you want to go to another copy?");
 	next;
 	.@i = select(getarg(0)+"", "Never mind");
 	if (.@i < 6) {

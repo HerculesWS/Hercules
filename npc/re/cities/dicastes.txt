@@ -33,9 +33,9 @@
 //================= File Encoding =========================================
 //= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
 //= -If the encoding is correct, the next three lines have the same length-
-//= ============ ¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä ============
+//= ============ ï¿½Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡ï¿½ ============
 //= ============ ============================================= ============
-//= ============ ¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á ============
+//= ============ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ============
 //================= Description ===========================================
 //= El Dicastes Town Script
 //================= Current Version =======================================
@@ -43,207 +43,207 @@
 //=========================================================================
 
 dicastes01,194,159,5	script	Excited Galten#a	4_MAN_GALTUN1,{
-	mes "[Excited Galten]";
+	mes("[Excited Galten]");
 	if (isequipped(2782)) {
-		mes "I can't get beautiful";
-		mes "Ahat's image out of my head.";
+		mes("I can't get beautiful");
+		mes("Ahat's image out of my head.");
 		emotion e_lv;
-		mes "As long as we have him,";
-		mes "it will only be a matter of time before Sapha";
-		mes "will rule this land.";
+		mes("As long as we have him,");
+		mes("it will only be a matter of time before Sapha");
+		mes("will rule this land.");
 		close;
 	}
-	mes sprintf("¡ø¢²¢£ ¡Ð ¡ò¡ð¡ð");
-	mes sprintf("¡÷¡ø¡ñ ¡ü ¡ü");
-	mes sprintf("¡ù¢²¢³ ¢²");
-	mes sprintf("¡ó¡õ¡ô ¢£ ¡Ð¡û¡ü ¡ò ¡ð¡ö¢£");
-	mes sprintf("¢¤¡õ¡þ ¡÷ ¡ñ");
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ð¡ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½"));
 	close;
 }
 
 dicastes01,202,86,3	script	Sentinel#a	4_MAN_GALTUN1,{
-	mes "[Sentinel]";
+	mes("[Sentinel]");
 	if (isequipped(2782)) {
-		mes "El Dicastes, the";
-		mes "capital city of Sapha.";
-		mes "The land is pretty";
-		mes "rough so many outsiders can't get in. Ha ha";
+		mes("El Dicastes, the");
+		mes("capital city of Sapha.");
+		mes("The land is pretty");
+		mes("rough so many outsiders can't get in. Ha ha");
 		next;
-		mes "[Sentinel]";
-		mes "...";
+		mes("[Sentinel]");
+		mes("...");
 		next;
-		mes "[Sentinel]";
-		mes "Hey, you are an outsider!";
+		mes("[Sentinel]");
+		mes("Hey, you are an outsider!");
 		close;
 	}
-	mes sprintf("¡ô¢±¢± ¡û ¡ó¡Ð¡ñ ¢£ ¢¤¡ú");
-	mes sprintf("¡ø¡ó¢² ¢¤ ");
-	mes sprintf("¡õ¡ó¡Ð ¢³ ¡Ð¡õ¢£ ¡û ¡ú¡ï");
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½Ð¡ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ "));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ð¡ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½"));
 	next;
-	mes "[Sentinel]";
-	mes sprintf("¡ù");
+	mes("[Sentinel]");
+	mes(sprintf("ï¿½ï¿½"));
 	next;
-	mes "[Sentinel]";
-	mes sprintf("¡ñ¡ö¡ï ¡ú ¡ó¢³¡ô");
+	mes("[Sentinel]");
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ó¢³¡ï¿½"));
 	close;
 }
 
 dicastes01,194,95,5	script	Sentinel#b	4_MAN_GALTUN,{
-	mes "[Sentinel]";
+	mes("[Sentinel]");
 	if (isequipped(2782)) {
-		mes "I permit your entry.";
-		mes "But if you dare to cause trouble";
-		mes "you won't know what hit you. Beware!";
+		mes("I permit your entry.");
+		mes("But if you dare to cause trouble");
+		mes("you won't know what hit you. Beware!");
 		close;
 	}
-	mes sprintf("¡ø¡ô¡ü ¡ø ¡ó");
-	mes sprintf("¡ø¡ï¡û ¡ó ¡û¢¤¢² ¡÷ ¢£");
-	mes sprintf("¢¤¡ô¡ø ¢³ ¡÷¡û¡ö ¡õ ¡ø");
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½"));
 	close;
 }
 
 dicastes01,234,158,0	script	Training Galten#a	4_MAN_GALTUN,{
-	mes "[Training Galten]";
+	mes("[Training Galten]");
 	if (isequipped(2782)) {
-		mes "I'll be ready for anything";
-		mes "if I keep up with my training every day.";
+		mes("I'll be ready for anything");
+		mes("if I keep up with my training every day.");
 		close;
 	}
-	mes sprintf("¡ø¡ô¡ü ¡ø ¡ø¡ô¡ü ¡ø");
-	mes sprintf("¡ô ¡ø");
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ ï¿½ï¿½"));
 	next;
-	mes "Don't know what it means.";
+	mes("Don't know what it means.");
 	close;
 }
 
 dicastes01,244,166,0	script	Training Galten#b	4_MAN_GALTUN,{
-	mes "[Training Galten]";
+	mes("[Training Galten]");
 	if (isequipped(2782)) {
-		mes "I wonder if Ahat knows how";
-		mes "hard I am training.";
+		mes("I wonder if Ahat knows how");
+		mes("hard I am training.");
 		close;
 	}
-	mes sprintf("¡ø¡ô¡ü ¡ø");
-	mes sprintf("¡ø¡ô¡ü ¡ø ¡ø¡ô¡ü ¡ø ¡ø¡ô¡ü ¡ø");
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½"));
 	next;
-	mes "Don't know what it means.";
+	mes("Don't know what it means.");
 	close;
 }
 
 dicastes01,272,166,0	script	Training Galten#c	4_MAN_GALTUN,{
-	mes "[Training Galten]";
+	mes("[Training Galten]");
 	if (isequipped(2782)) {
-		mes "[Training Galten]";
-		mes "I am a Sapha warrior.";
-		mes "I am never lazy with my training.";
+		mes("[Training Galten]");
+		mes("I am a Sapha warrior.");
+		mes("I am never lazy with my training.");
 		close;
 	}
-	mes sprintf("¡ø¡ô¡ü ¡ø ¡ø¡ô¡ü ¡ø");
-	mes sprintf("¡ø¡ô¡ü ¡ø");
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½"));
 	next;
-	mes "Don't know what it means.";
+	mes("Don't know what it means.");
 	close;
 }
 
 dicastes01,248,129,0	script	Training Galten#d	4_MAN_GALTUN,{
-	mes "[Training Galten]";
+	mes("[Training Galten]");
 	if (isequipped(2782)) {
-		mes "[Training Galten]";
-		mes "I heard this isn't training";
-		mes "equipment but a massager";
-		mes "for trainees like me.";
+		mes("[Training Galten]");
+		mes("I heard this isn't training");
+		mes("equipment but a massager");
+		mes("for trainees like me.");
 		close;
 	}
-	mes sprintf("¡ø¡ô¡ü ¡ø ¡ø¡ô¡ü");
-	mes sprintf("¡ø¡ô¡ü ¡ø ¡ø¡ô¡ü ¡ø");
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½"));
 	next;
-	mes "Don't know what it means.";
+	mes("Don't know what it means.");
 	close;
 }
 
 /*
 dicastes01,271,152,0	script	Training Galten#e	4_MAN_GALTUN,{
-	mes "[Training Galten]";
+	mes("[Training Galten]");
 	if (isequipped(2782)) {
-		mes "I will get great results";
-		mes "if I do my best, right?";
+		mes("I will get great results");
+		mes("if I do my best, right?");
 		close;
 	}
-	mes sprintf("¡ø¢²¡û ¡ô ¢£¢³¡ô");
-	mes sprintf("¡ü¡ô");
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½"));
 	close;
 }
 */
 
 dic_in01,349,282,4	script	Waiting Galten#in_1	4_MAN_GALTUN1,{
 	if (isequipped(2782)) {
-		mes "[Waiting Galten]";
-		mes "Here is the Battle Station.";
-		mes "We are all tensed up to be ready for action.";
+		mes("[Waiting Galten]");
+		mes("Here is the Battle Station.");
+		mes("We are all tensed up to be ready for action.");
 		close;
 	}
-	mes sprintf("[¢²¡Ð¡û ¡ù ¡Ð]");
-	mes sprintf("¡ñ¡õ¡ü ¢£ ¡ó");
-	mes sprintf("¢¤¡ó¡õ ¢£ ¢£¡ò¡ô ¡ö ¡ú¢¤¡ú ¢¤ ¡ò¡ö¡õ ¢¤ ");
+	mes(sprintf("[ï¿½ï¿½ï¿½Ð¡ï¿½ ï¿½ï¿½ ï¿½ï¿½]"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ "));
 	close;
 }
 
 dic_in01,370,261,1	script	Waiting Galten#in_2	4_MAN_GALTUN1,{
 	if (isequipped(2782)) {
-		mes "[Waiting Galten]";
-		mes "Boring.";
+		mes("[Waiting Galten]");
+		mes("Boring.");
 		close;
 	}
-	mes sprintf("[¢²¡Ð¡û ¡ù ¡Ð]");
-	mes sprintf("¡ù¢¤¢±");
+	mes(sprintf("[ï¿½ï¿½ï¿½Ð¡ï¿½ ï¿½ï¿½ ï¿½ï¿½]"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"));
 	close;
 }
 
 dic_in01,381,261,1	script	Waiting Galten#in_3	4_MAN_GALTUN1,{
 	if (isequipped(2782)) {
-		mes "[Waiting Galten]";
-		mes "Zzzzz...";
+		mes("[Waiting Galten]");
+		mes("Zzzzz...");
 		close;
 	}
-	mes sprintf("[¢²¡Ð¡û ¡ù ¡Ð]");
-	mes sprintf("¡ú¡ô");
+	mes(sprintf("[ï¿½ï¿½ï¿½Ð¡ï¿½ ï¿½ï¿½ ï¿½ï¿½]"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½"));
 	close;
 }
 
 dic_in01,370,282,4	script	Waiting Galten#in_4	4_MAN_GALTUN1,{
 	if (isequipped(2782)) {
-		mes "[Waiting Galten]";
-		mes "El Dicastes is the most peaceful place in this world as long as I am here.";
+		mes("[Waiting Galten]");
+		mes("El Dicastes is the most peaceful place in this world as long as I am here.");
 		close;
 	}
-	mes sprintf("[¢²¡Ð¡û ¡ù ¡Ð]");
-	mes sprintf("¡ï¡ï¢³ ¡þ ¡ö¢³¢£ ¢± ¢³¡û¡õ ¡ø ¡þ¡ï¡ï ¡ø ¡û");
+	mes(sprintf("[ï¿½ï¿½ï¿½Ð¡ï¿½ ï¿½ï¿½ ï¿½ï¿½]"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¢³ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½"));
 	close;
 }
 
 dic_in01,354,219,4	script	Resting Galten#in_5	4_MAN_GALTUN1,{
 	if (isequipped(2782)) {
-		mes "[Resting Galten]";
-		mes "Resting is always so sweet.";
+		mes("[Resting Galten]");
+		mes("Resting is always so sweet.");
 		close;
 	}
-	mes sprintf("[¡õ¡ø¡ò ¡ü ¢¤]");
-	mes sprintf("¡ï¡õ¡ù ¡ö ¡ò¡ð¢² ¢³ ¡ö");
+	mes(sprintf("[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½]"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½"));
 	close;
 }
 
 dic_in01,365,197,1	script	Resting Galten#in_6	4_MAN_GALTUN1,{
 	if (isequipped(2782)) {
-		mes "[Resting Galten]";
-		mes "Galten can also rest while standing up like this.";
+		mes("[Resting Galten]");
+		mes("Galten can also rest while standing up like this.");
 		next;
-		mes "[Resting Galten]";
-		mes "You say I don't look like I'm resting? But I'm already used to this.";
+		mes("[Resting Galten]");
+		mes("You say I don't look like I'm resting? But I'm already used to this.");
 		close;
 	}
-	mes sprintf("[¡õ¡ø¡ò ¡ü ¢¤]");
-	mes sprintf("¡ô¡ï¢¤ ¡ö ¡ù¡ð¡ñ ¡ü ¡ó¡û¡û");
-	mes sprintf("¡ï¢£¡ó ¡ù ¢³¡ô¡ð ¢£ ¡Ð¡û¡ô ¡ô ¡Ð¡ú¡ù ¡ô ¡ó");
+	mes(sprintf("[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½]"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¢¤ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¢£ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ð¡ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ð¡ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½"));
 	close;
 }
 
@@ -253,489 +253,489 @@ dic_in01,87,102,5	script	Resting Piom#01	4_MAN_PIOM,{
 
 dic_in01,29,119,4	script	Resting Piom#04	4_MAN_PIOM6,{
 	if (isequipped(2782)) {
-		mes "[Resting Piom]";
-		mes "Why is it so noisy when I'm trying to get rest?";
+		mes("[Resting Piom]");
+		mes("Why is it so noisy when I'm trying to get rest?");
 		close;
 	}
-	mes sprintf("[¢£¡ù¡ò ¢¤ ¡ù]");
-	mes sprintf("¡ü¢²¡ð ¡Ð ¡ò¡ø¢² ¡ô ¢²¡õ");
+	mes(sprintf("[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½]"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½"));
 	close;
 }
 
 dic_in01,91,113,5	script	Suspicious Piom#a	4_MAN_PIOM6,{
-	mes "[Suspicious Piom]";
+	mes("[Suspicious Piom]");
 	if (isequipped(2782)) {
-		mes "Have you heard of the";
-		mes "rumor about Ahat?";
+		mes("Have you heard of the");
+		mes("rumor about Ahat?");
 		next;
 		if(select("Nope!", "You first.") == 1) {
-			mes "[Suspicious Piom]";
-			mes "Never mind.";
+			mes("[Suspicious Piom]");
+			mes("Never mind.");
 			close;
 		}
-		mes "[Suspicious Piom]";
-		mes "Oh, you do seem to know?";
-		mes "I need to collect information.";
-		mes "You first.";
-		mes "You heard of the rumor, right?";
+		mes("[Suspicious Piom]");
+		mes("Oh, you do seem to know?");
+		mes("I need to collect information.");
+		mes("You first.");
+		mes("You heard of the rumor, right?");
 		next;
 		if(select("Something is fishy?", "If you're not going to spill it, me neither!") == 1) {
-			mes "[Suspicious Piom]";
-			mes "I'm only a very curious";
-			mes "ordinary Piom.";
+			mes("[Suspicious Piom]");
+			mes("I'm only a very curious");
+			mes("ordinary Piom.");
 			close;
 		}
-		mes "[Suspicious Piom]";
-		mes "I am not going to say anything, either!";
+		mes("[Suspicious Piom]");
+		mes("I am not going to say anything, either!");
 		close;
 	}
-	mes sprintf("¡ó¢³¡ó ¡ó ¡ó¡þ¡ö");
-	mes sprintf("¡õ ¢³¢²¡÷ ¡ó¡ó");
+	mes(sprintf("ï¿½ó¢³¡ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½"));
 	next;
 	if(select("Can't tell what it means", "Is it a curse??") == 2) {
-		mes "[Suspicious Piom]";
-		mes "Too bad.";
+		mes("[Suspicious Piom]");
+		mes("Too bad.");
 		close;
 	}
-	mes "[Suspicious Piom]";
-	mes "Be on your";
-	mes "way, shoo";
+	mes("[Suspicious Piom]");
+	mes("Be on your");
+	mes("way, shoo");
 	close;
 }
 
 dic_in01,168,116,5	script	Tired Piom#c	4_MAN_PIOM5,{
-	mes "[Tired Piom]";
+	mes("[Tired Piom]");
 	if (isequipped(2782)) {
-		mes "If you need any";
-		mes "information, you'd have better";
-		mes "luck with the Cat Merchant than wandering around here.";
-		mes "But of course you'll have to pay the price.";
+		mes("If you need any");
+		mes("information, you'd have better");
+		mes("luck with the Cat Merchant than wandering around here.");
+		mes("But of course you'll have to pay the price.");
 		close;
 	}
-	mes sprintf("¡þ¡õ¡ð ¢³ ¢³¡þ");
-	mes sprintf("¡þ¡ø¡ð ¡ö ¡ñ¡ú¡ð ¡ò");
-	mes sprintf("¡ï¡ñ¡ú ¡ô ¡ö¡ö¡ò ¡û ¡ó¢¤¡ø ¡ø ¢² ¡ø");
-	mes sprintf("¢¤¢²¡ø ¡ò ¡ú¡ó¢±");
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ó¢¤¡ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"));
 	close;
 }
 
 dic_in01,149,104,5	script	Tired Piom#b	4_MAN_PIOM2,{
-	mes "[Tired Piom]";
+	mes("[Tired Piom]");
 	if (isequipped(2782)) {
-		mes "I feel so stiff...";
-		mes "I will need another dose of Bradium.";
-		mes "I think the effects are weaker than before,";
-		mes "or is it just me?";
+		mes("I feel so stiff...");
+		mes("I will need another dose of Bradium.");
+		mes("I think the effects are weaker than before,");
+		mes("or is it just me?");
 		emotion e_what;
 		close;
 	}
-	mes sprintf("¡ð¡Ð¡ú ¡ø ¢²");
-	mes sprintf("¡ö¡õ¡ó ¢¤ ¡ò¡ò¢³ ¡ô ¡ô¡ó¡ñ");
-	mes sprintf("¢£¡ñ¡þ ¡ü ¢²¡û¡ó ¡ò ¡ð¡þ");
-	mes sprintf("¡ö¡ú¡ñ ¢³");
+	mes(sprintf("ï¿½ï¿½ï¿½Ð¡ï¿½ ï¿½ï¿½ ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½"));
 	emotion e_what;
 	close;
 }
 
 dic_in01,341,113,3	script	Tired Piom#a	4_MAN_PIOM5,{
-	mes "[Tired Piom]";
+	mes("[Tired Piom]");
 	if (isequipped(2782)) {
-		mes "[Tired Piom]";
-		mes "I think I look better in";
-		mes "robes than in leather.";
-		mes "I may have to change to knitting.";
-		mes "But mining does seem to suit me.";
+		mes("[Tired Piom]");
+		mes("I think I look better in");
+		mes("robes than in leather.");
+		mes("I may have to change to knitting.");
+		mes("But mining does seem to suit me.");
 		next;
-		mes "[Tired Piom]";
-		mes "...";
+		mes("[Tired Piom]");
+		mes("...");
 		next;
 		emotion e_swt;
-		mes "[Tired Piom]";
-		mes "I'll be rejected again, right?";
+		mes("[Tired Piom]");
+		mes("I'll be rejected again, right?");
 		close;
 	}
-	mes sprintf("¡÷¡ò¡û ¡ó ¡ó¡Ð¢±");
-	mes sprintf("¡ó¡õ¡ù ¡þ ¡ò¢±¡ñ ¡õ ¢£");
-	mes sprintf("¡ü¡ð¢¤ ¡ù ¡ò¡ô¡õ ¡ò ¡ñ");
-	mes sprintf("¢³¡ú¢³ ¡Ð ¡ñ¡õ¡ù ¡÷ ¡÷¢±");
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½Ð¢ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ò¢±¡ï¿½ ï¿½ï¿½ ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½"));
 	next;
-	mes "[Tired Piom]";
-	mes sprintf("¡þ");
+	mes("[Tired Piom]");
+	mes(sprintf("ï¿½ï¿½"));
 	next;
 	emotion e_swt;
-	mes "[Tired Piom]";
-	mes sprintf("¡ø¡ú¡ø ¢± ¡ö¡ò");
+	mes("[Tired Piom]");
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½"));
 	close;
 }
 
 dic_in01,252,103,3	script	Eating Adventurer#tre	4_F_05,{
-	mes "[Eating Adventurer]";
-	mes "Hey, do you have any emergency rations on you from Midgard?";
+	mes("[Eating Adventurer]");
+	mes("Hey, do you have any emergency rations on you from Midgard?");
 	next;
-	mes "[Eating Adventurer]";
-	mes "I came all the way here with a hungry stomach because I heard there was a Midgard pub but I've never tasted this food anywhere in Midgard.";
+	mes("[Eating Adventurer]");
+	mes("I came all the way here with a hungry stomach because I heard there was a Midgard pub but I've never tasted this food anywhere in Midgard.");
 	next;
-	mes "[Eating Adventurer]";
-	mes "No, I'm sure nobody in Midgard would want to try this.";
+	mes("[Eating Adventurer]");
+	mes("No, I'm sure nobody in Midgard would want to try this.");
 	next;
-	mes "[Eating Adventurer]";
-	mes "I really would like a nice hot meal.";
-	mes "I go to this great little restaurant in Geffen often and I really miss that place now.";
+	mes("[Eating Adventurer]");
+	mes("I really would like a nice hot meal.");
+	mes("I go to this great little restaurant in Geffen often and I really miss that place now.");
 	close;
 }
 
 dic_in01,32,54,5	script	Venknick#el_01	4_MAN_BENKUNI,{
 	if (isequipped(2782)) {
-		mes "[Venknick]";
-		mes "Oh feels so refreshed.";
-		mes "The refined Bradium was the best ever. Do you want to try some?";
+		mes("[Venknick]");
+		mes("Oh feels so refreshed.");
+		mes("The refined Bradium was the best ever. Do you want to try some?");
 		close;
 	}
-	mes sprintf("[¡ó¡ò¡ð]");
-	mes sprintf("¡ù¡ó¢¤ ¢± ¢£");
-	mes sprintf("¡õ¡þ¡ï ¢£ ¡÷¡÷¢¤ ¡ú ¡ó¡ñ¡ö ¢² ¡þ¢²¢¤ ¢² ¢£?");
+	mes(sprintf("[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½?"));
 	close;
 }
 
 dic_in01,372,116,3	script	Thrilled Piom#a	4_MAN_PIOM4,{
-	mes "[Thrilled Piom]";
+	mes("[Thrilled Piom]");
 	if (isequipped(2782)) {
-		mes "Ahat is the one";
-		mes "and only Sapha pride.";
-		mes "We have plenty of Bradium";
-		mes "because of him!";
+		mes("Ahat is the one");
+		mes("and only Sapha pride.");
+		mes("We have plenty of Bradium");
+		mes("because of him!");
 		next;
-		mes "[Thrilled Piom]";
-		mes "...";
+		mes("[Thrilled Piom]");
+		mes("...");
 		next;
-		mes "[Thrilled Piom]";
-		mes "You don't feel his";
-		mes "blessing?";
+		mes("[Thrilled Piom]");
+		mes("You don't feel his");
+		mes("blessing?");
 		close;
 	}
-	mes sprintf("¡ò¡õ¢³ ¡õ ¡ô");
-	mes sprintf("¢£¡ó¡ø ¢² ¡ô¡÷");
-	mes sprintf("¡ò¡ô¢³ ¡ù ¢±¡ó¢± ¡õ");
-	mes sprintf("¡ó¡ü¡Ð ¡ø ¢²¡ü¡Ð ¡õ ¡ï");
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½"));
 	next;
-	mes "[Thrilled Piom]";
-	mes sprintf("¢£");
+	mes("[Thrilled Piom]");
+	mes(sprintf("ï¿½ï¿½"));
 	next;
-	mes "[Thrilled Piom]";
-	mes sprintf("¡Ð¢¤¡ù ¢£ ¡ó¡ó");
-	mes sprintf("¡ù¡ó¡÷ ¡û ¡þ¡ô");
+	mes("[Thrilled Piom]");
+	mes(sprintf("ï¿½Ð¢ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½"));
 	close;
 }
 
 dic_in01,360,125,5	script	Serious Venknicka	4_MAN_BENKUNI,{
-	mes "[Serious Venknick]";
+	mes("[Serious Venknick]");
 	if (isequipped(2782)) {
-		mes "A sudden increase in Bradium production.";
-		mes "Why?";
-		mes "I will have to get more factory lines running.";
+		mes("A sudden increase in Bradium production.");
+		mes("Why?");
+		mes("I will have to get more factory lines running.");
 		close;
 	}
-	mes sprintf("¡û¡õ¡ñ ¢² ¢²¢¤¡Ð ¢² ¡ü¡ñ¡õ");
-	mes sprintf("¡þ¡ó¡ö ¢²");
-	mes sprintf("¡ö¡÷¡û ¡ú ¡÷¡Ð¢³ ¢³");
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½Ð¢ï¿½ ï¿½ï¿½"));
 	close;
 }
 
 dic_in01,42,250,5	script	Guide#diel_1	4_MAN_PIOM6,{
 	if (isequipped(2782)) {
 		if (ep13_3_invite > 5) {
-			mes "[Guide]";
-			mes "I'm Dior, your kind guide for El Dicastes.";
-			mes "How can I help you?";
+			mes("[Guide]");
+			mes("I'm Dior, your kind guide for El Dicastes.");
+			mes("How can I help you?");
 			next;
-			mes "[Guide]";
-			mes "You may submit your civil complaints here.";
-			mes "Civil services and El Dicastes zones are managed in the Situation Room upstairs.";
+			mes("[Guide]");
+			mes("You may submit your civil complaints here.");
+			mes("Civil services and El Dicastes zones are managed in the Situation Room upstairs.");
 			next;
-			mes "[Guide]";
-			mes "The Administrative Office is located on the top floor and handles very important matters.";
-			mes "The Archive Room is in the lower level where you can obtain a vast amount of information.";
+			mes("[Guide]");
+			mes("The Administrative Office is located on the top floor and handles very important matters.");
+			mes("The Archive Room is in the lower level where you can obtain a vast amount of information.");
 			next;
-			mes "[Guide]";
-			mes "By the way, you may use the elevator in the back to go to the other floors.";
+			mes("[Guide]");
+			mes("By the way, you may use the elevator in the back to go to the other floors.");
 			next;
-			mes "[Guide]";
-			mes "Oh, you didn't ask?";
-			mes "But since I'm Dior, the kind guide. He he.";
+			mes("[Guide]");
+			mes("Oh, you didn't ask?");
+			mes("But since I'm Dior, the kind guide. He he.");
 			close;
 		}
-		mes "- The guide looks at you with an alert expression. -";
+		mes("- The guide looks at you with an alert expression. -");
 		close;
 	}
-	mes sprintf("[¢³¡ñ]");
-	mes sprintf("¡õ¢£¡ó ¡Ð ¡õ¡ñ¡ò ¢¤ ¡ø¡ø¢£ ¢± ¢²¢³¡÷ ¢±");
-	mes sprintf("¡ö¡ò¡ð ¡ó ¡ô¡ô?");
+	mes(sprintf("[ï¿½ï¿½ï¿½ï¿½]"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½?"));
 	next;
-	mes sprintf("[¢³¡ñ]");
-	mes sprintf("¡Ð¡ù¡ó ¡ù ¡ü¢²¡Ð ¢± ¡÷¡ö¡þ");
-	mes sprintf("¡ñ¡þ¢² ¡ø ¡ó¡ï¡ï ¡ù ¡ð¡ñ¡Ð ¡ù ¢³¡ò¡þ ¡ù ¡ø¡ð¡õ ¡õ ¢¤");
+	mes(sprintf("[ï¿½ï¿½ï¿½ï¿½]"));
+	mes(sprintf("ï¿½Ð¡ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½"));
 	next;
-	mes sprintf("[¢³¡ñ]");
-	mes sprintf("¡û¡ù¡ô ¡ø ¡ð¡þ¡÷ ¢³ ¡þ¡ù¡ñ ¡ú ¡ü¢¤¡ò ¡ú ¡ô¢£");
-	mes sprintf("¡÷¡ò¢¤ ¡ø ¡û¢³");
+	mes(sprintf("[ï¿½ï¿½ï¿½ï¿½]"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½"));
 	next;
-	mes sprintf("[¢³¡ñ]");
-	mes sprintf("¡ô¡ð¡ñ ¢¤ ¡ó¡÷¢³ ¡þ ¡ó¡õ¡÷ ¡ö ¡ó ¡ö");
+	mes(sprintf("[ï¿½ï¿½ï¿½ï¿½]"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½"));
 	next;
-	mes sprintf("[¢³¡ñ]");
-	mes sprintf("¡ò¡ô¡ø ¡÷ ¡õ¡ø¡ð ¡ó ¢¤¡Ð¡ô ¡ø ¡ñ¡ñ¡ñ ¡ø ¡ú¡ö¡ø ¡ü");
-	mes sprintf("¡ï¢³¡ð ¢¤ ¡ð¡ö¢£ ¢± ¡ô¡ø");
+	mes(sprintf("[ï¿½ï¿½ï¿½ï¿½]"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½Ð¡ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¢³ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½"));
 	close;
 }
 
 dic_in01,335,34,5	script	Talkative Piom#a	4_MAN_PIOM4,{
-	mes "[Talkative Piom]";
+	mes("[Talkative Piom]");
 	if (isequipped(2782)) {
-		mes "At my factory";
-		mes "we not only refine Bradium,";
-		mes "but we also produce various";
-		mes "tools for daily use.";
-		mes "We manufacture war supplies";
-		mes "here too.";
+		mes("At my factory");
+		mes("we not only refine Bradium,");
+		mes("but we also produce various");
+		mes("tools for daily use.");
+		mes("We manufacture war supplies");
+		mes("here too.");
 		close;
 	}
-	mes sprintf("¡ü¡ù¢± ¢³");
-	mes sprintf("¡÷¡ø¡ï ¡þ ¡ó¡ó");
-	mes sprintf("¡ñ¡õ¡ò ¡ó ¡÷¡ü¡ù ¡ö");
-	mes sprintf("¡ñ¡ø¡ü ¡ú ¡ô");
-	mes sprintf("¡þ¡ú¡ò ¢± ¡û¡ò¡ò ¡ù ¡÷");
-	mes sprintf("¢³¡ò¡ò ¡ù ¢±¢£¡ò");
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"));
 	close;
 }
 
 dic_in01,387,30,1	script	Manuk Piom#a	4_MAN_PIOM,{
-	mes "[Manuk Piom]";
+	mes("[Manuk Piom]");
 	if (isequipped(2782)) {
-		mes "You! We met in Manuk, didn't we?";
-		mes "I've come to pick up the weapon I ordered.";
+		mes("You! We met in Manuk, didn't we?");
+		mes("I've come to pick up the weapon I ordered.");
 		close;
 	}
-	mes sprintf("¡ü¡ó¡þ ¡ó ¡ï¡ð¢¤ ¡ü ¡ð¢±");
-	mes sprintf("¡ù¡ô¡ï ¡ú ¡ñ¡ù¢³ ¡ó ¡ò¡ö¡ó ¡ô¡ô");
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½"));
 	close;
 }
 
 dicastes01,282,210,4	script	Free Knit#a	4_MAN_NITT,{
-	mes "[Free Knit]";
+	mes("[Free Knit]");
 	if (isequipped(2782)) {
-		mes "As long as we have a steady";
-		mes "supply of Bradium";
-		mes "Saphas can live forever.";
-		mes "Our childhood lasts 10 years,";
-		mes "which is short.";
+		mes("As long as we have a steady");
+		mes("supply of Bradium");
+		mes("Saphas can live forever.");
+		mes("Our childhood lasts 10 years,");
+		mes("which is short.");
 		close;
 	}
-	mes sprintf("¡ñ¡þ¡ð ¡ó ¡ü¡ò¡ö ¡÷");
-	mes sprintf("¢³¡ð¡ï ¢£ ¡ù¡ô¡ò ¡ô ¡ó¡þ¡ñ ¢² ¡ñ¡û¢£ ¢²");
-	mes sprintf("¡ô¡ó¡ð ¡þ ¢£¡ð¢¤ ¡õ ¡û¢³¡ü");
-	mes sprintf("¡ó¢³¡ò ¢± ¡ô¢£¢² ¡÷ ¡÷¡ñ");
-	mes sprintf("¡ò¢²¡ï ¢£ ¡ö¡ö");
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"));
+	mes(sprintf("ï¿½ó¢³¡ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½"));
+	mes(sprintf("ï¿½ò¢²¡ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½"));
 	close;
 }
 
 dicastes01,246,210,3	script	Free Venknick#a	4_MAN_BENKUNI,{
-	mes "[Free Venknick]";
+	mes("[Free Venknick]");
 	if (isequipped(2782)) {
-		mes "At least we have plenty of Bradium.";
-		mes "Look,";
-		mes "You can see Bradium";
-		mes "everywhere you go.";
+		mes("At least we have plenty of Bradium.");
+		mes("Look,");
+		mes("You can see Bradium");
+		mes("everywhere you go.");
 		next;
-		mes "[Free Venknick]";
-		mes "?";
+		mes("[Free Venknick]");
+		mes("?");
 		next;
-		mes "[Free Venknick]";
-		mes "The thing rolling around is a gem,";
-		mes "but why are you interested in it?";
+		mes("[Free Venknick]");
+		mes("The thing rolling around is a gem,");
+		mes("but why are you interested in it?");
 		close;
 	}
-	mes sprintf("¡ô¡ï¢£ ¢¤ ¡÷¡õ¢± ¡ü ¡ñ¡õ");
-	mes sprintf("¡ü¢³");
-	mes sprintf("¡ö¡ù¢¤ ¢² ¡ù¡ó¡ô");
-	mes sprintf("¡ü¢£¢³ ¡ø ¡û¡ð¡ü ¡õ");
+	mes(sprintf("ï¿½ï¿½ï¿½ï¢£ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½"));
 	next;
-	mes "[Free Venknick]";
-	mes sprintf("¡ù");
+	mes("[Free Venknick]");
+	mes(sprintf("ï¿½ï¿½"));
 	next;
-	mes "[Free Venknick]";
-	mes sprintf("¡þ¢¤¢£ ¢± ¡ó¡ò¢³ ¡ü ¡ñ¡ð");
-	mes sprintf("¢±¡û¢£ ¡ö ¡ü¡ò¡÷ ¡û ¡õ¡ò¡÷ ¢²¢²");
+	mes("[Free Venknick]");
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½"));
 	close;
 }
 
 dicastes01,235,245,4	script	Excited Piom#a	4_MAN_PIOM4,{
 	if (isequipped(2782)) {
-		mes "[Excited Piom]";
-		mes "Have you seen Ahat?";
+		mes("[Excited Piom]");
+		mes("Have you seen Ahat?");
 		emotion e_ho;
-		mes "His popularity here in El Discastes is phenomenal!";
+		mes("His popularity here in El Discastes is phenomenal!");
 		close;
 	}
-	mes "[Excited Piom]";
-	mes sprintf("¡ú¡þ¡ó ¢³ ¡ü¢²¡ñ ¢±");
+	mes("[Excited Piom]");
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½"));
 	emotion e_ho;
-	mes sprintf("¢³¡ó¡ñ ¡õ ¡ð¡ô¡þ ¡÷ ¡ú¡ò¡õ ¡ø ¢² ¡ø");
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½"));
 	close;
 }
 
 dicastes01,284,262,3	script	Favorable Knit#a	4_MAN_NITT,{
-	mes "[Favorable Knit]";
+	mes("[Favorable Knit]");
 	if (isequipped(2782)) {
-		mes "Unlike the Laphine, we Saphas";
-		mes "are a very close community.";
-		mes "We start by living together in common facilities after we are born.";
-		mes "That is why all Saphas are like family.";
-		mes "We never have any quarrels between classes.";
+		mes("Unlike the Laphine, we Saphas");
+		mes("are a very close community.");
+		mes("We start by living together in common facilities after we are born.");
+		mes("That is why all Saphas are like family.");
+		mes("We never have any quarrels between classes.");
 		close;
 	}
-	mes sprintf("¡ô¢±¡ó ¡õ ¡ú¡÷¡Ð ¡õ");
-	mes sprintf("¡ü¡ï¡Ð ¡õ ¡ô¡ó¡ü ¡ó ¢³");
-	mes sprintf("¡ñ¡ô¡ü ¡þ ¢¤¡ñ¢¤ ¡ô ¡û¡ï¡ù");
-	mes sprintf("¡ú¡ö¡ô ¡ó ¢£¡ú¡þ ¡ø ¡ø¡ò");
-	mes sprintf("¢²¢³¡û ¢¤ ¡ú¡ñ¡ù ¡û ¢³¡ò¡ø ¡õ¡õ");
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½"));
 	close;
 }
 
 dicastes01,164,180,4	script	Limpy Piom#a	4_MAN_PIOM6,{
-	mes "[Limpy Piom]";
+	mes("[Limpy Piom]");
 	if (isequipped(2782)) {
-		mes "They say there is a";
-		mes "war going on with the Splendide in Manuk.";
-		mes "I hope everything goes well.";
-		mes "I hope it doesn't come all";
-		mes "the way to the capital city here.";
+		mes("They say there is a");
+		mes("war going on with the Splendide in Manuk.");
+		mes("I hope everything goes well.");
+		mes("I hope it doesn't come all");
+		mes("the way to the capital city here.");
 		emotion e_dots;
 		close;
 	}
-	mes sprintf("¢²¡ô¡þ ¡ù ¡õ¡Ð");
-	mes sprintf("¢³¡ô¡û ¡ú ¡ø");
-	mes sprintf("¢³¡þ¢¤ ¡ó ¡õ¡÷¡Ð");
-	mes sprintf("¡ñ¡ò¡ü ¡ü ¡ù¡þ¢±");
-	mes sprintf("¢¤¡ò¡þ ¢¤ ¢£¡ñ ¢¤ ¢£¡ñ");
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½"));
 	emotion e_dots;
 	close;
 }
 
 dicastes01,191,202,4	script	Complaining Galten#fihs	4_MAN_GALTUN,{
 	if (isequipped(2782)) {
-		mes "[Complaining Galten]";
-		mes "That crazy Vanknick always";
-		mes "talks about the legend of that statue.";
+		mes("[Complaining Galten]");
+		mes("That crazy Vanknick always");
+		mes("talks about the legend of that statue.");
 		next;
-		mes "[Complaining Galten]";
-		mes "Have you ever talked";
-		mes "to him?";
+		mes("[Complaining Galten]");
+		mes("Have you ever talked");
+		mes("to him?");
 		next;
 		if(select("No", "Yes") == 1) {
-			mes "[Complaining Galten]";
-			mes "Then you don't know about the legend behind the statue?";
-			mes "Then, I don't know what to talk about with you.";
+			mes("[Complaining Galten]");
+			mes("Then you don't know about the legend behind the statue?");
+			mes("Then, I don't know what to talk about with you.");
 			close;
 		}
 		emotion e_gg,0,"Crazy Venknick#fihsing1";
-		mes "[Complaining Galten]";
-		mes "You also fell for that crazy man.";
+		mes("[Complaining Galten]");
+		mes("You also fell for that crazy man.");
 		next;
-		mes "[" + strcharinfo(PC_NAME) + "]";
-		mes "Yes";
+		mes("[" + strcharinfo(PC_NAME) + "]");
+		mes("Yes");
 		emotion e_sob,1;
 		next;
-		mes "[Complaining Galten]";
-		mes "Just forget about it quickly for your own good.";
+		mes("[Complaining Galten]");
+		mes("Just forget about it quickly for your own good.");
 		close;
 	}
-	mes sprintf("[¡õ¢£¡ö ¡ú ]");
-	mes sprintf("¡õ¡ò¡û ¡ò ¢£¡û¡÷ ¡÷ ");
-	mes sprintf("¡û¡ù¡û ¡÷ ¡ü¡þ¡û ¢³ ¡ó");
+	mes(sprintf("[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ]"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ "));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½"));
 	next;
-	mes sprintf("[¡õ¢£¡ö ¡ú ]");
-	mes sprintf("¡ð¢±¡ü ¡û ¡õ¡÷¢¤");
-	mes sprintf("¢¤¡þ¡ø ¢² ¡÷");
+	mes(sprintf("[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ]"));
+	mes(sprintf("ï¿½ð¢±¡ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½"));
 	next;
-	mes "Don't know what it means.";
+	mes("Don't know what it means.");
 	close;
 }
 
 dicastes01,202,197,4	script	Crazy Venknick#fihsing1	4_MAN_BENKUNI,{
 	if (isequipped(2782)) {
-		mes "[Crazy Venknick]";
-		mes "At only 5000 Zeny";
-		mes "I will tell you the sad legend behind that statue.";
+		mes("[Crazy Venknick]");
+		mes("At only 5000 Zeny");
+		mes("I will tell you the sad legend behind that statue.");
 		next;
 		if(select("Give 5000 Zeny.", "Don't give 5000 Zeny.") == 2) {
-			mes "[Crazy Venknick]";
-			mes "Don't come back with regrets.";
+			mes("[Crazy Venknick]");
+			mes("Don't come back with regrets.");
 			close;
 		}
 		if (Zeny < 5000) {
-			mes "[Crazy Venknick]";
-			mes "I have";
-			mes "no legend to share with";
-			mes "the poor.";
+			mes("[Crazy Venknick]");
+			mes("I have");
+			mes("no legend to share with");
+			mes("the poor.");
 			close;
 		}
 		Zeny -= 5000;
-		mes "[Crazy Venknick]";
-		mes "Thanks.";
+		mes("[Crazy Venknick]");
+		mes("Thanks.");
 		emotion e_gg,0,"Complaining Galten#fihs";
 		next;
-		mes "["+strcharinfo(PC_NAME)+"]";
-		mes "What is the sad legend?";
+		mes("["+strcharinfo(PC_NAME)+"]");
+		mes("What is the sad legend?");
 		next;
 		emotion e_dots;
-		mes "["+strcharinfo(PC_NAME)+"]";
-		mes "I asked what the sad legend is about!";
+		mes("["+strcharinfo(PC_NAME)+"]");
+		mes("I asked what the sad legend is about!");
 		next;
-		mes "[Crazy Venknick]";
-		mes "I don't believe in legends.";
+		mes("[Crazy Venknick]");
+		mes("I don't believe in legends.");
 		next;
 		emotion e_dots,1;
-		mes "["+strcharinfo(PC_NAME)+"]";
-		mes "Was I tricked?";
+		mes("["+strcharinfo(PC_NAME)+"]");
+		mes("Was I tricked?");
 		sc_start SC_BLIND,20000,0;
 		next;
-		mes "You feel outraged at being tricked.";
+		mes("You feel outraged at being tricked.");
 		close;
 	}
-	mes sprintf("[¡ö¡ú¡ù ¢³ ]");
-	mes sprintf("¢²¡û¡ó ¡ó ¡ù¢¤¡ø");
-	mes sprintf("¢¤¡ð¢² ¢± ¡ñ¡ö¢² ¡ø ¡ï¡ö¡ü");
+	mes(sprintf("[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ]"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"));
 	next;
-	mes "Don't know what it means.";
+	mes("Don't know what it means.");
 	close;
 }
 
 dic_in01,98,110,5	script	Worried Piom#a	4_MAN_PIOM6,{
 	if (isequipped(2782)) {
-		mes "[Worried Piom]";
-		mes "I haven't seen my friends for the last few hours.";
-		mes "It's about time for them to have";
-		mes "their Bradium. Hmm..";
+		mes("[Worried Piom]");
+		mes("I haven't seen my friends for the last few hours.");
+		mes("It's about time for them to have");
+		mes("their Bradium. Hmm..");
 		close;
 	}
-	mes "[Worried Piom]";
-	mes sprintf("¡û¢±¡÷ ¢² ¡ï¡þ¡ò ¡ü ¡ï¡û¢²");
-	mes sprintf("¡ï¡÷¢¤ ¡Ð ¡ï¡ï¡Ð ¢¤ ¢£");
-	mes sprintf("¡÷¡þ¡ð ¡ó ¡ñ");
+	mes("[Worried Piom]");
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½"));
 	close;
 }
 
 dic_in01,98,96,3	script	Lost Galten#a	4_MAN_GALTUN1,{
 	if (isequipped(2782)) {
-		mes "[Lost Galten]";
-		mes "I've been living as a Piom for too long";
-		mes "now it's like a bad habit.";
-		mes "and I find myself here all the time.";
+		mes("[Lost Galten]");
+		mes("I've been living as a Piom for too long");
+		mes("now it's like a bad habit.");
+		mes("and I find myself here all the time.");
 		close;
 	}
-	mes "[Lost Galten]";
-	mes sprintf("¡ó¡ô¡ï ¡û ¢³¡ú");
-	mes sprintf("¡ü¡ø¡ñ ¢£ ");
-	mes sprintf("¡ö¡ï¢² ¡û ¡ö¡ó");
+	mes("[Lost Galten]");
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½"));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ "));
+	mes(sprintf("ï¿½ï¿½ï¿½ï¢² ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½"));
 	close;
 }

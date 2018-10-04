@@ -34,10 +34,10 @@
 //=========================================================================
 
 comodo,322,178,4	script	Comodo Guide#01comodo::GuideComodo	8_F_GIRL,{
-	mes "[Comodo Guide]";
-	mes "Welcome to ^8B4513Comodo^000000,";
-	mes "the Beach Town of the Rune-Midgarts Kingdom.";
-	mes "Do you need help navigating the town?";
+	mes("[Comodo Guide]");
+	mes("Welcome to ^8B4513Comodo^000000,");
+	mes("the Beach Town of the Rune-Midgarts Kingdom.");
+	mes("Do you need help navigating the town?");
 	F_Navi("[Comodo Guide]");
 	next;
 	while (1) {
@@ -97,11 +97,11 @@ comodo,322,178,4	script	Comodo Guide#01comodo::GuideComodo	8_F_GIRL,{
 					next;
 					break;
 				case 11:
-					mes "[Comodo Guide]";
-					mes "Let me mark the location of the";
-					mes F_Navi("Kafra Corporation Western Branch","comodo,131,195","^DB7093");
-					mes "on your mini-map.";
-					mes "Would you like to check any other locations?";
+					mes("[Comodo Guide]");
+					mes("Let me mark the location of the");
+					mes(F_Navi("Kafra Corporation Western Branch","comodo,131,195","^DB7093"));
+					mes("on your mini-map.");
+					mes("Would you like to check any other locations?");
 					viewpoint 1,136,202,10,0xDB7093;
 					next;
 					break;
@@ -121,10 +121,10 @@ comodo,322,178,4	script	Comodo Guide#01comodo::GuideComodo	8_F_GIRL,{
 					next;
 					break;
 				case 2:
-					mes "[Comodo Guide]";
-					mes F_Navi("Bor Robin","comodo,193,151","^228B22");
-					mes "helps adventurers to become ^228B22Dancers^000000.";
-					mes "Would you like to check any other locations?";
+					mes("[Comodo Guide]");
+					mes(F_Navi("Bor Robin","comodo,193,151","^228B22"));
+					mes("helps adventurers to become ^228B22Dancers^000000.");
+					mes("Would you like to check any other locations?");
 					viewpoint 1,193,151,12,0x228B22;
 					next;
 					break;
@@ -134,10 +134,10 @@ comodo,322,178,4	script	Comodo Guide#01comodo::GuideComodo	8_F_GIRL,{
 					next;
 					break;
 				case 4:
-					mes "[Comodo Guide]";
-					mes "The "+F_Navi("Roaming Bard","comodo,211,155","^DB7093");
-					mes "helps adventurers to become ^DB7093Bards^000000.";
-					mes "Would you like to check any other locations?";
+					mes("[Comodo Guide]");
+					mes("The "+F_Navi("Roaming Bard","comodo,211,155","^DB7093"));
+					mes("helps adventurers to become ^DB7093Bards^000000.");
+					mes("Would you like to check any other locations?");
 					viewpoint 1,211,155,14,0xDB7093;
 					next;
 					break;
@@ -148,9 +148,9 @@ comodo,322,178,4	script	Comodo Guide#01comodo::GuideComodo	8_F_GIRL,{
 			}
 			break;
 		case 3:
-			mes "[Comodo Guide]";
-			mes "Sure, I'll remove all marks from your mini-map.";
-			mes "Is there anything else I can do for you?";
+			mes("[Comodo Guide]");
+			mes("Sure, I'll remove all marks from your mini-map.");
+			mes("Is there anything else I can do for you?");
 			viewpoint 2,166,298,0,0xFFFFFF;
 			viewpoint 2,140,98,1,0xFFFFFF;
 			viewpoint 2,266,70,2,0xFFFFFF;
@@ -169,31 +169,31 @@ comodo,322,178,4	script	Comodo Guide#01comodo::GuideComodo	8_F_GIRL,{
 			next;
 			break;
 		case 4:
-			mes "[Comodo Guide]";
-			mes "Enjoy your stay.";
+			mes("[Comodo Guide]");
+			mes("Enjoy your stay.");
 			close;
 		case 5:
-			mes "[Comodo Guide]";
-			mes "^8B4513Comodo^000000 is";
-			mes "located inside a cave";
-			mes "and can never be reached by natural sunlight.";
+			mes("[Comodo Guide]");
+			mes("^8B4513Comodo^000000 is");
+			mes("located inside a cave");
+			mes("and can never be reached by natural sunlight.");
 			next;
-			mes "[Comodo Guide]";
-			mes "The villagers of ^8B4513Comodo^000000";
-			mes "have overcome their poor natural surroundings";
-			mes "to create a popular tourist site.";
-			mes "Is there anything else I can do for you?";
+			mes("[Comodo Guide]");
+			mes("The villagers of ^8B4513Comodo^000000");
+			mes("have overcome their poor natural surroundings");
+			mes("to create a popular tourist site.");
+			mes("Is there anything else I can do for you?");
 			next;
 			break;
 		}
 	}
 	end;
 L_Mark:
-	mes "[Comodo Guide]";
-	mes "Let me mark the location of";
-	mes "the "+getarg(0);
-	mes "on your mini-map.";
-	mes "Would you like to check any other locations?";
+	mes("[Comodo Guide]");
+	mes("Let me mark the location of");
+	mes("the "+getarg(0));
+	mes("on your mini-map.");
+	mes("Would you like to check any other locations?");
 	return;
 }
 comodo,181,347,4	duplicate(GuideComodo)	Comodo Guide#02comodo	8_F_GIRL

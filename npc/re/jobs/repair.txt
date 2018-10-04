@@ -35,55 +35,55 @@
 
 prt_in,38,104,4	script	Valerie	4_F_VALKYRIE,{
 	if (checkweight(Knife,1) == 0) {
-		mes "I think you have too many items. Let's try it again after you take some out.";
+		mes("I think you have too many items. Let's try it again after you take some out.");
 		close;
 	}
 	if (MaxWeight - Weight < 1000) {
-		mes "You're overweight with items so I don't think we can proceed any further. Challenge me after you've taken some items off.";
+		mes("You're overweight with items so I don't think we can proceed any further. Challenge me after you've taken some items off.");
 		close;
 	}
-	mes "[Valerie]";
-	mes "I am Valerie; I help those with abnormalities. I am friends with Valkyrie.";
+	mes("[Valerie]");
+	mes("I am Valerie); I help those with abnormalities. I am friends with Valkyrie.";
 	next;
-	mes "[Valerie]";
-	mes "If both abnormalities disappear then we must start the test over from scratch. What would you like to do?";
+	mes("[Valerie]");
+	mes("If both abnormalities disappear then we must start the test over from scratch. What would you like to do?");
 	next;
 	switch(select("I don't have any abnormalities", "I think my body has some abnormalities")) {
 	case 1:
-		mes "[Valerie]";
-		mes "That's a relief. Then please take care.";
+		mes("[Valerie]");
+		mes("That's a relief. Then please take care.");
 		close;
 	case 2:
-		mes "[Valerie]";
-		mes "Are you sure you want to intialize it and start over?";
+		mes("[Valerie]");
+		mes("Are you sure you want to intialize it and start over?");
 		next;
 		if(select("Nope", "Yes, I want to start completely over") == 1) {
-			mes "[Valerie]";
-			mes "I understand. I'll see you next time";
+			mes("[Valerie]");
+			mes("I understand. I'll see you next time");
 			close;
 		}
-		mes "[Valerie]";
-		mes "All items related to the existing conditions will disappear. Are you okay with this?";
+		mes("[Valerie]");
+		mes("All items related to the existing conditions will disappear. Are you okay with this?");
 		next;
 		if(select("Nope", "Yes, I want to start completely over.") == 1) {
-			mes "[Valerie]";
-			mes "I understand. I'll see you next time.";
+			mes("[Valerie]");
+			mes("I understand. I'll see you next time.");
 			close;
 		}
-		mes "[Valerie]";
-		mes "It seems that there are a sea of people who seemed to be cursed of not being able to get a significant other after going through with this. Are you still okay with this? ";
+		mes("[Valerie]");
+		mes("It seems that there are a sea of people who seemed to be cursed of not being able to get a significant other after going through with this. Are you still okay with this? ");
 		next;
 		if(select("Nope", "I still want to intialize.") == 1) {
-			mes "[Valerie]";
-			mes "I understand. I will see you next time.";
+			mes("[Valerie]");
+			mes("I understand. I will see you next time.");
 			close;
 		}
-		mes "[Valerie]";
-		mes "In extreme cases, some become crippled and can get ulcers. Do you still want to intilize former processes?";
+		mes("[Valerie]");
+		mes("In extreme cases, some become crippled and can get ulcers. Do you still want to intilize former processes?");
 		next;
 		if(select("Nope", "Please intilize the former processes") == 1) {
-			mes "[Valerie]";
-			mes "I understand. I will see you next time";
+			mes("[Valerie]");
+			mes("I understand. I will see you next time");
 			close;
 		}
 		specialeffect(EF_INVENOM, AREA, playerattached());
@@ -91,14 +91,14 @@ prt_in,38,104,4	script	Valerie	4_F_VALKYRIE,{
 
 		// Warlock - quest items
 		if (isequipped(2796) || isequipped(2797)) {
-			mes "[Valerie]";
-			mes "Please unequip the Magical Stone or Magical Stone Ring and try again.";
+			mes("[Valerie]");
+			mes("Please unequip the Magical Stone or Magical Stone Ring and try again.");
 			close;
 		}
 		if (countitem(Magical_Stone) || countitem(Magical_Stone_)) {
 			if (isequipped(2796) || isequipped(2797)) {
-				mes "[Valerie]";
-				mes "Please talk to me after your replace all Magical Stones.";
+				mes("[Valerie]");
+				mes("Please talk to me after your replace all Magical Stones.");
 				close;
 			}
 			setarray .@items[0], 2796, 2797, 6152, 6151; //Magical_Stone,Magical_Stone_,Glittering_Crystal,Peice_Of_Great_Bradium
@@ -106,26 +106,26 @@ prt_in,38,104,4	script	Valerie	4_F_VALKYRIE,{
 				if (countitem(.@items[.@i]))
 					delitem .@items[.@i], countitem(.@items[.@i]);
 			}
-			mes "[Valerie]";
-			mes "You're carrying something that is unnecessary. I will sort it out for you.";
+			mes("[Valerie]");
+			mes("You're carrying something that is unnecessary. I will sort it out for you.");
 			close;
 		}
 
 		// Baby and third job characters meet no further conditions.
 		if (eaclass()&(EAJL_BABY|EAJL_THIRD)) {
-			mes "[Valerie]";
-			mes "I don't think you should have any further business with me.";
+			mes("[Valerie]");
+			mes("I don't think you should have any further business with me.");
 			close;
 		}
 
 		// Rebirth - variable
 		if ((Class >= Job_Swordman && Class <= Job_Crusader2) && ADVJOB != 0) {
 			ADVJOB = 0;
-			mes "[Valerie]";
-			mes "You're carrying big karma- You should erase it.";
+			mes("[Valerie]");
+			mes("You're carrying big karma- You should erase it.");
 			next;
-			mes "[Valerie]";
-			mes "Please talk to me again as there could be additional problems.";
+			mes("[Valerie]");
+			mes("Please talk to me again as there could be additional problems.");
 			close;
 		}
 
@@ -181,8 +181,8 @@ prt_in,38,104,4	script	Valerie	4_F_VALKYRIE,{
 		else if (BaseJob == Job_Sage)
 			callsub L_Third, "job_soc", 12098, 12096, 12098;
 
-		mes "[Valerie]";
-		mes "I don't think you should have any further business with me.";
+		mes("[Valerie]");
+		mes("I don't think you should have any further business with me.");
 		close;
 	}
 
@@ -191,11 +191,11 @@ L_Second:
 		setd getarg(0),0;
 		if (questprogress(getarg(1)) == 2)
 			erasequest getarg(1);
-		mes "[Valerie]";
-		mes "I will help clear your problems for you that came from your former attempts.";
+		mes("[Valerie]");
+		mes("I will help clear your problems for you that came from your former attempts.");
 		next;
-		mes "[Valerie]";
-		mes "Please talk to me again as there could be additional problems.";
+		mes("[Valerie]");
+		mes("Please talk to me again as there could be additional problems.");
 		close;
 	} else
 		return;
@@ -215,20 +215,20 @@ L_Third:
 			if (questprogress(getarg(4)))
 				erasequest getarg(4);
 		}
-		mes "[Valerie]";
-		mes "I will help clear your problems for you that came from your former attempts.";
+		mes("[Valerie]");
+		mes("I will help clear your problems for you that came from your former attempts.");
 		next;
-		mes "[Valerie]";
-		mes "Please talk to me again as there could be additional problems.";
+		mes("[Valerie]");
+		mes("Please talk to me again as there could be additional problems.");
 		close;
 	} else
 		return;
 }
 
 -	script	Valerie#sign	FAKE_NPC,{
-	mes "^ff00ffI couldn't pay the office rent so I am temporarily relocating to the building across from the Prontera Refinery.^000000";
-	mes " ";
-	mes "^ff00ffValerie^000000";
+	mes("^ff00ffI couldn't pay the office rent so I am temporarily relocating to the building across from the Prontera Refinery.^000000");
+	mes(" ");
+	mes("^ff00ffValerie^000000");
 	close;
 }
 in_moc_16,17,33,4	duplicate(Valerie#sign)	Valerie#asn	2_BULLETIN_BOARD
@@ -256,7 +256,7 @@ xmas,166,209,4	duplicate(Valerie#sign)	Valerie#wan	2_BULLETIN_BOARD
 
 sec_in02,12,40,5	script	Job Repair	1_M_LIBRARYMASTER,1,1,{
 	callfunc "F_GM_NPC";
-	mes "Please input your password.";
+	mes("Please input your password.");
 	next;
 	if (callfunc("F_GM_NPC","1854",1) == 1) {
 		job_arch = 100;

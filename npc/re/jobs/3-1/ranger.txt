@@ -36,94 +36,94 @@
 //=========================================================================
 
 tur_dun01,156,36,5	script	Survival Instructor#jr01	1_M_ORIENT01,{
-	mes "[Survival Instructor, Rescue]";
+	mes("[Survival Instructor, Rescue]");
 	if (BaseJob == Job_Hunter) {
 		if (job_ranger01 < 1) {
-			mes "eeeeei~ ha!";
-			mes "The weather is really great.";
+			mes("eeeeei~ ha!");
+			mes("The weather is really great.");
 			next;
-			mes "[Survival Instructor, Rescue]";
-			mes "What's up?";
-			mes "The monsters here are a";
-			mes "little tough so be careful.";
+			mes("[Survival Instructor, Rescue]");
+			mes("What's up?");
+			mes("The monsters here are a");
+			mes("little tough so be careful.");
 			next;
 			if(select("I came here to become to a Ranger.", "I just came to look around.") == 2) {
-				mes "[Survival Instructor, Rescue]";
-				mes "Oh ya?";
-				mes "The weather is really great. Shall we take a picture to commemorate it?";
+				mes("[Survival Instructor, Rescue]");
+				mes("Oh ya?");
+				mes("The weather is really great. Shall we take a picture to commemorate it?");
 				next;
-				mes "[Survival Instructor, Rescue]";
-				mes "No?";
-				mes "Then just look around quietly and then go back.";
+				mes("[Survival Instructor, Rescue]");
+				mes("No?");
+				mes("Then just look around quietly and then go back.");
 				close;
 			}
-			mes "[Survival Instructor, Rescue]";
-			mes "Huh?";
-			mes "How did you find me?";
+			mes("[Survival Instructor, Rescue]");
+			mes("Huh?");
+			mes("How did you find me?");
 			next;
-			mes "[Survival Instructor, Rescue]";
-			mes "Well, it's a passing mark that you recognize me... let me see.";
+			mes("[Survival Instructor, Rescue]");
+			mes("Well, it's a passing mark that you recognize me... let me see.");
 			next;
 			if (BaseLevel < 99 || JobLevel < 50) {
-				mes "[Survival Instructor, Rescue]";
-				mes "No.";
-				mes "I can tell just by looking at you that you seem to be inexperienced.";
+				mes("[Survival Instructor, Rescue]");
+				mes("No.");
+				mes("I can tell just by looking at you that you seem to be inexperienced.");
 				next;
-				mes "[Survival Instructor, Rescue]";
-				mes "Have more pride in your job and get more experience, and then when you grow as a Hunter or a Sniper you can make an aura by yourself, please come back again.";
+				mes("[Survival Instructor, Rescue]");
+				mes("Have more pride in your job and get more experience, and then when you grow as a Hunter or a Sniper you can make an aura by yourself, please come back again.");
 				close;
 			}
-			mes "[Survival Instructor, Rescue]";
-			mes "Ok!";
-			mes "It looks like you have";
-			mes "enough experience.";
+			mes("[Survival Instructor, Rescue]");
+			mes("Ok!");
+			mes("It looks like you have");
+			mes("enough experience.");
 			next;
-			mes "[Survival Instructor, Rescue]";
-			mes "Good.";
-			mes "First of all, let me tell you the job change qualifications to be a Ranger.";
+			mes("[Survival Instructor, Rescue]");
+			mes("Good.");
+			mes("First of all, let me tell you the job change qualifications to be a Ranger.");
 			next;
-			mes "[Survival Instructor, Rescue]";
-			mes "I've already checked the first qualification that you've experienced enough to make an aura as a Hunter or a Sniper.";
+			mes("[Survival Instructor, Rescue]");
+			mes("I've already checked the first qualification that you've experienced enough to make an aura as a Hunter or a Sniper.");
 			next;
-			mes "[Survival Instructor, Rescue]";
-			mes "For the second qualification to judge one's ability exactly, you need to lighten your body and mind.";
+			mes("[Survival Instructor, Rescue]");
+			mes("For the second qualification to judge one's ability exactly, you need to lighten your body and mind.");
 			next;
 			if (Class == Job_Hunter || Class == Job_Baby_Hunter) {
-				mes "[Survival Instructor, Rescue]";
-				mes "Ah wait, before that.";
-				mes "When you change a job into a Ranger from a Hunter,";
-				mes "you won't get any chance to learn the skills of a Sniper, would that be okay?";
+				mes("[Survival Instructor, Rescue]");
+				mes("Ah wait, before that.");
+				mes("When you change a job into a Ranger from a Hunter,");
+				mes("you won't get any chance to learn the skills of a Sniper, would that be okay?");
 				next;
 				switch(select("I'll think about it more.", "I want to be a Ranger already.")) {
 				case 1:
-					mes "[Survival Instructor, Rescue]";
-					mes "Okay.";
-					mes "Take your time to think, if it's okay then come back.";
+					mes("[Survival Instructor, Rescue]");
+					mes("Okay.");
+					mes("Take your time to think, if it's okay then come back.");
 					close;
 				case 2:
-					mes "[Survival Instructor, Rescue]";
-					mes "All right.";
-					mes "You are ready then.";
+					mes("[Survival Instructor, Rescue]");
+					mes("All right.");
+					mes("You are ready then.");
 					next;
 				}
-				mes "[Survival Instructor, Rescue]";
-				mes "Well let's continue our conversation.";
-				mes "Before you change into a Ranger, even though you reached the highest level of a Hunter, it is not the best evaluation of your abilities.";
+				mes("[Survival Instructor, Rescue]");
+				mes("Well let's continue our conversation.");
+				mes("Before you change into a Ranger, even though you reached the highest level of a Hunter, it is not the best evaluation of your abilities.");
 				next;
-				mes "[Survival Instructor, Rescue]";
-				mes "So in order to check your abilities, I'll need to evaluate your pure abilities.~";
+				mes("[Survival Instructor, Rescue]");
+				mes("So in order to check your abilities, I'll need to evaluate your pure abilities.~");
 				next;
 			} else {
-				mes "[Survival Instructor, Rescue]";
-				mes "Before you change into a Ranger, even though you reached the highest level of a Sniper, it is not the best evaluation of your abilities.";
+				mes("[Survival Instructor, Rescue]");
+				mes("Before you change into a Ranger, even though you reached the highest level of a Sniper, it is not the best evaluation of your abilities.");
 				next;
-				mes "[Survival Instructor]";
-				mes "So in order to check your abilities, I'll need to evaluate your pure abilities.~";
+				mes("[Survival Instructor]");
+				mes("So in order to check your abilities, I'll need to evaluate your pure abilities.~");
 				next;
 			}
-			mes "[Survival Instructor, Rescue]";
-			mes "To do this you need to be cleansed of body and soul.";
-			mes "Make sure that your weight equals '0' to continue.";
+			mes("[Survival Instructor, Rescue]");
+			mes("To do this you need to be cleansed of body and soul.");
+			mes("Make sure that your weight equals '0' to continue.");
 			job_ranger01 = 1;
 			setquest 8254;
 			close2;
@@ -131,82 +131,82 @@ tur_dun01,156,36,5	script	Survival Instructor#jr01	1_M_ORIENT01,{
 			end;
 		} else if (job_ranger01 == 1) {
 			if (Weight < 1) {
-				mes "Wow, you've come back so quickly.";
+				mes("Wow, you've come back so quickly.");
 				next;
-				mes "[Survival Instructor, Rescue]";
-				mes "Ok, now I'll talk about the requirements to take the test to become a Ranger.";
+				mes("[Survival Instructor, Rescue]");
+				mes("Ok, now I'll talk about the requirements to take the test to become a Ranger.");
 				next;
-				mes "[Survival Instructor, Rescue]";
-				mes "All the tests to become a Ranger are going to be done with practical means.";
+				mes("[Survival Instructor, Rescue]");
+				mes("All the tests to become a Ranger are going to be done with practical means.");
 				next;
-				mes "[Survival Instructor, Rescue]";
-				mes "Will there be a written test?";
+				mes("[Survival Instructor, Rescue]");
+				mes("Will there be a written test?");
 				next;
-				mes "[Survival Instructor, Rescue]";
-				mes "Why do you want one?";
-				mes "The most important part of this test is the test of your experience on the battlefield.";
+				mes("[Survival Instructor, Rescue]");
+				mes("Why do you want one?");
+				mes("The most important part of this test is the test of your experience on the battlefield.");
 				next;
-				mes "[Survival Instructor, Rescue]";
-				mes "Therefore, what I request of you is to prove your power of survival.";
+				mes("[Survival Instructor, Rescue]");
+				mes("Therefore, what I request of you is to prove your power of survival.");
 				next;
-				mes "[Survival Instructor, Rescue]";
-				mes "I want to see the real power of survival, even if you fall down and get beat up.";
+				mes("[Survival Instructor, Rescue]");
+				mes("I want to see the real power of survival, even if you fall down and get beat up.");
 				next;
-				mes "[Survival Instructor, Rescue]";
-				mes "If you succeed with this survival power test, you will receive the first qualification.";
+				mes("[Survival Instructor, Rescue]");
+				mes("If you succeed with this survival power test, you will receive the first qualification.");
 				next;
-				mes "[Survival Instructor, Rescue]";
-				mes "Well, let's talk about the details when you get the qualification for taking the test.";
-				mes "When you want to take the survival power test, please talk to me again.";
+				mes("[Survival Instructor, Rescue]");
+				mes("Well, let's talk about the details when you get the qualification for taking the test.");
+				mes("When you want to take the survival power test, please talk to me again.");
 				job_ranger01 = 2;
 				changequest 8254,8255;
 				close;
 			}
-			mes "Before you change into a Ranger, I'll need to evaluate your pure abilities.";
+			mes("Before you change into a Ranger, I'll need to evaluate your pure abilities.");
 			next;
-			mes "[Survival Instructor, Rescue]";
-			mes "To do this you need to be cleansed of body and soul.";
-			mes "Make sure that your weight equals 0 to continue.";
+			mes("[Survival Instructor, Rescue]");
+			mes("To do this you need to be cleansed of body and soul.");
+			mes("Make sure that your weight equals 0 to continue.");
 			close;
 		} else if (job_ranger01 == 2) {
 			if (Weight < 1) {
-				mes "Um. That you talked to me again means that you are determined to change into a Ranger and take the survival power test.";
+				mes("Um. That you talked to me again means that you are determined to change into a Ranger and take the survival power test.");
 				next;
 				if(select("I'll think about it more", "I'll take the test") == 1) {
-					mes "[Survival Instructor, Rescue]";
-					mes "Prepare yourself very well before taking this test.";
+					mes("[Survival Instructor, Rescue]");
+					mes("Prepare yourself very well before taking this test.");
 					next;
-					mes "[Survival Instructor, Rescue]";
-					mes "Think about it well and come back.";
+					mes("[Survival Instructor, Rescue]");
+					mes("Think about it well and come back.");
 					close;
 				}
-				mes "[Survival Instructor, Rescue]";
-				mes "If you are determined, then there's nothing to wait for.";
+				mes("[Survival Instructor, Rescue]");
+				mes("If you are determined, then there's nothing to wait for.");
 				next;
-				mes "[Survival Instructor, Rescue]";
-				mes "I'll explain it simply.";
-				mes "What I'm going to provide you is 10 Fly Wings, 500 of Arrows and 1 test Bow.";
+				mes("[Survival Instructor, Rescue]");
+				mes("I'll explain it simply.");
+				mes("What I'm going to provide you is 10 Fly Wings, 500 of Arrows and 1 test Bow.");
 				next;
-				mes "[Survival Instructor, Rescue]";
-				mes "Take the provided items and all you have to do for the survival power test is ^0000ffgo to the Northwestern area of Turtle Island and find Instructor Teardrop^000000.";
-				mes "Easy, right?";
+				mes("[Survival Instructor, Rescue]");
+				mes("Take the provided items and all you have to do for the survival power test is ^0000ffgo to the Northwestern area of Turtle Island and find Instructor Teardrop^000000.");
+				mes("Easy, right?");
 				next;
-				mes "[Survival Instructor, Rescue]";
-				mes "Remember that you don't have any other equipment on, so be careful of the monsters.";
-				mes "Ready to start?";
+				mes("[Survival Instructor, Rescue]");
+				mes("Remember that you don't have any other equipment on, so be careful of the monsters.");
+				mes("Ready to start?");
 				next;
 				if(select("Wait a second", "Yes, I'm ready") == 1) {
-					mes "[Survival Instructor, Rescue]";
-					mes "What kind of preparation can be so long.";
+					mes("[Survival Instructor, Rescue]");
+					mes("What kind of preparation can be so long.");
 					next;
-					mes "[Survival Instructor, Rescue]";
-					mes "Come again when you are absolutely ready.";
+					mes("[Survival Instructor, Rescue]");
+					mes("Come again when you are absolutely ready.");
 					close;
 				}
-				mes "[Survival Instructor, Rescue]";
-				mes "Well, then let's start.";
-				mes "There's no time to hesitate.";
-				mes "Do your best.";
+				mes("[Survival Instructor, Rescue]");
+				mes("Well, then let's start.");
+				mes("There's no time to hesitate.");
+				mes("Do your best.");
 				job_ranger01 = 3;
 				changequest 8255,8256;
 				getitem Bow__,1;
@@ -214,354 +214,354 @@ tur_dun01,156,36,5	script	Survival Instructor#jr01	1_M_ORIENT01,{
 				getitem Arrow,500;
 				close;
 			}
-			mes "I knew it.";
+			mes("I knew it.");
 			next;
-			mes "[Survival Instructor, Rescue]";
-			mes "Why did you bring so much?";
-			mes "It's good that you do your best on the job change but, the key to this test is to test our true abilities...";
+			mes("[Survival Instructor, Rescue]");
+			mes("Why did you bring so much?");
+			mes("It's good that you do your best on the job change but, the key to this test is to test our true abilities...");
 			next;
-			mes "[Survival Instructor, Rescue]";
-			mes "If you don't make your weight 0, you wouldn't be able to take the test.";
+			mes("[Survival Instructor, Rescue]");
+			mes("If you don't make your weight 0, you wouldn't be able to take the test.");
 			close;
 		} else if (job_ranger01 == 3) {
-			mes "Umm?";
-			mes "What are you waiting for?";
+			mes("Umm?");
+			mes("What are you waiting for?");
 			next;
 			if(select("Tell me the mission again.", "I just wanted to talk.") == 1) {
-				mes "[Survival Instructor, Rescue]";
-				mes "Oh, ya.";
-				mes "Is this the mind of a person who's going to take the test?";
+				mes("[Survival Instructor, Rescue]");
+				mes("Oh, ya.");
+				mes("Is this the mind of a person who's going to take the test?");
 				next;
-				mes "[Survival Instructor, Rescue]";
-				mes "Stay alert and listen.";
+				mes("[Survival Instructor, Rescue]");
+				mes("Stay alert and listen.");
 				next;
-				mes "[Survival Instructor, Rescue]";
-				mes "Take the provided items and all you have to do for the survival power test is ^0000ffgo to the Northwestern area of Turtle Island and find Instructor Teardrop^000000.";
-				mes "Isn't that so easy?";
+				mes("[Survival Instructor, Rescue]");
+				mes("Take the provided items and all you have to do for the survival power test is ^0000ffgo to the Northwestern area of Turtle Island and find Instructor Teardrop^000000.");
+				mes("Isn't that so easy?");
 				next;
-				mes "[Survival Instructor, Rescue]";
-				mes "As you don't have any equipment on, be careful of the monsters in the field.";
-				mes "Well, shall we start?";
+				mes("[Survival Instructor, Rescue]");
+				mes("As you don't have any equipment on, be careful of the monsters in the field.");
+				mes("Well, shall we start?");
 				next;
 				if(select("Wait a minute", "I will start") == 1) {
-					mes "[Survival Instructor, Rescue]";
-					mes "What kind of preparation can be so long.";
+					mes("[Survival Instructor, Rescue]");
+					mes("What kind of preparation can be so long.");
 					next;
-					mes "[Survival Instructor, Rescue]";
-					mes "Come again when you are absolutely ready.";
+					mes("[Survival Instructor, Rescue]");
+					mes("Come again when you are absolutely ready.");
 					close;
 				}
-				mes "[Survival Instructor, Rescue]";
-				mes "Okay, let's start.";
-				mes "There's no time to hesitate, so do your best.";
+				mes("[Survival Instructor, Rescue]");
+				mes("Okay, let's start.");
+				mes("There's no time to hesitate, so do your best.");
 				close;
 			}
-			mes "[Survival Instructor, Rescue]";
-			mes "I don't think you have the time for that.";
+			mes("[Survival Instructor, Rescue]");
+			mes("I don't think you have the time for that.");
 			next;
-			mes "[Survival Instructor, Rescue]";
-			mes "Hurry up and finish the test.";
+			mes("[Survival Instructor, Rescue]");
+			mes("Hurry up and finish the test.");
 			close;
 		} else if (job_ranger01 > 3 && job_ranger01 < 7) {
-			mes "Are you still wandering about here?";
+			mes("Are you still wandering about here?");
 			next;
-			mes "[Survival Instructor, Rescue]";
-			mes "Well, if you are an easy person, that's none of my business but if you decided once, wouldn't it be better to take the practical test in a minute and meet me after becoming a Ranger?";
+			mes("[Survival Instructor, Rescue]");
+			mes("Well, if you are an easy person, that's none of my business but if you decided once, wouldn't it be better to take the practical test in a minute and meet me after becoming a Ranger?");
 			close;
 		} else if (job_ranger01 == 7) {
-			mes "Oh, hey. What are you doing here?";
+			mes("Oh, hey. What are you doing here?");
 			next;
-			mes "[Survival Instructor, Rescue]";
-			mes "Because you've disappeared suddenly, the Ranger Master was looking for you.";
-			mes "Do you want to go to him now?";
+			mes("[Survival Instructor, Rescue]");
+			mes("Because you've disappeared suddenly, the Ranger Master was looking for you.");
+			mes("Do you want to go to him now?");
 			next;
 			switch(select("Don't go", "Go")) {
 			case 1:
-				mes "[Survival Instructor, Rescue]";
-				mes "Are you busy with something else?";
+				mes("[Survival Instructor, Rescue]");
+				mes("Are you busy with something else?");
 				close;
 			case 2:
-				mes "[Survival Instructor, Rescue]";
-				mes "Then I'll send you, please be well.";
+				mes("[Survival Instructor, Rescue]");
+				mes("Then I'll send you, please be well.");
 				close2;
 				warp "job3_rang01",89,38;
 				end;
 			}
 		}
-		mes "Oh, hey. Who's this?";
+		mes("Oh, hey. Who's this?");
 		next;
-		mes "[Survival Instructor, Rescue]";
-		mes "Hey, you look great.";
-		mes "Congratulations on becoming a Ranger~";
+		mes("[Survival Instructor, Rescue]");
+		mes("Hey, you look great.");
+		mes("Congratulations on becoming a Ranger~");
 		next;
-		mes "[Survival Instructor, Rescue]";
-		mes "Next time, try not to intimidate other people.";
+		mes("[Survival Instructor, Rescue]");
+		mes("Next time, try not to intimidate other people.");
 		close;
 	}
 	if (Class == Job_Ranger || Class == Job_Ranger_T || Class == Job_Baby_Ranger) {
 		if (job_ranger01 == 8) {
-			mes "Ho. Who's this~";
-			mes "You really look talented...";
+			mes("Ho. Who's this~");
+			mes("You really look talented...");
 			next;
-			mes "[Survival Instructor, Rescue]";
-			mes "Next time, try not to intimidate other people.";
+			mes("[Survival Instructor, Rescue]");
+			mes("Next time, try not to intimidate other people.");
 			close;
 		}
 	}
-	mes "Ha ~ ha.";
-	mes "The weather is really great.";
+	mes("Ha ~ ha.");
+	mes("The weather is really great.");
 	next;
-	mes "[Survival Instructor, Rescue]";
-	mes "What's up?";
-	mes "The monsters here are a";
-	mes "little tough so be careful.";
+	mes("[Survival Instructor, Rescue]");
+	mes("What's up?");
+	mes("The monsters here are a");
+	mes("little tough so be careful.");
 	close;
 }
 
 tur_dun01,91,169,3	script	Test Instructor#jr02	4_M_JOB_HUNTER,{
-	mes "[Test Instructor, Teardrop]";
+	mes("[Test Instructor, Teardrop]");
 	if (BaseJob == Job_Hunter) {
 		if (job_ranger01 < 3) {
-			mes "Good to goooooo!!!!!!!";
+			mes("Good to goooooo!!!!!!!");
 			next;
-			mes "[Test Instructor, Teardrop]";
-			mes "Huh? Who are you? What are you doing here, you baby archer.";
+			mes("[Test Instructor, Teardrop]");
+			mes("Huh? Who are you? What are you doing here, you baby archer.");
 			next;
-			mes "[Test Instructor, Teardrop]";
-			mes "May I tell you one thing?";
-			mes "If you want to change a job to a Ranger, first talk to Survival Instructor Rescue.";
+			mes("[Test Instructor, Teardrop]");
+			mes("May I tell you one thing?");
+			mes("If you want to change a job to a Ranger, first talk to Survival Instructor Rescue.");
 			next;
-			mes "[Test Instructor, Teardrop]";
-			mes "Then he will tell you the requirement for the job change test!!!";
+			mes("[Test Instructor, Teardrop]");
+			mes("Then he will tell you the requirement for the job change test!!!");
 			close;
 		} else if (job_ranger01 == 3) {
-			mes "Good to goooooo!!!!!!!";
+			mes("Good to goooooo!!!!!!!");
 			next;
-			mes "[Test Instructor, Teardrop]";
-			mes "Huh? Who are you? What are you doing here, you baby archer.";
+			mes("[Test Instructor, Teardrop]");
+			mes("Huh? Who are you? What are you doing here, you baby archer.");
 			next;
-			mes "[Test Instructor, Teardrop]";
-			mes "That you are coming and going bugs me so, would you please stop?!";
+			mes("[Test Instructor, Teardrop]");
+			mes("That you are coming and going bugs me so, would you please stop?!");
 			next;
 			if(select("Ranger practical test building?", "I came for the test.") == 1) {
-				mes "[Test Instructor, Teardrop]";
-				mes "What, what are you...?";
+				mes("[Test Instructor, Teardrop]");
+				mes("What, what are you...?");
 				next;
-				mes "[Test Instructor, Teardrop]";
-				mes "What do you think you are looking at?";
+				mes("[Test Instructor, Teardrop]");
+				mes("What do you think you are looking at?");
 				next;
-				mes "[Test Instructor, Teardrop]";
-				mes "How could you be a Ranger if you can't even recognize what's in front of you? Get out of here!";
+				mes("[Test Instructor, Teardrop]");
+				mes("How could you be a Ranger if you can't even recognize what's in front of you? Get out of here!");
 				close;
 			}
-			mes "[Test Instructor, Teardrop]";
-			mes "Ho, having come this far, it means you've passed the first survival test.";
+			mes("[Test Instructor, Teardrop]");
+			mes("Ho, having come this far, it means you've passed the first survival test.");
 			next;
-			mes "[Test Instructor, Teardrop]";
-			mes "But, can you be sure that there wasn't any cheating?";
+			mes("[Test Instructor, Teardrop]");
+			mes("But, can you be sure that there wasn't any cheating?");
 			next;
 			if (Weight > 500) {
-				mes "[Test Instructor, Teardrop]";
-				mes "See, I knew it.";
+				mes("[Test Instructor, Teardrop]");
+				mes("See, I knew it.");
 				next;
-				mes "[Test Instructor, Teardrop]";
-				mes "Having done the test normally, you would have adjusted your weight to 0, and hold the items provided by Rescue!";
-				mes "But, how come you weigh so much?";
+				mes("[Test Instructor, Teardrop]");
+				mes("Having done the test normally, you would have adjusted your weight to 0, and hold the items provided by Rescue!");
+				mes("But, how come you weigh so much?");
 				next;
-				mes "[Test Instructor, Teardrop]";
-				mes "I consider this as cheating!";
-				mes "Come and see me again!";
+				mes("[Test Instructor, Teardrop]");
+				mes("I consider this as cheating!");
+				mes("Come and see me again!");
 				close2;
 				warp "tur_dun01",162,33;
 				end;
 			}
-			mes "[Test Instructor, Teardrop]";
-			mes "Hmm. It's doubtful...";
+			mes("[Test Instructor, Teardrop]");
+			mes("Hmm. It's doubtful...");
 			next;
-			mes "[Test Instructor, Teardrop]";
-			mes "I don't smell any signs of cheating. For now...";
+			mes("[Test Instructor, Teardrop]");
+			mes("I don't smell any signs of cheating. For now...");
 			next;
-			mes "[Test Instructor, Teardrop]";
-			mes "Before taking a practical test, I want to eat something.";
-			mes "You know the food situation isn't always so good in a foreign land.";
+			mes("[Test Instructor, Teardrop]");
+			mes("Before taking a practical test, I want to eat something.");
+			mes("You know the food situation isn't always so good in a foreign land.");
 			next;
-			mes "[Test Instructor, Teardrop]";
-			mes "I know that the very basic way to survive might be raising the strength of one's own body. But, I find that sending adventurers is easier for me.";
+			mes("[Test Instructor, Teardrop]");
+			mes("I know that the very basic way to survive might be raising the strength of one's own body. But, I find that sending adventurers is easier for me.");
 			next;
-			mes "[Test Instructor, Teardrop]";
-			mes "So, kill ^0000ff1 Dragon Tail^000000 and bring me ^0000ff1 Wing of Dragonfly^000000.";
+			mes("[Test Instructor, Teardrop]");
+			mes("So, kill ^0000ff1 Dragon Tail^000000 and bring me ^0000ff1 Wing of Dragonfly^000000.");
 			next;
-			mes "[Test Instructor, Teardrop]";
-			mes "If you run out of the provided items, we cannot support you more so take care.";
-			mes "Consider this as an extension of the survival power test.";
+			mes("[Test Instructor, Teardrop]");
+			mes("If you run out of the provided items, we cannot support you more so take care.");
+			mes("Consider this as an extension of the survival power test.");
 			job_ranger01 = 4;
 			changequest 8256,8257;
 			close;
 		} else if (job_ranger01 == 4) {
 			if (questprogress(8257,HUNTING) == 2) {
 				if (countitem(Dragon_Fly_Wing) > 0) {
-					mes "Oh! Oh! Woooooow!";
-					mes "You've brought it! Let me see...";
+					mes("Oh! Oh! Woooooow!");
+					mes("You've brought it! Let me see...");
 					next;
-					mes "[Test Instructor, Teardrop]";
-					mes "Hmmmm, it's still hot?!";
-					mes "You don't seem to be hurt anywhere...";
+					mes("[Test Instructor, Teardrop]");
+					mes("Hmmmm, it's still hot?!");
+					mes("You don't seem to be hurt anywhere...");
 					next;
-					mes "[Test Instructor, Teardrop]";
-					mes "Good, for now you're qualified for the practical test.";
+					mes("[Test Instructor, Teardrop]");
+					mes("Good, for now you're qualified for the practical test.");
 					next;
-					mes "[Test Instructor, Teardrop]";
-					mes "Well, before I explain, could you please give me that Dragonfly wing?";
-					mes "You've heard the saying, 'in any situation, eating comes first'?";
+					mes("[Test Instructor, Teardrop]");
+					mes("Well, before I explain, could you please give me that Dragonfly wing?");
+					mes("You've heard the saying, 'in any situation, eating comes first'?");
 					delitem Dragon_Fly_Wing,1;
 					job_ranger01 = 5;
 					changequest 8257,8258;
 					close;
 				}
 			}
-			mes "What are you doing there? Standing with a blank look.";
+			mes("What are you doing there? Standing with a blank look.");
 			next;
-			mes "[Test Instructor, Teardrop]";
-			mes "I'm hungry.";
-			mes "Before taking the practical test, I want to eat something.";
+			mes("[Test Instructor, Teardrop]");
+			mes("I'm hungry.");
+			mes("Before taking the practical test, I want to eat something.");
 			next;
-			mes "[Test Instructor, Teardrop]";
-			mes "I know that the very basic way to survive might be raising the strength of one's own body. But, I find that sending adventurers is easier for me.";
+			mes("[Test Instructor, Teardrop]");
+			mes("I know that the very basic way to survive might be raising the strength of one's own body. But, I find that sending adventurers is easier for me.");
 			next;
-			mes "[Test Instructor, Teardrop]";
-			mes "So, kill ^0000ff1 Dragon Tail^000000 and bring me ^0000ff1 Dragon Fly Wing^000000.";
+			mes("[Test Instructor, Teardrop]");
+			mes("So, kill ^0000ff1 Dragon Tail^000000 and bring me ^0000ff1 Dragon Fly Wing^000000.");
 			next;
-			mes "[Test Instructor, Teardrop]";
-			mes "If you run out of the provided items, we cannot support more so take care.";
-			mes "Consider this as an extension of the survival power test.";
+			mes("[Test Instructor, Teardrop]");
+			mes("If you run out of the provided items, we cannot support more so take care.");
+			mes("Consider this as an extension of the survival power test.");
 			close;
 		} else if (job_ranger01 == 5) {
-			mes "Awooo. Yumyum.";
-			mes "Eh? What are you looking at?";
-			mes "You want to eat some?";
+			mes("Awooo. Yumyum.");
+			mes("Eh? What are you looking at?");
+			mes("You want to eat some?");
 			next;
 			switch(select("Oh, just eat up", "...")) {
 			case 1:
-				mes "[Test Instructor, Teardrop]";
-				mes "Why aren't you eating?";
-				mes "It's quite edible.";
-				mes "If you cover it with rice, it's like roasted seaweed, very tasty and delicious.";
+				mes("[Test Instructor, Teardrop]");
+				mes("Why aren't you eating?");
+				mes("It's quite edible.");
+				mes("If you cover it with rice, it's like roasted seaweed, very tasty and delicious.");
 				next;
-				mes "[Test Instructor, Teardrop]";
-				mes "You need to be strong enough not to be so picky with such things...";
+				mes("[Test Instructor, Teardrop]");
+				mes("You need to be strong enough not to be so picky with such things...");
 				next;
 				break;
 			case 2:
-				mes "["+strcharinfo(PC_NAME)+"]";
-				mes "No thanks... anyway...";
+				mes("["+strcharinfo(PC_NAME)+"]");
+				mes("No thanks... anyway...");
 				next;
-				mes "[Test Instructor, Teardrop]";
-				mes "Hmm? Oh my, oh my, I've shown you my sloppiness.";
+				mes("[Test Instructor, Teardrop]");
+				mes("Hmm? Oh my, oh my, I've shown you my sloppiness.");
 				next;
 				break;
 			}
-			mes "[Test Instructor, Teardrop]";
-			mes "Ok, I'll send you to the practical test field.";
+			mes("[Test Instructor, Teardrop]");
+			mes("Ok, I'll send you to the practical test field.");
 			next;
-			mes "[Test Instructor, Teardrop]";
-			mes "The practical test consists of 3 parts in total.";
-			mes "It's to recheck the things you've learned as a hunter or a sniper, so there's nothing much to be worried.";
+			mes("[Test Instructor, Teardrop]");
+			mes("The practical test consists of 3 parts in total.");
+			mes("It's to recheck the things you've learned as a hunter or a sniper, so there's nothing much to be worried.");
 			next;
-			mes "[Test Instructor, Teardrop]";
-			mes "If you get a passing mark over three tests, you'll be on your way to becoming a Ranger.";
+			mes("[Test Instructor, Teardrop]");
+			mes("If you get a passing mark over three tests, you'll be on your way to becoming a Ranger.");
 			next;
-			mes "[Test Instructor, Teardrop]";
-			mes "I'll explain the paths for the test.";
+			mes("[Test Instructor, Teardrop]");
+			mes("I'll explain the paths for the test.");
 			next;
-			mes "[Test Instructor, Teardrop]";
-			mes "Once you get into the test field, a staff will be waiting for you. Go into the room made by the staff, and standby.";
+			mes("[Test Instructor, Teardrop]");
+			mes("Once you get into the test field, a staff will be waiting for you. Go into the room made by the staff, and standby.");
 			next;
-			mes "[Test Instructor, Teardrop]";
-			mes "The test is done one by one so, if there's many people, you might need to wait.";
+			mes("[Test Instructor, Teardrop]");
+			mes("The test is done one by one so, if there's many people, you might need to wait.");
 			next;
-			mes "[Test Instructor, Teardrop]";
-			mes "The first test is to test of how keen your eyes are.";
-			mes "Different monsters will appear in 8 places. Kill only the monster named 'Poring' and you get a point, when you reach a certain mark, then you pass. Easy, huh?";
+			mes("[Test Instructor, Teardrop]");
+			mes("The first test is to test of how keen your eyes are.");
+			mes("Different monsters will appear in 8 places. Kill only the monster named 'Poring' and you get a point, when you reach a certain mark, then you pass. Easy, huh?");
 			next;
-			mes "[Test Instructor, Teardrop]";
-			mes "The second test is about how much you can use a trap efficiently.";
-			mes "Get rid of monsters and do the mission by using only the provided traps, and you pass. Just be careful not to be engulfed by the explosion.";
+			mes("[Test Instructor, Teardrop]");
+			mes("The second test is about how much you can use a trap efficiently.");
+			mes("Get rid of monsters and do the mission by using only the provided traps, and you pass. Just be careful not to be engulfed by the explosion.");
 			next;
-			mes "[Test Instructor, Teardrop]";
-			mes "For the 3rd test, when you become a Ranger you can handle a wolf, so you will be tested on how well you can handle such an animal.";
+			mes("[Test Instructor, Teardrop]");
+			mes("For the 3rd test, when you become a Ranger you can handle a wolf, so you will be tested on how well you can handle such an animal.");
 			next;
-			mes "[Test Instructor, Teardrop]";
-			mes "When you remove a bomb by using the given wolf, you get points. You pass when you get a certain mark on the test.";
+			mes("[Test Instructor, Teardrop]");
+			mes("When you remove a bomb by using the given wolf, you get points. You pass when you get a certain mark on the test.");
 			next;
-			mes "[Test Instructor, Teardrop]";
-			mes "The staff there will tell you more details as well.";
+			mes("[Test Instructor, Teardrop]");
+			mes("The staff there will tell you more details as well.");
 			next;
-			mes "[Test Instructor, Teardrop]";
-			mes "Now, I will enter you into the practical test field, is your preparation all done?";
+			mes("[Test Instructor, Teardrop]");
+			mes("Now, I will enter you into the practical test field, is your preparation all done?");
 			next;
 			if(select("Please wait a little", "Let's go to the practical test field!") == 1) {
-				mes "[Test Instructor, Teardrop]";
-				mes "Um? Aren't you ready?";
+				mes("[Test Instructor, Teardrop]");
+				mes("Um? Aren't you ready?");
 				next;
-				mes "[Test Instructor, Teardrop]";
-				mes "Well. To be careful is good.";
-				mes "Come back when you are ready.";
+				mes("[Test Instructor, Teardrop]");
+				mes("Well. To be careful is good.");
+				mes("Come back when you are ready.");
 				close;
 			}
 			callsub L_Start,0;
 			close;
 		} else if (job_ranger01 == 6) {
-			mes "Good to goooooo!!!!!!!";
+			mes("Good to goooooo!!!!!!!");
 			next;
-			mes "[Test Instructor, Teardrop]";
-			mes "Um? What happened?";
-			mes "Why are you walking about here? What about the test?";
+			mes("[Test Instructor, Teardrop]");
+			mes("Um? What happened?");
+			mes("Why are you walking about here? What about the test?");
 			next;
-			mes "[Test Instructor, Teardrop]";
-			mes "Aha... You've failed the middle!";
-			mes "You are such a fool.";
+			mes("[Test Instructor, Teardrop]");
+			mes("Aha... You've failed the middle!");
+			mes("You are such a fool.");
 			emotion e_gg;
 			next;
-			mes "[Test Instructor, Teardrop]";
-			mes "So what are you going to do? Try again?";
+			mes("[Test Instructor, Teardrop]");
+			mes("So what are you going to do? Try again?");
 			next;
 			switch(select("Wait a minute", "Go to the practical test field!", "I give up the job change.")) {
 			case 1:
-				mes "[Test Instructor, Teardrop]";
-				mes "Um? Aren't you ready yet?";
+				mes("[Test Instructor, Teardrop]");
+				mes("Um? Aren't you ready yet?");
 				next;
-				mes "[Test Instructor, Teardrop]";
-				mes "All right. To be careful is good.";
-				mes "Come when you are ready.";
+				mes("[Test Instructor, Teardrop]");
+				mes("All right. To be careful is good.");
+				mes("Come when you are ready.");
 				close;
 			case 2:
 				callsub L_Start,1;
 				close;
 			case 3:
-				mes "[Test Instructor, Teardrop]";
-				mes "Um? What, you're kidding huh?";
+				mes("[Test Instructor, Teardrop]");
+				mes("Um? What, you're kidding huh?");
 				next;
-				mes "[Test Instructor, Teardrop]";
-				mes "Think again.";
-				mes "Do you really want to give up the job change to become a Ranger?";
+				mes("[Test Instructor, Teardrop]");
+				mes("Think again.");
+				mes("Do you really want to give up the job change to become a Ranger?");
 				next;
 				switch(select("No, I'll try again", "I give up!")) {
 				case 1:
-					mes "[Test Instructor, Teardrop]";
-					mes "Hey. You were kidding after all?";
+					mes("[Test Instructor, Teardrop]");
+					mes("Hey. You were kidding after all?");
 					next;
-					mes "[Test Instructor, Teardrop]";
-					mes "It's not funny so don't do that kind of joke again.";
+					mes("[Test Instructor, Teardrop]");
+					mes("It's not funny so don't do that kind of joke again.");
 					close;
 				case 2:
-					mes "[Test Instructor, Teardrop]";
-					mes "You don't have as many guts as I thought.";
+					mes("[Test Instructor, Teardrop]");
+					mes("You don't have as many guts as I thought.");
 					nude;
 					next;
 					if (countitem(Bow__) > 0) {
-						mes "[Test Instructor, Teardrop]";
-						mes "Okay. I'll respect your opinion.";
-						mes "I'll cancel the job change request from "+strcharinfo(PC_NAME)+".";
+						mes("[Test Instructor, Teardrop]");
+						mes("Okay. I'll respect your opinion.");
+						mes("I'll cancel the job change request from "+strcharinfo(PC_NAME)+".");
 						delitem Bow__,1;
 						job_ranger01 = 0;
 						for(.@i = 8254; .@i <= 8262; ++.@i)
@@ -569,111 +569,111 @@ tur_dun01,91,169,3	script	Test Instructor#jr02	4_M_JOB_HUNTER,{
 								erasequest .@i;
 						close;
 					}
-					mes "[Test Instructor, Teardrop]";
-					mes "Huh? Where's the bow that I gave you for the practical tests?";
+					mes("[Test Instructor, Teardrop]");
+					mes("Huh? Where's the bow that I gave you for the practical tests?");
 					next;
-					mes "[Test Instructor, Teardrop]";
-					mes "If you don't return it, I can't cancel you job change request.";
+					mes("[Test Instructor, Teardrop]");
+					mes("If you don't return it, I can't cancel you job change request.");
 					close;
 				}
 			}
 		} else if (job_ranger01 == 7) {
-			mes "Oh, hey. What are you doing here?";
+			mes("Oh, hey. What are you doing here?");
 			next;
-			mes "[Test Instructor, Teardrop]";
-			mes "Because you've disappeared suddenly, the Ranger Master was looking for you.";
-			mes "Do you want to go to him now?";
+			mes("[Test Instructor, Teardrop]");
+			mes("Because you've disappeared suddenly, the Ranger Master was looking for you.");
+			mes("Do you want to go to him now?");
 			next;
 			switch(select("Don't go", "Go")) {
 			case 1:
-				mes "[Test Instructor, Teardrop]";
-				mes "Are you busy with something else?";
+				mes("[Test Instructor, Teardrop]");
+				mes("Are you busy with something else?");
 				close;
 			case 2:
-				mes "[Test Instructor, Teardrop]";
-				mes "Then I'll send you, please be well.";
+				mes("[Test Instructor, Teardrop]");
+				mes("Then I'll send you, please be well.");
 				close2;
 				warp "job3_rang01",89,38;
 				end;
 			}
 		}
-		mes "Wow. Who's this?";
+		mes("Wow. Who's this?");
 		next;
-		mes "[Test Instructor, Teardrop]";
-		mes "It seems that your dull eyes became somewhat keen now?";
+		mes("[Test Instructor, Teardrop]");
+		mes("It seems that your dull eyes became somewhat keen now?");
 		next;
-		mes "[Test Instructor, Teardrop]";
-		mes "Then, enjoy an adventure well as a Ranger.";
+		mes("[Test Instructor, Teardrop]");
+		mes("Then, enjoy an adventure well as a Ranger.");
 		close;
 	}
-	mes "Good to gooooooooooooooo!!!!!!";
+	mes("Good to gooooooooooooooo!!!!!!");
 	next;
-	mes "[Test Instructor]";
-	mes "Huh? What are you? Where are you from?";
-	mes "Don't hang around here doing nothing. This is my area!";
+	mes("[Test Instructor]");
+	mes("Huh? What are you? Where are you from?");
+	mes("Don't hang around here doing nothing. This is my area!");
 	close;
 L_Start:
 	if (getmercinfo(1)) {
-		mes "[Test Instructor, Teardrop]";
-		mes "Stop!";
+		mes("[Test Instructor, Teardrop]");
+		mes("Stop!");
 		next;
-		mes "[Test Instructor, Teardrop]";
-		mes "Where do you think you're going with that mercenary?!";
+		mes("[Test Instructor, Teardrop]");
+		mes("Where do you think you're going with that mercenary?!");
 		next;
-		mes "[Test Instructor, Teardrop]";
-		mes "If you don't cancel the mercenary, you cannot get into the test field! Cancel it first!";
+		mes("[Test Instructor, Teardrop]");
+		mes("If you don't cancel the mercenary, you cannot get into the test field! Cancel it first!");
 		close;
 	}
 	if (getarg(0) == 1) {
 		if (countitem(Desert_Wolf_Babe_Scroll)) {
-			mes "[Test Instructor, Teardrop]";
-			mes "What, what is this?";
-			mes "You shouldn't keep this around!";
+			mes("[Test Instructor, Teardrop]");
+			mes("What, what is this?");
+			mes("You shouldn't keep this around!");
 			delitem Desert_Wolf_Babe_Scroll,countitem(Desert_Wolf_Babe_Scroll);
 			next;
 		}
 		if (countitem(Bombring_Box)) {
-			mes "[Test Instructor, Teardrop]";
-			mes "What, what is this, a Bombring Capsule.";
-			mes "You shouldn't keep such a dangerous thing!";
+			mes("[Test Instructor, Teardrop]");
+			mes("What, what is this, a Bombring Capsule.");
+			mes("You shouldn't keep such a dangerous thing!");
 			delitem Bombring_Box,countitem(Bombring_Box);
 			next;
 		}
 		if (countitem(Approval_Report)) {
-			mes "[Test Instructor, Teardrop]";
-			mes "What, what are all these Documents?";
-			mes "I think I know. You were going to send this to Caution, right?";
+			mes("[Test Instructor, Teardrop]");
+			mes("What, what are all these Documents?");
+			mes("I think I know. You were going to send this to Caution, right?");
 			next;
-			mes "[Test Instructor, Teardrop]";
-			mes "If you hold such thing it would disturb your practical test so I'll take this.";
+			mes("[Test Instructor, Teardrop]");
+			mes("If you hold such thing it would disturb your practical test so I'll take this.");
 			delitem Approval_Report,countitem(Approval_Report);
 			next;
 		}
 	}
 	if (Weight > 500) {
-		mes "[Test Instructor, Teardrop]";
-		mes "Well, then let's gooooooooo.... oo,um?";
+		mes("[Test Instructor, Teardrop]");
+		mes("Well, then let's gooooooooo.... oo,um?");
 		next;
-		mes "[Test Instructor, Teardrop]";
-		mes "Hey, what are you hiding there?";
-		mes "I've pointed it out for several times, you should not even think to go in there secretly with anything other than the provided items!";
+		mes("[Test Instructor, Teardrop]");
+		mes("Hey, what are you hiding there?");
+		mes("I've pointed it out for several times, you should not even think to go in there secretly with anything other than the provided items!");
 		next;
-		mes "[Test Instructor, Teardrop]";
-		mes "You'd better lighten your weight.";
+		mes("[Test Instructor, Teardrop]");
+		mes("You'd better lighten your weight.");
 		close;
 	}
-	mes "[Test Instructor, Teardrop]";
-	mes "See, for the last time, I warn you that cheating is strictly banned.";
+	mes("[Test Instructor, Teardrop]");
+	mes("See, for the last time, I warn you that cheating is strictly banned.");
 	next;
 	if (countitem(Arrow) < 100) {
-		mes "[Test Instructor, Teardrop]";
-		mes "Okay, once again I'll provide you with arrows, then I'll let you in.";
+		mes("[Test Instructor, Teardrop]");
+		mes("Okay, once again I'll provide you with arrows, then I'll let you in.");
 		.@arrow = 1;
 		next;
 	}
-	mes "[Test Instructor, Teardrop]";
-	mes "Good luck.";
-	mes "Become a Ranger and we shall meet again.";
+	mes("[Test Instructor, Teardrop]");
+	mes("Good luck.");
+	mes("Become a Ranger and we shall meet again.");
 	job_ranger01 = 6;
 	if (getarg(0) == 0)
 		changequest 8258,8259;
@@ -688,42 +688,42 @@ L_Start:
 }
 
 job3_rang01,30,44,3	script	Test Waiting Room#jr_03	4_M_ORIENT01,{
-	mes "[Staff DTS]";
-	mes "Please wait at the practical test waiting room to start the test process.";
+	mes("[Staff DTS]");
+	mes("Please wait at the practical test waiting room to start the test process.");
 	next;
-	mes "[Staff DTS]";
-	mes "In the order you enter, you can take the practical test one by one.";
-	mes "There's 3 kinds of a Ranger job change practical tests, it takes a total of about 10 minutes.";
+	mes("[Staff DTS]");
+	mes("In the order you enter, you can take the practical test one by one.");
+	mes("There's 3 kinds of a Ranger job change practical tests, it takes a total of about 10 minutes.");
 	next;
 	switch(select("Test explanation", "Cancel", "I give up the Ranger test")) {
 	case 1:
 		break;
 	case 2:
-		mes "[Staff DTS]";
-		mes "Don't you need any explanation?";
+		mes("[Staff DTS]");
+		mes("Don't you need any explanation?");
 		next;
-		mes "[Staff DTS]";
-		mes "Enter into the chat room and wait for the order and take the job change practical test.";
+		mes("[Staff DTS]");
+		mes("Enter into the chat room and wait for the order and take the job change practical test.");
 		close;
 	case 3:
-		mes "[Staff DTS]";
-		mes "Please think about it again.";
-		mes "If you give up here, your job change request will be cancelled. Do you really want to give up the job change to a Ranger?";
+		mes("[Staff DTS]");
+		mes("Please think about it again.");
+		mes("If you give up here, your job change request will be cancelled. Do you really want to give up the job change to a Ranger?");
 		next;
 		switch(select("No, I'll continue with the test", "I give up the Ranger job change")) {
 		case 1:
-			mes "[Staff DTS]";
-			mes "If you want to continue with the practical test, please enter into the chat room.";
+			mes("[Staff DTS]");
+			mes("If you want to continue with the practical test, please enter into the chat room.");
 			close;
 		case 2:
-			mes "[Staff DTS]";
-			mes "You don't have as many guts as I thought.";
+			mes("[Staff DTS]");
+			mes("You don't have as many guts as I thought.");
 			nude;
 			next;
 			if (countitem(Bow__) > 0) {
-				mes "[Staff DTS]";
-				mes "Okay. I'll respect your opinion.";
-				mes "I'll cancel the job change request from "+strcharinfo(PC_NAME)+".";
+				mes("[Staff DTS]");
+				mes("Okay. I'll respect your opinion.");
+				mes("I'll cancel the job change request from "+strcharinfo(PC_NAME)+".");
 				delitem Bow__,1;
 				job_ranger01 = 0;
 				for(.@i = 8254; .@i <= 8262; ++.@i)
@@ -734,65 +734,65 @@ job3_rang01,30,44,3	script	Test Waiting Room#jr_03	4_M_ORIENT01,{
 				warp "alberta",117,57;
 				end;
 			}
-			mes "[Staff DTS]";
-			mes "Huh? Where's the bow that I gave you for the practical tests?";
+			mes("[Staff DTS]");
+			mes("Huh? Where's the bow that I gave you for the practical tests?");
 			next;
-			mes "[Test Instructor, Teardrop]";
-			mes "If you don't return it, I can't cancel you job change request.";
+			mes("[Test Instructor, Teardrop]");
+			mes("If you don't return it, I can't cancel you job change request.");
 			close;
 		}
 	}
 	while (1) {
-		mes "[Staff DTS]";
-		mes "I'll explain the Ranger job change practical test.";
-		mes "Among the 1st, 2nd, and 3rd practical tests, which one's test method are you curious of?";
+		mes("[Staff DTS]");
+		mes("I'll explain the Ranger job change practical test.");
+		mes("Among the 1st, 2nd, and 3rd practical tests, which one's test method are you curious of?");
 		next;
 		switch(select("1st Test", "2nd Test", "3rd Test", "Cancel")) {
 		case 1:
-			mes "[Staff DTS]";
-			mes "For the 1st test, we test your eyesight and accuracy.";
+			mes("[Staff DTS]");
+			mes("For the 1st test, we test your eyesight and accuracy.");
 			next;
-			mes "[Staff DTS]";
-			mes "Monsters appear randomly from 8 sides of the left, right, up and down of the player, among them if you get rid of a monster named 'Poring' you get a point.";
+			mes("[Staff DTS]");
+			mes("Monsters appear randomly from 8 sides of the left, right, up and down of the player, among them if you get rid of a monster named 'Poring' you get a point.");
 			next;
-			mes "[Staff DTS]";
-			mes "^0000ffWhatever the form looks like, you need to kill the monster named 'Poring' to get a point, and if you get rid of others your points get deducted, so be careful.^000000";
+			mes("[Staff DTS]");
+			mes("^0000ffWhatever the form looks like, you need to kill the monster named 'Poring' to get a point, and if you get rid of others your points get deducted, so be careful.^000000");
 			next;
-			mes "[Staff DTS]";
-			mes "The 1st test progressing time will be about 3 minutes. When you get 15 points or more over 20, you are sent to 2nd test field.";
+			mes("[Staff DTS]");
+			mes("The 1st test progressing time will be about 3 minutes. When you get 15 points or more over 20, you are sent to 2nd test field.");
 			next;
 			break;
 		case 2:
-			mes "[Staff DTS]";
-			mes "The 2nd test is to test the mission performance ability and the efficient use of a trap.";
+			mes("[Staff DTS]");
+			mes("The 2nd test is to test the mission performance ability and the efficient use of a trap.");
 			next;
-			mes "[Staff DTS]";
-			mes "The attendant receives 10 'Bombring Capsules'. When you consume the Bombring Capsule, a Bombring is summoned near and after the summoning when you reach a certain time, the Bombring explodes.";
+			mes("[Staff DTS]");
+			mes("The attendant receives 10 'Bombring Capsules'. When you consume the Bombring Capsule, a Bombring is summoned near and after the summoning when you reach a certain time, the Bombring explodes.");
 			next;
-			mes "[Staff DTS]";
-			mes "^0000ffThe Bombring explosion affects you, so be careful not to get involved in the explosion. You need to get rid of the monster by using the Bombring Capsule, accomplish the mission and come out alive.^000000";
+			mes("[Staff DTS]");
+			mes("^0000ffThe Bombring explosion affects you, so be careful not to get involved in the explosion. You need to get rid of the monster by using the Bombring Capsule, accomplish the mission and come out alive.^000000");
 			next;
-			mes "[Staff DTS]";
-			mes "The 2nd test progressing time will be about 3 minutes. When you consume all the Bombring Capsules, collect hidden equipment, and survive, you will be sent to the 3rd test field.";
+			mes("[Staff DTS]");
+			mes("The 2nd test progressing time will be about 3 minutes. When you consume all the Bombring Capsules, collect hidden equipment, and survive, you will be sent to the 3rd test field.");
 			next;
 			break;
 		case 3:
-			mes "[Staff DTS]";
-			mes "The 3rd is to test how you can efficiently use a wolf which is given Rangers.";
+			mes("[Staff DTS]");
+			mes("The 3rd is to test how you can efficiently use a wolf which is given Rangers.");
 			next;
-			mes "[Staff DTS]";
-			mes "The tester is provided with disposable wolf summoning flute. Remove all bombs that are dispersed here and there by controlling the summoned warg and you get a point.";
+			mes("[Staff DTS]");
+			mes("The tester is provided with disposable wolf summoning flute. Remove all bombs that are dispersed here and there by controlling the summoned warg and you get a point.");
 			next;
-			mes "[Staff DTS]";
-			mes "^0000ffThe tester cannot move while the test is going on and the test is completed when he or she removes the bombs quickly and accurately in time by using only the warg.^000000";
+			mes("[Staff DTS]");
+			mes("^0000ffThe tester cannot move while the test is going on and the test is completed when he or she removes the bombs quickly and accurately in time by using only the warg.^000000");
 			next;
-			mes "[Staff DTS]";
-			mes "The 3rd test progressing time would be about 3 minutes, when you get 10 or more over 20, all the practical tests are completed.";
+			mes("[Staff DTS]");
+			mes("The 3rd test progressing time would be about 3 minutes, when you get 10 or more over 20, all the practical tests are completed.");
 			next;
 			break;
 		case 4:
-			mes "[Staff DTS]";
-			mes "When you want to progress with the practical test, please enter into the chat room.";
+			mes("[Staff DTS]");
+			mes("When you want to progress with the practical test, please enter into the chat room.");
 			close;
 		}
 	}
@@ -1187,32 +1187,32 @@ job3_rang02,111,56,3	script	Staff Rust#jr_09	4_M_ORIENT02,{
 		if (countitem(Bombring_Box) < 1) {
 			percentheal 100,0;
 			specialeffect(EF_ABSORBSPIRITS, AREA, playerattached());
-			mes "[Staff Rust]";
-			mes "I'll give you the 'Bombring Capsules.";
-			mes "The 'Bombring Capsules' can be given again only for the one who used it all, so please keep that in mind.";
+			mes("[Staff Rust]");
+			mes("I'll give you the 'Bombring Capsules.");
+			mes("The 'Bombring Capsules' can be given again only for the one who used it all, so please keep that in mind.");
 			if (countitem(Approval_Report)) {
 				getitem Bombring_Box,5;
 				close;
 			}
 			next;
 			emotion e_an;
-			mes "[Staff Rust]";
-			mes "And the mission is.... to deliver these documents to the supervisor, Caution. He won't take what I give...";
+			mes("[Staff Rust]");
+			mes("And the mission is.... to deliver these documents to the supervisor, Caution. He won't take what I give...");
 			setquest 8260;
 			getitem Approval_Report, (MaxWeight-Weight-2000)/10;
 			getitem Bombring_Box,10;
 			getitem Novice_Potion,100;
 			close;
 		}
-		mes "[Staff Rust]";
-		mes "I'm sorry, but you already have the 'Bombring Capsules', so I cannot provide you with more.";
+		mes("[Staff Rust]");
+		mes("I'm sorry, but you already have the 'Bombring Capsules', so I cannot provide you with more.");
 		close;
 	}
-	mes "[Staff Rust]";
-	mes "Excuse me, but how did you get in?";
+	mes("[Staff Rust]");
+	mes("Excuse me, but how did you get in?");
 	next;
-	mes "[Staff Rust]";
-	mes "If you are not here for the job change test, please leave.";
+	mes("[Staff Rust]");
+	mes("If you are not here for the job change test, please leave.");
 	close;
 OnInit:
 	disablenpc "Staff Rust#jr_09";
@@ -1277,8 +1277,8 @@ OnMyMobDead:
 }
 
 job3_rang02,180,78,3	script	Test Supervisor#jr_11	4_F_SITDOWN,1,1,{
-	mes "[Test Supervisor, Caution]";
-	mes "Come, come near, nearer, nearer!!";
+	mes("[Test Supervisor, Caution]");
+	mes("Come, come near, nearer, nearer!!");
 	close;
 OnInit:
 	disablenpc "Test Supervisor#jr_11";
@@ -1293,58 +1293,58 @@ OnDisable:
 OnTouch:
 	if (job_ranger01 == 6) {
 		if (countitem(Bombring_Box)) {
-			mes "[Test Supervisor, Caution]";
-			mes "No, no!";
-			mes "You need to use all the 'Bombring Capsules'?!";
+			mes("[Test Supervisor, Caution]");
+			mes("No, no!");
+			mes("You need to use all the 'Bombring Capsules'?!");
 			next;
-			mes "[Test Supervisor, Caution]";
-			mes "Use it all and come back!";
-			mes "Time is ticking so you'd better hurry.";
+			mes("[Test Supervisor, Caution]");
+			mes("Use it all and come back!");
+			mes("Time is ticking so you'd better hurry.");
 			close;
 		}
 		if (countitem(Approval_Report) > 0) {
-			mes "[Test Supervisor, Caution]";
-			mes "You've arrived safely!!!";
+			mes("[Test Supervisor, Caution]");
+			mes("You've arrived safely!!!");
 			donpcevent "Second Test Timer#jr_08::OnDisable";
 			donpcevent "Staff Rust#jr_09::OnDisable";
 			donpcevent "Summon Monster#jr_10::OnDisable";
 			initnpctimer;
 			next;
-			mes "[Test Supervisor, Caution]";
-			mes "What are those documents?";
+			mes("[Test Supervisor, Caution]");
+			mes("What are those documents?");
 			emotion e_no;
 			next;
 			select("Mr. Rust asked me to give this to you.");
-			mes "[Test Supervisor, Caution]";
-			mes "Haaaaaaaah!!";
-			mes "I've been avoiding him so much!!";
+			mes("[Test Supervisor, Caution]");
+			mes("Haaaaaaaah!!");
+			mes("I've been avoiding him so much!!");
 			delitem Approval_Report,countitem(Approval_Report);
 			erasequest 8260;
 			next;
-			mes "[Test Supervisor, Caution]";
-			mes "I've never imagined this could be a test...";
+			mes("[Test Supervisor, Caution]");
+			mes("I've never imagined this could be a test...");
 			emotion e_sob;
 			next;
-			mes "[Test Supervisor, Caution]";
-			mes "Anyway you've passed the 2nd test very well.";
+			mes("[Test Supervisor, Caution]");
+			mes("Anyway you've passed the 2nd test very well.");
 			next;
-			mes "[Test Supervisor, Caution]";
-			mes "Pass the 3rd one and you will become a great ranger.";
+			mes("[Test Supervisor, Caution]");
+			mes("Pass the 3rd one and you will become a great ranger.");
 			close2;
 			warp "job3_rang02",250,49;
 			donpcevent "Test Supervisor#jr_13::OnEnable";
 			end;
 		}
 	}
-	mes "[Test Supervisor, Caution]";
-	mes "You've arrived safely......uh?";
+	mes("[Test Supervisor, Caution]");
+	mes("You've arrived safely......uh?");
 	next;
-	mes "[Test Supervisor, Caution]";
-	mes "Didn't Rust give you something?";
+	mes("[Test Supervisor, Caution]");
+	mes("Didn't Rust give you something?");
 	next;
-	mes "[Test Supervisor, Caution]";
-	mes "Where did you lose that?";
-	mes "Pick it up quickly!";
+	mes("[Test Supervisor, Caution]");
+	mes("Where did you lose that?");
+	mes("Pick it up quickly!");
 	close;
 OnTimer60000:
 	mapannounce "job3_rang02","Test Supervisor, Caution : Come here, you don't have to rush your test, but why are you delaying the test?",bc_map,"0xffb6c1"; //FW_NORMAL 12 0 0
@@ -1464,42 +1464,42 @@ OnTimer130000:
 }
 
 job3_rang02,251,49,3	script	Test Supervisor#jr_13	4_M_JOB_HUNTER,{
-	mes "[Test Supervisor, Freeze]";
+	mes("[Test Supervisor, Freeze]");
 	if (job_ranger01 == 6) {
 		if (!questprogress(8261)) {
-			mes "Congrats for passing the 2nd practical test! I am the 3rd practical test supervisor Freeze!";
+			mes("Congrats for passing the 2nd practical test! I am the 3rd practical test supervisor Freeze!");
 			next;
-			mes "[Test Supervisor, Freeze]";
-			mes "For the 3rd test, I'll test how much you could use a wolf effectively. When you become a Ranger in the future, you'll learn an wolf!";
+			mes("[Test Supervisor, Freeze]");
+			mes("For the 3rd test, I'll test how much you could use a wolf effectively. When you become a Ranger in the future, you'll learn an wolf!");
 			next;
-			mes "[Test Supervisor, Freeze]";
-			mes "^0000ffThe tester is provided with a disposable Wolf summoning Flute! When you remove egg bombs coming out from here and there by controlling the summoned wolf, you get points!^000000";
+			mes("[Test Supervisor, Freeze]");
+			mes("^0000ffThe tester is provided with a disposable Wolf summoning Flute! When you remove egg bombs coming out from here and there by controlling the summoned wolf, you get points!^000000");
 			next;
-			mes "[Test Supervisor, Freeze]";
-			mes "Tester cannot move during the test, and the test completes when all bombs are removed quickly and accurately within the given time only by using a wolf!";
+			mes("[Test Supervisor, Freeze]");
+			mes("Tester cannot move during the test, and the test completes when all bombs are removed quickly and accurately within the given time only by using a wolf!");
 			next;
-			mes "[Test Supervisor, Freeze]";
-			mes "^0000ffThe way to control an wolf is to press the alt key and left-click the surface, then the wolf moves to the point where you've clicked on!^000000";
-			mes "^0000ffWhen you target the bomb and press one more, it starts to attack!^000000";
+			mes("[Test Supervisor, Freeze]");
+			mes("^0000ffThe way to control an wolf is to press the alt key and left-click the surface, then the wolf moves to the point where you've clicked on!^000000");
+			mes("^0000ffWhen you target the bomb and press one more, it starts to attack!^000000");
 			next;
-			mes "[Test Supervisor, Freeze]";
-			mes "The 3rd test time limit is about 3 minutes, when you get 10 over 20 points, you can pass the practical test!";
+			mes("[Test Supervisor, Freeze]");
+			mes("The 3rd test time limit is about 3 minutes, when you get 10 over 20 points, you can pass the practical test!");
 			next;
-			mes "[Test Supervisor, Freeze]";
-			mes "Well, then first get this Wolf' flutes and after summoning the wolf, talk to me!";
+			mes("[Test Supervisor, Freeze]");
+			mes("Well, then first get this Wolf' flutes and after summoning the wolf, talk to me!");
 			getitem Desert_Wolf_Babe_Scroll,1;
 			setquest 8261;
 			close;
 		}
 		if (getmercinfo(1) == 2034) {
 			erasequest 8261;
-			mes "Good! Then I'll start the test right now!";
+			mes("Good! Then I'll start the test right now!");
 			next;
-			mes "[Test Supervisor, Freeze]";
-			mes "Keep in mind! You need to remove the egg bomb before it gets exploded by only using a wolf!";
+			mes("[Test Supervisor, Freeze]");
+			mes("Keep in mind! You need to remove the egg bomb before it gets exploded by only using a wolf!");
 			next;
-			mes "[Test Supervisor, Freeze]";
-			mes "Then, good luck!";
+			mes("[Test Supervisor, Freeze]");
+			mes("Then, good luck!");
 			sc_start SC_STONE,120000,10;
 			close2;
 			donpcevent "Test Supervisor#jr_13::OnDisable";
@@ -1507,27 +1507,27 @@ job3_rang02,251,49,3	script	Test Supervisor#jr_13	4_M_JOB_HUNTER,{
 			end;
 		}
 		if (countitem(Desert_Wolf_Babe_Scroll) < 1) {
-			mes "Huh?! There's no wolf, no Test Flute, where did you get rid of them?!";
+			mes("Huh?! There's no wolf, no Test Flute, where did you get rid of them?!");
 			next;
-			mes "[Test Supervisor, Freeze]";
-			mes "I'll give you one more time specially, so hold yourself together!";
+			mes("[Test Supervisor, Freeze]");
+			mes("I'll give you one more time specially, so hold yourself together!");
 			next;
-			mes "[Test Supervisor, Freeze]";
-			mes "Summon the wolf quickly, and talk to me again!";
+			mes("[Test Supervisor, Freeze]");
+			mes("Summon the wolf quickly, and talk to me again!");
 			getitem Desert_Wolf_Babe_Scroll,1;
 			close;
 		}
-		mes "Ha? What are you doing?";
+		mes("Ha? What are you doing?");
 		next;
-		mes "[Test Supervisor, Freeze]";
-		mes "Play the Test Flute quickly to summon the wolf and talk to me!";
+		mes("[Test Supervisor, Freeze]");
+		mes("Play the Test Flute quickly to summon the wolf and talk to me!");
 		close;
 	}
-	mes "Who are you?";
+	mes("Who are you?");
 	next;
-	mes "[Test Supervisor, Freeze]";
-	mes "This area is for the Ranger Job Change test!";
-	mes "You are not authorized to be here, please get out!";
+	mes("[Test Supervisor, Freeze]");
+	mes("This area is for the Ranger Job Change test!");
+	mes("You are not authorized to be here, please get out!");
 	close;
 OnInit:
 	disablenpc "Test Supervisor#jr_13";
@@ -1635,92 +1635,92 @@ job3_rang02,254,52,0	duplicate(Egg Bomb#0)	Egg Bomb#27	HIDDEN_WARP_NPC
 job3_rang02,247,42,0	duplicate(Egg Bomb#0)	Egg Bomb#28	HIDDEN_WARP_NPC
 
 job3_rang01,90,43,3	script	Ranger Master#jr_29	4_M_REIDIN_KURS,{
-	mes "[Ranger Master, Neveragain]";
+	mes("[Ranger Master, Neveragain]");
 	if (job_ranger01 < 6) {
-		mes "... ...Huh?";
-		mes "It's weird... How did you get here?";
+		mes("... ...Huh?");
+		mes("It's weird... How did you get here?");
 		next;
-		mes "[Ranger Master, Neveragain]";
-		mes "You don't seem to belong here...";
+		mes("[Ranger Master, Neveragain]");
+		mes("You don't seem to belong here...");
 		next;
-		mes "[Ranger Master, Neveragain]";
-		mes "Go away.";
-		mes "You are not supposed to be here.";
+		mes("[Ranger Master, Neveragain]");
+		mes("Go away.");
+		mes("You are not supposed to be here.");
 		close2;
 		warp "alberta",117,57;
 		end;
 	} else if (job_ranger01 == 6 || job_ranger01 == 7) {
 		if (BaseLevel < 99 || JobLevel < 50) {
-			mes "No.";
-			mes "I can tell just by looking at you that you seem to be inexperienced.";
+			mes("No.");
+			mes("I can tell just by looking at you that you seem to be inexperienced.");
 			next;
-			mes "[Ranger Master, Neveragain]";
-			mes "Have more pride in your job and get more experience, and then when you grow as a Hunter or a Sniper you can make an aura by yourself, please come back again.";
+			mes("[Ranger Master, Neveragain]");
+			mes("Have more pride in your job and get more experience, and then when you grow as a Hunter or a Sniper you can make an aura by yourself, please come back again.");
 			close2;
 			warp "alberta",117,57;
 			end;
 		}
-		mes "Congratulations!";
-		mes "You've completed all the rough practical tests!";
+		mes("Congratulations!");
+		mes("You've completed all the rough practical tests!");
 		if (job_ranger01 == 6) {
 			job_ranger01 = 7;
 			changequest 8259,8262;
 		}
 		next;
-		mes "[Ranger Master, Neveragain]";
-		mes "Well, you've had enough experience so I won't need to drag on.";
+		mes("[Ranger Master, Neveragain]");
+		mes("Well, you've had enough experience so I won't need to drag on.");
 		next;
-		mes "[Ranger Master, Neveragain]";
-		mes "Before you do a job change ^0000ffdismiss your Falcon^000000, and check if you've used all of your ^0000ffSkill Points^000000.";
+		mes("[Ranger Master, Neveragain]");
+		mes("Before you do a job change ^0000ffdismiss your Falcon^000000, and check if you've used all of your ^0000ffSkill Points^000000.");
 		next;
 		if(select("Wait a minute", "I am ready") == 1) {
-			mes "[Ranger Master, Neveragain]";
-			mes "I am not running away so take your time.";
+			mes("[Ranger Master, Neveragain]");
+			mes("I am not running away so take your time.");
 			close;
 		}
-		mes "[Ranger Master, Neveragain]";
+		mes("[Ranger Master, Neveragain]");
 		if (checkfalcon()) {
-			mes "Didn't you dismiss your falcon??";
+			mes("Didn't you dismiss your falcon??");
 			next;
-			mes "[Ranger Master, Neveragain]";
-			mes "Please dismiss your falcon, and come back to me.";
+			mes("[Ranger Master, Neveragain]");
+			mes("Please dismiss your falcon, and come back to me.");
 			close;
 		}
 		if (SkillPoint != 0) {
-			mes "I think you need to learn more.";
+			mes("I think you need to learn more.");
 			next;
-			mes "[Ranger Master Neveragain]";
-			mes "Use up all of your skill points before continuing on.";
+			mes("[Ranger Master Neveragain]");
+			mes("Use up all of your skill points before continuing on.");
 			close;
 		}
-		mes "Good. No falcon and you've used up all your skill points.";
+		mes("Good. No falcon and you've used up all your skill points.");
 		next;
-		mes "[Ranger Master, Neveragain]";
-		mes "Okay, before you really change the job into a ranger, I'll ask you on more time.";
-		mes "Do you really want to become a ranger?";
+		mes("[Ranger Master, Neveragain]");
+		mes("Okay, before you really change the job into a ranger, I'll ask you on more time.");
+		mes("Do you really want to become a ranger?");
 		next;
 		if(select("No", "Yes!") == 1) {
-			mes "[Ranger Master, Neveragain]";
-			mes "...Um? That's not the answer that I was waiting for...";
+			mes("[Ranger Master, Neveragain]");
+			mes("...Um? That's not the answer that I was waiting for...");
 			next;
-			mes "[Ranger Master, Neveragain]";
-			mes "Even after passing through all the rough practical tests, you don't want to become a ranger... are you sure?";
+			mes("[Ranger Master, Neveragain]");
+			mes("Even after passing through all the rough practical tests, you don't want to become a ranger... are you sure?");
 			close;
 		}
-		mes "[Ranger Master, Neveragain]";
+		mes("[Ranger Master, Neveragain]");
 		if (hascashmount()) {
-			mes "You are on a riding pet,";
-			mes "so you cannot change your job.";
-			mes "Please unequip your riding pet and try again!";
+			mes("You are on a riding pet,");
+			mes("so you cannot change your job.");
+			mes("Please unequip your riding pet and try again!");
 			close;
 		}
 		if (BaseJob != Job_Hunter) {
-			mes "Wait, who are you?";
-			mes "You are not a Hunter or a Sniper?!";
+			mes("Wait, who are you?");
+			mes("You are not a Hunter or a Sniper?!");
 			next;
-			mes "[Ranger Master, Neveragain]";
-			mes "What are you doing here?";
-			mes "You are not supposed to be here. Get out!";
+			mes("[Ranger Master, Neveragain]");
+			mes("What are you doing here?");
+			mes("You are not supposed to be here. Get out!");
 			job_ranger01 = 0;
 			for(.@i = 8254; .@i <= 8262; ++.@i)
 				if (questprogress(.@i))
@@ -1729,19 +1729,19 @@ job3_rang01,90,43,3	script	Ranger Master#jr_29	4_M_REIDIN_KURS,{
 			warp "alberta",117,57;
 			end;
 		}
-		mes "Your firm answer seems very trustworthy!";
+		mes("Your firm answer seems very trustworthy!");
 		next;
 		nude;
 		if (countitem(Bow__) < 1) {
-			mes "[Ranger Master, Neveragain]";
-			mes "Umm?";
-			mes "You need to return the borrowed stuff.";
-			mes "Where is the bow that was given to you for the job change test?";
+			mes("[Ranger Master, Neveragain]");
+			mes("Umm?");
+			mes("You need to return the borrowed stuff.");
+			mes("Where is the bow that was given to you for the job change test?");
 			close;
 		}
-		mes "[Ranger Master, Neveragain]";
-		mes "From now on be active as a splendid Ranger!";
-		mes "I wish you luck in your future!";
+		mes("[Ranger Master, Neveragain]");
+		mes("From now on be active as a splendid Ranger!");
+		mes("I wish you luck in your future!");
 		delitem Bow__,1;
 		job_ranger01 = 8;
 		completequest 8262;
@@ -1751,22 +1751,22 @@ job3_rang01,90,43,3	script	Ranger Master#jr_29	4_M_REIDIN_KURS,{
 		getitem Wolfs_Flute,1;
 		close;
 	}
-	mes "Hey, you look great.";
-	mes "What are you doing here?";
+	mes("Hey, you look great.");
+	mes("What are you doing here?");
 	next;
 	switch(select("I just came by", "Please let me be out")) {
 	case 1:
-		mes "[Ranger Master, Neveragain]";
-		mes "Well, there's nothing to see and you came.";
+		mes("[Ranger Master, Neveragain]");
+		mes("Well, there's nothing to see and you came.");
 		next;
-		mes "[Ranger Master, Neveragain]";
-		mes "Take a rest as long as you want.";
-		mes "It's the place where you can have a tea easily.";
+		mes("[Ranger Master, Neveragain]");
+		mes("Take a rest as long as you want.");
+		mes("It's the place where you can have a tea easily.");
 		close;
 	case 2:
-		mes "[Ranger Master, Neveragain]";
-		mes "It was good to see you.";
-		mes "Don't lose the dignity as a Ranger wherever you go.";
+		mes("[Ranger Master, Neveragain]");
+		mes("It was good to see you.");
+		mes("Don't lose the dignity as a Ranger wherever you go.");
 		close2;
 		warp "alberta",117,57;
 		end;
@@ -1777,19 +1777,19 @@ job3_rang01,58,1,0	script	Worker#job_ranger	4_M_ORIENT01,{
 	callfunc "F_GM_NPC";
 	switch(select("Enable Waiting Room", "Disable Waiting Room", "Enable 1st Test", "Disable 1st Test", "Enable 2nd Test", "Disable 2nd Test", "Enable 3rd Test", "Disable 3rd Test", "Cancel")) {
 	case 1:
-		mes "Enabled Waiting Room";
+		mes("Enabled Waiting Room");
 		donpcevent "Test Waiting Room#jr_03::OnEnable";
 		close;
 	case 2:
-		mes "Disabled Waiting Room";
+		mes("Disabled Waiting Room");
 		donpcevent "Test Waiting Room#jr_03::OnDisable";
 		close;
 	case 3:
-		mes "1st Test Enabled";
+		mes("1st Test Enabled");
 		donpcevent "Test Supervisor#jr_04::OnEnable";
 		close;
 	case 4:
-		mes "1st Test Disabled";
+		mes("1st Test Disabled");
 		donpcevent "Test Supervisor#jr_04::OnDisable";
 		donpcevent "First Test Timer#jr_05::OnDisable";
 		donpcevent "CallCorrectAnswer#jr::OnReset";
@@ -1798,19 +1798,19 @@ job3_rang01,58,1,0	script	Worker#job_ranger	4_M_ORIENT01,{
 		donpcevent "CallWrongAnswer#jr::OnDisable";
 		close;
 	case 5:
-		mes "2nd Test Enabled";
+		mes("2nd Test Enabled");
 		donpcevent "Second Test Timer#jr_08::OnEnable";
 		close;
 	case 6:
-		mes "2nd Test Disabled";
+		mes("2nd Test Disabled");
 		donpcevent "Second Test Timer#jr_08::OnDisable";
 		close;
 	case 7:
-		mes "3rd Test has been Enabled";
+		mes("3rd Test has been Enabled");
 		donpcevent "Third Test Timer#jr_12::OnEnable";
 		close;
 	case 8:
-		mes "3rd Test has been Disabled";
+		mes("3rd Test has been Disabled");
 		donpcevent "Third Test Timer#jr_12::OnDisable";
 		for(.@i = 14; .@i<=28; ++.@i)
 			donpcevent "Egg Bomb#"+.@i+"::OnDisable";

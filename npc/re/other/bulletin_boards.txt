@@ -34,20 +34,20 @@
 
 /*
 -	script	::BulletinBoard_iz	FAKE_NPC,{
-	mes "[Izlude: The Satellite City]";
-	mes "Welcome to Izlude, the satellite of Prontera. Izlude was built to support Prontera's defense and to accomodate its burgeoning population.";
+	mes("[Izlude: The Satellite City]");
+	mes("Welcome to Izlude, the satellite of Prontera. Izlude was built to support Prontera's defense and to accomodate its burgeoning population.");
 	next;
-	mes "[Izlude: The Satellite City]";
-	mes "The main buildings here are to accomodate the growth of the Cryptura Academy.";
+	mes("[Izlude: The Satellite City]");
+	mes("The main buildings here are to accomodate the growth of the Cryptura Academy.");
 	next;
-	mes "[Izlude: The Satellite City]";
-	mes "Points of interest include the Swordman Association building which allows adventurers to change their job to Swordman, and the Battle Area that is East of Izlude.";
+	mes("[Izlude: The Satellite City]");
+	mes("Points of interest include the Swordman Association building which allows adventurers to change their job to Swordman, and the Battle Area that is East of Izlude.");
 	next;
-	mes "[Izlude: The Satellite City]";
-	mes "At the docks, you may take a ship and travel to ^003399Alberta^000000 or ^660000Byalan Island^000000.";
+	mes("[Izlude: The Satellite City]");
+	mes("At the docks, you may take a ship and travel to ^003399Alberta^000000 or ^660000Byalan Island^000000.");
 	next;
-	mes "[Izlude: The Satellite City]";
-	mes "From Izlude, ^3355FFProntera^000000 is located to the Northwest, and ^006600Payon^000000 is located to the South. Enjoy your travels in the Rune-Midgarts Kingdom.";
+	mes("[Izlude: The Satellite City]");
+	mes("From Izlude, ^3355FFProntera^000000 is located to the Northwest, and ^006600Payon^000000 is located to the South. Enjoy your travels in the Rune-Midgarts Kingdom.");
 	close;
 }
 izlude,25,103,0	duplicate(BulletinBoard_iz)	Bulletin Board#5	2_BULLETIN_BOARD

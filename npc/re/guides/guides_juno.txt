@@ -34,9 +34,9 @@
 //=========================================================================
 
 yuno,59,212,4	script	Juno Guide#yuno01::GuideJuno	8_F_GIRL,{
-	mes "[Juno Guide]";
-	mes "A place that takes the vision of the future, and gives it form in the present. Welcome to";
-	mes "the city of ^8B4513Juno^000000!";
+	mes("[Juno Guide]");
+	mes("A place that takes the vision of the future, and gives it form in the present. Welcome to");
+	mes("the city of ^8B4513Juno^000000!");
 	F_Navi("[Juno Guide]");
 	next;
 	while (1) {
@@ -106,11 +106,11 @@ yuno,59,212,4	script	Juno Guide#yuno01::GuideJuno	8_F_GIRL,{
 					next;
 					break;
 				case 13:
-					mes "[Juno Guide]";
-					mes "I will mark the location of the";
-					mes F_Navi("Schweicherbil Magic Academy","yuno,323,280","^CD1039");
-					mes "on your mini-map.";
-					mes "Would you like to check any other locations?";
+					mes("[Juno Guide]");
+					mes("I will mark the location of the");
+					mes(F_Navi("Schweicherbil Magic Academy","yuno,323,280","^CD1039"));
+					mes("on your mini-map.");
+					mes("Would you like to check any other locations?");
 					viewpoint 1,323,280,12,0xCD1039;
 					next;
 					break;
@@ -143,9 +143,9 @@ yuno,59,212,4	script	Juno Guide#yuno01::GuideJuno	8_F_GIRL,{
 			}
 			break;
 		case 3:
-			mes "[Juno Guide]";
-			mes "Sure, I'll remove all marks from your mini-map.";
-			mes "Is there anything else I can do for you?";
+			mes("[Juno Guide]");
+			mes("Sure, I'll remove all marks from your mini-map.");
+			mes("Is there anything else I can do for you?");
 			viewpoint 2,194,140,0,0xFFFFFF;
 			viewpoint 2,120,137,1,0xFFFFFF;
 			viewpoint 2,16,261,2,0xFFFFFF;
@@ -166,18 +166,18 @@ yuno,59,212,4	script	Juno Guide#yuno01::GuideJuno	8_F_GIRL,{
 			next;
 			break;
 		case 4:
-			mes "[Juno Guide]";
-			mes "Have fun on your adventures!";
+			mes("[Juno Guide]");
+			mes("Have fun on your adventures!");
 			close;
 		}
 	}
 	end;
 L_Mark:
-	mes "[Juno Guide]";
-	mes "I will mark the location";
-	mes "of the "+getarg(0);
-	mes "on your mini-map.";
-	mes "Would you like to check any other locations?";
+	mes("[Juno Guide]");
+	mes("I will mark the location");
+	mes("of the "+getarg(0));
+	mes("on your mini-map.");
+	mes("Would you like to check any other locations?");
 	return;
 }
 yuno,153,47,4	duplicate(GuideJuno)	Juno Guide#yuno02	8_F_GIRL

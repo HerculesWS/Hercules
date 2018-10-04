@@ -34,17 +34,17 @@
 //=========================================================================
 
 gonryun,163,60,4	script	Kunlun Guide#01gonryun	8_M_TWSOLDIER,{
-	mes "[He Yuen Zhe]";
-	mes "Ni Hao!";
-	mes "Welcome to ^8B4513Kunlun^000000~";
-	mes "Take a walk around and experience";
-	mes "the ancient history and tradition";
-	mes "of our breath taking city.";
+	mes("[He Yuen Zhe]");
+	mes("Ni Hao!");
+	mes("Welcome to ^8B4513Kunlun^000000~");
+	mes("Take a walk around and experience");
+	mes("the ancient history and tradition");
+	mes("of our breath taking city.");
 	next;
-	mes "[He Yuen Zhe]";
-	mes "I am responsible for helping you";
-	mes "with any questions you may have.";
-	mes "Please feel free to ask me anything.";
+	mes("[He Yuen Zhe]");
+	mes("I am responsible for helping you");
+	mes("with any questions you may have.");
+	mes("Please feel free to ask me anything.");
 	F_Navi("[He Yuen Zhe]");
 	while (1) {
 		next;
@@ -78,9 +78,9 @@ gonryun,163,60,4	script	Kunlun Guide#01gonryun	8_M_TWSOLDIER,{
 			viewpoint 1,161,11,6,0x00BFFF;
 			break;
 		case 8:
-			mes "[He Yuen Zhe]";
-			mes "I'll remove all marks from your mini-map.";
-			mes "Is there anything else I can do for you?";
+			mes("[He Yuen Zhe]");
+			mes("I'll remove all marks from your mini-map.");
+			mes("Is there anything else I can do for you?");
 			viewpoint 2,1,1,0,0xFFFFFF;
 			viewpoint 2,1,1,1,0xFFFFFF;
 			viewpoint 2,1,1,2,0xFFFFFF;
@@ -90,17 +90,17 @@ gonryun,163,60,4	script	Kunlun Guide#01gonryun	8_M_TWSOLDIER,{
 			viewpoint 2,1,1,6,0xFFFFFF;
 			break;
 		case 9:
-			mes "[He Yuen Zhe]";
-			mes "Bon voyage!";
+			mes("[He Yuen Zhe]");
+			mes("Bon voyage!");
 			close;
 		}
 	}
 	end;
 L_Mark:
-	mes "[He Yuen Zhe]";
-	mes "The "+getarg(0)+" is";
-	mes "marked on your mini-map.";
-	mes "Check your mini-map.";
-	mes "Is there anything else I can do for you?";
+	mes("[He Yuen Zhe]");
+	mes("The "+getarg(0)+" is");
+	mes("marked on your mini-map.");
+	mes("Check your mini-map.");
+	mes("Is there anything else I can do for you?");
 	return;
 }
