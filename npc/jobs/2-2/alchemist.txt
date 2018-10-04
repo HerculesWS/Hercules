@@ -39,183 +39,183 @@
 //=========================================================================
 
 alde_alche,27,185,5	script	Alchemist Guildsman#am	4_F_ALCHE,{
-	mes "[Parmy Gianino]";
+	mes("[Parmy Gianino]");
 	if (Upper == 1) {
-		mes "Welcome to the\r"
-			"Alchemist Unio--";
-		mes "I-Impossible! How c-can\r"
-			"something like this happen?";
+		mes("Welcome to the\r"
+			"Alchemist Unio--");
+		mes("I-Impossible! How c-can\r"
+			"something like this happen?");
 		next;
-		mes "[Parmy Gianino]";
-		mes "Wait, wait...";
-		mes "I'm sorry. I was confused,\r"
+		mes("[Parmy Gianino]");
+		mes("Wait, wait...");
+		mes("I'm sorry. I was confused,\r"
 			"that's all. You look just like\r"
-			"someone I used to know.";
-		mes "Still, I get this weird\r"
-			"feeling about you...";
+			"someone I used to know.");
+		mes("Still, I get this weird\r"
+			"feeling about you...");
 		close;
 	}
 	if (BaseJob != Job_Merchant) {
 		if (BaseJob == Job_Alchemist) {
 			mesf("Welcome, %s.", strcharinfo(PC_NAME));
-			mes "The Alchemist Union\r"
-				"is busy today, like always.";
+			mes("The Alchemist Union\r"
+				"is busy today, like always.");
 			next;
-			mes "[Parmy Gianino]";
-			mes "Everyone is busy with their\r"
-				"own research, but recently, some headway has been made in the field of biotechnology.";
+			mes("[Parmy Gianino]");
+			mes("Everyone is busy with their\r"
+				"own research, but recently, some headway has been made in the field of biotechnology.");
 			next;
-			mes "[Parmy Gianino]";
-			mes "Everyone is hoping that the biotechnological studies will yield positive results. "
+			mes("[Parmy Gianino]");
+			mes("Everyone is hoping that the biotechnological studies will yield positive results. "
 				"Speaking of which, I wonder how the Alchemists working on artificial life are "
-				"doing...";
+				"doing...");
 			close;
 		}
 		else if (BaseClass == Job_Novice) {
-			mes "Welcome to the\r"
-				"Alchemist Union.";
-			mes "We are recruiting\r"
+			mes("Welcome to the\r"
+				"Alchemist Union.");
+			mes("We are recruiting\r"
 				"talented people\r"
-				"with novel ideas.";
+				"with novel ideas.");
 			next;
-			mes "[Parmy Gianino]";
-			mes "If you're interested in working with chemistry, visit us later when you become more "
-				"knowledgable.";
+			mes("[Parmy Gianino]");
+			mes("If you're interested in working with chemistry, visit us later when you become more "
+				"knowledgable.");
 			next;
-			mes "[Parmy Gianino]";
-			mes "Just one thing:\r"
+			mes("[Parmy Gianino]");
+			mes("Just one thing:\r"
 				"You've got to have\r"
 				"knowledge of items\r"
-				"as a Merchant first.";
+				"as a Merchant first.");
 			close;
 		}
-		mes "Welcome to the\r"
-			"Alchemist Union.";
-		mes "We are recruiting\r"
+		mes("Welcome to the\r"
+			"Alchemist Union.");
+		mes("We are recruiting\r"
 			"talented people\r"
-			"with novel ideas.";
+			"with novel ideas.");
 		next;
-		mes "[Parmy Gianino]";
-		mes "If you know any exceptional Merchants, by all means, please refer them to us. Those types of "
-			"people tend to have a talent for Alchemy and experimentation~";
+		mes("[Parmy Gianino]");
+		mes("If you know any exceptional Merchants, by all means, please refer them to us. Those types of "
+			"people tend to have a talent for Alchemy and experimentation~");
 		close;
 	}
 	if (ALCH_Q == 0) {
-		mes "Welcome to the\r"
-			"Alchemist Union.";
-		mes "How may I help you?";
+		mes("Welcome to the\r"
+			"Alchemist Union.");
+		mes("How may I help you?");
 		next;
 		switch (select("I would like to learn about Alchemists.",
 		               "I want to become an Alchemist.",
 		               "Nothing.")) {
 		case 1:
-			mes "[Parmy Gianino]";
-			mes "Alchemists study and create new substances and items out of existing materials. Our "
-				"knowledge allows us to change the properties of chemicals at the atomic level.";
+			mes("[Parmy Gianino]");
+			mes("Alchemists study and create new substances and items out of existing materials. Our "
+				"knowledge allows us to change the properties of chemicals at the atomic level.");
 			next;
-			mes "[Parmy Gianino]";
-			mes "Most people think our final goal\r"
+			mes("[Parmy Gianino]");
+			mes("Most people think our final goal\r"
 				"is to create gold, but that's not the entire truth. We also want to create things "
 				"like medicines\r"
-				"and new materials.";
+				"and new materials.");
 			next;
-			mes "[Parmy Gianino]";
-			mes "A few of us research the\r"
+			mes("[Parmy Gianino]");
+			mes("A few of us research the\r"
 				"creation of life, although many of us consider that god's territory. That field is so "
-				"complex, most of us deal with slightly less complicated projects anyway.";
+				"complex, most of us deal with slightly less complicated projects anyway.");
 			next;
-			mes "[Parmy Gianino]";
-			mes "If you are interested in becoming an Alchemist, I recommend that you first get a lot of "
+			mes("[Parmy Gianino]");
+			mes("If you are interested in becoming an Alchemist, I recommend that you first get a lot of "
 				"experience as a Merchant. Being a Merchant is a great opportunity to learn about "
-				"materials as you deal with them.";
+				"materials as you deal with them.");
 			next;
-			mes "[Parmy Gianino]";
-			mes "Whether or not you try to become an Alchemist is your decision. The road to becoming an "
+			mes("[Parmy Gianino]");
+			mes("Whether or not you try to become an Alchemist is your decision. The road to becoming an "
 				"Alchemist is very challenging, and you'll need to focus on experimentation and "
-				"research, instead of commerce.";
+				"research, instead of commerce.");
 			close;
 		case 2:
-			mes "[Parmy Gianino]";
-			mes "Is that so?";
-			mes "Nice to meet you.";
-			mes "My name is Parmy Gianino\r"
-				"of the Alchemist Union.";
+			mes("[Parmy Gianino]");
+			mes("Is that so?");
+			mes("Nice to meet you.");
+			mes("My name is Parmy Gianino\r"
+				"of the Alchemist Union.");
 			next;
-			mes "[Parmy Gianino]";
-			mes "If you join our Union and\r"
+			mes("[Parmy Gianino]");
+			mes("If you join our Union and\r"
 				"complete the training, you\r"
 				"will be officially recognized\r"
 				"as an Alchemist and be able\r"
-				"to contribute to our research.";
+				"to contribute to our research.");
 			next;
-			mes "[Parmy Gianino]";
-			mes "But we don't accept everyone.";
-			mes "You must have a lot of tenacity\r"
+			mes("[Parmy Gianino]");
+			mes("But we don't accept everyone.");
+			mes("You must have a lot of tenacity\r"
 				"and sincere devotion in exploring\r"
-				"the various fields of science.";
+				"the various fields of science.");
 			next;
-			mes "[Parmy Gianino]";
-			mes "There are a couple\r"
+			mes("[Parmy Gianino]");
+			mes("There are a couple\r"
 				"of requirements to join\r"
 				"the Alchemist Union, but\r"
 				"we'll discuss that\r"
-				"after you apply.";
+				"after you apply.");
 			next;
-			mes "[Parmy Gianino]";
-			mes "Well then, would\r"
+			mes("[Parmy Gianino]");
+			mes("Well then, would\r"
 				"you like to apply\r"
-				"for registration?";
+				"for registration?");
 			next;
 			if (select("I would like to apply.", "I'll do it later.") == 1) {
 				if (JobLevel < 40) {
-					mes "[Parmy Gianino]";
-					mes "Hmmm...";
-					mes "Just a moment.";
-					mes "I'm sorry to say that\r"
+					mes("[Parmy Gianino]");
+					mes("Hmmm...");
+					mes("Just a moment.");
+					mes("I'm sorry to say that\r"
 						"you're not experienced\r"
 						"enough as a Merchant to\r"
-						"join us right now.";
+						"join us right now.");
 					next;
-					mes "[Parmy Gianino]";
-					mes "You must be at least\r"
+					mes("[Parmy Gianino]");
+					mes("You must be at least\r"
 						"^551A8BJob Level 40^000000 to become\r"
 						"an Alchemist. Come back\r"
 						"later when you meet the\r"
-						"Job Level requirement, okay?";
+						"Job Level requirement, okay?");
 					close;
 				}
-				mes "[Parmy Gianino]";
-				mes "Alright, your application has been accepted. Now, you must pay the 50,000 Zeny "
+				mes("[Parmy Gianino]");
+				mes("Alright, your application has been accepted. Now, you must pay the 50,000 Zeny "
 					"application fee and bring some items before you can begin your formal "
-					"training.";
+					"training.");
 				next;
-				mes "[Parmy Gianino]";
+				mes("[Parmy Gianino]");
 				mesf("But if you bring an ^551A8B%s^000000 and ^551A8B%s^000000,\r"
 					"we will accept that as a substitute for the item requirement.",
 					getitemname(Old_Magic_Book), getitemname(Hammer_Of_Blacksmith));
 				next;
-				mes "[Parmy Gianino]";
-				mes "Now...";
-				mes "Please sign\r"
-					"the application.";
+				mes("[Parmy Gianino]");
+				mes("Now...");
+				mes("Please sign\r"
+					"the application.");
 				next;
 				select(strcharinfo(PC_NAME));
-				mes "[Parmy Gianino]";
-				mes "Good, good. Now, if you have\r"
+				mes("[Parmy Gianino]");
+				mes("Good, good. Now, if you have\r"
 					"the Zeny for your application fee ready, I will tell you which items you will "
-					"need to bring. Now, pay attention.";
+					"need to bring. Now, pay attention.");
 				next;
 				if (Zeny < 50000) {
-					mes "[Parmy Gianino]";
-					mes "Uh oh. You don't\r"
+					mes("[Parmy Gianino]");
+					mes("Uh oh. You don't\r"
 						"seem to have enough Zeny.\r"
 						"Come back to me when you have 50,000 Zeny, otherwise we can't process "
-						"your application.";
+						"your application.");
 					close;
 				}
 				Zeny -= 50000;
-				mes "[Parmy Gianino]";
-				mes "Let's see.";
+				mes("[Parmy Gianino]");
+				mes("Let's see.");
 				mesf("%s\r"
 					"needs to bring...",
 					strcharinfo(PC_NAME));
@@ -236,44 +236,44 @@ alde_alche,27,185,5	script	Alchemist Guildsman#am	4_F_ALCHE,{
 					mesf("^551A8B7,500 %s^000000.", getitemname(Fire_Arrow));
 				}
 				next;
-				mes "[Parmy Gianino]";
-				mes "Once you've gathered\r"
+				mes("[Parmy Gianino]");
+				mes("Once you've gathered\r"
 					"those items, come back\r"
 					"to me and your training\r"
-					"as an Alchemist will begin.";
-				mes "See you soon~";
+					"as an Alchemist will begin.");
+				mes("See you soon~");
 				close;
 			}
-			mes "[Parmy Gianino]";
-			mes "Talented Merchants\r"
-				"are always welcome here.";
-			mes "Please come back soon.";
+			mes("[Parmy Gianino]");
+			mes("Talented Merchants\r"
+				"are always welcome here.");
+			mes("Please come back soon.");
 			close;
 		case 3:
-			mes "[Parmy Gianino]";
-			mes "Umm...";
-			mes "Please let me know\r"
-				"if you need anything.";
+			mes("[Parmy Gianino]");
+			mes("Umm...");
+			mes("Please let me know\r"
+				"if you need anything.");
 			close;
 		}
 	}
 	else if (ALCH_Q >= 1 && ALCH_Q <= 3) {
 		if (countitem(Old_Magic_Book) > 0 && countitem(Hammer_Of_Blacksmith) > 0) {
-			mes "Well now~!";
+			mes("Well now~!");
 			mesf("You've brought an\r"
 				"%s and\r"
 				"a %s.",
 				getitemname(Old_Magic_Book),
 				getitemname(Hammer_Of_Blacksmith));
-			mes "We'll put these items\r"
-				"to good use.";
+			mes("We'll put these items\r"
+				"to good use.");
 			next;
 			delitem Old_Magic_Book,1;
 			delitem Hammer_Of_Blacksmith,1;
-			mes "[Parmy Gianino]";
-			mes "Okay, now you need to learn\r"
+			mes("[Parmy Gianino]");
+			mes("Okay, now you need to learn\r"
 				"the basics to being an Alchemist and learn the procedures for mixing chemicals and "
-				"medicines.";
+				"medicines.");
 			ALCH_Q = 4;
 			if (questprogress(2028)) {
 				changequest 2028,2031;
@@ -285,13 +285,13 @@ alde_alche,27,185,5	script	Alchemist Guildsman#am	4_F_ALCHE,{
 				changequest 2030,2031;
 			}
 			next;
-			mes "[Parmy Gianino]";
-			mes "But before all of that, you need to speak to Raspuchin. I'm not really sure what you'll "
-				"be talking about with him...";
+			mes("[Parmy Gianino]");
+			mes("But before all of that, you need to speak to Raspuchin. I'm not really sure what you'll "
+				"be talking about with him...");
 			next;
-			mes "[Parmy Gianino]";
-			mes "It shouldn't be anything extraordinary, but you're still required to speak to Raspuchin, "
-				"since apparently he's a part of the Alchemist selection process.";
+			mes("[Parmy Gianino]");
+			mes("It shouldn't be anything extraordinary, but you're still required to speak to Raspuchin, "
+				"since apparently he's a part of the Alchemist selection process.");
 			close;
 		}
 		switch(ALCH_Q) {
@@ -300,16 +300,16 @@ alde_alche,27,185,5	script	Alchemist Guildsman#am	4_F_ALCHE,{
 		case 3: setarray .@items[0],1752,7500; break;
 		}
 		if (countitem(.@items[0]) >= .@items[1]) {
-			mes "Seems like\r"
-				"you're all ready.";
-			mes "The Union will put\r"
-				"these items to good use.";
+			mes("Seems like\r"
+				"you're all ready.");
+			mes("The Union will put\r"
+				"these items to good use.");
 			next;
 			delitem .@items[0],.@items[1];
-			mes "[Parmy Gianino]";
-			mes "Okay, now you need to learn\r"
+			mes("[Parmy Gianino]");
+			mes("Okay, now you need to learn\r"
 				"the basics to being an Alchemist and learn the procedures for mixing chemicals and "
-				"medicines.";
+				"medicines.");
 			ALCH_Q = 4;
 			if (questprogress(2028)) {
 				changequest 2028,2031;
@@ -321,280 +321,280 @@ alde_alche,27,185,5	script	Alchemist Guildsman#am	4_F_ALCHE,{
 				changequest 2030,2031;
 			}
 			next;
-			mes "[Parmy Gianino]";
-			mes "But before all of that, you need to speak to Raspuchin. I'm not really sure what you'll "
-				"be talking about with him...";
+			mes("[Parmy Gianino]");
+			mes("But before all of that, you need to speak to Raspuchin. I'm not really sure what you'll "
+				"be talking about with him...");
 			next;
-			mes "[Parmy Gianino]";
-			mes "It shouldn't be anything extraordinary, but you're still required to speak to Raspuchin, "
-				"since apparently he's a part of the Alchemist selection process.";
+			mes("[Parmy Gianino]");
+			mes("It shouldn't be anything extraordinary, but you're still required to speak to Raspuchin, "
+				"since apparently he's a part of the Alchemist selection process.");
 			close;
 		}
-		mes "Aren't you ready?";
+		mes("Aren't you ready?");
 		mesf("Like I said before,\r"
 			"you must bring\r"
 			"^551A8B%d %s^000000.",
 			.@items[1],
 			getitemname(.@items[0]));
 		next;
-		mes "[Parmy Gianino]";
-		mes "Come back when you\r"
+		mes("[Parmy Gianino]");
+		mes("Come back when you\r"
 			"have prepared the\r"
-			"required items.";
+			"required items.");
 		close;
 	}
 	else if (ALCH_Q == 4) {
-		mes "Go and talk to\r"
-			"Mr. Raspuchin.";
-		mes "He's involved in the\r"
-			"Alchemist selection process, whatever that might mean.";
+		mes("Go and talk to\r"
+			"Mr. Raspuchin.");
+		mes("He's involved in the\r"
+			"Alchemist selection process, whatever that might mean.");
 		next;
-		mes "[Parmy Gianino]";
-		mes "Hopefully, it\r"
+		mes("[Parmy Gianino]");
+		mes("Hopefully, it\r"
 			"won't be too much of\r"
 			"a problem. I guess he'll just interview you, and ask you\r"
-			"some simple questions.";
+			"some simple questions.");
 		close;
 	}
 	else {
-		mes "Ah, I'm sorry, but\r"
-			"I'm busy right now~";
+		mes("Ah, I'm sorry, but\r"
+			"I'm busy right now~");
 		next;
-		mes "[Parmy Gianino]";
-		mes "Why don't you ask\r"
+		mes("[Parmy Gianino]");
+		mes("Why don't you ask\r"
 			"someone else if you're\r"
 			"not sure who to visit\r"
-			"next? Good luck~";
+			"next? Good luck~");
 		close;
 	}
 }
 
 alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
-	mes "[Raspuchin Gregory]";
+	mes("[Raspuchin Gregory]");
 	if (BaseJob != Job_Merchant) {
 		if (BaseJob == Job_Alchemist) {
-			mes "Heeheehee\r"
-				"keheheh~!";
-			mes "Eh? What do you want?!";
+			mes("Heeheehee\r"
+				"keheheh~!");
+			mes("Eh? What do you want?!");
 			next;
-			mes "[Raspuchin Gregory]";
-			mes "You're not here to steal my experimental results or plagiarize my work, are you? How dare "
-				"you consider intellectual theft!";
+			mes("[Raspuchin Gregory]");
+			mes("You're not here to steal my experimental results or plagiarize my work, are you? How dare "
+				"you consider intellectual theft!");
 			next;
-			mes "[Raspuchin Gregory]";
-			mes "You're not, are you?";
-			mes "Well, as a colleague,\r"
+			mes("[Raspuchin Gregory]");
+			mes("You're not, are you?");
+			mes("Well, as a colleague,\r"
 				"let me just warn you\r"
 				"that such tricks aren't\r"
 				"tolerated here in the\r"
-				"Alchemist Union!";
+				"Alchemist Union!");
 			close;
 		}
 		else if (BaseClass == Job_Novice) {
-			mes "Heeheehee\r"
-				"keheheh~!";
-			mes "How cute, you've come\r"
-				"all this way just to play...";
+			mes("Heeheehee\r"
+				"keheheh~!");
+			mes("How cute, you've come\r"
+				"all this way just to play...");
 			next;
-			mes "[Raspuchin Gregory]";
-			mes "I'll let you\r"
-				"go this time...";
-			mes "But next time, don't\r"
-				"expect to leave so easily...";
+			mes("[Raspuchin Gregory]");
+			mes("I'll let you\r"
+				"go this time...");
+			mes("But next time, don't\r"
+				"expect to leave so easily...");
 			close;
 		}
 		else {
-			mes "What is it?!";
-			mes "You're curious as\r"
-				"to what I'm doing?";
+			mes("What is it?!");
+			mes("You're curious as\r"
+				"to what I'm doing?");
 			next;
-			mes "[Raspuchin Gregory]";
-			mes "Heehee\r"
-				"keheheh~!";
-			mes "Why, I'm busy\r"
+			mes("[Raspuchin Gregory]");
+			mes("Heehee\r"
+				"keheheh~!");
+			mes("Why, I'm busy\r"
 				"researching,\r"
-				"of course!";
+				"of course!");
 			next;
-			mes "[Raspuchin Gregory]";
-			mes "Once this\r"
-				"potion is complete...";
-			mes "You can use it to take\r"
-				"over an entire nation!";
+			mes("[Raspuchin Gregory]");
+			mes("Once this\r"
+				"potion is complete...");
+			mes("You can use it to take\r"
+				"over an entire nation!");
 			next;
-			mes "[Raspuchin Gregory]";
-			mes "Hee hee hee!";
-			mes "Something this\r"
+			mes("[Raspuchin Gregory]");
+			mes("Hee hee hee!");
+			mes("Something this\r"
 				"dangerous has to\r"
-				"be kept a secret!";
-			mes "Understand?";
+				"be kept a secret!");
+			mes("Understand?");
 			close;
 		}
 	}
 	if (ALCH_Q == 0) {
-		mes "Heeheehee\r"
-			"keheheh~!";
-		mes "What do you\r"
-			"want, kid?";
+		mes("Heeheehee\r"
+			"keheheh~!");
+		mes("What do you\r"
+			"want, kid?");
 		next;
-		mes "[Raspuchin Gregory]";
-		mes "A Merchant should go and set up shop and vend items. Why are you wandering in a place like this?";
+		mes("[Raspuchin Gregory]");
+		mes("A Merchant should go and set up shop and vend items. Why are you wandering in a place like this?");
 		next;
-		mes "[Raspuchin Gregory]";
-		mes "Heheheh~!";
-		mes "Go vend somwhere else!";
-		mes "And leave me to my\r"
-			"dark enterprise!";
+		mes("[Raspuchin Gregory]");
+		mes("Heheheh~!");
+		mes("Go vend somwhere else!");
+		mes("And leave me to my\r"
+			"dark enterprise!");
 		close;
 	} else if (ALCH_Q >= 1 && ALCH_Q <= 3) {
-		mes "Heeheehee\r"
-			"keheheh~!";
-		mes "What do you\r"
-			"want, kid?";
+		mes("Heeheehee\r"
+			"keheheh~!");
+		mes("What do you\r"
+			"want, kid?");
 		next;
-		mes "[Raspuchin Gregory]";
-		mes "What...?";
-		mes "Learn Alchemy?!";
-		mes "Don't even speak\r"
-			"such nonsense!";
+		mes("[Raspuchin Gregory]");
+		mes("What...?");
+		mes("Learn Alchemy?!");
+		mes("Don't even speak\r"
+			"such nonsense!");
 		next;
-		mes "[Raspuchin Gregory]";
-		mes "Even if you tried studying for a thousand years, maybe even more, it'd be useless to you! Forget "
-			"about it and just worry about your store!";
+		mes("[Raspuchin Gregory]");
+		mes("Even if you tried studying for a thousand years, maybe even more, it'd be useless to you! Forget "
+			"about it and just worry about your store!");
 		close;
 	}
 	else if ((ALCH_Q == 4) || (ALCH_Q == 5)) {
 		if (ALCH_Q == 4) {
-			mes "Heeheehee";
-			mes "keheheh~!";
-			mes "What do you\r"
-				"want, kid?";
+			mes("Heeheehee");
+			mes("keheheh~!");
+			mes("What do you\r"
+				"want, kid?");
 			next;
-			mes "[Raspuchin Gregory]";
-			mes "What...?";
-			mes "Join the Union!?";
-			mes "I don't like it...";
-			mes "I just don't...!";
+			mes("[Raspuchin Gregory]");
+			mes("What...?");
+			mes("Join the Union!?");
+			mes("I don't like it...");
+			mes("I just don't...!");
 			next;
-			mes "[Raspuchin Gregory]";
-			mes "Nowadays, anyone thinks they can\r"
+			mes("[Raspuchin Gregory]");
+			mes("Nowadays, anyone thinks they can\r"
 				"be Alchemists just by knowing how to mix a few herbs. That's why my interview is "
-				"necessary.";
+				"necessary.");
 			next;
-			mes "[Raspuchin Gregory]";
-			mes "Heeheehee\r"
-				"keheheh~!";
-			mes "I plan on weeding out all the dumb and incompetent, and chase them\r"
-				"all away! We don't need morons!";
+			mes("[Raspuchin Gregory]");
+			mes("Heeheehee\r"
+				"keheheh~!");
+			mes("I plan on weeding out all the dumb and incompetent, and chase them\r"
+				"all away! We don't need morons!");
 			next;
 			if (JobLevel == 50) {
-				mes "[Raspuchin Gregory]";
-				mes "Wait...";
-				mes "Maybe I've\r"
-					"misjudged you.";
+				mes("[Raspuchin Gregory]");
+				mes("Wait...");
+				mes("Maybe I've\r"
+					"misjudged you.");
 				if (Sex == SEX_MALE) {
-					mes "You might be a pretty boy,\r"
+					mes("You might be a pretty boy,\r"
 						"but I can tell you're smart\r"
-						"from your eyes.";
+						"from your eyes.");
 				}
 				else {
-					mes "Huh. You're a cutie alright,\r"
-						"but I can tell you've got brains.";
+					mes("Huh. You're a cutie alright,\r"
+						"but I can tell you've got brains.");
 				}
 				next;
-				mes "[Raspuchin Gregory]";
-				mes "You're not just some stupid kid.";
-				mes "I can tell youve gone through some rough times as a Merchant. Excellent. Keh heh "
-					"heh~";
+				mes("[Raspuchin Gregory]");
+				mes("You're not just some stupid kid.");
+				mes("I can tell youve gone through some rough times as a Merchant. Excellent. Keh heh "
+					"heh~");
 				next;
-				mes "[Raspuchin Gregory]";
-				mes "Fine, just so we don't insult each other's intelligence, I'll just let you pass "
-					"the interview.";
+				mes("[Raspuchin Gregory]");
+				mes("Fine, just so we don't insult each other's intelligence, I'll just let you pass "
+					"the interview.");
 				next;
-				mes "[Raspuchin Gregory]";
-				mes "So hurry up, become an Alchemist, do some good research, and you might turn out "
-					"to be of some help to me. Hahahahahaha~!";
+				mes("[Raspuchin Gregory]");
+				mes("So hurry up, become an Alchemist, do some good research, and you might turn out "
+					"to be of some help to me. Hahahahahaha~!");
 				next;
-				mes "[Raspuchin Gregory]";
-				mes "Now go to Darwin!";
-				mes "He'll teach you how to do the experiments. Just tell him that\r"
-					"I sent you.";
+				mes("[Raspuchin Gregory]");
+				mes("Now go to Darwin!");
+				mes("He'll teach you how to do the experiments. Just tell him that\r"
+					"I sent you.");
 				ALCH_Q = 6;
 				changequest 2031,2032;
 				close;
 			}
 			else {
-				mes "[Raspuchin Gregory]";
-				mes "Surprised, are you?";
-				mes "Keheheh~ If you thought\r"
+				mes("[Raspuchin Gregory]");
+				mes("Surprised, are you?");
+				mes("Keheheh~ If you thought\r"
 					"becoming an Alchemist was\r"
 					"just a matter of changing\r"
 					"your clothes, then you're\r"
-					"sadly mistaken.";
+					"sadly mistaken.");
 				next;
-				mes "[Raspuchin Gregory]";
-				mes "Now, try solving\r"
-					"all these problems.";
-				mes "Let's see how smart\r"
-					"really are.";
+				mes("[Raspuchin Gregory]");
+				mes("Now, try solving\r"
+					"all these problems.");
+				mes("Let's see how smart\r"
+					"really are.");
 			}
 		}
 		else if (ALCH_Q == 5) {
-			mes "What...?!";
-			mes "You want to take\r"
-				"the test again?!";
-			mes "I thought I told\r"
-				"you to leave!";
+			mes("What...?!");
+			mes("You want to take\r"
+				"the test again?!");
+			mes("I thought I told\r"
+				"you to leave!");
 			next;
-			mes "[Raspuchin Gregory]";
-			mes "I don't like it...";
-			mes "I don't like this!";
+			mes("[Raspuchin Gregory]");
+			mes("I don't like it...");
+			mes("I don't like this!");
 			next;
-			mes "[Raspuchin Gregory]";
-			mes "Fine...";
-			mes "I'll try to overlook your pitiful performance last time and give\r"
+			mes("[Raspuchin Gregory]");
+			mes("Fine...");
+			mes("I'll try to overlook your pitiful performance last time and give\r"
 				"you another chance. Don't screw\r"
-				"up again, got it?";
+				"up again, got it?");
 			next;
-			mes "[Raspuchin Gregory]";
-			mes "Now then,\r"
+			mes("[Raspuchin Gregory]");
+			mes("Now then,\r"
 				"give me all the\r"
 				"^551A8Bright^000000 answers\r"
-				"this time.";
+				"this time.");
 		}
 		next;
 		switch(rand(1,3)) {
 		case 1:
-			mes "[Raspuchin Gregory]";
-			mes "12 + 23 + 34 + 45 = ?";
+			mes("[Raspuchin Gregory]");
+			mes("12 + 23 + 34 + 45 = ?");
 			next;
 			input .@input;
 			if (.@input != 114) .@w_point += 1;
-			mes "[Raspuchin Gregory]";
-			mes "1000 - 36 - 227 - 348 = ?";
+			mes("[Raspuchin Gregory]");
+			mes("1000 - 36 - 227 - 348 = ?");
 			next;
 			input .@input;
 			if (.@input != 389) .@w_point += 1;
-			mes "[Raspuchin Gregory]";
-			mes "14 * 17 * 3 = ?";
+			mes("[Raspuchin Gregory]");
+			mes("14 * 17 * 3 = ?");
 			next;
 			input .@input;
 			if (.@input != 714) .@w_point += 1;
-			mes "[Raspuchin Gregory]";
-			mes "9765 / 3 / 5 / 7 = ?";
+			mes("[Raspuchin Gregory]");
+			mes("9765 / 3 / 5 / 7 = ?");
 			next;
 			input .@input;
 			if (.@input != 93) .@w_point += 1;
-			mes "[Raspuchin Gregory]";
-			mes "(47 * 28) - (1376 / 4) = ?";
+			mes("[Raspuchin Gregory]");
+			mes("(47 * 28) - (1376 / 4) = ?");
 			next;
 			input .@input;
 			if (.@input != 972) .@w_point += 1;
-			mes "[Raspuchin Gregory]";
-			mes "(2646 / 7) + (13 * 28) = ?";
+			mes("[Raspuchin Gregory]");
+			mes("(2646 / 7) + (13 * 28) = ?");
 			next;
 			input .@input;
 			if (.@input != 742) .@w_point += 1;
-			mes "[Raspuchin Gregory]";
+			mes("[Raspuchin Gregory]");
 			mesf("How much do\r"
 				"12 %s,\r"
 				"1 %s\r"
@@ -606,7 +606,7 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 			next;
 			input .@input;
 			if (.@input != 909) .@w_point += 1;
-			mes "[Raspuchin Gregory]";
+			mes("[Raspuchin Gregory]");
 			mesf("What is the\r"
 				"total weight of\r"
 				"3 %s, 2 %s\r"
@@ -617,7 +617,7 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 			next;
 			input .@input;
 			if (.@input != 450) .@w_point += 1;
-			mes "[Raspuchin Gregory]";
+			mes("[Raspuchin Gregory]");
 			mesf("What is the\r"
 				"total defense of\r"
 				"a %s, %s,\r"
@@ -634,7 +634,7 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 			next;
 			input .@input;
 			if (.@input != 20) .@w_point += 1;
-			mes "[Raspuchin Gregory]";
+			mes("[Raspuchin Gregory]");
 			mesf("If you buy 5 %s\r"
 				"with a 24%% discount\r"
 				"and sell it at 20\r"
@@ -646,42 +646,42 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 			if (.@input != 8800) .@w_point += 1;
 			break;
 		case 2:
-			mes "[Raspuchin Gregory]";
-			mes "13 + 25 + 37 + 48 = ?";
+			mes("[Raspuchin Gregory]");
+			mes("13 + 25 + 37 + 48 = ?");
 			next;
 			input .@input;
 			if (.@input != 123) .@w_point += 1;
-			mes "[Raspuchin Gregory]";
-			mes "1000 - 58 - 214 - 416 = ?";
+			mes("[Raspuchin Gregory]");
+			mes("1000 - 58 - 214 - 416 = ?");
 			next;
 			input .@input;
 			if (.@input != 312) .@w_point += 1;
-			mes "[Raspuchin Gregory]";
-			mes "12 * 24 * 3 = ?";
+			mes("[Raspuchin Gregory]");
+			mes("12 * 24 * 3 = ?");
 			next;
 			input .@input;
 			if (.@input != 864) .@w_point += 1;
-			mes "[Raspuchin Gregory]";
-			mes "10530 / 3 / 5 / 2 = ?";
+			mes("[Raspuchin Gregory]");
+			mes("10530 / 3 / 5 / 2 = ?");
 			next;
 			input .@input;
 			if (.@input != 351) .@w_point += 1;
-			mes "[Raspuchin Gregory]";
-			mes "(35 * 19) - (1792 / 7) = ?";
+			mes("[Raspuchin Gregory]");
+			mes("(35 * 19) - (1792 / 7) = ?");
 			next;
 			input .@input;
 			if (.@input != 409) .@w_point += 1;
-			mes "[Raspuchin Gregory]";
-			mes "(2368 / 8) + (24 * 17) = ?";
+			mes("[Raspuchin Gregory]");
+			mes("(2368 / 8) + (24 * 17) = ?");
 			next;
 			input .@input;
 			if (.@input != 704) .@w_point += 1;
-			mes "[Raspuchin Gregory]";
-			mes "(2646 / 7) + (13 * 28) = ?";
+			mes("[Raspuchin Gregory]");
+			mes("(2646 / 7) + (13 * 28) = ?");
 			next;
 			input .@input;
 			if (.@input != 742) .@w_point += 1;
-			mes "[Raspuchin Gregory]";
+			mes("[Raspuchin Gregory]");
 			mesf("What is the\r"
 				"total price of\r"
 				"15 %s,\r"
@@ -694,7 +694,7 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 			next;
 			input .@input;
 			if (.@input != 934) .@w_point += 1;
-			mes "[Raspuchin Gregory]";
+			mes("[Raspuchin Gregory]");
 			mesf("What is the\r"
 				"total weight of\r"
 				"3 %s,\r"
@@ -705,7 +705,7 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 			next;
 			input .@input;
 			if (.@input != 550) .@w_point += 1;
-			mes "[Raspuchin Gregory]";
+			mes("[Raspuchin Gregory]");
 			mesf("What is the\r"
 				"total defense of\r"
 				"a %s, %s,\r"
@@ -722,7 +722,7 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 			next;
 			input .@input;
 			if (.@input != 16) .@w_point += 1;
-			mes "[Raspuchin Gregory]";
+			mes("[Raspuchin Gregory]");
 			mesf("How much profit do you\r"
 				"make if you buy %s\r"
 				"at a 24%% discount and\r"
@@ -734,37 +734,37 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 			if (.@input != 8520) .@w_point += 1;
 			break;
 		case 3:
-			mes "[Raspuchin Gregory]";
-			mes "12 + 23 + 34 + 45 = ?";
+			mes("[Raspuchin Gregory]");
+			mes("12 + 23 + 34 + 45 = ?");
 			next;
 			input .@input;
 			if (.@input != 114) .@w_point += 1;
-			mes "[Raspuchin Gregory]";
-			mes "1000 - 58 - 214 - 416 = ?";
+			mes("[Raspuchin Gregory]");
+			mes("1000 - 58 - 214 - 416 = ?");
 			next;
 			input .@input;
 			if (.@input != 312) .@w_point += 1;
-			mes "[Raspuchin Gregory]";
-			mes "14 * 17 * 3 = ?";
+			mes("[Raspuchin Gregory]");
+			mes("14 * 17 * 3 = ?");
 			next;
 			input .@input;
 			if (.@input != 714) .@w_point += 1;
-			mes "[Raspuchin Gregory]";
-			mes "10530 / 3 / 5 / 2 = ?";
+			mes("[Raspuchin Gregory]");
+			mes("10530 / 3 / 5 / 2 = ?");
 			next;
 			input .@input;
 			if (.@input != 351) .@w_point += 1;
-			mes "[Raspuchin Gregory]";
-			mes "(47 * 28) - (1376 / 4) = ?";
+			mes("[Raspuchin Gregory]");
+			mes("(47 * 28) - (1376 / 4) = ?");
 			next;
 			input .@input;
 			if (.@input != 972) .@w_point += 1;
-			mes "[Raspuchin Gregory]";
-			mes "(2646 / 7) + (13 * 28) = ?";
+			mes("[Raspuchin Gregory]");
+			mes("(2646 / 7) + (13 * 28) = ?");
 			next;
 			input .@input;
 			if (.@input != 742) .@w_point += 1;
-			mes "[Raspuchin Gregory]";
+			mes("[Raspuchin Gregory]");
 			mesf("What is the\r"
 				"total cost of\r"
 				"6 %s,\r"
@@ -777,7 +777,7 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 			next;
 			input .@input;
 			if (.@input != 798) .@w_point += 1;
-			mes "[Raspuchin Gregory]";
+			mes("[Raspuchin Gregory]");
 			mesf("What is the\r"
 				"total weight of\r"
 				"2 %s,\r"
@@ -788,7 +788,7 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 			next;
 			input .@input;
 			if (.@input != 480) .@w_point += 1;
-			mes "[Raspuchin Gregory]";
+			mes("[Raspuchin Gregory]");
 			mesf("What is the\r"
 				"total defense of\r"
 				"a %s, %s, %s, %s, %s, %s, and %s?",
@@ -802,7 +802,7 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 			next;
 			input .@input;
 			if (.@input != 12) .@w_point += 1;
-			mes "[Raspuchin Gregory]";
+			mes("[Raspuchin Gregory]");
 			mesf("If you buy 4 Padded Armors\r"
 				"at a 24%% discount and sell\r"
 				"them at 20%% of the original\r"
@@ -814,197 +814,197 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 			if (.@input != 7680) .@w_point += 1;
 		}
 		if (.@w_point == 0) {
-			mes "[Raspuchin Gregory]";
-			mes "Ooh...";
-			mes "Excellent! Great!";
-			mes "You got them all correct!?";
-			mes "Keheheh, I have no choice but to acknowledge you...";
+			mes("[Raspuchin Gregory]");
+			mes("Ooh...");
+			mes("Excellent! Great!");
+			mes("You got them all correct!?");
+			mes("Keheheh, I have no choice but to acknowledge you...");
 			next;
 		}
 		else if (.@w_point == 1) {
-			mes "[Raspuchin Gregory]";
-			mes "You got one wrong!";
-			mes "But I'll let it slide.";
-			mes "You pass the interview!";
+			mes("[Raspuchin Gregory]");
+			mes("You got one wrong!");
+			mes("But I'll let it slide.");
+			mes("You pass the interview!");
 			next;
 		}
 		else if (.@w_point == 2 && ALCH_Q == 5) {
-			mes "[Raspuchin Gregory]";
-			mes "You've got serious\r"
+			mes("[Raspuchin Gregory]");
+			mes("You've got serious\r"
 				"weaknesses in math,\r"
-				"but I'll let you go this time...";
+				"but I'll let you go this time...");
 			next;
 		}
 		else {
 			ALCH_Q = 5;
-			mes "[Raspuchin Gregory]";
-			mes "Keheheh! Idiot!";
-			mes "Just listening to your\r"
+			mes("[Raspuchin Gregory]");
+			mes("Keheheh! Idiot!");
+			mes("Just listening to your\r"
 				"answers is making me feel\r"
 				"stupider! You might as well\r"
-				"have got them all wrong!";
+				"have got them all wrong!");
 			next;
-			mes "[Raspuchin Gregory]";
-			mes "How can a person that\r"
+			mes("[Raspuchin Gregory]");
+			mes("How can a person that\r"
 				"can't even answer all of\r"
 				"these simple questions think\r"
-				"of becoming an Alchemist?!";
+				"of becoming an Alchemist?!");
 			next;
-			mes "[Raspuchin Gregory]";
-			mes "Hm...?";
-			mes "Did you get\r"
-				"any right?";
+			mes("[Raspuchin Gregory]");
+			mes("Hm...?");
+			mes("Did you get\r"
+				"any right?");
 			next;
-			mes "[Raspuchin Gregory]";
-			mes "Fool! Even if you make one little mistake, everything goes wrong\r"
-				"in Alchemy! Now get out of here!";
-			mes "You make me sick!";
+			mes("[Raspuchin Gregory]");
+			mes("Fool! Even if you make one little mistake, everything goes wrong\r"
+				"in Alchemy! Now get out of here!");
+			mes("You make me sick!");
 			close;
 		}
-		mes "[Raspuchin Gregory]";
-		mes "So hurry up, become an Alchemist, do some good research, and you might turn out to be of some "
-			"help to me. Hahahahahaha~!";
+		mes("[Raspuchin Gregory]");
+		mes("So hurry up, become an Alchemist, do some good research, and you might turn out to be of some "
+			"help to me. Hahahahahaha~!");
 		next;
-		mes "[Raspuchin Gregory]";
-		mes "Now go to Darwin!";
-		mes "He'll teach you how to do the experiments. Just tell him that\r"
-			"I sent you.";
+		mes("[Raspuchin Gregory]");
+		mes("Now go to Darwin!");
+		mes("He'll teach you how to do the experiments. Just tell him that\r"
+			"I sent you.");
 		ALCH_Q = 6;
 		changequest 2031,2032;
 		close;
 	}
 	else if (ALCH_Q == 6) {
-		mes "What are you doing?";
-		mes "Go and find Darwin now.";
+		mes("What are you doing?");
+		mes("Go and find Darwin now.");
 		next;
-		mes "[Raspuchin Gregory]";
-		mes "Keheheheheheheheh~";
-		mes "Don't think this is the end of it!";
+		mes("[Raspuchin Gregory]");
+		mes("Keheheheheheheheh~");
+		mes("Don't think this is the end of it!");
 		close;
 	}
-	mes "Keheheheheheheheh~";
-	mes "Don't think this is the end of it!";
+	mes("Keheheheheheheheh~");
+	mes("Don't think this is the end of it!");
 	close;
 }
 
 alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 	if (checkweight(Knife,1) == 0) {
-		mes "- Wait a minute! -";
-		mes "- Currently you are carrying -";
-		mes "- too many items with you. -";
-		mes "- Please come back again -";
-		mes "- after you store some items into kafra storage. -";
+		mes("- Wait a minute! -");
+		mes("- Currently you are carrying -");
+		mes("- too many items with you. -");
+		mes("- Please come back again -");
+		mes("- after you store some items into kafra storage. -");
 		close;
 	}
-	mes "[Darwin]";
+	mes("[Darwin]");
 	if (BaseJob != Job_Merchant) {
 		if (BaseJob == Job_Alchemist) {
-			mes "Ah...";
-			mes "You...";
-			mes "You've become\r"
-				"an Alchemist.";
+			mes("Ah...");
+			mes("You...");
+			mes("You've become\r"
+				"an Alchemist.");
 			next;
-			mes "[Darwin]";
-			mes "Remember...";
-			mes "In your quest\r"
+			mes("[Darwin]");
+			mes("Remember...");
+			mes("In your quest\r"
 				"to make your\r"
 				"dreams come true,\r"
 				"do not lose what\r"
-				"you cherish.";
+				"you cherish.");
 			next;
-			mes "[Darwin]";
-			mes "Ah...";
-			mes "Harmona...";
-			mes "My love...";
+			mes("[Darwin]");
+			mes("Ah...");
+			mes("Harmona...");
+			mes("My love...");
 			close;
 		}
 		else {
-			mes "When you have\r"
+			mes("When you have\r"
 				"your dreams, you\r"
-				"have everything.";
-			mes "Without them, you have\r"
-				"nothing more to lose.";
+				"have everything.");
+			mes("Without them, you have\r"
+				"nothing more to lose.");
 			next;
-			mes "[Darwin]";
-			mes "These cursed eyes...";
-			mes "They've lost sight of\r"
-				"my dreams a long time ago.";
-			mes "Ha ha ha ha...";
+			mes("[Darwin]");
+			mes("These cursed eyes...");
+			mes("They've lost sight of\r"
+				"my dreams a long time ago.");
+			mes("Ha ha ha ha...");
 			next;
-			mes "[Darwin]";
-			mes "Does paradise\r"
-				"really exist...?";
-			mes "Not without my love...\r"
-				"Not without Harmona...";
+			mes("[Darwin]");
+			mes("Does paradise\r"
+				"really exist...?");
+			mes("Not without my love...\r"
+				"Not without Harmona...");
 			close;
 		}
 	}
 	if (ALCH_Q == 6) {
-		mes "...";
+		mes("...");
 		next;
-		mes "[Darwin]";
-		mes "...";
-		mes "......";
+		mes("[Darwin]");
+		mes("...");
+		mes("......");
 		next;
-		mes "[Darwin]";
-		mes "...";
-		mes "......";
-		mes "Who is it...?";
+		mes("[Darwin]");
+		mes("...");
+		mes("......");
+		mes("Who is it...?");
 		next;
 		monster("alde_alche", 13, 15, getmonsterinfo(WOLF, MOB_NAME), WOLF, 1);
 		killmonsterall "alde_alche";
-		mes "[Darwin]";
-		mes "A wolf?";
-		mes "Or a human?";
-		mes "You must be seeking\r"
-			"something, are you not?";
+		mes("[Darwin]");
+		mes("A wolf?");
+		mes("Or a human?");
+		mes("You must be seeking\r"
+			"something, are you not?");
 		next;
-		mes "[Darwin]";
-		mes "After all...";
-		mes "Everyone has desires\r"
-			"to fulfill. Be be careful.";
-		mes "Do not be like the wild\r"
-			"wolf drawn to the flowers.";
+		mes("[Darwin]");
+		mes("After all...");
+		mes("Everyone has desires\r"
+			"to fulfill. Be be careful.");
+		mes("Do not be like the wild\r"
+			"wolf drawn to the flowers.");
 		next;
-		mes "[Darwin]";
-		mes "In your efforts to gain something else, you may end up sacrificing something precious to you.";
+		mes("[Darwin]");
+		mes("In your efforts to gain something else, you may end up sacrificing something precious to you.");
 		next;
-		mes "[Darwin]";
-		mes "Cultivating joy and happiness\r"
-			"is much like cultivating flowers.";
-		mes "If something is missing, the\r"
-			"flower will wilt away...";
+		mes("[Darwin]");
+		mes("Cultivating joy and happiness\r"
+			"is much like cultivating flowers.");
+		mes("If something is missing, the\r"
+			"flower will wilt away...");
 		next;
-		mes "[Darwin]";
-		mes "What brings you\r"
-			"to this kind of place?";
+		mes("[Darwin]");
+		mes("What brings you\r"
+			"to this kind of place?");
 		next;
 		switch (select("I want to learn how to experiment.", "Tell me more about flowers.", "Nothing.")) {
 		case 1:
-			mes "[Darwin]";
-			mes "You wish to\r"
-				"learn Alchemy?";
-			mes "Everything I know,\r"
+			mes("[Darwin]");
+			mes("You wish to\r"
+				"learn Alchemy?");
+			mes("Everything I know,\r"
 				"I've learned for the\r"
 				"sake of making my\r"
-				"dream come true...";
+				"dream come true...");
 			next;
-			mes "[Darwin]";
-			mes "I'll teach\r"
-				"you the basics...";
-			mes "But everything you\r"
+			mes("[Darwin]");
+			mes("I'll teach\r"
+				"you the basics...");
+			mes("But everything you\r"
 				"learn afterwards must\r"
 				"be directed through\r"
-				"your own motivations.";
+				"your own motivations.");
 			next;
-			mes "[Darwin]";
-			mes "I will teach you\r"
+			mes("[Darwin]");
+			mes("I will teach you\r"
 				"how to make simple\r"
 				"medicine. So please\r"
 				"bring the following\r"
-				"materials right away.";
+				"materials right away.");
 			next;
-			mes "[Darwin]";
+			mes("[Darwin]");
 			mesf("^551A8B3 %s^000000,", getitemname(Medicine_Bowl));
 			mesf("^551A8B3 %s^000000,", getitemname(Empty_Bottle));
 			mesf("^551A8B1 %s^000000,", getitemname(Red_Herb));
@@ -1013,216 +1013,216 @@ alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 			ALCH_Q = 7;
 			changequest 2032,2033;
 			next;
-			mes "[Darwin]";
-			mes "Once you have\r"
+			mes("[Darwin]");
+			mes("Once you have\r"
 				"prepared everything,\r"
-				"return to me.";
+				"return to me.");
 			close;
 		case 2:
-			mes "[Darwin]";
-			mes "Flowers...?";
-			mes "In the darkest\r"
+			mes("[Darwin]");
+			mes("Flowers...?");
+			mes("In the darkest\r"
 				"recesses of my mind,\r"
 				"there is a blossum\r"
-				"that I faintly remember...";
+				"that I faintly remember...");
 			next;
-			mes "[Darwin]";
-			mes "For the one that\r"
+			mes("[Darwin]");
+			mes("For the one that\r"
 				"I love, I put all\r"
 				"of my efforts into\r"
-				"researching that one thing.";
+				"researching that one thing.");
 			next;
-			mes "[Darwin]";
-			mes "I won't tell you the details,\r"
+			mes("[Darwin]");
+			mes("I won't tell you the details,\r"
 				"but I was basically researching\r"
 				"the relationship between\r"
-				"wolves and flowers.";
+				"wolves and flowers.");
 			next;
-			mes "[Darwin]";
-			mes "But yes...";
-			mes "It was a flower.";
-			mes "With its shine, it was said\r"
-				"to let you see paradise.";
+			mes("[Darwin]");
+			mes("But yes...");
+			mes("It was a flower.");
+			mes("With its shine, it was said\r"
+				"to let you see paradise.");
 			mesf("The ^551A8B%s^000000...", getitemname(Illusion_Flower));
 			next;
-			mes "[Darwin]";
-			mes "I even made";
-			mes "a Homunculus,";
-			mes "but no one believed that I could create new life from a flower...";
+			mes("[Darwin]");
+			mes("I even made");
+			mes("a Homunculus,");
+			mes("but no one believed that I could create new life from a flower...");
 			next;
-			mes "[Darwin]";
-			mes "Then...";
-			mes "Well, some other things happened, and now I have nothing left. Time no longer has any meaning for me.";
+			mes("[Darwin]");
+			mes("Then...");
+			mes("Well, some other things happened, and now I have nothing left. Time no longer has any meaning for me.");
 			next;
-			mes "[Darwin]";
-			mes "Ahh...";
-			mes "Harmona...";
-			mes "Where have you gone?";
-			mes "I hope you're in a field";
-			mes "of beautiful flowers...";
+			mes("[Darwin]");
+			mes("Ahh...");
+			mes("Harmona...");
+			mes("Where have you gone?");
+			mes("I hope you're in a field");
+			mes("of beautiful flowers...");
 			close;
 		case 3:
-			mes "[Darwin]";
-			mes "Consider what";
-			mes "is most precious";
-			mes "to you. It cannot";
-			mes "be protected if you";
-			mes "do not recognize it.";
+			mes("[Darwin]");
+			mes("Consider what");
+			mes("is most precious");
+			mes("to you. It cannot");
+			mes("be protected if you");
+			mes("do not recognize it.");
 			close;
 		}
 	}
 	else if (ALCH_Q == 7) {
-		mes "...";
-		mes "......";
+		mes("...");
+		mes("......");
 		next;
-		mes "[Darwin]";
-		mes "...";
-		mes "......";
-		mes "Who is it...?";
+		mes("[Darwin]");
+		mes("...");
+		mes("......");
+		mes("Who is it...?");
 		next;
-		mes "[Darwin]";
-		mes "Ah...";
-		mes "You are the one who\r"
-			"wishes to learn Alchemy.";
-		mes "Have you prepared everything?";
+		mes("[Darwin]");
+		mes("Ah...");
+		mes("You are the one who\r"
+			"wishes to learn Alchemy.");
+		mes("Have you prepared everything?");
 		next;
 		if (countitem(Illusion_Flower) > 0) {
-			mes "[Darwin]";
-			mes "Wait.";
+			mes("[Darwin]");
+			mes("Wait.");
 			mesf("That %s.", getitemname(Illusion_Flower));
-			mes "How did you get that?";
+			mes("How did you get that?");
 			next;
-			mes "[Darwin]";
-			mes "Where did you find it?!";
-			mes "The flower that slowly\r"
+			mes("[Darwin]");
+			mes("Where did you find it?!");
+			mes("The flower that slowly\r"
 				"blooms under the\r"
-				"moonlight?";
-			mes "It's beautiful...!";
+				"moonlight?");
+			mes("It's beautiful...!");
 			next;
-			mes "[Darwin]";
-			mes "Th-That flower...";
-			mes "Please let me see it.";
+			mes("[Darwin]");
+			mes("Th-That flower...");
+			mes("Please let me see it.");
 			mesf("The %s!", getitemname(Illusion_Flower));
-			mes "Uwaaaaaaah!!";
+			mes("Uwaaaaaaah!!");
 			next;
-			mes "[Darwin]";
-			mes "Would you be so kind\r"
-				"as to let me have this flower?";
-			mes "I'm sure that this is the Moonlight Flower that I've been seeking!";
+			mes("[Darwin]");
+			mes("Would you be so kind\r"
+				"as to let me have this flower?");
+			mes("I'm sure that this is the Moonlight Flower that I've been seeking!");
 			next;
 			if (select("Sorry, I can't give it to you.", "I brought it to give to you.") == 1) {
-				mes "[Darwin]";
-				mes "I understand.";
-				mes "You can't give\r"
+				mes("[Darwin]");
+				mes("I understand.");
+				mes("You can't give\r"
 					"such a precious\r"
-					"flower to just anyone.";
-				mes "Well... It's okay.";
+					"flower to just anyone.");
+				mes("Well... It's okay.");
 				next;
-				mes "[Darwin]";
-				mes "It just brought back old memories. I shouldn't have asked in the first place. In "
-					"any case, please bring what is needed for the experiment.";
+				mes("[Darwin]");
+				mes("It just brought back old memories. I shouldn't have asked in the first place. In "
+					"any case, please bring what is needed for the experiment.");
 				next;
-				mes "[Darwin]";
-				mes "Please leave that flower\r"
+				mes("[Darwin]");
+				mes("Please leave that flower\r"
 					"somewhere else. It brings\r"
-					"back too many memories...";
+					"back too many memories...");
 				close;
 			}
-			mes "[Darwin]";
-			mes "Are you\r"
-				"serious?!";
-			mes "Thank you!";
-			mes "Such a precious flower.";
-			mes "Ah, Harmona, my love...";
+			mes("[Darwin]");
+			mes("Are you\r"
+				"serious?!");
+			mes("Thank you!");
+			mes("Such a precious flower.");
+			mes("Ah, Harmona, my love...");
 			next;
-			mes "[Darwin]";
-			mes "Yes...";
-			mes "I shall repay you for this.";
-			mes "I shall plant all of my knowledge of Alchemy directly into your mind...";
+			mes("[Darwin]");
+			mes("Yes...");
+			mes("I shall repay you for this.");
+			mes("I shall plant all of my knowledge of Alchemy directly into your mind...");
 			next;
-			mes "[Darwin]";
-			mes "Open your eyes wide,\r"
-				"and look into my eyes!!";
-			mes "Don't stop until the end!!";
+			mes("[Darwin]");
+			mes("Open your eyes wide,\r"
+				"and look into my eyes!!");
+			mes("Don't stop until the end!!");
 			next;
-			mes "Lorem ipsum dolor sit amet,";
+			mes("Lorem ipsum dolor sit amet,");
 			next;
-			mes "Lorem ipsum dolor sit amet,\r"
-				"consectetuer adipiscing elit.";
+			mes("Lorem ipsum dolor sit amet,\r"
+				"consectetuer adipiscing elit.");
 			next;
-			mes "Lorem ipsum dolor sit amet,\r"
-				"consectetuer adipiscing elit.";
-			mes "Aenean fermentum ullamcorper.";
+			mes("Lorem ipsum dolor sit amet,\r"
+				"consectetuer adipiscing elit.");
+			mes("Aenean fermentum ullamcorper.");
 			next;
-			mes "Lorem ipsum dolor sit amet,\r"
-				"consectetuer adipiscing elit.";
-			mes "Aenean fermentum ullamcorper.";
-			mes "Vestibulum ante ipsum primis in";
+			mes("Lorem ipsum dolor sit amet,\r"
+				"consectetuer adipiscing elit.");
+			mes("Aenean fermentum ullamcorper.");
+			mes("Vestibulum ante ipsum primis in");
 			next;
-			mes "Lorem ipsum dolor sit amet,\r"
-				"consectetuer adipiscing elit.";
-			mes "Aenean fermentum ullamcorper.";
-			mes "Vestibulum ante ipsum primis in\r"
-				"faucibus orci luctus et ultrices";
+			mes("Lorem ipsum dolor sit amet,\r"
+				"consectetuer adipiscing elit.");
+			mes("Aenean fermentum ullamcorper.");
+			mes("Vestibulum ante ipsum primis in\r"
+				"faucibus orci luctus et ultrices");
 			next;
-			mes "Lorem ipsum dolor sit amet,\r"
-				"consectetuer adipiscing elit.";
-			mes "Aenean fermentum ullamcorper.";
-			mes "Vestibulum ante ipsum primis in\r"
+			mes("Lorem ipsum dolor sit amet,\r"
+				"consectetuer adipiscing elit.");
+			mes("Aenean fermentum ullamcorper.");
+			mes("Vestibulum ante ipsum primis in\r"
 				"faucibus orci luctus et ultrices\r"
-				"posuere cubilia Curae; Morbi";
+				"posuere cubilia Curae; Morbi");
 			next;
-			mes "Lorem ipsum dolor sit amet,\r"
-				"consectetuer adipiscing elit.";
-			mes "Aenean fermentum ullamcorper.";
-			mes "Vestibulum ante ipsum primis in\r"
+			mes("Lorem ipsum dolor sit amet,\r"
+				"consectetuer adipiscing elit.");
+			mes("Aenean fermentum ullamcorper.");
+			mes("Vestibulum ante ipsum primis in\r"
 				"faucibus orci luctus et ultrices\r"
 				"posuere cubilia Curae; Morbi\r"
-				"massa, fermentum vitae...";
+				"massa, fermentum vitae...");
 			next;
 			delitem Illusion_Flower,1;
-			mes "[Darwin]";
-			mes "^666666*Gasp...*^000000";
-			mes "You are now\r"
-				"an Alchemist!!";
-			mes "Go to the Union\r"
+			mes("[Darwin]");
+			mes("^666666*Gasp...*^000000");
+			mes("You are now\r"
+				"an Alchemist!!");
+			mes("Go to the Union\r"
 				"and cast away the last\r"
-				"vestiges of Merchant life!!";
+				"vestiges of Merchant life!!");
 			ALCH_Q = 40;
 			changequest 2033,2034;
 			close;
 		}
 		else if (countitem(Medicine_Bowl) > 2 && countitem(Empty_Bottle) > 2 && countitem(Red_Herb) > 0 && countitem(Yellow_Herb) > 0 && countitem(White_Herb) > 0) {
-			mes "[Darwin]";
-			mes "Seems like you have everything ready. As promised, I will teach you how to make simple "
-				"medicine.";
+			mes("[Darwin]");
+			mes("Seems like you have everything ready. As promised, I will teach you how to make simple "
+				"medicine.");
 			next;
-			mes "[Darwin]";
+			mes("[Darwin]");
 			mesf("First, prepare the %s. Then, you put the Herbs inside, like this, and slowly "
 				"crush them.",
 				getitemname(Medicine_Bowl));
 			next;
-			mes "[Darwin]";
-			mes "Pour small amounts\r"
+			mes("[Darwin]");
+			mes("Pour small amounts\r"
 				"of clean water and stir\r"
-				"the mixture until it thickens.";
-			mes "Afterwards, add some more Herbs.";
+				"the mixture until it thickens.");
+			mes("Afterwards, add some more Herbs.");
 			next;
-			mes "[Darwin]";
-			mes "That's how you make it. If you think you have enough, gently pour the mixture into an "
-				"empty bottle.";
+			mes("[Darwin]");
+			mes("That's how you make it. If you think you have enough, gently pour the mixture into an "
+				"empty bottle.");
 			delitem Medicine_Bowl,3;
 			delitem Empty_Bottle,3;
 			delitem Red_Herb,1;
 			delitem Yellow_Herb,1;
 			delitem White_Herb,1;
 			next;
-			mes "[Darwin]";
-			mes "There you go,\r"
-				"it's complete.";
-			mes "Now, make some medicine\r"
+			mes("[Darwin]");
+			mes("There you go,\r"
+				"it's complete.");
+			mes("Now, make some medicine\r"
 				"using the simple procedure\r"
-				"I just explained to you.";
+				"I just explained to you.");
 			.@w_point = 0;
 			next;
 			switch (select(sprintf(_$("Prepare the %s."), getitemname(Medicine_Bowl)),
@@ -1232,14 +1232,14 @@ alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 				break;
 			case 2:
 				++.@w_point;
-				mes "[Darwin]";
-				mes "What...?";
+				mes("[Darwin]");
+				mes("What...?");
 				next;
 				break;
 			case 3:
 				++.@w_point;
-				mes "[Darwin]";
-				mes "No!";
+				mes("[Darwin]");
+				mes("No!");
 				next;
 				break;
 			}
@@ -1248,20 +1248,20 @@ alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 					sprintf(_$("Put a Harp in the %s."), getitemname(Medicine_Bowl)))) {
 			case 1:
 				++.@w_point;
-				mes "[Darwin]";
-				mes "...Eh!?";
-				mes "That's not\r"
-					"medicine!";
+				mes("[Darwin]");
+				mes("...Eh!?");
+				mes("That's not\r"
+					"medicine!");
 				next;
 				break;
 			case 2:
 				break;
 			case 3:
 				++.@w_point;
-				mes "[Darwin]";
-				mes "A Harp?";
-				mes "And how would\r"
-					"you do that?";
+				mes("[Darwin]");
+				mes("A Harp?");
+				mes("And how would\r"
+					"you do that?");
 				next;
 				break;
 			}
@@ -1272,18 +1272,18 @@ alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 				break;
 			case 2:
 				++.@w_point;
-				mes "[Darwin]";
-				mes "Wh-What are\r"
-					"you doing!?";
+				mes("[Darwin]");
+				mes("Wh-What are\r"
+					"you doing!?");
 				next;
 				break;
 			case 3:
 				++.@w_point;
-				mes "[Darwin]";
-				mes "Agh...!";
-				mes "What do you\r"
+				mes("[Darwin]");
+				mes("Agh...!");
+				mes("What do you\r"
 					"think you're\r"
-					"doing?!";
+					"doing?!");
 				next;
 				break;
 			}
@@ -1292,17 +1292,17 @@ alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 					"Pour clean water.")) {
 			case 1:
 				++.@w_point;
-				mes "[Darwin]";
-				mes "Huh?";
-				mes "What are you doing?";
+				mes("[Darwin]");
+				mes("Huh?");
+				mes("What are you doing?");
 				next;
 				break;
 			case 2:
 				++.@w_point;
-				mes "[Darwin]";
-				mes "W-wait...";
-				mes "Are you\r"
-					"taking a break?";
+				mes("[Darwin]");
+				mes("W-wait...");
+				mes("Are you\r"
+					"taking a break?");
 				next;
 				break;
 			case 3:
@@ -1315,20 +1315,20 @@ alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 				break;
 			case 2:
 				++.@w_point;
-				mes "[Darwin]";
-				mes "Eat the Herbs?";
-				mes "I think you need\r"
+				mes("[Darwin]");
+				mes("Eat the Herbs?");
+				mes("I think you need\r"
 					"to focus on the\r"
-					"task at hand...";
+					"task at hand...");
 				next;
 				break;
 			case 3:
 				++.@w_point;
-				mes "[Darwin]";
-				mes "Singing and\r"
+				mes("[Darwin]");
+				mes("Singing and\r"
 					"dancing? Alchemists\r"
 					"don't do that, have\r"
-					"you gone crazy?";
+					"you gone crazy?");
 				next;
 				break;
 			}
@@ -1337,256 +1337,256 @@ alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 					sprintf(_$("Hold the %s and drink it."), getitemname(Medicine_Bowl)))) {
 			case 1:
 				++.@w_point;
-				mes "[Darwin]";
-				mes "We're Alchemists,\r"
-					"not restaurant chefs.";
+				mes("[Darwin]");
+				mes("We're Alchemists,\r"
+					"not restaurant chefs.");
 				next;
 				break;
 			case 2:
 				break;
 			case 3:
 				++.@w_point;
-				mes "[Darwin]";
-				mes "Huh...";
-				mes "Pretty sloppy...";
+				mes("[Darwin]");
+				mes("Huh...");
+				mes("Pretty sloppy...");
 				next;
 				break;
 			}
 			if (.@w_point > 0) {
-				mes "[Darwin]";
-				mes "...";
-				mes "......";
+				mes("[Darwin]");
+				mes("...");
+				mes("......");
 				next;
-				mes "[Darwin]";
-				mes "You messed up the mixture\r"
+				mes("[Darwin]");
+				mes("You messed up the mixture\r"
 					"since you didn't follow the procedure! Get some more ingredients so you can "
-					"try it again until you get it right.";
+					"try it again until you get it right.");
 				close;
 			}
 			getitem Red_Potion,1;
 			getitem Yellow_Potion,1;
 			getitem White_Potion,1;
-			mes "[Darwin]";
-			mes "Good job.";
-			mes "It came out pretty well considering it's your first time. Go ahead and keep the medicines "
-				"that you've just made.";
+			mes("[Darwin]");
+			mes("Good job.");
+			mes("It came out pretty well considering it's your first time. Go ahead and keep the medicines "
+				"that you've just made.");
 			ALCH_Q = 8;
 			changequest 2033,2035;
 			next;
-			mes "[Darwin]";
-			mes "Now, go into the next room\r"
+			mes("[Darwin]");
+			mes("Now, go into the next room\r"
 				"and speak to Van Helmont to\r"
-				"continue your training.";
+				"continue your training.");
 			next;
-			mes "[Darwin]";
-			mes "Never forget...";
-			mes "You must always protect\r"
-				"what is most precious to you.";
+			mes("[Darwin]");
+			mes("Never forget...");
+			mes("You must always protect\r"
+				"what is most precious to you.");
 			close;
 		}
 		else {
-			mes "[Darwin]";
-			mes "Have you forgotten\r"
-				"what you need to bring?";
-			mes "Let me remind you once\r"
+			mes("[Darwin]");
+			mes("Have you forgotten\r"
+				"what you need to bring?");
+			mes("Let me remind you once\r"
 				"again. You must come\r"
-				"back with...";
+				"back with...");
 			next;
-			mes "[Darwin]";
+			mes("[Darwin]");
 			mesf("^551A8B3 %s^000000,", getitemname(Medicine_Bowl));
 			mesf("^551A8B3 %s^000000,", getitemname(Empty_Bottle));
 			mesf("^551A8B1 %s^000000,", getitemname(Red_Herb));
 			mesf("^551A8B1 %s^000000 and", getitemname(Yellow_Herb));
 			mesf("^551A8B1 %s^000000.", getitemname(White_Herb));
 			next;
-			mes "[Darwin]";
-			mes "Come back\r"
+			mes("[Darwin]");
+			mes("Come back\r"
 				"when you are\r"
-				"ready...";
+				"ready...");
 			close;
 		}
 	}
 	else if (ALCH_Q == 8) {
-		mes "I said to go\r"
-			"to Van Helmont.";
-		mes "I'd like to teach you\r"
-			"more, but I can't.";
+		mes("I said to go\r"
+			"to Van Helmont.");
+		mes("I'd like to teach you\r"
+			"more, but I can't.");
 		next;
-		mes "[Darwin]";
-		mes "Aah...";
-		mes "Harmona, my love.";
-		mes "I can't even see the flower anymore. My soul quietly\r"
-			"withers as well..";
+		mes("[Darwin]");
+		mes("Aah...");
+		mes("Harmona, my love.");
+		mes("I can't even see the flower anymore. My soul quietly\r"
+			"withers as well..");
 		close;
 	}
 	else if (ALCH_Q == 40) {
-		mes "I have already given you all of my knowledge and have nothing more\r"
-			"to teach you.";
+		mes("I have already given you all of my knowledge and have nothing more\r"
+			"to teach you.");
 		next;
-		mes "[Darwin]";
-		mes "Go to the second floor and talk to speak to our Union Leader. Once\r"
-			"you do that, your life as an Alchemist will begin.";
+		mes("[Darwin]");
+		mes("Go to the second floor and talk to speak to our Union Leader. Once\r"
+			"you do that, your life as an Alchemist will begin.");
 		close;
 	}
 	else {
-		mes "When you have";
-		mes "your dreams, you\r"
-			"have everything.";
-		mes "Without them, you have\r"
-			"nothing more to lose.";
+		mes("When you have");
+		mes("your dreams, you\r"
+			"have everything.");
+		mes("Without them, you have\r"
+			"nothing more to lose.");
 		next;
-		mes "[Darwin]";
-		mes "These cursed eyes...";
-		mes "They've lost sight of\r"
-			"my dreams a long time ago.";
-		mes "Ha ha ha ha...";
+		mes("[Darwin]");
+		mes("These cursed eyes...");
+		mes("They've lost sight of\r"
+			"my dreams a long time ago.");
+		mes("Ha ha ha ha...");
 		next;
-		mes "[Darwin]";
-		mes "Does paradise\r"
-			"really exist...?";
-		mes "Not without my love...";
-		mes "Not without Harmona...";
+		mes("[Darwin]");
+		mes("Does paradise\r"
+			"really exist...?");
+		mes("Not without my love...");
+		mes("Not without Harmona...");
 		close;
 	}
 }
 
 alde_alche,79,19,5	script	Experiment Expert#am	4_M_ALCHE_A,{
-	mes "[Van Helmont]";
+	mes("[Van Helmont]");
 	if (BaseJob != Job_Merchant) {
 		if (BaseJob == Job_Alchemist) {
-			mes "What do you want?";
-			mes "I'm busy!! Don't\r"
+			mes("What do you want?");
+			mes("I'm busy!! Don't\r"
 				"bother me and get\r"
-				"on your way.";
+				"on your way.");
 			next;
-			mes "[Van Helmont]";
-			mes "Now, come on...";
-			mes "You'll never get\r"
-				"any research completed if you just slack off. Go out and learn all that you can.";
+			mes("[Van Helmont]");
+			mes("Now, come on...");
+			mes("You'll never get\r"
+				"any research completed if you just slack off. Go out and learn all that you can.");
 			next;
-			mes "[Van Helmont]";
-			mes "Reading science journals and performing experiments. That's what Alchemy is all about. "
-				"Now, let me get back to work!";
+			mes("[Van Helmont]");
+			mes("Reading science journals and performing experiments. That's what Alchemy is all about. "
+				"Now, let me get back to work!");
 			close;
 		}
 		else {
-			mes "Just a little...";
-			mes "A little bit more...";
-			mes "Nooo! Just a little\r"
+			mes("Just a little...");
+			mes("A little bit more...");
+			mes("Nooo! Just a little\r"
 				"bit more and it\r"
-				"would've been done!";
+				"would've been done!");
 			next;
-			mes "[Van Helmont]";
-			mes "Why...?!";
-			mes "Why, another failure?!";
-			mes "My calculations were\r"
-				"all correct! W-Wait...!";
+			mes("[Van Helmont]");
+			mes("Why...?!");
+			mes("Why, another failure?!");
+			mes("My calculations were\r"
+				"all correct! W-Wait...!");
 			next;
-			mes "[Van Helmont]";
-			mes "Perhaps, if I capacitated the thermal flux by using the neutronic gradient, it just might "
-				"work...!";
+			mes("[Van Helmont]");
+			mes("Perhaps, if I capacitated the thermal flux by using the neutronic gradient, it just might "
+				"work...!");
 			close;
 		}
 	}
 	if (ALCH_Q == 8) {
-		mes "Arrrrgh...!";
-		mes "Why isn't this formula working? What's wrong? In theory, it's all correct, but there must be an "
-			"error in the formula somewhere...";
+		mes("Arrrrgh...!");
+		mes("Why isn't this formula working? What's wrong? In theory, it's all correct, but there must be an "
+			"error in the formula somewhere...");
 		next;
-		mes "[Van Helmont]";
-		mes "I pour it in here, and it should stop. Wait, this is the wrong solution! How could I make such\r"
+		mes("[Van Helmont]");
+		mes("I pour it in here, and it should stop. Wait, this is the wrong solution! How could I make such\r"
 			"a dumb mistake?! When did these\r"
-			"get switched?!";
+			"get switched?!");
 		next;
-		mes "[Van Helmont]";
-		mes "Okay, okay...";
-		mes "I just need to fix this part.";
-		mes "No need to start over. I just\r"
-			"need to fix it... But wait. Wait...";
+		mes("[Van Helmont]");
+		mes("Okay, okay...");
+		mes("I just need to fix this part.");
+		mes("No need to start over. I just\r"
+			"need to fix it... But wait. Wait...");
 		next;
-		mes "[Van Helmont]";
-		mes ".................";
+		mes("[Van Helmont]");
+		mes(".................");
 		next;
-		mes "[Van Helmont]";
-		mes "Um...";
-		mes "Who are you?";
+		mes("[Van Helmont]");
+		mes("Um...");
+		mes("Who are you?");
 		next;
 		if (select("I want to become an Alchemist.", ".......") == 2) {
-			mes "[Van Helmont]";
-			mes "Hmm...?";
-			mes "What, did you just want to watch? Fine, fine, but do it quietly and leave right when "
-				"you're done.";
+			mes("[Van Helmont]");
+			mes("Hmm...?");
+			mes("What, did you just want to watch? Fine, fine, but do it quietly and leave right when "
+				"you're done.");
 			next;
-			mes "[Van Helmont]";
-			mes "Stay out of my way and don't go around touching stuff. There might be some volatile "
-				"materials, so it'd be dangerous to have any accidents.";
+			mes("[Van Helmont]");
+			mes("Stay out of my way and don't go around touching stuff. There might be some volatile "
+				"materials, so it'd be dangerous to have any accidents.");
 			close;
 		}
-		mes "[Van Helmont]";
-		mes "You...?";
-		mes "An Alchemist?";
-		mes "What a funny Merchant.";
+		mes("[Van Helmont]");
+		mes("You...?");
+		mes("An Alchemist?");
+		mes("What a funny Merchant.");
 		next;
-		mes "[Van Helmont]";
-		mes "Well, that's nice, but I have very urgent experiments that require\r"
+		mes("[Van Helmont]");
+		mes("Well, that's nice, but I have very urgent experiments that require\r"
 			"my attention, so don't get\r"
-			"in the way.";
+			"in the way.");
 		next;
 		if (select("Teach me something.", "...") == 1) {
-			mes "[Van Helmont]";
-			mes "Argh...!";
-			mes "Didn't I just tell you not to bother me? What's so hard to understand about that?";
+			mes("[Van Helmont]");
+			mes("Argh...!");
+			mes("Didn't I just tell you not to bother me? What's so hard to understand about that?");
 			next;
-			mes "[Van Helmont]";
-			mes "Fine, fine. I'll give you an assignment. Learn something\r"
-				"new and come back. Let's see.";
-			mes "What would be good...";
+			mes("[Van Helmont]");
+			mes("Fine, fine. I'll give you an assignment. Learn something\r"
+				"new and come back. Let's see.");
+			mes("What would be good...");
 			next;
-			mes "[Van Helmont]";
-			mes "Okay, I got it.";
+			mes("[Van Helmont]");
+			mes("Okay, I got it.");
 			mesf("Go learn how to make\r"
 				"a %s and %s\r"
 				"from Molgenstein.",
 				getitemname(Counteragent),
 				getitemname(Mixture));
 			next;
-			mes "[Van Helmont]";
-			mes "You don't need to bring anything. Just go watch him at work and have him tell you how he "
-				"makes those solutions. Got it?";
+			mes("[Van Helmont]");
+			mes("You don't need to bring anything. Just go watch him at work and have him tell you how he "
+				"makes those solutions. Got it?");
 			next;
-			mes "[Van Helmont]";
+			mes("[Van Helmont]");
 			ALCH_Q = 9;
 			changequest 2035,2036;
-			mes "Well then, see you later.";
-			mes "You'd better get going as\r"
-				"soon as you can.";
+			mes("Well then, see you later.");
+			mes("You'd better get going as\r"
+				"soon as you can.");
 			close;
 		}
-		mes "[Van Helmont]";
-		mes "...";
+		mes("[Van Helmont]");
+		mes("...");
 		next;
-		mes "[Van Helmont]";
-		mes "...";
-		mes "......";
+		mes("[Van Helmont]");
+		mes("...");
+		mes("......");
 		next;
-		mes "[Van Helmont]";
-		mes "...";
-		mes "......";
+		mes("[Van Helmont]");
+		mes("...");
+		mes("......");
 		next;
-		mes "[Van Helmont]";
-		mes "So if I recalibrate the combustion rate of this compound, that should negate any cohesive "
-			"tendencies in this particle flux...";
+		mes("[Van Helmont]");
+		mes("So if I recalibrate the combustion rate of this compound, that should negate any cohesive "
+			"tendencies in this particle flux...");
 		next;
-		mes "[Van Helmont]";
-		mes "But what am I going to do\r"
+		mes("[Van Helmont]");
+		mes("But what am I going to do\r"
 			"about all of this spontaneous\r"
 			"crystallization?! I can't very well remove this matrix, I need it for the catalyst to reach "
-				"the triple point.";
+				"the triple point.");
 		next;
-		mes "[Van Helmont]";
-		mes "Damn!";
-		mes "What am\r"
-			"I going to do?!";
+		mes("[Van Helmont]");
+		mes("Damn!");
+		mes("What am\r"
+			"I going to do?!");
 		close;
 	}
 	else if (ALCH_Q == 9) {
@@ -1597,41 +1597,41 @@ alde_alche,79,19,5	script	Experiment Expert#am	4_M_ALCHE_A,{
 			getitemname(Sticky_Mucus),
 			getitemname(Medicine_Bowl));
 		next;
-		mes "[Van Helmont]";
-		mes "Did I use them all at a time like this?! I wonder if Nicholas has any left. Ugh, what a pain. "
-			"Wait. Wait a minute...";
+		mes("[Van Helmont]");
+		mes("Did I use them all at a time like this?! I wonder if Nicholas has any left. Ugh, what a pain. "
+			"Wait. Wait a minute...");
 		next;
-		mes "[Van Helmont]";
-		mes "...";
+		mes("[Van Helmont]");
+		mes("...");
 		next;
-		mes "[Van Helmont]";
-		mes "...";
-		mes "......";
-		mes "Who are you?";
+		mes("[Van Helmont]");
+		mes("...");
+		mes("......");
+		mes("Who are you?");
 		next;
 		if (select("I want to become an Alchemist?", ".......") == 2) {
-			mes "[Van Helmont]";
-			mes "Hmm...?";
-			mes "What, did you just want to watch? Fine, fine, but do it quietly and leave right when "
-				"you're done.";
+			mes("[Van Helmont]");
+			mes("Hmm...?");
+			mes("What, did you just want to watch? Fine, fine, but do it quietly and leave right when "
+				"you're done.");
 			next;
-			mes "[Van Helmont]";
-			mes "Stay out of my way and don't go around touching stuff. There might be some volatile "
-				"materials, so it'd be dangerous to have any accidents.";
+			mes("[Van Helmont]");
+			mes("Stay out of my way and don't go around touching stuff. There might be some volatile "
+				"materials, so it'd be dangerous to have any accidents.");
 			close;
 		}
-		mes "[Van Helmont]";
-		mes "Ah, of course. The Merchant from before. So what did you learn from Molgenstein? I didn't just "
-			"send you there for fun, you know.";
+		mes("[Van Helmont]");
+		mes("Ah, of course. The Merchant from before. So what did you learn from Molgenstein? I didn't just "
+			"send you there for fun, you know.");
 		next;
-		mes "[Van Helmont]";
-		mes "Let me ask you\r"
+		mes("[Van Helmont]");
+		mes("Let me ask you\r"
 			"some questions to\r"
 			"check what you've\r"
-			"learned.";
+			"learned.");
 		next;
 		if(MISC_QUEST & 4) {
-			mes "[Van Helmont]";
+			mes("[Van Helmont]");
 			mesf("Which item is not\r"
 				"necessary to make\r"
 				"a %s?",
@@ -1639,7 +1639,7 @@ alde_alche,79,19,5	script	Experiment Expert#am	4_M_ALCHE_A,{
 			next;
 			if (select(getitemname(Karvodailnirol), getitemname(Detrimindexta), getitemname(Alchol)) != 1)
 				.@w_point += 1;
-			mes "[Van Helmont]";
+			mes("[Van Helmont]");
 			mesf("What item is not\r"
 				"necessary to make\r"
 				"a %s?",
@@ -1648,43 +1648,43 @@ alde_alche,79,19,5	script	Experiment Expert#am	4_M_ALCHE_A,{
 			if (select(getitemname(Karvodailnirol), getitemname(Detrimindexta), getitemname(Alchol)) != 2)
 				.@w_point += 1;
 			if (.@w_point > 0) {
-				mes "[Van Helmont]";
-				mes "Weren't you listening to Molgenstein at all? Maybe you\r"
-					"have to watch him make it again.";
+				mes("[Van Helmont]");
+				mes("Weren't you listening to Molgenstein at all? Maybe you\r"
+					"have to watch him make it again.");
 				next;
-				mes "[Van Helmont]";
-				mes "If you can't tell the exact items that you need in an experiment,\r"
-					"you might end up hurting yourself!";
+				mes("[Van Helmont]");
+				mes("If you can't tell the exact items that you need in an experiment,\r"
+					"you might end up hurting yourself!");
 				close;
 			}
-			mes "[Van Helmont]";
-			mes "Good, you've learned well.";
-			mes "Okay, now you know something about experimentation. You're done here, so now I can "
-				"continue with my experiments.";
+			mes("[Van Helmont]");
+			mes("Good, you've learned well.");
+			mes("Okay, now you know something about experimentation. You're done here, so now I can "
+				"continue with my experiments.");
 			next;
-			mes "[Van Helmont]";
-			mes "Go out and find the room next\r"
-				"to this one and talk to Nicholas. He'll continue your training.";
+			mes("[Van Helmont]");
+			mes("Go out and find the room next\r"
+				"to this one and talk to Nicholas. He'll continue your training.");
 			next;
 			ALCH_Q = 20;
 			changequest 2036,2037;
-			mes "[Van Helmont]";
-			mes "What are you\r"
-				"still doing here?";
-			mes "Go! We both have\r"
+			mes("[Van Helmont]");
+			mes("What are you\r"
+				"still doing here?");
+			mes("Go! We both have\r"
 				"more important\r"
-				"things to do!";
+				"things to do!");
 			close;
 		}
 		else {
-			mes "[Van Helmont]";
+			mes("[Van Helmont]");
 			mesf("What item do\r"
 				"you need to make\r"
 				"a %s?",
 				getitemname(Counteragent));
 			next;
 			select(getitemname(Feather), getitemname(Sticky_Mucus), getitemname(Animal_Blood));
-			mes "[Van Helmont]";
+			mes("[Van Helmont]");
 			mesf("What item do\r"
 				"you need to make\r"
 				"a %s?",
@@ -1693,120 +1693,120 @@ alde_alche,79,19,5	script	Experiment Expert#am	4_M_ALCHE_A,{
 			select(getitemname(Monsters_Feed),
 				getitemname(Lip_Of_Ancient_Fish),
 				getitemname(Rotten_Bandage));
-			mes "[Van Helmont]";
-			mes "Be honest. You don't know, do you?! Didn't I say to go to Molgenstein and have him teach "
-				"you?!";
+			mes("[Van Helmont]");
+			mes("Be honest. You don't know, do you?! Didn't I say to go to Molgenstein and have him teach "
+				"you?!");
 			next;
-			mes "[Van Helmont]";
-			mes "Don't even think about coming back until you talk to him! Now stop bothering me and get "
-				"out of here!";
+			mes("[Van Helmont]");
+			mes("Don't even think about coming back until you talk to him! Now stop bothering me and get "
+				"out of here!");
 			close;
 		}
 	}
 	else if (ALCH_Q == 20) {
-		mes "What...?";
-		mes "I thought I told you to\r"
-			"talk to Nicholas next door?";
+		mes("What...?");
+		mes("I thought I told you to\r"
+			"talk to Nicholas next door?");
 		next;
-		mes "[Van Helmont]";
-		mes "I need to continue my research,\r"
-			"and you need to finish becoming an Alchemist. Come on, get moving!";
+		mes("[Van Helmont]");
+		mes("I need to continue my research,\r"
+			"and you need to finish becoming an Alchemist. Come on, get moving!");
 		close;
 	}
 	else {
-		mes "Just a little...";
-		mes "A little bit more...";
-		mes "Nooo! Just a little\r"
+		mes("Just a little...");
+		mes("A little bit more...");
+		mes("Nooo! Just a little\r"
 			"bit more and it\r"
-			"would've been done!";
+			"would've been done!");
 		next;
-		mes "[Van Helmont]";
-		mes "Why...?!";
-		mes "Why, another failure?!";
-		mes "My calculations were\r"
-			"all correct! Wait...";
+		mes("[Van Helmont]");
+		mes("Why...?!");
+		mes("Why, another failure?!");
+		mes("My calculations were\r"
+			"all correct! Wait...");
 		next;
-		mes "[Van Helmont]";
-		mes "Perhaps, if I capacitated the thermal flux by using the neutronic gradient, it just might "
-			"work...";
+		mes("[Van Helmont]");
+		mes("Perhaps, if I capacitated the thermal flux by using the neutronic gradient, it just might "
+			"work...");
 		close;
 	}
 }
 
 alde_alche,101,184,4	script	Master Alchemist#am	2_M_DYEINGER,{
 	cutin "job_alche_vincent",2;
-	mes "[Vincent Carsciallo]";
+	mes("[Vincent Carsciallo]");
 	if (Upper == 1) {
-		mes "You have transcended...";
-		mes "Excellent, excellent.";
+		mes("You have transcended...");
+		mes("Excellent, excellent.");
 		next;
-		mes "[Vincent Carsciallo]";
-		mes "You don't belong here.";
-		mes "Go and explore the wide world, my friend.";
+		mes("[Vincent Carsciallo]");
+		mes("You don't belong here.");
+		mes("Go and explore the wide world, my friend.");
 		close2;
 		cutin "",255;
 		end;
 	}
 	if (BaseJob != Job_Merchant) {
 		if (BaseJob == Job_Alchemist) {
-			mes "Welcome!";
-			mes "So how is your\r"
-				"research coming along?";
+			mes("Welcome!");
+			mes("So how is your\r"
+				"research coming along?");
 			next;
-			mes "[Vincent Carsciallo]";
-			mes "At times you get results that are unexpected from an experiment. Although these may be "
-				"setbacks in your research, such results can also lead to new discoveries.";
+			mes("[Vincent Carsciallo]");
+			mes("At times you get results that are unexpected from an experiment. Although these may be "
+				"setbacks in your research, such results can also lead to new discoveries.");
 			next;
-			mes "[Vincent Carsciallo]";
-			mes "If you discover something new,\r"
+			mes("[Vincent Carsciallo]");
+			mes("If you discover something new,\r"
 				"come and tell us. Don't forget that we are all working together to unlock the "
-					"mysteries of science!";
+					"mysteries of science!");
 		}
 		else if (BaseClass == Job_Novice) {
-			mes "Hm...";
-			mes "A Novice?";
-			mes "You shouldn't be\r"
+			mes("Hm...");
+			mes("A Novice?");
+			mes("You shouldn't be\r"
 				"playing in a place\r"
-				"like this.";
+				"like this.");
 			next;
-			mes "[Vincent Carsciallo]";
-			mes "There are a lot of volatile chemicals and dangerous\r"
-				"materials in this building. It'd be a lot better if you just played outside.";
+			mes("[Vincent Carsciallo]");
+			mes("There are a lot of volatile chemicals and dangerous\r"
+				"materials in this building. It'd be a lot better if you just played outside.");
 		}
 		else {
-			mes "Hmm...?";
-			mes "What's an adventurer\r"
+			mes("Hmm...?");
+			mes("What's an adventurer\r"
 				"doing here in the\r"
-				"Alchemist Union?";
+				"Alchemist Union?");
 			next;
-			mes "[Vincent Carsciallo]";
-			mes "I'm afraid there's\r"
+			mes("[Vincent Carsciallo]");
+			mes("I'm afraid there's\r"
 				"not much we can offer\r"
 				"you here if you're not\r"
-				"a member of our Union.";
+				"a member of our Union.");
 		}
 		close2;
 		cutin "",255;
 		end;
 	}
 	if (ALCH_Q == 0) {
-		mes "Hmm...?";
-		mes "A Merchant?";
-		mes "Are you interested\r"
-			"in learning Alchemy?";
+		mes("Hmm...?");
+		mes("A Merchant?");
+		mes("Are you interested\r"
+			"in learning Alchemy?");
 		next;
-		mes "[Vincent Carsciallo]";
-		mes "This is the Alchemist Union.";
-		mes "We research and experiment with many different substances in order to create new materials "
-			"without using magic.";
+		mes("[Vincent Carsciallo]");
+		mes("This is the Alchemist Union.");
+		mes("We research and experiment with many different substances in order to create new materials "
+			"without using magic.");
 		next;
-		mes "[Vincent Carsciallo]";
-		mes "Someday, we hope to unlock\r"
-			"the secret of life, as well as the other mysteries of science.";
+		mes("[Vincent Carsciallo]");
+		mes("Someday, we hope to unlock\r"
+			"the secret of life, as well as the other mysteries of science.");
 		next;
-		mes "[Vincent Carsciallo]";
-		mes "After being traveling as a Merchant for a long time, you must have developed some scientific "
-			"curiosity. If you'd like to learn Alchemy, why don't you try joining the Alchemist Union?";
+		mes("[Vincent Carsciallo]");
+		mes("After being traveling as a Merchant for a long time, you must have developed some scientific "
+			"curiosity. If you'd like to learn Alchemy, why don't you try joining the Alchemist Union?");
 		close2;
 		cutin "",255;
 		end;
@@ -1814,24 +1814,24 @@ alde_alche,101,184,4	script	Master Alchemist#am	2_M_DYEINGER,{
 	else if (ALCH_Q == 40) {
 		if (JobLevel < 40) {
 			ALCH_Q = 0;
-			mes "Hmm...you don't seem to be qualified yet.";
-			mes "Remember, you must reach at least job level 40 to become an Alchemist.";
+			mes("Hmm...you don't seem to be qualified yet.");
+			mes("Remember, you must reach at least job level 40 to become an Alchemist.");
 			close2;
 			cutin "",255;
 			end;
 		}
 		if (SkillPoint) {
-			mes "Ah, you're almost\r"
+			mes("Ah, you're almost\r"
 				"ready to become an\r"
 				"Alchemist, but you must\r"
 				"first allocate your unused\r"
-				"Skill Points.";
+				"Skill Points.");
 			next;
-			mes "[Vincent Carsciallo]";
-			mes "Talk to me again\r"
+			mes("[Vincent Carsciallo]");
+			mes("Talk to me again\r"
 				"once you have spent\r"
 				"all of your extra\r"
-				"Skill Points.";
+				"Skill Points.");
 			close2;
 			cutin "",255;
 			end;
@@ -1842,30 +1842,30 @@ alde_alche,101,184,4	script	Master Alchemist#am	2_M_DYEINGER,{
 		if (questprogress(2034)) {
 			changequest 2034,2040;
 		}
-		mes "Ah, well done.";
-		mes "I can see that you\r"
+		mes("Ah, well done.");
+		mes("I can see that you\r"
 			"have learned all of"
-			"the basics of Alchemy.";
+			"the basics of Alchemy.");
 		next;
 		ALCH_Q = 0;
 		completequest 2040;
 		.@jlevel = JobLevel;
 		callfunc "Job_Change",Job_Alchemist;
 		callfunc "F_ClearJobVar";
-		mes "[Vincent Carsciallo]";
-		mes "Henceforth, you are\r"
+		mes("[Vincent Carsciallo]");
+		mes("Henceforth, you are\r"
 			"now a member of our\r"
-			"illustrious Union.";
-		mes "I hope you learn a lot...";
+			"illustrious Union.");
+		mes("I hope you learn a lot...");
 		next;
 		if (.@jlevel == 50) {
 			getitem Slim_Potion_Create_Book,1;
-			mes "[Vincent Carsciallo]";
-			mes "Let me give you\r"
-				"something special.";
-			mes "You can use this to"
+			mes("[Vincent Carsciallo]");
+			mes("Let me give you\r"
+				"something special.");
+			mes("You can use this to"
 				"begin your life"
-				"of research.";
+				"of research.");
 		}
 		else {
 			switch(rand(1,6)) {
@@ -1887,34 +1887,34 @@ alde_alche,101,184,4	script	Master Alchemist#am	2_M_DYEINGER,{
 			case 6:
 				getitem Normal_Potion_Book,1;
 			}
-			mes "[Vincent Carsciallo]";
-			mes "And...";
-			mes "Here's a little\r"
+			mes("[Vincent Carsciallo]");
+			mes("And...");
+			mes("Here's a little\r"
 				"something to help\r"
 				"you begin your\r"
-				"research.";
+				"research.");
 		}
 		next;
-		mes "[Vincent Carsciallo]";
-		mes "I'll see\r"
-			"you later then...";
-		mes "Remember to carry\r"
+		mes("[Vincent Carsciallo]");
+		mes("I'll see\r"
+			"you later then...");
+		mes("Remember to carry\r"
 			"yourself with pride\r"
-			"as an Alchemist!";
+			"as an Alchemist!");
 		close2;
 		cutin "",255;
 		end;
 	}
 	else {
-		mes "Ah...";
-		mes "I believe you've\r"
+		mes("Ah...");
+		mes("I believe you've\r"
 			"already registered\r"
 			"for training to become\r"
-			"an Alchemist.";
+			"an Alchemist.");
 		next;
-		mes "[Vincent Carsciallo]";
-		mes "Please listen to the\r"
-			"other Alchemists and follow their instructions carefully. You will learn much from them.";
+		mes("[Vincent Carsciallo]");
+		mes("Please listen to the\r"
+			"other Alchemists and follow their instructions carefully. You will learn much from them.");
 		close2;
 		cutin "",255;
 		end;
@@ -1923,77 +1923,77 @@ alde_alche,101,184,4	script	Master Alchemist#am	2_M_DYEINGER,{
 
 alde_alche,145,19,1	script	Chief Researcher#am	1_M_LIBRARYMASTER,{
 	if (checkweight(Knife,1) == 0) {
-		mes "- Wait a minute! -";
-		mes "- Currently you are carrying -";
-		mes "- too many items with you. -";
-		mes "- Please come back again -";
-		mes "- after you store some items into kafra storage. -";
+		mes("- Wait a minute! -");
+		mes("- Currently you are carrying -");
+		mes("- too many items with you. -");
+		mes("- Please come back again -");
+		mes("- after you store some items into kafra storage. -");
 		close;
 	}
 	if (ALCH_Q > 19 && ALCH_Q < 22) {
 		if (ALCH_Q == 20) {
-			mes "[Nicholas Flamel]";
-			mes "Ooh...";
-			mes "You're the upstart\r"
+			mes("[Nicholas Flamel]");
+			mes("Ooh...");
+			mes("You're the upstart\r"
 				"Merchant that wants\r"
-				"to become an Alchemist?";
+				"to become an Alchemist?");
 			next;
-			mes "[Nicholas Flamel]";
-			mes "Not just anyone can become an Alchemist, you know. You've got to have motivation and "
-				"clear goals and a strong sense of focus.";
+			mes("[Nicholas Flamel]");
+			mes("Not just anyone can become an Alchemist, you know. You've got to have motivation and "
+				"clear goals and a strong sense of focus.");
 			next;
-			mes "[Nicholas Flamel]";
-			mes "Alchemists must memorize many chemical equations, scientific laws and a lot of other "
-				"information. It's actually pretty tough.";
+			mes("[Nicholas Flamel]");
+			mes("Alchemists must memorize many chemical equations, scientific laws and a lot of other "
+				"information. It's actually pretty tough.");
 			next;
-			mes "[Nicholas Flamel]";
-			mes "If you can't focus, you'll be confused later when you look at Alchemy charts. My test "
-				"will judge your ability to do just that.";
+			mes("[Nicholas Flamel]");
+			mes("If you can't focus, you'll be confused later when you look at Alchemy charts. My test "
+				"will judge your ability to do just that.");
 			next;
 		}
-		mes "[Nicholas Flamel]";
-		mes "Find the words scrambled\r"
+		mes("[Nicholas Flamel]");
+		mes("Find the words scrambled\r"
 			"in the group of letters I give you. They can be made by using some\r"
-			"or all of the letters.";
+			"or all of the letters.");
 		next;
-		mes "[Nicholas Flamel]";
-		mes "You pass if you\r"
+		mes("[Nicholas Flamel]");
+		mes("You pass if you\r"
 			"choose the word\r"
-			"that is ^551A8BIN^000000 the puzzle.";
+			"that is ^551A8BIN^000000 the puzzle.");
 		next;
 		switch(rand(1,3)) {
 		case 1:
-			mes "t m y a n y e o b n e g p r i";
+			mes("t m y a n y e o b n e g p r i");
 			next;
 			if (select("Brake", "Brass", "Bug", "Broken", "Brigan?") == 5)
 				.@alch_t += 10;
-			mes "o n c u t a p j l e r s v m u";
+			mes("o n c u t a p j l e r s v m u");
 			next;
 			if (select("vendor", "storage", "weapon", "simple", "streetshop") == 1)
 				.@alch_t += 10;
-			mes "t v a r m e g p h e u b o y l";
+			mes("t v a r m e g p h e u b o y l");
 			next;
 			if (select("molasses", "party", "leader", "sweets", "treacle") == 2)
 				.@alch_t += 10;
-			mes "q z a h n a i n b r d p t n c";
+			mes("q z a h n a i n b r d p t n c");
 			next;
 			if (select("partisan", "partizan", "pato", "paros", "pack") == 2)
 				.@alch_t += 10;
 			break;
 		case 2:
-			mes "m p d i c f a r o g n k w a s";
+			mes("m p d i c f a r o g n k w a s");
 			next;
 			if (select("packman", "sunshine", "ragnarok", "wonderland", "frost") == 1)
 				.@alch_t += 10;
-			mes "g b n o p r e f a r e t a s k";
+			mes("g b n o p r e f a r e t a s k");
 			next;
 			if (select("purple", "smoker", "ragnarok", "bolt", "burnt wood") == 3)
 				.@alch_t += 10;
-			mes "u g n i s j e k c e o g n d p";
+			mes("u g n i s j e k c e o g n d p");
 			next;
 			if (select("scab", "kinship", "donate", "source", "opening") == 5)
 				.@alch_t += 10;
-			mes "r o e h n r o m c a i n p t t";
+			mes("r o e h n r o m c a i n p t t");
 			next;
 			if (select("forgemerchant",
 					"potionmerchant",
@@ -2003,19 +2003,19 @@ alde_alche,145,19,1	script	Chief Researcher#am	1_M_LIBRARYMASTER,{
 				.@alch_t += 10;
 			break;
 		case 3:
-			mes "s m i e x b w u n e t a g l r";
+			mes("s m i e x b w u n e t a g l r");
 			next;
 			if (select("tiger", "wolf", "pumpkin", "tripped", "tore") == 1)
 				.@alch_t += 10;
-			mes "n i e g b o p d s o a u w r v";
+			mes("n i e g b o p d s o a u w r v");
 			next;
 			if (select("bash", "provoke", "endure", "stun", "abracadabra") == 3)
 				.@alch_t += 10;
-			mes "l r m g r e x t a v i n e d e";
+			mes("l r m g r e x t a v i n e d e");
 			next;
 			if (select("alberta", "latifoliate", "crimson", "maple", "evergreen") == 5)
 				.@alch_t += 10;
-			mes "r o e h n r o m c a i n p t t";
+			mes("r o e h n r o m c a i n p t t");
 			next;
 			if (select("forgemerchant",
 					"potionmerchant",
@@ -2025,72 +2025,72 @@ alde_alche,145,19,1	script	Chief Researcher#am	1_M_LIBRARYMASTER,{
 				.@alch_t += 10;
 			break;
 		}
-		mes "[Nicholas Flamel]";
-		mes "Ah, you finished.";
-		mes "Now, let's see...";
+		mes("[Nicholas Flamel]");
+		mes("Ah, you finished.");
+		mes("Now, let's see...");
 		if (.@alch_t > 30) {
 			ALCH_Q = 22;
-			mes "Excellent job!";
+			mes("Excellent job!");
 			next;
-			mes "[Nicholas Flamel]";
-			mes "Great, you found all of those hidden words. With that kind of concentration, you should "
-				"have no problem memorizing information.";
+			mes("[Nicholas Flamel]");
+			mes("Great, you found all of those hidden words. With that kind of concentration, you should "
+				"have no problem memorizing information.");
 			next;
-			mes "[Nicholas Flamel]";
-			mes "Come back in a little bit while\r"
+			mes("[Nicholas Flamel]");
+			mes("Come back in a little bit while\r"
 				"I prepare the next assignment\r"
-				"for your training.";
+				"for your training.");
 			next;
-			mes "[Nicholas Flamel]";
-			mes "Oh, and before you talk to\r"
+			mes("[Nicholas Flamel]");
+			mes("Oh, and before you talk to\r"
 				"me again, make sure you have\r"
-				"^551A8Bplenty of room in your inventory^000000.";
+				"^551A8Bplenty of room in your inventory^000000.");
 			close;
 		}
 		else {
 			ALCH_Q = 21;
-			mes "^666666*Gasp!*^000000 H-horrible!";
+			mes("^666666*Gasp!*^000000 H-horrible!");
 			next;
-			mes "[Nicholas Flamel]";
-			mes "Judging from these results, you obviously have a problem with concentrating.";
+			mes("[Nicholas Flamel]");
+			mes("Judging from these results, you obviously have a problem with concentrating.");
 			next;
-			mes "[Nicholas Flamel]";
-			mes "If you can't even solve these easy word puzzles, how can you keep track of your "
-				"experiments and research?";
+			mes("[Nicholas Flamel]");
+			mes("If you can't even solve these easy word puzzles, how can you keep track of your "
+				"experiments and research?");
 			next;
-			mes "[Nicholas Flamel]";
-			mes "Why don't you relax\r"
+			mes("[Nicholas Flamel]");
+			mes("Why don't you relax\r"
 				"and rest a bit before\r"
-				"you take the test again?";
+				"you take the test again?");
 			close;
 
 		}
 	}
 	else if (ALCH_Q == 22) {
 		if (MaxWeight - Weight < 1370) {
-			mes "[Nicholas Flamel]";
-			mes "Whoa...";
-			mes "You're carrying too much stuff! First, put some of your things in Kafra Storage.";
+			mes("[Nicholas Flamel]");
+			mes("Whoa...");
+			mes("You're carrying too much stuff! First, put some of your things in Kafra Storage.");
 			close;
 		}
-		mes "[Nicholas Flamel]";
-		mes "Alright...";
-		mes "For your next\r"
+		mes("[Nicholas Flamel]");
+		mes("Alright...");
+		mes("For your next\r"
 			"assignment, you'll\r"
-			"need to travel to ^551A8BJuno^000000.";
+			"need to travel to ^551A8BJuno^000000.");
 		next;
-		mes "[Nicholas Flamel]";
-		mes "There, you'll need to talk to ^551A8BBain^000000 and ^551A8BBajin^000000. Those two are doing "
+		mes("[Nicholas Flamel]");
+		mes("There, you'll need to talk to ^551A8BBain^000000 and ^551A8BBajin^000000. Those two are doing "
 			"Alchemy research with the Sages\r"
-			"in Juno. You'll learn something by assisting them with their project.";
+			"in Juno. You'll learn something by assisting them with their project.");
 		next;
-		mes "[Nicholas Flamel]";
-		mes "Come back here to me after you\r"
-			"help them out. They'll need all of these items to continue their experiments.";
+		mes("[Nicholas Flamel]");
+		mes("Come back here to me after you\r"
+			"help them out. They'll need all of these items to continue their experiments.");
 		next;
 		ALCH_Q = 23;
 		changequest 2037,2038;
-		mes "[Nicholas Flamel]";
+		mes("[Nicholas Flamel]");
 		mesf("1 %s,", getitemname(Mixture));
 		mesf("5 %s,", getitemname(Burn_Tree));
 		mesf("5 %s,", getitemname(Fine_Sand));
@@ -2102,59 +2102,59 @@ alde_alche,145,19,1	script	Chief Researcher#am	1_M_LIBRARYMASTER,{
 		getitem Oridecon_Stone,3;
 		getitem Elunium_Stone,3;
 		next;
-		mes "[Nicholas Flamel]";
-		mes "Alright.";
-		mes "Have a safe trip\r"
+		mes("[Nicholas Flamel]");
+		mes("Alright.");
+		mes("Have a safe trip\r"
 			"and come back in\r"
-			"one piece.";
+			"one piece.");
 		close;
 	}
 	else if (ALCH_Q == 23) {
-		mes "[Nicholas Flamel]";
-		mes "Didn't I say to\r"
+		mes("[Nicholas Flamel]");
+		mes("Didn't I say to\r"
 			"go to Juno and help\r"
 			"Bain and Bajin with\r"
-			"their Alchemy research?";
+			"their Alchemy research?");
 		close;
 	}
 	else if (ALCH_Q == 24) {
 		ALCH_Q = 40;
 		changequest 2038,2039;
-		mes "[Nicholas Flamel]";
-		mes "Ah, you're back!";
-		mes "I just got a message from Bain\r"
-			"and Bajin. They let me know that they were very happy with your assistance.";
+		mes("[Nicholas Flamel]");
+		mes("Ah, you're back!");
+		mes("I just got a message from Bain\r"
+			"and Bajin. They let me know that they were very happy with your assistance.");
 		next;
-		mes "[Nicholas Flamel]";
-		mes "If you were good enough\r"
+		mes("[Nicholas Flamel]");
+		mes("If you were good enough\r"
 			"to help out those brothers,\r"
 			"you definitely qualify to be\r"
-			"an Alchemist.";
+			"an Alchemist.");
 		next;
-		mes "[Nicholas Flamel]";
-		mes "Good work!";
-		mes "All you have to do now is speak to the Union Leader on the 2nd floor! Congratulations, you'll "
-			"become an Alchemist very soon!";
+		mes("[Nicholas Flamel]");
+		mes("Good work!");
+		mes("All you have to do now is speak to the Union Leader on the 2nd floor! Congratulations, you'll "
+			"become an Alchemist very soon!");
 		close;
 	}
 	else if (ALCH_Q == 40 && BaseJob == Job_Merchant) {
-		mes "[Nicholas Flamel]";
-		mes "All you have to do now is speak to the Union Leader on the 2nd floor! Congratulations, you'll "
-			"become an Alchemist very soon!";
+		mes("[Nicholas Flamel]");
+		mes("All you have to do now is speak to the Union Leader on the 2nd floor! Congratulations, you'll "
+			"become an Alchemist very soon!");
 		close;
 	}
 	else {
-		mes "[Nicholas Flamel]";
-		mes "Lorem ipsum dolor sit amet,\r"
+		mes("[Nicholas Flamel]");
+		mes("Lorem ipsum dolor sit amet,\r"
 			"consectetuer adipiscing elit.\r"
 			"Vivamus sem. Sed metus\r"
 			"lacus, viverra id, rutrum eget,\r"
-			"rhoncus sit amet, lectus.";
+			"rhoncus sit amet, lectus.");
 		next;
-		mes "[Nicholas Flamel]";
-		mes "Suspendisse sit amet urna in\r"
-			"nisl fringilla faucibus. Nulla scelerisque eros...";
-		mes "^666666*Mumble Mumble*^000000";
+		mes("[Nicholas Flamel]");
+		mes("Suspendisse sit amet urna in\r"
+			"nisl fringilla faucibus. Nulla scelerisque eros...");
+		mes("^666666*Mumble Mumble*^000000");
 		close;
 	}
 }
