@@ -33,10 +33,10 @@
 //=========================================================================
 
 malaya,71,72,4	script	Port Malaya Guide#01::GuideMalaya	4_F_BARYO_WOMAN,{
-	mes "[Port Malaya Guide]";
-	mes "Welcome to ^8B4513Port Malaya^000000, the Breathing Village.";
-	mes "Where cultures and legends come to life!";
-	mes "Do you need help navigating the village?";
+	mes("[Port Malaya Guide]");
+	mes("Welcome to ^8B4513Port Malaya^000000, the Breathing Village.");
+	mes("Where cultures and legends come to life!");
+	mes("Do you need help navigating the village?");
 	F_Navi("[Port Malaya Guide]");
 	while(1) {
 		next;
@@ -71,9 +71,9 @@ malaya,71,72,4	script	Port Malaya Guide#01::GuideMalaya	4_F_BARYO_WOMAN,{
 			viewpoint 1,276,55,7,0x8A2BE2;
 			break;
 		case 8:
-			mes "[Port Malaya Guide]";
-			mes "I'll remove all marks from your mini-map.";
-			mes "Is there anything else I can do for you?";
+			mes("[Port Malaya Guide]");
+			mes("I'll remove all marks from your mini-map.");
+			mes("Is there anything else I can do for you?");
 			viewpoint 2,1,1,0,0xFFFFFF;
 			viewpoint 2,1,1,1,0xFFFFFF;
 			viewpoint 2,1,1,2,0xFFFFFF;
@@ -84,18 +84,18 @@ malaya,71,72,4	script	Port Malaya Guide#01::GuideMalaya	4_F_BARYO_WOMAN,{
 			viewpoint 2,1,1,7,0xFFFFFF;
 			break;
 		case 9:
-			mes "[Port Malaya Guide]";
-			mes "I hope you enjoy your journey.";
+			mes("[Port Malaya Guide]");
+			mes("I hope you enjoy your journey.");
 			close;
 		}
 	}
 	end;
 L_Mark:
-	mes "[Port Malaya Guide]";
-	mes "The "+getarg(0)+" "+((getarg(1,0))?"are":"is");
-	mes "marked on your mini-map.";
-	mes "Check your mini-map.";
-	mes "Is there anything else I can do for you?";
+	mes("[Port Malaya Guide]");
+	mes("The "+getarg(0)+" "+((getarg(1,0))?"are":"is"));
+	mes("marked on your mini-map.");
+	mes("Check your mini-map.");
+	mes("Is there anything else I can do for you?");
 	return;
 }
 malaya,250,83,6	duplicate(GuideMalaya)	Port Malaya Guide#02	4_F_BARYO_WOMAN

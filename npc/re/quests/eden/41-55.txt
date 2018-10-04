@@ -36,24 +36,24 @@
 
 moc_para01,40,38,3	script	Mission [41 - 55]	4_BOARD3,{
 	if (countitem(Para_Team_Mark) < 1 && countitem(Para_Team_Mark_) < 1) {
-		mes "You are not an Eden group member. You are not qualified to access the bulletin board.";
+		mes("You are not an Eden group member. You are not qualified to access the bulletin board.");
 		close;
 	}
 	if (checkweight(Knife,1) == 0 || (MaxWeight - Weight) < 1000) {
-		mes "^008800Wait a sec!!";
-		mes "You cannot receive any more items because you're carrying too many items. Please try again after you lighten up.^000000";
+		mes("^008800Wait a sec!!");
+		mes("You cannot receive any more items because you're carrying too many items. Please try again after you lighten up.^000000");
 		close;
 	}
 	if (!questprogress(12088)) {
 		if (BaseLevel < 41 || BaseLevel > 55) {
-			mes "Mission bulletin board for Lv41~55 adventurers.";
+			mes("Mission bulletin board for Lv41~55 adventurers.");
 			close;
 		}
-		mes "[Mission Board]";
-		mes "Mission bulletin board.";
+		mes("[Mission Board]");
+		mes("Mission bulletin board.");
 		next;
 		if(select("Check the Missions.", "Cancel.") == 2) {
-			mes "^000077Ok. Let's check the missions next time.^000000.";
+			mes("^000077Ok. Let's check the missions next time.^000000.");
 			close;
 		}
 		switch(select("Thara Frog Hunting", "Cruiser Hunting", "Kukre Hunting", "Orc Baby Hunting", "Orc Warrior Hunting", "Vadon Hunting", "Megalodon Hunting", "Marse Hunting", "Cornutus Hunting", "Myst Hunting", "Shellfish Hunting", "Marine Sphere Hunting")) {
@@ -79,9 +79,9 @@ moc_para01,40,38,3	script	Mission [41 - 55]	4_BOARD3,{
 	setarray .@exp[0],9600,7200,15750,7875,11100,8550,17100,9000,12300,9900,20250,10350,13800,11025,22500,11250;
 	for(.@i = 0; .@i<16; ++.@i)
 		if (questprogress(12072+.@i,HUNTING) == 2) {
-			mes "[Mission Board]";
-			mes "You have completed the mission.";
-			mes "Here is your reward.";
+			mes("[Mission Board]");
+			mes("You have completed the mission.");
+			mes("Here is your reward.");
 			erasequest 12088;
 			erasequest 12072+.@i;
 			specialeffect(EF_STEAL, AREA, playerattached());
@@ -92,19 +92,19 @@ moc_para01,40,38,3	script	Mission [41 - 55]	4_BOARD3,{
 	 && !questprogress(12076,HUNTING) && !questprogress(12077,HUNTING) && !questprogress(12078,HUNTING) && !questprogress(12079,HUNTING)
 	 && !questprogress(12080,HUNTING) && !questprogress(12081,HUNTING) && !questprogress(12082,HUNTING) && !questprogress(12083,HUNTING)
 	 && !questprogress(12084,HUNTING) && !questprogress(12085,HUNTING) && !questprogress(12086,HUNTING) && !questprogress(12087,HUNTING)) {
-		mes "You may now view the bulletin board.";
+		mes("You may now view the bulletin board.");
 		erasequest 12088;
 		close;
 	}
-	mes "There is nothing special to do.";
+	mes("There is nothing special to do.");
 	close;
 L_Quest:
-	mes "[Mission Board Memo]";
-	mes getarg(1);
+	mes("[Mission Board Memo]");
+	mes(getarg(1));
 	next;
 	if(select("Accept the mission.", "Cancel.") == 1) {
-		mes "[Mission Board]";
-		mes "You have accepted the mission. For more details, please press 'alt + u' keys, you can get information from the Quest Window.";
+		mes("[Mission Board]");
+		mes("You have accepted the mission. For more details, please press 'alt + u' keys, you can get information from the Quest Window.");
 		setquest 12088;
 		setquest getarg(0);
 	}

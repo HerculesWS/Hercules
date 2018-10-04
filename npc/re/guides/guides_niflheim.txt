@@ -34,14 +34,14 @@
 //=========================================================================
 
 niflheim,201,187,3	script	Niflheim Guide#01nif	4_M_DIEMAN,{
-	mes "[Niflheim Guide]";
-	mes "Welcome to.. ^8B4513Niflheim^000000...";
-	mes "the Realm of the Dead...";
-	mes "Do you need help navigating the realm...?";
+	mes("[Niflheim Guide]");
+	mes("Welcome to.. ^8B4513Niflheim^000000...");
+	mes("the Realm of the Dead...");
+	mes("Do you need help navigating the realm...?");
 	if (F_Navi() == 0) {
 		next;
-		mes "[Niflheim Guide]";
-		mes "When you click on the.. ^B9062F[location name]^000000... you'll receive the most advanced ^B9062FNavigation^000000 services...!";
+		mes("[Niflheim Guide]");
+		mes("When you click on the.. ^B9062F[location name]^000000... you'll receive the most advanced ^B9062FNavigation^000000 services...!");
 	}
 	while (1) {
 		next;
@@ -63,26 +63,26 @@ niflheim,201,187,3	script	Niflheim Guide#01nif	4_M_DIEMAN,{
 			viewpoint 1,255,195,3,0xFF1493;
 			break;
 		case 5:
-			mes "[Niflheim Guide]";
-			mes "Sure, I'll remove all marks from your mini-map...";
-			mes "Is there anything else I can do for you...?";
+			mes("[Niflheim Guide]");
+			mes("Sure, I'll remove all marks from your mini-map...");
+			mes("Is there anything else I can do for you...?");
 			viewpoint 2,1,1,0,0xFFFFFF;
 			viewpoint 2,1,1,1,0xFFFFFF;
 			viewpoint 2,1,1,2,0xFFFFFF;
 			viewpoint 2,1,1,3,0xFFFFFF;
 			break;
 		case 6:
-			mes "[Niflheim Guide]";
-			mes "......Bye~!..";
+			mes("[Niflheim Guide]");
+			mes("......Bye~!..");
 			close;
 		}
 	}
 	end;
 L_Mark:
-	mes "[Niflheim Guide]";
-	mes "Let me mark the location of the";
-	mes getarg(0)+"^000000...";
-	mes "on your mini-map.";
-	mes "Would you like to check any other locations?";
+	mes("[Niflheim Guide]");
+	mes("Let me mark the location of the");
+	mes(getarg(0)+"^000000...");
+	mes("on your mini-map.");
+	mes("Would you like to check any other locations?");
 	return;
 }

@@ -41,37 +41,37 @@ que_ng,28,156,0	script	Start#ko	HIDDEN_WARP_NPC,1,1,{
 
 OnTouch:
 	if (BaseLevel >= 99 && JobLevel >= 70 && job_kagero == 0 && Class == Job_Ninja) {
-		mes "Secret Passage to ^25C18DNinja Guild^25C18D";
-		mes "You hear familiar voices talking to each other.";
+		mes("Secret Passage to ^25C18DNinja Guild^25C18D");
+		mes("You hear familiar voices talking to each other.");
 		next;
-		mes "[Unknown Voice A]";
-		mes "Long time, no see. How are you? How are the kids you've taken in?";
+		mes("[Unknown Voice A]");
+		mes("Long time, no see. How are you? How are the kids you've taken in?");
 		next;
-		mes "[Unknown Voice B]";
-		mes "I have to hand it to you. You've picked some competitive ones.";
+		mes("[Unknown Voice B]");
+		mes("I have to hand it to you. You've picked some competitive ones.");
 		next;
-		mes "[Unknown Voice A]";
-		mes "Sounds like music to my ears. Being sent to a foreign land with air pollution was bad enough, now haunted with memories of this place...";
+		mes("[Unknown Voice A]");
+		mes("Sounds like music to my ears. Being sent to a foreign land with air pollution was bad enough, now haunted with memories of this place...");
 		next;
-		mes "[Unknown Voice A]";
-		mes "What do you think? Should we rotate now?";
+		mes("[Unknown Voice A]");
+		mes("What do you think? Should we rotate now?");
 		next;
-		mes "[Unknown Voice B]";
-		mes "Haven't given up, have ya. Do you really think he'll approve?";
+		mes("[Unknown Voice B]");
+		mes("Haven't given up, have ya. Do you really think he'll approve?");
 		next;
-		mes "[Unknown Voice A]";
-		mes "No need to be bitter. Hey! Were any of the kids that come and go here the ones that found the ^BD0408place^BD0408?";
+		mes("[Unknown Voice A]");
+		mes("No need to be bitter. Hey! Were any of the kids that come and go here the ones that found the ^BD0408place^BD0408?");
 		next;
-		mes "[Unknown Voice B]";
-		mes "Since finding the hidden place was also a part of the test.";
+		mes("[Unknown Voice B]");
+		mes("Since finding the hidden place was also a part of the test.");
 		next;
-		mes "[Unknown Voice A]";
-		mes "You are as stubborn as the first time I met you. It's just a wall in some place...";
+		mes("[Unknown Voice A]");
+		mes("You are as stubborn as the first time I met you. It's just a wall in some place...");
 		next;
-		mes "[Unknown Voice B]";
-		mes "Shssh! I think someone is eavesdropping. Hurry! Go back to the mission area.";
+		mes("[Unknown Voice B]");
+		mes("Shssh! I think someone is eavesdropping. Hurry! Go back to the mission area.");
 		next;
-		mes "The conversation stopped abruptly. Hidden place? Wall? Part of a test? What is all this about?";
+		mes("The conversation stopped abruptly. Hidden place? Wall? Part of a test? What is all this about?");
 		setquest 5131;
 		set job_kagero,1;
 		close;
@@ -85,34 +85,34 @@ OnTouch:
 
 que_ng,21,76,0	script	Wall with a Drawing#ko	CLEAR_NPC,{
 	if (Class == Job_Oboro || Class == Job_Kagerou) {
-		mes "You should no longer use this secret passage.";
+		mes("You should no longer use this secret passage.");
 		close;
 	} else if (job_kagero == 1 && Class == Job_Ninja) {
-		mes "You found a location that resembles the hidden place.";
+		mes("You found a location that resembles the hidden place.");
 		next;
-		mes "This wall was here ever since. How come I didn't notice it before?";
+		mes("This wall was here ever since. How come I didn't notice it before?");
 		next;
-		mes "Now that I know it's a secret passage, what do I do to get in?";
+		mes("Now that I know it's a secret passage, what do I do to get in?");
 		next;
 		if(select("Tear the drawing down.", "Touch the drawing with your hand.") == 1) {
-			mes "I can't rip it down because I don't own it.";
+			mes("I can't rip it down because I don't own it.");
 			close;
 		}
-		mes "You touch the drawing with the tip of your hand and felt a sudden sensation of being pulled.";
+		mes("You touch the drawing with the tip of your hand and felt a sudden sensation of being pulled.");
 		close2;
 		warp "job_ko",26,111;
 		end;
 	} else if (job_kagero > 1 && Class == Job_Ninja) {
-		mes "Entrance to the ^25C18DNinja Guild^000000 hideout.";
+		mes("Entrance to the ^25C18DNinja Guild^000000 hideout.");
 		next;
 		if(select("Enter.", "Do not enter.") == 2)
 			close;
-		mes "When touching the drawing, you get the feeling of being pulled...";
+		mes("When touching the drawing, you get the feeling of being pulled...");
 		close2;
 		warp "job_ko",26,111;
 		end;
 	} else {
-		mes "There is a wall with a great drawing on it.";
+		mes("There is a wall with a great drawing on it.");
 		close;
 	}
 	end;
@@ -120,275 +120,275 @@ que_ng,21,76,0	script	Wall with a Drawing#ko	CLEAR_NPC,{
 
 job_ko,25,115,4	script	Old Man#ko	4_M_KAGE_OLD,{
 	if (MaxWeight - Weight < 1000 || checkweight("Knife",1) == 0) {
-		mes "[Cougar]";
-		mes "You don't need to carry so many things.";
+		mes("[Cougar]");
+		mes("You don't need to carry so many things.");
 		close;
 	}
 	if (BaseJob != Job_Ninja) {
 		for (set .@i,5131; .@i<=5146; set .@i,.@i+1)
 			if (questprogress(.@i)) erasequest .@i;
 		set job_kagero,0;
-		mes "[Cougar]";
-		mes "You are not in the Family of the Ninja.";
+		mes("[Cougar]");
+		mes("You are not in the Family of the Ninja.");
 		close2;
 		warp "amatsu",147,136;
 		end;
 	}
 	if (job_kagero == 1) {
 		cutin "job_ko03",2;
-		mes "^1A95E6An old man looking hale and hearty is sitting and gazing vacantly.^1A95E6";
+		mes("^1A95E6An old man looking hale and hearty is sitting and gazing vacantly.^1A95E6");
 		next;
 		if(select("Ignore.", "Talk to him.") == 1) {
 			close2;
 			cutin "",255;
 			end;
 		}
-		mes "["+strcharinfo(PC_NAME)+"]";
-		mes "Excuse me...";
+		mes("["+strcharinfo(PC_NAME)+"]");
+		mes("Excuse me...");
 		next;
-		mes "^1A95E6You tried to talk to the old man but there is no response. Just when you are about to turn away...^1A95E6";
+		mes("^1A95E6You tried to talk to the old man but there is no response. Just when you are about to turn away...^1A95E6");
 		next;
-		mes "[Old Man]";
-		mes "At last, a customer! Hmm... and a live one, too!";
+		mes("[Old Man]");
+		mes("At last, a customer! Hmm... and a live one, too!");
 		next;
 		select("Excuse me... where am I?");
-		mes "[Old Man]";
-		mes "^1A95E6He keeps talking and doesn't stop to answer your question.^1A95E6";
+		mes("[Old Man]");
+		mes("^1A95E6He keeps talking and doesn't stop to answer your question.^1A95E6");
 		next;
-		mes "[Old Man]";
-		mes "There once was a quiet family living in ancient Amatsu times that is never mentioned in history books or stories.";
+		mes("[Old Man]");
+		mes("There once was a quiet family living in ancient Amatsu times that is never mentioned in history books or stories.");
 		next;
-		mes "[Old Man]";
-		mes "They lived beneath shadows but always yearned for the bright sun, like a sunflower.";
+		mes("[Old Man]");
+		mes("They lived beneath shadows but always yearned for the bright sun, like a sunflower.");
 		next;
-		mes "[Old Man]";
-		mes "A family that was loyal to their lord who they served as their bright sun.";
+		mes("[Old Man]");
+		mes("A family that was loyal to their lord who they served as their bright sun.");
 		next;
-		mes "[Old Man]";
-		mes "...a very trustworthy family...";
+		mes("[Old Man]");
+		mes("...a very trustworthy family...");
 		next;
-		mes "[Old Man]";
-		mes "....loyal to their core...";
+		mes("[Old Man]");
+		mes("....loyal to their core...");
 		next;
-		mes "[Old Man]";
-		mes "...a family of integrity...";
+		mes("[Old Man]");
+		mes("...a family of integrity...");
 		next;
 		select("What happened to them?");
-		mes "^1A95E6The old man looks at you with a melancholy face.^1A95E6";
+		mes("^1A95E6The old man looks at you with a melancholy face.^1A95E6");
 		next;
-		mes "[Old Man]";
-		mes "Why are you interested in a family that was abandoned by their lord and disappeared from history itself?";
+		mes("[Old Man]");
+		mes("Why are you interested in a family that was abandoned by their lord and disappeared from history itself?");
 		next;
 		if(select("I'm a Ninja.", "I'm bored.") == 2) {
-			mes "[Old Man]";
-			mes "Was nice to meet you.";
+			mes("[Old Man]");
+			mes("Was nice to meet you.");
 			close2;
 			warp "amatsu",147,136;
 			end;
 		}
 		cutin "job_ko02",2;
-		mes "[Old Man]";
-		mes "Ninja! There was a time when the family was called ninjas, too.";
+		mes("[Old Man]");
+		mes("Ninja! There was a time when the family was called ninjas, too.");
 		next;
 		erasequest 5131;
 		setquest 5132;
 		set job_kagero,2;
-		mes "[Old Man]";
-		mes "You'll have to lend me your ear for I have so much to tell you about the family story.";
+		mes("[Old Man]");
+		mes("You'll have to lend me your ear for I have so much to tell you about the family story.");
 		close2;
 		cutin "",255;
 		end;
 	} else if (job_kagero == 2) {
 		cutin "job_ko01",2;
-		mes "^1A95E6The Old Man starts the story with a very soothing tone as if he is telling his grandchild a story.^1A95E6";
+		mes("^1A95E6The Old Man starts the story with a very soothing tone as if he is telling his grandchild a story.^1A95E6");
 		next;
-		mes "[Old Man]";
-		mes "This goes way back to ancient times and nobody in Amatsu remembers about it.";
+		mes("[Old Man]");
+		mes("This goes way back to ancient times and nobody in Amatsu remembers about it.");
 		next;
-		mes "[Old Man]";
-		mes "The family worked behind the scenes and basically lived their lives for their lord.";
+		mes("[Old Man]");
+		mes("The family worked behind the scenes and basically lived their lives for their lord.");
 		next;
-		mes "[Old Man]";
-		mes "They were very loyal doing whatever deed their lord asked for.";
+		mes("[Old Man]");
+		mes("They were very loyal doing whatever deed their lord asked for.");
 		next;
-		mes "[Old Man]";
-		mes "Ninja, the family was known as the dark family but that doesn't mean they wanted to be hidden in the darkness.";
+		mes("[Old Man]");
+		mes("Ninja, the family was known as the dark family but that doesn't mean they wanted to be hidden in the darkness.");
 		next;
-		mes "[Old Man]";
-		mes "They were loyal enough to be satisfied as the lord's servants but their loyalty became the problem.";
+		mes("[Old Man]");
+		mes("They were loyal enough to be satisfied as the lord's servants but their loyalty became the problem.");
 		next;
 		select("Problem?");
-		mes "[Old Man]";
-		mes "They are a secret organization that even the lord didn't know much about.";
+		mes("[Old Man]");
+		mes("They are a secret organization that even the lord didn't know much about.");
 		next;
-		mes "[Old Man]";
-		mes "The few that knew about the family's existence, tried to investigate them but nobody was able to reveal their true identity.";
+		mes("[Old Man]");
+		mes("The few that knew about the family's existence, tried to investigate them but nobody was able to reveal their true identity.");
 		next;
-		mes "[Old Man]";
-		mes "That is why this family has grown from loyal servants to a group feared for its secrets.";
+		mes("[Old Man]");
+		mes("That is why this family has grown from loyal servants to a group feared for its secrets.");
 		next;
-		mes "[Old Man]";
-		mes "The lord shunned the family and didn't call them for their service any more but they never betrayed him.";
+		mes("[Old Man]");
+		mes("The lord shunned the family and didn't call them for their service any more but they never betrayed him.");
 		next;
 		select("They were really loyal people.");
 		cutin "job_ko03",2;
-		mes "[Old Man]";
-		mes "Yes, they were. Very loyal.";
+		mes("[Old Man]");
+		mes("Yes, they were. Very loyal.");
 		next;
 		erasequest 5132;
 		setquest 5133;
 		set job_kagero,3;
-		mes "^1A95E6The old man looks even more forlorn.^1A95E6";
+		mes("^1A95E6The old man looks even more forlorn.^1A95E6");
 		close2;
 		cutin "",255;
 		end;
 	} else if (job_kagero == 3) {
 		cutin "job_ko03",2;
-		mes "[Old Man]";
-		mes "The family has been living in hiding for so long since the old days. The current lord didn't even know of their existence.";
+		mes("[Old Man]");
+		mes("The family has been living in hiding for so long since the old days. The current lord didn't even know of their existence.");
 		next;
 		select(".........");
 		cutin "job_ko01",2;
-		mes "[Old Man]";
-		mes "I'm Guide Gion, the last of the dark ninja family.";
+		mes("[Old Man]");
+		mes("I'm Guide Gion, the last of the dark ninja family.");
 		next;
 		if(select("I think your time has ended.", "I need your teaching.") == 1) {
 			cutin "job_ko04",2;
-			mes "[Guide Gion]";
-			mes "Are you an assassin to end this old man's life?";
+			mes("[Guide Gion]");
+			mes("Are you an assassin to end this old man's life?");
 			next;
-			mes "[Guide Gion]";
-			mes "So that is why you've shown interest in my family. I won't give up easily.";
+			mes("[Guide Gion]");
+			mes("So that is why you've shown interest in my family. I won't give up easily.");
 			next;
 			percentheal -99,0;
-			mes "Pow!!";
-			mes "^1A95E6You lose conscience with the great impact.^000000";
+			mes("Pow!!");
+			mes("^1A95E6You lose conscience with the great impact.^000000");
 			close2;
 			warp "amatsu",147,136;
 			end;
 		}
 		cutin "job_ko02",2;
-		mes "[Guide Gion]";
-		mes "Teaching...";
-		mes "Been a long time since I last heard that word.";
+		mes("[Guide Gion]");
+		mes("Teaching...");
+		mes("Been a long time since I last heard that word.");
 		next;
-		mes "[Guide Gion]";
-		mes "I guess this little visit was not by coincidence but a start of a connection.";
+		mes("[Guide Gion]");
+		mes("I guess this little visit was not by coincidence but a start of a connection.");
 		next;
-		mes "[Guide Gion]";
-		mes "Sorry I am not a teacher. But!";
+		mes("[Guide Gion]");
+		mes("Sorry I am not a teacher. But!");
 		next;
-		mes "[Guide Gion]";
-		mes "I can help you on the path you've chosen, the ^33CC71"+ (Sex == SEX_MALE ? "Kagerou" : "Oboro") +"^000000 path.";
+		mes("[Guide Gion]");
+		mes("I can help you on the path you've chosen, the ^33CC71"+ (Sex == SEX_MALE ? "Kagerou" : "Oboro") +"^000000 path.");
 		next;
-		mes "^1A95E6You hear Guide Gion's voice faintly as you slip away.^1A95E6";
+		mes("^1A95E6You hear Guide Gion's voice faintly as you slip away.^1A95E6");
 		next;
 		erasequest 5133;
 		setquest 5134;
 		set job_kagero,4;
-		mes "[Guide Gion]";
-		mes "If you are prepared to follow me, Guide Gion, on the "+ (Sex == SEX_MALE ? "Kagerou" : "Oboro") +" path, we will meet again.";
+		mes("[Guide Gion]");
+		mes("If you are prepared to follow me, Guide Gion, on the "+ (Sex == SEX_MALE ? "Kagerou" : "Oboro") +" path, we will meet again.");
 		close2;
 		warp "amatsu",147,136;
 		end;
 	} else if (job_kagero == 4) {
 		cutin "job_ko02",2;
-		mes "[Guide Gion]";
-		mes "I thought you were afraid of the ^33CC71path of the "+ (Sex == SEX_MALE ? "Kagerou" : "Oboro") +"^33CC71 and wouldn't come back.";
+		mes("[Guide Gion]");
+		mes("I thought you were afraid of the ^33CC71path of the "+ (Sex == SEX_MALE ? "Kagerou" : "Oboro") +"^33CC71 and wouldn't come back.");
 		next;
-		mes "[Guide Gion]";
-		mes "But from the look of your eyes, I guess I misjudged you.";
+		mes("[Guide Gion]");
+		mes("But from the look of your eyes, I guess I misjudged you.");
 		next;
-		mes "[Guide Gion]";
-		mes "You will have to train your mind and body to walk steadily in the unknown world and never fall into temptation to stay on the path.";
+		mes("[Guide Gion]");
+		mes("You will have to train your mind and body to walk steadily in the unknown world and never fall into temptation to stay on the path.");
 		next;
-		mes "[Guide Gion]";
-		mes "Our ancestors had 4 tests to train our people.";
+		mes("[Guide Gion]");
+		mes("Our ancestors had 4 tests to train our people.");
 		next;
 		select("4 tests?");
 		cutin "job_ko01",2;
-		mes "[Guide Gion]";
-		mes "Yes, there are 4 tests.";
-		mes "My ancestors trained my people with 4 tests that involve ^087FF8knowledge^000000, ^087FF8survival^000000, ^087FF8weapons^000000, and ^087FF8battle^000000.";
+		mes("[Guide Gion]");
+		mes("Yes, there are 4 tests.");
+		mes("My ancestors trained my people with 4 tests that involve ^087FF8knowledge^000000, ^087FF8survival^000000, ^087FF8weapons^000000, and ^087FF8battle^000000.");
 		next;
-		mes "[Guide Gion]";
-		mes "I know you are curious what these tests are. Let me explain one by one.";
+		mes("[Guide Gion]");
+		mes("I know you are curious what these tests are. Let me explain one by one.");
 		next;
 		while(1) {
 			set .@i, select("Test of Knowledge", "Test of Survival", "Test of Weaponry", "Test of Battle");
 			set .@test, .@test | (1<<(.@i-1));
 			switch (.@i) {
 			case 1:
-				mes "[Guide Gion]";
-				mes "We need to be knowledgeable in order to assist the lord. This test is for this purpose.";
+				mes("[Guide Gion]");
+				mes("We need to be knowledgeable in order to assist the lord. This test is for this purpose.");
 				next;
-				mes "[Guide Gion]";
-				mes "You can pass the test if you successfully solve more than 9 out of 10 questions.";
+				mes("[Guide Gion]");
+				mes("You can pass the test if you successfully solve more than 9 out of 10 questions.");
 				next;
 				if (.@test != 15) {
-					mes "[Guide Gion]";
-					mes "The test will be easy to pass if you've been steady in your studies. Now what other test are you curious about?";
+					mes("[Guide Gion]");
+					mes("The test will be easy to pass if you've been steady in your studies. Now what other test are you curious about?");
 					next;
 				}
 				break;
 			case 2:
-				mes "[Guide Gion]";
-				mes "Missions aren't always easy and safe. That is why survival instincts are vital to us.";
+				mes("[Guide Gion]");
+				mes("Missions aren't always easy and safe. That is why survival instincts are vital to us.");
 				next;
-				mes "[Guide Gion]";
-				mes "My ancestors call this test the dice test. It is a test to advance forward depending on the dice results.";
+				mes("[Guide Gion]");
+				mes("My ancestors call this test the dice test. It is a test to advance forward depending on the dice results.");
 				next;
-				mes "[Guide Gion]";
-				mes "Think of it as the simple dice games people play.";
+				mes("[Guide Gion]");
+				mes("Think of it as the simple dice games people play.");
 				next;
-				mes "[Guide Gion]";
-				mes "But never let your guard down during the test because it isn't called the survival test for nothing.";
+				mes("[Guide Gion]");
+				mes("But never let your guard down during the test because it isn't called the survival test for nothing.");
 				next;
-				mes "[Guide Gion]";
-				mes "There will be blocks that help you while there are blocks that will interrupt you.";
+				mes("[Guide Gion]");
+				mes("There will be blocks that help you while there are blocks that will interrupt you.");
 				next;
 				if (.@test != 15) {
-					mes "[Guide Gion]";
-					mes "If you deal with various situations wisely, you will be able to pass the test. Now what other test are you curious about?";
+					mes("[Guide Gion]");
+					mes("If you deal with various situations wisely, you will be able to pass the test. Now what other test are you curious about?");
 					next;
 				}
 				break;
 			case 3:
-				mes "[Guide Gion]";
-				mes "My family was famous for using unique weapons that we created.";
+				mes("[Guide Gion]");
+				mes("My family was famous for using unique weapons that we created.");
 				next;
-				mes "[Guide Gion]";
-				mes "You would be considered blessed if you created your own unique weapon.";
+				mes("[Guide Gion]");
+				mes("You would be considered blessed if you created your own unique weapon.");
 				next;
-				mes "[Guide Gion]";
-				mes "Creating a weapon for yourself and refining it is the purpose of this test.";
+				mes("[Guide Gion]");
+				mes("Creating a weapon for yourself and refining it is the purpose of this test.");
 				next;
 				if (.@test != 15) {
-					mes "[Guide Gion]";
-					mes "I hope you will be blessed and find the best weapon for yourself. Now what other test are you curious about?";
+					mes("[Guide Gion]");
+					mes("I hope you will be blessed and find the best weapon for yourself. Now what other test are you curious about?");
 					next;
 				}
 				break;
 			case 4:
-				mes "[Guide Gion]";
-				mes "Missions are not always done alone. You will often work in teams of 2 or 3 for a common goal.";
+				mes("[Guide Gion]");
+				mes("Missions are not always done alone. You will often work in teams of 2 or 3 for a common goal.");
 				next;
-				mes "[Guide Gion]";
-				mes "The battle test is only for those that pass that knowledge, survival and weapon tests. So! It is the very last test.";
+				mes("[Guide Gion]");
+				mes("The battle test is only for those that pass that knowledge, survival and weapon tests. So! It is the very last test.");
 				next;
-				mes "[Guide Gion]";
-				mes "Unlike the other three tests that are done alone, you will have to compete with others in this final test.";
+				mes("[Guide Gion]");
+				mes("Unlike the other three tests that are done alone, you will have to compete with others in this final test.");
 				next;
-				mes "[Guide Gion]";
-				mes "There is only one target!!";
-				mes "And only the first to get to the target passes the test.";
+				mes("[Guide Gion]");
+				mes("There is only one target!!");
+				mes("And only the first to get to the target passes the test.");
 				next;
-				mes "[Guide Gion]";
-				mes "You'll be lucky if you have no competitors during your test.";
+				mes("[Guide Gion]");
+				mes("You'll be lucky if you have no competitors during your test.");
 				next;
 				if (.@test != 15) {
-					mes "[Guide Gion]";
-					mes "A challenge is better than explaining it a hundred times. It's the actual experience that makes you better.";
+					mes("[Guide Gion]");
+					mes("A challenge is better than explaining it a hundred times. It's the actual experience that makes you better.");
 					next;
 				}
 				break;
@@ -396,14 +396,14 @@ job_ko,25,115,4	script	Old Man#ko	4_M_KAGE_OLD,{
 			if (.@test == 15) break;
 		}
 		cutin "job_ko02",2;
-		mes "[Guide Gion]";
-		mes "Seeing is believing, so go on and take the challenge.";
+		mes("[Guide Gion]");
+		mes("Seeing is believing, so go on and take the challenge.");
 		next;
 		erasequest 5134;
 		setquest 5135;
 		set job_kagero,5;
-		mes "[Guide Gion]";
-		mes "Let's start right away after you are done with preparations.";
+		mes("[Guide Gion]");
+		mes("Let's start right away after you are done with preparations.");
 		close2;
 		cutin "",255;
 		end;
@@ -414,212 +414,212 @@ job_ko,25,115,4	script	Old Man#ko	4_M_KAGE_OLD,{
 		set .@ko_test, .@ko_test_01 + .@ko_test_02 + .@ko_test_03;
 		if (.@ko_test == 0) {
 			cutin "job_ko03",2;
-			mes "[Guide Gion]";
-			mes "It's been a while.";
+			mes("[Guide Gion]");
+			mes("It's been a while.");
 			next;
-			mes "[Guide Gion]";
-			mes "Since I felt happy like this. I feel young and energetic seeing young people like you challenge themselves with a new path.";
+			mes("[Guide Gion]");
+			mes("Since I felt happy like this. I feel young and energetic seeing young people like you challenge themselves with a new path.");
 			next;
-			mes "[Guide Gion]";
-			mes "We're done with explaining about the tests, now should I tell you my family story?";
+			mes("[Guide Gion]");
+			mes("We're done with explaining about the tests, now should I tell you my family story?");
 			next;
 			cutin "job_ko01",2;
-			mes "[Guide Gion]";
-			mes "My family started from two warriors.";
+			mes("[Guide Gion]");
+			mes("My family started from two warriors.");
 			next;
-			mes "[Guide Gion]";
-			mes "Kagerou, a warrior like the dancing flames of the sun.";
+			mes("[Guide Gion]");
+			mes("Kagerou, a warrior like the dancing flames of the sun.");
 			next;
-			mes "[Guide Gion]";
-			mes "Oboro, a warrior like the misty moonlight.";
+			mes("[Guide Gion]");
+			mes("Oboro, a warrior like the misty moonlight.");
 			next;
-			mes "[Guide Gion]";
-			mes "The Sun and the Moon.";
-			mes "The sunlight that lights up the world and the moonlight that lights up the night. Both were very similar but different warriors.";
+			mes("[Guide Gion]");
+			mes("The Sun and the Moon.");
+			mes("The sunlight that lights up the world and the moonlight that lights up the night. Both were very similar but different warriors.");
 			next;
-			mes "[Guide Gion]";
-			mes "There was a time there was an enmity between both warriors.";
+			mes("[Guide Gion]");
+			mes("There was a time there was an enmity between both warriors.");
 			next;
-			mes "[Guide Gion]";
-			mes "But it didn't take long for them to become one as a family.";
+			mes("[Guide Gion]");
+			mes("But it didn't take long for them to become one as a family.");
 			next;
 			select("How did it go afterwards?");
 			cutin "job_ko02",2;
-			mes "[Guide Gion]";
-			mes "Ha ha ha. It is never fun to listen to the whole story all at once, no? Come back after passing a test and I'll continue my story.";
+			mes("[Guide Gion]");
+			mes("Ha ha ha. It is never fun to listen to the whole story all at once, no? Come back after passing a test and I'll continue my story.");
 			next;
-			mes "[Guide Gion]";
-			mes "Which test will you select as your first test?";
+			mes("[Guide Gion]");
+			mes("Which test will you select as your first test?");
 			next;
 			callsub L_StartTest,select("Test of Knowledge", "Test of Survival", "Test of Weaponry"),1;
 			end;
 		} else if (.@ko_test == 2) {
 			cutin "job_ko01",2;
-			mes "[Guide Gion]";
+			mes("[Guide Gion]");
 			if (.@ko_test_01 == 2) {
 				set .@menu$,":Test of Survival:Test of Weaponry";
-				mes "You've passed the Test of Knowledge.";
+				mes("You've passed the Test of Knowledge.");
 				next;
-				mes "[Guide Gion]";
-				mes "My friend doesn't approve of others that easily but I guess he liked you.";
+				mes("[Guide Gion]");
+				mes("My friend doesn't approve of others that easily but I guess he liked you.");
 				next;
 			} else if (.@ko_test_02 == 2) {
 				set .@menu$,"Test of Knowledge::Test of Weaponry";
-				mes "You've passed the Test of Survival.";
+				mes("You've passed the Test of Survival.");
 				next;
-				mes "[Guide Gion]";
-				mes "Looks like you went through hell with this test.";
+				mes("[Guide Gion]");
+				mes("Looks like you went through hell with this test.");
 				next;
 			} else if (.@ko_test_03 == 2) {
 				set .@menu$,"Test of Knowledge:Test of Survival:";
-				mes "You've passed the Test of Weaponry.";
+				mes("You've passed the Test of Weaponry.");
 				next;
-				mes "[Guide Gion]";
-				mes "I wonder if Joe is satisfied with your performance.";
+				mes("[Guide Gion]");
+				mes("I wonder if Joe is satisfied with your performance.");
 				next;
 			}
 			select("Please continue with the family story.");
 			cutin "job_ko02",2;
-			mes "[Guide Gion]";
-			mes "Looks like you are pretty eager to hear more. Where did I leave off... Ah! I remember.";
+			mes("[Guide Gion]");
+			mes("Looks like you are pretty eager to hear more. Where did I leave off... Ah! I remember.");
 			next;
-			mes "[Guide Gion]";
-			mes "Kagerou, a warrior like the dancing flames of the sun.";
+			mes("[Guide Gion]");
+			mes("Kagerou, a warrior like the dancing flames of the sun.");
 			next;
-			mes "[Guide Gion]";
-			mes "Oboro, a warrior like the misty moonlight.";
+			mes("[Guide Gion]");
+			mes("Oboro, a warrior like the misty moonlight.");
 			next;
-			mes "[Guide Gion]";
-			mes "Both warriors weren't close at first, because personality and everything else was completely opposite of each other.";
+			mes("[Guide Gion]");
+			mes("Both warriors weren't close at first, because personality and everything else was completely opposite of each other.");
 			next;
-			mes "[Guide Gion]";
-			mes "The first place they met was the battlefield. And you know how enemies greet each other on a battlefield.";
+			mes("[Guide Gion]");
+			mes("The first place they met was the battlefield. And you know how enemies greet each other on a battlefield.");
 			next;
-			mes "[Guide Gion]";
-			mes "They ended up injuring each other badly.";
+			mes("[Guide Gion]");
+			mes("They ended up injuring each other badly.");
 			next;
-			mes "[Guide Gion]";
-			mes "But what can you do? War is a war.";
+			mes("[Guide Gion]");
+			mes("But what can you do? War is a war.");
 			next;
-			mes "[Guide Gion]";
-			mes "The friend you've laughed with yesterday is a foe that you have to fight with in a war today.";
+			mes("[Guide Gion]");
+			mes("The friend you've laughed with yesterday is a foe that you have to fight with in a war today.");
 			next;
-			mes "[Guide Gion]";
-			mes "So nobody can get along with anyone during a war.";
+			mes("[Guide Gion]");
+			mes("So nobody can get along with anyone during a war.");
 			next;
-			mes "[Guide Gion]";
-			mes "I'll continue the story after you pass another test.";
+			mes("[Guide Gion]");
+			mes("I'll continue the story after you pass another test.");
 			next;
-			mes "[Guide Gion]";
-			mes "Which test will you choose for the second test?";
+			mes("[Guide Gion]");
+			mes("Which test will you choose for the second test?");
 			next;
 			callsub L_StartTest,select(.@menu$),2;
 			end;
 		} else if (.@ko_test == 4) {
 			cutin "job_ko04",2;
-			mes "[Guide Gion]";
+			mes("[Guide Gion]");
 			if (.@ko_test_01 == 2 && .@ko_test_02 == 2) {
 				set .@last_test,3;
-				mes "You've passed the ^339CCCTests of Knowledge and Survival^000000!";
+				mes("You've passed the ^339CCCTests of Knowledge and Survival^000000!");
 			} else if (.@ko_test_01 == 2 && .@ko_test_03 == 2) {
 				set .@last_test,2;
-				mes "You've passed the ^339CCCTests of Knowledge and Weaponry^000000!";
+				mes("You've passed the ^339CCCTests of Knowledge and Weaponry^000000!");
 			} else if (.@ko_test_02 == 2 && .@ko_test_03 == 2) {
 				set .@last_test,1;
-				mes "You've passed the ^339CCCTests of Survival and Weaponry^000000!";
+				mes("You've passed the ^339CCCTests of Survival and Weaponry^000000!");
 			}
 			next;
-			mes "[Guide Gion]";
-			mes "You are already done with two tests. Hope you've learned a lot from them.";
+			mes("[Guide Gion]");
+			mes("You are already done with two tests. Hope you've learned a lot from them.");
 			next;
 			cutin "job_ko01",2;
-			mes "[Guide Gion]";
-			mes "Shall we continue with the story?";
+			mes("[Guide Gion]");
+			mes("Shall we continue with the story?");
 			next;
-			mes "[Guide Gion]";
-			mes "Kagerou, a warrior like the dancing flames of the sun.";
+			mes("[Guide Gion]");
+			mes("Kagerou, a warrior like the dancing flames of the sun.");
 			next;
-			mes "[Guide Gion]";
-			mes "Oboro, a warrior like the misty moonlight.";
+			mes("[Guide Gion]");
+			mes("Oboro, a warrior like the misty moonlight.");
 			next;
-			mes "[Guide Gion]";
-			mes "I think I left off when the two warriors met at the battlefield as enemies.";
+			mes("[Guide Gion]");
+			mes("I think I left off when the two warriors met at the battlefield as enemies.");
 			next;
-			mes "[Guide Gion]";
-			mes "The long war ended eventually but the wounds and pain of those that survived had just started.";
+			mes("[Guide Gion]");
+			mes("The long war ended eventually but the wounds and pain of those that survived had just started.");
 			next;
-			mes "[Guide Gion]";
-			mes "So these two warriors started to embrace and heal the war wounds together and became one.";
+			mes("[Guide Gion]");
+			mes("So these two warriors started to embrace and heal the war wounds together and became one.");
 			next;
-			mes "[Guide Gion]";
-			mes "There is a backstory of a man appearing in front of them and winning the loyalty from both warriors.";
+			mes("[Guide Gion]");
+			mes("There is a backstory of a man appearing in front of them and winning the loyalty from both warriors.");
 			next;
 			select("Who is this man?");
-			mes "[Guide Gion]";
-			mes "There isn't much known about this man. Only a short mentioning of the two warriors pledging their allegiance.";
+			mes("[Guide Gion]");
+			mes("There isn't much known about this man. Only a short mentioning of the two warriors pledging their allegiance.");
 			next;
-			mes "[Guide Gion]";
-			mes "Maybe current generations like me are the ancestors of the current Amatsu lord? But this is only an assumption.";
+			mes("[Guide Gion]");
+			mes("Maybe current generations like me are the ancestors of the current Amatsu lord? But this is only an assumption.");
 			next;
-			mes "[Guide Gion]";
-			mes "I'm almost at the end of my family story. Come back after you've passed the third test and I will tell you the rest.";
+			mes("[Guide Gion]");
+			mes("I'm almost at the end of my family story. Come back after you've passed the third test and I will tell you the rest.");
 			next;
 			callsub L_StartTest,.@last_test,3;
 			end;
 		} else if (.@ko_test == 6) {
 			cutin "job_ko01",2;
-			mes "[Guide Gion]";
-			mes "You've gone through three tests leaving only one to pass.";
+			mes("[Guide Gion]");
+			mes("You've gone through three tests leaving only one to pass.");
 			next;
-			mes "[Guide Gion]";
-			mes "As I've told you before, the last test is different because you have to compete against others.";
+			mes("[Guide Gion]");
+			mes("As I've told you before, the last test is different because you have to compete against others.");
 			next;
 			select("Will you continue the story?");
 			cutin "job_ko02",2;
-			mes "[Guide Gion]";
-			mes "Ha ha ha. I will finish the story.";
+			mes("[Guide Gion]");
+			mes("Ha ha ha. I will finish the story.");
 			next;
-			mes "[Guide Gion]";
-			mes "Kagerou, a warrior like the dancing flames of the sun.";
+			mes("[Guide Gion]");
+			mes("Kagerou, a warrior like the dancing flames of the sun.");
 			next;
-			mes "[Guide Gion]";
-			mes "Oboro, a warrior like the misty moonlight.";
+			mes("[Guide Gion]");
+			mes("Oboro, a warrior like the misty moonlight.");
 			next;
-			mes "[Guide Gion]";
-			mes "It is told that the man that earned the loyalty of the two warriors was a humorous person.";
+			mes("[Guide Gion]");
+			mes("It is told that the man that earned the loyalty of the two warriors was a humorous person.");
 			next;
-			mes "[Guide Gion]";
-			mes "He like the jokes and conversations better than quarrels and he liked women over men.";
+			mes("[Guide Gion]");
+			mes("He like the jokes and conversations better than quarrels and he liked women over men.");
 			next;
-			mes "[Guide Gion]";
-			mes "Hmm... I don't know why this part of the story was kept alive all these years but this man wanted to bring these two warriors together.";
+			mes("[Guide Gion]");
+			mes("Hmm... I don't know why this part of the story was kept alive all these years but this man wanted to bring these two warriors together.");
 			next;
-			mes "[Guide Gion]";
-			mes "Both warriors did travel together after the war but kept an awkward distance from each other.";
+			mes("[Guide Gion]");
+			mes("Both warriors did travel together after the war but kept an awkward distance from each other.");
 			next;
-			mes "[Guide Gion]";
-			mes "They must have had their reasons but their lord would send them out to a difficult mission together, put them in a secret room together and all sorts of situations together.";
+			mes("[Guide Gion]");
+			mes("They must have had their reasons but their lord would send them out to a difficult mission together, put them in a secret room together and all sorts of situations together.");
 			next;
 			select("Sounds like an odd person.");
-			mes "[Guide Gion]";
-			mes "Yes, he was. And his efforts didn't go in vain since the two warriors eventually got acquainted and married.";
+			mes("[Guide Gion]");
+			mes("Yes, he was. And his efforts didn't go in vain since the two warriors eventually got acquainted and married.");
 			next;
-			mes "[Guide Gion]";
-			mes "This is how the family started.";
+			mes("[Guide Gion]");
+			mes("This is how the family started.");
 			next;
 			select("What happened after?");
-			mes "[Guide Gion]";
-			mes "Sadly, the next part of story was purposely discontinued.";
+			mes("[Guide Gion]");
+			mes("Sadly, the next part of story was purposely discontinued.");
 			next;
-			mes "[Guide Gion]";
-			mes "I think it's because someone wanted us to let go of the past and move forward.";
+			mes("[Guide Gion]");
+			mes("I think it's because someone wanted us to let go of the past and move forward.");
 			next;
-			mes "[Guide Gion]";
-			mes "That's that. Now shouldn't you be preparing for the last test?";
+			mes("[Guide Gion]");
+			mes("That's that. Now shouldn't you be preparing for the last test?");
 			next;
 			set job_kagero,6;
-			mes "[Guide Gion]";
-			mes "But you must be tired from all the tests so far. Take a rest.";
+			mes("[Guide Gion]");
+			mes("But you must be tired from all the tests so far. Take a rest.");
 			close2;
 			cutin "",255;
 			end;
@@ -631,13 +631,13 @@ job_ko,25,115,4	script	Old Man#ko	4_M_KAGE_OLD,{
 				set .@test_ko$, "Survival";
 			else if (.@ko_test_03 == 1)
 				set .@test_ko$, "Weaponry";
-			mes "[Guide Gion]";
-			mes "Weren't you taking the Test of " + .@test_ko$ + " just now?";
+			mes("[Guide Gion]");
+			mes("Weren't you taking the Test of " + .@test_ko$ + " just now?");
 			next;
 			switch(select("I want to go back to test site.", "Ah... no.")) {
 			case 1:
-				mes "[Guide Gion]";
-				mes "The Test of " + .@test_ko$ + " site is over here.";
+				mes("[Guide Gion]");
+				mes("The Test of " + .@test_ko$ + " site is over here.");
 				close2;
 				if (.@ko_test_01 == 1)
 					warp "job_ko",72,128;
@@ -647,8 +647,8 @@ job_ko,25,115,4	script	Old Man#ko	4_M_KAGE_OLD,{
 					warp "job_ko",121,129;
 				end;
 			case 2:
-				mes "[Guide Gion]";
-				mes "The village is over here.";
+				mes("[Guide Gion]");
+				mes("The village is over here.");
 				close2;
 				warp "amatsu",147,136;
 				end;
@@ -656,40 +656,40 @@ job_ko,25,115,4	script	Old Man#ko	4_M_KAGE_OLD,{
 		}
 	} else if (job_kagero == 6) {
 		cutin "job_ko01",2;
-		mes "[Guide Gion]";
-		mes "You've come back already? You could have rested more. Is there a reason to hurry?";
+		mes("[Guide Gion]");
+		mes("You've come back already? You could have rested more. Is there a reason to hurry?");
 		next;
 		input .@inputstr$;
 		cutin "job_ko03",2;
-		mes "[Guide Gion]";
-		mes "Because of ^B24E59" + .@inputstr$ + "^000000?";
+		mes("[Guide Gion]");
+		mes("Because of ^B24E59" + .@inputstr$ + "^000000?");
 		next;
-		mes "[Guide Gion]";
-		mes "I have to admit, I don't understand you now.";
+		mes("[Guide Gion]");
+		mes("I have to admit, I don't understand you now.");
 		next;
-		mes "[Guide Gion]";
-		mes "But since you've gone through much, I'm sure you will do good with the final test.";
+		mes("[Guide Gion]");
+		mes("But since you've gone through much, I'm sure you will do good with the final test.");
 		next;
 		cutin "job_ko01",2;
-		mes "[Guide Gion]";
-		mes "Now! No more small talk. I'll let you know what the target is for the Test of Battle.";
+		mes("[Guide Gion]");
+		mes("Now! No more small talk. I'll let you know what the target is for the Test of Battle.");
 		next;
-		mes "[Guide Gion]";
-		mes "The target is a monster called the ^FF0000Family Secret^000000.";
+		mes("[Guide Gion]");
+		mes("The target is a monster called the ^FF0000Family Secret^000000.");
 		next;
-		mes "[Guide Gion]";
-		mes "You will have to be careful because there are many similiar shaped and named monsters in test site.";
+		mes("[Guide Gion]");
+		mes("You will have to be careful because there are many similiar shaped and named monsters in test site.");
 		next;
-		mes "[Guide Gion]";
-		mes "And if you are lucky, there will be others targeting the monster.";
+		mes("[Guide Gion]");
+		mes("And if you are lucky, there will be others targeting the monster.");
 		next;
-		mes "[Guide Gion]";
-		mes "May the blessings of '" + (Sex == SEX_MALE ? "Kagerou, dancing sun" : "Oboro, misty moonlight") + "' be with you.";
+		mes("[Guide Gion]");
+		mes("May the blessings of '" + (Sex == SEX_MALE ? "Kagerou, dancing sun" : "Oboro, misty moonlight") + "' be with you.");
 		next;
 		setquest 5146;
 		set job_kagero,7;
-		mes "[Guide Gion]";
-		mes "Then let's go to the battle test field.";
+		mes("[Guide Gion]");
+		mes("Then let's go to the battle test field.");
 		close2;
 		switch(rand(3)) {
 			case 0: warp "job_ko",142,20; break;
@@ -699,13 +699,13 @@ job_ko,25,115,4	script	Old Man#ko	4_M_KAGE_OLD,{
 		end;
 	} else if (job_kagero == 7 || job_kagero == 8) {
 		cutin "job_ko03",2;
-		mes "[Guide Gion]";
-		mes "I see you are in the middle of the ^339CCCTest of Battle^000000. Will you go back to the test site?";
+		mes("[Guide Gion]");
+		mes("I see you are in the middle of the ^339CCCTest of Battle^000000. Will you go back to the test site?");
 		next;
 		switch(select("Go back to the test site.", "Visit the village.")) {
 		case 1:
-			mes "[Guide Gion]";
-			mes "The test site is over here.";
+			mes("[Guide Gion]");
+			mes("The test site is over here.");
 			close2;
 			switch(rand(3)) {
 				case 0: warp "job_ko",142,20; break;
@@ -714,16 +714,16 @@ job_ko,25,115,4	script	Old Man#ko	4_M_KAGE_OLD,{
 			}
 			end;
 		case 2:
-			mes "[Guide Gion]";
-			mes "The village is over here.";
+			mes("[Guide Gion]");
+			mes("The village is over here.");
 			close2;
 			cutin "",255;
 			end;
 		}
 	} else {
 		cutin "job_ko03",2;
-		mes "[Guide Gion]";
-		mes "You should not be here. Leave!";
+		mes("[Guide Gion]");
+		mes("You should not be here. Leave!");
 		close2;
 		warp "amatsu",147,136;
 		end;
@@ -737,37 +737,37 @@ L_StartTest:
 		case 2: set .@str$,"You are taking the ^339CCCTest of %s^000000 as the second test? "; break;
 		case 3: set .@str$,"Your third test is the ^339CCCTest of %s^000000! "; break;
 	}
-	mes "[Guide Gion]";
+	mes("[Guide Gion]");
 	switch (getarg(0)) {
 	case 1:
-		mes sprintf(.@str$ + "Then I will get to see a familiar face after so long...","Knowledge");
+		mes(sprintf(.@str$ + "Then I will get to see a familiar face after so long...","Knowledge"));
 		next;
 		select("Familiar face?");
 		setquest 5136;
-		mes "[Guide Gion]";
-		mes "Ha ha ha. You'll know when we get there. The Test of Knowledge is taken over here.";
+		mes("[Guide Gion]");
+		mes("Ha ha ha. You'll know when we get there. The Test of Knowledge is taken over here.");
 		close2;
 		warp "job_ko",72,128;
 		end;
 	case 2:
-		mes sprintf(.@str$ + "It's a lonesome test that you have to face alone.","Survival");
+		mes(sprintf(.@str$ + "It's a lonesome test that you have to face alone.","Survival"));
 		next;
 		setquest 5137;
-		mes "[Guide Gion]";
-		mes "But I believe you can handle it. The Test of Survival is taken over here.";
+		mes("[Guide Gion]");
+		mes("But I believe you can handle it. The Test of Survival is taken over here.");
 		close2;
 		warp "job_ko",62,16;
 		end;
 	case 3:
-		mes sprintf(.@str$ + "I have something to give you before you go.","Weaponry");
+		mes(sprintf(.@str$ + "I have something to give you before you go.","Weaponry"));
 		next;
 		setquest 5138;
 		getitem "Iron_Ore", 5;
 		getitem "Phracon", 1;
-		mes "You receive 5 Iron Ore and 1 Phracon.";
+		mes("You receive 5 Iron Ore and 1 Phracon.");
 		next;
-		mes "[Guide Gion]";
-		mes "You will find these useful. The Test of Weaponry is taken over here.";
+		mes("[Guide Gion]");
+		mes("You will find these useful. The Test of Weaponry is taken over here.");
 		close2;
 		warp "job_ko",121,129;
 		end;
@@ -780,70 +780,70 @@ job_ko,81,124,4	script	Cougar#ko	4_M_JOB_ASSASSIN,{
 		for (set .@i,5131; .@i<=5146; set .@i,.@i+1)
 			if (questprogress(.@i)) erasequest .@i;
 		set job_kagero,0;
-		mes "[Cougar]";
-		mes "Sorry, your family is not same as ours, is there something wrong?";
+		mes("[Cougar]");
+		mes("Sorry, your family is not same as ours, is there something wrong?");
 		close2;
 		warp "amatsu",147,136;
 		end;
 	}
 	if (job_kagero == 5) {
 		if (MaxWeight - Weight < 1000 || checkweight("Knife",1) == 0) {
-			mes "[Cougar]";
-			mes "This is a test of knowledge, so why did you bring so many things?";
+			mes("[Cougar]");
+			mes("This is a test of knowledge, so why did you bring so many things?");
 			close;
 		}
 		set .@ko_test_01, questprogress(5136);
 		set .@ko_test_01_1, questprogress(5139);
 		if (.@ko_test_01 == 1 && .@ko_test_01_1 == 0) {
-			mes "[Cougar]";
-			mes "It's been a while.";
+			mes("[Cougar]");
+			mes("It's been a while.");
 			next;
 			select("Aren't you...");
-			mes "[Cougar]";
-			mes "I remember you from before looking for the way of the ninja.";
+			mes("[Cougar]");
+			mes("I remember you from before looking for the way of the ninja.");
 			next;
-			mes "[Cougar]";
-			mes "You've grown this strong already?";
+			mes("[Cougar]");
+			mes("You've grown this strong already?");
 			next;
-			mes "[Cougar]";
-			mes "Ha ha ha-";
-			mes "A truly determined youth! I like that.";
+			mes("[Cougar]");
+			mes("Ha ha ha-");
+			mes("A truly determined youth! I like that.");
 			next;
-			mes "[Cougar]";
-			mes "Good! The test you are about to take is the ^339CCCTest of Knowledge^000000.";
+			mes("[Cougar]");
+			mes("Good! The test you are about to take is the ^339CCCTest of Knowledge^000000.");
 			next;
-			mes "[Cougar]";
-			mes "I hope you haven't been lazy with your studies while focusing on getting stronger?";
+			mes("[Cougar]");
+			mes("I hope you haven't been lazy with your studies while focusing on getting stronger?");
 			next;
 			switch(select("Yes", "No")) {
 			case 1:
 				setquest 5139;
-				mes "[Cougar]";
-				mes "That's a relief. Let me know when you are ready to start the test.";
+				mes("[Cougar]");
+				mes("That's a relief. Let me know when you are ready to start the test.");
 				close;
 			case 2:
 				setquest 5139;
-				mes "[Cougar]";
-				mes "So you were all talk? Well, let me know when you are ready then.";
+				mes("[Cougar]");
+				mes("So you were all talk? Well, let me know when you are ready then.");
 				close;
 			}
 		} else if (.@ko_test_01 == 1 && .@ko_test_01_1 == 1) {
-			mes "[Cougar]";
-			mes "I'm ready at my end. Are you ready for the test?";
+			mes("[Cougar]");
+			mes("I'm ready at my end. Are you ready for the test?");
 			next;
 			if(select("Yes", "No") == 2) {
-				mes "[Cougar]";
-				mes "Well, what can I do but wait for you.";
+				mes("[Cougar]");
+				mes("Well, what can I do but wait for you.");
 				close;
 			}
-			mes "[Cougar]";
-			mes "This isn't your first test, is it?";
+			mes("[Cougar]");
+			mes("This isn't your first test, is it?");
 			next;
-			mes "[Cougar]";
-			mes "You only need to choose the correct answer to my questions.";
+			mes("[Cougar]");
+			mes("You only need to choose the correct answer to my questions.");
 			next;
-			mes "[Cougar]";
-			mes "Let's start.";
+			mes("[Cougar]");
+			mes("Let's start.");
 			next;
 
 			set .@questions,10;  // number of questions to ask
@@ -864,8 +864,8 @@ job_ko,81,124,4	script	Cougar#ko	4_M_JOB_ASSASSIN,{
 
 			set @job_ko_cougar,0;
 			for (set .@i,1; .@i<=.@questions; set .@i,.@i+1) {
-				mes "[Cougar]";
-				mes (.@i < .@questions)?"Question number "+.@i+":":"Last question:";
+				mes("[Cougar]");
+				mes((.@i < .@questions)?"Question number "+.@i+":":"Last question:");
 				switch (.@n[.@i-1]) {
 					case 1: callsub L_Question,"What is the DEX + LUK total for a Job Master?",2,"8:10:12:14"; break;
 					case 2: callsub L_Question,"What is the highest job level for a ninja?",1,"70:50:99:100"; break;
@@ -918,49 +918,49 @@ job_ko,81,124,4	script	Cougar#ko	4_M_JOB_ASSASSIN,{
 					case 49: callsub L_Question,"Which of the following blacksmiths do not create ninja items?",2,"Khaibara:Aiku:Tetsu:Toshu"; break;
 					case 50: callsub L_Question,"What is the name of the suspicious man you can meet during the Ninja job change quest?",3,"Red Leopard Jack:Black Leopard Jack:Red Leopard Joe:Black Leopard Joe"; break;
 					default:
-						mes "[Cougar]";
-						mes "An unknown error has occurred.";
-						mes "Please contact customer service.";
+						mes("[Cougar]");
+						mes("An unknown error has occurred.");
+						mes("Please contact customer service.");
 						close;
 				}
 			}
-			mes "[Cougar]";
-			mes "You're through all 10 questions. Wasn't so bad! The important part starts now.";
+			mes("[Cougar]");
+			mes("You're through all 10 questions. Wasn't so bad! The important part starts now.");
 			next;
-			mes "[Cougar]";
-			mes "... ... ...";
+			mes("[Cougar]");
+			mes("... ... ...");
 			next;
 			if (@job_ko_cougar < 90) {
-				mes "[Cougar]";
-				mes "You fool!!";
-				mes "You couldn't even solve these?";
+				mes("[Cougar]");
+				mes("You fool!!");
+				mes("You couldn't even solve these?");
 				next;
-				mes "[Cougar]";
-				mes "Can't believe someone who is taking a new path can be so pathetic.";
+				mes("[Cougar]");
+				mes("Can't believe someone who is taking a new path can be so pathetic.");
 				next;
-				mes "[Cougar]";
-				mes "I'll give you another chance.";
-				mes "You will take the test again with new questions. Better pass it this time.";
+				mes("[Cougar]");
+				mes("I'll give you another chance.");
+				mes("You will take the test again with new questions. Better pass it this time.");
 			} else {
-				mes "[Cougar]";
-				mes "Hmm. " + (@job_ko_cougar) + "?";
+				mes("[Cougar]");
+				mes("Hmm. " + (@job_ko_cougar) + "?");
 				next;
-				mes "[Cougar]";
-				mes "Well, looks like you weren't lazy with your studies.";
+				mes("[Cougar]");
+				mes("Well, looks like you weren't lazy with your studies.");
 				next;
-				mes "[Cougar]";
-				mes "What? Proud of yourself for solving these questions?";
+				mes("[Cougar]");
+				mes("What? Proud of yourself for solving these questions?");
 				next;
-				mes "[Cougar]";
-				mes "You still have a long way to go and this is only a small fraction of it.";
+				mes("[Cougar]");
+				mes("You still have a long way to go and this is only a small fraction of it.");
 				next;
-				mes "[Cougar]";
-				mes "Well... I'm curious how far your strong will can take you through other tests.";
+				mes("[Cougar]");
+				mes("Well... I'm curious how far your strong will can take you through other tests.");
 				next;
 				completequest 5136;
 				erasequest 5139;
-				mes "[Cougar]";
-				mes "I'll let you go now so go report back to Guide Gion with your results.";
+				mes("[Cougar]");
+				mes("I'll let you go now so go report back to Guide Gion with your results.");
 				close2;
 				warp "job_ko",16,113;
 				end;
@@ -968,27 +968,27 @@ job_ko,81,124,4	script	Cougar#ko	4_M_JOB_ASSASSIN,{
 			set @job_ko_cougar,0;
 			close;
 		} else if (.@ko_test_01 == 2 && .@ko_test_01_1 == 0) {
-			mes "[Cougar]";
-			mes "I'll let you go now so go report back to Guide Gion with your results.";
+			mes("[Cougar]");
+			mes("I'll let you go now so go report back to Guide Gion with your results.");
 			close2;
 			warp "job_ko",16,113;
 			end;
 		}
 	}
-	mes "[Cougar]";
-	mes "How did you get here?";
+	mes("[Cougar]");
+	mes("How did you get here?");
 	next;
-	mes "[Cougar]";
-	mes "It's my duty to get rid of you.";
-	mes "^000099(He's a short, silent man.)^000000";
-	mes "This will push you back!";
+	mes("[Cougar]");
+	mes("It's my duty to get rid of you.");
+	mes("^000099(He's a short, silent man.)^000000");
+	mes("This will push you back!");
 	close2;
 	warp "amatsu",147,136;
 	end;
 
 //callsub L_Question,"<Question>",<correct answer choice>,"<Choice 1>:<Choice 2>:<Choice 3>:<Choice 4>";
 L_Question:
-	mes getarg(0);
+	mes(getarg(0));
 	next;
 	if(select(getarg(2)) == getarg(1))
 		set @job_ko_cougar, @job_ko_cougar + 10;
@@ -999,8 +999,8 @@ L_Question:
 
 //- Functions -
 function	script	F_KO_Survival_mes	{
-	mes "[No. " + getarg(0) + "]";
-	mes "^1A95E6Other letters are too small to read. Let's look up close.^000000";
+	mes("[No. " + getarg(0) + "]");
+	mes("^1A95E6Other letters are too small to read. Let's look up close.^000000");
 	close;
 }
 
@@ -1055,24 +1055,24 @@ function	script	F_KO_Survival_warp	{
 //callfunc "F_KO_Survival_dice",<location>{,<LP (default:1)>{,<0:auto-warp (default), 1:do not warp>}}
 //Return: dice value [1..6] ONLY IF arg2 = 1
 function	script	F_KO_Survival_dice	{
-	mes "Location: " + getarg(0);
-	mes "Total LP: " + job_kagero_lp;
-	mes "To roll the dice, you need to consume " + getarg(1,1) + " ^FD0260LP^000000.";
+	mes("Location: " + getarg(0));
+	mes("Total LP: " + job_kagero_lp);
+	mes("To roll the dice, you need to consume " + getarg(1,1) + " ^FD0260LP^000000.");
 	next;
 	select("Roll the dice.");
 	if (job_kagero_lp < getarg(1,1)) {
-		mes "Due to insufficient ^FD0260LP^000000, you will be returned to starting position.";
+		mes("Due to insufficient ^FD0260LP^000000, you will be returned to starting position.");
 		callfunc "F_KO_Survival_warp",0;
 		end;
 	}
 	set job_kagero_lp, job_kagero_lp - getarg(1,1);
 	set .@dice, rand(1,6);
 	emotion 57 + .@dice,1;
-	mes "The dice came out as " + .@dice + ".";
+	mes("The dice came out as " + .@dice + ".");
 	if (getarg(2,0))
 		return .@dice;
 	else {
-		mes "Press Close to move forward " + .@dice + " blocks.";
+		mes("Press Close to move forward " + .@dice + " blocks.");
 		callfunc "F_KO_Survival_warp", .@dice + getarg(0);
 		end;
 	}
@@ -1080,22 +1080,22 @@ function	script	F_KO_Survival_dice	{
 
 //callfunc "F_KO_Survival_dice2",<location>{,<LP (default:2)>}
 function	script	F_KO_Survival_dice2	{
-	mes "Location: " + getarg(0);
-	mes "Total LP: " + job_kagero_lp;
-	mes "To roll the dice, you need to consume " + getarg(1,2) + " ^FD0260LP^000000.";
+	mes("Location: " + getarg(0));
+	mes("Total LP: " + job_kagero_lp);
+	mes("To roll the dice, you need to consume " + getarg(1,2) + " ^FD0260LP^000000.");
 	next;
 	select("Roll the first dice.");
 	if (job_kagero_lp < getarg(1,2)) {
-		mes "Due to insufficient ^FD0260LP^000000, you will be returned to starting position.";
+		mes("Due to insufficient ^FD0260LP^000000, you will be returned to starting position.");
 		callfunc "F_KO_Survival_warp",0;
 		end;
 	}
 	set job_kagero_lp, job_kagero_lp - getarg(1,2);
-	mes "< Used " + getarg(1,2) + " LP >";
+	mes("< Used " + getarg(1,2) + " LP >");
 	next;
 	set @job_ko_dice1, rand(1,6);
 	emotion 57 + @job_ko_dice1,1;
-	mes "First dice result is " + @job_ko_dice1 + ". Do you want to roll the second dice?";
+	mes("First dice result is " + @job_ko_dice1 + ". Do you want to roll the second dice?");
 	next;
 	select("Roll the second dice.");
 	set @job_ko_dice2, rand(1,6);
@@ -1108,28 +1108,28 @@ function	script	F_KO_Survival_rps	{
 	setarray .@rps$[1], "Scissors", "Rock", "Paper";
 	setarray .@emote[1], e_scissors, e_rock, e_paper;
 
-	mes "Rock! Paper! Scissors!";
+	mes("Rock! Paper! Scissors!");
 	next;
 	set .@pc, select("Give scissors.", "Give rock.", "Give paper.");
 	set .@npc, rand(1,3);
 	emotion .@emote[.@pc],1;
 	emotion .@emote[.@npc];
-	mes "=Game Results=";
-	mes "Machine: " + .@rps$[.@npc] + ".";
-	mes "You: " + .@rps$[.@pc] + ".";
+	mes("=Game Results=");
+	mes("Machine: " + .@rps$[.@npc] + ".");
+	mes("You: " + .@rps$[.@pc] + ".");
 	next;
 	if ((.@npc == 1 && .@pc == 2) || (.@npc == 2 && .@pc == 3) || (.@npc == 3 && .@pc == 1)) {
-		mes "You Win";
+		mes("You Win");
 		return 1;
 	} else if (.@pc == .@npc) {
-		mes "Draw";
+		mes("Draw");
 		return 0;
 	} else if ((.@npc == 1 && .@pc == 3) || (.@npc == 2 && .@pc == 1) || (.@npc == 3 && .@pc == 2)) {
-		mes "You Lose";
+		mes("You Lose");
 		return -1;
 	} else {
-		mes "An unknown error has occurred.";
-		mes "Please contact customer service.";
+		mes("An unknown error has occurred.");
+		mes("Please contact customer service.");
 		close;
 	}
 }
@@ -1139,7 +1139,7 @@ function	script	F_KO_Survival_rps	{
 	callfunc "F_KO_Survival_mes", atoi(substr(strnpcinfo(NPC_NAME_HIDDEN),3,4));
 	end;
 OnTouch:
-	mes "There are tiny letters on the sign.";
+	mes("There are tiny letters on the sign.");
 	next;
 	switch (atoi(substr(strnpcinfo(NPC_NAME_HIDDEN),3,4))) {
 		case  2: set .@id,0; break;
@@ -1150,8 +1150,8 @@ OnTouch:
 		case 30: set .@id,9; break;
 		case 35: set .@id,29; break;
 	}
-	mes "This block has a trap.";
-	mes "Press Close to go back to block " + .@id + ".";
+	mes("This block has a trap.");
+	mes("Press Close to go back to block " + .@id + ".");
 	callfunc "F_KO_Survival_warp", .@id;
 	end;
 }
@@ -1166,34 +1166,34 @@ OnTouch:
 		case 28: set .@var$, "$20110808_vko03"; break;
 		//case 38: set .@var$, "$20110808_vko04"; break;
 	}
-	mes "There are tiny letters on the sign.";
+	mes("There are tiny letters on the sign.");
 	next;
-	mes "If you don't want to be caught, install a trap.";
+	mes("If you don't want to be caught, install a trap.");
 	next;
 	if (getd(.@var$) == 0) {
-		mes "There is currently no trap installed.";
+		mes("There is currently no trap installed.");
 		next;
-		mes "Do you want to use 10 ^FD0260LP^000000 to install a trap?";
+		mes("Do you want to use 10 ^FD0260LP^000000 to install a trap?");
 		next;
 		if(select("Install a trap.", "Roll the Dice.") == 1) {
 			if (job_kagero_lp > 9) {
-				mes "< Used 10 LP >";
+				mes("< Used 10 LP >");
 				set job_kagero_lp, job_kagero_lp - 10;
 				setd .@var$,1;
 				next;
-				mes "The trap is installed. Please roll the dice.";
+				mes("The trap is installed. Please roll the dice.");
 				next;
 			} else {
-				mes "< Did not use 10 LP >";
-				mes "^FD0260LP^000000 insufficient! Please roll the dice.";
+				mes("< Did not use 10 LP >");
+				mes("^FD0260LP^000000 insufficient! Please roll the dice.");
 				next;
 			}
 		}
 	} else {
 		set job_kagero_lp,0;
 		setd .@var$,0;
-		mes "You are caught in the trap installed.";
-		mes "Press Close to go back to block 0.";
+		mes("You are caught in the trap installed.");
+		mes("Press Close to go back to block 0.");
 		callfunc "F_KO_Survival_warp",0;
 		end;
 	}
@@ -1206,13 +1206,13 @@ OnTouch:
 	end;
 OnTouch:
 	set .@id, atoi(substr(strnpcinfo(NPC_NAME_HIDDEN),3,4));
-	mes "There are tiny letters on the sign.";
+	mes("There are tiny letters on the sign.");
 	next;
-	mes "This block is blessed.";
-	mes "Life Point recovers 7 ^FD0260LP^000000.";
-	mes "Cannot exceed maximum 100 ^FD0260LP^000000.";
+	mes("This block is blessed.");
+	mes("Life Point recovers 7 ^FD0260LP^000000.");
+	mes("Cannot exceed maximum 100 ^FD0260LP^000000.");
 	next;
-	mes "< Recovered " + ((job_kagero_lp + 7 > 100) ? "" : "7") + " LP >";
+	mes("< Recovered " + ((job_kagero_lp + 7 > 100) ? "" : "7") + " LP >");
 	next;
 	set job_kagero_lp, ((job_kagero_lp + 7 > 100) ? 100 : job_kagero_lp + 7);
 	callfunc "F_KO_Survival_dice",.@id;
@@ -1226,40 +1226,40 @@ OnTouch:
 	set .@id, atoi(substr(strnpcinfo(NPC_NAME_HIDDEN),3,4));
 	set .@playtime, questprogress(5141,PLAYTIME);
 	if (!.@playtime) {
-		mes "There are tiny letters on the sign.";
+		mes("There are tiny letters on the sign.");
 		next;
-		mes "If you do not pay 5 ^FD0260LP^000000, you will be cursed and immobilized for 2 minutes.";
+		mes("If you do not pay 5 ^FD0260LP^000000, you will be cursed and immobilized for 2 minutes.");
 		next;
 		if(select("Use 5 LP", "Do not pay.") == 1) {
 			if (job_kagero_lp > 4) {
 				set job_kagero_lp, job_kagero_lp - 5;
-				mes "<Used 5 LP>";
-				mes "You can roll the dice.";
+				mes("<Used 5 LP>");
+				mes("You can roll the dice.");
 				next;
 				callfunc "F_KO_Survival_dice",.@id;
 				end;
 			} else {
-				mes "< Did not use 5 LP >";
-				mes "Could not withstand the curse.";
+				mes("< Did not use 5 LP >");
+				mes("Could not withstand the curse.");
 				next;
 			}
 		}
 		setquest 5141;
-		mes "You are cursed and cannot move to any other block for 2 minutes.";
+		mes("You are cursed and cannot move to any other block for 2 minutes.");
 		close;
 	} else if (.@playtime == 1) {
-		mes "You are cursed and cannot move to any other block for 2 minutes.";
+		mes("You are cursed and cannot move to any other block for 2 minutes.");
 		close;
 	} else if (.@playtime == 2) {
-		mes "The immobilize curse lasted for 2 minutes and then was removed.";
+		mes("The immobilize curse lasted for 2 minutes and then was removed.");
 		next;
 		erasequest 5141;
 		callfunc "F_KO_Survival_dice",.@id;
 		end;
 	} else {
 		erasequest 5141;
-		mes "An unknown error has occurred.";
-		mes "Please contact customer service.";
+		mes("An unknown error has occurred.");
+		mes("Please contact customer service.");
 		close;
 	}
 }
@@ -1269,9 +1269,9 @@ OnTouch:
 	end;
 OnTouch:
 	set .@id, atoi(substr(strnpcinfo(NPC_NAME_HIDDEN),3,4));
-	mes "There are tiny letters on the sign.";
+	mes("There are tiny letters on the sign.");
 	next;
-	mes "Area cursed with 10 times the normal gravity. You will need 10 ^FD0260LP^000000 to roll the dice.";
+	mes("Area cursed with 10 times the normal gravity. You will need 10 ^FD0260LP^000000 to roll the dice.");
 	next;
 	callfunc "F_KO_Survival_dice",.@id,10;
 	end;
@@ -1283,24 +1283,24 @@ job_ko,57,16,4	script	Sight#ko_00	4_BULLETIN_BOARD2,1,1,{
 	end;
 OnTouch:
 	if (job_kagero != 5) {
-		mes "You should not be here.";
+		mes("You should not be here.");
 		close2;
 		warp "amatsu",147,136;
 		end;
 	}
 	if (questprogress(5137) == 1 && questprogress(5140) == 0) {
-		mes "There are tiny letters on the sign.";
+		mes("There are tiny letters on the sign.");
 		next;
 		callsub L_Description;
 		setquest 5140;
 		set job_kagero_lp,100;
-		mes "You've gained 100 Life Points (LP).";
+		mes("You've gained 100 Life Points (LP).");
 		next;
 	} else {
 		if (questprogress(5141,PLAYTIME) > 0)
 			erasequest 5141;
 		set job_kagero_lp,100;
-		mes "You've returned to the first block. Your LP is recovered.";
+		mes("You've returned to the first block. Your LP is recovered.");
 		next;
 		callsub L_Description;
 	}
@@ -1311,15 +1311,15 @@ L_Description:
 	while (1) {
 		if(select("Read the description.", "Start the test.") == 2)
 			break;
-		mes "The Test of Survival starts from here and you use ^FD0260100 Life Points (LP)^000000 and roll dice to advance forward through the test.";
+		mes("The Test of Survival starts from here and you use ^FD0260100 Life Points (LP)^000000 and roll dice to advance forward through the test.");
 		next;
-		mes "The whole test starts from block 0 to block 40 and each block you get can either give or take your LP.";
+		mes("The whole test starts from block 0 to block 40 and each block you get can either give or take your LP.");
 		next;
-		mes "You need to have some ^FD0260LP^000000 till you get to the arrival block at the end to pass the test.";
+		mes("You need to have some ^FD0260LP^000000 till you get to the arrival block at the end to pass the test.");
 		next;
-		mes "But! You still pass the test if your ^FD0260LP^000000 becomes 0 when you get to the arrival block.";
+		mes("But! You still pass the test if your ^FD0260LP^000000 becomes 0 when you get to the arrival block.");
 		next;
-		mes "Game instructions end here. Good luck to you.";
+		mes("Game instructions end here. Good luck to you.");
 		next;
 	}
 	return;
@@ -1330,25 +1330,25 @@ job_ko,49,16,4	script	Sight#ko_01	4_BULLETIN_BOARD2,1,1,{
 	end;
 OnTouch:
 	set .@life_p, job_kagero_lp;
-	mes "There are tiny letters on the sign.";
+	mes("There are tiny letters on the sign.");
 	next;
-	mes "You are really bad at rolling dice. How can you get a 1 from the start? You can move to block 9 if you pay up 10 LP in this block.";
+	mes("You are really bad at rolling dice. How can you get a 1 from the start? You can move to block 9 if you pay up 10 LP in this block.");
 	next;
 	if(select("Use 10 LP", "Roll the dice.") == 1) {
 		if (job_kagero_lp > 9) {
 			set .@reset_p, .@life_p - 10;
 			set job_kagero_lp, .@reset_p;
-			mes "< Used 10 LP >";
-			mes "Press Close to move to block 9.";
+			mes("< Used 10 LP >");
+			mes("Press Close to move to block 9.");
 			callfunc "F_KO_Survival_warp",9;
 			end;
 		} else {
-			mes "< Did not use 10 LP >";
-			mes "^FD0260LP^000000 insufficient!";
+			mes("< Did not use 10 LP >");
+			mes("^FD0260LP^000000 insufficient!");
 			next;
 		}
 	}
-	mes "Roll the dice.";
+	mes("Roll the dice.");
 	next;
 	callfunc "F_KO_Survival_dice",1;
 	end;
@@ -1360,18 +1360,18 @@ job_ko,33,16,4	script	Sight#ko_03	4_BULLETIN_BOARD2,1,1,{
 	callfunc "F_KO_Survival_mes",3;
 	end;
 OnTouch:
-	mes "There are tiny letters on the sign.";
+	mes("There are tiny letters on the sign.");
 	next;
-	mes "Used 5 LP so you will have to resist the curse passed down through generations before moving forward.";
+	mes("Used 5 LP so you will have to resist the curse passed down through generations before moving forward.");
 	next;
 	select("Use 5 LP");
 	if (job_kagero_lp > 4) {
-		mes "< Used 5 LP >";
+		mes("< Used 5 LP >");
 		set job_kagero_lp, job_kagero_lp - 5;
 		callfunc "F_KO_Survival_dice",3;
 	} else {
-		mes "< Did not use 5 LP >";
-		mes "^FD0260LP^000000 insufficient! Returning to start location.";
+		mes("< Did not use 5 LP >");
+		mes("^FD0260LP^000000 insufficient! Returning to start location.");
 		callfunc "F_KO_Survival_warp",0;
 	}
 	end;
@@ -1381,26 +1381,26 @@ job_ko,25,16,4	script	Sight#ko_04	4_BULLETIN_BOARD2,1,1,{
 	callfunc "F_KO_Survival_mes",4;
 	end;
 OnTouch:
-	mes "There are tiny letters scribbled on the sign.";
+	mes("There are tiny letters scribbled on the sign.");
 	next;
 	if ($20110808_sko01$ != "") {
-		mes "^0000FF" + $20110808_sko01$ +" was here.^000000";
+		mes("^0000FF" + $20110808_sko01$ +" was here.^000000");
 		next;
 	}
-	mes "Should I leave my name since taking the test is a special occasion?";
+	mes("Should I leave my name since taking the test is a special occasion?");
 	next;
 	if(select("Use 5 LP and leave your name.", "Continue to roll the dice.") == 1) {
 		if (job_kagero_lp > 4) {
-			mes "< Used 5 LP >";
+			mes("< Used 5 LP >");
 			set job_kagero_lp, job_kagero_lp - 5;
 			next;
 			set $20110808_sko01$, strcharinfo(PC_NAME);
-			mes strcharinfo(PC_NAME)+" was here.";
-			mes "You left your name.";
+			mes(strcharinfo(PC_NAME)+" was here.");
+			mes("You left your name.");
 			next;
 		} else {
-			mes "< Did not use 5 LP >";
-			mes "^FD0260LP^000000 insufficient! You can roll the dice.";
+			mes("< Did not use 5 LP >");
+			mes("^FD0260LP^000000 insufficient! You can roll the dice.");
 			next;
 		}
 	}
@@ -1416,25 +1416,25 @@ job_ko,17,40,4	script	Sight#ko_08	4_BULLETIN_BOARD2,1,1,{
 	callfunc "F_KO_Survival_mes",8;
 	end;
 OnTouch:
-	mes "There are tiny letters on the sign.";
+	mes("There are tiny letters on the sign.");
 	next;
-	mes "Rock-paper-scissors Machine:";
-	mes "If you win, move to block 15.";
-	mes "If it is a draw, roll the dice.";
-	mes "If you lose, move to block 0.";
+	mes("Rock-paper-scissors Machine:");
+	mes("If you win, move to block 15.");
+	mes("If it is a draw, roll the dice.");
+	mes("If you lose, move to block 0.");
 	next;
 	switch (callfunc("F_KO_Survival_rps")) {
 	case 1:
-		mes "Press Close to move to block 15.";
+		mes("Press Close to move to block 15.");
 		callfunc "F_KO_Survival_warp",15;
 		end;
 	case 0:
-		mes "A tie, so roll the dice!";
+		mes("A tie, so roll the dice!");
 		next;
 		callfunc "F_KO_Survival_dice",8;
 		end;
 	case -1:
-		mes "Press Close to move to block 0.";
+		mes("Press Close to move to block 0.");
 		callfunc "F_KO_Survival_warp",0;
 		end;
 	}
@@ -1444,9 +1444,9 @@ job_ko,17,48,4	script	Sight#ko_09	4_BULLETIN_BOARD2,1,1,{
 	callfunc "F_KO_Survival_mes",9;
 	end;
 OnTouch:
-	mes "There are tiny letters on the sign.";
+	mes("There are tiny letters on the sign.");
 	next;
-	mes "Please proceed.";
+	mes("Please proceed.");
 	next;
 	callfunc "F_KO_Survival_dice",9;
 	end;
@@ -1459,25 +1459,25 @@ job_ko,30,60,4	script	Sight#ko_12	4_BULLETIN_BOARD2,1,1,{
 	callfunc "F_KO_Survival_mes",12;
 	end;
 OnTouch:
-	mes "There are tiny letters on the sign.";
+	mes("There are tiny letters on the sign.");
 	next;
-	mes "Rock-paper-scissors Machine:";
-	mes "If you win, move to block 20.";
-	mes "If it is a draw, roll the dice.";
-	mes "If you lose, move to block 9.";
+	mes("Rock-paper-scissors Machine:");
+	mes("If you win, move to block 20.");
+	mes("If it is a draw, roll the dice.");
+	mes("If you lose, move to block 9.");
 	next;
 	switch (callfunc("F_KO_Survival_rps")) {
 	case 1:
-		mes "Press Close to move to block 20.";
+		mes("Press Close to move to block 20.");
 		callfunc "F_KO_Survival_warp",20;
 		end;
 	case 0:
-		mes "A tie, so roll the dice!";
+		mes("A tie, so roll the dice!");
 		next;
 		callfunc "F_KO_Survival_dice",12;
 		end;
 	case -1:
-		mes "Press Close to move to block 9.";
+		mes("Press Close to move to block 9.");
 		callfunc "F_KO_Survival_warp",9;
 		end;
 	}
@@ -1492,24 +1492,24 @@ job_ko,54,60,4	script	Sight#ko_15	4_BULLETIN_BOARD2,1,1,{
 OnTouch:
 	set .@playtime, questprogress(5141,PLAYTIME);
 	if (!.@playtime) {
-		mes "There are tiny letters on the sign.";
+		mes("There are tiny letters on the sign.");
 		next;
-		mes "You will be cursed by a powerful gravity curse that immobilizes you for 2 minutes.";
+		mes("You will be cursed by a powerful gravity curse that immobilizes you for 2 minutes.");
 		setquest 5141;
 		close;
 	} else if (.@playtime == 1) {
-		mes "You are cursed and cannot move to any other block for 2 minutes.";
+		mes("You are cursed and cannot move to any other block for 2 minutes.");
 		close;
 	} else if (.@playtime == 2) {
-		mes "The immobilize curse lasted for 2 minutes and then was removed.";
+		mes("The immobilize curse lasted for 2 minutes and then was removed.");
 		next;
 		erasequest 5141;
 		callfunc "F_KO_Survival_dice",15;
 		end;
 	} else {
 		erasequest 5141;
-		mes "An unknown error has occurred.";
-		mes "Please contact customer service.";
+		mes("An unknown error has occurred.");
+		mes("Please contact customer service.");
 		close;
 	}
 }
@@ -1518,23 +1518,23 @@ job_ko,62,60,4	script	Sight#ko_16	4_BULLETIN_BOARD2,1,1,{
 	callfunc "F_KO_Survival_mes",16;
 	end;
 OnTouch:
-	mes "There are tiny letters on the sign.";
+	mes("There are tiny letters on the sign.");
 	next;
-	mes "Consume 2 ^FD0260LP^000000 and roll the dice twice.";
-	mes "If you get the same number then you can move to block 30, if the numbers are different, consume 2 LP to roll again... until you get the same numbers.";
+	mes("Consume 2 ^FD0260LP^000000 and roll the dice twice.");
+	mes("If you get the same number then you can move to block 30, if the numbers are different, consume 2 LP to roll again... until you get the same numbers.");
 	next;
 	while (1) {
 		callfunc "F_KO_Survival_dice2",16;
 		if (@job_ko_dice1 == @job_ko_dice2) break;
 		else {
-			mes "Second dice result is " + @job_ko_dice2 + ", which is not the same number.";
+			mes("Second dice result is " + @job_ko_dice2 + ", which is not the same number.");
 			next;
 		}
 	}
 	set @job_ko_dice1,0;
 	set @job_ko_dice2,0;
-	//mes "Second dice result is " + @job_ko_dice2 + ", which is the same number. Press Close to move block 30.";
-	mes "You got the same number. Press Close to move block 30.";
+	//mes("Second dice result is " + @job_ko_dice2 + ", which is the same number. Press Close to move block 30.");
+	mes("You got the same number. Press Close to move block 30.");
 	callfunc "F_KO_Survival_warp",30;
 	end;
 }
@@ -1545,25 +1545,25 @@ job_ko,62,43,4	script	Sight#ko_18	4_BULLETIN_BOARD2,1,1,{
 	callfunc "F_KO_Survival_mes",18;
 	end;
 OnTouch:
-	mes "There are tiny letters on the sign.";
+	mes("There are tiny letters on the sign.");
 	next;
-	mes "Consume 2 ^FD0260LP^000000 and roll the dice twice.";
+	mes("Consume 2 ^FD0260LP^000000 and roll the dice twice.");
 	next;
-	mes "If the sum of the numbers from both dice is lower than 5, move to block 30, if it higher than 5, move to block 19.";
+	mes("If the sum of the numbers from both dice is lower than 5, move to block 30, if it higher than 5, move to block 19.");
 	next;
 	callfunc "F_KO_Survival_dice2",18;
-	mes "Second dice result is " + @job_ko_dice2 + ".";
+	mes("Second dice result is " + @job_ko_dice2 + ".");
 	next;
 	set .@dice_sum, @job_ko_dice1 + @job_ko_dice2;
-	mes @job_ko_dice1 + " + " + @job_ko_dice2 + " = " + .@dice_sum;
+	mes(@job_ko_dice1 + " + " + @job_ko_dice2 + " = " + .@dice_sum);
 	set @job_ko_dice1,0;
 	set @job_ko_dice2,0;
 	if (.@dice_sum < 5) {
-		mes "You total is lower than 5. Press Close to move to block 30.";
+		mes("You total is lower than 5. Press Close to move to block 30.");
 		callfunc "F_KO_Survival_warp",30;
 		end;
 	} else {
-		mes "You total is larger than 5. Press Close to move to block 19.";
+		mes("You total is larger than 5. Press Close to move to block 19.");
 		callfunc "F_KO_Survival_warp",19;
 		end;
 	}
@@ -1573,9 +1573,9 @@ job_ko,62,35,4	script	Sight#ko_19	4_BULLETIN_BOARD2,1,1,{
 	callfunc "F_KO_Survival_mes",19;
 	end;
 OnTouch:
-	mes "There are tiny letters on the sign.";
+	mes("There are tiny letters on the sign.");
 	next;
-	mes "Move forward.";
+	mes("Move forward.");
 	next;
 	callfunc "F_KO_Survival_dice",19;
 	end;
@@ -1588,29 +1588,29 @@ job_ko,49,23,4	script	Sight#ko_22	4_BULLETIN_BOARD2,1,1,{
 	callfunc "F_KO_Survival_mes",22;
 	end;
 OnTouch:
-	mes "There are tiny letters on the sign.";
+	mes("There are tiny letters on the sign.");
 	next;
-	mes "Leave all your remaining ^FD0260LP^000000 and go back to block 0, then the next person will be redeemed.";
+	mes("Leave all your remaining ^FD0260LP^000000 and go back to block 0, then the next person will be redeemed.");
 	next;
 	if ($20110808_vko02 == 0) {
-		mes "Do you want to leave your ^FD0260LP^000000?";
-		mes "If you leave your ^FD0260LP^000000 then the next person for test that arrives at the block will automatically pass the test.";
+		mes("Do you want to leave your ^FD0260LP^000000?");
+		mes("If you leave your ^FD0260LP^000000 then the next person for test that arrives at the block will automatically pass the test.");
 		next;
 		if(select("Leave all your LP.", "Continue to roll the dice.") == 1) {
 			set job_kagero_lp,0;
 			set $20110808_vko02,1;
-			mes "Leave all remaining ^FD0260LP^000000 here. Press Close and go back to block 0.";
+			mes("Leave all remaining ^FD0260LP^000000 here. Press Close and go back to block 0.");
 			callfunc "F_KO_Survival_warp",0;
 			end;
 		}
 	} else if ($20110808_vko02 == 1) {
 		set $20110808_vko02,0;
-		mes "Someone before you sacrificed all their ^FD0260LP^000000, so press Close and go to the last block.";
+		mes("Someone before you sacrificed all their ^FD0260LP^000000, so press Close and go to the last block.");
 		callfunc "F_KO_Survival_warp",40;
 		end;
 	} else {
-		mes "An unknown error has occurred.";
-		mes "Please contact customer service.";
+		mes("An unknown error has occurred.");
+		mes("Please contact customer service.");
 		close;
 	}
 	callfunc "F_KO_Survival_dice",22;
@@ -1623,27 +1623,27 @@ job_ko,33,23,4	script	Sight#ko_24	4_BULLETIN_BOARD2,1,1,{
 	callfunc "F_KO_Survival_mes",24;
 	end;
 OnTouch:
-	mes "There are tiny letters on the sign.";
+	mes("There are tiny letters on the sign.");
 	next;
-	mes "Consume 2 ^FD0260LP^000000 and roll the dice twice.";
+	mes("Consume 2 ^FD0260LP^000000 and roll the dice twice.");
 	next;
-	mes "If the sum of the numbers from both dice is larger than 8, then you can move to any block between 25 to 30. But! If the sum is below 8, you must move back to block 19.";
+	mes("If the sum of the numbers from both dice is larger than 8, then you can move to any block between 25 to 30. But! If the sum is below 8, you must move back to block 19.");
 	next;
 	callfunc "F_KO_Survival_dice2",24;
-	mes "Second dice result is " + @job_ko_dice2 + ".";
+	mes("Second dice result is " + @job_ko_dice2 + ".");
 	next;
 	set .@dice_sum, @job_ko_dice1 + @job_ko_dice2;
 	if (.@dice_sum > 8) {
-		mes @job_ko_dice1 + " + " + @job_ko_dice2 + " = " + .@dice_sum;
+		mes(@job_ko_dice1 + " + " + @job_ko_dice2 + " = " + .@dice_sum);
 		set @job_ko_dice1,0;
 		set @job_ko_dice2,0;
-		mes "You total is larger than 8. Please choose a block to move between blocks 25 through 30.";
+		mes("You total is larger than 8. Please choose a block to move between blocks 25 through 30.");
 		callfunc "F_KO_Survival_warp", select("Move to block 25", "Move to block 26", "Move to block 27", "Move to block 28", "Move to block 29", "Move to block 30") + 24;
 		end;
 	} else {
 		set @job_ko_dice1,0;
 		set @job_ko_dice2,0;
-		mes "You total is lower than 8. Press Close to move to block 19.";
+		mes("You total is lower than 8. Press Close to move to block 19.");
 		callfunc "F_KO_Survival_warp",19;
 		end;
 	}
@@ -1655,40 +1655,40 @@ job_ko,25,23,4	script	Sight#ko_25	4_BULLETIN_BOARD2,1,1,{
 OnTouch:
 	set .@playtime, questprogress(5141,PLAYTIME);
 	if (!.@playtime) {
-		mes "There are tiny letters on the sign.";
+		mes("There are tiny letters on the sign.");
 		next;
-		mes "This is lame.";
-		mes "Cannot read the writing. There should be a way to read it.";
+		mes("This is lame.");
+		mes("Cannot read the writing. There should be a way to read it.");
 		next;
 		switch(select("Try something.", "Do nothing.")) {
 		case 1:
 			specialeffect(EF_TALK_FROSTJOKE, AREA, playerattached());
-			mes "Tried a recent Prontera joke to do something.";
+			mes("Tried a recent Prontera joke to do something.");
 			next;
 			setquest 5141;
-			mes "Got cursed and became immobilized for 2 minutes.";
+			mes("Got cursed and became immobilized for 2 minutes.");
 			close;
 		case 2:
 			if (rand(1,10) == 4) {
-				mes "Its a wise decision to do nothing.";
+				mes("Its a wise decision to do nothing.");
 				next;
 			} else {
-				mes "Nothing happened. Still need to do something.";
+				mes("Nothing happened. Still need to do something.");
 				close;
 			}
 			break;
 		}
 	} else if (.@playtime == 1) {
-		mes "Cannot move because you are cursed.";
+		mes("Cannot move because you are cursed.");
 		close;
 	} else if (.@playtime == 2) {
-		mes "The immobilize curse lasted for 2 minutes and then was removed.";
+		mes("The immobilize curse lasted for 2 minutes and then was removed.");
 		next;
 		erasequest 5141;
 	} else {
 		erasequest 5141;
-		mes "An unknown error has occurred.";
-		mes "Please contact customer service.";
+		mes("An unknown error has occurred.");
+		mes("Please contact customer service.");
 		close;
 	}
 	callfunc "F_KO_Survival_dice",25;
@@ -1703,9 +1703,9 @@ job_ko,30,52,4	script	Sight#ko_29	4_BULLETIN_BOARD2,1,1,{
 	callfunc "F_KO_Survival_mes",29;
 	end;
 OnTouch:
-	mes "There are tiny letters on the sign.";
+	mes("There are tiny letters on the sign.");
 	next;
-	mes "Go forth.";
+	mes("Go forth.");
 	next;
 	callfunc "F_KO_Survival_dice",29;
 	end;
@@ -1718,20 +1718,20 @@ job_ko,54,52,4	script	Sight#ko_32	4_BULLETIN_BOARD2,1,1,{
 	callfunc "F_KO_Survival_mes",32;
 	end;
 OnTouch:
-	mes "There are tiny letters on the sign.";
+	mes("There are tiny letters on the sign.");
 	next;
-	mes "Rock-paper-scissors Machine:";
-	mes "If you win, you get to move to any block between 33 to 38; if you lose or is a draw, you have to move to block 0.";
+	mes("Rock-paper-scissors Machine:");
+	mes("If you win, you get to move to any block between 33 to 38); if you lose or is a draw, you have to move to block 0.";
 	next;
 	switch (callfunc("F_KO_Survival_rps")) {
 	case 1:
-		mes "Please choose a block to move between blocks 33 through 38.";
+		mes("Please choose a block to move between blocks 33 through 38.");
 		next;
 		callfunc "F_KO_Survival_warp", select("Move to block 33", "Move to block 34", "Move to block 35", "Move to block 36", "Move to block 37", "Move to block 38") + 32;
 		end;
 	case 0:
 	case -1:
-		mes "Press Close to move to block 0.";
+		mes("Press Close to move to block 0.");
 		callfunc "F_KO_Survival_warp",0;
 		end;
 	}
@@ -1741,21 +1741,21 @@ job_ko,54,43,4	script	Sight#ko_33	4_BULLETIN_BOARD2,1,1,{
 	callfunc "F_KO_Survival_mes",33;
 	end;
 OnTouch:
-	mes "There are tiny letters on the sign.";
+	mes("There are tiny letters on the sign.");
 	next;
-	mes "You can move to block 39 if you pay all points except for the last 1 ^FD0260LP^000000 to roll the dice one last time.";
+	mes("You can move to block 39 if you pay all points except for the last 1 ^FD0260LP^000000 to roll the dice one last time.");
 	next;
 	switch(select("Pay LP.", "Move forward a little bit at a time.")) {
 	case 1:
 		set .@sell_p, job_kagero_lp - 1;
 		set job_kagero_lp,1;
-		mes "< Used " + .@sell_p + " LP >";
+		mes("< Used " + .@sell_p + " LP >");
 		next;
-		mes "Press Close to move to block 39.";
+		mes("Press Close to move to block 39.");
 		callfunc "F_KO_Survival_warp",39;
 		end;
 	case 2:
-		mes "Please roll the dice.";
+		mes("Please roll the dice.");
 		next;
 		break;
 	}
@@ -1770,19 +1770,19 @@ job_ko,41,31,4	script	Sight#ko_36	4_BULLETIN_BOARD2,1,1,{
 	callfunc "F_KO_Survival_mes",36;
 	end;
 OnTouch:
-	mes "There are tiny letters on the sign.";
+	mes("There are tiny letters on the sign.");
 	next;
-	mes "There are only 4 blocks left till the last block.";
+	mes("There are only 4 blocks left till the last block.");
 	next;
-	mes "Rule 1 (Normal Dice Roll)";
-	mes "You get to pass if you get 4 or above but nobody knows what will come from a dice roll.";
+	mes("Rule 1 (Normal Dice Roll)");
+	mes("You get to pass if you get 4 or above but nobody knows what will come from a dice roll.");
 	next;
-	mes "Rule 2";
-	mes "If you get 1, 2, or 3 you move right to the arrival point; if you get 4, 5, or 6 you get to choose to move to block 29.";
+	mes("Rule 2");
+	mes("If you get 1, 2, or 3 you move right to the arrival point); if you get 4, 5, or 6 you get to choose to move to block 29.";
 	next;
 	switch(select("Try it the other way.", "Go by the rules.")) {
 	case 1:
-		//mes "The Other Way (2nd Rule)";
+		//mes("The Other Way (2nd Rule)");
 		set .@dodoripo,0;
 		break;
 	case 2:
@@ -1792,16 +1792,16 @@ OnTouch:
 	set .@dice, callfunc("F_KO_Survival_dice",36,1,1);
 	if (.@dodoripo == 0) {
 		if (.@dice <= 3) {
-			mes "Press Close to move to the end.";
+			mes("Press Close to move to the end.");
 			callfunc "F_KO_Survival_warp",40;
 			end;
 		} else {
-			mes "Press Close to move to block 29.";
+			mes("Press Close to move to block 29.");
 			callfunc "F_KO_Survival_warp",29;
 			end;
 		}
 	} else {
-		mes "Press Close to move to forward " + .@dice + " blocks.";
+		mes("Press Close to move to forward " + .@dice + " blocks.");
 		callfunc "F_KO_Survival_warp", ((.@dice <= 3) ? .@dice + 36 : 40);
 		end;
 	}
@@ -1811,19 +1811,19 @@ job_ko,33,31,4	script	Sight#ko_37	4_BULLETIN_BOARD2,1,1,{
 	callfunc "F_KO_Survival_mes",37;
 	end;
 OnTouch:
-	mes "There are tiny letters on the sign.";
+	mes("There are tiny letters on the sign.");
 	next;
-	mes "There are only 3 blocks left to the finish line but you can't you go so easily.";
+	mes("There are only 3 blocks left to the finish line but you can't you go so easily.");
 	next;
-	mes "If you get 1, 3, or 5, move to the arrival point; if you get 2, 4, or 6, go back to the starting point.";
+	mes("If you get 1, 3, or 5, move to the arrival point); if you get 2, 4, or 6, go back to the starting point.";
 	next;
 	set .@dice, callfunc("F_KO_Survival_dice",37,1,1);
 	if (.@dice % 2) {
-		mes "Press Close to move to the last block.";
+		mes("Press Close to move to the last block.");
 		callfunc "F_KO_Survival_warp",40;
 		end;
 	} else {
-		mes "Press Close to move to the starting point.";
+		mes("Press Close to move to the starting point.");
 		callfunc "F_KO_Survival_warp",0;
 		end;
 	}
@@ -1833,37 +1833,37 @@ job_ko,33,40,4	script	Sight#ko_38	4_BULLETIN_BOARD2,1,1,{
 	callfunc "F_KO_Survival_mes",38;
 	end;
 OnTouch:
-	mes "There are tiny letters on the sign.";
+	mes("There are tiny letters on the sign.");
 	next;
-	mes "Leave 1 LP and invest the remaining LP to install the trap to bring down other players!";
+	mes("Leave 1 LP and invest the remaining LP to install the trap to bring down other players!");
 	next;
 	if ($20110808_vko04 == 0) {
-		mes "There is currently no trap installed. Do you want to install a trap?";
+		mes("There is currently no trap installed. Do you want to install a trap?");
 		next;
 		switch(select("Install a trap.", "Do not install.")) {
 		case 1:
 			set .@reset_p, job_kagero_lp - 1;
 			set job_kagero_lp,1;
 			set $20110808_vko04,1;
-			mes "< Used " + .@reset_p + " LP >";
+			mes("< Used " + .@reset_p + " LP >");
 			next;
-			mes "The trap is installed. Please roll the dice.";
+			mes("The trap is installed. Please roll the dice.");
 			next;
 			break;
 		case 2:
-			mes "Did not set a trap. Please roll the dice.";
+			mes("Did not set a trap. Please roll the dice.");
 			next;
 			break;
 		}
 	} else {
 		set $20110808_vko04,0;
 		set job_kagero_lp,0;
-		mes "You are caught in the trap installed. Press Close to go back to block 0.";
+		mes("You are caught in the trap installed. Press Close to go back to block 0.");
 		callfunc "F_KO_Survival_warp",0;
 		end;
 	}
 	set .@dice, callfunc("F_KO_Survival_dice",38,1,1);
-	mes "Press Close to move forward " + .@dice + " blocks.";
+	mes("Press Close to move forward " + .@dice + " blocks.");
 	callfunc "F_KO_Survival_warp", ((.@dice == 1) ? .@dice + 38 : 40);
 	end;
 }
@@ -1872,19 +1872,19 @@ job_ko,38,44,4	script	Sight#ko_39	4_BULLETIN_BOARD2,1,1,{
 	callfunc "F_KO_Survival_mes",39;
 	end;
 OnTouch:
-	mes "There are tiny letters on the sign.";
+	mes("There are tiny letters on the sign.");
 	next;
-	mes "Now there is only 1 block left till the end. Congratulations on all you've been through to get here.";
+	mes("Now there is only 1 block left till the end. Congratulations on all you've been through to get here.");
 	next;
-	mes "But you cannot go so easily. If you get a 3, you will go back to block 3.";
+	mes("But you cannot go so easily. If you get a 3, you will go back to block 3.");
 	next;
 	set .@dice, callfunc("F_KO_Survival_dice",39,1,1);
 	if (.@dice == 3) {
-		mes "Press Close to move to the 3rd block.";
+		mes("Press Close to move to the 3rd block.");
 		callfunc "F_KO_Survival_warp",3;
 		end;
 	} else {
-		mes "Press Close to move to the arrival point.";
+		mes("Press Close to move to the arrival point.");
 		callfunc "F_KO_Survival_warp",40;
 		end;
 	}
@@ -1895,28 +1895,28 @@ job_ko,46,41,4	script	Sight#ko_40	4_BULLETIN_BOARD2,1,1,{
 	end;
 OnTouch:
 	if (job_kagero != 5) {
-		mes "You should not be here.";
+		mes("You should not be here.");
 		close2;
 		warp "amatsu",147,136;
 		end;
 	}
 	if (questprogress(5137) != 1 || questprogress(5140) != 1) {
-		mes "You must be here by mistake.";
+		mes("You must be here by mistake.");
 		close2;
 		warp "amatsu",147,136;
 		end;
 	}
-	mes "There are tiny letters on the sign.";
+	mes("There are tiny letters on the sign.");
 	next;
-	mes "To those you are preparing for a new turn...";
-	mes "Well begun is half done. However always remember it is not the end.";
+	mes("To those you are preparing for a new turn...");
+	mes("Well begun is half done. However always remember it is not the end.");
 	next;
 	completequest 5137;
 	erasequest 5140;
 	if (questprogress(5141)) erasequest 5141;
 	set job_kagero_lp,0;
-	mes "Let's read all the writing on the sign.";
-	mes "You feel like you are moved to another place.";
+	mes("Let's read all the writing on the sign.");
+	mes("You feel like you are moved to another place.");
 	close2;
 	warp "job_ko",35,113;
 	end;
@@ -1925,25 +1925,25 @@ OnTouch:
 //== Test of Weaponry ======================================
 job_ko,127,125,4	script	Red Leopard Joe#ko	4_M_JOB_ASSASSIN,{
 	if (MaxWeight - Weight < 1000 || checkweight("Knife",1) == 0) {
-		mes "[Red Leopard Joe]";
-		mes "Go reduce your weight! This test will be too difficult otherwise...";
+		mes("[Red Leopard Joe]");
+		mes("Go reduce your weight! This test will be too difficult otherwise...");
 		close;
 	}
 	if (BaseJob != Job_Ninja) {
 		for (set .@i,5131; .@i<=5146; set .@i,.@i+1)
 			if (questprogress(.@i)) erasequest .@i;
 		set job_kagero,0;
-		mes "[Red Leopard Joe]";
-		mes "Sorry, your family is not the same as ours, is there something wrong?";
+		mes("[Red Leopard Joe]");
+		mes("Sorry, your family is not the same as ours, is there something wrong?");
 		close2;
 		warp "amatsu",147,136;
 		end;
 	}
 	if (job_kagero != 5) {
-		mes "[Red Leopard Joe]";
-		mes "You are not supposed to be here...";
-		mes "It's my duty to get rid of you,";
-		mes "so I'll send you back now!";
+		mes("[Red Leopard Joe]");
+		mes("You are not supposed to be here...");
+		mes("It's my duty to get rid of you,");
+		mes("so I'll send you back now!");
 		close2;
 		warp "amatsu",147,136;
 		end;
@@ -1954,54 +1954,54 @@ job_ko,127,125,4	script	Red Leopard Joe#ko	4_M_JOB_ASSASSIN,{
 	set .@ko_test_03_4, questprogress(5144);
 	set .@ko_test_03_5, questprogress(5145);
 	if (.@ko_test_03_1 == 1 && .@ko_test_03_2 == 0 && .@ko_test_03_3 == 0 && .@ko_test_03_4 == 0 && .@ko_test_03_5 == 0) {
-		mes "[Red Leopard Joe]";
-		mes "It's been a while!";
+		mes("[Red Leopard Joe]");
+		mes("It's been a while!");
 		next;
 		select("Long time indeed, Joe.");
-		mes "[Red Leopard Joe]";
-		mes "You aren't surprised I'm here. Did you meet ^0237FDCougar^000000 before coming here?";
+		mes("[Red Leopard Joe]");
+		mes("You aren't surprised I'm here. Did you meet ^0237FDCougar^000000 before coming here?");
 		next;
-		mes "[Red Leopard Joe]";
-		mes "Don't like it that I'm not the first one you visited but that is not important.";
+		mes("[Red Leopard Joe]");
+		mes("Don't like it that I'm not the first one you visited but that is not important.");
 		next;
-		mes "[Red Leopard Joe]";
-		mes "Alright, " + strcharinfo(PC_NAME) + "!";
-		mes "Welcome to the workshop where weapons are created for the family.";
+		mes("[Red Leopard Joe]");
+		mes("Alright, " + strcharinfo(PC_NAME) + "!");
+		mes("Welcome to the workshop where weapons are created for the family.");
 		next;
-		mes "[Red Leopard Joe]";
-		mes "Our family has been creating and using unique weapons to serve our secret missions since ancient times.";
+		mes("[Red Leopard Joe]");
+		mes("Our family has been creating and using unique weapons to serve our secret missions since ancient times.");
 		next;
 		select("Really? At Einbroch?");
-		mes "[Red Leopard Joe]";
-		mes "Hmm? You are not as slow as I thought you were!";
+		mes("[Red Leopard Joe]");
+		mes("Hmm? You are not as slow as I thought you were!");
 		next;
-		mes "[Red Leopard Joe]";
-		mes "Yes. Einbroch is known as an industrial city, the city of great blacksmiths create new technology.";
+		mes("[Red Leopard Joe]");
+		mes("Yes. Einbroch is known as an industrial city, the city of great blacksmiths create new technology.");
 		next;
-		mes "[Red Leopard Joe]";
-		mes "My mission is to analyze their technology and report back to the family.";
+		mes("[Red Leopard Joe]");
+		mes("My mission is to analyze their technology and report back to the family.");
 		next;
-		mes "[Red Leopard Joe]";
-		mes "I spoke more than I intended to.";
+		mes("[Red Leopard Joe]");
+		mes("I spoke more than I intended to.");
 		next;
-		mes "[Red Leopard Joe]";
-		mes "Did you bring enough ^6848B7Iron Ore, Iron, Steel, Phracon, Emveretaron, Rough Oridecon, and Rough Elunium^000000?";
+		mes("[Red Leopard Joe]");
+		mes("Did you bring enough ^6848B7Iron Ore, Iron, Steel, Phracon, Emveretaron, Rough Oridecon, and Rough Elunium^000000?");
 		next;
-		mes "[Red Leopard Joe]";
-		mes "Let's now create a new prototype weapon.";
+		mes("[Red Leopard Joe]");
+		mes("Let's now create a new prototype weapon.");
 		next;
 		specialeffect(EF_GUIDEDATTACK, AREA, getnpcid(0, "Crafting Tools#ko_01"));
-		mes "[Red Leopard Joe]";
-		mes "Feel free to use tools from here, and...";
+		mes("[Red Leopard Joe]");
+		mes("Feel free to use tools from here, and...");
 		next;
 		specialeffect(EF_GUIDEDATTACK, AREA, getnpcid(0, "Crafting Tools#ko_02"));
-		mes "[Red Leopard Joe]";
-		mes "...there...";
+		mes("[Red Leopard Joe]");
+		mes("...there...");
 		next;
 		specialeffect(EF_GUIDEDATTACK, AREA, getnpcid(0, "Crafting Tools#ko_03"));
 		setquest 5142;
-		mes "[Red Leopard Joe]";
-		mes "...and everywhere else. Now let's begin!!";
+		mes("[Red Leopard Joe]");
+		mes("...and everywhere else. Now let's begin!!");
 		close;
 	} else if (.@ko_test_03_1 == 1 && .@ko_test_03_2 == 1 && .@ko_test_03_3 == 0 && .@ko_test_03_4 == 0 && .@ko_test_03_5 == 0) {
 		callsub L_Weapon,":";
@@ -2009,168 +2009,168 @@ job_ko,127,125,4	script	Red Leopard Joe#ko	4_M_JOB_ASSASSIN,{
 	} else if (.@ko_test_03_1 == 1 && .@ko_test_03_2 == 0 && (.@ko_test_03_3 == 1 || .@ko_test_03_4 == 1) && .@ko_test_03_5 == 0) {
 		callsub L_Weapon,":Yes, I'm done.";
 		if (countitem("Ninja_Cutter")) {
-			mes "[Red Leopard Joe]";
-			mes "Hmm... Interesting... Is it a dagger in a shape of a Kunai?";
+			mes("[Red Leopard Joe]");
+			mes("Hmm... Interesting... Is it a dagger in a shape of a Kunai?");
 			next;
-			mes "[Red Leopard Joe]";
+			mes("[Red Leopard Joe]");
 		} else if (countitem("Huuma_Job_Test")) {
-			mes "[Red Leopard Joe]";
-			mes "Hmm... Is this an Ordinary Huuma?";
+			mes("[Red Leopard Joe]");
+			mes("Hmm... Is this an Ordinary Huuma?");
 			next;
-			mes "[Red Leopard Joe]";
-			mes "Ahh, Its not an Ordinary Huuma.";
+			mes("[Red Leopard Joe]");
+			mes("Ahh, Its not an Ordinary Huuma.");
 		} else {
-			mes "[Red Leopard Joe]";
-			mes "Ahh, how is it possible? You don't have weapons? Maybe you equipped it?";
+			mes("[Red Leopard Joe]");
+			mes("Ahh, how is it possible? You don't have weapons? Maybe you equipped it?");
 			close;
 		}
-		mes "Very creative. I do see room for improvement but the weapon itself may come out useful after smoothing it out a bit.";
+		mes("Very creative. I do see room for improvement but the weapon itself may come out useful after smoothing it out a bit.");
 		next;
-		mes "[Red Leopard Joe]";
-		mes "Good. I think you are ready.";
+		mes("[Red Leopard Joe]");
+		mes("Good. I think you are ready.");
 		next;
-		mes "[Red Leopard Joe]";
-		mes "Now it's time to upgrade?";
-		mes "There are refinement tools on both sides of me. Use those to refine a weapon and come back.";
+		mes("[Red Leopard Joe]");
+		mes("Now it's time to upgrade?");
+		mes("There are refinement tools on both sides of me. Use those to refine a weapon and come back.");
 		next;
-		mes "[Red Leopard Joe]";
-		mes "I created the refinement tools myself with great effort so you won't have any trouble using them.";
+		mes("[Red Leopard Joe]");
+		mes("I created the refinement tools myself with great effort so you won't have any trouble using them.");
 		next;
 		setquest 5145;
-		mes "[Red Leopard Joe]";
-		mes "Ah... But just in case,";
-		mes "^FF0000be careful not to cause trouble by showing these to blacksmiths outside of here.^000000";
+		mes("[Red Leopard Joe]");
+		mes("Ah... But just in case,");
+		mes("^FF0000be careful not to cause trouble by showing these to blacksmiths outside of here.^000000");
 		close;
 	} else if (.@ko_test_03_1 == 1 && .@ko_test_03_2 == 0 && (.@ko_test_03_3 == 1 || .@ko_test_03_4 == 1) && .@ko_test_03_5 == 1) {
 		disable_items;
-		mes "[Red Leopard Joe]";
-		mes "Did you get a successful result?";
+		mes("[Red Leopard Joe]");
+		mes("Did you get a successful result?");
 		next;
 		switch(select("Not yet.", "Here it is.", "Actually...")) {
 		case 1:
-			mes "[Red Leopard Joe]";
-			mes "It isn't easy to get a satisfactory result at first.";
+			mes("[Red Leopard Joe]");
+			mes("It isn't easy to get a satisfactory result at first.");
 			close;
 		case 2:
 			break;
 		case 3:
-			mes "[Red Leopard Joe]";
-			mes "You've lost the weapon even with my warning.";
+			mes("[Red Leopard Joe]");
+			mes("You've lost the weapon even with my warning.");
 			next;
-			mes "[Red Leopard Joe]";
-			mes "Nothing else we can do. Wait!";
+			mes("[Red Leopard Joe]");
+			mes("Nothing else we can do. Wait!");
 			next;
-			mes "Red Leopard Joe mumbles something and suddenly all weapons are unequipped.";
+			mes("Red Leopard Joe mumbles something and suddenly all weapons are unequipped.");
 			next;
 			nude;
 			if (countitem("Ninja_Cutter") || countitem("Huuma_Job_Test")) {
-				mes "[Red Leopard Joe]";
-				mes "What is this? You still have the prototype. Stop playing around.";
+				mes("[Red Leopard Joe]");
+				mes("What is this? You still have the prototype. Stop playing around.");
 				close;
 			}
-			mes "[Red Leopard Joe]";
-			mes "Oh! You really lost it.";
+			mes("[Red Leopard Joe]");
+			mes("Oh! You really lost it.");
 			next;
 			setquest 5142;
 			if (questprogress(5143)) erasequest 5143;
 			if (questprogress(5144)) erasequest 5144;
 			erasequest 5145;
-			mes "[Red Leopard Joe]";
-			mes "Well! Lets try to make it again!";
+			mes("[Red Leopard Joe]");
+			mes("Well! Lets try to make it again!");
 			close;
 		}
-		mes "[Red Leopard Joe]";
-		mes "Looks like you've got some results.";
+		mes("[Red Leopard Joe]");
+		mes("Looks like you've got some results.");
 		next;
 		set .@part, EQI_HAND_R;
 		if (!getequipisequiped(.@part)) {
-			mes "[Red Leopard Joe]";
-			mes "Ahh! You have not equipped any weapons!";
+			mes("[Red Leopard Joe]");
+			mes("Ahh! You have not equipped any weapons!");
 			close;
 		} else {
 			set .@equip_id, getequipid(.@part);
 			if (.@equip_id == 13074 || .@equip_id == 13312) {
-				mes "[Red Leopard Joe]";
-				mes "Is that weapon yours? Let me have a look.";
+				mes("[Red Leopard Joe]");
+				mes("Is that weapon yours? Let me have a look.");
 				next;
 			} else {
-				mes "[Red Leopard Joe]";
-				mes "Are you certain it's that weapon?";
+				mes("[Red Leopard Joe]");
+				mes("Are you certain it's that weapon?");
 				next;
-				mes "[Red Leopard Joe]";
-				mes "You plan to trick me with that? Again!!";
+				mes("[Red Leopard Joe]");
+				mes("You plan to trick me with that? Again!!");
 				close;
 			}
 		}
-		mes "Joe took a thorough look at the seal.";
+		mes("Joe took a thorough look at the seal.");
 		next;
 		set .@equip_refine, getequiprefinerycnt(.@part);
 		if (.@equip_refine < 7) {
-			mes "[Red Leopard Joe]";
-			mes "Are you that low?";
-			mes "I must have misjudged you. You might have been satisfied yourself but I'm not. Do it again!!";
+			mes("[Red Leopard Joe]");
+			mes("Are you that low?");
+			mes("I must have misjudged you. You might have been satisfied yourself but I'm not. Do it again!!");
 			close;
 		} else if (.@equip_refine > 6 && .@equip_refine < 9) {
-			mes "[Red Leopard Joe]";
-			mes "Hmm... Is this your limit?";
-			mes "You've just made it that close to passing. I will ask one more time, are you satisfied?";
+			mes("[Red Leopard Joe]");
+			mes("Hmm... Is this your limit?");
+			mes("You've just made it that close to passing. I will ask one more time, are you satisfied?");
 			next;
 			if(select("Yes", "No") == 2) {
-				mes "[Red Leopard Joe]";
-				mes "You're still here. Why?";
+				mes("[Red Leopard Joe]");
+				mes("You're still here. Why?");
 				close;
 			}
-			mes "[Red Leopard Joe]";
-			mes "Your competence is enough.";
+			mes("[Red Leopard Joe]");
+			mes("Your competence is enough.");
 			next;
 		} else if (.@equip_refine > 8 && .@equip_refine < 13) {
-			mes "[Red Leopard Joe]";
-			mes "Ah, as I expected.";
-			mes "I still believe that you will not stop here.";
+			mes("[Red Leopard Joe]");
+			mes("Ah, as I expected.");
+			mes("I still believe that you will not stop here.");
 			next;
 			if(select("I want to stop.", "I want to continue.") == 2) {
-				mes "[Red Leopard Joe]";
-				mes "I will look forward for your result.";
+				mes("[Red Leopard Joe]");
+				mes("I will look forward for your result.");
 				close;
 			}
-			mes "[Red Leopard Joe]";
-			mes "Your competence is enough.";
+			mes("[Red Leopard Joe]");
+			mes("Your competence is enough.");
 			next;
 		} else {
-			mes "[Red Leopard Joe]";
-			mes "Better than expected.";
+			mes("[Red Leopard Joe]");
+			mes("Better than expected.");
 			next;
-			mes "[Red Leopard Joe]";
-			mes "For beginners, quite good. This test may not be significant to you, but your competence is enough.";
+			mes("[Red Leopard Joe]");
+			mes("For beginners, quite good. This test may not be significant to you, but your competence is enough.");
 			next;
 		}
-		mes "[Red Leopard Joe]";
-		mes "I can feel it.";
-		mes "I will take this weapon to give it some finishing touches.";
+		mes("[Red Leopard Joe]");
+		mes("I can feel it.");
+		mes("I will take this weapon to give it some finishing touches.");
 		next;
 		delequip .@part;
 		erasequest 5145;
 		completequest 5138;
 		if (questprogress(5143) == 1) completequest 5143;
 		if (questprogress(5144) == 1) completequest 5144;
-		mes "[Red Leopard Joe]";
-		mes "'" + strcharinfo(PC_NAME) + "'";
-		mes "Passed the weapon test!!";
+		mes("[Red Leopard Joe]");
+		mes("'" + strcharinfo(PC_NAME) + "'");
+		mes("Passed the weapon test!!");
 		close2;
 		enable_items;
 		end;
 	} else if (.@ko_test_03_1 == 2 && .@ko_test_03_2 == 0 && (.@ko_test_03_3 == 2 || .@ko_test_03_4 == 2) && .@ko_test_03_5 == 0) {
-		mes "[Red Leopard Joe]";
-		mes "Oh, I almost forgot.";
-		mes "Go report the test results to Gion!";
+		mes("[Red Leopard Joe]");
+		mes("Oh, I almost forgot.");
+		mes("Go report the test results to Gion!");
 		close2;
 		warp "job_ko",26,104;
 		end;
 	} else {
-		mes "[Red Leopard Joe]";
-		mes "You should not have come here...";
-		mes "It's my duty to get rid of you.";
-		mes "This will push you back!";
+		mes("[Red Leopard Joe]");
+		mes("You should not have come here...");
+		mes("It's my duty to get rid of you.");
+		mes("This will push you back!");
 		close2;
 		warp "amatsu",147,136;
 		end;
@@ -2178,49 +2178,49 @@ job_ko,127,125,4	script	Red Leopard Joe#ko	4_M_JOB_ASSASSIN,{
 	end;
 
 L_Weapon:
-	mes "[Red Leopard Joe]";
-	mes "Are you done making the prototype of the new weapons?";
+	mes("[Red Leopard Joe]");
+	mes("Are you done making the prototype of the new weapons?");
 	next;
 	switch(select("Crafting tools?", "I don't have enough materials.", "How do you expect me to make a weapon?" + getarg(0))) {
 	case 1:
 		specialeffect(EF_GUIDEDATTACK, AREA, getnpcid(0, "Crafting Tools#ko_01"));
-		mes "[Red Leopard Joe]";
-		mes "Feel free to use tools from here, and...";
+		mes("[Red Leopard Joe]");
+		mes("Feel free to use tools from here, and...");
 		next;
 		specialeffect(EF_GUIDEDATTACK, AREA, getnpcid(0, "Crafting Tools#ko_02"));
-		mes "[Red Leopard Joe]";
-		mes "...there...";
+		mes("[Red Leopard Joe]");
+		mes("...there...");
 		next;
 		specialeffect(EF_GUIDEDATTACK, AREA, getnpcid(0, "Crafting Tools#ko_03"));
-		mes "[Red Leopard Joe]";
-		mes "...and everywhere else.";
+		mes("[Red Leopard Joe]");
+		mes("...and everywhere else.");
 		close;
 	case 2:
-		mes "[Red Leopard Joe]";
-		mes "You haven't brought enough materials?";
+		mes("[Red Leopard Joe]");
+		mes("You haven't brought enough materials?");
 		next;
 		specialeffect(EF_GUIDEDATTACK, AREA, getnpcid(0, "Drawer#ko"));
-		mes "[Red Leopard Joe]";
-		mes "Then we'll have to pay a visit to the village. Try the ^FF0000drawer^000000 over there. It'll take you to the village.";
+		mes("[Red Leopard Joe]");
+		mes("Then we'll have to pay a visit to the village. Try the ^FF0000drawer^000000 over there. It'll take you to the village.");
 		close;
 	case 3:
-		mes "[Red Leopard Joe]";
-		mes "Hmm... Guess I expected too much? Let me explain.";
+		mes("[Red Leopard Joe]");
+		mes("Hmm... Guess I expected too much? Let me explain.");
 		next;
-		mes "[Red Leopard Joe]";
-		mes "You first have to melt the ore to use for the weapon. And the best way to get high purity metal is to melt materials that are of the same kind.";
+		mes("[Red Leopard Joe]");
+		mes("You first have to melt the ore to use for the weapon. And the best way to get high purity metal is to melt materials that are of the same kind.");
 		next;
-		mes "[Red Leopard Joe]";
-		mes "For example, Iron Ore, Iron, and Steel are of similar property so you can get a high purity metal out of them.";
+		mes("[Red Leopard Joe]");
+		mes("For example, Iron Ore, Iron, and Steel are of similar property so you can get a high purity metal out of them.");
 		next;
-		mes "[Red Leopard Joe]";
-		mes "Once you've melted a high purity metal, pour it in a mold to get the shape of the weapon and then make it firm through grinding and tempering.";
+		mes("[Red Leopard Joe]");
+		mes("Once you've melted a high purity metal, pour it in a mold to get the shape of the weapon and then make it firm through grinding and tempering.");
 		next;
-		mes "[Red Leopard Joe]";
-		mes "By the way, you will get the best results by thoroughly rotating, grinding and tempering.";
+		mes("[Red Leopard Joe]");
+		mes("By the way, you will get the best results by thoroughly rotating, grinding and tempering.");
 		next;
-		mes "[Red Leopard Joe]";
-		mes "I think this is enough to get you started, don't you think? Now go and work on that prototype!!";
+		mes("[Red Leopard Joe]");
+		mes("I think this is enough to get you started, don't you think? Now go and work on that prototype!!");
 		close;
 	case 4:
 		return;
@@ -2228,10 +2228,10 @@ L_Weapon:
 }
 
 job_ko,117,128,0	script	Drawer#ko	CLEAR_NPC,{
-	mes "There is some kind of device on the drawer.";
+	mes("There is some kind of device on the drawer.");
 	next;
 	if(select("Stop.", "Try to operate it.") == 2) {
-		mes "Clank clunk clink";
+		mes("Clank clunk clink");
 		close2;
 		warp "amatsu",147,136;
 		end;
@@ -2241,22 +2241,22 @@ job_ko,117,128,0	script	Drawer#ko	CLEAR_NPC,{
 
 job_ko,131,124,0	script	Crafting Tools#ko_01	CLEAR_NPC,{
 	if (MaxWeight - Weight < 1000 || checkweight("Knife",1) == 0) {
-		mes "Too heavy! Please reduce your weight.";
+		mes("Too heavy! Please reduce your weight.");
 		close;
 	}
 	if (questprogress(5138) == 1 && questprogress(5142) == 1 && questprogress(5143) == 0 && questprogress(5144) == 0 && questprogress(5145) == 0) {
 		// fall through
 	} else {
-		mes "A crafting tool.";
-		mes "Don't really need it now.";
+		mes("A crafting tool.");
+		mes("Don't really need it now.");
 		close;
 	}
-	mes "Tool to create weapons.";
+	mes("Tool to create weapons.");
 	next;
 
 	// Part 1: Melting Metal
 	// Input similar materials to proceed to next step.
-	mes "First need to melt metals like iron and iron ore to use to create a weapon.";
+	mes("First need to melt metals like iron and iron ore to use to create a weapon.");
 	next;
 	callsub L_CheckMaterials;
 	while(1) {
@@ -2287,45 +2287,45 @@ job_ko,131,124,0	script	Crafting Tools#ko_01	CLEAR_NPC,{
 					set .@ston_t02, .@ston_t02 - .@val3;
 			}
 			specialeffect EF_DEMONSTRATION;
-			mes "Melted " + getitemname(.@item) + " in high temperature.";
+			mes("Melted " + getitemname(.@item) + " in high temperature.");
 			next;
 			if (.@ston_t01 > 49 || .@ston_t02 > 49)
 				break;
 		} else {
-			mes "Don't have " + getitemname(.@item) + ".";
+			mes("Don't have " + getitemname(.@item) + ".");
 			next;
 		}
 		callsub L_CheckMaterials;
-		mes "Which metal will be melted next?";
+		mes("Which metal will be melted next?");
 		next;
 	}
 	set .@boll_01, ((.@ston_t01 > 49) ? .@ston_t01 : .@ston_t02);
 
 	// Part 2: Forging
 	// Grind and temper a weapon.
-	mes "Now the metal is melted to use for creating weapons.";
+	mes("Now the metal is melted to use for creating weapons.");
 	next;
-	mes "Next is to make the melted metal firm by pouring it into a mold. Which mold shape will you use?";
+	mes("Next is to make the melted metal firm by pouring it into a mold. Which mold shape will you use?");
 	next;
 	switch(select("Dagger Mold", "Shuriken Mold")) {
 	case 1:
 		set .@weapon_who,0;
-		mes "Poured the melted metal into the dagger mold.";
+		mes("Poured the melted metal into the dagger mold.");
 		break;
 	case 2:
 		set .@weapon_who,1;
-		mes "Poured the melted metal into the shuriken mold.";
+		mes("Poured the melted metal into the shuriken mold.");
 		break;
 	}
 	next;
 	progressbar "ffff00",3;
-	mes "Looks like the metal is taking shape. Now what next?";
+	mes("Looks like the metal is taking shape. Now what next?");
 	next;
 	set @job_ko_forge,0;
 	set @job_ko_lastaction,0;
 	callsub L_ForgeWeapon,":";
 	while(1) {
-		mes "Now what next?";
+		mes("Now what next?");
 		next;
 		if (callsub(L_ForgeWeapon,":Final Touches") == 0)
 			break;
@@ -2337,7 +2337,7 @@ job_ko,131,124,0	script	Crafting Tools#ko_01	CLEAR_NPC,{
 	// Part 3: Create the Weapon
 	// Success rate based on previous two parts.
 	set .@boll_00, .@boll_01 + .@boll_02;
-	mes "Start to sharpen the tool using a whetstone for finishing touches.";
+	mes("Start to sharpen the tool using a whetstone for finishing touches.");
 	next;
 	progressbar "ffff00",3;
 	set .@success_pp, rand(1,100);
@@ -2356,22 +2356,22 @@ job_ko,131,124,0	script	Crafting Tools#ko_01	CLEAR_NPC,{
 			setquest 5144;
 			getitem "Huuma_Job_Test", 1;
 		}
-		mes "The weapon was created successfully.";
+		mes("The weapon was created successfully.");
 		next;
-		mes "Let's take it to Red Leopard Joe.";
+		mes("Let's take it to Red Leopard Joe.");
 		close;
 	} else {
 		specialeffect(EF_SUI_EXPLOSION, AREA, playerattached());
-		mes "The weapon was destroyed while doing the finishing touches to it.";
+		mes("The weapon was destroyed while doing the finishing touches to it.");
 		next;
-		mes "There must have been something missed while creating the weapon. Very sad this happened but you'll have to start all over again.";
+		mes("There must have been something missed while creating the weapon. Very sad this happened but you'll have to start all over again.");
 		close;
 	}
 	end;
 
 L_CheckMaterials:
 	if (!countitem("Iron_Ore") && !countitem("Iron") && !countitem("Steel") && !countitem("Phracon") && !countitem("Emveretarcon") && !countitem("Oridecon_Stone") && !countitem("Elunium_Stone")) {
-		mes "But you do not have any more metal to melt. Let's try again after getting more metal.";
+		mes("But you do not have any more metal to melt. Let's try again after getting more metal.");
 		close;
 	}
 	return;
@@ -2381,11 +2381,11 @@ L_ForgeWeapon:
 	switch (.@i) {
 	case 1:
 		specialeffect(EF_DETOXICATION, AREA, playerattached());
-		mes "Ground the weapon.";
+		mes("Ground the weapon.");
 		break;
 	case 2:
 		specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
-		mes "Tempered the weapon.";
+		mes("Tempered the weapon.");
 		break;
 	case 3:
 		return 0;
@@ -2405,66 +2405,66 @@ job_ko,121,121,0	script	Refinement Tools#ko_01	CLEAR_NPC,{
 	if (questprogress(5138) == 1 && questprogress(5142) == 0 && (questprogress(5143) == 1 || questprogress(5144) == 1) && questprogress(5145) == 1) {
 		disable_items;
 	} else {
-		mes "This tool helps you refine your weapons automatically. However, you won't need this just now.";
+		mes("This tool helps you refine your weapons automatically. However, you won't need this just now.");
 		close;
 	}
-	mes "You turn on the refinement tool.";
-	mes "The equipment starts up with a pleasant vibration.";
+	mes("You turn on the refinement tool.");
+	mes("The equipment starts up with a pleasant vibration.");
 	next;
-	mes "Looks like you can use the tool right away for refinement because it holds a good deal of Elunium and Oridecon within it.";
+	mes("Looks like you can use the tool right away for refinement because it holds a good deal of Elunium and Oridecon within it.");
 	next;
 	if(select("Start refining.", "Do not start refining.") == 2) {
-		mes "You turned off the tool.";
+		mes("You turned off the tool.");
 		close;
 	}
 	set .@part, EQI_HAND_R;
 	if (!getequipisequiped(.@part)) {
-		mes "Bzzzt";
-		mes "A warning beep comes from the tool.";
+		mes("Bzzzt");
+		mes("A warning beep comes from the tool.");
 		next;
-		mes "[Red Leopard Joe]";
-		mes "This equipment does not work without an equipped item to refine.";
+		mes("[Red Leopard Joe]");
+		mes("This equipment does not work without an equipped item to refine.");
 		close;
 	} else {
 		set .@equip_id, getequipid(.@part);
 		if (.@equip_id == 13074 || .@equip_id == 13312) {
-			mes "Analyzing the weapon.";
+			mes("Analyzing the weapon.");
 			next;
 		} else {
-			mes "[Red Leopard Joe]";
-			mes "Wait... this weapon is not a customized one.";
+			mes("[Red Leopard Joe]");
+			mes("Wait... this weapon is not a customized one.");
 			next;
-			mes "[Red Leopard Joe]";
-			mes "Why don't you refine this with those hot-headed blacksmiths out there?";
+			mes("[Red Leopard Joe]");
+			mes("Why don't you refine this with those hot-headed blacksmiths out there?");
 			close;
 		}
 	}
 	if (!getequipisenableref(.@part)) {
-		mes "Bzzzt";
-		mes "A warning beep comes from the tool.";
+		mes("Bzzzt");
+		mes("A warning beep comes from the tool.");
 		next;
-		mes "[Red Leopard Joe]";
-		mes "That weapon cannot be refined. Where did you get it?";
+		mes("[Red Leopard Joe]");
+		mes("That weapon cannot be refined. Where did you get it?");
 		close;
 	}
 	set .@equip_refine, getequiprefinerycnt(.@part);
 	if (.@equip_refine >= 20) {
-		mes "Bzzzt";
-		mes "A warning beep comes from the tool.";
+		mes("Bzzzt");
+		mes("A warning beep comes from the tool.");
 		next;
-		mes "[Red Leopard Joe]";
-		mes "This equipment is perfectly refined. Keep it for yourself!";
+		mes("[Red Leopard Joe]");
+		mes("This equipment is perfectly refined. Keep it for yourself!");
 		close;
 	}
 	if (getequippercentrefinery(.@part) < 100) {
-		mes "This is very well refined equipment. Do you want to continue? Refine skill decreases by 1 if refinement fails.";
+		mes("This is very well refined equipment. Do you want to continue? Refine skill decreases by 1 if refinement fails.");
 		next;
 		if(select("Continue.", "Stop.") == 2) {
-			mes "You turned off the tool.";
+			mes("You turned off the tool.");
 			close;
 		}
 	} else {
-		mes "Starting to refine.";
+		mes("Starting to refine.");
 		next;
 	}
 	progressbar "ffff00",1;
@@ -2486,14 +2486,14 @@ job_ko,121,121,0	script	Refinement Tools#ko_01	CLEAR_NPC,{
 	}
 	if (.@wlevel_up) {
 		successrefitem .@part;
-		mes "Succeeded in refining.";
-		mes "Turned off the refining tool.";
+		mes("Succeeded in refining.");
+		mes("Turned off the refining tool.");
 		close;
 	} else {
 		downrefitem .@part;
-		mes "Failed in refining.";
-		mes "Your weapon refinement skill dropped by 1.";
-		mes "Turned off the refining tool.";
+		mes("Failed in refining.");
+		mes("Your weapon refinement skill dropped by 1.");
+		mes("Turned off the refining tool.");
 		close;
 	}
 	end;
@@ -2503,85 +2503,85 @@ job_ko,127,121,0	duplicate(Refinement Tools#ko_01)	Refinement Tools#ko_02	CLEAR_
 //== Test of Battle ========================================
 job_ko,148,46,4	script	Guide Gion#ko2	4_M_KAGE_OLD,{
 	if (MaxWeight - Weight < 2000 || checkweight("Knife",1) == 0) {
-		mes "[Guide Gion]";
-		mes "You don't need so many things now!";
+		mes("[Guide Gion]");
+		mes("You don't need so many things now!");
 		close;
 	}
 	if (job_kagero == 7) {
 		cutin "job_ko01",2;
-		mes "[Guide Gion]";
-		mes "Looks like you haven't taken care of the target yet.";
+		mes("[Guide Gion]");
+		mes("Looks like you haven't taken care of the target yet.");
 		next;
-		mes "[Guide Gion]";
-		mes "I'll tell you once more. The target is the ^FF0000Family Secret^000000.";
+		mes("[Guide Gion]");
+		mes("I'll tell you once more. The target is the ^FF0000Family Secret^000000.");
 		next;
-		mes "[Guide Gion]";
-		mes "Of course the path will be difficult, so continue searching!";
+		mes("[Guide Gion]");
+		mes("Of course the path will be difficult, so continue searching!");
 		close2;
 		cutin "",255;
 		end;
 	} else if (job_kagero == 8) {
 		cutin "job_ko02",2;
-		mes "[Guide Gion]";
-		mes "Looks like you've taken care of the target. Hmm.";
+		mes("[Guide Gion]");
+		mes("Looks like you've taken care of the target. Hmm.");
 		next;
 		if (checkmount()) {
-			mes "[Guide Gion]";
-			mes "But please get down from your frog. Otherwise I can't continue!";
+			mes("[Guide Gion]");
+			mes("But please get down from your frog. Otherwise I can't continue!");
 			close2;
 			cutin "",255;
 			end;
 		}
 		if (BaseLevel < 99 || JobLevel < 70) {
-			mes "[Guide Gion]";
-			mes "How did you get weaker? Come back once you've regained your previous levels.";
+			mes("[Guide Gion]");
+			mes("How did you get weaker? Come back once you've regained your previous levels.");
 			close2;
 			cutin "",255;
 			end;
 		}
 		if (SkillPoint != 0) {
-			mes "[Guide Gion]";
-			mes "Please come back after using all your Skill Points.";
+			mes("[Guide Gion]");
+			mes("Please come back after using all your Skill Points.");
 			close2;
 			cutin "",255;
 			end;
 		}
 		mapannounce "job_ko","[Gion] Interrupting the Test of Battle.",bc_map;
 		cutin "job_ko04",2;
-		mes "[Guide Gion]";
-		mes "The Test of Battle will be put off for a while. Don't worry because this does not have affect to other tests.";
+		mes("[Guide Gion]");
+		mes("The Test of Battle will be put off for a while. Don't worry because this does not have affect to other tests.");
 		next;
 		mapannounce "job_ko","[Gion] My Friend " + strcharinfo(PC_NAME) + " made it to " + (Sex == SEX_MALE ? "Kagerou" : "Oboro") + " Path. Congratulations!!",bc_map;
-		mes "[Guide Gion]";
-		mes "My friend " + strcharinfo(PC_NAME) + " made it to " + (Sex == SEX_MALE ? "Kagerou" : "Oboro") + " Path. Congratulations!!";
+		mes("[Guide Gion]");
+		mes("My friend " + strcharinfo(PC_NAME) + " made it to " + (Sex == SEX_MALE ? "Kagerou" : "Oboro") + " Path. Congratulations!!");
 		next;
 		cutin "job_ko02",2;
-		mes "[Guide Gion]";
-		mes "It is pleasant to meet a youth that is walking through a new path.";
+		mes("[Guide Gion]");
+		mes("It is pleasant to meet a youth that is walking through a new path.");
 		next;
-		mes "[Someone's Voice]";
-		mes "Wait for a while, Gion.";
+		mes("[Someone's Voice]");
+		mes("Wait for a while, Gion.");
 		next;
 		donpcevent "Cougar#ko2::OnEnable";
 		donpcevent "Red Leopard Joe#ko2::OnEnable";
 		cutin "job_ko04",2;
-		mes "[Guide Gion]";
-		mes "I'm sorry I almost forgot about you two. Do you have anything to share with " + strcharinfo(PC_NAME) + "?";
+		mes("[Guide Gion]");
+		mes("I'm sorry I almost forgot about you two. Do you have anything to share with " + strcharinfo(PC_NAME) + "?");
 		next;
 		cutin "",255;
-		mes "[Cougar]";
-		mes "Hmm... Embarrassing... to speak so suddenly...";
+		mes("[Cougar]");
+		mes("Hmm... Embarrassing... to speak so suddenly...");
 		next;
-		mes "[Cougar]";
-		mes strcharinfo(PC_NAME) + ", you are now a proud member of our family. Always hold your head high and...";
+		mes("[Cougar]");
+		mes(strcharinfo(PC_NAME) + ", you are now a proud member of our family. Always hold your head high and...");
 		next;
-		mes "[Cougar]";
-		mes "^777777(Gai's voice fades out.)^000000.";
-		mes "I'm sorry I strangled you when we first met.";
+		mes("[Cougar]");
+		mes("^777777(Gai's voice fades out.)^000000.");
+		mes("I'm sorry I strangled you when we first met.");
 		next;
 		donpcevent "Cougar#ko2::OnDisable";
-		mes "[Red Leopard Joe]";
-		mes "Puhahaha! Gai is all talk. I know I was know valuable to you than that Gai.";
+		mes("[Red Leopard Joe]");
+		mes("Puhahaha! Gai is all talk. I know I was know valuable to you than that Gai.");
 		next;
 		if (questprogress(5143) == 2) {
 			set .@item,13075; //Kurenai
@@ -2590,28 +2590,28 @@ job_ko,148,46,4	script	Guide Gion#ko2	4_M_KAGE_OLD,{
 			set .@item,13311; //Huuma_Shadow
 			set .@weapon$,"shuriken";
 		}
-		mes "[Red Leopard Joe]";
-		mes "I did some work on the prototype " + .@weapon$ + " you made.";
+		mes("[Red Leopard Joe]");
+		mes("I did some work on the prototype " + .@weapon$ + " you made.");
 		next;
-		mes "[Red Leopard Joe]";
-		mes getitemname(.@item) + " now shines beautifully with a scarlet glow after I did the finishing touches.";
+		mes("[Red Leopard Joe]");
+		mes(getitemname(.@item) + " now shines beautifully with a scarlet glow after I did the finishing touches.");
 		next;
-		mes "[Red Leopard Joe]";
-		mes "I named your weapons on my own but I know you'll like the name.";
+		mes("[Red Leopard Joe]");
+		mes("I named your weapons on my own but I know you'll like the name.");
 		next;
-		mes "[Red Leopard Joe]";
-		mes "Guide Gion, please continue.";
+		mes("[Red Leopard Joe]");
+		mes("Guide Gion, please continue.");
 		next;
 		cutin "job_ko01",2;
 		donpcevent "Red Leopard Joe#ko2::OnDisable";
-		mes "[Guide Gion]";
-		mes "I don't have much to add because Gai and Joe said it all.";
+		mes("[Guide Gion]");
+		mes("I don't have much to add because Gai and Joe said it all.");
 		next;
-		mes "[Guide Gion]";
-		mes "I'm just sorry that the environment of all these tests could have been better for our later generation.";
+		mes("[Guide Gion]");
+		mes("I'm just sorry that the environment of all these tests could have been better for our later generation.");
 		next;
-		mes "[Guide Gion]";
-		mes "You only need to look forward and never turn back.";
+		mes("[Guide Gion]");
+		mes("You only need to look forward and never turn back.");
 		next;
 		for (set .@i,5131; .@i<=5146; set .@i,.@i+1)
 			if (questprogress(.@i)) erasequest .@i;
@@ -2619,22 +2619,22 @@ job_ko,148,46,4	script	Guide Gion#ko2	4_M_KAGE_OLD,{
 		getnameditem .@item,strcharinfo(PC_NAME);
 		jobchange(Sex == SEX_MALE ? Job_Kagerou : Job_Oboro);
 		donpcevent "Summon Target#ko::OnEnable";
-		mes "[Guide Gion]";
-		mes "I hope the blessings of Kagerou, dancing sun and Oboro, misty moonlight will be with you on your journey ahead.";
+		mes("[Guide Gion]");
+		mes("I hope the blessings of Kagerou, dancing sun and Oboro, misty moonlight will be with you on your journey ahead.");
 		close2;
 		warp "que_ng",21,71;
 		end;
 	} else if (job_kagero == 9) {
 		cutin "job_ko01",2;
-		mes "[Guide Gion]";
-		mes "I hope the blessings of Kagerou, dancing sun and Oboro, misty moonlight will be with you on your journey ahead.";
+		mes("[Guide Gion]");
+		mes("I hope the blessings of Kagerou, dancing sun and Oboro, misty moonlight will be with you on your journey ahead.");
 		close2;
 		warp "que_ng",21,71;
 		end;
 	} else {
 		cutin "job_ko01",2;
-		mes "[Guide Gion]";
-		mes "You should not be here. Please leave!";
+		mes("[Guide Gion]");
+		mes("You should not be here. Please leave!");
 		close2;
 		warp "amatsu",147,136;
 		end;
@@ -2642,8 +2642,8 @@ job_ko,148,46,4	script	Guide Gion#ko2	4_M_KAGE_OLD,{
 }
 
 job_ko,151,47,4	script	Cougar#ko2	4_M_JOB_ASSASSIN,{
-	mes "[Cougar]";
-	mes "Congratulation for choosing the road of development!";
+	mes("[Cougar]");
+	mes("Congratulation for choosing the road of development!");
 	close;
 OnInit:
 OnDisable:
@@ -2655,8 +2655,8 @@ OnEnable:
 }
 
 job_ko,145,47,6	script	Red Leopard Joe#ko2	4_M_JOB_ASSASSIN,{
-	mes "[Red Leopard Joe]";
-	mes "You have not found the target? Continue searching it.";
+	mes("[Red Leopard Joe]");
+	mes("You have not found the target? Continue searching it.");
 	close;
 OnInit:
 OnDisable:
@@ -2744,100 +2744,100 @@ OnMyMobDead:
 job_ko,3,1,4	script	Battle Test Control#ko	4_M_KAGE_OLD,{
 	callfunc "F_GM_NPC";
 	if (callfunc("F_GM_NPC",1854,0) == 1) {
-		mes "This is the Battle Test Control NPC.";
+		mes("This is the Battle Test Control NPC.");
 		next;
 	} else {
-		mes "Incorrect password.";
+		mes("Incorrect password.");
 		close;
 	}
 	switch(select("Summon Target", "Summon Target Disable", "Summon Fake", "Summon Fake Disable")) {
 	case 1:
 		donpcevent "Summon Target#ko::OnEnable";
-		mes "Summon Target activated.";
+		mes("Summon Target activated.");
 		break;
 	case 2:
 		donpcevent "Summon Target#ko::OnDisable";
-		mes "Summon Target disabled.";
+		mes("Summon Target disabled.");
 		break;
 	case 3:
 		donpcevent "Summon Fake#ko::OnEnable";
-		mes "Summon Fake activated.";
+		mes("Summon Fake activated.");
 		break;
 	case 4:
 		donpcevent "Summon Fake#ko::OnDisable";
-		mes "Summon Fake disabled.";
+		mes("Summon Fake disabled.");
 		break;
 	}
 	next;
-	mes "Control has completed.";
+	mes("Control has completed.");
 	close;
 }
 
 job_ko,4,1,4	script	Guide#ko_helper	4_M_KAGE_OLD,{
 	callfunc "F_GM_NPC";
 	if (callfunc("F_GM_NPC",1854,0) == 1) {
-		mes "This is the Kagerou and Oboro Job Change assistant NPC.";
+		mes("This is the Kagerou and Oboro Job Change assistant NPC.");
 		next;
 	} else {
-		mes "Incorrect password.";
+		mes("Incorrect password.");
 		close;
 	}
-	mes "I can solve any problems in the job change quest.";
+	mes("I can solve any problems in the job change quest.");
 	next;
 	switch(select("Current Status", "Test Set", "Pre-Transfer", "Initialize")) {
 	case 1:
-		mes "Variable states (current/maximum)";
-		mes "job_kagero (" + job_kagero + "/9)";
-		mes "job_kagero_lp (" + job_kagero_lp + "/100)";
+		mes("Variable states (current/maximum)");
+		mes("job_kagero (" + job_kagero + "/9)");
+		mes("job_kagero_lp (" + job_kagero_lp + "/100)");
 		next;
-		mes "Quest states (current/maximum)";
-		mes "5131 (" + questprogress(5131) + "/1)";
-		mes "5132 (" + questprogress(5132) + "/1)";
-		mes "5133 (" + questprogress(5133) + "/1)";
-		mes "5134 (" + questprogress(5134) + "/1)";
-		mes "5135 (" + questprogress(5135) + "/1)";
-		mes "5136 (" + questprogress(5136) + "/2)";
-		mes "5139 (" + questprogress(5139) + "/1)";
-		mes "5137 (" + questprogress(5137) + "/2)";
-		mes "5140 (" + questprogress(5140) + "/1)";
-		mes "5141 (" + questprogress(5141,PLAYTIME) + "/1)";
-		mes "5138 (" + questprogress(5138) + "/2)";
-		mes "5142 (" + questprogress(5142) + "/1)";
-		mes "5143 (" + questprogress(5143) + "/2)";
-		mes "5144 (" + questprogress(5144) + "/2)";
-		mes "5145 (" + questprogress(5145) + "/1)";
-		mes "5146 (" + questprogress(5146) + "/1)";
+		mes("Quest states (current/maximum)");
+		mes("5131 (" + questprogress(5131) + "/1)");
+		mes("5132 (" + questprogress(5132) + "/1)");
+		mes("5133 (" + questprogress(5133) + "/1)");
+		mes("5134 (" + questprogress(5134) + "/1)");
+		mes("5135 (" + questprogress(5135) + "/1)");
+		mes("5136 (" + questprogress(5136) + "/2)");
+		mes("5139 (" + questprogress(5139) + "/1)");
+		mes("5137 (" + questprogress(5137) + "/2)");
+		mes("5140 (" + questprogress(5140) + "/1)");
+		mes("5141 (" + questprogress(5141,PLAYTIME) + "/1)");
+		mes("5138 (" + questprogress(5138) + "/2)");
+		mes("5142 (" + questprogress(5142) + "/1)");
+		mes("5143 (" + questprogress(5143) + "/2)");
+		mes("5144 (" + questprogress(5144) + "/2)");
+		mes("5145 (" + questprogress(5145) + "/1)");
+		mes("5146 (" + questprogress(5146) + "/1)");
 		close;
 	case 2:
-		mes "Which test do you want to set as completed?";
-		mes "Three tests must be completed before changing jobs. If you wish to reach a job change state, please select [Pre-Transfer] directly from the previous menu!";
+		mes("Which test do you want to set as completed?");
+		mes("Three tests must be completed before changing jobs. If you wish to reach a job change state, please select [Pre-Transfer] directly from the previous menu!");
 		next;
 		switch(select("Complete Test of Knowledge", "Complete Test of Survival", "Complete Test of Weaponry")) {
 		case 1:
 			set job_kagero,5;
 			setquest 5136;
 			completequest 5136;
-			mes "The Test of Knowledge has been set as complete. I hope you have finished your initialization.";
+			mes("The Test of Knowledge has been set as complete. I hope you have finished your initialization.");
 			break;
 		case 2:
 			set job_kagero,5;
 			set job_kagero_lp,0;
 			setquest 5137;
 			completequest 5137;
-			mes "The Test of Survival has been set as complete. I hope you have finished your initialization.";
+			mes("The Test of Survival has been set as complete. I hope you have finished your initialization.");
 			break;
 		case 3:
 			set job_kagero,5;
 			setquest 5138;
 			completequest 5138;
-			mes "The Test of Weaponry has been set as complete. I hope you have finished your initialization.";
+			mes("The Test of Weaponry has been set as complete. I hope you have finished your initialization.");
 			break;
 		}
 		close;
 	case 3:
-		mes "I will change your quest status to Pre-Transfer, but before that...";
+		mes("I will change your quest status to Pre-Transfer, but before that...");
 		next;
-		mes "Please select a weapon.";
+		mes("Please select a weapon.");
 		next;
 		switch(select("Dagger", "Shuriken")) {
 			case 1: set .@quest,5143; break;
@@ -2853,14 +2853,14 @@ job_ko,4,1,4	script	Guide#ko_helper	4_M_KAGE_OLD,{
 		completequest .@quest;
 		setquest 5146;
 		set job_kagero,8;
-		mes "I've set the Pre-Transfer status. Good luck!!";
+		mes("I've set the Pre-Transfer status. Good luck!!");
 		close;
 	case 4:
 		set job_kagero,0;
 		set job_kagero_lp,0;
 		for (set .@i,5131; .@i<=5146; set .@i,.@i+1)
 			if (questprogress(.@i)) erasequest .@i;
-		mes "The task of initialization is complete. You can confirm this through the [Current Status] option!";
+		mes("The task of initialization is complete. You can confirm this through the [Current Status] option!");
 		close;
 	}
 	end;

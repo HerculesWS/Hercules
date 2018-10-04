@@ -44,16 +44,16 @@
 	.@tame_gets = 3;
 
 	if (cpm_one == .@tame_gets) {
-		mes "[Cute Pet Manager]";
-		mes "You have already exchanged";
-		mes .@tame_amount + " times for a taming item.";
-		mes "You can't exchange anymore.";
+		mes("[Cute Pet Manager]");
+		mes("You have already exchanged");
+		mes(.@tame_amount + " times for a taming item.");
+		mes("You can't exchange anymore.");
 		next;
-		mes "[Cute Pet Manager]";
-		mes "Besides me, there are other";
-		mes "Cute Pet Managers. If you want";
-		mes "to tame other pets, I suggest";
-		mes "you go and see them.";
+		mes("[Cute Pet Manager]");
+		mes("Besides me, there are other");
+		mes("Cute Pet Managers. If you want");
+		mes("to tame other pets, I suggest");
+		mes("you go and see them.");
 		close;
 	}
 
@@ -73,16 +73,16 @@
 	.@tame_gets = 2;
 
 	if (cpm_two == .@tame_gets) {
-		mes "[Cute Pet Manager]";
-		mes "You have already exchanged";
-		mes .@tame_amount + " times for a taming item.";
-		mes "You can't exchange anymore.";
+		mes("[Cute Pet Manager]");
+		mes("You have already exchanged");
+		mes(.@tame_amount + " times for a taming item.");
+		mes("You can't exchange anymore.");
 		next;
-		mes "[Cute Pet Manager]";
-		mes "Besides me, there are other";
-		mes "Cute Pet Managers. If you want";
-		mes "to tame other pets, I suggest";
-		mes "you go and see them.";
+		mes("[Cute Pet Manager]");
+		mes("Besides me, there are other");
+		mes("Cute Pet Managers. If you want");
+		mes("to tame other pets, I suggest");
+		mes("you go and see them.");
 		close;
 	}
 
@@ -103,16 +103,16 @@
 	.@tame_gets = 1;
 
 	if (cpm_three == .@tame_gets) {
-		mes "[Cute Pet Manager]";
-		mes "You have already exchanged";
-		mes .@tame_amount + " times for a taming item.";
-		mes "You can't exchange anymore.";
+		mes("[Cute Pet Manager]");
+		mes("You have already exchanged");
+		mes(.@tame_amount + " times for a taming item.");
+		mes("You can't exchange anymore.");
 		next;
-		mes "[Cute Pet Manager]";
-		mes "Besides me, there are other";
-		mes "Cute Pet Managers. If you want";
-		mes "to tame other pets, I suggest";
-		mes "you go and see them.";
+		mes("[Cute Pet Manager]");
+		mes("Besides me, there are other");
+		mes("Cute Pet Managers. If you want");
+		mes("to tame other pets, I suggest");
+		mes("you go and see them.");
 		close;
 	}
 
@@ -130,38 +130,38 @@ function	script	cute_pet_manager	{
 	// getarg(7) -> .@hunt_id2 Array
 	// getarg(8) -> .@hunt_amount2 Array
 
-	mes "[Cute Pet Manager]";
-	mes "Hello~! I am a Cute Pet Manager";
-	mes "who is in charge of public relations";
-	mes "for the New Upgraded Cute Pet system.";
+	mes("[Cute Pet Manager]");
+	mes("Hello~! I am a Cute Pet Manager");
+	mes("who is in charge of public relations");
+	mes("for the New Upgraded Cute Pet system.");
 	next;
-	mes "[Cute Pet Manager]";
-	mes "If you have any concerns regarding";
-	mes "the Cute Pet system I am here to guide you.";
-	mes "Let me know which taming";
-	mes "item you want,";
-	mes "then I will tell you the monster";
-	mes "that you can tame with the item.";
+	mes("[Cute Pet Manager]");
+	mes("If you have any concerns regarding");
+	mes("the Cute Pet system I am here to guide you.");
+	mes("Let me know which taming");
+	mes("item you want,");
+	mes("then I will tell you the monster");
+	mes("that you can tame with the item.");
 	next;
-	mes "Also I will explain what materials";
-	mes "you need to bring in order to";
-	mes "get the taming item.";
+	mes("Also I will explain what materials");
+	mes("you need to bring in order to");
+	mes("get the taming item.");
 	next;
-	mes "[Cute Pet Manager]";
-	mes "If you already brought materials";
-	mes "to exchange for the taming item,";
-	mes "I can exchange it for taming items immediately.";
+	mes("[Cute Pet Manager]");
+	mes("If you already brought materials");
+	mes("to exchange for the taming item,");
+	mes("I can exchange it for taming items immediately.");
 	next;
-	mes "[Cute Pet Manager]";
-	mes "However, there is a limit";
-	mes "for exchanging taming items.";
-	mes "You can only get taming items";
-	mes getarg(6) + " times. So please make sure";
-	mes "how many times you have exchanged.";
+	mes("[Cute Pet Manager]");
+	mes("However, there is a limit");
+	mes("for exchanging taming items.");
+	mes("You can only get taming items");
+	mes(getarg(6) + " times. So please make sure");
+	mes("how many times you have exchanged.");
 	next;
-	mes "[Cute Pet Manager]";
-	mes "So, which taming item do you want?";
-	mes "Please choose one from the list.";
+	mes("[Cute Pet Manager]");
+	mes("So, which taming item do you want?");
+	mes("Please choose one from the list.");
 	next;
 	// Create Menu System
 	for (.@a = 0; .@a < getarraysize(getarg(0)); ++.@a) {
@@ -188,35 +188,35 @@ function	script	cute_pet_manager	{
 	dispbottom "Hunt Amount2: " + .@hunt_amount2;
 	if (.@hunt_id2) { .@hunt2_count = countitem(.@hunt_id2); }
 	if (countitem(.@hunt_id) >= .@hunt_amount && countitem(Dolly_Capsule) > 0 && .@hunt2_count >= .@hunt_amount2) {
-		mes "[Cute Pet Manager]";
-		mes "Ah, you have gathered all items";
-		mes "with your friends. You can now";
-		mes "exchange for an " + getitemname(.@tame_id) + ".";
-		mes "Do you want to exchange with me?";
+		mes("[Cute Pet Manager]");
+		mes("Ah, you have gathered all items");
+		mes("with your friends. You can now");
+		mes("exchange for an " + getitemname(.@tame_id) + ".");
+		mes("Do you want to exchange with me?");
 		next;
 		if (select("Exchange", "Don't Exchange") == 2) {
-			mes "[Cute Pet Manager]";
-			mes "You don't? You will come back again.";
+			mes("[Cute Pet Manager]");
+			mes("You don't? You will come back again.");
 			close;
 		}
 		delitem .@hunt_id, .@hunt_amount;
 		delitem 6083, 1;
 		set getarg(5), getarg(5) + 1;
 		getitem .@tame_id, .@tame_amount;
-		mes "[Cute Pet Manager]";
-		mes "Wise choice.";
-		mes "I hope you and your pet get along.";
+		mes("[Cute Pet Manager]");
+		mes("Wise choice.");
+		mes("I hope you and your pet get along.");
 		close;
 	} else {
-		mes "[Cute Pet Manager]";
-		mes "You have chosen " + getitemname(.@tame_id) + ".";
-		mes "You can use it for taming";
-		mes "^FF0000" + strmobinfo(1,.@mob_id) + "^000000 monsters.";
+		mes("[Cute Pet Manager]");
+		mes("You have chosen " + getitemname(.@tame_id) + ".");
+		mes("You can use it for taming");
+		mes("^FF0000" + strmobinfo(1,.@mob_id) + "^000000 monsters.");
 		next;
-		mes "[Cute Pet Manager]";
-		mes "Bring ^FF0000" + .@hunt_amount + " " + getitemname(.@hunt_id) + "^000000s " + (.@hunt_id2 ? ", ^FF0000" + .@hunt_amount2 + " " + getitemname(.@hunt_id2) : "") + " ^000000 and ^FF00001 Dolly Capsule^000000";
-		mes "then you can exchange them";
-		mes "for an " + getitemname(.@tame_id) + ".";
+		mes("[Cute Pet Manager]");
+		mes("Bring ^FF0000" + .@hunt_amount + " " + getitemname(.@hunt_id) + "^000000s " + (.@hunt_id2 ? ", ^FF0000" + .@hunt_amount2 + " " + getitemname(.@hunt_id2) : "") + " ^000000 and ^FF00001 Dolly Capsule^000000");
+		mes("then you can exchange them");
+		mes("for an " + getitemname(.@tame_id) + ".");
 		close;
 	}
 }

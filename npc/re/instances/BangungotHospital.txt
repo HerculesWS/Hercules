@@ -60,30 +60,30 @@ ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 					else if (malaya_bang > 39)
 						callsub L_Enter,(getcharid(CHAR_ID_CHAR) == getpartyleader(.@party_id,2))?1:0,0,0;
 					else {
-						mes "[Nurse Maenne]";
-						mes "..........";
+						mes("[Nurse Maenne]");
+						mes("..........");
 						close2;
 						cutin "",255;
 						end;
 					}
 				} else if (.@playtime == 1) {
 					if (!questprogress(11309)) {
-						mes "[Nurse Maenne]";
-						mes "This is a fatal situation.";
+						mes("[Nurse Maenne]");
+						mes("This is a fatal situation.");
 						close2;
 						cutin "",255;
 						end;
 					} else {
-						mes "[Nurse Maenne]";
-						mes "Now the entrance";
-						mes "to the second floor";
-						mes "is closed.";
+						mes("[Nurse Maenne]");
+						mes("Now the entrance");
+						mes("to the second floor");
+						mes("is closed.");
 						next;
-						mes "[Nurse Maenne]";
-						mes "To go up to";
-						mes "the second floor again,";
-						mes "open the gate";
-						mes "after a lapse of time.";
+						mes("[Nurse Maenne]");
+						mes("To go up to");
+						mes("the second floor again,");
+						mes("open the gate");
+						mes("after a lapse of time.");
 						close2;
 						cutin "",255;
 						end;
@@ -104,8 +104,8 @@ ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 						if (malaya_bang > 39)
 							callsub L_Enter,(getcharid(CHAR_ID_CHAR) == getpartyleader(.@party_id,2))?1:0,1,1;
 						else {
-							mes "[Nurse Maenne]";
-							mes ".......";
+							mes("[Nurse Maenne]");
+							mes(".......");
 							close2;
 							cutin "",255;
 							end;
@@ -113,10 +113,10 @@ ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 					}
 				}
 			} else {
-				mes "[Nurse Maenne]";
-				mes "You got rid of Bangungot!"; //?
-				mes "The nurse might be waiting for you";
-				mes "in front of the hospital!";
+				mes("[Nurse Maenne]");
+				mes("You got rid of Bangungot!"); //?
+				mes("The nurse might be waiting for you");
+				mes("in front of the hospital!");
 				close2;
 				cutin "",255;
 				end;
@@ -127,8 +127,8 @@ ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 				if (questprogress(9222,HUNTING) == 1) {
 					.@playtime = questprogress(9224,PLAYTIME);
 					if (.@playtime == 1) {
-						mes "[Nurse Maenne]";
-						mes "Do you want go up to the second floor again?";
+						mes("[Nurse Maenne]");
+						mes("Do you want go up to the second floor again?");
 						next;
 						callsub L_Enter,0,0;
 					} else if (.@playtime == 2) {
@@ -136,35 +136,35 @@ ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 						if (malaya_bang > 39)
 							callsub L_Enter,(getcharid(CHAR_ID_CHAR) == getpartyleader(.@party_id,2))?1:0,1,1;
 						else {
-							mes "[Nurse Maenne]";
-							mes ".......";
+							mes("[Nurse Maenne]");
+							mes(".......");
 							close2;
 							cutin "",255;
 							end;
 						}
 					} else {
-						mes "[Nurse Maenne]";
-						mes "This is a fatal situation.";
-						mes "You can't go up to the 2nd floor.";
+						mes("[Nurse Maenne]");
+						mes("This is a fatal situation.");
+						mes("You can't go up to the 2nd floor.");
 						close2;
 						cutin "",255;
 						end;
 					}
 				} else {
 					if (checkweight(Yggdrasilberry,1) == 0) {
-						mes "[Nurse Maenne]";
-						mes "You have too much stuff.";
-						mes "Please reduce your stuff and";
-						mes "come to me again.";
+						mes("[Nurse Maenne]");
+						mes("You have too much stuff.");
+						mes("Please reduce your stuff and");
+						mes("come to me again.");
 						close2;
 						cutin "",255;
 						end;
 					}
 					if (checkweight(Yggdrasilberry,11) == 0) {
-						mes "[Nurse Maenne]";
-						mes "It's too heavy.";
-						mes "Please reduce the weight and";
-						mes "come to me again.";
+						mes("[Nurse Maenne]");
+						mes("It's too heavy.");
+						mes("Please reduce the weight and");
+						mes("come to me again.");
 						close2;
 						cutin "",255;
 						end;
@@ -185,10 +185,10 @@ ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 					end;
 				}
 			} else {
-				mes "[Nurse Maenne]";
-				mes ".....?";
-				mes "Now you can't go up";
-				mes "to the 2nd floor.";
+				mes("[Nurse Maenne]");
+				mes(".....?");
+				mes("Now you can't go up");
+				mes("to the 2nd floor.");
 				close2;
 				cutin "",255;
 				end;
@@ -215,8 +215,8 @@ ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 			if (malaya_bang > 39)
 				callsub L_Enter,(getcharid(CHAR_ID_CHAR) == getpartyleader(.@party_id,2))?1:0,1,1;
 			else {
-				mes "[Nurse Maenne]";
-				mes ".......";
+				mes("[Nurse Maenne]");
+				mes(".......");
 				close2;
 				cutin "",255;
 				end;
@@ -225,11 +225,11 @@ ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 	}
 
 L_Closed:
-	mes "[Nurse Maenne]";
-	mes "- The door is closed to 1st floor";
-	mes "When this Nurse came in?";
-	mes "I call her behind, but";
-	mes "she doesn't respond. -";
+	mes("[Nurse Maenne]");
+	mes("- The door is closed to 1st floor");
+	mes("When this Nurse came in?");
+	mes("I call her behind, but");
+	mes("she doesn't respond. -");
 	if (getarg(0)) {
 		malaya_bang = 31;
 		changequest 11302,11303;
@@ -239,10 +239,10 @@ L_Closed:
 	end;
 
 L_NoParty:
-	mes "- I guess...";
-	mes "I can't talk him alone.";
-	mes "After registering a party";
-	mes "let me try to say something. -";
+	mes("- I guess...");
+	mes("I can't talk him alone.");
+	mes("After registering a party");
+	mes("let me try to say something. -");
 	close2;
 	cutin "",255;
 	end;
@@ -250,25 +250,25 @@ L_NoParty:
 L_Enter:
 	.@md_name$ = "Bangungot Hospital 2F";
 	if (getarg(2) == 0) {
-		mes "[Nurse Maenne]";
-		mes "I already heard that story so";
-		mes "I pretty much know that.";
-		mes "What are you going to do?";
-		mes "Do you want to go up";
-		mes "to the second floor?";
+		mes("[Nurse Maenne]");
+		mes("I already heard that story so");
+		mes("I pretty much know that.");
+		mes("What are you going to do?");
+		mes("Do you want to go up");
+		mes("to the second floor?");
 	} else {
-		mes "[Nurse Maenne]";
-		mes "You are back...";
-		mes "There is bad news.";
-		mes "I heard that";
-		mes "the Bangungot has";
-		mes "appeared again.";
+		mes("[Nurse Maenne]");
+		mes("You are back...");
+		mes("There is bad news.");
+		mes("I heard that");
+		mes("the Bangungot has");
+		mes("appeared again.");
 		next;
-		mes "[Nurse Maenne]";
-		mes strcharinfo(PC_NAME) + "'s help";
-		mes "is needed again.";
-		mes "Please, could you give me";
-		mes "one more chance?";
+		mes("[Nurse Maenne]");
+		mes(strcharinfo(PC_NAME) + "'s help");
+		mes("is needed again.");
+		mes("Please, could you give me");
+		mes("one more chance?");
 	}
 	next;
 	switch(select(((getarg(0))?"Prepare to enter the second floor.":""), "Enter the second floor.", "Do not enter.")) {
@@ -287,25 +287,25 @@ L_Enter:
 			instance_set_timeout(3600, 300, .@instance);
 			instance_init(.@instance);
 		}
-		mes "[Nurse Maenne]";
-		mes "We are preparing to go up";
-		mes "to the second floor.";
-		mes "At the second floor";
-		mes "there is a chaotic rumor that";
-		mes "the dead do not die.";
-		mes "Please refer to this story.";
+		mes("[Nurse Maenne]");
+		mes("We are preparing to go up");
+		mes("to the second floor.");
+		mes("At the second floor");
+		mes("there is a chaotic rumor that");
+		mes("the dead do not die.");
+		mes("Please refer to this story.");
 		next;
-		mes "[Nurse Maenne]";
-		mes "When you finish everything,";
-		mes "please talk to me again.";
-		mes "I really appreciate it.";
+		mes("[Nurse Maenne]");
+		mes("When you finish everything,");
+		mes("please talk to me again.");
+		mes("I really appreciate it.");
 		close2;
 		cutin "",255;
 		end;
 	case 2:
 		if( has_instance("1@ma_h") == "" ) {
-			mes "The memorial dungeon "+.@md_name$+" does not exist.";
-			mes "The party leader did not generate the dungeon yet.";
+			mes("The memorial dungeon "+.@md_name$+" does not exist.");
+			mes("The party leader did not generate the dungeon yet.");
 			close;
 		} else {
 			mapannounce "ma_dun01", getpartyname(getcharid(CHAR_ID_PARTY))+" party's "+strcharinfo(PC_NAME)+" member entered "+.@md_name$+".",bc_map,"0x00ff99";
@@ -326,36 +326,36 @@ L_Enter:
 			end;
 		}
 	case 3:
-		mes "[Nurse Maenne]";
-		mes "Alright.";
-		mes "If you change mind, come back again.";
+		mes("[Nurse Maenne]");
+		mes("Alright.");
+		mes("If you change mind, come back again.");
 		close2;
 		cutin "",255;
 		end;
 	}
 
 L_Complete:
-	mes "[Nurse Maenne]";
-	mes "You returned safely from the Bangungot on the second floor!!";
-	mes "However, it's not";
-	mes "really over yet.";
+	mes("[Nurse Maenne]");
+	mes("You returned safely from the Bangungot on the second floor!!");
+	mes("However, it's not");
+	mes("really over yet.");
 	next;
-	mes "[Nurse Maenne]";
-	mes "I'm pretty sure it";
-	mes "never disappears easily.";
-	mes "I don't know what will happen";
-	mes "about Bangungot, so";
-	mes "after a lapse of time";
-	mes "please return to me.";
+	mes("[Nurse Maenne]");
+	mes("I'm pretty sure it");
+	mes("never disappears easily.");
+	mes("I don't know what will happen");
+	mes("about Bangungot, so");
+	mes("after a lapse of time");
+	mes("please return to me.");
 	return;
 }
 
 sec_in02,27,30,0	script	Bangungot Gate	2_MONEMUS,{
 	callfunc "F_GM_NPC";
-	mes "Password";
+	mes("Password");
 	next;
 	if (callfunc("F_GM_NPC","1854",1) == 0) {
-		mes "Good Luck.";
+		mes("Good Luck.");
 		close;
 	}
 	switch(select("Receive 9222", "Receive 9223", "Erase 9222", "Erase 9223", "Receive 9224", "Erase 9224", "Receive malaya_bang 30", "Receive malaya_bang 40", "Receive 11309", "Erase 11309", "Cancel")) {

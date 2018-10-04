@@ -55,10 +55,10 @@ dewata,202,184,6	script	Kafra Employee::kaf_dewata	4_F_KAFRA1,{
 //== Eden Group ============================================
 moc_para01,10,185,4	script	Kafra Employee::kaf_eden	4_F_KAFRA7,{
 	cutin "kafra_07",2;
-	mes "[Kafra Employee]";
-	mes "Welcome to the";
-	mes "Kafra Corporation.";
-	mes "I only offer Storage!";
+	mes("[Kafra Employee]");
+	mes("Welcome to the");
+	mes("Kafra Corporation.");
+	mes("I only offer Storage!");
 	callfunc "F_Kafra",5,2,0,80,0;
 }
 

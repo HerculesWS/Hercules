@@ -57,14 +57,14 @@ payon_in01,18,132,3	script	Vestri#pay	4_M_DWARF,{
 // 20% rate and downgrade at an 80% rate.
 function	script	refinenew	{
 	disable_items;
-	mes "["+ getarg(0) +"]";
-	mes "I am the best Armsmith ever!";
-	mes "I don't refine normal, boring items.";
-	mes "I only refine items that are Level 10 or higher.";
+	mes("["+ getarg(0) +"]");
+	mes("I am the best Armsmith ever!");
+	mes("I don't refine normal, boring items.");
+	mes("I only refine items that are Level 10 or higher.");
 	next;
-	mes "["+ getarg(0) +"]";
-	mes "Anyway, you may use my services if your item is Level 10 or higher.";
-	mes "What do you want me to refine?";
+	mes("["+ getarg(0) +"]");
+	mes("Anyway, you may use my services if your item is Level 10 or higher.");
+	mes("What do you want me to refine?");
 	next;
 
 	setarray .@position$[1],"Head","Body","Left hand","Right hand","Robe","Shoes","Accessory 1","Accessory 2","Head 2","Head 3";
@@ -77,36 +77,36 @@ function	script	refinenew	{
 		.@menu$ += ":";
 	}
 	if (.@equipped == 0) {
-		mes "[" + getarg(0) + "]";
-		mes "I don't think I can refine any items you have...";
+		mes("[" + getarg(0) + "]");
+		mes("I don't think I can refine any items you have...");
 		close;
 	}
 	.@part = select(.@menu$);
 
 	if (!getequipisequiped(.@part)) { //custom check
-		mes "[" + getarg(0) + "]";
-		mes "You're not wearing";
-		mes "anything there that";
-		mes "I can refine.";
+		mes("[" + getarg(0) + "]");
+		mes("You're not wearing");
+		mes("anything there that");
+		mes("I can refine.");
 		emotion e_an;
 		close;
 	}
 	if (!getequipisenableref(.@part)) {
-		mes "[" + getarg(0) + "]";
-		mes "I don't think I can";
-		mes "refine this item at all...";
+		mes("[" + getarg(0) + "]");
+		mes("I don't think I can");
+		mes("refine this item at all...");
 		close;
 	}
 	if (getequiprefinerycnt(.@part) < 10) {
-		mes "["+ getarg(0) +"]";
-		mes "I said I don't work with items that are lower than Level 10.";
+		mes("["+ getarg(0) +"]");
+		mes("I said I don't work with items that are lower than Level 10.");
 		close;
 	}
 	if (getequiprefinerycnt(.@part) >= 20) { //custom check
-		mes "["+ getarg(0) +"]";
-		mes "I can't refine this";
-		mes "any more. This is as";
-		mes "refined as it gets!";
+		mes("["+ getarg(0) +"]");
+		mes("I can't refine this");
+		mes("any more. This is as");
+		mes("refined as it gets!");
 		close;
 	}
 	.@refineitemid = getequipid(.@part); // save id of the item
@@ -121,53 +121,53 @@ function	script	refinenew	{
 			case 3: .@safe = 10; break;
 			case 4: .@safe = 10; break;
 		}
-		mes "["+ getarg(0) +"]";
-		mes "Hmm a weapon, is that ok?";
-		mes "If you want to refine this weapon,";
-		mes "I will need 1 ^003366Bradium^000000 and 100,000 zeny.";
+		mes("["+ getarg(0) +"]");
+		mes("Hmm a weapon, is that ok?");
+		mes("If you want to refine this weapon,");
+		mes("I will need 1 ^003366Bradium^000000 and 100,000 zeny.");
 	} else {
 		.@type$ = "armor";
 		.@material = 6223; //Carnium
 		.@price = 100000;
 		.@safe = 10;
-		mes "["+ getarg(0) +"]";
-		mes "Hmm an armor, is that ok?";
-		mes "If you want to refine this armor,";
-		mes "I will need 1 ^003366Carnium^000000 and 100,000 zeny.";
+		mes("["+ getarg(0) +"]");
+		mes("Hmm an armor, is that ok?");
+		mes("If you want to refine this armor,");
+		mes("I will need 1 ^003366Carnium^000000 and 100,000 zeny.");
 	}
-	mes "Are you sure you want to continue?";
+	mes("Are you sure you want to continue?");
 	next;
 	if(select("Yes", "No") == 2){
-		mes "["+ getarg(0) +"]";
-		mes "Hm... if you mind... never mind...";
+		mes("["+ getarg(0) +"]");
+		mes("Hm... if you mind... never mind...");
 		close;
 	}
 	if (getarg(1) != 1) {
 		if (getequippercentrefinery(.@part) < 100) {
-			mes "["+ getarg(0) +"]";
-			mes "This "+.@type$+" already has been refined serveral times.";
-			mes "It could be destroyed if I try again.";
-			mes "It won't break for sure, but there is has a small chance.";
+			mes("["+ getarg(0) +"]");
+			mes("This "+.@type$+" already has been refined serveral times.");
+			mes("It could be destroyed if I try again.");
+			mes("It won't break for sure, but there is has a small chance.");
 			next;
-			mes "["+ getarg(0) +"]";
-			mes "You could be ^FF0000lowering the upgrade level^000000 of the "+.@type$+",";
-			mes "or if it breaks, you will lose ^FF0000any cards^000000 or special properties added to it.";
+			mes("["+ getarg(0) +"]");
+			mes("You could be ^FF0000lowering the upgrade level^000000 of the "+.@type$+",");
+			mes("or if it breaks, you will lose ^FF0000any cards^000000 or special properties added to it.");
 			next;
-			mes "["+ getarg(0) +"]";
-			mes "Do you still want me to refine it?";
-			mes "I think I have given you enough warning.";
+			mes("["+ getarg(0) +"]");
+			mes("Do you still want me to refine it?");
+			mes("I think I have given you enough warning.");
 			next;
 			if(select("Yes.", "No.") == 2) {
-				mes "["+ getarg(0) +"]";
-				mes "Well, no challenge is one way to go...";
-				mes "No risk... that could be wise.";
+				mes("["+ getarg(0) +"]");
+				mes("Well, no challenge is one way to go...");
+				mes("No risk... that could be wise.");
 				close;
 			}
 		}
 		if (countitem(.@material) < 1 || Zeny < .@price) {
-			mes "["+ getarg(0) +"]";
-			mes "Hm. You don't seem to have enough money or "+getitemname(.@material)+".";
-			mes "Please come back when you have them.";
+			mes("["+ getarg(0) +"]");
+			mes("Hm. You don't seem to have enough money or "+getitemname(.@material)+".");
+			mes("Please come back when you have them.");
 			close;
 		}
 		Zeny -= .@price;
@@ -175,66 +175,66 @@ function	script	refinenew	{
 
 		//custom checks
 		if (getequipisequiped(.@part) == 0) { // hacker has removed the item (not changed, why?)
-			mes "[" + getarg(0) + "]";
-			mes "Look here... you don't have any items on...";
+			mes("[" + getarg(0) + "]");
+			mes("Look here... you don't have any items on...");
 			close;
 		}
 		if (getequiprefinerycnt(.@part) != .@refinerycnt || getequipid(.@part) != .@refineitemid) { // hacker has changed the item
-			mes "[" + getarg(0) + "]";
+			mes("[" + getarg(0) + "]");
 			emotion e_an;
-			mes "Wait a second...";
-			mes "Do you think I'm stupid?!";
-			mes "You switched the item while I wasn't looking! Get out of here!";
+			mes("Wait a second...");
+			mes("Do you think I'm stupid?!");
+			mes("You switched the item while I wasn't looking! Get out of here!");
 			close;
 		}
 
 		if (getequippercentrefinery(.@part) > rand(100)) {
-			mes "Clang! Clang! Clang! Clang!";
+			mes("Clang! Clang! Clang! Clang!");
 			successrefitem .@part;
 			next;
 			emotion e_no1;
-			mes "["+ getarg(0) +"]";
-			mes "Good! Succes!!!";
-			mes "I am the best Armsmith.";
+			mes("["+ getarg(0) +"]");
+			mes("Good! Succes!!!");
+			mes("I am the best Armsmith.");
 			close;
 		} else {
 			if (rand(100) < 80) {
-				mes "["+ getarg(0) +"]";
-				mes "Clang! Clang! Clang! Clang!";
+				mes("["+ getarg(0) +"]");
+				mes("Clang! Clang! Clang! Clang!");
 				downrefitem .@part, 3; // Failed refine attempts decrease the item's refine level by 3
 				next;
 				emotion (!rand(5))?e_cash:e_omg;
-				mes "["+ getarg(0) +"]";
-				mes "Ahhh!!!";
+				mes("["+ getarg(0) +"]");
+				mes("Ahhh!!!");
 				next;
-				mes "["+ getarg(0) +"]";
-				mes "Oh my god!";
-				mes "The upgrade level has dropped...";
+				mes("["+ getarg(0) +"]");
+				mes("Oh my god!");
+				mes("The upgrade level has dropped...");
 			} else {
-				mes "["+ getarg(0) +"]";
-				mes "Clang! Clang! Clang!";
+				mes("["+ getarg(0) +"]");
+				mes("Clang! Clang! Clang!");
 				failedrefitem .@part;
 				next;
 				emotion (!rand(5))?e_cash:e_omg;
-				mes "["+ getarg(0) +"]";
-				mes "Hmmm!";
+				mes("["+ getarg(0) +"]");
+				mes("Hmmm!");
 				next;
-				mes "["+ getarg(0) +"]";
-				mes "Oh my! I've failed to refine stuff...";
-				mes "I didn't mean it!";
+				mes("["+ getarg(0) +"]");
+				mes("Oh my! I've failed to refine stuff...");
+				mes("I didn't mean it!");
 			}
-			mes "I could have made a mistake even though I am the best Armsmith ever.";
-			mes "It just wasn't meant to be.";
+			mes("I could have made a mistake even though I am the best Armsmith ever.");
+			mes("It just wasn't meant to be.");
 			next;
-			mes "["+ getarg(0) +"]";
-			mes "I will do a better job next time! Don't worry!";
+			mes("["+ getarg(0) +"]");
+			mes("I will do a better job next time! Don't worry!");
 			close;
 		}
 	}
 //- New +11 and above Refining Functions -
 	if (getequiprefinerycnt(.@part) < .@safe) {
-		mes "[" + getarg(0) + "]";
-		mes "I can refine this to the safe limit or a desired number of times. It's your choice.";
+		mes("[" + getarg(0) + "]");
+		mes("I can refine this to the safe limit or a desired number of times. It's your choice.");
 		next;
 		.@menu2 = select("To the safe limit, please.","I'll decide how many times.","I've changed my mind...");
 	} else
@@ -244,125 +244,125 @@ function	script	refinenew	{
 		.@refinecnt = .@safe - getequiprefinerycnt(.@part);
 		break;
 	case 2:
-		mes "[" + getarg(0) + "]";
-		mes "How many times would you like me to refine your item?";
+		mes("[" + getarg(0) + "]");
+		mes("How many times would you like me to refine your item?");
 		next;
 		input .@refinecnt;
 		.@refinecheck = .@refinecnt + getequiprefinerycnt(.@part);
 		if (.@refinecnt < 1 || .@refinecheck > 20) {
-			mes "[" + getarg(0) + "]";
-			mes "I can't refine this item that many times.";
+			mes("[" + getarg(0) + "]");
+			mes("I can't refine this item that many times.");
 			close;
 		}
 		if (.@refinecheck > .@safe) {
 			.@refinecheck -= .@safe;
-			mes "[" + getarg(0) + "]";
-			mes "This will try to refine the equipment " + .@refinecheck + " times past the safe limit. Your equipment may be destroyed... is that ok?";
+			mes("[" + getarg(0) + "]");
+			mes("This will try to refine the equipment " + .@refinecheck + " times past the safe limit. Your equipment may be destroyed... is that ok?");
 			next;
 			if(select("Yes...","No...") == 2){
-				mes "[" + getarg(0) + "]";
-				mes "You said so... So be it.";
+				mes("[" + getarg(0) + "]");
+				mes("You said so... So be it.");
 				close;
 			}
 		}
 		break;
 	case 3:
-		mes "[" + getarg(0) + "]";
-		mes "You said so... So be it.";
+		mes("[" + getarg(0) + "]");
+		mes("You said so... So be it.");
 		close;
 	}
 	.@fullprice = .@price * .@refinecnt;
-	mes "[" + getarg(0) + "]";
-	mes "That will cost you " + .@refinecnt + " " + getitemname(.@material) + " and " + .@fullprice + " Zeny. Is that ok?";
+	mes("[" + getarg(0) + "]");
+	mes("That will cost you " + .@refinecnt + " " + getitemname(.@material) + " and " + .@fullprice + " Zeny. Is that ok?");
 	next;
 	if(select("Yes", "No...") == 2){
-		mes "[" + getarg(0) + "]";
-		mes "You said so... So be it.";
+		mes("[" + getarg(0) + "]");
+		mes("You said so... So be it.");
 		close;
 	}
 	if (countitem(.@material) < .@refinecnt || Zeny < .@fullprice) {
-		mes "[" + getarg(0) + "]";
-		mes "Hm. You don't seem to have enough money or "+getitemname(.@material)+".";
-		mes "Please come back when you have them.";
+		mes("[" + getarg(0) + "]");
+		mes("Hm. You don't seem to have enough money or "+getitemname(.@material)+".");
+		mes("Please come back when you have them.");
 		close;
 	}
 	Zeny -= .@fullprice;
 	delitem .@material,.@refinecnt;
 	while(.@refinecnt){
 		if (getequipisequiped(.@part) == 0) {
-			mes "[" + getarg(0) + "]";
-			mes "Look here... you don't have any items on...";
+			mes("[" + getarg(0) + "]");
+			mes("Look here... you don't have any items on...");
 			close;
 		}
 		if (getequipid(.@part) != .@refineitemid || (.@menu2 == 1 && getequippercentrefinery(.@part) < 100)) {
-			mes "[" + getarg(0) + "]";
-			mes "Clang... No, but did you imagine I could be so stupid?!";
-			mes "You changed it...";
-			mes "Get out before I stun you with my Hammer!!";
+			mes("[" + getarg(0) + "]");
+			mes("Clang... No, but did you imagine I could be so stupid?!");
+			mes("You changed it...");
+			mes("Get out before I stun you with my Hammer!!");
 			close;
 		}
 		if (getequippercentrefinery(.@part) > rand(100)) {
-			mes "Clang! Clang! Clang! Clang!";
+			mes("Clang! Clang! Clang! Clang!");
 			successrefitem .@part;
 			--.@refinecnt;
 			next;
 		} else {
 			if (rand(100) < 80) {
-				mes "["+ getarg(0) +"]";
-				mes "Clang! Clang! Clang! Clang!";
+				mes("["+ getarg(0) +"]");
+				mes("Clang! Clang! Clang! Clang!");
 				downrefitem .@part, 3; // Failed refine attempts decrease the item's refine level by 3
 				next;
 				emotion (!rand(5))?e_cash:e_omg;
-				mes "["+ getarg(0) +"]";
-				mes "Ahhh!!!";
+				mes("["+ getarg(0) +"]");
+				mes("Ahhh!!!");
 				next;
-				mes "["+ getarg(0) +"]";
-				mes "Oh my god!";
-				mes "The upgrade level has dropped...";
+				mes("["+ getarg(0) +"]");
+				mes("Oh my god!");
+				mes("The upgrade level has dropped...");
 			} else {
-				mes "["+ getarg(0) +"]";
-				mes "Clang! Clang! Clang!";
+				mes("["+ getarg(0) +"]");
+				mes("Clang! Clang! Clang!");
 				failedrefitem .@part;
 				next;
 				emotion (!rand(5))?e_cash:e_omg;
-				mes "["+ getarg(0) +"]";
-				mes "Hmmm!";
+				mes("["+ getarg(0) +"]");
+				mes("Hmmm!");
 				next;
-				mes "["+ getarg(0) +"]";
-				mes "Oh my! I've failed to refine stuff...";
-				mes "I didn't mean it!";
+				mes("["+ getarg(0) +"]");
+				mes("Oh my! I've failed to refine stuff...");
+				mes("I didn't mean it!");
 			}
-			mes "I could have made a mistake even though I am the best Armsmith ever.";
-			mes "It just wasn't meant to be.";
+			mes("I could have made a mistake even though I am the best Armsmith ever.");
+			mes("It just wasn't meant to be.");
 			next;
-			mes "["+ getarg(0) +"]";
-			mes "I will do a better job next time! Don't worry!";
+			mes("["+ getarg(0) +"]");
+			mes("I will do a better job next time! Don't worry!");
 			close;
 		}
 	}
 	emotion e_no1;
-	mes "["+ getarg(0) +"]";
-	mes "Good! Succes!!!";
-	mes "I am the best Blacksmith.";
+	mes("["+ getarg(0) +"]");
+	mes("Good! Succes!!!");
+	mes("I am the best Blacksmith.");
 	close;
 }
 
 //== Ori/Elu to Carnium/Bradium Refiners ===================
 -	script	Austri#ref	FAKE_NPC,{
 	if (checkweight(Knife,1) == 0) {
-		mes "- Wait a minute !! -";
-		mes "- Currently you're carrying -";
-		mes "- too many items with you. -";
-		mes "- Please try again -";
-		mes "- after you lose some weight. -";
+		mes("- Wait a minute !! -");
+		mes("- Currently you're carrying -");
+		mes("- too many items with you. -");
+		mes("- Please try again -");
+		mes("- after you lose some weight. -");
 		close;
 	}
-	mes "[Austri]";
-	mes "If you bring me 3";
-	mes "Oridecon or Elunium";
-	mes "I can exchange them for";
-	mes "Bradium or Carnium.";
-	mes "Just give me 50,000z.";
+	mes("[Austri]");
+	mes("If you bring me 3");
+	mes("Oridecon or Elunium");
+	mes("I can exchange them for");
+	mes("Bradium or Carnium.");
+	mes("Just give me 50,000z.");
 	next;
 	switch(select("Oridecon to Bradium.", "Elunium to Carnium.", "Purified Bradium to Carnium.", "No thanks.")) {
 	case 1:
@@ -375,29 +375,29 @@ function	script	refinenew	{
 		setarray .@i[0],6090,1,6223; //Purified_Bradium -> Carnium
 		break;
 	case 4:
-		mes "[Austri]";
-		mes "Hmm...";
+		mes("[Austri]");
+		mes("Hmm...");
 		close;
 	}
 	if (countitem(.@i[0]) >= .@i[1] && Zeny >= 50000) {
 		delitem .@i[0],.@i[1];
 		Zeny -= 50000;
 		getitem .@i[2],1;
-		mes "[Austri]";
+		mes("[Austri]");
 		if (.@i[0] == 6090) {
-			mes "Refining with Refined Bradium";
-			mes "can be a little expensive.";
-			mes "I can exchange it for some Carnium.";
+			mes("Refining with Refined Bradium");
+			mes("can be a little expensive.");
+			mes("I can exchange it for some Carnium.");
 		} else
-			mes "Ok! Here's your "+getitemname(.@i[2])+".";
-		mes "Take it and use it well.";
+			mes("Ok! Here's your "+getitemname(.@i[2])+".");
+		mes("Take it and use it well.");
 		close;
 	}
-	mes "[Austri]";
-	mes "You better not be trying";
-	mes "to cheat me because you";
-	mes "don't have enough money";
-	mes "or "+getitemname(.@i[0])+".";
+	mes("[Austri]");
+	mes("You better not be trying");
+	mes("to cheat me because you");
+	mes("don't have enough money");
+	mes("or "+getitemname(.@i[0])+".");
 	close;
 }
 prt_in,85,71,5	duplicate(Austri#ref)	Austri#prt	4_M_DWARF
@@ -407,11 +407,11 @@ morocc_in,60,38,5	duplicate(Austri#ref)	Austri#moc	4_M_DWARF
 //== Malangdo Refiner ======================================
 malangdo,224,172,6	script	Clink#mal_normal	4_CAT_SAILOR1,{
 	disable_items;
-	mes "[Clink]";
-	mes "My cool dad Holink said I have the world's greatest refine hammer!!";
-	mes "Meow Meow~";
-	mes "Who do you think I am?";
-	mes "Yes!!! You!! You want to refine?";
+	mes("[Clink]");
+	mes("My cool dad Holink said I have the world's greatest refine hammer!!");
+	mes("Meow Meow~");
+	mes("Who do you think I am?");
+	mes("Yes!!! You!! You want to refine?");
 	next;
 	setarray .@position$[1],"Head","Body","Left Hand","Right Hand","Robe","Shoes","Accessory 1","Accessory 2","Head 2","Head 3";
 	.@menu$ = "";
@@ -419,121 +419,121 @@ malangdo,224,172,6	script	Clink#mal_normal	4_CAT_SAILOR1,{
 		.@menu$ += ((getequipisequiped(.@i))?getequipname(.@i):.@position$[.@i]+"-[Empty]")+":";
 	.@part = select(.@menu$);
 	if (!getequipisequiped(.@part)) {
-		mes "[Clink]";
+		mes("[Clink]");
 		switch(.@part) {
 		case 1:
-			mes "Dad said. There's no cure for stupidity...";
+			mes("Dad said. There's no cure for stupidity...");
 			break;
 		case 2:
-			mes "There's nothing to see here!!";
+			mes("There's nothing to see here!!");
 			break;
 		case 3:
-			mes "What an arrogant left hand this is!";
+			mes("What an arrogant left hand this is!");
 			break;
 		case 4:
-			mes "What an arrogant right hand this is!";
+			mes("What an arrogant right hand this is!");
 			break;
 		case 5:
-			mes "Get that dirty thing off my face!!";
+			mes("Get that dirty thing off my face!!");
 			break;
 		case 6:
-			mes "Kyaong~! Do not provoke me.";
+			mes("Kyaong~! Do not provoke me.");
 			break;
 		case 7:
 		case 8:
-			mes "Where is the accessory?";
+			mes("Where is the accessory?");
 			break;
 		case 9:
 		case 10:
-			mes "Are you talking about the other head part?";
+			mes("Are you talking about the other head part?");
 			break;
 		}
 		close;
 	}
 	if (!getequipisenableref(.@part)) {
-		mes "[Clink]";
-		mes "This can't be refined!!";
+		mes("[Clink]");
+		mes("This can't be refined!!");
 		close;
 	}
 	if (getequiprefinerycnt(.@part) >= 10) {
-		mes "[Clink]";
-		mes "Perfect refining. Did I do this for you?";
+		mes("[Clink]");
+		mes("Perfect refining. Did I do this for you?");
 		close;
 	}
-	mes "[Clink]";
+	mes("[Clink]");
 	switch(getequipweaponlv(.@part)) {
 	default:
 	case 0: // Armor
 		.@price = 2000;
 		.@material = 985; //Elunium
 		.@type$ = "armor";
-		mes "Hmm, an armor refine? Someone like you?";
+		mes("Hmm, an armor refine? Someone like you?");
 		break;
 	case 1: // Level 1 Weapon
 		.@price = 50;
 		.@material = 1010; //Phracon
 		.@type$ = "weapon";
-		mes "A level 1 weapon?";
-		mes "Urr... Annoying... Okay, let's try...";
+		mes("A level 1 weapon?");
+		mes("Urr... Annoying... Okay, let's try...");
 		break;
 	case 2: // Level 2 Weapon
 		.@price = 200;
 		.@material = 1011; //Emveretarcon
 		.@type$ = "weapon";
-		mes "A level 2 weapon?";
+		mes("A level 2 weapon?");
 		break;
 	case 3: // Level 3 Weapon
 		.@price = 20000;
 		.@material = 984; //Oridecon
 		.@type$ = "weapon";
-		mes "Woot!! A level 3 weapon? Impressive~";
+		mes("Woot!! A level 3 weapon? Impressive~");
 		break;
 	case 4: // Level 4 Weapon
 		.@price = 50000;
 		.@material = 984; //Oridecon
 		.@type$ = "weapon";
-		mes "Wow!... A level 4 weapon~!!";
+		mes("Wow!... A level 4 weapon~!!");
 		break;
 	}
-	mes "You need ^ff9999"+getitemname(.@material)+"^000000 and ^ff9999"+.@price+"^000000 Zeny. Do you have them?";
+	mes("You need ^ff9999"+getitemname(.@material)+"^000000 and ^ff9999"+.@price+"^000000 Zeny. Do you have them?");
 	next;
 	if(select("Yes, I do!!", "Forget about it!!") == 2) {
-		mes "[Clink]";
-		mes "I knew it!!";
-		mes "I knew you were not worth trying my magical refining hammer for.";
+		mes("[Clink]");
+		mes("I knew it!!");
+		mes("I knew you were not worth trying my magical refining hammer for.");
 		close;
 	}
 	if (getequippercentrefinery(.@part) < 100) {
-		mes "[Clink]";
-		mes "Wow!!";
-		mes "This "+.@type$+" has been refined quite a bit, huh?";
-		mes "You do know that this might break, right?";
+		mes("[Clink]");
+		mes("Wow!!");
+		mes("This "+.@type$+" has been refined quite a bit, huh?");
+		mes("You do know that this might break, right?");
 		next;
-		mes "[Clink]";
-		mes "If you break the "+.@type$+", you can never use it again.";
-		mes "Cards and enchant effects...";
-		mes "the ^ff0000whole thing will disappear^000000.";
-		mes "You still up for this~?";
+		mes("[Clink]");
+		mes("If you break the "+.@type$+", you can never use it again.");
+		mes("Cards and enchant effects...");
+		mes("the ^ff0000whole thing will disappear^000000.");
+		mes("You still up for this~?");
 		next;
 		if(select("Yes, I am!!", "Forget about it!!") == 2) {
-			mes "[Clink]";
-			mes "I knew it!!";
-			mes "You can't even take this big step. Don't think about refining...";
+			mes("[Clink]");
+			mes("I knew it!!");
+			mes("You can't even take this big step. Don't think about refining...");
 			close;
 		}
 	}
 	if (countitem(.@material) == 0 || Zeny < .@price) {
-		mes "[Clink]";
-		mes "Hey you!! Didn't I tell you";
-		mes "that you need ^ff9999"+getitemname(.@material)+"^000000 and ^ff9999"+.@price+"^000000 Zeny??!!";
+		mes("[Clink]");
+		mes("Hey you!! Didn't I tell you");
+		mes("that you need ^ff9999"+getitemname(.@material)+"^000000 and ^ff9999"+.@price+"^000000 Zeny??!!");
 		close;
 	}
 	delitem .@material,1;
 	Zeny -= .@price;
 	if (getequippercentrefinery(.@part) <= rand(100)) {
 		failedrefitem .@part;
-		mes "[Clink]";
-		mes "Cry Hammer!! Cry!!!";
+		mes("[Clink]");
+		mes("Cry Hammer!! Cry!!!");
 		next;
 		switch(rand(1,5)) {
 			case 1: emotion e_sob; break;
@@ -542,28 +542,28 @@ malangdo,224,172,6	script	Clink#mal_normal	4_CAT_SAILOR1,{
 			case 4: emotion e_hmm; break;
 			case 5: emotion e_lv2; break;
 		}
-		mes "[Clink]";
-		mes "Huh?! I failed?!";
+		mes("[Clink]");
+		mes("Huh?! I failed?!");
 		next;
-		mes "[Clink]";
-		mes "Arrgg~ It's all~ Broken...? What a pity~";
+		mes("[Clink]");
+		mes("Arrgg~ It's all~ Broken...? What a pity~");
 		next;
-		mes "[Clink]";
-		mes "Hey...!! Get me another one.";
-		mes "This is not possible.";
-		mes "How can my hammer fail from refining?";
+		mes("[Clink]");
+		mes("Hey...!! Get me another one.");
+		mes("This is not possible.");
+		mes("How can my hammer fail from refining?");
 		close;
 	}
 	successrefitem .@part;
-	mes "[Clink]";
-	mes "Cry Hammer!! Cry!!!";
+	mes("[Clink]");
+	mes("Cry Hammer!! Cry!!!");
 	next;
 	emotion e_kis;
-	mes "[Clink]";
-	mes "Ok!! Perfect!!";
-	mes "There's nothing I can't refine";
-	mes "with this special hammer.";
-	mes "You can praise me!!";
-	mes "What a day!!";
+	mes("[Clink]");
+	mes("Ok!! Perfect!!");
+	mes("There's nothing I can't refine");
+	mes("with this special hammer.");
+	mes("You can praise me!!");
+	mes("What a day!!");
 	close;
 }

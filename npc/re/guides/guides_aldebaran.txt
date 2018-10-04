@@ -35,10 +35,10 @@
 
 aldebaran,139,63,4	script	Guide#01aldebaran::GuideAldearan	8W_SOLDIER,{
 	cutin "prt_soldier",2;
-	mes "[Al De Baran Guide]";
-	mes "Welcome to ^8B4513Al De Baran^000000,";
-	mes "the Border City.";
-	mes "Do you need help navigating the city?";
+	mes("[Al De Baran Guide]");
+	mes("Welcome to ^8B4513Al De Baran^000000,");
+	mes("the Border City.");
+	mes("Do you need help navigating the city?");
 	F_Navi("[Al De Baran Guide]");
 	next;
 	.@str$ = "Would you like to check any other locations?";
@@ -50,37 +50,37 @@ aldebaran,139,63,4	script	Guide#01aldebaran::GuideAldearan	8W_SOLDIER,{
 				switch(select("[ Kafra Headquarters ]", "[ Alchemist Guild ]", "[ Clock Tower ]", "[ Inn & Tool Shop ]", "[ Repair & Buy Equipment ]", "[ Tavern ]", "Previous Menu")) {
 				case 1:
 					callsub L_Mark, F_Navi("Kafra Headquarters","aldebaran,61,229","^B9062F");
-					mes .@str$;
+					mes(.@str$);
 					viewpoint 1,61,229,0,0xFF0000;
 					next;
 					break;
 				case 2:
 					callsub L_Mark, F_Navi("Alchemist Guild","aldebaran,60,60","^0000FF");
-					mes .@str$;
+					mes(.@str$);
 					viewpoint 1,60,60,1,0x0A82FF;
 					next;
 					break;
 				case 3:
 					callsub L_Mark, F_Navi("Clock Tower","aldebaran,139,133","^FF5400");
-					mes .@str$;
+					mes(.@str$);
 					viewpoint 1,139,133,2,0xFFB400;
 					next;
 					break;
 				case 4:
-					mes "[Al De Baran Guide]";
-					mes "Let me mark the location of the";
-					mes F_Navi("Inn & Tool Shop","aldebaran,197,70","^006400")+" building";
-					mes "on your mini-map.";
-					mes .@str$;
+					mes("[Al De Baran Guide]");
+					mes("Let me mark the location of the");
+					mes(F_Navi("Inn & Tool Shop","aldebaran,197,70","^006400")+" building");
+					mes("on your mini-map.");
+					mes(.@str$);
 					viewpoint 1,197,70,3,0xAAFF00;
 					next;
 					break;
 				case 5:
-					mes "[Al De Baran Guide]";
-					mes "If you'd like to ";
-					mes F_Navi("Buy or Repair Equipment","aldebaran,197,70","^7F3300")+",";
-					mes "then this is the place you'll want to visit.";
-					mes .@str$;
+					mes("[Al De Baran Guide]");
+					mes("If you'd like to ");
+					mes(F_Navi("Buy or Repair Equipment","aldebaran,197,70","^7F3300")+",");
+					mes("then this is the place you'll want to visit.");
+					mes(.@str$);
 					viewpoint 1,72,197,4,0xD2691E;
 					next;
 					break;
@@ -101,7 +101,7 @@ aldebaran,139,63,4	script	Guide#01aldebaran::GuideAldearan	8W_SOLDIER,{
 				switch(select("[ Eden Teleport Officer ]", "[ Kafra Employee ]", "[ Mr. Claus ]", "[ Chef Assistant ]", "Previous Menu")) {
 				case 1:
 					callsub L_Mark, F_Navi("Eden Teleport Officer","aldebaran,133,119","^B9062F");
-					mes .@str$;
+					mes(.@str$);
 					viewpoint 1,133,119,6,0xFF0000;
 					next;
 					break;
@@ -111,18 +111,18 @@ aldebaran,139,63,4	script	Guide#01aldebaran::GuideAldearan	8W_SOLDIER,{
 					next;
 					break;
 				case 3:
-					mes "[Al De Baran Guide]";
-					mes "Mr. Claus can teleport";
-					mes "you to "+F_Navi("Lutie","aldebaran,168,168","^006400")+".";
-					mes "Let me mark his location";
-					mes "on your mini-map.";
-					mes .@str$;
+					mes("[Al De Baran Guide]");
+					mes("Mr. Claus can teleport");
+					mes("you to "+F_Navi("Lutie","aldebaran,168,168","^006400")+".");
+					mes("Let me mark his location");
+					mes("on your mini-map.");
+					mes(.@str$);
 					viewpoint 1,168,168,8,0xAAFF00;
 					next;
 					break;
 				case 4:
 					callsub L_Mark, F_Navi("Chef Assistant","aldebaran,165,107","^7F3300");
-					mes .@str$;
+					mes(.@str$);
 					viewpoint 1,165,107,9,0xD2691E;
 					next;
 					break;
@@ -133,9 +133,9 @@ aldebaran,139,63,4	script	Guide#01aldebaran::GuideAldearan	8W_SOLDIER,{
 			}
 			break;
 		case 3:
-			mes "[Al De Baran Guide]";
-			mes "Sure, I'll remove all marks from your mini-map.";
-			mes "Is there anything else I can do for you?";
+			mes("[Al De Baran Guide]");
+			mes("Sure, I'll remove all marks from your mini-map.");
+			mes("Is there anything else I can do for you?");
 			viewpoint 2,1,1,0,0xFFFF00;
 			viewpoint 2,1,1,1,0x000000;
 			viewpoint 2,1,1,2,0xFF0000;
@@ -149,9 +149,9 @@ aldebaran,139,63,4	script	Guide#01aldebaran::GuideAldearan	8W_SOLDIER,{
 			next;
 			break;
 		case 4:
-			mes "[Al De Baran Guide]";
-			mes "Alright then,";
-			mes "enjoy your stay!";
+			mes("[Al De Baran Guide]");
+			mes("Alright then,");
+			mes("enjoy your stay!");
 			close2;
 			cutin "prt_soldier",255;
 			end;
@@ -159,10 +159,10 @@ aldebaran,139,63,4	script	Guide#01aldebaran::GuideAldearan	8W_SOLDIER,{
 	}
 	end;
 L_Mark:
-	mes "[Al De Baran Guide]";
-	mes "Let me mark the location of the";
-	mes getarg(0);
-	mes "on your mini-map.";
+	mes("[Al De Baran Guide]");
+	mes("Let me mark the location of the");
+	mes(getarg(0));
+	mes("on your mini-map.");
 	return;
 }
 aldebaran,243,143,2	duplicate(GuideAldearan)	Guide#02aldebaran	8W_SOLDIER

@@ -36,53 +36,53 @@
 prt_in,28,73,3	script	Devil Enchant Master#prq	1_M_SMITH,{
 	disable_items;
 	if (checkweight(Knife,1) == 0) {
-		mes "You are carrying too many items, please reduce it and come back again!";
+		mes("You are carrying too many items, please reduce it and come back again!");
 		close;
 	}
 	if (MaxWeight - Weight < 10000) {
-		mes "You are over the weight limit, please reduce it and come back again!";
+		mes("You are over the weight limit, please reduce it and come back again!");
 		close;
 	}
-	mes "[Devil Enchant Master]";
-	mes "Yes?";
-	mes "You are looking for me?";
+	mes("[Devil Enchant Master]");
+	mes("Yes?");
+	mes("You are looking for me?");
 	next;
 	switch(select("This is the first time seeing you!", "I heard that you are the best!", "Please initialize the enchant.")) {
 	case 1:
-		mes "[Devil Enchant Master]";
-		mes "Ha ha ha~ Of course, I am not the kind of person that simply deals with people.";
+		mes("[Devil Enchant Master]");
+		mes("Ha ha ha~ Of course, I am not the kind of person that simply deals with people.");
 		next;
-		mes "[Devil Enchant Master]";
-		mes "Including you! Even if you offer me plenty of money, I will not simply enchant for you!!";
+		mes("[Devil Enchant Master]");
+		mes("Including you! Even if you offer me plenty of money, I will not simply enchant for you!!");
 		next;
-		mes "[Devil Enchant Master]";
-		mes "Have you seen my title? Very few people have this title for a reason!";
+		mes("[Devil Enchant Master]");
+		mes("Have you seen my title? Very few people have this title for a reason!");
 		next;
-		mes "[Devil Enchant Master]";
-		mes "I will only enchant if you bring an ^0000ffEnchant Book^000000 along!";
+		mes("[Devil Enchant Master]");
+		mes("I will only enchant if you bring an ^0000ffEnchant Book^000000 along!");
 		next;
-		mes "[Devil Enchant Master]";
-		mes "Else, I will not enchant for you....";
+		mes("[Devil Enchant Master]");
+		mes("Else, I will not enchant for you....");
 		close;
 	case 2:
 		if (!countitem(Enchant_Book)) {
-			mes "[Devil Enchant Master]";
-			mes "Are you listening to me? I will only do for you if you bring the Enchant Book!";
+			mes("[Devil Enchant Master]");
+			mes("Are you listening to me? I will only do for you if you bring the Enchant Book!");
 			close;
 		}
 		.@select = 1;
 		break;
 	case 3:
-		mes "[Devil Enchant Master]";
+		mes("[Devil Enchant Master]");
 		if (Zeny < 100000) {
-			mes "Initializing will cost 100,000 zeny. It seems you do not have enough zeny...";
+			mes("Initializing will cost 100,000 zeny. It seems you do not have enough zeny...");
 			close;
 		}
-		mes "Initializing will cost 100,000 zeny and confirming whether the weapon is enchanted!";
+		mes("Initializing will cost 100,000 zeny and confirming whether the weapon is enchanted!");
 		next;
 		if (select("Let me think about it.", "Initialize it now!") == 1) {
-			mes "[Devil Enchant Master]";
-			mes "Come back after you have confirmed!";
+			mes("[Devil Enchant Master]");
+			mes("Come back after you have confirmed!");
 			close;
 		}
 		.@select = 2;
@@ -90,35 +90,35 @@ prt_in,28,73,3	script	Devil Enchant Master#prq	1_M_SMITH,{
 	}
 	.@part = EQI_HAND_R;
 
-	mes "[Devil Enchant Master]";
+	mes("[Devil Enchant Master]");
 	if (!getequipisequiped(.@part)) {
-		mes "Are you trying to remove the enchanted equipment?";
+		mes("Are you trying to remove the enchanted equipment?");
 		close;
 	}
 	setarray .@equip_card[0], getequipcardid(.@part,0), getequipcardid(.@part,1), getequipcardid(.@part,2), getequipcardid(.@part,3);
 	if (!getequipisequiped(.@part)) {
-		mes "It is dangerous to remove equipment during enchant process!";
+		mes("It is dangerous to remove equipment during enchant process!");
 		close;
 	}
 	.@equip_id = getequipid(.@part);
 	.@item$ = "|1292|1394|1491|1585|2015|13071|13115|16019|18112|21000|";
 	if (!compare(.@item$,"|"+.@equip_id+"|")) {
-		mes "I don't want to touch your equipment now!";
+		mes("I don't want to touch your equipment now!");
 		close;
 	}
 	.@equip_refine = getequiprefinerycnt(.@part);
 
 	if (.@select == 1) {
 		if (!countitem(Enchant_Book)) {
-			mes "Are you listening to me? I will only do for you if you bring the Enchant Book!";
+			mes("Are you listening to me? I will only do for you if you bring the Enchant Book!");
 			close;
 		}
-		mes "Which type of effect do you want to enchant?";
+		mes("Which type of effect do you want to enchant?");
 		next;
 		switch(select("Let me think about it.", "Physical Series", "Magical Series")) {
 		case 1:
-			mes "[Devil Enchant Master]";
-			mes "Come back again after you change your mind!";
+			mes("[Devil Enchant Master]");
+			mes("Come back again after you change your mind!");
 			close;
 		case 2:
 			.@enc_type = 1;
@@ -127,21 +127,21 @@ prt_in,28,73,3	script	Devil Enchant Master#prq	1_M_SMITH,{
 			.@enc_type = 2;
 			break;
 		}
-		mes "[Devil Enchant Master]";
+		mes("[Devil Enchant Master]");
 		if (.@equip_card[3]) {
-			mes "This equipment has been enchanted! You need to initialize first before you want to enchant it again.";
+			mes("This equipment has been enchanted! You need to initialize first before you want to enchant it again.");
 			close;
 		}
-		mes "The enchant process might fail, and ^ff0000it will reduce partial refine level^000000, but the slotted card and weapon will not be broken! Are you sure you want to continue?";
+		mes("The enchant process might fail, and ^ff0000it will reduce partial refine level^000000, but the slotted card and weapon will not be broken! Are you sure you want to continue?");
 		next;
 		if (select("Next time!", "Start now!") == 1) {
-			mes "[Devil Enchant Master]";
-			mes "Come back again after you have decided!";
+			mes("[Devil Enchant Master]");
+			mes("Come back again after you have decided!");
 			close;
 		}
 		if (.@equip_card[3]) {
-			mes "[Devil Enchant Master]";
-			mes "It seems there's a problem, let me take a look.";
+			mes("[Devil Enchant Master]");
+			mes("It seems there's a problem, let me take a look.");
 			close;
 		}
 
@@ -222,27 +222,27 @@ prt_in,28,73,3	script	Devil Enchant Master#prq	1_M_SMITH,{
 			else if (.@i < 1124)  .@enchant = 4806; //Matk3
 			else .@enchant = 0;
 		} else {
-			mes "[Devil Enchant Master]";
-			mes "Hmm! This item is having a problem, please check it again!";
+			mes("[Devil Enchant Master]");
+			mes("Hmm! This item is having a problem, please check it again!");
 			close;
 		}
-		mes "[Devil Enchant Master]";
+		mes("[Devil Enchant Master]");
 		if (.@equip_card[3]) {
-			mes "This item has been enchanted!";
+			mes("This item has been enchanted!");
 			close;
 		}
 		if (!countitem(Enchant_Book)) {
-			mes "Are you listening to me? I will only do for you if you bring the Enchant Book!";
+			mes("Are you listening to me? I will only do for you if you bring the Enchant Book!");
 			close;
 		}
 		if (.@enchant == 0) {
 			specialeffect EF_SHIELDCHARGE;
-			mes "Oh! Unbelievable!! It failed!! Please come again!";
+			mes("Oh! Unbelievable!! It failed!! Please come again!");
 			.@lost_refine = rand(0,.@equip_refine);
 			.@equip_refine -= .@lost_refine;
 		} else {
 			specialeffect EF_REPAIRWEAPON;
-			mes "The slot ^9900004^000000 has been enchanted!";
+			mes("The slot ^9900004^000000 has been enchanted!");
 		}
 		delitem Enchant_Book,1;
 		delequip .@part;
@@ -252,25 +252,25 @@ prt_in,28,73,3	script	Devil Enchant Master#prq	1_M_SMITH,{
 
 		if (.@lost_refine) {
 			next;
-			mes "[Devil Enchant Master]";
-			mes "The failure has reduced the refine by "+.@lost_refine+" level"+((.@lost_refine == 1)?"":"s")+"! Don't be depressed!";
+			mes("[Devil Enchant Master]");
+			mes("The failure has reduced the refine by "+.@lost_refine+" level"+((.@lost_refine == 1)?"":"s")+"! Don't be depressed!");
 		}
 		close;
 	} else if (.@select == 2) {
 		if (Zeny < 100000) {
-			mes "You need to bring some money to initialize!!";
+			mes("You need to bring some money to initialize!!");
 			close;
 		}
 		if (.@equip_card[3] < 4700) { // Armor Enchant System
-			mes "This item is not enchanted!";
+			mes("This item is not enchanted!");
 			close;
 		}
 		if (!getequipisequiped(.@part)) {
-			mes "Are you unequipping now?";
+			mes("Are you unequipping now?");
 			close;
 		}
 		specialeffect EF_REPAIRWEAPON;
-		mes "I initialized the enchant effects.";
+		mes("I initialized the enchant effects.");
 		Zeny -= 100000;
 		delequip .@part;
 
@@ -279,7 +279,7 @@ prt_in,28,73,3	script	Devil Enchant Master#prq	1_M_SMITH,{
 
 		close;
 	} else {
-		mes "It seems you have chosen the wrong job??";
+		mes("It seems you have chosen the wrong job??");
 		close;
 	}
 }

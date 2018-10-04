@@ -36,9 +36,9 @@
 
 moc_para01,44,38,3	script	Mission [71 - 85]	4_BOARD3,{
 	if (countitem(Para_Team_Mark) < 1 && countitem(Para_Team_Mark_) < 1) {
-		mes "- Only members of the -";
-		mes "- Eden Group can read -";
-		mes "- this bulletin board. -";
+		mes("- Only members of the -");
+		mes("- Eden Group can read -");
+		mes("- this bulletin board. -");
 		close;
 	}
 
@@ -49,18 +49,18 @@ moc_para01,44,38,3	script	Mission [71 - 85]	4_BOARD3,{
 			if (questprogress(.@quest))
 				erasequest .@quest;
 		}
-		mes "- Since the client has moved -";
-		mes "- to another place, -";
-		mes "- the application form has been removed. -";
+		mes("- Since the client has moved -");
+		mes("- to another place, -");
+		mes("- the application form has been removed. -");
 		next;
 	}
 
 	if (BaseLevel < 71) {
-		mes "- Only members of the -";
-		mes "- right level can read -";
-		mes "- this bulletin board. -";
-		mes "- Try to find a board -";
-		mes "- that suits your level. -";
+		mes("- Only members of the -");
+		mes("- right level can read -");
+		mes("- this bulletin board. -");
+		mes("- Try to find a board -");
+		mes("- that suits your level. -");
 		close;
 	} else if (BaseLevel > 85) {
 		// Quest IDs: 10107-10123, 5055-5057
@@ -77,8 +77,8 @@ moc_para01,44,38,3	script	Mission [71 - 85]	4_BOARD3,{
 		if (questprogress(5057) && countitem(Festival_Mask) >= 30)
 			.@complete[getarraysize(.@complete)] = 5057;
 		if (getarraysize(.@complete)) {
-			mes "You have quests in progress.";
-			mes "Do you want to turn them in?";
+			mes("You have quests in progress.");
+			mes("Do you want to turn them in?");
 			next;
 			if(select("Of course.", "No.") == 2)
 				close;
@@ -86,21 +86,21 @@ moc_para01,44,38,3	script	Mission [71 - 85]	4_BOARD3,{
 				callsub L_Quest,.@complete[.@i];
 			close;
 		}
-		mes "- Only members of the -";
-		mes "- right level can read -";
-		mes "- this bulletin board. -";
-		mes "- Try to find a board -";
-		mes "- that suits your level. -";
+		mes("- Only members of the -");
+		mes("- right level can read -");
+		mes("- this bulletin board. -");
+		mes("- Try to find a board -");
+		mes("- that suits your level. -");
 		close;
 	}
-	mes "- Choose where you -";
-	mes "- would like to hunt. -";
+	mes("- Choose where you -");
+	mes("- would like to hunt. -");
 	next;
 	switch(select("Sphinx Dungeon", "Glast Heim", "Juno Area", "Clock Tower", "Localized Islands")) {
 	case 1:
-		mes "- There are several requests -";
-		mes "- related to the Sphinx Dungeon -";
-		mes "- on this mission Board. -";
+		mes("- There are several requests -");
+		mes("- related to the Sphinx Dungeon -");
+		mes("- on this mission Board. -");
 		next;
 		.@str1$ = "The villagers of Morroc are worried by the increasing number of monsters in the Sphinx Dungeon. ";
 		.@str2$ = "- Meidi from Morroc -";
@@ -110,9 +110,9 @@ moc_para01,44,38,3	script	Mission [71 - 85]	4_BOARD3,{
 			case 3: callsub L_Quest,10109,.@str1$+"Hunt 10 Pasanas.",.@str2$;
 		}
 	case 2:
-		mes "- There are several requests -";
-		mes "- related to Glast Heim -";
-		mes "- on this mission Board. -";
+		mes("- There are several requests -");
+		mes("- related to Glast Heim -");
+		mes("- on this mission Board. -");
 		next;
 		.@str1$ = "I am very afraid that the monsters from Glast Heim will attack us. ";
 		.@str2$ = "- Ancellia from Geffen -";
@@ -123,9 +123,9 @@ moc_para01,44,38,3	script	Mission [71 - 85]	4_BOARD3,{
 			case 4: callsub L_Quest,10113,.@str1$+"Hunt 10 Raydric Archers.",.@str2$;
 		}
 	case 3:
-		mes "- There are several requests -";
-		mes "- related to the area -";
-		mes "- around Juno. -";
+		mes("- There are several requests -");
+		mes("- related to the area -");
+		mes("- around Juno. -");
 		next;
 		.@str1$ = "Those who can't fight, like me, find it much more difficult to travel due to the large number of monsters. ";
 		.@str2$ = "- Jeanbai, traveler -";
@@ -136,9 +136,9 @@ moc_para01,44,38,3	script	Mission [71 - 85]	4_BOARD3,{
 			case 4: callsub L_Quest,10117,.@str1$+"Hunt 20 Harpies.",.@str2$;
 		}
 	case 4:
-		mes "- There are several requests -";
-		mes "- related to the Clock Tower -";
-		mes "- on this mission Board. -";
+		mes("- There are several requests -");
+		mes("- related to the Clock Tower -");
+		mes("- on this mission Board. -");
 		next;
 		.@str1$ = "I used to love listening to the sweet melody of the Al De Baran Clock Tower but I can't hear anything anymore because of all the noises the monsters are making. ";
 		.@str2$ = "- Rizingsetter, President of the Love Clock community -";
@@ -148,9 +148,9 @@ moc_para01,44,38,3	script	Mission [71 - 85]	4_BOARD3,{
 			case 3: callsub L_Quest,10120,.@str1$+"Hunt 15 Ridewords before it breaks.",.@str2$;
 		}
 	case 5:
-		mes "- There are several requests -";
-		mes "- related to the Localized Islands -";
-		mes "- on this mission Board. -";
+		mes("- There are several requests -");
+		mes("- related to the Localized Islands -");
+		mes("- on this mission Board. -");
 		next;
 		.@str1$ = "I want to go on an adventure but there are so many things I have to deal with. If I can't, then others can't either! ";
 		.@str2$ = "- Funfy, who wants to go on an adventure -";
@@ -191,13 +191,13 @@ L_Quest:
 		case 5057: .@name$ = "Gather Festival Masks for the Festival"; .@exp = 30000; break;
 	}
 	if (getargcount() == 1) {
-		mes "'"+.@name$+"' completed. Do you want to turn it in and receive your reward?";
+		mes("'"+.@name$+"' completed. Do you want to turn it in and receive your reward?");
 		next;
 		if(select("Turn in quest.", "Cancel.") == 1) {
 			if (.@quest == 5057) delitem Festival_Mask,30;
 			erasequest .@quest;
 			getexp .@exp,0;
-			mes "You've received EXP for finishing the quest.";
+			mes("You've received EXP for finishing the quest.");
 			next;
 			return;
 		}
@@ -213,31 +213,31 @@ L_Quest:
 			.@hunting = questprogress(.@quest,HUNTING);
 		}
 		if (.@hunting == 1) {
-			mes getarg(1);
-			mes getarg(2);
+			mes(getarg(1));
+			mes(getarg(2));
 			next;
-			mes "Return here when you've finished the quest.";
+			mes("Return here when you've finished the quest.");
 		} else if (.@hunting == 2) {
-			mes "You have completed the quest.";
+			mes("You have completed the quest.");
 			next;
 			if(select("Turn in quest.", "Cancel.") == 1) {
 				if (.@quest == 5057) delitem Festival_Mask,30;
 				erasequest .@quest;
 				getexp .@exp,0;
-				mes "You've received EXP for finishing the quest.";
+				mes("You've received EXP for finishing the quest.");
 			}
 		}/* else if (.@hunting == 3) {
 //			recall_completequest .@quest
 			erasequest .@quest;
-			mes "You have re-accepted the quest '"+.@name$+"'.";
+			mes("You have re-accepted the quest '"+.@name$+"'.");
 		}*/ else {
-			mes getarg(1);
-			mes getarg(2);
+			mes(getarg(1));
+			mes(getarg(2));
 			next;
-			mes "Do you want to accept the quest?";
+			mes("Do you want to accept the quest?");
 			next;
 			if(select("Yes.", "No.") == 1) {
-				mes "You've received the quest '"+.@name$+"'. View your quest info for more details.";
+				mes("You've received the quest '"+.@name$+"'. View your quest info for more details.");
 				setquest .@quest;
 			}
 		}
