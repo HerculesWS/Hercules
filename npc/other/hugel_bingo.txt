@@ -99,19 +99,19 @@ OnTouch:
 	while (true) {
 		@bingo_fill = callfunc("Func_Bingo",@bingo_case);
 		if (!@bingo_fill) {
-			mes "The numbers you have entered";
-			mes "exceed the limit, or you have";
-			mes "already entered these numbers.";
-			mes "Please enter your numbers again.";
+			mes("The numbers you have entered");
+			mes("exceed the limit, or you have");
+			mes("already entered these numbers.");
+			mes("Please enter your numbers again.");
 			next;
 		} else if (@bingo_fill) {
 			if(@bingoplate[25] < 10) @bingo_e5$ = "0"+@bingoplate[25]+""; else @bingo_e5$ = @bingoplate[25];
 			donpcevent "start#bingo::OnEnter";
-			mes "["+@bingo_a1$+"] ["+@bingo_a2$+"] ["+@bingo_a3$+"] ["+@bingo_a4$+"] ["+@bingo_a5$+"]";
-			mes "["+@bingo_b1$+"] ["+@bingo_b2$+"] ["+@bingo_b3$+"] ["+@bingo_b4$+"] ["+@bingo_b5$+"]";
-			mes "["+@bingo_c1$+"] ["+@bingo_c2$+"] ["+@bingo_c3$+"] ["+@bingo_c4$+"] ["+@bingo_c5$+"]";
-			mes "["+@bingo_d1$+"] ["+@bingo_d2$+"] ["+@bingo_d3$+"] ["+@bingo_d4$+"] ["+@bingo_d5$+"]";
-			mes "["+@bingo_e1$+"] ["+@bingo_e2$+"] ["+@bingo_e3$+"] ["+@bingo_e4$+"] ["+@bingo_e5$+"]";
+			mes("["+@bingo_a1$+"] ["+@bingo_a2$+"] ["+@bingo_a3$+"] ["+@bingo_a4$+"] ["+@bingo_a5$+"]");
+			mes("["+@bingo_b1$+"] ["+@bingo_b2$+"] ["+@bingo_b3$+"] ["+@bingo_b4$+"] ["+@bingo_b5$+"]");
+			mes("["+@bingo_c1$+"] ["+@bingo_c2$+"] ["+@bingo_c3$+"] ["+@bingo_c4$+"] ["+@bingo_c5$+"]");
+			mes("["+@bingo_d1$+"] ["+@bingo_d2$+"] ["+@bingo_d3$+"] ["+@bingo_d4$+"] ["+@bingo_d5$+"]");
+			mes("["+@bingo_e1$+"] ["+@bingo_e2$+"] ["+@bingo_e3$+"] ["+@bingo_e4$+"] ["+@bingo_e5$+"]");
 			close;
 		}
 	}
@@ -461,26 +461,26 @@ OnTouch:
 	if(@bingoplate[5] == @bingoplate[10] && @bingoplate[5] == @bingoplate[15] && @bingoplate[5] == @bingoplate[20] && @bingoplate[5] == @bingoplate[25]) @bingowin = @bingowin +1;
 	if(@bingoplate[1] == @bingoplate[7] && @bingoplate[1] == @bingoplate[13] && @bingoplate[1] == @bingoplate[19] && @bingoplate[1] == @bingoplate[25]) @bingowin = @bingowin +1;
 	if(@bingoplate[5] == @bingoplate[9] && @bingoplate[5] == @bingoplate[13] && @bingoplate[5] == @bingoplate[17] && @bingoplate[5] == @bingoplate[21]) @bingowin = @bingowin +1;
-	if($@bingoresult == 1 || $@bingoresult == 21) mes "[ "+$@bingoresult+"st Number - "+$bingo[$@bingoresult -1]+" ]";
-	else if($@bingoresult == 2 || $@bingoresult == 22) mes "[ "+$@bingoresult+"nd Number - "+$bingo[$@bingoresult -1]+" ]";
-	else if($@bingoresult == 3 || $@bingoresult == 23) mes "[ "+$@bingoresult+"rd Number - "+$bingo[$@bingoresult -1]+" ]";
-	else mes "[ "+$@bingoresult+"th Number - "+$bingo[$@bingoresult -1]+" ]";
-	mes "["+@bingo_a1$+"] ["+@bingo_a2$+"] ["+@bingo_a3$+"] ["+@bingo_a4$+"] ["+@bingo_a5$+"]";
-	mes "["+@bingo_b1$+"] ["+@bingo_b2$+"] ["+@bingo_b3$+"] ["+@bingo_b4$+"] ["+@bingo_b5$+"]";
-	mes "["+@bingo_c1$+"] ["+@bingo_c2$+"] ["+@bingo_c3$+"] ["+@bingo_c4$+"] ["+@bingo_c5$+"]";
-	mes "["+@bingo_d1$+"] ["+@bingo_d2$+"] ["+@bingo_d3$+"] ["+@bingo_d4$+"] ["+@bingo_d5$+"]";
-	mes "["+@bingo_e1$+"] ["+@bingo_e2$+"] ["+@bingo_e3$+"] ["+@bingo_e4$+"] ["+@bingo_e5$+"]";
-	mes "[Currently Finished Lines - "+@bingowin+" ]";
+	if($@bingoresult == 1 || $@bingoresult == 21) mes("[ "+$@bingoresult+"st Number - "+$bingo[$@bingoresult -1]+" ]");
+	else if($@bingoresult == 2 || $@bingoresult == 22) mes("[ "+$@bingoresult+"nd Number - "+$bingo[$@bingoresult -1]+" ]");
+	else if($@bingoresult == 3 || $@bingoresult == 23) mes("[ "+$@bingoresult+"rd Number - "+$bingo[$@bingoresult -1]+" ]");
+	else mes("[ "+$@bingoresult+"th Number - "+$bingo[$@bingoresult -1]+" ]");
+	mes("["+@bingo_a1$+"] ["+@bingo_a2$+"] ["+@bingo_a3$+"] ["+@bingo_a4$+"] ["+@bingo_a5$+"]");
+	mes("["+@bingo_b1$+"] ["+@bingo_b2$+"] ["+@bingo_b3$+"] ["+@bingo_b4$+"] ["+@bingo_b5$+"]");
+	mes("["+@bingo_c1$+"] ["+@bingo_c2$+"] ["+@bingo_c3$+"] ["+@bingo_c4$+"] ["+@bingo_c5$+"]");
+	mes("["+@bingo_d1$+"] ["+@bingo_d2$+"] ["+@bingo_d3$+"] ["+@bingo_d4$+"] ["+@bingo_d5$+"]");
+	mes("["+@bingo_e1$+"] ["+@bingo_e2$+"] ["+@bingo_e3$+"] ["+@bingo_e4$+"] ["+@bingo_e5$+"]");
+	mes("[Currently Finished Lines - "+@bingowin+" ]");
 	if ($@bingoresult > 15) {
 		if (@bingowin > 4) {
 			next;
-			mes "We just have made 5 lines!";
-			mes "Say ^ff0000Bingo^000000!";
-			mes "W-we just matched";
-			mes "5 numbers in a row!";
-			mes "Quickly, say ''^FF0000Bingo^000000!''";
-			mes "Remember, you'll only";
-			mes "have one chance to say it!";
+			mes("We just have made 5 lines!");
+			mes("Say ^ff0000Bingo^000000!");
+			mes("W-we just matched");
+			mes("5 numbers in a row!");
+			mes("Quickly, say ''^FF0000Bingo^000000!''");
+			mes("Remember, you'll only");
+			mes("have one chance to say it!");
 			input @bingoyell$;
 			if (@bingoyell$ == "Bingo") {
 				if ($@hu_bingoa == 5) {
@@ -492,20 +492,20 @@ OnTouch:
 
 				} else if ($@hu_bingoa == 6) {
 					next;
-					mes "Oh no! I'm sorry, but";
-					mes "someone already yelled";
-					mes "''bingo'' before you did.";
-					mes "I'm sorry, but you missed";
-					mes "your chance! Better luck,";
-					mes "next time, alright?";
+					mes("Oh no! I'm sorry, but");
+					mes("someone already yelled");
+					mes("''bingo'' before you did.");
+					mes("I'm sorry, but you missed");
+					mes("your chance! Better luck,");
+					mes("next time, alright?");
 					close;
 				}
 			} else {
 				next;
-				mes "I'm sorry, but you";
-				mes "said it wrong. Next time,";
-				mes "make sure that you yell";
-				mes "out the word, ''^FF0000Bingo^000000,'' okay?";
+				mes("I'm sorry, but you");
+				mes("said it wrong. Next time,");
+				mes("make sure that you yell");
+				mes("out the word, ''^FF0000Bingo^000000,'' okay?");
 				close;
 			}
 		}
@@ -787,14 +787,14 @@ function	script	Func_Bingo	{
 		if(@bingoplate[3] < 10) @bingo_a3$ = "0"+@bingoplate[3]+""; else @bingo_a3$ = @bingoplate[3];
 		if(@bingoplate[4] < 10) @bingo_a4$ = "0"+@bingoplate[4]+""; else @bingo_a4$ = @bingoplate[4];
 		if(@bingoplate[5] < 10) @bingo_a5$ = "0"+@bingoplate[5]+""; else @bingo_a5$ = @bingoplate[5];
-		if(.@i > 5) mes "["+@bingo_a1$+"] ["+@bingo_a2$+"] ["+@bingo_a3$+"] ["+@bingo_a4$+"] ["+@bingo_a5$+"]";
+		if(.@i > 5) mes("["+@bingo_a1$+"] ["+@bingo_a2$+"] ["+@bingo_a3$+"] ["+@bingo_a4$+"] ["+@bingo_a5$+"]");
 		else {
 			switch(.@i) {
-				case 1: mes "^ff0000[__]^000000 [   ] [   ] [   ] [   ]"; break;
-				case 2: mes "["+@bingo_a1$+"] ^ff0000[__]^000000 [   ] [   ] [   ]"; break;
-				case 3:	mes "["+@bingo_a1$+"] ["+@bingo_a2$+"] ^ff0000[__]^000000 [   ] [   ]"; break;
-				case 4: mes "["+@bingo_a1$+"] ["+@bingo_a2$+"] ["+@bingo_a3$+"] ^ff0000[__]^000000 [   ]"; break;
-				case 5: mes "["+@bingo_a1$+"] ["+@bingo_a2$+"] ["+@bingo_a3$+"] ["+@bingo_a4$+"] ^ff0000[__]^000000"; break;
+				case 1: mes("^ff0000[__]^000000 [   ] [   ] [   ] [   ]"); break;
+				case 2: mes("["+@bingo_a1$+"] ^ff0000[__]^000000 [   ] [   ] [   ]"); break;
+				case 3:	mes("["+@bingo_a1$+"] ["+@bingo_a2$+"] ^ff0000[__]^000000 [   ] [   ]"); break;
+				case 4: mes("["+@bingo_a1$+"] ["+@bingo_a2$+"] ["+@bingo_a3$+"] ^ff0000[__]^000000 [   ]"); break;
+				case 5: mes("["+@bingo_a1$+"] ["+@bingo_a2$+"] ["+@bingo_a3$+"] ["+@bingo_a4$+"] ^ff0000[__]^000000"); break;
 			}
 		}
 		if(@bingoplate[6] < 10) @bingo_b1$ = "0"+@bingoplate[6]+""; else @bingo_b1$ = @bingoplate[6];
@@ -802,15 +802,15 @@ function	script	Func_Bingo	{
 		if(@bingoplate[8] < 10) @bingo_b3$ = "0"+@bingoplate[8]+""; else @bingo_b3$ = @bingoplate[8];
 		if(@bingoplate[9] < 10) @bingo_b4$ = "0"+@bingoplate[9]+""; else @bingo_b4$ = @bingoplate[9];
 		if(@bingoplate[10] < 10) @bingo_b5$ = "0"+@bingoplate[10]+""; else @bingo_b5$ = @bingoplate[10];
-		if(.@i > 10) mes "["+@bingo_b1$+"] ["+@bingo_b2$+"] ["+@bingo_b3$+"] ["+@bingo_b4$+"] ["+@bingo_b5$+"]";
-		else if(.@i < 6) mes "[   ] [   ] [   ] [   ] [   ]";
+		if(.@i > 10) mes("["+@bingo_b1$+"] ["+@bingo_b2$+"] ["+@bingo_b3$+"] ["+@bingo_b4$+"] ["+@bingo_b5$+"]");
+		else if(.@i < 6) mes("[   ] [   ] [   ] [   ] [   ]");
 		else {
 			switch(.@i) {
-				case 6: mes "^ff0000[__]^000000 [   ] [   ] [   ] [   ]"; break;
-				case 7: mes "["+@bingo_b1$+"] ^ff0000[__]^000000 [   ] [   ] [   ]"; break;
-				case 8:	mes "["+@bingo_b1$+"] ["+@bingo_b2$+"] ^ff0000[__]^000000 [   ] [   ]"; break;
-				case 9: mes "["+@bingo_b1$+"] ["+@bingo_b2$+"] ["+@bingo_b3$+"] ^ff0000[__]^000000 [   ]"; break;
-				case 10: mes "["+@bingo_b1$+"] ["+@bingo_b2$+"] ["+@bingo_b3$+"] ["+@bingo_b4$+"] ^ff0000[__]^000000"; break;
+				case 6: mes("^ff0000[__]^000000 [   ] [   ] [   ] [   ]"); break;
+				case 7: mes("["+@bingo_b1$+"] ^ff0000[__]^000000 [   ] [   ] [   ]"); break;
+				case 8:	mes("["+@bingo_b1$+"] ["+@bingo_b2$+"] ^ff0000[__]^000000 [   ] [   ]"); break;
+				case 9: mes("["+@bingo_b1$+"] ["+@bingo_b2$+"] ["+@bingo_b3$+"] ^ff0000[__]^000000 [   ]"); break;
+				case 10: mes("["+@bingo_b1$+"] ["+@bingo_b2$+"] ["+@bingo_b3$+"] ["+@bingo_b4$+"] ^ff0000[__]^000000"); break;
 			}
 		}
 		if(@bingoplate[11] < 10) @bingo_c1$ = "0"+@bingoplate[11]+""; else @bingo_c1$ = @bingoplate[11];
@@ -818,15 +818,15 @@ function	script	Func_Bingo	{
 		if(@bingoplate[13] < 10) @bingo_c3$ = "0"+@bingoplate[13]+""; else @bingo_c3$ = @bingoplate[13];
 		if(@bingoplate[14] < 10) @bingo_c4$ = "0"+@bingoplate[14]+""; else @bingo_c4$ = @bingoplate[14];
 		if(@bingoplate[15] < 10) @bingo_c5$ = "0"+@bingoplate[15]+""; else @bingo_c5$ = @bingoplate[15];
-		if(.@i > 15) mes "["+@bingo_c1$+"] ["+@bingo_c2$+"] ["+@bingo_c3$+"] ["+@bingo_c4$+"] ["+@bingo_c5$+"]";
-		else if(.@i < 11) mes "[   ] [   ] [   ] [   ] [   ]";
+		if(.@i > 15) mes("["+@bingo_c1$+"] ["+@bingo_c2$+"] ["+@bingo_c3$+"] ["+@bingo_c4$+"] ["+@bingo_c5$+"]");
+		else if(.@i < 11) mes("[   ] [   ] [   ] [   ] [   ]");
 		else {
 			switch(.@i) {
-				case 11: mes "^ff0000[__]^000000 [   ] [   ] [   ] [   ]"; break;
-				case 12: mes "["+@bingo_c1$+"] ^ff0000[__]^000000 [   ] [   ] [   ]"; break;
-				case 13: mes "["+@bingo_c1$+"] ["+@bingo_c2$+"] ^ff0000[__]^000000 [   ] [   ]"; break;
-				case 14: mes "["+@bingo_c1$+"] ["+@bingo_c2$+"] ["+@bingo_c3$+"] ^ff0000[__]^000000 [   ]"; break;
-				case 15: mes "["+@bingo_c1$+"] ["+@bingo_c2$+"] ["+@bingo_c3$+"] ["+@bingo_c4$+"] ^ff0000[__]^000000"; break;
+				case 11: mes("^ff0000[__]^000000 [   ] [   ] [   ] [   ]"); break;
+				case 12: mes("["+@bingo_c1$+"] ^ff0000[__]^000000 [   ] [   ] [   ]"); break;
+				case 13: mes("["+@bingo_c1$+"] ["+@bingo_c2$+"] ^ff0000[__]^000000 [   ] [   ]"); break;
+				case 14: mes("["+@bingo_c1$+"] ["+@bingo_c2$+"] ["+@bingo_c3$+"] ^ff0000[__]^000000 [   ]"); break;
+				case 15: mes("["+@bingo_c1$+"] ["+@bingo_c2$+"] ["+@bingo_c3$+"] ["+@bingo_c4$+"] ^ff0000[__]^000000"); break;
 			}
 		}
 		if(@bingoplate[16] < 10) @bingo_d1$ = "0"+@bingoplate[16]+""; else @bingo_d1$ = @bingoplate[16];
@@ -834,29 +834,29 @@ function	script	Func_Bingo	{
 		if(@bingoplate[18] < 10) @bingo_d3$ = "0"+@bingoplate[18]+""; else @bingo_d3$ = @bingoplate[18];
 		if(@bingoplate[19] < 10) @bingo_d4$ = "0"+@bingoplate[19]+""; else @bingo_d4$ = @bingoplate[19];
 		if(@bingoplate[20] < 10) @bingo_d5$ = "0"+@bingoplate[20]+""; else @bingo_d5$ = @bingoplate[20];
-		if(.@i > 20) mes "["+@bingo_d1$+"] ["+@bingo_d2$+"] ["+@bingo_d3$+"] ["+@bingo_d4$+"] ["+@bingo_d5$+"]";
-		else if(.@i < 16) mes "[   ] [   ] [   ] [   ] [   ]";
+		if(.@i > 20) mes("["+@bingo_d1$+"] ["+@bingo_d2$+"] ["+@bingo_d3$+"] ["+@bingo_d4$+"] ["+@bingo_d5$+"]");
+		else if(.@i < 16) mes("[   ] [   ] [   ] [   ] [   ]");
 		else {
 			switch(.@i) {
-				case 16: mes "^ff0000[__]^000000 [   ] [   ] [   ] [   ]"; break;
-				case 17: mes "["+@bingo_d1$+"] ^ff0000[__]^000000 [   ] [   ] [   ]"; break;
-				case 18: mes "["+@bingo_d1$+"] ["+@bingo_d2$+"] ^ff0000[__]^000000 [   ] [   ]"; break;
-				case 19: mes "["+@bingo_d1$+"] ["+@bingo_d2$+"] ["+@bingo_d3$+"] ^ff0000[__]^000000 [   ]"; break;
-				case 20: mes "["+@bingo_d1$+"] ["+@bingo_d2$+"] ["+@bingo_d3$+"] ["+@bingo_d4$+"] ^ff0000[__]^000000"; break;
+				case 16: mes("^ff0000[__]^000000 [   ] [   ] [   ] [   ]"); break;
+				case 17: mes("["+@bingo_d1$+"] ^ff0000[__]^000000 [   ] [   ] [   ]"); break;
+				case 18: mes("["+@bingo_d1$+"] ["+@bingo_d2$+"] ^ff0000[__]^000000 [   ] [   ]"); break;
+				case 19: mes("["+@bingo_d1$+"] ["+@bingo_d2$+"] ["+@bingo_d3$+"] ^ff0000[__]^000000 [   ]"); break;
+				case 20: mes("["+@bingo_d1$+"] ["+@bingo_d2$+"] ["+@bingo_d3$+"] ["+@bingo_d4$+"] ^ff0000[__]^000000"); break;
 			}
 		}
 		if(@bingoplate[21] < 10) @bingo_e1$ = "0"+@bingoplate[21]+""; else @bingo_e1$ = @bingoplate[21];
 		if(@bingoplate[22] < 10) @bingo_e2$ = "0"+@bingoplate[22]+""; else @bingo_e2$ = @bingoplate[22];
 		if(@bingoplate[23] < 10) @bingo_e3$ = "0"+@bingoplate[23]+""; else @bingo_e3$ = @bingoplate[23];
 		if(@bingoplate[24] < 10) @bingo_e4$ = "0"+@bingoplate[24]+""; else @bingo_e4$ = @bingoplate[24];
-		if(.@i < 21) mes "[   ] [   ] [   ] [   ] [   ]";
+		if(.@i < 21) mes("[   ] [   ] [   ] [   ] [   ]");
 		else {
 			switch(.@i) {
-				case 21: mes "^ff0000[__]^000000 [   ] [   ] [   ] [   ]"; break;
-				case 22: mes "["+@bingo_e1$+"] ^ff0000[__]^000000 [   ] [   ] [   ]"; break;
-				case 23: mes "["+@bingo_e1$+"] ["+@bingo_e2$+"] ^ff0000[__]^000000 [   ] [   ]"; break;
-				case 24: mes "["+@bingo_e1$+"] ["+@bingo_e2$+"] ["+@bingo_e3$+"] ^ff0000[__]^000000 [   ]"; break;
-				case 25: mes "["+@bingo_e1$+"] ["+@bingo_e2$+"] ["+@bingo_e3$+"] ["+@bingo_e4$+"] ^ff0000[__]^000000"; break;
+				case 21: mes("^ff0000[__]^000000 [   ] [   ] [   ] [   ]"); break;
+				case 22: mes("["+@bingo_e1$+"] ^ff0000[__]^000000 [   ] [   ] [   ]"); break;
+				case 23: mes("["+@bingo_e1$+"] ["+@bingo_e2$+"] ^ff0000[__]^000000 [   ] [   ]"); break;
+				case 24: mes("["+@bingo_e1$+"] ["+@bingo_e2$+"] ["+@bingo_e3$+"] ^ff0000[__]^000000 [   ]"); break;
+				case 25: mes("["+@bingo_e1$+"] ["+@bingo_e2$+"] ["+@bingo_e3$+"] ["+@bingo_e4$+"] ^ff0000[__]^000000"); break;
 			}
 		}
 		next;
@@ -888,99 +888,99 @@ function	script	Func_BingoResult	{
 }
 
 que_bingo,49,31,4	script	Arcade Helper#1	1_M_01,{
-	mes "[Helper]";
-	mes "If you'd like to play";
-	mes "a game of bingo, then";
-	mes "please proceed this way.";
+	mes("[Helper]");
+	mes("If you'd like to play");
+	mes("a game of bingo, then");
+	mes("please proceed this way.");
 	close;
 }
 que_bingo,42,31,4	duplicate(Arcade Helper#1)	Arcade Helper#2	1_F_01
 
 que_bingo,54,17,5	script	Arcade Owner	4_M_05,{
-	mes "[Arcade Owner]";
-	mes "Welcome to the";
-	mes "Bingo Game Arcade.";
-	mes "Care to play a game of";
-	mes "bingo? If you have any";
-	mes "questions, feel free to ask.";
+	mes("[Arcade Owner]");
+	mes("Welcome to the");
+	mes("Bingo Game Arcade.");
+	mes("Care to play a game of");
+	mes("bingo? If you have any");
+	mes("questions, feel free to ask.");
 	next;
 	switch(select("Rules for Bingo", "Bingo Room", "Marvelous Medals")) {
 	case 1:
-		mes "[Arcade Owner]";
-		mes "The rules for playing bingo";
-		mes "are simple. First, take a board";
-		mes "with 25 boxes organized so that";
-		mes "there are five rows and five";
-		mes "columns. Then, number the";
-		mes "boxes in any order you like.";
+		mes("[Arcade Owner]");
+		mes("The rules for playing bingo");
+		mes("are simple. First, take a board");
+		mes("with 25 boxes organized so that");
+		mes("there are five rows and five");
+		mes("columns. Then, number the");
+		mes("boxes in any order you like.");
 		next;
-		mes "[Arcade Owner]";
-		mes "Of course, you must use";
-		mes "the numbers 1 through 25.";
-		mes "When everyone's bingo board";
-		mes "is ready, the game will begin.";
-		mes "Our game coordinator will call out a number from 1 to 25 at random.";
+		mes("[Arcade Owner]");
+		mes("Of course, you must use");
+		mes("the numbers 1 through 25.");
+		mes("When everyone's bingo board");
+		mes("is ready, the game will begin.");
+		mes("Our game coordinator will call out a number from 1 to 25 at random.");
 		next;
-		mes "[Arcade Owner]";
-		mes "Each time the coordinator";
-		mes "calls out a number, make sure";
-		mes "that you mark the corresponding";
-		mes "numbered square on your bingo";
-		mes "board. Now, these are the";
-		mes "conditions for winning...";
+		mes("[Arcade Owner]");
+		mes("Each time the coordinator");
+		mes("calls out a number, make sure");
+		mes("that you mark the corresponding");
+		mes("numbered square on your bingo");
+		mes("board. Now, these are the");
+		mes("conditions for winning...");
 		next;
-		mes "[Arcade Owner]";
-		mes "If you can make a line of";
-		mes "5 squares in a row, horizontally, vertically, or diagonally, using";
-		mes "the numbers called out by the";
-		mes "coordinator, you quickly yell";
-		mes "the word, ''Bingo.''";
+		mes("[Arcade Owner]");
+		mes("If you can make a line of");
+		mes("5 squares in a row, horizontally, vertically, or diagonally, using");
+		mes("the numbers called out by the");
+		mes("coordinator, you quickly yell");
+		mes("the word, ''Bingo.''");
 		next;
-		mes "[Arcade Owner]";
-		mes "If you are the first to yell";
-		mes "the word, ''Bingo,'' you'll";
-		mes "win! But if someone beats you";
-		mes "to it, then it can't be helped.";
-		mes "Anyway, it costs 1,000 zeny";
-		mes "to play each bingo game~";
+		mes("[Arcade Owner]");
+		mes("If you are the first to yell");
+		mes("the word, ''Bingo,'' you'll");
+		mes("win! But if someone beats you");
+		mes("to it, then it can't be helped.");
+		mes("Anyway, it costs 1,000 zeny");
+		mes("to play each bingo game~");
 		close;
 	case 2:
-		mes "[Arcade Owner]";
-		mes "Ah, if you want to join a";
-		mes "bingo game, enter the right";
-		mes "door. There must be at least";
-		mes "5 people to play a game, so";
-		mes "you may need to wait until";
-		mes "that requirement is fulfilled.";
+		mes("[Arcade Owner]");
+		mes("Ah, if you want to join a");
+		mes("bingo game, enter the right");
+		mes("door. There must be at least");
+		mes("5 people to play a game, so");
+		mes("you may need to wait until");
+		mes("that requirement is fulfilled.");
 		next;
-		mes "[Arcade Owner]";
-		mes "If you just want to";
-		mes "watch the bingo game,";
-		mes "then you may enter the";
-		mes "left door as a spectator";
-		mes "in the Bingo Room.";
+		mes("[Arcade Owner]");
+		mes("If you just want to");
+		mes("watch the bingo game,");
+		mes("then you may enter the");
+		mes("left door as a spectator");
+		mes("in the Bingo Room.");
 		close;
 	case 3:
-		mes "[Arcade Owner]";
-		mes "When you win a bingo";
-		mes "game, you will be rewarded";
-		mes "with ''Marvelous Medals,''";
-		mes "which can only be used within";
-		mes "this arcade. You also can't trade medals with other players.";
+		mes("[Arcade Owner]");
+		mes("When you win a bingo");
+		mes("game, you will be rewarded");
+		mes("with ''Marvelous Medals,''");
+		mes("which can only be used within");
+		mes("this arcade. You also can't trade medals with other players.");
 		next;
-		mes "[Arcade Owner]";
-		mes "You usually get 1 Marvelous";
-		mes "Medal for winning a bingo game,";
-		mes "but you can win 50 at one time";
-		mes "under special conditions. You";
-		mes "can also play Monster Racing";
-		mes "games to win more medals.";
+		mes("[Arcade Owner]");
+		mes("You usually get 1 Marvelous");
+		mes("Medal for winning a bingo game,");
+		mes("but you can win 50 at one time");
+		mes("under special conditions. You");
+		mes("can also play Monster Racing");
+		mes("games to win more medals.");
 		next;
-		mes "[Arcade Owner]";
-		mes "Collect as many Marvelous";
-		mes "Medals as you can, and trade";
-		mes "them for products in the Monster Racing Arena. I hear there's also";
-		mes "a place in Einbroch where you can use them, but I wouldn't know.";
+		mes("[Arcade Owner]");
+		mes("Collect as many Marvelous");
+		mes("Medals as you can, and trade");
+		mes("them for products in the Monster Racing Arena. I hear there's also");
+		mes("a place in Einbroch where you can use them, but I wouldn't know.");
 		close;
 	}
 }
