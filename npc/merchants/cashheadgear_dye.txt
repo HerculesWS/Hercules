@@ -53,11 +53,11 @@ prt_in,253,168,4	script	Alora	4_F_LGTGIRL,{
 	// Magestic Goats - Normal, Evolved
 	setarray .@hg_7[1], 2256, 5217;
 
-	mes "[Alora]";
-	mes "Hello, I can change your headgear's color if you bring me a Mysterious Dyestuff.";
+	mes("[Alora]");
+	mes("Hello, I can change your headgear's color if you bring me a Mysterious Dyestuff.");
 	next;
-	mes "[Alora]";
-	mes "Do you have a headgear that you would like to dye?";
+	mes("[Alora]");
+	mes("Do you have a headgear that you would like to dye?");
 	next;
 	for(.@i = 1; .@i < getarraysize(.@hgn$); ++.@i) {
 		if(.@i == 1)    .@menu$ = .@hgn$[.@i];
@@ -66,13 +66,13 @@ prt_in,253,168,4	script	Alora	4_F_LGTGIRL,{
 	.@menu$ += ":Cancel";
 	.@t = select(.@menu$);
 	if(.@t == getarraysize(.@hgn$)) {
-		mes "[Alora]";
-		mes "Have a good journey adventurer!";
-		mes "If you ever are curious to try a new color on your Kafra headgear or the ones you found on your adventures please come to me!";
+		mes("[Alora]");
+		mes("Have a good journey adventurer!");
+		mes("If you ever are curious to try a new color on your Kafra headgear or the ones you found on your adventures please come to me!");
 		close;
 	}
-	mes "[Alora]";
-	mes "Okay, what color do you want to change it to?";
+	mes("[Alora]");
+	mes("Okay, what color do you want to change it to?");
 	next;
 	for(.@i = 1; .@i < getarraysize(getd(".@hg_"+.@t+"")); ++.@i) {
 		if(.@i == 1 && .@t != 5)
@@ -87,23 +87,23 @@ prt_in,253,168,4	script	Alora	4_F_LGTGIRL,{
 	.@menu$ += ":Cancel";
 	.@c = select(.@menu$);
 	if(.@c == getarraysize(getd(".@hg_"+.@t+""))) {
-		mes "[Alora]";
-		mes "Oh, okay no problem!";
+		mes("[Alora]");
+		mes("Oh, okay no problem!");
 		close;
 	}
 	.@dyHG = getd(".@hg_"+.@t+"["+.@c+"]");
-	mes "[Alora]";
-	mes "Oh I'm so excited aren't you?";
-	mes "And just to be sure, what color is the "+ .@hgn$[.@t] +" you want me to use?";
+	mes("[Alora]");
+	mes("Oh I'm so excited aren't you?");
+	mes("And just to be sure, what color is the "+ .@hgn$[.@t] +" you want me to use?");
 	next;
-	mes "[Alora]";
-	mes "Please understand that I'm going to use the ^FF00001st "+ .@hgn$[.@t] +" of that color in your inventory!^000000";
+	mes("[Alora]");
+	mes("Please understand that I'm going to use the ^FF00001st "+ .@hgn$[.@t] +" of that color in your inventory!^000000");
 	next;
-	mes "[Alora]";
-	mes "Any upgrades and cards will be dissolved by the mysterious dye, so be sure you are ok with having a ^0000FF+0 "+ getitemname(.@dyHG) +" without any cards.^000000";
+	mes("[Alora]");
+	mes("Any upgrades and cards will be dissolved by the mysterious dye, so be sure you are ok with having a ^0000FF+0 "+ getitemname(.@dyHG) +" without any cards.^000000");
 	next;
-	mes "["+ strcharinfo(PC_NAME) +"]";
-	mes "Ok, thanks for the warning, I think I'll give you my";
+	mes("["+ strcharinfo(PC_NAME) +"]");
+	mes("Ok, thanks for the warning, I think I'll give you my");
 	next;
 	.@menu$ = "Nevermind";
 	for(.@i = 1; .@i < getarraysize(getd(".@hg_"+.@t+"")); ++.@i) {
@@ -112,24 +112,24 @@ prt_in,253,168,4	script	Alora	4_F_LGTGIRL,{
 	}
 	.@mine = select(.@menu$) - 1;
 	if(!.@mine) {
-		mes "[Alora]";
-		mes "It's best to be very sure, have a safe journey.";
+		mes("[Alora]");
+		mes("It's best to be very sure, have a safe journey.");
 		close;
 	}
 	.@myHG = getd(".@hg_"+.@t+"["+.@mine+"]");
 	if(.@dyHG == .@myHG) {
-		mes "[Alora]";
-		mes "Woah what happened?";
+		mes("[Alora]");
+		mes("Woah what happened?");
 		close;
 	}
 	if(!countitem(.@dyeID) || !countitem(.@myHG)) {
-		mes "[Alora]";
-		mes "Oh my, you seem to be missing something.";
+		mes("[Alora]");
+		mes("Oh my, you seem to be missing something.");
 		close;
 	}
-	mes "[Alora]";
-	mes "Looks great doesn't it?!";
-	mes "I hope you'll come back to dye more pretty headgears!";
+	mes("[Alora]");
+	mes("Looks great doesn't it?!");
+	mes("I hope you'll come back to dye more pretty headgears!");
 	delitem .@dyeID,1; // Dyestuff
 	delitem .@myHG,1;  // Your headgear
 	getitem .@dyHG,1;  // Dyed headgear
