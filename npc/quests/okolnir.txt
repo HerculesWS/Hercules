@@ -46,68 +46,68 @@ function	script	F_Okolnir	{
 	.@GID = getcastledata(strnpcinfo(NPC_MAP),1);
 	if (getcharid(CHAR_ID_GUILD) == .@GID) {
 		if (getd("$siz_"+.@sub$+"_on") == 0) {
-			mes "[Guide]";
-			mes "This castle has a hidden secret.";
-			mes "That is the ^4d4dff'Okolnir'^000000.";
+			mes("[Guide]");
+			mes("This castle has a hidden secret.");
+			mes("That is the ^4d4dff'Okolnir'^000000.");
 			next;
 			switch(select("About Okolnir.", "Go to Okolnir.", "Cancel.")) {
 			case 1:
-				mes "[Guide]";
-				mes "Okolnir is a kind of virtual realm...";
-				mes "I don't know how Okolnir exists, but I guess only Valkyrie knows.";
+				mes("[Guide]");
+				mes("Okolnir is a kind of virtual realm...");
+				mes("I don't know how Okolnir exists, but I guess only Valkyrie knows.");
 				next;
-				mes "[Guide]";
-				mes "As you know this is a place to test the adventurers made by Valkyrie...";
-				mes "...you know the qualifications to enter Okolnir.";
+				mes("[Guide]");
+				mes("As you know this is a place to test the adventurers made by Valkyrie...");
+				mes("...you know the qualifications to enter Okolnir.");
 				next;
 				select("Qualifications?");
-				mes "[Guide]";
-				mes "Yes, Valkyrie definitely prefers strong adventurers.";
-				mes "Only the qualified can enter Okolnir and Valhalla.";
+				mes("[Guide]");
+				mes("Yes, Valkyrie definitely prefers strong adventurers.");
+				mes("Only the qualified can enter Okolnir and Valhalla.");
 				next;
-				mes "[Guide]";
-				mes "It only opens when everyone comes together to work it out.";
-				mes "The key is in the castle.";
+				mes("[Guide]");
+				mes("It only opens when everyone comes together to work it out.");
+				mes("The key is in the castle.");
 				next;
-				mes "[Guide]";
-				mes "If a castle's ^4d4dffeconomy is over 65 and defense also over 30^000000, this will be acceptable to access Okolnir.";
+				mes("[Guide]");
+				mes("If a castle's ^4d4dffeconomy is over 65 and defense also over 30^000000, this will be acceptable to access Okolnir.");
 				next;
-				mes "[Guide]";
-				mes "And, if you pass all of the tests given by Valkyrie in Okolnir!";
-				mes "You will also receive a mysterious gift.";
+				mes("[Guide]");
+				mes("And, if you pass all of the tests given by Valkyrie in Okolnir!");
+				mes("You will also receive a mysterious gift.");
 				next;
-				mes "[Guide]";
-				mes "Would you like to try to enter here?";
+				mes("[Guide]");
+				mes("Would you like to try to enter here?");
 				close;
 			case 2:
 				.@defence = getcastledata(strnpcinfo(NPC_MAP),3);
 				.@Economy = getcastledata(strnpcinfo(NPC_MAP),2);
 				if ((.@Economy > 64) && (.@defence > 29)) {
-					mes "[Guide]";
-					mes "Great! Economy and Defense are OK.";
-					mes "You can enter Okolnir now....";
-					mes "Do you want to go there?";
+					mes("[Guide]");
+					mes("Great! Economy and Defense are OK.");
+					mes("You can enter Okolnir now....");
+					mes("Do you want to go there?");
 					next;
 					switch(select("Sure let's go there.", "No.")) {
 					case 1:
 						if (countitem(Crystal_Key)) delitem Crystal_Key,countitem(Crystal_Key);
-						mes "[Guide]";
-						mes "Ok......";
-						mes "Please follow me...";
+						mes("[Guide]");
+						mes("Ok......");
+						mes("Please follow me...");
 						close2;
 						warp "que_q"+.@sub$,346,32;
 						end;
 					case 2:
-						mes "[Guide]";
-						mes "You can try this anytime in the future...";
-						mes "If you are ready to protect this castle.";
+						mes("[Guide]");
+						mes("You can try this anytime in the future...");
+						mes("If you are ready to protect this castle.");
 						close;
 					}
 				}
 				else {
-					mes "[Guide]";
-					mes "You are not qualified yet.";
-					mes "Please develop your castle more...";
+					mes("[Guide]");
+					mes("You are not qualified yet.");
+					mes("Please develop your castle more...");
 					close;
 				}
 			case 3:
@@ -115,46 +115,46 @@ function	script	F_Okolnir	{
 			}
 		}
 		else if (getd("$siz_"+.@sub$+"_on") == 1) {
-			mes "[Guide]";
-			mes "... OK...";
-			mes "Good luck.";
+			mes("[Guide]");
+			mes("... OK...");
+			mes("Good luck.");
 			next;
 			switch(select("Enter now.", "No.")) {
 			case 1:
 				if (countitem(Crystal_Key) > 0) {
 					delitem Crystal_Key,countitem(Crystal_Key);
 				}
-				mes "[Guide]";
-				mes "Hope you get everything you want...";
+				mes("[Guide]");
+				mes("Hope you get everything you want...");
 				close2;
 				warp "que_q"+.@sub$,346,32;
 				end;
 			case 2:
-				mes "[Guide]";
-				mes "Really?";
-				mes "Sorry to hear that.";
+				mes("[Guide]");
+				mes("Really?");
+				mes("Sorry to hear that.");
 				close;
 			}
 		}
 		else if (getd("$siz_"+.@sub$+"_on") == 2) {
-			mes "[Guide]";
-			mes "Building Okolnir needs quite a long time.";
-			mes "....even though it's only virtual...";
+			mes("[Guide]");
+			mes("Building Okolnir needs quite a long time.");
+			mes("....even though it's only virtual...");
 			next;
-			mes "[Guide]";
-			mes "It takes about 12 - 13 hours to create the virtual realm.";
+			mes("[Guide]");
+			mes("It takes about 12 - 13 hours to create the virtual realm.");
 			close;
 		}
 		else {
-			mes "[Guide]";
-			mes "You'll have to wait.";
+			mes("[Guide]");
+			mes("You'll have to wait.");
 			close;
 		}
 	}
 	else {
-		mes "[Guide]";
-		mes "... I've never seen you before.";
-		mes "You are strangers here. You'd better get out of here right now.";
+		mes("[Guide]");
+		mes("... I've never seen you before.");
+		mes("You are strangers here. You'd better get out of here right now.");
 		close;
 	}
 	end;
@@ -195,10 +195,10 @@ que_qsch05,345,23,0	warp	Gate02#gq_sch05	1,1,schg_cas05,369,306
 	if (getcharid(CHAR_ID_GUILD) == .@GID) {
 		cutin "wish_maiden31",1;
 		if (strcharinfo(PC_NAME) == getguildmaster(.@GID)) {
-			mes "[Wish Maiden]";
-			mes "I am... Wish maiden.";
-			mes "Mourning in this virtual realm, Okolnir.";
-			mes "On behalf of the humanbeings who defeated God here.";
+			mes("[Wish Maiden]");
+			mes("I am... Wish maiden.");
+			mes("Mourning in this virtual realm, Okolnir.");
+			mes("On behalf of the humanbeings who defeated God here.");
 			next;
 			if (compare(.@sub$,"aru")) {
 				setarray .@n, 7835,1,7836,1,7837,1,7838,1,2513,1,7291,10,7293,10,7063,100,985,20;
@@ -211,46 +211,46 @@ que_qsch05,345,23,0	warp	Gate02#gq_sch05	1,1,schg_cas05,369,306
 			}
 			if (.@check >= 9) {
 				cutin "wish_maiden11",1;
-				mes "[Wish Maiden]";
-				mes "Are you ready to endure the trials to get the Goddess' glory?";
+				mes("[Wish Maiden]");
+				mes("Are you ready to endure the trials to get the Goddess' glory?");
 				next;
 				switch(select("Yes, I am", "Sorry, I'll try later")) {
 				case 1:
 					cutin "wish_maiden12",1;
-					mes "[Wish Maiden]";
-					mes "I will test whether or not you deserve the Goddess shine...";
-					mes "Isn't it simple?";
+					mes("[Wish Maiden]");
+					mes("I will test whether or not you deserve the Goddess shine...");
+					mes("Isn't it simple?");
 					next;
-					mes "[Wish Maiden]";
-					mes "Okolnir is a virtual place.";
-					mes "There is no room for error there.";
-					mes "^ff0000You only have one hour.^000000";
+					mes("[Wish Maiden]");
+					mes("Okolnir is a virtual place.");
+					mes("There is no room for error there.");
+					mes("^ff0000You only have one hour.^000000");
 					next;
 					cutin "wish_maiden31",1;
-					mes "[Wish Maiden]";
-					mes "If you have not finished in that time, Okolnir will be destroyed, and I will go to rest.";
-					mes "You will have to wait again...";
+					mes("[Wish Maiden]");
+					mes("If you have not finished in that time, Okolnir will be destroyed, and I will go to rest.");
+					mes("You will have to wait again...");
 					next;
-					mes "[Wish Maiden]";
-					mes "Are you ready to go through?";
-					mes "^4d4dffYou need to have 16 to 20 members present^000000.";
+					mes("[Wish Maiden]");
+					mes("Are you ready to go through?");
+					mes("^4d4dffYou need to have 16 to 20 members present^000000.");
 					next;
 					cutin "wish_maiden11",1;
-					mes "[Wish Maiden]";
-					mes "I will open the gate of Okolnir if your members are ready.";
+					mes("[Wish Maiden]");
+					mes("I will open the gate of Okolnir if your members are ready.");
 					next;
 					switch(select("We are ready.", "We need more time.")) {
 					case 1:
 						.@saram = getmapusers("que_q"+.@sub$);
 						if (((.@saram > 15) && (.@saram < 21))) {
 							cutin "wish_maiden12",1;
-							mes "[Wish Maiden]";
-							mes "Now I will open the gate of Okolnir where I am.";
-							mes "I will wait for you on the top of Okolnir...";
+							mes("[Wish Maiden]");
+							mes("Now I will open the gate of Okolnir where I am.");
+							mes("I will wait for you on the top of Okolnir...");
 							next;
-							mes "[Wish Maiden]";
-							mes "I hope that you can complete all of the trials before the virtual Okolnir is destroyed...";
-							mes "Good luck.";
+							mes("[Wish Maiden]");
+							mes("I hope that you can complete all of the trials before the virtual Okolnir is destroyed...");
+							mes("Good luck.");
 							mapannounce "que_q"+.@sub$,"Wish Maiden: The gate of Okolnir is open! Don't forget you only have one hour.",bc_map,"0x00ff00";
 							close2;
 							setd "$@gqse_"+.@sub$+"_pcc",.@saram;
@@ -263,100 +263,100 @@ que_qsch05,345,23,0	warp	Gate02#gq_sch05	1,1,schg_cas05,369,306
 						}
 						else {
 							cutin "wish_maiden13",1;
-							mes "[Wish Maiden]";
-							mes "You need to have 16 to 20 members present to open the gate of Okolnir.";
-							mes "Come back when you are ready.";
+							mes("[Wish Maiden]");
+							mes("You need to have 16 to 20 members present to open the gate of Okolnir.");
+							mes("Come back when you are ready.");
 							close2;
 						}
 						break;
 					case 2:
 						cutin "wish_maiden13",1;
-						mes "[Wish Maiden]";
-						mes "Don't hesitate to try.";
-						mes "You should catch the chance when it comes to you.";
-						mes "Just gather your fellow members.";
+						mes("[Wish Maiden]");
+						mes("Don't hesitate to try.");
+						mes("You should catch the chance when it comes to you.");
+						mes("Just gather your fellow members.");
 						close2;
 					}
 					break;
 				case 2:
 					cutin "wish_maiden32",1;
-					mes "[Wish Maiden]";
-					mes "... Are you afraid of";
-					mes "the trials facing you?";
-					mes "....";
+					mes("[Wish Maiden]");
+					mes("... Are you afraid of");
+					mes("the trials facing you?");
+					mes("....");
 					next;
 					cutin "wish_maiden13",1;
-					mes "[Wish Maiden]";
-					mes "Do you think that you can defeat the Goddess shine easily?";
-					mes "I feel disappointed by all of you.";
-					mes "Just go away...";
+					mes("[Wish Maiden]");
+					mes("Do you think that you can defeat the Goddess shine easily?");
+					mes("I feel disappointed by all of you.");
+					mes("Just go away...");
 					close2;
 				}
 			}
 			else {
 				cutin "wish_maiden11",1;
-				mes "[Wish Maiden]";
-				mes "Do you wish to enter?";
-				mes "Only those prepared may enter here.";
-				mes "You must bring several items to enter Okolnir.";
+				mes("[Wish Maiden]");
+				mes("Do you wish to enter?");
+				mes("Only those prepared may enter here.");
+				mes("You must bring several items to enter Okolnir.");
 				next;
-				mes "[Wish Maiden]";
+				mes("[Wish Maiden]");
 				if (compare(.@sub$,"aru")) {
-					mes "Dusk Glow";
-					mes "Dawn Essence";
-					mes "Cold Moonlight";
-					mes "Hazy Starlight.";
+					mes("Dusk Glow");
+					mes("Dawn Essence");
+					mes("Cold Moonlight");
+					mes("Hazy Starlight.");
 					next;
-					mes "[Wish Maiden]";
-					mes "Please bring those four things, 10 Agate, 10 Rose Quartz, and 20 Elunium,";
-					mes "a Heavenly Maiden's Robe, as well as 100 Soft feathers.";
+					mes("[Wish Maiden]");
+					mes("Please bring those four things, 10 Agate, 10 Rose Quartz, and 20 Elunium,");
+					mes("a Heavenly Maiden's Robe, as well as 100 Soft feathers.");
 				} else {
-					mes "Goddess Tear";
-					mes "Valkyrie's Token";
-					mes "Brynhild Armor Piece";
-					mes "Hero Remains";
-					mes "Valkyrie Armor";
-					mes "Andvari's Ring.";
+					mes("Goddess Tear");
+					mes("Valkyrie's Token");
+					mes("Brynhild Armor Piece");
+					mes("Hero Remains");
+					mes("Valkyrie Armor");
+					mes("Andvari's Ring.");
 					next;
-					mes "[Wish Maiden]";
-					mes "You must bring those six things, 10 Gold, and 20 Elunium.";
-					mes "Many Valhala's Flowers are also required as an offering.";
+					mes("[Wish Maiden]");
+					mes("You must bring those six things, 10 Gold, and 20 Elunium.");
+					mes("Many Valhala's Flowers are also required as an offering.");
 				}
 				next;
-				mes "[Wish Maiden]";
-				mes "Once all of those are prepared, the gate will open.";
+				mes("[Wish Maiden]");
+				mes("Once all of those are prepared, the gate will open.");
 				next;
-				mes "[Wish Maiden]";
-				mes ".... ";
-				mes "...........The Goddess shines brightly down on you, you should be stronger to deserve it...";
+				mes("[Wish Maiden]");
+				mes(".... ");
+				mes("...........The Goddess shines brightly down on you, you should be stronger to deserve it...");
 				next;
-				mes "[Wish Maiden]";
-				mes "Remember...";
-				mes "You need to collect many soft feathers.";
-				mes "I hope that your dreams come true.";
+				mes("[Wish Maiden]");
+				mes("Remember...");
+				mes("You need to collect many soft feathers.");
+				mes("I hope that your dreams come true.");
 				next;
-				mes "[Wish Maiden]";
-				mes "I will answer all your requests if you bring these to me.";
+				mes("[Wish Maiden]");
+				mes("I will answer all your requests if you bring these to me.");
 				close2;
 			}
 		}
 		else {
 			cutin "wish_maiden31",1;
-			mes "[Wish Maiden]";
-			mes "I am... Wish maiden.";
-			mes "Mourning in this virtual realm, Okolnir.";
-			mes "On behalf of the humanbeings who defeated God here.";
+			mes("[Wish Maiden]");
+			mes("I am... Wish maiden.");
+			mes("Mourning in this virtual realm, Okolnir.");
+			mes("On behalf of the humanbeings who defeated God here.");
 			next;
-			mes "[Wish Maiden]";
-			mes "Bring me the one who brought you to this place.";
-			mes ".. Deliver him to my will.";
+			mes("[Wish Maiden]");
+			mes("Bring me the one who brought you to this place.");
+			mes(".. Deliver him to my will.");
 			close2;
 		}
 	}
 	else {
 		cutin "wish_maiden13",1;
-		mes "[Wish Maiden]";
-		mes "...You are not qualified.";
+		mes("[Wish Maiden]");
+		mes("...You are not qualified.");
 		close2;
 		unitkill getcharid(CHAR_ID_ACCOUNT);
 		cutin "wish_maiden11",255;
@@ -433,7 +433,7 @@ OnTouch:
 		end;
 	}
 	else {
-		mes "There are too many people, you can't enter.";
+		mes("There are too many people, you can't enter.");
 		close;
 	}
 
@@ -958,13 +958,13 @@ que_qsch05,2,3,0	duplicate(#miro_yf_main)	#miro_yf_sch05	CLEAR_NPC
 OnTouch:
 	.@sub$ = callfunc("F_Okolnir");
 	if (countitem(Crystal_Key)) {
-		mes "The Warp Gate responds to the Crystal Key.";
+		mes("The Warp Gate responds to the Crystal Key.");
 		delitem Crystal_Key,1;
 		close2;
 		warp "que_q"+.@sub$,114,158;
 		end;
 	}
-	mes "You need the Crystal Key to activate the Warp Gate.";
+	mes("You need the Crystal Key to activate the Warp Gate.");
 	close;
 }
 que_qaru01,132,172,0	duplicate(windpath01_main)	windpath01_aru01	WARPNPC,1,1
@@ -2176,24 +2176,24 @@ que_qsch05,251,255,3	duplicate(Wish Maiden#main_boss)	Wish Maiden#sch05_boss	WIS
 			}
 			if (.@check >= 9) {
 				cutin "wish_maiden12",1;
-				mes "[Wish Maiden]";
-				mes "As I declared, I will give the Goddess' shine to you.";
-				mes "You have the requirements to carry it...";
+				mes("[Wish Maiden]");
+				mes("As I declared, I will give the Goddess' shine to you.");
+				mes("You have the requirements to carry it...");
 				next;
-				mes "[Wish Maiden]";
-				mes "You will be granted the power of the great Valkyrie...";
+				mes("[Wish Maiden]");
+				mes("You will be granted the power of the great Valkyrie...");
 				next;
-				mes "[Wish Maiden]";
-				mes "I will give you some things for fun.";
-				mes "All of you enjoy them together...";
+				mes("[Wish Maiden]");
+				mes("I will give you some things for fun.");
+				mes("All of you enjoy them together...");
 				next;
-				mes "[Wish Maiden]";
-				mes "Go to Rachel and Juno to meet the Ravies sisters.";
+				mes("[Wish Maiden]");
+				mes("Go to Rachel and Juno to meet the Ravies sisters.");
 				next;
 				cutin "wish_maiden32",1;
-				mes "[Wish Maiden]";
-				mes "I will open the gate for you to come back here.";
-				mes "...Okolnir won't last forever...";
+				mes("[Wish Maiden]");
+				mes("I will open the gate for you to come back here.");
+				mes("...Okolnir won't last forever...");
 				for (.@i = 0; .@i < getarraysize(.@n); .@i += 2)
 					delitem .@n[.@i],.@n[.@i+1];
 				getitem .@rwd,1;
@@ -2207,28 +2207,28 @@ que_qsch05,251,255,3	duplicate(Wish Maiden#main_boss)	Wish Maiden#sch05_boss	WIS
 			}
 			else {
 				cutin "wish_maiden13",1;
-				mes "[Wish Maiden]";
-				mes "As I declared, you are worthy of holding the "+getitemname(.@rwd)+".";
-				mes "However, you do not have the requirements on you...";
+				mes("[Wish Maiden]");
+				mes("As I declared, you are worthy of holding the "+getitemname(.@rwd)+".");
+				mes("However, you do not have the requirements on you...");
 				next;
-				mes "[Wish Maiden]";
-				mes "...Did you forget something?";
+				mes("[Wish Maiden]");
+				mes("...Did you forget something?");
 				close2;
 			}
 		}
 		else {
 			cutin "wish_maiden12",1;
-			mes "[Wish Maiden]";
-			mes "All of you worked together as a team...";
-			mes "Humans are strong when they are united, but are easily swayed by lust.";
+			mes("[Wish Maiden]");
+			mes("All of you worked together as a team...");
+			mes("Humans are strong when they are united, but are easily swayed by lust.");
 			next;
-			mes "[Wish Maiden]";
-			mes "Humans are imperfect, so their chief god is there for them when they need help.";
-			mes "....";
+			mes("[Wish Maiden]");
+			mes("Humans are imperfect, so their chief god is there for them when they need help.");
+			mes("....");
 			next;
-			mes "[Wish Maiden]";
-			mes "Always be real.";
-			mes "Do not regret your actions...";
+			mes("[Wish Maiden]");
+			mes("Always be real.");
+			mes("Do not regret your actions...");
 			close2;
 		}
 	}

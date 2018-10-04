@@ -37,81 +37,81 @@
 //=========================================================================
 
 -	script	Smile Assistance::SmileHelper	4_F_03,{
-	mes "[Smile Girl]";
-	mes "Hi ~ Hi ~";
-	mes "This is Smile Assistance.";
-	mes "How may I help you ?";
+	mes("[Smile Girl]");
+	mes("Hi ~ Hi ~");
+	mes("This is Smile Assistance.");
+	mes("How may I help you ?");
 	next;
 	switch(select("^3355FFMr. Smile^000000 ?", "Construct ^3355FFMr. Smile^000000 ", "Quit")) {
 	case 1:
-		mes "[Smile Girl]";
-		mes "National Event held by the command of ^5577FFHis majesty Tristram the 3rd^000000,";
-		mes "that intends to encourage the nation of the Rune-Midgarts Kingdom";
-		mes " to play in more enjoyable atmosphere!";
-		mes "I am ^3355FF' Smile Assistance '^000000,";
-		mes ".. who leads the national event under the name of ";
-		mes "^3355FFSmile throughout the Rune-Midgarts Kingdom~^000000";
+		mes("[Smile Girl]");
+		mes("National Event held by the command of ^5577FFHis majesty Tristram the 3rd^000000,");
+		mes("that intends to encourage the nation of the Rune-Midgarts Kingdom");
+		mes(" to play in more enjoyable atmosphere!");
+		mes("I am ^3355FF' Smile Assistance '^000000,");
+		mes(".. who leads the national event under the name of ");
+		mes("^3355FFSmile throughout the Rune-Midgarts Kingdom~^000000");
 		next;
-		mes "[Smile Girl]";
-		mes "With simple and easy-to-get items,";
-		mes "I can provide you";
-		mes "^3355FF' Mr. Smile '^000000.";
-		mes "The requirements are followings.";
+		mes("[Smile Girl]");
+		mes("With simple and easy-to-get items,");
+		mes("I can provide you");
+		mes("^3355FF' Mr. Smile '^000000.");
+		mes("The requirements are followings.");
 		next;
-		mes "[Smile Girl]";
-		mes "^3355FF10 Jellopy^000000";
-		mes "^3355FF10 Fluff^000000";
-		mes "^3355FF10 Clover^000000";
+		mes("[Smile Girl]");
+		mes("^3355FF10 Jellopy^000000");
+		mes("^3355FF10 Fluff^000000");
+		mes("^3355FF10 Clover^000000");
 		next;
-		mes "[Smile Girl]";
-		mes "With this event";
-		mes "Everybody will be happy and smile,";
-		mes "getting together with other people,";
-		mes "And will try to make Ragnarok the most enjoyable game in the world.";
+		mes("[Smile Girl]");
+		mes("With this event");
+		mes("Everybody will be happy and smile,");
+		mes("getting together with other people,");
+		mes("And will try to make Ragnarok the most enjoyable game in the world.");
 		close;
 	case 2:
 		if (countitem(Jellopy) > 9 && countitem(Fluff) > 9 && countitem(Clover) > 9) {
-			mes "[Smile Girl]";
-			mes "Congratulations !";
-			mes "Now please take this Mr.Smile.";
+			mes("[Smile Girl]");
+			mes("Congratulations !");
+			mes("Now please take this Mr.Smile.");
 			next;
 			delitem Jellopy,10;
 			delitem Fluff,10;
 			delitem Clover,10;
 			getitem Mr_Smile,1;
-			mes "[Smile Girl]";
-			mes "His majesty,Tristram the 3rd";
-			mes "has promised to try his best to make Ragnarok better and more enjoyable.";
+			mes("[Smile Girl]");
+			mes("His majesty,Tristram the 3rd");
+			mes("has promised to try his best to make Ragnarok better and more enjoyable.");
 			next;
-			mes "The fact mentioned above";
-			mes "was announced by";
-			mes "the Public Information Bureau of the Rune-Midgarts Kingom.";
+			mes("The fact mentioned above");
+			mes("was announced by");
+			mes("the Public Information Bureau of the Rune-Midgarts Kingom.");
 			close;
 		}
 		else {
-			mes "[Smile Girl]";
-			mes "Oh - unfortunately";
-			mes "You have not brought";
-			mes "enough items for Mr. Smile.";
-			mes "^3355FF10 Jellopy^000000";
-			mes "^3355FF10 Fluff^000000";
-			mes "^3355FF10 Clover^000000";
-			mes "Please check the requirements above.";
+			mes("[Smile Girl]");
+			mes("Oh - unfortunately");
+			mes("You have not brought");
+			mes("enough items for Mr. Smile.");
+			mes("^3355FF10 Jellopy^000000");
+			mes("^3355FF10 Fluff^000000");
+			mes("^3355FF10 Clover^000000");
+			mes("Please check the requirements above.");
 			close;
 		}
 	case 3:
-		mes "[Smile Girl]";
-		mes "Thank you for visiting us.";
-		mes "We ..";
-		mes "The Rune-Midgarts Kingdom";
-		mes "always try to make Ragnarok";
-		mes "better and more enjoyable game.";
+		mes("[Smile Girl]");
+		mes("Thank you for visiting us.");
+		mes("We ..");
+		mes("The Rune-Midgarts Kingdom");
+		mes("always try to make Ragnarok");
+		mes("better and more enjoyable game.");
 		next;
-		mes "[Smile Girl]";
-		mes "We sincerely ask you";
-		mes "to cooperate.";
-		mes "The fact mentioned above";
-		mes "was announced by the Public Information Bureau of the Rune-Midgarts Kingom.";
+		mes("[Smile Girl]");
+		mes("We sincerely ask you");
+		mes("to cooperate.");
+		mes("The fact mentioned above");
+		mes("was announced by the Public Information Bureau of the Rune-Midgarts Kingom.");
 		close;
 	}
 }

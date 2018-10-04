@@ -34,7 +34,7 @@
 //=========================================================================
 
 prontera,113,294,3	script	Sign Post#god	2_BULLETIN_BOARD,{
-	mes "======== God Seal Status ========";
+	mes("======== God Seal Status ========");
 	setarray .@seal$[1], "Sleipnir","Megingjard","Brisingamen","Mjolnir";
 	for(.@i = 1; .@i<=4; ++.@i) {
 		.@val = getd("$God"+.@i);
@@ -46,25 +46,25 @@ prontera,113,294,3	script	Sign Post#god	2_BULLETIN_BOARD,{
 			.@status$ = "Appeared";
 		else
 			.@status$ = "Released";
-		mes .@seal$[.@i]+" Seal: "+.@status$;
+		mes(.@seal$[.@i]+" Seal: "+.@status$);
 	}
-	mes " ";
-	mes "======= Your Seal Status ========";
+	mes(" ");
+	mes("======= Your Seal Status ========");
 	if (god_sl_1 < 51)
-		mes "^ff0000Sleipnir Seal: Not Completed^000000";
+		mes("^ff0000Sleipnir Seal: Not Completed^000000");
 	else
-		mes "^00ff00Sleipnir Seal: Completed^000000";
+		mes("^00ff00Sleipnir Seal: Completed^000000");
 	if (god_eremes < 28)
-		mes "^ff0000Megingjard Seal: Not Completed^000000";
+		mes("^ff0000Megingjard Seal: Not Completed^000000");
 	else
-		mes "^00ff00Megingjard Seal: Completed^000000";
+		mes("^00ff00Megingjard Seal: Completed^000000");
 	if (god_brising < 50)
-		mes "^ff0000Brisingamen Seal: Not Completed^000000";
+		mes("^ff0000Brisingamen Seal: Not Completed^000000");
 	else
-		mes "^00ff00Brisingamen Seal: Completed^000000";
+		mes("^00ff00Brisingamen Seal: Completed^000000");
 	if (god_mjo_0 < 11)
-		mes "^ff0000Mjolnir Seal: Not Completed^000000";
+		mes("^ff0000Mjolnir Seal: Not Completed^000000");
 	else
-		mes "^00ff00Mjolnir Seal: Completed^000000";
+		mes("^00ff00Mjolnir Seal: Completed^000000");
 	close;
 }

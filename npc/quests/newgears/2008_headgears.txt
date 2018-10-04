@@ -34,89 +34,89 @@
 //=========================================================================
 
 gef_fild05,80,149,3	script	Myu#08_hat	4_F_YUNYANG,{
-	mes "[Myu]";
-	mes "Meow...";
+	mes("[Myu]");
+	mes("Meow...");
 	emotion e_omg;
 	next;
 	if(hatcat2008 == 0) {
-		mes "[Myu]";
-		mes "Oh? Aren't you an adventurer?";
-		mes "What brings you here? Ho, you are not here to harm Wild Roses, are you?";
-		mes "(Meow!)";
+		mes("[Myu]");
+		mes("Oh? Aren't you an adventurer?");
+		mes("What brings you here? Ho, you are not here to harm Wild Roses, are you?");
+		mes("(Meow!)");
 		next;
 		select("Meow..?");
-		mes "[Myu]";
-		mes "Ah, Never mind that.";
-		mes "This place is the village of Deserted people.";
-		mes "Homeland of those who walk in the shadows and lay low.";
+		mes("[Myu]");
+		mes("Ah, Never mind that.");
+		mes("This place is the village of Deserted people.");
+		mes("Homeland of those who walk in the shadows and lay low.");
 		next;
-		mes "[Myu]";
-		mes "....And yet, our peace is being disturbed by those barking dogs.";
-		mes "That's right, Adventurer.";
-		mes "Would you be so kind and punish those Kobold Archers?";
+		mes("[Myu]");
+		mes("....And yet, our peace is being disturbed by those barking dogs.");
+		mes("That's right, Adventurer.");
+		mes("Would you be so kind and punish those Kobold Archers?");
 		next;
-		mes "[Myu]";
-		mes "They have their own territory south of here, but they're still trying to invade ours.";
+		mes("[Myu]");
+		mes("They have their own territory south of here, but they're still trying to invade ours.");
 		next;
-		mes "[Myu]";
-		mes "How Impudent. I tried to talk to them in a peaceful way, or even fight them off, but it was of no use.";
+		mes("[Myu]");
+		mes("How Impudent. I tried to talk to them in a peaceful way, or even fight them off, but it was of no use.");
 		next;
-		mes "[Myu]";
-		mes "So what I'm asking you is... to drive them out of our territory by using all means necessary..";
+		mes("[Myu]");
+		mes("So what I'm asking you is... to drive them out of our territory by using all means necessary..");
 		next;
-		mes "[Myu]";
-		mes "If you manage to do that, I will give you something precious which I really adore.";
+		mes("[Myu]");
+		mes("If you manage to do that, I will give you something precious which I really adore.");
 		next;
 		switch(select("That sounds troublesome..", "What should I do?")){
 		case 1:
-			mes "[Myu]";
-			mes "Hmph, yeah, it was kinda funny huh.";
-			mes "Anybody who comes here....they all come to harm the Wild Roses..";
-			mes "I failed to notice that.";
+			mes("[Myu]");
+			mes("Hmph, yeah, it was kinda funny huh.");
+			mes("Anybody who comes here....they all come to harm the Wild Roses..");
+			mes("I failed to notice that.");
 			next;
-			mes "[Myu]";
-			mes "...It was a fruitless effort Meow...";
+			mes("[Myu]");
+			mes("...It was a fruitless effort Meow...");
 			next;
-			mes "["+strcharinfo(PC_NAME)+"]";
-			mes " (Meow again...What a weirdo.)";
+			mes("["+strcharinfo(PC_NAME)+"]");
+			mes(" (Meow again...What a weirdo.)");
 			close;
 		case 2:
-			mes "[Myu]";
-			mes "Of course take care of those Kobold Archers Meow!";
-			mes " ";
-			mes "(Meow!)";
+			mes("[Myu]");
+			mes("Of course take care of those Kobold Archers Meow!");
+			mes(" ");
+			mes("(Meow!)");
 			next;
 			select("Meow again?!");
-			mes "[Myu]";
-			mes "Hmm Hmm I told you to never mind that.";
-			mes "So as I was saying...";
-			mes "I mean... meow... er...";
+			mes("[Myu]");
+			mes("Hmm Hmm I told you to never mind that.");
+			mes("So as I was saying...");
+			mes("I mean... meow... er...");
 			next;
-			mes "[Myu]";
-			mes "Exactly 1,000 times no more, no less.";
-			mes "Give them 1,000 warnings and they will back off.";
+			mes("[Myu]");
+			mes("Exactly 1,000 times no more, no less.");
+			mes("Give them 1,000 warnings and they will back off.");
 			next;
 			select("What do you mean by 1,000 warnings...?");
-			mes "[Myu]";
-			mes "Hu~Do I have to spell it out for you?";
+			mes("[Myu]");
+			mes("Hu~Do I have to spell it out for you?");
 			next;
-			mes "As she says that, Myu slides her neck mocking like she's slitting her throat.";
+			mes("As she says that, Myu slides her neck mocking like she's slitting her throat.");
 			next;
 			switch(select("Isn't that too much?", "That's easy")){
 			case 1:
-				mes "[Myu]";
-				mes "..But they won't give up if we dont really teach them a lesson.";
-				mes "Well If you think it's too much for you, so be it.";
+				mes("[Myu]");
+				mes("..But they won't give up if we dont really teach them a lesson.");
+				mes("Well If you think it's too much for you, so be it.");
 				close;
 			case 2:
-				mes "[Myu]";
-				mes "But you have to keep one thing in mind and it is";
-				mes "obiously, NEVER EVER do any harm to Wild Roses.";
+				mes("[Myu]");
+				mes("But you have to keep one thing in mind and it is");
+				mes("obiously, NEVER EVER do any harm to Wild Roses.");
 				next;
-				mes "[Myu]";
-				mes "If you do, it's all over for you.";
-				mes "So you better be careful.. ";
-				mes "Meow Meow Meow..";
+				mes("[Myu]");
+				mes("If you do, it's all over for you.");
+				mes("So you better be careful.. ");
+				mes("Meow Meow Meow..");
 				hatcat2008 = 1;
 				setquest 7054;
 				setquest 7055;
@@ -125,646 +125,646 @@ gef_fild05,80,149,3	script	Myu#08_hat	4_F_YUNYANG,{
 		}
 	} else if(hatcat2008 == 1) {
 		if (questprogress(7055,HUNTING) == 2) {
-			mes "[Myu]";
-			mes "Did you think I didn't know what you have done?";
-			mes "Huh?";
+			mes("[Myu]");
+			mes("Did you think I didn't know what you have done?");
+			mes("Huh?");
 			next;
-			mes "[Myu]";
-			mes "How..just how could you kill those precious children..?";
-			mes "And you were saying that you are on our side?!";
+			mes("[Myu]");
+			mes("How..just how could you kill those precious children..?");
+			mes("And you were saying that you are on our side?!");
 			next;
-			mes "[Myu]";
-			mes "Our business is over!!!";
-			mes " ";
-			mes "(Meow..)";
+			mes("[Myu]");
+			mes("Our business is over!!!");
+			mes(" ");
+			mes("(Meow..)");
 			hatcat2008 = 0;
 			erasequest 7054;
 			erasequest 7055;
 			close;
 		} else if (questprogress(7054,HUNTING) == 2) {
-			mes "[Myu]";
-			mes "Oh..wow unbelievable!";
-			mes "Now, those Kobolds should have learned a lesson, haven't they?";
-			mes "Meow Meow Meow!";
+			mes("[Myu]");
+			mes("Oh..wow unbelievable!");
+			mes("Now, those Kobolds should have learned a lesson, haven't they?");
+			mes("Meow Meow Meow!");
 			next;
-			mes "[Myu]";
-			mes "Here, Take this.";
-			mes "This is the Seal of our 'Brave Kitty Cats'.";
-			mes "This is soooo valuable, so don't lose it.";
+			mes("[Myu]");
+			mes("Here, Take this.");
+			mes("This is the Seal of our 'Brave Kitty Cats'.");
+			mes("This is soooo valuable, so don't lose it.");
 			next;
 			select("This is it?");
-			mes "[Myu]";
-			mes "What more did you expect?";
-			mes "That Pow is really a valuable thing!";
-			mes "Now, just take it and leave. Wild Roses feel uncomfortable with an adventurer around them.";
+			mes("[Myu]");
+			mes("What more did you expect?");
+			mes("That Pow is really a valuable thing!");
+			mes("Now, just take it and leave. Wild Roses feel uncomfortable with an adventurer around them.");
 			hatcat2008 = 2;
 			getitem 5446,1;
 			erasequest 7054;
 			erasequest 7055;
 			close;
 		}
-		mes "[Myu]";
-		mes "You get it now, huh?";
-		mes "ONE THOUSAND TIMES! -chuckles-";
-		mes "(Meow Meow Meow~)";
+		mes("[Myu]");
+		mes("You get it now, huh?");
+		mes("ONE THOUSAND TIMES! -chuckles-");
+		mes("(Meow Meow Meow~)");
 		next;
-		mes "["+strcharinfo(PC_NAME)+"]";
-		mes "(What a weirdo.. Anyways..what's with that meow meow sound?)";
-		mes "Just keep your promises.";
-		mes "after the work is done...Ok?";
+		mes("["+strcharinfo(PC_NAME)+"]");
+		mes("(What a weirdo.. Anyways..what's with that meow meow sound?)");
+		mes("Just keep your promises.");
+		mes("after the work is done...Ok?");
 		next;
-		mes "[Myu]";
-		mes "Of course! Don't worry about that~";
+		mes("[Myu]");
+		mes("Of course! Don't worry about that~");
 		close;
 	} else if(hatcat2008 == 2) {
-		mes "[Myu]";
-		mes "This place is the village of Deserted people.";
-		mes "Homeland of those who walk in the shadows and lay low.";
+		mes("[Myu]");
+		mes("This place is the village of Deserted people.");
+		mes("Homeland of those who walk in the shadows and lay low.");
 		next;
-		mes "[Myu]";
-		mes "Oh, Aren't you the Adventurer who took the Seal of our 'Brave Kitty Cats'.";
-		mes "What brings you here?";
+		mes("[Myu]");
+		mes("Oh, Aren't you the Adventurer who took the Seal of our 'Brave Kitty Cats'.");
+		mes("What brings you here?");
 		next;
-		mes "[Myu]";
-		mes "Oh yeah, right, even after all the threats we gave the Kobolds..";
-		mes "our situation hasn't changed at all. Would you mind helping us once more?";
+		mes("[Myu]");
+		mes("Oh yeah, right, even after all the threats we gave the Kobolds..");
+		mes("our situation hasn't changed at all. Would you mind helping us once more?");
 		next;
-		mes "Myu slides her neck mocking like she's slitting her throat.";
-		mes "Her mouth looks like it's saying.";
-		mes " 'O.N.E. T.H.O.U.S.A.N.D.' ";
+		mes("Myu slides her neck mocking like she's slitting her throat.");
+		mes("Her mouth looks like it's saying.");
+		mes(" 'O.N.E. T.H.O.U.S.A.N.D.' ");
 		next;
 		switch(select("NO!", "Sure.")) {
 		case 1:
-			mes "[Myu]";
-			mes "...!...";
-			mes ".. Ah.. that's too bad.";
-			mes "Well, looks like a bait has spoiled.... ";
-			mes "It's ok. That's how it is. Meow.";
+			mes("[Myu]");
+			mes("...!...");
+			mes(".. Ah.. that's too bad.");
+			mes("Well, looks like a bait has spoiled.... ");
+			mes("It's ok. That's how it is. Meow.");
 			close;
 		case 2:
-			mes "[Myu]";
-			mes "You know the drill right?";
-			mes "Never ever touch the Wild Roses, Only hunt down the Kobold Archers.";
-			mes "Give them 1,000 times despair!";
+			mes("[Myu]");
+			mes("You know the drill right?");
+			mes("Never ever touch the Wild Roses, Only hunt down the Kobold Archers.");
+			mes("Give them 1,000 times despair!");
 			hatcat2008 = 1;
 			setquest 7054;
 			setquest 7055;
 			close;
 		}
 	}
-	mes "[Myu]";
-	mes "Meow..";
-	mes "This Sunshine...makes me sleepy..";
+	mes("[Myu]");
+	mes("Meow..");
+	mes("This Sunshine...makes me sleepy..");
 	close;
 }
 
 morocc_in,137,102,5	script	Trainee#2008hat01	4_KID01,{
-	mes "[Trainee Elgo]";
-	mes "Welcome.";
-	mes "Please talk to our teacher if you are here to make a dyes.";
-	mes "And talk to my friend next to me if it is about the delivery.";
+	mes("[Trainee Elgo]");
+	mes("Welcome.");
+	mes("Please talk to our teacher if you are here to make a dyes.");
+	mes("And talk to my friend next to me if it is about the delivery.");
 	next;
 	switch(select("And just what are you doing?", "I see.")){
 	case 1:
-		mes "[Elgo]";
-		mes "Well, I dye clothes.";
-		mes "like handkerchiefs, or ribbons.";
+		mes("[Elgo]");
+		mes("Well, I dye clothes.");
+		mes("like handkerchiefs, or ribbons.");
 		next;
-		mes "[Elgo]";
-		mes "I can dye small things really pretty..";
-		mes "Such as a ^4d4dffCute Ribbon^000000.";
-		mes "Bring me a Cute Ribbon if you want to dye it.";
+		mes("[Elgo]");
+		mes("I can dye small things really pretty..");
+		mes("Such as a ^4d4dffCute Ribbon^000000.");
+		mes("Bring me a Cute Ribbon if you want to dye it.");
 		next;
-		mes "[Elgo]";
-		mes "It'd be a good chance for me to practice one,";
-		mes "and you won't have to pay a single zeny.";
-		mes "Oh yeah, but I will at least need the required^4d4dffdyestuffs^000000.";
+		mes("[Elgo]");
+		mes("It'd be a good chance for me to practice one,");
+		mes("and you won't have to pay a single zeny.");
+		mes("Oh yeah, but I will at least need the required^4d4dffdyestuffs^000000.");
 		next;
-		mes "[Elgo]";
-		mes "Of course, I won't fail.";
-		mes "I will put all my efforts into it.";
-		mes "I want to challenge my skills!!";
+		mes("[Elgo]");
+		mes("Of course, I won't fail.");
+		mes("I will put all my efforts into it.");
+		mes("I want to challenge my skills!!");
 		next;
 		if (countitem(Fillet) > 0 || countitem(Fillet_White) > 0 || countitem(Fillet_Red) > 0 || countitem(Fillet_Blue) > 0 || countitem(Fillet_Green) > 0) {
-			mes "["+strcharinfo(PC_NAME)+"]";
-			mes "(I have a Cute Ribbon...what should I do..?)";
+			mes("["+strcharinfo(PC_NAME)+"]");
+			mes("(I have a Cute Ribbon...what should I do..?)");
 			next;
 			switch(select("Ask Elgo to dye it.", "Leave it alone.")){
 			case 1:
-				mes "[Elgo]";
-				mes "Oh, So you want to dye your Cute Ribbon, aren't you?";
-				mes "What colour is your Cute Ribbon?";
-				mes "Which one is the one you want to be dyed?";
+				mes("[Elgo]");
+				mes("Oh, So you want to dye your Cute Ribbon, aren't you?");
+				mes("What colour is your Cute Ribbon?");
+				mes("Which one is the one you want to be dyed?");
 				next;
 				switch(select("Yellow one..", "White one..", "Blue one..", "Red one..", "Green one..", "Never mind.")){
 				case 1:
 					if(countitem(Fillet) > 0) {
-						mes "[Elgo]";
-						mes "Ok Ok, Yellow Cute Ribbon, huh?";
-						mes "What color do you want it to be dyed?";
+						mes("[Elgo]");
+						mes("Ok Ok, Yellow Cute Ribbon, huh?");
+						mes("What color do you want it to be dyed?");
 						next;
 						switch(select("White", "Blue", "Red", "Green")){
 						case 1:
 							if(countitem(White_Dyestuffs) > 0) {
-								mes "[Elgo]";
-								mes "Wow, pure and innocent white!";
-								mes "Ok, let's do it.";
+								mes("[Elgo]");
+								mes("Wow, pure and innocent white!");
+								mes("Ok, let's do it.");
 								next;
-								mes "- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -";
+								mes("- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -");
 								next;
-								mes "[Elgo]";
-								mes ".. Hmm..";
-								mes "This should do it.";
-								mes "What do you think?";
-								mes "Did this color came out nicely?";
+								mes("[Elgo]");
+								mes(".. Hmm..");
+								mes("This should do it.");
+								mes("What do you think?");
+								mes("Did this color came out nicely?");
 								delitem 2250,1;
 								delitem 982,1;
 								getitem 5441,1;
 								close;
 							}
-							mes "[Elgo]";
-							mes "If you want to dye it white, bring me ^4d4dff1 White Dyestuffs^000000.";
+							mes("[Elgo]");
+							mes("If you want to dye it white, bring me ^4d4dff1 White Dyestuffs^000000.");
 							close;
 						case 2:
 							if(countitem(Cobaltblue_Dyestuffs) > 0) {
-								mes "[Elgo]";
-								mes "Cool blue!!";
-								mes "Let's do it!";
+								mes("[Elgo]");
+								mes("Cool blue!!");
+								mes("Let's do it!");
 								next;
-								mes "- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -";
+								mes("- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -");
 								next;
-								mes "[Elgo]";
-								mes ".. Hmm..";
-								mes "This should do it.";
-								mes "What do you think?";
-								mes "Did this color came out nicely?";
+								mes("[Elgo]");
+								mes(".. Hmm..");
+								mes("This should do it.");
+								mes("What do you think?");
+								mes("Did this color came out nicely?");
 								delitem 2250,1;
 								delitem 978,1;
 								getitem 5440,1;
 								close;
 							}
-							mes "[Elgo]";
-							mes "If you want to dye it blue, bring me ^4d4dff1 Blue Dyestuffs^000000.";
+							mes("[Elgo]");
+							mes("If you want to dye it blue, bring me ^4d4dff1 Blue Dyestuffs^000000.");
 							close;
 						case 3:
 							if(countitem(Scarlet_Dyestuffs) > 0) {
-								mes "[Elgo]";
-								mes "Cute Red!";
-								mes "Let's do it!";
+								mes("[Elgo]");
+								mes("Cute Red!");
+								mes("Let's do it!");
 								next;
-								mes "- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -";
+								mes("- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -");
 								next;
-								mes "[Elgo]";
-								mes ".. Hmm..";
-								mes "This should do it.";
-								mes "What do you think?";
-								mes "Did this color came out nicely?";
+								mes("[Elgo]");
+								mes(".. Hmm..");
+								mes("This should do it.");
+								mes("What do you think?");
+								mes("Did this color came out nicely?");
 								delitem 2250,1;
 								delitem 975,1;
 								getitem 5439,1;
 								close;
 							}
-							mes "[Elgo]";
-							mes "If you want to dye it red, bring me ^4d4dff1 Red Dyestuffs^000000.";
+							mes("[Elgo]");
+							mes("If you want to dye it red, bring me ^4d4dff1 Red Dyestuffs^000000.");
 							close;
 						case 4:
 							if(countitem(Darkgreen_Dyestuffs) > 0) {
-								mes "[Elgo]";
-								mes "Nature's Green!";
-								mes "Let's do it!";
+								mes("[Elgo]");
+								mes("Nature's Green!");
+								mes("Let's do it!");
 								next;
-								mes "- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -";
+								mes("- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -");
 								next;
-								mes "[Elgo]";
-								mes ".. Hmm..";
-								mes "This should do it.";
-								mes "What do you think?";
-								mes "Did this color came out nicely?";
+								mes("[Elgo]");
+								mes(".. Hmm..");
+								mes("This should do it.");
+								mes("What do you think?");
+								mes("Did this color came out nicely?");
 								delitem 2250,1;
 								delitem 979,1;
 								getitem 5438,1;
 								close;
 							}
-							mes "[Elgo]";
-							mes "If you want to dye it green, bring me ^4d4dff1 Green Dyestuffs^000000.";
+							mes("[Elgo]");
+							mes("If you want to dye it green, bring me ^4d4dff1 Green Dyestuffs^000000.");
 							close;
 						}
 					}
-					mes "[Elgo]";
-					mes "Yellow is the basic color of a Cute Ribbon.";
-					mes "But you don't even have one.";
+					mes("[Elgo]");
+					mes("Yellow is the basic color of a Cute Ribbon.");
+					mes("But you don't even have one.");
 					close;
 				case 2:
 					if(countitem(Fillet_White) > 0) {
-						mes "[Elgo]";
-						mes "Ok Ok, This white Cute Ribbon, huh?";
-						mes "What color do you want it to be dyed?";
+						mes("[Elgo]");
+						mes("Ok Ok, This white Cute Ribbon, huh?");
+						mes("What color do you want it to be dyed?");
 						next;
 						switch(select("Yellow", "Blue", "Red", "Green")) {
 						case 1:
 							if(countitem(Lemon_Dyestuffs) > 0) {
-								mes "[Elgo]";
-								mes "Basic Yellow!";
-								mes "Let's do it!";
+								mes("[Elgo]");
+								mes("Basic Yellow!");
+								mes("Let's do it!");
 								next;
-								mes "- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -";
+								mes("- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -");
 								next;
-								mes "[Elgo]";
-								mes ".. Hmm..";
-								mes "This should do it.";
-								mes "What do you think?";
-								mes "Did this color came out nicely?";
+								mes("[Elgo]");
+								mes(".. Hmm..");
+								mes("This should do it.");
+								mes("What do you think?");
+								mes("Did this color came out nicely?");
 								delitem 5441,1;
 								delitem 976,1;
 								getitem 2250,1;
 								close;
 							}
-							mes "[Elgo]";
-							mes "If you want to dye it yellow, bring me ^4d4dff1 yellow Dyestuffs^000000.";
+							mes("[Elgo]");
+							mes("If you want to dye it yellow, bring me ^4d4dff1 yellow Dyestuffs^000000.");
 							close;
 						case 2:
 							if(countitem(Cobaltblue_Dyestuffs) > 0) {
-								mes "[Elgo]";
-								mes "Cool blue!!";
-								mes "Let's do it!";
+								mes("[Elgo]");
+								mes("Cool blue!!");
+								mes("Let's do it!");
 								next;
-								mes "- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -";
+								mes("- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -");
 								next;
-								mes "[Elgo]";
-								mes ".. Hmm..";
-								mes "This should do it.";
-								mes "What do you think?";
-								mes "Did this color came out nicely?";
+								mes("[Elgo]");
+								mes(".. Hmm..");
+								mes("This should do it.");
+								mes("What do you think?");
+								mes("Did this color came out nicely?");
 								delitem 5441,1;
 								delitem 978,1;
 								getitem 5440,1;
 								close;
 							}
-							mes "[Elgo]";
-							mes "If you want to dye it blue, bring me ^4d4dff1 Blue Dyestuffs^000000.";
+							mes("[Elgo]");
+							mes("If you want to dye it blue, bring me ^4d4dff1 Blue Dyestuffs^000000.");
 							close;
 						case 3:
 							if(countitem(Scarlet_Dyestuffs) > 0) {
-								mes "[Elgo]";
-								mes "Cute Red!";
-								mes "Let's do it!";
+								mes("[Elgo]");
+								mes("Cute Red!");
+								mes("Let's do it!");
 								next;
-								mes "- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -";
+								mes("- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -");
 								next;
-								mes "[Elgo]";
-								mes ".. Hmm..";
-								mes "This should do it.";
-								mes "What do you think?";
-								mes "Did this color came out nicely?";
+								mes("[Elgo]");
+								mes(".. Hmm..");
+								mes("This should do it.");
+								mes("What do you think?");
+								mes("Did this color came out nicely?");
 								delitem 5441,1;
 								delitem 975,1;
 								getitem 5439,1;
 								close;
 							}
-							mes "[Elgo]";
-							mes "If you want to dye it red, bring me ^4d4dff1 Red Dyestuffs^000000.";
+							mes("[Elgo]");
+							mes("If you want to dye it red, bring me ^4d4dff1 Red Dyestuffs^000000.");
 							close;
 						case 4:
 							if(countitem(Darkgreen_Dyestuffs) > 0) {
-								mes "[Elgo]";
-								mes "Nature's Green!";
-								mes "Let's do it!";
+								mes("[Elgo]");
+								mes("Nature's Green!");
+								mes("Let's do it!");
 								next;
-								mes "- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -";
+								mes("- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -");
 								next;
-								mes "[Elgo]";
-								mes ".. Hmm..";
-								mes "This should do it.";
-								mes "What do you think?";
-								mes "Did this color came out nicely?";
+								mes("[Elgo]");
+								mes(".. Hmm..");
+								mes("This should do it.");
+								mes("What do you think?");
+								mes("Did this color came out nicely?");
 								delitem 5441,1;
 								delitem 979,1;
 								getitem 5438,1;
 								close;
 							}
-							mes "[Elgo]";
-							mes "If you want to dye it green, bring me ^4d4dff1 Green Dyestuffs^000000.";
+							mes("[Elgo]");
+							mes("If you want to dye it green, bring me ^4d4dff1 Green Dyestuffs^000000.");
 							close;
 						}
 					}
-					mes "[Elgo]";
-					mes "You want to dye a white Cute Ribbon, right?";
-					mes "But you don't even have one.";
+					mes("[Elgo]");
+					mes("You want to dye a white Cute Ribbon, right?");
+					mes("But you don't even have one.");
 					close;
 				case 3:
 					if(countitem(Fillet_Blue) > 0) {
-						mes "[Elgo]";
-						mes "Ok Ok, This blue Cute Ribbon, huh?";
-						mes "What color do you want it to be dyed?";
+						mes("[Elgo]");
+						mes("Ok Ok, This blue Cute Ribbon, huh?");
+						mes("What color do you want it to be dyed?");
 						next;
 						switch(select("White", "Yellow", "Red", "Green")) {
 						case 1:
 							if(countitem(White_Dyestuffs) > 0) {
-								mes "[Elgo]";
-								mes "Wow, pure and innocent white!";
-								mes "Ok, let's do it.";
+								mes("[Elgo]");
+								mes("Wow, pure and innocent white!");
+								mes("Ok, let's do it.");
 								next;
-								mes "- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -";
+								mes("- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -");
 								next;
-								mes "[Elgo]";
-								mes ".. Hmm..";
-								mes "This should do it.";
-								mes "What do you think?";
-								mes "Did this color came out nicely?";
+								mes("[Elgo]");
+								mes(".. Hmm..");
+								mes("This should do it.");
+								mes("What do you think?");
+								mes("Did this color came out nicely?");
 								delitem 5440,1;
 								delitem 982,1;
 								getitem 5441,1;
 								close;
 							}
-							mes "[Elgo]";
-							mes "If you want to dye it white, bring me ^4d4dff1 White Dyestuffs^000000.";
+							mes("[Elgo]");
+							mes("If you want to dye it white, bring me ^4d4dff1 White Dyestuffs^000000.");
 							close;
 						case 2:
 							if(countitem(Lemon_Dyestuffs) > 0) {
-								mes "[Elgo]";
-								mes "Basic Yellow!";
-								mes "Let's do it!";
+								mes("[Elgo]");
+								mes("Basic Yellow!");
+								mes("Let's do it!");
 								next;
-								mes "- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -";
+								mes("- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -");
 								next;
-								mes "[Elgo]";
-								mes ".. Hmm..";
-								mes "This should do it.";
-								mes "What do you think?";
-								mes "Did this color came out nicely?";
+								mes("[Elgo]");
+								mes(".. Hmm..");
+								mes("This should do it.");
+								mes("What do you think?");
+								mes("Did this color came out nicely?");
 								delitem 5440,1;
 								delitem 976,1;
 								getitem 2250,1;
 								close;
 							}
-							mes "[Elgo]";
-							mes "If you want to dye it yellow, bring me ^4d4dff1 yellow Dyestuffs^000000.";
+							mes("[Elgo]");
+							mes("If you want to dye it yellow, bring me ^4d4dff1 yellow Dyestuffs^000000.");
 							close;
 						case 3:
 							if(countitem(Scarlet_Dyestuffs) > 0) {
-								mes "[Elgo]";
-								mes "Cute Red!";
-								mes "Let's do it!";
+								mes("[Elgo]");
+								mes("Cute Red!");
+								mes("Let's do it!");
 								next;
-								mes "- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -";
+								mes("- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -");
 								next;
-								mes "[Elgo]";
-								mes ".. Hmm..";
-								mes "This should do it.";
-								mes "What do you think?";
-								mes "Did this color came out nicely?";
+								mes("[Elgo]");
+								mes(".. Hmm..");
+								mes("This should do it.");
+								mes("What do you think?");
+								mes("Did this color came out nicely?");
 								delitem 5440,1;
 								delitem 975,1;
 								getitem 5439,1;
 								close;
 							}
-							mes "[Elgo]";
-							mes "If you want to dye it red, bring me ^4d4dff1 Red Dyestuffs^000000.";
+							mes("[Elgo]");
+							mes("If you want to dye it red, bring me ^4d4dff1 Red Dyestuffs^000000.");
 							close;
 						case 4:
 							if(countitem(Darkgreen_Dyestuffs) > 0) {
-								mes "[Elgo]";
-								mes "Nature's Green!";
-								mes "Let's do it!";
+								mes("[Elgo]");
+								mes("Nature's Green!");
+								mes("Let's do it!");
 								next;
-								mes "- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -";
+								mes("- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -");
 								next;
-								mes "[Elgo]";
-								mes ".. Hmm..";
-								mes "This should do it.";
-								mes "What do you think?";
-								mes "Did this color came out nicely?";
+								mes("[Elgo]");
+								mes(".. Hmm..");
+								mes("This should do it.");
+								mes("What do you think?");
+								mes("Did this color came out nicely?");
 								delitem 5440,1;
 								delitem 979,1;
 								getitem 5438,1;
 								close;
 							}
-							mes "[Elgo]";
-							mes "If you want to dye it green, bring me ^4d4dff1 Green Dyestuffs^000000.";
+							mes("[Elgo]");
+							mes("If you want to dye it green, bring me ^4d4dff1 Green Dyestuffs^000000.");
 							close;
 						}
 					}
-					mes "[Elgo]";
-					mes "You want to dye a blue Cute Ribbon, right?";
-					mes "But you don't even have one.";
+					mes("[Elgo]");
+					mes("You want to dye a blue Cute Ribbon, right?");
+					mes("But you don't even have one.");
 					close;
 				case 4:
 					if(countitem(Fillet_Red) > 0) {
-						mes "[Elgo]";
-						mes "Ok Ok, This Red Cute Ribbon, huh?";
-						mes "What color do you want it to be dyed?";
+						mes("[Elgo]");
+						mes("Ok Ok, This Red Cute Ribbon, huh?");
+						mes("What color do you want it to be dyed?");
 						next;
 						switch(select("White", "Blue", "Yellow", "Green")){
 						case 1:
 							if (countitem(White_Dyestuffs) > 0){
-								mes "[Elgo]";
-								mes "Wow, pure and innocent white!";
-								mes "Ok, let's do it.";
+								mes("[Elgo]");
+								mes("Wow, pure and innocent white!");
+								mes("Ok, let's do it.");
 								next;
-								mes "- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -";
+								mes("- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -");
 								next;
-								mes "[Elgo]";
-								mes ".. Hmm..";
-								mes "This should do it.";
-								mes "What do you think?";
-								mes "Did this color came out nicely?";
+								mes("[Elgo]");
+								mes(".. Hmm..");
+								mes("This should do it.");
+								mes("What do you think?");
+								mes("Did this color came out nicely?");
 								delitem 5439,1;
 								delitem 982,1;
 								getitem 5441,1;
 								close;
 							}
-							mes "[Elgo]";
-							mes "If you want to dye it white, bring me ^4d4dff1 White Dyestuffs^000000.";
+							mes("[Elgo]");
+							mes("If you want to dye it white, bring me ^4d4dff1 White Dyestuffs^000000.");
 							close;
 						case 2:
 							if(countitem(Cobaltblue_Dyestuffs) > 0) {
-								mes "[Elgo]";
-								mes "Cool blue!!";
-								mes "Let's do it!";
+								mes("[Elgo]");
+								mes("Cool blue!!");
+								mes("Let's do it!");
 								next;
-								mes "- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -";
+								mes("- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -");
 								next;
-								mes "[Elgo]";
-								mes ".. Hmm..";
-								mes "This should do it.";
-								mes "What do you think?";
-								mes "Did this color came out nicely?";
+								mes("[Elgo]");
+								mes(".. Hmm..");
+								mes("This should do it.");
+								mes("What do you think?");
+								mes("Did this color came out nicely?");
 								delitem 5439,1;
 								delitem 978,1;
 								getitem 5440,1;
 								close;
 							}
-							mes "[Elgo]";
-							mes "If you want to dye it blue, bring me ^4d4dff1 Blue Dyestuffs^000000.";
+							mes("[Elgo]");
+							mes("If you want to dye it blue, bring me ^4d4dff1 Blue Dyestuffs^000000.");
 							close;
 						case 3:
 							if(countitem(Lemon_Dyestuffs) > 0) {
-								mes "[Elgo]";
-								mes "Basic Yellow!";
-								mes "Let's do it!";
+								mes("[Elgo]");
+								mes("Basic Yellow!");
+								mes("Let's do it!");
 								next;
-								mes "- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -";
+								mes("- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -");
 								next;
-								mes "[Elgo]";
-								mes ".. Hmm..";
-								mes "This should do it.";
-								mes "What do you think?";
-								mes "Did this color came out nicely?";
+								mes("[Elgo]");
+								mes(".. Hmm..");
+								mes("This should do it.");
+								mes("What do you think?");
+								mes("Did this color came out nicely?");
 								delitem 5439,1;
 								delitem 976,1;
 								getitem 2250,1;
 								close;
 							}
-							mes "[Elgo]";
-							mes "If you want to dye it yellow, bring me ^4d4dff1 yellow Dyestuffs^000000.";
+							mes("[Elgo]");
+							mes("If you want to dye it yellow, bring me ^4d4dff1 yellow Dyestuffs^000000.");
 							close;
 						case 4:
 							if(countitem(Darkgreen_Dyestuffs) > 0) {
-								mes "[Elgo]";
-								mes "Nature's Green!";
-								mes "Let's do it!";
+								mes("[Elgo]");
+								mes("Nature's Green!");
+								mes("Let's do it!");
 								next;
-								mes "- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -";
+								mes("- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -");
 								next;
-								mes "[Elgo]";
-								mes ".. Hmm..";
-								mes "This should do it.";
-								mes "What do you think?";
-								mes "Did this color came out nicely?";
+								mes("[Elgo]");
+								mes(".. Hmm..");
+								mes("This should do it.");
+								mes("What do you think?");
+								mes("Did this color came out nicely?");
 								delitem 5439,1;
 								delitem 979,1;
 								getitem 5438,1;
 								close;
 							}
-							mes "[Elgo]";
-							mes "If you want to dye it green, bring me ^4d4dff1 Green Dyestuffs^000000.";
+							mes("[Elgo]");
+							mes("If you want to dye it green, bring me ^4d4dff1 Green Dyestuffs^000000.");
 							close;
 						}
 					}
-					mes "[Elgo]";
-					mes "You want to dye a red Cute Ribbon, right?";
-					mes "But you don't even have one.";
+					mes("[Elgo]");
+					mes("You want to dye a red Cute Ribbon, right?");
+					mes("But you don't even have one.");
 					close;
 				case 5:
 					if(countitem(Fillet_Green) > 0) {
-						mes "[Elgo]";
-						mes "Ok Ok, This Green Cute Ribbon, huh?";
-						mes "What color do you want it to be dyed?";
+						mes("[Elgo]");
+						mes("Ok Ok, This Green Cute Ribbon, huh?");
+						mes("What color do you want it to be dyed?");
 						next;
 						switch(select("White", "Blue", "Red", "Yellow")) {
 						case 1:
 							if(countitem(White_Dyestuffs) > 0) {
-								mes "[Elgo]";
-								mes "Wow, pure and innocent white!";
-								mes "Ok, let's do it.";
+								mes("[Elgo]");
+								mes("Wow, pure and innocent white!");
+								mes("Ok, let's do it.");
 								next;
-								mes "- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -";
+								mes("- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -");
 								next;
-								mes "[Elgo]";
-								mes ".. Hmm..";
-								mes "This should do it.";
-								mes "What do you think?";
-								mes "Did this color came out nicely?";
+								mes("[Elgo]");
+								mes(".. Hmm..");
+								mes("This should do it.");
+								mes("What do you think?");
+								mes("Did this color came out nicely?");
 								delitem 5438,1;
 								delitem 982,1;
 								getitem 5441,1;
 								close;
 							}
-							mes "[Elgo]";
-							mes "If you want to dye it white, bring me ^4d4dff1 White Dyestuffs^000000.";
+							mes("[Elgo]");
+							mes("If you want to dye it white, bring me ^4d4dff1 White Dyestuffs^000000.");
 							close;
 						case 2:
 							if(countitem(Cobaltblue_Dyestuffs) > 0) {
-								mes "[Elgo]";
-								mes "Cool blue!!";
-								mes "Let's do it!";
+								mes("[Elgo]");
+								mes("Cool blue!!");
+								mes("Let's do it!");
 								next;
-								mes "- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -";
+								mes("- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -");
 								next;
-								mes "[Elgo]";
-								mes ".. Hmm..";
-								mes "This should do it.";
-								mes "What do you think?";
-								mes "Did this color came out nicely?";
+								mes("[Elgo]");
+								mes(".. Hmm..");
+								mes("This should do it.");
+								mes("What do you think?");
+								mes("Did this color came out nicely?");
 								delitem 5438,1;
 								delitem 978,1;
 								getitem 5440,1;
 								close;
 							}
-							mes "[Elgo]";
-							mes "If you want to dye it blue, bring me ^4d4dff1 Blue Dyestuffs^000000.";
+							mes("[Elgo]");
+							mes("If you want to dye it blue, bring me ^4d4dff1 Blue Dyestuffs^000000.");
 							close;
 						case 3:
 							if(countitem(Scarlet_Dyestuffs) > 0) {
-								mes "[Elgo]";
-								mes "Cute Red!";
-								mes "Let's do it!";
+								mes("[Elgo]");
+								mes("Cute Red!");
+								mes("Let's do it!");
 								next;
-								mes "- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -";
+								mes("- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -");
 								next;
-								mes "[Elgo]";
-								mes ".. Hmm..";
-								mes "This should do it.";
-								mes "What do you think?";
-								mes "Did this color came out nicely?";
+								mes("[Elgo]");
+								mes(".. Hmm..");
+								mes("This should do it.");
+								mes("What do you think?");
+								mes("Did this color came out nicely?");
 								delitem 5438,1;
 								delitem 975,1;
 								getitem 5439,1;
 								close;
 							}
-							mes "[Elgo]";
-							mes "If you want to dye it red, bring me ^4d4dff1 Red Dyestuffs^000000.";
+							mes("[Elgo]");
+							mes("If you want to dye it red, bring me ^4d4dff1 Red Dyestuffs^000000.");
 							close;
 						case 4:
 							if(countitem(Lemon_Dyestuffs) > 0) {
-								mes "[Elgo]";
-								mes "Basic Yellow!";
-								mes "Let's do it!";
+								mes("[Elgo]");
+								mes("Basic Yellow!");
+								mes("Let's do it!");
 								next;
-								mes "- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -";
+								mes("- Elgo starts to dissolve dyes and chemicals in water, then he begins to dye the Cute Ribbon. -");
 								next;
-								mes "[Elgo]";
-								mes ".. Hmm..";
-								mes "This should do it.";
-								mes "What do you think?";
-								mes "Did this color came out nicely?";
+								mes("[Elgo]");
+								mes(".. Hmm..");
+								mes("This should do it.");
+								mes("What do you think?");
+								mes("Did this color came out nicely?");
 								delitem 5438,1;
 								delitem 976,1;
 								getitem 250,1;
 								close;
 							}
-							mes "[Elgo]";
-							mes "If you want to dye it yellow, bring me ^4d4dff1 yellow Dyestuffs^000000.";
+							mes("[Elgo]");
+							mes("If you want to dye it yellow, bring me ^4d4dff1 yellow Dyestuffs^000000.");
 							close;
 						}
 					}
-					mes "[Elgo]";
-					mes "You want to dye a Green Cute Ribbon, right?";
-					mes "But you don't even have one.";
+					mes("[Elgo]");
+					mes("You want to dye a Green Cute Ribbon, right?");
+					mes("But you don't even have one.");
 					close;
 				case 6:
-					mes "["+strcharinfo(PC_NAME)+"]";
-					mes "Ah, I'm not sure this time. I will come back next time.";
-					mes "Take Care.";
+					mes("["+strcharinfo(PC_NAME)+"]");
+					mes("Ah, I'm not sure this time. I will come back next time.");
+					mes("Take Care.");
 					next;
-					mes "[Elgo]";
-					mes "Ok. It's fine. I will see you later~ Bye Bye~!";
+					mes("[Elgo]");
+					mes("Ok. It's fine. I will see you later~ Bye Bye~!");
 					close;
 				}
 			case 2:
-				mes "["+strcharinfo(PC_NAME)+"]";
-				mes "Hmm, I will bring you one next time.";
-				mes "Take Care.";
+				mes("["+strcharinfo(PC_NAME)+"]");
+				mes("Hmm, I will bring you one next time.");
+				mes("Take Care.");
 				next;
-				mes "[Elgo]";
-				mes "Ok, Good bye!";
+				mes("[Elgo]");
+				mes("Ok, Good bye!");
 				close;
 			}
 		}
 	case 2:
-		mes "[Elgo]";
-		mes "Uh..Would you please leave?";
-		mes "I need to get back to work...";
+		mes("[Elgo]");
+		mes("Uh..Would you please leave?");
+		mes("I need to get back to work...");
 		close;
 	}
 }
@@ -772,68 +772,68 @@ morocc_in,137,102,5	script	Trainee#2008hat01	4_KID01,{
 in_orcs01,119,106,3	script	Orc Lady#2008hat03	ORC_LADY,2,2,{
 
 OnTouch:
-	mes "["+strcharinfo(PC_NAME)+"]";
-	mes "This Orc Lady is absorbed in something.";
-	mes "I don't know what she's making...but she wouldn't notice me even I walk up on her.";
+	mes("["+strcharinfo(PC_NAME)+"]");
+	mes("This Orc Lady is absorbed in something.");
+	mes("I don't know what she's making...but she wouldn't notice me even I walk up on her.");
 	next;
-	mes "["+strcharinfo(PC_NAME)+"]";
-	mes "Should I talk to her?...Uh..Do we even understand eachother?";
+	mes("["+strcharinfo(PC_NAME)+"]");
+	mes("Should I talk to her?...Uh..Do we even understand eachother?");
 	next;
-	mes "THe Orc Lady suddenly turns around looking surprised.";
-	mes "A Maneater Blossom fell on the ground out of her hands.";
+	mes("THe Orc Lady suddenly turns around looking surprised.");
+	mes("A Maneater Blossom fell on the ground out of her hands.");
 	next;
 	switch(select("Pick up the flowers for Orc Lady.", "Run away!")) {
 	case 1:
-		mes "[Orc Lady]";
-		mes ".. ...";
-		mes "Adventurer with weapon helps Orc?";
-		mes "You weirdo.";
-		mes "My name is Aite-Nah-Zir-Be.";
+		mes("[Orc Lady]");
+		mes(".. ...");
+		mes("Adventurer with weapon helps Orc?");
+		mes("You weirdo.");
+		mes("My name is Aite-Nah-Zir-Be.");
 		next;
-		mes "["+strcharinfo(PC_NAME)+"]";
-		mes "Surprisingly the Orc Lady introduced herself to me.";
-		mes "How should I react?";
+		mes("["+strcharinfo(PC_NAME)+"]");
+		mes("Surprisingly the Orc Lady introduced herself to me.");
+		mes("How should I react?");
 		next;
 		switch(select("Ask her what she was up to.", "Say good bye.")){
 		case 1:
-			mes "[Aite]";
-			mes "I'm making a Corolla.";
-			mes "Weaving the flower...with a ribbon..";
-			mes "Brides...wear...Corollas..";
+			mes("[Aite]");
+			mes("I'm making a Corolla.");
+			mes("Weaving the flower...with a ribbon..");
+			mes("Brides...wear...Corollas..");
 			next;
 			select("Would you make one for me?");
 			if((countitem(Silk_Ribbon) > 0) && (countitem(Blossom_Of_Maneater) > 999)) {
-				mes "[Aite]";
-				mes ".. Materials..you..have..";
-				mes "..Too much time to make one.";
+				mes("[Aite]");
+				mes(".. Materials..you..have..");
+				mes("..Too much time to make one.");
 				next;
-				mes "[Aite]";
-				mes "Trade with you.. the one I just made.";
-				mes "But you, weirdo.";
-				mes "You humans are hard...to...understand.";
+				mes("[Aite]");
+				mes("Trade with you.. the one I just made.");
+				mes("But you, weirdo.");
+				mes("You humans are hard...to...understand.");
 				delitem 10007,1;
 				delitem 1032,1000;
 				getitem 5436,1;
 				close;
 			}
-			mes "[Aite]";
-			mes "I need... Silk... Ribbon.";
-			mes "1,000 Maneater Blossoms..";
-			mes "Bring me....";
+			mes("[Aite]");
+			mes("I need... Silk... Ribbon.");
+			mes("1,000 Maneater Blossoms..");
+			mes("Bring me....");
 			next;
-			mes "["+strcharinfo(PC_NAME)+"]";
-			mes "(^4d4dff Silk Ribbon and 1,000 Maneater Blossoms^000000, huh..)";
-			mes "Got it. I will go and bring back the materials.";
+			mes("["+strcharinfo(PC_NAME)+"]");
+			mes("(^4d4dff Silk Ribbon and 1,000 Maneater Blossoms^000000, huh..)");
+			mes("Got it. I will go and bring back the materials.");
 			close;
 		case 2:
-			mes "["+strcharinfo(PC_NAME)+"]";
-			mes "I nodded goodbye to her with a smile on my face saying nothing.";
-			mes "She nodded back to be as if she understood that was my good bye.";
+			mes("["+strcharinfo(PC_NAME)+"]");
+			mes("I nodded goodbye to her with a smile on my face saying nothing.");
+			mes("She nodded back to be as if she understood that was my good bye.");
 			close;
 		}
 	case 2:
-		mes "["+strcharinfo(PC_NAME)+"]";
-		mes "Let's run away while she's still in shock.";
+		mes("["+strcharinfo(PC_NAME)+"]");
+		mes("Let's run away while she's still in shock.");
 		close2;
 		warp "gef_fild10",223,203;
 		end;

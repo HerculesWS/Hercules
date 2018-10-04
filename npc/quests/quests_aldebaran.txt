@@ -37,24 +37,24 @@
 
 //== 'Doctor Band', 'Feather Bonnet', 'Opera Masque', 'Sakkat Hat' Quest =
 aldeba_in,152,166,4	script	Trader#01	4_M_04,{
-	mes "[Trader]";
-	mes "Who is this mysterious man?";
-	mes "I, the enigmatic and debonair 'Trader?'";
+	mes("[Trader]");
+	mes("Who is this mysterious man?");
+	mes("I, the enigmatic and debonair 'Trader?'");
 	next;
-	mes "[Trader]";
-	mes "Traveling about the Rune-Midgard Continent, with all of his wonderful hats? Nobody knows...";
+	mes("[Trader]");
+	mes("Traveling about the Rune-Midgard Continent, with all of his wonderful hats? Nobody knows...");
 	next;
-	mes "[Trader]";
-	mes "For what purpose do I collect and trade these hats from all around the world? Choose a hat, get closer to unraveling the mystery...";
+	mes("[Trader]");
+	mes("For what purpose do I collect and trade these hats from all around the world? Choose a hat, get closer to unraveling the mystery...");
 	next;
-	mes " (1) ^3355FFDoctor Band^000000:";
-	mes "1 Red Bandana + 50 Irons + 1 Cracked Diamond + 3500 Zeny";
-	mes " (2)^3355FFFeather Bonnet^000000:";
-	mes "1 Romantic Gent + 300 Feather of Birds + 500 Zeny";
-	mes " (3) ^3355FFPhantom of Opera^000000:";
-	mes "20 Iron + 1 Singing Plant + 5000 Zeny ";
-	mes " (4) ^3355FFSakkat^000000:";
-	mes "120 Trunks + 10000 Zeny ";
+	mes(" (1) ^3355FFDoctor Band^000000:");
+	mes("1 Red Bandana + 50 Irons + 1 Cracked Diamond + 3500 Zeny");
+	mes(" (2)^3355FFFeather Bonnet^000000:");
+	mes("1 Romantic Gent + 300 Feather of Birds + 500 Zeny");
+	mes(" (3) ^3355FFPhantom of Opera^000000:");
+	mes("20 Iron + 1 Singing Plant + 5000 Zeny ");
+	mes(" (4) ^3355FFSakkat^000000:");
+	mes("120 Trunks + 10000 Zeny ");
 	next;
 	switch(select(" Doctor Band ", " Feather Bonnet ", " Phantom of Opera ", " Sakkat ")) {
 	case 1:
@@ -63,19 +63,19 @@ aldeba_in,152,166,4	script	Trader#01	4_M_04,{
 			delitem Iron,50;
 			delitem Crystal_Jewel___,1;
 			Zeny -= 3500;
-			mes "[Trader]";
-			mes "Hm! You don't have a medical license, do you? It's alright, I've heard about a rogue, unlicensed physician who performed medical miracles! But... That might have been a comic book.";
+			mes("[Trader]");
+			mes("Hm! You don't have a medical license, do you? It's alright, I've heard about a rogue, unlicensed physician who performed medical miracles! But... That might have been a comic book.");
 			next;
-			mes "[Trader]";
-			mes "Oh whatever. Just don't get caught.";
+			mes("[Trader]");
+			mes("Oh whatever. Just don't get caught.");
 			getitem Doctor_Cap,1;
 			close;
 		}
 		else {
-			mes "[Trader]";
-			mes "You guy~";
-			mes "Check the requirements again.";
-			mes "You don't look like an idiot though. So c'mon man, get real.";
+			mes("[Trader]");
+			mes("You guy~");
+			mes("Check the requirements again.");
+			mes("You don't look like an idiot though. So c'mon man, get real.");
 			close;
 		}
 	case 2:
@@ -83,15 +83,15 @@ aldeba_in,152,166,4	script	Trader#01	4_M_04,{
 			delitem Oldmans_Romance,1;
 			delitem Feather_Of_Birds,300;
 			Zeny -= 500;
-			mes "[Trader]";
-			mes "Ooh~! You have good fashion sense. I know you've had a hard time collecting this stuff, but this hat is worth it. Take it. All you need now is a fur coat and a cane!";
+			mes("[Trader]");
+			mes("Ooh~! You have good fashion sense. I know you've had a hard time collecting this stuff, but this hat is worth it. Take it. All you need now is a fur coat and a cane!");
 			getitem Feather_Bonnet,1;
 			close;
 		}
 		else {
-			mes "[Trader]";
-			mes "You guy~";
-			mes "Go check my requirements again. You don't look like an idiot though. C'mon man, get real.";
+			mes("[Trader]");
+			mes("You guy~");
+			mes("Go check my requirements again. You don't look like an idiot though. C'mon man, get real.");
 			close;
 		}
 	case 3:
@@ -99,31 +99,31 @@ aldeba_in,152,166,4	script	Trader#01	4_M_04,{
 			delitem Iron,20;
 			delitem Singing_Plant,1;
 			Zeny -= 5000;
-			mes "[Trader]";
-			mes "This one? It's a little bit scary, though it has some sort of romantic quality. What do you think? You like it? Alright, take it, it's yours!";
+			mes("[Trader]");
+			mes("This one? It's a little bit scary, though it has some sort of romantic quality. What do you think? You like it? Alright, take it, it's yours!");
 			getitem Phantom_Of_Opera,1;
 			close;
 		}
 		else {
-			mes "[Trader]";
-			mes "Buffoon. Go check the requirements again. ^3355FFPhantom of Opera^000000 isn't easy to come by. So c'mon man, get real.";
+			mes("[Trader]");
+			mes("Buffoon. Go check the requirements again. ^3355FFPhantom of Opera^000000 isn't easy to come by. So c'mon man, get real.");
 			close;
 		}
 	case 4:
 		if ((countitem(Wooden_Block) > 119) && (Zeny > 9999)){ //Wooden_Block
 			delitem Wooden_Block,120;
 			Zeny -= 10000;
-			mes "[Trader]";
-			mes "If you have a chance to visit the Uplander Village, Payon, please go and meet the Sakkat Craftsman.";
+			mes("[Trader]");
+			mes("If you have a chance to visit the Uplander Village, Payon, please go and meet the Sakkat Craftsman.");
 			next;
-			mes "[Trader]";
-			mes "He's never sold Sakkat to Traders other than me, since only I can recognize its quality. Due to its rarity, Sakkat has become a very unique and exceptional product. Okay! Take it, it's yours!";
+			mes("[Trader]");
+			mes("He's never sold Sakkat to Traders other than me, since only I can recognize its quality. Due to its rarity, Sakkat has become a very unique and exceptional product. Okay! Take it, it's yours!");
 			getitem Sahkkat,1;
 			close;
 		}
 		else {
-			mes "[Trader]";
-			mes "MORON~ Check my requirements again. C'mon man, you don't look like an idiot, so get real~";
+			mes("[Trader]");
+			mes("MORON~ Check my requirements again. C'mon man, you don't look like an idiot, so get real~");
 			close;
 		}
 	}
