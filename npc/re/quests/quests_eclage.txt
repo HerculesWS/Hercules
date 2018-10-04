@@ -1455,8 +1455,8 @@ eclage,191,200,4	script	Yube#ep14_2	4_M_FAIRYKID5,{
 		next;
 		mes("[Yube]");
 		mes("Hmm, at least to summarize what everyone has said...");
-		mes("He's younger than me); 30 years age gap wtih both Glaces and Murah but Glaces and Murah are not the same age,";
-		mes("Shul's age is to add Moreng's age to my age of 100 years before); Shul is 2 years older than Glaces; the average age of me and Shul is Tato and Tato's age is 146, right?";
+		mes("He's younger than me; 30 years age gap wtih both Glaces and Murah but Glaces and Murah are not the same age,");
+		mes("Shul's age is to add Moreng's age to my age of 100 years before; Shul is 2 years older than Glaces; the average age of me and Shul is Tato and Tato's age is 146, right?");
 		emotion e_dots;
 		emotion e_dots,1;
 		cutin "war_y2",2;
@@ -8714,7 +8714,7 @@ ecl_in01,26,88,5	script	Cecilia#nk	4_F_FAIRYKID5,{
 				next;
 				mes("[Cecilia]");
 				mes("I hope you don't misunderstand us.");
-				mes("Most of the residents in Eclage);";
+				mes("Most of the residents in Eclage;");
 				mes("No, an absolute majority of the residents here are never against outsiders.");
 				next;
 				mes("[Cecilia]");
@@ -9049,7 +9049,7 @@ ecl_in01,82,84,4	script	Midgard Exploration#bok2	HIDDEN_NPC,{
 				next;
 				mes("Soon, they're going to reveal what have happened here and the story behind it. So, let's focus on the development of the situation.");
 				next;
-				mes("Anyway, there are a number of monsters living together in more than 10 regions); all in the upper and lower parts of Glast Heim.";
+				mes("Anyway, there are a number of monsters living together in more than 10 regions; all in the upper and lower parts of Glast Heim.");
 				next;
 				mes("More detailed geographic information on this region is...so limited that I want to just grab any urban engineer by the collar and start asking.");
 				break;

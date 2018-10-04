@@ -43,7 +43,7 @@ prt_in,38,104,4	script	Valerie	4_F_VALKYRIE,{
 		close;
 	}
 	mes("[Valerie]");
-	mes("I am Valerie); I help those with abnormalities. I am friends with Valkyrie.";
+	mes("I am Valerie; I help those with abnormalities. I am friends with Valkyrie.");
 	next;
 	mes("[Valerie]");
 	mes("If both abnormalities disappear then we must start the test over from scratch. What would you like to do?");

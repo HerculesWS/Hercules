@@ -525,9 +525,9 @@ mora,140,186,3	script	Raffle Philosopher	4_M_RAFLE_OLD,{
 		mes("- John Dewey -");
 		break;
 	case 8:
-		mes("We sow our thoughts, and we reap our actions);";
-		mes("we sow our actions, and we reap our habits);";
-		mes("we sow our habits, and we reap our characters);";
+		mes("We sow our thoughts, and we reap our actions;");
+		mes("we sow our actions, and we reap our habits;");
+		mes("we sow our habits, and we reap our characters;");
 		mes("we sow our characters, and we reap our destiny.");
 		mes("- Erasmus -");
 		break;
@@ -637,7 +637,7 @@ mora,140,186,3	script	Raffle Philosopher	4_M_RAFLE_OLD,{
 		break;
 	case 27:
 		mes("The superior man thinks always");
-		mes("of virtue); the common man";
+		mes("of virtue; the common man");
 		mes("thinks of comfort.");
 		mes("- Confucius -");
 		break;
@@ -670,7 +670,7 @@ mora,140,186,3	script	Raffle Philosopher	4_M_RAFLE_OLD,{
 		mes("- Osho Rajneesh -");
 		break;
 	case 33:
-		mes("The power of our unconscious mind is enormous);";
+		mes("The power of our unconscious mind is enormous;");
 		mes("what we cannot do in our conscious state");
 		mes("we can do with the help");
 		mes("of the unconscious mind");
@@ -698,7 +698,7 @@ mora,140,186,3	script	Raffle Philosopher	4_M_RAFLE_OLD,{
 		mes("- Helen Keller -");
 		break;
 	case 37:
-		mes("Alone we can do so little);";
+		mes("Alone we can do so little;");
 		mes("together we can do so much.");
 		mes("- Helen Keller -");
 		break;
@@ -708,7 +708,7 @@ mora,140,186,3	script	Raffle Philosopher	4_M_RAFLE_OLD,{
 		break;
 	case 39:
 		mes("We are, each of us");
-		mes("angels with only one wing);";
+		mes("angels with only one wing;");
 		mes("and we can only fly");
 		mes("by embracing one another.");
 		mes("- Luciano de Crescenzo -");
@@ -820,7 +820,7 @@ mora,140,186,3	script	Raffle Philosopher	4_M_RAFLE_OLD,{
 		break;
 	case 59:
 		mes("Laugh, and the world laughs");
-		mes("with you); weep, and";
+		mes("with you; weep, and");
 		mes("you weep alone.");
 		mes("- Ella Wheeler Wilcox -");
 		break;
@@ -874,7 +874,7 @@ mora,140,186,3	script	Raffle Philosopher	4_M_RAFLE_OLD,{
 		break;
 	case 68:
 		mes("True humor springs not more from the head than from the heart.");
-		mes("It is not contempt); its essence is love.";
+		mes("It is not contempt; its essence is love.");
 		mes("It issues not in laughter,");
 		mes("but in still smiles, which lie far deeper.");
 		mes("- Thomas Carlyle -");
@@ -891,7 +891,7 @@ mora,140,186,3	script	Raffle Philosopher	4_M_RAFLE_OLD,{
 		break;
 	case 70:
 		mes("My great hope is to laugh");
-		mes("as much as I cry);";
+		mes("as much as I cry;");
 		mes("to get my work done");
 		mes("and try to love somebody");
 		mes("and have the courage");

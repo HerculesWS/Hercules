@@ -110,7 +110,7 @@ moc_para01,34,178,3	script	Tutorial Instructor	4_M_KHMAN,{
 				mes("The ^006400Universal Silver Catalog^000000");
 				mes("can be obtained from ");
 				mes("the ^0000FFCatalogue Wizard^000000");
-				mes("that is located in South Prontera);";
+				mes("that is located in South Prontera.");
 				next;
 				mes("[Tutorial Instructor]");
 				mes("It only costs 200 zeny for one");
@@ -1546,7 +1546,7 @@ moc_para01,14,168,6	script	Map Expert	2_M_SAGE_OLD,{
 
 L_Info:
 	mes("[Map Expert]");
-	mes("A ^006400MAP^000000 shows you things that is much needed for travelling around the world); such as the lay of the land, major towns and fields and such. It's a very important tool!";
+	mes("A ^006400MAP^000000 shows you things that is much needed for travelling around the world; such as the lay of the land, major towns and fields and such. It's a very important tool!");
 	next;
 	mes("[Map Expert]");
 	mes("Because of this, it's more important than everything else that you know about ^006400MAP^000000s.");

@@ -6583,8 +6583,8 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 		next;
 		mes("[Cat Gamers Director]");
 		mes("Hmm... So the reason of our losing streak will be,");
-		mes("giving up too many points);";
-		mes("aggressive point betting);";
+		mes("giving up too many points;");
+		mes("aggressive point betting;");
 		mes("and players disappearing?");
 		malang_gamer = 2;
 		next;
