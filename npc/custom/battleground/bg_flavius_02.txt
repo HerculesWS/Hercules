@@ -273,17 +273,17 @@ bat_b02,390,13,5	script	Guillaume Vintenar#fl2	4_M_KY_HEAD,{
 	{
 		if( $@FlaviusBG2_Victory == Bat_Team )
 		{ // Victory
-			mes "[Swandery]";
-			mes "Blessed Guillaume!!";
-			mes "Let's enjoy our glorious victory!";
-			mes "" + strcharinfo(PC_NAME) + ", its a sign reflecting victory";
+			mes("[Swandery]");
+			mes("Blessed Guillaume!!");
+			mes("Let's enjoy our glorious victory!");
+			mes("" + strcharinfo(PC_NAME) + ", its a sign reflecting victory");
 			close2;
 			set .@reward, 9;
 		} else {
-			mes "[Swandery]";
-			mes "You lost, but you're dedicated to this battle.";
-			mes "This is a reward for your great dedication by Guillaume Marollo!";
-			mes "Just take this defeat a lesson, and later you would definitely learn.";
+			mes("[Swandery]");
+			mes("You lost, but you're dedicated to this battle.");
+			mes("This is a reward for your great dedication by Guillaume Marollo!");
+			mes("Just take this defeat a lesson, and later you would definitely learn.");
 			close2;
 			set .@reward, 3;
 		}
@@ -302,17 +302,17 @@ bat_b02,10,293,5	script	Croix Vintenar#fl2	4_M_CRU_HEAD,{
 	{
 		if( $@FlaviusBG2_Victory == Bat_Team )
 		{ // Victory
-			mes "[Swandery]";
-			mes "Blessed Croax!!";
-			mes "Let's enjoy our glorious victory!";
-			mes "" + strcharinfo(PC_NAME) + ", its a sign reflecting victory";
+			mes("[Swandery]");
+			mes("Blessed Croax!!");
+			mes("Let's enjoy our glorious victory!");
+			mes("" + strcharinfo(PC_NAME) + ", its a sign reflecting victory");
 			close2;
 			set .@reward, 9;
 		} else {
-			mes "[Swandery]";
-			mes "Oh, " + strcharinfo(PC_NAME) + ". Don't be sad.";
-			mes "Even though we didn't win, we did our best.";
-			mes "This is a Royal gift from Croix, and please don't forget this battle. We can win the next.";
+			mes("[Swandery]");
+			mes("Oh, " + strcharinfo(PC_NAME) + ". Don't be sad.");
+			mes("Even though we didn't win, we did our best.");
+			mes("This is a Royal gift from Croix, and please don't forget this battle. We can win the next.");
 			close2;
 			set .@reward, 3;
 		}
@@ -330,17 +330,17 @@ bat_b02,10,293,5	script	Croix Vintenar#fl2	4_M_CRU_HEAD,{
 // *********************************************************************
 
 bat_b02,390,13,5	script	Therapist in battle#fl22	4_F_SISTER,{
-	mes "[Therapist in battle]";
-	mes "Just close your eyes, and take a deep breathe.";
-	mes "You can be free from pain.";
+	mes("[Therapist in battle]");
+	mes("Just close your eyes, and take a deep breathe.");
+	mes("You can be free from pain.");
 	specialeffect(EF_HEAL, AREA, playerattached());
 	close;
 }
 
 bat_b02,10,293,5	script	Therapist in battle#fl21	4_F_SISTER,{
-	mes "[Therapist in battle]";
-	mes "Just close your eyes, and take a deep breathe.";
-	mes "You can be free from pain.";
+	mes("[Therapist in battle]");
+	mes("Just close your eyes, and take a deep breathe.");
+	mes("You can be free from pain.");
 	specialeffect(EF_HEAL, AREA, playerattached());
 	close;
 }

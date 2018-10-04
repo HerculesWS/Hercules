@@ -52,47 +52,47 @@ prontera,156,219,4	script	Cluckers	4_NFCOCK,{
 		}
 		end;
 	}
-	mes "[Cluckers]";
+	mes("[Cluckers]");
 	if (getgmlevel() >= .@GMAccess) {
-		mes "Cluck cluck! Cluuuuuck? ^FF0000~Hi GM " + strcharinfo(PC_NAME) + ", Wanna play today?~^000000";
-		mes "Cluck cluck... CLUCK! ^FF0000~Just tell me what to do!~^000000";
+		mes("Cluck cluck! Cluuuuuck? ^FF0000~Hi GM " + strcharinfo(PC_NAME) + ", Wanna play today?~^000000");
+		mes("Cluck cluck... CLUCK! ^FF0000~Just tell me what to do!~^000000");
 		next;
 		while(1) switch(select("Start Event", "Check Prize", "Set Prize", "Not today Cluckers")) {
 			case 1:
-				mes "[Cluckers]";
-				mes "CLUCK! ^FF0000~Sure thing!~^000000";
+				mes("[Cluckers]");
+				mes("CLUCK! ^FF0000~Sure thing!~^000000");
 				emotion 33;
 				close2;
 				announce "[Cluck! Cluck! Boom!] is about to start in Prontera!",bc_blue;
 				initnpctimer;
 				end;
 			case 2:
-				mes "[Cluckers]";
-				mes "Cluck, cluck cluck... Cluck! ^FF0000~The current prize is^000000 ^008000"+ $cluck_item_amount +" "+ getitemname($cluck_item_id) +".^000000";
+				mes("[Cluckers]");
+				mes("Cluck, cluck cluck... Cluck! ^FF0000~The current prize is^000000 ^008000"+ $cluck_item_amount +" "+ getitemname($cluck_item_id) +".^000000");
 				next;
 				break;
 			case 3:
-				mes "[Cluckers]";
-				mes "Cluck cluck? Cluck??? ^FF0000~What should the prize for winning be? Please input the ID.~^000000";
+				mes("[Cluckers]");
+				mes("Cluck cluck? Cluck??? ^FF0000~What should the prize for winning be? Please input the ID.~^000000");
 				input $cluck_item_id;
 				next;
-				mes "[Cluckers]";
-				mes "Cluck? cluuuck? ^FF0000~How many if this item should I give away?~^000000";
+				mes("[Cluckers]");
+				mes("Cluck? cluuuck? ^FF0000~How many if this item should I give away?~^000000");
 				input $cluck_item_amount;
 				next;
-				mes "[Cluckers]";
-				mes "Cluck cluck..? Cluck. ^FF0000~So, the prize is^000000 ^008000"+ $cluck_item_amount +" "+ getitemname($cluck_item_id) +"^000000? ^FF0000Great.~^000000";
+				mes("[Cluckers]");
+				mes("Cluck cluck..? Cluck. ^FF0000~So, the prize is^000000 ^008000"+ $cluck_item_amount +" "+ getitemname($cluck_item_id) +"^000000? ^FF0000Great.~^000000");
 				emotion 33;
 				next;
 				break;
 			case 4:
-				mes "[Cluckers]";
-				mes "Cluck cluck cluck...";
+				mes("[Cluckers]");
+				mes("Cluck cluck cluck...");
 				close;
 		}
 	}
-	mes "Cluck cluck! Cluuuuuck?";
-	mes "Cluck....";
+	mes("Cluck cluck! Cluuuuuck?");
+	mes("Cluck....");
 	close;
 
 OnTimer10000:

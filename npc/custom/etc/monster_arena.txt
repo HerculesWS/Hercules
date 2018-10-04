@@ -23,10 +23,10 @@
 
 // Entrance //
 prontera,158,193,6	script	Monster Arena	4_F_GON,{
-	mes "[Monster Arena]";
-	mes "Would you like to enter the Monster Arena?";
-	mes "Currently ^FF0000" + getmapusers("gon_test") + "^000000 players";
-	mes "^FF0000Note:^000000 Pecos, Falcons and Carts will be lost on entry.";
+	mes("[Monster Arena]");
+	mes("Would you like to enter the Monster Arena?");
+	mes("Currently ^FF0000" + getmapusers("gon_test") + "^000000 players");
+	mes("^FF0000Note:^000000 Pecos, Falcons and Carts will be lost on entry.");
 L_Menu:
 	next;
 	menu "Enter",-,"Information",L_Info,"Cancel",L_Exit;
@@ -38,32 +38,32 @@ L_Menu:
 	close;
 
 L_Exit:
-	mes "[Monster Arena]";
-	mes "Come back any time.";
+	mes("[Monster Arena]");
+	mes("Come back any time.");
 	close;
 
 L_Info:
-	mes "[Monster Arena]";
-	mes "You must purchase a pet from the Monster Tamer to start fighting.";
+	mes("[Monster Arena]");
+	mes("You must purchase a pet from the Monster Tamer to start fighting.");
 	next;
-	mes "[Monster Arena]";
-	mes "Then talk to the Usher and tell him you would like to compete.";
+	mes("[Monster Arena]");
+	mes("Then talk to the Usher and tell him you would like to compete.");
 	next;
-	mes "[Monster Arena]";
-	mes "Talk to the referee to summon your monster.";
-	mes "Once your monster has fought, you must talk to the Usher again and choose to spectate.";
+	mes("[Monster Arena]");
+	mes("Talk to the referee to summon your monster.");
+	mes("Once your monster has fought, you must talk to the Usher again and choose to spectate.");
 	next;
-	mes "[Monster Arena]";
-	mes "Talk to the Monster Trainer, he will ask you to heal your pet.";
+	mes("[Monster Arena]");
+	mes("Talk to the Monster Trainer, he will ask you to heal your pet.");
 	next;
-	mes "[Monster Arena]";
-	mes "To do this, click the Nurse repearedly until it says your pet is healed.";
+	mes("[Monster Arena]");
+	mes("To do this, click the Nurse repearedly until it says your pet is healed.");
 	next;
-	mes "[Monster Arena]";
-	mes "The more monsters you kill, the more exp you get and the quicker you can upgrade.";
+	mes("[Monster Arena]");
+	mes("The more monsters you kill, the more exp you get and the quicker you can upgrade.");
 	next;
-	mes "[Monster Arena]";
-	mes "The stronger your monster is, the longer it will take to summon again.";
+	mes("[Monster Arena]");
+	mes("The stronger your monster is, the longer it will take to summon again.");
 
 	goto L_Menu;
 }
@@ -102,33 +102,33 @@ function	script	monstersummon	{
 	end;
 
 L_Start:
-	mes "[Referee]";
-	mes "Your monster is:";
+	mes("[Referee]");
+	mes("Your monster is:");
 
 	// 2. ---Change to Add Monsters--- //
-	if (#monster == 10) mes "Poring";
-	if (#monster == 20) mes "Faber";
-	if (#monster == 30) mes "Lunatic";
-	if (#monster == 31) mes "Drops";
-	if (#monster == 32) mes "Picky";
-	if (#monster == 40) mes "ChonChon";
-	if (#monster == 41) mes "Super Picky";
-	if (#monster == 42) mes "Willow";
-	if (#monster == 50) mes "Roda Frog";
-	if (#monster == 51) mes "Condor";
-	if (#monster == 60) mes "Thief Bug Larva";
-	if (#monster == 70) mes "Savage Babe";
-	if (#monster == 80) mes "Familiar";
-	if (#monster == 81) mes "Hornet";
-	if (#monster == 90) mes "Desert Wolf Puppy";
-	if (#monster == 91) mes "Spore";
-	if (#monster == 92) mes "Rocker";
-	if (#monster == 100) mes "Skeleton";
-	if (#monster == 101) mes "Plankton";
-	if (#monster == 102) mes "Antonio";
-	if (#monster == 103) mes "Thief Bug Female";
+	if (#monster == 10) mes("Poring");
+	if (#monster == 20) mes("Faber");
+	if (#monster == 30) mes("Lunatic");
+	if (#monster == 31) mes("Drops");
+	if (#monster == 32) mes("Picky");
+	if (#monster == 40) mes("ChonChon");
+	if (#monster == 41) mes("Super Picky");
+	if (#monster == 42) mes("Willow");
+	if (#monster == 50) mes("Roda Frog");
+	if (#monster == 51) mes("Condor");
+	if (#monster == 60) mes("Thief Bug Larva");
+	if (#monster == 70) mes("Savage Babe");
+	if (#monster == 80) mes("Familiar");
+	if (#monster == 81) mes("Hornet");
+	if (#monster == 90) mes("Desert Wolf Puppy");
+	if (#monster == 91) mes("Spore");
+	if (#monster == 92) mes("Rocker");
+	if (#monster == 100) mes("Skeleton");
+	if (#monster == 101) mes("Plankton");
+	if (#monster == 102) mes("Antonio");
+	if (#monster == 103) mes("Thief Bug Female");
 
-	mes "Would you like to fight?";
+	mes("Would you like to fight?");
 	next;
 	menu "Fight",-,"Cancel",L_Exit;
 
@@ -189,8 +189,8 @@ Special5:
 	close;
 
 L_Exit:
-	mes "[Referee]";
-	mes "Alright";
+	mes("[Referee]");
+	mes("Alright");
 	close;
 }
 gon_test,56,91,6	duplicate(monsterreferee)	Referee#01	1_M_PUBMASTER
@@ -198,8 +198,8 @@ gon_test,56,91,6	duplicate(monsterreferee)	Referee#01	1_M_PUBMASTER
 // Usher //
 gon_test,58,94,6	script	Usher	4_M_04,{
 	set @marena,1;
-	mes "[Usher]";
-	mes "What would you like to do?";
+	mes("[Usher]");
+	mes("What would you like to do?");
 	next;
 	menu "^0000FFSpectate",L_Spec,"^FF0000Compete^000000",-,"Return to Town",L_Exit,"Cancel",L_Cancel;
 
@@ -259,13 +259,13 @@ L_Spec:
 	end;
 
 L_NoMon:
-	mes "[Usher]";
-	mes "You haven't got a monster, you can only spectate.";
+	mes("[Usher]");
+	mes("You haven't got a monster, you can only spectate.");
 	close;
 
 L_Heal:
-	mes "[Usher]";
-	mes "You have to heal your monster before you can fight again.";
+	mes("[Usher]");
+	mes("You have to heal your monster before you can fight again.");
 	close;
 
 L_Cancel:
@@ -274,85 +274,85 @@ L_Cancel:
 
 // Monster Trainer //
 gon_test,52,103,6	script	Monster Trainer	4_M_BARBER,{
-	mes "[Monster Trainer]";
+	mes("[Monster Trainer]");
 	if (#monster != 0) goto L_Mon;
 
-	mes "Welcome to the monster arena, would you like to start training?";
+	mes("Welcome to the monster arena, would you like to start training?");
 	next;
 	menu "Yes",-,"No",L_Exit;
 
-	mes "[Monster Trainer]";
-	mes "New trainers may only start with Porings.";
-	mes "They cost 1000z, Would you like to buy one?";
+	mes("[Monster Trainer]");
+	mes("New trainers may only start with Porings.");
+	mes("They cost 1000z, Would you like to buy one?");
 	next;
 	menu "Yes",-,"No",L_Exit;
 
 	if (Zeny < 1000) goto L_NoZeny;
 	Zeny -= 1000;
 	set #monster,10;
-	mes "[Monster Trainer]";
-	mes "Congratulations!";
-	mes "When your Poring earns enough experience, talk to me to upgrade.";
+	mes("[Monster Trainer]");
+	mes("Congratulations!");
+	mes("When your Poring earns enough experience, talk to me to upgrade.");
 	close;
 
 L_Mon:
-	mes "Welcome back, " + strcharinfo(PC_NAME) + ".";
-	mes "Your monster has " + #monpoints + " exp points.";
+	mes("Welcome back, " + strcharinfo(PC_NAME) + ".");
+	mes("Your monster has " + #monpoints + " exp points.");
 	next;
 	if (@fighting == 1) goto L_Heal;
 	menu "Upgrade Monster",L_Upgrade,"Sell Experience",L_Sell,"^FF0000Abandon Monster^000000",L_Abandon,"Cancel",L_Exit;
 
 L_Abandon:
-	mes "[Monster Trainer]";
-	mes "Are you sure you want to abandon your monster?";
+	mes("[Monster Trainer]");
+	mes("Are you sure you want to abandon your monster?");
 	next;
 	menu "Yes",-,"No",L_Exit;
 	set #monster,0;
 	set #monpoints,0;
-	mes "[Monster Trainer]";
-	mes "Monster released into the wild.";
+	mes("[Monster Trainer]");
+	mes("Monster released into the wild.");
 	close;
 
 L_Sell:
-	mes "[Monster Trainer]";
-	mes "You can sell your monster's experience for 100z each.";
+	mes("[Monster Trainer]");
+	mes("You can sell your monster's experience for 100z each.");
 	next;
 	menu "Sell",-,"Cancel",L_Exit;
-	mes "[Monster Trainer]";
-	mes "You have: ^FF0000" + #monpoints + "^000000 experience points";
-	mes "How many would you like to sell?";
+	mes("[Monster Trainer]");
+	mes("You have: ^FF0000" + #monpoints + "^000000 experience points");
+	mes("How many would you like to sell?");
 	next;
 	input @sellexp;
 	if (@sellexp > #monpoints) goto L_NoExp;
 	set #monpoints,#monpoints-@sellexp;
 	set @sellearn,100*@sellexp; // Price of exp
 	Zeny += @sellearn;
-	mes "[Monster Trainer]";
-	mes "You earned ^0000FF" + @sellearn + "^000000z.";
+	mes("[Monster Trainer]");
+	mes("You earned ^0000FF" + @sellearn + "^000000z.");
 	close;
 
 L_NoExp:
-	mes "[Monster Trainer]";
-	mes "You do not have enough experience.";
+	mes("[Monster Trainer]");
+	mes("You do not have enough experience.");
 	next;
 	goto L_Exit;
 
 	// Monster Upgrades //
 L_Upgrade:
-	mes "[Monster Trainer]";
+	mes("[Monster Trainer]");
 	// 3. ---Change to Add Monsters - May not be required--- //
-	if (#monster > 1 && #monster < 20) mes "You need 10 exp points to upgrade your monster.";
-	if (#monster > 19 && #monster < 30) mes "You need 20 exp points to upgrade your monster.";
-	if (#monster > 29 && #monster < 40) mes "You need 40 exp points to upgrade your monster.";
-	if (#monster > 39 && #monster < 50) mes "You need 80 exp points to upgrade your monster.";
-	if (#monster > 49 && #monster < 60) mes "You need 160 exp points to upgrade your monster.";
-	if (#monster > 59 && #monster < 70) mes "You need 320 exp points to upgrade your monster.";
-	if (#monster > 69 && #monster < 80) mes "You need 640 exp points to upgrade your monster.";
-	if (#monster > 79 && #monster < 90) mes "You need 1280 exp points to upgrade your monster.";
-	if (#monster > 89 && #monster < 100) mes "You need 2560 exp points to upgrade your monster.";
+	if (#monster > 1 && #monster < 20) mes("You need 10 exp points to upgrade your monster.");
+	if (#monster > 19 && #monster < 30) mes("You need 20 exp points to upgrade your monster.");
+	if (#monster > 29 && #monster < 40) mes("You need 40 exp points to upgrade your monster.");
+	if (#monster > 39 && #monster < 50) mes("You need 80 exp points to upgrade your monster.");
+	if (#monster > 49 && #monster < 60) mes("You need 160 exp points to upgrade your monster.");
+	if (#monster > 59 && #monster < 70) mes("You need 320 exp points to upgrade your monster.");
+	if (#monster > 69 && #monster < 80) mes("You need 640 exp points to upgrade your monster.");
+	if (#monster > 79 && #monster < 90) mes("You need 1280 exp points to upgrade your monster.");
+	if (#monster > 89 && #monster < 100) mes("You need 2560 exp points to upgrade your monster.");
 	next;
 	menu "Continue",-,"Cancel",L_Exit;
-	mes "[Monster Trainer]";
+	mes("[Monster Trainer]");
 
 	// 4. ---Change to Add Monsters - May not be required--- //
 	if (#monster > 1 && #monster < 20 && #monpoints > 9) goto L_Up1;
@@ -365,192 +365,192 @@ L_Upgrade:
 	if (#monster > 79 && #monster < 90 && #monpoints > 1279) goto L_Up8;
 	if (#monster > 89 && #monster < 100 && #monpoints > 2559) goto L_Up9;
 
-	mes "Unable to upgrade.";
+	mes("Unable to upgrade.");
 	close;
 
 	// 5. ---Change to Add Monsters--- //
 L_Up1:
 	set #monster,20;
 	set #monpoints,#monpoints-10;
-	mes "Upgraded to Fabre!";
+	mes("Upgraded to Fabre!");
 	close;
 
 L_Up2:
-	mes "Which monster would you like to upgrade to?";
+	mes("Which monster would you like to upgrade to?");
 	next;
 	menu "Lunatic",U_Lunatic,"Drops",U_Drops,"Picky",U_Picky;
 
 U_Drops:
 	set #monster,31;
 	set #monpoints,#monpoints-20;
-	mes "[Monster Trainer]";
-	mes "Upgraded to Drops!";
+	mes("[Monster Trainer]");
+	mes("Upgraded to Drops!");
 	close;
 
 U_Picky:
 	set #monster,32;
 	set #monpoints,#monpoints-20;
-	mes "[Monster Trainer]";
-	mes "Upgraded to Picky!";
+	mes("[Monster Trainer]");
+	mes("Upgraded to Picky!");
 	close;
 
 U_Lunatic:
 	set #monster,30;
 	set #monpoints,#monpoints-20;
-	mes "[Monster Trainer]";
-	mes "Upgraded to Lunatic!";
+	mes("[Monster Trainer]");
+	mes("Upgraded to Lunatic!");
 	close;
 
 L_Up3:
-	mes "Which monster would you like to upgrade to?";
+	mes("Which monster would you like to upgrade to?");
 	next;
 	menu "ChonChon",U_ChonChon,"Super Picky",U_SPicky,"Willow",U_Willow;
 
 U_ChonChon:
 	set #monster,40;
 	set #monpoints,#monpoints-40;
-	mes "[Monster Trainer]";
-	mes "Upgraded to ChonChon!";
+	mes("[Monster Trainer]");
+	mes("Upgraded to ChonChon!");
 	close;
 
 U_SPicky:
 	set #monster,41;
 	set #monpoints,#monpoints-40;
-	mes "[Monster Trainer]";
-	mes "Upgraded to Super Picky!";
+	mes("[Monster Trainer]");
+	mes("Upgraded to Super Picky!");
 	close;
 
 U_Willow:
 	set #monster,42;
 	set #monpoints,#monpoints-40;
-	mes "[Monster Trainer]";
-	mes "Upgraded to Willow!";
+	mes("[Monster Trainer]");
+	mes("Upgraded to Willow!");
 	close;
 
 L_Up4:
-	mes "Which monster would you like to upgrade to?";
+	mes("Which monster would you like to upgrade to?");
 	next;
 	menu "Condor",U_Condor,"Roda Frog",U_Roda;
 
 U_Condor:
 	set #monster,51;
 	set #monpoints,#monpoints-80;
-	mes "[Monster Trainer]";
-	mes "Upgraded to Condor!";
+	mes("[Monster Trainer]");
+	mes("Upgraded to Condor!");
 	close;
 
 U_Roda:
 	set #monster,50;
 	set #monpoints,#monpoints-80;
-	mes "[Monster Trainer]";
-	mes "Upgraded to Roda Frog!";
+	mes("[Monster Trainer]");
+	mes("Upgraded to Roda Frog!");
 	close;
 
 L_Up5:
 	set #monster,60;
 	set #monpoints,#monpoints-160;
-	mes "Upgraded to Thief Bug Larva!";
+	mes("Upgraded to Thief Bug Larva!");
 	close;
 
 L_Up6:
 	set #monster,70;
 	set #monpoints,#monpoints-320;
-	mes "Upgraded to Savage Babe!";
+	mes("Upgraded to Savage Babe!");
 	close;
 
 L_Up7:
-	mes "Which monster would you like to upgrade to?";
+	mes("Which monster would you like to upgrade to?");
 	next;
 	menu "Familiar",U_Familiar,"Hornet",U_Hornet;
 
 U_Hornet:
 	set #monster,81;
 	set #monpoints,#monpoints-640;
-	mes "[Monster Trainer]";
-	mes "Upgraded to Hornet!";
+	mes("[Monster Trainer]");
+	mes("Upgraded to Hornet!");
 	close;
 
 U_Familiar:
 	set #monster,80;
 	set #monpoints,#monpoints-640;
-	mes "[Monster Trainer]";
-	mes "Upgraded to Familiar!";
+	mes("[Monster Trainer]");
+	mes("Upgraded to Familiar!");
 	close;
 
 L_Up8:
-	mes "[Monster Trainer]";
-	mes "Which monster would you like to upgrade to?";
+	mes("[Monster Trainer]");
+	mes("Which monster would you like to upgrade to?");
 	next;
 	menu "Desert Wolf Puppy",U_Puppy,"Spore",U_Spore,"Rocker",U_Rocker;
 
 U_Spore:
 	set #monster,91;
 	set #monpoints,#monpoints-1280;
-	mes "[Monster Trainer]";
-	mes "Upgraded to Spore!";
+	mes("[Monster Trainer]");
+	mes("Upgraded to Spore!");
 	close;
 
 U_Rocker:
 	set #monster,92;
 	set #monpoints,#monpoints-1280;
-	mes "[Monster Trainer]";
-	mes "Upgraded to Rocker!";
+	mes("[Monster Trainer]");
+	mes("Upgraded to Rocker!");
 	close;
 
 U_Puppy:
 	set #monster,90;
 	set #monpoints,#monpoints-1280;
-	mes "[Monster Trainer]";
-	mes "Upgraded to Desert Wolf Puppy!";
+	mes("[Monster Trainer]");
+	mes("Upgraded to Desert Wolf Puppy!");
 	close;
 
 L_Up9:
-	mes "Which monster would you like to upgrade to?";
+	mes("Which monster would you like to upgrade to?");
 	next;
 	menu "Skeleton",U_Skeleton,"Antonio",U_Antonio,"Plankton",U_Plankton,"Thief Bug Female",U_ThiefFemale;
 
 U_Plankton:
 	set #monster,101;
 	set #monpoints,#monpoints-2560;
-	mes "[Monster Trainer]";
-	mes "Upgraded to Plankton!";
+	mes("[Monster Trainer]");
+	mes("Upgraded to Plankton!");
 	close;
 
 U_Antonio:
 	set #monster,102;
 	set #monpoints,#monpoints-2560;
-	mes "[Monster Trainer]";
-	mes "Upgraded to Antonio!";
+	mes("[Monster Trainer]");
+	mes("Upgraded to Antonio!");
 	close;
 
 U_ThiefFemale:
 	set #monster,103;
 	set #monpoints,#monpoints-2560;
-	mes "[Monster Trainer]";
-	mes "Upgraded to Thief Bug Female!";
+	mes("[Monster Trainer]");
+	mes("Upgraded to Thief Bug Female!");
 	close;
 
 U_Skeleton:
 	set #monster,100;
 	set #monpoints,#monpoints-2560;
-	mes "[Monster Trainer]";
-	mes "Upgraded to Skeleton!";
+	mes("[Monster Trainer]");
+	mes("Upgraded to Skeleton!");
 	close;
 
 L_NoZeny:
-	mes "[Monster Trainer]";
-	mes "You don't have enough zeny!";
+	mes("[Monster Trainer]");
+	mes("You don't have enough zeny!");
 	close;
 
 L_Exit:
-	mes "[Monster Trainer]";
-	mes "Goodbye.";
+	mes("[Monster Trainer]");
+	mes("Goodbye.");
 	close;
 
 L_Heal:
-	mes "[Monster Trainer]";
-	mes "Your monster needs to heal.";
-	mes "It will heal faster if you click the nurse faster.";
+	mes("[Monster Trainer]");
+	mes("Your monster needs to heal.");
+	mes("It will heal faster if you click the nurse faster.");
 	set #heal,1;
 	close;
 }
@@ -769,11 +769,11 @@ gon_test,58,103,5	script	Duel Master#01	4_F_03,{
 	if ($@monster1 == "") set @duel,0;
 	set @marena,1;
 	if (#monster == 0) goto L_NoMon;
-	mes "[Duel Master]";
+	mes("[Duel Master]");
 	if ($@duel == 1) goto L_Waiting;
 	if ($@duel == 2) goto L_Dueling;
 
-	mes "There are currently no players dueling.";
+	mes("There are currently no players dueling.");
 	next;
 	menu "Join",-,"Spectate",L_Spec,"Cancel",L_Exit;
 
@@ -799,8 +799,8 @@ gon_test,58,103,5	script	Duel Master#01	4_F_03,{
 	close;
 
 L_Waiting:
-	mes "^0000FF " + $@duelist1$ + "^000000 [Monster Level: ^FF0000" + $@monster1 + "^000000]";
-	mes "Is waiting for an opponent";
+	mes("^0000FF " + $@duelist1$ + "^000000 [Monster Level: ^FF0000" + $@monster1 + "^000000]");
+	mes("Is waiting for an opponent");
 	next;
 	menu "Join",-,"Spectate",L_Spec,"Cancel",L_Exit;
 
@@ -827,9 +827,9 @@ L_Duel2:
 	close;
 
 L_Dueling:
-	mes "^0000FF" + $@duelist1$ + "^000000 [Monster Level: ^0000FF" + $@monster1 + "^000000]";
-	mes "           VS.";
-	mes "^FF0000" + $@duelist2$ + "^000000 [Monster Level: ^FF0000" + $@monster2 + "^000000]";
+	mes("^0000FF" + $@duelist1$ + "^000000 [Monster Level: ^0000FF" + $@monster1 + "^000000]");
+	mes("           VS.");
+	mes("^FF0000" + $@duelist2$ + "^000000 [Monster Level: ^FF0000" + $@monster2 + "^000000]");
 	next;
 	menu "Spectate",L_Spec,"Cancel",L_Exit;
 
@@ -840,27 +840,27 @@ L_Spec:
 	close;
 
 L_Exit:
-	mes "[Duel Master]";
-	mes "Goodbye.";
+	mes("[Duel Master]");
+	mes("Goodbye.");
 	close;
 
 L_NoMon:
-	mes "[Duel Master]";
-	mes "You haven't got a monster, you can't participate.";
+	mes("[Duel Master]");
+	mes("You haven't got a monster, you can't participate.");
 	close;
 
 L_NeedHeal:
-	mes "[Duel Master]";
-	mes "You need to heal before you can join.";
+	mes("[Duel Master]");
+	mes("You need to heal before you can join.");
 	close;
 }
 
 // Duel Exit //
 gon_test,42,8,5	script	Duel Master#02	4_F_03,{
-	mes "[Duel Master]";
-	mes "Would you like to return?";
+	mes("[Duel Master]");
+	mes("Would you like to return?");
 	menu "Yes",L_Leave,"No",-;
-	mes "Alright";
+	mes("Alright");
 	close;
 
 L_Leave:

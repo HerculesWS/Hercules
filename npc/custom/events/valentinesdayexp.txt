@@ -16,44 +16,44 @@
 // Tine - Valentine Event Chocolate Even Guide ------------------
 prontera,156,172,4	script	Tine	1_M_MERCHANT,{
 //  Debug info for item effects and tricky conditions 8)
-//	mes "@dsv: "+@dsv;
-//	mes "ispartneron()=="+ispartneron();
-//	mes "sex == "+Sex;
-//	if(@dsv == gettime(GETTIME_HOUR)+1) mes "@dsv == gettime(GETTIME_HOUR)+1";
+//	mes("@dsv: "+@dsv);
+//	mes("ispartneron()=="+ispartneron());
+//	mes("sex == "+Sex);
+//	if(@dsv == gettime(GETTIME_HOUR)+1) mes("@dsv == gettime(GETTIME_HOUR)+1");
 
-	mes "[Tine]";
-	mes "The legend says that on 14th February... on the Day of Saint Valentine...";
-	mes "Only in Run-Midgard kingdom...";
+	mes("[Tine]");
+	mes("The legend says that on 14th February... on the Day of Saint Valentine...");
+	mes("Only in Run-Midgard kingdom...");
 	next;
 	specialeffect EF_HITBODY;
-	mes "[Tine]";
-	mes "Some married chocolate lovers almost double their experience at trainings!";
-	mes "But everything isn't so simply...";
+	mes("[Tine]");
+	mes("Some married chocolate lovers almost double their experience at trainings!");
+	mes("But everything isn't so simply...");
 	next;
 	if (select("Wow! Tell me more!", "Marri... what?") == 2) {
-		mes "[Tine]";
-		mes "Are you a single?";
-		mes "Today is a great date to ask your beloved half for marriage!";
+		mes("[Tine]");
+		mes("Are you a single?");
+		mes("Today is a great date to ask your beloved half for marriage!");
 		next;
-		mes "[Tine]";
-		mes "The Marriage fee is ridiculous low these days!";
+		mes("[Tine]");
+		mes("The Marriage fee is ridiculous low these days!");
 		close;
 	}
-	mes "[Tine]";
-	mes "The magic effect posesses only handmade chocolate from grand-grand-grand-whoever recipes!";
+	mes("[Tine]");
+	mes("The magic effect posesses only handmade chocolate from grand-grand-grand-whoever recipes!");
 	next;
-	mes "[Tine]";
-	mes "It being known that Black Handmade Chocolate works on married guys... And the White one on the married girls!";
-	mes "If you lose your wedding ring... then alas, it won't work on you.";
+	mes("[Tine]");
+	mes("It being known that Black Handmade Chocolate works on married guys... And the White one on the married girls!");
+	mes("If you lose your wedding ring... then alas, it won't work on you.");
 	next;
-	mes "[Tine]";
-	mes "On having a Chocolate, you should put off your ring then... put it back... And if your partner is online, then magc would last till the next hour!";
+	mes("[Tine]");
+	mes("On having a Chocolate, you should put off your ring then... put it back... And if your partner is online, then magc would last till the next hour!");
 	next;
-	mes "[Tine]";
-	mes "Rumors bark that guys and gals have +50% EXP bonuses on FIVE different races of the monsters... Exluding bloody bosses, of course.";
+	mes("[Tine]");
+	mes("Rumors bark that guys and gals have +50% EXP bonuses on FIVE different races of the monsters... Exluding bloody bosses, of course.");
 	next;
-	mes "[Tine]";
-	mes "There's a fameous confectioner in the Castle of Prontera! He's the one you need.";
+	mes("[Tine]");
+	mes("There's a fameous confectioner in the Castle of Prontera! He's the one you need.");
 	close;
 
 OnInit:
@@ -71,29 +71,29 @@ OnInit:
 
 // Stephen - Valentine Event Chocolate seller ------------------
 alberta,26,243,4	script	Stephen#val1	1_M_MERCHANT,{
-	mes "[Stephen]";
-	mes "Guess what I've got?";
-	mes "A tasty treat not easily found in Rune-Midgard....";
+	mes("[Stephen]");
+	mes("Guess what I've got?");
+	mes("A tasty treat not easily found in Rune-Midgard....");
 	next;
-	mes "[Stephen]";
-	mes "Chocolate!";
-	mes "That's right, don't you love chocolate.... I do.";
-	mes "And you are in luck, because I'm selling them for only 5,000 zeny a piece!";
+	mes("[Stephen]");
+	mes("Chocolate!");
+	mes("That's right, don't you love chocolate.... I do.");
+	mes("And you are in luck, because I'm selling them for only 5,000 zeny a piece!");
 	next;
 	if (select("I want some chocolate!", "No thanks.") != 1) {
-		mes "[Stephen]";
-		mes "You don't want any chocolate?";
-		mes "I'm telling you! You'll regret it!";
-		mes "You better get some now... you won't come across Chocolate like this ever again!";
-		mes "Think it over and visit me again sometime.";
+		mes("[Stephen]");
+		mes("You don't want any chocolate?");
+		mes("I'm telling you! You'll regret it!");
+		mes("You better get some now... you won't come across Chocolate like this ever again!");
+		mes("Think it over and visit me again sometime.");
 		close;
 	}
-	mes "[Stephen]";
-	mes "Hah!";
-	mes "I knew it!";
-	mes "But I can't sell you more then 5 at once....but, if you really need more....";
-	mes "you can come back again.";
-	mes "So how many do you want?";
+	mes("[Stephen]");
+	mes("Hah!");
+	mes("I knew it!");
+	mes("But I can't sell you more then 5 at once....but, if you really need more....");
+	mes("you can come back again.");
+	mes("So how many do you want?");
 	next;
 	set @needmon,0;
 	input @flag_num;
@@ -103,56 +103,56 @@ alberta,26,243,4	script	Stephen#val1	1_M_MERCHANT,{
 	if (Zeny < @needmon) goto L_NOTENO;
 	Zeny -= @needmon;
 	getitem 558,@flag_num;
-	mes "[Stephen]";
-	mes "There you go!";
-	mes "You can give that to someone as a gift, or enjoy it yourself!";
-	mes "Mmm....sweet chocolate...";
-	mes "Visit me anytime...!";
+	mes("[Stephen]");
+	mes("There you go!");
+	mes("You can give that to someone as a gift, or enjoy it yourself!");
+	mes("Mmm....sweet chocolate...");
+	mes("Visit me anytime...!");
 	close;
 
 L_ERR:
-	mes "[Stephen]";
-	mes "I'm sorry but I can't give you that many.";
+	mes("[Stephen]");
+	mes("I'm sorry but I can't give you that many.");
 L_NONE:
 	close;
 
 L_NOTENO:
-	mes "[Stephen]";
-	mes "I'm sorry but it seems you can't afford to buy these of me.";
+	mes("[Stephen]");
+	mes("I'm sorry but it seems you can't afford to buy these of me.");
 	close;
 }
 
 // Jainie -- Gives information about Valentine Event ------------------------
 alberta,29,243,4	script	Jainie#val1	1_M_INNKEEPER,{
-	mes "[Jainie]";
-	mes "You know what? The chocolate that my boyfriend sells are from me!";
-	mes "I made them by myself. Now I need some Milk for my special White Chocolate.";
+	mes("[Jainie]");
+	mes("You know what? The chocolate that my boyfriend sells are from me!");
+	mes("I made them by myself. Now I need some Milk for my special White Chocolate.");
 	next;
-	mes "[Jainie]";
-	mes "You know ... In cetain countries, there's a tradition of presenting chocolates to a person that you love...";
-	mes "They call it ^3355FFValentine's Day^000000.";
+	mes("[Jainie]");
+	mes("You know ... In cetain countries, there's a tradition of presenting chocolates to a person that you love...");
+	mes("They call it ^3355FFValentine's Day^000000.");
 	next;
-	mes "[Jainie]";
-	mes "So I gave him my delicious chocolate...";
-	mes "And then he made me cook a lot more...";
-	mes "And now he is selling them to everyone.";
-	mes "I guess he really enjoyed it.";
-	mes "But, I do feel good when people buy something I have made.";
+	mes("[Jainie]");
+	mes("So I gave him my delicious chocolate...");
+	mes("And then he made me cook a lot more...");
+	mes("And now he is selling them to everyone.");
+	mes("I guess he really enjoyed it.");
+	mes("But, I do feel good when people buy something I have made.");
 	next;
-	mes "[Jainie]";
-	mes "It would be great if you bought some too...";
-	mes "I will be making white chocolates for a while so...";
+	mes("[Jainie]");
+	mes("It would be great if you bought some too...");
+	mes("I will be making white chocolates for a while so...");
 	next;
 	if (select("I want some white chocolate!", "No thanks.") != 1) {
-		mes "[Jainie]";
-		mes "You don't like white chocolate?";
-		mes "Then buy some Stephen's black one!";
+		mes("[Jainie]");
+		mes("You don't like white chocolate?");
+		mes("Then buy some Stephen's black one!");
 		close;
 	}
-	mes "[Jainie]";
-	mes "I can't sell you more then 5 at once....but, if you really need more....";
-	mes "you can come back again.";
-	mes "So how many do you want? 1 portion is 4500z + 1 Milk.";
+	mes("[Jainie]");
+	mes("I can't sell you more then 5 at once....but, if you really need more....");
+	mes("you can come back again.");
+	mes("So how many do you want? 1 portion is 4500z + 1 Milk.");
 	next;
 	set @needmon,0;
 	input @flag_num;
@@ -164,113 +164,113 @@ alberta,29,243,4	script	Jainie#val1	1_M_INNKEEPER,{
 	Zeny -= @needmon;
 	delitem 519,@flag_num;
 	getitem 561,@flag_num;
-	mes "[Jainie]";
-	mes "There you go!";
-	mes "You can give that to someone as a gift, or enjoy it yourself!";
-	mes "Mmm... sweet chocolate...";
-	mes "Visit me anytime...!";
+	mes("[Jainie]");
+	mes("There you go!");
+	mes("You can give that to someone as a gift, or enjoy it yourself!");
+	mes("Mmm... sweet chocolate...");
+	mes("Visit me anytime...!");
 	close;
 
 L_ERR:
-	mes "[Jainie]";
-	mes "I'm sorry but I can't give you that many.";
+	mes("[Jainie]");
+	mes("I'm sorry but I can't give you that many.");
 L_NONE:
 	close;
 
 L_NOTENO:
-	mes "[Jainie]";
-	mes "I'm sorry but it seems you can't afford to buy these of me.";
+	mes("[Jainie]");
+	mes("I'm sorry but it seems you can't afford to buy these of me.");
 	close;
 
 L_NOMILK:
-	mes "[Jainie]";
-	mes "You need "+@flag_num+" Milk for "+@flag_num+" portions of my special White Chocolate...";
+	mes("[Jainie]");
+	mes("You need "+@flag_num+" Milk for "+@flag_num+" portions of my special White Chocolate...");
 	close;
 }
 
 // Carl Orleans -- Valentine Event Chocolate maker ------------------
 prt_castle,54,34,4	script	Carl Orleans#val1	1_M_01,{
-	mes "[Carl Orleans]";
-	mes "Yes? What can I cook for you?";
+	mes("[Carl Orleans]");
+	mes("Yes? What can I cook for you?");
 	next;
 	switch (select("Black handmade Chocolate, please", "I want a White handmade Chocolate...", "I'm lost, sorry to bother you.")) {
 	case 1:
-		mes "[Carl Orleans]";
-		mes "Well, I just might be able to fulfill your needs...";
+		mes("[Carl Orleans]");
+		mes("Well, I just might be able to fulfill your needs...");
 		next;
 		if (countitem(Chocolate)<3) {
-			mes "[Carl Orleans]";
-			mes "I'm sorry you do not have enough Chocolate Bars to do this.";
-			if(rand(2))mes "They say Stephen from Alberta used to sell good Chocolate.";
+			mes("[Carl Orleans]");
+			mes("I'm sorry you do not have enough Chocolate Bars to do this.");
+			if(rand(2))mes("They say Stephen from Alberta used to sell good Chocolate.");
 			close;
 		}
 		delitem 558,3;
-		mes "[Carl Orleans]";
-		mes "You got 3 pieces of pure chocolate I see.";
-		mes "Give them to me...";
+		mes("[Carl Orleans]");
+		mes("You got 3 pieces of pure chocolate I see.");
+		mes("Give them to me...");
 		next;
-		mes "[Carl Orleans]";
-		mes "Ok, now I will only create my special handmade chocolates if you promise to use it wisely.";
+		mes("[Carl Orleans]");
+		mes("Ok, now I will only create my special handmade chocolates if you promise to use it wisely.");
 		next;
-		mes "[Carl Orleans]";
-		mes "....Hmmmmmm.....";
-		mes "Well...";
+		mes("[Carl Orleans]");
+		mes("....Hmmmmmm.....");
+		mes("Well...");
 		next;
 		getitem 559,1;
-		mes "[Carl Orleans]";
-		mes "Here.";
+		mes("[Carl Orleans]");
+		mes("Here.");
 		if(rand(2))close;
-		mes "I hope you give it to someone special, because its a special chocolate.";
-		mes "As you know... only I can create this.";
+		mes("I hope you give it to someone special, because its a special chocolate.");
+		mes("As you know... only I can create this.");
 		next;
-		mes "[Carl Orleans]";
-		mes "Enjoy.";
+		mes("[Carl Orleans]");
+		mes("Enjoy.");
 		close;
 	case 2:
-		mes "[Carl Orleans]";
-		mes "Well, I just might be able to fulfill your needs...";
+		mes("[Carl Orleans]");
+		mes("Well, I just might be able to fulfill your needs...");
 		next;
 		if (countitem(White_Chocolate)<3) {
-			mes "[Carl Orleans]";
-			mes "I'm sorry you do not have enough White Chocolate Bars to do this.";
-			if(rand(2))mes "They say Jainie from Alberta used to sell good White Chocolate.";
+			mes("[Carl Orleans]");
+			mes("I'm sorry you do not have enough White Chocolate Bars to do this.");
+			if(rand(2))mes("They say Jainie from Alberta used to sell good White Chocolate.");
 			close;
 		}
 		delitem 561,3;
-		mes "[Carl Orleans]";
-		mes "You got 3 pieces of pure white chocolate I see.";
-		mes "Give them to me...";
+		mes("[Carl Orleans]");
+		mes("You got 3 pieces of pure white chocolate I see.");
+		mes("Give them to me...");
 		next;
-		mes "[Carl Orleans]";
-		mes "Ok, now I will only create my special handmade chocolates if you promise to use it wisely.";
+		mes("[Carl Orleans]");
+		mes("Ok, now I will only create my special handmade chocolates if you promise to use it wisely.");
 		next;
-		mes "[Carl Orleans]";
-		mes "....Hmmmmmm.....";
-		mes "Well...";
+		mes("[Carl Orleans]");
+		mes("....Hmmmmmm.....");
+		mes("Well...");
 		next;
 		getitem 560,1;
-		mes "[Carl Orleans]";
-		mes "Here.";
+		mes("[Carl Orleans]");
+		mes("Here.");
 		if(rand(2))close;
-		mes "I hope you give it to someone special, because its a special chocolate.";
-		mes "As you know... only I can create this.";
+		mes("I hope you give it to someone special, because its a special chocolate.");
+		mes("As you know... only I can create this.");
 		next;
-		mes "[Carl Orleans]";
-		mes "Enjoy.";
+		mes("[Carl Orleans]");
+		mes("Enjoy.");
 		close;
 	case 3:
-		mes "[Carl Orleans]";
-		mes "Oh.. well, if you want me to make some of my special handmade Chocolate....";
-		mes "You will need to give me at least ^0000FF 3 Chocolates^000000 or ^0000FF 3 White Chocolates^000000.";
+		mes("[Carl Orleans]");
+		mes("Oh.. well, if you want me to make some of my special handmade Chocolate....");
+		mes("You will need to give me at least ^0000FF 3 Chocolates^000000 or ^0000FF 3 White Chocolates^000000.");
 		if(rand(2))close;
 		next;
-		mes "[Carl Orleans]";
-		mes "That's right, only ^0000FF 3 Chocolates^000000 or ^0000FF 3 White Chocolates^000000.";
-		mes "Bring them to me and you'll get what you came for.";
+		mes("[Carl Orleans]");
+		mes("That's right, only ^0000FF 3 Chocolates^000000 or ^0000FF 3 White Chocolates^000000.");
+		mes("Bring them to me and you'll get what you came for.");
 		if(rand(2))close;
 		next;
-		mes "[Carl Orleans]";
-		mes "See You.";
+		mes("[Carl Orleans]");
+		mes("See You.");
 		close;
 	}
 }

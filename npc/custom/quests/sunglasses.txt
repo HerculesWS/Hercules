@@ -16,90 +16,90 @@
 //============================================================
 
 alberta,88,193,5	script	Sunglasses Trader	1_F_MERCHANT_01,{
-	mes "[Sunglasses Trader]";
+	mes("[Sunglasses Trader]");
 	if(SG_QUEST1 == 1) {
-		mes "There is nothing more I can tell you.";
+		mes("There is nothing more I can tell you.");
 		next;
-		mes "[Sunglasses Trader]";
-		mes "Go see Maseph. She is somewhere north of Morroc.";
+		mes("[Sunglasses Trader]");
+		mes("Go see Maseph. She is somewhere north of Morroc.");
 		close; }
-	mes "Hello. What can I do for you?";
+	mes("Hello. What can I do for you?");
 	next;
 	if(select("I heard that you can make ^0000FFSlotted Sunglasses^000000.", "Nothing, sorry to bother you.")==2) {
-		mes "[Sunglasses Trader]";
-		mes "Come back to me than you are ready.";
+		mes("[Sunglasses Trader]");
+		mes("Come back to me than you are ready.");
 		close; }
-	mes "[Sunglasses Trader]";
-	mes "I do not make them, but I can tell you where to find the person who does. For a small fee...";
+	mes("[Sunglasses Trader]");
+	mes("I do not make them, but I can tell you where to find the person who does. For a small fee...");
 	next;
 	if(select("How much?", "No way, I will find her myself!")==2) {
-		mes "[Sunglasses Trader]";
-		mes "Suit yourself, the Maker will not make you ^0000FFSlotted Sunglasses^000000 unless she knows that you are coming.";
-		mes "Only I can tell her you are coming.";
+		mes("[Sunglasses Trader]");
+		mes("Suit yourself, the Maker will not make you ^0000FFSlotted Sunglasses^000000 unless she knows that you are coming.");
+		mes("Only I can tell her you are coming.");
 		next;
-		mes "[Sunglasses Trader]";
-		mes "Come back to me when you have given up. Hahaha...";
+		mes("[Sunglasses Trader]");
+		mes("Come back to me when you have given up. Hahaha...");
 		close; }
-	mes "[Sunglasses Trader]";
-	mes "In order for me to tell you information on ^0000FFSlotted Sunglasses^000000 you need to get me:";
-	mes " - ^0000881 Carat Diamond^000000";
-	mes " - ^00008850 Feathers^000000";
-	mes " - ^000088100000z^000000";
+	mes("[Sunglasses Trader]");
+	mes("In order for me to tell you information on ^0000FFSlotted Sunglasses^000000 you need to get me:");
+	mes(" - ^0000881 Carat Diamond^000000");
+	mes(" - ^00008850 Feathers^000000");
+	mes(" - ^000088100000z^000000");
 	next;
 	if(select("Alright, here.", "That's too much!")==2) {
-		mes "[Sunglasses Trader]";
-		mes "Suit yourself.";
+		mes("[Sunglasses Trader]");
+		mes("Suit yourself.");
 		close; }
-	mes "[Sunglasses Trader]";
+	mes("[Sunglasses Trader]");
 	if (countitem(Crystal_Jewel) < 1 || countitem(Feather) < 50 || Zeny < 100000) {
-		mes "You're missing something. Come back when you've gathered all the materials.";
+		mes("You're missing something. Come back when you've gathered all the materials.");
 		close; }
 	delitem 730,1;
 	delitem 949,50;
 	Zeny -= 100000;
 	set SG_QUEST1,1;
-	mes "[Sunglasses Trader]";
-	mes "Great. Now, listen carefully.";
+	mes("[Sunglasses Trader]");
+	mes("Great. Now, listen carefully.");
 	next;
-	mes "[Sunglasses Trader]";
-	mes "Look for someone named Maseph somewhere north of Morroc.";
-	mes "I will send her a message to let her know that you are coming.";
+	mes("[Sunglasses Trader]");
+	mes("Look for someone named Maseph somewhere north of Morroc.");
+	mes("I will send her a message to let her know that you are coming.");
 	close;
 }
 
 moc_fild07,334,186,5	script	Maseph	4_F_GON,{
-	mes "[Maseph]";
+	mes("[Maseph]");
 	if(SG_QUEST1 != 1) {
-		mes "Lovely day, isn't it ?";
+		mes("Lovely day, isn't it ?");
 		close; }
-	mes "Hello there.";
-	mes "You came for the ^000088Slotted Sunglasses^000000, right?";
+	mes("Hello there.");
+	mes("You came for the ^000088Slotted Sunglasses^000000, right?");
 	next;
 	if(select("Yes", "No, sorry to bother you.")==2) {
-		mes "[Maseph]";
-		mes "Off you go, then.";
+		mes("[Maseph]");
+		mes("Off you go, then.");
 		close; }
-	mes "[Maseph]";
-	mes "To make one, I will need one pair of ^000088Sunglasses^000000 and 400000z.";
+	mes("[Maseph]");
+	mes("To make one, I will need one pair of ^000088Sunglasses^000000 and 400000z.");
 	next;
 	if(select("Here you go.", "No, thanks.")==2) {
-		mes "[Maseph]";
-		mes "As you wish.";
+		mes("[Maseph]");
+		mes("As you wish.");
 		close; }
-	mes "[Maseph]";
+	mes("[Maseph]");
 	if (countitem(Sunglasses) < 1) {
-		mes "I need one pair of ^000088Sunglasses^000000. Come back to me when you have one.";
+		mes("I need one pair of ^000088Sunglasses^000000. Come back to me when you have one.");
 		close; }
 	if (Zeny < 400000) {
-		mes "You do not have enough Zeny. Come back to me when you do.";
+		mes("You do not have enough Zeny. Come back to me when you do.");
 		close; }
 	delitem 2201,1;
 	Zeny -= 400000;
-	mes "Thank you. I will get on it right away...";
+	mes("Thank you. I will get on it right away...");
 	next;
-	mes "[Maseph]";
-	mes "Here you go, my friend.";
-	mes "Enjoy your ^000088Slotted Sunglasses^000000.";
+	mes("[Maseph]");
+	mes("Here you go, my friend.");
+	mes("Enjoy your ^000088Slotted Sunglasses^000000.");
 	getitem 2202,1;
 	set SG_QUEST1,0;
 	close;

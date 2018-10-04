@@ -19,18 +19,18 @@ prontera,160,155,4	script	Disguise Event	4_M_NFDEADMAN,{
 	set .@n$,"[^0000FFDisguise NPC^000000]";
 
 	if (getgmlevel()>=.@GMLevel) {
-		mes .@n$;
-		mes "Select an option.";
+		mes(.@n$);
+		mes("Select an option.");
 		next;
 		switch(select("Turn ON/OFF Event", "Event Settings")) {
 		case 1:
-			mes .@n$;
+			mes(.@n$);
 			if (.EventON) {
-				mes "The Event is currently: [^0000FFON^000000]";
-				mes "Would you like to turn it OFF?";
+				mes("The Event is currently: [^0000FFON^000000]");
+				mes("Would you like to turn it OFF?");
 			} else {
-				mes "The Event is currently: [^FF0000OFF^000000]";
-				mes "Would you like to turn it ON?";
+				mes("The Event is currently: [^FF0000OFF^000000]");
+				mes("Would you like to turn it ON?");
 			}
 			if(select("Yes", "No")==2) close;
 			if (.EventON) {
@@ -47,75 +47,75 @@ prontera,160,155,4	script	Disguise Event	4_M_NFDEADMAN,{
 			announce "The Event is being held in Prontera.",bc_all | bc_blue;
 			close;
 		case 2:
-			mes .@n$;
-			mes "Pick a setting to modify.";
+			mes(.@n$);
+			mes("Pick a setting to modify.");
 			next;
 			switch(select("Monster Display", "Number of Rounds", "Prize Settings")) {
 			case 1:
 				setarray .@r$[0],"Disguise as all monsters.","Disguise as MVPs only.";
-				mes .@n$;
-				mes "Choose a disguise rule.";
+				mes(.@n$);
+				mes("Choose a disguise rule.");
 				next;
 				set .Rule, select(implode(.@r$,":"));
-				mes .@n$;
-				mes "The Disguise Rule has been set:";
-				mes "  > ^0055FF"+.@r$[.Rule-1]+"^000000";
+				mes(.@n$);
+				mes("The Disguise Rule has been set:");
+				mes("  > ^0055FF"+.@r$[.Rule-1]+"^000000");
 				close;
 			case 2:
-				mes .@n$;
-				mes "Input the number of rounds you want the event to last.";
-				mes "Current number: [^0000FF"+.Rounds+"^000000]";
+				mes(.@n$);
+				mes("Input the number of rounds you want the event to last.");
+				mes("Current number: [^0000FF"+.Rounds+"^000000]");
 				next;
 				input .@Rounds;
 				set .Rounds,.@Rounds;
-				mes .@n$;
-				mes "The number of rounds has been changed to "+.Rounds+".";
+				mes(.@n$);
+				mes("The number of rounds has been changed to "+.Rounds+".");
 				close;
 			case 3:
-				mes .@n$;
-				mes "Input the Item ID of the prize given each round.";
-				mes "Current item: [^0000FF"+getitemname(.Prize)+"^000000] (ID #"+.Prize+")";
+				mes(.@n$);
+				mes("Input the Item ID of the prize given each round.");
+				mes("Current item: [^0000FF"+getitemname(.Prize)+"^000000] (ID #"+.Prize+")");
 				next;
 				input .@Prize;
-				mes .@n$;
+				mes(.@n$);
 				if (getitemname(.@Prize)=="" || getitemname(.@Prize)=="null") {
-					mes "That item does not exist. Please try again.";
+					mes("That item does not exist. Please try again.");
 					close;
 				}
 				set .Prize,.@Prize;
-				mes "Input the amount to be given.";
+				mes("Input the amount to be given.");
 				next;
 				input .@amount;
-				mes .@n$;
+				mes(.@n$);
 				if (.@amount<=0 || .@amount>=10000) {
-					mes "That amount is invalid. Using default ammount of 1.";
+					mes("That amount is invalid. Using default ammount of 1.");
 					set .@amount,1;
 					next;
-					mes .@n$;
+					mes(.@n$);
 				}
 				set .PrizeAmt,.@amount;
-				mes "The Prize has been changed successfully.";
-				mes "Prize: "+.PrizeAmt+"x [^0000FF"+getitemname(.Prize)+"^000000]";
+				mes("The Prize has been changed successfully.");
+				mes("Prize: "+.PrizeAmt+"x [^0000FF"+getitemname(.Prize)+"^000000]");
 				close;
 			}
 		}
 	}
 	if (.EventON) end;
-	mes .@n$;
-	mes "Welcome.";
-	mes "How may I be of assistance?";
+	mes(.@n$);
+	mes("Welcome.");
+	mes("How may I be of assistance?");
 	if(select("Information", "Nothing, just passing through.")==2) close;
 	next;
-	mes .@n$;
-	mes "This event is quite simple.";
-	mes "At the start of the event, I will";
-	mes "disguise myself as a random";
-	mes "monster. You have to shout";
-	mes "that monter's name out loud.";
+	mes(.@n$);
+	mes("This event is quite simple.");
+	mes("At the start of the event, I will");
+	mes("disguise myself as a random");
+	mes("monster. You have to shout");
+	mes("that monter's name out loud.");
 	next;
-	mes "If you are correct, you will receive";
-	mes "a prize. If not, keep trying!";
-	mes "That's all that there is to this event.";
+	mes("If you are correct, you will receive");
+	mes("a prize. If not, keep trying!");
+	mes("That's all that there is to this event.");
 	close;
 
 OnInit:

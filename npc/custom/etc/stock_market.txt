@@ -174,8 +174,8 @@ prontera,140,181,5	script	Stock Market::stockmarket	4_M_MANAGER,{
 	// Ensures no trading when default prices have not been set //
 	set @stotal,$S1+$S2+$S3+$S4+$S5+$S6+$S7+$S8+$S9+$S10;
 	if (@stotal <= 0) {
-		mes "[Stock Market]";
-		mes "Trading is currently closed.";
+		mes("[Stock Market]");
+		mes("Trading is currently closed.");
 		if (getgmlevel() > 90)
 			callsub(OnGMOpen);
 		close;
@@ -183,8 +183,8 @@ prontera,140,181,5	script	Stock Market::stockmarket	4_M_MANAGER,{
 
 	freeloop(true);
 	while (true) {
-		mes "[Stock Market]";
-		mes "Last fluctuation: " + $S_LastUpd$;
+		mes("[Stock Market]");
+		mes("Last fluctuation: " + $S_LastUpd$);
 
 		// Loss/Gain in price //
 		set @S1Update,$S1-$S1B;
@@ -240,16 +240,16 @@ prontera,140,181,5	script	Stock Market::stockmarket	4_M_MANAGER,{
 		if (@S10Update == 0) set @S10Update$,@S10Update;
 
 		// Displays shares & prices //
-		mes "^21698F"+$S1N$+"^000000" + " " + $S1 + "z (" + @S1Update$ + ")";
-		mes "^21698F"+$S2N$+"^000000" + " " + $S2 + "z (" + @S2Update$ + ")";
-		mes "^21698F"+$S3N$+"^000000" + " " + $S3 + "z (" + @S3Update$ + ")";
-		mes "^21698F"+$S4N$+"^000000" + " " + $S4 + "z (" + @S4Update$ + ")";
-		mes "^21698F"+$S5N$+"^000000" + " " + $S5 + "z (" + @S5Update$ + ")";
-		mes "^21698F"+$S6N$+"^000000" + " " + $S6 + "z (" + @S6Update$ + ")";
-		mes "^21698F"+$S7N$+"^000000" + " " + $S7 + "z (" + @S7Update$ + ")";
-		mes "^21698F"+$S8N$+"^000000" + " " + $S8 + "z (" + @S8Update$ + ")";
-		mes "^21698F"+$S9N$+"^000000" + " " + $S9 + "z (" + @S9Update$ + ")";
-		mes "^21698F"+$S10N$+"^000000" + " " + $S10 + "z (" + @S10Update$ + ")";
+		mes("^21698F"+$S1N$+"^000000" + " " + $S1 + "z (" + @S1Update$ + ")");
+		mes("^21698F"+$S2N$+"^000000" + " " + $S2 + "z (" + @S2Update$ + ")");
+		mes("^21698F"+$S3N$+"^000000" + " " + $S3 + "z (" + @S3Update$ + ")");
+		mes("^21698F"+$S4N$+"^000000" + " " + $S4 + "z (" + @S4Update$ + ")");
+		mes("^21698F"+$S5N$+"^000000" + " " + $S5 + "z (" + @S5Update$ + ")");
+		mes("^21698F"+$S6N$+"^000000" + " " + $S6 + "z (" + @S6Update$ + ")");
+		mes("^21698F"+$S7N$+"^000000" + " " + $S7 + "z (" + @S7Update$ + ")");
+		mes("^21698F"+$S8N$+"^000000" + " " + $S8 + "z (" + @S8Update$ + ")");
+		mes("^21698F"+$S9N$+"^000000" + " " + $S9 + "z (" + @S9Update$ + ")");
+		mes("^21698F"+$S10N$+"^000000" + " " + $S10 + "z (" + @S10Update$ + ")");
 		next;
 
 		// GM Menu link //
@@ -259,70 +259,70 @@ prontera,140,181,5	script	Stock Market::stockmarket	4_M_MANAGER,{
 		}
 		switch (select("Portfolio", "Buy Shares", "Sell Shares", "Cancel")) {
 		case 1:
-			mes "[Stock Market]";
+			mes("[Stock Market]");
 			if (#S1 >= 1) {
 				set @S1,#S1*$S1;
-				mes $S1N$ + ": " + #S1 + " x " + $S1 + "z = " + @S1 + "z";
+				mes($S1N$ + ": " + #S1 + " x " + $S1 + "z = " + @S1 + "z");
 			}
 			if (#S2 >= 1) {
 				set @S2,#S2*$S2;
-				mes $S2N$ + ": " + #S2 + " x " + $S2 + "z = " + @S2 + "z";
+				mes($S2N$ + ": " + #S2 + " x " + $S2 + "z = " + @S2 + "z");
 			}
 			if (#S3 >= 1) {
 				set @S3,#S3*$S3;
-				mes $S3N$ + ": " + #S3 + " x " + $S3 + "z = " + @S3 + "z";
+				mes($S3N$ + ": " + #S3 + " x " + $S3 + "z = " + @S3 + "z");
 			}
 			if (#S4 >= 1) {
 				set @S4,#S4*$S4;
-				mes $S4N$ + ": " + #S4 + " x " + $S4 + "z = " + @S4 + "z";
+				mes($S4N$ + ": " + #S4 + " x " + $S4 + "z = " + @S4 + "z");
 			}
 			if (#S5 >= 1) {
 				set @S5,#S5*$S5;
-				mes $S5N$ + ": " + #S5 + " x " + $S5 + "z = " + @S5 + "z";
+				mes($S5N$ + ": " + #S5 + " x " + $S5 + "z = " + @S5 + "z");
 			}
 			if (#S6 >= 1) {
 				set @S6,#S6*$S6;
-				mes $S6N$ + ": " + #S6 + " x " + $S6 + "z = " + @S6 + "z";
+				mes($S6N$ + ": " + #S6 + " x " + $S6 + "z = " + @S6 + "z");
 			}
 			if (#S7 >= 1) {
 				set @S7,#S7*$S7;
-				mes $S7N$ + ": " + #S7 + " x " + $S7 + "z = " + @S7 + "z";
+				mes($S7N$ + ": " + #S7 + " x " + $S7 + "z = " + @S7 + "z");
 			}
 			if (#S8 >= 1) {
 				set @S8,#S8*$S8;
-				mes $S8N$ + ": " + #S8 + " x " + $S8 + "z = " + @S8 + "z";
+				mes($S8N$ + ": " + #S8 + " x " + $S8 + "z = " + @S8 + "z");
 			}
 			if (#S9 >= 1) {
 				set @S9,#S9*$S9;
-				mes $S9N$ + ": " + #S9 + " x " + $S9 + "z = " + @S9 + "z";
+				mes($S9N$ + ": " + #S9 + " x " + $S9 + "z = " + @S9 + "z");
 			}
 			if (#S10 >= 1) {
 				set @S10,#S10*$S10;
-				mes $S10N$ + ": " + #S10 + " x " + $S10 + "z = " + @S10 + "z";
+				mes($S10N$ + ": " + #S10 + " x " + $S10 + "z = " + @S10 + "z");
 			}
 			set @total,@S1 + @S2 + @S3 + @S4 + @S5 + @S6 + @S7 + @S8 + @S9 + @S10;
-			mes "Total value: "+@total+"z";
+			mes("Total value: "+@total+"z");
 			next;
 			continue;
 		case 2:
-			mes "[Stock Market]";
-			mes "Available shares:";
-			mes $S1N$;
-			mes $S2N$;
-			mes $S3N$;
-			mes $S4N$;
-			mes $S5N$;
-			mes $S6N$;
-			mes $S7N$;
-			mes $S8N$;
-			mes $S9N$;
-			mes $S10N$;
+			mes("[Stock Market]");
+			mes("Available shares:");
+			mes($S1N$);
+			mes($S2N$);
+			mes($S3N$);
+			mes($S4N$);
+			mes($S5N$);
+			mes($S6N$);
+			mes($S7N$);
+			mes($S8N$);
+			mes($S9N$);
+			mes($S10N$);
 			next;
 			if (select("Continue", "Cancel") != 1)
 				continue;
 
-			mes "Enter the name of the share company";
-			mes "Transaction fee of ^FF0000" + $S_Trans + "z^000000 will apply.";
+			mes("Enter the name of the share company");
+			mes("Transaction fee of ^FF0000" + $S_Trans + "z^000000 will apply.");
 			set @buyname$,"0";
 			input @buyname$;
 
@@ -330,12 +330,12 @@ prontera,140,181,5	script	Stock Market::stockmarket	4_M_MANAGER,{
 			input @buyamount;
 			// Checks valid number //
 			if (@buyamount < $S_BuyMin) {
-				mes "^FF0000Minimum of " + $S_BuyMin + " shares can be bought at a time.^000000";
+				mes("^FF0000Minimum of " + $S_BuyMin + " shares can be bought at a time.^000000");
 				next;
 				continue;
 			}
 			if (@buyamount > $S_BuyMax) {
-				mes "^FF0000Maximum number of " + $S_BuyMax + " shares can be bought at a time.^000000";
+				mes("^FF0000Maximum number of " + $S_BuyMax + " shares can be bought at a time.^000000");
 				next;
 				continue;
 			}
@@ -354,8 +354,8 @@ prontera,140,181,5	script	Stock Market::stockmarket	4_M_MANAGER,{
 				set #S1,#S1+@buyamount;
 				set @price,@buyamount*$S1;
 				Zeny -= @price;
-				mes "Bought " + @buyamount + " " + $S1N$ + " shares.";
-				mes "Lost ^0000FF"+@price+"z^000000.";
+				mes("Bought " + @buyamount + " " + $S1N$ + " shares.");
+				mes("Lost ^0000FF"+@price+"z^000000.");
 				next;
 			} else if (@buyname$ == $S2N$) {
 				set @price,@buyamount*$S2;
@@ -365,8 +365,8 @@ prontera,140,181,5	script	Stock Market::stockmarket	4_M_MANAGER,{
 				}
 				set #S2,#S2+@buyamount;
 				Zeny -= @price;
-				mes "Bought " + @buyamount + " " + $S2N$ + " shares.";
-				mes "Lost ^0000FF"+@price+"z^000000.";
+				mes("Bought " + @buyamount + " " + $S2N$ + " shares.");
+				mes("Lost ^0000FF"+@price+"z^000000.");
 				next;
 			} else if (@buyname$ == $S3N$) {
 				set @price,@buyamount*$S3;
@@ -376,8 +376,8 @@ prontera,140,181,5	script	Stock Market::stockmarket	4_M_MANAGER,{
 				}
 				set #S3,#S3+@buyamount;
 				Zeny -= @price;
-				mes "Bought " + @buyamount + " " + $S3N$ + " shares.";
-				mes "Lost ^0000FF"+@price+"z^000000.";
+				mes("Bought " + @buyamount + " " + $S3N$ + " shares.");
+				mes("Lost ^0000FF"+@price+"z^000000.");
 				next;
 			} else if (@buyname$ == $S4N$) {
 				set @price,@buyamount*$S4;
@@ -387,8 +387,8 @@ prontera,140,181,5	script	Stock Market::stockmarket	4_M_MANAGER,{
 				}
 				set #S4,#S4+@buyamount;
 				Zeny -= @price;
-				mes "Bought " + @buyamount + " " + $S4N$ + " shares.";
-				mes "Lost ^0000FF"+@price+"z^000000.";
+				mes("Bought " + @buyamount + " " + $S4N$ + " shares.");
+				mes("Lost ^0000FF"+@price+"z^000000.");
 				next;
 			} else if (@buyname$ == $S5N$) {
 				set @price,@buyamount*$S5;
@@ -398,8 +398,8 @@ prontera,140,181,5	script	Stock Market::stockmarket	4_M_MANAGER,{
 				}
 				set #S5,#S5+@buyamount;
 				Zeny -= @price;
-				mes "Bought " + @buyamount + " " + $S5N$ + " shares.";
-				mes "Lost ^0000FF"+@price+"z^000000.";
+				mes("Bought " + @buyamount + " " + $S5N$ + " shares.");
+				mes("Lost ^0000FF"+@price+"z^000000.");
 				next;
 			} else if (@buyname$ == $S6N$) {
 				set @price,@buyamount*$S6;
@@ -409,8 +409,8 @@ prontera,140,181,5	script	Stock Market::stockmarket	4_M_MANAGER,{
 				}
 				set #S6,#S6+@buyamount;
 				Zeny -= @price;
-				mes "Bought " + @buyamount + " " + $S6N$ + " shares.";
-				mes "Lost ^0000FF"+@price+"z^000000.";
+				mes("Bought " + @buyamount + " " + $S6N$ + " shares.");
+				mes("Lost ^0000FF"+@price+"z^000000.");
 				next;
 			} else if (@buyname$ == $S7N$) {
 				set @price,@buyamount*$S7;
@@ -420,8 +420,8 @@ prontera,140,181,5	script	Stock Market::stockmarket	4_M_MANAGER,{
 				}
 				set #S7,#S7+@buyamount;
 				Zeny -= @price;
-				mes "Bought " + @buyamount + " " + $S7N$ + " shares.";
-				mes "Lost ^0000FF"+@price+"z^000000.";
+				mes("Bought " + @buyamount + " " + $S7N$ + " shares.");
+				mes("Lost ^0000FF"+@price+"z^000000.");
 				next;
 			} else if (@buyname$ == $S8N$) {
 				set @price,@buyamount*$S8;
@@ -431,8 +431,8 @@ prontera,140,181,5	script	Stock Market::stockmarket	4_M_MANAGER,{
 				}
 				set #S8,#S8+@buyamount;
 				Zeny -= @price;
-				mes "Bought " + @buyamount + " " + $S8N$ + " shares.";
-				mes "Lost ^0000FF"+@price+"z^000000.";
+				mes("Bought " + @buyamount + " " + $S8N$ + " shares.");
+				mes("Lost ^0000FF"+@price+"z^000000.");
 				next;
 			} else if (@buyname$ == $S9N$) {
 				set @price,@buyamount*$S9;
@@ -442,8 +442,8 @@ prontera,140,181,5	script	Stock Market::stockmarket	4_M_MANAGER,{
 				}
 				set #S9,#S9+@buyamount;
 				Zeny -= @price;
-				mes "Bought " + @buyamount + " " + $S9N$ + " shares.";
-				mes "Lost ^0000FF"+@price+"z^000000.";
+				mes("Bought " + @buyamount + " " + $S9N$ + " shares.");
+				mes("Lost ^0000FF"+@price+"z^000000.");
 				next;
 			} else if (@buyname$ == $S10N$) {
 				set @price,@buyamount*$S10;
@@ -453,35 +453,35 @@ prontera,140,181,5	script	Stock Market::stockmarket	4_M_MANAGER,{
 				}
 				set #S10,#S10+@buyamount;
 				Zeny -= @price;
-				mes "Bought " + @buyamount + " " + $S10N$ + " shares.";
-				mes "Lost ^0000FF"+@price+"z^000000.";
+				mes("Bought " + @buyamount + " " + $S10N$ + " shares.");
+				mes("Lost ^0000FF"+@price+"z^000000.");
 				next;
 			} else {
-				mes "^FF0000Invalid share name.^000000";
+				mes("^FF0000Invalid share name.^000000");
 				next;
 				continue;
 			}
 			continue;
 		case 3:
-			mes "[Stock Market]";
-			mes "Enter the name of the share you wish to sell.";
-			mes "Transaction fee of ^FF0000" + $S_Trans + "z^000000 will apply.";
-			if (#S1 > 0) mes "^0000FF"+$S1N$+"^FF0000" + " x " + #S1 + " [" + $S1 + "z]";
-			if (#S2 > 0) mes "^0000FF"+$S2N$+"^FF0000" + " x " + #S2 + " [" + $S2 + "z]";
-			if (#S3 > 0) mes "^0000FF"+$S3N$+"^FF0000" + " x " + #S3 + " [" + $S3 + "z]";
-			if (#S4 > 0) mes "^0000FF"+$S4N$+"^FF0000" + " x " + #S4 + " [" + $S4 + "z]";
-			if (#S5 > 0) mes "^0000FF"+$S5N$+"^FF0000" + " x " + #S5 + " [" + $S5 + "z]";
-			if (#S6 > 0) mes "^0000FF"+$S6N$+"^FF0000" + " x " + #S6 + " [" + $S6 + "z]";
-			if (#S7 > 0) mes "^0000FF"+$S7N$+"^FF0000" + " x " + #S7 + " [" + $S7 + "z]";
-			if (#S8 > 0) mes "^0000FF"+$S8N$+"^FF0000" + " x " + #S8 + " [" + $S8 + "z]";
-			if (#S9 > 0) mes "^0000FF"+$S9N$+"^FF0000" + " x " + #S9 + " [" + $S9 + "z]";
-			if (#S10 > 0) mes "^0000FF"+$S10N$+"^FF0000" + " x " + #S10 + " [" + $S10 + "z]";
+			mes("[Stock Market]");
+			mes("Enter the name of the share you wish to sell.");
+			mes("Transaction fee of ^FF0000" + $S_Trans + "z^000000 will apply.");
+			if (#S1 > 0) mes("^0000FF"+$S1N$+"^FF0000" + " x " + #S1 + " [" + $S1 + "z]");
+			if (#S2 > 0) mes("^0000FF"+$S2N$+"^FF0000" + " x " + #S2 + " [" + $S2 + "z]");
+			if (#S3 > 0) mes("^0000FF"+$S3N$+"^FF0000" + " x " + #S3 + " [" + $S3 + "z]");
+			if (#S4 > 0) mes("^0000FF"+$S4N$+"^FF0000" + " x " + #S4 + " [" + $S4 + "z]");
+			if (#S5 > 0) mes("^0000FF"+$S5N$+"^FF0000" + " x " + #S5 + " [" + $S5 + "z]");
+			if (#S6 > 0) mes("^0000FF"+$S6N$+"^FF0000" + " x " + #S6 + " [" + $S6 + "z]");
+			if (#S7 > 0) mes("^0000FF"+$S7N$+"^FF0000" + " x " + #S7 + " [" + $S7 + "z]");
+			if (#S8 > 0) mes("^0000FF"+$S8N$+"^FF0000" + " x " + #S8 + " [" + $S8 + "z]");
+			if (#S9 > 0) mes("^0000FF"+$S9N$+"^FF0000" + " x " + #S9 + " [" + $S9 + "z]");
+			if (#S10 > 0) mes("^0000FF"+$S10N$+"^FF0000" + " x " + #S10 + " [" + $S10 + "z]");
 			set @sellname$,"0";
 			input @sellname$;
 			set @sellamount,0;
 			input @sellamount;
 			if (@sellamount < 1) {
-				mes "^FF0000Invalid integer.^000000";
+				mes("^FF0000Invalid integer.^000000");
 				next;
 				continue;
 			}
@@ -500,8 +500,8 @@ prontera,140,181,5	script	Stock Market::stockmarket	4_M_MANAGER,{
 				set #S1,#S1-@sellamount;
 				Zeny += @price;
 				next;
-				mes "Sold " + @sellamount + " " + $S1N$ + " shares.";
-				mes "Earned ^0000FF"+@price+"z^000000.";
+				mes("Sold " + @sellamount + " " + $S1N$ + " shares.");
+				mes("Earned ^0000FF"+@price+"z^000000.");
 				next;
 			} else if (@sellname$ == $S2N$) {
 				if (@sellamount > #S2) {
@@ -512,8 +512,8 @@ prontera,140,181,5	script	Stock Market::stockmarket	4_M_MANAGER,{
 				set #S2,#S2-@sellamount;
 				Zeny += @price;
 				next;
-				mes "Sold " + @sellamount + " " + $S2N$ + " shares.";
-				mes "Earned ^0000FF"+@price+"z^000000.";
+				mes("Sold " + @sellamount + " " + $S2N$ + " shares.");
+				mes("Earned ^0000FF"+@price+"z^000000.");
 				next;
 			} else if (@sellname$ == $S3N$) {
 				if (@sellamount > #S3) {
@@ -524,8 +524,8 @@ prontera,140,181,5	script	Stock Market::stockmarket	4_M_MANAGER,{
 				set #S3,#S3-@sellamount;
 				Zeny += @price;
 				next;
-				mes "Sold " + @sellamount + " " + $S3N$ + " shares.";
-				mes "Earned ^0000FF"+@price+"z^000000.";
+				mes("Sold " + @sellamount + " " + $S3N$ + " shares.");
+				mes("Earned ^0000FF"+@price+"z^000000.");
 				next;
 			} else if (@sellname$ == $S4N$) {
 				if (@sellamount > #S4) {
@@ -536,8 +536,8 @@ prontera,140,181,5	script	Stock Market::stockmarket	4_M_MANAGER,{
 				set #S4,#S4-@sellamount;
 				Zeny += @price;
 				next;
-				mes "Sold " + @sellamount + " " + $S4N$ + " shares.";
-				mes "Earned ^0000FF"+@price+"z^000000.";
+				mes("Sold " + @sellamount + " " + $S4N$ + " shares.");
+				mes("Earned ^0000FF"+@price+"z^000000.");
 				next;
 			} else if (@sellname$ == $S5N$) {
 				if (@sellamount > #S5) {
@@ -548,8 +548,8 @@ prontera,140,181,5	script	Stock Market::stockmarket	4_M_MANAGER,{
 				set #S5,#S5-@sellamount;
 				Zeny += @price;
 				next;
-				mes "Sold " + @sellamount + " " + $S5N$ + " shares.";
-				mes "Earned ^0000FF"+@price+"z^000000.";
+				mes("Sold " + @sellamount + " " + $S5N$ + " shares.");
+				mes("Earned ^0000FF"+@price+"z^000000.");
 				next;
 			} else if (@sellname$ == $S6N$) {
 				if (@sellamount > #S6) {
@@ -560,8 +560,8 @@ prontera,140,181,5	script	Stock Market::stockmarket	4_M_MANAGER,{
 				set #S6,#S6-@sellamount;
 				Zeny += @price;
 				next;
-				mes "Sold " + @sellamount + " " + $S6N$ + " shares.";
-				mes "Earned ^0000FF"+@price+"z^000000.";
+				mes("Sold " + @sellamount + " " + $S6N$ + " shares.");
+				mes("Earned ^0000FF"+@price+"z^000000.");
 				next;
 			} else if (@sellname$ == $S7N$) {
 				if (@sellamount > #S7) {
@@ -572,8 +572,8 @@ prontera,140,181,5	script	Stock Market::stockmarket	4_M_MANAGER,{
 				set #S7,#S7-@sellamount;
 				Zeny += @price;
 				next;
-				mes "Sold " + @sellamount + " " + $S7N$ + " shares.";
-				mes "Earned ^0000FF"+@price+"z^000000.";
+				mes("Sold " + @sellamount + " " + $S7N$ + " shares.");
+				mes("Earned ^0000FF"+@price+"z^000000.");
 				next;
 			} else if (@sellname$ == $S8N$) {
 				if (@sellamount > #S8) {
@@ -584,8 +584,8 @@ prontera,140,181,5	script	Stock Market::stockmarket	4_M_MANAGER,{
 				set #S8,#S8-@sellamount;
 				Zeny += @price;
 				next;
-				mes "Sold " + @sellamount + " " + $S8N$ + " shares.";
-				mes "Earned ^0000FF"+@price+"z^000000.";
+				mes("Sold " + @sellamount + " " + $S8N$ + " shares.");
+				mes("Earned ^0000FF"+@price+"z^000000.");
 				next;
 			} else if (@sellname$ == $S9N$) {
 				if (@sellamount > #S9) {
@@ -596,8 +596,8 @@ prontera,140,181,5	script	Stock Market::stockmarket	4_M_MANAGER,{
 				set #S9,#S9-@sellamount;
 				Zeny += @price;
 				next;
-				mes "Sold " + @sellamount + " " + $S9N$ + " shares.";
-				mes "Earned ^0000FF"+@price+"z^000000.";
+				mes("Sold " + @sellamount + " " + $S9N$ + " shares.");
+				mes("Earned ^0000FF"+@price+"z^000000.");
 				next;
 			} else if (@sellname$ == $S10N$) {
 				if (@sellamount > #S10) {
@@ -608,29 +608,29 @@ prontera,140,181,5	script	Stock Market::stockmarket	4_M_MANAGER,{
 				set #S10,#S10-@sellamount;
 				Zeny += @price;
 				next;
-				mes "Sold " + @sellamount + " " + $S10N$ + " shares.";
-				mes "Earned ^0000FF"+@price+"z^000000.";
+				mes("Sold " + @sellamount + " " + $S10N$ + " shares.");
+				mes("Earned ^0000FF"+@price+"z^000000.");
 				next;
 			} else {
-				mes "^FF0000Invalid Share Name.^000000";
+				mes("^FF0000Invalid Share Name.^000000");
 				next;
 			}
 			continue;
 		case 4:
-			mes "[Stock Market]";
-			mes "Goodbye.";
+			mes("[Stock Market]");
+			mes("Goodbye.");
 			close;
 		}
 	}
 	end;
 
 OnSellTooHigh:
-	mes "^FF0000You don't have that many shares.^000000";
+	mes("^FF0000You don't have that many shares.^000000");
 	next;
 	return;
 
 OnNoZeny:
-	mes "^FF0000You do not have enough zeny.^000000";
+	mes("^FF0000You do not have enough zeny.^000000");
 	next;
 	return;
 
@@ -638,8 +638,8 @@ OnNoZeny:
 OnGMMenu:
 	freeloop(true);
 	while (true) {
-		mes "[Stock Market]";
-		mes "Master, do you require anything?";
+		mes("[Stock Market]");
+		mes("Master, do you require anything?");
 		switch (select("Fluctuate Market", "Reset Prices", "Nothing")) {
 		case 1:
 			set $fluc,rand (-6,6);
@@ -733,7 +733,7 @@ OnGMMenu:
 			if ($S10 < 1) set $S10,1;
 
 			set $S_LastUpd$,"GM Fluctuation";
-			mes "Market fluctuated.";
+			mes("Market fluctuated.");
 			close;
 		case 2:
 			callsub(OnGMOpen);
@@ -747,11 +747,11 @@ OnGMMenu:
 
 OnGMOpen:
 	if (select("Set prices to...", "Cancel") != 1) {
-		mes "Farewell.";
+		mes("Farewell.");
 		close;
 	}
-	mes "Are you sure you want to reset?";
-	mes "^FF0000All share values will become the same.^000000";
+	mes("Are you sure you want to reset?");
+	mes("^FF0000All share values will become the same.^000000");
 	next;
 	if (select("Yes", "No") != 1)
 		return;
@@ -777,6 +777,6 @@ OnGMOpen:
 	set $S8B,@gmset;
 	set $S9B,@gmset;
 	set $S10B,@gmset;
-	mes "All prices changed to " + @gmset + "z.";
+	mes("All prices changed to " + @gmset + "z.");
 	close;
 }

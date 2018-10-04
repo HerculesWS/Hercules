@@ -67,20 +67,20 @@ L_Start_Undead:
 }
 
 prontera,257,313,5	script	Mother Mathana	1_F_PRIEST,{
-	mes "[Mother Mathana]";
+	mes("[Mother Mathana]");
 	if ($UNEASY_DL <= 0) goto L_Undead_Walk;
-	mes "I'm afraid there's something wrong with our old cemetery...";
-	if ($UNEASY_H$==strcharinfo(PC_NAME)) mes "But thanks to you, "+$UNEASY_H$+", we'll be able to sleep " + $UNEASY_DL + " nights!";
-	if ($UNEASY_H$!=strcharinfo(PC_NAME)) mes "But thanks to "+$UNEASY_H$+"'s support, we've got " + $UNEASY_DL + " easy nights!";
+	mes("I'm afraid there's something wrong with our old cemetery...");
+	if ($UNEASY_H$==strcharinfo(PC_NAME)) mes("But thanks to you, "+$UNEASY_H$+", we'll be able to sleep " + $UNEASY_DL + " nights!");
+	if ($UNEASY_H$!=strcharinfo(PC_NAME)) mes("But thanks to "+$UNEASY_H$+"'s support, we've got " + $UNEASY_DL + " easy nights!");
 	emotion 0;
 	close;
 
 L_Undead_Walk:
-	if ($UNEASY_DL == 0) mes "THEY could return tomorrow's night again!";
-	if ($UNEASY_DL == 0 && $UNEASY_H$==strcharinfo(PC_NAME)) mes "Thank you, "+$UNEASY_H$+"! Now we'll manage to rest till the next midnight!";
-	if ($UNEASY_DL == 0 && $UNEASY_H$!=strcharinfo(PC_NAME)) mes "But due to "+$UNEASY_H$+"'s help we'll manage to rest till the next midnight!";
-	mes "To calm down the restless cemetery, we should pour all these graves with the Holy Water. But our sisters and broters have run out of it.";
-	mes "Could you supply us with Holy Water?";
+	if ($UNEASY_DL == 0) mes("THEY could return tomorrow's night again!");
+	if ($UNEASY_DL == 0 && $UNEASY_H$==strcharinfo(PC_NAME)) mes("Thank you, "+$UNEASY_H$+"! Now we'll manage to rest till the next midnight!");
+	if ($UNEASY_DL == 0 && $UNEASY_H$!=strcharinfo(PC_NAME)) mes("But due to "+$UNEASY_H$+"'s help we'll manage to rest till the next midnight!");
+	mes("To calm down the restless cemetery, we should pour all these graves with the Holy Water. But our sisters and broters have run out of it.");
+	mes("Could you supply us with Holy Water?");
 	next;
 	switch (select("Yes, have all my Holy Water!", "Nope, I need it.", "I don't have any.")) {
 	case 1:
@@ -90,47 +90,47 @@ L_Undead_Walk:
 		delitem 523,countitem(Holy_Water);
 
 		if ($UNEASY_BL > 0) {
-			mes "[Mother Mathana]";
-			mes "Thank you, good "+strcharinfo(PC_NAME)+", but we still need " + $UNEASY_BL + " more Holy Water bottles.";
+			mes("[Mother Mathana]");
+			mes("Thank you, good "+strcharinfo(PC_NAME)+", but we still need " + $UNEASY_BL + " more Holy Water bottles.");
 			close;
 		}
 		//set quiet days!!! no more undead for this period!
 		set $UNEASY_DL,5+((0-$UNEASY_BL)/30);
 		set $UNEASY_H$,strcharinfo(PC_NAME);
-		mes "[Mother Mathana]";
-		mes "Thank you, "+$UNEASY_H$+"! Now we've got enough Holy Water!";
+		mes("[Mother Mathana]");
+		mes("Thank you, "+$UNEASY_H$+"! Now we've got enough Holy Water!");
 		next;
-		mes "[Mother Mathana]";
-		mes "Upon pouring the cemetery with that water we'll get " + $UNEASY_DL + " safe nights!";
+		mes("[Mother Mathana]");
+		mes("Upon pouring the cemetery with that water we'll get " + $UNEASY_DL + " safe nights!");
 		next;
 		killmonster "prontera", "Uneasy_Check::OnZombieDead"; //kills any left monsters
-		mes "[Mother Mathana]";
-		mes "See, "+ $UNEASY_H$ +"? They all are gone now!";
+		mes("[Mother Mathana]");
+		mes("See, "+ $UNEASY_H$ +"? They all are gone now!");
 		next;
-		mes "[Mother Mathana]";
-		mes "Our Church is going to thank you personally...";
+		mes("[Mother Mathana]");
+		mes("Our Church is going to thank you personally...");
 		next;
 		if (Sex == SEX_MALE)
 			mapannounce "prontera","[Mother Mathana]: In the name of Odin we declare handsom "+$UNEASY_H$+" as a Prontera savior!",0;
 		else
 			mapannounce "prontera","[Mother Mathana]: In the name of Odin we declare beautiful "+$UNEASY_H$+" as a Prontera savior!",0;
-		mes "[Mother Mathana]";
-		mes "In the name of Odin we bless you and decently present a modest gift just from Mareusis' wine-cellar.";
+		mes("[Mother Mathana]");
+		mes("In the name of Odin we bless you and decently present a modest gift just from Mareusis' wine-cellar.");
 		getitem Blue_Potion,1;
 		set JobExp,JobExp+100;
 		set BaseExp,BaseExp+50;
 		close;
 	case 2:
-		mes "[Mother Mathana]";
-		mes "I'm afraid the old cemetery is going out of control soon... Please, get us all the Holy Water you can get.";
+		mes("[Mother Mathana]");
+		mes("I'm afraid the old cemetery is going out of control soon... Please, get us all the Holy Water you can get.");
 		close;
 	case 3:
 		break; // Not enough
 	}
 	// Not enough
-	mes "[Mother Mathana]";
-	mes "Alas! We still need " + $UNEASY_BL + " more bottles of Holy Water...  Why don't you go and ask other people for some extra Holy Water?";
-	mes "The old cemetery is going out of control soon...";
-	mes "Please, in the name of Odin, help Prontera city.";
+	mes("[Mother Mathana]");
+	mes("Alas! We still need " + $UNEASY_BL + " more bottles of Holy Water...  Why don't you go and ask other people for some extra Holy Water?");
+	mes("The old cemetery is going out of control soon...");
+	mes("Please, in the name of Odin, help Prontera city.");
 	close;
 }

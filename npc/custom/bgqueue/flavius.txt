@@ -334,10 +334,10 @@ OnStop:
 
 bat_b01,10,294,3	script	Battle Therapist#b01_a	4_F_SISTER,{
 	specialeffect(EF_HEAL, AREA, playerattached());
-	mes "[Battle Therapist]";
-	mes "Just close your eyes,";
-	mes "and take a deep breath.";
-	mes "You can be free from pain.";
+	mes("[Battle Therapist]");
+	mes("Just close your eyes,");
+	mes("and take a deep breath.");
+	mes("You can be free from pain.");
 	close;
 
 OnTimer25000:
@@ -379,10 +379,10 @@ OnTouch:
 
 bat_b01,389,14,3	script	Battle Therapist#b01_b	4_F_SISTER,{
 	specialeffect(EF_HEAL, AREA, playerattached());
-	mes "[Battle Therapist]";
-	mes "Just close your eyes,";
-	mes "and take a deep breath.";
-	mes "You can be free from pain.";
+	mes("[Battle Therapist]");
+	mes("Just close your eyes,");
+	mes("and take a deep breath.");
+	mes("You can be free from pain.");
 	close;
 
 OnTimer25000:
@@ -442,18 +442,18 @@ bat_b01,10,294,3	script	Guillaume Vintenar#b01_a	4_M_RASWORD,{
 			set .@your_medal,countitem(BF_Badge2);
 			set .@medal_gap,500 - .@your_medal;
 			if (.@medal_gap > 8) {
-				mes "[Axl Rose]";
-				mes "Blessed Guillaume!";
-				mes "Let's enjoy our glorious victory!";
-				mes ""+strcharinfo(PC_NAME)+", it's a sign reflecting victory.";
+				mes("[Axl Rose]");
+				mes("Blessed Guillaume!");
+				mes("Let's enjoy our glorious victory!");
+				mes(""+strcharinfo(PC_NAME)+", it's a sign reflecting victory.");
 				close2;
 				getitem BF_Badge2,9;
 			}
 			else {
-				mes "[Axl Rose]";
-				mes "Blessed Guillaume!";
-				mes "Let's enjoy our glorious victory!";
-				mes ""+strcharinfo(PC_NAME)+", it's a sign reflecting victory.";
+				mes("[Axl Rose]");
+				mes("Blessed Guillaume!");
+				mes("Let's enjoy our glorious victory!");
+				mes(""+strcharinfo(PC_NAME)+", it's a sign reflecting victory.");
 				close2;
 				getitem BF_Badge2,.@medal_gap;
 			}
@@ -462,18 +462,18 @@ bat_b01,10,294,3	script	Guillaume Vintenar#b01_a	4_M_RASWORD,{
 			set .@your_medal,countitem(BF_Badge2);
 			set .@medal_gap,500 - .@your_medal;
 			if (.@medal_gap > 2) {
-				mes "[Axl Rose]";
-				mes "You lost, but you're dedicated to this battle.";
-				mes "This is a reward for your great dedication by Guillaume Marollo!";
-				mes "Just take this defeat as a lesson, next time you will definitely win.";
+				mes("[Axl Rose]");
+				mes("You lost, but you're dedicated to this battle.");
+				mes("This is a reward for your great dedication by Guillaume Marollo!");
+				mes("Just take this defeat as a lesson, next time you will definitely win.");
 				close2;
 				getitem BF_Badge2,3;
 			}
 			else {
-				mes "[Axl Rose]";
-				mes "You lost, but you're dedicated to this battle.";
-				mes "This is a reward for your great dedication by Guillaume Marollo!";
-				mes "Just take this defeat as a lesson, next time you will definitely win.";
+				mes("[Axl Rose]");
+				mes("You lost, but you're dedicated to this battle.");
+				mes("This is a reward for your great dedication by Guillaume Marollo!");
+				mes("Just take this defeat as a lesson, next time you will definitely win.");
 				close2;
 				getitem BF_Badge2,.@medal_gap;
 			}
@@ -494,18 +494,18 @@ bat_b01,389,14,3	script	Croix Vintenar#b01_b	4_M_RASWORD,{
 			set .@your_medal,countitem(BF_Badge2);
 			set .@medal_gap,500 - .@your_medal;
 			if (.@medal_gap > 8) {
-				mes "[Swandery]";
-				mes "Blessed Croix!";
-				mes "Let's enjoy our glorious victory!";
-				mes ""+strcharinfo(PC_NAME)+", it's a sign reflecting victory.";
+				mes("[Swandery]");
+				mes("Blessed Croix!");
+				mes("Let's enjoy our glorious victory!");
+				mes(""+strcharinfo(PC_NAME)+", it's a sign reflecting victory.");
 				close2;
 				getitem BF_Badge2,9;
 			}
 			else {
-				mes "[Swandery]";
-				mes "Blessed Croix!";
-				mes "Let's enjoy our glorious victory!";
-				mes ""+strcharinfo(PC_NAME)+", it's a sign reflecting victory.";
+				mes("[Swandery]");
+				mes("Blessed Croix!");
+				mes("Let's enjoy our glorious victory!");
+				mes(""+strcharinfo(PC_NAME)+", it's a sign reflecting victory.");
 				close2;
 				getitem BF_Badge2,.@medal_gap;
 			}
@@ -514,18 +514,18 @@ bat_b01,389,14,3	script	Croix Vintenar#b01_b	4_M_RASWORD,{
 			set .@your_medal,countitem(BF_Badge2);
 			set .@medal_gap,500 - .@your_medal;
 			if (.@medal_gap > 2) {
-				mes "[Swandery]";
-				mes "Oh, "+strcharinfo(PC_NAME)+". Don't be sad.";
-				mes "Even though we didn't win, we did our best.";
-				mes "This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.";
+				mes("[Swandery]");
+				mes("Oh, "+strcharinfo(PC_NAME)+". Don't be sad.");
+				mes("Even though we didn't win, we did our best.");
+				mes("This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.");
 				close2;
 				getitem BF_Badge2,3;
 			}
 			else {
-				mes "[Swandery]";
-				mes "Oh, "+strcharinfo(PC_NAME)+". Don't be sad.";
-				mes "Even though we didn't win, we did our best.";
-				mes "This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.";
+				mes("[Swandery]");
+				mes("Oh, "+strcharinfo(PC_NAME)+". Don't be sad.");
+				mes("Even though we didn't win, we did our best.");
+				mes("This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.");
 				close2;
 				getitem BF_Badge2,.@medal_gap;
 			}
@@ -628,18 +628,18 @@ bat_b01,10,294,3	script	Vintenar#bat_b01_aover	4_M_KY_HEAD,{
 			set .@your_medal,countitem(BF_Badge2);
 			set .@medal_gap,500 - .@your_medal;
 			if (.@medal_gap > 8) {
-				mes "[Axl Rose]";
-				mes "Blessed Guillaume!";
-				mes "Let's enjoy our glorious victory!";
-				mes ""+strcharinfo(PC_NAME)+", it's a sign reflecting victory.";
+				mes("[Axl Rose]");
+				mes("Blessed Guillaume!");
+				mes("Let's enjoy our glorious victory!");
+				mes(""+strcharinfo(PC_NAME)+", it's a sign reflecting victory.");
 				close2;
 				getitem BF_Badge2,9;
 			}
 			else {
-				mes "[Axl Rose]";
-				mes "Blessed Guillaume!";
-				mes "Let's enjoy our glorious victory!";
-				mes ""+strcharinfo(PC_NAME)+", it's a sign reflecting victory.";
+				mes("[Axl Rose]");
+				mes("Blessed Guillaume!");
+				mes("Let's enjoy our glorious victory!");
+				mes(""+strcharinfo(PC_NAME)+", it's a sign reflecting victory.");
 				close2;
 				getitem BF_Badge2,.@medal_gap;
 			}
@@ -648,18 +648,18 @@ bat_b01,10,294,3	script	Vintenar#bat_b01_aover	4_M_KY_HEAD,{
 			set .@your_medal,countitem(BF_Badge2);
 			set .@medal_gap,500 - .@your_medal;
 			if (.@medal_gap > 2) {
-				mes "[Axl Rose]";
-				mes "You lost, but you're dedicated to this battle.";
-				mes "This is a reward for your great dedication by Guillaume Marollo!";
-				mes "Just take this defeat as a lesson, next time you will definitely win.";
+				mes("[Axl Rose]");
+				mes("You lost, but you're dedicated to this battle.");
+				mes("This is a reward for your great dedication by Guillaume Marollo!");
+				mes("Just take this defeat as a lesson, next time you will definitely win.");
 				close2;
 				getitem BF_Badge2,3;
 			}
 			else {
-				mes "[Axl Rose]";
-				mes "You lost, but you're dedicated to this battle.";
-				mes "This is a reward for your great dedication by Guillaume Marollo!";
-				mes "Just take this defeat as a lesson, next time you will definitely win.";
+				mes("[Axl Rose]");
+				mes("You lost, but you're dedicated to this battle.");
+				mes("This is a reward for your great dedication by Guillaume Marollo!");
+				mes("Just take this defeat as a lesson, next time you will definitely win.");
 				close2;
 				getitem BF_Badge2,.@medal_gap;
 			}
@@ -668,26 +668,26 @@ bat_b01,10,294,3	script	Vintenar#bat_b01_aover	4_M_KY_HEAD,{
 			set .@your_medal,countitem(BF_Badge2);
 			set .@medal_gap,500 - .@your_medal;
 			if (.@medal_gap > 2) {
-				mes "[Axl Rose]";
-				mes "You lost, but you're dedicated to this battle.";
-				mes "This is a reward for your great dedication by Guillaume Marollo!";
-				mes "Just take this defeat as a lesson, next time you will definitely win.";
+				mes("[Axl Rose]");
+				mes("You lost, but you're dedicated to this battle.");
+				mes("This is a reward for your great dedication by Guillaume Marollo!");
+				mes("Just take this defeat as a lesson, next time you will definitely win.");
 				close2;
 				getitem BF_Badge2,3;
 			}
 			else {
-				mes "[Axl Rose]";
-				mes "You lost, but you're dedicated to this battle.";
-				mes "This is a reward for your great dedication by Guillaume Marollo!";
-				mes "Just take this defeat as a lesson, next time you will definitely win.";
+				mes("[Axl Rose]");
+				mes("You lost, but you're dedicated to this battle.");
+				mes("This is a reward for your great dedication by Guillaume Marollo!");
+				mes("Just take this defeat as a lesson, next time you will definitely win.");
 				close2;
 				getitem BF_Badge2,.@medal_gap;
 			}
 		}
 	}
 	else {
-		mes "[Axl Rose]";
-		mes "Why are you here, Croix mercenary? I am definitely sure of victory against foolish Croix such as you. Ha!";
+		mes("[Axl Rose]");
+		mes("Why are you here, Croix mercenary? I am definitely sure of victory against foolish Croix such as you. Ha!");
 		close;
 	}
 	bg_leave;
@@ -706,18 +706,18 @@ bat_b01,389,14,3	script	Vintenar#bat_b01_bover	4_M_CRU_HEAD,{
 			set .@your_medal,countitem(BF_Badge2);
 			set .@medal_gap,500 - .@your_medal;
 			if (.@medal_gap > 2) {
-				mes "[Swandery]";
-				mes "Oh, "+strcharinfo(PC_NAME)+". Don't be sad.";
-				mes "Even though we didn't win, we did our best.";
-				mes "This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.";
+				mes("[Swandery]");
+				mes("Oh, "+strcharinfo(PC_NAME)+". Don't be sad.");
+				mes("Even though we didn't win, we did our best.");
+				mes("This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.");
 				close2;
 				getitem BF_Badge2,3;
 			}
 			else {
-				mes "[Swandery]";
-				mes "Oh, "+strcharinfo(PC_NAME)+". Don't be sad.";
-				mes "Even though we didn't win, we did our best.";
-				mes "This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.";
+				mes("[Swandery]");
+				mes("Oh, "+strcharinfo(PC_NAME)+". Don't be sad.");
+				mes("Even though we didn't win, we did our best.");
+				mes("This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.");
 				close2;
 				getitem BF_Badge2,.@medal_gap;
 			}
@@ -726,18 +726,18 @@ bat_b01,389,14,3	script	Vintenar#bat_b01_bover	4_M_CRU_HEAD,{
 			set .@your_medal,countitem(BF_Badge2);
 			set .@medal_gap,500 - .@your_medal;
 			if (.@medal_gap > 2) {
-				mes "[Swandery]";
-				mes "Oh, "+strcharinfo(PC_NAME)+". Don't be sad.";
-				mes "Even though we didn't win, we did our best.";
-				mes "This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.";
+				mes("[Swandery]");
+				mes("Oh, "+strcharinfo(PC_NAME)+". Don't be sad.");
+				mes("Even though we didn't win, we did our best.");
+				mes("This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.");
 				close2;
 				getitem BF_Badge2,3;
 			}
 			else {
-				mes "[Swandery]";
-				mes "Oh, "+strcharinfo(PC_NAME)+". Don't be sad.";
-				mes "Even though we didn't win, we did our best.";
-				mes "This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.";
+				mes("[Swandery]");
+				mes("Oh, "+strcharinfo(PC_NAME)+". Don't be sad.");
+				mes("Even though we didn't win, we did our best.");
+				mes("This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.");
 				close2;
 				getitem BF_Badge2,.@medal_gap;
 			}
@@ -746,26 +746,26 @@ bat_b01,389,14,3	script	Vintenar#bat_b01_bover	4_M_CRU_HEAD,{
 			set .@your_medal,countitem(BF_Badge2);
 			set .@medal_gap,500 - .@your_medal;
 			if (.@medal_gap > 8) {
-				mes "[Swandery]";
-				mes "Blessed Croix!";
-				mes "Let's enjoy our glorious victory!";
-				mes ""+strcharinfo(PC_NAME)+", it's a sign reflecting victory.";
+				mes("[Swandery]");
+				mes("Blessed Croix!");
+				mes("Let's enjoy our glorious victory!");
+				mes(""+strcharinfo(PC_NAME)+", it's a sign reflecting victory.");
 				close2;
 				getitem BF_Badge2,9;
 			}
 			else {
-				mes "[Swandery]";
-				mes "Blessed Croix!";
-				mes "Let's enjoy our glorious victory!";
-				mes ""+strcharinfo(PC_NAME)+", it's a sign reflecting victory.";
+				mes("[Swandery]");
+				mes("Blessed Croix!");
+				mes("Let's enjoy our glorious victory!");
+				mes(""+strcharinfo(PC_NAME)+", it's a sign reflecting victory.");
 				close2;
 				getitem BF_Badge2,.@medal_gap;
 			}
 		}
 	}
 	else {
-		mes "[Swandery]";
-		mes "Why do you come here as a Guillaume? You will be sent to where you should be!";
+		mes("[Swandery]");
+		mes("Why do you come here as a Guillaume? You will be sent to where you should be!");
 		close;
 	}
 	bg_leave;
