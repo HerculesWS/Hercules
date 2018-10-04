@@ -38,28 +38,28 @@
 
 //== Floating mailbox npc that all NPCs duplicate from =====
 -	script	Mailbox#dummy::MailBox	FAKE_NPC,{
-	mes "[Mailbox]";
-	mes "To use the mailbox service,";
-	mes "you are required to pay 130 zeny.";
-	mes "Would you like to use the service?";
+	mes("[Mailbox]");
+	mes("To use the mailbox service,");
+	mes("you are required to pay 130 zeny.");
+	mes("Would you like to use the service?");
 	next;
 	switch(select("Yes.", "No.")) {
 	case 1:
-		mes "[Mailbox]";
+		mes("[Mailbox]");
 		if (Zeny < 130) {
-			mes "I am sorry, but you do not have enough money.";
-			mes "To use the mailbox service,";
-			mes "you are required to pay 130 zeny.";
+			mes("I am sorry, but you do not have enough money.");
+			mes("To use the mailbox service,");
+			mes("you are required to pay 130 zeny.");
 			close;
 		}
-		mes "Thank you, please come again.";
+		mes("Thank you, please come again.");
 		Zeny -= 130;
 		close2;
 		openmail;
 		end;
 	case 2:
-		mes "[Mailbox]";
-		mes "Thank you, please come again.";
+		mes("[Mailbox]");
+		mes("Thank you, please come again.");
 		close;
 	}
 }
