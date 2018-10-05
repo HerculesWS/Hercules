@@ -525,9 +525,9 @@ mora,140,186,3	script	Raffle Philosopher	4_M_RAFLE_OLD,{
 		mes("- John Dewey -");
 		break;
 	case 8:
-		mes("We sow our thoughts, and we reap our actions");
-		mes("we sow our actions, and we reap our habits");
-		mes("we sow our habits, and we reap our characters");
+		mes("We sow our thoughts, and we reap our actions;");
+		mes("we sow our actions, and we reap our habits;");
+		mes("we sow our habits, and we reap our characters;");
 		mes("we sow our characters, and we reap our destiny.");
 		mes("- Erasmus -");
 		break;

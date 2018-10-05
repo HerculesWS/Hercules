@@ -1778,7 +1778,7 @@ OnTouch:
 	mes("You get to pass if you get 4 or above but nobody knows what will come from a dice roll.");
 	next;
 	mes("Rule 2");
-	mes("If you get 1, 2, or 3 you move right to the arrival; if you get 4, 5, or 6 you get to choose to move to block 29.");
+	mes("If you get 1, 2, or 3 you move right to the arrival point; if you get 4, 5, or 6 you get to choose to move to block 29.");
 	next;
 	switch(select("Try it the other way.", "Go by the rules.")) {
 	case 1:
