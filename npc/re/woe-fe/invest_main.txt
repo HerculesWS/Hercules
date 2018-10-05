@@ -853,7 +853,7 @@ OnAgitInvest:
 			close;
 		case 4:
 			mes(.@n$);
-			mes("The Abyss Gate is basically contracting and connecting with the castle that owns the Agit);";
+			mes("The Abyss Gate is basically contracting and connecting with the castle that owns the Agit;");
 			mes("therefore, we will provide all we have once the costs for connecting and maintaining the gate are sufficient.");
 			next;
 			mes(.@n$);

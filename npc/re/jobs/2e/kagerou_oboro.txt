@@ -1721,7 +1721,7 @@ OnTouch:
 	mes("There are tiny letters on the sign.");
 	next;
 	mes("Rock-paper-scissors Machine:");
-	mes("If you win, you get to move to any block between 33 to 38); if you lose or is a draw, you have to move to block 0.";
+	mes("If you win, you get to move to any block between 33 to 38; if you lose or is a draw, you have to move to block 0.");
 	next;
 	switch (callfunc("F_KO_Survival_rps")) {
 	case 1:
@@ -1778,7 +1778,7 @@ OnTouch:
 	mes("You get to pass if you get 4 or above but nobody knows what will come from a dice roll.");
 	next;
 	mes("Rule 2");
-	mes("If you get 1, 2, or 3 you move right to the arrival point); if you get 4, 5, or 6 you get to choose to move to block 29.";
+	mes("If you get 1, 2, or 3 you move right to the arrival; if you get 4, 5, or 6 you get to choose to move to block 29.");
 	next;
 	switch(select("Try it the other way.", "Go by the rules.")) {
 	case 1:
@@ -1815,7 +1815,7 @@ OnTouch:
 	next;
 	mes("There are only 3 blocks left to the finish line but you can't you go so easily.");
 	next;
-	mes("If you get 1, 3, or 5, move to the arrival point); if you get 2, 4, or 6, go back to the starting point.";
+	mes("If you get 1, 3, or 5, move to the arrival point; if you get 2, 4, or 6, go back to the starting point.");
 	next;
 	set .@dice, callfunc("F_KO_Survival_dice",37,1,1);
 	if (.@dice % 2) {
