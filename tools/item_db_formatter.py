@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 # This file is part of Hercules.
 # http://herc.ws - http://github.com/HerculesWS/Hercules
 #
