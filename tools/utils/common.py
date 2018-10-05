@@ -21,45 +21,47 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import io
-import libconf as libconf
+import utils.libconf as libconf
 import os.path
 
+
 def LoadDBConsts(DBname, mode, serverpath):
-	filenames = [serverpath + 'db/{}/{}.conf'.format(mode, DBname)]
+    filenames = [serverpath + 'db/{}/{}.conf'.format(mode, DBname)]
 
-	if os.path.isfile(serverpath + 'db/{}2.conf'.format(DBname)):
-		filenames.append(serverpath + 'db/{}2.conf'.format(DBname))
+    if os.path.isfile(serverpath + 'db/{}2.conf'.format(DBname)):
+        filenames.append(serverpath + 'db/{}2.conf'.format(DBname))
 
-	consts = dict()
-	for filename in filenames:
-		with io.open(filename) as f:
-			config = libconf.load(f)
-			db = config[DBname]
-			if DBname is 'item_db':
-				for i, v in enumerate(db):
-					consts[db[i].Id] = db[i].AegisName
-			elif DBname is 'mob_db':
-				for i, v in enumerate(db):
-					consts[db[i].Id] = db[i].SpriteName
-			elif DBname is 'skill_db':
-				for i, v in enumerate(db):
-					consts[db[i].Id] = db[i].Name
-			else:
-				print('LoadDBConsts: invalid database name {}'.format(DBname))
-				exit(1)
-	return consts
+    consts = dict()
+    for filename in filenames:
+        with io.open(filename) as f:
+            config = libconf.load(f)
+            db = config[DBname]
+            if DBname is 'item_db':
+                for i, v in enumerate(db):
+                    consts[db[i].Id] = db[i].AegisName
+            elif DBname is 'mob_db':
+                for i, v in enumerate(db):
+                    consts[db[i].Id] = db[i].SpriteName
+            elif DBname is 'skill_db':
+                for i, v in enumerate(db):
+                    consts[db[i].Id] = db[i].Name
+            else:
+                print('LoadDBConsts: invalid database name {}'.format(DBname))
+                exit(1)
+    return consts
+
 
 def LoadDB(DBname, mode, serverpath):
-	filenames = [serverpath + 'db/{}/{}.conf'.format(mode, DBname)]
+    filenames = [serverpath + 'db/{}/{}.conf'.format(mode, DBname)]
 
-	if os.path.isfile(serverpath + 'db/{}2.conf'.format(DBname)):
-		filenames.append(serverpath + 'db/{}2.conf'.format(DBname))
+    if os.path.isfile(serverpath + 'db/{}2.conf'.format(DBname)):
+        filenames.append(serverpath + 'db/{}2.conf'.format(DBname))
 
-	consts = dict()
-	for filename in filenames:
-		with io.open(filename) as f:
-			config = libconf.load(f)
-			db = config[DBname]
-			return db
-	print('LoadDB: invalid database name {}'.format(DBname))
-	exit(1)
+    consts = dict()
+    for filename in filenames:
+        with io.open(filename) as f:
+            config = libconf.load(f)
+            db = config[DBname]
+            return db
+    print('LoadDB: invalid database name {}'.format(DBname))
+    exit(1)

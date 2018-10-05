@@ -25,72 +25,73 @@ import sys
 import utils.common as Tools
 
 SKILL_STATES = {
-	"any":       "MSS_ANY",
-	"idle":      "MSS_IDLE",
-	"walk":      "MSS_WALK",
-	"loot":      "MSS_LOOT",
-	"dead":      "MSS_DEAD",
-	"attack":    "MSS_BERSERK",
-	"angry":     "MSS_ANGRY",
-	"chase":     "MSS_RUSH",
-	"follow":    "MSS_FOLLOW",
-	"anytarget": "MSS_ANYTARGET"
+    "any": "MSS_ANY",
+    "idle": "MSS_IDLE",
+    "walk": "MSS_WALK",
+    "loot": "MSS_LOOT",
+    "dead": "MSS_DEAD",
+    "attack": "MSS_BERSERK",
+    "angry": "MSS_ANGRY",
+    "chase": "MSS_RUSH",
+    "follow": "MSS_FOLLOW",
+    "anytarget": "MSS_ANYTARGET"
 }
 SKILL_COND1 = {
-	"always":            "MSC_ALWAYS",
-	"myhpltmaxrate":     "MSC_MYHPLTMAXRATE",
-	"myhpinrate":        "MSC_MYHPINRATE",
-	"friendhpltmaxrate": "MSC_FRIENDHPLTMAXRATE",
-	"friendhpinrate":    "MSC_FRIENDHPINRATE",
-	"mystatuson":        "MSC_MYSTATUSON",
-	"mystatusoff":       "MSC_MYSTATUSOFF",
-	"friendstatuson":    "MSC_FRIENDSTATUSON",
-	"friendstatusoff":   "MSC_FRIENDSTATUSOFF",
-	"attackpcgt":        "MSC_ATTACKPCGT",
-	"attackpcge":        "MSC_ATTACKPCGE",
-	"slavelt":           "MSC_SLAVELT",
-	"slavele":           "MSC_SLAVELE",
-	"closedattacked":    "MSC_CLOSEDATTACKED",
-	"longrangeattacked": "MSC_LONGRANGEATTACKED",
-	"skillused":         "MSC_SKILLUSED",
-	"afterskill":        "MSC_AFTERSKILL",
-	"casttargeted":      "MSC_CASTTARGETED",
-	"rudeattacked":      "MSC_RUDEATTACKED",
-	"masterhpltmaxrate": "MSC_MASTERHPLTMAXRATE",
-	"masterattacked":    "MSC_MASTERATTACKED",
-	"alchemist":         "MSC_ALCHEMIST",
-	"onspawn":           "MSC_SPAWN"
+    "always": "MSC_ALWAYS",
+    "myhpltmaxrate": "MSC_MYHPLTMAXRATE",
+    "myhpinrate": "MSC_MYHPINRATE",
+    "friendhpltmaxrate": "MSC_FRIENDHPLTMAXRATE",
+    "friendhpinrate": "MSC_FRIENDHPINRATE",
+    "mystatuson": "MSC_MYSTATUSON",
+    "mystatusoff": "MSC_MYSTATUSOFF",
+    "friendstatuson": "MSC_FRIENDSTATUSON",
+    "friendstatusoff": "MSC_FRIENDSTATUSOFF",
+    "attackpcgt": "MSC_ATTACKPCGT",
+    "attackpcge": "MSC_ATTACKPCGE",
+    "slavelt": "MSC_SLAVELT",
+    "slavele": "MSC_SLAVELE",
+    "closedattacked": "MSC_CLOSEDATTACKED",
+    "longrangeattacked": "MSC_LONGRANGEATTACKED",
+    "skillused": "MSC_SKILLUSED",
+    "afterskill": "MSC_AFTERSKILL",
+    "casttargeted": "MSC_CASTTARGETED",
+    "rudeattacked": "MSC_RUDEATTACKED",
+    "masterhpltmaxrate": "MSC_MASTERHPLTMAXRATE",
+    "masterattacked": "MSC_MASTERATTACKED",
+    "alchemist": "MSC_ALCHEMIST",
+    "onspawn": "MSC_SPAWN"
 }
 SKILL_COND2 = {
-	"anybad":    "MSC_ANY",
-	"stone":     "SC_STONE",
-	"freeze":    "SC_FREEZE",
-	"stun":      "SC_STUN",
-	"sleep":     "SC_SLEEP",
-	"poison":    "SC_POISON",
-	"curse":     "SC_CURSE",
-	"silence":   "SC_SILENCE",
-	"confusion": "SC_CONFUSION",
-	"blind":     "SC_BLIND",
-	"hiding":    "SC_HIDING",
-	"sight":     "SC_SIGHT"
+    "anybad": "MSC_ANY",
+    "stone": "SC_STONE",
+    "freeze": "SC_FREEZE",
+    "stun": "SC_STUN",
+    "sleep": "SC_SLEEP",
+    "poison": "SC_POISON",
+    "curse": "SC_CURSE",
+    "silence": "SC_SILENCE",
+    "confusion": "SC_CONFUSION",
+    "blind": "SC_BLIND",
+    "hiding": "SC_HIDING",
+    "sight": "SC_SIGHT"
 }
 SKILL_TARGET = {
-	"target":       "MST_TARGET",
-	"randomtarget": "MST_RANDOM",
-	"self":         "MST_SELF",
-	"friend":       "MST_FRIEND",
-	"master":       "MST_MASTER",
-	"around5":      "MST_AROUND5",
-	"around6":      "MST_AROUND6",
-	"around7":      "MST_AROUND7",
-	"around8":      "MST_AROUND8",
-	"around1":      "MST_AROUND1",
-	"around2":      "MST_AROUND2",
-	"around3":      "MST_AROUND3",
-	"around4":      "MST_AROUND4",
-	"around":       "MST_AROUND"
+    "target": "MST_TARGET",
+    "randomtarget": "MST_RANDOM",
+    "self": "MST_SELF",
+    "friend": "MST_FRIEND",
+    "master": "MST_MASTER",
+    "around5": "MST_AROUND5",
+    "around6": "MST_AROUND6",
+    "around7": "MST_AROUND7",
+    "around8": "MST_AROUND8",
+    "around1": "MST_AROUND1",
+    "around2": "MST_AROUND2",
+    "around3": "MST_AROUND3",
+    "around4": "MST_AROUND4",
+    "around": "MST_AROUND"
 }
+
 
 def printHeader():
     print("""
@@ -122,143 +123,158 @@ mob_skill_db:(
 	}
 **************************************************************************/""")
 
+
 def printFooter():
     print('}\n)\n')
+
 
 def isValidEntry(line):
     if re.match('^[0-9]+,.*', line):
         return True
     return False
 
+
 def commaSplit(line):
     return line.split(',')
+
 
 def stripLinebreak(line):
     return line.replace('\r', '').replace('\n', '')
 
+
 def printInt(key, value):
-	if key in value:
-		if int(value[key]) is not 0:
-			print('\t\t\t{}: {}'.format(key, value[key]))
+    if key in value:
+        if int(value[key]) is not 0:
+            print('\t\t\t{}: {}'.format(key, value[key]))
+
 
 def printStrToInt(key, value):
-	if value[key] is not '':
-		if int(value[key]) is not 0:
-			print('\t\t\t{}: {}'.format(key, value[key]))
+    if value[key] is not '':
+        if int(value[key]) is not 0:
+            print('\t\t\t{}: {}'.format(key, value[key]))
+
 
 def printBool(key, value):
-	if value[key] == 'yes':
-		print('\t\t\t{}: true'.format(key))
+    if value[key] == 'yes':
+        print('\t\t\t{}: true'.format(key))
+
 
 def printClearSkills(key, value):
-	if value[key] == 'clear':
-		print('\t\t\t{}: true'.format(key))
+    if value[key] == 'clear':
+        print('\t\t\t{}: true'.format(key))
+
 
 def printSkillState(key, value):
-	if value[key]:
-		print('\t\t\t{}: "{}"'.format(key, SKILL_STATES[value[key]]))
+    if value[key]:
+        print('\t\t\t{}: "{}"'.format(key, SKILL_STATES[value[key]]))
+
 
 def printSkillTarget(key, value):
-	if value[key]:
-		print('\t\t\t{}: "{}"'.format(key, SKILL_TARGET[value[key]]))
+    if value[key]:
+        print('\t\t\t{}: "{}"'.format(key, SKILL_TARGET[value[key]]))
+
 
 def printCastCondition(key, value):
-	if value[key]:
-		print('\t\t\t{}: "{}"'.format(key, SKILL_COND1[value[key]]))
+    if value[key]:
+        print('\t\t\t{}: "{}"'.format(key, SKILL_COND1[value[key]]))
+
 
 def printConditionData(key, value):
-	if value[key] in SKILL_COND2:
-		print('\t\t\t{}: "{}"'.format(key, SKILL_COND2[value[key]]))
-	elif value[key] is not '':
-		if int(value[key]) is not 0:
-			print('\t\t\t{}: {}'.format(key, value[key]))
+    if value[key] in SKILL_COND2:
+        print('\t\t\t{}: "{}"'.format(key, SKILL_COND2[value[key]]))
+    elif value[key] is not '':
+        if int(value[key]) is not 0:
+            print('\t\t\t{}: {}'.format(key, value[key]))
+
 
 def printEmotion(key, value):
-	if value[key] is not '':
-		print('\t\t\t{}: {}'.format(key, value[key]))
+    if value[key] is not '':
+        print('\t\t\t{}: {}'.format(key, value[key]))
+
 
 def LoadOldDB(mode, serverpath):
+    r = open('{}db/{}/mob_skill_db.txt'.format(serverpath, mode), "r")
 
-	r = open('{}db/{}/mob_skill_db.txt'.format(serverpath, mode), "r")
+    Db = dict()
+    for line in r:
+        if isValidEntry(line) == True:
+            entry = commaSplit(stripLinebreak(line))
+            MonsterId = entry[0]
+            if MonsterId not in Db:
+                Db[MonsterId] = dict()
+            skillidx = len(Db[MonsterId])
+            Db[MonsterId][skillidx] = dict()
+            Db[MonsterId][skillidx]['ClearSkills'] = entry[1]
+            Db[MonsterId][skillidx]['SkillState'] = entry[2]
+            Db[MonsterId][skillidx]['SkillId'] = entry[3]
+            Db[MonsterId][skillidx]['SkillLevel'] = entry[4]
+            Db[MonsterId][skillidx]['Rate'] = entry[5]
+            Db[MonsterId][skillidx]['CastTime'] = entry[6]
+            Db[MonsterId][skillidx]['Delay'] = entry[7]
+            Db[MonsterId][skillidx]['Cancelable'] = entry[8]
+            Db[MonsterId][skillidx]['SkillTarget'] = entry[9]
+            Db[MonsterId][skillidx]['CastCondition'] = entry[10]
+            Db[MonsterId][skillidx]['ConditionData'] = entry[11]
+            for i in range(5):
+                if entry[12 + i] is '':
+                    continue
+                try:
+                    Db[MonsterId][skillidx]['val{}'.format(i)] = int(entry[12 + i])
+                except:
+                    Db[MonsterId][skillidx]['val{}'.format(i)] = int(entry[12 + i], 16)
+            Db[MonsterId][skillidx]['Emotion'] = entry[17]
+            Db[MonsterId][skillidx]['ChatMsgID'] = entry[18]
+    return Db
 
-	Db = dict()
-	for line in r:
-		if isValidEntry(line) == True:
-			entry = commaSplit(stripLinebreak(line))
-			MonsterId = entry[0]
-			if MonsterId not in Db:
-				Db[MonsterId] = dict()
-			skillidx = len(Db[MonsterId])
-			Db[MonsterId][skillidx] = dict()
-			Db[MonsterId][skillidx]['ClearSkills'] = entry[1]
-			Db[MonsterId][skillidx]['SkillState'] = entry[2]
-			Db[MonsterId][skillidx]['SkillId'] = entry[3]
-			Db[MonsterId][skillidx]['SkillLevel'] = entry[4]
-			Db[MonsterId][skillidx]['Rate'] = entry[5]
-			Db[MonsterId][skillidx]['CastTime'] = entry[6]
-			Db[MonsterId][skillidx]['Delay'] = entry[7]
-			Db[MonsterId][skillidx]['Cancelable'] = entry[8]
-			Db[MonsterId][skillidx]['SkillTarget'] = entry[9]
-			Db[MonsterId][skillidx]['CastCondition'] = entry[10]
-			Db[MonsterId][skillidx]['ConditionData'] = entry[11]
-			for i in range(5):
-				if entry[12 + i] is '':
-					continue
-				try:
-					Db[MonsterId][skillidx]['val{}'.format(i)] = int(entry[12 + i])
-				except:
-					Db[MonsterId][skillidx]['val{}'.format(i)] = int(entry[12 + i], 16)
-			Db[MonsterId][skillidx]['Emotion'] = entry[17]
-			Db[MonsterId][skillidx]['ChatMsgID'] = entry[18]
-	return Db
 
 def ConvertDB(mode, serverpath):
-	db = LoadOldDB(mode, serverpath)
-	MobDB = Tools.LoadDBConsts('mob_db', mode, serverpath)
-	SkillDB = Tools.LoadDBConsts('skill_db', mode, serverpath)
+    db = LoadOldDB(mode, serverpath)
+    MobDB = Tools.LoadDBConsts('mob_db', mode, serverpath)
+    SkillDB = Tools.LoadDBConsts('skill_db', mode, serverpath)
 
-	printHeader()
-	for mobid in sorted(db.iterkeys()):
-		print('\t{}: {{'.format(MobDB[int(mobid)]))
-		for skillidx in sorted(db[mobid].iterkeys()):
-			valid = True
-			if int(db[mobid][skillidx]['SkillId']) not in SkillDB:
-				valid = False
-				print('/*')
-				print('// Can\'t find skill with id {} in skill_db'.format(db[mobid][skillidx]['SkillId']))
-				print('\t\t{}: {{'.format(db[mobid][skillidx]['SkillId']))
-			else:
-				print('\t\t{}: {{'.format(SkillDB[int(db[mobid][skillidx]['SkillId'])]))
-			printClearSkills('ClearSkills', db[mobid][skillidx])
-			printSkillState('SkillState', db[mobid][skillidx])
-			printStrToInt('SkillLevel', db[mobid][skillidx])
-			printStrToInt('Rate', db[mobid][skillidx])
-			printStrToInt('CastTime', db[mobid][skillidx])
-			printStrToInt('Delay', db[mobid][skillidx])
-			printBool('Cancelable', db[mobid][skillidx])
-			printSkillTarget('SkillTarget', db[mobid][skillidx])
-			printCastCondition('CastCondition', db[mobid][skillidx])
-			printConditionData('ConditionData', db[mobid][skillidx])
-			for i in range(5):
-				printInt('val{}'.format(i), db[mobid][skillidx])
-			printEmotion('Emotion', db[mobid][skillidx])
-			printStrToInt('ChatMsgID', db[mobid][skillidx])
-			print('\t\t}')
-			if valid is False:
-				print('*/')
-		print('\t}')
-	printFooter()
+    printHeader()
+    for mobid in sorted(db.iterkeys()):
+        print('\t{}: {{'.format(MobDB[int(mobid)]))
+        for skillidx in sorted(db[mobid].iterkeys()):
+            valid = True
+            if int(db[mobid][skillidx]['SkillId']) not in SkillDB:
+                valid = False
+                print('/*')
+                print('// Can\'t find skill with id {} in skill_db'.format(db[mobid][skillidx]['SkillId']))
+                print('\t\t{}: {{'.format(db[mobid][skillidx]['SkillId']))
+            else:
+                print('\t\t{}: {{'.format(SkillDB[int(db[mobid][skillidx]['SkillId'])]))
+            printClearSkills('ClearSkills', db[mobid][skillidx])
+            printSkillState('SkillState', db[mobid][skillidx])
+            printStrToInt('SkillLevel', db[mobid][skillidx])
+            printStrToInt('Rate', db[mobid][skillidx])
+            printStrToInt('CastTime', db[mobid][skillidx])
+            printStrToInt('Delay', db[mobid][skillidx])
+            printBool('Cancelable', db[mobid][skillidx])
+            printSkillTarget('SkillTarget', db[mobid][skillidx])
+            printCastCondition('CastCondition', db[mobid][skillidx])
+            printConditionData('ConditionData', db[mobid][skillidx])
+            for i in range(5):
+                printInt('val{}'.format(i), db[mobid][skillidx])
+            printEmotion('Emotion', db[mobid][skillidx])
+            printStrToInt('ChatMsgID', db[mobid][skillidx])
+            print('\t\t}')
+            if valid is False:
+                print('*/')
+        print('\t}')
+    printFooter()
+
 
 if len(sys.argv) != 3:
-	print('Monster Skill db converter from txt to conf format')
-	print('Usage:')
-	print('    mobskilldbconverter.py mode serverpath')
-	print("example:")
-	print('    mobskilldbconverter.py pre-re ../')
-	exit(1)
+    print('Monster Skill db converter from txt to conf format')
+    print('Usage:')
+    print('    mobskilldbconverter.py mode serverpath')
+    print("example:")
+    print('    mobskilldbconverter.py pre-re ../')
+    exit(1)
 
 if sys.argv[1] != 're' and sys.argv[1] != 'pre-re':
-	print('you have entred an invalid server mode')
-	exit(1)
+    print('you have entred an invalid server mode')
+    exit(1)
 
 ConvertDB(sys.argv[1], sys.argv[2])
