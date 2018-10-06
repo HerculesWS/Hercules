@@ -1,77 +1,65 @@
-//===== Hercules Documentation ===============================
 # Global configuration reference
-> //=====By: ==================================================
-//= Panikon (Hercules Dev. Team)
-//===== Current Version: =====================================
-//= 20140616
-//===== Description: =========================================
-//= Global configurations found in conf/global/
-//============================================================
+
+## What is global configuration?
+
+Global configuration is an import system that allows configuration files to be
+shared between servers (login, char, map), but can also be used independently
+in each server.
 
 
-## What are global configurations?
+## How does it work?
 
-Global configurations are configurations that can be shared between servers,
-but can also be set independently in each server.
+It works by using the `@include` directive from libconfig:
 
-## How do they work?
+> "A configuration file may "include" the contents of another file using an
+>  include directive. This directive has the effect of inlining the contents of
+>  the named file at the point of inclusion.
 
-They work by using an include system that is available with libconfig:
+An include directive must appear on its own line and takes this form:
 
-  "A configuration file may "include" the contents of another file using an
-  include directive. This directive has the effect of inlining the contents of
-  the named file at the point of inclusion.
+```
+	@include "filename"
+```
 
-  An include directive must appear on its own line in the input. It has the
-  form:
-
-  @include "filename"
-
-  Any backslashes or double quotes in the filename must be escaped as `\\` and
-  `\"`, respectively.
-                                     
- *From libconfig's documentation.*
-
-So each file that is included is actually inside each one of the main
-configuration files and thus a change in the first will be a change in the
-latter.
-Note: the @include directive is read by the server executable, so any path
-should be from were it is and NOT from where the main configuration file is!
+Any backslashes or double quotes in the filename must be escaped as `\\` and
+`\"`, respectively.
 
 
 ## How do I stop using global configurations?
 
-To stop using global configurations is very simple, all you have to do is copy
-the contents that are inside the global configuration file and put them
-_exactly_ where the include directive were in the main configuration file.
+To stop using global configuration, all you have to do is copy the contents of
+the file being imported and paste it _exactly_ where the include directive was.
 
-E.g.
-  Find in any file:
-      `@include "conf/global/sql_connection.conf"`
-  Replace it with:
-   
+### Example
 
-     sql_connection: {
-        // [INTER] You can specify the codepage to use in your mySQL tables here.
-        // (Note that this feature requires MySQL 4.1+)
-        //default_codepage: ""
+If you want map server and char server to have their own separate SQL connection
+settings, you would search in `conf/map/map-server.conf` and
+`conf/char/char-server.conf` for this line:
 
-        // [LOGIN] Is `userid` in account_db case sensitive?
-        //case_sensitive: false
+```
+	@include "conf/global/sql_connection.conf"
+```
 
-        // For IPs, ideally under linux, you want to use localhost instead of 127.0.0.1
-        // Under windows, you want to use 127.0.0.1.  If you see a message like
-        // "Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)"
-        // and you have localhost, switch it to 127.0.0.1
-        db_hostname: "127.0.0.1"
-        db_port: 3306
-        db_username: "ragnarok"
-        db_password: "ragnarok"
-        db_database: "ragnarok"
-        //codepage:""
-    }
+And replace it with:
 
-  If the main configuration file belongs to the map server, for instance, you
-don't need to include default_codepage and case_sensitive.
+```
+	sql_connection: {
+		// [INTER] You can specify the codepage to use in your mySQL tables here.
+		// (Note that this feature requires MySQL 4.1+)
+		//default_codepage: ""
 
+		// [LOGIN] Is `userid` in account_db case sensitive?
+		//case_sensitive: false
 
+		// For IPs, ideally under linux, you want to use localhost instead of 127.0.0.1.
+		// Under windows, you want to use 127.0.0.1.  If you see a message like
+		// "Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)"
+		// and you have localhost, switch it to 127.0.0.1
+		db_hostname: "127.0.0.1"
+		db_port: 3306
+		db_username: "ragnarok"
+		db_password: "ragnarok"
+		db_database: "ragnarok"
+		//codepage:""
+	}
+```
