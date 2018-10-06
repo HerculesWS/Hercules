@@ -35,13 +35,13 @@
 //=========================================================================
 
 dewata,202,106,4	script	Dewata Guide#dewata01	4_M_DEWOLDWOMAN,{
-	mes "[Dewata Guide]";
-	mes "Welcome to ^8B4513Dewata Island^000000,";
-	mes "a place with dazzling waves and charming views it's a great place to relax.";
-	mes "If you have any questions, please ask me.";
+	mes("[Dewata Guide]");
+	mes("Welcome to ^8B4513Dewata Island^000000,");
+	mes("a place with dazzling waves and charming views it's a great place to relax.");
+	mes("If you have any questions, please ask me.");
 	next;
-	mes "[Dewata Guide]";
-	mes "Where can I guide you?";
+	mes("[Dewata Guide]");
+	mes("Where can I guide you?");
 	F_Navi("[Dewata Guide]");
 	while (1) {
 		next;
@@ -75,9 +75,9 @@ dewata,202,106,4	script	Dewata Guide#dewata01	4_M_DEWOLDWOMAN,{
 			viewpoint 1,229,49,6,0x00BFFF;
 			break;
 		case 8:
-			mes "[Dewata Guide]";
-			mes "I'll remove all marks from your mini-map.";
-			mes "Is there anything else I can do for you?";
+			mes("[Dewata Guide]");
+			mes("I'll remove all marks from your mini-map.");
+			mes("Is there anything else I can do for you?");
 			viewpoint 2,202,184,0,0xFFFFFF;
 			viewpoint 2,218,163,1,0xFFFFFF;
 			viewpoint 2,158,182,2,0xFFFFFF;
@@ -87,18 +87,18 @@ dewata,202,106,4	script	Dewata Guide#dewata01	4_M_DEWOLDWOMAN,{
 			viewpoint 2,230,52,6,0xFFFFFF;
 			break;
 		case 9:
-			mes "[Dewata Guide]";
-			mes "Enjoy your trip!!";
+			mes("[Dewata Guide]");
+			mes("Enjoy your trip!!");
 			close;
 		}
 	}
 
 L_Mark:
-	mes "[Dewata Guide]";
-	mes "The "+getarg(0)+" is";
-	mes "marked on your mini-map.";
-	mes "Check your mini-map.";
-	mes "Is there anything else I can do for you?";
+	mes("[Dewata Guide]");
+	mes("The "+getarg(0)+" is");
+	mes("marked on your mini-map.");
+	mes("Check your mini-map.");
+	mes("Is there anything else I can do for you?");
 	return;
 }
 dewata,197,184,4	duplicate(Dewata Guide#dewata01)	Dewata Guide#dewata02	4_M_DEWOLDWOMAN

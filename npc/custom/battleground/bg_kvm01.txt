@@ -283,17 +283,17 @@ OnTimer60000:
 // *********************************************************************
 
 bat_c01,51,130,5	script	Therapist in battle::TherapistKvM01a	4_F_SISTER,{
-	mes "[Therapist in battle]";
-	mes "Just close your eyes, and take a deep breathe.";
-	mes "You can be free from pain.";
+	mes("[Therapist in battle]");
+	mes("Just close your eyes, and take a deep breathe.");
+	mes("You can be free from pain.");
 	specialeffect(EF_HEAL, AREA, playerattached());
 	close;
 }
 
 bat_c01,148,53,1	script	Therapist in battle::TherapistKvM01b	4_F_SISTER,{
-	mes "[Therapist in battle]";
-	mes "Just close your eyes, and take a deep breathe.";
-	mes "You can be free from pain.";
+	mes("[Therapist in battle]");
+	mes("Just close your eyes, and take a deep breathe.");
+	mes("You can be free from pain.");
 	specialeffect(EF_HEAL, AREA, playerattached());
 	close;
 }
@@ -314,17 +314,17 @@ bat_c01,51,130,5	script	Guillaume Vintenar::VintenarKvM01a	4_M_KY_HEAD,{
 		else if( $@KvM01BG_Victory == Bat_Team )
 		{ // Victory
 			set .@reward, 5;
-			mes "[Swandery]";
-			mes "Blessed Guillaume!!";
-			mes "Let's enjoy our glorious victory!";
-			mes "" + strcharinfo(PC_NAME) + ", its a sign reflecting victory";
+			mes("[Swandery]");
+			mes("Blessed Guillaume!!");
+			mes("Let's enjoy our glorious victory!");
+			mes("" + strcharinfo(PC_NAME) + ", its a sign reflecting victory");
 			close2;
 		} else {
 			set .@reward, 1;
-			mes "[Swandery]";
-			mes "You lost, but you're dedicated to this battle.";
-			mes "This is a reward for your great dedication by Guillaume Marollo!";
-			mes "Just take this defeat a lesson, and later you would definitely learn.";
+			mes("[Swandery]");
+			mes("You lost, but you're dedicated to this battle.");
+			mes("This is a reward for your great dedication by Guillaume Marollo!");
+			mes("Just take this defeat a lesson, and later you would definitely learn.");
 			close2;
 		}
 
@@ -350,17 +350,17 @@ bat_c01,148,53,1	script	Croix Vintenar::VintenarKvM01b	4_M_CRU_HEAD,{
 		else if( $@KvM01BG_Victory == Bat_Team )
 		{ // Victory
 			set .@reward, 5;
-			mes "[Swandery]";
-			mes "Blessed Croax!!";
-			mes "Let's enjoy our glorious victory!";
-			mes "" + strcharinfo(PC_NAME) + ", its a sign reflecting victory";
+			mes("[Swandery]");
+			mes("Blessed Croax!!");
+			mes("Let's enjoy our glorious victory!");
+			mes("" + strcharinfo(PC_NAME) + ", its a sign reflecting victory");
 			close2;
 		} else {
 			set .@reward, 1;
-			mes "[Swandery]";
-			mes "Oh, " + strcharinfo(PC_NAME) + ". Don't be sad.";
-			mes "Even though we didn't win, we did our best.";
-			mes "This is a Royal gift from Croix, and please don't forget this battle. We can win the next.";
+			mes("[Swandery]");
+			mes("Oh, " + strcharinfo(PC_NAME) + ". Don't be sad.");
+			mes("Even though we didn't win, we did our best.");
+			mes("This is a Royal gift from Croix, and please don't forget this battle. We can win the next.");
 			close2;
 		}
 

@@ -33,76 +33,76 @@
 //=========================================================================
 
 alberta,188,64,4	script	Sugar	4_F_02,{
-	mes "[Sugar]";
-	mes "Welcome!";
-	mes "How delicious are sweets?";
-	mes "My teacher.........";
-	mes "The sweets craftsman of ARUBERUTA";
-	mes "There are sweets that is built hard.";
+	mes("[Sugar]");
+	mes("Welcome!");
+	mes("How delicious are sweets?");
+	mes("My teacher.........");
+	mes("The sweets craftsman of ARUBERUTA");
+	mes("There are sweets that is built hard.");
 	next;
-	mes "[Sugar]";
-	mes "It was given by the darling person.";
-	mes "In return of the present ....";
-	mes "heartfelt like";
-	mes "the sweetness of the present some how.";
+	mes("[Sugar]");
+	mes("It was given by the darling person.");
+	mes("In return of the present ....");
+	mes("heartfelt like");
+	mes("the sweetness of the present some how.");
 	next;
 	switch (select("Please give me!","I don't need it.","The teacher.")) {
 	case 1: // Please give me
-		mes "[Sugar]";
-		mes "Yes!";
-		mes "Select from menu here.";
-		mes "Since there is a limitation in numbers";
-		mes "Not more than ^ff0000 5 pieces^000000.";
-		mes "are allowed to carry out?";
+		mes("[Sugar]");
+		mes("Yes!");
+		mes("Select from menu here.");
+		mes("Since there is a limitation in numbers");
+		mes("Not more than ^ff0000 5 pieces^000000.");
+		mes("are allowed to carry out?");
 		next;
 		switch (select("Candy","Candy Cane","Well baked cookie")) {
 		case 1: // Candy
-			mes "[Sugar]";
-			mes "It is a candy, and the price is";
-			mes "3000 Zeny each.";
-			mes "How many do you like to purchase?";
+			mes("[Sugar]");
+			mes("It is a candy, and the price is");
+			mes("3000 Zeny each.");
+			mes("How many do you like to purchase?");
 			next;
 			callsub(S_Purchase, 3000, Candy);
 			break;
 		case 2: // Candy Cane
-			mes "[Sugar]";
-			mes "It is a candy cane, and the price is";
-			mes "4000 Zeny each.";
-			mes "How many do you like to purchase?";
+			mes("[Sugar]");
+			mes("It is a candy cane, and the price is");
+			mes("4000 Zeny each.");
+			mes("How many do you like to purchase?");
 			next;
 			callsub(S_Purchase, 4000, Candy_Striper);
 			break;
 		case 3: // Well baked cookie
-			mes "[Sugar]";
-			mes "It is a well baked cookie, and the price is";
-			mes "2000 Zeny each.";
-			mes "How many do you like to purchase?";
+			mes("[Sugar]");
+			mes("It is a well baked cookie, and the price is");
+			mes("2000 Zeny each.");
+			mes("How many do you like to purchase?");
 			next;
 			callsub(S_Purchase, 2000, Well_Baked_Cookie);
 			break;
 		}
 		break;
 	case 3: // The teacher
-		mes "[Sugar]";
-		mes "Yes";
-		mes "The teacher of mine";
-		mes "is Mr. Kuberu, a sweets craftsman.";
-		mes "Making sweets under two persons.";
-		mes "which is allowed to self-train.";
+		mes("[Sugar]");
+		mes("Yes");
+		mes("The teacher of mine");
+		mes("is Mr. Kuberu, a sweets craftsman.");
+		mes("Making sweets under two persons.");
+		mes("which is allowed to self-train.");
 		next;
-		mes "[Sugar]";
-		mes "Although selling is seemingly to carried out ....";
-		mes "Where he is now?";
-		mes "Which I don't know.";
+		mes("[Sugar]");
+		mes("Although selling is seemingly to carried out ....");
+		mes("Where he is now?");
+		mes("Which I don't know.");
 		close;
 	case 2: // I don't need it
 		break;
 	}
-	mes "[Sugar]";
-	mes "Really .... You might regret it..";
-	mes "If you change your mind.";
-	mes "I am just here ok.";
-	mes "Have a nice day!";
+	mes("[Sugar]");
+	mes("Really .... You might regret it..");
+	mes("If you change your mind.");
+	mes("I am just here ok.");
+	mes("Have a nice day!");
 	close;
 
 /**
@@ -121,33 +121,33 @@ S_Purchase:
 		input .@amount;
 		if (.@amount <= 5)
 			break;
-		mes "[Sugar]";
-		mes "???";
-		mes "You seem to have a failure on hearing.";
-		mes "I will tell you once again?";
-		mes "You can only purchase";
-		mes "^ff0000 5 pieces^000000 at once.";
+		mes("[Sugar]");
+		mes("???");
+		mes("You seem to have a failure on hearing.");
+		mes("I will tell you once again?");
+		mes("You can only purchase");
+		mes("^ff0000 5 pieces^000000 at once.");
 		next;
 	}
 	if (.@amount == 0) // Cancel
 		return;
 	.@totalPrice = .@price * .@amount;
 	if (Zeny < .@totalPrice) {
-		mes "[Sugar]";
-		mes "???";
-		mes "Hmmm it seems you don't have enough money";
-		mes "to make that purchase.";
-		mes "I will ask you to check your money first.";
+		mes("[Sugar]");
+		mes("???");
+		mes("Hmmm it seems you don't have enough money");
+		mes("to make that purchase.");
+		mes("I will ask you to check your money first.");
 		close;
 	}
 	Zeny -= .@totalPrice;
 	getitem .@item_id, .@amount;
-	mes "[Sugar]";
-	mes "Thank you!!!";
-	mes "These sweets are really delicious.";
-	mes "Since my teacher of sweet is the No.1 teacher's in world!";
-	mes "Although you may eat by yourself";
-	mes "don't eat so much or you'll grow fat.";
-	mes "Please take care!!!";
+	mes("[Sugar]");
+	mes("Thank you!!!");
+	mes("These sweets are really delicious.");
+	mes("Since my teacher of sweet is the No.1 teacher's in world!");
+	mes("Although you may eat by yourself");
+	mes("don't eat so much or you'll grow fat.");
+	mes("Please take care!!!");
 	close;
 }

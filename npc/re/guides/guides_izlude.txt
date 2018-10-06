@@ -36,10 +36,10 @@
 
 -	script	::GuideIzlude	FAKE_NPC,{
 	cutin "prt_soldier",2;
-	mes "[Izlude Guide]";
-	mes "Welcome to ^8B4513Izlude^000000,";
-	mes "Prontera's satellite town.";
-	mes "Do you need help navigating the town?";
+	mes("[Izlude Guide]");
+	mes("Welcome to ^8B4513Izlude^000000,");
+	mes("Prontera's satellite town.");
+	mes("Do you need help navigating the town?");
 	F_Navi("[Izlude Guide]");
 	next;
 	.@map$ = strnpcinfo(NPC_MAP);
@@ -50,41 +50,41 @@
 			while (.@loop) {
 				switch(select("[ Cryptura Academy ]", "[ Marina ]", "[ International Airship ]", "[ Arena ]", "[ Kit Shop ]", "[ Swordsman Guild ]", "[ Enchant Association ]", "[ Forge ]", "Previous Menu")) {
 				case 1:
-					mes "[Izlude Guide]";
-					mes "Novice adventurers should go to "+F_Navi("Cryptura Academy","iz_ac01,100,39")+" to receive more information and training!";
-					mes "Would you like to check any other locations?";
+					mes("[Izlude Guide]");
+					mes("Novice adventurers should go to "+F_Navi("Cryptura Academy","iz_ac01,100,39")+" to receive more information and training!");
+					mes("Would you like to check any other locations?");
 					viewpoint 1,128,260,0,0xD2691E;
 					next;
 					break;
 				case 2:
-					mes "[Izlude Guide]";
-					mes "You can use the "+F_Navi("Marina",.@map$+",197,205","^B9062F");
-					mes "to go to ^8B4513Alberta^000000 or ^8B4513Byalan Island^000000.";
-					mes "Beware of ^8B4513Izlude Dungeon^000000";
-					mes "on Byalan Island since it is";
-					mes "filled with dreadful monsters.";
-					mes "Would you like to check any other locations?";
+					mes("[Izlude Guide]");
+					mes("You can use the "+F_Navi("Marina",.@map$+",197,205","^B9062F"));
+					mes("to go to ^8B4513Alberta^000000 or ^8B4513Byalan Island^000000.");
+					mes("Beware of ^8B4513Izlude Dungeon^000000");
+					mes("on Byalan Island since it is");
+					mes("filled with dreadful monsters.");
+					mes("Would you like to check any other locations?");
 					viewpoint 1,197,205,1,0xFF0000;
 					next;
 					break;
 				case 3:
-					mes "[Izlude Guide]";
-					mes "The "+F_Navi("International Airship",.@map$+",202,75","^0000FF");
-					mes "goes to ^8B4513Juno^000000 and ^8B4513Rachel^000000.";
-					mes "Let me mark its location";
-					mes "on your mini-map.";
-					mes "Would you like to check any other locations?";
+					mes("[Izlude Guide]");
+					mes("The "+F_Navi("International Airship",.@map$+",202,75","^0000FF"));
+					mes("goes to ^8B4513Juno^000000 and ^8B4513Rachel^000000.");
+					mes("Let me mark its location");
+					mes("on your mini-map.");
+					mes("Would you like to check any other locations?");
 					viewpoint 1,210,73,2,0x0A82FF;
 					next;
 					break;
 				case 4:
-					mes "[Izlude Guide]";
-					mes "The "+F_Navi("Arena",.@map$+",213,161","^FF5400");
-					mes "is a perfect place to";
-					mes "test your combat capabilities.";
-					mes "Let me mark its location";
-					mes "on your mini-map.";
-					mes "Would you like to check any other locations?";
+					mes("[Izlude Guide]");
+					mes("The "+F_Navi("Arena",.@map$+",213,161","^FF5400"));
+					mes("is a perfect place to");
+					mes("test your combat capabilities.");
+					mes("Let me mark its location");
+					mes("on your mini-map.");
+					mes("Would you like to check any other locations?");
 					viewpoint 1,213,161,3,0xFF5400;
 					next;
 					break;
@@ -94,11 +94,11 @@
 					next;
 					break;
 				case 6:
-					mes "[Izlude Guide]";
-					mes "The "+F_Navi("Swordsman Guild",.@map$+",51,172")+" is where you can ^800080change your job to Swordsman.^000000";
-					mes "Let me mark its location";
-					mes "on your mini-map.";
-					mes "Would you like to check any other locations?";
+					mes("[Izlude Guide]");
+					mes("The "+F_Navi("Swordsman Guild",.@map$+",51,172")+" is where you can ^800080change your job to Swordsman.^000000");
+					mes("Let me mark its location");
+					mes("on your mini-map.");
+					mes("Would you like to check any other locations?");
 					viewpoint 1,52,172,5,0xDA70D6;
 					next;
 					break;
@@ -123,12 +123,12 @@
 			while (.@loop) {
 				switch(select("[ Eden Teleport Officer ]", "[ Kafra Employee ]", "[ Hypnotist ]", "[ Newlywed Helper ]", "[ Mercenary Guildsman ]", "[ Pet Groomer ]", "Previous Menu")) {
 				case 1:
-					mes "[Izlude Guide]";
-					mes "The "+F_Navi("Eden Teleport Officer",.@map$+",131,148","^0000FF");
-					mes "is currently staying inside";
-					mes "the Swordsman Guild building.";
-					mes "Let me mark his location on your mini-map.";
-					mes "Would you like to check any other locations?";
+					mes("[Izlude Guide]");
+					mes("The "+F_Navi("Eden Teleport Officer",.@map$+",131,148","^0000FF"));
+					mes("is currently staying inside");
+					mes("the Swordsman Guild building.");
+					mes("Let me mark his location on your mini-map.");
+					mes("Would you like to check any other locations?");
 					viewpoint 1,131,148,8,0x0A82FF;
 					next;
 					break;
@@ -143,12 +143,12 @@
 					next;
 					break;
 				case 4:
-					mes "[Izlude Guide]";
-					mes "If you'd like to go on a honeymoon to";
-					mes "^8B4513Jawaii^000000, the paradise of newlyweds,";
-					mes "please speak to the ";
-					mes F_Navi("Newlywed Helper",.@map$+",180,224","^B9062F")+".";
-					mes "Would you like to check any other locations?";
+					mes("[Izlude Guide]");
+					mes("If you'd like to go on a honeymoon to");
+					mes("^8B4513Jawaii^000000, the paradise of newlyweds,");
+					mes("please speak to the ");
+					mes(F_Navi("Newlywed Helper",.@map$+",180,224","^B9062F")+".");
+					mes("Would you like to check any other locations?");
 					viewpoint 1,180,224,11,0xFF0000;
 					next;
 					break;
@@ -169,9 +169,9 @@
 			}
 			break;
 		case 3:
-			mes "[Izlude Guide]";
-			mes "Sure, I'll remove all marks from your mini-map.";
-			mes "Is there anything else I can do for you?";
+			mes("[Izlude Guide]");
+			mes("Sure, I'll remove all marks from your mini-map.");
+			mes("Is there anything else I can do for you?");
 			viewpoint 2,1,1,0,0xFFFF00;
 			viewpoint 2,1,1,1,0x000000;
 			viewpoint 2,1,1,2,0xFF0000;
@@ -189,9 +189,9 @@
 			next;
 			break;
 		case 4:
-			mes "[Izlude Guide]";
-			mes "Enjoy your stay.";
-			mes "Bye~!";
+			mes("[Izlude Guide]");
+			mes("Enjoy your stay.");
+			mes("Bye~!");
 			close2;
 			cutin "prt_soldier",255;
 			end;
@@ -199,14 +199,14 @@
 	}
 	end;
 L_Mark:
-	mes "[Izlude Guide]";
+	mes("[Izlude Guide]");
 	if (getarg(1,0)) {
-		mes "Let me mark the location of the";
-		mes getarg(0);
+		mes("Let me mark the location of the");
+		mes(getarg(0));
 	} else
-		mes "Let me mark the location of the "+getarg(0);
-	mes "on your mini-map.";
-	mes "Would you like to check any other locations?";
+		mes("Let me mark the location of the "+getarg(0));
+	mes("on your mini-map.");
+	mes("Would you like to check any other locations?");
 	return;
 }
 

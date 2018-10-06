@@ -36,54 +36,54 @@
 
 prontera,73,140,0	script	Milk Vendor	4_M_04,{
 	if (checkweight(Knife,1) == 0) {
-		mes "^3355FFJust a minute!";
-		mes "I can't offer any of my";
-		mes "services to you because";
-		mes "you're carrying too much";
-		mes "stuff. Put your extra items in";
-		mes "Kafra Storage and come again~";
+		mes("^3355FFJust a minute!");
+		mes("I can't offer any of my");
+		mes("services to you because");
+		mes("you're carrying too much");
+		mes("stuff. Put your extra items in");
+		mes("Kafra Storage and come again~");
 		close;
 	}
-	mes "[Milk Vendor]";
-	mes "Hey, hey...";
-	mes "If you bring me";
-	mes "1 Empty Bottle and";
-	mes "15 Zeny, I'll exchange";
-	mes "them for 1 Milk. How";
-	mes "does that sound?";
+	mes("[Milk Vendor]");
+	mes("Hey, hey...");
+	mes("If you bring me");
+	mes("1 Empty Bottle and");
+	mes("15 Zeny, I'll exchange");
+	mes("them for 1 Milk. How");
+	mes("does that sound?");
 	next;
 	if (select("Exchange all empty bottles.", "Cancel") == 1) {
 		if (countitem(Empty_Bottle) <= 0) {
-			mes "[Milk Vendor]";
-			mes "Hey...";
-			mes "You don't have";
-			mes "any Empty Bottles.";
-			mes "I can't really give you";
-			mes "this milk any other";
-			mes "way, you know...";
+			mes("[Milk Vendor]");
+			mes("Hey...");
+			mes("You don't have");
+			mes("any Empty Bottles.");
+			mes("I can't really give you");
+			mes("this milk any other");
+			mes("way, you know...");
 			close;
 		}
 		.@bottles = countitem(Empty_Bottle);
 		.@total_weight = .@bottles * 50;
 		.@total_cost = .@bottles * 15;
 		if (Zeny < .@total_cost) {
-			mes "[Milk Vendor]";
-			mes "Oh, whoa~!";
-			mes "You don't have enough";
-			mes "zeny to exchange all";
-			mes "these Empty Bottles for";
-			mes "Milk. You need to have";
-			mes "at least " + .@total_cost + " zeny.";
+			mes("[Milk Vendor]");
+			mes("Oh, whoa~!");
+			mes("You don't have enough");
+			mes("zeny to exchange all");
+			mes("these Empty Bottles for");
+			mes("Milk. You need to have");
+			mes("at least " + .@total_cost + " zeny.");
 			close;
 		}
 		if (MaxWeight - Weight < .@total_weight) {
-			mes "[Milk Vendor]";
-			mes "Hmm...";
-			mes "Would you make";
-			mes "a little more room";
-			mes "in your inventory";
-			mes "before I give you";
-			mes "all of this milk?";
+			mes("[Milk Vendor]");
+			mes("Hmm...");
+			mes("Would you make");
+			mes("a little more room");
+			mes("in your inventory");
+			mes("before I give you");
+			mes("all of this milk?");
 			close;
 		}
 		Zeny -= .@total_cost;

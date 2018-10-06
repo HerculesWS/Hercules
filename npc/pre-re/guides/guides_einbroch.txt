@@ -38,25 +38,25 @@
 
 einbroch,72,202,4	script	Guide#ein::EinGuide	4_M_EIN_SOLDIER,{
 	cutin "ein_soldier",2;
-	mes "[Einbroch Guide]";
-	mes "Welcome";
-	mes "to Einbroch,";
-	mes "the City of Steel.";
-	mes "Please ask me if you";
-	mes "have any questions.";
+	mes("[Einbroch Guide]");
+	mes("Welcome");
+	mes("to Einbroch,");
+	mes("the City of Steel.");
+	mes("Please ask me if you");
+	mes("have any questions.");
 	.@loop1 = 1;
 	while (.@loop1) {
 		next;
 		switch(select("City Guide.", "Remove Marks from Mini-Map.", "Notice.", "Cancel.")) {
 		case 1:
-			mes "[Einbroch Guide]";
-			mes "Please select";
-			mes "a location from";
-			mes "the following menu.";
+			mes("[Einbroch Guide]");
+			mes("Please select");
+			mes("a location from");
+			mes("the following menu.");
 			if (.@compass_check == 0) {
-				mes "Would you like me";
-				mes "to mark locations";
-				mes "on your Mini-Map?";
+				mes("Would you like me");
+				mes("to mark locations");
+				mes("on your Mini-Map?");
 				next;
 				if (select("Yes.", "No.") == 1) .@compass_check = 1;
 			}
@@ -66,99 +66,99 @@ einbroch,72,202,4	script	Guide#ein::EinGuide	4_M_EIN_SOLDIER,{
 				else next;
 				switch(select("^FF0000Airport^000000", "Train Station", "Factory", "Plaza", "Hotel", "Weapon Shop", "Laboratory", "Blacksmith Guild", "Einbroch Tower", "Cancel")) {
 				case 1:
-					mes "[Einbroch Guide]";
-					mes "The ^FF0000Airport^000000 is located";
-					mes "in the northwestern part";
-					mes "of the city. There you can";
-					mes "see our city's pride and joy, the Airship. Remember that you must pay admission to board the Airship.";
+					mes("[Einbroch Guide]");
+					mes("The ^FF0000Airport^000000 is located");
+					mes("in the northwestern part");
+					mes("of the city. There you can");
+					mes("see our city's pride and joy, the Airship. Remember that you must pay admission to board the Airship.");
 					if (.@compass_check)
 						viewpoint 1,63,228,2,0xFF0000;
 					break;
 				case 2:
-					mes "[Einbroch Guide]";
-					mes "The Train Station is";
-					mes "located in the northeast";
-					mes "part of Einbroch. Trains";
-					mes "running between here";
-					mes "and Einbech run all day";
-					mes "long, everyday.";
+					mes("[Einbroch Guide]");
+					mes("The Train Station is");
+					mes("located in the northeast");
+					mes("part of Einbroch. Trains");
+					mes("running between here");
+					mes("and Einbech run all day");
+					mes("long, everyday.");
 					if (.@compass_check)
 						viewpoint 1,236,279,3,0xFF00FF;
 					break;
 				case 3:
-					mes "[Einbroch Guide]";
-					mes "The Factory, perhaps the";
-					mes "most important facility in";
-					mes "Einbroch, is located in the";
-					mes "southern part of the city.";
+					mes("[Einbroch Guide]");
+					mes("The Factory, perhaps the");
+					mes("most important facility in");
+					mes("Einbroch, is located in the");
+					mes("southern part of the city.");
 					if (.@compass_check)
 						viewpoint 1,158,78,4,0xFF00FF;
 					break;
 				case 4:
-					mes "[Einbroch Guide]";
-					mes "The Plaza, our biggest";
-					mes "shopping district, can be";
-					mes "found just east from the";
-					mes "center of Einbroch.";
+					mes("[Einbroch Guide]");
+					mes("The Plaza, our biggest");
+					mes("shopping district, can be");
+					mes("found just east from the");
+					mes("center of Einbroch.");
 					if (.@compass_check)
 						viewpoint 1,232,190,5,0xFF00FF;
 					break;
 				case 5:
-					mes "[Einbroch Guide]";
-					mes "The Hotel is east of";
-					mes "the Plaza and offers top";
-					mes "caliber accomodations.";
-					mes "There, you can enjoy your";
-					mes "stay in Einbroch in comfort~";
+					mes("[Einbroch Guide]");
+					mes("The Hotel is east of");
+					mes("the Plaza and offers top");
+					mes("caliber accomodations.");
+					mes("There, you can enjoy your");
+					mes("stay in Einbroch in comfort~");
 					if (.@compass_check)
 						viewpoint 1,260,201,6,0x00FF00;
 					break;
 				case 6:
-					mes "[Einbroch Guide]";
-					mes "The Weapon Shop is";
-					mes "located north from the";
-					mes "Plaza. There you can";
-					mes "purchase weapons for";
-					mes "your personal use.";
+					mes("[Einbroch Guide]");
+					mes("The Weapon Shop is");
+					mes("located north from the");
+					mes("Plaza. There you can");
+					mes("purchase weapons for");
+					mes("your personal use.");
 					if (.@compass_check)
 						viewpoint 1,215,221,7,0x00FF00;
 					break;
 				case 7:
-					mes "[Einbroch Guide]";
-					mes "The Laboratory is an";
-					mes "annex of the Factory and";
-					mes "is located in the southwest";
-					mes "sector of Einbroch.";
+					mes("[Einbroch Guide]");
+					mes("The Laboratory is an");
+					mes("annex of the Factory and");
+					mes("is located in the southwest");
+					mes("sector of Einbroch.");
 					if (.@compass_check)
 						viewpoint 1,36,49,8,0x00FF;
 					break;
 				case 8:
-					mes "[Einbroch Guide]";
-					mes "The Blacksmith Guild is";
-					mes "located in the southeast";
-					mes "part of Einbroch. You can";
-					mes "upgrade your equipment";
-					mes "by using their services.";
+					mes("[Einbroch Guide]");
+					mes("The Blacksmith Guild is");
+					mes("located in the southeast");
+					mes("part of Einbroch. You can");
+					mes("upgrade your equipment");
+					mes("by using their services.");
 					if (.@compass_check)
 						viewpoint 1,244,90,9,0x00FF00;
 					break;
 				case 9:
-					mes "[Einbroch Guide]";
-					mes "The Einbroch Tower is";
-					mes "located in the center of";
-					mes "the city. From the top of";
-					mes "the tower, you can view";
-					mes "all of Einbroch.";
+					mes("[Einbroch Guide]");
+					mes("The Einbroch Tower is");
+					mes("located in the center of");
+					mes("the city. From the top of");
+					mes("the tower, you can view");
+					mes("all of Einbroch.");
 					if (.@compass_check)
 						viewpoint 1,174,195,10,0xFFFF00;
 					break;
 				case 10:
-					mes "[Einbroch Guide]";
-					mes "Please ask me to ''Remove";
-					mes "Marks from Mini-Map'' if you";
-					mes "no longer wish to have the";
-					mes "location marks displayed";
-					mes "on your Mini-Map.";
+					mes("[Einbroch Guide]");
+					mes("Please ask me to ''Remove");
+					mes("Marks from Mini-Map'' if you");
+					mes("no longer wish to have the");
+					mes("location marks displayed");
+					mes("on your Mini-Map.");
 					.@loop2 = 0;
 				}
 			}
@@ -174,45 +174,45 @@ einbroch,72,202,4	script	Guide#ein::EinGuide	4_M_EIN_SOLDIER,{
 			viewpoint 2,244,90,9,0x00FF00;
 			viewpoint 2,174,195,10,0xFFFF00;
 			.@compass_check = 0;
-			mes "[Einbroch Guide]";
-			mes "Okay, the marks from";
-			mes "your Mini-Map have been";
-			mes "removed. If you need any";
-			mes "guidance around Einbroch,";
-			mes "please let me or one of the";
-			mes "other Einbroch Guides know.";
+			mes("[Einbroch Guide]");
+			mes("Okay, the marks from");
+			mes("your Mini-Map have been");
+			mes("removed. If you need any");
+			mes("guidance around Einbroch,");
+			mes("please let me or one of the");
+			mes("other Einbroch Guides know.");
 			break;
 		case 3:
-			mes "[Einbroch Guide]";
-			mes "Through the technology of";
-			mes "the Schwaltzvalt Republic,";
-			mes "we've upgraded to a digital";
-			mes "information system that allows";
-			mes "us to mark locations on your";
-			mes "Mini-Map for easier navigation.";
+			mes("[Einbroch Guide]");
+			mes("Through the technology of");
+			mes("the Schwaltzvalt Republic,");
+			mes("we've upgraded to a digital");
+			mes("information system that allows");
+			mes("us to mark locations on your");
+			mes("Mini-Map for easier navigation.");
 			next;
-			mes "[Einbroch Guide]";
-			mes "Your Mini-Map is located";
-			mes "in the upper right corner";
-			mes "of the screen. If you can't";
-			mes "see it, press the Ctrl + Tab";
-			mes "keys or click the ''Map'' button in your Basic Info Window.";
+			mes("[Einbroch Guide]");
+			mes("Your Mini-Map is located");
+			mes("in the upper right corner");
+			mes("of the screen. If you can't");
+			mes("see it, press the Ctrl + Tab");
+			mes("keys or click the ''Map'' button in your Basic Info Window.");
 			next;
-			mes "[Einbroch Guide]";
-			mes "On your Mini-Map,";
-			mes "click on the ''+'' and ''-''";
-			mes "symbols to zoom in and";
-			mes "our of your Mini-Map. We";
-			mes "hope you enjoy your travels";
-			mes "here in Einbroch, adventurer.";
+			mes("[Einbroch Guide]");
+			mes("On your Mini-Map,");
+			mes("click on the ''+'' and ''-''");
+			mes("symbols to zoom in and");
+			mes("our of your Mini-Map. We");
+			mes("hope you enjoy your travels");
+			mes("here in Einbroch, adventurer.");
 			break;
 		case 4:
-			mes "[Einbroch Guide]";
-			mes "We hope that you";
-			mes "enjoy your travels";
-			mes "here in Einbroch.";
-			mes "Oh, and please be";
-			mes "aware of the Smog Alerts.";
+			mes("[Einbroch Guide]");
+			mes("We hope that you");
+			mes("enjoy your travels");
+			mes("here in Einbroch.");
+			mes("Oh, and please be");
+			mes("aware of the Smog Alerts.");
 			close2;
 			.@loop1 = 0;
 		}
@@ -226,25 +226,25 @@ einbroch,162,317,4	duplicate(EinGuide)	Guide#3ein	4_M_EIN_SOLDIER
 
 einbech,67,37,4	script	Guide#4ein::EinGuide2	4_M_EIN_SOLDIER,{
 	cutin "ein_soldier",2;
-	mes "[Einbech Guide]";
-	mes "Welcome to Einbech,";
-	mes "the Mining Town. We're";
-	mes "here to assist tourists,";
-	mes "so if you have any questions,";
-	mes "please feel free to ask us.";
+	mes("[Einbech Guide]");
+	mes("Welcome to Einbech,");
+	mes("the Mining Town. We're");
+	mes("here to assist tourists,");
+	mes("so if you have any questions,");
+	mes("please feel free to ask us.");
 	.@loop1 = 1;
 	while (.@loop1) {
 		next;
 		switch(select("City Guide.", "Remove Marks from Mini-Map.", "Notice.", "Cancel.")) {
 		case 1:
-			mes "[Einbech Guide]";
-			mes "Please select";
-			mes "a location from";
-			mes "the following menu.";
+			mes("[Einbech Guide]");
+			mes("Please select");
+			mes("a location from");
+			mes("the following menu.");
 			if (.@compass_check == 0) {
-				mes "Would you like me";
-				mes "to mark locations";
-				mes "on your Mini-Map?";
+				mes("Would you like me");
+				mes("to mark locations");
+				mes("on your Mini-Map?");
 				next;
 				if (select("Yes.", "No.") == 1) .@compass_check = 1;
 			}
@@ -254,62 +254,62 @@ einbech,67,37,4	script	Guide#4ein::EinGuide2	4_M_EIN_SOLDIER,{
 				else next;
 				switch(select("Train Station", "Tavern", "Tool Shop", "Swordman Guild", "Mine", "Cancel")) {
 				case 1:
-					mes "[Einbech Guide]";
-					mes "The Train Stations are";
-					mes "located in the northwest";
-					mes "and northeast parts of";
-					mes "Einbech. There, you can";
-					mes "take a train to Einbroch.";
+					mes("[Einbech Guide]");
+					mes("The Train Stations are");
+					mes("located in the northwest");
+					mes("and northeast parts of");
+					mes("Einbech. There, you can");
+					mes("take a train to Einbroch.");
 					if (.@compass_check)
 						viewpoint 1,43,213,2,0xFF0000;
 					break;
 				case 2:
-					mes "[Einbech Guide]";
-					mes "The Tavern is located";
-					mes "in the southern part of";
-					mes "Einbech. It's a nice place";
-					mes "to relax after a long day.";
+					mes("[Einbech Guide]");
+					mes("The Tavern is located");
+					mes("in the southern part of");
+					mes("Einbech. It's a nice place");
+					mes("to relax after a long day.");
 					if (.@compass_check)
 						viewpoint 1,142,112,3,0xFF00FF;
 					break;
 				case 3:
-					mes "[Einbech Guide]";
-					mes "You can find the Tool";
-					mes "Shop in the center of";
-					mes "Einbech. There, you can";
-					mes "purchase any tools you";
-					mes "might need for your travels.";
+					mes("[Einbech Guide]");
+					mes("You can find the Tool");
+					mes("Shop in the center of");
+					mes("Einbech. There, you can");
+					mes("purchase any tools you");
+					mes("might need for your travels.");
 					if (.@compass_check)
 						viewpoint 1,176,136,4,0xFF00FF;
 					break;
 				case 4:
-					mes "[Einbech Guide]";
-					mes "The Swordman Guild";
-					mes "is located in the eastern";
-					mes "outskirts of Einbech. It's";
-					mes "under construction and they";
-					mes "haven't started accepting";
-					mes "applications.";
+					mes("[Einbech Guide]");
+					mes("The Swordman Guild");
+					mes("is located in the eastern");
+					mes("outskirts of Einbech. It's");
+					mes("under construction and they");
+					mes("haven't started accepting");
+					mes("applications.");
 					if (.@compass_check)
 						viewpoint 1,250,110,5,0xFF00FF;
 					break;
 				case 5:
-					mes "[Einbech Guide]";
-					mes "The Mine, which is";
-					mes "Einbech's major industry,";
-					mes "is located in the northern";
-					mes "part of this town. It's where";
-					mes "we get all our ores, although monsters get in the miners' way.";
+					mes("[Einbech Guide]");
+					mes("The Mine, which is");
+					mes("Einbech's major industry,");
+					mes("is located in the northern");
+					mes("part of this town. It's where");
+					mes("we get all our ores, although monsters get in the miners' way.");
 					if (.@compass_check)
 						viewpoint 1,138,251,6,0x00FF00;
 					break;
 				case 6:
-					mes "[Einbech Guide]";
-					mes "Please ask me to ''Remove";
-					mes "Marks from Mini-Map'' if you";
-					mes "no longer wish to have the";
-					mes "location marks displayed";
-					mes "on your Mini-Map.";
+					mes("[Einbech Guide]");
+					mes("Please ask me to ''Remove");
+					mes("Marks from Mini-Map'' if you");
+					mes("no longer wish to have the");
+					mes("location marks displayed");
+					mes("on your Mini-Map.");
 					.@loop2 = 0;
 				}
 			}
@@ -321,43 +321,43 @@ einbech,67,37,4	script	Guide#4ein::EinGuide2	4_M_EIN_SOLDIER,{
 			viewpoint 2,250,110,5,0xFF00FF;
 			viewpoint 2,138,251,6,0x00FF00;
 			.@compass_check = 0;
-			mes "[Einbech Guide]";
-			mes "Okay, the marks from";
-			mes "your Mini-Map have been";
-			mes "removed. If you need any";
-			mes "guidance around Einbech,";
-			mes "please let me or one of the";
-			mes "other Einbech Guides know.";
+			mes("[Einbech Guide]");
+			mes("Okay, the marks from");
+			mes("your Mini-Map have been");
+			mes("removed. If you need any");
+			mes("guidance around Einbech,");
+			mes("please let me or one of the");
+			mes("other Einbech Guides know.");
 			break;
 		case 3:
-			mes "[Einbech Guide]";
-			mes "Through the technology of";
-			mes "the Schwaltzvalt Republic,";
-			mes "we've upgraded to a digital";
-			mes "information system that allows";
-			mes "us to mark locations on your";
-			mes "Mini-Map for easier navigation.";
+			mes("[Einbech Guide]");
+			mes("Through the technology of");
+			mes("the Schwaltzvalt Republic,");
+			mes("we've upgraded to a digital");
+			mes("information system that allows");
+			mes("us to mark locations on your");
+			mes("Mini-Map for easier navigation.");
 			next;
-			mes "[Einbech Guide]";
-			mes "Your Mini-Map is located";
-			mes "in the upper right corner";
-			mes "of the screen. If you can't";
-			mes "see it, press the Ctrl + Tab";
-			mes "keys or click the ''Map'' button in your Basic Info Window.";
+			mes("[Einbech Guide]");
+			mes("Your Mini-Map is located");
+			mes("in the upper right corner");
+			mes("of the screen. If you can't");
+			mes("see it, press the Ctrl + Tab");
+			mes("keys or click the ''Map'' button in your Basic Info Window.");
 			next;
-			mes "[Einbech Guide]";
-			mes "On your Mini-Map,";
-			mes "click on the ''+'' and ''-''";
-			mes "symbols to zoom in and";
-			mes "our of your Mini-Map. We";
-			mes "hope you enjoy your travels";
-			mes "here in Einbech, adventurer.";
+			mes("[Einbech Guide]");
+			mes("On your Mini-Map,");
+			mes("click on the ''+'' and ''-''");
+			mes("symbols to zoom in and");
+			mes("our of your Mini-Map. We");
+			mes("hope you enjoy your travels");
+			mes("here in Einbech, adventurer.");
 			break;
 		case 4:
-			mes "[Einbech Guide]";
-			mes "We hope that you";
-			mes "enjoy your travels";
-			mes "here in Einbech.";
+			mes("[Einbech Guide]");
+			mes("We hope that you");
+			mes("enjoy your travels");
+			mes("here in Einbech.");
 			close2;
 			.@loop1 = 0;
 		}

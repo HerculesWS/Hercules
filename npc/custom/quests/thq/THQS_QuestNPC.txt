@@ -17,13 +17,13 @@
 //============================================================
 
 yuno_in01,112,151,6	script	Quest Manager	1_M_SIZ,{
-	mes "[Guy]";
-	mes "Welcome to the Treasure Hunters Guild "+strcharinfo(PC_NAME)+".";
+	mes("[Guy]");
+	mes("Welcome to the Treasure Hunters Guild "+strcharinfo(PC_NAME)+".");
 	next;
 	if (On_Quest == 0) goto N_NewQuest;
-	mes "[Guy]";
-	mes "Look " +strcharinfo(PC_NAME)+ ", you can only 1 quest at a time, you should finish the quest unless you have given up.";
-	mes "Giving up will cost you ^FF00002500z^000000.";
+	mes("[Guy]");
+	mes("Look " +strcharinfo(PC_NAME)+ ", you can only 1 quest at a time, you should finish the quest unless you have given up.");
+	mes("Giving up will cost you ^FF00002500z^000000.");
 	next;
 	if (select("No, never would I leave a quest!", "Yah I'm pathetic... Pay 2500z") == 1) {
 		mes("[Guy]");
@@ -45,25 +45,25 @@ yuno_in01,112,151,6	script	Quest Manager	1_M_SIZ,{
 	Zeny -= 2500;
 	//add time delay penalty. You can get another quest after 2 - 3 hours. [Lupus]
 	set #THQ_DELAY, (gettime(GETTIME_YEAR)*12*31*24+gettime(GETTIME_MONTH)*31*24+gettime(GETTIME_DAYOFMONTH)*24+gettime(GETTIME_HOUR)+rand(2,3));
-	mes "[Guy]";
-	mes "Its sad to see someone give a quest up...";
-	mes "Shame on you.";
+	mes("[Guy]");
+	mes("Its sad to see someone give a quest up...");
+	mes("Shame on you.");
 	emotion 7;
 	close;
 
 N_ZenyFail:
-	mes "[Guy]";
-	mes "Thats sad you don't even have ^FF00002500z^000000.";
+	mes("[Guy]");
+	mes("Thats sad you don't even have ^FF00002500z^000000.");
 	close;
 
 N_NewQuest:
 	if (Event_THQS == 0) goto N_Signup;
 	//checking if time penalty is over [Lupus]
 	if (#THQ_DELAY > (gettime(GETTIME_YEAR)*12*31*24 + gettime(GETTIME_MONTH)*31*24 + gettime(GETTIME_DAYOFMONTH)*24 + gettime(GETTIME_HOUR)) ) goto L_NoQuestsForYet;
-	mes "[Guy]";
-	mes "Ahh welcome fellow Treasure Hunter.";
-	mes "You currently have ^FF0000"+#Treasure_Token+"^000000 treasure tokens!!!";
-	mes "Would you like me to asign you a Quest?";
+	mes("[Guy]");
+	mes("Ahh welcome fellow Treasure Hunter.");
+	mes("You currently have ^FF0000"+#Treasure_Token+"^000000 treasure tokens!!!");
+	mes("Would you like me to asign you a Quest?");
 	next;
 	if (select("Yes I would like a Quest Please.", "Sorry Guy no time today.") == 2) {
 		mes("[Guy]");
@@ -72,9 +72,9 @@ N_NewQuest:
 		close;
 	}
 
-	mes "[Guy]";
-	mes "Ok lets see what quest we can give you today.";
-	mes "The quest names in ^FF0000This Colour^000000 mean that they are more challanging then the rest, but have better rewards.";
+	mes("[Guy]");
+	mes("Ok lets see what quest we can give you today.");
+	mes("The quest names in ^FF0000This Colour^000000 mean that they are more challanging then the rest, but have better rewards.");
 	next;
 	set #THQ_DELAY,(gettime(GETTIME_YEAR)*12*31*24+gettime(GETTIME_MONTH)*31*24+gettime(GETTIME_DAYOFMONTH)*24+gettime(GETTIME_HOUR) + 1); //you can get another quest after 1 hour [Lupus]
 	emotion 21;
@@ -91,15 +91,15 @@ N_NewQuest:
 	goto N_JobList1; //if(@treasure_job==1)
 
 N_Signup:
-	mes "[Guy]";
-	mes "I'm afraid you must sign up for the guild before you can go on a quest!";
+	mes("[Guy]");
+	mes("I'm afraid you must sign up for the guild before you can go on a quest!");
 	emotion 17;
 	close;
 
 L_NoQuestsForYet:
-	mes "[Guy]";
-	mes "I'm afraid there aren't any Quests for you yet.";
-	mes "Call in "+ (#THQ_DELAY - (gettime(GETTIME_YEAR)*12*31*24+gettime(GETTIME_MONTH)*31*24+gettime(GETTIME_DAYOFMONTH)*24+gettime(GETTIME_HOUR)) )+" hours later.";
+	mes("[Guy]");
+	mes("I'm afraid there aren't any Quests for you yet.");
+	mes("Call in "+ (#THQ_DELAY - (gettime(GETTIME_YEAR)*12*31*24+gettime(GETTIME_MONTH)*31*24+gettime(GETTIME_DAYOFMONTH)*24+gettime(GETTIME_HOUR)) )+" hours later.");
 	emotion 17;
 	close;
 
@@ -110,8 +110,8 @@ L_QuestGiven:
 
 ///////Job list 1///////
 N_JobList1:
-	mes "[Guy]";
-	mes "Ok you have a couple quests that can be done here.";
+	mes("[Guy]");
+	mes("Ok you have a couple quests that can be done here.");
 	next;
 	switch (select("Lost Old Man.", "Master needs his Bow.", "The Hit List.", "^FF0000The Sad Widow.^000000")) {
 	case 1:
@@ -161,8 +161,8 @@ N_JobList1:
 
 ///////Job list 2///////
 N_JobList2:
-	mes "[Guy]";
-	mes "Ok you have a couple quests that can be done here.";
+	mes("[Guy]");
+	mes("Ok you have a couple quests that can be done here.");
 	next;
 	switch (select("The Strange Letter", "Jur for Jeramiah", "Bee Keepers Hunny", "^FF0000The Wander Man^000000")) {
 	case 1:
@@ -205,8 +205,8 @@ N_JobList2:
 
 ///////Job list 3///////
 N_JobList3:
-	mes "[Guy]";
-	mes "Ok you have a couple quests that can be done here.";
+	mes("[Guy]");
+	mes("Ok you have a couple quests that can be done here.");
 	next;
 	switch (select("Damn Pixies!", "Package Delivery", "Prontera Culvert", "^FF0000Trouble at the Coal Mine^000000")) {
 	case 1:
@@ -251,8 +251,8 @@ N_JobList3:
 
 ///////Job list 4///////
 N_JobList4:
-	mes "[Guy]";
-	mes "Ok you have a couple quests that can be done here.";
+	mes("[Guy]");
+	mes("Ok you have a couple quests that can be done here.");
 	next;
 	switch (select("Zombie Attack", "Mystic Wizard", "Aww shoot!", "^FF0000Emperium^000000")) {
 	case 1:
@@ -293,8 +293,8 @@ N_JobList4:
 
 ///////Job list 5///////
 N_JobList5:
-	mes "[Guy]";
-	mes "Ok you have a couple quests that can be done here.";
+	mes("[Guy]");
+	mes("Ok you have a couple quests that can be done here.");
 	next;
 	switch (select("Savage Land", "Pyramid's part 1", "Thinking first", "^FF0000The not so friendly ghost^000000")) {
 	case 1:
@@ -335,8 +335,8 @@ N_JobList5:
 
 ///////Job list 6///////
 N_JobList6:
-	mes "[Guy]";
-	mes "Ok you have a couple quests that can be done here.";
+	mes("[Guy]");
+	mes("Ok you have a couple quests that can be done here.");
 	next;
 	switch (select("Package for thiefs", "Pyramid's part 2", "Special delivery", "^FF0000Geffenia^000000")) {
 	case 1:
@@ -378,8 +378,8 @@ N_JobList6:
 
 ///////Job list 7///////
 N_JobList7:
-	mes "[Guy]";
-	mes "Ok you have a couple quests that can be done here.";
+	mes("[Guy]");
+	mes("Ok you have a couple quests that can be done here.");
 	next;
 	switch (select("Apple Juice", "Delivery", "^FF0000Golden Thief Bug^000000", "^FF0000Evil Pirates^000000")) {
 	case 1:
@@ -420,8 +420,8 @@ N_JobList7:
 
 ///////Job list 8///////
 N_JobList8:
-	mes "[Guy]";
-	mes "Ok you have a couple quests that can be done here.";
+	mes("[Guy]");
+	mes("Ok you have a couple quests that can be done here.");
 	next;
 	switch (select("Banana Juice", "Another Delivery", "^FF0000Baphomet!^000000", "My lost beeds")) {
 	case 1:
@@ -462,8 +462,8 @@ N_JobList8:
 
 ///////Job list 9///////
 N_JobList9:
-	mes "[Guy]";
-	mes "Ok you have a couple quests that can be done here.";
+	mes("[Guy]");
+	mes("Ok you have a couple quests that can be done here.");
 	next;
 	switch (select("Smelly Box", "^FF0000Sohee's Everywere!^000000", "^FF0000Moonlight Flower^000000", "Payon Cave")) {
 	case 1:
@@ -507,8 +507,8 @@ N_JobList9:
 
 ///////Job list 10///////
 N_JobList10:
-	mes "[Guy]";
-	mes "Ok you have a couple quests that can be done here.";
+	mes("[Guy]");
+	mes("Ok you have a couple quests that can be done here.");
 	next;
 	switch (select("The Blank Box", "^FF0000Eddga^000000", "^FF0000Phreeoni^000000", "^FF0000Maya^000000")) {
 	case 1:

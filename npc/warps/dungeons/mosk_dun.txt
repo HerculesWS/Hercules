@@ -44,19 +44,19 @@ OnTouch:
 		donpcevent "Soldier1#mos::OnEnable";
 		donpcevent "Soldier2#mos::OnEnable";
 		donpcevent "Soldier3#mos::OnEnable";
-		mes "[Soldier]";
-		mes "Halt right there!";
+		mes("[Soldier]");
+		mes("Halt right there!");
 		next;
-		mes "[Soldier]";
-		mes "We have information";
-		mes "that you've been secretly";
-		mes "communicating with";
-		mes "Baba Yaga, the Horrible.";
+		mes("[Soldier]");
+		mes("We have information");
+		mes("that you've been secretly");
+		mes("communicating with");
+		mes("Baba Yaga, the Horrible.");
 		next;
-		mes "[Soldier]";
-		mes "If you have something to say,";
-		mes "speak to the Csar.";
-		mes "Come with us.";
+		mes("[Soldier]");
+		mes("If you have something to say,");
+		mes("speak to the Csar.");
+		mes("Come with us.");
 		close2;
 		donpcevent "Soldier1#mos::OnInit";
 		donpcevent "Soldier2#mos::OnInit";
@@ -69,14 +69,14 @@ OnTouch:
 		donpcevent "Soldier1#mos::OnEnable";
 		donpcevent "Soldier2#mos::OnEnable";
 		donpcevent "Soldier3#mos::OnEnable";
-		mes "[Soldier]";
-		mes "We expected";
-		mes "that you would appear again.";
-		mes "What is your business with the Csar?";
+		mes("[Soldier]");
+		mes("We expected");
+		mes("that you would appear again.");
+		mes("What is your business with the Csar?");
 		next;
 		if(select("Run away.:Explain the situation.") == 1) {
-			mes "["+strcharinfo(PC_NAME)+"]";
-			mes "I should get out of here...";
+			mes("["+strcharinfo(PC_NAME)+"]");
+			mes("I should get out of here...");
 			close2;
 			warp "mosk_dun02",100,100;
 			donpcevent "Soldier1#mos::OnInit";
@@ -84,13 +84,13 @@ OnTouch:
 			donpcevent "Soldier3#mos::OnInit";
 			end;
 		}
-		mes "-I explain what happend until now.-";
+		mes("-I explain what happend until now.-");
 		next;
-		mes "[Soldier]";
-		mes "If you have something to say, speak";
-		mes "to the Csar.";
-		mes "If you leave to this place,";
-		mes "you will be considered as our enemy.";
+		mes("[Soldier]");
+		mes("If you have something to say, speak");
+		mes("to the Csar.");
+		mes("If you leave to this place,");
+		mes("you will be considered as our enemy.");
 		close2;
 		donpcevent "Soldier1#mos::OnInit";
 		donpcevent "Soldier2#mos::OnInit";
@@ -101,14 +101,14 @@ OnTouch:
 		donpcevent "Soldier1#mos::OnEnable";
 		donpcevent "Soldier2#mos::OnEnable";
 		donpcevent "Soldier3#mos::OnEnable";
-		mes "[Soldier]";
-		mes "We expected";
-		mes "that you would appear again.";
-		mes "What is your business with the Csar?";
+		mes("[Soldier]");
+		mes("We expected");
+		mes("that you would appear again.");
+		mes("What is your business with the Csar?");
 		next;
 		if(select("Run away.:Explain the situation.") == 1) {
-			mes "["+strcharinfo(PC_NAME)+"]";
-			mes "I should get out of here...";
+			mes("["+strcharinfo(PC_NAME)+"]");
+			mes("I should get out of here...");
 			close2;
 			warp "mosk_dun02",100,100;
 			donpcevent "Soldier1#mos::OnInit";
@@ -116,13 +116,13 @@ OnTouch:
 			donpcevent "Soldier3#mos::OnInit";
 			end;
 		}
-		mes "-I explain what happend until now.-";
+		mes("-I explain what happend until now.-");
 		next;
-		mes "[Soldier]";
-		mes "If you have something to say, speak";
-		mes "to the Csar.";
-		mes "If you leave to this place,";
-		mes "you will be considered as our enemy.";
+		mes("[Soldier]");
+		mes("If you have something to say, speak");
+		mes("to the Csar.");
+		mes("If you leave to this place,");
+		mes("you will be considered as our enemy.");
 		close2;
 		donpcevent "Soldier1#mos::OnInit";
 		donpcevent "Soldier2#mos::OnInit";
@@ -136,10 +136,10 @@ OnTouch:
 }
 
 mosk_dun02,53,215,3	script	Soldier1#mos	4_M_RUSKNIGHT,{
-	mes "[Soldier]";
-	mes "We're the Csar's soldiers.";
-	mes "We're called out for emergencies,";
-	mes "don't disturb us anymore.";
+	mes("[Soldier]");
+	mes("We're the Csar's soldiers.");
+	mes("We're called out for emergencies,");
+	mes("don't disturb us anymore.");
 	close;
 
 OnInit:
@@ -152,10 +152,10 @@ OnEnable:
 }
 
 mosk_dun02,50,217,3	script	Soldier2#mos	4_M_RUSKNIGHT,{
-	mes "[Soldier]";
-	mes "We're the Csar's soldiers.";
-	mes "We're called out for emergencies,";
-	mes "don't disturb us anymore.";
+	mes("[Soldier]");
+	mes("We're the Csar's soldiers.");
+	mes("We're called out for emergencies,");
+	mes("don't disturb us anymore.");
 	close;
 
 OnInit:
@@ -168,10 +168,10 @@ OnEnable:
 }
 
 mosk_dun02,56,217,5	script	Soldier3#mos	4_M_RUSKNIGHT,{
-	mes "[Soldier]";
-	mes "We're the Csar's soldiers.";
-	mes "We're called out for emergencies,";
-	mes "don't disturb us anymore.";
+	mes("[Soldier]");
+	mes("We're the Csar's soldiers.");
+	mes("We're called out for emergencies,");
+	mes("don't disturb us anymore.");
 	close;
 
 OnInit:
@@ -184,124 +184,124 @@ OnEnable:
 }
 
 mosk_dun01,170,164,3	script	Milestone#1	HIDDEN_NPC,{
-	mes "- There is writing on a big rock. -";
+	mes("- There is writing on a big rock. -");
 	next;
-	mes "^3131FF- Those who serve the Sun will die, Go to the North. -^000000";
+	mes("^3131FF- Those who serve the Sun will die, Go to the North. -^000000");
 	close;
 }
 
 mosk_dun01,207,276,3	script	Milestone#1-2	HIDDEN_NPC,{
-	mes "- There is writing on a big rock. -";
+	mes("- There is writing on a big rock. -");
 	next;
-	mes "^3131FF- Those who advance may get hurt but are courageous of heart and those who move back will remain safe.";
-	mes "If you have courage, step forward. Otherwise, step backward. -^000000";
+	mes("^3131FF- Those who advance may get hurt but are courageous of heart and those who move back will remain safe.");
+	mes("If you have courage, step forward. Otherwise, step backward. -^000000");
 	next;
 	if(select("Step forward.:Stay.") == 1) {
-		mes "- You follow the way before you. -";
+		mes("- You follow the way before you. -");
 		close2;
 		warp "mosk_dun02",165,30;
 		end;
 	}
-	mes "- You won't advance. -";
+	mes("- You won't advance. -");
 	close;
 }
 
 mosk_dun01,264,191,3	script	Milestone#1-3	HIDDEN_NPC,{
-	mes "- There is writing on a big rock. -";
+	mes("- There is writing on a big rock. -");
 	next;
-	mes "^3131FF- Those who advance may get hurt but are brave of heart and those who move back will remain safe.";
-	mes "If you are brave, then take a step forward. Otherwise, step back. -^000000";
+	mes("^3131FF- Those who advance may get hurt but are brave of heart and those who move back will remain safe.");
+	mes("If you are brave, then take a step forward. Otherwise, step back. -^000000");
 	next;
 	if(select("Step forward.:Stay.") == 1) {
-		mes "- You follow the way before you. -";
+		mes("- You follow the way before you. -");
 		close2;
 		warp "mosk_dun03",117,36;
 		end;
 	}
-	mes "- You decide to stay. -";
+	mes("- You decide to stay. -");
 	close;
 }
 
 mosk_dun02,168,28,3	script	Milestone#2-1	HIDDEN_NPC,{
-	mes "- There is writing on a big rock. -";
+	mes("- There is writing on a big rock. -");
 	next;
-	mes "^3131FF- Those who advance may get hurt but are valorous of heart and those who move back will remain safe.";
-	mes "If you valorous, then take a step forward. Otherwise, step back. -^000000";
+	mes("^3131FF- Those who advance may get hurt but are valorous of heart and those who move back will remain safe.");
+	mes("If you valorous, then take a step forward. Otherwise, step back. -^000000");
 	next;
 	if(select("Go back.:Stay.") == 1) {
-		mes "- You sense danger and decide to go back -";
+		mes("- You sense danger and decide to go back -");
 		close2;
 		warp "mosk_dun01",201,269;
 		end;
 	}
-	mes "- You decided to stay. -";
+	mes("- You decided to stay. -");
 	close;
 }
 
 mosk_dun02,268,117,3	script	Milestone#2-3	HIDDEN_NPC,{
-	mes "- There is writing on a big rock. -";
+	mes("- There is writing on a big rock. -");
 	next;
-	mes "^3131FF- Those who step forward will gain honor but may die, those who step backward will have courage but may still get hurt.";
-	mes "If you are truly brave, step forward. Otherwise, step back -^000000";
+	mes("^3131FF- Those who step forward will gain honor but may die, those who step backward will have courage but may still get hurt.");
+	mes("If you are truly brave, step forward. Otherwise, step back -^000000");
 	next;
 	if(select("Step forward.:Stay.") == 1) {
-		mes "- You bravely step forward. -";
+		mes("- You bravely step forward. -");
 		close2;
 		warp "mosk_dun03",32,135;
 		end;
 	}
-	mes "- You decided to stay. -";
+	mes("- You decided to stay. -");
 	close;
 }
 
 mosk_dun03,27,131,3	script	Milestone#3-2	HIDDEN_NPC,{
-	mes "- There is writing on a big rock. -";
+	mes("- There is writing on a big rock. -");
 	next;
-	mes "^3131FF- Those who stay may die but will gain honor, those who go back may get hurt but will gain courage.";
-	mes "Those who have courage will go back, otherwise step forward and stay. -^000000";
+	mes("^3131FF- Those who stay may die but will gain honor, those who go back may get hurt but will gain courage.");
+	mes("Those who have courage will go back, otherwise step forward and stay. -^000000");
 	next;
 	if(select("Go back.:Stay.") == 1) {
-		mes "- You sense danger and decide to go back -";
+		mes("- You sense danger and decide to go back -");
 		close2;
 		warp "mosk_dun02",262,118;
 		end;
 	}
-	mes "- You decide to stay. -";
+	mes("- You decide to stay. -");
 	close;
 }
 
 mosk_dun03,119,46,3	script	Milestone#3-1	HIDDEN_NPC,{
-	mes "There is writing on a big rock.";
+	mes("There is writing on a big rock.");
 	next;
-	mes "^3131FF- Those who stay may die but will gain honor, those who go back may get hurt but will gain courage.";
-	mes "Those who are afraid of the death will go back, otherwise step forward and stay. -^000000";
+	mes("^3131FF- Those who stay may die but will gain honor, those who go back may get hurt but will gain courage.");
+	mes("Those who are afraid of the death will go back, otherwise step forward and stay. -^000000");
 	next;
 	if(select("Go back.:Stay.") == 1) {
-		mes "- You sense danger and decide to go back -";
+		mes("- You sense danger and decide to go back -");
 		close2;
 		warp "mosk_dun01",257,190;
 		end;
 	}
-	mes "- You decided to stay. -";
+	mes("- You decided to stay. -");
 	close;
 }
 
 mosk_dun01,194,43,3	script	Milestone#1-1	HIDDEN_NPC,{
-	mes "- There is writing on a big rock. -";
+	mes("- There is writing on a big rock. -");
 	next;
-	mes "- If you want to protect your life, go back -";
+	mes("- If you want to protect your life, go back -");
 	close;
 }
 
 mosk_fild02,198,53,3	script	Ship#mos_dun	HIDDEN_NPC,{
-	mes "- You find a ship at anchor. -";
+	mes("- You find a ship at anchor. -");
 	next;
 	if(select("Take the ship and go back to the village.:Explore more.") == 1) {
-		mes "- You board the ship and pull at the oars. -";
+		mes("- You board the ship and pull at the oars. -");
 		close2;
 		warp "moscovia",140,54;
 		end;
 	}
-	mes "- That unknown area arouses your interest. -";
+	mes("- That unknown area arouses your interest. -");
 	close;
 }

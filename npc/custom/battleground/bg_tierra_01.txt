@@ -323,17 +323,17 @@ bat_a01,45,19,3	script	Croix Vintenar#tv1	4_M_CRU_HEAD,{
 		if( $@TierraBG1_Victory == Bat_Team )
 		{ // Victory
 			set .@reward, 3;
-			mes "[Swandery]";
-			mes "Blessed Croax!!";
-			mes "Let's enjoy our glorious victory!";
-			mes "" + strcharinfo(PC_NAME) + ", its a sign reflecting victory";
+			mes("[Swandery]");
+			mes("Blessed Croax!!");
+			mes("Let's enjoy our glorious victory!");
+			mes("" + strcharinfo(PC_NAME) + ", its a sign reflecting victory");
 			close2;
 		} else {
 			set .@reward, 1;
-			mes "[Swandery]";
-			mes "Oh, " + strcharinfo(PC_NAME) + ". Don't be sad.";
-			mes "Even though we didn't win, we did our best.";
-			mes "This is a Royal gift from Croix, and please don't forget this battle. We can win the next.";
+			mes("[Swandery]");
+			mes("Oh, " + strcharinfo(PC_NAME) + ". Don't be sad.");
+			mes("Even though we didn't win, we did our best.");
+			mes("This is a Royal gift from Croix, and please don't forget this battle. We can win the next.");
 			close2;
 		}
 
@@ -352,17 +352,17 @@ bat_a01,53,377,3	script	Guillaume Vintenar#tv1	4_M_KY_HEAD,{
 		if( $@TierraBG1_Victory == Bat_Team )
 		{ // Victory
 			set .@reward, 3;
-			mes "[Swandery]";
-			mes "Blessed Guillaume!!";
-			mes "Let's enjoy our glorious victory!";
-			mes "" + strcharinfo(PC_NAME) + ", its a sign reflecting victory";
+			mes("[Swandery]");
+			mes("Blessed Guillaume!!");
+			mes("Let's enjoy our glorious victory!");
+			mes("" + strcharinfo(PC_NAME) + ", its a sign reflecting victory");
 			close2;
 		} else {
 			set .@reward, 1;
-			mes "[Swandery]";
-			mes "You lost, but you're dedicated to this battle.";
-			mes "This is a reward for your great dedication by Guillaume Marollo!";
-			mes "Just take this defeat a lesson, and later you would definitely learn.";
+			mes("[Swandery]");
+			mes("You lost, but you're dedicated to this battle.");
+			mes("This is a reward for your great dedication by Guillaume Marollo!");
+			mes("Just take this defeat a lesson, and later you would definitely learn.");
 			close2;
 		}
 
@@ -379,24 +379,24 @@ bat_a01,53,377,3	script	Guillaume Vintenar#tv1	4_M_KY_HEAD,{
 // *********************************************************************
 
 bat_a01,60,216,3	script	Ghost#tv13	4_GHOSTRING,{
-	mes "[Ghost in valley]";
-	mes "Boo...Boo...";
+	mes("[Ghost in valley]");
+	mes("Boo...Boo...");
 	specialeffect(EF_HEAL, AREA, playerattached());
 	close;
 }
 
 bat_a01,53,377,3	script	Therapist in battle#tv12	4_F_SISTER,{
-	mes "[Therapist in battle]";
-	mes "Just close your eyes, and take a deep breathe.";
-	mes "You can be free from pain.";
+	mes("[Therapist in battle]");
+	mes("Just close your eyes, and take a deep breathe.");
+	mes("You can be free from pain.");
 	specialeffect(EF_HEAL, AREA, playerattached());
 	close;
 }
 
 bat_a01,45,18,3	script	Therapist in battle#tv11	4_F_SISTER,{
-	mes "[Therapist in battle]";
-	mes "Just close your eyes, and take a deep breathe.";
-	mes "You can be free from pain.";
+	mes("[Therapist in battle]");
+	mes("Just close your eyes, and take a deep breathe.");
+	mes("You can be free from pain.");
 	specialeffect(EF_HEAL, AREA, playerattached());
 	close;
 }

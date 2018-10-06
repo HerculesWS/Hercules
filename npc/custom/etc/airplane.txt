@@ -236,8 +236,8 @@ function	script	F_Porter	{
 	if($destination!=getarg(0))goto Notime;
 
 Board:
-	mes "^FF0000[Porter]^000000";
-	mes "The plane is currently ported.  Would you like to board?";
+	mes("^FF0000[Porter]^000000");
+	mes("The plane is currently ported.  Would you like to board?");
 	next;
 	menu "Yes.",L_Yes,"No.",L_Nope,"View Hourly Itinerary.",Itin;
 
@@ -246,23 +246,23 @@ L_Yes:
 	warp "airplane", 105, 72;
 	specialeffect(EF_CASTSPIN, AREA, playerattached());
 L_Nope:
-	mes "^FF0000[Porter]^000000";
-	mes "Have a good day.  Thank you for traveling with Airship.";
+	mes("^FF0000[Porter]^000000");
+	mes("Have a good day.  Thank you for traveling with Airship.");
 	close;
 
 Notime:
-	mes "^FF0000[Porter]^000000";
+	mes("^FF0000[Porter]^000000");
 	if (Sex == SEX_FEMALE)
-		mes "Sorry, ma'am, but the plane currently isn't ported.  However, you can view the airplane's hourly itinerary.";
+		mes("Sorry, ma'am, but the plane currently isn't ported.  However, you can view the airplane's hourly itinerary.");
 	else
-		mes "Sorry, sir, but the plane currently isn't ported.  However, you can view the airplane's hourly itinerary.";
+		mes("Sorry, sir, but the plane currently isn't ported.  However, you can view the airplane's hourly itinerary.");
 	next;
 	menu "Yes, please.",Itin,"No thanks.",L_Nope;
 	close;
 	end;
 
 Itin:
-	mes "^FF0000[Porter]^000000";
+	mes("^FF0000[Porter]^000000");
 	callfunc "F_Itin";
 }
 
@@ -339,16 +339,16 @@ jupe_gate,46,18,7	script	Porter#23	4_M_TWBOY,{
 	callfunc "F_Porter",23;
 }
 airport,141,43,5	script	Itinerary Schedule	2_BULLETIN_BOARD,{
-	mes "^FF0000[Itinerary]^000000";
+	mes("^FF0000[Itinerary]^000000");
 	callfunc "F_Itin";
 }
 
 airplane,102,68,5	script	Docker	4_M_EIN_SOLDIER,{
 	if($destination == 250) goto Nowhere;
-	mes "^FF0000[Airplane Attendant]^000000";
+	mes("^FF0000[Airplane Attendant]^000000");
 	if($destination == 250)goto Notime;
 	set @dockky, $destination;
-	if($destination != 250)mes "We are currently docked at "+$locationsname$[$destination]+".  Would you like to exit?";
+	if($destination != 250)mes("We are currently docked at "+$locationsname$[$destination]+".  Would you like to exit?");
 	next;
 	menu "Yes.",Lyes,"No.",Lnope;
 
@@ -359,27 +359,27 @@ Lyes:
 	specialeffect(EF_CASTSPIN, AREA, playerattached());
 
 Lnope:
-	mes "^FF0000[Airplane Attendant]^000000";
-	mes "Have a good day.  Thank you for traveling with us.";
+	mes("^FF0000[Airplane Attendant]^000000");
+	mes("Have a good day.  Thank you for traveling with us.");
 	close;
 
 Notime:
-	mes "^FF0000[Airplane Attendant]^000000";
+	mes("^FF0000[Airplane Attendant]^000000");
 	if (Sex == SEX_FEMALE)
-		mes "Sorry, ma'am, but the plane currently isn't docked.  Please wait.";
+		mes("Sorry, ma'am, but the plane currently isn't docked.  Please wait.");
 	else
-		mes "Sorry, sir, but the plane currently isn't docked.  Please wait.";
+		mes("Sorry, sir, but the plane currently isn't docked.  Please wait.");
 	close;
 
 Nowhere:
-	mes "^FF0000[Airplane Attendant]^000000";
-	mes "We're currently in air. Please wait until the pilot has announced that we have safely landed.";
+	mes("^FF0000[Airplane Attendant]^000000");
+	mes("We're currently in air. Please wait until the pilot has announced that we have safely landed.");
 	close;
 }
 
 function	script	F_Itin	{
 	//This is the itinerary's function.  It should work well enough.
-	if($@currenttime==0)mes "Try again later.  A recent server reboot or rehash has messed the itinerary up for a bit.";
+	if($@currenttime==0)mes("Try again later.  A recent server reboot or rehash has messed the itinerary up for a bit.");
 	if($@currenttime==0)close;
 	if($@currenttime==0)end;
 	set @tempo, 0;
@@ -399,10 +399,10 @@ seta:
 	if(@time<12)set @time$,@time;
 	if(@time==12)set @time$,12;
 	if(@time>12)set @time$,@time - 12;
-	if(@time<12)mes @time$+":"+ @minutes$ + " A.M. - "+@time$+ ":"+ @minutess$ + " A.M. - "+"^FF0000"+$locationsname$[$locationn[@tempo]]+"^000000";
-	if(@time==12)mes @time$+":"+ @minutes$ + " P.M. - "+@time$+ ":"+ @minutess$ + " P.M. -"+"^FF0000 "+$locationsname$[$locationn[@tempo]]+"^000000";
-	if(@time>12 && time<24)mes @time$ +":"+ @minutes$ + " P.M. - "+@time$ + ":"+ @minutess$ + " P.M. -"+"^FF0000 "+$locationsname$[$locationn[@tempo]]+"^000000";
-	if(@time==24)mes @time$+":"+ @minutes$ + " A.M. - "+@time$+ ":"+ @minutess$ + " A.M. -"+"^FF0000 "+$locationsname$[$locationn[@tempo]]+"^000000";
+	if(@time<12)mes(@time$+":"+ @minutes$ + " A.M. - "+@time$+ ":"+ @minutess$ + " A.M. - "+"^FF0000"+$locationsname$[$locationn[@tempo]]+"^000000");
+	if(@time==12)mes(@time$+":"+ @minutes$ + " P.M. - "+@time$+ ":"+ @minutess$ + " P.M. -"+"^FF0000 "+$locationsname$[$locationn[@tempo]]+"^000000");
+	if(@time>12 && time<24)mes(@time$ +":"+ @minutes$ + " P.M. - "+@time$ + ":"+ @minutess$ + " P.M. -"+"^FF0000 "+$locationsname$[$locationn[@tempo]]+"^000000");
+	if(@time==24)mes(@time$+":"+ @minutes$ + " A.M. - "+@time$+ ":"+ @minutess$ + " A.M. -"+"^FF0000 "+$locationsname$[$locationn[@tempo]]+"^000000");
 	if(@tempo<12)goto seta;
 	set @tempo, 0;
 	goto setb;
@@ -420,10 +420,10 @@ setb:
 	if(@time<12)set @time$,@time;
 	if(@time==12)set @time$,12;
 	if(@time>12)set @time$,@time - 12;
-	if(@time<12)mes @time$+":"+ @minutes$ + " A.M. - "+@time$+ ":"+ @minutess$ + " A.M. - "+"^FF0000"+$locationsname$[$locationn[@tempo]]+"^000000";
-	if(@time==12)mes @time$+":"+ @minutes$ + " P.M. - "+@time$+ ":"+ @minutess$ + " P.M. -"+"^FF0000 "+$locationsname$[$locationn[@tempo]]+"^000000";
-	if(@time>12 && time<24)mes @time$ +":"+ @minutes$ + " P.M. - "+@time$+ ":"+ @minutess$ + " P.M. -"+"^FF0000 "+$locationsname$[$locationn[@tempo]]+"^000000";
-	if(@time==24)mes @time$+":"+ @minutes$ + " A.M. - "+@time$+ ":"+ @minutess$ + " A.M. -"+"^FF0000 "+$locationsname$[$locationn[@tempo]]+"^000000";
+	if(@time<12)mes(@time$+":"+ @minutes$ + " A.M. - "+@time$+ ":"+ @minutess$ + " A.M. - "+"^FF0000"+$locationsname$[$locationn[@tempo]]+"^000000");
+	if(@time==12)mes(@time$+":"+ @minutes$ + " P.M. - "+@time$+ ":"+ @minutess$ + " P.M. -"+"^FF0000 "+$locationsname$[$locationn[@tempo]]+"^000000");
+	if(@time>12 && time<24)mes(@time$ +":"+ @minutes$ + " P.M. - "+@time$+ ":"+ @minutess$ + " P.M. -"+"^FF0000 "+$locationsname$[$locationn[@tempo]]+"^000000");
+	if(@time==24)mes(@time$+":"+ @minutes$ + " A.M. - "+@time$+ ":"+ @minutess$ + " A.M. -"+"^FF0000 "+$locationsname$[$locationn[@tempo]]+"^000000");
 	goto setb;
 
 setc:

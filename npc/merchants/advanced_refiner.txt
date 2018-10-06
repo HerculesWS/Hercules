@@ -45,11 +45,11 @@
 
 payon,157,146,6	script	Suhnbi#cash	4_M_03,{
 	disable_items;
-	mes "[Suhnbi]";
-	mes "I am the Armsmith";
-	mes "I can refine all kinds of weapons,";
-	mes "armor and equipment, so let me";
-	mes "know what you want to refine.";
+	mes("[Suhnbi]");
+	mes("I am the Armsmith");
+	mes("I can refine all kinds of weapons,");
+	mes("armor and equipment, so let me");
+	mes("know what you want to refine.");
 	next;
 
 	setarray .@position$[1], "Head","Body","Left hand","Right hand","Robe","Shoes","Accessory 1","Accessory 2","Head 2","Head 3";
@@ -62,8 +62,8 @@ payon,157,146,6	script	Suhnbi#cash	4_M_03,{
 		.@menu$ += ":";
 	}
 	if (.@equipped == 0) {
-		mes "[Suhnbi]";
-		mes "I don't think I can refine any items you have...";
+		mes("[Suhnbi]");
+		mes("I don't think I can refine any items you have...");
 		close;
 	}
 	.@part = select(.@menu$);
@@ -71,13 +71,13 @@ payon,157,146,6	script	Suhnbi#cash	4_M_03,{
 	if (!getequipisequiped(.@part)) //custom check
 		close;
 	if (!getequipisenableref(.@part)) {
-		mes "[Suhnbi]";
-		mes "Go find another Blacksmith. You can't refine this thing.";
+		mes("[Suhnbi]");
+		mes("Go find another Blacksmith. You can't refine this thing.");
 		close;
 	}
 	if (getequiprefinerycnt(.@part) >= 10) {
-		mes "[Suhnbi]";
-		mes "Hmm... someone perfected this already. I don't think I can work on it further.";
+		mes("[Suhnbi]");
+		mes("Hmm... someone perfected this already. I don't think I can work on it further.");
 		close;
 	}
 
@@ -91,74 +91,74 @@ payon,157,146,6	script	Suhnbi#cash	4_M_03,{
 		default: callsub S_RefineValidate,0,7619,2000,.@part; break;
 	}
 
-	mes "[Suhnbi]";
-	mes "Clang! Clang! Clang!";
+	mes("[Suhnbi]");
+	mes("Clang! Clang! Clang!");
 	if (getequippercentrefinery(.@part, REFINE_CHANCE_TYPE_ENRICHED) > rand(100)) {
 		successrefitem .@part;
 		next;
 		emotion e_no1;
-		mes "[Suhnbi]";
-		mes "There you go! It's done.";
-		mes "It's been a while since I've made such a fine "+((getequipweaponlv(.@part))?"weapon":"armor")+". You must be happy because it has become stronger!";
+		mes("[Suhnbi]");
+		mes("There you go! It's done.");
+		mes("It's been a while since I've made such a fine "+((getequipweaponlv(.@part))?"weapon":"armor")+". You must be happy because it has become stronger!");
 		close;
 	}
 	failedrefitem .@part;
 	next;
 	emotion (!rand(5))?e_cash:e_omg;
-	mes "[Suhnbi]";
-	mes "Uuuuuuuuuummmmmph!!!";
+	mes("[Suhnbi]");
+	mes("Uuuuuuuuuummmmmph!!!");
 	next;
-	mes "[Suhnbi]";
-	mes "...";
-	mes ".....";
-	mes ".......Huhuhuhuhu~";
-	mes "........It was your choice and my ability, no regret.";
+	mes("[Suhnbi]");
+	mes("...");
+	mes(".....");
+	mes(".......Huhuhuhuhu~");
+	mes("........It was your choice and my ability, no regret.");
 	close;
 
 S_RefineValidate:
-	mes "[Suhnbi]";
+	mes("[Suhnbi]");
 	if (getarg(0))
-		mes "You want to refine a level " + getarg(0) + " weapon?";
-	mes "To refine that, you'll need to have one ^ff9999" + getitemname(getarg(1)) + "^000000 and " + getarg(2) + " zeny.";
-	mes "Would you like to continue?";
+		mes("You want to refine a level " + getarg(0) + " weapon?");
+	mes("To refine that, you'll need to have one ^ff9999" + getitemname(getarg(1)) + "^000000 and " + getarg(2) + " zeny.");
+	mes("Would you like to continue?");
 	next;
 	if(select("Yes", "No") == 1) {
 		if (getequippercentrefinery(getarg(3), REFINE_CHANCE_TYPE_ENRICHED) < 100) {
 			if (getarg(0)) {
-				mes "[Suhnbi]";
-				mes "Wow!!";
-				mes "This weapon probably";
-				mes "looks like it's been refined...";
-				mes "many times...";
-				mes "It may break if";
-				mes "you refine it again.";
+				mes("[Suhnbi]");
+				mes("Wow!!");
+				mes("This weapon probably");
+				mes("looks like it's been refined...");
+				mes("many times...");
+				mes("It may break if");
+				mes("you refine it again.");
 				next;
-				mes "And if it breaks,";
-				mes "you can't use it anymore!";
-				mes "All the cards in it and the properties ^ff0000will be lost^000000!";
-				mes "^ff0000Besides, the equipment will break!^000000";
-				mes "Are you sure you still want to continue?";
+				mes("And if it breaks,");
+				mes("you can't use it anymore!");
+				mes("All the cards in it and the properties ^ff0000will be lost^000000!");
+				mes("^ff0000Besides, the equipment will break!^000000");
+				mes("Are you sure you still want to continue?");
 				next;
 				if(select("Yes", "No") == 2) {
-					mes "[Suhnbi]";
-					mes "Good.";
-					mes "Because if the weapon breaks from unreasonable refining, then I get a bad mood, too.";
+					mes("[Suhnbi]");
+					mes("Good.");
+					mes("Because if the weapon breaks from unreasonable refining, then I get a bad mood, too.");
 					close;
 				}
 			} else {
-				mes "[Suhnbi]";
-				mes "Giggle. Giggle. Oh, you have guts, daring to refine this.";
-				mes "You know it's pretty risky, don't you?";
+				mes("[Suhnbi]");
+				mes("Giggle. Giggle. Oh, you have guts, daring to refine this.");
+				mes("You know it's pretty risky, don't you?");
 				next;
-				mes "If your defensive equipment is broken, you'll never be able to use it again.";
-				mes "Even your cards and your modifications will ^ff0000completely disappear^000000.";
-				//mes "Everything will disappear. As in... GONE!";
-				mes "Do you really wish to continue?";
+				mes("If your defensive equipment is broken, you'll never be able to use it again.");
+				mes("Even your cards and your modifications will ^ff0000completely disappear^000000.");
+				//mes("Everything will disappear. As in... GONE!");
+				mes("Do you really wish to continue?");
 				next;
 				if(select("Yes", "No") == 2) {
-					mes "[Suhnbi]";
-					mes "What nonsense. You waste my precious time.";
-					mes "Get lost, punk.";
+					mes("[Suhnbi]");
+					mes("What nonsense. You waste my precious time.");
+					mes("Get lost, punk.");
 					close;
 				}
 			}
@@ -168,12 +168,12 @@ S_RefineValidate:
 			Zeny -= getarg(2);
 			return;
 		}
-		mes "[Suhnbi]";
-		mes "Are these all you have?";
-		mes "I'm very sorry, but I can't do anything without all the materials. Besides, I deserve some payments for my work, don't I?";
+		mes("[Suhnbi]");
+		mes("Are these all you have?");
+		mes("I'm very sorry, but I can't do anything without all the materials. Besides, I deserve some payments for my work, don't I?");
 		close;
 	}
-	mes "[Suhnbi]";
-	mes "I can't help it even if you're not happy about it...";
+	mes("[Suhnbi]");
+	mes("I can't help it even if you're not happy about it...");
 	close;
 }

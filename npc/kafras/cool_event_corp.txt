@@ -43,12 +43,12 @@
 // - 1: Used to determine the location displayed in the save message.
 function	script	F_ZondaStaff	{
 	cutin "zonda_01",2;
-	mes "[Cool Event Corp. Staff]";
-	mes "Welcome to Cool Event Corp.";
-	mes "Our staff is always working";
-	mes "to surpass your expactations";
-	mes "for quality service. So how";
-	mes "may I assist you today?";
+	mes("[Cool Event Corp. Staff]");
+	mes("Welcome to Cool Event Corp.");
+	mes("Our staff is always working");
+	mes("to surpass your expactations");
+	mes("for quality service. So how");
+	mes("may I assist you today?");
 	next;
 	switch (getarg(0)) {
 		// Save, Storage, Pushcart, Storage Password (Hugel)
@@ -62,12 +62,12 @@ function	script	F_ZondaStaff	{
 		.@menu$ += @Z_Menu0$[.@i] + ":";
 	.@j = select (.@menu$) - 1;
 	if (@Z_Menu0$[.@j] == "Save") {
-		mes "[Cool Event Corp. Staff]";
-		mes "Your Respawn Point";
-		mes "has been saved here";
-		mes getarg(1);
-		mes "Thank you for using the";
-		mes "Cool Event Corp. service~";
+		mes("[Cool Event Corp. Staff]");
+		mes("Your Respawn Point");
+		mes("has been saved here");
+		mes(getarg(1));
+		mes("Thank you for using the");
+		mes("Cool Event Corp. service~");
 		return;
 	} else if (@Z_Menu0$[.@j] == "Use Storage") {
 		callfunc "F_KafStor",0,40,6,"[Cool Event Corp. Staff]";
@@ -88,13 +88,13 @@ function	script	F_ZondaStaff	{
 		callfunc("F_SetKafCode","[Cool Event Corp. Staff]","Cool Event Corp.");
 		//the function closes msg and removes cutins
 	} else {
-		mes "[Cool Event Corp. Staff]";
-		mes "Cool Event Corp. is always";
-		mes "striving to provide the best";
-		mes "services for our customers.";
-		mes "Help us become the best by";
-		mes "providing us with your opinions";
-		mes "and honest feedback. Thank you.";
+		mes("[Cool Event Corp. Staff]");
+		mes("Cool Event Corp. is always");
+		mes("striving to provide the best");
+		mes("services for our customers.");
+		mes("Help us become the best by");
+		mes("providing us with your opinions");
+		mes("and honest feedback. Thank you.");
 		close2;
 	}
 	cutin "", 255;

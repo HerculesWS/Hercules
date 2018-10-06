@@ -36,9 +36,9 @@
 
 moc_para01,36,38,3	script	Mission [11 - 25]#Tuto	4_BOARD3,{
 	if (countitem(Para_Team_Mark) < 1 && countitem(Para_Team_Mark_) < 1) {
-		mes "- You need to have an -";
-		mes "- ^4d4dff'Eden Group Mark'^000000 -";
-		mes "- to receive these missions. -";
+		mes("- You need to have an -");
+		mes("- ^4d4dff'Eden Group Mark'^000000 -");
+		mes("- to receive these missions. -");
 		close;
 	}
 	for(.@i = 11124; .@i<11134; ++.@i)
@@ -47,37 +47,37 @@ moc_para01,36,38,3	script	Mission [11 - 25]#Tuto	4_BOARD3,{
 	for(.@i = 11114; .@i<11123; ++.@i) {
 		.@state = questprogress(.@i,HUNTING);
 		if (.@state == 2) {
-			mes " - You must collect your - ";
-			mes " - reward before starting - ";
-			mes " - a new mission. - ";
-			mes " ";
-			mes " - Manager : Spike - ";
+			mes(" - You must collect your - ");
+			mes(" - reward before starting - ");
+			mes(" - a new mission. - ");
+			mes(" ");
+			mes(" - Manager : Spike - ");
 			close;
 		}
 		else if (.@state) {
-			mes " - You can only request - ";
-			mes " - one mission at a time. - ";
-			mes " ";
-			mes " - Manager : Spike - ";
+			mes(" - You can only request - ");
+			mes(" - one mission at a time. - ");
+			mes(" ");
+			mes(" - Manager : Spike - ");
 			close;
 		}
 	}
 	if (BaseLevel < 11) {
-		mes " - There are no tasks - ";
-		mes " - open for you right now. - ";
+		mes(" - There are no tasks - ");
+		mes(" - open for you right now. - ");
 		close;
 	}
 	if (BaseLevel > 25) {
-		mes " - These missions are too - ";
-		mes " - easy for your caliber - ";
-		mes " - search for a more level - ";
-		mes " - appropriate mission. - ";
+		mes(" - These missions are too - ");
+		mes(" - easy for your caliber - ");
+		mes(" - search for a more level - ");
+		mes(" - appropriate mission. - ");
 		close;
 	}
-	mes " - Mission bulletin board -";
-	mes " - for beginners. -";
-	mes " ";
-	mes " - Manager : Spike -";
+	mes(" - Mission bulletin board -");
+	mes(" - for beginners. -");
+	mes(" ");
+	mes(" - Manager : Spike -");
 	next;
 	switch(select("Hornet Hunting", "Condor Hunting", "Grasshopper's Leg", "Worm Tail Hunting", "Spore Hunting", "Pest Control", "Muka Hunting", "Familiar Hunting", "Collect Feathers", "Collect Poison Spores", "Cancel")) {
 		case 1: callsub L_Quest,11114,"Hornet Hunting"," - Hunt 10 ^4d4dff'Hornets'^000000 - "," - northwest of Prontera. - ";
@@ -90,30 +90,30 @@ moc_para01,36,38,3	script	Mission [11 - 25]#Tuto	4_BOARD3,{
 		case 8: callsub L_Quest,11121,"Familiar Hunting"," - Hunt 20 ^4d4dffFamiliar^000000 - "," - in the Culvert Sewers - "," - west of Prontera. - ";
 		case 9: callsub L_Quest,11122,"Collect Feathers"," - Hunt 30 ^4d4dff'Peco Pecos'^000000 - "," - south of Prontera. - ";
 		case 10: callsub L_Quest,11123,"Collect Poison Spores"," - Hunt 30 ^4d4dffPoison Spores^000000 - "," - inside the Geffen Tower and - "," - bring 5 ^4d4dffPoison Spores^000000. - ";
-		case 11: mes " - Stop reading the bulletin board. - "; close;
+		case 11: mes(" - Stop reading the bulletin board. - "); close;
 	}
 	end;
 L_Quest:
 	if (questprogress(getarg(0)+10,PLAYTIME) == 1) {
-		mes " - Mission ^4d4dff"+getarg(1)+"^000000 - ";
-		mes " - is already finished for today. - ";
-		mes " ";
-		mes " - Manager : Spike - ";
+		mes(" - Mission ^4d4dff"+getarg(1)+"^000000 - ");
+		mes(" - is already finished for today. - ");
+		mes(" ");
+		mes(" - Manager : Spike - ");
 		close;
 	}
-	mes " - Mission '"+getarg(1)+"' - ";
+	mes(" - Mission '"+getarg(1)+"' - ");
 	for(.@i = 2; .@i<getargcount(); ++.@i)
-		mes getarg(.@i);
-	mes " ";
-	mes " - Manager : Spike - ";
+		mes(getarg(.@i));
+	mes(" ");
+	mes(" - Manager : Spike - ");
 	next;
 	if(select("I will do this mission.", "Look for other missions.") == 2) {
-		mes " - Let's search for -";
-		mes " - other missions. - ";
+		mes(" - Let's search for -");
+		mes(" - other missions. - ");
 		close;
 	}
 	for(.@i = 2; .@i<getargcount(); ++.@i)
-		mes getarg(.@i);
+		mes(getarg(.@i));
 	if (getarg(0) == 11123 && questprogress(11123,PLAYTIME) == 2)
 		erasequest 11133;	// Special case for "Collect Poison Spores"
 	setquest getarg(0);
@@ -136,36 +136,36 @@ moc_para01,32,30,6	script	Spike	4_F_CHILD,{
 			case 11123: callsub L_Quest,.@i,"Collect Poison Spores",6000,7033,5;
 		}
 		else if (.@state) {
-			mes "[Spike]";
-			mes "You haven't finished your mission yet.";
-			mes "Keep up the good work. You are almost done.";
+			mes("[Spike]");
+			mes("You haven't finished your mission yet.");
+			mes("Keep up the good work. You are almost done.");
 			close;
 		}
 	}
-	mes "[Spike]";
-	mes "Are you looking for a job?";
-	mes "We always have lots of work to do.";
+	mes("[Spike]");
+	mes("Are you looking for a job?");
+	mes("We always have lots of work to do.");
 	next;
-	mes "[Spike]";
-	mes "Why don't you look around and find some interesting tasks?";
+	mes("[Spike]");
+	mes("Why don't you look around and find some interesting tasks?");
 	close;
 L_Quest:
 	if (questprogress(getarg(0),HUNTING) == 2) {
 		if (getarg(3,0))
 			if (countitem(getarg(3)) < getarg(4)) {
-				mes "[Spike]";
-				mes "You don't have enough "+getitemname(getarg(3))+".";
-				mes "You need to bring "+getarg(4)+" "+getitemname(getarg(3))+".";
+				mes("[Spike]");
+				mes("You don't have enough "+getitemname(getarg(3))+".");
+				mes("You need to bring "+getarg(4)+" "+getitemname(getarg(3))+".");
 				close;
 			}
-		mes "[Spike]";
-		mes "Hmm... let me see~";
-		mes "You have completed the '"+getarg(1)+"' mission.";
+		mes("[Spike]");
+		mes("Hmm... let me see~");
+		mes("You have completed the '"+getarg(1)+"' mission.");
 		next;
-		mes "[Spike]";
-		mes "Good work~!!";
-		mes "Our client is so happy with your work. He will appreciate what you have done.";
-		mes "Please help us again. Thanks!";
+		mes("[Spike]");
+		mes("Good work~!!");
+		mes("Our client is so happy with your work. He will appreciate what you have done.");
+		mes("Please help us again. Thanks!");
 		if (getarg(3,0)) delitem getarg(3),getarg(4);
 		erasequest getarg(0);
 		setquest getarg(0)+10;

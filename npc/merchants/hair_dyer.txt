@@ -36,42 +36,42 @@
 //=========================================================================
 
 prt_in,243,168,4	script	Jovovich	4_F_02,{
-	mes "[Hairdresser Jovovich]";
-	mes "Welcome~!";
-	mes "How may I help you?";
+	mes("[Hairdresser Jovovich]");
+	mes("Welcome~!");
+	mes("How may I help you?");
 	next;
-	mes "[Hairdresser Jovovich]";
+	mes("[Hairdresser Jovovich]");
 	if (Sex == SEX_MALE) {
-		mes "Oh, no! Your hair is damaged. It seems as if you may need professional treatment. Come sit over here, please. Come.";
+		mes("Oh, no! Your hair is damaged. It seems as if you may need professional treatment. Come sit over here, please. Come.");
 	} else if (rand(20) > 11) {
-		mes "Eh!? Oh my! Oh no no no no! Your hair is sooo damaged! It's not good if you leave your hair like this.";
+		mes("Eh!? Oh my! Oh no no no no! Your hair is sooo damaged! It's not good if you leave your hair like this.");
 		next;
-		mes "[Hairdresser Jovovich]";
-		mes "Would you let me treat your hair? Please?";
+		mes("[Hairdresser Jovovich]");
+		mes("Would you let me treat your hair? Please?");
 	} else {
-		mes "Wow! Your hair would be perfect once it's dyed~ How about dying your hair for a change?";
+		mes("Wow! Your hair would be perfect once it's dyed~ How about dying your hair for a change?");
 	}
 	next;
 	while(1) {
 		switch(select("Dye Hair", "Tips and Information", "Cancel")) {
 		case 1:
-			mes "[Hairdresser Jovovich]";
-			mes "Yes yes, good choice~";
-			mes "Well then, this is your chance for a make-over, your chance to blossom in beauty! Choose the color you would like.";
+			mes("[Hairdresser Jovovich]");
+			mes("Yes yes, good choice~");
+			mes("Well then, this is your chance for a make-over, your chance to blossom in beauty! Choose the color you would like.");
 			next;
 			while(1) {
 				if (.@choose_success == 1) {
-					mes "[Hairdresser Jovovich]";
-					mes "What do you think? Did you want a different color?";
+					mes("[Hairdresser Jovovich]");
+					mes("What do you think? Did you want a different color?");
 					next;
 					if (select("Yes", "No") == 1) {
-						mes "[Hairdresser Jovovich]";
-						mes "Okay! Choose the color that you would like.";
+						mes("[Hairdresser Jovovich]");
+						mes("Okay! Choose the color that you would like.");
 						next;
 					}
 					else  {
-						mes "[Hairdresser Jovovich]";
-						mes "Hmm, I'm sort of disappointed. I wanted to do a better job. But I promise I'll do it better next time. Please come again~";
+						mes("[Hairdresser Jovovich]");
+						mes("Hmm, I'm sort of disappointed. I wanted to do a better job. But I promise I'll do it better next time. Please come again~");
 						close;
 					}
 				}
@@ -88,18 +88,18 @@ prt_in,243,168,4	script	Jovovich	4_F_02,{
 					case 8: .@headpalette = 7; break;
 					case 9:
 						if (.@choose_success != 0) {
-							mes "[Hairdresser Jovovich]";
-							mes "You must like your hair color~";
+							mes("[Hairdresser Jovovich]");
+							mes("You must like your hair color~");
 							close;
 						}
-						mes "[Hairdresser Jovovich]";
-						mes "Eehh~? You're not going to dye your hair? I'm a little sad...";
+						mes("[Hairdresser Jovovich]");
+						mes("Eehh~? You're not going to dye your hair? I'm a little sad...");
 						close;
 					}
 
 					if (.@headpalette == getlook(LOOK_HAIR_COLOR)) {
-						mes "[Hairdresser Jovovich]";
-						mes "Eh? But that's the hair color you already have. Please choose a different color.";
+						mes("[Hairdresser Jovovich]");
+						mes("Eh? But that's the hair color you already have. Please choose a different color.");
 						next;
 					}
 					else {
@@ -114,8 +114,8 @@ prt_in,243,168,4	script	Jovovich	4_F_02,{
 						case 8: callsub S_NoDye,975,"red"; break;
 						}
 						if (Zeny < 1000) {
-							mes "[Hairdresser Jovovich]";
-							mes "The fee is 1000 zeny. Do you not have enough...?";
+							mes("[Hairdresser Jovovich]");
+							mes("The fee is 1000 zeny. Do you not have enough...?");
 							close;
 						}
 
@@ -140,25 +140,25 @@ prt_in,243,168,4	script	Jovovich	4_F_02,{
 			}
 
 		case 2:
-			mes "[Hairdresser Jovovich]";
-			mes "When you're feeling down , when you get dumped, when you want to impress someone, or even when you just want to stand out...";
+			mes("[Hairdresser Jovovich]");
+			mes("When you're feeling down , when you get dumped, when you want to impress someone, or even when you just want to stand out...");
 			next;
-			mes "[Hairdresser Jovovich]";
-			mes "For that special place and time, wouldn't you want a hairstyle of your very own? As long as you have the appropriate dyestuffs, I will make your hair look wonderful.";
+			mes("[Hairdresser Jovovich]");
+			mes("For that special place and time, wouldn't you want a hairstyle of your very own? As long as you have the appropriate dyestuffs, I will make your hair look wonderful.");
 			next;
-			mes "[Hairdresser Jovovich]";
-			mes "And try not to worry too much about the fee. Acquiring beauty is the same as acquiring everything. Hehe~";
+			mes("[Hairdresser Jovovich]");
+			mes("And try not to worry too much about the fee. Acquiring beauty is the same as acquiring everything. Hehe~");
 			next;
-			mes "[Hairdresser Jovovich]";
-			mes "* Fees and Information *";
-			mes "- 1 Dyestuffs item of the color of hair you want.";
-			mes "- 1000 zeny fee.";
+			mes("[Hairdresser Jovovich]");
+			mes("* Fees and Information *");
+			mes("- 1 Dyestuffs item of the color of hair you want.");
+			mes("- 1000 zeny fee.");
 			break;
 
 		case 3:
-			mes "[Hairdresser Jovovich]";
-			mes "Men or Women...";
-			mes "Everyone has the right and obligation to be beautiful.";
+			mes("[Hairdresser Jovovich]");
+			mes("Men or Women...");
+			mes("Everyone has the right and obligation to be beautiful.");
 			close;
 		}
 
@@ -166,8 +166,8 @@ prt_in,243,168,4	script	Jovovich	4_F_02,{
 
 S_NoDye:
 	if (countitem(getarg(0)) == 0) {
-		mes "[Hairdresser Jovovich]";
-		mes "Eh?! But you need the item '"+getitemname(getarg(0))+"' to dye your hair "+getarg(1)+"...";
+		mes("[Hairdresser Jovovich]");
+		mes("Eh?! But you need the item '"+getitemname(getarg(0))+"' to dye your hair "+getarg(1)+"...");
 		close;
 	}
 	return;
@@ -175,53 +175,53 @@ S_NoDye:
 
 //== Lighthalzen ===========================================
 lhz_in02,100,134,3	script	Hair Dyer#lich	4_F_EINWOMAN,{
-	mes "[Rossa]";
+	mes("[Rossa]");
 	if (Sex == SEX_MALE) {
-		mes "Welcome, come in~";
-		mes "Oh, I see that you take";
-		mes "much better care of your";
-		mes "hair than those other boys.";
-		mes "Now would you like to dye";
-		mes "your hair another color?";
+		mes("Welcome, come in~");
+		mes("Oh, I see that you take");
+		mes("much better care of your");
+		mes("hair than those other boys.");
+		mes("Now would you like to dye");
+		mes("your hair another color?");
 	}
 	else {
-		mes "Oh, wow~ Where did";
-		mes "you get your hair styled?";
-		mes "I love it! But... It would";
-		mes "be even more beautiful if";
-		mes "you dyed your hair. What";
-		mes "do you think about that?";
+		mes("Oh, wow~ Where did");
+		mes("you get your hair styled?");
+		mes("I love it! But... It would");
+		mes("be even more beautiful if");
+		mes("you dyed your hair. What");
+		mes("do you think about that?");
 	}
 	while (.@choose_success != 2) {
 		next;
 		switch(select("Dye Hair", "Coloring Information", "Cancel")) {
 		case 1:
-			mes "[Rossa]";
-			mes "Ho ho ho ho~";
-			mes "So which color would";
-			mes "you like to try? Something";
-			mes "vivid or dark? Sexy or cute?";
+			mes("[Rossa]");
+			mes("Ho ho ho ho~");
+			mes("So which color would");
+			mes("you like to try? Something");
+			mes("vivid or dark? Sexy or cute?");
 			next;
 			while (.@choose_success != 2) {
 				if (.@choose_success == 1) {
-					mes "[Rossa]";
-					mes "Ooh, I like this color!";
-					mes "But would you like to";
-					mes "try a different one?";
+					mes("[Rossa]");
+					mes("Ooh, I like this color!");
+					mes("But would you like to");
+					mes("try a different one?");
 					next;
 					switch(select("Yes", "No")) {
 					case 1:
-						mes "[Rossa]";
-						mes "Please select";
-						mes "another color~";
+						mes("[Rossa]");
+						mes("Please select");
+						mes("another color~");
 						next;
 						break;
 					case 2:
-						mes "[Rossa]";
-						mes "An excellent choice~";
-						mes "Alright then, thank you";
-						mes "for using my service and";
-						mes "I hope you come by again!";
+						mes("[Rossa]");
+						mes("An excellent choice~");
+						mes("Alright then, thank you");
+						mes("for using my service and");
+						mes("I hope you come by again!");
 						close2;
 						.@choose_success = 2;
 						break;
@@ -255,126 +255,126 @@ lhz_in02,100,134,3	script	Hair Dyer#lich	4_F_EINWOMAN,{
 						break;
 					case 9:
 						if (.@choose_success != 0) {
-							mes "[Rossa]";
-							mes "Are you sure?";
-							mes "Alright then, you";
-							mes "know what's best for";
-							mes "your beauty and to tell";
-							mes "the truth, I agree with you~";
+							mes("[Rossa]");
+							mes("Are you sure?");
+							mes("Alright then, you");
+							mes("know what's best for");
+							mes("your beauty and to tell");
+							mes("the truth, I agree with you~");
 							close2;
 							.@choose_success = 2;
 						}
 						else {
-							mes "[Rossa]";
-							mes "Oh, I see. Still, I can't";
-							mes "help but feel so disappointed.";
-							mes "You'd look so good if you dyed";
-							mes "your hair a different color~";
+							mes("[Rossa]");
+							mes("Oh, I see. Still, I can't");
+							mes("help but feel so disappointed.");
+							mes("You'd look so good if you dyed");
+							mes("your hair a different color~");
 							close2;
 							.@choose_success = 2;
 						}
 						break;
 					}
 					if (getlook(LOOK_HAIR_COLOR) == .@headpalette) {
-						mes "[Rossa]";
-						mes "Hmm, your hair color";
-						mes "is still fine, so there's";
-						mes "no need to dye it the same";
-						mes "color again, if that's what";
-						mes "you're worried about.";
+						mes("[Rossa]");
+						mes("Hmm, your hair color");
+						mes("is still fine, so there's");
+						mes("no need to dye it the same");
+						mes("color again, if that's what");
+						mes("you're worried about.");
 						next;
 					}
 					else {
 						if ((.@headpalette == 8) && (countitem(Scarlet_Dyestuffs) == 0)) {
-							mes "[Rossa]";
-							mes "Oh, I'm sorry dear,";
-							mes "but I can't dye your";
-							mes "hair if you didn't bring";
-							mes "Scarlet Dyestuffs with you...";
+							mes("[Rossa]");
+							mes("Oh, I'm sorry dear,");
+							mes("but I can't dye your");
+							mes("hair if you didn't bring");
+							mes("Scarlet Dyestuffs with you...");
 							close2;
 							.@choose_success = 2;
 							break;
 						}
 						else if ((.@headpalette == 1) && (countitem(Lemon_Dyestuffs) == 0)) {
-							mes "[Rossa]";
-							mes "Oh, I'm sorry dear,";
-							mes "but I can't dye your";
-							mes "hair if you didn't bring";
-							mes "Lemon Dyestuffs with you...";
+							mes("[Rossa]");
+							mes("Oh, I'm sorry dear,");
+							mes("but I can't dye your");
+							mes("hair if you didn't bring");
+							mes("Lemon Dyestuffs with you...");
 							close2;
 							.@choose_success = 2;
 							break;
 						}
 						else if ((.@headpalette == 2) && (countitem(Violet_Dyestuffs) == 0)) {
-							mes "[Rossa]";
-							mes "Oh, I'm sorry dear,";
-							mes "but I can't dye your";
-							mes "hair if you didn't bring";
-							mes "Violet Dyestuffs with you...";
+							mes("[Rossa]");
+							mes("Oh, I'm sorry dear,");
+							mes("but I can't dye your");
+							mes("hair if you didn't bring");
+							mes("Violet Dyestuffs with you...");
 							close2;
 							.@choose_success = 2;
 							break;
 						}
 						else if ((.@headpalette == 3) && (countitem(Orange_Dyestuffs) == 0)) {
-							mes "[Rossa]";
-							mes "Oh, I'm sorry dear,";
-							mes "but I can't dye your";
-							mes "hair if you didn't bring";
-							mes "Orange Dyestuffs with you...";
+							mes("[Rossa]");
+							mes("Oh, I'm sorry dear,");
+							mes("but I can't dye your");
+							mes("hair if you didn't bring");
+							mes("Orange Dyestuffs with you...");
 							close2;
 							.@choose_success = 2;
 							break;
 						}
 						else if ((.@headpalette == 4) && (countitem(Darkgreen_Dyestuffs) == 0)) {
-							mes "[Rossa]";
-							mes "Oh, I'm sorry dear,";
-							mes "but I can't dye your";
-							mes "hair if you didn't bring";
-							mes "Darkgreen Dyestuffs";
-							mes "with you. Would you come";
-							mes "back after you get some?";
+							mes("[Rossa]");
+							mes("Oh, I'm sorry dear,");
+							mes("but I can't dye your");
+							mes("hair if you didn't bring");
+							mes("Darkgreen Dyestuffs");
+							mes("with you. Would you come");
+							mes("back after you get some?");
 							close2;
 							.@choose_success = 2;
 							break;
 						}
 						else if ((.@headpalette == 5) && (countitem(Cobaltblue_Dyestuffs) == 0)) {
-							mes "[Rossa]";
-							mes "Oh, I'm sorry dear,";
-							mes "but I can't dye your";
-							mes "hair if you didn't bring";
-							mes "Cobaltblue Dyestuffs";
-							mes "with you. Would you come";
-							mes "back after you get some?";
+							mes("[Rossa]");
+							mes("Oh, I'm sorry dear,");
+							mes("but I can't dye your");
+							mes("hair if you didn't bring");
+							mes("Cobaltblue Dyestuffs");
+							mes("with you. Would you come");
+							mes("back after you get some?");
 							close2;
 							.@choose_success = 2;
 							break;
 						}
 						else if ((.@headpalette == 6) && (countitem(White_Dyestuffs) == 0)) {
-							mes "[Rossa]";
-							mes "Oh, I'm sorry dear,";
-							mes "but I can't dye your";
-							mes "hair if you didn't bring";
-							mes "White Dyestuffs with you...";
+							mes("[Rossa]");
+							mes("Oh, I'm sorry dear,");
+							mes("but I can't dye your");
+							mes("hair if you didn't bring");
+							mes("White Dyestuffs with you...");
 							close2;
 							.@choose_success = 2;
 							break;
 						}
 						else if ((.@headpalette == 7) && (countitem(Black_Dyestuffs) == 0)) {
-							mes "[Rossa]";
-							mes "Oh, I'm sorry dear,";
-							mes "but I can't dye your";
-							mes "hair if you didn't bring";
-							mes "Black Dyestuffs with you...";
+							mes("[Rossa]");
+							mes("Oh, I'm sorry dear,");
+							mes("but I can't dye your");
+							mes("hair if you didn't bring");
+							mes("Black Dyestuffs with you...");
 							close2;
 							.@choose_success = 2;
 							break;
 						}
 						if (Zeny < 1000) {
-							mes "[Rossa]";
-							mes "Oh, I'm so sorry dear,";
-							mes "but my service fee is";
-							mes "1,000 zeny. Did you forget";
-							mes "to bring your money with you?";
+							mes("[Rossa]");
+							mes("Oh, I'm so sorry dear,");
+							mes("but my service fee is");
+							mes("1,000 zeny. Did you forget");
+							mes("to bring your money with you?");
 							close2;
 							.@choose_success = 2;
 							break;
@@ -396,30 +396,30 @@ lhz_in02,100,134,3	script	Hair Dyer#lich	4_F_EINWOMAN,{
 			}
 			break;
 		case 2:
-			mes "[Rossa]";
-			mes "When you're feeling";
-			mes "down, when you just want";
-			mes "to look nice for the one you";
-			mes "love, or when you just want";
-			mes "a different look, why don't";
-			mes "you dye your hair?";
+			mes("[Rossa]");
+			mes("When you're feeling");
+			mes("down, when you just want");
+			mes("to look nice for the one you");
+			mes("love, or when you just want");
+			mes("a different look, why don't");
+			mes("you dye your hair?");
 			next;
-			mes "[Rossa]";
-			mes "All you need is one";
-			mes "Dyestuffs item of the";
-			mes "color that you want to";
-			mes "dye your hair, as well as";
-			mes "a 1,000 zeny service fee.";
-			mes "I'm here for your beauty needs~";
+			mes("[Rossa]");
+			mes("All you need is one");
+			mes("Dyestuffs item of the");
+			mes("color that you want to");
+			mes("dye your hair, as well as");
+			mes("a 1,000 zeny service fee.");
+			mes("I'm here for your beauty needs~");
 			break;
 		case 3:
-			mes "[Rossa]";
-			mes "You know, when you";
-			mes "put some effort into";
-			mes "your appearance, you'll";
-			mes "not only look better, but";
-			mes "you'll feel better about";
-			mes "yourself. Makes sense, right?";
+			mes("[Rossa]");
+			mes("You know, when you");
+			mes("put some effort into");
+			mes("your appearance, you'll");
+			mes("not only look better, but");
+			mes("you'll feel better about");
+			mes("yourself. Makes sense, right?");
 			close;
 		}
 	}

@@ -16,9 +16,9 @@
 
 // Entrance
 prontera,154,197,3	script	MVP Warper	8_M_JPNMASTER,{
-	mes "[ ^0065DFMVP Warper^000000 ]";
-	mes "Would you like to enter";
-	mes "the MVP Arena?";
+	mes("[ ^0065DFMVP Warper^000000 ]");
+	mes("Would you like to enter");
+	mes("the MVP Arena?");
 	if (select("Yes!","No thanks.") == 2) close;
 	warp "quiz_00",50,24;
 	close;
@@ -26,14 +26,14 @@ prontera,154,197,3	script	MVP Warper	8_M_JPNMASTER,{
 
 // Information
 quiz_00,49,31,4	script	MVP Arena Guide	4_M_TWTEAMAN,{
-	mes "[ ^0065DFMVP Arena Guide^000000 ]";
-	mes "Welcome and behold this sacred place. Here you will find out if you truly have what it takes to call yourself a warrior.";
+	mes("[ ^0065DFMVP Arena Guide^000000 ]");
+	mes("Welcome and behold this sacred place. Here you will find out if you truly have what it takes to call yourself a warrior.");
 	next;
 	switch(select("Information","Heal me!","Return to Prontera","Cancel")) {
 	case 1:
-		mes "[ ^0065DFMVP Arena Guide^000000 ]";
-		mes "There are four Keepers, and each can spawn four different MVPs.";
-		mes "There are eight rooms per Keeper, and sixteen MVPs in total.";
+		mes("[ ^0065DFMVP Arena Guide^000000 ]");
+		mes("There are four Keepers, and each can spawn four different MVPs.");
+		mes("There are eight rooms per Keeper, and sixteen MVPs in total.");
 		close;
 	case 2:
 		specialeffect(EF_HEAL2, AREA, playerattached());
@@ -49,16 +49,16 @@ quiz_00,49,31,4	script	MVP Arena Guide	4_M_TWTEAMAN,{
 
 // Keepers
 function	script	Keeper	{
-	mes "[ ^0065DF"+strnpcinfo(NPC_NAME_VISIBLE)+"^000000 ]";
-	mes "Which arena would you";
-	mes "like to enter?";
+	mes("[ ^0065DF"+strnpcinfo(NPC_NAME_VISIBLE)+"^000000 ]");
+	mes("Which arena would you");
+	mes("like to enter?");
 	set .@menu$,"";
 	for(set .@i,1; .@i<9; set .@i,.@i+1)
 		set .@menu$, .@menu$+"Arena "+.@i+" ["+getmapusers("pvp_n_"+.@i+"-"+getarg(0))+"/20]:";
 	set .@i, select(.@menu$);
 	if (getmapusers("pvp_n_"+.@i+"-"+getarg(0))>19) {
-		mes "[ ^0065DF"+strnpcinfo(NPC_NAME_VISIBLE)+"^000000 ]";
-		mes "Sorry, this arena is full!";
+		mes("[ ^0065DF"+strnpcinfo(NPC_NAME_VISIBLE)+"^000000 ]");
+		mes("Sorry, this arena is full!");
 		close;
 	}
 	warp "pvp_n_"+.@i+"-"+getarg(0),102,102;
@@ -71,7 +71,7 @@ quiz_00,62,31,4	script	Epsilon MVP	4_M_TWMIDMAN,{ callfunc "Keeper",5; }
 
 // Protectors
 function	script	Protector	{
-  mes "[ ^0065DFMVP-Protector^000000 ]";
+  mes("[ ^0065DFMVP-Protector^000000 ]");
 	switch(select( ((getarg(0)=="")?"":"Harder Monsters"), "Heal", "Exit")) {
 	case 1:
 		warp getarg(0),102,102;

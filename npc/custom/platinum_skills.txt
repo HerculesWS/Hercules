@@ -19,13 +19,13 @@
 //============================================================
 
 prontera,128,200,6	script	Platinum Skill NPC	4_F_MAID,{
-	mes "[Platinum Skill NPC]";
-	mes "I can give you the special skills available to your job.";
-	mes "Would you like these skills now?";
+	mes("[Platinum Skill NPC]");
+	mes("I can give you the special skills available to your job.");
+	mes("Would you like these skills now?");
 	next;
 	if (select("Yes Please", "No") == 2) {
-		mes "[Platinum Skill NPC]";
-		mes "Have a nice day... >.>";
+		mes("[Platinum Skill NPC]");
+		mes("Have a nice day... >.>");
 		close;
 	}
 	skill 142,1,0;
@@ -55,7 +55,7 @@ prontera,128,200,6	script	Platinum Skill NPC	4_F_MAID,{
 		case 20: skill 1011,1,0; break;
 		default: break;
 	}
-	mes "[Platinum Skill NPC]";
-	mes "There you go!";
+	mes("[Platinum Skill NPC]");
+	mes("There you go!");
 	close;
 }

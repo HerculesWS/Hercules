@@ -23,284 +23,284 @@
 //============================================================
 
 prt_in,130,66,5	script	Zac	4_M_BIBI,{
-	mes "[Zac]";
-	mes "I am the oldest and strongest of the 4 brothers that makes all the newer hats. You will need to bring me the correct items for each hat, so I can make them.";
+	mes("[Zac]");
+	mes("I am the oldest and strongest of the 4 brothers that makes all the newer hats. You will need to bring me the correct items for each hat, so I can make them.");
 	next;
-	mes "[Zac]";
-	mes "I provide 1 hat and my brothers provides the other 5.";
+	mes("[Zac]");
+	mes("I provide 1 hat and my brothers provides the other 5.");
 	next;
 	switch (select("Join", "Information", "Cancel")) {
 	case 1:
-		mes "[Zac]";
-		mes "What hat do you want me to make?";
+		mes("[Zac]");
+		mes("What hat do you want me to make?");
 		next;
 		switch (select("Bongun Hat")) {
 		case 1:
-			mes "[Zac]";
-			mes "Let me check the items you have brought here.";
+			mes("[Zac]");
+			mes("Let me check the items you have brought here.");
 			next;
 			if (countitem(Amulet) < 10) {
-				mes "[Zac]";
-				mes "Oh, dear. You need 10 Amulets...";
+				mes("[Zac]");
+				mes("Oh, dear. You need 10 Amulets...");
 				close;
 			}
 			if (countitem(Cobaltblue_Dyestuffs) < 1) {
-				mes "[Zac]";
-				mes "Oh, dear. You need 1 Cobaltblue Dyestuffs...";
+				mes("[Zac]");
+				mes("Oh, dear. You need 1 Cobaltblue Dyestuffs...");
 				close;
 			}
 			if (countitem(Munak_Turban) < 1) {
-				mes "[Zac]";
-				mes "Oh, dear. You need 1 Munak Hat...";
+				mes("[Zac]");
+				mes("Oh, dear. You need 1 Munak Hat...");
 				close;
 			}
 			delitem Amulet,10;//Items: Amulet,
 			delitem Cobaltblue_Dyestuffs,1;//Items: Cobaltblue Dyestuff,
 			delitem Munak_Turban,1;	//Items: Munak Hat,
-			mes "[Zac]";
-			mes "Wow!! Well done! Finally you have gathered all items needed! We will make the Bongun Hat for you right away. Please Wait a Moment.";
+			mes("[Zac]");
+			mes("Wow!! Well done! Finally you have gathered all items needed! We will make the Bongun Hat for you right away. Please Wait a Moment.");
 			next;
-			mes "[Zac]";
-			mes "Tah Dah! ^FF0000Bongun Hat^000000...! Please Take it!";
+			mes("[Zac]");
+			mes("Tah Dah! ^FF0000Bongun Hat^000000...! Please Take it!");
 			getitem Bongun_Hat,1;//Items: Bongun Hat,
 			next;
-			mes "[Zac]";
-			mes "I liked that, I look forward to making more. Thank you.";
+			mes("[Zac]");
+			mes("I liked that, I look forward to making more. Thank you.");
 			close;
 		}
 		break;
 	case 2:
-		mes "[Zac]";
-		mes "Which hat materials do you wish to know?";
+		mes("[Zac]");
+		mes("Which hat materials do you wish to know?");
 		next;
 		switch (select("Bongun Hat")) {
 		case 1:
-			mes "[Zac]";
-			mes "You need 10 Amulets, 1 Cobaltblue Dyestuffs and 1 Munak Hat for Bongun Hat.";
+			mes("[Zac]");
+			mes("You need 10 Amulets, 1 Cobaltblue Dyestuffs and 1 Munak Hat for Bongun Hat.");
 			close;
 		}
 		break;
 	case 3:
-		mes "[Zac]";
-		mes "Stop by some other time with the right materials, so I can make the hats for you.";
+		mes("[Zac]");
+		mes("Stop by some other time with the right materials, so I can make the hats for you.");
 		close;
 	}
 }
 
 prt_in,162,131,5	script	Blac	4_M_JOB_HUNTER,{
-	mes "[Blac]";
-	mes "I am the youngest and sexiest of the 4 brothers that makes all the newer hats. You will need to bring me the correct items for each hat, so I can make them.";
+	mes("[Blac]");
+	mes("I am the youngest and sexiest of the 4 brothers that makes all the newer hats. You will need to bring me the correct items for each hat, so I can make them.");
 	next;
-	mes "[Blac]";
-	mes "I provide 1 hat and my brothers provides the other 5.";
+	mes("[Blac]");
+	mes("I provide 1 hat and my brothers provides the other 5.");
 	next;
 	switch (select("Join", "Information", "Cancel")) {
 	case 1:
-		mes "[Blac]";
-		mes "What hat do you want me to make?";
+		mes("[Blac]");
+		mes("What hat do you want me to make?");
 		next;
 		switch (select("Crescent Hairpin")) {
 		case 1:
-			mes "[Blac]";
-			mes "Let me check the items you have brought here.";
+			mes("[Blac]");
+			mes("Let me check the items you have brought here.");
 			next;
 			if (countitem(Heart_Hair_Pin) < 1) {
-				mes "[Blac]";
-				mes "Oh, dear. You need 1 Heart Hairpin...";
+				mes("[Blac]");
+				mes("Oh, dear. You need 1 Heart Hairpin...");
 				close;
 			}
 			if (countitem(Steel) < 10) {
-				mes "[Blac]";
-				mes "Oh, dear. You need 10 Steels...";
+				mes("[Blac]");
+				mes("Oh, dear. You need 10 Steels...");
 				close;
 			}
 			delitem Heart_Hair_Pin,1;//Items: Heart Hairpin,
 			delitem Steel,10;	//Items: Steel,
-			mes "[Blac]";
-			mes "Wow!! Well done! Finally you have gathered all items needed! We will make the Crescent Hairpin for you right away. Please Wait a Moment.";
+			mes("[Blac]");
+			mes("Wow!! Well done! Finally you have gathered all items needed! We will make the Crescent Hairpin for you right away. Please Wait a Moment.");
 			next;
-			mes "[Blac]";
-			mes "Tah Dah! ^FF0000Crescent Hairpin^000000...! Please Take it!";
+			mes("[Blac]");
+			mes("Tah Dah! ^FF0000Crescent Hairpin^000000...! Please Take it!");
 			getitem First_Moon_Hair_Pin,1;//Items: Cresent Hairpin,
 			next;
-			mes "[Blac]";
-			mes "I liked that, I look forward to making more. Thank you.";
+			mes("[Blac]");
+			mes("I liked that, I look forward to making more. Thank you.");
 			close;
 		}
 		break;
 	case 2:
-		mes "[Blac]";
-		mes "Which hat materials do you wish to know?";
+		mes("[Blac]");
+		mes("Which hat materials do you wish to know?");
 		next;
 		switch (select("Crescent Hairpin")) {
 		case 1:
-			mes "[Blac]";
-			mes "You need 1 Heart Hairpin and 10 Steels for Crescent Hairpin.";
+			mes("[Blac]");
+			mes("You need 1 Heart Hairpin and 10 Steels for Crescent Hairpin.");
 			close;
 		}
 		break;
 	case 3:
-		mes "[Blac]";
-		mes "Stop by some other time with the right materials, so I can make the hats for you.";
+		mes("[Blac]");
+		mes("Stop by some other time with the right materials, so I can make the hats for you.");
 		close;
 	}
 }
 
 prt_in,53,56,5	script	Jac	1_M_PAY_ELDER,{
-	mes "[Jac]";
-	mes "I am the 2nd oldest and calmest of the 4 brothers that makes all the newer hats. You will need to bring me the correct items for each hat, so I can make them.";
+	mes("[Jac]");
+	mes("I am the 2nd oldest and calmest of the 4 brothers that makes all the newer hats. You will need to bring me the correct items for each hat, so I can make them.");
 	next;
-	mes "[Jac]";
-	mes "I provide 2 hats and my brothers provides the other 4.";
+	mes("[Jac]");
+	mes("I provide 2 hats and my brothers provides the other 4.");
 	next;
 	switch (select("Join", "Information", "Cancel")) {
 	case 1:
-		mes "[Jac]";
-		mes "What hat do you want me to make?";
+		mes("[Jac]");
+		mes("What hat do you want me to make?");
 		next;
 		switch (select("Kafra Band", "Panda Hat")) {
 		case 1:
-			mes "[Jac]";
-			mes "Let me check the items you have brought here.";
+			mes("[Jac]");
+			mes("Let me check the items you have brought here.");
 			next;
 			if (countitem(Silk_Ribbon) < 1) {
-				mes "[Jac]";
-				mes "Oh, dear. You need 1 Silk Ribbon...";
+				mes("[Jac]");
+				mes("Oh, dear. You need 1 Silk Ribbon...");
 				close;
 			}
 			if (countitem(Wild_Flower) < 1) {
-				mes "[Jac]";
-				mes "Oh, dear. You need 1 Wild Flower...";
+				mes("[Jac]");
+				mes("Oh, dear. You need 1 Wild Flower...");
 				close;
 			}
 			delitem Silk_Ribbon,1;//Items: Silk Ribbon,
 			delitem Wild_Flower,1;	//Items: Wild Flower,
-			mes "[Jac]";
-			mes "Wow!! Well done! Finally you have gathered all items needed! We will make the Kafra Band for you right away. Please Wait a Moment.";
+			mes("[Jac]");
+			mes("Wow!! Well done! Finally you have gathered all items needed! We will make the Kafra Band for you right away. Please Wait a Moment.");
 			next;
-			mes "[Jac]";
-			mes "Tah Dah! ^FF0000Kafra Band^000000...! Please Take it!";
+			mes("[Jac]");
+			mes("Tah Dah! ^FF0000Kafra Band^000000...! Please Take it!");
 			getitem Kafra_Band,1;//Items: Kafra's Band,
 			next;
-			mes "[Jac]";
-			mes "I liked that, I look forward to making more. Thank you.";
+			mes("[Jac]");
+			mes("I liked that, I look forward to making more. Thank you.");
 			close;
 		case 2:
-			mes "[Jac]";
-			mes "Let me check the items you have brought here.";
+			mes("[Jac]");
+			mes("Let me check the items you have brought here.");
 			next;
 			if (countitem(Steel) < 10) {
-				mes "[Jac]";
-				mes "Oh, dear. You need 10 Steels...";
+				mes("[Jac]");
+				mes("Oh, dear. You need 10 Steels...");
 				close;
 			}
 			if (countitem(Bears_Foot) < 200) {
-				mes "[Jac]";
-				mes "Oh, dear. You need 200 Bear Footskins...";
+				mes("[Jac]");
+				mes("Oh, dear. You need 200 Bear Footskins...");
 				close;
 			}
 			delitem Steel,10;//Items: Steel,
 			delitem Bears_Foot,200; //Items: Bears Footskin,
-			mes "[Jac]";
-			mes "Wow!! Well done! Finally you have gathered all items needed! We will make the Panda Hat for you right away. Please Wait a Moment.";
+			mes("[Jac]");
+			mes("Wow!! Well done! Finally you have gathered all items needed! We will make the Panda Hat for you right away. Please Wait a Moment.");
 			next;
-			mes "[Jac]";
-			mes "Tah Dah! ^FF0000Panda Hat^000000...! Please Take it!";
+			mes("[Jac]");
+			mes("Tah Dah! ^FF0000Panda Hat^000000...! Please Take it!");
 			getitem Panda_Cap,1;//Items: Panda Hat,
 			next;
-			mes "[Jac]";
-			mes "I liked that, I look forward to making more. Thank you.";
+			mes("[Jac]");
+			mes("I liked that, I look forward to making more. Thank you.");
 			close;
 		}
 		break;
 	case 2:
-		mes "[Jac]";
-		mes "Which hat materials do you wish to know?";
+		mes("[Jac]");
+		mes("Which hat materials do you wish to know?");
 		next;
 		switch (select("Kafra Band", "Panda Hat")) {
 		case 1:
-			mes "[Jac]";
-			mes "You need 1 Silk Ribbon and 1 Wild Flower for Kafra Band.";
+			mes("[Jac]");
+			mes("You need 1 Silk Ribbon and 1 Wild Flower for Kafra Band.");
 			close;
 		case 2:
-			mes "[Jac]";
-			mes "You need 10 Steels and 200 Bear Footskins for Panda Hat.";
+			mes("[Jac]");
+			mes("You need 10 Steels and 200 Bear Footskins for Panda Hat.");
 			close;
 		}
 		break;
 	case 3:
-		mes "[Jac]";
-		mes "Stop by some other time with the right materials, so I can make the hats for you.";
+		mes("[Jac]");
+		mes("Stop by some other time with the right materials, so I can make the hats for you.");
 		close;
 	}
 }
 
 prt_in,45,113,5	script	Pac	4_M_GEF_SOLDIER,{
-	mes "[Pac]";
-	mes "I am 3rd oldest and wisest of the 4 brothers that makes all the newer hats. You will need to bring me the correct items for each hat so I can make them.";
+	mes("[Pac]");
+	mes("I am 3rd oldest and wisest of the 4 brothers that makes all the newer hats. You will need to bring me the correct items for each hat so I can make them.");
 	next;
-	mes "[Pac]";
-	mes "I provide 2 hats and my brothers provides the other 4.";
+	mes("[Pac]");
+	mes("I provide 2 hats and my brothers provides the other 4.");
 	next;
 	switch (select("Join", "Information", "Cancel")) {
 	case 1:
-		mes "[Pac]";
-		mes "What hat do you want me to make?";
+		mes("[Pac]");
+		mes("What hat do you want me to make?");
 		next;
 		switch (select("Poring Hat", "Sphinx Hat")) {
 		case 1:
-			mes "[Pac]";
-			mes "Let me check the items you have brought here.";
+			mes("[Pac]");
+			mes("Let me check the items you have brought here.");
 			next;
 			if (countitem(Poring_Doll) < 1) {
-				mes "[Pac]";
-				mes "Oh, dear. You need 1 Poring Doll...";
+				mes("[Pac]");
+				mes("Oh, dear. You need 1 Poring Doll...");
 				close;
 			}
 			if (countitem(Jellopy) < 300) {
-				mes "[Pac]";
-				mes "Oh, dear. You need 300 Jellopys...";
+				mes("[Pac]");
+				mes("Oh, dear. You need 300 Jellopys...");
 				close;
 			}
 			delitem Poring_Doll,1;//Items: Poring Doll,
 			delitem Jellopy,300;//Items: Jellopy,
-			mes "[Pac]";
-			mes "Wow!! Well done! Finally you have gathered all items needed! We will make the Poring Hat for you right away. Please Wait a Moment.";
+			mes("[Pac]");
+			mes("Wow!! Well done! Finally you have gathered all items needed! We will make the Poring Hat for you right away. Please Wait a Moment.");
 			next;
-			mes "[Pac]";
-			mes "Tah Dah! ^FF0000Poring Hat^000000...! Please Take it!";
+			mes("[Pac]");
+			mes("Tah Dah! ^FF0000Poring Hat^000000...! Please Take it!");
 			getitem Poring_Hat,1;//Items: Poring Hat,
 			next;
-			mes "[Pac]";
-			mes "I liked that, I look forward to making more. Thank you.";
+			mes("[Pac]");
+			mes("I liked that, I look forward to making more. Thank you.");
 			close;
 		case 2:
-			mes "[Pac]";
-			mes "Let me check the items you have brought here.";
+			mes("[Pac]");
+			mes("Let me check the items you have brought here.");
 			next;
 			if (countitem(Steel) < 25) {
-				mes "[Pac]";
-				mes "Oh, dear. You need 25 Steels...";
+				mes("[Pac]");
+				mes("Oh, dear. You need 25 Steels...");
 				close;
 			}
 			if (countitem(Darkgreen_Dyestuffs) < 1) {
-				mes "[Pac]";
-				mes "Oh, dear. You need 1 DarkGreen Dyestuffs...";
+				mes("[Pac]");
+				mes("Oh, dear. You need 1 DarkGreen Dyestuffs...");
 				close;
 			}
 			if (countitem(Lemon_Dyestuffs) < 1) {
-				mes "[Pac]";
-				mes "Oh, dear. You need 1 Lemon Dyestuffs...";
+				mes("[Pac]");
+				mes("Oh, dear. You need 1 Lemon Dyestuffs...");
 				close;
 			}
 			if (countitem(Transparent_Cloth) < 150) {
-				mes "[Pac]";
-				mes "Oh, dear. You need 150 Fabric...";
+				mes("[Pac]");
+				mes("Oh, dear. You need 150 Fabric...");
 				close;
 			}
 			if (countitem(Gold) < 2) {
-				mes "[Pac]";
-				mes "Oh, dear. You need 2 Gold Bar's...";
+				mes("[Pac]");
+				mes("Oh, dear. You need 2 Gold Bar's...");
 				close;
 			}
 			delitem Steel,25;//Items: Steel,
@@ -308,36 +308,36 @@ prt_in,45,113,5	script	Pac	4_M_GEF_SOLDIER,{
 			delitem Lemon_Dyestuffs,1;//Items: Lemon Dyestuffs,
 			delitem Transparent_Cloth,150;//Items: Fabric,
 			delitem Gold,2; //Items: Gold,
-			mes "[Pac]";
-			mes "Wow!! Well done! Finally you have gathered all items needed! We will make the Sphinx Hat for you right away. Please Wait a Moment.";
+			mes("[Pac]");
+			mes("Wow!! Well done! Finally you have gathered all items needed! We will make the Sphinx Hat for you right away. Please Wait a Moment.");
 			next;
-			mes "[Pac]";
-			mes "Tah Dah! ^FF0000Sphinx Hat^000000...! Please Take it!";
+			mes("[Pac]");
+			mes("Tah Dah! ^FF0000Sphinx Hat^000000...! Please Take it!");
 			getitem Spinx_Helm,1;//Items: Sphinx Hat,
 			next;
-			mes "[Pac]";
-			mes "I liked that, I look forward to making more. Thank you.";
+			mes("[Pac]");
+			mes("I liked that, I look forward to making more. Thank you.");
 			close;
 		}
 		break;
 	case 2:
-		mes "[Pac]";
-		mes "Which hat materials do you wish to know?";
+		mes("[Pac]");
+		mes("Which hat materials do you wish to know?");
 		next;
 		switch (select("Poring Hat", "Sphinx Hat")) {
 		case 1:
-			mes "[Pac]";
-			mes "You need 1 Poring Doll and 300 Jellopys for Poring Hat.";
+			mes("[Pac]");
+			mes("You need 1 Poring Doll and 300 Jellopys for Poring Hat.");
 			close;
 		case 2:
-			mes "[Pac]";
-			mes "You need 25 Steels, 1 DarkGreen Dyestuffs, 1 Lemon Dyestuffs, 150 Fabric and 2 Gold Bar's for Sphinx Hat.";
+			mes("[Pac]");
+			mes("You need 25 Steels, 1 DarkGreen Dyestuffs, 1 Lemon Dyestuffs, 150 Fabric and 2 Gold Bar's for Sphinx Hat.");
 			close;
 		}
 		break;
 	case 3:
-		mes "[Pac]";
-		mes "Stop by some other time with the right materials, so I can make the hats for you.";
+		mes("[Pac]");
+		mes("Stop by some other time with the right materials, so I can make the hats for you.");
 		close;
 	}
 }

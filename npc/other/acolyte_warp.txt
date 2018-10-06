@@ -33,28 +33,28 @@
 //=========================================================================
 
 prontera,98,121,4	script	Acolyte#Prtclear	4_F_01,{
-	mes "[Keiki]";
-	mes "Hello there, adventurer.";
-	mes "I've been studying magic from all over Rune-Midgard to upgrade what I believe to be one of the greatest skills available to the acolyte class.";
+	mes("[Keiki]");
+	mes("Hello there, adventurer.");
+	mes("I've been studying magic from all over Rune-Midgard to upgrade what I believe to be one of the greatest skills available to the acolyte class.");
 	next;
-	mes "[Keiki]";
-	mes "I am the one and only Acolyte that has attained the Level 10 Warp Portal skill!";
+	mes("[Keiki]");
+	mes("I am the one and only Acolyte that has attained the Level 10 Warp Portal skill!");
 	emotion e_dots,1;
 	next;
-	mes "[Keiki]";
-	mes "That's right! And...";
-	mes "I promise you that I don't forget locations that I have already memorized.";
-	mes "One day I will level up my skills to warp to wherever I please~";
+	mes("[Keiki]");
+	mes("That's right! And...");
+	mes("I promise you that I don't forget locations that I have already memorized.");
+	mes("One day I will level up my skills to warp to wherever I please~");
 	next;
-	mes "[Keiki]";
-	mes "I am willing to warp you to the many locations that I have memorized for a small fee.";
-	mes "Would you like to use this service?";
+	mes("[Keiki]");
+	mes("I am willing to warp you to the many locations that I have memorized for a small fee.");
+	mes("Would you like to use this service?");
 	next;
 	switch(select("Yes", "No")) {
 	case 1:
-		mes "[Keiki]";
-		mes "Where would you like to go to?";
-		mes "I wish you goodluck on your journey.";
+		mes("[Keiki]");
+		mes("Where would you like to go to?");
+		mes("I wish you goodluck on your journey.");
 		next;
 
 		setarray .@towns$[0], "Izlude", "Geffen", "Payon", "Morroc", "Alberta", "Al De Baran", "Comodo", "Umbala", "Juno";
@@ -68,11 +68,11 @@ prontera,98,121,4	script	Acolyte#Prtclear	4_F_01,{
 		if (.@i == .@size)
 			close;
 		if (Zeny < .@cost[.@i]) {
-			mes "[Keiki]";
-			mes "I'm sorry, but you don't have";
-			mes "enough zeny for the Teleport";
-			mes "Service. The fee to teleport";
-			mes "to "+.@towns$[.@i]+" is "+.@cost[.@i]+" zeny.";
+			mes("[Keiki]");
+			mes("I'm sorry, but you don't have");
+			mes("enough zeny for the Teleport");
+			mes("Service. The fee to teleport");
+			mes("to "+.@towns$[.@i]+" is "+.@cost[.@i]+" zeny.");
 			close;
 		}
 		specialeffect(EF_READYPORTAL, AREA, playerattached());
@@ -98,26 +98,26 @@ prontera,98,121,4	script	Acolyte#Prtclear	4_F_01,{
 }
 
 yuno,142,184,6	script	Acolyte#Junoclear	4_F_01,{
-	mes "[Isalei]";
-	mes "Hello, adventurer.";
-	mes "My companion Keiki and I have discovered a way to increase our warp portal abilities.";
+	mes("[Isalei]");
+	mes("Hello, adventurer.");
+	mes("My companion Keiki and I have discovered a way to increase our warp portal abilities.");
 	next;
-	mes "[Isalei]";
-	mes "Though I have not mastered up to the level that she has, I have been able to attain Level 5.";
+	mes("[Isalei]");
+	mes("Though I have not mastered up to the level that she has, I have been able to attain Level 5.");
 	emotion e_dots,1;
 	next;
-	mes "[Isalei]";
-	mes "Maybe one day I can level up my skills enough so that I can use Warp portal to more saved locations.";
+	mes("[Isalei]");
+	mes("Maybe one day I can level up my skills enough so that I can use Warp portal to more saved locations.");
 	next;
-	mes "[Isalei]";
-	mes "I am willing to warp you to the many locations that I have memorized for a small fee.";
-	mes "Would you like to use this service?";
+	mes("[Isalei]");
+	mes("I am willing to warp you to the many locations that I have memorized for a small fee.");
+	mes("Would you like to use this service?");
 	next;
 	switch(select("Yes", "No")) {
 	case 1:
-		mes "[Isalei]";
-		mes "Where would you like to go to?";
-		mes "I wish you goodluck on your journey.";
+		mes("[Isalei]");
+		mes("Where would you like to go to?");
+		mes("I wish you goodluck on your journey.");
 		next;
 
 		setarray .@towns$[0], "Einbroch", "Lighthalzen", "Hugel", "Rachel", "Prontera";
@@ -131,11 +131,11 @@ yuno,142,184,6	script	Acolyte#Junoclear	4_F_01,{
 		if (.@i == .@size)
 			close;
 		if (Zeny < .@cost[.@i]) {
-				mes "[Isalei]";
-			mes "I'm sorry, but you don't have";
-			mes "enough zeny for the Teleport";
-			mes "Service. The fee to teleport";
-			mes "to "+.@towns$[.@i]+" is "+.@cost[.@i]+" zeny.";
+				mes("[Isalei]");
+			mes("I'm sorry, but you don't have");
+			mes("enough zeny for the Teleport");
+			mes("Service. The fee to teleport");
+			mes("to "+.@towns$[.@i]+" is "+.@cost[.@i]+" zeny.");
 			close;
 		}
 		specialeffect(EF_READYPORTAL, AREA, playerattached());

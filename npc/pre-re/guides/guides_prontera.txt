@@ -40,24 +40,24 @@
 
 prontera,154,187,4	script	Guide#prt::PrtGuide	8W_SOLDIER,{
 	cutin "prt_soldier",2;
-	mes "[Prontera Guide]";
-	mes "Welcome to Prontera,";
-	mes "the beautiful capital of the";
-	mes "Rune-Midgarts Kingdom. If";
-	mes "you have questions or need help finding something in the city, don't hesitate to ask.";
+	mes("[Prontera Guide]");
+	mes("Welcome to Prontera,");
+	mes("the beautiful capital of the");
+	mes("Rune-Midgarts Kingdom. If");
+	mes("you have questions or need help finding something in the city, don't hesitate to ask.");
 	.@loop1 = 1;
 	while (.@loop1) {
 		next;
 		switch(select("City Guide.", "Remove Marks from Mini-Map", "Notice", "Cancel")) {
 		case 1:
-			mes "[Prontera Guide]";
-			mes "Please select";
-			mes "a location from";
-			mes "the following menu.";
+			mes("[Prontera Guide]");
+			mes("Please select");
+			mes("a location from");
+			mes("the following menu.");
 			if (.@compass_check == 0) {
-				mes "Would you like me";
-				mes "to mark locations";
-				mes "on your Mini-Map?";
+				mes("Would you like me");
+				mes("to mark locations");
+				mes("on your Mini-Map?");
 				next;
 				if (select("Yes", "No") == 1) .@compass_check = 1;
 			}
@@ -68,125 +68,125 @@ prontera,154,187,4	script	Guide#prt::PrtGuide	8W_SOLDIER,{
 
 				switch(select("Swordman Association", "^0000FFSanctuary^000000", "Prontera Chivalry", "Weapon Shop", "Tool Shop", "Inn", "Trading Post", "Pub", "Library", "Job Agency", "Prontera Castle", "City Hall", "Cancel")) {
 				case 1:
-					mes "[Prontera Guide]";
-					mes "The Swordman Association,";
-					mes "which handles Job Changes";
-					mes "to the Swordman class, has";
-					mes "moved to Izlude. This facility";
-					mes "is just an empty building now.";
+					mes("[Prontera Guide]");
+					mes("The Swordman Association,");
+					mes("which handles Job Changes");
+					mes("to the Swordman class, has");
+					mes("moved to Izlude. This facility");
+					mes("is just an empty building now.");
 					if (.@compass_check)
 						viewpoint 1,237,41,4,0x00FF00;
 					break;
 				case 2:
-					mes "[Prontera Guide]";
-					mes "The Prontera Sanctuary";
-					mes "handles Job Changes to";
-					mes "the Acolyte class, and can";
-					mes "be found in the northeast";
-					mes "corner of Prontera.";
+					mes("[Prontera Guide]");
+					mes("The Prontera Sanctuary");
+					mes("handles Job Changes to");
+					mes("the Acolyte class, and can");
+					mes("be found in the northeast");
+					mes("corner of Prontera.");
 					if (.@compass_check)
 						viewpoint 1,236,316,5,0xFF0000;
 					break;
 				case 3:
-					mes "[Prontera Guide]";
-					mes "The Prontera Chivralry,";
-					mes "which is responsible for";
-					mes "the safety of our capital, is";
-					mes "in Prontera's northwest corner.";
+					mes("[Prontera Guide]");
+					mes("The Prontera Chivralry,");
+					mes("which is responsible for");
+					mes("the safety of our capital, is");
+					mes("in Prontera's northwest corner.");
 					if (.@compass_check)
 						viewpoint 1,46,345,6,0x00FF00;
 					break;
 				case 4:
-					mes "[Prontera Guide]";
-					mes "The Weapon Shop";
-					mes "is located northeast";
-					mes "of the central fountain.";
+					mes("[Prontera Guide]");
+					mes("The Weapon Shop");
+					mes("is located northeast");
+					mes("of the central fountain.");
 					if (.@compass_check)
 						viewpoint 1,175,220,7,0xFF00FF;
 					break;
 				case 5:
-					mes "[Prontera Guide]";
-					mes "The Tool Shop";
-					mes "is located northwest";
-					mes "of the central fountain.";
+					mes("[Prontera Guide]");
+					mes("The Tool Shop");
+					mes("is located northwest");
+					mes("of the central fountain.");
 					if (.@compass_check)
 						viewpoint 1,134,221,8,0xFF00FF;
 					break;
 				case 6:
-					mes "[Prontera Guide]";
-					mes "The Inns in Prontera are";
-					mes "located both to the east";
-					mes "and west of Prontera's";
-					mes "central fountain area.";
+					mes("[Prontera Guide]");
+					mes("The Inns in Prontera are");
+					mes("located both to the east");
+					mes("and west of Prontera's");
+					mes("central fountain area.");
 					if (.@compass_check) {
 						viewpoint 1,204,191,9,0xFF00FF;
 						viewpoint 1,107,192,10,0xFF00FF;
 					}
 					break;
 				case 7:
-					mes "[Prontera Guide]";
-					mes "The Trading Post";
-					mes "can be found southeast";
-					mes "from the central fountain.";
+					mes("[Prontera Guide]");
+					mes("The Trading Post");
+					mes("can be found southeast");
+					mes("from the central fountain.");
 					if (.@compass_check)
 						viewpoint 1,179,184,11,0x00FF00;
 					break;
 				case 8:
-					mes "[Prontera Guide]";
-					mes "The Pub is located";
-					mes "southeast of the fountain,";
-					mes "behind the Trading Post.";
+					mes("[Prontera Guide]");
+					mes("The Pub is located");
+					mes("southeast of the fountain,");
+					mes("behind the Trading Post.");
 					if (.@compass_check)
 						viewpoint 1,208,154,12,0x00FF00;
 					break;
 				case 9:
-					mes "[Prontera Guide]";
-					mes "If you head north from";
-					mes "the central fountain, you'll";
-					mes "find an empty area in which";
-					mes "both branches of the Prontera";
-					mes "Library can be accessed if you";
-					mes "head towards the east or west.";
+					mes("[Prontera Guide]");
+					mes("If you head north from");
+					mes("the central fountain, you'll");
+					mes("find an empty area in which");
+					mes("both branches of the Prontera");
+					mes("Library can be accessed if you");
+					mes("head towards the east or west.");
 					if (.@compass_check) {
 						viewpoint 1,120,267,13,0x00FF00;
 						viewpoint 1,192,267,14,0x00FF00;
 					}
 					break;
 				case 10:
-					mes "[Prontera Guide]";
-					mes "The Job Agency is";
-					mes "just southwest of the";
-					mes "central fountain area.";
+					mes("[Prontera Guide]");
+					mes("The Job Agency is");
+					mes("just southwest of the");
+					mes("central fountain area.");
 					if (.@compass_check)
 						viewpoint 1,133,183,15,0x00FF00;
 					break;
 				case 11:
-					mes "[Prontera Guide]";
-					mes "The Prontera Castle is";
-					mes "located at the northern";
-					mes "sector of this city. You can";
-					mes "go to the fields that are north";
-					mes "of Prontera by going through";
-					mes "the castle's rear exit.";
+					mes("[Prontera Guide]");
+					mes("The Prontera Castle is");
+					mes("located at the northern");
+					mes("sector of this city. You can");
+					mes("go to the fields that are north");
+					mes("of Prontera by going through");
+					mes("the castle's rear exit.");
 					if (.@compass_check)
 						viewpoint 1,156,360,16,0x00FF00;
 					break;
 				case 12:
-					mes "[Prontera Guide]";
-					mes "The City Hall";
-					mes "is located in the";
-					mes "southwest corner";
-					mes "in our city of Prontera.";
+					mes("[Prontera Guide]");
+					mes("The City Hall");
+					mes("is located in the");
+					mes("southwest corner");
+					mes("in our city of Prontera.");
 					if (.@compass_check)
 						viewpoint 1,75,91,17,0x01FF01;
 					break;
 				case 13:
-					mes "[Prontera Guide]";
-					mes "Please ask me to ''Remove";
-					mes "Marks from Mini-Map'' if you";
-					mes "no longer wish to have the";
-					mes "location marks displayed";
-					mes "on your Mini-Map.";
+					mes("[Prontera Guide]");
+					mes("Please ask me to ''Remove");
+					mes("Marks from Mini-Map'' if you");
+					mes("no longer wish to have the");
+					mes("location marks displayed");
+					mes("on your Mini-Map.");
 					.@loop2 = 0;
 					break;
 				}
@@ -210,35 +210,35 @@ prontera,154,187,4	script	Guide#prt::PrtGuide	8W_SOLDIER,{
 			.@compass_check = 0;
 			break;
 		case 3:
-			mes "[Prontera Guide]";
-			mes "Advances in sorcery and";
-			mes "technology have allowed";
-			mes "us to update our information";
-			mes "system, enabling up to mark";
-			mes "locations on your Mini-Map";
-			mes "for easier navigation.";
+			mes("[Prontera Guide]");
+			mes("Advances in sorcery and");
+			mes("technology have allowed");
+			mes("us to update our information");
+			mes("system, enabling up to mark");
+			mes("locations on your Mini-Map");
+			mes("for easier navigation.");
 			next;
-			mes "[Prontera Guide]";
-			mes "Your Mini-Map is located";
-			mes "in the upper right corner";
-			mes "of the screen. If you can't";
-			mes "see it, press the Ctrl + Tab";
-			mes "keys or click the ''Map'' button in your Basic Info Window.";
+			mes("[Prontera Guide]");
+			mes("Your Mini-Map is located");
+			mes("in the upper right corner");
+			mes("of the screen. If you can't");
+			mes("see it, press the Ctrl + Tab");
+			mes("keys or click the ''Map'' button in your Basic Info Window.");
 			next;
-			mes "[Prontera Guide]";
-			mes "On your Mini-Map,";
-			mes "click on the ''+'' and ''-''";
-			mes "symbols to zoom in and";
-			mes "our of your Mini-Map. We";
-			mes "hope you enjoy your travels";
-			mes "here in the city of Prontera.";
+			mes("[Prontera Guide]");
+			mes("On your Mini-Map,");
+			mes("click on the ''+'' and ''-''");
+			mes("symbols to zoom in and");
+			mes("our of your Mini-Map. We");
+			mes("hope you enjoy your travels");
+			mes("here in the city of Prontera.");
 			break;
 		case 4:
-			mes "[Prontera Guide]";
-			mes "Well, adventurer...";
-			mes "I hope your journeys";
-			mes "through Rune-Midgard";
-			mes "are both fun and safe.";
+			mes("[Prontera Guide]");
+			mes("Well, adventurer...");
+			mes("I hope your journeys");
+			mes("through Rune-Midgard");
+			mes("are both fun and safe.");
 			close2;
 			.@loop1 = 0;
 			break;

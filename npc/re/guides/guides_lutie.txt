@@ -34,10 +34,10 @@
 //=========================================================================
 
 xmas,140,137,3	script	Lutie Guide#xmas	4_F_KID3,{
-	mes "[Lutie Guide]";
-	mes "Welcome to ^8B4513Lutie^000000,";
-	mes "the Snow Village.";
-	mes "Do you need help navigating the village?";
+	mes("[Lutie Guide]");
+	mes("Welcome to ^8B4513Lutie^000000,");
+	mes("the Snow Village.");
+	mes("Do you need help navigating the village?");
 	F_Navi("[Lutie Guide]");
 	while (1) {
 		next;
@@ -67,9 +67,9 @@ xmas,140,137,3	script	Lutie Guide#xmas	4_F_KID3,{
 			viewpoint 1,143,312,6,0xFF0000;
 			break;
 		case 7:
-			mes "[Lutie Guide]";
-			mes "Sure, I'll remove all marks from your mini-map.";
-			mes "Is there anything else I can do for you?";
+			mes("[Lutie Guide]");
+			mes("Sure, I'll remove all marks from your mini-map.");
+			mes("Is there anything else I can do for you?");
 			viewpoint 2,1,1,0,0xFFFFFF;
 			viewpoint 2,1,1,1,0xFFFFFF;
 			viewpoint 2,1,1,2,0xFFFFFF;
@@ -79,17 +79,17 @@ xmas,140,137,3	script	Lutie Guide#xmas	4_F_KID3,{
 			viewpoint 2,1,1,6,0xFFFFFF;
 			break;
 		case 8:
-			mes "[Lutie Guide]";
-			mes "Be safe on your travels.";
+			mes("[Lutie Guide]");
+			mes("Be safe on your travels.");
 			close;
 		}
 	}
 	end;
 L_Mark:
-	mes "[Lutie Guide]";
-	mes "Let me mark the location of "+((getarg(1,0))?"":"the");
-	mes getarg(0)+"^000000";
-	mes "on your mini-map.";
-	mes "Would you like to check any other locations?";
+	mes("[Lutie Guide]");
+	mes("Let me mark the location of "+((getarg(1,0))?"":"the"));
+	mes(getarg(0)+"^000000");
+	mes("on your mini-map.");
+	mes("Would you like to check any other locations?");
 	return;
 }

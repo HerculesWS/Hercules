@@ -35,10 +35,10 @@
 
 geffen,203,116,4	script	Guide#01geffen::GuideGeffen	4_M_GEF_SOLDIER,{
 	cutin "gef_soldier",2;
-	mes "[Geffen Guide]";
-	mes "Welcome to ^8B4513Geffen^000000,";
-	mes "the City of Magic.";
-	mes "Do you need help navigating the city?";
+	mes("[Geffen Guide]");
+	mes("Welcome to ^8B4513Geffen^000000,");
+	mes("the City of Magic.");
+	mes("Do you need help navigating the city?");
 	F_Navi("[Geffen Guide]");
 	next;
 	while (1) {
@@ -48,13 +48,13 @@ geffen,203,116,4	script	Guide#01geffen::GuideGeffen	4_M_GEF_SOLDIER,{
 			while (.@loop) {
 				switch(select("[ Magic Academy ]", "[ Geffen Tower ]", "[ Fountain ]", "[ Tool Shop ]", "[ Buy & Repair Equipment ]", "[ Inn ]", "[ Tavern ]", "[ Christopher's Forge ]", "Previous Menu")) {
 				case 1:
-					mes "[Geffen Guide]";
-					mes "The "+F_Navi("Magic Academy","geffen,61,180","^B9062F");
-					mes "handles all magic-related affairs,";
-					mes "including job changes.";
-					mes "Let me mark its location";
-					mes "on your mini-map.";
-					mes "Would you like to check any other locations?";
+					mes("[Geffen Guide]");
+					mes("The "+F_Navi("Magic Academy","geffen,61,180","^B9062F"));
+					mes("handles all magic-related affairs,");
+					mes("including job changes.");
+					mes("Let me mark its location");
+					mes("on your mini-map.");
+					mes("Would you like to check any other locations?");
 					viewpoint 1,61,180,0,0xFF0000;
 					next;
 					break;
@@ -74,13 +74,13 @@ geffen,203,116,4	script	Guide#01geffen::GuideGeffen	4_M_GEF_SOLDIER,{
 					next;
 					break;
 				case 5:
-					mes "[Geffen Guide]";
-					mes "If you'd like to ";
-					mes F_Navi("Buy or Repair Equipment","geffen,99,140","^7F3300");
-					mes "then this is the place you'll want to visit.";
-					mes "Let me mark its location";
-					mes "on your mini-map.";
-					mes "Would you like to check any other locations?";
+					mes("[Geffen Guide]");
+					mes("If you'd like to ");
+					mes(F_Navi("Buy or Repair Equipment","geffen,99,140","^7F3300"));
+					mes("then this is the place you'll want to visit.");
+					mes("Let me mark its location");
+					mes("on your mini-map.");
+					mes("Would you like to check any other locations?");
 					viewpoint 1,99,140,4,0xD2691E;
 					next;
 					break;
@@ -95,11 +95,11 @@ geffen,203,116,4	script	Guide#01geffen::GuideGeffen	4_M_GEF_SOLDIER,{
 					next;
 					break;
 				case 8:
-					mes "[Geffen Guide]";
-					mes F_Navi("Christopher's Forge","geffen,182,59","^0000FF")+" is";
-					mes "where you can purchase";
-					mes "Refining materials.";
-					mes "It used to be the old Blacksmith Guild.";
+					mes("[Geffen Guide]");
+					mes(F_Navi("Christopher's Forge","geffen,182,59","^0000FF")+" is");
+					mes("where you can purchase");
+					mes("Refining materials.");
+					mes("It used to be the old Blacksmith Guild.");
 					viewpoint 1,182,59,6,0x0000FF;
 					next;
 					break;
@@ -147,9 +147,9 @@ geffen,203,116,4	script	Guide#01geffen::GuideGeffen	4_M_GEF_SOLDIER,{
 			}
 			break;
 		case 3:
-			mes "[Geffen Guide]";
-			mes "Sure, I'll remove all marks from your mini-map.";
-			mes "Is there anything else I can do for you?";
+			mes("[Geffen Guide]");
+			mes("Sure, I'll remove all marks from your mini-map.");
+			mes("Is there anything else I can do for you?");
 			viewpoint 2,1,1,0,0xFFFF00;
 			viewpoint 2,1,1,1,0x000000;
 			viewpoint 2,1,1,2,0xFF0000;
@@ -168,8 +168,8 @@ geffen,203,116,4	script	Guide#01geffen::GuideGeffen	4_M_GEF_SOLDIER,{
 			next;
 			break;
 		case 4:
-			mes "[Geffen Guide]";
-			mes "Enjoy your stay.";
+			mes("[Geffen Guide]");
+			mes("Enjoy your stay.");
 			close2;
 			cutin "gef_soldier",255;
 			end;
@@ -177,11 +177,11 @@ geffen,203,116,4	script	Guide#01geffen::GuideGeffen	4_M_GEF_SOLDIER,{
 	}
 	end;
 L_Mark:
-	mes "[Geffen Guide]";
-	mes "Let me mark the location of the";
-	mes getarg(0)+"^000000";
-	mes "on your mini-map.";
-	mes "Would you like to check any other locations?";
+	mes("[Geffen Guide]");
+	mes("Let me mark the location of the");
+	mes(getarg(0)+"^000000");
+	mes("on your mini-map.");
+	mes("Would you like to check any other locations?");
 	return;
 }
 

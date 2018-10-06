@@ -74,12 +74,12 @@ function	script	thqs_trade_token	{
 	@prize = (10 ** @type);
 
 	if( #Treasure_Token < @price ) {
-		mes "You don't have enough tokens!";
+		mes("You don't have enough tokens!");
 		close;
 	}
 
 	if( Zeny == MAX_ZENY ) {
-		mes "You can't add more zeny to your character";
+		mes("You can't add more zeny to your character");
 		close;
 	}
 
@@ -126,7 +126,7 @@ function	script	thqs_menu_buy	{
 	@item_id = getd(.@mw$+"["+@index+"]");
 	@price = getd(.@mp$+"["+@index+"]");
 	if( #Treasure_Token < @price ) {
-		mes "You don't have enough tokens!";
+		mes("You don't have enough tokens!");
 		close;
 	}
 	#Treasure_Token -= @price;
@@ -141,8 +141,8 @@ function	script	ths_menu_weapons	{
 	@first_option = getarg(0);
 	if( @first_option == 11 )
 		close;
-	mes "[Ash]";
-	mes "This is what we have to offer."+@first_option;
+	mes("[Ash]");
+	mes("This is what we have to offer."+@first_option);
 	next;
 	// Array names so they can be used by thqs_menu_buy
 	.@mw$ = "$THQS_menu_weapons_"+@first_option;
@@ -153,20 +153,20 @@ function	script	ths_menu_weapons	{
 
 // Main script
 prt_in,164,174,1	script	Treasure Hunter's Shop	1_M_YOUNGKNIGHT,{
-	mes "[Ash]";
-	mes "Ahh, "+strcharinfo(PC_NAME)+"! Welcome to the Offical Treasure Hunter's Guild Shop.";
-	mes "You currently have ^FF0000"+#Treasure_Token+"^000000 treasure tokens!!!";
+	mes("[Ash]");
+	mes("Ahh, "+strcharinfo(PC_NAME)+"! Welcome to the Offical Treasure Hunter's Guild Shop.");
+	mes("You currently have ^FF0000"+#Treasure_Token+"^000000 treasure tokens!!!");
 	next;
 	switch( select("How does this place work?","What do you have in stock?","Nevermind") ) {
 		case 1:
-			mes "[Ash]";
-			mes "Well you see here you can exchange your treasure hunter tokens for zeny or rare weapons forged by our blacksmiths.";
-			mes " ";
-			mes "Everything has its own price value and the only way you can get the tokens is by completing quests assigned to you,the system normally works like this.";
-			mes " ";
-			mes "The harder the mission the more Tokens you will earn. All red quests are worth 4-8 Tokens, and the rest are worth 1-5.";
-			mes " ";
-			mes "Hope that solves your problem and questions.";
+			mes("[Ash]");
+			mes("Well you see here you can exchange your treasure hunter tokens for zeny or rare weapons forged by our blacksmiths.");
+			mes(" ");
+			mes("Everything has its own price value and the only way you can get the tokens is by completing quests assigned to you,the system normally works like this.");
+			mes(" ");
+			mes("The harder the mission the more Tokens you will earn. All red quests are worth 4-8 Tokens, and the rest are worth 1-5.");
+			mes(" ");
+			mes("Hope that solves your problem and questions.");
 			close;
 		case 2:
 			break;
@@ -174,27 +174,27 @@ prt_in,164,174,1	script	Treasure Hunter's Shop	1_M_YOUNGKNIGHT,{
 			close;
 	}
 
-	mes "[Ash]";
-	mes "Ok here is our Big list of goods.";
-	mes " ";
-	mes "(Note T stands for a Treasure Token.)";
+	mes("[Ash]");
+	mes("Ok here is our Big list of goods.");
+	mes(" ");
+	mes("(Note T stands for a Treasure Token.)");
 	next;
-	mes "[Ash]";
-	mes "This is what we have to offer.";
+	mes("[Ash]");
+	mes("This is what we have to offer.");
 	next;
 	switch( select("Trade for zeny", "Trade for Weapons", "Trade for Cards", "Nevermind") ) {
 		case 1:
 			select("1000z - 1T","10000z - 10T","100000z - 100T","Nevermind");
 			thqs_trade_token(@menu);
 		case 2:
-			mes "[Ash]";
-			mes "This is what we have to offer.";
+			mes("[Ash]");
+			mes("This is what we have to offer.");
 			next;
 			select("Axe's","1 Handed Swords","2 Handed Swords","Book's","Bow's","Katar's","Knuckle's","Mace's","Whips","Wands","Nevermind");
 			ths_menu_weapons(@menu);
 		case 3:
-			mes "[Ash]";
-			mes "This is what we have to offer.";
+			mes("[Ash]");
+			mes("This is what we have to offer.");
 			next;
 			thqs_menu_buy("$THQS_menu_cards","$THQS_menu_price");
 		case 4:

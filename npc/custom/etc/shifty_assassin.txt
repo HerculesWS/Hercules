@@ -16,39 +16,39 @@ morocc,148,86,5	script	Shifty Assassin	4_F_JOB_ASSASSIN,{
 
 	freeloop(true);
 	while (true) {
-		mes "[Shifty Assassin]";
-		mes "What do you want?";
+		mes("[Shifty Assassin]");
+		mes("What do you want?");
 		next;
 		switch (select("Buy Ninjas", "Assassinate somebody", "Check your Ninjas", getgmlevel() > 90 ? "Add Ninjas" : "", "Cancel")) {
 		case 1:
-			mes "[Shifty Assassin]";
-			mes "How many ninjas do you want buy?";
-			mes "There are ^0000FF" + $ninja_avail + "^000000 ninjas available.";
-			mes "They cost ^0000FF" + $ninja_price + " zeny ^000000each.";
+			mes("[Shifty Assassin]");
+			mes("How many ninjas do you want buy?");
+			mes("There are ^0000FF" + $ninja_avail + "^000000 ninjas available.");
+			mes("They cost ^0000FF" + $ninja_price + " zeny ^000000each.");
 
 			set @buy,0;
 			input @buy;
 			next;
 			if ($ninja_avail < 1) {
-				mes "[Shifty Assassin]";
-				mes "There are no ninjas left to buy.";
+				mes("[Shifty Assassin]");
+				mes("There are no ninjas left to buy.");
 				close;
 			}
 			if ($ninja_avail < @buy) {
-				mes "[Shifty Assassin]";
-				mes "There aren't that many ninjas to buy.";
+				mes("[Shifty Assassin]");
+				mes("There aren't that many ninjas to buy.");
 				next;
 				continue;
 			}
 			set @price,@buy*$ninja_price;
 			if (Zeny < @price ) {
-				mes "[Shifty Assassin]";
-				mes "You do not have enough zeny.";
+				mes("[Shifty Assassin]");
+				mes("You do not have enough zeny.");
 				close;
 			}
 
-			mes "[Shifty Assassin]";
-			mes "That will cost you ^0000FF" + @price + " zeny^000000.";
+			mes("[Shifty Assassin]");
+			mes("That will cost you ^0000FF" + @price + " zeny^000000.");
 			next;
 			if (select("Continue", "Cancel") != 1) {
 				callsub(OnExit);
@@ -58,19 +58,19 @@ morocc,148,86,5	script	Shifty Assassin	4_F_JOB_ASSASSIN,{
 			set #ninjas,#ninjas+@buy;
 			set $ninja_avail,$ninja_avail-@buy;
 
-			mes "[Shifty Assassin]";
-			mes "Thank you.";
+			mes("[Shifty Assassin]");
+			mes("Thank you.");
 			close;
 		case 2:
 			if (agitcheck()) {
 				// NINJAS BUSY FOR WOE //
-				mes "[Shifty Assassin]";
-				mes "Sorry, all my ninjas are busy doing War of Emperium.";
+				mes("[Shifty Assassin]");
+				mes("Sorry, all my ninjas are busy doing War of Emperium.");
 				close;
 			}
-			mes "[Shifty Assassin]";
-			mes "Enter the name of the target.";
-			mes "^FF0000Type the name exactly, otherwise I won't be able to find the victim.^000000";
+			mes("[Shifty Assassin]");
+			mes("Enter the name of the target.");
+			mes("^FF0000Type the name exactly, otherwise I won't be able to find the victim.^000000");
 			next;
 			if (select("Continue", "Cancel") != 1) {
 				callsub(OnExit);
@@ -79,27 +79,27 @@ morocc,148,86,5	script	Shifty Assassin	4_F_JOB_ASSASSIN,{
 			set @name$,"0";
 			input @name$;
 			next;
-			mes "[Shifty Assassin]";
-			mes "Active Ninjas: "+#ninjas;
-			mes "Resting Ninjas: "+#ninjasr;
-			mes "How many do you want to send?";
+			mes("[Shifty Assassin]");
+			mes("Active Ninjas: "+#ninjas);
+			mes("Resting Ninjas: "+#ninjasr);
+			mes("How many do you want to send?");
 			set @number,0;
 			input @number;
 			if (@number < 1) {
-				mes "[Shifty Assassin]";
-				mes "You can't kill anyone without ninjas.";
+				mes("[Shifty Assassin]");
+				mes("You can't kill anyone without ninjas.");
 				next;
 				continue;
 			}
 			if (@number > #ninjas) {
-				mes "[Shifty Assassin]";
-				mes "You do not have that many ninjas.";
+				mes("[Shifty Assassin]");
+				mes("You do not have that many ninjas.");
 				next;
 				continue;
 			}
 			if (@number > 10) {
-				mes "[Shifty Assassin]";
-				mes "You can only send 10 ninjas max.";
+				mes("[Shifty Assassin]");
+				mes("You can only send 10 ninjas max.");
 				next;
 				continue;
 			}
@@ -109,44 +109,44 @@ morocc,148,86,5	script	Shifty Assassin	4_F_JOB_ASSASSIN,{
 			set #ninjasr,0;
 			if (@number < @chance) {
 				// FAILED ATTACK //
-				mes "Sending ninjas now.";
+				mes("Sending ninjas now.");
 				next;
-				mes "[Shifty Assassin]";
+				mes("[Shifty Assassin]");
 				set @ninjasurvived,rand (1,@number);
 				set #ninjasr,@number-@ninjasurvived;
-				mes "Your attack failed and only ^FF0000" + #ninjasr + "^000000 Ninjas survived.";
+				mes("Your attack failed and only ^FF0000" + #ninjasr + "^000000 Ninjas survived.");
 
 				announce @name$+" has survived " + strcharinfo(PC_NAME) +"'s Ninja attack.",8;
 				close;
 			}
 			// SUCCESSFUL ATTACK //
-			mes "Sending ninjas now.";
+			mes("Sending ninjas now.");
 			next;
-			mes "[Shifty Assassin]";
+			mes("[Shifty Assassin]");
 			set @ninjasurvived,rand (1,@number);
 			set #ninjasr,@number-@ninjasurvived;
-			mes "Your attack succeeded but only ^FF0000" + #ninjasr + "^000000 Ninjas survived.";
+			mes("Your attack succeeded but only ^FF0000" + #ninjasr + "^000000 Ninjas survived.");
 
 			atcommand strcharinfo(PC_NAME) + "@kill "+@name$;
 			announce @name$+" has been assassinated by " + strcharinfo(PC_NAME) +"'s Ninjas.",bc_npc;
 			close;
 		case 3:
-			mes "[Shifty Assassin]";
-			mes "You have:";
-			mes "^FF0000" + #ninjas + "^000000 Active Ninjas.";
-			mes "^0000FF" + #ninjasr + "^000000 Resting Ninjas.";
+			mes("[Shifty Assassin]");
+			mes("You have:");
+			mes("^FF0000" + #ninjas + "^000000 Active Ninjas.");
+			mes("^0000FF" + #ninjasr + "^000000 Resting Ninjas.");
 			next;
 			continue;
 		case 4:
 			if (getgmlevel() <= 90)
 				end;
-			mes "[Shifty Assassin]";
-			mes "How many ninjas do you want to make available?";
+			mes("[Shifty Assassin]");
+			mes("How many ninjas do you want to make available?");
 			next;
 			set @add,0;
 			input @add;
 			set $ninja_avail,$ninja_avail+@add;
-			mes @add + " ninjas added.";
+			mes(@add + " ninjas added.");
 			close;
 		case 5:
 			callsub(OnExit);
@@ -156,8 +156,8 @@ morocc,148,86,5	script	Shifty Assassin	4_F_JOB_ASSASSIN,{
 	}
 
 OnExit:
-	mes "[Shifty Assassin]";
-	mes "Goodbye.";
+	mes("[Shifty Assassin]");
+	mes("Goodbye.");
 	close;
 
 // TIMER DELAY NINJA ADDER //

@@ -37,37 +37,37 @@
 malangdo,213,167,4	script	Mayomayo#mal	4_CAT_3COLOR,{
 	disable_items;
 	if (checkweight(Knife,1) == 0) {
-		mes "You have too many kinds of objects. Let's try to continue after reducing those objects.";
+		mes("You have too many kinds of objects. Let's try to continue after reducing those objects.");
 		close;
 	}
 	if (MaxWeight - Weight < 10000) {
-		mes "Can't continue because you have too many heavy objects. Let's try to continue after reducing the weight.";
+		mes("Can't continue because you have too many heavy objects. Let's try to continue after reducing the weight.");
 		close;
 	}
-	mes "[Mayomayo]";
-	mes "Wow welcome. It is new Mayomayo refinement store~ I enchant some luxury weapons including level 4 weapons.";
+	mes("[Mayomayo]");
+	mes("Wow welcome. It is new Mayomayo refinement store~ I enchant some luxury weapons including level 4 weapons.");
 	next;
 	switch(select("Any store policy changes?", "Enchant High Ranked Weapon", "Initialize Enchant (Need Silvervine Fruit)")) {
 	case 1:
-		mes "[Mayomayo]";
-		mes "When I enchant weapons, the slotted cards or refined level are dissipated sometimes. I hated it. However, one day I found how to do it without any extinction.";
+		mes("[Mayomayo]");
+		mes("When I enchant weapons, the slotted cards or refined level are dissipated sometimes. I hated it. However, one day I found how to do it without any extinction.");
 		next;
-		mes "[Mayomayo]";
-		mes "Have you ever seen a building of person of reinforcement capacity association?";
+		mes("[Mayomayo]");
+		mes("Have you ever seen a building of person of reinforcement capacity association?");
 		next;
 		if(select("I've seen it before.", "I haven't seen it before.") == 2) {
-			mes "[Mayomayo]";
-			mes "That builiding is located to the southeast of where I am. Why don't you go on a field trip there?";
+			mes("[Mayomayo]");
+			mes("That builiding is located to the southeast of where I am. Why don't you go on a field trip there?");
 			close;
 		}
-		mes "[Mayomayo]";
-		mes "If you go to the place, there is someone who enchants the Archangel Wing. At that time that was amazing, because that was impossible ability by my own skill.";
+		mes("[Mayomayo]");
+		mes("If you go to the place, there is someone who enchants the Archangel Wing. At that time that was amazing, because that was impossible ability by my own skill.");
 		next;
-		mes "[Mayomayo]";
-		mes "Every night I became his butler and did odd jobs. That is how I learned to enchant.";
+		mes("[Mayomayo]");
+		mes("Every night I became his butler and did odd jobs. That is how I learned to enchant.");
 		next;
-		mes "[Mayomayo]";
-		mes "Several rules are changed. Well, you better have experience.";
+		mes("[Mayomayo]");
+		mes("Several rules are changed. Well, you better have experience.");
 		close;
 	case 2:
 		@mal_enchant_select = 1;
@@ -78,8 +78,8 @@ malangdo,213,167,4	script	Mayomayo#mal	4_CAT_3COLOR,{
 	}
 
 	if (!getequipisequiped(EQI_HAND_R)) {
-		mes "[Mayomayo]";
-		mes "Did you take off your equipment?";
+		mes("[Mayomayo]");
+		mes("Did you take off your equipment?");
 		@mal_enchant_select = 0;
 		close;
 	}
@@ -330,11 +330,11 @@ malangdo,213,167,4	script	Mayomayo#mal	4_CAT_3COLOR,{
 	case W_HUUMA:
 		break;
 	}
-	mes "[Mayomayo]";
+	mes("[Mayomayo]");
 	if (@mal_enchant_select == 1)
-		mes "This is not a suitable equipment for the enchant. Don't forget we only take care of high class weapons, including level 4 weapons~";
+		mes("This is not a suitable equipment for the enchant. Don't forget we only take care of high class weapons, including level 4 weapons~");
 	else
-		mes "This equipment can not be initialized. Don't forget we only handle some luxury weapons, including level 4 weapons~";
+		mes("This equipment can not be initialized. Don't forget we only handle some luxury weapons, including level 4 weapons~");
 	@mal_equip_id = 0;
 	@mal_enchant_select = 0;
 	close;
@@ -349,8 +349,8 @@ L_Socket:
 	@mal_enchant_select = 0;
 
 	if (.@select == 1) {
-		mes "[Mayomayo]";
-		mes "^0000ff"+.@equip_name$+"^000000! Do you want to enchant this equipment? How will you pay for this?";
+		mes("[Mayomayo]");
+		mes("^0000ff"+.@equip_name$+"^000000! Do you want to enchant this equipment? How will you pay for this?");
 		next;
 
 		setarray .@coin[0],6422,6421,6420,6419,6418,6423; // Payment ID
@@ -367,12 +367,12 @@ L_Socket:
 		}
 		.@coin_select = select(.@menu$)-2;
 		if (.@coin_select == -1) {
-			mes "[Mayomayo]";
-			mes "Come back again if you change your mind.";
+			mes("[Mayomayo]");
+			mes("Come back again if you change your mind.");
 			close;
 		} else if (.@count[.@coin_select] < .@total[.@coin_select]) {
-			mes "[Mayomayo]";
-			mes "You don't have enough coins. Do you want to check again?";
+			mes("[Mayomayo]");
+			mes("You don't have enough coins. Do you want to check again?");
 			close;
 		}
 		switch(.@coin_select) {
@@ -390,13 +390,13 @@ L_Socket:
 			break;
 		case 4: //Agrade_Coin
 		case 5: //Anger_Seagod
-			mes "[Mayomayo]";
-			mes "When you use the "+getitemname(.@coin[.@coin_select])+", you can choose the enchant type.";
+			mes("[Mayomayo]");
+			mes("When you use the "+getitemname(.@coin[.@coin_select])+", you can choose the enchant type.");
 			next;
 			switch(select("Stop", "Short Range Type", "Long Range Type", "Caster Type")) {
 			case 1:
-				mes "[Mayomayo]";
-				mes "Ok. If you change your mind, let me know.";
+				mes("[Mayomayo]");
+				mes("Ok. If you change your mind, let me know.");
 				close;
 			case 2:
 				.@enchant_type = ((.@coin_select == 4)?4:1);
@@ -417,16 +417,16 @@ L_Socket:
 			.@socket = 3;
 			.@str$ = "2nd";
 		} else {
-			mes "[Mayomayo]";
-			mes "This equipment is at the end of enchant. Please initialize the enchant and you will be able to enchant it again, or bring another weapon.";
+			mes("[Mayomayo]");
+			mes("This equipment is at the end of enchant. Please initialize the enchant and you will be able to enchant it again, or bring another weapon.");
 			close;
 		}
-		mes "[Mayomayo]";
-		mes "I'm trying for the "+.@str$+" enchant. ^ff0000It will not touch previous refinement and cards. Also, the equipment will not be destroyed.^000000 Can I continue?";
+		mes("[Mayomayo]");
+		mes("I'm trying for the "+.@str$+" enchant. ^ff0000It will not touch previous refinement and cards. Also, the equipment will not be destroyed.^000000 Can I continue?");
 		next;
 		if(select("I'll come back later.", "Please, continue.") == 1) {
-			mes "[Mayomayo]";
-			mes "Ok. If you change your mind, come back again.";
+			mes("[Mayomayo]");
+			mes("Ok. If you change your mind, come back again.");
 			close;
 		}
 		switch(.@enchant_type) {
@@ -591,8 +591,8 @@ L_Socket:
 			else .@enchant = 9;
 			break;
 		default:
-			mes "[Mayomayo]";
-			mes "There is something wrong. Please try again.";
+			mes("[Mayomayo]");
+			mes("There is something wrong. Please try again.");
 			close;
 		}
 		     if (.@equip_card[3] == 0 && getarg(1) < 4) .@equip_card[3] = .@enchant;
@@ -600,25 +600,25 @@ L_Socket:
 		else if (.@equip_card[1] == 0 && getarg(1) < 2) .@equip_card[1] = .@enchant;
 		else if (.@equip_card[0] == 0 && getarg(1) < 1) .@equip_card[0] = .@enchant;
 		else {
-			mes "[Mayomayo]";
-			mes "This equipment is at the end of enchant. I provide enchant for two times maximum.";
+			mes("[Mayomayo]");
+			mes("This equipment is at the end of enchant. I provide enchant for two times maximum.");
 			next;
-			mes "[Mayomayo]";
-			mes "Surely I don't enchant at card socket, therefore weapons that have 3 slots can be enchanted only 1 time. Don't forget this~";
+			mes("[Mayomayo]");
+			mes("Surely I don't enchant at card socket, therefore weapons that have 3 slots can be enchanted only 1 time. Don't forget this~");
 			close;
 		}
 		if (.@enchant == 9) { // Should never happen.
 			specialeffect(EF_SUI_EXPLOSION, AREA, playerattached());
-			mes "[Mayomayo]";
-			mes "Oh my god!";
-			mes "This equipment is destroyed because it could not endure powerful ability. I'm so sorry.";
+			mes("[Mayomayo]");
+			mes("Oh my god!");
+			mes("This equipment is destroyed because it could not endure powerful ability. I'm so sorry.");
 			delitem .@coin[.@coin_select],.@total[.@coin_select];
 			delequip EQI_HAND_R;
 			close;
 		}
 		specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
-		mes "[Mayomayo]";
-		mes "I have enchanted ^990000slot "+.@socket+"^000000 of this equipment.";
+		mes("[Mayomayo]");
+		mes("I have enchanted ^990000slot "+.@socket+"^000000 of this equipment.");
 		delitem .@coin[.@coin_select],.@total[.@coin_select];
 		delequip EQI_HAND_R;
 
@@ -627,32 +627,32 @@ L_Socket:
 
 		close;
 	} else if (.@select == 2) {
-		mes "[Mayomayo]";
-		mes "I will only initialize the enchant effect without touching previous refined level and cards.";
+		mes("[Mayomayo]");
+		mes("I will only initialize the enchant effect without touching previous refined level and cards.");
 		next;
 		if(select("Stop", "Continue") == 1) {
-			mes "[Mayomayo]";
-			mes "If you change your mind, come back anytime.";
+			mes("[Mayomayo]");
+			mes("If you change your mind, come back anytime.");
 			close;
 		}
 		if (countitem(Silvervine) == 0) {
-			mes "[Mayomayo]";
-			mes "I'm sorry. You don't have Silvervine Fruit. Please check your inventory again?";
+			mes("[Mayomayo]");
+			mes("I'm sorry. You don't have Silvervine Fruit. Please check your inventory again?");
 			close;
 		}
 		if (!getequipisequiped(EQI_HAND_R)) {
-			mes "[Mayomayo]";
-			mes "Did you take off the equipment?";
+			mes("[Mayomayo]");
+			mes("Did you take off the equipment?");
 			close;
 		}
 		if (.@equip_card[3] == 0) {
-			mes "[Mayomayo]";
-			mes "This equipment has nothing to initialize. Please check again.";
+			mes("[Mayomayo]");
+			mes("This equipment has nothing to initialize. Please check again.");
 			close;
 		}
 		specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
-		mes "[Mayomayo]";
-		mes "Initialize the enchant effect from the equipment.";
+		mes("[Mayomayo]");
+		mes("Initialize the enchant effect from the equipment.");
 		delitem Silvervine,1;
 		delequip EQI_HAND_R;
 

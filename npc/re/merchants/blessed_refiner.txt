@@ -39,16 +39,16 @@
 
 -	script	::BlacksmithDister	FAKE_NPC,{
 	disable_items;
-	mes "[Blacksmith Dister]";
-	mes "In this highly competitive society, we must be different in order to survive!";
-	mes "I only refine equipment at the +6 ~ 12 levels.";
+	mes("[Blacksmith Dister]");
+	mes("In this highly competitive society, we must be different in order to survive!");
+	mes("I only refine equipment at the +6 ~ 12 levels.");
 	next;
-	mes "[Blacksmith Dister]";
-	mes "I will need ^ff9999Blessed Weapon Ore^000000 for weapons, and ^ff9999Blessed Armor Ore^000000 for armors.";
-	mes "Failed refines ^FF0000will not break or reduce the refine level^000000.";
+	mes("[Blacksmith Dister]");
+	mes("I will need ^ff9999Blessed Weapon Ore^000000 for weapons, and ^ff9999Blessed Armor Ore^000000 for armors.");
+	mes("Failed refines ^FF0000will not break or reduce the refine level^000000.");
 	next;
-	mes "[Blacksmith Dister]";
-	mes "How about it? Do you want to refine?";
+	mes("[Blacksmith Dister]");
+	mes("How about it? Do you want to refine?");
 	next;
 	setarray .@position$[1],"Head","Body","Left Hand","Right Hand","Robe","Shoes","Accessory 1","Accessory 2","Head 2","Head 3";
 	.@menu$ = "";
@@ -56,46 +56,46 @@
 		.@menu$ += ((getequipisequiped(.@i))?getequipname(.@i):.@position$[.@i]+"-[Unequipped]")+":";
 	.@part = select(.@menu$);
 	if (!getequipisequiped(.@part)) {
-		mes "[Blacksmith Dister]";
+		mes("[Blacksmith Dister]");
 		switch(.@part) {
 		case 1:
-			mes "I'm a blacksmith, not a hairstylist.";
+			mes("I'm a blacksmith, not a hairstylist.");
 			break;
 		case 2:
-			mes "With my hammer, I will make you a star of the sky.";
+			mes("With my hammer, I will make you a star of the sky.");
 			break;
 		case 3:
 		case 4:
-			mes "Making artificial hands is not my specialty.";
+			mes("Making artificial hands is not my specialty.");
 			break;
 		case 5:
-			mes "Bring out the item so I can refine it!";
+			mes("Bring out the item so I can refine it!");
 			break;
 		case 6:
-			mes "Where is this weird smell coming from?";
+			mes("Where is this weird smell coming from?");
 			break;
 		case 7:
 		case 8:
-			mes "Where is the accessory?";
+			mes("Where is the accessory?");
 			break;
 		case 9:
-			mes "What do you want me to refine?";
+			mes("What do you want me to refine?");
 			break;
 		case 10:
-			mes "Huh? What do you want me to do?";
+			mes("Huh? What do you want me to do?");
 			break;
 		}
 		close;
 	}
 	if (!getequipisenableref(.@part)) {
-		mes "[Blacksmith Dister]";
-		mes "This item cannot be refined.";
+		mes("[Blacksmith Dister]");
+		mes("This item cannot be refined.");
 		close;
 	}
 	.@equip_refine = getequiprefinerycnt(.@part);
 	if (.@equip_refine < 6 || .@equip_refine > 12) {
-		mes "[Blacksmith Dister]";
-		mes "This equipment has refined to "+.@equip_refine+". I only handle items with refine levels from +6 to +12!";
+		mes("[Blacksmith Dister]");
+		mes("This equipment has refined to "+.@equip_refine+". I only handle items with refine levels from +6 to +12!");
 		close;
 	}
 	.@equip_lv = getequipweaponlv(.@part);
@@ -128,61 +128,61 @@
 		break;
 	}
 	.@ore$ = "^ff9999Blessed "+.@type$+" Ore^000000";
-	mes "[Blacksmith Dister]";
-	mes "This "+.@type$+" has been refined to "+.@equip_refine+". To refine it, I need "+.@ore$+" and a "+(.@price/1000)+",000 zeny refining fee.";
-	mes "Do you want to proceed?";
+	mes("[Blacksmith Dister]");
+	mes("This "+.@type$+" has been refined to "+.@equip_refine+". To refine it, I need "+.@ore$+" and a "+(.@price/1000)+",000 zeny refining fee.");
+	mes("Do you want to proceed?");
 	next;
 	if(select("Yes", "No") == 2) {
-		mes "[Blacksmith Dister]";
-		mes "I am busy, don't joke with me!";
+		mes("[Blacksmith Dister]");
+		mes("I am busy, don't joke with me!");
 		close;
 	}
 	if (getequippercentrefinery(.@part) < 100) {
-		mes "[Blacksmith Dister]";
-		mes "This "+.@type$+" has been refined many times. Although it will not disappear upon failure, the "+.@ore$+" will disappear!";
+		mes("[Blacksmith Dister]");
+		mes("This "+.@type$+" has been refined many times. Although it will not disappear upon failure, the "+.@ore$+" will disappear!");
 		next;
-		mes "[Blacksmith Dister]";
-		mes "Of course, the refining fee will not be returned! Do you want to continue?";
+		mes("[Blacksmith Dister]");
+		mes("Of course, the refining fee will not be returned! Do you want to continue?");
 		next;
 		if(select("Yes", "No") == 2) {
-			mes "[Blacksmith Dister]";
-			mes "Good. I'd be sad if it failed, too.";
+			mes("[Blacksmith Dister]");
+			mes("Good. I'd be sad if it failed, too.");
 			close;
 		}
 	}
 	if (countitem(.@material) == 0 || Zeny < .@price) {
-		mes "[Blacksmith Dister]";
-		mes "Materials insufficient.";
-		mes "To refine "+((.@equip_lv)?"a level "+.@equip_lv+" weapon":"armor")+", I need "+.@ore$+" and a "+(.@price/1000)+",000 zeny refining fee.";
+		mes("[Blacksmith Dister]");
+		mes("Materials insufficient.");
+		mes("To refine "+((.@equip_lv)?"a level "+.@equip_lv+" weapon":"armor")+", I need "+.@ore$+" and a "+(.@price/1000)+",000 zeny refining fee.");
 		close;
 	}
 	delitem .@material,1;
 	Zeny -= .@price;
-	mes "[Blacksmith Dister]";
-	mes "Tac! Tac! Tac!";
+	mes("[Blacksmith Dister]");
+	mes("Tac! Tac! Tac!");
 	if (getequippercentrefinery(.@part) > rand(100) || getequippercentrefinery(.@part) > rand(100)) {
 		specialeffect EF_BLESSING;
 		successrefitem .@part;
 		next;
-		mes "[Blacksmith Dister]";
-		mes "Hahahahahaha!!!";
+		mes("[Blacksmith Dister]");
+		mes("Hahahahahaha!!!");
 		next;
-		mes "[Blacksmith Dister]";
-		mes "Refine was a huge success~ Hahaha!";
+		mes("[Blacksmith Dister]");
+		mes("Refine was a huge success~ Hahaha!");
 		close;
 	}
 	specialeffect EF_CURSEATTACK;
 	specialeffect(EF_SUI_EXPLOSION, AREA, playerattached());
 	next;
 	emotion (!rand(5))?e_ag:e_omg;
-	mes "[Blacksmith Dister]";
-	mes "Oh my goodness!!!!";
+	mes("[Blacksmith Dister]");
+	mes("Oh my goodness!!!!");
 	next;
-	mes "[Blacksmith Dister]";
-	mes "Oh! Although it was blessed by "+.@ore$+" to retain the equipment...";
+	mes("[Blacksmith Dister]");
+	mes("Oh! Although it was blessed by "+.@ore$+" to retain the equipment...");
 	next;
-	mes "[Blacksmith Dister]";
-	mes "My mood is worse when I fail!!";
+	mes("[Blacksmith Dister]");
+	mes("My mood is worse when I fail!!");
 	close;
 }
 prt_in,52,56,3	duplicate(BlacksmithDister)	Blacksmith Dister#prt	4_M_DWARF

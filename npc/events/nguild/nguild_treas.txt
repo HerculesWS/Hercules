@@ -68,8 +68,8 @@ function	script	F_GldTreas	{
 
 //== Treasure Room Switch ==================================
 function	script	F_GldTreasSw	{
-	mes " ";
-	mes "There's a small lever. Will you pull it?";
+	mes(" ");
+	mes("There's a small lever. Will you pull it?");
 	next;
 
 	if (select("Pull.", "Do not.") == 1) {

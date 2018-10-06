@@ -13,20 +13,20 @@
 
 prontera,144,174,4	script	Bound Items	4_M_JP_MID,{
 
-	mes "I can bind your items to your account, guild, or character"+((.bindprice)?" for a ^0000FF"+.bindprice+"^000000 zeny fee":"")+".";
+	mes("I can bind your items to your account, guild, or character"+((.bindprice)?" for a ^0000FF"+.bindprice+"^000000 zeny fee":"")+".");
 	next;
-	mes "With this, you can rest assured your items are safe.";
+	mes("With this, you can rest assured your items are safe.");
 	next;
-	mes "What would you like to do?";
+	mes("What would you like to do?");
 	if(select("Bind", "Unbind") == 1) {
 		if(Zeny < .bindprice) {
-			mes "You don't have enough zeny to bind an item.";
+			mes("You don't have enough zeny to bind an item.");
 			close;
 		}
-		mes "What kind of bind?";
+		mes("What kind of bind?");
 		.@boundtype = 1 << (select("Account", "Guild", "Character")-1);
 		if(.@boundtype == 2 && (!getcharid(CHAR_ID_GUILD) || getguildmaster(getcharid(CHAR_ID_GUILD)) != strcharinfo(PC_NAME))) {
-			mes "In order for me to bind an item to a guild you must be the master of one.";
+			mes("In order for me to bind an item to a guild you must be the master of one.");
 			close;
 		}
 		getinventorylist();
@@ -47,32 +47,32 @@ prontera,144,174,4	script	Bound Items	4_M_JP_MID,{
 		}
 		.@item = .@bindlist[select(.@bindlist$)-2];
 		next;
-		mes "Before I continue, I want you to know I can't tell the difference between multiple items.  If you have a specific item you want bounded, please remove any duplicates from inventory.";
+		mes("Before I continue, I want you to know I can't tell the difference between multiple items.  If you have a specific item you want bounded, please remove any duplicates from inventory.");
 		if(select("I understand, continue", "Wait a minute") == 2) {
 			next;
-			mes "I'll be here when you're ready.";
+			mes("I'll be here when you're ready.");
 			close;
 		}
 		next;
-		mes "Are you sure you'd like to bind your "+ getitemname(@inventorylist_id[.@item]) +" to your "+.boundtypes$[.@boundtype]+"?";
+		mes("Are you sure you'd like to bind your "+ getitemname(@inventorylist_id[.@item]) +" to your "+.boundtypes$[.@boundtype]+"?");
 		if(select("Yes", "No") == 1) {
 			Zeny -= .bindprice;
 			delitem2 @inventorylist_id[.@item],@inventorylist_amount[.@item],@inventorylist_identify[.@item],@inventorylist_refine[.@item],@inventorylist_attribute[.@item],@inventorylist_card1[.@item],@inventorylist_card2[.@item],@inventorylist_card3[.@item],@inventorylist_card4[.@item];
 			getitembound2 @inventorylist_id[.@item],@inventorylist_amount[.@item],@inventorylist_identify[.@item],@inventorylist_refine[.@item],@inventorylist_attribute[.@item],@inventorylist_card1[.@item],@inventorylist_card2[.@item],@inventorylist_card3[.@item],@inventorylist_card4[.@item],.@boundtype;
-			mes "All done!";
+			mes("All done!");
 			if(.logbinds)
 				logmes "Bound "+ @inventorylist_amount[.@item]+" "+@inventorylist_id[.@item]+" as "+.boundtypes$[.@boundtype]+" type.";
 		}
 	} else {
 		if(!countbound()) {
-			mes "You don't have any bound items in your inventory.  Not much I can do here.";
+			mes("You don't have any bound items in your inventory.  Not much I can do here.");
 			close;
 		}
 		countbound(2);
 		if(.unbindprice) {
-			mes "Unbinding an item has a fee of ^0000FF"+.unbindprice+"^000000 zeny.";
+			mes("Unbinding an item has a fee of ^0000FF"+.unbindprice+"^000000 zeny.");
 			if(Zeny < .unbindprice) {
-				mes "You don't have enough to unbind an item.";
+				mes("You don't have enough to unbind an item.");
 				close;
 			}
 		}
@@ -90,23 +90,23 @@ prontera,144,174,4	script	Bound Items	4_M_JP_MID,{
 			if(@inventorylist_id[.@item] == @bound_items[.@i] &&
 				(!getcharid(CHAR_ID_GUILD) || getguildmaster(getcharid(CHAR_ID_GUILD)) != strcharinfo(PC_NAME))
 			) {
-				mes "I will only unbind guild bound items that the guild master requests.";
+				mes("I will only unbind guild bound items that the guild master requests.");
 				close;
 			}
 		}
-		mes "Before I continue, I want you to know I can't tell the difference between multiple items.  If you have a specific item you want unbounded, please remove any duplicates from inventory.";
+		mes("Before I continue, I want you to know I can't tell the difference between multiple items.  If you have a specific item you want unbounded, please remove any duplicates from inventory.");
 		if(select("I understand, continue", "Wait a minute") == 2) {
 			next;
-			mes "I'll be here when you're ready.";
+			mes("I'll be here when you're ready.");
 			close;
 		}
 		next;
-		mes "Are you sure you'd like to unbind your "+ getitemname(@inventorylist_id[.@item]) +"?";
+		mes("Are you sure you'd like to unbind your "+ getitemname(@inventorylist_id[.@item]) +"?");
 		if(select("Yes", "No") == 1) {
 			Zeny -= .unbindprice;
 			delitem2 @inventorylist_id[.@item],@inventorylist_amount[.@item],@inventorylist_identify[.@item],@inventorylist_refine[.@item],@inventorylist_attribute[.@item],@inventorylist_card1[.@item],@inventorylist_card2[.@item],@inventorylist_card3[.@item],@inventorylist_card4[.@item];
 			getitem2 @inventorylist_id[.@item],@inventorylist_amount[.@item],@inventorylist_identify[.@item],@inventorylist_refine[.@item],@inventorylist_attribute[.@item],@inventorylist_card1[.@item],@inventorylist_card2[.@item],@inventorylist_card3[.@item],@inventorylist_card4[.@item];
-			mes "All done!";
+			mes("All done!");
 			if(.logbinds)
 				logmes "Unbound "+ @inventorylist_amount[.@item]+" "+@inventorylist_id[.@item]+".";
 		}
