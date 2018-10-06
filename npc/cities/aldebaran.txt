@@ -41,25 +41,25 @@
 
 //== Aldebaran =============================================
 aldebaran,113,70,4	script	Forger Munster#alde	1_M_02,{
-	mes ("[Munster]");
+	mes("[Munster]");
 	mes("My family used to live in Geffen. So I guess it was natural that we studied forging and eventually became Blacksmiths. Then, we finally moved to this town,");
 	mes("Al De Baran.");
 	next;
 	if (select("About ^3355FFItem Upgrade^000000", "Quit") == 1) {
-		mes ("[Munster]");
+		mes("[Munster]");
 		mes("My father was a famous blacksmith in Geffen, and he taught me a lot about forging equipment.");
 		next;
-		mes ("[Munster]");
+		mes("[Munster]");
 		mes("One of the fundamentals is that the success probability of upgrading an item depends on the level of the weapon.");
 		next;
-		mes ("[Munster]");
+		mes("[Munster]");
 		mes("For level 1 weapons, you may upgrade up to + 7 without the risk of breaking the weapon. Level 2 weapons can be upgraded to +6. Level 3 weapons can be upgraded to +5 safely.");
 		next;
-		mes ("[Munster]");
+		mes("[Munster]");
 		mes("For level 4 weapons, you can upgrade + 4 without too much risk. As for armors, you can upgrade them to +4. But if the upgrade for the equipment fails, it will be destroyed!");
 		close;
 	}
-	mes ("[Munster]");
+	mes("[Munster]");
 	mes("Hmm...");
 	mes("If you get a chance, try to visit my father's workshop here in Al de Baran. If I may say so, he's a pretty talented Blacksmith.");
 	close;
