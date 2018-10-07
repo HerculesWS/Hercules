@@ -5948,7 +5948,7 @@ static short status_calc_aspd(struct block_list *bl, struct status_change *sc, s
 			pots += sc->data[i]->val1;
 
 		if (!sc->data[SC_QUAGMIRE]) {
-			if(sc->data[SC_TWOHANDQUICKEN] && bonus < 7)
+			if(sc->data[SC_TWOHANDQUICKEN]) // bonus < 7, but as it is first condition, it is always < 7
 				bonus = 7;
 			if(sc->data[SC_ONEHANDQUICKEN] && bonus < 7)
 				bonus = 7;
