@@ -8125,7 +8125,7 @@ built-in atcommands and custom atcommands.
 *has_permission("<permission>"{, <account id>})
 
 Check if the attached or specified player has the specified permission
-and returns true or false accordingly. See doc/permissions.txt for
+and returns true or false accordingly. See doc/permissions.md for
 details about permissions.
 
 Valid <permission> are:

@@ -218,7 +218,7 @@ the weather.  For an in-depth explanation, please see /doc/atcommands.txt
 The Hercules emulator has a permission system that enables certain groups of
 players to perform certain actions, or have access to certain visual
 enhancements or in-game activity. To see what permissions are available, they
-are detailed in /doc/permissions.txt
+are detailed in /doc/permissions.md
 
 ### Others
 There are more files in the /doc/ directory that will help you to create scripts
