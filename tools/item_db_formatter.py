@@ -21,8 +21,9 @@
 # This script will convert old-styled HERCULES item_db.conf to new style.
 import os
 import io
-import libconf
 import argparse
+from typing import Any
+from utils import libconf
 
 ALL_JOBS = 0xFFFFFFFF
 ALL_EXCEPT_NOVICE = 0xFFFFFFFE
@@ -65,7 +66,7 @@ def item_get_gender(sex: int):
     return ''
 
 
-def item_type_formatter(item_type: int):
+def item_get_type(item_type: int):
     if item_type == 3:
         return ''
 
@@ -86,6 +87,115 @@ def item_type_formatter(item_type: int):
         if item_type in type_:
             return type_[1]
     return ''
+
+
+def item_get_loc(loc: int):
+    if not loc:
+        return ''
+
+    item_locs = (
+        (1, 'EQP_HEAD_LOW'),
+        (2, 'EQP_WEAPON'),
+        (4, 'EQP_GARMENT'),
+        (8, 'EQP_ACC_L'),
+        (16, 'EQP_ARMOR'),
+        (32, 'EQP_SHIELD'),
+        (34, 'EQP_ARMS'),
+        (64, 'EQP_SHOES'),
+        (128, 'EQP_ACC_R'),
+        (136, 'EQP_ACC'),
+        (256, 'EQP_HEAD_TOP'),
+        (512, 'EQP_HEAD_MID'),
+        (769, 'EQP_HELM'),
+        (1024, 'EQP_COSTUME_HEAD_TOP'),
+        (2048, 'EQP_COSTUME_HEAD_MID'),
+        (4096, 'EQP_COSTUME_HEAD_LOW'),
+        (8192, 'EQP_COSTUME_GARMENT'),
+        (32768, 'EQP_AMMO'),
+        (65536, 'EQP_SHADOW_ARMOR'),
+        (131072, 'EQP_SHADOW_WEAPON'),
+        (262144, 'EQP_SHADOW_SHIELD'),
+        (393216, 'EQP_SHADOW_ARMS'),
+        (524288, 'EQP_SHADOW_SHOES'),
+        (1048576, 'EQP_SHADOW_ACC_R'),
+        (2097152, 'EQP_SHADOW_ACC_L'),
+        (3145728, 'EQP_SHADOW_ACC')
+    )
+
+    if loc == 34:
+        return '"EQP_ARMS"'
+    if loc == 136:
+        return '"EQP_ACC"'
+    if loc == 769:
+        return '"EQP_HELM"'
+    if loc == 393216:
+        return '"EQP_SHADOW_ARMS"'
+    if loc == 3145728:
+        return '"EQP_SHADOW_ACC"'
+
+    locs = []
+    for item in item_locs:
+        if loc & item[0] == item[0]:
+            locs.append('"{const}"'.format(const=item[1]))
+
+    locs = ', '.join(map(str, locs))
+    return locs
+
+
+def item_get_subtype_and_view(item_type: int, view: Any) -> tuple:
+    # Check if item_type is AMMO or WEAPON
+    if item_type != 4 and item_type != 10:
+        return '', view
+
+    weapon_types = (
+        (0, 'W_FIST'),
+        (1, 'W_DAGGER'),
+        (2, 'W_1HSWORD'),
+        (3, 'W_2HSWORD'),
+        (4, 'W_1HSPEAR'),
+        (5, 'W_2HSPEAR'),
+        (6, 'W_1HAXE'),
+        (7, 'W_2HAXE'),
+        (8, 'W_MACE'),
+        (9, 'W_2HMACE', 'unused'),
+        (10, 'W_STAFF'),
+        (11, 'W_BOW'),
+        (12, 'W_KNUCKLE'),
+        (13, 'W_MUSICAL'),
+        (14, 'W_WHIP'),
+        (15, 'W_BOOK'),
+        (16, 'W_KATAR'),
+        (17, 'W_REVOLVER'),
+        (18, 'W_RIFLE'),
+        (19, 'W_GATLING'),
+        (20, 'W_SHOTGUN'),
+        (21, 'W_GRENADE'),
+        (22, 'W_HUUMA'),
+        (23, 'W_2HSTAFF')
+    )
+
+    ammo_types = (
+        (1, 'A_ARROW'),
+        (2, 'A_DAGGER'),
+        (3, 'A_BULLET'),
+        (4, 'A_SHELL'),
+        (5, 'A_GRENADE'),
+        (6, 'A_SHURIKEN'),
+        (7, 'A_KUNAI'),
+        (8, 'A_CANNONBALL'),
+        (9, 'A_THROWWEAPON')
+    )
+    sub_type = None
+    if item_type == 4:
+        for sub in weapon_types:
+            if view in sub:
+                sub_type = sub[1]
+    elif item_type == 10:
+        for sub in ammo_types:
+            if view in sub:
+                sub_type = sub[1]
+    # return it's view
+    return sub_type, ''
 
 
 def item_get_job_const(job: int):
@@ -165,7 +275,7 @@ def get_optional_fields(item):
     # Check all fields
     # if no old field found just don't put it in new file
     optional_fields = ''
-    item_type = item_type_formatter(item.get('Type'))
+    item_type = item_get_type(item.get('Type'))
     buy = item.get('Buy')
     sell = item.get('Sell')
     weight = item.get('Weight')
@@ -177,13 +287,12 @@ def get_optional_fields(item):
     job = item_get_job_const(item.get('Job', 0))
     upper = item_get_upper_mask(item.get('Upper', None))
     gender = item_get_gender(item.get('Gender'))
-    loc = item.get('Loc')
+    loc = item_get_loc(item.get('Loc'))
     weapon_lv = item.get('WeaponLv')
     equip_lv = item.get('EquipLv')
     refine = item.get('Refine')
     disable_options = item.get('DisableOptions')
-    subtype = item.get('Subtype')
-    view_sprite = item.get('ViewSprite')
+    subtype, view_sprite = item_get_subtype_and_view(item.get('Type'), item.get('View'))
     bind_on_equip = item.get('BindOnEquip')
     force_serial = item.get('ForceSerial')
     buying_store = item.get('BuyingStore')
@@ -227,7 +336,10 @@ def get_optional_fields(item):
     if gender:
         optional_fields += '\tGender: "{gender}"\n'.format(gender=gender)
     if loc:
-        optional_fields += '\tLoc: {loc}\n'.format(loc=loc)
+        if len(loc.split(',')) > 1:
+            optional_fields += '\tLoc: [{loc}]\n'.format(loc=loc)
+        else:
+            optional_fields += '\tLoc: {loc}\n'.format(loc=loc)
     if weapon_lv:
         optional_fields += '\tWeaponLv: {weapon_lv}\n'.format(weapon_lv=weapon_lv)
     if equip_lv:
@@ -237,7 +349,7 @@ def get_optional_fields(item):
     if disable_options:
         optional_fields += '\tDisableOptions: {disable_options}\n'.format(disable_options=disable_options)
     if subtype:
-        optional_fields += '\tSubtype: {subtype}\n'.format(subtype=subtype)
+        optional_fields += '\tSubtype: "{subtype}"\n'.format(subtype=subtype)
     if view_sprite:
         optional_fields += '\tViewSprite: {view_sprite}\n'.format(view_sprite=view_sprite)
     if bind_on_equip:
@@ -309,7 +421,49 @@ def item_db_formatter(args, db_name: str = 'item_db'):
     if os.path.exists(args.new_path):
         # Create new .conf file
         with io.open(args.new_path, 'w') as file:
+            file.write("""item_db: (
+/******************************************************************************
+ ************* Entry structure ************************************************
+ ******************************************************************************
+{
+    // =================== Mandatory fields ===============================
+    Id: ID                        (int)
+    AegisName: "Aegis_Name"       (string, optional if Inherit: true)
+    Name: "Item Name"             (string, optional if Inherit: true)
+    // =================== Optional fields ================================
+    Type: Item Type               (int, defaults to 3 = etc item)
+    Buy: Buy Price                (int, defaults to Sell * 2)
+    Sell: Sell Price              (int, defaults to Buy / 2)
+    Weight: Item Weight           (int, defaults to 0)
+    Atk: Attack                   (int, defaults to 0)
+    Matk: Magical Attack          (int, defaults to 0, ignored in pre-re)
+    Def: Defense                  (int, defaults to 0)
+    Range: Attack Range           (int, defaults to 0)
+    Slots: Slots                  (int, defaults to 0)
+    Job: Job mask                 (int, defaults to all jobs = 0xFFFFFFFF)
+    Upper: Upper mask             (int, defaults to any = 0x3f)
+    Gender: Gender                (int, defaults to both = 2)
+    Loc: Equip location           (int, required value for equipment)
+    WeaponLv: Weapon Level        (int, defaults to 0)
+    EquipLv: Equip required level (int, defaults to 0)
+    EquipLv: [min, max]           (alternative syntax with min / max level)
+    Refine: Refineable            (boolean, defaults to true)
+    View: View ID                 (int, defaults to 0)
+    BindOnEquip: true/false       (boolean, defaults to false)
+    Script: <"
+        Script
+        (it can be multi-line)
+    ">
+    OnEquipScript: <" OnEquip Script (can also be multi-line) ">
+    OnUnequipScript: <" OnUnequip Script (can also be multi-line) ">
+    // =================== Optional fields (item_db2 only) ================
+    Inherit: true/false           (boolean, if true, inherit the values
+                                  that weren't specified, from item_db.conf,
+                                  else override it and use default values)
+},
+******************************************************************************/\n""")
             file.write(formatted_conf)
+            file.write(")")
     else:
         print(f'new_path: {args.new_path} is not correct path')
 
