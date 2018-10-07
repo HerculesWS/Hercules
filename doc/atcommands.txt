@@ -786,7 +786,7 @@ Additionally, @follow will track the player's movements until turned off.
 @recallall
 
 Warps a character to your position.
-Additionally, @recallall will recall the entire server, except for players who are Vending, in an NPC dialog or in a Chatroom.
+Additionally, @recallall will recall the entire server except players who are vending, interacting with an NPC, in a chatroom or idle.
 
 ---------------------------------------
 
