@@ -29,7 +29,13 @@ ALL_JOBS = 0xFFFFFFFF
 ALL_EXCEPT_NOVICE = 0xFFFFFFFE
 
 
-def item_get_upper_mask(upper: int):
+def item_get_upper_mask(upper: Any):
+    if isinstance(upper, list) or isinstance(upper, dict):
+        result = []
+        for i_upper in upper:
+            result.append('"{upper}"'.format(upper=i_upper))
+        return ', '.join(map(str, result))
+
     if not upper or upper == 63:
         return ''
 
@@ -89,7 +95,17 @@ def item_get_type(item_type: int):
     return ''
 
 
-def item_get_loc(loc: int):
+def item_get_loc(loc: Any):
+    locs = []
+    if isinstance(loc, str):
+        return '"{loc}"'.format(loc=loc)
+
+    if isinstance(loc, list) or isinstance(loc, dict):
+        for item_loc in loc:
+            locs.append('"{loc}"'.format(loc=item_loc))
+        locs = ', '.join(map(str, locs))
+        return locs
+
     if not loc:
         return ''
 
@@ -133,10 +149,13 @@ def item_get_loc(loc: int):
     if loc == 3145728:
         return '"EQP_SHADOW_ACC"'
 
-    locs = []
     for item in item_locs:
-        if loc & item[0] == item[0]:
-            locs.append('"{const}"'.format(const=item[1]))
+        try:
+            if loc & item[0] == item[0]:
+                locs.append('"{const}"'.format(const=item[1]))
+        except TypeError:
+            print(f'Can\'t check Loc bitmask for {loc} (expected {type(int)}, getting {type(loc)})... inserting None')
+            locs.append('"None"')
 
     locs = ', '.join(map(str, locs))
     return locs
@@ -198,7 +217,7 @@ def item_get_subtype_and_view(item_type: int, view: Any):
     return sub_type, ''
 
 
-def item_get_job_const(job: int):
+def item_get_job_const(job: Any):
     job_names = (
         "Novice",
         "Swordsman",
@@ -233,7 +252,20 @@ def item_get_job_const(job: int):
         "Rebellion",
         "Summoner"
     )
-    job_mask = int(hex(job), 16)
+
+    if isinstance(job, list) or isinstance(job, dict):
+        jobs = ''
+        for p_job in job:
+            if p_job in job_names:
+                jobs += '\t\t{job}: true\n'.format(job=p_job)
+            else:
+                print(f'{p_job} not found in Job List. Skipping...')
+        return jobs
+    try:
+        job_mask = int(hex(job), 16)
+    except TypeError:
+        job_mask = ''
+
     result = ""
     if job_mask == '':
         return "\n"
@@ -248,7 +280,8 @@ def item_get_job_const(job: int):
     for x, job in enumerate(job_names):
         current_bit = 1 << x
         if job_mask & current_bit == current_bit:
-            result += '\t\t{job}: true\n'.format(job=job_names[x])
+            if job_names[x] != 'Unused':
+                result += '\t\t{job}: true\n'.format(job=job_names[x])
     return result
 
 
@@ -310,7 +343,7 @@ def get_optional_fields(item):
     on_unequip_script = item.get('OnUnequipScript')
 
     if item_type:
-        optional_fields += '\tItemType: "{type}"\n'.format(type=item_type)
+        optional_fields += '\tType: "{type}"\n'.format(type=item_type)
     if buy:
         optional_fields += '\tBuy: {buy}\n'.format(buy=buy)
     if sell:
@@ -332,7 +365,10 @@ def get_optional_fields(item):
         jobs = jobs + '{jobs}'.format(jobs=job)
         optional_fields += jobs + '\t}\n'
     if upper:
-        optional_fields += '\tUpper: "{upper}"\n'.format(upper=upper)
+        if len(upper.split(',')) > 1:
+            optional_fields += '\tUpper: [{upper}]\n'.format(upper=upper)
+        else:
+            optional_fields += '\tUpper: "{upper}"\n'.format(upper=upper)
     if gender:
         optional_fields += '\tGender: "{gender}"\n'.format(gender=gender)
     if loc:
@@ -344,7 +380,8 @@ def get_optional_fields(item):
         optional_fields += '\tWeaponLv: {weapon_lv}\n'.format(weapon_lv=weapon_lv)
     if equip_lv:
         optional_fields += '\tEquipLv: {equip_lv}\n'.format(equip_lv=equip_lv)
-    if refine:
+
+    if refine is False:
         optional_fields += '\tRefine: {refine}\n'.format(refine=refine)
     if disable_options:
         optional_fields += '\tDisableOptions: {disable_options}\n'.format(disable_options=disable_options)
@@ -407,7 +444,6 @@ def item_db_formatter(args, db_name: str = 'item_db'):
         name = db[x].Name
         # Optional fields
         optional_fields = get_optional_fields(item)
-
         header = '{\n'
         footer = '},\n'
 
@@ -421,17 +457,46 @@ def item_db_formatter(args, db_name: str = 'item_db'):
     if os.path.exists(args.new_path):
         # Create new .conf file
         with io.open(args.new_path, 'w') as file:
-            file.write("""item_db: (
-/******************************************************************************
- ************* Entry structure ************************************************
- ******************************************************************************
+            file.write("""//================= Hercules Database =====================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2014-2018  Hercules Dev Team
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Items Database
+//=========================================================================
+
+item_db: (
+/**************************************************************************
+ ************* Entry structure ********************************************
+ **************************************************************************
 {
-    // =================== Mandatory fields ===============================
+    // ================ Mandatory fields ==============================
     Id: ID                        (int)
-    AegisName: "Aegis_Name"       (string, optional if Inherit: true)
-    Name: "Item Name"             (string, optional if Inherit: true)
-    // =================== Optional fields ================================
-    Type: Item Type               (int, defaults to 3 = etc item)
+    AegisName: "Aegis_Name"       (string)
+    Name: "Item Name"             (string)
+    // ================ Optional fields ===============================
+    Type: Item Type               (string, defaults to "IT_ETC")
     Buy: Buy Price                (int, defaults to Sell * 2)
     Sell: Sell Price              (int, defaults to Buy / 2)
     Weight: Item Weight           (int, defaults to 0)
@@ -440,28 +505,83 @@ def item_db_formatter(args, db_name: str = 'item_db'):
     Def: Defense                  (int, defaults to 0)
     Range: Attack Range           (int, defaults to 0)
     Slots: Slots                  (int, defaults to 0)
-    Job: Job mask                 (int, defaults to all jobs = 0xFFFFFFFF)
-    Upper: Upper mask             (int, defaults to any = 0x3f)
-    Gender: Gender                (int, defaults to both = 2)
-    Loc: Equip location           (int, required value for equipment)
+    Job: {                        (defaults to all job)
+        All: true/false               (boolean, defaults to false)
+        Novice: true/false            (boolean, defaults to false)
+        Swordsman: true/false         (boolean, defaults to false)
+        Magician: true/false          (boolean, defaults to false)
+        Archer: true/false            (boolean, defaults to false)
+        Acolyte: true/false           (boolean, defaults to false)
+        Merchant: true/false          (boolean, defaults to false)
+        Thief: true/false             (boolean, defaults to false)
+        Knight: true/false            (boolean, defaults to false)
+        Priest: true/false            (boolean, defaults to false)
+        Wizard: true/false            (boolean, defaults to false)
+        Blacksmith: true/false        (boolean, defaults to false)
+        Hunter: true/false            (boolean, defaults to false)
+        Assassin: true/false          (boolean, defaults to false)
+        Crusader: true/false          (boolean, defaults to false)
+        Monk: true/false              (boolean, defaults to false)
+        Sage: true/false              (boolean, defaults to false)
+        Rogue: true/false             (boolean, defaults to false)
+        Alchemist: true/false         (boolean, defaults to false)
+        Bard: true/false              (boolean, defaults to false)
+        Taekwon: true/false           (boolean, defaults to false)
+        Star_Gladiator: true/false    (boolean, defaults to false)
+        Soul_Linker: true/false       (boolean, defaults to false)
+        Gunslinger: true/false        (boolean, defaults to false)
+        Ninja: true/false             (boolean, defaults to false)
+        Gangsi: true/false            (boolean, defaults to false)
+        Death_Knight: true/false      (boolean, defaults to false)
+        Dark_Collector: true/false    (boolean, defaults to false)
+        Kagerou: true/false           (boolean, defaults to false)
+        Rebellion: true/false         (boolean, defaults to false)
+    }
+    Job: Job mask                 (alternate format, int, defaults to all jobs = 0xFFFFFFFF)
+    Upper: Upper mask             (bitmask array, string or int, defaults to "ITEMUPPER_ALL")
+    Gender: Gender                (string, defaults to "SEX_ANY")
+    Loc: Equip location           (bitmask array, string or int, required value for equipment)
     WeaponLv: Weapon Level        (int, defaults to 0)
     EquipLv: Equip required level (int, defaults to 0)
     EquipLv: [min, max]           (alternative syntax with min / max level)
     Refine: Refineable            (boolean, defaults to true)
-    View: View ID                 (int, defaults to 0)
+    DisableOptions: true/false    (boolean, defaults to false !!for equipments only!!) [Smokexyz]
+    Subtype: Item Subtype         (int, defaults to 0)
+    ViewSprite: Sprite view ID    (int, defaults to 0)
     BindOnEquip: true/false       (boolean, defaults to false)
+    ForceSerial: true/false       (boolean, defaults to false)
+    BuyingStore: true/false       (boolean, defaults to false)
+    Delay: Delay to use item      (int, defaults to 0)
+    KeepAfterUse: true/false      (boolean, defaults to false)
+    DropAnnounce: true/false      (boolean, defaults to false)
+    ShowDropEffect: true/false    (boolean, defaults to false)
+    DropEffectMode: Effect Type   (int, default to 0)
+    Trade: {                      (defaults to no restrictions)
+        override: GroupID             (int, defaults to 100)
+        nodrop: true/false            (boolean, defaults to false)
+        notrade: true/false           (boolean, defaults to false)
+        nostorage: true/false         (boolean, defaults to false)
+        nocart: true/false            (boolean, defaults to false)
+        noselltonpc: true/false       (boolean, defaults to false)
+        nomail: true/false            (boolean, defaults to false)
+        noauction: true/false         (boolean, defaults to false)
+        nogstorage: true/false        (boolean, defaults to false)
+        partneroverride: true/false   (boolean, defaults to false)
+    }
+    Nouse: {                      (defaults to no restrictions)
+        override: GroupID             (int, defaults to 100)
+        sitting: true/false           (boolean, defaults to false)
+    }
+    Stack: [amount, type]         (int, defaults to 0)
+    Sprite: SpriteID              (int, defaults to 0)
     Script: <"
         Script
         (it can be multi-line)
     ">
     OnEquipScript: <" OnEquip Script (can also be multi-line) ">
     OnUnequipScript: <" OnUnequip Script (can also be multi-line) ">
-    // =================== Optional fields (item_db2 only) ================
-    Inherit: true/false           (boolean, if true, inherit the values
-                                  that weren't specified, from item_db.conf,
-                                  else override it and use default values)
 },
-******************************************************************************/\n""")
+**************************************************************************/\n""")
             file.write(formatted_conf)
             file.write(")")
     else:
