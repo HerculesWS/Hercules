@@ -142,7 +142,7 @@ def item_get_loc(loc: int):
     return locs
 
 
-def item_get_subtype_and_view(item_type: int, view: Any) -> tuple:
+def item_get_subtype_and_view(item_type: int, view: Any):
     # Check if item_type is AMMO or WEAPON
     if item_type != 4 and item_type != 10:
         return '', view
