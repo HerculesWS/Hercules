@@ -6839,9 +6839,11 @@ static int battle_check_target(struct block_list *src, struct block_list *target
 				if (map_flag_gvg(m) && map->list[m].flag.gvg_noparty) {
 					if (s_guild != 0 && t_guild != 0 && (s_guild == t_guild || guild->isallied(s_guild, t_guild)))
 						state |= BCT_PARTY;
-					else
+					else if (battle->bc->party_skill_behavior == 0)
 						state |= flag & BCT_ENEMY ? BCT_ENEMY : BCT_PARTY;
-				} else if (!(map->list[m].flag.pvp && map->list[m].flag.pvp_noparty)
+					else
+						state |= BCT_ENEMY;
+				} else if (!(map->list[m].flag.pvp && map->list[m].flag.pvp_noparty && battle->bc->party_skill_behavior == 0)
 					&& (!map->list[m].flag.battleground || sbg_id == tbg_id)) {
 					state |= BCT_PARTY;
 				} else if (!map->list[m].flag.cvc || s_clan == t_clan) {
@@ -7371,6 +7373,7 @@ static const struct battle_data {
 	{ "storage_use_item",                   &battle_config.storage_use_item,                0,      0,      1,              },
 	{ "features/enable_attendance_system",  &battle_config.feature_enable_attendance_system,1,      0,      1,              },
 	{ "features/feature_attendance_endtime",&battle_config.feature_attendance_endtime,      1,      0,      99999999,       },
+	{ "party_skill_behavior",               &battle_config.party_skill_behavior,            0,      0,      1,              },
 };
 
 static bool battle_set_value_sub(int index, int value)

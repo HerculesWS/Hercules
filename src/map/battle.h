@@ -570,6 +570,8 @@ struct Battle_Config {
 
 	int feature_enable_attendance_system;
 	int feature_attendance_endtime;
+
+	int party_skill_behavior; // Skill behavior on gvg_noparty/pvp_noparty maps [Wolfie]
 };
 
 /* criteria for battle_config.idletime_critera */
