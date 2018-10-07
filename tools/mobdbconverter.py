@@ -260,7 +260,7 @@ def readItemDB(inFile, itemDb):
                 elif line[:3] == "Id:":
                     try:
                         itemId = int(line[4:])
-                    except:
+                    except BaseException:
                         started = False
                 if itemId != 0 and itemName != "":
 # was need for remove wrong characters
