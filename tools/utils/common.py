@@ -55,7 +55,6 @@ def LoadDB(DBname, mode, serverpath):
 	if os.path.isfile(serverpath + 'db/{}2.conf'.format(DBname)):
 		filenames.append(serverpath + 'db/{}2.conf'.format(DBname))
 
-	consts = dict()
 	for filename in filenames:
 		with io.open(filename) as f:
 			config = libconf.load(f)
