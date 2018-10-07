@@ -11993,7 +11993,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 
 		case SC_ELECTRICSHOCKER:
 			if( --(sce->val4) > 0 ) {
-				status->charge(bl, 0, st->max_sp / 100 * sce->val1 );
+				status->charge(bl, 0, (int64)st->max_sp / 100 * sce->val1 );
 				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}

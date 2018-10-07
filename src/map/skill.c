@@ -5169,7 +5169,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 					for(i = SC_SUMMON5; i >= SC_SUMMON1; i--){
 						if( sc->data[i] ){
 							int skillid = WL_SUMMON_ATK_FIRE + (sc->data[i]->val1 - WLS_FIRE);
-							skill->addtimerskill(src, tick + status_get_adelay(src) * (SC_SUMMON5 - i), bl->id, 0, 0, skillid, skill_lv, BF_MAGIC, flag);
+							skill->addtimerskill(src, tick + (int64)status_get_adelay(src) * (SC_SUMMON5 - i), bl->id, 0, 0, skillid, skill_lv, BF_MAGIC, flag);
 							status_change_end(src, (sc_type)i, INVALID_TIMER);
 							if(skill_lv == 1)
 								break;
@@ -12756,7 +12756,7 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 		ts->tick = tick+sg->interval;
 
 		if ((skill_id==CR_GRANDCROSS || skill_id==NPC_GRANDDARKNESS) && !battle_config.gx_allhit)
-			ts->tick += sg->interval*(map->count_oncell(bl->m,bl->x,bl->y,BL_CHAR,0)-1);
+			ts->tick += (int64)sg->interval * (map->count_oncell(bl->m, bl->x, bl->y, BL_CHAR, 0) - 1);
 	}
 
 	switch (sg->unit_id) {
@@ -12769,9 +12769,9 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 				break;
 
 			//Take into account these hit more times than the timer interval can handle.
-			do
-				skill->attack(BF_MAGIC,ss,&src->bl,bl,sg->skill_id,sg->skill_lv,tick+count*sg->interval,0);
-			while (src->alive != 0 && --src->val2 != 0 && x == bl->x && y == bl->y
+			do {
+				skill->attack(BF_MAGIC, ss, &src->bl, bl, sg->skill_id, sg->skill_lv, tick + (int64)count * sg->interval, 0);
+			} while (src->alive != 0 && --src->val2 != 0 && x == bl->x && y == bl->y
 			    && ++count < SKILLUNITTIMER_INTERVAL/sg->interval && !status->isdead(bl));
 
 			if (src->val2<=0)
@@ -12847,7 +12847,7 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 							status_zap(bl, 0, 15); // sp damage to players
 						else if( status->charge(ss, 0, 2) ) { // mobs
 							// costs 2 SP per hit
-							if( !skill->attack(BF_WEAPON,ss,&src->bl,bl,sg->skill_id,sg->skill_lv,tick+count*sg->interval,0) )
+							if (!skill->attack(BF_WEAPON, ss, &src->bl, bl, sg->skill_id, sg->skill_lv, tick + (int64)count * sg->interval, 0))
 								status->charge(ss, 0, 8); //costs additional 8 SP if miss
 						} else { // mobs
 							//should end when out of sp.
@@ -15813,7 +15813,7 @@ static int skill_vfcastfix(struct block_list *bl, double time, uint16 skill_id, 
 	if( !(skill->get_castnodex(skill_id, skill_lv)&1) )// reduction from status point
 		time = (1 - sqrt( ((float)(status_get_dex(bl)*2 + status_get_int(bl)) / battle_config.vcast_stat_scale) )) * time;
 	// underflow checking/capping
-	time = max(time, 0) + (1 - (float)min(fixcast_r, 100) / 100) * max(fixed,0);
+	time = max(time, 0) + (double)(1 - (float)min(fixcast_r, 100) / 100) * max(fixed, 0);
 #endif
 	return (int)time;
 }

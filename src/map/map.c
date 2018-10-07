@@ -3835,7 +3835,7 @@ static int map_readgat(struct map_data *m)
 
 	m->xs = *(int32*)(gat+6);
 	m->ys = *(int32*)(gat+10);
-	num_cells = m->xs * m->ys;
+	num_cells = (size_t)m->xs * m->ys;
 	CREATE(m->cell, struct mapcell, num_cells);
 
 	water_height = map->waterheight(m->name);
@@ -3931,7 +3931,7 @@ static int map_readallmaps(void)
 		map->list[i].bxs = (map->list[i].xs + BLOCK_SIZE - 1) / BLOCK_SIZE;
 		map->list[i].bys = (map->list[i].ys + BLOCK_SIZE - 1) / BLOCK_SIZE;
 
-		size = map->list[i].bxs * map->list[i].bys * sizeof(struct block_list*);
+		size = (size_t)map->list[i].bxs * map->list[i].bys * sizeof(struct block_list*);
 		map->list[i].block = (struct block_list**)aCalloc(size, 1);
 		map->list[i].block_mob = (struct block_list**)aCalloc(size, 1);
 
