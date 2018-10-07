@@ -3552,9 +3552,9 @@ ACMD(recallall)
 		if (sd->status.account_id != pl_sd->status.account_id && pc_get_group_level(sd) >= pc_get_group_level(pl_sd)) {
 			if (pl_sd->bl.m == sd->bl.m && pl_sd->bl.x == sd->bl.x && pl_sd->bl.y == sd->bl.y)
 				continue; // Don't waste time warping the character to the same place.
-			if (pl_sd->bl.m >= 0 && map->list[pl_sd->bl.m].flag.nowarp && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE))
+			if (pl_sd->bl.m >= 0 && map->list[pl_sd->bl.m].flag.nowarp && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
 				count++;
-			else {
+			} else if (!pc_cant_act(pl_sd) && DIFF_TICK(sockt->last_tick, (pl_sd)->idletime) <= 300) { // Perform the warp only if all the conditions are met (pc_cant_act + idletime lesser than 5 min)
 				if (pc_isdead(pl_sd)) { //Wake them up
 					pc->setstand(pl_sd);
 					pc->setrestartvalue(pl_sd,1);
