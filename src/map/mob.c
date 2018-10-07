@@ -66,7 +66,7 @@
 #include <string.h>
 
 static struct mob_interface mob_s;
-struct mob_interface *mob;
+struct mob_interface *mob; // lgtm [cpp/short-global-name]
 
 #define ACTIVE_AI_RANGE 2 //Distance added on top of 'AREA_SIZE' at which mobs enter active AI mode.
 
@@ -3526,7 +3526,7 @@ static int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 
 		return 0;
 
 	ARR_FIND( MOB_CLONE_START, MOB_CLONE_END, class_, mob->db_data[class_] == NULL );
-	if(class_ < 0 || class_ >= MOB_CLONE_END)
+	if (class_ < MOB_CLONE_START || class_ >= MOB_CLONE_END)
 		return 0;
 
 	db = mob->db_data[class_]=(struct mob_db*)aCalloc(1, sizeof(struct mob_db));

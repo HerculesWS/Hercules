@@ -62,7 +62,7 @@
 #include <time.h>
 
 static struct npc_interface npc_s;
-struct npc_interface *npc;
+struct npc_interface *npc; // lgtm [cpp/short-global-name]
 
 
 //For holding the view data of npc classes. [Skotlex]

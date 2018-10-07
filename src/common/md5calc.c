@@ -35,7 +35,7 @@
  */
 
 static struct md5_interface md5_s;
-struct md5_interface *md5;
+struct md5_interface *md5; // lgtm [cpp/short-global-name]
 
 /// Global variable
 static unsigned int *pX;

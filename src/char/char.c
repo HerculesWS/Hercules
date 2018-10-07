@@ -116,7 +116,7 @@ char char_reg_num_db[32] = "char_reg_num_db";
 char char_achievement_db[256] = "char_achievements";
 
 static struct char_interface char_s;
-struct char_interface *chr;
+struct char_interface *chr; // lgtm [cpp/short-global-name]
 
 char db_path[1024] = "db";
 

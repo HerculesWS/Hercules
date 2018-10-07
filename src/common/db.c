@@ -101,7 +101,7 @@
 #include <stdlib.h>
 
 static struct db_interface DB_s;
-struct db_interface *DB;
+struct db_interface *DB; // lgtm [cpp/short-global-name]
 
 /*****************************************************************************
  *  (1) Private enums, structures, defines and global variables of the       *

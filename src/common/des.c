@@ -30,7 +30,7 @@
  */
 
 static struct des_interface des_s;
-struct des_interface *des;
+struct des_interface *des; // lgtm [cpp/short-global-name]
 
 /// Bitmask for accessing individual bits of a byte.
 static const uint8_t mask[8] = {

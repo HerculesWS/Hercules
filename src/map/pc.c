@@ -78,7 +78,7 @@
 #include <time.h>
 
 static struct pc_interface pc_s;
-struct pc_interface *pc;
+struct pc_interface *pc; // lgtm [cpp/short-global-name]
 
 static struct class_exp_tables exptables;
 
