@@ -206,7 +206,7 @@ def LoadOldDB(mode, serverpath):
 					continue
 				try:
 					Db[MonsterId][skillidx]['val{}'.format(i)] = int(entry[12 + i])
-				except:
+				except ValueError:
 					Db[MonsterId][skillidx]['val{}'.format(i)] = int(entry[12 + i], 16)
 			Db[MonsterId][skillidx]['Emotion'] = entry[17]
 			Db[MonsterId][skillidx]['ChatMsgID'] = entry[18]
