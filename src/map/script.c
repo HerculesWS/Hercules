@@ -12268,7 +12268,9 @@ static BUILDIN(sc_end)
 		}
 
 		//This should help status_change_end force disabling the SC in case it has no limit.
-		sce->val1 = sce->val2 = sce->val3 = sce->val4 = 0;
+		if (type != SC_BERSERK)
+			sce->val1 = 0; // SC_BERSERK requires skill_lv that's stored in sce->val1 when being removed [KirieZ]
+		sce->val2 = sce->val3 = sce->val4 = 0;
 		status_change_end(bl, (sc_type)type, INVALID_TIMER);
 	}
 	else
