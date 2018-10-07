@@ -136,6 +136,10 @@ struct {
 	struct HPMHookPoint *HP_achievement_check_title_post;
 	struct HPMHookPoint *HP_achievement_get_rewards_pre;
 	struct HPMHookPoint *HP_achievement_get_rewards_post;
+	struct HPMHookPoint *HP_achievement_get_rewards_buffs_pre;
+	struct HPMHookPoint *HP_achievement_get_rewards_buffs_post;
+	struct HPMHookPoint *HP_achievement_get_rewards_items_pre;
+	struct HPMHookPoint *HP_achievement_get_rewards_items_post;
 	struct HPMHookPoint *HP_atcommand_init_pre;
 	struct HPMHookPoint *HP_atcommand_init_post;
 	struct HPMHookPoint *HP_atcommand_final_pre;
@@ -6719,6 +6723,10 @@ struct {
 	int HP_achievement_check_title_post;
 	int HP_achievement_get_rewards_pre;
 	int HP_achievement_get_rewards_post;
+	int HP_achievement_get_rewards_buffs_pre;
+	int HP_achievement_get_rewards_buffs_post;
+	int HP_achievement_get_rewards_items_pre;
+	int HP_achievement_get_rewards_items_post;
 	int HP_atcommand_init_pre;
 	int HP_atcommand_init_post;
 	int HP_atcommand_final_pre;

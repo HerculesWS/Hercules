@@ -1498,3 +1498,9 @@ Reloads the 'conf/clans.conf' file.
 Obs: it will reload 'db/clans.conf' too since it's included inside 'conf/clans.conf'
 
 ---------------------------------------
+
+@camerainfo {<range>, <rotation>, <latitude>}
+
+Allow show/hide or change client camera parameters
+
+---------------------------------------

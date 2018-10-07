@@ -4689,7 +4689,7 @@ static int pc_search_inventory(struct map_session_data *sd, int item_id)
  * 6 = ?
  * 7 = stack limitation
  *------------------------------------------*/
-static int pc_additem(struct map_session_data *sd, struct item *item_data, int amount, e_log_pick_type log_type)
+static int pc_additem(struct map_session_data *sd, const struct item *item_data, int amount, e_log_pick_type log_type)
 {
 	struct item_data *data;
 	int i;

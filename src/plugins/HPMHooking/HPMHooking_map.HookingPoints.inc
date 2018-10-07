@@ -83,6 +83,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(achievement->init_titles, HP_achievement_init_titles) },
 	{ HP_POP(achievement->check_title, HP_achievement_check_title) },
 	{ HP_POP(achievement->get_rewards, HP_achievement_get_rewards) },
+	{ HP_POP(achievement->get_rewards_buffs, HP_achievement_get_rewards_buffs) },
+	{ HP_POP(achievement->get_rewards_items, HP_achievement_get_rewards_items) },
 /* atcommand_interface */
 	{ HP_POP(atcommand->init, HP_atcommand_init) },
 	{ HP_POP(atcommand->final, HP_atcommand_final) },
