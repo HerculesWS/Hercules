@@ -1108,6 +1108,10 @@ struct {
 	struct HPMHookPoint *HP_clif_specialeffect_single_post;
 	struct HPMHookPoint *HP_clif_specialeffect_value_pre;
 	struct HPMHookPoint *HP_clif_specialeffect_value_post;
+	struct HPMHookPoint *HP_clif_removeSpecialEffect_pre;
+	struct HPMHookPoint *HP_clif_removeSpecialEffect_post;
+	struct HPMHookPoint *HP_clif_removeSpecialEffect_single_pre;
+	struct HPMHookPoint *HP_clif_removeSpecialEffect_single_post;
 	struct HPMHookPoint *HP_clif_millenniumshield_pre;
 	struct HPMHookPoint *HP_clif_millenniumshield_post;
 	struct HPMHookPoint *HP_clif_spiritcharm_pre;
@@ -2212,6 +2216,10 @@ struct {
 	struct HPMHookPoint *HP_clif_party_dead_notification_post;
 	struct HPMHookPoint *HP_clif_pMemorialDungeonCommand_pre;
 	struct HPMHookPoint *HP_clif_pMemorialDungeonCommand_post;
+	struct HPMHookPoint *HP_clif_camera_showWindow_pre;
+	struct HPMHookPoint *HP_clif_camera_showWindow_post;
+	struct HPMHookPoint *HP_clif_camera_change_pre;
+	struct HPMHookPoint *HP_clif_camera_change_post;
 	struct HPMHookPoint *HP_cmdline_init_pre;
 	struct HPMHookPoint *HP_cmdline_init_post;
 	struct HPMHookPoint *HP_cmdline_final_pre;
@@ -7695,6 +7703,10 @@ struct {
 	int HP_clif_specialeffect_single_post;
 	int HP_clif_specialeffect_value_pre;
 	int HP_clif_specialeffect_value_post;
+	int HP_clif_removeSpecialEffect_pre;
+	int HP_clif_removeSpecialEffect_post;
+	int HP_clif_removeSpecialEffect_single_pre;
+	int HP_clif_removeSpecialEffect_single_post;
 	int HP_clif_millenniumshield_pre;
 	int HP_clif_millenniumshield_post;
 	int HP_clif_spiritcharm_pre;
@@ -8799,6 +8811,10 @@ struct {
 	int HP_clif_party_dead_notification_post;
 	int HP_clif_pMemorialDungeonCommand_pre;
 	int HP_clif_pMemorialDungeonCommand_post;
+	int HP_clif_camera_showWindow_pre;
+	int HP_clif_camera_showWindow_post;
+	int HP_clif_camera_change_pre;
+	int HP_clif_camera_change_post;
 	int HP_cmdline_init_pre;
 	int HP_cmdline_init_post;
 	int HP_cmdline_final_pre;

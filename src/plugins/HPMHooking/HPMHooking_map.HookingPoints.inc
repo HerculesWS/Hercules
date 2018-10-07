@@ -578,6 +578,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->specialeffect, HP_clif_specialeffect) },
 	{ HP_POP(clif->specialeffect_single, HP_clif_specialeffect_single) },
 	{ HP_POP(clif->specialeffect_value, HP_clif_specialeffect_value) },
+	{ HP_POP(clif->removeSpecialEffect, HP_clif_removeSpecialEffect) },
+	{ HP_POP(clif->removeSpecialEffect_single, HP_clif_removeSpecialEffect_single) },
 	{ HP_POP(clif->millenniumshield, HP_clif_millenniumshield) },
 	{ HP_POP(clif->spiritcharm, HP_clif_spiritcharm) },
 	{ HP_POP(clif->charm_single, HP_clif_charm_single) },
@@ -1130,6 +1132,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->petEvolutionResult, HP_clif_petEvolutionResult) },
 	{ HP_POP(clif->party_dead_notification, HP_clif_party_dead_notification) },
 	{ HP_POP(clif->pMemorialDungeonCommand, HP_clif_pMemorialDungeonCommand) },
+	{ HP_POP(clif->camera_showWindow, HP_clif_camera_showWindow) },
+	{ HP_POP(clif->camera_change, HP_clif_camera_change) },
 /* cmdline_interface */
 	{ HP_POP(cmdline->init, HP_cmdline_init) },
 	{ HP_POP(cmdline->final, HP_cmdline_final) },

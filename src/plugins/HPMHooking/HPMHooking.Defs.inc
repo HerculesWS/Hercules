@@ -1516,6 +1516,10 @@ typedef void (*HPMHOOK_pre_clif_specialeffect_single) (struct block_list **bl, i
 typedef void (*HPMHOOK_post_clif_specialeffect_single) (struct block_list *bl, int type, int fd);
 typedef void (*HPMHOOK_pre_clif_specialeffect_value) (struct block_list **bl, int *effect_id, int *num, send_target *target);
 typedef void (*HPMHOOK_post_clif_specialeffect_value) (struct block_list *bl, int effect_id, int num, send_target target);
+typedef void (*HPMHOOK_pre_clif_removeSpecialEffect) (struct block_list **bl, int *effectId, enum send_target *target);
+typedef void (*HPMHOOK_post_clif_removeSpecialEffect) (struct block_list *bl, int effectId, enum send_target target);
+typedef void (*HPMHOOK_pre_clif_removeSpecialEffect_single) (struct block_list **bl, int *effectId, struct block_list **targetBl);
+typedef void (*HPMHOOK_post_clif_removeSpecialEffect_single) (struct block_list *bl, int effectId, struct block_list *targetBl);
 typedef void (*HPMHOOK_pre_clif_millenniumshield) (struct block_list **bl, short *shields);
 typedef void (*HPMHOOK_post_clif_millenniumshield) (struct block_list *bl, short shields);
 typedef void (*HPMHOOK_pre_clif_spiritcharm) (struct map_session_data **sd);
@@ -2620,6 +2624,10 @@ typedef void (*HPMHOOK_pre_clif_party_dead_notification) (struct map_session_dat
 typedef void (*HPMHOOK_post_clif_party_dead_notification) (struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pMemorialDungeonCommand) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pMemorialDungeonCommand) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_camera_showWindow) (struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_camera_showWindow) (struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_camera_change) (struct map_session_data **sd, float *range, float *rotation, float *latitude, enum send_target *target);
+typedef void (*HPMHOOK_post_clif_camera_change) (struct map_session_data *sd, float range, float rotation, float latitude, enum send_target target);
 #endif // MAP_CLIF_H
 #ifdef COMMON_CORE_H /* cmdline */
 typedef void (*HPMHOOK_pre_cmdline_init) (void);
