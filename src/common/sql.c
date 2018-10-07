@@ -43,7 +43,7 @@ static int mysql_reconnect_type = 2;
 static int mysql_reconnect_count = 1;
 
 static struct sql_interface sql_s;
-struct sql_interface *SQL;
+struct sql_interface *SQL; // lgtm[cpp/short-global-name]
 
 /// Sql handle
 struct Sql {

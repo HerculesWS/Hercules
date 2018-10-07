@@ -41,7 +41,7 @@
  */
 
 static struct rnd_interface rnd_s;
-struct rnd_interface *rnd;
+struct rnd_interface *rnd; // lgtm[cpp/short-global-name]
 
 /// @copydoc rnd_interface::init()
 static void rnd_init(void)

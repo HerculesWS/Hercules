@@ -51,7 +51,7 @@
 static struct malloc_interface iMalloc_HPM;
 static struct malloc_interface *HPMiMalloc;
 static struct HPM_interface HPM_s;
-struct HPM_interface *HPM;
+struct HPM_interface *HPM; // lgtm[cpp/short-global-name]
 static struct HPMHooking_core_interface HPMHooking_core_s;
 
 /**

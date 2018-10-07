@@ -91,7 +91,7 @@
 static struct map_interface map_s;
 static struct mapit_interface mapit_s;
 
-struct map_interface *map;
+struct map_interface *map; // lgtm[cpp/short-global-name]
 struct mapit_interface *mapit;
 
 /*==========================================
