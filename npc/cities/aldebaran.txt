@@ -1079,8 +1079,8 @@ aldeba_in,79,161,6	script	Kafra#04	4_F_KAFRA3,{
 			                     800, Sweet_Potato,  85,
 			                     900, Sweet_Potato, 100,
 			                    1000,         null,   0;
-			.@ordinal$ = "1st");
-			.@changepage$ = "Next items");
+			.@ordinal$ = "1st";
+			.@changepage$ = "Next items";
 		} else { // .@page == 2
 			setarray .@choices, 1100, Sweet_Potato,   7,
 			                    1300, Sweet_Potato,  15,
@@ -1092,16 +1092,16 @@ aldeba_in,79,161,6	script	Kafra#04	4_F_KAFRA3,{
 			                    2500, Sweet_Potato,  85,
 			                    2800, Sweet_Potato, 100,
 			                    3000,         null,   0;
-			.@ordinal$ = "2nd");
-			.@changepage$ = "Previous List");
+			.@ordinal$ = "2nd";
+			.@changepage$ = "Previous List";
 		}
-		.@list$ = "");
+		.@list$ = "";
 		.@numitemchoices = 0;
 		for (.@i = 0; .@i < getarraysize(.@choices) - 3; .@i += 3) { // Skip the last entry as it's handled separately
 			.@list$ +=sprintf(_$("%d- %s  %d ea"), .@choices[.@i], getitemname(.@choices[.@i+1]), .@choices[.@i+2]);
 			++.@numitemchoices;
 		}
-		.@list$ +=sprintf(_$("%d- %s Lottery Chance!:%s:Cancel), .@choices[.@i], .@ordinal$, .@changepage$);
+		.@list$ +=sprintf(_$("%d- %s Lottery Chance!:%s:Cancel"), .@choices[.@i], .@ordinal$, .@changepage$);
 		next;
 		.@chosen = select(.@list$) - 1;
 		if (.@chosen <= .@numitemchoices) {
@@ -1122,7 +1122,7 @@ aldeba_in,79,161,6	script	Kafra#04	4_F_KAFRA3,{
 			mesf("^0000FF %s Lottery Opportunity!!^000000",.@ordinal$);
 			@Lotto = .@page;
 			next;
-			callfunc "F_Lottery");
+			callfunc "F_Lottery";
 			break;
 		} else if (.@chosen == .@numitemchoices + 1) { // next/previous items
 			.@page = (.@page == 1 ? 2 : 1);
@@ -1179,7 +1179,7 @@ aldeba_in,88,161,3	script	Kafra#05	4_F_KAFRA3,{
 				close;
 			}
 			RESRVPTS -= .@points;
-			callfunc "F_Lottery");
+			callfunc "F_Lottery";
 		}
 	}
 	mes("[Kafra]");
@@ -1267,7 +1267,7 @@ function	script	F_Lottery	{
 sF_Spin:
 	while (true) {
 		mes("[Lottery Machine]");
-		mes("Number of spins remaining: %d",@input);
+		mesf("Number of spins remaining: %d" , @input);
 		next;
 		mes("[Lottery Machine]");
 		mes("(rumble~rumble~rumble~)...");
@@ -1294,7 +1294,7 @@ function	script	F_ClockTowerGate	{
 	mes("Welcome to");
 	mes("Kinase - Blue Gallino");
 	mes("The one of Local Speciality in Aldebaran.");
-	mes("You can't go through from %s Floor,",getarg(0));
+	mesf("You can't go through from %s Floor," , getarg(0));
 	mes("Please go back.");
 	next;
 	switch(select("About Clock Tower", "About the "+getarg(0)+" Floor", "Move to the "+getarg(0)+" Floor", "End Dialogue")) {
