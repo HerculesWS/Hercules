@@ -22,7 +22,7 @@
 
 import re
 import sys
-import utils.common as Tools
+import utils.common as tools
 
 SKILL_STATES = {
     "any": "MSS_ANY",
@@ -93,93 +93,93 @@ SKILL_TARGET = {
 }
 
 
-def printHeader():
+def print_header():
     print("""
-mob_skill_db:(
-{
-/**************************************************************************
- ************* Entry structure ********************************************
- **************************************************************************
-	<Monster_Constant>: {
-		<Skill_Constant>: {
-			ClearSkills:   (boolean, defaults to false) allows cleaning all previous defined skills for the mob.
-			SkillLevel:    (int, defaults to 1)
-			SkillState:    (int, defaults to 0)
-			SkillTarget:   (int, defaults to 0)
-			Rate:          (int, defaults to 1)
-			CastTime:      (int, defaults to 0)
-			Delay:         (int, defaults to 0)
-			Cancelable:    (boolean, defaults to false)
-			CastCondition: (int, defaults to 0)
-			ConditionData: (int, defaults to 0)
-			val0:          (int, defaults to 0)
-			val1:          (int, defaults to 0)
-			val2:          (int, defaults to 0)
-			val3:          (int, defaults to 0)
-			val4:          (int, defaults to 0)
-			Emotion:       (int, defaults to 0)
-			ChatMsgID:     (int, defaults to 0)
-		}
-	}
+    mob_skill_db:(
+    {
+    /**************************************************************************
+     ************* Entry structure ********************************************
+     **************************************************************************
+        <Monster_Constant>: {
+            <Skill_Constant>: {
+                ClearSkills:   (boolean, defaults to false) allows cleaning all previous defined skills for the mob.
+                SkillLevel:    (int, defaults to 1)
+                SkillState:    (int, defaults to 0)
+                SkillTarget:   (int, defaults to 0)
+                Rate:          (int, defaults to 1)
+                CastTime:      (int, defaults to 0)
+                Delay:         (int, defaults to 0)
+                Cancelable:    (boolean, defaults to false)
+                CastCondition: (int, defaults to 0)
+                ConditionData: (int, defaults to 0)
+                val0:          (int, defaults to 0)
+                val1:          (int, defaults to 0)
+                val2:          (int, defaults to 0)
+                val3:          (int, defaults to 0)
+                val4:          (int, defaults to 0)
+                Emotion:       (int, defaults to 0)
+                ChatMsgID:     (int, defaults to 0)
+            }
+        }
 **************************************************************************/""")
 
 
-def printFooter():
+def print_footer():
     print('}\n)\n')
 
 
-def isValidEntry(line):
+def is_valid_entry(line):
     if re.match('^[0-9]+,.*', line):
         return True
     return False
 
 
-def commaSplit(line):
+def comma_split(line):
     return line.split(',')
 
 
-def stripLinebreak(line):
+def strip_linebreak(line):
     return line.replace('\r', '').replace('\n', '')
 
 
-def printInt(key, value):
+def print_int(key, value):
     if key in value:
         if int(value[key]) is not 0:
             print('\t\t\t{}: {}'.format(key, value[key]))
 
 
-def printStrToInt(key, value):
+def print_str_to_int(key, value):
     if value[key] is not '':
         if int(value[key]) is not 0:
             print('\t\t\t{}: {}'.format(key, value[key]))
 
 
-def printBool(key, value):
+def print_bool(key, value):
     if value[key] == 'yes':
         print('\t\t\t{}: true'.format(key))
 
 
-def printClearSkills(key, value):
+def print_clear_skills(key, value):
     if value[key] == 'clear':
         print('\t\t\t{}: true'.format(key))
 
 
-def printSkillState(key, value):
+def print_skill_state(key, value):
     if value[key]:
         print('\t\t\t{}: "{}"'.format(key, SKILL_STATES[value[key]]))
 
 
-def printSkillTarget(key, value):
+def print_skill_target(key, value):
     if value[key]:
         print('\t\t\t{}: "{}"'.format(key, SKILL_TARGET[value[key]]))
 
 
-def printCastCondition(key, value):
+def print_cast_condition(key, value):
     if value[key]:
         print('\t\t\t{}: "{}"'.format(key, SKILL_COND1[value[key]]))
 
 
-def printConditionData(key, value):
+def print_condition_data(key, value):
     if value[key] in SKILL_COND2:
         print('\t\t\t{}: "{}"'.format(key, SKILL_COND2[value[key]]))
     elif value[key] is not '':
@@ -187,82 +187,83 @@ def printConditionData(key, value):
             print('\t\t\t{}: {}'.format(key, value[key]))
 
 
-def printEmotion(key, value):
+def print_emotion(key, value):
     if value[key] is not '':
         print('\t\t\t{}: {}'.format(key, value[key]))
 
 
-def LoadOldDB(mode, serverpath):
+def load_old_db(mode, serverpath):
     r = open('{}db/{}/mob_skill_db.txt'.format(serverpath, mode), "r")
 
-    Db = dict()
+    db = dict()
     for line in r:
-        if isValidEntry(line) == True:
-            entry = commaSplit(stripLinebreak(line))
-            MonsterId = entry[0]
-            if MonsterId not in Db:
-                Db[MonsterId] = dict()
-            skillidx = len(Db[MonsterId])
-            Db[MonsterId][skillidx] = dict()
-            Db[MonsterId][skillidx]['ClearSkills'] = entry[1]
-            Db[MonsterId][skillidx]['SkillState'] = entry[2]
-            Db[MonsterId][skillidx]['SkillId'] = entry[3]
-            Db[MonsterId][skillidx]['SkillLevel'] = entry[4]
-            Db[MonsterId][skillidx]['Rate'] = entry[5]
-            Db[MonsterId][skillidx]['CastTime'] = entry[6]
-            Db[MonsterId][skillidx]['Delay'] = entry[7]
-            Db[MonsterId][skillidx]['Cancelable'] = entry[8]
-            Db[MonsterId][skillidx]['SkillTarget'] = entry[9]
-            Db[MonsterId][skillidx]['CastCondition'] = entry[10]
-            Db[MonsterId][skillidx]['ConditionData'] = entry[11]
+        if is_valid_entry(line):
+            entry = comma_split(strip_linebreak(line))
+            monster_id = entry[0]
+            if monster_id not in db:
+                db[monster_id] = dict()
+            skillidx = len(db[monster_id])
+            db[monster_id][skillidx] = dict()
+            db[monster_id][skillidx]['ClearSkills'] = entry[1]
+            db[monster_id][skillidx]['SkillState'] = entry[2]
+            db[monster_id][skillidx]['SkillId'] = entry[3]
+            db[monster_id][skillidx]['SkillLevel'] = entry[4]
+            db[monster_id][skillidx]['Rate'] = entry[5]
+            db[monster_id][skillidx]['CastTime'] = entry[6]
+            db[monster_id][skillidx]['Delay'] = entry[7]
+            db[monster_id][skillidx]['Cancelable'] = entry[8]
+            db[monster_id][skillidx]['SkillTarget'] = entry[9]
+            db[monster_id][skillidx]['CastCondition'] = entry[10]
+            db[monster_id][skillidx]['ConditionData'] = entry[11]
             for i in range(5):
                 if entry[12 + i] is '':
                     continue
                 try:
-                    Db[MonsterId][skillidx]['val{}'.format(i)] = int(entry[12 + i])
-                except:
-                    Db[MonsterId][skillidx]['val{}'.format(i)] = int(entry[12 + i], 16)
-            Db[MonsterId][skillidx]['Emotion'] = entry[17]
-            Db[MonsterId][skillidx]['ChatMsgID'] = entry[18]
-    return Db
+                    db[monster_id][skillidx]['val{}'.format(i)] = int(entry[12 + i])
+                except Exception as e:
+                    print(e)
+                    db[monster_id][skillidx]['val{}'.format(i)] = int(entry[12 + i], 16)
+            db[monster_id][skillidx]['Emotion'] = entry[17]
+            db[monster_id][skillidx]['ChatMsgID'] = entry[18]
+    return db
 
 
-def ConvertDB(mode, serverpath):
-    db = LoadOldDB(mode, serverpath)
-    MobDB = Tools.LoadDBConsts('mob_db', mode, serverpath)
-    SkillDB = Tools.LoadDBConsts('skill_db', mode, serverpath)
+def convert_db(mode, serverpath):
+    db = load_old_db(mode, serverpath)
+    mob_db = tools.load_db_consts('mob_db', mode, serverpath)
+    skill_db = tools.load_db_consts('skill_db', mode, serverpath)
 
-    printHeader()
-    for mobid in sorted(db.iterkeys()):
-        print('\t{}: {{'.format(MobDB[int(mobid)]))
-        for skillidx in sorted(db[mobid].iterkeys()):
+    print_header()
+    for mobid in sorted(db.keys()):
+        print('\t{}: {{'.format(mob_db[int(mobid)]))
+        for skillidx in sorted(db[mobid].keys()):
             valid = True
-            if int(db[mobid][skillidx]['SkillId']) not in SkillDB:
+            if int(db[mobid][skillidx]['SkillId']) not in skill_db:
                 valid = False
                 print('/*')
                 print('// Can\'t find skill with id {} in skill_db'.format(db[mobid][skillidx]['SkillId']))
                 print('\t\t{}: {{'.format(db[mobid][skillidx]['SkillId']))
             else:
-                print('\t\t{}: {{'.format(SkillDB[int(db[mobid][skillidx]['SkillId'])]))
-            printClearSkills('ClearSkills', db[mobid][skillidx])
-            printSkillState('SkillState', db[mobid][skillidx])
-            printStrToInt('SkillLevel', db[mobid][skillidx])
-            printStrToInt('Rate', db[mobid][skillidx])
-            printStrToInt('CastTime', db[mobid][skillidx])
-            printStrToInt('Delay', db[mobid][skillidx])
-            printBool('Cancelable', db[mobid][skillidx])
-            printSkillTarget('SkillTarget', db[mobid][skillidx])
-            printCastCondition('CastCondition', db[mobid][skillidx])
-            printConditionData('ConditionData', db[mobid][skillidx])
+                print('\t\t{}: {{'.format(skill_db[int(db[mobid][skillidx]['SkillId'])]))
+            print_clear_skills('ClearSkills', db[mobid][skillidx])
+            print_skill_state('SkillState', db[mobid][skillidx])
+            print_str_to_int('SkillLevel', db[mobid][skillidx])
+            print_str_to_int('Rate', db[mobid][skillidx])
+            print_str_to_int('CastTime', db[mobid][skillidx])
+            print_str_to_int('Delay', db[mobid][skillidx])
+            print_bool('Cancelable', db[mobid][skillidx])
+            print_skill_target('SkillTarget', db[mobid][skillidx])
+            print_cast_condition('CastCondition', db[mobid][skillidx])
+            print_condition_data('ConditionData', db[mobid][skillidx])
             for i in range(5):
-                printInt('val{}'.format(i), db[mobid][skillidx])
-            printEmotion('Emotion', db[mobid][skillidx])
-            printStrToInt('ChatMsgID', db[mobid][skillidx])
+                print_int('val{}'.format(i), db[mobid][skillidx])
+            print_emotion('Emotion', db[mobid][skillidx])
+            print_str_to_int('ChatMsgID', db[mobid][skillidx])
             print('\t\t}')
             if valid is False:
                 print('*/')
         print('\t}')
-    printFooter()
+    print_footer()
 
 
 if len(sys.argv) != 3:
@@ -277,4 +278,4 @@ if sys.argv[1] != 're' and sys.argv[1] != 'pre-re':
     print('you have entred an invalid server mode')
     exit(1)
 
-ConvertDB(sys.argv[1], sys.argv[2])
+convert_db(sys.argv[1], sys.argv[2])

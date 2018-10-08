@@ -25,57 +25,67 @@ import os
 import re
 import sys
 
-def isValidEntry(line):
+
+def is_valid_entry(line):
     if re.match('^[0-9]+,.*', line):
         return True
     return False
 
-def curlSplit(line):
+
+def curl_split(line):
     return re.split('[{}]|},', line)
 
-def commaSplit(line):
+
+def comma_split(line):
     return line.split(',')
 
-def printIntField(name, value):
+
+def print_int_field(name, value):
     if int(value) != 0:
         print('\t{0}: {1}'.format(name, value))
 
-def printIntField2(name, value):
+
+def print_int_field2(name, value):
     if int(value) != 0:
         print('\t\t{0}: {1}'.format(name, value))
 
-def printStrField(name, value):
+
+def print_str_field(name, value):
     if value != '':
         print('\t{0}: \"{1}\"'.format(name, value))
 
-def printBool(name, value):
+
+def print_bool(name, value):
     if int(value) != 0:
         print('\t{0}: true'.format(name))
 
-def printIntimacy(arr):
+
+def print_intimacy(arr):
     if int(arr[9]) == 0 or int(arr[10]) == 0 or int(arr[11]) == 0 or int(arr[12]) == 0:
         return
     print('\tIntimacy: {')
-    printIntField2('Initial', arr[11])
-    printIntField2('FeedIncrement', arr[9])
-    printIntField2('OverFeedDecrement', arr[10])
-    printIntField2('OwnerDeathDecrement', arr[12])
+    print_int_field2('Initial', arr[11])
+    print_int_field2('FeedIncrement', arr[9])
+    print_int_field2('OverFeedDecrement', arr[10])
+    print_int_field2('OwnerDeathDecrement', arr[12])
     print('\t}')
 
-def printScript(name, value):
+
+def print_script(name, value):
     if re.match('.*[a-zA-Z0-9,]+.*', value):
         print('\t{0}: <\"{1}\">'.format(name, value))
 
-def printItemName(fieldname, itemid, itemDb):
+
+def print_item_name(fieldname, itemid, item_db):
     value = int(itemid)
     if value != 0:
-        if value not in itemDb:
+        if value not in item_db:
             print("// Error: pet item with id {0} not found in item_db.conf".format(value))
         else:
-           printStrField(fieldname, itemDb[value])
+            print_str_field(fieldname, item_db[value])
 
 
-def printHeader():
+def print_header():
     print("""
 pet_db:(
 /**************************************************************************
@@ -112,47 +122,50 @@ pet_db:(
 **************************************************************************/
     """)
 
-def printFooter():
+
+def print_footer():
     print(')\n')
 
-def convertFile(inFile, itemDb):
-    if inFile != "" and not os.path.exists(inFile):
+
+def convert_file(in_file, item_db):
+    if in_file != "" and not os.path.exists(in_file):
         return
 
-    if inFile == "":
+    if in_file == "":
         r = sys.stdin
     else:
-        r = open(inFile, "r")
+        r = open(in_file, "r")
 
-    printHeader()
+    print_header()
     for line in r:
-        if isValidEntry(line) == True:
+        if is_valid_entry(line):
             print('{')
-            firstsplit = curlSplit(line)
-            secondsplit = commaSplit(firstsplit[0])
-            printIntField('Id', secondsplit[0])
-            printStrField('SpriteName', secondsplit[1])
-            printStrField('Name', secondsplit[2])
-            printItemName('TamingItem', secondsplit[3], itemDb)
-            printItemName('EggItem', secondsplit[4], itemDb)
-            printItemName('AccessoryItem', secondsplit[5], itemDb)
-            printItemName('FoodItem', secondsplit[6], itemDb)
-            printIntField('FoodEffectiveness', secondsplit[7])
-            printIntField('HungerDelay', secondsplit[8])
-            printIntimacy(secondsplit)
-            printIntField('CaptureRate', secondsplit[13])
-            printIntField('Speed', secondsplit[14])
-            printBool('SpecialPerformance', secondsplit[15])
-            printBool('TalkWithEmotes', secondsplit[16])
-            printIntField('AttackRate', secondsplit[17])
-            printIntField('DefendRate', secondsplit[18])
-            printIntField('ChangeTargetRate', secondsplit[19])
-            printScript('PetScript', firstsplit[1])
-            printScript('EquipScript', firstsplit[3])
+            firstsplit = curl_split(line)
+            secondsplit = comma_split(firstsplit[0])
+            print_int_field('Id', secondsplit[0])
+            print_str_field('SpriteName', secondsplit[1])
+            print_str_field('Name', secondsplit[2])
+            print_item_name('TamingItem', secondsplit[3], item_db)
+            print_item_name('EggItem', secondsplit[4], item_db)
+            print_item_name('AccessoryItem', secondsplit[5], item_db)
+            print_item_name('FoodItem', secondsplit[6], item_db)
+            print_int_field('FoodEffectiveness', secondsplit[7])
+            print_int_field('HungerDelay', secondsplit[8])
+            print_intimacy(secondsplit)
+            print_int_field('CaptureRate', secondsplit[13])
+            print_int_field('Speed', secondsplit[14])
+            print_bool('SpecialPerformance', secondsplit[15])
+            print_bool('TalkWithEmotes', secondsplit[16])
+            print_int_field('AttackRate', secondsplit[17])
+            print_int_field('DefendRate', secondsplit[18])
+            print_int_field('ChangeTargetRate', secondsplit[19])
+            print_script('PetScript', firstsplit[1])
+            print_script('EquipScript', firstsplit[3])
             print('},')
-    printFooter()
+    print_footer()
 
-def printHelp():
+
+def print_help():
     print("PetDB converter from txt to conf format")
     print("Usage:")
     print("    petdbconverter.py re serverpath dbfilepath")
@@ -160,55 +173,57 @@ def printHelp():
     print("Usage for read from stdin:")
     print("    petdbconverter.py re dbfilepath")
 
-def readItemDB(inFile, itemDb):
-    itemId = 0
-    itemName = ""
+
+def read_item_db(in_file, item_db):
+    item_id = 0
+    item_name = ""
     started = False
-    with open(inFile, "r") as r:
+    with open(in_file, "r") as r:
         for line in r:
             line = line.strip()
-            if started == True:
+            if started:
                 if line == "},":
                     started = False
                 elif line[:10] == "AegisName:":
-                    itemName = line[12:-1]
+                    item_name = line[12:-1]
                 elif line[:3] == "Id:":
                     try:
-                        itemId = int(line[4:])
-                    except:
+                        item_id = int(line[4:])
+                    except ValueError:
                         started = False
-                if itemId != 0 and itemName != "":
-# was need for remove wrong characters
-#                    itemName = itemName.replace(".", "")
-#                    if itemName[0] >= "0" and itemName[0] <= "9":
-#                        itemName = "Num" + itemName
-                    itemDb[itemId] = itemName
+                if item_id != 0 and item_name != "":
+                    # was need for remove wrong characters
+                    #                    item_name = item_name.replace(".", "")
+                    #                    if item_name[0] >= "0" and item_name[0] <= "9":
+                    #                        item_name = "Num" + item_name
+                    item_db[item_id] = item_name
                     started = False
             else:
                 if line == "{":
                     started = True
-                    itemId = 0
-                    itemName = ""
-    return itemDb
+                    item_id = 0
+                    item_name = ""
+    return item_db
+
 
 if len(sys.argv) != 4 and len(sys.argv) != 3:
-    printHelp();
+    print_help()
     exit(1)
 startPath = sys.argv[2]
 if len(sys.argv) == 4:
     sourceFile = sys.argv[3]
 else:
-    sourceFile = "";
+    sourceFile = ""
 
 itemDb = dict()
 if sys.argv[1] == "re":
-    itemDb = readItemDB(startPath + "/db/re/item_db.conf", itemDb)
-    itemDb = readItemDB(startPath + "/db/item_db2.conf", itemDb)
+    itemDb = read_item_db(startPath + "/db/re/item_db.conf", itemDb)
+    itemDb = read_item_db(startPath + "/db/item_db2.conf", itemDb)
 elif sys.argv[1] == "pre-re":
-    itemDb = readItemDB(startPath + "/db/pre-re/item_db.conf", itemDb)
-    itemDb = readItemDB(startPath + "/db/item_db2.conf", itemDb)
+    itemDb = read_item_db(startPath + "/db/pre-re/item_db.conf", itemDb)
+    itemDb = read_item_db(startPath + "/db/item_db2.conf", itemDb)
 else:
-    printHelp();
+    print_help()
     exit(1)
 
-convertFile(sourceFile, itemDb)
+convert_file(sourceFile, itemDb)
