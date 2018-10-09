@@ -1,11 +1,19 @@
-# Hercules Documentation
-By: [Myriad](http://herc.ws/board/topic/15868-guide-mapcache-generation-2018/)
-Current Version: 20180923
-Description: An updated manual for Hercules' map cache generator 
+<!--
+Copyright
+This file is part of Hercules. http://herc.ws - http://github.com/HerculesWS/Hercules
 
-##Mapcache Generation 2018
+Copyright (C) 2012-2018 Hercules Dev Team Copyright (C) Athena Dev Teams
+
+Hercules is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.
+If not, see http://www.gnu.org/licenses/.
+-->
+# Mapcache Generation 2018
 As of [Release v2018.03.13](https://github.com/HerculesWS/Hercules/commit/d89690fbdbaa5dc78f98d96ee91403e329c12af1), the method to generate mapcache for Hercules has changed. 
-### Old  (your source predates [is older than] [Feb 18, 2018](https://github.com/HerculesWS/Hercules/commit/60870581e1e2dd740751c1104299536975015b9e))
+## Old  (your source predates [is older than] [Feb 18, 2018](https://github.com/HerculesWS/Hercules/commit/60870581e1e2dd740751c1104299536975015b9e))
 
 In the old system, there were two ways to generate mapcache
 
@@ -14,7 +22,7 @@ In the old system, there were two ways to generate mapcache
 
 These two methods would generate or alter your required mapcache located in `db/[pre-re or re]/map_cache.dat`. However, they are no longer supported.
 
-### New (your source is using Release v2018.03.13 or newer)
+## New (your source is using Release v2018.03.13 or newer)
 
 The new system involves the use of the new 'mapcache' plugin to generate files. Some quick points:
 
@@ -23,20 +31,20 @@ The new system involves the use of the new 'mapcache' plugin to generate files. 
 - `mapcache`executable has been removed.
 - Replaced with the `mapcache` plugin (`src/plugins/mapcache.c`).
 
-### How to generate the mapcache?
+## How to generate the mapcache?
 
-1. Same as before, check `conf/map/maps.conf` and `db/map_index.txt` have all the maps you want to cache.
-2. Your maps need to exist somewhere in your repository! There are two ways for the plugin to find them:
-    a. Place all your maps, including `resnametable.txt`, inside the **data folder** of your Hercules repo. I.e. `Hercules/data/prontera.gat/gnd/gnd/rsw` (note: I forget if all three files are needed).
-    b. OR Configure your `conf/grf-files.txt` to tell it where to find your GRF(s) which contains your maps.
-3. Build the `mapcache` plugin. On linux, this can be done by running the following command: 
+- Same as before, check `conf/map/maps.conf` and `db/map_index.txt` have all the maps you want to cache.
+- Your maps need to exist somewhere in your repository! There are two ways for the plugin to find them:
+    - Place all your maps, including `resnametable.txt`, inside the **data folder** of your Hercules repo. I.e. `Hercules/data/prontera.gat/gnd/gnd/rsw` (note: I forget if all three files are needed).
+    - OR Configure your `conf/grf-files.txt` to tell it where to find your GRF(s) which contains your maps.
+- Build the `mapcache` plugin. On linux, this can be done by running the following command: 
     - `make plugin.mapcache`
     - If using `MSVC`, compile as you would any other plugin.
-4. Execute plugin. This can be done using the following command:
+- Execute plugin. This can be done using the following command:
     - `./map-server --load-plugin mapcache [param]`
     - In windows, just remove the `./` and run the commands in your command prompt.
 
-### The params:
+## The params:
 
 The first thing you should do is run 
 `./map-server --load-plugin mapcache --help`
@@ -49,11 +57,11 @@ A list of usable parameters will appear. Here are the ones you need to know for 
 [Info]:   --fix-md5                      Updates the checksum for the files in maps/pre-re/, using db/map_index.txt as index (see PR #1981). [Mapcache]
 ```
 
-- Rebuild all the `.mcache files` using your old `db/[pre-re or re]map_cache.dat` file.
+- Rebuild all the `.mcache files` using your old `db/[pre-re or re]map_cache.dat` file:
 `./map-server --load-plugin mapcache --convert-old-mapcache`
 
-- Rebuild all the `.mcache` files using your map files specified in step 2 of generation.
+- Rebuild all the `.mcache` files using your map files specified in step 2 of generation:
 `./map-server --load-plugin mapcache --rebuild-mapcache`
 
-- Rebuild the `.mcache file` for the map name you specify. E.g. if you replace <name> with prontera, the maps/[pre-re or re]/prontera.mcache file will be rebuilt.
+- Rebuild the `.mcache file` for the map name you specify. E.g. if you replace <name> with prontera, the maps/[pre-re or re]/prontera.mcache file will be rebuilt:
 `./map-server --load-plugin mapcache --map <name>`
