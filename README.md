@@ -136,7 +136,7 @@ the end of this file).
 Troubleshooting
 ---------------
 
-If you're having problems with starting your server, the first thing you should
+If you are having problems with starting your server, the first thing you should
 do is check what's happening on your consoles. More often that not, all support
 issues can be solved simply by looking at the error messages given.
 
