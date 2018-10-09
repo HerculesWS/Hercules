@@ -3531,13 +3531,22 @@ ACMD(idsearch)
 }
 
 /*==========================================
- * Recall All Characters Online To Your Location
+ * Usage: @recallall [integer value]
+ * Recall all characters online to your location except for users who are:
+ * - Idle for more than [input integer value] (if not provided, defaults to 300 seconds)
+ * - Vending
+ * - Interacting with an NPC
+ * - In a chatroom
+ * e.g. @recallall 30 will recall users who are not idle for the past 30 seconds
  *------------------------------------------*/
 ACMD(recallall)
 {
 	struct map_session_data* pl_sd;
 	struct s_mapiterator* iter;
 	int unauthorised_count, idle_count;
+	int idle_seconds_criteria = 300;
+
+	sscanf(message, "%12d[^\n]", &idle_seconds_criteria); // If the input is not an integer it'll still default to 300
 
 	memset(atcmd_output, '\0', sizeof(atcmd_output));
 
@@ -3557,7 +3566,7 @@ ACMD(recallall)
 
 			if (pl_sd->bl.m >= 0 && map->list[pl_sd->bl.m].flag.nowarp && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
 				unauthorised_count++;
-			} else if (pc_cant_act(pl_sd) || DIFF_TICK(sockt->last_tick, (pl_sd)->idletime) >= 300) {
+			} else if (pc_cant_act(pl_sd) || DIFF_TICK(sockt->last_tick, (pl_sd)->idletime) >= idle_seconds_criteria) {
 				idle_count++;
 			} else {
 				if (pc_isdead(pl_sd)) { //Wake them up
