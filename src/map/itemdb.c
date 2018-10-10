@@ -2422,6 +2422,100 @@ static uint64 itemdb_unique_id(struct map_session_data *sd)
 	return ((uint64)sd->status.char_id << 32) | sd->status.uniqueitem_counter++;
 }
 
+static bool itemdb_read_libconfig_lapineddukddak(void)
+{
+	struct config_t item_lapineddukddak;
+	struct config_setting_t *it = NULL;
+#ifdef RENEWAL
+	const char *config_filename = "db/re/item_lapineddukddak.conf"; // FIXME hardcoded name
+#else
+	const char *config_filename = "db/pre-re/item_lapineddukddak.conf"; // FIXME hardcoded name
+#endif
+	int i = 0;
+	int count = 0;
+
+	if (libconfig->load_file(&item_lapineddukddak, config_filename) == CONFIG_FALSE)
+		return false;
+
+	while ((it = libconfig->setting_get_elem(item_lapineddukddak.root, i++)) != NULL) {
+		if (itemdb->read_libconfig_lapineddukddak_sub(it, config_filename))
+			++count;
+	}
+
+	libconfig->destroy(&item_lapineddukddak);
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, config_filename);
+	return true;
+}
+
+static bool itemdb_read_libconfig_lapineddukddak_sub(struct config_setting_t *it, const char *source)
+{
+	nullpo_retr(false, it);
+	nullpo_retr(false, source);
+
+	struct item_data *data = NULL;
+	const char *name = config_setting_name(it);
+	const char *str = NULL;
+	int i32 = 0;
+
+	if ((data = itemdb->name2id(name)) == NULL) {
+		ShowWarning("itemdb_read_libconfig_lapineddukddak_sub: unknown item '%s', skipping..\n", name);
+		return false;
+	}
+
+	data->lapineddukddak = aCalloc(1, sizeof(struct item_lapineddukddak));
+	if (libconfig->setting_lookup_int(it, "NeedCount", &i32) == CONFIG_TRUE)
+		data->lapineddukddak->NeedCount = (int16)i32;
+
+	if (libconfig->setting_lookup_int(it, "NeedRefineMin", &i32) == CONFIG_TRUE)
+		data->lapineddukddak->NeedRefineMin = (int8)i32;
+
+	if (libconfig->setting_lookup_int(it, "NeedRefineMax", &i32) == CONFIG_TRUE)
+		data->lapineddukddak->NeedRefineMax = (int8)i32;
+
+	struct config_setting_t *sources = libconfig->setting_get_member(it, "SourceItems");
+	itemdb->read_libconfig_lapineddukddak_sub_sources(sources, data);
+
+	if (libconfig->setting_lookup_string(it, "Script", &str) == CONFIG_TRUE)
+		data->lapineddukddak->script = *str ? script->parse(str, source, -data->nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
+	return true;
+}
+
+static bool itemdb_read_libconfig_lapineddukddak_sub_sources(struct config_setting_t *sources, struct item_data *data)
+{
+	nullpo_retr(false, data);
+	nullpo_retr(false, data->lapineddukddak);
+
+	int i = 0;
+	struct config_setting_t *entry = NULL;
+
+	if (sources == NULL || !config_setting_is_group(sources))
+		return false;
+
+	VECTOR_INIT(data->lapineddukddak->SourceItems);
+	while ((entry = libconfig->setting_get_elem(sources, i++)) != NULL) {
+		struct item_data *edata = NULL;
+		struct itemlist_entry item = { 0 };
+		const char *name = config_setting_name(entry);
+		int i32 = 0;
+
+		if ((edata = itemdb->name2id(name)) == NULL) {
+			ShowWarning("itemdb_read_libconfig_lapineddukddak_sub: unknown item '%s', skipping..\n", name);
+			continue;
+		}
+		item.id = edata->nameid;
+
+		if ((i32 = libconfig->setting_get_int(entry)) == CONFIG_TRUE && (i32 <= 0 || i32 > MAX_AMOUNT)) {
+			ShowWarning("itemdb_read_libconfig_lapineddukddak_sub: invalid amount (%d) for source item '%s', skipping..\n", i32, name);
+			continue;
+		}
+		item.amount = i32;
+
+		VECTOR_ENSURE(data->lapineddukddak->SourceItems, 1, 1);
+		VECTOR_PUSH(data->lapineddukddak->SourceItems, item);
+	}
+	return true;
+}
+
 /**
  * Reads all item-related databases.
  */
@@ -2460,6 +2554,7 @@ static void itemdb_read(bool minimal)
 	itemdb->read_groups();
 	itemdb->read_chains();
 	itemdb->read_packages();
+	itemdb->read_libconfig_lapineddukddak();
 }
 
 /**
@@ -2516,6 +2611,12 @@ static void destroy_item_data(struct item_data *self, int free_self)
 		script->free_code(self->unequip_script);
 	if( self->combos )
 		aFree(self->combos);
+	if (self->lapineddukddak != NULL) {
+		if (self->lapineddukddak->script != NULL)
+			script->free_code(self->lapineddukddak->script);
+		VECTOR_CLEAR(self->lapineddukddak->SourceItems);
+		aFree(self->lapineddukddak);
+	}
 	HPM->data_store_destroy(&self->hdata);
 #if defined(DEBUG)
 	// trash item
@@ -2820,4 +2921,7 @@ void itemdb_defaults(void)
 	itemdb->lookup_const = itemdb_lookup_const;
 	itemdb->lookup_const_mask = itemdb_lookup_const_mask;
 	itemdb->addname_sub = itemdb_addname_sub;
+	itemdb->read_libconfig_lapineddukddak = itemdb_read_libconfig_lapineddukddak;
+	itemdb->read_libconfig_lapineddukddak_sub = itemdb_read_libconfig_lapineddukddak_sub;
+	itemdb->read_libconfig_lapineddukddak_sub_sources = itemdb_read_libconfig_lapineddukddak_sub_sources;
 }
