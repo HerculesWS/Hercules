@@ -1921,5 +1921,9 @@ packet(0x96e,clif->ackmergeitems);
 	packet(0x0b16,clif->pInventoryExpansionConfirmed);
 	packet(0x0b19,clif->pInventoryExpansionRejected);
 #endif
+#if PACKETVER >= 20160302
+	packet(0x0a4f,clif->plapineDdukDdak_ack);
+	packet(0x0a70,clif->plapineDdukDdak_close);
+#endif
 
 #endif /* MAP_PACKETS_H */

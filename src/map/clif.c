@@ -22215,6 +22215,104 @@ static bool clif_enchant_equipment(struct map_session_data *sd, enum equip_pos p
 #endif
 }
 
+static bool clif_lapineDdukDdak_open(struct map_session_data *sd, int itemId)
+{
+#if PACKETVER_MAIN_NUM >= 20160601 || PACKETVER_RE_NUM >= 20160525 || defined(PACKETVER_ZERO)
+	nullpo_retr(false, sd);
+	nullpo_retr(false, itemdb->exists(itemId));
+	struct PACKET_ZC_LAPINEDDUKDDAK_OPEN p;
+
+	p.packetType = HEADER_ZC_LAPINEDDUKDDAK_OPEN;
+	p.itemId = itemId;
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
+	return true;
+#else
+	return false;
+#endif // PACKETVER_MAIN_NUM >= 20160601 || PACKETVER_RE_NUM >= 20160525 || defined(PACKETVER_ZERO)
+}
+
+// 5 - insufficient amount of items
+// 7 - invalid source item
+static bool clif_lapineDdukDdak_result(struct map_session_data *sd, int result)
+{
+#if PACKETVER_MAIN_NUM >= 20160601 || PACKETVER_RE_NUM >= 20160525 || defined(PACKETVER_ZERO)
+	nullpo_retr(false, sd);
+	struct PACKET_ZC_LAPINEDDUKDDAK_RESULT p;
+
+	p.packetType = HEADER_ZC_LAPINEDDUKDDAK_RESULT;
+	p.result = result;
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
+	return true;
+#else
+	return false;
+#endif // PACKETVER_MAIN_NUM >= 20160601 || PACKETVER_RE_NUM >= 20160525 || defined(PACKETVER_ZERO)
+}
+
+static void clif_parse_lapineDdukDdak_ack(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_lapineDdukDdak_ack(int fd, struct map_session_data *sd)
+{
+#if PACKETVER >= 20160302
+	const struct PACKET_CZ_LAPINEDDUKDDAK_ACK *p = RP2PTR(fd);
+	struct item_data *it = itemdb->exists(p->itemId);
+
+	if (it == NULL || it->lapineddukddak == NULL)
+		return;
+	if (pc_isdead(sd))
+		return;
+	if ((!sd->npc_id && pc_istrading(sd)) || sd->chat_id != 0)
+		return;
+	if (pc->search_inventory(sd, it->nameid) == INDEX_NOT_FOUND)
+		return;
+
+	if (((p->packetLength - sizeof(struct PACKET_CZ_LAPINEDDUKDDAK_ACK)) / sizeof(struct PACKET_CZ_LAPINEDDUKDDAK_ACK_sub)) != it->lapineddukddak->NeedCount)
+		return;
+
+	for (int i = 0; i < it->lapineddukddak->NeedCount; ++i) {
+		struct item itr = sd->status.inventory[p->items[i].index - 2];
+		int j = 0;
+		for (j = 0; j < VECTOR_LENGTH(it->lapineddukddak->SourceItems); ++j) {
+			if (itr.nameid == VECTOR_INDEX(it->lapineddukddak->SourceItems, j).id) {
+				// Validate that the amount sent in the packet is matching the database
+				if (p->items[i].count != VECTOR_INDEX(it->lapineddukddak->SourceItems, j).amount) {
+					clif->lapineDdukDdak_result(sd, 5);
+					return;
+				}
+
+				// Validate that the player have enough of the item
+				if (itr.amount < VECTOR_INDEX(it->lapineddukddak->SourceItems, j).amount) {
+					clif->lapineDdukDdak_result(sd, 5);
+					return;
+				}
+
+				// Validate refine rate requirement
+				if (itemtype(itemdb_type(itr.nameid)) == IT_ARMOR && itr.refine < it->lapineddukddak->NeedRefineMin)
+					return;
+
+				// All requirements are met, move to the next one
+				break;
+			}
+		}
+		// The item is not in sources list
+		if (j == VECTOR_LENGTH(it->lapineddukddak->SourceItems)) {
+			clif->lapineDdukDdak_result(sd, 7);
+			return;
+		}
+	}
+
+	for (int i = 0; i < it->lapineddukddak->NeedCount; ++i)
+		pc->delitem(sd, p->items[i].index - 2, p->items[i].count, 0, DELITEM_NORMAL, LOG_TYPE_SCRIPT);
+	if (it->lapineddukddak->script != NULL)
+		script->run_item_lapineddukddak_script(sd, it, npc->fake_nd->bl.id);
+	clif->lapineDdukDdak_result(sd, 0);
+	return;
+#endif // PACKETVER >= 20160302
+}
+
+static void clif_parse_lapineDdukDdak_close(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_lapineDdukDdak_close(int fd, struct map_session_data *sd)
+{
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -23400,4 +23498,8 @@ void clif_defaults(void)
 
 	clif->pMemorialDungeonCommand = clif_parse_memorial_dungeon_command;
 	clif->pReqRemainTime = clif_parse_reqRemainTime;
+	clif->lapineDdukDdak_open = clif_lapineDdukDdak_open;
+	clif->lapineDdukDdak_result = clif_lapineDdukDdak_result;
+	clif->plapineDdukDdak_ack = clif_parse_lapineDdukDdak_ack;
+	clif->plapineDdukDdak_close = clif_parse_lapineDdukDdak_close;
 }

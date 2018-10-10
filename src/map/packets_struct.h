@@ -3057,6 +3057,45 @@ struct PACKET_CZ_PARTY_CONFIG {
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(CZ_PARTY_CONFIG, 0x02c8);
 
+#if PACKETVER_MAIN_NUM >= 20160601 || PACKETVER_RE_NUM >= 20160525 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_LAPINEDDUKDDAK_OPEN {
+	int16 packetType;
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	int32 itemId;
+#else
+	int16 itemId;
+#endif
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_LAPINEDDUKDDAK_OPEN, 0x0a4e);
+#endif // PACKETVER_MAIN_NUM >= 20160601 || PACKETVER_RE_NUM >= 20160525 || defined(PACKETVER_ZERO)
+
+#if PACKETVER >= 20160302
+struct PACKET_CZ_LAPINEDDUKDDAK_ACK_sub {
+	int16 index;
+	int16 count;
+} __attribute__((packed));
+
+struct PACKET_CZ_LAPINEDDUKDDAK_ACK {
+	int16 packetType;
+	int16 packetLength;
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	int32 itemId;
+#else
+	int16 itemId;
+#endif
+	struct PACKET_CZ_LAPINEDDUKDDAK_ACK_sub items[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_LAPINEDDUKDDAK_ACK, 0x0a4f);
+#endif // PACKETVER >= 20160302
+
+#if PACKETVER_MAIN_NUM >= 20160601 || PACKETVER_RE_NUM >= 20160525 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_LAPINEDDUKDDAK_RESULT {
+	int16 packetType;
+	int16 result;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_LAPINEDDUKDDAK_RESULT, 0x0a50);
+#endif // PACKETVER_MAIN_NUM >= 20160601 || PACKETVER_RE_NUM >= 20160525 || defined(PACKETVER_ZERO)
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
