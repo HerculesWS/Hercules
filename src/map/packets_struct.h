@@ -383,7 +383,9 @@ enum packet_headers {
 #else
 	questAddType = 0x2b3,
 #endif // PACKETVER < 20150513
-#if PACKETVER >= 20150513
+#if PACKETVER_ZERO_NUM >= 20181010 || PACKETVER >= 20181017
+	questUpdateType = 0xafe,
+#elif PACKETVER >= 20150513
 	questUpdateType = 0x9fa,
 #else
 	questUpdateType = 0x2b5,
@@ -1853,7 +1855,10 @@ struct packet_quest_add_header {
  */
 struct packet_quest_update_hunt {
 	uint32 questID;
-#if PACKETVER >= 20150513
+#if PACKETVER_ZERO_NUM >= 20181010 || PACKETVER >= 20181017
+	uint32 huntIdent;
+	uint32 huntIdent2;
+#elif PACKETVER >= 20150513
 	uint32 huntIdent;
 #else
 	uint32 mob_id;

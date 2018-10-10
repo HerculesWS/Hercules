@@ -17022,7 +17022,10 @@ static void clif_quest_update_objective(struct map_session_data *sd, struct ques
 		real_len += sizeof(packet->objectives[i]);
 
 		packet->objectives[i].questID = qd->quest_id;
-#if PACKETVER >= 20150513
+#if PACKETVER_ZERO_NUM >= 20181010 || PACKETVER >= 20181017
+		packet->objectives[i].huntIdent = qd->quest_id;
+		packet->objectives[i].huntIdent2 = i;
+#elif PACKETVER >= 20150513
 		packet->objectives[i].huntIdent = (qd->quest_id * 1000) + i;
 #else
 		packet->objectives[i].mob_id = qi->objectives[i].mob;
