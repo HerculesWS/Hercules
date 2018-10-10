@@ -697,6 +697,12 @@ enum expand_inventory_result {
 	EXPAND_INVENTORY_RESULT_MAX_SIZE = 4
 };
 
+enum lapineddukddak_result {
+	LAPINEDDKUKDDAK_SUCCESS = 0,
+	LAPINEDDKUKDDAK_INSUFFICIENT_AMOUNT = 5,
+	LAPINEDDKUKDDAK_INVALID_ITEM = 7,
+};
+
 /**
  * Clif.c Interface
  **/
@@ -1618,6 +1624,10 @@ struct clif_interface {
 	void (*pRefineryUIClose) (int fd, struct map_session_data *sd);
 	void (*pRefineryUIRefine) (int fd, struct map_session_data *sd);
 	void (*announce_refine_status) (struct map_session_data *sd, int item_id, int refine_level, bool success, enum send_target target);
+	bool (*lapineDdukDdak_open) (struct map_session_data *sd, int item_id);
+	bool (*lapineDdukDdak_result) (struct map_session_data *sd, enum lapineddukddak_result result);
+	void (*plapineDdukDdak_ack) (int fd, struct map_session_data *sd);
+	void (*plapineDdukDdak_close) (int fd, struct map_session_data *sd);
 };
 
 #ifdef HERCULES_CORE
