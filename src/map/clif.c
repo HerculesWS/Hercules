@@ -8872,7 +8872,7 @@ static void clif_specialeffect_value(struct block_list *bl, int effect_id, int n
 ///     @see doc/effect_list.txt
 static void clif_removeSpecialEffect(struct block_list *bl, int effectId, enum send_target target)
 {
-#if PACKETVER_MAIN_NUM >= 20181002 || PACKETVER_RE_NUM >= 20181002
+#if PACKETVER_MAIN_NUM >= 20181002 || PACKETVER_RE_NUM >= 20181002 || PACKETVER_ZERO_NUM >= 20181010
 	nullpo_retv(bl);
 
 	struct PACKET_ZC_REMOVE_EFFECT p;
@@ -8891,7 +8891,7 @@ static void clif_removeSpecialEffect(struct block_list *bl, int effectId, enum s
 
 static void clif_removeSpecialEffect_single(struct block_list *bl, int effectId, struct block_list *targetBl)
 {
-#if PACKETVER_MAIN_NUM >= 20181002 || PACKETVER_RE_NUM >= 20181002
+#if PACKETVER_MAIN_NUM >= 20181002 || PACKETVER_RE_NUM >= 20181002 || PACKETVER_ZERO_NUM >= 20181010
 	nullpo_retv(bl);
 	nullpo_retv(targetBl);
 
