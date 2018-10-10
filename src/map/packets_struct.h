@@ -324,7 +324,9 @@ enum packet_headers {
 	achievementUpdateType = 0xa24,
 	achievementRewardAckType = 0xa26,
 #endif // PACKETVER >= 20141016
-#if PACKETVER >= 20150513  // [4144] 0x09f8 handling in client from 2014-10-29aRagexe and 2014-03-26cRagexeRE
+#if PACKETVER_ZERO_NUM >= 20181010 || PACKETVER >= 20181017
+	questListType = 0xaff, ///< ZC_ALL_QUEST_LIST4
+#elif PACKETVER >= 20150513  // [4144] 0x09f8 handling in client from 2014-10-29aRagexe and 2014-03-26cRagexeRE
 	questListType = 0x9f8, ///< ZC_ALL_QUEST_LIST3
 #elif PACKETVER >= 20141022
 	questListType = 0x97a, ///< ZC_ALL_QUEST_LIST2
@@ -1451,7 +1453,11 @@ struct packet_hotkey {
  * MISSION_HUNT_INFO_EX (PACKETVER >= 20150513)
  */
 struct packet_mission_info_sub {
-#if PACKETVER >= 20150513
+#if PACKETVER_ZERO_NUM >= 20181010 || PACKETVER >= 20181017
+	uint32 huntIdent;
+	uint32 huntIdent2;
+	uint32 mobType;
+#elif PACKETVER >= 20150513
 	uint32 huntIdent;
 	uint32 mobType;
 #endif

@@ -16872,7 +16872,11 @@ static void clif_quest_send_list(struct map_session_data *sd)
 			real_len += sizeof(info->objectives[j]);
 
 			mob_data = mob->db(qi->objectives[j].mob);
-#if PACKETVER >= 20150513
+#if PACKETVER_ZERO_NUM >= 20181010 || PACKETVER >= 20181017
+			info->objectives[j].huntIdent = sd->quest_log[i].quest_id;
+			info->objectives[j].huntIdent2 = j;
+			info->objectives[j].mobType = 0; // Info Needed
+#elif PACKETVER >= 20150513
 			info->objectives[j].huntIdent = (sd->quest_log[i].quest_id * 1000) + j;
 			info->objectives[j].mobType = 0; // Info Needed
 #endif
