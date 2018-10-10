@@ -4355,4 +4355,28 @@ packet(0x96e,-1,clif->ackmergeitems);
 // changed packet sizes
 #endif
 
+// 2018-10-10_2aRagexe_zero
+#if PACKETVER_ZERO_NUM >= 20181010
+// new packets
+	packet(0x0b10,10,clif->pDull/*,XXX*/);
+	packet(0x0b11,4,clif->pDull/*,XXX*/);
+// changed packet sizes
+#endif
+
+// 2018-10-17bRagexe
+#if PACKETVER_MAIN_NUM >= 20181017
+// new packets
+	packet(0x0b12,2,clif->pDull/*,XXX*/);
+	packet(0x0b13,40);
+// changed packet sizes
+#endif
+
+// 2018-10-17bRagexeRE
+#if PACKETVER_RE_NUM >= 20181017
+// new packets
+	packet(0x0b12,2,clif->pDull/*,XXX*/);
+	packet(0x0b13,48);
+// changed packet sizes
+#endif
+
 #endif /* MAP_PACKETS_H */
