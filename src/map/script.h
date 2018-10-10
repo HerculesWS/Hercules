@@ -177,6 +177,8 @@ struct item_data;
 
 #define BUILDIN(x) bool buildin_ ## x (struct script_state* st)
 
+#define get_buildin_name(st) ( script->get_str((int)(script_getdata((st), 0)->u.num)) )
+
 #define script_fetch(st, n, t) do { \
 	if( script_hasdata((st),(n)) ) \
 		(t)=script_getnum((st),(n)); \

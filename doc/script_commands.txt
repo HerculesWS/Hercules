@@ -1600,21 +1600,24 @@ perfectly equivalent.
 ---------------------------------------
 
 *select("<option>"{, "<option>", ...})
-*prompt("<option>"{, "<option>", ...})
 
 This function is a handy replacement for 'menu' that doesn't use a complex
-label structure. It will return the number of menu option picked,
-starting with 1. Like 'menu', it will also set the variable @menu to
-contain the option the user picked.
+label structure. It will return the number of the menu option picked,
+starting with 1. If the player presses cancel, the script is terminated.
 
-    if (select("Yes:No") == 1)
+    if (select("Yes", "No") == 1)
         mes("You said yes, I know.");
 
 And like 'menu', the selected option is consistent with grouped options
 and empty options.
 
-'prompt' works almost the same as select, except that when a character
-clicks the Cancel button, this function will return 255 instead.
+---------------------------------------
+
+*prompt("<option>"{, "<option>", ...})
+
+This function behaves exactly like select(), but when a player presses cancel
+it returns 255 and the script is not terminated. You almost always want to use
+select() rather than prompt().
 
 ---------------------------------------
 

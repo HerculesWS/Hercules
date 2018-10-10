@@ -6216,9 +6216,16 @@ static BUILDIN(select)
 			ShowWarning("buildin_select: Too many options specified (current=%d, max=254).\n", sd->npc_menu);
 			script->reportsrc(st);
 		}
-	} else if( sd->npc_menu == 0xff ) {// Cancel was pressed
+	} else if(sd->npc_menu == 0xff) { // Cancel was pressed
 		sd->state.menu_or_input = 0;
-		st->state = END;
+
+		if (strncmp(get_buildin_name(st), "prompt", 6) == 0) {
+			pc->setreg(sd, script->add_variable("@menu"), 0xff);
+			script_pushint(st, 0xff);
+			st->state = RUN;
+		} else {
+			st->state = END;
+		}
 	} else {// return selected option
 		int menu = 0;
 
@@ -6229,90 +6236,7 @@ static BUILDIN(select)
 			if( sd->npc_menu <= 0 )
 				break;// entry found
 		}
-		pc->setreg(sd, script->add_variable("@menu"), menu);
-		script_pushint(st, menu);
-		st->state = RUN;
-	}
-	return true;
-}
-
-/// Displays a menu with options and returns the selected option.
-/// Behaves like 'menu' without the target labels, except when cancel is
-/// pressed.
-/// When cancel is pressed, the script continues and 255 is returned.
-///
-/// prompt(<option_text>{,<option_text>,...}) -> <selected_option>
-///
-/// @see menu
-static BUILDIN(prompt)
-{
-	int i;
-	const char *text;
-	struct map_session_data *sd = script->rid2sd(st);
-	if (sd == NULL)
-		return true;
-
-#ifdef SECURE_NPCTIMEOUT
-	sd->npc_idle_type = NPCT_MENU;
-#endif
-
-	if( sd->state.menu_or_input == 0 )
-	{
-		struct StringBuf buf;
-
-		StrBuf->Init(&buf);
-		sd->npc_menu = 0;
-		for( i = 2; i <= script_lastdata(st); ++i )
-		{
-			text = script_getstr(st, i);
-			if( sd->npc_menu > 0 )
-				StrBuf->AppendStr(&buf, ":");
-			StrBuf->AppendStr(&buf, text);
-			sd->npc_menu += script->menu_countoptions(text, 0, NULL);
-		}
-
-		st->state = RERUNLINE;
-		sd->state.menu_or_input = 1;
-
-		/* menus beyond this length crash the client (see bugreport:6402) */
-		if( StrBuf->Length(&buf) >= 2047 ) {
-			struct npc_data * nd = map->id2nd(st->oid);
-			char* menu;
-			CREATE(menu, char, 2048);
-			safestrncpy(menu, StrBuf->Value(&buf), 2047);
-			ShowWarning("NPC Menu too long! (source:%s / length:%d)\n",nd?nd->name:"Unknown",StrBuf->Length(&buf));
-			clif->scriptmenu(sd, st->oid, menu);
-			aFree(menu);
-		} else
-			clif->scriptmenu(sd, st->oid, StrBuf->Value(&buf));
-		StrBuf->Destroy(&buf);
-
-		if( sd->npc_menu >= 0xff )
-		{
-			ShowWarning("buildin_prompt: Too many options specified (current=%d, max=254).\n", sd->npc_menu);
-			script->reportsrc(st);
-		}
-	}
-	else if( sd->npc_menu == 0xff )
-	{// Cancel was pressed
-		sd->state.menu_or_input = 0;
-		pc->setreg(sd, script->add_variable("@menu"), 0xff);
-		script_pushint(st, 0xff);
-		st->state = RUN;
-	}
-	else
-	{// return selected option
-		int menu = 0;
-
-		sd->state.menu_or_input = 0;
-		for( i = 2; i <= script_lastdata(st); ++i )
-		{
-			text = script_getstr(st, i);
-			sd->npc_menu -= script->menu_countoptions(text, sd->npc_menu, &menu);
-			if( sd->npc_menu <= 0 )
-				break;// entry found
-		}
-		pc->setreg(sd, script->add_variable("@menu"), menu);
+		pc->setreg(sd, script->add_variable("@menu"), menu); // TODO: throw a deprecation warning for scripts using @menu
 		script_pushint(st, menu);
 		st->state = RUN;
 	}
@@ -24978,7 +24902,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(close2,""),
 		BUILDIN_DEF(menu,"sl*"),
 		BUILDIN_DEF(select,"s*"), //for future jA script compatibility
-		BUILDIN_DEF(prompt,"s*"),
+		BUILDIN_DEF2(select, "prompt", "s*"),
 		//
 		BUILDIN_DEF(goto,"l"),
 		BUILDIN_DEF(callsub,"l*"),
