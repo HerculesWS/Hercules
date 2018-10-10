@@ -16965,7 +16965,11 @@ static void clif_quest_add(struct map_session_data *sd, struct quest *qd)
 
 		monster = mob->db(qi->objectives[i].mob);
 
-#if PACKETVER >= 20150513
+#if PACKETVER_ZERO_NUM >= 20181010 || PACKETVER >= 20181017
+		packet->objectives[i].huntIdent = qd->quest_id;
+		packet->objectives[i].huntIdent2 = i;
+		packet->objectives[i].mobType = 0; // Info Needed
+#elif PACKETVER >= 20150513
 		packet->objectives[i].huntIdent = (qd->quest_id * 1000) + i;
 		packet->objectives[i].mobType = 0; // Info Needed
 #endif

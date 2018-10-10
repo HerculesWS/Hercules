@@ -380,7 +380,9 @@ enum packet_headers {
 	clanLeave = 0x0989, ///< ZC_ACK_CLAN_LEAVE
 	clanMessage = 0x098E, ///< ZC_NOTIFY_CLAN_CHAT
 #endif
-#if PACKETVER >= 20150513 // [4144] 0x09f9 handled in client from 2014-10-29aRagexe and 2014-03-26cRagexeRE
+#if PACKETVER_ZERO_NUM >= 20181010 || PACKETVER >= 20181017
+	questAddType = 0xb0c,
+#elif PACKETVER >= 20150513 // [4144] 0x09f9 handled in client from 2014-10-29aRagexe and 2014-03-26cRagexeRE
 	questAddType = 0x9f9,
 #else
 	questAddType = 0x2b3,
@@ -1827,7 +1829,11 @@ struct PACKET_ZC_NOTIFY_CLAN_CHAT {
  * PACKET_ZC_MISSION_HUNT_EX (PACKETVER >= 20150513)
  */
 struct packet_quest_hunt_sub {
-#if PACKETVER >= 20150513
+#if PACKETVER_ZERO_NUM >= 20181010 || PACKETVER >= 20181017
+	uint32 huntIdent;
+	uint32 huntIdent2;
+	uint32 mobType;
+#elif PACKETVER >= 20150513
 	uint32 huntIdent;
 	uint32 mobType;
 #endif
