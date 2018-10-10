@@ -23332,6 +23332,109 @@ static void clif_parse_GuildCastleInfoRequest(int fd, struct map_session_data *s
 #endif
 }
 
+static bool clif_lapineDdukDdak_open(struct map_session_data *sd, int item_id)
+{
+#if PACKETVER_MAIN_NUM >= 20160601 || PACKETVER_RE_NUM >= 20160525 || defined(PACKETVER_ZERO)
+	nullpo_retr(false, sd);
+	nullpo_retr(false, itemdb->exists(item_id));
+	struct PACKET_ZC_LAPINEDDUKDDAK_OPEN p;
+
+	p.packetType = HEADER_ZC_LAPINEDDUKDDAK_OPEN;
+	p.itemId = item_id;
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
+
+	sd->state.lapine_ui = 1;
+	return true;
+#else
+	return false;
+#endif // PACKETVER_MAIN_NUM >= 20160601 || PACKETVER_RE_NUM >= 20160525 || defined(PACKETVER_ZERO)
+}
+
+static bool clif_lapineDdukDdak_result(struct map_session_data *sd, enum lapineddukddak_result result)
+{
+#if PACKETVER_MAIN_NUM >= 20160601 || PACKETVER_RE_NUM >= 20160525 || defined(PACKETVER_ZERO)
+	nullpo_retr(false, sd);
+	struct PACKET_ZC_LAPINEDDUKDDAK_RESULT p;
+
+	p.packetType = HEADER_ZC_LAPINEDDUKDDAK_RESULT;
+	p.result = result;
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
+	return true;
+#else
+	return false;
+#endif // PACKETVER_MAIN_NUM >= 20160601 || PACKETVER_RE_NUM >= 20160525 || defined(PACKETVER_ZERO)
+}
+
+static void clif_parse_lapineDdukDdak_ack(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_lapineDdukDdak_ack(int fd, struct map_session_data *sd)
+{
+#if PACKETVER >= 20160302
+	const struct PACKET_CZ_LAPINEDDUKDDAK_ACK *p = RP2PTR(fd);
+	struct item_data *it = itemdb->exists(p->itemId);
+
+	if (it == NULL || it->lapineddukddak == NULL)
+		return;
+	if (pc_cant_act(sd))
+		return;
+	if (pc->search_inventory(sd, it->nameid) == INDEX_NOT_FOUND)
+		return;
+
+	if (((p->packetLength - sizeof(struct PACKET_CZ_LAPINEDDUKDDAK_ACK)) / sizeof(struct PACKET_CZ_LAPINEDDUKDDAK_ACK_sub)) != it->lapineddukddak->NeedCount)
+		return;
+
+	for (int i = 0; i < it->lapineddukddak->NeedCount; ++i) {
+		int16 idx = p->items[i].index - 2;
+		Assert_retv(idx >= 0 && idx < sd->status.inventorySize);
+
+		struct item itr = sd->status.inventory[idx];
+		int j = 0;
+		for (j = 0; j < VECTOR_LENGTH(it->lapineddukddak->SourceItems); ++j) {
+			if (itr.nameid == VECTOR_INDEX(it->lapineddukddak->SourceItems, j).id) {
+				// Validate that the amount sent in the packet is matching the database
+				if (p->items[i].count != VECTOR_INDEX(it->lapineddukddak->SourceItems, j).amount) {
+					clif->lapineDdukDdak_result(sd, LAPINEDDKUKDDAK_INSUFFICIENT_AMOUNT);
+					return;
+				}
+
+				// Validate that the player have enough of the item
+				if (itr.amount < VECTOR_INDEX(it->lapineddukddak->SourceItems, j).amount) {
+					clif->lapineDdukDdak_result(sd, LAPINEDDKUKDDAK_INSUFFICIENT_AMOUNT);
+					return;
+				}
+
+				// Validate refine rate requirement
+				if ((itemdb_type(itr.nameid) == IT_ARMOR || itemdb_type(itr.nameid) == IT_WEAPON)
+					&& (itr.refine < it->lapineddukddak->NeedRefineMin || itr.refine > it->lapineddukddak->NeedRefineMax))
+					return;
+
+				// All requirements are met, move to the next one
+				break;
+			}
+		}
+		// The item is not in sources list
+		if (j == VECTOR_LENGTH(it->lapineddukddak->SourceItems)) {
+			clif->lapineDdukDdak_result(sd, LAPINEDDKUKDDAK_INVALID_ITEM);
+			return;
+		}
+	}
+
+	for (int i = 0; i < it->lapineddukddak->NeedCount; ++i)
+		pc->delitem(sd, p->items[i].index - 2, p->items[i].count, 0, DELITEM_NORMAL, LOG_TYPE_SCRIPT);
+	if (it->lapineddukddak->script != NULL)
+		script->run_item_lapineddukddak_script(sd, it, npc->fake_nd->bl.id);
+	clif->lapineDdukDdak_result(sd, LAPINEDDKUKDDAK_SUCCESS);
+	return;
+#endif // PACKETVER >= 20160302
+}
+
+static void clif_parse_lapineDdukDdak_close(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_lapineDdukDdak_close(int fd, struct map_session_data *sd)
+{
+#if PACKETVER >= 20160504
+	sd->state.lapine_ui = 0;
+#endif // PACKETVER >= 20160504
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -24562,4 +24665,8 @@ void clif_defaults(void)
 	clif->pGuildCastleTeleportRequest = clif_parse_GuildCastleTeleportRequest;
 	clif->pGuildCastleInfoRequest = clif_parse_GuildCastleInfoRequest;
 	clif->guild_castleteleport_res = clif_guild_castleteleport_res;
+	clif->lapineDdukDdak_open = clif_lapineDdukDdak_open;
+	clif->lapineDdukDdak_result = clif_lapineDdukDdak_result;
+	clif->plapineDdukDdak_ack = clif_parse_lapineDdukDdak_ack;
+	clif->plapineDdukDdak_close = clif_parse_lapineDdukDdak_close;
 }

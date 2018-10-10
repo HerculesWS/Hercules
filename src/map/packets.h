@@ -1959,4 +1959,12 @@ packet(0x96e,clif->ackmergeitems);
 	packet(0x0b2c,clif->pGuildCastleInfoRequest);
 #endif
 
+#if PACKETVER >= 20160302
+	packet(0x0a4f,clif->plapineDdukDdak_ack);
+#endif
+
+#if PACKETVER >= 20160504
+	packet(0x0a70,clif->plapineDdukDdak_close);
+#endif
+
 #endif /* MAP_PACKETS_H */
