@@ -6099,11 +6099,11 @@ static BUILDIN(menu)
 		sd->state.menu_or_input = 1;
 
 		/* menus beyond this length crash the client (see bugreport:6402) */
-		if( StrBuf->Length(&buf) >= 2047 ) {
+		if( StrBuf->Length(&buf) >= MAX_MENU_LENGTH - 1 ) {
 			struct npc_data * nd = map->id2nd(st->oid);
 			char* menu;
-			CREATE(menu, char, 2048);
-			safestrncpy(menu, StrBuf->Value(&buf), 2047);
+			CREATE(menu, char, MAX_MENU_LENGTH);
+			safestrncpy(menu, StrBuf->Value(&buf), MAX_MENU_LENGTH - 1);
 			ShowWarning("NPC Menu too long! (source:%s / length:%d)\n",nd?nd->name:"Unknown",StrBuf->Length(&buf));
 			clif->scriptmenu(sd, st->oid, menu);
 			aFree(menu);
@@ -6112,13 +6112,13 @@ static BUILDIN(menu)
 
 		StrBuf->Destroy(&buf);
 
-		if( sd->npc_menu >= 0xff )
+		if( sd->npc_menu >= MAX_MENU_OPTIONS )
 		{// client supports only up to 254 entries; 0 is not used and 255 is reserved for cancel; excess entries are displayed but cause 'uint8' overflow
-			ShowWarning("buildin_menu: Too many options specified (current=%d, max=254).\n", sd->npc_menu);
+			ShowWarning("buildin_menu: Too many options specified (current=%d, max=%d).\n", sd->npc_menu, MAX_MENU_OPTIONS - 1);
 			script->reportsrc(st);
 		}
 	}
-	else if( sd->npc_menu == 0xff )
+	else if( sd->npc_menu == MAX_MENU_OPTIONS )
 	{// Cancel was pressed
 		sd->state.menu_or_input = 0;
 		st->state = END;
@@ -6200,11 +6200,11 @@ static BUILDIN(select)
 		sd->state.menu_or_input = 1;
 
 		/* menus beyond this length crash the client (see bugreport:6402) */
-		if( StrBuf->Length(&buf) >= 2047 ) {
+		if( StrBuf->Length(&buf) >= MAX_MENU_LENGTH - 1 ) {
 			struct npc_data * nd = map->id2nd(st->oid);
 			char* menu;
-			CREATE(menu, char, 2048);
-			safestrncpy(menu, StrBuf->Value(&buf), 2047);
+			CREATE(menu, char, MAX_MENU_LENGTH);
+			safestrncpy(menu, StrBuf->Value(&buf), MAX_MENU_LENGTH - 1);
 			ShowWarning("NPC Menu too long! (source:%s / length:%d)\n",nd?nd->name:"Unknown",StrBuf->Length(&buf));
 			clif->scriptmenu(sd, st->oid, menu);
 			aFree(menu);
@@ -6212,16 +6212,16 @@ static BUILDIN(select)
 			clif->scriptmenu(sd, st->oid, StrBuf->Value(&buf));
 		StrBuf->Destroy(&buf);
 
-		if( sd->npc_menu >= 0xff ) {
-			ShowWarning("buildin_select: Too many options specified (current=%d, max=254).\n", sd->npc_menu);
+		if( sd->npc_menu >= MAX_MENU_OPTIONS ) {
+			ShowWarning("buildin_select: Too many options specified (current=%d, max=%d).\n", sd->npc_menu, MAX_MENU_OPTIONS - 1);
 			script->reportsrc(st);
 		}
-	} else if(sd->npc_menu == 0xff) { // Cancel was pressed
+	} else if(sd->npc_menu == MAX_MENU_OPTIONS) { // Cancel was pressed
 		sd->state.menu_or_input = 0;
 
 		if (strncmp(get_buildin_name(st), "prompt", 6) == 0) {
-			pc->setreg(sd, script->add_variable("@menu"), 0xff);
-			script_pushint(st, 0xff);
+			pc->setreg(sd, script->add_variable("@menu"), MAX_MENU_OPTIONS);
+			script_pushint(st, MAX_MENU_OPTIONS); // XXX: we should really be pushing -1 instead
 			st->state = RUN;
 		} else {
 			st->state = END;
@@ -25514,6 +25514,8 @@ static void script_hardcoded_constants(void)
 	script->set_constant("MAX_BG_MEMBERS",MAX_BG_MEMBERS,false, false);
 	script->set_constant("MAX_CHAT_USERS",MAX_CHAT_USERS,false, false);
 	script->set_constant("MAX_REFINE",MAX_REFINE,false, false);
+	script->set_constant("MAX_MENU_OPTIONS", MAX_MENU_OPTIONS, false, false);
+	script->set_constant("MAX_MENU_LENGTH", MAX_MENU_LENGTH, false, false);
 
 	script->constdb_comment("status options");
 	script->set_constant("Option_Nothing",OPTION_NOTHING,false, false);

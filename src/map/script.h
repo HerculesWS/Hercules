@@ -64,6 +64,9 @@ struct item_data;
 
 #define SCRIPT_EQUIP_TABLE_SIZE 20
 
+#define MAX_MENU_OPTIONS 0xFF
+#define MAX_MENU_LENGTH 0x800
+
 //#define SCRIPT_DEBUG_DISP
 //#define SCRIPT_DEBUG_DISASM
 //#define SCRIPT_DEBUG_HASH

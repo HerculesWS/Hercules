@@ -714,6 +714,8 @@ MAX_BANK_ZENY		- Maximum Zeny in the bank
 MAX_BG_MEMBERS		- Maximum BattleGround members
 MAX_CHAT_USERS		- Maximum Chat users
 MAX_REFINE			- Maximum Refine level
+MAX_MENU_OPTIONS    - Maximum NPC menu options
+MAX_MENU_LENGTH     - Maximum NPC menu string length
 
 Send targets and status options are also hard-coded and can be found
 in 'doc/constants.md'.
@@ -1616,8 +1618,8 @@ and empty options.
 *prompt("<option>"{, "<option>", ...})
 
 This function behaves exactly like select(), but when a player presses cancel
-it returns 255 and the script is not terminated. You almost always want to use
-select() rather than prompt().
+it returns MAX_MENU_OPTIONS and the script is not terminated. You almost always
+want to use select() rather than prompt().
 
 ---------------------------------------
 
