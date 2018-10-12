@@ -2789,11 +2789,11 @@ static void clif_item_normal(short idx, struct NORMALITEM_INFO *p, struct item *
 
 static void clif_inventoryList(struct map_session_data *sd)
 {
-#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 	clif->inventoryStart(sd, INVTYPE_INVENTORY, "");
 #endif
 	clif->inventoryItems(sd, INVTYPE_INVENTORY);
-#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 	clif->inventoryEnd(sd, INVTYPE_INVENTORY);
 #endif
 }
@@ -2816,7 +2816,7 @@ static void clif_inventoryItems(struct map_session_data *sd, enum inventory_type
 	if (normal) {
 		itemlist_normal.PacketType = inventorylistnormalType;
 		itemlist_normal.PacketLength = (sizeof(itemlist_normal) - sizeof(itemlist_normal.list)) + (sizeof(struct NORMALITEM_INFO) * normal);
-#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 		itemlist_normal.invType = type;
 #endif
 
@@ -2829,7 +2829,7 @@ static void clif_inventoryItems(struct map_session_data *sd, enum inventory_type
 	if( equip ) {
 		itemlist_equip.PacketType  = inventorylistequipType;
 		itemlist_equip.PacketLength = (sizeof(itemlist_equip) - sizeof(itemlist_equip.list)) + (sizeof(struct EQUIPITEM_INFO) * equip);
-#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 		itemlist_equip.invType = type;
 #endif
 
@@ -2849,7 +2849,7 @@ static void clif_inventoryItems(struct map_session_data *sd, enum inventory_type
 
 static void clif_equipList(struct map_session_data *sd)
 {
-#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 	clif->inventoryStart(sd, INVTYPE_INVENTORY, "");
 	clif->inventoryItems(sd, INVTYPE_INVENTORY);
 	clif->inventoryEnd(sd, INVTYPE_INVENTORY);
@@ -2876,7 +2876,7 @@ static void clif_equipItems(struct map_session_data *sd, enum inventory_type typ
 	if (equip) {
 		itemlist_equip.PacketType = inventorylistequipType;
 		itemlist_equip.PacketLength = (sizeof(itemlist_equip) - sizeof(itemlist_equip.list)) + (sizeof(struct EQUIPITEM_INFO) * equip);
-#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 		itemlist_equip.invType = type;
 #endif
 
@@ -2914,7 +2914,7 @@ static void clif_guildStorageList(struct map_session_data *sd, struct item *item
 
 static void clif_inventoryStart(struct map_session_data *sd, enum inventory_type type, const char *name)
 {
-#if PACKETVER_RE_NUM >= 20180829 || PACKETVER_ZERO_NUM >= 20180919
+#if PACKETVER_RE_NUM >= 20180829 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 	nullpo_retv(sd);
 	nullpo_retv(name);
 
@@ -2922,10 +2922,10 @@ static void clif_inventoryStart(struct map_session_data *sd, enum inventory_type
 	memset(buf, 0, sizeof(buf));
 	struct ZC_INVENTORY_START *p = (struct ZC_INVENTORY_START *)buf;
 	p->packetType = 0xb08;
-#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 	p->invType = type;
 #endif
-#if PACKETVER_RE_NUM >= 20180919 || PACKETVER_ZERO_NUM >= 20180919
+#if PACKETVER_RE_NUM >= 20180919 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 	int strLen = (int)safestrnlen(name, 24);
 	if (strLen > 24)
 		strLen = 24;
@@ -2942,12 +2942,12 @@ static void clif_inventoryStart(struct map_session_data *sd, enum inventory_type
 
 static void clif_inventoryEnd(struct map_session_data *sd, enum inventory_type type)
 {
-#if PACKETVER_RE_NUM >= 20180829 || PACKETVER_ZERO_NUM >= 20180919
+#if PACKETVER_RE_NUM >= 20180829 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 	nullpo_retv(sd);
 
 	struct ZC_INVENTORY_END p;
 	p.packetType = 0xb0b;
-#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 	p.invType = type;
 #endif
 	p.flag = 0;
@@ -2983,10 +2983,10 @@ static void clif_storageItems(struct map_session_data *sd, enum inventory_type t
 			storelist_normal.PacketType   = storageListNormalType;
 			storelist_normal.PacketLength =  ( sizeof( storelist_normal ) - sizeof( storelist_normal.list ) ) + (sizeof(struct NORMALITEM_INFO) * normal);
 
-#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 			storelist_normal.invType = type;
 #endif
-#if PACKETVER >= 20120925 && PACKETVER_RE_NUM < 20180829 && PACKETVER_ZERO_NUM < 20180919
+#if PACKETVER >= 20120925 && PACKETVER_RE_NUM < 20180829 && PACKETVER_ZERO_NUM < 20180919 && PACKETVER_MAIN_NUM < 20181002
 			safestrncpy(storelist_normal.name, "Storage", NAME_LENGTH);
 #endif
 
@@ -2997,10 +2997,10 @@ static void clif_storageItems(struct map_session_data *sd, enum inventory_type t
 			storelist_equip.PacketType   = storageListEquipType;
 			storelist_equip.PacketLength = ( sizeof( storelist_equip ) - sizeof( storelist_equip.list ) ) + (sizeof(struct EQUIPITEM_INFO) * equip);
 
-#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 			storelist_equip.invType = type;
 #endif
-#if PACKETVER >= 20120925 && PACKETVER_RE_NUM < 20180829 && PACKETVER_ZERO_NUM < 20180919
+#if PACKETVER >= 20120925 && PACKETVER_RE_NUM < 20180829 && PACKETVER_ZERO_NUM < 20180919 && PACKETVER_MAIN_NUM < 20181002
 			safestrncpy(storelist_equip.name, "Storage", NAME_LENGTH);
 #endif
 
@@ -3013,11 +3013,11 @@ static void clif_storageItems(struct map_session_data *sd, enum inventory_type t
 
 static void clif_cartList(struct map_session_data *sd)
 {
-#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 	clif->inventoryStart(sd, INVTYPE_CART, "");
 #endif
 	clif->cartItems(sd, INVTYPE_CART);
-#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 	clif->inventoryEnd(sd, INVTYPE_CART);
 #endif
 }
@@ -3043,7 +3043,7 @@ static void clif_cartItems(struct map_session_data *sd, enum inventory_type type
 	if (normal) {
 		itemlist_normal.PacketType = cartlistnormalType;
 		itemlist_normal.PacketLength = (sizeof(itemlist_normal) - sizeof(itemlist_normal.list)) + (sizeof(struct NORMALITEM_INFO) * normal);
-#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 		itemlist_normal.invType = type;
 #endif
 
@@ -3053,7 +3053,7 @@ static void clif_cartItems(struct map_session_data *sd, enum inventory_type type
 	if (equip) {
 		itemlist_equip.PacketType = cartlistequipType;
 		itemlist_equip.PacketLength = (sizeof(itemlist_equip) - sizeof(itemlist_equip.list)) + (sizeof(struct EQUIPITEM_INFO) * equip);
-#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 		itemlist_equip.invType = type;
 #endif
 
@@ -7721,6 +7721,7 @@ static void clif_mvp_noitem(struct map_session_data *sd)
 ///     1 = "You are already in a Guild."
 ///     2 = "That Guild Name already exists."
 ///     3 = "You need the necessary item to create a Guild."
+///     4 = "Can't create a Guild in this area."
 static void clif_guild_created(struct map_session_data *sd, int flag)
 {
 	int fd;
@@ -8207,6 +8208,7 @@ static void clif_guild_invite(struct map_session_data *sd, struct guild *g)
 ///     1 = Offer rejected.
 ///     2 = Offer accepted.
 ///     3 = Guild full.
+///     4 = Offline or not exists
 static void clif_guild_inviteack(struct map_session_data *sd, int flag)
 {
 	int fd;
@@ -8863,6 +8865,45 @@ static void clif_specialeffect_value(struct block_list *bl, int effect_id, int n
 		clif->send(buf, packet_len(0x284), bl, SELF);
 	}
 }
+
+/// Remove special effects (ZC_REMOVE_EFFECT).
+/// 0b0d <id>.L <effect id>.L
+/// effect id:
+///     @see doc/effect_list.txt
+static void clif_removeSpecialEffect(struct block_list *bl, int effectId, enum send_target target)
+{
+#if PACKETVER_MAIN_NUM >= 20181002 || PACKETVER_RE_NUM >= 20181002
+	nullpo_retv(bl);
+
+	struct PACKET_ZC_REMOVE_EFFECT p;
+	p.packetType = 0xb0d;
+	p.aid = bl->id;
+	p.effectId = effectId;
+
+	clif->send(&p, sizeof(p), bl, target);
+
+	if (clif->isdisguised(bl)) {
+		p.aid = -bl->id;
+		clif->send(&p, sizeof(p), bl, SELF);
+	}
+#endif
+}
+
+static void clif_removeSpecialEffect_single(struct block_list *bl, int effectId, struct block_list *targetBl)
+{
+#if PACKETVER_MAIN_NUM >= 20181002 || PACKETVER_RE_NUM >= 20181002
+	nullpo_retv(bl);
+	nullpo_retv(targetBl);
+
+	struct PACKET_ZC_REMOVE_EFFECT p;
+	p.packetType = 0xb0d;
+	p.aid = bl->id;
+	p.effectId = effectId;
+
+	clif->send(&p, sizeof(p), targetBl, SELF);
+#endif
+}
+
 /**
  * Modification of clif_messagecolor to send colored messages to players to chat log only (doesn't display overhead).
  *
@@ -17556,6 +17597,7 @@ static int clif_instance(int instance_id, int type, int flag)
 		case 2:
 			// S 0x2cc <Standby Position>.W
 			// To announce Instancing queue creation if no maps available
+			// flag is priority, negative value mean cancel reservation
 			WBUFW(buf,0) = 0x02CC;
 			WBUFW(buf,2) = flag;
 			clif->send(buf,packet_len(0x02CC),&sd->bl,target);
@@ -18837,8 +18879,20 @@ static void clif_monster_hp_bar(struct mob_data *md, struct map_session_data *sd
 }
 
 /* [Ind/Hercules] placeholder for unsupported incoming packets (avoids server disconnecting client) */
-static void __attribute__ ((unused)) clif_parse_dull(int fd, struct map_session_data *sd)
+static void clif_parse_dull(int fd, struct map_session_data *sd)
 {
+	const int cmd = clif->cmd;
+	Assert_retv(cmd <= MAX_PACKET_DB && cmd >= MIN_PACKET_DB);
+
+	int packet_len = packet_db[cmd].len;
+	if (packet_len == -1) { // variable-length packet
+		packet_len = RFIFOW(fd, 2);
+	}
+	if (sd) {
+		ShowWarning("Unhandled packet 0x%04d (length %d), %s session #%d, %d/%d (AID/CID)\n", cmd, packet_len, sd->state.active ? "authed" : "unauthed", fd, sd->status.account_id, sd->status.char_id);
+	} else {
+		ShowWarning("Unhandled packet 0x%04d (length %d), session #%d\n", cmd, packet_len, fd);
+	}
 	return;
 }
 
@@ -20624,7 +20678,7 @@ static void clif_achievement_reward_ack(int fd, struct map_session_data *sd, con
 	nullpo_retv(ad);
 
 	p.packet_id = achievementRewardAckType;
-	p.received = 1;
+	p.failed = 0;
 	p.ach_id = ad->id;
 
 	clif->send(&p, packet_len(achievementRewardAckType), &sd->bl, SELF);
@@ -21868,6 +21922,32 @@ static void clif_parse_memorial_dungeon_command(int fd, struct map_session_data 
 	}
 }
 
+static void clif_camera_showWindow(struct map_session_data *sd)
+{
+#if PACKETVER >= 20160525
+	struct PACKET_ZC_CAMERA_INFO p;
+	p.packetType = 0xa78;
+	p.action = 1;
+	p.range = 0;
+	p.rotation = 0;
+	p.latitude = 0;
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
+#endif
+}
+
+static void clif_camera_change(struct map_session_data *sd, float range, float rotation, float latitude, enum send_target target)
+{
+#if PACKETVER >= 20160525
+	struct PACKET_ZC_CAMERA_INFO p;
+	p.packetType = 0xa78;
+	p.action = 0;
+	p.range = range;
+	p.rotation = rotation;
+	p.latitude = latitude;
+	clif->send(&p, sizeof(p), &sd->bl, target);
+#endif
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -21919,6 +21999,7 @@ static int clif_parse(int fd)
 			parse_cmd_func = clif->parse_cmd;
 
 		cmd = parse_cmd_func(fd,sd);
+		clif->cmd = cmd;
 
 		if (VECTOR_LENGTH(HPM->packets[hpClif_Parse]) > 0) {
 			int result = HPM->parse_packets(fd,cmd,hpClif_Parse);
@@ -21982,8 +22063,8 @@ static int clif_parse(int fd)
 				else
 					packet_db[cmd].func(fd, sd);
 		}
-#ifdef DUMP_UNKNOWN_PACKET
 		else {
+#ifdef DUMP_UNKNOWN_PACKET
 			const char* packet_txt = "save/packet.txt";
 			FILE* fp;
 
@@ -22009,8 +22090,10 @@ static int clif_parse(int fd)
 
 				ShowDump(RFIFOP(fd,0), packet_len);
 			}
-		}
+#else
+			clif->pDull(fd, sd);
 #endif
+		}
 
 		RFIFOSKIP(fd, packet_len);
 
@@ -22182,6 +22265,7 @@ void clif_defaults(void)
 	clif->map_port = 5121;
 	clif->ally_only = false;
 	clif->delayed_damage_ers = NULL;
+	clif->cmd = -1;
 	/* core */
 	clif->init = do_init_clif;
 	clif->final = do_final_clif;
@@ -22416,6 +22500,8 @@ void clif_defaults(void)
 	clif->specialeffect = clif_specialeffect;
 	clif->specialeffect_single = clif_specialeffect_single;
 	clif->specialeffect_value = clif_specialeffect_value;
+	clif->removeSpecialEffect = clif_removeSpecialEffect;
+	clif->removeSpecialEffect_single = clif_removeSpecialEffect_single;
 	clif->millenniumshield = clif_millenniumshield;
 	clif->spiritcharm = clif_charm;
 	clif->charm_single = clif_charm_single;
@@ -23025,6 +23111,9 @@ void clif_defaults(void)
 	clif->pReqStyleChange2 = clif_parse_cz_req_style_change2;
 	clif->cz_req_style_change_sub = clif_cz_req_style_change_sub;
 	clif->style_change_response = clif_style_change_response;
+
+	clif->camera_showWindow = clif_camera_showWindow;
+	clif->camera_change = clif_camera_change;
 
 	// -- Pet Evolution
 	clif->pPetEvolution = clif_parse_pet_evolution;

@@ -4337,4 +4337,22 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0b0d,10,clif->pDull/*,XXX*/);
 #endif
 
+
+// 2018-10-02aRagexe
+#if PACKETVER_MAIN_NUM >= 20181002
+// new packets
+	packet(0x0b10,10,clif->pDull/*,XXX*/);
+	packet(0x0b11,4,clif->pDull/*,XXX*/);
+// changed packet sizes
+	packet(0x0b08,-1); // ZC_INVENTORY_START
+#endif
+
+// 2018-10-02aRagexeRE
+#if PACKETVER_RE_NUM >= 20181002
+// new packets
+	packet(0x0b10,10,clif->pDull/*,XXX*/);
+	packet(0x0b11,4,clif->pDull/*,XXX*/);
+// changed packet sizes
+#endif
+
 #endif /* MAP_PACKETS_H */

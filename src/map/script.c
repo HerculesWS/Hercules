@@ -3316,95 +3316,28 @@ static void set_reg_npcscope_str(struct script_state *st, struct reg_db *n, int6
 
 static void set_reg_pc_ref_str(struct script_state *st, struct reg_db *n, int64 num, const char *name, const char *str)
 {
-	struct script_reg_str *p = NULL;
-	unsigned int index = script_getvaridx(num);
+	struct DBIterator *iter = db_iterator(map->pc_db);
 
-	nullpo_retv(n);
-
-	if ((p = i64db_get(n->vars, num)) != NULL) {
-		if (str[0]) {
-			if (p->value) {
-				aFree(p->value);
-			} else if (index) {
-				script->array_update(n, num, false);
-			}
-			p->value = aStrdup(str);
-		} else {
-			p->value = NULL;
-			if (index) {
-				script->array_update(n, num, true);
-			}
-		}
-
-		if (!pc->reg_load) {
-			p->flag.update = 1;
-		}
-	} else if (str[0]) {
-		struct DBData prev;
-		if (index) {
-			script->array_update(n, num, false);
-		}
-
-		p = ers_alloc(pc->str_reg_ers, struct script_reg_str);
-		p->value = aStrdup(str);
-
-		if (!pc->reg_load) {
-			p->flag.update = 1;
-		}
-		p->flag.type = 1;
-
-		if(n->vars->put(n->vars, DB->i642key(num), DB->ptr2data(p), &prev)) {
-			p = DB->data2ptr(&prev);
-			if (p->value) {
-				aFree(p->value);
-			}
-			ers_free(pc->str_reg_ers, p);
+	for (struct map_session_data *sd = dbi_first(iter); dbi_exists(iter); sd = dbi_next(iter)) {
+		if (sd != NULL && n == &sd->regs) {
+			pc->setregistry_str(sd, num, str);
+			break;
 		}
 	}
+	dbi_destroy(iter);
 }
 
 static void set_reg_pc_ref_num(struct script_state *st, struct reg_db *n, int64 num, const char *name, int val)
 {
-	struct script_reg_num *p = NULL;
-	unsigned int index = script_getvaridx(num);
+	struct DBIterator *iter = db_iterator(map->pc_db);
 
-	nullpo_retv(n);
-
-	if ((p = i64db_get(n->vars, num)) != NULL) {
-		if (val) {
-			if (!p->value && index) {
-				script->array_update(n, num, false);
-			}
-			p->value = val;
-		} else {
-			p->value = 0;
-			if (index) {
-				script->array_update(n, num, true);
-			}
-		}
-
-		if (!pc->reg_load) {
-			p->flag.update = 1;
-		}
-	} else if (val) {
-		struct DBData prev;
-		if (index) {
-			script->array_update(n, num, false);
-		}
-
-		p = ers_alloc(pc->num_reg_ers, struct script_reg_num);
-		p->value = val;
-
-		if (!pc->reg_load) {
-			p->flag.update = 1;
-		}
-		p->flag.type = 1;
-
-		if(n->vars->put(n->vars, DB->i642key(num), DB->ptr2data(p), &prev)) {
-			p = DB->data2ptr(&prev);
-			ers_free(pc->num_reg_ers, p);
+	for (struct map_session_data *sd = dbi_first(iter); dbi_exists(iter); sd = dbi_next(iter)) {
+		if (sd != NULL && n == &sd->regs) {
+			pc->setregistry(sd, num, val);
+			break;
 		}
 	}
+	dbi_destroy(iter);
 }
 
 static void set_reg_npcscope_num(struct script_state *st, struct reg_db *n, int64 num, const char *name, int val)
@@ -12335,7 +12268,9 @@ static BUILDIN(sc_end)
 		}
 
 		//This should help status_change_end force disabling the SC in case it has no limit.
-		sce->val1 = sce->val2 = sce->val3 = sce->val4 = 0;
+		if (type != SC_BERSERK)
+			sce->val1 = 0; // SC_BERSERK requires skill_lv that's stored in sce->val1 when being removed [KirieZ]
+		sce->val2 = sce->val3 = sce->val4 = 0;
 		status_change_end(bl, (sc_type)type, INVALID_TIMER);
 	}
 	else
@@ -15428,6 +15363,50 @@ static BUILDIN(specialeffect2)
 	return true;
 }
 
+static BUILDIN(removespecialeffect)
+{
+	struct block_list *bl = NULL;
+	int type = script_getnum(st, 2);
+	enum send_target target = AREA;
+
+	if (script_hasdata(st, 3)) {
+		target = script_getnum(st, 3);
+	}
+
+	if (script_hasdata(st, 4)) {
+		if (script_isstringtype(st, 4)) {
+			struct npc_data *nd = npc->name2id(script_getstr(st, 4));
+			if (nd != NULL) {
+				bl = &nd->bl;
+			}
+		} else {
+			bl = map->id2bl(script_getnum(st, 4));
+		}
+	} else {
+		bl = map->id2bl(st->oid);
+	}
+
+	if (bl == NULL) {
+		return true;
+	}
+
+	if (target == SELF) {
+		struct map_session_data *sd;
+		if (script_hasdata(st, 5)) {
+			sd = map->id2sd(script_getnum(st, 5));
+		} else {
+			sd = script->rid2sd(st);
+		}
+		if (sd != NULL) {
+			clif->removeSpecialEffect_single(bl, type, &sd->bl);
+		}
+	} else {
+		clif->removeSpecialEffect(bl, type, target);
+	}
+
+	return true;
+}
+
 /*==========================================
  * Nude [Valaris]
  *------------------------------------------*/
@@ -17870,7 +17849,9 @@ static BUILDIN(getd)
 
 	id = script->add_variable(varname);
 
-	if (script->str_data[id].type != C_NAME) {
+	if (script->str_data[id].type != C_NAME && // variable
+		script->str_data[id].type != C_PARAM && // param
+		script->str_data[id].type != C_INT) { // constant
 		ShowError("script:getd: `%s` is already used by something that is not a variable.\n", varname);
 		st->state = END;
 		return false;
@@ -20698,7 +20679,7 @@ static BUILDIN(getvariableofpc)
 	}
 
 	if (!sd->regs.vars)
-		sd->regs.vars = i64db_alloc(DB_OPT_RELEASE_DATA);
+		sd->regs.vars = i64db_alloc(DB_OPT_BASE);
 
 	script->push_val(st->stack, C_NAME, reference_getuid(data), &sd->regs);
 	return true;
@@ -24803,6 +24784,32 @@ static BUILDIN(msgtable2)
 	return true;
 }
 
+// show/hide camera info
+static BUILDIN(camerainfo)
+{
+	struct map_session_data *sd = script_rid2sd(st);
+	if (sd == NULL)
+		return false;
+
+	clif->camera_showWindow(sd);
+	return true;
+}
+
+// allow change some camera parameters
+static BUILDIN(changecamera)
+{
+	struct map_session_data *sd = script_rid2sd(st);
+	if (sd == NULL)
+		return false;
+
+	enum send_target target = SELF;
+	if (script_hasdata(st, 5)) {
+		target = script_getnum(st, 5);
+	}
+	clif->camera_change(sd, (float)script_getnum(st, 2), (float)script_getnum(st, 3), (float)script_getnum(st, 4), target);
+	return true;
+}
+
 /**
  * Adds a built-in script function.
  *
@@ -25199,6 +25206,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(skilleffect,"vi"), // skill effect [Celest]
 		BUILDIN_DEF(npcskilleffect,"viii"), // npc skill effect [Valaris]
 		BUILDIN_DEF(specialeffect,"i???"), // npc skill effect [Valaris]
+		BUILDIN_DEF(removespecialeffect,"i???"),
 		BUILDIN_DEF_DEPRECATED(specialeffect2,"i??"), // skill effect on players[Valaris]
 		BUILDIN_DEF(nude,""), // nude command [Valaris]
 		BUILDIN_DEF(mapwarp,"ssii??"), // Added by RoVeRT
@@ -25532,6 +25540,10 @@ static void script_parse_builtin(void)
 
 		// -- HatEffect
 		BUILDIN_DEF(hateffect, "ii"),
+
+		// camera
+		BUILDIN_DEF(camerainfo, ""),
+		BUILDIN_DEF(changecamera, "iii?"),
 	};
 	int i, len = ARRAYLENGTH(BUILDIN);
 	RECREATE(script->buildin, char *, script->buildin_count + len); // Pre-alloc to speed up

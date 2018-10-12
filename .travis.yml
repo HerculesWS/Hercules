@@ -2,26 +2,32 @@ language: c
 sudo: false
 dist: trusty
 addons:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-
-install:
-  - ./tools/ci/travis.sh getplugins || true
-
-before_script:
-  - uname -a
-  - ./tools/ci/travis.sh createdb ragnarok root
-  - ./tools/ci/travis.sh importdb ragnarok root
-  - ./tools/ci/travis.sh adduser ragnarok travis travis root
+  #apt:
+  #  sources:
+  #  - ubuntu-toolchain-r-test
+  coverity_scan:
+    # GitHub project metadata
+    project:
+      name: "HerculesWS/Hercules"
+      description: "Build submitted via Travis CI"
+      #version: 1.0
+    # Where email notification of build analysis results will be sent
+    notification_email: "haru@dotalux.com"
+    # Commands to prepare for build_command
+    build_command_prepend: "./configure --enable-debug; make clean"
+    # The command that will be added as an argument to "cov-build" to compile your project for analysis,
+    build_command: "make"
+    # Pattern to match selecting branches that will run analysis.
+    branch_pattern: coverity_scan
 
 script:
-  - if [[ ! -z "${HPM}" ]]; then ./tools/ci/travis.sh buildhpm $CONFIGURE_FLAGS; fi
-  - ./tools/ci/travis.sh build $CONFIGURE_FLAGS
-  - ./tools/ci/travis.sh test ragnarok travis travis
+  - true
 
 compiler: false # Necessary at the top level because referenced by allow_failures
-env: ignore=this # Necessary at the top level because referenced by allow_failures
+env:
+  global:
+    # COVERITY_SCAN_TOKEN
+    - secure: "gcrI+3sx7SFz9N0NN1Ap+qlrAJjOe9xIxMQkV78LmhBBc8wG3lkSF4ASEf7690yo3bcp0gsvkfIUL8fXl68ImOxgnVTuR7oxCkjHdtCdszsoU8eGU7Kg8H0ggq/8G6493/l6sNUgZodXJOS0oyl0hHzcf5ViVM8EcoyC9USd06U="
 
 matrix:
   allow_failures:
@@ -38,93 +44,7 @@ matrix:
   - compiler: false
   include:
   - compiler: gcc
-    env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug CC=gcc-6 --disable-manager --enable-Werror --enable-packetver=20180919 --enable-packetver-re --enable-buildbot" HPM="1"
-    addons:
-      apt:
-        sources:
-        - ubuntu-toolchain-r-test
-        packages:
-        - gcc-6
-        - doxygen
-        - libxml-simple-perl
-        - libxml-sax-perl
-        - libxml-parser-perl
-  - compiler: clang
-    env: CONFIGURE_FLAGS="--enable-debug CC=clang-5.0 --enable-Werror --enable-packetver=20180919 --enable-packetver-re --enable-buildbot"
-    addons:
-      apt:
-        sources:
-        - llvm-toolchain-trusty-5.0
-        - ubuntu-toolchain-r-test
-        packages:
-        - clang-5.0
-  - compiler: clang
-    env: CONFIGURE_FLAGS="--enable-debug CC=clang-5.0 --disable-renewal --enable-Werror --enable-buildbot"
-    addons:
-      apt:
-        sources:
-        - llvm-toolchain-trusty-5.0
-        - ubuntu-toolchain-r-test
-        packages:
-        - clang-5.0
-  - compiler: clang
-    env: CONFIGURE_FLAGS="--enable-debug CC=clang-4.0 --enable-Werror --enable-packetver=20180919 --enable-packetver-re --enable-buildbot"
-    addons:
-      apt:
-        sources:
-        - llvm-toolchain-trusty-4.0
-        - ubuntu-toolchain-r-test
-        packages:
-        - clang-4.0
-  - compiler: clang
-    env: CONFIGURE_FLAGS="--enable-debug CC=clang-4.0 --disable-renewal --enable-Werror --enable-buildbot"
-    addons:
-      apt:
-        sources:
-        - llvm-toolchain-trusty-4.0
-        - ubuntu-toolchain-r-test
-        packages:
-        - clang-4.0
-  - compiler: clang
-    env: CONFIGURE_FLAGS="--enable-debug --enable-Werror --enable-buildbot"
-  - compiler: clang
-    env: CONFIGURE_FLAGS="--enable-debug --disable-renewal --enable-Werror --enable-buildbot"
-  - compiler: gcc
-    env: CONFIGURE_FLAGS="--enable-debug --enable-Werror --enable-packetver=20180919 --enable-packetver-re --enable-buildbot"
-  - compiler: gcc
-    env: CONFIGURE_FLAGS="--enable-debug --disable-renewal --enable-Werror --enable-buildbot"
-  - compiler: gcc
-    env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug --enable-sanitize=full CC=gcc-5 --disable-manager --enable-Werror --enable-packetver=20180919 --enable-packetver-re --enable-buildbot"
-    addons:
-      apt:
-        sources:
-        - ubuntu-toolchain-r-test
-        packages:
-        - gcc-5
-  - compiler: gcc
-    env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug --enable-sanitize=full CC=gcc-5 --disable-manager --disable-renewal --enable-Werror --enable-buildbot"
-    addons:
-      apt:
-        sources:
-        - ubuntu-toolchain-r-test
-        packages:
-        - gcc-5
-  - compiler: gcc
-    env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug --enable-sanitize=full CC=gcc-6 --disable-manager --enable-Werror --enable-packetver=20180919 --enable-packetver-re --enable-buildbot"
-    addons:
-      apt:
-        sources:
-        - ubuntu-toolchain-r-test
-        packages:
-        - gcc-6
-  - compiler: gcc
-    env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug --enable-sanitize=full CC=gcc-6 --disable-manager --disable-renewal --enable-Werror --enable-buildbot"
-    addons:
-      apt:
-        sources:
-        - ubuntu-toolchain-r-test
-        packages:
-        - gcc-6
+    env: CONFIGURE_FLAGS="--enable-debug"
 
 notifications:
   email: false

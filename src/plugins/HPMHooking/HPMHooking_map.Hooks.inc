@@ -1459,13 +1459,40 @@ bool HP_achievement_check_title(struct map_session_data *sd, int title_id) {
 	}
 	return retVal___;
 }
-void HP_achievement_get_rewards(struct map_session_data *sd, const struct achievement_data *ad) {
+bool HP_achievement_get_rewards(struct map_session_data *sd, const struct achievement_data *ad) {
 	int hIndex = 0;
+	bool retVal___ = false;
 	if (HPMHooks.count.HP_achievement_get_rewards_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, const struct achievement_data **ad);
+		bool (*preHookFunc) (struct map_session_data **sd, const struct achievement_data **ad);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_get_rewards_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_achievement_get_rewards_pre[hIndex].func;
+			retVal___ = preHookFunc(&sd, &ad);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.achievement.get_rewards(sd, ad);
+	}
+	if (HPMHooks.count.HP_achievement_get_rewards_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, const struct achievement_data *ad);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_get_rewards_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_get_rewards_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd, ad);
+		}
+	}
+	return retVal___;
+}
+void HP_achievement_get_rewards_buffs(struct map_session_data *sd, const struct achievement_data *ad) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_get_rewards_buffs_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, const struct achievement_data **ad);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_get_rewards_buffs_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_get_rewards_buffs_pre[hIndex].func;
 			preHookFunc(&sd, &ad);
 		}
 		if (*HPMforce_return) {
@@ -1474,12 +1501,38 @@ void HP_achievement_get_rewards(struct map_session_data *sd, const struct achiev
 		}
 	}
 	{
-		HPMHooks.source.achievement.get_rewards(sd, ad);
+		HPMHooks.source.achievement.get_rewards_buffs(sd, ad);
 	}
-	if (HPMHooks.count.HP_achievement_get_rewards_post > 0) {
+	if (HPMHooks.count.HP_achievement_get_rewards_buffs_post > 0) {
 		void (*postHookFunc) (struct map_session_data *sd, const struct achievement_data *ad);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_get_rewards_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_achievement_get_rewards_post[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_get_rewards_buffs_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_get_rewards_buffs_post[hIndex].func;
+			postHookFunc(sd, ad);
+		}
+	}
+	return;
+}
+void HP_achievement_get_rewards_items(struct map_session_data *sd, const struct achievement_data *ad) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_get_rewards_items_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, const struct achievement_data **ad);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_get_rewards_items_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_get_rewards_items_pre[hIndex].func;
+			preHookFunc(&sd, &ad);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.achievement.get_rewards_items(sd, ad);
+	}
+	if (HPMHooks.count.HP_achievement_get_rewards_items_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, const struct achievement_data *ad);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_get_rewards_items_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_get_rewards_items_post[hIndex].func;
 			postHookFunc(sd, ad);
 		}
 	}
@@ -14399,6 +14452,58 @@ void HP_clif_specialeffect_value(struct block_list *bl, int effect_id, int num, 
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_specialeffect_value_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_specialeffect_value_post[hIndex].func;
 			postHookFunc(bl, effect_id, num, target);
+		}
+	}
+	return;
+}
+void HP_clif_removeSpecialEffect(struct block_list *bl, int effectId, enum send_target target) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_removeSpecialEffect_pre > 0) {
+		void (*preHookFunc) (struct block_list **bl, int *effectId, enum send_target *target);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_removeSpecialEffect_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_removeSpecialEffect_pre[hIndex].func;
+			preHookFunc(&bl, &effectId, &target);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.removeSpecialEffect(bl, effectId, target);
+	}
+	if (HPMHooks.count.HP_clif_removeSpecialEffect_post > 0) {
+		void (*postHookFunc) (struct block_list *bl, int effectId, enum send_target target);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_removeSpecialEffect_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_removeSpecialEffect_post[hIndex].func;
+			postHookFunc(bl, effectId, target);
+		}
+	}
+	return;
+}
+void HP_clif_removeSpecialEffect_single(struct block_list *bl, int effectId, struct block_list *targetBl) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_removeSpecialEffect_single_pre > 0) {
+		void (*preHookFunc) (struct block_list **bl, int *effectId, struct block_list **targetBl);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_removeSpecialEffect_single_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_removeSpecialEffect_single_pre[hIndex].func;
+			preHookFunc(&bl, &effectId, &targetBl);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.removeSpecialEffect_single(bl, effectId, targetBl);
+	}
+	if (HPMHooks.count.HP_clif_removeSpecialEffect_single_post > 0) {
+		void (*postHookFunc) (struct block_list *bl, int effectId, struct block_list *targetBl);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_removeSpecialEffect_single_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_removeSpecialEffect_single_post[hIndex].func;
+			postHookFunc(bl, effectId, targetBl);
 		}
 	}
 	return;
@@ -28778,6 +28883,58 @@ void HP_clif_pMemorialDungeonCommand(int fd, struct map_session_data *sd) {
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pMemorialDungeonCommand_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_pMemorialDungeonCommand_post[hIndex].func;
 			postHookFunc(fd, sd);
+		}
+	}
+	return;
+}
+void HP_clif_camera_showWindow(struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_camera_showWindow_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_camera_showWindow_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_camera_showWindow_pre[hIndex].func;
+			preHookFunc(&sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.camera_showWindow(sd);
+	}
+	if (HPMHooks.count.HP_clif_camera_showWindow_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_camera_showWindow_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_camera_showWindow_post[hIndex].func;
+			postHookFunc(sd);
+		}
+	}
+	return;
+}
+void HP_clif_camera_change(struct map_session_data *sd, float range, float rotation, float latitude, enum send_target target) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_camera_change_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, float *range, float *rotation, float *latitude, enum send_target *target);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_camera_change_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_camera_change_pre[hIndex].func;
+			preHookFunc(&sd, &range, &rotation, &latitude, &target);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.camera_change(sd, range, rotation, latitude, target);
+	}
+	if (HPMHooks.count.HP_clif_camera_change_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, float range, float rotation, float latitude, enum send_target target);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_camera_change_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_camera_change_post[hIndex].func;
+			postHookFunc(sd, range, rotation, latitude, target);
 		}
 	}
 	return;
@@ -59054,11 +59211,11 @@ int HP_pc_payzeny(struct map_session_data *sd, int zeny, enum e_log_pick_type ty
 	}
 	return retVal___;
 }
-int HP_pc_additem(struct map_session_data *sd, struct item *item_data, int amount, e_log_pick_type log_type) {
+int HP_pc_additem(struct map_session_data *sd, const struct item *item_data, int amount, e_log_pick_type log_type) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_pc_additem_pre > 0) {
-		int (*preHookFunc) (struct map_session_data **sd, struct item **item_data, int *amount, e_log_pick_type *log_type);
+		int (*preHookFunc) (struct map_session_data **sd, const struct item **item_data, int *amount, e_log_pick_type *log_type);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_additem_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_pc_additem_pre[hIndex].func;
@@ -59073,7 +59230,7 @@ int HP_pc_additem(struct map_session_data *sd, struct item *item_data, int amoun
 		retVal___ = HPMHooks.source.pc.additem(sd, item_data, amount, log_type);
 	}
 	if (HPMHooks.count.HP_pc_additem_post > 0) {
-		int (*postHookFunc) (int retVal___, struct map_session_data *sd, struct item *item_data, int amount, e_log_pick_type log_type);
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, const struct item *item_data, int amount, e_log_pick_type log_type);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_additem_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_pc_additem_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd, item_data, amount, log_type);

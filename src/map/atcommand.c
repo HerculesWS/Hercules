@@ -9810,6 +9810,24 @@ ACMD(reloadclans)
 	return true;
 }
 
+// show camera window or change camera parameters
+ACMD(camerainfo)
+{
+	if (*message == '\0') {
+		clif->camera_showWindow(sd);
+		return true;
+	}
+	float range = 0;
+	float rotation = 0;
+	float latitude = 0;
+	if (sscanf(message, "%15f %15f %15f", &range, &rotation, &latitude) < 3) {
+		clif->message(fd, msg_fd(fd, 452));  // usage @camerainfo range rotation latitude
+		return false;
+	}
+	clif->camera_change(sd, range, rotation, latitude, SELF);
+	return true;
+}
+
 /**
  * Fills the reference of available commands in atcommand DBMap
  **/
@@ -10092,6 +10110,7 @@ static void atcommand_basecommands(void)
 		ACMD_DEF(leaveclan),
 		ACMD_DEF(reloadclans),
 		ACMD_DEF(setzone),
+		ACMD_DEF(camerainfo),
 	};
 	int i;
 

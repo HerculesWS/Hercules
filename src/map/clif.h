@@ -684,6 +684,7 @@ struct clif_interface {
 	uint16 map_port;
 	char map_ip_str[128];
 	int map_fd;
+	int cmd;
 	/* for clif_clearunit_delayed */
 	struct eri *delay_clearunit_ers;
 	/* Cash Shop [Ind/Hercules] */
@@ -939,6 +940,8 @@ struct clif_interface {
 	void (*specialeffect) (struct block_list* bl, int type, enum send_target target);
 	void (*specialeffect_single) (struct block_list* bl, int type, int fd);
 	void (*specialeffect_value) (struct block_list* bl, int effect_id, int num, send_target target);
+	void (*removeSpecialEffect) (struct block_list *bl, int effectId, enum send_target target);
+	void (*removeSpecialEffect_single) (struct block_list *bl, int effectId, struct block_list *targetBl);
 	void (*millenniumshield) (struct block_list *bl, short shields );
 	void (*spiritcharm) (struct map_session_data *sd);
 	void (*charm_single) (int fd, struct map_session_data *sd);
@@ -1549,6 +1552,8 @@ struct clif_interface {
 	void (*petEvolutionResult) (int fd, enum pet_evolution_result result);
 	void (*party_dead_notification) (struct map_session_data *sd);
 	void (*pMemorialDungeonCommand) (int fd, struct map_session_data *sd);
+	void (*camera_showWindow) (struct map_session_data *sd);
+	void (*camera_change) (struct map_session_data *sd, float range, float rotation, float latitude, enum send_target target);
 };
 
 #ifdef HERCULES_CORE
