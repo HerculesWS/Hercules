@@ -14232,7 +14232,7 @@ static BUILDIN(delwall)
 static BUILDIN(checkwall) {
 	const char *name = script_getstr(st, 2);
 
-	script_pushint(st, (strdb_get(map->iwall_db, name) == NULL) ? 0 : 1);
+	script_pushint(st, strdb_exists(map->iwall_db, name) ? 1 : 0);
 
 	return true;
 
