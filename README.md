@@ -29,17 +29,17 @@ Project Info:
 
 Table of Contents
 ---------
-* 1 What is Hercules?
-* 2 Prerequisites
-* 3 Installation
-* 4 Troubleshooting
-* 5 Helpful Links
-* 6 More Documentation
+1. What is Hercules?
+2. Prerequisites
+3. Installation
+4. Troubleshooting
+5. Helpful Links
+6. More Documentation
 
 What is Hercules?
 -----------------
 Hercules is a collaborative software development project revolving around the
-creation of a robust Massively Multiplayer Online Role Playing Game (MMORPG)
+creation of a robust Massively Multiplayer Online Role-Playing Game (MMORPG)
 server package. Written in C, the program is very versatile and provides NPCs,
 warps and modifications. The project is jointly managed by a group of
 volunteers located around the world as well as a tremendous community providing
@@ -64,7 +64,7 @@ Platforms](https://github.com/HerculesWS/Hercules/wiki/Supported-Platforms) wiki
   - git
   - gcc or clang (version 4.5 or newer, recommended 5.0 or newer)
   - GNU make
-  - mysql (`mysql-server`) or mariadb
+  - MySQL (`mysql-server`) or MariaDB
   - libmysqlclient (`mysql-devel`)
   - zlib (`zlib-devel`)
   - libpcre (`pcre-devel`)
@@ -137,7 +137,7 @@ Troubleshooting
 ---------------
 
 If you're having problems with starting your server, the first thing you should
-do is check what's happening on your consoles. More often that not, all support
+do is check what's happening on your consoles. More often than not, all support
 issues can be solved simply by looking at the error messages given.
 
 Examples:
