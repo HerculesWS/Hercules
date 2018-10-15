@@ -570,6 +570,8 @@ struct Battle_Config {
 
 	int feature_enable_attendance_system;
 	int feature_attendance_endtime;
+
+	int channel_opt_msg_delay;
 };
 
 /* criteria for battle_config.idletime_critera */
