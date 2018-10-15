@@ -276,7 +276,9 @@ static void channel_send(struct channel_data *chan, struct map_session_data *sd,
 	if (sd && chan->msg_delay != 0
 	 && DIFF_TICK(sd->hchsysch_tick + chan->msg_delay*1000, timer->gettick()) > 0
 	 && !pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN)) {
-		clif->messagecolor_self(sd->fd, COLOR_RED, msg_sd(sd,1455));
+		char output[CHAT_SIZE_MAX];
+		sprintf(output, msg_sd(sd, 1455), DIFF_TICK(sd->hchsysch_tick + chan->msg_delay * 1000, timer->gettick()) / 1000); // "You cannot send a message to this channel for another %d seconds."
+		clif->messagecolor_self(sd->fd, COLOR_RED, output);
 		return;
 	} else if (sd) {
 		int i;
