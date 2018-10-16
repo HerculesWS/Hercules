@@ -472,22 +472,26 @@ Displays inventory contents of the attached player.
 @who
 @who2
 @who3
+@who4
 
 Returns a list of online characters.
 @who will also return character positions.
 @who2 will also return job classes.
 @who3 will also return parties/guilds.
+@who4 will also return character positions, excluding vendor characters from being listed.
 
 ---------------------------------------
 
 @whomap
 @whomap2
 @whomap3
+@whomap4
 
 Returns a list of online characters in a specific map.
 @whomap will also return character positions.
 @whomap2 will also return job classes.
 @whomap3 will also return parties/guilds.
+@whomap4 will also return character positions, excluding vendor characters from being listed.
 
 ---------------------------------------
 
