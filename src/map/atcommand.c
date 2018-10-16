@@ -9398,8 +9398,8 @@ ACMD(channel)
 		} else {
 			int v = atoi(sub3);
 			if (k == HCS_OPT_MSG_DELAY) {
-				if (v < 0 || v > 10) {
-					safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1451), v, opt_str[k]);// value '%d' for option '%s' is out of range (limit is 0-10)
+				if (v < 0 || v > channel->config->channel_opt_msg_delay) {
+					safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1451), v, opt_str[k], channel->config->channel_opt_msg_delay);// value '%d' for option '%s' is out of range (limit is 0-%d)
 					clif->message(fd, atcmd_output);
 					return false;
 				}

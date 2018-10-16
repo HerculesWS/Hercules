@@ -622,7 +622,8 @@ static void read_channels_config(void)
 			irc_autojoin = 0,
 			irc_flood_protection_rate = 0,
 			irc_flood_protection_burst = 0,
-			irc_flood_protection_enabled = 0;
+			irc_flood_protection_enabled = 0,
+			channel_opt_msg_delay = 10;
 
 		if( !libconfig->setting_lookup_string(settings, "map_local_channel_name", &local_name) )
 			local_name = "map";
@@ -817,6 +818,16 @@ static void read_channels_config(void)
 				channel->create(HCS_TYPE_PUBLIC, name, k);
 			}
 		}
+
+		libconfig->setting_lookup_int(settings, "channel_opt_msg_delay", &channel_opt_msg_delay);
+		if (channel_opt_msg_delay < 0) {
+			ShowWarning("channels.conf: channel_opt_msg_delay value '%d' must be from 0-255. Defaulting to 0...\n", channel_opt_msg_delay);
+			channel_opt_msg_delay = 0;
+		} else if (channel_opt_msg_delay > 255) {
+			ShowWarning("channels.conf: channel_opt_msg_delay value '%d' must be from 0-255. Defaulting to 255...\n", channel_opt_msg_delay);
+			channel_opt_msg_delay = 255;
+		}
+		channel->config->channel_opt_msg_delay = channel_opt_msg_delay;
 
 		ShowStatus("Done reading '"CL_WHITE"%u"CL_RESET"' channels in '"CL_WHITE"%s"CL_RESET"'.\n", db_size(channel->db), config_filename);
 	}
