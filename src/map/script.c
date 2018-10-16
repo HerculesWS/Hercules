@@ -24810,6 +24810,38 @@ static BUILDIN(changecamera)
 	return true;
 }
 
+// Reset 'Feeling' maps.
+BUILDIN(resetfeel)
+{
+	struct map_session_data *sd;
+
+	if (script_hasdata(st, 2))
+		sd = script->id2sd(st, script_getnum(st, 2));
+	else
+		sd = script->rid2sd(st);
+
+	if (sd != NULL)
+		pc->resetfeel(sd);
+
+	return true;
+}
+
+// Reset hatred target marks.
+BUILDIN(resethate)
+{
+	struct map_session_data *sd;
+
+	if (script_hasdata(st, 2))
+		sd = script->id2sd(st, script_getnum(st, 2));
+	else
+		sd = script->rid2sd(st);
+
+	if (sd != NULL)
+		pc->resethate(sd);
+
+	return true;
+}
+
 /**
  * Adds a built-in script function.
  *
@@ -25136,6 +25168,8 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(resetlvl,"i"),
 		BUILDIN_DEF(resetstatus,""),
 		BUILDIN_DEF(resetskill,""),
+		BUILDIN_DEF(resetfeel, "?"),
+		BUILDIN_DEF(resethate, "?"),
 		BUILDIN_DEF(skillpointcount,""),
 		BUILDIN_DEF(changebase,"i?"),
 		BUILDIN_DEF(changesex,""),

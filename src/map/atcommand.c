@@ -8170,6 +8170,15 @@ ACMD(feelreset)
 	return true;
 }
 
+// Reset hatred targets [Wolfie]
+ACMD(hatereset)
+{
+	pc->resethate(sd);
+	clif->message(fd, msg_fd(fd, 979)); // Reset 'Hatred' targets.
+
+	return true;
+}
+
 /*==========================================
  * AUCTION SYSTEM
  *------------------------------------------*/
@@ -10063,6 +10072,7 @@ static void atcommand_basecommands(void)
 		ACMD_DEF(homshuffle),
 		ACMD_DEF(showmobs),
 		ACMD_DEF(feelreset),
+		ACMD_DEF(hatereset),
 		ACMD_DEF(auction),
 		ACMD_DEF(mail),
 		ACMD_DEF2("noks", ksprotection),
