@@ -1052,7 +1052,7 @@ OnInit:
 
 OnEnable:
 	enablenpc "#wop_warp_a";
-	specialeffect(EF_MAPPILLAR2, AREA, getnpcid(0, "#wop_warp_a"));
+	specialeffect(EF_MAPPILLAR2, AREA, getnpcid("#wop_warp_a"));
 	end;
 
 OnDisable:
@@ -1074,7 +1074,7 @@ OnInit:
 
 OnEnable:
 	enablenpc "#wop_warp_d";
-	specialeffect(EF_MAPPILLAR2, AREA, getnpcid(0, "#wop_warp_d"));
+	specialeffect(EF_MAPPILLAR2, AREA, getnpcid("#wop_warp_d"));
 	end;
 
 OnDisable:

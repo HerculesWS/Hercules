@@ -2328,7 +2328,7 @@ izlude,140,249,7	script	Academy Student#0	4_M_NOV_RUMIN,{
 		close();
 	}
 	if (questprogress(7478) == 1 && !questprogress(7479)) {
-		specialeffect(EF_STEAL, AREA, getnpcid(0, "Cultivated Red Plant#"+strnpcinfo(NPC_NAME_HIDDEN)));
+		specialeffect(EF_STEAL, AREA, getnpcid("Cultivated Red Plant#"+strnpcinfo(NPC_NAME_HIDDEN)));
 		donpcevent("Cultivated Red Plant#"+strnpcinfo(NPC_NAME_HIDDEN)+"::OnDisable");
 		emotion(e_gasp, 1);
 		emotion(e_heh);
@@ -5693,7 +5693,7 @@ izlude,95,146,5	script	Mom#iz	4_F_CAVE1,{
 	mes("^0000cd[Come to me, honey~]^000000");
 	next();
 	enablenpc("Etinifni#"+strnpcinfo(NPC_NAME_HIDDEN));
-	specialeffect(EF_PORTAL, AREA, getnpcid(0, "Etinifni#"+strnpcinfo(NPC_NAME_HIDDEN)));
+	specialeffect(EF_PORTAL, AREA, getnpcid("Etinifni#"+strnpcinfo(NPC_NAME_HIDDEN)));
 	mes("[Etinifni]");
 	mes("What's up? Where am I?");
 	next();
@@ -5779,7 +5779,7 @@ izlude,99,138,3	script	Romantic Male#iz	4_M_SITDOWN,{
 	mes("[Romantic Male]");
 	mes("Are you lifting up our good old memories renting my wedding dress and your tuxedo!! It will strenghthen our relationship, won't it?");
 	next();
-	specialeffect(EF_HEARTCASTING, AREA, getnpcid(0, "Romantic Female#"+strnpcinfo(NPC_NAME_HIDDEN)));
+	specialeffect(EF_HEARTCASTING, AREA, getnpcid("Romantic Female#"+strnpcinfo(NPC_NAME_HIDDEN)));
 	emotion(e_kis, 0, "Romantic Female#"+strnpcinfo(NPC_NAME_HIDDEN));
 	mes("[Romantic Male]");
 	mes("Honey~~ I love you!! Sweetheart~");
@@ -5813,7 +5813,7 @@ izlude,97,138,5	script	Romantic Female#iz	4_F_SITDOWN,{
 	mes("[Romantic Female]");
 	mes("You are tired of sitting, aren't you?");
 	next();
-	specialeffect(EF_HEARTCASTING, AREA, getnpcid(0, "Romantic Female#"+strnpcinfo(NPC_NAME_HIDDEN)));
+	specialeffect(EF_HEARTCASTING, AREA, getnpcid("Romantic Female#"+strnpcinfo(NPC_NAME_HIDDEN)));
 	emotion(e_kis, 0, "Romantic Female#"+strnpcinfo(NPC_NAME_HIDDEN));
 	mes("[Romantic Female]");
 	mes("My sweetheart!!! I love you!!!");
@@ -5821,7 +5821,7 @@ izlude,97,138,5	script	Romantic Female#iz	4_F_SITDOWN,{
 	mes("[Romantic Male]");
 	mes("Yes, thank you for sharing your SP! You are also tired, aren't you?");
 	next();
-	specialeffect(EF_HEARTCASTING, AREA, getnpcid(0, "Romantic Male#"+strnpcinfo(NPC_NAME_HIDDEN)));
+	specialeffect(EF_HEARTCASTING, AREA, getnpcid("Romantic Male#"+strnpcinfo(NPC_NAME_HIDDEN)));
 	emotion(e_kis2, 0, "Romantic Male#"+strnpcinfo(NPC_NAME_HIDDEN));
 	mes("[Romantic Male]");
 	mes("My sweetheart!! I love you!!!");

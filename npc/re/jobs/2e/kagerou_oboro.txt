@@ -1990,15 +1990,15 @@ job_ko,127,125,4	script	Red Leopard Joe#ko	4_M_JOB_ASSASSIN,{
 		mes "[Red Leopard Joe]";
 		mes "Let's now create a new prototype weapon.";
 		next;
-		specialeffect(EF_GUIDEDATTACK, AREA, getnpcid(0, "Crafting Tools#ko_01"));
+		specialeffect(EF_GUIDEDATTACK, AREA, getnpcid("Crafting Tools#ko_01"));
 		mes "[Red Leopard Joe]";
 		mes "Feel free to use tools from here, and...";
 		next;
-		specialeffect(EF_GUIDEDATTACK, AREA, getnpcid(0, "Crafting Tools#ko_02"));
+		specialeffect(EF_GUIDEDATTACK, AREA, getnpcid("Crafting Tools#ko_02"));
 		mes "[Red Leopard Joe]";
 		mes "...there...";
 		next;
-		specialeffect(EF_GUIDEDATTACK, AREA, getnpcid(0, "Crafting Tools#ko_03"));
+		specialeffect(EF_GUIDEDATTACK, AREA, getnpcid("Crafting Tools#ko_03"));
 		setquest 5142;
 		mes "[Red Leopard Joe]";
 		mes "...and everywhere else. Now let's begin!!";
@@ -2183,15 +2183,15 @@ L_Weapon:
 	next;
 	switch(select("Crafting tools?", "I don't have enough materials.", "How do you expect me to make a weapon?" + getarg(0))) {
 	case 1:
-		specialeffect(EF_GUIDEDATTACK, AREA, getnpcid(0, "Crafting Tools#ko_01"));
+		specialeffect(EF_GUIDEDATTACK, AREA, getnpcid("Crafting Tools#ko_01"));
 		mes "[Red Leopard Joe]";
 		mes "Feel free to use tools from here, and...";
 		next;
-		specialeffect(EF_GUIDEDATTACK, AREA, getnpcid(0, "Crafting Tools#ko_02"));
+		specialeffect(EF_GUIDEDATTACK, AREA, getnpcid("Crafting Tools#ko_02"));
 		mes "[Red Leopard Joe]";
 		mes "...there...";
 		next;
-		specialeffect(EF_GUIDEDATTACK, AREA, getnpcid(0, "Crafting Tools#ko_03"));
+		specialeffect(EF_GUIDEDATTACK, AREA, getnpcid("Crafting Tools#ko_03"));
 		mes "[Red Leopard Joe]";
 		mes "...and everywhere else.";
 		close;
@@ -2199,7 +2199,7 @@ L_Weapon:
 		mes "[Red Leopard Joe]";
 		mes "You haven't brought enough materials?";
 		next;
-		specialeffect(EF_GUIDEDATTACK, AREA, getnpcid(0, "Drawer#ko"));
+		specialeffect(EF_GUIDEDATTACK, AREA, getnpcid("Drawer#ko"));
 		mes "[Red Leopard Joe]";
 		mes "Then we'll have to pay a visit to the village. Try the ^FF0000drawer^000000 over there. It'll take you to the village.";
 		close;

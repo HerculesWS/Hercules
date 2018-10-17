@@ -7096,15 +7096,15 @@ mosk_dun01,45,259,0	script	Wall#rus04	HIDDEN_NPC,{
 			mes "- The wind disappears and -";
 			mes "- a very young girl appears -";
 			donpcevent "Maria Morebna#rus46::OnEnable";
-			specialeffect(EF_FREEZED, AREA, getnpcid(0, "Maria Morebna#rus46"));
+			specialeffect(EF_FREEZED, AREA, getnpcid("Maria Morebna#rus46"));
 			next;
 			mes "[Maria Morebna]";
 			mes "Thank you!";
 			mes "I'm finally out of there! Now I can.....................aaaaak!!!....";
 			next;
-			specialeffect(EF_HIT2, AREA, getnpcid(0, "Maria Morebna#rus46"));
-			specialeffect(EF_DARKBREATH, AREA, getnpcid(0, "Maria Morebna#rus46"));
-			specialeffect(EF_DEVIL, AREA, getnpcid(0, "Maria Morebna#rus46"));
+			specialeffect(EF_HIT2, AREA, getnpcid("Maria Morebna#rus46"));
+			specialeffect(EF_DARKBREATH, AREA, getnpcid("Maria Morebna#rus46"));
+			specialeffect(EF_DEVIL, AREA, getnpcid("Maria Morebna#rus46"));
 			mes "- Maria is attacked -";
 			mes "- and falls down!! -";
 			next;
@@ -7133,7 +7133,7 @@ mosk_dun01,45,259,0	script	Wall#rus04	HIDDEN_NPC,{
 			mes "Gray Wolf...";
 			mes "You think you can fight me?!";
 			next;
-			specialeffect(EF_FIREHIT, AREA, getnpcid(0, "Gray Wolf#rus05"));
+			specialeffect(EF_FIREHIT, AREA, getnpcid("Gray Wolf#rus05"));
 			mes "- Staggering from -";
 			mes "- Koshei's flames, -";
 			mes "- Gray Wolf quickly tell me -";
@@ -7261,7 +7261,7 @@ mosk_dun01,45,259,0	script	Wall#rus04	HIDDEN_NPC,{
 		mes "- The wounds and -";
 		mes "- curses on her body -";
 		mes "- are removed !! -";
-		specialeffect(EF_ABSORBSPIRITS, AREA, getnpcid(0, "Maria Morebna#rus46"));
+		specialeffect(EF_ABSORBSPIRITS, AREA, getnpcid("Maria Morebna#rus46"));
 		next;
 		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Ok! Next...";
@@ -7291,7 +7291,7 @@ mosk_dun01,45,259,0	script	Wall#rus04	HIDDEN_NPC,{
 			next;
 		}
 		mes "- !! -";
-		specialeffect(EF_RESURRECTION, AREA, getnpcid(0, "Maria Morebna#rus46"));
+		specialeffect(EF_RESURRECTION, AREA, getnpcid("Maria Morebna#rus46"));
 		next;
 		mes "[Gray Wolf]";
 		mes "Success!!";

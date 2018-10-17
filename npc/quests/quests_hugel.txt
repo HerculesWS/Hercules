@@ -297,7 +297,7 @@ hu_in01,387,245,0	script	Allen Schuwell	4_M_DIEMAN,2,2,{
 			mes "medicine you're";
 			mes "supposed to";
 			mes "need so badly.";
-			specialeffect(EF_CHANGECOLD, AREA, getnpcid(0, "Postell Schuwell#D"));
+			specialeffect(EF_CHANGECOLD, AREA, getnpcid("Postell Schuwell#D"));
 			next;
 			mes "[Allen]";
 			mes "Thank goodness...";
@@ -9384,7 +9384,7 @@ OnTouch:
 		mes "followed. Hold on a sec";
 		mes "while I take care of him.";
 		next;
-		specialeffect(EF_SONICBLOWHIT, AREA, getnpcid(0, "Hit"));
+		specialeffect(EF_SONICBLOWHIT, AREA, getnpcid("Hit"));
 		mes "[???]";
 		mes "Ha!";
 		next;

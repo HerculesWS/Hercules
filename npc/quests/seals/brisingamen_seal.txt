@@ -3226,7 +3226,7 @@ OnTouch:
 	mes "Go, Lowen!";
 	mes "Cast Grand Cross, now!^000000";
 	next;
-	specialeffect(EF_BEGINSPELL7, AREA, getnpcid(0, "#lowen"));
+	specialeffect(EF_BEGINSPELL7, AREA, getnpcid("#lowen"));
 	mapannounce "que_god02","Mwahaha! Mortals are such fools...",0,0xA8A8A8;
 	donpcevent "#brisinsummon::OnDoppel1Off";
 	donpcevent "#brisinsummon::OnDoppel2On";
@@ -3237,7 +3237,7 @@ OnTouch:
 	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes " ??!!!";
 	next;
-	specialeffect(EF_BEGINSPELL7, AREA, getnpcid(0, "#doppelganger2"));
+	specialeffect(EF_BEGINSPELL7, AREA, getnpcid("#doppelganger2"));
 	mes "[Male Voice]";
 	mes "Lowen!";
 	mes "Noooooooooo!!!";

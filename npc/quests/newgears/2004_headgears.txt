@@ -1927,10 +1927,10 @@ alde_alche,88,180,0	script	Muscle Man#Alarm Mask	4_M_ALCHE_A,{
 	enablenpc " #Alarm Mask Man2";
 	enablenpc " #Alarm Mask Man3";
 	enablenpc " #Alarm Mask Man4";
-	specialeffect(EF_CLAYMORE, AREA, getnpcid(0, " #Alarm Mask Man1"));
-	specialeffect(EF_CLAYMORE, AREA, getnpcid(0, " #Alarm Mask Man2"));
-	specialeffect(EF_CLAYMORE, AREA, getnpcid(0, " #Alarm Mask Man3"));
-	specialeffect(EF_CLAYMORE, AREA, getnpcid(0, " #Alarm Mask Man4"));
+	specialeffect(EF_CLAYMORE, AREA, getnpcid(" #Alarm Mask Man1"));
+	specialeffect(EF_CLAYMORE, AREA, getnpcid(" #Alarm Mask Man2"));
+	specialeffect(EF_CLAYMORE, AREA, getnpcid(" #Alarm Mask Man3"));
+	specialeffect(EF_CLAYMORE, AREA, getnpcid(" #Alarm Mask Man4"));
 	initnpctimer;
 	if (countitem(Needle_Of_Alarm) > 2999 && countitem(Mr_Scream) > 0) {
 		if (select("Give him items", "Cancel") == 1) {
@@ -2042,10 +2042,10 @@ OnTimer4000:
 	disablenpc " #Alarm Mask Man2";
 	disablenpc " #Alarm Mask Man3";
 	disablenpc " #Alarm Mask Man4";
-	specialeffect(EF_CLAYMORE, AREA, getnpcid(0, " #Alarm Mask Man1"));
-	specialeffect(EF_CLAYMORE, AREA, getnpcid(0, " #Alarm Mask Man2"));
-	specialeffect(EF_CLAYMORE, AREA, getnpcid(0, " #Alarm Mask Man3"));
-	specialeffect(EF_CLAYMORE, AREA, getnpcid(0, " #Alarm Mask Man4"));
+	specialeffect(EF_CLAYMORE, AREA, getnpcid(" #Alarm Mask Man1"));
+	specialeffect(EF_CLAYMORE, AREA, getnpcid(" #Alarm Mask Man2"));
+	specialeffect(EF_CLAYMORE, AREA, getnpcid(" #Alarm Mask Man3"));
+	specialeffect(EF_CLAYMORE, AREA, getnpcid(" #Alarm Mask Man4"));
 	stopnpctimer;
 	end;
 }

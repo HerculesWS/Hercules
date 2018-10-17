@@ -2088,11 +2088,11 @@ OnTimer1000:
 OnTimer5000:
 	.@pillar = 1;
 OnTimer3000:
-	specialeffect(EF_BEGINSPELL7, AREA, getnpcid(0, "#tteffect05"));
-	specialeffect(EF_BEGINSPELL3, AREA, getnpcid(0, "#tteffect04"));
-	specialeffect(EF_BEGINSPELL2, AREA, getnpcid(0, "#tteffect03"));
-	specialeffect(EF_BEGINSPELL4, AREA, getnpcid(0, "#tteffect02"));
-	specialeffect(EF_BEGINSPELL5, AREA, getnpcid(0, "#tteffect01"));
+	specialeffect(EF_BEGINSPELL7, AREA, getnpcid("#tteffect05"));
+	specialeffect(EF_BEGINSPELL3, AREA, getnpcid("#tteffect04"));
+	specialeffect(EF_BEGINSPELL2, AREA, getnpcid("#tteffect03"));
+	specialeffect(EF_BEGINSPELL4, AREA, getnpcid("#tteffect02"));
+	specialeffect(EF_BEGINSPELL5, AREA, getnpcid("#tteffect01"));
 	if (.@pillar) specialeffect EF_MAPPILLAR2;
 	end;
 }
@@ -2235,8 +2235,8 @@ OnDisable:
 
 thana_boss,141,218,0	script	#sommon_thanatos	FAKE_NPC,{
 OnEnable:
-	specialeffect(EF_MAPPILLAR2, AREA, getnpcid(0, "#sommon_thanatos"));
-	specialeffect(EF_SEISMICWEAPON, AREA, getnpcid(0, "#sommon_thanatos"));
+	specialeffect(EF_MAPPILLAR2, AREA, getnpcid("#sommon_thanatos"));
+	specialeffect(EF_SEISMICWEAPON, AREA, getnpcid("#sommon_thanatos"));
 	monster "thana_boss",141,218,"Thanatos Phantom",1708,1,"#sommon_thanatos::OnMyMobDead";
 	end;
 OnMyMobDead:
