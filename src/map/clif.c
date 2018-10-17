@@ -21936,6 +21936,7 @@ static void clif_parse_memorial_dungeon_command(int fd, struct map_session_data 
 static void clif_camera_showWindow(struct map_session_data *sd)
 {
 #if PACKETVER >= 20160525
+	nullpo_retv(sd);
 	struct PACKET_ZC_CAMERA_INFO p;
 	p.packetType = 0xa78;
 	p.action = 1;
@@ -21949,6 +21950,7 @@ static void clif_camera_showWindow(struct map_session_data *sd)
 static void clif_camera_change(struct map_session_data *sd, float range, float rotation, float latitude, enum send_target target)
 {
 #if PACKETVER >= 20160525
+	nullpo_retv(sd);
 	struct PACKET_ZC_CAMERA_INFO p;
 	p.packetType = 0xa78;
 	p.action = 0;
