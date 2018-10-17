@@ -1262,7 +1262,7 @@ OnTouch:
 	mes "So bright and warm....";
 	next;
 	mes "- Shoooo -";
-	specialeffect(EF_CLOAKING, AREA, getnpcid(0, "Valkyrie Anguhilde#end"));
+	specialeffect(EF_CLOAKING, AREA, getnpcid("Valkyrie Anguhilde#end"));
 	hideonnpc "Valkyrie Anguhilde#end";
 	emotion e_omg,1;
 	next;

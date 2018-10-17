@@ -1348,33 +1348,33 @@ OnMVP:
 	end;
 
 OnTimer1000:
-	specialeffect(EF_MVP, AREA, getnpcid(0, "paper_sp_1_s"));
-	specialeffect(EF_MVP, AREA, getnpcid(0, "paper_sp_3_s"));
-	specialeffect(EF_MVP, AREA, getnpcid(0, "paper_sp_5_s"));
-	specialeffect(EF_MVP, AREA, getnpcid(0, "paper_sp_7_s"));
-	specialeffect(EF_MVP, AREA, getnpcid(0, "paper_sp_9_s"));
+	specialeffect(EF_MVP, AREA, getnpcid("paper_sp_1_s"));
+	specialeffect(EF_MVP, AREA, getnpcid("paper_sp_3_s"));
+	specialeffect(EF_MVP, AREA, getnpcid("paper_sp_5_s"));
+	specialeffect(EF_MVP, AREA, getnpcid("paper_sp_7_s"));
+	specialeffect(EF_MVP, AREA, getnpcid("paper_sp_9_s"));
 	end;
 
 OnTimer2000:
-	specialeffect(EF_MVP, AREA, getnpcid(0, "paper_sp_2_s"));
-	specialeffect(EF_MVP, AREA, getnpcid(0, "paper_sp_4_s"));
-	specialeffect(EF_MVP, AREA, getnpcid(0, "paper_sp_6_s"));
-	specialeffect(EF_MVP, AREA, getnpcid(0, "paper_sp_8_s"));
+	specialeffect(EF_MVP, AREA, getnpcid("paper_sp_2_s"));
+	specialeffect(EF_MVP, AREA, getnpcid("paper_sp_4_s"));
+	specialeffect(EF_MVP, AREA, getnpcid("paper_sp_6_s"));
+	specialeffect(EF_MVP, AREA, getnpcid("paper_sp_8_s"));
 	end;
 
 OnTimer3000:
-	specialeffect(EF_MVP, AREA, getnpcid(0, "paper_sp_1_s"));
-	specialeffect(EF_MVP, AREA, getnpcid(0, "paper_sp_3_s"));
-	specialeffect(EF_MVP, AREA, getnpcid(0, "paper_sp_5_s"));
-	specialeffect(EF_MVP, AREA, getnpcid(0, "paper_sp_7_s"));
-	specialeffect(EF_MVP, AREA, getnpcid(0, "paper_sp_9_s"));
+	specialeffect(EF_MVP, AREA, getnpcid("paper_sp_1_s"));
+	specialeffect(EF_MVP, AREA, getnpcid("paper_sp_3_s"));
+	specialeffect(EF_MVP, AREA, getnpcid("paper_sp_5_s"));
+	specialeffect(EF_MVP, AREA, getnpcid("paper_sp_7_s"));
+	specialeffect(EF_MVP, AREA, getnpcid("paper_sp_9_s"));
 	end;
 
 OnTimer4000:
-	specialeffect(EF_MVP, AREA, getnpcid(0, "paper_sp_2_s"));
-	specialeffect(EF_MVP, AREA, getnpcid(0, "paper_sp_4_s"));
-	specialeffect(EF_MVP, AREA, getnpcid(0, "paper_sp_6_s"));
-	specialeffect(EF_MVP, AREA, getnpcid(0, "paper_sp_8_s"));
+	specialeffect(EF_MVP, AREA, getnpcid("paper_sp_2_s"));
+	specialeffect(EF_MVP, AREA, getnpcid("paper_sp_4_s"));
+	specialeffect(EF_MVP, AREA, getnpcid("paper_sp_6_s"));
+	specialeffect(EF_MVP, AREA, getnpcid("paper_sp_8_s"));
 	stopnpctimer;
 	end;
 }

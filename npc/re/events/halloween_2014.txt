@@ -170,7 +170,7 @@
 			mes "[Mighty Priest]";
 			mes "Dear Odin, show me your love!";
 			mes "Heal me with your love! Great!! Bam!!!!!";
-			specialeffect(EF_HEAL2, AREA, getnpcid(0, "Exhausted Priest#pron14hal"));
+			specialeffect(EF_HEAL2, AREA, getnpcid("Exhausted Priest#pron14hal"));
 			emotion e_swt, 1;
 			next;
 			mes "[Mighty Priest]";
@@ -1373,8 +1373,8 @@ niflheim,193,186,6	script	Bonfire Spirit#14hal	4_TRACE,{
 	OnTimer21000:
 	OnTimer23000:
 	OnTimer25000:
-		specialeffect(EF_TORCH, AREA, getnpcid(0, "Bonfire Spirit#14hal"));
-		specialeffect(EF_DRAGONSMOKE, AREA, getnpcid(0, "Bonfire Spirit#14hal"));
+		specialeffect(EF_TORCH, AREA, getnpcid("Bonfire Spirit#14hal"));
+		specialeffect(EF_DRAGONSMOKE, AREA, getnpcid("Bonfire Spirit#14hal"));
 		end;
 
 	OnTimer5000:
@@ -1383,16 +1383,16 @@ niflheim,193,186,6	script	Bonfire Spirit#14hal	4_TRACE,{
 	OnTimer13000:
 	OnTimer14000:
 	OnTimer16000:
-		specialeffect(EF_DRAGONSMOKE, AREA, getnpcid(0, "Bonfire Spirit#14hal"));
+		specialeffect(EF_DRAGONSMOKE, AREA, getnpcid("Bonfire Spirit#14hal"));
 		end;
 
 	OnTimer19000:
 		npctalk "Oh, No! The fire is dying!!!! Fire!!!!!!!!!!!!";
-		specialeffect(EF_DRAGONSMOKE, AREA, getnpcid(0, "Bonfire Spirit#14hal"));
+		specialeffect(EF_DRAGONSMOKE, AREA, getnpcid("Bonfire Spirit#14hal"));
 		end;
 
 	OnTimer20000:
-		specialeffect(EF_SIGHTRASHER, AREA, getnpcid(0, "Bonfire Spirit#14hal"));
+		specialeffect(EF_SIGHTRASHER, AREA, getnpcid("Bonfire Spirit#14hal"));
 		end;
 
 	OnTimer27000:
@@ -1543,7 +1543,7 @@ prt_church,96,91,4	script	Spiritual Sister#14hal	1_F_PRIEST,5,5,{
 			mes "This is enough. I can make it soon.";
 			mes "Odin Crystal power! with Holy light!!!!";
 			next;
-			specialeffect(EF_HOLYHIT, AREA, getnpcid(0, "Spiritual Sister#14hal"));
+			specialeffect(EF_HOLYHIT, AREA, getnpcid("Spiritual Sister#14hal"));
 			mes "[Sister Haley]";
 			mes "Whoa~ It's done.";
 			mes "Hold  ^0000cd this in your pocket^000000 and go to the crowd with live and dead ones, you will see who is dead or live.";
@@ -1691,7 +1691,7 @@ xmas_in,160,175,1	script	Worried Wife#14hal	4_F_05,{
 			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "It's almost ran out.. Why not he wakes up..";
 			mes "Oh!!";
-			specialeffect(EF_RESURRECTION, AREA, getnpcid(0, "Richard#14hal02"));
+			specialeffect(EF_RESURRECTION, AREA, getnpcid("Richard#14hal02"));
 			next;
 			mes "[Richard]";
 			mes "Uhh.. Umm..";
@@ -1726,7 +1726,7 @@ xmas_in,160,175,1	script	Worried Wife#14hal	4_F_05,{
 			next;
 			mes "[Richard's Daughter]";
 			mes "Dad!!!";
-			specialeffect(EF_SONICBLOWHIT, AREA, getnpcid(0, "Richard#14hal02"));
+			specialeffect(EF_SONICBLOWHIT, AREA, getnpcid("Richard#14hal02"));
 			next;
 			mes "[Richard]";
 			mes "O, Ouch!!!";

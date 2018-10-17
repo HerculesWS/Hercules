@@ -2574,15 +2574,12 @@ playerattached() to check for the character attached to the script.
 
 ---------------------------------------
 
-*getnpcid(<type>{, "<npc name>"})
+*getnpcid({"<npc name>"})
 
 Retrieves IDs of the currently invoked NPC. If a unique npc name is given,
-IDs of that NPC are retrieved instead. Type specifies what ID to retrieve
-and can be one of the following:
+IDs of that NPC are retrieved instead.
 
-	0 - Unit ID (GID)
-
-If an invalid type is given or the NPC does not exist, 0 is returned.
+If the NPC does not exist, 0 is returned.
 
 ---------------------------------------
 

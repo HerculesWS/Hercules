@@ -1038,23 +1038,23 @@ ein_in01,125,99,3	script	Tarsha Cherno	4_F_EINWOMAN,{
 ein_in01,127,94,3	script	#exp_ein	HIDDEN_NPC,{ end; }
 
 function	script	F_Cherno	{
-	specialeffect(EF_COMBOATTACK1, AREA, getnpcid(0, "#exp_ein"));
+	specialeffect(EF_COMBOATTACK1, AREA, getnpcid("#exp_ein"));
 	mes("^33355F*Bang*^000000");
 	next();
-	specialeffect(EF_COMBOATTACK2, AREA, getnpcid(0, "#exp_ein"));
+	specialeffect(EF_COMBOATTACK2, AREA, getnpcid("#exp_ein"));
 	mes("^3355FF*Bang*^000000");
 	if (getarg(0) == true) {
 		mes("^3355FF*Beeeeeep*^000000");
 	}
 	next();
-	specialeffect(EF_COMBOATTACK3, AREA, getnpcid(0, "#exp_ein"));
+	specialeffect(EF_COMBOATTACK3, AREA, getnpcid("#exp_ein"));
 	mes("^3355FF*Bang*^000000");
 	if (getarg(0) == true) {
 		mes("^3355FF*Beeeeeep*^000000");
 		mes("^3355FF*Boop Boop Boop*^000000");
 	}
 	next();
-	specialeffect(EF_POISONATTACK, AREA, getnpcid(0, "#exp_ein"));
+	specialeffect(EF_POISONATTACK, AREA, getnpcid("#exp_ein"));
 	mes("^33355F*Crash!*^000000");
 	mes(".....");
 	emotion(e_swt, false, "Theo Cherno");
@@ -1717,65 +1717,65 @@ OnTimer68000:
 	end;
 OnTimer73000:
 	mapannounce("airplane_01", _("*Kzzz...Drrrr...Boom! CRASH!*"), bc_map, C_LIME);
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom6#airplane"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom6#airplane"));
 	end;
 OnTimer73500:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom7#airplane"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom7#airplane"));
 	end;
 OnTimer74000:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom8#airplane"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom8#airplane"));
 	end;
 OnTimer74500:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom9#airplane"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom9#airplane"));
 	end;
 OnTimer75000:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom10#airplane"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom10#airplane"));
 	end;
 OnTimer75500:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom6#airplane"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom6#airplane"));
 	end;
 OnTimer76000:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom7#airplane"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom7#airplane"));
 	end;
 OnTimer76500:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom8#airplane"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom8#airplane"));
 	end;
 OnTimer77000:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom9#airplane"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom9#airplane"));
 	end;
 OnTimer77500:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom10#airplane"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom10#airplane"));
 	end;
 OnTimer78000:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom6#airplane"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom6#airplane"));
 	mapannounce("airplane_01", _("Engineer: Oh no! We've got a problem with the Number One Rear Engine!"), bc_map, C_LIME);
 	end;
 OnTimer79000:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom7#airplane"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom7#airplane"));
 	end;
 OnTimer80000:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom8#airplane"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom8#airplane"));
 	end;
 OnTimer81000:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom9#airplane"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom9#airplane"));
 	end;
 OnTimer82000:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom10#airplane"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom10#airplane"));
 	end;
 OnTimer83000:
 	mapannounce("airplane_01", _("Pilot: Hurry! Get the women, old people and children somewhere safe first! Hurry!"), bc_map, C_LIME);
 	end;
 OnTimer84000:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom6#airplane"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom6#airplane"));
 	end;
 OnTimer85000:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom7#airplane"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom7#airplane"));
 	end;
 OnTimer86000:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom8#airplane"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom8#airplane"));
 	end;
 OnTimer87000:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom7#airplane"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom7#airplane"));
 	end;
 OnTimer88000:
 	emotion(e_ag, false, "Airship Captain#02");
@@ -1791,46 +1791,46 @@ OnTimer98000:
 	end;
 OnTimer103000:
 	mapannounce("airplane_01", _("*Bang! Bang Bang! Bang Bang! Bang Bang Bang!*"), bc_map, C_LIME);
-	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
+	specialeffect(EF_HIT5, AREA, getnpcid("Airship Captain#02"));
 	end;
 OnTimer103500:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom1#airplane"));
-	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom1#airplane"));
+	specialeffect(EF_HIT5, AREA, getnpcid("Airship Captain#02"));
 	end;
 OnTimer104000:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom2#airplane"));
-	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom2#airplane"));
+	specialeffect(EF_HIT5, AREA, getnpcid("Airship Captain#02"));
 	end;
 OnTimer104500:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom3#airplane"));
-	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom3#airplane"));
+	specialeffect(EF_HIT5, AREA, getnpcid("Airship Captain#02"));
 	end;
 OnTimer105000:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom4#airplane"));
-	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom4#airplane"));
+	specialeffect(EF_HIT5, AREA, getnpcid("Airship Captain#02"));
 	end;
 OnTimer105500:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom5#airplane"));
-	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom5#airplane"));
+	specialeffect(EF_HIT5, AREA, getnpcid("Airship Captain#02"));
 	end;
 OnTimer106000:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom0#airplane"));
-	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom0#airplane"));
+	specialeffect(EF_HIT5, AREA, getnpcid("Airship Captain#02"));
 	end;
 OnTimer106500:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom1#airplane"));
-	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom1#airplane"));
+	specialeffect(EF_HIT5, AREA, getnpcid("Airship Captain#02"));
 	end;
 OnTimer107000:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom2#airplane"));
-	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom2#airplane"));
+	specialeffect(EF_HIT5, AREA, getnpcid("Airship Captain#02"));
 	end;
 OnTimer107500:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom4#airplane"));
-	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom4#airplane"));
+	specialeffect(EF_HIT5, AREA, getnpcid("Airship Captain#02"));
 	end;
 OnTimer108000:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom5#airplane"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom5#airplane"));
 	killmonster "airplane_01","Airship#airplane02::OnCaptainMobDead";
 	end;
 OnTimer113000:
@@ -1839,59 +1839,59 @@ OnTimer113000:
 	end;
 OnTimer118000:
 	mapannounce("airplane_01", _("*Bang! Bang Bang! Bang Bang! Bang Bang Bang!*"), bc_map, C_LIME);
-	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
+	specialeffect(EF_HIT5, AREA, getnpcid("Airship Captain#02"));
 	end;
 OnTimer118500:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom6#airplane"));
-	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom6#airplane"));
+	specialeffect(EF_HIT5, AREA, getnpcid("Airship Captain#02"));
 	end;
 OnTimer119000:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom7#airplane"));
-	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom7#airplane"));
+	specialeffect(EF_HIT5, AREA, getnpcid("Airship Captain#02"));
 	end;
 OnTimer119500:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom8#airplane"));
-	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom8#airplane"));
+	specialeffect(EF_HIT5, AREA, getnpcid("Airship Captain#02"));
 	end;
 OnTimer120000:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom9#airplane"));
-	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom9#airplane"));
+	specialeffect(EF_HIT5, AREA, getnpcid("Airship Captain#02"));
 	end;
 OnTimer120500:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom10#airplane"));
-	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom10#airplane"));
+	specialeffect(EF_HIT5, AREA, getnpcid("Airship Captain#02"));
 	end;
 OnTimer121000:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom6#airplane"));
-	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom6#airplane"));
+	specialeffect(EF_HIT5, AREA, getnpcid("Airship Captain#02"));
 	end;
 OnTimer121500:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom7#airplane"));
-	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom7#airplane"));
+	specialeffect(EF_HIT5, AREA, getnpcid("Airship Captain#02"));
 	end;
 OnTimer122000:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom8#airplane"));
-	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom8#airplane"));
+	specialeffect(EF_HIT5, AREA, getnpcid("Airship Captain#02"));
 	end;
 OnTimer122500:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom9#airplane"));
-	specialeffect(EF_HIT5, AREA, getnpcid(0, "Airship Captain#02"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom9#airplane"));
+	specialeffect(EF_HIT5, AREA, getnpcid("Airship Captain#02"));
 	end;
 OnTimer123000:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom8#airplane"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom8#airplane"));
 	mapannounce("airplane_01", _("*Boom! Boom Boom! Boom Boom! Boom!*"), bc_map, C_LIME);
 	end;
 OnTimer124000:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom9#airplane"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom9#airplane"));
 	end;
 OnTimer125000:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom10#airplane"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom10#airplane"));
 	end;
 OnTimer126000:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom6#airplane"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom6#airplane"));
 	end;
 OnTimer127000:
-	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid(0, "boom7#airplane"));
+	specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("boom7#airplane"));
 	end;
 OnTimer128000:
 	emotion(e_an, false, "Airship Captain#02");

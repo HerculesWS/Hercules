@@ -404,7 +404,7 @@ OnInstanceInit:
 	disablenpc instance_npcname("#Memorial Start_time");
 	end;
 OnEnable:
-	specialeffect(EF_BAT2, AREA, getnpcid(0, instance_npcname("#Memorial Start")));
+	specialeffect(EF_BAT2, AREA, getnpcid(instance_npcname("#Memorial Start")));
 	initnpctimer;
 	end;
 OnDisable:
@@ -890,19 +890,19 @@ OnStopTimer:
 	end;
 OnTimer1000:
 	mapannounce instance_mapname("1@ma_h"),"- Bangungot's Pillar of Spirit is curing Bangungot. If you don't hunt it now, he will fully recover!! -",bc_map,"0xFF8200";
-	specialeffect(EF_MAPPILLAR2, AREA, getnpcid(0, instance_npcname("#Patternwarp45")));
+	specialeffect(EF_MAPPILLAR2, AREA, getnpcid(instance_npcname("#Patternwarp45")));
 	end;
 OnTimer7000:
 	mapannounce instance_mapname("1@ma_h"),"Bangungot: I never die!!!!",bc_map,"0xFF82FF";
-	specialeffect(EF_MAPPILLAR2, AREA, getnpcid(0, instance_npcname("#Patternwarp45")));
+	specialeffect(EF_MAPPILLAR2, AREA, getnpcid(instance_npcname("#Patternwarp45")));
 	end;
 OnTimer14000:
 	mapannounce instance_mapname("1@ma_h"),"Bangungot: If you dare, kill me!! I will revive soon!!!",bc_map,"0xFF82FF";
-	specialeffect(EF_MAPPILLAR2, AREA, getnpcid(0, instance_npcname("#Patternwarp45")));
+	specialeffect(EF_MAPPILLAR2, AREA, getnpcid(instance_npcname("#Patternwarp45")));
 	end;
 OnTimer21000:
 	mapannounce instance_mapname("1@ma_h"),"Bangungot: I cannot die this way...!!!!",bc_map,"0xFF82FF";
-	specialeffect(EF_MAPPILLAR2, AREA, getnpcid(0, instance_npcname("#Patternwarp45")));
+	specialeffect(EF_MAPPILLAR2, AREA, getnpcid(instance_npcname("#Patternwarp45")));
 	end;
 OnTimer30000:
 	donpcevent instance_npcname("#Summon Pillar")+"::OnReset";

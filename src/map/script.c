@@ -8779,28 +8779,24 @@ static BUILDIN(getcharid)
  *------------------------------------------*/
 static BUILDIN(getnpcid)
 {
-	int num = script_getnum(st,2);
-	struct npc_data* nd = NULL;
+	struct npc_data *nd = NULL;
 
-	if( script_hasdata(st,3) )
-	{// unique npc name
-		if( ( nd = npc->name2id(script_getstr(st,3)) ) == NULL )
-		{
-			ShowError("buildin_getnpcid: No such NPC '%s'.\n", script_getstr(st,3));
-			script_pushint(st,0);
-			return false;
+	// unique npc name
+	if (script_hasdata(st, 2)) {
+		// Deprecate old form - getnpcid(<type>{, <"npc name">})
+		if (script_isinttype(st, 2)) {
+			ShowWarning("buildin_getnpcid: Use of type is deprecated. Format - getnpcid({<\"npc name\">})\n");
+			script_pushint(st, 0);
+			return true;
+		}
+
+		if ((nd = npc->name2id(script_getstr(st, 2))) == NULL) {
+			script_pushint(st, 0);
+			return true;
 		}
 	}
 
-	switch (num) {
-		case 0:
-			script_pushint(st,nd ? nd->bl.id : st->oid);
-			break;
-		default:
-			ShowError("buildin_getnpcid: invalid parameter (%d).\n", num);
-			script_pushint(st,0);
-			return false;
-	}
+	script_pushint(st, (nd != NULL) ? nd->bl.id : st->oid);
 
 	return true;
 }
@@ -25027,7 +25023,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(readparam,"i?"),
 		BUILDIN_DEF(setparam,"ii?"),
 		BUILDIN_DEF(getcharid,"i?"),
-		BUILDIN_DEF(getnpcid,"i?"),
+		BUILDIN_DEF(getnpcid, "?"),
 		BUILDIN_DEF(getpartyname,"i"),
 		BUILDIN_DEF(getpartymember,"i?"),
 		BUILDIN_DEF(getpartyleader,"i?"),

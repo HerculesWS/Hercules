@@ -828,7 +828,7 @@ brasilis,203,64,3	script	Strange Kid#bra	4_M_KID1,{
 brasilis,56,224,7	script	Mage Paje#bra	4_M_BIBI,{
 	mes "[Mage Paje]";
 	mes "Abracadabra~";
-	specialeffect(EF_POISONHIT, AREA, getnpcid(0, "Poring#bra"));
+	specialeffect(EF_POISONHIT, AREA, getnpcid("Poring#bra"));
 	setarray .@display[0], 4_NFCOCK, 4_CAT, 4_PORING;
 	setnpcdisplay "Poring#bra",.@display[rand(3)];
 	if (brazil_gua != 5) close;
@@ -950,7 +950,7 @@ OnTouch_:
 		mes "Smelling! This smell is from a human!";
 		mes "Somewhere, a human!";
 		mes "I got it. You are!!!";
-		specialeffect(EF_HIT1, AREA, getnpcid(0, "Jaguar#bra"));
+		specialeffect(EF_HIT1, AREA, getnpcid("Jaguar#bra"));
 		emotion e_omg,1;
 		next;
 		mes "[Jaguar]";
@@ -1875,7 +1875,7 @@ bra_dun02,71,200,3	script	Water lily#bra	HIDDEN_NPC,{
 		next;
 		mes "- munch -";
 		mes "- mumble mumble mumble -";
-		specialeffect(EF_POTION7, AREA, getnpcid(0, "Recluse#bra"));
+		specialeffect(EF_POTION7, AREA, getnpcid("Recluse#bra"));
 		next;
 		mes "[Jasi]";
 		mes "Uh, this taste... is!";
