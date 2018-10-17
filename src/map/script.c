@@ -9010,6 +9010,43 @@ static BUILDIN(getguildmember)
 	return true;
 }
 
+
+/**
+ * getguildonline(<Guild ID>{, type})
+ * Returns amount of guild members online.
+ * Returns -1 if guild does not exist.
+ * If type is specified 1, it will exclude vendor characters.
+**/
+BUILDIN(getguildonline)
+{
+	struct guild *g;
+	int guild_id = script_getnum(st, 2);
+	int type = 0, j = 0;
+
+	if ((g = guild->search(guild_id)) == NULL) {
+		script_pushint(st, -1);
+		return true;
+	}
+	
+	if (script_hasdata(st, 3))
+		type = script_getnum(st, 3);
+
+	if (type == 1) {
+		struct map_session_data *sd;
+		for (int i = 0; i < MAX_GUILD; i++) {
+			sd = g->member[i].sd;
+			if (sd != NULL && sd->state.vending == 0)
+				j++;
+		}
+	} else {
+		j = g->connect_member;
+	}
+
+	script_pushint(st, j);
+
+	return true;
+}
+
 /*==========================================
  * Get char string information by type :
  * Return by @type :
@@ -25035,6 +25072,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(getguildmaster,"i"),
 		BUILDIN_DEF(getguildmasterid,"i"),
 		BUILDIN_DEF(getguildmember,"i?"),
+		BUILDIN_DEF(getguildonline, "i?"),
 		BUILDIN_DEF(strcharinfo,"i??"),
 		BUILDIN_DEF(strnpcinfo,"i??"),
 		BUILDIN_DEF(charid2rid,"i"),

@@ -3766,6 +3766,15 @@ getarraysize(), because it is not cleared between runs of getguildmember().
 For usage examples, see getpartymember().
 
 ---------------------------------------
+
+*getguildonline(<guild id>{, <type>});
+
+Returns the amount of players online in the specified guild id.
+Returns -1 if the guild was not found.
+
+If type 1 is specified, vendor characters will be excluded from the count.
+
+---------------------------------------
 //=====================================
 2.2 - End of Guild-Related Commands
 //=====================================
