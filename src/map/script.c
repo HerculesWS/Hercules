@@ -24816,6 +24816,16 @@ static BUILDIN(changecamera)
 	return true;
 }
 
+// update preview window to given item
+static BUILDIN(itempreview)
+{
+	struct map_session_data *sd = script_rid2sd(st);
+	if (sd == NULL)
+		return false;
+	clif->item_preview(sd, script_getnum(st, 2));
+	return true;
+}
+
 /**
  * Adds a built-in script function.
  *
@@ -25550,6 +25560,8 @@ static void script_parse_builtin(void)
 		// camera
 		BUILDIN_DEF(camerainfo, ""),
 		BUILDIN_DEF(changecamera, "iii?"),
+
+		BUILDIN_DEF(itempreview, "i"),
 	};
 	int i, len = ARRAYLENGTH(BUILDIN);
 	RECREATE(script->buildin, char *, script->buildin_count + len); // Pre-alloc to speed up
