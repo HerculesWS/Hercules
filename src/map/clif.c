@@ -21961,6 +21961,26 @@ static void clif_camera_change(struct map_session_data *sd, float range, float r
 #endif
 }
 
+// show item preview in already opened preview window
+static void clif_item_preview(struct map_session_data *sd, int n)
+{
+#if PACKETVER_MAIN_NUM >= 20170726 || PACKETVER_RE_NUM >= 20170621 || defined(PACKETVER_ZERO)
+	nullpo_retv(sd);
+	Assert_retv(n >= 0 && n < MAX_INVENTORY);
+
+	struct PACKET_ZC_ITEM_PREVIEW p;
+	p.packetType = itemPreview;
+	p.index = n + 2;
+#if PACKETVER_MAIN_NUM >= 20181017 || PACKETVER_RE_NUM >= 20181017
+	p.isDamaged = (sd->status.inventory[n].attribute & ATTR_BROKEN) != 0 ? 1 : 0;
+#endif
+	p.refiningLevel = sd->status.inventory[n].refine;
+	clif->addcards(&p.slot, &sd->status.inventory[n]);
+	clif->add_item_options(&p.option_data[0], &sd->status.inventory[n]);
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
+#endif
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -23127,6 +23147,7 @@ void clif_defaults(void)
 
 	clif->camera_showWindow = clif_camera_showWindow;
 	clif->camera_change = clif_camera_change;
+	clif->item_preview = clif_item_preview;
 
 	// -- Pet Evolution
 	clif->pPetEvolution = clif_parse_pet_evolution;

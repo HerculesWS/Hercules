@@ -451,6 +451,11 @@ enum packet_headers {
 #else
 	guildLeave = 0x15a,
 #endif
+#if PACKETVER_MAIN_NUM >= 20181017 || PACKETVER_RE_NUM >= 20181017
+	itemPreview = 0xb13,
+#else
+	itemPreview = 0xab9,
+#endif
 };
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
@@ -2870,6 +2875,17 @@ struct PACKET_ZC_CAMERA_INFO {
 	float range;
 	float rotation;
 	float latitude;
+} __attribute__((packed));
+
+struct PACKET_ZC_ITEM_PREVIEW {
+	int16 packetType;
+	int16 index;
+#if PACKETVER_MAIN_NUM >= 20181017 || PACKETVER_RE_NUM >= 20181017
+	int8 isDamaged;
+#endif
+	int16 refiningLevel;
+	struct EQUIPSLOTINFO slot;
+	struct ItemOptions option_data[MAX_ITEM_OPTIONS];
 } __attribute__((packed));
 
 
