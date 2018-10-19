@@ -430,6 +430,9 @@ If you are reading this in a text editor, simply ignore this section
 ### Other
 - New versioning scheme and project changelogs/release notes (#1853)
 
+###Readme 
+-Readme of the project is made more stable by  making it more descriptive , making it more easily understable for users.
+
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
 [v2018.09.23]: https://github.com/HerculesWS/Hercules/compare/v2018.08.26+1...v2018.09.23
 [v2018.08.26+1]: https://github.com/HerculesWS/Hercules/compare/v2018.08.26...v2018.08.26+1
