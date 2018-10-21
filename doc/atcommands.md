@@ -1,31 +1,43 @@
-# Hercules Documentation
-## Atcommand List
-### By
-## Hercules Dev Team
-### Current Version:
-#### 20130115
-### Description:
-#### List of available atcommands and their functions.
-******
+# Atcommand List
+A list of atcommand, configured in `conf/atcommand.conf`.
 
-This file describes the usage of in-game commands and assumes that
-`conf/atcommand.conf` has the following:
+<!--
+## Copyright
+> This file is part of Hercules.
+> http://herc.ws - http://github.com/HerculesWS/Hercules
+> 
+> Copyright (C) 2012-2018 Hercules Dev Team
+> Copyright (C) Athena Dev Teams
+> 
+> Hercules is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+> 
+> This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+> See the GNU General Public License for more details.
+>
+> You should have received a copy of the GNU General Public License along with this program.  
+> If not, see <http://www.gnu.org/licenses/>.
+-->
+
+## Description
+The Hercules emulator has a atcommand system that enables players to perform certain actions, or have access to certain visual enhancements or in-game activity.
+This file describes the usage of in-game commands and assumes that `conf/atcommand.conf` has the following:
 ```
-	atcommand_symbol : "@"
-	charcommand_symbol: "#"
+	atcommand_symbol:   @
+	charcommand_symbol: #
 ```
 
-To search for a command, write "@" before the command name (ex. @commands).
+To search for a command, write `@` before the command name (ex. `@commands`).
+
 The format of this file is as follows:
-	1. System Commands
-	2. Database Commands
-	3. Player Information Commands
-	4. Action Commands
-	5. Administrative Commands
-	6. Party Commands
-	7. Guild Commands
-	8. Pet Commands
-	9. Homunculus Commands
+ 1. System Commands
+ 2. Database Commands
+ 3. Player Information Commands
+ 4. Action Commands
+ 5. Administrative Commands
+ 6. Party Commands
+ 7. Guild Commands
+ 8. Pet Commands
+ 9. Homunculus Commands
 
 *****
 ## 1. System Commands
@@ -42,10 +54,12 @@ Displays SVN version of the server.
 Displays the server rates.
 
 Output Example:
+```
 Experience rates: Base 1.00x / Job 1.00x
 Normal Drop Rates: Common 1.00x / Healing 1.00x / Usable 1.00x Equipment 1.00x / Card 1.00x
 Boss Drop Rates:  Common 1.00x / Healing 1.00x / Usable 1.00x Equipment 1.00x / Card 1.00x
 Other Drop Rates: MvP 1.00x / Card-Based 1.00x / Treasure 1.00x
+```
 
 ---------------------------------------
 
@@ -60,7 +74,9 @@ Displays the local server time, along with day/night information.
 Show server uptime since last map server restart.
 
 Output Example:
+```
 Server Uptime: 3 days, 8 hours, 6 minutes, 4 seconds.
+```
 
 ---------------------------------------
 
@@ -70,7 +86,7 @@ Server Uptime: 3 days, 8 hours, 6 minutes, 4 seconds.
 ```
 
 Synchronizes the player's position on the client with the one stored on the server.
-Additionally, @refreshall will refresh all online players.
+Additionally, `@refreshall` will refresh all online players.
 
 ---------------------------------------
 
@@ -83,18 +99,21 @@ Toggles the display of experience gain messages.
 `@showzeny`
 
 Toggles the display of Zeny gain messages.
-Configuration for zeny being dropped by mobs is in 'conf/map/battle/monster.conf':
+Configuration for zeny being dropped by mobs can be found in 
+```
+conf/map/battle/monster.conf:
 zeny_from_mobs: true
-
+```
 ---------------------------------------
 
 `@showdelay`
 
-Shows or hides the red "Cannot use the skills" message.
+Shows or hides the red `Cannot use the skills` message.
 
 Output Example:
+```
 [Storm Gust] Cannot use the skills.
-
+```
 ---------------------------------------
 
 `@noask`
@@ -105,13 +124,13 @@ Toggles automatic rejection of deals and invites.
 
 `@noks`
 
-Toggles Kill Steal Protection.
+Toggles Kill Steal (KS) Protection.
 
 ---------------------------------------
 
 `@font <0-9>`
 
-Sets client font (0 is the default).
+Sets client font (`0` is the default).
 
 ---------------------------------------
 
@@ -121,7 +140,7 @@ Sets client font (0 is the default).
 ```
 
 Starts or ends War of Emperium [FE] by invoking scripts with the
-OnAgitStart/OnAgitEnd labels.
+`OnAgitStart`/`OnAgitEnd` labels.
 
 ---------------------------------------
 
@@ -131,7 +150,7 @@ OnAgitStart/OnAgitEnd labels.
 ```
 
 Starts or ends War of Emperium [SE] by invoking scripts with the
-OnAgitStart2/OnAgitEnd2 labels.
+`OnAgitStart2`/`OnAgitEnd2` labels.
 
 ---------------------------------------
 
@@ -164,7 +183,7 @@ Enables or disables skill usage on a map.
 
 `@allowks`
 
-Toggles Kill Steal Protection on a map.
+Toggles Kill Steal (KS) Protection on a map.
 
 ---------------------------------------
 
@@ -199,14 +218,13 @@ Toggles weather effects on your map.
 
 `@clearweather`
 
-Stops all weather effects. May require a map change or @refresh
-for the effect to stop client-side.
+Stops all weather effects. May require a map change or `@refresh` for the effect to stop client-side.
 
 ---------------------------------------
 
 `@mapflag <flag> <value 0-1>`
 
-Sets a mapflag for the current map (1 = On, 0 = Off).
+Sets a mapflag for the current map (`1` = On, `0` = Off).
 
 ---------------------------------------
 
@@ -216,25 +234,26 @@ Changes the zone of the current map.
 
 ---------------------------------------
 
-`@addwarp <map> <x> <y> <npc name>`
+`@addwarp <map> <x> <y> <npc_name>`
 
 Creates a warp portal on the character's current coordinates that lasts until the next reboot.
-The name parameter is mandatory and if it already exists, the server will automagically assign a name,
+The `<npc_name>` parameter is mandatory and if it already exists, the server will automagically assign a name,
 and it will be displayed only once in the chat window.
 
 Example:
+```
 @addwarp prontera 50 50 my_warp_sample
-
+```
 Output:
+```
 New warp NPC 'my_warp_sample' created.
-
+```
 ---------------------------------------
 
 `@effect <effect ID>`
 
 Creates a visual effect on or around the character.
-A list of IDs can be found in '/db/constants.conf'.
-Descriptions of the effects can be found in '/doc/effect_list.txt'.
+A list of available effect IDs and description can be found in `/doc/effect_list.md`.
 
 ---------------------------------------
 
@@ -266,7 +285,10 @@ Displays a status change without really applying it (debug function).
 `@send <Hex Number> {<value>}`
 
 Used for testing packet sends from the client (debug function).
-Value: <type=B(default),W,L><number> or S<length>"<string>"
+Value: 
+```
+<type=B(default),W,L><number> or S<length>"<string>"
+```
 
 ---------------------------------------
 
@@ -275,6 +297,7 @@ Value: <type=B(default),W,L><number> or S<length>"<string>"
 Displays information about the current map.
 
 Output Example:
+```
 ------ Map Info ------
 Map Name: prontera | Players In Map: 1 | NPCs In Map: 127 | Chats In Map: 0
 ------ Map Flags ------
@@ -287,6 +310,7 @@ No Exp Penalty: On | No Zeny Penalty: On
 Weather Flags: Displays Night |
 Other Flags: NoBranch | Reset |
 Other Flags:
+```
 
 ---------------------------------------
 
@@ -295,12 +319,13 @@ Other Flags:
 Gives information about terrain/area (debug function).
 
 Output Example:
+```
 prontera (x= 165, y= 202) 00 00 00 00 00
 prontera (x= 165, y= 201) 01 00 00 00 00
 prontera (x= 165, y= 200) 01 00 00 00 00
 prontera (x= 165, y= 199) 01 00 00 00 00
 prontera (x= 165, y= 198) 01 00 00 00 00
-
+```
 ---------------------------------------
 
 ****
@@ -312,16 +337,18 @@ prontera (x= 165, y= 198) 01 00 00 00 00
 Displays monster information (rates, stats, drops, MVP data).
 
 Example:
+```
 @monsterinfo Poring
-
+```
 Output:
+```
 Monster: 'Poring'/'Poring'/'PORING' (1002)
 Lv: 1 HP:60 Base EXP:27 Job EXP:20 HIT:103 FLEE:183
 DEF:2 MDEF:5 STR:6 AGI:1 VIT:1 INT:1 DEX:6 LUK:5
 ATK:8~9 Range:1~10~12 Size:Medium Race:Plant Element:Water (Lv:1)
 Drops:
  - Jellopy 70.00% - Knife[4] 1.00% etc...
-
+```
 ---------------------------------------
 
 `@iteminfo <item name/ID>`
@@ -329,13 +356,15 @@ Drops:
 Displays item information (type, price, weight, drops).
 
 Example:
+```
 @iteminfo Jellopy
-
+```
 Output:
+```
 Item: 'Jellopy'/'Jellopy'[0] (909) Type: Etc. | Extra Effect: None
 NPC Buy:6z, Sell:3z | Weight: 1.0
 - Maximal monsters drop change: 75.00%
-
+```
 ---------------------------------------
 
 `@whodrops <item name/ID>`
@@ -358,8 +387,8 @@ If a percentage is given, only items dropped at that rate and below will be auto
 ```
 
 Starts or stops autolooting a specified item.
-Typing "reset" will clear the autoloot item list.
-By default, 10 items can be autolooted at one time.
+Typing `reset` will clear the autoloot item list.
+By default, `10` items can be autolooted at one time.
 
 ---------------------------------------
 
@@ -369,8 +398,18 @@ By default, 10 items can be autolooted at one time.
 ```
 
 Starts or stops autolooting a specified item type.
-Type List: healing, usable, etc, weapon, armor, card, petegg, petarmor, ammo.
-Typing "reset" will clear the autoloot item list.
+Type List: 
+ - `healing`
+ - `usable`
+ - `etc`
+ - `weapon`
+ - `armor`
+ - `card`
+ - `petegg`
+ - `petarmor`
+ - `ammo`
+ 
+Typing `reset` will clear the autoloot item list.
 
 ---------------------------------------
 
@@ -380,9 +419,11 @@ Typing "reset" will clear the autoloot item list.
 Locates and displays the position of a certain mob on the current map.
 
 Output Example:
+```
 1[155:184] Poring
 2[154:188] Poring
 3[127:146] Poring
+```
 
 ---------------------------------------
 
@@ -395,7 +436,7 @@ Looks up an item by name (or part of a name).
 `@showmobs <monster name/ID>`
 
 Locates and displays the position of a certain mob on your mini-map.
-This shows up as a small white cross (+).
+This shows up as a small white cross `+`.
 
 ---------------------------------------
 
@@ -433,10 +474,11 @@ If no skill ID is specified, a list of available skills will be returned.
 Casts the specified skill.
 
 Example:
+```
 @useskill 28 5 Char2
--> casts Level 5 Heal on player Char2
+```
+Attached player will casts Level 5 Heal (SkillID 28) on player Char2
 
----------------------------------------
 
 ****
 ## 3. Player Information Commands
@@ -444,13 +486,13 @@ Example:
 
 `@commands`
 
-Displays a list of @ commands available to the player.
+Displays a list of `@` commands available to the player.
 
 ---------------------------------------
 
 `@charcommands`
 
-Displays a list of # commands available to the player.
+Displays a list of `#` commands available to the player.
 
 ---------------------------------------
 
@@ -465,8 +507,9 @@ Displays the help message for the specified command.
 Displays current levels and % progress.
 
 Output Example:
+```
 Base Level: 13 (3.323%) | Job Level: 10 (0.000%)
-
+```
 ---------------------------------------
 
 `@stats`
@@ -500,9 +543,9 @@ Displays inventory contents of the attached player.
 ```
 
 Returns a list of online characters.
-@who will also return character positions.
-@who2 will also return job classes.
-@who3 will also return parties/guilds.
+`@who` will also return character positions.
+`@who2` will also return job classes.
+`@who3` will also return parties/guilds.
 
 ---------------------------------------
 
@@ -513,9 +556,9 @@ Returns a list of online characters.
 ```
 
 Returns a list of online characters in a specific map.
-@whomap will also return character positions.
-@whomap2 will also return job classes.
-@whomap3 will also return parties/guilds.
+`@whomap` will also return character positions.
+`@whomap2` will also return job classes.
+`@whomap3` will also return parties/guilds.
 
 ---------------------------------------
 
@@ -523,7 +566,7 @@ Returns a list of online characters in a specific map.
 
 Returns a list of GMs online.
 For those who are higher GM level than yourself, only name is shown.
-For the rest, the command acts as a combination of @who+@who2+@who3.
+For the rest, the command acts as a combination of `@who` + `@who2` + `@who3`.
 
 ---------------------------------------
 
@@ -532,10 +575,11 @@ For the rest, the command acts as a combination of @who+@who2+@who3.
 Displays distribution of players on the server per map (% on each map which has players.)
 
 Output Example:
+```
 prontera: 1 (50%)
 prt_fild01: 1 (50%)
 all: 2
-
+```
 ---------------------------------------
 
 `@where <player_name>`
@@ -547,7 +591,7 @@ Locates a player on a map. The player must be online.
 `@jailtime`
 
 Displays remaining jail time.
-If @jail was used, the chat window will display "You have been jailed indefinitely".
+If `@jail` was used, the chat window will display `You have been jailed indefinitely`.
 
 ---------------------------------------
 
@@ -555,12 +599,15 @@ If @jail was used, the chat window will display "You have been jailed indefinite
 
 Searches for an account by ID or a character name, and outputs detailed information.
 Password will only be displayed for group levels lower than yours.
-To search partial names, "%" can be used as a wildcard.
+To search partial names, `%` can be used as a wildcard.
 
 Example:
+```
 @accinfo Test%
+```
 
 Output:
+```
 -- Account 2000001 --
 User: user123 | GM Group: 0 | State: 0
 Password: password123
@@ -570,6 +617,7 @@ This user has logged 27 times, the last time were at 2012-11-24 17:29:07
 -- Character Details --
 [Slot/CID: 0/150001] Test1 | High Swordsman | Level: 99/50 | Off
 [Slot/CID: 1/150002] Test2 | Rune Knight | Level: 150/50 | On
+```
 
 *****
 ## 4. Action Commands
@@ -577,13 +625,13 @@ This user has logged 27 times, the last time were at 2012-11-24 17:29:07
 
 `@me <message>`
 
-Displays the text as a normal message with the format "*name <message>*" instead of "name: <message>".
+Displays the text as a normal message with the format `*name <message>*` instead of `name: <message>`.
 
 ---------------------------------------
 
 `@main {<message>}`
 
-Broadcasts a message to all players with @main enabled.
+Broadcasts a message to all players with `@main` enabled.
 Using the command without a message will enable or disable main chat.
 
 ---------------------------------------
@@ -621,8 +669,7 @@ Opens the trade window with the specified player.
 `@autotrade`
 
 Allows you continue vending offline, then logs off.
-The character will continue vending until you log in to that account again,
-all items are sold, or the mapserver closes.
+The character will continue vending until you log in to that account again, all items are sold, or the mapserver closes.
 
 ---------------------------------------
 
@@ -652,9 +699,9 @@ If a duration is specified, they will stay with you until the duration has ended
 ```
 
 Spawns a clone of the specified player.
-@clone will spawn a supportive clone.
-@slaveclone will spawn a supportive clone that follows the creator around.
-@evilclone will spawn an aggressive clone.
+`@clone` will spawn a supportive clone.
+`@slaveclone` will spawn a supportive clone that follows the creator around.
+`@evilclone` will spawn an aggressive clone.
 
 ---------------------------------------
 
@@ -671,25 +718,29 @@ If an amount is given for @item, that number will be created.
 
 `@item2 <item name/ID> <quantity> <identify_flag> <refine> <attribute> <card1> <card2> <card3> <card4>`
 
-Creates an item with the given parameters (the 'cards' can be any item).
-identify_flag: 0 = unidentified, 1 = identified
-attribute: 0 = not broken, 1 = broken
+Creates an item with the given parameters (the `cards` can be any item).
+`identify_flag`: `0` = unidentified, `1` = identified
+`attribute`: `0` = not broken, `1` = broken
 
 ---------------------------------------
 
 `@itembound <item name/ID> <amount> <bound_type>`
 
 Creates the specified item and bounds it to the account.
-bound_type: 1 = Account, 2 = Guild, 3 = Party, 4 = Character
+`bound_type`: 
+ 1 = Account
+ 2 = Guild
+ 3 = Party
+ 4 = Character
 
 ---------------------------------------
 
 `@itembound2 <item name/ID> <quantity> <identify_flag> <refine> <attribute> <card1> <card2> <card3> <card4> <bound_type>`
 
-Creates an item with the given parameters (the 'cards' can be any item) and bounds it to the account.
-identify_flag: 0 = unidentified, 1 = identified
-attribute: 0 = not broken, 1 = broken
-bound_type: 1 = Account, 2 = Guild, 3 = Party, 4 = Character
+Creates an item with the given parameters (the `cards` can be any item) and bounds it to the account.
+`identify_flag`: `0` = unidentified, `1` = identified
+`attribute`: `0` = not broken, `1` = broken
+`bound_type`: `1` = Account, `2` = Guild, `3` = Party, `4` = Character
 
 ---------------------------------------
 
@@ -698,26 +749,29 @@ bound_type: 1 = Account, 2 = Guild, 3 = Party, 4 = Character
 Creates a weapon with the given parameters.
 
 Example:
+```
 @produce 1602 1 2
--> crafts an item called "Very Very Strong Char's Ice Rod".
+```
+player crafts an item called `Very Very Strong Char's Ice Rod`.
 
 ---------------------------------------
 
 `@refine <equip position> <+/- amount>`
 
 Refines an equipped item by the specified amount.
-0: All Equipment
-1: Lower Headgear
-2: Right Hand
-4: Garment
-8: Left Accessory
-16: Body Armor
-32: Left Hand
-64: Shoes
-128: Right Accessory
-256: Top Headgear
-512: Mid Headgear
-
+```
+ - 0: All Equipment
+ - 1: Lower Headgear
+ - 2: Right Hand
+ - 4: Garment
+ - 8: Left Accessory
+ - 16: Body Armor
+ - 32: Left Hand
+ - 64: Shoes
+ - 128: Right Accessory
+ - 256: Top Headgear
+ - 512: Mid Headgear
+```
 ---------------------------------------
 
 `@repairall`
@@ -786,9 +840,9 @@ Sets your save point as your current map coordinates.
 
 `@memo {<0-2>}`
 
-Saves a warp point for the "Warp Portal" skill.
+Saves a warp point for the `Warp Portal` skill.
 If a number is not specified, the command will output all currently saved locations.
-Location "void" indicates an empty warp point.
+Location `void` indicates an empty warp point.
 
 ---------------------------------------
 
@@ -808,7 +862,7 @@ Warps to a random coordinate on the current map.
 
 Warps to predefined locations in major cities.
 If no ID is given, all available maps will be displayed in the chat window.
-Locations and coordinates are stored in '/src/map/atcommand.c'.
+Locations and coordinates are stored in `/src/map/atcommand.c`.
 
 ---------------------------------------
 
@@ -829,7 +883,7 @@ If no coordinates are entered, a random location will be chosen.
 ```
 
 Warps to the specified player.
-Additionally, @follow will track the player's movements until turned off.
+Additionally, `@follow` will track the player's movements until turned off.
 
 ---------------------------------------
 
@@ -840,7 +894,7 @@ Additionally, @follow will track the player's movements until turned off.
 ```
 
 Warps a character to your position.
-Additionally, @recallall will recall the entire server.
+Additionally, `@recallall` will recall the entire server.
 
 ---------------------------------------
 
@@ -886,7 +940,7 @@ Changes the specified stat of your character.
 
 `@allstats`
 
-Sets all stats to the maximum (default is 99).
+Sets all stats to the maximum (default is `99`).
 
 ---------------------------------------
 
@@ -911,7 +965,7 @@ Changes unused status or skill points by the specified amount.
 @reset
 ```
 
-Resets stats (@streset), skills (@skreset), or both (@reset).
+Resets stats (`@streset`), skills (`@skreset`), or both (`@reset`).
 
 ---------------------------------------
 
@@ -925,14 +979,14 @@ Resets a Star Gladiator's marked maps.
 
 Changes your job.
 If no job is given, a list of all available jobs will be returned.
-Note that jobs 22 (Wedding), 26 (Summer), and 27 (Christmas) are not available via @job.
+Note that jobs `22` (Wedding), `26` (Summer), and `27` (Christmas) are not available via `@job`.
 
 ---------------------------------------
 
 `@speed <0-1000>`
 
 Sets the speed at which the character walks and attacks.
-Default is 150 (0 is fastest, 1000 is slowest).
+Default is `150` (`0` is fastest, `1000` is slowest).
 
 ---------------------------------------
 
@@ -947,7 +1001,7 @@ Summons the specified amount of spirit spheres around you.
 @mount2
 ```
 
-Toggles mounting/unmounting a peco (@mount) or cash mount (@mount2).
+Toggles mounting/unmounting a peco (`@mount`) or cash mount (`@mount2`).
 
 ---------------------------------------
 
@@ -977,7 +1031,7 @@ Changes Kafra Points by the specified amount.
 ```
 
 Changes appearance based on the given parameters.
-The min/max values are set in 'conf/map/battle/client.conf'.
+The min/max values are set in `conf/map/battle/client.conf`.
 
 ---------------------------------------
 
@@ -985,13 +1039,13 @@ The min/max values are set in 'conf/map/battle/client.conf'.
 
 Changes the player's appearance to the specified view ID.
 If no position is given, the command defaults to headgear.
-1: Top
-2: Middle
-3: Bottom
-4: Weapon
-5: Shield
-6: Shoes
-7: Robe
+ - 1: Top
+ - 2: Middle
+ - 3: Bottom
+ - 4: Weapon
+ - 5: Shield
+ - 6: Shoes
+ - 7: Robe
 
 ---------------------------------------
 
@@ -1007,8 +1061,8 @@ If no string is given, the character's real name will be re-applied.
 @sizeall <0-2>
 ```
 
-Changes your size (0 = Normal, 1 = Small, 2 = Large).
-Additionally, @sizeall will change the size of all online players.
+Changes your size (`0` = Normal, `1` = Small, `2` = Large).
+Additionally, `@sizeall` will change the size of all online players.
 
 ---------------------------------------
 
@@ -1021,7 +1075,7 @@ Additionally, @sizeall will change the size of all online players.
 ```
 
 Duel-organizing commands.
-Some options can be found in 'conf/map/battle/misc.conf'.
+Some options can be found in `conf/map/battle/misc.conf`.
 
 ---------------------------------------
 
@@ -1038,9 +1092,9 @@ Fully heals HP and SP.
 ```
 
 Resurrection commands.
-@alive will revive the attached player.
-@raisemap will revive all players on the map.
-@raise will revive all players on the server.
+`@alive` will revive the attached player.
+`@raisemap` will revive all players on the map.
+`@raise` will revive all players on the server.
 
 ---------------------------------------
 
@@ -1052,7 +1106,7 @@ Resurrection commands.
 ```
 
 Disguises or undisguises player as a monster/NPC sprite.
-Additionally, @disguiseall/@undisguiseall will disguise all online players.
+Additionally, `@disguiseall`/`@undisguiseall` will disguise all online players.
 
 ---------------------------------------
 
@@ -1074,7 +1128,7 @@ Toggles GM Hide (total invisibility to characters and monsters).
 `@npctalk <npc name> <message>`
 
 Command what other npcs say.
-Displays the message above the NPC's head (like the 'npctalk' script command).
+Displays the message above the NPC's head (like the `npctalk` script command).
 
 ---------------------------------------
 
@@ -1085,15 +1139,18 @@ Displays the message above the NPC's head (like the 'npctalk' script command).
 `@email <current@email.tld> <new@email.tld>`
 
 Changes the email address attached the player's account.
-Note: This command doesn't validate the email address itself, but checks the structure of the email (xxx@xxx).
+Note: This command doesn't validate the email address itself, but checks the structure of the email (`xxx@xxx`).
 
 Example:
+```
 @email a@b.com b@b.com
+```
 
 Output:
+```
 Fail message: Invalid email. If you have default e-mail, type a@a.com.
 Success message: Information sent to login-server via char-server.
-
+````
 ---------------------------------------
 
 `@changesex`
@@ -1133,9 +1190,9 @@ Displays the motd file to all players.
 ```
 
 Announces a message in yellow text.
-Except for /nb and /nlb, the message will be prefixed with the name of the attached character.
-@broadcast will be shown to the entire server.
-@localbroadcast will be shown on the player's map only.
+Except for `/nb` and `/nlb`, the message will be prefixed with the name of the attached character.
+`@broadcast` will be shown to the entire server.
+`@localbroadcast` will be shown on the player's map only.
 
 ---------------------------------------
 
@@ -1147,14 +1204,15 @@ Except for /nb and /nlb, the message will be prefixed with the name of the attac
 ```
 
 Announces a message without a name prefix.
-@kami will broadcast in yellow text.
-@kamib will broadcast in blue text.
-@kamic will broadcast in the specified color (a hexadecimal value).
-@lkami will broadcast on the attached character's current map.
+`@kami` will broadcast in yellow text.
+`@kamib` will broadcast in blue text.
+`@kamic` will broadcast in the specified color (a hexadecimal value).
+`@lkami` will broadcast on the attached character's current map.
 
 Example:
+```
 @kamic FF0000 This message is in red.
-
+```
 ---------------------------------------
 
 ```
@@ -1163,7 +1221,7 @@ Example:
 ```
 
 Kills all monsters on the map.
-Additionally, @killmonster2 will prevent the monsters from dropping items (except looted items).
+Additionally, `@killmonster2` will prevent the monsters from dropping items (except looted items).
 
 ---------------------------------------
 
@@ -1175,10 +1233,10 @@ Additionally, @killmonster2 will prevent the monsters from dropping items (excep
 ```
 
 Kill commands.
-@kill will kill the attached player.
-@nuke will kill the specified player and deal area splash damage.
-@doommap will kill all players on the map.
-@doom will kill all players on the server.
+`@kill` will kill the attached player.
+`@nuke` will kill the specified player and deal area splash damage.
+`@doommap` will kill all players on the map.
+`@doom` will kill all players on the server.
 
 ---------------------------------------
 
@@ -1189,7 +1247,7 @@ Kill commands.
 ```
 
 Mutes or unmutes a player (prevents talking, usage of skills, and commands).
-@mutearea will mute every player on screen for the specified time.
+`@mutearea` will mute every player on screen for the specified time.
 
 ---------------------------------------
 
@@ -1219,11 +1277,13 @@ Disconnects a user or all users from the server.
 ```
 
 Bans or unbans a player for a limited time.
-Time elements: y/a, m, d/j, h, mn, s
+Time elements: `y`/`a`, `m`, `d`/`j`, `h`, `mn`, `s`
 
 Example:
+```
 @ban +2d Char2
--> bans Char2's account for 2 days.
+```
+GM bans Char2's account for 2 days.
 
 ---------------------------------------
 
@@ -1252,11 +1312,11 @@ This will also send a packet to clients causing them to close.
 ```
 
 Reloads the specified database.
--itemdb: Item Database
--mobdb: Monster Database
--skilldb: Skill Database
--questdb: Quest Database
--script: NPC Scripts
+`@reloaditemdb`: Item Database
+`@reloadmobdb`: Monster Database
+`@reloadskilldb`: Skill Database
+`@reloadquestdb`: Quest Database
+`@reloadscript`: NPC Scripts
 
 ---------------------------------------
 
@@ -1269,11 +1329,11 @@ Reloads the specified database.
 ```
 
 Reloads the specified configuration file.
--atcommand: Atcommand Settings
--battleconf: Battle Settings (may require relog)
--statusdb: Status Settings
--pcdb: Player Settings
--motd: Message of the Day
+`@reloadatcommand`: Atcommand Settings
+`@reloadbattleconf`: Battle Settings (may require relog)
+`@reloadstatusdb`: Status Settings
+`@reloadpcdb`: Player Settings
+`@reloadmotd`: Message of the Day
 
 ---------------------------------------
 
@@ -1294,7 +1354,7 @@ Changes a battle_config flag without rebooting the server.
 `@adjgroup <group ID>`
 
 Changes the group of a character (lasts until relog).
-The groups are specified in 'conf/groups.conf'.
+The groups are specified in `conf/groups.conf`.
 
 ---------------------------------------
 
@@ -1328,8 +1388,9 @@ Toggles the visibility of an NPC's sprite.
 Loads an NPC script by path.
 
 Example:
+```
 @loadnpc npc/custom/jobmaster.txt
-
+```
 ---------------------------------------
 
 `@unloadnpc <npc name>`
@@ -1337,8 +1398,9 @@ Example:
 Unloads an NPC.
 
 Example:
+```
 @unloadnpc Job Master
-
+```
 ---------------------------------------
 
 `@unloadnpcfile <path>`
@@ -1346,8 +1408,9 @@ Example:
 Unloads all NPCs in a file.
 
 Example:
+```
 @unloadnpcfile npc/custom/jobmaster.txt
-
+```
 ---------------------------------------
 
 =====================
@@ -1383,7 +1446,7 @@ Warps all online characters of a party to your location.
 
 Allows you to spy on any party's Party Chat.
 At least one member of that party must be online.
-NOTE: map server needs to be configured to enable spying to use this command (enable_spy: true)
+**NOTE:** map server needs to be configured to enable spying to use this command (`enable_spy: true`)
 
 ---------------------------------------
 
@@ -1423,8 +1486,10 @@ Changes guild level by the specified amount.
 
 ---------------------------------------
 
-`@disguiseguild <monster/npc name/ID> <guild name/ID>
+```
+@disguiseguild <monster/npc name/ID> <guild name/ID>
 @undisguiseguild`
+```
 
 Disguises or undisguises all online characters of a guild.
 
@@ -1446,7 +1511,7 @@ Warps all online characters of a guild to your location.
 
 Allows you to spy on any guild's Guild Chat.
 At least one member of that guild must be online.
-NOTE: map server needs to be configured to enable spying to use this command (enable_spy: true)
+**NOTE:** map server needs to be configured to enable spying to use this command (`enable_spy: true`)
 
 ---------------------------------------
 
@@ -1482,13 +1547,13 @@ the rename option on the window again.
 
 `@petfriendly <0-1000>`
 
-Sets the intimacy level of your pet, with 1000 being "Loyal".
+Sets the intimacy level of your pet, with `1000` being `Loyal`.
 
 ---------------------------------------
 
 `@pethungry <0-100>`
 
-Sets the hunger level of your pet, with 100 being "Stuffed".
+Sets the hunger level of your pet, with `100` being `Stuffed`.
 
 ---------------------------------------
 
@@ -1508,8 +1573,8 @@ Creates the specified homunculus.
 ```
 
 Evolves or mutates your homunculus, if possible.
-If no Homunculus ID is specified for @hommutate, a random ID is chosen.
-If it doesn't work, the /swt emotion is shown.
+If no Homunculus ID is specified for `@hommutate`, a random ID is chosen.
+If it doesn't work, the `/swt` emotion is shown.
 
 ---------------------------------------
 
@@ -1520,14 +1585,17 @@ If it doesn't work, the /swt emotion is shown.
 
 Displays homunculus stats in different formats.
 
-Output Example [@hominfo]:
+Output Example `@hominfo`:
+```
 Homunculus Stats:
 HP: 153/153 - SP: 54/54
 ATK: 59 - MATK: 69~69
 Hungry: 29 - Intimacy: 5
 Stats: Str 24 / Agi 25 / Vit 18 / Int 40 / Dex 31 / Luk 14
+```
 
-Output Example [@homstats]:
+Output Example `@homstats`:
+```
 Homunculus growth stats (Lv 1 Lif):
 Max HP: 153 (151~160)
 Max SP: 54 (50~60)
@@ -1537,7 +1605,7 @@ Vit: 16 (16~20)
 Int: 40 (39~45)
 Dex: 29 (25~34)
 Luk: 14 (13~15)
-
+```
 ---------------------------------------
 
 `@homshuffle`
@@ -1560,13 +1628,13 @@ Changes homunculus level by the specified amount.
 
 `@homfriendly <0-1000>`
 
-Sets the intimacy level of your homunculus, with 1000 being "Loyal".
+Sets the intimacy level of your homunculus, with `1000` being `Loyal`.
 
 ---------------------------------------
 
 `@homhungry <0-100>`
 
-Sets the hunger level of your homunculus, with 100 being "Stuffed".
+Sets the hunger level of your homunculus, with `100` being `Stuffed`.
 
 ---------------------------------------
 
@@ -1602,8 +1670,8 @@ Leaves the Clan if any.
 
 `@reloadclans`
 
-Reloads the 'conf/clans.conf' file.
-Obs: it will reload 'db/clans.conf' too since it's included inside 'conf/clans.conf'
+Reloads the `conf/clans.conf` file.
+**Obs:** it will reload `db/clans.conf` too since it's included inside `conf/clans.conf`
 
 ---------------------------------------
 
