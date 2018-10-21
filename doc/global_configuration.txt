@@ -67,3 +67,5 @@ E.g.
     }
   If the main configuration file belongs to the map server, for instance, you
   don't need to include default_codepage and case_sensitive.
+  
+  My changes
