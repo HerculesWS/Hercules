@@ -438,3 +438,40 @@ function	script	F_ShuffleNumbers	{
 function	script	F_MesColor	{
 	return sprintf("^%06X", min(getarg(0), 0xFFFFFF));
 }
+
+//== Function F_GetTradeRestriction ========================
+// Function to get item trade restriction
+// Examples:
+//    mes "Red Potion Restriction: "+ callfunc("F_GetTradeRestriction", Red_Potion);
+function	script	F_GetTradeRestriction	{
+	.@trade = getiteminfo(getarg(0), ITEMINFO_TRADE);
+
+	if (.@trade == 0) {
+		return "None";
+	}
+	.@trade$ = "";
+	if (.@trade & ITR_NODROP) {
+		.@trade$ += "NoDrop|";
+	}
+	if (.@trade & ITR_NOTRADE) {
+		.@trade$ += "NoTrade|";
+	}
+	if (.@trade & ITR_PARTNEROVERRIDE) {
+		.@trade$ += "PartnerOverride|";
+	}
+	if (.@trade & ITR_NOSELLTONPC) {
+		.@trade$ += "NoSellToNpc|";
+	}
+	if (.@trade & ITR_NOSTORAGE) {
+		.@trade$ += "NoStorage|";
+	}
+	if (.@trade & ITR_NOGSTORAGE) {
+		.@trade$ += "NoGuildStorage|";
+	}
+	if (.@trade & ITR_NOMAIL) {
+		.@trade$ += "NoMail|";
+	}
+	if (.@trade & ITR_NOAUCTION) {
+		.@trade$ += "NoAuction|";
+	}
+}
