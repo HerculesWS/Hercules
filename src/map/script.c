@@ -24982,7 +24982,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(next,""),
 		BUILDIN_DEF(close,""),
 		BUILDIN_DEF(close2,""),
-		BUILDIN_DEF(menu,"sl*"),
+		BUILDIN_DEF_DEPRECATED(menu,"sl*"), // Deprecated 2016-08-20 [Haru]
 		BUILDIN_DEF(select,"s*"), //for future jA script compatibility
 		BUILDIN_DEF(prompt,"s*"),
 		//

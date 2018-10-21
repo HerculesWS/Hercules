@@ -1457,164 +1457,110 @@ Gotos are considered to be harmful and should be avoided whenever possible.
 
 *menu("<option_text>", <target_label>{, "<option_text>", <target_label>, ...})
 
-This command will create a selectable menu for the invoking character.
-Only one menu can be on screen at the same time.
-
-Depending on what the player picks from the menu, the script execution
-will continue from the corresponding label. It's string-label pairs, not
-label-string.
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 This command is deprecated and it should not be used in new scripts, as it
 is likely to be removed at a later time. Please consider using select() or
 prompt() instead.
 
-Options can be grouped together, separated by the character ':'.
+For the complete documentation, please see select and prompt.
 
-	menu("A:B", L_Wrong, "C", L_Right);
-
-It also sets a special temporary character variable @menu, which contains
-the number of option the player picked. Numbering of options starts at 1.
-This number is consistent with empty options and grouped options.
-
-	menu("A::B", L_Wrong, "", L_Impossible, "C", L_Right);
-	L_Wrong:
-	// If they click "A" or "B" they will end up here
-	// @menu == 1 if "A"
-	// @menu == 2 will never happen because the option is empty
-	// @menu == 3 if "B"
-	L_Impossible:
-	// Empty options are not displayed and therefore can't be selected
-	// this label will never be reached from the menu command
-	L_Right:
-	// If they click "C" they will end up here
-	// @menu == 5
+Unlike select, this command will jump to the label corrseponding to the user's
+selection. Note: It's string-label pairs, not label-string.
 
 If a label is '-', the script execution will continue right after the menu
-command if that option is selected, this can be used to save you time, and
-optimize big scripts.
-
-	menu("A::B:", -, "C", L_Right);
-	// If they click "A" or "B" they will end up here
-	// @menu == 1 if "A"
-	// @menu == 3 if "B"
-	L_Right:
-	// If they click "C" they will end up here
-	// @menu == 5
-
-Both these examples will perform the exact same task.
-
-If you give an empty string as a menu item, the item will not display.
-This can effectively be used to script dynamic menus by using empty string
-for entries that should be unavailable at that time.
-
-You can do it by using arrays, but watch carefully - this trick isn't high
-wizardry, but minor magic at least. You can't expect to easily duplicate
-it until you understand how it works.
-
-Create a temporary array of strings to contain your menu items, and
-populate it with the strings that should go into the menu at this
-execution, making sure not to leave any gaps. Normally, you do it with a
-loop and an extra counter, like this:
-
-	setarray(.@possiblemenuitems$[0], <list of potential menu items>);
-	.@j = 0; // That's the menu lines counter.
-
-	// We loop through the list of possible menu items.
-	// .@i is our loop counter.
-	for (.@i = 0; .@i < getarraysize(.@possiblemenuitems$); ++.@i) {
-		// That 'condition' is whatever condition that determines whether
-		// a menu item number .@i actually goes into the menu or not.
-
-		if (<condition>) {
-			// We record the option into the list of options actually
-			// available.
-			.@menulist$[.@j] = .@possiblemenuitems$[.@i];
-
-			// We just copied the string, we do need it's number for later
-			// though, so we record it as well.
-			.@menureference[.@j] = .@i;
-
-			// Since we've just added a menu item into the list, we
-			// increment the menu lines counter.
-			++.@j;
-		}
-
-		// We go on to the next possible menu item.
-	}
-
-This will create you an array .@menulist$ which contains the text of all
-items that should actually go into the menu based on your condition, and
-an array .@menureference, which contains their numbers in the list of
-possible menu items. Remember, arrays start with 0. There's less of them
-than the possible menu items you've defined, but the menu() command can
-handle the empty lines - only if they are last in the list, and if it's
-made this way, they are. Now comes a dirty trick:
-
-	// X is whatever the most menu items you expect to handle.
-	menu(.@menulist$[0], -, .@menulist$[1], -, ..., .@menulist$[<X>], -);
-
-This calls up a menu of all your items. Since you didn't copy some of the
-possible menu items into the list, it's end is empty and so no menu items
-will show up past the end. But this menu() call doesn't jump anywhere, it
-just continues execution right after the menu() command. (And it's a good
-thing it doesn't, cause you can only explicitly define labels to jump to,
-and how do you know which ones to define if you don't know beforehand
-which options will end up where in your menu?)
-But how do you figure out which option the user picked? Enter the @menu.
-
-@menu contains the number of option that the user selected from the list,
-starting with 1 for the first option. You know now which option the user
-picked and which number in your real list of possible menu items it
-translated to:
-
-    mes("You selected "+.@possiblemenuitems$[.@menureference[@menu-1]]+"!");
-
-@menu is the number of option the user picked.
-@menu-1 is the array index for the list of actually used menu items that
-we made.
-.@menureference[@menu-1] is the number of the item in the array of possible
-menu items that we've saved just for this purpose.
-
-And .@possiblemenuitems$[.@menureference[@menu-1]] is the string that we
-used to display the menu line the user picked. (Yes, it's a handful, but
-it works.)
-
-You can set up a bunch of 'if (.@menureference[@menu-1]==X) goto(Y)'
-statements to route your execution based on the line selected and still
-generate a different menu every time, which is handy when you want to, for
-example, make users select items in any specific order before proceeding,
-or make a randomly shuffled menu.
-
-Kafra code bundled with the standard distribution uses a similar
-array-based menu technique for teleport lists, but it's much simpler and
-doesn't use @menu, probably since that wasn't documented anywhere.
-
-See also 'select', which is probably better in this particular case.
-Instead of menu(), you could use select() like this:
-
-    .@dummy = select(.@menulist$[0], .@menulist$[1], ..., .@menulist$[<X>]);
-
-For the purposes of the technique described above these two statements are
-perfectly equivalent.
+command if that option is selected.
 
 ---------------------------------------
 
-*select("<option>"{, "<option>", ...})
-*prompt("<option>"{, "<option>", ...})
+*select("<option>"{,"<option>",...})
+*prompt("<option>"{,"<option>",...})
 
-This function is a handy replacement for 'menu' that doesn't use a complex
-label structure. It will return the number of menu option picked,
-starting with 1. Like 'menu', it will also set the variable @menu to
-contain the option the user picked.
+This command will create a selectable menu for the invoking character. 
+Only one menu can be on screen at the same time.
 
-    if (select("Yes:No") == 1)
+The function will return the number of menu option picked, starting with 1. For
+backwards compatibility, it will also set the variable @menu to contain the
+option the user picked, but this shouldn't be used in new code (use the return
+value instead).
+
+    if (select("Yes", "No") == 1)
         mes("You said yes, I know.");
 
-And like 'menu', the selected option is consistent with grouped options
-and empty options.
+When the user clicks the Cancel button, select() will terminate the script,
+whereas prompt() will return the value 255. This manual will show select(), but
+all examples can be similarly repeated with prompt().
 
-'prompt' works almost the same as select, except that when a character
-clicks the Cancel button, this function will return 255 instead.
+Options can be grouped together, separated by the character ':'. The following
+examples are equivalent:
+
+	select("A", "B", "C");
+	select("A:B", "C");
+	select("A:B:C");
+
+If an option is specified as an empty string, it will not be displayed to the
+user (but it will be counted for return value purposes). This can effectively
+be used to script dynamic menus by using empty string for entries that should
+be unavailable at that time.
+
+	switch (select("A::B","","C")) {
+	case 1: // "A" was chosen.
+		break;
+	case 2: // This will never happen, because the option is empty.
+		break;
+	case 3: // "B" was chosen"
+		break;
+	case 4: // This will never happen, because the option is empty.
+		break;
+	case 5: // "C" was chosen
+		break;
+	}
+
+This is an advanced example that makes use of a dynamically built selection
+through arrays:
+
+	setarray(.@possiblemenuitems$, <list of potential menu items>);
+	.@menulist$ = ""; // Start with an empty menu list.
+	deletearray(.@availableoptions); // This array will be used to hold
+	                                 // all available options.
+	.@j = 0; // This will be used as index for .@availableoptions.
+	
+	// We loop through the list of possible menu items.
+	// .@i is our loop counter.
+	for (.@i = 0; .@i < getarraysize(.@possiblemenuitems$); ++.@i) {
+		// Append a ":" separator if there are already other entries.
+		if (.@menulist$ != "")
+			.@menulist$ += ":";
+
+		// That 'condition' is whatever condition that determines whether 
+		// a menu item number .@i actually goes into the menu or not.
+		if (<condition>) {
+			// Append each available entry to the menu list.
+			.@menulist$ += .@possiblemenuitems$[.@i];
+			// The 'j'th option in .@menulist$ actually contains
+			// the 'i'th option in .@possiblemenuitems$, so we might
+			// want to keep track of this.
+			.@availableoptions[.@j] = .@i;
+			++.@j; // Increment .@j, since a new entry was added.
+		}
+		// We go on to the next possible menu item.
+	}
+
+This will create a string .@menulist$ which contains the text of all items that
+should actually go into the menu based on your condition.
+
+	.@choice = select(.@menulist$) - 1;
+
+This will show the available options to the user, and then set .@choice to the
+appropriate array index from .@availableoptions (note the -1: array indices
+start at 0 while select returns 1-based values!). Now, to retrieve the actual
+picked option:
+
+	mes("You selected "+.@possiblemenuitems$[.@availableoptions[.@choice]]+"!");
+
+This will display the string that was displayed in the option that the user picked.
 
 ---------------------------------------
 
