@@ -9430,6 +9430,7 @@ supported types: values
 	QINFO_HOMUN_LEVEL: min
 	QINFO_HOMUN_TYPE: homunculus_type (0 - regular, 1 - evolved, 2 - S)
 	QINFO_QUEST: quest_id, state // append to the quests list on each use
+	QINFO_MERCENARY_CLASS: mercenary_class
 
 ---------------------------------------
 

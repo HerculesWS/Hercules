@@ -21177,6 +21177,17 @@ static BUILDIN(setquestinfo)
 		VECTOR_PUSH(qi->quest_requirement, quest_req);
 		break;
 	}
+	case QINFO_MERCENARY_CLASS:
+	{
+		int mer_class = script_getnum(st, 3);
+
+		if (!mercenary->class(mer_class)) {
+			ShowWarning("buildin_setquestinfo: invalid mercenary class given (%d).\n", mer_class);
+			return false;
+		}
+		qi->mercenary_class = mer_class;
+		break;
+	}
 	default:
 		ShowWarning("buildin_setquestinfo: invalid type given (%u).\n", type);
 		return false;
@@ -25938,6 +25949,7 @@ static void script_hardcoded_constants(void)
 	script->set_constant("QINFO_HOMUN_LEVEL", QINFO_HOMUN_LEVEL, false, false);
 	script->set_constant("QINFO_HOMUN_TYPE", QINFO_HOMUN_TYPE, false, false);
 	script->set_constant("QINFO_QUEST", QINFO_QUEST, false, false);
+	script->set_constant("QINFO_MERCENARY_CLASS", QINFO_MERCENARY_CLASS, false, false);
 
 	script->constdb_comment("function types");
 	script->set_constant("FUNCTION_IS_COMMAND", FUNCTION_IS_COMMAND, false, false);

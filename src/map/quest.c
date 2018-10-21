@@ -30,6 +30,7 @@
 #include "map/itemdb.h"
 #include "map/log.h"
 #include "map/map.h"
+#include "map/mercenary.h"
 #include "map/mob.h"
 #include "map/npc.h"
 #include "map/party.h"
@@ -719,6 +720,8 @@ static bool quest_questinfo_validate(struct map_session_data *sd, struct questin
 		return false;
 	if (VECTOR_LENGTH(qi->quest_requirement) > 0 && quest->questinfo_validate_quests(sd, qi) == false)
 		return false;
+	if (qi->mercenary_class != 0 && quest->questinfo_validate_mercenary_class(sd, qi) == false)
+		return false;
 	return true;
 }
 
@@ -901,6 +904,29 @@ static bool quest_questinfo_validate_quests(struct map_session_data *sd, struct 
 }
 
 /**
+ * Validate mercenary class required for the questinfo
+ *
+ * @param sd session data.
+ * @param qi questinfo data.
+ *
+ * @retval true if player have a mercenary with the given class.
+ * @retval false if player does NOT have a mercenary with the given class.
+ */
+static bool quest_questinfo_validate_mercenary_class(struct map_session_data *sd, struct questinfo *qi)
+{
+	nullpo_retr(false, sd);
+	nullpo_retr(false, qi);
+
+	if (sd->md == NULL)
+		return false;
+
+	if (sd->md->mercenary.class_ != qi->mercenary_class)
+		return false;
+
+	return true;
+}
+
+/**
  * Clears the questinfo data vector
  *
  * @param m mapindex.
@@ -993,5 +1019,6 @@ void quest_defaults(void)
 	quest->questinfo_validate_homunculus_level = quest_questinfo_validate_homunculus_level;
 	quest->questinfo_validate_homunculus_type = quest_questinfo_validate_homunculus_type;
 	quest->questinfo_validate_quests = quest_questinfo_validate_quests;
+	quest->questinfo_validate_mercenary_class = quest_questinfo_validate_mercenary_class;
 	quest->questinfo_vector_clear = quest_questinfo_vector_clear;
 }
