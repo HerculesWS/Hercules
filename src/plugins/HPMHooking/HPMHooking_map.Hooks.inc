@@ -2859,6 +2859,32 @@ void HP_battle_reflect_damage(struct block_list *target, struct block_list *src,
 	}
 	return;
 }
+void HP_battle_reflect_trap(struct block_list *target, struct block_list *src, struct Damage *md, uint16 skill_id) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_battle_reflect_trap_pre > 0) {
+		void (*preHookFunc) (struct block_list **target, struct block_list **src, struct Damage **md, uint16 *skill_id);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_battle_reflect_trap_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_battle_reflect_trap_pre[hIndex].func;
+			preHookFunc(&target, &src, &md, &skill_id);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.battle.reflect_trap(target, src, md, skill_id);
+	}
+	if (HPMHooks.count.HP_battle_reflect_trap_post > 0) {
+		void (*postHookFunc) (struct block_list *target, struct block_list *src, struct Damage *md, uint16 skill_id);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_battle_reflect_trap_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_battle_reflect_trap_post[hIndex].func;
+			postHookFunc(target, src, md, skill_id);
+		}
+	}
+	return;
+}
 int HP_battle_attr_ratio(int atk_elem, int def_type, int def_lv) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -76341,6 +76367,32 @@ int HP_skill_timerskill(int tid, int64 tick, int id, intptr_t data) {
 		}
 	}
 	return retVal___;
+}
+void HP_skill_trap_do_splash(struct block_list *bl, uint16 skill_id, uint16 skill_lv, int bl_flag, int64 tick) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_skill_trap_do_splash_pre > 0) {
+		void (*preHookFunc) (struct block_list **bl, uint16 *skill_id, uint16 *skill_lv, int *bl_flag, int64 *tick);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_trap_do_splash_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_skill_trap_do_splash_pre[hIndex].func;
+			preHookFunc(&bl, &skill_id, &skill_lv, &bl_flag, &tick);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.skill.trap_do_splash(bl, skill_id, skill_lv, bl_flag, tick);
+	}
+	if (HPMHooks.count.HP_skill_trap_do_splash_post > 0) {
+		void (*postHookFunc) (struct block_list *bl, uint16 skill_id, uint16 skill_lv, int bl_flag, int64 tick);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_trap_do_splash_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_skill_trap_do_splash_post[hIndex].func;
+			postHookFunc(bl, skill_id, skill_lv, bl_flag, tick);
+		}
+	}
+	return;
 }
 int HP_skill_trap_splash(struct block_list *bl, va_list ap) {
 	int hIndex = 0;

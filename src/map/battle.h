@@ -506,6 +506,7 @@ struct Battle_Config {
 
 	/** Hercules **/
 	int skill_trap_type;
+	int trap_reflect;
 	int item_restricted_consumption_type;
 	int unequip_restricted_equipment;
 	int max_walk_path;
@@ -639,6 +640,8 @@ struct battle_interface {
 	void (*drain) (struct map_session_data *sd, struct block_list *tbl, int64 rdamage, int64 ldamage, int race, int boss);
 	/* damage reflect */
 	void (*reflect_damage) (struct block_list *target, struct block_list *src, struct Damage *wd,uint16 skill_id);
+	/* trap reflect */
+	void(*reflect_trap) (struct block_list *target, struct block_list *src, struct Damage *md, uint16 skill_id);
 	/* attribute rate */
 	int (*attr_ratio) (int atk_elem, int def_type, int def_lv);
 	/* applies attribute modifiers */

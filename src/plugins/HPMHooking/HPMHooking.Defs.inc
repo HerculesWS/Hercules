@@ -282,6 +282,8 @@ typedef void (*HPMHOOK_pre_battle_drain) (struct map_session_data **sd, struct b
 typedef void (*HPMHOOK_post_battle_drain) (struct map_session_data *sd, struct block_list *tbl, int64 rdamage, int64 ldamage, int race, int boss);
 typedef void (*HPMHOOK_pre_battle_reflect_damage) (struct block_list **target, struct block_list **src, struct Damage **wd, uint16 *skill_id);
 typedef void (*HPMHOOK_post_battle_reflect_damage) (struct block_list *target, struct block_list *src, struct Damage *wd, uint16 skill_id);
+typedef void (*HPMHOOK_pre_battle_reflect_trap) (struct block_list **target, struct block_list **src, struct Damage **md, uint16 *skill_id);
+typedef void (*HPMHOOK_post_battle_reflect_trap) (struct block_list *target, struct block_list *src, struct Damage *md, uint16 skill_id);
 typedef int (*HPMHOOK_pre_battle_attr_ratio) (int *atk_elem, int *def_type, int *def_lv);
 typedef int (*HPMHOOK_post_battle_attr_ratio) (int retVal___, int atk_elem, int def_type, int def_lv);
 typedef int64 (*HPMHOOK_pre_battle_attr_fix) (struct block_list **src, struct block_list **target, int64 *damage, int *atk_elem, int *def_type, int *def_lv);
@@ -7198,6 +7200,8 @@ typedef int (*HPMHOOK_pre_skill_cell_overlap) (struct block_list **bl, va_list a
 typedef int (*HPMHOOK_post_skill_cell_overlap) (int retVal___, struct block_list *bl, va_list ap);
 typedef int (*HPMHOOK_pre_skill_timerskill) (int *tid, int64 *tick, int *id, intptr_t *data);
 typedef int (*HPMHOOK_post_skill_timerskill) (int retVal___, int tid, int64 tick, int id, intptr_t data);
+typedef void (*HPMHOOK_pre_skill_trap_do_splash) (struct block_list **bl, uint16 *skill_id, uint16 *skill_lv, int *bl_flag, int64 *tick);
+typedef void (*HPMHOOK_post_skill_trap_do_splash) (struct block_list *bl, uint16 skill_id, uint16 skill_lv, int bl_flag, int64 tick);
 typedef int (*HPMHOOK_pre_skill_trap_splash) (struct block_list **bl, va_list ap);
 typedef int (*HPMHOOK_post_skill_trap_splash) (int retVal___, struct block_list *bl, va_list ap);
 typedef int (*HPMHOOK_pre_skill_check_condition_mercenary) (struct block_list **bl, int *skill_id, int *lv, int *type);

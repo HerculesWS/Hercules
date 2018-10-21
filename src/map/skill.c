@@ -4138,7 +4138,7 @@ static int skill_activate_reverberation(struct block_list *bl, va_list ap)
 	if( su->alive && (sg = su->group) != NULL && sg->skill_id == WM_REVERBERATION && sg->unit_id == UNT_REVERBERATION ) {
 		int64 tick = timer->gettick();
 		clif->changetraplook(bl,UNT_USED_TRAPS);
-		map->foreachinrange(skill->trap_splash, bl, skill->get_splash(sg->skill_id, sg->skill_lv), sg->bl_flag, bl, tick);
+		skill->trap_do_splash(bl, sg->skill_id, sg->skill_lv, sg->bl_flag, tick);
 		su->limit = DIFF_TICK32(tick,sg->tick)+1500;
 		sg->unit_id = UNT_USED_TRAPS;
 	}
@@ -12644,7 +12644,7 @@ static int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int
 			if (sg->src_id == bl->id)
 				break; //Does not affect the caster.
 			clif->changetraplook(&src->bl,UNT_USED_TRAPS);
-			map->foreachinrange(skill->trap_splash,&src->bl, skill->get_splash(sg->skill_id, sg->skill_lv), sg->bl_flag, &src->bl,tick);
+			skill->trap_do_splash(&src->bl, sg->skill_id, sg->skill_lv, sg->bl_flag, tick);
 			sg->unit_id = UNT_USED_TRAPS;
 			sg->limit = DIFF_TICK32(tick,sg->tick) + 1500;
 			break;
@@ -12938,7 +12938,7 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 
 				}
 
-				map->foreachinrange(skill->trap_splash, &src->bl, skill->get_splash(sg->skill_id, sg->skill_lv), sg->bl_flag, &src->bl, tick);
+				skill->trap_do_splash(&src->bl, sg->skill_id, sg->skill_lv, sg->bl_flag, tick);
 				sg->unit_id = UNT_USED_TRAPS; //Changed ID so it does not invoke a for each in area again.
 			}
 			break;
@@ -12969,10 +12969,10 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 		case UNT_FREEZINGTRAP:
 		case UNT_FIREPILLAR_ACTIVE:
 		case UNT_CLAYMORETRAP:
-			if( sg->unit_id == UNT_FIRINGTRAP || sg->unit_id == UNT_ICEBOUNDTRAP || sg->unit_id == UNT_CLAYMORETRAP )
-				map->foreachinrange(skill->trap_splash,&src->bl, skill->get_splash(sg->skill_id, sg->skill_lv), sg->bl_flag|BL_SKILL|~BCT_SELF, &src->bl,tick);
+			if (sg->unit_id == UNT_FIRINGTRAP || sg->unit_id == UNT_ICEBOUNDTRAP || sg->unit_id == UNT_CLAYMORETRAP)
+				skill->trap_do_splash(&src->bl, sg->skill_id, sg->skill_lv, sg->bl_flag | BL_SKILL | ~BCT_SELF, tick);
 			else
-				map->foreachinrange(skill->trap_splash,&src->bl, skill->get_splash(sg->skill_id, sg->skill_lv), sg->bl_flag, &src->bl,tick);
+				skill->trap_do_splash(&src->bl, sg->skill_id, sg->skill_lv, sg->bl_flag, tick);
 			if (sg->unit_id != UNT_FIREPILLAR_ACTIVE)
 				clif->changetraplook(&src->bl, sg->unit_id==UNT_LANDMINE?UNT_FIREPILLAR_ACTIVE:UNT_USED_TRAPS);
 			sg->limit=DIFF_TICK32(tick,sg->tick)+1500 +
@@ -13203,9 +13203,7 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 		case UNT_GROUNDDRIFT_POISON:
 		case UNT_GROUNDDRIFT_WATER:
 		case UNT_GROUNDDRIFT_FIRE:
-			map->foreachinrange(skill->trap_splash,&src->bl,
-			                    skill->get_splash(sg->skill_id, sg->skill_lv), sg->bl_flag,
-			                    &src->bl,tick);
+			skill->trap_do_splash(&src->bl, sg->skill_id, sg->skill_lv, sg->bl_flag, tick);
 			sg->unit_id = UNT_USED_TRAPS;
 			//clif->changetraplook(&src->bl, UNT_FIREPILLAR_ACTIVE);
 			sg->limit=DIFF_TICK32(tick,sg->tick)+1500;
@@ -13266,7 +13264,7 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 
 		case UNT_REVERBERATION:
 			clif->changetraplook(&src->bl,UNT_USED_TRAPS);
-			map->foreachinrange(skill->trap_splash,&src->bl, skill->get_splash(sg->skill_id, sg->skill_lv), sg->bl_flag, &src->bl,tick);
+			skill->trap_do_splash(&src->bl, sg->skill_id, sg->skill_lv, sg->bl_flag, tick);
 			sg->limit = DIFF_TICK32(tick,sg->tick)+1500;
 			sg->unit_id = UNT_USED_TRAPS;
 			break;
@@ -16630,10 +16628,10 @@ static int skill_detonator(struct block_list *bl, va_list ap)
 				case UNT_CLAYMORETRAP:
 				case UNT_FIRINGTRAP:
 				case UNT_ICEBOUNDTRAP:
-					map->foreachinrange(skill->trap_splash,bl,skill->get_splash(su->group->skill_id,su->group->skill_lv),su->group->bl_flag|BL_SKILL|~BCT_SELF,bl,su->group->tick);
+					skill->trap_do_splash(bl, su->group->skill_id, su->group->skill_lv, su->group->bl_flag | BL_SKILL | ~BCT_SELF, su->group->tick);
 					break;
 				default:
-					map->foreachinrange(skill->trap_splash,bl,skill->get_splash(su->group->skill_id,su->group->skill_lv),su->group->bl_flag,bl,su->group->tick);
+					skill->trap_do_splash(bl, su->group->skill_id, su->group->skill_lv, su->group->bl_flag, su->group->tick);
 			}
 			clif->changetraplook(bl, UNT_USED_TRAPS);
 			su->group->limit = DIFF_TICK32(timer->gettick(),su->group->tick) +
@@ -16766,6 +16764,27 @@ static int skill_chastle_mob_changetarget(struct block_list *bl, va_list ap)
 	return 0;
 }
 
+/**
+ * Does final adjustments (e.g. count enemies affected by splash) then runs trap splash function (skill_trap_splash).
+ *
+ * @param bl : trap skill unit's bl
+ * @param skill_id : Trap Skill ID
+ * @param skill_lv : Trap Skill Level
+ * @param bl_flag : Flag representing units affected by this trap
+ * @param tick : tick related to this trap
+ */
+static void skill_trap_do_splash(struct block_list *bl, uint16 skill_id, uint16 skill_lv, int bl_flag, int64 tick)
+{
+	int enemy_count = 0;
+
+	if (skill->get_nk(skill_id) & NK_SPLASHSPLIT) {
+		enemy_count = map->foreachinrange(skill->area_sub, bl, skill->get_splash(skill_id, skill_lv), BL_CHAR, bl, skill_id, skill_lv, tick, BCT_ENEMY, skill->area_sub_count);
+		enemy_count = max(1, enemy_count); // Don't let enemy_count be 0 when spliting trap damage
+	}
+
+	map->foreachinrange(skill->trap_splash, bl, skill->get_splash(skill_id, skill_lv), bl_flag, bl, tick, enemy_count);
+}
+
 /*==========================================
  *
  *------------------------------------------*/
@@ -16776,6 +16795,7 @@ static int skill_trap_splash(struct block_list *bl, va_list ap)
 	struct skill_unit *src_su = NULL;
 	struct skill_unit_group *sg;
 	struct block_list *ss;
+	int enemy_count = va_arg(ap, int);
 
 	nullpo_ret(bl);
 	nullpo_ret(src);
@@ -16870,7 +16890,7 @@ static int skill_trap_splash(struct block_list *bl, va_list ap)
 			}
 			/* Fall through */
 		default:
-			skill->attack(skill->get_type(sg->skill_id),ss,src,bl,sg->skill_id,sg->skill_lv,tick,0);
+			skill->attack(skill->get_type(sg->skill_id), ss, src, bl, sg->skill_id, sg->skill_lv, tick, enemy_count);
 			break;
 	}
 	return 1;
@@ -17585,7 +17605,7 @@ static int skill_unit_timer_sub(union DBKey key, struct DBData *data, va_list ap
 					break;
 				}
 				clif->changetraplook(bl,UNT_USED_TRAPS);
-				map->foreachinrange(skill->trap_splash, bl, skill->get_splash(group->skill_id, group->skill_lv), group->bl_flag, bl, tick);
+				skill->trap_do_splash(bl, group->skill_id, group->skill_lv, group->bl_flag, tick);
 				group->limit = DIFF_TICK32(tick,group->tick)+1500;
 				su->limit = DIFF_TICK32(tick,group->tick)+1500;
 				group->unit_id = UNT_USED_TRAPS;
@@ -18973,7 +18993,7 @@ static int skill_destroy_trap(struct block_list *bl, va_list ap)
 			case UNT_CLAYMORETRAP:
 			case UNT_FIRINGTRAP:
 			case UNT_ICEBOUNDTRAP:
-				map->foreachinrange(skill->trap_splash,&su->bl, skill->get_splash(sg->skill_id, sg->skill_lv), sg->bl_flag|BL_SKILL|~BCT_SELF, &su->bl,tick);
+				skill->trap_do_splash(&su->bl, sg->skill_id, sg->skill_lv, sg->bl_flag | BL_SKILL | ~BCT_SELF, tick);
 				break;
 			case UNT_LANDMINE:
 			case UNT_BLASTMINE:
@@ -18982,7 +19002,7 @@ static int skill_destroy_trap(struct block_list *bl, va_list ap)
 			case UNT_FLASHER:
 			case UNT_FREEZINGTRAP:
 			case UNT_CLUSTERBOMB:
-				map->foreachinrange(skill->trap_splash,&su->bl, skill->get_splash(sg->skill_id, sg->skill_lv), sg->bl_flag, &su->bl,tick);
+				skill->trap_do_splash(&su->bl, sg->skill_id, sg->skill_lv, sg->bl_flag, tick);
 				break;
 		}
 		// Traps aren't recovered.
@@ -21578,6 +21598,7 @@ void skill_defaults(void)
 	skill->onskillusage = skill_onskillusage;
 	skill->cell_overlap = skill_cell_overlap;
 	skill->timerskill = skill_timerskill;
+	skill->trap_do_splash = skill_trap_do_splash;
 	skill->trap_splash = skill_trap_splash;
 	skill->check_condition_mercenary = skill_check_condition_mercenary;
 	skill->locate_element_field = skill_locate_element_field;

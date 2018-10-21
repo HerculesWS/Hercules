@@ -236,6 +236,8 @@ struct {
 	struct HPMHookPoint *HP_battle_drain_post;
 	struct HPMHookPoint *HP_battle_reflect_damage_pre;
 	struct HPMHookPoint *HP_battle_reflect_damage_post;
+	struct HPMHookPoint *HP_battle_reflect_trap_pre;
+	struct HPMHookPoint *HP_battle_reflect_trap_post;
 	struct HPMHookPoint *HP_battle_attr_ratio_pre;
 	struct HPMHookPoint *HP_battle_attr_ratio_post;
 	struct HPMHookPoint *HP_battle_attr_fix_pre;
@@ -5714,6 +5716,8 @@ struct {
 	struct HPMHookPoint *HP_skill_cell_overlap_post;
 	struct HPMHookPoint *HP_skill_timerskill_pre;
 	struct HPMHookPoint *HP_skill_timerskill_post;
+	struct HPMHookPoint *HP_skill_trap_do_splash_pre;
+	struct HPMHookPoint *HP_skill_trap_do_splash_post;
 	struct HPMHookPoint *HP_skill_trap_splash_pre;
 	struct HPMHookPoint *HP_skill_trap_splash_post;
 	struct HPMHookPoint *HP_skill_check_condition_mercenary_pre;
@@ -6831,6 +6835,8 @@ struct {
 	int HP_battle_drain_post;
 	int HP_battle_reflect_damage_pre;
 	int HP_battle_reflect_damage_post;
+	int HP_battle_reflect_trap_pre;
+	int HP_battle_reflect_trap_post;
 	int HP_battle_attr_ratio_pre;
 	int HP_battle_attr_ratio_post;
 	int HP_battle_attr_fix_pre;
@@ -12309,6 +12315,8 @@ struct {
 	int HP_skill_cell_overlap_post;
 	int HP_skill_timerskill_pre;
 	int HP_skill_timerskill_post;
+	int HP_skill_trap_do_splash_pre;
+	int HP_skill_trap_do_splash_post;
 	int HP_skill_trap_splash_pre;
 	int HP_skill_trap_splash_post;
 	int HP_skill_check_condition_mercenary_pre;

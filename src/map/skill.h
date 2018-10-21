@@ -2059,6 +2059,7 @@ struct skill_interface {
 	int (*onskillusage) (struct map_session_data *sd, struct block_list *bl, uint16 skill_id, int64 tick);
 	int (*cell_overlap) (struct block_list *bl, va_list ap);
 	int (*timerskill) (int tid, int64 tick, int id, intptr_t data);
+	void (*trap_do_splash) (struct block_list *bl, uint16 skill_id, uint16 skill_lv, int bl_flag, int64 tick);
 	int (*trap_splash) (struct block_list *bl, va_list ap);
 	int (*check_condition_mercenary) (struct block_list *bl, int skill_id, int lv, int type);
 	struct skill_unit_group *(*locate_element_field) (struct block_list *bl);
