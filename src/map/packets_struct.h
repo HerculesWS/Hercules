@@ -2274,8 +2274,13 @@ struct PACKET_ZC_PROPERTY_HOMUN {
 	uint16 mdef;
 	uint16 flee;
 	uint16 amotion;
+#if PACKETVER < 20150513
+	uint16 hp;
+	uint16 maxHp;
+#else
 	uint32 hp;
 	uint32 maxHp;
+#endif
 	uint16 sp;
 	uint16 maxSp;
 	uint32 exp;
