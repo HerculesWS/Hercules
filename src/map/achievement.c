@@ -772,6 +772,10 @@ static void achievement_validate_refine(struct map_session_data *sd, unsigned in
 
 	criteria.goal = sd->status.inventory[idx].refine;
 
+	// achievement should not trigger if refine is 0
+	if (criteria.goal == 0)
+		return;
+
 	/* Universal */
 	achievement->validate_type(sd,
 			success ? ACH_EQUIP_REFINE_SUCCESS : ACH_EQUIP_REFINE_FAILURE,
