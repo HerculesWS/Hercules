@@ -12759,7 +12759,9 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 			ts->tick += sg->interval*(map->count_oncell(bl->m,bl->x,bl->y,BL_CHAR,0)-1);
 	}
 
-	if (battle_config.trap_visibility != 0 && skill->get_inf2(sg->skill_id) & INF2_HIDDEN_TRAP) {
+	if (sg->skill_id == HT_ANKLESNARE
+		|| (battle_config.trap_trigger == 1 && skill->get_inf2(sg->skill_id) & INF2_HIDDEN_TRAP)
+	) {
 		src->visible = true;
 		clif->skillunit_update(&src->bl);
 	}

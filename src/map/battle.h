@@ -150,6 +150,7 @@ struct Battle_Config {
 	int defnotenemy;
 	int vs_traps_bctall;
 	int trap_visibility;
+	int trap_trigger;
 	int summon_flora; //[Skotlex]
 	int clear_unit_ondeath; //[Skotlex]
 	int clear_unit_onwarp; //[Skotlex]
