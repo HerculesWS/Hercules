@@ -3991,6 +3991,8 @@
 - `MAX_BG_MEMBERS`: 30
 - `MAX_CHAT_USERS`: 20
 - `MAX_REFINE`: 20
+- `MAX_MENU_OPTIONS`: 255
+- `MAX_MENU_LENGTH`: 2048
 
 ### status options
 
