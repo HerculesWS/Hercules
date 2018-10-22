@@ -64,6 +64,9 @@ struct item_data;
 
 #define SCRIPT_EQUIP_TABLE_SIZE 20
 
+#define MAX_MENU_OPTIONS 0xFF
+#define MAX_MENU_LENGTH 0x800
+
 //#define SCRIPT_DEBUG_DISP
 //#define SCRIPT_DEBUG_DISASM
 //#define SCRIPT_DEBUG_HASH
@@ -176,6 +179,8 @@ struct item_data;
 #define is_string_variable(name) ( (name)[strlen(name) - 1] == '$' )
 
 #define BUILDIN(x) bool buildin_ ## x (struct script_state* st)
+
+#define get_buildin_name(st) ( script->get_str((int)(script_getdata((st), 0)->u.num)) )
 
 #define script_fetch(st, n, t) do { \
 	if( script_hasdata((st),(n)) ) \

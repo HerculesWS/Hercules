@@ -12342,7 +12342,7 @@ static void clif_parse_NpcSelectMenu(int fd, struct map_session_data *sd)
 	int npc_id = RFIFOL(fd,2);
 	uint8 select = RFIFOB(fd,6);
 
-	if( (select > sd->npc_menu && select != 0xff) || select == 0 ) {
+	if( (select > sd->npc_menu && select != MAX_MENU_OPTIONS) || select == 0 ) {
 #ifdef SECURE_NPCTIMEOUT
 		if( sd->npc_idle_timer != INVALID_TIMER ) {
 #endif
