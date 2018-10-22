@@ -10215,3 +10215,11 @@ account_id  - (optional) AID to perform on (default to attached player).
 returns progress on success and false on failure
 
 ---------------------------------------
+
+*itempreview(<index>)
+
+Update already opened preview window with item from
+ inventory with given index.
+Works for 20181017 RE and main clients or newer.
+
+---------------------------------------

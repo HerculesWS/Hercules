@@ -324,7 +324,9 @@ enum packet_headers {
 	achievementUpdateType = 0xa24,
 	achievementRewardAckType = 0xa26,
 #endif // PACKETVER >= 20141016
-#if PACKETVER >= 20150513  // [4144] 0x09f8 handling in client from 2014-10-29aRagexe and 2014-03-26cRagexeRE
+#if PACKETVER_ZERO_NUM >= 20181010 || PACKETVER >= 20181017
+	questListType = 0xaff, ///< ZC_ALL_QUEST_LIST4
+#elif PACKETVER >= 20150513  // [4144] 0x09f8 handling in client from 2014-10-29aRagexe and 2014-03-26cRagexeRE
 	questListType = 0x9f8, ///< ZC_ALL_QUEST_LIST3
 #elif PACKETVER >= 20141022
 	questListType = 0x97a, ///< ZC_ALL_QUEST_LIST2
@@ -378,12 +380,16 @@ enum packet_headers {
 	clanLeave = 0x0989, ///< ZC_ACK_CLAN_LEAVE
 	clanMessage = 0x098E, ///< ZC_NOTIFY_CLAN_CHAT
 #endif
-#if PACKETVER >= 20150513 // [4144] 0x09f9 handled in client from 2014-10-29aRagexe and 2014-03-26cRagexeRE
+#if PACKETVER_ZERO_NUM >= 20181010 || PACKETVER >= 20181017
+	questAddType = 0xb0c,
+#elif PACKETVER >= 20150513 // [4144] 0x09f9 handled in client from 2014-10-29aRagexe and 2014-03-26cRagexeRE
 	questAddType = 0x9f9,
 #else
 	questAddType = 0x2b3,
 #endif // PACKETVER < 20150513
-#if PACKETVER >= 20150513
+#if PACKETVER_ZERO_NUM >= 20181010 || PACKETVER >= 20181017
+	questUpdateType = 0xafe,
+#elif PACKETVER >= 20150513
 	questUpdateType = 0x9fa,
 #else
 	questUpdateType = 0x2b5,
@@ -444,6 +450,11 @@ enum packet_headers {
 	guildLeave = 0xa83,
 #else
 	guildLeave = 0x15a,
+#endif
+#if PACKETVER_MAIN_NUM >= 20181017 || PACKETVER_RE_NUM >= 20181017
+	itemPreview = 0xb13,
+#else
+	itemPreview = 0xab9,
 #endif
 };
 
@@ -1449,7 +1460,11 @@ struct packet_hotkey {
  * MISSION_HUNT_INFO_EX (PACKETVER >= 20150513)
  */
 struct packet_mission_info_sub {
-#if PACKETVER >= 20150513
+#if PACKETVER_ZERO_NUM >= 20181010 || PACKETVER >= 20181017
+	uint32 huntIdent;
+	uint32 huntIdent2;
+	uint32 mobType;
+#elif PACKETVER >= 20150513
 	uint32 huntIdent;
 	uint32 mobType;
 #endif
@@ -1819,7 +1834,11 @@ struct PACKET_ZC_NOTIFY_CLAN_CHAT {
  * PACKET_ZC_MISSION_HUNT_EX (PACKETVER >= 20150513)
  */
 struct packet_quest_hunt_sub {
-#if PACKETVER >= 20150513
+#if PACKETVER_ZERO_NUM >= 20181010 || PACKETVER >= 20181017
+	uint32 huntIdent;
+	uint32 huntIdent2;
+	uint32 mobType;
+#elif PACKETVER >= 20150513
 	uint32 huntIdent;
 	uint32 mobType;
 #endif
@@ -1853,7 +1872,10 @@ struct packet_quest_add_header {
  */
 struct packet_quest_update_hunt {
 	uint32 questID;
-#if PACKETVER >= 20150513
+#if PACKETVER_ZERO_NUM >= 20181010 || PACKETVER >= 20181017
+	uint32 huntIdent;
+	uint32 huntIdent2;
+#elif PACKETVER >= 20150513
 	uint32 huntIdent;
 #else
 	uint32 mob_id;
@@ -2853,6 +2875,17 @@ struct PACKET_ZC_CAMERA_INFO {
 	float range;
 	float rotation;
 	float latitude;
+} __attribute__((packed));
+
+struct PACKET_ZC_ITEM_PREVIEW {
+	int16 packetType;
+	int16 index;
+#if PACKETVER_MAIN_NUM >= 20181017 || PACKETVER_RE_NUM >= 20181017
+	int8 isDamaged;
+#endif
+	int16 refiningLevel;
+	struct EQUIPSLOTINFO slot;
+	struct ItemOptions option_data[MAX_ITEM_OPTIONS];
 } __attribute__((packed));
 
 

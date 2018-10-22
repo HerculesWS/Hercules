@@ -8872,7 +8872,7 @@ static void clif_specialeffect_value(struct block_list *bl, int effect_id, int n
 ///     @see doc/effect_list.txt
 static void clif_removeSpecialEffect(struct block_list *bl, int effectId, enum send_target target)
 {
-#if PACKETVER_MAIN_NUM >= 20181002 || PACKETVER_RE_NUM >= 20181002
+#if PACKETVER_MAIN_NUM >= 20181002 || PACKETVER_RE_NUM >= 20181002 || PACKETVER_ZERO_NUM >= 20181010
 	nullpo_retv(bl);
 
 	struct PACKET_ZC_REMOVE_EFFECT p;
@@ -8891,7 +8891,7 @@ static void clif_removeSpecialEffect(struct block_list *bl, int effectId, enum s
 
 static void clif_removeSpecialEffect_single(struct block_list *bl, int effectId, struct block_list *targetBl)
 {
-#if PACKETVER_MAIN_NUM >= 20181002 || PACKETVER_RE_NUM >= 20181002
+#if PACKETVER_MAIN_NUM >= 20181002 || PACKETVER_RE_NUM >= 20181002 || PACKETVER_ZERO_NUM >= 20181010
 	nullpo_retv(bl);
 	nullpo_retv(targetBl);
 
@@ -16872,7 +16872,11 @@ static void clif_quest_send_list(struct map_session_data *sd)
 			real_len += sizeof(info->objectives[j]);
 
 			mob_data = mob->db(qi->objectives[j].mob);
-#if PACKETVER >= 20150513
+#if PACKETVER_ZERO_NUM >= 20181010 || PACKETVER >= 20181017
+			info->objectives[j].huntIdent = sd->quest_log[i].quest_id;
+			info->objectives[j].huntIdent2 = j;
+			info->objectives[j].mobType = 0; // Info Needed
+#elif PACKETVER >= 20150513
 			info->objectives[j].huntIdent = (sd->quest_log[i].quest_id * 1000) + j;
 			info->objectives[j].mobType = 0; // Info Needed
 #endif
@@ -16961,7 +16965,11 @@ static void clif_quest_add(struct map_session_data *sd, struct quest *qd)
 
 		monster = mob->db(qi->objectives[i].mob);
 
-#if PACKETVER >= 20150513
+#if PACKETVER_ZERO_NUM >= 20181010 || PACKETVER >= 20181017
+		packet->objectives[i].huntIdent = qd->quest_id;
+		packet->objectives[i].huntIdent2 = i;
+		packet->objectives[i].mobType = 0; // Info Needed
+#elif PACKETVER >= 20150513
 		packet->objectives[i].huntIdent = (qd->quest_id * 1000) + i;
 		packet->objectives[i].mobType = 0; // Info Needed
 #endif
@@ -17022,7 +17030,10 @@ static void clif_quest_update_objective(struct map_session_data *sd, struct ques
 		real_len += sizeof(packet->objectives[i]);
 
 		packet->objectives[i].questID = qd->quest_id;
-#if PACKETVER >= 20150513
+#if PACKETVER_ZERO_NUM >= 20181010 || PACKETVER >= 20181017
+		packet->objectives[i].huntIdent = qd->quest_id;
+		packet->objectives[i].huntIdent2 = i;
+#elif PACKETVER >= 20150513
 		packet->objectives[i].huntIdent = (qd->quest_id * 1000) + i;
 #else
 		packet->objectives[i].mob_id = qi->objectives[i].mob;
@@ -21925,6 +21936,7 @@ static void clif_parse_memorial_dungeon_command(int fd, struct map_session_data 
 static void clif_camera_showWindow(struct map_session_data *sd)
 {
 #if PACKETVER >= 20160525
+	nullpo_retv(sd);
 	struct PACKET_ZC_CAMERA_INFO p;
 	p.packetType = 0xa78;
 	p.action = 1;
@@ -21938,6 +21950,7 @@ static void clif_camera_showWindow(struct map_session_data *sd)
 static void clif_camera_change(struct map_session_data *sd, float range, float rotation, float latitude, enum send_target target)
 {
 #if PACKETVER >= 20160525
+	nullpo_retv(sd);
 	struct PACKET_ZC_CAMERA_INFO p;
 	p.packetType = 0xa78;
 	p.action = 0;
@@ -21945,6 +21958,26 @@ static void clif_camera_change(struct map_session_data *sd, float range, float r
 	p.rotation = rotation;
 	p.latitude = latitude;
 	clif->send(&p, sizeof(p), &sd->bl, target);
+#endif
+}
+
+// show item preview in already opened preview window
+static void clif_item_preview(struct map_session_data *sd, int n)
+{
+#if PACKETVER_MAIN_NUM >= 20170726 || PACKETVER_RE_NUM >= 20170621 || defined(PACKETVER_ZERO)
+	nullpo_retv(sd);
+	Assert_retv(n >= 0 && n < MAX_INVENTORY);
+
+	struct PACKET_ZC_ITEM_PREVIEW p;
+	p.packetType = itemPreview;
+	p.index = n + 2;
+#if PACKETVER_MAIN_NUM >= 20181017 || PACKETVER_RE_NUM >= 20181017
+	p.isDamaged = (sd->status.inventory[n].attribute & ATTR_BROKEN) != 0 ? 1 : 0;
+#endif
+	p.refiningLevel = sd->status.inventory[n].refine;
+	clif->addcards(&p.slot, &sd->status.inventory[n]);
+	clif->add_item_options(&p.option_data[0], &sd->status.inventory[n]);
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
 #endif
 }
 
@@ -23114,6 +23147,7 @@ void clif_defaults(void)
 
 	clif->camera_showWindow = clif_camera_showWindow;
 	clif->camera_change = clif_camera_change;
+	clif->item_preview = clif_item_preview;
 
 	// -- Pet Evolution
 	clif->pPetEvolution = clif_parse_pet_evolution;
