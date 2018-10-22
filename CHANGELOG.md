@@ -9,6 +9,45 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+## [v2018.10.21] `October 21 2018`
+
+### Added
+
+- Unknown packets are now printed to the console, when the option to dump them to disk (`DUMP_UNKNOWN_PACKET`) is disabled. (part of #2226)
+- Added/updated packets, encryption keys and message tables for clients up to 2018-10-02 (#2226)
+- Implemented the script command `removespecialeffect()`. (part of #2226)
+- Implemented the atcommand `@camerainfo` and the script commands `camerainfo()` and `changecamera()`. (part of #2226)
+- Added options to enforce a minimum buy/sell price for NPC items, defaulting to the official values of 1 and 0, respectively. (#2208, issue #2177)
+- Added documentation for the script command `achievement_progress()`. (#2249)
+- Added/updated packets, encryption keys and message tables for clients up to 2018-10-17 (#2278)
+- Implemented script command `itempreview()`. (part of #2278)
+- Added placeholders for 493 items from kRO. (#2280)
+
+### Changed
+
+- Converted the effect list documentation to Markdown (`effect_list.md`). (#2230, issue #2215)
+- Improved the GitHub pull request and issue templates. (#2237)
+- Allowed `getd()` to work with constants and params (although this is a discouraged practice). (#2240)
+- Converted the permissions documentation to Markdown (`permissions.md`). (#2253)
+- Extended `getiteminfo()` and `setitmeinfo()` with the trade restriction information (`ITEMINFO_TRADE`). The `ITR_*` constants are made available to the script engine, and the global function `F_GetTradeRestriction()` has been provided, for convenience. (#2172)
+- Converted the global configuration documentation to Markdown (`global_configuration.md`). (#2229, issue #2216)
+- Removed duplicated code from the `showevent()` icon validation. (#2250)
+- Extended `setquestinfo()` with a mercenary class option (`QINFO_MERCENARY_CLASS`). (#2251)
+- Removed duplicated/diverging code from the `@bodystyle` command. (#2264)
+- Removed duplicated code for `prompt()`, now sharing the same function as `select()`. The new constants `MAX_MENU_OPTIONS` and `MAX_MENU_LENGTH` have been provided. (#2279)
+
+### Fixed
+
+- Fixed an assertion failure in the zeny achievement, when the amount of zeny is zero. (#2227)
+- Fixed issues when setting a char or account variable of another player. (#2238, issue #2212)
+- Fixed a failed assertion when a character is invited to and joins a guild. (#2235, issue #2210)
+- Fixed a failed assertion when `sc_end()` is called for `SC_BERSERK`. (#2239, issue #1388)
+- Fixed display issues with homunculus in old clients. (#2252)
+- Fixed damage reflection (through Reflect Shield, High Orc Card, etc) to work on traps. The old, unofficial, behavior can be restored through the battle configuration flag `trap_reflect`. (#2182, issue #1926)
+- Fixed Blast Mine and Claymore Trap damage, that wasn't getting split by the number of targets. (#2182, issue #1900)
+- Fixed an assertion failure when refining an item fails. (#2234, issue #2217)
+- Fixed the gitlab-ci builds with clang-5.0, which was removed from Debian testing/unstable. (58afe047cd)
+
 ## [v2018.09.23] `September 23 2018`
 
 ### Added
@@ -431,6 +470,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2018.10.21]: https://github.com/HerculesWS/Hercules/compare/v2018.09.23...v2018.10.21
 [v2018.09.23]: https://github.com/HerculesWS/Hercules/compare/v2018.08.26+1...v2018.09.23
 [v2018.08.26+1]: https://github.com/HerculesWS/Hercules/compare/v2018.08.26...v2018.08.26+1
 [v2018.08.26]: https://github.com/HerculesWS/Hercules/compare/v2018.07.29+2...v2018.08.26
