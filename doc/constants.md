@@ -4368,6 +4368,7 @@
 - `QINFO_HOMUN_LEVEL`: 5
 - `QINFO_HOMUN_TYPE`: 6
 - `QINFO_QUEST`: 7
+- `QINFO_MERCENARY_CLASS`: 8
 
 ### function types
 
