@@ -1135,6 +1135,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->pMemorialDungeonCommand, HP_clif_pMemorialDungeonCommand) },
 	{ HP_POP(clif->camera_showWindow, HP_clif_camera_showWindow) },
 	{ HP_POP(clif->camera_change, HP_clif_camera_change) },
+	{ HP_POP(clif->item_preview, HP_clif_item_preview) },
 /* cmdline_interface */
 	{ HP_POP(cmdline->init, HP_cmdline_init) },
 	{ HP_POP(cmdline->final, HP_cmdline_final) },
@@ -2565,6 +2566,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(quest->questinfo_validate_homunculus_level, HP_quest_questinfo_validate_homunculus_level) },
 	{ HP_POP(quest->questinfo_validate_homunculus_type, HP_quest_questinfo_validate_homunculus_type) },
 	{ HP_POP(quest->questinfo_validate_quests, HP_quest_questinfo_validate_quests) },
+	{ HP_POP(quest->questinfo_validate_mercenary_class, HP_quest_questinfo_validate_mercenary_class) },
 	{ HP_POP(quest->questinfo_vector_clear, HP_quest_questinfo_vector_clear) },
 /* rnd_interface */
 	{ HP_POP(rnd->init, HP_rnd_init) },

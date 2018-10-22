@@ -2630,6 +2630,8 @@ typedef void (*HPMHOOK_pre_clif_camera_showWindow) (struct map_session_data **sd
 typedef void (*HPMHOOK_post_clif_camera_showWindow) (struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_camera_change) (struct map_session_data **sd, float *range, float *rotation, float *latitude, enum send_target *target);
 typedef void (*HPMHOOK_post_clif_camera_change) (struct map_session_data *sd, float range, float rotation, float latitude, enum send_target target);
+typedef void (*HPMHOOK_pre_clif_item_preview) (struct map_session_data **sd, int *n);
+typedef void (*HPMHOOK_post_clif_item_preview) (struct map_session_data *sd, int n);
 #endif // MAP_CLIF_H
 #ifdef COMMON_CORE_H /* cmdline */
 typedef void (*HPMHOOK_pre_cmdline_init) (void);
@@ -6482,6 +6484,8 @@ typedef bool (*HPMHOOK_pre_quest_questinfo_validate_homunculus_type) (struct map
 typedef bool (*HPMHOOK_post_quest_questinfo_validate_homunculus_type) (bool retVal___, struct map_session_data *sd, struct questinfo *qi);
 typedef bool (*HPMHOOK_pre_quest_questinfo_validate_quests) (struct map_session_data **sd, struct questinfo **qi);
 typedef bool (*HPMHOOK_post_quest_questinfo_validate_quests) (bool retVal___, struct map_session_data *sd, struct questinfo *qi);
+typedef bool (*HPMHOOK_pre_quest_questinfo_validate_mercenary_class) (struct map_session_data **sd, struct questinfo **qi);
+typedef bool (*HPMHOOK_post_quest_questinfo_validate_mercenary_class) (bool retVal___, struct map_session_data *sd, struct questinfo *qi);
 typedef void (*HPMHOOK_pre_quest_questinfo_vector_clear) (int *m);
 typedef void (*HPMHOOK_post_quest_questinfo_vector_clear) (int m);
 #endif // MAP_QUEST_H

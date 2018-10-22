@@ -28965,6 +28965,32 @@ void HP_clif_camera_change(struct map_session_data *sd, float range, float rotat
 	}
 	return;
 }
+void HP_clif_item_preview(struct map_session_data *sd, int n) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_item_preview_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, int *n);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_item_preview_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_item_preview_pre[hIndex].func;
+			preHookFunc(&sd, &n);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.item_preview(sd, n);
+	}
+	if (HPMHooks.count.HP_clif_item_preview_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, int n);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_item_preview_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_item_preview_post[hIndex].func;
+			postHookFunc(sd, n);
+		}
+	}
+	return;
+}
 /* cmdline_interface */
 void HP_cmdline_init(void) {
 	int hIndex = 0;
@@ -66730,6 +66756,33 @@ bool HP_quest_questinfo_validate_quests(struct map_session_data *sd, struct ques
 		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, struct questinfo *qi);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_questinfo_validate_quests_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_quest_questinfo_validate_quests_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd, qi);
+		}
+	}
+	return retVal___;
+}
+bool HP_quest_questinfo_validate_mercenary_class(struct map_session_data *sd, struct questinfo *qi) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_quest_questinfo_validate_mercenary_class_pre > 0) {
+		bool (*preHookFunc) (struct map_session_data **sd, struct questinfo **qi);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_questinfo_validate_mercenary_class_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_quest_questinfo_validate_mercenary_class_pre[hIndex].func;
+			retVal___ = preHookFunc(&sd, &qi);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.quest.questinfo_validate_mercenary_class(sd, qi);
+	}
+	if (HPMHooks.count.HP_quest_questinfo_validate_mercenary_class_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, struct questinfo *qi);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_questinfo_validate_mercenary_class_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_quest_questinfo_validate_mercenary_class_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd, qi);
 		}
 	}

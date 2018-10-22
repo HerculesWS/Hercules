@@ -2222,6 +2222,8 @@ struct {
 	struct HPMHookPoint *HP_clif_camera_showWindow_post;
 	struct HPMHookPoint *HP_clif_camera_change_pre;
 	struct HPMHookPoint *HP_clif_camera_change_post;
+	struct HPMHookPoint *HP_clif_item_preview_pre;
+	struct HPMHookPoint *HP_clif_item_preview_post;
 	struct HPMHookPoint *HP_cmdline_init_pre;
 	struct HPMHookPoint *HP_cmdline_init_post;
 	struct HPMHookPoint *HP_cmdline_final_pre;
@@ -5010,6 +5012,8 @@ struct {
 	struct HPMHookPoint *HP_quest_questinfo_validate_homunculus_type_post;
 	struct HPMHookPoint *HP_quest_questinfo_validate_quests_pre;
 	struct HPMHookPoint *HP_quest_questinfo_validate_quests_post;
+	struct HPMHookPoint *HP_quest_questinfo_validate_mercenary_class_pre;
+	struct HPMHookPoint *HP_quest_questinfo_validate_mercenary_class_post;
 	struct HPMHookPoint *HP_quest_questinfo_vector_clear_pre;
 	struct HPMHookPoint *HP_quest_questinfo_vector_clear_post;
 	struct HPMHookPoint *HP_rnd_init_pre;
@@ -8821,6 +8825,8 @@ struct {
 	int HP_clif_camera_showWindow_post;
 	int HP_clif_camera_change_pre;
 	int HP_clif_camera_change_post;
+	int HP_clif_item_preview_pre;
+	int HP_clif_item_preview_post;
 	int HP_cmdline_init_pre;
 	int HP_cmdline_init_post;
 	int HP_cmdline_final_pre;
@@ -11609,6 +11615,8 @@ struct {
 	int HP_quest_questinfo_validate_homunculus_type_post;
 	int HP_quest_questinfo_validate_quests_pre;
 	int HP_quest_questinfo_validate_quests_post;
+	int HP_quest_questinfo_validate_mercenary_class_pre;
+	int HP_quest_questinfo_validate_mercenary_class_post;
 	int HP_quest_questinfo_vector_clear_pre;
 	int HP_quest_questinfo_vector_clear_post;
 	int HP_rnd_init_pre;
