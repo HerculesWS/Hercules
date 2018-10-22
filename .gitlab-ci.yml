@@ -124,14 +124,22 @@ zero-2018:clang-4.0:
 
 pre_re:clang-5.0:
   <<: *branch_exceptions
-  <<: *prerequisites
+  before_script:
+    - echo "Building $CI_BUILD_NAME"
+    - uname -a
+    - echo 'deb http://ftp.debian.org/debian stretch-backports main' >> /etc/apt/sources.list
+    - ./tools/ci/retry.sh apt-get update
+    - ./tools/ci/retry.sh apt-get install -t stretch-backports -y -qq clang-5.0
+    - ./tools/ci/retry.sh apt-get install -y -qq $INSTALL_PACKAGES $DEBIAN_COMMON_PACKAGES
+    - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok $SQLHOST
+    - ./tools/ci/travis.sh getplugins || true
   stage: secondary
-  image: debian:unstable
+  image: debian:stretch
   services:
-    - mariadb:10
+    - mariadb:10.1
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: clang-5.0 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: mariadb-client libmariadbclient-dev-compat
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=clang-5.0 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
@@ -139,14 +147,22 @@ pre_re:clang-5.0:
 
 re:clang-5.0:
   <<: *branch_exceptions
-  <<: *prerequisites
+  before_script:
+    - echo "Building $CI_BUILD_NAME"
+    - uname -a
+    - echo 'deb http://ftp.debian.org/debian stretch-backports main' >> /etc/apt/sources.list
+    - ./tools/ci/retry.sh apt-get update
+    - ./tools/ci/retry.sh apt-get install -t stretch-backports -y -qq clang-5.0
+    - ./tools/ci/retry.sh apt-get install -y -qq $INSTALL_PACKAGES $DEBIAN_COMMON_PACKAGES
+    - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok $SQLHOST
+    - ./tools/ci/travis.sh getplugins || true
   stage: secondary
-  image: debian:unstable
+  image: debian:stretch
   services:
-    - mariadb:10
+    - mariadb:10.1
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: clang-5.0 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: mariadb-client libmariadbclient-dev-compat
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=clang-5.0 --enable-debug --enable-Werror --enable-buildbot
@@ -154,14 +170,22 @@ re:clang-5.0:
 
 zero-2018:clang-5.0:
   <<: *branch_exceptions
-  <<: *prerequisites
+  before_script:
+    - echo "Building $CI_BUILD_NAME"
+    - uname -a
+    - echo 'deb http://ftp.debian.org/debian stretch-backports main' >> /etc/apt/sources.list
+    - ./tools/ci/retry.sh apt-get update
+    - ./tools/ci/retry.sh apt-get install -t stretch-backports -y -qq clang-5.0
+    - ./tools/ci/retry.sh apt-get install -y -qq $INSTALL_PACKAGES $DEBIAN_COMMON_PACKAGES
+    - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok $SQLHOST
+    - ./tools/ci/travis.sh getplugins || true
   stage: clients
-  image: debian:unstable
+  image: debian:stretch
   services:
-    - mariadb:10
+    - mariadb:10.1
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: clang-5.0 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: mariadb-client libmariadbclient-dev-compat
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=clang-5.0 --enable-debug --enable-Werror --enable-buildbot --enable-packetver-zero --enable-packetver=20180511
