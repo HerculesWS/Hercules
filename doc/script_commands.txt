@@ -8604,6 +8604,18 @@ Example:
 
 ---------------------------------------
 
+*data_to_string(<data>)
+
+Returns a string representation of the given data, similar to the .toString()
+method in JavaScript.
+
+Example:
+
+	data_to_string(DATATYPE_VAR) // "DATATYPE_VAR"
+	data_to_string(.@foo) // ".@foo"
+
+---------------------------------------
+
 *charisalpha("<string>", <position>)
 
 This function will return true if the character number Position in the given
