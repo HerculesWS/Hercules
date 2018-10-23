@@ -175,8 +175,8 @@ function	script	F_Bye	{
 // - 1 - Element N (0=none,1=Ice,2=Earth,3=Fire,4=Wind)
 // - 2 - VVS meter 0...3
 // - 3 - Refine
-// Example: mes "Show me your "+callfunc("F_ItemName",1201,1,2,5)+"...";
-//  is equal to: mes "Show me your ^000090 +5 VVS Fire Knife ^000000..."
+// Example: mesf("Show me your %s...", callfunc("F_ItemName",1201,1,2,5));
+//  is equal to: mes("Show me your ^000090 +5 VVS Fire Knife ^000000...");
 function	script	F_ItemName	{
 	if(getarg(3))
 		.@t$ += "+"+getarg(3)+" ";
@@ -434,7 +434,7 @@ function	script	F_ShuffleNumbers	{
 //== Function F_MesColor ===================================
 // Function to colorize npc dialog without having to memorize the color code
 // Examples:
-//    mes callfunc("F_MesColor", C_BLUE) +"This message is now in BLUE";
+//    mesf("%sThis message is now in BLUE", callfunc("F_MesColor", C_BLUE));
 function	script	F_MesColor	{
 	return sprintf("^%06X", min(getarg(0), 0xFFFFFF));
 }

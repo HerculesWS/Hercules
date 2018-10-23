@@ -41,7 +41,7 @@ OnTouch:
 		end;
 	}
 	else {
-		mes "Only Acolyte class are applicable to join this mode.";
+		mes("Only Acolyte class are applicable to join this mode.");
 		close;
 	}
 }
@@ -1064,30 +1064,30 @@ OnTouch:
 }
 
 prt_are_in,181,83,3	script	Staff#aco-1	1_F_02,{
-	mes "[Staff]";
-	mes "Nice work!";
-	mes "You might have failed";
-	mes "the Time Attack battle,";
-	mes "but you still earned a";
-	mes "small Arena Point reward~";
+	mes("[Staff]");
+	mes("Nice work!");
+	mes("You might have failed");
+	mes("the Time Attack battle,");
+	mes("but you still earned a");
+	mes("small Arena Point reward~");
 	next;
 	if (arena_point == 30000) {
-		mes "[Staff]";
-		mes "Wait, I'm sorry, but you";
-		mes "have too many Arena Points.";
-		mes "Since you've reached the point";
-		mes "limitation, I can't give you any point rewards until you spend";
-		mes "some of your Arena Points.";
+		mes("[Staff]");
+		mes("Wait, I'm sorry, but you");
+		mes("have too many Arena Points.");
+		mes("Since you've reached the point");
+		mes("limitation, I can't give you any point rewards until you spend");
+		mes("some of your Arena Points.");
 		next;
 	}
 	else {
 		++arena_point;
 	}
-	mes "[Staff]";
-	mes "Well, let me guide";
-	mes "you back outside.";
-	mes "I hope you enjoyed";
-	mes "your battle in the area~";
+	mes("[Staff]");
+	mes("Well, let me guide");
+	mes("you back outside.");
+	mes("I hope you enjoyed");
+	mes("your battle in the area~");
 	close2;
 	specialeffect(EF_EXIT, AREA, playerattached());
 	warp "arena_room",100,75;
@@ -1114,35 +1114,35 @@ prt_are_in,25,31,3	script	Staff#aco-2	1_F_02,{
 	.@record_secaco = .@record_timeaco % 60;
 	if ((.@record_timeaco < 0 ) || (.@record_houraco < 0) || (.@record_minaco < 0 ) || (.@record_secaco < 0)) {
 		emotion e_omg;
-		mes "[Staff]";
-		mes "How did you...?";
-		mes "According to these re-";
-		mes "Uh oh. These records";
-		mes "got messed up somehow.";
-		mes "Th-This isn't good at all!";
-		mes "Now what am I gonna do?";
+		mes("[Staff]");
+		mes("How did you...?");
+		mes("According to these re-");
+		mes("Uh oh. These records");
+		mes("got messed up somehow.");
+		mes("Th-This isn't good at all!");
+		mes("Now what am I gonna do?");
 		next;
-		mes "[Staff]";
-		mes "Well, I'll give you the";
-		mes "benefit of the doubt and";
-		mes "assume you completed the";
-		mes "arena battle under the time";
-		mes "limit. So, let me give you the";
-		mes "standard Arena Point reward.";
+		mes("[Staff]");
+		mes("Well, I'll give you the");
+		mes("benefit of the doubt and");
+		mes("assume you completed the");
+		mes("arena battle under the time");
+		mes("limit. So, let me give you the");
+		mes("standard Arena Point reward.");
 		next;
-		mes "[Staff]";
-		mes "I'm really sorry about";
-		mes "this, especially if you";
-		mes "broke some record, but";
-		mes "all I can do is restore your";
-		mes "HP and SP for you, "+strcharinfo(PC_NAME)+".";
+		mes("[Staff]");
+		mes("I'm really sorry about");
+		mes("this, especially if you");
+		mes("broke some record, but");
+		mes("all I can do is restore your");
+		mesf("HP and SP for you, %s.", strcharinfo(PC_NAME));
 		percentheal 100,100;
 		next;
-		mes "[Staff]";
+		mes("[Staff]");
 		emotion e_korea;
-		mes "Thank you.";
-		mes "I hope you enjoy";
-		mes "your time in the Arena~";
+		mes("Thank you.");
+		mes("I hope you enjoy");
+		mes("your time in the Arena~");
 		close2;
 		if (arena_point < 29981) {
 			arena_point += 20;
@@ -1183,37 +1183,37 @@ prt_are_in,25,31,3	script	Staff#aco-2	1_F_02,{
 		.@topbunaco = ((.@acotop_t % 3600) / 60);
 		.@topchoaco = .@acotop_t % 60;
 		.@gapaco = .@acotop_t - .@record_timeaco;
-		mes "[Staff]";
-		mes "^3131FF"+strcharinfo(PC_NAME)+"^000000, right?";
-		mes "Hey, you did great! You";
-		mes "completed this Arena Battle";
-		mes "in "+.@record_minaco+" min and "+.@record_secaco+" seconds!";
+		mes("[Staff]");
+		mesf("^3131FF%s^000000, right?", strcharinfo(PC_NAME));
+		mes("Hey, you did great! You");
+		mes("completed this Arena Battle");
+		mesf("in %d min and %d seconds!", .@record_minaco, .@record_secaco);
 		next;
-		mes "[Staff]";
-		mes "Currently, ^3131FF"+.@acotop_n$+"^000000";
-		mes "is the top player, with a record";
-		mes "of ^3131FF"+.@topbunaco+"^000000 minutes, ^3131FF"+.@topchoaco+"^000000 seconds, of the Acolyte Class Time Force Battle.";
+		mes("[Staff]");
+		mesf("Currently, ^3131FF%s^000000", .@acotop_n$);
+		mes("is the top player, with a record");
+		mesf("of ^3131FF%d^000000 minutes, ^3131FF%d^000000 seconds, of the Acolyte Class Time Force Battle.", .@topbunaco, .@topchoaco);
 		next;
 		if ((.@acotop_t < 0) || (.@topbunaco < 0 ) || (.@topchoaco < 0)) {
 			emotion e_omg;
-			mes "[Staff]";
-			mes "Wait a second...";
-			mes "Your time is better";
-			mes "than that. Well now.";
-			mes "It's time I made a little";
-			mes "correction to the records.";
+			mes("[Staff]");
+			mes("Wait a second...");
+			mes("Your time is better");
+			mes("than that. Well now.");
+			mes("It's time I made a little");
+			mes("correction to the records.");
 			next;
 			emotion e_no1;
-			mes "[Staff]";
-			mes "Wow! A new record!";
-			mes "Excellent!";
+			mes("[Staff]");
+			mes("Wow! A new record!");
+			mes("Excellent!");
 			next;
-			mes "[Staff]";
-			mes "^333333*Ahem*^000000 Oh wow!";
-			mes "A new record! Your";
-			mes "name will now be listed";
-			mes "under the Time Force Battle";
-			mes "Arena - Acolyte Class Record!";
+			mes("[Staff]");
+			mes("^333333*Ahem*^000000 Oh wow!");
+			mes("A new record! Your");
+			mes("name will now be listed");
+			mes("under the Time Force Battle");
+			mes("Arena - Acolyte Class Record!");
 			if (BaseJob == Job_Acolyte) {
 				$arn_acotop = .@record_timeaco;
 				$arn_acotopn$ = strcharinfo(PC_NAME);
@@ -1240,52 +1240,52 @@ prt_are_in,25,31,3	script	Staff#aco-2	1_F_02,{
 			}
 			next;
 			if (arena_point == 30000) {
-				mes "[Staff]";
-				mes "Alright, let me reward you";
-				mes "with some Arena Poi--Wait.";
-				mes "I can't. Your Arena Points are";
-				mes "already maxed out. I'm sorry,";
-				mes "but you'll have to spend some before you can receive more points.";
+				mes("[Staff]");
+				mes("Alright, let me reward you");
+				mes("with some Arena Poi--Wait.");
+				mes("I can't. Your Arena Points are");
+				mes("already maxed out. I'm sorry,");
+				mes("but you'll have to spend some before you can receive more points.");
 				next;
-				mes "[Staff]";
-				mes "Anyway, you can check";
-				mes "your current Arena Point";
-				mes "total in the Arena Lobby";
-				mes "with Vendigos. Well, I hope";
-				mes "you enjoyed your battle. Now, let me guide you back outside...";
+				mes("[Staff]");
+				mes("Anyway, you can check");
+				mes("your current Arena Point");
+				mes("total in the Arena Lobby");
+				mes("with Vendigos. Well, I hope");
+				mes("you enjoyed your battle. Now, let me guide you back outside...");
 				close2;
 			}
 			else if (arena_point > 29950) {
-				mes "[Staff]";
-				mes "Let me reward you with some";
-				mes "Arena Points. This time, you'll";
-				mes "be getting more points since";
-				mes "you set a new record. Please";
-				mes "talk with ^3131FFVendigos^000000 in the lobby";
-				mes "to check your new point total.";
+				mes("[Staff]");
+				mes("Let me reward you with some");
+				mes("Arena Points. This time, you'll");
+				mes("be getting more points since");
+				mes("you set a new record. Please");
+				mes("talk with ^3131FFVendigos^000000 in the lobby");
+				mes("to check your new point total.");
 				next;
-				mes "[Staff]";
-				mes "Well, I hope you";
-				mes "enjoyed your battle.";
-				mes "Now let me guide you";
-				mes "back to the Arena Lobby...";
+				mes("[Staff]");
+				mes("Well, I hope you");
+				mes("enjoyed your battle.");
+				mes("Now let me guide you");
+				mes("back to the Arena Lobby...");
 				close2;
 				arena_point = 30000;
 			}
 			else {
-				mes "[Staff]";
-				mes "Let me reward you with some";
-				mes "Arena Points. This time, you'll";
-				mes "be getting more points since";
-				mes "you set a new record. Please";
-				mes "talk with ^3131FFVendigos^000000 in the lobby";
-				mes "to check your new point total.";
+				mes("[Staff]");
+				mes("Let me reward you with some");
+				mes("Arena Points. This time, you'll");
+				mes("be getting more points since");
+				mes("you set a new record. Please");
+				mes("talk with ^3131FFVendigos^000000 in the lobby");
+				mes("to check your new point total.");
 				next;
-				mes "[Staff]";
-				mes "Well, I hope you";
-				mes "enjoyed your battle.";
-				mes "Now let me guide you";
-				mes "back to the Arena Lobby...";
+				mes("[Staff]");
+				mes("Well, I hope you");
+				mes("enjoyed your battle.");
+				mes("Now let me guide you");
+				mes("back to the Arena Lobby...");
 				close2;
 				arena_point += 50;
 			}
@@ -1297,59 +1297,59 @@ prt_are_in,25,31,3	script	Staff#aco-2	1_F_02,{
 			end;
 		}
 		if (gapaco < 0) {
-			mes "[Staff]";
-			mes "You didn't break the";
-			mes "current record this time,";
-			mes "but you still gave an awesome";
-			mes "performance. Excellent work!";
+			mes("[Staff]");
+			mes("You didn't break the");
+			mes("current record this time,");
+			mes("but you still gave an awesome");
+			mes("performance. Excellent work!");
 			next;
 			if (arena_point == 30000) {
-				mes "[Staff]";
-				mes "Alright, let me reward you";
-				mes "with some Arena Poi--Wait.";
-				mes "I can't. Your Arena Points are";
-				mes "already maxed out. I'm sorry,";
-				mes "but you'll have to spend some before you can receive more points.";
+				mes("[Staff]");
+				mes("Alright, let me reward you");
+				mes("with some Arena Poi--Wait.");
+				mes("I can't. Your Arena Points are");
+				mes("already maxed out. I'm sorry,");
+				mes("but you'll have to spend some before you can receive more points.");
 				next;
-				mes "[Staff]";
-				mes "Anyway, you can check";
-				mes "your current Arena Point";
-				mes "total in the Arena Lobby";
-				mes "with Vendigos. Well, I hope";
-				mes "you enjoyed your battle. Now, let me guide you back outside...";
+				mes("[Staff]");
+				mes("Anyway, you can check");
+				mes("your current Arena Point");
+				mes("total in the Arena Lobby");
+				mes("with Vendigos. Well, I hope");
+				mes("you enjoyed your battle. Now, let me guide you back outside...");
 				close2;
 			}
 			else if (arena_point > 29980) {
-				mes "[Staff]";
-				mes "Let me reward you";
-				mes "with some Arena Points.";
-				mes "Please check your new";
-				mes "Arena Point total in the";
-				mes "Arena Lobby by speaking";
-				mes "to the friendly ^3131FFVendigos.^000000";
+				mes("[Staff]");
+				mes("Let me reward you");
+				mes("with some Arena Points.");
+				mes("Please check your new");
+				mes("Arena Point total in the");
+				mes("Arena Lobby by speaking");
+				mes("to the friendly ^3131FFVendigos.^000000");
 				next;
-				mes "[Staff]";
-				mes "Well, I hope you";
-				mes "enjoyed your battle.";
-				mes "Now let me guide you";
-				mes "back to the Arena Lobby...";
+				mes("[Staff]");
+				mes("Well, I hope you");
+				mes("enjoyed your battle.");
+				mes("Now let me guide you");
+				mes("back to the Arena Lobby...");
 				close2;
 				arena_point = 30000;
 			}
 			else {
-				mes "[Staff]";
-				mes "Let me reward you";
-				mes "with some Arena Points.";
-				mes "Please check your new";
-				mes "Arena Point total in the";
-				mes "Arena Lobby by speaking";
-				mes "to the friendly ^3131FFVendigos.^000000";
+				mes("[Staff]");
+				mes("Let me reward you");
+				mes("with some Arena Points.");
+				mes("Please check your new");
+				mes("Arena Point total in the");
+				mes("Arena Lobby by speaking");
+				mes("to the friendly ^3131FFVendigos.^000000");
 				next;
-				mes "[Staff]";
-				mes "Well, I hope you";
-				mes "enjoyed your battle.";
-				mes "Now let me guide you";
-				mes "back to the Arena Lobby...";
+				mes("[Staff]");
+				mes("Well, I hope you");
+				mes("enjoyed your battle.");
+				mes("Now let me guide you");
+				mes("back to the Arena Lobby...");
 				close2;
 				arena_point += 20;
 			}
@@ -1362,17 +1362,17 @@ prt_are_in,25,31,3	script	Staff#aco-2	1_F_02,{
 		}
 		else {
 			emotion e_omg;
-			mes "[Staff]";
-			mes "Wow! A new record!";
-			mes "This is awsome!";
+			mes("[Staff]");
+			mes("Wow! A new record!");
+			mes("This is awsome!");
 			next;
-			mes "[Staff]";
-			mes "Oooh... A brand new";
-			mes "record. ^3131FF"+ strcharinfo(PC_NAME)+"^000000, your";
-			mes "name will now be listed in";
-			mes "the Time Force Battle Arena";
-			mes "Acolyte Class Records.";
-			mes "Congratulations~";
+			mes("[Staff]");
+			mes("Oooh... A brand new");
+			mesf("record. ^3131FF%s^000000, your", strcharinfo(PC_NAME));
+			mes("name will now be listed in");
+			mes("the Time Force Battle Arena");
+			mes("Acolyte Class Records.");
+			mes("Congratulations~");
 			if (BaseJob == Job_Acolyte) {
 				$arn_acotop = .@record_timeaco;
 				$arn_acotopn$ = strcharinfo(PC_NAME);
@@ -1402,52 +1402,52 @@ prt_are_in,25,31,3	script	Staff#aco-2	1_F_02,{
 			}
 			next;
 			if (arena_point == 30000) {
-				mes "[Staff]";
-				mes "Alright, let me reward you";
-				mes "with some Arena Poi--Wait.";
-				mes "I can't. Your Arena Points are";
-				mes "already maxed out. I'm sorry,";
-				mes "but you'll have to spend some before you can receive more points.";
+				mes("[Staff]");
+				mes("Alright, let me reward you");
+				mes("with some Arena Poi--Wait.");
+				mes("I can't. Your Arena Points are");
+				mes("already maxed out. I'm sorry,");
+				mes("but you'll have to spend some before you can receive more points.");
 				next;
-				mes "[Staff]";
-				mes "Anyway, you can check";
-				mes "your current Arena Point";
-				mes "total in the Arena Lobby";
-				mes "with Vendigos. Well, I hope";
-				mes "you enjoyed your battle. Now, let me guide you back outside...";
+				mes("[Staff]");
+				mes("Anyway, you can check");
+				mes("your current Arena Point");
+				mes("total in the Arena Lobby");
+				mes("with Vendigos. Well, I hope");
+				mes("you enjoyed your battle. Now, let me guide you back outside...");
 				close2;
 			}
 			else if (arena_point > 29980) {
-				mes "[Staff]";
-				mes "Let me reward you with some";
-				mes "Arena Points. This time, you'll";
-				mes "be getting more points since";
-				mes "you set a new record. Please";
-				mes "talk with ^3131FFVendigos^000000 in the lobby";
-				mes "to check your new point total.";
+				mes("[Staff]");
+				mes("Let me reward you with some");
+				mes("Arena Points. This time, you'll");
+				mes("be getting more points since");
+				mes("you set a new record. Please");
+				mes("talk with ^3131FFVendigos^000000 in the lobby");
+				mes("to check your new point total.");
 				next;
-				mes "[Staff]";
-				mes "Well, I hope you";
-				mes "enjoyed your battle.";
-				mes "Now let me guide you";
-				mes "back to the Arena Lobby...";
+				mes("[Staff]");
+				mes("Well, I hope you");
+				mes("enjoyed your battle.");
+				mes("Now let me guide you");
+				mes("back to the Arena Lobby...");
 				close2;
 				arena_point = 30000;
 			}
 			else {
-				mes "[Staff]";
-				mes "Let me reward you with some";
-				mes "Arena Points. This time, you'll";
-				mes "be getting more points since";
-				mes "you set a new record. Please";
-				mes "talk with ^3131FFVendigos^000000 in the lobby";
-				mes "to check your new point total.";
+				mes("[Staff]");
+				mes("Let me reward you with some");
+				mes("Arena Points. This time, you'll");
+				mes("be getting more points since");
+				mes("you set a new record. Please");
+				mes("talk with ^3131FFVendigos^000000 in the lobby");
+				mes("to check your new point total.");
 				next;
-				mes "[Staff]";
-				mes "Well, I hope you";
-				mes "enjoyed your battle.";
-				mes "Now let me guide you";
-				mes "back to the Arena Lobby...";
+				mes("[Staff]");
+				mes("Well, I hope you");
+				mes("enjoyed your battle.");
+				mes("Now let me guide you");
+				mes("back to the Arena Lobby...");
 				close2;
 				arena_point += 20;
 			}
@@ -1572,20 +1572,20 @@ OnEnable:
 }
 
 arena_room,94,82,7	script	Arena Record Staff#aco	1_F_PRIEST,{
-	mes "[Mathea]";
-	mes "Hello, I'm in charge of";
-	mes "the Acolyte Class Records";
-	mes "in the Arena. If you'd like to";
-	mes "view the other records, please";
-	mes "talk to the Arena Record Staff,";
-	mes "Owen Kheuv, and he'll help you.";
+	mes("[Mathea]");
+	mes("Hello, I'm in charge of");
+	mes("the Acolyte Class Records");
+	mes("in the Arena. If you'd like to");
+	mes("view the other records, please");
+	mes("talk to the Arena Record Staff,");
+	mes("Owen Kheuv, and he'll help you.");
 	next;
-	mes "[Mathea]";
-	mes "Would you like to";
-	mes "see who are the top";
-	mes "players in the Acolyte";
-	mes "Class Arena Challenges?";
-	mes "Please choose from the menu.";
+	mes("[Mathea]");
+	mes("Would you like to");
+	mes("see who are the top");
+	mes("players in the Acolyte");
+	mes("Class Arena Challenges?");
+	mes("Please choose from the menu.");
 	next;
 	switch(select("Acolyte Mode", "Priest - Level 70 or lower", "Priest - Level 80 or lower", "Priest - Level 90 or lower", "Priest - Level 91 ~ "+(RENEWAL?"160":"99"))) {
 	case 1:
@@ -1593,13 +1593,13 @@ arena_room,94,82,7	script	Arena Record Staff#aco	1_F_PRIEST,{
 		.@acotop_n$ = $arn_acotopn$;
 		.@acotopbun = ((.@acotop_t % 3600) / 60 );
 		.@acotopcho = (.@acotop_t % 60);
-		mes "[Mathea]";
-		mes "^3131FF"+.@acotop_n$+"^000000";
-		mes "is the top player of the";
-		mes "Acolyte Mode, finishing";
-		mes "with a time of ^3131FF"+.@acotopbun+"^000000 minutes";
-		mes "and ^3131FF"+.@acotopcho+"^000000 seconds. Thank you";
-		mes "for participating in the Arena.";
+		mes("[Mathea]");
+		mesf("^3131FF%s^000000", .@acotop_n$);
+		mes("is the top player of the");
+		mes("Acolyte Mode, finishing");
+		mesf("with a time of ^3131FF%d^000000 minutes", .@acotopbun);
+		mesf("and ^3131FF%d^000000 seconds. Thank you", .@acotopcho);
+		mes("for participating in the Arena.");
 		close;
 	case 2:
 		.@pritop_t = $arn_pritop60;
@@ -1620,13 +1620,13 @@ arena_room,94,82,7	script	Arena Record Staff#aco	1_F_PRIEST,{
 	}
 	.@pritopbun = ((.@pritop_t % 3600) / 60 );
 	.@pritopcho = (.@pritop_t % 60);
-	mes "[Mathea]";
-	mes "^3131FF"+.@pritop_n$+"^000000";
-	mes "is the top player of this";
-	mes "Priest Mode, finishing ";
-	mes "with a time of ^3131FF"+.@pritopbun+" minutes";
-	mes "and ^3131FF"+.@pritopcho+" seconds. Thank you";
-	mes "for participating in the Arena.";
+	mes("[Mathea]");
+	mesf("^3131FF%s^000000", .@pritop_n$);
+	mes("is the top player of this");
+	mes("Priest Mode, finishing ");
+	mesf("with a time of ^3131FF%d minutes", .@pritopbun);
+	mesf("and ^3131FF%d seconds. Thank you", .@pritopcho);
+	mes("for participating in the Arena.");
 	close;
 
 OnInit:
@@ -1668,83 +1668,83 @@ OnLineRec_pri90:
 }
 
 arena_room,140,136,3	script	Guide Alias	4_F_NOVICE,{
-	mes "[Alias]";
-	mes "Hello there, I'm here";
-	mes "to inform you about";
-	mes "the Izlude Arena's";
-	mes "Acolyte Class Mode.";
-	mes "My name is Alias,";
-	mes "your Arena Guide.";
+	mes("[Alias]");
+	mes("Hello there, I'm here");
+	mes("to inform you about");
+	mes("the Izlude Arena's");
+	mes("Acolyte Class Mode.");
+	mes("My name is Alias,");
+	mes("your Arena Guide.");
 	next;
-	mes "[Alias]";
-	mes "Now, there are two modes";
-	mes "under Acolyte Class Mode.";
-	mes "These are ^3131FFAcolyte Mode^000000 and";
-	mes "^3131FFPriest Mode^000000. For both modes,";
-	mes "you will need to wait inside the ^3131FFAcolyte Class Waiting Room^000000.";
+	mes("[Alias]");
+	mes("Now, there are two modes");
+	mes("under Acolyte Class Mode.");
+	mes("These are ^3131FFAcolyte Mode^000000 and");
+	mes("^3131FFPriest Mode^000000. For both modes,");
+	mes("you will need to wait inside the ^3131FFAcolyte Class Waiting Room^000000.");
 	next;
-	mes "[Alias]";
-	mes "Once it's your turn,";
-	mes "you'll be sent out of the";
-	mes "waiting room and guided to";
-	mes "the arena grounds. Oh, and";
-	mes "the entrance fee is 1,000 zeny.";
+	mes("[Alias]");
+	mes("Once it's your turn,");
+	mes("you'll be sent out of the");
+	mes("waiting room and guided to");
+	mes("the arena grounds. Oh, and");
+	mes("the entrance fee is 1,000 zeny.");
 	next;
-	mes "[Alias]";
-	mes "It'll be handy to know";
-	mes "that the Red Plants and";
-	mes "Permeters in the Acolyte";
-	mes "Class Mode will drop items";
-	mes "and give experience. Other";
-	mes "monsters, however, won't.";
+	mes("[Alias]");
+	mes("It'll be handy to know");
+	mes("that the Red Plants and");
+	mes("Permeters in the Acolyte");
+	mes("Class Mode will drop items");
+	mes("and give experience. Other");
+	mes("monsters, however, won't.");
 	next;
-	mes "[Alias]";
-	mes "Once you've been guided";
-	mes "to the actual arena grounds,";
-	mes "listen to ^3131FFTrocco^000000 for the mission objectives that you will have to";
-	mes "complete within the time limit";
-	mes "of ^3131FF8 minutes^000000. Don't forget~";
+	mes("[Alias]");
+	mes("Once you've been guided");
+	mes("to the actual arena grounds,");
+	mes("listen to ^3131FFTrocco^000000 for the mission objectives that you will have to");
+	mes("complete within the time limit");
+	mes("of ^3131FF8 minutes^000000. Don't forget~");
 	next;
-	mes "[Alias]";
-	mes "Upon completing the";
-	mes "entire stage, you will be";
-	mes "warped to the ^3131DDFinale Waiting";
-	mes "Room^000000 where you'll be rewarded";
-	mes "with Arena Points. But you must get your points within 1 minute.";
+	mes("[Alias]");
+	mes("Upon completing the");
+	mes("entire stage, you will be");
+	mes("warped to the ^3131DDFinale Waiting");
+	mes("Room^000000 where you'll be rewarded");
+	mes("with Arena Points. But you must get your points within 1 minute.");
 	next;
-	mes "[Alias]";
-	mes "Once you're automatically";
-	mes "sent outside of the Finale";
-	mes "Waiting Room, you won't have";
-	mes "the chance to get your Arena";
-	mes "Points if you didn't get them";
-	mes "there, so be careful~";
+	mes("[Alias]");
+	mes("Once you're automatically");
+	mes("sent outside of the Finale");
+	mes("Waiting Room, you won't have");
+	mes("the chance to get your Arena");
+	mes("Points if you didn't get them");
+	mes("there, so be careful~");
 	next;
-	mes "[Alias]";
-	mes "Well, I hope you enjoy";
-	mes "the Acolyte Mode Arena!";
-	mes "Good luck and good fighting!";
+	mes("[Alias]");
+	mes("Well, I hope you enjoy");
+	mes("the Acolyte Mode Arena!");
+	mes("Good luck and good fighting!");
 	close;
 }
 
 arena_room,195,5,3	script	log-on-aco#arena	4_NFWISP,{
 	.@i = callfunc("F_GM_NPC",1357,0);
 	if (.@i == -1) {
-		mes "^3355FFIncorrect Password.^000000";
+		mes("^3355FFIncorrect Password.^000000");
 		close;
 	} else if (.@i == 0) {
 		end;
 	} else {
-		mes "[!!CAUTION!!]";
-		mes "^3355FFThe following menu";
-		mes "the record for that";
-		mes "particular mode in the";
-		mes "Arena Acolyte Class Mode.^000000";
+		mes("[!!CAUTION!!]");
+		mes("^3355FFThe following menu");
+		mes("the record for that");
+		mes("particular mode in the");
+		mes("Arena Acolyte Class Mode.^000000");
 		next;
 		switch(select("Cancel", "Acolyte", "~level 70", "~level 80", "~level 90", "~level "+(RENEWAL?"160":"99"))) {
 		case 1:
-			mes "^3355FFCommand has";
-			mes "been canceled.^000000";
+			mes("^3355FFCommand has");
+			mes("been canceled.^000000");
 			close;
 		case 2:
 			$arn_acotop = 480;
@@ -1774,32 +1774,32 @@ arena_room,195,5,3	script	log-on-aco#arena	4_NFWISP,{
 arena_room,195,10,3	script	acolink#arena	4_NFWISP,{
 	.@i = callfunc("F_GM_NPC",1357,0);
 	if (.@i == -1) {
-		mes "Command has";
-		mes "been canceled.";
+		mes("Command has");
+		mes("been canceled.");
 		close;
 	} else if (.@i == 0) {
 		end;
 	} else {
-		mes "This NPC opens and";
-		mes "closes the Warp Portal";
-		mes "to the Arena's Acolyte";
-		mes "Class Mode. Choose";
-		mes "an option from the menu.";
+		mes("This NPC opens and");
+		mes("closes the Warp Portal");
+		mes("to the Arena's Acolyte");
+		mes("Class Mode. Choose");
+		mes("an option from the menu.");
 		next;
 		switch(select("Cancel", "Warp ON", "Warp OFF")) {
 		case 1:
-			mes "Command has";
-			mes "been canceled.";
+			mes("Command has");
+			mes("been canceled.");
 			close;
 		case 2:
 			enablenpc "onlyaco#arena";
-			mes "The Warp Portal";
-			mes "will be opened shortly.";
+			mes("The Warp Portal");
+			mes("will be opened shortly.");
 			close;
 		case 3:
 			disablenpc "onlyaco#arena";
-			mes "The Warp Portal";
-			mes "will be closed shortly.";
+			mes("The Warp Portal");
+			mes("will be closed shortly.");
 			close;
 		}
 	}

@@ -62,26 +62,26 @@ prt_are_in,76,87,3	script	Helper#party	1_F_02,4,4,{
 	if($arn_partywait == 0) {
 		$arn_partywait = 1;
 		emotion e_gasp,0;
-		mes "[Helper Iriff]";
-		mes "Good day, challengers!";
-		mes "You are in the party arena waiting room.";
+		mes("[Helper Iriff]");
+		mes("Good day, challengers!");
+		mes("You are in the party arena waiting room.");
 		next;
-		mes "[Helper Iriff]";
-		mes "Only one person at a time is allowed to stay in this waiting room.";
-		mes "Would you like to start a battle now?";
+		mes("[Helper Iriff]");
+		mes("Only one person at a time is allowed to stay in this waiting room.");
+		mes("Would you like to start a battle now?");
 		next;
 		switch( select( "No","Yes" ) ) {
 		case 1:
 			$arn_partywait = 0;
-			mes "[Helper Iriff]";
-			mes "I see.";
-			mes "However, please remember you have only a limited amount of time.";
+			mes("[Helper Iriff]");
+			mes("I see.");
+			mes("However, please remember you have only a limited amount of time.");
 			close;
 		case 2:
-			mes "[Helper Iriff]";
-			mes "Thank you, let me start a battle.";
-			mes "A warp portal leading to the arena room will be open.";
-			mes "I hope you will survive until the end of the battle and engrave your name on the list of honor...";
+			mes("[Helper Iriff]");
+			mes("Thank you, let me start a battle.");
+			mes("A warp portal leading to the arena room will be open.");
+			mes("I hope you will survive until the end of the battle and engrave your name on the list of honor...");
 			close2;
 			donpcevent "toarena#party::OnEnter";
 			donpcevent "Helper#party::OnStop";
@@ -970,21 +970,21 @@ OnMyMobDead:
 }
 
 prt_are_in,181,135,3	script	Staff#party-1	1_F_02,{
-	mes "[Staff]";
-	mes "You did a good job.";
-	mes "Even if you have failed to clear a time attack battle, I will reward you with a small amount of arena points.";
+	mes("[Staff]");
+	mes("You did a good job.");
+	mes("Even if you have failed to clear a time attack battle, I will reward you with a small amount of arena points.");
 	next;
 	if (arena_point == 30000) {
-		mes "[Staff]";
-		mes "Uh huh!";
-		mes "You already have enough arena points.";
-		mes "Please spend some arena points later. When I see you next time, I will make sure to give you some reward.";
+		mes("[Staff]");
+		mes("Uh huh!");
+		mes("You already have enough arena points.");
+		mes("Please spend some arena points later. When I see you next time, I will make sure to give you some reward.");
 		next;
 	} else {
 		++arena_point;
 	}
-	mes "[Staff]";
-	mes "Let me guide you outside. I hope you had a good time.";
+	mes("[Staff]");
+	mes("Let me guide you outside. I hope you had a good time.");
 	close2;
 	specialeffect(EF_HIT5, AREA, playerattached());
 	warp "arena_room",100,75;
@@ -1010,47 +1010,47 @@ prt_are_in,77,135,3	script	Staff#party-2	1_F_02,{
 		}
 	}
 	@gappt = (60 * $top_ptmin + $top_ptsec) - (60 * @record_minpt + @record_secpt);
-	mes "[Staff]";
-	mes "Wow, you did a good job~ ";
-	mes "Your name is...^3131FF" + strcharinfo(PC_NAME) +"^000000, isn't it?";
-	mes "^3131FF"+ strcharinfo(PC_NAME) +"^000000, total time you spent to pass the battle..";
+	mes("[Staff]");
+	mes("Wow, you did a good job~ ");
+	mesf("Your name is...^3131FF%s^000000, isn't it?", strcharinfo(PC_NAME));
+	mesf("^3131FF%s^000000, total time you spent to pass the battle..", strcharinfo(PC_NAME));
 	next;
-	mes "[Staff]";
-	mes "is "+@record_minpt+"minutes "+@record_secpt+"seconds.";
-	mes "Congratulations!";
+	mes("[Staff]");
+	mesf("is %dminutes %dseconds.", @record_minpt, @record_secpt);
+	mes("Congratulations!");
 	next;
-	mes "[Staff]";
-	mes "The fastest party among people who cleared party arena time force battle is ^3131FF"+$arena_pttopn$+"^000000.";
+	mes("[Staff]");
+	mesf("The fastest party among people who cleared party arena time force battle is ^3131FF%s^000000.", $arena_pttopn$);
 	next;
-	mes "[Staff]";
-	mes "^3131FF"+$arena_pttopn$+"^000000's running time was ^3131FF"+$top_ptmin+"^000000minutes ^3131FF"+$top_ptsec+"^000000seconds.";
+	mes("[Staff]");
+	mesf("^3131FF%s^000000's running time was ^3131FF%d^000000minutes ^3131FF%d^000000seconds.", $arena_pttopn$, $top_ptmin, $top_ptsec);
 	next;
 	.arn_party = getcharid(CHAR_ID_PARTY);
 	if (@gappt < 0) {
-		mes "[Staff]";
-		mes "Although you failed to make a new record, I hope you will succeed next time.";
+		mes("[Staff]");
+		mes("Although you failed to make a new record, I hope you will succeed next time.");
 		next;
 		if (arena_point > 29980) {
-			mes "[Staff]";
-			mes "Then let me reward you with some arena points....eh?";
-			mes "Your arena points have exceeded the maximum amount. I cannot give you more points until you spend some points.";
+			mes("[Staff]");
+			mes("Then let me reward you with some arena points....eh?");
+			mes("Your arena points have exceeded the maximum amount. I cannot give you more points until you spend some points.");
 			next;
-			mes "[Staff]";
-			mes "You can check the amount of arena points you have in the arena waiting room.";
+			mes("[Staff]");
+			mes("You can check the amount of arena points you have in the arena waiting room.");
 			next;
-			mes "[Staff]";
-			mes "I hope you had a good time and let me guide you to the entrance of arena.";
-			mes "Thank you.";
+			mes("[Staff]");
+			mes("I hope you had a good time and let me guide you to the entrance of arena.");
+			mes("Thank you.");
 			close2;
 		} else {
 			arena_point += 40;
-			mes "[Staff]";
-			mes "Let me reward you some arena points.";
-			mes "If you wish to check the amount of arena points you have, please go talk to ^3131FFVendigos^000000 at the arena entrance.";
+			mes("[Staff]");
+			mes("Let me reward you some arena points.");
+			mes("If you wish to check the amount of arena points you have, please go talk to ^3131FFVendigos^000000 at the arena entrance.");
 			next;
-			mes "[Staff]";
-			mes "Let me guide you to the entrance of arena.";
-			mes "See you later~";
+			mes("[Staff]");
+			mes("Let me guide you to the entrance of arena.");
+			mes("See you later~");
 			close2;
 		}
 		if(getpartyleader(.arn_party,2) == getcharid(CHAR_ID_CHAR)) {
@@ -1064,23 +1064,23 @@ prt_are_in,77,135,3	script	Staff#party-2	1_F_02,{
 		end;
 	} else {
 		emotion e_omg;
-		mes "[Staff]";
-		mes "Wow! You have renewed the record!";
-		mes "What a great job!";
+		mes("[Staff]");
+		mes("Wow! You have renewed the record!");
+		mes("What a great job!");
 		next;
 		if(getpartyleader(.arn_party,2) == getcharid(CHAR_ID_CHAR)) {
-			mes "[Staff]";
-			mes "You can record you and your party members on ^FF0000the hall of Arena Time Force Battle party ^000000.";
-			mes "When you enter a name, the name will be remained on the top unless someone make a new record.";
+			mes("[Staff]");
+			mes("You can record you and your party members on ^FF0000the hall of Arena Time Force Battle party ^000000.");
+			mes("When you enter a name, the name will be remained on the top unless someone make a new record.");
 			next;
-			mes "[Staff]";
-			mes "Please enter a name within 10 letters which can represent you and your party members.";
+			mes("[Staff]");
+			mes("Please enter a name within 10 letters which can represent you and your party members.");
 			next;
 			switch( select( "Ok.","Let me think." ) )  {
 			case 1:
 				input .@arnparty$;
-				mes "[Staff]";
-				mes "You have entered ^3131FF"+.@arnparty$+"^000000. Is it correct?";
+				mes("[Staff]");
+				mesf("You have entered ^3131FF%s^000000. Is it correct?", .@arnparty$);
 				next;
 				switch( select( "Yes","No" ) ) {
 				case 1:
@@ -1088,47 +1088,47 @@ prt_are_in,77,135,3	script	Staff#party-2	1_F_02,{
 					$top_ptsec = @record_secpt;
 					$arena_pttopn$ = .@arnparty$;
 					donpcevent "Vendigos::OnLineRec_pt";
-					mes "[Staff]";
-					mes "Your record has been entered.";
+					mes("[Staff]");
+					mes("Your record has been entered.");
 					next;
 					break;
 				case 2:
-					mes "[Staff]";
-					mes "Please take your time and think up a nice name.";
+					mes("[Staff]");
+					mes("Please take your time and think up a nice name.");
 					close;
 				}
 				break;
 			case 2:
-				mes "[Staff]";
-				mes "Please take your time and think up a nice name.";
+				mes("[Staff]");
+				mes("Please take your time and think up a nice name.");
 				close;
 			}
 		}
 		if (arena_point > 29900) {
-			mes "[Staff]";
-			mes "Then let me reward you with some arena points....eh?";
-			mes "Your arena points have exceeded the maximum amount. I cannot give you more points until you spend some points.";
+			mes("[Staff]");
+			mes("Then let me reward you with some arena points....eh?");
+			mes("Your arena points have exceeded the maximum amount. I cannot give you more points until you spend some points.");
 			next;
-			mes "[Staff]";
-			mes "You can check the amount of arena points you have in the arena waiting room.";
+			mes("[Staff]");
+			mes("You can check the amount of arena points you have in the arena waiting room.");
 			next;
-			mes "[Staff]";
-			mes "I hope you had a good time and let me guide you to the entrance of arena.";
-			mes "Thank you.";
+			mes("[Staff]");
+			mes("I hope you had a good time and let me guide you to the entrance of arena.");
+			mes("Thank you.");
 			close2;
 		} else {
-			mes "[Staff]";
-			mes "Let me reward you with some arena points.";
-			mes "At the same time, since you have renewed the record you will receive an extra amount of the points this time.";
+			mes("[Staff]");
+			mes("Let me reward you with some arena points.");
+			mes("At the same time, since you have renewed the record you will receive an extra amount of the points this time.");
 			next;
 			arena_point += 100;
-			mes "[Staff]";
-			mes "Let me reward you some arena points.";
-			mes "If you wish to check the amount of arena points you have, please go talk to ^3131FFVendigos^000000 at the arena entrance.";
+			mes("[Staff]");
+			mes("Let me reward you some arena points.");
+			mes("If you wish to check the amount of arena points you have, please go talk to ^3131FFVendigos^000000 at the arena entrance.");
 			next;
-			mes "[Staff]";
-			mes "Let me guide you to the entrance of arena.";
-			mes "See you later~";
+			mes("[Staff]");
+			mes("Let me guide you to the entrance of arena.");
+			mes("See you later~");
 			close2;
 		}
 		if(getpartyleader(.arn_party,2) == getcharid(CHAR_ID_CHAR)) {
