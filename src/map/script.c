@@ -7714,6 +7714,66 @@ static BUILDIN(countitem2)
 }
 
 /*==========================================
+ * countnameditem(item ID, { <Char Name / ID> })
+ * returns number of named items.
+ *------------------------------------------*/
+static BUILDIN(countnameditem)
+{
+	int count = 0;
+	int i;
+	struct item_data* id = NULL;
+	struct map_session_data *sd;
+
+	if (script_hasdata(st, 3)) {
+		if (script_isstringtype(st, 3)) {
+			// Character name was given
+			sd = script->nick2sd(st, script_getstr(st, 3));
+		} else {
+			// Character ID was given
+			sd = script->charid2sd(st, script_getnum(st, 3));
+		}
+	} else {
+		// Use RID by default if no name was provided
+		sd = script->rid2sd(st);
+	}
+
+	// Player not attached
+	if (sd == NULL) {
+		return true;
+	}
+
+	if (script_isstringtype(st, 2)) {
+		// Get item from DB via item name
+		id = itemdb->search_name(script_getstr(st, 2));
+	} else {
+		// Get item from DB via item ID
+		id = itemdb->exists(script_getnum(st, 2));
+	}
+
+	if (id == NULL) {
+		ShowError("buildin_countnameditem: Invalid item '%s'.\n", script_getstr(st, 2));  // returns string, regardless of what it was
+		script_pushint(st, 0);
+		return false;
+	}
+
+	for (i = 0; i < MAX_INVENTORY; i++) {
+		if (sd->status.inventory[i].nameid > 0 &&
+			sd->inventory_data[i] != NULL &&
+			sd->status.inventory[i].amount > 0 &&
+			sd->status.inventory[i].nameid == id->nameid &&
+			sd->status.inventory[i].card[0] == CARD0_CREATE &&
+			sd->status.inventory[i].card[2] == sd->status.char_id &&
+			sd->status.inventory[i].card[3] == sd->status.char_id >> 16)
+		{
+			count += sd->status.inventory[i].amount;
+		}
+	}
+
+	script_pushint(st, count);
+	return true;
+}
+
+/*==========================================
  * Check if item with this amount can fit in inventory
  * Checking : weight, stack amount >32k, slots amount >(MAX_INVENTORY)
  * Return
@@ -25038,6 +25098,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(rand,"i?"),
 		BUILDIN_DEF(countitem,"v"),
 		BUILDIN_DEF(countitem2,"viiiiiii"),
+		BUILDIN_DEF(countnameditem,"v?"),
 		BUILDIN_DEF(checkweight,"vi*"),
 		BUILDIN_DEF(checkweight2,"rr"),
 		BUILDIN_DEF(readparam,"i?"),
