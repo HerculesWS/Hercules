@@ -1,5 +1,4 @@
-Hercules
-========
+# ![Hercules Logo](https://user-images.githubusercontent.com/3507758/48214059-222a8900-e34d-11e8-871f-9036112c8aa4.png) Hercules
 
 Build Status:
 [![Build Status](https://travis-ci.org/HerculesWS/Hercules.svg?branch=master)](https://travis-ci.org/HerculesWS/Hercules)
