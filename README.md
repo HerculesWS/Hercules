@@ -1,6 +1,11 @@
 Hercules
 ========
 
+![Logo](http://herc.ws/board/uploads/monthly_2017_06/1_hercules_forum2.png.e577fe087b8bc4611fd86cd7a1744ffe.png)
+
+
+
+
 Build Status:
 [![Build Status](https://travis-ci.org/HerculesWS/Hercules.svg?branch=master)](https://travis-ci.org/HerculesWS/Hercules)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/cm9xbwurpbltqjop?svg=true)](https://ci.appveyor.com/project/Haru/hercules)
