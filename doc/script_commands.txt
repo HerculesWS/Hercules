@@ -5340,6 +5340,30 @@ Check getitem2() to understand the arguments of the function.
 
 ---------------------------------------
 
+*countnameditem(<item id>, "<character name>")
+*countnameditem(<item id>, <character ID>)
+*countnameditem("<item name>", "<character name>")
+*countnameditem("<item name>", <character ID>)
+
+This function will return the number of signed items for the specified item ID
+that the invoking character has in their inventory.
+
+	mes("[Item Checker]");
+	if (countnameditem(Apple) > 0) {
+		mes("You have an apple with your name on it!");
+	} else {
+		mes("You do not have an apple with your name on it.");
+	}
+	next;
+	mes("[Item Checker]");
+	mes("You have "+countnameditem(Apple, "John")+" apples with John's name on it!");
+	close;
+
+Like getnameditem(), this function will also accept an 'english name' from the
+database as an argument.
+
+---------------------------------------
+
 *groupranditem(<item id>)
 
 Returns the item_id of a random item picked from the item container specified. There
