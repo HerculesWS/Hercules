@@ -44,7 +44,7 @@ alberta,26,243,4	script	Stephen	1_M_MERCHANT,{
 	mes "That's right, don't you love chocolate.... I do.";
 	mes "And you are in luck, because I'm selling them for only 5,000 zeny a piece!";
 	next;
-	if(select("I want some chocolate!", "No thanks.")==2) {
+	if (select("I want some chocolate!", "No thanks.")==2) {
 		mes "[Stephen]";
 		mes "You don't want any chocolate?";
 		mes "I'm telling you! You'll regret it!";
@@ -61,7 +61,7 @@ alberta,26,243,4	script	Stephen	1_M_MERCHANT,{
 	input .@i;
 	if (.@i <= 0) close;
 	mes "[Stephen]";
-	if (.@i > 5)  {
+	if (.@i > 5) {
 		mes "I'm sorry, but I can't give you that many.";
 		close; }
 	if (Zeny < .@i*5000) {
@@ -104,7 +104,7 @@ prt_castle,54,34,4	script	Carl Orleans	1_M_01,{
 	mes "[Carl Orleans]";
 	mes "Yes?";
 	next;
-	if(select("I want some hand made chocolate...", "I'm lost, sorry to bother you.")==2) {
+	if (select("I want some hand made chocolate...", "I'm lost, sorry to bother you.")==2) {
 		mes "[Carl Orleans]";
 		mes "Oh... well, if you want me to make some of my special Hand Made Chocolate....";
 		mes "You will need to give me at least ^0000FF 3 Chocolates^000000.";

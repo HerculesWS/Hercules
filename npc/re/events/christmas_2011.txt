@@ -80,7 +80,7 @@ prontera,149,176,5	script	Quercus#mas	XMAS_SMOKEY_R,{
 			mes("and will use the Church as our head office.");
 			next();
 			mes("[Quercus]");
-			mes("But those  raccoons...");
+			mes("But those raccoons...");
 			mes("they just want their own present.");
 			mes("So they have been taking pieces of the cloth for the sock");
 			mes("which doesn't help to complete the sock.");
@@ -127,7 +127,7 @@ prontera,149,176,5	script	Quercus#mas	XMAS_SMOKEY_R,{
 			mes("[Quercus]");
 			mes("We want Prontera Church as the gift");
 			mes("because we want it as our place.");
-			mes("But those  raccoons...");
+			mes("But those raccoons...");
 			mes("they just want their own present.");
 			mes("So they have been taking pieces of the cloth for the sock");
 			mes("which doesn't help to complete the sock.");
@@ -269,7 +269,7 @@ prontera,149,176,5	script	Quercus#mas	XMAS_SMOKEY_R,{
 			close();
 		}
 	} else if (evt_2011_xmas == 3) {
-		if(countitem(Shining_Beads) < 0) {
+		if (countitem(Shining_Beads) < 0) {
 			mes("[Quercus]");
 			mes("Go to Geffen and find Castanea, the Raccoon");
 			mes("who's trying to chat up with other Raccons~");
@@ -283,7 +283,7 @@ prontera,149,176,5	script	Quercus#mas	XMAS_SMOKEY_R,{
 			close();
 		}
 	} else if (evt_2011_xmas == 4) {
-		if(countitem(Shining_Beads) < 0) {
+		if (countitem(Shining_Beads) < 0) {
 			mes("[Quercus]");
 			mes("You went to get Shiny Beads,");
 			mes("but you got another errand to run??");
@@ -297,7 +297,7 @@ prontera,149,176,5	script	Quercus#mas	XMAS_SMOKEY_R,{
 			close();
 		}
 	} else if (evt_2011_xmas == 5) {
-		if(countitem(Shining_Beads) < 0) {
+		if (countitem(Shining_Beads) < 0) {
 			mes("[Quercus]");
 			mes("Woooooow, the gift is a Striped Sock!");
 			mes("...");
@@ -311,7 +311,7 @@ prontera,149,176,5	script	Quercus#mas	XMAS_SMOKEY_R,{
 			close();
 		}
 	} else if (evt_2011_xmas == 6) {
-		if(countitem(Shining_Beads) < 0) {
+		if (countitem(Shining_Beads) < 0) {
 			mes("[Quercus]");
 			mes("Again? Another errand?");
 			mes("When will you");
@@ -325,7 +325,7 @@ prontera,149,176,5	script	Quercus#mas	XMAS_SMOKEY_R,{
 			close();
 		}
 	} else if (evt_2011_xmas == 7) {
-		if(countitem(Shining_Beads) < 0) {
+		if (countitem(Shining_Beads) < 0) {
 			mes("[Quercus]");
 			mes("Is it taking that loooong");
 			mes("because you need to pack it for me?");
@@ -344,7 +344,7 @@ prontera,149,176,5	script	Quercus#mas	XMAS_SMOKEY_R,{
 			close();
 		}
 	} else if (evt_2011_xmas == 8) {
-		if(countitem(Shining_Beads) > 0) {
+		if (countitem(Shining_Beads) > 0) {
 			mes("[Quercus]");
 			mes("Oh! What you are holding in your hand..!");
 			mes("is the ^FF0000Shiny Bead^000000.");
@@ -783,7 +783,7 @@ geffen,113,148,3	script	Castanea#mas	XMAS_SMOKEY_B,{
 			mes("[Castanea]");
 			mes("The wood barrel located in west end garden");
 			mes("of Geffen.");
-			mes("Hurry before I  ");
+			mes("Hurry before I");
 			mes("make your nose as Rudolph");
 			emotion(e_swt2);
 			close();
@@ -977,7 +977,7 @@ geffen,199,172,3	script	Bean#mas	XMAS_SMOKEY_R,{
 			} else {
 				mes("[Bean]");
 				mes("You don't have enough candies.");
-				mes("Are you trying  discount");
+				mes("Are you trying discount");
 				mes("to the poor raccoon?");
 				mes("You are the person who will get ");
 				mes("the new years fortune with big discounted price!");
@@ -2176,11 +2176,11 @@ prontera,1,2,5	script	Christmas Assistant#mas	4_MASK_SMOKEY,{
 			mes("to make NPC disappear!");
 			close();
 		case 3:
-		  mes("[Coal Briquet Plan]");
-		  mes("There you go!");
-		  evt_2011_xmas = 0;
-		  erasequest(1194, 1213);
-		  close();
+			mes("[Coal Briquet Plan]");
+			mes("There you go!");
+			evt_2011_xmas = 0;
+			erasequest(1194, 1213);
+			close();
 		case 4:
 			mes("[Coal Briquet Plan]");
 			mes("There you go!");

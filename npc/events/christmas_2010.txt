@@ -41,7 +41,7 @@ prontera,152,193,3	script	Strange Box#prontera	4_MYSTCASE,{
 			mes("Strange Box doesn't match well with the ambiance of ^1E90FFChristmas^000000.");
 			mes("Although you can't see what's inside, it doesn't seem to be locked.");
 			next();
-			if(select("[Open the box]", "[Pass it by]") == 2) {
+			if (select("[Open the box]", "[Pass it by]") == 2) {
 				close();
 			}
 			.@int_temp = rand(1,30);
@@ -195,15 +195,15 @@ prontera,142,183,3	script	Red Coat Girl#prontera	4_F_NFLOSTGIRL,3,3,{
 		end;
 	}
 
-	OnTouch:
-		if (evt_2010_xmas == 250) {
-			mes("[Red Coat Girl]");
-			mes("Dear adventurer, please come to me.");
-			emotion(e_dots);
-			close();
-		} else {
-			end;
-		}
+OnTouch:
+	if (evt_2010_xmas == 250) {
+		mes("[Red Coat Girl]");
+		mes("Dear adventurer, please come to me.");
+		emotion(e_dots);
+		close();
+	} else {
+		end;
+	}
 }
 
 // - Message
@@ -211,14 +211,14 @@ prontera,142,183,3	script	Red Coat Girl#prontera	4_F_NFLOSTGIRL,3,3,{
 niflheim,253,191,3	script	#message	FAKE_NPC,2,2,{
 	end;
 
-	OnTouch:
-		if (evt_2010_xmas == 251) {
-			mes("[Red Coat Girl]");
-			mes("The Witch is probably at the 2nd floor.");
-			close();
-		} else {
-			end;
-		}
+OnTouch:
+	if (evt_2010_xmas == 251) {
+		mes("[Red Coat Girl]");
+		mes("The Witch is probably at the 2nd floor.");
+		close();
+	} else {
+		end;
+	}
 }
 
 // - Trap
@@ -226,12 +226,12 @@ niflheim,253,191,3	script	#message	FAKE_NPC,2,2,{
 nif_in,59,167,3	script	#trap01	FAKE_NPC,2,2,{
 	end;
 
-	OnTouch:
-		if (evt_2010_xmas == 251) {
-			specialeffect(EF_BLASTMINEBOMB, AREA, playerattached());
-			percentheal(-5, 0);
-		}
-		end;
+OnTouch:
+	if (evt_2010_xmas == 251) {
+		specialeffect(EF_BLASTMINEBOMB, AREA, playerattached());
+		percentheal(-5, 0);
+	}
+	end;
 }
 
 // - Trap
@@ -239,11 +239,11 @@ nif_in,59,167,3	script	#trap01	FAKE_NPC,2,2,{
 nif_in,43,148,3	script	#trap02	FAKE_NPC,2,2,{
 	end;
 
-	OnTouch:
-		if (evt_2010_xmas == 251) {
-			areamonster("nif_in",42,147,44,149,"Witch's Zombie",1015,1);
-		}
-		end;
+OnTouch:
+	if (evt_2010_xmas == 251) {
+		areamonster("nif_in",42,147,44,149,"Witch's Zombie",1015,1);
+	}
+	end;
 }
 
 // - Trap
@@ -251,12 +251,12 @@ nif_in,43,148,3	script	#trap02	FAKE_NPC,2,2,{
 nif_in,43,155,3	script	#trap03	FAKE_NPC,2,2,{
 	end;
 
-	OnTouch:
-		if (evt_2010_xmas == 251) {
-			specialeffect(EF_PORTAL, AREA, playerattached());
-			warp("nif_in", 21, 157);
-		}
-		end;
+OnTouch:
+	if (evt_2010_xmas == 251) {
+		specialeffect(EF_PORTAL, AREA, playerattached());
+		warp("nif_in", 21, 157);
+	}
+	end;
 }
 
 // - Trap
@@ -277,12 +277,12 @@ OnTouch:
 nif_in,35,162,3	script	#trap05	FAKE_NPC,2,2,{
 	end;
 
-	OnTouch:
-		if (evt_2010_xmas == 251) {
-			specialeffect(EF_EARTHSPIKE, AREA, playerattached());
-			percentheal(-5, 0);
-		}
-		end;
+OnTouch:
+	if (evt_2010_xmas == 251) {
+		specialeffect(EF_EARTHSPIKE, AREA, playerattached());
+		percentheal(-5, 0);
+	}
+	end;
 }
 
 // - Trap
@@ -290,12 +290,12 @@ nif_in,35,162,3	script	#trap05	FAKE_NPC,2,2,{
 nif_in,47,180,3	script	#trap06	FAKE_NPC,2,2,{
 	end;
 
-	OnTouch:
-		if (evt_2010_xmas == 251) {
-			specialeffect(EF_PORTAL, AREA, playerattached());
-			warp("nif_in", 21, 157);
-		}
-		end;
+OnTouch:
+	if (evt_2010_xmas == 251) {
+		specialeffect(EF_PORTAL, AREA, playerattached());
+		warp("nif_in", 21, 157);
+	}
+	end;
 }
 
 // - Witch
@@ -870,7 +870,7 @@ prontera,170,126,3	script	Old Santa Claus#prontera	4_M_SANTA,{
 						mes("can be received.");
 						mes("Do you want to exchange yours?");
 						next();
-						if(select("[ Yes, please. ]", "[ Not yet. ]") == 2) {
+						if (select("[ Yes, please. ]", "[ Not yet. ]") == 2) {
 							close();
 						}
 						if (!checkweight(Claymore_, 1)) {

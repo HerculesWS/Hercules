@@ -297,14 +297,14 @@ prontera,47,329,3	script	Examiner#2007xm	4_M_ALCHE_D,3,3,{
 		close();
 	}
 
-	OnTouch:
-		if (05christ_solo < 100) {
-			mes("[Examiner]");
-			mes("Hmmm... This is strange.");
-			mes("How can someone cause all");
-			mes("this without leaving a trace?");
-			close();
-		}
+OnTouch:
+	if (05christ_solo < 100) {
+		mes("[Examiner]");
+		mes("Hmmm... This is strange.");
+		mes("How can someone cause all");
+		mes("this without leaving a trace?");
+		close();
+	}
 }
 
 xmas,196,245,5	script	Dist. Staff#2007xm	4_M_ROGUE,{
@@ -938,22 +938,22 @@ xmas,143,44,3	script	Kid#2007xm	4_F_NFLOSTGIRL,{
 -	script	::thief07xm	FAKE_NPC,3,3,{
 	end;
 
-	OnTouch:
-		if (strnpcinfo(2) == "thief107xm") {
-			.@checkVal = 107;
-		} else if (strnpcinfo(2) == "thief207xm") {
-			.@checkVal = 108;
-		} else if (strnpcinfo(2) == "thief307xm") {
-			.@checkVal = 109;
-		} else if (strnpcinfo(2) == "thief407xm") {
-			.@checkVal = 110;
-		}
+OnTouch:
+	if (strnpcinfo(2) == "thief107xm") {
+		.@checkVal = 107;
+	} else if (strnpcinfo(2) == "thief207xm") {
+		.@checkVal = 108;
+	} else if (strnpcinfo(2) == "thief307xm") {
+		.@checkVal = 109;
+	} else if (strnpcinfo(2) == "thief407xm") {
+		.@checkVal = 110;
+	}
 
-		if (05christ_solo == .@checkVal || 05christ_solo == 111) {
-			enablenpc("Odd Old Man#"+strnpcinfo(2));
-			disablenpc("#"+strnpcinfo(2));
-		}
-		end;
+	if (05christ_solo == .@checkVal || 05christ_solo == 111) {
+		enablenpc("Odd Old Man#"+strnpcinfo(2));
+		disablenpc("#"+strnpcinfo(2));
+	}
+	end;
 }
 
 xmas_dun02,127,205,0	duplicate(thief07xm)	#thief107xm	FAKE_NPC,3,3
@@ -1048,11 +1048,11 @@ xmas_dun02,239,19,0	duplicate(thief07xm)	#thief407xm	FAKE_NPC,3,3
 		end;
 	}
 
-	OnInit:
-		if (strnpcinfo(2) != "") {
-			disablenpc("Odd Old Man#"+strnpcinfo(2));
-		}
-		end;
+OnInit:
+	if (strnpcinfo(2) != "") {
+		disablenpc("Odd Old Man#"+strnpcinfo(2));
+	}
+	end;
 }
 
 xmas_dun02,127,205,0	duplicate(oldMan07xm)	Odd Old Man#thief107xm	4_M_SANTA
@@ -1063,52 +1063,52 @@ xmas_dun02,239,19,0	duplicate(oldMan07xm)	Odd Old Man#thief407xm	4_M_SANTA
 -	script	::mobSpawner07xm	FAKE_NPC,{
 	end;
 
-	OnEnable:
-		enablenpc("mobspawn#"+strnpcinfo(2));
-		initnpctimer();
-		getmapxy(.@map$, .@mapx, .@mapy, UNITTYPE_NPC, strnpcinfo(0));
-		monster("xmas_dun02",.@mapx,.@mapy,"Cookie Thief",1962,1,"mobspawn#"+strnpcinfo(2)+"::OnMyMobDead");
-		monster("xmas_dun02",.@mapx,.@mapy,"Hat Thief",1962,1,"mobspawn#"+strnpcinfo(2)+"::OnMyMobDead");
-		monster("xmas_dun02",.@mapx,.@mapy,"Candy Thief",1962,1,"mobspawn#"+strnpcinfo(2)+"::OnMyMobDead");
-		end;
+OnEnable:
+	enablenpc("mobspawn#"+strnpcinfo(2));
+	initnpctimer();
+	getmapxy(.@map$, .@mapx, .@mapy, UNITTYPE_NPC, strnpcinfo(0));
+	monster("xmas_dun02",.@mapx,.@mapy,"Cookie Thief",1962,1,"mobspawn#"+strnpcinfo(2)+"::OnMyMobDead");
+	monster("xmas_dun02",.@mapx,.@mapy,"Hat Thief",1962,1,"mobspawn#"+strnpcinfo(2)+"::OnMyMobDead");
+	monster("xmas_dun02",.@mapx,.@mapy,"Candy Thief",1962,1,"mobspawn#"+strnpcinfo(2)+"::OnMyMobDead");
+	end;
 
-	OnMyMobDead:
-		if (strnpcinfo(2) == "thief107xm") {
-			.@checkVala = 107;
-			.@checkValb = 111;
-		} else if (strnpcinfo(2) == "thief207xm") {
-			.@checkVala = 108;
-			.@checkValb = 112;
-		} else if (strnpcinfo(2) == "thief307xm") {
-			.@checkVala = 109;
-			.@checkValb = 113;
-		} else if (strnpcinfo(2) == "thief407xm") {
-			.@checkVala = 110;
-			.@checkValb = 114;
+OnMyMobDead:
+	if (strnpcinfo(2) == "thief107xm") {
+		.@checkVala = 107;
+		.@checkValb = 111;
+	} else if (strnpcinfo(2) == "thief207xm") {
+		.@checkVala = 108;
+		.@checkValb = 112;
+	} else if (strnpcinfo(2) == "thief307xm") {
+		.@checkVala = 109;
+		.@checkValb = 113;
+	} else if (strnpcinfo(2) == "thief407xm") {
+		.@checkVala = 110;
+		.@checkValb = 114;
+	}
+
+	if (mobcount("xmas_dun02", "#"+strnpcinfo(2)+"::OnMyMobDead") < 1) {
+		if (05christ_solo == .@checkVala) {
+			05christ_solo = .@checkValb;
 		}
-
-		if (mobcount("xmas_dun02", "#"+strnpcinfo(2)+"::OnMyMobDead") < 1) {
-			if (05christ_solo == .@checkVala) {
-				05christ_solo = .@checkValb;
-			}
-			enablenpc("Odd Old Man#"+strnpcinfo(2));
-			disablenpc("mobspawn#"+strnpcinfo(2));
-			stopnpctimer();
-		}
-		end;
-
-	OnTimer120000:
-		killmonster("xmas_dun02", "#"+strnpcinfo(2)+"::OnMyMobDead");
 		enablenpc("Odd Old Man#"+strnpcinfo(2));
 		disablenpc("mobspawn#"+strnpcinfo(2));
 		stopnpctimer();
-		end;
+	}
+	end;
 
-	OnInit:
-		if (strnpcinfo(2) != "") {
-			disablenpc("mobspawn#"+strnpcinfo(2));
-		}
-		end;
+OnTimer120000:
+	killmonster("xmas_dun02", "#"+strnpcinfo(2)+"::OnMyMobDead");
+	enablenpc("Odd Old Man#"+strnpcinfo(2));
+	disablenpc("mobspawn#"+strnpcinfo(2));
+	stopnpctimer();
+	end;
+
+OnInit:
+	if (strnpcinfo(2) != "") {
+		disablenpc("mobspawn#"+strnpcinfo(2));
+	}
+	end;
 }
 
 xmas_dun02,127,205,0	duplicate(mobSpawner07xm)	mobspawn#thief107xm	FAKE_NPC
@@ -2193,7 +2193,7 @@ morocc_in,116,127,3	script	Kage#ryu	4W_M_02,{
 		mes("ask if you knew anything");
 		mes("about the recent incidents");
 		mes("of guerilla haircuts that three");
-		mes("women experienced. Your group happens to be  the prime suspect!");
+		mes("women experienced. Your group happens to be the prime suspect!");
 		next();
 		mes("[Kage]");
 		mes("What? Oh, well, naturally,");
@@ -2468,7 +2468,7 @@ xmas_in,89,92,5	script	Louise Kim#07christ_00	4_F_06,{
 		mes("checking hairstyles.");
 		next();
 		input .@style;
-		if(.@style > 23) {
+		if (.@style > 23) {
 			mes("[Artist Louise Kim]");
 			mes("You may only enter");
 			mes("a number from 1 to 23.");
@@ -2476,7 +2476,7 @@ xmas_in,89,92,5	script	Louise Kim#07christ_00	4_F_06,{
 			mes("me know which hairstyle");
 			mes("you want to see!");
 			close();
-		} else if(.@style == 0) {
+		} else if (.@style == 0) {
 			cutin "hair_f_01", 255;
 			mes("[Artist Louise Kim]");
 			mes("Let me know anytime");
@@ -2824,14 +2824,14 @@ xmas_in,89,92,5	script	Louise Kim#07christ_00	4_F_06,{
 			mes("the way your hair looks.");
 			next();
 			input .@style;
-			if(.@style > 23) {
+			if (.@style > 23) {
 				mes("[Artist Louise Kim]");
 				mes("I'm sorry, but there");
 				mes("aren't any styles like");
 				mes("that. Make sure that you");
 				mes("enter a number from 1 to 23.");
 				close();
-			} else if(.@style == 0) {
+			} else if (.@style == 0) {
 				mes("[Artist Louise Kim]");
 				mes("Oh, you changed your");
 				mes("mind? Alright, but come");
@@ -2853,7 +2853,7 @@ xmas_in,89,92,5	script	Louise Kim#07christ_00	4_F_06,{
 				mes("Shall I go ahead and");
 				mes("change your hairstyle?");
 				next();
-				if(select("Yes, please.", "No, stop!") == 2) {
+				if (select("Yes, please.", "No, stop!") == 2) {
 					mes("[Artist Louise Kim]");
 					mes("Oh, that wasn't it?");
 					mes("Alright, then go ahead and");
@@ -2904,8 +2904,8 @@ xmas_in,89,92,5	script	Louise Kim#07christ_00	4_F_06,{
 
 	L_cutin:
 		.@num = getarg(0);
-		if(Sex == SEX_MALE) {
-			if (.@num  < 10)
+		if (Sex == SEX_MALE) {
+			if (.@num < 10)
 				cutin "hair_m_0"+ .@num, 4;
 			else
 				cutin "hair_m_"+ .@num, 4;
@@ -2979,7 +2979,7 @@ prontera,156,268,3	script	Santa Claus#07christ_01	4_M_SANTA,{
 		mes("you can help Santa with");
 		mes("a very important job?");
 		next();
-		if(select("Boo! I don't wanna!", "Sure.") == 1) {
+		if (select("Boo! I don't wanna!", "Sure.") == 1) {
 			mes("[Santa Claus]");
 			mes("Ho ho ho, well, if you");
 			mes("don't want to, I can't");

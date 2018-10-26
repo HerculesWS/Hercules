@@ -57,7 +57,7 @@ hugel,102,148,3	script	The Old Man#hugel	4_M_HUGRANFA,{
 			next();
 			mes("(The Old Woman who's beside him says nothing.)");
 			next();
-			if(select("Talk to her.", "Just pass.") == 2) {
+			if (select("Talk to her.", "Just pass.") == 2) {
 				mes("(The Old Man is laughing.");
 				mes("Would the Old Woman as well laughing?)");
 				close();
@@ -153,7 +153,7 @@ hugel,102,148,3	script	The Old Man#hugel	4_M_HUGRANFA,{
 				mes("(I truly think that I'm an angel.)");
 				specialeffect(EF_DEVOTION, AREA, playerattached());
 				next();
-				if(select("Give her the ^FF1493Cupid's Chocolate^000000.", "Just pass by her.") == 2) {
+				if (select("Give her the ^FF1493Cupid's Chocolate^000000.", "Just pass by her.") == 2) {
 					close();
 				}
 				mes("[^0000CD"+strcharinfo(0)+"^000000]");
@@ -263,7 +263,7 @@ yuno,66,189,6	script	Andy#yuno	4_M_NFLOSTMAN,{
 		mes("This is a conspiracy. Conspiracy... sob.");
 		emotion(e_sob);
 		next();
-		if(select("Talk to him.", "Just pass him.") == 2) {
+		if (select("Talk to him.", "Just pass him.") == 2) {
 			mes("[Andy]");
 			mes("Sob.. Who are those just passing by");
 			mes("when a little kid is crying?");
@@ -588,7 +588,7 @@ aldebaran,184,127,3	script	The Fairy of Cupid#vday2	4_ANGELING,1,1,{
 				mes("Wait for a second.");
 				mes("I'll give you an extraordinary chocolate.");
 				next();
-				if(!checkweight(Claymore_, 1)) {
+				if (!checkweight(Claymore_, 1)) {
 					mes("[The Fairy of Cupid]");
 					mes("Your bag looks too heavy,");
 					mes("please empty it and come again.");
@@ -675,7 +675,7 @@ aldebaran,98,138,3	script	Tarence#aldebaran	4_M_KID2,{
 		switch(select("Yes.", "No.", "End the conversation.")) {
 			case 1:
 				mes("[Tarence]");
-				mes("We are giving it  in order");
+				mes("We are giving it in order");
 				mes("so you might have to wait in line for a long time.");
 				next();
 				mes("[Tarence]");
@@ -906,7 +906,7 @@ hugel,1,1,3	script	Valentine ON/OFF#hugel	1_M_SIZ,{
 	mes("Hello?");
 	mes("I'm 2010 Valentine's Day Event ON/OFF NPC.");
 	next();
-	if(select("[2010] Valentine's Day NPC ON", "[2010] Valentine's Day NPC OFF") == 1) {
+	if (select("[2010] Valentine's Day NPC ON", "[2010] Valentine's Day NPC OFF") == 1) {
 		enablenpc "The Old Man#hugel";
 		enablenpc "the Old Woman#hugel";
 		mes("Valentine's Day NPC are now enabled.");

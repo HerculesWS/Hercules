@@ -628,7 +628,7 @@ prontera,155,238,0	script	White Note#06xmas	CLEAR_NPC,3,3,{
 		mes("Wow!!!");
 		mes("...Such an odd man..He could have said in words...?");
 		next();
-		if(select("Stop reading.", "Keep on reading.") == 1) {
+		if (select("Stop reading.", "Keep on reading.") == 1) {
 			mes("["+ strcharinfo(PC_NAME) +"]");
 			mes("...Reading makes me sleepy....");
 			close();
@@ -695,17 +695,17 @@ prontera,155,238,0	script	White Note#06xmas	CLEAR_NPC,3,3,{
 		close();
 	}
 
-	OnTouch:
-		if (05christ_solo == 8) {
-			mes("["+ strcharinfo(PC_NAME) +"]");
-			mes("Damn..! What is wrong with Enjoy. Such a tensed person he is...");
-			next();
-			mes("-There you find a white note which seems to be hidden by someone.-");
-			next();
-			mes("["+ strcharinfo(PC_NAME) +"]");
-			mes("...?What's this?");
-			close();
-		}
+OnTouch:
+	if (05christ_solo == 8) {
+		mes("["+ strcharinfo(PC_NAME) +"]");
+		mes("Damn..! What is wrong with Enjoy. Such a tensed person he is...");
+		next();
+		mes("-There you find a white note which seems to be hidden by someone.-");
+		next();
+		mes("["+ strcharinfo(PC_NAME) +"]");
+		mes("...?What's this?");
+		close();
+	}
 }
 
 prt_fild05,355,254,0	script	White Note#06xmas2	CLEAR_NPC,3,3,{
@@ -783,70 +783,70 @@ prt_fild05,355,254,0	script	White Note#06xmas2	CLEAR_NPC,3,3,{
 		close();
 	}
 
-	OnTouch:
-		if (05christ_solo == 13) {
-			mes("["+ strcharinfo(PC_NAME) +"]");
-			mes("Garden, under the bench, where the sun goes down, and another note... What does this mean?");
-			next();
-			mes("-There you find a white note which seems to be hidden by someone.-");
-			next();
-			mes("["+ strcharinfo(PC_NAME) +"]");
-			mes("...?What's this?");
-			close();
-		}
+OnTouch:
+	if (05christ_solo == 13) {
+		mes("["+ strcharinfo(PC_NAME) +"]");
+		mes("Garden, under the bench, where the sun goes down, and another note... What does this mean?");
+		next();
+		mes("-There you find a white note which seems to be hidden by someone.-");
+		next();
+		mes("["+ strcharinfo(PC_NAME) +"]");
+		mes("...?What's this?");
+		close();
+	}
 }
 
 prt_fild05,101,158,0	script	Switch#06xmas	FAKE_NPC,3,3,{
 	end;
 
-	OnInit:
-		enablenpc("Switch#06xmas");
-		end;
+OnInit:
+	enablenpc("Switch#06xmas");
+	end;
 
-	OnTouch:
-		if (05christ_solo == 14) {
-			mes("["+ strcharinfo(PC_NAME) +"]");
-			mes("<^0000ffWhere the water and wood meet^000000>");
-			mes("<^0000ffWe will meet there on a stone.^000000>");
-			mes("...This must be the place!");
-			next();
+OnTouch:
+	if (05christ_solo == 14) {
+		mes("["+ strcharinfo(PC_NAME) +"]");
+		mes("<^0000ffWhere the water and wood meet^000000>");
+		mes("<^0000ffWe will meet there on a stone.^000000>");
+		mes("...This must be the place!");
+		next();
+		mes("[??????]");
+		mes("... Hey!!!You!!!");
+		next();
+		mes("["+ strcharinfo(PC_NAME) +"]");
+		mes("Did someone just call me!?");
+		next();
+		mes("[??????]");
+		mes("Did you bring all materials??");
+		next();
+		mes("["+ strcharinfo(PC_NAME) +"]");
+		mes("Where's Enjoy?");
+		next();
+		mes("[??????]");
+		mes("I don't have time!Just answer to what I say! Where are the materials?");
+		next();
+		if (select("I haven't prepared it yet...", "Here~I brought it all!") == 1) {
 			mes("[??????]");
-			mes("... Hey!!!You!!!");
-			next();
-			mes("["+ strcharinfo(PC_NAME) +"]");
-			mes("Did someone just call me!?");
-			next();
-			mes("[??????]");
-			mes("Did you bring all materials??");
-			next();
-			mes("["+ strcharinfo(PC_NAME) +"]");
-			mes("Where's Enjoy?");
-			next();
-			mes("[??????]");
-			mes("I don't have time!Just answer to what I say! Where are the materials?");
-			next();
-			if (select("I haven't prepared it yet...", "Here~I brought it all!") == 1) {
-				mes("[??????]");
-				mes("Still?! Hurry!!Go get it right away!");
-				close();
-			}
-			if (countitem(Wooden_Block) > 4 && countitem(Tree_Knot) > 4 && countitem(Branch_Of_Dead_Tree) > 0) {
-				mes("[??????]");
-				mes("Good! If all things are prepared....Let's go!!Single soldiers!!!");
-				enablenpc("Enjoy#06xmas2");
-				donpcevent("Happymerry#06xmas_02::OnEnable");
-				donpcevent("Christ#06xmas_02::OnEnable");
-				donpcevent("Mas#06xmas_02::OnEnable");
-				donpcevent("Event#06xmas_02::OnEnable");
-				disablenpc("Switch#06xmas");
-				close();
-			} else {
-				mes("[??????]");
-				mes("Are you sure? Something's still missing!");
-				close();
-			}
+			mes("Still?! Hurry!!Go get it right away!");
+			close();
 		}
-		end;
+		if (countitem(Wooden_Block) > 4 && countitem(Tree_Knot) > 4 && countitem(Branch_Of_Dead_Tree) > 0) {
+			mes("[??????]");
+			mes("Good! If all things are prepared....Let's go!!Single soldiers!!!");
+			enablenpc("Enjoy#06xmas2");
+			donpcevent("Happymerry#06xmas_02::OnEnable");
+			donpcevent("Christ#06xmas_02::OnEnable");
+			donpcevent("Mas#06xmas_02::OnEnable");
+			donpcevent("Event#06xmas_02::OnEnable");
+			disablenpc("Switch#06xmas");
+			close();
+		} else {
+			mes("[??????]");
+			mes("Are you sure? Something's still missing!");
+			close();
+		}
+	}
+	end;
 }
 
 prt_fild05,101,161,3	script	Enjoy#06xmas2	4_M_MONK,{
@@ -996,105 +996,105 @@ prt_fild05,101,161,3	script	Enjoy#06xmas2	4_M_MONK,{
 		close();
 	}
 
-	OnGo:
-		disablenpc("Enjoy#06xmas2");
-		initnpctimer();
-		end;
+OnGo:
+	disablenpc("Enjoy#06xmas2");
+	initnpctimer();
+	end;
 
-	OnStop:
-		enablenpc("Enjoy#06xmas2");
-		killmonster("prt_fild05", "Enjoy#06xmas2::OnMobDead");
-		stopnpctimer();
-		end;
+OnStop:
+	enablenpc("Enjoy#06xmas2");
+	killmonster("prt_fild05", "Enjoy#06xmas2::OnMobDead");
+	stopnpctimer();
+	end;
 
-	OnInit:
-		disablenpc("Enjoy#06xmas2");
-		end;
+OnInit:
+	disablenpc("Enjoy#06xmas2");
+	end;
 
-	OnTimer3000:
-		announce("Never cry for the past.", bc_map, 0x66FFCC);
-		end;
+OnTimer3000:
+	announce("Never cry for the past.", bc_map, 0x66FFCC);
+	end;
 
-	OnTimer5000:
-		announce("Never wait for the unexpected phone call!!", bc_map, 0x66FFCC);
-		end;
+OnTimer5000:
+	announce("Never wait for the unexpected phone call!!", bc_map, 0x66FFCC);
+	end;
 
-	OnTimer7000:
-		announce("Never have a lingering affection for the love that never have started!!!", bc_map, 0x66FFCC);
-		end;
+OnTimer7000:
+	announce("Never have a lingering affection for the love that never have started!!!", bc_map, 0x66FFCC);
+	end;
 
-	OnTimer9000:
-		announce("Never break down being a lonely single!!!", bc_map, 0x66FFCC);
-		end;
+OnTimer9000:
+	announce("Never break down being a lonely single!!!", bc_map, 0x66FFCC);
+	end;
 
-	OnTimer11000:
-		announce("Never remember the sad memory!!!.", bc_map, 0x66FFCC);
-		end;
+OnTimer11000:
+	announce("Never remember the sad memory!!!.", bc_map, 0x66FFCC);
+	end;
 
-	OnTimer13000:
-		announce("...I am the happy single soldier!!!", bc_map, 0x66FFCC);
-		end;
+OnTimer13000:
+	announce("...I am the happy single soldier!!!", bc_map, 0x66FFCC);
+	end;
 
-	OnTimer180000:
-		killmonster("prt_fild05", "Enjoy#06xmas2::OnMobDead");
-		announce("To all my single soldier friends~Merry christmas.", bc_map, 0x66FFCC);
-		donpcevent("Enjoy#06xmas2::OnStop");
-		end;
+OnTimer180000:
+	killmonster("prt_fild05", "Enjoy#06xmas2::OnMobDead");
+	announce("To all my single soldier friends~Merry christmas.", bc_map, 0x66FFCC);
+	donpcevent("Enjoy#06xmas2::OnStop");
+	end;
 
-	OnMobDead:
-		end;
+OnMobDead:
+	end;
 }
 
 prt_fild05,97,164,5	script	Happymerry#06xmas_02	4_M_LGTMAN,{
 	end;
 
-	OnInit:
-		disablenpc("Happymerry#06xmas_02");
-		end;
+OnInit:
+	disablenpc("Happymerry#06xmas_02");
+	end;
 
-	OnEnable:
-		enablenpc("Happymerry#06xmas_02");
-		emotion(e_go);
-		end;
+OnEnable:
+	enablenpc("Happymerry#06xmas_02");
+	emotion(e_go);
+	end;
 }
 
 prt_fild05,103,164,4	script	Christ#06xmas_02	4_M_PECOKNIGHT,{
 	end;
 
-	OnInit:
-		disablenpc("Christ#06xmas_02");
-		end;
+OnInit:
+	disablenpc("Christ#06xmas_02");
+	end;
 
-	OnEnable:
-		enablenpc("Christ#06xmas_02");
-		emotion(e_go);
-		end;
+OnEnable:
+	enablenpc("Christ#06xmas_02");
+	emotion(e_go);
+	end;
 }
 
 prt_fild05,103,159,1	script	Mas#06xmas_02	4_M_ALCHE_A,{
 	end;
 
-	OnInit:
-		disablenpc("Mas#06xmas_02");
-		end;
+OnInit:
+	disablenpc("Mas#06xmas_02");
+	end;
 
-	OnEnable:
-		enablenpc("Mas#06xmas_02");
-		emotion(e_go);
-		end;
+OnEnable:
+	enablenpc("Mas#06xmas_02");
+	emotion(e_go);
+	end;
 }
 
 prt_fild05,97,159,7	script	Event#06xmas_02	4_M_SITDOWN,{
 	end;
 
-	OnInit:
-		disablenpc("Event#06xmas_02");
-		end;
+OnInit:
+	disablenpc("Event#06xmas_02");
+	end;
 
-	OnEnable:
-		enablenpc("Event#06xmas_02");
-		emotion(e_go);
-		end;
+OnEnable:
+	enablenpc("Event#06xmas_02");
+	emotion(e_go);
+	end;
 }
 
 prt_fild05,188,177,4	script	Happymerry#06xmas01	4_M_LGTMAN,{
@@ -1420,7 +1420,7 @@ xmas,152,290,3	script	Poe#06xmas_poe01	4_M_KID2,{
 		mes("That made my parents angry so they're telling me to throw it away but... but...");
 		next();
 		mes("["+ strcharinfo(PC_NAME) +"]");
-		mes("Hum...  suspicious... This blotch... it's misterious! It seems to be wicked! It makes me feel that I should clean it!");
+		mes("Hum... suspicious... This blotch... it's misterious! It seems to be wicked! It makes me feel that I should clean it!");
 		next();
 		mes("[Poe]");
 		mes("Hey!!I said not to touch! I'll make him good! He's my brother!");
@@ -1612,7 +1612,7 @@ xmas,152,290,3	script	Poe#06xmas_poe01	4_M_KID2,{
 				break;
 			case 3:
 				mes("["+ strcharinfo(PC_NAME) +"]");
-				mes("Here!!I've prepared an 'bitter herb'! Due to its bitterness, whoever eats it make wry face.But  Poporing likes it!");
+				mes("Here!!I've prepared an 'bitter herb'! Due to its bitterness, whoever eats it make wry face.But Poporing likes it!");
 				.@mobName$ = "Poporing";
 				.@delItem = 621; // Bitter_Herb
 				.@cakeAmount = 3;
@@ -1881,13 +1881,13 @@ prontera,226,306,0	script	Ohholy#06ohholy_01	1_F_PRIEST,{
 		next();
 		mes("[Ohholy]");
 		mes("What? Did you say wicked spirit?");
-		mes("Do you mean the devil is around  here somewhere on this holy day?");
+		mes("Do you mean the devil is around here somewhere on this holy day?");
 		next();
 		mes("["+ strcharinfo(PC_NAME) +"]");
 		mes("No... but, I'm not sure whether it's the devil or not...");
 		next();
 		mes("[Ohholy]");
-		mes("Oh.dear! How can evil creatures wander around  on this divine day? I'm already exhausted looking after Santa Antonio who's making troubles every Christmas!");
+		mes("Oh.dear! How can evil creatures wander around on this divine day? I'm already exhausted looking after Santa Antonio who's making troubles every Christmas!");
 		next();
 		mes("[Ohholy]");
 		mes("I'll drive the evil away along God's will! Where is it? The devil!");
@@ -1962,7 +1962,7 @@ prontera,226,306,0	script	Ohholy#06ohholy_01	1_F_PRIEST,{
 					mes("Yes, that's it. I remember. Hehe.");
 					next();
 					mes("[Ohholy]");
-					mes("Then... let me see,  seems like you've got all stuffs for the powder, I'll make it right away.");
+					mes("Then... let me see, seems like you've got all stuffs for the powder, I'll make it right away.");
 					next();
 					mes("[Ohholy]");
 					mes("First, I have to break the broken diamonds and make the powder of it! It requires know-how. I learned it from a smith.");
@@ -2182,7 +2182,7 @@ xmas,137,233,3	script	Isite#06tasty_01	4_F_NFLOSTGIRL,{
 			mes("Eh? more!? Don't you think it's too hard for me?!");
 			next();
 			mes("[Isite]");
-			mes("If you say so, I would be hurt... then, I would strike a light to get some warmth... and then  ...");
+			mes("If you say so, I would be hurt... then, I would strike a light to get some warmth... and then...");
 			next();
 			mes("["+ strcharinfo(PC_NAME) +"]");
 			mes("What! Ok , I'll do it!!! What do you want?! Tell me what to do!");
@@ -2243,7 +2243,7 @@ xmas,137,233,3	script	Isite#06tasty_01	4_F_NFLOSTGIRL,{
 				mes("[Isite]");
 				mes("Thank you so much.");
 				mes("I know it's not enough to repay you");
-				mes("take it, is not a  big thing...");
+				mes("take it, is not a big thing...");
 				next();
 				mes("[Isite]");
 				mes("It's a Santa's clothes that I took from a designer, ^4d4dffLouise^000000. I mean I got from...");
@@ -2417,7 +2417,7 @@ xmas_in,109,109,3	script	Isire#06risse_01	4_M_LIEMAN,{
 		mes("");
 		mes("Hahaha....su...re....");
 		mes("But only one favor, no more!");
-		mes("(I hate myself  who can't refuse..!)");
+		mes("(I hate myself who can't refuse..!)");
 		next();
 		mes("[Isire]");
 		mes("Oh you're real (cough), ^4d4dff"+ .@input$ +"^000000!");
@@ -2957,7 +2957,7 @@ xmas,157,126,6	script	Noel#06noel_01	4_F_KID3,{
 			mes("Merry Christmas~");
 			next();
 			mes("[Noel]");
-			mes("If you  ever get to see ^4d4dffRednyre^000000, tell him to bring my cake fast!");
+			mes("If you ever get to see ^4d4dffRednyre^000000, tell him to bring my cake fast!");
 			emotion(e_kis);
 			close();
 		} else {
@@ -3120,7 +3120,7 @@ prontera,156,268,3	script	Santa Claus#06xmas_01	4_M_SANTA,{
 				mes("- I've received a gift box. With 'To Mihir' written on its ribbon!! -");
 				next();
 				mes("[Santa Claus]");
-				mes("Oh! Before you deliver the gifts, don't forget to wear ^0000ff'Louise's Santa's hat' and  'Grandpa's beard'^000000! You should not shatter children's dream. Hohoho.");
+				mes("Oh! Before you deliver the gifts, don't forget to wear ^0000ff'Louise's Santa's hat' and 'Grandpa's beard'^000000! You should not shatter children's dream. Hohoho.");
 				05christ_carol = 4;
 				close();
 			} else if (.@06deliver == 2) {
@@ -3130,7 +3130,7 @@ prontera,156,268,3	script	Santa Claus#06xmas_01	4_M_SANTA,{
 				mes("- I've received a gift box.'To Dimari' is written on its ribbon!! -");
 				next();
 				mes("[Santa Claus]");
-				mes("Oh! Before you deliver the gifts, don't forget to wear ^0000ff'Louise's Santa's hat' and  'Grandpa's beard'^000000! You should not shatter children's dream. Hohoho.");
+				mes("Oh! Before you deliver the gifts, don't forget to wear ^0000ff'Louise's Santa's hat' and 'Grandpa's beard'^000000! You should not shatter children's dream. Hohoho.");
 				05christ_carol = 5;
 				close();
 			} else if (.@06deliver == 3) {
@@ -3140,7 +3140,7 @@ prontera,156,268,3	script	Santa Claus#06xmas_01	4_M_SANTA,{
 				mes("- I've received a gift box. 'To Racy' is written on its ribbon!! -");
 				next();
 				mes("[Santa Claus]");
-				mes("Oh! Before you deliver the gifts, don't forget to wear ^0000ff'Louise's Santa's hat' and  'Grandpa's beard'^000000! You should not shatter children's dream. Hohoho.");
+				mes("Oh! Before you deliver the gifts, don't forget to wear ^0000ff'Louise's Santa's hat' and 'Grandpa's beard'^000000! You should not shatter children's dream. Hohoho.");
 				05christ_carol = 6;
 				close();
 			} else if (.@06deliver == 4) {
@@ -3150,7 +3150,7 @@ prontera,156,268,3	script	Santa Claus#06xmas_01	4_M_SANTA,{
 				mes("- I've received a gift box. 'To Anze' is written on its ribbon!! -");
 				next();
 				mes("[Santa Claus]");
-				mes("Oh! Before you deliver the gifts, don't forget to wear ^0000ff'Louise's Santa's hat' and  'Grandpa's beard'^000000! You should not shatter children's dream. Hohoho.");
+				mes("Oh! Before you deliver the gifts, don't forget to wear ^0000ff'Louise's Santa's hat' and 'Grandpa's beard'^000000! You should not shatter children's dream. Hohoho.");
 				05christ_carol = 7;
 				close();
 			} else {
@@ -3160,7 +3160,7 @@ prontera,156,268,3	script	Santa Claus#06xmas_01	4_M_SANTA,{
 				mes("- I've received a gift box. 'To Isite' is written on its ribbon !! -");
 				next();
 				mes("[Santa Claus]");
-				mes("Oh! Before you deliver the gifts, don't forget to wear ^0000ff'Louise's Santa's hat' and  'Grandpa's beard'^000000! You should not shatter children's dream. Hohoho.");
+				mes("Oh! Before you deliver the gifts, don't forget to wear ^0000ff'Louise's Santa's hat' and 'Grandpa's beard'^000000! You should not shatter children's dream. Hohoho.");
 				05christ_carol = 8;
 				close();
 			}
@@ -3219,28 +3219,28 @@ prontera,156,268,3	script	Santa Claus#06xmas_01	4_M_SANTA,{
 		mes("This gift is for 'Dimari'. ^0000ffHe's fishing on the wreck in Alberta^000000. Thank you for helping me!");
 		next();
 		mes("[Santa Claus]");
-		mes("Oh! Before you deliver the gifts, don't forget to wear ^0000ff'Louise's Santa's hat' and  'Grandpa's beard'^000000! You should not shatter children's dream. Hohoho.");
+		mes("Oh! Before you deliver the gifts, don't forget to wear ^0000ff'Louise's Santa's hat' and 'Grandpa's beard'^000000! You should not shatter children's dream. Hohoho.");
 		close();
 	} else if (05christ_carol == 6) {
 		mes("[Santa Claus]");
-		mes("This is for  'Racy'. ^0000ffShe's a quiet girl living in Payon^000000. Thank you for helping me!");
+		mes("This is for 'Racy'. ^0000ffShe's a quiet girl living in Payon^000000. Thank you for helping me!");
 		next();
 		mes("[Santa Claus]");
-		mes("Oh! Before you deliver the gifts, don't forget to wear ^0000ff'Louise's Santa's hat' and  'Grandpa's beard'^000000! You should not shatter children's dream. Hohoho.");
+		mes("Oh! Before you deliver the gifts, don't forget to wear ^0000ff'Louise's Santa's hat' and 'Grandpa's beard'^000000! You should not shatter children's dream. Hohoho.");
 		close();
 	} else if (05christ_carol == 7) {
 		mes("[Santa Claus]");
-		mes("This is for  'Anze'. ^0000ffShe enjoys exploring the misterious forest^000000. Thank you for helping me!");
+		mes("This is for 'Anze'. ^0000ffShe enjoys exploring the misterious forest^000000. Thank you for helping me!");
 		next();
 		mes("[Santa Claus]");
 		mes("Oh! Before you deliver the gifts, don't forget to wear ^0000ff'Santa's hat'by Louise and 'Grandpa's beard'^000000! You shouud pretend Santa Claus. Hahaha.");
 		close();
 	} else if (05christ_carol == 8) {
 		mes("[Santa Claus]");
-		mes("This is for  'Isite'. ^0000ffShe's a very good girl living in Lutie^000000. Thank you for helping me!");
+		mes("This is for 'Isite'. ^0000ffShe's a very good girl living in Lutie^000000. Thank you for helping me!");
 		next();
 		mes("[Santa Claus]");
-		mes("Oh! Before you deliver the gifts, don't forget to wear ^0000ff'Louise's Santa's hat' and  'Grandpa's beard'^000000! You should not shatter children's dream. Hohoho.");
+		mes("Oh! Before you deliver the gifts, don't forget to wear ^0000ff'Louise's Santa's hat' and 'Grandpa's beard'^000000! You should not shatter children's dream. Hohoho.");
 		close();
 	} else if (05christ_carol == 9) {
 		mes("[Santa Claus]");
