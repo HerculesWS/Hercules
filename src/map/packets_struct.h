@@ -451,7 +451,7 @@ enum packet_headers {
 #else
 	guildLeave = 0x15a,
 #endif
-#if PACKETVER_MAIN_NUM >= 20181017 || PACKETVER_RE_NUM >= 20181017
+#if PACKETVER_MAIN_NUM >= 20181017 || PACKETVER_RE_NUM >= 20181017 || PACKETVER_ZERO_NUM >= 20181024
 	itemPreview = 0xb13,
 #else
 	itemPreview = 0xab9,
@@ -2880,7 +2880,7 @@ struct PACKET_ZC_CAMERA_INFO {
 struct PACKET_ZC_ITEM_PREVIEW {
 	int16 packetType;
 	int16 index;
-#if PACKETVER_MAIN_NUM >= 20181017 || PACKETVER_RE_NUM >= 20181017
+#if PACKETVER_MAIN_NUM >= 20181017 || PACKETVER_RE_NUM >= 20181017 || PACKETVER_ZERO_NUM >= 20181024
 	int8 isDamaged;
 #endif
 	int16 refiningLevel;
