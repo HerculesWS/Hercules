@@ -26,3 +26,4 @@
 
 [cont]: https://github.com/HerculesWS/Hercules/blob/master/CONTRIBUTING.md
 [code]: https://github.com/HerculesWS/Hercules/wiki/Coding-Style
+https://hacktoberfest.digitalocean.com/
