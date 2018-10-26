@@ -3,6 +3,7 @@
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
  * Copyright (C) 2013-2018  Hercules Dev Team
+ * Copyright (C) 2018  Andrei Karas (4144)
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,849 +34,65 @@
 #if PACKETVER == 20101123 || \
     PACKETVER == 20101124 || \
     PACKETVER == 20101126
-	packetKeys(0x49357D72,0x22C370A1,0x5F836591);
+	packetKeys(0x49357d72,0x22c370a1,0x5f836591);
 #endif
 
-// 2010-11-30aRagexe
-#if PACKETVER == 20101130
-	packetKeys(0x3726593C,0x0EFD5EE8,0x79036DF9);
-#endif
-
-// 2010-12-07bRagexe
-#if PACKETVER == 20101207
-	packetKeys(0x66111112,0x2B7B53AA,0x04E76DF8);
-#endif
-
-// 2010-12-14aRagexe
-#if PACKETVER == 20101214
-	packetKeys(0x5E535D06,0x4E297F0E,0x400B6AD8);
-#endif
-
-// 2010-12-21aRagexe
-#if PACKETVER == 20101221
-	packetKeys(0x0448466A,0x41554AC9,0x5B4710B2);
-#endif
-
-// 2010-12-28aRagexe
-#if PACKETVER == 20101228
-	packetKeys(0x50C638A5,0x4BF86B20,0x480C3746);
-#endif
-
-// 2011-01-04aRagexe
-#if PACKETVER == 20110104
-	packetKeys(0x55DB401F,0x047D4E02,0x6D8F2EA3);
-#endif
-
-// 2011-01-11aRagexe
-#if PACKETVER == 20110111
-	packetKeys(0x2D5F6302,0x2A361CD6,0x39D661D6);
-#endif
-
-// 2011-01-18aRagexe
-#if PACKETVER == 20110118
-	packetKeys(0x3C777D2D,0x00541A1D,0x5E0053A2);
-#endif
-
-// 2011-01-25aRagexe, 2011-01-26aRagexe, 2011-01-26bRagexe, 2011-01-31aRagexe
-#if PACKETVER == 20110125 || \
+// 2010-11-23aRagexeRE, 2010-11-24aRagexeRE, 2010-11-24bRagexeRE, 2010-11-25aRagexeRE, 2010-11-26aRagexeRE, 2010-11-30aRagexeRE, 2010-12-07aRagexeRE, 2010-12-14aRagexeRE, 2010-12-21aRagexeRE, 2010-12-23aRagexeRE, 2010-12-28aRagexeRE, 2011-01-04aRagexeRE, 2011-01-05aRagexeRE, 2011-01-11aRagexeRE, 2011-01-18aRagexeRE, 2011-01-25aRagexeRE, 2011-01-26aRagexeRE, 2011-01-26bRagexeRE, 2011-01-31aRagexeRE, 2011-01-31bRagexeRE, 2011-01-31cRagexeRE, 2011-02-08aRagexeRE, 2011-02-15aRagexeRE, 2011-02-22aRagexeRE, 2011-02-23aRagexeRE, 2011-02-23bRagexeRE, 2011-02-24aRagexeRE, 2011-02-25aRagexeRE, 2011-02-28aRagexeRE, 2011-03-08aRagexeRE, 2011-03-09aRagexeRE, 2011-03-09bRagexeRE, 2011-03-09cRagexeRE, 2011-03-09dRagexeRE, 2011-03-15aRagexeRE, 2011-03-22aRagexeRE, 2011-03-29aRagexeRE, 2011-03-30aRagexeRE, 2011-03-30cRagexeRE, 2011-04-05aRagexeRE, 2011-04-12aRagexeRE, 2011-04-19aRagexeRE, 2011-04-20aRagexeRE, 2011-04-26aRagexeRE, 2011-04-27aRagexeRE, 2011-05-03aRagexeRE, 2011-05-11aRagexeRE, 2011-05-17bRagexeRE, 2011-05-24aRagexeRE, 2011-05-26aRagexeRE, 2011-05-31aRagexeRE, 2011-06-07aRagexeRE, 2011-06-08aRagexeRE, 2011-06-08bRagexeRE, 2011-06-08cRagexeRE, 2011-06-09aRagexeRE, 2011-06-14bRagexeRE, 2011-06-22aRagexeRE, 2011-06-28aRagexeRE, 2011-07-06aRagexeRE, 2011-07-13aRagexeRE, 2011-07-13bRagexeRE, 2011-07-13cRagexeRE, 2011-07-19aRagexeRE, 2011-07-26aRagexeRE, 2011-08-03aRagexeRE, 2011-08-03bRagexeRE, 2011-08-10aRagexeRE, 2013-12-23aRagexeRE, 2014-05-08aRagexe, 2014-05-08aRagexeRE, 2014-06-11eRagexe, 2015-02-25hRagexe, 2018-03-15aRagexe, 2018-03-21aRagexe, 2018-03-21aRagexeRE, 2018-03-28bRagexe, 2018-03-28bRagexeRE, 2018-04-04bRagexe, 2018-04-04cRagexeRE, 2018-04-18aRagexe, 2018-04-18bRagexeRE, 2018-04-25cRagexe, 2018-04-25cRagexeRE, 2018-05-02bRagexe, 2018-05-02bRagexeRE, 2018-05-02dRagexeRE, 2018-05-09aRagexe, 2018-05-16cRagexe, 2018-05-16cRagexeRE, 2018-05-23aRagexe, 2018-05-23aRagexeRE, 2018-05-30aRagexe, 2018-05-30bRagexeRE, 2018-05-30cRagexeRE, 2018-06-05bRagexe, 2018-06-05bRagexeRE, 2018-06-12aRagexeRE, 2018-06-12bRagexeRE, 2018-06-20cRagexe, 2018-06-20dRagexeRE, 2018-06-20eRagexe, 2018-06-20eRagexeRE, 2018-06-21aRagexe, 2018-06-21aRagexeRE, 2018-07-04aRagexe, 2018-07-04aRagexeRE, 2018-07-11aRagexeRE, 2018-07-18bRagexe, 2018-07-18bRagexeRE, 2018-07-18bRagexeRE1, 2018-07-18cRagexe, 2018-07-18cRagexeRE, 2018-08-01cRagexe, 2018-08-01cRagexeRE, 2018-08-08bRagexe, 2018-08-08bRagexeRE, 2018-08-22cRagexe, 2018-08-22cRagexeRE, 2018-08-29aRagexe, 2018-08-29aRagexeRE, 2018-08-29bRagexeRE, 2018-08-31aRagexe, 2018-09-12dRagexe, 2018-09-12dRagexeRE, 2018-09-19aRagexe, 2018-09-19aRagexeRE, 2018-10-02aRagexe, 2018-10-02aRagexeRE, 2018-10-02bRagexe, 2018-10-02bRagexeRE, 2018-10-17_02aRagexe, 2018-10-17_02aRagexeRE, 2018-10-17_03aRagexe, 2018-10-17_03aRagexeRE, 2018-10-17bRagexe, 2018-10-17bRagexeRE, 2018-10-24bRagexe, 2018-10-31aRagexe, 2018-10-31bRagexe, 2018-10-31cRagexeRE, 2018-11-07aRagexe, 2018-11-07aRagexeRE
+#if PACKETVER == 20101123 || \
+    PACKETVER == 20101124 || \
+    PACKETVER == 20101125 || \
+    PACKETVER == 20101126 || \
+    PACKETVER == 20101130 || \
+    PACKETVER == 20101207 || \
+    PACKETVER == 20101214 || \
+    PACKETVER == 20101221 || \
+    PACKETVER == 20101223 || \
+    PACKETVER == 20101228 || \
+    PACKETVER == 20110104 || \
+    PACKETVER == 20110105 || \
+    PACKETVER == 20110111 || \
+    PACKETVER == 20110118 || \
+    PACKETVER == 20110125 || \
     PACKETVER == 20110126 || \
-    PACKETVER == 20110131
-	packetKeys(0x6BB84BB0,0x4C004382,0x10AE3260);
-#endif
-
-// 2011-01-31bRagexe, 2011-02-01aRagexe
-#if PACKETVER == 20110131 || \
-    PACKETVER == 20110201
-	packetKeys(0x68871E62,0x60D17266,0x74726DAA);
-#endif
-
-// 2011-02-08aRagexe, 2011-02-10aRagexe, 2011-02-10bRagexe
-#if PACKETVER == 20110208 || \
-    PACKETVER == 20110210
-	packetKeys(0x72BA4E9D,0x281E1DF1,0x208255AA);
-#endif
-
-// 2011-02-15aRagexe
-#if PACKETVER == 20110215
-	packetKeys(0x1B174D76,0x32005014,0x7B8B72D5);
-#endif
-
-// 2011-02-22aRagexe, 2011-02-23aRagexe, 2011-02-23bRagexe, 2011-02-24aRagexe, 2011-02-25aRagexe, 2011-02-25bRagexe
-#if PACKETVER == 20110222 || \
+    PACKETVER == 20110131 || \
+    PACKETVER == 20110208 || \
+    PACKETVER == 20110215 || \
+    PACKETVER == 20110222 || \
     PACKETVER == 20110223 || \
     PACKETVER == 20110224 || \
-    PACKETVER == 20110225
-	packetKeys(0x48F73B56,0x155F7D66,0x44AB57CE);
-#endif
-
-// 2011-02-28aRagexe
-#if PACKETVER == 20110228
-	packetKeys(0x26385EBF,0x7A8C7534,0x60AE2C34);
-#endif
-
-// 2011-03-08aRagexe, 2011-03-09aRagexe, 2011-03-09bRagexe, 2011-03-09cRagexe, 2011-03-09dRagexe
-#if PACKETVER == 20110308 || \
-    PACKETVER == 20110309
-	packetKeys(0x003F1B20,0x7A1E12A3,0x34994AAD);
-#endif
-
-// 2011-03-15aRagexe, 2011-03-16aRagexe
-#if PACKETVER == 20110315 || \
-    PACKETVER == 20110316
-	packetKeys(0x62967D7D,0x34833D1A,0x26D45ECA);
-#endif
-
-// 2011-03-22aRagexe
-#if PACKETVER == 20110322
-	packetKeys(0x5870617C,0x638D5376,0x739F4817);
-#endif
-
-// 2011-03-29aRagexe, 2011-03-30aRagexe
-#if PACKETVER == 20110329 || \
-    PACKETVER == 20110330
-	packetKeys(0x06900BB7,0x45DB687B,0x197B017B);
-#endif
-
-// 2011-04-05aRagexe
-#if PACKETVER == 20110405
-	packetKeys(0x248D5C37,0x1C6A1B37,0x1F644FDB);
-#endif
-
-// 2011-04-12bRagexe
-#if PACKETVER == 20110412
-	packetKeys(0x3DE86BFC,0x0DD47F80,0x42481C9B);
-#endif
-
-// 2011-04-19aRagexe
-#if PACKETVER == 20110419
-	packetKeys(0x26073204,0x62013A51,0x22AC58E0);
-#endif
-
-// 2011-04-26aRagexe
-#if PACKETVER == 20110426
-	packetKeys(0x392813F9,0x09905054,0x40DB732E);
-#endif
-
-// 2011-05-03aRagexe
-#if PACKETVER == 20110503
-	packetKeys(0x28BE32EE,0x1D506FCB,0x63832421);
-#endif
-
-// 2011-05-11aRagexe
-#if PACKETVER == 20110511
-	packetKeys(0x6A715733,0x3C5C0D74,0x408A48EC);
-#endif
-
-// 2011-05-17aRagexe
-#if PACKETVER == 20110517
-	packetKeys(0x07FE0C72,0x46766BAD,0x5EB5126A);
-#endif
-
-// 2011-05-23aRagexe, 2011-05-26bRagexe
-#if PACKETVER == 20110523 || \
-    PACKETVER == 20110526
-	packetKeys(0x69166916,0x69166916,0x69166916);
-#endif
-
-// 2011-05-31aRagexe
-#if PACKETVER == 20110531
-	packetKeys(0x5ABA2C7C,0x3CD22073,0x78953988);
-#endif
-
-// 2011-06-07aRagexe, 2011-06-08aRagexe, 2011-06-08bRagexe, 2011-06-08cRagexe, 2011-06-09aRagexe
-#if PACKETVER == 20110607 || \
+    PACKETVER == 20110225 || \
+    PACKETVER == 20110228 || \
+    PACKETVER == 20110308 || \
+    PACKETVER == 20110309 || \
+    PACKETVER == 20110315 || \
+    PACKETVER == 20110322 || \
+    PACKETVER == 20110329 || \
+    PACKETVER == 20110330 || \
+    PACKETVER == 20110405 || \
+    PACKETVER == 20110412 || \
+    PACKETVER == 20110419 || \
+    PACKETVER == 20110420 || \
+    PACKETVER == 20110426 || \
+    PACKETVER == 20110427 || \
+    PACKETVER == 20110503 || \
+    PACKETVER == 20110511 || \
+    PACKETVER == 20110517 || \
+    PACKETVER == 20110524 || \
+    PACKETVER == 20110526 || \
+    PACKETVER == 20110531 || \
+    PACKETVER == 20110607 || \
     PACKETVER == 20110608 || \
-    PACKETVER == 20110609
-	packetKeys(0x76B0426C,0x0DD74DEB,0x1F92228E);
-#endif
-
-// 2011-06-14aRagexe
-#if PACKETVER == 20110614
-	packetKeys(0x5749027B,0x71710972,0x5B096475);
-#endif
-
-// 2011-06-20aRagexe
-#if PACKETVER == 20110620
-	packetKeys(0x3A1760D4,0x254E0DF9,0x440E2357);
-#endif
-
-// 2011-06-27aRagexe
-#if PACKETVER == 20110627
-	packetKeys(0x3EFC29BD,0x699E4B11,0x7B900A13);
-#endif
-
-// 2011-07-05aRagexe
-#if PACKETVER == 20110705
-	packetKeys(0x48801A5E,0x68FC7726,0x081D7F6E);
-#endif
-
-// 2011-07-11bRagexe, 2011-07-13aRagexe, 2011-07-13bRagexe
-#if PACKETVER == 20110711 || \
-    PACKETVER == 20110713
-	packetKeys(0x489C544B,0x33BA1C25,0x2DE66E4E);
-#endif
-
-// 2011-07-18aRagexe
-#if PACKETVER == 20110718
-	packetKeys(0x08464674,0x1EEB3BD5,0x33395199);
-#endif
-
-// 2011-07-26aRagexe
-#if PACKETVER == 20110726
-	packetKeys(0x41E5730B,0x119C6C11,0x5356524A);
-#endif
-
-// 2011-08-02aRagexe
-#if PACKETVER == 20110802
-	packetKeys(0x607C08A1,0x65B20528,0x360571E9);
-#endif
-
-// 2011-08-09aRagexe
-#if PACKETVER == 20110809
-	packetKeys(0x742A559A,0x047F425D,0x5C8C2CA0);
-#endif
-
-// 2011-08-16aRagexe, 2011-08-16aRagexeRE, 2011-08-17aRagexe, 2011-08-17aRagexeRE, 2011-08-17bRagexe, 2011-08-17bRagexeRE
-#if PACKETVER == 20110816 || \
-    PACKETVER == 20110817
-	packetKeys(0x053D5CED,0x3DED6DED,0x6DED6DED);
-#endif
-
-// 2011-08-23aRagexe, 2011-08-23aRagexeRE, 2011-08-24aRagexe, 2011-08-24aRagexeRE, 2011-08-24bRagexeRE
-#if PACKETVER == 20110823 || \
-    PACKETVER == 20110824
-	packetKeys(0x35C91401,0x262A5556,0x28FA03AA);
-#endif
-
-// 2011-08-31aRagexe, 2011-08-31aRagexeRE, 2011-08-31bRagexe, 2011-08-31bRagexeRE, 2011-08-31cRagexe, 2011-08-31cRagexeRE, 2011-08-31dRagexeRE, 2011-08-31eRagexeRE
-#if PACKETVER == 20110831
-	packetKeys(0x3AD67ED0,0x44703C69,0x6F876809);
-#endif
-
-// 2011-09-06aRagexe, 2011-09-06aRagexeRE, 2011-09-14aRagexe, 2011-09-14aRagexeRE
-#if PACKETVER == 20110906 || \
-    PACKETVER == 20110914
-	packetKeys(0x350124EC,0x39A14595,0x0DE56125);
-#endif
-
-// 2011-09-20aRagexe, 2011-09-20aRagexeRE, 2011-09-20aRagexeRE2
-#if PACKETVER == 20110920
-	packetKeys(0x79C91A12,0x20450CC0,0x584B2A38);
-#endif
-
-// 2011-09-28aRagexe, 2011-09-28aRagexe-retry, 2011-09-28aRagexeRE, 2011-09-29aRagexe, 2011-09-29aRagexeRE
-#if PACKETVER == 20110928 || \
-    PACKETVER == 20110929
-	packetKeys(0x26567512,0x4B0732DF,0x57D266C6);
-#endif
-
-// 2011-10-04aRagexe, 2011-10-04aRagexeRE, 2011-10-05aRagexe, 2011-10-05aRagexeRE
-#if PACKETVER == 20111004 || \
-    PACKETVER == 20111005
-	packetKeys(0x291E6762,0x77CD391A,0x60AC2F16);
-#endif
-
-// 2011-10-10aRagexe, 2011-10-10bRagexeRE, 2011-10-12aRagexeRE, 2011-10-12bRagexe
-#if PACKETVER == 20111010 || \
-    PACKETVER == 20111012
-	packetKeys(0x7F3C2D29,0x59B01DE6,0x1DBB44CA);
-#endif
-
-// 2011-10-17aRagexe, 2011-10-17aRagexeRE, 2011-10-19aRagexeRE, 2011-10-19bRagexeRE, 2011-10-21aRagexe, 2011-10-21aRagexeRE, 2011-10-21cRagexe
-#if PACKETVER == 20111017 || \
-    PACKETVER == 20111019 || \
-    PACKETVER == 20111021
-	packetKeys(0x357D55DC,0x5A8D759F,0x245C30F5);
-#endif
-
-// 2011-10-25aRagexe, 2011-10-25aRagexeRE
-#if PACKETVER == 20111025
-	packetKeys(0x50AE1A63,0x3CE579B5,0x29C10406);
-#endif
-
-// 2011-11-01cRagexe, 2011-11-01cRagexeRE, 2011-11-02aRagexe, 2011-11-02aRagexeRE
-#if PACKETVER == 20111101 || \
-    PACKETVER == 20111102
-	packetKeys(0x5324329D,0x5D545D52,0x06137269);
-#endif
-
-// 2011-11-08aRagexe, 2011-11-08aRagexeRE, 2011-11-09aRagexe, 2011-11-09aRagexeRE, 2011-11-09bRagexe, 2011-11-09cRagexe, 2011-11-09dRagexe, 2011-11-09eRagexe
-#if PACKETVER == 20111108 || \
-    PACKETVER == 20111109
-	packetKeys(0x0B642BDA,0x6ECB1D1C,0x61C7454B);
-#endif
-
-// 2011-11-14aRagexe, 2011-11-14aRagexeRE, 2011-11-16aRagexe, 2011-11-16aRagexeRE
-#if PACKETVER == 20111114 || \
-    PACKETVER == 20111116
-	packetKeys(0x419D0DB0,0x74916BF4,0x027371B4);
-#endif
-
-// 2011-11-22aRagexe, 2011-11-22aRagexeRE, 2011-11-23aRagexe
-#if PACKETVER == 20111122 || \
-    PACKETVER == 20111123
-	packetKeys(0x3B550F07,0x1F666C7C,0x60304EF5);
-#endif
-
-// 2011-12-07aRagexe, 2011-12-07aRagexeRE
-#if PACKETVER == 20111207
-	packetKeys(0x2A610886,0x3E09165E,0x57C11888);
-#endif
-
-// 2011-12-13aRagexe, 2011-12-13aRagexeRE, 2011-12-14aRagexe, 2011-12-14aRagexeRE, 2011-12-14bRagexeRE, 2011-12-14cRagexeRE
-#if PACKETVER == 20111213 || \
-    PACKETVER == 20111214
-	packetKeys(0x5151306B,0x7AE32886,0x53060628);
-#endif
-
-// 2011-12-20bRagexe, 2011-12-20bRagexeRE
-#if PACKETVER == 20111220
-	packetKeys(0x05D53871,0x7D0027B4,0x29975333);
-#endif
-
-// 2011-12-27aRagexe, 2011-12-27aRagexeRE, 2011-12-28aRagexe, 2011-12-28aRagexeRE
-#if PACKETVER == 20111227 || \
-    PACKETVER == 20111228
-	packetKeys(0x0FF87E93,0x6CFF7860,0x3A3D1DEC);
-#endif
-
-// 2012-01-03aRagexe, 2012-01-03bRagexeRE, 2012-01-04aRagexe, 2012-01-04aRagexeRE, 2012-01-04bRagexe
-#if PACKETVER == 20120103 || \
-    PACKETVER == 20120104
-	packetKeys(0x262034A1,0x674542A5,0x73A50BA5);
-#endif
-
-// 2012-01-10aRagexeRE, 2012-01-10bRagexe
-#if PACKETVER == 20120110
-	packetKeys(0x2B412AFC,0x4FF94487,0x6705339D);
-#endif
-
-// 2012-01-17aRagexe, 2012-01-17aRagexeRE, 2012-01-18aRagexe
-#if PACKETVER == 20120117 || \
-    PACKETVER == 20120118
-	packetKeys(0x24E32C2E,0x48DD17A5,0x64F8771A);
-#endif
-
-// 2012-01-20aRagexe, 2012-01-20aRagexeRE
-#if PACKETVER == 20120120
-	packetKeys(0x504345D0,0x3D427B1B,0x794C2DCC);
-#endif
-
-// 2012-01-31aRagexe, 2012-01-31cRagexeRE, 2012-02-01aRagexeRE, 2012-02-02aRagexe, 2012-02-02aRagexeRE, 2012-02-02bRagexe, 2012-02-02bRagexeRE
-#if PACKETVER == 20120131 || \
-    PACKETVER == 20120201 || \
-    PACKETVER == 20120202
-	packetKeys(0x2CFC0A71,0x2BA91D8D,0x087E39E0);
-#endif
-
-// 2012-02-07bRagexe, 2012-02-07bRagexeRE, 2012-02-08aRagexe, 2012-02-09aRagexe
-#if PACKETVER == 20120207 || \
-    PACKETVER == 20120208 || \
-    PACKETVER == 20120209
-	packetKeys(0x1D373F5D,0x5ACD604D,0x1C4D7C4D);
-#endif
-
-// 2012-02-14bRagexe, 2012-02-14bRagexeRE, 2012-02-15aRagexe
-#if PACKETVER == 20120214 || \
-    PACKETVER == 20120215
-	packetKeys(0x7A255EFA,0x30977276,0x2D4A0448);
-#endif
-
-// 2012-02-21aRagexe, 2012-02-21aRagexeRE, 2012-02-22aRagexe, 2012-02-22aRagexeRE
-#if PACKETVER == 20120221 || \
-    PACKETVER == 20120222
-	packetKeys(0x1CA5130F,0x43ED240A,0x7FEA3BE0);
-#endif
-
-// 2012-02-28bRagexe, 2012-02-28bRagexeRE, 2012-02-29aRagexe, 2012-02-29aRagexeRE
-#if PACKETVER == 20120228 || \
-    PACKETVER == 20120229
-	packetKeys(0x520B4C64,0x2800407D,0x47651458);
-#endif
-
-// 2012-03-07aRagexe, 2012-03-07aRagexeRE, 2012-03-07bRagexe, 2012-03-07bRagexeRE, 2012-03-07cRagexe, 2012-03-07cRagexeRE, 2012-03-07dRagexe, 2012-03-07dRagexeRE, 2012-03-07eRagexeRE, 2012-03-07fRagexeRE
-#if PACKETVER == 20120307
-	packetKeys(0x382A6DEF,0x5CBE7202,0x61F46637);
-#endif
-
-// 2012-03-14aRagexe, 2012-03-14aRagexeRE, 2012-03-14bRagexe, 2012-03-14bRagexeRE, 2012-03-14cRagexe, 2012-03-14cRagexeRE
-#if PACKETVER == 20120314
-	packetKeys(0x689C1729,0x11812639,0x60F82967);
-#endif
-
-// 2012-03-20aRagexe, 2012-03-20aRagexeRE, 2012-03-21aRagexeRE
-#if PACKETVER == 20120320 || \
-    PACKETVER == 20120321
-	packetKeys(0x21F9683F,0x710C5CA5,0x1FD910E9);
-#endif
-
-// 2012-03-28aRagexe, 2012-03-28aRagexeRE, 2012-03-28bRagexe, 2012-03-28bRagexeRE, 2012-03-28cRagexe, 2012-03-28cRagexeRE, 2012-03-28dRagexe, 2012-03-28dRagexeRE, 2012-03-28eRagexeRE, 2012-03-28fRagexeRE, 2012-03-28gRagexeRE
-#if PACKETVER == 20120328
-	packetKeys(0x75B8553B,0x37F20B12,0x385C2B40);
-#endif
-
-// 2012-04-04aRagexe, 2012-04-04aRagexeRE
-#if PACKETVER == 20120404
-	packetKeys(0x0036310C,0x2DCD0BED,0x1EE62A78);
-#endif
-
-// 2012-04-10aRagexe, 2012-04-10aRagexeRE
-#if PACKETVER == 20120410
-	packetKeys(0x01581359,0x452D6FFA,0x6AFB6E2E);
-#endif
-
-// 2012-04-17aRagexe, 2012-04-17aRagexeRE, 2012-04-18aRagexeRE
-#if PACKETVER == 20120417 || \
-    PACKETVER == 20120418
-	packetKeys(0x01540E48,0x13041224,0x31247924);
-#endif
-
-// 2012-04-24aRagexe, 2012-04-24aRagexeRE
-#if PACKETVER == 20120424
-	packetKeys(0x411D1DBB,0x4CBA4848,0x1A432FC4);
-#endif
-
-// 2012-05-02aRagexeRE, 2012-05-03aRagexe, 2012-05-03aRagexeRE, 2012-05-03bRagexe
-#if PACKETVER == 20120502 || \
-    PACKETVER == 20120503
-	packetKeys(0x37A91D19,0x10190019,0x00190019);
-#endif
-
-// 2012-05-08aRagexe, 2012-05-08aRagexeRE, 2012-05-09aRagexeRE, 2012-05-09bRagexeRE
-#if PACKETVER == 20120508 || \
-    PACKETVER == 20120509
-	packetKeys(0x16CF3301,0x1F472B9B,0x0B4A3CD2);
-#endif
-
-// 2012-05-15aRagexe, 2012-05-15aRagexeRE
-#if PACKETVER == 20120515
-	packetKeys(0x4A715EF9,0x79103E4F,0x405C1238);
-#endif
-
-// 2012-05-22aRagexe, 2012-05-23aRagexe, 2012-05-23aRagexeRE, 2012-05-23bRagexeRE, 2012-05-25aRagexeRE
-#if PACKETVER == 20120522 || \
-    PACKETVER == 20120523 || \
-    PACKETVER == 20120525
-	packetKeys(0x70EB4CCB,0x0487713C,0x398D4B08);
-#endif
-
-// 2012-05-29bRagexe, 2012-05-29bRagexeRE
-#if PACKETVER == 20120529
-	packetKeys(0x53415DDE,0x34953E16,0x27623DF2);
-#endif
-
-// 2012-06-01aRagexeRE, 2012-06-04aRagexe, 2012-06-05aRagexeRE
-#if PACKETVER == 20120601 || \
-    PACKETVER == 20120604 || \
-    PACKETVER == 20120605
-	packetKeys(0x68CA3080,0x31B74BDD,0x505208F1);
-#endif
-
-// 2012-06-12aRagexe, 2012-06-12aRagexeRE
-#if PACKETVER == 20120612
-	packetKeys(0x32E45D64,0x35643564,0x35643564);
-#endif
-
-// 2012-06-18aRagexe, 2012-06-18aRagexeRE
-#if PACKETVER == 20120618
-	packetKeys(0x261F261F,0x261F261F,0x261F261F);
-#endif
-
-// 2012-06-26aRagexe, 2012-06-26aRagexeRE, 2012-06-27aRagexe, 2012-06-27aRagexeRE
-#if PACKETVER == 20120626 || \
-    PACKETVER == 20120627
-	packetKeys(0x02277E66,0x045723F1,0x7107392C);
-#endif
-
-// 2012-07-02aRagexe, 2012-07-02aRagexeRE
-#if PACKETVER == 20120702
-	packetKeys(0x25733B31,0x53486CFD,0x398649BD);
-#endif
-
-// 2012-07-10aRagexe, 2012-07-10aRagexeRE, 2012-07-12aRagexe, 2012-07-12aRagexeRE
-#if PACKETVER == 20120710 || \
-    PACKETVER == 20120712
-	packetKeys(0x0E8B7AFB,0x6930362D,0x42D33A57);
-#endif
-
-// 2012-07-16aRagexe, 2012-07-16aRagexeRE
-#if PACKETVER == 20120716
-	packetKeys(0x76052205,0x22052205,0x22052205);
-#endif
-
-// 2012-07-24aRagexe, 2012-07-24aRagexeRE
-#if PACKETVER == 20120724
-	packetKeys(0x783D5BC6,0x3AAC2176,0x66616F02);
-#endif
-
-// 2012-08-01aRagexe, 2012-08-01aRagexeRE, 2012-08-01bRagexe, 2012-08-01bRagexeRE
-#if PACKETVER == 20120801
-	packetKeys(0x71FB6768,0x5843166B,0x6CB445C6);
-#endif
-
-// 2012-08-08aRagexe, 2012-08-08aRagexeRE, 2012-08-08bRagexe, 2012-08-08bRagexeRE, 2012-08-08cRagexe, 2012-08-08cRagexeRE, 2012-08-08dRagexeRE
-#if PACKETVER == 20120808
-	packetKeys(0x5D5068BB,0x36732065,0x47CF7367);
-#endif
-
-// 2012-08-14aRagexe, 2012-08-14aRagexeRE, 2012-08-14bRagexe, 2012-08-14bRagexeRE
-#if PACKETVER == 20120814
-	packetKeys(0x203E21BD,0x047459FB,0x56AF5A97);
-#endif
-
-// 2012-08-22aRagexe, 2012-08-22aRagexeRE, 2012-08-22bRagexe, 2012-08-22bRagexeRE, 2012-08-22cRagexe, 2012-08-22cRagexeRE
-#if PACKETVER == 20120822
-	packetKeys(0x06A92E7B,0x3D324F29,0x5FD63004);
-#endif
-
-// 2012-08-30aRagexe, 2012-08-30aRagexeRE, 2012-08-30bRagexeRE
-#if PACKETVER == 20120830
-	packetKeys(0x0AF1363D,0x4AB33E3B,0x48421DBE);
-#endif
-
-// 2012-09-05aRagexe, 2012-09-05aRagexeRE
-#if PACKETVER == 20120905
-	packetKeys(0x04F50D80,0x092F5C4D,0x29BF3DCF);
-#endif
-
-// 2012-09-11aRagexe, 2012-09-11aRagexeRE
-#if PACKETVER == 20120911
-	packetKeys(0x1F3D1145,0x02DB3C32,0x4BE34C49);
-#endif
-
-// 2012-09-19aRagexe, 2012-09-19aRagexeRE
-#if PACKETVER == 20120919
-	packetKeys(0x72E00F24,0x4EA02D80,0x7C803480);
-#endif
-
-// 2012-09-25aRagexe, 2012-09-25aRagexeRE, 2012-09-26aRagexe, 2012-09-26aRagexeRE
-#if PACKETVER == 20120925 || \
-    PACKETVER == 20120926
-	packetKeys(0x43A66E22,0x36C2229F,0x08172ECE);
-#endif
-
-// 2012-10-10aRagexe, 2012-10-10aRagexeRE, 2012-10-10bRagexe, 2012-10-10bRagexeRE, 2012-10-11aRagexeRE
-#if PACKETVER == 20121010 || \
-    PACKETVER == 20121011
-	packetKeys(0x169733E2,0x4C4640DC,0x31636531);
-#endif
-
-// 2012-10-17aRagexe, 2012-10-17aRagexeRE, 2012-10-17bRagexe, 2012-10-17bRagexeRE
-#if PACKETVER == 20121017
-	packetKeys(0x340C0C31,0x33205EA8,0x55964BFF);
-#endif
-
-// 2012-10-24aRagexe, 2012-10-24aRagexeRE
-#if PACKETVER == 20121024
-	packetKeys(0x6166335C,0x45393483,0x7EDC5478);
-#endif
-
-// 2012-10-31aRagexe, 2012-10-31aRagexeRE
-#if PACKETVER == 20121031
-	packetKeys(0x66EB7ADB,0x242864BB,0x354A4CDE);
-#endif
-
-// 2012-11-07aRagexe, 2012-11-07aRagexeRE
-#if PACKETVER == 20121107
-	packetKeys(0x49967892,0x48025276,0x1E192CA3);
-#endif
-
-// 2012-11-14aRagexe, 2012-11-14aRagexeRE
-#if PACKETVER == 20121114
-	packetKeys(0x3473545C,0x2706445C,0x79647616);
-#endif
-
-// 2012-11-21aRagexe, 2012-11-21aRagexeRE
-#if PACKETVER == 20121121
-	packetKeys(0x6EB54B0B,0x3F2A6BE5,0x0B2866E6);
-#endif
-
-// 2012-11-28aRagexe, 2012-11-28aRagexeRE
-#if PACKETVER == 20121128
-	packetKeys(0x146D4D5E,0x5C3D161B,0x759250B8);
-#endif
-
-// 2012-12-05aRagexe, 2012-12-05aRagexeRE, 2012-12-05bRagexe, 2012-12-05bRagexeRE
-#if PACKETVER == 20121205
-	packetKeys(0x218C64B6,0x4EFE17AE,0x27EA5E74);
-#endif
-
-// 2012-12-12aRagexe, 2012-12-12aRagexeRE, 2012-12-12bRagexe, 2012-12-12bRagexeRE, 2012-12-12cRagexeRE
-#if PACKETVER == 20121212
-	packetKeys(0x7F8026F0,0x32EE2A4B,0x73746C0E);
-#endif
-
-// 2012-12-18aRagexe, 2012-12-18aRagexeRE, 2012-12-18bRagexe, 2012-12-18bRagexeRE
-#if PACKETVER == 20121218
-	packetKeys(0x6A5450A2,0x4322498A,0x2C6574FB);
-#endif
-
-// 2012-12-27aRagexe, 2012-12-27aRagexeRE
-#if PACKETVER == 20121227
-	packetKeys(0x71773018,0x36A14EEB,0x28CD5A20);
-#endif
-
-// 2013-01-03aRagexe, 2013-01-03aRagexeRE, 2013-01-07aRagexe
-#if PACKETVER == 20130103 || \
-    PACKETVER == 20130107
-	packetKeys(0x1E1A559A,0x199A799A,0x799A799A);
-#endif
-
-// 2013-01-09aRagexe, 2013-01-09aRagexeRE
-#if PACKETVER == 20130109
-	packetKeys(0x6435360F,0x0A283678,0x64A04AC7);
-#endif
-
-// 2013-01-15aRagexeRE, 2013-01-15bRagexe, 2013-01-16aRagexe, 2013-01-16aRagexeRE, 2013-01-16bRagexe
-#if PACKETVER == 20130115 || \
-    PACKETVER == 20130116
-	packetKeys(0x273C25CD,0x06AA48AF,0x45A01BD4);
-#endif
-
-// 2013-01-21aRagexe, 2013-01-21aRagexeRE
-#if PACKETVER == 20130121
-	packetKeys(0x5DD874B0,0x7D98233F,0x28FF5566);
-#endif
-
-// 2013-01-30aRagexe, 2013-01-30aRagexeRE
-#if PACKETVER == 20130130
-	packetKeys(0x1EA57961,0x27786856,0x30301FA0);
-#endif
-
-// 2013-02-06aRagexe, 2013-02-06aRagexeRE
-#if PACKETVER == 20130206
-	packetKeys(0x1D8F4227,0x675812AA,0x29132929);
-#endif
-
-// 2013-02-15aRagexe, 2013-02-15aRagexeRE, 2013-02-15bRagexe
-#if PACKETVER == 20130215
-	packetKeys(0x69FB1C38,0x7D386860,0x62805311);
-#endif
-
-// 2013-02-20aRagexe, 2013-02-20bRagexeRE
-#if PACKETVER == 20130220
-	packetKeys(0x0D555256,0x28C26722,0x72220A22);
-#endif
-
-// 2013-02-27aRagexe, 2013-02-27aRagexeRE
-#if PACKETVER == 20130227
-	packetKeys(0x44F86842,0x43786A7A,0x71654528);
-#endif
-
-// 2013-03-06aRagexe, 2013-03-06aRagexeRE, 2013-03-06bRagexeRE
-#if PACKETVER == 20130306
-	packetKeys(0x7E274326,0x7D182DF2,0x4FC27DFA);
-#endif
-
-// 2013-03-13aRagexe, 2013-03-13aRagexeRE, 2013-03-13bRagexeRE, 2013-03-13cRagexeRE
-#if PACKETVER == 20130313
-	packetKeys(0x560021C3,0x6A5D110F,0x52BD40A5);
-#endif
-
-// 2013-03-20bRagexeRE, 2013-03-20cRagexeRE, 2013-03-20dRagexe, 2013-03-20eRagexe
-#if PACKETVER == 20130320
-	packetKeys(0x3F094C49,0x55F86C1E,0x58AA359A);
-#endif
-
-// 2013-03-27bRagexe, 2013-03-27bRagexeRE
-#if PACKETVER == 20130327
-	packetKeys(0x114B1BA0,0x2C4F0AE2,0x5FA1183F);
-#endif
-
-// 2013-04-03aRagexe, 2013-04-03aRagexeRE
-#if PACKETVER == 20130403
-	packetKeys(0x424A43AE,0x4A9D5EBE,0x4B3518A9);
-#endif
-
-// 2013-04-10aRagexe, 2013-04-10aRagexeRE
-#if PACKETVER == 20130410
-	packetKeys(0x3AD52ACA,0x314D1AED,0x086E415E);
-#endif
-
-// 2013-04-17aRagexe, 2013-04-17aRagexeRE
-#if PACKETVER == 20130417
-	packetKeys(0x7FB13B83,0x6E003749,0x07A02B94);
-#endif
-
-// 2013-04-24aRagexe, 2013-04-24aRagexeRE
-#if PACKETVER == 20130424
-	packetKeys(0x79F679F6,0x79F679F6,0x79F679F6);
-#endif
-
-// 2013-05-02aRagexe, 2013-05-02aRagexeRE, 2013-05-02bRagexe
-#if PACKETVER == 20130502
-	packetKeys(0x62E733B9,0x62204281,0x7F044DCA);
-#endif
-
-// 2013-05-08bRagexe, 2013-05-08bRagexeRE, 2013-05-08cRagexe, 2013-05-08dRagexe, 2013-05-08eRagexe, 2013-05-08fRagexe
-#if PACKETVER == 20130508
-	packetKeys(0x25421E49,0x175200BA,0x6C0B5239);
-#endif
-
-// 2013-05-15aRagexe, 2013-05-15aRagexeRE
-#if PACKETVER == 20130515
-	packetKeys(0x75794A38,0x58A96BC1,0x296E6FB8);
-#endif
-
-// 2013-05-22aRagexe, 2013-05-22aRagexeRE
-#if PACKETVER == 20130522
-	packetKeys(0x6948050B,0x06511D9D,0x725D4DF1);
-#endif
-
-// 2013-05-29aRagexe, 2013-05-29aRagexeRE
-#if PACKETVER == 20130529
-	packetKeys(0x023A6C87,0x14BF1F1E,0x5CC70CC9);
-#endif
-
-// 2013-06-05aRagexe, 2013-06-05bRagexe, 2013-06-05cRagexeRE
-#if PACKETVER == 20130605
-	packetKeys(0x646E08D9,0x5F153AB5,0x61B509B5);
-#endif
-
-// 2013-06-12aRagexe, 2013-06-12bRagexe, 2013-06-12bRagexeRE, 2013-06-12cRagexe, 2013-06-12dRagexe, 2013-06-12eRagexe
-#if PACKETVER == 20130612
-	packetKeys(0x6D166F66,0x3C000FCF,0x295B0FCB);
-#endif
-
-// 2013-06-18#1aRagexe, 2013-06-18#1aRagexeRE
-#if PACKETVER == 20130618
-	packetKeys(0x434115DE,0x34A10FE9,0x6791428E);
-#endif
-
-// 2013-06-26_3bRagexeRE, 2013-06-26_3cRagexe, 2013-06-26aRagexeRE, 2013-06-26bRagexe
-#if PACKETVER == 20130626
-	packetKeys(0x38F453EF,0x6A040FD8,0x65BD6668);
-#endif
-
-// 2013-07-03aRagexe, 2013-07-03bRagexeRE
-#if PACKETVER == 20130703
-	packetKeys(0x4FF90E23,0x0F1432F2,0x4CFA1EDA);
-#endif
-
-// 2013-07-10aRagexeRE, 2013-07-10bRagexe, 2013-07-10bRagexeRE, 2013-07-10cRagexeRE, 2013-07-10dRagexeRE, 2013-07-10eRagexeRE
-#if PACKETVER == 20130710
-	packetKeys(0x4A9C4237,0x4CCF3F8F,0x458F758F);
-#endif
-
-// 2013-07-17cRagexe, 2013-07-17cRagexeRE, 2013-07-17dRagexeRE, 2013-07-17eRagexeRE
-#if PACKETVER == 20130717
-	packetKeys(0x5EE5520C,0x5F9E00CF,0x2BED4F91);
-#endif
-
-// 2013-07-24eRagexe, 2013-07-24eRagexeRE, 2013-07-24fRagexeRE
-#if PACKETVER == 20130724
-	packetKeys(0x3C243BF5,0x42CC4E2F,0x02106EC6);
-#endif
-
-// 2013-07-31cRagexe, 2013-07-31cRagexeRE
-#if PACKETVER == 20130731
-	packetKeys(0x1E9D11A6,0x21A232B8,0x6A9E02B7);
-#endif
-
-// 2013-08-07aRagexe, 2013-08-07aRagexeRE
-#if PACKETVER == 20130807
-	packetKeys(0x7E241DE0,0x5E805580,0x3D807D80);
-#endif
-
-// 2013-08-14aRagexe, 2013-08-14aRagexeRE
-#if PACKETVER == 20130814
-	packetKeys(0x23A23148,0x0C41420E,0x53785AD7);
-#endif
-
-// 2013-08-21bRagexe, 2013-08-21dRagexeRE
-#if PACKETVER == 20130821
-	packetKeys(0x51673F38,0x01663512,0x5CFF0B3D);
-#endif
-
-// 2013-08-28bRagexe, 2013-08-28bRagexeRE, 2013-08-28cRagexe, 2013-08-28cRagexeRE
-#if PACKETVER == 20130828
-	packetKeys(0x02EF7A9A,0x4882042F,0x76796678);
-#endif
-
-// 2013-09-04aRagexe, 2013-09-04bRagexeRE
-#if PACKETVER == 20130904
-	packetKeys(0x41AF20C5,0x0997799E,0x4AE803A0);
-#endif
-
-// 2013-09-11aRagexe, 2013-09-11aRagexeRE, 2013-09-11bRagexe, 2013-09-11bRagexeRE
-#if PACKETVER == 20130911
-	packetKeys(0x232B3F47,0x0AD0515F,0x1CA31828);
-#endif
-
-// 2013-09-17aRagexe, 2013-09-17aRagexeRE
-#if PACKETVER == 20130917
-	packetKeys(0x5C9164C5,0x32B62F83,0x52864548);
-#endif
-
-// 2013-09-25aRagexe, 2013-09-25aRagexeRE, 2013-09-25bRagexe, 2013-09-25bRagexeRE, 2013-09-25cRagexe
-#if PACKETVER == 20130925
-	packetKeys(0x4B9C279A,0x0C7849C4,0x72A77646);
-#endif
-
-// 2013-10-02aRagexe, 2013-10-02aRagexeRE
-#if PACKETVER == 20131002
-	packetKeys(0x63A466F7,0x635362F3,0x41F369F3);
-#endif
-
-// 2013-10-08aRagexe, 2013-10-08bRagexeRE
-#if PACKETVER == 20131008
-	packetKeys(0x64924AAD,0x08CA0445,0x1CBC36DE);
-#endif
-
-// 2013-10-16aRagexe, 2013-10-16aRagexeRE, 2013-10-16bRagexe, 2013-10-16bRagexeRE
-#if PACKETVER == 20131016
-	packetKeys(0x33AD7A93,0x720C7C49,0x12C4205A);
-#endif
-
-// 2013-10-23aRagexe, 2013-10-23aRagexeRE
-#if PACKETVER == 20131023
-	packetKeys(0x02EF6163,0x2B774814,0x58EC3036);
-#endif
-
-// 2013-10-30aRagexe, 2013-10-30aRagexeRE
-#if PACKETVER == 20131030
-	packetKeys(0x4A6A3EFF,0x7E2D5237,0x01CA019E);
-#endif
-
-// 2013-11-06aRagexe, 2013-11-06aRagexeRE, 2013-11-07aRagexe, 2013-11-07bRagexe, 2013-11-07cRagexe, 2013-11-08aRagexe
-#if PACKETVER == 20131106 || \
-    PACKETVER == 20131107 || \
-    PACKETVER == 20131108
-	packetKeys(0x143E528F,0x5CA05899,0x44B85B23);
-#endif
-
-// 2013-11-13aRagexeRE, 2013-11-13bRagexe
-#if PACKETVER == 20131113
-	packetKeys(0x44EA14CD,0x49311C88,0x40C86C31);
-#endif
-
-// 2013-11-20dRagexe, 2013-11-20eRagexeRE
-#if PACKETVER == 20131120
-	packetKeys(0x541E5172,0x1B1D30A0,0x28AA7CE5);
-#endif
-
-// 2013-11-27aRagexeRE, 2013-11-27bRagexe, 2013-11-27bRagexeRE
-#if PACKETVER == 20131127
-	packetKeys(0x21426A48,0x5C505D6A,0x046D06AD);
-#endif
-
-// 2013-12-04dRagexeRE, 2013-12-04eRagexe, 2013-12-04eRagexeRE
-#if PACKETVER == 20131204
-	packetKeys(0x792760B2,0x5AF45387,0x36165603);
-#endif
-
-// 2013-12-11cRagexe, 2013-12-11cRagexeRE, 2013-12-11dRagexe, 2013-12-11eRagexeRE
-#if PACKETVER == 20131211
-	packetKeys(0x55B0394E,0x4D341FF2,0x60BC1DC3);
-#endif
-
-// 2013-12-18aRagexeRE, 2013-12-18bRagexe
-#if PACKETVER == 20131218
-	packetKeys(0x6A596301,0x76866D0E,0x32294A45);
-#endif
-
-// 2013-12-23aRagexeRE, 2014-05-08aRagexe, 2014-05-08aRagexeRE, 2014-06-11eRagexe, 2015-02-25hRagexe, 2018-03-15aRagexe, 2018-03-21aRagexe, 2018-03-21aRagexeRE, 2018-03-28bRagexe, 2018-03-28bRagexeRE, 2018-04-04bRagexe, 2018-04-04cRagexeRE, 2018-04-18aRagexe, 2018-04-18bRagexeRE, 2018-04-25cRagexe, 2018-04-25cRagexeRE, 2018-05-02bRagexe, 2018-05-02bRagexeRE, 2018-05-02dRagexeRE, 2018-05-09aRagexe, 2018-05-16cRagexe, 2018-05-16cRagexeRE, 2018-05-23aRagexe, 2018-05-23aRagexeRE, 2018-05-30aRagexe, 2018-05-30bRagexeRE, 2018-05-30cRagexeRE, 2018-06-05bRagexe, 2018-06-05bRagexeRE, 2018-06-12aRagexeRE, 2018-06-12bRagexeRE, 2018-06-20cRagexe, 2018-06-20dRagexeRE, 2018-06-20eRagexe, 2018-06-20eRagexeRE, 2018-06-21aRagexe, 2018-06-21aRagexeRE, 2018-07-04aRagexe, 2018-07-04aRagexeRE, 2018-07-11aRagexeRE, 2018-07-18bRagexe, 2018-07-18bRagexeRE, 2018-07-18bRagexeRE1, 2018-07-18cRagexe, 2018-07-18cRagexeRE, 2018-08-01cRagexe, 2018-08-01cRagexeRE, 2018-08-08bRagexe, 2018-08-08bRagexeRE, 2018-08-22cRagexe, 2018-08-22cRagexeRE, 2018-08-29aRagexe, 2018-08-29aRagexeRE, 2018-08-29bRagexeRE, 2018-08-31aRagexe, 2018-09-12dRagexe, 2018-09-12dRagexeRE, 2018-09-19aRagexe, 2018-09-19aRagexeRE, 2018-10-02aRagexe, 2018-10-02aRagexeRE, 2018-10-02bRagexe, 2018-10-02bRagexeRE, 2018-10-17bRagexe, 2018-10-17bRagexeRE
-#if PACKETVER == 20131223 || \
+    PACKETVER == 20110609 || \
+    PACKETVER == 20110614 || \
+    PACKETVER == 20110622 || \
+    PACKETVER == 20110628 || \
+    PACKETVER == 20110706 || \
+    PACKETVER == 20110713 || \
+    PACKETVER == 20110719 || \
+    PACKETVER == 20110726 || \
+    PACKETVER == 20110803 || \
+    PACKETVER == 20110810 || \
+    PACKETVER == 20131223 || \
     PACKETVER == 20140508 || \
     PACKETVER == 20140611 || \
     PACKETVER == 20150225 || \
@@ -905,88 +122,929 @@
     PACKETVER == 20180912 || \
     PACKETVER == 20180919 || \
     PACKETVER == 20181002 || \
-    PACKETVER >= 20181017
+    PACKETVER == 20181017 || \
+    PACKETVER == 20181024 || \
+    PACKETVER == 20181031 || \
+    PACKETVER >= 20181107
 	packetKeys(0x00000000,0x00000000,0x00000000);
+#endif
+
+// 2010-11-30aRagexe
+#if PACKETVER == 20101130
+	packetKeys(0x3726593c,0x0efd5ee8,0x79036df9);
+#endif
+
+// 2010-12-07bRagexe
+#if PACKETVER == 20101207
+	packetKeys(0x66111112,0x2b7b53aa,0x04e76df8);
+#endif
+
+// 2010-12-14aRagexe
+#if PACKETVER == 20101214
+	packetKeys(0x5e535d06,0x4e297f0e,0x400b6ad8);
+#endif
+
+// 2010-12-21aRagexe
+#if PACKETVER == 20101221
+	packetKeys(0x0448466a,0x41554ac9,0x5b4710b2);
+#endif
+
+// 2010-12-28aRagexe
+#if PACKETVER == 20101228
+	packetKeys(0x50c638a5,0x4bf86b20,0x480c3746);
+#endif
+
+// 2011-01-04aRagexe
+#if PACKETVER == 20110104
+	packetKeys(0x55db401f,0x047d4e02,0x6d8f2ea3);
+#endif
+
+// 2011-01-11aRagexe
+#if PACKETVER == 20110111
+	packetKeys(0x2d5f6302,0x2a361cd6,0x39d661d6);
+#endif
+
+// 2011-01-18aRagexe
+#if PACKETVER == 20110118
+	packetKeys(0x3c777d2d,0x00541a1d,0x5e0053a2);
+#endif
+
+// 2011-01-25aRagexe, 2011-01-26aRagexe, 2011-01-26bRagexe, 2011-01-31aRagexe
+#if PACKETVER == 20110125 || \
+    PACKETVER == 20110126 || \
+    PACKETVER == 20110131
+	packetKeys(0x6bb84bb0,0x4c004382,0x10ae3260);
+#endif
+
+// 2011-01-31bRagexe, 2011-02-01aRagexe
+#if PACKETVER == 20110131 || \
+    PACKETVER == 20110201
+	packetKeys(0x68871e62,0x60d17266,0x74726daa);
+#endif
+
+// 2011-02-08aRagexe, 2011-02-10aRagexe, 2011-02-10bRagexe
+#if PACKETVER == 20110208 || \
+    PACKETVER == 20110210
+	packetKeys(0x72ba4e9d,0x281e1df1,0x208255aa);
+#endif
+
+// 2011-02-15aRagexe
+#if PACKETVER == 20110215
+	packetKeys(0x1b174d76,0x32005014,0x7b8b72d5);
+#endif
+
+// 2011-02-22aRagexe, 2011-02-23aRagexe, 2011-02-23bRagexe, 2011-02-24aRagexe, 2011-02-25aRagexe, 2011-02-25bRagexe
+#if PACKETVER == 20110222 || \
+    PACKETVER == 20110223 || \
+    PACKETVER == 20110224 || \
+    PACKETVER == 20110225
+	packetKeys(0x48f73b56,0x155f7d66,0x44ab57ce);
+#endif
+
+// 2011-02-28aRagexe
+#if PACKETVER == 20110228
+	packetKeys(0x26385ebf,0x7a8c7534,0x60ae2c34);
+#endif
+
+// 2011-03-08aRagexe, 2011-03-09aRagexe, 2011-03-09bRagexe, 2011-03-09cRagexe, 2011-03-09dRagexe
+#if PACKETVER == 20110308 || \
+    PACKETVER == 20110309
+	packetKeys(0x003f1b20,0x7a1e12a3,0x34994aad);
+#endif
+
+// 2011-03-15aRagexe, 2011-03-16aRagexe
+#if PACKETVER == 20110315 || \
+    PACKETVER == 20110316
+	packetKeys(0x62967d7d,0x34833d1a,0x26d45eca);
+#endif
+
+// 2011-03-22aRagexe
+#if PACKETVER == 20110322
+	packetKeys(0x5870617c,0x638d5376,0x739f4817);
+#endif
+
+// 2011-03-29aRagexe, 2011-03-30aRagexe
+#if PACKETVER == 20110329 || \
+    PACKETVER == 20110330
+	packetKeys(0x06900bb7,0x45db687b,0x197b017b);
+#endif
+
+// 2011-04-05aRagexe
+#if PACKETVER == 20110405
+	packetKeys(0x248d5c37,0x1c6a1b37,0x1f644fdb);
+#endif
+
+// 2011-04-12bRagexe
+#if PACKETVER == 20110412
+	packetKeys(0x3de86bfc,0x0dd47f80,0x42481c9b);
+#endif
+
+// 2011-04-19aRagexe
+#if PACKETVER == 20110419
+	packetKeys(0x26073204,0x62013a51,0x22ac58e0);
+#endif
+
+// 2011-04-26aRagexe
+#if PACKETVER == 20110426
+	packetKeys(0x392813f9,0x09905054,0x40db732e);
+#endif
+
+// 2011-05-03aRagexe
+#if PACKETVER == 20110503
+	packetKeys(0x28be32ee,0x1d506fcb,0x63832421);
+#endif
+
+// 2011-05-11aRagexe
+#if PACKETVER == 20110511
+	packetKeys(0x6a715733,0x3c5c0d74,0x408a48ec);
+#endif
+
+// 2011-05-17aRagexe
+#if PACKETVER == 20110517
+	packetKeys(0x07fe0c72,0x46766bad,0x5eb5126a);
+#endif
+
+// 2011-05-23aRagexe, 2011-05-26bRagexe
+#if PACKETVER == 20110523 || \
+    PACKETVER == 20110526
+	packetKeys(0x69166916,0x69166916,0x69166916);
+#endif
+
+// 2011-05-31aRagexe
+#if PACKETVER == 20110531
+	packetKeys(0x5aba2c7c,0x3cd22073,0x78953988);
+#endif
+
+// 2011-06-07aRagexe, 2011-06-08aRagexe, 2011-06-08bRagexe, 2011-06-08cRagexe, 2011-06-09aRagexe
+#if PACKETVER == 20110607 || \
+    PACKETVER == 20110608 || \
+    PACKETVER == 20110609
+	packetKeys(0x76b0426c,0x0dd74deb,0x1f92228e);
+#endif
+
+// 2011-06-14aRagexe
+#if PACKETVER == 20110614
+	packetKeys(0x5749027b,0x71710972,0x5b096475);
+#endif
+
+// 2011-06-20aRagexe
+#if PACKETVER == 20110620
+	packetKeys(0x3a1760d4,0x254e0df9,0x440e2357);
+#endif
+
+// 2011-06-27aRagexe
+#if PACKETVER == 20110627
+	packetKeys(0x3efc29bd,0x699e4b11,0x7b900a13);
+#endif
+
+// 2011-07-05aRagexe
+#if PACKETVER == 20110705
+	packetKeys(0x48801a5e,0x68fc7726,0x081d7f6e);
+#endif
+
+// 2011-07-11bRagexe, 2011-07-13aRagexe, 2011-07-13bRagexe
+#if PACKETVER == 20110711 || \
+    PACKETVER == 20110713
+	packetKeys(0x489c544b,0x33ba1c25,0x2de66e4e);
+#endif
+
+// 2011-07-18aRagexe
+#if PACKETVER == 20110718
+	packetKeys(0x08464674,0x1eeb3bd5,0x33395199);
+#endif
+
+// 2011-07-26aRagexe
+#if PACKETVER == 20110726
+	packetKeys(0x41e5730b,0x119c6c11,0x5356524a);
+#endif
+
+// 2011-08-02aRagexe
+#if PACKETVER == 20110802
+	packetKeys(0x607c08a1,0x65b20528,0x360571e9);
+#endif
+
+// 2011-08-09aRagexe
+#if PACKETVER == 20110809
+	packetKeys(0x742a559a,0x047f425d,0x5c8c2ca0);
+#endif
+
+// 2011-08-16aRagexe, 2011-08-16aRagexeRE, 2011-08-17aRagexe, 2011-08-17aRagexeRE, 2011-08-17bRagexe, 2011-08-17bRagexeRE
+#if PACKETVER == 20110816 || \
+    PACKETVER == 20110817
+	packetKeys(0x053d5ced,0x3ded6ded,0x6ded6ded);
+#endif
+
+// 2011-08-23aRagexe, 2011-08-23aRagexeRE, 2011-08-24aRagexe, 2011-08-24aRagexeRE, 2011-08-24bRagexeRE
+#if PACKETVER == 20110823 || \
+    PACKETVER == 20110824
+	packetKeys(0x35c91401,0x262a5556,0x28fa03aa);
+#endif
+
+// 2011-08-31aRagexe, 2011-08-31aRagexeRE, 2011-08-31bRagexe, 2011-08-31bRagexeRE, 2011-08-31cRagexe, 2011-08-31cRagexeRE, 2011-08-31dRagexeRE, 2011-08-31eRagexeRE
+#if PACKETVER == 20110831
+	packetKeys(0x3ad67ed0,0x44703c69,0x6f876809);
+#endif
+
+// 2011-09-06aRagexe, 2011-09-06aRagexeRE, 2011-09-14aRagexe, 2011-09-14aRagexeRE
+#if PACKETVER == 20110906 || \
+    PACKETVER == 20110914
+	packetKeys(0x350124ec,0x39a14595,0x0de56125);
+#endif
+
+// 2011-09-20aRagexe, 2011-09-20aRagexeRE, 2011-09-20aRagexeRE2
+#if PACKETVER == 20110920
+	packetKeys(0x79c91a12,0x20450cc0,0x584b2a38);
+#endif
+
+// 2011-09-28aRagexe, 2011-09-28aRagexe-retry, 2011-09-28aRagexeRE, 2011-09-29aRagexe, 2011-09-29aRagexeRE
+#if PACKETVER == 20110928 || \
+    PACKETVER == 20110929
+	packetKeys(0x26567512,0x4b0732df,0x57d266c6);
+#endif
+
+// 2011-10-04aRagexe, 2011-10-04aRagexeRE, 2011-10-05aRagexe, 2011-10-05aRagexeRE
+#if PACKETVER == 20111004 || \
+    PACKETVER == 20111005
+	packetKeys(0x291e6762,0x77cd391a,0x60ac2f16);
+#endif
+
+// 2011-10-10aRagexe, 2011-10-10bRagexeRE, 2011-10-12aRagexeRE, 2011-10-12bRagexe
+#if PACKETVER == 20111010 || \
+    PACKETVER == 20111012
+	packetKeys(0x7f3c2d29,0x59b01de6,0x1dbb44ca);
+#endif
+
+// 2011-10-17aRagexe, 2011-10-17aRagexeRE, 2011-10-19aRagexeRE, 2011-10-19bRagexeRE, 2011-10-21aRagexe, 2011-10-21aRagexeRE, 2011-10-21cRagexe
+#if PACKETVER == 20111017 || \
+    PACKETVER == 20111019 || \
+    PACKETVER == 20111021
+	packetKeys(0x357d55dc,0x5a8d759f,0x245c30f5);
+#endif
+
+// 2011-10-25aRagexe, 2011-10-25aRagexeRE
+#if PACKETVER == 20111025
+	packetKeys(0x50ae1a63,0x3ce579b5,0x29c10406);
+#endif
+
+// 2011-11-01cRagexe, 2011-11-01cRagexeRE, 2011-11-02aRagexe, 2011-11-02aRagexeRE
+#if PACKETVER == 20111101 || \
+    PACKETVER == 20111102
+	packetKeys(0x5324329d,0x5d545d52,0x06137269);
+#endif
+
+// 2011-11-08aRagexe, 2011-11-08aRagexeRE, 2011-11-09aRagexe, 2011-11-09aRagexeRE, 2011-11-09bRagexe, 2011-11-09cRagexe, 2011-11-09dRagexe, 2011-11-09eRagexe
+#if PACKETVER == 20111108 || \
+    PACKETVER == 20111109
+	packetKeys(0x0b642bda,0x6ecb1d1c,0x61c7454b);
+#endif
+
+// 2011-11-14aRagexe, 2011-11-14aRagexeRE, 2011-11-16aRagexe, 2011-11-16aRagexeRE
+#if PACKETVER == 20111114 || \
+    PACKETVER == 20111116
+	packetKeys(0x419d0db0,0x74916bf4,0x027371b4);
+#endif
+
+// 2011-11-22aRagexe, 2011-11-22aRagexeRE, 2011-11-23aRagexe
+#if PACKETVER == 20111122 || \
+    PACKETVER == 20111123
+	packetKeys(0x3b550f07,0x1f666c7c,0x60304ef5);
+#endif
+
+// 2011-12-07aRagexe, 2011-12-07aRagexeRE
+#if PACKETVER == 20111207
+	packetKeys(0x2a610886,0x3e09165e,0x57c11888);
+#endif
+
+// 2011-12-13aRagexe, 2011-12-13aRagexeRE, 2011-12-14aRagexe, 2011-12-14aRagexeRE, 2011-12-14bRagexeRE, 2011-12-14cRagexeRE
+#if PACKETVER == 20111213 || \
+    PACKETVER == 20111214
+	packetKeys(0x5151306b,0x7ae32886,0x53060628);
+#endif
+
+// 2011-12-20bRagexe, 2011-12-20bRagexeRE
+#if PACKETVER == 20111220
+	packetKeys(0x05d53871,0x7d0027b4,0x29975333);
+#endif
+
+// 2011-12-27aRagexe, 2011-12-27aRagexeRE, 2011-12-28aRagexe, 2011-12-28aRagexeRE
+#if PACKETVER == 20111227 || \
+    PACKETVER == 20111228
+	packetKeys(0x0ff87e93,0x6cff7860,0x3a3d1dec);
+#endif
+
+// 2012-01-03aRagexe, 2012-01-03bRagexeRE, 2012-01-04aRagexe, 2012-01-04aRagexeRE, 2012-01-04bRagexe
+#if PACKETVER == 20120103 || \
+    PACKETVER == 20120104
+	packetKeys(0x262034a1,0x674542a5,0x73a50ba5);
+#endif
+
+// 2012-01-10aRagexeRE, 2012-01-10bRagexe
+#if PACKETVER == 20120110
+	packetKeys(0x2b412afc,0x4ff94487,0x6705339d);
+#endif
+
+// 2012-01-17aRagexe, 2012-01-17aRagexeRE, 2012-01-18aRagexe
+#if PACKETVER == 20120117 || \
+    PACKETVER == 20120118
+	packetKeys(0x24e32c2e,0x48dd17a5,0x64f8771a);
+#endif
+
+// 2012-01-20aRagexe, 2012-01-20aRagexeRE
+#if PACKETVER == 20120120
+	packetKeys(0x504345d0,0x3d427b1b,0x794c2dcc);
+#endif
+
+// 2012-01-31aRagexe, 2012-01-31cRagexeRE, 2012-02-01aRagexeRE, 2012-02-02aRagexe, 2012-02-02aRagexeRE, 2012-02-02bRagexe, 2012-02-02bRagexeRE
+#if PACKETVER == 20120131 || \
+    PACKETVER == 20120201 || \
+    PACKETVER == 20120202
+	packetKeys(0x2cfc0a71,0x2ba91d8d,0x087e39e0);
+#endif
+
+// 2012-02-07bRagexe, 2012-02-07bRagexeRE, 2012-02-08aRagexe, 2012-02-09aRagexe
+#if PACKETVER == 20120207 || \
+    PACKETVER == 20120208 || \
+    PACKETVER == 20120209
+	packetKeys(0x1d373f5d,0x5acd604d,0x1c4d7c4d);
+#endif
+
+// 2012-02-14bRagexe, 2012-02-14bRagexeRE, 2012-02-15aRagexe
+#if PACKETVER == 20120214 || \
+    PACKETVER == 20120215
+	packetKeys(0x7a255efa,0x30977276,0x2d4a0448);
+#endif
+
+// 2012-02-21aRagexe, 2012-02-21aRagexeRE, 2012-02-22aRagexe, 2012-02-22aRagexeRE
+#if PACKETVER == 20120221 || \
+    PACKETVER == 20120222
+	packetKeys(0x1ca5130f,0x43ed240a,0x7fea3be0);
+#endif
+
+// 2012-02-28bRagexe, 2012-02-28bRagexeRE, 2012-02-29aRagexe, 2012-02-29aRagexeRE
+#if PACKETVER == 20120228 || \
+    PACKETVER == 20120229
+	packetKeys(0x520b4c64,0x2800407d,0x47651458);
+#endif
+
+// 2012-03-07aRagexe, 2012-03-07aRagexeRE, 2012-03-07bRagexe, 2012-03-07bRagexeRE, 2012-03-07cRagexe, 2012-03-07cRagexeRE, 2012-03-07dRagexe, 2012-03-07dRagexeRE, 2012-03-07eRagexeRE, 2012-03-07fRagexeRE
+#if PACKETVER == 20120307
+	packetKeys(0x382a6def,0x5cbe7202,0x61f46637);
+#endif
+
+// 2012-03-14aRagexe, 2012-03-14aRagexeRE, 2012-03-14bRagexe, 2012-03-14bRagexeRE, 2012-03-14cRagexe, 2012-03-14cRagexeRE
+#if PACKETVER == 20120314
+	packetKeys(0x689c1729,0x11812639,0x60f82967);
+#endif
+
+// 2012-03-20aRagexe, 2012-03-20aRagexeRE, 2012-03-21aRagexeRE
+#if PACKETVER == 20120320 || \
+    PACKETVER == 20120321
+	packetKeys(0x21f9683f,0x710c5ca5,0x1fd910e9);
+#endif
+
+// 2012-03-28aRagexe, 2012-03-28aRagexeRE, 2012-03-28bRagexe, 2012-03-28bRagexeRE, 2012-03-28cRagexe, 2012-03-28cRagexeRE, 2012-03-28dRagexe, 2012-03-28dRagexeRE, 2012-03-28eRagexeRE, 2012-03-28fRagexeRE, 2012-03-28gRagexeRE
+#if PACKETVER == 20120328
+	packetKeys(0x75b8553b,0x37f20b12,0x385c2b40);
+#endif
+
+// 2012-04-04aRagexe, 2012-04-04aRagexeRE
+#if PACKETVER == 20120404
+	packetKeys(0x0036310c,0x2dcd0bed,0x1ee62a78);
+#endif
+
+// 2012-04-10aRagexe, 2012-04-10aRagexeRE
+#if PACKETVER == 20120410
+	packetKeys(0x01581359,0x452d6ffa,0x6afb6e2e);
+#endif
+
+// 2012-04-17aRagexe, 2012-04-17aRagexeRE, 2012-04-18aRagexeRE
+#if PACKETVER == 20120417 || \
+    PACKETVER == 20120418
+	packetKeys(0x01540e48,0x13041224,0x31247924);
+#endif
+
+// 2012-04-24aRagexe, 2012-04-24aRagexeRE
+#if PACKETVER == 20120424
+	packetKeys(0x411d1dbb,0x4cba4848,0x1a432fc4);
+#endif
+
+// 2012-05-02aRagexeRE, 2012-05-03aRagexe, 2012-05-03aRagexeRE, 2012-05-03bRagexe
+#if PACKETVER == 20120502 || \
+    PACKETVER == 20120503
+	packetKeys(0x37a91d19,0x10190019,0x00190019);
+#endif
+
+// 2012-05-08aRagexe, 2012-05-08aRagexeRE, 2012-05-09aRagexeRE, 2012-05-09bRagexeRE
+#if PACKETVER == 20120508 || \
+    PACKETVER == 20120509
+	packetKeys(0x16cf3301,0x1f472b9b,0x0b4a3cd2);
+#endif
+
+// 2012-05-15aRagexe, 2012-05-15aRagexeRE
+#if PACKETVER == 20120515
+	packetKeys(0x4a715ef9,0x79103e4f,0x405c1238);
+#endif
+
+// 2012-05-22aRagexe, 2012-05-23aRagexe, 2012-05-23aRagexeRE, 2012-05-23bRagexeRE, 2012-05-25aRagexeRE
+#if PACKETVER == 20120522 || \
+    PACKETVER == 20120523 || \
+    PACKETVER == 20120525
+	packetKeys(0x70eb4ccb,0x0487713c,0x398d4b08);
+#endif
+
+// 2012-05-29bRagexe, 2012-05-29bRagexeRE
+#if PACKETVER == 20120529
+	packetKeys(0x53415dde,0x34953e16,0x27623df2);
+#endif
+
+// 2012-06-01aRagexeRE, 2012-06-04aRagexe, 2012-06-05aRagexeRE
+#if PACKETVER == 20120601 || \
+    PACKETVER == 20120604 || \
+    PACKETVER == 20120605
+	packetKeys(0x68ca3080,0x31b74bdd,0x505208f1);
+#endif
+
+// 2012-06-12aRagexe, 2012-06-12aRagexeRE
+#if PACKETVER == 20120612
+	packetKeys(0x32e45d64,0x35643564,0x35643564);
+#endif
+
+// 2012-06-18aRagexe, 2012-06-18aRagexeRE
+#if PACKETVER == 20120618
+	packetKeys(0x261f261f,0x261f261f,0x261f261f);
+#endif
+
+// 2012-06-26aRagexe, 2012-06-26aRagexeRE, 2012-06-27aRagexe, 2012-06-27aRagexeRE
+#if PACKETVER == 20120626 || \
+    PACKETVER == 20120627
+	packetKeys(0x02277e66,0x045723f1,0x7107392c);
+#endif
+
+// 2012-07-02aRagexe, 2012-07-02aRagexeRE
+#if PACKETVER == 20120702
+	packetKeys(0x25733b31,0x53486cfd,0x398649bd);
+#endif
+
+// 2012-07-10aRagexe, 2012-07-10aRagexeRE, 2012-07-12aRagexe, 2012-07-12aRagexeRE
+#if PACKETVER == 20120710 || \
+    PACKETVER == 20120712
+	packetKeys(0x0e8b7afb,0x6930362d,0x42d33a57);
+#endif
+
+// 2012-07-16aRagexe, 2012-07-16aRagexeRE
+#if PACKETVER == 20120716
+	packetKeys(0x76052205,0x22052205,0x22052205);
+#endif
+
+// 2012-07-24aRagexe, 2012-07-24aRagexeRE
+#if PACKETVER == 20120724
+	packetKeys(0x783d5bc6,0x3aac2176,0x66616f02);
+#endif
+
+// 2012-08-01aRagexe, 2012-08-01aRagexeRE, 2012-08-01bRagexe, 2012-08-01bRagexeRE
+#if PACKETVER == 20120801
+	packetKeys(0x71fb6768,0x5843166b,0x6cb445c6);
+#endif
+
+// 2012-08-08aRagexe, 2012-08-08aRagexeRE, 2012-08-08bRagexe, 2012-08-08bRagexeRE, 2012-08-08cRagexe, 2012-08-08cRagexeRE, 2012-08-08dRagexeRE
+#if PACKETVER == 20120808
+	packetKeys(0x5d5068bb,0x36732065,0x47cf7367);
+#endif
+
+// 2012-08-14aRagexe, 2012-08-14aRagexeRE, 2012-08-14bRagexe, 2012-08-14bRagexeRE
+#if PACKETVER == 20120814
+	packetKeys(0x203e21bd,0x047459fb,0x56af5a97);
+#endif
+
+// 2012-08-22aRagexe, 2012-08-22aRagexeRE, 2012-08-22bRagexe, 2012-08-22bRagexeRE, 2012-08-22cRagexe, 2012-08-22cRagexeRE
+#if PACKETVER == 20120822
+	packetKeys(0x06a92e7b,0x3d324f29,0x5fd63004);
+#endif
+
+// 2012-08-30aRagexe, 2012-08-30aRagexeRE, 2012-08-30bRagexeRE
+#if PACKETVER == 20120830
+	packetKeys(0x0af1363d,0x4ab33e3b,0x48421dbe);
+#endif
+
+// 2012-09-05aRagexe, 2012-09-05aRagexeRE
+#if PACKETVER == 20120905
+	packetKeys(0x04f50d80,0x092f5c4d,0x29bf3dcf);
+#endif
+
+// 2012-09-11aRagexe, 2012-09-11aRagexeRE
+#if PACKETVER == 20120911
+	packetKeys(0x1f3d1145,0x02db3c32,0x4be34c49);
+#endif
+
+// 2012-09-19aRagexe, 2012-09-19aRagexeRE
+#if PACKETVER == 20120919
+	packetKeys(0x72e00f24,0x4ea02d80,0x7c803480);
+#endif
+
+// 2012-09-25aRagexe, 2012-09-25aRagexeRE, 2012-09-26aRagexe, 2012-09-26aRagexeRE
+#if PACKETVER == 20120925 || \
+    PACKETVER == 20120926
+	packetKeys(0x43a66e22,0x36c2229f,0x08172ece);
+#endif
+
+// 2012-10-10aRagexe, 2012-10-10aRagexeRE, 2012-10-10bRagexe, 2012-10-10bRagexeRE, 2012-10-11aRagexeRE
+#if PACKETVER == 20121010 || \
+    PACKETVER == 20121011
+	packetKeys(0x169733e2,0x4c4640dc,0x31636531);
+#endif
+
+// 2012-10-17aRagexe, 2012-10-17aRagexeRE, 2012-10-17bRagexe, 2012-10-17bRagexeRE
+#if PACKETVER == 20121017
+	packetKeys(0x340c0c31,0x33205ea8,0x55964bff);
+#endif
+
+// 2012-10-24aRagexe, 2012-10-24aRagexeRE
+#if PACKETVER == 20121024
+	packetKeys(0x6166335c,0x45393483,0x7edc5478);
+#endif
+
+// 2012-10-31aRagexe, 2012-10-31aRagexeRE
+#if PACKETVER == 20121031
+	packetKeys(0x66eb7adb,0x242864bb,0x354a4cde);
+#endif
+
+// 2012-11-07aRagexe, 2012-11-07aRagexeRE
+#if PACKETVER == 20121107
+	packetKeys(0x49967892,0x48025276,0x1e192ca3);
+#endif
+
+// 2012-11-14aRagexe, 2012-11-14aRagexeRE
+#if PACKETVER == 20121114
+	packetKeys(0x3473545c,0x2706445c,0x79647616);
+#endif
+
+// 2012-11-21aRagexe, 2012-11-21aRagexeRE
+#if PACKETVER == 20121121
+	packetKeys(0x6eb54b0b,0x3f2a6be5,0x0b2866e6);
+#endif
+
+// 2012-11-28aRagexe, 2012-11-28aRagexeRE
+#if PACKETVER == 20121128
+	packetKeys(0x146d4d5e,0x5c3d161b,0x759250b8);
+#endif
+
+// 2012-12-05aRagexe, 2012-12-05aRagexeRE, 2012-12-05bRagexe, 2012-12-05bRagexeRE
+#if PACKETVER == 20121205
+	packetKeys(0x218c64b6,0x4efe17ae,0x27ea5e74);
+#endif
+
+// 2012-12-12aRagexe, 2012-12-12aRagexeRE, 2012-12-12bRagexe, 2012-12-12bRagexeRE, 2012-12-12cRagexeRE
+#if PACKETVER == 20121212
+	packetKeys(0x7f8026f0,0x32ee2a4b,0x73746c0e);
+#endif
+
+// 2012-12-18aRagexe, 2012-12-18aRagexeRE, 2012-12-18bRagexe, 2012-12-18bRagexeRE
+#if PACKETVER == 20121218
+	packetKeys(0x6a5450a2,0x4322498a,0x2c6574fb);
+#endif
+
+// 2012-12-27aRagexe, 2012-12-27aRagexeRE
+#if PACKETVER == 20121227
+	packetKeys(0x71773018,0x36a14eeb,0x28cd5a20);
+#endif
+
+// 2013-01-03aRagexe, 2013-01-03aRagexeRE, 2013-01-07aRagexe
+#if PACKETVER == 20130103 || \
+    PACKETVER == 20130107
+	packetKeys(0x1e1a559a,0x199a799a,0x799a799a);
+#endif
+
+// 2013-01-09aRagexe, 2013-01-09aRagexeRE
+#if PACKETVER == 20130109
+	packetKeys(0x6435360f,0x0a283678,0x64a04ac7);
+#endif
+
+// 2013-01-15aRagexeRE, 2013-01-15bRagexe, 2013-01-16aRagexe, 2013-01-16aRagexeRE, 2013-01-16bRagexe
+#if PACKETVER == 20130115 || \
+    PACKETVER == 20130116
+	packetKeys(0x273c25cd,0x06aa48af,0x45a01bd4);
+#endif
+
+// 2013-01-21aRagexe, 2013-01-21aRagexeRE
+#if PACKETVER == 20130121
+	packetKeys(0x5dd874b0,0x7d98233f,0x28ff5566);
+#endif
+
+// 2013-01-30aRagexe, 2013-01-30aRagexeRE
+#if PACKETVER == 20130130
+	packetKeys(0x1ea57961,0x27786856,0x30301fa0);
+#endif
+
+// 2013-02-06aRagexe, 2013-02-06aRagexeRE
+#if PACKETVER == 20130206
+	packetKeys(0x1d8f4227,0x675812aa,0x29132929);
+#endif
+
+// 2013-02-15aRagexe, 2013-02-15aRagexeRE, 2013-02-15bRagexe
+#if PACKETVER == 20130215
+	packetKeys(0x69fb1c38,0x7d386860,0x62805311);
+#endif
+
+// 2013-02-20aRagexe, 2013-02-20bRagexeRE
+#if PACKETVER == 20130220
+	packetKeys(0x0d555256,0x28c26722,0x72220a22);
+#endif
+
+// 2013-02-27aRagexe, 2013-02-27aRagexeRE
+#if PACKETVER == 20130227
+	packetKeys(0x44f86842,0x43786a7a,0x71654528);
+#endif
+
+// 2013-03-06aRagexe, 2013-03-06aRagexeRE, 2013-03-06bRagexeRE
+#if PACKETVER == 20130306
+	packetKeys(0x7e274326,0x7d182df2,0x4fc27dfa);
+#endif
+
+// 2013-03-13aRagexe, 2013-03-13aRagexeRE, 2013-03-13bRagexeRE, 2013-03-13cRagexeRE
+#if PACKETVER == 20130313
+	packetKeys(0x560021c3,0x6a5d110f,0x52bd40a5);
+#endif
+
+// 2013-03-20bRagexeRE, 2013-03-20cRagexeRE, 2013-03-20dRagexe, 2013-03-20eRagexe
+#if PACKETVER == 20130320
+	packetKeys(0x3f094c49,0x55f86c1e,0x58aa359a);
+#endif
+
+// 2013-03-27bRagexe, 2013-03-27bRagexeRE
+#if PACKETVER == 20130327
+	packetKeys(0x114b1ba0,0x2c4f0ae2,0x5fa1183f);
+#endif
+
+// 2013-04-03aRagexe, 2013-04-03aRagexeRE
+#if PACKETVER == 20130403
+	packetKeys(0x424a43ae,0x4a9d5ebe,0x4b3518a9);
+#endif
+
+// 2013-04-10aRagexe, 2013-04-10aRagexeRE
+#if PACKETVER == 20130410
+	packetKeys(0x3ad52aca,0x314d1aed,0x086e415e);
+#endif
+
+// 2013-04-17aRagexe, 2013-04-17aRagexeRE
+#if PACKETVER == 20130417
+	packetKeys(0x7fb13b83,0x6e003749,0x07a02b94);
+#endif
+
+// 2013-04-24aRagexe, 2013-04-24aRagexeRE
+#if PACKETVER == 20130424
+	packetKeys(0x79f679f6,0x79f679f6,0x79f679f6);
+#endif
+
+// 2013-05-02aRagexe, 2013-05-02aRagexeRE, 2013-05-02bRagexe
+#if PACKETVER == 20130502
+	packetKeys(0x62e733b9,0x62204281,0x7f044dca);
+#endif
+
+// 2013-05-08bRagexe, 2013-05-08bRagexeRE, 2013-05-08cRagexe, 2013-05-08dRagexe, 2013-05-08eRagexe, 2013-05-08fRagexe
+#if PACKETVER == 20130508
+	packetKeys(0x25421e49,0x175200ba,0x6c0b5239);
+#endif
+
+// 2013-05-15aRagexe, 2013-05-15aRagexeRE
+#if PACKETVER == 20130515
+	packetKeys(0x75794a38,0x58a96bc1,0x296e6fb8);
+#endif
+
+// 2013-05-22aRagexe, 2013-05-22aRagexeRE
+#if PACKETVER == 20130522
+	packetKeys(0x6948050b,0x06511d9d,0x725d4df1);
+#endif
+
+// 2013-05-29aRagexe, 2013-05-29aRagexeRE
+#if PACKETVER == 20130529
+	packetKeys(0x023a6c87,0x14bf1f1e,0x5cc70cc9);
+#endif
+
+// 2013-06-05aRagexe, 2013-06-05bRagexe, 2013-06-05cRagexeRE
+#if PACKETVER == 20130605
+	packetKeys(0x646e08d9,0x5f153ab5,0x61b509b5);
+#endif
+
+// 2013-06-12aRagexe, 2013-06-12bRagexe, 2013-06-12bRagexeRE, 2013-06-12cRagexe, 2013-06-12dRagexe, 2013-06-12eRagexe
+#if PACKETVER == 20130612
+	packetKeys(0x6d166f66,0x3c000fcf,0x295b0fcb);
+#endif
+
+// 2013-06-18#1aRagexe, 2013-06-18#1aRagexeRE
+#if PACKETVER == 20130618
+	packetKeys(0x434115de,0x34a10fe9,0x6791428e);
+#endif
+
+// 2013-06-26_3bRagexeRE, 2013-06-26_3cRagexe, 2013-06-26aRagexeRE, 2013-06-26bRagexe
+#if PACKETVER == 20130626
+	packetKeys(0x38f453ef,0x6a040fd8,0x65bd6668);
+#endif
+
+// 2013-07-03aRagexe, 2013-07-03bRagexeRE
+#if PACKETVER == 20130703
+	packetKeys(0x4ff90e23,0x0f1432f2,0x4cfa1eda);
+#endif
+
+// 2013-07-10aRagexeRE, 2013-07-10bRagexe, 2013-07-10bRagexeRE, 2013-07-10cRagexeRE, 2013-07-10dRagexeRE, 2013-07-10eRagexeRE
+#if PACKETVER == 20130710
+	packetKeys(0x4a9c4237,0x4ccf3f8f,0x458f758f);
+#endif
+
+// 2013-07-17cRagexe, 2013-07-17cRagexeRE, 2013-07-17dRagexeRE, 2013-07-17eRagexeRE
+#if PACKETVER == 20130717
+	packetKeys(0x5ee5520c,0x5f9e00cf,0x2bed4f91);
+#endif
+
+// 2013-07-24eRagexe, 2013-07-24eRagexeRE, 2013-07-24fRagexeRE
+#if PACKETVER == 20130724
+	packetKeys(0x3c243bf5,0x42cc4e2f,0x02106ec6);
+#endif
+
+// 2013-07-31cRagexe, 2013-07-31cRagexeRE
+#if PACKETVER == 20130731
+	packetKeys(0x1e9d11a6,0x21a232b8,0x6a9e02b7);
+#endif
+
+// 2013-08-07aRagexe, 2013-08-07aRagexeRE
+#if PACKETVER == 20130807
+	packetKeys(0x7e241de0,0x5e805580,0x3d807d80);
+#endif
+
+// 2013-08-14aRagexe, 2013-08-14aRagexeRE
+#if PACKETVER == 20130814
+	packetKeys(0x23a23148,0x0c41420e,0x53785ad7);
+#endif
+
+// 2013-08-21bRagexe, 2013-08-21dRagexeRE
+#if PACKETVER == 20130821
+	packetKeys(0x51673f38,0x01663512,0x5cff0b3d);
+#endif
+
+// 2013-08-28bRagexe, 2013-08-28bRagexeRE, 2013-08-28cRagexe, 2013-08-28cRagexeRE
+#if PACKETVER == 20130828
+	packetKeys(0x02ef7a9a,0x4882042f,0x76796678);
+#endif
+
+// 2013-09-04aRagexe, 2013-09-04bRagexeRE
+#if PACKETVER == 20130904
+	packetKeys(0x41af20c5,0x0997799e,0x4ae803a0);
+#endif
+
+// 2013-09-11aRagexe, 2013-09-11aRagexeRE, 2013-09-11bRagexe, 2013-09-11bRagexeRE
+#if PACKETVER == 20130911
+	packetKeys(0x232b3f47,0x0ad0515f,0x1ca31828);
+#endif
+
+// 2013-09-17aRagexe, 2013-09-17aRagexeRE
+#if PACKETVER == 20130917
+	packetKeys(0x5c9164c5,0x32b62f83,0x52864548);
+#endif
+
+// 2013-09-25aRagexe, 2013-09-25aRagexeRE, 2013-09-25bRagexe, 2013-09-25bRagexeRE, 2013-09-25cRagexe
+#if PACKETVER == 20130925
+	packetKeys(0x4b9c279a,0x0c7849c4,0x72a77646);
+#endif
+
+// 2013-10-02aRagexe, 2013-10-02aRagexeRE
+#if PACKETVER == 20131002
+	packetKeys(0x63a466f7,0x635362f3,0x41f369f3);
+#endif
+
+// 2013-10-08aRagexe, 2013-10-08bRagexeRE
+#if PACKETVER == 20131008
+	packetKeys(0x64924aad,0x08ca0445,0x1cbc36de);
+#endif
+
+// 2013-10-16aRagexe, 2013-10-16aRagexeRE, 2013-10-16bRagexe, 2013-10-16bRagexeRE
+#if PACKETVER == 20131016
+	packetKeys(0x33ad7a93,0x720c7c49,0x12c4205a);
+#endif
+
+// 2013-10-23aRagexe, 2013-10-23aRagexeRE
+#if PACKETVER == 20131023
+	packetKeys(0x02ef6163,0x2b774814,0x58ec3036);
+#endif
+
+// 2013-10-30aRagexe, 2013-10-30aRagexeRE
+#if PACKETVER == 20131030
+	packetKeys(0x4a6a3eff,0x7e2d5237,0x01ca019e);
+#endif
+
+// 2013-11-06aRagexe, 2013-11-06aRagexeRE, 2013-11-07aRagexe, 2013-11-07bRagexe, 2013-11-07cRagexe, 2013-11-08aRagexe
+#if PACKETVER == 20131106 || \
+    PACKETVER == 20131107 || \
+    PACKETVER == 20131108
+	packetKeys(0x143e528f,0x5ca05899,0x44b85b23);
+#endif
+
+// 2013-11-13aRagexeRE, 2013-11-13bRagexe
+#if PACKETVER == 20131113
+	packetKeys(0x44ea14cd,0x49311c88,0x40c86c31);
+#endif
+
+// 2013-11-20dRagexe, 2013-11-20eRagexeRE
+#if PACKETVER == 20131120
+	packetKeys(0x541e5172,0x1b1d30a0,0x28aa7ce5);
+#endif
+
+// 2013-11-27aRagexeRE, 2013-11-27bRagexe, 2013-11-27bRagexeRE
+#if PACKETVER == 20131127
+	packetKeys(0x21426a48,0x5c505d6a,0x046d06ad);
+#endif
+
+// 2013-12-04dRagexeRE, 2013-12-04eRagexe, 2013-12-04eRagexeRE
+#if PACKETVER == 20131204
+	packetKeys(0x792760b2,0x5af45387,0x36165603);
+#endif
+
+// 2013-12-11cRagexe, 2013-12-11cRagexeRE, 2013-12-11dRagexe, 2013-12-11eRagexeRE
+#if PACKETVER == 20131211
+	packetKeys(0x55b0394e,0x4d341ff2,0x60bc1dc3);
+#endif
+
+// 2013-12-18aRagexeRE, 2013-12-18bRagexe
+#if PACKETVER == 20131218
+	packetKeys(0x6a596301,0x76866d0e,0x32294a45);
 #endif
 
 // 2013-12-23bRagexe, 2013-12-23bRagexeRE, 2013-12-23cRagexe, 2013-12-23xRagexeRE
 #if PACKETVER == 20131223
-	packetKeys(0x631C511C,0x111C111C,0x111C111C);
+	packetKeys(0x631c511c,0x111c111c,0x111c111c);
 #endif
 
 // 2013-12-30aRagexe, 2013-12-30aRagexeRE
 #if PACKETVER == 20131230
-	packetKeys(0x611B7097,0x01F957A1,0x768A0FCB);
+	packetKeys(0x611b7097,0x01f957a1,0x768a0fcb);
 #endif
 
 // 2014-01-08bRagexeRE, 2014-01-08cRagexe, 2014-01-08cRagexeRE, 2014-01-08dRagexe
 #if PACKETVER == 20140108
-	packetKeys(0x4A1E26F2,0x231E7EFE,0x61FE19FE);
+	packetKeys(0x4a1e26f2,0x231e7efe,0x61fe19fe);
 #endif
 
 // 2014-01-15aRagexe, 2014-01-15bRagexe, 2014-01-15cRagexe, 2014-01-15cRagexeRE, 2014-01-15dRagexeRE, 2014-01-15eRagexe, 2014-01-15eRagexeRE
 #if PACKETVER == 20140115
-	packetKeys(0x63224335,0x0F3A1F27,0x6D217B24);
+	packetKeys(0x63224335,0x0f3a1f27,0x6d217b24);
 #endif
 
 // 2014-01-22aRagexe, 2014-01-22aRagexeRE
 #if PACKETVER == 20140122
-	packetKeys(0x6123177B,0x05B42C99,0x71702594);
+	packetKeys(0x6123177b,0x05b42c99,0x71702594);
 #endif
 
 // 2014-01-29aRagexe, 2014-01-29bRagexeRE, 2014-01-29cRagexe
 #if PACKETVER == 20140129
-	packetKeys(0x2E52163C,0x605E518B,0x3C7A62CB);
+	packetKeys(0x2e52163c,0x605e518b,0x3c7a62cb);
 #endif
 
 // 2014-02-05bRagexe, 2014-02-05bRagexeRE
 #if PACKETVER == 20140205
-	packetKeys(0x63DC7BDC,0x7BDC7BDC,0x7BDC7BDC);
+	packetKeys(0x63dc7bdc,0x7bdc7bdc,0x7bdc7bdc);
 #endif
 
 // 2014-02-12aRagexe, 2014-02-12aRagexeRE
 #if PACKETVER == 20140212
-	packetKeys(0x46837074,0x65292E89,0x77237F9C);
+	packetKeys(0x46837074,0x65292e89,0x77237f9c);
 #endif
 
 // 2014-02-19aRagexe, 2014-02-19aRagexeRE, 2014-02-19bRagexeRE
 #if PACKETVER == 20140219
-	packetKeys(0x4E3C5327,0x3A6B5469,0x2CE36AED);
+	packetKeys(0x4e3c5327,0x3a6b5469,0x2ce36aed);
 #endif
 
 // 2014-02-26aRagexe, 2014-02-26aRagexeRE, 2014-02-26bRagexeRE
 #if PACKETVER == 20140226
-	packetKeys(0x36D71056,0x52122F5E,0x6FF76E99);
+	packetKeys(0x36d71056,0x52122f5e,0x6ff76e99);
 #endif
 
 // 2014-03-05aRagexe, 2014-03-05aRagexeRE, 2014-03-05bRagexe, 2014-03-05bRagexeRE
 #if PACKETVER == 20140305
-	packetKeys(0x116763F2,0x41117DAC,0x7FD13C45);
+	packetKeys(0x116763f2,0x41117dac,0x7fd13c45);
 #endif
 
 // 2014-03-12bRagexeRE, 2014-03-12dRagexe
 #if PACKETVER == 20140312
-	packetKeys(0x48911E4E,0x58CB2EB3,0x05232619);
+	packetKeys(0x48911e4e,0x58cb2eb3,0x05232619);
 #endif
 
 // 2014-03-19aRagexe, 2014-03-19aRagexeRE
 #if PACKETVER == 20140319
-	packetKeys(0x3DA44383,0x1ABB165F,0x5B6846B9);
+	packetKeys(0x3da44383,0x1abb165f,0x5b6846b9);
 #endif
 
 // 2014-03-26aRagexe, 2014-03-26cRagexeRE
 #if PACKETVER == 20140326
-	packetKeys(0x68E72AF6,0x27DB4C3D,0x348F2677);
+	packetKeys(0x68e72af6,0x27db4c3d,0x348f2677);
 #endif
 
 // 2014-04-02eRagexeRE, 2014-04-02fRagexe, 2014-04-02fRagexeRE, 2014-04-02gRagexe
 #if PACKETVER == 20140402
-	packetKeys(0x15D3271C,0x004D725B,0x111A3A37);
+	packetKeys(0x15d3271c,0x004d725b,0x111a3a37);
 #endif
 
 // 2014-04-09aRagexe, 2014-04-09aRagexeRE, 2014-04-09bRagexe
 #if PACKETVER == 20140409
-	packetKeys(0x7F6C390F,0x139C254C,0x7F25708C);
+	packetKeys(0x7f6c390f,0x139c254c,0x7f25708c);
 #endif
 
 // 2014-04-16aRagexe, 2014-04-16aRagexeRE, 2014-04-16bRagexe
@@ -996,464 +1054,464 @@
 
 // 2014-04-23aRagexe, 2014-04-23aRagexeRE
 #if PACKETVER == 20140423
-	packetKeys(0x7E0D6B56,0x74673CD3,0x2EBA4940);
+	packetKeys(0x7e0d6b56,0x74673cd3,0x2eba4940);
 #endif
 
 // 2014-04-30aRagexe, 2014-04-30aRagexeRE
 #if PACKETVER == 20140430
-	packetKeys(0x400145D8,0x3FE50155,0x11624F70);
+	packetKeys(0x400145d8,0x3fe50155,0x11624f70);
 #endif
 
 // 2014-05-08bRagexe, 2014-05-08bRagexeRE
 #if PACKETVER == 20140508
-	packetKeys(0x087E57EC,0x25224F4A,0x024F12C6);
+	packetKeys(0x087e57ec,0x25224f4a,0x024f12c6);
 #endif
 
 // 2014-05-14bRagexe, 2014-05-14bRagexeRE, 2014-05-14cRagexeRE
 #if PACKETVER == 20140514
-	packetKeys(0x4BE46730,0x047926E0,0x37773BBB);
+	packetKeys(0x4be46730,0x047926e0,0x37773bbb);
 #endif
 
 // 2014-05-21aRagexeRE, 2014-05-21bRagexe
 #if PACKETVER == 20140521
-	packetKeys(0x14ED2D86,0x17371C33,0x2D0473C8);
+	packetKeys(0x14ed2d86,0x17371c33,0x2d0473c8);
 #endif
 
 // 2014-05-28aRagexe, 2014-05-28aRagexeRE
 #if PACKETVER == 20140528
-	packetKeys(0x579445EB,0x26734878,0x7C861628);
+	packetKeys(0x579445eb,0x26734878,0x7c861628);
 #endif
 
 // 2014-06-05aRagexe, 2014-06-05aRagexeRE, 2014-06-05bRagexe
 #if PACKETVER == 20140605
-	packetKeys(0x5ABC4223,0x04DD2636,0x0D5850E0);
+	packetKeys(0x5abc4223,0x04dd2636,0x0d5850e0);
 #endif
 
 // 2014-06-11bRagexeRE, 2014-06-11cRagexe, 2014-06-11dRagexe, 2014-06-11hRagexe, 2014-06-12aRagexe, 2014-06-13aRagexe
 #if PACKETVER == 20140611 || \
     PACKETVER == 20140612 || \
     PACKETVER == 20140613
-	packetKeys(0x4FC83479,0x3AB04D1F,0x477B4010);
+	packetKeys(0x4fc83479,0x3ab04d1f,0x477b4010);
 #endif
 
 // 2014-06-18aRagexe, 2014-06-18cRagexeRE
 #if PACKETVER == 20140618
-	packetKeys(0x2DB507BB,0x11BA12E7,0x7F447760);
+	packetKeys(0x2db507bb,0x11ba12e7,0x7f447760);
 #endif
 
 // 2014-06-25aRagexe, 2014-06-25aRagexeRE, 2014-06-25bRagexe
 #if PACKETVER == 20140625
-	packetKeys(0x09987045,0x644B1051,0x1A091CB8);
+	packetKeys(0x09987045,0x644b1051,0x1a091cb8);
 #endif
 
 // 2014-07-02aRagexe, 2014-07-02aRagexeRE
 #if PACKETVER == 20140702
-	packetKeys(0x5C4574F4,0x5D446386,0x48BD24C9);
+	packetKeys(0x5c4574f4,0x5d446386,0x48bd24c9);
 #endif
 
 // 2014-07-09aRagexe, 2014-07-09aRagexeRE
 #if PACKETVER == 20140709
-	packetKeys(0x2C7A6E92,0x324F1B85,0x29916FC2);
+	packetKeys(0x2c7a6e92,0x324f1b85,0x29916fc2);
 #endif
 
 // 2014-07-16aRagexe, 2014-07-16aRagexeRE, 2014-07-16bRagexe, 2014-07-16cRagexe
 #if PACKETVER == 20140716
-	packetKeys(0x0EB20408,0x6D6C4292,0x4F6E4CF3);
+	packetKeys(0x0eb20408,0x6d6c4292,0x4f6e4cf3);
 #endif
 
 // 2014-07-23aRagexe, 2014-07-23aRagexeRE, 2014-07-23bRagexe, 2014-07-23bRagexeRE
 #if PACKETVER == 20140723
-	packetKeys(0x42A21713,0x51CE6EAD,0x102F7B0B);
+	packetKeys(0x42a21713,0x51ce6ead,0x102f7b0b);
 #endif
 
 // 2014-07-30aRagexe, 2014-07-30bRagexeRE
 #if PACKETVER == 20140730
-	packetKeys(0x63CE4E53,0x04F969A3,0x690954DB);
+	packetKeys(0x63ce4e53,0x04f969a3,0x690954db);
 #endif
 
 // 2014-08-06aRagexe, 2014-08-06aRagexeRE, 2014-08-06bRagexe
 #if PACKETVER == 20140806
-	packetKeys(0x0D5B69AC,0x3C001F20,0x0C201420);
+	packetKeys(0x0d5b69ac,0x3c001f20,0x0c201420);
 #endif
 
 // 2014-08-13aRagexe, 2014-08-13aRagexeRE, 2014-08-13bRagexe, 2014-08-14aRagexe
 #if PACKETVER == 20140813 || \
     PACKETVER == 20140814
-	packetKeys(0x7AD51E0A,0x28C72C46,0x210205BD);
+	packetKeys(0x7ad51e0a,0x28c72c46,0x210205bd);
 #endif
 
 // 2014-08-20aRagexe, 2014-08-20aRagexeRE
 #if PACKETVER == 20140820
-	packetKeys(0x374F15D0,0x64C87DEC,0x65CE2A41);
+	packetKeys(0x374f15d0,0x64c87dec,0x65ce2a41);
 #endif
 
 // 2014-08-27aRagexe, 2014-08-27aRagexeRE
 #if PACKETVER == 20140827
-	packetKeys(0x53814CA2,0x27DE193E,0x503E683E);
+	packetKeys(0x53814ca2,0x27de193e,0x503e683e);
 #endif
 
 // 2014-09-03aRagexe, 2014-09-03aRagexeRE
 #if PACKETVER == 20140903
-	packetKeys(0x2F386F34,0x0F935365,0x76A43888);
+	packetKeys(0x2f386f34,0x0f935365,0x76a43888);
 #endif
 
 // 2014-09-17aRagexe, 2014-09-17cRagexeRE
 #if PACKETVER == 20140917
-	packetKeys(0x180118EA,0x440134CF,0x3A99179D);
+	packetKeys(0x180118ea,0x440134cf,0x3a99179d);
 #endif
 
 // 2014-09-24bRagexeRE, 2014-09-24cRagexe, 2014-09-24cRagexeRE
 #if PACKETVER == 20140924
-	packetKeys(0x6F5222D8,0x593B798C,0x4CBD655E);
+	packetKeys(0x6f5222d8,0x593b798c,0x4cbd655e);
 #endif
 
 // 2014-10-01aRagexe, 2014-10-01bRagexeRE, 2014-10-01cRagexeRE
 #if PACKETVER == 20141001
-	packetKeys(0x6D882C11,0x7DF959E2,0x4F3F60E8);
+	packetKeys(0x6d882c11,0x7df959e2,0x4f3f60e8);
 #endif
 
 // 2014-10-08aRagexe, 2014-10-08bRagexe, 2014-10-08bRagexeRE, 2014-10-08cRagexe, 2014-10-08cRagexeRE, 2014-10-08dRagexe
 #if PACKETVER == 20141008
-	packetKeys(0x754365B3,0x36B326B3,0x26B326B3);
+	packetKeys(0x754365b3,0x36b326b3,0x26b326b3);
 #endif
 
 // 2014-10-15bRagexe, 2014-10-15bRagexeRE, 2014-10-15cRagexe, 2014-10-15dRagexe, 2014-10-16aRagexe, 2014-10-16aRagexeRE
 #if PACKETVER == 20141015 || \
     PACKETVER == 20141016
-	packetKeys(0x2DFF467C,0x444B37EE,0x2C1B634F);
+	packetKeys(0x2dff467c,0x444b37ee,0x2c1b634f);
 #endif
 
 // 2014-10-22aRagexeRE, 2014-10-22bRagexe
 #if PACKETVER == 20141022
-	packetKeys(0x290551EA,0x2B952C75,0x2D67669B);
+	packetKeys(0x290551ea,0x2b952c75,0x2d67669b);
 #endif
 
 // 2014-10-29aRagexe, 2014-10-29aRagexeRE
 #if PACKETVER == 20141029
-	packetKeys(0x1AFD581D,0x2E1D4E1D,0x4E1D4E1D);
+	packetKeys(0x1afd581d,0x2e1d4e1d,0x4e1d4e1d);
 #endif
 
 // 2014-11-05aRagexe, 2014-11-05aRagexeRE, 2014-11-05bRagexe, 2014-11-05bRagexeRE
 #if PACKETVER == 20141105
-	packetKeys(0x7F310819,0x5FF45401,0x2D303DD9);
+	packetKeys(0x7f310819,0x5ff45401,0x2d303dd9);
 #endif
 
 // 2014-11-12aRagexeRE, 2014-11-12cRagexe, 2014-11-12dRagexe
 #if PACKETVER == 20141112
-	packetKeys(0x430C0C27,0x067153CF,0x5E5439A9);
+	packetKeys(0x430c0c27,0x067153cf,0x5e5439a9);
 #endif
 
 // 2014-11-19bRagexeRE, 2014-11-19dRagexe
 #if PACKETVER == 20141119
-	packetKeys(0x7A7E7EDE,0x24EB02E3,0x71603607);
+	packetKeys(0x7a7e7ede,0x24eb02e3,0x71603607);
 #endif
 
 // 2014-11-26aRagexe, 2014-11-26aRagexeRE, 2014-11-26bRagexe, 2014-11-26bRagexeRE, 2014-11-26cRagexe, 2014-11-26cRagexeRE, 2014-11-26dRagexe, 2014-11-26dRagexeRE, 2014-11-26eRagexeRE
 #if PACKETVER == 20141126
-	packetKeys(0x01E14C42,0x56D73044,0x4B3278DF);
+	packetKeys(0x01e14c42,0x56d73044,0x4b3278df);
 #endif
 
 // 2014-12-03aRagexe, 2014-12-03aRagexeRE
 #if PACKETVER == 20141203
-	packetKeys(0x66CB52E4,0x1EB84093,0x33563E18);
+	packetKeys(0x66cb52e4,0x1eb84093,0x33563e18);
 #endif
 
 // 2014-12-10bRagexe, 2014-12-10cRagexe, 2014-12-10cRagexeRE
 #if PACKETVER == 20141210
-	packetKeys(0x0B0B1DD3,0x26EF1797,0x4F40370B);
+	packetKeys(0x0b0b1dd3,0x26ef1797,0x4f40370b);
 #endif
 
 // 2014-12-17aRagexe, 2014-12-17aRagexeRE
 #if PACKETVER == 20141217
-	packetKeys(0x01AB478C,0x0FDE58F2,0x1DAC7303);
+	packetKeys(0x01ab478c,0x0fde58f2,0x1dac7303);
 #endif
 
 // 2014-12-23cRagexeRE, 2014-12-24aRagexe
 #if PACKETVER == 20141223 || \
     PACKETVER == 20141224
-	packetKeys(0x2E8936E6,0x34463C46,0x67CD3885);
+	packetKeys(0x2e8936e6,0x34463c46,0x67cd3885);
 #endif
 
 // 2014-12-31aRagexe, 2014-12-31aRagexeRE
 #if PACKETVER == 20141231
-	packetKeys(0x154C347E,0x54B26512,0x52126A12);
+	packetKeys(0x154c347e,0x54b26512,0x52126a12);
 #endif
 
 // 2015-01-07aRagexe, 2015-01-07aRagexeRE
 #if PACKETVER == 20150107
-	packetKeys(0x6C494A14,0x4DDB6427,0x3E6D7B65);
+	packetKeys(0x6c494a14,0x4ddb6427,0x3e6d7b65);
 #endif
 
 // 2015-01-14aRagexe, 2015-01-14aRagexeRE, 2015-01-14bRagexe, 2015-01-14cRagexe, 2015-01-14dRagexe
 #if PACKETVER == 20150114
-	packetKeys(0x21C96102,0x13142934,0x1ABF4EA3);
+	packetKeys(0x21c96102,0x13142934,0x1abf4ea3);
 #endif
 
 // 2015-01-21aRagexe, 2015-01-21aRagexeRE, 2015-01-21bRagexeRE
 #if PACKETVER == 20150121
-	packetKeys(0x0B9D2AF5,0x658A3346,0x379E3654);
+	packetKeys(0x0b9d2af5,0x658a3346,0x379e3654);
 #endif
 
 // 2015-01-28aRagexe, 2015-01-28aRagexeRE, 2015-01-29aRagexe, 2015-01-30aRagexe
 #if PACKETVER == 20150128 || \
     PACKETVER == 20150129 || \
     PACKETVER == 20150130
-	packetKeys(0x77CA2D55,0x28B608F0,0x75B47957);
+	packetKeys(0x77ca2d55,0x28b608f0,0x75b47957);
 #endif
 
 // 2015-02-04aRagexe, 2015-02-04cRagexeRE
 #if PACKETVER == 20150204
-	packetKeys(0x134529DB,0x5B4F6CEF,0x29EF11EF);
+	packetKeys(0x134529db,0x5b4f6cef,0x29ef11ef);
 #endif
 
 // 2015-02-11aRagexe, 2015-02-11aRagexeRE
 #if PACKETVER == 20150211
-	packetKeys(0x33911A25,0x1E6945FD,0x7385623A);
+	packetKeys(0x33911a25,0x1e6945fd,0x7385623a);
 #endif
 
 // 2015-02-17aRagexe, 2015-02-17aRagexeRE
 #if PACKETVER == 20150217
-	packetKeys(0x731B731B,0x731B731B,0x731B731B);
+	packetKeys(0x731b731b,0x731b731b,0x731b731b);
 #endif
 
 // 2015-02-25aRagexeRE, 2015-02-25bRagexeRE, 2015-02-25cRagexeRE, 2015-02-25dRagexeRE, 2015-02-25eRagexe, 2015-02-25eRagexeRE, 2015-02-25fRagexe, 2015-02-25gRagexe, 2015-02-25iRagexe, 2015-02-25jRagexe, 2015-02-26aRagexe, 2015-02-26aRagexeRE
 #if PACKETVER == 20150225 || \
     PACKETVER == 20150226
-	packetKeys(0x57FD4B7B,0x19CC16FB,0x0D255D72);
+	packetKeys(0x57fd4b7b,0x19cc16fb,0x0d255d72);
 #endif
 
 // 2015-03-04aRagexe, 2015-03-04aRagexeRE, 2015-03-04bRagexeRE
 #if PACKETVER == 20150304
-	packetKeys(0x1A657B1C,0x7E1806E7,0x55396A5C);
+	packetKeys(0x1a657b1c,0x7e1806e7,0x55396a5c);
 #endif
 
 // 2015-03-11aRagexe, 2015-03-11aRagexeRE, 2015-03-11bRagexe, 2015-03-11bRagexeRE
 #if PACKETVER == 20150311
-	packetKeys(0x48C45D97,0x06CE09B0,0x5836642F);
+	packetKeys(0x48c45d97,0x06ce09b0,0x5836642f);
 #endif
 
 // 2015-03-18aRagexe, 2015-03-18aRagexeRE, 2015-03-18bRagexe, 2015-03-18bRagexeRE, 2015-03-18cRagexeRE
 #if PACKETVER == 20150318
-	packetKeys(0x1B3738E7,0x0AD4238F,0x7D252A1F);
+	packetKeys(0x1b3738e7,0x0ad4238f,0x7d252a1f);
 #endif
 
 // 2015-03-25aRagexe, 2015-03-25bRagexeRE, 2015-03-25cRagexeRE
 #if PACKETVER == 20150325
-	packetKeys(0x68F62B8C,0x337C3468,0x38FC0AC7);
+	packetKeys(0x68f62b8c,0x337c3468,0x38fc0ac7);
 #endif
 
 // 2015-04-01aRagexe, 2015-04-01bRagexeRE
 #if PACKETVER == 20150401
-	packetKeys(0x207F3A08,0x57E6160C,0x02A60382);
+	packetKeys(0x207f3a08,0x57e6160c,0x02a60382);
 #endif
 
 // 2015-04-08aRagexe, 2015-04-08aRagexeRE
 #if PACKETVER == 20150408
-	packetKeys(0x39812C9D,0x23DA516E,0x59A33DD2);
+	packetKeys(0x39812c9d,0x23da516e,0x59a33dd2);
 #endif
 
 // 2015-04-15aRagexe, 2015-04-15aRagexeRE
 #if PACKETVER == 20150415
-	packetKeys(0x7EC44F6A,0x7DE57139,0x60DA5436);
+	packetKeys(0x7ec44f6a,0x7de57139,0x60da5436);
 #endif
 
 // 2015-04-22aRagexe, 2015-04-22aRagexeRE
 #if PACKETVER == 20150422
-	packetKeys(0x10D22CE2,0x69E279E2,0x79E279E2);
+	packetKeys(0x10d22ce2,0x69e279e2,0x79e279e2);
 #endif
 
 // 2015-04-29aRagexe, 2015-04-29aRagexeRE
 #if PACKETVER == 20150429
-	packetKeys(0x2BF61A71,0x565D5DDF,0x0FB90019);
+	packetKeys(0x2bf61a71,0x565d5ddf,0x0fb90019);
 #endif
 
 // 2015-05-07bRagexe, 2015-05-07bRagexeRE, 2015-05-07cRagexe
 #if PACKETVER == 20150507
-	packetKeys(0x55B54373,0x58967821,0x67F41832);
+	packetKeys(0x55b54373,0x58967821,0x67f41832);
 #endif
 
 // 2015-05-13aRagexe, 2015-05-13aRagexeRE
 #if PACKETVER == 20150513
-	packetKeys(0x62C86D09,0x75944F17,0x112C133D);
+	packetKeys(0x62c86d09,0x75944f17,0x112c133d);
 #endif
 
 // 2015-05-20aRagexe, 2015-05-20aRagexeRE
 #if PACKETVER == 20150520
-	packetKeys(0x17430238,0x44DE585F,0x56A40616);
+	packetKeys(0x17430238,0x44de585f,0x56a40616);
 #endif
 
 // 2015-05-27aRagexe, 2015-05-27aRagexeRE
 #if PACKETVER == 20150527
-	packetKeys(0x35AE7BAE,0x3BAE3BAE,0x3BAE3BAE);
+	packetKeys(0x35ae7bae,0x3bae3bae,0x3bae3bae);
 #endif
 
 // 2015-06-03aRagexe, 2015-06-03bRagexeRE
 #if PACKETVER == 20150603
-	packetKeys(0x1DDD245D,0x309446E0,0x58E53F1F);
+	packetKeys(0x1ddd245d,0x309446e0,0x58e53f1f);
 #endif
 
 // 2015-06-10aRagexe, 2015-06-10aRagexeRE
 #if PACKETVER == 20150610
-	packetKeys(0x2FC406D3,0x7B3E32F5,0x02B80B47);
+	packetKeys(0x2fc406d3,0x7b3e32f5,0x02b80b47);
 #endif
 
 // 2015-06-17aRagexe, 2015-06-17aRagexeRE, 2015-06-18aRagexe, 2015-06-18aRagexeRE
 #if PACKETVER == 20150617 || \
     PACKETVER == 20150618
-	packetKeys(0x250F7E09,0x25416076,0x029A780E);
+	packetKeys(0x250f7e09,0x25416076,0x029a780e);
 #endif
 
 // 2015-06-24aRagexe, 2015-06-24aRagexeRE
 #if PACKETVER == 20150624
-	packetKeys(0x440B0E24,0x1BEA7A4C,0x2C646784);
+	packetKeys(0x440b0e24,0x1bea7a4c,0x2c646784);
 #endif
 
 // 2015-07-01bRagexe, 2015-07-01bRagexeRE, 2015-07-02aRagexe
 #if PACKETVER == 20150701 || \
     PACKETVER == 20150702
-	packetKeys(0x4DD55F9B,0x70C67B03,0x78C60DB6);
+	packetKeys(0x4dd55f9b,0x70c67b03,0x78c60db6);
 #endif
 
 // 2015-07-08bRagexeRE, 2015-07-08cRagexe, 2015-07-08cRagexeRE, 2015-07-08dRagexeRE
 #if PACKETVER == 20150708
-	packetKeys(0x451C5E19,0x5661750B,0x2F4644AC);
+	packetKeys(0x451c5e19,0x5661750b,0x2f4644ac);
 #endif
 
 // 2015-07-15aRagexe, 2015-07-15aRagexeRE
 #if PACKETVER == 20150715
-	packetKeys(0x1F805483,0x67745585,0x7FCE189C);
+	packetKeys(0x1f805483,0x67745585,0x7fce189c);
 #endif
 
 // 2015-07-22bRagexe, 2015-07-22bRagexeRE
 #if PACKETVER == 20150722
-	packetKeys(0x41FA53D4,0x2CF044E2,0x663A3F1D);
+	packetKeys(0x41fa53d4,0x2cf044e2,0x663a3f1d);
 #endif
 
 // 2015-07-29aRagexe, 2015-07-29aRagexeRE
 #if PACKETVER == 20150729
-	packetKeys(0x08EE40A9,0x206F3D7F,0x0AE37339);
+	packetKeys(0x08ee40a9,0x206f3d7f,0x0ae37339);
 #endif
 
 // 2015-08-05aRagexe, 2015-08-05dRagexeRE
 #if PACKETVER == 20150805
-	packetKeys(0x1C3F243F,0x243F243F,0x243F243F);
+	packetKeys(0x1c3f243f,0x243f243f,0x243f243f);
 #endif
 
 // 2015-08-12aRagexe, 2015-08-12aRagexeRE
 #if PACKETVER == 20150812
-	packetKeys(0x0B6F64A8,0x5BCC47EC,0x00EC08EC);
+	packetKeys(0x0b6f64a8,0x5bcc47ec,0x00ec08ec);
 #endif
 
 // 2015-08-19aRagexe, 2015-08-19aRagexeRE, 2015-08-19bRagexeRE
 #if PACKETVER == 20150819
-	packetKeys(0x1A2400E0,0x736E5686,0x10F315D5);
+	packetKeys(0x1a2400e0,0x736e5686,0x10f315d5);
 #endif
 
 // 2015-08-26aRagexe, 2015-08-26aRagexeRE, 2015-08-26bRagexe, 2015-08-26bRagexeRE
 #if PACKETVER == 20150826
-	packetKeys(0x77883C56,0x1829359F,0x0DE635B6);
+	packetKeys(0x77883c56,0x1829359f,0x0de635b6);
 #endif
 
 // 2015-09-02aRagexe, 2015-09-02aRagexeRE
 #if PACKETVER == 20150902
-	packetKeys(0x4EDB18C1,0x6B9355BA,0x38AA6239);
+	packetKeys(0x4edb18c1,0x6b9355ba,0x38aa6239);
 #endif
 
 // 2015-09-09aRagexe, 2015-09-09aRagexeRE
 #if PACKETVER == 20150909
-	packetKeys(0x19AB2BF0,0x04754299,0x48770736);
+	packetKeys(0x19ab2bf0,0x04754299,0x48770736);
 #endif
 
 // 2015-09-16aRagexe, 2015-09-16cRagexe, 2015-09-16cRagexeRE
 #if PACKETVER == 20150916
-	packetKeys(0x17F83A19,0x116944F4,0x1CC541E9);
+	packetKeys(0x17f83a19,0x116944f4,0x1cc541e9);
 #endif
 
 // 2015-09-23bRagexe, 2015-09-23bRagexeRE, 2015-09-23cRagexe, 2015-09-23dRagexe, 2015-09-23eRagexe, 2015-09-23eRagexeRE, 2015-09-23fRagexe, 2015-09-23fRagexeRE
 #if PACKETVER == 20150923
-	packetKeys(0x765742B9,0x22D61C2F,0x7DA94FB2);
+	packetKeys(0x765742b9,0x22d61c2f,0x7da94fb2);
 #endif
 
 // 2015-10-01aRagexe, 2015-10-01bRagexeRE
 #if PACKETVER == 20151001
-	packetKeys(0x5CFF4561,0x32514AD1,0x06D126D1);
+	packetKeys(0x5cff4561,0x32514ad1,0x06d126d1);
 #endif
 
 // 2015-10-07aRagexe, 2015-10-07aRagexeRE
 #if PACKETVER == 20151007
-	packetKeys(0x3C6447A8,0x032170D7,0x6490476C);
+	packetKeys(0x3c6447a8,0x032170d7,0x6490476c);
 #endif
 
 // 2015-10-14bRagexe, 2015-10-14bRagexeRE
 #if PACKETVER == 20151014
-	packetKeys(0x402728A8,0x5D0E309F,0x240018FD);
+	packetKeys(0x402728a8,0x5d0e309f,0x240018fd);
 #endif
 
 // 2015-10-21aRagexe, 2015-10-21aRagexeRE, 2015-10-22aRagexe, 2015-10-22aRagexeRE
 #if PACKETVER == 20151021 || \
     PACKETVER == 20151022
-	packetKeys(0x0311104D,0x46C326D6,0x00E82720);
+	packetKeys(0x0311104d,0x46c326d6,0x00e82720);
 #endif
 
 // 2015-10-28bRagexeRE, 2015-10-28bRagexeRE_2, 2015-10-28cRagexe, 2015-10-28cRagexeRE, 2015-10-28dRagexe, 2015-10-28dRagexeRE, 2015-10-29aRagexe, 2015-10-29aRagexeRE
 #if PACKETVER == 20151028 || \
     PACKETVER == 20151029
-	packetKeys(0x45B945B9,0x45B945B9,0x45B945B9);
+	packetKeys(0x45b945b9,0x45b945b9,0x45b945b9);
 #endif
 
 // 2015-11-04aRagexe, 2015-11-04aRagexeRE
 #if PACKETVER == 20151104
-	packetKeys(0x4C17382A,0x7ED174C9,0x29961E4F);
+	packetKeys(0x4c17382a,0x7ed174c9,0x29961e4f);
 #endif
 
 // 2015-11-11aRagexe, 2015-11-11aRagexeRE, 2015-11-11bRagexe
 #if PACKETVER == 20151111
-	packetKeys(0x46097C77,0x5F193871,0x29140A21);
+	packetKeys(0x46097c77,0x5f193871,0x29140a21);
 #endif
 
 // 2015-11-18aRagexe, 2015-11-18aRagexeRE
 #if PACKETVER == 20151118
-	packetKeys(0x734C3241,0x6E846F34,0x731C06D6);
+	packetKeys(0x734c3241,0x6e846f34,0x731c06d6);
 #endif
 
 // 2015-11-25bRagexe, 2015-11-25bRagexeRE, 2015-11-25cRagexeRE, 2015-11-25dRagexe, 2015-11-25dRagexeRE
 #if PACKETVER == 20151125
-	packetKeys(0x237446C0,0x5EFB343A,0x0EDF06C5);
+	packetKeys(0x237446c0,0x5efb343a,0x0edf06c5);
 #endif
 
 // 2015-12-02aRagexe, 2015-12-02bRagexeRE
 #if PACKETVER == 20151202
-	packetKeys(0x4EDE52DE,0x52DE52DE,0x52DE52DE);
+	packetKeys(0x4ede52de,0x52de52de,0x52de52de);
 #endif
 
 // 2015-12-09aRagexe, 2015-12-09aRagexeRE
 #if PACKETVER == 20151209
-	packetKeys(0x652C5898,0x7A351FB3,0x67EA2886);
+	packetKeys(0x652c5898,0x7a351fb3,0x67ea2886);
 #endif
 
 // 2015-12-16aRagexe, 2015-12-16aRagexeRE
 #if PACKETVER == 20151216
-	packetKeys(0x25DD643D,0x61AC39DE,0x77A8206D);
+	packetKeys(0x25dd643d,0x61ac39de,0x77a8206d);
 #endif
 
 // 2015-12-23bRagexe, 2015-12-23bRagexeRE
 #if PACKETVER == 20151223
-	packetKeys(0x347D68D0,0x2C705320,0x7B4A199D);
+	packetKeys(0x347d68d0,0x2c705320,0x7b4a199d);
 #endif
 
 // 2015-12-30aRagexe, 2015-12-30aRagexeRE
 #if PACKETVER == 20151230
-	packetKeys(0x54C51241,0x33883499,0x3CDA35F0);
+	packetKeys(0x54c51241,0x33883499,0x3cda35f0);
 #endif
 
 // 2016-01-06aRagexe, 2016-01-06aRagexeRE
 #if PACKETVER == 20160106
-	packetKeys(0x40520265,0x33FE26FC,0x7136294F);
+	packetKeys(0x40520265,0x33fe26fc,0x7136294f);
 #endif
 
 // 2016-01-13aRagexe, 2016-01-13aRagexeRE, 2016-01-13bRagexe, 2016-01-13bRagexeRE, 2016-01-13bRagexeRE_2, 2016-01-13bRagexe_2, 2016-01-13cRagexeRE
 #if PACKETVER == 20160113
-	packetKeys(0x18005C4B,0x19A94A72,0x73F678EC);
+	packetKeys(0x18005c4b,0x19a94a72,0x73f678ec);
 #endif
 
 // 2016-01-20aRagexe, 2016-01-20aRagexeRE
@@ -1463,549 +1521,549 @@
 
 // 2016-01-27aRagexeRE, 2016-01-27aRagexeRE_2, 2016-01-27bRagexeRE, 2016-01-27cRagexe, 2016-01-27dRagexe
 #if PACKETVER == 20160127
-	packetKeys(0x6B1E7146,0x612C47E6,0x274E56EE);
+	packetKeys(0x6b1e7146,0x612c47e6,0x274e56ee);
 #endif
 
 // 2016-02-03aRagexe, 2016-02-03aRagexeRE
 #if PACKETVER == 20160203
-	packetKeys(0x3E1411AF,0x6C744497,0x7CFA1BDE);
+	packetKeys(0x3e1411af,0x6c744497,0x7cfa1bde);
 #endif
 
 // 2016-02-11aRagexe, 2016-02-11aRagexeRE
 #if PACKETVER == 20160211
-	packetKeys(0x613813EA,0x05251DAB,0x1FD35E33);
+	packetKeys(0x613813ea,0x05251dab,0x1fd35e33);
 #endif
 
 // 2016-02-17aRagexe, 2016-02-17aRagexeRE, 2016-02-17bRagexeRE, 2016-02-17bRagexeRE_2, 2016-02-17cRagexeRE
 #if PACKETVER == 20160217
-	packetKeys(0x25895A8E,0x09421C19,0x763A2D7A);
+	packetKeys(0x25895a8e,0x09421c19,0x763a2d7a);
 #endif
 
 // 2016-02-24aRagexe, 2016-02-24aRagexeRE, 2016-02-24bRagexeRE
 #if PACKETVER == 20160224
-	packetKeys(0x7088019A,0x13471F02,0x42356A7D);
+	packetKeys(0x7088019a,0x13471f02,0x42356a7d);
 #endif
 
 // 2016-03-02bRagexe, 2016-03-02bRagexeRE
 #if PACKETVER == 20160302
-	packetKeys(0x7B4441B9,0x5BBC63AF,0x45DA0E71);
+	packetKeys(0x7b4441b9,0x5bbc63af,0x45da0e71);
 #endif
 
 // 2016-03-09aRagexeRE, 2016-03-09cRagexe
 #if PACKETVER == 20160309
-	packetKeys(0x21587520,0x353A7706,0x1B722B25);
+	packetKeys(0x21587520,0x353a7706,0x1b722b25);
 #endif
 
 // 2016-03-16aRagexe, 2016-03-16aRagexeRE, 2016-03-18aRagexe
 #if PACKETVER == 20160316 || \
     PACKETVER == 20160318
-	packetKeys(0x62363E36,0x3E363E36,0x3E363E36);
+	packetKeys(0x62363e36,0x3e363e36,0x3e363e36);
 #endif
 
 // 2016-03-23aRagexe, 2016-03-23aRagexeRE, 2016-03-23bRagexe, 2016-03-23bRagexeRE
 #if PACKETVER == 20160323
-	packetKeys(0x73E35A83,0x62142FA8,0x12BA36BD);
+	packetKeys(0x73e35a83,0x62142fa8,0x12ba36bd);
 #endif
 
 // 2016-03-30aRagexe, 2016-03-30aRagexeRE, 2016-03-30bRagexe
 #if PACKETVER == 20160330
-	packetKeys(0x02050940,0x545336FF,0x7E7D4902);
+	packetKeys(0x02050940,0x545336ff,0x7e7d4902);
 #endif
 
 // 2016-04-06aRagexe, 2016-04-06aRagexeRE, 2016-04-06bRagexe
 #if PACKETVER == 20160406
-	packetKeys(0x568611EA,0x32457D8D,0x2B020477);
+	packetKeys(0x568611ea,0x32457d8d,0x2b020477);
 #endif
 
 // 2016-04-14aRagexe, 2016-04-14aRagexeRE, 2016-04-14bRagexe, 2016-04-14bRagexeRE, 2016-04-14bRagexe_2, 2016-04-14cRagexe
 #if PACKETVER == 20160414
-	packetKeys(0x31BD479A,0x40C61398,0x397C1A80);
+	packetKeys(0x31bd479a,0x40c61398,0x397c1a80);
 #endif
 
 // 2016-04-20aRagexeRE, 2016-04-20cRagexe
 #if PACKETVER == 20160420
-	packetKeys(0x67D2163A,0x3068215B,0x4835474D);
+	packetKeys(0x67d2163a,0x3068215b,0x4835474d);
 #endif
 
 // 2016-04-27aRagexe, 2016-04-27aRagexeRE
 #if PACKETVER == 20160427
-	packetKeys(0x12DC378E,0x4E3E7EBE,0x0ABE2ABE);
+	packetKeys(0x12dc378e,0x4e3e7ebe,0x0abe2abe);
 #endif
 
 // 2016-05-04aRagexe, 2016-05-04aRagexeRE
 #if PACKETVER == 20160504
-	packetKeys(0x09E0544C,0x0231251D,0x2F4E195F);
+	packetKeys(0x09e0544c,0x0231251d,0x2f4e195f);
 #endif
 
 // 2016-05-11aRagexe, 2016-05-11aRagexeRE, 2016-05-11bRagexeRE
 #if PACKETVER == 20160511
-	packetKeys(0x3C666FE2,0x27E84E3E,0x53E11BA5);
+	packetKeys(0x3c666fe2,0x27e84e3e,0x53e11ba5);
 #endif
 
 // 2016-05-18aRagexe, 2016-05-18aRagexeRE
 #if PACKETVER == 20160518
-	packetKeys(0x57DB7CA1,0x1FEA1629,0x26DD244D);
+	packetKeys(0x57db7ca1,0x1fea1629,0x26dd244d);
 #endif
 
 // 2016-05-25aRagexe, 2016-05-25aRagexeRE, 2016-05-26aRagexe
 #if PACKETVER == 20160525 || \
     PACKETVER == 20160526
-	packetKeys(0x485C45B6,0x47DC6192,0x76B34A36);
+	packetKeys(0x485c45b6,0x47dc6192,0x76b34a36);
 #endif
 
 // 2016-06-01aRagexe, 2016-06-01aRagexeRE
 #if PACKETVER == 20160601
-	packetKeys(0x3DAD32C4,0x59F001BE,0x73F65E56);
+	packetKeys(0x3dad32c4,0x59f001be,0x73f65e56);
 #endif
 
 // 2016-06-08aRagexe, 2016-06-08aRagexeRE, 2016-06-08bRagexe, 2016-06-08bRagexeRE, 2016-06-09aRagexe
 #if PACKETVER == 20160608 || \
     PACKETVER == 20160609
-	packetKeys(0x11D74609,0x77C43E8A,0x44290F53);
+	packetKeys(0x11d74609,0x77c43e8a,0x44290f53);
 #endif
 
 // 2016-06-15aRagexe, 2016-06-15aRagexeRE
 #if PACKETVER == 20160615
-	packetKeys(0x062C5C26,0x6CF47E82,0x4DD53480);
+	packetKeys(0x062c5c26,0x6cf47e82,0x4dd53480);
 #endif
 
 // 2016-06-22aRagexe, 2016-06-22aRagexeRE
 #if PACKETVER == 20160622
-	packetKeys(0x426548AB,0x5C0F5DD4,0x03022710);
+	packetKeys(0x426548ab,0x5c0f5dd4,0x03022710);
 #endif
 
 // 2016-06-29aRagexe, 2016-06-29aRagexeRE, 2016-06-30aRagexe, 2016-06-30aRagexeRE
 #if PACKETVER == 20160629 || \
     PACKETVER == 20160630
-	packetKeys(0x0DF31CCC,0x54281606,0x5C4C6855);
+	packetKeys(0x0df31ccc,0x54281606,0x5c4c6855);
 #endif
 
 // 2016-07-06bRagexe, 2016-07-06cRagexeRE
 #if PACKETVER == 20160706
-	packetKeys(0x33A766D0,0x743F04F8,0x0FA0276C);
+	packetKeys(0x33a766d0,0x743f04f8,0x0fa0276c);
 #endif
 
 // 2016-07-13aRagexe, 2016-07-13aRagexeRE, 2016-07-13bRagexe, 2016-07-13bRagexeRE, 2016-07-13cRagexe, 2016-07-13dRagexe
 #if PACKETVER == 20160713
-	packetKeys(0x714F2495,0x7DDC6F32,0x3FD8533D);
+	packetKeys(0x714f2495,0x7ddc6f32,0x3fd8533d);
 #endif
 
 // 2016-07-20aRagexe, 2016-07-20aRagexeRE, 2016-07-20bRagexe, 2016-07-20bRagexeRE
 #if PACKETVER == 20160720
-	packetKeys(0x4F8A19C0,0x2D8E085C,0x37BB67D6);
+	packetKeys(0x4f8a19c0,0x2d8e085c,0x37bb67d6);
 #endif
 
 // 2016-07-27aRagexe, 2016-07-27aRagexeRE, 2016-07-27bRagexe, 2016-07-27bRagexeRE
 #if PACKETVER == 20160727
-	packetKeys(0x3C6952AB,0x26E4077F,0x37E25DF7);
+	packetKeys(0x3c6952ab,0x26e4077f,0x37e25df7);
 #endif
 
 // 2016-08-03bRagexe, 2016-08-03bRagexeRE
 #if PACKETVER == 20160803
-	packetKeys(0x67F438C2,0x512A4EB7,0x2D353182);
+	packetKeys(0x67f438c2,0x512a4eb7,0x2d353182);
 #endif
 
 // 2016-08-10aRagexe, 2016-08-10aRagexeRE
 #if PACKETVER == 20160810
-	packetKeys(0x2F252886,0x242234A2,0x48BC5032);
+	packetKeys(0x2f252886,0x242234a2,0x48bc5032);
 #endif
 
 // 2016-08-17aRagexe, 2016-08-17aRagexeRE
 #if PACKETVER == 20160817
-	packetKeys(0x675E6900,0x3F8E1D16,0x58D650E5);
+	packetKeys(0x675e6900,0x3f8e1d16,0x58d650e5);
 #endif
 
 // 2016-08-24aRagexe, 2016-08-24aRagexeRE
 #if PACKETVER == 20160824
-	packetKeys(0x2FA92FA9,0x2FA92FA9,0x2FA92FA9);
+	packetKeys(0x2fa92fa9,0x2fa92fa9,0x2fa92fa9);
 #endif
 
 // 2016-08-31aRagexe, 2016-08-31aRagexeRE, 2016-08-31bRagexe, 2016-08-31bRagexeRE
 #if PACKETVER == 20160831
-	packetKeys(0x564E13B0,0x7F680549,0x382D273B);
+	packetKeys(0x564e13b0,0x7f680549,0x382d273b);
 #endif
 
 // 2016-09-07aRagexe, 2016-09-07aRagexeRE
 #if PACKETVER == 20160907
-	packetKeys(0x32E5237D,0x57BD4DBD,0x5DBD5DBD);
+	packetKeys(0x32e5237d,0x57bd4dbd,0x5dbd5dbd);
 #endif
 
 // 2016-09-13aRagexe, 2016-09-13aRagexeRE
 #if PACKETVER == 20160913
-	packetKeys(0x7C79748F,0x1AA03B1D,0x6EAC4747);
+	packetKeys(0x7c79748f,0x1aa03b1d,0x6eac4747);
 #endif
 
 // 2016-09-21aRagexe, 2016-09-21bRagexeRE
 #if PACKETVER == 20160921
-	packetKeys(0x11CD15CD,0x15CD15CD,0x15CD15CD);
+	packetKeys(0x11cd15cd,0x15cd15cd,0x15cd15cd);
 #endif
 
 // 2016-09-28cRagexe, 2016-09-28cRagexeRE, 2016-09-28dRagexeRE
 #if PACKETVER == 20160928
-	packetKeys(0x2F8C67F5,0x22D42C38,0x57513774);
+	packetKeys(0x2f8c67f5,0x22d42c38,0x57513774);
 #endif
 
 // 2016-10-05aRagexe, 2016-10-05aRagexeRE
 #if PACKETVER == 20161005
-	packetKeys(0x5BAE21F8,0x021E2FFC,0x3BEB7C31);
+	packetKeys(0x5bae21f8,0x021e2ffc,0x3beb7c31);
 #endif
 
 // 2016-10-12aRagexe, 2016-10-12aRagexeRE
 #if PACKETVER == 20161012
-	packetKeys(0x5E2311F2,0x14FD012C,0x76EB64F6);
+	packetKeys(0x5e2311f2,0x14fd012c,0x76eb64f6);
 #endif
 
 // 2016-10-19aRagexe, 2016-10-19aRagexeRE
 #if PACKETVER == 20161019
-	packetKeys(0x34882F11,0x7C870E70,0x7E61350D);
+	packetKeys(0x34882f11,0x7c870e70,0x7e61350d);
 #endif
 
 // 2016-10-26bRagexe, 2016-10-26bRagexeRE, 2016-10-26cRagexe, 2016-10-26cRagexeRE
 #if PACKETVER == 20161026
-	packetKeys(0x2CB86AE6,0x7D12660E,0x1B004DEB);
+	packetKeys(0x2cb86ae6,0x7d12660e,0x1b004deb);
 #endif
 
 // 2016-11-02aRagexe, 2016-11-02aRagexeRE, 2016-11-03aRagexe, 2016-11-03aRagexeRE
 #if PACKETVER == 20161102 || \
     PACKETVER == 20161103
-	packetKeys(0x76725C17,0x72FE4EC1,0x07A91BFD);
+	packetKeys(0x76725c17,0x72fe4ec1,0x07a91bfd);
 #endif
 
 // 2016-11-09aRagexe, 2016-11-09aRagexeRE, 2016-11-09bRagexe, 2016-11-09bRagexeRE, 2016-11-09cRagexeRE, 2016-11-09dRagexeRE
 #if PACKETVER == 20161109
-	packetKeys(0x0A5277C0,0x2DB17506,0x0E8F26DA);
+	packetKeys(0x0a5277c0,0x2db17506,0x0e8f26da);
 #endif
 
 // 2016-11-16aRagexe, 2016-11-16bRagexeRE, 2016-11-16cRagexeRE
 #if PACKETVER == 20161116
-	packetKeys(0x780C5C3F,0x15E92272,0x2BA770C5);
+	packetKeys(0x780c5c3f,0x15e92272,0x2ba770c5);
 #endif
 
 // 2016-11-23aRagexe, 2016-11-23aRagexeRE
 #if PACKETVER == 20161123
-	packetKeys(0x66FF559F,0x00D3535B,0x236246F7);
+	packetKeys(0x66ff559f,0x00d3535b,0x236246f7);
 #endif
 
 // 2016-11-30aRagexe, 2016-11-30aRagexeRE, 2016-11-30bRagexe, 2016-11-30bRagexeRE
 #if PACKETVER == 20161130
-	packetKeys(0x2ED80296,0x0D837373,0x20266F9A);
+	packetKeys(0x2ed80296,0x0d837373,0x20266f9a);
 #endif
 
 // 2016-12-07cRagexe, 2016-12-07cRagexeRE, 2016-12-07dRagexeRE, 2016-12-07eRagexe, 2016-12-07eRagexeRE
 #if PACKETVER == 20161207
-	packetKeys(0x52D267AA,0x4FE42156,0x1292153E);
+	packetKeys(0x52d267aa,0x4fe42156,0x1292153e);
 #endif
 
 // 2016-12-14bRagexe, 2016-12-14bRagexeRE, 2016-12-14cRagexe, 2016-12-14cRagexeRE
 #if PACKETVER == 20161214
-	packetKeys(0x4DDE217B,0x07863AE0,0x5B591656);
+	packetKeys(0x4dde217b,0x07863ae0,0x5b591656);
 #endif
 
 // 2016-12-21aRagexe, 2016-12-21aRagexeRE, 2016-12-21bRagexe, 2016-12-21bRagexeRE, 2016-12-21cRagexeRE, 2016-12-21dRagexeRE
 #if PACKETVER == 20161221
-	packetKeys(0x69CB4F56,0x793C165E,0x673A2354);
+	packetKeys(0x69cb4f56,0x793c165e,0x673a2354);
 #endif
 
 // 2016-12-28aRagexe, 2016-12-28aRagexeRE
 #if PACKETVER == 20161228
-	packetKeys(0x09366971,0x005672F1,0x6F3712AE);
+	packetKeys(0x09366971,0x005672f1,0x6f3712ae);
 #endif
 
 // 2017-01-04aRagexe, 2017-01-04bRagexeRE
 #if PACKETVER == 20170104
-	packetKeys(0x44416BC3,0x6C8D1817,0x072D75D5);
+	packetKeys(0x44416bc3,0x6c8d1817,0x072d75d5);
 #endif
 
 // 2017-01-11aRagexe, 2017-01-11aRagexeRE
 #if PACKETVER == 20170111
-	packetKeys(0x19B637F9,0x0E9C378A,0x41673186);
+	packetKeys(0x19b637f9,0x0e9c378a,0x41673186);
 #endif
 
 // 2017-01-18aRagexe, 2017-01-18aRagexeRE
 #if PACKETVER == 20170118
-	packetKeys(0x456B36EB,0x15EB34B0,0x18C42E43);
+	packetKeys(0x456b36eb,0x15eb34b0,0x18c42e43);
 #endif
 
 // 2017-01-25aRagexe, 2017-01-25aRagexeRE
 #if PACKETVER == 20170125
-	packetKeys(0x066E04FE,0x3004224A,0x04FF0458);
+	packetKeys(0x066e04fe,0x3004224a,0x04ff0458);
 #endif
 
 // 2017-02-01aRagexe, 2017-02-01aRagexeRE
 #if PACKETVER == 20170201
-	packetKeys(0x2011228E,0x00453005,0x628E7F0A);
+	packetKeys(0x2011228e,0x00453005,0x628e7f0a);
 #endif
 
 // 2017-02-08aRagexeRE, 2017-02-08bRagexe, 2017-02-08bRagexeRE
 #if PACKETVER == 20170208
-	packetKeys(0x6A764E5F,0x0609570D,0x28AE07FA);
+	packetKeys(0x6a764e5f,0x0609570d,0x28ae07fa);
 #endif
 
 // 2017-02-15aRagexe, 2017-02-15aRagexeRE
 #if PACKETVER == 20170215
-	packetKeys(0x50C01315,0x51012A42,0x679E16C3);
+	packetKeys(0x50c01315,0x51012a42,0x679e16c3);
 #endif
 
 // 2017-02-22aRagexe, 2017-02-22aRagexeRE
 #if PACKETVER == 20170222
-	packetKeys(0x5A242F2F,0x6C556187,0x73C022CB);
+	packetKeys(0x5a242f2f,0x6c556187,0x73c022cb);
 #endif
 
 // 2017-02-28aRagexe, 2017-02-28aRagexeRE, 2017-02-28bRagexe
 #if PACKETVER == 20170228
-	packetKeys(0x771D4F2B,0x20EF1F4C,0x0D5135C8);
+	packetKeys(0x771d4f2b,0x20ef1f4c,0x0d5135c8);
 #endif
 
 // 2017-03-08aRagexe, 2017-03-08bRagexeRE
 #if PACKETVER == 20170308
-	packetKeys(0x653470A9,0x6B316A71,0x5C712C71);
+	packetKeys(0x653470a9,0x6b316a71,0x5c712c71);
 #endif
 
 // 2017-03-15cRagexe, 2017-03-15cRagexeRE
 #if PACKETVER == 20170315
-	packetKeys(0x399A0856,0x56642A94,0x7F77157D);
+	packetKeys(0x399a0856,0x56642a94,0x7f77157d);
 #endif
 
 // 2017-03-22aRagexe, 2017-03-22aRagexeRE, 2017-03-22bRagexe, 2017-03-22bRagexeRE
 #if PACKETVER == 20170322
-	packetKeys(0x2050167B,0x01731233,0x40337033);
+	packetKeys(0x2050167b,0x01731233,0x40337033);
 #endif
 
 // 2017-03-29bRagexe, 2017-03-29cRagexe, 2017-03-29cRagexeRE, 2017-03-29dRagexeRE
 #if PACKETVER == 20170329
-	packetKeys(0x18B31A80,0x1B0B1D56,0x16857D6A);
+	packetKeys(0x18b31a80,0x1b0b1d56,0x16857d6a);
 #endif
 
 // 2017-04-05bRagexe, 2017-04-05bRagexeRE, 2017-04-05cRagexe, 2017-04-05cRagexeRE
 #if PACKETVER == 20170405
-	packetKeys(0x1FDE7DAC,0x2F9F5B63,0x3F2062AF);
+	packetKeys(0x1fde7dac,0x2f9f5b63,0x3f2062af);
 #endif
 
 // 2017-04-12aRagexe, 2017-04-12aRagexeRE
 #if PACKETVER == 20170412
-	packetKeys(0x39223393,0x5C847779,0x10217985);
+	packetKeys(0x39223393,0x5c847779,0x10217985);
 #endif
 
 // 2017-04-19aRagexe, 2017-04-19bRagexeRE
 #if PACKETVER == 20170419
-	packetKeys(0x1F8F4B3F,0x2E481F03,0x39ED4178);
+	packetKeys(0x1f8f4b3f,0x2e481f03,0x39ed4178);
 #endif
 
 // 2017-04-26bRagexe, 2017-04-26dRagexeRE
 #if PACKETVER == 20170426
-	packetKeys(0x167642A7,0x1DEC3D26,0x6D046D4C);
+	packetKeys(0x167642a7,0x1dec3d26,0x6d046d4c);
 #endif
 
 // 2017-05-02aRagexe, 2017-05-02bRagexe, 2017-05-02dRagexeRE
 #if PACKETVER == 20170502
-	packetKeys(0x05224194,0x466D4204,0x31F02EE0);
+	packetKeys(0x05224194,0x466d4204,0x31f02ee0);
 #endif
 
 // 2017-05-17aRagexe, 2017-05-17aRagexeRE, 2017-05-17bRagexeRE
 #if PACKETVER == 20170517
-	packetKeys(0x2CC4749A,0x1FA954DC,0x72276857);
+	packetKeys(0x2cc4749a,0x1fa954dc,0x72276857);
 #endif
 
 // 2017-05-24aRagexe, 2017-05-24aRagexeRE, 2017-05-24bRagexe
 #if PACKETVER == 20170524
-	packetKeys(0x0B4E03A6,0x2B93427C,0x583D4477);
+	packetKeys(0x0b4e03a6,0x2b93427c,0x583d4477);
 #endif
 
 // 2017-05-31aRagexe, 2017-05-31aRagexeRE
 #if PACKETVER == 20170531
-	packetKeys(0x03FA5A97,0x20B802D5,0x339F1977);
+	packetKeys(0x03fa5a97,0x20b802d5,0x339f1977);
 #endif
 
 // 2017-06-07bRagexeRE, 2017-06-07cRagexe, 2017-06-07cRagexeRE
 #if PACKETVER == 20170607
-	packetKeys(0x50564ACD,0x79CA4E15,0x405F4894);
+	packetKeys(0x50564acd,0x79ca4e15,0x405f4894);
 #endif
 
 // 2017-06-14bRagexe, 2017-06-14bRagexeRE
 #if PACKETVER == 20170614
-	packetKeys(0x5ED10A48,0x667F4301,0x2E5D761F);
+	packetKeys(0x5ed10a48,0x667f4301,0x2e5d761f);
 #endif
 
 // 2017-06-21aRagexeRE, 2017-06-21bRagexe
 #if PACKETVER == 20170621
-	packetKeys(0x155F34EC,0x2D943FA9,0x3D9170EB);
+	packetKeys(0x155f34ec,0x2d943fa9,0x3d9170eb);
 #endif
 
 // 2017-06-28bRagexe, 2017-06-28bRagexeRE
 #if PACKETVER == 20170628
-	packetKeys(0x04691C86,0x43C210E2,0x2FE277E2);
+	packetKeys(0x04691c86,0x43c210e2,0x2fe277e2);
 #endif
 
 // 2017-07-05aRagexe, 2017-07-05aRagexeRE
 #if PACKETVER == 20170705
-	packetKeys(0x7EB000AE,0x02FB1DBC,0x5CB131E6);
+	packetKeys(0x7eb000ae,0x02fb1dbc,0x5cb131e6);
 #endif
 
 // 2017-07-12bRagexe, 2017-07-12bRagexeRE
 #if PACKETVER == 20170712
-	packetKeys(0x2C3C202C,0x3F2C2F2C,0x2F2C2F2C);
+	packetKeys(0x2c3c202c,0x3f2c2f2c,0x2f2c2f2c);
 #endif
 
 // 2017-07-19aRagexe, 2017-07-19aRagexeRE
 #if PACKETVER == 20170719
-	packetKeys(0x46465C88,0x10116F66,0x200866F9);
+	packetKeys(0x46465c88,0x10116f66,0x200866f9);
 #endif
 
 // 2017-07-26aRagexe, 2017-07-26cRagexeRE
 #if PACKETVER == 20170726
-	packetKeys(0x102F23DB,0x7E767751,0x3BC172EF);
+	packetKeys(0x102f23db,0x7e767751,0x3bc172ef);
 #endif
 
 // 2017-08-01aRagexe, 2017-08-01aRagexeRE, 2017-08-01bRagexe
 #if PACKETVER == 20170801
-	packetKeys(0x26B52A7F,0x5377619D,0x4F580AC4);
+	packetKeys(0x26b52a7f,0x5377619d,0x4f580ac4);
 #endif
 
 // 2017-08-09cRagexe, 2017-08-09cRagexeRE
 #if PACKETVER == 20170809
-	packetKeys(0x452156CB,0x71442624,0x2EE66D1C);
+	packetKeys(0x452156cb,0x71442624,0x2ee66d1c);
 #endif
 
 // 2017-08-16cRagexe, 2017-08-16cRagexeRE, 2017-08-16dRagexe, 2017-08-16dRagexeRE
 #if PACKETVER == 20170816
-	packetKeys(0x78914673,0x3F8B7634,0x55B814BC);
+	packetKeys(0x78914673,0x3f8b7634,0x55b814bc);
 #endif
 
 // 2017-08-23aRagexe, 2017-08-23aRagexeRE
 #if PACKETVER == 20170823
-	packetKeys(0x22677205,0x393D1002,0x58DC6BB4);
+	packetKeys(0x22677205,0x393d1002,0x58dc6bb4);
 #endif
 
 // 2017-08-30aRagexe, 2017-08-30aRagexeRE, 2017-08-30bRagexe, 2017-08-30bRagexeRE
 #if PACKETVER == 20170830
-	packetKeys(0x1D49592B,0x00970C17,0x1E640103);
+	packetKeys(0x1d49592b,0x00970c17,0x1e640103);
 #endif
 
 // 2017-09-06cRagexe, 2017-09-06cRagexeRE
 #if PACKETVER == 20170906
-	packetKeys(0x7DEF7677,0x351F36E6,0x52303485);
+	packetKeys(0x7def7677,0x351f36e6,0x52303485);
 #endif
 
 // 2017-09-13bRagexeRE, 2017-09-13cRagexe
 #if PACKETVER == 20170913
-	packetKeys(0x7A645935,0x1DA05062,0x5A7A4C43);
+	packetKeys(0x7a645935,0x1da05062,0x5a7a4c43);
 #endif
 
 // 2017-09-20aRagexe, 2017-09-20bRagexeRE
 #if PACKETVER == 20170920
-	packetKeys(0x53024DA5,0x04EC212D,0x0BF87CD4);
+	packetKeys(0x53024da5,0x04ec212d,0x0bf87cd4);
 #endif
 
 // 2017-09-27bRagexe, 2017-09-27bRagexeRE, 2017-09-27cRagexe, 2017-09-27dRagexe, 2017-09-27dRagexeRE
 #if PACKETVER == 20170927
-	packetKeys(0x15624100,0x0CE1463E,0x0E5D6534);
+	packetKeys(0x15624100,0x0ce1463e,0x0e5d6534);
 #endif
 
 // 2017-10-02cRagexe, 2017-10-02cRagexeRE
 #if PACKETVER == 20171002
-	packetKeys(0x15E1716C,0x4E765B63,0x357D2370);
+	packetKeys(0x15e1716c,0x4e765b63,0x357d2370);
 #endif
 
 // 2017-10-11aRagexe, 2017-10-11aRagexeRE, 2017-10-11bRagexe, 2017-10-11bRagexeRE
 #if PACKETVER == 20171011
-	packetKeys(0x4F121B3E,0x12670E17,0x19896C11);
+	packetKeys(0x4f121b3e,0x12670e17,0x19896c11);
 #endif
 
 // 2017-10-18aRagexe, 2017-10-18aRagexeRE
 #if PACKETVER == 20171018
-	packetKeys(0x2CAA109C,0x158C1EC2,0x7A5E58F3);
+	packetKeys(0x2caa109c,0x158c1ec2,0x7a5e58f3);
 #endif
 
 // 2017-10-25bRagexe, 2017-10-25bRagexeRE, 2017-10-25cRagexe, 2017-10-25cRagexeRE, 2017-10-25dRagexe, 2017-10-25dRagexeRE, 2017-10-25eRagexe, 2017-10-25eRagexeRE
 #if PACKETVER == 20171025
-	packetKeys(0x165C565C,0x565C565C,0x565C565C);
+	packetKeys(0x165c565c,0x565c565c,0x565c565c);
 #endif
 
 // 2017-11-01aRagexe, 2017-11-01bRagexeRE
 #if PACKETVER == 20171101
-	packetKeys(0x7056317F,0x7EEE0589,0x02672373);
+	packetKeys(0x7056317f,0x7eee0589,0x02672373);
 #endif
 
 // 2017-11-08aRagexe, 2017-11-08bRagexeRE
 #if PACKETVER == 20171108
-	packetKeys(0x03695685,0x7FAC12CE,0x182F7A7B);
+	packetKeys(0x03695685,0x7fac12ce,0x182f7a7b);
 #endif
 
 // 2017-11-15aRagexe, 2017-11-15aRagexeRE
 #if PACKETVER == 20171115
-	packetKeys(0x23B97A3B,0x34610993,0x2892070E);
+	packetKeys(0x23b97a3b,0x34610993,0x2892070e);
 #endif
 
 // 2017-11-22aRagexe, 2017-11-22bRagexeRE
 #if PACKETVER == 20171122
-	packetKeys(0x03221B0E,0x73AB7A5F,0x0DD80FD4);
+	packetKeys(0x03221b0e,0x73ab7a5f,0x0dd80fd4);
 #endif
 
 // 2017-11-29aRagexe, 2017-11-29aRagexeRE
 #if PACKETVER == 20171129
-	packetKeys(0x581B77A7,0x62F74D7A,0x4F102173);
+	packetKeys(0x581b77a7,0x62f74d7a,0x4f102173);
 #endif
 
 // 2017-12-06aRagexeRE, 2017-12-06bRagexe, 2017-12-06cRagexe
 #if PACKETVER == 20171206
-	packetKeys(0x39D54BD3,0x577A0C21,0x4C1C316E);
+	packetKeys(0x39d54bd3,0x577a0c21,0x4c1c316e);
 #endif
 
 // 2017-12-13bRagexe, 2017-12-13bRagexeRE
 #if PACKETVER == 20171213
-	packetKeys(0x44E41107,0x3B126921,0x00E06AAC);
+	packetKeys(0x44e41107,0x3b126921,0x00e06aac);
 #endif
 
 // 2017-12-20aRagexe, 2017-12-20aRagexeRE
 #if PACKETVER == 20171220
-	packetKeys(0x6EFE009A,0x440B7BFA,0x052339C8);
+	packetKeys(0x6efe009a,0x440b7bfa,0x052339c8);
 #endif
 
 // 2017-12-27aRagexe, 2017-12-27aRagexeRE
 #if PACKETVER == 20171227
-	packetKeys(0x257A2F6E,0x51140EEE,0x00FA4452);
+	packetKeys(0x257a2f6e,0x51140eee,0x00fa4452);
 #endif
 
 // 2018-01-03aRagexe, 2018-01-03aRagexeRE, 2018-01-03bRagexe, 2018-01-03bRagexeRE
 #if PACKETVER == 20180103
-	packetKeys(0x348F4BD7,0x7A425A54,0x628F589A);
+	packetKeys(0x348f4bd7,0x7a425a54,0x628f589a);
 #endif
 
 // 2018-01-17aRagexe, 2018-01-17aRagexeRE
 #if PACKETVER == 20180117
-	packetKeys(0x21F477F4,0x37F437F4,0x37F437F4);
+	packetKeys(0x21f477f4,0x37f437f4,0x37f437f4);
 #endif
 
 // 2018-01-24bRagexe, 2018-01-24bRagexeRE, 2018-01-31Ragexe
 #if PACKETVER == 20180124 || \
     PACKETVER == 20180131
-	packetKeys(0x7EAA1CE0,0x415D1CFD,0x4C8F19FA);
+	packetKeys(0x7eaa1ce0,0x415d1cfd,0x4c8f19fa);
 #endif
 
 // 2018-02-07bRagexe, 2018-02-07bRagexeRE, 2018-02-07cRagexe
 #if PACKETVER == 20180207
-	packetKeys(0x45AA1B44,0x20E716B7,0x5388105C);
+	packetKeys(0x45aa1b44,0x20e716b7,0x5388105c);
 #endif
 
 // 2018-02-13aRagexe, 2018-02-13aRagexeRE, 2018-02-13bRagexe
 #if PACKETVER == 20180213
-	packetKeys(0x189D69B2,0x43B85EAD,0x2B7A687E);
+	packetKeys(0x189d69b2,0x43b85ead,0x2b7a687e);
 #endif
 
 // 2018-02-21aRagexeRE, 2018-02-21bRagexe, 2018-02-21bRagexeRE
 #if PACKETVER == 20180221
-	packetKeys(0x6E2F6233,0x193B0A66,0x0D1D2CA5);
+	packetKeys(0x6e2f6233,0x193b0a66,0x0d1d2ca5);
 #endif
 
 // 2018-03-07bRagexe, 2018-03-07bRagexeRE, 2018-03-09aRagexe
 #if PACKETVER == 20180307 || \
     PACKETVER == 20180309
-	packetKeys(0x47DA10EB,0x4B922CCF,0x765C5055);
+	packetKeys(0x47da10eb,0x4b922ccf,0x765c5055);
 #endif
 
 // 2018-03-14nRagexe
 #if PACKETVER == 20180314
-	packetKeys(0x2FF07149,0x00596EA3,0x2B853026);
+	packetKeys(0x2ff07149,0x00596ea3,0x2b853026);
 #endif
 
 
