@@ -1928,7 +1928,9 @@ struct PACKET_ZC_FORMATSTRING_MSG_COLOR {
 	uint16 PacketType;
 	uint16 PacketLength;
 	uint16 messageId;
+#if PACKETVER >= 20160406
 	uint32 color;
+#endif
 	char messageString[];
 } __attribute__((packed));
 

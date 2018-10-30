@@ -9672,7 +9672,9 @@ static void clif_msgtable_str_color(struct map_session_data *sd, enum clif_messa
 	p->PacketType = 0xa6f;
 	p->PacketLength = len;
 	p->messageId = msg_id;
+#if PACKETVER >= 20160406
 	p->color = color;
+#endif
 	safestrncpy(p->messageString, value, message_len);
 	p->messageString[message_len] = 0;
 
