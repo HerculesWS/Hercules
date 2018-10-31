@@ -29,12 +29,12 @@ Project Info:
 
 Table of Contents
 ---------
-* 1 What is Hercules?
-* 2 Prerequisites
-* 3 Installation
-* 4 Troubleshooting
-* 5 Helpful Links
-* 6 More Documentation
+* 1 [What is Hercules?](#what-is-hercules)
+* 2 [Prerequisites](#prerequisites)
+* 3 [Installation](#installation)
+* 4 [Troubleshooting](#troubleshooting)
+* 5 [Helpful Links](#helpful-links)
+* 6 [More Documentation](#more-documentation)
 
 What is Hercules?
 -----------------
