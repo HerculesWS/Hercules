@@ -2132,17 +2132,20 @@ static void char_mmo_char_send_ban_list(int fd, struct char_session_data *sd)
 //----------------------------------------
 static void char_mmo_char_send_slots_info(int fd, struct char_session_data *sd)
 {
+// also probably supported client 2013-02-15aRagexe but not 2013-02-15bRagexe [4144]
+#if PACKETVER_MAIN_NUM >= 20130612 || PACKETVER_RE_NUM >= 20130115 || defined(PACKETVER_ZERO)
 	nullpo_retv(sd);
-	WFIFOHEAD(fd,29);
-	WFIFOW(fd,0) = 0x82d;
-	WFIFOW(fd,2) = 29;
-	WFIFOB(fd,4) = sd->char_slots;
-	WFIFOB(fd,5) = MAX_CHARS - sd->char_slots;
-	WFIFOB(fd,6) = 0;
-	WFIFOB(fd,7) = sd->char_slots;
-	WFIFOB(fd,8) = sd->char_slots;
-	memset(WFIFOP(fd,9), 0, 20); // unused bytes
-	WFIFOSET(fd,29);
+	WFIFOHEAD(fd, 29);
+	WFIFOW(fd, 0) = 0x82d;
+	WFIFOW(fd, 2) = 29;
+	WFIFOB(fd, 4) = sd->char_slots;
+	WFIFOB(fd, 5) = MAX_CHARS - sd->char_slots;
+	WFIFOB(fd, 6) = 0;
+	WFIFOB(fd, 7) = sd->char_slots;
+	WFIFOB(fd, 8) = sd->char_slots;
+	memset(WFIFOP(fd, 9), 0, 20); // unused bytes
+	WFIFOSET(fd, 29);
+#endif
 }
 //----------------------------------------
 // Function to send characters to a player
@@ -2409,12 +2412,8 @@ static void char_parse_fromlogin_account_data(int fd)
 			chr->auth_error(i, 0);
 		} else {
 			// send characters to player
-	#if PACKETVER >= 20130000
 			chr->mmo_char_send_slots_info(i, sd);
 			chr->mmo_char_send_characters(i, sd);
-	#else
-			chr->mmo_char_send_characters(i, sd);
-	#endif
 	#if PACKETVER >= 20060819
 			chr->mmo_char_send_ban_list(i, sd);
 	#endif
