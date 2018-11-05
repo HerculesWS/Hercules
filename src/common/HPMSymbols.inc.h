@@ -218,6 +218,9 @@ struct npc_interface *npc;
 #ifdef COMMON_NULLPO_H /* nullpo */
 struct nullpo_interface *nullpo;
 #endif // COMMON_NULLPO_H
+#ifdef COMMON_PACKETS_H /* packets */
+struct packets_interface *packets;
+#endif // COMMON_PACKETS_H
 #ifdef MAP_PARTY_H /* party */
 struct party_interface *party;
 #endif // MAP_PARTY_H
@@ -559,6 +562,10 @@ HPExport const char *HPM_shared_symbols(int server_type)
 	if ((server_type&(SERVER_TYPE_ALL)) != 0 && !HPM_SYMBOL("nullpo", nullpo))
 		return "nullpo";
 #endif // COMMON_NULLPO_H
+#ifdef COMMON_PACKETS_H /* packets */
+	if ((server_type&(SERVER_TYPE_ALL)) != 0 && !HPM_SYMBOL("packets", packets))
+		return "packets";
+#endif // COMMON_PACKETS_H
 #ifdef MAP_PARTY_H /* party */
 	if ((server_type&(SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("party", party))
 		return "party";

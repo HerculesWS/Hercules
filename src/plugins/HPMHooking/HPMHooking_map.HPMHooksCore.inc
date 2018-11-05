@@ -4248,6 +4248,14 @@ struct {
 	struct HPMHookPoint *HP_npc_secure_timeout_timer_post;
 	struct HPMHookPoint *HP_nullpo_assert_report_pre;
 	struct HPMHookPoint *HP_nullpo_assert_report_post;
+	struct HPMHookPoint *HP_packets_init_pre;
+	struct HPMHookPoint *HP_packets_init_post;
+	struct HPMHookPoint *HP_packets_final_pre;
+	struct HPMHookPoint *HP_packets_final_post;
+	struct HPMHookPoint *HP_packets_addLens_pre;
+	struct HPMHookPoint *HP_packets_addLens_post;
+	struct HPMHookPoint *HP_packets_addLen_pre;
+	struct HPMHookPoint *HP_packets_addLen_post;
 	struct HPMHookPoint *HP_party_init_pre;
 	struct HPMHookPoint *HP_party_init_post;
 	struct HPMHookPoint *HP_party_final_pre;
@@ -10851,6 +10859,14 @@ struct {
 	int HP_npc_secure_timeout_timer_post;
 	int HP_nullpo_assert_report_pre;
 	int HP_nullpo_assert_report_post;
+	int HP_packets_init_pre;
+	int HP_packets_init_post;
+	int HP_packets_final_pre;
+	int HP_packets_final_post;
+	int HP_packets_addLens_pre;
+	int HP_packets_addLens_post;
+	int HP_packets_addLen_pre;
+	int HP_packets_addLen_post;
 	int HP_party_init_pre;
 	int HP_party_init_post;
 	int HP_party_final_pre;
@@ -13272,6 +13288,7 @@ struct {
 	struct npc_chat_interface npc_chat;
 	struct npc_interface npc;
 	struct nullpo_interface nullpo;
+	struct packets_interface packets;
 	struct party_interface party;
 	struct path_interface path;
 	struct pc_groups_interface pcg;

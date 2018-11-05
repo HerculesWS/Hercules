@@ -703,6 +703,11 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(mutex->cond_broadcast, HP_mutex_cond_broadcast) },
 /* nullpo_interface */
 	{ HP_POP(nullpo->assert_report, HP_nullpo_assert_report) },
+/* packets_interface */
+	{ HP_POP(packets->init, HP_packets_init) },
+	{ HP_POP(packets->final, HP_packets_final) },
+	{ HP_POP(packets->addLens, HP_packets_addLens) },
+	{ HP_POP(packets->addLen, HP_packets_addLen) },
 /* pincode_interface */
 	{ HP_POP(pincode->handle, HP_pincode_handle) },
 	{ HP_POP(pincode->decrypt, HP_pincode_decrypt) },

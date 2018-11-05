@@ -5673,6 +5673,16 @@ typedef int (*HPMHOOK_post_npc_secure_timeout_timer) (int retVal___, int tid, in
 typedef void (*HPMHOOK_pre_nullpo_assert_report) (const char **file, int *line, const char **func, const char **targetname, const char **title);
 typedef void (*HPMHOOK_post_nullpo_assert_report) (const char *file, int line, const char *func, const char *targetname, const char *title);
 #endif // COMMON_NULLPO_H
+#ifdef COMMON_PACKETS_H /* packets */
+typedef void (*HPMHOOK_pre_packets_init) (void);
+typedef void (*HPMHOOK_post_packets_init) (void);
+typedef void (*HPMHOOK_pre_packets_final) (void);
+typedef void (*HPMHOOK_post_packets_final) (void);
+typedef void (*HPMHOOK_pre_packets_addLens) (void);
+typedef void (*HPMHOOK_post_packets_addLens) (void);
+typedef void (*HPMHOOK_pre_packets_addLen) (int *id, int *len);
+typedef void (*HPMHOOK_post_packets_addLen) (int id, int len);
+#endif // COMMON_PACKETS_H
 #ifdef MAP_PARTY_H /* party */
 typedef void (*HPMHOOK_pre_party_init) (bool *minimal);
 typedef void (*HPMHOOK_post_party_init) (bool minimal);
