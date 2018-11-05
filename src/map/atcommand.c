@@ -62,6 +62,7 @@
 #include "common/memmgr.h"
 #include "common/mmo.h" // MAX_CARTS
 #include "common/nullpo.h"
+#include "common/packets.h"
 #include "common/random.h"
 #include "common/showmsg.h"
 #include "common/socket.h"

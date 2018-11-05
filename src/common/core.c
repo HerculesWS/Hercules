@@ -36,6 +36,7 @@
 #include "common/mmo.h"
 #include "common/mutex.h"
 #include "common/nullpo.h"
+#include "common/packets.h"
 #include "common/random.h"
 #include "common/showmsg.h"
 #include "common/socket.h"
@@ -261,6 +262,7 @@ static void core_defaults(void)
 	timer_defaults();
 	db_defaults();
 	socket_defaults();
+	packets_defaults();
 	rnd_defaults();
 	md5_defaults();
 	thread_defaults();
@@ -526,6 +528,8 @@ int main(int argc, char **argv)
 
 	sockt->init();
 
+	packets->init();
+
 	do_init(argc,argv);
 
 	// Main runtime cycle
@@ -539,6 +543,7 @@ int main(int argc, char **argv)
 	retval = do_final();
 	HPM->final();
 	timer->final();
+	packets->final();
 	sockt->final();
 	DB->final();
 	thread->final();

@@ -25,6 +25,7 @@
 #include "common/memmgr.h"
 #include "common/mmo.h"
 #include "common/socket.h"
+#include "common/packets.h"
 
 PRAGMA_GCC5(GCC diagnostic push)
 PRAGMA_GCC5(GCC diagnostic ignored "-Wdiscarded-qualifiers")

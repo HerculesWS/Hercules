@@ -65,6 +65,7 @@
 #include "common/memmgr.h"
 #include "common/mmo.h" // NEW_CARTS, char_achievements
 #include "common/nullpo.h"
+#include "common/packets.h"
 #include "common/random.h"
 #include "common/showmsg.h"
 #include "common/socket.h"
@@ -22200,13 +22201,13 @@ static void packetdb_loaddb(void)
 	memset(packet_db,0,sizeof(packet_db));
 
 #define packet(id, size, ...) packetdb_addpacket((id), (size), ##__VA_ARGS__, 0xFFFF)
-#include "packets.h" /* load structure data */
+#include "map/packets.h" /* load structure data */
 #ifdef PACKETVER_ZERO
-#include "packets_shuffle_zero.h"
+#include "map/packets_shuffle_zero.h"
 #elif defined(PACKETVER_RE)
-#include "packets_shuffle_re.h"
+#include "map/packets_shuffle_re.h"
 #else  // PACKETVER_ZERO
-#include "packets_shuffle_main.h"
+#include "map/packets_shuffle_main.h"
 #endif  // PACKETVER_ZERO
 #undef packet
 #define packetKeys(a,b,c) do { clif->cryptKey[0] = (a); clif->cryptKey[1] = (b); clif->cryptKey[2] = (c); } while(0)
@@ -22214,9 +22215,9 @@ static void packetdb_loaddb(void)
 	packetKeys(OBFUSCATIONKEY1,OBFUSCATIONKEY2,OBFUSCATIONKEY3);
 #else  // defined(OBFUSCATIONKEY1) && defined(OBFUSCATIONKEY2) && defined(OBFUSCATIONKEY3)
 #ifdef PACKETVER_ZERO
-#include "packets_keys_zero.h"
+#include "map/packets_keys_zero.h"
 #else  // PACKETVER_ZERO
-#include "packets_keys_main.h"
+#include "map/packets_keys_main.h"
 #endif  // PACKETVER_ZERO
 #endif  // defined(OBFUSCATIONKEY1) && defined(OBFUSCATIONKEY2) && defined(OBFUSCATIONKEY3)
 #undef packetKeys

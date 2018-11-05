@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
+ * Copyright (C) 2013-2018  Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,19 +17,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef COMMON_PACKETS_LEN_H
-#define COMMON_PACKETS_LEN_H
+#ifndef COMMON_PACKETS_H
+#define COMMON_PACKETS_H
 
-#if defined(PACKETVER_ZERO)
-#include "common/packets/packets_len_zero.h"
-#elif defined(PACKETVER_RE)
-#include "common/packets/packets_len_re.h"
-#elif defined(PACKETVER_SAK)
-#include "common/packets/packets_len_sak.h"
-#elif defined(PACKETVER_AD)
-#include "common/packets/packets_len_ad.h"
-#else
-#include "common/packets/packets_len_main.h"
+#include "common/hercules.h"
+
+#ifndef MIN_PACKET_DB
+#define MIN_PACKET_DB 0x0064
 #endif
 
-#endif /* COMMON_PACKETS_LEN_H */
+#ifndef MAX_PACKET_DB
+#define MAX_PACKET_DB 0x0F00
+#endif
+
+struct packets_interface {
+	void (*init) (void);
+	void (*final) (void);
+	void (*addLens) (void);
+	void (*addLen) (int id, int len);
+	int db[MAX_PACKET_DB + 1];
+};
+
+#ifdef HERCULES_CORE
+void packets_defaults(void);
+#endif // HERCULES_CORE
+
+HPShared struct packets_interface *packets;
+
+#endif /* COMMON_PACKETS_H */
