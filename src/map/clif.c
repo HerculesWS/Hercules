@@ -18468,7 +18468,7 @@ static void clif_parse_debug(int fd, struct map_session_data *sd)
 	cmd = RFIFOW(fd,0);
 
 	if( sd ) {
-		packet_len = packet_db[cmd].len;
+		packet_len = packets->db[cmd];
 
 		if( packet_len == -1 ) {// variable length
 			packet_len = RFIFOW(fd,2);  // clif_parse ensures, that this amount of data is already received
@@ -18897,7 +18897,7 @@ static void clif_parse_dull(int fd, struct map_session_data *sd)
 	const int cmd = clif->cmd;
 	Assert_retv(cmd <= MAX_PACKET_DB && cmd >= MIN_PACKET_DB);
 
-	int packet_len = packet_db[cmd].len;
+	int packet_len = packets->db[cmd];
 	if (packet_len == -1) { // variable-length packet
 		packet_len = RFIFOW(fd, 2);
 	}
@@ -20526,7 +20526,7 @@ static unsigned short clif_parse_cmd_optional(int fd, struct map_session_data *s
 	unsigned short cmd = RFIFOW(fd,0);
 
 	// filter out invalid / unsupported packets
-	if( cmd > MAX_PACKET_DB || cmd < MIN_PACKET_DB || packet_db[cmd].len == 0 ) {
+	if( cmd > MAX_PACKET_DB || cmd < MIN_PACKET_DB || packets->db[cmd] == 0 ) {
 		if( sd )
 			sd->parse_cmd_func = clif_parse_cmd_decrypt;
 		return clif_parse_cmd_decrypt(fd, sd);
@@ -22045,7 +22045,7 @@ static int clif_parse(int fd)
 		}
 
 		// filter out invalid / unsupported packets
-		if (cmd > MAX_PACKET_DB || cmd < MIN_PACKET_DB || packet_db[cmd].len == 0) {
+		if (cmd > MAX_PACKET_DB || cmd < MIN_PACKET_DB || packets->db[cmd] == 0) {
 			ShowWarning("clif_parse: Received unsupported packet (packet 0x%04x (0x%04x), %"PRIuS" bytes received), disconnecting session #%d.\n",
 			            (unsigned int)cmd, RFIFOW(fd,0), RFIFOREST(fd), fd);
 #ifdef DUMP_INVALID_PACKET
@@ -22056,7 +22056,7 @@ static int clif_parse(int fd)
 		}
 
 		// determine real packet length
-		if ( ( packet_len = packet_db[cmd].len ) == -1) { // variable-length packet
+		if ((packet_len = packets->db[cmd]) == -1) { // variable-length packet
 
 			if (RFIFOREST(fd) < 4)
 				return 0;
@@ -22145,7 +22145,7 @@ static int clif_parse(int fd)
  */
 static const struct s_packet_db *clif_packet(int packet_id)
 {
-	if (packet_id < MIN_PACKET_DB || packet_id > MAX_PACKET_DB || packet_db[packet_id].len == 0)
+	if (packet_id < MIN_PACKET_DB || packet_id > MAX_PACKET_DB || packets->db[packet_id] == 0)
 		return NULL;
 	return &packet_db[packet_id];
 }
@@ -22167,7 +22167,7 @@ static void __attribute__ ((unused)) packetdb_addpacket(short cmd, int len, ...)
 		return;
 	}
 
-	packet_db[cmd].len = len;
+//	packet_db[cmd].len = len;
 
 	va_start(va,len);
 

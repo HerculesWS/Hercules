@@ -64,7 +64,7 @@ enum rodex_get_items;
 /**
  * Defines
  **/
-#define packet_len(cmd) packet_db[cmd].len
+#define packet_len(cmd) packets->db[cmd]
 #define clif_menuskill_clear(sd) ((sd)->menuskill_id = (sd)->menuskill_val = (sd)->menuskill_val2 = 0)
 #define clif_disp_onlyself(sd, mes) clif->disp_message(&(sd)->bl, (mes), SELF)
 #define MAX_ROULETTE_LEVEL 7 /** client-defined value **/
@@ -626,7 +626,6 @@ enum inventory_type {
  **/
 typedef void (*pFunc)(int, struct map_session_data *); //cant help but put it first
 struct s_packet_db {
-	short len;
 	pFunc func;
 	short pos[MAX_PACKET_POS];
 };
