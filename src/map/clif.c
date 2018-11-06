@@ -18901,9 +18901,9 @@ static void clif_parse_dull(int fd, struct map_session_data *sd)
 		packet_len = RFIFOW(fd, 2);
 	}
 	if (sd) {
-		ShowWarning("Unhandled packet 0x%04d (length %d), %s session #%d, %d/%d (AID/CID)\n", cmd, packet_len, sd->state.active ? "authed" : "unauthed", fd, sd->status.account_id, sd->status.char_id);
+		ShowWarning("Unhandled packet 0x%04X (length %d), %s session #%d, %d/%d (AID/CID)\n", (uint32)cmd, packet_len, sd->state.active ? "authed" : "unauthed", fd, sd->status.account_id, sd->status.char_id);
 	} else {
-		ShowWarning("Unhandled packet 0x%04d (length %d), session #%d\n", cmd, packet_len, fd);
+		ShowWarning("Unhandled packet 0x%04X (length %d), session #%d\n", (uint32)cmd, packet_len, fd);
 	}
 	return;
 }
