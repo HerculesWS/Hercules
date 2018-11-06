@@ -30,6 +30,7 @@
 #include "common/memmgr.h"
 #include "common/mmo.h"
 #include "common/nullpo.h"
+#include "common/packets.h"
 #include "common/showmsg.h"
 #include "common/strlib.h"
 #include "common/timer.h"
@@ -580,6 +581,7 @@ static int connect_client(int listen_fd)
 
 	create_session(fd, recv_to_fifo, send_from_fifo, default_func_parse);
 	sockt->session[fd]->client_addr = ntohl(client_address.sin_addr.s_addr);
+	sockt->session[fd]->flag.validate = sockt->validate;
 
 	return fd;
 }
@@ -649,7 +651,6 @@ static int make_listen_bind(uint32 ip, uint16 port)
 	create_session(fd, connect_client, null_send, null_parse);
 	sockt->session[fd]->client_addr = 0; // just listens
 	sockt->session[fd]->rdata_tick = 0; // disable timeouts on this socket
-
 	return fd;
 }
 
@@ -821,14 +822,12 @@ static int rfifoskip(int fd, size_t len)
 }
 
 /// advance the WFIFO cursor (marking 'len' bytes for sending)
-static int wfifoset(int fd, size_t len)
+static int wfifoset(int fd, size_t len, bool validate)
 {
-	size_t newreserve;
-	struct socket_data* s;
-
 	if (!sockt->session_is_valid(fd))
 		return 0;
-	s = sockt->session[fd];
+
+	struct socket_data* s = sockt->session[fd];
 	if (s == NULL || s->wdata == NULL)
 		return 0;
 
@@ -867,6 +866,10 @@ static int wfifoset(int fd, size_t len)
 		}
 
 	}
+
+	if (validate && s->flag.validate == 1)
+		sockt->validateWfifo(fd, len);
+
 	s->wdata_size += len;
 #ifdef SHOW_SERVER_STATS
 	socket_data_qo += len;
@@ -877,7 +880,7 @@ static int wfifoset(int fd, size_t len)
 
 	// always keep a WFIFO_SIZE reserve in the buffer
 	// For inter-server connections, let the reserve be 1/4th of the link size.
-	newreserve = s->flag.server ? FIFOSIZE_SERVERLINK / 4 : WFIFO_SIZE;
+	size_t newreserve = s->flag.server ? FIFOSIZE_SERVERLINK / 4 : WFIFO_SIZE;
 
 	// readjust the buffer to include the chosen reserve
 	sockt->realloc_writefifo(fd, newreserve);
@@ -2049,6 +2052,43 @@ static void socket_net_config_read(const char *filename)
 	return;
 }
 
+static void socket_validateWfifo(int fd, size_t len)
+{
+	if (len < 2) {
+		ShowError("Sent packet with size smaller than 2\n");
+		Assert_retv(0);
+		return;
+	}
+	const uint cmd = (uint)WFIFOW(fd, 0);
+	if (cmd < MIN_PACKET_DB || cmd > MAX_PACKET_DB) {
+		ShowError("Sent wrong packet id: 0x%04X\n", cmd);
+		Assert_retv(0);
+		return;
+	}
+	if (len > 65535) {
+		ShowError("Sent packet with size bigger than 65535\n");
+		Assert_retv(0);
+		return;
+	}
+	int packet_len = packets->db[cmd];
+	const int len2 = (int)len;
+	if (packet_len == -1) {
+		if (len2 < 4) {
+			ShowError("Sent packet with size smaller than 2\n");
+			Assert_retv(0);
+			return;
+		}
+		packet_len = WFIFOW(fd, 2);
+		if (packet_len != len2) {
+			ShowError("Sent packet 0x%04X with dynamic size %d, but must be size %d \n", cmd, len2, packet_len);
+			Assert_retv(0);
+		}
+	} else if (packet_len != len2) {
+		ShowError("Sent packet 0x%04X with size %d, but must be size %d \n", cmd, len2, packet_len);
+		Assert_retv(0);
+	}
+}
+
 void socket_defaults(void)
 {
 	sockt = &sockt_s;
@@ -2060,6 +2100,7 @@ void socket_defaults(void)
 	/* */
 	memset(&sockt->addr_, 0, sizeof(sockt->addr_));
 	sockt->naddr_ = 0;
+	sockt->validate = false;
 	/* */
 	VECTOR_INIT(sockt->lan_subnets);
 	VECTOR_INIT(sockt->allowed_ips);
@@ -2099,4 +2140,5 @@ void socket_defaults(void)
 	sockt->trusted_ip_check = socket_trusted_ip_check;
 	sockt->net_config_read_sub = socket_net_config_read_sub;
 	sockt->net_config_read = socket_net_config_read;
+	sockt->validateWfifo = socket_validateWfifo;
 }

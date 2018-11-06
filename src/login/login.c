@@ -1457,6 +1457,7 @@ static void login_parse_request_connection(int fd, struct login_session_data* sd
 
 		sockt->session[fd]->func_parse = login->parse_fromchar;
 		sockt->session[fd]->flag.server = 1;
+		sockt->session[fd]->flag.validate = 0;
 		sockt->realloc_fifo(fd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
 
 		// send connection success
@@ -2175,6 +2176,7 @@ int do_init(int argc, char **argv)
 
 	// set default parser as lclif->parse function
 	sockt->set_defaultparse(lclif->parse);
+	sockt->validate = true;
 
 	// every 10 minutes cleanup online account db.
 	timer->add_func_list(login->online_data_cleanup, "login->online_data_cleanup");

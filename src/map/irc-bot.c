@@ -63,6 +63,7 @@ static int irc_connect_timer(int tid, int64 tick, int id, intptr_t data)
 	if ((ircbot->fd = sockt->make_connection(ircbot->ip, channel->config->irc_server_port, &opt)) > 0) {
 		sockt->session[ircbot->fd]->func_parse = ircbot->parse;
 		sockt->session[ircbot->fd]->flag.server = 1;
+		sockt->session[ircbot->fd]->flag.validate = 0;
 		timer->add(timer->gettick() + 3000, ircbot->identify_timer, 0, 0);
 		ircbot->isOn = true;
 	}

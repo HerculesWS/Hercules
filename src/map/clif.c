@@ -22254,6 +22254,7 @@ static int do_init_clif(bool minimal)
 	packetdb_loaddb();
 
 	sockt->set_defaultparse(clif->parse);
+	sockt->validate = true;
 	if (sockt->make_listen_bind(clif->bind_ip,clif->map_port) == -1) {
 		ShowFatalError("Failed to bind to port '"CL_WHITE"%d"CL_RESET"'\n",clif->map_port);
 		exit(EXIT_FAILURE);

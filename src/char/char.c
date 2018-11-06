@@ -4353,9 +4353,9 @@ static void char_delete2_cancel(int fd, struct char_session_data *sd)
 
 static void char_send_account_id(int fd, int account_id)
 {
-	WFIFOHEAD(fd,4);
-	WFIFOL(fd,0) = account_id;
-	WFIFOSET(fd,4);
+	WFIFOHEAD(fd, 4);
+	WFIFOL(fd, 0) = account_id;
+	WFIFOSET2(fd, 4);
 }
 
 static void char_parse_char_connect(int fd, struct char_session_data *sd, uint32 ipl)
@@ -4908,10 +4908,10 @@ static void char_parse_char_delete2_cancel(int fd, struct char_session_data *sd)
 // 3 - error
 static void char_login_map_server_ack(int fd, uint8 flag)
 {
-	WFIFOHEAD(fd,3);
-	WFIFOW(fd,0) = 0x2af9;
-	WFIFOB(fd,2) = flag;
-	WFIFOSET(fd,3);
+	WFIFOHEAD(fd, 3);
+	WFIFOW(fd, 0) = 0x2af9;
+	WFIFOB(fd, 2) = flag;
+	WFIFOSET2(fd, 3);
 }
 
 static void char_parse_char_login_map_server(int fd, uint32 ipl)
@@ -4938,6 +4938,7 @@ static void char_parse_char_login_map_server(int fd, uint32 ipl)
 		chr->server[i].users = 0;
 		sockt->session[fd]->func_parse = chr->parse_frommap;
 		sockt->session[fd]->flag.server = 1;
+		sockt->session[fd]->flag.validate = 0;
 		sockt->realloc_fifo(fd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
 		chr->mapif_init(fd);
 	}
@@ -5307,6 +5308,7 @@ static int char_check_connect_login_server(int tid, int64 tick, int id, intptr_t
 
 	sockt->session[chr->login_fd]->func_parse = chr->parse_fromlogin;
 	sockt->session[chr->login_fd]->flag.server = 1;
+	sockt->session[chr->login_fd]->flag.validate = 0;
 	sockt->realloc_fifo(chr->login_fd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
 
 	loginif->connect_to_server();
@@ -6299,6 +6301,7 @@ int do_init(int argc, char **argv)
 		Sql_ShowDebug(inter->sql_handle);
 
 	sockt->set_defaultparse(chr->parse_char);
+	sockt->validate = true;
 
 	if ((chr->char_fd = sockt->make_listen_bind(bind_ip,chr->port)) == -1) {
 		ShowFatalError("Failed to bind to port '"CL_WHITE"%d"CL_RESET"'\n",chr->port);

@@ -73,7 +73,8 @@ struct config_setting_t;
 		} \
 	} while(0)
 
-#define WFIFOSET(fd, len)  (sockt->wfifoset(fd, len))
+#define WFIFOSET(fd, len)  (sockt->wfifoset(fd, len, true))
+#define WFIFOSET2(fd, len)  (sockt->wfifoset(fd, len, false))
 #define RFIFOSKIP(fd, len) (sockt->rfifoskip(fd, len))
 
 /* [Ind/Hercules] */
@@ -122,6 +123,7 @@ struct socket_data {
 		unsigned char eof : 1;
 		unsigned char server : 1;
 		unsigned char ping : 2;
+		unsigned char validate : 1;
 	} flag;
 
 	uint32 client_addr; // remote client address
@@ -178,9 +180,11 @@ struct socket_interface {
 	/* */
 	time_t stall_time;
 	time_t last_tick;
+
 	/* */
 	uint32 addr_[16];   // ip addresses of local host (host byte order)
 	int naddr_;   // # of ip addresses
+	bool validate;
 
 	struct socket_data **session;
 
@@ -200,9 +204,10 @@ struct socket_interface {
 	int (*make_connection) (uint32 ip, uint16 port, struct hSockOpt *opt);
 	int (*realloc_fifo) (int fd, unsigned int rfifo_size, unsigned int wfifo_size);
 	int (*realloc_writefifo) (int fd, size_t addition);
-	int (*wfifoset) (int fd, size_t len);
+	int (*wfifoset) (int fd, size_t len, bool validate);
 	int (*rfifoskip) (int fd, size_t len);
 	void (*close) (int fd);
+	void (*validateWfifo) (int fd, size_t len);
 	/* */
 	bool (*session_is_valid) (int fd);
 	bool (*session_is_active) (int fd);
