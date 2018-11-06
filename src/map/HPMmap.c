@@ -74,7 +74,6 @@
 #include "map/mercenary.h"
 #include "map/mob.h"
 #include "map/npc.h"
-#include "map/packets_struct.h"
 #include "map/party.h"
 #include "map/path.h"
 #include "map/pc.h"

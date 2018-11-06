@@ -21971,7 +21971,7 @@ static void clif_item_preview(struct map_session_data *sd, int n)
 	Assert_retv(n >= 0 && n < MAX_INVENTORY);
 
 	struct PACKET_ZC_ITEM_PREVIEW p;
-	p.packetType = itemPreview;
+	p.packetType = HEADER_ZC_ITEM_PREVIEW;
 	p.index = n + 2;
 #if PACKETVER_MAIN_NUM >= 20181017 || PACKETVER_RE_NUM >= 20181017 || PACKETVER_ZERO_NUM >= 20181024
 	p.isDamaged = (sd->status.inventory[n].attribute & ATTR_BROKEN) != 0 ? 1 : 0;

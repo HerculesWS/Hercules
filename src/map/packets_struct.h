@@ -25,9 +25,14 @@
 
 #include "common/cbasetypes.h"
 #include "common/mmo.h"
+#include "common/packetsstatic_len.h"
 
 // Packet DB
 #define MAX_PACKET_POS 20
+
+#define DEFINE_PACKET_HEADER(name, id) \
+	STATIC_ASSERT(sizeof(struct PACKET_##name) == PACKET_LEN_##id, "Wrong size PACKET_"#name); \
+	enum { HEADER_##name = id };
 
 /**
  *
@@ -448,11 +453,6 @@ enum packet_headers {
 	guildLeave = 0xa83,
 #else
 	guildLeave = 0x15a,
-#endif
-#if PACKETVER_MAIN_NUM >= 20181017 || PACKETVER_RE_NUM >= 20181017 || PACKETVER_ZERO_NUM >= 20181024
-	itemPreview = 0xb13,
-#else
-	itemPreview = 0xab9,
 #endif
 #if PACKETVER_RE_NUM >= 20181031
 	autoSpellList = 0xafb,
@@ -2882,17 +2882,6 @@ struct PACKET_ZC_CAMERA_INFO {
 	float latitude;
 } __attribute__((packed));
 
-struct PACKET_ZC_ITEM_PREVIEW {
-	int16 packetType;
-	int16 index;
-#if PACKETVER_MAIN_NUM >= 20181017 || PACKETVER_RE_NUM >= 20181017 || PACKETVER_ZERO_NUM >= 20181024
-	int8 isDamaged;
-#endif
-	int16 refiningLevel;
-	struct EQUIPSLOTINFO slot;
-	struct ItemOptions option_data[MAX_ITEM_OPTIONS];
-} __attribute__((packed));
-
 #if PACKETVER_RE_NUM >= 20181031
 #define PACKET_ZC_AUTOSPELLLIST PACKET_ZC_AUTOSPELLLIST2
 #else
@@ -2909,6 +2898,30 @@ struct PACKET_ZC_AUTOSPELLLIST2 {
 	int16 packetLength;
 	int skills[];
 } __attribute__((packed));
+
+#if PACKETVER_MAIN_NUM >= 20170726 || PACKETVER_RE_NUM >= 20170621 || defined(PACKETVER_ZERO)
+#if PACKETVER_MAIN_NUM >= 20181017 || PACKETVER_RE_NUM >= 20181017 || PACKETVER_ZERO_NUM >= 20181024
+struct PACKET_ZC_ITEM_PREVIEW {
+	int16 packetType;
+	int16 index;
+	int8 isDamaged;
+	int16 refiningLevel;
+	struct EQUIPSLOTINFO slot;
+	struct ItemOptions option_data[MAX_ITEM_OPTIONS];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_ITEM_PREVIEW, 0x0b13);
+#else  // PACKETVER_MAIN_NUM >= 20181017 || PACKETVER_RE_NUM >= 20181017 || PACKETVER_ZERO_NUM >= 20181024
+
+struct PACKET_ZC_ITEM_PREVIEW {
+	int16 packetType;
+	int16 index;
+	int16 refiningLevel;
+	struct EQUIPSLOTINFO slot;
+	struct ItemOptions option_data[MAX_ITEM_OPTIONS];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_ITEM_PREVIEW, 0x0ab9);
+#endif  // PACKETVER_MAIN_NUM >= 20181017 || PACKETVER_RE_NUM >= 20181017 || PACKETVER_ZERO_NUM >= 20181024
+#endif  // PACKETVER_MAIN_NUM >= 20170726 || PACKETVER_RE_NUM >= 20170621 || defined(PACKETVER_ZERO)
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
