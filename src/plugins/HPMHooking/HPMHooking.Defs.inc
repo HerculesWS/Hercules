@@ -7462,12 +7462,14 @@ typedef int (*HPMHOOK_pre_sockt_realloc_fifo) (int *fd, unsigned int *rfifo_size
 typedef int (*HPMHOOK_post_sockt_realloc_fifo) (int retVal___, int fd, unsigned int rfifo_size, unsigned int wfifo_size);
 typedef int (*HPMHOOK_pre_sockt_realloc_writefifo) (int *fd, size_t *addition);
 typedef int (*HPMHOOK_post_sockt_realloc_writefifo) (int retVal___, int fd, size_t addition);
-typedef int (*HPMHOOK_pre_sockt_wfifoset) (int *fd, size_t *len);
-typedef int (*HPMHOOK_post_sockt_wfifoset) (int retVal___, int fd, size_t len);
+typedef int (*HPMHOOK_pre_sockt_wfifoset) (int *fd, size_t *len, bool *validate);
+typedef int (*HPMHOOK_post_sockt_wfifoset) (int retVal___, int fd, size_t len, bool validate);
 typedef int (*HPMHOOK_pre_sockt_rfifoskip) (int *fd, size_t *len);
 typedef int (*HPMHOOK_post_sockt_rfifoskip) (int retVal___, int fd, size_t len);
 typedef void (*HPMHOOK_pre_sockt_close) (int *fd);
 typedef void (*HPMHOOK_post_sockt_close) (int fd);
+typedef void (*HPMHOOK_pre_sockt_validateWfifo) (int *fd, size_t *len);
+typedef void (*HPMHOOK_post_sockt_validateWfifo) (int fd, size_t len);
 typedef bool (*HPMHOOK_pre_sockt_session_is_valid) (int *fd);
 typedef bool (*HPMHOOK_post_sockt_session_is_valid) (bool retVal___, int fd);
 typedef bool (*HPMHOOK_pre_sockt_session_is_active) (int *fd);

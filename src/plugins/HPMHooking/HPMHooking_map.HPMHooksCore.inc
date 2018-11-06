@@ -5980,6 +5980,8 @@ struct {
 	struct HPMHookPoint *HP_sockt_rfifoskip_post;
 	struct HPMHookPoint *HP_sockt_close_pre;
 	struct HPMHookPoint *HP_sockt_close_post;
+	struct HPMHookPoint *HP_sockt_validateWfifo_pre;
+	struct HPMHookPoint *HP_sockt_validateWfifo_post;
 	struct HPMHookPoint *HP_sockt_session_is_valid_pre;
 	struct HPMHookPoint *HP_sockt_session_is_valid_post;
 	struct HPMHookPoint *HP_sockt_session_is_active_pre;
@@ -12591,6 +12593,8 @@ struct {
 	int HP_sockt_rfifoskip_post;
 	int HP_sockt_close_pre;
 	int HP_sockt_close_post;
+	int HP_sockt_validateWfifo_pre;
+	int HP_sockt_validateWfifo_post;
 	int HP_sockt_session_is_valid_pre;
 	int HP_sockt_session_is_valid_post;
 	int HP_sockt_session_is_active_pre;
