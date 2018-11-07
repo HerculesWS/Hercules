@@ -892,6 +892,15 @@ static int wfifoset(int fd, size_t len, bool validate)
 	return 0;
 }
 
+static void wfifohead(int fd, size_t len)
+{
+	Assert_retv(fd >= 0);
+
+	sockt->session[fd]->last_head_size = (uint32)len;
+	if (sockt->session[fd]->wdata_size + len > sockt->session[fd]->max_wdata)
+		sockt->realloc_writefifo(fd, len);
+}
+
 static int do_sockets(int next)
 {
 #ifndef SOCKET_EPOLL
@@ -2065,6 +2074,9 @@ static void socket_validateWfifo(int fd, size_t len)
 		return;
 	}
 	const uint cmd = (uint)WFIFOW(fd, 0);
+	const uint last_head_size = sockt->session[fd]->last_head_size;
+	sockt->session[fd]->last_head_size = 0;
+
 	if (cmd < MIN_PACKET_DB || cmd > MAX_PACKET_DB) {
 		ShowError("Sent wrong packet id: 0x%04X\n", cmd);
 		Assert_retv(0);
@@ -2079,17 +2091,21 @@ static void socket_validateWfifo(int fd, size_t len)
 	const int len2 = (int)len;
 	if (packet_len == -1) {
 		if (len2 < 4) {
-			ShowError("Sent packet with size smaller than 2\n");
+			ShowError("Sent packet with size smaller than 4\n");
 			Assert_retv(0);
 			return;
 		}
 		packet_len = WFIFOW(fd, 2);
 		if (packet_len != len2) {
-			ShowError("Sent packet 0x%04X with dynamic size %d, but must be size %d \n", cmd, len2, packet_len);
+			ShowError("Sent packet 0x%04X with dynamic size %d, but must be size %d\n", cmd, len2, packet_len);
 			Assert_retv(0);
 		}
 	} else if (packet_len != len2) {
-		ShowError("Sent packet 0x%04X with size %d, but must be size %d \n", cmd, len2, packet_len);
+		ShowError("Sent packet 0x%04X with size %d, but must be size %d\n", cmd, len2, packet_len);
+		Assert_retv(0);
+	}
+	if (last_head_size < packet_len) {
+		ShowError("Reserved too small packet buffer for packet 0x%04X with size %u, but must be size %d\n", cmd, last_head_size, packet_len);
 		Assert_retv(0);
 	}
 }
@@ -2123,6 +2139,7 @@ void socket_defaults(void)
 	sockt->realloc_fifo = realloc_fifo;
 	sockt->realloc_writefifo = realloc_writefifo;
 	sockt->wfifoset = wfifoset;
+	sockt->wfifohead = wfifohead;
 	sockt->rfifoskip = rfifoskip;
 	sockt->close = socket_close;
 	/* */

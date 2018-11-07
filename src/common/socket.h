@@ -41,11 +41,7 @@ struct config_setting_t;
 
 // socket I/O macros
 #define RFIFOHEAD(fd)
-#define WFIFOHEAD(fd, size) \
-	do{ \
-		if ((fd) && sockt->session[fd]->wdata_size + (size) > sockt->session[fd]->max_wdata) \
-			sockt->realloc_writefifo((fd), (size)); \
-	} while(0)
+#define WFIFOHEAD(fd, size) sockt->wfifohead(fd, size)
 
 #define RFIFOP(fd,pos) ((const void *)(sockt->session[fd]->rdata + sockt->session[fd]->rdata_pos + (pos)))
 #define WFIFOP(fd,pos) ((void *)(sockt->session[fd]->wdata + sockt->session[fd]->wdata_size + (pos)))
@@ -132,6 +128,7 @@ struct socket_data {
 	size_t max_rdata, max_wdata;
 	size_t rdata_size, wdata_size;
 	size_t rdata_pos;
+	uint last_head_size;
 	time_t rdata_tick; // time of last recv (for detecting timeouts); zero when timeout is disabled
 
 	RecvFunc func_recv;
@@ -205,6 +202,7 @@ struct socket_interface {
 	int (*realloc_fifo) (int fd, unsigned int rfifo_size, unsigned int wfifo_size);
 	int (*realloc_writefifo) (int fd, size_t addition);
 	int (*wfifoset) (int fd, size_t len, bool validate);
+	void (*wfifohead) (int fd, size_t len);
 	int (*rfifoskip) (int fd, size_t len);
 	void (*close) (int fd);
 	void (*validateWfifo) (int fd, size_t len);
