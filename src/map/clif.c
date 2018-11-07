@@ -22150,7 +22150,7 @@ static const struct s_packet_db *clif_packet(int packet_id)
 	return &packet_db[packet_id];
 }
 
-static void __attribute__ ((unused)) packetdb_addpacket(short cmd, int len, ...)
+static void __attribute__ ((unused)) packetdb_addpacket(int cmd, ...)
 {
 	va_list va;
 	int i;
@@ -22167,21 +22167,19 @@ static void __attribute__ ((unused)) packetdb_addpacket(short cmd, int len, ...)
 		return;
 	}
 
-//	packet_db[cmd].len = len;
-
-	va_start(va,len);
+	va_start(va, cmd);
 
 	pos = va_arg(va, int);
 
 	va_end(va);
 
-	if( pos == 0xFFFF ) { /* nothing more to do */
+	if (pos == 0xFFFF) { /* nothing more to do */
 		return;
 	}
 
-	va_start(va,len);
+	va_start(va, cmd);
 
-	func = va_arg(va,pFunc);
+	func = va_arg(va, pFunc);
 
 	packet_db[cmd].func = func;
 
@@ -22200,7 +22198,7 @@ static void packetdb_loaddb(void)
 {
 	memset(packet_db,0,sizeof(packet_db));
 
-#define packet(id, size, ...) packetdb_addpacket((id), (size), ##__VA_ARGS__, 0xFFFF)
+#define packet(id, ...) packetdb_addpacket((id), ##__VA_ARGS__, 0xFFFF)
 #include "map/packets.h" /* load structure data */
 #ifdef PACKETVER_ZERO
 #include "map/packets_shuffle_zero.h"
