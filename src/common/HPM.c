@@ -30,6 +30,7 @@
 #include "common/memmgr.h"
 #include "common/mapindex.h"
 #include "common/mmo.h"
+#include "common/packets.h"
 #include "common/showmsg.h"
 #include "common/socket.h"
 #include "common/sql.h"
@@ -185,6 +186,10 @@ static bool hplugins_addpacket(unsigned short cmd, unsigned short length, void (
 	packet->cmd = cmd;
 	packet->len = length;
 	packet->receive = receive;
+
+	if (cmd <= MAX_PACKET_DB && cmd >= MIN_PACKET_DB) {
+		packets->db[cmd] = length;
+	}
 
 	return true;
 }
