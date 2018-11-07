@@ -1798,6 +1798,11 @@ static void socket_datasync(int fd, bool send)
 		{ sizeof(struct guild_castle) },
 		{ sizeof(struct fame_list) },
 		{ PACKETVER },
+		{ PACKETVER_MAIN_NUM },
+		{ PACKETVER_RE_NUM },
+		{ PACKETVER_ZERO_NUM },
+		{ PACKETVER_AD_NUM },
+		{ PACKETVER_SAK_NUM },
 	};
 	unsigned short i;
 	unsigned int alen = ARRAYLENGTH(data_list);
