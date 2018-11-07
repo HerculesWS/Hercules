@@ -312,10 +312,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0193,22,clif->pMoveFromKafra,12,18);
 #endif
 
-//2004-11-01aSakexe
-#if PACKETVER >= 20041101
-#endif
-
 //2004-11-08aSakexe
 #if PACKETVER >= 20041108
 	packet(0x0217,2,clif->pBlacksmith,0);
@@ -349,11 +345,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0222,6,clif->pWeaponRefine,2);
 #endif
 
-//2004-12-13aSakexe
-#if PACKETVER >= 20041213
-//skipped: many packets being set to -1
-#endif
-
 //2005-01-10bSakexe
 #if PACKETVER >= 20050110
 	packet(0x0072,26,clif->pUseSkillToId,8,16,22);
@@ -378,14 +369,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 //2005-03-28aSakexe
 #if PACKETVER >= 20050328
 	packet(0x0225,2,clif->pTaekwon,0);
-#endif
-
-//2005-04-04aSakexe
-#if PACKETVER >= 20050404
-#endif
-
-//2005-04-11aSakexe
-#if PACKETVER >= 20050411
 #endif
 
 //2005-04-25aSakexe
@@ -415,17 +398,9 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0190,19,clif->pActionRequest,5,18);
 #endif
 
-//2005-05-23aSakexe
-#if PACKETVER >= 20050523
-#endif
-
 //2005-05-30aSakexe
 #if PACKETVER >= 20050530
 	packet(0x0237,2,clif->pRankingPk,0);
-#endif
-
-//2005-05-31aSakexe
-#if PACKETVER >= 20050531
 #endif
 
 //2005-06-08aSakexe
@@ -433,11 +408,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0217,2,clif->pBlacksmith,0);
 	packet(0x0231,26,clif->pChangeHomunculusName,0);
 	packet(0x023b,36,clif->pStoragePassword,2,4,20);
-#endif
-
-//2005-06-22aSakexe
-#if PACKETVER >= 20050622
-
 #endif
 
 //2005-06-28aSakexe
@@ -507,10 +477,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0190,24,clif->pActionRequest,11,23);
 #endif
 
-//2005-08-01aSakexe
-#if PACKETVER >= 20050801
-#endif
-
 //2005-08-08aSakexe
 #if PACKETVER >= 20050808
 	packet(0x024d,12,clif->pAuction_register,0);
@@ -524,10 +490,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 //2005-08-29aSakexe
 #if PACKETVER >= 20050829
 	packet(0x0248,-1,clif->pMail_send,2,4,28,68);
-#endif
-
-//2005-09-12bSakexe
-#if PACKETVER >= 20050912
 #endif
 
 //2005-10-10aSakexe
@@ -545,27 +507,10 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x025d,6,clif->pAuction_close,0);
 #endif
 
-//2005-10-24aSakexe
-#if PACKETVER >= 20051024
-#endif
-
 //2005-11-07aSakexe
 #if PACKETVER >= 20051107
 	packet(0x024e,6,clif->pAuction_cancel,0);
 	packet(0x0251,34,clif->pAuction_search,0);
-#endif
-
-//2006-01-09aSakexe
-#if PACKETVER >= 20060109
-#endif
-
-//2006-01-26aSakexe
-#if PACKETVER >= 20060126
-
-#endif
-
-//2006-03-06aSakexe
-#if PACKETVER >= 20060306
 #endif
 
 //2006-03-13aSakexe
@@ -591,10 +536,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0190,18,clif->pActionRequest,7,17);
 #endif
 
-//2006-10-23aSakexe
-#if PACKETVER >= 20061023
-#endif
-
 //2006-04-24aSakexe to 2007-01-02aSakexe
 #if PACKETVER >= 20060424
 	packet(0x0292,2,clif->pAutoRevive,0);
@@ -618,19 +559,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0113,40,clif->pUseSkillToPos,10,19,23,38);
 	packet(0x0116,19,clif->pDropItem,11,17);
 	packet(0x0190,10,clif->pActionRequest,4,9);
-#endif
-
-//2007-01-22aSakexe
-#if PACKETVER >= 20070122
-#endif
-
-//2007-01-29aSakexe
-#if PACKETVER >= 20070129
-
-#endif
-
-//2007-02-05aSakexe
-#if PACKETVER >= 20070205
 #endif
 
 //2007-02-12aSakexe
@@ -670,26 +598,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x02db,-1,clif->pBattleChat,2,4);
 #endif
 
-//2007-10-23aSakexe
-#if PACKETVER >= 20071023
-#endif
-
-//2007-11-06aSakexe
-#if PACKETVER >= 20071106
-#endif
-
-//2007-11-13aSakexe
-#if PACKETVER >= 20071113
-#endif
-
-//2007-11-20aSakexe
-#if PACKETVER >= 20071120
-#endif
-
-//2007-11-27aSakexe
-#if PACKETVER >= 20071127
-#endif
-
 //2008-01-02aSakexe
 #if PACKETVER >= 20080102
 	packet(0x01df,6,clif->pGMReqAccountName,2);
@@ -700,22 +608,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x02f1,2,clif->pProgressbar,0);
 #endif
 
-//2008-03-25bSakexe
-#if PACKETVER >= 20080325
-#endif
-
-//2008-04-01aSakexe
-#if PACKETVER >= 20080401
-#endif
-
-//2008-05-27aSakexe
-#if PACKETVER >= 20080527
-#endif
-
-//2008-08-20aSakexe
-#if PACKETVER >= 20080820
-#endif
-
 //2008-09-10aSakexe
 #if PACKETVER >= 20080910
 	packet(0x0436,19,clif->pWantToConnection,2,6,10,14,18);  // CZ_ENTER
@@ -724,37 +616,9 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0439,8,clif->pUseItem,2,4);
 #endif
 
-//2008-11-13aSakexe
-#if PACKETVER >= 20081113
-#endif
-
-//2008-11-26aSakexe
-#if PACKETVER >= 20081126
-#endif
-
 //2008-12-10aSakexe
 #if PACKETVER >= 20081210
 	packet(0x0443,8,clif->pSkillSelectMenu,2,6);
-#endif
-
-//2009-01-14aSakexe
-#if PACKETVER >= 20090114
-#endif
-
-//2009-02-18aSakexe
-#if PACKETVER >= 20090218
-#endif
-
-//2009-02-25aSakexe
-#if PACKETVER >= 20090225
-#endif
-
-//2009-03-30aSakexe
-#if PACKETVER >= 20090330
-#endif
-
-//2009-04-08aSakexe
-#if PACKETVER >= 20090408
 #endif
 
 //2008-08-27aRagexeRE
@@ -782,44 +646,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0437,7,clif->pActionRequest,2,6);  // CZ_REQUEST_ACT
 	packet(0x0438,10,clif->pUseSkillToId,2,4,6);  // CZ_USE_SKILL
 	packet(0x0439,8,clif->pUseItem,2,4);
-
-#endif
-
-//2008-11-12aRagexeRE
-#if PACKETVER >= 20081112
-#endif
-
-//2008-12-17aRagexeRE
-#if PACKETVER >= 20081217
-#endif
-
-//2008-12-17bRagexeRE
-#if PACKETVER >= 20081217
-
-#endif
-
-//2009-01-21aRagexeRE
-#if PACKETVER >= 20090121
-#endif
-
-//2009-02-18aRagexeRE
-#if PACKETVER >= 20090218
-#endif
-
-//2009-02-26cRagexeRE
-#if PACKETVER >= 20090226
-#endif
-
-//2009-04-01aRagexeRE
-#if PACKETVER >= 20090401
-#endif
-
-//2009-05-14aRagexeRE
-#if PACKETVER >= 20090514
-#endif
-
-//2009-05-20aRagexeRE
-#if PACKETVER >= 20090520
 #endif
 
 // 2009-05-20aRagexe, 2009-05-20aRagexeRE
@@ -834,75 +660,14 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x07da,6,clif->pPartyChangeLeader,2);
 #endif
 
-//2009-06-10aRagexeRE
-#if PACKETVER >= 20090610
-#endif
-
-//2009-06-17aRagexeRE
-#if PACKETVER >= 20090617
-#endif
-
-//2009-07-01aRagexeRE
-#if PACKETVER >= 20090701
-#endif
-
-//2009-07-08aRagexeRE
-#if PACKETVER >= 20090708
-#endif
-
-//2009-07-15aRagexeRE
-#if PACKETVER >= 20090715
-#endif
-
-//2009-08-05aRagexeRE
-#if PACKETVER >= 20090805
-#endif
-
 //2009-08-18aRagexeRE
 #if PACKETVER >= 20090818
 	packet(0x07e4,-1,clif->pItemListWindowSelected,2,4,8);  // CZ_ITEMLISTWIN_RES
 #endif
 
-//2009-08-25aRagexeRE
-#if PACKETVER >= 20090825
-#endif
-
-//2009-09-22aRagexeRE
-#if PACKETVER >= 20090922
-#endif
-
-//2009-09-29aRagexeRE
-#if PACKETVER >= 20090929
-#endif
-
-//2009-10-06aRagexeRE
-#if PACKETVER >= 20091006
-#endif
-
 //2009-10-27aRagexeRE
 #if PACKETVER >= 20091027
 	packet(0x07f5,6,clif->pGMFullStrip,2);
-#endif
-
-//2009-11-03aRagexeRE
-#if PACKETVER >= 20091103
-#endif
-
-//2009-11-17aRagexeRE
-#if PACKETVER >= 20091117
-
-#endif
-
-//2009-11-24aRagexeRE
-#if PACKETVER >= 20091124
-#endif
-
-//2009-12-01aRagexeRE
-#if PACKETVER >= 20091201
-#endif
-
-//2009-12-15aRagexeRE
-#if PACKETVER >= 20091215
 #endif
 
 //2009-12-22aRagexeRE
@@ -923,41 +688,9 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0801,-1,clif->pPurchaseReq2,2,4,8,12);
 #endif
 
-	//2010-01-26aRagexeRE
-#if PACKETVER >= 20100126
-#endif
-
-	//2010-02-09aRagexeRE
-#if PACKETVER >= 20100209
-#endif
-
-	//2010-02-23aRagexeRE
-#if PACKETVER >= 20100223
-#endif
-
-	//2010-03-03aRagexeRE
+//2010-03-03aRagexeRE
 #if PACKETVER >= 20100303
 	packet(0x0811,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);  // CZ_REQ_OPEN_BUYING_STORE
-#endif
-
-	//2010-03-09aRagexeRE
-#if PACKETVER >= 20100309
-#endif
-
-	//2010-03-23aRagexeRE
-#if PACKETVER >= 20100323
-#endif
-
-	//2010-04-06aRagexeRE
-#if PACKETVER >= 20100406
-#endif
-
-	//2010-04-13aRagexeRE
-#if PACKETVER >= 20100413
-#endif
-
-	//2010-04-14dRagexeRE
-#if PACKETVER >= 20100414
 #endif
 
 	//2010-04-20aRagexeRE
@@ -977,30 +710,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0838,2,clif->pSearchStoreInfoNextPage,0);  // CZ_SEARCH_STORE_INFO_NEXT_PAGE
 	packet(0x083B,2,clif->pCloseSearchStoreInfo,0);
 	packet(0x083C,12,clif->pSearchStoreInfoListItemClick,2,6,10);  // CZ_SSILIST_ITEM_CLICK
-#endif
-
-//2010-06-15aRagexeRE
-#if PACKETVER >= 20100615
-#endif
-
-//2010-06-22aRagexeRE
-#if PACKETVER >= 20100622
-#endif
-
-//2010-06-29aRagexeRE
-#if PACKETVER >= 20100629
-#endif
-
-//2010-07-01aRagexeRE
-#if PACKETVER >= 20100701
-#endif
-
-//2010-07-13aRagexeRE
-#if PACKETVER >= 20100713
-#endif
-
-//2010-07-14aRagexeRE
-#if PACKETVER >= 20100714
 #endif
 
 //2010-08-03aRagexeRE
@@ -1026,18 +735,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0369,6,clif->pSolveCharName,2);  // CZ_REQNAME_BYGID
 #endif
 
-// 2010-12-21aRagexe
-#if PACKETVER >= 20101221
-// shuffle packets not added
-// new packets
-#endif
-
-// 2011-01-11aRagexe
-#if PACKETVER >= 20110111
-// shuffle packets not added
-// new packets
-#endif
-
 // 2011-01-25aRagexe
 #if PACKETVER >= 20110125
 // shuffle packets not added
@@ -1061,23 +758,11 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x08c2,2,clif->pDull); // CZ_MACRO_STOP
 #endif
 
-// 2011-04-19aRagexe
-#if PACKETVER >= 20110419
-// shuffle packets not added
-// new packets
-#endif
-
 // 2011-06-14aRagexe
 #if PACKETVER >= 20110614
 // shuffle packets not added
 // new packets
 	packet(0x08c9,2,clif->pCashShopSchedule,0);
-#endif
-
-// 2011-06-27aRagexe
-#if PACKETVER >= 20110627
-// shuffle packets not added
-// new packets
 #endif
 
 //2011-07-18aRagexe (Thanks to Yommy!)
@@ -1087,30 +772,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x084a,2,clif->pCashShopClose,2);/* tell server cashshop window is being closed */
 	packet(0x0846,4,clif->pCashShopReqTab,2);
 	packet(0x0848,-1,clif->pCashShopBuy,2);
-#endif
-
-// 2011-08-02aRagexe
-#if PACKETVER >= 20110802
-// shuffle packets not added
-// new packets
-#endif
-
-// 2011-08-09aRagexe
-#if PACKETVER >= 20110809
-// shuffle packets not added
-// new packets
-#endif
-
-// 2011-08-16aRagexe
-#if PACKETVER >= 20110816
-// shuffle packets not added
-// new packets
-#endif
-
-// 2011-09-28aRagexe
-#if PACKETVER >= 20110928
-// shuffle packets not added
-// new packets
 #endif
 
 //2011-10-05aRagexeRE
@@ -1276,11 +937,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 #endif
 #endif
 
-//2012-06-18aRagexeRE
-#if PACKETVER >= 20120618
-// shuffle packets not added
-#endif
-
 // ========== 2012-07-02aRagexeRE  =============
 // - 2012-07-02 is NOT STABLE.
 // - The packets are kept here for reference, DONT USE THEM.
@@ -1299,11 +955,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x094a,6,clif->pGetCharNameRequest,2);  // CZ_REQNAME
 	packet(0x0953,5,clif->pWalkToXY,2);  // CZ_REQUEST_MOVE
 	packet(0x0960,5,clif->pChangeDir,2,4);  // CZ_CHANGE_DIRECTION
-#endif
-
-//2012-07-02
-#if PACKETVER >= 20120702
-// new packets
 #endif
 
 //2012-07-10
@@ -1355,12 +1006,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 #if PACKETVER >= 20120925
 // new packets (not all)
 	packet(0x0998,8,clif->pEquipItem,2,4);
-#endif
-
-// 2013-02-06aRagexe
-#if PACKETVER >= 20130206
-// new packets
-// changed packet sizes
 #endif
 
 // 2013-03-06aRagexe
@@ -1726,33 +1371,10 @@ packet(0x96e,-1,clif->ackmergeitems);
 // changed packet sizes
 #endif
 
-// 2013-05-15aRagexe
-#if PACKETVER >= 20130515
-// new packets
-// changed packet sizes
-#endif
-
 // 2013-05-29Ragexe
 #if PACKETVER >= 20130529
 // new packets
 	packet(0x09c3,8,clif->pDull/*,XXX*/); // CZ_REQ_COUNT_BARGAIN_SALE_ITEM
-// changed packet sizes
-#endif
-
-// 2013-06-05Ragexe
-#if PACKETVER >= 20130605
-// new packets
-#endif
-
-// 2013-06-18aRagexe
-#if PACKETVER >= 20130618
-// new packets
-// changed packet sizes
-#endif
-
-// 2013-07-17cRagexe
-#if PACKETVER >= 20130717
-// new packets
 // changed packet sizes
 #endif
 
@@ -1791,12 +1413,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0887,36,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD
 	packet(0x0363,8,clif->pDull); // CZ_JOIN_BATTLE_FIELD
 	packet(0x0436,4,clif->pDull); // CZ_GANGSI_RANK
-#endif
-
-// 2013-08-07aRagexe
-#if PACKETVER >= 20130807
-// new packets
-// changed packet sizes
 #endif
 
 //2013-08-14aRagexe - Themon
@@ -1844,24 +1460,12 @@ packet(0x96e,-1,clif->ackmergeitems);
 // changed packet sizes
 #endif
 
-// 2013-08-21bRagexe
-#if PACKETVER >= 20130821
-// new packets
-// changed packet sizes
-#endif
-
 // 2013-08-28bRagexe
 #if PACKETVER >= 20130828
 // new packets
 // changed packet sizes
 	packet(0x09ba,2,clif->pDull/*,XXX*/); // CZ_REQ_OPEN_GUILD_STORAGE
 	packet(0x09be,2,clif->pDull/*,XXX*/); // CZ_REQ_CLOSE_GUILD_STORAGE
-#endif
-
-// 2013-09-04aRagexe
-#if PACKETVER >= 20130904
-// new packets
-// changed packet sizes
 #endif
 
 // 2013-09-11aRagexe
@@ -1871,12 +1475,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x09d6,-1,clif->pNPCMarketPurchase); // CZ_NPC_MARKET_PURCHASE
 	packet(0x09d8,2,clif->pNPCMarketClosed); // CZ_NPC_MARKET_CLOSE
 	packet(0x09d9,2,clif->pDull/*,XXX*/); // CZ_REQ_GUILDSTORAGE_LOG
-// changed packet sizes
-#endif
-
-// 2013-09-25aRagexe
-#if PACKETVER >= 20130925
-// new packets
 // changed packet sizes
 #endif
 
@@ -1901,11 +1499,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x09d9,4,clif->pDull/*,XXX*/); // CZ_REQ_GUILDSTORAGE_LOG
 #endif
 
-// 2013-10-30aRagexe
-#if PACKETVER >= 20131030
-// new packets
-#endif
-
 // 2013-11-06aRagexe
 #if PACKETVER >= 20131106
 // new packets
@@ -1913,18 +1506,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x09e2,8,clif->pDull/*,XXX*/); // CZ_MOVE_ITEM_FROM_GUILDSTORAGE_TO_BODY
 	packet(0x09e3,8,clif->pDull/*,XXX*/); // CZ_MOVE_ITEM_FROM_CART_TO_GUILDSTORAGE
 	packet(0x09e4,8,clif->pDull/*,XXX*/); // CZ_MOVE_ITEM_FROM_GUILDSTORAGE_TO_CART
-// changed packet sizes
-#endif
-
-// 2013-11-20dRagexe
-#if PACKETVER >= 20131120
-// new packets
-// changed packet sizes
-#endif
-
-// 2013-11-27bRagexe
-#if PACKETVER >= 20131127
-// new packets
 // changed packet sizes
 #endif
 
@@ -2082,10 +1663,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 #if PACKETVER >= 20140129
 // new packets
 	packet(0x0a01,3,clif->pHotkeyRowShift,2); // CZ_SHORTCUTKEYBAR_ROTATE
-// Warning hercules using this packets for items manipulation. In RagexeRE from 20140129 and before 20140305, this actions broken.
-#ifdef PACKETVER_RE
-// changed packet sizes
-#endif  // PACKETVER_RE
 #endif
 
 // 2014-02-12aRagexeRE
@@ -2093,14 +1670,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 // new packets
 // changed packet sizes
 	packet(0x09e8,11,clif->pRodexOpenMailbox); // CZ_OPEN_RODEXBOX
-#endif
-
-// 2014-02-19aRagexeRE
-#if PACKETVER >= 20140219
-// Warning hercules using this packets for items manipulation. In RagexeRE from 20140129 and before 20140305, this actions broken.
-#ifdef PACKETVER_RE
-// changed packet sizes
-#endif  // PACKETVER_RE
 #endif
 
 // 2014-02-26aRagexeRE
@@ -2117,15 +1686,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 // new packets
 	packet(0x0a08,5,clif->pDull/*,XXX*/); // CZ_REQ_OPEN_WRITE_RODEX
 // changed packet sizes
-#ifdef PACKETVER_RE
-#endif  // PACKETVER_RE
 	packet(0x09f3,10,clif->pDull/*,XXX*/); // CZ_REQ_ITEM_FROM_RODEX
-#endif
-
-// 2014-03-12bRagexeRE
-#if PACKETVER >= 20140312
-// new packets
-// changed packet sizes
 #endif
 
 // 2014-03-26cRagexeRE
@@ -2135,17 +1696,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x09f3,11,clif->pRodexRequestItems); // CZ_REQ_ITEM_FROM_RODEX
 	packet(0x0a03,2,clif->pRodexCancelWriteMail); // CZ_REQ_CANCEL_WRITE_RODEX
 	packet(0x0a08,7,clif->pDull/*,XXX*/); // CZ_REQ_OPEN_WRITE_RODEX
-#endif
-
-// 2014-04-02eRagexeRE
-#if PACKETVER >= 20140402
-// new packets
-// changed packet sizes
-#endif
-
-// 2014-04-09aRagexeRE
-#if PACKETVER >= 20140409
-// changed packet sizes
 #endif
 
 // 2014-04-16aRagexeRE
@@ -2169,16 +1719,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 #if PACKETVER >= 20140430
 // new packets
 	packet(0x0a16,26,clif->pDull/*,XXX*/); // CZ_DYNAMICNPC_CREATE_REQUEST
-#endif
-
-// 2014-05-08bRagexeRE
-#if PACKETVER >= 20140508
-// changed packet sizes
-#endif
-
-// 2014-05-21aRagexeRE
-#if PACKETVER >= 20140521
-// changed packet sizes
 #endif
 
 /* Roulette System [Yommy/Hercules] */
@@ -2208,53 +1748,16 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0a21,3,clif->pRouletteRecvItem,2); // CZ_RECV_ROULETTE_ITEM
 #endif
 
-// 2014-06-25aRagexeRE
-#if PACKETVER >= 20140625
-// new packets
-// changed packet sizes
-#endif
-
 // 2014-07-02aRagexeRE
 #if PACKETVER >= 20140702
 // new packets
 	packet(0x0a2a,6,clif->pDull/*,XXX*/); // CZ_ACK_AU_BOT
 #endif
 
-// 2014-07-16aRagexeRE
-#if PACKETVER >= 20140716
-// changed packet sizes
-#endif
-
-// 2014-07-23aRagexeRE
-#if PACKETVER >= 20140723
-// new packets
-// changed packet sizes
-#endif
-
-// 2014-08-20aRagexeRE
-#if PACKETVER >= 20140820
-// new packets
-#endif
-
 // 2014-09-03aRagexeRE
 #if PACKETVER >= 20140903
 // new packets
 	packet(0x0a2e,6,clif->pChangeTitle); // CZ_REQ_CHANGE_TITLE
-// changed packet sizes
-#endif
-
-// 2014-09-24bRagexeRE
-#if PACKETVER >= 20140924
-// new packets
-#endif
-
-// 2014-10-01bRagexeRE
-#if PACKETVER >= 20141001
-// changed packet sizes
-#endif
-
-// 2014-10-08bRagexeRE
-#if PACKETVER >= 20141008
 // changed packet sizes
 #endif
 
@@ -2265,100 +1768,10 @@ packet(0x96e,-1,clif->ackmergeitems);
 // changed packet sizes
 #endif
 
-// 2014-11-26aRagexeRE
-#if PACKETVER >= 20141126
-// new packets
-#endif
-
-// 2015-01-28aRagexeRE
-#if PACKETVER >= 20150128
-// new packets
-#endif
-
-// 2015-03-11aRagexeRE
-#if PACKETVER >= 20150311
-// new packets
-// changed packet sizes
-#endif
-
-// 2015-04-15aRagexeRE
-#if PACKETVER >= 20150415
-// changed packet sizes
-#endif
-
-// 2015-04-22aRagexeRE
-#if PACKETVER >= 20150422
-// new packets
-// changed packet sizes
-#endif
-
-// 2015-05-20aRagexeRE
-#if PACKETVER >= 20150520
-// new packets
-#endif
-
-// 2015-06-03bRagexeRE
-#if PACKETVER >= 20150603
-// new packets
-#endif
-
-// 2015-06-24aRagexeRE
-#if PACKETVER >= 20150624
-// new packets
-#endif
-
-// 2015-08-12aRagexeRE
-#if PACKETVER >= 20150812
-// new packets
-#endif
-
-// 2015-09-09aRagexeRE
-#if PACKETVER >= 20150909
-// new packets
-#endif
-
-// 2015-09-16aRagexeRE
-#if PACKETVER >= 20150916
-// new packets
-#endif
-
-// 2015-10-07aRagexeRE
-#if PACKETVER >= 20151007
-// new packets
-#endif
-
-// 2015-10-28cRagexeRE
-#if PACKETVER >= 20151028
-// new packets
-#endif
-
 // 2015-11-04aRagexeRE
 #if PACKETVER >= 20151104
 // new packets
 	packet(0x0a46,14,clif->pReqStyleChange);
-#endif
-
-// 2015-11-18aRagexeRE
-#if PACKETVER >= 20151118
-// new packets
-#endif
-
-// 2016-01-27aRagexeRE
-#if PACKETVER >= 20160127
-// new packets
-// changed packet sizes
-#endif
-
-// 2016-03-02bRagexeRE
-#if PACKETVER >= 20160302
-// new packets
-// changed packet sizes
-#endif
-
-// 2016-03-16aRagexeRE
-#if PACKETVER >= 20160316
-// new packets
-// changed packet sizes
 #endif
 
 // 2016-03-23aRagexeRE
@@ -2375,254 +1788,12 @@ packet(0x96e,-1,clif->ackmergeitems);
 // changed packet sizes
 #endif
 
-// 2016-04-27aRagexeRE
-#if PACKETVER >= 20160427
-// new packets
-// changed packet sizes
-#endif
-
-// 2016-05-04aRagexeRE
-#if PACKETVER >= 20160504
-// new packets
-// changed packet sizes
-#endif
-
-// 2016-05-11aRagexeRE
-#if PACKETVER >= 20160511
-// new packets
-// changed packet sizes
-#endif
-
-// 2016-05-18aRagexeRE
-#if PACKETVER >= 20160518
-// new packets
-// changed packet sizes
-#endif
-
-// 2016-05-25aRagexeRE
-#if PACKETVER >= 20160525
-// new packets
-// changed packet sizes
-#endif
-
-// 2016-06-01aRagexeRE
-#if PACKETVER >= 20160601
-// new packets
-// changed packet sizes
-#endif
-
-// 2016-06-15aRagexeRE
-#if PACKETVER >= 20160615
-// new packets
-// changed packet sizes
-#endif
-
-// 2016-06-22aRagexeRE
-#if PACKETVER >= 20160622
-// new packets
-// changed packet sizes
-#endif
-
-// 2016-06-29aRagexeRE
-#if PACKETVER >= 20160629
-// new packets
-// changed packet sizes
-#endif
-
-// 2016-07-06cRagexeRE
-#if PACKETVER >= 20160706
-// new packets
-// changed packet sizes
-#endif
-
-// 2016-07-13aRagexeRE
-#if PACKETVER >= 20160713
-// new packets
-// changed packet sizes
-#endif
-
-// 2016-07-20aRagexeRE
-#if PACKETVER >= 20160720
-// new packets
-// changed packet sizes
-#endif
-
-// 2016-07-27aRagexeRE
-#if PACKETVER >= 20160727
-// new packets
-// changed packet sizes
-#endif
-
-// 2016-08-03bRagexeRE
-#if PACKETVER >= 20160803
-// new packets
-// changed packet sizes
-#endif
-
-// 2016-09-07aRagexeRE
-#if PACKETVER >= 20160907
-// new packets
-// changed packet sizes
-#endif
-
-// 2016-09-21bRagexeRE
-#if PACKETVER >= 20160921
-// new packets
-// changed packet sizes
-#endif
-
-// 2016-09-28cRagexeRE
-#if PACKETVER >= 20160928
-// new packets
-// changed packet sizes
-#endif
-
-// 2016-10-05aRagexeRE
-#if PACKETVER >= 20161005
-// new packets
-// changed packet sizes
-#endif
-
-// 2016-10-26bRagexeRE
-#if PACKETVER >= 20161026
-// new packets
-// changed packet sizes
-#endif
-
-// 2016-11-30aRagexeRE
-#if PACKETVER >= 20161130
-// new packets
-// changed packet sizes
-#endif
-
-// 2016-12-07cRagexeRE
-#if PACKETVER >= 20161207
-// new packets
-// changed packet sizes
-#endif
-
-// 2016-12-21aRagexeRE
-#if PACKETVER >= 20161221
-// new packets
-// changed packet sizes
-#endif
-
-// 2016-12-28aRagexeRE
-#if PACKETVER >= 20161228
-// new packets
-// changed packet sizes
-#endif
-
-// 2017-01-04bRagexeRE
-#if PACKETVER >= 20170104
-// new packets
-// changed packet sizes
-#endif
-
-// 2017-01-11aRagexeRE
-#if PACKETVER >= 20170111
-// new packets
-// changed packet sizes
-#endif
-
-// 2017-01-18aRagexeRE
-#if PACKETVER >= 20170118
-// new packets
-// changed packet sizes
-#endif
-
-// 2017-02-01aRagexeRE
-#if PACKETVER >= 20170201
-// new packets
-// changed packet sizes
-#endif
-
-// 2017-02-15aRagexeRE
-#if PACKETVER >= 20170215
-// new packets
-// changed packet sizes
-#endif
-
-// 2017-02-22aRagexeRE
-#if PACKETVER >= 20170222
-// new packets
-// changed packet sizes
-#endif
-
 // 2017-02-28aRagexeRE
 #if PACKETVER >= 20170228
 // new packets
 	packet(0x0ac0,26,clif->pRodexOpenMailbox); // CZ_OPEN_RODEXBOX
 	packet(0x0ac1,26,clif->pRodexRefreshMaillist); // CZ_REQ_REFRESH_RODEX
 // changed packet sizes
-#endif
-
-// 2017-03-08bRagexeRE
-#if PACKETVER >= 20170308
-// new packets
-// changed packet sizes
-#endif
-
-// 2017-03-22aRagexeRE
-#if PACKETVER >= 20170322
-// new packets
-// changed packet sizes
-#endif
-
-// 2017-03-29cRagexeRE
-#if PACKETVER >= 20170329
-// new packets
-// changed packet sizes
-#endif
-
-// 2017-04-05bRagexeRE
-#if PACKETVER >= 20170405
-// new packets
-// changed packet sizes
-#endif
-
-// 2017-04-19bRagexeRE
-#if PACKETVER >= 20170419
-// new packets
-// changed packet sizes
-#endif
-
-// 2017-04-26dRagexeRE
-#if PACKETVER >= 20170426
-// new packets
-// changed packet sizes
-#endif
-
-// 2017-05-02dRagexeRE
-#if PACKETVER >= 20170502
-// new packets
-// changed packet sizes
-#endif
-
-// 2017-06-14bRagexeRE
-#if PACKETVER >= 20170614
-// new packets
-#endif
-
-// 2017-06-21aRagexeRE
-#if PACKETVER >= 20170621
-// changed packet sizes
-#endif
-
-// 2017-07-05aRagexeRE
-#if PACKETVER >= 20170705
-// changed packet sizes
-#endif
-
-// 2017-07-19aRagexeRE
-#if PACKETVER >= 20170719
-// new packets
-// changed packet sizes
-#endif
-
-// 2017-07-26cRagexeRE
-#if PACKETVER >= 20170726
-// new packets
 #endif
 
 // 2017-08-30aRagexeRE
@@ -2632,80 +1803,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0a49,20,clif->pPrivateAirshipRequest);
 #endif
 
-// 2017-09-06cRagexeRE
-#if PACKETVER >= 20170906
-// new packets
-#endif
-
-// 2017-09-13bRagexeRE
-#if PACKETVER >= 20170913
-// new packets
-#endif
-
-#if PACKETVER >= 20170920
-// new packets
-#endif
-
-#if PACKETVER >= 20170927
-// new packets
-// changed packet sizes
-#endif
-
-#ifdef PACKETVER_ZERO
-// 2017-10-25bRagexe_zero
-#if PACKETVER >= 20171025
-// new packets
-#endif
-#endif  // PACKETVER_ZERO
-
-// 2017-11-01bRagexeRE
-#if PACKETVER >= 20171101
-// new packets
-#endif
-
-#ifdef PACKETVER_ZERO
-// 2017-11-09aRagexe
-#if PACKETVER >= 20171109
-// new packets
-#endif
-// 2017-11-13aRagexe
-#if PACKETVER >= 20171113
-// changed packet sizes
-#endif
-#endif  // PACKETVER_ZERO
-
-// 2017-11-15aRagexeRE
-#if PACKETVER >= 20171115
-// new packets
-// changed packet sizes
-#endif
-
-#ifdef PACKETVER_ZERO
-// 2017-11-23dRagexe
-#if PACKETVER >= 20171123
-// new packets
-#endif
-
-// 2017-11-30bRagexe
-#if PACKETVER >= 20171130
-// new packets
-// changed packet sizes
-#endif
-#endif  // PACKETVER_ZERO
-
-// 2017-12-06aRagexeRE
-#if PACKETVER >= 20171206
-// new packets
-// changed packet sizes
-#endif
-
-#ifndef PACKETVER_ZERO
-#if PACKETVER >= 20171213
-// new packets
-// changed packet sizes
-#endif
-#endif  // PACKETVER_ZERO
-
 #ifdef PACKETVER_ZERO
 #if PACKETVER >= 20171214
 // new packets
@@ -2714,12 +1811,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 #endif
 #endif  // PACKETVER_ZERO
 
-// 2017-12-13bRagexe
-#if PACKETVER >= 20171213
-// new packets
-// changed packet sizes
-#endif
-
 // 2017-12-20aRagexe
 #if PACKETVER >= 20171220
 // new packets
@@ -2727,30 +1818,9 @@ packet(0x96e,-1,clif->ackmergeitems);
 // changed packet sizes
 #endif
 
-// 2017-12-27aRagexe
-#if PACKETVER >= 20171227
-// new packets
-// changed packet sizes
-#endif
-
-// 2018-01-03aRagexe
-#if PACKETVER >= 20180103
-// new packets
-// changed packet sizes
-#ifdef PACKETVER_RE
-#endif
-// changed packet sizes
-#endif
-
 #if PACKETVER >= 20180117
 // new packets
 	packet(0x0aef,2,clif->pAttendanceRewardRequest);
-// changed packet sizes
-#endif
-
-// 2018-01-24bRagexeRE
-#if PACKETVER >= 20180124
-// new packets
 // changed packet sizes
 #endif
 
@@ -2763,74 +1833,11 @@ packet(0x96e,-1,clif->ackmergeitems);
 #endif
 #endif  // PACKETVER_ZERO
 
-#ifdef PACKETVER_ZERO
-// 2018-02-07bRagexe_zero
-#if PACKETVER >= 20180207
-// new packets
-// changed packet sizes
-#endif
-#else  // PACKETVER_ZERO
+#ifndef PACKETVER_ZERO
 // 2018-02-07bRagexeRE, 2018-02-07bRagexe
 #if PACKETVER >= 20180207
 // new packets
 	packet(0x0af4,11,clif->pUseSkillToPos,2,4,6,8,10);  // CZ_USE_SKILL_TOGROUND
-// changed packet sizes
-#endif
-#endif  // PACKETVER_ZERO
-
-#ifdef PACKETVER_RE
-// 2018-02-21aRagexeRE
-#if PACKETVER >= 20180221
-// new packets
-// changed packet sizes
-#endif
-#endif  // PACKETVER_RE
-
-#ifndef PACKETVER_ZERO
-// 2018-03-07bRagexe
-#if PACKETVER >= 20180307
-// new packets
-// changed packet sizes
-#endif
-#endif  // PACKETVER_ZERO
-
-#ifndef PACKETVER_ZERO
-// 2018-03-21aRagexe, 2018-03-21aRagexeRE
-#if PACKETVER >= 20180321
-// new packets
-// changed packet sizes
-#endif
-#endif  // PACKETVER_ZERO
-
-#ifdef PACKETVER_ZERO
-// 2018-03-28_1aRagexe_zero
-#if PACKETVER >= 20180328
-// new packets
-// changed packet sizes
-#endif
-#endif  // PACKETVER_ZERO
-
-
-#ifndef PACKETVER_ZERO
-// 2018-04-04bRagexe, 2018-04-04cRagexeRE
-#if PACKETVER >= 20180404
-// new packets
-// changed packet sizes
-#endif
-#endif  // PACKETVER_ZERO
-
-#ifndef PACKETVER_ZERO
-// 2018-04-18aRagexe, 2018-04-18bRagexeRE
-#if PACKETVER >= 20180418
-// new packets
-// changed packet sizes
-#endif
-#endif
-
-#ifdef PACKETVER_ZERO
-// 2018-04-25_3aRagexe_zero
-#if PACKETVER >= 20180425
-// new packets
 // changed packet sizes
 #endif
 #endif  // PACKETVER_ZERO
@@ -2853,32 +1860,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 #endif
 #endif  // PACKETVER_ZERO
 
-// 2018-06-05bRagexe, 2018-06-05bRagexeRE, 2018-06-05bRagexe_zero
-#if PACKETVER >= 20180605
-// new packets
-// changed packet sizes
-#endif
-
-#ifndef PACKETVER_ZERO
-// 2018-06-20cRagexe, 2018-06-20eRagexe, 2018-06-20dRagexeRE, 2018-06-20eRagexeRE
-#if PACKETVER >= 20180620
-// new packets
-// changed packet sizes
-#endif
-
-// 2018-07-04aRagexe, 2018-07-04aRagexeRE
-#if PACKETVER >= 20180704
-// new packets
-// changed packet sizes
-#endif
-#endif  // PACKETVER_ZERO
-
-// 2018-06-27aRagexe_zero
-#if PACKETVER_ZERO_NUM >= 20180627
-// new packets
-// changed packet sizes
-#endif
-
 // 2018-07-04aRagexeRE
 #if PACKETVER_RE_NUM >= 20180704
 // new packets
@@ -2893,122 +1874,5 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x09c3,10,clif->pDull/*,XXX*/); // CZ_REQ_COUNT_BARGAIN_SALE_ITEM
 	packet(0x0a49,22,clif->pPrivateAirshipRequest); // CZ_PRIVATE_AIRSHIP_REQUEST
 #endif
-
-// 2018-07-25_2aRagexe_zero
-#if PACKETVER_ZERO_NUM >= 20180725
-// new packets
-// changed packet sizes
-#endif
-
-#ifndef PACKETVER_ZERO
-// 2018-08-01cRagexe, 2018-08-01cRagexeRE
-#if PACKETVER >= 20180801
-// new packets
-// changed packet sizes
-#endif
-#endif  // PACKETVER_ZERO
-
-// 2018-08-08_2aRagexe_zero
-#if PACKETVER_ZERO_NUM >= 20180808
-// new packets
-// changed packet sizes
-#endif
-
-// 2018-08-22aRagexe_zero
-#if PACKETVER_ZERO_NUM >= 20180822
-// new packets
-// changed packet sizes
-#endif
-
-// 2018-08-29aRagexe
-#if PACKETVER_MAIN_NUM >= 20180829
-// new packets
-// changed packet sizes
-#endif
-
-// 2018-08-29aRagexeRE
-#if PACKETVER_RE_NUM >= 20180829
-// new packets
-// changed packet sizes
-#endif
-
-// 2018-09-05aRagexe_zero
-#if PACKETVER_ZERO_NUM >= 20180905
-// new packets
-// changed packet sizes
-#endif
-
-#ifndef PACKETVER_ZERO
-// 2018-09-12dRagexe, 2018-09-12dRagexeRE
-#if PACKETVER >= 20180912
-// new packets
-// changed packet sizes
-#endif
-#endif
-
-// 2018-09-19aRagexeRE
-#if PACKETVER_RE_NUM >= 20180919
-// new packets
-// changed packet sizes
-#endif
-
-// 2018-09-19aRagexe_zero
-#if PACKETVER_ZERO_NUM >= 20180919
-// new packets
-// changed packet sizes
-#endif
-
-
-// 2018-10-02aRagexe
-#if PACKETVER_MAIN_NUM >= 20181002
-// new packets
-// changed packet sizes
-#endif
-
-// 2018-10-02aRagexeRE
-#if PACKETVER_RE_NUM >= 20181002
-// new packets
-// changed packet sizes
-#endif
-
-// 2018-10-10_2aRagexe_zero
-#if PACKETVER_ZERO_NUM >= 20181010
-// new packets
-// changed packet sizes
-#endif
-
-// 2018-10-17bRagexe
-#if PACKETVER_MAIN_NUM >= 20181017
-// new packets
-// changed packet sizes
-#endif
-
-// 2018-10-17bRagexeRE
-#if PACKETVER_RE_NUM >= 20181017
-// new packets
-// changed packet sizes
-#endif
-
-// 2018-10-24_2aRagexe_zero
-#if PACKETVER_ZERO_NUM >= 20181024
-// new packets
-	packet(0x0b12,2,clif->pDull/*,XXX*/);
-	packet(0x0b13,40); // ZC_ITEM_PREVIEW
-// changed packet sizes
-#endif
-
-#ifndef PACKETVER_ZERO
-// 2018-10-31aRagexe, 2018-10-31cRagexeRE
-#if PACKETVER >= 20181031
-// new packets
-	packet(0x0b14,2,clif->pDull/*,XXX*/);
-	packet(0x0b15,7,clif->pDull/*,XXX*/);
-	packet(0x0b16,2,clif->pDull/*,XXX*/);
-	packet(0x0b17,3,clif->pDull/*,XXX*/);
-	packet(0x0b18,4,clif->pDull/*,XXX*/);
-	packet(0x0b19,2,clif->pDull/*,XXX*/);
-// changed packet sizes
-#endif
-#endif  // PACKETVER_ZERO
 
 #endif /* MAP_PACKETS_H */
