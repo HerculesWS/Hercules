@@ -1285,6 +1285,7 @@ END_ZEROED_BLOCK;
 	int (*foreachinpath) (int (*func)(struct block_list*,va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int16 range, int length, int type, ...);
 	int (*vforeachinmap) (int (*func)(struct block_list*,va_list), int16 m, int type, va_list args);
 	int (*foreachinmap) (int (*func)(struct block_list*,va_list), int16 m, int type, ...);
+	int (*forcountinmap) (int (*func)(struct block_list*,va_list), int16 m, int count, int type, ...);
 	int (*vforeachininstance)(int (*func)(struct block_list*,va_list), int16 instance_id, int type, va_list ap);
 	int (*foreachininstance)(int (*func)(struct block_list*,va_list), int16 instance_id, int type,...);
 

@@ -11382,7 +11382,7 @@ static int buildin_getunits_sub(struct block_list *bl, va_list ap)
 		(const void *)h64BPTRSIZE(bl->id), ref);
 
 	(*count)++;
-	return 0;
+	return 1;
 }
 
 static int buildin_getunits_sub_pc(struct map_session_data *sd, va_list ap)
@@ -11454,18 +11454,10 @@ static BUILDIN(getunits)
 			int16 x2 = script_getnum(st, 8);
 			int16 y2 = script_getnum(st, 9);
 
-			// FIXME: map_foreachinarea does NOT stop iterating when the callback
-			//        function returns -1. we still limit the array size, but
-			//        this doesn't break the loop. We need a foreach function
-			//        that behaves like map_foreachiddb, but for areas
-			map->foreachinarea(buildin_getunits_sub, m, x1, y1, x2, y2, type,
+			map->forcountinarea(buildin_getunits_sub, m, x1, y1, x2, y2, limit, type,
 				st, sd, id, start, &count, limit, name, ref, type);
 		} else {
-			// FIXME: map_foreachinmap does NOT stop iterating when the callback
-			//        function returns -1. we still limit the array size, but
-			//        this doesn't break the loop. We need a foreach function
-			//        that behaves like map_foreachiddb, but for maps
-			map->foreachinmap(buildin_getunits_sub, m, type,
+			map->forcountinmap(buildin_getunits_sub, m, limit, type,
 				st, sd, id, start, &count, limit, name, ref, type);
 		}
 	} else {
