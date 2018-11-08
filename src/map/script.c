@@ -3841,12 +3841,8 @@ static void script_free_code(struct script_code *code)
 	if (code->local.arrays)
 		code->local.arrays->destroy(code->local.arrays,script->array_free_db);
 
-	if (code->script_pointer != NULL) {
-		code->script_pointer = NULL;
-	} else {
-		VECTOR_CLEAR(code->script_buf);
-	}
-
+	VECTOR_CLEAR(code->script_buf);
+	code->script_pointer = NULL;
 	aFree(code);
 }
 

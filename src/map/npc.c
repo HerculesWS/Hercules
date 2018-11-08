@@ -2443,7 +2443,7 @@ static int npc_unload(struct npc_data *nd, bool single)
 			script->free_code(nd->u.scr.script);
 			nd->u.scr.script = NULL;
 		}
-		if (nd->src_id == 0) {
+		if (nd->src_id == 0 || (nd->u.scr.script != NULL && nd->u.scr.script->script_pointer != NULL)) {
 			if (nd->u.scr.label_list) {
 				aFree(nd->u.scr.label_list);
 				nd->u.scr.label_list = NULL;
@@ -3270,6 +3270,7 @@ static bool npc_duplicate_script_sub(struct npc_data *nd, const struct npc_data 
 		struct script_code *code;
 		CREATE(code, struct script_code, 1);
 
+		VECTOR_INIT(code->script_buf);
 		code->script_pointer = &snd->u.scr.script->script_buf;
 		code->local.vars = NULL;
 		code->local.arrays = NULL;
